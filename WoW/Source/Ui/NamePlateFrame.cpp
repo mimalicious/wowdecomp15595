@@ -411,9 +411,9 @@ void CGNamePlateFrame::SetCastBarValues(float minValue, float maxValue, float va
     this->m_castBar->SetValue(value);
     this->m_channeling = channel;
 
-    SpellRec spellRec;
+    SpellRec* spellRec;
 
-    if (!spellId || !g_spellDB.GetRecord(spellId, &spellRec) || (spellRec.m_attributes & 0x20)) {
+    if (!spellId || !(spellRec = g_spellDB.GetRecord(spellId)) || (spellRec->m_attributes & 0x20)) {
         this->HideCastBar();
         return;
     }
@@ -457,7 +457,7 @@ void CGNamePlateFrame::SetCastBarValues(float minValue, float maxValue, float va
     this->m_castBar->Show();
     this->m_castBarIcon->Show();
 
-    SpellIconRec* iconRec = g_spellIconDB.GetRecord(spellRec.m_spellIconID);
+    SpellIconRec* iconRec = g_spellIconDB.GetRecord(spellRec->m_spellIconID);
 
     if (iconRec) {
         this->m_castBarIcon->SetTexture(iconRec->m_textureFilename, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);

@@ -657,7 +657,7 @@ static int32_t GetAmmoCount() {
     }
 
     CGPlayer_C* player = CGLCD::m_player;
-    int32_t ammoId = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerAmmoId : 0;
+    int32_t ammoId = 0;
 
     if (CGLCD::m_player->m_unit->m_unitFieldBytes0[1] == 9) {
         return CGLCD::m_player->m_bag.GetItemTypeCount(6265, 0);
@@ -916,8 +916,8 @@ void CGLCD::DisplayMeleeStats() {
 
     CGLCD::SetStat("SPEED", speed, false);
     int32_t power = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPower);
-    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPowerMods[0]);
-    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPowerMods[1]);
+    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPowerModPos);
+    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPowerModNeg);
     CGLCD::SetStat("POWER", power + positive + negative);
     CGLCD::SetStat("HIT", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldCombatRating1[5]));
     CGLCD::SetStat("CRIT", CGLCD::m_player->m_player->m_playerCritPercentage, true);
@@ -951,8 +951,8 @@ void CGLCD::DisplayRangedStats() {
     }
 
     int32_t power = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPower);
-    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMods[0]);
-    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMods[1]);
+    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerModPos);
+    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerModNeg);
     CGLCD::SetStat("POWER", power + positive + negative);
     CGLCD::SetStat("HIT", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldCombatRating1[6]));
     CGLCD::SetStat("CRIT", CGLCD::m_player->m_player->m_playerRangedCritPercentage, true);

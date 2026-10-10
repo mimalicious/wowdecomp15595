@@ -293,11 +293,11 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
                 previewRank = item->m_previewRank;
             }
 
-            SpellRec spell;
+            SpellRec* spell;
 
-            if (g_spellDB.GetRecord(rank < 0 ? talent->m_spellRank[0] : talent->m_spellRank[rank], &spell)) {
-                lua_pushstring(L, spell.m_name);
-                SpellIconRec* icon = g_spellIconDB.GetRecord(spell.m_spellIconID);
+            if ((spell = g_spellDB.GetRecord(rank < 0 ? talent->m_spellRank[0] : talent->m_spellRank[rank]))) {
+                lua_pushstring(L, spell->m_name);
+                SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_spellIconID);
 
                 if (icon) {
                     lua_pushstring(L, icon->m_textureFilename);
@@ -469,10 +469,10 @@ static int32_t Script_GetTalentLink(lua_State* L) {
                 rank = StringToBOOL(L, 5, 0) ? item->m_previewRank : item->m_rank;
             }
 
-            SpellRec spell;
+            SpellRec* spell;
 
-            if (g_spellDB.GetRecord(talent->m_spellRank[rank < 0 ? 0 : rank], &spell)) {
-                lua_pushstring(L, CGTooltip::GetTalentHyperlinkString(talent, spell.m_name, rank));
+            if ((spell = g_spellDB.GetRecord(talent->m_spellRank[rank < 0 ? 0 : rank]))) {
+                lua_pushstring(L, CGTooltip::GetTalentHyperlinkString(talent, spell->m_name, rank));
                 return 1;
             }
         }

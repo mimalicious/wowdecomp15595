@@ -14,6 +14,7 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRandom.h"
 #include "WoW/Common/ComponentCore/CharacterComponent.h"
+#include "WoW/Source/Object/ObjectClient/UnitDisplayTransition_C.h"
 #include "WoW/Source/Client.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
@@ -7679,6 +7680,25 @@ bool CGPlayer_C::GetExpandedSkillRank(int32_t skillId, int32_t& rank, int32_t& b
 
     bonus = static_cast<int16_t>(this->m_player->m_playerSkillModifier0[index]);
     return true;
+}
+
+// OFFSET: 0x00557D40/0x1401B4D80
+void CGPlayer_C::ApplyGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background) {
+    if (this->m_characterComponent) {
+        this->m_characterComponent->ApplyGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+        CImVector backgroundColor(0);
+        CImVector borderColorValue(0);
+        CImVector emblemColorValue(0);
+        char fileName[64];
+        CGObject_C::GetGuildLogoInfo(background, borderColor, emblemColor, emblemStyle, backgroundColor, borderColorValue, emblemColorValue, fileName, sizeof(fileName));
+        CGObject_C::ReplaceGuildTextures(this->m_characterComponent->m_data.m_model, backgroundColor, borderColorValue, emblemColorValue, fileName);
+        WOWGUID guid = this->m_obj->m_guid;
+        CGGameUI::UnitModelUpdate(guid, 3);
+    }
+
+    if (this->m_displayTransition) {
+        this->m_displayTransition->ApplyGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+    }
 }
 
 // PROVEN: c1904e2d IDENTICAL/NONE

@@ -21,8 +21,8 @@ class AreaPOIRec {
     /* 0044 */ DBCString m_name;
     /* 0048 */ DBCString m_description;
     /* 004C */ int32_t m_worldStateID;
-    /* 0050 */ int32_t unk_0050;
-    /* 0054 */ int32_t unk_0054;
+    /* 0050 */ int32_t m_worldMapLink;
+    /* 0054 */ int32_t m_graveyardID;
 };
 
 #endif

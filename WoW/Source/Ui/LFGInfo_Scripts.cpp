@@ -1480,11 +1480,11 @@ static int32_t Script_SearchLFGGetEncounterResults(lua_State* L) {
     }
 
     if (!player) {
-        return PushDungeonEncounterInfo(L, 0, 0, 0, 0);
+        return PushDungeonEncounterInfo(L, 0, 0, 0, 0, 0);
     }
 
     uint32_t mask = party ? party->m_encounterMask : player->m_encounterMask;
-    return PushDungeonEncounterInfo(L, rec->m_mapID, rec->m_difficulty, static_cast<int32_t>(encounter - 1.0), mask);
+    return PushDungeonEncounterInfo(L, rec->m_mapID, rec->m_difficulty, static_cast<int32_t>(encounter - 1.0), mask, 0);
 }
 
 // OFFSET: 0x00981760/0x1406FBFD0

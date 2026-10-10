@@ -413,11 +413,11 @@ bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char
 
     if (reduced && offset) {
         if (reduced->m_intValue) {
-            Spell_C_SetMaxSpellStartRecoveryOffset(offset->m_intValue);
+            Spell_C_SetMaxStartRecoveryOffset(offset->m_intValue);
             return true;
         }
 
-        Spell_C_SetMaxSpellStartRecoveryOffset(400);
+        Spell_C_SetMaxStartRecoveryOffset(400);
     }
 
     return true;

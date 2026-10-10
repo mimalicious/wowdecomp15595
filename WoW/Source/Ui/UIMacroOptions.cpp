@@ -586,9 +586,9 @@ int32_t EvaluateChanneling(const WOWGUID* unit, const TSGrowableArray<MacroSubst
     }
 
     uint32_t now = OsGetAsyncTimeMs();
-    SpellRec spell;
+    SpellRec* spell;
 
-    if (!g_spellDB.GetRecord(player->m_channelSpellId, &spell) || static_cast<int32_t>(now - player->m_channelEndTime) >= 0) {
+    if (!(spell = g_spellDB.GetRecord(player->m_channelSpellId)) || static_cast<int32_t>(now - player->m_channelEndTime) >= 0) {
         return 0;
     }
 
@@ -608,7 +608,7 @@ int32_t EvaluateChanneling(const WOWGUID* unit, const TSGrowableArray<MacroSubst
         memcpy(text, arg.m_start, length);
         text[length] = '\0';
 
-        if (!SStrCmpUTF8I(text, spell.m_name, 0x7FFFFFFF)) {
+        if (!SStrCmpUTF8I(text, spell->m_name, 0x7FFFFFFF)) {
             return 1;
         }
     }

@@ -1,4 +1,5 @@
 #include "GlyphInfo.h"
+#include "WoW/Source/DB/Rec/SpellEffectRec.h"
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -88,19 +89,29 @@ static int32_t Script_GlyphMatchesSocket(lua_State* L) {
         return 1;
     }
 
-    SpellRec spell;
+    SpellRec* spell;
     PendingSpellCast* cast = Spell_C_GetTargetingSpellCast();
 
-    if (!cast || !g_spellDB.GetRecord(cast->m_data.m_spellId, &spell)) {
+    if (!cast || !(spell = g_spellDB.GetRecord(cast->m_data.m_spellId))) {
         return 0;
     }
 
-    for (uint32_t i = 0; i < 3; i++) {
-        if (spell.m_effect[i] != 74) {
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+    for (uint32_t i = 0; i < count; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect || effect->m_effect != 74) {
             continue;
         }
 
-        GlyphPropertiesRec* glyph = g_glyphPropertiesDB.GetRecord(spell.m_effectMiscValue[i]);
+        if (!effect->m_effectMiscValue) {
+            lua_pushnumber(L, 1.0);
+            return 1;
+        }
+
+        GlyphPropertiesRec* glyph = g_glyphPropertiesDB.GetRecord(effect->m_effectMiscValue);
         GlyphSlotRec* slot = g_glyphSlotDB.GetRecord(player->m_player->m_playerFieldGlyphSlots1[index]);
 
         if (!glyph || !slot) {
@@ -173,11 +184,11 @@ static int32_t Script_GetGlyphLink(lua_State* L) {
     CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 0, 0, 2), 0, 0);
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
-    if (index >= 6 || !player || !group) {
+    if (index >= 9 || !player || !group) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::GetGlyphHyperlinkString(player->m_player->m_playerFieldGlyphSlots1[index], group->GetGlyph(index)));
+    lua_pushstring(L, CGTooltip::GetGlyphHyperlinkString(group->GetGlyph(index)));
     return 1;
 }
 

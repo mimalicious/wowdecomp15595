@@ -13,15 +13,15 @@ class WorldMapOverlayRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapAreaID;
     /* 0008 */ int32_t m_areaID [4];
-    /* 0018 */ DBCString unk_0018;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ int32_t unk_0020;
-    /* 0024 */ int32_t unk_0024;
-    /* 0028 */ int32_t unk_0028;
-    /* 002C */ int32_t unk_002C;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
+    /* 0018 */ DBCString m_textureName;
+    /* 001C */ int32_t m_textureWidth;
+    /* 0020 */ int32_t m_textureHeight;
+    /* 0024 */ int32_t m_offsetX;
+    /* 0028 */ int32_t m_offsetY;
+    /* 002C */ int32_t m_hitRectTop;
+    /* 0030 */ int32_t m_hitRectLeft;
+    /* 0034 */ int32_t m_hitRectBottom;
+    /* 0038 */ int32_t m_hitRectRight;
 };
 
 #endif

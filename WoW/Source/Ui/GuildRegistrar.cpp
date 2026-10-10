@@ -78,7 +78,7 @@ void CGGuildRegistrar::BuyGuildCharter(const char* name) {
         return;
     }
 
-    if (player->m_player->m_playerGuildid) {
+    if (player->GetGuildGUID()) {
         CGGameUI::DisplayError(ERR_ALREADY_IN_GUILD);
         return;
     }

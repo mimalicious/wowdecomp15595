@@ -2,7 +2,6 @@
 #include <cstdio>
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/IOHandler.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/StackedMopaq.h"
-#include "WoW/Source/DB/Rec/KeyChainRec.h"
 
 static void StandIn(const char* name, uint32_t address) {
     char text[512];
@@ -47,5 +46,3 @@ bool PurgeCacheFile(Blizzard::Mopaq::HSFILERecord* file) {
     StandIn("PurgeCacheFile", 0x007530A0);
     return false;
 }
-
-DBCache<KeyChainRec, int32_t, HASHKEY_INT> g_keyChainDB(0, "", 0, 0, false, false, 0);

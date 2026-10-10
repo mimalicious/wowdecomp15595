@@ -1,4 +1,5 @@
 #include "CGWorldStateInfo.h"
+#include "WoW/Source/Game/GameClient/PhaseShift_C.h"
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/Os/TimeManager.h"
@@ -134,7 +135,7 @@ void CGWorldStateInfo::OnUITime(uint32_t time) {
     CGWorldStateInfo::m_UITimeOffset = time - static_cast<uint32_t>(::time(NULL));
 }
 
-// OFFSET: #0x005487D0
+// OFFSET: 0x009CD6A0
 void CGWorldStateInfo::ResetWorldStateUI() {
     CGWorldStateInfo::m_worldStateUI.m_count = 0;
 
@@ -149,7 +150,7 @@ void CGWorldStateInfo::ResetWorldStateUI() {
             continue;
         }
 
-        if (rec->m_phaseShift && !(rec->m_phaseShift & CGGameUI::m_phaseMask)) {
+        if (!PhaseShift_C_HasSharedPhase(rec)) {
             continue;
         }
 

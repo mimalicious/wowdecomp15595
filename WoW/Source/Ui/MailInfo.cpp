@@ -1127,7 +1127,7 @@ bool CGMailInfo::AddItemToOutgoingMail(uint32_t index, WOWGUID item, WOWGUID con
 
     CGMailInfo::SetSendItem(sendIndex, item, container, slot);
     CGGameUI::LockItem(item);
-    SndInterfacePlayItemSound(1, object);
+    SI3::PlayItemSound(1, object);
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (player) {

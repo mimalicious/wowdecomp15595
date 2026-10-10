@@ -293,7 +293,7 @@ void PlayerSignalSkillStatChanges() {
 
     for (uint32_t i = 0; i < 128; i++) {
         CGPlayerLocalData* data = static_cast<CGPlayerLocalData*>(player->m_player);
-        uint16_t skillId = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? data->m_playerSkillInfo[i].m_skillId : 0;
+        uint16_t skillId = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? data->m_playerSkillLineid0[i] : 0;
 
         if (!skillId) {
             continue;
@@ -306,7 +306,7 @@ void PlayerSignalSkillStatChanges() {
             continue;
         }
 
-        uint16_t rank = data->m_playerSkillInfo[i].m_rank;
+        uint16_t rank = data->m_playerSkillRank0[i];
 
         if (!(info->m_flags & 1) && !rank && (!(info->m_flags & 4) || static_cast<int32_t>(player->m_unit->m_unitFieldLevel) < info->m_minLevel)) {
             continue;

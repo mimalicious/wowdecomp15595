@@ -103,7 +103,7 @@ static int32_t TeleportCheat(const char* arguments, int32_t charm) {
     SStrTokenize(&arguments, token, sizeof(token), whitespace, NULL);
     position.z = token[0] ? SStrToFloat(token) : 0.0f;
 
-    if (!World::IsValidPosition(position.x, position.y, position.z, 0.0f)) {
+    if (!World::IsValidPosition(position, 0.0f)) {
         ConsoleWrite("Coordinates out of range\n", DEFAULT_COLOR);
         return 1;
     }

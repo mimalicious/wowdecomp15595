@@ -846,7 +846,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
             CGLookingForGroup::ShowProposal(proposal.unk_0010);
 
             if (declinedParty) {
-                SI3::PlayUISound(0x43BD);
+                SI3::PlayUISound(0x43BD, NULL, false);
                 CGGameUI::DisplayError(ERR_LFG_PROPOSAL_DECLINED_PARTY);
                 proposal.m_id = 0;
                 proposal.m_state = 0;
@@ -856,7 +856,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
                 memset(proposal.m_members, 0, sizeof(proposal.m_members));
                 FrameScript_SignalEvent(SCRIPT_EVENT_LFG_PROPOSAL_FAILED, NULL);
             } else if (declinedSelf) {
-                SI3::PlayUISound(0x43BD);
+                SI3::PlayUISound(0x43BD, NULL, false);
                 CGGameUI::DisplayError(ERR_LFG_PROPOSAL_DECLINED_SELF);
                 proposal.Clear();
                 FrameScript_SignalEvent(SCRIPT_EVENT_LFG_PROPOSAL_FAILED, NULL);
@@ -900,7 +900,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
 
             if (beginning) {
                 CGGameUI::DisplayError(ERR_LFG_ROLE_CHECK_INITIATED);
-                SI3::PlayUISound(0x43A6);
+                SI3::PlayUISound(0x43A6, NULL, false);
 
                 for (int32_t i = 0; i < memberCount; i++) {
                     LFGRoleCheckMember& member = CGLookingForGroup::m_roleCheckMembers.m_data[i];
@@ -922,12 +922,12 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
             if (!CGLookingForGroup::m_roleCheckMembers.m_data[localIndex].m_confirmed && CGLookingForGroup::m_roleCheckState == 2) {
                 FrameScript_SignalEvent(SCRIPT_EVENT_LFG_ROLE_CHECK_SHOW, NULL);
             } else if (CGLookingForGroup::m_roleCheckState == 5) {
-                SI3::PlayUISound(0x43BD);
+                SI3::PlayUISound(0x43BD, NULL, false);
                 CGGameUI::DisplayError(ERR_LFG_ROLE_CHECK_ABORTED);
                 FrameScript_SignalEvent(SCRIPT_EVENT_LFG_ROLE_CHECK_HIDE, NULL);
             } else {
                 if (CGLookingForGroup::m_roleCheckState == 6) {
-                    SI3::PlayUISound(0x43BD);
+                    SI3::PlayUISound(0x43BD, NULL, false);
                 }
 
                 FrameScript_SignalEvent(SCRIPT_EVENT_LFG_ROLE_CHECK_HIDE, NULL);
@@ -1053,7 +1053,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
 
             if (info.unk_0001) {
                 if (!current.unk_0001) {
-                    SI3::PlayUISound(0x210E);
+                    SI3::PlayUISound(0x210E, NULL, false);
                     CGGameUI::DisplayError(CGLookingForGroup::HasRaidDungeon(&info) ? ERR_LFG_JOINED_LIST : ERR_LFG_JOINED_QUEUE);
                 } else if (!info.m_queued && current.m_queued) {
                     left = true;
@@ -1063,7 +1063,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
             }
 
             if (left && (updateType == 7 || updateType == 15)) {
-                SI3::PlayUISound(0x43BD);
+                SI3::PlayUISound(0x43BD, NULL, false);
                 CGGameUI::DisplayError(CGLookingForGroup::HasRaidDungeon(&current) ? ERR_LFG_LEFT_LIST : ERR_LFG_LEFT_QUEUE);
             }
 
@@ -1152,7 +1152,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
 
             if (info.unk_0001) {
                 if (!current.unk_0001 && dungeonCount) {
-                    SI3::PlayUISound(0x210E);
+                    SI3::PlayUISound(0x210E, NULL, false);
                     CGGameUI::DisplayError(CGLookingForGroup::HasRaidDungeon(&info) ? ERR_LFG_JOINED_LIST : ERR_LFG_JOINED_QUEUE);
                 } else if (!info.m_queued && current.m_queued) {
                     left = true;
@@ -1162,7 +1162,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
             }
 
             if (left && (updateType == 7 || updateType == 15)) {
-                SI3::PlayUISound(0x43BD);
+                SI3::PlayUISound(0x43BD, NULL, false);
                 CGGameUI::DisplayError(CGLookingForGroup::HasRaidDungeon(&current) ? ERR_LFG_LEFT_LIST : ERR_LFG_LEFT_QUEUE);
             }
 

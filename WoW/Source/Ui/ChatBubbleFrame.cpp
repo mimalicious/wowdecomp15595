@@ -150,7 +150,7 @@ bool CGChatBubbleFrame::Update(CGUnit_C* player, CGUnit_C* unit) {
         return false;
     }
 
-    CMapEntity* entity = unit->m_worldObject;
+    uintptr_t entity = unit->m_worldObject;
     CM2Model* model = unit->m_worldModel;
 
     if (!entity || !model) {

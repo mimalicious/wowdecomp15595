@@ -3608,10 +3608,10 @@ static int32_t Script_GetInstanceLockTimeRemainingEncounter(lua_State* L) {
     CGGameUI::GetInstanceLockInfo(&remaining, &completedMask, &extending);
 
     if (remaining) {
-        return PushDungeonEncounterInfo(L, CGGameUI::m_iCurrentMapID, CGGameUI::m_instanceDifficulty, static_cast<int32_t>(index - 1.0), completedMask);
+        return PushDungeonEncounterInfo(L, CGGameUI::m_iCurrentMapID, CGGameUI::m_instanceDifficulty, static_cast<int32_t>(index - 1.0), completedMask, 0);
     }
 
-    return PushDungeonEncounterInfo(L, 0, 0, 0, 0);
+    return PushDungeonEncounterInfo(L, 0, 0, 0, 0, 0);
 }
 
 // PROVEN: 10a9e962 IDENTICAL/IDENTICAL

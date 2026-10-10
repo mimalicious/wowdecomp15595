@@ -66,10 +66,10 @@ static int32_t Script_GetTrackingTexture(lua_State* L) {
     if (CGMinimapFrame::s_trackingInfo) {
         SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", CGMinimapFrame::s_trackingInfo->m_texture);
     } else {
-        SpellRec spell;
+        SpellRec* spell;
 
-        if (g_spellDB.GetRecord(CGMinimapFrame::s_trackingSpell, &spell)) {
-            SpellIconRec* icon = g_spellIconDB.GetRecord(spell.m_activeIconID ? spell.m_activeIconID : spell.m_spellIconID);
+        if ((spell = g_spellDB.GetRecord(CGMinimapFrame::s_trackingSpell))) {
+            SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID);
 
             if (icon) {
                 lua_pushstring(L, icon->m_textureFilename);
@@ -150,15 +150,15 @@ static int32_t Script_GetTrackingInfo(lua_State* L) {
         return 4;
     }
 
-    SpellRec spell;
+    SpellRec* spell;
 
-    if (!g_spellDB.GetRecord(s_trackingSpells.m_data[index], &spell)) {
+    if (!(spell = g_spellDB.GetRecord(s_trackingSpells.m_data[index]))) {
         return 0;
     }
 
-    bool active = CGMinimapFrame::s_trackingSpell == spell.m_id;
-    lua_pushstring(L, spell.m_name);
-    SpellIconRec* icon = g_spellIconDB.GetRecord(active && spell.m_activeIconID ? spell.m_activeIconID : spell.m_spellIconID);
+    bool active = CGMinimapFrame::s_trackingSpell == spell->m_id;
+    lua_pushstring(L, spell->m_name);
+    SpellIconRec* icon = g_spellIconDB.GetRecord(active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID);
 
     if (icon) {
         lua_pushstring(L, icon->m_textureFilename);
@@ -306,10 +306,10 @@ static int32_t Script_SetTracking(lua_State* L) {
         int32_t spellId = CGMinimapFrame::s_trackingSpell;
 
         if (spellId) {
-            SpellRec spell;
+            SpellRec* spell;
 
-            if (g_spellDB.GetRecord(spellId, &spell)) {
-                Spell_C_CancelAura(&spell, ClntObjMgrGetActivePlayerObj(), -1);
+            if ((spell = g_spellDB.GetRecord(spellId))) {
+                Spell_C_CancelAura(spell, ClntObjMgrGetActivePlayerObj(), -1);
                 CGMinimapFrame::s_trackingSpell = 0;
                 Script_SendUniqueSignal(SCRIPT_EVENT_MINIMAP_UPDATE_TRACKING);
             }
@@ -335,10 +335,10 @@ static int32_t Script_SetTracking(lua_State* L) {
     int32_t spellId = CGMinimapFrame::s_trackingSpell;
 
     if (spellId) {
-        SpellRec spell;
+        SpellRec* spell;
 
-        if (g_spellDB.GetRecord(spellId, &spell)) {
-            Spell_C_CancelAura(&spell, ClntObjMgrGetActivePlayerObj(), -1);
+        if ((spell = g_spellDB.GetRecord(spellId))) {
+            Spell_C_CancelAura(spell, ClntObjMgrGetActivePlayerObj(), -1);
         }
     }
 

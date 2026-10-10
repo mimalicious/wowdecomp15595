@@ -1,4 +1,5 @@
 #include "PaperDollInfoFrame.h"
+#include "Engine/Source/SoundEngine/SE3.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
@@ -72,7 +73,6 @@ int32_t PlayerEquipmentChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
-        player->UpdateAmmoModel(player->GetEquippedAmmoDisplayId(), 24);
         CGActionBar::UpdateUsable();
         FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_INVENTORY_CHANGED, "%s", "player");
     }
@@ -86,9 +86,8 @@ int32_t PlayerCharacterPointsUpdateHandler(WOWGUID guid, uint32_t fieldOffset, u
 
     if (player) {
         const int32_t* oldPoints = static_cast<const int32_t*>(oldValue);
-        int32_t points2 = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerCharacterPoints[1] : 0;
-        int32_t points1 = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerCharacterPoints[0] : 0;
-        FrameScript_SignalEvent(SCRIPT_EVENT_CHARACTER_POINTS_CHANGED, "%d%d", points1 - oldPoints[0], points2 - oldPoints[1]);
+        int32_t points = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerCharacterPoints : 0;
+        FrameScript_SignalEvent(SCRIPT_EVENT_CHARACTER_POINTS_CHANGED, "%d", points - oldPoints[0]);
     }
 
     return 1;
@@ -192,10 +191,6 @@ int32_t GetUnitAndSlotFromLua(lua_State* L, const char*& unit, int32_t& slot) {
 
 // OFFSET: #0x005E8300
 int32_t CGCharacterInfo::GetActivePlayerAmmoID(const CGPlayer_C* player) {
-    if (player->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        return player->m_player->m_playerAmmoId;
-    }
-
     return 0;
 }
 
@@ -436,7 +431,8 @@ void CGCharacterInfo::PickupInventoryItem(int32_t slot) {
             return;
         }
 
-        SI3::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
+        SE3SoundKitProperties properties;
+        SE3::PlaySoundKit("ITEM_REPAIR", NULL, &properties, NULL, __FILE__, __LINE__, "CGCharacterInfo::PickupInventoryItem");
         CDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
         msg.Put(CGMerchantInfo::m_merchant.m_guid);
@@ -476,7 +472,8 @@ void CGCharacterInfo::UseItem(int32_t slot, WOWGUID* target) {
         uint32_t cost = CGMerchantInfo::GetRepairCost(item);
 
         if (cost <= player->GetCoinage()) {
-            SI3::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
+            SE3SoundKitProperties properties;
+            SE3::PlaySoundKit("ITEM_REPAIR", NULL, &properties, NULL, __FILE__, __LINE__, "CGCharacterInfo::UseItem");
             WDataStore msg;
             msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
             msg.Put(CGMerchantInfo::m_merchant.m_guid);
@@ -756,17 +753,7 @@ int32_t CGCharacterInfo::PutItemInBackpack(uint32_t slot) {
 // OFFSET: #0x005E8FE0
 int32_t CGCharacterInfo::CalculateInventoryAlertStatus(CGPlayer_C* player, uint32_t slot) {
     if (s_inventoryAlertSlots[slot] == -1) {
-        if (player->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
-            return 0;
-        }
-
-        uint32_t ammo = player->m_player->m_playerAmmoId;
-
-        if (!ammo) {
-            return 0;
-        }
-
-        return static_cast<uint32_t>(player->m_bag.GetItemTypeCount(ammo, 0)) <= 20;
+        return 0;
     }
 
     CGItem_C* item = player->m_bag.GetItemPointer(s_inventoryAlertSlots[slot]);

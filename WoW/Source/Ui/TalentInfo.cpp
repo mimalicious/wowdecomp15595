@@ -372,15 +372,7 @@ static void BuildTabInfo(CGPlayer_C* player, TSFixedArray<TalentTabInfo*>* tabs,
         TalentTabRec* tab = g_talentTabDB.GetRecordByIndex(i);
 
         if (player) {
-            if (tab->m_raceMask) {
-                if (!(tab->m_raceMask & (1 << (player->m_unit->m_unitFieldBytes0[0] - 1)))) {
-                    continue;
-                }
-
-                if (tab->m_classMask && !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
-                    continue;
-                }
-            } else if (!tab->m_classMask || !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
+            if (!tab->m_classMask || !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
                 continue;
             }
         } else if (!tab->m_petTalentMask || petTalentType < 0 || !(tab->m_petTalentMask & (1 << petTalentType))) {
@@ -406,15 +398,7 @@ static void BuildTabInfo(CGPlayer_C* player, TSFixedArray<TalentTabInfo*>* tabs,
         TalentTabRec* tab = g_talentTabDB.GetRecordByIndex(i);
 
         if (player) {
-            if (tab->m_raceMask) {
-                if (!(tab->m_raceMask & (1 << (player->m_unit->m_unitFieldBytes0[0] - 1)))) {
-                    continue;
-                }
-
-                if (tab->m_classMask && !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
-                    continue;
-                }
-            } else if (!tab->m_classMask || !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
+            if (!tab->m_classMask || !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
                 continue;
             }
         } else if (!tab->m_petTalentMask || petTalentType < 0 || !(tab->m_petTalentMask & (1 << petTalentType))) {
@@ -549,7 +533,7 @@ void CGTalentInfo::ResetGroupPreviewTalentPoints(uint32_t group, int32_t pet) {
 // OFFSET: #0x005C73B0
 TalentGroupItem_C* CGTalentGroup_C::GetTalentItem(int32_t talentId) const {
     HASHKEY_NONE key;
-    return this->m_items.Ptr(talentId, key);
+    return const_cast<CGTalentGroup_C*>(this)->m_items.Ptr(talentId, key);
 }
 
 // OFFSET: #0x005C73D0
@@ -627,7 +611,7 @@ int32_t CGTalentGroup_C::CanAddPreviewTalentPoints(uint32_t tabIndex, const Tale
         return 1;
     }
 
-    for (TalentGroupItem_C* other = this->m_items.m_fulllist.Head(); other; other = this->m_items.Next(other)) {
+    for (TalentGroupItem_C* other = const_cast<CGTalentGroup_C*>(this)->m_items.m_fulllist.Head(); other; other = const_cast<CGTalentGroup_C*>(this)->m_items.Next(other)) {
         if (other->m_previewRank < 0) {
             continue;
         }
@@ -790,9 +774,9 @@ void CGTalentGroup_C::AddTalentItem(int32_t talentId, int32_t rank) {
         return;
     }
 
-    SpellRec spell;
+    SpellRec* spell;
 
-    if (!g_spellDB.GetRecord(talent->m_spellRank[rank], &spell)) {
+    if (!(spell = g_spellDB.GetRecord(talent->m_spellRank[rank]))) {
         return;
     }
 

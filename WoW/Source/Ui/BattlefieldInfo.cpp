@@ -715,7 +715,7 @@ static void BattlegroundPlayerLeftNameCallback(int32_t id, const WOWGUID& guid, 
     CGGameUI::DisplayError(ERR_BG_PLAYER_LEFT_S, fullName);
 }
 
-// OFFSET: #0x0054A650
+// OFFSET: 0x0093E010/0x1406A99F0
 int32_t QSortBattlefields(const void* a, const void* b) {
     int32_t idA = *static_cast<const int32_t*>(a);
     int32_t idB = *static_cast<const int32_t*>(b);

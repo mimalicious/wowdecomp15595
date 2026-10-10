@@ -17,7 +17,7 @@ class DungeonEncounterRec {
     /* 0010 */ int32_t m_bit;
     /* 0014 */ DBCString m_name;
     /* 0018 */ int32_t unk_0018;
-    /* 001C */ int32_t unk_001C;
+    /* 001C */ int32_t m_spellIconID;
 };
 
 #endif

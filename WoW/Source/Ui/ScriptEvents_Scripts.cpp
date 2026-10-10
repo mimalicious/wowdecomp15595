@@ -1,4 +1,5 @@
 #include <cstdint>
+#include "WoW/Source/DB/Rec/SpellEffectRec.h"
 #include "Engine/Source/ConsoleBase/IConsole.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -601,22 +602,6 @@ static int32_t Script_UnitSex(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0060FC40
-static int32_t Script_GetHonorCurrency(lua_State* L) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-    lua_pushnumber(L, player ? player->m_player->m_playerFieldHonorCurrency : 0.0);
-    lua_pushnumber(L, 75000.0);
-    return 2;
-}
-
-// OFFSET: #0x0060FCC0
-static int32_t Script_GetArenaCurrency(lua_State* L) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-    lua_pushnumber(L, player ? player->m_player->m_playerFieldArenaCurrency : 0.0);
-    lua_pushnumber(L, 10000.0);
-    return 2;
-}
-
 // OFFSET: 0x0044E970/0x14005CC50
 static int32_t Script_FillLocalizedClassList(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -1112,7 +1097,7 @@ static int32_t Script_IsXPUserDisabled(lua_State* L) {
 static int32_t Script_IsInGuild(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (player && player->m_player->m_playerGuildid) {
+    if (player && player->GetGuildGUID()) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -1269,7 +1254,7 @@ static int32_t Script_IsStealthed(lua_State* L) {
 static int32_t Script_IsGuildLeader(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (player && player->m_player->m_playerGuildid && !player->m_player->m_playerGuildrank) {
+    if (player && player->GetGuildGUID() && !player->m_player->m_playerGuildrank) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -1894,14 +1879,8 @@ static int32_t Script_GetExpertise(lua_State* L) {
 static int32_t Script_GetPVPSessionStats(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (player) {
-        lua_pushnumber(L, player->m_player->m_playerFieldKills[0]);
-        lua_pushnumber(L, player->m_player->m_playerFieldTodayContribution);
-    } else {
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-    }
-
+    lua_pushnumber(L, player ? player->m_player->m_playerFieldKills[0] : 0.0);
+    lua_pushnumber(L, 0.0);
     return 2;
 }
 
@@ -1911,9 +1890,7 @@ static int32_t Script_GetPVPYesterdayStats(lua_State* L) {
 
     if (player) {
         lua_pushnumber(L, player->m_player->m_playerFieldKills[1]);
-        lua_pushnumber(L, player->m_player->m_playerFieldYesterdayContribution);
     } else {
-        lua_pushnumber(L, 0.0);
         lua_pushnumber(L, 0.0);
     }
 
@@ -2324,15 +2301,15 @@ static int32_t Script_UnitCastingInfo(lua_State* L) {
     }
 
     uint32_t now = OsGetAsyncTimeMs();
-    SpellRec spell;
+    SpellRec* spell;
 
-    if (!g_spellDB.GetRecord(unit->m_castingSpellId, &spell) || static_cast<int32_t>(now - unit->m_castEndTime) >= 0) {
+    if (!(spell = g_spellDB.GetRecord(unit->m_castingSpellId)) || static_cast<int32_t>(now - unit->m_castEndTime) >= 0) {
         return 0;
     }
 
-    const char* name = spell.m_name;
-    const char* rank = spell.m_nameSubtext;
-    const char* displayName = spell.m_attributesExC & 4 ? "" : spell.m_name;
+    const char* name = spell->m_name;
+    const char* rank = spell->m_nameSubtext;
+    const char* displayName = spell->m_attributesExC & 4 ? "" : spell->m_name;
     CGGameObject_C* gameObject = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(unit->m_castingObject, TYPEMASK_OBJECT, __FILE__, __LINE__));
 
     if (gameObject && (gameObject->m_obj->m_type & TYPEMASK_GAMEOBJECT)) {
@@ -2340,13 +2317,18 @@ static int32_t Script_UnitCastingInfo(lua_State* L) {
         LockRec* lock = gameObject->GetLockRec();
 
         if (lock) {
-            for (uint32_t i = 0; i < 3; i++) {
-                if (spell.m_effect[i] != 33) {
+            uint32_t count;
+            const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+            for (uint32_t i = 0; i < count; i++) {
+                const SpellEffectRec* effect = effects->m_data[i];
+
+                if (!effect || effect->m_effect != 33) {
                     continue;
                 }
 
                 for (uint32_t j = 0; j < 8; j++) {
-                    if (lock->m_type[j] == 2 && spell.m_effectMiscValue[i] == lock->m_index[j]) {
+                    if (lock->m_type[j] == 2 && effect->m_effectMiscValue == lock->m_index[j]) {
                         int32_t action = lock->m_action[j];
 
                         if (action >= 0) {
@@ -2369,13 +2351,13 @@ static int32_t Script_UnitCastingInfo(lua_State* L) {
     }
 
     const char* icon = "";
-    SpellIconRec* iconRec = g_spellIconDB.GetRecord(spell.m_spellIconID);
+    SpellIconRec* iconRec = g_spellIconDB.GetRecord(spell->m_spellIconID);
 
     if (iconRec) {
         icon = iconRec->m_textureFilename;
     }
 
-    bool isTradeSkill = (spell.m_attributes & 0x20) != 0;
+    bool isTradeSkill = (spell->m_attributes & 0x20) != 0;
     bool notInterruptible = unit->IsCastNotInterruptible();
     lua_pushstring(L, name);
     lua_pushstring(L, rank);
@@ -2687,31 +2669,6 @@ static int32_t Script_UnitIsUnit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00610FB0
-static int32_t Script_UnitCharacterPoints(lua_State* L) {
-    if (!lua_isstring(L, 1)) {
-        luaL_error(L, "Usage: UnitCharacterPoints(\"unit\")");
-        return 0;
-    }
-
-    CGUnit_C* unit = Script_GetUnitFromName(lua_tolstring(L, 1, NULL));
-
-    if (!unit || !(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
-        for (int32_t i = 2; i; i--) {
-            lua_pushnumber(L, 0.0);
-        }
-
-        return 2;
-    }
-
-    for (uint32_t i = 0; i < 2; i++) {
-        int32_t points = unit->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? static_cast<CGPlayer_C*>(unit)->m_player->m_playerCharacterPoints[i] : 0;
-        lua_pushnumber(L, points);
-    }
-
-    return 2;
-}
-
 // OFFSET: 0x004567F0/0x140065F80
 static int32_t Script_UnitChannelInfo(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -2726,30 +2683,30 @@ static int32_t Script_UnitChannelInfo(lua_State* L) {
     }
 
     uint32_t now = OsGetAsyncTimeMs();
-    SpellRec spell;
+    SpellRec* spell;
 
-    if (!g_spellDB.GetRecord(unit->m_channelSpellId, &spell) || static_cast<int32_t>(now - unit->m_channelEndTime) >= 0) {
+    if (!(spell = g_spellDB.GetRecord(unit->m_channelSpellId)) || static_cast<int32_t>(now - unit->m_channelEndTime) >= 0) {
         return 0;
     }
 
-    const char* name = spell.m_name;
-    const char* rank = spell.m_nameSubtext;
+    const char* name = spell->m_name;
+    const char* rank = spell->m_nameSubtext;
     const char* displayName;
 
-    if (SStrCmpI(lua_tolstring(L, 1, NULL), "player", STORM_MAX_STR) || (spell.m_attributesEx & 0x20000000)) {
+    if (SStrCmpI(lua_tolstring(L, 1, NULL), "player", STORM_MAX_STR) || (spell->m_attributesEx & 0x20000000)) {
         displayName = name;
     } else {
         displayName = FrameScript_GetText("CHANNELING", -1, GENDER_NOT_APPLICABLE);
     }
 
     const char* icon = "";
-    SpellIconRec* iconRec = g_spellIconDB.GetRecord(spell.m_spellIconID);
+    SpellIconRec* iconRec = g_spellIconDB.GetRecord(spell->m_spellIconID);
 
     if (iconRec) {
         icon = iconRec->m_textureFilename;
     }
 
-    bool tradeSkill = (spell.m_attributes & 0x20) != 0;
+    bool tradeSkill = (spell->m_attributes & 0x20) != 0;
     bool notInterruptible = unit->IsCastNotInterruptible();
     lua_pushstring(L, name);
     lua_pushstring(L, rank);
@@ -3235,8 +3192,8 @@ static int32_t Script_UnitAttackPower(lua_State* L) {
 
     float multiplier = unit->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f;
     lua_pushnumber(L, multiplier * unit->m_unit->m_unitFieldAttackPower);
-    lua_pushnumber(L, (unit->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldAttackPowerMods[0]);
-    lua_pushnumber(L, (unit->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldAttackPowerMods[1]);
+    lua_pushnumber(L, (unit->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldAttackPowerModPos);
+    lua_pushnumber(L, (unit->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldAttackPowerModNeg);
     return 3;
 }
 
@@ -3258,8 +3215,8 @@ static int32_t Script_UnitRangedAttackPower(lua_State* L) {
 
     float multiplier = unit->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f;
     lua_pushnumber(L, multiplier * unit->m_unit->m_unitFieldRangedAttackPower);
-    lua_pushnumber(L, (unit->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldRangedAttackPowerMods[0]);
-    lua_pushnumber(L, (unit->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldRangedAttackPowerMods[1]);
+    lua_pushnumber(L, (unit->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldRangedAttackPowerModPos);
+    lua_pushnumber(L, (unit->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * unit->m_unit->m_unitFieldRangedAttackPowerModNeg);
     return 3;
 }
 
@@ -3294,7 +3251,7 @@ static int32_t Script_GetUnitHealthRegenRateFromSpirit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006085D0
+// OFFSET: 0x0044C140
 static int32_t PushItemStatsTable(lua_State* L, const CGItemStatsSummary* summary) {
     float dps = summary->m_dps;
 
@@ -3304,14 +3261,14 @@ static int32_t PushItemStatsTable(lua_State* L, const CGItemStatsSummary* summar
         lua_settable(L, -3);
     }
 
-    for (uint32_t i = 0; i < 73; i++) {
+    for (uint32_t i = 0; i < 89; i++) {
         if (i == 49 || i == 50) {
             continue;
         }
 
         int32_t value = summary->m_stats[i];
         char buffer[1024];
-        const char* name = CGItem_C::GetStatName(i, buffer, sizeof(buffer));
+        const char* name = CGItemStatsSummary::GetStatIntGlobalString(i, buffer, sizeof(buffer));
 
         if (value) {
             lua_pushstring(L, name);
@@ -3332,9 +3289,9 @@ static int32_t Script_GetItemStats(lua_State* L) {
 
     const char* link = lua_tolstring(L, 1, NULL);
     CGItemStatsSummary summary;
-    summary.Create();
+    summary.Clear();
 
-    if (!summary.Fill(link)) {
+    if (!summary.Create(link)) {
         return 0;
     }
 
@@ -3357,11 +3314,11 @@ static int32_t Script_GetItemStatDelta(lua_State* L) {
     const char* link1 = lua_tolstring(L, 1, NULL);
     const char* link2 = lua_tolstring(L, 2, NULL);
     CGItemStatsSummary first;
-    first.Create();
+    first.Clear();
     CGItemStatsSummary second;
-    second.Create();
+    second.Clear();
 
-    if (!first.Fill(link1) || !second.Fill(link2)) {
+    if (!first.Create(link1) || !second.Create(link2)) {
         return 0;
     }
 
@@ -3410,9 +3367,9 @@ static int32_t Script_UnitIsInMyGuild(lua_State* L) {
     CGPlayer_C* target = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(match, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (target && player) {
-        uint32_t guild = target->m_player->m_playerGuildid;
+        uint64_t guild = target->GetGuildGUID().m_guid;
 
-        if (guild && guild == player->m_player->m_playerGuildid) {
+        if (guild && guild == player->GetGuildGUID().m_guid) {
             lua_pushnumber(L, 1.0);
             return 1;
         }
@@ -3685,17 +3642,17 @@ static int32_t Script_GetResSicknessDuration(lua_State* L) {
         }
     }
 
-    SpellRec spell;
+    SpellRec* spell;
     SpellDurationRec* duration;
 
-    if (g_spellDB.GetRecord(spellId, &spell) && (duration = g_spellDurationDB.GetRecord(spell.m_durationIndex)) != NULL) {
+    if ((spell = g_spellDB.GetRecord(spellId)) && (duration = g_spellDurationDB.GetRecord(spell->m_durationIndex)) != NULL) {
         int32_t value = duration->m_duration + level * duration->m_durationPerLevel;
 
         if (value >= duration->m_maxDuration) {
             value = duration->m_maxDuration;
         }
 
-        Spell_C_ModifySpellValue(&spell, value, 1);
+        Spell_C_ModifySpellValue(spell, value, 1);
 
         if (value >= 1000) {
             char buffer[256];
@@ -4338,8 +4295,6 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitSex", &Script_UnitSex },
     { "UnitLevel", &Script_UnitLevel },
     { "GetMoney", &Script_GetMoney },
-    { "GetHonorCurrency", &Script_GetHonorCurrency },
-    { "GetArenaCurrency", &Script_GetArenaCurrency },
     { "UnitRace", &Script_UnitRace },
     { "UnitClass", &Script_UnitClass },
     { "UnitClassBase", &Script_UnitClassBase },
@@ -4354,7 +4309,6 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitRangedAttackPower", &Script_UnitRangedAttackPower },
     { "UnitDefense", &Script_UnitDefense },
     { "UnitArmor", &Script_UnitArmor },
-    { "UnitCharacterPoints", &Script_UnitCharacterPoints },
     { "UnitBuff", &Script_UnitBuff },
     { "UnitDebuff", &Script_UnitDebuff },
     { "UnitAura", &Script_UnitAura },

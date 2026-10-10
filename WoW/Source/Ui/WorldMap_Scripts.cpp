@@ -1,4 +1,5 @@
 #include "WorldMap.h"
+#include "WoW/Source/Game/GameClient/PhaseShift_C.h"
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -164,7 +165,7 @@ static int32_t Script_GetMapContinents(lua_State* L) {
 
     for (uint32_t i = 0; i < count; i++) {
         MapRec* map = i < CGWorldMap::m_continents.Count() ? g_mapDB.GetRecord(CGWorldMap::m_continents.m_data[i].m_mapID) : NULL;
-        lua_pushstring(L, map ? map->m_mapName : NULL);
+        lua_pushstring(L, map ? static_cast<const char*>(map->m_mapName) : NULL);
     }
 
     return count;
@@ -709,6 +710,33 @@ static int32_t Script_GetMapZones(lua_State* L) {
     return count;
 }
 
+// OFFSET: 0x0091B4A0
+static WorldMapOverlayRec* GetMapOverlayTexture(uint32_t index, char* texture, uint32_t size) {
+    int32_t overlayID = index < CGWorldMap::m_numOverlays ? CGWorldMap::m_overlays.m_data[index] : 0;
+    WorldMapOverlayRec* overlay = g_worldMapOverlayDB.GetRecord(overlayID);
+
+    if (!overlay) {
+        return overlay;
+    }
+
+    const char* name = overlay->m_textureName;
+
+    if (!name || !*name) {
+        *texture = '\0';
+        return overlay;
+    }
+
+    const WorldMapAreaRec* area = PhaseShift_C_GetPhasedWorldMap(g_worldMapAreaDB.GetRecord(overlay->m_mapAreaID));
+
+    if (area) {
+        SStrPrintf(texture, size, "Interface\\WorldMap\\%s\\%s", static_cast<const char*>(area->m_areaName), name);
+    } else {
+        SStrPrintf(texture, size, "Interface\\WorldMap\\World\\%s", name);
+    }
+
+    return overlay;
+}
+
 // OFFSET: 0x0091C370/0x14067DA70
 static int32_t Script_GetMapOverlayInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -716,43 +744,25 @@ static int32_t Script_GetMapOverlayInfo(lua_State* L) {
         return 0;
     }
 
-    int64_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
-    int32_t overlayID = index < CGWorldMap::m_numOverlays ? CGWorldMap::m_overlays.m_data[index] : 0;
-    WorldMapOverlayRec* overlay = g_worldMapOverlayDB.GetRecord(overlayID);
-
-    if (!overlay) {
-        lua_pushnil(L);
-
-        for (int32_t i = 0; i < 6; i++) {
-            lua_pushnumber(L, 0.0);
-        }
-
-        return 7;
-    }
-
+    int64_t index = static_cast<int64_t>(lua_tonumber(L, 1));
     char texture[260];
-    const char* name = overlay->m_textureName;
+    WorldMapOverlayRec* overlay = GetMapOverlayTexture(static_cast<uint32_t>(index - 1), texture, sizeof(texture));
 
-    if (name && *name) {
-        WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(overlay->m_mapAreaID);
-
-        if (area) {
-            SStrPrintf(texture, sizeof(texture), "Interface\\WorldMap\\%s\\%s", area->m_areaName, name);
-        } else {
-            SStrPrintf(texture, sizeof(texture), "Interface\\WorldMap\\World\\%s", name);
-        }
+    if (overlay) {
+        lua_pushstring(L, texture);
+        lua_pushnumber(L, overlay->m_textureWidth);
+        lua_pushnumber(L, overlay->m_textureHeight);
+        lua_pushnumber(L, overlay->m_offsetX);
+        lua_pushnumber(L, overlay->m_offsetY);
     } else {
-        texture[0] = '\0';
+        lua_pushnil(L);
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
     }
 
-    lua_pushstring(L, texture);
-    lua_pushnumber(L, overlay->m_textureWidth);
-    lua_pushnumber(L, overlay->m_textureHeight);
-    lua_pushnumber(L, overlay->m_offsetX);
-    lua_pushnumber(L, overlay->m_offsetY);
-    lua_pushnumber(L, overlay->m_mapPointX);
-    lua_pushnumber(L, overlay->m_mapPointY);
-    return 7;
+    return 5;
 }
 
 // OFFSET: 0x0091F630/0x1406817F0

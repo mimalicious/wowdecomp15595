@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "WoW/Source/WorldClient/World.h"
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Frame/CSimpleFrame.h"
 #include "Engine/Source/Gx/CGxTex.h"
@@ -63,13 +64,6 @@ struct MINIMAPINDOOR {
     /* 001C */ C3Vector m_position;
     /* 0028 */ C44Matrix m_matrix;
     /* 0068 */ C44Matrix m_invMatrix;
-};
-
-struct MINIMAPQUADINFO {
-    /* 0000 */ int32_t m_groupId;
-    /* 0004 */ int32_t m_x;
-    /* 0008 */ int32_t m_y;
-    /* 000C */ CAaBox m_bounds;
 };
 
 struct OBJINFO {
@@ -229,7 +223,7 @@ void MinimapRegisterScriptFunctions();
 void MinimapUnregisterScriptFunctions();
 
 void MinimapInitialize(int32_t mapId);
-int32_t MinimapUpdate(CMapEntity* entity, int32_t mapId, const C3Vector* position, C2Vector* center, float* scale, MINIMAPTILE* tiles, MINIMAPINDOOR* indoor, int32_t force);
+int32_t MinimapUpdate(uintptr_t entity, int32_t mapId, const C3Vector* position, C2Vector* center, float* scale, MINIMAPTILE* tiles, MINIMAPINDOOR* indoor, int32_t force);
 TSGrowableArray<AreaPOIRec*>* MinimapGetPOI(int32_t* changed);
 float MinimapGetViewRadius();
 AreaPOIRec* MinimapGetGossipPoi();

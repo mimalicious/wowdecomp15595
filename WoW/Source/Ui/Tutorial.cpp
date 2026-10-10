@@ -1,4 +1,5 @@
 #include "Tutorial.h"
+#include "Engine/Source/SoundEngine/SE3.h"
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
@@ -7,6 +8,12 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include <cstring>
 #include "WoW/Source/Net/Types.h"
+
+// STATIC: 0x00D10978
+static const uint32_t s_forcedTutorials[] = { 56, 33, 3, 4, 10, 54, 65 };
+
+// STATIC: 0x00D10994
+static const uint32_t s_repeatableTutorials[] = { 56, 65 };
 
 // STATIC: #0x00BD19F0
 static int32_t s_tutorialsCompleted[60];
@@ -131,6 +138,15 @@ void CGTutorial::TriggerTutorial(uint32_t tutorial) {
         return;
     }
 
+    bool repeatable = false;
+
+    for (uint32_t i = 0; s_repeatableTutorials[i] != 65; i++) {
+        if (s_repeatableTutorials[i] == tutorial) {
+            repeatable = true;
+            break;
+        }
+    }
+
     uint32_t bit = 1 << (tutorial & 0x1F);
     uint32_t index = tutorial >> 5;
 
@@ -139,9 +155,22 @@ void CGTutorial::TriggerTutorial(uint32_t tutorial) {
     }
 
     if (CVar::Lookup("showTutorials")->m_intValue) {
-        SI3::PlaySoundKit("TutorialPopup", NULL, NULL, NULL);
-        FrameScript_SignalEvent(SCRIPT_EVENT_TUTORIAL_TRIGGER, "%d", tutorial + 1);
-        CGTutorial::m_tutorialShown.m_bits.m_data[index] |= bit;
+        SE3SoundKitProperties properties;
+        SE3::PlaySoundKit("TutorialPopup", NULL, &properties, NULL, __FILE__, __LINE__, "CGTutorial::TriggerTutorial");
+        bool forced = false;
+
+        for (uint32_t i = 0; s_forcedTutorials[i] != 65; i++) {
+            if (s_forcedTutorials[i] == tutorial) {
+                forced = true;
+                break;
+            }
+        }
+
+        FrameScript_SignalEvent(SCRIPT_EVENT_TUTORIAL_TRIGGER, "%d%b", tutorial + 1, forced);
+
+        if (!repeatable) {
+            CGTutorial::m_tutorialShown.m_bits.m_data[index] |= bit;
+        }
     } else {
         CGTutorial::m_tutorialShown.m_bits.m_data[index] |= bit;
         CGTutorial::FlagTutorial(tutorial);

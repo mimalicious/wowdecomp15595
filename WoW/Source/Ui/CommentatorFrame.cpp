@@ -163,10 +163,10 @@ void CGCommentator::SnapCameraToPlayer() {
     camera->CommentatorSetViewAndPosition(this->m_position, this->m_facing, this->m_pitch);
 }
 
-// OFFSET: #0x0056B830
+// OFFSET: 0x0092C070
 void CGCommentator::PostInit(CGPlayer_C* player) {
     if (player && player->IsCommentatorUberOrInArena()) {
-        World::ObjectSetShadow(player->m_worldObject, 2, 2);
+        World::ObjectSetShadow(player->m_worldObject, 0);
 
         if (CGWorldFrame::s_currentWorldFrame) {
             CGWorldFrame::GetActiveCamera()->SetView(6, 2, 0);
@@ -555,14 +555,14 @@ int32_t CGCommentator::OnStateChanged(void* param, NETMESSAGE msgId, uint32_t ti
     }
 
     if (enabled && player->IsCommentatorUberOrInArena()) {
-        World::ObjectSetShadow(player->m_worldObject, 2, 2);
+        World::ObjectSetShadow(player->m_worldObject, 0);
 
         if (CGWorldFrame::s_currentWorldFrame) {
             CGWorldFrame::GetActiveCamera()->SetView(6, 2, 0);
             CGCommentator::s_Commentator.SnapCameraToPlayer();
         }
     } else {
-        World::ObjectSetShadow(player->m_worldObject, 0, 2);
+        World::ObjectSetShadow(player->m_worldObject, 1);
 
         if (CGWorldFrame::s_currentWorldFrame) {
             CGWorldFrame::GetActiveCamera()->SetView(1, 2, 0);

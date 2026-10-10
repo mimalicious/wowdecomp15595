@@ -56,7 +56,7 @@ static int32_t Script_CanSignPetition(lua_State* L) {
         if (petition->m_staticType == 0 || petition->m_staticType == 1) {
             CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-            if ((!petition->m_staticType && player && player->m_player->m_playerGuildid) || static_cast<int32_t>(CGPetitionInfo::m_numPetitionNames) >= static_cast<int32_t>(petition->m_maxSignatures)) {
+            if ((!petition->m_staticType && player && player->GetGuildGUID()) || static_cast<int32_t>(CGPetitionInfo::m_numPetitionNames) >= static_cast<int32_t>(petition->m_maxSignatures)) {
                 canSign = 0;
             }
         }
@@ -193,7 +193,7 @@ static int32_t Script_OfferPetition(lua_State* L) {
         return 0;
     }
 
-    if (!petition->m_staticType && static_cast<CGPlayer_C*>(target)->m_player->m_playerGuildid) {
+    if (!petition->m_staticType && static_cast<CGPlayer_C*>(target)->GetGuildGUID()) {
         CGGameUI::DisplayError(ERR_ALREADY_IN_GUILD_S, target->GetUnitName(NULL, 1));
         return 0;
     }

@@ -704,7 +704,7 @@ void MathState::GetVariableValue(uint32_t op, MathStack* stack, const SpellRec* 
 
             case MATHOP_ATTACK_POWER_EFFECTIVE: {
                 CGUnitData* data = player->m_unit;
-                value = static_cast<float>(data->m_unitFieldAttackPower + data->m_unitFieldAttackPowerMods[0] + data->m_unitFieldAttackPowerMods[1]) * (data->m_unitFieldAttackPowerMultiplier + 1.0f);
+                value = static_cast<float>(data->m_unitFieldAttackPower + data->m_unitFieldAttackPowerModPos + data->m_unitFieldAttackPowerModNeg) * (data->m_unitFieldAttackPowerMultiplier + 1.0f);
                 value = 0.0f >= value ? 0.0f : value;
                 break;
             }
@@ -716,7 +716,7 @@ void MathState::GetVariableValue(uint32_t op, MathStack* stack, const SpellRec* 
 
             case MATHOP_RANGED_ATTACK_POWER_EFFECTIVE: {
                 CGUnitData* data = player->m_unit;
-                value = static_cast<float>(data->m_unitFieldRangedAttackPower + data->m_unitFieldRangedAttackPowerMods[0] + data->m_unitFieldRangedAttackPowerMods[1]) * (data->m_unitFieldRangedAttackPowerMultiplier + 1.0f);
+                value = static_cast<float>(data->m_unitFieldRangedAttackPower + data->m_unitFieldRangedAttackPowerModPos + data->m_unitFieldRangedAttackPowerModNeg) * (data->m_unitFieldRangedAttackPowerMultiplier + 1.0f);
                 value = 0.0f >= value ? 0.0f : value;
                 break;
             }
@@ -907,7 +907,7 @@ float MathState::Evaluate(const SpellRec* spell, int32_t spellLevel, int32_t sca
     MathStack stack;
     stack.m_top = 32;
     int32_t useLoaded = 0;
-    SpellRec loaded;
+    SpellRec* loaded;
     const float* constant = this->m_constants;
     const float* variable = this->m_variables;
     const int32_t* intArg = this->m_intArgs;
@@ -916,7 +916,7 @@ float MathState::Evaluate(const SpellRec* spell, int32_t spellLevel, int32_t sca
         uint8_t op = this->m_ops[i];
 
         if (op == MATHOP_SPELL) {
-            if (!g_spellDB.GetRecord(Spell_C_SpellGetSpellIDForDifficulty(*intArg++), &loaded)) {
+            if (!(loaded = g_spellDB.GetRecord(Spell_C_SpellGetSpellIDForDifficulty(*intArg++)))) {
                 this->m_status = 1;
                 return 0.0f;
             }
@@ -960,7 +960,7 @@ float MathState::Evaluate(const SpellRec* spell, int32_t spellLevel, int32_t sca
                 break;
 
             default:
-                this->GetVariableValue(op, &stack, useLoaded ? &loaded : spell, spellLevel, scale, parseUnit, parsePet, noModifiers);
+                this->GetVariableValue(op, &stack, useLoaded ? loaded : spell, spellLevel, scale, parseUnit, parsePet, noModifiers);
                 useLoaded = 0;
                 break;
         }

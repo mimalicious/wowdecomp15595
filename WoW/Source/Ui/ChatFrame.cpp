@@ -174,7 +174,7 @@ static const uint32_t s_chatEvents[CHAT_MSG_MAX] = {
     SCRIPT_EVENT_CHAT_MSG_BATTLEGROUND,
     SCRIPT_EVENT_CHAT_MSG_BATTLEGROUND_LEADER,
     SCRIPT_EVENT_CHAT_MSG_RESTRICTED,
-    SCRIPT_EVENT_UNNAMED_237,
+    236,
     SCRIPT_EVENT_CHAT_MSG_ACHIEVEMENT,
     SCRIPT_EVENT_CHAT_MSG_GUILD_ACHIEVEMENT,
     658,
@@ -4266,7 +4266,7 @@ void CGChat::UpdateGuildStatus() {
 
     ChatChannel* channel = CGChat::GetChannelByChatChannelID(s_recruitmentChannelID);
 
-    if (player->m_player->m_playerGuildid) {
+    if (player->GetGuildGUID()) {
         if (channel) {
             InternalLeaveChannel(s_recruitmentChannelName, false, true);
             FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
@@ -6096,9 +6096,9 @@ void ComplainChat(const char* name, const char* text, uint32_t lineID) {
 
 // OFFSET: #0x0050EBE0
 void CombatLog::GetSpellLogLinkInfo(const WOWGUID& source, const WOWGUID& dest, int32_t spellId) {
-    SpellRec spell;
+    SpellRec* spell;
 
-    if (!g_spellDB.GetRecord(spellId, &spell) || (spell.m_attributes & 0x180) || !*spell.m_name) {
+    if (!(spell = g_spellDB.GetRecord(spellId)) || (spell->m_attributes & 0x180) || !*spell->m_name) {
         return;
     }
 
@@ -6110,9 +6110,9 @@ void CombatLog::GetSpellLogLinkInfo(const WOWGUID& source, const WOWGUID& dest, 
 
     if (object->m_obj->m_type & TYPEMASK_ITEM) {
         ItemStats_C* stats = g_itemDBCache.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
-        CGChat::LogOpenLock(source, &spell, stats);
+        CGChat::LogOpenLock(source, spell, stats);
     } else if (object->m_obj->m_type & TYPEMASK_GAMEOBJECT) {
         GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
-        CGChat::LogOpenLock(source, &spell, stats);
+        CGChat::LogOpenLock(source, spell, stats);
     }
 }

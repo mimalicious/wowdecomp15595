@@ -495,7 +495,7 @@ bool CGCalendarEvent::AddEvent() {
     if (this->m_flags & 0x440) {
         CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
-        if (player && !player->m_player->m_playerGuildid) {
+        if (player && !player->GetGuildGUID()) {
             CGCalendar::CalendarError("ERR_GUILD_PLAYER_NOT_IN_GUILD", 0);
             return false;
         }

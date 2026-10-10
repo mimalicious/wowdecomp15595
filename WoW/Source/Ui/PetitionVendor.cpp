@@ -113,7 +113,7 @@ void CGPetitionVendorInfo::BuyPetition(uint32_t index, const char* name) {
         return;
     }
 
-    if (!CGPetitionVendorInfo::m_petitionItems[index].m_charterType && player->m_player->m_playerGuildid) {
+    if (!CGPetitionVendorInfo::m_petitionItems[index].m_charterType && player->GetGuildGUID()) {
         CGGameUI::DisplayError(ERR_ALREADY_IN_GUILD);
         return;
     }

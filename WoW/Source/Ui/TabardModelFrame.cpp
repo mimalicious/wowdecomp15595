@@ -86,12 +86,13 @@ void EmblemTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height,
     }
 }
 
-// OFFSET: #0x005993B0
+// PROVEN: d2491ccd IDENTICAL/NONE
+// OFFSET: 0x00A06240
 void CGTabardModelFrame::ApplyGuildColorFromPlayer() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (player && player->m_characterComponent) {
-        player->m_characterComponent->ApplyGuildColor(this->m_variations[0], this->m_variations[1], this->m_variations[2], this->m_variations[3], this->m_variations[4]);
+    if (player) {
+        player->ApplyGuildTabard(this->m_variations[0], this->m_variations[1], this->m_variations[2], this->m_variations[3], this->m_variations[4]);
     }
 }
 
@@ -137,7 +138,7 @@ void CGTabardModelFrame::OnModelLoaded(CM2Model* model) {
 void CGTabardModelFrame::InitializeTabardColors(CGPlayer_C* player) {
     CRndSeed seed;
     WOWGUID none = WOWGUID();
-    GuildStats_C* stats = g_guildInfoCache.GetRecord(player->m_player->m_playerGuildid, none, NULL, NULL, false);
+    GuildStats_C* stats = g_guildInfoCache.GetRecord(player->GetGuildGUID().m_guid, none, NULL, NULL, false);
 
     if (!stats || stats->m_emblemStyle == -1 || stats->m_emblemColor == -1 || stats->m_borderStyle == -1 || stats->m_borderColor == -1 || stats->m_background == -1) {
         seed.SetSeed(0);
@@ -156,7 +157,7 @@ void CGTabardModelFrame::InitializeTabardColors(CGPlayer_C* player) {
 
     CGPlayer_C* activePlayer = ClntObjMgrGetActivePlayerObj();
 
-    if (activePlayer && activePlayer->m_characterComponent) {
-        activePlayer->m_characterComponent->ApplyGuildColor(this->m_variations[0], this->m_variations[1], this->m_variations[2], this->m_variations[3], this->m_variations[4]);
+    if (activePlayer) {
+        activePlayer->ApplyGuildTabard(this->m_variations[0], this->m_variations[1], this->m_variations[2], this->m_variations[3], this->m_variations[4]);
     }
 }

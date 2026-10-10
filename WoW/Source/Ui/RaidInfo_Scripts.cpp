@@ -536,10 +536,10 @@ static int32_t Script_GetSavedInstanceEncounterInfo(lua_State* L) {
 
     if (index < s_savedInstances.Count() && g_mapDB.GetRecord(s_savedInstances.m_data[index].m_mapID)) {
         RaidInstanceInfo* info = &s_savedInstances.m_data[index];
-        return PushDungeonEncounterInfo(L, info->m_mapID, info->m_difficulty, static_cast<int32_t>(encounter) - 1, info->m_completedMask);
+        return PushDungeonEncounterInfo(L, info->m_mapID, info->m_difficulty, static_cast<int32_t>(encounter) - 1, info->m_completedMask, 0);
     }
 
-    return PushDungeonEncounterInfo(L, 0, 0, 0, 0);
+    return PushDungeonEncounterInfo(L, 0, 0, 0, 0, 0);
 }
 
 // OFFSET: 0x0092ECE0/0x140696310

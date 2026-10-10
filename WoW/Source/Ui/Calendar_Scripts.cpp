@@ -1741,7 +1741,7 @@ static int32_t Script_CalendarContextEventComplain(lua_State* L) {
 static int32_t Script_CalendarEventAvailable(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
-    if (player && !CGCalendar::m_actionPending && CGCalendar::m_curEvent && (!(CGCalendar::m_curEvent->m_flags & 0x400) || CGCalendar::m_curEvent->m_guildID != player->m_player->m_playerGuildid)) {
+    if (player && !CGCalendar::m_actionPending && CGCalendar::m_curEvent && (!(CGCalendar::m_curEvent->m_flags & 0x400) || CGCalendar::m_curEvent->m_guildID != player->GetGuildGUID().m_guid)) {
         if (CGCalendar::m_curEvent->InviteRSVP(1)) {
             CGCalendar::SetActionPending(1);
         }
@@ -1761,7 +1761,7 @@ static int32_t Script_CalendarEventTentative(lua_State* L) {
 static int32_t Script_CalendarEventDecline(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
-    if (player && !CGCalendar::m_actionPending && CGCalendar::m_curEvent && (!(CGCalendar::m_curEvent->m_flags & 0x400) || CGCalendar::m_curEvent->m_guildID != player->m_player->m_playerGuildid)) {
+    if (player && !CGCalendar::m_actionPending && CGCalendar::m_curEvent && (!(CGCalendar::m_curEvent->m_flags & 0x400) || CGCalendar::m_curEvent->m_guildID != player->GetGuildGUID().m_guid)) {
         if (CGCalendar::m_curEvent->InviteRSVP(2)) {
             CGCalendar::SetActionPending(1);
         }

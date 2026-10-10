@@ -638,20 +638,20 @@ static int32_t SpellParserReplaceText(const SpellRec* spell, char* buffer, uint3
         count++;
     }
 
-    SpellRec loaded;
+    SpellRec* loaded;
 
     if (count) {
         char digits[8];
         SStrCopy(digits, *cursor, count + 1);
         *cursor += count;
 
-        if (!g_spellDB.GetRecord(Spell_C_SpellGetSpellIDForDifficulty(SStrToInt(digits)), &loaded)) {
+        if (!(loaded = g_spellDB.GetRecord(Spell_C_SpellGetSpellIDForDifficulty(SStrToInt(digits))))) {
             return 0;
         }
 
-        spell = &loaded;
+        spell = loaded;
 
-        if (loaded.m_attributesExB & 0x1000000) {
+        if (loaded->m_attributesExB & 0x1000000) {
             CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
             if (player) {
@@ -659,8 +659,8 @@ static int32_t SpellParserReplaceText(const SpellRec* spell, char* buffer, uint3
             }
         }
 
-        if (loaded.m_maxLevel > 0 && spellLevel >= loaded.m_maxLevel) {
-            spellLevel = loaded.m_maxLevel;
+        if (loaded->m_maxLevel > 0 && spellLevel >= loaded->m_maxLevel) {
+            spellLevel = loaded->m_maxLevel;
         }
     }
 

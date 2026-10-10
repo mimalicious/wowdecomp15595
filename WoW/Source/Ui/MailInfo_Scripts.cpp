@@ -1,4 +1,6 @@
 #include "MailInfo.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -93,7 +95,7 @@ static int32_t Script_SelectPackage(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     const PackageRec* rec;
 
-    if (index >= 0 && index < g_packageDB.m_numRecords && (rec = &g_packageDB.m_records[index])) {
+    if (index >= 0 && index < g_packageDB.m_numRecords && (rec = g_packageDB.GetRecordByIndex(index))) {
         CGMailInfo::m_selectedPackage = rec->m_id;
         return 0;
     }
@@ -1103,11 +1105,12 @@ static int32_t Script_GetInboxItem(lua_State* L) {
         return 5;
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(attachment->m_itemID, none, &InboxItemQueryCallback, NULL, false);
+    WOWGUID requester = WOWGUID::Make(0);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(attachment->m_itemID, requester, &InboxItemQueryCallback, NULL, false);
+    ItemRec* item;
     char texture[260];
 
-    if (!stats) {
+    if (!stats || !(item = stats->GetNonSparse())) {
         lua_pushstring(L, FrameScript_GetText("UNKNOWNOBJECT", -1, GENDER_NOT_APPLICABLE));
         const char* iconPath = ClientDBStringLookup(3);
         SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", "INV_Misc_QuestionMark");
@@ -1122,10 +1125,10 @@ static int32_t Script_GetInboxItem(lua_State* L) {
     CGItem_C::BuildItemName(name, sizeof(name), attachment->m_itemID, attachment->m_randomPropertiesID);
     lua_pushstring(L, name);
     const char* iconPath = ClientDBStringLookup(3);
-    SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", CGItem_C::GetInventoryArt(stats->m_displayId));
+    SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", CGItem_C::GetInventoryArt(item->m_displayInfoID));
     lua_pushstring(L, texture);
     lua_pushnumber(L, static_cast<int32_t>(attachment->m_count));
-    lua_pushnumber(L, stats->m_inventoryType ? static_cast<int32_t>(stats->m_quality) : -1);
+    lua_pushnumber(L, stats->m_inventoryType ? stats->m_quality : -1);
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     int32_t error;
 

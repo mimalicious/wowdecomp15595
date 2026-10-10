@@ -1,4 +1,5 @@
 #include "MinimapFrame.h"
+#include "Engine/Source/ShaderEffect/DefaultShaders.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Services/Texture.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
@@ -1316,7 +1317,7 @@ static int32_t MinimapUpdatePosition(int32_t mapId, const C3Vector* position, C2
 }
 
 // OFFSET: #0x007F3E00
-static void SetupMapObjMatrices(CMapEntity* entity) {
+static void SetupMapObjMatrices(uintptr_t entity) {
     World::QueryMapObjMatrix(entity, &s_mapObjMatrix, &s_mapObjInvMatrix);
     float a0 = s_mapObjMatrix.a0;
     float a1 = s_mapObjMatrix.a1;
@@ -1346,9 +1347,9 @@ static void SetupMapObjMatrices(CMapEntity* entity) {
 }
 
 // OFFSET: #0x007F3A70
-static void MinimapSetMapObjName(CMapEntity* entity) {
+static void MinimapSetMapObjName(uintptr_t entity) {
     const char* fileName = NULL;
-    World::QueryMapObjFileName(entity, &fileName);
+    World::QueryMapObjFileName(entity, fileName);
 
     if (fileName) {
         fileName += SStrLen("World\\");
@@ -1365,17 +1366,17 @@ static void MinimapSetMapObjName(CMapEntity* entity) {
 }
 
 // OFFSET: #0x007F3CE0
-static MINIMAPTILE* MinimapFindTile(MINIMAPTILE* tiles, const MINIMAPQUADINFO* quad, int32_t currentGroup, float height) {
+static MINIMAPTILE* MinimapFindTile(MINIMAPTILE* tiles, const World::MinimapQuad* quad, int32_t currentGroup, float height) {
     for (uint32_t i = 0; i < 256; i++) {
         MINIMAPTILE* tile = &tiles[i];
 
-        if (tile->m_groupId == quad->m_groupId && tile->m_x == quad->m_x && tile->m_y == quad->m_y) {
+        if (tile->m_groupId == quad->m_groupNum && tile->m_x == quad->m_x && tile->m_y == quad->m_y) {
             if (tile->m_groupId == currentGroup) {
                 tile->m_flags |= 2;
                 tile->m_depth = 3.402823466e38f;
             } else {
                 tile->m_flags |= 2;
-                tile->m_depth = (quad->m_bounds.t.z + quad->m_bounds.b.z) * 0.5f - height;
+                tile->m_depth = (quad->m_box.t.z + quad->m_box.b.z) * 0.5f - height;
             }
 
             return tile;
@@ -1386,7 +1387,7 @@ static MINIMAPTILE* MinimapFindTile(MINIMAPTILE* tiles, const MINIMAPQUADINFO* q
 }
 
 // OFFSET: #0x007F5070
-static void SetupQuad(MINIMAPTILE* tiles, const MINIMAPQUADINFO* quad, int32_t currentGroup, float height, const char* mapObjName) {
+static void SetupQuad(MINIMAPTILE* tiles, const World::MinimapQuad* quad, int32_t currentGroup, float height, const char* mapObjName) {
     uint32_t index = 0;
 
     while (tiles->m_flags & 2) {
@@ -1400,7 +1401,7 @@ static void SetupQuad(MINIMAPTILE* tiles, const MINIMAPQUADINFO* quad, int32_t c
 
     tiles->m_flags |= 2;
     char path[260];
-    SStrPrintf(path, sizeof(path), s_minimapQuadFormat, mapObjName, quad->m_groupId, quad->m_x, quad->m_y);
+    SStrPrintf(path, sizeof(path), s_minimapQuadFormat, mapObjName, quad->m_groupNum, quad->m_x, quad->m_y);
     MINIMAPMD5NAME* name = s_md5Names.Ptr(path);
 
     if (name) {
@@ -1426,8 +1427,8 @@ static void SetupQuad(MINIMAPTILE* tiles, const MINIMAPQUADINFO* quad, int32_t c
 
     tiles->m_x = quad->m_x;
     tiles->m_y = quad->m_y;
-    tiles->m_bounds = quad->m_bounds;
-    tiles->m_groupId = quad->m_groupId;
+    tiles->m_bounds = quad->m_box;
+    tiles->m_groupId = quad->m_groupNum;
 
     if (tiles->m_groupId == currentGroup) {
         tiles->m_depth = 3.402823466e38f;
@@ -1437,7 +1438,7 @@ static void SetupQuad(MINIMAPTILE* tiles, const MINIMAPQUADINFO* quad, int32_t c
 }
 
 // OFFSET: #0x007F5BA0
-int32_t MinimapUpdate(CMapEntity* entity, int32_t mapId, const C3Vector* position, C2Vector* center, float* scale, MINIMAPTILE* tiles, MINIMAPINDOOR* indoor, int32_t force) {
+int32_t MinimapUpdate(uintptr_t entity, int32_t mapId, const C3Vector* position, C2Vector* center, float* scale, MINIMAPTILE* tiles, MINIMAPINDOOR* indoor, int32_t force) {
     uint8_t reload = s_updateFlags & 1;
     bool changed = (s_updateFlags & 3) != 0;
     bool result = changed;
@@ -1462,12 +1463,12 @@ int32_t MinimapUpdate(CMapEntity* entity, int32_t mapId, const C3Vector* positio
         s_playerPosition = *position;
         s_mapId = mapId;
 
-        WMOAreaTableRec* groupRec = NULL;
-        WMOAreaTableRec* rootRec = NULL;
+        const WMOAreaTableRec* groupRec = NULL;
+        const WMOAreaTableRec* rootRec = NULL;
         int32_t outdoorArea = 0;
-        inside = World::QueryObjectInside(entity);
-        int32_t groupId;
-        World::QueryMapObjAreaTable(entity, &groupRec, &rootRec, &groupId);
+        inside = World::QueryObjectInside(entity, 0);
+        uint32_t groupId;
+        World::QueryMapObjAreaTable(entity, groupRec, rootRec, groupId, 0);
         uint8_t indoorArea = 0;
 
         if (rootRec) {
@@ -1481,13 +1482,13 @@ int32_t MinimapUpdate(CMapEntity* entity, int32_t mapId, const C3Vector* positio
         }
 
         s_mapObjIndoorArea = indoorArea;
-        int32_t wmoId;
-        int32_t wmoHash;
+        uint32_t wmoId;
+        uint32_t wmoHash;
 
         if (groupRec && (groupRec->m_flags & 0x20)) {
             inside = 0;
             s_mapObjIndoorArea = 0;
-        } else if ((outdoorArea || indoorArea || inside) && World::QueryMapObjIDs(entity, &wmoId, &wmoHash, &groupId)) {
+        } else if ((outdoorArea || indoorArea || inside) && World::QueryMapObjIDs(entity, wmoId, wmoHash, groupId)) {
             indoor->m_active = 1;
 
             if (wmoId != s_mapObjId || wmoHash != s_mapObjGroup) {
@@ -1533,7 +1534,7 @@ int32_t MinimapUpdate(CMapEntity* entity, int32_t mapId, const C3Vector* positio
             goto done;
         }
 
-        inside = World::QueryObjectInside(entity);
+        inside = World::QueryObjectInside(entity, 0);
     }
 
     if (indoor->m_active) {
@@ -1555,11 +1556,11 @@ int32_t MinimapUpdate(CMapEntity* entity, int32_t mapId, const C3Vector* positio
             s_indoorBounds.t.y = radius + minY;
             s_indoorBounds.t.z = s_indoorBounds.b.z + half;
 
-            MINIMAPQUADINFO* buffer = static_cast<MINIMAPQUADINFO*>(alloca(256 * sizeof(MINIMAPQUADINFO)));
-            TSStackArray<MINIMAPQUADINFO> quads(buffer, 0, 0);
+            World::MinimapQuad* buffer = static_cast<World::MinimapQuad*>(alloca(256 * sizeof(World::MinimapQuad)));
+            TSStackArray<World::MinimapQuad> quads(buffer, 0, 0);
             CAaBox box = s_indoorBounds;
             box.Expand(radius);
-            World::QueryMapObjMinimap(entity, &box, &quads, 256, inside != 0, s_mapObjIndoorArea);
+            World::QueryMapObjMinimap(entity, box, quads, 256, inside != 0, s_mapObjIndoorArea);
             C3Vector local = *position * s_mapObjInvMatrix;
 
             for (uint32_t i = 0; i < 256; i++) {
@@ -1567,16 +1568,16 @@ int32_t MinimapUpdate(CMapEntity* entity, int32_t mapId, const C3Vector* positio
             }
 
             if (quads.m_count) {
-                int32_t currentGroup = quads.m_data[0].m_groupId;
+                int32_t currentGroup = quads.m_data[0].m_groupNum;
 
                 for (uint32_t i = 0; i < quads.m_count; i++) {
                     if (MinimapFindTile(tiles, &quads.m_data[i], currentGroup, local.z)) {
-                        quads.m_data[i].m_groupId = -1;
+                        quads.m_data[i].m_groupNum = -1;
                     }
                 }
 
                 for (uint32_t i = 0; i < quads.m_count; i++) {
-                    if (quads.m_data[i].m_groupId != -1) {
+                    if (quads.m_data[i].m_groupNum != -1) {
                         SetupQuad(tiles, &quads.m_data[i], currentGroup, local.z, s_mapObjName);
                     }
                 }
@@ -1676,7 +1677,7 @@ void CGMinimapFrame::Render() {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
     CGObject_C* target = ClntObjMgrObjectPtr(camera->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
     C3Vector position = target ? target->GetPosition() : camera->m_position;
-    CMapEntity* worldObject;
+    uintptr_t worldObject;
 
     if (target) {
         worldObject = target->m_worldObject;
@@ -1758,9 +1759,10 @@ void CGMinimapFrame::Render() {
     GxRsSet(GxRs_BlendingMode, 2);
     GxUpdateAlphaRef(GxRs_AlphaRef);
 
-    DayNight::DNInfo* info = DayNight::GetInfo();
-    CImVector diffuse = info->m_light0.m_diffuse;
-    CImVector ambient = info->m_light0.m_ambient;
+    DefaultShaders::SetFogEnabled(0);
+    const DayNight::LightInfo* info = DayNight::GetMinimapLightInfo();
+    CImVector diffuse = info->m_directColor;
+    CImVector ambient = info->m_ambientColor;
     CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
     uint32_t luminance = static_cast<uint8_t>(ColorToLuminance(ambient)) + 96;
 
@@ -1924,12 +1926,12 @@ void CGMinimapFrame::Render() {
             s_objInfo[i].SetCount(0);
         }
 
-        int32_t wmoId = 0;
-        int32_t wmoHash = 0;
-        int32_t groupNum;
+        uint32_t wmoId = 0;
+        uint32_t wmoHash = 0;
+        uint32_t groupNum;
 
-        if (World::QueryObjectInside(worldObject)) {
-            World::QueryMapObjIDs(worldObject, &wmoId, &wmoHash, &groupNum);
+        if (World::QueryObjectInside(worldObject, 0)) {
+            World::QueryMapObjIDs(worldObject, wmoId, wmoHash, groupNum);
         }
 
         MINIMAPENUMPARAM param;
@@ -2262,12 +2264,12 @@ int32_t CGMinimapFrame::ObjectEnumProc(WOWGUID guid, void* param) {
         }
     }
 
-    int32_t wmoId = 0;
-    int32_t wmoHash = 0;
-    int32_t groupNum;
+    uint32_t wmoId = 0;
+    uint32_t wmoHash = 0;
+    uint32_t groupNum;
 
-    if (World::QueryObjectInside(object->m_worldObject)) {
-        World::QueryMapObjIDs(object->m_worldObject, &wmoId, &wmoHash, &groupNum);
+    if (World::QueryObjectInside(object->m_worldObject, 0)) {
+        World::QueryMapObjIDs(object->m_worldObject, wmoId, wmoHash, groupNum);
     }
 
     if (!data->m_wmoId || (wmoId == data->m_wmoId && wmoHash == data->m_wmoHash)) {

@@ -141,11 +141,13 @@ bool CGRuneInfo::HasRunesForSpell(int32_t spellId, int32_t* needed) {
         return false;
     }
 
-    SpellRec spell;
+    SpellRec* rec = g_spellDB.GetRecord(spellId);
 
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
+    if (!rec) {
         return false;
     }
+
+    SpellRec spell = *rec;
 
     int32_t school = spell.m_schoolMask;
     int32_t pct = player->GetSpellCostModifier(school) + 100;

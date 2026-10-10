@@ -108,12 +108,12 @@ void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32
     }
 }
 
-// OFFSET: #0x005538B0
-int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty, int32_t index, uint32_t completedMask) {
+// OFFSET: 0x00980C80/0x1406FB0E0
+int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty, int32_t index, uint32_t completedMask, uint32_t otherMask) {
     for (int32_t i = 0; i < g_dungeonEncounterDB.m_numRecords; i++) {
         DungeonEncounterRec* encounter = g_dungeonEncounterDB.GetRecordByIndex(i);
 
-        if (encounter->m_mapID != mapId || encounter->m_difficulty != difficulty) {
+        if (encounter->m_mapID != mapId || (encounter->m_difficulty != -1 && encounter->m_difficulty != difficulty)) {
             continue;
         }
 
@@ -132,13 +132,15 @@ int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty
         }
 
         lua_pushboolean(L, (completedMask & (1 << encounter->m_bit)) != 0);
-        return 3;
+        lua_pushboolean(L, (otherMask & (1 << encounter->m_bit)) != 0);
+        return 4;
     }
 
     lua_pushnil(L);
     lua_pushnil(L);
     lua_pushnil(L);
-    return 3;
+    lua_pushnil(L);
+    return 4;
 }
 
 // OFFSET: #0x00553B50
@@ -285,10 +287,10 @@ int32_t CGLookingForGroup::GetLFGProposalEncounter(lua_State* L) {
     LfgDungeonsRec* rec;
 
     if (CGLookingForGroup::m_proposal.m_id && (rec = g_lfgDungeonsDB.GetRecord(CGLookingForGroup::m_proposal.m_id & 0xFFFFFF))) {
-        return PushDungeonEncounterInfo(L, rec->m_mapID, rec->m_difficulty, static_cast<int32_t>(index - 1.0), CGLookingForGroup::m_proposal.m_completedMask);
+        return PushDungeonEncounterInfo(L, rec->m_mapID, rec->m_difficulty, static_cast<int32_t>(index - 1.0), CGLookingForGroup::m_proposal.m_completedMask, 0);
     }
 
-    return PushDungeonEncounterInfo(L, 0, 0, 0, 0);
+    return PushDungeonEncounterInfo(L, 0, 0, 0, 0, 0);
 }
 
 // OFFSET: #0x00554450

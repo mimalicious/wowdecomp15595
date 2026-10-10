@@ -145,7 +145,7 @@ const char* GetHolidayName(int32_t holidayId) {
     }
 
     HolidayNamesRec* name = g_holidayNamesDB.GetRecord(holiday->m_holidayNameID);
-    return name ? name->m_name : NULL;
+    return name ? static_cast<const char*>(name->m_name) : NULL;
 }
 
 // OFFSET: #0x005B7E50
@@ -1743,7 +1743,7 @@ const char* GetHolidayDescription(int32_t holidayId) {
     }
 
     HolidayDescriptionsRec* description = g_holidayDescriptionsDB.GetRecord(holiday->m_holidayDescriptionID);
-    return description ? description->m_description : NULL;
+    return description ? static_cast<const char*>(description->m_description) : NULL;
 }
 
 // OFFSET: #0x005B94F0
@@ -2045,7 +2045,7 @@ void CGCalendar::CreateGuildAnnouncement() {
         return;
     }
 
-    if (!player->m_player->m_playerGuildid) {
+    if (!player->GetGuildGUID()) {
         CGCalendar::CalendarError("ERR_GUILD_PLAYER_NOT_IN_GUILD", 0);
         return;
     }
@@ -2071,7 +2071,7 @@ void CGCalendar::CreateGuildEvent() {
         return;
     }
 
-    if (!player->m_player->m_playerGuildid) {
+    if (!player->GetGuildGUID()) {
         CGCalendar::CalendarError("ERR_GUILD_PLAYER_NOT_IN_GUILD", 0);
         return;
     }
@@ -2101,7 +2101,7 @@ void CGCalendar::GuildFilter(uint32_t minLevel, uint32_t maxLevel, uint32_t minR
         return;
     }
 
-    if (!player->m_player->m_playerGuildid) {
+    if (!player->GetGuildGUID()) {
         CGCalendar::CalendarError("ERR_GUILD_PLAYER_NOT_IN_GUILD", 0);
         return;
     }
@@ -2190,7 +2190,7 @@ void CGCalendar::InviteRSVP(uint32_t status) {
 
     bool sent;
 
-    if ((CGCalendar::m_curEvent->m_flags & 0x400) && CGCalendar::m_curEvent->m_guildID == player->m_player->m_playerGuildid) {
+    if ((CGCalendar::m_curEvent->m_flags & 0x400) && CGCalendar::m_curEvent->m_guildID == player->GetGuildGUID().m_guid) {
         if (status != 8) {
             return;
         }
@@ -3053,7 +3053,7 @@ void CGCalendar::GuildChanged() {
         return;
     }
 
-    if (player->m_player->m_playerGuildid) {
+    if (player->GetGuildGUID()) {
         CGCalendar::GetCalendar();
         return;
     }

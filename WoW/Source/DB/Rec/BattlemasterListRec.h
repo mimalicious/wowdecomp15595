@@ -17,7 +17,7 @@ class BattlemasterListRec {
     /* 002C */ DBCString m_name;
     /* 0030 */ int32_t m_maxGroupSize;
     /* 0034 */ int32_t m_holidayWorldState;
-    /* 0038 */ int32_t unk_0038;
+    /* 0038 */ int32_t m_minLevel;
     /* 003C */ int32_t unk_003C;
     /* 0040 */ int32_t unk_0040;
     /* 0044 */ int32_t unk_0044;

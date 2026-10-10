@@ -12,7 +12,7 @@ class TalentTabRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_name;
-    /* 0008 */ int32_t unk_0008;
+    /* 0008 */ int32_t m_spellIconID;
     /* 000C */ int32_t m_classMask;
     /* 0010 */ int32_t m_petTalentMask;
     /* 0014 */ int32_t m_orderIndex;

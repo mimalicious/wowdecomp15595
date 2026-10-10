@@ -429,7 +429,7 @@ static int32_t Script_GetGuildInfo(lua_State* L) {
 
     if (unit && (unit->m_obj->m_type & TYPEMASK_PLAYER)) {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(unit);
-        int32_t guildId = player->m_player->m_playerGuildid;
+        uint64_t guildId = player->GetGuildGUID().m_guid;
 
         if (guildId) {
             WOWGUID guid = unit->m_obj->m_guid;
