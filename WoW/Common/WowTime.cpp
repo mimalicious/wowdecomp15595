@@ -6,13 +6,13 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00ADC064
+// STATIC: 0x00D1C924
 static const char* s_weekDayNames[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
 // STATIC: #0x00CAC11C
 static int32_t s_localTimeOffset;
 
-// OFFSET: #0x0076C1B0
+// OFFSET: 0x00A304D0/0x1407B9178
 static void LocalTimeSafe(tm* out, const time_t* t) {
     tm* local = localtime(t);
 
@@ -44,7 +44,7 @@ WowTime::WowTime() {
     this->m_tzHours = 0;
 }
 
-// OFFSET: #0x0076C1F0
+// OFFSET: 0x00A30510/0x1407DA440
 int32_t WowTime::GetDaysSinceEpoch() const {
     if (this->m_year < 0 || this->m_month < 0 || this->m_monthDay < 0) {
         return 0;
@@ -59,7 +59,7 @@ int32_t WowTime::GetDaysSinceEpoch() const {
     return static_cast<int32_t>(mktime(&date)) / 86400;
 }
 
-// OFFSET: #0x0076C280
+// OFFSET: 0x00A305A0/0x1407DA500
 void WowTime::AddDays(int32_t days, bool keepTime) {
     if (this->m_year < 0 || this->m_month < 0 || this->m_monthDay < 0) {
         return;
@@ -112,7 +112,7 @@ void WowTime::SetHourAndMinutes(int32_t minutes) {
     this->m_hour = minutes / 60;
 }
 
-// OFFSET: #0x0076C3C0
+// OFFSET: 0x00A306E0/0x1407DA6E0
 bool WowTime::SetHourAndMinutes(uint32_t hour, uint32_t minute) {
     if (hour >= 24 || minute >= 60) {
         return false;
@@ -124,7 +124,7 @@ bool WowTime::SetHourAndMinutes(uint32_t hour, uint32_t minute) {
     return true;
 }
 
-// OFFSET: #0x0076C3F0
+// OFFSET: 0x00A30710/0x1407DA700
 void WowTime::AddMinutes(int32_t minutes) {
     int32_t total = this->GetHourAndMinutes() + minutes;
     int32_t days = total / 1440;
@@ -142,7 +142,7 @@ void WowTime::AddMinutes(int32_t minutes) {
     this->SetHourAndMinutes(total);
 }
 
-// OFFSET: #0x0076C480
+// OFFSET: 0x00A30830/0x1407DA7A0
 bool WowTime::SetDate(uint32_t month, uint32_t monthDay, uint32_t year) {
     if (month >= 12 || monthDay >= 32) {
         return false;
@@ -191,13 +191,18 @@ void WowTime::AddHolidayDuration(int32_t minutes) {
     }
 }
 
-// OFFSET: #0x0076C5E0
+// INLINED
 int32_t WowTime::CompareMonth(const WowTime& time) const {
     if (this->m_month > time.m_month) {
         return 1;
     }
 
     return this->m_month < time.m_month ? -1 : 0;
+}
+
+// OFFSET: 0x00A30A50/0x1407DA960
+bool WowTime::IsSameDay(const WowTime& time) const {
+    return this->m_year == time.m_year && this->m_month == time.m_month && this->m_monthDay == time.m_monthDay;
 }
 
 // PROVEN: 618d5b34 IDENTICAL/NONE
@@ -240,7 +245,7 @@ int32_t WowTime::CompareMinute(const WowTime& time) const {
     return this->m_minute < time.m_minute ? -1 : 0;
 }
 
-// OFFSET: #0x0076C6D0
+// OFFSET: 0x00A30A90
 bool WowTime::operator<(const WowTime& time) const {
     if (&time == this) {
         return false;
@@ -277,7 +282,7 @@ bool WowTime::operator<(const WowTime& time) const {
     return time.m_minute >= 0 && this->m_minute >= 0 && (result = this->CompareMinute(time)) != 0 && result < 0;
 }
 
-// OFFSET: #0x0076C7B0
+// OFFSET: 0x00A30B80
 bool WowTime::operator>(const WowTime& time) const {
     if (&time == this) {
         return false;
@@ -350,7 +355,7 @@ void WowTime::WowEncodeTime(uint32_t& value, int32_t minute, int32_t hour, int32
     value = minute & 0x3F | ((hour & 0x1F | ((weekDay & 7 | ((monthDay & 0x3F | ((month & 0xF | ((year & 0x1F | ((flags & 3) << 5)) << 4)) << 6)) << 3)) << 5)) << 6);
 }
 
-// OFFSET: #0x0076C970
+// OFFSET: 0x00A30D50/0x1407DABC0
 void WowTime::WowDecodeTime(uint32_t value, int32_t* minute, int32_t* hour, int32_t* weekDay, int32_t* monthDay, int32_t* month, int32_t* year, int32_t* flags) {
     if (minute) {
         int32_t field = value & 0x3F;
@@ -400,7 +405,7 @@ void WowTime::WowDecodeTime(uint32_t value, WowTime* time) {
     WowTime::WowDecodeTime(value, &time->m_minute, &time->m_hour, &time->m_weekDay, &time->m_monthDay, &time->m_month, &time->m_year, &time->m_flags);
 }
 
-// OFFSET: #0x0076CAE0
+// OFFSET: 0x00A30EC0/0x1407DAD30
 void WowTime::WowDecodeTimeToDbDate(uint32_t value, DBDATESTRUCT* date) {
     int32_t minute = -1;
     int32_t hour = -1;
@@ -481,6 +486,15 @@ void WowTime::ConvertToLocal(WowTime& time) const {
     time.m_weekDay = -1;
 }
 
+// OFFSET: 0x00A30F80/0x1407DAE40
+int32_t WowTime::Compare(const WowTime& time) const {
+    if (*this < time) {
+        return 1;
+    }
+
+    return -(*this > time);
+}
+
 // PROVEN: 764ffdc0 IDENTICAL/NONE
 // OFFSET: 0x00A30FC0/0x1407DAE70
 bool WowTime::operator<=(const WowTime& time) const {
@@ -493,7 +507,7 @@ bool WowTime::operator>=(const WowTime& time) const {
     return *this == time || *this > time;
 }
 
-// OFFSET: #0x0076CD40
+// OFFSET: 0x00A31040/0x1407DAED0
 char* WowTime::WowGetTimeString(WowTime* time, char* buffer, int32_t size) {
     uint32_t value;
     WowTime::WowEncodeTime(value, time);
@@ -551,7 +565,7 @@ char* WowTime::WowGetTimeString(WowTime* time, char* buffer, int32_t size) {
     return buffer;
 }
 
-// OFFSET: #0x0076CF10
+// OFFSET: 0x00A31210/0x1407DB0E0
 bool WowTime::InRange(const WowTime& start, const WowTime& end) const {
     if (start == end || start < end) {
         return (*this == start || *this > start) && *this < end;

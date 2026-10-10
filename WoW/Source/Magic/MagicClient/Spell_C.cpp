@@ -3969,7 +3969,7 @@ float Spell_C_GetPointsPerCombo(const CGUnit_C* unit, const SpellRec* spell, int
             classIndex = g_chrClassesDB.m_maxID - classIndex;
         }
 
-        float value = GetGameTableValue(12, unit->m_unit->m_unitFieldLevel - 1, classIndex - 1);
+        float value = GameFormulaEvaluateTable(12, unit->m_unit->m_unitFieldLevel - 1, classIndex - 1);
         points = static_cast<float>(static_cast<int32_t>(Spell_C_GetSpellScalingMultiplier(unit, scaling, false) * value * scaling->m_comboPointsCoefficient[effectIndex]));
     }
 
@@ -4214,7 +4214,7 @@ void Spell_C_GetMinMaxPoints(const SpellRec* spell, uint32_t effectIndex, float*
                 }
 
                 int32_t classIndex = SpellScalingGetClassIndex(scaling);
-                float table = GetGameTableValue(12, unit->m_unit->m_unitFieldLevel - 1, classIndex);
+                float table = GameFormulaEvaluateTable(12, unit->m_unit->m_unitFieldLevel - 1, classIndex);
                 multiplier = Spell_C_GetSpellScalingMultiplier(unit, scaling, false) * table;
             }
 
@@ -6667,8 +6667,8 @@ int32_t Spell_C_GetPowerCost(const SpellRec* spell, const CGUnit_C* unit) {
     }
 
     if (levels && !(unit->m_obj->m_type & TYPEMASK_PLAYER) && (spell->m_attributes & 0x80000) && !powerType && levels->m_spellLevel) {
-        float spellLevelValue = GetGameTableValue(6, levels->m_spellLevel - 1, 0);
-        float unitLevelValue = GetGameTableValue(6, unit->m_unit->m_unitFieldLevel - 1, 0);
+        float spellLevelValue = GameFormulaEvaluateTable(6, levels->m_spellLevel - 1, 0);
+        float unitLevelValue = GameFormulaEvaluateTable(6, unit->m_unit->m_unitFieldLevel - 1, 0);
 
         if (spellLevelValue > 0.0f && unitLevelValue > 0.0f) {
             cost = static_cast<int32_t>(unitLevelValue / spellLevelValue * static_cast<float>(cost));

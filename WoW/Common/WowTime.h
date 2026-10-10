@@ -40,6 +40,8 @@ class WowTime {
     int32_t CompareHour(const WowTime& time) const;
     int32_t CompareMinute(const WowTime& time) const;
     int32_t CompareMonth(const WowTime& time) const;
+    bool IsSameDay(const WowTime& time) const;
+    int32_t Compare(const WowTime& time) const;
     int32_t CompareMonthDay(const WowTime& time) const;
     int32_t CompareWeekDay(const WowTime& time) const;
     void ConvertToLocal(WowTime& time) const;

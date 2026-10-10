@@ -2,10 +2,10 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00D37F98
+// STATIC: 0x00DC0CB8
 CGameTime g_clientGameTime;
 
-// OFFSET: #0x0076CFF0
+// OFFSET: 0x00A313C0/0x1407DB280
 float CGameTime::GameTimeGetDayProgression() {
     uint32_t elapsed;
 
@@ -25,7 +25,7 @@ float CGameTime::GameTimeGetDayProgression() {
     return minutes * (1.0f / 1440.0f);
 }
 
-// OFFSET: #0x0076CFA0
+// OFFSET: 0x00A31360
 float CGameTime::GameTimeSetMinutesPerSecond(float minutesPerSecond) {
     float old = this->m_minutesPerSecond;
 
@@ -76,7 +76,7 @@ bool CGameTime::IsDaytime() {
     return time.InRange(start, end);
 }
 
-// OFFSET: #0x0076D650
+// OFFSET: 0x00A31440
 void CGameTime::UpdateTimeStamps(int32_t minutes) {
     HASHKEY_NONE key;
     TIMESTAMPSTRUCT* stamp = this->m_timeStamps.Ptr(minutes, key);
@@ -94,7 +94,7 @@ void CGameTime::UpdateTimeStamps(int32_t minutes) {
     }
 }
 
-// OFFSET: #0x0076D740
+// OFFSET: 0x00A31610
 void CGameTime::TickMinute() {
     int32_t minutes = (this->GetHourAndMinutes() + 1) % 1440;
     this->SetHourAndMinutes(minutes);
@@ -110,7 +110,7 @@ void CGameTime::TickMinute() {
     this->m_baseMinuteOfDay = minutes + this->m_fracMinutes;
 }
 
-// OFFSET: #0x0076D810
+// OFFSET: 0x00A31680
 void CGameTime::GameTimeSetTime(const WowTime& time, bool tick) {
     WowTime newTime = time;
 
@@ -146,7 +146,7 @@ void CGameTime::GameTimeSetTime(const WowTime& time, bool tick) {
     this->TickMinute();
 }
 
-// OFFSET: #0x0076D900
+// OFFSET: 0x00A31770/0x1407DB740
 void CGameTime::GameTimeUpdate(float elapsed) {
     this->m_fracMinutes = this->m_minutesPerSecond * elapsed + this->m_fracMinutes;
 
@@ -167,7 +167,7 @@ void CGameTime::GameTimeUpdate(float elapsed) {
     }
 }
 
-// OFFSET: #0x0076D9A0
+// OFFSET: 0x00A318F0/0x1407DB840
 void CGameTime::GameTimeSync(const WowTime& time, bool force) {
     WowTime newTime = time;
 
@@ -218,7 +218,7 @@ void CGameTime::GameTimeSync(const WowTime& time, bool force) {
     DebugLog(0x10, "GameTimeSync: delta=%d, differential=%d, HoursAndMinutes=%d", 0, this->m_elapsedMinutes, this->GetHourAndMinutes());
 }
 
-// OFFSET: #0x0076D1D0
+// OFFSET: 0x00A31C20/0x1407DBB30
 void __stdcall CGameTime::GameTimeUnregisterCallback(TIMESTAMPCALLBACK* callback) {
     callback->m_link.Unlink();
     delete callback;

@@ -407,7 +407,7 @@ int32_t Packet_Group_30(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
 int32_t Packet_SMSG_NOTIFY_DEST_LOC_SPELL_CAST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 void Spell_C_Initialize();
 void Spell_C_SendPendingCast(PendingSpellCast* cast, bool hideVisuals);
-float GetGameTableValue(int32_t table, int32_t index, int32_t a3);
+float GameFormulaEvaluateTable(int32_t table, int32_t index, int32_t a3);
 void UnitCombatLogCastStart(const WOWGUID& caster, const WOWGUID& target, int32_t spellId);
 void SpellTableInitialize();
 void SpellRegisterScriptFunctions();

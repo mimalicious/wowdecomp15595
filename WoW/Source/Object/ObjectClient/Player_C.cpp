@@ -7864,8 +7864,8 @@ int32_t CGItem::GetEnchantmentCharges(int32_t slot) {
 
 // OFFSET: #0x006DE410
 float CGPlayer_C::GetCombatRatingPct(int32_t rating) {
-    float base = GetGameTableValue(1, this->m_unit->m_unitFieldLevel - 1, rating);
-    float scalar = GetGameTableValue(11, rating + 1, this->m_unit->m_unitFieldBytes0[1] - 1);
+    float base = GameFormulaEvaluateTable(1, this->m_unit->m_unitFieldLevel - 1, rating);
+    float scalar = GameFormulaEvaluateTable(11, rating + 1, this->m_unit->m_unitFieldBytes0[1] - 1);
 
     if (base == 0.0f || scalar == 0.0f) {
         return 0.0f;

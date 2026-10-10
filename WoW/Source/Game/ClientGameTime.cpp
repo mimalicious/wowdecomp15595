@@ -8,16 +8,16 @@
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00D37F80
+// STATIC: 0x00DC0CA8
 static void (*s_timeCallbacks[4])(int32_t hour, int32_t minute);
 
-// OFFSET: #0x007E2730
+// OFFSET: 0x004D90C0/0x1401172E0
 static void UpdateTime() {
-    DayNight::DNInfo* info = DayNight::GetInfo();
-    info->m_timeOfDay = g_clientGameTime.GetHourAndMinutes();
-    info->m_dayProgression = g_clientGameTime.GameTimeGetDayProgression();
-    info->m_day = static_cast<float>(g_clientGameTime.GetDaysSinceEpoch());
-    DayNight::Update(1, NULL);
+    uint32_t time = g_clientGameTime.GetHourAndMinutes();
+    float dayProgression = g_clientGameTime.GameTimeGetDayProgression();
+    int32_t days = g_clientGameTime.GetDaysSinceEpoch();
+    DayNight::SetTime(time, static_cast<float>(days), dayProgression);
+    DayNight::ForceFullUpdate();
 
     for (uint32_t i = 0; i < sizeof(s_timeCallbacks) / sizeof(s_timeCallbacks[0]); i++) {
         if (s_timeCallbacks[i]) {
@@ -31,7 +31,7 @@ static void UpdateTime() {
     ConsoleWrite(text, DEFAULT_COLOR);
 }
 
-// OFFSET: #0x007E2840
+// OFFSET: 0x004D9180
 static int32_t Packet_SMSG_GAMESPEED_SET(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     float minutesPerSecond;
     msg->Get(minutesPerSecond);
@@ -47,7 +47,7 @@ static int32_t Packet_SMSG_GAMESPEED_SET(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// OFFSET: #0x007E28E0
+// OFFSET: 0x004D9220
 static int32_t Packet_SMSG_LOGIN_SETTIMESPEED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     float minutesPerSecond;
@@ -73,7 +73,7 @@ static int32_t Packet_SMSG_LOGIN_SETTIMESPEED(void* param, NETMESSAGE msgId, uin
     return 1;
 }
 
-// OFFSET: #0x007E29C0
+// OFFSET: 0x004D9300
 static int32_t Packet_SMSG_GAMETIME_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     uint32_t tzHours = 0;
@@ -92,7 +92,7 @@ static int32_t Packet_SMSG_GAMETIME_UPDATE(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// OFFSET: #0x007E2A50
+// OFFSET: 0x004D9390
 static int32_t Packet_SMSG_SERVERTIME(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     uint32_t lastTick;
@@ -117,7 +117,7 @@ static int32_t Packet_SMSG_SERVERTIME(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x007E2B40
+// OFFSET: 0x004D9480
 static int32_t Packet_SMSG_GAMETIME_SET(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     uint32_t tzHours;
@@ -137,7 +137,7 @@ static int32_t Packet_SMSG_GAMETIME_SET(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x007E2BD0
+// OFFSET: 0x004D9540/0x140117860
 void ClientInitializeGameTime() {
     ClientServices::SetMessageHandler(SMSG_GAME_SPEED_SET, Packet_SMSG_GAMESPEED_SET, NULL);
     ClientServices::SetMessageHandler(SMSG_LOGIN_SET_TIME_SPEED, Packet_SMSG_LOGIN_SETTIMESPEED, NULL);
@@ -150,13 +150,13 @@ void ClientInitializeGameTime() {
     }
 }
 
-// OFFSET: %0x004DF470
+// OFFSET: 0x004D9510/0x140117830
 int32_t ClientGameTimeTickHandler(const void* data, void* param) {
     g_clientGameTime.GameTimeUpdate(*static_cast<const float*>(data));
     return 1;
 }
 
-// OFFSET: #0x007E2810
+// OFFSET: 0x004D95D0
 void ClientDestroyGameTime() {
     ClientServices::ClearMessageHandler(SMSG_GAME_SPEED_SET);
     ClientServices::ClearMessageHandler(SMSG_LOGIN_SET_TIME_SPEED);

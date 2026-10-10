@@ -474,7 +474,7 @@ int32_t CGBarberShop::GetTotalCost() {
         return 0;
     }
 
-    float base = GetGameTableValue(0, player->m_unit->m_unitFieldLevel - 1, 0);
+    float base = GameFormulaEvaluateTable(0, player->m_unit->m_unitFieldLevel - 1, 0);
     int32_t baseCost = static_cast<int32_t>(base);
 
     if (!CGBarberShop::IsCurrentStyle(0)) {

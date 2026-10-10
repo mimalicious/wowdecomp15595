@@ -11,7 +11,7 @@
 #include "WoW/Source/Game/GameClient/PetNameCache.h"
 #include "WoW/Source/Game/ValidateName.h"
 
-// STATIC: #0x00D37DE4
+// STATIC: 0x00DC71B0
 static TSHashTable<DECLINEDWORD, HASHKEY_CONSTSTRI> s_declinedWords;
 
 // OFFSET: #0x007E01B0
@@ -19,12 +19,12 @@ void DeclinedWordsDestroy() {
     s_declinedWords.Clear();
 }
 
-// OFFSET: #0x007E08E0
+// OFFSET: 0x004E5E00
 void DeclinedWordsInitialize() {
     g_declinedWordDB.Load(&DeclinedWordRec::s_meta);
     g_declinedWordCasesDB.Load(&DeclinedWordCasesRec::s_meta);
     int32_t caseIndex = 0;
-    DeclinedWordCasesRec* cases = g_declinedWordCasesDB.m_numRecords <= 0 ? NULL : g_declinedWordCasesDB.m_records;
+    DeclinedWordCasesRec* cases = g_declinedWordCasesDB.m_numRecords <= 0 ? NULL : reinterpret_cast<DeclinedWordCasesRec*>(g_declinedWordCasesDB.m_records);
 
     for (int32_t i = 0; i < g_declinedWordDB.m_numRecords; i++) {
         DeclinedWordRec* word = g_declinedWordDB.GetRecordByIndex(i);
