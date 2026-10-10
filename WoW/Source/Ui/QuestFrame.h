@@ -50,6 +50,8 @@ class CGQuestInfo {
     static void ProcessQuestLogRewardFactions();
     static void InitRewRepFields(uint32_t index, int32_t faction, int32_t value, int32_t override);
     static void InitRewRepShowMask(uint32_t mask);
+    static void SetRewardFactionInfo(int32_t index, int32_t faction, int32_t rewardId, int32_t overrideValue);
+    static void ProcessFactionRewards();
     static int32_t m_numRewardFactions;
     static void SetState(WOWGUID npc, WOWGUID inform, int32_t state, const char* text, int32_t questId, int32_t startCheat);
     static void SetLogDescription(const char* text);

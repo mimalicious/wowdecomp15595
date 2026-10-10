@@ -157,7 +157,7 @@ static int32_t Script_DrawQuestBlob(lua_State* L) {
     int32_t questId = static_cast<int32_t>(lua_tointeger(L, 2));
 
     if (lua_toboolean(L, 3)) {
-        QuestPOIInfo* info = CGQuestLog::GetQuestPOIInfo(questId);
+        QuestPOIInfo* info = CGQuestLog::GetQuestPOIData(questId);
 
         if (info) {
             frame->AddQuest(info);

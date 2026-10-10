@@ -39,7 +39,7 @@ inline uint32_t JamBitReader::ReadBits() {
     return this->ReadBits<count>(JamBitCount<(count > 8)>());
 }
 
-// OFFSET: [0x00696C20/0x140342240<2>, 0x0066CCC0<4>, 0x00696CC0/0x140342300<6>]
+// OFFSET: [0x00696C20/0x140342240<2>, 0x0066CCC0<4>, 0x00696CC0/0x140342300<6>, 0x0066CEE0<8>]
 template <uint32_t count>
 uint32_t JamBitReader::ReadBits(JamBitCount<false>) {
     uint8_t bits = this->m_bits;
@@ -82,7 +82,7 @@ inline uint32_t JamBitReader::ReadBits<1>(JamBitCount<false>) {
     return this->ReadBit();
 }
 
-// OFFSET: [0x0066EC70<12>, 0x006C3010<23>, 0x00697700/0x1403BB7A0<24>, 0x00697860/0x140342E40<30>]
+// OFFSET: [0x0066EC70<12>, 0x006C2F70<21>, 0x006C3010<23>, 0x00697700/0x1403BB7A0<24>, 0x00697860/0x140342E40<30>]
 template <uint32_t count>
 uint32_t JamBitReader::ReadBits(JamBitCount<true>) {
     uint32_t result = 0;
@@ -160,8 +160,13 @@ inline void JamBitWriter::WriteBits<1>(uint32_t value, JamBitCount<false>) {
     this->WriteBit(value);
 }
 
+// INLINED
+template <>
+inline void JamBitWriter::WriteBits<0>(uint32_t value, JamBitCount<false>) {
+}
+
 // PROVEN: 2d1fbfa8 IDENTICAL/NONE
-// OFFSET: [0x0066AF20<12>, 0x006757D0<30>]
+// OFFSET: [0x0066AF20<12>, 0x0066EB50<24>, 0x006757D0<30>]
 template <uint32_t count>
 void JamBitWriter::WriteBits(uint32_t value, JamBitCount<true>) {
     for (int32_t i = 0; i < static_cast<int32_t>(count / 8 * 8); i += 8) {

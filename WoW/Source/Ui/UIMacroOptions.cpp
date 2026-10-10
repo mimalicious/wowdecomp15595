@@ -77,14 +77,14 @@ int32_t EvaluateFlyable(const WOWGUID* unit, const TSGrowableArray<MacroSubstrin
 // OFFSET: #0x005EEED0
 int32_t EvaluateGroup(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     if (!args->m_count) {
-        return CGPartyInfo::GetNumPartyMembers() || CGRaidInfo::m_numMembers;
+        return CGPartyInfo::NumMembers() || CGRaidInfo::m_numMembers;
     }
 
     for (uint32_t i = args->m_count; i; i--) {
         MacroSubstring& arg = args->m_data[i - 1];
 
         if (arg == "party") {
-            return CGPartyInfo::GetNumPartyMembers() != 0;
+            return CGPartyInfo::NumMembers() != 0;
         }
 
         if (arg == "raid") {

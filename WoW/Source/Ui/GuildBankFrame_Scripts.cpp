@@ -199,7 +199,7 @@ static int32_t Script_GetGuildBankItemLink(lua_State* L) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::CreateItemLink(info->m_itemID, stats->m_quality, info->unk_0010, reinterpret_cast<const int32_t*>(info->m_enchants), info->m_randomPropertyID, info->m_suffixFactor));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(info->m_itemID, stats->m_quality, info->unk_0010, reinterpret_cast<const int32_t*>(info->m_enchants), info->m_randomPropertyID, info->m_suffixFactor, 0));
     return 1;
 }
 
@@ -729,7 +729,7 @@ static int32_t Script_GetGuildBankTransaction(lua_State* L) {
     }
 
     if (stats) {
-        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(entry->m_itemID, stats->m_quality, 0, 0, 0));
+        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(entry->m_itemID, stats->m_quality, 0, 0, 0, 0));
     } else {
         lua_pushstring(L, "");
     }

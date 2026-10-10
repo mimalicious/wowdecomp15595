@@ -2114,7 +2114,7 @@ void CGMinimapFrame::SetPingPosition(const WOWGUID& guid, const C2Vector& positi
     if (guid != player->m_obj->m_guid) {
         bool found = false;
 
-        for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
             if (guid == CGGameUI::GetPartyMember(i)) {
                 SStrPrintf(unit, sizeof(unit), "party%d", i + 1);
                 found = true;

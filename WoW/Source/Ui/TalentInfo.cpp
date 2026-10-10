@@ -379,7 +379,7 @@ static void BuildTabInfo(CGPlayer_C* player, TSFixedArray<TalentTabInfo*>* tabs,
             } else if (!tab->m_classMask || !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
                 continue;
             }
-        } else if (!tab->m_categoryEnumID || petTalentType < 0 || !(tab->m_categoryEnumID & (1 << petTalentType))) {
+        } else if (!tab->m_petTalentMask || petTalentType < 0 || !(tab->m_petTalentMask & (1 << petTalentType))) {
             continue;
         }
 
@@ -413,7 +413,7 @@ static void BuildTabInfo(CGPlayer_C* player, TSFixedArray<TalentTabInfo*>* tabs,
             } else if (!tab->m_classMask || !(tab->m_classMask & (1 << (player->m_unit->m_unitFieldBytes0[1] - 1)))) {
                 continue;
             }
-        } else if (!tab->m_categoryEnumID || petTalentType < 0 || !(tab->m_categoryEnumID & (1 << petTalentType))) {
+        } else if (!tab->m_petTalentMask || petTalentType < 0 || !(tab->m_petTalentMask & (1 << petTalentType))) {
             continue;
         }
 

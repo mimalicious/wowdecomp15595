@@ -3904,11 +3904,11 @@ void CGGameUI::OnItemPush(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t ite
             if (static_cast<int32_t>(count) > 1) {
                 const char* token = created ? "LOOT_ITEM_CREATED_SELF_MULTIPLE" : received ? "LOOT_ITEM_PUSHED_SELF_MULTIPLE" : "LOOT_ITEM_SELF_MULTIPLE";
                 const char* format = FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE);
-                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor), count);
+                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor, 0), count);
             } else {
                 const char* token = created ? "LOOT_ITEM_CREATED_SELF" : received ? "LOOT_ITEM_PUSHED_SELF" : "LOOT_ITEM_SELF";
                 const char* format = FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE);
-                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor));
+                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor, 0));
             }
 
             CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(27), NULL);
@@ -3944,12 +3944,12 @@ void CGGameUI::OnItemPush(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t ite
     } else if ((!received || created) && showInChat) {
         if (static_cast<int32_t>(count) > 1) {
             const char* format = FrameScript_GetText(created ? "CREATED_ITEM_MULTIPLE" : "LOOT_ITEM_MULTIPLE", -1, GENDER_NOT_APPLICABLE);
-            const char* link = CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor);
+            const char* link = CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor, 0);
             SStrPrintf(text, sizeof(text), format, player->GetUnitName(NULL, 1), link, count);
         } else {
             const char* token = created ? "CREATED_ITEM" : CGLootInfo::IsPlayerIneligible(itemId) ? "LOOT_ITEM_WHILE_PLAYER_INELIGIBLE" : "LOOT_ITEM";
             const char* format = FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE);
-            const char* link = CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor);
+            const char* link = CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor, 0);
             SStrPrintf(text, sizeof(text), format, player->GetUnitName(NULL, 1), link);
         }
 

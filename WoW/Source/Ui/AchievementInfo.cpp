@@ -931,3 +931,14 @@ void CGAchievementInfo::ReleaseInspect() {
 // OFFSET: 0x00401000/0x1407D7E80
 void CGAchievementInfo::LeaveWorld() {
 }
+
+// OFFSET: 0x00949300/0x1406B6D80
+CLIENT_ACHIEVEMENTS* CGAchievementInfo::GetAchievement(int32_t id) {
+    for (CLIENT_ACHIEVEMENTS* entry = s_completedAchievements.Head(); entry; entry = s_completedAchievements.Next(entry)) {
+        if (entry->m_id == id) {
+            return entry;
+        }
+    }
+
+    return NULL;
+}

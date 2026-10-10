@@ -21,7 +21,7 @@ class WorldMapAreaRec {
     /* 0020 */ int32_t m_displayMapID;
     /* 0024 */ int32_t unk_0024;
     /* 0028 */ int32_t unk_0028;
-    /* 002C */ int32_t unk_002C;
+    /* 002C */ int32_t m_flags;
     /* 0030 */ int32_t unk_0030;
     /* 0034 */ int32_t unk_0034;
 };

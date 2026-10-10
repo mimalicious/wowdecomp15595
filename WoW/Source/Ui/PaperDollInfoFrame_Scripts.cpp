@@ -808,7 +808,7 @@ static int32_t Script_GetInventoryItemLink(lua_State* L) {
         ItemStats_C* stats = g_itemDBCache.GetRecord(ammo, none, NULL, NULL, false);
 
         if (stats) {
-            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(ammo, stats->m_quality, 0, 0, 0));
+            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(ammo, stats->m_quality, 0, 0, 0, 0));
             return 1;
         }
     } else if (guid == activePlayer) {
@@ -826,7 +826,7 @@ static int32_t Script_GetInventoryItemLink(lua_State* L) {
             ItemStats_C* stats = g_itemDBCache.GetRecord(inspected->m_itemId, none, NULL, NULL, false);
 
             if (stats) {
-                lua_pushstring(L, CGTooltip::CreateItemLink(inspected->m_itemId, stats->m_quality, inspected->m_enchants[0], &inspected->m_enchants[2], static_cast<uint16_t>(inspected->m_randomPropertiesId), inspected->m_propertySeed));
+                lua_pushstring(L, CGTooltip::GetItemHyperlinkString(inspected->m_itemId, stats->m_quality, inspected->m_enchants[0], &inspected->m_enchants[2], static_cast<uint16_t>(inspected->m_randomPropertiesId), inspected->m_propertySeed, 0));
                 return 1;
             }
         }

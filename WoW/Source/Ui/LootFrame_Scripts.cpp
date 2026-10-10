@@ -267,7 +267,7 @@ static int32_t Script_GetLootRollItemLink(lua_State* L) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
     return 1;
 }
 

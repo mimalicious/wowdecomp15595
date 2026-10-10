@@ -233,37 +233,37 @@ static void RolledStatsAndName(const NameCache* name, PendingLootRoll* roll, con
 
     if (roll->m_rollerGuid == ClntObjMgrGetActivePlayer()) {
         if (roll->m_rollType == 2 && roll->m_rollNumber < 0) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_GREED_SELF", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_GREED_SELF", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType == 3 && roll->m_rollNumber < 0) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_DISENCHANT_SELF", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_DISENCHANT_SELF", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType != 3 && roll->m_rollNumber < 0) {
             const char* format = roll->m_autoPass ? FrameScript_GetText("LOOT_ROLL_PASSED_SELF_AUTO", -1, GENDER_NOT_APPLICABLE) : FrameScript_GetText("LOOT_ROLL_PASSED_SELF", -1, GENDER_NOT_APPLICABLE);
-            SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (!roll->m_rollType) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_NEED_SELF", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_NEED_SELF", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType == 2) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_GREED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix), name->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_GREED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0), name->m_name);
         } else if (roll->m_rollType == 3) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_DE", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix), name->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_DE", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0), name->m_name);
         } else {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_NEED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix), name->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_NEED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0), name->m_name);
         }
     } else {
         if (roll->m_rollType == 2 && roll->m_rollNumber < 0) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_GREED", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_GREED", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType == 3 && roll->m_rollNumber < 0) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_DISENCHANT", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_DISENCHANT", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType != 3 && roll->m_rollNumber < 0) {
             const char* format = roll->m_autoPass ? FrameScript_GetText("LOOT_ROLL_PASSED_AUTO", -1, static_cast<FRAMESCRIPT_GENDER>((name->m_sex != 0) + 2)) : FrameScript_GetText("LOOT_ROLL_PASSED", -1, GENDER_NOT_APPLICABLE);
-            SStrPrintf(text, sizeof(text), format, name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), format, name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (!roll->m_rollType) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_NEED", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_NEED", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType == 2) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_GREED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix), name->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_GREED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0), name->m_name);
         } else if (roll->m_rollType == 3) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_DE", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix), name->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_DE", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0), name->m_name);
         } else {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_NEED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix), name->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ROLLED_NEED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0), name->m_name);
         }
     }
 
@@ -415,7 +415,7 @@ int32_t LootRollStart(CDataStore* msg) {
 // OFFSET: 0x0057B620/0x1401E1140
 static void AllPassedStats(PendingLootRoll* roll, const ItemStats_C* stats) {
     char text[3000];
-    SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ALL_PASSED", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+    SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ALL_PASSED", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
     CGChat::AddChatMessage(text, 27, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
 
     if (!roll->unk_0042) {
@@ -483,22 +483,22 @@ static void WonStatsAndName(const NameCache* name, PendingLootRoll* roll, const 
 
     if (roll->m_rollerGuid == ClntObjMgrGetActivePlayer()) {
         if (g_showLootSpamCVar->m_intValue) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType == 1) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON_NO_SPAM_NEED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON_NO_SPAM_NEED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType == 2) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON_NO_SPAM_GREED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON_NO_SPAM_GREED", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         } else if (roll->m_rollType == 3) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON_NO_SPAM_DE", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_YOU_WON_NO_SPAM_DE", -1, GENDER_NOT_APPLICABLE), roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
         }
     } else if (g_showLootSpamCVar->m_intValue) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON", -1, GENDER_NOT_APPLICABLE), name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
     } else if (roll->m_rollType == 1) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON_NO_SPAM_NEED", -1, GENDER_NOT_APPLICABLE), name->m_name, roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON_NO_SPAM_NEED", -1, GENDER_NOT_APPLICABLE), name->m_name, roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
     } else if (roll->m_rollType == 2) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON_NO_SPAM_GREED", -1, GENDER_NOT_APPLICABLE), name->m_name, roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON_NO_SPAM_GREED", -1, GENDER_NOT_APPLICABLE), name->m_name, roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
     } else if (roll->m_rollType == 3) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON_NO_SPAM_DE", -1, GENDER_NOT_APPLICABLE), name->m_name, roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_WON_NO_SPAM_DE", -1, GENDER_NOT_APPLICABLE), name->m_name, roll->m_rollNumber, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
     }
 
     CGChat::AddChatMessage(text, 27, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);

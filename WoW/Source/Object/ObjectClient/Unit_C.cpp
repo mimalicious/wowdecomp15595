@@ -17434,7 +17434,7 @@ void CGUnit_C::OnVisFlagChanged(uint8_t oldFlags) {
 }
 
 // OFFSET: 0x005C0650/0x140236200
-bool CGUnit_C::IsSpellKnown(int32_t spellId) {
+bool CGUnit_C::IsSpellKnown(int32_t spellId) const {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         if (static_cast<uint32_t>(spellId) <= static_cast<uint32_t>(g_spellDB.m_maxID)) {
             return (s_knownSpellBits.m_bits.m_data[static_cast<uint32_t>(spellId) >> 5] & (1 << (spellId & 0x1F))) != 0;

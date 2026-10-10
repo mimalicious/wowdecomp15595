@@ -820,7 +820,7 @@ void CGBattlefieldInfo::JoinBattlefield(uint32_t index, int32_t asGroup, int32_t
     BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(CGBattlefieldInfo::m_bgTypeID);
     int32_t arena = rec && rec->m_instanceType == 4;
 
-    if (asGroup && rec && (rec->m_maxGroupSize < static_cast<int32_t>(CGPartyInfo::GetNumPartyMembers()) || rec->m_maxGroupSize < static_cast<int32_t>(CGRaidInfo::m_numMembers))) {
+    if (asGroup && rec && (rec->m_maxGroupSize < static_cast<int32_t>(CGPartyInfo::NumMembers()) || rec->m_maxGroupSize < static_cast<int32_t>(CGRaidInfo::m_numMembers))) {
         CGGameUI::DisplayError(ERR_GROUP_JOIN_BATTLEGROUND_TOO_MANY);
         return;
     }

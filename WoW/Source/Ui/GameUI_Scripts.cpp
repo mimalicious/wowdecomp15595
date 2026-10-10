@@ -103,6 +103,7 @@
 #include "WoW/Source/Ui/DuelInfo.h"
 #include "WoW/Source/Ui/EquipmentManager.h"
 #include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/Flyout.h"
 #include "WoW/Source/Ui/GlyphInfo.h"
 #include "WoW/Source/Ui/GMSurveyInfo.h"
 #include "WoW/Source/Ui/GMTicketInfo.h"
@@ -2258,7 +2259,7 @@ static int32_t Script_GetItemCooldown(lua_State* L) {
 
 // OFFSET: 0x008D9B80/0x14064D5E0
 static int32_t Script_GetItemInfo(lua_State* L) {
-    ItemLinkInfo linkInfo;
+    TooltipExtendedItemInfo linkInfo;
     linkInfo.Clear();
     int32_t itemId;
 
@@ -2289,7 +2290,7 @@ static int32_t Script_GetItemInfo(lua_State* L) {
     char name[1024];
     CGItem_C::BuildItemName(name, sizeof(name), itemId, linkInfo.m_randomPropertiesId);
     lua_pushstring(L, name);
-    lua_pushstring(L, CGTooltip::CreateItemLink(itemId, stats->m_quality, linkInfo.m_enchants[0], reinterpret_cast<const int32_t*>(&linkInfo.m_enchants[2]), linkInfo.m_randomPropertiesId, linkInfo.m_propertySeed));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, linkInfo.m_enchants[0], reinterpret_cast<const int32_t*>(&linkInfo.m_enchants[2]), linkInfo.m_randomPropertiesId, linkInfo.m_propertySeed, 0));
     lua_pushnumber(L, static_cast<int32_t>(stats->m_quality));
     lua_pushnumber(L, static_cast<int32_t>(stats->m_itemLevel));
     lua_pushnumber(L, static_cast<int32_t>(stats->m_requiredLevel));
@@ -2444,10 +2445,10 @@ static int32_t Script_TargetNearestRaidMember(lua_State* L) {
 
 // OFFSET: 0x008C3800/0x140633320
 static int32_t Script_GetThreatStatusColor(lua_State* L) {
-    uint32_t color = *CGTooltip::GetThreatStateColor(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1) + 1.0)));
-    lua_pushnumber(L, ((color >> 16) & 0xFF) * 0.0039215689);
-    lua_pushnumber(L, ((color >> 8) & 0xFF) * 0.0039215689);
-    lua_pushnumber(L, (color & 0xFF) * 0.0039215689);
+    CImVector color = *CGTooltip::GetThreatStateColor(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1) + 1.0)));
+    lua_pushnumber(L, color.r * 0.0039215689);
+    lua_pushnumber(L, color.g * 0.0039215689);
+    lua_pushnumber(L, color.b * 0.0039215689);
     return 3;
 }
 
@@ -2536,7 +2537,7 @@ static int32_t Script_GetCursorInfo(lua_State* L) {
 
             lua_pushstring(L, "item");
             lua_pushnumber(L, itemId);
-            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, rec->m_quality, 0, 0, 0));
+            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, rec->m_quality, 0, 0, 0, 0));
             return 3;
         }
 
@@ -3661,7 +3662,7 @@ static int32_t Script_GetGMTicketCategories(lua_State* L) {
 
 // OFFSET: 0x008D9FC0/0x14064DCE0
 static int32_t Script_GetItemUniqueness(lua_State* L) {
-    ItemLinkInfo linkInfo;
+    TooltipExtendedItemInfo linkInfo;
     linkInfo.Clear();
     int32_t itemId;
 
@@ -3682,8 +3683,8 @@ static int32_t Script_GetItemUniqueness(lua_State* L) {
         }
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    WOWGUID none = WOWGUID::Make(0);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemId, none, NULL, NULL, false);
 
     if (!stats) {
         return 0;
@@ -4355,10 +4356,10 @@ static int32_t Script_GetItemGem(lua_State* L) {
     const char* text = lua_tolstring(L, 1, NULL);
 
     if (SStrStr(text, "item:")) {
-        ItemLinkInfo link;
-        link.Clear();
-        link.GetItemIdFromLink(text);
-        enchantId = link.m_enchants[index + 2];
+        TooltipExtendedItemInfo info;
+        info.Clear();
+        info.GetItemIdFromLink(text);
+        enchantId = info.m_enchants[index + 2];
     } else {
         CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4382,8 +4383,8 @@ static int32_t Script_GetItemGem(lua_State* L) {
         gemId = enchant->m_srcItemID;
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(gemId, none, NULL, NULL, false);
+    WOWGUID none = WOWGUID::Make(0);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(gemId, none, NULL, NULL, false);
 
     if (!stats) {
         return 0;
@@ -4392,7 +4393,7 @@ static int32_t Script_GetItemGem(lua_State* L) {
     char name[1024];
     CGItem_C::BuildItemName(name, sizeof(name), gemId, 0);
     lua_pushstring(L, name);
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(gemId, stats->m_quality, 0, 0, 0));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(gemId, stats->m_quality, 0, 0, 0, 0));
     return 2;
 }
 
@@ -5589,13 +5590,13 @@ static int32_t Script_ToggleTris(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008C2760
+// OFFSET: 0x008C2760/0x140632160
 static int32_t Script_ConfirmOnUse(lua_State* L) {
     CGItem_C::ConfirmOnUse();
     return 0;
 }
 
-// OFFSET: 0x008C26A0
+// OFFSET: 0x008C26A0/0x140632000
 static int32_t Script_GetNetIpTypes(lua_State* L) {
     for (uint32_t i = 0; i < 2; i++) {
         lua_pushnumber(L, static_cast<double>(ClientServices::Connection()->GetLocalAddress(i)));
@@ -5604,31 +5605,31 @@ static int32_t Script_GetNetIpTypes(lua_State* L) {
     return 2;
 }
 
-// OFFSET: 0x008C3900
+// OFFSET: 0x008C3900/0x1406334A0
 static int32_t Script_GetBackgroundLoadingStatus(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(static_cast<uint32_t>(SFile::IsBackgroundStreamingInProgress())));
     return 1;
 }
 
-// OFFSET: 0x008C3940
+// OFFSET: 0x008C3940/0x1406334D0
 static int32_t Script_GetAvailableBandwidth(lua_State* L) {
     lua_pushnumber(L, AsyncFileReadGetStreamingBandwidth());
     return 1;
 }
 
-// OFFSET: 0x008C3970
+// OFFSET: 0x008C3970/0x140633500
 static int32_t Script_GetDownloadedPercentage(lua_State* L) {
     lua_pushnumber(L, SFile::GetBGStreamingDownloadedPercentage());
     return 1;
 }
 
-// OFFSET: 0x008C39A0
+// OFFSET: 0x008C39A0/0x140633530
 static int32_t Script_GetMaxSpellStartRecoveryOffset(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(Spell_C_GetMaxStartRecoveryOffset()));
     return 1;
 }
 
-// OFFSET: 0x008C39D0
+// OFFSET: 0x008C39D0/0x140633560
 static int32_t Script_ValidateTimer(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Script_ValidateTimer(TimerType)");
@@ -5642,7 +5643,7 @@ static int32_t Script_ValidateTimer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008C3A30
+// OFFSET: 0x008C3A30/0x1406335D0
 static int32_t Script_GetRestrictedAccountData(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGameUI::s_restrictedLevel));
     lua_pushnumber(L, static_cast<double>(CGGameUI::s_restrictedMoney));
@@ -5650,7 +5651,7 @@ static int32_t Script_GetRestrictedAccountData(lua_State* L) {
     return 3;
 }
 
-// OFFSET: 0x008C6DF0
+// OFFSET: 0x008C6DF0/0x140636E20
 static int32_t Script_GetCVarBitfield(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetCVarBitfield(\"cvar\", index)");
@@ -5674,7 +5675,7 @@ static int32_t Script_GetCVarBitfield(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008C7290
+// OFFSET: 0x008C7290/0x140631CD0
 static int32_t Script_IsOnTournamentRealm(lua_State* L) {
     if (CGGameUI::s_tournamentRealm) {
         lua_pushnumber(L, 1.0);
@@ -5685,19 +5686,19 @@ static int32_t Script_IsOnTournamentRealm(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008C73C0
+// OFFSET: 0x008C73C0/0x140637240
 static int32_t Script_GetDefaultRaidDifficulty(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGameUI::m_raidDifficulty + 1));
     return 1;
 }
 
-// OFFSET: 0x008C7400
+// OFFSET: 0x008C7400/0x140637270
 static int32_t Script_GetCurrentRaidDifficulty(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGameUI::GetCurrentRaidDifficulty() + 1));
     return 1;
 }
 
-// OFFSET: 0x008C8D20
+// OFFSET: 0x008C8D20/0x140638F00
 static int32_t Script_GetAddOnOptionalDependencies(lua_State* L) {
     const char* name;
 
@@ -5730,13 +5731,13 @@ static int32_t Script_GetAddOnOptionalDependencies(lua_State* L) {
     return dependencies->m_count;
 }
 
-// OFFSET: 0x008C9170
+// OFFSET: 0x008C9170/0x140633470
 static int32_t Script_GetCemeteryPreference(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGameUI::s_cemeteryPreference));
     return 1;
 }
 
-// OFFSET: 0x008C91B0
+// OFFSET: 0x008C91B0/0x140639330
 static int32_t Script_SetCemeteryPreference(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Script_SetCemeteryPreference(cemeteryID)");
@@ -5746,7 +5747,7 @@ static int32_t Script_SetCemeteryPreference(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008C9220
+// OFFSET: 0x008C9220/0x140639380
 static int32_t Script_IsCemeterySelectionAvailable(lua_State* L) {
     if (CGGameUI::s_numCemeteries) {
         lua_pushnumber(L, 1.0);
@@ -5757,13 +5758,13 @@ static int32_t Script_IsCemeterySelectionAvailable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008C9260
+// OFFSET: 0x008C9260/0x1406393C0
 static int32_t Script_GetFileStreamingStatus(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(static_cast<uint32_t>(CGGameUI::s_streamingIcon)));
     return 1;
 }
 
-// OFFSET: 0x008C92A0
+// OFFSET: 0x008C92A0/0x1406393F0
 static int32_t Script_MouseOverrideCinematicDisable(lua_State* L) {
     int32_t disable = StringToBOOL(L, 1, 0);
     CGInputControl* input = CGInputControl::GetActive();
@@ -5778,25 +5779,25 @@ static int32_t Script_MouseOverrideCinematicDisable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008C92F0
+// OFFSET: 0x008C92F0/0x140633620
 static int32_t Script_HasTravelPass(lua_State* L) {
     lua_pushboolean(L, CGGameUI::m_hasTravelPass);
     return 1;
 }
 
-// OFFSET: 0x008C9310
+// OFFSET: 0x008C9310/0x140633640
 static int32_t Script_CanSendSoRByText(lua_State* L) {
     lua_pushboolean(L, CGGameUI::s_canSendSoR);
     return 1;
 }
 
-// OFFSET: 0x008C9330
+// OFFSET: 0x008C9330/0x140633660
 static int32_t Script_GetNumSoRRemaining(lua_State* L) {
     lua_pushinteger(L, CGGameUI::s_numSoRRemaining);
     return 1;
 }
 
-// OFFSET: 0x008CC210
+// OFFSET: 0x008CC210/0x14063D0A0
 static int32_t Script_SetCVarBitfield(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetCVarBitfield(\"cvar\", index, value, [, \"scriptCvar\")");
@@ -5838,7 +5839,7 @@ static int32_t Script_SetCVarBitfield(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008CC6C0
+// OFFSET: 0x008CC6C0/0x14063D7B0
 static int32_t Script_GetSheathState(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -5850,7 +5851,7 @@ static int32_t Script_GetSheathState(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008CEDF0
+// OFFSET: 0x008CEDF0/0x140641140
 static int32_t Script_GetAutoDeclineGuildInvites(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -5863,7 +5864,7 @@ static int32_t Script_GetAutoDeclineGuildInvites(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008CEE60
+// OFFSET: 0x008CEE60/0x1406411B0
 static int32_t Script_SetAutoDeclineGuildInvites(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         int32_t decline = StringToBOOL(L, 1, 1);
@@ -5877,7 +5878,7 @@ static int32_t Script_SetAutoDeclineGuildInvites(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008D3760
+// OFFSET: 0x008D3760/0x1406473F0
 static int32_t Script_PortGraveyard(lua_State* L) {
     if (lua_tainted) {
         CGGameUI::ShowBlockedActionFeedback(NULL, 0);
@@ -5894,17 +5895,17 @@ static int32_t Script_PortGraveyard(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00842700
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_GetDebugAnimationStats(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00842700
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_GetDebugSpellEffects(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00842700
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_ToggleAnimKitDisplay(lua_State* L) {
     return 0;
 }
@@ -6257,7 +6258,7 @@ void LoadScriptFunctions() {
     UnitCombatLogRegisterScriptFunctions();
     ActionBarRegisterScriptFunctions();
     SpellActivationOverlayRegisterScriptFunctions();
-    FlyoutRegisterScriptFunctions();
+    CFlyout::RegisterScriptFunctions();
     CGPartyInfo::RegisterScriptFunctions();
     ChatRegisterScriptFunctions();
     AutoCompleteRegisterScriptFunctions();
@@ -6350,7 +6351,7 @@ void UnloadScriptFunctions() {
     UnitCombatLogUnregisterScriptFunctions();
     ActionBarUnregisterScriptFunctions();
     SpellActivationOverlayUnregisterScriptFunctions();
-    FlyoutUnregisterScriptFunctions();
+    CFlyout::UnregisterScriptFunctions();
     CGPartyInfo::UnregisterScriptFunctions();
     ChatUnregisterScriptFunctions();
     AutoCompleteUnregisterScriptFunctions();

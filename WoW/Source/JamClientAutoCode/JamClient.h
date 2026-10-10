@@ -413,13 +413,28 @@ class ClientChatIgnoredAccountMuted : public JamClientMessage {
     bool Handle();
 };
 
+struct JamClientCurrencyData {
+    /* 0000 */ int32_t m_type;
+    /* 0004 */ int32_t m_quantity;
+    /* 0008 */ bool m_hasWeeklyQuantity;
+    /* 000C */ int32_t m_weeklyQuantity;
+    /* 0010 */ bool m_hasMaxWeeklyQuantity;
+    /* 0014 */ int32_t m_maxWeeklyQuantity;
+    /* 0018 */ bool m_hasTrackedQuantity;
+    /* 001C */ int32_t m_trackedQuantity;
+    /* 0020 */ uint8_t m_flags;
+};
+
 class ClientSetupCurrency : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientSetupCurrency* msg);
 
+    /* 0010 */ TSGrowableArray<JamClientCurrencyData> m_data;
+
     ClientSetupCurrency(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSetupCurrency();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientBattlefieldMgrQueueInvite : public JamClientMessage {
@@ -1017,9 +1032,17 @@ class ClientPetAdded : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientPetAdded* msg);
 
+    /* 0010 */ uint8_t m_flags;
+    /* 0014 */ uint32_t m_level;
+    /* 0018 */ char m_name[80];
+    /* 0068 */ int32_t m_slot;
+    /* 006C */ uint32_t m_petNumber;
+    /* 0070 */ int32_t m_creatureID;
+
     ClientPetAdded(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPetAdded();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildChangeNameResult : public JamClientMessage {
@@ -1161,9 +1184,15 @@ class ClientPetSlotUpdated : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientPetSlotUpdated* msg);
 
+    /* 0010 */ int32_t m_prevSlot;
+    /* 0014 */ uint32_t m_petNumber;
+    /* 0018 */ uint32_t m_prevPetNumber;
+    /* 001C */ int32_t m_newSlot;
+
     ClientPetSlotUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPetSlotUpdated();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientVoidStorageTransferChanges : public JamClientMessage {
@@ -1358,9 +1387,18 @@ class ClientSetCurrency : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientSetCurrency* msg);
 
+    /* 0010 */ int32_t m_quantity;
+    /* 0014 */ int32_t m_type;
+    /* 0018 */ bool m_suppressChatLog;
+    /* 001C */ bool m_hasWeeklyQuantity;
+    /* 0020 */ int32_t m_weeklyQuantity;
+    /* 0024 */ bool m_hasTrackedQuantity;
+    /* 0028 */ int32_t m_trackedQuantity;
+
     ClientSetCurrency(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSetCurrency();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientWargameRequestSent : public JamClientMessage {
@@ -1499,9 +1537,13 @@ class ClientUpdateCurrencyWeekLimit : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientUpdateCurrencyWeekLimit* msg);
 
+    /* 0010 */ int32_t m_type;
+    /* 0014 */ int32_t m_weekCap;
+
     ClientUpdateCurrencyWeekLimit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientUpdateCurrencyWeekLimit();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientRolePollBegin : public JamClientMessage {
@@ -1770,13 +1812,31 @@ class ClientSorStartExperienceIncomplete : public JamClientMessage {
     bool Handle();
 };
 
+struct JamVendorItem {
+    /* 0000 */ int32_t m_muid;
+    /* 0004 */ int32_t m_type;
+    /* 0008 */ int32_t m_item;
+    /* 000C */ int32_t m_displayID;
+    /* 0010 */ int32_t m_quantity;
+    /* 0014 */ int32_t m_price;
+    /* 0018 */ int32_t m_durability;
+    /* 001C */ int32_t m_stackCount;
+    /* 0020 */ int32_t m_extendedCostID;
+    /* 0024 */ int32_t m_playerConditionID;
+};
+
 class ClientVendorInventory : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientVendorInventory* msg);
 
+    /* 0010 */ uint8_t m_reason;
+    /* 0014 */ TSGrowableArray<JamVendorItem> m_items;
+    /* 0028 */ uint8_t m_vendor[8];
+
     ClientVendorInventory(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVendorInventory();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientItemAddPassive : public JamClientMessage {

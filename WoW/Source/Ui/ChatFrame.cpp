@@ -3548,7 +3548,7 @@ uint32_t BuildPartyDisplayList() {
         return 0;
     }
 
-    s_pendingUsers.SetCount(CGPartyInfo::GetNumPartyMembers() + 1);
+    s_pendingUsers.SetCount(CGPartyInfo::NumMembers() + 1);
     PENDINGUSERLIST* self = s_pendingUsers.m_data;
     WOWGUID guid = player->m_obj->m_guid;
     UpdateVoiceMemberFlags(self, guid == CGPartyInfo::m_leader ? 5 : 4, guid, 2, "");
@@ -3662,7 +3662,7 @@ void RebuildDisplayChannelList(int32_t signal) {
             entry->m_enabled = 1;
             entry->m_type = 2;
             entry->m_voiceEnabled = ComSatClient_HasSession(2, "");
-            entry->m_count = CGPartyInfo::GetNumPartyMembers() + 1;
+            entry->m_count = CGPartyInfo::NumMembers() + 1;
 
             if (!s_collapsedHeaders[0]) {
                 group->m_collapsed = 0;

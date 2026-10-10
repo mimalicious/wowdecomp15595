@@ -378,7 +378,7 @@ char* CGLootInfo::GetLootSlotLink(uint32_t slot, char* buffer, uint32_t size) {
         return NULL;
     }
 
-    SStrCopy(buffer, CGTooltip::GetItemHyperlinkString(CGLootInfo::m_slots[slot].m_itemID, stats->m_quality, 0, CGLootInfo::m_slots[slot].m_randomPropertyId, CGLootInfo::m_slots[slot].m_randomSuffix), size);
+    SStrCopy(buffer, CGTooltip::GetItemHyperlinkString(CGLootInfo::m_slots[slot].m_itemID, stats->m_quality, 0, CGLootInfo::m_slots[slot].m_randomPropertyId, CGLootInfo::m_slots[slot].m_randomSuffix, 0), size);
     return buffer;
 }
 

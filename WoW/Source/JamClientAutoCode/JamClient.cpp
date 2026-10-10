@@ -1,6 +1,27 @@
 #include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "Engine/Source/Base/CDataStore.h"
 
+// STATIC: 0x00E4D694
+bool (*ClientSetupCurrency::s_handler)(ClientSetupCurrency* msg);
+
+// STATIC: 0x00E4D728
+bool (*ClientSetCurrency::s_handler)(ClientSetCurrency* msg);
+
+// STATIC: 0x00E4D644
+bool (*ClientWeeklyResetCurrency::s_handler)(ClientWeeklyResetCurrency* msg);
+
+// STATIC: 0x00E4D42C
+bool (*ClientUpdateCurrencyWeekLimit::s_handler)(ClientUpdateCurrencyWeekLimit* msg);
+
+// STATIC: 0x00E4D734
+bool (*ClientVendorInventory::s_handler)(ClientVendorInventory* msg);
+
+// STATIC: 0x00E4D518
+bool (*ClientPetSlotUpdated::s_handler)(ClientPetSlotUpdated* msg);
+
+// STATIC: 0x00E4D66C
+bool (*ClientPetAdded::s_handler)(ClientPetAdded* msg);
+
 // STATIC: 0x00E4D7D0
 bool (*ClientAuthResponse::s_handler)(ClientAuthResponse* msg);
 
@@ -1279,4 +1300,386 @@ void ClientClearCooldowns::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->m_guid[6] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006F2DB0/0x1403B9980
+ClientSetupCurrency::ClientSetupCurrency(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DFCD0/0x14039FBB0
+ClientSetupCurrency::~ClientSetupCurrency() {
+}
+
+// OFFSET: 0x006F0580/0x1403B5E30
+void ClientSetupCurrency::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_data.SetCount(bits.ReadBits<23>());
+
+    for (uint32_t i = 0; i < this->m_data.Count(); i++) {
+        JamClientCurrencyData& data = this->m_data[i];
+        data.m_hasWeeklyQuantity = bits.ReadBit() != 0;
+        data.m_flags = static_cast<uint8_t>(bits.ReadBits<4>());
+        data.m_hasMaxWeeklyQuantity = bits.ReadBit() != 0;
+        data.m_hasTrackedQuantity = bits.ReadBit() != 0;
+    }
+
+    for (uint32_t i = 0; i < this->m_data.Count(); i++) {
+        JamClientCurrencyData& data = this->m_data[i];
+        uint32_t value = 0;
+        msg->Get(value);
+        data.m_quantity = value;
+
+        if (data.m_hasMaxWeeklyQuantity) {
+            value = 0;
+            msg->Get(value);
+            data.m_maxWeeklyQuantity = value;
+        }
+
+        if (data.m_hasTrackedQuantity) {
+            value = 0;
+            msg->Get(value);
+            data.m_trackedQuantity = value;
+        }
+
+        value = 0;
+        msg->Get(value);
+        data.m_type = value;
+
+        if (data.m_hasWeeklyQuantity) {
+            value = 0;
+            msg->Get(value);
+            data.m_weeklyQuantity = value;
+        }
+    }
+}
+
+// OFFSET: 0x006B0440/0x1403611B0
+bool ClientSetupCurrency::Handle() {
+    if (!ClientSetupCurrency::s_handler) {
+        return false;
+    }
+
+    return ClientSetupCurrency::s_handler(this);
+}
+
+// OFFSET: 0x006C4580/0x14037A430
+ClientSetCurrency::ClientSetCurrency(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->m_hasWeeklyQuantity = false;
+    this->m_hasTrackedQuantity = false;
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2A00/0x14034FEF0
+ClientSetCurrency::~ClientSetCurrency() {
+}
+
+// OFFSET: 0x006B0730/0x140361510
+void ClientSetCurrency::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_hasWeeklyQuantity = bits.ReadBit() != 0;
+    this->m_hasTrackedQuantity = bits.ReadBit() != 0;
+    this->m_suppressChatLog = bits.ReadBit() != 0;
+
+    uint32_t value;
+
+    if (this->m_hasTrackedQuantity) {
+        value = 0;
+        msg->Get(value);
+        this->m_trackedQuantity = value;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_quantity = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_type = value;
+
+    if (this->m_hasWeeklyQuantity) {
+        value = 0;
+        msg->Get(value);
+        this->m_weeklyQuantity = value;
+    }
+}
+
+// OFFSET: 0x006BFD40/0x140374F80
+bool ClientSetCurrency::Handle() {
+    if (!ClientSetCurrency::s_handler) {
+        return false;
+    }
+
+    return ClientSetCurrency::s_handler(this);
+}
+
+// OFFSET: 0x006A2E40/0x14036ACB0
+ClientWeeklyResetCurrency::ClientWeeklyResetCurrency(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+}
+
+// OFFSET: 0x006A1120/0x14033F780
+ClientWeeklyResetCurrency::~ClientWeeklyResetCurrency() {
+}
+
+// OFFSET: 0x006A3C80/0x140351500
+bool ClientWeeklyResetCurrency::Handle() {
+    if (!ClientWeeklyResetCurrency::s_handler) {
+        return false;
+    }
+
+    return ClientWeeklyResetCurrency::s_handler(this);
+}
+
+// OFFSET: 0x006BD0A0/0x1403717A0
+ClientUpdateCurrencyWeekLimit::ClientUpdateCurrencyWeekLimit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A10B0/0x14034F400
+ClientUpdateCurrencyWeekLimit::~ClientUpdateCurrencyWeekLimit() {
+}
+
+// INLINED
+void ClientUpdateCurrencyWeekLimit::Unpack(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_weekCap = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_type = value;
+}
+
+// OFFSET: 0x006A6E40/0x1403557A0
+bool ClientUpdateCurrencyWeekLimit::Handle() {
+    if (!ClientUpdateCurrencyWeekLimit::s_handler) {
+        return false;
+    }
+
+    return ClientUpdateCurrencyWeekLimit::s_handler(this);
+}
+
+// OFFSET: 0x006DD810/0x14039CE50
+ClientVendorInventory::ClientVendorInventory(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006D9770/0x140397C10
+ClientVendorInventory::~ClientVendorInventory() {
+}
+
+// OFFSET: 0x006DC6F0/0x14039B920
+void ClientVendorInventory::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_vendor[1] = bits.ReadBit();
+    this->m_vendor[0] = bits.ReadBit();
+    this->m_items.SetCount(bits.ReadBits<21>());
+    this->m_vendor[3] = bits.ReadBit();
+    this->m_vendor[6] = bits.ReadBit();
+    this->m_vendor[5] = bits.ReadBit();
+    this->m_vendor[2] = bits.ReadBit();
+    this->m_vendor[7] = bits.ReadBit();
+
+    for (uint32_t i = 0; i < this->m_items.Count(); i++) {
+        JamVendorItem& item = this->m_items[i];
+        item.m_extendedCostID = bits.ReadBit() == 0;
+        item.m_playerConditionID = bits.ReadBit() == 0;
+    }
+
+    this->m_vendor[4] = bits.ReadBit();
+    uint8_t byteValue;
+    uint32_t intValue;
+
+    for (uint32_t i = 0; i < this->m_items.Count(); i++) {
+        JamVendorItem& item = this->m_items[i];
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_muid = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_durability = intValue;
+
+        if (item.m_extendedCostID) {
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_extendedCostID = intValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_item = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_type = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_price = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_displayID = intValue;
+
+        if (item.m_playerConditionID) {
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_playerConditionID = intValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_quantity = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_stackCount = intValue;
+    }
+
+    if (this->m_vendor[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[5] ^= byteValue;
+    }
+
+    if (this->m_vendor[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[4] ^= byteValue;
+    }
+
+    if (this->m_vendor[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[1] ^= byteValue;
+    }
+
+    if (this->m_vendor[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[0] ^= byteValue;
+    }
+
+    if (this->m_vendor[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[6] ^= byteValue;
+    }
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_reason = byteValue;
+
+    if (this->m_vendor[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[2] ^= byteValue;
+    }
+
+    if (this->m_vendor[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[3] ^= byteValue;
+    }
+
+    if (this->m_vendor[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_vendor[7] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006AA040/0x140359600
+bool ClientVendorInventory::Handle() {
+    if (!ClientVendorInventory::s_handler) {
+        return false;
+    }
+
+    return ClientVendorInventory::s_handler(this);
+}
+
+// OFFSET: 0x006A1640/0x14034E980
+ClientPetSlotUpdated::ClientPetSlotUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0E10/0x14034DEB0
+ClientPetSlotUpdated::~ClientPetSlotUpdated() {
+}
+
+// OFFSET: 0x006A0E40/0x14034DEE0
+void ClientPetSlotUpdated::Unpack(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_newSlot = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_prevPetNumber = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_petNumber = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_prevSlot = value;
+}
+
+// OFFSET: 0x006A92A0/0x140358420
+bool ClientPetSlotUpdated::Handle() {
+    if (!ClientPetSlotUpdated::s_handler) {
+        return false;
+    }
+
+    return ClientPetSlotUpdated::s_handler(this);
+}
+
+// OFFSET: 0x006B35E0/0x1403650D0
+ClientPetAdded::ClientPetAdded(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A12C0/0x14034E590
+ClientPetAdded::~ClientPetAdded() {
+}
+
+// OFFSET: 0x006A7630/0x140356120
+void ClientPetAdded::Unpack(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_level = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_slot = value;
+
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_flags = byteValue;
+
+    value = 0;
+    msg->Get(value);
+    this->m_creatureID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_petNumber = value;
+
+    JamBitReader bits(msg);
+    uint32_t length = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = length;
+    msg->GetData(this->m_name, length);
+    this->m_name[length] = 0;
+}
+
+// OFFSET: 0x006B6D40/0x140369940
+bool ClientPetAdded::Handle() {
+    if (!ClientPetAdded::s_handler) {
+        return false;
+    }
+
+    return ClientPetAdded::s_handler(this);
 }

@@ -466,7 +466,7 @@ int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint3
             return 1;
         }
     } else {
-        for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
             PartyReadyCheckInfo info;
             CGPartyInfo::GetReadyCheckInfo(&info, i);
 
@@ -577,7 +577,7 @@ int32_t Packet_MSG_RAID_READY_CHECK(void* param, NETMESSAGE msgId, uint32_t time
             }
         }
     } else if (CGPartyInfo::m_leader == ClntObjMgrGetActivePlayer()) {
-        for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
             if (GetPartyMemberGUID(i)) {
                 PartyReadyCheckInfo info;
                 CGPartyInfo::GetReadyCheckInfo(&info, i);
@@ -641,7 +641,7 @@ void CGRaidInfo::RosterUpdateRefreshReadyCheck(uint32_t removed, WOWGUID leader)
 
         uint32_t i = 0;
 
-        for (; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+        for (; i < CGPartyInfo::NumMembers(); i++) {
             CGPartyMemberState* state = CGPartyInfo::GetMemberState(i);
 
             if (state && (state->m_flags & 0x1) && CGRaidInfo::IsPartyMemberReadyCheckPending(i)) {
@@ -649,7 +649,7 @@ void CGRaidInfo::RosterUpdateRefreshReadyCheck(uint32_t removed, WOWGUID leader)
             }
         }
 
-        done = i == CGPartyInfo::GetNumPartyMembers();
+        done = i == CGPartyInfo::NumMembers();
     }
 
     if (done) {
@@ -1197,7 +1197,7 @@ void CGRaidInfo::CheckReadyCheckTime() {
             }
         }
     } else {
-        for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
             if (i >= 4 || !CGRaidInfo::m_partyReadyCheckReady[i]) {
                 allReady = 0;
             }

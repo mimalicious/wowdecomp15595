@@ -161,7 +161,7 @@ static int32_t Script_GetGossipActiveQuests(lua_State* L) {
 
         int32_t index = CGQuestLog::GetQuestIndex(quest->m_questID);
 
-        if (index > 0 && (CGQuestLog::IsQuestCompleteEx(index - 1, 1) || CGQuestLog::HasNoObjectives(index - 1))) {
+        if (index > 0 && (CGQuestLog::IsQuestCompleteEx(ClntObjMgrGetActivePlayerObj(), index - 1, true, 0, 0) || CGQuestLog::HasNoObjectives(index - 1))) {
             lua_pushnumber(L, 1.0);
         } else {
             lua_pushnil(L);

@@ -29,27 +29,27 @@ class CGBag_C {
     int32_t FindItemSlot(const CGItem_C* item) const;
     int32_t FindItemSlot(WOWGUID guid) const;
     void UnlockItemsOfType(int32_t itemId, uint32_t flags);
-    CGItem_C* FindItemOfBagFamily(uint32_t bagFamily, uint32_t flags);
+    CGItem_C* FindItemOfBagFamily(uint32_t bagFamily, uint32_t flags) const;
     uint32_t GetAvgEquippedDurability() const;
     const CGItem_C* GetItemPointer(int32_t slot) const;
-    int32_t GetNumFreeInvSlots();
+    int32_t GetNumFreeInvSlots() const;
     int32_t GetNumItems() const;
     uint64_t GetItemGuid(uint32_t slot) const;
-    CGItem_C* FindItemOfType(int32_t itemId, uint32_t flags);
+    CGItem_C* FindItemOfType(int32_t itemId, uint32_t flags) const;
     CGItem_C* FindItemOfClass(int32_t classId, uint32_t subclassMask, uint32_t flags);
-    CGItem_C* FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, uint32_t flags);
-    CGItem_C* FindItemByName(const char* name, uint32_t flags);
-    CGItem_C* FindItemByFullName(const char* name, uint32_t flags);
+    CGItem_C* FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, uint32_t flags) const;
+    CGItem_C* FindItemByName(const char* name, uint32_t flags) const;
+    CGItem_C* FindItemByFullName(const char* name, uint32_t flags) const;
     CGItem_C* GetItemIdByName(const char* name, WOWGUID& container, uint32_t& slot, uint32_t flags);
     CGItem_C* GetItemPointer(int32_t slot);
 
     bool ContainsItem(WOWGUID guid, bool recurse, uint32_t flags) const;
     bool FindTotemCategory(int32_t category, uint32_t flags);
     bool FindTotemCategory(int32_t type, int32_t& mask, bool recurse, uint32_t flags);
-    CGItem_C* FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, WOWGUID& container, uint32_t& slot, uint32_t flags);
-    CGItem_C* FindItemOfType(int32_t itemId, WOWGUID& container, uint32_t& slot, uint32_t flags);
-    int32_t GetItemTypeCount(int32_t itemId, uint32_t flags);
-    int32_t GetItemTypeCharges(int32_t itemId, uint32_t flags);
+    CGItem_C* FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, WOWGUID& container, uint32_t& slot, uint32_t flags) const;
+    CGItem_C* FindItemOfType(int32_t itemId, WOWGUID& container, uint32_t& slot, uint32_t flags) const;
+    int32_t GetItemTypeCount(int32_t itemId, uint32_t flags) const;
+    int32_t GetItemTypeCharges(int32_t itemId, uint32_t flags) const;
     bool ItemCountValid(int32_t itemId, const ItemStats_C* stats, int32_t count, bool showError);
 };
 

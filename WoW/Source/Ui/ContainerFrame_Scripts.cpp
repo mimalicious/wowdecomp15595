@@ -1066,7 +1066,7 @@ static int32_t Script_GetContainerItemPurchaseItem(lua_State* L) {
     ItemStats_C* stats = g_itemDBCache.GetRecord(data->m_itemId[i], none, NULL, NULL, true);
 
     if (stats) {
-        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(data->m_itemId[i], stats->m_quality, 0, 0, 0));
+        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(data->m_itemId[i], stats->m_quality, 0, 0, 0, 0));
     } else {
         lua_pushnil(L);
     }

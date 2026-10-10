@@ -2,9 +2,8 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x00634E70
+// OFFSET: 0x00496800
 QuestCache::QuestCache() {
-    this->m_rewardHonorBonus = 0.0f;
     this->m_id = 0;
     this->m_method = 0;
     this->m_level = 0;
@@ -23,12 +22,18 @@ QuestCache::QuestCache() {
     this->m_rewardSpellId = 0;
     this->m_effectOnPlayer = 0;
     this->m_rewardHonor = 0;
+    this->m_rewardHonorBonus = 0.0f;
     this->m_startingItemId = 0;
     this->m_flags = 0;
+    this->m_minimapTargetMark = 0;
     this->m_rewardTitleId = 0;
     this->m_requiredPlayersKilled = 0;
     this->m_rewardTalentPoints = 0;
     this->m_rewardArenaPoints = 0;
+    this->m_rewardSkillId = 0;
+    this->m_rewardSkillPoints = 0;
+    this->m_questGiverPortrait = 0;
+    this->m_questTurnInPortrait = 0;
 
     for (uint32_t i = 0; i < 5; i++) {
         this->m_rewardReputationFaction[i] = 0;
@@ -42,7 +47,7 @@ QuestCache::QuestCache() {
         this->m_rewardReputationOverride[i] = 0;
     }
 
-    this->unk_28E0 = 0;
+    this->m_rewardReputationMask = 0;
 
     for (uint32_t i = 0; i < 4; i++) {
         this->m_rewardItem[i] = 0;
@@ -57,15 +62,19 @@ QuestCache::QuestCache() {
         this->m_rewardChoiceItemCount[i] = 1;
     }
 
+    this->m_pointMapId = 0;
     this->m_pointX = 0.0f;
     this->m_pointY = 0.0f;
-    this->m_pointMapId = 0;
     this->m_pointOptional = 0;
     this->m_name[0] = '\0';
     this->m_objText[0] = '\0';
     this->m_description[0] = '\0';
     this->m_endText[0] = '\0';
     this->m_completionText[0] = '\0';
+    this->m_questGiverTextWindow[0] = '\0';
+    this->m_questGiverTargetName[0] = '\0';
+    this->m_questTurnTextWindow[0] = '\0';
+    this->m_questTurnTargetName[0] = '\0';
 
     for (uint32_t i = 0; i < 4; i++) {
         this->m_objectiveId[i] = 0;
@@ -82,9 +91,13 @@ QuestCache::QuestCache() {
         this->m_collectItemId[i] = 0;
         this->m_collectItemCount[i] = 0;
     }
+
+    this->m_requiredSpell = 0;
+    this->m_soundAccept = 0;
+    this->m_soundTurnIn = 0;
 }
 
-// OFFSET: #0x007F6D60
+// OFFSET: 0x004EAF00
 void QuestCache::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));
     msg->Put(this->m_method);
@@ -107,11 +120,16 @@ void QuestCache::Pack(CDataStore* msg) {
     msg->Put(this->m_rewardHonorBonus);
     msg->Put(this->m_startingItemId);
     msg->Put(this->m_flags);
+    msg->Put(this->m_minimapTargetMark);
     msg->Put(this->m_rewardTitleId);
     msg->Put(this->m_requiredPlayersKilled);
     msg->Put(this->m_rewardTalentPoints);
     msg->Put(this->m_rewardArenaPoints);
-    msg->Put(this->unk_28E0);
+    msg->Put(this->m_rewardSkillId);
+    msg->Put(this->m_rewardSkillPoints);
+    msg->Put(this->m_rewardReputationMask);
+    msg->Put(this->m_questGiverPortrait);
+    msg->Put(this->m_questTurnInPortrait);
 
     uint32_t count = 0;
 
@@ -177,12 +195,31 @@ void QuestCache::Pack(CDataStore* msg) {
         msg->Put(this->m_collectItemCount[i]);
     }
 
+    msg->Put(this->m_requiredSpell);
+
     for (uint32_t i = 0; i < 4; i++) {
         msg->PutString(this->m_objectiveText[i]);
     }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        msg->Put(this->m_rewardCurrencyId[i]);
+        msg->Put(this->m_rewardCurrencyCount[i]);
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        msg->Put(this->m_requiredCurrencyId[i]);
+        msg->Put(this->m_requiredCurrencyCount[i]);
+    }
+
+    msg->PutString(this->m_questGiverTextWindow);
+    msg->PutString(this->m_questGiverTargetName);
+    msg->PutString(this->m_questTurnTextWindow);
+    msg->PutString(this->m_questTurnTargetName);
+    msg->Put(this->m_soundAccept);
+    msg->Put(this->m_soundTurnIn);
 }
 
-// OFFSET: #0x007F70E0
+// OFFSET: 0x004EB380
 void QuestCache::Unpack(CDataStore* msg) {
     msg->Get(reinterpret_cast<uint32_t&>(this->m_id));
     msg->Get(this->m_method);
@@ -205,11 +242,16 @@ void QuestCache::Unpack(CDataStore* msg) {
     msg->Get(this->m_rewardHonorBonus);
     msg->Get(this->m_startingItemId);
     msg->Get(this->m_flags);
+    msg->Get(this->m_minimapTargetMark);
     msg->Get(this->m_rewardTitleId);
     msg->Get(this->m_requiredPlayersKilled);
     msg->Get(this->m_rewardTalentPoints);
     msg->Get(this->m_rewardArenaPoints);
-    msg->Get(this->unk_28E0);
+    msg->Get(this->m_rewardSkillId);
+    msg->Get(this->m_rewardSkillPoints);
+    msg->Get(this->m_rewardReputationMask);
+    msg->Get(this->m_questGiverPortrait);
+    msg->Get(this->m_questTurnInPortrait);
 
     for (uint32_t i = 0; i < 4; i++) {
         msg->Get(this->m_rewardItem[i]);
@@ -255,84 +297,26 @@ void QuestCache::Unpack(CDataStore* msg) {
         msg->Get(this->m_collectItemCount[i]);
     }
 
+    msg->Get(this->m_requiredSpell);
+
     for (uint32_t i = 0; i < 4; i++) {
         msg->GetString(this->m_objectiveText[i], 0x7FFFFFFF);
     }
-}
 
-// OFFSET: #0x00668170
-QuestCache& QuestCache::operator=(const QuestCache& source) {
-    this->m_id = source.m_id;
-    this->m_method = source.m_method;
-    this->m_level = source.m_level;
-    this->m_requiredLevel = source.m_requiredLevel;
-    this->m_areaIdOrSortId = source.m_areaIdOrSortId;
-    this->m_infoId = source.m_infoId;
-    this->m_suggestedPlayers = source.m_suggestedPlayers;
-    this->m_friendlyFactionId = source.m_friendlyFactionId;
-    this->m_friendlyFactionAmount = source.m_friendlyFactionAmount;
-    this->m_hostileFactionId = source.m_hostileFactionId;
-    this->m_hostileFactionAmount = source.m_hostileFactionAmount;
-    this->m_nextQuestId = source.m_nextQuestId;
-    this->m_xPId = source.m_xPId;
-    this->m_rewardMoney = source.m_rewardMoney;
-    this->m_rewardMoneyInsteadOfXp = source.m_rewardMoneyInsteadOfXp;
-    this->m_rewardSpellId = source.m_rewardSpellId;
-    this->m_effectOnPlayer = source.m_effectOnPlayer;
-    this->m_rewardHonor = source.m_rewardHonor;
-    this->m_rewardHonorBonus = source.m_rewardHonorBonus;
-    this->m_startingItemId = source.m_startingItemId;
-    this->m_flags = source.m_flags;
-    this->m_rewardTitleId = source.m_rewardTitleId;
-    this->m_requiredPlayersKilled = source.m_requiredPlayersKilled;
-    this->m_rewardTalentPoints = source.m_rewardTalentPoints;
-    this->m_rewardArenaPoints = source.m_rewardArenaPoints;
-    this->unk_28E0 = source.unk_28E0;
-
-    for (uint32_t i = 0; i < 5; i++) {
-        this->m_rewardReputationFaction[i] = source.m_rewardReputationFaction[i];
-    }
-
-    for (uint32_t i = 0; i < 5; i++) {
-        this->m_factionRewardId[i] = source.m_factionRewardId[i];
-    }
-
-    for (uint32_t i = 0; i < 5; i++) {
-        this->m_rewardReputationOverride[i] = source.m_rewardReputationOverride[i];
+    for (uint32_t i = 0; i < 4; i++) {
+        msg->Get(this->m_rewardCurrencyId[i]);
+        msg->Get(this->m_rewardCurrencyCount[i]);
     }
 
     for (uint32_t i = 0; i < 4; i++) {
-        this->m_rewardItem[i] = source.m_rewardItem[i];
-        this->m_rewardItemCount[i] = source.m_rewardItemCount[i];
+        msg->Get(this->m_requiredCurrencyId[i]);
+        msg->Get(this->m_requiredCurrencyCount[i]);
     }
 
-    for (uint32_t i = 0; i < 6; i++) {
-        this->m_rewardChoiceItem[i] = source.m_rewardChoiceItem[i];
-        this->m_rewardChoiceItemCount[i] = source.m_rewardChoiceItemCount[i];
-    }
-
-    this->m_pointMapId = source.m_pointMapId;
-    this->m_pointX = source.m_pointX;
-    this->m_pointY = source.m_pointY;
-    this->m_pointOptional = source.m_pointOptional;
-    SStrCopy(this->m_name, source.m_name, sizeof(this->m_name));
-    SStrCopy(this->m_objText, source.m_objText, sizeof(this->m_objText));
-    SStrCopy(this->m_description, source.m_description, sizeof(this->m_description));
-    SStrCopy(this->m_endText, source.m_endText, sizeof(this->m_endText));
-    SStrCopy(this->m_completionText, source.m_completionText, sizeof(this->m_completionText));
-
-    for (uint32_t i = 0; i < 4; i++) {
-        this->m_objectiveId[i] = source.m_objectiveId[i];
-        this->m_objectiveRequiredCount[i] = source.m_objectiveRequiredCount[i];
-        this->m_intermediateItemId[i] = source.m_intermediateItemId[i];
-        this->m_intermediateItemCount[i] = source.m_intermediateItemCount[i];
-        SStrCopy(this->m_objectiveText[i], source.m_objectiveText[i], sizeof(this->m_objectiveText[i]));
-    }
-
-    for (uint32_t i = 0; i < 6; i++) {
-        this->m_collectItemId[i] = source.m_collectItemId[i];
-        this->m_collectItemCount[i] = source.m_collectItemCount[i];
-    }
-
-    return *this;
+    msg->GetString(this->m_questGiverTextWindow, 0x7FFFFFFF);
+    msg->GetString(this->m_questGiverTargetName, 0x7FFFFFFF);
+    msg->GetString(this->m_questTurnTextWindow, 0x7FFFFFFF);
+    msg->GetString(this->m_questTurnTargetName, 0x7FFFFFFF);
+    msg->Get(this->m_soundAccept);
+    msg->Get(this->m_soundTurnIn);
 }

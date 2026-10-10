@@ -619,7 +619,7 @@ static int32_t Script_GetInboxItemLink(lua_State* L) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::CreateItemLink(attachment->m_itemID, stats->m_quality, attachment->m_enchantIDs[0], &attachment->m_enchantIDs[2], attachment->m_randomPropertiesID, attachment->m_suffixFactor));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(attachment->m_itemID, stats->m_quality, attachment->m_enchantIDs[0], &attachment->m_enchantIDs[2], attachment->m_randomPropertiesID, attachment->m_suffixFactor, 0));
     return 1;
 }
 

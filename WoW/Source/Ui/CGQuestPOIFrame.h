@@ -14,15 +14,15 @@ class CRenderBatch;
 class CStatus;
 class CTexture;
 class linkObject;
-struct QuestPOIBlob;
+struct BLOB;
 struct QuestPOIInfo;
-struct QuestPOIPoint;
+struct BLOBPOI;
 struct lua_State;
 
 class CGQuestPOIFrame : public CSimpleFrame {
     public:
     struct QuestPOIRenderData {
-        /* 0000 */ QuestPOIBlob* m_blob;
+        /* 0000 */ BLOB* m_blob;
         /* 0004 */ TSGrowableArray<C3Vector> m_fillVerts;
         /* 0014 */ TSGrowableArray<C2Vector> m_fillTexCoords;
         /* 0024 */ TSGrowableArray<uint16_t> m_fillIndices;
@@ -82,8 +82,8 @@ class CGQuestPOIFrame : public CSimpleFrame {
     void Render();
     void UpdateMouseOverPOI(float x, float y);
     void MergeBlobs(uint32_t index);
-    void BuildBlobOutline(QuestPOIBlob* blob, TSGrowableArray<QuestPOIPoint>* points);
-    void BuildBlobRenderData(QuestPOIRenderData* data, QuestPOIBlob* blob);
+    void BuildBlobOutline(BLOB* blob, TSGrowableArray<BLOBPOI>* points);
+    void BuildBlobRenderData(QuestPOIRenderData* data, BLOB* blob);
     void RemoveQuest(int32_t questId);
     bool BuildRenderData(uint32_t index);
     void AddQuest(QuestPOIInfo* info);

@@ -11,16 +11,16 @@ class CurrencyTypesRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ DBCString unk_0008;
-    /* 000C */ DBCString unk_000C;
-    /* 0010 */ DBCString unk_0010;
-    /* 0014 */ int32_t unk_0014;
-    /* 0018 */ int32_t unk_0018;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ int32_t unk_0020;
-    /* 0024 */ int32_t unk_0024;
-    /* 0028 */ DBCString unk_0028;
+    /* 0004 */ int32_t m_categoryID;
+    /* 0008 */ DBCString m_name;
+    /* 000C */ DBCString m_inventoryIcon;
+    /* 0010 */ DBCString m_inventoryIcon2;
+    /* 0014 */ int32_t m_spellWeight;
+    /* 0018 */ int32_t m_spellCategory;
+    /* 001C */ int32_t m_totalCap;
+    /* 0020 */ int32_t m_weeklyCap;
+    /* 0024 */ int32_t m_flags;
+    /* 0028 */ DBCString m_description;
 };
 
 #endif

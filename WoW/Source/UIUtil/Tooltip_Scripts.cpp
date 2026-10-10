@@ -1913,7 +1913,7 @@ static int32_t Script_SetMerchantItem(lua_State* L) {
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 2) - 1.0);
-    MerchantItem* item;
+    VendorItem* item;
 
     if (index < 0 || index >= CGMerchantInfo::m_numMerchantItems || !CGMerchantInfo::m_merchant || (item = &CGMerchantInfo::m_items[index]) == NULL || !item->m_itemID) {
         return 0;
@@ -1936,7 +1936,7 @@ static int32_t Script_SetMerchantCostItem(lua_State* L) {
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 2) - 1.0);
     int32_t costIndex = static_cast<int32_t>(lua_tonumber(L, 3) - 1.0);
-    MerchantItem* item;
+    VendorItem* item;
     ItemExtendedCostRec* cost;
 
     if (index < 0 || index >= CGMerchantInfo::m_numMerchantItems || !CGMerchantInfo::m_merchant || (item = &CGMerchantInfo::m_items[index]) == NULL || !item->m_itemID || (cost = g_itemExtendedCostDB.GetRecord(item->m_extendedCostID)) == NULL) {

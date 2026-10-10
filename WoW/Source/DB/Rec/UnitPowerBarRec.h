@@ -32,7 +32,7 @@ class UnitPowerBarRec {
     /* 004C */ int32_t unk_004C;
     /* 0050 */ int32_t m_flags;
     /* 0054 */ DBCString unk_0054;
-    /* 0058 */ DBCString unk_0058;
+    /* 0058 */ DBCString m_costString;
     /* 005C */ DBCString m_outOfError;
     /* 0060 */ DBCString unk_0060;
     /* 0064 */ float unk_0064;

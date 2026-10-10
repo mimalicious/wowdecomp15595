@@ -618,8 +618,6 @@ int32_t Script_GetEventTime(lua_State* L);
 int32_t Script_SendSoRByText(lua_State* L);
 void SpellActivationOverlayRegisterScriptFunctions();
 void SpellActivationOverlayUnregisterScriptFunctions();
-void FlyoutRegisterScriptFunctions();
-void FlyoutUnregisterScriptFunctions();
 void LFGuildRegisterScriptFunctions();
 void LFGuildUnregisterScriptFunctions();
 void ReforgeRegisterScriptFunctions();

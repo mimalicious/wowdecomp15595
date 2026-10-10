@@ -16,5 +16,5 @@ const DBCMeta ItemNameDescriptionRec::s_meta = { "DBFilesClient\\ItemNameDescrip
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ItemNameDescriptionRec::FixupStrings(void* record, const char* strings) {
     ItemNameDescriptionRec* rec = static_cast<ItemNameDescriptionRec*>(record);
-    DBCFixupString(rec->unk_0004, strings);
+    DBCFixupString(rec->m_description, strings);
 }

@@ -295,7 +295,7 @@ void CGCharacterInfo::UpdateItem(WOWGUID guid) {
 }
 
 // OFFSET: #0x005E79D0
-static void BuyItemInBag(WOWGUID merchant, const MerchantItem* item, uint32_t count, WOWGUID bag) {
+static void BuyItemInBag(WOWGUID merchant, const VendorItem* item, uint32_t count, WOWGUID bag) {
     CGPlayer_C::BuyItemInSlot(merchant, item, count, bag, 0xFF);
 }
 
@@ -402,7 +402,7 @@ void CGCharacterInfo::PickupInventoryItem(int32_t slot) {
 
     if (virtualId) {
         if (CGGameUI::m_cursorItemType == 5 && CGMerchantInfo::m_merchant) {
-            MerchantItem* merchantItem = CGMerchantInfo::GetItem(virtualSlot);
+            VendorItem* merchantItem = CGMerchantInfo::GetItem(virtualSlot);
 
             if (merchantItem) {
                 CGPlayer_C::BuyItemInSlot(CGMerchantInfo::m_merchant, merchantItem, 1, player->m_obj->m_guid, slot);

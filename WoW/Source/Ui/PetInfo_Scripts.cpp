@@ -177,7 +177,7 @@ static int32_t Script_GetPetTalentTree(lua_State* L) {
         for (uint32_t i = 0; i < static_cast<uint32_t>(g_talentTabDB.m_numRecords); i++) {
             TalentTabRec* tab = g_talentTabDB.GetRecordByIndex(i);
 
-            if (tab->m_categoryEnumID && ((1 << talentType) & tab->m_categoryEnumID)) {
+            if (tab->m_petTalentMask && ((1 << talentType) & tab->m_petTalentMask)) {
                 lua_pushstring(L, tab->m_name);
                 return 1;
             }

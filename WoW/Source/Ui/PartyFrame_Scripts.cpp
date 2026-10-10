@@ -17,7 +17,7 @@
 
 // OFFSET: 0x008FCAC0/0x140653D90
 static int32_t Script_GetNumPartyMembers(lua_State* L) {
-    lua_pushnumber(L, CGPartyInfo::GetNumPartyMembers());
+    lua_pushnumber(L, CGPartyInfo::NumMembers());
     return 1;
 }
 

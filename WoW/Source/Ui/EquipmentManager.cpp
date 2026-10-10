@@ -1,6 +1,5 @@
 #include "EquipmentManager.h"
 #include "Engine/Source/Base/CDataStore.h"
-#include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include <new>
 #include "Engine/Source/Base/ObjectAlloc.h"
@@ -20,26 +19,33 @@
 #include "WoW/Source/Object/Unit.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00C1E95C
-uint32_t* CGEquipmentManager::s_equipmentSetHeap;
-
-// STATIC: #0x00C1E954
-uint8_t CGEquipmentManager::m_lastCanUseEquipmentSetsValue;
-
-// STATIC: #0x00C1E955
-uint8_t CGEquipmentManager::m_loaded;
-
-// STATIC: #0x00C1E956
-uint8_t CGEquipmentManager::m_swapPending;
-
-// STATIC: #0x00C1E958
-int32_t CGEquipmentManager::m_pendingSetID;
-
-// STATIC: #0x00C1E908
+// STATIC: 0x00F4B978
 int32_t CGEquipmentManager::m_ignoredSlots[19];
 
-// STATIC: #0x00ACFC00
+// STATIC: 0x00F4B9C4
+uint8_t CGEquipmentManager::m_lastCanUseEquipmentSetsValue;
+
+// STATIC: 0x00F4B9C5
+uint8_t CGEquipmentManager::m_loaded;
+
+// STATIC: 0x00F4B9C6
+uint8_t CGEquipmentManager::m_swapPending;
+
+// STATIC: 0x00F4B9C8
+int32_t CGEquipmentManager::m_pendingSetID;
+
+// STATIC: 0x00F4B9CC
+TSObjectAllocPool<EQUIPMENT_SET>* CGEquipmentManager::s_equipmentSetPool;
+
+// STATIC: 0x00D15060
 TSList<EQUIPMENT_SET_NODE> CGEquipmentManager::s_equipmentSets;
+
+// INLINED
+EQUIPMENT_SET::EQUIPMENT_SET() {
+    this->m_guid = WOWGUID::Make(0);
+    memset(this->m_items, 0, sizeof(this->m_items));
+    this->m_unsaved = 0;
+}
 
 // PROVEN: b695294d IDENTICAL/NONE
 // OFFSET: 0x009A1280/0x140725A20
@@ -49,304 +55,19 @@ void CGEquipmentManager::EnterWorld() {
     CGEquipmentManager::m_pendingSetID = 0;
 }
 
-// OFFSET: #0x005AD6B0
-int32_t CGEquipmentManager::CanUseEquipmentSets(bool a1) {
-    uint8_t canUse = 0;
-
-    if (!CGEquipmentManager::m_swapPending) {
-        CVar* var = CVar::Lookup("equipmentManager");
-
-        if (var && var->m_intValue) {
-            canUse = 1;
-        }
-    }
+// OFFSET: 0x009A12A0
+int32_t CGEquipmentManager::CanUseEquipmentSets(bool updateActionBar) {
+    uint8_t canUse = CGEquipmentManager::m_swapPending == 0;
 
     if (CGEquipmentManager::m_lastCanUseEquipmentSetsValue != canUse) {
         CGEquipmentManager::m_lastCanUseEquipmentSetsValue = canUse;
 
-        if (a1) {
+        if (updateActionBar) {
             CGActionBar::UpdateUsable();
         }
     }
 
     return canUse;
-}
-
-// OFFSET: #0x005AD9B0
-static EQUIPMENT_SET* AllocSet(uint32_t* heap) {
-    uint32_t handle;
-    void* object = NULL;
-
-    if (!ObjectAlloc(*heap, &handle, &object, false, __FILE__, __LINE__)) {
-        return NULL;
-    }
-
-    EQUIPMENT_SET* set = object ? new (object) EQUIPMENT_SET() : NULL;
-    set->m_handle = handle;
-    return set;
-}
-
-// OFFSET: #0x005AF7E0
-void CGEquipmentManager::CreateEquipmentSet(const char* name, const char* icon) {
-    int32_t count = 0;
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        count++;
-    }
-
-    if (count >= 10 || CGEquipmentManager::HasSet(name)) {
-        return;
-    }
-
-    int32_t id = CGEquipmentManager::GetNextFreeSetID();
-
-    if (id < 0) {
-        return;
-    }
-
-    EQUIPMENT_SET* set = AllocSet(CGEquipmentManager::s_equipmentSetHeap);
-    set->m_id = id;
-    EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.NewNode(2, 0, 8);
-    node->m_set = set;
-    CGEquipmentManager::SaveSet(set, name, icon);
-    set->unk_0230 = 1;
-}
-
-// PROVEN: 62cfdeb7 IDENTICAL/NONE
-// OFFSET: 0x009A2F50
-void CGEquipmentManager::SaveSetByName(const char* name, const char* icon) {
-    EQUIPMENT_SET* set = CGEquipmentManager::GetSetByName(name);
-
-    if (set) {
-        CGEquipmentManager::SaveSet(set, name, icon);
-    }
-}
-
-// OFFSET: #0x005AFBB0
-void CGEquipmentManager::InitializeGame() {
-    ClientServices::SetMessageHandler(SMSG_LOAD_EQUIPMENT_SET, Packet_SMSG_EQUIPMENT_SET_LIST, NULL);
-    ClientServices::SetMessageHandler(SMSG_EQUIPMENT_SET_ID, Packet_SMSG_EQUIPMENT_SET_SAVED, NULL);
-    ClientServices::SetMessageHandler(SMSG_USE_EQUIPMENT_SET_RESULT, Packet_SMSG_EQUIPMENT_SET_USE_RESULT, NULL);
-
-    if (!CGEquipmentManager::s_equipmentSetHeap) {
-        CGEquipmentManager::s_equipmentSetHeap = new (SMemAlloc(sizeof(uint32_t), __FILE__, __LINE__, 0)) uint32_t(ObjectAllocAddHeap(sizeof(EQUIPMENT_SET), 128, "EQUIPMENTSET", true));
-    }
-}
-
-// OFFSET: #0x005AE260
-bool CGEquipmentManager::DeleteEquipmentSet(EQUIPMENT_SET* set) {
-    CGActionBar::RemoveEquipmentSet(set->m_id);
-    WOWGUID guid = set->m_guid;
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        if (node->m_set == set) {
-            CGEquipmentManager::s_equipmentSets.DeleteNode(node);
-            break;
-        }
-    }
-
-    ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, set->m_handle, set, __FILE__, __LINE__);
-    WDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_EQUIPMENT_SET_DELETE));
-    SmartGUID setGuid;
-    setGuid.m_guid = guid.m_guid;
-    msg << setGuid;
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SETS_CHANGED, NULL);
-    return true;
-}
-
-// OFFSET: #0x005AE380
-int32_t CGEquipmentManager::GetSetList(char* buffer, uint32_t size, const WOWGUID* item) {
-    uint32_t remaining = size - 1;
-    char* out = buffer;
-    const char* separator = "";
-    const char* delimiter = FrameScript_GetText("PLAYER_LIST_DELIMITER", -1, GENDER_NOT_APPLICABLE);
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        EQUIPMENT_SET* set = node->m_set;
-
-        for (uint32_t i = 0; i < sizeof(set->m_items) / sizeof(set->m_items[0]); i++) {
-            if (set->m_items[i] != *item) {
-                continue;
-            }
-
-            size_t nameLength = SStrLen(set->m_name);
-            size_t separatorLength = SStrLen(separator);
-
-            if (separatorLength + nameLength > remaining) {
-                break;
-            }
-
-            memcpy(out, separator, separatorLength);
-            out += separatorLength;
-            memcpy(out, set->m_name, nameLength);
-            out += nameLength;
-            remaining -= nameLength + separatorLength;
-            separator = delimiter;
-        }
-    }
-
-    *out = '\0';
-    return buffer != out;
-}
-
-// OFFSET: #0x005AE490
-bool CGEquipmentManager::HasSet(const char* name) {
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        if (!SStrCmp(node->m_set->m_name, name, STORM_MAX_STR)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// OFFSET: #0x005AE530
-int32_t CGEquipmentManager::GetNextFreeSetID() {
-    int32_t id = 0;
-    EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head();
-
-    while (node) {
-        if (node->m_set->m_id == id) {
-            if (++id >= 10) {
-                return -1;
-            }
-
-            node = CGEquipmentManager::s_equipmentSets.Head();
-        } else {
-            node = CGEquipmentManager::s_equipmentSets.Next(node);
-        }
-    }
-
-    return id;
-}
-
-// OFFSET: #0x005AE580
-EQUIPMENT_SET* CGEquipmentManager::GetSetByIndex(int32_t index) {
-    int32_t i = 0;
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        if (i == index) {
-            return node->m_set;
-        }
-
-        i++;
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x005AE5C0
-const EQUIPMENT_SET* CGEquipmentManager::GetSetByID(int32_t id) {
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        if (node->m_set->m_id == id) {
-            return node->m_set;
-        }
-    }
-
-    return NULL;
-}
-
-// INLINED
-EQUIPMENT_SET::EQUIPMENT_SET() {
-    this->m_guid = WOWGUID::Make(0);
-    memset(this->m_items, 0, sizeof(this->m_items));
-    this->unk_0230 = 0;
-}
-
-// OFFSET: #0x005AE600
-EQUIPMENT_SET* CGEquipmentManager::GetSetByName(const char* name) {
-    if (!name) {
-        return NULL;
-    }
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        if (!SStrCmp(node->m_set->m_name, name, STORM_MAX_STR)) {
-            return node->m_set;
-        }
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x005AF400
-bool CGEquipmentManager::ModifyEquipmentSet(EQUIPMENT_SET* set, const char* name) {
-    if (!set || CGEquipmentManager::HasSet(name)) {
-        return false;
-    }
-
-    SStrCopy(set->m_name, name, STORM_MAX_STR);
-    CGEquipmentManager::SaveSet(set, name, set->m_icon);
-    FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SETS_CHANGED, NULL);
-    return true;
-}
-
-// OFFSET: #0x005AF460
-bool CGEquipmentManager::CanCreateSet() {
-    int32_t count = 0;
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        count++;
-    }
-
-    return count < 10;
-}
-
-// OFFSET: #0x005AF490
-int32_t Packet_SMSG_EQUIPMENT_SET_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint32_t count = 0;
-    msg->Get(count);
-
-    uint32_t existing = 0;
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); !CGEquipmentManager::s_equipmentSets.IsEnd(node); node = CGEquipmentManager::s_equipmentSets.RawNext(node)) {
-        existing++;
-    }
-
-    if (CGEquipmentManager::m_loaded && count == existing) {
-        msg->m_read = msg->m_size;
-        return 1;
-    }
-
-    if (existing) {
-        for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); !CGEquipmentManager::s_equipmentSets.IsEnd(node); node = CGEquipmentManager::s_equipmentSets.RawNext(node)) {
-            ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, node->m_set->m_handle, node->m_set, __FILE__, __LINE__);
-        }
-
-        CGEquipmentManager::s_equipmentSets.Clear();
-    }
-
-    for (int32_t i = 0; i < static_cast<int32_t>(count) && i < 10; i++) {
-        EQUIPMENT_SET* set = NULL;
-        uint32_t handle;
-        void* object = NULL;
-
-        if (ObjectAlloc(*CGEquipmentManager::s_equipmentSetHeap, &handle, &object, false, __FILE__, __LINE__)) {
-            set = object ? new (object) EQUIPMENT_SET() : NULL;
-            set->m_handle = handle;
-        }
-
-        SmartGUID guid;
-        *msg >> guid;
-        set->m_guid = guid;
-        msg->Get(reinterpret_cast<uint32_t&>(set->m_id));
-        msg->GetString(set->m_name, sizeof(set->m_name));
-        msg->GetString(set->m_icon, sizeof(set->m_icon));
-
-        for (uint32_t slot = 0; slot < 19; slot++) {
-            SmartGUID item;
-            *msg >> item;
-            set->m_items[slot] = item;
-        }
-
-        EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.NewNode(2, 0, 0);
-        node->m_set = set;
-    }
-
-    CGEquipmentManager::m_loaded = 1;
-    return 1;
 }
 
 // PROVEN: 243b4596 IDENTICAL/NONE
@@ -357,7 +78,7 @@ void CGEquipmentManager::ClearIgnoredSlots() {
     }
 }
 
-// OFFSET: #0x005AD940
+// OFFSET: 0x009A14C0/0x140725CA0
 int32_t CGEquipmentManager::SetContainsLockedItems(const EQUIPMENT_SET* set) {
     if (!set) {
         return 0;
@@ -376,120 +97,7 @@ int32_t CGEquipmentManager::SetContainsLockedItems(const EQUIPMENT_SET* set) {
     return 0;
 }
 
-// OFFSET: #0x005AE040
-int32_t CGEquipmentManager::SetUsesLockedSlots(const EQUIPMENT_SET* set) {
-    if (!set) {
-        return 0;
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (!player) {
-        return 0;
-    }
-
-    for (int32_t slot = 0; slot <= 18; slot++) {
-        if (set->m_items[slot].m_guid == 1) {
-            continue;
-        }
-
-        CGItem_C* item = player->m_bag.GetItemPointer(slot);
-
-        if (item && (item->m_itemFlags & 0x1)) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x005AE660
-void CGEquipmentManager::EquipSet(int32_t id) {
-    const EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
-
-    if (set) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_WEAR_EQUIPMENT_SET, "%s", set->m_name);
-    }
-}
-
-// OFFSET: #0x005AE6B0
-void CGEquipmentManager::GetFullIconPath(int32_t id, char* buffer, uint32_t size) {
-    const EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
-
-    if (!set) {
-        SStrPrintf(buffer, size, "");
-        return;
-    }
-
-    const char* path = ClientDBStringLookup(3);
-    const char* icon = set->m_icon;
-
-    if (!icon || !*icon) {
-        SStrPrintf(buffer, size, "");
-        return;
-    }
-
-    SStrPrintf(buffer, size, "%s%s%s", path, *path ? "\\" : "", icon);
-}
-
-// OFFSET: #0x005AE760
-static void OnEquipmentSetSaved(int32_t id, WOWGUID guid) {
-    EQUIPMENT_SET* set = const_cast<EQUIPMENT_SET*>(CGEquipmentManager::GetSetByID(id));
-
-    if (!set) {
-        return;
-    }
-
-    if (guid.m_guid) {
-        set->m_guid = guid;
-        set->unk_0230 = 0;
-        return;
-    }
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        if (node->m_set->m_id == id) {
-            CGEquipmentManager::s_equipmentSets.DeleteNode(node);
-            break;
-        }
-    }
-
-    ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, set->m_handle, set, __FILE__, __LINE__);
-}
-
-// OFFSET: #0x005AF6C0
-int32_t Packet_SMSG_EQUIPMENT_SET_SAVED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    int32_t id = 0;
-    msg->Get(reinterpret_cast<uint32_t&>(id));
-    SmartGUID guid;
-    *msg >> guid;
-    OnEquipmentSetSaved(id, guid);
-    return 1;
-}
-
-// OFFSET: #0x005AF710
-int32_t Packet_SMSG_EQUIPMENT_SET_USE_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    CGEquipmentManager::m_swapPending = 0;
-    uint8_t result = 0;
-    msg->Get(result);
-
-    if (result) {
-        const EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
-        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 0, set ? set->m_name : NULL);
-
-        if (result == 4) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("EQUIPMENT_MANAGER_BAGS_FULL", -1, GENDER_NOT_APPLICABLE));
-        }
-    } else {
-        const EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
-        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 1, set ? set->m_name : NULL);
-    }
-
-    CGActionBar::UpdateUsable();
-    CGEquipmentManager::m_pendingSetID = 0;
-    return 1;
-}
-
-// OFFSET: #0x005ADA20
+// OFFSET: 0x009A15D0/0x140725D30
 bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -497,19 +105,12 @@ bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
         return false;
     }
 
-    if (!CGEquipmentManager::CanUseEquipmentSets(true)) {
-        CVar* var = CVar::Lookup("equipmentManager");
-
-        if (var && var->m_intValue) {
-            return false;
-        }
-
-        FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("EQUIPMENT_MANAGER_IS_DISABLED", -1, GENDER_NOT_APPLICABLE));
+    if (!CGEquipmentManager::CanUseEquipmentSets(true) || CGGameUI::GetCursorItem()) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("SPELL_FAILED_CANT_DO_THAT_RIGHT_NOW", -1, GENDER_NOT_APPLICABLE));
         return false;
     }
 
-    if (CGGameUI::GetCursorItem()) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("SPELL_FAILED_CANT_DO_THAT_RIGHT_NOW", -1, GENDER_NOT_APPLICABLE));
+    if (!CGGameUI::CanPerformAction(22)) {
         return false;
     }
 
@@ -602,14 +203,14 @@ bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
     return true;
 }
 
-// OFFSET: #0x005ADE50
+// OFFSET: 0x009A1990
 void CGEquipmentManager::SaveSet(EQUIPMENT_SET* set, const char* name, const char* icon) {
-    if (set->unk_0230) {
+    if (set->m_unsaved) {
         return;
     }
 
-    SStrCopy(set->m_name, name, STORM_MAX_STR);
-    SStrCopy(set->m_icon, icon, STORM_MAX_STR);
+    SStrCopy(set->m_name, name, sizeof(set->m_name));
+    SStrCopy(set->m_icon, icon, sizeof(set->m_icon));
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (!player) {
@@ -621,7 +222,7 @@ void CGEquipmentManager::SaveSet(EQUIPMENT_SET* set, const char* name, const cha
             set->m_items[slot].m_guid = 1;
         } else {
             CGItem_C* item = player->m_bag.GetItemPointer(slot);
-            set->m_items[slot] = item ? item->m_obj->m_guid : WOWGUID();
+            set->m_items[slot] = item ? item->m_obj->m_guid : WOWGUID::Make(0);
         }
     }
 
@@ -649,22 +250,77 @@ void CGEquipmentManager::SaveSet(EQUIPMENT_SET* set, const char* name, const cha
     FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SETS_CHANGED, NULL);
 }
 
-// OFFSET: #0x005AE1B0
-void CGEquipmentManager::ShutdownGame() {
-    ClientServices::ClearMessageHandler(SMSG_LOAD_EQUIPMENT_SET);
-    ClientServices::ClearMessageHandler(SMSG_EQUIPMENT_SET_ID);
-    ClientServices::ClearMessageHandler(SMSG_USE_EQUIPMENT_SET_RESULT);
-    CGEquipmentManager::m_swapPending = 0;
-    CGEquipmentManager::m_pendingSetID = 0;
-    CGEquipmentManager::m_loaded = 0;
-
-    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, node->m_set->m_handle, node->m_set, __FILE__, __LINE__);
+// OFFSET: 0x009A1BB0
+int32_t CGEquipmentManager::SetUsesLockedSlots(const EQUIPMENT_SET* set) {
+    if (!set) {
+        return 0;
     }
 
-    CGEquipmentManager::s_equipmentSets.Clear();
-    delete CGEquipmentManager::s_equipmentSetHeap;
-    CGEquipmentManager::s_equipmentSetHeap = NULL;
+    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+    if (!player) {
+        return 0;
+    }
+
+    for (int32_t slot = 0; slot <= 18; slot++) {
+        if (set->m_items[slot].m_guid == 1) {
+            continue;
+        }
+
+        CGItem_C* item = player->m_bag.GetItemPointer(slot);
+
+        if (item && (item->m_itemFlags & 0x1)) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009A1C30/0x1407266F0
+int32_t CGEquipmentManager::GetSetList(char* buffer, uint32_t size, const WOWGUID& item) {
+    uint32_t remaining = size - 1;
+    char* out = buffer;
+    const char* separator = "";
+    const char* delimiter = FrameScript_GetText("PLAYER_LIST_DELIMITER", -1, GENDER_NOT_APPLICABLE);
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        EQUIPMENT_SET* set = node->m_set;
+
+        for (uint32_t i = 0; i <= 18; i++) {
+            if (set->m_items[i] != item) {
+                continue;
+            }
+
+            size_t nameLength = strlen(set->m_name);
+            size_t separatorLength = strlen(separator);
+
+            if (separatorLength + nameLength > remaining) {
+                break;
+            }
+
+            memcpy(out, separator, separatorLength);
+            out += separatorLength;
+            memcpy(out, set->m_name, nameLength);
+            out += nameLength;
+            remaining -= nameLength + separatorLength;
+            separator = delimiter;
+        }
+    }
+
+    *out = '\0';
+    return buffer != out;
+}
+
+// OFFSET: 0x009A1D50
+bool CGEquipmentManager::HasSet(const char* name) {
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        if (!strcmp(node->m_set->m_name, name)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // OFFSET: 0x009A1DC0
@@ -676,4 +332,419 @@ bool CGEquipmentManager::HasSet(int32_t id) {
     }
 
     return false;
+}
+
+// OFFSET: 0x009A1E00
+int32_t CGEquipmentManager::GetNextFreeSetID() {
+    int32_t id = 0;
+    EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head();
+
+    while (node) {
+        if (node->m_set->m_id == id) {
+            if (++id >= 10) {
+                return -1;
+            }
+
+            node = CGEquipmentManager::s_equipmentSets.Head();
+        } else {
+            node = CGEquipmentManager::s_equipmentSets.Next(node);
+        }
+    }
+
+    return id;
+}
+
+// OFFSET: 0x009A1E50/0x1407268F0
+EQUIPMENT_SET* CGEquipmentManager::GetSetByIndex(int32_t index) {
+    int32_t i = 0;
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        if (i == index) {
+            return node->m_set;
+        }
+
+        i++;
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x009A1E90/0x140726930
+EQUIPMENT_SET* CGEquipmentManager::GetSetByID(int32_t id) {
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        if (node->m_set->m_id == id) {
+            return node->m_set;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x009A1ED0/0x140726970
+EQUIPMENT_SET* CGEquipmentManager::GetSetByName(const char* name) {
+    if (!name) {
+        return NULL;
+    }
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        if (!strcmp(node->m_set->m_name, name)) {
+            return node->m_set;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x009A1F50
+void CGEquipmentManager::EquipSet(int32_t id) {
+    EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
+
+    if (set) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_WEAR_EQUIPMENT_SET, "%s", set->m_name);
+    }
+}
+
+// OFFSET: 0x009A1F80/0x140726A50
+void CGEquipmentManager::GetFullIconPath(int32_t id, char* buffer, uint32_t size) {
+    EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
+
+    if (set) {
+        const char* path = ClientDBStringLookup(3);
+
+        if (*set->m_icon) {
+            SStrPrintf(buffer, size, "%s%s%s", path, *path ? "\\" : "", set->m_icon);
+            return;
+        }
+    }
+
+    SStrPrintf(buffer, size, "");
+}
+
+// OFFSET: 0x009A2010/0x140726B20
+int32_t CGEquipmentManager::GetNumSets() {
+    int32_t count = 0;
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        count++;
+    }
+
+    return count;
+}
+
+// OFFSET: 0x009A2A80/0x1407277A0
+void CGEquipmentManager::GetSetStatus(int32_t id, int32_t& total, int32_t& equipped, int32_t& inInventory, int32_t& missing, int32_t (&missingSlots)[19], int32_t& ignored) {
+    ignored = 0;
+    missing = 0;
+    inInventory = 0;
+    equipped = 0;
+    total = 0;
+    EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
+
+    if (!set) {
+        return;
+    }
+
+    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+    if (!player) {
+        return;
+    }
+
+    uint32_t flags = CGBankInfo::m_banker ? 14 : 6;
+
+    for (int32_t slot = 0; slot <= 18; slot++) {
+        WOWGUID guid = set->m_items[slot];
+
+        if (!guid) {
+            continue;
+        }
+
+        if (guid.m_guid == 1) {
+            ignored++;
+        } else if (static_cast<uint32_t>(player->m_bag.FindItemSlot(guid)) <= 18) {
+            equipped++;
+        } else if (player->m_bag.ContainsItem(guid, true, flags)) {
+            inInventory++;
+        } else {
+            missingSlots[missing] = slot;
+            missing++;
+        }
+    }
+
+    total = missing + inInventory + equipped;
+}
+
+// OFFSET: 0x009A2BB0/0x140727940
+bool CGEquipmentManager::IsSetEquipped(int32_t id) {
+    EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
+
+    if (!set) {
+        return false;
+    }
+
+    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+    if (!player) {
+        return false;
+    }
+
+    for (int32_t slot = 0; slot <= 18; slot++) {
+        if (set->m_items[slot].m_guid == 1) {
+            continue;
+        }
+
+        WOWGUID guid = static_cast<uint32_t>(slot) < static_cast<uint32_t>(player->m_bag.m_numSlots) ? player->m_bag.m_slots[slot] : WOWGUID::Make(0);
+
+        if (guid != set->m_items[slot]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x009A2C60
+bool CGEquipmentManager::ModifyEquipmentSet(EQUIPMENT_SET* set, const char* name, const char* icon) {
+    if (!set) {
+        return false;
+    }
+
+    if (name) {
+        if (strcmp(set->m_name, name) && CGEquipmentManager::HasSet(name)) {
+            return false;
+        }
+
+        SStrCopy(set->m_name, name, sizeof(set->m_name));
+    }
+
+    if (icon) {
+        SStrCopy(set->m_icon, icon, sizeof(set->m_icon));
+    }
+
+    if (set->m_guid) {
+        CGActionBar::UpdateEquipmentSet(set->m_id);
+    }
+
+    WDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_SAVE_EQUIPMENT_SET));
+    SmartGUID setGuid;
+    setGuid.m_guid = set->m_guid.m_guid;
+    msg << setGuid;
+    msg.Put(static_cast<uint32_t>(set->m_id));
+    msg.PutString(set->m_name);
+    msg.PutString(set->m_icon);
+
+    for (uint32_t slot = 0; slot < 19; slot++) {
+        SmartGUID itemGuid;
+        itemGuid.m_guid = set->m_items[slot].m_guid;
+        msg << itemGuid;
+    }
+
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+    FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SETS_CHANGED, NULL);
+    return true;
+}
+
+// OFFSET: 0x009A2E50
+bool CGEquipmentManager::CanCreateSet() {
+    int32_t count = 0;
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        count++;
+    }
+
+    return count < 10;
+}
+
+// OFFSET: 0x009A2E80
+int32_t CGEquipmentManager::OnEquipmentSetResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    CGEquipmentManager::m_swapPending = 0;
+    uint8_t result = 0;
+    msg->Get(result);
+
+    if (!result) {
+        EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
+        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 1, set ? set->m_name : NULL);
+    } else {
+        EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
+        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 0, set ? set->m_name : NULL);
+
+        if (result == 4) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("EQUIPMENT_MANAGER_BAGS_FULL", -1, GENDER_NOT_APPLICABLE));
+        }
+    }
+
+    CGActionBar::UpdateUsable();
+    CGEquipmentManager::m_pendingSetID = 0;
+    return 1;
+}
+
+// PROVEN: 62cfdeb7 IDENTICAL/NONE
+// OFFSET: 0x009A2F50
+void CGEquipmentManager::SaveSetByName(const char* name, const char* icon) {
+    EQUIPMENT_SET* set = CGEquipmentManager::GetSetByName(name);
+
+    if (set) {
+        CGEquipmentManager::SaveSet(set, name, icon);
+    }
+}
+
+// OFFSET: 0x009A32B0
+void CGEquipmentManager::CreateEquipmentSet(const char* name, const char* icon) {
+    int32_t count = 0;
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        count++;
+    }
+
+    if (count >= 10 || CGEquipmentManager::HasSet(name)) {
+        return;
+    }
+
+    int32_t id = CGEquipmentManager::GetNextFreeSetID();
+
+    if (id < 0) {
+        return;
+    }
+
+    EQUIPMENT_SET* set = CGEquipmentManager::s_equipmentSetPool->New("", 0);
+    set->m_id = id;
+    EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.NewNode(2, 0, 8);
+    node->m_set = set;
+    CGEquipmentManager::SaveSet(set, name, icon);
+    set->m_unsaved = 1;
+}
+
+// OFFSET: 0x009A36C0/0x140728B00
+bool CGEquipmentManager::DeleteEquipmentSet(EQUIPMENT_SET* set) {
+    CGActionBar::RemoveEquipmentSet(set->m_id);
+    WOWGUID guid = set->m_guid;
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        if (node->m_set == set) {
+            CGEquipmentManager::s_equipmentSets.DeleteNode(node);
+            break;
+        }
+    }
+
+    CGEquipmentManager::s_equipmentSetPool->Delete(set);
+    WDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_EQUIPMENT_SET_DELETE));
+    SmartGUID setGuid;
+    setGuid.m_guid = guid.m_guid;
+    msg << setGuid;
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+    FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SETS_CHANGED, NULL);
+    return true;
+}
+
+// OFFSET: 0x009A3800
+int32_t CGEquipmentManager::OnEquipmentSet(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    uint32_t count = 0;
+    msg->Get(count);
+    uint32_t existing = 0;
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        existing++;
+    }
+
+    if (CGEquipmentManager::m_loaded && count == existing) {
+        msg->m_read = msg->m_size;
+        return 1;
+    }
+
+    if (existing) {
+        for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+            CGEquipmentManager::s_equipmentSetPool->Delete(node->m_set);
+        }
+
+        CGEquipmentManager::s_equipmentSets.Clear();
+    }
+
+    for (int32_t i = 0; i < static_cast<int32_t>(count) && i < 10; i++) {
+        EQUIPMENT_SET* set = CGEquipmentManager::s_equipmentSetPool->New("", 0);
+        SmartGUID guid;
+        *msg >> guid;
+        set->m_guid = guid;
+        msg->Get(reinterpret_cast<uint32_t&>(set->m_id));
+        msg->GetString(set->m_name, sizeof(set->m_name));
+        msg->GetString(set->m_icon, sizeof(set->m_icon));
+
+        for (uint32_t slot = 0; slot < 19; slot++) {
+            SmartGUID item;
+            *msg >> item;
+            set->m_items[slot] = item;
+        }
+
+        EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.NewNode(2, 0, 8);
+        node->m_set = set;
+    }
+
+    CGEquipmentManager::m_loaded = 1;
+    return 1;
+}
+
+// OFFSET: 0x009A3A10
+static void OnEquipmentSetSaved(int32_t id, WOWGUID guid) {
+    EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
+
+    if (!set) {
+        return;
+    }
+
+    if (guid.m_guid) {
+        set->m_guid = guid;
+        set->m_unsaved = 0;
+        return;
+    }
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        if (node->m_set->m_id == id) {
+            CGEquipmentManager::s_equipmentSets.DeleteNode(node);
+            break;
+        }
+    }
+
+    CGEquipmentManager::s_equipmentSetPool->Delete(set);
+}
+
+// OFFSET: 0x009A3B10
+void CGEquipmentManager::ShutdownGame() {
+    ClientServices::ClearMessageHandler(SMSG_LOAD_EQUIPMENT_SET);
+    ClientServices::ClearMessageHandler(SMSG_EQUIPMENT_SET_ID);
+    ClientServices::ClearMessageHandler(SMSG_USE_EQUIPMENT_SET_RESULT);
+    CGEquipmentManager::m_swapPending = 0;
+    CGEquipmentManager::m_pendingSetID = 0;
+    CGEquipmentManager::m_loaded = 0;
+
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        CGEquipmentManager::s_equipmentSetPool->Delete(node->m_set);
+    }
+
+    CGEquipmentManager::s_equipmentSets.Clear();
+    delete CGEquipmentManager::s_equipmentSetPool;
+    CGEquipmentManager::s_equipmentSetPool = NULL;
+}
+
+// OFFSET: 0x009A3C20
+int32_t CGEquipmentManager::OnEquipmentSetID(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    int32_t id = 0;
+    msg->Get(reinterpret_cast<uint32_t&>(id));
+    SmartGUID guid;
+    *msg >> guid;
+    OnEquipmentSetSaved(id, guid);
+    return 1;
+}
+
+// OFFSET: 0x009A3C70/0x1407292A0
+void CGEquipmentManager::InitializeGame() {
+    ClientServices::SetMessageHandler(SMSG_LOAD_EQUIPMENT_SET, CGEquipmentManager::OnEquipmentSet, NULL);
+    ClientServices::SetMessageHandler(SMSG_EQUIPMENT_SET_ID, CGEquipmentManager::OnEquipmentSetID, NULL);
+    ClientServices::SetMessageHandler(SMSG_USE_EQUIPMENT_SET_RESULT, CGEquipmentManager::OnEquipmentSetResult, NULL);
+
+    if (!CGEquipmentManager::s_equipmentSetPool) {
+        CGEquipmentManager::s_equipmentSetPool = new (SMemAlloc(sizeof(TSObjectAllocPool<EQUIPMENT_SET>), __FILE__, __LINE__, 0)) TSObjectAllocPool<EQUIPMENT_SET>("EQUIPMENTSET", 128);
+    }
 }

@@ -840,7 +840,7 @@ static int32_t Script_GetTrainerServiceItemLink(lua_State* L) {
             ItemStats_C* stats = g_itemDBCache.GetRecord(spell.m_effectItemType[0], none, NULL, NULL, false);
 
             if (stats) {
-                lua_pushstring(L, CGTooltip::GetItemHyperlinkString(spell.m_effectItemType[0], stats->m_quality, 0, 0, 0));
+                lua_pushstring(L, CGTooltip::GetItemHyperlinkString(spell.m_effectItemType[0], stats->m_quality, 0, 0, 0, 0));
                 return 1;
             }
         }

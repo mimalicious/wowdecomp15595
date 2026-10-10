@@ -1817,7 +1817,7 @@ static int32_t Script_GetLFGDungeonRewardLink(lua_State* L) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item->m_itemID, stats->m_quality, 0, 0, 0));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item->m_itemID, stats->m_quality, 0, 0, 0, 0));
     return 1;
 }
 

@@ -130,7 +130,7 @@ void CGPartyInfo::SetLeader(WOWGUID leader) {
 
 // PROVEN: 6b80e4f8 IDENTICAL/NONE
 // OFFSET: 0x008FC650/0x1406539A0
-uint32_t CGPartyInfo::GetNumPartyMembers() {
+uint32_t CGPartyInfo::NumMembers() {
     uint32_t count = 0;
 
     for (uint32_t i = 0; i < sizeof(((CGPartyInfo*)0)->m_members) / sizeof(CGPartyInfo::m_members[0]); i++) {
@@ -581,7 +581,7 @@ int32_t CGPartyInfo::IsPlayerOrPetInParty(const WOWGUID& guid) {
         return static_cast<uint32_t>(guid.m_guid >> 32);
     }
 
-    for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
         WOWGUID member = i < 4 ? CGPartyInfo::m_members[i] : WOWGUID();
 
         if (guid == member) {

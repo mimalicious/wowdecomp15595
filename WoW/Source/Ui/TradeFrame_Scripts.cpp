@@ -76,7 +76,7 @@ static int32_t Script_GetTradeTargetItemLink(lua_State* L) {
         gems[i] = CGTradeInfo::m_targetSocketEnchants[index][i];
     }
 
-    lua_pushstring(L, CGTooltip::CreateItemLink(itemId, stats->m_quality, CGTradeInfo::m_targetEnchant[index], gems, CGTradeInfo::m_targetRandomPropertyID[index], CGTradeInfo::m_targetSuffixFactor[index]));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, CGTradeInfo::m_targetEnchant[index], gems, CGTradeInfo::m_targetRandomPropertyID[index], CGTradeInfo::m_targetSuffixFactor[index], 0));
     return 1;
 }
 

@@ -597,7 +597,7 @@ static int32_t Script_GetAuctionItemLink(lua_State* L) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::CreateItemLink(auction->m_itemID, stats->m_quality, auction->m_enchantID[0], reinterpret_cast<const int32_t*>(&auction->m_enchantID[2]), auction->m_randomPropertyID, auction->m_suffixFactor));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(auction->m_itemID, stats->m_quality, auction->m_enchantID[0], reinterpret_cast<const int32_t*>(&auction->m_enchantID[2]), auction->m_randomPropertyID, auction->m_suffixFactor, 0));
     return 1;
 }
 

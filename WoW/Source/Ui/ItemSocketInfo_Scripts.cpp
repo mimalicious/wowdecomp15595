@@ -262,7 +262,7 @@ static int32_t Script_GetExistingSocketLink(lua_State* L) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(enchant->m_srcItemID, stats->m_quality, 0, 0, 0));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(enchant->m_srcItemID, stats->m_quality, 0, 0, 0, 0));
     return 1;
 }
 

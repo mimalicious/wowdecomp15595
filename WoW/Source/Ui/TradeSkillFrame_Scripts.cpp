@@ -539,7 +539,7 @@ static int32_t Script_GetTradeSkillItemLink(lua_State* L) {
         WOWGUID none = WOWGUID();
 
         if ((stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false))) {
-            link = CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, 0, 0);
+            link = CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, 0, 0, 0);
             lua_pushstring(L, link);
             return 1;
         }
@@ -609,7 +609,7 @@ static int32_t Script_GetTradeSkillReagentItemLink(lua_State* L) {
                 ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
 
                 if (stats) {
-                    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, 0, 0));
+                    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, 0, 0, 0));
                     return 1;
                 }
             }

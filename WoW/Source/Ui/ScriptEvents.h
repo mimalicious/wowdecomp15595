@@ -39,6 +39,7 @@ VehicleSeatRec* GetVehicleSeatRecAsPassengerFromLua(lua_State* L);
 void UnitNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 bool Script_GetGUIDFromString(const char** name, WOWGUID& guid);
 bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTarget);
+WOWGUID Script_GetGUIDFromName(const char* name);
 bool Script_GetNameFromToken(const char* token, const char** name, bool defaultToTarget, bool withRealm);
 char** Script_GetTokenIDsFromGUID(const WOWGUID& guid, int32_t* count);
 void ScriptEventsInitialize();

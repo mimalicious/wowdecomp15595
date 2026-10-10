@@ -1427,7 +1427,7 @@ void CGLookingForGroup::SetLFGDungeon(uint32_t slot) {
                 break;
             }
         }
-    } else if (type != 2 || CGPartyInfo::GetNumPartyMembers()) {
+    } else if (type != 2 || CGPartyInfo::NumMembers()) {
         clear = true;
     } else {
         for (LFGDungeonEntry* dungeon = CGLookingForGroup::m_localInfo.m_dungeons.Head(); dungeon; dungeon = CGLookingForGroup::m_localInfo.m_dungeons.Next(dungeon)) {

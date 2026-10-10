@@ -334,7 +334,7 @@ static int32_t Script_GetQuestItemLink(lua_State* L) {
     WOWGUID none = { 0 };
 
     if (itemId && (stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false)) != NULL) {
-        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, 0, 0));
+        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, 0, 0, 0));
     } else {
         lua_pushnil(L);
     }

@@ -223,7 +223,7 @@ uint32_t GetCombatLogObjectRaidFlags(const WOWGUID& guid) {
 
     uint32_t flags = 0;
 
-    if (CGRaidInfo::m_numMembers || CGPartyInfo::GetNumPartyMembers()) {
+    if (CGRaidInfo::m_numMembers || CGPartyInfo::NumMembers()) {
         uint32_t index = GetRaidTargetIndexFromGuid(guid);
 
         if (index < 28) {
@@ -1251,7 +1251,7 @@ uint32_t GetCombatLogObjectFlags(const WOWGUID& guid) {
     }
 
     bool inRaid = CGRaidInfo::m_numMembers != 0;
-    bool inGroup = inRaid || CGPartyInfo::GetNumPartyMembers();
+    bool inGroup = inRaid || CGPartyInfo::NumMembers();
     WOWGUID owner = guid;
     CGObject_C* object = static_cast<CGObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__));
     CGUnit_C* unit = NULL;

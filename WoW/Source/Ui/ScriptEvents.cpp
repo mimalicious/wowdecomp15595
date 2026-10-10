@@ -194,6 +194,13 @@ bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTar
     return true;
 }
 
+// OFFSET: 0x00450AA0/0x14005EEC0
+WOWGUID Script_GetGUIDFromName(const char* name) {
+    WOWGUID guid = WOWGUID::Make(0);
+    Script_GetGUIDFromToken(name, guid, false);
+    return guid;
+}
+
 // OFFSET: #0x0060C1F0
 CGUnit_C* GetUnitFromName(const char* token) {
     WOWGUID guid;
@@ -236,7 +243,7 @@ void Script_SendUniqueSignalToAllUnits(int32_t signal) {
         }
     }
 
-    for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
         if (CGGameUI::GetPartyMember(i)) {
             WOWGUID member = CGGameUI::GetPartyMember(i);
             Script_SendUniqueSignal(member, signal);
@@ -509,8 +516,8 @@ bool Script_GetGUIDFromString(const char** name, WOWGUID& guid) {
                 break;
             }
         }
-    } else if (CGPartyInfo::GetNumPartyMembers()) {
-        for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    } else if (CGPartyInfo::NumMembers()) {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
             SStrPrintf(token, sizeof(token), "party%d", i + 1);
 
             if (Script_GetNameFromToken(token, &unitName, false, withRealm) && unitName && !SStrCmpUTF8I(buffer, unitName, STORM_MAX_STR)) {
@@ -548,8 +555,8 @@ bool Script_GetGUIDFromString(const char** name, WOWGUID& guid) {
                 break;
             }
         }
-    } else if (CGPartyInfo::GetNumPartyMembers()) {
-        for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    } else if (CGPartyInfo::NumMembers()) {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
             SStrPrintf(token, sizeof(token), "partypet%d", i + 1);
 
             if (Script_GetNameFromToken(token, &unitName, false, withRealm) && unitName && !SStrCmpUTF8I(buffer, unitName, STORM_MAX_STR)) {
@@ -595,7 +602,7 @@ const char* Script_GetTokenFromGUID(const WOWGUID* guid) {
         return "pet";
     }
 
-    for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
         if (*guid == CGGameUI::GetPartyMember(i)) {
             SStrPrintf(s_tokenFromGUID, sizeof(s_tokenFromGUID), "party%d", i + 1);
             return s_tokenFromGUID;
@@ -681,7 +688,7 @@ const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
         return "pet";
     }
 
-    for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
         if (*guid == CGGameUI::GetPartyMember(i)) {
             SStrPrintf(s_auraToken, sizeof(s_auraToken), "party%d", i + 1);
             return s_auraToken;
@@ -774,7 +781,7 @@ const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
         return "pet";
     }
 
-    for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
         WOWGUID member = CGGameUI::GetPartyMember(i);
 
         if ((owner && owner == member) || (charm && charm == member)) {
@@ -867,7 +874,7 @@ char** Script_GetTokenIDsFromGUID(const WOWGUID& guid, int32_t* count) {
         SStrCopy(s_tokenIDs[(*count)++], "pet", sizeof(s_tokenBuffers[0]));
     }
 
-    for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+    for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
         if (guid == CGGameUI::GetPartyMember(i)) {
             SStrPrintf(s_tokenIDs[(*count)++], sizeof(s_tokenBuffers[0]), "party%d", i + 1);
             break;

@@ -4862,7 +4862,7 @@ void PendingSpellCast::OnSpellStartPacket(CDataStore* msg) {
                             }
                         }
                     } else if (CGPartyInfo::InParty()) {
-                        for (uint32_t i = 0; i < CGPartyInfo::GetNumPartyMembers(); i++) {
+                        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
                             WOWGUID guid = CGPartyInfo::GetMember(i);
                             CGUnit_C* otherUnit;
 

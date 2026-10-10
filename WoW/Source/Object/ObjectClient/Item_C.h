@@ -37,12 +37,12 @@ class CGItem_C : public CGObject_C, public CGItem {
     static void Shutdown();
     struct ItemPurchaseData {
         /* 0000 */ uint32_t m_money;
-        /* 0004 */ uint32_t m_honorPoints;
-        /* 0008 */ uint32_t m_arenaPoints;
-        /* 000C */ uint32_t m_itemId [5];
-        /* 0020 */ uint32_t m_itemCount [5];
-        /* 0034 */ uint32_t unk_0034;
-        /* 0038 */ uint32_t m_refundTimeLeft;
+        /* 0004 */ uint32_t m_itemId [5];
+        /* 0018 */ uint32_t m_itemCount [5];
+        /* 002C */ uint32_t m_currencyId [5];
+        /* 0040 */ uint32_t m_currencyCount [5];
+        /* 0054 */ uint32_t m_flags;
+        /* 0058 */ uint32_t m_refundTimeLeft;
     };
 
     static char* BuildItemName(char* buffer, uint32_t size, int32_t itemId, int32_t randomPropertiesId);

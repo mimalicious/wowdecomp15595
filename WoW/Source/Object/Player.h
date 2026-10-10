@@ -26,7 +26,8 @@ struct PlayerSkillInfo {
 
 class CGPlayer {
     public:
-    PlayerQuestLogEntry* GetQuestLogEntry(uint32_t slot);
+    PlayerQuestLogEntry* GetQuestLogEntry(int32_t slot) const;
+    PlayerQuestLogEntry* GetQuestLogEntryByID(int32_t questId) const;
     uint32_t GetBuybackPrice(uint32_t slot);
     bool HasPvpMedal(uint8_t medal);
     bool HasAuraVision(uint8_t vision);

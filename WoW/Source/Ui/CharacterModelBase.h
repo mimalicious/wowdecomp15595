@@ -51,6 +51,7 @@ class CGCharacterModelBase : public CSimpleModel {
     void SetUpModel(CGUnit_C* unit);
     void SetUpModel(CreatureStats_C* stats);
     void SetCreature(CreatureStats_C* stats);
+    void SetCreature(CreatureStats_C* stats, const CGUnit_C* owner);
     void RotateModel(float facing);
 };
 

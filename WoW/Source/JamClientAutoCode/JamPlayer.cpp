@@ -118,3 +118,96 @@ void PlayerObjectUpdateRescued::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(this->m_guid[7] ^ 1));
     }
 }
+
+// OFFSET: 0x00670A10
+PlayerSetCurrencyFlags::PlayerSetCurrencyFlags() {
+}
+
+// OFFSET: 0x006703A0
+PlayerSetCurrencyFlags::~PlayerSetCurrencyFlags() {
+}
+
+// OFFSET: 0x00674080
+void PlayerSetCurrencyFlags::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7306));
+    msg->Put(this->m_flags);
+    msg->Put(static_cast<uint32_t>(this->m_type));
+}
+
+// OFFSET: 0x006880B0
+PlayerQueryQuestCompletionNPCs::PlayerQueryQuestCompletionNPCs() {
+}
+
+// OFFSET: 0x00688020/0x140332E40
+PlayerQueryQuestCompletionNPCs::~PlayerQueryQuestCompletionNPCs() {
+}
+
+// OFFSET: 0x00680AB0/0x14032A460
+void PlayerQueryQuestCompletionNPCs::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7302));
+    JamBitWriter bits(msg);
+    bits.WriteBits<24>(this->m_questIds.m_count);
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_questIds.m_count; i++) {
+        msg->Put(static_cast<uint32_t>(this->m_questIds.m_data[i]));
+    }
+}
+
+// OFFSET: 0x006708D0
+PlayerSetPetSlot::PlayerSetPetSlot() {
+}
+
+// OFFSET: 0x006704E0
+PlayerSetPetSlot::~PlayerSetPetSlot() {
+}
+
+// OFFSET: 0x00674B60
+void PlayerSetPetSlot::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3A04));
+    msg->Put(this->m_petNumber);
+    msg->Put(this->m_destSlot);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_stableMaster[3] != 0);
+    bits.WriteBit(this->m_stableMaster[2] != 0);
+    bits.WriteBit(this->m_stableMaster[0] != 0);
+    bits.WriteBit(this->m_stableMaster[7] != 0);
+    bits.WriteBit(this->m_stableMaster[5] != 0);
+    bits.WriteBit(this->m_stableMaster[6] != 0);
+    bits.WriteBit(this->m_stableMaster[1] != 0);
+    bits.WriteBit(this->m_stableMaster[4] != 0);
+    bits.Flush();
+
+    if (this->m_stableMaster[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[5] ^ 1));
+    }
+
+    if (this->m_stableMaster[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[3] ^ 1));
+    }
+
+    if (this->m_stableMaster[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[1] ^ 1));
+    }
+
+    if (this->m_stableMaster[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[7] ^ 1));
+    }
+
+    if (this->m_stableMaster[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[4] ^ 1));
+    }
+
+    if (this->m_stableMaster[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[0] ^ 1));
+    }
+
+    if (this->m_stableMaster[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[6] ^ 1));
+    }
+
+    if (this->m_stableMaster[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_stableMaster[2] ^ 1));
+    }
+}

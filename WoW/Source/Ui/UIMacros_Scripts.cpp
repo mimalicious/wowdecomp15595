@@ -415,7 +415,7 @@ static int32_t Script_GetMacroItem(lua_State* L) {
     }
 
     lua_pushstring(L, CGItem_C::BuildItemName(name, sizeof(name), macro->m_itemID, 0));
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(macro->m_itemID, rec->m_quality, 0, 0, 0));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(macro->m_itemID, rec->m_quality, 0, 0, 0, 0));
     return 2;
 }
 

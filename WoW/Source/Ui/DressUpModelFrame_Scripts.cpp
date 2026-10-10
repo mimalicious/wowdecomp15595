@@ -52,10 +52,10 @@ static int32_t Script_TryOn(lua_State* L) {
         const char* link = lua_tolstring(L, 2, NULL);
 
         if (SStrStr(link, "item:")) {
-            ItemLinkInfo info;
+            TooltipExtendedItemInfo info;
             info.Clear();
             info.GetItemIdFromLink(link);
-            frame->TryOn(info.m_itemId, info.m_enchants, -1);
+            frame->TryOn(info.m_itemId, reinterpret_cast<const uint32_t*>(info.m_enchants), -1);
             return 0;
         }
 

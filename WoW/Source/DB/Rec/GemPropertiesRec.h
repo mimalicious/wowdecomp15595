@@ -14,8 +14,8 @@ class GemPropertiesRec {
     /* 0004 */ int32_t m_enchantID;
     /* 0008 */ int32_t m_maxcountInv;
     /* 000C */ int32_t m_maxcountItem;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ int32_t unk_0014;
+    /* 0010 */ int32_t m_type;
+    /* 0014 */ int32_t m_minItemLevel;
 };
 
 #endif

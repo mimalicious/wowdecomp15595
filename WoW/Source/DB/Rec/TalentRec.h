@@ -14,9 +14,9 @@ class TalentRec {
     /* 0004 */ int32_t m_tabID;
     /* 0008 */ int32_t m_tierID;
     /* 000C */ int32_t m_columnIndex;
-    /* 0010 */ int32_t m_spellRank [9];
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
+    /* 0010 */ int32_t m_spellRank [5];
+    /* 0024 */ int32_t m_prereqTalent [3];
+    /* 0030 */ int32_t m_prereqRank [3];
     /* 003C */ int32_t m_flags;
     /* 0040 */ int32_t m_requiredSpellID;
     /* 0044 */ int32_t m_categoryMask [2];

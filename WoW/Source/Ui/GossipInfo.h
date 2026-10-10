@@ -40,6 +40,7 @@ class CGGossipInfo {
     static void SetGossipText(int32_t textId);
     static uint32_t m_gossipID;
     static void SetGossip(const WOWGUID& guid);
+    static void ClearGossip();
     static GossipOption m_options[32];
     static char m_gossipText[2048];
     static void InitializeGame();

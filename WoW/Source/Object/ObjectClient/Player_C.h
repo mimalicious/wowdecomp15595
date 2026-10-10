@@ -66,7 +66,7 @@ struct PlayerPendingItemExpiration : public TSLinkedNode<PlayerPendingItemExpira
     /* 0014 */ int32_t m_duration;
 };
 
-struct MerchantItem;
+struct VendorItem;
 class ItemRecSparse;
 class ItemStats_C;
 class EmotesTextRec;
@@ -147,7 +147,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void __stdcall GetQuestReward(const WOWGUID& questGiver, int32_t questId, int32_t reward);
     static void __stdcall GiveQuestItems(const WOWGUID& questGiver, int32_t questId);
     static int32_t IsGiftWrapping();
-    static void BuyItemInSlot(WOWGUID merchant, const MerchantItem* item, uint32_t count, WOWGUID bag, uint8_t slot);
+    static void BuyItemInSlot(WOWGUID merchant, const VendorItem* item, uint32_t count, WOWGUID bag, uint8_t slot);
     static void CancelGiftWrap();
     static int32_t AutoCombatModeEventHandler(const void* data, void* param);
     static void __stdcall LeaveGroup();
@@ -179,6 +179,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void __stdcall QueryQuest(const WOWGUID& questGiver, int32_t questId);
     static void __stdcall QueryQuestGiverStatus(const WOWGUID& questGiver);
     static void QueryQuestGiverStatusMultiple();
+    static void CheckForQuestAutoComplete(int32_t questId, int32_t a2, int32_t a3);
     static bool __stdcall IsRAFPlayer(WOWGUID guid);
     static int32_t __stdcall CanSummonFriend(WOWGUID guid);
     int32_t CanGrantLevel(WOWGUID guid);
@@ -418,12 +419,11 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     int32_t OnLootRemoved(CDataStore* msg);
     int32_t OnLootSlotChanged(CDataStore* msg);
     int32_t OnSignedResults(CDataStore* msg);
-    int32_t OnListInventory(CDataStore* msg);
     void RequestAllItemPurchaseData();
     float CalcRewardHonor(float honor);
     float GetQuestXPMultiplier();
     int32_t CanUseItem(const ItemRecSparse* stats, int32_t& error);
-    static void BuyItem(WOWGUID vendor, const MerchantItem* item, uint32_t count, uint8_t a5);
+    static void BuyItem(WOWGUID vendor, const VendorItem* item, uint32_t count, uint8_t a5);
     int32_t OnItemRefundResult(CDataStore* msg);
     void DelKnownSpell(int32_t spellId, int32_t a3);
     bool VehicleAllowsInteraction() const;
@@ -514,7 +514,6 @@ int32_t OnUpdateMoney(WOWGUID guid, uint32_t offset, uint32_t count, const void*
 int32_t CharmChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param);
 int32_t OnUpdateShapeshiftForm(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param);
 int32_t FarsightChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param);
-int32_t SignalKnownCurrencyTypesUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param);
 int32_t SkillRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param);
 int32_t SkillMaxRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param);
 int32_t SignalPlayerSkillStatEventsAndRefresh(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param);

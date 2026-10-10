@@ -88,7 +88,7 @@ class CGPartyInfo {
 
     static bool InParty();
 
-    static uint32_t GetNumPartyMembers();
+    static uint32_t NumMembers();
     static uint32_t GetGroupRole(const WOWGUID& guid);
     static int32_t IsMember(const WOWGUID& guid);
     static uint8_t GetPartyAssignments(const WOWGUID& guid);

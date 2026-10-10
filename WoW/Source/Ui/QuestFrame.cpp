@@ -638,7 +638,7 @@ bool CGQuestInfo::IsQuestCompleteAt(uint32_t index) {
     }
 
     uint32_t logIndex = CGQuestLog::GetQuestIndex(CGQuestInfo::m_inProgressQuests[index].m_questID) - 1;
-    return CGQuestLog::IsQuestCompleteEx(logIndex, 1) || CGQuestLog::HasNoObjectives(logIndex);
+    return CGQuestLog::IsQuestCompleteEx(ClntObjMgrGetActivePlayerObj(), logIndex, true, 0, 0) || CGQuestLog::HasNoObjectives(logIndex);
 }
 
 // OFFSET: #0x0058CBB0

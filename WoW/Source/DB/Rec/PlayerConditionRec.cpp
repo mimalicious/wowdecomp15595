@@ -16,5 +16,5 @@ const DBCMeta PlayerConditionRec::s_meta = { "DBFilesClient\\PlayerCondition.dbc
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void PlayerConditionRec::FixupStrings(void* record, const char* strings) {
     PlayerConditionRec* rec = static_cast<PlayerConditionRec*>(record);
-    DBCFixupString(rec->unk_0004, strings);
+    DBCFixupString(rec->m_failureDescription, strings);
 }

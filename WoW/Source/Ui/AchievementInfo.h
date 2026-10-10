@@ -64,6 +64,7 @@ class CGAchievementInfo {
     static void RemoveTrackedAchievement(int32_t id);
     static WOWGUID m_inspect;
     static bool IsRealAchievement(int32_t id);
+    static CLIENT_ACHIEVEMENTS* GetAchievement(int32_t id);
     static bool IsSupersededByCompleted(int32_t id);
     static uint64_t BuildOutputString(char* buffer, int32_t size, uint64_t sum, uint64_t highest, int32_t highestId, uint64_t count, uint64_t value, CLIENT_ACHIEVEMENT_CRITERIA* criteria, int32_t flags, int32_t criteriaFlags, bool completed, const AchievementRec* achievement, const Achievement_CriteriaRec* criteriaRec, int32_t required);
     static void ReleaseInspect();

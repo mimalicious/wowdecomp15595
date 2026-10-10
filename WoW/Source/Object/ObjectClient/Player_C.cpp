@@ -298,7 +298,7 @@ uint32_t CGPlayer_C::s_lastUpdateTime;
 static WOWGUID s_lastTrainerRequest;
 
 // STATIC: #0x00C9D7D0
-static MerchantItem s_vendorItems[150];
+static VendorItem s_vendorItems[150];
 
 // STATIC: #0x00C9EB08
 static int32_t s_questsAccepted;
@@ -2230,8 +2230,6 @@ int32_t __stdcall CGPlayer_C::OnRefundInfo(CDataStore* msg) {
     }
 
     msg->Get(data->m_money);
-    msg->Get(data->m_honorPoints);
-    msg->Get(data->m_arenaPoints);
 
     for (uint32_t i = 0; i < 5; i++) {
         msg->Get(data->m_itemId[i]);
@@ -2241,7 +2239,12 @@ int32_t __stdcall CGPlayer_C::OnRefundInfo(CDataStore* msg) {
         g_itemDBCache.GetRecord(data->m_itemId[i], requester, NULL, NULL, true);
     }
 
-    msg->Get(data->unk_0034);
+    for (uint32_t i = 0; i < 5; i++) {
+        msg->Get(data->m_currencyId[i]);
+        msg->Get(data->m_currencyCount[i]);
+    }
+
+    msg->Get(data->m_flags);
     msg->Get(data->m_refundTimeLeft);
 
     return 1;
@@ -2609,7 +2612,7 @@ int32_t Packet_SMSG_QUEST_POI_QUERY_RESPONSE(void* param, NETMESSAGE msgId, uint
         SErrDisplayAppFatalMessage("", "", 0);
     }
 
-    CGQuestLog::HandlePOIQueryResponse(msg);
+    CGQuestLog::OnQuestPOIResponse(msg);
     return 1;
 }
 
@@ -2640,7 +2643,7 @@ int32_t Packet_SMSG_GROUP_UNINVITE(void* param, NETMESSAGE msgId, uint32_t time,
 
 // OFFSET: #0x006CBE40
 int32_t Packet_SMSG_GROUP_DESTROYED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    if (CGPartyInfo::GetNumPartyMembers()) {
+    if (CGPartyInfo::NumMembers()) {
         CGGameUI::DisplayError(ERR_GROUP_DISBANDED);
     }
 
@@ -3387,8 +3390,6 @@ int32_t Packet_Group_10(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
     }
 
     switch (msgId) {
-        case SMSG_VENDOR_INVENTORY:
-            return player->OnListInventory(msg);
         case SMSG_SELL_ITEM:
             return CGPlayer_C::OnSellResponse(msg);
         case SMSG_BUY_SUCCEEDED:
@@ -3635,7 +3636,6 @@ void CGPlayer_C::PlayerInitializeMessageHandlers() {
     ClientServices::SetMessageHandler(SMSG_INVENTORY_CHANGE_FAILURE, Packet_Group_9, NULL);
     ClientServices::SetMessageHandler(SMSG_OPEN_CONTAINER, Packet_Group_9, NULL);
     ClientServices::SetMessageHandler(SMSG_ITEM_PUSH_RESULT, Packet_Group_9, NULL);
-    ClientServices::SetMessageHandler(SMSG_VENDOR_INVENTORY, Packet_Group_10, NULL);
     ClientServices::SetMessageHandler(SMSG_BUY_FAILED, Packet_Group_10, NULL);
     ClientServices::SetMessageHandler(SMSG_BUY_SUCCEEDED, Packet_Group_10, NULL);
     ClientServices::SetMessageHandler(SMSG_SELL_ITEM, Packet_Group_10, NULL);
@@ -5468,74 +5468,6 @@ void CGPlayer_C::RequestAllItemPurchaseData() {
     }
 }
 
-// OFFSET: #0x006D9960
-int32_t CGPlayer_C::OnListInventory(CDataStore* msg) {
-    for (int32_t i = 0; i < 150; i++) {
-        s_vendorItems[i].m_slot = 0;
-    }
-
-    WOWGUID vendor;
-    msg->Get(vendor.m_guid);
-
-    uint8_t count;
-    msg->Get(count);
-
-    if (count > 150) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    CGPlayer_C::s_lastVendorListReceived = vendor;
-    uint8_t error = 0xFF;
-
-    if (count) {
-        for (uint8_t i = 0; i < count; i++) {
-            MerchantItem& item = s_vendorItems[i];
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_slot));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_itemID));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_displayID));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_maxCount));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_price));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_durability));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_buyCount));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_extendedCostID));
-        }
-    } else {
-        msg->Get(error);
-
-        switch (error) {
-            case 0:
-                ConsoleWrite("Vendor has no inventory", DEFAULT_COLOR);
-                break;
-
-            case 1:
-                ConsoleWrite("I don't think he likes you very much", DEFAULT_COLOR);
-                break;
-
-            case 2:
-                ConsoleWrite("You are too far away", DEFAULT_COLOR);
-                break;
-
-            case 3:
-                ConsoleWrite("Vendor is dead", DEFAULT_COLOR);
-                break;
-
-            case 4:
-                ConsoleWrite("You can't shop while dead.", DEFAULT_COLOR);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    if (count || !error) {
-        this->RequestAllItemPurchaseData();
-        CGMerchantInfo::SetMerchant(vendor, s_vendorItems, count);
-    }
-
-    return 1;
-}
-
 // OFFSET: #0x006D0460
 int32_t __stdcall CGPlayer_C::OnQuestGiverQuestDetails(CDataStore* msg) {
     WOWGUID npc;
@@ -5680,7 +5612,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestDetails(CDataStore* msg) {
 }
 
 // OFFSET: #0x006D2DE0
-void CGPlayer_C::BuyItem(WOWGUID vendor, const MerchantItem* item, uint32_t count, uint8_t a5) {
+void CGPlayer_C::BuyItem(WOWGUID vendor, const VendorItem* item, uint32_t count, uint8_t a5) {
     if (!item) {
         return;
     }
@@ -5951,14 +5883,14 @@ int32_t OnUpdateQuest(WOWGUID guid, uint32_t offset, uint32_t count, const void*
     if (quest) {
         int32_t index = CGQuestLog::GetQuestIndex(quest->m_id) - 1;
 
-        if (index >= 0 && (quest->m_flags & 0x10000) && CGQuestLog::IsQuestCompleteEx(index, 1)) {
+        if (index >= 0 && (quest->m_flags & 0x10000) && CGQuestLog::IsQuestCompleteEx(ClntObjMgrGetActivePlayerObj(), index, true, 0, 0)) {
             WOWGUID self = player->m_obj->m_guid;
             CGPlayer_C::CompleteQuest(self, quest->m_id);
         }
     }
 
     if (old && old->m_questId && entry->m_questId != old->m_questId) {
-        RemoveQuestPointDisplay(old->m_questId);
+        CGQuestLog::ClearQuest(old->m_questId);
     }
 
     return 1;
@@ -6008,8 +5940,6 @@ void CGPlayer_C::SetActiveMirrorHandlers() {
     for (uint32_t i = 0x778; i < 0x790; i += 8) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_KNOWN_TITLES_UPDATE)), static_cast<HANDLER_PRIORITY>(0), 0);
     }
-
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x790, 8, SignalKnownCurrencyTypesUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
 
     for (uint32_t i = 0x7A6; i < 0xDA6; i += 12) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i - 2, 2, SkillRankChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
@@ -6083,14 +6013,14 @@ static void CrossedInebriationThresholdItemCallback(int32_t id, const WOWGUID& g
     if (id && (stats = g_itemDBCache.GetRecord(id, none, NULL, NULL, false)) != NULL) {
         if (player->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
             SStrPrintf(token, sizeof(token), "DRUNK_MESSAGE_ITEM_OTHER%d", threshold + 1);
-            const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0);
+            const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0, 0);
             SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), player->GetUnitName(NULL, 1), link);
             CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
             return;
         }
 
         SStrPrintf(token, sizeof(token), "DRUNK_MESSAGE_ITEM_SELF%d", threshold + 1);
-        const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0);
+        const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0, 0);
         SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), link);
     } else {
         if (player->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
@@ -6323,7 +6253,7 @@ static void QuestRewardItemCallback(int32_t id, const WOWGUID& guid, void* param
         return;
     }
 
-    const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0);
+    const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0, 0);
     int32_t count = static_cast<int32_t>(reinterpret_cast<intptr_t>(param));
 
     if (count <= 1) {
@@ -7301,7 +7231,7 @@ static void RandomRollNameQueryCallback(int32_t id, const WOWGUID& guid, void* p
 }
 
 // OFFSET: #0x006D2EA0
-void CGPlayer_C::BuyItemInSlot(WOWGUID merchant, const MerchantItem* item, uint32_t count, WOWGUID bag, uint8_t slot) {
+void CGPlayer_C::BuyItemInSlot(WOWGUID merchant, const VendorItem* item, uint32_t count, WOWGUID bag, uint8_t slot) {
     if (!item) {
         return;
     }
@@ -8388,7 +8318,6 @@ void CGPlayer_C::PlayerShutdownMessageHandlers() {
     ClientServices::ClearMessageHandler(SMSG_INVENTORY_CHANGE_FAILURE);
     ClientServices::ClearMessageHandler(SMSG_OPEN_CONTAINER);
     ClientServices::ClearMessageHandler(SMSG_ITEM_PUSH_RESULT);
-    ClientServices::ClearMessageHandler(SMSG_VENDOR_INVENTORY);
     ClientServices::ClearMessageHandler(SMSG_BUY_FAILED);
     ClientServices::ClearMessageHandler(SMSG_BUY_SUCCEEDED);
     ClientServices::ClearMessageHandler(SMSG_SELL_ITEM);
@@ -8874,7 +8803,7 @@ static int32_t OnQuestItemLoot(QuestCache* quest, int32_t itemId, int32_t count,
     CGGameUI::DisplayError(ERR_QUEST_ADD_ITEM_SII, name, totalCount > required ? required : totalCount, required);
     FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_WATCH_UPDATE, "%d", CGQuestLog::GetQuestIndex(quest->m_id));
 
-    if ((quest->m_flags & 0x10000) && CGQuestLog::IsQuestCompleteEx(CGQuestLog::GetQuestIndex(quest->m_id) - 1, 1)) {
+    if ((quest->m_flags & 0x10000) && CGQuestLog::IsQuestCompleteEx(ClntObjMgrGetActivePlayerObj(), CGQuestLog::GetQuestIndex(quest->m_id) - 1, true, 0, 0)) {
         WOWGUID guid = player->m_obj->m_guid;
         CGPlayer_C::CompleteQuest(guid, quest->m_id);
     }

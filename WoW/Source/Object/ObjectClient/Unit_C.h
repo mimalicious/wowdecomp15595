@@ -234,7 +234,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t ClampRawAngleToLegalFacingRange(float& angle) const;
     static void UpdateMissileTrajectoryTargeting();
     void AuraVisionUpdated(uint8_t vision);
-    bool IsSpellKnown(int32_t spellId);
+    bool IsSpellKnown(int32_t spellId) const;
+    double GetQuestExperienceModifier() const;
     bool IsSpellSuperceded(int32_t spellId);
     void SetLocalClientControl(bool control);
     static void Initialize();

@@ -4,20 +4,29 @@
 #include <cstdint>
 #include "WoW/Source/Object/WGUID.h"
 
-class ItemStats_C;
+class ItemRecSparse;
 class CGItem_C;
+class ClientVendorInventory;
 
 struct lua_State;
 
-struct MerchantItem {
+enum VENDOR_ITEM_TYPE {
+    VENDOR_ITEM_TYPE_NONE = 0,
+    VENDOR_ITEM_TYPE_ITEM = 1,
+    VENDOR_ITEM_TYPE_CURRENCY = 2
+};
+
+struct VendorItem {
     /* 0000 */ int32_t m_slot;
-    /* 0004 */ int32_t m_itemID;
-    /* 0008 */ int32_t m_displayID;
-    /* 000C */ int32_t m_maxCount;
-    /* 0010 */ int32_t m_price;
-    /* 0014 */ int32_t m_durability;
-    /* 0018 */ int32_t m_buyCount;
-    /* 001C */ int32_t m_extendedCostID;
+    /* 0004 */ int32_t m_type;
+    /* 0008 */ int32_t m_itemID;
+    /* 000C */ int32_t m_displayID;
+    /* 0010 */ int32_t m_maxCount;
+    /* 0014 */ int32_t m_price;
+    /* 0018 */ int32_t m_durability;
+    /* 001C */ int32_t m_buyCount;
+    /* 0020 */ int32_t m_extendedCostID;
+    /* 0024 */ int32_t m_playerConditionID;
 };
 
 struct BuybackEntry {
@@ -28,24 +37,24 @@ struct BuybackEntry {
 class CGMerchantInfo {
     public:
     static uint32_t m_buybackSlots[12];
-    static MerchantItem* GetItem(int32_t index);
-    static ItemStats_C* GetItemStats(int32_t itemId);
-    static uint32_t m_pendingItemStats;
-    static void SetMerchant(WOWGUID merchant, const MerchantItem* items, int32_t count);
-    static void RefreshList();
-    static void UpdateItemQuantity(WOWGUID merchant, int32_t slot, int32_t quantity);
-    static int32_t CanRepair();
-    static bool IsBuybackItem(WOWGUID item);
-    static void CloseMerchant();
-    static void EnterWorld();
-    static void LeaveWorld();
-    static void SortBuybackItems();
-    static MerchantItem* FindItemById(int32_t itemId);
-    static int32_t GetRepairCost(CGItem_C* item);
-    static MerchantItem m_items[150];
+    static VendorItem m_items[150];
     static WOWGUID m_merchant;
     static int32_t m_numMerchantItems;
     static uint32_t m_numBuybackItems;
+    static uint32_t m_pendingItemStats;
+
+    static void EnterWorld();
+    static void LeaveWorld();
+    static void RefreshList();
+    static void UpdateItemQuantity(WOWGUID merchant, int32_t slot, int32_t quantity);
+    static VendorItem* FindItem(int32_t type, int32_t itemId);
+    static VendorItem* GetItem(int32_t index);
+    static ItemRecSparse* GetItemStats(int32_t itemId);
+    static int32_t CanRepair();
+    static void CloseMerchant();
+    static int32_t GetRepairCost(CGItem_C* item);
+    static void SortBuybackItems();
+    static bool IsBuybackItem(WOWGUID item);
 };
 
 void MerchantRegisterScriptFunctions();

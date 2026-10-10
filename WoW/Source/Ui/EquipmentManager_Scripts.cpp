@@ -18,7 +18,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/UIMacros.h"
 
-// STATIC: #0x00ACFB74
+// STATIC: 0x00D14FD0
 static const char* s_equipmentSetIconPath = "Interface\\Icons\\";
 
 // OFFSET: 0x009A1340/0x140725A70
@@ -372,7 +372,6 @@ static int32_t Script_GetEquipmentSetInfo(lua_State* L) {
 
     if (static_cast<uint32_t>(index - 1) > 9) {
         luaL_error(L, "Usage: GetEquipmentSetInfo(setIndex)");
-        return 0;
     }
 
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByIndex(index - 1);
@@ -386,14 +385,26 @@ static int32_t Script_GetEquipmentSetInfo(lua_State* L) {
     SStrPrintf(icon, sizeof(icon), "%s%s", s_equipmentSetIconPath, set->m_icon);
     lua_pushstring(L, icon);
     lua_pushnumber(L, set->m_id);
-    return 3;
+    lua_pushboolean(L, CGEquipmentManager::IsSetEquipped(set->m_id));
+    int32_t total;
+    int32_t equipped;
+    int32_t inInventory;
+    int32_t missing;
+    int32_t missingSlots[19];
+    int32_t ignored;
+    CGEquipmentManager::GetSetStatus(set->m_id, total, equipped, inInventory, missing, missingSlots, ignored);
+    lua_pushnumber(L, total);
+    lua_pushnumber(L, equipped);
+    lua_pushnumber(L, inInventory);
+    lua_pushnumber(L, missing);
+    lua_pushnumber(L, ignored);
+    return 9;
 }
 
 // OFFSET: 0x009A31B0/0x140728200
 static int32_t Script_GetEquipmentSetInfoByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetEquipmentSetInfoByName(\"setName\")");
-        return 0;
     }
 
     const char* name = lua_tolstring(L, 1, NULL);
@@ -410,7 +421,20 @@ static int32_t Script_GetEquipmentSetInfoByName(lua_State* L) {
 
     lua_pushstring(L, set->m_icon);
     lua_pushnumber(L, set->m_id);
-    return 2;
+    lua_pushboolean(L, CGEquipmentManager::IsSetEquipped(set->m_id));
+    int32_t total;
+    int32_t equipped;
+    int32_t inInventory;
+    int32_t missing;
+    int32_t missingSlots[19];
+    int32_t ignored;
+    CGEquipmentManager::GetSetStatus(set->m_id, total, equipped, inInventory, missing, missingSlots, ignored);
+    lua_pushnumber(L, total);
+    lua_pushnumber(L, equipped);
+    lua_pushnumber(L, inInventory);
+    lua_pushnumber(L, missing);
+    lua_pushnumber(L, ignored);
+    return 8;
 }
 
 // PROVEN: d24455dc IDENTICAL/NONE
@@ -495,26 +519,30 @@ static int32_t Script_UseEquipmentSet(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AF910
-static int32_t Script_RenameEquipmentSet(lua_State* L) {
+// OFFSET: 0x009A2F80/0x140727DC0
+static int32_t Script_ModifyEquipmentSet(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
-        luaL_error(L, "Usage: RenameEquipmentSet(\"oldName\", \"newName\")");
-        return 0;
+        luaL_error(L, "Usage: ModifyEquipmentSet(\"oldName\", \"newName\"[, newIconFileName])");
     }
 
     const char* oldName = lua_tolstring(L, 1, NULL);
     const char* newName = lua_tolstring(L, 2, NULL);
+    const char* icon = NULL;
+
+    if (lua_isstring(L, 3)) {
+        icon = lua_tolstring(L, 3, NULL);
+    }
+
     char name[128];
 
     if (!ScrubString(newName, name, 32, sizeof(name), 1)) {
         luaL_error(L, "Invalid string for setName");
-        return 0;
     }
 
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByName(oldName);
 
     if (set) {
-        CGEquipmentManager::ModifyEquipmentSet(set, name);
+        CGEquipmentManager::ModifyEquipmentSet(set, name, icon);
     }
 
     return 0;
@@ -526,57 +554,39 @@ static int32_t Script_SaveEquipmentSet(lua_State* L) {
         return 0;
     }
 
-    if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
-        luaL_error(L, "Usage: SaveEquipmentSet(\"setName\", iconIndex)");
-        return 0;
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: SaveEquipmentSet(\"setName\"[, iconFileName])");
     }
 
-    const char* setName = lua_tolstring(L, 1, NULL);
-    int32_t iconIndex = static_cast<int32_t>(lua_tonumber(L, 2));
     char name[128];
 
-    if (!ScrubString(setName, name, 32, sizeof(name), 1)) {
+    if (!ScrubString(lua_tolstring(L, 1, NULL), name, 32, sizeof(name), 1)) {
         luaL_error(L, "Invalid string for setName");
-        return 0;
     }
 
-    char icon[64] = { 0 };
+    char icon[64];
+    memset(icon, 0, sizeof(icon));
 
-    if (iconIndex >= 0) {
-        uint32_t index = iconIndex - 1;
+    if (lua_isstring(L, 2)) {
+        const char* iconName = lua_tolstring(L, 2, NULL);
 
-        if (index < GetNumMacroIcons()) {
-            SStrCopy(icon, GetMacroIcon(index), STORM_MAX_STR);
+        if (iconName) {
+            SStrCopy(icon, iconName, sizeof(icon));
         }
     } else {
-        int32_t slot = abs(iconIndex) - 1;
+        if (lua_type(L, 2) > 0) {
+            luaL_error(L, "Usage: SaveEquipmentSet(\"setName\"[, iconFileName])");
+        }
 
-        if (slot <= 18) {
-            CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        EQUIPMENT_SET* existing = CGEquipmentManager::GetSetByName(name);
 
-            if (player) {
-                uint32_t displayId = 0;
-                const VisibleItem_C* visible = player->GetVisibleItem(slot);
-
-                if (visible && abs(visible->m_itemId)) {
-                    displayId = const_cast<VisibleItem_C*>(visible)->GetDisplayID();
-                } else {
-                    CGItem_C* item = player->GetBag()->GetItemPointer(slot);
-
-                    if (item && !(item->m_modelFlags & 0x10000)) {
-                        displayId = item->GetDisplayID();
-                    }
-                }
-
-                if (displayId) {
-                    SStrCopy(icon, CGItem_C::GetInventoryArt(displayId), STORM_MAX_STR);
-                }
-            }
+        if (existing) {
+            SStrCopy(icon, existing->m_icon, sizeof(icon));
         }
     }
 
     if (!icon[0]) {
-        SStrCopy(icon, "INV_Misc_QuestionMark", STORM_MAX_STR);
+        SStrCopy(icon, "INV_Misc_QuestionMark", sizeof(icon));
     }
 
     if (CGEquipmentManager::HasSet(name)) {
@@ -586,18 +596,17 @@ static int32_t Script_SaveEquipmentSet(lua_State* L) {
 
     if (!CGEquipmentManager::CanCreateSet()) {
         luaL_error(L, "Too many sets! You can only have %d sets", 10);
-        return 0;
     }
 
     CGEquipmentManager::CreateEquipmentSet(name, icon);
     return 0;
 }
 
-// STATIC: #0x00ACFB78
+// STATIC: 0x00D14FD8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SaveEquipmentSet", &Script_SaveEquipmentSet },
     { "DeleteEquipmentSet", &Script_DeleteEquipmentSet },
-    { "RenameEquipmentSet", &Script_RenameEquipmentSet },
+    { "ModifyEquipmentSet", &Script_ModifyEquipmentSet },
     { "EquipmentManagerIgnoreSlotForSave", &Script_EquipmentManagerIgnoreSlotForSave },
     { "EquipmentManagerIsSlotIgnoredForSave", &Script_EquipmentManagerIsSlotIgnoredForSave },
     { "EquipmentManagerClearIgnoredSlotsForSave", &Script_EquipmentManagerClearIgnoredSlotsForSave },

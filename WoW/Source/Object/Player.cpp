@@ -159,10 +159,25 @@ bool CGPlayer::HasAuraVision(uint8_t vision) {
 }
 
 // OFFSET: 0x0055E1F0
-PlayerQuestLogEntry* CGPlayer::GetQuestLogEntry(uint32_t slot) {
-    if (slot > 25) {
+PlayerQuestLogEntry* CGPlayer::GetQuestLogEntry(int32_t slot) const {
+    if (slot < 0 || slot > 50) {
         return NULL;
     }
 
     return &this->m_player->m_playerQuestLog[slot];
+}
+
+// OFFSET: 0x0095E520
+PlayerQuestLogEntry* CGPlayer::GetQuestLogEntryByID(int32_t questId) const {
+    if (!questId) {
+        return NULL;
+    }
+
+    for (uint32_t i = 0; i < 50; i++) {
+        if (static_cast<int32_t>(this->m_player->m_playerQuestLog[i].m_questId) == questId) {
+            return &this->m_player->m_playerQuestLog[i];
+        }
+    }
+
+    return NULL;
 }

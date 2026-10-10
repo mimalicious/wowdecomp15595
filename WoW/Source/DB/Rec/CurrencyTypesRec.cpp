@@ -16,8 +16,8 @@ const DBCMeta CurrencyTypesRec::s_meta = { "DBFilesClient\\CurrencyTypes.dbc", 1
 // OFFSET: 0x00A2EC00/0x1407D84D0
 void CurrencyTypesRec::FixupStrings(void* record, const char* strings) {
     CurrencyTypesRec* rec = static_cast<CurrencyTypesRec*>(record);
-    DBCFixupString(rec->unk_0008, strings);
-    DBCFixupString(rec->unk_000C, strings);
-    DBCFixupString(rec->unk_0010, strings);
-    DBCFixupString(rec->unk_0028, strings);
+    DBCFixupString(rec->m_name, strings);
+    DBCFixupString(rec->m_inventoryIcon, strings);
+    DBCFixupString(rec->m_inventoryIcon2, strings);
+    DBCFixupString(rec->m_description, strings);
 }

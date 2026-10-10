@@ -11,9 +11,9 @@ class SpellFlyoutItemRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
+    /* 0004 */ int32_t m_spellFlyoutID;
+    /* 0008 */ int32_t m_spellID;
+    /* 000C */ int32_t m_slot;
 };
 
 #endif
