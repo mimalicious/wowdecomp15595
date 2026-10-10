@@ -1301,7 +1301,7 @@ int32_t ConsoleGetActive() {
     return s_active;
 }
 
-// OFFSET: 0x006108E0
+// OFFSET: 0x006108E0/0x14029ADF0
 static bool BGLoadThrottleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     BGLoading::SetBandwidthThrottlePercentage(SStrToInt(value));
     return true;

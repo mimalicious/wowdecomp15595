@@ -33,7 +33,7 @@ static int32_t Script_GetGlyphSocketInfo(lua_State* L) {
     }
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 2), 0, 0);
+    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 0, 0, 2), 0, 0);
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (index >= 6 || !group || !player) {
@@ -170,14 +170,14 @@ static int32_t Script_GetGlyphLink(lua_State* L) {
     }
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 2), 0, 0);
+    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 0, 0, 2), 0, 0);
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (index >= 6 || !player || !group) {
         return 0;
     }
 
-    lua_pushstring(L, CGTooltip::GetGlyphLink(player->m_player->m_playerFieldGlyphSlots1[index], group->GetGlyph(index)));
+    lua_pushstring(L, CGTooltip::GetGlyphHyperlinkString(player->m_player->m_playerFieldGlyphSlots1[index], group->GetGlyph(index)));
     return 1;
 }
 

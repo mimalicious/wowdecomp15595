@@ -62,15 +62,15 @@ class CGTalentGroup_C {
     void Reset();
     uint32_t GetGlyph(uint32_t index);
     TalentGroupTab_C* GetTab(uint32_t index);
-    TalentGroupTab_C* GetTabFromID(int32_t tabId);
+    TalentGroupTab_C* GetTabFromID(int32_t tabId) const;
     TalentGroupTab_C* GetTabFromTalentID(int32_t talentId);
-    TalentGroupItem_C* GetTalentItem(int32_t talentId);
+    TalentGroupItem_C* GetTalentItem(int32_t talentId) const;
     void AddTalentItem(int32_t talentId, int32_t rank);
     void UpdateTabs(const TSFixedArray<TalentTabInfo*>* tabs);
     void ResetPreviewTalentPoints(uint32_t tabIndex);
     void ResetAllPreviewTalentPoints();
-    int32_t ValidatePreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t* delta, int32_t pet);
-    int32_t CanAddPreviewTalentPoints(const TalentRec* talent, int32_t points, int32_t* delta, int32_t pet);
+    int32_t CanAddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t& delta, int32_t pet) const;
+    int32_t CanAddPreviewTalentPoints(const TalentRec* talent, int32_t points, int32_t& delta, int32_t pet) const;
     void AddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t pet);
 };
 
@@ -117,7 +117,7 @@ class CGTalentInfo {
 void TalentInfoRegisterScriptFunctions();
 void TalentInfoUnregisterScriptFunctions();
 int32_t TalentInfoIsSpellKnown(int32_t spellId, int32_t isInspect, int32_t isPet);
-uint32_t TalentInfoGetScriptGroupIndex(lua_State* L, int32_t index);
+uint32_t TalentInfoGetScriptGroupIndex(lua_State* L, int32_t inspect, int32_t pet, int32_t index);
 CGTalentGroup_C* TalentInfoGetTalentGroup(uint32_t index, int32_t inspect, int32_t pet);
 TalentGroupItem_C* TalentInfoGetTalentItem(uint32_t group, int32_t talentId, int32_t inspect, int32_t pet);
 

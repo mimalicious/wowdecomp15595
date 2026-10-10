@@ -59,6 +59,7 @@ static int32_t Script_KBArticle_IsLoaded(lua_State* L) {
 static int32_t Script_KBSetup_GetLanguageCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         return luaL_error(L, "KBSetup_GetLanguageCount() failed because setup is not loaded");
+        return 0;
     }
 
     lua_pushnumber(L, g_KnowledgeBaseSetup.m_numLanguages);
@@ -69,6 +70,7 @@ static int32_t Script_KBSetup_GetLanguageCount(lua_State* L) {
 static int32_t Script_KBSetup_GetCategoryCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         return luaL_error(L, "KBSetup_GetCategoryCount() failed because setup is not loaded");
+        return 0;
     }
 
     lua_pushnumber(L, g_KnowledgeBaseSetup.m_numCategories);
@@ -79,6 +81,7 @@ static int32_t Script_KBSetup_GetCategoryCount(lua_State* L) {
 static int32_t Script_KBSetup_GetArticleHeaderCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         return luaL_error(L, "KBSetup_GetArticleHeaderCount() failed because setup is not loaded");
+        return 0;
     }
 
     lua_pushnumber(L, g_KnowledgeBaseSetup.m_numArticleHeaders);
@@ -89,6 +92,7 @@ static int32_t Script_KBSetup_GetArticleHeaderCount(lua_State* L) {
 static int32_t Script_KBQuery_GetArticleHeaderCount(lua_State* L) {
     if (g_KnowledgeBaseQuery.m_state != 2) {
         return luaL_error(L, "KBQuery_GetArticleHeaderCount() failed because query is not loaded");
+        return 0;
     }
 
     lua_pushnumber(L, g_KnowledgeBaseQuery.m_numArticleHeaders);

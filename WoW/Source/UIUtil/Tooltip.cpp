@@ -194,10 +194,10 @@ static const char* s_colorblindSuffixes[5] = { "", "[+] ", "[++] ", "[+++] ", "[
 const char* CGTooltip::s_objectTypeName = "GameTooltip";
 
 // STATIC: 0x00C9A2B8
-static CImVector s_tooltipTitleColor = CImVector(0xFFFFD200);
+CImVector s_tooltipTitleColor = CImVector(0xFFFFD200);
 
 // STATIC: 0x00C9A2BC
-static CImVector s_tooltipTextColor = CImVector(0xFFFFFFFF);
+CImVector s_tooltipTextColor = CImVector(0xFFFFFFFF);
 
 // STATIC: 0x00C9A2C0
 static CImVector s_tooltipRedColor = CImVector(0xFFFF2020);
@@ -334,7 +334,7 @@ static TSGrowableArray<FrameStackInfo> s_frameStack;
 // STATIC: 0x00D3AC70
 static const char* s_itemQualityColorStrings[8] = { "ff9d9d9d", "ffffffff", "ff1eff00", "ff0070dd", "ffa335ee", "ffff8000", "ffe6cc80", "ffe6cc80" };
 
-// OFFSET: 0x00464260
+// OFFSET: 0x00464260/0x140077C00
 void TooltipExtendedItemInfo::Clear() {
     this->m_itemId = 0;
     memset(this->m_enchants, 0, sizeof(this->m_enchants));
@@ -357,7 +357,7 @@ void TooltipExtendedItemInfo::Clear() {
     this->m_maxStackCount = -1;
 }
 
-// OFFSET: 0x00464300
+// OFFSET: 0x00464300/0x140077CC0
 int32_t TooltipExtendedItemInfo::GetItemIdFromLink(const char* link) {
     this->Clear();
     const char* cursor = strstr(link, "item:");
@@ -443,7 +443,7 @@ int32_t TooltipExtendedItemInfo::GetItemIdFromLink(const char* link) {
     return this->m_itemId;
 }
 
-// OFFSET: 0x004648F0
+// OFFSET: 0x004648F0/0x1400780E0
 const char* GetSocketIdentifier(int32_t color) {
     for (uint32_t i = 0; i < 8; i++) {
         if (s_socketColors[i] == color) {
@@ -454,7 +454,7 @@ const char* GetSocketIdentifier(int32_t color) {
     return "Unknown";
 }
 
-// OFFSET: 0x00464920
+// OFFSET: 0x00464920/0x140078120
 FrameScript_Object::ScriptIx* CGTooltip::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
 
@@ -521,7 +521,7 @@ void CGTooltip::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: 0x00464CB0
+// OFFSET: 0x00464CB0/0x1400783F0
 const CImVector* CGTooltip::GetThreatStateColor(uint32_t status) {
     if (status >= 5) {
         status = 1;
@@ -550,7 +550,7 @@ const char* CGTooltip::GetItemQualityColorString(uint32_t quality) {
     return s_itemQualityColorStrings[quality];
 }
 
-// OFFSET: 0x00464D10
+// OFFSET: 0x00464D10/0x140078450
 const char* CGTooltip::GetTalentHyperlinkString(const TalentRec* talent, const char* name, int32_t rank) {
     if (!talent || !name) {
         return "";
@@ -592,7 +592,7 @@ static int32_t QSortFrameStack(const void* a, const void* b) {
     return SStrCmpI(infoA->m_name, infoB->m_name, STORM_MAX_STR);
 }
 
-// OFFSET: 0x00464F20
+// OFFSET: 0x00464F20/0x140078530
 static int32_t SortItemSetBonuses(const void* a, const void* b) {
     uint8_t left = *static_cast<const uint8_t*>(a);
     uint8_t right = *static_cast<const uint8_t*>(b);
@@ -954,7 +954,7 @@ void __stdcall CGTooltip::FormatStringForXML(const char* text, char* buffer) {
     buffer[out] = '\0';
 }
 
-// OFFSET: 0x00465BD0
+// OFFSET: 0x00465BD0/0x140079240
 void CGItemStatsSummary::Clear() {
     memset(this->m_stats, 0, sizeof(this->m_stats));
     this->m_dps = 0.0f;
@@ -1053,7 +1053,7 @@ void CGTooltip::AddMoney(int32_t money, int32_t maxMoney) {
     this->RunScript(this->m_onTooltipAddMoney, 2, NULL);
 }
 
-// OFFSET: 0x004660F0
+// OFFSET: 0x004660F0/0x1400797F0
 void CGTooltip::RunOnTooltipSetUnit() {
     if (this->HasScript(this->m_onTooltipSetUnit)) {
         this->RunScript(this->m_onTooltipSetUnit, 0, NULL);
@@ -1072,7 +1072,7 @@ static const char* GetColorblindSuffix(int32_t index) {
     return "";
 }
 
-// OFFSET: 0x00466230
+// OFFSET: 0x00466230/0x1400798E0
 static const CImVector* GetSkillColor(int32_t required, int32_t current, const char** suffix) {
     const CImVector* color = &s_skillColors[4];
     int32_t index = 4;
@@ -1102,7 +1102,7 @@ static const CImVector* GetSkillColor(int32_t required, int32_t current, const c
     return color;
 }
 
-// OFFSET: 0x004662C0
+// OFFSET: 0x004662C0/0x1400799B0
 static int32_t HealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -1115,7 +1115,7 @@ static int32_t HealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t 
     return 1;
 }
 
-// OFFSET: 0x00466330
+// OFFSET: 0x00466330/0x140079A30
 static int32_t ObjHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
 
@@ -1128,7 +1128,7 @@ static int32_t ObjHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     return 1;
 }
 
-// OFFSET: 0x00466410
+// OFFSET: 0x00466410/0x140079B50
 const char* CGTooltip::GetSpellHyperlinkString(int32_t spellId) {
     SpellRec* spell = g_spellDB.GetRecord(spellId);
 
@@ -1140,7 +1140,7 @@ const char* CGTooltip::GetSpellHyperlinkString(int32_t spellId) {
     return s_itemLink;
 }
 
-// OFFSET: 0x00466480
+// OFFSET: 0x00466480/0x140079BF0
 const char* CGTooltip::GetAchievementHyperlink(int32_t achievementId, WOWGUID guid, bool completed, WowTime time, uint32_t criteria1, uint32_t criteria2, uint32_t criteria3, uint32_t criteria4) {
     AchievementRec* achievement = g_achievementDB.GetRecord(achievementId);
 
@@ -1154,7 +1154,7 @@ const char* CGTooltip::GetAchievementHyperlink(int32_t achievementId, WOWGUID gu
     return s_itemLink;
 }
 
-// OFFSET: 0x00466540
+// OFFSET: 0x00466540/0x140079D50
 const char* CGTooltip::GetGlyphHyperlinkString(int32_t glyphId) {
     GlyphPropertiesRec* glyph = g_glyphPropertiesDB.GetRecord(glyphId);
 
@@ -1172,7 +1172,7 @@ const char* CGTooltip::GetGlyphHyperlinkString(int32_t glyphId) {
     return s_itemLink;
 }
 
-// OFFSET: 0x004665D0
+// OFFSET: 0x004665D0/0x140079E30
 const char* CGTooltip::GetInstanceLockHyperlink(int32_t mapId, int32_t difficulty, uint32_t encounterMask) {
     MapRec* map = g_mapDB.GetRecord(mapId);
 
@@ -1185,7 +1185,7 @@ const char* CGTooltip::GetInstanceLockHyperlink(int32_t mapId, int32_t difficult
     return s_itemLink;
 }
 
-// OFFSET: 0x00466650
+// OFFSET: 0x00466650/0x140079F30
 int32_t GetEnchantmentConditionText(CGPlayer_C* player, const SpellItemEnchantmentRec* enchant, char* buffer, uint32_t size, int32_t newline) {
     *buffer = '\0';
 
@@ -1338,7 +1338,7 @@ int32_t GetEnchantmentConditionText(CGPlayer_C* player, const SpellItemEnchantme
     return allMet;
 }
 
-// OFFSET: 0x00466C70
+// OFFSET: 0x00466C70/0x14007A7F0
 void CGTooltip::GetItemDurationString(char* buffer, uint32_t size, uint64_t time, const char* token) {
     if (!buffer || !token) {
         return;
@@ -1392,7 +1392,7 @@ void CGTooltip::GetItemDurationString(char* buffer, uint32_t size, uint64_t time
     SStrPrintf(buffer, size, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), text);
 }
 
-// OFFSET: 0x004670F0
+// OFFSET: 0x004670F0/0x14007AD20
 void CGTooltip::GetSummonedByString(const CGUnit_C* unit, char* buffer, uint32_t size) {
     if (!unit || !buffer) {
         return;
@@ -1444,7 +1444,7 @@ void CGTooltip::GetSummonedByString(const CGUnit_C* unit, char* buffer, uint32_t
     SStrPrintf(buffer, size, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), GetCombatLogObjectName(owner));
 }
 
-// OFFSET: 0x004672C0
+// OFFSET: 0x004672C0/0x14007AF00
 void CGTooltip::ClearTooltip() {
     if (this->m_healthGuid) {
         if (this->m_unitGuid) {
@@ -1506,7 +1506,7 @@ void CGTooltip::ClearTooltip() {
     }
 }
 
-// OFFSET: 0x00467580
+// OFFSET: 0x00467580/0x14007B2B0
 void CGTooltip::AddTexture(const char* texture, const CAaRect& coords, const CImVector& color) {
     uint32_t index = this->m_numTextures;
 
@@ -1552,7 +1552,7 @@ void CGTooltip::AddTexture(const char* texture, const CAaRect& coords, const CIm
     this->m_textureLines[this->m_numTextures++] = line;
 }
 
-// OFFSET: 0x004677C0
+// OFFSET: 0x004677C0/0x14007B5D0
 void CGTooltip::CalculateSize() {
     if (!this->m_owner) {
         return;
@@ -1656,7 +1656,7 @@ void CGTooltip::CalculateSize() {
     this->Resize(0);
 }
 
-// OFFSET: 0x00467BD0
+// OFFSET: 0x00467BD0/0x14007BA90
 void CGTooltip::ShowThis(bool loadPending) {
     if (!this->m_owner || !this->m_numLines) {
         this->Hide();
@@ -1757,7 +1757,7 @@ void CGItemStatsSummary::ScanEnchantSpells(const ItemRecSparse* item) {
     }
 }
 
-// OFFSET: 0x00468BA0
+// OFFSET: 0x00468BA0/0x14007CCF0
 CGItemStatsSummary CGItemStatsSummary::operator-(const CGItemStatsSummary& other) const {
     CGItemStatsSummary result;
     result.Clear();
@@ -1771,7 +1771,7 @@ CGItemStatsSummary CGItemStatsSummary::operator-(const CGItemStatsSummary& other
     return result;
 }
 
-// OFFSET: 0x00468C20
+// OFFSET: 0x00468C20/0x14007CD80
 char* CGItemStatsSummary::GetStatIntGlobalString(uint32_t stat, char* buffer, uint32_t size) {
     if (stat - 11 <= 56) {
         SStrPrintf(buffer, size, "%s%s", s_itemModTokens[stat - 11], "_SHORT");
@@ -1917,7 +1917,7 @@ void TooltipObjectCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
-// OFFSET: 0x00469080
+// OFFSET: 0x00469080/0x14007D220
 void TooltipCorpseCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -1932,7 +1932,7 @@ void TooltipCorpseCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
-// OFFSET: 0x004690C0
+// OFFSET: 0x004690C0/0x14007D260
 void TooltipSpellCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -1950,7 +1950,7 @@ void TooltipSpellCallback(int32_t id, const WOWGUID& guid, void* param, bool suc
     }
 }
 
-// OFFSET: 0x00469130
+// OFFSET: 0x00469130/0x14007D310
 void TooltipUnitNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -1966,7 +1966,7 @@ void TooltipUnitNameCallback(int32_t id, const WOWGUID& guid, void* param, bool 
     }
 }
 
-// OFFSET: 0x00469180
+// OFFSET: 0x00469180/0x14007D360
 void TooltipQuestCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -1980,7 +1980,7 @@ void TooltipQuestCallback(int32_t id, const WOWGUID& guid, void* param, bool suc
     }
 }
 
-// OFFSET: 0x004691B0
+// OFFSET: 0x004691B0/0x14007D390
 void TooltipAchievementCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -2041,7 +2041,7 @@ int32_t CGTooltip::GetScriptMetaTable() {
     return CGTooltip::s_metatable;
 }
 
-// OFFSET: 0x00469570
+// OFFSET: 0x00469570/0x14007D770
 bool CGTooltip::IsA(int32_t type) {
     return type == CGTooltip::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
@@ -2051,7 +2051,7 @@ bool CGTooltip::IsA(const char* typeName) {
     return !_stricmp(typeName, CGTooltip::s_objectTypeName) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: 0x004695F0
+// OFFSET: 0x004695F0/0x14007D810
 CGTooltip::~CGTooltip() {
     if (this->m_healthGuid && ClntObjMgrGetCurrent()) {
         if (this->m_unitGuid) {
@@ -2062,7 +2062,7 @@ CGTooltip::~CGTooltip() {
     }
 }
 
-// OFFSET: 0x004696D0
+// OFFSET: 0x004696D0/0x14007D920
 const char* CGTooltip::GetItemHyperlinkString(int32_t itemId, uint32_t quality, int32_t enchant, const int32_t* gems, int32_t randomPropertiesId, int32_t seed, int32_t reforge) {
     int32_t level = 0;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2082,13 +2082,13 @@ const char* CGTooltip::GetItemHyperlinkString(int32_t itemId, uint32_t quality, 
     return s_itemLink;
 }
 
-// OFFSET: 0x004697B0
+// OFFSET: 0x004697B0/0x14007DA70
 const char* CGTooltip::GetItemHyperlinkString(int32_t itemId, uint32_t quality, int32_t enchant, int32_t randomPropertiesId, int32_t seed, int32_t reforge) {
     int32_t gems[3] = { 0, 0, 0 };
     return CGTooltip::GetItemHyperlinkString(itemId, quality, enchant, gems, randomPropertiesId, seed, reforge);
 }
 
-// OFFSET: 0x004697F0
+// OFFSET: 0x004697F0/0x14007DAB0
 const char* CGTooltip::GetQuestDifficultyColorString(int32_t level) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2117,7 +2117,7 @@ const char* CGTooltip::GetQuestDifficultyColorString(int32_t level) {
     return s_questDifficultyColorStrings[4];
 }
 
-// OFFSET: 0x00469870
+// OFFSET: 0x00469870/0x14007DB50
 const char* CGTooltip::GetQuestHyperlinkString(int32_t questId, int32_t level) {
     WOWGUID none = WOWGUID::Make(0);
     QuestCache* quest = g_questDBCache.GetRecord(questId, none, NULL, NULL, false);
@@ -2166,7 +2166,7 @@ int32_t CGTooltip::GetDislayedScalingItemLevel(const ItemRecSparse* item, const 
     return level > 1 ? level : 1;
 }
 
-// OFFSET: 0x00469A10
+// OFFSET: 0x00469A10/0x14007DD60
 void CGTooltip::SetOwner(CSimpleFrame* owner, TOOLTIP_ANCHORPOINT anchorType, float offsetX, float offsetY) {
     this->ClearTooltip();
     this->SetFrameAlpha(255);
@@ -2188,7 +2188,7 @@ void CGTooltip::SetOwner(CSimpleFrame* owner, TOOLTIP_ANCHORPOINT anchorType, fl
     this->ResetPosition(1);
 }
 
-// OFFSET: 0x00469AC0
+// OFFSET: 0x00469AC0/0x14007DE40
 void CGTooltip::AppendText(const char* text) {
     if (!this->m_numLines) {
         return;
@@ -2392,7 +2392,7 @@ void CGItemStatsSummary::AddEnchantment(const SpellItemEnchantmentRec* enchant, 
     }
 }
 
-// OFFSET: 0x0046A8C0
+// OFFSET: 0x0046A8C0/0x14007EF80
 void CGTooltip::PostLoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::PostLoadXML(node, status);
 
@@ -2452,7 +2452,7 @@ void CGTooltip::AddFontStrings(CSimpleFontString* left, CSimpleFontString* right
     this->m_lineWrap.m_data[this->m_maxLines - 1] = 0;
 }
 
-// OFFSET: 0x0046ACA0
+// OFFSET: 0x0046ACA0/0x14007F4C0
 void CGTooltip::AddLine(const char* left, const char* right, const CImVector& leftColor, const CImVector& rightColor, int32_t wrap) {
     if ((!left || !*left) && (!right || !*right)) {
         return;
@@ -2552,7 +2552,7 @@ void CGItemStatsSummary::FillOutRandomProperties(int32_t randomPropertiesId, int
     }
 }
 
-// OFFSET: 0x0046B5D0
+// OFFSET: 0x0046B5D0/0x140080150
 void CGTooltip::AddEmpathyText(CGUnit_C* unit, char* buffer, uint32_t size) {
     int32_t minDamage = static_cast<int32_t>(unit->m_unit->m_unitFieldMindamage);
     int32_t maxDamage = static_cast<int32_t>(ceil(static_cast<double>(unit->m_unit->m_unitFieldMaxdamage)));
@@ -2659,7 +2659,7 @@ void CGTooltip::AddEmpathyText(CGUnit_C* unit, char* buffer, uint32_t size) {
     }
 }
 
-// OFFSET: 0x0046BBD0
+// OFFSET: 0x0046BBD0/0x140080870
 void CGTooltip::AddSkinnableText(CGUnit_C* unit, char* buffer, uint32_t size) {
     *buffer = '\0';
     CImVector color = s_skillColors[4];
@@ -2736,7 +2736,7 @@ void CGTooltip::AddItemNameDescription(int32_t descriptionId) {
     this->AddLine(description->m_description, NULL, color, color, 0);
 }
 
-// OFFSET: 0x0046BDB0
+// OFFSET: 0x0046BDB0/0x140080BC0
 void CGTooltip::SetCorpse(const WOWGUID& guid) {
     this->ClearTooltip();
     CGCorpse_C* corpse = static_cast<CGCorpse_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_CORPSE, __FILE__, __LINE__));
@@ -2758,7 +2758,7 @@ void CGTooltip::SetCorpse(const WOWGUID& guid) {
     }
 }
 
-// OFFSET: 0x0046BE90
+// OFFSET: 0x0046BE90/0x140080CC0
 int32_t CGTooltip::AddTalentPrereqs(const TalentRec* talent, const CGTalentGroup_C* group, int32_t isInspect, int32_t isPet, int32_t usePreview) {
     if (!talent) {
         return 0;
@@ -2833,7 +2833,7 @@ int32_t CGTooltip::AddTalentPrereqs(const TalentRec* talent, const CGTalentGroup
     return met;
 }
 
-// OFFSET: 0x0046C130
+// OFFSET: 0x0046C130/0x1400810E0
 void CGTooltip::AddTalentLearnText(const TalentRec* talent, const CGTalentGroup_C* group, int32_t prereqsMet, int32_t rank, int32_t maxRank, int32_t a7, int32_t a8, int32_t isPet, int32_t usePreview) {
     if (!talent || !ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return;
@@ -2866,7 +2866,7 @@ void CGTooltip::AddTalentLearnText(const TalentRec* talent, const CGTalentGroup_
     }
 }
 
-// OFFSET: 0x0046C290
+// OFFSET: 0x0046C290/0x140081290
 void CGTooltip::SetCurrency(const CurrencyTypesRec* currency, WOWGUID owner) {
     if (!currency) {
         return;
@@ -2930,7 +2930,7 @@ void CGTooltip::SetCurrency(const CurrencyTypesRec* currency, WOWGUID owner) {
     this->Show();
 }
 
-// OFFSET: 0x0046C560
+// OFFSET: 0x0046C560/0x140081640
 int32_t CGTooltip::SetQuest(int32_t questId) {
     this->ClearTooltip();
     WOWGUID requester = WOWGUID::Make(0);
@@ -2987,7 +2987,7 @@ int32_t CGTooltip::SetQuest(int32_t questId) {
     return 1;
 }
 
-// OFFSET: 0x0046C7F0
+// OFFSET: 0x0046C7F0/0x140081970
 int32_t CGTooltip::SetAchievement(int32_t achievementId, WOWGUID guid, bool completed, WowTime time, uint32_t criteria1, uint32_t criteria2, uint32_t criteria3, uint32_t criteria4) {
     AchievementRec* rec = g_achievementDB.GetRecord(achievementId);
 
@@ -3115,7 +3115,7 @@ int32_t CGTooltip::SetAchievement(int32_t achievementId, WOWGUID guid, bool comp
     return 1;
 }
 
-// OFFSET: 0x0046CD00
+// OFFSET: 0x0046CD00/0x1400821E0
 void CGTooltip::SetGlyph(int32_t glyphId, int32_t hideRemove, int32_t unit) {
     this->ClearTooltip();
     GlyphPropertiesRec* glyph = g_glyphPropertiesDB.GetRecord(glyphId);
@@ -3163,7 +3163,7 @@ void CGTooltip::SetGlyph(int32_t glyphId, int32_t hideRemove, int32_t unit) {
     this->Show();
 }
 
-// OFFSET: 0x0046CEB0
+// OFFSET: 0x0046CEB0/0x140082430
 int32_t CGTooltip::SetEquipmentSet(int32_t setId) {
     this->ClearTooltip();
     const EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(setId);
@@ -3221,7 +3221,7 @@ int32_t CGTooltip::SetEquipmentSet(int32_t setId) {
 
 // OFFSET: 0x0046D100
 int32_t CGTooltip::SetSpellFlyout(int32_t flyoutId, bool showDescription) {
-    FLYOUT* flyout = CGFlyout::GetFlyout(flyoutId);
+    CFlyout* flyout = CFlyout::GetByID(flyoutId);
     const SpellFlyoutRec* rec = flyout ? flyout->m_rec : NULL;
 
     if (!rec) {
@@ -3238,7 +3238,7 @@ int32_t CGTooltip::SetSpellFlyout(int32_t flyoutId, bool showDescription) {
     return 0;
 }
 
-// OFFSET: 0x0046D170
+// OFFSET: 0x0046D170/0x140082800
 void CGTooltip::SetInstanceLockCompletedEncounters(WOWGUID guid, int32_t mapId, uint32_t difficulty, uint32_t encounterMask) {
     this->ClearTooltip();
     WOWGUID requester = WOWGUID::Make(0);
@@ -3293,7 +3293,7 @@ void CGTooltip::SetInstanceLockCompletedEncounters(WOWGUID guid, int32_t mapId, 
     this->Show();
 }
 
-// OFFSET: 0x0046D380
+// OFFSET: 0x0046D380/0x140082B60
 void CGTooltip::SetFrameStack(bool showHidden) {
     this->ClearTooltip();
 
@@ -3410,7 +3410,7 @@ void CGTooltip::SetFrameStack(bool showHidden) {
     s_frameStack.m_count = 0;
 }
 
-// OFFSET: 0x0046D870
+// OFFSET: 0x0046D870/0x1400831C0
 int32_t CGTooltip::SetItemNoStats() {
     this->AddLine(FrameScript_GetText("RETRIEVING_ITEM_INFO", -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
 
@@ -3485,7 +3485,7 @@ void CGTooltip::SetBuff(int32_t spellId, int32_t casterLevel, int32_t stacks, ui
     }
 }
 
-// OFFSET: 0x0046DF90
+// OFFSET: 0x0046DF90/0x140083A00
 int32_t SetTooltipUnitAura(CGTooltip* tooltip, ScriptAuraInfo* info) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -3545,7 +3545,7 @@ int32_t SetTooltipUnitAura(CGTooltip* tooltip, ScriptAuraInfo* info) {
         return 0;
     }
 
-    if (!auras || !auras->Count()) {
+    if (!auras || !auras->m_count) {
         return 0;
     }
 
@@ -3616,7 +3616,7 @@ int32_t SetTooltipUnitAura(CGTooltip* tooltip, ScriptAuraInfo* info) {
     return 0;
 }
 
-// OFFSET: 0x0046E980
+// OFFSET: 0x0046E980/0x1400847A0
 int32_t CGTooltip::SetItemDelta(const CGItemStatsSummary& summary, int32_t append) {
     if (!append) {
         this->ClearTooltip();
@@ -3688,7 +3688,7 @@ int32_t CGItemStatsSummary::Create(const ItemRecSparse* item, const TooltipExten
     return 1;
 }
 
-// OFFSET: 0x0046F130
+// OFFSET: 0x0046F130/0x140085130
 int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUID& healthGuid, int32_t a4) {
     this->ClearTooltip();
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -4183,7 +4183,7 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
     return result;
 }
 
-// OFFSET: 0x004707F0
+// OFFSET: 0x004707F0/0x140086F70
 const char* CGTooltip::GetItemHyperlinkString(const CGItem_C* item) {
     if (!item) {
         return NULL;
@@ -4221,7 +4221,7 @@ const char* CGTooltip::GetItemHyperlinkString(const CGItem_C* item) {
     return CGTooltip::GetItemHyperlinkString(item->m_obj->m_entryID, rec ? rec->m_quality : 1, enchant, gems, randomPropertiesId, seed, reforge);
 }
 
-// OFFSET: 0x00470910
+// OFFSET: 0x00470910/0x140087110
 void CGTooltip::AddSpellReagents(const SpellRec* spell, const char* token, void (*callback)(int32_t id, const WOWGUID& guid, void* param, bool success)) {
     if (!spell->m_spellReagentsID) {
         return;
@@ -4284,7 +4284,7 @@ void CGTooltip::AddSpellReagents(const SpellRec* spell, const char* token, void 
     }
 }
 
-// OFFSET: 0x00470C60
+// OFFSET: 0x00470C60/0x140087580
 int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, int32_t isPet, int32_t showSubtext, int32_t isInspect, int32_t hideCallPetName, const TalentRec* talent, const CGTalentGroup_C* talentGroup, int32_t append, int32_t usePreview, int32_t a12, int32_t rank, int32_t maxRank, int32_t a15, int32_t noCastTime, int32_t noCost) {
     if (!append) {
         this->ClearTooltip();
@@ -4385,10 +4385,10 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
 
         if (!hideCallPetName && stable && stable->m_name[0]) {
             SStrPrintf(token, sizeof(token), FrameScript_GetText("CALL_PET_SPELL_NAME", -1, GENDER_NOT_APPLICABLE), stable->m_name);
-            right = brief || showSubtext ? spell->m_nameSubtext : NULL;
+            right = brief || showSubtext ? static_cast<const char*>(spell->m_nameSubtext) : NULL;
             left = token;
         } else {
-            right = brief || showSubtext ? spell->m_nameSubtext : NULL;
+            right = brief || showSubtext ? static_cast<const char*>(spell->m_nameSubtext) : NULL;
             left = spell->m_name;
         }
 
@@ -4625,11 +4625,11 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
         }
     }
 
-    Spell_C_ModifySpellValue(spell, &recoveryTime, 11);
-    Spell_C_ModifyCategoryRecovery(&categoryRecoveryTime, spell, 0, 1);
+    Spell_C_ModifySpellValue(spell, recoveryTime, 11);
+    Spell_C_ModifyCategoryRecovery(categoryRecoveryTime, spell, 0, 1);
 
     if (caster) {
-        caster->SpellHasteCooldowns(spell, &recoveryTime, &categoryRecoveryTime);
+        caster->SpellHasteCooldowns(spell, recoveryTime, categoryRecoveryTime);
     }
 
     int32_t recovery = recoveryTime <= categoryRecoveryTime ? categoryRecoveryTime : recoveryTime;
@@ -4664,9 +4664,9 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
                 CGTooltip::GetFloatDurationString(range, sizeof(range), static_cast<float>(recovery), "SPELL_RECAST_TIME", NULL);
             }
 
-            int32_t used;
-            int32_t maxUses;
-            int32_t category = Spell_C_GetSpellCategoryWeeklyUses(spell, &used, &maxUses);
+            uint8_t used;
+            uint8_t maxUses;
+            int32_t category = Spell_C_GetSpellCategoryWeeklyUses(spell, used, maxUses);
 
             if (maxUses) {
                 if (used >= maxUses) {
@@ -4812,12 +4812,12 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
                 inventoryMask = (spell->m_attributesExC & 0x1000000) ? 0x10000 : 0xFFFFFFFF;
             }
 
-            if (!player->HasEquippedItemForSpell(equipped, inventoryMask)) {
+            if (!player->GetEquippedItemForSpell(equipped, inventoryMask)) {
                 hasItem = 0;
                 allPresent = 0;
             }
 
-            if ((spell->m_attributesExC & 0x1000400) == 0x1000400 && !player->HasEquippedItemForSpell(equipped, 0x10000)) {
+            if ((spell->m_attributesExC & 0x1000400) == 0x1000400 && !player->GetEquippedItemForSpell(equipped, 0x10000)) {
                 hasItem = 0;
                 allPresent = 0;
             }
@@ -5015,7 +5015,7 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
         SpellClassOptionsRec* classOptions = NULL;
 
         if (spell->m_spellClassOptionsID && newbieTips && newbieTips->m_intValue && (classOptions = g_spellClassOptionsDB.GetRecord(spell->m_spellClassOptionsID)) != NULL && classOptions->m_description && *classOptions->m_description) {
-            SpellParserParseTextWithString(spell, description, sizeof(description), classOptions->m_description, isPet, isInspect, 0, 1, 0, NULL);
+            SpellParserParseTextAsSpell(spell, description, sizeof(description), classOptions->m_description, isPet, isInspect, 0, 1, 0, NULL);
             this->AddLine(description, NULL, 1);
         } else if (spell->m_description && *spell->m_description) {
             SpellParserParseText(spell, description, sizeof(description), isPet, isInspect, 0, 0, 1, 0, NULL);
@@ -5071,7 +5071,7 @@ int32_t CGItemStatsSummary::Create(const CGItem_C* item, int32_t level) {
     return 1;
 }
 
-// OFFSET: 0x00473B20
+// OFFSET: 0x00473B20/0x14008C080
 int32_t CGItemStatsSummary::Create(const char* link) {
     this->Clear();
     int32_t randomPropertiesId = 0;
@@ -5167,7 +5167,7 @@ int32_t CGItemStatsSummary::Create(const char* link) {
     return 1;
 }
 
-// OFFSET: 0x00473CF0
+// OFFSET: 0x00473CF0/0x14008C290
 void TooltipItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -5186,7 +5186,7 @@ void TooltipItemCallback(int32_t id, const WOWGUID& guid, void* param, bool succ
     }
 }
 
-// OFFSET: 0x00473DC0
+// OFFSET: 0x00473DC0/0x14008C3D0
 void CGTooltip::SetObject(const WOWGUID& guid) {
     this->ClearTooltip();
     CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
@@ -5251,7 +5251,7 @@ void CGTooltip::SetObject(const WOWGUID& guid) {
 
             if (spellId) {
                 color = *GetSkillColor(requiredSkill, skillValue, &suffix);
-                CGGameObject_C::GetLockSkillColor(requiredSkill, skillValue, color);
+                object->GetLockSkillColor(requiredSkill, skillValue, color);
                 FormatString("LOCKED_WITH_SPELL_KNOWN", -1, GENDER_NOT_APPLICABLE, format, sizeof(format));
             } else if (!(object->m_gameObject->m_flags & 0x2)) {
                 color.Set(1.0f, 1.0f, 0.0f, 0.0f);
@@ -5408,7 +5408,7 @@ void CGTooltip::SetObject(const WOWGUID& guid) {
     }
 }
 
-// OFFSET: 0x004746C0
+// OFFSET: 0x004746C0/0x14008CF90
 void CGTooltip::SetTalent(const TalentRec* talent, const CGTalentGroup_C* group, int32_t isInspect, int32_t a4, int32_t forcedRank, int32_t isPet, int32_t usePreview) {
     if (!talent) {
         this->Hide();
@@ -5509,9 +5509,9 @@ void CGTooltip::SetTalent(const TalentRec* talent, const CGTalentGroup_C* group,
     this->Show();
 }
 
-// OFFSET: 0x00474AD0
+// OFFSET: 0x00474AD0/0x14008D610
 int32_t CGTooltip::SetPetAction(const PetAction& action) {
-    uint32_t value = action.m_value;
+    uint32_t value = action.m_data;
 
     if (!value) {
         return 0;
@@ -5533,20 +5533,20 @@ int32_t CGTooltip::SetPetAction(const PetAction& action) {
         case 17: {
             uint32_t start = 0;
             uint32_t duration = 0;
-            int32_t enabled = 0;
+            uint32_t enabled = 0;
             Spell_C_GetSpellCooldown(value & 0xFFFFFF, 1, &start, &duration, &enabled, 0);
 
             if (!enabled || !duration || !start) {
-                return this->SetSpell(action.m_value & 0xFFFFFF, 0, 0, 1, 1, 0, 0, NULL, NULL, 0, 0, -1, -1, 0, 0, 0, 0);
+                return this->SetSpell(action.m_data & 0xFFFFFF, 0, 0, 1, 1, 0, 0, NULL, NULL, 0, 0, -1, -1, 0, 0, 0, 0);
             }
 
-            return this->SetSpell(action.m_value & 0xFFFFFF, 0, start + duration - FrameTime::GetCurTimeMs(), 1, 1, 0, 0, NULL, NULL, 0, 0, -1, -1, 0, 0, 0, 0);
+            return this->SetSpell(action.m_data & 0xFFFFFF, 0, start + duration - FrameTime::GetCurTimeMs(), 1, 1, 0, 0, NULL, NULL, 0, 0, -1, -1, 0, 0, 0, 0);
         }
 
         case 6:
             SStrPrintf(token, sizeof(token), "PET_MODE_%s", CGPetInfo::GetModeToken(value & 0xFFFFFF));
             this->AddLine(FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipTextColor, s_tooltipGrayColor, 0);
-            SStrPrintf(token, sizeof(token), "PET_MODE_%s_TOOLTIP", CGPetInfo::GetModeToken(action.m_value & 0xFFFFFF));
+            SStrPrintf(token, sizeof(token), "PET_MODE_%s_TOOLTIP", CGPetInfo::GetModeToken(action.m_data & 0xFFFFFF));
             this->AddLine(FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipTitleColor, s_tooltipTitleColor, 1);
             this->Show();
             break;
@@ -5554,7 +5554,7 @@ int32_t CGTooltip::SetPetAction(const PetAction& action) {
         case 7:
             SStrPrintf(token, sizeof(token), "PET_ACTION_%s", CGPetInfo::GetOrdersToken(value & 0xFFFFFF));
             this->AddLine(FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipTextColor, s_tooltipGrayColor, 0);
-            SStrPrintf(token, sizeof(token), "PET_ACTION_%s_TOOLTIP", CGPetInfo::GetOrdersToken(action.m_value & 0xFFFFFF));
+            SStrPrintf(token, sizeof(token), "PET_ACTION_%s_TOOLTIP", CGPetInfo::GetOrdersToken(action.m_data & 0xFFFFFF));
             this->AddLine(FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipTitleColor, s_tooltipTitleColor, 1);
             this->Show();
             break;
@@ -5566,7 +5566,7 @@ int32_t CGTooltip::SetPetAction(const PetAction& action) {
     return 0;
 }
 
-// OFFSET: 0x00474CE0
+// OFFSET: 0x00474CE0/0x14008D910
 bool ResolveItemSetItem(ItemSetTooltipData* data, int32_t pass, int32_t itemId, int32_t slot) {
     WOWGUID requester = WOWGUID::Make(0);
     ItemRecSparse* item = g_itemSparseDB.GetRecord(itemId, requester, TooltipItemCallback, data->m_tooltip, true);
@@ -5640,7 +5640,7 @@ static bool AppendMasterySpells(char* text, uint32_t size) {
     return true;
 }
 
-// OFFSET: 0x00474DE0
+// OFFSET: 0x00474DE0/0x14008DA50
 int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGUID& itemGuid, int32_t nameOnly, int32_t compare, int32_t useLinkInfo, int32_t append, WOWGUID owner, int32_t socketPreview, FILE* stream, int32_t hideCharges, const TooltipExtendedItemInfo* info, int32_t minimumLevel, int32_t skipLock, int32_t skipSellPrice, const WOWGUID* transmogrify) {
     int32_t result = 0;
 
@@ -5838,7 +5838,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
 
                     equippedId = equipped->m_obj->m_entryID;
                 } else {
-                    const InspectedItem* inspected = ownerPlayer->GetInspectedItem(slot);
+                    const InspectItem* inspected = ownerPlayer->GetInspectedItem(slot);
 
                     if (!inspected) {
                         continue;
@@ -7164,7 +7164,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                             bracket = 0;
                         }
 
-                        bool ratingOk = CGArenaTeamInfo::CheckPersonalAndTeamRating(cost->m_requiredArenaRating, static_cast<ARENA_TEAM_SIZE_INDEX>(bracket)) != 0;
+                        bool ratingOk = CGArenaTeamInfo::CheckPersonalAndTeamRating(cost->m_requiredArenaRating, bracket) != 0;
 
                         if (bracket == 2) {
                             SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_ARENA_RATING_5V5", -1, GENDER_NOT_APPLICABLE), cost->m_requiredArenaRating);
@@ -8143,7 +8143,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
             WOWGUID none = WOWGUID::Make(0);
             ItemRecSparse* vendorRec = g_itemSparseDB.GetRecord(itemId, none, TooltipItemCallback, this, true);
 
-            if (merchant && (merchant->m_unit->m_unitFieldNpcFlags & 0x80) && vendorRec->m_stackable > 1) {
+            if (merchant && (merchant->m_unit->m_unitNpcFlags & 0x80) && vendorRec->m_stackable > 1) {
                 this->AddLine(FrameScript_GetText("ITEM_VENDOR_STACK_BUY", -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipGreenColor, s_tooltipGreenColor, 0);
             }
         }
@@ -8217,7 +8217,7 @@ int32_t CGItemStatsSummary::CreateFromTooltip(CGTooltip* tooltip) {
     return 0;
 }
 
-// OFFSET: 0x004803F0
+// OFFSET: 0x004803F0/0x14009E6A0
 int32_t CGTooltip::SetMacro(uint32_t macroId) {
     this->ClearTooltip();
     MACRONODE* macro = CGUIMacros::GetMacroByID(macroId);
@@ -8266,7 +8266,7 @@ int32_t CGTooltip::SetMacro(uint32_t macroId) {
         if (macro->m_spellID) {
             uint32_t start = 0;
             uint32_t duration = 0;
-            int32_t enable = 0;
+            uint32_t enable = 0;
             Spell_C_GetSpellCooldown(macro->m_spellID, macro->m_spellFlags, &start, &duration, &enable, 0);
             int32_t brief = 1;
             CVar* uber = CVar::Lookup("UberTooltips");

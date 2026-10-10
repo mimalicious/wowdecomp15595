@@ -126,6 +126,7 @@ static int32_t s_poiOverlapIterations = 20;
 // STATIC: 0x00BFD938
 static const int32_t s_questGreenRange[20] = { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
 
+// PROVEN: 11c5bb76 IDENTICAL/NONE
 // OFFSET: 0x0095BF90
 int32_t CGQuestLog::GetQuestLogSlot(int32_t index) {
     if (index < 0 || index >= static_cast<int32_t>(CGQuestLog::m_numQuest) || CGQuestLog::m_quests[index].m_isHeader) {
@@ -177,6 +178,7 @@ void ObjectQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool succ
     }
 }
 
+// PROVEN: 7ce68c36 IDENTICAL/NONE
 // OFFSET: 0x0095C0A0/0x1406CEDD0
 void ItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -209,6 +211,7 @@ void CGQuestLog::RemoveQuestWatch(int32_t questId) {
     CGQuestLog::m_questWatches[count - 1].m_expireTime = 0;
 }
 
+// PROVEN: 6b6ba060 IDENTICAL/NONE
 // OFFSET: 0x0095C140
 AutoQuestPopUp* CGQuestLog::FindAutoQuestPopUp(int32_t questId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numAutoQuestPopUps; i++) {
@@ -258,6 +261,7 @@ void AddQuestPointDisplay() {
     }
 }
 
+// PROVEN: 3f2dd7d0 IDENTICAL/NONE
 // OFFSET: 0x0095C270
 int32_t CGQuestLog::GetSelectedLogEntry() {
     uint32_t index = 0;
@@ -275,6 +279,7 @@ int32_t CGQuestLog::GetSelectedLogEntry() {
     return index;
 }
 
+// PROVEN: b1c7e4d0 IDENTICAL/NONE
 // OFFSET: 0x0095C2B0
 void CGQuestLog::ClearQuest(int32_t questId) {
     if (questId && questId == CGQuestLog::m_selectedQuest) {
@@ -282,6 +287,7 @@ void CGQuestLog::ClearQuest(int32_t questId) {
     }
 }
 
+// PROVEN: 9df14ef6 IDENTICAL/NONE
 // OFFSET: 0x0095C2E0/0x1406CF030
 int32_t CGQuestLog::GetQuestID(int32_t index) {
     if (index < 0 || index >= static_cast<int32_t>(CGQuestLog::m_numQuest) || CGQuestLog::m_quests[index].m_isHeader) {
@@ -319,6 +325,7 @@ int32_t CGQuestLog::GetQuestItemID(const char* type, int32_t index) {
     return quest->m_rewardChoiceItem[index];
 }
 
+// PROVEN: a6fdd2f6 IDENTICAL/NONE
 // OFFSET: 0x0095C3B0/0x1406CF140
 int32_t CGQuestLog::IsQuestFailed(uint32_t index) {
     return index < CGQuestLog::m_numQuest && !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
@@ -479,6 +486,7 @@ static int32_t QSortQuestSortTypes(const void* a, const void* b) {
     return SStrSortUTF8I(nameA, nameB, 0x7FFFFFFF);
 }
 
+// PROVEN: 6154cc11 IDENTICAL/NONE
 // OFFSET: 0x0095D960
 void CGQuestLog::UpdateWatchTimers() {
     for (uint32_t i = 0; i < CGQuestLog::m_numQuestWatches; i++) {
@@ -508,6 +516,7 @@ void CGQuestLog::SetServerTime(int32_t serverTime, int32_t resetTime) {
     Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
 }
 
+// PROVEN: 602bed41 IDENTICAL/NONE
 // OFFSET: 0x0095DA10
 void CGQuestLog::SetSelectedQuest(int32_t index) {
     if (CGQuestLog::m_selectedQuest) {
@@ -522,18 +531,20 @@ void CGQuestLog::SetSelectedQuest(int32_t index) {
     }
 }
 
+// PROVEN: a27e2510 IDENTICAL/NONE
 // OFFSET: 0x0095DA70
 int32_t CGQuestLog::IsSelectedQuestExpired() {
     uint32_t index = CGQuestLog::GetSelectedLogEntry();
     return index < CGQuestLog::m_numQuest && !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
 }
 
+// PROVEN: 878a66d1 IDENTICAL/NONE
 // OFFSET: 0x0095DAA0
 void CGQuestLog::GetBlobBounds(const TSGrowableArray<BLOBPOI>& points, CRect& bounds) {
-    bounds.minX = 3.4028235e38f;
-    bounds.maxX = -3.4028235e38f;
-    bounds.minY = 3.4028235e38f;
-    bounds.maxY = -3.4028235e38f;
+    bounds.minX = 3.402823466e38f;
+    bounds.maxX = -3.402823466e38f;
+    bounds.minY = 3.402823466e38f;
+    bounds.maxY = -3.402823466e38f;
 
     for (uint32_t i = 0; i < points.m_count; i++) {
         float x = static_cast<float>(points.m_data[i].m_x);
@@ -645,6 +656,7 @@ void QuestQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool succe
     }
 }
 
+// PROVEN: 199e966e IDENTICAL/NONE
 // OFFSET: 0x0095E620
 int32_t Packet_SMSG_QUERY_TIME_RESPONSE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t serverTime = 0;
@@ -1555,7 +1567,7 @@ int32_t CGQuestLog::GetQuestWorldMapAreaID(int32_t questId, int32_t& floor) {
             poi->m_objectiveMask = CGQuestLog::ComputeBlobQuestObjectives(poi->m_questId);
             int32_t bestArea = 0;
             int32_t bestFloor = 0;
-            float bestDistance = 3.4028235e38f;
+            float bestDistance = 3.402823466e38f;
             int32_t bestFloorDelta = 0x7FFFFFFF;
 
             for (uint32_t i = 0; static_cast<int32_t>(i) < static_cast<int32_t>(poi->m_blobs.m_count); i++) {
@@ -1770,10 +1782,10 @@ float CGQuestLog::GetQuestDistSqr(int32_t questId, C2Vector& position) {
     int32_t index = CGQuestLog::GetQuestPOIIndex(questId);
 
     if (index < 0) {
-        return 3.4028235e38f;
+        return 3.402823466e38f;
     }
 
-    float bestDistance = 3.4028235e38f;
+    float bestDistance = 3.402823466e38f;
     int32_t bestFloorDelta = 0x7FFFFFFF;
     int32_t continent = CGPlayer_C::GetNewContinentID();
     DungeonMapRec* dungeonMap = g_dungeonMapDB.GetRecord(CGWorldMap::GetCurrentDungeonMap());
@@ -1917,6 +1929,7 @@ bool CGQuestLog::AddAutoQuestPopUp(int32_t questId, int32_t type) {
     return true;
 }
 
+// PROVEN: e68df7f6 IDENTICAL/NONE
 // OFFSET: 0x00961B50
 void CGQuestLog::RemoveAutoQuestPopUp(int32_t questId) {
     uint32_t count = CGQuestLog::m_numAutoQuestPopUps;
@@ -1979,6 +1992,7 @@ int32_t CGQuestLog::IsQuestComplete(uint32_t index) {
     return CGQuestLog::IsQuestCompleteEx(player, index, true, 0, 0);
 }
 
+// PROVEN: 23fcc8e2 IDENTICAL/NONE
 // OFFSET: 0x00961C50/0x1406D5A30
 int32_t CGQuestLog::IsQuestComplete(const CGPlayer_C* player, uint32_t index) {
     return CGQuestLog::IsQuestCompleteEx(player, index, true, 0, 0);
@@ -2146,7 +2160,7 @@ void CGQuestLog::UpdatePOIIcons() {
 
     for (uint32_t i = 0; i < 50; i++) {
         QuestPOIInfo* poi = &CGQuestLog::m_questPOIs[i];
-        float bestDistance = 3.4028235e38f;
+        float bestDistance = 3.402823466e38f;
         int32_t best = -1;
         int32_t bestPriority = 10;
 
@@ -2631,6 +2645,7 @@ static uint32_t AddUniqueBlobIndex(uint32_t blobIndex, TSGrowableArray<uint32_t>
     return indices.m_count;
 }
 
+// PROVEN: 605690e6 IDENTICAL/NONE
 // OFFSET: 0x009639B0
 void CGQuestLog::LoadTrackedQuests(bool force) {
     if (force && !CGQuestLog::m_trackedQuestsLoaded) {

@@ -298,6 +298,7 @@ static int32_t Script_RemoveMessagesByExtraData(lua_State* L) {
     if (!lua_isnumber(L, 2)) {
         const char* name = frame->GetName();
         luaL_error(L, "Usage: %s:RemoveMessagesByExtraData(extraData)", name ? name : "<unnamed>");
+        return 0;
     }
 
     int32_t extraData = lua_tointeger(L, 2);

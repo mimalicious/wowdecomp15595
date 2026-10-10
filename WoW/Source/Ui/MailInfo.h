@@ -33,12 +33,12 @@ struct MailAttachmentInfo {
     /* 0010 */ uint32_t unk_0010;
     /* 0014 */ uint32_t m_count;
     /* 0018 */ int32_t m_spellCharges;
-    /* 001C */ int32_t m_enchantIDs[7];
-    /* 0038 */ uint32_t m_enchantDurations[7];
-    /* 0054 */ int32_t m_enchantCharges[7];
-    /* 0070 */ uint32_t m_maxDurability;
-    /* 0074 */ uint32_t m_durability;
-    /* 0078 */ uint32_t unk_0078;
+    /* 001C */ int32_t m_enchantIDs[10];
+    /* 0044 */ uint32_t m_enchantDurations[10];
+    /* 006C */ int32_t m_enchantCharges[10];
+    /* 0094 */ uint32_t m_maxDurability;
+    /* 0098 */ uint32_t m_durability;
+    /* 009C */ uint32_t unk_009C;
 };
 
 struct MailboxMessageInfo {
@@ -60,9 +60,10 @@ struct MailboxMessageInfo {
     /* 2174 */ int32_t m_invoiceType;
     /* 2178 */ int32_t m_mailTemplateID;
     /* 217C */ uint32_t m_invoiceValue;
-    /* 2180 */ MailAttachmentInfo m_attachments[16];
-    /* 2940 */ uint32_t m_deletePending;
-    /* 2944 */ uint32_t unk_2944;
+    /* 2180 */ uint32_t unk_2180[4];
+    /* 2190 */ MailAttachmentInfo m_attachments[16];
+    /* 2B90 */ uint32_t m_deletePending;
+    /* 2B94 */ uint32_t unk_2B94;
 };
 
 struct SendMailItem {
@@ -78,6 +79,7 @@ class CGMailInfo {
     static uint8_t m_lockSendItems;
     static uint32_t m_sendPending;
     static void ClearSendMail(bool signal);
+    static MailAttachmentInfo* GetFirstAttachment(MailboxMessageInfo* mail);
     static bool IsSendItem(WOWGUID item);
     static void CloseMail(bool leavingWorld);
     static uint8_t m_sendMailShowing;

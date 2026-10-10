@@ -206,11 +206,13 @@ static int32_t Script_SetPlayerTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetPlayerTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     if (!minimap->m_playerTexture->SetTexture(lua_tolstring(L, 2, NULL), 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal)) {
         const char* name = minimap->GetName();
         luaL_error(L, "%s:SetPlayerTexture(): Couldn't load the file %s", name ? name : "<unnamed>", lua_tolstring(L, 2, NULL));
+        return 0;
     }
 
     return 0;
@@ -351,6 +353,7 @@ static int32_t Script_SetMaskTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetMaskTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     CStatus status;
@@ -376,6 +379,7 @@ static int32_t Script_SetPOIArrowTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetPOITexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     CStatus status;
@@ -401,6 +405,7 @@ static int32_t Script_SetStaticPOIArrowTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetStaticPOITexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     CStatus status;
@@ -426,6 +431,7 @@ static int32_t Script_SetCorpsePOIArrowTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetCorpsePOITexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     CStatus status;
@@ -451,6 +457,7 @@ static int32_t Script_SetIconTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetIconTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     CStatus status;
@@ -476,6 +483,7 @@ static int32_t Script_SetBlipTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetBlipTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     const char* fileName = lua_tolstring(L, 2, NULL);
@@ -496,6 +504,7 @@ static int32_t Script_SetBlipTexture(lua_State* L) {
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();
         luaL_error(L, "%s:SetBlipTexture(): Couldn't load the file %s", name ? name : "<unnamed>", fileName);
+        return 0;
     }
 
     return 0;
@@ -508,6 +517,7 @@ static int32_t Script_SetClassBlipTexture(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetClassBlipTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     CStatus status;

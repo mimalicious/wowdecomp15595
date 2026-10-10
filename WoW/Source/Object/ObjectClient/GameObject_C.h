@@ -17,6 +17,7 @@
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/WorldClient/Map.h"
 
+class CImVector;
 class SpellRec;
 class CMapBaseObj;
 class CDataStore;
@@ -417,6 +418,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     void UpdateDisplay(uint32_t time);
     uint32_t GetProperty(int32_t prop) const;
     bool IsLocked(int32_t* spellId, int32_t* skillValue, int32_t* requiredSkill, CGItem_C** key, uint32_t* entry) const;
+    void GetLockSkillColor(int32_t requiredSkill, int32_t skillValue, CImVector& color);
     bool IsUsableInCombat() const;
     bool IsUsableMounted() const;
     bool IsUsableWhileImmune() const;

@@ -8,6 +8,17 @@ WOWGUID CGTransmogrify::m_transmogrifier;
 // STATIC: 0x00F4DE44
 std::list<TransmogrifyPendingItem, Blizzard::Memory::AllocSTL_raw<TransmogrifyPendingItem> > CGTransmogrify::s_pendingItems;
 
+// OFFSET: 0x009BF090/0x14074B190
+TransmogrifyPendingItem* CGTransmogrify::GetPendingItem(uint32_t slot) {
+    for (std::list<TransmogrifyPendingItem, Blizzard::Memory::AllocSTL_raw<TransmogrifyPendingItem> >::iterator it = CGTransmogrify::s_pendingItems.begin(); it != CGTransmogrify::s_pendingItems.end(); ++it) {
+        if (it->m_slot == slot) {
+            return &*it;
+        }
+    }
+
+    return NULL;
+}
+
 // OFFSET: 0x009BFD90
 void CGTransmogrify::OnTransmogrifySuccess(uint32_t slot) {
     for (std::list<TransmogrifyPendingItem, Blizzard::Memory::AllocSTL_raw<TransmogrifyPendingItem> >::iterator it = CGTransmogrify::s_pendingItems.begin(); it != CGTransmogrify::s_pendingItems.end(); ++it) {

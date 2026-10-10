@@ -204,7 +204,7 @@ static int32_t Script_GetLootSlotInfo(lua_State* L) {
     char text[256];
     CGLootInfo::GetLootSlotText(text, sizeof(text), slot);
     lua_pushstring(L, text);
-    lua_pushnumber(L, CGLootInfo::GetLootItemCount(slot));
+    lua_pushnumber(L, CGLootInfo::GetLootQuantity(slot));
     lua_pushnumber(L, CGLootWindow::GetLootItemRarity(slot));
     uint32_t index = slot;
 

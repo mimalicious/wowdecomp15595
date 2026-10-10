@@ -1,4 +1,5 @@
 #include "Player_C.h"
+#include "WoW/Source/Object/ObjectClient/VoidStorage_C.h"
 #include "WoW/Source/UIUtil/CameraManager.h"
 #include <malloc.h>
 #include "Engine/Source/Base/CDataStore.h"
@@ -1155,6 +1156,16 @@ int32_t CGPlayer_C::GetPlayedTime() const {
     }
 
     return this->m_playedTime + static_cast<int32_t>(time(NULL)) - this->m_playedTimeBase;
+}
+
+// OFFSET: 0x00554AE0/0x1401B1440
+CGVoidStorage_C* CGPlayer_C::GetVoidStorage() {
+    if (!this->m_voidStorage) {
+        void* mem = SMemAlloc(sizeof(CGVoidStorage_C), __FILE__, __LINE__, 0);
+        this->m_voidStorage = mem ? new (mem) CGVoidStorage_C() : NULL;
+    }
+
+    return this->m_voidStorage;
 }
 
 // OFFSET: #0x006CF470
@@ -6750,7 +6761,7 @@ int32_t CGPlayer_C::GetLootItemDisplayId(uint32_t slot) {
 }
 
 // OFFSET: #0x006CEBE0
-int32_t CGPlayer_C::GetLootItemCount(uint32_t slot) {
+int32_t CGPlayer_C::GetLootQuantity(uint32_t slot) {
     if (slot >= 18) {
         SErrDisplayAppFatalMessage("", "", 0);
     }
@@ -6759,7 +6770,7 @@ int32_t CGPlayer_C::GetLootItemCount(uint32_t slot) {
 }
 
 // OFFSET: #0x006CEC10
-int32_t CGPlayer_C::GetLootItemRandomSuffix(uint32_t slot) {
+int32_t CGPlayer_C::GetLootSeed(uint32_t slot) {
     if (slot >= 18) {
         SErrDisplayAppFatalMessage("", "", 0);
     }
@@ -6768,7 +6779,7 @@ int32_t CGPlayer_C::GetLootItemRandomSuffix(uint32_t slot) {
 }
 
 // OFFSET: #0x006CEC40
-int32_t CGPlayer_C::GetLootItemRandomPropertyId(uint32_t slot) {
+int32_t CGPlayer_C::GetLootRandomPropertiesID(uint32_t slot) {
     if (slot >= 18) {
         SErrDisplayAppFatalMessage("", "", 0);
     }

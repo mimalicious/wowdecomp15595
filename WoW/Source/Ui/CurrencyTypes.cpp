@@ -44,12 +44,13 @@ TSGrowableArray<CGCurrencyTypes::CurrencyCategoryInfo> CGCurrencyTypes::s_catego
 // STATIC: 0x00F4B968
 TSGrowableArray<CGCurrencyTypes::CurrencyListInfo> CGCurrencyTypes::s_displayList;
 
-// OFFSET: 0x0099F760
+// OFFSET: 0x0099F760/0x140723720
 static int32_t DumpCurrencyToChat(const void* data, void* param) {
     CGCurrencyTypes::SendChatCurrency();
     return 1;
 }
 
+// PROVEN: 8a11d2e7 IDENTICAL/NONE
 // OFFSET: 0x0099F770/0x140723740
 int32_t CGCurrencyTypes::CurrencyCategorySortCallback(const void* a, const void* b) {
     const CurrencyCategoryInfo* first = static_cast<const CurrencyCategoryInfo*>(a);
@@ -68,7 +69,7 @@ int32_t CGCurrencyTypes::CurrencyCategorySortCallback(const void* a, const void*
     return result;
 }
 
-// OFFSET: 0x0099F9B0
+// OFFSET: 0x0099F9B0/0x140723A70
 int32_t CGCurrencyTypes::DisplayListSortCallback(const void* a, const void* b) {
     const CurrencyListInfo* first = static_cast<const CurrencyListInfo*>(a);
     const CurrencyListInfo* second = static_cast<const CurrencyListInfo*>(b);
@@ -112,7 +113,7 @@ int32_t CGCurrencyTypes::DisplayListSortCallback(const void* a, const void* b) {
     return SStrSortUTF8I(firstName, secondName, 0x7FFFFFFF);
 }
 
-// OFFSET: 0x0099FAB0
+// OFFSET: 0x0099FAB0/0x140723C30
 CGCurrencyTypes::CurrencyListInfo* CGCurrencyTypes::GetDisplayListInfo(uint32_t index) {
     if (index >= CGCurrencyTypes::s_displayList.Count()) {
         return NULL;
@@ -135,7 +136,7 @@ void CGCurrencyTypes::SetCategoryExpand(uint32_t index, int32_t expand) {
     }
 }
 
-// OFFSET: 0x0099FB30
+// OFFSET: 0x0099FB30/0x140723CB0
 const CurrencyTypesRec* CGCurrencyTypes::GetCurrencyRec(uint32_t index) {
     if (index >= CGCurrencyTypes::s_displayList.Count()) {
         return NULL;
@@ -144,7 +145,7 @@ const CurrencyTypesRec* CGCurrencyTypes::GetCurrencyRec(uint32_t index) {
     return g_currencyTypesDB.GetRecord(CGCurrencyTypes::s_displayList[index].m_currencyID);
 }
 
-// OFFSET: 0x0099FB70
+// OFFSET: 0x0099FB70/0x140723D00
 const char* CGCurrencyTypes::GetCurrencyIcon(const CurrencyTypesRec* rec) {
     if (rec->m_id == 392 || rec->m_id == 390) {
         SStrCopy(s_currencyIcon, "inv_misc_questionmark", sizeof(s_currencyIcon));
@@ -215,7 +216,7 @@ int32_t CGCurrencyTypes::CategoryHasKnownTypes(uint32_t index) {
     return 0;
 }
 
-// OFFSET: 0x0099FE40
+// OFFSET: 0x0099FE40/0x1407240D0
 void CGCurrencyTypes::BuildDisplayList() {
     CGCurrencyTypes::s_displayList.m_count = 0;
 
@@ -272,7 +273,7 @@ void CGCurrencyTypes::BuildDisplayList() {
     qsort(CGCurrencyTypes::s_displayList.m_data, CGCurrencyTypes::s_displayList.Count(), sizeof(CurrencyListInfo), CGCurrencyTypes::DisplayListSortCallback);
 }
 
-// OFFSET: 0x009A00B0
+// OFFSET: 0x009A00B0/0x1407243E0
 PlayerCurrency* CGCurrencyTypes::GetCurrency(int32_t id) {
     for (PlayerCurrency* currency = CGCurrencyTypes::s_currencies.Head(); currency; currency = CGCurrencyTypes::s_currencies.Next(currency)) {
         if (currency->m_rec->m_id == id) {
@@ -300,7 +301,7 @@ bool CGCurrencyTypes::HasCurrency(int32_t id, int32_t count) {
     return quantity >= count;
 }
 
-// OFFSET: 0x009A0140
+// OFFSET: 0x009A0140/0x140724480
 bool CGCurrencyTypes::HasEarnedCurrency(int32_t id, int32_t count) {
     PlayerCurrency* currency = CGCurrencyTypes::GetCurrency(id);
 
@@ -348,7 +349,7 @@ bool CGCurrencyTypes::HasCurrencyFlags(int32_t id, uint32_t flag) {
     return (flag & currency->m_flags) != 0;
 }
 
-// OFFSET: 0x009A04E0
+// OFFSET: 0x009A04E0/0x1407248A0
 void CGCurrencyTypes::EnterWorld() {
     CGCurrencyTypes::BuildDisplayList();
     FrameScript_SignalEvent(SCRIPT_EVENT_CURRENCY_DISPLAY_UPDATE, NULL);
@@ -365,7 +366,7 @@ static bool OnWeeklyResetCurrency(ClientWeeklyResetCurrency* msg) {
     return true;
 }
 
-// OFFSET: 0x009A0540
+// OFFSET: 0x009A0540/0x140724910
 const CurrencyTypesRec* CGCurrencyTypes::GetBackpackCurrencyInfo(int32_t index) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return NULL;
@@ -403,7 +404,7 @@ void CGCurrencyTypes::SetUnused(uint32_t index, int32_t unused) {
     }
 }
 
-// OFFSET: 0x009A0610
+// OFFSET: 0x009A0610/0x140724A50
 int32_t CGCurrencyTypes::IsCurrencyUnused(uint32_t index) {
     if (index >= CGCurrencyTypes::s_displayList.Count()) {
         return 0;
@@ -435,7 +436,7 @@ void CGCurrencyTypes::SetBackpack(uint32_t index, int32_t backpack) {
     }
 }
 
-// OFFSET: 0x009A06C0
+// OFFSET: 0x009A06C0/0x140724B70
 void CGCurrencyTypes::SendChatCurrency() {
     ClientKillTimer(s_dumpTimer, DumpCurrencyToChat, "DumpCurrencyToChat");
     s_dumpTimer = 0;
@@ -518,7 +519,7 @@ bool CGCurrencyTypes::SetCurrency(int32_t id, int32_t quantity, int32_t weeklyQu
     return created;
 }
 
-// OFFSET: 0x009A0F00
+// OFFSET: 0x009A0F00/0x1407255B0
 void CGCurrencyTypes::ShutdownGame() {
     CGCurrencyTypes::s_currencies.Clear();
     ClientSetupCurrency::s_handler = NULL;
@@ -589,7 +590,7 @@ static bool OnUpdateCurrencyWeekLimit(ClientUpdateCurrencyWeekLimit* msg) {
     return true;
 }
 
-// OFFSET: 0x009A1130
+// OFFSET: 0x009A1130/0x140725860
 void CGCurrencyTypes::InitializeGame() {
     CGCurrencyTypes::s_categories.Reserve(16, 0);
     CGCurrencyTypes::s_categories.m_count = 0;

@@ -841,6 +841,7 @@ void ClientNewWorld::Unpack(CDataStore* msg, bool full) {
     this->m_position.z = z;
 }
 
+// PROVEN: 48018d85 IDENTICAL/NONE
 // OFFSET: [0x0066BC00/0x140312430]
 JamWeeklySpellUse::JamWeeklySpellUse() {
 }
@@ -1413,10 +1414,12 @@ bool ClientSetCurrency::Handle() {
     return ClientSetCurrency::s_handler(this);
 }
 
+// PROVEN: f5a18197 IDENTICAL/NONE
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientWeeklyResetCurrency::ClientWeeklyResetCurrency(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
+// PROVEN: 0b497e5b IDENTICAL/NONE
 // OFFSET: 0x006A1120/0x14033F780
 ClientWeeklyResetCurrency::~ClientWeeklyResetCurrency() {
 }

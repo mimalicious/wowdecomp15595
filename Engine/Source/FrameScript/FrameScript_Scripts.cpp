@@ -416,6 +416,7 @@ static int32_t Script_date(lua_State* L) {
             lua_pushstring(L, buffer);
         } else {
             luaL_error(L, "'date' format too long");
+            return 0;
         }
     }
 

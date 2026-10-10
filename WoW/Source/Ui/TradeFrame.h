@@ -33,6 +33,33 @@ struct TRADE_ITEM {
     /* 004C */ int32_t m_durability;
 };
 
+struct TradePlayerItem {
+    /* 0000 */ WOWGUID m_item;
+    /* 0008 */ WOWGUID m_container;
+    /* 0010 */ uint8_t m_containerSlot;
+    /* 0011 */ uint8_t unk_0011[7];
+};
+
+struct TradeTargetItem {
+    /* 0000 */ int32_t m_itemID;
+    /* 0004 */ int32_t m_count;
+    /* 0008 */ uint8_t m_wrapped;
+    /* 0009 */ uint8_t unk_0009[7];
+    /* 0010 */ WOWGUID m_giftCreator;
+    /* 0018 */ int32_t m_enchant;
+    /* 001C */ int32_t m_socketEnchants[3];
+    /* 0028 */ int32_t m_reforgeEnchant;
+    /* 002C */ int32_t m_engineeringEnchant;
+    /* 0030 */ WOWGUID m_creator;
+    /* 0038 */ uint8_t m_locked;
+    /* 0039 */ uint8_t unk_0039[3];
+    /* 003C */ int32_t m_spellCharges;
+    /* 0040 */ int32_t m_suffixFactor;
+    /* 0044 */ int32_t m_randomPropertyID;
+    /* 0048 */ int32_t m_maxDurability;
+    /* 004C */ int32_t m_durability;
+};
+
 class CGTradeInfo {
     public:
     static void ShutdownGame();
@@ -53,6 +80,10 @@ class CGTradeInfo {
     static bool SetMoney(uint32_t amount);
     static uint32_t GetTargetTradeMoney();
     static WOWGUID m_tradingPlayer;
+    static int32_t m_playerProposedEnchant;
+    static TradeTargetItem m_targetTradeItems[7];
+    static int32_t m_targetProposedEnchant;
+    static TradePlayerItem m_playerTradeItems[7];
     static PlayerTradeState m_playerTrade;
     static int32_t m_targetDurability[7];
     static int32_t m_targetMaxDurability[7];

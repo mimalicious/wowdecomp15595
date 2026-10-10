@@ -23,7 +23,19 @@
 // STATIC: #0x00BFA680
 WOWGUID CGTradeInfo::m_enchantingItem;
 
-// STATIC: #0x00BFA658
+// STATIC: 0x00F48184
+int32_t CGTradeInfo::m_playerProposedEnchant;
+
+// STATIC: 0x00F48198
+TradeTargetItem CGTradeInfo::m_targetTradeItems[7];
+
+// STATIC: 0x00F483CC
+int32_t CGTradeInfo::m_targetProposedEnchant;
+
+// STATIC: 0x00F483E0
+TradePlayerItem CGTradeInfo::m_playerTradeItems[7];
+
+// STATIC: 0x00F48488
 WOWGUID CGTradeInfo::m_tradingPlayer;
 
 // STATIC: #0x00BFA400

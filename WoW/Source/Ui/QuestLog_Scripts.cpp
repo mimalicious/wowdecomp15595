@@ -76,12 +76,14 @@ static int32_t Script_GetNumQuestLogEntries(lua_State* L) {
     return 2;
 }
 
+// PROVEN: d5d4f689 IDENTICAL/NONE
 // OFFSET: 0x0095C700/0x1406CF500
 static int32_t Script_GetQuestLogSelection(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::GetSelectedLogEntry() + 1);
     return 1;
 }
 
+// PROVEN: ab8052b5 IDENTICAL/NONE
 // OFFSET: 0x0095C730/0x1406CF560
 static int32_t Script_SetAbandonQuest(lua_State* L) {
     CGQuestLog::m_abandonQuest = CGQuestLog::m_selectedQuest;
@@ -225,6 +227,7 @@ static int32_t Script_GetQuestLogPushable(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 5a751288 IDENTICAL/NONE
 // OFFSET: 0x0095CB00/0x1406CF940
 static int32_t Script_GetNumQuestWatches(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::m_numQuestWatches);
@@ -235,6 +238,7 @@ static int32_t Script_GetNumQuestWatches(lua_State* L) {
 static int32_t Script_IsQuestWatched(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsQuestWatched(index)");
+        return 0;
     }
 
     bool watched = false;
@@ -276,6 +280,7 @@ static int32_t Script_RemoveQuestWatch(lua_State* L) {
 static int32_t Script_GetQuestIndexForWatch(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestIndexForWatch(index)");
+        return 0;
     }
 
     uint32_t watch = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
@@ -324,6 +329,7 @@ static int32_t Script_GetNumQuestLogRewardFactions(lua_State* L) {
 static int32_t Script_GetQuestLogRewardFactionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Script_GetQuestLogRewardFactionInfo(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1) - 1.0));
@@ -336,6 +342,7 @@ static int32_t Script_GetQuestLogRewardFactionInfo(lua_State* L) {
 static int32_t Script_GetQuestSortIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestSortIndex(questIndex)");
+        return 0;
     }
 
     lua_pushnumber(L, GetQuestSortId(static_cast<int32_t>(lua_tonumber(L, 1)) - 1) + 1);
@@ -346,6 +353,7 @@ static int32_t Script_GetQuestSortIndex(lua_State* L) {
 static int32_t Script_QuestPOIGetQuestIDByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: QuestPOIGetQuestIDByIndex(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -368,6 +376,7 @@ static int32_t Script_QuestPOIGetQuestIDByIndex(lua_State* L) {
 static int32_t Script_SetPOIIconOverlapDistance(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetPOIIconOverlapDistance(index)");
+        return 0;
     }
 
     CGQuestLog::m_questIconOverlapDist = static_cast<float>(lua_tonumber(L, 1));
@@ -378,6 +387,7 @@ static int32_t Script_SetPOIIconOverlapDistance(lua_State* L) {
 static int32_t Script_SetPOIIconOverlapPushDistance(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetPOIIconOverlapPushDistance(index)");
+        return 0;
     }
 
     double distance = lua_tonumber(L, 1);
@@ -393,6 +403,7 @@ static int32_t Script_SetPOIIconOverlapPushDistance(lua_State* L) {
 static int32_t Script_ShiftQuestWatches(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: ShiftQuestWatches(indexFrom, indexTo)");
+        return 0;
     }
 
     uint32_t to = static_cast<int64_t>(lua_tonumber(L, 2)) - 1;
@@ -405,6 +416,7 @@ static int32_t Script_ShiftQuestWatches(lua_State* L) {
 static int32_t Script_GetQuestWatchIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestWatchIndex(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
@@ -436,6 +448,7 @@ static int32_t Script_GetQuestWatchIndex(lua_State* L) {
 static int32_t Script_GetQuestLogIndexByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogIndexByID(questID)");
+        return 0;
     }
 
     lua_pushnumber(L, CGQuestLog::GetQuestIndex(static_cast<int32_t>(lua_tonumber(L, 1))));
@@ -488,6 +501,7 @@ static int32_t Script_GetQuestLogPortraitTurnIn(lua_State* L) {
     return 3;
 }
 
+// PROVEN: bd357a09 IDENTICAL/NONE
 // OFFSET: 0x0095D5C0/0x1406D03C0
 static int32_t Script_GetNumAutoQuestPopUps(lua_State* L) {
     lua_pushinteger(L, CGQuestLog::m_numAutoQuestPopUps);
@@ -498,6 +512,7 @@ static int32_t Script_GetNumAutoQuestPopUps(lua_State* L) {
 static int32_t Script_FindAutoQuestPopUp(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: FindAutoQuestPopUp(index)");
+        return 0;
     }
 
     uint32_t index = lua_tointeger(L, 1) - 1;
@@ -525,6 +540,7 @@ static int32_t Script_FindAutoQuestPopUp(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 406f6bef IDENTICAL/NONE
 // OFFSET: 0x0095D690/0x1406D04D0
 static int32_t Script_SetSuperTrackedQuestID(lua_State* L) {
     if (lua_isnumber(L, 1)) {
@@ -536,6 +552,7 @@ static int32_t Script_SetSuperTrackedQuestID(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 73bb14de IDENTICAL/NONE
 // OFFSET: 0x0095D6D0/0x1406D0520
 static int32_t Script_GetSuperTrackedQuestID(lua_State* L) {
     lua_pushinteger(L, CGQuestLog::m_superTrackedQuest);
@@ -546,6 +563,7 @@ static int32_t Script_GetSuperTrackedQuestID(lua_State* L) {
 static int32_t Script_SelectQuestLogEntry(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectQuestLogEntry(index)");
+        return 0;
     }
 
     CGQuestLog::SetSelectedQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -556,6 +574,7 @@ static int32_t Script_SelectQuestLogEntry(lua_State* L) {
 static int32_t Script_GetQuestLogRewardCurrencyInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogRewardCurrencyInfo(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -674,6 +693,7 @@ static int32_t Script_GetQuestLogRewardSpell(lua_State* L) {
 static int32_t Script_QuestPOIGetIconInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: QuestPOIGetIconInfo(questID)");
+        return 0;
     }
 
     bool complete;
@@ -726,6 +746,7 @@ static int32_t Script_GetQuestLogCompletionText(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 4ca66562 IDENTICAL/NONE
 // OFFSET: 0x009608A0/0x1406D41A0
 static int32_t Script_AbandonQuest(lua_State* L) {
     CGQuestLog::AbandonSelectedQuest();
@@ -736,6 +757,7 @@ static int32_t Script_AbandonQuest(lua_State* L) {
 static int32_t Script_IsUnitOnQuest(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: IsUnitOnQuest(index, \"unit\")");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -998,6 +1020,7 @@ static int32_t Script_QuestLogPushQuest(lua_State* L) {
 static int32_t Script_GetQuestIndexForTimer(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestIndexForTimer(index)");
+        return 0;
     }
 
     int32_t timer = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -1042,6 +1065,7 @@ static int32_t Script_GetQuestIndexForTimer(lua_State* L) {
 static int32_t Script_CollapseQuestHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CollapseQuestHeader(index)");
+        return 0;
     }
 
     CGQuestLog::CollapseHeader(static_cast<int32_t>(lua_tonumber(L, 1)) - 1, 1);
@@ -1052,12 +1076,14 @@ static int32_t Script_CollapseQuestHeader(lua_State* L) {
 static int32_t Script_ExpandQuestHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ExpandQuestHeader(index)");
+        return 0;
     }
 
     CGQuestLog::CollapseHeader(static_cast<int32_t>(lua_tonumber(L, 1)) - 1, 0);
     return 0;
 }
 
+// PROVEN: 078f9aad IDENTICAL/NONE
 // OFFSET: 0x00961360
 static int32_t Script_GetQuestGreenRange(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::GetQuestGreenRange());
@@ -1075,6 +1101,7 @@ static int32_t Script_GetQuestLogGroupNum(lua_State* L) {
 static int32_t Script_GetQuestLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLink(questID)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -1097,6 +1124,7 @@ static int32_t Script_GetQuestLink(lua_State* L) {
 static int32_t Script_GetQuestLogSpecialItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogSpecialItemInfo(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
@@ -1123,6 +1151,7 @@ static int32_t Script_GetQuestLogSpecialItemInfo(lua_State* L) {
 static int32_t Script_GetQuestLogSpecialItemCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogSpecialItemCooldown(index)");
+        return 0;
     }
 
     CGItem_C* item = CGQuestLog::GetQuestSpecialItem(static_cast<int64_t>(lua_tonumber(L, 1)) - 1);
@@ -1145,6 +1174,7 @@ static int32_t Script_GetQuestLogSpecialItemCooldown(lua_State* L) {
 static int32_t Script_IsQuestLogSpecialItemInRange(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsQuestLogSpecialItemInRange(index [,target])");
+        return 0;
     }
 
     WOWGUID target;
@@ -1168,6 +1198,7 @@ static int32_t Script_IsQuestLogSpecialItemInRange(lua_State* L) {
 static int32_t Script_GetQuestWorldMapAreaID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestWorldMapAreaID(questID)");
+        return 0;
     }
 
     int32_t floor = 0;
@@ -1187,6 +1218,7 @@ static int32_t Script_GetQuestWorldMapAreaID(lua_State* L) {
 static int32_t Script_GetDistanceSqToQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetDistanceSqToQuest(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -1211,6 +1243,7 @@ static int32_t Script_GetDistanceSqToQuest(lua_State* L) {
 static int32_t Script_GetQuestLogTitle(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogTitle(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -1337,6 +1370,7 @@ static int32_t Script_QuestMapUpdateAllQuests(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ed7c9622 IDENTICAL/NONE
 // OFFSET: 0x009633E0/0x1406D7FF0
 static int32_t Script_QuestPOIUpdateIcons(lua_State* L) {
     CGQuestLog::UpdatePOIIcons();
@@ -1347,6 +1381,7 @@ static int32_t Script_QuestPOIUpdateIcons(lua_State* L) {
 static int32_t Script_QuestPOIGetQuestIDByVisibleIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Script_QuestPOIGetQuestIDByVisibleIndex(index)");
+        return 0;
     }
 
     int32_t questId = CGQuestLog::GetPOIQuestIDByVisibleIndex(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -1360,6 +1395,7 @@ static int32_t Script_QuestPOIGetQuestIDByVisibleIndex(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 3c87843e IDENTICAL/NONE
 // OFFSET: 0x00963480/0x1406D80C0
 static int32_t Script_SortQuestWatches(lua_State* L) {
     lua_pushboolean(L, CGQuestLog::SortQuestWatches());
@@ -1370,6 +1406,7 @@ static int32_t Script_SortQuestWatches(lua_State* L) {
 static int32_t Script_AddAutoQuestPopUp(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: AddAutoQuestPopUp(questID, type)");
+        return 0;
     }
 
     int32_t questId = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -1379,6 +1416,7 @@ static int32_t Script_AddAutoQuestPopUp(lua_State* L) {
     if (type) {
         if (_stricmp(name, "COMPLETE")) {
             luaL_error(L, "AddAutoQuestPopUp: Unknown pop-up type %s", name);
+            return 0;
         }
 
         type = 1;
@@ -1393,6 +1431,7 @@ static int32_t Script_AddAutoQuestPopUp(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 78e02b3a IDENTICAL/NONE
 // OFFSET: 0x00963580/0x1406D81F0
 static int32_t Script_RemoveAutoQuestPopUp(lua_State* L) {
     int32_t questId = lua_isnumber(L, 1) ? static_cast<int32_t>(lua_tonumber(L, 1)) : CGQuestLog::m_selectedQuest;
@@ -1634,6 +1673,7 @@ static int32_t Script_GetQuestLogRewardInfo(lua_State* L) {
 
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogRewardInfo(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
@@ -1677,6 +1717,7 @@ static int32_t Script_GetQuestLogChoiceInfo(lua_State* L) {
 
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogRewardInfo(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
@@ -1717,6 +1758,7 @@ static int32_t Script_GetQuestLogChoiceInfo(lua_State* L) {
 static int32_t Script_GetQuestLogItemLink(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetQuestLogItemLink(\"type\", index)");
+        return 0;
     }
 
     const char* type = lua_tolstring(L, 1, NULL);
@@ -1766,6 +1808,7 @@ static int32_t Script_GetQuestLogItemLink(lua_State* L) {
 static int32_t Script_UseQuestLogSpecialItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: UseQuestLogSpecialItem(index)");
+        return 0;
     }
 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -1833,6 +1876,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardForItem(int32_t questId, int32_t itemId, 
 static int32_t Script_GetQuestLogLeaderBoard(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogLeaderBoard(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
@@ -1864,6 +1908,7 @@ static int32_t Script_GetQuestLogLeaderBoard(lua_State* L) {
 static int32_t Script_GetQuestLogItemDrop(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogItemDrop(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
@@ -1895,6 +1940,7 @@ static int32_t Script_GetQuestLogItemDrop(lua_State* L) {
 static int32_t Script_GetQuestPOILeaderBoard(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetQuestLogLeaderBoard(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
@@ -2019,6 +2065,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetSuperTrackedQuestID", &Script_GetSuperTrackedQuestID },
 };
 
+// PROVEN: cb18a370 IDENTICAL/NONE
 // OFFSET: 0x0095D6F0
 void QuestLogRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -2026,6 +2073,7 @@ void QuestLogRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 0e94e32e IDENTICAL/NONE
 // OFFSET: 0x0095D720
 void QuestLogUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

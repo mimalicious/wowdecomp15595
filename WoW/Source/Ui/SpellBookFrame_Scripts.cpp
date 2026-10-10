@@ -109,6 +109,7 @@ static bool GetSlotFromLua(lua_State* L, int32_t* slot, int32_t* petSpell, int32
 static int32_t Script_UnlearnSpecialization(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: UnlearnSpecialization(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1));
@@ -142,6 +143,7 @@ static int32_t Script_GetNumSpellTabs(lua_State* L) {
 static int32_t Script_GetSpellTabInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetSpellTabInfo(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -187,6 +189,7 @@ static int32_t Script_GetSpellTabInfo(lua_State* L) {
 static int32_t Script_GetSpellBaseCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1) || lua_gettop(L) != 1) {
         luaL_error(L, "Usage: GetSpellBaseCooldown(spellID)");
+        return 0;
     }
 
     const SpellRec* spell = g_spellDB.GetRecord(static_cast<int32_t>(lua_tonumber(L, 1)));
@@ -215,12 +218,14 @@ static int32_t Script_GetSpellBaseCooldown(lua_State* L) {
 static int32_t Script_SetSpellbookPetAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSpellbookPetAction(slot, target)");
+        return 0;
     }
 
     int32_t slot = static_cast<int64_t>(lua_tonumber(L, 1));
 
     if (static_cast<uint32_t>(slot - 1) > 7) {
         luaL_error(L, "Invalid slot in SetSpellbookPetAction");
+        return 0;
     }
 
     static const uint32_t s_actions[8] = { 0x7000002, 0x7000001, 0x7000004, 0x7000000, 0x6000003, 0x6000001, 0x6000000, 0 };
@@ -247,6 +252,7 @@ static int32_t Script_GetNumShapeshiftForms(lua_State* L) {
 static int32_t Script_CastShapeshiftForm(lua_State* L) {
     if (lua_tonumber(L, 1) == 0.0) {
         luaL_error(L, "Usage: CastShapeshiftForm(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int64_t>(lua_tonumber(L, 1));
@@ -262,6 +268,7 @@ static int32_t Script_CastShapeshiftForm(lua_State* L) {
 static int32_t Script_GetShapeshiftFormCooldown(lua_State* L) {
     if (lua_tonumber(L, 1) == 0.0) {
         luaL_error(L, "Usage: GetShapeshiftFormCooldown(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -289,6 +296,7 @@ static int32_t Script_GetNumCompanions(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type)) {
         luaL_error(L, "Usage: GetNumCompanions(type)");
+        return 0;
     }
 
     lua_pushnumber(L, static_cast<double>(CGSpellBook::m_companions[type].m_count));
@@ -301,6 +309,7 @@ static int32_t Script_FindSpellBookSlotBySpellID(lua_State* L) {
 
     if (!lua_isnumber(L, 1) || (spellId = lua_tointeger(L, 1)) <= 0) {
         luaL_error(L, "Usage: FindSpellBookSlotByID(spellID[, isPet])");
+        return 0;
     }
 
     int32_t slot = CGSpellBook::FindSlotBySpellID(spellId, StringToBOOL(L, 2, 0));
@@ -318,6 +327,7 @@ static int32_t Script_FindSpellBookSlotBySpellID(lua_State* L) {
 static int32_t Script_GetCallPetSpellInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCallPetSpellInfo(spellID)");
+        return 0;
     }
 
     const SpellRec* spell = g_spellDB.GetRecord(lua_tointeger(L, 1));
@@ -333,7 +343,7 @@ static int32_t Script_GetCallPetSpellInfo(lua_State* L) {
     }
 
     lua_pushnumber(L, static_cast<double>(index));
-    StablePetInfo* pet = CGStableInfo::GetPet(index);
+    StablePetInfo* pet = CGStableInfo::GetPetInfo(index);
 
     if (pet) {
         lua_pushstring(L, pet->m_name);
@@ -364,6 +374,7 @@ static int32_t Script_HasPetSpells(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 07fe615a IDENTICAL/NONE
 // OFFSET: 0x00910D00/0x14066C9A0
 static int32_t Script_GetShapeshiftForm(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGSpellBook::GetShapeshiftForm(StringToBOOL(L, 1, 0))));
@@ -399,6 +410,7 @@ static int32_t Script_CancelShapeshiftForm(lua_State* L) {
 static int32_t Script_GetShapeshiftFormInfo(lua_State* L) {
     if (lua_tonumber(L, 1) == 0.0) {
         luaL_error(L, "Usage: GetShapeshiftFormInfo(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -447,6 +459,7 @@ static int32_t Script_GetShapeshiftFormInfo(lua_State* L) {
 static int32_t Script_CastSpellByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CastSpellByID(spellID[, target])");
+        return 0;
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -525,6 +538,7 @@ static int32_t Script_GetCompanionInfo(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type) || lua_tonumber(L, 2) == 0.0) {
         luaL_error(L, "Usage: GetCompanionInfo(type, index)");
+        return 0;
     }
 
     TSGrowableArray<int32_t>& companions = CGSpellBook::m_companions[type];
@@ -598,6 +612,7 @@ static int32_t Script_GetCompanionCooldown(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type) || lua_tonumber(L, 2) == 0.0) {
         luaL_error(L, "Usage: GetCompanionCooldown(type, index)");
+        return 0;
     }
 
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -627,6 +642,7 @@ static int32_t Script_CallCompanion(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type) || lua_tonumber(L, 2) == 0.0) {
         luaL_error(L, "Usage: CallCompanion(type, index)");
+        return 0;
     }
 
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -649,6 +665,7 @@ static int32_t Script_DismissCompanion(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type)) {
         luaL_error(L, "Usage: DismissCompanion(type)");
+        return 0;
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -671,6 +688,7 @@ static int32_t Script_IsSpellKnown(lua_State* L) {
 
     if (!lua_isnumber(L, 1) || (spellId = lua_tointeger(L, 1)) <= 0) {
         luaL_error(L, "Usage: IsSpellKnown(spellID[, isPet])");
+        return 0;
     }
 
     int32_t petSpell = StringToBOOL(L, 2, 0);
@@ -772,6 +790,7 @@ static int32_t Script_GetProfessions(lua_State* L) {
 static int32_t Script_GetProfessionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetProfessionSkillLine(index)");
+        return 0;
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -852,6 +871,7 @@ static int32_t Script_GetProfessionInfo(lua_State* L) {
 static int32_t Script_GetCurrentLevelSpells(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCurrentLevelSpells(level)");
+        return 0;
     }
 
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -883,6 +903,7 @@ static int32_t Script_GetCurrentLevelSpells(lua_State* L) {
 static int32_t Script_GetCurrentLevelFeatures(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCurrentLevelSpells(level)");
+        return 0;
     }
 
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -932,6 +953,7 @@ static int32_t Script_PickupCompanion(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type) || lua_tonumber(L, 2) == 0.0) {
         luaL_error(L, "Usage: PickupCompanion(type, index)");
+        return 0;
     }
 
     CGSpellBook::PickupCompanion(type, static_cast<int64_t>(lua_tonumber(L, 2)) - 1);
@@ -942,6 +964,7 @@ static int32_t Script_PickupCompanion(lua_State* L) {
 static int32_t Script_CastSpellByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: CastSpellByName(name[, target])");
+        return 0;
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1060,6 +1083,7 @@ static int32_t Script_CastSpellByName(lua_State* L) {
 static int32_t Script_SetBarSlotFromIntro(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetBarSlotFromIntro(slot)");
+        return 0;
     }
 
     CGSpellBook::SetBarSlotFromIntro(lua_tointeger(L, 1) - 1);
@@ -1092,7 +1116,7 @@ static int32_t Script_GetSpellBookItemName(lua_State* L) {
                 break;
             }
 
-            StablePetInfo* pet = CGStableInfo::GetPet(CGStableInfo::FindPetIndexBySpellID(spell->m_id, 0));
+            StablePetInfo* pet = CGStableInfo::GetPetInfo(CGStableInfo::FindPetIndexBySpellID(spell->m_id, 0));
 
             if (pet && *pet->m_name) {
                 char name[128];

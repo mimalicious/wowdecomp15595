@@ -160,6 +160,7 @@ int32_t CGPetInfo::OnPetRenameable(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
+// PROVEN: 97502d5f IDENTICAL/NONE
 // OFFSET: 0x00950160
 static int32_t PetTempActionBarCallback(uint32_t index, const void* data) {
     return index < 10 ? index | 0x10000000 : 0;
@@ -755,6 +756,7 @@ void CGPetInfo::PetFollow() {
     CGPetInfo::SendPetAction(action, WOWGUID(), 0);
 }
 
+// PROVEN: f641700b IDENTICAL/NONE
 // OFFSET: 0x00951980/0x1406C2020
 void CGPetInfo::PetAttackTarget(const WOWGUID& target, int32_t useGiven) {
     PetAction action;

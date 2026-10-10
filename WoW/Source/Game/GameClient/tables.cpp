@@ -72,7 +72,7 @@ void GameTablesInitialize() {
     }
 }
 
-// PROVEN: efa079a9 IDENTICAL/NONE
+// PROVEN: 8c5ba323 IDENTICAL/NONE
 // OFFSET: 0x004EAE10/0x14012DE10
 float GameFormulaEvaluateTable(int32_t table, int32_t index, int32_t a3) {
     return s_gameTables[table]->EvaluateTable(index, a3);

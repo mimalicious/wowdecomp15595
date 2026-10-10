@@ -33,6 +33,7 @@ static HICON s_archiveProgressIcon;
 static void InvalidParameterHandler(const wchar_t* expression, const wchar_t* function, const wchar_t* file, unsigned int line, uintptr_t reserved) {
 }
 
+// PROVEN: 5f3f6529 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool ReturnFalse() {
     return false;

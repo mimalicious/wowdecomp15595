@@ -19,11 +19,11 @@ class CGRaidMember {
     /* 0008 */ uint32_t m_subgroup;
     /* 000C */ int32_t m_rank;
     /* 0010 */ CGPartyMemberState m_stats;
-    /* 0320 */ int32_t m_readyCheckPending;
-    /* 0324 */ int32_t m_readyCheckReady;
-    /* 0328 */ uint8_t m_assignments;
-    /* 0329 */ uint8_t unk_0329[3];
-    /* 032C */ uint32_t m_groupRole;
+    /* 00E8 */ int32_t m_readyCheckPending;
+    /* 00EC */ int32_t m_readyCheckReady;
+    /* 00F0 */ uint8_t m_assignments;
+    /* 00F1 */ uint8_t unk_00F1[3];
+    /* 00F4 */ uint32_t m_groupRole;
 };
 
 class CGRaidInfo {
@@ -74,6 +74,7 @@ class CGRaidInfo {
     static uint8_t GetPartyAssignments(const WOWGUID& guid);
     static int32_t GetPartyAssignments(lua_State* L, int32_t assignment);
     static void GetMapNameWithDifficulty(char* buffer, uint32_t size, int32_t mapId, int32_t difficulty);
+    static uint32_t GetIneligibleEncounterMask(int32_t mapId, uint32_t completedMask, uint32_t difficulty);
 };
 
 int32_t Script_DoReadyCheck(lua_State* L);

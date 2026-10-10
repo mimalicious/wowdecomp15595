@@ -116,6 +116,7 @@ static int32_t Script_ShowRepairCursor(lua_State* L) {
 static int32_t Script_GetBuybackItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetBuybackItemLink(slot)");
+        return 0;
     }
 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -178,6 +179,7 @@ static int32_t Script_PickupMerchantItem(lua_State* L) {
 static int32_t Script_BuyMerchantItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: BuyMerchantItem(index [,quantity])");
+        return 0;
     }
 
     if (!ClntObjMgrGetActivePlayerObj()) {
@@ -229,6 +231,7 @@ static int32_t Script_BuyMerchantItem(lua_State* L) {
 static int32_t Script_BuybackItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: BuybackItem(slot)");
+        return 0;
     }
 
     WOWGUID merchant = CGMerchantInfo::m_merchant;
@@ -261,6 +264,7 @@ static int32_t Script_ShowBuybackSellCursor(lua_State* L) {
 
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ShowBuybackSellCursor(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
@@ -423,6 +427,7 @@ static int32_t Script_RepairAllItems(lua_State* L) {
 static int32_t Script_GetMerchantItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMerchantItemInfo(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -533,6 +538,7 @@ static int32_t Script_GetMerchantItemInfo(lua_State* L) {
 static int32_t Script_GetMerchantItemCostInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMerchantItemCostInfo(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -591,6 +597,7 @@ static int32_t Script_GetMerchantItemCostInfo(lua_State* L) {
 static int32_t Script_GetMerchantItemCostItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetMerchantItemCostItem(index, itemIndex)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -743,6 +750,7 @@ static int32_t Script_GetMerchantCurrencies(lua_State* L) {
 static int32_t Script_GetBuybackItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetBuybackItemInfo(slot)");
+        return 0;
     }
 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -784,6 +792,7 @@ static int32_t Script_GetBuybackItemInfo(lua_State* L) {
 static int32_t Script_GetMerchantItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMerchantItemLink(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -813,6 +822,7 @@ static int32_t Script_GetMerchantItemLink(lua_State* L) {
 static int32_t Script_GetMerchantItemMaxStack(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMerchantItemMaxStack(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -842,6 +852,7 @@ static int32_t Script_ShowMerchantSellCursor(lua_State* L) {
 
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ShowMerchantSellCursor(index)");
+        return 0;
     }
 
     VendorItem* item = CGMerchantInfo::GetItem(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);

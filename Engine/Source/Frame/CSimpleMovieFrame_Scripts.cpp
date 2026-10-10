@@ -27,6 +27,7 @@ static int32_t Script_StartMovie(lua_State* L) {
     if (!lua_isnumber(L, 2)) {
         const char* name = movieFrame->GetName();
         luaL_error(L, "Usage: %s:StartMovie(movieID)", name ? name : "<unnamed>");
+        return 0;
     }
 
     int32_t result = movieFrame->StartMovie(lua_tointeger(L, 2));

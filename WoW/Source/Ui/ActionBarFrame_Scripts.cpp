@@ -28,6 +28,7 @@
 static int32_t Script_GetActionCount(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionCount(slot)");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -40,6 +41,7 @@ static int32_t Script_GetActionCount(lua_State* L) {
 static int32_t Script_GetActionText(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionText(slot)");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -71,6 +73,7 @@ static int32_t Script_GetActionText(lua_State* L) {
 static int32_t Script_IsUsableAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsUsableAction(slot)");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -110,6 +113,7 @@ static int32_t Script_ChangeActionBarPage(lua_State* L) {
 
     if (page > 5) {
         luaL_error(L, "ChangeActionBarPage() needs a page in the range 1 to %d", 6);
+        return 0;
     }
 
     if (!CGGameUI::CanPerformAction(14) || page == CGActionBar::m_currentPage) {
@@ -136,6 +140,7 @@ static int32_t Script_GetActionBarPage(lua_State* L) {
 static int32_t Script_HasAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: HasAction(slot)");
+        return 0;
     }
 
     if (CGActionBar::HasAction(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
@@ -181,6 +186,7 @@ static int32_t Script_IsPossessBarVisible(lua_State* L) {
 static int32_t Script_GetMultiCastTotemSpells(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMultiCastTotemSpells(slot)");
+        return 0;
     }
 
     uint32_t slot = (static_cast<uint8_t>(lua_tointeger(L, 1)) - 1) & 0x3;
@@ -253,6 +259,7 @@ static int32_t Script_HasExtraActionBar(lua_State* L) {
 static int32_t Script_GetActionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionInfo(slot)");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -338,6 +345,7 @@ static int32_t Script_GetActionInfo(lua_State* L) {
 static int32_t Script_GetActionAutocast(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionAutocast(slot)");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -369,6 +377,7 @@ static int32_t Script_GetActionAutocast(lua_State* L) {
 static int32_t Script_IsAttackAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsAttackAction(slot)");
+        return 0;
     }
 
     if (CGActionBar::IsAttackAction(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
@@ -384,6 +393,7 @@ static int32_t Script_IsAttackAction(lua_State* L) {
 static int32_t Script_IsAutoRepeatAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsAutorepeatAction(slot)");
+        return 0;
     }
 
     if (CGActionBar::IsAutoRepeatAction(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
@@ -442,6 +452,7 @@ static int32_t Script_SetActionUIButton(lua_State* L) {
 
     if (!checkbox || !checkbox->IsA(CSimpleCheckbox::GetObjectType()) || !cooldown || !cooldown->IsA(CGCooldown::GetObjectType())) {
         luaL_error(L, "Usage: SetActionUIButton(checkboxFrame, actionSlot, cooldownFrame)");
+        return 0;
     }
 
     CGActionBar::SetActionUIButton(checkbox, slot, cooldown);
@@ -452,6 +463,7 @@ static int32_t Script_SetActionUIButton(lua_State* L) {
 static int32_t Script_IsCurrentAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsCurrentAction(slot)");
+        return 0;
     }
 
     if (CGActionBar::IsCurrentAction(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
@@ -467,6 +479,7 @@ static int32_t Script_IsCurrentAction(lua_State* L) {
 static int32_t Script_GetActionTexture(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionTexture(slot)");
+        return 0;
     }
 
     const char* texture = CGActionBar::GetTexture(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -484,6 +497,7 @@ static int32_t Script_GetActionTexture(lua_State* L) {
 static int32_t Script_GetActionCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionCooldown(slot)");
+        return 0;
     }
 
     uint32_t start;
@@ -500,6 +514,7 @@ static int32_t Script_GetActionCooldown(lua_State* L) {
 static int32_t Script_IsConsumableAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsConsumableAction(slot)");
+        return 0;
     }
 
     if (CGActionBar::IsConsumableAction(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
@@ -515,6 +530,7 @@ static int32_t Script_IsConsumableAction(lua_State* L) {
 static int32_t Script_IsStackableAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsStackableAction(slot)");
+        return 0;
     }
 
     if (IsStackableAucItem(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
@@ -530,6 +546,7 @@ static int32_t Script_IsStackableAction(lua_State* L) {
 static int32_t Script_IsEquippedAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsEquippedAction(slot)");
+        return 0;
     }
 
     if (CGActionBar::IsEquippedAction(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
@@ -545,6 +562,7 @@ static int32_t Script_IsEquippedAction(lua_State* L) {
 static int32_t Script_PlaceAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PlaceAction(slot)");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -561,6 +579,7 @@ static int32_t Script_PlaceAction(lua_State* L) {
 static int32_t Script_SetMultiCastSpell(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetMultiCastSpell(slot, spellID)");
+        return 0;
     }
 
     if (!CGGameUI::CanPerformAction(14)) {
@@ -605,6 +624,7 @@ static int32_t Script_SetMultiCastSpell(lua_State* L) {
 static int32_t Script_UseAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: UseAction(slot, [, target] [, button])");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -621,6 +641,7 @@ static int32_t Script_UseAction(lua_State* L) {
 static int32_t Script_PickupAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupAction(slot)");
+        return 0;
     }
 
     CGActionBar::PickupAction(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);

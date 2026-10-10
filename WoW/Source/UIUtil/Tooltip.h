@@ -34,7 +34,7 @@ class SpellItemEnchantmentRec;
 class SpellRec;
 class TalentRec;
 class linkObject;
-struct PetAction;
+class PetAction;
 struct ScriptAuraInfo;
 struct lua_State;
 
@@ -263,6 +263,8 @@ class CGItemStatsSummary {
     int32_t CreateFromTooltip(CGTooltip* tooltip);
 };
 
+extern CImVector s_tooltipTitleColor;
+extern CImVector s_tooltipTextColor;
 extern const char* s_inventoryTypeTokens[29];
 extern const char* s_itemModTokens[57];
 

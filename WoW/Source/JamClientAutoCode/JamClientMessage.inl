@@ -165,7 +165,6 @@ template <>
 inline void JamBitWriter::WriteBits<0>(uint32_t value, JamBitCount<false>) {
 }
 
-// PROVEN: 2d1fbfa8 IDENTICAL/NONE
 // OFFSET: [0x0066AF20<12>, 0x0066EB50<24>, 0x006757D0<30>]
 template <uint32_t count>
 void JamBitWriter::WriteBits(uint32_t value, JamBitCount<true>) {

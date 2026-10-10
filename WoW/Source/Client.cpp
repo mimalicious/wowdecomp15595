@@ -342,7 +342,7 @@ static char s_installLocation[1024];
 // STATIC: 0x00D732EC
 bool g_hasIsoLocale[15];
 
-// STATIC: 0x00D732FC
+// STATIC: 0x00D732FC/0x140DABA80
 int32_t s_locale;
 
 // STATIC: #0x00B2F040
@@ -553,7 +553,7 @@ static void ReportArchiveFailure(const char* name) {
     SErrDisplayAppFatal("Failed to open required archive %s with error : %d \n\nStreaming Status: Data Rdy\n\nWow.mfil download error: %s\n\nDebug Details:\n\n%sStorm Error Msg:%s", name, error, s_mfilDownloadErrors ? s_mfilDownloadErrors : "None", errors, stormMessage);
 }
 
-// OFFSET: 0x00402D90
+// OFFSET: 0x00402D90/0x1400022E0
 static void LoadInstallLocation() {
     uint32_t size = 0;
     char* data = GetComponentVersionData(&size);
@@ -580,7 +580,7 @@ static void LoadInstallLocation() {
     delete[] data;
 }
 
-// OFFSET: 0x00402E10
+// OFFSET: 0x00402E10/0x140005FF0
 void StartupReport() {
     if (SFile::IsTrial()) {
         uint32_t speedTest;
@@ -600,7 +600,7 @@ void StartupReport() {
     WoWReport::Initialize(version, s_localeCode, s_cvarEnterWorld->m_intValue != 0, trial);
 }
 
-// OFFSET: 0x00402ED0
+// OFFSET: 0x00402ED0/0x140002380
 static void AddMfilDownloadError(const char* format, ...) {
     char text[1024];
     va_list args;
@@ -617,7 +617,7 @@ static void AddMfilDownloadError(const char* format, ...) {
     SStrPack(s_mfilDownloadErrors, "\r\n", 16192);
 }
 
-// OFFSET: 0x00405320
+// OFFSET: 0x00405320/0x140005CC0
 const char* GetInstallLocationRegKeyName() {
     if (GetInstallLocation() == INSTALL_LOCATION_TEST) {
         SStrPack(s_installLocationRegKeyName, "\\", sizeof(s_installLocationRegKeyName));
@@ -684,7 +684,7 @@ static bool GetMfilBuild(int32_t* build) {
     return found;
 }
 
-// OFFSET: 0x00405940
+// OFFSET: 0x00405940/0x1400060D0
 static bool ParsePatchRecord(const char* data, const char* program, const char* component, char* url, uint32_t urlSize, char* mfilName, uint32_t mfilSize) {
     XMLTree* tree = XMLTree_Load(data, strlen(data));
 
@@ -730,7 +730,7 @@ static bool ParsePatchRecord(const char* data, const char* program, const char* 
     return false;
 }
 
-// OFFSET: 0x00405B20
+// OFFSET: 0x00405B20/0x140006350
 static bool ParseServerConfig(const char* product, const char* data, char* servers, uint32_t size) {
     XMLTree* tree = XMLTree_Load(data, strlen(data));
 
@@ -871,7 +871,7 @@ static bool DownloadMfil(const char* patchListURL, const char* locale, uint32_t 
     return result;
 }
 
-// OFFSET: 0x00406D30
+// OFFSET: 0x00406D30/0x140008610
 static bool InitializeStreamingManifest() {
     bool mfilReady = false;
     bool dataReady = false;
@@ -970,7 +970,7 @@ static bool FindArchivesToPreload() {
     return true;
 }
 
-// OFFSET: 0x00407830
+// OFFSET: 0x00407830/0x140009370
 static void DestroyArchivePreloads() {
     ArchivePreload* preload = s_archivePreloads.Head();
 
@@ -1311,7 +1311,7 @@ static bool OpenCacheArchive(ArchiveEnumParams* params, const char* path, int32_
     return true;
 }
 
-// OFFSET: 0x00404760
+// OFFSET: 0x00404760/0x140004C90
 static int32_t OpenLocaleUpdateArchive(ArchiveEnumParams* params, const char* path, int32_t alternate) {
     SArchive* archive = NULL;
 
@@ -1406,7 +1406,7 @@ static int32_t OpenBaseUpdateArchive(ArchiveEnumParams* params, const char* path
     return 0;
 }
 
-// OFFSET: 0x004049E0
+// OFFSET: 0x004049E0/0x140004FA0
 static bool IsUpdateArchiveInManifest(const char* path) {
     char name[260];
     SStrCopy(name, path, sizeof(name));
@@ -1474,7 +1474,7 @@ static int32_t AcceptArchive(const char* path, void* param, uint8_t flags) {
     return 1;
 }
 
-// OFFSET: 0x00404C00
+// OFFSET: 0x00404C00/0x140005320
 static void ListArchives(const char* prefix, int32_t index, int32_t (*callback)(const char* fileName, void* param), void* param) {
     ARCHIVELISTPARAMS params;
     params.m_prefix = prefix;
@@ -1491,7 +1491,7 @@ static void ListArchives(const char* prefix, int32_t index, int32_t (*callback)(
     }
 }
 
-// OFFSET: 0x00404C90
+// OFFSET: 0x00404C90/0x1400053C0
 void ListInterfaceArchive(const char* prefix, int32_t (*callback)(const char* fileName, void* param), void* param) {
     ListArchives(prefix, 3, callback, param);
 }
@@ -2236,13 +2236,13 @@ int32_t STORMAPI WowLogHeader(char* buffer, uint32_t bufferchars) {
     return 1;
 }
 
-// OFFSET: 0x00406A70
+// OFFSET: 0x00406A70/0x140008340
 int32_t ForEveryRunOnceWTF::AppendFileName(OS_FILE_DATA& data, void* param) {
     static_cast<TSGrowableArray<char*>*>(param)->New(SStrDupA(data.fileName, __FILE__, __LINE__));
     return 0;
 }
 
-// OFFSET: 0x00407090
+// OFFSET: 0x00407090/0x140008C40
 void ForEveryRunOnceWTF::Execute(int32_t (*callback)(const char*)) {
     char basePath[260];
     SFile::GetBasePath(basePath, sizeof(basePath));

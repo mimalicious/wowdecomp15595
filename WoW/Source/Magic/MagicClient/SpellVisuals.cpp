@@ -178,7 +178,7 @@ float SpellVisualsGetMountTransitionAlpha(const MountTransitionObject* transitio
     return transition->m_alpha;
 }
 
-// PROVEN: 5fe23a2a IDENTICAL/NONE
+// PROVEN: 06742b3f IDENTICAL/NONE
 // OFFSET: 0x008BC140/0x140604D10
 void SpellVisualsGetMountTransitionPosAndNormal(const MountTransitionObject* transition, C3Vector* position, C3Vector* normal, float* facing) {
     *position = transition->m_position;
@@ -802,7 +802,7 @@ BlizzardObject::BlizzardObject() : m_entity(0), m_radius(0.0f), m_angle(0.0f), m
     this->unk_0030[3] = 0.0f;
 }
 
-// PROVEN: 6ca4cbc1 IDENTICAL/NONE
+// PROVEN: a303902f IDENTICAL/NONE
 // OFFSET: 0x008BE2F0
 int32_t BlizzardObject::WorldObjectRender(void* param, uintptr_t flags, uint64_t param64, uintptr_t param32) {
     static_cast<BlizzardObject*>(param)->Render(flags & 1);

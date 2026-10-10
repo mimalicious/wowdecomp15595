@@ -588,7 +588,7 @@ static int32_t Script_GetQuestItemInfo(lua_State* L) {
     int32_t quality;
     int32_t usable;
 
-    if (!lua_isstring(L, 1) || !lua_isnumber(L, 2) || !CGQuestInfo::QuestItemInfo(lua_tostring(L, 1), static_cast<int32_t>(lua_tonumber(L, 2)) - 1, name, sizeof(name), texture, sizeof(texture), &count, &quality, &usable)) {
+    if (!lua_isstring(L, 1) || !lua_isnumber(L, 2) || !CGQuestInfo::GetQuestItemInfo(lua_tostring(L, 1), static_cast<int32_t>(lua_tonumber(L, 2)) - 1, name, sizeof(name), texture, sizeof(texture), &count, &quality, &usable)) {
         luaL_error(L, "Invalid quest item in GetQuestItemInfo(\"type\", index)");
         return 0;
     }
@@ -613,7 +613,7 @@ static int32_t Script_GetQuestSpellLink(lua_State* L) {
     SpellRec spell;
 
     if (g_spellDB.GetRecord(spellId, &spell)) {
-        lua_pushstring(L, CGTooltip::GetSpellLink(spellId));
+        lua_pushstring(L, CGTooltip::GetSpellHyperlinkString(spellId));
     } else {
         lua_pushnil(L);
     }

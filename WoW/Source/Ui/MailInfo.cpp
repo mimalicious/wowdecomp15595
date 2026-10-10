@@ -28,7 +28,7 @@
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// STATIC: #0x00BEB038
+// STATIC: 0x00F48E78
 SendMailItem CGMailInfo::m_sendItems[16];
 
 // STATIC: #0x00BEB1B8
@@ -49,7 +49,7 @@ uint32_t CGMailInfo::m_sendCOD;
 // STATIC: #0x00ACE60C
 float CGMailInfo::m_nextMailTime = -1.0f;
 
-// STATIC: #0x00BEB1D8
+// STATIC: 0x00F49024
 uint32_t CGMailInfo::m_numInboxItems;
 
 // STATIC: #0x00BEB1DC
@@ -88,8 +88,23 @@ MailboxMessageInfo* CGMailInfo::m_autoLooting;
 // STATIC: #0x00BEB1F0
 TSFixedArray<StationeryInfo*> CGMailInfo::m_stationeries;
 
-// STATIC: #0x00BEB1FC
+// STATIC: 0x00F49048
 TSGrowableArray<MailboxMessageInfo*> CGMailInfo::m_inbox;
+
+// OFFSET: 0x00464790
+MailAttachmentInfo* CGMailInfo::GetFirstAttachment(MailboxMessageInfo* mail) {
+    if (!mail) {
+        return NULL;
+    }
+
+    for (uint32_t i = 0; i < 16; i++) {
+        if (mail->m_attachments[i].m_itemID) {
+            return &mail->m_attachments[i];
+        }
+    }
+
+    return NULL;
+}
 
 // OFFSET: #0x0056D420
 MailAttachmentInfo* GetFirstAttachment(MailboxMessageInfo* message) {
@@ -437,7 +452,7 @@ int32_t Packet_SMSG_MAIL_LIST_RESULT(void* param, NETMESSAGE msgId, uint32_t tim
             msg->Get(attachment->m_durability);
             uint8_t unknown;
             msg->Get(unknown);
-            attachment->unk_0078 = unknown;
+            attachment->unk_009C = unknown;
         }
 
         message->m_invoiceItemID = 0;

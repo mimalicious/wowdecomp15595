@@ -454,6 +454,7 @@ C3Vector CGDynamicObject_C::GetRawPosition() const {
     return this->m_passenger.m_position;
 }
 
+// PROVEN: 6f187274 IDENTICAL/NONE
 // OFFSET: 0x00598B70/0x1402142E0
 uint64_t CGDynamicObject_C::GetTransportGUID() const {
     return this->m_passenger.m_transportGuid.m_guid;

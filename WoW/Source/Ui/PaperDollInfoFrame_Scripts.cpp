@@ -42,7 +42,7 @@ static int32_t Script_GetInventoryItemTexture(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* unit = static_cast<CGPlayer_C*>(GetUnitFromName(token));
+    CGPlayer_C* unit = static_cast<CGPlayer_C*>(Script_GetUnitFromName(token));
 
     if (CGCharacterInfo::CanInspect(unit)) {
         int32_t displayId = 0;
@@ -230,7 +230,7 @@ static int32_t Script_GetInventoryItemCooldown(lua_State* L) {
     CGPlayer_C* unit;
     CGItem_C* item;
 
-    if (slot != -1 && CGCharacterInfo::CanInspect(unit = static_cast<CGPlayer_C*>(GetUnitFromName(unitName))) && (item = unit->m_bag.GetItemPointer(slot)) && item->GetEnchantmentSpell(0) && (!item->GetUsableSpellCharges() || item->GetCurrentSpellCharges())) {
+    if (slot != -1 && CGCharacterInfo::CanInspect(unit = static_cast<CGPlayer_C*>(Script_GetUnitFromName(unitName))) && (item = unit->m_bag.GetItemPointer(slot)) && item->GetEnchantmentSpell(0) && (!item->GetUsableSpellCharges() || item->GetCurrentSpellCharges())) {
         uint32_t start = 0;
         uint32_t duration = 0;
         uint32_t enable = 0;
@@ -256,7 +256,7 @@ static int32_t Script_GetInventoryItemBroken(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* unit = static_cast<CGPlayer_C*>(GetUnitFromName(unitName));
+    CGPlayer_C* unit = static_cast<CGPlayer_C*>(Script_GetUnitFromName(unitName));
     CGItem_C* item;
 
     if (!CGCharacterInfo::CanInspect(unit) || slot == -1 || !(item = unit->m_bag.GetItemPointer(slot)) || (item->m_item->m_itemFieldFlags & 0x8) || !item->m_item->m_itemFieldMaxdurability || item->GetDurability()) {
@@ -277,7 +277,7 @@ static int32_t Script_GetInventoryItemCount(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* unit = static_cast<CGPlayer_C*>(GetUnitFromName(unitName));
+    CGPlayer_C* unit = static_cast<CGPlayer_C*>(Script_GetUnitFromName(unitName));
 
     if (!CGCharacterInfo::CanInspect(unit)) {
         lua_pushnumber(L, 1.0);
@@ -425,7 +425,7 @@ static int32_t Script_GetGuildInfo(lua_State* L) {
         return 0;
     }
 
-    CGUnit_C* unit = GetUnitFromName(lua_tolstring(L, 1, NULL));
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tolstring(L, 1, NULL));
 
     if (unit && (unit->m_obj->m_type & TYPEMASK_PLAYER)) {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(unit);
@@ -703,7 +703,7 @@ static int32_t Script_GetInventoryItemQuality(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* unit = static_cast<CGPlayer_C*>(GetUnitFromName(token));
+    CGPlayer_C* unit = static_cast<CGPlayer_C*>(Script_GetUnitFromName(token));
 
     if (!CGCharacterInfo::CanInspect(unit)) {
         lua_pushnil(L);
@@ -793,7 +793,7 @@ static int32_t Script_GetInventoryItemLink(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* unit = static_cast<CGPlayer_C*>(GetUnitFromName(token));
+    CGPlayer_C* unit = static_cast<CGPlayer_C*>(Script_GetUnitFromName(token));
 
     if (!CGCharacterInfo::CanInspect(unit)) {
         return 0;
@@ -844,7 +844,7 @@ static int32_t Script_GetInventoryItemID(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* unit = static_cast<CGPlayer_C*>(GetUnitFromName(token));
+    CGPlayer_C* unit = static_cast<CGPlayer_C*>(Script_GetUnitFromName(token));
 
     if (!CGCharacterInfo::CanInspect(unit)) {
         return 0;
@@ -1004,7 +1004,7 @@ static int32_t Script_SetInventoryPortraitTexture(lua_State* L) {
         return 0;
     }
 
-    CGUnit_C* unit = GetUnitFromName(lua_tolstring(L, 2, NULL));
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tolstring(L, 2, NULL));
 
     if (!unit || !(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
         return 0;

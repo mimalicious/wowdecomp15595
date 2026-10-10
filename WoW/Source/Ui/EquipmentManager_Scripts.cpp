@@ -372,6 +372,7 @@ static int32_t Script_GetEquipmentSetInfo(lua_State* L) {
 
     if (static_cast<uint32_t>(index - 1) > 9) {
         luaL_error(L, "Usage: GetEquipmentSetInfo(setIndex)");
+        return 0;
     }
 
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByIndex(index - 1);
@@ -405,6 +406,7 @@ static int32_t Script_GetEquipmentSetInfo(lua_State* L) {
 static int32_t Script_GetEquipmentSetInfoByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetEquipmentSetInfoByName(\"setName\")");
+        return 0;
     }
 
     const char* name = lua_tolstring(L, 1, NULL);
@@ -523,6 +525,7 @@ static int32_t Script_UseEquipmentSet(lua_State* L) {
 static int32_t Script_ModifyEquipmentSet(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: ModifyEquipmentSet(\"oldName\", \"newName\"[, newIconFileName])");
+        return 0;
     }
 
     const char* oldName = lua_tolstring(L, 1, NULL);
@@ -537,6 +540,7 @@ static int32_t Script_ModifyEquipmentSet(lua_State* L) {
 
     if (!ScrubString(newName, name, 32, sizeof(name), 1)) {
         luaL_error(L, "Invalid string for setName");
+        return 0;
     }
 
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByName(oldName);
@@ -556,6 +560,7 @@ static int32_t Script_SaveEquipmentSet(lua_State* L) {
 
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SaveEquipmentSet(\"setName\"[, iconFileName])");
+        return 0;
     }
 
     char name[128];
@@ -576,6 +581,7 @@ static int32_t Script_SaveEquipmentSet(lua_State* L) {
     } else {
         if (lua_type(L, 2) > 0) {
             luaL_error(L, "Usage: SaveEquipmentSet(\"setName\"[, iconFileName])");
+            return 0;
         }
 
         EQUIPMENT_SET* existing = CGEquipmentManager::GetSetByName(name);
@@ -596,6 +602,7 @@ static int32_t Script_SaveEquipmentSet(lua_State* L) {
 
     if (!CGEquipmentManager::CanCreateSet()) {
         luaL_error(L, "Too many sets! You can only have %d sets", 10);
+        return 0;
     }
 
     CGEquipmentManager::CreateEquipmentSet(name, icon);

@@ -22,6 +22,7 @@ static int32_t Script_GetNumFlyouts(lua_State* L) {
 static int32_t Script_GetFlyoutID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: flyoutID = GetFlyoutID(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tointeger(L, 1)) - 1;
@@ -40,6 +41,7 @@ static int32_t Script_GetFlyoutID(lua_State* L) {
 
     if (index < 0 || index >= count) {
         luaL_error(L, "Error: No flyout found at index = %i, index should be in the range [1, %i]", index, count);
+        return 0;
     }
 
     lua_pushnumber(L, flyout->m_rec ? flyout->m_rec->m_id : 0);
@@ -50,6 +52,7 @@ static int32_t Script_GetFlyoutID(lua_State* L) {
 static int32_t Script_GetFlyoutInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: name, description, numSlots, isKnown = GetFlyoutInfo(flyoutID)");
+        return 0;
     }
 
     int32_t id = static_cast<int32_t>(lua_tointeger(L, 1));
@@ -57,6 +60,7 @@ static int32_t Script_GetFlyoutInfo(lua_State* L) {
 
     if (!flyout) {
         luaL_error(L, "Error: No flyout found for ID=%i", id);
+        return 0;
     }
 
     lua_pushstring(L, flyout->m_rec->m_name);
@@ -70,6 +74,7 @@ static int32_t Script_GetFlyoutInfo(lua_State* L) {
 static int32_t Script_GetFlyoutSlotInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: spellID, isKnown = GetFlyoutSlotInfo(flyoutID, slot)");
+        return 0;
     }
 
     int32_t id = static_cast<int32_t>(lua_tointeger(L, 1));
@@ -78,10 +83,12 @@ static int32_t Script_GetFlyoutSlotInfo(lua_State* L) {
 
     if (!flyout) {
         luaL_error(L, "Error: No flyout found for ID=%i", id);
+        return 0;
     }
 
     if (slot < 0 || slot >= static_cast<int32_t>(flyout->m_slots.m_count)) {
         luaL_error(L, "Error: No slot %i found for ID=%i, slot should be in the range [1, %i]", slot, id, flyout->m_slots.m_count);
+        return 0;
     }
 
     lua_pushnumber(L, flyout->m_slots.m_data[slot].m_rec->m_spellID);
@@ -97,6 +104,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetFlyoutSlotInfo", &Script_GetFlyoutSlotInfo },
 };
 
+// PROVEN: 799e8602 IDENTICAL/NONE
 // OFFSET: 0x009A3D00
 void CFlyout::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -104,6 +112,7 @@ void CFlyout::RegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 7a9a4f9f IDENTICAL/NONE
 // OFFSET: 0x009A3D30
 void CFlyout::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

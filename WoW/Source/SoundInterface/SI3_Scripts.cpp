@@ -111,6 +111,7 @@ static int32_t Script_Sound_ChatSystem_GetNumInputDrivers(lua_State* L) {
 static int32_t Script_Sound_ChatSystem_GetInputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Sound_ChatSystem_GetInputDriverNameByIndex(InputDriverIndex)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tointeger(L, 1));
@@ -131,6 +132,7 @@ static int32_t Script_Sound_ChatSystem_GetNumOutputDrivers(lua_State* L) {
 static int32_t Script_Sound_ChatSystem_GetOutputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Sound_ChatSystem_GetOutputDriverNameByIndex(OutputDriverIndex)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tointeger(L, 1));
@@ -155,6 +157,7 @@ static int32_t Script_VoiceChat_StopCapture(lua_State* L) {
 static int32_t Script_VoiceChat_RecordLoopbackSound(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: VoiceChat_RecordLoopbackSound(MaxRecordTimeInSeconds)");
+        return 0;
     }
 
     SI3::VoiceChat_RecordLoopbackSound(static_cast<int32_t>(lua_tonumber(L, 1)));
@@ -227,6 +230,7 @@ static int32_t Script_Sound_GameSystem_GetNumInputDrivers(lua_State* L) {
 static int32_t Script_Sound_GameSystem_GetInputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Sound_GameSystem_GetInputDriverNameByIndex(InputDriverIndex)");
+        return 0;
     }
 
     char name[2048] = "None";
@@ -245,6 +249,7 @@ static int32_t Script_Sound_GameSystem_GetNumOutputDrivers(lua_State* L) {
 static int32_t Script_Sound_GameSystem_GetOutputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Sound_GetOutputDriverNameByIndex(OutputDriverIndex)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tointeger(L, 1));

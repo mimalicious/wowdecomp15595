@@ -203,7 +203,7 @@ static CLoadingScreenShipInfo<TaxiPathNodeRec> s_shipInfo;
 // STATIC: 0x00D369E8
 static char s_raceDataTipText[260];
 
-// OFFSET: 0x0040AB80
+// OFFSET: 0x0040AB80/0x14000D460
 static void BuildTiles() {
     for (int32_t row = 0; row < 3; row++) {
         for (int32_t col = 0; col < 4; col++) {

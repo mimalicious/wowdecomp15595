@@ -177,6 +177,7 @@ static int32_t Script_GetGossipActiveQuests(lua_State* L) {
 static int32_t Script_SelectGossipOption(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: SelectGossipOption(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -189,6 +190,7 @@ static int32_t Script_SelectGossipOption(lua_State* L) {
 static int32_t Script_SelectGossipAvailableQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: SelectGossipAvailableQuest(index)");
+        return 0;
     }
 
     CGGossipInfo::SelectGossipAvailableQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -199,6 +201,7 @@ static int32_t Script_SelectGossipAvailableQuest(lua_State* L) {
 static int32_t Script_SelectGossipActiveQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: SelectGossipActiveQuest(index)");
+        return 0;
     }
 
     CGGossipInfo::SelectGossipActiveQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);

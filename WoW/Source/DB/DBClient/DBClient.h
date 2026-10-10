@@ -676,6 +676,7 @@ void InitResistances();
 void InitTerrainTypeFlags();
 void InitSpellEffects();
 const SpellEffectRec* SpellGetEffect(uint32_t spellID, uint32_t index);
+int32_t DungeonEncounterFindFirst(int32_t mapId);
 const TSGrowableArray<const SpellEffectRec*>* SpellGetEffects(uint32_t spellID, uint32_t& count);
 uint32_t SpellGetEffectCount(uint32_t spellID);
 const SpellActivationOverlayRec* GetSpellActivationOverlayRec(int32_t spellID);

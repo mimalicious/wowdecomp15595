@@ -17,10 +17,10 @@
 // STATIC: #0x00C21008
 WOWGUID CGTalentInfo_Inspect::m_inspectTarget;
 
-// STATIC: #0x00C20FF4
+// STATIC: 0x00F4B5E4
 uint32_t CGTalentInfo::m_activeTalentGroup;
 
-// STATIC: #0x00C21004
+// STATIC: 0x00F4B5F4
 uint32_t CGTalentInfo_Inspect::m_activeTalentGroup;
 
 // STATIC: #0x00C20FF8
@@ -110,7 +110,7 @@ uint32_t CGTalentInfo::GetActiveTalentGroup(int32_t pet) {
 }
 
 // OFFSET: #0x005C5B30
-TalentGroupTab_C* CGTalentGroup_C::GetTabFromID(int32_t tabId) {
+TalentGroupTab_C* CGTalentGroup_C::GetTabFromID(int32_t tabId) const {
     for (uint32_t i = 0; i < this->m_tabs.m_count; i++) {
         if (this->m_tabs.m_data[i].m_tabId == tabId) {
             return &this->m_tabs.m_data[i];
@@ -207,13 +207,17 @@ void CGTalentInfo::LeaveWorld() {
     CGTalentInfo::m_petTalentTab = 0;
 }
 
-// OFFSET: #0x005C57D0
-uint32_t TalentInfoGetScriptGroupIndex(lua_State* L, int32_t index) {
+// OFFSET: 0x00999CC0/0x14071BA40
+uint32_t TalentInfoGetScriptGroupIndex(lua_State* L, int32_t inspect, int32_t pet, int32_t index) {
     if (lua_isnumber(L, index)) {
         return lua_tointeger(L, index) - 1;
     }
 
-    return CGTalentInfo::m_activeTalentGroup;
+    if (inspect) {
+        return CGTalentInfo_Inspect::m_activeTalentGroup;
+    }
+
+    return pet == 0 ? CGTalentInfo::m_activeTalentGroup : 0;
 }
 
 // OFFSET: #0x005C5A20
@@ -543,14 +547,14 @@ void CGTalentInfo::ResetGroupPreviewTalentPoints(uint32_t group, int32_t pet) {
 }
 
 // OFFSET: #0x005C73B0
-TalentGroupItem_C* CGTalentGroup_C::GetTalentItem(int32_t talentId) {
+TalentGroupItem_C* CGTalentGroup_C::GetTalentItem(int32_t talentId) const {
     HASHKEY_NONE key;
     return this->m_items.Ptr(talentId, key);
 }
 
 // OFFSET: #0x005C73D0
-int32_t CGTalentGroup_C::ValidatePreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t* delta, int32_t pet) {
-    *delta = 0;
+int32_t CGTalentGroup_C::CanAddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t& delta, int32_t pet) const {
+    delta = 0;
 
     if (!points) {
         return 1;
@@ -613,7 +617,7 @@ int32_t CGTalentGroup_C::ValidatePreviewTalentPoints(uint32_t tabIndex, const Ta
     int32_t wanted = previewRank + points - rank;
     int32_t newRank = rank + (wanted < 0 ? 0 : wanted > room ? room : wanted);
     int32_t change = newRank - previewRank;
-    *delta = change;
+    delta = change;
 
     if (!change) {
         return 0;
@@ -670,8 +674,8 @@ int32_t CGTalentGroup_C::ValidatePreviewTalentPoints(uint32_t tabIndex, const Ta
 }
 
 // OFFSET: #0x005C76E0
-int32_t CGTalentGroup_C::CanAddPreviewTalentPoints(const TalentRec* talent, int32_t points, int32_t* delta, int32_t pet) {
-    *delta = 0;
+int32_t CGTalentGroup_C::CanAddPreviewTalentPoints(const TalentRec* talent, int32_t points, int32_t& delta, int32_t pet) const {
+    delta = 0;
 
     if (!points) {
         return 1;
@@ -683,7 +687,7 @@ int32_t CGTalentGroup_C::CanAddPreviewTalentPoints(const TalentRec* talent, int3
 
     for (uint32_t i = 0; i < this->m_tabs.m_count; i++) {
         if (this->m_tabs.m_data[i].m_tabId == talent->m_tabID) {
-            return this->ValidatePreviewTalentPoints(i, talent, points, delta, pet);
+            return this->CanAddPreviewTalentPoints(i, talent, points, delta, pet);
         }
     }
 
@@ -816,7 +820,7 @@ void CGTalentGroup_C::AddTalentItem(int32_t talentId, int32_t rank) {
 void CGTalentGroup_C::AddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t pet) {
     int32_t delta;
 
-    if (!this->ValidatePreviewTalentPoints(tabIndex, talent, points, &delta, pet)) {
+    if (!this->CanAddPreviewTalentPoints(tabIndex, talent, points, delta, pet)) {
         return;
     }
 

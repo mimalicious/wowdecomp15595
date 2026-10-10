@@ -128,7 +128,7 @@ void CGPartyInfo::SetLeader(WOWGUID leader) {
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_LEADER_CHANGED);
 }
 
-// PROVEN: 6b80e4f8 IDENTICAL/NONE
+// PROVEN: dd5ea47a IDENTICAL/NONE
 // OFFSET: 0x008FC650/0x1406539A0
 uint32_t CGPartyInfo::NumMembers() {
     uint32_t count = 0;

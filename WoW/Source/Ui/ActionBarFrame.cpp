@@ -65,18 +65,21 @@ TSCGrowableArray<UIButtons, 144> CGActionBar::m_uiButtons;
 // STATIC: 0x00F33DC8
 TSHashTable<OVERRIDE_SPELL_NODE, HASHKEY_NONE> CGActionBar::m_overrideSpells;
 
+// PROVEN: 2e75b45b IDENTICAL/NONE
 // OFFSET: 0x004644D0
 int32_t CGActionBar::IsSpell(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && !(action & 0xF0000000);
 }
 
+// PROVEN: 9bcd55b7 IDENTICAL/NONE
 // OFFSET: 0x00464500/0x140077ED0
 int32_t CGActionBar::IsItem(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x80000000;
 }
 
+// PROVEN: 19d316e3 IDENTICAL/NONE
 // OFFSET: 0x00464530
 int32_t CGActionBar::IsMacro(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
@@ -144,6 +147,7 @@ PetAction* GetPetAction(uint32_t index) {
     return NULL;
 }
 
+// PROVEN: 7e12b449 IDENTICAL/NONE
 // OFFSET: 0x0094FEB0/0x1405E8860
 uint32_t CGPetInfo::GetPetMode() {
     if (CGPetInfo::m_petMode & 0x8000000) {
@@ -248,6 +252,7 @@ uint32_t CGActionBar::GetMultiCastSlotMaskForTotemCategory(int32_t category) {
     }
 }
 
+// PROVEN: 299cac77 IDENTICAL/NONE
 // OFFSET: 0x009543E0
 void CGActionBar::SetTemporaryActionBarFlags(uint32_t flags, int32_t enable) {
     if (enable) {
@@ -1699,6 +1704,7 @@ void CGActionBar::RemoveEquipmentSet(uint32_t id) {
     }
 }
 
+// PROVEN: e2c92266 IDENTICAL/NONE
 // OFFSET: 0x00958950/0x1406CAA70
 void ItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -1918,6 +1924,7 @@ void CGActionBar::PutActionInSlot(uint32_t slot, int32_t a2) {
     CGActionBar::SetAction(slot, itemId | 0x80000000, 1, 0);
 }
 
+// PROVEN: 7fc56e8b IDENTICAL/NONE
 // OFFSET: 0x00959050
 void CGActionBar::UpdateTemporaryActionBar(int32_t (*getSpell)(uint32_t index, const void* data), const void* data) {
     if (!getSpell) {
@@ -2147,6 +2154,7 @@ void CGActionBar::PickupAction(uint32_t slot) {
     }
 }
 
+// PROVEN: 245edc1b IDENTICAL/NONE
 // OFFSET: 0x00959930/0x1406CBF50
 void CGActionBar::EnterWorld() {
     CGActionBar::UpdateUsable();

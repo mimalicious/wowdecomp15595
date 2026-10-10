@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[4] = { 0, 0, 0, 2 };
 // STATIC: 0x00C231D8/0x140A18398
 const DBCMeta OverrideSpellDataRec::s_meta = { "DBFilesClient\\OverrideSpellData.dbc", 4, 52, OverrideSpellDataRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 565e7c94 IDENTICAL/NONE
+// PROVEN: c922f1fa IDENTICAL/NONE
 // OFFSET: 0x00A2EA80/0x1407D80B0
 void OverrideSpellDataRec::FixupStrings(void* record, const char* strings) {
     OverrideSpellDataRec* rec = static_cast<OverrideSpellDataRec*>(record);

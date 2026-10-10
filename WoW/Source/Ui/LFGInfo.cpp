@@ -29,6 +29,9 @@ struct LFGJoinResultError {
     /* 0004 */ UIErrors m_error;
 };
 
+// STATIC: 0x00F4A8C8
+TSGrowableArray<LFGReward> CGLookingForGroup::m_completionRewards;
+
 // STATIC: #0x00BEAA14
 int32_t CGLookingForGroup::m_searchJoinedID;
 

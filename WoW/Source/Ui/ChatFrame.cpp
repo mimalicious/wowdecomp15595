@@ -422,7 +422,7 @@ static TSGrowableArray<int32_t> s_pendingChannelFlags;
 // STATIC: #0x00BCFAD0
 static TSGrowableArray<int32_t> s_pendingChannelNumbers;
 
-// STATIC: #0x00BCFAE0
+// STATIC: 0x00F340A4
 TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
 // STATIC: #0x00AC7FB4

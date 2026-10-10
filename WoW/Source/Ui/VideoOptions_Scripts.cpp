@@ -201,6 +201,7 @@ static int32_t Script_GetToolTipInfo(lua_State* L) {
 static int32_t Script_SetDefaultVideoOptions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetDefaultVideoOptions(value)");
+        return 0;
     }
 
     uint32_t page = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -230,6 +231,7 @@ static int32_t Script_GetDefaultVideoOptions(lua_State* L) {
 static int32_t Script_GetVideoOptions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetVideoOptions(value)");
+        return 0;
     }
 
     uint32_t level = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -268,6 +270,7 @@ static int32_t Script_GetGraphicsAPIs(lua_State* L) {
 static int32_t Script_SetSelectedScreenResolutionIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSelectedScreenResolutionIndex(integer index)");
+        return 0;
     }
 
     s_selectedResolutionIndex = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -341,6 +344,7 @@ static int32_t Script_SetupFullscreenScale(lua_State* L) {
 static int32_t Script_GetMaxMultisampleFormatOnCvar(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetMaxMultisampleFormatOnCvar(\"cvar\", cvarValue [, monitor)");
+        return 0;
     }
 
     const char* name = lua_tolstring(L, 1, NULL);

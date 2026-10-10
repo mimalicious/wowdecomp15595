@@ -19,8 +19,8 @@ class WorldMapAreaRec {
     /* 0018 */ float m_locTop;
     /* 001C */ float m_locBottom;
     /* 0020 */ int32_t m_displayMapID;
-    /* 0024 */ int32_t unk_0024;
-    /* 0028 */ int32_t unk_0028;
+    /* 0024 */ int32_t m_defaultDungeonFloor;
+    /* 0028 */ int32_t m_parentWorldMapID;
     /* 002C */ int32_t m_flags;
     /* 0030 */ int32_t unk_0030;
     /* 0034 */ int32_t unk_0034;

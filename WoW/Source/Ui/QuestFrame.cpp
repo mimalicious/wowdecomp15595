@@ -811,7 +811,7 @@ int32_t CGQuestInfo::GetReward(int32_t choice) {
 }
 
 // OFFSET: #0x0058D190
-int32_t CGQuestInfo::QuestItemInfo(const char* type, uint32_t index, char* name, uint32_t nameSize, char* texture, uint32_t textureSize, int32_t* count, int32_t* quality, int32_t* usable) {
+int32_t CGQuestInfo::GetQuestItemInfo(const char* type, uint32_t index, char* name, uint32_t nameSize, char* texture, uint32_t textureSize, int32_t* count, int32_t* quality, int32_t* usable) {
     *name = 0;
     *texture = 0;
     *count = 1;

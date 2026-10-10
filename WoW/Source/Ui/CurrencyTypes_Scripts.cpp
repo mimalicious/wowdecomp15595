@@ -12,10 +12,11 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// OFFSET: 0x0099F7B0
+// OFFSET: 0x0099F7B0/0x140723780
 static int32_t Script_GetCurrencyLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage:GetCurrencyLink(currencyType)");
+        return 0;
     }
 
     lua_pushstring(L, CGTooltip::GetCurrencyHyperlinkString(static_cast<int32_t>(lua_tonumber(L, 1))));
@@ -28,10 +29,11 @@ static int32_t Script_GetCurrencyListSize(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0099FD10
+// OFFSET: 0x0099FD10/0x140723F60
 static int32_t Script_GetCurrencyListLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage:GetCurrencyListLink(index)");
+        return 0;
     }
 
     CGCurrencyTypes::CurrencyListInfo* info = CGCurrencyTypes::GetDisplayListInfo(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -49,6 +51,7 @@ static int32_t Script_GetCurrencyListLink(lua_State* L) {
 static int32_t Script_ExpandCurrencyList(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: ExpandCurrencyList(index,expand)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -57,10 +60,11 @@ static int32_t Script_ExpandCurrencyList(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x009A0300
+// OFFSET: 0x009A0300/0x140724600
 static int32_t Script_PickupCurrency(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage:PickupCurrency(currencyType)");
+        return 0;
     }
 
     int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -72,10 +76,11 @@ static int32_t Script_PickupCurrency(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x009A0360
+// OFFSET: 0x009A0360/0x140724680
 static int32_t Script_GetCurrencyInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage:GetCurrencyInfo(currencyType)");
+        return 0;
     }
 
     int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -121,6 +126,7 @@ static int32_t Script_GetCurrencyInfo(lua_State* L) {
 static int32_t Script_GetCurrencyListInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCurrencyListInfo(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
@@ -204,6 +210,7 @@ static int32_t Script_GetCurrencyListInfo(lua_State* L) {
 static int32_t Script_SetCurrencyUnused(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetCurrencyUnused(index,unused)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -216,6 +223,7 @@ static int32_t Script_SetCurrencyUnused(lua_State* L) {
 static int32_t Script_SetCurrencyBackpack(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetCurrencyBackpack(index,backpack)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -228,6 +236,7 @@ static int32_t Script_SetCurrencyBackpack(lua_State* L) {
 static int32_t Script_GetBackpackCurrencyInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetBackpackCurrencyInfo(index)");
+        return 0;
     }
 
     const CurrencyTypesRec* rec = CGCurrencyTypes::GetBackpackCurrencyInfo(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);

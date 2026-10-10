@@ -5,10 +5,19 @@
 #include <cstdint>
 #include "WoW/Source/Object/WGUID.h"
 #include "WoW/Source/Net/Types.h"
+#include "WoW/Common/PhaseShiftShared.h"
+#include "Engine/Source/Storm/H/stpl.h"
 
 class CDataStore;
 class CGPlayer_C;
 struct lua_State;
+
+struct PartyAura {
+    /* 0000 */ int32_t m_spellId;
+    /* 0004 */ int32_t m_effectAmounts[3];
+    /* 0010 */ uint16_t m_flags;
+    /* 0012 */ uint16_t unk_0012;
+};
 
 class CGPartyPetState {
     public:
@@ -21,29 +30,33 @@ class CGPartyPetState {
     /* 0060 */ uint32_t m_maxHealth;
     /* 0064 */ uint16_t m_power;
     /* 0066 */ uint16_t m_maxPower;
-    /* 0068 */ int32_t m_auras[64];
-    /* 0168 */ uint8_t m_auraFlags[64];
+    /* 0068 */ uint32_t m_numAuras;
+    /* 006C */ uint32_t unk_006C;
+    /* 0070 */ TSGrowableArray<PartyAura> m_auras;
 };
 
 class CGPartyMemberState {
     public:
     /* 0000 */ WOWGUID m_guid;
-    /* 0008 */ uint16_t m_flags;
-    /* 000A */ uint8_t m_powerType;
-    /* 000B */ uint8_t unk_000B;
-    /* 000C */ uint32_t m_health;
-    /* 0010 */ uint32_t m_maxHealth;
-    /* 0014 */ uint16_t m_power;
-    /* 0016 */ uint16_t m_maxPower;
-    /* 0018 */ uint16_t m_level;
-    /* 001A */ uint16_t m_zoneID;
-    /* 001C */ int16_t m_posX;
-    /* 001E */ int16_t m_posY;
-    /* 0020 */ int32_t m_auras[64];
-    /* 0120 */ uint8_t m_auraFlags[64];
-    /* 0160 */ CGPartyPetState m_pet;
-    /* 0308 */ uint32_t m_vehicleSeatId;
-    /* 030C */ uint32_t unk_030C;
+    /* 0008 */ uint32_t m_health;
+    /* 000C */ uint32_t m_maxHealth;
+    /* 0010 */ uint32_t m_vehicleSeatId;
+    /* 0014 */ uint32_t m_numAuras;
+    /* 0018 */ uint16_t m_flags;
+    /* 001A */ uint16_t m_power;
+    /* 001C */ uint16_t m_maxPower;
+    /* 001E */ uint16_t m_level;
+    /* 0020 */ uint16_t m_zoneID;
+    /* 0022 */ uint16_t unk_0022;
+    /* 0024 */ int16_t m_posX;
+    /* 0026 */ int16_t m_posY;
+    /* 0028 */ int16_t m_posZ;
+    /* 002A */ uint8_t m_powerType;
+    /* 002B */ uint8_t unk_002B;
+    /* 002C */ uint32_t unk_002C;
+    /* 0030 */ CGPartyPetState m_pet;
+    /* 00B0 */ TSGrowableArray<PartyAura> m_auras;
+    /* 00C0 */ CPhaseShift m_phaseShift;
 };
 
 struct PartyReadyCheckInfo {

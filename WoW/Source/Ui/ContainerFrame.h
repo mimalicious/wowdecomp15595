@@ -11,6 +11,7 @@ class CGBag_C;
 class CGContainerInfo {
     public:
     static WOWGUID m_containers[11];
+    static WOWGUID GetContainer(int32_t index);
     static void UpdateContainers();
     static void OpenContainer(WOWGUID guid);
     static void EnterWorld();

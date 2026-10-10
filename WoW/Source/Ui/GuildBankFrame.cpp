@@ -531,13 +531,13 @@ void CGGuildBankInfo::ClearGuildTabList(uint32_t tab) {
         slot.m_randomPropertyID = 0;
         slot.m_suffixFactor = 0;
         slot.m_count = 0;
-        slot.unk_0010 = 0;
-        slot.unk_0014 = 0;
+        slot.m_enchant = 0;
+        slot.m_spellCharges = 0;
         slot.m_enchants[0] = 0;
         slot.m_enchants[1] = 0;
         slot.m_enchants[2] = 0;
         slot.m_locked = 0;
-        slot.unk_0028 = 0;
+        slot.m_flags = 0;
     }
 }
 
@@ -729,7 +729,7 @@ int32_t Packet_SMSG_GUILD_BANK_LIST(void* param, NETMESSAGE msgId, uint32_t time
             continue;
         }
 
-        msg->Get(slot->unk_0028);
+        msg->Get(slot->m_flags);
         msg->Get(reinterpret_cast<uint32_t&>(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_randomPropertyID));
         slot = &CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex];
 
@@ -740,8 +740,8 @@ int32_t Packet_SMSG_GUILD_BANK_LIST(void* param, NETMESSAGE msgId, uint32_t time
         }
 
         msg->Get(reinterpret_cast<uint32_t&>(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_count));
-        msg->Get(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].unk_0010);
-        msg->Get(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].unk_0014);
+        msg->Get(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_enchant);
+        msg->Get(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_spellCharges);
         uint8_t numEnchants;
         msg->Get(numEnchants);
         slot = &CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex];

@@ -4208,7 +4208,7 @@ static int32_t Script_CheckInteractDistance(lua_State* L) {
     }
 
     static float s_interactDistances[4] = { s_inspectDistSq, s_playerInteractDistSq, s_duelDistSq, s_followDistSq };
-    CGUnit_C* unit = GetUnitFromName(lua_tolstring(L, 1, NULL));
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tolstring(L, 1, NULL));
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
 
@@ -4251,7 +4251,7 @@ static int32_t Script_DropItemOnUnit(lua_State* L) {
         return 0;
     }
 
-    CGUnit_C* unit = GetUnitFromName(lua_tolstring(L, 1, NULL));
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tolstring(L, 1, NULL));
 
     if (!unit || !(unit->m_obj->m_type & TYPEMASK_UNIT)) {
         return 0;
@@ -5020,7 +5020,7 @@ static int32_t Script_CanInspect(lua_State* L) {
     }
 
     const char* token = lua_tolstring(L, 1, NULL);
-    CGUnit_C* unit = GetUnitFromName(token);
+    CGUnit_C* unit = Script_GetUnitFromName(token);
 
     if (StringToBOOL(L, 2, 0)) {
         if (unit) {
@@ -5059,7 +5059,7 @@ static int32_t Script_NotifyInspect(lua_State* L) {
         return 0;
     }
 
-    CGUnit_C* unit = GetUnitFromName(lua_tolstring(L, 1, NULL));
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tolstring(L, 1, NULL));
 
     if (CGGameUI::CanInspect(unit)) {
         CDataStore msg;
@@ -5633,6 +5633,7 @@ static int32_t Script_GetMaxSpellStartRecoveryOffset(lua_State* L) {
 static int32_t Script_ValidateTimer(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Script_ValidateTimer(TimerType)");
+        return 0;
     }
 
     if (!lua_tointeger(L, 1)) {
@@ -5655,12 +5656,14 @@ static int32_t Script_GetRestrictedAccountData(lua_State* L) {
 static int32_t Script_GetCVarBitfield(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetCVarBitfield(\"cvar\", index)");
+        return 0;
     }
 
     int32_t index = lua_tointeger(L, 2);
 
     if (index < 1) {
         luaL_error(L, "Index out of range");
+        return 0;
     }
 
     CVar* var = CVar::LookupRegistered(lua_tolstring(L, 1, NULL));
@@ -5707,10 +5710,12 @@ static int32_t Script_GetAddOnOptionalDependencies(lua_State* L) {
 
         if (!name) {
             luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
+            return 0;
         }
     } else {
         if (!lua_isstring(L, 1)) {
             luaL_error(L, "Usage: GetAddOnOptionalDependencies(index or \"name\")");
+            return 0;
         }
 
         name = lua_tolstring(L, 1, NULL);
@@ -5741,6 +5746,7 @@ static int32_t Script_GetCemeteryPreference(lua_State* L) {
 static int32_t Script_SetCemeteryPreference(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Script_SetCemeteryPreference(cemeteryID)");
+        return 0;
     }
 
     CGGameUI::SetCemeteryPreference(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
@@ -5895,16 +5901,19 @@ static int32_t Script_PortGraveyard(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e9842f20 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_GetDebugAnimationStats(lua_State* L) {
     return 0;
 }
 
+// PROVEN: b4e261ad IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_GetDebugSpellEffects(lua_State* L) {
     return 0;
 }
 
+// PROVEN: d1f09fc7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_ToggleAnimKitDisplay(lua_State* L) {
     return 0;

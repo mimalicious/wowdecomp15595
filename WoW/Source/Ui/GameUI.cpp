@@ -2273,7 +2273,7 @@ void CGGameUI::SetCursorVoidStorageItem(WOWGUID guid) {
         return;
     }
 
-    VoidStorageItem* item = storage->GetItem(guid);
+    VoidItem_C* item = storage->GetItem(guid);
 
     if (!item) {
         return;
@@ -4247,6 +4247,7 @@ int32_t CGGameUI::HandleMouseDown(const CMouseEvent& evt) {
     return 0;
 }
 
+// PROVEN: 79259ec7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t CGGameUI::HandleMouseUp(const CMouseEvent& evt) {
     return 0;

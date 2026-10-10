@@ -105,6 +105,7 @@ static int32_t Script_SpellTargetItem(lua_State* L) {
 static int32_t Script_SpellTargetUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SpellTargetUnit(\"unit\")");
+        return 0;
     }
 
     if (!CGGameUI::CanPerformAction(2) || !s_targetingSpell) {
@@ -139,6 +140,7 @@ static int32_t Script_SpellTargetUnit(lua_State* L) {
 static int32_t Script_SpellCanTargetUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return luaL_error(L, "Usage: SpellCanTargetUnit(\"unit\")");
+        return 0;
     }
 
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
@@ -238,6 +240,7 @@ static int32_t Script_CancelUnitBuff(lua_State* L) {
 
     if (!Script_GetUnitAuraInfo(L, 1, &info)) {
         luaL_error(L, "Usage: CancelUnitBuff(\"unit\", [index] or [\"name\", \"rank\"][, \"filter\"])");
+        return 0;
     }
 
     if (!CGGameUI::CanPerformAction(24)) {
@@ -305,6 +308,7 @@ static int32_t Script_SpellCancelQueuedSpell(lua_State* L) {
 static int32_t Script_SpellIsSelfBuff(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SpellIsSelfBuff(spellID)");
+        return 0;
     }
 
     SpellRec* spell = g_spellDB.GetRecord(lua_tointeger(L, 1));
@@ -338,6 +342,7 @@ static int32_t Script_SpellIsSelfBuff(lua_State* L) {
 static int32_t Script_SpellGetVisibilityInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SpellGetVisibilityInfo(spellID, \"visType\")");
+        return 0;
     }
 
     int32_t type = 0;
@@ -345,6 +350,7 @@ static int32_t Script_SpellGetVisibilityInfo(lua_State* L) {
     while (_stricmp(lua_tostring(L, 2), s_visibilityTypes[type])) {
         if (++type >= 3) {
             luaL_error(L, "SpellGetVisibilityInfo: Invalid visType. Valid types: \"RAID_INCOMBAT\", \"RAID_OUTOFCOMBAT\", \"ENEMY_TARGET\"");
+            return 0;
         }
     }
 

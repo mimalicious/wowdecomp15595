@@ -1945,7 +1945,7 @@ int32_t GetCurrentDB2Locale() {
     return LocaleIndexToDB2Locale(GetCurrentLocaleIndex());
 }
 
-// OFFSET: 0x0048A6A0
+// OFFSET: 0x0048A6A0/0x1400ACDD0
 int32_t LocaleNameToIndex(const char* locale) {
     int32_t index = LocaleIdToIndex(*reinterpret_cast<const uint32_t*>(locale));
 

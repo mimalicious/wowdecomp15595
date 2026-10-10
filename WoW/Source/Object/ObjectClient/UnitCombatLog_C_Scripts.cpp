@@ -262,6 +262,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CombatTextSetActiveUnit", &Script_CombatTextSetActiveUnit },
 };
 
+// PROVEN: c1d9265c IDENTICAL/NONE
 // OFFSET: 0x005F3B70
 void UnitCombatLogRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -269,6 +270,7 @@ void UnitCombatLogRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 12b18f47 IDENTICAL/NONE
 // OFFSET: 0x005F3BA0
 void UnitCombatLogUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

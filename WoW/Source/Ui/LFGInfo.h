@@ -12,6 +12,28 @@ class LfgDungeonExpansionRec;
 
 struct lua_State;
 
+struct LFGReward {
+    /* 0000 */ int32_t m_id;
+    /* 0004 */ int32_t m_displayID;
+    /* 0008 */ uint32_t m_quantity;
+    /* 000C */ int32_t m_isCurrency;
+};
+
+struct LFGShortageReward {
+    /* 0000 */ uint32_t unk_0000;
+    /* 0004 */ TSGrowableArray<LFGReward> m_rewards;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint32_t unk_0018;
+};
+
+struct LFGDungeonRewardInfo : public TSLinkedNode<LFGDungeonRewardInfo> {
+    /* 0008 */ uint32_t m_dungeonKey;
+    /* 000C */ uint32_t unk_000C[20];
+    /* 005C */ TSGrowableArray<LFGReward> m_rewards;
+    /* 006C */ uint32_t unk_006C[3];
+    /* 0078 */ LFGShortageReward m_shortages[3];
+};
+
 struct LFGRewardItem : public TSLinkedNode<LFGRewardItem> {
     /* 0008 */ int32_t m_itemID;
     /* 000C */ int32_t m_displayID;
@@ -196,6 +218,9 @@ class CGLookingForGroup {
     static void SetLFGDungeon(uint32_t slot);
     static void JoinLFG();
     static LFGRewardItem* GetDungeonRewardItem(uint32_t slot, int32_t index);
+    static TSGrowableArray<LFGReward> m_completionRewards;
+    static LFGDungeonRewardInfo* GetDungeonRewardInfo(uint32_t dungeonKey);
+    static LFGReward* GetDungeonReward(uint32_t dungeonKey, uint32_t index);
     static void RequestLFGPlayerInfo();
     static void ClearPartyInfo();
     static uint8_t GetClassRoles(uint32_t classID);

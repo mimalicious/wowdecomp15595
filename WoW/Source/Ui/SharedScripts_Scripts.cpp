@@ -14,6 +14,7 @@
 static int32_t Script_IsMovieLocal(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsMovieLocal(movieId)");
+        return 0;
     }
 
     lua_pushboolean(L, MovieStreaming::IsMovieLocal(static_cast<int32_t>(lua_tointeger(L, 1))));
@@ -24,6 +25,7 @@ static int32_t Script_IsMovieLocal(lua_State* L) {
 static int32_t Script_PreloadMovie(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PreloadMovie(movieId)");
+        return 0;
     }
 
     MovieStreaming::PreloadMovie(static_cast<int32_t>(lua_tointeger(L, 1)));
@@ -34,6 +36,7 @@ static int32_t Script_PreloadMovie(lua_State* L) {
 static int32_t Script_CancelPreloadingMovie(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CancelPreloadingMovie(movieId)");
+        return 0;
     }
 
     MovieStreaming::CancelPreloadingMovie(static_cast<int32_t>(lua_tointeger(L, 1)));
@@ -44,6 +47,7 @@ static int32_t Script_CancelPreloadingMovie(lua_State* L) {
 static int32_t Script_GetMovieDownloadProgress(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMovieDownloadProgress(movieId)");
+        return 0;
     }
 
     int32_t movieID = static_cast<int32_t>(lua_tointeger(L, 1));
@@ -59,6 +63,7 @@ static int32_t Script_GetMovieDownloadProgress(lua_State* L) {
 static int32_t Script_IsMoviePlayable(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMovieDownloadProgress(movieId)");
+        return 0;
     }
 
     lua_pushboolean(L, MovieStreaming::IsMoviePlayable(static_cast<int32_t>(lua_tointeger(L, 1))));

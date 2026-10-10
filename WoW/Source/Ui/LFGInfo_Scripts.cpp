@@ -1293,8 +1293,8 @@ static int32_t Script_UnitHasLFGRandomCooldown(lua_State* L) {
         return 0;
     }
 
-    for (int32_t i = 0; i < 64; i++) {
-        if (state->m_auras[i] == 71328) {
+    for (uint32_t i = 0; i < state->m_numAuras; i++) {
+        if (state->m_auras.m_data[i].m_spellId == 71328) {
             lua_pushboolean(L, 1);
             return 1;
         }
@@ -1330,8 +1330,8 @@ static int32_t Script_UnitHasLFGDeserter(lua_State* L) {
         return 0;
     }
 
-    for (int32_t i = 0; i < 64; i++) {
-        if (state->m_auras[i] == 71041) {
+    for (uint32_t i = 0; i < state->m_numAuras; i++) {
+        if (state->m_auras.m_data[i].m_spellId == 71041) {
             lua_pushboolean(L, 1);
             return 1;
         }

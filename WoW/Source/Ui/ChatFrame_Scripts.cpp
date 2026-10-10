@@ -63,6 +63,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     if (lua_isstring(L, 2)) {
         if (!StringToChatType(lua_tolstring(L, 2, NULL), &type)) {
             luaL_error(L, "SendChatMessage(): Unknown chat type");
+            return 0;
         }
     }
 
@@ -80,6 +81,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     if (lua_isstring(L, 3)) {
         if (!StringToLanguage(lua_tolstring(L, 3, NULL), &language)) {
             luaL_error(L, "SendChatMessage(): Unknown language");
+            return 0;
         }
 
         uint32_t skill;
@@ -97,6 +99,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     if (type == CHAT_MSG_WHISPER) {
         if (!target || !*target) {
             luaL_error(L, "SendChatMessage(): Whisper message missing target player!");
+            return 0;
         }
     } else if (type == CHAT_MSG_PARTY) {
         if (!CGPartyInfo::InParty() && (!CGRaidInfo::m_numMembers || !CGRaidInfo::IsPVPRaid())) {
@@ -137,6 +140,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     } else if (type == CHAT_MSG_CHANNEL) {
         if (!target || !*target) {
             luaL_error(L, "SendChatMessage(): Channel send missing channel number");
+            return 0;
         }
 
         int32_t number = SStrToInt(target);
@@ -211,6 +215,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
         } else {
             if (escape[1] != 'c') {
                 luaL_error(L, "SendChatMessage(): Invalid escape code in chat message");
+                return 0;
             }
 
             char* end = SStrStr(escape, "|r");

@@ -121,6 +121,7 @@ static int32_t Script_GetUpperEmblemTexture(lua_State* L) {
     if (lua_type(L, 2) != LUA_TTABLE) {
         const char* name = frame->GetName();
         luaL_error(L, "Usage: %s:GetUpperEmblemTexture(texture)", name ? name : "<unnamed>");
+        return 0;
     }
 
     lua_rawgeti(L, 2, 0);
@@ -130,11 +131,13 @@ static int32_t Script_GetUpperEmblemTexture(lua_State* L) {
     if (!texture) {
         const char* name = frame->GetName();
         luaL_error(L, "%s:GetUpperEmblemTexture(): Couldn't find 'this' in texture object", name ? name : "<unnamed>");
+        return 0;
     }
 
     if (!texture->IsA(CSimpleTexture::GetObjectType())) {
         const char* name = frame->GetName();
         luaL_error(L, "%s:GetUpperEmblemTexture(): Wrong object type, expected texture", name ? name : "<unnamed>");
+        return 0;
     }
 
     // STATIC: #0x00C0E538
@@ -181,6 +184,7 @@ static int32_t Script_GetLowerEmblemTexture(lua_State* L) {
     if (lua_type(L, 2) != LUA_TTABLE) {
         const char* name = frame->GetName();
         luaL_error(L, "Usage: %s:GetLowerEmblemTexture(texture)", name ? name : "<unnamed>");
+        return 0;
     }
 
     lua_rawgeti(L, 2, 0);
@@ -190,6 +194,7 @@ static int32_t Script_GetLowerEmblemTexture(lua_State* L) {
     if (!texture) {
         const char* name = frame->GetName();
         luaL_error(L, "%s:GetLowerEmblemTexture(): Couldn't find 'this' in texture object", name ? name : "<unnamed>");
+        return 0;
     }
 
     if (!texture->IsA(CSimpleTexture::GetObjectType())) {

@@ -33,11 +33,13 @@ struct GuildBankSlotInfo {
     /* 0004 */ uint32_t m_suffixFactor;
     /* 0008 */ int32_t m_randomPropertyID;
     /* 000C */ int32_t m_count;
-    /* 0010 */ uint32_t unk_0010;
-    /* 0014 */ uint32_t unk_0014;
+    /* 0010 */ uint32_t m_enchant;
+    /* 0014 */ uint32_t m_spellCharges;
     /* 0018 */ uint32_t m_enchants[3];
-    /* 0024 */ int32_t m_locked;
-    /* 0028 */ uint32_t unk_0028;
+    /* 0024 */ uint32_t m_reforgeEnchant;
+    /* 0028 */ uint32_t m_engineeringEnchant;
+    /* 002C */ int32_t m_locked;
+    /* 0030 */ uint32_t m_flags;
 };
 
 int32_t Packet_SMSG_GUILD_BANK_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

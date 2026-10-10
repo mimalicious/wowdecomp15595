@@ -673,6 +673,7 @@ C3Vector CGCorpse_C::GetRawPosition() const {
     return this->m_passenger.m_position;
 }
 
+// PROVEN: c85850d8 IDENTICAL/NONE
 // OFFSET: 0x00598B70/0x1402142E0
 uint64_t CGCorpse_C::GetTransportGUID() const {
     return this->m_passenger.m_transportGuid.m_guid;

@@ -124,7 +124,7 @@ static int32_t Script_GetTalentTabInfo(lua_State* L) {
         lua_pushnil(L);
     }
 
-    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 4), inspect, pet);
+    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, inspect, pet, 4), inspect, pet);
     TalentGroupTab_C* groupTab;
 
     if (group && (groupTab = group->GetTab(tabIndex))) {
@@ -144,7 +144,7 @@ static int32_t Script_GetTalentTabInfo(lua_State* L) {
 static int32_t Script_GetUnspentTalentPoints(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 1, 0);
     int32_t pet = StringToBOOL(L, 2, 0);
-    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 3), inspect, pet);
+    CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, inspect, pet, 3), inspect, pet);
     lua_pushinteger(L, group ? group->m_unspentPoints : 0);
     return 1;
 }
@@ -152,7 +152,7 @@ static int32_t Script_GetUnspentTalentPoints(lua_State* L) {
 // OFFSET: 0x0099B090/0x14071D360
 static int32_t Script_GetGroupPreviewTalentPointsSpent(lua_State* L) {
     int32_t pet = StringToBOOL(L, 1, 0);
-    uint32_t group = TalentInfoGetScriptGroupIndex(L, 2);
+    uint32_t group = TalentInfoGetScriptGroupIndex(L, 0, pet, 2);
     lua_pushinteger(L, CGTalentInfo::GetPreviewPointsSpent(group, pet));
     return 1;
 }
@@ -231,7 +231,7 @@ static int32_t Script_ResetPreviewTalentPoints(lua_State* L) {
 
     uint32_t tab = lua_tointeger(L, 1) - 1;
     int32_t pet = StringToBOOL(L, 2, 0);
-    uint32_t group = TalentInfoGetScriptGroupIndex(L, 3);
+    uint32_t group = TalentInfoGetScriptGroupIndex(L, 0, pet, 3);
     int32_t before = CGTalentInfo::GetPreviewPointsSpent(group, pet);
     CGTalentInfo::ResetPreviewTalentPoints(group, tab, pet);
     int32_t after = CGTalentInfo::GetPreviewPointsSpent(group, pet);
@@ -246,7 +246,7 @@ static int32_t Script_ResetPreviewTalentPoints(lua_State* L) {
 // OFFSET: 0x0099CFB0/0x14071FC60
 static int32_t Script_ResetGroupPreviewTalentPoints(lua_State* L) {
     int32_t pet = StringToBOOL(L, 1, 0);
-    uint32_t group = TalentInfoGetScriptGroupIndex(L, 2);
+    uint32_t group = TalentInfoGetScriptGroupIndex(L, 0, pet, 2);
     int32_t before = CGTalentInfo::GetPreviewPointsSpent(group, pet);
     CGTalentInfo::ResetGroupPreviewTalentPoints(group, pet);
     int32_t after = CGTalentInfo::GetPreviewPointsSpent(group, pet);
@@ -286,7 +286,7 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
 
             int32_t rank = -1;
             int32_t previewRank = -1;
-            TalentGroupItem_C* item = TalentInfoGetTalentItem(TalentInfoGetScriptGroupIndex(L, 5), talent->m_id, inspect, pet);
+            TalentGroupItem_C* item = TalentInfoGetTalentItem(TalentInfoGetScriptGroupIndex(L, inspect, pet, 5), talent->m_id, inspect, pet);
 
             if (item) {
                 rank = item->m_rank;
@@ -394,7 +394,7 @@ static int32_t Script_GetTalentPrereqs(lua_State* L) {
     uint32_t talentIndex = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
     int32_t inspect = StringToBOOL(L, 3, 0);
     int32_t pet = StringToBOOL(L, 4, 0);
-    uint32_t group = TalentInfoGetScriptGroupIndex(L, 5);
+    uint32_t group = TalentInfoGetScriptGroupIndex(L, inspect, pet, 5);
     TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, inspect, pet);
 
     if (tab && talentIndex < tab->m_numTalents) {
@@ -463,7 +463,7 @@ static int32_t Script_GetTalentLink(lua_State* L) {
 
         if (talent && (!pet || CGTalentInfo::IsTalentAvailableForPet(unit, talent))) {
             int32_t rank = -1;
-            TalentGroupItem_C* item = TalentInfoGetTalentItem(TalentInfoGetScriptGroupIndex(L, 5), talent->m_id, inspect, pet);
+            TalentGroupItem_C* item = TalentInfoGetTalentItem(TalentInfoGetScriptGroupIndex(L, inspect, pet, 5), talent->m_id, inspect, pet);
 
             if (item) {
                 rank = StringToBOOL(L, 5, 0) ? item->m_previewRank : item->m_rank;
@@ -551,7 +551,7 @@ static int32_t Script_AddPreviewTalentPoints(lua_State* L) {
     uint32_t talent = lua_tointeger(L, 2) - 1;
     int32_t points = lua_tointeger(L, 3);
     int32_t pet = StringToBOOL(L, 4, 0);
-    uint32_t group = TalentInfoGetScriptGroupIndex(L, 5);
+    uint32_t group = TalentInfoGetScriptGroupIndex(L, 0, pet, 5);
     int32_t before = CGTalentInfo::GetPreviewPointsSpent(group, pet);
     CGTalentInfo::AddPreviewTalentPoints(group, tab, talent, points, pet);
     int32_t after = CGTalentInfo::GetPreviewPointsSpent(group, pet);

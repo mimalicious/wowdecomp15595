@@ -36,6 +36,9 @@ WOWGUID CGLootInfo::m_lootObj;
 // STATIC: #0x00BFA8E0
 int32_t CGLootInfo::m_autolooted;
 
+// STATIC: 0x00F4523C
+TSGrowableArray<MissingLootItem> CGLootInfo::m_missingItems;
+
 // STATIC: #0x00BFA8F0
 static char s_lootSlotTexture[260];
 
@@ -144,7 +147,7 @@ void GetCurrencyText(int32_t amount, char* buffer, uint32_t size, const char* se
     }
 }
 
-// OFFSET: 0x004E3A40
+// OFFSET: 0x004E3A40/0x140124C30
 void GetCurrencyIcon(uint64_t amount, char* buffer, uint32_t size) {
     const char* path = ClientDBStringLookup(3);
     SStrPrintf(buffer, size, "%s%s", path, *path ? "\\" : "");
@@ -211,7 +214,7 @@ int32_t CGLootInfo::GetLootItem(uint32_t slot) {
 }
 
 // OFFSET: #0x00588250
-int32_t CGLootInfo::GetLootItemCount(uint32_t slot) {
+int32_t CGLootInfo::GetLootQuantity(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
         return 0;
     }
@@ -232,7 +235,7 @@ int32_t CGLootInfo::GetLootItemCount(uint32_t slot) {
 }
 
 // OFFSET: #0x00588290
-int32_t CGLootInfo::GetLootItemRandomSuffix(uint32_t slot) {
+int32_t CGLootInfo::GetLootSeed(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
         return 0;
     }
@@ -253,7 +256,7 @@ int32_t CGLootInfo::GetLootItemRandomSuffix(uint32_t slot) {
 }
 
 // OFFSET: #0x005882D0
-int32_t CGLootInfo::GetLootItemRandomPropertyId(uint32_t slot) {
+int32_t CGLootInfo::GetLootRandomPropertiesID(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
         return 0;
     }
@@ -675,9 +678,9 @@ void CGLootInfo::SetObject(CGObject_C* object, int32_t coins, uint32_t lootType)
         ::LootSlot& slot = CGLootInfo::m_slots[count++];
         slot.m_itemID = itemId;
         slot.m_displayId = CGPlayer_C::GetLootItemDisplayId(i);
-        slot.m_count = CGPlayer_C::GetLootItemCount(i);
-        slot.m_randomSuffix = CGPlayer_C::GetLootItemRandomSuffix(i);
-        slot.m_randomPropertyId = CGPlayer_C::GetLootItemRandomPropertyId(i);
+        slot.m_count = CGPlayer_C::GetLootQuantity(i);
+        slot.m_randomSuffix = CGPlayer_C::GetLootSeed(i);
+        slot.m_randomPropertyId = CGPlayer_C::GetLootRandomPropertiesID(i);
         slot.m_slot = static_cast<uint8_t>(i);
         slot.m_slotType = CGPlayer_C::GetLootItemSlotType(i);
     }
@@ -758,9 +761,9 @@ void CGLootInfo::OnLootSlotChanged(uint8_t slot) {
     ::LootSlot& entry = CGLootInfo::m_slots[index];
     entry.m_itemID = CGPlayer_C::GetLootItem(slot);
     entry.m_displayId = CGPlayer_C::GetLootItemDisplayId(slot);
-    entry.m_count = CGPlayer_C::GetLootItemCount(slot);
-    entry.m_randomSuffix = CGPlayer_C::GetLootItemRandomSuffix(slot);
-    entry.m_randomPropertyId = CGPlayer_C::GetLootItemRandomPropertyId(slot);
+    entry.m_count = CGPlayer_C::GetLootQuantity(slot);
+    entry.m_randomSuffix = CGPlayer_C::GetLootSeed(slot);
+    entry.m_randomPropertyId = CGPlayer_C::GetLootRandomPropertiesID(slot);
     entry.m_slot = slot;
     entry.m_slotType = CGPlayer_C::GetLootItemSlotType(slot);
 

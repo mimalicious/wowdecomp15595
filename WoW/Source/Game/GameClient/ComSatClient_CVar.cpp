@@ -57,6 +57,7 @@ bool InboundChatVolumeHandler(CVar* var, const char* oldValue, const char* value
     return true;
 }
 
+// PROVEN: fe6fc487 IDENTICAL/NONE
 // OFFSET: 0x004DC900/0x14011AFA0
 bool VoiceChatModeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value) == 1) {

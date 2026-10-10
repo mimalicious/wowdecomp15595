@@ -576,7 +576,7 @@ bool CGBag_C::FindTotemCategory(int32_t category, uint32_t flags) {
     return this->FindTotemCategory(rec->m_totemCategoryType, mask, true, flags);
 }
 
-// PROVEN: 6d821df1 IDENTICAL/NONE
+// PROVEN: 85899f61 IDENTICAL/NONE
 // OFFSET: 0x005F2E30/0x1402759F0
 CGItem_C* CGBag_C::FindItemOfType(int32_t itemId, uint32_t flags) const {
     WOWGUID container;
@@ -584,13 +584,13 @@ CGItem_C* CGBag_C::FindItemOfType(int32_t itemId, uint32_t flags) const {
     return this->FindItem(FindItemIDCallback, &itemId, container, slot, flags);
 }
 
-// PROVEN: a4f3aaf6 IDENTICAL/NONE
+// PROVEN: 0ca56534 IDENTICAL/NONE
 // OFFSET: 0x005F2E60/0x140275A30
 CGItem_C* CGBag_C::FindItemOfType(int32_t itemId, WOWGUID& container, uint32_t& slot, uint32_t flags) const {
     return this->FindItem(FindItemIDCallback, &itemId, container, slot, flags);
 }
 
-// PROVEN: e6c5e80b IDENTICAL/NONE
+// PROVEN: 12f5dafe IDENTICAL/NONE
 // OFFSET: 0x005F30D0/0x140275F90
 int32_t CGBag_C::GetItemTypeCount(int32_t itemId, uint32_t flags) const {
     if (itemId == -2) {
@@ -606,7 +606,7 @@ int32_t CGBag_C::GetItemTypeCount(int32_t itemId, uint32_t flags) const {
     return param.m_count;
 }
 
-// PROVEN: 4adf5fcf IDENTICAL/NONE
+// PROVEN: a4e0673c IDENTICAL/NONE
 // OFFSET: 0x005F3120/0x140275FE0
 int32_t CGBag_C::GetItemTypeCharges(int32_t itemId, uint32_t flags) const {
     ItemTypeCountParam param;
@@ -752,7 +752,7 @@ CGItem_C* CGBag_C::FindItemByFullName(const char* name, uint32_t flags) const {
     return this->FindItem(&FindItemLinkCallback, &link, flags);
 }
 
-// PROVEN: d9f705aa IDENTICAL/NONE
+// PROVEN: e10fc6a9 IDENTICAL/NONE
 // OFFSET: 0x005F30A0/0x140275F60
 CGItem_C* CGBag_C::FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, uint32_t flags) const {
     WOWGUID container;

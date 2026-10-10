@@ -184,6 +184,7 @@ static int32_t Script_RunMacroText(lua_State* L) {
 static int32_t Script_GetMacroIcons(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
         luaL_error(L, "Usage: GetMacroIcons([table])");
+        return 0;
     }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -211,6 +212,7 @@ static int32_t Script_GetMacroIcons(lua_State* L) {
 static int32_t Script_GetMacroItemIcons(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
         luaL_error(L, "Usage: GetMacroItemIcons([table])");
+        return 0;
     }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -437,6 +439,7 @@ static int32_t Script_PickupMacro(lua_State* L) {
 static int32_t Script_CreateMacro(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: CreateMacro(name, iconFileName, body, perCharacter)");
+        return 0;
     }
 
     if (!CGGameUI::CanPerformAction(12)) {
@@ -449,10 +452,12 @@ static int32_t Script_CreateMacro(lua_State* L) {
 
     if (!name || !*name) {
         luaL_error(L, "CreateMacro() failed, no name specified");
+        return 0;
     }
 
     if (!icon || !*icon) {
         luaL_error(L, "CreateMacro() failed, no icon specified");
+        return 0;
     }
 
     if (lua_isstring(L, 3)) {
@@ -463,6 +468,7 @@ static int32_t Script_CreateMacro(lua_State* L) {
 
     if (!id) {
         luaL_error(L, "CreateMacro() failed, already have %d macros", 36);
+        return 0;
     }
 
     lua_pushnumber(L, static_cast<double>(CGUIMacros::GetMacroIndexByID(id) + 1));

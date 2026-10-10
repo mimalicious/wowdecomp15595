@@ -20,6 +20,7 @@ class CGTransmogrify {
 
     static void SetTransmogrifier(const WOWGUID& guid);
     static void OnTransmogrifySuccess(uint32_t slot);
+    static TransmogrifyPendingItem* GetPendingItem(uint32_t slot);
 };
 
 #endif

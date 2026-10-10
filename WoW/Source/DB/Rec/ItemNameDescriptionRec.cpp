@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[3] = { 0, 2, 0 };
 // STATIC: 0x00C24194/0x140A19748
 const DBCMeta ItemNameDescriptionRec::s_meta = { "DBFilesClient\\ItemNameDescription.dbc", 3, 12, ItemNameDescriptionRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 350e8ea9 IDENTICAL/NONE
+// PROVEN: 9aa008b1 IDENTICAL/NONE
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ItemNameDescriptionRec::FixupStrings(void* record, const char* strings) {
     ItemNameDescriptionRec* rec = static_cast<ItemNameDescriptionRec*>(record);

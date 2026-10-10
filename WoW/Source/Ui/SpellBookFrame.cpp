@@ -1851,7 +1851,7 @@ const char* CGSpellBook::GetSpellTexture(int32_t spellId) {
     uint32_t petIndex = CGStableInfo::FindPetIndexBySpellID(spell->m_id, 0);
 
     if (petIndex < 25) {
-        StablePetInfo* pet = CGStableInfo::GetPet(petIndex);
+        StablePetInfo* pet = CGStableInfo::GetPetInfo(petIndex);
 
         if (pet) {
             CreatureStats_C* stats = g_creatureDBCache.GetRecord(pet->m_entry, WOWGUID(), NULL, NULL, false);
@@ -3145,6 +3145,7 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
     }
 }
 
+// PROVEN: d123f581 IDENTICAL/NONE
 // OFFSET: 0x00919860
 void CGSpellBook::ReplaceSpell(int32_t oldSpell, int32_t newSpell) {
     CGSpellBook::DelKnownSpell(oldSpell, 1);

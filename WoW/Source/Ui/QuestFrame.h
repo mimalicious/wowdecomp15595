@@ -97,7 +97,9 @@ class CGQuestInfo {
     static void AcceptQuest();
     static void DeclineQuest();
     static void GiveQuestItems();
-    static int32_t QuestItemInfo(const char* type, uint32_t index, char* name, uint32_t nameSize, char* texture, uint32_t textureSize, int32_t* count, int32_t* quality, int32_t* usable);
+    static int32_t GetQuestItemInfo(const char* type, uint32_t index, char* name, uint32_t nameSize, char* texture, uint32_t textureSize, int32_t* count, int32_t* quality, int32_t* usable);
+    static int32_t GetQuestCurrencyID(const char* type, uint32_t index);
+    static void GetQuestCurrencyInfo(const char* type, uint32_t index, char* name, uint32_t nameSize, char* texture, uint32_t textureSize, uint32_t& count);
     static int32_t GetReward(int32_t choice);
 };
 struct lua_State;

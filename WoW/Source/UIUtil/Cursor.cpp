@@ -356,7 +356,7 @@ void CursorSetHeldItem(WOWGUID item) {
     CursorReleaseItemMips();
 }
 
-// OFFSET: 0x004862B0
+// OFFSET: 0x004862B0/0x1400A7030
 void CursorGrabMoney(uint64_t amount) {
     if (s_cursorItemMips) {
         TextureFreeMippedImg(s_cursorItemMips);

@@ -13,6 +13,7 @@ class ItemRecSparse {
 
     const char* GetName(int32_t index) const;
     class ItemRec* GetNonSparse() const;
+    int32_t GetDisenchantSkillRequired() const;
     int32_t GetBuyPrice(bool* computed) const;
     int32_t GetSellPrice() const;
 

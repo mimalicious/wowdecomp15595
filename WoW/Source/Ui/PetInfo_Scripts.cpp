@@ -203,6 +203,7 @@ static int32_t Script_PetHasActionBar(lua_State* L) {
 static int32_t Script_GetPetActionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPetActionInfo(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -319,6 +320,7 @@ static int32_t Script_GetPetActionInfo(lua_State* L) {
 static int32_t Script_GetPetActionCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPetActionCooldown(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -356,6 +358,7 @@ static int32_t Script_GetPetActionsUsable(lua_State* L) {
 static int32_t Script_GetPetActionSlotUsable(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPetActionSlotsUsable(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
@@ -386,6 +389,7 @@ static int32_t Script_PetDefensiveMode(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 8b56276e IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_PetAggressiveMode(lua_State* L) {
     return 0;
@@ -520,6 +524,7 @@ static int32_t Script_PetRename(lua_State* L) {
 static int32_t Script_GetPossessInfo(lua_State* L) {
     if (lua_tonumber(L, 1) == 0.0) {
         luaL_error(L, "Usage: GetPossessInfo(index)");
+        return 0;
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -581,6 +586,7 @@ static int32_t Script_GetPossessInfo(lua_State* L) {
 static int32_t Script_IsPetAttackAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsPetAttackAction(index)");
+        return 0;
     }
 
     int32_t index = lua_tointeger(L, 1);
@@ -592,12 +598,14 @@ static int32_t Script_IsPetAttackAction(lua_State* L) {
 static int32_t Script_PickupPetAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupPetAction(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
 
     if (index > 10) {
         luaL_error(L, "Invalid slot in PickupPetAction");
+        return 0;
     }
 
     if (!CGGameUI::CanPerformAction(14)) {
@@ -632,12 +640,14 @@ static int32_t Script_PickupPetAction(lua_State* L) {
 static int32_t Script_TogglePetAutocast(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TogglePetAutocast(index)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
 
     if (index > 10) {
         luaL_error(L, "Invalid slot in TogglePetAutocast");
+        return 0;
     }
 
     PetAction cursor = CGGameUI::m_cursorPetAction;
@@ -656,12 +666,14 @@ static int32_t Script_TogglePetAutocast(lua_State* L) {
 static int32_t Script_CastPetAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CastPetAction(index, target)");
+        return 0;
     }
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
 
     if (index > 10) {
         luaL_error(L, "Invalid slot in CastPetAction");
+        return 0;
     }
 
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -730,6 +742,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "IsPetAttackAction", &Script_IsPetAttackAction },
 };
 
+// PROVEN: fa9e451e IDENTICAL/NONE
 // OFFSET: 0x00950110
 void PetInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -737,6 +750,7 @@ void PetInfoRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 547bebb0 IDENTICAL/NONE
 // OFFSET: 0x00950140
 void PetInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

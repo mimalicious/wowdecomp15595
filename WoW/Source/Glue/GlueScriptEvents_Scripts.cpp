@@ -1213,6 +1213,7 @@ static int32_t Script_PINEntered(lua_State* L) {
 
         if (!lua_isnumber(L, i)) {
             luaL_error(L, "Usage: PINEntered(4-10 key positions) - non-numeric arg #%d", count + 1);
+            return 0;
         }
 
         digits[i - 1] = static_cast<uint8_t>(lua_tonumber(L, i));
@@ -1221,6 +1222,7 @@ static int32_t Script_PINEntered(lua_State* L) {
 
     if (static_cast<uint32_t>(count - 4) > 6) {
         luaL_error(L, "Usage: PINEntered(4-10 key positions) - bad number of args %d", count);
+        return 0;
     }
 
     CGlueMgr::LoginEnterPIN(count, digits);
@@ -1231,12 +1233,14 @@ static int32_t Script_PINEntered(lua_State* L) {
 static int32_t Script_MatrixEntered(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: MatrixEntered(number)");
+        return 0;
     }
 
     double value = lua_tonumber(L, 1);
 
     if (value > 9) {
         luaL_error(L, "MatrixEntered: number must be 0 to 9");
+        return 0;
     }
 
     CGlueMgr::LoginEnterMatrix(static_cast<uint8_t>(value));
@@ -1294,12 +1298,14 @@ static int32_t Script_PatchDownloadApply(lua_State* L) {
 static int32_t Script_LaunchAddOnURL(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: LaunchAddOnURL(index)");
+        return 0;
     }
 
     const char* name = GetAddOnByIndex(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1);
 
     if (!name) {
         luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
+        return 0;
     }
 
     const char* url = GetAddOnURL(name);
@@ -1315,6 +1321,7 @@ static int32_t Script_LaunchAddOnURL(lua_State* L) {
 static int32_t Script_EnableAddOn(lua_State* L) {
     if ((!lua_isstring(L, 1) && lua_type(L, 1)) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: EnableAddOn(\"character\", index)");
+        return 0;
     }
 
     const char* character = lua_tolstring(L, 1, NULL);
@@ -1322,6 +1329,7 @@ static int32_t Script_EnableAddOn(lua_State* L) {
 
     if (!name) {
         luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
+        return 0;
     }
 
     SetAddOnEnableState(name, character, 2);
@@ -1344,6 +1352,7 @@ static int32_t Script_EnableAllAddOns(lua_State* L) {
 static int32_t Script_DisableAddOn(lua_State* L) {
     if ((!lua_isstring(L, 1) && lua_type(L, 1)) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: DisableAddOn(\"character\", index)");
+        return 0;
     }
 
     const char* character = lua_tolstring(L, 1, NULL);
@@ -1351,6 +1360,7 @@ static int32_t Script_DisableAddOn(lua_State* L) {
 
     if (!name) {
         luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
+        return 0;
     }
 
     SetAddOnEnableState(name, character, 0);
@@ -1392,6 +1402,7 @@ static int32_t Script_IsStreamingMode(lua_State* L) {
 static int32_t Script_GetLoginScreenBackground(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: GetLoginScreenBackground(\"highresbg\", \"lowresbg\")");
+        return 0;
     }
 
     const char* highRes = lua_tolstring(L, 1, NULL);
@@ -1417,6 +1428,7 @@ static int32_t Script_IsGMClient(lua_State* L) {
 static int32_t Script_LoadURLIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: LoadURLIndex(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));

@@ -376,6 +376,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "UnitIsTalking", &Script_UnitIsTalking },
 };
 
+// PROVEN: 23a6a688 IDENTICAL/NONE
 // OFFSET: 0x004DB2D0
 void VoiceRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -383,6 +384,7 @@ void VoiceRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: d2acb2c7 IDENTICAL/NONE
 // OFFSET: 0x004DB300
 void VoiceUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

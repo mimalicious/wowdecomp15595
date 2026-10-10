@@ -28,7 +28,7 @@ extern const char* g_scriptEvents[NUM_SCRIPT_EVENTS];
 extern const int32_t s_unitSexValues[3];
 extern const char* s_vehicleSkinNames[2];
 
-CGUnit_C* GetUnitFromName(const char* token);
+CGUnit_C* Script_GetUnitFromName(const char* token);
 WOWGUID GetGuidByKeyword(const char* token);
 bool GetUnitByKeyword(const char* token, CGUnit_C** unit, bool defaultToTarget);
 int32_t Script_GetUnitAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* info);

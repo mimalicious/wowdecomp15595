@@ -29,11 +29,10 @@ class SpellVisualKitRec;
 struct InspectItem {
     /* 0000 */ WOWGUID m_creator;
     /* 0008 */ int32_t m_itemId;
-    /* 000C */ int32_t m_enchants [12];
-    /* 003C */ int16_t m_randomPropertiesId;
-    /* 003E */ uint16_t m_flags;
-    /* 0040 */ uint32_t m_propertySeed;
-    /* 0044 */ uint32_t unk_0044;
+    /* 000C */ int32_t m_enchants [15];
+    /* 0048 */ int16_t m_randomPropertiesId;
+    /* 004A */ uint16_t m_flags;
+    /* 004C */ uint32_t m_propertySeed;
 };
 
 struct InspectData {
@@ -251,7 +250,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 21F4 */ int32_t m_playedTime;
     /* 21F8 */ uint32_t m_playedTimeBase;
     /* 21FC */ uint32_t unk_21FC;
-    /* 2200 */ uint32_t unk_2200;
+    /* 2200 */ CGVoidStorage_C* m_voidStorage;
     /* 2204 */ uint32_t unk_2204;
 
     ~CGPlayer_C();
@@ -361,6 +360,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     float GetModDamageDonePct(int32_t school) const;
     const CGItem_C* EquippedItemMeetSpellRequirements(const SpellRec* spell, uint32_t slotMask);
     const CGItem_C* GetEquippedItemForSpell(const SpellEquippedItemsRec* items, uint32_t slotMask);
+    bool IsInArena();
+    int32_t CanUseItemSet(const ItemSetRec* itemSet);
     int32_t GetModHealingDonePos() const;
     void ModifyCategoryCooldown(int32_t& cooldown, int32_t category);
     int32_t HasZoneExplored(int32_t zone);
@@ -411,9 +412,9 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static int32_t GetLootItem(uint32_t slot);
     static void ClearLootItemSlotType(WOWGUID lootObject, uint32_t slot);
     static int32_t GetLootItemDisplayId(uint32_t slot);
-    static int32_t GetLootItemCount(uint32_t slot);
-    static int32_t GetLootItemRandomSuffix(uint32_t slot);
-    static int32_t GetLootItemRandomPropertyId(uint32_t slot);
+    static int32_t GetLootQuantity(uint32_t slot);
+    static int32_t GetLootSeed(uint32_t slot);
+    static int32_t GetLootRandomPropertiesID(uint32_t slot);
     static int32_t GetLootItemSlotType(uint32_t slot);
     int32_t OnLootReleaseResponse(CDataStore* msg);
     int32_t OnLootRemoved(CDataStore* msg);

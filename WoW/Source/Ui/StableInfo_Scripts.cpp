@@ -35,6 +35,7 @@ static void StablePaperdollCallback(int32_t id, const WOWGUID& guid, void* param
 static int32_t Script_PickupStablePet(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupStablePet(slot)");
+        return 0;
     }
 
     double value = lua_tonumber(L, 1);
@@ -66,6 +67,7 @@ static int32_t Script_IsAtStableMaster(lua_State* L) {
 static int32_t Script_SetPetSlot(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetPetSlot(index, slot)");
+        return 0;
     }
 
     uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
@@ -82,6 +84,7 @@ static int32_t Script_SetPetSlot(lua_State* L) {
 static int32_t Script_GetStablePetInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetStablePetInfo(slot)");
+        return 0;
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -126,6 +129,7 @@ static int32_t Script_GetStablePetFoodTypes(lua_State* L) {
 
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetStablePetFoodTypes(slot)");
+        return 0;
     }
 
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -179,6 +183,7 @@ static int32_t Script_ClosePetStables(lua_State* L) {
 static int32_t Script_SetPetStablePaperdoll(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Usage: SetPetStablePaperdoll(characterModel, slot)");
+        return 0;
     }
 
     lua_rawgeti(L, 1, 0);
@@ -187,14 +192,17 @@ static int32_t Script_SetPetStablePaperdoll(lua_State* L) {
 
     if (!model) {
         luaL_error(L, "SetPetStablePaperdoll(): Couldn't find 'this' in frame object");
+        return 0;
     }
 
     if (!model->IsA(CGCharacterModelBase::GetObjectType())) {
         luaL_error(L, "SetPetStablePaperdoll(): Wrong object type, expected frame");
+        return 0;
     }
 
     if (!lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetPetStablePaperdoll(characterModel, slot)");
+        return 0;
     }
 
     StablePetInfo* pet = CGStableInfo::GetPetInfo(static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 2))) - 1);

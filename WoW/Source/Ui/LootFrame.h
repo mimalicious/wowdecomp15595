@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Storm/H/stpl.h"
 #include "WoW/Source/Object/WGUID.h"
 
 struct lua_State;
@@ -34,6 +35,15 @@ struct LootSlot {
     /* 001C */ int32_t m_slotType;
 };
 
+struct MissingLootItem {
+    /* 0000 */ int32_t m_itemId;
+    /* 0004 */ uint32_t unk_0004;
+    /* 0008 */ int32_t m_quantity;
+    /* 000C */ int32_t m_seed;
+    /* 0010 */ int32_t m_randomPropertiesId;
+    /* 0014 */ uint32_t unk_0014;
+};
+
 class CGLootInfo {
     public:
     static bool IsPlayerIneligible(int32_t itemId);
@@ -43,6 +53,7 @@ class CGLootInfo {
     static int32_t m_coins;
     static WOWGUID m_lootObj;
     static int32_t m_autolooted;
+    static TSGrowableArray<MissingLootItem> m_missingItems;
 
     static void InitializeGame();
     static void ShutdownGame();
@@ -57,9 +68,10 @@ class CGLootInfo {
     static void ClearSlot(uint8_t slot);
     static void OnLootSlotChanged(uint8_t slot);
     static int32_t GetLootItem(uint32_t slot);
-    static int32_t GetLootItemCount(uint32_t slot);
-    static int32_t GetLootItemRandomSuffix(uint32_t slot);
-    static int32_t GetLootItemRandomPropertyId(uint32_t slot);
+    static int32_t GetLootQuantity(uint32_t slot);
+    static int32_t GetLootSeed(uint32_t slot);
+    static int32_t GetLootRandomPropertiesID(uint32_t slot);
+    static int32_t GetLootCurrency(uint32_t slot);
     static const char* GetLootSlotTexture(uint32_t slot);
     static void GetLootSlotText(char* buffer, uint32_t size, uint32_t slot);
     static char* GetLootSlotLink(uint32_t slot, char* buffer, uint32_t size);

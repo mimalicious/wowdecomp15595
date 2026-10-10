@@ -369,7 +369,7 @@ bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* 
     return true;
 }
 
-// OFFSET: 0x008C42F0
+// OFFSET: 0x008C42F0/0x140633E50
 bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t spent = CGTalentInfo::GetAllGroupPreviewTalentPointsSpent(0);
     CGTalentInfo::ResetAllGroupPreviewTalentPoints(0);
@@ -406,7 +406,7 @@ bool CVarHandler_autoCompleteUseContext(CVar* var, const char* oldValue, const c
     return true;
 }
 
-// OFFSET: 0x008C4400
+// OFFSET: 0x008C4400/0x140633F90
 bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char* value, void* arg) {
     CVar* reduced = CVar::Lookup("reducedLagTolerance");
     CVar* offset = CVar::Lookup("maxSpellStartRecoveryOffset");
@@ -487,7 +487,7 @@ bool CVarHandler_threatWarning(CVar* var, const char* oldValue, const char* valu
     return true;
 }
 
-// OFFSET: 0x008CF1C0
+// OFFSET: 0x008CF1C0/0x140641950
 void CGGameUI::RegisterGameCVars() {
     g_deselectOnClickCVar = CVar::Register("deselectOnClick", "Clear the target when clicking on terrain", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_cvAutoInteract = CVar::Register("autoInteract", "Toggles auto-move to interact target", 0x10, s_locale == 1 ? "1" : "0", AutoInteractStateChangedCallback, CATEGORY_GAME, false, NULL, false);

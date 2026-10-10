@@ -89,11 +89,13 @@ enum SLASH_COMMAND_ID {
 struct RaidInstanceInfo {
     /* 0000 */ uint32_t m_mapID;
     /* 0004 */ uint32_t m_difficulty;
-    /* 0008 */ uint64_t m_instanceID;
-    /* 0010 */ uint32_t m_locked;
-    /* 0014 */ uint32_t m_extended;
-    /* 0018 */ uint32_t m_resetTime;
-    /* 001C */ uint32_t unk_001C;
+    /* 0008 */ uint32_t m_heroic;
+    /* 000C */ uint32_t unk_000C;
+    /* 0010 */ uint64_t m_instanceID;
+    /* 0018 */ uint32_t m_locked;
+    /* 001C */ uint32_t m_extended;
+    /* 0020 */ uint32_t m_resetTime;
+    /* 0024 */ uint32_t m_completedMask;
 };
 
 struct ChatConversation {

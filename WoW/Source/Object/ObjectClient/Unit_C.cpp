@@ -18189,7 +18189,7 @@ int32_t CGUnit_C::OnAttackIconPressed(WOWGUID target, int32_t a3, int32_t a4, in
     return 1;
 }
 
-// PROVEN: e806479d IDENTICAL/NONE
+// PROVEN: 32fa8632 IDENTICAL/NONE
 // OFFSET: 0x005C93C0
 bool CGUnit_C::CheckShapeshiftRules(const SpellRec* spell, int32_t* reason) {
     int32_t form = this->m_shapeshiftSuppressed ? 0 : this->m_unit->m_unitFieldBytes2[3];

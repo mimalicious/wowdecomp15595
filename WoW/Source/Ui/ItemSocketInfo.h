@@ -10,6 +10,7 @@ void ItemSocketInfoRegisterScriptFunctions();
 void ItemSocketInfoUnregisterScriptFunctions();
 
 class ItemStats_C;
+class ItemRecSparse;
 
 class CGItemSocketInfo {
     public:
@@ -30,6 +31,7 @@ class CGItemSocketInfo {
     static void UpdateItem(WOWGUID item);
     static void RemoveItem(WOWGUID item);
     static int32_t GemMatchesSocket(const ItemStats_C* item, const ItemStats_C* gem, int32_t socket);
+    static int32_t GemMatchesSocket(const ItemRecSparse* item, const ItemRecSparse* gem, int32_t socket);
 };
 
 void EnchantItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
