@@ -1796,118 +1796,6 @@ int32_t CGGameUI::CanPerformAction(uint32_t action) {
     return 1;
 }
 
-// OFFSET: 0x008DDB50/0x1406526A0
-void CGGameUI::Initialize() {
-    g_taintLogCVar = CVar::Register("taintLog", "Whether taint logging is enabled", 0, "0", SetTaintLogCallback, 5, false, NULL, false);
-    g_scriptProfileCVar = CVar::Register("scriptProfile", "Whether or not script profiling is enabled", 0, "0", NULL, 5, false, NULL, false);
-
-    CGGameUI::m_loggingIn = 1;
-    CGGameUI::m_reloadUIRequested = 0;
-    CGGameUI::m_repopTime = 0;
-    CGGameUI::m_deadNoRepopTimer = 0;
-    CGGameUI::m_corpseReclaimDelay = 0;
-    CGGameUI::m_instanceBootTime = 0;
-    CGGameUI::m_instanceLockTime = 0;
-    CGGameUI::m_instanceLockCompletedMask = 0;
-    CGGameUI::m_instanceLockExtending = 0;
-    CGGameUI::m_summonConfirmTime = 0;
-
-    AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_subzoneID);
-
-    if (!area) {
-        area = g_areaTableDB.GetRecord(CGGameUI::m_areaID);
-    }
-
-    CGGameUI::m_areaMountFlags = area ? area->m_mountFlags : -1;
-
-    CRect windowRect = { 0.0f, 0.0f, 0.0f, 0.0f };
-    g_theGxDevicePtr->CapsWindowSizeInScreenCoords(windowRect);
-    CGGameUI::m_screenWidth = 0;
-    CGGameUI::m_screenHeight = 0;
-    CGGameUI::m_aspect = g_theGxDevicePtr->CapsAspectRatio(0);
-    CoordinateSetAspectRatio(CGGameUI::m_aspect);
-
-    CGGameUI::m_simpleTop = new (__FILE__, __LINE__) CSimpleTop();
-    CGGameUI::m_simpleTop->m_mouseButtonCallback = CGGameUI::FilterMouseDown;
-    CGGameUI::m_simpleTop->m_mouseMoveCallback = CGGameUI::FilterMouseMotion;
-    CGGameUI::m_simpleTop->m_displaySizeCallback = CGGameUI::HandleDisplaySizeChanged;
-    CGGameUI::m_simpleTop->m_focusChangedCallback = CGGameUI::HandleFocusChanged;
-    CGGameUI::m_simpleTop->m_allowProtectedActions = 1;
-    CGGameUI::m_simpleTop->m_actionBlockedCallback = CGGameUI::ShowBlockedFrameFeedback;
-
-    CursorInitialize();
-
-    CGInputControl* input = CGInputControl::GetActive();
-    input->m_mouseModeFlags = 3;
-    input->m_forceCursorOn = 0;
-    input->UpdateMouseMode(1);
-
-    FrameScript_Destroy();
-    FrameScript_Initialize(g_scriptProfileCVar->m_intValue);
-    LoadScriptFunctions();
-    FrameScript_CreateEvents(g_scriptEvents, NUM_SCRIPT_EVENTS);
-    CGGameUI::RegisterGameCVars();
-    CGUIBindings::Initialize();
-    CGWorldFrame::RegisterFrames();
-    OsCreateDirectory("Logs", 0);
-
-    CWOWClientStatus status("Logs\\FrameXML.log");
-
-    LoadAddOnEnableState(ClientServices::GetCharacterName());
-
-    MD5_CTX md5;
-    MD5Init(&md5);
-
-    uint8_t signature[16];
-
-    switch (FrameXML_CheckSignature("Interface\\FrameXML\\FrameXML.toc", "Interface\\FrameXML\\Bindings.xml", InterfaceKey, signature)) {
-        case 0:
-            status.Add(STATUS_WARNING, "FrameXML missing signature");
-            ClientPostClose(10);
-            break;
-
-        case 1:
-            status.Add(STATUS_WARNING, "FrameXML has corrupt signature");
-            ClientPostClose(10);
-            break;
-
-        case 2:
-            status.Add(STATUS_WARNING, "FrameXML is modified or corrupt");
-            ClientPostClose(10);
-            break;
-
-        case 3:
-            break;
-
-        default:
-            ClientPostClose(10);
-            break;
-    }
-
-    uint32_t numFiles = 0;
-    void* toc;
-
-    if (SFile::ReadFile(NULL, "Interface\\FrameXML\\FrameXML.toc", &toc, NULL, 1, 1)) {
-        numFiles = FrameXML_GuessNumFiles(static_cast<const char*>(toc));
-        SFile::Unload(toc);
-    }
-
-    FrameXML_RegisterLoadProgressCallback(LoadingScreenXMLCallback, NULL, LoadAddOnFileCount() + numFiles);
-    FrameXML_FreeHashNodes();
-    FrameXML_CreateFrames("Interface\\FrameXML\\FrameXML.toc", NULL, &md5, &status);
-
-    if (SFile::FileExistsEx("Interface\\FrameXML\\Bindings.xml", 1)) {
-        CGUIBindings::s_bindings->Load("Interface\\FrameXML\\Bindings.xml", &md5, &status);
-    }
-
-    uint8_t digest[16];
-    MD5Final(digest, &md5);
-
-#ifndef DISABLE_SIGNATURE_CHECKS
-    if (memcmp(signature, digest, sizeof(digest))) {
-        ClientPostClose(10);
-    }
-
 // OFFSET: 0x008C3FC0/0x140633A90
 int32_t CGGameUI::StartCinematicSound() {
     CinematicCameraRec* record = CGGameUI::m_cinematic.m_camera;
@@ -2301,6 +2189,118 @@ void CGGameUI::SetCursorVoidStorageItem(WOWGUID guid) {
 
     CGGameUI::m_cursorHasAction = 0;
 }
+
+// OFFSET: 0x008DDB50/0x1406526A0
+void CGGameUI::Initialize() {
+    g_taintLogCVar = CVar::Register("taintLog", "Whether taint logging is enabled", 0, "0", SetTaintLogCallback, 5, false, NULL, false);
+    g_scriptProfileCVar = CVar::Register("scriptProfile", "Whether or not script profiling is enabled", 0, "0", NULL, 5, false, NULL, false);
+
+    CGGameUI::m_loggingIn = 1;
+    CGGameUI::m_reloadUIRequested = 0;
+    CGGameUI::m_repopTime = 0;
+    CGGameUI::m_deadNoRepopTimer = 0;
+    CGGameUI::m_corpseReclaimDelay = 0;
+    CGGameUI::m_instanceBootTime = 0;
+    CGGameUI::m_instanceLockTime = 0;
+    CGGameUI::m_instanceLockCompletedMask = 0;
+    CGGameUI::m_instanceLockExtending = 0;
+    CGGameUI::m_summonConfirmTime = 0;
+
+    AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_subzoneID);
+
+    if (!area) {
+        area = g_areaTableDB.GetRecord(CGGameUI::m_areaID);
+    }
+
+    CGGameUI::m_areaMountFlags = area ? area->m_mountFlags : -1;
+
+    CRect windowRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    g_theGxDevicePtr->CapsWindowSizeInScreenCoords(windowRect);
+    CGGameUI::m_screenWidth = 0;
+    CGGameUI::m_screenHeight = 0;
+    CGGameUI::m_aspect = g_theGxDevicePtr->CapsAspectRatio(0);
+    CoordinateSetAspectRatio(CGGameUI::m_aspect);
+
+    CGGameUI::m_simpleTop = new (__FILE__, __LINE__) CSimpleTop();
+    CGGameUI::m_simpleTop->m_mouseButtonCallback = CGGameUI::FilterMouseDown;
+    CGGameUI::m_simpleTop->m_mouseMoveCallback = CGGameUI::FilterMouseMotion;
+    CGGameUI::m_simpleTop->m_displaySizeCallback = CGGameUI::HandleDisplaySizeChanged;
+    CGGameUI::m_simpleTop->m_focusChangedCallback = CGGameUI::HandleFocusChanged;
+    CGGameUI::m_simpleTop->m_allowProtectedActions = 1;
+    CGGameUI::m_simpleTop->m_actionBlockedCallback = CGGameUI::ShowBlockedFrameFeedback;
+
+    CursorInitialize();
+
+    CGInputControl* input = CGInputControl::GetActive();
+    input->m_mouseModeFlags = 3;
+    input->m_forceCursorOn = 0;
+    input->UpdateMouseMode(1);
+
+    FrameScript_Destroy();
+    FrameScript_Initialize(g_scriptProfileCVar->m_intValue);
+    LoadScriptFunctions();
+    FrameScript_CreateEvents(g_scriptEvents, NUM_SCRIPT_EVENTS);
+    CGGameUI::RegisterGameCVars();
+    CGUIBindings::Initialize();
+    CGWorldFrame::RegisterFrames();
+    OsCreateDirectory("Logs", 0);
+
+    CWOWClientStatus status("Logs\\FrameXML.log");
+
+    LoadAddOnEnableState(ClientServices::GetCharacterName());
+
+    MD5_CTX md5;
+    MD5Init(&md5);
+
+    uint8_t signature[16];
+
+    switch (FrameXML_CheckSignature("Interface\\FrameXML\\FrameXML.toc", "Interface\\FrameXML\\Bindings.xml", InterfaceKey, signature)) {
+        case 0:
+            status.Add(STATUS_WARNING, "FrameXML missing signature");
+            ClientPostClose(10);
+            break;
+
+        case 1:
+            status.Add(STATUS_WARNING, "FrameXML has corrupt signature");
+            ClientPostClose(10);
+            break;
+
+        case 2:
+            status.Add(STATUS_WARNING, "FrameXML is modified or corrupt");
+            ClientPostClose(10);
+            break;
+
+        case 3:
+            break;
+
+        default:
+            ClientPostClose(10);
+            break;
+    }
+
+    uint32_t numFiles = 0;
+    void* toc;
+
+    if (SFile::ReadFile(NULL, "Interface\\FrameXML\\FrameXML.toc", &toc, NULL, 1, 1)) {
+        numFiles = FrameXML_GuessNumFiles(static_cast<const char*>(toc));
+        SFile::Unload(toc);
+    }
+
+    FrameXML_RegisterLoadProgressCallback(LoadingScreenXMLCallback, NULL, LoadAddOnFileCount() + numFiles);
+    FrameXML_FreeHashNodes();
+    FrameXML_CreateFrames("Interface\\FrameXML\\FrameXML.toc", NULL, &md5, &status);
+
+    if (SFile::FileExistsEx("Interface\\FrameXML\\Bindings.xml", 1)) {
+        CGUIBindings::s_bindings->Load("Interface\\FrameXML\\Bindings.xml", &md5, &status);
+    }
+
+    uint8_t digest[16];
+    MD5Final(digest, &md5);
+
+#ifndef DISABLE_SIGNATURE_CHECKS
+    if (memcmp(signature, digest, sizeof(digest))) {
+        ClientPostClose(10);
+    }
 #endif
 
     CGGameUI::m_UISimpleParent = static_cast<CSimpleFrame*>(CScriptObject::GetScriptObjectByName("UIParent", CSimpleFrame::GetObjectType()));
