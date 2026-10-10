@@ -340,7 +340,7 @@ static int32_t Script_SetLootPortrait(lua_State* L) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGLootInfo::m_lootObj, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (unit) {
-        RenderPortraitTexture(texture, unit);
+        SetPortraitTexture(texture, unit);
         lua_pushnumber(L, 1.0);
     } else {
         texture->SetTexture(NULL);

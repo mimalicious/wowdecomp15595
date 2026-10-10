@@ -7,27 +7,31 @@
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-class CGPartyPetState;
 class CGUnit_C;
+class CM2Model;
+class CM2Scene;
 class CSimpleTexture;
 class CTexture;
 
-struct PORTRAITCACHE {
+struct PortraitData {
+    /* 0000 */ CTexture* m_texture;
+    /* 0004 */ TSGrowableArray<CImVector> m_texels;
+};
+
+struct PortraitBase {
     /* 0000 */ uint8_t m_dirty;
     /* 0001 */ uint8_t m_pad[3];
-    /* 0004 */ CTexture* m_texture;
-    /* 0008 */ TSGrowableArray<CImVector> m_texels;
-    /* 0018 */ PORTRAITCACHE* m_prev;
-    /* 001C */ PORTRAITCACHE* m_next;
+    /* 0004 */ PortraitData m_data;
+    /* 0018 */ PortraitBase* m_prev;
+    /* 001C */ PortraitBase* m_next;
 };
 
 struct PLAYERPORTRAIT : public TSHashObject<PLAYERPORTRAIT, CHashKeyGUID> {
-    /* 0020 */ PORTRAITCACHE m_cache;
+    /* 0020 */ PortraitBase m_cache;
 };
 
-struct ITEMPORTRAIT : public TSHashObject<ITEMPORTRAIT, HASHKEY_STRI> {
-    /* 0018 */ CTexture* m_texture;
-    /* 001C */ TSGrowableArray<CImVector> m_texels;
+struct ITEMPORTRAIT : public TSHashObject<ITEMPORTRAIT, HASHKEY_STR> {
+    /* 0018 */ PortraitData m_data;
 };
 
 struct PORTRAITREQUEST : public TSLinkedNode<PORTRAITREQUEST> {
@@ -35,8 +39,8 @@ struct PORTRAITREQUEST : public TSLinkedNode<PORTRAITREQUEST> {
     /* 0010 */ uint32_t m_flags;
 };
 
-struct UNITPORTRAIT : public TSHashObject<UNITPORTRAIT, HASHKEY_DWORD> {
-    /* 0018 */ PORTRAITCACHE m_cache;
+struct UNITPORTRAIT : public TSHashObject<UNITPORTRAIT, HASHKEY_NONE> {
+    /* 0018 */ PortraitBase m_cache;
 };
 
 extern const char* s_sexNames[3];
@@ -47,10 +51,13 @@ void __fastcall UpdateAllPortraits();
 void PortraitInitialize();
 void PortraitShutdown();
 void UpdatePendingPortraits();
+void UpdateModelForUI(const WOWGUID& guid, uint32_t flags);
+bool RenderPortraitTexture(CSimpleTexture* texture, CM2Model* model, CM2Scene* scene, PortraitData* data);
 void SetPortraitTexture(CSimpleTexture* texture, const char* fileName);
 void SetPortraitTexture(CSimpleTexture* texture, uint32_t race, uint32_t sex, WOWGUID guid);
-void SetPortraitTexture(CSimpleTexture* texture, uint32_t displayId, CGPartyPetState* petState);
-void RenderPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit);
+void SetPortraitTexture(CSimpleTexture* texture, int32_t displayId, const WOWGUID& petGuid);
+void SetPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit);
+void SetPortraitTextureFromDisplayID(CSimpleTexture* texture, int32_t displayId);
 
 int32_t ReadyModelForUI(CGUnit_C* unit, uint32_t flags);
 

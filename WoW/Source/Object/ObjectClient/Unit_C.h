@@ -35,6 +35,7 @@ namespace Liquid {
     struct DisplMapPerturbation;
 }
 class CM2Model;
+class CM2Scene;
 class CMovementShared;
 class CCharacterComponent;
 class CEffect;
@@ -646,6 +647,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void StopMountTransition();
     const char* GetDisplayBakeName() const;
     const char* GetPortraitTextureName() const;
+    CM2Model* DuplicateModel(CM2Scene* scene);
     void SetAnimEventPosition(const C3Vector* position);
     void SetCastingSpell(const PendingSpellCast* cast);
     void DestroyLiquidPerturbator();

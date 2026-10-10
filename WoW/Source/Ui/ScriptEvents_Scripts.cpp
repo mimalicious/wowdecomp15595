@@ -3021,7 +3021,7 @@ static int32_t Script_SetPortraitTexture(lua_State* L) {
 
     if (object) {
         if (object->m_obj->m_type & TYPEMASK_UNIT) {
-            RenderPortraitTexture(texture, static_cast<CGUnit_C*>(object));
+            SetPortraitTexture(texture, static_cast<CGUnit_C*>(object));
             lua_pushboolean(L, 1);
             return 1;
         }
@@ -3051,7 +3051,7 @@ static int32_t Script_SetPortraitTexture(lua_State* L) {
         CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid);
 
         if (petState) {
-            SetPortraitTexture(texture, petState->m_displayId, petState);
+            SetPortraitTexture(texture, petState->m_displayId, petState->m_guid);
             lua_pushboolean(L, 1);
             return 1;
         }

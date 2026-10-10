@@ -510,6 +510,11 @@ int32_t GxFrameBufferFinalize(CGxFrameBuffer* frameBuffer) {
     return g_theGxDevicePtr->FrameBufferFinalize(frameBuffer);
 }
 
+// OFFSET: 0x00481D40
+int32_t GxFrameBufferAttach(CGxFrameBuffer* frameBuffer, EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
+    return g_theGxDevicePtr->FrameBufferAttach(frameBuffer, buffer, texture, plane);
+}
+
 // PROVEN: 583c8da5 IDENTICAL/NONE
 // OFFSET: 0x004E0600
 void GxXformPush(EGxXform xf) {

@@ -23739,3 +23739,44 @@ bool CGUnit_C::HasFlightFormAura() const {
 
     return false;
 }
+
+// OFFSET: 0x005AE2C0
+CM2Model* CGUnit_C::DuplicateModel(CM2Scene* scene) {
+    if (!scene) {
+        return NULL;
+    }
+
+    CM2Model* model = scene->DuplicateModel(this->m_worldModel, 0);
+
+    if (model) {
+        CUnitDisplayTransition_C* transition = this->m_displayTransition;
+
+        if (transition && transition->m_model && transition->m_model->m_attachParent == this->m_worldModel) {
+            CM2Model* child = model->m_attachList;
+
+            while (child && child->m_attachmentId != static_cast<uint32_t>(transition->m_attachment)) {
+                child = child->m_attachNext;
+            }
+
+            while (child) {
+                CM2Model* next = child->m_attachNext;
+
+                while (next && next->m_attachmentId != static_cast<uint32_t>(transition->m_attachment)) {
+                    next = next->m_attachNext;
+                }
+
+                if (child->m_shared->m_fileNameWithoutPath == transition->m_model->m_shared->m_fileNameWithoutPath && child->m_shared->m_fileName == transition->m_model->m_shared->m_fileName) {
+                    child->DetachFromParent();
+                }
+
+                child = next;
+            }
+        }
+    }
+
+    if (this->m_characterComponent) {
+        this->m_characterComponent->RelinkShoulderAnimations(model);
+    }
+
+    return model;
+}

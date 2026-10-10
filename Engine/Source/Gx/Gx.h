@@ -76,6 +76,7 @@ void GxPoolDestroy(CGxPool* pool);
 void GxRenderTargetSet(EGxBuffer buffer, CGxTex* texture, uint32_t plane);
 void GxFrameBufferSet(CGxFrameBuffer* frameBuffer);
 int32_t GxFrameBufferFinalize(CGxFrameBuffer* frameBuffer);
+int32_t GxFrameBufferAttach(CGxFrameBuffer* frameBuffer, EGxBuffer buffer, CGxTex* texture, uint32_t plane);
 CGxFrameBuffer* GxFrameBufferCreate(CGxTex* depthTex, CGxTex* colorTex);
 void GxBufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset);
 CGxBuf* GxBufStream(EGxPoolTarget target, uint32_t itemSize, uint32_t itemCount);
