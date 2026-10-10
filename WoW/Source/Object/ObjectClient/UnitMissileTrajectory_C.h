@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Base/ObjectAlloc.h"
 #include "WoW/Source/Object/WGUID.h"
 
 #include "Engine/Source/Tempest/C2Vector.h"
@@ -13,16 +14,9 @@ class CGUnit_C;
 class SpellMissileRec;
 class CMissileCollision;
 
-class CMissileCollisionHeap {
-    public:
-    /* 0000 */ uint32_t m_heapId;
-
-    CMissileCollision* New();
-};
-
 class CMissileCollision {
     public:
-    static CMissileCollisionHeap* s_pool;
+    static TSObjectAllocPool<CMissileCollision>* s_pool;
     static CMissileCollision* s_head;
     static CMissileCollision* s_tail;
 
@@ -32,7 +26,7 @@ class CMissileCollision {
     static void MaybeAddUnitToSystem(CGUnit_C* unit);
     static int32_t MaybeAddUnitToWorkingList(WOWGUID guid, void* param);
 
-    /* 0000 */ uint32_t m_memHandle;
+    /* 0000 */ uint32_t m_handle;
     /* 0004 */ CGUnit_C* m_units [16];
     /* 0044 */ C2Vector m_start;
     /* 004C */ C2Vector m_end;

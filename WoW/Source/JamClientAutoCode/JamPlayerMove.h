@@ -596,4 +596,22 @@ class PlayerSetActiveMover : public JamClientMessage {
     ~PlayerSetActiveMover();
 };
 
+class PlayerMoveUpdateMissileTrajectory : public JamClientMessage {
+    public:
+    /* 0010 */ WOWGUID m_guid;
+    /* 0018 */ bool m_hasStatus;
+    /* 0020 */ CMovementStatus m_status;
+    /* 00A8 */ C3Vector m_impactPos;
+    /* 00B4 */ uint32_t m_spellID;
+    /* 00B8 */ uint16_t m_moveMsgID;
+    /* 00BC */ float m_pitch;
+    /* 00C0 */ float m_speed;
+    /* 00C4 */ C3Vector m_firePos;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerMoveUpdateMissileTrajectory();
+    ~PlayerMoveUpdateMissileTrajectory();
+};
+
 #endif

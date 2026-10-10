@@ -8311,7 +8311,7 @@ int32_t Spell_C_PrepareMissileTrajectoryCast(CGUnit_C* caster, PendingSpellCast*
     }
 
     if (cast->m_trajectoryLaunched) {
-        caster->RecordMissileTrajectoryUpdate(cast->m_data.m_castCount, &impact, *pitch, *speed, arrival);
+        caster->CorrectTrajectoryOfPendingMissiles(cast->m_data.m_castCount, impact, *pitch, *speed, arrival);
     }
 
     return 1;

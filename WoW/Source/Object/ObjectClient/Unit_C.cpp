@@ -274,10 +274,10 @@ float CGUnit_C::s_trackingFacing;
 // STATIC: #0x00CA1208
 uint32_t CGUnit_C::s_namePlateFlags;
 
-// STATIC: #0x00CA0AB0
+// STATIC: 0x00DD57C8
 uint32_t CGUnit_C::s_missileTrajectoryTargetingSpell;
 
-// STATIC: #0x00CA0AB4
+// STATIC: 0x00DD57CC
 uint32_t CGUnit_C::s_pitchMissileTrajectoryTargetingNextFrame;
 
 // STATIC: #0x00CA1264

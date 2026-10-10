@@ -9792,3 +9792,243 @@ void PlayerSetActiveMover::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(guid[7] ^ 1));
     }
 }
+
+// OFFSET: 0x00683780
+PlayerMoveUpdateMissileTrajectory::PlayerMoveUpdateMissileTrajectory() : m_hasStatus(false) {
+}
+
+// OFFSET: 0x00684840
+PlayerMoveUpdateMissileTrajectory::~PlayerMoveUpdateMissileTrajectory() {
+}
+
+// OFFSET: 0x0067AB00
+void PlayerMoveUpdateMissileTrajectory::Put(CDataStore* msg) {
+    const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_guid);
+    const uint8_t* moverGuid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
+    const uint8_t* transportGuid = reinterpret_cast<const uint8_t*>(&this->m_status.m_transport.m_guid);
+    msg->Put(static_cast<uint32_t>(0x781E));
+    msg->Put(this->m_firePos.z);
+    msg->Put(this->m_firePos.x);
+    msg->Put(this->m_pitch);
+    msg->Put(this->m_impactPos.x);
+    msg->Put(this->m_firePos.y);
+    msg->Put(this->m_speed);
+    msg->Put(this->m_impactPos.y);
+    msg->Put(this->m_moveMsgID);
+    msg->Put(this->m_spellID);
+    msg->Put(this->m_impactPos.z);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(guid[5] != 0);
+    bits.WriteBit(guid[6] != 0);
+    bits.WriteBit(guid[0] != 0);
+    bits.WriteBit(guid[7] != 0);
+    bits.WriteBit(guid[1] != 0);
+    bits.WriteBit(guid[3] != 0);
+    bits.WriteBit(guid[2] != 0);
+    bits.WriteBit(guid[4] != 0);
+    bits.WriteBit(this->m_hasStatus);
+
+    if (this->m_hasStatus) {
+        bits.WriteBit(moverGuid[2] != 0);
+        bits.WriteBit(this->m_status.m_heightChangeFailed);
+        bits.WriteBit(this->m_status.m_moveFlags == 0);
+        bits.WriteBit(this->m_status.m_hasSpline);
+        bits.WriteBit(moverGuid[4] != 0);
+
+        if (this->m_status.m_moveFlags) {
+            bits.WriteBits<30>(this->m_status.m_moveFlags);
+        }
+
+        bits.WriteBit(moverGuid[3] != 0);
+        bits.WriteBit(this->m_status.m_pitch == 0.0f);
+        bits.WriteBit(this->m_status.m_moveExtraFlags == 0);
+        bits.WriteBit(this->m_status.m_hasTransport);
+        bits.WriteBit(moverGuid[7] != 0);
+
+        if (this->m_status.m_hasTransport) {
+            bits.WriteBit(transportGuid[0] != 0);
+            bits.WriteBit(transportGuid[7] != 0);
+            bits.WriteBit(transportGuid[2] != 0);
+            bits.WriteBit(transportGuid[4] != 0);
+            bits.WriteBit(this->m_status.m_transport.m_hasVehicleId);
+            bits.WriteBit(transportGuid[5] != 0);
+            bits.WriteBit(transportGuid[3] != 0);
+            bits.WriteBit(transportGuid[6] != 0);
+            bits.WriteBit(this->m_status.m_transport.m_hasTime2);
+            bits.WriteBit(transportGuid[1] != 0);
+        }
+
+        bits.WriteBit(moverGuid[6] != 0);
+        bits.WriteBit(this->m_status.m_facing == 0.0f);
+        bits.WriteBit(this->m_status.m_gameTime == 0);
+        bits.WriteBit(moverGuid[5] != 0);
+        bits.WriteBit(this->m_status.m_splineElevation == 0.0f);
+        bits.WriteBit(moverGuid[1] != 0);
+        bits.WriteBit(this->m_status.m_hasFall);
+        bits.WriteBit(moverGuid[0] != 0);
+
+        if (this->m_status.m_hasFall) {
+            bits.WriteBit(this->m_status.m_fall.m_hasDirection);
+        }
+
+        if (this->m_status.m_moveExtraFlags) {
+            bits.WriteBits<12>(this->m_status.m_moveExtraFlags);
+        }
+    }
+
+    bits.Flush();
+
+    if (guid[2]) {
+        msg->Put(static_cast<uint8_t>(guid[2] ^ 1));
+    }
+
+    if (guid[1]) {
+        msg->Put(static_cast<uint8_t>(guid[1] ^ 1));
+    }
+
+    if (guid[3]) {
+        msg->Put(static_cast<uint8_t>(guid[3] ^ 1));
+    }
+
+    if (guid[7]) {
+        msg->Put(static_cast<uint8_t>(guid[7] ^ 1));
+    }
+
+    if (guid[6]) {
+        msg->Put(static_cast<uint8_t>(guid[6] ^ 1));
+    }
+
+    if (guid[4]) {
+        msg->Put(static_cast<uint8_t>(guid[4] ^ 1));
+    }
+
+    if (guid[0]) {
+        msg->Put(static_cast<uint8_t>(guid[0] ^ 1));
+    }
+
+    if (guid[5]) {
+        msg->Put(static_cast<uint8_t>(guid[5] ^ 1));
+    }
+
+    if (!this->m_hasStatus) {
+        return;
+    }
+
+    if (this->m_status.m_hasFall) {
+        if (this->m_status.m_fall.m_hasDirection) {
+            msg->Put(this->m_status.m_fall.m_direction.m_sinAngle);
+            msg->Put(this->m_status.m_fall.m_direction.m_cosAngle);
+            msg->Put(this->m_status.m_fall.m_direction.m_xySpeed);
+        }
+
+        msg->Put(this->m_status.m_fall.m_zSpeed);
+        msg->Put(this->m_status.m_fall.m_time);
+    }
+
+    if (this->m_status.m_facing != 0.0f) {
+        msg->Put(this->m_status.m_facing);
+    }
+
+    if (this->m_status.m_hasTransport) {
+        msg->Put(this->m_status.m_transport.m_position.z);
+
+        if (transportGuid[3]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[3] ^ 1));
+        }
+
+        if (transportGuid[7]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[7] ^ 1));
+        }
+
+        msg->Put(this->m_status.m_transport.m_position.x);
+        msg->Put(this->m_status.m_transport.m_facing);
+
+        if (this->m_status.m_transport.m_hasTime2) {
+            msg->Put(this->m_status.m_transport.m_time2);
+        }
+
+        if (transportGuid[2]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[2] ^ 1));
+        }
+
+        msg->Put(this->m_status.m_transport.m_time);
+
+        if (transportGuid[0]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[0] ^ 1));
+        }
+
+        msg->Put(this->m_status.m_transport.m_position.y);
+
+        if (this->m_status.m_transport.m_hasVehicleId) {
+            msg->Put(this->m_status.m_transport.m_vehicleId);
+        }
+
+        if (transportGuid[4]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[4] ^ 1));
+        }
+
+        if (transportGuid[6]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[6] ^ 1));
+        }
+
+        if (transportGuid[1]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[1] ^ 1));
+        }
+
+        msg->Put(this->m_status.m_transport.m_seat);
+
+        if (transportGuid[5]) {
+            msg->Put(static_cast<uint8_t>(transportGuid[5] ^ 1));
+        }
+    }
+
+    if (this->m_status.m_splineElevation != 0.0f) {
+        msg->Put(this->m_status.m_splineElevation);
+    }
+
+    if (moverGuid[4]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[4] ^ 1));
+    }
+
+    if (this->m_status.m_pitch != 0.0f) {
+        msg->Put(this->m_status.m_pitch);
+    }
+
+    if (moverGuid[7]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[7] ^ 1));
+    }
+
+    if (moverGuid[2]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[2] ^ 1));
+    }
+
+    if (this->m_status.m_gameTime) {
+        msg->Put(this->m_status.m_gameTime);
+    }
+
+    msg->Put(this->m_status.m_position.x);
+
+    if (moverGuid[5]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[5] ^ 1));
+    }
+
+    if (moverGuid[3]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[3] ^ 1));
+    }
+
+    if (moverGuid[1]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[1] ^ 1));
+    }
+
+    if (moverGuid[0]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[0] ^ 1));
+    }
+
+    msg->Put(this->m_status.m_position.y);
+    msg->Put(this->m_status.m_position.z);
+
+    if (moverGuid[6]) {
+        msg->Put(static_cast<uint8_t>(moverGuid[6] ^ 1));
+    }
+}

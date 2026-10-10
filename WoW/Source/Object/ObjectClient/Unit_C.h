@@ -466,7 +466,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     /* 1038 */ uint32_t m_missileTrajectoryStart;
     /* 103C */ uint32_t m_missileTrajectoryEnd;
     /* 1040 */ uint8_t m_missileTrajectoryReleased;
-    /* 1041 */ uint8_t unk_1041 [3];
+    /* 1041 */ uint8_t m_missileTrajectoryCastCount;
+    /* 1042 */ uint8_t unk_1042 [2];
     /* 1044 */ uint32_t m_wheelMask;
     /* 1048 */ float m_wheelAngles [8];
     /* 1068 */ uint32_t m_lastWheelTime;
@@ -632,7 +633,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SendFinalMissileTrajectoryUpdate();
     int32_t ComputeMissileTrajectory(const SpellRec* spell, float* pitch, float* speed, C3Vector* launch, C3Vector* impact, float* time, C3Vector* points, uint32_t* count, int32_t preview);
     void GetMissileCollisionSphere(CAaSphere* sphere, const C2Vector& direction) const;
-    void RecordMissileTrajectoryUpdate(uint8_t castId, const C3Vector* impact, float pitch, float speed, float time);
+    void CorrectTrajectoryOfPendingMissiles(uint8_t castCount, const C3Vector& impact, float pitch, float speed, float time);
     int32_t OverrideMissileFirePos(C3Vector* position, const SpellRec* spell);
     bool IsLocalClientControlled() const;
     void FreeComponent();
@@ -1176,7 +1177,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void OnMovementInitiated(bool clearTracking, bool keepLoot);
     void SendMovementHeartbeat();
     static void SetActiveMover(uint64_t guid);
-    static void StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec* vehicleRec);
     static void StartMissileTrajectoryTargeting(const VehicleRec* vehicleRec);
     int32_t VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t transport, uint8_t seat);
     void ClearAttackRound();
@@ -1384,7 +1384,6 @@ int32_t CreatureSoundDataGetFidgetSound(const CreatureSoundDataRec* rec, uint32_
 float CreatureSoundDataGetFidgetDelayMin(const CreatureSoundDataRec* rec);
 float CreatureSoundDataGetFidgetDelayMax(const CreatureSoundDataRec* rec);
 
-int32_t MissileTrajectoryObjectCallback(void* param, uint32_t a2, uint64_t a3, uintptr_t a4);
 
 bool ClientPlaySpellVisualHandler(ClientPlaySpellVisual* msg);
 bool ClientSetPlayHoverAnimHandler(ClientSetPlayHoverAnim* msg);

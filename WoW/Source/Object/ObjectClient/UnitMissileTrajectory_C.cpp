@@ -44,65 +44,70 @@
 #include "WoW/Source/Net/NetClient/NetClient.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/Ui/PetInfo.h"
+#include "WoW/Source/Object/ObjectClient/Movement_C.h"
+#include "Engine/Source/ShaderEffect/DefaultShaders.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
+#include "WoW/Source/StaticSingleton.h"
+#include "WoW/Source/JamClientAutoCode/JamPlayerMove.h"
 
 struct MissileUnitRank {
     CGUnit_C* m_unit;
     float m_rank;
 };
 
-// STATIC: #0x00CA0A98
-CMapEntity* CGUnit_C::s_trajectoryWorldObjects[2];
-
-// STATIC: #0x00CA0AA0
-CM2Model* CGUnit_C::s_trajectoryModels[2];
-
-// STATIC: #0x00CA0AA8
-static WOWGUID s_trajectoryTargetGuid;
-
-// STATIC: #0x00CA0AB8
-static float s_trajectoryAlpha;
-
-// STATIC: #0x00CA0ABC
-static uint32_t s_trajectoryStartTime;
-
-// STATIC: #0x00CA0AC0
-static uint32_t s_trajectoryFadeStart;
-
-// STATIC: #0x00CA0AC4
-static int32_t s_trajectoryMode;
-
-// STATIC: #0x00CA0AC8
-C3Vector* CGUnit_C::s_trajectoryPoints;
-
-// STATIC: #0x00CA0ACC
-static uint32_t s_trajectoryPointCount;
-
-// STATIC: #0x00CA0AD0
-static CTexture* s_trajectoryTexture0;
-
-// STATIC: #0x00CA0AD4
-static CTexture* s_trajectoryTexture1;
-
-// STATIC: #0x00CA0AEC
-static C3Vector s_trajectoryLaunchPosition;
-
-// STATIC: #0x00CA0698
+// STATIC: 0x00DD53B0
 static MissileUnitRank s_unitRanks[128];
 
-// STATIC: #0x00CA0AE4
-static int32_t s_unitRankCount;
+// STATIC: 0x00DD57B0
+uintptr_t CGUnit_C::s_trajectoryWorldObjects[2];
 
-// STATIC: #0x00CA0AE8
-static CGUnit_C* s_unitRankExclude;
+// STATIC: 0x00DD57B8
+CM2Model* CGUnit_C::s_trajectoryModels[2];
 
-// STATIC: #0x00CA0AD8
-CMissileCollisionHeap* CMissileCollision::s_pool;
+// STATIC: 0x00DD57C0
+static WOWGUID s_trajectoryTargetGuid;
 
-// STATIC: #0x00CA0ADC
+// STATIC: 0x00DD57D0
+static float s_trajectoryAlpha;
+
+// STATIC: 0x00DD57D4
+static uint32_t s_trajectoryStartTime;
+
+// STATIC: 0x00DD57D8
+static uint32_t s_trajectoryFadeStart;
+
+// STATIC: 0x00DD57DC
+static int32_t s_trajectoryMode;
+
+// STATIC: 0x00DD57E0
+C3Vector* CGUnit_C::s_trajectoryPoints;
+
+// STATIC: 0x00DD57E4
+static uint32_t s_trajectoryPointCount;
+
+// STATIC: 0x00DD57E8
+static CTexture* s_trajectoryTexture0;
+
+// STATIC: 0x00DD57EC
+static CTexture* s_trajectoryTexture1;
+
+// STATIC: 0x00DD57F0
+TSObjectAllocPool<CMissileCollision>* CMissileCollision::s_pool;
+
+// STATIC: 0x00DD57F4
 CMissileCollision* CMissileCollision::s_head;
 
-// STATIC: #0x00CA0AE0
+// STATIC: 0x00DD57F8
 CMissileCollision* CMissileCollision::s_tail;
+
+// STATIC: 0x00DD57FC
+static int32_t s_unitRankCount;
+
+// STATIC: 0x00DD5800
+static CGUnit_C* s_unitRankExclude;
+
+// STATIC: 0x00DD5804
+static C3Vector s_trajectoryLaunchPosition;
 
 // INLINED
 inline CMissileCollision::CMissileCollision() {
@@ -116,7 +121,7 @@ inline CMissileCollision::CMissileCollision() {
     this->m_perp.y = 0.0f;
 }
 
-// OFFSET: #0x006FC0F0
+// OFFSET: 0x0057D060
 void CMissileCollision::RemoveUnitFromSystem(CGUnit_C* unit) {
     for (CMissileCollision* collision = CMissileCollision::s_head; collision; collision = collision->m_next) {
         uint32_t i = 0;
@@ -136,51 +141,25 @@ void CMissileCollision::RemoveUnitFromSystem(CGUnit_C* unit) {
     }
 }
 
-// INLINED
-inline void CMissileCollision::InitSystem() {
-    delete CMissileCollision::s_pool;
-
-    CMissileCollisionHeap* pool = static_cast<CMissileCollisionHeap*>(SMemAlloc(sizeof(CMissileCollisionHeap), __FILE__, __LINE__, 0));
-
-    if (pool) {
-        pool->m_heapId = ObjectAllocAddHeap(sizeof(CMissileCollision), 8, "Missile Collision", true);
-        CMissileCollision::s_tail = NULL;
-        CMissileCollision::s_head = NULL;
-        CMissileCollision::s_pool = pool;
-    } else {
-        CMissileCollision::s_pool = NULL;
-        CMissileCollision::s_tail = NULL;
-        CMissileCollision::s_head = NULL;
-    }
-}
-
-// OFFSET: #0x006FC770
-CMissileCollision* CMissileCollisionHeap::New() {
-    uint32_t memHandle;
-    void* memory = NULL;
-
-    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false, __FILE__, __LINE__)) {
-        return NULL;
-    }
-
-    CMissileCollision* collision = memory ? new (memory) CMissileCollision() : NULL;
-    collision->m_memHandle = memHandle;
-
-    return collision;
-}
-
-// OFFSET: #0x006FC8E0
+// OFFSET: 0x0057FD80
 void CGUnit_C::InitMissileTrajectorySystem() {
     C3Vector* points = static_cast<C3Vector*>(SMemAlloc(2400, __FILE__, __LINE__, 0));
     CGUnit_C::s_trajectoryModels[0] = NULL;
-    CGUnit_C::s_trajectoryWorldObjects[0] = NULL;
+    CGUnit_C::s_trajectoryWorldObjects[0] = 0;
     CGUnit_C::s_trajectoryModels[1] = NULL;
-    CGUnit_C::s_trajectoryWorldObjects[1] = NULL;
+    CGUnit_C::s_trajectoryWorldObjects[1] = 0;
     CGUnit_C::s_trajectoryPoints = points;
-    CMissileCollision::InitSystem();
+
+    if (CMissileCollision::s_pool) {
+        delete CMissileCollision::s_pool;
+    }
+
+    CMissileCollision::s_pool = new (__FILE__, __LINE__) TSObjectAllocPool<CMissileCollision>("Missile Collision", 8);
+    CMissileCollision::s_tail = NULL;
+    CMissileCollision::s_head = NULL;
 }
 
-// OFFSET: #0x006FC950
+// OFFSET: 0x0057F900/0x1401E6430
 void CMissileCollision::Free() {
     if (this == CMissileCollision::s_head) {
         CMissileCollision::s_head = this->m_next;
@@ -199,12 +178,12 @@ void CMissileCollision::Free() {
         this->m_next->m_prev = this->m_prev;
     }
 
-    ObjectFree(CMissileCollision::s_pool->m_heapId, this->m_memHandle, this, __FILE__, __LINE__);
+    CMissileCollision::s_pool->Delete(this);
 }
 
-// OFFSET: #0x006FC920
+// OFFSET: 0x0057D9C0
 CMissileCollision* CMissileCollision::Alloc() {
-    CMissileCollision* collision = CMissileCollision::s_pool->New();
+    CMissileCollision* collision = CMissileCollision::s_pool->New("", 0);
     CMissileCollision* head = CMissileCollision::s_head;
     collision->m_prev = NULL;
     CMissileCollision::s_head = collision;
@@ -241,7 +220,7 @@ void CMissileCollision::MaybeAddUnitToSystem(CGUnit_C* unit) {
     }
 }
 
-// OFFSET: #0x006FBF00
+// OFFSET: 0x0057CD00/0x1403FDAC0
 void CGUnit_C::StopMissileTrajectoryTargeting() {
     if (s_trajectoryTexture0) {
         TextureRelease(s_trajectoryTexture0);
@@ -261,56 +240,54 @@ void CGUnit_C::StopMissileTrajectoryTargeting() {
 
         if (CGUnit_C::s_trajectoryWorldObjects[i]) {
             World::ObjectDestroy(CGUnit_C::s_trajectoryWorldObjects[i]);
-            CGUnit_C::s_trajectoryWorldObjects[i] = NULL;
+            CGUnit_C::s_trajectoryWorldObjects[i] = 0;
         }
     }
 
     s_trajectoryTargetGuid = WOWGUID();
 }
 
-// OFFSET: #0x006FE7E0
+// OFFSET: 0x0057F980
 void CGUnit_C::UpdateMissileTrajectory() {
     if (!this->m_missileTrajectoryCastId || !this->m_missileTrajectoryStart || this->m_missileTrajectoryReleased) {
         return;
     }
 
-    int32_t spellId = this->m_missileTrajectorySpell;
-
-    if (static_cast<int32_t>(FrameTime::s_curTimeMs - this->m_missileTrajectoryEnd - this->m_missileTrajectoryCastId) < 0) {
+    if (static_cast<int32_t>(FrameTime::GetCurTimeMs() - (this->m_missileTrajectoryCastId + this->m_missileTrajectoryEnd)) < 0) {
         return;
     }
 
-    SpellRec spell;
+    const SpellRec* spell = g_spellDB.GetRecord(this->m_missileTrajectorySpell);
 
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
+    if (!spell) {
         return;
     }
 
     SpellVisualRec visualRec;
-    const SpellVisualRec* visual = this->GetAppropriateSpellVisual(&spell, visualRec, 0, 0);
-    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual ? visual->m_castKit : 0);
+    const SpellVisualRec* visual = this->GetAppropriateSpellVisual(spell, visualRec, 0, 0);
+    const SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual ? visual->m_castKit : 0);
     WOWGUID guid = this->m_obj->m_guid;
     PendingSpellCast* cast = GetPendingSpellCast(this->m_castCount, this->m_castSpellId, guid);
 
-    if (cast && !cast->unk_0139 && visual && visual->m_hasMissile && kit && kit->m_animID > 0 && !(visual->m_flags & 0x4)) {
+    if (cast && !cast->m_trajectoryLaunched && visual && visual->m_hasMissile && kit && (kit->m_startAnimID > 0 || kit->m_animID > 0) && !(visual->m_flags & 0x4)) {
         cast->m_data.m_targetFlags |= 0x40;
-        cast->m_data.m_elevation = 0.0f;
         cast->m_data.m_destPos = C3Vector(0.0f, 0.0f, 0.0f);
-        cast->m_data.unk_0120 = 1.0f;
-        TSStackArray<CGUnit_C*> targets(static_cast<CGUnit_C**>(alloca(0)), 0, 0);
-        Spell_C_PlayMissileTrajectoryCastVisuals(this, cast, &spell, visual, kit, &targets, 1.0f);
+        cast->m_data.m_elevation = 0.0f;
+        cast->m_data.m_speed = 1.0f;
+        TSStackArray<CGUnit_C*> targets(static_cast<CGUnit_C**>(alloca(sizeof(CGUnit_C*))), 0, 0);
+        Spell_C_PlayMissileTrajectoryCastVisuals(this, cast, spell, visual, kit, &targets, 1.0f);
         this->m_missileTrajectoryReleased = cast->m_data.m_castCount;
-        cast->unk_0139 = 1;
+        cast->m_trajectoryLaunched = 1;
     } else {
         this->SendFinalMissileTrajectoryUpdate();
     }
 }
 
-// OFFSET: #0x006FDA20
+// OFFSET: 0x0057EBC0
 void CGUnit_C::UpdateMissileTrajectoryTargeting() {
-    s_trajectoryAlpha = 0.0f;
     uint32_t pitchNextFrame = CGUnit_C::s_pitchMissileTrajectoryTargetingNextFrame;
     CGUnit_C::s_pitchMissileTrajectoryTargetingNextFrame = 0;
+    s_trajectoryAlpha = 0.0f;
 
     if (!s_trajectoryTargetGuid) {
         return;
@@ -329,21 +306,18 @@ void CGUnit_C::UpdateMissileTrajectoryTargeting() {
         return;
     }
 
+    int32_t castSpell = unit->m_castSpellId;
     int32_t spellId = 0;
-    bool hasMissile = false;
-    SpellRec spell;
-    int32_t castSpell;
+    int32_t hasMissile = 0;
 
-    if (unit->m_castSpellId) {
-        castSpell = unit->m_castSpellId;
-    } else if (Spell_C_GetDelayedTrajectoryCast()) {
-        castSpell = Spell_C_GetDelayedTrajectoryCast()->m_data.m_spellId;
-    } else {
-        castSpell = 0;
+    if (!castSpell) {
+        castSpell = Spell_C_GetDelayedTrajectoryCast() ? Spell_C_GetDelayedTrajectoryCast()->m_data.m_spellId : 0;
     }
 
-    if (g_spellDB.GetRecord(castSpell, &spell) && spell.m_spellMissileID && g_spellMissileDB.GetRecord(spell.m_spellMissileID)) {
-        hasMissile = true;
+    const SpellRec* spell = g_spellDB.GetRecord(castSpell);
+
+    if (spell && spell->m_spellMissileID && g_spellMissileDB.GetRecord(spell->m_spellMissileID)) {
+        hasMissile = 1;
         spellId = castSpell;
     }
 
@@ -354,41 +328,34 @@ void CGUnit_C::UpdateMissileTrajectoryTargeting() {
     }
 
     uint32_t flags = vehicleRec->m_flags;
-    int32_t mode;
-    bool active;
+    int32_t active;
 
     if (flags & 0x800000) {
-        mode = 0;
-        active = true;
+        active = 1;
         s_trajectoryMode = 0;
     } else if ((flags & 0x1000000) && input->IsMouseDragging()) {
-        mode = 1;
-        active = true;
+        active = 1;
         s_trajectoryMode = 1;
     } else if ((flags & 0x2000000) && (pitchNextFrame || (input->m_flags & 0xC00))) {
-        mode = 2;
-        active = true;
+        active = 1;
         s_trajectoryMode = 2;
     } else if ((flags & 0x4000000) && input->CanSyncFreeLookFacing(unit)) {
-        mode = 3;
-        active = true;
+        active = 1;
         s_trajectoryMode = 3;
     } else if ((vehicleRec->m_flags & 0x8000000) && hasMissile) {
-        mode = 0;
-        active = true;
+        active = 1;
         s_trajectoryMode = 0;
     } else {
-        mode = s_trajectoryMode;
-        active = false;
+        active = 0;
     }
 
-    bool fullAlpha = true;
-    int32_t pitchArg = static_cast<int32_t>(pitchNextFrame);
+    uint32_t now = FrameTime::GetCurTimeMs();
 
     if (active) {
         s_trajectoryFadeStart = 0;
+        s_trajectoryAlpha = 1.0f;
     } else {
-        if (!mode) {
+        if (!s_trajectoryMode) {
             s_trajectoryFadeStart = 0;
             s_trajectoryMode = 0;
             return;
@@ -403,32 +370,34 @@ void CGUnit_C::UpdateMissileTrajectoryTargeting() {
 
             s_trajectoryFadeStart = 1;
 
-            if (FrameTime::s_curTimeMs) {
-                s_trajectoryFadeStart = FrameTime::s_curTimeMs;
+            if (now) {
+                s_trajectoryFadeStart = now;
             }
+
+            s_trajectoryAlpha = 1.0f;
         } else {
             float linger;
 
-            if (mode == 1) {
+            if (s_trajectoryMode == 1) {
                 linger = vehicleRec->m_msslTrgtTurnLingering;
-            } else if (mode == 2) {
+            } else if (s_trajectoryMode == 2) {
                 linger = vehicleRec->m_msslTrgtPitchLingering;
             } else {
                 linger = vehicleRec->m_msslTrgtMouseLingering;
             }
 
-            float fade = 0.5f * linger;
+            float fade = linger * 0.5f;
 
-            if (fade > 0.3f) {
-                fade = 0.3f;
+            if (fade > 0.30000001f) {
+                fade = 0.30000001f;
             }
 
-            int32_t hold = CMath::fint_((linger - fade) * 1000.0f);
-            pitchArg = hold;
-            uint32_t fadeMs = static_cast<uint32_t>(CMath::fint_(fade * 1000.0f));
-            uint32_t elapsed = FrameTime::s_curTimeMs - (s_trajectoryFadeStart + hold);
+            int32_t elapsed = now - (s_trajectoryFadeStart + static_cast<int32_t>((linger - fade) * 1000.0f));
+            uint32_t fadeMs = static_cast<int32_t>(fade * 1000.0f);
 
-            if (static_cast<int32_t>(elapsed) >= 0) {
+            if (elapsed < 0) {
+                s_trajectoryAlpha = 1.0f;
+            } else {
                 if (!fadeMs) {
                     s_trajectoryAlpha = 0.0f;
                     s_trajectoryFadeStart = 0;
@@ -436,31 +405,26 @@ void CGUnit_C::UpdateMissileTrajectoryTargeting() {
                     return;
                 }
 
-                s_trajectoryAlpha = 1.0f - static_cast<float>(elapsed) / static_cast<float>(fadeMs);
+                s_trajectoryAlpha = static_cast<float>(1.0 - static_cast<double>(elapsed) / static_cast<double>(fadeMs));
 
-                if (s_trajectoryAlpha <= 0.0f) {
+                if (!(s_trajectoryAlpha > 0.0f)) {
                     s_trajectoryFadeStart = 0;
                     s_trajectoryMode = 0;
                     return;
                 }
-
-                fullAlpha = false;
             }
         }
     }
-
-    if (fullAlpha) {
-        s_trajectoryAlpha = 1.0f;
-    }
-
-    spell.m_id = 0;
-    spell.m_spellMissileID = 0;
 
     if (!spellId) {
         spellId = CGUnit_C::s_missileTrajectoryTargetingSpell;
     }
 
-    if (spellId <= 0 || (g_spellDB.GetRecord(spellId, &spell), !spell.m_id)) {
+    if (spellId > 0) {
+        spell = g_spellDB.GetRecord(spellId);
+    }
+
+    if (!spell) {
         for (uint32_t i = 0; i < 10; i++) {
             PetAction* action = GetPetAction(i);
 
@@ -475,30 +439,31 @@ void CGUnit_C::UpdateMissileTrajectoryTargeting() {
             }
 
             spellId = action->m_data & 0xFFFFFF;
+            spell = g_spellDB.GetRecord(spellId);
 
-            if (g_spellDB.GetRecord(spellId, &spell) && spell.m_spellMissileID) {
+            if (spell && spell->m_spellMissileID) {
                 break;
             }
         }
 
-        if (!spell.m_id) {
+        if (!spell) {
             s_trajectoryAlpha = 0.0f;
             return;
         }
     }
 
-    C3Vector position(0.0f, 0.0f, 0.0f);
+    C3Vector impact(0.0f, 0.0f, 0.0f);
     s_trajectoryPointCount = 0;
     float pitch;
     float speed;
-    float facing;
+    float time;
 
-    if (!unit->ComputeMissileTrajectory(&spell, &pitch, &speed, &s_trajectoryLaunchPosition, &position, &facing, CGUnit_C::s_trajectoryPoints, &s_trajectoryPointCount, 1)) {
+    if (!unit->ComputeMissileTrajectory(spell, &pitch, &speed, &s_trajectoryLaunchPosition, &impact, &time, CGUnit_C::s_trajectoryPoints, &s_trajectoryPointCount, 1)) {
         s_trajectoryAlpha = 0.0f;
         return;
     }
 
-    facing = unit->GetFacing();
+    float facing = unit->GetFacing();
 
     for (uint32_t i = 0; i < 2; i++) {
         CM2Model* model = CGUnit_C::s_trajectoryModels[i];
@@ -509,38 +474,37 @@ void CGUnit_C::UpdateMissileTrajectoryTargeting() {
 
         CAaSphere sphere = model->GetBoundingSphere();
         float scale = sphere.r <= 0.0f ? vehicleRec->m_msslTrgtImpactRadius[i] : vehicleRec->m_msslTrgtImpactRadius[i] / sphere.r;
-        CGUnit_C::s_trajectoryModels[i]->SetWorldTransform(position, facing, scale);
-        CGUnit_C::s_trajectoryModels[i]->m_fadeAlpha = s_trajectoryAlpha;
-        CGUnit_C::s_trajectoryModels[i]->ForceAnimate();
+        model->SetWorldTransform(impact, facing, scale);
+        model->m_fadeAlpha = s_trajectoryAlpha;
+        model->ForceAnimate();
 
         if (!CGUnit_C::s_trajectoryWorldObjects[i]) {
-            C44Matrix transform = CGUnit_C::s_trajectoryModels[i]->m_worldTransform;
-            CGUnit_C::s_trajectoryWorldObjects[i] = CMap::ObjectCreateStaticEx(CGUnit_C::s_trajectoryModels[i], transform, MissileTrajectoryObjectCallback, NULL, 0, i, __FILE__, __LINE__);
+            CGUnit_C::s_trajectoryWorldObjects[i] = World::ObjectCreate(model, model->m_worldTransform, NULL, NULL, 0, 0, 6, __FILE__, __LINE__);
         }
 
-        if (CGUnit_C::s_trajectoryModels[i]->IsLoaded()) {
-            CAaBox box = CGUnit_C::s_trajectoryModels[i]->GetBoundingBox();
-            C44Matrix transform = CGUnit_C::s_trajectoryModels[i]->m_worldTransform;
-            CMap::ObjectUpdate(CGUnit_C::s_trajectoryWorldObjects[i], transform, box, sphere, sphere.c, false, 0xFFFFFFFF);
+        if (model->IsLoaded()) {
+            CAaBox box = model->GetBoundingBox();
+            World::ObjectUpdate(CGUnit_C::s_trajectoryWorldObjects[i], model->m_worldTransform, box, sphere, sphere.c, 0);
         }
     }
 
     CGUnit_C::s_missileTrajectoryTargetingSpell = spellId;
 }
 
-// OFFSET: #0x006FC190
-void CGUnit_C::ShutdownMissileTrajectorySystem() {
-    SMemFree(CGUnit_C::s_trajectoryPoints, __FILE__, __LINE__, 0);
-    CGUnit_C::StopMissileTrajectoryTargeting();
-    delete CMissileCollision::s_pool;
-    CMissileCollision::s_pool = NULL;
-    CMissileCollision::s_tail = NULL;
-    CMissileCollision::s_head = NULL;
-}
-
-// OFFSET: #0x006FDFB0
+// OFFSET: 0x0057F0F0
 void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
-    if (!(s_trajectoryAlpha > 0.0f) || !s_trajectoryTargetGuid) {
+    if (!(s_trajectoryAlpha > 0.0f)) {
+        for (uint32_t i = 0; i < 2; i++) {
+            if (CGUnit_C::s_trajectoryWorldObjects[i]) {
+                World::ObjectDestroy(CGUnit_C::s_trajectoryWorldObjects[i]);
+                CGUnit_C::s_trajectoryWorldObjects[i] = 0;
+            }
+        }
+
+        return;
+    }
+
+    if (!s_trajectoryTargetGuid) {
         return;
     }
 
@@ -564,15 +528,17 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
         g_theGxDevicePtr->RsPush();
         GxXformPush(GxXform_World);
         GxXformPush(GxXform_Tex0);
-        GxXformTranslate(GxXform_World, -CGWorldFrame::GetActiveCamera()->m_position);
+        const C3Vector& cameraPos = StaticSingleton<CCameraManager>::Instance()->m_shot.m_position;
+        C3Vector move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+        GxXformTranslate(GxXform_World, move);
         GxRsSet(GxRs_Culling, 0);
-        GxRsSet(GxRs_Fog, 0);
         GxRsSet(GxRs_ColorOp0, 0);
         GxRsSet(GxRs_AlphaOp0, 0);
         GxRsSet(GxRs_ColorWrite, 15);
         GxRsSet(GxRs_Lighting, 0);
         GxRsSet(GxRs_DepthWrite, 0);
         GxRsSet(GxRs_BlendingMode, 3);
+        DefaultShaders::SetFogEnabled(0);
         int32_t vertexCount = 2 * s_trajectoryPointCount + 2;
         C3Vector* positions = static_cast<C3Vector*>(alloca(sizeof(C3Vector) * vertexCount));
         CImVector* colors = static_cast<CImVector*>(alloca(sizeof(CImVector) * vertexCount));
@@ -587,10 +553,10 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
         C3Vector side;
         side.x = -(CMath::sin_(facing) * halfWidth);
         side.y = CMath::cos_(facing) * halfWidth;
-        uint32_t elapsed = FrameTime::s_curTimeMs - s_trajectoryStartTime;
         float alpha = s_trajectoryAlpha * 255.0f;
-        float alphaStep = (255.0f * (s_trajectoryAlpha * vehicle->m_msslTrgtEndOpacity) - alpha) * (1.0f / s_trajectoryPointCount);
-        float texStart = 1.0f - fmodf(static_cast<float>(elapsed) * 0.001f * vehicle->m_msslTrgtArcSpeed, 1.0f);
+        float alphaStep = (vehicle->m_msslTrgtEndOpacity * s_trajectoryAlpha * 255.0f - alpha) * (1.0f / static_cast<float>(s_trajectoryPointCount));
+        uint32_t elapsed = FrameTime::GetCurTimeMs() - s_trajectoryStartTime;
+        float texStart = static_cast<float>(1.0 - fmod(static_cast<double>(elapsed) * 0.001f * vehicle->m_msslTrgtArcSpeed, 1.0));
         positions[0].x = s_trajectoryLaunchPosition.x + side.x;
         positions[0].y = s_trajectoryLaunchPosition.y + side.y;
         positions[0].z = s_trajectoryLaunchPosition.z;
@@ -607,7 +573,7 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
         texCoords[1].x = texStart;
         texCoords[1].y = 1.0f;
         float pointAlpha = alphaStep + alpha;
-        float texCoord = texStart + vehicle->m_msslTrgtArcRepeat;
+        float texCoord = vehicle->m_msslTrgtArcRepeat + texStart;
 
         for (uint32_t i = 0; i < s_trajectoryPointCount; i++) {
             const C3Vector& point = CGUnit_C::s_trajectoryPoints[i];
@@ -618,31 +584,28 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
             positions[2 * i + 3].y = point.y - side.y;
             positions[2 * i + 3].z = point.z;
 
-            if (pointAlpha < 0.0f) {
+            if (0.0f > pointAlpha) {
                 pointAlpha = 0.0f;
             }
 
             colors[2 * i + 2].b = 0xFF;
             colors[2 * i + 2].g = 0xFF;
             colors[2 * i + 2].r = 0xFF;
-            colors[2 * i + 2].a = static_cast<uint8_t>(pointAlpha + 0.5f);
+            colors[2 * i + 2].a = static_cast<uint8_t>(static_cast<int32_t>(pointAlpha + 0.5f));
             colors[2 * i + 3] = colors[2 * i + 2];
-            pointAlpha += alphaStep;
             texCoords[2 * i + 2].x = texCoord;
             texCoords[2 * i + 2].y = 0.0f;
             texCoords[2 * i + 3].x = texCoord;
             texCoords[2 * i + 3].y = 1.0f;
-            texCoord += vehicle->m_msslTrgtArcRepeat;
+            pointAlpha = alphaStep + pointAlpha;
+            texCoord = vehicle->m_msslTrgtArcRepeat + texCoord;
         }
 
-        CGxMatrixStack& texStack = g_theGxDevicePtr->m_xforms[GxXform_Tex0];
-        texStack.m_dirty = 1;
-        texStack.m_flags[texStack.m_level] &= ~CGxMatrixStack::F_Identity;
-        texStack.m_mtx[texStack.m_level] = C44Matrix();
         g_theGxDevicePtr->RsSet(GxRs_Texture0, arcTex);
+        g_theGxDevicePtr->RsSet(GxRs_Texture1, static_cast<CGxTex*>(NULL));
         C3Vector normal(0.0f, 0.0f, 1.0f);
-        GxRsSet(GxRs_TextureShader0, 1);
         GxPrimLockVertexPtrs(vertexCount, positions, sizeof(C3Vector), &normal, 0, colors, sizeof(CImVector), NULL, 0, texCoords, sizeof(C2Vector), NULL, 0);
+        DefaultShaders::SetDefaultShaders(GxVertexBufferFormats_Last, 0xFFFFFFFF);
         GxDrawLockedElements(GxPrim_TriangleStrip, vertexCount, indices);
         GxPrimUnlockVertexPtrs();
         GxXformPop(GxXform_World);
@@ -666,24 +629,21 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
     GxRsSet(GxRs_Lighting, 0);
     GxRsSet(GxRs_DepthWrite, 0);
     g_theGxDevicePtr->RsSet(GxRs_Texture0, impactTex);
-    g_theGxDevicePtr->RsSet(GxRs_Texture1, ProjectTex2dGetAddFadeTex());
     GxRsSet(GxRs_ColorOp0, 0);
     GxRsSet(GxRs_AlphaOp0, 0);
-    GxRsSet(GxRs_ColorOp1, 0);
-    GxRsSet(GxRs_AlphaOp1, 0);
     const C3Vector& impact = CGUnit_C::s_trajectoryPoints[s_trajectoryPointCount - 1];
     float radius = vehicle->m_msslTrgtImpactTexRadius;
     CAaBox box;
     box.b.x = impact.x - radius;
     box.b.y = impact.y - radius;
     box.b.z = impact.z - radius;
-    box.t.x = radius + impact.x;
-    box.t.y = radius + impact.y;
-    box.t.z = radius + impact.z;
-    CImVector color(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(s_trajectoryAlpha * 255.0f + 0.5f));
+    box.t.x = impact.x + radius;
+    box.t.y = impact.y + radius;
+    box.t.z = impact.z + radius;
+    CImVector color(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(static_cast<int32_t>(s_trajectoryAlpha * 255.0f + 0.5f)));
     C44Matrix rotation;
     rotation.RotateAroundZ(-facing);
-    ProjectTex2d(box, color, &rotation, 0.5f, 0x200122, 5, GxPolygonOffset_Small);
+    World::ProjectTex2d(box, color, &rotation, 0.5f, 0x200122, 3, GxPolygonOffset_Small);
     g_theGxDevicePtr->RsPop();
 }
 
@@ -713,7 +673,7 @@ void CGUnit_C::GetMissileCollisionSphere(CAaSphere* sphere, const C2Vector& dire
     sphere->c.z = sphere->r + sphere->c.z;
 }
 
-// OFFSET: #0x006FC0A0
+// OFFSET: 0x0057CE90
 void CMissileCollision::ComputeHitSpheres(CAaSphere* spheres) {
     uint32_t i = 0;
 
@@ -726,22 +686,22 @@ void CMissileCollision::ComputeHitSpheres(CAaSphere* spheres) {
     spheres[i].r = 0.0f;
 }
 
-// OFFSET: #0x006FC210
-void CGUnit_C::RecordMissileTrajectoryUpdate(uint8_t castId, const C3Vector* impact, float pitch, float speed, float time) {
-    uint32_t now = FrameTime::s_curTimeMs;
+// OFFSET: 0x0057D240
+void CGUnit_C::CorrectTrajectoryOfPendingMissiles(uint8_t castCount, const C3Vector& impact, float pitch, float speed, float time) {
+    uint32_t now = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
 
     for (CMissile* missile = this->m_missiles; missile; missile = missile->m_next) {
-        if (missile->m_castID == castId) {
+        if (missile->m_castID == castCount) {
             missile->m_castTime = now;
-            missile->m_impactPos = *impact;
+            missile->m_impactPos = impact;
             missile->m_pitch = pitch;
             missile->m_trajectorySpeed = speed;
-            missile->m_arrivalTime = now + static_cast<uint32_t>(time * 1000.0f);
+            missile->m_arrivalTime = now + static_cast<int32_t>(time * 1000.0f);
         }
     }
 }
 
-// OFFSET: #0x006FC360
+// OFFSET: 0x0057CEF0
 static float ComputeTrajectoryImpact(const C3Vector* start, const C3Vector* delta, const CAaSphere* spheres) {
     float x = delta->x;
     float y = delta->y;
@@ -771,7 +731,7 @@ static float ComputeTrajectoryImpact(const C3Vector* start, const C3Vector* delt
     return -1.0f;
 }
 
-// OFFSET: #0x006FC4A0
+// OFFSET: 0x0057D3F0
 float CMissileCollision::ComputeUnitRank(CGUnit_C* unit) {
     if (unit->m_obj->m_type & TYPEMASK_PLAYER) {
         int32_t mode = this->m_missile->m_flags & 0xC;
@@ -783,21 +743,25 @@ float CMissileCollision::ComputeUnitRank(CGUnit_C* unit) {
         if (mode != 0xC) {
             CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-            if (!mover || !(mode & 0x4) != !mover->CanAttack(unit)) {
+            if (!mover || (!(mode & 0x4) && mover->CanAttack(unit, false))) {
                 return -1.0f;
             }
         }
     } else {
         int32_t mode = this->m_missile->m_flags & 0x30;
 
-        if (!mode || !unit->m_creatureCacheEntry || !(unit->m_creatureCacheEntry->m_typeFlags[0] & 0x80000)) {
+        if (!mode) {
+            return -1.0f;
+        }
+
+        if (!unit->m_creatureCacheEntry || !(unit->m_creatureCacheEntry->m_typeFlags[0] & 0x80000)) {
             return -1.0f;
         }
 
         if (mode != 0x30) {
             CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-            if (!mover || !(mode & 0x10) != !mover->CanAttack(unit)) {
+            if (!mover || (!(mode & 0x10) && mover->CanAttack(unit, false))) {
                 return -1.0f;
             }
         }
@@ -832,12 +796,12 @@ float CMissileCollision::ComputeUnitRank(CGUnit_C* unit) {
         rank = -1.0f;
     } else {
         float distance = fabs(this->m_perp.y * dy + this->m_perp.x * dx);
-        float along = (this->m_perp.x * distance + position.x - this->m_start.x) * this->m_dir.x + (this->m_perp.y * distance + position.y - this->m_start.y) * this->m_dir.y;
+        float along = this->m_dir.y * (this->m_perp.y * distance + position.y - this->m_start.y) + this->m_dir.x * (this->m_perp.x * distance + position.x - this->m_start.x);
 
         if (along < 0.000099999997f) {
             float sx = this->m_start.x - position.x;
             float sy = this->m_start.y - position.y;
-            rank = (radius * radius - (sx * sx + sy * sy)) * 10000.0f;
+            rank = (radius * radius - (sy * sy + sx * sx)) * 10000.0f;
         } else if (this->m_length <= along) {
             rank = -1.0f;
         } else {
@@ -847,20 +811,20 @@ float CMissileCollision::ComputeUnitRank(CGUnit_C* unit) {
     }
 
     float reach = this->m_duration * speed + radius;
-    float endRank = (reach * reach - (dx * dx + dy * dy)) / this->m_length;
+    float endRank = (reach * reach - (dy * dy + dx * dx)) / this->m_length;
 
     if (endRank > 0.0f && endRank > rank) {
         return endRank;
     }
 
-    if (0.0f >= rank) {
+    if (rank <= 0.0f) {
         return -1.0f;
     }
 
     return rank;
 }
 
-// OFFSET: #0x006FC7D0
+// OFFSET: 0x0057D790
 static void SortUnitRanks(MissileUnitRank* ranks, int32_t count) {
     if (count < 2) {
         return;
@@ -904,7 +868,7 @@ static void SortUnitRanks(MissileUnitRank* ranks, int32_t count) {
     }
 }
 
-// OFFSET: #0x006FC9B0
+// OFFSET: 0x0057D340
 float CMissileCollision::ComputeSegmentImpactTime(const C3Vector* start, const C3Vector* end) {
     CAaSphere spheres[16];
 
@@ -921,7 +885,7 @@ float CMissileCollision::ComputeSegmentImpactTime(const C3Vector* start, const C
     return ComputeTrajectoryImpact(start, &delta, spheres);
 }
 
-// OFFSET: #0x006FCAA0
+// OFFSET: 0x0057D900
 int32_t CMissileCollision::MaybeAddUnitToWorkingList(WOWGUID guid, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__));
 
@@ -948,7 +912,7 @@ int32_t CMissileCollision::MaybeAddUnitToWorkingList(WOWGUID guid, void* param) 
     return index + 1 < 128;
 }
 
-// OFFSET: #0x006FCB60
+// OFFSET: 0x0057DA00
 int32_t CMissileCollision::Init(const C3Vector* start, const C3Vector* end, float pitch, float speed, const SpellMissileRec* missile, CGUnit_C* caster) {
     this->m_start.x = start->x;
     this->m_start.y = start->y;
@@ -1024,7 +988,7 @@ int32_t CMissileCollision::Init(const C3Vector* start, const C3Vector* end, floa
     return i;
 }
 
-// OFFSET: #0x006FCD60
+// OFFSET: 0x0057DC80
 int32_t CGUnit_C::ComputeMissileTrajectory(const SpellRec* spell, float* pitch, float* speed, C3Vector* launch, C3Vector* impact, float* time, C3Vector* points, uint32_t* count, int32_t preview) {
     if (!spell) {
         return 0;
@@ -1059,7 +1023,7 @@ int32_t CGUnit_C::ComputeMissileTrajectory(const SpellRec* spell, float* pitch, 
 
     CM2Model* model = this->GetObjectModel();
 
-    if (model && model->IsLoaded() && (model->m_fFlags & 0x8000) && model->HasEvent('MIA$')) {
+    if (model && model->IsLoaded() && (model->m_fFlags & 0x4000) && model->HasEvent('MIA$')) {
         *launch = model->GetEventPosition('MIA$');
     } else {
         *launch = this->GetMissileFirePosition();
@@ -1108,10 +1072,10 @@ int32_t CGUnit_C::ComputeMissileTrajectory(const SpellRec* spell, float* pitch, 
         root = this;
     }
 
-    if (!(this->m_movement->m_flags & 0x2200000) && model && (model->m_fFlags & 0x8000)) {
+    if (!(this->m_movement->m_flags & 0x1100000) && model && (model->m_fFlags & 0x4000)) {
         C44Matrix transform = model->GetAnimatedWorldTransform();
 
-        if (transform.c2 < 1.0f) {
+        if (transform.c2 < 0.99000001f) {
             transform.Scale(1.0f / sqrt(transform.a2 * transform.a2 + transform.a0 * transform.a0 + transform.a1 * transform.a1));
             transform.d0 = 0.0f;
             transform.d1 = 0.0f;
@@ -1122,16 +1086,26 @@ int32_t CGUnit_C::ComputeMissileTrajectory(const SpellRec* spell, float* pitch, 
         }
     }
 
-    float scale = *speed * 0.1f;
-    velocity.x = velocity.x * scale;
+    float step = missile->m_maxDuration;
+    float scale;
+
+    if (step <= 0.0f || step >= 0.1f) {
+        scale = *speed * 0.1f;
+    } else {
+        scale = step * *speed;
+    }
+
+    velocity.x = scale * velocity.x;
     velocity.y = velocity.y * scale;
     float gravity = missile->m_gravity * 0.010000001f;
     velocity.z = scale * velocity.z - gravity * 0.5f;
 
     int32_t steps;
 
-    if (missile->m_maxDuration <= 0.000099999997f || (steps = static_cast<int32_t>(missile->m_maxDuration * 10.0f)) > 200) {
+    if (step <= 0.000099999997f || (steps = static_cast<int32_t>(step * 10.0f)) > 200) {
         steps = 200;
+    } else if (steps < 1) {
+        steps = 1;
     }
 
     int32_t maxSteps = steps;
@@ -1150,7 +1124,7 @@ int32_t CGUnit_C::ComputeMissileTrajectory(const SpellRec* spell, float* pitch, 
         center.z = 1.0f;
     }
 
-    C3Vector normal = root->m_movement->GetGroundNormal();
+    C3Vector normal = root->m_movementData.GetGroundNormal();
     C3Vector up;
     up.x = normal.x * center.z;
     up.y = normal.y * center.z;
@@ -1255,11 +1229,11 @@ int32_t CGUnit_C::ComputeMissileTrajectory(const SpellRec* spell, float* pitch, 
     return 1;
 }
 
-// OFFSET: #0x006FD6B0
+// OFFSET: 0x0057E860
 void CGUnit_C::SendFinalMissileTrajectoryUpdate() {
-    SpellRec spell;
+    const SpellRec* spell = g_spellDB.GetRecord(this->m_missileTrajectorySpell);
 
-    if (!g_spellDB.GetRecord(this->m_missileTrajectorySpell, &spell)) {
+    if (!spell) {
         return;
     }
 
@@ -1269,65 +1243,65 @@ void CGUnit_C::SendFinalMissileTrajectoryUpdate() {
     float speed;
     float time;
 
-    if (!this->ComputeMissileTrajectory(&spell, &pitch, &speed, &launch, &impact, &time, NULL, NULL, 0)) {
+    if (!this->ComputeMissileTrajectory(spell, &pitch, &speed, &launch, &impact, &time, NULL, NULL, 0)) {
         return;
     }
 
     Spell_C_EncodeSequenceIntoMissileTrajectory(reinterpret_cast<uint32_t*>(&pitch), reinterpret_cast<uint32_t*>(&speed), reinterpret_cast<uint32_t*>(&launch), reinterpret_cast<uint32_t*>(&impact));
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_UPDATE_MISSILE_TRAJECTORY));
-    msg.Put(this->m_obj->m_guid.m_guid);
-    msg.Put(static_cast<uint32_t>(spell.m_id));
-    msg.Put(pitch);
-    msg.Put(speed);
-    msg.Put(launch.x);
-    msg.Put(launch.y);
-    msg.Put(launch.z);
-    msg.Put(impact.x);
-    msg.Put(impact.y);
-    msg.Put(impact.z);
-    WriteMovementPacket(this, &msg);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    PlayerMoveUpdateMissileTrajectory msg;
+    msg.m_guid = this->m_obj->m_guid;
+    msg.m_moveMsgID = 0x320A;
+    msg.m_spellID = spell->m_id;
+    msg.m_firePos = launch;
+    msg.m_impactPos = impact;
+    msg.m_pitch = pitch;
+    msg.m_speed = speed;
+
+    if (this->m_obj->m_guid == CGUnit_C::s_activeMover && !this->m_movement->IsOnSpline()) {
+        msg.m_hasStatus = true;
+        this->m_movementData.GetMoveStatus(static_cast<NETMESSAGE>(0x781E), MovementGetIdleTime(), &msg.m_status);
+    }
+
+    ClientServices::Send(&msg);
 
     float bytes;
     uint32_t latency;
-    ClientServices::Connection()->GetNetStats(bytes, bytes, latency);
-    float arrival = time + static_cast<int32_t>(latency) * 0.001f * 0.5f + 0.2f;
+    ClientServices::Connection()->GetNetStats(static_cast<CONNECTION_ID>(1), bytes, bytes, latency);
     float limit = time * 1.3f;
+    time = static_cast<float>(static_cast<double>(latency) * 0.001 * 0.5 + time + 0.2);
 
-    if (limit < arrival) {
-        arrival = limit;
+    if (time > limit) {
+        time = limit;
     }
 
     WOWGUID guid = this->m_obj->m_guid;
-    PendingSpellCast* cast = GetPendingSpellCast(this->m_castCount, this->m_castSpellId, guid);
+    PendingSpellCast* cast = GetPendingSpellCast(this->m_missileTrajectoryCastCount, this->m_castSpellId, guid);
 
     if (cast) {
         cast->m_data.m_targetFlags |= 0x40;
         cast->m_data.m_destPos = impact;
-        cast->unk_0139 = 1;
+        cast->m_trajectoryLaunched = 1;
 
-        if (this->m_missileTrajectoryReleased) {
-            this->RecordMissileTrajectoryUpdate(cast->m_data.m_castCount, &impact, pitch, speed, arrival);
-        } else {
+        if (!this->m_missileTrajectoryReleased) {
             cast->m_data.m_elevation = pitch;
-            cast->m_data.unk_0120 = speed;
+            cast->m_data.m_speed = speed;
             SpellVisualRec visualRec;
-            const SpellVisualRec* visual = this->GetAppropriateSpellVisual(&spell, visualRec, 0, 0);
-            SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual ? visual->m_castKit : 0);
-            TSStackArray<CGUnit_C*> targets(static_cast<CGUnit_C**>(alloca(0)), 0, 0);
-            Spell_C_PlayMissileTrajectoryCastVisuals(this, cast, &spell, visual, kit, &targets, arrival);
+            const SpellVisualRec* visual = this->GetAppropriateSpellVisual(spell, visualRec, 0, 0);
+            const SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual ? visual->m_castKit : 0);
+            TSStackArray<CGUnit_C*> targets(static_cast<CGUnit_C**>(alloca(sizeof(CGUnit_C*))), 0, 0);
+            Spell_C_PlayMissileTrajectoryCastVisuals(this, cast, spell, visual, kit, &targets, time);
             this->ReleaseMissiles();
+        } else if (cast->m_trajectoryLaunched) {
+            this->CorrectTrajectoryOfPendingMissiles(cast->m_data.m_castCount, impact, pitch, speed, time);
         }
     }
 
-    this->StopUpdatingMissileTrajectory(spell.m_id);
+    this->StopUpdatingMissileTrajectory(spell->m_id, this->m_missileTrajectoryCastCount);
 }
 
-// OFFSET: #0x006FE9B0
-void CGUnit_C::StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec* vehicleRec) {
+// OFFSET: 0x0057FB80
+void CGUnit_C::StartMissileTrajectoryTargeting(const VehicleRec* vehicleRec) {
     CGUnit_C::StopMissileTrajectoryTargeting();
 
     if (!(vehicleRec->m_flags & 0xF800000)) {
@@ -1335,15 +1309,19 @@ void CGUnit_C::StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec*
     }
 
     CStatus status;
+    CGxTexFlags arcFlags;
+    arcFlags.m_wrapU = 1;
 
-    if (*vehicleRec->m_msslTrgtArcTexture) {
-        s_trajectoryTexture0 = TextureCreate(vehicleRec->m_msslTrgtArcTexture, CGxTexFlags(GxTex_Linear, 1, 1, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
+    if (*static_cast<const char*>(vehicleRec->m_msslTrgtArcTexture)) {
+        s_trajectoryTexture0 = TextureCreate(vehicleRec->m_msslTrgtArcTexture, arcFlags, &status, 0, NULL, 2);
     } else {
         s_trajectoryTexture0 = NULL;
     }
 
-    if (*vehicleRec->m_msslTrgtImpactTexture) {
-        s_trajectoryTexture1 = TextureCreate(vehicleRec->m_msslTrgtImpactTexture, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
+    CGxTexFlags impactFlags;
+
+    if (*static_cast<const char*>(vehicleRec->m_msslTrgtImpactTexture)) {
+        s_trajectoryTexture1 = TextureCreate(vehicleRec->m_msslTrgtImpactTexture, impactFlags, &status, 0, NULL, 2);
     } else {
         s_trajectoryTexture1 = NULL;
     }
@@ -1356,19 +1334,22 @@ void CGUnit_C::StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec*
         }
     }
 
-    s_trajectoryTargetGuid = unit->m_obj->m_guid;
+    s_trajectoryTargetGuid = CGUnit_C::s_activeMover;
     CGUnit_C::s_missileTrajectoryTargetingSpell = 0;
     CGUnit_C::s_pitchMissileTrajectoryTargetingNextFrame = 0;
     s_trajectoryFadeStart = 0;
-    s_trajectoryStartTime = FrameTime::s_curTimeMs;
+    s_trajectoryStartTime = FrameTime::GetCurTimeMs();
 }
 
-// OFFSET: #0x006FBFA0
-int32_t MissileTrajectoryObjectCallback(void* param, uint32_t a2, uint64_t a3, uintptr_t a4) {
-    if (s_trajectoryAlpha <= 0.0f && CGUnit_C::s_trajectoryWorldObjects[a4]) {
-        World::ObjectDestroy(CGUnit_C::s_trajectoryWorldObjects[a4]);
-        CGUnit_C::s_trajectoryWorldObjects[a4] = NULL;
+// OFFSET: #0x006FC190
+void CGUnit_C::ShutdownMissileTrajectorySystem() {
+    SMemFree(CGUnit_C::s_trajectoryPoints, __FILE__, __LINE__, 0);
+    CGUnit_C::StopMissileTrajectoryTargeting();
+    if (CMissileCollision::s_pool) {
+        delete CMissileCollision::s_pool;
     }
 
-    return CGUnit_C::s_trajectoryWorldObjects[a4] != NULL;
+    CMissileCollision::s_pool = NULL;
+    CMissileCollision::s_tail = NULL;
+    CMissileCollision::s_head = NULL;
 }

@@ -28,7 +28,11 @@ class CGCorpse_C : public CGObject_C, public CGCorpse {
     int32_t ShouldFadeout() override;
     float GetTrueScale() const override;
     int32_t CanHighlight() const override;
+    C3Vector GetPosition() const override;
+    C3Vector GetRawPosition() const override;
     float GetFacing() const override;
+    float GetRawFacing() const override;
+    uint64_t GetTransportGUID() const override;
     void ModelLoaded(CM2Model* model) override;
     void Disable() override;
     void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
@@ -42,7 +46,9 @@ class CGCorpse_C : public CGObject_C, public CGCorpse {
     void OnInteract() override;
 
     CGCorpse_C(uint32_t time, const CClientObjCreate& create);
-    void ApplyGuildColor(int32_t request);
+    void ApplyGuildColor(uint32_t flags);
+    void ApplyShirtGuildColor(uint32_t flags);
+    void SetDeathSequence(CM2Model* model, int32_t underwater);
     int32_t CanBeLooted() const;
     void SetStorage(uint32_t* storage, uint32_t* saved);
     float GetDisplayScale() const;

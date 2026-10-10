@@ -20,7 +20,7 @@ class CGDynamicObject {
 class CGDynamicObjectData {
     public:
     /* 0000 */ WOWGUID m_caster;
-    /* 0008 */ uint8_t m_bytes[4];
+    /* 0008 */ uint32_t m_typeAndVisualID;
     /* 000C */ uint32_t m_spellID;
     /* 0010 */ float m_radius;
     /* 0014 */ uint32_t m_castTime;

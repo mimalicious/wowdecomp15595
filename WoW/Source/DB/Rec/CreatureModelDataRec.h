@@ -35,9 +35,9 @@ class CreatureModelDataRec {
     /* 0058 */ float m_geoBoxMaxZ;
     /* 005C */ float m_worldEffectScale;
     /* 0060 */ float m_attachedEffectScale;
-    /* 0064 */ float unk_0064;
-    /* 0068 */ float unk_0068;
-    /* 006C */ float unk_006C;
+    /* 0064 */ float m_missileCollisionRadius;
+    /* 0068 */ float m_missileCollisionPush;
+    /* 006C */ float m_missileCollisionRaise;
     /* 0070 */ float unk_0070;
     /* 0074 */ float unk_0074;
     /* 0078 */ float m_petScale;

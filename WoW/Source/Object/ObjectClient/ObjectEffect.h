@@ -27,6 +27,7 @@ class CObjectEffect : public TSLinkedNode<CObjectEffect> {
     ~CObjectEffect();
     C3Vector GetWorldPosition();
     void PlayOneShot();
+    void StopLoopingEffect();
     void TriggerLoopingEffect();
     void UpdateLoopingEffect(CObjectEffectManager* manager);
 };
