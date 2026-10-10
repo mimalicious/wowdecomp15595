@@ -1,72 +1,95 @@
 #include "RaidInfo.h"
 #include <cstring>
-#include "Engine/Source/FrameScript/FrameScript.h"
-#include "Engine/Source/Storm/H/storm.h"
-#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
-#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/Ui/Types.h"
-#include "WoW/Source/DB/DBClient/DBClient.h"
-#include "WoW/Source/DB/Rec/MapRec.h"
-#include "WoW/Source/Ui/GameUI.h"
-#include "WoW/Source/Object/ObjectClient/Player_C.h"
-#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
-#include "WoW/Source/Object/Unit.h"
-#include "Engine/Source/Base/CDataStore.h"
-#include "WoW/Source/Net/Types.h"
-#include "WoW/Source/Ui/ScriptEvents.h"
-#include "WoW/Source/Client.h"
-#include "WoW/Source/Ui/CGAutoCompleteName.h"
-#include "WoW/Source/Ui/Tutorial.h"
-#include "WoW/Source/Ui/ChatFrame.h"
-#include "WoW/Source/Game/GameClient/NameCache.h"
-#include "WoW/Source/Object/ObjectClient/Unit_C.h"
-#include "Engine/Source/Os/TimeManager.h"
 #include <malloc.h>
+#include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Event/Event.h"
-#include "Engine/Source/lua-5.1/src/lua.h"
+#include "Engine/Source/Event/FrameTime.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include "Engine/Source/lua-5.1/src/lua.h"
+#include "WoW/Source/Client.h"
+#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/MapDifficultyRec.h"
+#include "WoW/Source/DB/Rec/MapRec.h"
+#include "WoW/Source/Game/GameClient/NameCache.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Source/Net/Types.h"
+#include "WoW/Source/Object/ObjectClient/Player_C.h"
+#include "WoW/Source/Object/ObjectClient/Unit_C.h"
+#include "WoW/Source/Object/Unit.h"
+#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
+#include "WoW/Source/Ui/CGAutoCompleteName.h"
+#include "WoW/Source/Ui/ChatFrame.h"
+#include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/ScriptEvents.h"
+#include "WoW/Source/Ui/Tutorial.h"
+#include "WoW/Source/Ui/Types.h"
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00BEB568
+// STATIC: 0x00F33EF8
+WOWGUID CGRaidInfo::m_raidTargets[28];
+
+// STATIC: 0x00F33FD8
 CGRaidMember* CGRaidInfo::m_members[40];
 
-// STATIC: #0x00BEB608
+// STATIC: 0x00F34078
 uint32_t CGRaidInfo::m_numMembers;
 
-// STATIC: #0x00BEB618
-static int32_t s_pendingNameQueries;
-
-// STATIC: #0x00BEB528
-WOWGUID CGRaidInfo::m_raidTargets[8];
-
-// STATIC: #0x00BEB60C
+// STATIC: 0x00F3407C
 uint32_t CGRaidInfo::m_realNumMembers;
 
-// STATIC: #0x00BEB610
+// STATIC: 0x00F34080
 WOWGUID CGRaidInfo::m_selectedMember;
 
-// STATIC: #0x00BEB61C
+// STATIC: 0x00F34088
+uint32_t CGRaidInfo::m_raidMarkers;
+
+// STATIC: 0x00F3408C
+static int32_t s_pendingNameQueries;
+
+// STATIC: 0x00F34090
 uint32_t CGRaidInfo::m_readyCheckTime;
 
-// STATIC: #0x00BEB620
-WOWGUID CGRaidInfo::m_readyCheckInitiator;
-
-// STATIC: #0x00BEB628
+// STATIC: 0x00F34094
 uint32_t CGRaidInfo::m_readyCheckTimer;
 
-// STATIC: #0x00ACE788
+// STATIC: 0x00F34098
+WOWGUID CGRaidInfo::m_readyCheckInitiator;
+
+// STATIC: 0x00F340A0
+uint8_t CGRaidInfo::m_isInFakeRaid;
+
+// STATIC: 0x00F340A1
+uint8_t CGRaidInfo::m_everyoneIsAssistant;
+
+// STATIC: 0x00F340A4
+TSGrowableArray<RaidInstanceInfo> s_savedInstances;
+
+// STATIC: 0x00D11AB0
 uint8_t CGRaidInfo::m_rosterCounter = 0xFF;
 
-// OFFSET: #0x00572490
+// OFFSET: 0x0092CB10
 static void RaidMemberRemovedNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
     }
 
-    WOWGUID none = WOWGUID();
-    NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, none, NULL, NULL, false);
+    WOWGUID requester = WOWGUID();
 
-    if (name) {
+    if (NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false)) {
         CGGameUI::DisplayError(ERR_RAID_MEMBER_REMOVED_S, name->m_name);
+    }
+}
+
+// OFFSET: 0x0092CB60
+static void SignalReadyCheckConfirmEvents(const WOWGUID& guid, int32_t ready) {
+    int32_t count;
+    char** tokens = Script_GetTokenIDsFromGUID(guid, &count);
+
+    for (int32_t i = 0; i < count; i++) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_READY_CHECK_CONFIRM, "%s%b", tokens[i], ready);
     }
 }
 
@@ -80,7 +103,7 @@ void CGRaidInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     CGPartyInfo::m_realLeader = leader;
 }
 
-// OFFSET: #0x00572560
+// OFFSET: 0x0092CBE0
 int32_t Packet_MSG_RAID_READY_CHECK_FINISHED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGRaidInfo::m_readyCheckTime = 0;
     FrameScript_SignalEvent(SCRIPT_EVENT_READY_CHECK_FINISHED, "%b", 0);
@@ -88,13 +111,13 @@ int32_t Packet_MSG_RAID_READY_CHECK_FINISHED(void* param, NETMESSAGE msgId, uint
     return 1;
 }
 
-// OFFSET: #0x005725A0
-int32_t Packet_SMSG_RAID_READY_CHECK_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+// OFFSET: 0x0092CC20
+int32_t Packet_SMSG_READY_CHECK_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_READY_CHECK_THROTTLED);
     return 1;
 }
 
-// OFFSET: #0x005725C0
+// OFFSET: 0x0092CC40
 int32_t Packet_MSG_NOTIFY_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t squelched;
     msg->Get(squelched);
@@ -108,14 +131,14 @@ int32_t Packet_MSG_NOTIFY_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x00572610
+// OFFSET: 0x0092CC90
 int32_t Packet_SMSG_ECHO_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint32_t squelched;
     msg->Get(guid.m_guid);
     msg->Get(squelched);
-    WOWGUID none = WOWGUID();
-    NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, none, NULL, NULL, false);
+    WOWGUID requester = WOWGUID();
+    NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false);
 
     if (!name) {
         return 1;
@@ -130,17 +153,7 @@ int32_t Packet_SMSG_ECHO_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: #0x005724E0
-static void SignalReadyCheckConfirmEvents(const WOWGUID& guid, int32_t ready) {
-    int32_t count;
-    char** tokens = Script_GetTokenIDsFromGUID(guid, &count);
-
-    for (int32_t i = 0; i < count; i++) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_READY_CHECK_CONFIRM, "%s%b", tokens[i], ready);
-    }
-}
-
-// OFFSET: #0x00572690
+// OFFSET: 0x0092CD10
 int32_t CGRaidInfo::GetSelectedMemberIndex() {
     if (!CGRaidInfo::m_selectedMember) {
         return -1;
@@ -193,6 +206,177 @@ int32_t CGRaidInfo::IsPlayerRaidOfficer(const WOWGUID& guid) {
     return 0;
 }
 
+// OFFSET: 0x0092CE20/0x140693D40
+PartyMemberState* CGRaidInfo::GetRemoteStats(const WOWGUID& guid) {
+    if (!guid) {
+        return NULL;
+    }
+
+    for (uint32_t i = 0; i < 40; i++) {
+        if (CGRaidInfo::m_members[i]->m_guid == guid) {
+            return &CGRaidInfo::m_members[i]->m_stats;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x0092CE70/0x140693D80
+PartyMemberState* CGRaidInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
+    for (uint32_t i = 0; i < 40; i++) {
+        CGRaidMember* member = CGRaidInfo::m_members[i];
+
+        if (member->m_guid && member->m_stats.m_pet.m_guid == petGuid) {
+            return &CGRaidInfo::m_members[i]->m_stats;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x0092CEC0/0x140693DC0
+PartyMemberPetState* CGRaidInfo::GetRemotePetStats(const WOWGUID& guid) {
+    if (!guid) {
+        return NULL;
+    }
+
+    for (uint32_t i = 0; i < 40; i++) {
+        CGRaidMember* member = CGRaidInfo::m_members[i];
+
+        if (member->m_guid && (member->m_stats.m_flags & 1) && member->m_stats.m_pet.m_guid == guid) {
+            return &CGRaidInfo::m_members[i]->m_stats.m_pet;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x0092CF20/0x140693E10
+uint32_t GetRaidTargetIndexFromGuid(WOWGUID guid) {
+    uint32_t index = 0;
+
+    while (CGRaidInfo::m_raidTargets[index] != guid) {
+        if (++index >= 28) {
+            return 28;
+        }
+    }
+
+    return index;
+}
+
+// OFFSET: 0x0092CF60
+uint8_t CGRaidInfo::GetPartyAssignments(const WOWGUID& guid) {
+    uint32_t i = 0;
+
+    if (!CGRaidInfo::m_numMembers) {
+        return 0;
+    }
+
+    while (CGRaidInfo::m_members[i]->m_guid != guid) {
+        if (++i >= CGRaidInfo::m_numMembers) {
+            return 0;
+        }
+    }
+
+    return CGRaidInfo::m_members[i]->m_assignments;
+}
+
+// OFFSET: 0x0092CFB0/0x140693E80
+int32_t CGRaidInfo::GetPartyAssignments(lua_State* L, int32_t assignment) {
+    uint8_t flag = 0;
+
+    if (assignment == 0) {
+        flag = 2;
+    } else if (assignment == 1) {
+        flag = 4;
+    }
+
+    if (lua_isstring(L, 2)) {
+        const char* name = lua_tolstring(L, 2, NULL);
+        WOWGUID guid = CGGameUI::ClosestObjectMatch(name, TYPEMASK_PLAYER, 6, StringToBOOL(L, 3, 0), 3.402823466e38f, 0);
+
+        if (!guid) {
+            CGGameUI::DisplayError(ERR_TARGET_NOT_IN_GROUP_S, name);
+            return 0;
+        }
+
+        if (CGRaidInfo::GetPartyAssignments(guid) & flag) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 1;
+    }
+
+    int32_t count = 0;
+
+    for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
+        if (flag & CGRaidInfo::m_members[i]->m_assignments) {
+            lua_checkstack(L, ++count);
+            lua_pushnumber(L, i + 1);
+        }
+    }
+
+    return count;
+}
+
+// OFFSET: 0x0092D0F0
+void CGRaidInfo::ClearRecruitAFriend(WOWGUID guid) {
+    if (PartyMemberState* stats = CGRaidInfo::GetRemoteStats(guid)) {
+        stats->m_flags &= ~0x100;
+    }
+}
+
+// OFFSET: 0x0092D520
+void RaidRosterNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (!s_pendingNameQueries || !--s_pendingNameQueries) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_RAID_ROSTER_UPDATE, NULL);
+        Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBERS_CHANGED);
+    }
+}
+
+// OFFSET: 0x0092D550
+static void RaidMemberAddedNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (!success) {
+        return;
+    }
+
+    WOWGUID requester = WOWGUID();
+
+    if (NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false)) {
+        CGGameUI::DisplayError(ERR_RAID_MEMBER_ADDED_S, name->m_name);
+        char fullName[256];
+        CGAutoCompleteName::SetName(guid, name->FullName(fullName, sizeof(fullName)), false);
+    }
+}
+
+// OFFSET: 0x0092D5D0/0x140694670
+void CGRaidInfo::EnterWorld() {
+    uint32_t i = 0;
+
+    if (!CGRaidInfo::m_numMembers) {
+        return;
+    }
+
+    while (CGRaidInfo::m_members[i]->m_guid) {
+        if (++i >= CGRaidInfo::m_numMembers) {
+            return;
+        }
+    }
+
+    CGRaidInfo::m_members[i]->m_guid = ClntObjMgrGetActivePlayer();
+    CGRaidMember* member = CGRaidInfo::m_members[i];
+
+    if (g_nameDBCache.GetRecord(member->m_guid.m_guid, member->m_guid, &RaidRosterNameCallback, NULL, false)) {
+        if (!s_pendingNameQueries) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_RAID_ROSTER_UPDATE, NULL);
+        }
+    } else {
+        s_pendingNameQueries++;
+    }
+}
+
 // PROVEN: b8e75bb9 IDENTICAL/NONE
 // OFFSET: 0x0092D650/0x140694720
 void CGRaidInfo::SetRaidTarget(uint32_t index, const WOWGUID& guid) {
@@ -210,7 +394,7 @@ void CGRaidInfo::SetRaidTarget(uint32_t index, const WOWGUID& guid) {
     }
 }
 
-// OFFSET: #0x00572F50
+// OFFSET: 0x0092D6D0/0x1406947B0
 int32_t CGRaidInfo::IsPVPRaid() {
     MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
 
@@ -221,108 +405,58 @@ int32_t CGRaidInfo::IsPVPRaid() {
     return map->m_instanceType == 4;
 }
 
-// OFFSET: #0x00572D60
-void RaidRosterNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (!s_pendingNameQueries || !--s_pendingNameQueries) {
+// OFFSET: 0x0092D710
+void CGRaidInfo::ClearRoster() {
+    if (CGRaidInfo::m_numMembers) {
+        CGGameUI::DisplayError(ERR_RAID_YOU_LEFT);
+        CGRaidInfo::m_numMembers = 0;
         FrameScript_SignalEvent(SCRIPT_EVENT_RAID_ROSTER_UPDATE, NULL);
-        Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBERS_CHANGED);
+
+        for (uint32_t i = 0; i < 40; i++) {
+            CGRaidInfo::m_members[i]->m_guid = WOWGUID();
+        }
     }
+
+    WOWGUID targets[28];
+    memcpy(targets, CGRaidInfo::m_raidTargets, sizeof(targets));
+    memset(CGRaidInfo::m_raidTargets, 0, sizeof(CGRaidInfo::m_raidTargets));
+
+    for (uint32_t i = 0; i < 28; i++) {
+        if (!targets[i]) {
+            continue;
+        }
+
+        if (CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(targets[i], TYPEMASK_UNIT, __FILE__, __LINE__))) {
+            unit->NamePlateUpdateRaidTarget();
+        }
+    }
+
+    CGAutoCompleteName::RemoveFlagsFromAllNodes(1);
+    FrameScript_SignalEvent(SCRIPT_EVENT_RAID_TARGET_UPDATE, NULL);
+    FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_ROLES_ASSIGNED, NULL);
 }
 
-// OFFSET: #0x00572D90
-static void RaidMemberAddedNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (!success) {
-        return;
-    }
+// OFFSET: 0x0092D810/0x140694900
+void CGRaidInfo::EnableMember(CGPlayer_C* player, int32_t enable) {
+    WOWGUID guid = player->m_obj->m_guid;
+    uint32_t index;
 
-    WOWGUID none = WOWGUID();
-    NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, none, NULL, NULL, false);
-
-    if (!name) {
-        return;
-    }
-
-    CGGameUI::DisplayError(ERR_RAID_MEMBER_ADDED_S, name->m_name);
-    char fullName[256];
-
-    if (name->m_realmName[0]) {
-        SStrPrintf(fullName, sizeof(fullName), "%s-%s", name->m_name, name->m_realmName);
-    } else {
-        SStrCopy(fullName, name->m_name, sizeof(fullName));
-    }
-
-    CGAutoCompleteName::SetName(guid, fullName, false);
-}
-
-// OFFSET: #0x00572E40
-void CGRaidInfo::EnterWorld() {
-    uint32_t i = 0;
-
-    for (; i < CGRaidInfo::m_numMembers; i++) {
-        if (!CGRaidInfo::m_members[i]->m_guid) {
+    for (index = 0; index < CGRaidInfo::m_numMembers; index++) {
+        if (CGRaidInfo::m_members[index]->m_guid == guid) {
             break;
         }
     }
 
-    if (i >= CGRaidInfo::m_numMembers) {
+    if (index == CGRaidInfo::m_numMembers || enable) {
         return;
     }
 
-    CGRaidInfo::m_members[i]->m_guid = ClntObjMgrGetActivePlayer();
-    CGRaidMember* member = CGRaidInfo::m_members[i];
-
-    if (g_nameDBCache.GetRecord(member->m_guid.m_guid, member->m_guid, RaidRosterNameCallback, NULL, false)) {
-        if (!s_pendingNameQueries) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_RAID_ROSTER_UPDATE, NULL);
-        }
-    } else {
-        s_pendingNameQueries++;
-    }
-}
-
-// OFFSET: #0x005728C0
-uint32_t GetRaidTargetIndexFromGuid(WOWGUID guid) {
-    uint32_t index = 0;
-
-    while (CGRaidInfo::m_raidTargets[index] != guid) {
-        if (++index >= sizeof(((CGRaidInfo*)0)->m_raidTargets) / sizeof(CGRaidInfo::m_raidTargets[0])) {
-            return 8;
-        }
-    }
-
-    return index;
-}
-
-// OFFSET: #0x005727B0
-PartyMemberState* CGRaidInfo::GetRemoteStats(const WOWGUID& guid) {
-    if (!guid) {
-        return NULL;
-    }
-
-    for (uint32_t i = 0; i < sizeof(((CGRaidInfo*)0)->m_members) / sizeof(CGRaidInfo::m_members[0]); i++) {
-        if (CGRaidInfo::m_members[i]->m_guid == guid) {
-            return &CGRaidInfo::m_members[i]->m_stats;
-        }
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x00572850
-PartyMemberPetState* CGRaidInfo::GetRemotePetStats(const WOWGUID& guid) {
-    if (!guid) {
-        return NULL;
-    }
-
-    for (uint32_t i = 0; i < sizeof(((CGRaidInfo*)0)->m_members) / sizeof(CGRaidInfo::m_members[0]); i++) {
-        CGRaidMember* member = CGRaidInfo::m_members[i];
-
-        if (member->m_guid && (member->m_stats.m_flags & 1) && member->m_stats.m_pet.m_guid == guid) {
-            return &CGRaidInfo::m_members[i]->m_stats.m_pet;
-        }
-    }
-
-    return NULL;
+    player->FillPartyMemberState(&CGRaidInfo::m_members[index]->m_stats);
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
+    msg.Put(player->m_obj->m_guid.m_guid);
+    msg.Finalize();
+    ClientServices::Send2(&msg);
 }
 
 // OFFSET: 0x0092D8F0/0x140694A00
@@ -360,22 +494,244 @@ int32_t CGRaidInfo::IsPetInRaid(const WOWGUID& guid, int32_t* index) {
     return 0;
 }
 
-// OFFSET: #0x005743B0
+// OFFSET: 0x0092D9A0/0x140694AF0
+int32_t CGRaidInfo::IsPlayerOrPetInRaid(const WOWGUID& guid) {
+    if (!guid) {
+        return 0;
+    }
+
+    for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
+        CGRaidMember* member = CGRaidInfo::m_members[i];
+
+        if (!member) {
+            continue;
+        }
+
+        if (member->m_guid == guid) {
+            return 1;
+        }
+
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(member->m_guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (player) {
+            CGUnitData* unit = player->m_unit;
+            const WOWGUID& pet = unit->m_unitFieldCharm ? unit->m_unitFieldCharm : unit->m_unitFieldSummon;
+
+            if (pet == guid) {
+                return 1;
+            }
+        } else if ((member->m_stats.m_flags & 1) && member->m_stats.m_pet.m_guid == guid) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0092DA50/0x140694BC0
+void CGRaidInfo::SendReadyCheck() {
+    WOWGUID player = ClntObjMgrGetActivePlayer();
+
+    if (!player) {
+        return;
+    }
+
+    if (CGRaidInfo::m_numMembers) {
+        if (!CGRaidInfo::IsPlayerRaidOfficer(player)) {
+            return;
+        }
+    } else if (player != CGPartyInfo::m_leader) {
+        return;
+    }
+
+    uint32_t now = FrameTime::GetCurTimeMs();
+
+    if (CGRaidInfo::m_readyCheckTime && static_cast<int32_t>(now - CGRaidInfo::m_readyCheckTime) < 0 && CGRaidInfo::m_readyCheckTime != now) {
+        CGGameUI::DisplayError(ERR_READY_CHECK_IN_PROGRESS);
+        return;
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(MSG_RAID_READY_CHECK));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x0092DB30/0x140694CF0
+void CGRaidInfo::CheckReadyCheckTime() {
+    if (!CGRaidInfo::m_readyCheckTime || !CGRaidInfo::m_readyCheckInitiator || CGRaidInfo::m_readyCheckInitiator != ClntObjMgrGetActivePlayer() || static_cast<int32_t>(FrameTime::GetCurTimeMs() - CGRaidInfo::m_readyCheckTime) < 0) {
+        return;
+    }
+
+    if (CGRaidInfo::m_readyCheckTimer) {
+        ClientKillTimer(CGRaidInfo::m_readyCheckTimer, CGRaidInfo::ProcessReadyCheckTimer, "ProcessReadyCheckTimer");
+        CGRaidInfo::m_readyCheckTimer = 0;
+    }
+
+    CGRaidInfo::m_readyCheckTime = 0;
+    const char* format = FrameScript_GetText("RAID_MEMBERS_AFK", -1, GENDER_NOT_APPLICABLE);
+    int32_t first = 1;
+    int32_t allReady = 1;
+    char names[512];
+
+    if (CGRaidInfo::m_numMembers) {
+        for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
+            CGRaidMember* member = CGRaidInfo::m_members[i];
+
+            if (!member->m_readyCheckReady) {
+                allReady = 0;
+            }
+
+            if (!member->m_readyCheckPending) {
+                continue;
+            }
+
+            WOWGUID requester = WOWGUID();
+            NameCache* name = g_nameDBCache.GetRecord(member->m_guid.m_guid, requester, NULL, NULL, false);
+
+            if (!name) {
+                continue;
+            }
+
+            if (first) {
+                SStrCopy(names, name->m_name, sizeof(names));
+                first = 0;
+            } else {
+                SStrPack(names, ", ", sizeof(names));
+                SStrPack(names, name->m_name, sizeof(names));
+            }
+        }
+    } else {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
+            if (i >= 4 || !CGPartyInfo::m_readyCheckReady[i]) {
+                allReady = 0;
+            }
+
+            if (i >= 4 || !CGPartyInfo::m_readyCheckPending[i]) {
+                continue;
+            }
+
+            WOWGUID requester = WOWGUID();
+            NameCache* name = g_nameDBCache.GetRecord(CGPartyInfo::GetMember(i).m_guid, requester, NULL, NULL, false);
+
+            if (!name) {
+                continue;
+            }
+
+            if (first) {
+                SStrCopy(names, name->m_name, sizeof(names));
+                first = 0;
+            } else {
+                SStrPack(names, ", ", sizeof(names));
+                SStrPack(names, name->m_name, sizeof(names));
+            }
+        }
+    }
+
+    if (!first) {
+        char text[512];
+        SStrPrintf(text, sizeof(text), format, names);
+        CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
+    } else if (!allReady) {
+        CGChat::AddChatMessage(FrameScript_GetText("READY_CHECK_FINISHED", -1, GENDER_NOT_APPLICABLE), static_cast<SLASH_COMMAND_ID>(0), NULL);
+    } else {
+        CGChat::AddChatMessage(FrameScript_GetText("READY_CHECK_ALL_READY", -1, GENDER_NOT_APPLICABLE), static_cast<SLASH_COMMAND_ID>(0), NULL);
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(MSG_RAID_READY_CHECK_FINISHED));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// PROVEN: 3c2c0e63 IDENTICAL/NONE
+// OFFSET: 0x0092DED0/0x1406951E0
+int32_t CGRaidInfo::ProcessReadyCheckTimer(const void* data, void* param) {
+    CGRaidInfo::m_readyCheckTimer = 0;
+    CGRaidInfo::CheckReadyCheckTime();
+    return 1;
+}
+
+// OFFSET: 0x0092ED90/0x1406963B0
+static bool GetSavedInstanceCompletedMask(int32_t mapId, uint32_t& mask, int32_t difficulty) {
+    bool matchDifficulty = true;
+    MapRec* map = g_mapDB.GetRecord(mapId);
+
+    if (map && !(map->m_flags & 0x8000)) {
+        matchDifficulty = false;
+    }
+
+    for (uint32_t i = 0; i < s_savedInstances.Count(); i++) {
+        RaidInstanceInfo& info = s_savedInstances.m_data[i];
+
+        if (info.m_mapID == static_cast<uint32_t>(mapId) && info.m_locked && static_cast<int32_t>(info.m_resetTime) > 0 && (matchDifficulty || static_cast<int32_t>(info.m_difficulty) == difficulty)) {
+            mask = info.m_completedMask;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: 0x0092EE20/0x140696450
+void CGRaidInfo::GetMapNameWithDifficulty(char* buffer, uint32_t size, int32_t mapId, int32_t difficulty, int32_t heroic) {
+    *buffer = 0;
+    MapRec* map = g_mapDB.GetRecord(mapId);
+
+    if (!map) {
+        return;
+    }
+
+    const char* difficultyName;
+
+    if (map->m_flags & 0x8000) {
+        if (heroic <= 0) {
+            SStrCopy(buffer, map->m_mapName, size);
+            return;
+        }
+
+        difficultyName = "PLAYER_DIFFICULTY2";
+    } else {
+        MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
+
+        if (!entry || !entry->m_difficultystring || !*entry->m_difficultystring) {
+            SStrCopy(buffer, map->m_mapName, size);
+            return;
+        }
+
+        difficultyName = entry->m_difficultystring;
+    }
+
+    const char* name = map->m_mapName;
+    const char* difficultyText = FrameScript_GetText(difficultyName, -1, GENDER_NOT_APPLICABLE);
+    SStrPrintf(buffer, size, FrameScript_GetText("DUNGEON_NAME_WITH_DIFFICULTY", -1, GENDER_NOT_APPLICABLE), name, difficultyText);
+}
+
+// OFFSET: 0x0092EF40
+uint32_t CGRaidInfo::GetIneligibleEncounterMask(int32_t mapId, uint32_t completedMask, uint32_t difficulty) {
+    uint32_t mask;
+
+    if (GetSavedInstanceCompletedMask(mapId, mask, difficulty)) {
+        return mask & ~completedMask;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0092F310
 int32_t Packet_MSG_RAID_TARGET_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID setter = WOWGUID();
     uint8_t full;
     msg->Get(full);
 
     if (full) {
-        WOWGUID previous[8];
+        WOWGUID previous[28];
         memcpy(previous, CGRaidInfo::m_raidTargets, sizeof(previous));
-        memset(CGRaidInfo::m_raidTargets, 0, sizeof(((CGRaidInfo*)0)->m_raidTargets));
+        memset(CGRaidInfo::m_raidTargets, 0, sizeof(CGRaidInfo::m_raidTargets));
 
-        for (uint32_t i = 0; i < 8; i++) {
+        for (uint32_t i = 0; i < 28; i++) {
             if (previous[i]) {
-                CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(previous[i], TYPEMASK_UNIT, __FILE__, __LINE__));
-
-                if (unit) {
+                if (CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(previous[i], TYPEMASK_UNIT, __FILE__, __LINE__))) {
                     unit->NamePlateUpdateRaidTarget();
                 }
             }
@@ -391,7 +747,7 @@ int32_t Packet_MSG_RAID_TARGET_UPDATE(void* param, NETMESSAGE msgId, uint32_t ti
         msg->Get(index);
         msg->Get(target.m_guid);
 
-        if (index < 8) {
+        if (index < 28) {
             CGRaidInfo::SetRaidTarget(index, target);
         }
     }
@@ -405,7 +761,7 @@ int32_t Packet_MSG_RAID_TARGET_UPDATE(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x005744F0
+// OFFSET: 0x0092F450
 int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid = WOWGUID();
     msg->Get(guid.m_guid);
@@ -431,12 +787,12 @@ int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint3
                 found = true;
 
                 if (!ready) {
-                    WOWGUID none = WOWGUID();
-                    NameCache* name = g_nameDBCache.GetRecord(CGRaidInfo::m_members[i]->m_guid.m_guid, none, NULL, NULL, false);
+                    WOWGUID requester = WOWGUID();
+                    NameCache* name = g_nameDBCache.GetRecord(CGRaidInfo::m_members[i]->m_guid.m_guid, requester, NULL, NULL, false);
 
                     if (name && initiator) {
                         SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("RAID_MEMBER_NOT_READY", -1, GENDER_NOT_APPLICABLE), name->m_name);
-                        CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+                        CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
                     }
                 }
 
@@ -471,12 +827,12 @@ int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint3
                 found = true;
 
                 if (!ready) {
-                    WOWGUID none = WOWGUID();
-                    NameCache* name = g_nameDBCache.GetRecord(info.m_guid.m_guid, none, NULL, NULL, false);
+                    WOWGUID requester = WOWGUID();
+                    NameCache* name = g_nameDBCache.GetRecord(info.m_guid.m_guid, requester, NULL, NULL, false);
 
                     if (name) {
                         SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("RAID_MEMBER_NOT_READY", -1, GENDER_NOT_APPLICABLE), name->m_name);
-                        CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+                        CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
                     }
                 }
 
@@ -501,14 +857,70 @@ int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint3
         }
     }
 
-    CGRaidInfo::m_readyCheckTime = OsGetAsyncTimeMs() - 1;
+    CGRaidInfo::m_readyCheckTime = FrameTime::GetCurTimeMs() - 1;
     CGRaidInfo::CheckReadyCheckTime();
     return 1;
 }
 
-// OFFSET: #0x005747D0
+// OFFSET: 0x0092F720/0x140697190
+bool CGRaidInfo::CanBeRaidTarget(WOWGUID guid) {
+    if (!guid) {
+        return false;
+    }
+
+    if (CGRaidInfo::IsPlayerOrPetInRaid(guid) || CGPartyInfo::IsPlayerOrPetInParty(guid)) {
+        return true;
+    }
+
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    return unit && player && (unit == player || !(unit->m_obj->m_type & TYPEMASK_PLAYER) || unit->CanCooperate(player));
+}
+
+// OFFSET: 0x0092F7C0
+void CGRaidInfo::SetRaidTarget(WOWGUID guid, uint32_t index) {
+    if (guid && !CGRaidInfo::IsPlayerOrPetInRaid(guid) && !CGPartyInfo::IsPlayerOrPetInParty(guid)) {
+        if (!ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__)) {
+            CGGameUI::DisplayError(ERR_GENERIC_NO_TARGET);
+            return;
+        }
+
+        if (!CGRaidInfo::CanBeRaidTarget(guid)) {
+            CGGameUI::DisplayError(ERR_INVALID_RAID_TARGET);
+            return;
+        }
+    }
+
+    if (index >= 28) {
+        return;
+    }
+
+    if (CGRaidInfo::m_numMembers || CGPartyInfo::m_members[0]) {
+        CDataStore msg;
+        msg.Put(static_cast<uint32_t>(MSG_RAID_TARGET_UPDATE));
+        msg.Put(static_cast<uint8_t>(index));
+        msg.Put(guid.m_guid);
+        msg.Finalize();
+        ClientServices::Send2(&msg);
+        return;
+    }
+
+    uint32_t current = GetRaidTargetIndexFromGuid(guid);
+
+    if (current == index || current < 28) {
+        CGRaidInfo::SetRaidTarget(current, WOWGUID());
+    }
+
+    if (current != index) {
+        CGRaidInfo::SetRaidTarget(index, guid);
+    }
+
+    FrameScript_SignalEvent(SCRIPT_EVENT_RAID_TARGET_UPDATE, NULL);
+}
+
+// OFFSET: 0x0092F940/0x140697410
 void CGRaidInfo::InitiateReadyCheck(const char* name) {
-    uint32_t now = OsGetAsyncTimeMs();
+    uint32_t now = FrameTime::GetCurTimeMs();
     uint32_t remaining;
 
     if (CGRaidInfo::m_readyCheckTime && static_cast<int32_t>(now - CGRaidInfo::m_readyCheckTime) < 0) {
@@ -532,72 +944,7 @@ void CGRaidInfo::InitiateReadyCheck(const char* name) {
     CGRaidInfo::m_readyCheckTimer = ClientSetTimer(30000, CGRaidInfo::ProcessReadyCheckTimer, NULL);
 }
 
-// OFFSET: #0x00574D00
-static void ReadyCheckNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    WOWGUID none = WOWGUID();
-    NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, none, NULL, NULL, false);
-
-    if (name) {
-        CGRaidInfo::InitiateReadyCheck(name->m_name);
-    }
-}
-
-// OFFSET: #0x00574D50
-int32_t Packet_MSG_RAID_READY_CHECK(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    WOWGUID initiator;
-    msg->Get(initiator.m_guid);
-    CGRaidInfo::m_readyCheckInitiator = initiator;
-    CGRaidInfo::m_readyCheckTime = OsGetAsyncTimeMs() + 30000;
-
-    if (initiator == ClntObjMgrGetActivePlayer()) {
-        CGChat::AddChatMessage(FrameScript_GetText("READY_CHECK_START", -1, GENDER_NOT_APPLICABLE), 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
-    }
-
-    if (CGRaidInfo::m_numMembers) {
-        CGRaidMember* self = CGRaidInfo::FindMemberByGuid(ClntObjMgrGetActivePlayer());
-
-        if (self && self->m_rank > 0) {
-            for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
-                CGRaidMember* member = CGRaidInfo::m_members[i];
-
-                if (member->m_guid) {
-                    if (member->m_guid == initiator) {
-                        member->m_readyCheckPending = 0;
-                        CGRaidInfo::m_members[i]->m_readyCheckReady = 1;
-                    } else {
-                        member->m_readyCheckPending = 1;
-                    }
-                }
-            }
-        }
-    } else if (CGPartyInfo::m_leader == ClntObjMgrGetActivePlayer()) {
-        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
-            if (CGPartyInfo::GetMember(i)) {
-                PartyReadyCheckInfo info;
-                CGPartyInfo::GetReadyCheckInfo(&info, i);
-
-                if (info.m_guid == initiator) {
-                    info.m_pending = 0;
-                    info.m_ready = 1;
-                } else {
-                    info.m_pending = 1;
-                }
-
-                CGPartyInfo::SetReadyCheckInfo(&info, i);
-            }
-        }
-    }
-
-    NameCache* name = g_nameDBCache.GetRecord(initiator.m_guid, initiator, &ReadyCheckNameCallback, NULL, false);
-
-    if (name) {
-        CGRaidInfo::InitiateReadyCheck(name->m_name);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x00574880
+// OFFSET: 0x0092F9F0/0x1406974C0
 void CGRaidInfo::RosterUpdateRefreshReadyCheck(uint32_t removed, WOWGUID leader) {
     if (!CGRaidInfo::m_numMembers || !CGPartyInfo::m_members[0] || leader != CGPartyInfo::m_leader) {
         CGRaidInfo::m_readyCheckTime = 0;
@@ -647,17 +994,106 @@ void CGRaidInfo::RosterUpdateRefreshReadyCheck(uint32_t removed, WOWGUID leader)
     }
 
     if (done) {
-        CGRaidInfo::m_readyCheckTime = OsGetAsyncTimeMs() - 1;
+        CGRaidInfo::m_readyCheckTime = FrameTime::GetCurTimeMs() - 1;
         CGRaidInfo::CheckReadyCheckTime();
     }
 }
 
-// OFFSET: #0x00574F10
-void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, const uint8_t* flags, const uint32_t* roles, const uint8_t* online, uint32_t count, uint8_t battleground) {
-    if (count > 40) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// OFFSET: 0x00930260
+static void ReadyCheckNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    WOWGUID requester = WOWGUID();
+
+    if (NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false)) {
+        CGRaidInfo::InitiateReadyCheck(name->m_name);
+    }
+}
+
+// OFFSET: 0x009302B0
+int32_t Packet_SMSG_RAID_INSTANCE_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    uint32_t count;
+    msg->Get(count);
+
+    if (count) {
+        if (count >= s_savedInstances.Count()) {
+            s_savedInstances.SetCount(count);
+        }
+
+        for (uint32_t i = 0; i < count; i++) {
+            RaidInstanceInfo& info = s_savedInstances.m_data[i];
+            msg->Get(info.m_mapID);
+            msg->Get(info.m_difficulty);
+            msg->Get(info.m_heroic);
+            msg->Get(info.m_instanceID);
+            uint8_t value = 0;
+            msg->Get(value);
+            info.m_locked = value;
+            value = 0;
+            msg->Get(value);
+            info.m_extended = value;
+            msg->Get(info.m_resetTime);
+            msg->Get(info.m_completedMask);
+        }
     }
 
+    FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_INSTANCE_INFO, NULL);
+    return 1;
+}
+
+// OFFSET: 0x009303D0
+int32_t Packet_MSG_RAID_READY_CHECK(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    WOWGUID initiator;
+    msg->Get(initiator.m_guid);
+    CGRaidInfo::m_readyCheckInitiator = initiator;
+    CGRaidInfo::m_readyCheckTime = FrameTime::GetCurTimeMs() + 30000;
+
+    if (initiator == ClntObjMgrGetActivePlayer()) {
+        CGChat::AddChatMessage(FrameScript_GetText("READY_CHECK_START", -1, GENDER_NOT_APPLICABLE), static_cast<SLASH_COMMAND_ID>(0), NULL);
+    }
+
+    if (CGRaidInfo::m_numMembers) {
+        CGRaidMember* self = CGRaidInfo::FindMemberByGuid(ClntObjMgrGetActivePlayer());
+
+        if (self && self->m_rank > 0) {
+            for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
+                CGRaidMember* member = CGRaidInfo::m_members[i];
+
+                if (member->m_guid) {
+                    if (member->m_guid == initiator) {
+                        member->m_readyCheckPending = 0;
+                        CGRaidInfo::m_members[i]->m_readyCheckReady = 1;
+                    } else {
+                        member->m_readyCheckPending = 1;
+                    }
+                }
+            }
+        }
+    } else if (CGPartyInfo::m_leader == ClntObjMgrGetActivePlayer()) {
+        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
+            if (CGPartyInfo::GetMember(i)) {
+                PartyReadyCheckInfo info;
+                CGPartyInfo::GetReadyCheckInfo(&info, i);
+
+                if (info.m_guid == initiator) {
+                    info.m_pending = 0;
+                    info.m_ready = 1;
+                } else {
+                    info.m_pending = 1;
+                }
+
+                CGPartyInfo::SetReadyCheckInfo(&info, i);
+            }
+        }
+    }
+
+    if (NameCache* name = g_nameDBCache.GetRecord(initiator.m_guid, initiator, &ReadyCheckNameCallback, NULL, false)) {
+        CGRaidInfo::InitiateReadyCheck(name->m_name);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00930570/0x140698360
+void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, const uint8_t* flags, const uint32_t* roles, const uint8_t* online, uint32_t count, uint8_t battleground, uint8_t everyoneIsAssistant) {
     if (count) {
         CGTutorial::TriggerTutorial(45);
     }
@@ -667,45 +1103,42 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
 
     if (s_pendingNameQueries) {
         for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
-            g_nameDBCache.CancelCallback(CGRaidInfo::m_members[i]->m_guid.m_guid, RaidRosterNameCallback, NULL);
+            g_nameDBCache.CancelCallback(CGRaidInfo::m_members[i]->m_guid.m_guid, &RaidRosterNameCallback, NULL);
+            oldCount = CGRaidInfo::m_numMembers;
         }
-
-        oldCount = CGRaidInfo::m_numMembers;
     }
 
     uint32_t addedCount = 0;
     WOWGUID* added = static_cast<WOWGUID*>(alloca(sizeof(WOWGUID) * count));
     uint32_t removedCount = 0;
     WOWGUID* removed = static_cast<WOWGUID*>(alloca(sizeof(WOWGUID) * oldCount));
-    PartyMemberState* stats = static_cast<PartyMemberState*>(alloca(sizeof(PartyMemberState) * count));
+    PartyMemberState* stats = new (__FILE__, __LINE__) PartyMemberState[count];
 
     for (uint32_t i = 0; i < count; i++) {
         uint32_t j = 0;
 
-        for (; j < oldCount; j++) {
+        for (; j < CGRaidInfo::m_numMembers; j++) {
             if (guids[i] == CGRaidInfo::m_members[j]->m_guid) {
-                memcpy(&stats[i], &CGRaidInfo::m_members[j]->m_stats, sizeof(PartyMemberState));
-                oldCount = CGRaidInfo::m_numMembers;
+                stats[i].Copy(&CGRaidInfo::m_members[j]->m_stats);
                 break;
             }
         }
 
-        if (j != oldCount) {
+        if (j != CGRaidInfo::m_numMembers) {
             continue;
         }
 
-        memset(&stats[i], 0, sizeof(PartyMemberState));
+        stats[i].Reset();
         stats[i].m_health = 1;
         stats[i].m_maxHealth = 1;
         stats[i].m_power = 1;
         stats[i].m_maxPower = 1;
 
-        if (oldCount) {
-            NameCache* name = g_nameDBCache.GetRecord(guids[i].m_guid, guids[i], RaidMemberAddedNameCallback, NULL, false);
+        if (CGRaidInfo::m_numMembers) {
             const char* fullNamePtr = NULL;
             char fullName[256];
 
-            if (name) {
+            if (NameCache* name = g_nameDBCache.GetRecord(guids[i].m_guid, guids[i], &RaidMemberAddedNameCallback, NULL, false)) {
                 CGGameUI::DisplayError(ERR_RAID_MEMBER_ADDED_S, name->m_name);
 
                 if (name->m_realmName[0]) {
@@ -718,14 +1151,13 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
             }
 
             CGAutoCompleteName::AddFlags(guids[i], 1, 0, fullNamePtr);
-            oldCount = CGRaidInfo::m_numMembers;
         }
 
         added[addedCount++] = guids[i];
     }
 
     if (CGRaidInfo::m_rosterCounter == battleground) {
-        for (uint32_t j = 0; j < oldCount; j++) {
+        for (uint32_t j = 0; j < CGRaidInfo::m_numMembers; j++) {
             uint32_t i = 0;
 
             while (i < count && CGRaidInfo::m_members[j]->m_guid != guids[i]) {
@@ -736,29 +1168,28 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
                 continue;
             }
 
-            NameCache* name = g_nameDBCache.GetRecord(CGRaidInfo::m_members[j]->m_guid.m_guid, CGRaidInfo::m_members[j]->m_guid, RaidMemberRemovedNameCallback, NULL, false);
+            NameCache* name = g_nameDBCache.GetRecord(CGRaidInfo::m_members[j]->m_guid.m_guid, CGRaidInfo::m_members[j]->m_guid, &RaidMemberRemovedNameCallback, NULL, false);
 
             if (name && ClntObjMgrGetActivePlayer()) {
                 CGGameUI::DisplayError(ERR_RAID_MEMBER_REMOVED_S, name->m_name);
                 CGAutoCompleteName::RemoveFlags(CGRaidInfo::m_members[j]->m_guid, 1);
             }
 
-            oldCount = CGRaidInfo::m_numMembers;
             removed[removedCount++] = CGRaidInfo::m_members[j]->m_guid;
         }
     }
 
     CGRaidInfo::m_rosterCounter = battleground;
 
-    if (!oldCount) {
+    if (!CGRaidInfo::m_numMembers) {
         CGGameUI::DisplayError(ERR_RAID_YOU_JOINED);
-        oldCount = CGRaidInfo::m_numMembers;
     }
 
-    PartyReadyCheckInfo* previous = static_cast<PartyReadyCheckInfo*>(alloca(sizeof(PartyReadyCheckInfo) * oldCount));
+    uint32_t previousCount = CGRaidInfo::m_numMembers;
+    PartyReadyCheckInfo* previous = static_cast<PartyReadyCheckInfo*>(alloca(sizeof(PartyReadyCheckInfo) * previousCount));
     WOWGUID leader = WOWGUID();
 
-    for (uint32_t i = 0; i < oldCount; i++) {
+    for (uint32_t i = 0; i < previousCount; i++) {
         CGRaidMember* member = CGRaidInfo::m_members[i];
         previous[i].m_guid = member->m_guid;
         previous[i].m_pending = member->m_readyCheckPending;
@@ -778,8 +1209,14 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
         member->m_subgroup = subgroups[i];
         member->m_assignments = flags[i];
         member->m_groupRole = roles[i];
-        member->m_rank = member->m_guid == CGPartyInfo::m_leader ? 2 : flags[i] & 0x1;
-        memcpy(&member->m_stats, &stats[i], sizeof(PartyMemberState));
+
+        if (member->m_guid == CGPartyInfo::m_leader) {
+            member->m_rank = 2;
+        } else {
+            member->m_rank = everyoneIsAssistant || (flags[i] & 0x1);
+        }
+
+        member->m_stats.Copy(&stats[i]);
 
         if (online[i]) {
             member->m_stats.m_flags |= 0x1;
@@ -789,11 +1226,11 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
 
         uint32_t j = 0;
 
-        while (j < oldCount && member->m_guid != previous[j].m_guid) {
+        while (j < previousCount && member->m_guid != previous[j].m_guid) {
             j++;
         }
 
-        if (j < oldCount) {
+        if (j < previousCount) {
             member->m_readyCheckPending = previous[j].m_pending;
             member->m_readyCheckReady = previous[j].m_ready;
         } else {
@@ -801,7 +1238,7 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
             member->m_readyCheckReady = 0;
         }
 
-        if (member->m_guid && !g_nameDBCache.GetRecord(member->m_guid.m_guid, member->m_guid, RaidRosterNameCallback, NULL, false)) {
+        if (member->m_guid && !g_nameDBCache.GetRecord(member->m_guid.m_guid, member->m_guid, &RaidRosterNameCallback, NULL, false)) {
             s_pendingNameQueries++;
         }
     }
@@ -814,15 +1251,13 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
             continue;
         }
 
-        const WOWGUID& petGuid = unit->m_unit->m_unitFieldCharm.m_guid ? unit->m_unit->m_unitFieldCharm : unit->m_unit->m_unitFieldSummon;
+        const WOWGUID& petGuid = unit->m_unit->m_unitFieldCharm ? unit->m_unit->m_unitFieldCharm : unit->m_unit->m_unitFieldSummon;
 
         if (petGuid) {
-            CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(petGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-            if (pet) {
+            if (CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(unit->m_unit->m_unitFieldCharm ? unit->m_unit->m_unitFieldCharm : unit->m_unit->m_unitFieldSummon, TYPEMASK_UNIT, __FILE__, __LINE__))) {
                 pet->UnregisterScript(512);
             } else {
-                CGGameUI::ClearTarget(petGuid, 1);
+                CGGameUI::ClearTarget(unit->m_unit->m_unitFieldCharm ? unit->m_unit->m_unitFieldCharm : unit->m_unit->m_unitFieldSummon, 1);
             }
         }
 
@@ -830,15 +1265,12 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
     }
 
     for (uint32_t i = 0; i < addedCount; i++) {
-        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(added[i], TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-        if (unit) {
+        if (CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(added[i], TYPEMASK_PLAYER, __FILE__, __LINE__))) {
             unit->RegisterScript(256);
-            const WOWGUID& petGuid = unit->m_unit->m_unitFieldCharm.m_guid ? unit->m_unit->m_unitFieldCharm : unit->m_unit->m_unitFieldSummon;
-            CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(petGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
+            const WOWGUID& petGuid = unit->m_unit->m_unitFieldCharm ? unit->m_unit->m_unitFieldCharm : unit->m_unit->m_unitFieldSummon;
 
-            if (pet) {
-                pet->RegisterScript(512);
+            if (ClntObjMgrObjectPtr(petGuid, TYPEMASK_UNIT, __FILE__, __LINE__)) {
+                unit->RegisterScript(512);
             }
         } else {
             CDataStore msg;
@@ -856,40 +1288,72 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_ROLES_ASSIGNED, NULL);
 
     if (joining) {
-        CDataStore msg;
-        msg.Put(static_cast<uint32_t>(MSG_RAID_TARGET_UPDATE));
-        msg.Put(static_cast<uint8_t>(255));
-        msg.Finalize();
-        ClientServices::Send2(&msg);
+        UserClientRequestPartyJoinUpdates msg;
+        ClientServices::Send(&msg);
     }
 
     CGRaidInfo::RosterUpdateRefreshReadyCheck(removedCount, leader);
+    delete[] stats;
 }
 
-// OFFSET: #0x005756C0
+// OFFSET: 0x00930DE0
 void CGRaidInfo::InitializeGame() {
     ClientServices::SetMessageHandler(MSG_RAID_TARGET_UPDATE, Packet_MSG_RAID_TARGET_UPDATE, NULL);
     ClientServices::SetMessageHandler(MSG_RAID_READY_CHECK, Packet_MSG_RAID_READY_CHECK, NULL);
     ClientServices::SetMessageHandler(MSG_RAID_READY_CHECK_CONFIRM, Packet_MSG_RAID_READY_CHECK_CONFIRM, NULL);
     ClientServices::SetMessageHandler(MSG_RAID_READY_CHECK_FINISHED, Packet_MSG_RAID_READY_CHECK_FINISHED, NULL);
-    ClientServices::SetMessageHandler(SMSG_READY_CHECK_ERROR, Packet_SMSG_RAID_READY_CHECK_ERROR, NULL);
+    ClientServices::SetMessageHandler(SMSG_READY_CHECK_ERROR, Packet_SMSG_READY_CHECK_ERROR, NULL);
     ClientServices::SetMessageHandler(MSG_NOTIFY_PARTY_SQUELCH, Packet_MSG_NOTIFY_PARTY_SQUELCH, NULL);
     ClientServices::SetMessageHandler(SMSG_ECHO_PARTY_SQUELCH, Packet_SMSG_ECHO_PARTY_SQUELCH, NULL);
+    ClientServices::SetMessageHandler(SMSG_RAID_INSTANCE_INFO, Packet_SMSG_RAID_INSTANCE_INFO, NULL);
     CGRaidInfo::m_numMembers = 0;
     CGRaidInfo::m_realNumMembers = 0;
     CGRaidInfo::m_selectedMember = WOWGUID();
     s_pendingNameQueries = 0;
     CGRaidInfo::m_rosterCounter = 0xFF;
-    memset(CGRaidInfo::m_raidTargets, 0, sizeof(((CGRaidInfo*)0)->m_raidTargets));
+    memset(CGRaidInfo::m_raidTargets, 0, sizeof(CGRaidInfo::m_raidTargets));
+    CGRaidInfo::m_raidMarkers = 0;
 
-    for (uint32_t i = 0; i < sizeof(((CGRaidInfo*)0)->m_members) / sizeof(CGRaidInfo::m_members[0]); i++) {
-        CGRaidInfo::m_members[i] = static_cast<CGRaidMember*>(SMemAlloc(sizeof(CGRaidMember), __FILE__, __LINE__, 0));
-        memset(CGRaidInfo::m_members[i], 0, sizeof(CGRaidMember));
+    for (uint32_t i = 0; i < 40; i++) {
+        CGRaidInfo::m_members[i] = new (__FILE__, __LINE__) CGRaidMember;
+        CGRaidInfo::m_members[i]->m_guid = WOWGUID();
+        CGRaidInfo::m_members[i]->m_subgroup = 0;
+        CGRaidInfo::m_members[i]->m_rank = 0;
+        CGRaidInfo::m_members[i]->m_readyCheckPending = 0;
+        CGRaidInfo::m_members[i]->m_readyCheckReady = 0;
+        CGRaidInfo::m_members[i]->m_assignments = 0;
+        CGRaidInfo::m_members[i]->m_groupRole = 0;
+        CGRaidInfo::m_members[i]->m_stats.Reset();
     }
 
     CGRaidInfo::m_readyCheckTime = 0;
     CGRaidInfo::m_readyCheckInitiator = WOWGUID();
     CGRaidInfo::m_readyCheckTimer = 0;
+    CGRaidInfo::m_isInFakeRaid = 0;
+    CGRaidInfo::m_everyoneIsAssistant = 0;
+}
+
+// OFFSET: 0x00930FE0/0x140699000
+void CGRaidInfo::ShutdownGame() {
+    ClientServices::ClearMessageHandler(MSG_RAID_TARGET_UPDATE);
+    ClientServices::ClearMessageHandler(MSG_RAID_READY_CHECK);
+    ClientServices::ClearMessageHandler(MSG_RAID_READY_CHECK_CONFIRM);
+    ClientServices::ClearMessageHandler(MSG_RAID_READY_CHECK_FINISHED);
+    ClientServices::ClearMessageHandler(SMSG_READY_CHECK_ERROR);
+    ClientServices::ClearMessageHandler(MSG_NOTIFY_PARTY_SQUELCH);
+    ClientServices::ClearMessageHandler(SMSG_ECHO_PARTY_SQUELCH);
+    ClientServices::ClearMessageHandler(SMSG_RAID_INSTANCE_INFO);
+
+    for (uint32_t i = 0; i < 40; i++) {
+        delete CGRaidInfo::m_members[i];
+        CGRaidInfo::m_members[i] = NULL;
+    }
+
+    if (CGRaidInfo::m_readyCheckTimer) {
+        ClientKillTimer(CGRaidInfo::m_readyCheckTimer, CGRaidInfo::ProcessReadyCheckTimer, "ProcessReadyCheckTimer");
+    }
+
+    s_savedInstances.Clear();
 }
 
 // PROVEN: b809d5f5 IDENTICAL/NONE
@@ -926,41 +1390,7 @@ CGRaidMember* CGRaidInfo::FindMemberByGuid(WOWGUID guid) {
     return NULL;
 }
 
-// OFFSET: 0x0092D9A0/0x140694AF0
-int32_t CGRaidInfo::IsPlayerOrPetInRaid(const WOWGUID& guid) {
-    if (!static_cast<uint32_t>(guid.m_guid)) {
-        return static_cast<uint32_t>(guid.m_guid >> 32);
-    }
-
-    for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
-        CGRaidMember* member = CGRaidInfo::m_members[i];
-
-        if (!member) {
-            continue;
-        }
-
-        if (member->m_guid == guid) {
-            return 1;
-        }
-
-        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(member->m_guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-        if (player) {
-            CGUnitData* unit = player->m_unit;
-            const WOWGUID& pet = unit->m_unitFieldCharm ? unit->m_unitFieldCharm : unit->m_unitFieldSummon;
-
-            if (pet == guid) {
-                return 1;
-            }
-        } else if ((member->m_stats.m_flags & 1) && member->m_stats.m_pet.m_guid == guid) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x005723E0
+// OFFSET: 0x0092CA90
 int32_t CGRaidInfo::GetPartyMemberIndex(WOWGUID guid) {
     for (int32_t i = 0; i < 4; i++) {
         if (CGPartyInfo::m_members[i] == guid) {
@@ -971,294 +1401,14 @@ int32_t CGRaidInfo::GetPartyMemberIndex(WOWGUID guid) {
     return -1;
 }
 
-// OFFSET: #0x00572450
+// OFFSET: 0x0092CAD0
 int32_t CGRaidInfo::IsPartyMemberReadyCheckPending(uint32_t index) {
     return index < 4 ? CGPartyInfo::m_readyCheckPending[index] : 0;
 }
 
-// OFFSET: #0x00572470
+// OFFSET: 0x0092CAF0
 int32_t CGRaidInfo::IsPartyMemberReadyCheckReady(uint32_t index) {
     return index < 4 ? CGPartyInfo::m_readyCheckReady[index] : 0;
-}
-
-// OFFSET: #0x00572800
-PartyMemberState* CGRaidInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
-    for (uint32_t i = 0; i < sizeof(((CGRaidInfo*)0)->m_members) / sizeof(CGRaidInfo::m_members[0]); i++) {
-        CGRaidMember* member = CGRaidInfo::m_members[i];
-
-        if (member->m_guid && member->m_stats.m_pet.m_guid == petGuid) {
-            return &CGRaidInfo::m_members[i]->m_stats;
-        }
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x00572900
-uint8_t CGRaidInfo::GetPartyAssignments(const WOWGUID& guid) {
-    uint32_t i = 0;
-
-    if (!CGRaidInfo::m_numMembers) {
-        return 0;
-    }
-
-    while (CGRaidInfo::m_members[i]->m_guid != guid) {
-        if (++i >= CGRaidInfo::m_numMembers) {
-            return 0;
-        }
-    }
-
-    return CGRaidInfo::m_members[i]->m_assignments;
-}
-
-// OFFSET: #0x00572950
-int32_t CGRaidInfo::GetPartyAssignments(lua_State* L, int32_t assignment) {
-    uint8_t flag = 0;
-
-    if (assignment == 0) {
-        flag = 2;
-    } else if (assignment == 1) {
-        flag = 4;
-    }
-
-    if (lua_isstring(L, 2)) {
-        const char* name = lua_tolstring(L, 2, NULL);
-        WOWGUID guid = CGGameUI::ClosestObjectMatch(name, TYPEMASK_PLAYER, 6, StringToBOOL(L, 3, 0), 3.402823466e38f, 0);
-
-        if (!guid) {
-            CGGameUI::DisplayError(ERR_TARGET_NOT_IN_GROUP_S, name);
-            return 0;
-        }
-
-        if (CGRaidInfo::GetPartyAssignments(guid) & flag) {
-            lua_pushnumber(L, 1.0);
-        } else {
-            lua_pushnil(L);
-        }
-
-        return 1;
-    }
-
-    int32_t count = 0;
-
-    for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
-        if (flag & CGRaidInfo::m_members[i]->m_assignments) {
-            lua_checkstack(L, ++count);
-            lua_pushnumber(L, i + 1);
-        }
-    }
-
-    return count;
-}
-
-// OFFSET: %0x00888870
-void CGRaidInfo::ClearRecruitAFriend(WOWGUID guid) {
-    PartyMemberState* stats = CGRaidInfo::GetRemoteStats(guid);
-
-    if (stats) {
-        stats->m_flags &= ~0x100;
-    }
-}
-
-// OFFSET: #0x00572F90
-void CGRaidInfo::ClearRoster() {
-    if (CGRaidInfo::m_numMembers) {
-        CGGameUI::DisplayError(ERR_RAID_YOU_LEFT);
-        CGRaidInfo::m_numMembers = 0;
-        FrameScript_SignalEvent(SCRIPT_EVENT_RAID_ROSTER_UPDATE, NULL);
-
-        for (uint32_t i = 0; i < 40; i++) {
-            CGRaidInfo::m_members[i]->m_guid = WOWGUID();
-        }
-    }
-
-    WOWGUID targets[8];
-    memcpy(targets, CGRaidInfo::m_raidTargets, sizeof(targets));
-    memset(CGRaidInfo::m_raidTargets, 0, sizeof(((CGRaidInfo*)0)->m_raidTargets));
-
-    for (uint32_t i = 0; i < 8; i++) {
-        if (!targets[i]) {
-            continue;
-        }
-
-        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(targets[i], TYPEMASK_UNIT, __FILE__, __LINE__));
-
-        if (unit) {
-            unit->NamePlateUpdateRaidTarget();
-        }
-    }
-
-    CGAutoCompleteName::RemoveFlagsFromAllNodes(1);
-    FrameScript_SignalEvent(SCRIPT_EVENT_RAID_TARGET_UPDATE, NULL);
-    FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_ROLES_ASSIGNED, NULL);
-}
-
-// OFFSET: #0x00573070
-void CGRaidInfo::EnableMember(CGPlayer_C* player, int32_t enable) {
-    WOWGUID guid = player->m_obj->m_guid;
-    uint32_t index;
-
-    for (index = 0; index < CGRaidInfo::m_numMembers; index++) {
-        if (CGRaidInfo::m_members[index]->m_guid == guid) {
-            break;
-        }
-    }
-
-    if (index == CGRaidInfo::m_numMembers || enable) {
-        return;
-    }
-
-    player->FillPartyMemberState(&CGRaidInfo::m_members[index]->m_stats);
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
-    msg.Put(player->m_obj->m_guid.m_guid);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x005732B0
-void CGRaidInfo::SendReadyCheck() {
-    WOWGUID player = ClntObjMgrGetActivePlayer();
-
-    if (!player) {
-        return;
-    }
-
-    if (CGRaidInfo::m_numMembers) {
-        if (!CGRaidInfo::IsPlayerRaidOfficer(player)) {
-            return;
-        }
-    } else if (player != CGPartyInfo::m_leader) {
-        return;
-    }
-
-    uint32_t now = OsGetAsyncTimeMs();
-
-    if (CGRaidInfo::m_readyCheckTime && static_cast<int32_t>(now - CGRaidInfo::m_readyCheckTime) < 0 && CGRaidInfo::m_readyCheckTime != now) {
-        CGGameUI::DisplayError(ERR_READY_CHECK_IN_PROGRESS);
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(MSG_RAID_READY_CHECK));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x00573390
-void CGRaidInfo::CheckReadyCheckTime() {
-    if (!CGRaidInfo::m_readyCheckTime || !CGRaidInfo::m_readyCheckInitiator || CGRaidInfo::m_readyCheckInitiator != ClntObjMgrGetActivePlayer() || static_cast<int32_t>(OsGetAsyncTimeMs() - CGRaidInfo::m_readyCheckTime) < 0) {
-        return;
-    }
-
-    if (CGRaidInfo::m_readyCheckTimer) {
-        ClientKillTimer(CGRaidInfo::m_readyCheckTimer, CGRaidInfo::ProcessReadyCheckTimer, "ProcessReadyCheckTimer");
-        CGRaidInfo::m_readyCheckTimer = 0;
-    }
-
-    CGRaidInfo::m_readyCheckTime = 0;
-    const char* format = FrameScript_GetText("RAID_MEMBERS_AFK", -1, GENDER_NOT_APPLICABLE);
-    int32_t first = 1;
-    int32_t allReady = 1;
-    char names[512];
-
-    if (CGRaidInfo::m_numMembers) {
-        for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
-            CGRaidMember* member = CGRaidInfo::m_members[i];
-
-            if (!member->m_readyCheckReady) {
-                allReady = 0;
-            }
-
-            if (!member->m_readyCheckPending) {
-                continue;
-            }
-
-            WOWGUID none = WOWGUID();
-            NameCache* name = g_nameDBCache.GetRecord(member->m_guid.m_guid, none, NULL, NULL, false);
-
-            if (!name) {
-                continue;
-            }
-
-            if (first) {
-                SStrCopy(names, name->m_name, sizeof(names));
-                first = 0;
-            } else {
-                SStrPack(names, ", ", sizeof(names));
-                SStrPack(names, name->m_name, sizeof(names));
-            }
-        }
-    } else {
-        for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
-            if (i >= 4 || !CGPartyInfo::m_readyCheckReady[i]) {
-                allReady = 0;
-            }
-
-            if (i >= 4 || !CGPartyInfo::m_readyCheckPending[i]) {
-                continue;
-            }
-
-            WOWGUID none = WOWGUID();
-            NameCache* name = g_nameDBCache.GetRecord(CGPartyInfo::GetMember(i).m_guid, none, NULL, NULL, false);
-
-            if (!name) {
-                continue;
-            }
-
-            if (first) {
-                SStrCopy(names, name->m_name, sizeof(names));
-                first = 0;
-            } else {
-                SStrPack(names, ", ", sizeof(names));
-                SStrPack(names, name->m_name, sizeof(names));
-            }
-        }
-    }
-
-    if (!first) {
-        char text[512];
-        SStrPrintf(text, sizeof(text), format, names);
-        CGChat::AddChatMessage(text, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
-    } else if (!allReady) {
-        CGChat::AddChatMessage(FrameScript_GetText("READY_CHECK_FINISHED", -1, GENDER_NOT_APPLICABLE), 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
-    } else {
-        CGChat::AddChatMessage(FrameScript_GetText("READY_CHECK_ALL_READY", -1, GENDER_NOT_APPLICABLE), 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(MSG_RAID_READY_CHECK_FINISHED));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x00574310
-void CGRaidInfo::ShutdownGame() {
-    ClientServices::ClearMessageHandler(MSG_RAID_TARGET_UPDATE);
-    ClientServices::ClearMessageHandler(MSG_RAID_READY_CHECK);
-    ClientServices::ClearMessageHandler(MSG_RAID_READY_CHECK_CONFIRM);
-    ClientServices::ClearMessageHandler(MSG_RAID_READY_CHECK_FINISHED);
-    ClientServices::ClearMessageHandler(SMSG_READY_CHECK_ERROR);
-    ClientServices::ClearMessageHandler(MSG_NOTIFY_PARTY_SQUELCH);
-    ClientServices::ClearMessageHandler(SMSG_ECHO_PARTY_SQUELCH);
-
-    for (uint32_t i = 0; i < 40; i++) {
-        delete CGRaidInfo::m_members[i];
-        CGRaidInfo::m_members[i] = NULL;
-    }
-
-    if (CGRaidInfo::m_readyCheckTimer) {
-        ClientKillTimer(CGRaidInfo::m_readyCheckTimer, CGRaidInfo::ProcessReadyCheckTimer, "ProcessReadyCheckTimer");
-    }
-}
-
-// PROVEN: 3c2c0e63 IDENTICAL/NONE
-// OFFSET: 0x0092DED0/0x1406951E0
-int32_t CGRaidInfo::ProcessReadyCheckTimer(const void* data, void* param) {
-    CGRaidInfo::m_readyCheckTimer = 0;
-    CGRaidInfo::CheckReadyCheckTime();
-    return 1;
 }
 
 // PROVEN: c54805fa IDENTICAL/IDENTICAL

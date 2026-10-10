@@ -10,6 +10,18 @@
 class CDataStore;
 class CGPlayer_C;
 
+struct RaidInstanceInfo {
+    /* 0000 */ uint32_t m_mapID;
+    /* 0004 */ uint32_t m_difficulty;
+    /* 0008 */ uint32_t m_heroic;
+    /* 000C */ uint32_t unk_000C;
+    /* 0010 */ uint64_t m_instanceID;
+    /* 0018 */ uint32_t m_locked;
+    /* 001C */ uint32_t m_extended;
+    /* 0020 */ uint32_t m_resetTime;
+    /* 0024 */ uint32_t m_completedMask;
+};
+
 uint32_t GetRaidTargetIndexFromGuid(WOWGUID guid);
 struct lua_State;
 
@@ -31,7 +43,10 @@ class CGRaidInfo {
     static void LeaveWorld();
     static CGRaidMember* m_members[40];
     static uint32_t m_numMembers;
-    static WOWGUID m_raidTargets[8];
+    static WOWGUID m_raidTargets[28];
+    static uint32_t m_raidMarkers;
+    static uint8_t m_isInFakeRaid;
+    static uint8_t m_everyoneIsAssistant;
     static uint32_t m_realNumMembers;
     static WOWGUID m_selectedMember;
 
@@ -61,7 +76,9 @@ class CGRaidInfo {
     static void InitiateReadyCheck(const char* name);
     static void SetRaidTarget(uint32_t index, const WOWGUID& guid);
     static void RosterUpdateRefreshReadyCheck(uint32_t removed, WOWGUID leader);
-    static void UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, const uint8_t* flags, const uint32_t* roles, const uint8_t* online, uint32_t count, uint8_t battleground);
+    static void UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, const uint8_t* flags, const uint32_t* roles, const uint8_t* online, uint32_t count, uint8_t battleground, uint8_t everyoneIsAssistant);
+    static bool CanBeRaidTarget(WOWGUID guid);
+    static void SetRaidTarget(WOWGUID guid, uint32_t index);
     static int32_t IsPetInRaid(const WOWGUID& guid, int32_t* index);
     static int32_t IsPlayerRaidOfficer(const WOWGUID& guid);
     static int32_t IsPVPRaid();
@@ -71,11 +88,10 @@ class CGRaidInfo {
     static void SendReadyCheck();
     static uint8_t GetPartyAssignments(const WOWGUID& guid);
     static int32_t GetPartyAssignments(lua_State* L, int32_t assignment);
-    static void GetMapNameWithDifficulty(char* buffer, uint32_t size, int32_t mapId, int32_t difficulty);
+    static void GetMapNameWithDifficulty(char* buffer, uint32_t size, int32_t mapId, int32_t difficulty, int32_t heroic);
     static uint32_t GetIneligibleEncounterMask(int32_t mapId, uint32_t completedMask, uint32_t difficulty);
 };
 
-int32_t Script_DoReadyCheck(lua_State* L);
 void RaidInfoRegisterScriptFunctions();
 void RaidInfoUnregisterScriptFunctions();
 
@@ -84,8 +100,11 @@ int32_t Packet_MSG_RAID_TARGET_UPDATE(void* param, NETMESSAGE msgId, uint32_t ti
 int32_t Packet_MSG_RAID_READY_CHECK(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_RAID_READY_CHECK_FINISHED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_RAID_READY_CHECK_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_READY_CHECK_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_RAID_INSTANCE_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_NOTIFY_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_ECHO_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+
+extern TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
 #endif

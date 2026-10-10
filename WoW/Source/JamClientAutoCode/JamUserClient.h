@@ -160,4 +160,32 @@ class UserClientPartyInviteResponse : public JamClientMessage {
     ~UserClientPartyInviteResponse();
 };
 
+class UserClientSetEveryoneIsAssistant : public JamClientMessage {
+    public:
+    /* 0010 */ bool m_everyoneIsAssistant;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSetEveryoneIsAssistant();
+    ~UserClientSetEveryoneIsAssistant();
+};
+
+class UserClientClearRaidMarker : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_markerId;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientClearRaidMarker();
+    ~UserClientClearRaidMarker();
+};
+
+class UserClientRequestPartyJoinUpdates : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestPartyJoinUpdates();
+    ~UserClientRequestPartyJoinUpdates();
+};
+
 #endif

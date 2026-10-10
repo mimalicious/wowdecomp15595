@@ -433,3 +433,47 @@ void UserClientPartyInviteResponse::Put(CDataStore* msg) {
         msg->Put(this->m_rolesDesired);
     }
 }
+
+// OFFSET: 0x0066D150/0x140314160
+UserClientSetEveryoneIsAssistant::UserClientSetEveryoneIsAssistant() {
+}
+
+// OFFSET: 0x0066BAB0/0x140312290
+UserClientSetEveryoneIsAssistant::~UserClientSetEveryoneIsAssistant() {
+}
+
+// OFFSET: 0x0066D760
+void UserClientSetEveryoneIsAssistant::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2530));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_everyoneIsAssistant);
+    bits.Flush();
+}
+
+// OFFSET: 0x00670980/0x1403189C0
+UserClientClearRaidMarker::UserClientClearRaidMarker() {
+}
+
+// OFFSET: 0x006704F0/0x140317DD0
+UserClientClearRaidMarker::~UserClientClearRaidMarker() {
+}
+
+// OFFSET: 0x00674D20
+void UserClientClearRaidMarker::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7300));
+    msg->Put(this->m_markerId);
+}
+
+// OFFSET: 0x0066D680/0x140314730
+UserClientRequestPartyJoinUpdates::UserClientRequestPartyJoinUpdates() {
+}
+
+// OFFSET: 0x0066BB10/0x1403122E0
+UserClientRequestPartyJoinUpdates::~UserClientRequestPartyJoinUpdates() {
+}
+
+// OFFSET: 0x0066BB50
+void UserClientRequestPartyJoinUpdates::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2583));
+}

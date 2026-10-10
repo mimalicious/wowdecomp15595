@@ -33,7 +33,7 @@ static int32_t s_joinAttempts;
 // STATIC: #0x00BEABC4
 static float s_lastJoinTime;
 
-// STATIC: #0x00AD87B0
+// STATIC: 0x00C9F524
 static const char* s_roleTokens[3] = { "TANK", "HEALER", "DAMAGER" };
 
 // STATIC: #0x00ACDD58
@@ -54,6 +54,17 @@ static uint32_t s_lastQueueSlot;
 // OFFSET: %0x008D75C0
 uint8_t CGLookingForGroup::GetClassRoles(uint32_t classID) {
     return s_classRoles[classID - 1];
+}
+
+// OFFSET: 0x00A30430/0x1407DA360
+const char* GetRoleTokenFromFlags(uint32_t flags) {
+    for (uint32_t i = 0; i < 3; i++) {
+        if ((2 << i) & flags) {
+            return s_roleTokens[i];
+        }
+    }
+
+    return "NONE";
 }
 
 // OFFSET: #0x00555920

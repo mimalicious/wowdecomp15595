@@ -371,9 +371,6 @@ int32_t CGChat::m_complaintsSystemStatus;
 // STATIC: #0x00BCF010
 uint32_t s_joinedZoneChannels;
 
-// STATIC: #0x00BCF014
-uint32_t s_numSavedInstances;
-
 // STATIC: #0x00BCF09C
 TSGrowableArray<ChatColorInfo> s_channelColors;
 
@@ -421,9 +418,6 @@ static TSGrowableArray<int32_t> s_pendingChannelFlags;
 
 // STATIC: #0x00BCFAD0
 static TSGrowableArray<int32_t> s_pendingChannelNumbers;
-
-// STATIC: 0x00F340A4
-TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
 // STATIC: #0x00AC7FB4
 static const char* s_exhaustionTokens[7] = { NULL, "COMBATLOG_XPGAIN_EXHAUSTION1", "COMBATLOG_XPGAIN_EXHAUSTION2", "NULL", "COMBATLOG_XPGAIN_EXHAUSTION4", "COMBATLOG_XPGAIN_EXHAUSTION5", "COMBATLOG_XPGAIN_EXHAUSTION1" };
@@ -2294,7 +2288,7 @@ int32_t CGChat::OnRaidInstanceMessage(void* param, NETMESSAGE msgId, uint32_t ti
     msg->Get(reinterpret_cast<uint32_t&>(mapId));
     msg->Get(reinterpret_cast<uint32_t&>(difficulty));
     msg->Get(reinterpret_cast<uint32_t&>(seconds));
-    CGRaidInfo::GetMapNameWithDifficulty(mapName, sizeof(mapName), mapId, difficulty);
+    CGRaidInfo::GetMapNameWithDifficulty(mapName, sizeof(mapName), mapId, difficulty, 0);
 
     switch (type) {
         case 1: {
@@ -2877,7 +2871,6 @@ void CGChat::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_ZONE_UNDER_ATTACK, CGChat::OnZoneUnderAttack, NULL);
     ClientServices::SetMessageHandler(SMSG_DEFENSE_MESSAGE, CGChat::OnDefenseMessage, NULL);
     ClientServices::SetMessageHandler(SMSG_CHAT_SERVER_MESSAGE, CGChat::OnServerMessage, NULL);
-    ClientServices::SetMessageHandler(SMSG_RAID_INSTANCE_INFO, CGChat::OnRaidInstanceInfo, NULL);
     ClientServices::SetMessageHandler(SMSG_RAID_INSTANCE_MESSAGE, CGChat::OnRaidInstanceMessage, NULL);
     ClientServices::SetMessageHandler(SMSG_INSTANCE_RESET, CGChat::OnInstanceReset, NULL);
     ClientServices::SetMessageHandler(SMSG_INSTANCE_RESET_FAILED, CGChat::OnInstanceResetFailed, NULL);
@@ -4949,36 +4942,6 @@ int32_t FormatTime(char* buffer, uint32_t size, int32_t seconds) {
     return SStrPrintf(buffer, size, "%dd %dh %dm %ds", days, hours, minutes, seconds % 60);
 }
 
-// OFFSET: #0x00501030
-int32_t CGChat::OnRaidInstanceInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint32_t count;
-    msg->Get(count);
-
-    if (count) {
-        if (count >= s_savedInstances.Count()) {
-            s_savedInstances.SetCount(count);
-        }
-
-        for (uint32_t i = 0; i < count; i++) {
-            RaidInstanceInfo& info = s_savedInstances.m_data[i];
-            msg->Get(info.m_mapID);
-            msg->Get(info.m_difficulty);
-            msg->Get(info.m_instanceID);
-            uint8_t locked = 0;
-            msg->Get(locked);
-            info.m_locked = locked;
-            uint8_t extended = 0;
-            msg->Get(extended);
-            info.m_extended = extended;
-            msg->Get(info.m_resetTime);
-        }
-    }
-
-    s_numSavedInstances = count;
-    FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_INSTANCE_INFO, NULL);
-    return 1;
-}
-
 // OFFSET: #0x005019D0
 void ChatWindowInfo::Reset() {
     for (uint32_t i = 0; i < this->m_channels.m_count; i++) {
@@ -5044,8 +5007,6 @@ void CGChat::ShutdownGame() {
     s_pendingChannelNames.Clear();
     s_pendingChannelFlags.Clear();
     s_pendingChannelNumbers.Clear();
-    s_numSavedInstances = 0;
-    s_savedInstances.Clear();
     s_channelThrottle.Clear();
     CGChat::s_throttledChat.Clear();
     ClientServices::ClearMessageHandler(SMSG_CHANNEL_NOTIFY);
@@ -5055,8 +5016,7 @@ void CGChat::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_ZONE_UNDER_ATTACK);
     ClientServices::ClearMessageHandler(SMSG_DEFENSE_MESSAGE);
     ClientServices::ClearMessageHandler(SMSG_CHAT_SERVER_MESSAGE);
-    ClientServices::ClearMessageHandler(SMSG_RAID_INSTANCE_INFO);
-    ClientServices::ClearMessageHandler(SMSG_RAID_INSTANCE_MESSAGE);
+        ClientServices::ClearMessageHandler(SMSG_RAID_INSTANCE_MESSAGE);
     ClientServices::ClearMessageHandler(SMSG_INSTANCE_RESET);
     ClientServices::ClearMessageHandler(SMSG_INSTANCE_RESET_FAILED);
     ClientServices::ClearMessageHandler(SMSG_UPDATE_LAST_INSTANCE);
@@ -5590,25 +5550,6 @@ static void RebuildDisplayListMember(PENDINGUSERLIST* user, int32_t type, const 
 
     if (ComSatClient_IsPlayerMuted(user->m_guid) || ComSatClient_IsTalkerSquelchedInChannel(user->m_guid, type, name)) {
         user->m_flags |= 0x20;
-    }
-}
-
-// OFFSET: #0x004FE070
-void CGRaidInfo::GetMapNameWithDifficulty(char* buffer, uint32_t size, int32_t mapId, int32_t difficulty) {
-    *buffer = 0;
-    MapRec* map = g_mapDB.GetRecord(mapId);
-
-    if (!map) {
-        return;
-    }
-
-    MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
-
-    if (entry && entry->m_difficultystring && *entry->m_difficultystring) {
-        const char* difficultyName = FrameScript_GetText(entry->m_difficultystring, -1, GENDER_NOT_APPLICABLE);
-        SStrPrintf(buffer, size, FrameScript_GetText("DUNGEON_NAME_WITH_DIFFICULTY", -1, GENDER_NOT_APPLICABLE), map->m_mapName, difficultyName);
-    } else {
-        SStrCopy(buffer, map->m_mapName, size);
     }
 }
 

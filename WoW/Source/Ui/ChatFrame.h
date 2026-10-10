@@ -86,18 +86,6 @@ enum SLASH_COMMAND_ID {
     CHAT_MSG_MAX = 62,
 };
 
-struct RaidInstanceInfo {
-    /* 0000 */ uint32_t m_mapID;
-    /* 0004 */ uint32_t m_difficulty;
-    /* 0008 */ uint32_t m_heroic;
-    /* 000C */ uint32_t unk_000C;
-    /* 0010 */ uint64_t m_instanceID;
-    /* 0018 */ uint32_t m_locked;
-    /* 001C */ uint32_t m_extended;
-    /* 0020 */ uint32_t m_resetTime;
-    /* 0024 */ uint32_t m_completedMask;
-};
-
 struct ChatConversation {
     /* 0000 */ uint8_t m_index;
     /* 0004 */ uint32_t m_presenceID;
@@ -338,7 +326,6 @@ class CGChat {
     static int32_t OnZoneUnderAttack(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnDefenseMessage(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnServerMessage(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-    static int32_t OnRaidInstanceInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnRaidInstanceMessage(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnInstanceReset(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnInstanceResetFailed(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -414,7 +401,6 @@ extern int32_t s_displayChannelMemberCount;
 extern TSGrowableArray<PENDINGUSERLIST> s_pendingUsers;
 extern uint32_t s_numDisplayChannels;
 extern uint32_t s_activeVoiceChannel;
-extern uint32_t s_numSavedInstances;
 extern uint8_t s_collapsedHeaders[3];
 extern ChatWindowInfo s_chatWindows[10];
 extern const ChatMessageGroup s_chatMessageGroups[46];
@@ -425,7 +411,6 @@ extern HSLOG s_chatLog[2];
 extern const ChatColorInfo s_chatTypeInfo[CHAT_MSG_MAX];
 extern uint32_t s_activeDisplayChannelFlags;
 extern uint32_t s_joinedZoneChannels;
-extern TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
 int32_t StringToChatType(const char* string, int32_t* type);
 int32_t StringToLanguage(const char* string, uint32_t* language);

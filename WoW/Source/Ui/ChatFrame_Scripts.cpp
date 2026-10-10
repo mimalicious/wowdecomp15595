@@ -537,15 +537,6 @@ static int32_t Script_SetChatWindowSize(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00500BE0
-static int32_t Script_RequestRaidInfo(lua_State* L) {
-    WDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_RAID_INFO));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    return 0;
-}
-
 // OFFSET: 0x008E6D40/0x1406150E0
 static int32_t Script_SetChatWindowAlpha(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -1316,12 +1307,6 @@ static int32_t Script_GetChatWindowChannels(lua_State* L) {
     return 2 * count;
 }
 
-// OFFSET: #0x004FCA50
-static int32_t Script_GetNumSavedInstances(lua_State* L) {
-    lua_pushnumber(L, s_numSavedInstances);
-    return 1;
-}
-
 // OFFSET: 0x008E7630/0x140615960
 static int32_t Script_GetMuteStatus(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1734,53 +1719,6 @@ static int32_t Script_EnumerateServerChannels(lua_State* L) {
     }
 
     return pushed;
-}
-
-// OFFSET: #0x004FF2C0
-static int32_t Script_GetSavedInstanceInfo(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetSavedInstanceInfo(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    MapRec* map;
-
-    if (index >= s_numSavedInstances || !(map = g_mapDB.GetRecord(s_savedInstances.m_data[index].m_mapID))) {
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
-        lua_pushboolean(L, 0);
-        lua_pushboolean(L, 0);
-        lua_pushnumber(L, 0.0);
-        lua_pushboolean(L, 0);
-        lua_pushnumber(L, 0.0);
-        lua_pushstring(L, "");
-        return 10;
-    }
-
-    RaidInstanceInfo* info = &s_savedInstances.m_data[index];
-    int32_t mapId = info->m_mapID;
-    int32_t difficulty = info->m_difficulty;
-    lua_pushstring(L, map->m_mapName);
-    lua_pushnumber(L, static_cast<uint32_t>(info->m_instanceID));
-    lua_pushnumber(L, info->m_resetTime);
-    lua_pushnumber(L, difficulty + 1);
-    lua_pushboolean(L, info->m_locked);
-    lua_pushboolean(L, info->m_extended);
-    lua_pushnumber(L, static_cast<uint32_t>(info->m_instanceID >> 32));
-    lua_pushboolean(L, map->m_instanceType == 2);
-    lua_pushnumber(L, GetMaxPlayersForMap(map, info->m_difficulty));
-    MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
-
-    if (!entry) {
-        lua_pushstring(L, "");
-        return 10;
-    }
-
-    lua_pushstring(L, FrameScript_GetText(entry->m_difficultystring, -1, GENDER_NOT_APPLICABLE));
-    return 10;
 }
 
 // OFFSET: 0x008EAD50/0x140619C80
@@ -2277,45 +2215,6 @@ static int32_t Script_JoinPermanentChannel(lua_State* L) {
     return JoinChannelFromScript(L, 1);
 }
 
-// OFFSET: #0x0050DC10
-static int32_t Script_SetSavedInstanceExtend(lua_State* L) {
-    if (!lua_isnumber(L, 1) || lua_type(L, 2) != LUA_TBOOLEAN) {
-        luaL_error(L, "Usage: SetSavedInstanceExtend(index, extend)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t extend = lua_toboolean(L, 2);
-
-    if (index >= s_numSavedInstances) {
-        return 0;
-    }
-
-    RaidInstanceInfo* info = &s_savedInstances.m_data[index];
-    info->m_extended = extend;
-    char mapName[1024];
-    CGRaidInfo::GetMapNameWithDifficulty(mapName, sizeof(mapName), info->m_mapID, info->m_difficulty);
-    const char* format;
-
-    if (extend) {
-        format = FrameScript_GetText("RAID_INSTANCE_LOCK_EXTENDED", -1, GENDER_NOT_APPLICABLE);
-    } else {
-        format = FrameScript_GetText("RAID_INSTANCE_LOCK_NOT_EXTENDED", -1, GENDER_NOT_APPLICABLE);
-    }
-
-    char text[1024];
-    SStrPrintf(text, sizeof(text), format, mapName);
-    CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_SET_SAVED_INSTANCE_EXTEND));
-    msg.Put(info->m_mapID);
-    msg.Put(info->m_difficulty);
-    msg.Put(static_cast<uint8_t>(extend != 0));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    return 0;
-}
-
 // OFFSET: #0x0050ED00
 static int32_t Script_ComplainChat(lua_State* L) {
     const char* text = NULL;
@@ -2398,10 +2297,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetChatWindowSavedPosition", &Script_SetChatWindowSavedPosition },
     { "SetChatWindowSavedDimensions", &Script_SetChatWindowSavedDimensions },
     { "EnumerateServerChannels", &Script_EnumerateServerChannels },
-    { "RequestRaidInfo", &Script_RequestRaidInfo },
-    { "GetNumSavedInstances", &Script_GetNumSavedInstances },
-    { "GetSavedInstanceInfo", &Script_GetSavedInstanceInfo },
-    { "SetSavedInstanceExtend", &Script_SetSavedInstanceExtend },
     { "ResetChatWindows", &Script_ResetChatWindows },
     { "CanComplainChat", &Script_CanComplainChat },
     { "ComplainChat", &Script_ComplainChat },
