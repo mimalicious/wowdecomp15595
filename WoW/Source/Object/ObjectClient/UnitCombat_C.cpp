@@ -1045,7 +1045,7 @@ int32_t Packet_Group_29(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
             CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
             if (player) {
-                player->SetCombatMode();
+                player->SetCombatMode(true);
             }
 
             return 0;

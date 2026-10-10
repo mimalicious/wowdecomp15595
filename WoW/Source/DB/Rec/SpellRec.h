@@ -9,16 +9,9 @@ class SpellRec {
     static const DBCMeta s_meta;
 
     static void FixupStrings(void* record, const char* strings);
-    static int32_t IsHelpfulOrHarmful(const SpellRec* spell);
-    static bool WillSummonCritter(const SpellRec* spell);
     static const int32_t* GetClassMask(const SpellRec* spell, int32_t effect);
-    static bool IsAffectedBy(const SpellRec* spell, const SpellRec* modifier, int32_t effect);
     static bool IsMeleeRange(const SpellRec* spell);
-    static int32_t IsTrackingSpell(const SpellRec* spell);
     static bool IsMinimumRange(const SpellRec* spell);
-    static void GetMinRange(const SpellRec* spell, float* range);
-    static bool HasModifier(const SpellRec* spell, int32_t modifier);
-    static bool NotUsableInShapeshiftForm(const SpellRec* spell, int32_t form);
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_attributes;

@@ -366,7 +366,7 @@ int32_t CGPetInfo::OnPetActionFeedback(void* param, NETMESSAGE msgId, uint32_t t
             UIErrors error = ERR_NO_ATTACK_TARGET;
             SpellRec* spell = g_spellDB.GetRecord(spellId);
 
-            if (spell && SpellRec::IsHelpfulOrHarmful(spell) == 1) {
+            if (spell && SpellFaction(spell) == 1) {
                 error = ERR_GENERIC_NO_VALID_TARGETS;
             }
 
@@ -622,7 +622,7 @@ void CGPetInfo::SendPetAction(const PetAction& action, const WOWGUID& target, in
             }
 
             if (Spell_C_GetSpellCooldown(spell->m_id, 1, NULL, NULL, NULL, NULL)) {
-                ShowPetSpellFailed(NULL, spell, 69, -1, -1);
+                Spell_C_PetSpellFailed(NULL, spell, 69, -1, -1);
                 return;
             }
 
@@ -663,11 +663,11 @@ void CGPetInfo::SendPetAction(const PetAction& action, const WOWGUID& target, in
             }
 
             if (!(spell->m_attributesExD & 0x20) && player->GetPossessedUnit() != pet) {
-                Spell_C_StartSpellCooldown(spell, pet);
+                Spell_C_StartSpellCooldown(spell, pet, 0, 0);
                 break;
             }
 
-            Spell_C_CastSpell(pet, spell->m_id, NULL, actionTarget, NULL, false);
+            Spell_C_CastSpell(pet, spell->m_id, NULL, actionTarget, NULL, false, false, 0, 0);
             return;
         }
 

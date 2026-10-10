@@ -21,6 +21,7 @@ bool WorldStateParseText(const char* text, char* buffer, uint32_t size);
 
 class CGWorldStateInfo {
     public:
+    static uint32_t GetWorldState(int32_t id);
     static void LeaveWorld(bool reload);
     static int32_t m_mapID;
     static int32_t m_areaID;

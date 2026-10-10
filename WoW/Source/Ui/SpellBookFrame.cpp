@@ -1468,7 +1468,7 @@ void CGSpellBook::InitFutureSpells() {
 
         int32_t level;
 
-        if (SpellRec::WillSummonCritter(spell) || !player->CanLearnSpell(ability->m_spell, level, true) || level <= 0 || (spell->m_attributesExD & 0x8000) || (spell->m_attributes & 0xA0) || (spell->m_attributesExH & 0x2000)) {
+        if (SpellIsCallCompanion(spell) || !player->CanLearnSpell(ability->m_spell, level, true) || level <= 0 || (spell->m_attributesExD & 0x8000) || (spell->m_attributes & 0xA0) || (spell->m_attributesExH & 0x2000)) {
             continue;
         }
 
@@ -2398,7 +2398,7 @@ void CGSpellBook::DelKnownSpell(int32_t spellId, int32_t replacing) {
         CGActionBar::UpdateMultiCastBar();
     }
 
-    if (SpellRec::WillSummonCritter(spell)) {
+    if (SpellIsCallCompanion(spell)) {
         int32_t type = CGSpellBook::GetCompanionType(spell);
         TSGrowableArray<int32_t>& companions = CGSpellBook::m_companions[type];
         uint32_t count = companions.m_count;
@@ -2660,7 +2660,7 @@ bool CGActionBar::SetOverrideSpellclass(const SpellRec* spell, uint32_t effectIn
 
         const SpellRec* base = g_spellDB.GetRecord(baseSpell);
 
-        if (!base || !SpellRec::IsAffectedBy(base, spell, effectIndex)) {
+        if (!base || !SpellMatchesAuraSpellClass(base, spell, effectIndex)) {
             continue;
         }
 
@@ -2792,7 +2792,7 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
         }
     }
 
-    if (SpellRec::IsTrackingSpell(spell) && static_cast<int8_t>(spell->m_attributes) >= 0) {
+    if (SpellIsTrackingAura(spell) && static_cast<int8_t>(spell->m_attributes) >= 0) {
         *s_trackingSpells.New() = spellId;
         CGSpellBook::AddSkillInfo(skillLine, isProfession);
         CGSpellBook::UpdateSpells(1, 0, 0);
@@ -2962,7 +2962,7 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
 
     CGSpellBook::AddSpellToNameCache(spellId, 0);
 
-    if (SpellRec::WillSummonCritter(spell)) {
+    if (SpellIsCallCompanion(spell)) {
         int32_t type = CGSpellBook::GetCompanionType(spell);
         *CGSpellBook::m_companions[type].New() = spellId;
 

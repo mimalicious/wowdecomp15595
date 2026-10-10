@@ -819,3 +819,464 @@ void ClientNewWorld::Unpack(CDataStore* msg, bool full) {
     msg->Get(z);
     this->m_position.z = z;
 }
+
+// OFFSET: [0x0066BC00/0x140312430]
+JamWeeklySpellUse::JamWeeklySpellUse() {
+}
+
+// OFFSET: 0x006A1DD0
+JamWeeklySpellUse& JamWeeklySpellUse::operator=(const JamWeeklySpellUse& source) {
+    this->m_category = source.m_category;
+    this->m_uses = source.m_uses;
+    return *this;
+}
+
+// STATIC: 0x00E4D4D4
+bool (*ClientPlaySpellVisualKit::s_handler)(ClientPlaySpellVisualKit* msg);
+
+// STATIC: 0x00E4D488
+bool (*ClientWeeklySpellUsage::s_handler)(ClientWeeklySpellUsage* msg);
+
+// STATIC: 0x00E4D6F8
+bool (*ClientWeeklySpellUsageUpdate::s_handler)(ClientWeeklySpellUsageUpdate* msg);
+
+// STATIC: 0x00E4D77C
+bool (*ClientClearCooldowns::s_handler)(ClientClearCooldowns* msg);
+
+// OFFSET: 0x006C1130/0x140376650
+ClientPlaySpellVisualKit::ClientPlaySpellVisualKit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A28B0/0x14034FD30
+ClientPlaySpellVisualKit::~ClientPlaySpellVisualKit() {
+}
+
+// OFFSET: 0x006CA820
+bool ClientPlaySpellVisualKit::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C0920/0x140375CB0
+bool ClientPlaySpellVisualKit::Handle() {
+    if (!ClientPlaySpellVisualKit::s_handler) {
+        return false;
+    }
+
+    return ClientPlaySpellVisualKit::s_handler(this);
+}
+
+// OFFSET: 0x006B7900
+bool ClientPlaySpellVisualKit::Read(CDataStore* msg, bool full) {
+    uint32_t timeOffset = 0;
+    msg->Get(timeOffset);
+    this->m_timeOffset = timeOffset;
+
+    uint32_t kitRecID = 0;
+    msg->Get(kitRecID);
+    this->m_kitRecID = kitRecID;
+
+    uint32_t kitType = 0;
+    msg->Get(kitType);
+    this->m_kitType = kitType;
+
+    JamBitReader bits(msg);
+    this->m_unitGUID[4] = bits.ReadBit();
+    this->m_unitGUID[7] = bits.ReadBit();
+    this->m_unitGUID[5] = bits.ReadBit();
+    this->m_unitGUID[3] = bits.ReadBit();
+    this->m_unitGUID[1] = bits.ReadBit();
+    this->m_unitGUID[2] = bits.ReadBit();
+    this->m_unitGUID[0] = bits.ReadBit();
+    this->m_unitGUID[6] = bits.ReadBit();
+
+    if (this->m_unitGUID[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[0] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[4] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[1] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[6] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[7] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[2] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[3] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[5] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
+// OFFSET: 0x006AE450/0x14035EA40
+void ClientPlaySpellVisualKit::Unpack(CDataStore* msg, bool full) {
+    uint32_t timeOffset = 0;
+    msg->Get(timeOffset);
+    this->m_timeOffset = timeOffset;
+
+    uint32_t kitRecID = 0;
+    msg->Get(kitRecID);
+    this->m_kitRecID = kitRecID;
+
+    uint32_t kitType = 0;
+    msg->Get(kitType);
+    this->m_kitType = kitType;
+
+    JamBitReader bits(msg);
+    this->m_unitGUID[4] = bits.ReadBit();
+    this->m_unitGUID[7] = bits.ReadBit();
+    this->m_unitGUID[5] = bits.ReadBit();
+    this->m_unitGUID[3] = bits.ReadBit();
+    this->m_unitGUID[1] = bits.ReadBit();
+    this->m_unitGUID[2] = bits.ReadBit();
+    this->m_unitGUID[0] = bits.ReadBit();
+    this->m_unitGUID[6] = bits.ReadBit();
+
+    if (this->m_unitGUID[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[0] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[4] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[1] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[6] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[7] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[2] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[3] ^= byteValue;
+    }
+
+    if (this->m_unitGUID[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_unitGUID[5] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006DEB60/0x14039E700
+ClientWeeklySpellUsage::ClientWeeklySpellUsage(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E5A60/0x1403A6FE0
+ClientWeeklySpellUsage::~ClientWeeklySpellUsage() {
+}
+
+// OFFSET: 0x006E1F70
+bool ClientWeeklySpellUsage::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A5CC0/0x140353CC0
+bool ClientWeeklySpellUsage::Handle() {
+    if (!ClientWeeklySpellUsage::s_handler) {
+        return false;
+    }
+
+    return ClientWeeklySpellUsage::s_handler(this);
+}
+
+// OFFSET: 0x006DC5B0
+bool ClientWeeklySpellUsage::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint32_t count = bits.ReadBits<23>();
+
+    if (msg->m_size - msg->m_read < 5 * count) {
+        return false;
+    }
+
+    this->m_usage.SetCount(count);
+
+    for (uint32_t i = 0; i < this->m_usage.Count(); i++) {
+        uint32_t category = 0;
+        msg->Get(category);
+        this->m_usage[i].m_category = category;
+
+        uint8_t uses = 0;
+        msg->Get(uses);
+        this->m_usage[i].m_uses = uses;
+    }
+
+    return msg->IsRead() != 0;
+}
+
+// OFFSET: 0x006DEA10/0x14039E530
+void ClientWeeklySpellUsage::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_usage.SetCount(bits.ReadBits<23>());
+
+    for (uint32_t i = 0; i < this->m_usage.Count(); i++) {
+        uint32_t category = 0;
+        msg->Get(category);
+        this->m_usage[i].m_category = category;
+
+        uint8_t uses = 0;
+        msg->Get(uses);
+        this->m_usage[i].m_uses = uses;
+    }
+}
+
+// OFFSET: 0x006AEF10/0x14034ED70
+ClientWeeklySpellUsageUpdate::ClientWeeklySpellUsageUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    uint8_t uses = 0;
+    msg->Get(uses);
+    this->m_usage.m_uses = uses;
+
+    uint32_t category = 0;
+    msg->Get(category);
+    this->m_usage.m_category = category;
+}
+
+// OFFSET: 0x006B1AE0/0x140350000
+ClientWeeklySpellUsageUpdate::~ClientWeeklySpellUsageUpdate() {
+}
+
+// OFFSET: 0x006C52E0
+bool ClientWeeklySpellUsageUpdate::Get(CDataStore* msg, bool full) {
+    uint8_t uses = 0;
+    msg->Get(uses);
+    this->m_usage.m_uses = uses;
+
+    uint32_t category = 0;
+    msg->Get(category);
+    this->m_usage.m_category = category;
+
+    return msg->IsRead() != 0;
+}
+
+// OFFSET: 0x006AD140/0x14035D210
+bool ClientWeeklySpellUsageUpdate::Handle() {
+    if (!ClientWeeklySpellUsageUpdate::s_handler) {
+        return false;
+    }
+
+    return ClientWeeklySpellUsageUpdate::s_handler(this);
+}
+
+// OFFSET: 0x006D8620/0x140396710
+ClientClearCooldowns::ClientClearCooldowns(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006C9A90/0x1403814F0
+ClientClearCooldowns::~ClientClearCooldowns() {
+}
+
+// OFFSET: 0x006D97A0
+bool ClientClearCooldowns::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B6020/0x140368670
+bool ClientClearCooldowns::Handle() {
+    if (!ClientClearCooldowns::s_handler) {
+        return false;
+    }
+
+    return ClientClearCooldowns::s_handler(this);
+}
+
+// OFFSET: 0x006D9350
+bool ClientClearCooldowns::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_guid[1] = bits.ReadBit();
+    this->m_guid[3] = bits.ReadBit();
+    this->m_guid[6] = bits.ReadBit();
+    uint32_t count = bits.ReadBits<24>();
+
+    if (msg->m_size - msg->m_read < 4 * count) {
+        return false;
+    }
+
+    this->m_spellID.SetCount(count);
+    this->m_guid[7] = bits.ReadBit();
+    this->m_guid[5] = bits.ReadBit();
+    this->m_guid[2] = bits.ReadBit();
+    this->m_guid[4] = bits.ReadBit();
+    this->m_guid[0] = bits.ReadBit();
+
+    if (this->m_guid[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[7] ^= byteValue;
+    }
+
+    if (this->m_guid[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[2] ^= byteValue;
+    }
+
+    if (this->m_guid[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[4] ^= byteValue;
+    }
+
+    if (this->m_guid[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[5] ^= byteValue;
+    }
+
+    if (this->m_guid[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[1] ^= byteValue;
+    }
+
+    if (this->m_guid[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[3] ^= byteValue;
+    }
+
+    for (uint32_t i = 0; i < this->m_spellID.Count(); i++) {
+        uint32_t spellID = 0;
+        msg->Get(spellID);
+        this->m_spellID[i] = spellID;
+    }
+
+    if (this->m_guid[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[0] ^= byteValue;
+    }
+
+    if (this->m_guid[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[6] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
+// OFFSET: 0x006D83B0
+void ClientClearCooldowns::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_guid[1] = bits.ReadBit();
+    this->m_guid[3] = bits.ReadBit();
+    this->m_guid[6] = bits.ReadBit();
+    this->m_spellID.SetCount(bits.ReadBits<24>());
+    this->m_guid[7] = bits.ReadBit();
+    this->m_guid[5] = bits.ReadBit();
+    this->m_guid[2] = bits.ReadBit();
+    this->m_guid[4] = bits.ReadBit();
+    this->m_guid[0] = bits.ReadBit();
+
+    if (this->m_guid[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[7] ^= byteValue;
+    }
+
+    if (this->m_guid[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[2] ^= byteValue;
+    }
+
+    if (this->m_guid[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[4] ^= byteValue;
+    }
+
+    if (this->m_guid[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[5] ^= byteValue;
+    }
+
+    if (this->m_guid[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[1] ^= byteValue;
+    }
+
+    if (this->m_guid[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[3] ^= byteValue;
+    }
+
+    for (uint32_t i = 0; i < this->m_spellID.Count(); i++) {
+        uint32_t spellID = 0;
+        msg->Get(spellID);
+        this->m_spellID[i] = spellID;
+    }
+
+    if (this->m_guid[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[0] ^= byteValue;
+    }
+
+    if (this->m_guid[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[6] ^= byteValue;
+    }
+}

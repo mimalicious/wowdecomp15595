@@ -11,21 +11,15 @@ class SpellScalingRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ float unk_0014;
-    /* 0018 */ float unk_0018;
-    /* 001C */ float unk_001C;
-    /* 0020 */ float unk_0020;
-    /* 0024 */ float unk_0024;
-    /* 0028 */ int32_t unk_0028;
-    /* 002C */ float unk_002C;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ float unk_0038;
-    /* 003C */ int32_t unk_003C;
+    /* 0004 */ int32_t m_castTimeMin;
+    /* 0008 */ int32_t m_castTimeMax;
+    /* 000C */ int32_t m_castTimeMaxLevel;
+    /* 0010 */ int32_t m_class;
+    /* 0014 */ float m_coefficient [3];
+    /* 0020 */ float m_variance [3];
+    /* 002C */ float m_comboPointsCoefficient [3];
+    /* 0038 */ float m_nerfFactor;
+    /* 003C */ int32_t m_nerfMaxLevel;
 };
 
 #endif

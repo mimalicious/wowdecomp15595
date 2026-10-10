@@ -320,7 +320,7 @@ static int32_t Script_SetTracking(lua_State* L) {
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
 
     if (index < static_cast<int32_t>(s_trackingSpells.Count())) {
-        Spell_C::CastSpell(s_trackingSpells.m_data[index], NULL, WOWGUID(), false);
+        Spell_C_CastSpell(s_trackingSpells.m_data[index], NULL, WOWGUID(), false);
         return 0;
     }
 

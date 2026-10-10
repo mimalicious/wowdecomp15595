@@ -15,6 +15,14 @@ struct JamUserClientReorderEntry {
     JamUserClientReorderEntry(const JamUserClientReorderEntry& source);
 };
 
+class UserClientCancelQueuedSpell : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientCancelQueuedSpell();
+    ~UserClientCancelQueuedSpell();
+};
+
 class UserClientEnumCharacters : public JamClientMessage {
     public:
     void Put(CDataStore* msg) override;

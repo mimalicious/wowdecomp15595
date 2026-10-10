@@ -172,7 +172,7 @@ void CGTradeSkillInfo::DoRecast(int32_t spellId) {
     }
 
     if (--CGTradeSkillInfo::m_recastTimes) {
-        Spell_C::CastSpell(spellId, NULL, WOWGUID::Make(0), false);
+        Spell_C_CastSpell(spellId, NULL, WOWGUID::Make(0), false);
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_TRADESKILL_RECAST, NULL);
     } else {
         CGTradeSkillInfo::m_recastSpellID = 0;

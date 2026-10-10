@@ -23,6 +23,7 @@ class CGItem_C;
 class CGPetition;
 class CreatureModelDataRec;
 class SpellRec;
+class SpellEquippedItemsRec;
 class SpellVisualKitRec;
 
 struct InspectItem {
@@ -357,6 +358,9 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     int32_t GetModDamageDoneNeg(int32_t school) const;
     float GetModDamageDonePct(int32_t school) const;
     const CGItem_C* EquippedItemMeetSpellRequirements(const SpellRec* spell, uint32_t slotMask);
+    const CGItem_C* GetEquippedItemForSpell(const SpellEquippedItemsRec* items, uint32_t slotMask);
+    int32_t GetModHealingDonePos() const;
+    void ModifyCategoryCooldown(int32_t& cooldown, int32_t category);
     int32_t HasZoneExplored(int32_t zone);
     int32_t UpdateUnitCollisionBox(int32_t a2, int32_t a3);
     int32_t UpdateMountedCollisionBox(float mountHeight, int32_t force);
@@ -397,7 +401,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void UpdateTaxiStatus(CGUnit_C* unit);
     void HandleRepopRequest(bool a2);
     void SetClientStandState(uint32_t standState);
-    void SetCombatMode();
+    void SetCombatMode(bool sendStop);
     CGUnit_C* GetPossessedUnit();
     int32_t OnLootResponse(uint32_t time, CDataStore* msg);
     void ClearLootingObject();
@@ -461,7 +465,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void UpdatePartyMemberState();
     void SetActiveMirrorHandlers();
     void UnsetActiveMirrorHandlers();
-    void MeleeModeLeave();
+    void MeleeModeLeave(bool sendStop);
 };
 #pragma pack(pop)
 
@@ -607,7 +611,6 @@ void PlayerSignalSkillStatChanges();
 void SendQuestGiverStatusMultipleQuery();
 int32_t SignalPetSpellPowerUpdate(WOWGUID guid);
 
-void Spell_C_SeedMissileTrajectorySequence(uint32_t guidLow);
 
 class LootRoll {
     public:
@@ -630,5 +633,7 @@ int32_t GetModalNextSpell();
 
 uint32_t GetVisibleAuraEffectDisplay();
 uint32_t GetVisibleAuraEffectFlags();
+
+#include "Player_C.inl"
 
 #endif

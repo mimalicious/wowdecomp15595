@@ -916,7 +916,7 @@ float MathState::Evaluate(const SpellRec* spell, int32_t spellLevel, int32_t sca
         uint8_t op = this->m_ops[i];
 
         if (op == MATHOP_SPELL) {
-            if (!g_spellDB.GetRecord(QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(*intArg++), &loaded)) {
+            if (!g_spellDB.GetRecord(Spell_C_SpellGetSpellIDForDifficulty(*intArg++), &loaded)) {
                 this->m_status = 1;
                 return 0.0f;
             }

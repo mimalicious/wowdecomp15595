@@ -19,6 +19,7 @@ class CGRuneInfo {
     static uint32_t m_numRunes;
     static uint32_t m_predictedRunes;
     static void SetPredictedRunes(uint8_t available, uint8_t used, const uint8_t* cooldowns);
+    static void SetPredictedRunes(uint8_t available, uint8_t used, const uint8_t* cooldowns, bool predicted);
     static void InitializeGame();
     static void ShutdownGame();
     static bool HasRunesForSpell(int32_t spellId, int32_t* needed);

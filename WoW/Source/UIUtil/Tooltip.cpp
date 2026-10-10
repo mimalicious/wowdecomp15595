@@ -2618,7 +2618,7 @@ static void AddSpellRangeLines(CGTooltip* tooltip, const SpellRec* spell, CGUnit
     float friendlyMax = 0.0f;
 
     if (!brief && !(spell->m_attributes & 0x404) && !(spell->m_attributesExC & 0x40000000)) {
-        if (SpellRec::IsMeleeRange(spell) && !SpellRec::HasModifier(spell, 5)) {
+        if (SpellRec::IsMeleeRange(spell) && !Spell_C_HasSpellModifiers(spell, 5)) {
             char format[128];
             FormatString("MELEE_RANGE", -1, GENDER_NOT_APPLICABLE, format, sizeof(format));
             SStrPrintf(range, 128, format);
@@ -2627,8 +2627,8 @@ static void AddSpellRangeLines(CGTooltip* tooltip, const SpellRec* spell, CGUnit
             Spell_C_GetMinMaxRange(caster, spell, &friendlyMin, &friendlyMax, 1, NULL);
 
             if (SpellRec::IsMinimumRange(spell)) {
-                SpellRec::GetMinRange(spell, &enemyMin);
-                SpellRec::GetMinRange(spell, &friendlyMin);
+                Spell_C_GetDefaultMinRange(spell, &enemyMin);
+                Spell_C_GetDefaultMinRange(spell, &friendlyMin);
             }
 
             if (fnotequal(enemyMin, friendlyMin) || fnotequal(enemyMax, friendlyMax)) {

@@ -8,10 +8,21 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
+#include "WoW/Source/DB/Rec/SpellEffectRec.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/UIUtil/InputControl.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
+#include "WoW/Source/DB/Rec/SpellAuraVisibilityRec.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
+#include "WoW/Source/Ui/TalentInfo.h"
+#include "WoW/Source/Object/ObjectClient/Corpse_C.h"
+#include <cstdlib>
+#include <cstring>
+
+// STATIC: 0x00D0ADC8
+static const char* s_visibilityTypes[] = { "RAID_INCOMBAT", "RAID_OUTOFCOMBAT", "ENEMY_TARGET" };
 
 // OFFSET: 0x008A5A60/0x1405E8660
 static int32_t Script_SpellIsTargeting(lua_State* L) {
@@ -93,25 +104,34 @@ static int32_t Script_SpellTargetItem(lua_State* L) {
 // OFFSET: 0x008B7A00/0x1405FF4E0
 static int32_t Script_SpellTargetUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
-        return luaL_error(L, "Usage: SpellTargetUnit(\"unit\")");
+        luaL_error(L, "Usage: SpellTargetUnit(\"unit\")");
     }
 
     if (!CGGameUI::CanPerformAction(2) || !s_targetingSpell) {
         return 0;
     }
 
-    CGUnit_C* unit = GetUnitFromName(lua_tolstring(L, 1, NULL));
+    SpellRec* spell = g_spellDB.GetRecord(s_targetingSpell->m_data.m_spellId);
+    WOWGUID guid = WOWGUID::Make(0);
 
-    if (unit && (unit->m_obj->m_type & TYPEMASK_UNIT)) {
-        WOWGUID guid = unit->m_obj->m_guid;
-        Spell_C_TargetUnitByGuid(guid);
-        return 0;
+    if (Script_GetGUIDFromToken(lua_tostring(L, 1), guid, false) && guid) {
+        CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
+
+        if (!(guid.m_guid & 0xF000000000000000ull) && (guid.m_guid & 0xF07FFFFFFFFFFFFFull) && ((s_needTargets & 0x8000) || (spell && (spell->m_attributesExI & 0x8000000)))) {
+            CGCorpse_C* corpse = ClntObjMgrFindCorpseByOwner(guid);
+
+            if (corpse) {
+                object = corpse;
+            }
+        }
+
+        if (object) {
+            Spell_C_HandleSpriteClick(object, NULL);
+            return 0;
+        }
     }
 
-    SpellRec spell;
-    PendingSpellCast* cast = s_targetingSpell;
-    g_spellDB.GetRecord(cast->m_data.m_spellId, &spell);
-    Spell_C_SpellFailed(cast, &spell, 97, -1, -1, false);
+    Spell_C_SpellFailed(s_targetingSpell, spell, SPELL_FAILED_OUT_OF_RANGE, -1, -1, false);
     return 0;
 }
 
@@ -123,7 +143,7 @@ static int32_t Script_SpellCanTargetUnit(lua_State* L) {
 
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
 
-    if (guid && Spell_C::HandleSpriteRay(guid, true)) {
+    if (guid && Spell_C_HandleSpriteRay(guid, true)) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -218,6 +238,9 @@ static int32_t Script_CancelUnitBuff(lua_State* L) {
 
     if (!Script_GetUnitAuraInfo(L, 1, &info)) {
         luaL_error(L, "Usage: CancelUnitBuff(\"unit\", [index] or [\"name\", \"rank\"][, \"filter\"])");
+    }
+
+    if (!CGGameUI::CanPerformAction(24)) {
         return 0;
     }
 
@@ -230,10 +253,10 @@ static int32_t Script_CancelUnitBuff(lua_State* L) {
             return 0;
         }
 
-        SpellRec spell;
+        SpellRec* spell = g_spellDB.GetRecord(player->GetAuraSpellId(slot));
 
-        if (g_spellDB.GetRecord(player->GetAuraSpellId(slot), &spell) && ((player->GetAuraFlags(slot) & 0x10) || (spell.m_attributesEx & 0x4))) {
-            Spell_C_CancelAura(&spell, player, slot);
+        if (spell && ((player->GetAuraFlags(slot) & 0x10) || (spell->m_attributesEx & 0x4))) {
+            Spell_C_CancelAura(spell, player, slot);
         }
 
         return 0;
@@ -252,21 +275,99 @@ static int32_t Script_CancelUnitBuff(lua_State* L) {
         return 0;
     }
 
-    SpellRec spell;
+    SpellRec* spell = g_spellDB.GetRecord(mover->GetAuraSpellId(slot));
 
-    if (g_spellDB.GetRecord(mover->GetAuraSpellId(slot), &spell)) {
-        for (uint32_t i = 0; i < 3; i++) {
-            if (spell.m_effectAura[i] == 236) {
-                mover->VehiclePassengerRequestExit();
-                break;
-            }
+    if (!spell) {
+        return 0;
+    }
+
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+    for (uint32_t i = 0; i < count; i++) {
+        if (effects->m_data[i] && effects->m_data[i]->m_effectAura == 236) {
+            mover->VehiclePassengerRequestExit();
+            break;
         }
     }
 
     return 0;
 }
 
-// STATIC: #0x00AF51C8
+// OFFSET: 0x008A5B40/0x1405E8730
+static int32_t Script_SpellCancelQueuedSpell(lua_State* L) {
+    UserClientCancelQueuedSpell msg;
+    ClientServices::Send(&msg);
+    return 0;
+}
+
+// OFFSET: 0x008A8770/0x1405EBA60
+static int32_t Script_SpellIsSelfBuff(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: SpellIsSelfBuff(spellID)");
+    }
+
+    SpellRec* spell = g_spellDB.GetRecord(lua_tointeger(L, 1));
+
+    if (!spell) {
+        return 0;
+    }
+
+    bool selfBuff = false;
+
+    for (uint32_t i = 0; i < 3; i++) {
+        const SpellEffectRec* effect = SpellGetEffect(spell->m_id, i);
+
+        if (!effect || effect->m_effect != 6) {
+            continue;
+        }
+
+        if (effect->m_implicitTargetA != 1 && effect->m_implicitTargetB != 1) {
+            lua_pushboolean(L, false);
+            return 1;
+        }
+
+        selfBuff = true;
+    }
+
+    lua_pushboolean(L, selfBuff);
+    return 1;
+}
+
+// OFFSET: 0x008AB060/0x1405EED50
+static int32_t Script_SpellGetVisibilityInfo(lua_State* L) {
+    if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
+        luaL_error(L, "Usage: SpellGetVisibilityInfo(spellID, \"visType\")");
+    }
+
+    int32_t type = 0;
+
+    while (_stricmp(lua_tostring(L, 2), s_visibilityTypes[type])) {
+        if (++type >= 3) {
+            luaL_error(L, "SpellGetVisibilityInfo: Invalid visType. Valid types: \"RAID_INCOMBAT\", \"RAID_OUTOFCOMBAT\", \"ENEMY_TARGET\"");
+        }
+    }
+
+    if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+        SpellAuraVisibilityRec key;
+        key.m_spellID = lua_tointeger(L, 1);
+        key.m_type = type;
+        const SpellAuraVisibilityRec* rec = static_cast<const SpellAuraVisibilityRec*>(bsearch(&key, g_spellAuraVisibilityDB.m_numRecords <= 0 ? NULL : g_spellAuraVisibilityDB.m_records, g_spellAuraVisibilityDB.m_numRecords, sizeof(SpellAuraVisibilityRec), CompareSpellAuraVisibility));
+
+        if (rec) {
+            lua_pushboolean(L, true);
+            lua_pushboolean(L, rec->m_flags & 0x1);
+            int32_t talentTab = TalentInfoGetPrimaryTalentTree(CGTalentInfo::GetActiveTalentGroup(0), 0, 0);
+            lua_pushboolean(L, SpellAuraVisibilityHasTalentTab(rec->m_id, talentTab));
+            return 3;
+        }
+    }
+
+    lua_pushboolean(L, false);
+    return 1;
+}
+
+// STATIC: 0x00D0AE00
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SpellIsTargeting", &Script_SpellIsTargeting },
     { "SpellCanTargetItem", &Script_SpellCanTargetItem },
@@ -279,18 +380,19 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CancelUnitBuff", &Script_CancelUnitBuff },
     { "CancelItemTempEnchantment", &Script_CancelItemTempEnchantment },
     { "CannotBeResurrected", &Script_CannotBeResurrected },
+    { "SpellCancelQueuedSpell", &Script_SpellCancelQueuedSpell },
+    { "SpellGetVisibilityInfo", &Script_SpellGetVisibilityInfo },
+    { "SpellIsSelfBuff", &Script_SpellIsSelfBuff },
 };
 
-// PROVEN: db7bed79 IDENTICAL/NONE
-// OFFSET: 0x005F3B70/0x140276820
+// OFFSET: 0x008A5B70
 void SpellRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// PROVEN: 56a174da IDENTICAL/NONE
-// OFFSET: 0x005F3BA0/0x140276870
+// OFFSET: 0x008A5BA0
 void SpellUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

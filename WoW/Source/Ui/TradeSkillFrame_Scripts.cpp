@@ -273,7 +273,7 @@ static int32_t Script_DoTradeSkill(lua_State* L) {
                 times = info->m_numAvailable;
             }
 
-            if (CGTradeSkillInfo::m_recastSpellID == info->m_spellId || Spell_C::CastSpell(info->m_spellId, NULL, WOWGUID::Make(0), false)) {
+            if (CGTradeSkillInfo::m_recastSpellID == info->m_spellId || Spell_C_CastSpell(info->m_spellId, NULL, WOWGUID::Make(0), false)) {
                 CGTradeSkillInfo::DoTradeSkill(info->m_spellId, times);
             }
         }

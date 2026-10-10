@@ -2482,7 +2482,7 @@ static int32_t Script_GetCursorInfo(lua_State* L) {
             int32_t spellId = CGGameUI::m_cursorSpell;
             const SpellRec* spell = g_spellDB.GetRecord(spellId);
 
-            if (spell && SpellRec::WillSummonCritter(spell)) {
+            if (spell && SpellIsCallCompanion(spell)) {
                 int32_t type = CGSpellBook::GetCompanionType(spell);
                 lua_pushstring(L, "companion");
                 lua_pushnumber(L, CGSpellBook::FindCompanionSlotByID(spellId, type) + 1);
@@ -2997,7 +2997,7 @@ static int32_t Script_RegisterCVar(lua_State* L) {
 
 // OFFSET: 0x008C1FE0/0x1406314C0
 static int32_t Script_Stuck(lua_State* L) {
-    Spell_C::CastSpell(CGSpellBook::m_stuckSpell, NULL, WOWGUID(), false);
+    Spell_C_CastSpell(CGSpellBook::m_stuckSpell, NULL, WOWGUID(), false);
     return 0;
 }
 
@@ -3750,7 +3750,7 @@ static int32_t Script_IsHelpfulItem(lua_State* L) {
     int32_t spellId = item ? item->GetEnchantmentSpell(0) : CGItem_C::GetUseSpell(itemId);
     const SpellRec* spell = NULL;
 
-    if ((spell = g_spellDB.GetRecord(spellId)) && SpellRec::IsHelpfulOrHarmful(spell) == 1) {
+    if ((spell = g_spellDB.GetRecord(spellId)) && SpellFaction(spell) == 1) {
         lua_pushnumber(L, 1.0);
         return 1;
     }
@@ -3773,7 +3773,7 @@ static int32_t Script_IsHarmfulItem(lua_State* L) {
     int32_t spellId = item ? item->GetEnchantmentSpell(0) : CGItem_C::GetUseSpell(itemId);
     const SpellRec* spell = NULL;
 
-    if ((spell = g_spellDB.GetRecord(spellId)) && SpellRec::IsHelpfulOrHarmful(spell) == 2) {
+    if ((spell = g_spellDB.GetRecord(spellId)) && SpellFaction(spell) == 2) {
         lua_pushnumber(L, 1.0);
         return 1;
     }
@@ -4490,7 +4490,7 @@ static int32_t Script_IsUsableItem(lua_State* L) {
                     CGItem_C::GetCooldowns(itemId, cooldown, categoryCooldown, category);
                 }
 
-                Spell_C_AdjustCategoryCooldown(reinterpret_cast<int32_t*>(&categoryCooldown), category, 1);
+                Spell_C_ModifyCategoryRecovery(reinterpret_cast<int32_t&>(categoryCooldown), category, 1);
 
                 if (charges < 0 || static_cast<int32_t>(cooldown) > 900000 || static_cast<int32_t>(categoryCooldown) > 900000) {
                     check = false;
@@ -4830,7 +4830,7 @@ static int32_t Script_StopAttack(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (player && player->IsInMelee() && CGGameUI::m_hasControl) {
-        player->SetCombatMode();
+        player->SetCombatMode(true);
     }
 
     return 0;
@@ -5251,7 +5251,7 @@ static int32_t Script_SummonFriend(lua_State* L) {
         CGGameUI::SendTarget(guid);
     }
 
-    Spell_C::CastSpell(CGSpellBook::m_summonFriendSpell, NULL, guid, false);
+    Spell_C_CastSpell(CGSpellBook::m_summonFriendSpell, NULL, guid, false);
 
     if (retarget) {
         CGGameUI::SendTarget(CGGameUI::m_lockedTarget);
@@ -5306,7 +5306,7 @@ static int32_t Script_EndBoundTradeable(lua_State* L) {
     }
 
     if (!SStrCmpI(type, "spellenchant", STORM_MAX_STR) && CGGameUI::m_lastEnchantSpellID) {
-        Spell_C::CastSpell(CGGameUI::m_lastEnchantSpellID, NULL, CGGameUI::m_lastItemSpellTarget, true);
+        Spell_C_CastSpell(CGGameUI::m_lastEnchantSpellID, NULL, CGGameUI::m_lastItemSpellTarget, true);
         CGGameUI::m_lastEnchantSpellID = 0;
     }
 
@@ -5624,7 +5624,7 @@ static int32_t Script_GetDownloadedPercentage(lua_State* L) {
 
 // OFFSET: 0x008C39A0
 static int32_t Script_GetMaxSpellStartRecoveryOffset(lua_State* L) {
-    lua_pushnumber(L, static_cast<double>(Spell_C_GetMaxSpellStartRecoveryOffset()));
+    lua_pushnumber(L, static_cast<double>(Spell_C_GetMaxStartRecoveryOffset()));
     return 1;
 }
 

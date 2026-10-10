@@ -274,7 +274,7 @@ static int32_t Script_GetActionInfo(lua_State* L) {
 
             const SpellRec* spell = g_spellDB.GetRecord(spellId);
 
-            if (spell && SpellRec::WillSummonCritter(spell)) {
+            if (spell && SpellIsCallCompanion(spell)) {
                 int32_t type = CGSpellBook::GetCompanionType(spell);
                 lua_pushstring(L, "companion");
                 lua_pushnumber(L, static_cast<double>(spellId));

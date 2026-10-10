@@ -468,7 +468,7 @@ static int32_t Script_CastSpellByID(lua_State* L) {
     }
 
     if (CGSpellBook::FindSlotBySpellID(spellId, 0) >= 0) {
-        lua_pushboolean(L, Spell_C::CastSpell(spellId, NULL, target, false));
+        lua_pushboolean(L, Spell_C_CastSpell(spellId, NULL, target, false));
         return 1;
     }
 
@@ -501,11 +501,11 @@ static int32_t Script_CastSpellByID(lua_State* L) {
     }
 
     if ((spell->m_attributesExD & 0x20) || player->GetPossessedUnit() == pet) {
-        lua_pushboolean(L, Spell_C_CastSpell(pet, spell->m_id, NULL, target, NULL, false));
+        lua_pushboolean(L, Spell_C_CastSpell(pet, spell->m_id, NULL, target, NULL, false, false, 0, 0));
         return 1;
     }
 
-    Spell_C_StartSpellCooldown(spell, pet);
+    Spell_C_StartSpellCooldown(spell, pet, 0, 0);
     CDataStore msg;
     C3Vector position = C3Vector();
     msg.Put(static_cast<uint32_t>(CMSG_PET_ACTION));
@@ -637,7 +637,7 @@ static int32_t Script_CallCompanion(lua_State* L) {
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 2)) - 1;
 
     if (index < companions.m_count) {
-        Spell_C::CastSpell(companions.m_data[index], NULL, WOWGUID(), false);
+        Spell_C_CastSpell(companions.m_data[index], NULL, WOWGUID(), false);
     }
 
     return 0;
@@ -1006,7 +1006,7 @@ static int32_t Script_CastSpellByName(lua_State* L) {
             ignoreCost = (node->m_flags >> 1) & 0x1;
         }
 
-        Spell_C::CastSpell(spellId, NULL, target, false, false, baseSpell, ignoreCost);
+        Spell_C_CastSpell(spellId, NULL, target, false, false, baseSpell, ignoreCost);
         return 0;
     }
 
@@ -1039,11 +1039,11 @@ static int32_t Script_CastSpellByName(lua_State* L) {
     }
 
     if ((spell->m_attributesExD & 0x20) || player->GetPossessedUnit() == pet) {
-        Spell_C_CastSpell(pet, spell->m_id, NULL, target, NULL, false);
+        Spell_C_CastSpell(pet, spell->m_id, NULL, target, NULL, false, false, 0, 0);
         return 0;
     }
 
-    Spell_C_StartSpellCooldown(spell, pet);
+    Spell_C_StartSpellCooldown(spell, pet, 0, 0);
     CDataStore msg;
     C3Vector position = C3Vector();
     msg.Put(static_cast<uint32_t>(CMSG_PET_ACTION));
@@ -1779,7 +1779,7 @@ static int32_t Script_IsHelpfulSpell(lua_State* L) {
 
     const SpellRec* spell = g_spellDB.GetRecord(CGSpellBook::GetSpell(slot, petSpell));
 
-    if (spell && SpellRec::IsHelpfulOrHarmful(spell) == 1) {
+    if (spell && SpellFaction(spell) == 1) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -1799,7 +1799,7 @@ static int32_t Script_IsHarmfulSpell(lua_State* L) {
 
     const SpellRec* spell = g_spellDB.GetRecord(CGSpellBook::GetSpell(slot, petSpell));
 
-    if (spell && SpellRec::IsHelpfulOrHarmful(spell) == 2) {
+    if (spell && SpellFaction(spell) == 2) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);

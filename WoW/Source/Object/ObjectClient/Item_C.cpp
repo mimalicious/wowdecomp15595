@@ -1627,7 +1627,7 @@ int32_t CGItem_C::UseItem(WOWGUID* target, int32_t a2) {
     }
 
     if (stats->m_bonding != 3 || this->IsBound() || a2) {
-        return Spell_C::CastSpell(spellId, this, *target, false);
+        return Spell_C_CastSpell(spellId, this, *target, false);
     }
 
     CGItem_C::s_bindOnUseItem = this->m_obj->m_guid;

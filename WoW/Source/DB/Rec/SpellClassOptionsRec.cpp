@@ -16,5 +16,5 @@ const DBCMeta SpellClassOptionsRec::s_meta = { "DBFilesClient\\SpellClassOptions
 // OFFSET: 0x00A2E920/0x1407D7F90
 void SpellClassOptionsRec::FixupStrings(void* record, const char* strings) {
     SpellClassOptionsRec* rec = static_cast<SpellClassOptionsRec*>(record);
-    DBCFixupString(rec->unk_0018, strings);
+    DBCFixupString(rec->m_description, strings);
 }

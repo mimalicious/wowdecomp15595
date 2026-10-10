@@ -361,9 +361,6 @@ static uint32_t s_combatModeExitCount;
 // STATIC: #0x00C9EAC8
 static int32_t s_dualWieldSpell;
 
-// STATIC: #0x00D3F4EC
-static uint32_t s_missileTrajectorySequence;
-
 // STATIC: #0x00A32450
 static const RestStateInfo s_restStateInfo[3] = {
     { ERR_MAX_VALUE, 60 },
@@ -771,7 +768,7 @@ void CGPlayer_C::SetClientStandState(uint32_t standState) {
         }
 
         if (this->CGUnit_C::IsInMelee()) {
-            this->SetCombatMode();
+            this->SetCombatMode(true);
         }
 
         if (standState >= 4 && standState <= 6) {
@@ -2552,15 +2549,15 @@ CGUnit_C* CGPlayer_C::GetPossessedUnit() {
 }
 
 // OFFSET: 0x00566EF0/0x1401C57A0
-void CGPlayer_C::SetCombatMode() {
+void CGPlayer_C::SetCombatMode(bool sendStop) {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && (this->CGUnit_C::IsInMelee() || this->m_combat.m_attackSent)) {
-        this->StopAttack(true);
+        this->StopAttack(sendStop);
         Spell_C_CancelMeleeSpells();
     }
 
     if (Spell_C_GetAutoRangedCombatSpell()) {
         Spell_C_SetAutoRangedCombatSpell(0);
-        int32_t autoRangedSpell = s_cvAutoRangedCombat->m_intValue ? CGSpellBook::m_autoRangedSpell : 0;
+        int32_t autoRangedSpell = CGSpellBook::m_autoRangedSpell;
 
         if (Spell_C_GetAutoRepeatingSpell() == autoRangedSpell) {
             Spell_C_CancelAutoRepeat(true);
@@ -2573,21 +2570,17 @@ void CGPlayer_C::SetCombatMode() {
     this->m_combatModeFlags &= ~0xEu;
     CGGameUI::UpdateCombatMode();
 
-    if (static_cast<int32_t>(this->m_unit->m_unitFieldLevel) < 2) {
+    if (static_cast<int32_t>(this->m_unit->m_unitFieldLevel) < 3) {
         return;
     }
 
-    if (CGTutorial::m_tutorialFlags.m_count && (reinterpret_cast<uint8_t*>(CGTutorial::m_tutorialFlags.m_bits.m_data)[7] & 0x1)) {
+    if (CGTutorial::m_tutorialFlags.m_count && (CGTutorial::m_tutorialFlags.m_bits.m_data[0] & 0x20)) {
         return;
     }
 
-    uint32_t count = ++s_combatModeExitCount;
+    s_combatModeExitCount++;
 
-    if (CGTutorial::m_tutorialFlags.m_count && (CGTutorial::m_tutorialFlags.m_bits.m_data[1] & 0x800000) && count > 4) {
-        if (IsTutorialFlagged(5) && count > 10) {
-            CGTutorial::TriggerTutorial(56);
-        }
-
+    if (CGTutorial::m_tutorialFlags.m_count && (CGTutorial::m_tutorialFlags.m_bits.m_data[1] & 0x800000) && s_combatModeExitCount > 4) {
         CGTutorial::TriggerTutorial(5);
     }
 
@@ -3477,7 +3470,7 @@ int32_t Packet_SMSG_CANCEL_COMBAT(void* param, NETMESSAGE msgId, uint32_t time, 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
-        player->SetCombatMode();
+        player->SetCombatMode(true);
     }
 
     return 1;
@@ -3820,7 +3813,7 @@ void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int
         float maxRange;
 
         if (rangedSpell) {
-            Spell_C::GetSpellRange(this, rangedSpell, &minRange, &maxRange, unit);
+            Spell_C_GetMinMaxRange(this, rangedSpell, &minRange, &maxRange, unit);
         } else {
             maxRange = this->CGUnit::GetMeleeRange(unit);
         }
@@ -3860,7 +3853,7 @@ void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int
 
     if (!this->CanAttackNow(unit)) {
         if (this->IsInMelee()) {
-            this->SetCombatMode();
+            this->SetCombatMode(true);
         }
 
         return;
@@ -3899,52 +3892,6 @@ int32_t CGPlayer_C::IsXRayVisionActive() {
 // OFFSET: 0x00554440/0x1401B0480
 int32_t CGPlayer_C::GetNewContinentID() {
     return ClntObjMgrGetMapID();
-}
-
-// OFFSET: #0x007FE510
-void Spell_C_SeedMissileTrajectorySequence(uint32_t guidLow) {
-    s_missileTrajectorySequence = guidLow;
-}
-
-// INLINED
-static uint32_t SetTrajectoryCheckBit(uint32_t value, uint32_t shift) {
-    uint32_t masked = value & ~(1u << shift);
-    uint32_t fold = masked ^ (masked >> 16);
-    fold ^= fold >> 8;
-    fold = (fold ^ (fold >> 4)) & 0xF;
-    return masked | (((0x28D7 >> fold) & 1) << shift);
-}
-
-// OFFSET: #0x007FE520
-uint32_t Spell_C_EncodeSequenceIntoMissileTrajectory(uint32_t* pitch, uint32_t* speed, uint32_t* source, uint32_t* dest) {
-    uint32_t sequence = s_missileTrajectorySequence++;
-    uint32_t key[2];
-    key[0] = (((source[0] ^ (source[2] & 0xF000)) & 0x2F000) ^ (source[1] & 0x300EE630) ^ (pitch[0] & 0x6000CF0) ^ (dest[1] & 0x60E0400) ^ (speed[0] & 0x240E00) ^ (dest[0] & 0xA9070F01) ^ sequence) | 0x1010101;
-    key[1] = 0;
-    uint32_t hash = SStrHash(reinterpret_cast<const char*>(key), 1, 0);
-
-    pitch[0] = (pitch[0] & ~0x3u) | ((hash >> 10) & 1) | ((hash >> 27) & 2);
-    speed[0] = (speed[0] & ~0x9u) | ((hash >> 1) & 1) | ((hash >> 19) & 8);
-    source[0] = (source[0] & ~0x6u) | (((hash & 0x8000) | ((hash >> 9) & 0x10000)) >> 14);
-    source[1] ^= ((hash >> 1) ^ source[1]) & 2;
-    source[1] ^= ((hash >> 11) ^ source[1]) & 8;
-    source[2] ^= ((hash >> 6) ^ source[2]) & 8;
-    source[2] ^= ((hash >> 28) ^ source[2]) & 4;
-    dest[0] = (dest[0] & ~0x6u) | ((hash >> 6) & 2) | ((hash >> 3) & 4);
-    dest[1] ^= ((hash >> 29) ^ dest[1]) & 1;
-    dest[1] ^= ((hash >> 3) ^ dest[1]) & 8;
-    dest[2] ^= ((hash >> 20) ^ dest[2]) & 1;
-    dest[2] ^= ((hash >> 10) ^ dest[2]) & 4;
-
-    pitch[0] = SetTrajectoryCheckBit(pitch[0], 3);
-    speed[0] = SetTrajectoryCheckBit(speed[0], 1);
-    source[0] = SetTrajectoryCheckBit(source[0], 3);
-    source[1] = SetTrajectoryCheckBit(source[1], 2);
-    source[2] = SetTrajectoryCheckBit(source[2], 0);
-    dest[0] = SetTrajectoryCheckBit(dest[0], 0);
-    dest[1] = SetTrajectoryCheckBit(dest[1], 2);
-    dest[2] = SetTrajectoryCheckBit(dest[2], 1);
-    return dest[2];
 }
 
 // OFFSET: 0x0044EDD0/0x14005D0C0
@@ -6476,7 +6423,7 @@ void CGPlayer_C::CastRandomCritter() {
     uint32_t count = this->m_companionSpells.m_count;
 
     if (count) {
-        Spell_C::CastSpell(this->m_companionSpells.m_data[rand() % count], NULL, WOWGUID::Make(0), false);
+        Spell_C_CastSpell(this->m_companionSpells.m_data[rand() % count], NULL, WOWGUID::Make(0), false);
     }
 }
 
@@ -6646,9 +6593,9 @@ void CGPlayer_C::ExitAutoCombatMode() {
 }
 
 // OFFSET: 0x0055C340/0x1401B90B0
-void CGPlayer_C::MeleeModeLeave() {
+void CGPlayer_C::MeleeModeLeave(bool sendStop) {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && (this->CGUnit_C::IsInMelee() || this->m_combat.m_attackSent)) {
-        this->StopAttack(true);
+        this->StopAttack(sendStop);
         Spell_C_CancelMeleeSpells();
     }
 }
@@ -6738,7 +6685,7 @@ void CGPlayer_C::ToggleSheathe() {
             }
 
             if (this->CGUnit_C::IsInMelee()) {
-                this->SetCombatMode();
+                this->SetCombatMode(true);
             }
 
             break;
@@ -6792,7 +6739,7 @@ int32_t CGPlayer_C::AutoCombatModeEventHandler(const void* data, void* param) {
     }
 
     if (!player->CanAttackNow(target)) {
-        player->SetCombatMode();
+        player->SetCombatMode(true);
         return 1;
     }
 
@@ -6804,12 +6751,12 @@ int32_t CGPlayer_C::AutoCombatModeEventHandler(const void* data, void* param) {
     C3Vector toTarget = target->GetPosition() - player->GetPosition();
     float minRange;
     float maxRange;
-    Spell_C::GetSpellRange(player, CGSpellBook::m_autoRangedSpell, &minRange, &maxRange, target);
+    Spell_C_GetMinMaxRange(player, CGSpellBook::m_autoRangedSpell, &minRange, &maxRange, target);
     float distanceSq = toTarget.y * toTarget.y + toTarget.z * toTarget.z + toTarget.x * toTarget.x;
 
     if (minRange * minRange < distanceSq || !player->CGUnit_C::IsInMelee()) {
         if (player->CGUnit_C::IsInMelee()) {
-            player->MeleeModeLeave();
+            player->MeleeModeLeave(true);
         }
 
         if (!Spell_C_GetAutoRangedCombatSpell()) {
@@ -6819,7 +6766,7 @@ int32_t CGPlayer_C::AutoCombatModeEventHandler(const void* data, void* param) {
 
         C3Vector direction = player->m_movementData.GetDirection();
 
-        if (direction.y * toTarget.y + direction.z * toTarget.z + direction.x * toTarget.x > 0.0f && !(player->m_movement->m_flags & 0x33) && maxRange * maxRange > distanceSq && Spell_C::CastSpell(CGSpellBook::m_autoRangedSpell, NULL, target->m_obj->m_guid, false)) {
+        if (direction.y * toTarget.y + direction.z * toTarget.z + direction.x * toTarget.x > 0.0f && !(player->m_movement->m_flags & 0x33) && maxRange * maxRange > distanceSq && Spell_C_CastSpell(CGSpellBook::m_autoRangedSpell, NULL, target->m_obj->m_guid, false)) {
             Spell_C_ClearLastAutoRangedCombatError();
         }
     }
@@ -10026,7 +9973,7 @@ void CGPlayer_C::UpdateObjComponentVisuals(const VisibleItem_C* item, GEOCOMPONE
 void CGPlayer_C::HandleSkinning(CGObject_C* object, bool autoInteract, bool a4) {
     float minRange;
     float maxRange;
-    Spell_C::GetSpellRange(this, CGSpellBook::GetSkinningSpell(object), &minRange, &maxRange, object);
+    Spell_C_GetMinMaxRange(this, CGSpellBook::GetSkinningSpell(object), &minRange, &maxRange, object);
     C3Vector target = object->GetPosition();
     C3Vector position = this->GetPosition();
     float dx = position.x - target.x;
@@ -10036,7 +9983,7 @@ void CGPlayer_C::HandleSkinning(CGObject_C* object, bool autoInteract, bool a4) 
     if (maxRange * maxRange <= dx * dx + dz * dz + dy * dy && autoInteract) {
         this->SetTrackingTarget(object->m_obj->m_guid, 9);
     } else {
-        Spell_C::CastSpell(CGSpellBook::GetSkinningSpell(object), NULL, object->m_obj->m_guid, false);
+        Spell_C_CastSpell(CGSpellBook::GetSkinningSpell(object), NULL, object->m_obj->m_guid, false);
     }
 
     if (a4) {
@@ -10398,7 +10345,7 @@ bool CGPlayer_C::ToggleFarSight(CGObject_C* object) {
             this->m_combatModeFlags |= 0x1;
         }
 
-        this->SetCombatMode();
+        this->SetCombatMode(true);
 
         if ((target->m_obj->m_type & TYPEMASK_UNIT) && static_cast<CGUnit_C*>(target)->IsLocalClientControlled()) {
             CGUnit_C::SetActiveMover(target->m_obj->m_guid.m_guid);

@@ -43,6 +43,7 @@
 #include "WoW/Source/Game/GameTime.h"
 #include "WoW/Source/Magic/MagicClient/SpellVisuals.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
+#include "WoW/Source/Magic/MagicClient/SpellWorldObject.h"
 #include "WoW/Source/Object/ObjectClient/AuraData.h"
 #include "WoW/Source/Object/ObjectClient/Corpse_C.h"
 #include "WoW/Source/Object/ObjectClient/DynamicObject_C.h"
@@ -593,13 +594,14 @@ void CGWorldFrame::OnLayerTrackTerrain(const HITTESTRESULT& result) {
                 break;
         }
 
-        CMapEntity* entity = Spell_C_GetSpellWorldObject();
+        SpellWorldObject* cursor = Spell_C_GetCursorWorldObject();
+        uintptr_t entity = cursor->m_entity;
 
         if (!entity) {
             return;
         }
 
-        CM2Model* model = Spell_C_GetCursorWorldObjectModel();
+        CM2Model* model = cursor->m_model;
         CAaBox box;
         box.b = C3Vector(0.0f, 0.0f, 0.0f);
         box.t = C3Vector(0.0f, 0.0f, 0.0f);
@@ -615,13 +617,13 @@ void CGWorldFrame::OnLayerTrackTerrain(const HITTESTRESULT& result) {
         }
 
         C44Matrix matrix;
-        const C3Vector& position = Spell_C_GetCursorWorldObjectPosition();
+        const C3Vector& position = cursor->m_position;
         matrix.d0 = position.x;
         matrix.d1 = position.y;
         matrix.d2 = position.z;
-        matrix.RotateAroundZ(Spell_C_GetCursorWorldObjectFacing());
-        World::ObjectUpdate(reinterpret_cast<uintptr_t>(entity), matrix, box, sphere, center, 0, 0xFFFFFFFF);
-        World::ObjectSetHidden(reinterpret_cast<uintptr_t>(entity), s_spellShadowStyle != 0);
+        matrix.RotateAroundZ(cursor->m_facing);
+        World::ObjectUpdate(entity, matrix, box, sphere, center, 0, 0xFFFFFFFF);
+        World::ObjectSetHidden(entity, s_spellShadowStyle != 0);
         return;
     }
 
@@ -1339,7 +1341,7 @@ void __stdcall CGWorldFrame::CursorTrackUnit(CGUnit_C* unit) {
     if ((unit->m_unit->m_unitFieldFlags & 0x4000000) && CGSpellBook::GetSkinningSpell(unit) && !((unit->m_obj->m_type & TYPEMASK_PLAYER) && player->CanAssist(unit, false))) {
         float minRange;
         float maxRange;
-        Spell_C::GetSpellRange(player, CGSpellBook::GetSkinningSpell(unit), &minRange, &maxRange, unit);
+        Spell_C_GetMinMaxRange(player, CGSpellBook::GetSkinningSpell(unit), &minRange, &maxRange, unit);
 
         if (!(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
             int32_t type = unit->GetSkinningType();
@@ -1441,7 +1443,7 @@ void __stdcall CGWorldFrame::CursorTrackCorpse(CGCorpse_C* corpse) {
     if ((corpse->m_corpse->m_corpseFieldFlags & 0x20) && CGSpellBook::GetSkinningSpell(asUnit) && !player->CanAssist(corpse)) {
         float minRange;
         float maxRange;
-        Spell_C::GetSpellRange(player, CGSpellBook::GetSkinningSpell(asUnit), &minRange, &maxRange, NULL);
+        Spell_C_GetMinMaxRange(player, CGSpellBook::GetSkinningSpell(asUnit), &minRange, &maxRange, NULL);
 
         if (distance <= maxRange * maxRange) {
             CursorSetMode(s_skinCursorModes[player->GetPVPFactionIndex()]);
@@ -1464,7 +1466,7 @@ void CGWorldFrame::OnLayerTrackObject(const HITTESTRESULT& result) {
 
     if (Spell_C_IsTargeting()) {
         WOWGUID guid = result.m_guid;
-        CursorSetMode(Spell_C::HandleSpriteRay(guid, true) ? 2 : 28);
+        CursorSetMode(Spell_C_HandleSpriteRay(guid, true) ? 2 : 28);
         this->HandleSpriteTrack(result.m_guid);
         return;
     }
@@ -2068,7 +2070,7 @@ void CGWorldFrame::OnWorldUpdate() {
     CEffect::CleanUpStaticLists();
     CMissile::UpdateStaticLists();
     CGObject_C::UpdateFadeoutList();
-    Spell_C_ExpireDestLocSpellCasts(FrameTime::GetCurTimeMs());
+    Spell_C_CleanUpProcessedDestLocSpellCasts(FrameTime::GetCurTimeMs());
     Spell_C_UpdateInTransitList();
     CGGameObject_C::UpdateMapObjSpeeds();
     this->UpdateWorld();
@@ -2160,7 +2162,7 @@ static void DrawSpellCursorShadow(uint32_t triFlags) {
         return;
     }
 
-    if (Spell_C_GetSpellWorldObject() && !s_spellShadowStyle) {
+    if (Spell_C_GetCursorWorldObject()->m_entity && !s_spellShadowStyle) {
         return;
     }
 

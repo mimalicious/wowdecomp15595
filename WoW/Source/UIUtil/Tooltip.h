@@ -102,6 +102,7 @@ int32_t TimeFractionBelow(float time, float fraction);
 
 class CGTooltip : public CSimpleFrame {
     public:
+    static WOWGUID m_vehicleStatUnit;
     static CDataAllocator s_tooltipHeap;
     static int32_t s_metatable;
     static int32_t s_objectType;

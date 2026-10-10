@@ -334,3 +334,16 @@ void UserClientSetPreferredCemetery::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x311E));
     msg->Put(this->m_cemeteryID);
 }
+
+// OFFSET: 0x00670920/0x1403187B0
+UserClientCancelQueuedSpell::UserClientCancelQueuedSpell() {
+}
+
+// OFFSET: 0x00670B40/0x140318D10
+UserClientCancelQueuedSpell::~UserClientCancelQueuedSpell() {
+}
+
+// OFFSET: 0x00670400
+void UserClientCancelQueuedSpell::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7B1C));
+}

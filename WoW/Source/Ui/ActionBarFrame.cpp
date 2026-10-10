@@ -897,7 +897,7 @@ int32_t CGActionBar::UpdateUsableAction(uint32_t slot, int32_t& noMana) {
                 CGItem_C::GetCooldowns(itemId, cooldown, categoryCooldown, category);
             }
 
-            Spell_C_AdjustCategoryCooldown(reinterpret_cast<int32_t*>(&categoryCooldown), category, 1);
+            Spell_C_ModifyCategoryRecovery(reinterpret_cast<int32_t&>(categoryCooldown), category, 1);
 
             if (charges < 0 || static_cast<int32_t>(cooldown) > 900000 || static_cast<int32_t>(categoryCooldown) > 900000) {
                 return 0;
@@ -1259,7 +1259,7 @@ void CGActionBar::UpdateSpellEffect(int32_t effect) {
         int32_t petSpell;
         const SpellRec* spell = g_spellDB.GetRecord(CGActionBar::GetSpell(i, petSpell));
 
-        if (spell && Spell_C_HasEffect(spell, effect)) {
+        if (spell && SpellHasEffect(spell, effect)) {
             int32_t noMana;
             CGActionBar::m_slotUsable[i] = CGActionBar::UpdateUsableAction(i, noMana);
             CGActionBar::m_slotNoMana[i] = noMana;

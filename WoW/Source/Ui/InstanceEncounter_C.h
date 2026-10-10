@@ -31,6 +31,7 @@ struct ENCOUNTER_OBJECTIVE : public TSLinkedNode<ENCOUNTER_OBJECTIVE> {
 
 class CGInstanceEncounter_C {
     public:
+    static bool CanResurrect(int32_t spellId);
     static void EnterWorld();
     static void LeaveWorld();
     static WOWGUID GetBoss(uint32_t index);

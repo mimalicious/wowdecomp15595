@@ -74,6 +74,8 @@ class CGTalentGroup_C {
     void AddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t pet);
 };
 
+int32_t TalentInfoGetPrimaryTalentTree(uint32_t group, int32_t pet, int32_t a3);
+
 class CGTalentInfo {
     public:
     static uint32_t m_activeTalentGroup;

@@ -183,3 +183,12 @@ void CGStableInfo::ShutdownGame() {
 void CGStableInfo::LeaveWorld() {
     CGStableInfo::CloseStables(false);
 }
+
+// OFFSET: 0x00464740
+StablePetInfo* CGStableInfo::GetPetInfo(uint32_t index) {
+    if (index >= 25) {
+        return NULL;
+    }
+
+    return &CGStableInfo::m_pets[index];
+}

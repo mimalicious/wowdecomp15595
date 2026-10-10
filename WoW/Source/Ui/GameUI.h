@@ -633,6 +633,8 @@ void EncounterJournalUnregisterScriptFunctions();
 void CompactUnitFrameProfilesRegisterScriptFunctions();
 void CompactUnitFrameProfilesUnregisterScriptFunctions();
 void IncomingResurrectionRegisterScriptFunctions();
+void IncomingResurrectionCastStart(const WOWGUID& target, const WOWGUID& caster, int32_t spellId);
+void IncomingResurrectionCastEnd(const WOWGUID& target, const WOWGUID& caster, int32_t spellId);
 void IncomingResurrectionUnregisterScriptFunctions();
 void TransmogrifyRegisterScriptFunctions();
 void TransmogrifyUnregisterScriptFunctions();

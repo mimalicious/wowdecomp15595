@@ -111,6 +111,7 @@ extern const uint32_t s_environmentalDamageSchools[6];
 
 void UnitCombatLogInstakill(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId);
 void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId, int32_t missType, bool a5, bool a6, int32_t a7);
+void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t missType, bool a5, bool a6, int32_t a7);
 void UnitCombatLogDamageShield(const WOWGUID& victimGuid, const WOWGUID& casterGuid, int32_t spellId, int32_t damage, uint32_t overkill, uint32_t schoolMask);
 PendingCombatLogData* GetPendingCombatLogData(CombatLogEntry* entry, const WOWGUID& guid, uint32_t mask);
 CombatLogEntry* GetCombatLogEntry(const WOWGUID& source, const WOWGUID& dest, int32_t event, const SpellRec* spell);
@@ -128,7 +129,10 @@ void UnitCombatLog(const WOWGUID& guid, uint32_t type, int32_t damage, int32_t a
 void UnitCombatLog(const ATTACKROUNDINFO& info);
 void UnitCombatLogUnitDead(CGUnit_C* unit);
 void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, int32_t spellId);
+void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
 void UnitCombatLogSpellFail(const WOWGUID& caster, int32_t spellId, const char* reason);
+void UnitCombatLogSpellFail(const WOWGUID& caster, const SpellRec* spell, const char* reason);
+void UnitCombatLogCastStart(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
 class AuraData;
 extern TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_entries;
 extern WOWGUID s_combatTextActiveUnit;

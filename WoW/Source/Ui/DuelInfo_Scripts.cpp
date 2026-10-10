@@ -15,7 +15,7 @@ static int32_t Script_StartDuel(lua_State* L) {
     WOWGUID guid = CGGameUI::ClosestObjectMatch(lua_tolstring(L, 1, NULL), TYPEMASK_PLAYER, 0, exact, FLT_MAX, 0);
 
     if (guid) {
-        Spell_C::CastSpell(CGSpellBook::m_duelSpell, NULL, guid, false);
+        Spell_C_CastSpell(CGSpellBook::m_duelSpell, NULL, guid, false);
         CGDuelInfo::m_dueler = guid;
     }
 

@@ -645,7 +645,7 @@ static int32_t SpellParserReplaceText(const SpellRec* spell, char* buffer, uint3
         SStrCopy(digits, *cursor, count + 1);
         *cursor += count;
 
-        if (!g_spellDB.GetRecord(QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(SStrToInt(digits)), &loaded)) {
+        if (!g_spellDB.GetRecord(Spell_C_SpellGetSpellIDForDifficulty(SStrToInt(digits)), &loaded)) {
             return 0;
         }
 

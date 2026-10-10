@@ -1732,7 +1732,7 @@ void CGUnit_C::CreateProceduralEffect(const PlaySpellVisualKitAnimData* data, in
             }
 
             case 1: {
-                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && data->m_spellRec && SpellRec::IsHelpfulOrHarmful(data->m_spellRec) == 2) {
+                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && data->m_spellRec && SpellFaction(data->m_spellRec) == 2) {
                     break;
                 }
 
@@ -1784,7 +1784,7 @@ void CGUnit_C::CreateProceduralEffect(const PlaySpellVisualKitAnimData* data, in
             }
 
             case 13: {
-                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && data->m_spellRec && SpellRec::IsHelpfulOrHarmful(data->m_spellRec) == 2) {
+                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && data->m_spellRec && SpellFaction(data->m_spellRec) == 2) {
                     break;
                 }
 
@@ -3099,7 +3099,7 @@ void CGUnit_C::OnAuraRemoved(uint32_t index, AuraData* aura) {
                     updateSpells = true;
                 }
 
-                Spell_C_CancelSpellsWithId(overrideSpell);
+                Spell_C_CancelSpellBySpellID(overrideSpell);
             }
         }
 
@@ -11232,7 +11232,7 @@ bool __stdcall CGUnit_C::CheckSpellPvPUsability(const SpellRec* spell, int32_t* 
         }
     }
 
-    Spell_C_AdjustCategoryCooldown(&categoryRecoveryTime, category, 0);
+    Spell_C_ModifyCategoryRecovery(categoryRecoveryTime, category, 0);
     bool arena = false;
 
     if (!CGGameUI::IsInArenaOrRatedBattleground(&arena)) {
@@ -17550,7 +17550,7 @@ bool CGUnit_C::HasAuraMatchingSpellClass(int32_t auraType, const SpellRec* spell
         for (uint32_t j = 0; j < effectCount; j++) {
             const SpellEffectRec* effect = effects->m_data[j];
 
-            if (effect && effect->m_effectAura == auraType && (aura->m_flags & (1 << j)) && SpellRec::IsAffectedBy(spell, auraSpell, j)) {
+            if (effect && effect->m_effectAura == auraType && (aura->m_flags & (1 << j)) && SpellMatchesAuraSpellClass(spell, auraSpell, j)) {
                 return true;
             }
         }
@@ -18087,7 +18087,7 @@ checkTarget:
         int32_t spellId;
 
         if (this->IsActivePlayer() && (spellId = GetModalNextSpell())) {
-            Spell_C::GetSpellRange(this, spellId, &minRange, &maxRange, unit);
+            Spell_C_GetMinMaxRange(this, spellId, &minRange, &maxRange, unit);
         } else {
             maxRange = this->GetMeleeRange(unit);
         }
@@ -18145,7 +18145,7 @@ int32_t CGUnit_C::OnAttackIconPressed(WOWGUID target, int32_t a3, int32_t a4, in
 
     if (isPlayer) {
         if (((player->m_combatModeFlags & 2) || player->m_combat.m_attacking) && CGGameUI::m_hasControl) {
-            player->SetCombatMode();
+            player->SetCombatMode(true);
         } else {
             player->CombatModeEnter(target, targetChanged, 0, a4, a5);
         }
@@ -18184,7 +18184,7 @@ int32_t CGUnit_C::OnAttackIconPressed(WOWGUID target, int32_t a3, int32_t a4, in
 bool CGUnit_C::CheckShapeshiftRules(const SpellRec* spell, int32_t* reason) {
     int32_t form = this->m_shapeshiftSuppressed ? 0 : this->m_unit->m_unitFieldBytes2[3];
 
-    if (SpellRec::NotUsableInShapeshiftForm(spell, form - 1)) {
+    if (Spell_C_SpellHasShapeshiftExclude(spell, form - 1)) {
         if (!this->HasAuraMatchingSpellClass(275, spell)) {
             *reason = SPELL_FAILED_NOT_SHAPESHIFT;
             return false;
@@ -19730,7 +19730,7 @@ void CGUnit_C::CreateMissile(const CreateMissileParams& params) {
             missile->m_attachOffset = offset;
             object = ClntObjMgrObjectPtr(params.m_target, TYPEMASK_OBJECT, __FILE__, __LINE__);
         } else {
-            PendingSpellCastData* data = params.m_data;
+            SpellCast* data = params.m_data;
             uint32_t targetFlags = data ? data->m_targetFlags : 0;
 
             if (data && (targetFlags & 0x60) == 0x60) {
@@ -19839,11 +19839,11 @@ flagsDone:
     missile->m_castTime = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     missile->SetReadyToFire(&this->m_missiles);
     this->m_lastMissileTime = missile->m_castTime;
-    PendingSpellCastData* data = params.m_data;
+    SpellCast* data = params.m_data;
 
     if (data && (data->m_castFlags & 0x20000)) {
         missile->m_pitch = data->m_elevation;
-        missile->m_trajectorySpeed = data->unk_0120;
+        missile->m_trajectorySpeed = data->m_speed;
         missile->m_flags |= 0x10800;
         missile->m_arrivalTime = missile->m_castTime + params.m_delay;
     }
@@ -21068,7 +21068,7 @@ void CGUnit_C::DisengageFromActivePlayer() {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (player && player->m_combat.m_attacking) {
-            player->SetCombatMode();
+            player->SetCombatMode(true);
         }
 
         Spell_C_CancelAutoRepeat(true);
@@ -22212,7 +22212,7 @@ bool CGUnit_C::GetInteractDistanceOfAction(int32_t action, const WOWGUID& guid, 
                 return false;
             }
 
-            Spell_C::GetSpellRange(this, spellId, &minRange, &maxRange, unit);
+            Spell_C_GetMinMaxRange(this, spellId, &minRange, &maxRange, unit);
             break;
         }
 
@@ -22223,7 +22223,7 @@ bool CGUnit_C::GetInteractDistanceOfAction(int32_t action, const WOWGUID& guid, 
                 return false;
             }
 
-            Spell_C::GetSpellRange(this, CGSpellBook::m_autoRangedSpell, &minRange, &maxRange, unit);
+            Spell_C_GetMinMaxRange(this, CGSpellBook::m_autoRangedSpell, &minRange, &maxRange, unit);
             break;
         }
 
@@ -23690,4 +23690,42 @@ void CGUnit_C::UpdateEffectVirtualItemFlag() {
             return;
         }
     }
+}
+
+// OFFSET: 0x005CCD70
+void CGUnit_C::ReleaseMissiles() {
+    C3Vector position;
+    position = this->GetMissileFirePosition();
+    this->ReleaseMissiles(position);
+}
+
+// OFFSET: 0x005C81B0
+void CGUnit_C::SpellHasteCooldowns(const SpellRec* spell, int32_t& recovery, int32_t& categoryRecovery) {
+    if (!this->HasAuraMatchingSpellClass(347, spell)) {
+        return;
+    }
+
+    float haste = this->m_unit->m_unitModCastHaste;
+
+    if (haste > 1.0f) {
+        haste = 1.0f;
+    }
+
+    recovery = static_cast<int32_t>(static_cast<float>(recovery) * haste);
+    categoryRecovery = static_cast<int32_t>(static_cast<float>(categoryRecovery) * haste);
+}
+
+// OFFSET: 0x005C1BA0/0x140237C10
+bool CGUnit_C::HasFlightFormAura() const {
+    CGUnit_C* unit = const_cast<CGUnit_C*>(this);
+
+    for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
+        SpellRec* spell = g_spellDB.GetRecord(unit->m_auras[i].m_spellId);
+
+        if (spell && SpellHasAuraEffect(spell, 36) && SpellHasAuraEffect(spell, 201)) {
+            return true;
+        }
+    }
+
+    return false;
 }

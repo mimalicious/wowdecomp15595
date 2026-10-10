@@ -1183,6 +1183,13 @@ int32_t FrameScript_Initialize(int32_t profile) {
     return 1;
 }
 
+// OFFSET: 0x00464D70
+bool FrameScript_GetText(const char* token, char* buffer, uint32_t size, int32_t count, FRAMESCRIPT_GENDER gender) {
+    const char* text = FrameScript_GetText(token, count, gender);
+    SStrCopy(buffer, text, size);
+    return *text != '\0';
+}
+
 // OFFSET: 0x0083D310/0x140568110
 const char* FrameScript_GetText(const char* token, int32_t count, FRAMESCRIPT_GENDER gender) {
     // STATIC: %0x00D8BCC0

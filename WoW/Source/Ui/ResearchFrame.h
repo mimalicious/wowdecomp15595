@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+class CDataStore;
+
 class CGResearchFrame {
     public:
     static void ShutdownGame();
@@ -13,6 +15,8 @@ class CGResearchFrame {
     static void InitializeGame();
     static bool IsInsideResearchSite(int32_t siteId);
     static bool CanScanResearchSite(int32_t researchField);
+    static bool CanCastSpell(int32_t spellId, int32_t& reason);
+    static void PutWeightForSpell(CDataStore* msg);
 };
 
 #endif

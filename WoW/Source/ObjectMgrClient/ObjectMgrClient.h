@@ -12,6 +12,7 @@
 
 class CDataStore;
 class CGObject_C;
+class CGCorpse_C;
 class CGPlayer_C;
 class CHashKeyGUID;
 struct ClntObjMgr;
@@ -62,6 +63,7 @@ void ClntObjMgrDestroyStd();
 void ClntObjMgrDestroyShared();
 void ClntObjMgrDestroyLazyCleanupObjects();
 int32_t ClntObjMgrEnumVisibleObjects(OBJECTENUMFUNC func, void* param);
+CGCorpse_C* ClntObjMgrFindCorpseByOwner(const WOWGUID& owner);
 WOWGUID ClntObjMgrGetActivePlayer();
 CGPlayer_C* ClntObjMgrGetActivePlayerObj();
 ObjectMgr* ClntObjMgrGetCurrent();

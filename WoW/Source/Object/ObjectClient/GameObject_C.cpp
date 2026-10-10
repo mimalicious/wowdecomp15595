@@ -4626,7 +4626,7 @@ int32_t CGGameObject_C_TypeBase::CheckRange() const {
         }
     } else {
         float minRange;
-        Spell_C::GetSpellRange(player, spellId, &minRange, &range, NULL);
+        Spell_C_GetMinMaxRange(player, spellId, &minRange, &range, NULL);
     }
 
     CGGameObject_C* owner = this->m_owner;
@@ -4949,7 +4949,7 @@ bool CGGameObject_C_TypeBase::Use() {
     if (spellId) {
         WOWGUID none = WOWGUID();
 
-        if (!Spell_C::CastSpell(spellId, key, none, false)) {
+        if (!Spell_C_CastSpell(spellId, key, none, false)) {
             return false;
         }
 

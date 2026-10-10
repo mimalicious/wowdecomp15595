@@ -125,6 +125,15 @@ class ClientGenerateRandomCharacterNameResult : public JamClientMessage {
     void Unpack(CDataStore* msg, bool full);
 };
 
+struct JamWeeklySpellUse {
+    /* 0000 */ int32_t m_category;
+    /* 0004 */ uint8_t m_uses;
+    /* 0005 */ uint8_t unk_0005[3];
+
+    JamWeeklySpellUse();
+    JamWeeklySpellUse& operator=(const JamWeeklySpellUse& source);
+};
+
 struct HotfixNotify {
     /* 0000 */ uint32_t m_tableHash;
     /* 0004 */ int32_t m_recordID;
@@ -310,8 +319,11 @@ class ClientWeeklySpellUsageUpdate : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientWeeklySpellUsageUpdate* msg);
 
+    /* 0010 */ JamWeeklySpellUse m_usage;
+
     ClientWeeklySpellUsageUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientWeeklySpellUsageUpdate();
+    bool Get(CDataStore* msg, bool full) override;
     bool Handle();
 };
 
@@ -973,9 +985,14 @@ class ClientWeeklySpellUsage : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientWeeklySpellUsage* msg);
 
+    /* 0010 */ TSGrowableArray<JamWeeklySpellUse> m_usage;
+
     ClientWeeklySpellUsage(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientWeeklySpellUsage();
+    bool Get(CDataStore* msg, bool full) override;
     bool Handle();
+    bool Read(CDataStore* msg, bool full);
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientWeeklyResetCurrency : public JamClientMessage {
@@ -1243,9 +1260,17 @@ class ClientPlaySpellVisualKit : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientPlaySpellVisualKit* msg);
 
+    /* 0010 */ uint8_t m_unitGUID[8];
+    /* 0018 */ uint32_t m_timeOffset;
+    /* 001C */ int32_t m_kitRecID;
+    /* 0020 */ uint32_t m_kitType;
+
     ClientPlaySpellVisualKit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPlaySpellVisualKit();
+    bool Get(CDataStore* msg, bool full) override;
     bool Handle();
+    bool Read(CDataStore* msg, bool full);
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildCriteriaDeleted : public JamClientMessage {
@@ -1351,9 +1376,15 @@ class ClientClearCooldowns : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientClearCooldowns* msg);
 
+    /* 0010 */ uint8_t m_guid[8];
+    /* 0018 */ TSGrowableArray<int32_t> m_spellID;
+
     ClientClearCooldowns(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientClearCooldowns();
+    bool Get(CDataStore* msg, bool full) override;
     bool Handle();
+    bool Read(CDataStore* msg, bool full);
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientBattlefieldMgrEntered : public JamClientMessage {

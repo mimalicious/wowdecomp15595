@@ -18,6 +18,6 @@ void UnitPowerBarRec::FixupStrings(void* record, const char* strings) {
     UnitPowerBarRec* rec = static_cast<UnitPowerBarRec*>(record);
     DBCFixupString(rec->unk_0054, strings);
     DBCFixupString(rec->unk_0058, strings);
-    DBCFixupString(rec->unk_005C, strings);
+    DBCFixupString(rec->m_outOfError, strings);
     DBCFixupString(rec->unk_0060, strings);
 }

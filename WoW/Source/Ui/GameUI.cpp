@@ -3139,7 +3139,7 @@ void CGGameUI::ClearTarget(WOWGUID guid, int32_t a2) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
-        player->SetCombatMode();
+        player->SetCombatMode(true);
 
         if (player->GetPossessedUnit()) {
             CGPetInfo::PetClearTarget();
@@ -6588,7 +6588,7 @@ static int32_t AutoMouseOverProc(WOWGUID guid, void* param) {
         } else if ((unit->m_unit->m_unitFieldFlags & 0x4000000) && CGSpellBook::GetSkinningSpell(unit) && (!(unit->m_obj->m_type & TYPEMASK_PLAYER) || !player->CanAssist(unit, false))) {
             float minRange;
             float maxRange;
-            Spell_C::GetSpellRange(player, CGSpellBook::GetSkinningSpell(unit), &minRange, &maxRange, unit);
+            Spell_C_GetMinMaxRange(player, CGSpellBook::GetSkinningSpell(unit), &minRange, &maxRange, unit);
             rangeSq = maxRange * maxRange;
         } else {
             if (!player->CanAttackNow(unit) || (player->m_unit->m_unitFieldFlags & 0x20000) || !CGGameUI::m_hasControl) {
@@ -6625,7 +6625,7 @@ static int32_t AutoMouseOverProc(WOWGUID guid, void* param) {
 
             float minRange;
             float maxRange;
-            Spell_C::GetSpellRange(player, CGSpellBook::GetSkinningSpell(reinterpret_cast<CGUnit_C*>(corpse)), &minRange, &maxRange, NULL);
+            Spell_C_GetMinMaxRange(player, CGSpellBook::GetSkinningSpell(reinterpret_cast<CGUnit_C*>(corpse)), &minRange, &maxRange, NULL);
 
             if (maxRange * maxRange < distSq) {
                 return 1;

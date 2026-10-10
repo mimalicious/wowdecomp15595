@@ -121,3 +121,58 @@ int32_t SpellUtils_ComputeMissileTrajectory(float pitch, const C3Vector* delta, 
 
     return 2;
 }
+
+// OFFSET: 0x006638E0/0x140309A50
+bool SpellIsApplyAuraEffect(int32_t effect) {
+    switch (effect) {
+        case 6:
+        case 35:
+        case 65:
+        case 119:
+        case 128:
+        case 129:
+        case 143:
+        case 174:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+// OFFSET: 0x00663A90
+bool SpellIsDamageEffect(int32_t effect, int32_t aura) {
+    switch (effect) {
+        case 2:
+        case 9:
+        case 17:
+        case 31:
+        case 58:
+        case 62:
+        case 121:
+            return true;
+
+        case 6:
+        case 27:
+        case 35:
+        case 65:
+        case 119:
+        case 128:
+        case 129:
+        case 143:
+        case 174:
+            switch (aura) {
+                case 3:
+                case 15:
+                case 43:
+                case 53:
+                    return true;
+
+                default:
+                    return false;
+            }
+
+        default:
+            return false;
+    }
+}

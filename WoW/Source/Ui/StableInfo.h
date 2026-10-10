@@ -20,6 +20,7 @@ class CGStableInfo {
     public:
     static void ShutdownGame();
     static StablePetInfo m_pets[25];
+    static StablePetInfo* GetPetInfo(uint32_t index);
     static WOWGUID m_stableMaster;
     static uint32_t m_numPets;
     static int32_t m_numSlots;

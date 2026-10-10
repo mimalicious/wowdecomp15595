@@ -1107,3 +1107,120 @@ BlizzardObject* SpellVisualsBlizzardCreate(const C3Vector* position, float radiu
     object->Init(position, modelName, radius, rate);
     return object;
 }
+
+// OFFSET: #0x007FA2E0
+void SpellVisualsHandleCastStart(CGUnit_C* unit, SpellCast* data, const SpellRec* spell) {
+    if (!unit) {
+        SErrSetLastError(87);
+        return;
+    }
+
+    if (spell->m_attributes & 0x2) {
+        unit->SetSheatheState(2, 1, 0);
+    }
+
+    if (spell->m_attributesExB & 0x20) {
+        if (unit->m_animationState & 0x200) {
+            return;
+        }
+
+        unit->SetCastingAutoRepeat(true);
+    }
+
+    SpellVisualRec visualRec;
+    const SpellVisualRec* visual = unit->GetAppropriateSpellVisual(spell, visualRec, 0, 0);
+
+    if (visual) {
+        if (visual->m_hasMissile && visual->m_missileModel && (visual->m_missileModel == -1 || visual->m_missileModel == -2)) {
+            unit->SetSheatheState(1, 1, 0);
+        }
+
+        SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_precastKit);
+
+        if (kit) {
+            if (kit->m_startAnimID > 0 || kit->m_animID > 0) {
+                unit->SetCastingAnim(true);
+            }
+
+            PlaySpellVisuaKitData kitData(const_cast<SpellRec*>(spell), kit, 4);
+            unit->PlaySpellVisualKit(kitData);
+        }
+
+        if (unit->IsActivePlayer() && (spell->m_attributes & 0x400000) && (data->m_targetFlags & 0x2) && data->m_objectTarget.m_guid) {
+            if (!(spell->m_facingCasterFlags & 0x1) || unit->IsInFrontOfTargetWithGuid(data->m_objectTarget)) {
+                unit->SetTrackingTarget(data->m_objectTarget, 0);
+            }
+        }
+
+        if (visual->m_flags & 0x20) {
+            unit->AttachPrecastMissileModel(visual, data->m_castCount);
+        }
+    }
+}
+
+// OFFSET: 0x008BC1A0/0x140604D60
+bool CanPlaySpellVisualForPlayer(uint64_t caster, uint64_t target, int32_t casterIsPlayer, int32_t targetIsPlayer) {
+    if (caster) {
+        if (casterIsPlayer && caster != ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+
+        if (targetIsPlayer && caster == ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+    }
+
+    if (target) {
+        if (targetIsPlayer && target != ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+
+        if (casterIsPlayer && target == ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x008BC220/0x140604DF0
+bool CanPlaySpellVisual(uint64_t caster, uint64_t target, const SpellVisualRec* visual) {
+    if (!visual) {
+        return false;
+    }
+
+    return CanPlaySpellVisualForPlayer(caster, target, visual->m_flags & 0x800, visual->m_flags & 0x1000);
+}
+
+// OFFSET: 0x008BC260/0x140604E20
+bool CanPlaySpellVisualKit(uint64_t caster, uint64_t target, const SpellVisualKitRec* kit, const SpellVisualRec* visual) {
+    if (!kit || (visual && !CanPlaySpellVisualForPlayer(caster, target, visual->m_flags & 0x800, visual->m_flags & 0x1000))) {
+        return false;
+    }
+
+    return CanPlaySpellVisualForPlayer(caster, target, kit->m_flags & 0x1000, kit->m_flags & 0x2000);
+}
+
+// OFFSET: 0x008BC6D0/0x140605480
+const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit) {
+    int32_t visualId = spell->m_spellVisualID[0];
+
+    if (ViolenceGetLevel() < 2 && spell->m_spellVisualID[1]) {
+        visualId = spell->m_spellVisualID[1];
+    }
+
+    const SpellVisualRec* visual = g_spellVisualDB.GetRecord(visualId);
+
+    if (!unit || !visual || !visual->unk_0080) {
+        return visual;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || player->IsFriendly(unit)) {
+        return visual;
+    }
+
+    const SpellVisualRec* hostile = g_spellVisualDB.GetRecord(visual->unk_0080);
+    return hostile ? hostile : visual;
+}

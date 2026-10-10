@@ -69,7 +69,7 @@ class ChrClassesRec;
 class ChrRacesRec;
 class NameCache;
 struct SpellCastTargetPoint;
-class PendingSpellCastData;
+class SpellCast;
 class CreatureDisplayInfoExtraRec;
 class CreatureDisplayInfoRec;
 class CreatureModelDataRec;
@@ -78,7 +78,7 @@ class CreatureStats_C;
 class UnitBloodLevelsRec;
 
 struct CreateMissileParams {
-    /* 0000 */ PendingSpellCastData* m_data;
+    /* 0000 */ SpellCast* m_data;
     /* 0004 */ uint32_t m_ammoDisplayId;
     /* 0008 */ uint32_t m_ammoInventoryType;
     /* 000C */ const SpellVisualRec* m_visual;
@@ -1082,6 +1082,12 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void HandleBloodPool(uint32_t time);
     void NamePlateAddOrUpdate(const C3Vector& position, CGWorldFrame* worldFrame);
     void ReleaseMissiles();
+    void StopUpdatingMissileTrajectory(int32_t spellId, uint8_t castCount);
+    void PreStartUpdatingMissileTrajectory(int32_t spellId, uint8_t castCount, uint32_t time);
+    int32_t GetCategoryCooldownModifier(int32_t category) const;
+    bool CheckSpellImmunity(const SpellRec* aura, int32_t* schoolMask, int32_t miscValue, int32_t* effectMask, bool a5) const;
+    void SpellHasteCooldowns(const SpellRec* spell, int32_t& recovery, int32_t& categoryRecovery);
+    bool HasFlightFormAura() const;
     void ReleaseMissiles(const C3Vector& position);
     int32_t ShouldShowNamePlate(CGWorldFrame* worldFrame, C3Vector* position);
     void CheckApplyPeriodicClientTriggers();
@@ -1235,6 +1241,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     UnitBloodRec* GetBloodRecord();
     void ModifyPredictedPower(int32_t powerType, int32_t delta);
     void AddWorldText(const WOWGUID& source, int32_t reason, const SpellRec* spell, bool periodic);
+    void AddWorldText(const WOWGUID& source, int32_t reason, const SpellRec* spell, bool periodic, int32_t a5);
     void AddWorldHealingText(const WOWGUID& source, int32_t amount, const SpellRec* spell, bool crit, int32_t a6);
     void AddWorldHonorGainText(int32_t honor, int32_t pvpRank, const char* victimName);
     void PlayCombatSpellMissEffects(uint32_t reason, const WOWGUID& source);

@@ -12,8 +12,8 @@ class SpellCategoryRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_flags;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ DBCString unk_000C;
+    /* 0008 */ int32_t m_usesPerWeek;
+    /* 000C */ DBCString m_name;
 };
 
 #endif
