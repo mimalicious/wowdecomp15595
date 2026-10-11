@@ -14972,11 +14972,6 @@ void CGUnit_C::Disable() {
     }
 }
 
-// PROVEN: b83e445a IDENTICAL/IDENTICAL
-// OFFSET: 0x00401000/0x1407D7E80
-void WeaponTrailsInitialize() {
-}
-
 // OFFSET: 0x005CD6B0
 void CGUnit_C::OnSetRawFacingLocal(uint32_t eventTime, float facing) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover && CGUnit_C::s_trackingType != 13 && !(CGUnit_C::s_trackingFlags & 0x1)) {

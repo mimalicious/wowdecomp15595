@@ -61,7 +61,6 @@ void PlayerNameInitialize();
 void PlayerNameShutdown();
 void PlayerNameUpdateEarly();
 void PlayerNameUpdateLate();
-void PlayerNameClearFrameFlags();
 void PlayerNameUpdateWorldText();
 
 bool ObjectNameShowCallback(CVar* var, const char* oldValue, const char* value, void* arg);

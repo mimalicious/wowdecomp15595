@@ -1,4 +1,5 @@
 #include "WorldFrame.h"
+#include "WoW/Source/Game/GameClient/WTOBJECT.h"
 #include "Engine/Source/Base/ConvertUTF.h"
 #include <cstring>
 #include <typeinfo>
@@ -1602,7 +1603,7 @@ int32_t CGWorldFrame::Update(const void* data, void* param) {
         player->UpdateActiveMoverDisplay(FrameTime::GetCurTimeMs());
     }
 
-    PlayerNameClearFrameFlags();
+    WeaponTrailsClearFinished();
     g_scene.Update(FrameTime::GetCurTimeMs());
     CAnimKitManager::GarbageCollect();
     return 1;

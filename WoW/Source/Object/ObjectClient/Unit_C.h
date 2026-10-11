@@ -1406,7 +1406,6 @@ bool IsGuildPerkSpell(int32_t spellId);
 void NameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 float CalculateFacingTo(const C3Vector* from, const C3Vector* to);
 
-void WeaponTrailsInitialize();
 
 const char* GetCombatLogObjectName(const WOWGUID& guid);
 void WriteMovementPacket(CGUnit_C* unit, CDataStore* msg);

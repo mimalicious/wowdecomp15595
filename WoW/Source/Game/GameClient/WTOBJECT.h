@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
+#include "Engine/Source/Storm/H/stpl.h"
 
 class CM2Model;
 class CGxVertexPC;
@@ -27,6 +28,7 @@ class WTOBJECT {
     public:
     /* 0000 */ SWING* m_swing;
     /* 0004 */ CM2Model* m_model;
+    /* 0008 */ TSLink<WTOBJECT> m_link;
 
     ~WTOBJECT();
     void SetDrawTrail(const uint32_t* color, uint32_t duration);
@@ -34,7 +36,9 @@ class WTOBJECT {
 
 WTOBJECT* WeaponTrailCreate(CM2Model* model);
 void WeaponTrailClose(WTOBJECT* trail);
+void WeaponTrailsInitialize();
 void WeaponTrailsShutdown();
+void WeaponTrailsClearFinished();
 void WeaponTrailSetDrawTrail(WTOBJECT* trail, const uint32_t* a2, uint32_t a3);
 
 void WorldTextInitialize();

@@ -1,4 +1,7 @@
 #include "WTOBJECT.h"
+#include <new>
+#include "Engine/Source/Tempest/C44Matrix.h"
+#include "Engine/Source/Gx/CGxDevice/CGxShader.h"
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Gx/Gx.h"
@@ -9,56 +12,23 @@
 #include "Engine/Source/Event/FrameTime.h"
 #include <typeinfo>
 
-// STATIC: #0x00D38074
+// STATIC: 0x00CA10BC
+static TSExplicitList<WTOBJECT, offsetof(WTOBJECT, m_link)> s_finishedTrails;
+
+// STATIC: 0x00DC7098
 static uint32_t s_count;
 
-// STATIC: #0x00D38078
+// STATIC: 0x00DC709C
+static CGxShader* s_vertexShader;
+
+// STATIC: 0x00DC70A0
+static CGxShader* s_pixelShader;
+
+// STATIC: 0x00DC70A4
 static CDataAllocator s_freeSwings(sizeof(SWING), 8);
 
-// STATIC: #0x00D3808C
+// STATIC: 0x00DC70B8
 static CDataAllocator s_freeTrails(sizeof(WTOBJECT), 128);
-
-// INLINED
-WTOBJECT::~WTOBJECT() {
-    if (this->m_model) {
-        CM2Model* model = this->m_model;
-        model->m_fFlags |= 0x20;
-        model->m_drawCallback = NULL;
-        model->m_drawArg = NULL;
-        this->m_model->Release();
-    }
-
-    if (this->m_swing) {
-        s_freeSwings.PutData(this->m_swing, NULL, 0);
-    }
-}
-
-// OFFSET: [0x00717BD0]
-void WeaponTrailsShutdown() {
-    s_freeTrails.Clear(typeid(WTOBJECT).raw_name(), SLOG_OBJECT, 1);
-    s_freeSwings.Clear(typeid(SWING).raw_name(), SLOG_OBJECT, 1);
-}
-
-// OFFSET: 0x004E02C0
-WTOBJECT* WeaponTrailCreate(CM2Model* model) {
-    s_count++;
-    WTOBJECT* trail = static_cast<WTOBJECT*>(s_freeTrails.GetData(0, typeid(WTOBJECT).raw_name(), SLOG_OBJECT));
-
-    if (trail) {
-        trail->m_swing = NULL;
-        trail->m_model = NULL;
-    }
-
-    trail->m_model = model;
-    model->m_refCount++;
-    return trail;
-}
-
-// OFFSET: 0x004E0430
-void WeaponTrailClose(WTOBJECT* trail) {
-    s_count--;
-    s_freeTrails.Delete(trail);
-}
 
 // PROVEN: a5cd2e8f IDENTICAL/NONE
 // OFFSET: 0x004DFC20
@@ -74,14 +44,77 @@ void SWING::FillVertices(CImVector color, uint8_t fade, CGxVertexPC* vertices) {
     }
 }
 
-// OFFSET: #0x007E4C30
+// OFFSET: 0x004DFC70/0x14011FCA0
+void WeaponTrailsInitialize() {
+    if (!s_vertexShader) {
+        s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "WeaponTrails");
+        s_pixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "WeaponTrails");
+    }
+}
+
+// OFFSET: 0x004DFCB0
+void WeaponTrailsShutdown() {
+    s_freeTrails.Clear(typeid(WTOBJECT).raw_name(), SLOG_OBJECT, 1);
+    s_freeSwings.Clear(typeid(SWING).raw_name(), SLOG_OBJECT, 1);
+
+    if (s_vertexShader) {
+        g_theGxDevicePtr->ShaderRelease(s_vertexShader);
+        s_vertexShader = NULL;
+    }
+
+    if (s_pixelShader) {
+        g_theGxDevicePtr->ShaderRelease(s_pixelShader);
+        s_pixelShader = NULL;
+    }
+}
+
+// INLINED
 SWING::SWING() {
+    for (int32_t i = 0; i < 128; i++) {
+        this->m_points[i].x = 0.0f;
+        this->m_points[i].y = 0.0f;
+        this->m_points[i].z = 0.0f;
+    }
+
     this->m_tail = 0;
     this->m_head = 0;
     *reinterpret_cast<uint32_t*>(&this->m_color) = 0;
 }
 
-// OFFSET: #0x007E4CE0
+// OFFSET: 0x004DFD30
+static SWING* AllocSwing(uint32_t zero) {
+    SWING* swing = static_cast<SWING*>(s_freeSwings.GetData(zero, typeid(SWING).raw_name(), SLOG_OBJECT));
+
+    if (swing) {
+        new (swing) SWING();
+    }
+
+    return swing;
+}
+
+// OFFSET: 0x004DFD90
+WTOBJECT::~WTOBJECT() {
+    if (this->m_model) {
+        this->m_model->m_drawCallback = NULL;
+        this->m_model->Release();
+    }
+
+    if (this->m_swing) {
+        s_freeSwings.PutData(this->m_swing, NULL, 0);
+    }
+}
+
+// OFFSET: 0x004DFE00
+void WeaponTrailsClearFinished() {
+    for (WTOBJECT* trail = s_finishedTrails.Head(), * next; trail; trail = next) {
+        next = s_finishedTrails.Next(trail);
+        trail->m_model->m_drawCallback = NULL;
+    }
+
+    s_finishedTrails.UnlinkAll();
+}
+
+// OFFSET: 0x004DFE40
 bool SWING::BuildVertexBuffer(uint32_t time, const C3Vector& top, const C3Vector& bottom) {
     uint32_t elapsed = time - this->m_startTime;
 
@@ -135,11 +168,25 @@ bool SWING::BuildVertexBuffer(uint32_t time, const C3Vector& top, const C3Vector
         GxRsSet(GxRs_Fog, 0);
         GxRsSet(GxRs_Lighting, 0);
         GxRsSet(GxRs_BlendingMode, GxBlend_Alpha);
-        GxRsSet(GxRs_AlphaRef, static_cast<int32_t>(CGxDevice::s_alphaRef[g_theGxDevicePtr->m_appRenderStates.m_data[GxRs_BlendingMode].m_value.m_data.i[0]]));
+        GxUpdateAlphaRef(GxRs_AlphaRef);
         GxRsSet(GxRs_DepthWrite, 0);
         GxRsSet(GxRs_DepthTest, 1);
         GxRsSet(GxRs_Texture0, 0);
         GxRsSet(GxRs_Texture1, 0);
+
+        if (s_vertexShader) {
+            g_theGxDevicePtr->RsSet(GxRs_VertexShader, &s_vertexShader->m_permutes[0]);
+            g_theGxDevicePtr->RsSet(GxRs_PixelShader, &s_pixelShader->m_permutes[0]);
+
+            C44Matrix view;
+            GxXformView(view);
+            C44Matrix world;
+            GxXform(GxXform_World, world);
+            C44Matrix proj;
+            GxXformProjNative(proj);
+            C44Matrix transform = world * view * proj;
+            g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 0, reinterpret_cast<const float*>(&transform), 4);
+        }
 
         CGxBuf* buf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(CGxVertexPC), count);
         CGxVertexPC* vertices = reinterpret_cast<CGxVertexPC*>(g_theGxDevicePtr->BufLock(buf));
@@ -166,13 +213,29 @@ bool SWING::BuildVertexBuffer(uint32_t time, const C3Vector& top, const C3Vector
     return true;
 }
 
+// OFFSET: 0x004E02C0
+WTOBJECT* WeaponTrailCreate(CM2Model* model) {
+    s_count++;
+    WTOBJECT* trail = static_cast<WTOBJECT*>(s_freeTrails.GetData(0, typeid(WTOBJECT).raw_name(), SLOG_OBJECT));
+
+    if (trail) {
+        new (trail) WTOBJECT();
+        trail->m_swing = NULL;
+        trail->m_model = NULL;
+    }
+
+    trail->m_model = model;
+    model->m_refCount++;
+    return trail;
+}
+
 // OFFSET: 0x004E0310
 static void WeaponTrailCallback(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     if (!model->HasEvent('BTW$') || !model->HasEvent('TTW$')) {
         return;
     }
 
-    uint32_t time = FrameTime::s_curTimeMs;
+    uint32_t time = FrameTime::GetCurTimeMs();
     C3Vector bottom = model->GetEventPosition('BTW$');
     C3Vector top = model->GetEventPosition('TTW$');
     WTOBJECT* trail = static_cast<WTOBJECT*>(arg);
@@ -180,35 +243,33 @@ static void WeaponTrailCallback(CM2Model* model, const CM2Lighting* lighting, vo
     if (!trail->m_swing->BuildVertexBuffer(time, top, bottom)) {
         s_freeSwings.PutData(trail->m_swing, NULL, 0);
         trail->m_swing = NULL;
-        model->m_fFlags |= 0x20;
-        model->m_drawCallback = NULL;
-        model->m_drawArg = NULL;
+        s_finishedTrails.LinkToTail(trail);
     }
 }
 
-// OFFSET: #0x007E4FF0
+// OFFSET: 0x004E03A0
 void WTOBJECT::SetDrawTrail(const uint32_t* color, uint32_t duration) {
     if (this->m_swing) {
         this->m_swing->m_tail = 0;
         this->m_swing->m_head = 0;
     } else {
-        SWING* swing = static_cast<SWING*>(s_freeSwings.GetData(0, typeid(SWING).raw_name(), SLOG_OBJECT));
-
-        if (swing) {
-            new (swing) SWING();
-        }
-
+        this->m_swing = AllocSwing(0);
         CM2Model* model = this->m_model;
-        this->m_swing = swing;
-        model->m_fFlags |= 0x20;
         model->m_drawCallback = WeaponTrailCallback;
         model->m_drawArg = this;
+        model->m_drawFlags = (model->m_drawFlags & 0xFFF8) | 2;
     }
 
     *reinterpret_cast<uint32_t*>(&this->m_swing->m_color) = *color;
     this->m_swing->m_duration = duration;
-    this->m_swing->m_startTime = FrameTime::s_curTimeMs;
+    this->m_swing->m_startTime = FrameTime::GetCurTimeMs();
     this->m_swing->m_lastTime = this->m_swing->m_startTime;
+}
+
+// OFFSET: 0x004E0430
+void WeaponTrailClose(WTOBJECT* trail) {
+    s_count--;
+    s_freeTrails.Delete(trail);
 }
 
 // OFFSET: 0x004E0460
