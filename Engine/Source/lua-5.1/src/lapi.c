@@ -1225,7 +1225,7 @@ LUA_API void lua_setdecimalconversion (int convert) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042CE30
 LUA_API void lua_convertdecimal (char *s) {
   if (lua_decimalconvert) {
     char *end = s + strlen(s);
