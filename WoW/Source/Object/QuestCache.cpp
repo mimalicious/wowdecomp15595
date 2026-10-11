@@ -97,6 +97,113 @@ QuestCache::QuestCache() {
     this->m_soundTurnIn = 0;
 }
 
+// OFFSET: 0x0049B500
+QuestCache& QuestCache::operator=(const QuestCache& source) {
+    this->m_id = source.m_id;
+    this->m_method = source.m_method;
+    this->m_level = source.m_level;
+    this->m_requiredLevel = source.m_requiredLevel;
+    this->m_areaIdOrSortId = source.m_areaIdOrSortId;
+    this->m_infoId = source.m_infoId;
+    this->m_suggestedPlayers = source.m_suggestedPlayers;
+    this->m_friendlyFactionId = source.m_friendlyFactionId;
+    this->m_friendlyFactionAmount = source.m_friendlyFactionAmount;
+    this->m_hostileFactionId = source.m_hostileFactionId;
+    this->m_hostileFactionAmount = source.m_hostileFactionAmount;
+    this->m_nextQuestId = source.m_nextQuestId;
+    this->m_xPId = source.m_xPId;
+    this->m_rewardMoney = source.m_rewardMoney;
+    this->m_rewardMoneyInsteadOfXp = source.m_rewardMoneyInsteadOfXp;
+    this->m_rewardSpellId = source.m_rewardSpellId;
+    this->m_effectOnPlayer = source.m_effectOnPlayer;
+    this->m_rewardHonor = source.m_rewardHonor;
+    this->m_rewardHonorBonus = source.m_rewardHonorBonus;
+    this->m_startingItemId = source.m_startingItemId;
+    this->m_flags = source.m_flags;
+    this->m_minimapTargetMark = source.m_minimapTargetMark;
+    this->m_rewardTitleId = source.m_rewardTitleId;
+    this->m_requiredPlayersKilled = source.m_requiredPlayersKilled;
+    this->m_rewardTalentPoints = source.m_rewardTalentPoints;
+    this->m_rewardArenaPoints = source.m_rewardArenaPoints;
+    this->m_rewardSkillId = source.m_rewardSkillId;
+    this->m_rewardSkillPoints = source.m_rewardSkillPoints;
+    this->m_rewardReputationMask = source.m_rewardReputationMask;
+    this->m_questGiverPortrait = source.m_questGiverPortrait;
+    this->m_questTurnInPortrait = source.m_questTurnInPortrait;
+
+    for (uint32_t i = 0; i < 5; i++) {
+        this->m_rewardReputationFaction[i] = source.m_rewardReputationFaction[i];
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        this->m_factionRewardId[i] = source.m_factionRewardId[i];
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        this->m_rewardReputationOverride[i] = source.m_rewardReputationOverride[i];
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        this->m_rewardItem[i] = source.m_rewardItem[i];
+        this->m_rewardItemCount[i] = source.m_rewardItemCount[i];
+    }
+
+    for (uint32_t i = 0; i < 6; i++) {
+        this->m_rewardChoiceItem[i] = source.m_rewardChoiceItem[i];
+        this->m_rewardChoiceItemCount[i] = source.m_rewardChoiceItemCount[i];
+    }
+
+    this->m_pointMapId = source.m_pointMapId;
+    this->m_pointX = source.m_pointX;
+    this->m_pointY = source.m_pointY;
+    this->m_pointOptional = source.m_pointOptional;
+    SStrCopy(this->m_name, source.m_name, sizeof(this->m_name));
+    SStrCopy(this->m_objText, source.m_objText, sizeof(this->m_objText));
+    SStrCopy(this->m_description, source.m_description, sizeof(this->m_description));
+    SStrCopy(this->m_endText, source.m_endText, sizeof(this->m_endText));
+    SStrCopy(this->m_completionText, source.m_completionText, sizeof(this->m_completionText));
+    SStrCopy(this->m_questGiverTextWindow, source.m_questGiverTextWindow, sizeof(this->m_questGiverTextWindow));
+    SStrCopy(this->m_questGiverTargetName, source.m_questGiverTargetName, sizeof(this->m_questGiverTargetName));
+    SStrCopy(this->m_questTurnTextWindow, source.m_questTurnTextWindow, sizeof(this->m_questTurnTextWindow));
+    SStrCopy(this->m_questTurnTargetName, source.m_questTurnTargetName, sizeof(this->m_questTurnTargetName));
+
+    for (uint32_t i = 0; i < 4; i++) {
+        this->m_objectiveId[i] = source.m_objectiveId[i];
+        this->m_objectiveRequiredCount[i] = source.m_objectiveRequiredCount[i];
+        this->m_intermediateItemId[i] = source.m_intermediateItemId[i];
+        this->m_intermediateItemCount[i] = source.m_intermediateItemCount[i];
+        SStrCopy(this->m_objectiveText[i], source.m_objectiveText[i], sizeof(this->m_objectiveText[i]));
+    }
+
+    for (uint32_t i = 0; i < 6; i++) {
+        this->m_collectItemId[i] = source.m_collectItemId[i];
+        this->m_collectItemCount[i] = source.m_collectItemCount[i];
+    }
+
+    this->m_requiredSpell = source.m_requiredSpell;
+
+    for (uint32_t i = 0; i < 4; i++) {
+        this->m_rewardCurrencyId[i] = source.m_rewardCurrencyId[i];
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        this->m_rewardCurrencyCount[i] = source.m_rewardCurrencyCount[i];
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        this->m_requiredCurrencyId[i] = source.m_requiredCurrencyId[i];
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        this->m_requiredCurrencyCount[i] = source.m_requiredCurrencyCount[i];
+    }
+
+    this->m_soundAccept = source.m_soundAccept;
+    this->m_soundTurnIn = source.m_soundTurnIn;
+
+    return *this;
+}
+
 // OFFSET: 0x004EAF00
 void QuestCache::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));

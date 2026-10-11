@@ -659,7 +659,7 @@ void CAnimKitManager::OnModelSequenceCallback(uint32_t boneId, uint32_t sequence
         if (!info.m_finished) {
             uint32_t duration = this->m_model->GetSequenceDuration(sequenceId, segmentInst->variation);
             uint32_t time = speed < 0.0f ? 0 : duration - 1;
-            this->m_model->SetBoneSequence(boneId, sequenceId, segmentInst->variation, time, 0.0f, 0, primary, 1, 0, 0);
+            this->m_model->SetBoneSequenceForward(boneId, sequenceId, segmentInst->variation, time, 0.0f, 0, primary, 1, 0, 0);
         }
 
         return;
@@ -679,7 +679,7 @@ void CAnimKitManager::OnModelSequenceCallback(uint32_t boneId, uint32_t sequence
 
     if (info.m_finished || variation != segmentInst->variation || repetitions != segmentInst->repetitions) {
         int32_t blend = primary && !(segmentInst->segmentFlags & 0x1) && !(segmentInst->userFlags & 0x1) && !(expressing->flags & SEGMENT_BONE_SET_INST_FLAG_NO_BLEND);
-        this->m_model->SetBoneSequence(boneId, sequenceId, segmentInst->variation, time, speed, blend, primary, segmentInst->repetitions, 0, 0);
+        this->m_model->SetBoneSequenceForward(boneId, sequenceId, segmentInst->variation, time, speed, blend, primary, segmentInst->repetitions, 0, 0);
     }
 }
 

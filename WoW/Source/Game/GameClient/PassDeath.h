@@ -13,6 +13,7 @@ class PassDeath : public FFX::Pass {
     /* 0050 */ CGxShader* m_shader;
     /* 0054 */ CGxShader* m_nvts2dShader;
     /* 0058 */ CGxShader* m_nvtsRectShader;
+    /* 005C */ uint8_t m_alpha;
 
     virtual ~PassDeath();
     virtual bool Valid();

@@ -47,6 +47,7 @@ class CClientObjCreate {
     ~CClientObjCreate();
     void Get(CDataStore* msg, bool a2);
     bool IsValid() const;
+    bool Validate() const;
 };
 
 #endif

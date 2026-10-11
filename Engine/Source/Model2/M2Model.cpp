@@ -7577,6 +7577,11 @@ void CM2Model::UnsetBoneSequence(uint32_t boneId, int32_t blend, int32_t primary
     }
 }
 
+// OFFSET: 0x0058BF20
+void CM2Model::SetBoneSequenceForward(uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime) {
+    this->SetBoneSequence(boneId, sequenceId, variation, time, speed, blend, primary, repetitions, blendTimeMode, blendTime);
+}
+
 // OFFSET: 0x00820F30/0x14053C980
 void CM2Model::SetBoneSequence(uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime) {
     if (sequenceId == 0xFFFFFFFF) {

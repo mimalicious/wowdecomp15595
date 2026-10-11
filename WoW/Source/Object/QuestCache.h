@@ -77,6 +77,7 @@ class QuestCache {
     /* 3340 */ uint32_t m_soundTurnIn;
 
     QuestCache();
+    QuestCache& operator=(const QuestCache& source);
     void Pack(CDataStore* msg);
     void Unpack(CDataStore* msg);
 };

@@ -542,6 +542,18 @@ CSoftFloat operator+(const CSoftFloat& l, const CSoftFloat& r) {
     return result;
 }
 
+// OFFSET: 0x008A4740
+CSoftFloat& CSoftFloat::operator+=(CSoftFloat r) {
+    *this = *this + r;
+    return *this;
+}
+
+// OFFSET: 0x008A4770
+CSoftFloat& CSoftFloat::operator*=(CSoftFloat r) {
+    *this = *this * r;
+    return *this;
+}
+
 // OFFSET: 0x00B2EF50
 CSoftFloat CSoftFloat::Reciprocal(const CSoftFloat& value) {
     uint32_t bits = value.m_bits;

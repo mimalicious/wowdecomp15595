@@ -424,6 +424,21 @@ bool IsAlphaInCharSet(uint16_t c, int32_t charset) {
     }
 }
 
+// OFFSET: 0x004E72C0
+static void GetDefaultCharsetMask(int32_t* charsetMask, bool english) {
+    if (english) {
+        CVar* forceEnglish = CVar::Lookup("forceEnglishNames");
+
+        if (forceEnglish && forceEnglish->m_intValue) {
+            *charsetMask = 2;
+        } else {
+            *charsetMask = s_cachedCharsetMask;
+        }
+    } else {
+        *charsetMask = s_cachedExistingCharsetMask;
+    }
+}
+
 // OFFSET: 0x004E7300
 int32_t ValidateName(uint32_t language, const uint16_t* allowed, const char* name, uint32_t* length, int32_t* charset, bool profanity, bool chatProfanity, bool reserved, bool relaxed, bool english, int32_t charsetMask) {
     if (!name) {
@@ -437,17 +452,7 @@ int32_t ValidateName(uint32_t language, const uint16_t* allowed, const char* nam
     }
 
     if (charsetMask == -1) {
-        if (english) {
-            CVar* forceEnglish = CVar::Lookup("forceEnglishNames");
-
-            if (forceEnglish && forceEnglish->m_intValue) {
-                charsetMask = 2;
-            } else {
-                charsetMask = s_cachedCharsetMask;
-            }
-        } else {
-            charsetMask = s_cachedExistingCharsetMask;
-        }
+        GetDefaultCharsetMask(&charsetMask, english);
     }
 
     *charset = -1;

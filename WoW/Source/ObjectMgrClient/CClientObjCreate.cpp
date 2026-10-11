@@ -409,3 +409,8 @@ bool CClientObjCreate::IsValid() const {
         && (!this->m_hasGOTransport || this->m_goTransport.IsValid())
         && (!this->m_hasMovement || this->m_move.IsValid());
 }
+
+// OFFSET: 0x00699DE0
+bool CClientObjCreate::Validate() const {
+    return this->IsValid();
+}

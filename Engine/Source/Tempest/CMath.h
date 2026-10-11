@@ -42,6 +42,8 @@ class CSoftFloat {
     CSoftFloat();
     CSoftFloat(uint32_t bits);
     ~CSoftFloat();
+    CSoftFloat& operator+=(CSoftFloat r);
+    CSoftFloat& operator*=(CSoftFloat r);
 };
 
 CSoftFloat operator*(const CSoftFloat& l, const CSoftFloat& r);

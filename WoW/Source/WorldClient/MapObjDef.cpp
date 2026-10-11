@@ -32,6 +32,11 @@ void CMapObjDefGroup::UpdateBounds(const C44Matrix& matrix) {
     this->m_portalBox = this->m_bbox;
 }
 
+// OFFSET: 0x00756DF0
+CMapObjDefGroup* CMapObjDef::GetDefGroup(uint32_t index) {
+    return this->m_defGroups[index];
+}
+
 // PROVEN: e9e8d538 IDENTICAL/NONE
 // OFFSET: 0x0075EE50/0x140442E60
 bool CMapObjDef::TestAABox(const C3Vector& start, const C3Vector& end) {

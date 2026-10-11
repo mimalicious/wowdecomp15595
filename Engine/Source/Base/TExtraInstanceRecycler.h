@@ -17,6 +17,7 @@ class TExtraInstanceRecycler : public CDataRecycler {
     /* 0018 */ uint32_t m_recycleBytes;
 
     TExtraInstanceRecycler(uint32_t nodesPerBlock, int32_t maxNodes, uint32_t recycleBytes);
+    virtual void Clear();
     T* New(uint32_t extraBytes);
     void Delete(T* ptr);
 };
@@ -24,6 +25,12 @@ class TExtraInstanceRecycler : public CDataRecycler {
 // INLINED
 template <class T>
 TExtraInstanceRecycler<T>::TExtraInstanceRecycler(uint32_t nodesPerBlock, int32_t maxNodes, uint32_t recycleBytes) : CDataRecycler(nodesPerBlock, maxNodes), m_recycleBytes(recycleBytes) {
+}
+
+// OFFSET: [0x008A3650<EvtMessage>]
+template <class T>
+void TExtraInstanceRecycler<T>::Clear() {
+    this->CDataRecycler::Clear();
 }
 
 // OFFSET: #0x00480600

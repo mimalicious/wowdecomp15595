@@ -1393,7 +1393,7 @@ static int32_t UpdateExistingObject(CDataStore* msg, CGObject_C* object, int32_t
     CClientObjCreate create;
     create.Get(msg, true);
 
-    if (!create.IsValid() || !FillInPartialObjectData(object, object->m_obj->m_guid, msg, false, true)) {
+    if (!create.Validate() || !FillInPartialObjectData(object, object->m_obj->m_guid, msg, false, true)) {
         return 0;
     }
 

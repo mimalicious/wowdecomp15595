@@ -16,6 +16,7 @@ class EffectColorShift : public FFX::Effect {
 class EffectDeath : public FFX::Effect {
     public:
     virtual ~EffectDeath();
+    virtual void SetParameters(int32_t count, const int32_t* params);
 
     EffectDeath();
 };
@@ -42,10 +43,12 @@ class EffectSwirlingFog : public FFX::Effect {
 class EffectUnconscious : public FFX::Effect {
     public:
     /* 0018 */ bool m_fadingOut;
+    /* 0019 */ bool m_reportFade;
 
     virtual ~EffectUnconscious();
     virtual void Begin();
     virtual void SetParameters(int32_t count, const int32_t* params);
+    virtual float GetFadeAmount();
 
     EffectUnconscious();
     bool FadedOut();

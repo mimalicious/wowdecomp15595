@@ -1450,9 +1450,9 @@ int32_t CGCamera::CCommand_PitchLimit(const char* command, const char* arguments
     return 1;
 }
 
-// OFFSET: %0x00449A20
+// OFFSET: 0x0043B680
 uint32_t CGCamera::GetCollisionQueryFlags() {
-    return s_cameraWaterCollision->m_intValue ? 0x120171 : 0x100171;
+    return 0x900171;
 }
 
 // PROVEN: 71800b93 IDENTICAL/NONE

@@ -79,6 +79,7 @@ class CGSpellBook {
     static TSGrowableArray<int32_t> m_companions[2];
     static TSGrowableArray<int32_t> m_unlearnedSpells;
     static TSGrowableArray<int32_t> m_totemSpells[4];
+    static TSGrowableArray<int32_t>* GetTotemSpells(uint32_t slot);
     static TSList<PASSIVESPELLNODE> s_passiveSpells;
 
     static int32_t GetCompanionType(const SpellRec* spell);

@@ -392,17 +392,13 @@ void BattlenetLogin::SetAuthModuleMatrixInfo(const char* info, const char* chall
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_MATRIX, LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: #0x008C61E0
+// OFFSET: 0x006285A0
 void BattlenetLogin::SetAuthModulePinInfo(const char* keyMap) {
     if (!keyMap || SStrLen(keyMap) != 10) {
-        SErrDisplayAppFatalMessage("", "", 0);
+        return;
     }
 
     for (uint32_t i = 0; i < 10; i++) {
-        if (!isdigit(static_cast<uint8_t>(keyMap[i]))) {
-            SErrDisplayAppFatalMessage("", "", 0);
-        }
-
         this->unk_105D[1 + i] = keyMap[i] - '0';
     }
 

@@ -46,6 +46,13 @@ static int32_t Script_GetNumReforgeOptions(lua_State* L) {
     return 1;
 }
 
+// OFFSET: 0x0098D900
+static bool GetGlobalText(const char* key, char* buffer, uint32_t size) {
+    const char* text = FrameScript_GetText(key, -1, GENDER_NOT_APPLICABLE);
+    SStrCopy(buffer, text, size);
+    return *text != '\0';
+}
+
 // OFFSET: 0x0098B930/0x1407097D0
 static int32_t Script_GetReforgeOptionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -94,12 +101,12 @@ static int32_t Script_GetReforgeOptionInfo(lua_State* L) {
     int32_t targetAmount = static_cast<int32_t>(static_cast<float>(sourceAmount) * reforge->m_targetMultiplier);
     char text[1024];
     SStrPrintf(text, sizeof(text), "%s_SHORT", s_itemModTokens[reforge->m_sourceStat]);
-    SStrCopy(text, FrameScript_GetText(text, -1, GENDER_NOT_APPLICABLE), sizeof(text));
+    GetGlobalText(text, text, sizeof(text));
     lua_pushstring(L, text);
     lua_pushnumber(L, reforge->m_sourceStat);
     lua_pushnumber(L, sourceAmount);
     SStrPrintf(text, sizeof(text), "%s_SHORT", s_itemModTokens[reforge->m_targetStat]);
-    SStrCopy(text, FrameScript_GetText(text, -1, GENDER_NOT_APPLICABLE), sizeof(text));
+    GetGlobalText(text, text, sizeof(text));
     lua_pushstring(L, text);
     lua_pushnumber(L, reforge->m_targetStat);
     lua_pushnumber(L, targetAmount);

@@ -2041,29 +2041,10 @@ static int32_t Script_GetTotemInfo(lua_State* L) {
 
     bool found = false;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    TSGrowableArray<int32_t>* spells;
 
-    if (player) {
-        int32_t category = 0;
-
-        switch (slot) {
-            case 0:
-                category = 4;
-                break;
-
-            case 1:
-                category = 2;
-                break;
-
-            case 2:
-                category = 5;
-                break;
-
-            case 3:
-                category = 3;
-                break;
-        }
-
-        found = player->m_bag.FindTotemCategory(category, 8);
+    if (player && (spells = CGSpellBook::GetTotemSpells(slot)) != NULL && spells->m_count) {
+        found = true;
     }
 
     lua_pushboolean(L, found);

@@ -284,6 +284,13 @@ PassNetherCombine::PassNetherCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex
 }
 
 // PROVEN: f38723fb IDENTICAL/NONE
+// OFFSET: 0x00B0C2B0
+void EffectDeath::SetParameters(int32_t count, const int32_t* params) {
+    if (g_theGxDevicePtr->m_caps.m_shaderModel >= 2) {
+        static_cast<PassDeath*>(this->m_passes[2])->m_alpha = static_cast<uint8_t>(params[0]);
+    }
+}
+
 // OFFSET: 0x00B0C2E0/0x1408D0320
 void EffectNetherWorld::End() {
     if (this->m_passes.Count() >= 2) {
@@ -342,15 +349,25 @@ void EffectUnconscious::Begin() {
     pass->m_fadingOut = false;
 }
 
-// OFFSET: %0x00A4DD30
+// OFFSET: 0x00B0C550
 void EffectUnconscious::SetParameters(int32_t count, const int32_t* params) {
     float time = static_cast<float>(params[1]);
     float fadeOutTime = static_cast<float>(params[2]);
+    this->m_reportFade = params[3] & 1;
     PassGlowFade* pass = static_cast<PassGlowFade*>(this->m_passes[2]);
     pass->m_fadeColor = *reinterpret_cast<const CImVector*>(&params[0]);
     pass->m_fadeTime = time;
     pass->m_fadeInTime = time;
     pass->m_fadeOutTime = fadeOutTime;
+}
+
+// OFFSET: 0x00B0C590
+float EffectUnconscious::GetFadeAmount() {
+    if (!this->m_reportFade) {
+        return 1.0f;
+    }
+
+    return static_cast<PassGlowFade*>(this->m_passes[2])->GetFadeAmount();
 }
 
 // PROVEN: 63c90148 IDENTICAL/NONE
@@ -545,7 +562,7 @@ void PassDeath::Execute() {
     g_theGxDevicePtr->RsSet(GxRs_Texture1, TextureGetGxTex(this->m_inputs[1]->m_texture));
 
     CImVector color;
-    color.a = static_cast<uint8_t>(static_cast<int32_t>(DayNight::GetGlow() * 255.0f));
+    color.a = this->m_alpha;
     color.b = 0xA8;
     color.g = 0x93;
     color.r = 0x53;
@@ -836,7 +853,7 @@ EffectDeath::EffectDeath() {
     }
 }
 
-// OFFSET: [%0x00A4FDB0, %0x00A50430]
+// OFFSET: 0x00B0E950
 EffectDeath::~EffectDeath() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {

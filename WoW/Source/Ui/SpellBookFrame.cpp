@@ -177,6 +177,15 @@ TSList<PASSIVESPELLNODE> CGSpellBook::s_passiveSpells;
 // STATIC: 0x00F33E00
 TSHashTable<OVERRIDE_SPELL_BY_NAME_NODE, HASHKEY_UTF8I> CGActionBar::m_overrideSpellsByName;
 
+// OFFSET: 0x008C13D0
+TSGrowableArray<int32_t>* CGSpellBook::GetTotemSpells(uint32_t slot) {
+    if (slot >= 4) {
+        return NULL;
+    }
+
+    return &CGSpellBook::m_totemSpells[slot];
+}
+
 // OFFSET: 0x0090E1C0
 int32_t CGSpellBook::GetCompanionType(const SpellRec* spell) {
     const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);

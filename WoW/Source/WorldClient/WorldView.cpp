@@ -2519,7 +2519,7 @@ void CWorldView::CullPortals(CMapObj* mapObj, uint32_t groupNum, uint32_t prevGr
         CWorldScene::renderSkyboxName = mapObj->m_skyboxName;
     }
 
-    CMapObjDefGroup* group = this->m_cullMapObjDef->m_defGroups[groupNum];
+    CMapObjDefGroup* group = this->m_cullMapObjDef->GetDefGroup(groupNum);
     this->CullMapObjDefGroup(group, !(groupFlags & 0x8));
 
     if (!mapObjGroup->m_portalCount) {

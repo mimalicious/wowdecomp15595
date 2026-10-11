@@ -88,6 +88,7 @@ class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_N
     int32_t MoveDoodadDefs(uint16_t doodadSet, CMapObjDef* target, uint16_t targetDoodadSet);
     void Purge(int32_t unlinkWorld);
     uint32_t GetGroundType(uint32_t groupNum, uint16_t polyIndex);
+    CMapObjDefGroup* GetDefGroup(uint32_t index);
     void UpdateMoved();
     void SetDoodadEmittersIgnoresDistance(int32_t enable, uint16_t doodadSet);
     void SetDoodadsEnabled(int32_t enable, uint16_t doodadSet);

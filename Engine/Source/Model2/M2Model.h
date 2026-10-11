@@ -332,6 +332,7 @@ class CM2Model {
     void CancelDeferredSequences(uint16_t boneIndex, bool primary);
     int32_t ProcessCallbacks();
     void SetBoneSequence(uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime);
+    void SetBoneSequenceForward(uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime);
     void SetBoneSequenceDeferred(uint16_t sequenceIndex, M2Data* data, uint16_t boneIndex, uint32_t time, float speed, M2SequenceFallback fallback, int32_t blend, int32_t primary, int32_t pickRandom, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime);
     void UnsetBoneSequence(uint32_t boneId, int32_t blend, int32_t primary);
     void AnimateSM();
