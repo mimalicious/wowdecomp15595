@@ -48,7 +48,11 @@ int32_t CAccountMsgHeaders::GetHeaderPriority(int32_t index) {
 
 // OFFSET: 0x009FA140
 int32_t CAccountMsgHeaders::GetMessageId(int32_t index) {
-    if (this->m_state == 1 || index < 0 || index >= this->m_count) {
+    if (this->m_state == 1) {
+        return 0;
+    }
+
+    if (index < 0 || index >= this->m_count) {
         return 0;
     }
 
@@ -100,10 +104,12 @@ int32_t CAccountMsgHeaders::GetIndexNextUnreadMsg(int32_t index) {
     }
 
     for (int32_t i = 0; i < this->m_count; i++) {
-        bool read = i >= 0 && i < this->m_count && this->m_opened.m_data[i];
+        if (i > index) {
+            bool read = i >= 0 && i < this->m_count && this->m_opened.m_data[i];
 
-        if (i > index && !read) {
-            return i;
+            if (!read) {
+                return i;
+            }
         }
     }
 

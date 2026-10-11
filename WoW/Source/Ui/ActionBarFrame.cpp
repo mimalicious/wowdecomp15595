@@ -198,7 +198,7 @@ int32_t CGActionBar::GetMacroItem(uint32_t slot) {
 uint32_t CGActionBar::GetFlyout(uint32_t slot) {
     uint32_t action;
 
-    if (slot <= 143 && (action = CGActionBar::m_slotActions[slot]) && (action & 0xF0000000) == 0x30000000) {
+    if (static_cast<int32_t>(slot) >= 0 && slot < 144 && (action = CGActionBar::m_slotActions[slot]) && (action & 0xF0000000) == 0x30000000) {
         return action & 0xC1FFFFFF;
     }
 
@@ -297,7 +297,7 @@ static int32_t GetOverrideSpell(uint32_t index, const void* data) {
 
 // OFFSET: 0x00954920/0x1406C5780
 int32_t CGActionBar::GetItem(uint32_t slot) {
-    if (slot > 143) {
+    if (static_cast<int32_t>(slot) < 0 || slot >= 144) {
         return 0;
     }
 
@@ -511,27 +511,27 @@ int32_t CGActionBar::GetItemSpell(uint32_t slot) {
 
     CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
 
-    if (!item) {
-        return 0;
+    if (item) {
+        return item->GetEnchantmentSpell(0);
     }
 
-    return item->GetEnchantmentSpell(0);
+    return 0;
 }
 
 // OFFSET: 0x00955300
 int32_t CGActionBar::GetMacroSpell(uint32_t slot, int32_t& petSpell) {
     MACRONODE* macro = CGUIMacros::GetMacroByID(CGActionBar::GetMacroID(slot));
 
-    if (!macro) {
-        return 0;
+    if (macro) {
+        if (macro->m_itemID) {
+            return CGActionBar::GetItemSpell(slot);
+        }
+
+        petSpell = macro->m_spellFlags;
+        return macro->m_spellID;
     }
 
-    if (macro->m_itemID) {
-        return CGActionBar::GetItemSpell(slot);
-    }
-
-    petSpell = macro->m_spellFlags;
-    return macro->m_spellID;
+    return 0;
 }
 
 // OFFSET: 0x009553F0/0x1406C6620
@@ -935,7 +935,7 @@ int32_t CGActionBar::UpdateUsableAction(uint32_t slot, int32_t& noMana) {
             return 0;
         }
 
-        if (player->m_unit->m_unitFieldFlags & 0x100000) {
+        if (static_cast<uint8_t>(player->m_unit->m_unitFieldFlags >> 20) & 1) {
             return 1;
         }
     }
@@ -1506,7 +1506,7 @@ void CGActionBar::UpdateCooldowns() {
         uint32_t enable = 0;
         CGActionBar::GetCooldown(button.m_slot, start, duration, enable);
 
-        if (enable && start && duration) {
+        if (enable && start > 0 && duration > 0) {
             button.m_cooldown->SetCooldown(start, duration);
         } else {
             button.m_cooldown->Hide();
@@ -2078,7 +2078,7 @@ void CGActionBar::UseAction(uint32_t slot, const WOWGUID& target, const char* bu
             item = player->m_bag.FindItemOfType(itemId, flags);
 
             if (!item) {
-                WOWGUID container = WOWGUID();
+                WOWGUID container = WOWGUID::Make(0);
                 uint32_t containerSlot = 0;
                 CGItem_C* equip;
 
@@ -2139,7 +2139,7 @@ void CGActionBar::UseAction(uint32_t slot, const WOWGUID& target, const char* bu
 
 // OFFSET: 0x009597B0
 void CGActionBar::PickupAction(uint32_t slot) {
-    if (slot > 143 || !CGGameUI::CanPerformAction(14) || (slot >= 120 && slot < 132)) {
+    if (static_cast<int32_t>(slot) < 0 || slot >= 144 || !CGGameUI::CanPerformAction(14) || (static_cast<int32_t>(slot) >= 120 && slot < 132)) {
         return;
     }
 

@@ -47,22 +47,22 @@ void CGContainerInfo::UpdateCooldowns() {
 
 // OFFSET: 0x009BB1F0/0x140746A10
 WOWGUID CGContainerInfo::GetContainer(int32_t index) {
-    if (static_cast<uint32_t>(index) <= 10 && (index < 4 || CGBankInfo::m_banker)) {
+    if (index >= 0 && static_cast<uint32_t>(index) < 11 && (index < 4 || CGBankInfo::m_banker)) {
         return CGContainerInfo::m_containers[index];
     }
 
-    return WOWGUID();
+    return WOWGUID::Make(0);
 }
 
 // OFFSET: 0x009BB230/0x140746A40
 void CGContainerInfo::SetItemSearch(const char* search) {
     uint32_t length = SStrLenUTF8(search);
 
-    if (CGContainerInfo::m_searchText) {
-        if (!SStrCmpUTF8I(CGContainerInfo::m_searchText, search, STORM_MAX_STR)) {
-            return;
-        }
-    } else if (!length) {
+    if (CGContainerInfo::m_searchText && !SStrCmpUTF8I(CGContainerInfo::m_searchText, search, STORM_MAX_STR)) {
+        return;
+    }
+
+    if (!CGContainerInfo::m_searchText && !length) {
         return;
     }
 
@@ -77,7 +77,7 @@ void CGContainerInfo::SetItemSearch(const char* search) {
     CGContainerInfo::m_searchText = NULL;
     CGContainerInfo::m_searchTextParsed = NULL;
 
-    if (SStrLenUTF8(search)) {
+    if (SStrLenUTF8(search) > 0) {
         CGContainerInfo::m_searchText = SStrDupA(search, __FILE__, __LINE__);
         CGContainerInfo::m_searchTextParsed = SStrDupA(search, __FILE__, __LINE__);
         CaseAccentInsensitiveParse(CGContainerInfo::m_searchTextParsed, length, s_locale);
@@ -130,7 +130,7 @@ void CGContainerInfo::UpdateItem(WOWGUID guid) {
 
 // OFFSET: 0x009BB710/0x140746FA0
 bool CGContainerInfo::GetLuaBagAndSlot(lua_State* L, CGBag_C*& bag, int32_t& slot, int32_t& bank) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
@@ -201,7 +201,7 @@ static void TriggerMultiCastBarUpdate(const ItemRecSparse* rec) {
 // OFFSET: 0x009BCE10/0x140748930
 static void MultiCastBarItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
-        WOWGUID requester = WOWGUID();
+        WOWGUID requester = WOWGUID::Make(0);
 
         if (ItemRecSparse* rec = g_itemSparseDB.GetRecord(id, requester, NULL, NULL, false)) {
             TriggerMultiCastBarUpdate(rec);
@@ -239,19 +239,19 @@ int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     CGGameUI::UnlockItem(newGuid);
 
     if (CGGameUI::m_autoStoreItem == oldGuid || CGGameUI::m_autoStoreItem == newGuid || (!CGGameUI::m_autoStoreItem && CGGameUI::m_autoStoreItemID)) {
-        WOWGUID requester = WOWGUID();
+        WOWGUID requester = WOWGUID::Make(0);
 
         if (ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, requester, NULL, NULL, false)) {
             SI3::PlayItemSound(1, item->m_displayInfoID);
         }
     }
 
-    CGGameUI::m_autoStoreItem = WOWGUID();
+    CGGameUI::m_autoStoreItem.m_guid = 0;
     CGGameUI::m_autoStoreItemID = 0;
     CGContainerInfo::UpdateContents(guid);
 
     if (newItem) {
-        WOWGUID requester = WOWGUID();
+        WOWGUID requester = WOWGUID::Make(0);
 
         if (ItemRecSparse* rec = g_itemSparseDB.GetRecord(newItem->m_obj->m_entryID, requester, MultiCastBarItemStatsCallback, NULL, false)) {
             TriggerMultiCastBarUpdate(rec);
@@ -297,19 +297,19 @@ int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize
     CGGameUI::UnlockItem(newGuid);
 
     if (CGGameUI::m_autoStoreItem == oldGuid || CGGameUI::m_autoStoreItem == newGuid || (!CGGameUI::m_autoStoreItem && CGGameUI::m_autoStoreItemID)) {
-        WOWGUID requester = WOWGUID();
+        WOWGUID requester = WOWGUID::Make(0);
 
         if (ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, requester, NULL, NULL, false)) {
             SI3::PlayItemSound(1, item->m_displayInfoID);
         }
     }
 
-    CGGameUI::m_autoStoreItem = WOWGUID();
+    CGGameUI::m_autoStoreItem.m_guid = 0;
     CGGameUI::m_autoStoreItemID = 0;
     CGContainerInfo::UpdateContents(guid);
 
     if (newItem) {
-        WOWGUID requester = WOWGUID();
+        WOWGUID requester = WOWGUID::Make(0);
 
         if (ItemRecSparse* rec = g_itemSparseDB.GetRecord(newItem->m_obj->m_entryID, requester, MultiCastBarItemStatsCallback, NULL, false)) {
             TriggerMultiCastBarUpdate(rec);
@@ -323,7 +323,7 @@ int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize
 
 // OFFSET: 0x009BD1E0/0x140748D50
 void CGContainerInfo::UpdateContainers() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -383,7 +383,7 @@ bool ItemRecIsFiltered(const ItemRec* item, int32_t randomPropertiesId) {
         return false;
     }
 
-    WOWGUID requester = WOWGUID();
+    WOWGUID requester = WOWGUID::Make(0);
     ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_ID, requester, NULL, NULL, false);
 
     if (!rec) {
@@ -457,15 +457,15 @@ int32_t InvUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize,
 
 // OFFSET: 0x009BE590/0x14074A580
 void CGContainerInfo::EnterWorld() {
-    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 19 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+    for (int32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 19 * sizeof(WOWGUID); offset < static_cast<int32_t>(offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID)); offset += sizeof(WOWGUID)) {
         ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), InvUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 39 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+    for (int32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID); offset < static_cast<int32_t>(offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 39 * sizeof(WOWGUID)); offset += sizeof(WOWGUID)) {
         ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), UpdateInvContents, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
     }
 
-    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 67 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 74 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+    for (int32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 67 * sizeof(WOWGUID); offset < static_cast<int32_t>(offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 74 * sizeof(WOWGUID)); offset += sizeof(WOWGUID)) {
         ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), InvUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 

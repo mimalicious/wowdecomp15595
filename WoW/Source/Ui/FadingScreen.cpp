@@ -1,5 +1,6 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "Engine/Source/Event/Event.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Scrn/Scrn.h"
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Base/Handle.h"
@@ -53,13 +54,13 @@ static int32_t SwallowEvent(const void* data, void* param) {
 
 // OFFSET: 0x00A0A260
 static void RegisterHandlers() {
-    EventRegisterEx(EVENT_ID_CHAR, SwallowEvent, NULL, 8.0f);
-    EventRegisterEx(EVENT_ID_KEYDOWN, SwallowEvent, NULL, 8.0f);
-    EventRegisterEx(EVENT_ID_KEYUP, SwallowEvent, NULL, 8.0f);
-    EventRegisterEx(EVENT_ID_KEYDOWN_REPEATING, SwallowEvent, NULL, 8.0f);
-    EventRegisterEx(EVENT_ID_MOUSEDOWN, SwallowEvent, NULL, 8.0f);
-    EventRegisterEx(EVENT_ID_MOUSEUP, SwallowEvent, NULL, 8.0f);
-    EventRegisterEx(EVENT_ID_MOUSEMOVE, SwallowEvent, NULL, 8.0f);
+    EventRegisterEx(EVENT_ID_CHAR, SwallowEvent, NULL, 9.0f);
+    EventRegisterEx(EVENT_ID_KEYDOWN, SwallowEvent, NULL, 9.0f);
+    EventRegisterEx(EVENT_ID_KEYUP, SwallowEvent, NULL, 9.0f);
+    EventRegisterEx(EVENT_ID_KEYDOWN_REPEATING, SwallowEvent, NULL, 9.0f);
+    EventRegisterEx(EVENT_ID_MOUSEDOWN, SwallowEvent, NULL, 9.0f);
+    EventRegisterEx(EVENT_ID_MOUSEUP, SwallowEvent, NULL, 9.0f);
+    EventRegisterEx(EVENT_ID_MOUSEMOVE, SwallowEvent, NULL, 9.0f);
 }
 
 // OFFSET: 0x00A0A320
@@ -79,10 +80,10 @@ void DisableFadingScreen(float duration, void (*callback)(void*), void* param) {
         return;
     }
 
-    s_fadeDuration = duration;
     s_fadeCallback = callback;
     s_fadeStarted = 0;
     s_fadeDirection = 1;
+    s_fadeDuration = duration;
     s_fadeFinished = 0;
     s_fadeParam = param;
 
@@ -114,10 +115,10 @@ static void FadingScreenPaint(void* param, const RECTF* rect, const RECTF* visib
         float elapsed;
 
         if (s_fadeStarted) {
-            elapsed = static_cast<float>(OsGetAsyncTimeMs() - s_fadeStartTime) * 0.001f;
+            elapsed = static_cast<float>(FrameTime::GetCurTimeMs() - s_fadeStartTime) * 0.001f;
         } else {
             elapsed = 0.0f;
-            s_fadeStartTime = OsGetAsyncTimeMs();
+            s_fadeStartTime = FrameTime::GetCurTimeMs();
         }
 
         if (s_fadeDuration > elapsed) {

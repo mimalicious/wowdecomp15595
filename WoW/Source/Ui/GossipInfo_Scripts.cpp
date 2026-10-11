@@ -79,20 +79,23 @@ static int32_t Script_GetGossipOptions(lua_State* L) {
 
 // OFFSET: 0x009E1390/0x140778070
 static int32_t Script_GetNumGossipAvailableQuests(lua_State* L) {
-    lua_pushnumber(L, CGGossipInfo::GetNumAvailableQuests());
+    lua_pushnumber(L, static_cast<uint32_t>(CGGossipInfo::GetNumAvailableQuests()));
     return 1;
 }
 
 // OFFSET: 0x009E13D0/0x1407780D0
 static int32_t Script_GetNumGossipActiveQuests(lua_State* L) {
-    lua_pushnumber(L, CGGossipInfo::GetNumActiveQuests());
+    lua_pushnumber(L, static_cast<uint32_t>(CGGossipInfo::GetNumActiveQuests()));
     return 1;
 }
 
 // OFFSET: 0x009E1660/0x1407784D0
 static int32_t Script_CloseGossip(lua_State* L) {
-    WOWGUID none = { 0 };
-    CGGossipInfo::SetGossip(none);
+    if (CGGossipInfo::m_gossip) {
+        WOWGUID none = { 0 };
+        CGGossipInfo::SetGossip(none);
+    }
+
     return 0;
 }
 
@@ -161,7 +164,7 @@ static int32_t Script_GetGossipActiveQuests(lua_State* L) {
 
         int32_t index = CGQuestLog::GetQuestIndex(quest->m_questID);
 
-        if (index > 0 && (CGQuestLog::IsQuestCompleteEx(ClntObjMgrGetActivePlayerObj(), index - 1, true, 0, 0) || CGQuestLog::HasNoObjectives(index - 1))) {
+        if (index > 0 && (CGQuestLog::IsQuestComplete(index - 1) || CGQuestLog::HasNoObjectives(index - 1))) {
             lua_pushnumber(L, 1.0);
         } else {
             lua_pushnil(L);
@@ -189,22 +192,22 @@ static int32_t Script_SelectGossipOption(lua_State* L) {
 // OFFSET: 0x009E2020/0x140779190
 static int32_t Script_SelectGossipAvailableQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        return luaL_error(L, "Usage: SelectGossipAvailableQuest(index)");
+        luaL_error(L, "Usage: SelectGossipAvailableQuest(index)");
         return 0;
     }
 
-    CGGossipInfo::SelectGossipAvailableQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    CGGossipInfo::SelectGossipAvailableQuest(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
     return 0;
 }
 
 // OFFSET: 0x009E2090/0x1407791E0
 static int32_t Script_SelectGossipActiveQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        return luaL_error(L, "Usage: SelectGossipActiveQuest(index)");
+        luaL_error(L, "Usage: SelectGossipActiveQuest(index)");
         return 0;
     }
 
-    CGGossipInfo::SelectGossipActiveQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    CGGossipInfo::SelectGossipActiveQuest(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
     return 0;
 }
 

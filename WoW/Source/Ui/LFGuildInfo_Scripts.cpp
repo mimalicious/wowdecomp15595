@@ -327,36 +327,34 @@ static int32_t Script_DeclineGuildApplicant(lua_State* L) {
 static int32_t Script_GetLookingForGuildSettings(lua_State* L) {
     CVar* var = CVar::Lookup("lfGuildSettings");
 
-    if (!var) {
-        return 0;
+    if (var) {
+        uint32_t value = var->m_intValue;
+        lua_pushboolean(L, value & 1);
+        lua_pushboolean(L, (value >> 1) & 1);
+        lua_pushboolean(L, (value >> 2) & 1);
+        lua_pushboolean(L, (value >> 3) & 1);
+        lua_pushboolean(L, (value >> 4) & 1);
+        lua_pushboolean(L, (value >> 5) & 1);
+        lua_pushboolean(L, (value >> 6) & 1);
+        lua_pushboolean(L, (value >> 7) & 1);
+        lua_pushboolean(L, (value >> 8) & 1);
+        lua_pushboolean(L, (value >> 9) & 1);
+        return 10;
     }
 
-    uint32_t value = var->m_intValue;
-    lua_pushboolean(L, value & 1);
-    lua_pushboolean(L, (value >> 1) & 1);
-    lua_pushboolean(L, (value >> 2) & 1);
-    lua_pushboolean(L, (value >> 3) & 1);
-    lua_pushboolean(L, (value >> 4) & 1);
-    lua_pushboolean(L, (value >> 5) & 1);
-    lua_pushboolean(L, (value >> 6) & 1);
-    lua_pushboolean(L, (value >> 7) & 1);
-    lua_pushboolean(L, (value >> 8) & 1);
-    lua_pushboolean(L, (value >> 9) & 1);
-
-    return 10;
+    return 0;
 }
 
 // OFFSET: 0x009EC640/0x140785590
 static int32_t Script_GetLookingForGuildComment(lua_State* L) {
     CVar* var = CVar::Lookup("lfGuildComment");
 
-    if (!var) {
-        return 0;
+    if (var) {
+        lua_pushstring(L, var->m_stringValue.m_str);
+        return 1;
     }
 
-    lua_pushstring(L, var->m_stringValue.m_str);
-
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009EC670/0x1407855D0
@@ -536,7 +534,7 @@ static int32_t Script_SetLookingForGuildSettings(lua_State* L) {
     }
 
     uint32_t settings = var->m_intValue;
-    uint32_t flag = 1 << (static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    uint32_t flag = 1 << (static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
     int32_t value = lua_toboolean(L, 2);
 
     switch (flag) {

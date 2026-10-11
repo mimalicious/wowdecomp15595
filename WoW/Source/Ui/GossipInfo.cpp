@@ -65,7 +65,7 @@ void CGGossipInfo::SetGossip(const WOWGUID& guid) {
         CGGameUI::ClearInteractTarget(CGGossipInfo::m_gossip, 0);
     }
 
-    CGGossipInfo::m_gossip = WOWGUID();
+    CGGossipInfo::m_gossip.m_guid = 0;
     CGGossipInfo::m_gossipID = 0;
     FrameScript_SignalEvent(SCRIPT_EVENT_GOSSIP_CLOSED, NULL);
 }

@@ -1559,7 +1559,11 @@ bool CGLookingForGroup::IsSlotValidForPlayer(uint32_t slot) {
     if (CGLookingForGroup::m_playerLockInfo.m_valid) {
         for (LFGDungeonEntry* entry = CGLookingForGroup::m_playerLockInfo.m_dungeons.Head(); !CGLookingForGroup::m_playerLockInfo.m_dungeons.IsEnd(entry); entry = entry->RawNext()) {
             if (entry->m_slot == slot) {
-                return !entry->m_locked;
+                if (entry->m_locked) {
+                    return false;
+                }
+
+                break;
             }
         }
     }

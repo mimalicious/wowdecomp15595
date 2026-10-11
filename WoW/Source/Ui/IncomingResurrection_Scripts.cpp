@@ -11,6 +11,7 @@
 static int32_t Script_UnitHasIncomingResurrection(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitHasIncomingResurrection(\"unit\")");
+        return 0;
     }
 
     WOWGUID guid = Script_GetGUIDFromName(lua_tostring(L, 1));

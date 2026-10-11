@@ -69,10 +69,6 @@ void CGCharacterModelBase::operator delete(void* ptr) {
 
 // OFFSET: 0x008C64D0
 CSimpleFrame* CGCharacterModelBase::Create(CSimpleFrame* parent) {
-    if (CGCharacterModelBase::s_characterModelHeap.m_bytesPerData < sizeof(CGCharacterModelBase)) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     void* data = CGCharacterModelBase::s_characterModelHeap.GetData(0, typeid(CGCharacterModelBase).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGCharacterModelBase(parent) : NULL;
 }
@@ -98,11 +94,11 @@ int32_t CGCharacterModelBase::GetScriptMetaTable() {
 
 // OFFSET: 0x00A02CC0
 CM2Model* CGCharacterModelBase::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
-    if (!unit) {
-        return NULL;
+    if (unit) {
+        return unit->DuplicateModel(this->GetScene());
     }
 
-    return unit->DuplicateModel(this->GetScene());
+    return NULL;
 }
 
 // OFFSET: 0x00A02CF0/0x1407A1DE0
@@ -116,7 +112,7 @@ void CGCharacterModelBase::RotateModel(float facing, bool animate) {
         if (facing != this->m_facing) {
             uint32_t sequence = 11;
 
-            if (facing <= this->m_facing) {
+            if (!(facing > this->m_facing)) {
                 sequence = 12;
             }
 

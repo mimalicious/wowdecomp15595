@@ -1,4 +1,5 @@
 #include "GuildBankFrame.h"
+#include "WoW/Source/Ui/CGTabardCreationFrame.h"
 #include <cstdint>
 #include <cstring>
 #include <ctime>
@@ -63,10 +64,9 @@ static int32_t Script_SetCurrentGuildBankTab(lua_State* L) {
         return 0;
     }
 
-    int32_t tabValue = static_cast<int32_t>(lua_tonumber(L, 1));
-    uint32_t tab = tabValue - 1;
+    int32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (tab < 8) {
+    if (static_cast<uint32_t>(tab) < 8) {
         CGGuildBankInfo::m_currentTab = static_cast<uint8_t>(tab);
     }
 
@@ -140,9 +140,8 @@ static int32_t Script_GetNumGuildBankTransactions(lua_State* L) {
         return 0;
     }
 
-    int32_t tabValue = static_cast<int32_t>(lua_tonumber(L, 1));
-    uint32_t tab = tabValue - 1;
-    lua_pushnumber(L, tab >= 9 ? 0 : CGGuildBankInfo::m_numLogEntries[tab]);
+    int32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    lua_pushnumber(L, static_cast<uint32_t>(tab) < 9 ? CGGuildBankInfo::m_numLogEntries[tab] : 0);
     return 1;
 }
 
@@ -181,10 +180,9 @@ static int32_t Script_QueryGuildBankTab(lua_State* L) {
         return 0;
     }
 
-    int32_t tabValue = static_cast<int32_t>(lua_tonumber(L, 1));
-    uint32_t tab = tabValue - 1;
+    int32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (tab < 8) {
+    if (static_cast<uint32_t>(tab) < 8) {
         CGGuildBankInfo::QueryGuildBankTab(static_cast<uint8_t>(tab));
     }
 
@@ -290,7 +288,8 @@ static int32_t Script_QueryGuildBankText(lua_State* L) {
         return 0;
     }
 
-    CGGuildBankInfo::QueryGuildBankText(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    CGGuildBankInfo::QueryGuildBankText(slot);
     return 0;
 }
 
@@ -350,7 +349,7 @@ static int32_t Script_DepositGuildBankMoney(lua_State* L) {
         return 0;
     }
 
-    if (player && amount) {
+    if (player && amount > 0) {
         if (player->GetCoinage() >= amount && amount < 10000000000ull) {
             CGGuildBankInfo::DepositMoney(amount);
             return 0;
@@ -596,11 +595,11 @@ static int32_t Script_GetGuildBankItemInfo(lua_State* L) {
 
     int32_t tabValue = static_cast<int32_t>(lua_tonumber(L, 1));
     uint32_t tab = tabValue - 1;
-    uint32_t slot = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
     GuildBankItem* item;
     ItemRec* rec;
 
-    if (tab < 8 && slot < CGGuildBankInfo::m_tabSlots[tab].Count() && (item = &CGGuildBankInfo::m_tabSlots[tab][slot])->m_itemID && item && ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+    if (tab < 8 && static_cast<uint32_t>(slot) < CGGuildBankInfo::m_tabSlots[tab].Count() && (item = &CGGuildBankInfo::m_tabSlots[tab][slot])->m_itemID && item && ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         WOWGUID requester = WOWGUID::Make(0);
 
         if ((rec = g_itemDB.GetRecord(item->m_itemID, requester, NULL, NULL, false))) {
@@ -735,7 +734,11 @@ static int32_t Script_SplitGuildBankItem(lua_State* L) {
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player || (!CGGameUI::m_hasControl && !(player->m_unit->m_unitFieldFlags & 0x100000))) {
+    if (!player) {
+        return 0;
+    }
+
+    if (!CGGameUI::m_hasControl && !(static_cast<uint8_t>(player->m_unit->m_unitFieldFlags >> 20) & 1)) {
         return 0;
     }
 

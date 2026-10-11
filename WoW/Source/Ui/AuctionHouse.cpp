@@ -161,29 +161,29 @@ TSGrowableArray<OutbidItemInfo*> CGAuctionHouse::m_outbidItems;
 
 // OFFSET: 0x004661A0
 AuctionItemInfo* GetListAuction(uint32_t index) {
-    if (index >= CGAuctionHouse::m_browseList.m_count) {
-        return NULL;
+    if (index < CGAuctionHouse::m_browseList.m_count) {
+        return &CGAuctionHouse::m_browseList.m_data[index];
     }
 
-    return &CGAuctionHouse::m_browseList.m_data[index];
+    return NULL;
 }
 
 // OFFSET: 0x004661C0
 AuctionItemInfo* GetOwnerAuction(uint32_t index) {
-    if (index >= CGAuctionHouse::m_ownerList.m_count) {
-        return NULL;
+    if (index < CGAuctionHouse::m_ownerList.m_count) {
+        return &CGAuctionHouse::m_ownerList.m_data[index];
     }
 
-    return &CGAuctionHouse::m_ownerList.m_data[index];
+    return NULL;
 }
 
 // OFFSET: 0x004661E0
 AuctionItemInfo* GetBidderAuction(uint32_t index) {
-    if (index >= CGAuctionHouse::m_bidderList.m_count) {
-        return NULL;
+    if (index < CGAuctionHouse::m_bidderList.m_count) {
+        return &CGAuctionHouse::m_bidderList.m_data[index];
     }
 
-    return &CGAuctionHouse::m_bidderList.m_data[index];
+    return NULL;
 }
 
 // OFFSET: 0x00975400
@@ -690,9 +690,9 @@ int32_t CGAuctionHouse::GetSelectedBidIndex() {
 static int32_t CheckSortCriteria(int32_t column, const AuctionItemInfo* a, const AuctionItemInfo* b) {
     switch (column) {
         case 0: {
-            WOWGUID noneA = WOWGUID();
+            WOWGUID noneA = WOWGUID::Make(0);
             ItemRecSparse* statsA = g_itemSparseDB.GetRecord(a->m_itemID, noneA, NULL, NULL, false);
-            WOWGUID noneB = WOWGUID();
+            WOWGUID noneB = WOWGUID::Make(0);
             ItemRecSparse* statsB = g_itemSparseDB.GetRecord(b->m_itemID, noneB, NULL, NULL, false);
 
             if (!statsA || !statsB) {
@@ -719,9 +719,9 @@ static int32_t CheckSortCriteria(int32_t column, const AuctionItemInfo* a, const
         }
 
         case 1: {
-            WOWGUID noneA = WOWGUID();
+            WOWGUID noneA = WOWGUID::Make(0);
             ItemRecSparse* statsA = g_itemSparseDB.GetRecord(a->m_itemID, noneA, NULL, NULL, false);
-            WOWGUID noneB = WOWGUID();
+            WOWGUID noneB = WOWGUID::Make(0);
             ItemRecSparse* statsB = g_itemSparseDB.GetRecord(b->m_itemID, noneB, NULL, NULL, false);
 
             if (!statsA || !statsB || statsA->m_quality == statsB->m_quality) {
@@ -787,9 +787,9 @@ static int32_t CheckSortCriteria(int32_t column, const AuctionItemInfo* a, const
         }
 
         case 5: {
-            WOWGUID noneA = WOWGUID();
+            WOWGUID noneA = WOWGUID::Make(0);
             ItemRecSparse* statsA = g_itemSparseDB.GetRecord(a->m_itemID, noneA, NULL, NULL, false);
-            WOWGUID noneB = WOWGUID();
+            WOWGUID noneB = WOWGUID::Make(0);
             ItemRecSparse* statsB = g_itemSparseDB.GetRecord(b->m_itemID, noneB, NULL, NULL, false);
 
             if (!statsA || !statsB) {
@@ -813,9 +813,9 @@ static int32_t CheckSortCriteria(int32_t column, const AuctionItemInfo* a, const
         }
 
         case 7: {
-            WOWGUID noneA = WOWGUID();
+            WOWGUID noneA = WOWGUID::Make(0);
             NameCache* nameA = g_nameDBCache.GetRecord(a->m_owner.m_guid, noneA, NULL, NULL, false);
-            WOWGUID noneB = WOWGUID();
+            WOWGUID noneB = WOWGUID::Make(0);
             NameCache* nameB = g_nameDBCache.GetRecord(b->m_owner.m_guid, noneB, NULL, NULL, false);
 
             if (nameA && nameB) {
@@ -1265,7 +1265,7 @@ int32_t Packet_SMSG_AUCTION_LIST_RESULT(void* param, NETMESSAGE msgId, uint32_t 
         msg->Get(auction->m_bid);
         auction->m_sold = 0;
 
-        WOWGUID none = WOWGUID();
+        WOWGUID none = WOWGUID::Make(0);
 
         if (!g_itemSparseDB.GetRecord(auction->m_itemID, none, AuctionListItemQueryCallback, NULL, false)) {
             CGAuctionHouse::m_pendingBrowseItems++;
@@ -1532,7 +1532,7 @@ int32_t Packet_SMSG_AUCTION_BIDDER_LIST_RESULT(void* param, NETMESSAGE msgId, ui
         msg->Get(auction->m_bid);
         auction->m_sold = 0;
 
-        WOWGUID none = WOWGUID();
+        WOWGUID none = WOWGUID::Make(0);
 
         if (!g_itemSparseDB.GetRecord(auction->m_itemID, none, AuctionBidItemQueryCallback, NULL, false)) {
             CGAuctionHouse::m_pendingBidItems++;
@@ -1686,7 +1686,7 @@ static int32_t FindSellItemsCallback(const CGItem_C* item, void* param) {
         CGAuctionHouse::m_numSellItems++;
     }
 
-    if (find->m_wanted && find->m_total >= find->m_wanted) {
+    if (find->m_wanted > 0 && find->m_total >= find->m_wanted) {
         return 1;
     }
 
@@ -1921,14 +1921,14 @@ int32_t Packet_SMSG_AUCTION_BIDDER_NOTIFICATION(void* param, NETMESSAGE msgId, u
     msg->Get(itemID);
     msg->Get(randomPropertyID);
 
-    WOWGUID none = WOWGUID();
+    WOWGUID none = WOWGUID::Make(0);
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemID, none, NULL, NULL, false);
 
     if (!stats) {
         AuctionNotifyInfo* info = static_cast<AuctionNotifyInfo*>(SMemAlloc(sizeof(AuctionNotifyInfo), __FILE__, __LINE__, 0));
         info->m_randomPropertyID = randomPropertyID;
         info->m_error = bid ? ERR_AUCTION_OUTBID_S : ERR_AUCTION_WON_S;
-        none = WOWGUID();
+        none.m_guid = 0;
         stats = g_itemSparseDB.GetRecord(itemID, none, AucNotifyCallback, info, false);
     }
 
@@ -2050,7 +2050,7 @@ int32_t Packet_SMSG_AUCTION_OWNER_NOTIFICATION(void* param, NETMESSAGE msgId, ui
         return 1;
     }
 
-    WOWGUID none = WOWGUID();
+    WOWGUID none = WOWGUID::Make(0);
 
     if (g_itemSparseDB.GetRecord(itemID, none, NULL, NULL, false)) {
         char name[256];
@@ -2085,7 +2085,7 @@ int32_t Packet_SMSG_AUCTION_REMOVED_NOTIFICATION(void* param, NETMESSAGE msgId, 
     msg->Get(itemID);
     msg->Get(randomPropertyID);
 
-    WOWGUID none = WOWGUID();
+    WOWGUID none = WOWGUID::Make(0);
 
     if (g_itemSparseDB.GetRecord(itemID, none, NULL, NULL, false)) {
         char name[256];
@@ -2095,7 +2095,7 @@ int32_t Packet_SMSG_AUCTION_REMOVED_NOTIFICATION(void* param, NETMESSAGE msgId, 
         AuctionNotifyInfo* info = static_cast<AuctionNotifyInfo*>(SMemAlloc(sizeof(AuctionNotifyInfo), __FILE__, __LINE__, 0));
         info->m_randomPropertyID = randomPropertyID;
         info->m_error = ERR_AUCTION_REMOVED_S;
-        none = WOWGUID();
+        none.m_guid = 0;
         g_itemSparseDB.GetRecord(itemID, none, AucNotifyCallback, info, false);
     }
 
@@ -2184,7 +2184,11 @@ void CGAuctionHouse::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_AUCTION_LIST_PENDING_SALES);
 
     for (uint32_t i = 0; i < CGAuctionHouse::m_outbidItems.m_count; i++) {
-        delete CGAuctionHouse::m_outbidItems.m_data[i];
+        OutbidItemInfo* item = CGAuctionHouse::m_outbidItems.m_data[i];
+
+        if (item) {
+            SMemFree(item, "delete", -1, 0);
+        }
     }
 
     CGAuctionHouse::m_outbidItems.Clear();

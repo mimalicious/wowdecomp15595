@@ -475,9 +475,11 @@ void CGEncounterJournal::SetSearch(const char* search) {
         }
     }
 
+    WOWGUID requester = WOWGUID::Make(0);
+
     for (int32_t i = g_journalEncounterItemDB.m_numRecords - 1; i >= 0; i--) {
         JournalEncounterItemRec* item = g_journalEncounterItemDB.GetRecordByIndex(i);
-        ItemRecSparse* sparse = g_itemSparseDB.GetRecord(item->m_itemID, WOWGUID(), NULL, NULL, false);
+        ItemRecSparse* sparse = g_itemSparseDB.GetRecord(item->m_itemID, requester, NULL, NULL, false);
 
         if (sparse) {
             CGEncounterJournal::AddSearchResult(item->m_id, 0, sparse->m_name, search);

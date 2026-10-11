@@ -32,10 +32,10 @@ static int32_t Script_MakeMinigameMove(lua_State* L) {
     }
 
     uint8_t moveType = static_cast<int32_t>(lua_tonumber(L, 1) - 1.0);
-    double param = lua_tonumber(L, 2);
+    int32_t param = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
 
     if (CGMinigameInfo::m_minigame) {
-        CGMinigameInfo::m_minigame->MakeMove(moveType, static_cast<int32_t>(param - 1.0));
+        CGMinigameInfo::m_minigame->MakeMove(moveType, param);
     }
 
     return 0;

@@ -177,11 +177,12 @@ int32_t CKBPage::_BeginLoading() {
 XMLNode* CKBPage::_GetRoot(CKBIterator& iterator) {
     XMLNode* root = XMLTree_GetRoot(this->m_tree);
 
-    if (root) {
-        iterator.m_node = root;
-        iterator.m_index = 0;
+    if (!root) {
+        return NULL;
     }
 
+    iterator.m_node = root;
+    iterator.m_index = 0;
     return root;
 }
 
@@ -207,7 +208,12 @@ const char* CKBPage::_GetBodyString(XMLNode* node) const {
 // OFFSET: 0x009FB330
 bool CKBPage::_GetBodyBool(const char* element, const char* child) const {
     const char* body = this->_GetBodyString(element, child);
-    return body && !SStrCmpI(body, "true", STORM_MAX_STR);
+
+    if (body) {
+        return SStrCmpI(body, "true", STORM_MAX_STR) == 0;
+    }
+
+    return false;
 }
 
 // OFFSET: [#0x005510B0, #0x005512B0]

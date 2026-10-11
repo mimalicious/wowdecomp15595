@@ -9,6 +9,7 @@
 static int32_t Script_PlayDance(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: PlayDance(\"dance name\")");
+        return 0;
     }
 
     const char* name = lua_tolstring(L, 1, NULL);

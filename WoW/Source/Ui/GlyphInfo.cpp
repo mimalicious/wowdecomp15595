@@ -279,7 +279,11 @@ void CGGlyphInfo::CastGlyph(uint32_t index) {
 // OFFSET: 0x009F0080/0x140789BE0
 void CGGlyphInfo::ClearGlyphs() {
     for (int32_t i = CGGlyphInfo::s_glyphs.Count() - 1; i >= 0; i--) {
-        delete CGGlyphInfo::s_glyphs[i];
+        GlyphItem* glyph = CGGlyphInfo::s_glyphs[i];
+
+        if (glyph) {
+            SMemFree(glyph, "delete", -1, 0);
+        }
     }
 
     CGGlyphInfo::s_glyphs.Clear();

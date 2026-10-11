@@ -30,7 +30,7 @@ ThrottleObject CGGMTicketInfo::s_quickTicketThrottle(0, 1);
 
 // OFFSET: 0x009E5700
 void CGGMTicketInfo::SetQuickTicketSystemStatus(bool enabled) {
-    if (enabled != (CGGMTicketInfo::s_quickTicketSystemStatus != 0)) {
+    if (static_cast<uint8_t>(enabled) != CGGMTicketInfo::s_quickTicketSystemStatus) {
         CGGMTicketInfo::s_quickTicketSystemStatus = enabled;
         FrameScript_SignalEvent(SCRIPT_EVENT_QUICK_TICKET_SYSTEM_STATUS, NULL);
     }
@@ -45,7 +45,7 @@ void CGGMTicketInfo::SetQuickTicketThrottle(const ThrottleObject* throttle) {
 
 // OFFSET: 0x009E5780
 void CGGMTicketInfo::SetItemRestorationButtonStatus(bool enabled) {
-    if (enabled != (CGGMTicketInfo::s_itemRestorationButtonStatus != 0)) {
+    if (static_cast<uint8_t>(enabled) != CGGMTicketInfo::s_itemRestorationButtonStatus) {
         CGGMTicketInfo::s_itemRestorationButtonStatus = enabled;
         FrameScript_SignalEvent(SCRIPT_EVENT_ITEM_RESTORATION_BUTTON_STATUS, NULL);
     }
@@ -101,7 +101,7 @@ void CGGMTicketInfo::CreateTicket(const char* text, int32_t needResponse, uint32
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || !IsTicketTextValid(text)) {
         return;
@@ -198,7 +198,7 @@ void SendGMResponseResolve() {
 
 // OFFSET: 0x009E6670
 void CGGMReportLag::Submit(int32_t type) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;

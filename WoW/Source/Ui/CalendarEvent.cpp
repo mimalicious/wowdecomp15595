@@ -50,12 +50,12 @@ const char* GetEventStatusString(uint32_t status) {
 
 // OFFSET: 0x00A0AE90
 const char* GetEventTypeString(uint32_t type) {
-    return type < 5 ? s_eventTypeStrings[type] : NULL;
+    return type >= 5 ? NULL : s_eventTypeStrings[type];
 }
 
 // OFFSET: 0x00A0AEB0
 const char* GetEventRepeatString(uint32_t repeat) {
-    return repeat < 4 ? s_eventRepeatStrings[repeat] : NULL;
+    return repeat >= 4 ? NULL : s_eventRepeatStrings[repeat];
 }
 
 // PROVEN: 629657d7 IDENTICAL/NONE
@@ -121,7 +121,7 @@ void CGCalendarEvent::SetType(uint32_t type) {
 
 // OFFSET: 0x00A0B090
 void CGCalendarEvent::SetRepeatOption(uint32_t repeatOption) {
-    if (repeatOption < 4 && repeatOption != this->m_repeatOption) {
+    if (static_cast<int32_t>(repeatOption) < 4 && repeatOption != this->m_repeatOption) {
         this->m_repeatOption = repeatOption;
         this->m_changed = 1;
     }
@@ -306,7 +306,7 @@ bool CGCalendarEvent::CanModerate(uint32_t index) {
         return false;
     }
 
-    if ((this->m_flags & 0x400) && !this->m_invites.m_data[index]->m_inviteType) {
+    if ((static_cast<uint8_t>(this->m_flags >> 10) & 1) && !this->m_invites.m_data[index]->m_inviteType) {
         CGCalendar::CalendarError("CALENDAR_ERROR_NO_MODERATOR", 0);
         return false;
     }
@@ -476,7 +476,7 @@ static void InviteNameCacheCallback(int32_t id, const WOWGUID& guid, void* param
 
 // OFFSET: 0x00A0BB70
 bool CGCalendarEvent::IsModerator() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     WOWGUID guid = player ? player->m_obj->m_guid : WOWGUID();
     return this->m_moderatorInviteID || guid == this->m_creatorGUID;
 }
@@ -493,7 +493,7 @@ bool CGCalendarEvent::AddEvent() {
     }
 
     if (this->m_flags & 0x440) {
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (player && !player->GetGuildGUID()) {
             CGCalendar::CalendarError("ERR_GUILD_PLAYER_NOT_IN_GUILD", 0);
@@ -542,7 +542,7 @@ bool CGCalendarEvent::AddEvent() {
     msg.Put(lockoutDate);
     msg.Put(this->m_flags);
 
-    if (!(this->m_flags & 0x40)) {
+    if (!(static_cast<uint8_t>(this->m_flags >> 6) & 1)) {
         msg.Put(this->m_numInvites);
 
         for (uint32_t i = 0; i < this->m_numInvites; i++) {
@@ -612,7 +612,7 @@ bool CGCalendarEvent::Update() {
 
 // OFFSET: 0x00A0BE70
 bool CGCalendarEvent::Invite(const char* name) {
-    if (this->m_flags & 0x40) {
+    if (static_cast<uint8_t>(this->m_flags >> 6) & 1) {
         CGCalendar::CalendarError("CALENDAR_ERROR_INVITES_DISABLED", 0);
         return false;
     }
@@ -665,7 +665,7 @@ bool CGCalendarEvent::RemoveInvite(uint32_t index) {
 
     SmartGUID guid;
     guid.m_guid = this->m_invites.m_data[index]->m_guid.m_guid;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && this->m_invites.m_data[index]->m_guid != player->m_obj->m_guid && !this->IsModerator()) {
         CGCalendar::CalendarError("CALENDAR_ERROR_PERMISSIONS", 0);
@@ -697,17 +697,15 @@ bool CGCalendarEvent::RemoveInvite(uint32_t index) {
 
 // OFFSET: 0x00A0C1D0
 bool CGCalendarEvent::RemoveInviteByGUID(WOWGUID guid) {
-    if (!guid) {
-        return false;
+    if (guid) {
+        int32_t index = this->GetInviteIndex(guid);
+
+        if (index >= 0) {
+            return this->RemoveInvite(index);
+        }
     }
 
-    int32_t index = this->GetInviteIndex(guid);
-
-    if (index < 0) {
-        return false;
-    }
-
-    return this->RemoveInvite(index);
+    return false;
 }
 
 // OFFSET: 0x00A0C210
@@ -716,7 +714,7 @@ bool CGCalendarEvent::InviteRSVP(uint32_t status) {
         return false;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
@@ -736,7 +734,7 @@ bool CGCalendarEvent::InviteRSVP(uint32_t status) {
         }
     }
 
-    if ((this->m_flags & 0x400) && this->m_invites.m_data[index]->m_inviteType == 1) {
+    if ((static_cast<uint8_t>(this->m_flags >> 10) & 1) && this->m_invites.m_data[index]->m_inviteType == 1) {
         return false;
     }
 
@@ -756,7 +754,7 @@ bool CGCalendarEvent::SignUp(uint8_t tentative) {
         return false;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         WOWGUID guid = player->m_obj->m_guid;
@@ -785,7 +783,7 @@ void CGCalendarEvent::UpdateInviteModeratorStatus(WOWGUID guid, uint8_t status) 
         }
 
         this->m_invites.m_data[i]->m_moderatorStatus = status;
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (player && player->m_obj->m_guid == guid) {
             if (status == 1) {
@@ -806,7 +804,7 @@ bool CGCalendarEvent::CanSetInviteStatus(uint32_t index, uint32_t status) {
         return false;
     }
 
-    if ((this->m_flags & 0x400) && (status == 1 || status == 2)) {
+    if ((static_cast<uint8_t>(this->m_flags >> 10) & 1) && (status == 1 || status == 2)) {
         return false;
     }
 
@@ -845,7 +843,7 @@ void CGCalendarEvent::SetModeratorStatus(uint32_t index, uint32_t status) {
         return;
     }
 
-    if (index >= this->m_numInvites || status >= 2 || !this->CanModerate(index)) {
+    if (index >= this->m_numInvites || static_cast<int32_t>(status) >= 2 || !this->CanModerate(index)) {
         return;
     }
 
@@ -936,7 +934,7 @@ CGCalendarEvent::~CGCalendarEvent() {
 
 // OFFSET: 0x00A0CA30
 bool CGCalendarEvent::ProcessGetEvent(CDataStore* msg, int32_t* status) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     WOWGUID playerGuid = player ? player->m_obj->m_guid : WOWGUID();
 
     SmartGUID creator;
@@ -1019,7 +1017,7 @@ bool CGCalendarEvent::ProcessGetEvent(CDataStore* msg, int32_t* status) {
         msg->GetString(this->m_invites.m_data[i]->m_notes, STORM_MAX_STR);
     }
 
-    if (!found && (this->m_flags & 0x400)) {
+    if (!found && (static_cast<uint8_t>(this->m_flags >> 10) & 1)) {
         *status = 7;
     }
 
@@ -1036,7 +1034,7 @@ bool CGCalendarEvent::ProcessGetEvent(CDataStore* msg, int32_t* status) {
 
 // OFFSET: 0x00A0CDB0
 bool CGCalendarEvent::ProcessInitialInviteList(CDataStore* msg) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     WOWGUID playerGuid = player ? player->m_obj->m_guid : WOWGUID();
 
     uint32_t count = this->m_invites.Count();

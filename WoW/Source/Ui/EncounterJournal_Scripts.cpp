@@ -220,7 +220,7 @@ static int32_t Script_EJ_SetClassLootFilter(lua_State* L) {
     ChrClassesRec* rec;
     int32_t index;
 
-    if (lua_isnumber(L, 1) && (index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1, index >= 0) && index < g_chrClassesDB.m_numRecords && (rec = g_chrClassesDB.GetRecordByIndex(index)) != NULL) {
+    if (lua_isnumber(L, 1) && (index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1, index >= 0) && index < g_chrClassesDB.m_numRecords && (rec = g_chrClassesDB.GetRecordByIndex(index)) != NULL) {
         CGEncounterJournal::s_classFilter = rec->m_id;
         CGEncounterJournal::s_lootDirty = true;
         return 0;
@@ -233,9 +233,9 @@ static int32_t Script_EJ_SetClassLootFilter(lua_State* L) {
 
 // OFFSET: 0x00A07580/0x1407A76D0
 static int32_t Script_EJ_GetAvailableClasses(lua_State* L) {
-    int32_t count = g_chrClassesDB.m_numRecords;
+    uint32_t count = g_chrClassesDB.m_numRecords;
 
-    for (int32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         ChrClassesRec* rec = g_chrClassesDB.GetRecordByIndex(i);
         const char* name = CGUnit_C::GetDisplayClassNameFromRecord(rec, 2, NULL);
 
@@ -255,20 +255,20 @@ static int32_t Script_EJ_GetAvailableClasses(lua_State* L) {
 static int32_t Script_EJ_GetClassFilter(lua_State* L) {
     int32_t index = CGEncounterJournal::s_classFilter - 1;
 
-    if (index < 0) {
-        return 0;
+    if (index >= 0) {
+        ChrClassesRec* rec = g_chrClassesDB.GetRecordByIndex(index);
+        const char* name = CGUnit_C::GetDisplayClassNameFromRecord(rec, 2, NULL);
+
+        if (!rec || !name) {
+            return 0;
+        }
+
+        lua_pushinteger(L, index + 1);
+        lua_pushstring(L, name);
+        return 2;
     }
 
-    ChrClassesRec* rec = g_chrClassesDB.GetRecordByIndex(index);
-    const char* name = CGUnit_C::GetDisplayClassNameFromRecord(rec, 2, NULL);
-
-    if (!rec || !name) {
-        return 0;
-    }
-
-    lua_pushinteger(L, index + 1);
-    lua_pushstring(L, name);
-    return 2;
+    return 0;
 }
 
 // OFFSET: 0x00A07680/0x1407A7860
@@ -340,12 +340,12 @@ static int32_t Script_EJ_HandleLinkPath(lua_State* L) {
 static int32_t PushSectionPath(lua_State* L, int32_t sectionID) {
     JournalEncounterSectionRec* section = g_journalEncounterSectionDB.GetRecord(sectionID);
 
-    if (!section) {
-        return 0;
+    if (section) {
+        lua_pushinteger(L, sectionID);
+        return PushSectionPath(L, section->m_parentSectionID) + 1;
     }
 
-    lua_pushinteger(L, sectionID);
-    return PushSectionPath(L, section->m_parentSectionID) + 1;
+    return 0;
 }
 
 // OFFSET: 0x00A078F0/0x1407A7B00
@@ -438,7 +438,7 @@ static int32_t Script_EJ_GetInstanceByIndex(lua_State* L) {
     }
 
     int32_t index = lua_tointeger(L, 1) - 1;
-    int32_t isRaid = lua_toboolean(L, 2);
+    bool isRaid = lua_toboolean(L, 2) != 0;
     JournalInstanceRec* instance = g_journalInstanceDB.GetRecord(CGEncounterJournal::GetInstanceByIndex(index, (isRaid != 0) + 1));
 
     if (!instance) {
@@ -583,14 +583,14 @@ static int32_t Script_EJ_GetMapEncounter(lua_State* L) {
 
     JournalEncounterRec* encounter = CGEncounterJournal::GetMapEncounter(lua_tointeger(L, 1) - 1);
 
-    if (!encounter) {
-        return 0;
+    if (encounter) {
+        lua_pushnumber(L, encounter->m_mapX);
+        lua_pushnumber(L, 1.0 - encounter->m_mapY);
+        lua_pushinteger(L, encounter->m_journalInstanceID);
+        return PushEncounterInfo(L, encounter) + 3;
     }
 
-    lua_pushnumber(L, encounter->m_mapX);
-    lua_pushnumber(L, 1.0 - encounter->m_mapY);
-    lua_pushinteger(L, encounter->m_journalInstanceID);
-    return PushEncounterInfo(L, encounter) + 3;
+    return 0;
 }
 
 // OFFSET: 0x00A08F90/0x1407A9950

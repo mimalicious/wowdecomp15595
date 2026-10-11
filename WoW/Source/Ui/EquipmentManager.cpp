@@ -99,7 +99,7 @@ int32_t CGEquipmentManager::SetContainsLockedItems(const EQUIPMENT_SET* set) {
 
 // OFFSET: 0x009A15D0/0x140725D30
 bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
@@ -256,7 +256,7 @@ int32_t CGEquipmentManager::SetUsesLockedSlots(const EQUIPMENT_SET* set) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -444,7 +444,7 @@ void CGEquipmentManager::GetSetStatus(int32_t id, int32_t& total, int32_t& equip
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -482,7 +482,7 @@ bool CGEquipmentManager::IsSetEquipped(int32_t id) {
         return false;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
@@ -562,15 +562,16 @@ int32_t CGEquipmentManager::OnEquipmentSetResult(void* param, NETMESSAGE msgId, 
     CGEquipmentManager::m_swapPending = 0;
     uint8_t result = 0;
     msg->Get(result);
+    int32_t code = result;
 
-    if (!result) {
+    if (!code) {
         EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
         FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 1, set ? static_cast<const char*>(set->m_name) : NULL);
     } else {
         EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
         FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 0, set ? static_cast<const char*>(set->m_name) : NULL);
 
-        if (result == 4) {
+        if (code == 4) {
             FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("EQUIPMENT_MANAGER_BAGS_FULL", -1, GENDER_NOT_APPLICABLE));
         }
     }

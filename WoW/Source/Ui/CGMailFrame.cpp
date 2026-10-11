@@ -3,6 +3,7 @@
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/GossipInfo.h"
 #include "WoW/Source/Ui/MailInfo.h"
 #include "WoW/Source/Ui/Types.h"
 
@@ -31,8 +32,9 @@ void CGMailInfo::ClearSendMail(bool signal) {
 
 // OFFSET: 0x0096E030/0x1406E5110
 void CGPlayer_C::TalkToMailbox(WOWGUID guid) {
+    CGGossipInfo::ClearGossip();
     CGGameUI::SetInteractTarget(guid);
     CGMailInfo::m_object = guid;
-    CGMailInfo::ClearSendMail(true);
+    CGMailInfo::ClearSendMail(false);
     FrameScript_SignalEvent(SCRIPT_EVENT_MAIL_SHOW, NULL);
 }

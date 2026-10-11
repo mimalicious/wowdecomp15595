@@ -294,7 +294,7 @@ void CGArenaTeamInfo::InitializeGame() {
         CGArenaTeamInfo::m_arenaTeams[i].FreeMemberArray();
     }
 
-    CGArenaTeamInfo::m_selectedMember = WOWGUID();
+    CGArenaTeamInfo::m_selectedMember.m_guid = 0;
 
     for (uint32_t i = 0; i < 7; i++) {
         CGArenaTeamInfo::m_sortOrder[i].m_reverse = 0;

@@ -371,13 +371,14 @@ static CLIENT_ACHIEVEMENT_CRITERIA* GetCriteria(int32_t id) {
     CLIENT_ACHIEVEMENT_CRITERIA* node = s_criteria.Head();
 
     while (!s_criteria.IsEnd(node)) {
-        CLIENT_ACHIEVEMENT_CRITERIA* entry = node;
-        node = s_criteria.RawNext(node);
+        CLIENT_ACHIEVEMENT_CRITERIA* next = s_criteria.RawNext(node);
 
-        if (entry->m_id == id) {
-            result = entry;
+        if (node->m_id == id) {
+            result = node;
             break;
         }
+
+        node = next;
     }
 
     return result;
@@ -1645,7 +1646,8 @@ static int32_t Script_IsAchievementEligible(lua_State* L) {
         return 0;
     }
 
-    ACHIEVEMENT* achievement = s_achievements.Ptr(static_cast<int32_t>(lua_tonumber(L, 1)), HASHKEY_NONE());
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1));
+    ACHIEVEMENT* achievement = s_achievements.Ptr(slot, HASHKEY_NONE());
 
     if (!achievement) {
         return 0;
@@ -1739,7 +1741,8 @@ static int32_t Script_GetAchievementGuildRep(lua_State* L) {
         return 0;
     }
 
-    ACHIEVEMENT* achievement = s_achievements.Ptr(static_cast<int32_t>(lua_tonumber(L, 1)), HASHKEY_NONE());
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1));
+    ACHIEVEMENT* achievement = s_achievements.Ptr(slot, HASHKEY_NONE());
 
     if (!achievement) {
         lua_pushboolean(L, 0);

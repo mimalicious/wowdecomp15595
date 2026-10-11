@@ -45,7 +45,7 @@ void CGTabardCreationFrame::Close() {
     }
 
     CGGameUI::ClearInteractTarget(CGTabardCreationFrame::m_vendor, 0);
-    CGTabardCreationFrame::m_vendor = WOWGUID();
+    CGTabardCreationFrame::m_vendor.m_guid = 0;
     FrameScript_SignalEvent(SCRIPT_EVENT_CLOSE_TABARD_FRAME, NULL);
 }
 

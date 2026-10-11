@@ -33,7 +33,7 @@ int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time,
 // OFFSET: 0x00A0A130
 void CGMinigameInfo::LeaveWorld() {
     if (CGMinigameInfo::m_minigame) {
-        delete CGMinigameInfo::m_minigame;
+        SMemFree(CGMinigameInfo::m_minigame, "delete", -1, 0);
         CGMinigameInfo::m_minigame = NULL;
     }
 }
@@ -46,7 +46,7 @@ int32_t Packet_SMSG_MINIGAME_SETUP(void* param, NETMESSAGE msgId, uint32_t time,
     msg->Get(type);
 
     if (CGMinigameInfo::m_minigame) {
-        delete CGMinigameInfo::m_minigame;
+        SMemFree(CGMinigameInfo::m_minigame, "delete", -1, 0);
         CGMinigameInfo::m_minigame = NULL;
     }
 

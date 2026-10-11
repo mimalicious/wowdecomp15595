@@ -21,7 +21,7 @@ static int32_t Script_GetGuildCharterCost(lua_State* L) {
 static int32_t Script_CloseGuildRegistrar(lua_State* L) {
     if (CGGuildRegistrar::m_registrar) {
         CGGameUI::ClearInteractTarget(CGGuildRegistrar::m_registrar, 0);
-        CGGuildRegistrar::m_registrar = WOWGUID();
+        CGGuildRegistrar::m_registrar.m_guid = 0;
         FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_CLOSED, NULL);
     }
 
@@ -51,7 +51,7 @@ static int32_t Script_BuyGuildCharter(lua_State* L) {
 
 // OFFSET: 0x009EB8F0/0x14077D900
 static int32_t Script_TurnInGuildCharter(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         player->TurnInGuildCharter();
@@ -62,7 +62,7 @@ static int32_t Script_TurnInGuildCharter(lua_State* L) {
 
 // OFFSET: 0x009EB920
 static int32_t Script_GetTabardInfo(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         WOWGUID registrar = CGGuildRegistrar::m_registrar;
@@ -71,7 +71,7 @@ static int32_t Script_GetTabardInfo(lua_State* L) {
 
     if (CGGuildRegistrar::m_registrar) {
         CGGameUI::ClearInteractTarget(CGGuildRegistrar::m_registrar, 0);
-        CGGuildRegistrar::m_registrar = WOWGUID();
+        CGGuildRegistrar::m_registrar.m_guid = 0;
         FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_CLOSED, NULL);
     }
 

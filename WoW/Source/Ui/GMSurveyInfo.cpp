@@ -22,7 +22,7 @@ const char* CGGMSurveyInfo::GetQuestion(int32_t index) {
     }
 
     GMSurveyCurrentSurveyRec* current = g_gmSurveyCurrentSurveyDB.GetRecord(s_locale);
-    GMSurveySurveysRec* survey = g_gmSurveySurveysDB.GetRecord(current ? current->m_gmsurveyID : 0);
+    GMSurveySurveysRec* survey = g_gmSurveySurveysDB.GetRecord(!current ? 0 : current->m_gmsurveyID);
 
     if (!survey) {
         return NULL;
@@ -150,7 +150,7 @@ void CGGMSurveyInfo::FreeAnswers() {
 
 // OFFSET: 0x009E5820/0x14077DBB0
 void CGGMSurveyInfo::SetAnswer(uint32_t index, uint8_t answer, const char* comment) {
-    if (index > 14) {
+    if (static_cast<int32_t>(index) < 0 || index >= 15) {
         return;
     }
 

@@ -71,14 +71,14 @@ static int32_t Script_DrawNone(lua_State* L) {
 // OFFSET: 0x00A00530/0x14079EB50
 static int32_t Script_EnableSmoothing(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
-    frame->m_smoothing = lua_toboolean(L, 2);
+    frame->m_smoothing = lua_toboolean(L, 2) != 0;
     return 0;
 }
 
 // OFFSET: 0x00A00580/0x14079EBB0
 static int32_t Script_EnableMerging(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
-    frame->m_merging = lua_toboolean(L, 2);
+    frame->m_merging = lua_toboolean(L, 2) != 0;
     return 0;
 }
 
@@ -102,10 +102,12 @@ static int32_t Script_SetNumSplinePoints(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
     int32_t points = lua_tointeger(L, 2);
 
-    if (points < 8) {
+    if (points >= 8) {
+        if (points > 30) {
+            points = 30;
+        }
+    } else {
         points = 8;
-    } else if (points > 30) {
-        points = 30;
     }
 
     frame->m_numSplinePoints = points;

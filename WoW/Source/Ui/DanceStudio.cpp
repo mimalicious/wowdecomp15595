@@ -287,7 +287,7 @@ static void DanceSequenceLoadCallBack(int32_t id, const WOWGUID& guid, void* par
 // OFFSET: 0x009B8240/0x140742900
 void CGDanceStudio::LoadDance(int32_t danceId) {
     g_danceCache.Invalidate(danceId);
-    WOWGUID none = WOWGUID();
+    WOWGUID none = WOWGUID::Make(0);
     DanceCache* record = g_danceCache.GetRecord(danceId, none, DanceSequenceLoadCallBack, NULL, false);
 
     if (record) {
@@ -297,7 +297,7 @@ void CGDanceStudio::LoadDance(int32_t danceId) {
 
 // OFFSET: 0x009B8290/0x140742960
 void PlayDance(const char* name) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;

@@ -23,35 +23,35 @@ static const char* s_equipmentSetIconPath = "Interface\\Icons\\";
 
 // OFFSET: 0x009A1340/0x140725A70
 static int32_t Script_EquipmentManagerIgnoreSlotForSave(lua_State* L) {
-    uint32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (slot > 18) {
-        luaL_error(L, "Usage: EquipmentManagerIgnoreSlotForSave(slot)");
+    if (static_cast<uint32_t>(slot) <= 18) {
+        CGEquipmentManager::m_ignoredSlots[slot] = 1;
         return 0;
     }
 
-    CGEquipmentManager::m_ignoredSlots[slot] = 1;
+    luaL_error(L, "Usage: EquipmentManagerIgnoreSlotForSave(slot)");
     return 0;
 }
 
 // OFFSET: 0x009A13E0/0x140725B70
 static int32_t Script_EquipmentManagerUnignoreSlotForSave(lua_State* L) {
-    uint32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (slot > 18) {
-        luaL_error(L, "Usage: UpdatePendingEquipmentSetSlot(slot)");
+    if (static_cast<uint32_t>(slot) <= 18) {
+        CGEquipmentManager::m_ignoredSlots[slot] = 0;
         return 0;
     }
 
-    CGEquipmentManager::m_ignoredSlots[slot] = 0;
+    luaL_error(L, "Usage: UpdatePendingEquipmentSetSlot(slot)");
     return 0;
 }
 
 // OFFSET: 0x009A1380/0x140725AC0
 static int32_t Script_EquipmentManagerIsSlotIgnoredForSave(lua_State* L) {
-    uint32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (slot > 18) {
+    if (static_cast<uint32_t>(slot) > 18) {
         luaL_error(L, "Usage: EquipmentSetIsSlotIgnoredForSave(slot)");
         return 0;
     }
@@ -106,7 +106,7 @@ static int32_t Script_GetEquipmentSetLocations(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;

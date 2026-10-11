@@ -134,7 +134,7 @@ static int32_t PushAuraExpiration(lua_State* L, int32_t spellID) {
 
 // OFFSET: 0x009833A0
 static int32_t PushUnitHasAura(lua_State* L, int32_t spellID) {
-    WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
+    WOWGUID guid = Script_GetGUIDFromName(lua_tolstring(L, 1, NULL));
 
     if (guid) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1244,7 +1244,7 @@ static int32_t Script_UnitHasLFGRandomCooldown(lua_State* L) {
         return 0;
     }
 
-    WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
+    WOWGUID guid = Script_GetGUIDFromName(lua_tolstring(L, 1, NULL));
 
     if (guid) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1870,7 +1870,7 @@ static int32_t Script_UnitGetAvailableRoles(lua_State* L) {
     if (!_stricmp(token, "player")) {
         classID = ClientServices::GetCharacterClass();
     } else {
-        WOWGUID guid = GetGuidByKeyword(token);
+        WOWGUID guid = Script_GetGUIDFromName(token);
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
         if (unit) {

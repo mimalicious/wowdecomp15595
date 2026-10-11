@@ -416,7 +416,7 @@ bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, voi
     if (g_useUiScaleCVar && g_useUiScaleCVar->m_intValue) {
         float scale = SStrToFloat(value);
 
-        if (CGGameUI::m_aspect * 3.0f < 4.0f && CGGameUI::m_aspect * 0.75f <= scale) {
+        if (CGGameUI::m_aspect * 3.0f < 4.0f && !(CGGameUI::m_aspect * 0.75f > scale)) {
             scale = CGGameUI::m_aspect * 0.75f;
         }
 
@@ -441,7 +441,7 @@ bool CVarHandler_useUiScale(CVar* var, const char* oldValue, const char* value, 
     if (SStrToInt(value)) {
         float scale = g_uiScaleCVar->m_floatValue;
 
-        if (CGGameUI::m_aspect * 3.0f < 4.0f && CGGameUI::m_aspect * 0.75f <= scale) {
+        if (CGGameUI::m_aspect * 3.0f < 4.0f && !(CGGameUI::m_aspect * 0.75f > scale)) {
             scale = CGGameUI::m_aspect * 0.75f;
         }
 

@@ -512,7 +512,7 @@ void CGGuildBankInfo::SwapItems(uint32_t tab, uint32_t slot, uint64_t item, uint
         return;
     }
 
-    if (object->m_item->m_itemFieldFlags & 0x8) {
+    if (static_cast<uint8_t>(object->m_item->m_itemFieldFlags >> 3) & 1) {
         CGGameUI::DisplayError(ERR_GUILD_BANK_WRAPPED_ITEM);
         return;
     }

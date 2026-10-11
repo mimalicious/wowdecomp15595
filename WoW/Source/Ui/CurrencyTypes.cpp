@@ -115,11 +115,11 @@ int32_t CGCurrencyTypes::DisplayListSortCallback(const void* a, const void* b) {
 
 // OFFSET: 0x0099FAB0/0x140723C30
 CGCurrencyTypes::CurrencyListInfo* CGCurrencyTypes::GetDisplayListInfo(uint32_t index) {
-    if (index >= CGCurrencyTypes::s_displayList.Count()) {
-        return NULL;
+    if (index < CGCurrencyTypes::s_displayList.Count()) {
+        return &CGCurrencyTypes::s_displayList[index];
     }
 
-    return &CGCurrencyTypes::s_displayList[index];
+    return NULL;
 }
 
 // OFFSET: 0x0099FAD0

@@ -133,11 +133,7 @@ CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::FindNodeByName(co
         AUTOCOMPLETE_NAMENODE* next = node->RawNext();
 
         if (!SStrCmpUTF8I(name, node->m_name, STORM_MAX_STR)) {
-            if (node->m_presenceId) {
-                if (battlenet) {
-                    return node;
-                }
-            } else if (characters) {
+            if ((node->m_presenceId && battlenet) || (!node->m_presenceId && characters)) {
                 return node;
             }
         }

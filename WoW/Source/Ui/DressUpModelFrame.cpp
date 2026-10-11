@@ -91,7 +91,7 @@ void CGDressUpModelFrame::Undress() {
     }
 
     if (this->m_dressUpComponent) {
-        for (uint32_t i = 0; i < 12; i++) {
+        for (int32_t i = 0; i < 12; i++) {
             this->m_dressUpComponent->RemoveItem(static_cast<ITEM_SLOT>(i));
         }
     }
@@ -277,7 +277,7 @@ void CGDressUpModelFrame::TryOn(int32_t itemId, const int32_t* enchants, int32_t
     }
 
     if (enchants && !visuals) {
-        for (uint32_t i = 0; i < 15; i++) {
+        for (int32_t i = 0; i < 15; i++) {
             SpellItemEnchantmentRec* enchant = g_spellItemEnchantmentDB.GetRecord(enchants[i]);
 
             if (enchant && enchant->m_itemVisual) {

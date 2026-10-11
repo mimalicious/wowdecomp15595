@@ -44,7 +44,7 @@ int32_t Packet_SMSG_DUEL_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, 
             CGGameUI::DisplayError(ERR_DUEL_CANCELLED);
         }
 
-        s_duelArbiter = WOWGUID();
+        s_duelArbiter.m_guid = 0;
         FrameScript_SignalEvent(SCRIPT_EVENT_DUEL_FINISHED, NULL);
     }
 
@@ -53,7 +53,7 @@ int32_t Packet_SMSG_DUEL_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, 
         s_countdownTimer = 0;
     }
 
-    CGDuelInfo::m_dueler = WOWGUID();
+    CGDuelInfo::m_dueler.m_guid = 0;
     return 1;
 }
 
@@ -111,7 +111,7 @@ int32_t Packet_SMSG_DUEL_REQUESTED(void* param, NETMESSAGE msgId, uint32_t time,
 
     if (FriendList::s_friendList->IsIgnored(requester, true)) {
         CGDuelInfo::CancelDuel();
-        s_duelArbiter = WOWGUID();
+        s_duelArbiter.m_guid = 0;
         return 1;
     }
 
@@ -175,7 +175,7 @@ void CGDuelInfo::ShutdownGame() {
 // OFFSET: 0x009F0710/0x14078A5A0
 void CGDuelInfo::LeaveWorld() {
     if (!CGGameUI::m_currentlyReloadingUI) {
-        s_duelArbiter = WOWGUID();
+        s_duelArbiter.m_guid = 0;
     }
 
     if (s_countdownTimer) {

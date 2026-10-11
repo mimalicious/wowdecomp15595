@@ -1230,7 +1230,7 @@ void CGCalendar::SetFilter(CVar* var, int32_t value) {
 
 // OFFSET: 0x009B37E0
 void CGCalendar::InitHolidays() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -1747,7 +1747,7 @@ bool CGCalendar::CanEditCurrentEvent() {
 
 // OFFSET: 0x009AF410
 bool CGCalendar::CanEditEvent(CalendarDayEvent* event) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && event) {
         if (event->m_type & 0x440) {
@@ -1766,7 +1766,7 @@ bool CGCalendar::CanEditEvent(CalendarDayEvent* event) {
 
 // OFFSET: 0x009AF4A0
 bool CGCalendar::CanRemoveEvent(CalendarDayEvent* event) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && event) {
         if (event->m_type & 0x440) {
@@ -2103,7 +2103,7 @@ void CGCalendar::GetCalendar() {
 
 // OFFSET: 0x009AECB0
 void CGCalendar::ProcessInviteNotes(CDataStore* msg, uint8_t* clearPending) {
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         msg->m_read = msg->m_size;
         return;
     }
@@ -2128,7 +2128,7 @@ void CGCalendar::ProcessInviteNotes(CDataStore* msg, uint8_t* clearPending) {
 
 // OFFSET: 0x009AED60
 void CGCalendar::ProcessInviteNotesAlert(CDataStore* msg) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         msg->m_read = msg->m_size;
@@ -2170,7 +2170,7 @@ void CGCalendar::AddEvent() {
 
 // OFFSET: 0x009AEEF0
 void CGCalendar::CreatePlayerEvent() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -2221,7 +2221,7 @@ void CGCalendar::CreateGuildAnnouncement() {
 
 // OFFSET: 0x009AF0E0
 void CGCalendar::CreateGuildEvent() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -2251,7 +2251,7 @@ void CGCalendar::GuildFilter(uint32_t minLevel, uint32_t maxLevel, uint32_t minR
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -2282,7 +2282,7 @@ void CGCalendar::ArenaTeam(uint32_t index) {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || index >= 3) {
         return;
@@ -2362,11 +2362,11 @@ void CGCalendar::InviteRSVP(uint32_t status) {
 
 // OFFSET: 0x009AF650
 void CGCalendar::EventSignUp() {
-    if (CGCalendar::m_actionPending || !CGCalendar::m_curEvent || !(CGCalendar::m_curEvent->m_flags & 0x400)) {
+    if (CGCalendar::m_actionPending || !CGCalendar::m_curEvent || !(static_cast<uint8_t>(CGCalendar::m_curEvent->m_flags >> 10) & 1)) {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if ((!player || !CGCalendar::GetCurrentEventInvite(player->m_obj->m_guid)) && CGCalendar::m_curEvent->SignUp(0)) {
         CGCalendar::SetActionPending(1);
@@ -2379,7 +2379,7 @@ void CGCalendar::ContextMenuInviteRemove(CalendarDayEvent* event) {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -2405,7 +2405,7 @@ void CGCalendar::ContextMenuEventSignUp(CalendarDayEvent* event, uint8_t tentati
         return;
     }
 
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return;
     }
 
@@ -2425,7 +2425,7 @@ void CGCalendar::ContextMenuEventRemove(CalendarDayEvent* event) {
         return;
     }
 
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return;
     }
 
@@ -2507,9 +2507,9 @@ bool CGCalendar::CanComplainAboutEvent(CalendarDayEvent* event) {
         return false;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    return player && CGChat::m_complaintsSystemStatus && !(event->m_type & 0x6CC) && event->m_creatorGUID != player->m_obj->m_guid && !FriendList::s_friendList->IsFriend(event->m_creatorGUID);
+    return player && CGChat::m_complaintsSystemStatus && !(event->m_type & 0x6CC) && event->m_creatorGUID.m_guid != player->m_obj->m_guid.m_guid && !FriendList::s_friendList->IsFriend(event->m_creatorGUID);
 }
 
 // OFFSET: 0x009AFC40
@@ -2524,7 +2524,7 @@ void CGCalendar::Complain(CalendarDayEvent* event) {
         if (FriendList::s_friendList->IsComplained(event->m_creatorGUID)) {
             CGCalendar::CalendarError("COMPLAINT_ADDED", 0);
             SmartGUID guid;
-            guid.m_guid = ClntObjMgrGetActivePlayerObj()->m_obj->m_guid.m_guid;
+            guid.m_guid = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->m_obj->m_guid.m_guid;
             msg.Put(static_cast<uint32_t>(CMSG_CALENDAR_EVENT_REMOVE_INVITE));
             msg << guid;
             msg.Put(event->m_inviteID);
@@ -2572,7 +2572,7 @@ CALENDAREVENTHASH::~CALENDAREVENTHASH() {
 
 // OFFSET: 0x009B23F0
 void CGCalendar::InvalidatePlayer(WOWGUID guid) {
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return;
     }
 
@@ -2673,7 +2673,7 @@ bool CGCalendar::DeletePendingInvite(uint64_t eventID) {
 
 // OFFSET: 0x009B34D0
 void CGCalendar::ProcessGetEvent(CDataStore* msg) {
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return;
     }
 
@@ -2839,7 +2839,7 @@ void CGCalendar::ProcessInviteRemoved(CDataStore* msg, uint8_t* clearPending) {
 
 // OFFSET: 0x009B4490
 void CGCalendar::ProcessInviteStatus(CDataStore* msg, uint8_t* clearPending) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         msg->m_read = msg->m_size;
@@ -2893,7 +2893,7 @@ void CGCalendar::ProcessInviteStatus(CDataStore* msg, uint8_t* clearPending) {
 
 // OFFSET: 0x009B4820
 void CGCalendar::ProcessInviteStatusAlert(CDataStore* msg) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         msg->m_read = msg->m_size;
@@ -3202,7 +3202,7 @@ void CGCalendar::ProcessInviteModeratorStatusAlert(CDataStore* msg, uint8_t* cle
         CGCalendar::m_curEvent->UpdateInviteModeratorStatus(guid, status);
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && player->m_obj->m_guid == guid) {
         CGCalendar::SetInviteFlag(eventID, 0x2, status == 1);
@@ -3305,7 +3305,7 @@ void PH_SMSG_CALENDAR_SEND_CALENDAR(CDataStore* msg) {
         *msg >> creator;
         event.m_flags = (activePlayer && creator == activePlayer) ? 0x4 : 0;
         event.m_inviteID = 0;
-        event.m_creatorGUID = WOWGUID();
+        event.m_creatorGUID.m_guid = 0;
         int32_t table;
 
         if (event.m_type & 0x440) {
@@ -3621,7 +3621,7 @@ void CGCalendar::ProcessLockoutUpdated(CDataStore* msg) {
 
 // OFFSET: 0x009B71F0
 void CGCalendar::ProcessInviteAlert(CDataStore* msg) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;

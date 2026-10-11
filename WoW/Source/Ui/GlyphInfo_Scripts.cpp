@@ -174,12 +174,12 @@ static int32_t Script_GetSelectedGlyphSpellIndex(lua_State* L) {
         }
     }
 
-    if (i < 0) {
-        return 0;
+    if (i >= 0) {
+        lua_pushinteger(L, i + 1);
+        return 1;
     }
 
-    lua_pushinteger(L, i + 1);
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009EF510/0x140788ED0
@@ -239,7 +239,7 @@ static int32_t Script_GetGlyphSocketInfo(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 0, 0, 2), 0, 0);
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (index >= 6 || !group || !player) {
         return 0;
@@ -341,7 +341,7 @@ static int32_t Script_PlaceGlyphInSocket(lua_State* L) {
     }
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (index >= 6 || !player) {
         return 0;
@@ -385,7 +385,7 @@ static int32_t Script_GetGlyphLink(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     CGTalentGroup_C* group = TalentInfoGetTalentGroup(TalentInfoGetScriptGroupIndex(L, 0, 0, 2), 0, 0);
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (index >= 9 || !player || !group) {
         return 0;

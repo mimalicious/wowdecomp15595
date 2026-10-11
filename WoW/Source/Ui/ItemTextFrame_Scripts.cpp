@@ -104,7 +104,7 @@ static int32_t Script_ItemTextGetMaterial(lua_State* L) {
 
 // OFFSET: 0x009DE4C0/0x140774680
 static int32_t Script_ItemTextPrevPage(lua_State* L) {
-    if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_currentPage) {
+    if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_currentPage > 0) {
         CGItemText::m_currentPage--;
         CGItemText::DisplayText(CGItemText::m_itemGUID, 1);
     }

@@ -206,7 +206,7 @@ static int32_t Script_CalendarContextGetEventIndex(lua_State* L) {
 
 // OFFSET: 0x009AFF90/0x1407381E0
 static int32_t Script_CalendarDefaultGuildFilter(lua_State* L) {
-    if (ClntObjMgrGetActivePlayerObj()) {
+    if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         double level = s_expansionMaxLevels[ClientServices::Connection()->m_accountExpansion];
         lua_pushnumber(L, level);
         lua_pushnumber(L, level);
@@ -437,9 +437,9 @@ static int32_t Script_CalendarEventSortInvites(lua_State* L) {
         criterion = 5;
     }
 
-    int32_t reverse = StringToBOOL(L, 2, 1);
+    bool reverse = StringToBOOL(L, 2, 1) != 0;
 
-    if (CGCalendar::m_curEvent && CGCalendar::m_curEvent->SortInvites(criterion, reverse != 0)) {
+    if (CGCalendar::m_curEvent && CGCalendar::m_curEvent->SortInvites(criterion, reverse)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_UPDATE_INVITE_LIST, NULL);
     }
 
@@ -1874,7 +1874,7 @@ static int32_t Script_CalendarGetEventInfo(lua_State* L) {
     SStrCopy(description, event->m_description, STORM_MAX_STR);
     ProfanityFilter(description, false, false);
     lua_pushstring(L, description);
-    WOWGUID key = WOWGUID();
+    WOWGUID key = WOWGUID::Make(0);
     NameCache* creator = g_nameDBCache.GetRecord(event->m_creatorGUID.m_guid, key, NameCacheCallback, NULL, false);
     lua_pushstring(L, creator ? creator->m_name : "");
     lua_pushnumber(L, static_cast<int32_t>(event->m_type + 1));

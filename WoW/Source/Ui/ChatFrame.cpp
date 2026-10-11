@@ -734,7 +734,7 @@ void CGChat::RecordChat(const char* text, int32_t type, const char* senderName, 
     if (!s_chatHistoryInitialized) {
         for (uint32_t i = 0; i < sizeof(((CGChat*)0)->m_chatHistory) / sizeof(CGChat::m_chatHistory[0]); i++) {
             ChatRecord* record = &CGChat::m_chatHistory[i];
-            record->m_senderGuid = WOWGUID();
+            record->m_senderGuid.m_guid = 0;
             record->m_senderUnk = 0;
             record->m_senderName[0] = 0;
             record->m_description[0] = 0;
@@ -1013,7 +1013,7 @@ int32_t CGChat::CanSendChannelMessage(const char* channelName) {
 
     if (channel->m_flags & 0x8) {
         int32_t cutoff = static_cast<int32_t>(time(NULL)) - 30;
-        uint32_t recent = 0;
+        int32_t recent = 0;
 
         for (uint32_t i = 0; i < sizeof(channel->m_messageTimes) / sizeof(channel->m_messageTimes[0]); i++) {
             if (channel->m_messageTimes[i] > cutoff) {
@@ -1740,9 +1740,9 @@ int32_t CGChat::ChatMessageReceived(CDataStore* msg, bool isGM) {
     bool mobile = false;
     uint8_t hideChatLog = 0;
     float displayTime = 0.0f;
-    WOWGUID senderGuid = WOWGUID();
+    WOWGUID senderGuid = WOWGUID::Make(0);
     uint32_t senderUnk = 0;
-    WOWGUID targetGuid = WOWGUID();
+    WOWGUID targetGuid = WOWGUID::Make(0);
     uint8_t type;
     uint32_t language;
     uint32_t length;
@@ -1877,7 +1877,7 @@ int32_t CGChat::ChatMessageReceived(CDataStore* msg, bool isGM) {
             CGChat::RecordWhisperDest(senderGuid);
         }
 
-        if ((type == CHAT_MSG_WHISPER || type == CHAT_MSG_BATTLENET) && (chatFlags & 0x8) && !(chatFlags & 0x4) && language != 0xFFFFFFFF && (!player || senderGuid != player->m_obj->m_guid) && (!FriendList::s_friendList || !FriendList::s_friendList->IsFriend(senderGuid)) && !CGChat::IsInWhisperHistory(senderGuid)) {
+        if ((type == CHAT_MSG_WHISPER || type == CHAT_MSG_BATTLENET) && (chatFlags & 0x8) && !(chatFlags & 0x4) && language != 0xFFFFFFFF && (!player || senderGuid.m_guid != player->m_obj->m_guid.m_guid) && (!FriendList::s_friendList || !FriendList::s_friendList->IsFriend(senderGuid)) && !CGChat::IsInWhisperHistory(senderGuid)) {
             CGChat::SendIgnoredResponse(senderGuid, 1);
             return 1;
         }
@@ -2666,12 +2666,16 @@ int32_t CGChat::OnInstanceResetFailed(void* param, NETMESSAGE msgId, uint32_t ti
         SStrPrintf(mapName, sizeof(mapName), "%d", mapId);
     }
 
-    if (!reason) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_RESET_FAILED", -1, GENDER_NOT_APPLICABLE), mapName);
-    } else if (reason == 1) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_RESET_FAILED_OFFLINE", -1, GENDER_NOT_APPLICABLE), mapName);
-    } else if (reason == 2) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_RESET_FAILED_ZONING", -1, GENDER_NOT_APPLICABLE), mapName);
+    switch (reason) {
+        case 0:
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_RESET_FAILED", -1, GENDER_NOT_APPLICABLE), mapName);
+            break;
+        case 1:
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_RESET_FAILED_OFFLINE", -1, GENDER_NOT_APPLICABLE), mapName);
+            break;
+        case 2:
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_RESET_FAILED_ZONING", -1, GENDER_NOT_APPLICABLE), mapName);
+            break;
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
@@ -3264,17 +3268,17 @@ static void UnitCombatLogShowXPGained(CGUnit_C* unit, int32_t amount, float grou
     char text[3000];
     int32_t base = static_cast<int32_t>(amount / groupMult);
 
-    if (unit && (unit->m_obj->m_type & TYPEMASK_UNIT)) {
+    if (unit && (static_cast<uint8_t>(static_cast<uint32_t>(static_cast<int16_t>(unit->m_obj->m_type)) >> 3) & 1)) {
         if (base == amount) {
             SStrPrintf(text, sizeof(text), FrameScript_GetText("COMBATLOG_XPGAIN_FIRSTPERSON", -1, GENDER_NOT_APPLICABLE), unit->GetUnitName(NULL, 1), amount);
         } else {
-            const char* token = base >= amount ? "COMBATLOG_XPGAIN_FIRSTPERSON_RAID" : "COMBATLOG_XPGAIN_FIRSTPERSON_GROUP";
+            const char* token = base < amount ? "COMBATLOG_XPGAIN_FIRSTPERSON_GROUP" : "COMBATLOG_XPGAIN_FIRSTPERSON_RAID";
             SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), unit->GetUnitName(NULL, 1), amount, abs(amount - base));
         }
     } else if (base == amount) {
         SStrPrintf(text, sizeof(text), FrameScript_GetText("COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED", -1, GENDER_NOT_APPLICABLE), amount);
     } else {
-        const char* token = base >= amount ? "COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED_RAID" : "COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED_GROUP";
+        const char* token = base < amount ? "COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED_GROUP" : "COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED_RAID";
         SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), amount, abs(amount - base));
     }
 
@@ -3348,7 +3352,7 @@ void CGChat::LogXPGain(CGUnit_C* unit, int32_t amount, int32_t type, int32_t bon
 
 // OFFSET: 0x008F91E0
 int32_t Packet_SMSG_LOG_XPGAIN(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    WOWGUID guid = WOWGUID();
+    WOWGUID guid = WOWGUID::Make(0);
     msg->Get(guid.m_guid);
     uint32_t amount = 0;
     msg->Get(amount);
@@ -3688,7 +3692,7 @@ PENDINGCHAT::~PENDINGCHAT() {
     }
 
     if (this->m_conversation) {
-        delete this->m_conversation;
+        SMemFree(this->m_conversation, "delete", -1, 0);
     }
 }
 
@@ -4425,9 +4429,7 @@ void CGChat::LogDismissPet(const WOWGUID& guid, const WOWGUID& pet) {
         const char* petName = GetCombatLogObjectName(pet);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("SPELLDISMISSPETSELF", -1, GENDER_NOT_APPLICABLE), petName);
     } else {
-        const char* petName = GetCombatLogObjectName(pet);
-        const char* name = GetCombatLogObjectName(guid);
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("SPELLDISMISSPETOTHER", -1, GENDER_NOT_APPLICABLE), name, petName);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("SPELLDISMISSPETOTHER", -1, GENDER_NOT_APPLICABLE), GetCombatLogObjectName(guid), GetCombatLogObjectName(pet));
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_PET_INFO, NULL);
@@ -5120,7 +5122,11 @@ const char* CGChat::GetChannelShortName(int32_t number, bool includeInactive) {
 
     ChatChannel* channel = &CGChat::s_channels.m_data[number - 1];
 
-    if (channel->m_channelNumber != number || (!includeInactive && channel->m_unk9C)) {
+    if (channel->m_channelNumber != number) {
+        return NULL;
+    }
+
+    if (!includeInactive && channel->m_unk9C) {
         return NULL;
     }
 
@@ -5638,8 +5644,8 @@ int32_t CGChat::OnDisplayChannelList(CDataStore* msg) {
             }
         }
 
-        if (ClntObjMgrGetActivePlayer() && ClntObjMgrGetActivePlayerObj()->m_obj->m_guid) {
-            if (user->m_guid == ClntObjMgrGetActivePlayerObj()->m_obj->m_guid) {
+        if (ClntObjMgrGetActivePlayer() && static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->m_obj->m_guid) {
+            if (user->m_guid == static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->m_obj->m_guid) {
                 s_activeDisplayChannelFlags = user->m_flags;
 
                 if (index) {
@@ -5816,13 +5822,17 @@ static void RebuildDisplayListMember(PENDINGUSERLIST* user, int32_t type, const 
 
 // OFFSET: 0x008EB080
 bool CGChat::CanComplain(WOWGUID guid) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
     }
 
-    if (guid == player->m_obj->m_guid || (FriendList::s_friendList && FriendList::s_friendList->IsFriend(guid))) {
+    if (guid == player->m_obj->m_guid) {
+        return false;
+    }
+
+    if (FriendList::s_friendList && FriendList::s_friendList->IsFriend(guid)) {
         return false;
     }
 
@@ -5850,14 +5860,17 @@ void CGChat::VoiceSessionUpdate(const char* name, int32_t type) {
 void CGChat::NewVoiceSession(const char* name, int32_t type) {
     uint32_t index = CGChat::FindDisplayChannelIndex(name, type);
 
-    if (!index) {
+    if (!(index > 0)) {
         return;
     }
 
-    CGChat::s_displayChannels[index - 1].m_voiceEnabled = 1;
+    index--;
+    CGChat::s_displayChannels[index].m_voiceEnabled = 1;
+    int32_t active = s_activeVoiceChannel == static_cast<int32_t>(index);
+    index++;
 
-    if (s_activeVoiceChannel == static_cast<int32_t>(index - 1)) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_CHANNEL_VOICE_UPDATE, "%d%d%d", index, 1, 1);
+    if (active) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_CHANNEL_VOICE_UPDATE, "%d%d%d", index, 1, active);
     } else {
         FrameScript_SignalEvent(SCRIPT_EVENT_CHANNEL_VOICE_UPDATE, "%d%d", index, 1);
     }
@@ -5868,11 +5881,13 @@ int32_t CGChat::OnVoiceStatusChanged(void* param, NETMESSAGE msgId, uint32_t tim
     uint8_t status;
     msg->Get(status);
 
-    if (CGChat::m_voiceChatSystemStatus == (status != 0)) {
+    int32_t enabled = status != 0;
+
+    if (CGChat::m_voiceChatSystemStatus == enabled) {
         return 1;
     }
 
-    if (status) {
+    if (enabled) {
         CGChat::m_voiceChatSystemStatus = 1;
 
         if (CGGameUI::m_initialized) {
@@ -5895,7 +5910,7 @@ int32_t CGChat::OnVoiceStatusChanged(void* param, NETMESSAGE msgId, uint32_t tim
         FrameScript_SignalEvent(SCRIPT_EVENT_VOICE_CHAT_ENABLED_UPDATE, NULL);
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -5919,7 +5934,7 @@ void CGChat::SilencePartyMember(bool silence, const char* name) {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -6241,7 +6256,7 @@ int32_t CGChat::OnTitleEarned(void* param, NETMESSAGE msgId, uint32_t time, CDat
     uint32_t earned;
     msg->Get(titleId);
     msg->Get(earned);
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CharTitlesRec* title = g_charTitlesDB.GetRecord(CGUnit_C::GetRecordForTitle(titleId));
 
     if (!player || !title) {

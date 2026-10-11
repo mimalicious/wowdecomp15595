@@ -49,7 +49,7 @@ void CGGuildRegistrar::CloseRegistrar() {
     }
 
     CGGameUI::ClearInteractTarget(CGGuildRegistrar::m_registrar, 0);
-    CGGuildRegistrar::m_registrar = WOWGUID();
+    CGGuildRegistrar::m_registrar.m_guid = 0;
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_CLOSED, NULL);
 }
 
@@ -72,7 +72,7 @@ void CGGuildRegistrar::BuyGuildCharter(const char* name) {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;

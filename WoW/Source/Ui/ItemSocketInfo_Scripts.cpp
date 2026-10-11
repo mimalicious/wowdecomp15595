@@ -189,7 +189,7 @@ static int32_t Script_GetExistingSocketLink(lua_State* L) {
         return 0;
     }
 
-    WOWGUID requester = WOWGUID();
+    WOWGUID requester = WOWGUID::Make(0);
     ItemRecSparse* rec = g_itemSparseDB.GetRecord(enchant->m_srcItemID, requester, &EnchantItemCacheCallback, NULL, false);
 
     if (!rec) {

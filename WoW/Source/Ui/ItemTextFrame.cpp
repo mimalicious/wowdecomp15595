@@ -148,7 +148,7 @@ void CGItemText::SetItem(const WOWGUID& guid, int32_t a2) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (!object) {
-        CGItemText::m_itemGUID = WOWGUID();
+        CGItemText::m_itemGUID.m_guid = 0;
         return;
     }
 

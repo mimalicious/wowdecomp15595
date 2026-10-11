@@ -11,6 +11,7 @@
 #include "WoW/Source/Client.h"
 #include "WoW/Source/Game/ValidateName.h"
 #include "Engine/Source/Base/Coordinate.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Frame/CLayoutFrame.h"
 #include "Engine/Source/Frame/CScriptRegion.h"
 #include "Engine/Source/Frame/CSimpleTop.h"
@@ -57,7 +58,7 @@ void CGChatBubbleFrame::FadeIn() {
 
     uint8_t alpha = this->m_alpha;
     this->m_bubbleFlags = (this->m_bubbleFlags & ~0x3) | 0x1;
-    this->m_fadeStart = OsGetAsyncTimeMs() - static_cast<int32_t>(alpha * (1.0f / 255.0f) * 250.0f);
+    this->m_fadeStart = FrameTime::GetCurTimeMs() - static_cast<int32_t>(alpha * (1.0f / 255.0f) * 250.0f);
 }
 
 // OFFSET: 0x009F0D50
@@ -76,7 +77,7 @@ void CGChatBubbleFrame::FadeOut(bool remove) {
 
     uint8_t alpha = this->m_alpha;
     this->m_bubbleFlags = (this->m_bubbleFlags & ~0x3) | 0x2;
-    this->m_fadeStart = OsGetAsyncTimeMs() - static_cast<int32_t>((255.0f - alpha) * (1.0f / 255.0f) * 250.0f);
+    this->m_fadeStart = FrameTime::GetCurTimeMs() - static_cast<int32_t>((255.0f - alpha) * (1.0f / 255.0f) * 250.0f);
 }
 
 // PROVEN: 2f74ebde IDENTICAL/NONE
@@ -178,7 +179,7 @@ bool CGChatBubbleFrame::Update(CGUnit_C* player, CGUnit_C* unit) {
         this->FadeOut(false);
     }
 
-    uint32_t now = OsGetAsyncTimeMs();
+    uint32_t now = FrameTime::GetCurTimeMs();
 
     if (!(this->m_bubbleFlags & 0x2) && static_cast<int32_t>(now - this->m_showTime) > this->m_duration + 250) {
         this->FadeOut(true);
@@ -258,7 +259,7 @@ void CGChatBubbleFrame::Initialize(const WOWGUID& unit, const char* text, const 
     this->m_positionValid = 0;
     this->m_height = 0.0f;
     this->m_worldPosition = C3Vector(0.0f, 0.0f, 0.0f);
-    this->m_showTime = OsGetAsyncTimeMs();
+    this->m_showTime = FrameTime::GetCurTimeMs();
     this->m_duration = ComputeDuration(buffer, unit == ClntObjMgrGetActivePlayer());
     this->m_bubbleFlags = 0x8;
     this->m_unit = unit;

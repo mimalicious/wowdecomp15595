@@ -135,7 +135,7 @@ static int32_t Script_GetMasterLootCandidate(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1));
     WOWGUID guid = GetMasterLootCandidate(index - 1);
     NameCache* name;
 
@@ -155,7 +155,7 @@ static int32_t Script_GetLootRollTimeLeft(lua_State* L) {
         return 0;
     }
 
-    PendingLootRoll* roll = FindRoll(static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
+    PendingLootRoll* roll = FindRoll(static_cast<uint32_t>(lua_tonumber(L, 1)));
     double timeLeft;
 
     if (roll) {
@@ -176,8 +176,8 @@ static int32_t Script_RollOnLoot(lua_State* L) {
     }
 
     int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
-    double rollType = lua_tonumber(L, 2);
-    LootRoll(id, static_cast<int32_t>(rollType), false);
+    int32_t rollType = static_cast<int32_t>(lua_tonumber(L, 2));
+    LootRoll(id, rollType, false);
     return 0;
 }
 
@@ -188,9 +188,9 @@ static int32_t Script_ConfirmLootRoll(lua_State* L) {
         return 0;
     }
 
-    int32_t id = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
-    double rollType = lua_tonumber(L, 2);
-    LootRoll(id, static_cast<int32_t>(rollType), true);
+    int32_t id = static_cast<int32_t>(static_cast<uint32_t>(lua_tonumber(L, 1)));
+    int32_t rollType = static_cast<int32_t>(lua_tonumber(L, 2));
+    LootRoll(id, rollType, true);
     return 0;
 }
 
@@ -212,7 +212,7 @@ static int32_t Script_SetLootPortrait(lua_State* L) {
 
 // OFFSET: 0x0095A5D0/0x1406CCC90
 static int32_t Script_GetNumMissingLootItems(lua_State* L) {
-    lua_pushnumber(L, CGLootInfo::m_missingItems.m_count);
+    lua_pushnumber(L, static_cast<int32_t>(CGLootInfo::m_missingItems.m_count));
     return 1;
 }
 
@@ -223,8 +223,8 @@ static int32_t Script_GiveMasterLoot(lua_State* L) {
         return 0;
     }
 
-    uint32_t slot = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
-    int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 2)));
+    uint32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 2));
     WOWGUID guid = GetMasterLootCandidate(index - 1);
 
     if (guid.m_guid) {
@@ -321,13 +321,12 @@ static int32_t Script_GetLootSlotLink(lua_State* L) {
         return 0;
     }
 
-    int32_t slot = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    int32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1));
     char buffer[1024];
     lua_pushstring(L, CGLootInfo::GetLootSlotLink(slot - 1, buffer, sizeof(buffer)));
     return 1;
 }
 
-// PROVEN: 445ecabf IDENTICAL/NONE
 // OFFSET: 0x0095B240/0x1406CDBD0
 static int32_t Script_LootSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -335,12 +334,11 @@ static int32_t Script_LootSlot(lua_State* L) {
         return 0;
     }
 
-    int32_t slot = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    int32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1));
     CGLootInfo::LootSlot(slot - 1);
     return 0;
 }
 
-// PROVEN: 772a6e4e IDENTICAL/NONE
 // OFFSET: 0x0095B2B0/0x1406CDC20
 static int32_t Script_ConfirmLootSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -348,7 +346,7 @@ static int32_t Script_ConfirmLootSlot(lua_State* L) {
         return 0;
     }
 
-    int32_t slot = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    int32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1));
     CGLootInfo::ConfirmLootSlot(slot - 1);
     return 0;
 }
@@ -432,7 +430,7 @@ static int32_t Script_GetLootRollItemLink(lua_State* L) {
         return 0;
     }
 
-    WOWGUID requester = WOWGUID();
+    WOWGUID requester = WOWGUID::Make(0);
     ItemRecSparse* rec = g_itemSparseDB.GetRecord(roll->m_itemId, requester, NULL, NULL, false);
 
     if (!rec) {
@@ -450,7 +448,7 @@ static int32_t Script_GetMissingLootItemInfo(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1));
     MissingLootItem* missing;
     ItemRecSparse* rec;
     WOWGUID requester = WOWGUID();
@@ -483,7 +481,7 @@ static int32_t Script_GetMissingLootItemLink(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1));
 
     if (index - 1 >= CGLootInfo::m_missingItems.m_count) {
         return 0;
@@ -495,7 +493,7 @@ static int32_t Script_GetMissingLootItemLink(lua_State* L) {
         return 0;
     }
 
-    WOWGUID requester = WOWGUID();
+    WOWGUID requester = WOWGUID::Make(0);
     ItemRecSparse* rec = g_itemSparseDB.GetRecord(missing->m_itemId, requester, NULL, NULL, false);
 
     if (!rec) {

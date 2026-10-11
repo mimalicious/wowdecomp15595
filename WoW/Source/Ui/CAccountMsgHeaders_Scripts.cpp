@@ -30,14 +30,14 @@ static int32_t Script_AccountMsg_GetHeaderSubject(lua_State* L) {
         return 0;
     }
 
-    double index = lua_tonumber(L, 1);
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
 
-    if (index < 0.0 || index >= g_accountMsgHeaders.m_count) {
+    if (index < 0 || index >= g_accountMsgHeaders.m_count) {
         luaL_error(L, "Usage: AccountMsg_GetHeaderSubject(number) failed because the number is out of range");
         return 0;
     }
 
-    lua_pushstring(L, g_accountMsgHeaders.GetHeaderSubject(static_cast<int32_t>(index)));
+    lua_pushstring(L, g_accountMsgHeaders.GetHeaderSubject(index));
     return 1;
 }
 
@@ -53,14 +53,14 @@ static int32_t Script_AccountMsg_GetHeaderPriority(lua_State* L) {
         return 0;
     }
 
-    double index = lua_tonumber(L, 1);
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
 
-    if (index < 0.0 || index >= g_accountMsgHeaders.m_count) {
+    if (index < 0 || index >= g_accountMsgHeaders.m_count) {
         luaL_error(L, "Usage: AccountMsg_GetHeaderPriority(number) failed because the number is out of range");
         return 0;
     }
 
-    lua_pushnumber(L, g_accountMsgHeaders.GetHeaderPriority(static_cast<int32_t>(index)));
+    lua_pushnumber(L, g_accountMsgHeaders.GetHeaderPriority(index));
     return 1;
 }
 
@@ -76,14 +76,14 @@ static int32_t Script_AccountMsg_LoadBody(lua_State* L) {
         return 0;
     }
 
-    double index = lua_tonumber(L, 1);
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
 
-    if (index < 0.0 || index >= g_accountMsgHeaders.m_count) {
+    if (index < 0 || index >= g_accountMsgHeaders.m_count) {
         luaL_error(L, "Usage: AccountMsg_LoadBody(number) failed because the number is out of range");
         return 0;
     }
 
-    if (!g_accountMsgBody.LoadBody(g_accountMsgHeaders.GetMessageId(static_cast<int32_t>(index)))) {
+    if (!g_accountMsgBody.LoadBody(g_accountMsgHeaders.GetMessageId(index))) {
         luaL_error(L, "AccountMsg_LoadHeaders() failed");
         return 0;
     }

@@ -610,11 +610,11 @@ CUFProfileInfo* CGCUFProfiles::GetProfile(const char* name) {
 bool CGCUFProfiles::HasUnsavedChanges() {
     CUFProfileInfo* profile = CGCUFProfiles::GetProfile(CGCUFProfiles::s_savedName);
 
-    if (!profile) {
-        return false;
+    if (profile) {
+        return memcmp(&profile->m_options, &CGCUFProfiles::s_savedOptions, sizeof(CUFFRAMEOPTIONS)) != 0 || memcmp(&CGCUFProfiles::s_savedAutoActivate, &profile->m_autoActivate, sizeof(CUFAUTOACTIVATE)) != 0;
     }
 
-    return memcmp(&profile->m_options, &CGCUFProfiles::s_savedOptions, sizeof(CUFFRAMEOPTIONS)) != 0 || memcmp(&CGCUFProfiles::s_savedAutoActivate, &profile->m_autoActivate, sizeof(CUFAUTOACTIVATE)) != 0;
+    return false;
 }
 
 // OFFSET: 0x009C8E50/0x1407579B0

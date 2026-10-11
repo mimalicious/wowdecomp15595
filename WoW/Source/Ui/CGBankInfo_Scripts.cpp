@@ -23,15 +23,14 @@ static int32_t Script_BankButtonIDToInvSlotID(lua_State* L) {
     }
 
     int32_t button = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t slot;
 
     if (lua_isnumber(L, 2)) {
-        slot = button + 63;
+        button += 63;
     } else {
-        slot = button + 39;
+        button += 39;
     }
 
-    lua_pushnumber(L, slot + 1);
+    lua_pushnumber(L, button + 1);
     return 1;
 }
 
@@ -41,10 +40,10 @@ static int32_t Script_GetNumBankSlots(lua_State* L) {
     int32_t slots = player ? player->m_player->m_playerBytes2[2] : 0;
     lua_pushnumber(L, slots);
 
-    if (slots < 7) {
-        lua_pushnil(L);
-    } else {
+    if (slots >= 7) {
         lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
     }
 
     return 2;
@@ -54,7 +53,7 @@ static int32_t Script_GetNumBankSlots(lua_State* L) {
 static int32_t Script_GetBankSlotCost(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     const BankBagSlotPricesRec* rec;
-    int32_t cost;
+    uint32_t cost;
 
     if (player && (rec = g_bankBagSlotPricesDB.GetRecord(player->m_player->m_playerBytes2[2] + 1))) {
         cost = rec->m_cost;

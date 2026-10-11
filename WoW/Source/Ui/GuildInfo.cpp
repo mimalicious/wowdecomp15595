@@ -208,17 +208,11 @@ TSList<CGGuildInfo::GuildProfessionHeader, TSGetLink<CGGuildInfo::GuildProfessio
 
 // OFFSET: 0x0044BB90/0x140059250
 uint32_t CGGuildInfo::GetNumMembers(int32_t includeOffline) {
-    if (CGGuildInfo::m_showOffline) {
-        return CGGuildInfo::m_numMembers;
+    if (!CGGuildInfo::m_showOffline && !includeOffline) {
+        return CGGuildInfo::m_numOnline;
     }
 
-    uint32_t count = CGGuildInfo::m_numOnline;
-
-    if (includeOffline) {
-        count = CGGuildInfo::m_numMembers;
-    }
-
-    return count;
+    return CGGuildInfo::m_numMembers;
 }
 
 // PROVEN: 9fb711da IDENTICAL/NONE
@@ -1762,7 +1756,7 @@ bool CGGuildInfo::ClientGuildInviteHandler(ClientGuildInvite* msg) {
         return true;
     }
 
-    if (player->m_player->m_playerFlags & 0x8000000) {
+    if (static_cast<uint8_t>(player->m_player->m_playerFlags >> 27) & 1) {
         GlobalGuildAutoDeclineInvitation decline;
         ClientServices::Send(&decline);
         return true;

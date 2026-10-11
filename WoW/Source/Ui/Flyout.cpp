@@ -42,7 +42,7 @@ void CFlyout::DelKnownSpellInternal(int32_t spellId) {
 
 // OFFSET: 0x009A3F10/0x140729690
 void CFlyout::AddKnownSpellInternal(int32_t spellId) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -54,18 +54,14 @@ void CFlyout::AddKnownSpellInternal(int32_t spellId) {
         return;
     }
 
-    bool changed = false;
+    int32_t changed = 0;
     this->m_numKnownSpells = 0;
-
-    if (!this->m_slots.m_count) {
-        return;
-    }
 
     for (uint32_t i = 0; i < this->m_slots.m_count; i++) {
         Slot& slot = this->m_slots.m_data[i];
 
         if (slot.m_rec->m_spellID == spellId && !slot.m_known) {
-            changed = true;
+            changed = 1;
             slot.m_known = 1;
         }
 
@@ -121,15 +117,13 @@ CFlyout* CFlyout::GetByID(int32_t id) {
 int32_t CFlyout::FindFlyoutForSpell(int32_t spellId) {
     SpellToFlyoutMapItem* item = s_spellToFlyout.Ptr(spellId, HASHKEY_NONE());
 
-    if (!item) {
-        return 0;
-    }
+    if (item) {
+        for (uint32_t i = 0; i < item->m_flyouts.m_count; i++) {
+            CFlyout* flyout = item->m_flyouts.m_data[i];
 
-    for (uint32_t i = 0; i < item->m_flyouts.m_count; i++) {
-        CFlyout* flyout = item->m_flyouts.m_data[i];
-
-        if (flyout && flyout->m_numKnownSpells) {
-            return flyout->m_rec ? flyout->m_rec->m_id : 0;
+            if (flyout && flyout->m_numKnownSpells) {
+                return flyout->m_rec ? flyout->m_rec->m_id : 0;
+            }
         }
     }
 
@@ -140,26 +134,26 @@ int32_t CFlyout::FindFlyoutForSpell(int32_t spellId) {
 bool CFlyout::AddKnownSpell(int32_t spellId) {
     SpellToFlyoutMapItem* item = s_spellToFlyout.Ptr(spellId, HASHKEY_NONE());
 
-    if (!item) {
-        return false;
-    }
+    if (item) {
+        for (uint32_t i = 0; i < item->m_flyouts.m_count; i++) {
+            CFlyout* flyout = item->m_flyouts.m_data[i];
 
-    for (uint32_t i = 0; i < item->m_flyouts.m_count; i++) {
-        CFlyout* flyout = item->m_flyouts.m_data[i];
+            if (!flyout) {
+                continue;
+            }
 
-        if (!flyout) {
-            continue;
+            uint32_t known = flyout->m_numKnownSpells;
+            flyout->AddKnownSpellInternal(spellId);
+
+            if (flyout->m_numKnownSpells && !known) {
+                CGSpellBook::AddFlyout(flyout->m_rec ? flyout->m_rec->m_id : 0, spellId);
+            }
         }
 
-        uint32_t known = flyout->m_numKnownSpells;
-        flyout->AddKnownSpellInternal(spellId);
-
-        if (flyout->m_numKnownSpells && !known) {
-            CGSpellBook::AddFlyout(flyout->m_rec ? flyout->m_rec->m_id : 0, spellId);
-        }
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 // OFFSET: 0x009A4270
@@ -171,8 +165,10 @@ void CFlyout::DelKnownSpell(int32_t spellId) {
     }
 
     for (uint32_t i = 0; i < item->m_flyouts.m_count; i++) {
-        if (item->m_flyouts.m_data[i]) {
-            item->m_flyouts.m_data[i]->DelKnownSpellInternal(spellId);
+        CFlyout* flyout = item->m_flyouts.m_data[i];
+
+        if (flyout) {
+            flyout->DelKnownSpellInternal(spellId);
         }
     }
 }
@@ -223,7 +219,7 @@ void CFlyout::InitializeGame() {
 
         *item->m_flyouts.New() = flyout;
         flyout->AddSlot(rec);
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (player && player->IsSpellKnown(rec->m_spellID)) {
             flyout->AddKnownSpellInternal(rec->m_spellID);

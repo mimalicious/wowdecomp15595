@@ -94,7 +94,7 @@ void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t trainerID, int32
     if (!trainer) {
         FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_CLOSED, NULL);
         CGGameUI::ClearInteractTarget(CGClassTrainer::m_trainer, 0);
-        CGClassTrainer::m_trainer = WOWGUID();
+        CGClassTrainer::m_trainer.m_guid = 0;
         CGClassTrainer::m_numServices = 0;
         return;
     }
@@ -212,11 +212,11 @@ static int32_t QSortServices_Tradeskill(const void* a, const void* b) {
 
 // OFFSET: 0x009B9560
 TrainerServiceInfo* CGClassTrainer::GetService(uint32_t index) {
-    if (index < CGClassTrainer::m_numServices) {
-        return CGClassTrainer::m_services.m_data[index];
+    if (index >= CGClassTrainer::m_numServices) {
+        return NULL;
     }
 
-    return NULL;
+    return CGClassTrainer::m_services.m_data[index];
 }
 
 // PROVEN: b695dbba IDENTICAL/NONE
@@ -364,7 +364,11 @@ void CGClassTrainer::SetServiceTypeFilter(int32_t filter) {
 // OFFSET: 0x009BA450
 void CGClassTrainer::ShutdownGame() {
     for (uint32_t i = 0; i < CGClassTrainer::m_services.m_count; i++) {
-        delete CGClassTrainer::m_services.m_data[i];
+        TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
+
+        if (service) {
+            SMemFree(service, "delete", -1, 0);
+        }
     }
 
     CGClassTrainer::m_services.m_count = 0;

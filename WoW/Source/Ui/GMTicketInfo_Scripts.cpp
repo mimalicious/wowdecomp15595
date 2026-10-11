@@ -64,8 +64,8 @@ static int32_t Script_GMSurveyAnswerSubmit(lua_State* L) {
         return 0;
     }
 
-    uint32_t question = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t rank = static_cast<int32_t>(lua_tonumber(L, 2));
+    uint32_t question = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t rank = static_cast<uint32_t>(lua_tonumber(L, 2));
     const char* comment = lua_tolstring(L, 3, NULL);
 
     if (question >= 15) {
@@ -116,10 +116,10 @@ static int32_t Script_GMSurveyAnswer(lua_State* L) {
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
-    double answerIndex = lua_tonumber(L, 2);
+    int32_t answerIndex = static_cast<int32_t>(lua_tonumber(L, 2));
     const char* answer;
 
-    if (index >= 1 && static_cast<uint32_t>(index) <= 15 && (answer = CGGMSurveyInfo::GetAnswer(index, static_cast<int32_t>(answerIndex)))) {
+    if (index >= 1 && static_cast<uint32_t>(index) <= 15 && (answer = CGGMSurveyInfo::GetAnswer(index, answerIndex))) {
         lua_pushstring(L, answer);
     } else {
         lua_pushnil(L);
@@ -167,7 +167,8 @@ static int32_t Script_NewGMTicket(lua_State* L) {
 
     if (CGGameUI::CanPerformAction(17)) {
         const char* text = lua_tolstring(L, 1, NULL);
-        CGGMTicketInfo::CreateTicket(text, lua_toboolean(L, 2), 0);
+        int32_t needResponse = lua_toboolean(L, 2);
+        CGGMTicketInfo::CreateTicket(text, needResponse, 0);
     }
 
     return 0;
@@ -202,7 +203,8 @@ static int32_t Script_GMResponseNeedMoreHelp(lua_State* L) {
     }
 
     if (CGGameUI::CanPerformAction(17)) {
-        CGGMTicketInfo::CreateTicket(lua_tolstring(L, 1, NULL), 1, 1);
+        const char* text = lua_tolstring(L, 1, NULL);
+        CGGMTicketInfo::CreateTicket(text, 1, 1);
     }
 
     return 0;

@@ -1299,7 +1299,7 @@ static int32_t Script_GetGuildBankTabPermissions(lua_State* L) {
         return 0;
     }
 
-    uint32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     uint32_t flags = CGGuildInfo::GetTabFlagsForSelectedRank(tab);
 
     if (flags & 0x1) {
@@ -1362,9 +1362,9 @@ static int32_t Script_SetGuildBankTabItemWithdraw(lua_State* L) {
         return 0;
     }
 
-    uint32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (tab < 8) {
+    if (static_cast<uint32_t>(tab) < 8) {
         int32_t amount = static_cast<int32_t>(lua_tonumber(L, 2));
 
         if (amount >= 0) {
@@ -1762,7 +1762,8 @@ static int32_t Script_CanViewGuildRecipes(lua_State* L) {
     }
 
     HASHKEY_NONE key;
-    CGGuildInfo::GuildRecipesKnown* recipes = CGGuildInfo::m_guildRecipesKnown.Ptr(static_cast<int32_t>(lua_tonumber(L, 1)), key);
+    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1));
+    CGGuildInfo::GuildRecipesKnown* recipes = CGGuildInfo::m_guildRecipesKnown.Ptr(slot, key);
     lua_pushboolean(L, recipes && recipes->m_canView);
     return 1;
 }
@@ -1815,8 +1816,8 @@ static int32_t Script_QueryGuildMembersForRecipe(lua_State* L) {
 
 // OFFSET: 0x00934D60/0x14069D6F0
 static int32_t Script_GetGuildRecipeInfoPostQuery(lua_State* L) {
-    uint32_t count = CGGuildInfo::m_knownRecipeMembers.Count();
     int32_t spellID = CGGuildInfo::m_knownRecipeSpellID;
+    uint32_t count = CGGuildInfo::m_knownRecipeMembers.Count();
     lua_pushinteger(L, CGGuildInfo::m_knownRecipeSkillLineID);
     lua_pushinteger(L, spellID);
     lua_pushinteger(L, count);

@@ -142,7 +142,7 @@ static int32_t Script_GetAuctionInvTypes(lua_State* L) {
     }
 
     uint32_t classIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t subClass = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
+    int32_t subClass = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
 
     if (classIndex >= 10 || !s_auctionClasses[classIndex].m_hasSubClasses) {
         return 0;
@@ -589,7 +589,7 @@ static int32_t Script_GetAuctionItemLink(lua_State* L) {
         return 0;
     }
 
-    WOWGUID none = WOWGUID();
+    WOWGUID none = WOWGUID::Make(0);
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(auction->m_itemID, none, NULL, NULL, false);
 
     if (!stats) {
@@ -709,7 +709,7 @@ static int32_t Script_CalculateAuctionDeposit(lua_State* L) {
     int32_t count;
 
     if (lua_isnumber(L, 2)) {
-        count = static_cast<int32_t>(lua_tonumber(L, 2));
+        count = static_cast<uint32_t>(lua_tonumber(L, 2));
     } else {
         count = item->m_item->m_itemFieldStackCount;
     }
@@ -770,7 +770,7 @@ static int32_t Script_GetBidderAuctionItems(lua_State* L) {
         int32_t page = 0;
 
         if (lua_isnumber(L, 1)) {
-            page = 50 * static_cast<int32_t>(lua_tonumber(L, 1));
+            page = 50 * static_cast<uint32_t>(lua_tonumber(L, 1));
         }
 
         BidderListItems(page);
@@ -1078,7 +1078,7 @@ static int32_t Script_PlaceAuctionBid(lua_State* L) {
         return 0;
     }
 
-    WOWGUID none = WOWGUID();
+    WOWGUID none = WOWGUID::Make(0);
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(auction->m_itemID, none, NULL, NULL, false);
 
     if (stats && !player->GetBag()->ItemCountValid(auction->m_itemID, stats, auction->m_count, true)) {

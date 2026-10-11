@@ -11,8 +11,7 @@
 
 // OFFSET: 0x009F05D0/0x14078A3E0
 static int32_t Script_StartDuel(lua_State* L) {
-    int32_t exact = StringToBOOL(L, 2, 0);
-    WOWGUID guid = CGGameUI::ClosestObjectMatch(lua_tolstring(L, 1, NULL), TYPEMASK_PLAYER, 0, exact, FLT_MAX, 0);
+    WOWGUID guid = CGGameUI::ClosestObjectMatch(lua_tolstring(L, 1, NULL), TYPEMASK_PLAYER, 0, StringToBOOL(L, 2, 0), FLT_MAX, 0);
 
     if (guid) {
         Spell_C_CastSpell(CGSpellBook::m_duelSpell, NULL, guid, false);

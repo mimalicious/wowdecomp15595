@@ -24,7 +24,7 @@ void CGBankInfo::SetBanker(const WOWGUID& banker) {
     if (!banker) {
         FrameScript_SignalEvent(SCRIPT_EVENT_BANKFRAME_CLOSED, NULL);
         CGGameUI::ClearInteractTarget(CGBankInfo::m_banker, 0);
-        CGBankInfo::m_banker = WOWGUID();
+        CGBankInfo::m_banker.m_guid = 0;
         return;
     }
 

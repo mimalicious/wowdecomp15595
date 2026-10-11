@@ -242,7 +242,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
             return 0;
         }
 
-        if (!(player->m_player->m_playerFlags & 0x8) && !(player->m_player->m_playerFlags & 0x80000) && !CGChat::CanSendChannelMessage(target)) {
+        if (!(static_cast<uint8_t>(player->m_player->m_playerFlags >> 3) & 1) && !(static_cast<uint8_t>(player->m_player->m_playerFlags >> 19) & 1) && !CGChat::CanSendChannelMessage(target)) {
             ChatMessageParams params;
             params.m_channelName = target;
             CGChat::AddChatMessage("THROTTLED", CHAT_MSG_CHANNEL_NOTICE, &params);
@@ -325,7 +325,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
         escape = SStrChr(next, '|');
     }
 
-    if ((type == CHAT_MSG_WHISPER || type == CHAT_MSG_CHANNEL || type == CHAT_MSG_BATTLENET) && language != 0xFFFFFFFF && !(player->m_player->m_playerFlags & 0x8) && !(player->m_player->m_playerFlags & 0x80000)) {
+    if ((type == CHAT_MSG_WHISPER || type == CHAT_MSG_CHANNEL || type == CHAT_MSG_BATTLENET) && language != 0xFFFFFFFF && !(static_cast<uint8_t>(player->m_player->m_playerFlags >> 3) & 1) && !(static_cast<uint8_t>(player->m_player->m_playerFlags >> 19) & 1)) {
         CGChat::ProcessThrottledChat();
 
         if (type == CHAT_MSG_WHISPER || type == CHAT_MSG_BATTLENET) {
@@ -408,18 +408,18 @@ static int32_t Script_ClearChannelWatch(lua_State* L) {
 static int32_t Script_GetDefaultLanguage(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player) {
-        return 0;
+    if (player) {
+        const LanguagesRec* rec = g_languagesDB.GetRecord(player->GetDefaultLanguage());
+
+        if (!rec) {
+            return 0;
+        }
+
+        lua_pushstring(L, rec->m_name);
+        return 1;
     }
 
-    const LanguagesRec* rec = g_languagesDB.GetRecord(player->GetDefaultLanguage());
-
-    if (!rec) {
-        return 0;
-    }
-
-    lua_pushstring(L, rec->m_name);
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x008E9080/0x140617860
@@ -432,7 +432,7 @@ static void ChannelDisplayCommand(lua_State* L, uint32_t msgId, const char* name
     }
 
     int32_t type;
-    const char* channel = CGChat::GetChannelStringForDisplay(static_cast<int32_t>(lua_tonumber(L, 1)) - 1, &type);
+    const char* channel = CGChat::GetChannelStringForDisplay(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1, &type);
 
     if (!channel || type) {
         return;
@@ -719,7 +719,7 @@ static int32_t Script_GetNumLanguages(lua_State* L) {
         return 0;
     }
 
-    int32_t count = 0;
+    uint32_t count = 0;
     int32_t numRecords = g_languagesDB.m_numRecords;
 
     for (int32_t i = 0; i < numRecords; i++) {
@@ -748,7 +748,7 @@ static int32_t Script_GetLanguageByIndex(lua_State* L) {
         return 0;
     }
 
-    int32_t wanted = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t wanted = static_cast<uint32_t>(lua_tonumber(L, 1));
     int32_t numRecords = g_languagesDB.m_numRecords;
     int32_t found = 0;
 
@@ -872,7 +872,7 @@ static int32_t Script_GetChatWindowInfo(lua_State* L) {
         lua_pushnil(L);
     }
 
-    int32_t docked = s_chatWindows[index].m_docked;
+    uint32_t docked = s_chatWindows[index].m_docked;
 
     if (docked) {
         lua_pushnumber(L, docked);
@@ -1555,7 +1555,7 @@ static int32_t Script_UnitIsSilenced(lua_State* L) {
         return 0;
     }
 
-    WOWGUID guid = WOWGUID();
+    WOWGUID guid = WOWGUID::Make(0);
     const char* name = lua_tolstring(L, 1, NULL);
     NameCache* record = g_nameDBCache.GetRecordByName(name);
 
@@ -2009,7 +2009,7 @@ static int32_t Script_RemoveChatWindowChannel(lua_State* L) {
 
 // OFFSET: 0x008EA720/0x140619500
 static int32_t Script_EnumerateServerChannels(lua_State* L) {
-    int32_t count = g_chatChannelsDB.m_numRecords;
+    uint32_t count = g_chatChannelsDB.m_numRecords;
     lua_checkstack(L, count);
     AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_areaID);
 
@@ -2019,7 +2019,7 @@ static int32_t Script_EnumerateServerChannels(lua_State* L) {
 
     int32_t pushed = 0;
 
-    for (int32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         ChatChannelsRec* rec = g_chatChannelsDB.GetRecordByIndex(i);
 
         if (!(rec->m_flags & 0x10) || (area->m_flags & 0x8)) {
@@ -2063,7 +2063,7 @@ static int32_t Script_IsSilenced(lua_State* L) {
         return 0;
     }
 
-    WOWGUID guid = WOWGUID();
+    WOWGUID guid = WOWGUID::Make(0);
     const char* name = lua_tolstring(L, 1, NULL);
     NameCache* record = g_nameDBCache.GetRecordByName(name);
 
@@ -2100,7 +2100,7 @@ static int32_t Script_SetChannelWatch(lua_State* L) {
 
 // OFFSET: 0x008EBC20/0x14061AD50
 static int32_t Script_DoEmote(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!lua_isstring(L, 1)) {
         if (lua_type(L, 1) == LUA_TNIL && player) {
@@ -2490,7 +2490,7 @@ static int32_t Script_GetNumChannelMembers(lua_State* L) {
     }
 
     int32_t type;
-    const char* channel = CGChat::GetChannelStringForDisplay(static_cast<int32_t>(lua_tonumber(L, 1)) - 1, &type);
+    const char* channel = CGChat::GetChannelStringForDisplay(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1, &type);
 
     if (!channel || type == 4) {
         lua_pushnil(L);

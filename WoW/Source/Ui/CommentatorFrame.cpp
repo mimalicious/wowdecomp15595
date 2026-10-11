@@ -244,13 +244,13 @@ void CGCommentator::SetPosYawPitch(const C3Vector& position, float facing, float
 void CGCommentator::SetFov(float fov) {
     this->m_targetFov = fov;
 
-    if (2.0943952f <= fov) {
+    if (!(2.0943952f > fov)) {
         fov = 2.0943952f;
     }
 
     this->m_targetFov = fov;
 
-    if (0.017453292f >= fov) {
+    if (!(fov > 0.017453292f)) {
         fov = 0.017453292f;
     }
 
@@ -575,11 +575,11 @@ void CGCommentator::OnUpdate(float elapsed) {
 
 // OFFSET: 0x0092B9E0
 uint64_t CGCommentator::GetArenaMember(int32_t index) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGCommentator::MapInfo* map;
     CGCommentator::InstanceInfo* instance;
 
-    if (!player || !(player->m_player->m_playerFlags & 0x80000) || !this->GetCurrentMapAndInstance(&map, &instance)) {
+    if (!player || !(static_cast<uint8_t>(player->m_player->m_playerFlags >> 19) & 1) || !this->GetCurrentMapAndInstance(&map, &instance)) {
         return 0;
     }
 
@@ -590,7 +590,7 @@ uint64_t CGCommentator::GetArenaMember(int32_t index) {
         index -= 5;
     }
 
-    if (index >= 0 && static_cast<uint32_t>(index) < instance->m_numPlayers[faction]) {
+    if (index >= 0 && index < static_cast<int32_t>(instance->m_numPlayers[faction])) {
         return instance->m_players[faction][index].m_guid.m_guid;
     }
 
@@ -674,7 +674,7 @@ int32_t CGCommentator::OnStateChanged(void* param, NETMESSAGE msgId, uint32_t ti
     uint8_t enabled = 0;
     msg->Get(enabled);
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || player->m_obj->m_guid != guid) {
         return 1;

@@ -48,7 +48,7 @@ static const char* s_vehicleTypes[5] = { "Drive", "Fly", "Idle", "Airship Horde"
 
 // OFFSET: 0x0093D440/0x1406A8E80
 static int32_t Script_JoinArena(lua_State* L) {
-    for (uint8_t i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         if (s_arenaTeamSizes[i] == static_cast<int32_t>(CGPartyInfo::m_realNumMembers + 1)) {
             UserClientBattlemasterJoinArena msg(i);
             ClientServices::Send(&msg);
@@ -177,8 +177,10 @@ static int32_t Script_GetNumBattlefieldFlagPositions(lua_State* L) {
 
     if (CGBattlefieldInfo::m_flagCarriers[1]) {
         count = 2;
+    } else if (CGBattlefieldInfo::m_flagCarriers[0]) {
+        count = 1;
     } else {
-        count = CGBattlefieldInfo::m_flagCarriers[0] != 0;
+        count = 0;
     }
 
     lua_pushnumber(L, count);
@@ -306,7 +308,7 @@ static int32_t Script_GetPVPRewards(lua_State* L) {
 static int32_t Script_ClearBattlemaster(lua_State* L) {
     FrameScript_SignalEvent(SCRIPT_EVENT_BATTLEFIELDS_CLOSED, NULL);
     CGGameUI::ClearInteractTarget(CGBattlefieldInfo::m_battlemaster, 0);
-    CGBattlefieldInfo::m_battlemaster = WOWGUID();
+    CGBattlefieldInfo::m_battlemaster.m_guid = 0;
     return 0;
 }
 
@@ -417,7 +419,7 @@ static int32_t Script_GetBattlefieldStatInfo(lua_State* L) {
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t id = index < CGBattlefieldInfo::m_numWorldStateStats ? CGBattlefieldInfo::m_worldStateStats[index] : 0;
+    int32_t id = index >= CGBattlefieldInfo::m_numWorldStateStats ? 0 : CGBattlefieldInfo::m_worldStateStats[index];
     WorldStateUIRec* rec = g_worldStateUIDB.GetRecord(id);
 
     if (rec) {
@@ -685,13 +687,13 @@ static int32_t Script_RequestRatedArenaInfo(lua_State* L) {
 static int32_t Script_GetRatedBattleGroundInfo(lua_State* L) {
     BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(GetWorldState(5508) + 99);
 
-    if (!rec) {
-        return 0;
+    if (rec) {
+        lua_pushstring(L, rec->m_name);
+        lua_pushinteger(L, rec->m_ratedPlayers);
+        return 2;
     }
 
-    lua_pushstring(L, rec->m_name);
-    lua_pushinteger(L, rec->m_ratedPlayers);
-    return 2;
+    return 0;
 }
 
 // OFFSET: 0x0093FFA0/0x1406ABFB0
@@ -702,16 +704,19 @@ static int32_t Script_CommentatorStartWargame(lua_State* L) {
     for (int32_t i = 0; i < 2; i++) {
         if (!lua_isstring(L, i + 3)) {
             luaL_error(L, "arg %d is not a string", i + 3);
+            return 0;
         }
 
         const char* name = lua_tolstring(L, i + 3, NULL);
 
         if (!name) {
             luaL_error(L, "arg %d is not a string", i + 3);
+            return 0;
         }
 
         if (strlen(name) > 48) {
             luaL_error(L, "Name too long");
+            return 0;
         }
 
         SStrCopy(i ? msg.unk_0048 : msg.unk_0018, name, 48);
@@ -819,18 +824,21 @@ static int32_t Script_GetSelectedWarGameType(lua_State* L) {
 static int32_t Script_GetWorldPVPAreaInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetWorldPVPAreaInfo(index)");
+        return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
     if (index >= g_world_PVP_AreaDB.m_numRecords) {
         luaL_error(L, "invalid index");
+        return 0;
     }
 
     World_PVP_AreaRec* rec;
 
     if (index < 0 || !(rec = g_world_PVP_AreaDB.GetRecordByIndex(index))) {
         luaL_error(L, "Area not found");
+        return 0;
     }
 
     lua_pushnumber(L, rec->m_id);
@@ -1057,10 +1065,13 @@ static int32_t Script_GetBattlegroundInfo(lua_State* L) {
 
     int32_t faction = player->GetPVPFactionIndex();
 
-    if (!faction) {
-        lua_pushstring(L, map->m_mapDescription0);
-    } else if (faction == 1) {
-        lua_pushstring(L, map->m_mapDescription1);
+    switch (faction) {
+        case 0:
+            lua_pushstring(L, map->m_mapDescription0);
+            break;
+        case 1:
+            lua_pushstring(L, map->m_mapDescription1);
+            break;
     }
 
     return 6;
@@ -1068,7 +1079,7 @@ static int32_t Script_GetBattlegroundInfo(lua_State* L) {
 
 // OFFSET: 0x009414B0/0x1406AD4E0
 static int32_t Script_BattlefieldMgrEntryInviteResponse(lua_State* L) {
-    int64_t queueID = static_cast<int64_t>(lua_tonumber(L, 1));
+    int64_t queueID = static_cast<int32_t>(lua_tonumber(L, 1));
     CGBattlefieldInfo::BattlefieldMgrEntryInviteResponse(static_cast<uint16_t>(queueID), static_cast<int32_t>(queueID >> 32), StringToBOOL(L, 2, 0));
     return 0;
 }
@@ -1087,7 +1098,7 @@ static int32_t Script_BattlefieldMgrQueueRequest(lua_State* L) {
 
 // OFFSET: 0x00941560/0x1406AD590
 static int32_t Script_BattlefieldMgrQueueInviteResponse(lua_State* L) {
-    int64_t queueID = static_cast<int64_t>(lua_tonumber(L, 1));
+    int64_t queueID = static_cast<int32_t>(lua_tonumber(L, 1));
     CGBattlefieldInfo::BattlefieldMgrQueueInviteResponse(static_cast<uint16_t>(queueID), static_cast<int32_t>(queueID >> 32), StringToBOOL(L, 2, 0));
     return 0;
 }
@@ -1116,6 +1127,7 @@ static int32_t Script_StartWarGame(lua_State* L) {
         if (targetName) {
             if (strlen(targetName) > 48) {
                 luaL_error(L, "Name too long");
+                return 0;
             }
 
             NameCache* target = g_nameDBCache.GetRecordByName(targetName);
@@ -1383,7 +1395,7 @@ static int32_t Script_AcceptBattlefieldPort(lua_State* L) {
         return 0;
     }
 
-    BattlefieldStatusNode* status = CGBattlefieldInfo::FindStatus(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
+    BattlefieldStatusNode* status = CGBattlefieldInfo::FindStatus(static_cast<uint32_t>(lua_tonumber(L, 1)));
 
     if (!status) {
         lua_pushnil(L);
@@ -1449,7 +1461,7 @@ static int32_t Script_GetBattlefieldStatus(lua_State* L) {
         return 0;
     }
 
-    uint32_t id = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    uint32_t id = static_cast<uint32_t>(lua_tonumber(L, 1));
     BattlefieldStatusNode* status = NULL;
 
     for (BattlefieldStatusNode* node = CGBattlefieldInfo::m_statusList.Head(); node; node = CGBattlefieldInfo::m_statusList.Next(node)) {
@@ -1554,7 +1566,7 @@ static int32_t Script_GetBattlefieldPortExpiration(lua_State* L) {
         return 0;
     }
 
-    uint32_t id = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    uint32_t id = static_cast<uint32_t>(lua_tonumber(L, 1));
     double remaining = 0.0;
 
     for (BattlefieldStatusNode* node = CGBattlefieldInfo::m_statusList.Head(); node; node = CGBattlefieldInfo::m_statusList.Next(node)) {
@@ -1584,7 +1596,7 @@ static int32_t Script_GetBattlefieldEstimatedWaitTime(lua_State* L) {
         return 0;
     }
 
-    uint32_t id = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    uint32_t id = static_cast<uint32_t>(lua_tonumber(L, 1));
     double wait = 0.0;
 
     for (BattlefieldStatusNode* node = CGBattlefieldInfo::m_statusList.Head(); node; node = CGBattlefieldInfo::m_statusList.Next(node)) {
@@ -1605,7 +1617,7 @@ static int32_t Script_GetBattlefieldTimeWaited(lua_State* L) {
         return 0;
     }
 
-    uint32_t id = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    uint32_t id = static_cast<uint32_t>(lua_tonumber(L, 1));
     double waited = 0.0;
 
     for (BattlefieldStatusNode* node = CGBattlefieldInfo::m_statusList.Head(); node; node = CGBattlefieldInfo::m_statusList.Next(node)) {
@@ -1717,7 +1729,8 @@ static int32_t Script_IsRatedBattleground(lua_State* L) {
 // OFFSET: 0x00943310/0x1406AFE90
 static int32_t Script_IsRatedMap(lua_State* L) {
     uint64_t queueID = CGBattlefieldInfo::GetActiveQueueID();
-    lua_pushboolean(L, queueID && (queueID & 0x100000));
+    bool rated = queueID && (queueID & 0x100000);
+    lua_pushboolean(L, rated);
     return 1;
 }
 
@@ -1801,7 +1814,7 @@ static FrameScript_Method s_scriptFunctions[74] = {
 
 // OFFSET: 0x0093DD40
 void BattlefieldInfoRegisterScriptFunctions() {
-    for (int32_t i = 0; i < 74; i++) {
+    for (uint32_t i = 0; i < 74; i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);
     }
 }

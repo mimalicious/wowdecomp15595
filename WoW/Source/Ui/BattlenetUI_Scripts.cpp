@@ -936,7 +936,11 @@ static int32_t Script_BNGetNumBlockedToons(lua_State* L) {
 static int32_t Script_BNGetBlockedToonInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount()) {
+        return 0;
+    }
+
+    if (!BattlenetAPI::IsRIDEnabled()) {
         return 0;
     }
 
@@ -1124,14 +1128,16 @@ static int32_t Script_BNReportPlayer(lua_State* L) {
 // OFFSET: 0x00908010
 static int32_t Script_BNFeaturesEnabledAndConnected(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
-    lua_pushboolean(L, login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled() && static_cast<BattlenetLogin*>(login)->IsConnected());
+    bool enabled = login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled() && static_cast<BattlenetLogin*>(login)->IsConnected();
+    lua_pushboolean(L, enabled);
     return 1;
 }
 
 // OFFSET: 0x00908070/0x140660F50
 static int32_t Script_BNFeaturesEnabled(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
-    lua_pushboolean(L, login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled());
+    bool enabled = login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled();
+    lua_pushboolean(L, enabled);
     return 1;
 }
 
@@ -1179,11 +1185,10 @@ static int32_t Script_BNSetSelectedFriend(lua_State* L) {
         }
 
         if (BattlenetUI::m_friendListLoaded) {
-            uint32_t number = static_cast<uint32_t>(lua_tonumber(L, 1));
-            uint32_t index = number - 1;
+            uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
             if (index >= BattlenetUI::m_friends.Count()) {
-                luaL_error(L, "Friend index %d too large, only %d friends.", number, BattlenetUI::m_friends.Count());
+                luaL_error(L, "Friend index %d too large, only %d friends.", index + 1, BattlenetUI::m_friends.Count());
                 return 0;
             }
 
@@ -1677,7 +1682,11 @@ static int32_t Script_BNListConversation(lua_State* L) {
 static int32_t Script_BNGetBlockedInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount()) {
+        return 0;
+    }
+
+    if (!BattlenetAPI::IsRIDEnabled()) {
         return 0;
     }
 
@@ -1831,14 +1840,14 @@ static int32_t Script_BNGetFriendInfo(lua_State* L) {
         return 0;
     }
 
-    uint32_t number = static_cast<uint32_t>(lua_tonumber(L, 1));
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (number - 1 >= BattlenetUI::m_friends.Count()) {
-        luaL_error(L, "Friend index %d too large, only %d friends.", number, BattlenetUI::m_friends.Count());
+    if (index >= BattlenetUI::m_friends.Count()) {
+        luaL_error(L, "Friend index %d too large, only %d friends.", index + 1, BattlenetUI::m_friends.Count());
         return 0;
     }
 
-    return BattlenetUI::BNGetFriendInfoHelper(L, number - 1);
+    return BattlenetUI::BNGetFriendInfoHelper(L, index);
 }
 
 // OFFSET: 0x0090E0C0/0x1406693A0

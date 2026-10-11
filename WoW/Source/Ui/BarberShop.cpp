@@ -126,7 +126,7 @@ void CGBarberShop::UpdateAlternateForm() {
 
 // OFFSET: 0x008FF860/0x1406573A0
 bool CGBarberShop::IsCurrentStyle(int32_t type) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CCharacterComponent* component = player->m_characterComponent;
 
     if (!component) {
@@ -149,19 +149,22 @@ bool CGBarberShop::IsCurrentStyle(int32_t type) {
 
 // OFFSET: 0x008FFB90
 bool CGBarberShop::IsSlotHidden(int32_t slot) {
-    if (slot == INVSLOT_HEAD || slot == INVSLOT_SHOULDER) {
-        return true;
-    }
+    switch (slot) {
+        case INVSLOT_HEAD:
+        case INVSLOT_SHOULDER:
+            return true;
+        case INVSLOT_OFFHAND: {
+            CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (slot == INVSLOT_OFFHAND) {
-        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+            if (player) {
+                VisibleItem_C* item = const_cast<VisibleItem_C*>(player->GetVisibleItem(INVSLOT_OFFHAND));
 
-        if (player) {
-            VisibleItem_C* item = const_cast<VisibleItem_C*>(player->GetVisibleItem(INVSLOT_OFFHAND));
-
-            if (item->GetDisplayID() && item->GetInventoryType() == 14) {
-                return true;
+                if (item->GetDisplayID() && item->GetInventoryType() == 14) {
+                    return true;
+                }
             }
+
+            break;
         }
     }
 
@@ -210,7 +213,7 @@ int32_t CGBarberShop::GetTotalCost() {
     }
 
     int32_t cost = 0;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player->m_characterComponent) {
         return 0;
@@ -254,7 +257,7 @@ void CGBarberShop::DisableBarberShop() {
         camera->SetView(CGBarberShop::m_prevView, 1, 0);
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -420,6 +423,11 @@ void CGBarberShop::Reset() {
     CGBarberShop::ResetAppearance();
 }
 
+// OFFSET: 0x009005B0/0x140658420
+void CGBarberShop::LeaveWorld() {
+    CGBarberShop::DisableBarberShop();
+}
+
 // OFFSET: 0x009005C0
 void CGBarberShop::ShutdownGame() {
     CGBarberShop::m_initialized = 0;
@@ -431,7 +439,7 @@ void CGBarberShop::ShutdownGame() {
 
 // OFFSET: 0x00900600
 int32_t Packet_SMSG_ENABLE_BARBER_SHOP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 1;

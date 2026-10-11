@@ -75,23 +75,28 @@ int32_t CGItemSocketInfo::GemMatchesSocket(const ItemRecSparse* item, const Item
     }
 
     GemPropertiesRec* properties = g_gemPropertiesDB.GetRecord(gem->m_gemProperties);
-    return properties && (color & properties->m_type);
+
+    if (properties) {
+        return (color & properties->m_type) != 0;
+    }
+
+    return 0;
 }
 
 // OFFSET: 0x0097A370
 bool CGItemSocketInfo::IsSocketItemBoundTradeable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (!item) {
-        return false;
+    if (item) {
+        return item->IsBound() && !item->IsBoundForTrade();
     }
 
-    return item->IsBound() && !item->IsBoundForTrade();
+    return false;
 }
 
 // OFFSET: 0x0097A660
 void CGItemSocketInfo::UpdateItem(WOWGUID item) {
-    if (CGPlayer_C* player = ClntObjMgrGetActivePlayerObj()) {
+    if (CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         player->CountEquippedGems();
     }
 
@@ -130,18 +135,16 @@ void CGItemSocketInfo::Accept() {
 bool CGItemSocketInfo::IsSocketItemRefundable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (!item) {
-        return false;
+    if (item) {
+        CGItem_C::ItemPurchaseData* purchase = item->m_itemPurchaseData;
+
+        if (purchase) {
+            CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+            return static_cast<int32_t>(purchase->m_refundTimeLeft - player->GetPlayedTime() + 7200) > 0;
+        }
     }
 
-    CGItem_C::ItemPurchaseData* purchase = item->m_itemPurchaseData;
-
-    if (!purchase) {
-        return false;
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    return static_cast<int32_t>(purchase->m_refundTimeLeft - player->GetPlayedTime() + 7200) > 0;
+    return false;
 }
 
 // OFFSET: 0x0097A870/0x1406F3E20
@@ -154,14 +157,14 @@ void CGItemSocketInfo::SetItem(WOWGUID item) {
         }
     }
 
-    CGItemSocketInfo::m_gemItems[0] = WOWGUID();
-    CGItemSocketInfo::m_gemItems[1] = WOWGUID();
-    CGItemSocketInfo::m_gemItems[2] = WOWGUID();
+    CGItemSocketInfo::m_gemItems[0].m_guid = 0;
+    CGItemSocketInfo::m_gemItems[1].m_guid = 0;
+    CGItemSocketInfo::m_gemItems[2].m_guid = 0;
     CGItemSocketInfo::m_socketItemRec = NULL;
     CGItemSocketInfo::m_socketItem = item;
 
     if (CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__))) {
-        WOWGUID requester = WOWGUID();
+        WOWGUID requester = WOWGUID::Make(0);
         CGItemSocketInfo::m_socketItemRec = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, requester, NULL, NULL, false);
     }
 
@@ -181,7 +184,7 @@ int32_t CGItemSocketInfo::SetGem(uint32_t slot, WOWGUID item, WOWGUID container,
     }
 
     if (!item) {
-        CGItemSocketInfo::m_gemItems[slot] = WOWGUID();
+        CGItemSocketInfo::m_gemItems[slot].m_guid = 0;
         FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
         return 1;
     }
@@ -249,7 +252,7 @@ void CGItemSocketInfo::RemoveItem(WOWGUID item) {
         }
     }
 
-    if (CGPlayer_C* player = ClntObjMgrGetActivePlayerObj()) {
+    if (CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         player->CountEquippedGems();
     }
 }

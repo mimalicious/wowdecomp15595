@@ -157,15 +157,12 @@ class CGGameUI {
     static void CancelMirrorTimers();
     static void SaveSavedVariables();
     static void UnitTooltipUpdate(const WOWGUID& guid);
-    static int32_t FoundHiddenHostile();
-    static void SetFoundHiddenHostile();
     static void UnlockAllItems();
     static void SetRegenEnabled(int32_t enabled);
 
     static TSHashTable<SAVEDVARIABLE, HASHKEY_STR> s_savedVariables[2];
     static int32_t HandleMouseDown(const CMouseEvent& evt);
     static int32_t HandleMouseUp(const CMouseEvent& evt);
-    static void ResetDisplayUpdateCount();
     static void OnClientControlChanged(int32_t control);
     static void SetMinimapZoneText(const char* text);
     static void NewZoneFeedback(int32_t areaId, int32_t subzoneId, int32_t wmoGroupId, const char* zoneText, const char* subZoneText, int32_t inside);
@@ -604,7 +601,6 @@ extern float s_followDistSq;
 void LoadScriptFunctions();
 int32_t Script_GetCurrentEventID(lua_State* L);
 int32_t Script_GetEventTime(lua_State* L);
-int32_t Script_SendSoRByText(lua_State* L);
 void SpellActivationOverlayRegisterScriptFunctions();
 void SpellActivationOverlayUnregisterScriptFunctions();
 void LFGuildRegisterScriptFunctions();
