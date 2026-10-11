@@ -310,7 +310,7 @@ static int32_t Script_CalendarGetFirstPendingInvite(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B78D0
+// OFFSET: 0x009AAA60
 static void NameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID key = WOWGUID();
 
@@ -1941,7 +1941,7 @@ static int32_t Script_CalendarEventHasPendingInvite(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C0FB0
+// OFFSET: 0x009B2490
 static void PushDayEventTexture(lua_State* L, CalendarDayEvent* event) {
     const char* texture = "";
 

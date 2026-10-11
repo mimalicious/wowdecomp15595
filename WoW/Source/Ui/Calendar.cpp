@@ -159,7 +159,7 @@ const char* GetHolidayName(int32_t holidayId) {
     return name ? static_cast<const char*>(name->m_name) : NULL;
 }
 
-// OFFSET: #0x005B7E50
+// OFFSET: 0x009AC860
 size_t CGCalendar::GetDateTimeText(char* buffer, uint32_t size, uint32_t time) {
     WowTime date;
     WowTime::WowDecodeTime(time, &date);
@@ -226,7 +226,7 @@ void CGCalendar::CalendarError(const char* error, uintptr_t arg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_ACTION_PENDING, "%b", 0);
 }
 
-// OFFSET: #0x005BBBB0
+// OFFSET: 0x009ABD10
 void CGCalendar::QueryPendingInvites() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_CALENDAR_GET_NUM_PENDING));
@@ -542,7 +542,7 @@ void CGCalendar::UpdatePendingInvites(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x005B7A10
+// OFFSET: 0x009AAAA0
 int32_t CGCalendar::GetDaysInMonth(int32_t month, int32_t year, int32_t* days, int32_t* weekDay) {
     WowTime date;
     date.m_month = month;
@@ -761,7 +761,7 @@ int32_t CalendarDayEvent::GetSequenceType() const {
     return (this->m_sequenceIndex != this->m_sequenceLength - 1) + 2;
 }
 
-// OFFSET: #0x005BFAB0
+// OFFSET: 0x009B15B0
 static bool ComputeEventOccurrence(const WowTime* now, const WowTime* rangeStart, const WowTime* rangeEnd, WowTime* outEnd, HolidaysRec* holiday, int32_t index, bool* weekly, int32_t interval, WowTime* outStart) {
     *weekly = false;
     DYNAMICHOLIDAYHASH* dynamic = s_dynamicHolidays.Ptr(holiday->m_id, HASHKEY_NONE());
@@ -912,7 +912,7 @@ found:
     return true;
 }
 
-// OFFSET: #0x005BFD20
+// OFFSET: 0x009B1820
 static int QSortEvents(const void* a, const void* b) {
     const CalendarDayEvent* left = *static_cast<CalendarDayEvent* const*>(a);
     const CalendarDayEvent* right = *static_cast<CalendarDayEvent* const*>(b);
@@ -1162,7 +1162,7 @@ void CGCalendar::UpdateDisplayList(bool signal, bool updateGuildEvents) {
     }
 }
 
-// OFFSET: #0x005C0240
+// OFFSET: 0x009B1A40
 void CGCalendar::SetFilter(CVar* var, int32_t value) {
     if (!var || !CGCalendar::m_absMonthDays) {
         return;
@@ -1228,7 +1228,7 @@ void CGCalendar::SetFilter(CVar* var, int32_t value) {
     }
 }
 
-// OFFSET: #0x005C04F0
+// OFFSET: 0x009B37E0
 void CGCalendar::InitHolidays() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -1324,7 +1324,7 @@ void CGCalendar::InitHolidays() {
     }
 }
 
-// OFFSET: #0x005C2030
+// OFFSET: 0x009B5810
 void CGCalendar::InsertEvent(CalendarDayEvent* event, int32_t table) {
     uint32_t originalEnd = event->m_endTime;
     WowTime start;
@@ -1412,7 +1412,7 @@ void CGCalendar::InsertEvent(CalendarDayEvent* event, int32_t table) {
     }
 }
 
-// OFFSET: #0x005C23C0
+// OFFSET: 0x009B5BE0
 void CGCalendar::CalculateEvents(bool signal) {
     s_eventTables.m_counts[4] = 0;
     s_eventTables.m_tables[4].InternalClear(0);
@@ -1651,7 +1651,7 @@ int32_t CGCalendar::GetFirstPendingInviteIndex(uint32_t offset, uint32_t day) {
     return -1;
 }
 
-// OFFSET: #0x005B7910
+// OFFSET: 0x009ABBA0
 static void __stdcall FireEventAlarm(CGameTime* time, void* param) {
     CalendarDayEvent* event = static_cast<CalendarDayEvent*>(param);
     WowTime alarm;
@@ -1667,7 +1667,7 @@ static void __stdcall FireEventAlarm(CGameTime* time, void* param) {
     }
 }
 
-// OFFSET: #0x005B79B0
+// OFFSET: 0x009ABC40
 void CalendarDayEvent::ScheduleAlarm() {
     WowTime alarm;
     WowTime::WowDecodeTime(this->m_startTime, &alarm);
@@ -1864,7 +1864,7 @@ CalendarDayEvent* CGCalendar::GetDayEvent(uint32_t offset, uint32_t day, uint32_
     return NULL;
 }
 
-// OFFSET: #0x005B9310
+// OFFSET: 0x009AC1D0
 void CGCalendar::GetEvent(uint32_t offset, uint32_t day, uint32_t index) {
     if (CGCalendar::m_actionPending || offset + 1 > 2 || day >= 31 || index >= s_days[offset + 1][day].Count()) {
         return;
@@ -2067,7 +2067,7 @@ void CGCalendar::SelectContextEvent(uint32_t offset, uint32_t day, uint32_t inde
     CGCalendar::m_contextEventInfo = event;
 }
 
-// OFFSET: #0x005B9860
+// OFFSET: 0x009AC6D0
 void CGCalendar::ContextMenuInviteRSVP(CalendarDayEvent* event, uint32_t status) {
     if (!event || CGCalendar::m_actionPending) {
         return;
@@ -2092,7 +2092,7 @@ void CGCalendar::ContextMenuInviteRSVP(CalendarDayEvent* event, uint32_t status)
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_ACTION_PENDING, "%b", 1);
 }
 
-// OFFSET: #0x005BBB40
+// OFFSET: 0x009ABCA0
 void CGCalendar::GetCalendar() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_CALENDAR_GET_CALENDAR));
@@ -2101,7 +2101,7 @@ void CGCalendar::GetCalendar() {
     CGCalendar::m_openedCalendar = 1;
 }
 
-// OFFSET: #0x005BBC20
+// OFFSET: 0x009AECB0
 void CGCalendar::ProcessInviteNotes(CDataStore* msg, uint8_t* clearPending) {
     if (!ClntObjMgrGetActivePlayerObj()) {
         msg->m_read = msg->m_size;
@@ -2145,7 +2145,7 @@ void CGCalendar::ProcessInviteNotesAlert(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x005BBD60
+// OFFSET: 0x009AEDF0
 void CGCalendar::AddEvent() {
     if (CGCalendar::m_actionPending) {
         return;
@@ -2245,7 +2245,7 @@ void CGCalendar::CreateGuildEvent() {
     CGCalendar::m_selectedEvent.m_type = 0;
 }
 
-// OFFSET: #0x005BC160
+// OFFSET: 0x009AF210
 void CGCalendar::GuildFilter(uint32_t minLevel, uint32_t maxLevel, uint32_t minRank) {
     if (CGCalendar::m_actionPending) {
         return;
@@ -2276,7 +2276,7 @@ void CGCalendar::GuildFilter(uint32_t minLevel, uint32_t maxLevel, uint32_t minR
     CGCalendar::SetActionPending(1);
 }
 
-// OFFSET: #0x005BC240
+// OFFSET: 0x009AF2F0
 void CGCalendar::ArenaTeam(uint32_t index) {
     if (CGCalendar::m_actionPending) {
         return;
@@ -2360,7 +2360,7 @@ void CGCalendar::InviteRSVP(uint32_t status) {
     }
 }
 
-// OFFSET: #0x005BC460
+// OFFSET: 0x009AF650
 void CGCalendar::EventSignUp() {
     if (CGCalendar::m_actionPending || !CGCalendar::m_curEvent || !(CGCalendar::m_curEvent->m_flags & 0x400)) {
         return;
@@ -2373,7 +2373,7 @@ void CGCalendar::EventSignUp() {
     }
 }
 
-// OFFSET: #0x005BC4D0
+// OFFSET: 0x009AF6C0
 void CGCalendar::ContextMenuInviteRemove(CalendarDayEvent* event) {
     if (!event || CGCalendar::m_actionPending) {
         return;
@@ -2399,7 +2399,7 @@ void CGCalendar::ContextMenuInviteRemove(CalendarDayEvent* event) {
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_ACTION_PENDING, "%b", 1);
 }
 
-// OFFSET: #0x005BC5E0
+// OFFSET: 0x009AF7D0
 void CGCalendar::ContextMenuEventSignUp(CalendarDayEvent* event, uint8_t tentative) {
     if (!event || CGCalendar::m_actionPending || ((event->m_type & 0x400) && event->m_inviteStatus != 7)) {
         return;
@@ -2419,7 +2419,7 @@ void CGCalendar::ContextMenuEventSignUp(CalendarDayEvent* event, uint8_t tentati
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_ACTION_PENDING, "%b", 1);
 }
 
-// OFFSET: #0x005BC6D0
+// OFFSET: 0x009AF8C0
 void CGCalendar::ContextMenuEventRemove(CalendarDayEvent* event) {
     if (!event || CGCalendar::m_actionPending) {
         return;
@@ -2454,7 +2454,7 @@ void CGCalendar::ContextMenuEventCopy(CalendarDayEvent* event) {
     }
 }
 
-// OFFSET: #0x005BC870
+// OFFSET: 0x009AFA50
 void CGCalendar::ContextMenuEventPaste(int32_t offset, uint32_t day) {
     if (CGCalendar::m_actionPending || !s_eventClipboard.m_eventID) {
         return;
@@ -2501,7 +2501,7 @@ void CGCalendar::ContextMenuEventPaste(int32_t offset, uint32_t day) {
     }
 }
 
-// OFFSET: #0x005BC9D0
+// OFFSET: 0x009AFBC0
 bool CGCalendar::CanComplainAboutEvent(CalendarDayEvent* event) {
     if (!event) {
         return false;
@@ -2512,7 +2512,7 @@ bool CGCalendar::CanComplainAboutEvent(CalendarDayEvent* event) {
     return player && CGChat::m_complaintsSystemStatus && !(event->m_type & 0x6CC) && event->m_creatorGUID != player->m_obj->m_guid && !FriendList::s_friendList->IsFriend(event->m_creatorGUID);
 }
 
-// OFFSET: #0x005BCA50
+// OFFSET: 0x009AFC40
 void CGCalendar::Complain(CalendarDayEvent* event) {
     if (CGCalendar::m_actionPending || !CGCalendar::CanComplainAboutEvent(event)) {
         return;
@@ -2546,7 +2546,7 @@ void CGCalendar::Complain(CalendarDayEvent* event) {
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_ACTION_PENDING, "%b", 1);
 }
 
-// OFFSET: #0x005BD850
+// OFFSET: 0x009B0B00
 bool CGCalendar::HasPendingInvite(uint64_t eventID) {
     CalendarPendingInvite* next;
 
@@ -2570,7 +2570,7 @@ CALENDAREVENTHASH::~CALENDAREVENTHASH() {
     }
 }
 
-// OFFSET: #0x005BDE60
+// OFFSET: 0x009B23F0
 void CGCalendar::InvalidatePlayer(WOWGUID guid) {
     if (!ClntObjMgrGetActivePlayerObj()) {
         return;
@@ -2586,7 +2586,7 @@ void CGCalendar::InvalidatePlayer(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x005BE590
+// OFFSET: 0x009B30B0
 void CGCalendar::AddPendingInvite(CalendarDayEvent* event) {
     CalendarPendingInvite* invite = s_pendingInvites.NewNode(2, 0, 0);
 
@@ -2634,7 +2634,7 @@ bool CalendarEventTables::Delete(int32_t table, uint32_t date, uint64_t eventID)
     return false;
 }
 
-// OFFSET: #0x005BEA50
+// OFFSET: 0x009B11F0
 CalendarDayEvent* CalendarEventTables::GetEvent(int32_t table, uint32_t date, uint64_t eventID) {
     CalendarDayEvent* event = NULL;
     CALENDAREVENTHASH* entry = this->m_tables[table].Ptr(date, HASHKEY_NONE());
@@ -2655,7 +2655,7 @@ CalendarDayEvent* CalendarEventTables::GetEvent(int32_t table, uint32_t date, ui
     return event;
 }
 
-// OFFSET: #0x005BECD0
+// OFFSET: 0x009B4440
 bool CGCalendar::DeletePendingInvite(uint64_t eventID) {
     CalendarPendingInvite* next;
 
@@ -2837,7 +2837,7 @@ void CGCalendar::ProcessInviteRemoved(CDataStore* msg, uint8_t* clearPending) {
     }
 }
 
-// OFFSET: #0x005BF420
+// OFFSET: 0x009B4490
 void CGCalendar::ProcessInviteStatus(CDataStore* msg, uint8_t* clearPending) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -2891,7 +2891,7 @@ void CGCalendar::ProcessInviteStatus(CDataStore* msg, uint8_t* clearPending) {
     }
 }
 
-// OFFSET: #0x005BF590
+// OFFSET: 0x009B4820
 void CGCalendar::ProcessInviteStatusAlert(CDataStore* msg) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -2974,7 +2974,7 @@ void CGCalendar::SetInviteFlag(uint64_t eventID, uint32_t flag, bool set) {
     }
 }
 
-// OFFSET: #0x005BFA90
+// OFFSET: 0x009A4170
 DYNAMICHOLIDAYHASH* CalendarGetHolidayInfo(int32_t holidayId) {
     return s_dynamicHolidays.Ptr(holidayId, HASHKEY_NONE());
 }

@@ -111,7 +111,7 @@ void CGCalendarEvent::SetDescription(const char* description) {
     }
 }
 
-// OFFSET: #0x005F11D0
+// OFFSET: 0x00A0B060
 void CGCalendarEvent::SetType(uint32_t type) {
     if (type < 5 && type != this->m_type) {
         this->m_type = type;
@@ -119,7 +119,7 @@ void CGCalendarEvent::SetType(uint32_t type) {
     }
 }
 
-// OFFSET: #0x005F1200
+// OFFSET: 0x00A0B090
 void CGCalendarEvent::SetRepeatOption(uint32_t repeatOption) {
     if (repeatOption < 4 && repeatOption != this->m_repeatOption) {
         this->m_repeatOption = repeatOption;
@@ -300,7 +300,7 @@ void CGCalendarEvent::UpdateInviteNotes(WOWGUID guid, const char* notes) {
     }
 }
 
-// OFFSET: #0x005F16E0
+// OFFSET: 0x00A0B710
 bool CGCalendarEvent::CanModerate(uint32_t index) {
     if (index >= this->m_numInvites) {
         return false;
@@ -314,7 +314,7 @@ bool CGCalendarEvent::CanModerate(uint32_t index) {
     return true;
 }
 
-// OFFSET: #0x005F1720
+// OFFSET: 0x00A0B750
 static int32_t QSortInvites(const void* a, const void* b) {
     const EventInviteInfo* left = *static_cast<EventInviteInfo* const*>(a);
     const EventInviteInfo* right = *static_cast<EventInviteInfo* const*>(b);
@@ -396,7 +396,7 @@ static int32_t QSortInvites(const void* a, const void* b) {
     return result;
 }
 
-// OFFSET: #0x005F1980
+// OFFSET: 0x00A0B9C0
 bool CGCalendarEvent::SortInvites(uint32_t criterion, bool toggle) {
     for (uint32_t i = 0; i < 6; i++) {
         if (i == criterion) {
@@ -474,14 +474,14 @@ static void InviteNameCacheCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
-// OFFSET: #0x005F1B30
+// OFFSET: 0x00A0BB70
 bool CGCalendarEvent::IsModerator() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID guid = player ? player->m_obj->m_guid : WOWGUID();
     return this->m_moderatorInviteID || guid == this->m_creatorGUID;
 }
 
-// OFFSET: #0x005F1B90
+// OFFSET: 0x00A0BBD0
 bool CGCalendarEvent::AddEvent() {
     if (!this->m_new) {
         return false;
@@ -576,7 +576,7 @@ bool CGCalendarEvent::RemoveEvent() {
     return true;
 }
 
-// OFFSET: #0x005F1EF0
+// OFFSET: 0x00A0B420
 bool CGCalendarEvent::Update() {
     if (!this->m_changed) {
         return false;
@@ -610,7 +610,7 @@ bool CGCalendarEvent::Update() {
     return true;
 }
 
-// OFFSET: #0x005F2070
+// OFFSET: 0x00A0BE70
 bool CGCalendarEvent::Invite(const char* name) {
     if (this->m_flags & 0x40) {
         CGCalendar::CalendarError("CALENDAR_ERROR_INVITES_DISABLED", 0);
@@ -652,7 +652,7 @@ bool CGCalendarEvent::Invite(const char* name) {
     return true;
 }
 
-// OFFSET: #0x005F2220
+// OFFSET: 0x00A0C040
 bool CGCalendarEvent::RemoveInvite(uint32_t index) {
     if (index >= this->m_numInvites) {
         return false;
@@ -695,7 +695,7 @@ bool CGCalendarEvent::RemoveInvite(uint32_t index) {
     return true;
 }
 
-// OFFSET: #0x005F23B0
+// OFFSET: 0x00A0C1D0
 bool CGCalendarEvent::RemoveInviteByGUID(WOWGUID guid) {
     if (!guid) {
         return false;
@@ -750,7 +750,7 @@ bool CGCalendarEvent::InviteRSVP(uint32_t status) {
     return true;
 }
 
-// OFFSET: #0x005F2530
+// OFFSET: 0x00A0C350
 bool CGCalendarEvent::SignUp(uint8_t tentative) {
     if (this->m_new) {
         return false;
@@ -800,7 +800,7 @@ void CGCalendarEvent::UpdateInviteModeratorStatus(WOWGUID guid, uint8_t status) 
     }
 }
 
-// OFFSET: #0x005F26F0
+// OFFSET: 0x00A0C510
 bool CGCalendarEvent::CanSetInviteStatus(uint32_t index, uint32_t status) {
     if (!this->IsModerator() || index >= this->m_numInvites || status >= 9 || !status || status == 6 || status == 7) {
         return false;
@@ -813,7 +813,7 @@ bool CGCalendarEvent::CanSetInviteStatus(uint32_t index, uint32_t status) {
     return status != this->m_invites.m_data[index]->m_status;
 }
 
-// OFFSET: #0x005F2750
+// OFFSET: 0x00A0C570
 void CGCalendarEvent::SetInviteStatus(uint32_t index, uint32_t status) {
     if (!this->CanSetInviteStatus(index, status)) {
         return;
@@ -838,7 +838,7 @@ void CGCalendarEvent::SetInviteStatus(uint32_t index, uint32_t status) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005F2860
+// OFFSET: 0x00A0C680
 void CGCalendarEvent::SetModeratorStatus(uint32_t index, uint32_t status) {
     if (!this->IsModerator()) {
         CGCalendar::CalendarError("CALENDAR_ERROR_PERMISSIONS", 0);
