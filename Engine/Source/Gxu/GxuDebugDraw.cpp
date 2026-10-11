@@ -1,5 +1,7 @@
 #include "Engine/Source/Gxu/GxuDebugDraw.h"
 #include <new>
+#include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Gxu/GxuDebugDrawShapes.h"
 #include "Engine/Source/Gxu/GxuFont.h"
 #include "Engine/Source/Scrn/Scrn.h"
 #include "Engine/Source/Services/TextBlock.h"
@@ -30,6 +32,21 @@ static GxuDebugText3DObject* s_text3DObjectFreeList;
 
 // STATIC: 0x00DD8B0C
 static GxuDebugObjectBlock<GxuDebugText3DObject>* s_text3DObjectBlocks;
+
+// STATIC: 0x00DD9E7C
+static CGxShader* s_textureVertexShader;
+
+// STATIC: 0x00DD9E80
+static CGxShader* s_texturePixelShader;
+
+// STATIC: 0x00DD9E84
+static GxuDebugTextureObject* s_textureObjectFreeList;
+
+// STATIC: 0x00DD9E88
+static GxuDebugObjectBlock<GxuDebugTextureObject>* s_textureObjectBlocks;
+
+// STATIC: 0x00DD9E8C
+static bool s_textureDrawerInitialized;
 
 // PROVEN: 1a9e7609 IDENTICAL/NONE
 // OFFSET: 0x006120D0/0x14029D070
@@ -141,6 +158,18 @@ void GxuShutdownDebugText3DDrawer() {
     s_text3DDrawerInitialized = false;
 }
 
+// OFFSET: 0x00612770
+void GxuShutdownDebugDraw() {
+    GxuShutdownDebugTextDrawer();
+    GxuShutdownDebugText3DDrawer();
+    GxuShutdownDebugTextureDrawer();
+    GxuShutdownDebugShapeDrawer();
+
+    for (uint32_t i = 0; i < GxuCats_Last; i++) {
+        GxuClearDrawList(static_cast<EGxuDrawListCategory>(i));
+    }
+}
+
 // OFFSET: 0x00612790/0x14029D9C0
 void GxuDebugDrawText(float x, float y, const char* text, const CImVector& color, float time) {
     if (!s_textDrawerInitialized) {
@@ -178,4 +207,33 @@ GxuDebugTextObject::GxuDebugTextObject() : m_next(NULL), m_time(0.0f) {
 
 // INLINED
 GxuDebugTextObject::GxuDebugTextObject(float x, float y, const char* text, const CImVector& color, float time) : m_next(NULL), m_text(x, y, text, color), m_time(time) {
+}
+
+// OFFSET: 0x00616E80
+void GxuShutdownDebugTextureDrawer() {
+    if (!s_textureDrawerInitialized) {
+        return;
+    }
+
+    s_textureObjectFreeList = NULL;
+
+    while (s_textureObjectBlocks) {
+        GxuDebugObjectBlock<GxuDebugTextureObject>* block = s_textureObjectBlocks;
+        s_textureObjectBlocks = block->m_next;
+        block->m_objects.Clear();
+        delete block;
+    }
+
+    if (s_textureVertexShader) {
+        g_theGxDevicePtr->ShaderRelease(s_textureVertexShader);
+    }
+
+    s_textureVertexShader = NULL;
+
+    if (s_texturePixelShader) {
+        g_theGxDevicePtr->ShaderRelease(s_texturePixelShader);
+    }
+
+    s_texturePixelShader = NULL;
+    s_textureDrawerInitialized = false;
 }

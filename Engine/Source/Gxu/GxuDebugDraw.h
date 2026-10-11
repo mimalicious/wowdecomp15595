@@ -48,6 +48,12 @@ class GxuDebugText3DObject : public GxuSceneObject {
     /* 0008 */ uint8_t unk_0008[0x24];
 };
 
+class GxuDebugTextureObject : public GxuSceneObject {
+    public:
+    /* 0004 */ GxuDebugTextureObject* m_next;
+    /* 0008 */ uint8_t unk_0008[0x44];
+};
+
 template <class T>
 struct GxuDebugObjectBlock {
     /* 0000 */ TSGrowableArray<T> m_objects;
@@ -57,7 +63,9 @@ struct GxuDebugObjectBlock {
 float GxuGetLODDistModifier();
 int32_t GxuGetLODMode();
 void GxuDebugDrawText(float x, float y, const char* text, const CImVector& color, float time);
+void GxuShutdownDebugDraw();
 void GxuShutdownDebugText3DDrawer();
+void GxuShutdownDebugTextureDrawer();
 void GxuShutdownDebugTextDrawer();
 
 #endif

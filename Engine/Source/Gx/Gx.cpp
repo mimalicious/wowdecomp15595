@@ -65,6 +65,10 @@ static bool s_drawListBusy;
 // STATIC: 0x00DD8B14
 static TSGrowableArray<GxDrawListEntry> s_drawLists[GxuCats_Last];
 
+// OFFSET: [0x006128A0]
+GxuDrawListState::~GxuDrawListState() {
+}
+
 // OFFSET: [0x006128B0/0x14029DB50, 0x00612220/0x14029D200]
 GxuDrawListItem::~GxuDrawListItem() {
 }
