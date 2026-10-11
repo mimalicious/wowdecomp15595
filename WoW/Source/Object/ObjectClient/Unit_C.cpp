@@ -429,6 +429,11 @@ static CDataAllocator s_activeHeadLookAllocator(sizeof(ActiveHeadLook), 8);
 // STATIC: 0x00CA6308
 static float s_namePlateMaxDistanceSquared = 1681.0f;
 
+// OFFSET: 0x00554D30
+uint32_t CGUnit_C::GetSpellLevel(const SpellRec* spell) const {
+    return static_cast<uint32_t>(this->GetSpellRank(spell)) / 5;
+}
+
 // OFFSET: 0x00599DD0
 bool CGUnit_C::IsPowerRegenInterrupted() const {
     return (this->m_unit->m_unitFieldFlags & 0x80000) || (this->m_auraEffectMask[11] & 0x40);
@@ -825,6 +830,34 @@ void CGUnit_C::UpdateLastSentMovement() {
     if (this->m_movement->m_flags & (MOVEMENTFLAG_PITCH_UP | MOVEMENTFLAG_PITCH_DOWN)) {
         this->unk_09FC |= 0x200;
     }
+}
+
+// OFFSET: 0x005B0020/0x140222EB0
+bool CGUnit_C::LoadGuildTextures(uint64_t guildGUID) {
+    if (guildGUID) {
+        WOWGUID requester = this->m_obj->m_guid;
+
+        if (!g_guildInfoCache.GetRecord2(guildGUID, requester, &CGObject_C::GuildTextureCallback, NULL, false)) {
+            return false;
+        }
+    }
+
+    int32_t factionIndex = -1;
+
+    if (this->m_obj->m_type & TYPEMASK_PLAYER) {
+        factionIndex = static_cast<CGPlayer_C*>(this)->GetPVPFactionIndex();
+    }
+
+    CGObject_C::ReplaceGuildTextures(this->m_worldModel, guildGUID, factionIndex);
+    CGObject_C::ReplaceGuildTextures(this->m_mountModel, guildGUID, factionIndex);
+
+    for (CEffect* effect = this->m_effectList; effect; effect = effect->m_next) {
+        if (effect->m_flags & 0x1000) {
+            effect->LoadGuildTextures();
+        }
+    }
+
+    return true;
 }
 
 // OFFSET: 0x005B00E0/0x140222F90
@@ -13329,7 +13362,7 @@ C3Spline_CatmullRom* CGUnit_C::GetSpline() {
     return spline ? &spline->m_spline : NULL;
 }
 
-// OFFSET: #0x00717890
+// OFFSET: 0x005AE610
 float CGUnit_C::GetSplineElapsedTime() {
     CMoveSpline* spline = this->m_movementData.m_spline;
     return spline ? static_cast<float>(static_cast<int32_t>(spline->m_start)) : 0.0f;
@@ -22335,7 +22368,7 @@ void CGUnit_C::FootstepAnimEventHit(const C3Vector* position, int32_t left) {
     effect->Release();
 }
 
-// OFFSET: #0x0072CDE0
+// OFFSET: 0x005CACD0/0x140242C30
 void CreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CreatureStats_C* stats = g_creatureDBCache.GetRecord(id, WOWGUID(), NULL, NULL, false);
 
@@ -22346,6 +22379,7 @@ void CreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (unit) {
+        bool shadow = !(unit->m_creatureCacheEntry && (unit->m_creatureCacheEntry->m_typeFlags[0] & 0x2000000));
         unit->DestroyNamePlate();
         unit->m_creatureCacheEntry = stats;
 
@@ -22354,6 +22388,11 @@ void CreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
         }
 
         unit->UpdateUnitCollisionBox(1, 0);
+        bool newShadow = !(unit->m_creatureCacheEntry && (unit->m_creatureCacheEntry->m_typeFlags[0] & 0x2000000));
+
+        if (shadow != newShadow) {
+            World::ObjectSetShadow(unit->m_worldObject, newShadow);
+        }
     }
 
     CGGameUI::UnitNameUpdate(guid);
@@ -23316,7 +23355,7 @@ bool CGUnit_C::SetTrackingTarget(const WOWGUID& target, int32_t type) {
     return true;
 }
 
-// INLINED
+// OFFSET: 0x005C8CA0
 bool CGPlayer_C::CTMFace(float facing) {
     if (!this->CanAutoInteract()) {
         return false;

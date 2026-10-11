@@ -6640,7 +6640,7 @@ int32_t Spell_C_GetPowerCost(const SpellRec* spell, const CGUnit_C* unit) {
                 perLevel = -perLevel;
             }
 
-            cost = perLevel * Spell_C_GetSpellLevelBonus(spell, unit->GetSpellRank(spell) / 5) + cost;
+            cost = perLevel * Spell_C_GetSpellLevelBonus(spell, unit->GetSpellLevel(spell)) + cost;
         }
     }
 

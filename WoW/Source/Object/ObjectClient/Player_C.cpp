@@ -10056,24 +10056,9 @@ void CGPlayer_C::MeleeModeLeave(bool sendStop) {
     }
 }
 
-// OFFSET: #0x006CEB10
+// OFFSET: 0x005AE0B0
 static int32_t IsCastAnimation(uint32_t anim) {
-    switch (anim) {
-        case 46:
-        case 49:
-        case 105:
-        case 106:
-        case 107:
-        case 108:
-        case 109:
-        case 110:
-        case 111:
-        case 112:
-            return 1;
-
-        default:
-            return 0;
-    }
+    return AnimationDataHasFlags(anim, 0xE0000);
 }
 
 // OFFSET: 0x00567EA0/0x1401C6AE0

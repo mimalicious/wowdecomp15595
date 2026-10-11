@@ -251,6 +251,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ResumeMovement();
     int32_t GetHighestThreatExcluding(WOWGUID exclude);
     double GetQuestExperienceModifier() const;
+    uint32_t GetSpellLevel(const SpellRec* spell) const;
     bool IsSpellSuperceded(int32_t spellId);
     void SetLocalClientControl(bool control);
     static void Initialize();
