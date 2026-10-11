@@ -10,16 +10,16 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: 0x00DD3C74
+// STATIC: 0x00DD3C84
 static TSHashTable<SIMPLEFONT, HASHKEY_STRI> s_fontList;
 
-// STATIC: 0x00DD3C6C
+// STATIC: 0x00DD3C7C
 static int32_t s_fontCount;
 
 // STATIC: %0x00BB9228
 int32_t CSimpleFont::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3C70/0x140CB9A4C
+// STATIC: 0x00DD3C80/0x140CB9A4C
 int32_t CSimpleFont::s_objectType;
 
 // STATIC: %0x00BB8B4C

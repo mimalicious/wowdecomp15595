@@ -17,7 +17,7 @@
 // STATIC: %0x00BB9AFC
 int32_t CSimplePathAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CA8/0x140CB9A58
+// STATIC: 0x00DD3CB8/0x140CB9A58
 int32_t CSimplePathAnim::s_objectType;
 
 // STATIC: %0x00BB8BBC

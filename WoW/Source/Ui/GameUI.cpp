@@ -1036,7 +1036,7 @@ uint32_t CGGameUI::s_restrictedLevel;
 // STATIC: 0x00ED755C
 uint32_t CGGameUI::s_restrictedMoney;
 
-// STATIC: 0x00D0BD1C
+// STATIC: 0x00D0BD10
 CCapturePointUIManager g_capturePointUIManager;
 
 // STATIC: 0x00D0BCAC

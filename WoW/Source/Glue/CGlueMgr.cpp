@@ -324,7 +324,7 @@ static CDataAllocator s_emoteKitFinishedAllocator(sizeof(CharacterEmoteKitFinish
 // STATIC: 0x00EBBFA0
 static CDataAllocator s_emoteSpellStartAllocator(sizeof(CharacterEmoteSpellStartData), 4);
 
-// STATIC: 0x00DD2010
+// STATIC: 0x01014010
 static __declspec(thread) WOWGUID s_activeCharacterGuid;
 
 // PROVEN: d7d34f06 IDENTICAL/NONE

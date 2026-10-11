@@ -15,7 +15,7 @@
 // STATIC: %0x00BB9A4C
 int32_t CSimpleTranslationAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CB8/0x140CB9A68
+// STATIC: 0x00DD3CC8/0x140CB9A68
 int32_t CSimpleTranslationAnim::s_objectType;
 
 // STATIC: %0x00BB8BAC

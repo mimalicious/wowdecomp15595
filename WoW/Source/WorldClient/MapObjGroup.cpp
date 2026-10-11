@@ -66,10 +66,10 @@ uint16_t BspQuery::s_testFaces[0x2000];
 // STATIC: 0x00EAF230
 uint16_t BspQuery::s_hitFaces[0x2000];
 
-// STATIC: 0x00EB3230
+// STATIC: 0x00EB3234
 uint32_t BspQuery::s_testFaceSub;
 
-// STATIC: 0x00EB3234
+// STATIC: 0x00EB3230
 uint32_t BspQuery::s_hitFaceSub;
 
 // STATIC: 0x00D03F38/0x140BB4130

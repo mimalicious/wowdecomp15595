@@ -176,7 +176,7 @@ static float s_minTimeScale = 0.0f;
 // STATIC: 0x00ED7A60
 static C3Vector s_listenerUp;
 
-// STATIC: 0x00D10188
+// STATIC: 0x00ED7A44
 CDataAllocator CGWorldFrame::s_worldFrameHeap(sizeof(CGWorldFrame), 1);
 
 // OFFSET: 0x008DEAF0

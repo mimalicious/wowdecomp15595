@@ -20,7 +20,7 @@
 // STATIC: %0x00BB9A38
 int32_t CSimpleAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CBC/0x140CB9A6C
+// STATIC: 0x00DD3CCC/0x140CB9A6C
 int32_t CSimpleAnim::s_objectType;
 
 // STATIC: %0x00BB8BA8

@@ -7,7 +7,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "WoW/Source/Minigame/Minigame_c.h"
 
-// STATIC: 0x00D17A04
+// STATIC: 0x00D179FC
 static const char* s_minigameNames[] = { "TicTacToe", NULL };
 
 // PROVEN: a1c93ff7 IDENTICAL/NONE

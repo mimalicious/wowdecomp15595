@@ -848,7 +848,7 @@ void CSimpleMovieFrame::Render() {
     GxXformSetView(view);
     GxXformSetProjection(projection);
 
-    // STATIC: 0x00DD3C5C
+    // STATIC: 0x00DD3C6C
     static C3Vector s_normal(0.0f, 0.0f, 1.0f);
 
     // STATIC: %0x00CD2794
