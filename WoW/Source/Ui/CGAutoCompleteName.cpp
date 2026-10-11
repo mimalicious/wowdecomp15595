@@ -1,18 +1,30 @@
 #include "CGAutoCompleteName.h"
 #include "Engine/Source/Storm/H/storm.h"
+#include <cstdio>
+#include <cstdlib>
 #include <new>
 #include <typeinfo>
 #include "Engine/Source/Event/FrameTime.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
 #include "WoW/Source/WowServices/RealmConnection.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/Ui/BattlenetUI.h"
 
-// STATIC: #0x00ACEB70
-TSList<AUTOCOMPLETE_NAMENODE, TSGetLink<AUTOCOMPLETE_NAMENODE>> CGAutoCompleteName::m_list;
+// STATIC: 0x00D16098
+TSList<CGAutoCompleteName::AUTOCOMPLETE_NAMENODE, TSGetLink<CGAutoCompleteName::AUTOCOMPLETE_NAMENODE>> CGAutoCompleteName::m_list;
 
-// STATIC: #0x00BEB994
+// STATIC: 0x00F60FE0
+TSHashTable<CGAutoCompleteName::AUTOCOMPLETE_CHARACTER_HASHNODE, CHashKeyGUID> CGAutoCompleteName::m_characterHash;
+
+// STATIC: 0x00F6100C
+TSHashTable<CGAutoCompleteName::AUTOCOMPLETE_BATTLENET_HASHNODE, HASHKEY_NONE> CGAutoCompleteName::m_battlenetHash;
+
+// STATIC: 0x00F60FD8
+uint32_t CGAutoCompleteName::s_numNodes;
+
+// STATIC: 0x00F60FD4
 bool CGAutoCompleteName::s_resortNamesOnRecency;
 
 // STATIC: 0x00F60FDC
@@ -21,67 +33,22 @@ bool CGAutoCompleteName::s_batchUpdate;
 // STATIC: 0x00F60FDD
 bool CGAutoCompleteName::s_resortPending;
 
-// STATIC: #0x00BEB995
+// STATIC: 0x00F60FD5
 bool CGAutoCompleteName::s_whenEditingFromCenter;
 
-// STATIC: #0x00BEB996
+// STATIC: 0x00F60FD6
 bool CGAutoCompleteName::s_useContext;
 
-// OFFSET: 0x009CB590
-static void SortNameNode(AUTOCOMPLETE_NAMENODE* node) {
-    for (AUTOCOMPLETE_NAMENODE* current = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(current); current = current->RawNext()) {
-        if (CGAutoCompleteName::s_resortNamesOnRecency) {
-            if (current->m_lastUsed > node->m_lastUsed) {
-                continue;
-            }
+// OFFSET: 0x009CB210
+int32_t CGAutoCompleteName::CompareNodes(const void* a, const void* b) {
+    const AUTOCOMPLETE_NAMENODE* nodeA = *static_cast<const AUTOCOMPLETE_NAMENODE* const*>(a);
+    const AUTOCOMPLETE_NAMENODE* nodeB = *static_cast<const AUTOCOMPLETE_NAMENODE* const*>(b);
 
-            if (current->m_lastUsed == node->m_lastUsed && SStrCmpUTF8I(current->m_name, node->m_name, 0x7FFFFFFF) < 0) {
-                continue;
-            }
-        } else if (SStrCmpUTF8I(current->m_name, node->m_name, 0x7FFFFFFF) < 0) {
-            continue;
-        }
-
-        if (current == node) {
-            continue;
-        }
-
-        CGAutoCompleteName::m_list.LinkNode(node, 2, current);
-        return;
+    if (CGAutoCompleteName::s_resortNamesOnRecency && nodeA->m_lastUsed != nodeB->m_lastUsed) {
+        return nodeA->m_lastUsed - nodeB->m_lastUsed;
     }
 
-    CGAutoCompleteName::m_list.LinkToTail(node);
-}
-
-// OFFSET: #0x0057B250
-int32_t CGAutoCompleteName::GetMatchingResults(lua_State* L, const char* text, uint32_t include, uint32_t exclude, int32_t numReturns, int32_t cursor, bool allowFullMatch) {
-    int32_t count = 0;
-
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); node; node = CGAutoCompleteName::m_list.Next(node)) {
-        if (!CGAutoCompleteName::NodeMatchesParams(node, text, include, exclude, cursor, allowFullMatch)) {
-            continue;
-        }
-
-        lua_pushstring(L, node->m_name);
-
-        if (++count == numReturns) {
-            break;
-        }
-    }
-
-    return count;
-}
-
-// OFFSET: #0x0057B2C0
-int32_t CGAutoCompleteName::GetPresenceID(const char* name, uint32_t* presenceId) {
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); node; node = CGAutoCompleteName::m_list.Next(node)) {
-        if (node->m_presenceId && !SStrCmpUTF8I(name, node->m_name, STORM_MAX_STR)) {
-            *presenceId = node->m_presenceId;
-            return 1;
-        }
-    }
-
-    return 0;
+    return SStrCmpUTF8I(nodeA->m_name, nodeB->m_name, STORM_MAX_STR);
 }
 
 // OFFSET: 0x009CB260
@@ -98,42 +65,37 @@ const char* CGAutoCompleteName::GetDisplayName(const char* name) {
     return name;
 }
 
-// OFFSET: 0x009CB870
-void CGAutoCompleteName::ResortAll() {
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
-        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
-        SortNameNode(node);
-        node = next;
-    }
-}
-
-// OFFSET: #0x0057ACA0
-int32_t CGAutoCompleteName::NodeMatchesParams(AUTOCOMPLETE_NAMENODE* node, const char* text, uint32_t include, uint32_t exclude, int32_t cursor, bool allowFullMatch) {
+// OFFSET: 0x009CB3A0
+int32_t CGAutoCompleteName::NodeMatchesParams(const AUTOCOMPLETE_NAMENODE* node, const char* text, uint32_t include, uint32_t exclude, int32_t cursor, bool allowFullMatch) {
     if (CGAutoCompleteName::s_useContext && ((node->m_flags & exclude) || !(node->m_flags & include))) {
         return 0;
     }
 
-    if (node->m_guid == ClientServices::GetCharacterInfo()->m_guid) {
+    if (ClientServices::GetCharacterInfo()->m_guid == node->m_guid) {
         return 0;
     }
 
-    if (!allowFullMatch) {
-        int32_t result = SStrCmpUTF8I(text, node->m_name, STORM_MAX_STR);
+    const char* name = CGAutoCompleteName::GetDisplayName(node->m_name);
 
-        if (!result) {
-            return result;
-        }
+    if (!allowFullMatch && !SStrCmpUTF8I(text, name, STORM_MAX_STR)) {
+        return 0;
+    }
+
+    FrameScript_GetContext();
+
+    if (lua_tainted && node->m_presenceId && SStrCmpUTF8I(text, name, STORM_MAX_STR) && *SStrAdvanceCharsUTF8(name, SStrLenUTF8(text)) != ' ') {
+        return 0;
     }
 
     if (!CGAutoCompleteName::s_whenEditingFromCenter) {
-        return SStrCmpUTF8I(text, node->m_name, SStrLenUTF8(text)) ? 0 : 1;
+        return SStrCmpUTF8I(text, name, SStrLenUTF8(text)) ? 0 : 1;
     }
 
-    if (SStrCmpUTF8I(text, node->m_name, cursor)) {
+    if (SStrCmpUTF8I(text, name, cursor)) {
         return 0;
     }
 
-    int32_t nameLength = SStrLenUTF8(node->m_name);
+    int32_t nameLength = SStrLenUTF8(name);
     int32_t textLength = SStrLenUTF8(text);
     int32_t tail = textLength - cursor;
 
@@ -145,7 +107,7 @@ int32_t CGAutoCompleteName::NodeMatchesParams(AUTOCOMPLETE_NAMENODE* node, const
         return 1;
     }
 
-    const char* namePosition = SStrAdvanceCharsUTF8(node->m_name, cursor);
+    const char* namePosition = SStrAdvanceCharsUTF8(name, cursor);
     int32_t remaining = nameLength - tail - cursor;
     const char* textPosition = SStrAdvanceCharsUTF8(text, cursor);
 
@@ -154,50 +116,321 @@ int32_t CGAutoCompleteName::NodeMatchesParams(AUTOCOMPLETE_NAMENODE* node, const
     }
 
     while (SStrCmpUTF8I(namePosition, textPosition, tail)) {
-        if (!--remaining) {
+        remaining--;
+        namePosition = SStrAdvanceCharsUTF8(namePosition, 1);
+
+        if (!remaining) {
             return 0;
         }
-
-        namePosition = SStrAdvanceCharsUTF8(namePosition, 1);
     }
 
     return 1;
 }
 
-// OFFSET: #0x0057AE80
-static AUTOCOMPLETE_NAMENODE* FindNodeByGuid(const WOWGUID& guid) {
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); node; node = CGAutoCompleteName::m_list.Next(node)) {
-        if (!node->m_presenceId && node->m_guid == guid) {
-            return node;
+// OFFSET: 0x009CB520
+CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::FindNodeByName(const char* name, bool characters, bool battlenet) {
+    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
+        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
+
+        if (!SStrCmpUTF8I(name, node->m_name, STORM_MAX_STR)) {
+            if (node->m_presenceId) {
+                if (battlenet) {
+                    return node;
+                }
+            } else if (characters) {
+                return node;
+            }
         }
+
+        node = next;
     }
 
     return NULL;
 }
 
-// OFFSET: #0x0057B630
-static int32_t ApplyNodeFlags(AUTOCOMPLETE_NAMENODE* node, uint32_t flags, int32_t touch, const char* name) {
-    if (!node) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// OFFSET: 0x009CB590
+void CGAutoCompleteName::PutNameInCorrectSpot(AUTOCOMPLETE_NAMENODE* node) {
+    if (CGAutoCompleteName::s_batchUpdate) {
+        CGAutoCompleteName::m_list.LinkToTail(node);
+        CGAutoCompleteName::s_resortPending = true;
+        return;
     }
 
-    node->m_flags |= flags;
+    for (AUTOCOMPLETE_NAMENODE* current = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(current); ) {
+        AUTOCOMPLETE_NAMENODE* next = current->RawNext();
+        int32_t result;
 
-    if (touch) {
-        node->m_lastUsed = FrameTime::s_curTimeMs;
+        if (CGAutoCompleteName::s_resortNamesOnRecency && current->m_lastUsed != node->m_lastUsed) {
+            result = current->m_lastUsed - node->m_lastUsed;
+        } else {
+            result = SStrCmpUTF8I(current->m_name, node->m_name, STORM_MAX_STR);
+        }
+
+        if (result >= 0 && current != node) {
+            CGAutoCompleteName::m_list.LinkNode(node, 2, current);
+            return;
+        }
+
+        current = next;
+    }
+
+    CGAutoCompleteName::m_list.LinkToTail(node);
+}
+
+// OFFSET: 0x009CB6E0
+int32_t CGAutoCompleteName::GetMatchingResults(lua_State* L, const char* text, uint32_t include, uint32_t exclude, int32_t numReturns, int32_t cursor, bool allowFullMatch) {
+    int32_t count = 0;
+
+    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
+        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
+
+        if (CGAutoCompleteName::NodeMatchesParams(node, text, include, exclude, cursor, allowFullMatch)) {
+            lua_pushstring(L, node->m_name);
+
+            if (++count == numReturns) {
+                break;
+            }
+        }
+
+        node = next;
+    }
+
+    return count;
+}
+
+// OFFSET: 0x009CB750
+int32_t CGAutoCompleteName::GetPresenceID(const char* name, uint32_t* presenceId) {
+    if (name[0] == '|' && name[1] == 'K' && name[2] == 'f') {
+        uint32_t id = 0;
+        sscanf(name, "|Kf%d", &id);
+
+        if (id) {
+            *presenceId = id;
+            return 1;
+        }
+
+        return 0;
+    }
+
+    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
+        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
+
+        if (node->m_presenceId && (!SStrCmpUTF8I(name, node->m_name, STORM_MAX_STR) || !SStrCmpUTF8I(name, CGAutoCompleteName::GetDisplayName(node->m_name), STORM_MAX_STR))) {
+            *presenceId = static_cast<uint32_t>(node->m_guid.m_guid);
+            return 1;
+        }
+
+        node = next;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009CB870
+void CGAutoCompleteName::ResortAll() {
+    TSGrowableArray<AUTOCOMPLETE_NAMENODE*> nodes;
+    uint32_t count = CGAutoCompleteName::s_numNodes;
+    nodes.SetCount(count);
+    AUTOCOMPLETE_NAMENODE** entry = nodes.m_data;
+
+    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
+        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
+        *entry++ = node;
+        node = next;
+    }
+
+    qsort(nodes.m_data, count, sizeof(AUTOCOMPLETE_NAMENODE*), CGAutoCompleteName::CompareNodes);
+
+    while (count) {
+        AUTOCOMPLETE_NAMENODE* node = nodes.m_data[--count];
+        CGAutoCompleteName::m_list.UnlinkNode(node);
+        CGAutoCompleteName::m_list.LinkToHead(node);
+    }
+
+    CGAutoCompleteName::s_resortPending = false;
+}
+
+// OFFSET: 0x009CBBC0
+int32_t CGAutoCompleteName::SetName(const WOWGUID& guid, const char* name, bool overwrite) {
+    AUTOCOMPLETE_CHARACTER_HASHNODE* hashNode = CGAutoCompleteName::m_characterHash.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
+    AUTOCOMPLETE_NAMENODE* node;
+
+    if (!hashNode || !(node = hashNode->m_node)) {
+        return 0;
+    }
+
+    if (node->m_name[0] && !overwrite) {
+        return 0;
+    }
+
+    SStrCopy(node->m_name, name, 305);
+    return 1;
+}
+
+// OFFSET: 0x009CBC40
+int32_t CGAutoCompleteName::SetName(const uint32_t& presenceId, const char* name, bool overwrite) {
+    AUTOCOMPLETE_BATTLENET_HASHNODE* hashNode = CGAutoCompleteName::m_battlenetHash.Ptr(presenceId, HASHKEY_NONE());
+    AUTOCOMPLETE_NAMENODE* node;
+
+    if (!hashNode || !(node = hashNode->m_node)) {
+        return 0;
+    }
+
+    if (node->m_name[0] && !overwrite) {
+        return 0;
+    }
+
+    SStrCopy(node->m_name, name, 305);
+    return 1;
+}
+
+// OFFSET: 0x009CBCC0
+int32_t CGAutoCompleteName::AddFlagsToNode(AUTOCOMPLETE_NAMENODE* node, uint32_t flags, int32_t add, const char* name) {
+    node->m_flags |= flags;
+    bool resort = false;
+
+    if (add) {
+        node->m_lastUsed = FrameTime::GetCurTimeMs();
+        resort = true;
     }
 
     if (name && !node->m_name[0]) {
         SStrCopy(node->m_name, name, 305);
+        resort = true;
     }
 
-    SortNameNode(node);
+    if (resort) {
+        CGAutoCompleteName::PutNameInCorrectSpot(node);
+    }
+
     return 1;
 }
 
-// OFFSET: #0x0057B6A0
-static AUTOCOMPLETE_NAMENODE* AllocNameNode(const WOWGUID& guid, uint32_t flags, uint32_t lastUsed, const char* name) {
+// OFFSET: 0x009CC030
+static void AutoCompleteNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, WOWGUID(), NULL, NULL, false);
+
+    if (name) {
+        CGAutoCompleteName::SetName(guid, name->m_name, true);
+    }
+}
+
+// OFFSET: 0x009CC080
+void CGAutoCompleteName::RefreshName(const WOWGUID& guid) {
+    NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, guid, AutoCompleteNameQueryCallback, NULL, true);
+
+    if (name) {
+        CGAutoCompleteName::SetName(guid, name->m_name, true);
+    }
+}
+
+// OFFSET: 0x009CC260
+CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::RemoveNode(AUTOCOMPLETE_NAMENODE* node) {
+    CGAutoCompleteName::s_numNodes--;
+
+    if (node->m_presenceId) {
+        AUTOCOMPLETE_BATTLENET_HASHNODE* hashNode = CGAutoCompleteName::m_battlenetHash.Ptr(static_cast<uint32_t>(node->m_guid.m_guid), HASHKEY_NONE());
+
+        if (hashNode) {
+            CGAutoCompleteName::m_battlenetHash.Delete(hashNode);
+        } else {
+            SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
+        }
+    } else {
+        AUTOCOMPLETE_CHARACTER_HASHNODE* hashNode = CGAutoCompleteName::m_characterHash.Ptr(static_cast<uint32_t>(node->m_guid.m_guid), CHashKeyGUID(node->m_guid.m_guid));
+
+        if (hashNode) {
+            CGAutoCompleteName::m_characterHash.Delete(hashNode);
+        } else {
+            SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
+        }
+    }
+
+    return CGAutoCompleteName::m_list.DeleteNode(node);
+}
+
+// OFFSET: 0x009CC340
+void CGAutoCompleteName::RemoveAllBattlenet() {
+    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
+        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
+
+        if (node->m_presenceId) {
+            CGAutoCompleteName::RemoveNode(node);
+        }
+
+        node = next;
+    }
+}
+
+// OFFSET: 0x009CC5A0
+int32_t CGAutoCompleteName::RemoveFlags(const WOWGUID& guid, uint32_t flags) {
+    AUTOCOMPLETE_CHARACTER_HASHNODE* hashNode = CGAutoCompleteName::m_characterHash.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
+    AUTOCOMPLETE_NAMENODE* node;
+
+    if (hashNode && (node = hashNode->m_node)) {
+        node->m_flags &= ~flags;
+
+        if (!(node->m_flags & ~0x28)) {
+            CGAutoCompleteName::RemoveNode(node);
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x009CC600
+int32_t CGAutoCompleteName::RemoveFlags(const uint32_t& presenceId, uint32_t flags) {
+    AUTOCOMPLETE_BATTLENET_HASHNODE* hashNode = CGAutoCompleteName::m_battlenetHash.Ptr(presenceId, HASHKEY_NONE());
+    AUTOCOMPLETE_NAMENODE* node;
+
+    if (hashNode && (node = hashNode->m_node)) {
+        node->m_flags &= ~flags;
+
+        if (!(node->m_flags & ~0x28)) {
+            CGAutoCompleteName::RemoveNode(node);
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x009CC650
+int32_t CGAutoCompleteName::RemoveFlagsByName(const char* name, uint32_t flags, bool characters, bool battlenet) {
+    AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::FindNodeByName(name, characters, battlenet);
+
+    if (node) {
+        node->m_flags &= ~flags;
+
+        if (!(node->m_flags & ~0x28) && CGAutoCompleteName::s_useContext) {
+            CGAutoCompleteName::RemoveNode(node);
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x009CC6A0
+int32_t CGAutoCompleteName::RemoveFlagsFromAllNodes(uint32_t flags) {
+    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
+        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
+        node->m_flags &= ~flags;
+
+        if (!(node->m_flags & ~0x28) && CGAutoCompleteName::s_useContext) {
+            CGAutoCompleteName::RemoveNode(node);
+        }
+
+        node = next;
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x009CD0F0
+CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::AddPlayerToList(const WOWGUID& guid, uint32_t flags, uint32_t lastUsed, const char* name) {
     AUTOCOMPLETE_NAMENODE* node = new (SMemAlloc(sizeof(AUTOCOMPLETE_NAMENODE), typeid(AUTOCOMPLETE_NAMENODE).raw_name(), -2, 0x8)) AUTOCOMPLETE_NAMENODE;
+    CGAutoCompleteName::s_numNodes++;
+    AUTOCOMPLETE_CHARACTER_HASHNODE* hashNode = CGAutoCompleteName::m_characterHash.New(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid), 0, 0);
+    hashNode->m_node = node;
     node->m_presenceId = 0;
     node->m_guid = guid;
 
@@ -209,190 +442,20 @@ static AUTOCOMPLETE_NAMENODE* AllocNameNode(const WOWGUID& guid, uint32_t flags,
 
     if (node->m_lastUsed != lastUsed) {
         node->m_lastUsed = lastUsed;
-        SortNameNode(node);
+        CGAutoCompleteName::PutNameInCorrectSpot(node);
     }
 
     node->m_flags = flags;
-    SortNameNode(node);
+    CGAutoCompleteName::PutNameInCorrectSpot(node);
     return node;
 }
 
-// OFFSET: #0x0057B7C0
-void CGAutoCompleteName::AddFlags(const WOWGUID& guid, uint32_t flags, int32_t add, const char* name) {
-    if (guid == WOWGUID()) {
-        return;
-    }
-
-    if (flags & 0x8) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByGuid(guid);
-
-    if (node) {
-        ApplyNodeFlags(node, flags, add, name);
-    } else {
-        AllocNameNode(guid, flags, add ? FrameTime::s_curTimeMs : 0, name);
-    }
-}
-
-// OFFSET: #0x0057AF80
-int32_t CGAutoCompleteName::SetName(const WOWGUID& guid, const char* name, bool overwrite) {
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByGuid(guid);
-
-    if (!node) {
-        return 0;
-    }
-
-    if (node->m_name[0] && !overwrite) {
-        return 0;
-    }
-
-    SStrCopy(node->m_name, name, 305);
-    return 1;
-}
-
-// OFFSET: #0x0057B000
-int32_t CGAutoCompleteName::RemoveFlags(const WOWGUID& guid, uint32_t flags) {
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByGuid(guid);
-
-    if (node) {
-        node->m_flags &= ~flags;
-
-        if (!(node->m_flags & ~0x20)) {
-            CGAutoCompleteName::m_list.DeleteNode(node);
-        }
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0057B0D0
-int32_t CGAutoCompleteName::RemoveFlagsFromAllNodes(uint32_t flags) {
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
-        AUTOCOMPLETE_NAMENODE* next = node->RawNext();
-        node->m_flags &= ~flags;
-
-        if (!(node->m_flags & ~0x20) && CGAutoCompleteName::s_useContext) {
-            CGAutoCompleteName::m_list.DeleteNode(node);
-        }
-
-        node = next;
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0057AED0
-static AUTOCOMPLETE_NAMENODE* FindNodeByPresenceId(const uint32_t& presenceId) {
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); node; node = CGAutoCompleteName::m_list.Next(node)) {
-        if (node->m_presenceId && presenceId == static_cast<uint32_t>(node->m_guid.m_guid)) {
-            return node;
-        }
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x0057AF10
-AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::FindNodeByName(const char* name, bool characters, bool battlenet) {
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); node; node = CGAutoCompleteName::m_list.Next(node)) {
-        if (SStrCmpUTF8I(name, node->m_name, STORM_MAX_STR)) {
-            continue;
-        }
-
-        if (node->m_presenceId) {
-            if (battlenet) {
-                return node;
-            }
-        } else if (characters) {
-            return node;
-        }
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x0057AFC0
-int32_t CGAutoCompleteName::SetName(const uint32_t& presenceId, const char* name, bool overwrite) {
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByPresenceId(presenceId);
-
-    if (!node) {
-        return 0;
-    }
-
-    if (node->m_name[0] && !overwrite) {
-        return 0;
-    }
-
-    SStrCopy(node->m_name, name, 305);
-    return 1;
-}
-
-// OFFSET: #0x0057B040
-int32_t CGAutoCompleteName::RemoveFlags(const uint32_t& presenceId, uint32_t flags) {
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByPresenceId(presenceId);
-
-    if (node) {
-        node->m_flags &= ~flags;
-
-        if (!(node->m_flags & ~0x20)) {
-            CGAutoCompleteName::m_list.DeleteNode(node);
-        }
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0057B080
-int32_t CGAutoCompleteName::RemoveFlagsByName(const char* name, uint32_t flags, bool characters, bool battlenet) {
-    AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::FindNodeByName(name, characters, battlenet);
-
-    if (node) {
-        node->m_flags &= ~flags;
-
-        if (!(node->m_flags & ~0x20) && CGAutoCompleteName::s_useContext) {
-            CGAutoCompleteName::m_list.DeleteNode(node);
-        }
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0057B580
-static void AutoCompleteNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    WOWGUID none = WOWGUID();
-    const char* name = reinterpret_cast<const char*>(g_nameDBCache.GetRecord(guid.m_guid, none, NULL, NULL, false));
-
-    if (!name) {
-        return;
-    }
-
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByGuid(guid);
-
-    if (node) {
-        SStrCopy(node->m_name, name, 305);
-    }
-}
-
-// OFFSET: #0x0057B5E0
-void CGAutoCompleteName::RefreshName(const WOWGUID& guid) {
-    const char* name = reinterpret_cast<const char*>(g_nameDBCache.GetRecord(guid.m_guid, guid, AutoCompleteNameQueryCallback, NULL, false));
-
-    if (!name) {
-        return;
-    }
-
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByGuid(guid);
-
-    if (node) {
-        SStrCopy(node->m_name, name, 305);
-    }
-}
-
-// OFFSET: #0x0057B730
-AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::AddPlayerToList(const uint32_t& presenceId, uint32_t flags, uint32_t lastUsed, const char* name) {
+// OFFSET: 0x009CD230
+CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::AddPlayerToList(const uint32_t& presenceId, uint32_t flags, uint32_t lastUsed, const char* name) {
     AUTOCOMPLETE_NAMENODE* node = new (SMemAlloc(sizeof(AUTOCOMPLETE_NAMENODE), typeid(AUTOCOMPLETE_NAMENODE).raw_name(), -2, 0x8)) AUTOCOMPLETE_NAMENODE;
+    CGAutoCompleteName::s_numNodes++;
+    AUTOCOMPLETE_BATTLENET_HASHNODE* hashNode = CGAutoCompleteName::m_battlenetHash.New(presenceId, HASHKEY_NONE(), 0, 0);
+    hashNode->m_node = node;
     node->m_presenceId = 1;
     *reinterpret_cast<uint32_t*>(&node->m_guid) = presenceId;
 
@@ -404,25 +467,46 @@ AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::AddPlayerToList(const uint32_t& prese
 
     if (node->m_lastUsed != lastUsed) {
         node->m_lastUsed = lastUsed;
-        SortNameNode(node);
+        CGAutoCompleteName::PutNameInCorrectSpot(node);
     }
 
     node->m_flags = flags | 0x8;
-    SortNameNode(node);
+    CGAutoCompleteName::PutNameInCorrectSpot(node);
     return node;
 }
 
-// OFFSET: #0x0057B840
+// OFFSET: 0x009CD350
+int32_t CGAutoCompleteName::AddFlags(const WOWGUID& guid, uint32_t flags, int32_t add, const char* name) {
+    if (!guid.m_guid) {
+        return 0;
+    }
+
+    AUTOCOMPLETE_CHARACTER_HASHNODE* hashNode = CGAutoCompleteName::m_characterHash.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
+    AUTOCOMPLETE_NAMENODE* node;
+
+    if (hashNode && (node = hashNode->m_node)) {
+        return CGAutoCompleteName::AddFlagsToNode(node, flags, add, name);
+    }
+
+    if (!(flags & ~0x28)) {
+        return 0;
+    }
+
+    return CGAutoCompleteName::AddPlayerToList(guid, flags, add ? FrameTime::GetCurTimeMs() : 0, name) != NULL;
+}
+
+// OFFSET: 0x009CD3F0
 int32_t CGAutoCompleteName::AddFlags(const uint32_t& presenceId, uint32_t flags, int32_t add, const char* name) {
-    if (!presenceId) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    AUTOCOMPLETE_BATTLENET_HASHNODE* hashNode = CGAutoCompleteName::m_battlenetHash.Ptr(presenceId, HASHKEY_NONE());
+    AUTOCOMPLETE_NAMENODE* node;
+
+    if (hashNode && (node = hashNode->m_node)) {
+        return CGAutoCompleteName::AddFlagsToNode(node, flags, add, name);
     }
 
-    AUTOCOMPLETE_NAMENODE* node = FindNodeByPresenceId(presenceId);
-
-    if (node) {
-        return ApplyNodeFlags(node, flags, add, name);
+    if (!(flags & ~0x28)) {
+        return 0;
     }
 
-    return CGAutoCompleteName::AddPlayerToList(presenceId, flags, add ? FrameTime::s_curTimeMs : 0, name) != NULL;
+    return CGAutoCompleteName::AddPlayerToList(presenceId, flags, add ? FrameTime::GetCurTimeMs() : 0, name) != NULL;
 }

@@ -23,9 +23,16 @@
 #include "WoW/Source/Ui/ChatFrame.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
+#include "Engine/Source/Event/FrameTime.h"
+#include "Engine/Source/ConsoleBase/IConsole.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/DB/Rec/LfgDungeonsRec.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Common/ThrottleObject.h"
 
-// STATIC: #0x00A394B0
-static const uint8_t s_classRoles[11] = { 0x0B, 0x0F, 0x09, 0x09, 0x0D, 0x0B, 0x0D, 0x09, 0x09, 0x00, 0x0F };
+// STATIC: 0x00C273B8
+static const uint8_t s_classRoles[11] = { 0x0A, 0x0E, 0x08, 0x08, 0x0C, 0x0A, 0x0C, 0x08, 0x08, 0x00, 0x0E };
 
 // STATIC: #0x00ACDD6C
 static int32_t s_joinAttempts;
@@ -42,23 +49,25 @@ static int32_t s_proposalResponseCount = 2;
 // STATIC: #0x00BEABB0
 static float s_proposalResponseTime;
 
-// STATIC: #0x00ACDD5C
-static int32_t s_bootVoteCount = 2;
-
-// STATIC: #0x00BEABB4
-static float s_bootVoteTime;
-
-// STATIC: #0x00BEAA0C
+// STATIC: 0x00F4A4D0
 static uint32_t s_lastQueueSlot;
 
-// OFFSET: %0x008D75C0
+// OFFSET: 0x00A30410
 uint8_t CGLookingForGroup::GetClassRoles(uint32_t classID) {
+    if (!classID) {
+        return 0;
+    }
+
+    if (classID > 11) {
+        return 0;
+    }
+
     return s_classRoles[classID - 1];
 }
 
 // OFFSET: 0x00A30430/0x1407DA360
 const char* GetRoleTokenFromFlags(uint32_t flags) {
-    for (uint32_t i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         if ((2 << i) & flags) {
             return s_roleTokens[i];
         }
@@ -69,7 +78,7 @@ const char* GetRoleTokenFromFlags(uint32_t flags) {
 
 // OFFSET: 0x00A30470/0x1407DA390
 uint32_t GetRoleFlagFromToken(const char* token) {
-    for (uint32_t i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         if (!_stricmp(token, s_roleTokens[i])) {
             return 2 << i;
         }
@@ -78,30 +87,44 @@ uint32_t GetRoleFlagFromToken(const char* token) {
     return 0;
 }
 
-// OFFSET: #0x00555920
+// INLINED
 void CGLookingForGroup::RequestLFGStatus() {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_DF_GET_JOIN_STATUS));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    UserClientOpcode2581 request;
+    ClientServices::Send(&request);
 }
 
-// OFFSET: #0x00555990
+// INLINED
 void CGLookingForGroup::RequestLFGPlayerInfo() {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_LFG_PLAYER_LOCK_INFO_REQUEST));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    UserClientLfgLockInfoRequest request;
+    request.unk_0010 = true;
+    ClientServices::Send(&request);
 }
 
-// OFFSET: #0x00557240
+// OFFSET: 0x00980700
+static bool OnSetDfFastLaunchResult(ClientSetDfFastLaunchResult* msg) {
+    char text[64];
+    SStrPrintf(text, sizeof(text), "lfgFastLaunch set to %d", msg->unk_0010);
+    CGGameUI::AddErrorMessage(text, 1);
+    ConsoleWrite(text, ERROR_COLOR);
+    return true;
+}
+
+// OFFSET: 0x00980740
+static bool OnLfgSlotInvalid(ClientLfgSlotInvalid* msg) {
+    FrameScript_SignalEvent(SCRIPT_EVENT_LFG_INVALID_ERROR_MESSAGE, "%d%d%d", msg->unk_0010.m_firstCompleted, msg->unk_0010.m_projectID, msg->unk_0010.m_completionCount);
+    return true;
+}
+
+// OFFSET: 0x00983570
 void CGLookingForGroup::EnterWorld() {
     CGLookingForGroup::m_lastProposalID = 0;
     CGLookingForGroup::RequestLFGStatus();
     CGLookingForGroup::RequestLFGPlayerInfo();
+    ClientSetDfFastLaunchResult::s_handler = OnSetDfFastLaunchResult;
+    ClientLfgSlotInvalid::s_handler = OnLfgSlotInvalid;
 }
 
-// OFFSET: #0x00553830
+// OFFSET: 0x00980C00
 void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32_t completedMask, uint32_t* total, uint32_t* completed) {
     *total = 0;
     *completed = 0;
@@ -109,7 +132,7 @@ void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32
     for (int32_t i = 0; i < g_dungeonEncounterDB.m_numRecords; i++) {
         DungeonEncounterRec* encounter = g_dungeonEncounterDB.GetRecordByIndex(i);
 
-        if (encounter->m_mapID == mapId && encounter->m_difficulty == difficulty) {
+        if (encounter->m_mapID == mapId && (encounter->m_difficulty == -1 || encounter->m_difficulty == difficulty)) {
             ++*total;
 
             if ((1 << encounter->m_bit) & completedMask) {
@@ -154,13 +177,20 @@ int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty
     return 4;
 }
 
-// OFFSET: #0x00553B50
-uint32_t FilterRolesByClass(uint8_t roles) {
-    ChrClassesRec* rec = g_chrClassesDB.GetRecord(ClientServices::GetCharacterClass());
-    return roles & s_classRoles[rec->m_id - 1];
+// OFFSET: 0x0097EF80
+static int32_t GetLFGDungeonSubtype(const LfgDungeonsRec* rec) {
+    if (rec->m_typeID != 1) {
+        return 0;
+    }
+
+    if (rec->IsRaid()) {
+        return 3;
+    }
+
+    return rec->IsHeroic() ? 2 : 1;
 }
 
-// OFFSET: #0x00554610
+// OFFSET: 0x00982070
 int32_t CGLookingForGroup::GetLFGRoleUpdate(lua_State* L) {
     lua_pushboolean(L, CGLookingForGroup::m_roleCheckState == 2);
     lua_pushnumber(L, CGLookingForGroup::m_roleCheckSlots.m_count);
@@ -168,7 +198,7 @@ int32_t CGLookingForGroup::GetLFGRoleUpdate(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00554690
+// OFFSET: 0x009820F0
 int32_t CGLookingForGroup::GetLFGRoleUpdateSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGRoleUpdateSlot(index)");
@@ -181,9 +211,16 @@ int32_t CGLookingForGroup::GetLFGRoleUpdateSlot(lua_State* L) {
         return 0;
     }
 
-    lua_pushnumber(L, CGLookingForGroup::m_roleCheckSlots.m_data[index] >> 24);
-    lua_pushnumber(L, CGLookingForGroup::m_roleCheckSlots.m_data[index] & 0xFFFFFF);
-    return 2;
+    LfgDungeonsRec* rec = g_lfgDungeonsDB.GetRecord(CGLookingForGroup::m_roleCheckSlots.m_data[index] & 0xFFFFFF);
+
+    if (!rec) {
+        return 0;
+    }
+
+    lua_pushnumber(L, rec->m_id);
+    lua_pushnumber(L, rec->m_typeID);
+    lua_pushnumber(L, GetLFGDungeonSubtype(rec));
+    return 3;
 }
 
 // OFFSET: #0x005572D0
@@ -206,7 +243,7 @@ void CGLookingForGroup::JoinLFG() {
     }
 
     CDataStore msg;
-    uint32_t roles = FilterRolesByClass(static_cast<uint8_t>(s_cvLfgSelectedRoles->m_intValue));
+    uint32_t roles = static_cast<uint8_t>(s_cvLfgSelectedRoles->m_intValue) & (CGLookingForGroup::GetClassRoles(ClientServices::GetCharacterClass()) | 1);
 
     if (!(roles & ~0x1)) {
         return;
@@ -253,7 +290,7 @@ void CGLookingForGroup::LeaveLFG() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00553000
+// OFFSET: 0x00981D70
 int32_t CGLookingForGroup::GetLFGProposalMember(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGProposalMember(index)");
@@ -262,43 +299,32 @@ int32_t CGLookingForGroup::GetLFGProposalMember(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (!CGLookingForGroup::m_proposal.m_id || index > 4) {
+    if (!CGLookingForGroup::m_proposal.m_id || index >= CGLookingForGroup::m_proposal.m_numMembers) {
         return 0;
     }
 
-    LFGProposalMember* member = &CGLookingForGroup::m_proposal.m_members[index];
-    lua_pushboolean(L, member->m_roles & 0x1);
-
-    if (member->m_roles & 0x2) {
-        lua_pushstring(L, s_roleTokens[0]);
-    } else if (member->m_roles & 0x4) {
-        lua_pushstring(L, s_roleTokens[1]);
-    } else if (member->m_roles & 0x8) {
-        lua_pushstring(L, s_roleTokens[2]);
-    } else {
-        lua_pushstring(L, "UNKNOWN");
-    }
-
+    lua_pushboolean(L, CGLookingForGroup::m_proposal.m_members[index].m_roles & 0x1);
+    lua_pushstring(L, GetRoleTokenFromFlags(CGLookingForGroup::m_proposal.m_members[index].m_roles));
     lua_pushnumber(L, 0.0);
-    lua_pushboolean(L, member->m_accepted);
-    lua_pushboolean(L, member->unk_0014);
+    lua_pushboolean(L, CGLookingForGroup::m_proposal.m_members[index].m_accepted);
+    lua_pushboolean(L, CGLookingForGroup::m_proposal.m_members[index].unk_0014);
     lua_pushnil(L);
     lua_pushnil(L);
     return 7;
 }
 
-// OFFSET: #0x00554380
+// OFFSET: 0x00981E60
 int32_t CGLookingForGroup::GetLFGProposalEncounter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGProposalEncounter(index)");
         return 0;
     }
 
-    double index = lua_tonumber(L, 1);
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     LfgDungeonsRec* rec;
 
     if (CGLookingForGroup::m_proposal.m_id && (rec = g_lfgDungeonsDB.GetRecord(CGLookingForGroup::m_proposal.m_id & 0xFFFFFF))) {
-        return PushDungeonEncounterInfo(L, rec->m_mapID, rec->m_difficulty, static_cast<int32_t>(index - 1.0), CGLookingForGroup::m_proposal.m_completedMask, 0);
+        return PushDungeonEncounterInfo(L, rec->m_mapID, rec->m_difficulty, index, CGLookingForGroup::m_proposal.m_completedMask, 0);
     }
 
     return PushDungeonEncounterInfo(L, 0, 0, 0, 0, 0);
@@ -344,38 +370,42 @@ void CGLookingForGroup::ProposalResponse(bool accept) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LFG_PROPOSAL_UPDATE, NULL);
 }
 
-// OFFSET: #0x00554750
+// OFFSET: 0x009821D0
 int32_t CGLookingForGroup::GetLFGRoleUpdateMember(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGRoleUpdateMember(index)");
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
     if (index < 0 || index >= static_cast<int32_t>(CGLookingForGroup::m_roleCheckMembers.m_count)) {
         return 0;
     }
 
-    LFGRoleCheckMember* member = &CGLookingForGroup::m_roleCheckMembers.m_data[index];
-    lua_pushboolean(L, member->m_confirmed);
-    lua_pushnumber(L, member->m_level);
-    NameCache* name = g_nameDBCache.GetRecord(member->m_guid.m_guid, WOWGUID(), NULL, NULL, false);
+    lua_pushboolean(L, CGLookingForGroup::m_roleCheckMembers.m_data[index].m_confirmed);
+    lua_pushnumber(L, CGLookingForGroup::m_roleCheckMembers.m_data[index].m_level);
+    NameCache* name = g_nameDBCache.GetRecord(CGLookingForGroup::m_roleCheckMembers.m_data[index].m_guid.m_guid, WOWGUID(), NULL, NULL, false);
 
     if (name) {
         lua_pushstring(L, name->m_name);
         const char* className = CGUnit_C::GetDisplayClassName(NULL, name);
-        lua_pushstring(L, className ? className : "");
+
+        if (className) {
+            lua_pushstring(L, className);
+        } else {
+            lua_pushstring(L, "");
+        }
     } else {
         lua_pushnil(L);
         lua_pushnil(L);
     }
 
-    if (member->m_confirmed) {
-        lua_pushboolean(L, member->m_roles & 0x1);
-        lua_pushboolean(L, member->m_roles & 0x2);
-        lua_pushboolean(L, member->m_roles & 0x4);
-        lua_pushboolean(L, member->m_roles & 0x8);
+    if (CGLookingForGroup::m_roleCheckMembers.m_data[index].m_confirmed) {
+        lua_pushboolean(L, CGLookingForGroup::m_roleCheckMembers.m_data[index].m_roles & 0x1);
+        lua_pushboolean(L, CGLookingForGroup::m_roleCheckMembers.m_data[index].m_roles & 0x2);
+        lua_pushboolean(L, CGLookingForGroup::m_roleCheckMembers.m_data[index].m_roles & 0x4);
+        lua_pushboolean(L, CGLookingForGroup::m_roleCheckMembers.m_data[index].m_roles & 0x8);
     } else {
         lua_pushnil(L);
         lua_pushnil(L);
@@ -386,113 +416,95 @@ int32_t CGLookingForGroup::GetLFGRoleUpdateMember(lua_State* L) {
     return 8;
 }
 
-// OFFSET: #0x00554960
+// OFFSET: 0x00982470
 int32_t CGLookingForGroup::SetLFGBootVote(lua_State* L) {
     bool vote = StringToBOOL(L, 1, 0) != 0;
 
-    if (!CGLookingForGroup::m_bootProposal.m_inProgress) {
-        return 0;
-    }
+    if (CGLookingForGroup::m_bootProposal.m_inProgress) {
+        static ThrottleObject s_throttle(2, 10);
 
-    if (++s_bootVoteCount > 2) {
-        float now = OsGetAsyncTimeSec();
-
-        if (now - s_bootVoteTime < 10.0) {
-            if (s_bootVoteCount > 2) {
-                return 0;
-            }
-        } else {
-            s_bootVoteTime = now;
-            s_bootVoteCount = 0;
+        if (s_throttle.IncrementAndCheck()) {
+            CGLookingForGroup::m_bootProposal.m_myVote = vote;
+            UserClientLfgSetBootVote request;
+            request.unk_0010 = vote;
+            ClientServices::Send(&request);
         }
     }
 
-    CGLookingForGroup::m_bootProposal.m_myVote = vote;
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_LFG_SET_BOOT_VOTE));
-    msg.Put(static_cast<uint8_t>(vote));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
     return 0;
 }
 
-// OFFSET: #0x00554A60
+// OFFSET: 0x00982520
 int32_t CGLookingForGroup::GetLFGBootProposal(lua_State* L) {
     lua_pushboolean(L, CGLookingForGroup::m_bootProposal.m_inProgress);
 
-    if (!CGLookingForGroup::m_bootProposal.m_inProgress) {
-        return 1;
-    }
+    if (CGLookingForGroup::m_bootProposal.m_inProgress) {
+        lua_pushboolean(L, CGLookingForGroup::m_bootProposal.m_didVote);
+        lua_pushboolean(L, CGLookingForGroup::m_bootProposal.m_myVote);
+        NameCache* name = g_nameDBCache.GetRecord(CGLookingForGroup::m_bootProposal.m_target.m_guid, WOWGUID(), NULL, NULL, false);
 
-    lua_pushboolean(L, CGLookingForGroup::m_bootProposal.m_didVote);
-    lua_pushboolean(L, CGLookingForGroup::m_bootProposal.m_myVote);
-    NameCache* name = g_nameDBCache.GetRecord(CGLookingForGroup::m_bootProposal.m_target.m_guid, WOWGUID(), NULL, NULL, false);
-
-    if (name) {
-        char fullName[256];
-
-        if (name->m_realmName[0]) {
-            SStrPrintf(fullName, sizeof(fullName), "%s-%s", static_cast<const char*>(name->m_name), name->m_realmName);
+        if (name) {
+            char fullName[256];
+            lua_pushstring(L, name->FullName(fullName, sizeof(fullName)));
         } else {
-            SStrCopy(fullName, name->m_name, sizeof(fullName));
+            lua_pushnil(L);
         }
 
-        lua_pushstring(L, fullName);
-    } else {
-        lua_pushnil(L);
+        lua_pushnumber(L, CGLookingForGroup::m_bootProposal.m_totalVotes);
+        lua_pushnumber(L, CGLookingForGroup::m_bootProposal.m_bootVotes);
+        lua_pushnumber(L, static_cast<int32_t>(CGLookingForGroup::m_bootProposal.m_timeLeft));
+        ProfanityFilter(CGLookingForGroup::m_bootProposal.m_reason, false, false);
+        lua_pushstring(L, CGLookingForGroup::m_bootProposal.m_reason);
+        return 8;
     }
 
-    lua_pushnumber(L, CGLookingForGroup::m_bootProposal.m_totalVotes);
-    lua_pushnumber(L, CGLookingForGroup::m_bootProposal.m_bootVotes);
-    lua_pushnumber(L, CGLookingForGroup::m_bootProposal.m_timeLeft);
-    ProfanityFilter(CGLookingForGroup::m_bootProposal.m_reason, false, false);
-    lua_pushstring(L, CGLookingForGroup::m_bootProposal.m_reason);
-    return 8;
+    return 1;
 }
 
-// OFFSET: #0x00555F30
+// OFFSET: 0x009835E0
 bool CGLookingForGroup::SetHeaderCollapsed(uint32_t header, bool collapsed) {
-    if (!s_cvLfdCollapsedHeaders) {
-        return false;
+    if (s_cvLfdCollapsedHeaders) {
+        CVarArrayWrapper wrapper(s_cvLfdCollapsedHeaders);
+        return wrapper.RawSetValue(header, collapsed != wrapper.m_defaultValue);
     }
 
-    CVarArrayWrapper wrapper(s_cvLfdCollapsedHeaders);
-    return wrapper.RawSetValue(header, collapsed != wrapper.m_defaultValue);
+    return false;
 }
 
-// OFFSET: #0x00555F80
+// OFFSET: 0x00983630
 bool CGLookingForGroup::SetDungeonEnabled(uint32_t dungeon, bool enabled) {
-    if (!s_cvLfdSelectedDungeons) {
-        return false;
+    if (s_cvLfdSelectedDungeons) {
+        CVarArrayWrapper wrapper(s_cvLfdSelectedDungeons);
+        return wrapper.RawSetValue(dungeon, enabled != wrapper.m_defaultValue);
     }
 
-    CVarArrayWrapper wrapper(s_cvLfdSelectedDungeons);
-    return wrapper.RawSetValue(dungeon, enabled != wrapper.m_defaultValue);
+    return false;
 }
 
-// OFFSET: #0x00558ED0
+// OFFSET: 0x00987E20
 void CGLookingForGroup::JoinLFGSearch(int32_t lfgID) {
-    if (CGLookingForGroup::m_searchJoinedID == lfgID) {
-        return;
+    if (CGLookingForGroup::m_searchJoinedID != lfgID) {
+        CGLookingForGroup::m_prevSearchResults.Clear();
+        CGLookingForGroup::m_prevSearchResults.m_time = FrameTime::GetCurTimeMs();
+        CGLookingForGroup::m_searchJoinedID = lfgID;
+        CGLookingForGroup::m_searchResults.Clear();
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
+        UserClientLfgLfrJoin request;
+        request.unk_0010 = CGLookingForGroup::m_searchJoinedID;
+        ClientServices::Send(&request);
     }
-
-    CGLookingForGroup::m_prevSearchResults.Clear();
-    CGLookingForGroup::m_prevSearchResults.m_time = OsGetAsyncTimeMs();
-    CGLookingForGroup::m_searchJoinedID = lfgID;
-    CGLookingForGroup::m_searchResults.Clear();
-    FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_LFG_LFR_JOIN));
-    msg.Put(static_cast<uint32_t>(lfgID));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005593A0
+// OFFSET: 0x00987960
 void CGLookingForGroup::ClearLFGDungeon(uint32_t slot) {
-    for (LFGDungeonEntry* entry = CGLookingForGroup::m_localInfo.m_dungeons.Head(); entry; entry = CGLookingForGroup::m_localInfo.m_dungeons.Next(entry)) {
+    LFGDungeonEntry* next;
+
+    for (LFGDungeonEntry* entry = CGLookingForGroup::m_localInfo.m_dungeons.Head(); !CGLookingForGroup::m_localInfo.m_dungeons.IsEnd(entry); entry = next) {
+        next = entry->RawNext();
+
         if (entry->m_slot == slot) {
-            delete entry;
+            entry->~LFGDungeonEntry();
+            SMemFree(entry, "delete", -1, 0);
             CGLookingForGroup::m_localInfo.m_numDungeons--;
             CGLookingForGroup::m_localInfo.unk_0003 = 1;
             return;
@@ -500,12 +512,16 @@ void CGLookingForGroup::ClearLFGDungeon(uint32_t slot) {
     }
 }
 
-// OFFSET: #0x00559C40
+// OFFSET: 0x00985140
 int32_t CGLookingForGroup::GetQueueStatusIndex() {
-    LFGInfo* info = (CGPartyInfo::m_members[0] || CGRaidInfo::m_numMembers) ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
+    LFGInfo* info = CGPartyInfo::m_members[0] || CGPartyInfo::m_onePersonParty || CGRaidInfo::m_numMembers ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
     int32_t index = 0;
 
-    for (LFGDungeonEntry* entry = info->m_dungeons.Head(); entry; entry = info->m_dungeons.Next(entry)) {
+    LFGDungeonEntry* next;
+
+    for (LFGDungeonEntry* entry = info->m_dungeons.Head(); !info->m_dungeons.IsEnd(entry); entry = next) {
+        next = entry->RawNext();
+
         if (entry->m_slot == s_lastQueueSlot) {
             return index;
         }
@@ -516,7 +532,7 @@ int32_t CGLookingForGroup::GetQueueStatusIndex() {
     return -1;
 }
 
-// OFFSET: #0x0055B120
+// OFFSET: 0x0098A3D0
 void CGLookingForGroup::ClearPartyInfo() {
     CGLookingForGroup::m_partyLockInfo.Clear();
 
@@ -533,7 +549,7 @@ void CGLookingForGroup::ClearPartyInfo() {
     }
 }
 
-// OFFSET: #0x00555A70
+// OFFSET: 0x0097FA50
 static int QSortLFGParty(const void* a, const void* b) {
     LFGListParty* partyA = *static_cast<LFGListParty* const*>(a);
     LFGListParty* partyB = *static_cast<LFGListParty* const*>(b);
@@ -606,7 +622,7 @@ static int QSortLFGParty(const void* a, const void* b) {
     return 0;
 }
 
-// OFFSET: #0x00555CD0
+// OFFSET: 0x0097FCD0
 static int QSortLFGPlayer(const void* a, const void* b) {
     LFGListPlayer* playerA = *static_cast<LFGListPlayer* const*>(a);
     LFGListPlayer* playerB = *static_cast<LFGListPlayer* const*>(b);
@@ -681,7 +697,7 @@ static int QSortLFGPlayer(const void* a, const void* b) {
     return 0;
 }
 
-// OFFSET: #0x0055B700
+// OFFSET: 0x0098A9D0
 void CGLookingForGroup::ResortLFGLists() {
     LFGLIST* list = &CGLookingForGroup::m_prevSearchResults;
 

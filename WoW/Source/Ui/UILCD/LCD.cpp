@@ -724,7 +724,7 @@ void CGLCD::UpdateMapPositions() {
 
             AreaPOIRec* rec = g_areaPOIDB.GetRecord(landmark->m_id);
 
-            if ((landmark->m_isGossip || CGWorldMap::m_currentZone == -1) && rec->m_flags < 0) {
+            if ((landmark->m_type == 2 || CGWorldMap::m_currentZone == -1) && rec->m_flags < 0) {
                 uint32_t iconIndex = 0;
 
                 if (rec->m_worldStateID) {

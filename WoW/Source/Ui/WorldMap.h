@@ -11,7 +11,10 @@ class AreaPOIRec;
 class C3Vector;
 class CSimpleFrame;
 class CSimpleModel;
+class DungeonMapRec;
+class WorldMapAreaRec;
 class WorldMapContinentRec;
+class WorldMapOverlayRec;
 
 struct DebugElement {
     /* 0000 */ int32_t unk_0000;
@@ -35,16 +38,22 @@ struct DebugElement {
     /* 0068 */ int32_t unk_0068;
 };
 
+struct WorldMapPhasedChunkInfo {
+    /* 00000 */ int32_t m_areaID;
+    /* 00004 */ int32_t m_zoneMap[128][128];
+};
+
 struct WorldMapContinentInfo {
     /* 00000 */ int32_t m_mapID;
     /* 00004 */ int32_t m_areaID;
     /* 00008 */ TSFixedArray<int32_t> m_zones;
-    /* 00014 */ uint32_t m_zoneMap[128][128];
-    /* 10014 */ float unk_10014;
-    /* 10018 */ float unk_10018;
-    /* 1001C */ float unk_1001C;
-    /* 10020 */ float unk_10020;
-    /* 10024 */ int32_t unk_10024;
+    /* 00014 */ int32_t m_zoneMap[128][128];
+    /* 10014 */ TSFixedArray<WorldMapPhasedChunkInfo> m_phasedChunks;
+    /* 10020 */ float m_top;
+    /* 10024 */ float m_left;
+    /* 10028 */ float m_bottom;
+    /* 1002C */ float m_right;
+    /* 10030 */ int32_t m_worldMapID;
 
     WorldMapContinentInfo();
 };
@@ -53,8 +62,7 @@ struct WorldMapLandmarkInfo {
     /* 0000 */ int32_t m_id;
     /* 0004 */ float m_x;
     /* 0008 */ float m_y;
-    /* 000C */ int32_t m_isGraveyard;
-    /* 0010 */ int32_t m_isGossip;
+    /* 000C */ int32_t m_type;
 };
 
 bool WorldMapTransformPosition(int32_t mapID, float x, float y, int32_t* outMapID, float* outX, float* outY, int32_t* outDungeonMapID);
@@ -92,24 +100,38 @@ class CGWorldMap {
     static int32_t GetZoneID(uint32_t continent, uint32_t zone);
     static uint32_t GetNumZones(uint32_t continent);
     static int32_t GetCurrentDungeonMap();
-    static bool TransformPosition(int32_t mapID, float x, float y, int32_t* newMapID, float* newX, float* newY, int32_t* dungeonMapID);
-    static int32_t GetDungeonMapFromChunk(int32_t mapID, int32_t wmoGroupID, float z);
+    static int32_t IsContinent(const WorldMapAreaRec* area);
+    static int32_t InitializeChunkZones(const WorldMapAreaRec* area, int32_t (&zoneMap)[128][128]);
+    static const char* GetContinentName(uint32_t continent);
+    static bool DetermineAlternateMapPosition(int32_t mapID, int32_t areaID, float x, float y, int32_t& newMapID, int32_t& newAreaID, float& newX, float& newY, int32_t& dungeonMapID, bool& forceDungeonMap);
+    static bool DetermineAlternateMapPosition(int32_t mapID, float x, float y, int32_t& newMapID, float& newX, float& newY, int32_t& dungeonMapID, bool& forceDungeonMap);
+    static int32_t GetDungeonMapFromChunk(int32_t mapID, int32_t wmoGroupID, float z, int32_t worldMapAreaID);
+    static int32_t GetWorldMapAreaByZone(int32_t continent, uint32_t y, uint32_t x);
     static WorldMapContinentRec* GetContinentRec(int32_t mapID);
+    static bool IsMapOnContinent(int32_t mapID, uint32_t continent);
+    static int32_t GetWorldMapChildDepth(int32_t parent, int32_t child, int32_t* childArea);
+    static int32_t GetCurrentDungeonFloor(DungeonMapRec** dungeonMap);
+    static void PreloadMapTileTextures();
+    static void PreloadMapOverlayTextures();
+    static void GetMapForPosition(int32_t mapID, int32_t areaID, int32_t wmoGroupID, const C3Vector& position, int32_t& continent, int32_t& zone, int32_t& dungeonMap, int32_t debug);
+    static int32_t GetChunkFromPos(float x, float y, uint32_t* chunkX, uint32_t* chunkY);
+    static bool GetWorldPosition(const C3Vector& position, int32_t mapID, int32_t wmoGroupID, float* x, float* y, bool* outland, bool noClamp, int32_t dungeonMapID);
     static bool GetWorldPosition(const C3Vector& position, int32_t mapID, float* x, float* y, bool* outland, bool noClamp, int32_t dungeonMapID);
     static void GetPOIPosition(const AreaPOIRec* poi, float* x, float* y);
     static int32_t GetNumDungeonLevels();
     static const char* GetZoneName(uint32_t continent, uint32_t zone);
     static int32_t GetMapAreaFromPos(float x, float y);
     static int32_t GetMapHighlight(float x, float y);
-    static const char* GetCurrentMapName();
-    static int32_t GetCurrentMapHeight();
-    static bool GetPlayerPosition(WOWGUID guid, float* x, float* y);
+    static int32_t GetMapHeight();
+    static void GetPlayerPosition(WOWGUID guid, float* x, float* y);
     static int32_t GetCurrentAreaID();
+    static const char* GetMapName(int32_t areaID);
 };
 
 void WorldMapRegisterScriptFunctions();
 void WorldMapUnregisterScriptFunctions();
 
+WorldMapOverlayRec* GetMapOverlayTexture(uint32_t index, char* texture, uint32_t size);
 int32_t PlayerExploredZonesUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 
 #include "WoW/Source/Ui/WorldMap.inl"
