@@ -19,10 +19,10 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// STATIC: #0x00ACF580
+// STATIC: 0x00D17710
 const char* CGTabardModelFrame::s_objectTypeName = "TabardModel";
 
-// STATIC: #0x00ACF584
+// STATIC: 0x00D17714
 int32_t CGTabardModelFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00F76CA8
@@ -53,12 +53,12 @@ CSimpleFrame* CGTabardModelFrame::Create(CSimpleFrame* parent) {
 CGTabardModelFrame::CGTabardModelFrame(CSimpleFrame* parent) : CGCharacterModelBase(parent) {
 }
 
-// OFFSET: #0x00598F80
+// OFFSET: 0x00A05EA0
 const char* CGTabardModelFrame::GetObjectTypeName() {
     return CGTabardModelFrame::s_objectTypeName;
 }
 
-// OFFSET: %0x00942B90
+// OFFSET: 0x00A05EB0
 int32_t CGTabardModelFrame::GetScriptMetaTable() {
     return CGTabardModelFrame::s_metatable;
 }
@@ -67,12 +67,12 @@ int32_t CGTabardModelFrame::GetScriptMetaTable() {
 CGTabardModelFrame::~CGTabardModelFrame() {
 }
 
-// OFFSET: #0x005990D0
+// OFFSET: 0x00A05F60
 bool CGTabardModelFrame::IsA(int32_t type) {
     return type == CGTabardModelFrame::s_objectType || type == CGCharacterModelBase::s_objectType || type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: #0x00599120
+// OFFSET: 0x00A05FB0
 bool CGTabardModelFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGTabardModelFrame::s_objectTypeName, STORM_MAX_STR) || CGCharacterModelBase::IsA(typeName);
 }
@@ -96,9 +96,9 @@ void CGTabardModelFrame::ApplyGuildColorFromPlayer() {
     }
 }
 
-// OFFSET: #0x00599410
+// OFFSET: 0x00A06290/0x1407A5E60
 void CGTabardModelFrame::Save() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         player->SaveTabard(this->m_variations[0], this->m_variations[1], this->m_variations[2], this->m_variations[3], this->m_variations[4], CGGameUI::m_interactTarget);
@@ -134,7 +134,7 @@ void CGTabardModelFrame::OnModelLoaded(CM2Model* model) {
     CameraSetCoord(camera, 8, coord);
 }
 
-// OFFSET: 0x00A06530
+// OFFSET: 0x00A06530/0x1407A6150
 void CGTabardModelFrame::InitializeTabardColors(CGPlayer_C* player) {
     CRndSeed seed;
     WOWGUID none = WOWGUID();

@@ -1,4 +1,5 @@
 #include "GameUI.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Common/ThrottleObject.h"
 #include "WoW/Source/Ui/BlobFrame.h"
 #include "WoW/Source/Ui/ArchaeologyDigSiteFrame.h"
@@ -625,7 +626,7 @@ static int32_t Script_IsRightAltKeyDown(lua_State* L) {
 static int32_t Script_GetCorpseRecoveryDelay(lua_State* L) {
     int32_t remaining;
 
-    if (!CGGameUI::m_corpseReclaimDelay || (remaining = CGGameUI::m_corpseReclaimDelay - OsGetAsyncTimeMs()) <= 0) {
+    if (!CGGameUI::m_corpseReclaimDelay || (remaining = CGGameUI::m_corpseReclaimDelay - FrameTime::GetCurTimeMs()) <= 0) {
         remaining = 0;
     }
 
@@ -637,7 +638,7 @@ static int32_t Script_GetCorpseRecoveryDelay(lua_State* L) {
 static int32_t Script_GetInstanceBootTimeRemaining(lua_State* L) {
     int32_t remaining;
 
-    if (!CGGameUI::m_instanceBootTime || (remaining = CGGameUI::m_instanceBootTime - OsGetAsyncTimeMs()) <= 0) {
+    if (!CGGameUI::m_instanceBootTime || (remaining = CGGameUI::m_instanceBootTime - FrameTime::GetCurTimeMs()) <= 0) {
         remaining = 0;
     }
 
@@ -649,7 +650,7 @@ static int32_t Script_GetInstanceBootTimeRemaining(lua_State* L) {
 static int32_t Script_GetSummonConfirmTimeLeft(lua_State* L) {
     int32_t remaining;
 
-    if (!CGGameUI::m_summonConfirmTime || (remaining = CGGameUI::m_summonConfirmTime - OsGetAsyncTimeMs()) <= 0) {
+    if (!CGGameUI::m_summonConfirmTime || (remaining = CGGameUI::m_summonConfirmTime - FrameTime::GetCurTimeMs()) <= 0) {
         remaining = 0;
     }
 
@@ -688,7 +689,7 @@ static int32_t Script_GetAreaSpiritHealerTime(lua_State* L) {
     int32_t remaining = 0;
 
     if (CGGameUI::m_areaSpiritHealerTime) {
-        remaining = CGGameUI::m_areaSpiritHealerTime - OsGetAsyncTimeMs();
+        remaining = CGGameUI::m_areaSpiritHealerTime - FrameTime::GetCurTimeMs();
 
         if (remaining < 0) {
             remaining = 0;
@@ -853,7 +854,7 @@ static int32_t Script_GetReleaseTimeRemaining(lua_State* L) {
 
     if (CGGameUI::m_deadNoRepopTimer) {
         remaining = -1000;
-    } else if (!CGGameUI::m_repopTime || (remaining = CGGameUI::m_repopTime - OsGetAsyncTimeMs()) <= 0) {
+    } else if (!CGGameUI::m_repopTime || (remaining = CGGameUI::m_repopTime - FrameTime::GetCurTimeMs()) <= 0) {
         remaining = 0;
     }
 

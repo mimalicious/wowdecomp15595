@@ -15,14 +15,14 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
 
-// OFFSET: [0x00A02310]
+// OFFSET: 0x00A05F20
 void CGTabardModelFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGTabardModelFrame::s_metatable);
     CGTabardModelFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: [0x00A02A80]
+// OFFSET: 0x00A06220
 void CGTabardModelFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGTabardModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGTabardModelFrame::RegisterScriptMethods);

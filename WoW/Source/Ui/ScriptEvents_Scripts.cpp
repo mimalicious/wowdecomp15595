@@ -727,7 +727,7 @@ static int32_t Script_GetMoney(lua_State* L) {
 
 // OFFSET: 0x0044BC90/0x1400592B0
 static int32_t Script_GetTime(lua_State* L) {
-    lua_pushnumber(L, OsGetAsyncTimeMs() * 0.001);
+    lua_pushnumber(L, FrameTime::GetCurTimeMs() * 0.001);
 
     return 1;
 }

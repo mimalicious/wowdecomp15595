@@ -28,7 +28,7 @@
 
 // OFFSET: 0x009EEB00/0x1407881E0
 static int32_t Script_GetNumGlyphSockets(lua_State* L) {
-    lua_pushnumber(L, 6.0);
+    lua_pushnumber(L, 9.0);
     return 1;
 }
 
