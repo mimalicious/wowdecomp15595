@@ -1,9 +1,9 @@
 #include "Corpse.h"
 #include "WoW/Source/Object/Object.h"
 
-// STATIC: #0x00AC5C34
+// STATIC: 0x00D1A1D0
 const uint32_t CGCorpse::s_mirrorFields[3] = {
-    0x1B, 0x1C, 0x1E
+    0x1A, 0x1B, 0x1C
 };
 
 // OFFSET: 0x0048DAA0/0x1400B19D0
@@ -26,5 +26,5 @@ uint32_t CGCorpse::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, in
         }
     }
 
-    return 30;
+    return 28;
 }

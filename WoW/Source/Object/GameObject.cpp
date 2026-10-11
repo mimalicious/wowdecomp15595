@@ -1,8 +1,10 @@
 #include "GameObject.h"
 #include "WoW/Source/Object/Object.h"
 
-// STATIC: #0x00AC5C1C
-uint32_t CGGameObject::s_mirrorFieldIndex[4] = { 3, 8, 11, 12 };
+// STATIC: 0x00D1A1B8
+uint32_t CGGameObject::s_mirrorFieldIndex[4] = {
+    0x3, 0x8, 0xB, 0xC
+};
 
 // OFFSET: 0x0048DA20/0x1400B18F0
 uint32_t CGGameObject::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int32_t local, uint32_t base) {

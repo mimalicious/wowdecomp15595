@@ -12,7 +12,7 @@ class CMovement_C;
 class CGUnit {
     public:
     int32_t GetQuestGreenRange() const;
-    static const uint32_t s_mirrorFieldIndices[123];
+    static const uint32_t s_mirrorFieldIndices[120];
 
     static uint32_t MirrorIndexFromFieldIndex(uint32_t fieldIndex);
     static uint32_t DescriptorToMirrorOffset(uint32_t offset, uint32_t a2, uint32_t a3, uint32_t base);

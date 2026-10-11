@@ -9,7 +9,7 @@ class CGItemData;
 
 class CGItem {
     public:
-    static const uint32_t s_mirrorFields[47];
+    static const uint32_t s_mirrorFields[56];
 
     static uint32_t DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int32_t local, uint32_t base);
     static uint32_t GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int32_t local);

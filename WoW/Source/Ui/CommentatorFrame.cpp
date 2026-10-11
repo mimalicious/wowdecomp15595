@@ -355,7 +355,7 @@ bool CGCommentator::OnClientCommentatorPartyInfo(ClientCommentatorPartyInfo* msg
 
         if (race && raceName) {
             raceNames.PutArray(reinterpret_cast<const uint8_t*>(raceName), SStrLen(raceName));
-            raceFiles.PutArray(reinterpret_cast<const uint8_t*>(race->m_clientFileString), SStrLen(race->m_clientFileString));
+            raceFiles.PutArray(reinterpret_cast<const uint8_t*>(static_cast<const char*>(race->m_clientFileString)), SStrLen(race->m_clientFileString));
         }
 
         ChrClassesRec* classRec = g_chrClassesDB.GetRecord(member->unk_0044);
@@ -363,7 +363,7 @@ bool CGCommentator::OnClientCommentatorPartyInfo(ClientCommentatorPartyInfo* msg
 
         if (classRec && className) {
             classNames.PutArray(reinterpret_cast<const uint8_t*>(className), SStrLen(className));
-            classFiles.PutArray(reinterpret_cast<const uint8_t*>(classRec->m_filename), SStrLen(classRec->m_filename));
+            classFiles.PutArray(reinterpret_cast<const uint8_t*>(static_cast<const char*>(classRec->m_filename)), SStrLen(classRec->m_filename));
         }
 
         SStrPrintf(buffer, "%u", sex <= 3 ? s_unitSexValues[sex] : s_unitSexValues[2]);
