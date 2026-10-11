@@ -42,7 +42,7 @@ void CSimpleAlphaAnim::DestroyScriptMetaTable() {
     CSimpleAlphaAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB9B00
+// STATIC: 0x00CA47C8
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetChange", &Script_SetChange },
     { "GetChange", &Script_GetChange },

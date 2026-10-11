@@ -711,7 +711,7 @@ static int32_t Script_SetMaxLines(lua_State* L) {
     return 0;
 }
 
-// STATIC: %0x00BB8D90
+// STATIC: 0x00CA3A08
 static FrameScript_Method s_ScriptMethods[] = {
     { "IsObjectType", &Script_IsObjectType },
     { "GetObjectType", &Script_GetObjectType },

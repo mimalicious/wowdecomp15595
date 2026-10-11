@@ -86,7 +86,7 @@ void CSimpleScaleAnim::DestroyScriptMetaTable() {
     CSimpleScaleAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB9A84
+// STATIC: 0x00CA474C
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetOrigin", &Script_SetOrigin },
     { "GetOrigin", &Script_GetOrigin },

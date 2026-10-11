@@ -594,7 +594,7 @@ static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_GetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// STATIC: %0x00BB9168
+// STATIC: 0x00CA3E40
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetObjectType", &Script_GetObjectType },
     { "IsObjectType", &Script_IsObjectType },

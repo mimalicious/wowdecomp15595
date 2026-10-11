@@ -208,7 +208,7 @@ static int32_t Script_AccountMsg_LoadHeaders(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACD418
+// STATIC: 0x00D171F0
 static FrameScript_Method s_scriptFunctions[] = {
     { "AccountMsg_LoadHeaders", &Script_AccountMsg_LoadHeaders },
     { "AccountMsg_GetNumTotalMsgs", &Script_AccountMsg_GetNumTotalMsgs },

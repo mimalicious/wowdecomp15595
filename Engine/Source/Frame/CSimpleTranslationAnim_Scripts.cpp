@@ -58,7 +58,7 @@ void CSimpleTranslationAnim::DestroyScriptMetaTable() {
     CSimpleTranslationAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB9A3C
+// STATIC: 0x00CA4704
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetOffset", &Script_SetOffset },
     { "GetOffset", &Script_GetOffset },

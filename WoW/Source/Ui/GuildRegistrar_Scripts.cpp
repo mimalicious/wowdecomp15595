@@ -78,7 +78,7 @@ static int32_t Script_GetTabardInfo(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACF5FC
+// STATIC: 0x00D16B88
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseGuildRegistrar", &Script_CloseGuildRegistrar },
     { "GetGuildCharterCost", &Script_GetGuildCharterCost },

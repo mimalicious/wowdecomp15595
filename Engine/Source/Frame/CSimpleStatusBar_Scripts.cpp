@@ -259,7 +259,7 @@ static int32_t Script_SetReverseFill(lua_State* L) {
     return 0;
 }
 
-// STATIC: %0x00BB8FB8
+// STATIC: 0x00CA3C40
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetOrientation", &Script_GetOrientation },
     { "SetOrientation", &Script_SetOrientation },

@@ -47,7 +47,7 @@ static int32_t Script_GetMinigameState(lua_State* L) {
     return CGMinigameInfo::m_minigame ? CGMinigameInfo::m_minigame->PushStateToLua(L) : 0;
 }
 
-// STATIC: #0x00AD05D0
+// STATIC: 0x00D17A04
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMinigameType", &Script_GetMinigameType },
     { "MakeMinigameMove", &Script_MakeMinigameMove },

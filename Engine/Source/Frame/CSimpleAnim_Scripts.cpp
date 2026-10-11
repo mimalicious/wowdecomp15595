@@ -373,7 +373,7 @@ void CSimpleAnim::DestroyScriptMetaTable() {
     CSimpleAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB9940
+// STATIC: 0x00CA4618
 static FrameScript_Method s_ScriptMethods[] = {
     { "Play", &Script_Play },
     { "Pause", &Script_Pause },

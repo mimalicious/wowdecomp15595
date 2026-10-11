@@ -326,7 +326,7 @@ static int32_t Script_GetFramesRegisteredForEvent(lua_State* L) {
     return count;
 }
 
-// STATIC: %0x00C0D7C4
+// STATIC: 0x00D08478
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetText", &Script_GetText },
     { "GetNumFrames", &Script_GetNumFrames },

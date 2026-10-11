@@ -3,6 +3,7 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/Os/TimeManager.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
@@ -13,35 +14,35 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Ui/QuestTextParser.h"
 
-// STATIC: #0x00BE8F40
+// STATIC: 0x00F61038
 uint32_t CGWorldStateInfo::m_nextUITimeUpdate;
 
 // STATIC: 0x00F6103C
 uint32_t CGWorldStateInfo::m_UITimeOffset;
 
-// STATIC: #0x00BE8F48
+// STATIC: 0x00F61040
 uint32_t CGWorldStateInfo::m_nextUpdateTime;
 
-// STATIC: #0x00BE8F4C
+// STATIC: 0x00F61044
 int32_t CGWorldStateInfo::m_subAreaID;
 
-// STATIC: #0x00BE8F50
+// STATIC: 0x00F61048
 int32_t CGWorldStateInfo::m_areaID;
 
-// STATIC: #0x00BE8F54
+// STATIC: 0x00F6104C
 int32_t CGWorldStateInfo::m_mapID;
 
 // STATIC: 0x00F61050
 TSHashTable<WORLDSTATE, HASHKEY_NONE> CGWorldStateInfo::m_worldStates;
 
-// STATIC: #0x00BE8F80
-TSGrowableArray<WorldStateUIEntry> CGWorldStateInfo::m_worldStateUI;
+// STATIC: 0x00F6107C
+TSGrowableArray<CGWorldStateInfo::WorldStateUIData> CGWorldStateInfo::m_worldStateUI;
 
-// OFFSET: 0x009CD470
+// OFFSET: 0x009CD470/0x14075DB50
 void CGWorldStateInfo::InitializeGame() {
     CGWorldStateInfo::m_mapID = -1;
     CGWorldStateInfo::m_areaID = 0;
-    CGWorldStateInfo::m_nextUpdateTime = OsGetAsyncTimeMs();
+    CGWorldStateInfo::m_nextUpdateTime = FrameTime::GetCurTimeMs();
     CGWorldStateInfo::m_UITimeOffset = 0;
     CGWorldStateInfo::m_nextUITimeUpdate = 0;
 }
@@ -52,7 +53,7 @@ int32_t CGWorldStateInfo::GetUITime() {
     return CGWorldStateInfo::m_UITimeOffset + static_cast<int32_t>(time(NULL));
 }
 
-// OFFSET: 0x009CD850
+// OFFSET: 0x009CD850/0x14075E010
 int32_t GetWorldState(int32_t id) {
     WORLDSTATE* state = CGWorldStateInfo::m_worldStates.Ptr(id, HASHKEY_NONE());
 
@@ -63,21 +64,21 @@ int32_t GetWorldState(int32_t id) {
     return 0;
 }
 
-// OFFSET: #0x00548760
-static void SendWorldStateUITimerUpdate() {
+// OFFSET: 0x009CD630
+void CGWorldStateInfo::RequestUITime() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_UI_TIME_REQUEST));
     msg.Finalize();
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005488F0
-void CheckEventWorldStateUITimerUpdate() {
-    uint32_t now = OsGetAsyncTimeMs();
+// OFFSET: 0x009CD7B0
+void CGWorldStateInfo::TimerUpdate() {
+    uint32_t now = FrameTime::GetCurTimeMs();
 
     if (static_cast<int32_t>(now - CGWorldStateInfo::m_nextUITimeUpdate) >= 0) {
         CGWorldStateInfo::m_nextUITimeUpdate = now + 20000;
-        SendWorldStateUITimerUpdate();
+        CGWorldStateInfo::RequestUITime();
     }
 
     if (static_cast<int32_t>(now - CGWorldStateInfo::m_nextUpdateTime) < 0) {
@@ -94,17 +95,18 @@ void CheckEventWorldStateUITimerUpdate() {
     }
 }
 
-// OFFSET: #0x00548970
+// OFFSET: 0x009CD820
 bool CGWorldStateInfo::InitWorldStates(uint32_t mapId, uint32_t zoneId, uint32_t areaId) {
-    if (mapId == static_cast<uint32_t>(CGWorldStateInfo::m_mapID) && zoneId == static_cast<uint32_t>(CGWorldStateInfo::m_areaID) && areaId == static_cast<uint32_t>(CGWorldStateInfo::m_subAreaID)) {
-        return false;
-    }
-
     CGWorldStateInfo::m_mapID = mapId;
     CGWorldStateInfo::m_areaID = zoneId;
     CGWorldStateInfo::m_subAreaID = areaId;
     CGWorldStateInfo::ResetWorldStateUI();
     return true;
+}
+
+// OFFSET: 0x009CD880/0x14075E0D0
+bool CGWorldStateInfo::GetWorldStateKnown(int32_t id) {
+    return CGWorldStateInfo::m_worldStates.Ptr(id, HASHKEY_NONE()) != NULL;
 }
 
 // OFFSET: 0x009CE3B0
@@ -115,17 +117,19 @@ bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value, bool hidden
         worldState = CGWorldStateInfo::m_worldStates.New(state, HASHKEY_NONE(), 0, 0);
     }
 
-    if (worldState->m_value == static_cast<int32_t>(value)) {
+    if (worldState->m_value == static_cast<int32_t>(value) && worldState->m_hidden == static_cast<uint8_t>(hidden)) {
         return false;
     }
 
     worldState->m_value = value;
+    worldState->m_hidden = hidden;
 
     if (state == 3191) {
         FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_SEASON_WORLD_STATE, NULL);
     }
 
     RefreshWorldStatePOIs(state);
+    CGGameUI::OnWorldStateChanged(state);
     return true;
 }
 
@@ -158,7 +162,7 @@ void CGWorldStateInfo::ResetWorldStateUI() {
             continue;
         }
 
-        WorldStateUIEntry* entry = CGWorldStateInfo::m_worldStateUI.New();
+        WorldStateUIData* entry = CGWorldStateInfo::m_worldStateUI.New();
         entry->m_id = rec->m_id;
         entry->m_state = rec->m_type;
     }
@@ -170,7 +174,15 @@ void CGWorldStateInfo::ShutdownGame() {
     CGWorldStateInfo::m_worldStateUI.Clear();
 }
 
-// OFFSET: 0x00992F50
+// OFFSET: 0x009CDCC0/0x14075E620
+void CGWorldStateInfo::LeaveWorld(bool reload) {
+    if (!reload) {
+        CGWorldStateInfo::m_worldStates.InternalClear(0);
+        CGWorldStateInfo::m_worldStateUI.Clear();
+    }
+}
+
+// OFFSET: 0x00992F50/0x140712960
 bool WorldStateParseText(const char* text, char* buffer, uint32_t size) {
     if (!text) {
         return false;

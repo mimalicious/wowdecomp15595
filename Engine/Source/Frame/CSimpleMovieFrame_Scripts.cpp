@@ -53,7 +53,7 @@ static int32_t Script_EnableSubtitles(lua_State* L) {
     return 0;
 }
 
-// STATIC: %0x00BB9924
+// STATIC: 0x00CA45FC
 static FrameScript_Method s_ScriptMethods[] = {
     { "StartMovie", &Script_StartMovie },
     { "StopMovie", &Script_StopMovie },

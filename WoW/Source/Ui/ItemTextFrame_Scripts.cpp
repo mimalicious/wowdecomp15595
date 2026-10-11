@@ -132,7 +132,7 @@ static int32_t Script_CloseItemText(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACEEC0
+// STATIC: 0x00D165C0
 static FrameScript_Method s_ScriptFunctions[] = {
     { "ItemTextGetItem", &Script_ItemTextGetItem },
     { "ItemTextGetCreator", &Script_ItemTextGetCreator },

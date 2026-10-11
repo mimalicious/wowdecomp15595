@@ -20,7 +20,7 @@ static int32_t Script_PlayDance(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACE834
+// STATIC: 0x00D159C4
 static FrameScript_Method s_ScriptFunctions[] = {
     { "PlayDance", &Script_PlayDance },
 };

@@ -256,7 +256,7 @@ static int32_t Script_RenamePetition(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00AD0A60
+// STATIC: 0x00D16738
 static FrameScript_Method s_ScriptFunctions[] = {
     { "ClosePetition", &Script_ClosePetition },
     { "GetPetitionInfo", &Script_GetPetitionInfo },

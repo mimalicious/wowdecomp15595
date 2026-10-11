@@ -187,7 +187,7 @@ void CSimpleScrollFrame::CreateScriptMetaTable() {
     CSimpleScrollFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleScrollFrame::RegisterScriptMethods);
 }
 
-// STATIC: %0x00BB9740
+// STATIC: 0x00CA4428
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetScrollChild", &Script_SetScrollChild },
     { "GetScrollChild", &Script_GetScrollChild },

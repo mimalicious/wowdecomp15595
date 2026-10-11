@@ -575,7 +575,7 @@ static int32_t Script_GetInsertMode(lua_State* L) {
     return 1;
 }
 
-// STATIC: %0x00BB94F0
+// STATIC: 0x00CA41E0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetFontObject", &Script_SetFontObject },
     { "GetFontObject", &Script_GetFontObject },

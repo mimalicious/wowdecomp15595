@@ -495,7 +495,7 @@ void CSimpleTexture::DestroyScriptMetaTable() {
     CSimpleTexture::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB8CA0
+// STATIC: 0x00CA3918
 static FrameScript_Method s_ScriptMethods[] = {
     { "IsObjectType", &Script_IsObjectType },
     { "GetObjectType", &Script_GetObjectType },

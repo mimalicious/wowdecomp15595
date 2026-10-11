@@ -9,11 +9,7 @@ struct lua_State;
 
 struct WORLDSTATE : public TSHashObject<WORLDSTATE, HASHKEY_NONE> {
     /* 0018 */ int32_t m_value;
-};
-
-struct WorldStateUIEntry {
-    /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t m_state;
+    /* 001C */ uint8_t m_hidden;
 };
 
 int32_t GetWorldState(int32_t id);
@@ -21,7 +17,11 @@ bool WorldStateParseText(const char* text, char* buffer, uint32_t size);
 
 class CGWorldStateInfo {
     public:
-    static uint32_t GetWorldState(int32_t id);
+    struct WorldStateUIData {
+        /* 0000 */ int32_t m_id;
+        /* 0004 */ int32_t m_state;
+    };
+
     static void LeaveWorld(bool reload);
     static int32_t m_mapID;
     static int32_t m_areaID;
@@ -30,7 +30,7 @@ class CGWorldStateInfo {
     static uint32_t m_UITimeOffset;
     static uint32_t m_nextUITimeUpdate;
     static TSHashTable<WORLDSTATE, HASHKEY_NONE> m_worldStates;
-    static TSGrowableArray<WorldStateUIEntry> m_worldStateUI;
+    static TSGrowableArray<WorldStateUIData> m_worldStateUI;
 
     static int32_t GetUITime();
     static void InitializeGame();
@@ -39,12 +39,13 @@ class CGWorldStateInfo {
     static bool SetWorldState(uint32_t state, uint32_t value, bool hidden = false);
     static void OnUITime(uint32_t time);
     static void ResetWorldStateUI();
+    static void RequestUITime();
+    static void TimerUpdate();
+    static bool GetWorldStateKnown(int32_t id);
 };
 
 int32_t Script_GetWorldStateUIInfo(lua_State* L);
 void WorldStateInfoRegisterScriptFunctions();
 void WorldStateInfoUnregisterScriptFunctions();
-
-void CheckEventWorldStateUITimerUpdate();
 
 #endif

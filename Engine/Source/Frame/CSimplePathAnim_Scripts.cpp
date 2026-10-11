@@ -153,7 +153,7 @@ void CSimplePathAnim::DestroyScriptMetaTable() {
     CSimplePathAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB9AD4
+// STATIC: 0x00CA479C
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetCurve", &Script_SetCurve },
     { "GetCurve", &Script_GetCurve },

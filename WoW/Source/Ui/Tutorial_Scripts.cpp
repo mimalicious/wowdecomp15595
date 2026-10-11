@@ -124,7 +124,7 @@ static int32_t Script_GetPrevCompleatedTutorial(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ACC868
+// STATIC: 0x00D109A0
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CanResetTutorials", &Script_CanResetTutorials },
     { "FlagTutorial", &Script_FlagTutorial },

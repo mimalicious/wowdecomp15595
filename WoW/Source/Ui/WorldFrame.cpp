@@ -2094,7 +2094,7 @@ void CGWorldFrame::OnWorldUpdate() {
     }
 
     CGUnit_C::UpdateAllSmoothFacing();
-    CheckEventWorldStateUITimerUpdate();
+    CGWorldStateInfo::TimerUpdate();
 }
 
 // OFFSET: 0x008E3270/0x140610900

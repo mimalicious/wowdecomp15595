@@ -507,7 +507,7 @@ void CSimpleModel::CreateScriptMetaTable() {
     CSimpleModel::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleModel::RegisterScriptMethods);
 }
 
-// STATIC: %0x00BB9678
+// STATIC: 0x00CA4360
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetModel", &Script_SetModel },
     { "GetModel", &Script_GetModel },

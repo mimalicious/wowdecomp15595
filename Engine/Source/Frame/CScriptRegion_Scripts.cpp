@@ -707,7 +707,7 @@ static int32_t Script_CreateAnimationGroup(lua_State* L) {
     return 1;
 }
 
-// STATIC: %0x00BB8EF0
+// STATIC: 0x00CA3B78
 static FrameScript_Method s_ScriptMethods[] = {
     { "IsProtected", &Script_IsProtected },
     { "CanChangeProtectedState", &Script_CanChangeProtectedState },

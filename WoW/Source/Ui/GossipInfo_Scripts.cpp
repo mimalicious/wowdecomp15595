@@ -208,7 +208,7 @@ static int32_t Script_SelectGossipActiveQuest(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACEF78
+// STATIC: 0x00D16800
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGossipText", &Script_GetGossipText },
     { "GetNumGossipOptions", &Script_GetNumGossipOptions },

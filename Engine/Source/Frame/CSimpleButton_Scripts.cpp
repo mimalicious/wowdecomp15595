@@ -574,7 +574,7 @@ void CSimpleButton::CreateScriptMetaTable() {
     CSimpleButton::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleButton::RegisterScriptMethods);
 }
 
-// STATIC: %0x00BB9020
+// STATIC: 0x00CA3CB8
 static FrameScript_Method s_ScriptMethods[] = {
     { "Enable", &Script_Enable },
     { "Disable", &Script_Disable },

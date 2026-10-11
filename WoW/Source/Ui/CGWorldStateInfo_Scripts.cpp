@@ -13,7 +13,7 @@ static int32_t Script_GetNumWorldStateUI(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00548D40
+// OFFSET: 0x009CD8A0
 int32_t Script_GetWorldStateUIInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetWorldStateUIInfo(index)");
@@ -30,16 +30,17 @@ int32_t Script_GetWorldStateUIInfo(lua_State* L) {
     }
 
     lua_pushnumber(L, rec->m_type);
-    double state;
 
     if (rec->m_stateVariable) {
         WORLDSTATE* worldState = CGWorldStateInfo::m_worldStates.Ptr(rec->m_stateVariable, HASHKEY_NONE());
-        state = worldState ? worldState->m_value : 0;
+        lua_pushnumber(L, worldState ? worldState->m_value : 0);
+        worldState = CGWorldStateInfo::m_worldStates.Ptr(rec->m_stateVariable, HASHKEY_NONE());
+        lua_pushboolean(L, worldState ? worldState->m_hidden : 0);
     } else {
-        state = 1.0;
+        lua_pushnumber(L, 1.0);
+        lua_pushboolean(L, 0);
     }
 
-    lua_pushnumber(L, state);
     char text[256];
     WorldStateParseText(rec->m_string, text, sizeof(text));
     lua_pushstring(L, text);
@@ -54,10 +55,10 @@ int32_t Script_GetWorldStateUIInfo(lua_State* L) {
         lua_pushnumber(L, worldState ? worldState->m_value : 0);
     }
 
-    return 11;
+    return 12;
 }
 
-// STATIC: #0x00ACD0D0
+// STATIC: 0x00D1623C
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumWorldStateUI", &Script_GetNumWorldStateUI },
     { "GetWorldStateUIInfo", &Script_GetWorldStateUIInfo },

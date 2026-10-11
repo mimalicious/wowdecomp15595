@@ -296,7 +296,7 @@ static int32_t Script_ArenaTeamRoster(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACF838
+// STATIC: 0x00D15308
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetArenaTeam", &Script_GetArenaTeam },
     { "GetNumArenaTeamMembers", &Script_GetNumArenaTeamMembers },

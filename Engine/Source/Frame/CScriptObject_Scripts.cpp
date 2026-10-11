@@ -89,7 +89,7 @@ static int32_t Script_GetParent(lua_State* L) {
     return 1;
 }
 
-// STATIC: %0x00BB9BC8
+// STATIC: 0x00CA48A0
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetObjectType", &Script_GetObjectType },
     { "IsObjectType", &Script_IsObjectType },

@@ -321,7 +321,7 @@ static int32_t Script_KBQuery_BeginLoading(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACD488
+// STATIC: 0x00D17270
 static FrameScript_Method s_apMethodMap[] = {
     { "KBSetup_BeginLoading", &Script_KBSetup_BeginLoading },
     { "KBSetup_IsLoaded", &Script_KBSetup_IsLoaded },

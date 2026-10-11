@@ -138,7 +138,7 @@ void CSimpleControlPoint::DestroyScriptMetaTable() {
     CSimpleControlPoint::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB9AA8
+// STATIC: 0x00CA4770
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetParent", &Script_SetParent },
     { "SetOffset", &Script_SetOffset },

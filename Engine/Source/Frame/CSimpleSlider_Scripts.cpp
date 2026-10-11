@@ -221,7 +221,7 @@ void CSimpleSlider::CreateScriptMetaTable() {
     CSimpleSlider::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleSlider::RegisterScriptMethods);
 }
 
-// STATIC: %0x00BB9790
+// STATIC: 0x00CA4478
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetThumbTexture", &Script_GetThumbTexture },
     { "SetThumbTexture", &Script_SetThumbTexture },

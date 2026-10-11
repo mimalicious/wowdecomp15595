@@ -297,7 +297,7 @@ static int32_t Script_GetColorRGB(lua_State* L) {
     return 3;
 }
 
-// STATIC: %0x00BB98C0
+// STATIC: 0x00CA4598
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetColorWheelTexture", &Script_GetColorWheelTexture },
     { "SetColorWheelTexture", &Script_SetColorWheelTexture },

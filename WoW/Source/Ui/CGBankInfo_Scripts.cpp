@@ -107,7 +107,7 @@ static int32_t Script_PurchaseSlot(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACEB7C
+// STATIC: 0x00D16D10
 static FrameScript_Method s_ScriptFunctions[] = {
     { "BankButtonIDToInvSlotID", &Script_BankButtonIDToInvSlotID },
     { "GetNumBankSlots", &Script_GetNumBankSlots },

@@ -9,13 +9,13 @@ static int32_t Script_GetTabardCreationCost(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0092A730
+// OFFSET: 0x009E00E0
 static int32_t Script_CloseTabardCreation(lua_State* L) {
     CGTabardCreationFrame::Close();
     return 0;
 }
 
-// STATIC: #0x00ACF56C
+// STATIC: 0x00D16728
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseTabardCreation", &Script_CloseTabardCreation },
     { "GetTabardCreationCost", &Script_GetTabardCreationCost },

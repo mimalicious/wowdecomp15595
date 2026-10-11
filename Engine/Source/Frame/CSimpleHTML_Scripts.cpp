@@ -249,7 +249,7 @@ void CSimpleHTML::CreateScriptMetaTable() {
     CSimpleHTML::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleHTML::RegisterScriptMethods);
 }
 
-// STATIC: %0x00BB9800
+// STATIC: 0x00CA44E8
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetFontObject", &Script_SetFontObject },
     { "GetFontObject", &Script_GetFontObject },

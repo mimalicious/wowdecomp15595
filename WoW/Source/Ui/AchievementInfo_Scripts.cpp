@@ -1228,7 +1228,7 @@ static void CriteriaPlayerNameCallback(const uint64_t& key, const WOWGUID& guid,
 
 // OFFSET: 0x00947840
 static bool IsCriteriaEligible(const Achievement_CriteriaRec* criteria) {
-    return !criteria->unk_0040 || !CGWorldStateInfo::m_worldStates.Ptr(criteria->unk_0040, HASHKEY_NONE()) || GetWorldState(criteria->unk_0040) == criteria->unk_0044;
+    return !criteria->unk_0040 || !CGWorldStateInfo::GetWorldStateKnown(criteria->unk_0040) || GetWorldState(criteria->unk_0040) == criteria->unk_0044;
 }
 
 // OFFSET: 0x0094C280/0x1406BAE10
@@ -1662,7 +1662,7 @@ static int32_t Script_IsAchievementEligible(lua_State* L) {
             Achievement_CriteriaRec* criteria = node->m_criteria;
             SPECIFIC_CRITERIA* next = achievement->m_criteria.RawNext(node);
 
-            if (criteria->unk_0040 && CGWorldStateInfo::m_worldStates.Ptr(criteria->unk_0040, HASHKEY_NONE()) && GetWorldState(criteria->unk_0040) != criteria->unk_0044) {
+            if (criteria->unk_0040 && CGWorldStateInfo::GetWorldStateKnown(criteria->unk_0040) && GetWorldState(criteria->unk_0040) != criteria->unk_0044) {
                 eligible = 0;
                 break;
             }

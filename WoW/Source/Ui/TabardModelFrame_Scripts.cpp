@@ -239,7 +239,7 @@ static int32_t Script_GetLowerEmblemTexture(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACF588
+// STATIC: 0x00D17718
 static FrameScript_Method s_ScriptMethods[] = {
     { "InitializeTabardColors", &Script_InitializeTabardColors },
     { "Save", &Script_Save },

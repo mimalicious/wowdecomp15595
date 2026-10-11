@@ -162,7 +162,7 @@ void CSimpleCheckbox::CreateScriptMetaTable() {
     CSimpleCheckbox::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleCheckbox::RegisterScriptMethods);
 }
 
-// STATIC: %0x00BB9134
+// STATIC: 0x00CA3DCC
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetChecked", &Script_SetChecked },
     { "GetChecked", &Script_GetChecked },

@@ -322,7 +322,7 @@ static int32_t Script_Clear(lua_State* L) {
     return 0;
 }
 
-// STATIC: %0x00BB9408
+// STATIC: 0x00CA40F8
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetFontObject", &Script_SetFontObject },
     { "GetFontObject", &Script_GetFontObject },
