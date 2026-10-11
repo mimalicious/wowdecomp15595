@@ -3539,3 +3539,185 @@ void UserClientBFMgrQueueRequest::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
     }
 }
+
+// OFFSET: 0x0066E110/0x140312340
+UserClientOpcode2581::UserClientOpcode2581() {
+}
+
+// OFFSET: 0x0066B940/0x140312140
+UserClientOpcode2581::~UserClientOpcode2581() {
+}
+
+// OFFSET: 0x0066BBE0
+void UserClientOpcode2581::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2581));
+}
+
+// OFFSET: 0x0066DAF0/0x140314C70
+UserClientOpcode2422::UserClientOpcode2422() {
+}
+
+// OFFSET: 0x0066B9C0/0x1403121B0
+UserClientOpcode2422::~UserClientOpcode2422() {
+}
+
+// OFFSET: 0x0066E0C0
+void UserClientOpcode2422::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2422));
+    msg->Put(this->unk_0010);
+
+    JamBitWriter bits(msg);
+    bits.Flush();
+}
+
+// OFFSET: 0x00673180/0x140317C40
+UserClientOpcode7912::UserClientOpcode7912() {
+}
+
+// OFFSET: 0x006706A0/0x140318080
+UserClientOpcode7912::~UserClientOpcode7912() {
+}
+
+// OFFSET: 0x006709A0
+void UserClientOpcode7912::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7912));
+}
+
+// OFFSET: 0x006708F0/0x140318770
+UserClientOpcode791E::UserClientOpcode791E() {
+}
+
+// OFFSET: 0x00670420/0x140317CA0
+UserClientOpcode791E::~UserClientOpcode791E() {
+}
+
+// OFFSET: 0x006731E0
+void UserClientOpcode791E::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x791E));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+}
+
+// OFFSET: 0x00670830/0x140318370
+UserClientOpcode7816::UserClientOpcode7816() {
+}
+
+// OFFSET: 0x00670680/0x140318050
+UserClientOpcode7816::~UserClientOpcode7816() {
+}
+
+// OFFSET: 0x006733A0
+void UserClientOpcode7816::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7816));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x00670660/0x140318010
+UserClientOpcode3010::UserClientOpcode3010() {
+}
+
+// OFFSET: 0x006706D0/0x1403180A0
+UserClientOpcode3010::~UserClientOpcode3010() {
+}
+
+// OFFSET: 0x006744E0
+void UserClientOpcode3010::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3010));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+}
+
+// OFFSET: 0x0069C180
+UserClientOpcode3235::UserClientOpcode3235() {
+}
+
+// OFFSET: 0x0069A320
+UserClientOpcode3235::~UserClientOpcode3235() {
+}
+
+// OFFSET: 0x0069A0A0/0x140346600
+void UserClientOpcode3235::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3235));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x0069C110/0x1403485F0
+UserClientOpcode3231::UserClientOpcode3231() {
+}
+
+// OFFSET: 0x0069A120/0x140346690
+UserClientOpcode3231::~UserClientOpcode3231() {
+}
+
+// OFFSET: 0x0069A4A0/0x140346A50
+void UserClientOpcode3231::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3231));
+}

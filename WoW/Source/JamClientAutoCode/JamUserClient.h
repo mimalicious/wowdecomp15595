@@ -1239,4 +1239,78 @@ class UserClientBattlefieldPort : public JamClientMessage {
     ~UserClientBattlefieldPort();
 };
 
+class UserClientOpcode2581 : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode2581();
+    ~UserClientOpcode2581();
+};
+
+class UserClientOpcode2422 : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode2422();
+    ~UserClientOpcode2422();
+};
+
+class UserClientOpcode7912 : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode7912();
+    ~UserClientOpcode7912();
+};
+
+class UserClientOpcode791E : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode791E();
+    ~UserClientOpcode791E();
+};
+
+class UserClientOpcode7816 : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode7816();
+    ~UserClientOpcode7816();
+};
+
+class UserClientOpcode3010 : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode3010();
+    ~UserClientOpcode3010();
+};
+
+class UserClientOpcode3235 : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode3235();
+    ~UserClientOpcode3235();
+};
+
+class UserClientOpcode3231 : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientOpcode3231();
+    ~UserClientOpcode3231();
+};
+
 #endif
