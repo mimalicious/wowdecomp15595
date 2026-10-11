@@ -1581,7 +1581,7 @@ void CGUnit_C::AnimKitMgrExpressionCallback(CAnimKitManager* manager) {
         uint32_t boneDataID = 0xFFFFFFFF;
         uint32_t anim = this->m_animKitManager.GetExpressingHandItemAnim(boneDataID, 1, 1);
         this->UpdateHandItemAnimEffects(anim);
-        this->UpdateWeaponVisibilityFromAnimChange(anim);
+        this->UpdateRangedWeaponRotation(anim);
     }
 
     CVehicle_C* vehicle = this->m_vehicle;

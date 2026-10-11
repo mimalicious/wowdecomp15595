@@ -1052,7 +1052,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t IsVehicle() const;
     void DisengageFromActivePlayer();
     void PlayDeathAnim(int32_t force);
-    void UpdateWeaponVisibilityFromAnimChange(uint32_t anim);
     static uint8_t KitFlagsToPlayFlags(const SpellRec* spell, const SpellVisualRec* visual, const SpellVisualKitRec* kit);
     static void MovementOneShotAnimKitStopCallback(CAnimKitInst* inst, uint64_t param);
     static void CastAnimKitStopCallback(CAnimKitInst* inst, uint64_t param);
