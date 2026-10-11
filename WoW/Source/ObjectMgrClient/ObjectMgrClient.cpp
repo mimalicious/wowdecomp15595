@@ -1658,7 +1658,7 @@ int32_t Packet_SMSG_UPDATE_OBJECT(void* param, NETMESSAGE msgId, uint32_t time, 
         facing = player->GetFacing();
     }
 
-    ClientChangeWorld(mapId, position, facing);
+    ClientLoadNewWorld(mapId, &position, facing);
     msg->m_read = start;
     return Packet_SMSG_UPDATE_OBJECT(NULL, SMSG_UPDATE_OBJECT, time, msg);
 }

@@ -2029,7 +2029,7 @@ static bool OnTransferPending(ClientTransferPending* msg) {
 }
 
 // OFFSET: 0x00403660/0x140002EA0
-static int32_t ClientLoadNewWorld(int32_t mapID, C3Vector* position, float facing) {
+int32_t ClientLoadNewWorld(int32_t mapID, C3Vector* position, float facing) {
     if (!g_mapDB.GetRecord(mapID)) {
         ConsolePrintf("Bad ClientLoadNewWorld mapID %d\n", mapID);
         return 0;

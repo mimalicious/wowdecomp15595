@@ -281,7 +281,7 @@ static bool ErrorDisplayMaxLevelCallback(CVar* var, const char* oldValue, const 
     return true;
 }
 
-// OFFSET: 0x00403BA0
+// OFFSET: 0x00403BA0/0x140003510
 static void PrintFilterMask() {
     uint32_t filter = SysMsgGetFilter();
 
@@ -302,7 +302,7 @@ static void PrintFilterMask() {
     ConsolePrintf("Now filtering: %s", names);
 }
 
-// OFFSET: 0x004014C0
+// OFFSET: 0x004014C0/0x1400012B0
 static int32_t ErrorDisplaySetFilter(const char* filter) {
     int32_t except = 0;
     uint32_t mask = 0;
@@ -472,7 +472,7 @@ static bool M2DebugFasterChanged(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// OFFSET: 0x004019E0
+// OFFSET: 0x004019E0/0x140004230
 bool UIFasterCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t faster = SStrToInt(value);
 
@@ -504,7 +504,7 @@ bool UIFasterCallback(CVar* var, const char* oldValue, const char* value, void* 
     return true;
 }
 
-// OFFSET: 0x00401A70
+// OFFSET: 0x00401A70/0x1400015C0
 bool ProcessAffinityMaskCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t maxMask = 0xFFFFFFFF >> (32 - OsGetNumberOfProcessors());
     uint32_t mask = atol(value);
@@ -573,7 +573,7 @@ bool TextureCacheSizeCallback(CVar* var, const char* oldValue, const char* value
     return true;
 }
 
-// OFFSET: 0x00401B50
+// OFFSET: 0x00401B50/0x1400016C0
 static bool BatchDoodadsCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t enable = SStrToInt(value);
     uint32_t flags = M2GetCacheFlags();
@@ -589,7 +589,7 @@ static bool BatchDoodadsCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// OFFSET: 0x00401C10
+// OFFSET: 0x00401C10/0x140001780
 static bool BatchParticlesCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t enable = SStrToInt(value);
     uint32_t flags = M2GetCacheFlags();
@@ -605,7 +605,7 @@ static bool BatchParticlesCallback(CVar* var, const char* oldValue, const char* 
     return true;
 }
 
-// OFFSET: 0x00401BB0
+// OFFSET: 0x00401BB0/0x140001720
 static bool ForceAdditiveParticleSortCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t enable = SStrToInt(value);
     uint32_t flags = M2GetCacheFlags();
@@ -631,7 +631,7 @@ static bool AsyncFileReadHandlerTimeoutCallback(CVar* var, const char* oldValue,
     return static_cast<uint32_t>(SStrToInt(value) - 20) <= 230;
 }
 
-// OFFSET: 0x004025C0
+// OFFSET: 0x004025C0/0x140005430
 bool TimingMethodCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t method = atol(value);
 
@@ -670,7 +670,7 @@ void ClientRegisterConsoleCommands() {
     g_blizzconVar = CVar::Register("blizzcon", "Blizzcon special behavior", 0x100, "0", NULL, CATEGORY_DEFAULT, false, NULL, false);
 
     if (g_blizzconVar->m_intValue) {
-        OsInputEnableKioskMode();
+        OsInputInstallKeyboardHook();
         ConsoleAccessSetEnabled(0);
     }
 
@@ -714,14 +714,14 @@ void ClientRegisterConsoleCommands() {
     g_installLocaleVar = CVar::Register("installLocale", "The locale the original install was from", 1, "", NULL, CATEGORY_GAME, false, NULL, false);
 }
 
-// OFFSET: 0x00401DD0
+// OFFSET: 0x00401DD0/0x1400042D0
 void AsyncFileReadRegisterCVars() {
     s_cvAsyncThreadSleep = CVar::Register("asyncThreadSleep", "Engine option: Async read thread sleep", 1, "0", AsyncFileReadThreadSleepCallback, CATEGORY_DEBUG, false, NULL, false);
     s_cvAsyncHandlerTimeout = CVar::Register("asyncHandlerTimeout", "Engine option: Async read main thread timeout", 1, "100", AsyncFileReadHandlerTimeoutCallback, CATEGORY_DEBUG, false, NULL, false);
     AsyncFileReadInitialize(s_cvAsyncThreadSleep->m_intValue, s_cvAsyncHandlerTimeout->m_intValue);
 }
 
-// OFFSET: 0x00401E40
+// OFFSET: 0x00401E40/0x140004380
 uint32_t GetM2CvarFlags() {
     s_M2UseZFillVar = CVar::Register("M2UseZFill", "z-fill transparent objects", 0, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);
     s_M2UseClipPlanesVar = CVar::Register("M2UseClipPlanes", "use clip planes for sorting transparent objects", 0, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);

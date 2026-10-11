@@ -19,6 +19,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/IncomingResurrection.h"
 #include "WoW/Source/Ui/PetInfo.h"
 #include "WoW/Source/Ui/RuneInfo.h"
 #include "WoW/Source/Net/Types.h"
@@ -4831,7 +4832,7 @@ void PendingSpellCast::OnSpellStartPacket(CDataStore* msg) {
     }
 
     if (SpellHasEffect(spell, 18) && this->m_data.m_objectTarget) {
-        IncomingResurrectionCastStart(this->m_data.m_objectTarget, caster, spell->m_id);
+        CGIncomingResurrection::Add(this->m_data.m_objectTarget, caster, spell->m_id);
     }
 
     if (hasPrediction && (this->m_data.m_targetFlags & 0x2) && this->m_data.m_objectTarget) {
@@ -5785,7 +5786,7 @@ void FinishPendingSpellCast(PendingSpellCast* cast, CGUnit_C* unit, const SpellR
     }
 
     if (SpellHasEffect(spell, 18)) {
-        IncomingResurrectionCastEnd(cast->m_data.m_objectTarget, cast->m_data.m_caster, spell->m_id);
+        CGIncomingResurrection::Remove(cast->m_data.m_objectTarget, cast->m_data.m_caster, spell->m_id);
     }
 
     if (spell->m_attributesExH & 0x1000000) {
@@ -10474,6 +10475,20 @@ void Spell_C_AddProcessedDestLocSpellCast(WOWGUID caster, uint8_t count, uint32_
 
     node->m_castCount = count;
     node->m_time = time + 10000;
+}
+
+// INLINED
+SpellCastTargetPoint::SpellCastTargetPoint() {
+    this->m_position.x = 0.0f;
+    this->m_position.y = 0.0f;
+    this->m_position.z = 0.0f;
+    this->m_transport = WOWGUID();
+    this->m_worldPosition.x = 0.0f;
+    this->m_worldPosition.y = 0.0f;
+    this->m_worldPosition.z = 0.0f;
+    this->unk_0024.x = 0.0f;
+    this->unk_0024.y = 0.0f;
+    this->unk_0024.z = 1.0f;
 }
 
 // OFFSET: 0x008B96B0

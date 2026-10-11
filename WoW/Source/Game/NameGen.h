@@ -14,9 +14,10 @@ class CRndSeed;
 
 class CNameGen {
     public:
-    /* 0000 */ TSFixedArray<const char*> m_names;
-    /* 000C */ TSGrowableArray<DictionaryRecord> m_dictionary;
-    /* 001C */ int32_t m_dictionaryCount;
+    /* 0000 */ CRndSeed* m_seed;
+    /* 0004 */ TSFixedArray<const char*> m_names;
+    /* 0010 */ TSGrowableArray<DictionaryRecord> m_dictionary;
+    /* 0020 */ int32_t m_dictionaryCount;
 
     CNameGen(CRndSeed& seed);
     void ClearDictionary();
