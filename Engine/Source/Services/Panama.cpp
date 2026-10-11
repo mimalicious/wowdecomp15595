@@ -50,6 +50,243 @@ Crypt::PanamaCypher::~PanamaCypher() {
     memset(this->m_bufferData, 0, sizeof(this->m_bufferData));
 }
 
+#if defined(_M_IX86)
+// OFFSET: 0x00A1D2B0
+static __declspec(naked) void __cdecl Panama_SSE2_Pull(uint32_t count, uint32_t* state, uint32_t* z) {
+    __asm {
+        push ebp
+        mov ebp, esp
+        push ebx
+        push esi
+        mov ecx, dword ptr [ebp + 8]
+        mov edx, dword ptr [ebp + 0xc]
+        mov esi, dword ptr [ebp + 0x10]
+        shl ecx, 5
+        je L_A1D60A
+        mov ebx, dword ptr [edx + 0x44]
+        add ecx, ebx
+        push ebp
+        push ecx
+        movdqa xmm0, xmmword ptr [edx]
+        movdqa xmm1, xmmword ptr [edx + 0x10]
+        movdqa xmm2, xmmword ptr [edx + 0x20]
+        movdqa xmm3, xmmword ptr [edx + 0x30]
+        mov eax, dword ptr [edx + 0x40]
+    L_A1D2E4:
+        test ebx, 1
+        jne L_A1D30C
+        movdqa xmm6, xmm2
+        movss xmm6, xmm3
+        pshufd xmm5, xmm6, 0x39
+        movd xmm6, eax
+        movdqa xmm7, xmm3
+        movss xmm7, xmm6
+        pshufd xmm6, xmm7, 0x39
+        jmp L_A1D320
+    L_A1D30C:
+        movdqa xmm5, xmm3
+        palignr xmm5, xmm2, 4
+        movd xmm6, eax
+        palignr xmm6, xmm3, 4
+    L_A1D320:
+        movd ecx, xmm2
+        not ecx
+        movd ebp, xmm3
+        or ecx, ebp
+        xor eax, ecx
+        pcmpeqb xmm7, xmm7
+        pxor xmm7, xmm1
+        por xmm7, xmm2
+        pxor xmm7, xmm3
+        movd ecx, xmm7
+        rol ecx, 0xf
+        mov dword ptr [edx + 0x34], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 4
+        mov dword ptr [edx + 4], ecx
+        punpckhqdq xmm7, xmm7
+        movd ecx, xmm7
+        rol ecx, 2
+        mov dword ptr [edx + 0x18], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 9
+        mov dword ptr [edx + 0x2c], ecx
+        pcmpeqb xmm7, xmm7
+        pxor xmm7, xmm0
+        por xmm7, xmm1
+        pxor xmm7, xmm2
+        movd ecx, xmm7
+        rol ecx, 0x17
+        mov dword ptr [edx + 0x28], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 0x1b
+        mov dword ptr [edx + 0x3c], ecx
+        punpckhqdq xmm7, xmm7
+        movd ecx, xmm7
+        rol ecx, 8
+        mov dword ptr [edx + 0xc], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 3
+        mov dword ptr [edx + 0x20], ecx
+        pcmpeqb xmm7, xmm7
+        pxor xmm7, xmm6
+        por xmm7, xmm0
+        pxor xmm7, xmm1
+        movd ecx, xmm7
+        rol ecx, 0x18
+        mov dword ptr [edx + 0x1c], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 1
+        mov dword ptr [edx + 0x30], ecx
+        punpckhqdq xmm7, xmm7
+        movd ecx, xmm7
+        rol ecx, 0xa
+        mov dword ptr [edx], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 0x1c
+        mov dword ptr [edx + 0x14], ecx
+        pcmpeqb xmm7, xmm7
+        pxor xmm7, xmm5
+        por xmm7, xmm6
+        pxor xmm7, xmm0
+        movd ecx, xmm7
+        rol ecx, 6
+        mov dword ptr [edx + 0x10], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 0x15
+        mov dword ptr [edx + 0x24], ecx
+        punpckhqdq xmm7, xmm7
+        movd ecx, xmm7
+        rol ecx, 0xd
+        mov dword ptr [edx + 0x38], ecx
+        pshuflw xmm7, xmm7, 0x4e
+        movd ecx, xmm7
+        rol ecx, 0xe
+        mov dword ptr [edx + 8], ecx
+        movdqa xmm4, xmm3
+        punpcklqdq xmm3, xmm2
+        punpckhdq xmm4, xmm2
+        movdqa xmm2, xmm1
+        punpcklqdq xmm1, xmm0
+        punpckhdq xmm2, xmm0
+        test esi, esi
+        je L_A1D48E
+        movdqa xmm6, xmm4
+        punpcklqdq xmm4, xmm2
+        punpckhqdq xmm6, xmm2
+        test esi, 0xf
+        jne L_A1D482
+        movdqa xmmword ptr [esi], xmm4
+        movdqa xmmword ptr [esi + 0x10], xmm6
+        add esi, 0x20
+        jmp L_A1D48E
+    L_A1D482:
+        movdqu xmmword ptr [esi], xmm4
+        movdqu xmmword ptr [esi + 0x10], xmm6
+        add esi, 0x20
+    L_A1D48E:
+        lea ecx, [ebx + 0x20]
+        and ecx, 0x3e0
+        lea ebp, [ebx + 0x100]
+        and ebp, 0x3e0
+        movdqa xmm0, xmmword ptr [edx + ecx + 0x50]
+        pxor xmm3, xmm0
+        pshufd xmm0, xmm0, 0xb1
+        movdqa xmmword ptr [edx + ecx + 0x50], xmm3
+        pxor xmm0, xmmword ptr [edx + ebp + 0x60]
+        movdqa xmmword ptr [edx + ebp + 0x60], xmm0
+        movdqa xmm4, xmmword ptr [edx + ecx + 0x60]
+        pxor xmm1, xmm4
+        movdqa xmmword ptr [edx + ecx + 0x60], xmm1
+        pxor xmm4, xmmword ptr [edx + ebp + 0x50]
+        movdqa xmmword ptr [edx + ebp + 0x50], xmm4
+        movdqa xmm3, xmmword ptr [edx + 0x30]
+        movdqa xmm2, xmmword ptr [edx + 0x20]
+        movdqa xmm1, xmmword ptr [edx + 0x10]
+        movdqa xmm0, xmmword ptr [edx]
+        test ebx, 1
+        jne L_A1D535
+        movd xmm6, eax
+        movdqa xmm7, xmm3
+        movss xmm7, xmm6
+        movdqa xmm6, xmm2
+        movss xmm6, xmm3
+        movdqa xmm5, xmm1
+        movss xmm5, xmm2
+        movdqa xmm4, xmm0
+        movss xmm4, xmm1
+        pshufd xmm7, xmm7, 0x39
+        pshufd xmm6, xmm6, 0x39
+        pshufd xmm5, xmm5, 0x39
+        pshufd xmm4, xmm4, 0x39
+        jmp L_A1D55D
+    L_A1D535:
+        movd xmm7, eax
+        palignr xmm7, xmm3, 4
+        movq xmm6, xmm3
+        palignr xmm6, xmm2, 4
+        movq xmm5, xmm2
+        palignr xmm5, xmm1, 4
+        movq xmm4, xmm1
+        palignr xmm4, xmm0, 4
+    L_A1D55D:
+        xor eax, 1
+        movd ecx, xmm0
+        xor eax, ecx
+        movd ecx, xmm3
+        xor eax, ecx
+        pxor xmm3, xmm2
+        pxor xmm2, xmm1
+        pxor xmm1, xmm0
+        pxor xmm0, xmm7
+        pxor xmm3, xmm7
+        pxor xmm2, xmm6
+        pxor xmm1, xmm5
+        pxor xmm0, xmm4
+        lea ecx, [ebx + 0x380]
+        and ecx, 0x3e0
+        lea ebp, [ebx + 0x200]
+        and ebp, 0x3e0
+        movdqa xmm4, xmmword ptr [edx + ecx + 0x50]
+        movdqa xmm5, xmmword ptr [edx + ebp + 0x50]
+        movdqa xmm6, xmm4
+        punpcklqdq xmm4, xmm5
+        punpckhqdq xmm6, xmm5
+        pxor xmm3, xmm4
+        pxor xmm2, xmm6
+        movdqa xmm4, xmmword ptr [edx + ecx + 0x60]
+        movdqa xmm5, xmmword ptr [edx + ebp + 0x60]
+        movdqa xmm6, xmm4
+        punpcklqdq xmm4, xmm5
+        punpckhqdq xmm6, xmm5
+        pxor xmm1, xmm4
+        pxor xmm0, xmm6
+        add ebx, 0x20
+        cmp ebx, dword ptr [esp]
+        jne L_A1D2E4
+        mov dword ptr [edx + 0x40], eax
+        movdqa xmmword ptr [edx + 0x30], xmm3
+        movdqa xmmword ptr [edx + 0x20], xmm2
+        movdqa xmmword ptr [edx + 0x10], xmm1
+        movdqa xmmword ptr [edx], xmm0
+        add esp, 4
+        pop ebp
+    L_A1D60A:
+        pop esi
+        pop ebx
+        pop ebp
+        ret
+    }
+}
+#endif
+
 // OFFSET: 0x00A1D610/0x1407C3270
 void Crypt::PanamaCypher::Reset() {
     Crypt::Panama::Reset();
@@ -207,6 +444,13 @@ void Crypt::Panama::SetKey(const uint8_t* key, const uint8_t* iv) {
         this->Iterate(1, reinterpret_cast<const uint32_t*>(key), NULL);
     }
 
+#if defined(_M_IX86)
+    if (OsGetProcessorFeatures() & 0x10) {
+        Panama_SSE2_Pull(32, this->m_state, NULL);
+        return;
+    }
+#endif
+
     this->Iterate(32, NULL, NULL);
 }
 
@@ -223,7 +467,15 @@ void Crypt::PanamaCypher::ProcessBuffer(uint8_t* buffer, uint32_t size) {
 
     while (size) {
         this->m_leftOver = this->m_bufferSize;
-        this->Iterate(this->m_bufferSize / 32, NULL, reinterpret_cast<uint32_t*>(this->m_buffer));
+
+#if defined(_M_IX86)
+        if (!(reinterpret_cast<uintptr_t>(this->m_buffer) & 0xF) && (OsGetProcessorFeatures() & 0x10)) {
+            Panama_SSE2_Pull(this->m_bufferSize / 32, this->m_state, reinterpret_cast<uint32_t*>(this->m_buffer));
+        } else
+#endif
+        {
+            this->Iterate(this->m_bufferSize / 32, NULL, reinterpret_cast<uint32_t*>(this->m_buffer));
+        }
 
         count = this->m_leftOver < size ? this->m_leftOver : size;
         Crypt::PanamaCypher::xorbuf(buffer, this->m_buffer, count);
