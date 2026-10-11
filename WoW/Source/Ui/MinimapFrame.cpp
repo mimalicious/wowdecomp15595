@@ -1464,7 +1464,7 @@ void CGMinimapFrame::SaveShapeshiftTracking() {
 
 // OFFSET: 0x009D21B0/0x140763630
 void CGMinimapFrame::SetPingPosition(const WOWGUID& guid, const C2Vector& position) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -1856,7 +1856,7 @@ CGMinimapFrame::~CGMinimapFrame() {
 
 // OFFSET: 0x009D3EF0
 void CGMinimapFrame::RenderBlobInside(const C44Matrix& rotation, MINIMAPBLOB* blob) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || blob->m_points.m_count < 3) {
         return;
@@ -1944,7 +1944,7 @@ void CGMinimapFrame::RenderBlobInside(const C44Matrix& rotation, MINIMAPBLOB* bl
 
 // OFFSET: 0x009D44A0
 void CGMinimapFrame::RenderBlobOutside(const C44Matrix& rotation, MINIMAPBLOB* blob) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || blob->m_points.m_count < 3) {
         return;
@@ -2079,7 +2079,7 @@ void CGMinimapFrame::RenderBlobOutside(const C44Matrix& rotation, MINIMAPBLOB* b
 
 // OFFSET: 0x009D4CF0
 void CGMinimapFrame::AddBlobRingSegment(MINIMAPBLOB* blob, float from, float to) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -2088,7 +2088,7 @@ void CGMinimapFrame::AddBlobRingSegment(MINIMAPBLOB* blob, float from, float to)
     C3Vector position = player->GetPosition();
     float radius = static_cast<float>(MinimapGetViewRadius() * this->m_questBlobRingScalar);
     uint32_t vertexBase = s_blipVertices.m_count;
-    uint32_t indexBase = s_blipIndices.m_count;
+    uint16_t indexBase = static_cast<uint16_t>(s_blipIndices.m_count);
     uint32_t texCoordBase = s_blipTexCoords2.m_count;
     s_blipVertices.SetCount(s_blipVertices.m_count + 3);
     s_blipVertices.m_data[vertexBase].y = position.y;
@@ -2120,7 +2120,7 @@ void CGMinimapFrame::AddBlobRingSegment(MINIMAPBLOB* blob, float from, float to)
 // OFFSET: 0x009D4F10/0x140766F40
 bool CGMinimapFrame::BuildBlobRings(MINIMAPBLOB* blob) {
     blob->m_rings.SetCount(0);
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
@@ -2267,7 +2267,7 @@ bool CGMinimapFrame::BuildBlobRings(MINIMAPBLOB* blob) {
 
 // OFFSET: 0x009D55E0
 static bool IsPlayerInQuestBlob(int32_t questId, uint32_t blobIndex) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
@@ -3375,7 +3375,7 @@ void CGMinimapFrame::RenderMarkedBlips(const C44Matrix& rotation) {
 
 // OFFSET: 0x009D9D30
 void CGMinimapFrame::RenderBlobRing(const C44Matrix& rotation, MINIMAPBLOB* blob) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || blob->m_points.m_count < 3 || !blob->m_rings.m_count) {
         return;
