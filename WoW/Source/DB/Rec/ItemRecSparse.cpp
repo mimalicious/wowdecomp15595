@@ -38,6 +38,23 @@ static TSGrowableArray<TSGrowableArray<int32_t> > s_itemSubClassIds;
 void ItemRecSparse::FixupRecord(void* record) {
 }
 
+// OFFSET: 0x004B1990
+static bool FindItemCurrencyCost(const uint8_t* record, WowClientDB2_Base* db, void* param) {
+    struct Search {
+        bool m_found;
+        int32_t m_itemID;
+    };
+
+    Search* search = static_cast<Search*>(param);
+
+    if (!record || reinterpret_cast<const ItemCurrencyCostRec*>(record)->m_itemID != search->m_itemID) {
+        return true;
+    }
+
+    search->m_found = true;
+    return false;
+}
+
 // OFFSET: 0x004B19B0/0x1400E8090
 const char* ItemRecSparse::GetName(int32_t index) const {
     switch (index) {
@@ -247,6 +264,94 @@ int32_t ItemRecSparse::GetSellPrice() const {
         if (itemClass) {
             return static_cast<int32_t>(static_cast<float>(price) * itemClass->m_priceFactor);
         }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x004B1CF0/0x1400E84D0
+static int32_t GetDisenchantLootID(const ItemRecSparse* item) {
+    if (!item) {
+        return 0;
+    }
+
+    if ((item->m_flags[0] & 0x8002) || item->m_bonding == 4 || item->m_zoneBound || item->m_instanceBound || item->m_stackable > 1) {
+        return 0;
+    }
+
+    if (!item->GetSellPrice()) {
+        struct Search {
+            bool m_found;
+            int32_t m_itemID;
+        };
+
+        Search search;
+        search.m_found = false;
+        search.m_itemID = item->m_ID;
+        g_itemCurrencyCostDB.IterateOverRecords(FindItemCurrencyCost, &search);
+
+        if (!search.m_found) {
+            return 0;
+        }
+    }
+
+    ItemRec* rec = item->GetNonSparse();
+
+    if (!rec) {
+        return 0;
+    }
+
+    int32_t classID = rec->m_classID;
+
+    if (classID < 0 || classID >= static_cast<int32_t>(s_itemSubClassIds.m_count)) {
+        return 0;
+    }
+
+    int32_t subClassID = rec->m_subclassID;
+
+    if (subClassID < 0 || subClassID >= static_cast<int32_t>(s_itemSubClassIds.m_data[classID].m_count)) {
+        return 0;
+    }
+
+    int32_t subClassRecID = s_itemSubClassIds.m_data[classID].m_data[subClassID];
+
+    if (subClassRecID < 0 || subClassRecID >= static_cast<int32_t>(s_disenchantLootBySubClass.m_count)) {
+        return 0;
+    }
+
+    int32_t quality = item->m_quality;
+
+    if (quality < 0 || quality >= static_cast<int32_t>(s_disenchantLootBySubClass.m_data[subClassRecID].m_count)) {
+        return 0;
+    }
+
+    int32_t itemLevel = item->m_itemLevel;
+
+    if (itemLevel < 0 || itemLevel >= static_cast<int32_t>(s_disenchantLootBySubClass.m_data[subClassRecID].m_data[quality].m_count)) {
+        return 0;
+    }
+
+    int32_t lootID = s_disenchantLootBySubClass.m_data[subClassRecID].m_data[quality].m_data[itemLevel];
+
+    if (!lootID) {
+        return s_disenchantLootByClass.m_data[classID].m_data[quality].m_data[itemLevel];
+    }
+
+    return lootID;
+}
+
+// OFFSET: 0x004B1E00/0x1400E8600
+int32_t ItemRecSparse::GetDisenchantSkillRequired() const {
+    int32_t lootID = GetDisenchantLootID(this);
+
+    if (lootID <= 0) {
+        return -1;
+    }
+
+    ItemDisenchantLootRec* loot = g_itemDisenchantLootDB.GetRecord(lootID);
+
+    if (loot) {
+        return loot->m_skillRequired;
     }
 
     return 0;

@@ -1341,7 +1341,7 @@ void CGUnit_C::StartMissileTrajectoryTargeting(const VehicleRec* vehicleRec) {
     s_trajectoryStartTime = FrameTime::GetCurTimeMs();
 }
 
-// OFFSET: #0x006FC190
+// OFFSET: 0x0057FCA0
 void CGUnit_C::ShutdownMissileTrajectorySystem() {
     SMemFree(CGUnit_C::s_trajectoryPoints, __FILE__, __LINE__, 0);
     CGUnit_C::StopMissileTrajectoryTargeting();

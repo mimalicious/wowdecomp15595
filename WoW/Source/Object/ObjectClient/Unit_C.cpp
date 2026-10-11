@@ -193,7 +193,7 @@ static WOWGUID s_pendingSkinTarget;
 static int32_t s_showAttackIndicators;
 
 // STATIC: 0x00E283B8
-static uint32_t s_npcFeedbackSuppressCount;
+uint32_t g_npcFeedbackSuppressCount;
 
 // STATIC: 0x00DD5E9C
 int32_t CGUnit_C::s_powerTypeBySlot[12][5];
@@ -9318,9 +9318,9 @@ static bool ClientSuppressNPCGreetingsHandler(ClientSuppressNPCGreetings* msg) {
     unit->SetFootstepSoundsSuppressed(suppressed);
 
     if (suppressed) {
-        s_npcFeedbackSuppressCount++;
+        g_npcFeedbackSuppressCount++;
     } else {
-        s_npcFeedbackSuppressCount--;
+        g_npcFeedbackSuppressCount--;
     }
 
     return true;
@@ -13903,7 +13903,7 @@ void CGUnit_C::SetClientInitData(const CClientObjCreate& create) {
 
     if (create.unk_0004) {
         this->unk_09FC |= 0x40;
-        s_npcFeedbackSuppressCount++;
+        g_npcFeedbackSuppressCount++;
     } else {
         this->unk_09FC &= ~0x40;
     }
@@ -14891,7 +14891,7 @@ void CGUnit_C::Disable() {
     }
 
     if (this->unk_09FC & 0x40) {
-        s_npcFeedbackSuppressCount--;
+        g_npcFeedbackSuppressCount--;
     }
 }
 
@@ -15853,7 +15853,7 @@ void CGUnit_C::HandleNPCFeedback() {
         return;
     }
 
-    if (s_npcFeedbackSuppressCount) {
+    if (g_npcFeedbackSuppressCount) {
         return;
     }
 
@@ -21930,12 +21930,13 @@ void CGUnit_C::SequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t 
     }
 }
 
-// OFFSET: #0x00724EA0
+// OFFSET: 0x005AB810
 void CGUnit_C::PostShutdown() {
     CMissile::Destroy();
     CGNamePlateFrame::DestroyUnusedNameplateFrames();
 
     CGUnit_C::s_lastNPCSoundGUID = WOWGUID();
+    CUnitDisplayTransition_C::UninitSystem();
     CVehicle_C::UninitSystem();
     CVehiclePassenger_C::UninitSystem();
     CVehicleCamera_C::UninitSystem();

@@ -20,8 +20,6 @@ typedef Blizzard::Lock::Atomic ATOMIC32;
 
 class WowConnectionNet;
 
-void ARC4PrepareKey(const uint8_t* key, uint32_t length, SARC4Key* state);
-
 class WowConnection {
     public:
     struct SENDNODE : public TSLinkedNode<WowConnection::SENDNODE> {

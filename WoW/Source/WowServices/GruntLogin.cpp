@@ -343,7 +343,7 @@ void GruntLogin::SetTokenInfo(bool enabled, uint8_t required) {
     this->m_tokenRequired = required;
 }
 
-// OFFSET: 0x00625F70
+// OFFSET: 0x00625F70/0x1402B7B30
 void GruntLogin::GetTokenInfo(bool* enabled, char* token) {
     *enabled = this->m_tokenEnabled;
     SStrCopy(token, this->m_token, sizeof(this->m_token));
@@ -523,7 +523,7 @@ void GruntLogin::SetMatrixInfo(bool enabled, uint8_t width, uint8_t height, uint
 
     input->m_hmac.m_hash.Prepare();
     input->m_hmac.m_hash.Process(input->m_hmac.m_innerPad, sizeof(input->m_hmac.m_innerPad));
-    ARC4PrepareKey(this->m_matrixKey, sizeof(this->m_matrixKey), &input->m_key);
+    SARC4PrepareKey(this->m_matrixKey, sizeof(this->m_matrixKey), &input->m_key);
     input->m_valid = true;
 
     this->CommitMatrix();

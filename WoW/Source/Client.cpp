@@ -1697,7 +1697,7 @@ static bool OpenArchives() {
     return LoadMopaqFileSigningData(s_localeCode) && (CmdLineGetBool(static_cast<CMDOPT>(CMD_LAUNCH)) || s_locale != 4 || s_allArchivesComplete || !SCreateProcess("Launcher.exe", NULL, 0, NULL, NULL, NULL));
 }
 
-// OFFSET: #0x00401220
+// OFFSET: 0x004011A0
 CommandManager::~CommandManager() {
     for (uint32_t i = 0; i < this->m_count; i++) {
         this->m_commands[i]->Uninstall();
@@ -2593,6 +2593,103 @@ int32_t InitializeEngineCallback(const void* data, void* param) {
     InitializeClient();
 
     return 1;
+}
+
+// OFFSET: 0x00406AE0/0x140008380
+void ClientDestroyGame(int32_t charSelect, int32_t resumeGlue, int32_t worldLogin) {
+    if (!s_gameInitialized) {
+        return;
+    }
+
+    EventUnregister(EVENT_ID_IDLE, ClientIdle);
+    ClientServices::ClearMessageHandler(SMSG_NOTIFICATION);
+    ClientServices::ClearMessageHandler(SMSG_PLAYED_TIME);
+    ClientTransferPending::s_handler = NULL;
+    ClientServices::ClearMessageHandler(SMSG_TRANSFER_ABORTED);
+    ClientServices::ClearMessageHandler(SMSG_CHANNEL_NOTIFY);
+    ClientServices::ClearMessageHandler(SMSG_CHANNEL_LIST);
+    ClientServices::ClearMessageHandler(SMSG_LOGIN_VERIFY_WORLD);
+    ClientServices::ClearMessageHandler(SMSG_KICK_REASON);
+    ClientNewWorld::s_handler = NULL;
+    ClientNewWorldAbort::s_handler = NULL;
+    ClientMessageBox::s_handler = NULL;
+    ClientSuspendToken::s_handler = NULL;
+    ClientNotification::s_handler = NULL;
+
+    if (StaticSingleton<CommandManager>::m_instance) {
+        delete StaticSingleton<CommandManager>::m_instance;
+        StaticSingleton<CommandManager>::m_instance = NULL;
+    }
+
+    VoidStorage_C_Shutdown();
+    FriendList::Destroy();
+    AreaListShutdown();
+    CGItem_C::Shutdown();
+    CGPlayer_C::Shutdown();
+    PlayerClientShutdown();
+    LootDestroy();
+    CGUnit_C::Shutdown();
+    CGGameObject_C::Shutdown();
+    CGObject_C::Shutdown();
+    MovementDestroy();
+    LootRollShutdown();
+    EventUnregister(EVENT_ID_IDLE, MovementIdleMoveUnits);
+    Spell_C_StopTargeting();
+    ClntObjMgrDestroyStd();
+    CGUnit_C::PostShutdown();
+    CGObject_C::PostShutdown();
+    SpellVisualsClear();
+    CEffect::Destroy();
+    CGWorldFrame::SetScreenEffect(0);
+
+    if (CGWorldFrame::s_currentWorldFrame) {
+        CGWorldFrame::s_currentWorldFrame->UnitClear();
+    }
+
+    World::UnloadMap();
+    WeaponTrailsShutdown();
+    PlayerNameShutdown();
+    WorldTextShutdown();
+    CGGameUI::ShutdownGame();
+    ClientDestroyGameTime();
+    SI3::ShutDownAmbienceFlavor();
+    SI3::ShutdownZoneSoundsHandler();
+    SI3::FreeZoneIntros();
+    SE3::StopAllSounds(static_cast<SE3BUS>(-2), 0);
+    g_npcFeedbackSuppressCount = 0;
+    SI3::UpdateSoundEmitters(-1);
+    ClntObjMgrDestroyShared();
+    AccountDataDestroy(false);
+    s_gameInitialized = 0;
+    LoadingScreenDisable();
+
+    if (s_clientTaxiBenchEnabled) {
+        s_clientTaxiBenchEnabled = 0;
+        s_clientTaxiBenchIsOnTaxi = 0;
+    }
+
+    BattlenetUI_LeaveRealm();
+    CAnimKitManager::UninitSystem();
+    CAnimReplacementSetDef::UninitSystem();
+
+    if (StaticSingleton<CCameraManager>::m_instance) {
+        delete StaticSingleton<CCameraManager>::m_instance;
+        StaticSingleton<CCameraManager>::m_instance = NULL;
+    }
+
+    if (!charSelect) {
+        DBClient_ClearDB2Caches();
+    }
+
+    if (resumeGlue) {
+        CGlueMgr::Resume();
+
+        if (worldLogin) {
+            CGlueMgr::SetIdleState(static_cast<GLUE_IDLE_STATE>(1024));
+        }
+
+        CGlueMgr::SetScreen(charSelect ? 2 : 0);
+    }
 }
 
 // OFFSET: #0x00406B70

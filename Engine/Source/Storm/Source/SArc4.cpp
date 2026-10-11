@@ -2,7 +2,7 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: 0x00B02740
+// OFFSET: 0x00B02740/0x1408C4730
 void STORMAPI SARC4ProcessBuffer(uint8_t* data, uint32_t length, const SARC4Key* inKey, SARC4Key* outKey) {
     SARC4Key* key = outKey;
 
@@ -68,7 +68,7 @@ void STORMAPI SARC4ProcessBuffer(uint8_t* data, uint32_t length, const SARC4Key*
     key->m_x = x;
 }
 
-// OFFSET: #0x00775040
+// OFFSET: 0x00B028F0/0x1408C48F0
 void SARC4PrepareKey(const void* key, uint32_t length, SARC4Key* outKey) {
     if (!key) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

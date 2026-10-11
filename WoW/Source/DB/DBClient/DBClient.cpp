@@ -2004,6 +2004,34 @@ int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
     return entry->m_maxPlayers;
 }
 
+// OFFSET: 0x00494CA0
+void DBClient_CancelAllCallbacks() {
+    for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
+        (*table)->CancelAllCallbacks();
+    }
+
+    if (g_clientDBWorldTablesLoaded == 1) {
+        for (WowClientDB2_Base** table = g_clientDB2GameTables; *table; table++) {
+            (*table)->CancelAllCallbacks();
+        }
+    }
+}
+
+// OFFSET: 0x00495020
+void DBClient_ClearDB2Caches() {
+    DBClient_CancelAllCallbacks();
+
+    for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
+        (*table)->ClearPendingRequests();
+    }
+
+    if (g_clientDBWorldTablesLoaded == 1) {
+        for (WowClientDB2_Base** table = g_clientDB2GameTables; *table; table++) {
+            (*table)->ClearPendingRequests();
+        }
+    }
+}
+
 // OFFSET: 0x00494D90/0x1400BA580
 void DBClient_Idle() {
     for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {

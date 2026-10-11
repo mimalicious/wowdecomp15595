@@ -1409,4 +1409,6 @@ float CreatureSoundDataGetFidgetDelayMax(const CreatureSoundDataRec* rec);
 bool ClientPlaySpellVisualHandler(ClientPlaySpellVisual* msg);
 bool ClientSetPlayHoverAnimHandler(ClientSetPlayHoverAnim* msg);
 
+extern uint32_t g_npcFeedbackSuppressCount;
+
 #endif

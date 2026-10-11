@@ -1,8 +1,34 @@
 #include <cstdint>
 #include <cstdlib>
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/AreaTableRec.h"
+#include "WoW/Source/DB/Rec/LiquidTypeRec.h"
 #include "WoW/Source/DB/Rec/WMOAreaTableRec.h"
 #include "WoW/Source/WorldClient/World.h"
+
+// OFFSET: 0x00B02420
+const LiquidTypeRec* GetLiquidTypeRecForArea(uint32_t areaId, uint32_t liquidType) {
+    if (!liquidType) {
+        return NULL;
+    }
+
+    if (areaId && liquidType < 21) {
+        uint32_t index = (liquidType - 1) & 3;
+        AreaTableRec* area = g_areaTableDB.GetRecord(areaId);
+
+        if (area) {
+            if (!area->m_liquidTypeID[index] && area->m_parentAreaID) {
+                area = g_areaTableDB.GetRecord(area->m_parentAreaID);
+            }
+
+            if (area && area->m_liquidTypeID[index]) {
+                return g_liquidTypeDB.GetRecord(area->m_liquidTypeID[index]);
+            }
+        }
+    }
+
+    return g_liquidTypeDB.GetRecord(liquidType);
+}
 
 // PROVEN: 5ac149c8 IDENTICAL/NONE
 // OFFSET: 0x00B024B0/0x1408C44B0

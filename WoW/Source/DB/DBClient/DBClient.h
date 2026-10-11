@@ -696,4 +696,6 @@ int32_t GetCurrentDB2Locale();
 void DBCache_ClearTemporaryCaches();
 const char* ClientDBStringLookup(uint32_t lookup);
 
+void DBClient_CancelAllCallbacks();
+
 #endif
