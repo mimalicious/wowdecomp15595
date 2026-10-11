@@ -683,7 +683,7 @@ const char* Script_GetTokenFromGUID(const WOWGUID* guid) {
     return NULL;
 }
 
-// OFFSET: #0x0060B420
+// OFFSET: 0x0044FC50
 const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
     if (!*guid) {
         return NULL;
@@ -865,6 +865,215 @@ const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
     }
 
     return NULL;
+}
+
+// OFFSET: 0x0045A130
+int32_t PushUnitAura(lua_State* L, ScriptAuraInfo* info) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit && (unit->m_auraEffectMask[36] & 0x80) && ClntObjMgrGetActivePlayer() && !unit->IsFriendly(static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)))) {
+        return 0;
+    }
+
+    lua_checkstack(L, 16);
+
+    if (!unit || (unit->m_modelFlags & 0x10000)) {
+        uint32_t count;
+        const TSGrowableArray<PartyMemberAuraStates>* auras;
+
+        if (PartyMemberState* state = CGGameUI::GetPartyMemberState(info->m_guid)) {
+            if (!(state->m_flags & 0x1)) {
+                return 0;
+            }
+
+            count = state->m_numAuras;
+            auras = &state->m_auras;
+        } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(info->m_guid)) {
+            count = petState->m_numAuras;
+            auras = &petState->m_auras;
+        } else {
+            return 0;
+        }
+
+        if (!auras || !auras->m_count) {
+            return 0;
+        }
+
+        bool helpful = (info->m_filter & 0x1) != 0;
+        bool raid = (info->m_filter & 0x8) != 0;
+        int32_t found = 0;
+
+        for (uint32_t i = 0; i < count; i++) {
+            const PartyMemberAuraStates* entry = &auras->m_data[i];
+
+            if (!entry->m_spellId) {
+                break;
+            }
+
+            if (helpful != !(entry->m_flags & 0x80)) {
+                continue;
+            }
+
+            SpellRec* spell = g_spellDB.GetRecord(entry->m_spellId);
+
+            if (!spell) {
+                continue;
+            }
+
+            WOWGUID caster = WOWGUID::Make(0);
+
+            if (!CGSpellBook::CanShowAura(spell, caster, (entry->m_flags & 0x8) != 0)) {
+                continue;
+            }
+
+            int32_t dispelType = 0;
+
+            if (spell->m_spellCategoriesID) {
+                SpellCategoriesRec* categories = g_spellCategoriesDB.GetRecord(spell->m_spellCategoriesID);
+
+                if (categories) {
+                    dispelType = categories->m_dispelType;
+                }
+            }
+
+            if (raid && !(helpful ? CGSpellBook::FindRaidBuff(entry->m_spellId) : CGSpellBook::FindRaidDispel(dispelType))) {
+                continue;
+            }
+
+            if ((entry->m_flags & 0x10) ? (info->m_filter & 0x20) : (info->m_filter & 0x10)) {
+                continue;
+            }
+
+            if ((info->m_index >= 0 && info->m_index == found) || (info->m_name && !SStrCmpUTF8I(info->m_name, spell->m_name, 0x7FFFFFFF) && (!info->m_rank || !SStrCmpUTF8I(info->m_rank, spell->m_nameSubtext, 0x7FFFFFFF)))) {
+                const char* dispelName = NULL;
+
+                if (dispelType) {
+                    SpellDispelTypeRec* dispel = g_spellDispelTypeDB.GetRecord(dispelType);
+
+                    if (dispel && dispel->m_immunityPossible) {
+                        dispelName = dispel->m_internalName;
+                    }
+                }
+
+                SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_spellIconID);
+                lua_pushstring(L, spell->m_name);
+                lua_pushstring(L, spell->m_nameSubtext);
+                lua_pushstring(L, icon ? static_cast<const char*>(icon->m_textureFilename) : NULL);
+                lua_pushnumber(L, 1.0);
+                lua_pushstring(L, dispelName);
+                lua_pushnumber(L, 0.0);
+                lua_pushnumber(L, 0.0);
+                lua_pushnil(L);
+                lua_pushnil(L);
+
+                if ((spell->m_attributes & 0x4000000) || !(spell->m_attributesExG & 0x10000000)) {
+                    lua_pushnil(L);
+                } else {
+                    lua_pushnumber(L, 1.0);
+                }
+
+                lua_pushnumber(L, spell->m_id);
+                WOWGUID none = WOWGUID::Make(0);
+                lua_pushboolean(L, CGSpellBook::CanApplyAura(spell->m_id, &none));
+
+                if (spell->m_attributesExH & 0x40000000) {
+                    lua_pushnumber(L, 1.0);
+                } else {
+                    lua_pushnil(L);
+                }
+
+                for (uint32_t j = 0; j < 3; j++) {
+                    lua_pushnumber(L, auras->m_data[i].m_effectAmounts[j]);
+                }
+
+                lua_pushboolean(L, 0);
+                return 17;
+            }
+
+            found++;
+        }
+
+        return 0;
+    }
+
+    int32_t slot = unit->GetSortedAuraSlot(info->m_index, info->m_name, info->m_rank, info->m_filter);
+
+    if (slot < 0) {
+        return 0;
+    }
+
+    SpellRec* spell = g_spellDB.GetRecord(unit->GetAuraSpellId(slot));
+
+    if (!spell) {
+        return 0;
+    }
+
+    AuraData* aura = unit->GetAura(slot);
+    const char* dispelName = NULL;
+
+    if (spell->m_spellCategoriesID) {
+        SpellCategoriesRec* categories = g_spellCategoriesDB.GetRecord(spell->m_spellCategoriesID);
+
+        if (categories && categories->m_dispelType) {
+            SpellDispelTypeRec* dispel = g_spellDispelTypeDB.GetRecord(categories->m_dispelType);
+
+            if (dispel && dispel->m_immunityPossible) {
+                dispelName = dispel->m_internalName;
+            }
+        }
+    }
+
+    SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_spellIconID);
+    lua_pushstring(L, spell->m_name);
+    lua_pushstring(L, spell->m_nameSubtext);
+    lua_pushstring(L, icon ? static_cast<const char*>(icon->m_textureFilename) : NULL);
+    lua_pushnumber(L, aura->m_stackCount);
+    lua_pushstring(L, dispelName);
+
+    if (aura->m_duration <= 0) {
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+    } else {
+        lua_pushnumber(L, aura->m_duration * 0.001);
+        lua_pushnumber(L, static_cast<uint32_t>(aura->m_endTime) * 0.001);
+    }
+
+    lua_pushstring(L, Script_GetAuraTokenFromGUID(&aura->m_creator));
+
+    if (CGSpellBook::CanStealAura(unit, aura, spell)) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    if ((spell->m_attributes & 0x4000000) || !(spell->m_attributesExG & 0x10000000)) {
+        lua_pushnil(L);
+    } else {
+        lua_pushnumber(L, 1.0);
+    }
+
+    lua_pushnumber(L, spell->m_id);
+    lua_pushboolean(L, CGSpellBook::CanApplyAura(aura));
+
+    if (spell->m_attributesExH & 0x40000000) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    for (uint32_t j = 0; j < 3; j++) {
+        lua_pushnumber(L, aura->m_effectAmounts[j]);
+    }
+
+    uint32_t high = static_cast<uint32_t>(aura->m_creator.m_guid >> 32);
+
+    if ((high & 0xF0000000) || !((high & 0xF07FFFFF) | static_cast<uint32_t>(aura->m_creator.m_guid))) {
+        lua_pushboolean(L, 0);
+    } else {
+        lua_pushboolean(L, 1);
+    }
+
+    return 17;
 }
 
 // OFFSET: #0x0060BB70
