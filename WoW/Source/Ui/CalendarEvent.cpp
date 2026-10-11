@@ -48,12 +48,12 @@ const char* GetEventStatusString(uint32_t status) {
     return s_eventStatusStrings[status];
 }
 
-// OFFSET: #0x005F1020
+// OFFSET: 0x00A0AE90
 const char* GetEventTypeString(uint32_t type) {
     return type < 5 ? s_eventTypeStrings[type] : NULL;
 }
 
-// OFFSET: #0x005F1040
+// OFFSET: 0x00A0AEB0
 const char* GetEventRepeatString(uint32_t repeat) {
     return repeat < 4 ? s_eventRepeatStrings[repeat] : NULL;
 }
@@ -239,7 +239,7 @@ bool CGCalendarEvent::ProcessUpdateEvent(CDataStore* msg) {
     return true;
 }
 
-// OFFSET: #0x005F1580
+// OFFSET: 0x00A0B5A0
 void CGCalendarEvent::InviteRemoved(WOWGUID guid) {
     uint32_t count = this->m_numInvites;
 
@@ -710,7 +710,7 @@ bool CGCalendarEvent::RemoveInviteByGUID(WOWGUID guid) {
     return this->RemoveInvite(index);
 }
 
-// OFFSET: #0x005F23F0
+// OFFSET: 0x00A0C210
 bool CGCalendarEvent::InviteRSVP(uint32_t status) {
     if (this->m_new || (status != 1 && status != 2 && status != 8)) {
         return false;
@@ -777,7 +777,7 @@ bool CGCalendarEvent::SignUp(uint8_t tentative) {
     return true;
 }
 
-// OFFSET: #0x005F2640
+// OFFSET: 0x00A0C460
 void CGCalendarEvent::UpdateInviteModeratorStatus(WOWGUID guid, uint8_t status) {
     for (uint32_t i = 0; i < this->m_numInvites; i++) {
         if (this->m_invites.m_data[i]->m_guid != guid) {
@@ -922,7 +922,7 @@ CGCalendarEvent::CGCalendarEvent(WOWGUID guid, uint8_t level, int32_t calendarTy
     this->m_new = 1;
 }
 
-// OFFSET: #0x005F2B70
+// OFFSET: 0x00A0C990
 CGCalendarEvent::~CGCalendarEvent() {
     uint32_t count = this->m_invites.Count();
 
@@ -934,7 +934,7 @@ CGCalendarEvent::~CGCalendarEvent() {
     this->m_invites.Clear();
 }
 
-// OFFSET: #0x005F2C00
+// OFFSET: 0x00A0CA30
 bool CGCalendarEvent::ProcessGetEvent(CDataStore* msg, int32_t* status) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID playerGuid = player ? player->m_obj->m_guid : WOWGUID();
@@ -1034,7 +1034,7 @@ bool CGCalendarEvent::ProcessGetEvent(CDataStore* msg, int32_t* status) {
     return true;
 }
 
-// OFFSET: #0x005F2F90
+// OFFSET: 0x00A0CDB0
 bool CGCalendarEvent::ProcessInitialInviteList(CDataStore* msg) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID playerGuid = player ? player->m_obj->m_guid : WOWGUID();
@@ -1117,7 +1117,7 @@ bool CGCalendarEvent::ProcessInitialInviteList(CDataStore* msg) {
     return true;
 }
 
-// OFFSET: #0x005F32B0
+// OFFSET: 0x00A0D0C0
 void CGCalendarEvent::AddInvite(uint64_t inviteID, WOWGUID guid, uint8_t level, uint8_t status, uint8_t inviteType, uint32_t responseTime) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID playerGuid = player ? player->m_obj->m_guid : WOWGUID();

@@ -198,7 +198,7 @@ size_t CGCalendar::GetDateTimeText(char* buffer, uint32_t size, uint32_t time) {
     return SStrPrintf(buffer, size, FrameScript_GetText("FULLDATE_AND_TIME", -1, GENDER_NOT_APPLICABLE), dateText, timeText);
 }
 
-// OFFSET: #0x005B8E50
+// OFFSET: 0x009ABB30
 static int32_t QSortTextures(const void* a, const void* b) {
     LfgDungeonsRec* recA = g_lfgDungeonsDB.GetRecord(*static_cast<const int32_t*>(a));
     LfgDungeonsRec* recB = g_lfgDungeonsDB.GetRecord(*static_cast<const int32_t*>(b));
@@ -465,7 +465,7 @@ int32_t PH_CALENDAR_GROUP(void* param, NETMESSAGE msgId, uint32_t time, CDataSto
     return 1;
 }
 
-// OFFSET: #0x005C1E40
+// OFFSET: 0x009B5630
 CalendarEventTables::CalendarEventTables() {
     this->m_counts[0] = 0;
     this->m_counts[1] = 0;
@@ -485,7 +485,7 @@ void CalendarEventTables::Clear() {
     }
 }
 
-// OFFSET: #0x005BEAD0
+// OFFSET: 0x009B4210
 void CGCalendar::ShutdownGame() {
     if (CGCalendar::m_curEvent) {
         delete CGCalendar::m_curEvent;
@@ -637,7 +637,7 @@ int32_t CGCalendar::ClampAbsMonthDay(int32_t month, int32_t year, int32_t* outMo
     return CGCalendar::GetDaysInMonth(*outMonth, *outYear, days, weekDay);
 }
 
-// OFFSET: #0x005B9000
+// OFFSET: 0x009ABEC0
 bool CGCalendar::ComputeEventIndex(const CalendarEventSelection* selection, int32_t* monthOffset, int32_t* day, int32_t* index) {
     *monthOffset = 0;
     *day = 0;
@@ -728,7 +728,7 @@ bool GameCalendarGetMaxCreateDate(WowTime* date, const WowTime* now) {
     return date->SetHourAndMinutes(23u, 59u);
 }
 
-// OFFSET: %0x008FF800
+// OFFSET: 0x009AA9B0
 CalendarDayEvent::CalendarDayEvent() {
     this->m_eventID = 0;
     this->m_startTime = 0;
@@ -748,7 +748,7 @@ CalendarDayEvent::CalendarDayEvent() {
     this->m_sequenceLength = 0;
 }
 
-// OFFSET: %0x008FF870
+// OFFSET: 0x009AAA30
 int32_t CalendarDayEvent::GetSequenceType() const {
     if (this->m_sequenceLength <= 1) {
         return 4;
@@ -2000,7 +2000,7 @@ void CGCalendar::RemoveEvent() {
     }
 }
 
-// OFFSET: #0x005B9700
+// OFFSET: 0x009AC570
 int32_t CGCalendar::GetTextureIndex(uint32_t type, int32_t textureID) {
     int32_t result = -1;
     uint32_t list;
@@ -2126,7 +2126,7 @@ void CGCalendar::ProcessInviteNotes(CDataStore* msg, uint8_t* clearPending) {
     }
 }
 
-// OFFSET: #0x005BBCD0
+// OFFSET: 0x009AED60
 void CGCalendar::ProcessInviteNotesAlert(CDataStore* msg) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -2168,7 +2168,7 @@ void CGCalendar::AddEvent() {
     }
 }
 
-// OFFSET: #0x005BBE50
+// OFFSET: 0x009AEEF0
 void CGCalendar::CreatePlayerEvent() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -2561,7 +2561,7 @@ bool CGCalendar::HasPendingInvite(uint64_t eventID) {
     return false;
 }
 
-// OFFSET: #0x005BDDE0
+// OFFSET: 0x009B4D30
 CALENDAREVENTHASH::~CALENDAREVENTHASH() {
     uint32_t count = this->m_events.Count();
 
@@ -2939,7 +2939,7 @@ void CGCalendar::ProcessInviteStatusAlert(CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_UPDATE_EVENT_LIST, NULL);
 }
 
-// OFFSET: #0x005BF6F0
+// OFFSET: 0x009B2110
 void CGCalendar::SetInviteFlag(uint64_t eventID, uint32_t flag, bool set) {
     CalendarDayEvent* event = NULL;
 
@@ -3183,7 +3183,7 @@ void CGCalendar::ProcessEventRemovedAlert(CDataStore* msg, uint8_t* clearPending
     CGCalendar::UpdateDisplayList(true, table == 1);
 }
 
-// OFFSET: #0x005C0E70
+// OFFSET: 0x009B3DD0
 void CGCalendar::ProcessInviteModeratorStatusAlert(CDataStore* msg, uint8_t* clearPending) {
     SmartGUID guid;
     *msg >> guid;
@@ -3540,7 +3540,7 @@ void PH_SMSG_CALENDAR_SEND_CALENDAR(CDataStore* msg) {
     CGCalendar::m_calendarReceived = 1;
 }
 
-// OFFSET: #0x005C37D0
+// OFFSET: 0x009B6F10
 void CGCalendar::ProcessLockoutAdded(CDataStore* msg) {
     WowTime date;
     uint32_t time;
@@ -3560,7 +3560,7 @@ void CGCalendar::ProcessLockoutAdded(CDataStore* msg) {
     CGCalendar::UpdateDisplayList(true, false);
 }
 
-// OFFSET: #0x005C3880
+// OFFSET: 0x009B6FC0
 void CGCalendar::ProcessLockoutUpdated(CDataStore* msg) {
     int32_t mapID = -1;
     int32_t difficulty = 0;
