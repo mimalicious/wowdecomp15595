@@ -2059,7 +2059,7 @@ void CGWorldFrame::OnWorldUpdate() {
     }
 
     CGObject_C::UpdateAllObjectEffectManagers();
-    PlayerNameNextFrame();
+    PlayerNameUpdateEarly();
     UpdatePendingPortraits();
     this->MoveToFreeList(&this->m_modelList);
     this->MoveToFreeList(&this->m_hitModelList);

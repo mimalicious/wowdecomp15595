@@ -35,7 +35,7 @@
 // STATIC: 0x00DC70CC
 uint32_t s_nameMask;
 
-// STATIC: #0x00D380A4
+// STATIC: 0x00DC70D0
 static uint32_t s_lastRenderFrame;
 
 // STATIC: #0x00D380A8
@@ -69,7 +69,7 @@ static C2Vector s_iconTexCoords[4] = {
 // STATIC: 0x00CA1148
 TSExplicitList<PLAYERNAMEDESC, offsetof(PLAYERNAMEDESC, m_link)> s_playerNames;
 
-// OFFSET: 0x004E1230
+// OFFSET: 0x004E1230/0x1401217B0
 void PlayerNameShutdown() {
     if (s_playerNameFont) {
         GxuFontDestroyFont(s_playerNameFont);
@@ -87,7 +87,7 @@ void PlayerNameShutdown() {
     }
 }
 
-// OFFSET: 0x004E1DD0
+// OFFSET: 0x004E1DD0/0x140122A20
 void PlayerNameInitialize() {
     PlayerNameShutdown();
 
@@ -153,7 +153,7 @@ void PlayerNameUpdateDrawCallback(PLAYERNAMEDESC* desc) {
     }
 }
 
-// OFFSET: #0x007E5120
+// OFFSET: 0x004E0500
 void PlayerNameUpdateEarly() {
     s_lastRenderFrame++;
 }
@@ -206,7 +206,7 @@ inline PLAYERNAMEDESC::PLAYERNAMEDESC() {
     this->m_worldText[3] = NULL;
 }
 
-// OFFSET: 0x004E0F20
+// OFFSET: 0x004E0F20/0x140121330
 PLAYERNAMEDESC::~PLAYERNAMEDESC() {
     if (this->m_string) {
         GxuFontDestroyString(this->m_string);
@@ -484,7 +484,7 @@ void PLAYERNAMEDESC::RenderIfVisible(CM2Model* model, const CM2Lighting* lightin
     }
 }
 
-// OFFSET: 0x004E0480
+// OFFSET: 0x004E0480/0x140120800
 void PLAYERNAMEDESC::DeleteWorldText(uint32_t type) {
     for (int32_t i = 3; i >= 0; i--) {
         if (this->m_worldText[i] && (type == 11 || WorldTextGetType(this->m_worldText[i]) == type)) {
@@ -547,14 +547,14 @@ void PLAYERNAMEDESC::UpdateWorldTextIcons() {
     }
 }
 
-// OFFSET: 0x004E12C0
+// OFFSET: 0x004E12C0/0x1401218A0
 void PlayerNameTriggerColorUpdateAll() {
     for (PLAYERNAMEDESC* desc = s_playerNames.Head(); desc; desc = s_playerNames.Next(desc)) {
         desc->m_flags |= 0x2;
     }
 }
 
-// OFFSET: 0x004E08B0
+// OFFSET: 0x004E08B0/0x140120B60
 void PLAYERNAMEDESC::CreateWorldText(uint32_t type, const char* text, const CImVector* color, const int32_t* pvpRank) {
     uint32_t slot = 0;
 

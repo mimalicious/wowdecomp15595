@@ -113,6 +113,9 @@ static C2Vector s_pathTexCoords[4] = {
 // STATIC: 0x00C976D4
 static CSizeEvent s_sizeEvent;
 
+// STATIC: 0x00D36548
+static int32_t s_fileBarEnabled;
+
 // STATIC: 0x00D3654C
 static CGxShader* s_pixelShader;
 
@@ -271,7 +274,7 @@ static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: 0x00409440
+// OFFSET: 0x00409440/0x14000BB20
 static void UpdateProgressValue() {
     float xmlProgress = 0.0f;
     float worldScale = 1.0f;
@@ -302,7 +305,7 @@ static void UpdateProgressValue() {
     }
 }
 
-// OFFSET: 0x00409570
+// OFFSET: 0x00409570/0x14000BC70
 static void InitializeProgressBarEvents() {
     EventRegisterEx(EVENT_ID_CHAR, SwallowEvent, NULL, 8.0f);
     EventRegisterEx(EVENT_ID_IME, SwallowEvent, NULL, 8.0f);
@@ -534,7 +537,7 @@ int32_t IsStillLoading() {
     return 0;
 }
 
-// OFFSET: 0x0040CB30
+// OFFSET: 0x0040CB30/0x14000FEA0
 static void LoadingScreenPaint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (!GxHasContext() || !GxIsWindowVisible() || (s_progress > 0.99f && !IsStillLoading())) {
         return;
@@ -612,7 +615,7 @@ static void LoadingScreenPaint(void* param, const RECTF* rect, const RECTF* visi
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: 0x0040D280
+// OFFSET: 0x0040D280/0x140010890
 static void UpdateProgressBar(int32_t force) {
     uint32_t time = OsGetAsyncTimeMs();
     EventInputProcess(EventGetCurrentContext());
@@ -629,7 +632,7 @@ static void UpdateProgressBar(int32_t force) {
     GxScenePresent(NULL);
 }
 
-// OFFSET: 0x0040D2F0
+// OFFSET: 0x0040D2F0/0x140010910
 static void InitializeProgressBar(bool loadingWorld) {
     if (s_loadingScreenLayer) {
         ScrnLayerSetFlags(s_loadingScreenLayer, ScrnLayerGetFlags(s_loadingScreenLayer) & ~0x1u);
@@ -684,7 +687,7 @@ void LoadingScreenSpellUpdateProgress(float progress) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: 0x0040D490
+// OFFSET: 0x0040D490/0x140010B20
 void LoadingScreenEnable(int32_t mapID, bool loadingWorld) {
     CGGameUI::SetAspect();
 
@@ -757,7 +760,7 @@ void LoadingScreenXMLCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: 0x00409640
+// OFFSET: 0x00409640/0x14000BD30
 static void LoadingScreenDisableEvents() {
     EventUnregister(EVENT_ID_CHAR, SwallowEvent);
     EventUnregister(EVENT_ID_IME, SwallowEvent);
@@ -772,7 +775,7 @@ static void LoadingScreenDisableEvents() {
     }
 }
 
-// OFFSET: 0x0040BA40
+// OFFSET: 0x0040BA40/0x14000E860
 static void ClearDynamicData() {
     if (s_dynamicElementsTexture) {
         TextureRelease(s_dynamicElementsTexture);
@@ -859,7 +862,7 @@ void LoadingScreenShutdown() {
     }
 }
 
-// OFFSET: 0x004097A0
+// OFFSET: 0x004097A0/0x14000BEA0
 void LoadingScreenMiniDisable() {
     if (s_miniLoadingLayer) {
         HandleClose(reinterpret_cast<HOBJECT>(s_miniLoadingLayer));
@@ -882,7 +885,7 @@ void LoadingScreenMiniUpdate(float progress) {
     s_progress = progress;
 }
 
-// OFFSET: 0x0040CA70
+// OFFSET: 0x0040CA70/0x14000FDA0
 bool LoadDynamicBackground() {
     CStatus status;
 
@@ -1259,4 +1262,9 @@ void LoadingScreenEnableShipLeg(int32_t entryId, uint32_t leg) {
     }
 
     InitializeProgressBar(true);
+}
+
+// OFFSET: 0x004097F0/0x14000BF20
+void LoadingScreenEnableFileBar(bool enable) {
+    s_fileBarEnabled = enable;
 }

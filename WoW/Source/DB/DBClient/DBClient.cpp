@@ -1381,7 +1381,7 @@ static void LocateWeaponSubclass() {
     }
 }
 
-// OFFSET: 0x00495060
+// OFFSET: 0x00495060/0x1400BA9F0
 int32_t ClientDBGetNumWeaponSubClasses() {
     return s_weaponSubclasses.Count();
 }
@@ -1398,7 +1398,7 @@ int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty) {
     return 0;
 }
 
-// OFFSET: 0x004954F0
+// OFFSET: 0x004954F0/0x1400BAFD0
 void InitResistances() {
     uint32_t count = g_resistancesDB.m_numRecords;
     s_physicalDamageClassID = -1;
@@ -1695,7 +1695,7 @@ void ClientDBInitializeInGame() {
     InitLights(1);
 }
 
-// OFFSET: 0x004956C0
+// OFFSET: 0x004956C0/0x1400BB1B0
 void InitWeaponSubclasses() {
     s_weaponSubclasses.SetCount(0);
     s_unarmedWeapon = NULL;
@@ -1963,7 +1963,7 @@ const char* ClientDBStringLookup(uint32_t lookup) {
     return rec ? static_cast<const char*>(rec->m_string) : NULL;
 }
 
-// OFFSET: 0x00495240
+// OFFSET: 0x00495240/0x1400BAC50
 MapDifficultyRec* GetMapDifficultyRec(int32_t mapId, uint32_t difficulty, int32_t* index) {
     for (int32_t i = 0; i < g_mapDifficultyDB.m_numRecords; i++) {
         MapDifficultyRec* rec = g_mapDifficultyDB.GetRecordByIndex(i);
@@ -2002,4 +2002,17 @@ int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
     }
 
     return entry->m_maxPlayers;
+}
+
+// OFFSET: 0x00494D90/0x1400BA580
+void DBClient_Idle() {
+    for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
+        (*table)->Idle();
+    }
+
+    if (g_clientDBWorldTablesLoaded == 1) {
+        for (WowClientDB2_Base** table = g_clientDB2GameTables; *table; table++) {
+            (*table)->Idle();
+        }
+    }
 }

@@ -1091,7 +1091,7 @@ uint32_t CGObject_C::GetQuestInteractIcon() {
 
 // OFFSET: 0x005DD820/0x14025A000
 uint32_t CGObject_C::GetNPCInteractIcon() {
-    if (!(this->m_obj->m_type & TYPEMASK_UNIT) || !static_cast<CGUnit_C*>(this)->IsNPCTracked()) {
+    if (!(this->m_obj->m_type & TYPEMASK_UNIT) || !static_cast<CGUnit_C*>(this)->IsTracked()) {
         return 0;
     }
 
