@@ -8287,7 +8287,7 @@ void CGGameUI::LeaveWorld() {
     CGWorldMap::LeaveWorld();
     CGReputationInfo::LeaveWorld();
     CGDuelInfo::LeaveWorld();
-    CGTabardCreationFrame::Close();
+    CGTabardCreationFrame::LeaveWorld();
     CGGuildRegistrar::CloseRegistrar();
     CGPartyInfo::LeaveWorld(CGGameUI::m_currentlyReloadingUI);
     CGPetitionInfo::LeaveWorld();

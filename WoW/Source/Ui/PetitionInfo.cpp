@@ -31,7 +31,7 @@ int32_t CGPetitionInfo::m_pendingNameQueries;
 // STATIC: 0x00F71098
 CGPetition* CGPetitionInfo::m_petition;
 
-// STATIC: #0x00C22B44
+// STATIC: 0x00F7109C
 TSGrowableArray<PetitionSignerInfo> CGPetitionInfo::m_signers;
 
 // OFFSET: 0x009E0100
@@ -48,7 +48,7 @@ int32_t Packet_SMSG_OFFER_PETITION_ERROR(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// OFFSET: #0x005CEA60
+// OFFSET: 0x009E0160
 void CGPetitionInfo::SetPetitionStats(int32_t id) {
     if (CGPetitionInfo::m_petitionId != id) {
         return;
@@ -77,7 +77,7 @@ void PetitionQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
-// OFFSET: 0x009E0350
+// OFFSET: 0x009E0350/0x140776F90
 void CGPetitionInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_OFFER_PETITION_ERROR, Packet_SMSG_OFFER_PETITION_ERROR, NULL);
 }
@@ -94,7 +94,7 @@ void CGPetitionInfo::ClearSignatures() {
     CGPetitionInfo::m_pendingNameQueries = 0;
 }
 
-// OFFSET: 0x009E0620
+// OFFSET: 0x009E0620/0x140777290
 void CGPetitionInfo::SetPetition(WOWGUID petition, int32_t id, WOWGUID item) {
     if (CGPetitionInfo::m_petitionGUID) {
         if (!CGPetitionInfo::m_signed && CGPetitionInfo::m_petition && CGPetitionInfo::m_petition->m_ownerGuid != ClntObjMgrGetActivePlayer()) {
@@ -124,7 +124,7 @@ void CGPetitionInfo::SetPetition(WOWGUID petition, int32_t id, WOWGUID item) {
     }
 }
 
-// OFFSET: 0x009E0CB0
+// OFFSET: 0x009E0CB0/0x140777A60
 void CGPetitionInfo::EnterWorld() {
     CGPetitionInfo::m_petitionGUID = WOWGUID::Make(0);
     CGPetitionInfo::m_petitionItem = WOWGUID::Make(0);
@@ -193,7 +193,7 @@ void CGPetitionInfo::AddSignature(WOWGUID petition, WOWGUID signer) {
     }
 }
 
-// OFFSET: 0x009E0D40
+// OFFSET: 0x009E0D40/0x140777B00
 void CGPetitionInfo::LeaveWorld() {
     CGPetitionInfo::m_signers.Clear();
 }

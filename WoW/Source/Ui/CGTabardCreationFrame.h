@@ -12,6 +12,7 @@ void TabardCreationUnregisterScriptFunctions();
 class CGTabardCreationFrame {
     public:
     static void Close();
+    static void LeaveWorld();
     static void Open(const WOWGUID& vendor);
     static void EnterWorld();
     static WOWGUID m_vendor;

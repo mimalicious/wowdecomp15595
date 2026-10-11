@@ -4,6 +4,7 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/GossipInfo.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
@@ -17,26 +18,27 @@ void CGTabardCreationFrame::EnterWorld() {
     CGTabardCreationFrame::m_vendor = WOWGUID();
 }
 
-// OFFSET: #0x00598E60
+// OFFSET: 0x009E0010
 void CGTabardCreationFrame::Open(const WOWGUID& vendor) {
     CGTabardCreationFrame::m_vendor = vendor;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         player->TurnOnGuildTabardPurchase();
     }
 
+    CGGossipInfo::ClearGossip();
     CGGameUI::SetInteractTarget(vendor);
     FrameScript_SignalEvent(SCRIPT_EVENT_OPEN_TABARD_FRAME, NULL);
 }
 
-// OFFSET: #0x00598EC0
+// OFFSET: 0x009E0070/0x140776C70
 void CGTabardCreationFrame::Close() {
     if (!CGTabardCreationFrame::m_vendor) {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         player->TurnOffGuildTabardPurchase();
@@ -45,6 +47,11 @@ void CGTabardCreationFrame::Close() {
     CGGameUI::ClearInteractTarget(CGTabardCreationFrame::m_vendor, 0);
     CGTabardCreationFrame::m_vendor = WOWGUID();
     FrameScript_SignalEvent(SCRIPT_EVENT_CLOSE_TABARD_FRAME, NULL);
+}
+
+// OFFSET: 0x009E00F0
+void CGTabardCreationFrame::LeaveWorld() {
+    CGTabardCreationFrame::Close();
 }
 
 // OFFSET: 0x00B0F1A0/0x1408D44F0
