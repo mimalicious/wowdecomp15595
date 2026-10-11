@@ -1439,7 +1439,7 @@ void InitializeAddOns() {
     }
 }
 
-// OFFSET: #0x005F9080
+// OFFSET: 0x00460140
 void InitializeAddOns(const char* accountName) {
     ShutdownAddOns();
     SStrCopy(s_addOnAccountName, accountName, sizeof(s_addOnAccountName));

@@ -123,7 +123,7 @@ LFGLIST::~LFGLIST() {
     }
 }
 
-// OFFSET: #0x0055B1A0
+// OFFSET: 0x0098A470
 bool LFGLIST::Copy(LFGLIST& source) {
     this->Clear();
     this->m_lfgID = source.m_lfgID;

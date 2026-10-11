@@ -292,7 +292,7 @@ void WORLDTEXTSTRING::CalculateTextHeight(uint32_t elapsed) {
     }
 }
 
-// OFFSET: #0x007E6DC0
+// OFFSET: 0x004E2760
 WORLDTEXTSTRING* WorldTextCreate(uint32_t type, const C3Vector& position, const char* text, const CImVector* color, const int32_t* pvpRank) {
     if (!text || !*text) {
         return NULL;

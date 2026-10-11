@@ -451,7 +451,7 @@ static JSAMPARRAY alloc_sarray(j_common_ptr cinfo, int pool_id, JDIMENSION sampl
  */
 
 /* Allocate a 2-D coefficient-block array */
-// OFFSET: %0x00A90A70
+// OFFSET: 0x00B5E820
 static JBLOCKARRAY alloc_barray(j_common_ptr cinfo, int pool_id, JDIMENSION blocksperrow, JDIMENSION numrows) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   JBLOCKARRAY result;

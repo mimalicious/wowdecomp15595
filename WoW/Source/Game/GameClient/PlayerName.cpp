@@ -111,7 +111,7 @@ void PlayerNameTriggerColorUpdate(PLAYERNAMEDESC* desc) {
     }
 }
 
-// OFFSET: #0x007E6390
+// OFFSET: 0x004E1CE0
 void PlayerNameUpdateDrawCallback(PLAYERNAMEDESC* desc) {
     if (!desc) {
         return;

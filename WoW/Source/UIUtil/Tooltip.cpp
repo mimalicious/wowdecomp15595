@@ -8476,7 +8476,7 @@ CSimpleFrame* CGTooltip::Create(CSimpleFrame* parent) {
     return data ? new (data) CGTooltip(parent) : NULL;
 }
 
-// OFFSET: #0x005143F0
+// OFFSET: 0x008CC0B0
 void CGTooltip::SetDefaultAnchor() {
     if (this->HasScript(this->m_onTooltipSetDefaultAnchor)) {
         this->RunScript(this->m_onTooltipSetDefaultAnchor, 0, NULL);

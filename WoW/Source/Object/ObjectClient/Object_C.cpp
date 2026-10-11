@@ -2309,7 +2309,7 @@ void CGObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_objMirror = saved;
 }
 
-// OFFSET: #0x004D5E00
+// OFFSET: 0x0048F630
 CGObject_C::CGObject_C() {
 }
 

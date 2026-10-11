@@ -1061,7 +1061,7 @@ void BattlenetLogin::QueueEvent(BN_EVENT_ID id, void* data, int32_t size) {
     this->m_eventLock.Leave();
 }
 
-// OFFSET: #0x008C8730
+// OFFSET: 0x0062A770
 void BattlenetApplication::WCConnected(WowConnection* connection, WowConnection* inbound, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_localAddress.m_address.m_data[0] = addr->selfAddr.data[4];
     this->m_localAddress.m_address.m_data[1] = addr->selfAddr.data[5];
