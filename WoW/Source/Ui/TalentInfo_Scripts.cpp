@@ -23,6 +23,9 @@
 #include "WoW/Source/DB/Rec/NumTalentsAtLevelRec.h"
 #include "WoW/Source/DB/Rec/TalentTreePrimarySpellsRec.h"
 #include "WoW/Source/Object/Player.h"
+#include "WoW/Source/Ui/GameUI.h"
+#include "Engine/Source/ConsoleBase/ConsoleVar.h"
+#include "WoW/Source/Ui/QuestTextParser.h"
 
 // STATIC: 0x00D14CD0
 static int32_t s_activateTalentGroupSpells[2] = { 63645, 63644 };
@@ -59,7 +62,13 @@ static int32_t Script_GetNumTalents(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 2, 0);
     int32_t pet = StringToBOOL(L, 3, 0);
     TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, inspect, pet);
-    lua_pushnumber(L, tab ? static_cast<int32_t>(tab->m_numTalents) : 0);
+
+    if (tab) {
+        lua_pushnumber(L, tab->m_numTalents);
+    } else {
+        lua_pushnumber(L, 0.0);
+    }
+
     return 1;
 }
 
@@ -71,10 +80,8 @@ static int32_t Script_GetNumTalentGroups(lua_State* L) {
 
     if (inspect) {
         count = CGTalentInfo_Inspect::m_numTalentGroups;
-    } else if (pet) {
-        count = CGTalentInfo::m_petTalentTab && CGTalentInfo::m_petTabs.m_count;
     } else {
-        count = CGTalentInfo::m_numTalentGroups;
+        count = CGTalentInfo::GetNumTalentGroups(pet);
     }
 
     lua_pushnumber(L, count);
@@ -91,7 +98,14 @@ static int32_t Script_SetActiveTalentGroup(lua_State* L) {
     uint32_t group = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
     if (group != CGTalentInfo::m_activeTalentGroup && group < CGTalentInfo::m_numTalentGroups && group < 2) {
-        Spell_C_ClickSpell(s_activateTalentGroupSpells[group], NULL, ClntObjMgrGetActivePlayer());
+        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+        if (player && player->CanChangeTalentsInRaid()) {
+            Spell_C_ClickSpell(s_activateTalentGroupSpells[group], NULL, ClntObjMgrGetActivePlayer());
+            return 0;
+        }
+
+        FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("SPELL_FAILED_CANT_DO_THAT_RIGHT_NOW", -1, GENDER_NOT_APPLICABLE));
     }
 
     return 0;
@@ -113,13 +127,20 @@ static int32_t Script_GetTalentTabInfo(lua_State* L) {
     if (!info || !(tab = g_talentTabDB.GetRecord(info->m_tabId))) {
         lua_pushnil(L);
         lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnil(L);
         lua_pushinteger(L, 0);
         lua_pushnil(L);
         lua_pushinteger(L, 0);
-        return 5;
+        lua_pushboolean(L, 0);
+        return 8;
     }
 
+    char description[1024];
+    lua_pushinteger(L, tab->m_id);
     lua_pushstring(L, tab->m_name);
+    QuestParserParseText(tab->unk_001C, description, sizeof(description), ClntObjMgrGetActivePlayer(), NULL, 0);
+    lua_pushstring(L, description);
     SpellIconRec* icon = g_spellIconDB.GetRecord(tab->m_spellIconID);
 
     if (icon) {
@@ -135,13 +156,36 @@ static int32_t Script_GetTalentTabInfo(lua_State* L) {
         lua_pushinteger(L, groupTab->m_pointsSpent);
         lua_pushstring(L, tab->m_backgroundFile);
         lua_pushinteger(L, groupTab->m_previewPointsSpent);
+        int32_t primaryTree = group->m_previewPrimaryTree;
+
+        if (!primaryTree) {
+            primaryTree = group->m_primaryTree;
+        }
+
+        if (pet || primaryTree == groupTab->m_tabId) {
+            lua_pushboolean(L, 1);
+        } else {
+            uint32_t spent = 0;
+
+            for (uint32_t i = 0; i < 3; i++) {
+                TalentGroupTab_C* other = group->GetTab(i);
+
+                if (other && other->m_tabId == primaryTree) {
+                    spent = other->m_pointsSpent + other->m_previewPointsSpent;
+                    break;
+                }
+            }
+
+            lua_pushboolean(L, spent >= 31);
+        }
     } else {
         lua_pushinteger(L, 0);
         lua_pushstring(L, tab->m_backgroundFile);
         lua_pushinteger(L, 0);
+        lua_pushboolean(L, 0);
     }
 
-    return 5;
+    return 8;
 }
 
 // OFFSET: 0x0099AE80/0x14071D100
@@ -170,17 +214,11 @@ static int32_t Script_LearnPreviewTalents(lua_State* L) {
         return 0;
     }
 
-    int32_t spent = 0;
-
-    for (uint32_t i = 0; i < group->m_tabs.m_count; i++) {
-        spent += group->m_tabs.m_data[i].m_previewPointsSpent;
-    }
-
-    if (spent <= 0) {
+    if (group->GetPreviewPointsSpent() <= 0 && !group->m_previewPrimaryTree) {
         return 0;
     }
 
-    CGUnit_C* unit = pet ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : ClntObjMgrGetActivePlayerObj();
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(pet ? CGPetInfo::GetPet(0) : ClntObjMgrGetActivePlayer(), pet ? TYPEMASK_UNIT : TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!unit) {
         return 0;
@@ -193,14 +231,30 @@ static int32_t Script_LearnPreviewTalents(lua_State* L) {
         msg.Put(unit->m_obj->m_guid.m_guid);
     } else {
         msg.Put(static_cast<uint32_t>(CMSG_LEARN_PREVIEW_TALENTS));
+        TalentTabRec* tabRec = g_talentTabDB.GetRecord(group->m_previewPrimaryTree);
+
+        if (tabRec) {
+            msg.Put(static_cast<uint32_t>(tabRec->m_orderIndex));
+        } else {
+            msg.Put(static_cast<uint32_t>(-1));
+        }
     }
 
     uint32_t count = 0;
     uint32_t countPos = msg.m_size;
     msg.Put(0u);
+    int32_t primaryTree = group->m_previewPrimaryTree;
+
+    if (!primaryTree) {
+        primaryTree = group->m_primaryTree;
+    }
 
     for (uint32_t i = 0; i < group->m_tabs.m_count; i++) {
         TalentGroupTab_C* tab = &group->m_tabs.m_data[i];
+
+        if (tab->m_tabId != primaryTree) {
+            continue;
+        }
 
         for (uint32_t j = 0; j < tab->m_tiers.m_count; j++) {
             TalentGroupTier_C* tier = tab->m_tiers.m_data[j];
@@ -217,10 +271,36 @@ static int32_t Script_LearnPreviewTalents(lua_State* L) {
         }
     }
 
-    if (count) {
+    for (uint32_t i = 0; i < group->m_tabs.m_count; i++) {
+        TalentGroupTab_C* tab = &group->m_tabs.m_data[i];
+
+        if (tab->m_tabId == primaryTree) {
+            continue;
+        }
+
+        for (uint32_t j = 0; j < tab->m_tiers.m_count; j++) {
+            TalentGroupTier_C* tier = tab->m_tiers.m_data[j];
+
+            for (TalentGroupTierItem_C* node = tier->m_items.m_fulllist.Head(); node; node = tier->m_items.Next(node)) {
+                TalentGroupItem_C* item = node->m_item;
+
+                if (item && item->m_previewRank > item->m_rank) {
+                    msg.Put(static_cast<uint32_t>(item->m_talentId));
+                    msg.Put(static_cast<uint32_t>(item->m_previewRank));
+                    count++;
+                }
+            }
+        }
+    }
+
+    if (count || group->m_previewPrimaryTree) {
         msg.Set(countPos, count);
         msg.Finalize();
         ClientServices::Send2(&msg);
+
+        if (count) {
+            g_talentPointsSpentCVar->Set("1", true, false, false, true);
+        }
     }
 
     return 0;
@@ -259,6 +339,13 @@ static int32_t Script_ResetGroupPreviewTalentPoints(lua_State* L) {
         FrameScript_SignalEvent(pet ? SCRIPT_EVENT_PREVIEW_PET_TALENT_POINTS_CHANGED : SCRIPT_EVENT_PREVIEW_TALENT_POINTS_CHANGED, "%d%d%d%d", 0, 0, group + 1, after - before);
     }
 
+    CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
+
+    if (talentGroup && talentGroup->m_previewPrimaryTree) {
+        CGTalentInfo::SetPreviewPrimaryTalentTree(group, pet != 0, 0);
+        FrameScript_SignalEvent(SCRIPT_EVENT_PREVIEW_TALENT_PRIMARY_TREE_CHANGED, "%d", 0);
+    }
+
     return 0;
 }
 
@@ -282,7 +369,7 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
         if (talent && (!pet || CGTalentInfo::IsTalentAvailableForPet(unit, talent))) {
             int32_t maxRank = -1;
 
-            for (int32_t i = 8; i >= 0; i--) {
+            for (int32_t i = 4; i >= 0; i--) {
                 if (talent->m_spellRank[i] && maxRank < 0) {
                     maxRank = i;
                 }
@@ -314,12 +401,6 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
                 lua_pushnumber(L, rank + 1);
                 lua_pushnumber(L, maxRank + 1);
 
-                if (talent->m_flags & 1) {
-                    lua_pushnumber(L, 1.0);
-                } else {
-                    lua_pushnil(L);
-                }
-
                 int32_t available = 0;
 
                 if (inspect) {
@@ -328,12 +409,8 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
                     int32_t requiredSpell = talent->m_requiredSpellID;
                     available = 1;
 
-                    if (requiredSpell && !pet) {
-                        CGUnit_C* player = ClntObjMgrGetActivePlayerObj();
-
-                        if ((!player || (!player->IsSpellKnown(requiredSpell) && !player->IsSpellSuperceded(requiredSpell))) && !unit->IsSpellSuperceded(talent->m_requiredSpellID)) {
-                            available = 0;
-                        }
+                    if (requiredSpell && !pet && !TalentInfoIsSpellKnown(requiredSpell, 0, 0) && !unit->IsSpellSuperceded(talent->m_requiredSpellID)) {
+                        available = 0;
                     }
                 }
 
@@ -353,12 +430,8 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
                     int32_t requiredSpell = talent->m_requiredSpellID;
                     previewAvailable = 1;
 
-                    if (requiredSpell && !pet) {
-                        CGUnit_C* player = ClntObjMgrGetActivePlayerObj();
-
-                        if ((!player || (!player->IsSpellKnown(requiredSpell) && !player->IsSpellSuperceded(requiredSpell))) && !unit->IsSpellSuperceded(talent->m_requiredSpellID)) {
-                            previewAvailable = 0;
-                        }
+                    if (requiredSpell && !pet && !TalentInfoIsSpellKnown(requiredSpell, 0, 0) && !unit->IsSpellSuperceded(talent->m_requiredSpellID)) {
+                        previewAvailable = 0;
                     }
                 }
 
@@ -368,7 +441,19 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
                     lua_pushnil(L);
                 }
 
-                return 10;
+                if (talent->m_flags & 1) {
+                    lua_pushnumber(L, 1.0);
+                } else {
+                    lua_pushnil(L);
+                }
+
+                if (talent->m_flags & 4) {
+                    lua_pushnumber(L, 1.0);
+                } else {
+                    lua_pushnil(L);
+                }
+
+                return 11;
             }
         }
     }
@@ -379,11 +464,12 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
     lua_pushnumber(L, 1.0);
     lua_pushnumber(L, 0.0);
     lua_pushnumber(L, 0.0);
-    lua_pushnumber(L, 0.0);
     lua_pushnil(L);
     lua_pushnumber(L, 0.0);
     lua_pushnil(L);
-    return 10;
+    lua_pushnil(L);
+    lua_pushnil(L);
+    return 11;
 }
 
 // OFFSET: 0x0099CAB0/0x14071F510
@@ -497,7 +583,7 @@ static int32_t Script_LearnTalent(lua_State* L) {
     uint32_t talentIndex = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
     int32_t pet = StringToBOOL(L, 3, 0);
     CGUnit_C* unit = pet ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : ClntObjMgrGetActivePlayerObj();
-    TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, 0, pet);
+    TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, pet);
 
     if (!unit || !tab || talentIndex >= tab->m_numTalents) {
         return 0;
@@ -512,7 +598,7 @@ static int32_t Script_LearnTalent(lua_State* L) {
     int32_t rank = -1;
     int32_t maxRank = -1;
 
-    for (int32_t i = 8; i >= 0; i--) {
+    for (int32_t i = 4; i >= 0; i--) {
         if (talent->m_spellRank[i]) {
             maxRank = i;
             break;
@@ -539,6 +625,7 @@ static int32_t Script_LearnTalent(lua_State* L) {
         msg.Put(static_cast<uint32_t>(rank + 1));
         msg.Finalize();
         ClientServices::Send2(&msg);
+        g_talentPointsSpentCVar->Set("1", true, false, false, true);
     }
 
     return 0;
@@ -732,7 +819,7 @@ static int32_t Script_GetNumTalentPoints(lua_State* L) {
 
 // OFFSET: 0x0099B0F0/0x14071D420
 static int32_t Script_GetNextTalentLevel(lua_State* L) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (!player) {
         return 0;

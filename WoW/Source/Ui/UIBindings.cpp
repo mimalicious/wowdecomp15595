@@ -29,10 +29,10 @@
 #include "WoW/Source/Ui/WorldFrame.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/AccountData.h"
 
-// STATIC: #0x00ACDF1C
+// STATIC: 0x00D115A4
 static CGUIBindingsStatus s_bindingsStatus;
 
-// STATIC: #0x00ACDF30
+// STATIC: 0x00D115B8
 static const char* s_keyNames[31] = {
     "SPACE",
     "NUMPADPLUS",
@@ -67,7 +67,7 @@ static const char* s_keyNames[31] = {
     "JOYHATLEFT",
 };
 
-// STATIC: #0x00ACDFAC
+// STATIC: 0x00D11634
 static BINDINGPREFIX s_numberedKeys[6] = {
     { "F", 1 },
     { "NUMPAD", 6 },
@@ -77,7 +77,7 @@ static BINDINGPREFIX s_numberedKeys[6] = {
     { "JOYBUTTON", 9 },
 };
 
-// STATIC: #0x00ACDFDC
+// STATIC: 0x00D11664
 static BINDINGPREFIX s_modifierPrefixes[3] = {
     { "SHIFT-", 6 },
     { "CTRL-", 5 },
@@ -96,13 +96,13 @@ static uint16_t s_initRound;
 // STATIC: 0x00F33EB4
 static TSHashTable<CLICKFRAME, HASHKEY_STR> s_clickFrames;
 
-// STATIC: #0x00BEAE10
+// STATIC: 0x00F33EE0
 static char s_keyName[8];
 
 // STATIC: 0x00F33EE8
 static char s_bindKey[2];
 
-// OFFSET: #0x0055DAB0
+// OFFSET: 0x009211F0/0x140683A30
 static int32_t IsValidKeyName(const char* key) {
     bool found;
 
@@ -153,7 +153,7 @@ static int32_t IsValidKeyName(const char* key) {
     return 0;
 }
 
-// OFFSET: #0x0055DD10
+// OFFSET: 0x009214E0
 static const char* GetKeyName(KEY key) {
     if (key > KEY_SPACE && key < KEY_NUMPAD0) {
         sputu8(key, s_keyName);
@@ -260,7 +260,7 @@ static const char* GetKeyName(KEY key) {
     }
 }
 
-// OFFSET: #0x00812F60
+// OFFSET: 0x009240C0
 void CGUIBindingsStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     char buffer[512];
 
@@ -272,7 +272,7 @@ void CGUIBindingsStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     DebugLog(buffer);
 }
 
-// OFFSET: #0x00560300
+// OFFSET: 0x009246A0
 OVERRIDEKEYBINDING::~OVERRIDEKEYBINDING() {
     for (int32_t i = 0; i < 2; i++) {
         this->m_lists[i].Clear();
@@ -281,7 +281,7 @@ OVERRIDEKEYBINDING::~OVERRIDEKEYBINDING() {
     this->m_freeList.Clear();
 }
 
-// OFFSET: #0x0055E5E0
+// OFFSET: 0x00921C80
 KEYBINDING* OVERRIDEKEYBINDING::GetActiveBinding() {
     for (int32_t i = 1; i >= 0; i--) {
         OVERRIDEKEYBINDINGENTRY* entry = this->m_lists[i].Head();
@@ -294,7 +294,7 @@ KEYBINDING* OVERRIDEKEYBINDING::GetActiveBinding() {
     return NULL;
 }
 
-// OFFSET: #0x005603D0
+// OFFSET: 0x00923930
 void OVERRIDEKEYBINDING::SetOverrideBinding(void* owner, int32_t priority, const char* command) {
     for (int32_t i = 1; i >= 0; i--) {
         for (OVERRIDEKEYBINDINGENTRY* entry = this->m_lists[i].Head(); entry; entry = this->m_lists[i].Next(entry)) {
@@ -319,7 +319,7 @@ void OVERRIDEKEYBINDING::SetOverrideBinding(void* owner, int32_t priority, const
     }
 }
 
-// OFFSET: #0x0055D990
+// OFFSET: 0x00920FA0/0x140683750
 int32_t CGUIBindings::AddMetaPrefix(uint32_t modifiers, char*& binding, int32_t& maxLength) {
     if ((modifiers & 0x30) == 0x30) {
         SStrCopy(binding, "ALT-", maxLength);
@@ -374,7 +374,7 @@ int32_t CGUIBindings::AddMetaPrefix(uint32_t modifiers, char*& binding, int32_t&
     return maxLength >= 0;
 }
 
-// OFFSET: #0x0055D860
+// OFFSET: 0x00920E50
 void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     while (*binding) {
         if (!SStrCmpI(binding, "LSHIFT", 6)) {
@@ -424,7 +424,7 @@ void CGUIBindings::Initialize() {
     } while (!s_initRound);
 }
 
-// OFFSET: #0x0055E2C0
+// OFFSET: 0x009218D0
 char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_t maxLength) {
     uint32_t modifiers = evt.m_data.m_metaKeyState;
     KEY key = evt.m_data.m_key;
@@ -434,7 +434,7 @@ char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_
         return NULL;
     }
 
-    if (static_cast<int32_t>(key) <= KEY_LASTMETAKEY) {
+    if (static_cast<int32_t>(key) <= static_cast<int32_t>(KEY_LASTMETAKEY)) {
         modifiers &= ~(1 << key);
     }
 
@@ -453,7 +453,7 @@ char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_
     return result;
 }
 
-// OFFSET: %0x00883330
+// OFFSET: 0x00927C00/0x14068D6D0
 void CGUIBindings::LoadBindings() {
     void* data;
 
@@ -530,7 +530,7 @@ void CGUIBindings::LoadBindings(BINDING_SET set, const char* data) {
     }
 }
 
-// OFFSET: #0x00564310
+// OFFSET: 0x00927B60
 void CGUIBindings::LoadBindingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     uint32_t value = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(param));
 
@@ -561,7 +561,7 @@ void CGUIBindings::LoadBindingsCallback(HOSFILE localFile, HOSFILE file, void* p
     }
 }
 
-// OFFSET: #0x0055E340
+// OFFSET: 0x00921950/0x140684940
 char* CGUIBindings::MouseEventToString(const CMouseEvent& evt, char* binding, int32_t maxLength) {
     char* result = binding;
 
@@ -610,7 +610,7 @@ char* CGUIBindings::MouseEventToString(const CMouseEvent& evt, char* binding, in
     return NULL;
 }
 
-// OFFSET: #0x0055F3D0
+// OFFSET: 0x00921F50
 void CGUIBindings::SaveBindings() {
     if (s_loadPendingMask) {
         return;
@@ -634,7 +634,7 @@ void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* p
     }
 }
 
-// OFFSET: #0x00562820
+// OFFSET: 0x00925F70
 void CGUIBindings::Shutdown() {
     if (CGUIBindings::s_bindings) {
         delete CGUIBindings::s_bindings;
@@ -686,7 +686,7 @@ void CGUIBindings::StripModifiers(uint32_t& modifiers, const char* binding) {
     }
 }
 
-// OFFSET: #0x00561B80
+// OFFSET: 0x00925880
 CGUIBindings::CGUIBindings() {
     this->m_numCommands = 0;
     this->m_numHiddenCommands = 0;
@@ -697,7 +697,7 @@ CGUIBindings::CGUIBindings() {
     this->m_bindingModeToggles = 0;
 }
 
-// OFFSET: #0x00561C60
+// OFFSET: 0x00925960
 CGUIBindings::~CGUIBindings() {
     this->m_commands.Clear();
 
@@ -709,7 +709,7 @@ CGUIBindings::~CGUIBindings() {
     this->m_modifiedClicks.Clear();
 }
 
-// OFFSET: #0x0055F430
+// OFFSET: 0x009226E0
 void CGUIBindings::AdjustCommandKeyIndices(BINDING_SET set, BINDING_MODE mode, const char* command, int32_t index) {
     for (KEYBINDING* binding = this->m_bindings[set].m_fulllist.Head(); binding; binding = this->m_bindings[set].m_fulllist.Next(binding)) {
         if (this->GetBindingCommand(binding, mode) && !SStrCmpI(this->GetBindingCommand(binding, mode), command, STORM_MAX_STR) && this->GetBindingIndex(binding, mode) > index) {
@@ -718,7 +718,7 @@ void CGUIBindings::AdjustCommandKeyIndices(BINDING_SET set, BINDING_MODE mode, c
     }
 }
 
-// OFFSET: #0x00562ED0
+// OFFSET: 0x00926650
 int32_t CGUIBindings::Bind(BINDING_SET set, BINDING_MODE mode, const char* key, const char* command) {
     if (!CGGameUI::CanPerformAction(13)) {
         return 0;
@@ -796,7 +796,7 @@ int32_t CGUIBindings::Bind(BINDING_SET set, BINDING_MODE mode, const char* key, 
     return 1;
 }
 
-// OFFSET: #0x005604F0
+// OFFSET: 0x00923A60/0x140687910
 void CGUIBindings::ClearOverrideBindings(void* owner, bool checkPermission) {
     if (checkPermission && !CGGameUI::CanPerformAction(13)) {
         return;
@@ -807,7 +807,7 @@ void CGUIBindings::ClearOverrideBindings(void* owner, bool checkPermission) {
     }
 }
 
-// OFFSET: #0x00562990
+// OFFSET: 0x009260D0
 CSimpleFrame* GetClickFrame(lua_State* L, const char* name, uint32_t length) {
     char* buffer = static_cast<char*>(alloca(length + 1));
     memcpy(buffer, name, length);
@@ -864,7 +864,7 @@ CSimpleFrame* GetClickFrame(lua_State* L, const char* name, uint32_t length) {
     return entry->m_frame;
 }
 
-// OFFSET: #0x00562B80
+// OFFSET: 0x009262E0
 void CGUIBindings::CopyBindings(BINDING_SET source, BINDING_SET dest) {
     if (!CGGameUI::CanPerformAction(13)) {
         return;
@@ -897,7 +897,7 @@ void CGUIBindings::CopyBindings(BINDING_SET source, BINDING_SET dest) {
     }
 }
 
-// OFFSET: #0x0055E550
+// OFFSET: 0x00921BF0
 void CGUIBindings::EnableBindingMode(BINDING_MODE mode, int32_t enable) {
     if (!mode) {
         return;
@@ -928,7 +928,7 @@ void CGUIBindings::EnableBindingMode(BINDING_MODE mode, int32_t enable) {
     }
 }
 
-// OFFSET: #0x0055F860
+// OFFSET: 0x009223C0
 int32_t CGUIBindings::ExecCommand(const char* command, int32_t isDown, float pressure, int32_t allowPressure, int32_t isPressure, int32_t isAngle, float angle, float precision, const char* taint) {
     if (!command || !*command) {
         return 0;
@@ -968,7 +968,7 @@ int32_t CGUIBindings::ExecCommand(const char* command, int32_t isDown, float pre
     return 1;
 }
 
-// OFFSET: #0x00563150
+// OFFSET: 0x009268E0
 int32_t CGUIBindings::ExecKey(uint32_t modifiers, const char* key, int32_t isDown, int32_t allowPressure, BINDING_MODE mode) {
     char reducedKey[128];
     KEYBINDING* binding = this->GetReducedKeyBinding(mode, key, reducedKey, sizeof(reducedKey));
@@ -1079,7 +1079,7 @@ int32_t CGUIBindings::ExecKey(uint32_t modifiers, const char* key, int32_t isDow
     return result;
 }
 
-// OFFSET: #0x00562D60
+// OFFSET: 0x009264E0
 void CGUIBindings::FinishLoadBindings() {
     this->m_dirtySets = 0;
     this->m_saveSet = this->m_bindings[BINDING_SET_CHARACTER].m_fulllist.Head() ? BINDING_SET_CHARACTER : BINDING_SET_ACCOUNT;
@@ -1092,7 +1092,7 @@ void CGUIBindings::FinishLoadBindings() {
     }
 }
 
-// OFFSET: #0x0055E470
+// OFFSET: 0x00921B30
 const char* CGUIBindings::GetBindingCommand(KEYBINDING* binding, BINDING_MODE mode) {
     if (mode != BINDING_MODE_ACTIVE) {
         return binding->m_data[mode].m_command.m_str;
@@ -1107,7 +1107,7 @@ const char* CGUIBindings::GetBindingCommand(KEYBINDING* binding, BINDING_MODE mo
     return NULL;
 }
 
-// OFFSET: #0x0055E4E0
+// OFFSET: 0x00921B90
 int32_t CGUIBindings::GetBindingIndex(KEYBINDING* binding, BINDING_MODE mode) {
     if (mode != BINDING_MODE_ACTIVE) {
         return binding->m_data[mode].m_index;
@@ -1122,7 +1122,7 @@ int32_t CGUIBindings::GetBindingIndex(KEYBINDING* binding, BINDING_MODE mode) {
     return -1;
 }
 
-// OFFSET: #0x0055E700
+// OFFSET: 0x009224A0
 void CGUIBindings::GetCommand(int32_t index, const char** command) {
     for (KEYCOMMAND* keyCommand = this->m_commands.m_fulllist.Head(); keyCommand; keyCommand = this->m_commands.m_fulllist.Next(keyCommand)) {
         if (keyCommand->m_index == index) {
@@ -1132,7 +1132,7 @@ void CGUIBindings::GetCommand(int32_t index, const char** command) {
     }
 }
 
-// OFFSET: #0x00562490
+// OFFSET: 0x00922580
 const char* CGUIBindings::GetCommandAction(BINDING_MODE mode, const char* key, int32_t checkOverride) {
     if (!key || !*key) {
         return NULL;
@@ -1169,7 +1169,7 @@ const char* CGUIBindings::GetCommandAction(BINDING_MODE mode, const char* key, i
     return NULL;
 }
 
-// OFFSET: #0x0055E750
+// OFFSET: 0x009224F0
 const char* CGUIBindings::GetCommandKey(BINDING_MODE mode, const char* command, int32_t index) {
     for (KEYBINDING* binding = this->m_bindings[BINDING_SET_CURRENT].m_fulllist.Head(); binding; binding = this->m_bindings[BINDING_SET_CURRENT].m_fulllist.Next(binding)) {
         if (this->GetBindingCommand(binding, mode) && !SStrCmpI(this->GetBindingCommand(binding, mode), command, STORM_MAX_STR) && this->GetBindingIndex(binding, mode) == index) {
@@ -1180,7 +1180,7 @@ const char* CGUIBindings::GetCommandKey(BINDING_MODE mode, const char* command, 
     return NULL;
 }
 
-// OFFSET: #0x00562140
+// OFFSET: 0x00921FB0
 KEYBINDING* CGUIBindings::GetKeyBinding(BINDING_MODE mode, const char* key) {
     if (!key || !*key) {
         return NULL;
@@ -1251,7 +1251,7 @@ KEYBINDING* CGUIBindings::GetKeyBinding(BINDING_MODE mode, const char* key) {
     return binding;
 }
 
-// OFFSET: #0x0055E870
+// OFFSET: 0x00922780
 const char* CGUIBindings::GetModifiedClick(int32_t index) {
     int32_t i = 0;
 
@@ -1264,7 +1264,7 @@ const char* CGUIBindings::GetModifiedClick(int32_t index) {
     return NULL;
 }
 
-// OFFSET: #0x0055E7E0
+// OFFSET: 0x00922650
 int32_t CGUIBindings::GetNumCommandKeys(BINDING_SET set, BINDING_MODE mode, const char* command) {
     int32_t count = 0;
 
@@ -1277,7 +1277,7 @@ int32_t CGUIBindings::GetNumCommandKeys(BINDING_SET set, BINDING_MODE mode, cons
     return count;
 }
 
-// OFFSET: #0x005622E0
+// OFFSET: 0x00922170
 KEYBINDING* CGUIBindings::GetReducedKeyBinding(BINDING_MODE mode, const char* key, char* reducedKey, uint32_t maxLength) {
     char modifiers[3][32];
     uint32_t numModifiers = 0;
@@ -1325,7 +1325,7 @@ KEYBINDING* CGUIBindings::GetReducedKeyBinding(BINDING_MODE mode, const char* ke
     return NULL;
 }
 
-// OFFSET: #0x0055F940
+// OFFSET: 0x009227E0
 int32_t CGUIBindings::IsModifiedClick(const char* action) {
     int32_t result = 0;
 
@@ -1393,7 +1393,7 @@ int32_t CGUIBindings::IsModifiedClick(const char* action) {
     return result;
 }
 
-// OFFSET: #0x00564760
+// OFFSET: 0x00927F60
 int32_t CGUIBindings::Load(const char* file, MD5_CTX* md5, CStatus* status) {
     if (!status) {
         status = &s_bindingsStatus;
@@ -1431,7 +1431,7 @@ int32_t CGUIBindings::Load(const char* file, MD5_CTX* md5, CStatus* status) {
     return 1;
 }
 
-// OFFSET: #0x00564470
+// OFFSET: 0x00927CC0
 void CGUIBindings::LoadBinding(const char* file, XMLNode* node, CStatus* status) {
     const char* name = node->GetAttributeByName("name");
     const char* body = node->m_body;
@@ -1507,7 +1507,7 @@ void CGUIBindings::LoadBinding(const char* file, XMLNode* node, CStatus* status)
     }
 }
 
-// OFFSET: #0x00562DD0
+// OFFSET: 0x00926550/0x14068BA40
 void CGUIBindings::LoadModifiedClick(const char* file, XMLNode* node, CStatus* status) {
     const char* action = node->GetAttributeByName("action");
 
@@ -1531,7 +1531,7 @@ void CGUIBindings::LoadModifiedClick(const char* file, XMLNode* node, CStatus* s
     }
 }
 
-// OFFSET: #0x0055F1B0
+// OFFSET: 0x00921D10
 void CGUIBindings::SaveBindings(BINDING_SET set, HOSFILE file) {
     char buffer[1024];
     uint32_t written;
@@ -1573,7 +1573,7 @@ void CGUIBindings::SaveBindings(BINDING_SET set, HOSFILE file) {
     }
 }
 
-// OFFSET: #0x00563480
+// OFFSET: 0x00926C40/0x14068C370
 void CGUIBindings::SetOverrideBinding(void* owner, int32_t priority, const char* key, const char* command, bool checkPermission) {
     if (checkPermission && !CGGameUI::CanPerformAction(13)) {
         return;
@@ -1588,7 +1588,7 @@ void CGUIBindings::SetOverrideBinding(void* owner, int32_t priority, const char*
     binding->SetOverrideBinding(owner, priority, command);
 }
 
-// OFFSET: #0x0055DF30
+// OFFSET: 0x008DF000/0x1406840B0
 int32_t MouseButtonToIndex(uint32_t button) {
     switch (button) {
         case 0x1:
@@ -1658,7 +1658,7 @@ int32_t MouseButtonToIndex(uint32_t button) {
     }
 }
 
-// OFFSET: #0x007DC010
+// OFFSET: 0x004DB960/0x1406842E0
 MOUSEBUTTON StringToMouseButton(const char* string) {
     if (!string || !*string) {
         return MOUSE_BUTTON_NONE;
@@ -1791,7 +1791,7 @@ MOUSEBUTTON StringToMouseButton(const char* string) {
     return MOUSE_BUTTON_NONE;
 }
 
-// OFFSET: #0x005EEC20
+// OFFSET: 0x008C60E0/0x1407AEEA0
 MOUSEBUTTON IndexToMouseButton(uint32_t index) {
     switch (index) {
         case 1:

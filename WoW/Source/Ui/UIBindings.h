@@ -82,15 +82,15 @@ class CGUIBindings {
     /* 0004 */ int32_t m_numHiddenCommands;
     /* 0008 */ int32_t m_numModifiedClicks;
     /* 000C */ TSHashTable<KEYCOMMAND, HASHKEY_STRI> m_commands;
-    /* 0034 */ TSHashTable<KEYBINDING, HASHKEY_STRI> m_bindings [4];
-    /* 00D4 */ TSHashTable<OVERRIDEKEYBINDING, HASHKEY_STRI> m_overrideBindings;
-    /* 00FC */ TSHashTable<MODIFIEDCLICK, HASHKEY_STRI> m_modifiedClicks;
-    /* 0124 */ int32_t m_saveSet;
-    /* 0128 */ uint32_t m_dirtySets;
-    /* 012C */ int32_t m_keyStateOverride;
-    /* 0130 */ uint32_t m_heldModifiers;
-    /* 0134 */ uint32_t m_bindingModeMask;
-    /* 0138 */ uint32_t m_bindingModeToggles;
+    /* 0038 */ TSHashTable<KEYBINDING, HASHKEY_STRI> m_bindings [4];
+    /* 00E8 */ TSHashTable<OVERRIDEKEYBINDING, HASHKEY_STRI> m_overrideBindings;
+    /* 0114 */ TSHashTable<MODIFIEDCLICK, HASHKEY_STRI> m_modifiedClicks;
+    /* 0140 */ int32_t m_saveSet;
+    /* 0144 */ uint32_t m_dirtySets;
+    /* 0148 */ int32_t m_keyStateOverride;
+    /* 014C */ uint32_t m_heldModifiers;
+    /* 0150 */ uint32_t m_bindingModeMask;
+    /* 0154 */ uint32_t m_bindingModeToggles;
 
     CGUIBindings();
     ~CGUIBindings();

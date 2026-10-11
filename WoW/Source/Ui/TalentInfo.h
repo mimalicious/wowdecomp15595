@@ -50,7 +50,7 @@ struct TalentGroupTab_C {
     TalentGroupTab_C();
     ~TalentGroupTab_C();
     TalentGroupTier_C* FindTier(int32_t tier);
-    int32_t AddItem(const TalentRec* talent, TalentGroupItem_C* item);
+    int32_t AddTierItem(const TalentRec* talent, TalentGroupItem_C* item);
 };
 
 class CGTalentGroup_C {
@@ -65,7 +65,7 @@ class CGTalentGroup_C {
     CGTalentGroup_C();
     virtual ~CGTalentGroup_C();
     void Reset();
-    uint32_t GetGlyph(uint32_t index);
+    uint32_t GetGlyph(uint32_t index) const;
     TalentGroupTab_C* GetTab(uint32_t index);
     TalentGroupTab_C* GetTabFromID(int32_t tabId) const;
     TalentGroupTab_C* GetTabFromTalentID(int32_t talentId);
@@ -73,7 +73,7 @@ class CGTalentGroup_C {
     int32_t GetPreviewPointsSpent() const;
     uint32_t GetPointsSpent() const;
     void AddTalentItem(int32_t talentId, int32_t rank);
-    void UpdateTabs(const TSFixedArray<TalentTabInfo*>* tabs);
+    void UpdateTabs(const TSFixedArray<TalentTabInfo*>& tabs);
     void ResetPreviewTalentPoints(uint32_t tabIndex);
     void ResetAllPreviewTalentPoints();
     int32_t CanAddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t& delta, int32_t pet) const;
@@ -98,6 +98,7 @@ class CGTalentInfo {
     static void LeaveWorld();
     static void ShutdownGame();
     static uint32_t GetActiveTalentGroup(int32_t pet);
+    static uint32_t GetNumTalentGroups(int32_t pet);
     static uint32_t GetUnspentTalentPoints(uint32_t index, int32_t pet);
     static CGTalentGroup_C* GetTalentGroup(uint32_t index, int32_t pet);
     static TalentTabInfo* GetTab(uint32_t index, int32_t inspect, int32_t pet);

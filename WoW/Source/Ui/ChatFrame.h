@@ -327,7 +327,6 @@ class CGChat {
     static int32_t m_afk;
     static int32_t m_dnd;
     static int32_t m_areaID;
-    static int32_t m_paused;
     static int32_t m_voiceChatSystemStatus;
     static ChatRecord m_chatHistory[60];
     static uint32_t m_currentChatIndex;
@@ -338,7 +337,6 @@ class CGChat {
     static TSExplicitList<PENDINGTEXTEMOTE, 0> s_pendingTextEmotes;
 
     static void LogFeedPet(const WOWGUID& guid, int32_t itemId);
-    static void LogPetHappinessDecrease(const WOWGUID& caster, const WOWGUID& target, int32_t amount);
     static void LogDismissPet(const WOWGUID& guid, const WOWGUID& pet);
     static void LogTradeSkillCreate(const WOWGUID& guid, int32_t itemId);
     static int32_t AddChatMessage(const char* text, SLASH_COMMAND_ID type, ChatMessageParams* params);
@@ -422,12 +420,9 @@ class CGChat {
     static void LogOpenLock(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
     static void LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const GameObjectStats_C* stats);
     static const char* GetChannelStringForDisplay(int32_t session, int32_t* type);
-    static int32_t IsPaused();
     static int32_t IsVoiceChatAllowed();
     static void ProcessThrottledChat();
     static void LeaveWorld();
-    static void Pause();
-    static void Resume();
     static int32_t SetActiveVoiceSession(const char* channel, int32_t type, int32_t index);
     static int32_t OnChatDown(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnChatIsDown(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
