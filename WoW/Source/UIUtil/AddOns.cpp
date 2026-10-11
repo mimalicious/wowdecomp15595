@@ -54,9 +54,9 @@ static char s_addOnAccountName[1280];
 // STATIC: #0x00C24918
 static bool s_addOnsInitialized;
 
-// OFFSET: #0x005F4C10
+// OFFSET: 0x0045B6B0/0x14006D190
 uint32_t GetCodeInterfaceVersion() {
-    return 30300;
+    return 40300;
 }
 
 // OFFSET: #0x005F4C40
@@ -897,7 +897,7 @@ bool IsAddOnLoadable(const char* name, bool demandLoad, UIADDON_LOADABLE_REASON&
         return false;
     }
 
-    if (addon->m_interfaceVersion != 30300) {
+    if (addon->m_interfaceVersion != 40300) {
         reason = UIADDON_INTERFACE_VERSION;
 
         if (g_checkAddonVersionVar->m_intValue) {
@@ -1423,7 +1423,7 @@ static int32_t EnumAddOnsDisk(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// OFFSET: 0x00460010
+// OFFSET: 0x00460010/0x140073800
 void InitializeAddOns() {
     ListInterfaceArchive("Interface\\AddOns\\", EnumAddOnsArchive, NULL);
     OsFileList("Interface\\AddOns\\", "*", EnumAddOnsDisk, NULL, 0);
