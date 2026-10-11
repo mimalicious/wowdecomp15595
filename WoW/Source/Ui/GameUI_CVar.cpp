@@ -70,9 +70,6 @@ CVar* g_autoLootDefaultCVar;
 // STATIC: 0x00ED764C
 CVar* g_assistAttackCVar;
 
-// STATIC: #0x00BD091C
-CVar* s_cvAutoRangedCombat;
-
 // STATIC: 0x00ED7650
 CVar* g_autoSelfCastCVar;
 

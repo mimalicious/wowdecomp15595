@@ -7532,7 +7532,7 @@ void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int
         return;
     }
 
-    int32_t rangedSpell = s_cvAutoRangedCombat->m_intValue ? CGSpellBook::m_autoRangedSpell : 0;
+    int32_t rangedSpell = CGSpellBook::m_autoRangedSpell;
 
     if (this->m_mountDisplayId > 0 && !(this->m_clientFlags & 0x10000000) && !this->MountedCombatAllowed()) {
         float minRange;
@@ -7600,7 +7600,7 @@ void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int
 
 // OFFSET: 0x00554970/0x1401B11C0
 int32_t GetModalNextSpell() {
-    return s_cvAutoRangedCombat->m_intValue ? CGSpellBook::m_autoRangedSpell : 0;
+    return CGSpellBook::m_autoRangedSpell;
 }
 
 // OFFSET: 0x005638C0
@@ -10046,7 +10046,7 @@ int32_t CGPlayer_C::AutoCombatModeEventHandler(const void* data, void* param) {
         return 1;
     }
 
-    if (!s_cvAutoRangedCombat->m_intValue || !CGSpellBook::m_autoRangedSpell) {
+    if (!CGSpellBook::m_autoRangedSpell) {
         Spell_C_SetAutoRangedCombatSpell(0);
         return 1;
     }
