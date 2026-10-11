@@ -9,7 +9,7 @@ class CEzLcd;
 class CGPlayer_C;
 class CStatus;
 class XMLNode;
-struct BattlefieldStatus;
+struct BattlefieldStatusNode;
 
 struct LCDHANDLE : public TSHashObject<LCDHANDLE, HASHKEY_CONSTSTRI> {
     /* 0018 */ void* m_handle;
@@ -58,7 +58,7 @@ class CGLCD {
     static void SetScreen(int32_t screen);
     static void ShowBattlefieldScreen();
     static void HideBattlefieldAlert();
-    static void OnBattlefieldReady(const BattlefieldStatus* status);
+    static void OnBattlefieldReady(const BattlefieldStatusNode* status);
     static void OnBattlefieldActive();
     static void UpdateBattlefieldStats();
     static void Shutdown();

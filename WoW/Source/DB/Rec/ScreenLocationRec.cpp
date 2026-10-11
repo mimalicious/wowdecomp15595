@@ -16,5 +16,5 @@ const DBCMeta ScreenLocationRec::s_meta = { "DBFilesClient\\ScreenLocation.dbc",
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ScreenLocationRec::FixupStrings(void* record, const char* strings) {
     ScreenLocationRec* rec = static_cast<ScreenLocationRec*>(record);
-    DBCFixupString(rec->unk_0004, strings);
+    DBCFixupString(rec->m_name, strings);
 }

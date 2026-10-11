@@ -244,13 +244,13 @@ void CGLCD::HideBattlefieldAlert() {
     }
 }
 
-// OFFSET: #0x008483C0
-void CGLCD::OnBattlefieldReady(const BattlefieldStatus* status) {
+// OFFSET: 0x00B2F7B0/0x1408F8400
+void CGLCD::OnBattlefieldReady(const BattlefieldStatusNode* status) {
     if (!CGLCD::m_lcd || !CGLCD::m_lcd->IsConnected() || !IsLCDAvailable() || !CGLCD::initComplete || !status) {
         return;
     }
 
-    if (status->m_bgTypeID == 32) {
+    if (static_cast<uint16_t>(status->m_queueID) == 32) {
         BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(32);
 
         if (rec) {

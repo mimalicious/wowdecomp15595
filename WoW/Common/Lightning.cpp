@@ -1102,7 +1102,7 @@ void CLightning::Update(float elapsed) {
     if (chainEffects->m_texCoordScale == 0.0f) {
         this->m_texOffset = 0.0f;
     } else {
-        this->m_texOffset = static_cast<float>(fmod(chainEffects->m_texCoordScale * elapsed + this->m_texOffset, 1.0));
+        this->m_texOffset = static_cast<float>(fmod(static_cast<double>(chainEffects->m_texCoordScale * elapsed + this->m_texOffset), 1.0));
     }
 
     float dz = this->m_dstPos.z - this->m_srcPos.z;

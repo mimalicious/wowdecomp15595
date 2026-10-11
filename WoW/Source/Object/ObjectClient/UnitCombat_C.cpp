@@ -508,21 +508,21 @@ void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
 
     if (victimState == 8) {
         WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 9, NULL, false);
+        this->AddWorldText(source, 9, NULL, false, false);
         CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
         return;
     }
 
     if (victimState == 3) {
         WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 4, NULL, false);
+        this->AddWorldText(source, 4, NULL, false, false);
         CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
         return;
     }
 
     if (victimState == 6) {
         WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 6, NULL, false);
+        this->AddWorldText(source, 6, NULL, false, false);
         CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
         return;
     }
@@ -540,21 +540,21 @@ void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
         }
 
         WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 3, NULL, false);
+        this->AddWorldText(source, 3, NULL, false, false);
         CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
         return;
     }
 
     if (victimState == 5) {
         WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 5, NULL, false);
+        this->AddWorldText(source, 5, NULL, false, false);
         CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
         return;
     }
 
     if (victimState == 7) {
         WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 7, NULL, false);
+        this->AddWorldText(source, 7, NULL, false, false);
         CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
         return;
     }
@@ -593,7 +593,7 @@ void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
         }
 
         WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, reason, NULL, false);
+        this->AddWorldText(source, reason, NULL, false, false);
     }
 
     if (info.m_attacker.m_guid) {

@@ -18,11 +18,11 @@ class BattlemasterListRec {
     /* 0030 */ int32_t m_maxGroupSize;
     /* 0034 */ int32_t m_holidayWorldState;
     /* 0038 */ int32_t m_minLevel;
-    /* 003C */ int32_t unk_003C;
-    /* 0040 */ int32_t unk_0040;
-    /* 0044 */ int32_t unk_0044;
-    /* 0048 */ int32_t unk_0048;
-    /* 004C */ int32_t unk_004C;
+    /* 003C */ int32_t m_maxLevel;
+    /* 0040 */ int32_t m_ratedPlayers;
+    /* 0044 */ int32_t m_minPlayers;
+    /* 0048 */ int32_t m_maxPlayers;
+    /* 004C */ int32_t m_flags;
 };
 
 #endif
