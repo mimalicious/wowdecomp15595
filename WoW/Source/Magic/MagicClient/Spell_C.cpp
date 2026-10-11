@@ -8672,7 +8672,7 @@ bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID
             AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_areaID);
             World_PVP_AreaRec* pvpArea;
 
-            if (area && area->m_worldPvpID && (pvpArea = g_world_PVP_AreaDB.GetRecord(area->m_worldPvpID)) && static_cast<int32_t>(CGWorldStateInfo::GetWorldState(pvpArea->m_gameTimeWorldState)) > 0 && (spell->m_attributesExH & 0x10000000)) {
+            if (area && area->m_worldPvpID && (pvpArea = g_world_PVP_AreaDB.GetRecord(area->m_worldPvpID)) && static_cast<int32_t>(GetWorldState(pvpArea->m_gameTimeWorldState)) > 0 && (spell->m_attributesExH & 0x10000000)) {
                 return false;
             }
         }
