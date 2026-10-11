@@ -912,7 +912,7 @@ int32_t CParticleEmitter2::RenderParticle(CParticle2_Model& particle, const C44M
 
     CM2Model* model = particle.m_model;
     model->m_fFlags |= 0x8000;
-    model->m_worldTransform = transform;
+    model->SetWorldTransform(transform);
 
     model = particle.m_model;
     model->m_diffuseTintR = color.r * 0.0039215689f;

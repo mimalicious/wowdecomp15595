@@ -2175,7 +2175,7 @@ void CEffect::PostInitialize() {
         CGObject_C* source = ClntObjMgrObjectPtr(this->m_sourceGuid, TYPEMASK_OBJECT, __FILE__, __LINE__);
         C44Matrix matrix = this->TransformPosition(source);
         this->m_model->m_fFlags |= 0x4000;
-        this->m_model->m_worldTransform = matrix;
+        this->m_model->SetWorldTransform(matrix);
         this->m_mapEntity = World::ObjectCreate(this->m_model, this->m_model->m_worldTransform, CGWorldFrame::SpellEffectEnumProc, NULL, 0, reinterpret_cast<uintptr_t>(this), 6, __FILE__, __LINE__);
 
         CAaBox box;
@@ -2471,7 +2471,7 @@ void CEffect::EffectUpdate() {
 
                 light.z = 1.0f;
                 this->m_model->m_fFlags |= 0x4000;
-                this->m_model->m_worldTransform = matrix;
+                this->m_model->SetWorldTransform(matrix);
                 World::ObjectUpdate(this->m_mapEntity, this->m_model->m_worldTransform, box, sphere, light, 0, -1);
             }
         }

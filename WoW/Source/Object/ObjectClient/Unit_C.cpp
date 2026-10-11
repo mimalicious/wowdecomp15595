@@ -5619,7 +5619,7 @@ void CGUnit_C::OnDisplayModelLoaded(CM2Model* model) {
         matrix.a0 = scale;
         matrix.b1 = scale;
         matrix.c2 = scale;
-        model->m_worldTransform = matrix;
+        model->SetWorldTransform(matrix);
     }
 
     this->Animate(0.0f);
@@ -5769,7 +5769,7 @@ int32_t CGUnit_C::Animate(float elapsed) {
 
             CM2Model* model = this->GetObjectModel();
             model->m_fFlags |= 0x4000;
-            model->m_worldTransform = matrix;
+            model->SetWorldTransform(matrix);
         } else {
             this->ResetSmoothFacing();
 
@@ -19856,7 +19856,7 @@ void CGUnit_C::ReleaseMissiles(const C3Vector& position) {
             this->m_missiles->m_flags |= 0x2000000;
             CM2Model* missileModel = this->m_missiles->m_model;
             missileModel->m_fFlags |= 0x4000;
-            missileModel->m_worldTransform = transform;
+            missileModel->SetWorldTransform(transform);
             C3Vector firePosition(transform.d0, transform.d1, transform.d2);
             this->m_missiles->FireMissiles(&firePosition);
             continue;
@@ -21772,7 +21772,7 @@ void CGUnit_C::CreateUnitMount() {
         mount->SetSequenceStartCallback(&CGUnit_C::SequenceStartCallback, this->m_obj->m_guid.m_guid);
         mount->SetEventCallback(reinterpret_cast<void*>(&CGUnit_C::AnimEventCallback), this->m_obj->m_guid.m_guid);
         mount->m_fFlags |= 0x4000;
-        mount->m_worldTransform = this->m_worldModel->m_worldTransform;
+        mount->SetWorldTransform(this->m_worldModel->m_worldTransform);
         CCharacterComponent::ApplyMonsterGeosets(mount, displayInfo);
         CCharacterComponent::ReplaceMonsterSkin(mount, displayInfo, modelData);
         this->SetMountModel(mount);
@@ -21804,7 +21804,7 @@ void CGUnit_C::CreateUnitMount() {
 
         float scale = 1.0f / this->m_mountScale;
         this->m_worldModel->m_fFlags |= 0x4000;
-        this->m_worldModel->m_worldTransform = C44Matrix(scale);
+        this->m_worldModel->SetWorldTransform(C44Matrix(scale));
         mount->m_diffuseTintR = this->m_worldModel->m_diffuseTintR;
         mount->m_diffuseTintG = this->m_worldModel->m_diffuseTintG;
         mount->m_diffuseTintB = this->m_worldModel->m_diffuseTintB;
@@ -23720,7 +23720,7 @@ void CGUnit_C::MountTransitionSetCharacterTransform(float elapsed) {
 
     CM2Model* objectModel = this->GetObjectModel();
     objectModel->m_fFlags |= 0x8000;
-    objectModel->m_worldTransform = transform;
+    objectModel->SetWorldTransform(transform);
 
     if (this->m_mountTransitionEffect) {
         this->m_mountTransitionSpellId = this->m_mountTransitionEffect->m_spellId;

@@ -1509,7 +1509,7 @@ void CMissile::CalcPosition(int32_t advance) {
         C44Matrix matrix;
         this->ComputeModelMatrix(&matrix, &this->m_position, &dir);
         this->m_model->m_fFlags |= 0x4000;
-        this->m_model->m_worldTransform = matrix;
+        this->m_model->SetWorldTransform(matrix);
         this->m_lastModelPos = C3Vector(matrix.d0, matrix.d1, matrix.d2);
 
         if (this->m_fizzleTime) {
@@ -2163,7 +2163,7 @@ void CMissile::ReachedTarget(CGUnit_C* target, const C3Vector* direction) {
         C44Matrix matrix;
         this->ComputeModelMatrix(&matrix, &this->m_position, &dir);
         this->m_model->m_fFlags |= 0x4000;
-        this->m_model->m_worldTransform = matrix;
+        this->m_model->SetWorldTransform(matrix);
         this->m_lastModelPos = C3Vector(matrix.d0, matrix.d1, matrix.d2);
     }
 

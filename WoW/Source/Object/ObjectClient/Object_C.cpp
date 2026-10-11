@@ -2181,7 +2181,7 @@ void CGObject_C::UpdateFadeoutList() {
                 if (model) {
                     C44Matrix world = info->m_matrix * transportMatrix;
                     model->m_fFlags |= 0x4000;
-                    model->m_worldTransform = world;
+                    model->SetWorldTransform(world);
                 }
 
                 object->SetFrameOfReference(&transportMatrix);

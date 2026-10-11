@@ -93,7 +93,7 @@ void CUnitDisplayTransition_C::MirrorTransformToSwapModel() {
     }
 
     this->m_model->m_fFlags |= 0x4000;
-    this->m_model->m_worldTransform = matrix;
+    this->m_model->SetWorldTransform(matrix);
 }
 
 // OFFSET: 0x005FDD40/0x140286440
@@ -423,7 +423,7 @@ void CUnitDisplayTransition_C::PerformSwap() {
         float scale = 1.0f / this->m_unit->m_mountScale;
         this->m_unit->m_worldModel->m_fFlags |= 0x4000;
         C44Matrix matrix(scale, 0.0f, 0.0f, 0.0f, 0.0f, scale, 0.0f, 0.0f, 0.0f, 0.0f, scale, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-        this->m_unit->m_worldModel->m_worldTransform = matrix;
+        this->m_unit->m_worldModel->SetWorldTransform(matrix);
     }
 
     for (CEffect* effect = this->m_unit->m_effectList; effect;) {

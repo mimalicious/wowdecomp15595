@@ -36,7 +36,7 @@ int32_t SpellWorldObject::Update(uintptr_t object, uint64_t param64, uintptr_t p
         matrix.RotateAroundZ(this->m_facing);
         matrix.Scale(this->m_scale);
         this->m_model->m_fFlags |= 0x4000;
-        this->m_model->m_worldTransform = matrix;
+        this->m_model->SetWorldTransform(matrix);
     }
 
     return 1;

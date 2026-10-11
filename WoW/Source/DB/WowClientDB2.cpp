@@ -145,7 +145,7 @@ uint32_t WowClientDB2_Base::Export(uint8_t* record, const uint8_t* source, char*
     for (int32_t field = 0; index < meta->m_numStringFields; field++) {
         if (meta->m_fieldTypes[field] == 2) {
             for (uint32_t i = 0; i < static_cast<uint32_t>(meta->m_fieldSizes[field]) / sizeof(uint32_t); i++) {
-                int32_t fieldOffset = meta->m_fieldOffsets[field] + i * sizeof(const char*);
+                int32_t fieldOffset = meta->m_fieldOffsets[field] + i * sizeof(DBCString);
                 const char* string = *reinterpret_cast<const DBCString*>(&source[fieldOffset]);
                 uint32_t length = strlen(string) + 1;
 
@@ -206,10 +206,10 @@ uint32_t WowClientDB2_Base::GetStringsSize(const uint8_t* record) {
             uint32_t count = static_cast<uint32_t>(meta->m_fieldSizes[field]) / sizeof(uint32_t);
 
             if (count) {
-                const char* const* strings = reinterpret_cast<const char* const*>(&record[meta->m_fieldOffsets[field]]);
+                const DBCString* strings = reinterpret_cast<const DBCString*>(&record[meta->m_fieldOffsets[field]]);
 
                 for (uint32_t i = 0; i < count; i++) {
-                    uint32_t length = strlen(*reinterpret_cast<const DBCString*>(&strings[i]));
+                    uint32_t length = strlen(strings[i]);
 
                     if (length) {
                         size += length + 1;

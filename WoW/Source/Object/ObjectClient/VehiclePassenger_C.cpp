@@ -1819,7 +1819,7 @@ void CVehiclePassenger_C::UpdateModel() {
 
     if (useMatrix) {
         model->m_fFlags |= 0x4000;
-        model->m_worldTransform = matrix;
+        model->SetWorldTransform(matrix);
     } else {
         model->SetWorldTransform(position, facing, scale, up, 3);
     }
