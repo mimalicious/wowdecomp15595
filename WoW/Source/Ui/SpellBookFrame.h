@@ -109,7 +109,6 @@ class CGSpellBook {
     static int32_t IsSelectedSlot(int32_t slot, int32_t petSpell);
     static uint32_t GetShapeshiftForm(int32_t requireForm);
     static int32_t CanShowAura(const SpellRec* spell, const WOWGUID* caster, bool helpful);
-    static bool CanShowAura(const SpellRec* spell, const WOWGUID& caster, bool helpful);
     static int32_t CanStealAura(const CGUnit_C* unit, const AuraData* aura, const SpellRec* spell);
     static int32_t CanApplyAura(int32_t spellId, const WOWGUID* target);
     static int32_t CanApplyAura(const AuraData* aura);

@@ -9,17 +9,16 @@ class SpellRec;
 class CGRuneInfo {
     public:
     static void LeaveWorld();
-    static int32_t m_runes[8];
+    static int32_t m_runes[6];
     static void ConvertRune(uint8_t rune, uint8_t type);
     static void ResyncRunes(CDataStore* msg);
     static void AddRunePower(CDataStore* msg);
-    static int32_t m_baseRunes[8];
-    static uint32_t m_runeCooldowns[8];
-    static uint32_t m_runeLastUsed[8];
+    static int32_t m_baseRunes[6];
+    static uint32_t m_runeCooldowns[6];
+    static uint32_t m_runeLastUsed[6];
     static uint32_t m_numRunes;
     static uint32_t m_predictedRunes;
-    static void SetPredictedRunes(uint8_t available, uint8_t used, const uint8_t* cooldowns);
-    static void SetPredictedRunes(uint8_t available, uint8_t used, const uint8_t* cooldowns, bool predicted);
+    static void SetPredictedRunes(uint8_t available, uint8_t used, const uint8_t* cooldowns, bool force);
     static void InitializeGame();
     static void EnterWorld();
     static void ShutdownGame();

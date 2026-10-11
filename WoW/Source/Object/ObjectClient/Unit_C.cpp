@@ -19542,7 +19542,7 @@ void CGUnit_C::DoPowerRegen(uint32_t elapsed) {
         }
 
         if (runes != previous) {
-            CGRuneInfo::SetPredictedRunes(previous, runes, NULL);
+            CGRuneInfo::SetPredictedRunes(previous, runes, NULL, false);
         }
     } else if (powerType == 10) {
         return;

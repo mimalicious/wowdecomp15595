@@ -3573,7 +3573,7 @@ int32_t SetTooltipUnitAura(CGTooltip* tooltip, ScriptAuraInfo* info) {
 
         WOWGUID caster = WOWGUID::Make(0);
 
-        if (!CGSpellBook::CanShowAura(spell, caster, (entry->m_flags & 0x8) != 0)) {
+        if (!CGSpellBook::CanShowAura(spell, &caster, (entry->m_flags & 0x8) != 0)) {
             continue;
         }
 
