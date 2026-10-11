@@ -83,9 +83,9 @@ enum SLASH_COMMAND_ID {
     CHAT_MSG_BN_INLINE_TOAST_BROADCAST = 59,
     CHAT_MSG_BN_INLINE_TOAST_BROADCAST_INFORM = 60,
     CHAT_MSG_BN_INLINE_TOAST_CONVERSATION = 61,
-    CHAT_MSG_COMBAT_GUILD_XP_GAIN = 62,
-    CHAT_MSG_CURRENCY = 63,
-    CHAT_MSG_BN_WHISPER_PLAYER_OFFLINE = 64,
+    CHAT_MSG_BN_WHISPER_PLAYER_OFFLINE = 62,
+    CHAT_MSG_COMBAT_GUILD_XP_GAIN = 63,
+    CHAT_MSG_CURRENCY = 64,
     CHAT_MSG_MAX = 65,
 };
 
@@ -474,7 +474,6 @@ bool RegisterAddonMessagePrefix(const char* prefix);
 uint32_t BuildRaidDisplayList(int32_t type);
 void RebuildDisplayChannelList(int32_t a1);
 bool SpamFilter(char* text, bool cache);
-bool ChatParserParseText(const char* text, char* buffer, uint32_t size);
 bool InebriatedParseText(const char* text, char* buffer, uint32_t size, float drunkness);
 int32_t QuestParserParseText(const char* text, char* buffer, uint32_t size, const WOWGUID& guid, const char* name, int32_t a6);
 

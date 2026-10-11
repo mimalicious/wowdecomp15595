@@ -12,6 +12,7 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/Types.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
+#include "WoW/Source/Ui/QuestTextParser.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/PartyFrame.h"
 #include "WoW/Source/Ui/RaidInfo.h"
