@@ -129,6 +129,9 @@ static TSCGrowableArray<MapObjSpeedTransition, 8> s_mapObjSpeedTransitions;
 // STATIC: 0x00CA61C0
 static uint32_t s_mapObjSpeedTransitionTime = 4000;
 
+// STATIC: 0x00CA6054
+static uint32_t s_lockSkillColors[5] = { 0xFF808080, 0xFF40C040, 0xFFFFFF00, 0xFFFF8040, 0xFFFF2020 };
+
 // OFFSET: 0x005A35F0
 static void GameObjectStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
@@ -3513,7 +3516,7 @@ int32_t CGGameObject_C::GetPageTextLanguage() const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 16));
 }
 
-// OFFSET: 0x005A0790
+// OFFSET: 0x005A0790/0x140210230
 int32_t CGGameObject_C::GetPageTextMaterial() const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 17));
 }
@@ -3950,7 +3953,7 @@ void CGGameObject_C_Type_TransportBase::Disable() {
     this->DestroyWorldObj();
 }
 
-// OFFSET: 0x005A0220
+// OFFSET: 0x005A0220/0x14020FC50
 void CGGameObject_C_Type_MapObjTransport::InitializeMovement() {
     uint32_t time = OsGetAsyncTimeMs();
     CGGameObject_C* owner = this->m_owner;
@@ -4741,6 +4744,58 @@ void CGGameObject_C_Type_MeetingStone::AddToolTipInfo(CGTooltip* tooltip) {
 
     if (area) {
         tooltip->AddLine(area->m_areaName, NULL, 0);
+    }
+}
+
+// OFFSET: 0x0059FCF0
+int32_t CGGameObject_C_TypeBase::GetTrivialSkillLow() const {
+    CGGameObject_C* owner = this->m_owner;
+    uint32_t index = CGameObjectDef::GetPropNum(owner->m_gameObject->m_typeID, 151);
+    GameObjectStats* stats = owner->m_stats;
+
+    if (stats && index < 32) {
+        return stats->m_propValue[index];
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0059FD30
+int32_t CGGameObject_C_TypeBase::GetTrivialSkillHigh() const {
+    CGGameObject_C* owner = this->m_owner;
+    uint32_t index = CGameObjectDef::GetPropNum(owner->m_gameObject->m_typeID, 150);
+    GameObjectStats* stats = owner->m_stats;
+
+    if (stats && index < 32) {
+        return stats->m_propValue[index];
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x005A14E0
+void CGGameObject_C::GetLockSkillColor(int32_t requiredSkill, int32_t skillValue, CImVector& color) {
+    if (!this->m_stats || this->m_stats->m_typeID != 3) {
+        return;
+    }
+
+    CGGameObject_C_TypeBase* typeData = this->m_typeData;
+
+    if (skillValue < requiredSkill) {
+        color = CImVector(s_lockSkillColors[4]);
+    }
+
+    int32_t low = typeData->GetTrivialSkillLow();
+    int32_t high = typeData->GetTrivialSkillHigh();
+
+    if (low > 0) {
+        if (skillValue < low) {
+            color = CImVector(s_lockSkillColors[3]);
+        } else if (skillValue < high) {
+            color = CImVector(s_lockSkillColors[2]);
+        } else {
+            color = CImVector(s_lockSkillColors[0]);
+        }
     }
 }
 

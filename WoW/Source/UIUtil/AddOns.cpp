@@ -36,6 +36,18 @@ static TSGrowableArray<const char*> s_addOnInfo;
 // STATIC: #0x00C24410
 static uint32_t s_dataInterfaceVersion;
 
+// STATIC: 0x00D3A758
+static TSGrowableArray<char*> s_exportFiles;
+
+// STATIC: 0x00C99C4C
+static const char* s_exportInterfacePath = "Interface\\";
+
+// STATIC: 0x00C99C50
+static const char* s_exportCodePath = "BlizzardInterfaceCode\\";
+
+// STATIC: 0x00C99C54
+static const char* s_exportArtPath = "BlizzardInterfaceArt\\";
+
 // STATIC: 0x00D3A218
 static char s_addOnAccountName[1280];
 
@@ -306,6 +318,103 @@ const char* GetAddOnByIndex(uint32_t index) {
     }
 
     return NULL;
+}
+
+// OFFSET: 0x0045BC20/0x14006D9E0
+static int32_t ExportCodeFileCallback(const char* fileName, void* param) {
+    if (SFile::FileExists(fileName)) {
+        const char* extension = strrchr(fileName, '.');
+
+        if (extension && (!_stricmp(extension, ".lua") || !_stricmp(extension, ".xml") || !_stricmp(extension, ".toc") || !_stricmp(extension, ".xsd"))) {
+            char* copy = SStrDupA(fileName, __FILE__, 1605);
+            *s_exportFiles.New() = copy;
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0045BCC0/0x14006DB20
+static int32_t ExportArtFileCallback(const char* fileName, void* param) {
+    if (SFile::FileExists(fileName)) {
+        const char* extension = strrchr(fileName, '.');
+
+        if (extension && (!_stricmp(extension, ".blp") || !_stricmp(extension, ".tga"))) {
+            char* copy = SStrDupA(fileName, __FILE__, 1619);
+            *s_exportFiles.New() = copy;
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0045BD40/0x14006DC40
+void ExportInterfaceFiles(bool code) {
+    if (code) {
+        ListInterfaceArchive(s_exportInterfacePath, ExportCodeFileCallback, NULL);
+    } else {
+        ListInterfaceArchive(s_exportInterfacePath, ExportArtFileCallback, NULL);
+    }
+
+    for (uint32_t i = s_exportFiles.m_count; i;) {
+        i--;
+
+        char path[260];
+        path[0] = 0;
+
+        if (code) {
+            SStrCopy(path, s_exportCodePath, sizeof(path));
+        } else {
+            SStrCopy(path, s_exportArtPath, sizeof(path));
+        }
+
+        SStrPack(path, s_exportFiles.m_data[i], sizeof(path));
+
+        char* directory = SStrDupA(path, __FILE__, 1646);
+        *strrchr(directory, '\\') = 0;
+
+        if (!OsDirectoryExists(directory)) {
+            OsCreateDirectory(directory, 1);
+        }
+
+        SMemFree(directory, __FILE__, 1652, 0);
+
+        if (OsFileExists(path) && !OsDeleteFile(path)) {
+            break;
+        }
+
+        void* data;
+        uint32_t size;
+
+        if (!SFile::ReadFile(NULL, s_exportFiles.m_data[i], &data, &size, 1, 1)) {
+            break;
+        }
+
+        HOSFILE file = OsCreateFile(path, 0x40000000, 0, 2, 0x80, 0x3F3F3F3F);
+
+        if (file == OS_INVALID_FILE) {
+            SFile::Unload(data);
+            break;
+        }
+
+        uint32_t bytesWritten = 0;
+
+        if (!OsWriteFile(file, data, size, &bytesWritten) || size != bytesWritten) {
+            SFile::Unload(data);
+            OsCloseFile(file);
+            break;
+        }
+
+        SFile::Unload(data);
+        OsCloseFile(file);
+    }
+
+    for (uint32_t i = s_exportFiles.m_count; i;) {
+        i--;
+        SMemFree(s_exportFiles.m_data[i], __FILE__, 1694, 0);
+    }
+
+    s_exportFiles.Clear();
 }
 
 // OFFSET: 0x0045BFA0/0x14006DFD0

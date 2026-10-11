@@ -1100,12 +1100,12 @@ int32_t CGlueMgr::CCommand_ExportInterfaceFiles(const char* command, const char*
     }
 
     if (!_stricmp("art", arguments)) {
-        ExportInterfaceFiles(0);
+        ExportInterfaceFiles(false);
         return 1;
     }
 
     if (!_stricmp("code", arguments)) {
-        ExportInterfaceFiles(1);
+        ExportInterfaceFiles(true);
     }
 
     return 1;

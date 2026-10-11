@@ -2004,6 +2004,32 @@ int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
     return entry->m_maxPlayers;
 }
 
+// OFFSET: 0x004B2860/0x1400E9350
+int32_t DungeonEncounterFindFirst(int32_t mapId) {
+    int32_t high = g_dungeonEncounterDB.m_numRecords;
+    int32_t low = 0;
+
+    if (high <= 0) {
+        return -1;
+    }
+
+    do {
+        int32_t mid = (high + low) / 2;
+
+        if (g_dungeonEncounterDB.GetRecordByIndex(mid)->m_mapID >= mapId) {
+            high = mid;
+        } else {
+            low = mid + 1;
+        }
+    } while (low < high);
+
+    if (low < g_dungeonEncounterDB.m_numRecords && g_dungeonEncounterDB.GetRecordByIndex(low)->m_mapID == mapId) {
+        return low;
+    }
+
+    return -1;
+}
+
 // OFFSET: 0x00494CA0
 void DBClient_CancelAllCallbacks() {
     for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
