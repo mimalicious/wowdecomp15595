@@ -459,7 +459,7 @@ void WorldTextAddIcon(WORLDTEXTSTRING* text) {
     }
 }
 
-// OFFSET: #0x007E7490
+// OFFSET: 0x004E2FF0
 void WorldTextRenderBatch() {
     GxuFontRenderBatch(s_worldTextBatch);
 

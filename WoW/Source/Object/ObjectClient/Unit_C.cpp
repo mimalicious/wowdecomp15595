@@ -12671,7 +12671,7 @@ int32_t CGUnit_C::GetAuraIndex(int32_t spellId) {
     return -1;
 }
 
-// OFFSET: #0x007226B0
+// OFFSET: 0x005BBCE0
 bool CGUnit_C::IsPetBarUsed() const {
     if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x2000)) {
         return false;

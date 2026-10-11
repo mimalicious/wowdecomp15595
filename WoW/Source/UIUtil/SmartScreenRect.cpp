@@ -279,7 +279,7 @@ static BFSNODE* SmartScreenRectAllocNode() {
     return node;
 }
 
-// OFFSET: #0x00615980
+// OFFSET: 0x00460F00
 static CRect SmartScreenRectFindFreeRect(uint32_t grid, const CRect& rect) {
     CRect result;
     result.minY = 0.0f;

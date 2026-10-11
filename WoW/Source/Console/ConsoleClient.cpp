@@ -450,7 +450,7 @@ static void DrawHighLight() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: #0x007641A0
+// OFFSET: 0x0060EE80
 static void DrawCaret(const C3Vector& caretpos) {
     C3Vector position[4] = {
         C3Vector(caretpos.x, caretpos.y, 0.0f),
@@ -601,7 +601,7 @@ static CONSOLELINE* GetLineAtMousePosition(float y) {
     return NULL;
 }
 
-// OFFSET: #0x00764800
+// OFFSET: 0x0060F4E0
 static void PasteInInputLine(const char* text) {
     int32_t length = SStrLen(text);
 

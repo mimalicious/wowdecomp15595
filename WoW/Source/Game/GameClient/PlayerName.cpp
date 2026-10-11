@@ -293,7 +293,7 @@ float PlayerNameComputeScale(CGObject_C* object) {
     return height * 0.25f * 1.5f;
 }
 
-// OFFSET: #0x007E52A0
+// OFFSET: 0x004E0770
 static uint8_t PlayerNameIconAlpha(const C3Vector& position) {
     CGCamera* camera = CGWorldFrame::s_currentWorldFrame->m_camera;
 

@@ -373,7 +373,7 @@ void CGChatBubbleFrame::ClearAll() {
     }
 }
 
-// OFFSET: #0x0056D050
+// OFFSET: 0x009F1E80
 void CGChatBubbleFrame::OnWorldLayerUpdate() {
     if (!s_chatBubbles.Head()) {
         return;

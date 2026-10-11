@@ -8283,7 +8283,7 @@ void GuildCharterTurnInCallback(int32_t id, const WOWGUID& guid, void* param, bo
     }
 }
 
-// OFFSET: #0x006DD3A0
+// OFFSET: 0x00562820
 void CGPlayer_C::TurnInGuildCharter() {
     for (uint32_t i = 23; i <= 38; i++) {
         WOWGUID guid = i < static_cast<uint32_t>(this->m_bag.m_numSlots) ? this->m_bag.m_slots[i] : WOWGUID();

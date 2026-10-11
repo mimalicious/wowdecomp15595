@@ -876,7 +876,7 @@ CGCalendarEvent::CGCalendarEvent() {
     this->Clear();
 }
 
-// OFFSET: #0x005F2A20
+// OFFSET: 0x00A0C840
 CGCalendarEvent::CGCalendarEvent(WOWGUID guid, uint8_t level, int32_t calendarType) {
     this->Clear();
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();

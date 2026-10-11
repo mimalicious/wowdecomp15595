@@ -1101,7 +1101,7 @@ void RequestListPendingSales() {
     CGAuctionHouse::m_lastQueryTime[2] = FrameTime::GetCurTimeMs();
 }
 
-// OFFSET: #0x0059CE50
+// OFFSET: 0x00973F20
 void BidderListItems(int32_t page) {
     if (!CGAuctionHouse::m_canGetBidderList) {
         return;
@@ -1170,7 +1170,7 @@ void CGAuctionHouse::SortBidderList(int32_t column) {
     CGAuctionHouse::ApplyBidderSort();
 }
 
-// OFFSET: #0x0059D0B0
+// OFFSET: 0x00977350
 bool CGAuctionHouse::IsSellItemValid(CGItem_C* item, int32_t showError) {
     UIErrors error;
     WOWGUID none = WOWGUID();

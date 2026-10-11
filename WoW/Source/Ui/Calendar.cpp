@@ -2335,7 +2335,7 @@ void CGCalendar::Invite(const char* name) {
     }
 }
 
-// OFFSET: #0x005BC3E0
+// OFFSET: 0x009AF5B0
 void CGCalendar::InviteRSVP(uint32_t status) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

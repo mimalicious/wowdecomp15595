@@ -65,7 +65,7 @@ static void ConvertNumber(CMDDEF* ptr, const char* string, int32_t* datachars) {
     }
 }
 
-// OFFSET: #0x00772C20
+// OFFSET: 0x004B6700
 static void ConvertString(CMDDEF* ptr, const char* string, int32_t* datachars) {
     *datachars = SStrLen(string);
 
