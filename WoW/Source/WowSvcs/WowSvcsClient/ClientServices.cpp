@@ -926,9 +926,17 @@ void ClientServices::LoginServerStatus(LOGIN_STATE state, LOGIN_RESULT result, c
     CVar::DeleteAccountCVars();
 }
 
-// OFFSET: #0x00406F40
+// OFFSET: 0x004085D0
 void ClientServices::SendPacket(CDataStore* msg) {
     StaticSingleton<CommandManager>::Instance()->m_connection->Send(msg, CONNECTION_ROUTED);
+}
+
+// OFFSET: 0x00408680
+void ClientServices::SendPacket(JamClientMessage* msg) {
+    CDataStore store;
+    msg->Put(&store);
+    store.Finalize();
+    StaticSingleton<CommandManager>::Instance()->m_connection->Send(&store, CONNECTION_ROUTED);
 }
 
 // OFFSET: 0x004D1970/0x14010E9D0

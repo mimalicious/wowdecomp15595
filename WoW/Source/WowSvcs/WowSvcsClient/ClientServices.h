@@ -110,6 +110,7 @@ class ClientServices : public LoginResponse {
     static void ClearMessageHandler(NETMESSAGE msgId);
     static void Send2(CDataStore* msg);
     static void SendPacket(CDataStore* msg);
+    static void SendPacket(JamClientMessage* msg);
     static ClientConnection* Connection();
     static void Destroy();
     static void ConnectToSelectedServer();

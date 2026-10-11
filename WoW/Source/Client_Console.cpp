@@ -1,4 +1,5 @@
 #include <cstdint>
+#include "WoW/Source/JamClientAutoCode/JamPlayerMove.h"
 #include "Client.h"
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
@@ -264,11 +265,7 @@ int32_t CCommand_SetRawPos(const char* command, const char* arguments) {
     SStrTokenize(&arguments, token, sizeof(token), whitespace, NULL);
     float facing = token[0] ? SStrToFloat(token) * 0.017453292f : player->GetRawFacing();
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_MOVE_SET_RAW_POSITION));
-    msg << rawPosition;
-    msg.Put(facing);
-    msg.Finalize();
+    PlayerMoveSetRawPosition msg(rawPosition, facing);
     ClientServices::SendPacket(&msg);
     return 1;
 }

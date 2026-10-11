@@ -366,12 +366,11 @@ static int32_t Script_RemoveGlyphFromSocket(lua_State* L) {
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (index < 6 && player && player->m_player->m_playerFieldGlyphSlots1[index]) {
-        CDataStore msg;
-        msg.Put(static_cast<uint32_t>(CMSG_REMOVE_GLYPH));
-        msg.Put(index);
-        msg.Finalize();
-        ClientServices::Send2(&msg);
+    if (index < 9 && player && player->m_player->m_playerFieldGlyphSlots1[index]) {
+        Spell_C_ClickSpell(CGGlyphInfo::s_clearGlyphSpell, NULL, WOWGUID::Make(0), 0, 0);
+        Spell_C_HandleGlyphClick(index);
+        CGGlyphInfo::s_selectedGlyph = -1;
+        FrameScript_SignalEvent(SCRIPT_EVENT_USE_GLYPH, NULL);
     }
 
     return 0;
