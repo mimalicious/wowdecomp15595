@@ -126,7 +126,7 @@ class SI3 {
     static int32_t OnFocusChanged(const void* data, void* param);
     static void OverrideZoneSounds();
     static void PlayAIMusic(int32_t soundKitID);
-    static void PlayFoleySound(uint32_t materialID, const C3Vector& position, int32_t self);
+    static void PlayFoleySound(uint32_t materialID, const C3Vector& position, int32_t self, void* unit);
     static void PlayFootstepSound(int32_t footstepID, const C3Vector* position, uint32_t terrainType, int32_t splash, int32_t loud, CGObject_C* object);
     static void PlayHitSound(const CGUnitVirtualItem* weapon, uint32_t impactType, int32_t crit, const C3Vector& position, int32_t self);
     static void PlayItemSound(int32_t type, const CGItem_C* item);

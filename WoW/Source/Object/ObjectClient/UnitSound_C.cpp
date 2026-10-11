@@ -173,7 +173,7 @@ void CGUnit_C::PlayFidgetSound(uint32_t index) {
 // OFFSET: 0x0060C3F0
 void CGUnit_C::PlayFoleySound() {
     if (SI3::sm_pCVar_Sound_EnableArmorFoleySoundForOthers && SI3::sm_pCVar_Sound_EnableArmorFoleySoundForOthers->m_intValue) {
-        SI3::PlayFoleySound(this->m_modelData->m_foleyMaterialID, this->GetPosition(), 0);
+        SI3::PlayFoleySound(this->m_modelData->m_foleyMaterialID, this->GetPosition(), 0, this);
     }
 }
 
@@ -557,7 +557,7 @@ void CGUnit_C::HandleFootfallAnimEvent(const C3Vector& position) {
     }
 }
 
-// INLINED
+// OFFSET: 0x0060C0B0
 int32_t CheckUnitSoundTimer(uint32_t soundType) {
     if (soundType == 5) {
         uint32_t now = FrameTime::GetCurTimeMs();

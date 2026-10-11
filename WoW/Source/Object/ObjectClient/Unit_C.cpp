@@ -24483,3 +24483,27 @@ bool CGUnit_C::FlyingMountAllowed(bool checkContinent) const {
 
     return true;
 }
+
+// OFFSET: [0x009FCE20]
+int32_t CGUnit_C::IsSolidSelectable() const {
+    return 1;
+}
+
+// OFFSET: 0x005D4E10/0x14024F2A0
+void CGUnit_C::OnInteract() {
+    this->OnRightClick(false);
+}
+
+// OFFSET: [0x00A3AA30]
+bool CGUnit_C::IsTransport() const {
+    return true;
+}
+
+// OFFSET: 0x005EB640
+int32_t CGUnit_C::IsPointInside(const C3Vector& point) const {
+    return 1;
+}
+
+// OFFSET: [0x00841AE0]
+void CGUnit_C::GetComText(char* buffer, uint32_t size) const {
+}

@@ -120,7 +120,7 @@ void SI3::PlayItemSound(int32_t type, int32_t displayID) {
 }
 
 // OFFSET: 0x0062C500/0x1402BFCD0
-void SI3::PlayFoleySound(uint32_t materialID, const C3Vector& position, int32_t self) {
+void SI3::PlayFoleySound(uint32_t materialID, const C3Vector& position, int32_t self, void* unit) {
     MaterialRec* material = g_materialDB.GetRecord(materialID);
 
     if (!material || !material->m_foleySoundID) {
