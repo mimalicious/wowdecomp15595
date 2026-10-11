@@ -115,7 +115,7 @@ C3Vector CRandom::C3Vector_(CRndSeed& seed) {
     return C3Vector(c * r, r * s, z);
 }
 
-// OFFSET: #0x00982310
+// INLINED
 float __stdcall CRandom::ufloat_(float range, CRndSeed& seed) {
     return CRandom::ufloat_(seed) * range;
 }

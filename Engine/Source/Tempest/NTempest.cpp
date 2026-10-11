@@ -60,7 +60,7 @@ float NTempest::Distance(const CAaBox& box, const C3Vector& point) {
     return sqrt(dy * dy + (x - point.x) * (x - point.x) + (z - point.z) * (z - point.z));
 }
 
-// OFFSET: #0x007B4830
+// INLINED
 float NTempest::DistanceSquared(const CAaBox& box, const C2Vector& point) {
     float x = box.b.x <= point.x ? (box.t.x >= point.x ? point.x : box.t.x) : box.b.x;
     float y = box.b.y <= point.y ? (box.t.y >= point.y ? point.y : box.t.y) : box.b.y;
@@ -68,7 +68,7 @@ float NTempest::DistanceSquared(const CAaBox& box, const C2Vector& point) {
     return (x - point.x) * (x - point.x) + dy * dy;
 }
 
-// OFFSET: #0x007B48C0
+// INLINED
 float NTempest::DistanceSquared(const CAaBox& box, const C3Vector& point) {
     float x = box.b.x <= point.x ? (box.t.x >= point.x ? point.x : box.t.x) : box.b.x;
     float y = box.b.y <= point.y ? (box.t.y >= point.y ? point.y : box.t.y) : box.b.y;

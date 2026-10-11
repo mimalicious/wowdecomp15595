@@ -107,7 +107,7 @@ C33Matrix operator*(const C33Matrix& l, const C33Matrix& r) {
     return result;
 }
 
-// OFFSET: #0x004C5430
+// INLINED
 C33Matrix C33Matrix::Adjoint() const {
     C33Matrix result;
     result.a0 = this->b1 * this->c2 - this->c1 * this->b2;
@@ -279,7 +279,7 @@ void C33Matrix::Rotate(float angle, const C3Vector& axis, bool normalized) {
     *this = Rotation(angle, axis, normalized) * *this;
 }
 
-// OFFSET: #0x004C1D40
+// INLINED
 C33Matrix::C33Matrix(float a0, float a1, float a2, float b0, float b1, float b2, float c0, float c1, float c2) {
     this->a0 = a0;
     this->a1 = a1;
@@ -349,7 +349,7 @@ void C33Matrix::RotateAroundZ(float angle) {
     *this = rotation * *this;
 }
 
-// OFFSET: #0x005FED20
+// INLINED
 C3Vector operator*(const C3Vector& v, const C33Matrix& m) {
     C3Vector result;
     result.x = m.b0 * v.y + m.c0 * v.z + v.x * m.a0;

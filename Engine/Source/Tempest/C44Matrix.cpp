@@ -46,7 +46,7 @@ C44Matrix::C44Matrix(float a0, float a1, float a2, float a3, float b0, float b1,
     this->d3 = d3;
 }
 
-// OFFSET: #0x0057C2A0
+// INLINED
 void C44Matrix::Identity() {
     this->d3 = 1.0f;
     this->c2 = 1.0f;
@@ -152,7 +152,7 @@ void C44Matrix::Scale(float scale) {
     this->c2 = scale * this->c2;
 }
 
-// OFFSET: #0x004C1C40
+// INLINED
 void C44Matrix::FromQuaternion(const C4Quaternion& q, C44Matrix& m) {
     float x2 = q.x * 2.0f;
     float y2 = q.y * 2.0f;
@@ -211,7 +211,7 @@ C44Matrix::C44Matrix(const C4Quaternion& q) {
     FromQuaternion(q, *this);
 }
 
-// OFFSET: #0x004C1E60
+// INLINED
 C44Matrix operator+(const C44Matrix& l, const C44Matrix& r) {
     C44Matrix result;
     result.a0 = l.a0 + r.a0;
@@ -256,7 +256,7 @@ C44Matrix operator*(const C44Matrix& l, const C44Matrix& r) {
     return result;
 }
 
-// OFFSET: #0x004C2120
+// INLINED
 C44Matrix operator*(const C44Matrix& l, float s) {
     C44Matrix result;
     result.a0 = l.a0 * s;
@@ -288,7 +288,7 @@ C3Vector operator*(const C3Vector& v, const C44Matrix& m) {
     return result;
 }
 
-// OFFSET: #0x004C2270
+// INLINED
 C4Vector operator*(const C4Vector& v, const C44Matrix& m) {
     C4Vector result;
     result.x = m.d0 * v.w + m.b0 * v.y + m.c0 * v.z + v.x * m.a0;
@@ -499,7 +499,7 @@ void C44Matrix::AffineInvertInPlace(float scale) {
     this->InvertTranslation();
 }
 
-// OFFSET: #0x004C31B0
+// INLINED
 C44Matrix C44Matrix::RotationAroundX(float angle) {
     float c;
     float s;
@@ -525,7 +525,7 @@ C44Matrix C44Matrix::RotationAroundX(float angle) {
     return result;
 }
 
-// OFFSET: #0x004C3220
+// INLINED
 C44Matrix C44Matrix::RotationAroundY(float angle) {
     float c;
     float s;
@@ -644,7 +644,7 @@ C44Matrix C44Matrix::Rotation(float angle, const C3Vector& axis, bool normalized
     return result;
 }
 
-// OFFSET: #0x0057C2E0
+// INLINED
 C3Vector TransformDirection(const C3Vector& v, const C44Matrix& m) {
     C3Vector result;
     result.x = m.c0 * v.z + m.b0 * v.y + v.x * m.a0;
@@ -673,7 +673,7 @@ C44Matrix& C44Matrix::operator=(const C4Quaternion& q) {
     return *this;
 }
 
-// OFFSET: #0x004C2210
+// INLINED
 C3Vector operator*(const C44Matrix& m, const C3Vector& v) {
     C3Vector result;
     result.x = m.a2 * v.z + m.a1 * v.y + m.a0 * v.x + m.a3;

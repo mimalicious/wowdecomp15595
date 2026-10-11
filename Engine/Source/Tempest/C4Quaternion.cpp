@@ -164,7 +164,7 @@ void C4Quaternion::FromRotationMatrix(const C44Matrix& m) {
     FromTransposedRotationMatrix(*this, m.Transpose());
 }
 
-// OFFSET: #0x004F4320
+// INLINED
 C4Quaternion operator*(const C4Quaternion& l, const C4Quaternion& r) {
     C4Quaternion result;
     result.x = l.w * r.x + r.z * l.y + r.w * l.x - l.z * r.y;

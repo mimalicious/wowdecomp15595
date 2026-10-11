@@ -385,7 +385,7 @@ int32_t fnotequalz(float a, float b, float z) {
     return !(fabsf(a - b) < z);
 }
 
-// OFFSET: #0x00482940
+// INLINED
 float fclamp(float value, float min, float max) {
     if (value < min) {
         return min;
@@ -404,7 +404,7 @@ int32_t RoundToInt64(float value) {
     return static_cast<uint32_t>(value + 0.5f);
 }
 
-// OFFSET: #0x00497A90
+// INLINED
 void ClampInPlace(float& value, float min, float max) {
     value = min > value ? min : (max <= value ? max : value);
 }
@@ -589,7 +589,7 @@ CSoftFloat CSoftFloat::Floor(const CSoftFloat& value) {
     return value;
 }
 
-// OFFSET: #0x0095D500
+// OFFSET: 0x00B2F060
 CSoftFloat CSoftFloat::Ceil(const CSoftFloat& value) {
     uint32_t bits = value.m_bits;
     int32_t exp = static_cast<int32_t>((bits >> 23) & 0xFF) - 127;

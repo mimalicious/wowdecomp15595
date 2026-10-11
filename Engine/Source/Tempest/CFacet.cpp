@@ -1,6 +1,6 @@
 #include "Engine/Source/Tempest/CFacet.h"
 
-// OFFSET: #0x005FED80
+// INLINED
 CFacet::CFacet(float value) {
     this->plane.n.x = 0.0f;
     this->plane.n.y = 0.0f;

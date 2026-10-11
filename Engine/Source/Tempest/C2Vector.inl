@@ -1,4 +1,4 @@
-// OFFSET: #0x004079C0
+// INLINED
 inline C2Vector::C2Vector() {
     this->x = 0.0f;
     this->y = 0.0f;

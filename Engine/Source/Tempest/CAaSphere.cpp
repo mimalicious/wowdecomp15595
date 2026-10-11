@@ -2,12 +2,12 @@
 #include <cstdint>
 #include "Engine/Source/Tempest/CAaSphere.h"
 
-// OFFSET: #0x006FC1E0
+// INLINED
 CAaSphere::CAaSphere() {
     this->r = 0.0f;
 }
 
-// OFFSET: #0x007FA140
+// INLINED
 CAaBox CAaSphere::Box() const {
     CAaBox result;
     result.b.x = this->c.x - this->r;

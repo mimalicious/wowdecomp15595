@@ -99,7 +99,7 @@ C3Vector::EAxis C3Vector::MinorAxis() const {
     return y > z ? AXIS_Z : AXIS_Y;
 }
 
-// OFFSET: #0x004C3650
+// INLINED
 C3Vector operator%(const C3Vector& l, const C2Vector& r) {
     C3Vector result;
     result.x = -(r.y * l.z);
@@ -114,12 +114,12 @@ float C3Vector::Distance(const C3Vector& a, const C3Vector& b) {
     return sqrt((a - b).SquaredMag());
 }
 
-// OFFSET: #0x007E2CE0
+// INLINED
 void C3Vector::Minimize(const C3Vector& v) {
     *this = C3Vector::Min(*this, v);
 }
 
-// OFFSET: #0x007E2D20
+// INLINED
 void C3Vector::Maximize(const C3Vector& v) {
     *this = C3Vector::Max(*this, v);
 }

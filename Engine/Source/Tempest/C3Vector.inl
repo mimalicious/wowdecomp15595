@@ -12,7 +12,7 @@ inline C3Vector::C3Vector(float x, float y, float z) {
     this->z = z;
 }
 
-// OFFSET: #0x004C1D20
+// INLINED
 inline C3Vector C3Vector::operator-() const {
     C3Vector result;
     result.x = -this->x;
@@ -21,7 +21,7 @@ inline C3Vector C3Vector::operator-() const {
     return result;
 }
 
-// OFFSET: #0x00407990
+// INLINED
 inline C3Vector operator+(const C3Vector& l, const C3Vector& r) {
     C3Vector result;
     result.x = l.x + r.x;
@@ -30,7 +30,7 @@ inline C3Vector operator+(const C3Vector& l, const C3Vector& r) {
     return result;
 }
 
-// OFFSET: #0x00482970
+// INLINED
 inline C3Vector& C3Vector::operator+=(const C3Vector& v) {
     this->x = v.x + this->x;
     this->y = v.y + this->y;
@@ -38,7 +38,7 @@ inline C3Vector& C3Vector::operator+=(const C3Vector& v) {
     return *this;
 }
 
-// OFFSET: #0x004829A0
+// INLINED
 inline C3Vector operator-(const C3Vector& l, const C3Vector& r) {
     C3Vector result;
     result.x = l.x - r.x;
@@ -47,7 +47,7 @@ inline C3Vector operator-(const C3Vector& l, const C3Vector& r) {
     return result;
 }
 
-// OFFSET: #0x004C35A0
+// INLINED
 inline C3Vector& C3Vector::operator*=(float s) {
     this->x = this->x * s;
     this->y = this->y * s;
@@ -55,7 +55,7 @@ inline C3Vector& C3Vector::operator*=(float s) {
     return *this;
 }
 
-// OFFSET: #0x004C35D0
+// INLINED
 inline C3Vector& C3Vector::operator/=(float s) {
     float scale = 1.0f / s;
     this->x = this->x * scale;
@@ -64,7 +64,7 @@ inline C3Vector& C3Vector::operator/=(float s) {
     return *this;
 }
 
-// OFFSET: #0x004BEC40
+// INLINED
 inline C3Vector operator*(const C3Vector& l, float r) {
     C3Vector result;
     result.x = l.x * r;
@@ -73,7 +73,7 @@ inline C3Vector operator*(const C3Vector& l, float r) {
     return result;
 }
 
-// OFFSET: #0x00568680
+// INLINED
 inline C3Vector& C3Vector::operator-=(const C3Vector& v) {
     this->x = this->x - v.x;
     this->y = this->y - v.y;
@@ -86,12 +86,12 @@ inline float C3Vector::SquaredMag() const {
     return this->y * this->y + this->x * this->x + this->z * this->z;
 }
 
-// OFFSET: #0x00714D10
+// INLINED
 inline C3Vector C3Vector::Min(const C3Vector& a, const C3Vector& b) {
     return C3Vector(a.x < b.x ? a.x : b.x, a.y < b.y ? a.y : b.y, a.z < b.z ? a.z : b.z);
 }
 
-// OFFSET: #0x00714D70
+// INLINED
 inline C3Vector C3Vector::Max(const C3Vector& a, const C3Vector& b) {
     return C3Vector(a.x > b.x ? a.x : b.x, a.y > b.y ? a.y : b.y, a.z > b.z ? a.z : b.z);
 }

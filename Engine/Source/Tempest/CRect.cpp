@@ -1,23 +1,23 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// OFFSET: #0x0047FC40
+// INLINED
 bool CRect::ContainsPoint(const C2Vector& point) const {
     return this->minX < point.x && this->maxX > point.x && this->minY < point.y && this->maxY > point.y;
 }
 
-// OFFSET: #0x00488D40
+// INLINED
 bool CRect::IsPointInside(const C2Vector& point) const {
     return this->minX <= point.x && this->maxX >= point.x && this->minY <= point.y && this->maxY >= point.y;
 }
 
-// OFFSET: #0x0048EDE0
+// INLINED
 CRect CRect::operator&=(const CRect& r) {
     *this = *this & r;
     return *this;
 }
 
-// OFFSET: #0x0048ED60
+// INLINED
 CRect operator&(const CRect& l, const CRect& r) {
     float maxX = r.maxX <= l.maxX ? r.maxX : l.maxX;
     float maxY = r.maxY <= l.maxY ? r.maxY : l.maxY;
@@ -31,7 +31,7 @@ CRect operator&(const CRect& l, const CRect& r) {
     return result;
 }
 
-// OFFSET: #0x0078F2F0
+// INLINED
 CRect operator|(const CRect& l, const CRect& r) {
     float maxX = r.maxX >= l.maxX ? r.maxX : l.maxX;
     float maxY = r.maxY >= l.maxY ? r.maxY : l.maxY;
@@ -45,7 +45,7 @@ CRect operator|(const CRect& l, const CRect& r) {
     return result;
 }
 
-// OFFSET: #0x007A6DA0
+// INLINED
 CRect operator+(const CRect& l, const CRect& r) {
     CRect result;
     result.minY = l.minY + r.minY;
@@ -55,7 +55,7 @@ CRect operator+(const CRect& l, const CRect& r) {
     return result;
 }
 
-// OFFSET: #0x007A6DD0
+// INLINED
 CRect operator/(const CRect& l, const CRect& r) {
     CRect result;
     result.minY = l.minY / r.minY;

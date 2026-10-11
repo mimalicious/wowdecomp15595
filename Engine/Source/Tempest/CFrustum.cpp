@@ -158,7 +158,7 @@ void CFrustum::Transform(const C44Matrix& m) {
     this->CalcPlanesFromCorners();
 }
 
-// OFFSET: #0x00983FB0
+// INLINED
 uint32_t CFrustum::Cull(const C3Vector& center, float radius) {
     CAaSphere sphere;
     sphere.c = center;
