@@ -33,6 +33,10 @@ void UserClientEnumCharacters::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x502));
 }
 
+// OFFSET: 0x0066D3A0
+UserClientSupportTicketSubmitComplaint::UserClientSupportTicketSubmitComplaint() {
+}
+
 // PROVEN: 71643081 IDENTICAL/NONE
 // OFFSET: 0x0066D6F0
 UserClientPlayerLogin::UserClientPlayerLogin(uint64_t guid) {
@@ -46,6 +50,10 @@ UserClientPlayerLogin::~UserClientPlayerLogin() {
 
 // OFFSET: 0x0066DE90/0x140315090
 UserClientAcceptWargameInvite::UserClientAcceptWargameInvite() {
+}
+
+// OFFSET: 0x0066DEA0
+UserClientSupportTicketSubmitComplaint::~UserClientSupportTicketSubmitComplaint() {
 }
 
 // PROVEN: 54ede3e3 IDENTICAL/NONE
@@ -169,6 +177,55 @@ void UserClientAcceptWargameInvite::Put(CDataStore* msg) {
     if (this->m_opposingPartyMemberGUID[4]) {
         msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[4] ^ 1));
     }
+}
+
+// OFFSET: 0x0066FFA0
+void UserClientSupportTicketSubmitComplaint::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2501));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_targetCharacterGUID[5] != 0);
+    bits.WriteBit(this->m_targetCharacterGUID[0] != 0);
+    bits.WriteBit(this->m_targetCharacterGUID[1] != 0);
+    bits.WriteBits<12>(strlen(this->m_note));
+    bits.WriteBit(this->m_targetCharacterGUID[3] != 0);
+    bits.WriteBit(this->m_targetCharacterGUID[2] != 0);
+    bits.WriteBit(this->m_targetCharacterGUID[4] != 0);
+    bits.WriteBit(this->m_targetCharacterGUID[7] != 0);
+    bits.WriteBits<4>(this->m_complaintType);
+    bits.WriteBit(this->m_targetCharacterGUID[6] != 0);
+    bits.Flush();
+
+    if (this->m_targetCharacterGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[3] ^ 1));
+    }
+    if (this->m_targetCharacterGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[5] ^ 1));
+    }
+    if (this->m_targetCharacterGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[1] ^ 1));
+    }
+    if (this->m_targetCharacterGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[2] ^ 1));
+    }
+    if (this->m_targetCharacterGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[6] ^ 1));
+    }
+    if (this->m_targetCharacterGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[0] ^ 1));
+    }
+
+    msg->PutData(this->m_note, strlen(this->m_note));
+
+    if (this->m_targetCharacterGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[7] ^ 1));
+    }
+    if (this->m_targetCharacterGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetCharacterGUID[4] ^ 1));
+    }
+
+    this->m_header.Put(msg);
+    this->m_chatLog.Put(msg);
 }
 
 // PROVEN: bb06eec1 IDENTICAL/NONE
@@ -2243,32 +2300,32 @@ void UserClientChatChannelAnnouncements::Put(CDataStore* msg) {
 }
 
 // OFFSET: 0x0069E4D0/0x14034ADD0
-UserClientGetdeathbindzone::UserClientGetdeathbindzone(uint32_t a1, bool a2, bool a3, const char* a4, const char* a5) {
-    this->unk_0011 = a3;
+UserClientChatJoinChannel::UserClientChatJoinChannel(uint32_t channelID, bool a2, bool a3, const char* channelName, const char* password) {
     this->unk_0010 = a2;
-    SStrCopy(this->unk_0012, a4, sizeof(this->unk_0012));
-    this->unk_0094 = a1;
-    SStrCopy(this->unk_0098, a5, sizeof(this->unk_0098));
+    this->unk_0011 = a3;
+    SStrCopy(this->m_channelName, channelName, sizeof(this->m_channelName));
+    this->m_channelID = channelID;
+    SStrCopy(this->m_password, password, sizeof(this->m_password));
 }
 
 // OFFSET: 0x0069CEA0/0x1403493C0
-UserClientGetdeathbindzone::~UserClientGetdeathbindzone() {
+UserClientChatJoinChannel::~UserClientChatJoinChannel() {
 }
 
 // OFFSET: 0x0069F170/0x14034BCC0
-void UserClientGetdeathbindzone::Put(CDataStore* msg) {
+void UserClientChatJoinChannel::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x156));
-    msg->Put(this->unk_0094);
+    msg->Put(this->m_channelID);
 
     JamBitWriter bits(msg);
     bits.WriteBit(this->unk_0011);
     bits.WriteBit(this->unk_0010);
-    bits.WriteBits<8>(strlen(this->unk_0012));
-    bits.WriteBits<8>(strlen(this->unk_0098));
+    bits.WriteBits<8>(strlen(this->m_channelName));
+    bits.WriteBits<8>(strlen(this->m_password));
     bits.Flush();
 
-    msg->PutData(this->unk_0012, strlen(this->unk_0012));
-    msg->PutData(this->unk_0098, strlen(this->unk_0098));
+    msg->PutData(this->m_channelName, strlen(this->m_channelName));
+    msg->PutData(this->m_password, strlen(this->m_password));
 }
 
 // OFFSET: 0x0069E200/0x14034AA90

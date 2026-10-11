@@ -391,6 +391,33 @@ struct JamCliCUFProfile {
     JamCliCUFProfile();
 };
 
+struct JamCliSupportTicketChatLine {
+    /* 0000 */ uint32_t m_timestamp;
+    /* 0004 */ char m_text[3000];
+
+    JamCliSupportTicketChatLine& operator=(const JamCliSupportTicketChatLine& source);
+};
+
+struct JamCliSupportTicketChatLog {
+    /* 0000 */ TSGrowableArray<JamCliSupportTicketChatLine> m_lines;
+    /* 0010 */ bool m_hasReportLineIndex;
+    /* 0014 */ uint32_t m_reportLineIndex;
+
+    JamCliSupportTicketChatLog();
+    ~JamCliSupportTicketChatLog();
+    void Put(CDataStore* msg) const;
+};
+
+struct JamCliSupportTicketHeader {
+    /* 0000 */ uint32_t m_mapID;
+    /* 0004 */ C3Vector m_position;
+    /* 0010 */ float m_facing;
+
+    JamCliSupportTicketHeader();
+    ~JamCliSupportTicketHeader();
+    void Put(CDataStore* msg) const;
+};
+
 struct JamAccountInfoData {
     /* 0000 */ uint32_t unk_0000;
     /* 0004 */ uint32_t unk_0004;

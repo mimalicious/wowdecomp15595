@@ -728,18 +728,18 @@ class UserClientChatChannelAnnouncements : public JamClientMessage {
     ~UserClientChatChannelAnnouncements();
 };
 
-class UserClientGetdeathbindzone : public JamClientMessage {
+class UserClientChatJoinChannel : public JamClientMessage {
     public:
     /* 0010 */ bool unk_0010;
     /* 0011 */ bool unk_0011;
-    /* 0012 */ char unk_0012[128];
-    /* 0094 */ uint32_t unk_0094;
-    /* 0098 */ char unk_0098[128];
+    /* 0012 */ char m_channelName[128];
+    /* 0094 */ uint32_t m_channelID;
+    /* 0098 */ char m_password[128];
 
     void Put(CDataStore* msg) override;
 
-    UserClientGetdeathbindzone(uint32_t a1, bool a2, bool a3, const char* a4, const char* a5);
-    ~UserClientGetdeathbindzone();
+    UserClientChatJoinChannel(uint32_t channelID, bool a2, bool a3, const char* channelName, const char* password);
+    ~UserClientChatJoinChannel();
 };
 
 class UserClientMessageChatAfk : public JamClientMessage {
@@ -1160,6 +1160,20 @@ class UserClientAcceptWargameInvite : public JamClientMessage {
 
     UserClientAcceptWargameInvite();
     ~UserClientAcceptWargameInvite();
+};
+
+class UserClientSupportTicketSubmitComplaint : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_targetCharacterGUID[8];
+    /* 0018 */ char m_note[1024];
+    /* 0418 */ JamCliSupportTicketChatLog m_chatLog;
+    /* 0430 */ JamCliSupportTicketHeader m_header;
+    /* 0444 */ uint32_t m_complaintType;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSupportTicketSubmitComplaint();
+    ~UserClientSupportTicketSubmitComplaint();
 };
 
 class UserClientBattlefieldPort : public JamClientMessage {

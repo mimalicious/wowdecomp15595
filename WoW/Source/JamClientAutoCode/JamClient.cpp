@@ -8,6 +8,61 @@
 JamGuildRewardItem::~JamGuildRewardItem() {
 }
 
+// OFFSET: [0x00401000]
+JamCliSupportTicketHeader::~JamCliSupportTicketHeader() {
+}
+
+// OFFSET: 0x00696AB0
+void JamCliSupportTicketHeader::Put(CDataStore* msg) const {
+    msg->Put(this->m_position.y);
+    msg->Put(this->m_position.z);
+    msg->Put(this->m_position.x);
+    msg->Put(this->m_mapID);
+    msg->Put(this->m_facing);
+}
+
+// OFFSET: 0x00696E60/0x1403424C0
+JamCliSupportTicketHeader::JamCliSupportTicketHeader() {
+}
+
+// OFFSET: 0x00696FD0
+JamCliSupportTicketChatLine& JamCliSupportTicketChatLine::operator=(const JamCliSupportTicketChatLine& source) {
+    SStrCopy(this->m_text, source.m_text, sizeof(this->m_text));
+    this->m_timestamp = source.m_timestamp;
+    return *this;
+}
+
+// OFFSET: 0x00697DB0
+void JamCliSupportTicketChatLog::Put(CDataStore* msg) const {
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_hasReportLineIndex);
+    bits.WriteBits<22>(this->m_lines.m_count);
+
+    for (uint32_t i = 0; i < this->m_lines.m_count; i++) {
+        bits.WriteBits<13>(strlen(this->m_lines.m_data[i].m_text));
+    }
+
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_lines.m_count; i++) {
+        msg->Put(this->m_lines.m_data[i].m_timestamp);
+        msg->PutData(this->m_lines.m_data[i].m_text, strlen(this->m_lines.m_data[i].m_text));
+    }
+
+    if (this->m_hasReportLineIndex) {
+        msg->Put(this->m_reportLineIndex);
+    }
+}
+
+// OFFSET: 0x006981E0
+JamCliSupportTicketChatLog::JamCliSupportTicketChatLog() {
+    this->m_hasReportLineIndex = false;
+}
+
+// OFFSET: 0x006982F0
+JamCliSupportTicketChatLog::~JamCliSupportTicketChatLog() {
+}
+
 // OFFSET: 0x006A2770
 JamGuildRewardItem& JamGuildRewardItem::operator=(const JamGuildRewardItem& other) {
     this->m_cost = other.m_cost;
