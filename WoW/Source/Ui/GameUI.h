@@ -157,17 +157,6 @@ class CGGameUI {
     static void LeaveWorld();
     static void CancelMirrorTimers();
     static void SaveSavedVariables();
-    struct THREATMAP : public TSHashObject<THREATMAP, CHashKeyGUID> {
-        /* 0020 */ TSGrowableArray<WOWGUID> m_units;
-
-        uint8_t ComputeMaxThreatLevel(const WOWGUID& guid);
-        void RemoveUnit(const WOWGUID& guid);
-        void AddUnit(const WOWGUID& guid);
-    };
-
-    static TSHashTable<THREATMAP, CHashKeyGUID> s_threatMap;
-    static void ThreatMapRemove(const WOWGUID& unit, const WOWGUID& target);
-    static void ThreatMapAdd(const WOWGUID& unit, const WOWGUID& target);
     static void UnitTooltipUpdate(const WOWGUID& guid);
     static int32_t FoundHiddenHostile();
     static void SetFoundHiddenHostile();

@@ -957,7 +957,9 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool HasAuraMatchingSpellClass(int32_t auraType, const SpellRec* spell) const;
     bool IsInMyPartyOrRaid(const CGUnit_C* unit) const;
     bool IsInMyParty(const CGUnit_C* unit) const;
-    static uint8_t GetThreatSituation(const WOWGUID& guid);
+    uint8_t GetThreatSituation();
+    void ThreatMapRemove(const WOWGUID& target);
+    void ThreatMapAdd(const WOWGUID& target);
     bool CalculateThreat(const WOWGUID& guid, uint8_t* status, uint8_t* rawPercent, float* percent, int32_t* threat);
     int32_t GetHighestThreatExcluding(const WOWGUID& guid) const;
     int32_t GetIncomingHealsFrom(const WOWGUID& healer);

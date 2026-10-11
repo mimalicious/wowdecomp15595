@@ -2514,7 +2514,13 @@ static int32_t Script_UnitThreatSituation(lua_State* L) {
             mob->CalculateThreat(guid, &status, NULL, NULL, NULL);
         }
     } else {
-        status = CGUnit_C::GetThreatSituation(guid);
+        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+        if (!unit) {
+            return 0;
+        }
+
+        status = unit->GetThreatSituation();
     }
 
     if (!status) {

@@ -1387,9 +1387,6 @@ static TSGrowableArray<NearestUnitData> s_nearestUnits;
 // STATIC: #0x00AC8050
 static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY", "INTERRUPT", "BLOCK", "EVADE", "IMMUNE", "DEFLECT" };
 
-// STATIC: #0x00BD0BD4
-TSHashTable<CGGameUI::THREATMAP, CHashKeyGUID> CGGameUI::s_threatMap;
-
 // STATIC: 0x00ED74AC
 int32_t CGGameUI::s_loadingScreen;
 
@@ -5682,115 +5679,6 @@ void CGGameUI::BreakTarget(WOWGUID guid) {
 
     if (guid == CGGameUI::m_directionalTarget) {
         CGGameUI::m_directionalTarget = WOWGUID();
-    }
-}
-
-// OFFSET: #0x00519D50
-uint8_t CGGameUI::THREATMAP::ComputeMaxThreatLevel(const WOWGUID& guid) {
-    uint8_t level = 0;
-
-    for (uint32_t i = this->m_units.Count(); i;) {
-        i--;
-
-        if (!this->m_units[i]) {
-            continue;
-        }
-
-        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_units[i], TYPEMASK_UNIT, __FILE__, __LINE__));
-
-        if (!unit) {
-            this->m_units[i] = WOWGUID();
-            continue;
-        }
-
-        uint8_t status;
-        unit->CalculateThreat(guid, &status, NULL, NULL, NULL);
-
-        if (level <= 2) {
-            if (status > level) {
-                level = status;
-            }
-        } else if (level == 4 && status == 3) {
-            level = 3;
-        }
-    }
-
-    return level;
-}
-
-// OFFSET: #0x00519CF0
-void CGGameUI::THREATMAP::RemoveUnit(const WOWGUID& guid) {
-    for (uint32_t i = this->m_units.Count(); i;) {
-        i--;
-
-        if (this->m_units[i] == guid) {
-            this->m_units[i] = WOWGUID();
-            return;
-        }
-    }
-}
-
-// OFFSET: #0x005256A0
-void CGGameUI::THREATMAP::AddUnit(const WOWGUID& guid) {
-    WOWGUID* empty = NULL;
-
-    for (uint32_t i = this->m_units.Count(); i;) {
-        i--;
-
-        if (this->m_units[i] == guid) {
-            return;
-        }
-
-        if (!this->m_units[i]) {
-            empty = &this->m_units[i];
-        }
-    }
-
-    if (!empty) {
-        empty = this->m_units.New();
-    }
-
-    *empty = guid;
-}
-
-// OFFSET: #0x0052A1A0
-uint8_t CGUnit_C::GetThreatSituation(const WOWGUID& guid) {
-    CGGameUI::THREATMAP* map = CGGameUI::s_threatMap.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
-
-    if (map) {
-        return map->ComputeMaxThreatLevel(guid);
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0052A160
-void CGGameUI::ThreatMapRemove(const WOWGUID& unit, const WOWGUID& target) {
-    CGGameUI::THREATMAP* map = CGGameUI::s_threatMap.Ptr(static_cast<uint32_t>(target.m_guid), CHashKeyGUID(target.m_guid));
-
-    if (map) {
-        map->RemoveUnit(unit);
-    }
-}
-
-// OFFSET: #0x0052B370
-void CGGameUI::ThreatMapAdd(const WOWGUID& unit, const WOWGUID& target) {
-    uint32_t hashval = static_cast<uint32_t>(target.m_guid);
-    CHashKeyGUID key(target.m_guid);
-    CGGameUI::THREATMAP* map = CGGameUI::s_threatMap.Ptr(hashval, key);
-
-    if (!map) {
-        map = CGGameUI::s_threatMap.New(hashval, key, 0, 0);
-    }
-
-    map->AddUnit(unit);
-
-    if (CGGameUI::m_threatWarningEnabled && target == ClntObjMgrGetActivePlayer()) {
-        CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-        if (player->m_unit->m_unitFieldLevel >= 14) {
-            CGTutorial::TriggerTutorial(53);
-        }
     }
 }
 

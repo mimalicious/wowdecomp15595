@@ -1257,6 +1257,24 @@ void CGUnit_C::SubtractChanneledHealPrediction(int32_t spellId, const WOWGUID& c
     }
 }
 
+// OFFSET: 0x005B5CB0
+void CGUnit_C::ThreatMapRemove(const WOWGUID& target) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(target, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return;
+    }
+
+    for (uint32_t i = unit->m_attackers.Count(); i;) {
+        i--;
+
+        if (unit->m_attackers[i] == this->m_obj->m_guid) {
+            unit->m_attackers[i] = WOWGUID();
+            return;
+        }
+    }
+}
+
 // PROVEN: ac89fbbf IDENTICAL/NONE
 // OFFSET: 0x005B68F0
 int32_t NPCFlagsHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
@@ -1495,6 +1513,35 @@ void CGUnit_C::UpdateSwimmingStatusDefault(uint32_t time, int32_t spline, float 
     }
 }
 
+// OFFSET: 0x005C3A10
+void CGUnit_C::ThreatMapAdd(const WOWGUID& target) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(target, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return;
+    }
+
+    WOWGUID* empty = NULL;
+
+    for (uint32_t i = unit->m_attackers.Count(); i;) {
+        i--;
+
+        if (unit->m_attackers[i] == this->m_obj->m_guid) {
+            return;
+        }
+
+        if (!unit->m_attackers[i]) {
+            empty = &unit->m_attackers[i];
+        }
+    }
+
+    if (!empty) {
+        empty = unit->m_attackers.New();
+    }
+
+    *empty = this->m_obj->m_guid;
+}
+
 // OFFSET: 0x005C4380/0x14023ADA0
 void CGUnit_C::PlayFlightBoundsFeedback(uint32_t time) {
     // STATIC: 0x00DD62D0
@@ -1554,6 +1601,46 @@ void CGUnit_C::PlayFlightBoundsFeedback(uint32_t time) {
 // OFFSET: 0x005CE850
 bool CGUnit_C::CheckMountRules(const SpellRec* spell, SpellCastResult* reason) {
     return this->CheckMountRules(CGUnit_C::FindMountTypeIDFromSpell(spell), reason);
+}
+
+// OFFSET: 0x005CF250/0x1402481F0
+uint8_t CGUnit_C::GetThreatSituation() {
+    uint8_t level = 0;
+
+    for (uint32_t i = this->m_attackers.Count(); i;) {
+        i--;
+
+        if (!this->m_attackers[i]) {
+            continue;
+        }
+
+        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_attackers[i], TYPEMASK_UNIT, __FILE__, __LINE__));
+
+        if (!unit) {
+            this->m_attackers[i] = WOWGUID();
+            continue;
+        }
+
+        WOWGUID guid = this->m_obj->m_guid;
+        UnitThreat* entry = unit->m_threats.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
+        uint8_t status;
+
+        if (unit->m_highestThreatGuid) {
+            status = entry ? entry->m_status : 0;
+        } else {
+            status = entry != NULL;
+        }
+
+        if (level <= 2) {
+            if (status > level) {
+                level = status;
+            }
+        } else if (level == 4 && status == 3) {
+            level = 3;
+        }
+    }
+
+    return level;
 }
 
 // PROVEN: 35e096f0 IDENTICAL/NONE
@@ -18724,7 +18811,7 @@ bool CGUnit_C::CalculateThreat(const WOWGUID& guid, uint8_t* status, uint8_t* ra
     return true;
 }
 
-// OFFSET: #0x007345C0
+// OFFSET: 0x005D75C0
 void CGUnit_C::ClearThreatList() {
     if (!this->m_threats.m_fulllist.Head()) {
         return;
@@ -18735,14 +18822,16 @@ void CGUnit_C::ClearThreatList() {
     while ((entry = this->m_threats.m_fulllist.Head())) {
         WOWGUID target = entry->m_key.m_guid;
         Script_SendUniqueSignal(target, SCRIPT_EVENT_UNIT_THREAT_SITUATION_UPDATE);
-        CGGameUI::ThreatMapRemove(this->m_obj->m_guid, target);
+        this->ThreatMapRemove(target);
         this->m_threats.Unlink(entry);
         s_unitThreatPool->Delete(entry);
     }
 
     this->m_highestThreatGuid = WOWGUID();
-    Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_THREAT_LIST_UPDATE);
-    CGGameUI::UnitTooltipUpdate(this->m_obj->m_guid);
+    WOWGUID guid = this->m_obj->m_guid;
+    Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_THREAT_LIST_UPDATE);
+    guid = this->m_obj->m_guid;
+    CGGameUI::UnitTooltipUpdate(guid);
 }
 
 // OFFSET: 0x005B0990/0x1402238E0
@@ -18765,7 +18854,7 @@ void CGUnit_C::AddWorldThreatUpdateText(int32_t oldStatus, int32_t newStatus) {
     }
 }
 
-// OFFSET: #0x007416F0
+// OFFSET: 0x005DB180
 UnitThreat* CGUnit_C::CreateThreatEntry(const WOWGUID& guid) {
     UnitThreat* entry = this->m_threats.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
@@ -18783,7 +18872,8 @@ UnitThreat* CGUnit_C::CreateThreatEntry(const WOWGUID& guid) {
         this->m_clientFlags |= 0x8;
     }
 
-    CGGameUI::ThreatMapAdd(this->m_obj->m_guid, guid);
+    this->ThreatMapAdd(guid);
+    CGGameUI::CheckThreatTutorial(guid);
     return entry;
 }
 
@@ -18932,7 +19022,7 @@ void CGUnit_C::UpdateThreat(CDataStore* msg, bool highest) {
     Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_THREAT_LIST_UPDATE);
 }
 
-// OFFSET: #0x00737750
+// OFFSET: 0x005D7490
 void CGUnit_C::RemoveThreat(const WOWGUID& guid) {
     UnitThreat* entry = this->m_threats.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
@@ -18948,7 +19038,7 @@ void CGUnit_C::RemoveThreat(const WOWGUID& guid) {
         update = true;
     }
 
-    CGGameUI::ThreatMapRemove(this->m_obj->m_guid, guid);
+    this->ThreatMapRemove(guid);
     this->m_threats.Unlink(entry);
     s_unitThreatPool->Delete(entry);
     Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_THREAT_SITUATION_UPDATE);
@@ -18957,10 +19047,12 @@ void CGUnit_C::RemoveThreat(const WOWGUID& guid) {
         this->UpdateThreatStatus();
     }
 
-    Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_THREAT_LIST_UPDATE);
+    WOWGUID self = this->m_obj->m_guid;
+    Script_SendUniqueSignal(self, SCRIPT_EVENT_UNIT_THREAT_LIST_UPDATE);
 
     if (guid == ClntObjMgrGetActivePlayer()) {
-        CGGameUI::UnitTooltipUpdate(this->m_obj->m_guid);
+        self = this->m_obj->m_guid;
+        CGGameUI::UnitTooltipUpdate(self);
     }
 }
 
