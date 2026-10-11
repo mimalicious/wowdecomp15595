@@ -3547,7 +3547,7 @@ static int32_t Script_DownloadSettings(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515900
+// OFFSET: 0x008C74D0
 static void ResurrectNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID offerer = CGPlayer_C::s_resurrectOfferer;
     NameCache* name = g_nameDBCache.GetRecord(CGPlayer_C::s_resurrectOfferer.m_guid, offerer, NULL, NULL, false);

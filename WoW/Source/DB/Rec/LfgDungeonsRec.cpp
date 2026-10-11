@@ -1,8 +1,10 @@
 #include "WoW/Source/DB/Rec/LfgDungeonsRec.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/LfgDungeonExpansionRec.h"
 #include "WoW/Source/DB/Rec/LfgDungeonGroupRec.h"
 #include "WoW/Source/DB/Rec/LfgDungeonsGroupingMapRec.h"
 #include "WoW/Source/DB/Rec/MapRec.h"
+#include "WoW/Source/Ui/LFGInfo.h"
 
 // STATIC: 0x00C236A8/0x140A189D0
 static const int32_t s_fieldOffsets[21] = { 0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80 };
@@ -70,6 +72,21 @@ bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID) const {
     }
 
     return false;
+}
+
+// OFFSET: 0x00B026F0
+bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID, int32_t expansionLevel) const {
+    if (!randomID) {
+        return false;
+    }
+
+    LfgDungeonExpansionRec* expansion = GetLfgDungeonExpansionRec(this->m_id, expansionLevel);
+
+    if (expansion) {
+        return expansion->m_randomID == randomID;
+    }
+
+    return this->IsInRandomGroup(randomID);
 }
 
 // OFFSET: 0x00B02640

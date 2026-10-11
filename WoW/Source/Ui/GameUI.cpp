@@ -8452,7 +8452,7 @@ void CGGameUI::LeaveWorld() {
     CGMinigameInfo::LeaveWorld();
     CGItemSocketInfo::LeaveWorld();
     CGLCD::LeaveWorld();
-    CGLookingForGroup::LeaveLFGSearch();
+    CGLookingForGroup::LeaveWorld();
     g_capturePointUIManager.Clear();
     CGBarberShop::LeaveWorld();
     CGGMSurveyInfo::ShutdownGame();

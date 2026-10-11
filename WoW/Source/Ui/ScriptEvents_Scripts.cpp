@@ -3336,7 +3336,6 @@ static int32_t Script_GetItemStats(lua_State* L) {
 
     const char* link = lua_tolstring(L, 1, NULL);
     CGItemStatsSummary summary;
-    summary.Clear();
 
     if (!summary.Create(link)) {
         return 0;
@@ -3361,9 +3360,7 @@ static int32_t Script_GetItemStatDelta(lua_State* L) {
     const char* link1 = lua_tolstring(L, 1, NULL);
     const char* link2 = lua_tolstring(L, 2, NULL);
     CGItemStatsSummary first;
-    first.Clear();
     CGItemStatsSummary second;
-    second.Clear();
 
     if (!first.Create(link1) || !second.Create(link2)) {
         return 0;

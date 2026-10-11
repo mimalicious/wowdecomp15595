@@ -234,6 +234,7 @@ class CGBattlefieldInfo {
     static void ShutdownGame();
     static void EnterWorld();
     static void LeaveWorld();
+    static WOWGUID GetVehicleGuid(uint32_t index);
     static void RemoveStatus(const JamClientRideTicket& ticket);
     static void AddArenaOpponentToSlot(const WOWGUID& guid, int32_t slot);
     static void InitializeGame();

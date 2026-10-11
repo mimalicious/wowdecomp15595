@@ -955,6 +955,11 @@ void __stdcall CGTooltip::FormatStringForXML(const char* text, char* buffer) {
     buffer[out] = '\0';
 }
 
+// OFFSET: 0x0044BC70
+CGItemStatsSummary::CGItemStatsSummary() {
+    this->Clear();
+}
+
 // OFFSET: 0x00465BD0/0x140079240
 void CGItemStatsSummary::Clear() {
     memset(this->m_stats, 0, sizeof(this->m_stats));
@@ -1761,7 +1766,6 @@ void CGItemStatsSummary::ScanEnchantSpells(const ItemRecSparse* item) {
 // OFFSET: 0x00468BA0/0x14007CCF0
 CGItemStatsSummary CGItemStatsSummary::operator-(const CGItemStatsSummary& other) const {
     CGItemStatsSummary result;
-    result.Clear();
 
     for (uint32_t i = 0; i < sizeof(this->m_stats) / sizeof(this->m_stats[0]); i++) {
         result.m_stats[i] = this->m_stats[i] - other.m_stats[i];
@@ -8299,7 +8303,6 @@ int32_t CGItemStatsSummary::GetItemComparison(CGTooltip* first, CGTooltip* secon
         int32_t m_levels[2];
 
         ComparisonEntry() {
-            this->m_summary.Clear();
             memset(this->m_itemIds, 0, sizeof(this->m_itemIds));
             memset(this->m_randomProperties, 0, sizeof(this->m_randomProperties));
             memset(this->m_seeds, 0, sizeof(this->m_seeds));
@@ -8340,9 +8343,7 @@ int32_t CGItemStatsSummary::GetItemComparison(CGTooltip* first, CGTooltip* secon
     }
 
     CGItemStatsSummary firstSummary;
-    firstSummary.Clear();
     CGItemStatsSummary secondSummary;
-    secondSummary.Clear();
 
     if (!firstSummary.CreateFromTooltip(first) || !secondSummary.CreateFromTooltip(second)) {
         return 0;
@@ -8455,7 +8456,6 @@ int32_t SetCompareItem(CGTooltip* tooltip, int32_t itemId, int32_t offset, int32
 
     if (compare) {
         CGItemStatsSummary summary;
-        summary.Clear();
 
         if (CGItemStatsSummary::GetItemComparison(compare, tooltip, summary)) {
             tooltip->SetItemDelta(summary, 1);

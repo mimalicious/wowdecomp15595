@@ -48,5 +48,6 @@ int32_t EvaluateSpec(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>*
 int32_t EvaluateVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args);
 int32_t EvaluateUnitHasVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args);
 int32_t EvaluateCursor(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args);
+int32_t EvaluateResting(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args);
 
 #endif

@@ -13,6 +13,7 @@ class LfgDungeonsRec {
     bool IsHeroic() const;
     bool IsRaid() const;
     bool IsInRandomGroup(int32_t randomID) const;
+    bool IsInRandomGroup(int32_t randomID, int32_t expansionLevel) const;
     int32_t GetTopGroupID() const;
 
     /* 0000 */ int32_t m_id;

@@ -265,6 +265,7 @@ class CGLookingForGroup {
     static void RequestLFGPartyInfo();
     static void SetLFGComment(const char* comment);
     static void LeaveLFGSearch();
+    static void LeaveWorld();
     static void LeaveLFG();
     static int32_t GetLFGProposal(lua_State* L);
     static int32_t GetLFGProposalMember(lua_State* L);

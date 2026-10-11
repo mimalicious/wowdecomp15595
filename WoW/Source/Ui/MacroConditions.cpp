@@ -12,8 +12,8 @@
 // STATIC: #0x00C2438C
 TSHashTable<MacroConditions, HASHKEY_STR> s_macroConditions;
 
-// STATIC: #0x00AD14D8
-static const char* s_conditionNames[33] = { "", "combat", "exists", "help", "harm", "party", "raid", "dead", "flyable", "indoors", "outdoors", "swimming", "flying", "mounted", "stealth", "group", "stance", "form", "pet", "modifier", "mod", "button", "btn", "actionbar", "bar", "bonusbar", "equipped", "worn", "channeling", "spec", "vehicleui", "unithasvehicleui", "cursor" };
+// STATIC: 0x00D17AB8
+static const char* s_conditionNames[34] = { "", "combat", "exists", "help", "harm", "party", "raid", "dead", "flyable", "indoors", "outdoors", "swimming", "flying", "mounted", "stealth", "group", "stance", "form", "pet", "modifier", "mod", "button", "btn", "actionbar", "bar", "bonusbar", "equipped", "worn", "channeling", "spec", "vehicleui", "unithasvehicleui", "cursor", "resting" };
 
 // PROVEN: 725171f7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
@@ -21,8 +21,8 @@ static int32_t EvaluateNone(const WOWGUID* unit, const TSGrowableArray<MacroSubs
     return 1;
 }
 
-// STATIC: #0x00AD1560
-static MACROCONDITIONFUNC s_conditionFuncs[33] = { EvaluateNone, EvaluateCombat, EvaluateExists, EvaluateHelp, EvaluateHarm, EvaluateParty, EvaluateRaid, EvaluateDead, EvaluateFlyable, EvaluateIndoors, EvaluateOutdoors, EvaluateSwimming, EvaluateFlying, EvaluateMounted, EvaluateStealth, EvaluateGroup, EvaluateStance, EvaluateStance, EvaluatePet, EvaluateModifier, EvaluateModifier, EvaluateButton, EvaluateButton, EvaluateActionBar, EvaluateActionBar, EvaluateBonusBar, EvaluateEquipped, EvaluateEquipped, EvaluateChanneling, EvaluateSpec, EvaluateVehicleUI, EvaluateUnitHasVehicleUI, EvaluateCursor };
+// STATIC: 0x00D17B40
+static MACROCONDITIONFUNC s_conditionFuncs[34] = { EvaluateNone, EvaluateCombat, EvaluateExists, EvaluateHelp, EvaluateHarm, EvaluateParty, EvaluateRaid, EvaluateDead, EvaluateFlyable, EvaluateIndoors, EvaluateOutdoors, EvaluateSwimming, EvaluateFlying, EvaluateMounted, EvaluateStealth, EvaluateGroup, EvaluateStance, EvaluateStance, EvaluatePet, EvaluateModifier, EvaluateModifier, EvaluateButton, EvaluateButton, EvaluateActionBar, EvaluateActionBar, EvaluateBonusBar, EvaluateEquipped, EvaluateEquipped, EvaluateChanneling, EvaluateSpec, EvaluateVehicleUI, EvaluateUnitHasVehicleUI, EvaluateCursor, EvaluateResting };
 
 // OFFSET: 0x00A0F4F0/0x1407B1E80
 int32_t EvaluateMacroOptions(const char* start, const char* end, MacroSubstring* result, MacroSubstring* target) {
@@ -241,14 +241,14 @@ void MacroCondition::Parse(const char* start, const char* end) {
     option.SetText(cursor, end, ':', &cursor);
     int32_t type = 0;
 
-    for (; type < 33; type++) {
+    for (; type < 34; type++) {
         if (option == s_conditionNames[type]) {
             this->m_type = type;
             break;
         }
     }
 
-    if (type == 33) {
+    if (type == 34) {
         char text[1024];
         uint32_t length = option.m_end - option.m_start;
 

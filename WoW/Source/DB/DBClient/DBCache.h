@@ -142,7 +142,7 @@ DBCache<T, TKey, THashKey>::~DBCache() {
     this->m_reverse.InternalClear(0);
 }
 
-// OFFSET: [#0x00672DA0, #0x00673050, #0x00673300, #0x006735B0, #0x00673860, #0x00673B10, #0x00673DD0, #0x00674070, #0x00674310, #0x006745C0, #0x00674870, #0x00674B10, #0x00674DB0, #0x00675050, #0x006752F0, 0x004A73B0<QuestCache, int, HASHKEY_INT>, 0x004A7650<PageTextCache_C, int, HASHKEY_INT>, 0x004A7900<PetNameCache, int, HASHKEY_INT>, 0x004A7BB0<CGPetition, int, HASHKEY_INT>, 0x004A80F0<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A8390<ArenaTeamCache, int, HASHKEY_INT>]
+// OFFSET: [#0x00672DA0, #0x00673050, #0x00673300, #0x006735B0, #0x00673860, #0x00673B10, #0x00673DD0, #0x00674070, #0x00674310, #0x006745C0, #0x00674870, #0x00674B10, #0x00674DB0, #0x00675050, #0x006752F0, 0x004A73B0<QuestCache, int, HASHKEY_INT>, 0x004A7650<PageTextCache_C, int, HASHKEY_INT>, 0x004A7900<PetNameCache, int, HASHKEY_INT>, 0x004A7BB0<CGPetition, int, HASHKEY_INT>, 0x004A80F0<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A8390<ArenaTeamCache, int, HASHKEY_INT>, 0x004A6E50<NameCache, uint64_t, CHashKeyGUID>, 0x004A7110<GuildStats_C, uint64_t, CHashKeyGUID>, 0x004A7E50<ItemTextCache_C, uint64_t, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 DBCache<T, TKey, THashKey>::DBCACHEHASH::~DBCACHEHASH() {
     this->m_callbacks.Clear();

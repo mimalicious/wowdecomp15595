@@ -1983,6 +1983,15 @@ void CGBattlefieldInfo::EnterWorld() {
     ClientServices::Send(&stateMsg);
 }
 
+// OFFSET: 0x004E8410
+WOWGUID CGBattlefieldInfo::GetVehicleGuid(uint32_t index) {
+    if (index >= CGBattlefieldInfo::m_numVehicles) {
+        return WOWGUID();
+    }
+
+    return CGBattlefieldInfo::m_vehicleGuids[index];
+}
+
 // OFFSET: 0x009437E0/0x1406B0440
 void CGBattlefieldInfo::LeaveWorld() {
     if (!CGGameUI::m_currentlyReloadingUI) {

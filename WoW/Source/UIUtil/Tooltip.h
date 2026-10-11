@@ -240,6 +240,7 @@ class CGItemStatsSummary {
     /* 0004 */ int32_t m_stats [89];
     /* 0168 */ uint32_t m_flags;
 
+    CGItemStatsSummary();
     void Clear();
     void AddStatMod(int32_t stat, int32_t amount);
     void GetSocketFlags(const ItemRecSparse* item);

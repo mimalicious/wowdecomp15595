@@ -1667,13 +1667,7 @@ void CGLookingForGroup::UpdateRandomSlots(int32_t minLevel, int32_t maxLevel) {
         for (int32_t j = 0; j < g_lfgDungeonsDB.m_numRecords; j++) {
             LfgDungeonsRec* rec = g_lfgDungeonsDB.GetRecordByIndex(j);
 
-            if (!random->m_id) {
-                continue;
-            }
-
-            LfgDungeonExpansionRec* groupExpansion = GetLfgDungeonExpansionRec(rec->m_id, expansion);
-
-            if (groupExpansion ? groupExpansion->m_randomID != random->m_id : !rec->IsInRandomGroup(random->m_id)) {
+            if (!rec->IsInRandomGroup(random->m_id, expansion)) {
                 continue;
             }
 
@@ -1858,6 +1852,13 @@ void CGLookingForGroup::SetLFGComment(const char* comment) {
         SStrCopy(request.unk_0010, CGLookingForGroup::m_localInfo.m_comment, sizeof(request.unk_0010));
         ClientServices::Send(&request);
     }
+}
+
+// OFFSET: 0x009886E0
+void CGLookingForGroup::LeaveWorld() {
+    ClientSetDfFastLaunchResult::s_handler = NULL;
+    ClientLfgSlotInvalid::s_handler = NULL;
+    CGLookingForGroup::LeaveLFGSearch();
 }
 
 // OFFSET: 0x00987E90

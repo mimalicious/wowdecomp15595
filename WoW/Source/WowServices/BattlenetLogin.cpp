@@ -58,16 +58,12 @@ void BattlenetAllocator::Free(void* memory) {
     SMemFree(memory, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: #0x008C5180
+// OFFSET: 0x00627420
 bool BattlenetApplication::Send(uint32_t connection, const void* data, uint32_t size) {
-    if (connection != this->m_connection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     return this->m_wowConnection->SendRaw(static_cast<uint8_t*>(const_cast<void*>(data)), size);
 }
 
-// OFFSET: #0x008C51C0
+// OFFSET: 0x00627440
 uint64_t BattlenetApplication::GetCurrentTick() const {
     return OsGetAsyncTimeMs();
 }
@@ -493,15 +489,11 @@ void BattlenetLogin::LogConnectionStatus(const char* format, ...) {
     }
 }
 
-// OFFSET: #0x008C6980
+// OFFSET: 0x00628070
 void BattlenetApplication::Disconnect(uint32_t connection) {
-    if (connection != this->m_connection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     if (this->m_wowConnection) {
         this->m_wowConnection->Disconnect();
-        BattlenetLogin::LogConnectionStatus("Disconnected from %x", this->m_wowConnection->m_connectAddress.m_ipv4);
+        BattlenetLogin::LogConnectionStatus("Disconnected from %s", SockAddrString(this->m_wowConnection->m_connectAddress).m_str);
     }
 }
 
@@ -553,28 +545,23 @@ uint32_t BattlenetApplication::Connect(const Battlenet::IP4::AddressPort& addres
     return this->m_connection;
 }
 
-// PROVEN: c1435f50 IDENTICAL/NONE
-// OFFSET: 0x00904350
+// OFFSET: 0x00841AE0
 uint32_t BattlenetApplication::OpenDatagram(int32_t port, const uint32_t& tendrilId) {
-    SErrDisplayAppFatalMessage("", "", 0);
+    return 0;
 }
 
-// PROVEN: 213ab6a2 IDENTICAL/NONE
-// OFFSET: 0x00904350
+// OFFSET: 0x00847950
 void BattlenetApplication::CloseDatagram(uint32_t connection) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// PROVEN: 24de9826 IDENTICAL/NONE
-// OFFSET: 0x00904350
+// OFFSET: 0x00762820
 bool BattlenetApplication::SendDatagram(uint32_t connection, const void* data, uint32_t size, const Battlenet::IP4::AddressPort& address) {
-    SErrDisplayAppFatalMessage("", "", 0);
+    return false;
 }
 
-// PROVEN: 011ff2c9 IDENTICAL/NONE
-// OFFSET: 0x00904350
+// OFFSET: 0x00842700
 uint64_t BattlenetApplication::GetCurrentTime() const {
-    SErrDisplayAppFatalMessage("", "", 0);
+    return 0;
 }
 
 // PROVEN: 2aca7dfc IDENTICAL/DIFFERENT

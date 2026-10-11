@@ -74,7 +74,7 @@ int32_t EvaluateFlyable(const WOWGUID* unit, const TSGrowableArray<MacroSubstrin
     return flyable == args->m_data->ToNumber();
 }
 
-// OFFSET: #0x005EEED0
+// OFFSET: 0x00A0D4E0
 int32_t EvaluateGroup(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     if (!args->m_count) {
         return CGPartyInfo::NumMembers() || CGRaidInfo::m_numMembers;
@@ -430,9 +430,9 @@ int32_t EvaluateOutdoors(const WOWGUID* unit, const TSGrowableArray<MacroSubstri
     return outdoors == args->m_data->ToNumber();
 }
 
-// OFFSET: #0x005EFA40
+// OFFSET: 0x00A0E0C0
 int32_t EvaluateSwimming(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t swimming = player && (player->m_clientFlags & 0x200000);
 
     if (args->m_count) {
@@ -442,10 +442,10 @@ int32_t EvaluateSwimming(const WOWGUID* unit, const TSGrowableArray<MacroSubstri
     return swimming;
 }
 
-// OFFSET: #0x005EFAA0
+// OFFSET: 0x00A0E120
 int32_t EvaluateFlying(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    int32_t flying = player && (player->m_movement->m_flags & 0x2000000);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    int32_t flying = player && (player->m_movement->m_flags & 0x1000000);
 
     if (args->m_count) {
         return flying == args->m_data->ToNumber();
@@ -614,4 +614,10 @@ int32_t EvaluateChanneling(const WOWGUID* unit, const TSGrowableArray<MacroSubst
     }
 
     return 0;
+}
+
+// OFFSET: 0x00A0E620
+int32_t EvaluateResting(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    return player && (player->m_player->m_playerFlags & 0x20);
 }

@@ -239,9 +239,9 @@ float CGUnit::GetFacing(float facing) const {
     return this->m_movement->GetFacing(facing);
 }
 
-// OFFSET: #0x004F7250
+// OFFSET: 0x004E8BE0
 bool CGUnit::IsPossessedBy(const WOWGUID& guid) const {
-    return (this->m_unit->m_unitFieldFlags & 0x1000000) && *this->GetCharmerOrCreatorGuid() == guid;
+    return (this->m_unit->m_unitFieldFlags & 0x1000000) && guid == this->m_unit->m_unitFieldCharmedby;
 }
 
 // PROVEN: 0ce1f4fb IDENTICAL/NONE

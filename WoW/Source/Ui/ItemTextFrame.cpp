@@ -209,7 +209,7 @@ void CGItemText::ItemTextCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 }
 
-// OFFSET: #0x0058A430
+// OFFSET: 0x009DE7E0
 void CGItemText::LeaveWorld() {
     CGItemText::SetItem(WOWGUID::Make(0), 0);
 }

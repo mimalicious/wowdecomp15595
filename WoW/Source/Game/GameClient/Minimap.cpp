@@ -430,7 +430,7 @@ static void SetMemberData(WOWGUID guid, MEMBERINFO* member, CGPlayer_C* player, 
         position.z = static_cast<float>(state->m_posZ);
 
         for (uint32_t i = 0; i < CGBattlefieldInfo::m_numVehicles; i++) {
-            CGUnit_C* vehicle = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(i < CGBattlefieldInfo::m_numVehicles ? CGBattlefieldInfo::m_vehicleGuids[i] : WOWGUID(), TYPEMASK_UNIT, __FILE__, __LINE__));
+            CGUnit_C* vehicle = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGBattlefieldInfo::GetVehicleGuid(i), TYPEMASK_UNIT, __FILE__, __LINE__));
 
             if (!vehicle) {
                 continue;

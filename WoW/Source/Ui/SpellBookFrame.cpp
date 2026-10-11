@@ -1170,7 +1170,7 @@ int32_t CGSpellBook::CanShowAura(const SpellRec* spell, const WOWGUID* caster, b
     }
 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    return player && ((1 << (requirements->m_requiredAuraVision - 1)) & player->m_player->m_playerFieldBytes2[3]);
+    return player && player->HasAuraVision(requirements->m_requiredAuraVision);
 }
 
 // OFFSET: 0x00910810
