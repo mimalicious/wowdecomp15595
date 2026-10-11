@@ -1001,6 +1001,11 @@ void CM2Model::SetLoadedCallback(void (*callback)(CM2Model*, void*), void* arg) 
     this->UpdateLoaded();
 }
 
+// OFFSET: 0x00585480
+void CM2Model::GetWorldTransform(C44Matrix& matrix) {
+    matrix = this->m_worldTransform;
+}
+
 // OFFSET: 0x00815BB0/0x14052DDC0
 void CM2Model::SetWorldTransform(const C3Vector& position, float rotation, float scale) {
     C44Matrix& matrix = this->m_worldTransform;

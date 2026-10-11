@@ -15,6 +15,7 @@ struct DEATTHUDSOUNDINFO {
 
 void UnitSoundInitialize();
 void UnitSoundShutdown();
+void UnitSoundDestroy();
 int32_t GetSoundID(const CreatureSoundDataRec* soundData, uint32_t soundType);
 int32_t CheckUnitSoundTimer(uint32_t soundType);
 

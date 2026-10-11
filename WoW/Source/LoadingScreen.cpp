@@ -587,6 +587,21 @@ bool LoadingScreenGetBackgroundTexturePath(int32_t mapID, char* path, uint32_t s
     return true;
 }
 
+// OFFSET: 0x0040A510
+bool LoadingScreenGetBackgroundTexturePathForMap(int32_t mapID, char* path, uint32_t size, bool* isWide) {
+    MapRec* map = g_mapDB.GetRecord(mapID);
+
+    if (isWide) {
+        *isWide = false;
+    }
+
+    if (!map) {
+        return false;
+    }
+
+    return LoadingScreenGetBackgroundTexturePath(map->m_loadingScreenID, path, size, isWide);
+}
+
 // OFFSET: 0x0040C750
 static bool LoadSimpleBackgroundTexture() {
     s_backgroundLocal = 1;

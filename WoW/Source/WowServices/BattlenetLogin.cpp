@@ -132,7 +132,7 @@ bool BattlenetLogin::Disconnected() {
     return false;
 }
 
-// OFFSET: #0x008C53B0
+// OFFSET: 0x00628170
 void BattlenetLogin::LogonResultBN(int32_t result) {
     this->m_logonResult = result;
 
@@ -141,8 +141,8 @@ void BattlenetLogin::LogonResultBN(int32_t result) {
             this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_AUTHENTICATED, LOGIN_OK, NULL, 0);
             break;
 
-        case 103:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_BAD_SERVER_PROOF, NULL, 0);
+        case 123:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_TOO_FAST, NULL, 0);
             break;
 
         case 104:
@@ -152,9 +152,30 @@ void BattlenetLogin::LogonResultBN(int32_t result) {
             this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_UNKNOWN_ACCOUNT, NULL, 0);
             break;
 
+        case 211:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_ANTI_INDULGENCE, NULL, 0);
+            break;
+
+        case 113:
+        case 200:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_AUTH_OUTAGE, NULL, 0);
+            break;
+
         case 105:
         case 106:
             this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_DISCONNECTED, NULL, 0);
+            break;
+
+        case 103:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_BAD_SERVER_PROOF, NULL, 0);
+            break;
+
+        case 140:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_NO_GAME_ACCOUNTS_IN_REGION, NULL, 0);
+            break;
+
+        case 141:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_ACCOUNT_LOCKED, NULL, 0);
             break;
 
         case 107:
@@ -166,32 +187,6 @@ void BattlenetLogin::LogonResultBN(int32_t result) {
         case 111:
         case 112:
             this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_BADVERSION, NULL, 0);
-            break;
-
-        case 113:
-        case 200:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_AUTH_OUTAGE, NULL, 0);
-            break;
-
-        case 115:
-        case 205:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_ALREADYONLINE, NULL, 0);
-            break;
-
-        case 123:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_TOO_FAST, NULL, 0);
-            break;
-
-        case 124:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_USE_GRUNT, NULL, 0);
-            break;
-
-        case 140:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_NO_GAME_ACCOUNTS_IN_REGION, NULL, 0);
-            break;
-
-        case 141:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_ACCOUNT_LOCKED, NULL, 0);
             break;
 
         case 202:
@@ -207,8 +202,9 @@ void BattlenetLogin::LogonResultBN(int32_t result) {
             this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_GAME_ACCOUNT_LOCKED, NULL, 0);
             break;
 
-        case 206:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_NOTIME, NULL, 0);
+        case 115:
+        case 205:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_ALREADYONLINE, NULL, 0);
             break;
 
         case 207:
@@ -216,16 +212,36 @@ void BattlenetLogin::LogonResultBN(int32_t result) {
             this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_EXPIRED, NULL, 0);
             break;
 
-        case 209:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_PARENTALCONTROL, NULL, 0);
+        case 206:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_NOTIME, NULL, 0);
             break;
 
         case 210:
             this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_TRIAL_EXPIRED, NULL, 0);
             break;
 
-        case 211:
-            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_ANTI_INDULGENCE, NULL, 0);
+        case 209:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_PARENTALCONTROL, NULL, 0);
+            break;
+
+        case 124:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_USE_GRUNT, NULL, 0);
+            break;
+
+        case 214:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_CHARGEBACK, NULL, 0);
+            break;
+
+        case 215:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_IGR_WITHOUT_BNET, NULL, 0);
+            break;
+
+        case 213:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_LOCKED_ENFORCED, NULL, 0);
+            break;
+
+        case 216:
+            this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_UNLOCKABLE_LOCK, NULL, 0);
             break;
 
         default:

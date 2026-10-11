@@ -2782,7 +2782,7 @@ int32_t CGGameUI::Idle(const void* data, void* param) {
     CGUIMacros::UpdateDynamicMacros();
     CKBPage::UpdateLoadingQueue();
     g_capturePointUIManager.Update();
-    DBCache_Idle();
+    ClientDBIdle();
     CGGameUI::UpdateStreamingIcon();
     Script_SendUniqueSignals();
     DBClient_Idle();
@@ -8447,7 +8447,7 @@ void CGGameUI::LeaveWorld() {
     CGBattlefieldInfo::LeaveWorld();
     CGTalentInfo::LeaveWorld();
     CGTalentInfo_Inspect::EnterWorld();
-    CGAuctionHouse::CloseAuctionHouse();
+    CGAuctionHouse::LeaveWorld();
     CGStableInfo::LeaveWorld();
     CGMinigameInfo::LeaveWorld();
     CGItemSocketInfo::LeaveWorld();

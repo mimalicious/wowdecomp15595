@@ -119,7 +119,7 @@ void SPIRIT_IP_MR_V3_AnalyzeFrame(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_ENC_UNK0
         SPIRIT_IP_MR_V3_NAME_181(state, tables, filtered, frame);
     } else {
         SPIRIT_IP_MR_V3_ResetEncoderState(state);
-        SPIRIT_IP_MR_V3_NAME_85(state, input);
+        SPIRIT_IP_MR_V3_NAME_85_Forward(state, input);
     }
 }
 

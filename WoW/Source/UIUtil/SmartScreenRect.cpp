@@ -279,6 +279,23 @@ static BFSNODE* SmartScreenRectAllocNode() {
     return node;
 }
 
+// OFFSET: 0x004607B0
+int32_t SmartScreenRectStartDirection(uint8_t flags) {
+    if (flags & 0x1) {
+        return (flags & 0x4) ? 8 : ((flags & 0x8) | 0x10) >> 2;
+    }
+
+    if (flags & 0x4) {
+        return (flags & 0x2) ? 7 : 2;
+    }
+
+    if (flags & 0x2) {
+        return (flags & 0x8) ? 5 : 3;
+    }
+
+    return (flags >> 3) & 1;
+}
+
 // OFFSET: 0x00460F00
 static CRect SmartScreenRectFindFreeRect(uint32_t grid, const CRect& rect) {
     CRect result;
@@ -288,17 +305,7 @@ static CRect SmartScreenRectFindFreeRect(uint32_t grid, const CRect& rect) {
     result.maxX = 0.0f;
 
     uint32_t flags = SmartScreenRectClampToScreen(&result, rect, 0);
-    int32_t start;
-
-    if (flags & 0x1) {
-        start = (flags & 0x4) ? 8 : ((flags & 0x8) | 0x10) >> 2;
-    } else if (flags & 0x4) {
-        start = (flags & 0x2) ? 7 : 2;
-    } else if (flags & 0x2) {
-        start = (flags & 0x8) ? 5 : 3;
-    } else {
-        start = (flags >> 3) & 1;
-    }
+    int32_t start = SmartScreenRectStartDirection(static_cast<uint8_t>(flags));
 
     BFSNODE* root = SmartScreenRectAllocNode();
     root->m_rect = result;

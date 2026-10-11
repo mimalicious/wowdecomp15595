@@ -736,6 +736,11 @@ void UnitSoundShutdown() {
     }
 }
 
+// OFFSET: 0x0060DA30
+void UnitSoundDestroy() {
+    UnitSoundShutdown();
+}
+
 // PROVEN: 7217bd7f IDENTICAL/NONE
 // OFFSET: 0x0060DA40/0x140297670
 void UnitSoundInitialize() {

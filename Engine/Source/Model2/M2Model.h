@@ -384,6 +384,7 @@ class CM2Model {
     void SetRibbonsEnabled(uint32_t enabled);
     void SetSequenceCallback(void* callback, uint64_t param);
     void SetWorldTransform(const C44Matrix& matrix);
+    void GetWorldTransform(C44Matrix& matrix);
     void SetWorldTransform(const C3Vector& position, float rotation, float scale);
     void SetWorldTransform(const C3Vector& position, float rotation, float scale, const C3Vector& up, uint32_t flags);
     void UpdateLoaded();

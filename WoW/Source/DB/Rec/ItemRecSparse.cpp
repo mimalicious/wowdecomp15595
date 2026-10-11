@@ -434,3 +434,8 @@ void ItemRecSparse::Initialize() {
         }
     }
 }
+
+// OFFSET: 0x004B2850
+void ItemSparseInitialize() {
+    ItemRecSparse::Initialize();
+}

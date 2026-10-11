@@ -129,7 +129,7 @@ inline void operator delete[](void* ptr, const char* filename, int32_t linenumbe
     SMemFree(ptr, filename, linenumber, 0);
 }
 
-// OFFSET: [0x004EC7E0<271>, 0x0087CF70/0x1402F3F70<1024>, 0x00B41F90/0x14069ACB0<128>]
+// OFFSET: [0x004EC7E0<271>, 0x0087CF70/0x1402F3F70<1024>, 0x00B41F90/0x14069ACB0<128>, 0x00403140<256>, 0x00403160<512>, 0x00403180<16192>, 0x00635B00<260>, 0x00627D00<64>, 0x00928370<32>]
 template <size_t N>
 size_t SStrPrintf(char (&dest)[N], const char* format, ...) {
     va_list args;

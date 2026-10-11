@@ -55,7 +55,7 @@ uint32_t CRandom::uint32_(CRndSeed& seed) {
     return acc;
 }
 
-// INLINED
+// OFFSET: 0x004010D0
 CRndSeed::CRndSeed(uint32_t seed) {
     this->SetSeed(seed);
 }

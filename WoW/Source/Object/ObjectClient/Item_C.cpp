@@ -675,6 +675,11 @@ void CGItem_C::UpdateSockets(uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
     FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_SUCCESS, NULL);
 }
 
+// OFFSET: 0x005A5AC0
+bool CGItem_C::IsTemporarilyBoundForTrade() {
+    return this->HasSoulboundEnchant();
+}
+
 // OFFSET: 0x005A6030/0x140217160
 bool CGItem_C::IsBound() {
     if (this->m_item->m_itemFieldFlags & 0x1) {
@@ -1054,7 +1059,7 @@ void CGItem_C::GetCooldowns(int32_t itemId, uint32_t& cooldown, uint32_t& catego
 
 // OFFSET: 0x005A70A0/0x1402187E0
 void CGItem_C::Initialize() {
-    ItemRecSparse::Initialize();
+    ItemSparseInitialize();
     ClntObjMgrSetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldStackCount), sizeof(uint32_t), OnUpdateStackCount, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     ClntObjMgrSetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldSpellCharges), sizeof(((CGItemData*)0)->m_itemFieldSpellCharges), OnUpdateSpellCharges, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     ClntObjMgrSetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldEnchantment), sizeof(((CGItemData*)0)->m_itemFieldEnchantment), OnUpdateEnchantments, NULL, static_cast<HANDLER_PRIORITY>(0), 0);

@@ -172,6 +172,7 @@ class CGlueMgr {
     static void QuitGameAndRunLauncher();
     static void GetRealmList(int32_t showDialog);
     static void GetCharacterList();
+    static void UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>& characters);
     static void ResetQueueState();
     static void DownloadFeed(const uint8_t* data, uint32_t size);
     static void AttachmentSequenceCallback(CM2Model* model);

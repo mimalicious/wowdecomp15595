@@ -28,6 +28,17 @@ void GuildStats_C::Pack(CDataStore* msg) {
 }
 
 // PROVEN: 9bd6c1da IDENTICAL/NONE
+// OFFSET: 0x005FAD50
+int32_t GuildStats_C::GetRankIndex(int32_t rankId) {
+    for (int32_t i = 0; i < this->m_numRanks; i++) {
+        if (this->m_rankIds[i] == rankId) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 // OFFSET: 0x005FAD90
 void GuildStats_C::Unpack(CDataStore* msg) {
     msg->Get(this->m_guildGuid);

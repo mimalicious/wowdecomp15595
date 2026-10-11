@@ -58,6 +58,7 @@ void DBCache_ClearHandlers();
 void DBCache_ClearPending();
 void DBCache_Destroy();
 void DBCache_Idle();
+void ClientDBIdle();
 void DBCache_Initialize();
 void DBCache_RegisterHandlers();
 void SetClientCacheVersion(uint32_t version);

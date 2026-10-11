@@ -24,6 +24,7 @@ class GuildStats_C {
 
     void Pack(CDataStore* msg);
     void Unpack(CDataStore* msg);
+    int32_t GetRankIndex(int32_t rankId);
 };
 
 #endif

@@ -2011,7 +2011,7 @@ bool CGGuildInfo::ClientGuildReputationReactionChangedHandler(ClientGuildReputat
 // OFFSET: 0x00937BC0
 bool CGGuildInfo::ClientGuildResetHandler(ClientGuildReset* msg) {
     CGGuildInfo::m_guildLevel = 1;
-    CGAchievementInfo::ClearGuildInfo();
+    CGAchievementInfo::ResetGuildInfo();
     CGGuildInfo::m_guildNews.Clear();
     CGGuildInfo::m_numGuildNews = 0;
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_NEWS_UPDATE, NULL);

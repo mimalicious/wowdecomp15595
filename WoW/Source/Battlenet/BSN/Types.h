@@ -339,7 +339,7 @@ const T& BSN::Choice::Get() const {
     return *reinterpret_cast<const T*>(this + 1);
 }
 
-// OFFSET: [#0x008C7000<0, Battlenet::Authentication::Request>, #0x008C6FD0<2, Battlenet::Authentication::ModuleMessage>, #0x008C6C90<1, BSN::AsciiString<320>>, #0x008C6CB0<0, BSN::AsciiString<31>>, #0x008C6CD0<12, Battlenet::Event::Creep::Portal>]
+// OFFSET: [#0x008C7000<0, Battlenet::Authentication::Request>, #0x008C6FD0<2, Battlenet::Authentication::ModuleMessage>, #0x008C6C90<1, BSN::AsciiString<320>>, #0x008C6CB0<0, BSN::AsciiString<31>>, #0x008C6CD0<12, Battlenet::Event::Creep::Portal>, 0x006287F0<1, Battlenet::Event::Creep::Invoke::Authentication::Logon>, 0x00628810<0, Battlenet::Event::Creep::Invoke::DarkPortal::Select>, 0x00628830<6, Battlenet::Event::Creep::Invoke::WoW>]
 template <int32_t TAG, class T>
 T* BSN::Choice::Set() {
     this->m_tag = TAG;

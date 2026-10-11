@@ -2697,7 +2697,7 @@ void CGWorldFrame::RenderWorld(void* param) {
     worldFrame->OnWorldUpdate();
     PlayerNameUpdateWorldText();
     worldFrame->OnWorldRender();
-    WorldTextRenderBatch();
+    PlayerNameRenderWorldText();
 
     g_theGxDevicePtr->XformSetProjection(projection);
     g_theGxDevicePtr->XformSetView(view);

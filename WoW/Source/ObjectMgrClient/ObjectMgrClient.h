@@ -65,6 +65,7 @@ void ClntObjMgrDestroyLazyCleanupObjects();
 int32_t ClntObjMgrEnumVisibleObjects(OBJECTENUMFUNC func, void* param);
 CGCorpse_C* ClntObjMgrFindCorpseByOwner(const WOWGUID& owner);
 WOWGUID ClntObjMgrGetActivePlayer();
+WOWGUID ClntObjMgrGetActivePlayerGuid();
 CGPlayer_C* ClntObjMgrGetActivePlayerObj();
 ObjectMgr* ClntObjMgrGetCurrent();
 uint32_t ClntObjMgrGetMapID();

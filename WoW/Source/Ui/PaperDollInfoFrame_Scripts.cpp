@@ -446,14 +446,7 @@ static int32_t Script_GetGuildInfo(lua_State* L) {
 
         if (guild) {
             CGPlayer_C* player = static_cast<CGPlayer_C*>(unit);
-            int32_t rank = -1;
-
-            for (int32_t i = 0; i < guild->m_numRanks; i++) {
-                if (guild->m_rankIds[i] == static_cast<int32_t>(player->m_player->m_playerGuildrank)) {
-                    rank = i;
-                    break;
-                }
-            }
+            int32_t rank = guild->GetRankIndex(player->m_player->m_playerGuildrank);
 
             if (rank < 0) {
                 return 0;

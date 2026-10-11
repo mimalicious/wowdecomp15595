@@ -101,7 +101,7 @@ void STORMAPI GruntFileDownload::CalculateMD5(Storm::IOUnit* unit, uint64_t offs
     MD5Final(digest, &context);
 }
 
-// INLINED
+// OFFSET: 0x00B0A470
 bool GruntFileDownload::VerifyMD5(uint64_t size) {
     uint8_t digest[16];
     GruntFileDownload::CalculateMD5(this->m_unit, 0, size, digest);

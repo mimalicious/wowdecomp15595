@@ -1049,7 +1049,7 @@ void CGObject_C::UpdateInteractIconScale() {
     }
 
     C44Matrix matrix;
-    matrix = this->m_interactIcon->m_worldTransform;
+    this->m_interactIcon->GetWorldTransform(matrix);
     float current = sqrtf(matrix.a1 * matrix.a1 + matrix.a2 * matrix.a2 + matrix.a0 * matrix.a0);
 
     if (0.01f < current && fabsf(scale - current) > 0.01f) {

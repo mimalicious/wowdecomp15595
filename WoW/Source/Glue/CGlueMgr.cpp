@@ -813,6 +813,11 @@ void CGlueMgr::ResetQueueState() {
 }
 
 // PROVEN: 80a87352 IDENTICAL/NONE
+// OFFSET: 0x00800AD0
+void CGlueMgr::UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>& characters) {
+    CCharacterSelection::UpdateCharacterList(characters);
+}
+
 // OFFSET: 0x00800AE0/0x140514B00
 void CGlueMgr::DownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_patchDownload) {

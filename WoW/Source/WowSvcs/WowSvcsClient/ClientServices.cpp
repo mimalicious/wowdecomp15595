@@ -1189,7 +1189,7 @@ void ClientRealmResponseAdapter::CharacterListReceived(RealmConnection* connecti
     ClientConnection* clientConnection = static_cast<ClientConnection*>(connection);
 
     if (success) {
-        CCharacterSelection::UpdateCharacterList(characters);
+        CGlueMgr::UpdateCharacterList(characters);
         clientConnection->Complete(1, CHAR_LIST_RETRIEVED);
     } else {
         clientConnection->Complete(0, CHAR_LIST_FAILED);

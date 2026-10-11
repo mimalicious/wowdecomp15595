@@ -9811,7 +9811,7 @@ void CGUnit_C::Shutdown() {
     ClientMoveSetVehicleRecId::s_handler = NULL;
     ClientMoveSkipTime::s_handler = NULL;
     ClientMoveSetCompoundState::s_handler = NULL;
-    UnitSoundShutdown();
+    UnitSoundDestroy();
     Spell_C_Destroy();
     UnitCombatClientShutdown();
     CGUnit_C::UnregisterMirrorHandlers();
@@ -10480,9 +10480,9 @@ float CGUnit_C::GetTrackingTurn() {
     return s_trackingFacing;
 }
 
-// OFFSET: [0x00507A70]
+// OFFSET: 0x005B41B0
 bool CGUnit_C::IsBossMob() const {
-    if (this->m_creatureCacheEntry) {
+    if (this->m_creatureCacheEntry && !this->m_unit->m_unitFieldPetnumber) {
         return (this->m_creatureCacheEntry->m_typeFlags[0] >> 2) & 1;
     }
 

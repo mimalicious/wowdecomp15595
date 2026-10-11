@@ -29,7 +29,7 @@ CGPetition::CGPetition() {
     this->m_staticType = 0;
 }
 
-// OFFSET: #0x00668600
+// OFFSET: 0x0049BC00
 CGPetition& CGPetition::operator=(const CGPetition& source) {
     this->m_id = source.m_id;
     this->m_ownerGuid = source.m_ownerGuid;

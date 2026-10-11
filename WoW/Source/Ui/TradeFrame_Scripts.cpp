@@ -277,7 +277,7 @@ static int32_t Script_ClickTradeButton(lua_State* L) {
             return 0;
         }
 
-        if (item->HasSoulboundEnchant() && !canTradeBound) {
+        if (item->IsTemporarilyBoundForTrade() && !canTradeBound) {
             CGGameUI::DisplayError(ERR_TRADE_TEMP_ENCHANT_BOUND);
             return 0;
         }

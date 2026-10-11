@@ -204,7 +204,7 @@ void CShadowCache::SetShadowScale(float scale) {
     CShadowCache::s_shadowScale = scale;
 }
 
-// INLINED
+// OFFSET: 0x007552B0
 CShadowBand::CShadowBand() {
     this->m_lastPos = C3Vector(0.0f, 0.0f, 0.0f);
     this->m_pos = C3Vector(0.0f, 0.0f, 0.0f);

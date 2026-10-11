@@ -556,6 +556,11 @@ void WorldTextRenderBatch() {
     g_theGxDevicePtr->XformSetProjection(projection);
 }
 
+// OFFSET: 0x004E0520
+void PlayerNameRenderWorldText() {
+    WorldTextRenderBatch();
+}
+
 // OFFSET: 0x004E38E0
 void WorldTextInitialize() {
     const char* fontName = FrameScript_GetText("DAMAGE_TEXT_FONT", -1, GENDER_NOT_APPLICABLE);

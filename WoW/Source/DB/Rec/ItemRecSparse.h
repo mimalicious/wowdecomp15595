@@ -89,4 +89,6 @@ class ItemRecSparse {
 
 extern WowClientDB2<ItemRecSparse> g_itemSparseDB;
 
+void ItemSparseInitialize();
+
 #endif

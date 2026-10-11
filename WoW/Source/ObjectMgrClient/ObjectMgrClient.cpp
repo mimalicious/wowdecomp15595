@@ -222,6 +222,11 @@ WOWGUID ClntObjMgrGetActivePlayer() {
     return mgr->m_playerGuid;
 }
 
+// OFFSET: 0x00401180
+WOWGUID ClntObjMgrGetActivePlayerGuid() {
+    return ClntObjMgrGetActivePlayer();
+}
+
 // OFFSET: 0x0048E5C0/0x1400B26D0
 CGObject_C* ClntObjMgrObjectPtr(WOWGUID guid, TypeMask mask, const char* fileName, int32_t lineNumber) {
     ObjectMgr* mgr = s_curMgr;
@@ -808,7 +813,7 @@ static void SetupObjectStorage(CGObject_C* object, OBJECT_TYPE_ID typeId, WOWGUI
             CGPlayer_C* player = static_cast<CGPlayer_C*>(object);
             uint32_t size;
 
-            if (guid == ClntObjMgrGetActivePlayer()) {
+            if (guid == ClntObjMgrGetActivePlayerGuid()) {
                 size = sizeof(CGObjectData) + sizeof(CGUnitData) + sizeof(CGPlayerLocalData);
                 player->m_playerLocalMirrorLists = reinterpret_cast<TSList<void>*>(base + sizeof(CGPlayer_C) + size + CGPlayer::TotalFields() * sizeof(uint32_t));
             } else {
@@ -1562,7 +1567,7 @@ static void UpdateOutOfRangeObjects(CDataStore* msg) {
         SmartGUID guid;
         *msg >> guid;
 
-        if (guid == ClntObjMgrGetActivePlayer()) {
+        if (guid == ClntObjMgrGetActivePlayerGuid()) {
             continue;
         }
 
@@ -1593,7 +1598,7 @@ static void UpdateOutOfRangeObjects(CDataStore* msg) {
         SmartGUID guid;
         *msg >> guid;
 
-        if (guid == ClntObjMgrGetActivePlayer()) {
+        if (guid == ClntObjMgrGetActivePlayerGuid()) {
             continue;
         }
 

@@ -66,6 +66,7 @@ class CGAchievementInfo {
     static void SetFocusedAchievement(int32_t id);
     static void EnterWorld();
     static void ClearGuildInfo();
+    static void ResetGuildInfo();
     static void LeaveWorld();
     static void SaveTrackedAchievements();
     static int32_t m_showAchievementUI;

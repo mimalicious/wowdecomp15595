@@ -124,6 +124,7 @@ class CGItem_C : public CGObject_C, public CGItem {
     bool IsBoundToBattlenetAccount();
     bool IsInstanceBound() const;
     bool IsPermanentlyBoundForTrade();
+    bool IsTemporarilyBoundForTrade();
     bool IsZoneBound() const;
     void PostInitWithStats();
     void RequestItemCacheInfo();

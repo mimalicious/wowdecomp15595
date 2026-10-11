@@ -412,7 +412,7 @@ void C3Spline_CatmullRom::ISetPoints(const C3Vector* points, uint32_t count) {
     C3Spline::ISetPoints(points, count);
 }
 
-// INLINED
+// OFFSET: [0x004879C0<uint32_t>, 0x00550DA0<uint64_t>]
 template <class T>
 static T ReadValue(CDataStore& msg) {
     T value = 0;

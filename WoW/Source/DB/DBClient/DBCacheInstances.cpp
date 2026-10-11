@@ -588,6 +588,11 @@ void DBCache_Idle() {
     g_arenaTeamCache.Idle();
 }
 
+// OFFSET: 0x00496F30
+void ClientDBIdle() {
+    DBCache_Idle();
+}
+
 // OFFSET: 0x00496FD0
 void DBCache_ClearPending() {
     g_creatureDBCache.ClearPending();

@@ -307,6 +307,7 @@ void SPIRIT_IP_MR_V3_NAME_199(const int16_t* pcm, float* dst, int16_t count);
 void SPIRIT_IP_MR_V3_NAME_200(const float* src, int16_t* pcm, int16_t count);
 float SPIRIT_IP_MR_V3_SquaredDistance10(const float* a, const float* b);
 void SPIRIT_IP_MR_V3_NAME_85(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input);
+void SPIRIT_IP_MR_V3_NAME_85_Forward(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input);
 void SPIRIT_IP_MR_V3_HighPassFilter(float* memory, const float* input, float* output);
 int32_t SPIRIT_IP_MR_V3_GetBits(SPIRIT_IPMR_STREAM* stream, int16_t count);
 void SPIRIT_IP_MR_V3_ReadFrameHeader(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream);

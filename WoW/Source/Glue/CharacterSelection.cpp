@@ -895,7 +895,7 @@ void CCharacterSelection::ShowCharacter(uint8_t raceOverride, int32_t noEffects)
 
     char loadingScreen[260];
 
-    if (LoadingScreenGetBackgroundTexturePath(display.m_characterInfo.m_mapID, loadingScreen, sizeof(loadingScreen), NULL)) {
+    if (LoadingScreenGetBackgroundTexturePathForMap(display.m_characterInfo.m_mapID, loadingScreen, sizeof(loadingScreen), NULL)) {
         AsyncFileReadCreateObject(loadingScreen, 5, 0, 0, NULL, NULL, NULL, AsyncFileReadDestroyObject, AsyncFileReadDestroyObject, 0, 0, 0);
     }
 

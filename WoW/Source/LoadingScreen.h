@@ -62,6 +62,7 @@ bool LoadingScreenIsPreparedForSpell(int32_t spellID);
 bool LoadDynamicBackground();
 void LoadingScreenInitialize();
 bool LoadingScreenGetBackgroundTexturePath(int32_t mapID, char* path, uint32_t size, bool* isWide);
+bool LoadingScreenGetBackgroundTexturePathForMap(int32_t mapID, char* path, uint32_t size, bool* isWide);
 void LoadingScreenMiniDisable();
 void LoadingScreenMiniEnable();
 void LoadingScreenMiniUpdate(float progress);

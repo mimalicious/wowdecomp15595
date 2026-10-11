@@ -57,6 +57,7 @@ void WorldTextDelete(WORLDTEXTSTRING* text);
 float WorldTextGetAscendDistance(uint32_t type);
 uint32_t WorldTextGetType(WORLDTEXTSTRING* text);
 void WorldTextRenderBatch();
+void PlayerNameRenderWorldText();
 bool WorldTextUpdate(WORLDTEXTSTRING* text, uint32_t time);
 
 #endif

@@ -11,13 +11,13 @@ bool CRect::IsPointInside(const C2Vector& point) const {
     return this->minX <= point.x && this->maxX >= point.x && this->minY <= point.y && this->maxY >= point.y;
 }
 
-// INLINED
+// OFFSET: [0x004FEFA0, 0x0061DD50]
 CRect CRect::operator&=(const CRect& r) {
     *this = *this & r;
     return *this;
 }
 
-// INLINED
+// OFFSET: 0x0061DCA0
 CRect operator&(const CRect& l, const CRect& r) {
     float maxX = r.maxX <= l.maxX ? r.maxX : l.maxX;
     float maxY = r.maxY <= l.maxY ? r.maxY : l.maxY;

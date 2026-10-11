@@ -311,6 +311,11 @@ void CGAchievementInfo::ClearGuildInfo() {
     FrameScript_SignalEvent(SCRIPT_EVENT_CRITERIA_UPDATE, NULL);
 }
 
+// OFFSET: 0x0094BE20
+void CGAchievementInfo::ResetGuildInfo() {
+    CGAchievementInfo::ClearGuildInfo();
+}
+
 // OFFSET: 0x0094D730
 static bool OnGuildAchievementEarned(ClientGuildAchievementEarned* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));

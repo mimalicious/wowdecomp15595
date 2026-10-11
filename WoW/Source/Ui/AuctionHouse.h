@@ -69,6 +69,7 @@ struct AuctionNotifyInfo {
 class CGAuctionHouse {
     public:
     static void CloseAuctionHouse();
+    static void LeaveWorld();
     static bool IsItemForSell(WOWGUID item);
     static AuctionSortCriteria m_bidSortCriteria[12];
     static AuctionSortCriteria m_ownedSortCriteria[12];

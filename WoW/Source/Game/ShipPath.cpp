@@ -184,7 +184,7 @@ void ShipPath::BuildLegs() {
     }
 }
 
-// INLINED
+// OFFSET: 0x00B0F7C0
 uint32_t ShipPath::LegTimeAccel(float distance) {
     float invAccel = 1.0f / this->m_accelRate;
     float accelTime = invAccel * this->m_moveSpeed;
