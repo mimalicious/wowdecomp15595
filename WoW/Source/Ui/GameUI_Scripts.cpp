@@ -1159,11 +1159,16 @@ static int32_t Script_GuildUninvite(lua_State* L) {
         return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_OFFICER_REMOVE_MEMBER));
-    msg.PutString(target);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    for (uint32_t i = 0; i < CGGuildInfo::GetNumMembers(1); i++) {
+        GuildMemberInfo* member;
+
+        if (i < CGGuildInfo::m_numMembers && (member = CGGuildInfo::m_members.m_data[i]) != NULL && !SStrCmpUTF8I(member->m_name, target, 0x7FFFFFFF)) {
+            UserClientGuildRemove msg(member->m_guid);
+            ClientServices::Send(&msg);
+            return 0;
+        }
+    }
+
     return 0;
 }
 
@@ -1181,11 +1186,13 @@ static int32_t Script_GuildPromote(lua_State* L) {
         return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_PROMOTE_MEMBER));
-    msg.PutString(target);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    uint64_t guid;
+
+    if (CGGuildInfo::GetMemberGUIDFromName(target, guid)) {
+        UserClientGuildPromote msg(guid);
+        ClientServices::Send(&msg);
+    }
+
     return 0;
 }
 
@@ -1203,16 +1210,27 @@ static int32_t Script_GuildDemote(lua_State* L) {
         return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_DEMOTE_MEMBER));
-    msg.PutString(target);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    for (uint32_t i = 0; i < CGGuildInfo::GetNumMembers(1); i++) {
+        GuildMemberInfo* member;
+
+        if (i < CGGuildInfo::m_numMembers && (member = CGGuildInfo::m_members.m_data[i]) != NULL && !SStrCmpUTF8I(member->m_name, target, 0x7FFFFFFF)) {
+            UserClientGuildDemote msg(member->m_guid);
+            ClientServices::Send(&msg);
+            return 0;
+        }
+    }
+
     return 0;
 }
 
 // OFFSET: 0x008D42F0/0x14063E690
 static int32_t Script_GuildSetLeader(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || player->m_obj->m_dataType != 1 || !player->m_obj->m_data || !player->IsGuildLeader()) {
+        return 0;
+    }
+
     const char* target = lua_tolstring(L, 1, NULL);
 
     if (!target) {
@@ -1225,11 +1243,8 @@ static int32_t Script_GuildSetLeader(lua_State* L) {
         return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_LEADER));
-    msg.PutString(target);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    UserClientGuildLeader msg(target);
+    ClientServices::Send(&msg);
     return 0;
 }
 
