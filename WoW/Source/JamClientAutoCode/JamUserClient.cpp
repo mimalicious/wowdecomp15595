@@ -276,6 +276,66 @@ UserClientUnlearnSpecialization::UserClientUnlearnSpecialization() {
 UserClientUnlearnSpecialization::~UserClientUnlearnSpecialization() {
 }
 
+// OFFSET: 0x006736F0
+UserClientReforgeItem::UserClientReforgeItem() {
+    this->m_flags = 0;
+}
+
+// OFFSET: 0x006703D0
+UserClientReforgeItem::~UserClientReforgeItem() {
+}
+
+// OFFSET: 0x006753B0
+void UserClientReforgeItem::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x331A));
+    msg->Put(static_cast<uint32_t>(this->m_reforgeId));
+    msg->Put(this->m_slot);
+    msg->Put(this->m_bag);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_forgeMaster[2] != 0);
+    bits.WriteBit(this->m_forgeMaster[6] != 0);
+    bits.WriteBit(this->m_forgeMaster[3] != 0);
+    bits.WriteBit(this->m_forgeMaster[4] != 0);
+    bits.WriteBit(this->m_forgeMaster[1] != 0);
+    bits.WriteBit(this->m_forgeMaster[0] != 0);
+    bits.WriteBit(this->m_forgeMaster[7] != 0);
+    bits.WriteBit(this->m_forgeMaster[5] != 0);
+    bits.Flush();
+
+    if (this->m_forgeMaster[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[2] ^ 1));
+    }
+
+    if (this->m_forgeMaster[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[3] ^ 1));
+    }
+
+    if (this->m_forgeMaster[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[6] ^ 1));
+    }
+
+    if (this->m_forgeMaster[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[4] ^ 1));
+    }
+
+    if (this->m_forgeMaster[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[1] ^ 1));
+    }
+
+    if (this->m_forgeMaster[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[0] ^ 1));
+    }
+
+    if (this->m_forgeMaster[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[7] ^ 1));
+    }
+
+    if (this->m_forgeMaster[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_forgeMaster[5] ^ 1));
+    }
+}
+
 // OFFSET: 0x00673610
 void UserClientUnlearnSpecialization::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3210));

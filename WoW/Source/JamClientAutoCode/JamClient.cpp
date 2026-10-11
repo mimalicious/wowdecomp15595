@@ -67,6 +67,12 @@ bool (*ClientGuildXPEarned::s_handler)(ClientGuildXPEarned* msg);
 // STATIC: 0x00E4D6B4
 bool (*ClientGuildBankMoneyWithdrawn::s_handler)(ClientGuildBankMoneyWithdrawn* msg);
 
+// STATIC: 0x00E4D80C
+bool (*ClientReforgeResult::s_handler)(ClientReforgeResult* msg);
+
+// STATIC: 0x00E4D494
+bool (*ClientForgeMasterSet::s_handler)(ClientForgeMasterSet* msg);
+
 // STATIC: 0x00E4D60C
 bool (*ClientGuildChangeNameResult::s_handler)(ClientGuildChangeNameResult* msg);
 
@@ -6639,4 +6645,110 @@ bool ClientDebugRuneRegen::Handle() {
     }
 
     return ClientDebugRuneRegen::s_handler(this);
+}
+
+// OFFSET: 0x006C4910/0x14037A850
+ClientReforgeResult::ClientReforgeResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1F40/0x14034F3E0
+ClientReforgeResult::~ClientReforgeResult() {
+}
+
+// INLINED
+void ClientReforgeResult::Unpack(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_success = byteValue;
+}
+
+// OFFSET: 0x006A4A80/0x140352890
+bool ClientReforgeResult::Handle() {
+    if (!ClientReforgeResult::s_handler) {
+        return false;
+    }
+
+    return ClientReforgeResult::s_handler(this);
+}
+
+// OFFSET: 0x006C0A90/0x140375E90
+ClientForgeMasterSet::ClientForgeMasterSet(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1220/0x14034E500
+ClientForgeMasterSet::~ClientForgeMasterSet() {
+}
+
+// OFFSET: 0x006BB410/0x14036F2D0
+void ClientForgeMasterSet::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_forgeMaster[1] = bits.ReadBit();
+    this->m_forgeMaster[3] = bits.ReadBit();
+    this->m_forgeMaster[4] = bits.ReadBit();
+    this->m_forgeMaster[2] = bits.ReadBit();
+    this->m_forgeMaster[6] = bits.ReadBit();
+    this->m_forgeMaster[0] = bits.ReadBit();
+    this->m_forgeMaster[7] = bits.ReadBit();
+    this->m_forgeMaster[5] = bits.ReadBit();
+
+    if (this->m_forgeMaster[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[6] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[2] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[3] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[4] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[5] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[0] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[7] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[1] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006A8160/0x140356E40
+bool ClientForgeMasterSet::Handle() {
+    if (!ClientForgeMasterSet::s_handler) {
+        return false;
+    }
+
+    return ClientForgeMasterSet::s_handler(this);
 }

@@ -1767,9 +1767,12 @@ class ClientReforgeResult : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientReforgeResult* msg);
 
+    /* 0010 */ uint8_t m_success;
+
     ClientReforgeResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientReforgeResult();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientAllAchievementData : public JamClientMessage {
@@ -2096,9 +2099,12 @@ class ClientForgeMasterSet : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientForgeMasterSet* msg);
 
+    /* 0010 */ uint8_t m_forgeMaster[8];
+
     ClientForgeMasterSet(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientForgeMasterSet();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientLfGuildApplicationsListChanged : public JamClientMessage {

@@ -49,6 +49,21 @@ class UserClientWorldPortResponse : public JamClientMessage {
     ~UserClientWorldPortResponse();
 };
 
+class UserClientReforgeItem : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_flags;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint8_t m_forgeMaster[8];
+    /* 0020 */ uint32_t m_slot;
+    /* 0024 */ uint32_t m_bag;
+    /* 0028 */ int32_t m_reforgeId;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientReforgeItem();
+    ~UserClientReforgeItem();
+};
+
 class UserClientUnlearnSpecialization : public JamClientMessage {
     public:
     /* 0010 */ uint32_t m_index;
