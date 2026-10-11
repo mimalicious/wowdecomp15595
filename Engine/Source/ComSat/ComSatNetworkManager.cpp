@@ -3,7 +3,7 @@
 #include <cstring>
 #include <new>
 
-// OFFSET: #0x008851D0
+// INLINED
 void ComSat::Network::HMAC::Init(const uint8_t* key, uint32_t length) {
     memset(this->m_innerPad, 0x36, sizeof(this->m_innerPad));
     memset(this->m_outerPad, 0x5C, sizeof(this->m_outerPad));

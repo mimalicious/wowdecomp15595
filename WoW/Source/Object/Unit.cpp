@@ -189,7 +189,7 @@ int32_t CGUnit::HasAuraState(int32_t state) const {
     return (this->m_unit->m_unitFieldAurastate & (1 << (state - 1))) != 0;
 }
 
-// OFFSET: #0x004F5290
+// INLINED
 int32_t CGUnit::IsOnFlyingSpline() const {
     CMoveSpline* spline = this->m_movement->m_spline;
 
@@ -304,7 +304,7 @@ int32_t CGUnit::GetQuestGreenRange() const {
     return band < 20 ? s_questGreenRange[band] : 8;
 }
 
-// OFFSET: #0x006FED70
+// INLINED
 C3Vector CGUnit::GetVelocity() const {
     float speed = this->m_movement->m_currentSpeed;
     return C3Vector(this->m_movement->m_moveDir.x * speed, this->m_movement->m_moveDir.y * speed, speed * this->m_movement->m_moveDir.z);

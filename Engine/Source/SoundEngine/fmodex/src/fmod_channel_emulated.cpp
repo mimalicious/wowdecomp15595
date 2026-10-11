@@ -28,7 +28,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00944A70
+// INLINED
 ChannelEmulated::ChannelEmulated()
 {
 #ifdef FMOD_SUPPORT_SOFTWARE
@@ -151,7 +151,7 @@ FMOD_RESULT ChannelEmulated::alloc()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00944820
+// INLINED
 FMOD_RESULT ChannelEmulated::stop(bool ignoreenddelay, bool resetstate, bool force)
 {
     if (mFlags & CHANNELREAL_FLAG_ENDDELAY && !ignoreenddelay)
@@ -266,7 +266,7 @@ FMOD_RESULT ChannelEmulated::close()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009448F0
+// INLINED
 FMOD_RESULT ChannelEmulated::update(int delta)
 {
     FMOD_RESULT result;

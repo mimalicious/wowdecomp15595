@@ -16,7 +16,7 @@
 static char *FMOD_ErrorString(FMOD_RESULT errcode) __attribute__((unused));
 #endif
 
-// OFFSET: #0x00877AA0
+// INLINED
 static char *FMOD_ErrorString(FMOD_RESULT errcode)
 {
     switch (errcode)

@@ -433,7 +433,7 @@ FMOD_RESULT ChannelDSound::stop(bool ignoreenddelay, bool resetstate)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094E070
+// INLINED
 FMOD_RESULT ChannelDSound::setPaused(bool paused)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -539,7 +539,7 @@ FMOD_RESULT ChannelDSound::setPaused(bool paused)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094E130
+// INLINED
 FMOD_RESULT ChannelDSound::setVolume(float volume)
 {  
 	if (mBuffer) 
@@ -726,7 +726,7 @@ FMOD_RESULT ChannelDSound::setPan(float pan, float fbpan)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094E910
+// INLINED
 FMOD_RESULT ChannelDSound::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 {
     HRESULT         hr;
@@ -782,7 +782,7 @@ FMOD_RESULT ChannelDSound::setPosition(unsigned int position, FMOD_TIMEUNIT post
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094EC00
+// INLINED
 FMOD_RESULT ChannelDSound::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
 	DWORD             dwPlay, dwWrite;

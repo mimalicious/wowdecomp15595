@@ -99,7 +99,7 @@ void Tracker::SetLocale(const char* locale) {
     Blizzard::String::Copy(s_locale, locale, sizeof(s_locale));
 }
 
-// OFFSET: %0x0070BBC0
+// INLINED
 void Tracker::SetBuildnum(int32_t buildnum) {
     s_buildnum = buildnum;
 }

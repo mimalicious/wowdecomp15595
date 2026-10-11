@@ -434,7 +434,7 @@ inline M2Array<T>::~M2Array() {
     }
 }
 
-// OFFSET: [#0x0081CD50]
+// INLINED
 template <class T>
 inline T& M2Array<T>::operator[](uint32_t index) const {
     return this->Data()[index];

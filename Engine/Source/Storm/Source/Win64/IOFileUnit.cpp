@@ -293,7 +293,7 @@ bool IOUnbufferedFileUnit::GetFileSize(int64_t* size) {
     return true;
 }
 
-// OFFSET: #0x0077A200
+// INLINED
 IOUnit::~IOUnit() {
 }
 
@@ -303,7 +303,7 @@ IOWin32FileUnit::~IOWin32FileUnit() {
     this->m_handle = NULL;
 }
 
-// OFFSET: #0x0077A270
+// INLINED
 IOUnbufferedFileUnit::IOUnbufferedFileUnit(void* handle, const IOFileParam* param) {
     this->m_unit = new IOWin32FileUnit(handle);
     this->m_size = 0;
@@ -367,7 +367,7 @@ IOUnit* IOFileUnit::Create(const IOFileParam& param, IOUnit* next) {
     return IOWin32FileUnit::Open(&param);
 }
 
-// OFFSET: [%0x00A9A1D0, %0x00A9A280]
+// INLINED
 IOUnbufferedFileUnit::~IOUnbufferedFileUnit() {
     VirtualFree(this->m_buffer, 0, MEM_RELEASE);
 

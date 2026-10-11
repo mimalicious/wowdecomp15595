@@ -52,7 +52,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00915030
+// INLINED
 FMOD_OUTPUT_DESCRIPTION_EX *OutputNoSound::getDescriptionEx()
 {
     FMOD_memset(&nosoundoutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -175,7 +175,7 @@ FMOD_RESULT OutputNoSound::getDriverCaps(int id, FMOD_CAPS *caps)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00914E40
+// INLINED
 FMOD_RESULT OutputNoSound::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     Plugin::init(); /* Set up gGlobal - for debug / file / memory access by this plugin. */

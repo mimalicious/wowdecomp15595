@@ -858,7 +858,7 @@ void TextureSetMaxAnisotropy(uint32_t maxAnisotropy) {
     s_maxAnisotropy = maxAnisotropy;
 }
 
-// OFFSET: #0x004B6280
+// INLINED
 int32_t TextureGetRefCnt(CTexture* texture) {
     if (!texture) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

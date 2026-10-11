@@ -112,7 +112,7 @@ void CSimpleHyperlinkButton::SetHyperlink(CSimpleFontString* fontString, const G
     this->Show();
 }
 
-// OFFSET: %0x00546820
+// INLINED
 CSimpleHyperlinkButton::CSimpleHyperlinkButton(CSimpleHyperlinkedFrame* parent) : CSimpleButton(parent) {
     this->SetClickAction(0xFFFFFFFF80000000ULL);
     this->m_linkData = NULL;

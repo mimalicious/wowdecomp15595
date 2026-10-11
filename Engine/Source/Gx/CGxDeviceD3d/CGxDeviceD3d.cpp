@@ -3539,7 +3539,7 @@ LPDIRECT3DSURFACE9 CGxDeviceD3d::ITexGetSurface(CGxTex* texId, uint32_t level, u
     return surface;
 }
 
-// OFFSET: [%0x007C9600, %0x007C9B30]
+// INLINED
 CGxDeviceD3d::~CGxDeviceD3d() {
 }
 
@@ -3653,7 +3653,7 @@ void CGxDeviceD3d::DeviceReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pi
     surface->Release();
 }
 
-// OFFSET: %0x007C7380
+// INLINED
 int32_t CGxDeviceD3d::ICheckDepthStencilFormat(D3DFORMAT format) {
     return SUCCEEDED(this->m_d3d->CheckDeviceFormat(this->m_d3dCaps.AdapterOrdinal, this->m_d3dCaps.DeviceType, this->m_devAdapterFormat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, format)) && SUCCEEDED(this->m_d3d->CheckDepthStencilMatch(this->m_d3dCaps.AdapterOrdinal, this->m_d3dCaps.DeviceType, this->m_devAdapterFormat, this->m_devAdapterFormat, format));
 }

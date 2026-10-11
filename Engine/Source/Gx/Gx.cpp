@@ -313,7 +313,7 @@ int32_t GxXformIsValidViewport(float minX, float maxX, float minY, float maxY, f
     return g_theGxDevicePtr->XformIsValidViewport(cleanMinX, cleanMaxX, cleanMinY, cleanMaxY, minZ, maxZ);
 }
 
-// OFFSET: %0x007A6110
+// INLINED
 uint32_t GxVertexAttribOffset(EGxVertexBufferFormat format, EGxVertexAttrib attrib) {
     return Buffer::s_vertexBufDesc[format].attribPtrs[attrib]->m_offset;
 }

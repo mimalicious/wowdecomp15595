@@ -125,7 +125,7 @@ static unsigned int HighestBit(unsigned int value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00925520
+// INLINED
 void aabbAdd(FMOD_AABB& a, FMOD_AABB& b, FMOD_AABB& dst)
 {    
     dst.xMin = MIN(a.xMin, b.xMin);
@@ -787,7 +787,7 @@ void Octree::setMaxSize(float maxSize)
     mScale = 1.0f / maxSize;
 }
 
-// OFFSET: #0x00925E60
+// INLINED
 bool Octree::testLine(bool (*octreeLineTestCallback)(OctreeNode* item, void* data), void* data, const FMOD_VECTOR& a, const FMOD_VECTOR& b)
 {
     ASSERT(octreeLineTestCallback);    
@@ -1199,7 +1199,7 @@ public:
 TestClass testClass;*/
 #endif
 
-// OFFSET: #0x00925EE0
+// INLINED
 void Octree::insertInternal(OctreeNode* node, OctreeNode* item)
 {
     for (;;)
@@ -1585,7 +1585,7 @@ void Octree::addListItem(OctreeNode* list, OctreeNode* node)
     ASSERT(node->nextItem != node);
 }
 
-// OFFSET: #0x00925790
+// INLINED
 void Octree::testLine(OctreeNode* node, FMOD_VECTOR a, FMOD_VECTOR b, RecursionData* recursionData)
 {
     float t;

@@ -529,7 +529,7 @@ void CGxDevice::NotifyOnDisplayChange(uint32_t value) {
     }
 }
 
-// OFFSET: %0x007A9420
+// INLINED
 void CGxDevice::NotifyOnShaderModelChange() {
     for (uint32_t i = 0; i < CGxDevice::s_shaderModelChangeCallbacks.Count(); i++) {
         CGxDevice::ShaderModelCall& call = CGxDevice::s_shaderModelChangeCallbacks[i];
@@ -1937,7 +1937,7 @@ void CGxDevice::IDeleteBackBufferFB(int32_t deleteTextures) {
     }
 }
 
-// OFFSET: [%0x007AE400, %0x007AE5A0]
+// INLINED
 CGxDevice::~CGxDevice() {
     this->IDeleteBackBufferFB(1);
     this->m_frameBuffer = NULL;
@@ -2084,7 +2084,7 @@ void CGxDevice::ITexWHDStartEnd(CGxTex* texId, uint32_t& width, uint32_t& height
     height >>= baseMip;
 }
 
-// OFFSET: %0x007A7950
+// INLINED
 void CGxDevice::DeviceGetRenderTarget(EGxBuffer buffer, CGxTex*& texture) {
     texture = this->m_textureTarget[buffer].m_texture;
 }

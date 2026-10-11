@@ -170,7 +170,7 @@ int32_t CGBag_C::GetNumItems() const {
     return count;
 }
 
-// OFFSET: #0x00753A50
+// INLINED
 static int32_t __stdcall SlotMatchesSearchFlags(uint32_t slot, uint32_t flags) {
     return (slot <= 18 && (flags & 0x1)) || (slot - 23 <= 15 && (flags & 0x4)) || (slot - 19 <= 3 && (flags & 0x2)) || (((slot >= 39 && slot <= 66) || slot - 67 <= 6) && (flags & 0x8)) || (slot - 86 <= 31 && (flags & 0x40)) || (slot - 118 <= 31 && (flags & 0x200));
 }

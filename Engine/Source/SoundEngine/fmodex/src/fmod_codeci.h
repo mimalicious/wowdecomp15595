@@ -133,7 +133,7 @@ namespace FMOD
 
       public:
 
-        // OFFSET: [#0x008F40E0, #0x008F4440]
+        // INLINED
         Codec()
         {
             mType         = FMOD_SOUND_TYPE_UNKNOWN;
@@ -164,7 +164,7 @@ namespace FMOD
         FMOD_RESULT getPosition(unsigned int *position, FMOD_TIMEUNIT postype);
         FMOD_RESULT metaData(FMOD_TAGTYPE type, const char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype, bool unique);
         FMOD_RESULT getMetadataFromFile();
-        // OFFSET: #0x008D26F0
+        // INLINED
         FMOD_RESULT canPointTo() 
         {
             if (mDescription.canpoint)

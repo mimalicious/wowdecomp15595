@@ -31,7 +31,7 @@ void HMAC<T>::Init(const uint8_t* key, uint32_t length) {
     this->m_hash.Process(this->m_innerPad, sizeof(this->m_innerPad));
 }
 
-// OFFSET: [#0x00465780, 0x00487940<SHA1>]
+// OFFSET: [0x00487940<SHA1>]
 template <class T>
 void HMAC<T>::Finish(typename T::Digest& digest) {
     typename T::Digest inner;

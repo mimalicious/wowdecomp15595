@@ -59,7 +59,7 @@ uint32_t GetCodeInterfaceVersion() {
     return 40300;
 }
 
-// OFFSET: #0x005F4C40
+// INLINED
 char* AddOnUnloadableToken(UIADDON_LOADABLE_REASON reason, UIADDON_LOADABLE_REASON dependencyReason, char* buffer, uint32_t size) {
     if (reason) {
         SStrCopy(buffer, s_addOnLoadableTokens[reason], size);
@@ -620,7 +620,7 @@ bool IsAddOnLoaded(const char* name) {
     return false;
 }
 
-// OFFSET: #0x005F7840
+// INLINED
 void ClearAddOnEnableState(const char* character) {
     ADDONSTATELIST* list = s_addOnStates.Head();
 

@@ -44,7 +44,7 @@ typedef struct lsfit_acc{
 
 /***********************************************/
 
-// OFFSET: #0x004713E0
+// INLINED
 static void FMOD_floor1_free_info(vorbis_info_floor *i){
   vorbis_info_floor1 *info=(vorbis_info_floor1 *)i;
   if(info){
@@ -53,7 +53,7 @@ static void FMOD_floor1_free_info(vorbis_info_floor *i){
   }
 }
 
-// OFFSET: #0x00471410
+// INLINED
 static void FMOD_floor1_free_look(vorbis_look_floor *i){
   vorbis_look_floor1 *look=(vorbis_look_floor1 *)i;
   if(look){
@@ -127,7 +127,7 @@ static int icomp(const void *a,const void *b){
   return(**(int **)a-**(int **)b);
 }
 
-// OFFSET: #0x00471440
+// INLINED
 static vorbis_info_floor *FMOD_floor1_unpack (vorbis_info *vi,oggpack_buffer *opb){
   codec_setup_info     *ci=vi->codec_setup;
   int j,k,count=0,maxclass=-1,rangebits;
@@ -180,7 +180,7 @@ static vorbis_info_floor *FMOD_floor1_unpack (vorbis_info *vi,oggpack_buffer *op
   return(NULL);
 }
 
-// OFFSET: #0x00471690
+// INLINED
 static vorbis_look_floor *FMOD_floor1_look(vorbis_dsp_state *vd,
                                       vorbis_info_floor *in){
 
@@ -349,7 +349,7 @@ static const float FLOOR1_fromdB_LOOKUP[256]={
   0.82788260F, 0.88168307F, 0.9389798F, 1.F,
 };
 
-// OFFSET: #0x004718C0
+// INLINED
 static void render_line(int n, int x0,int x1,int y0,int y1,float *d){
   int dy=y1-y0;
   int adx=x1-x0;
@@ -969,7 +969,7 @@ static int post_Y(int *A,int *B,int pos){
 //  }
 //}
 
-// OFFSET: #0x00471A30
+// INLINED
 static void *FMOD_floor1_inverse1(vorbis_block *vb,vorbis_look_floor *in){
   vorbis_look_floor1 *look=(vorbis_look_floor1 *)in;
   vorbis_info_floor1 *info=look->vi;
@@ -1057,7 +1057,7 @@ static void *FMOD_floor1_inverse1(vorbis_block *vb,vorbis_look_floor *in){
   return(NULL);
 }
 
-// OFFSET: #0x00471D20
+// INLINED
 static int FMOD_floor1_inverse2(vorbis_block *vb,vorbis_look_floor *in,void *memo,
                           float *out){
   vorbis_look_floor1 *look=(vorbis_look_floor1 *)in;

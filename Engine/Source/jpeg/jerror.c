@@ -218,7 +218,7 @@ static void reset_error_mgr(j_common_ptr cinfo) {
  * after which the application may override some of the methods.
  */
 
-// OFFSET: %0x00A90740
+// INLINED
 struct jpeg_error_mgr * jpeg_std_error(struct jpeg_error_mgr * err) {
   err->error_exit = error_exit;
   err->emit_message = emit_message;

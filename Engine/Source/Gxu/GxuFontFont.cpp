@@ -25,7 +25,7 @@ bool KERNINGHASHKEY::operator==(const KERNINGHASHKEY& key) {
     return this == &key || this->m_code == key.m_code;
 }
 
-// OFFSET: #0x006C2260
+// INLINED
 const char* CGxFont::GetName() {
     return FontFaceGetFontName(this->m_fontFaceHandle);
 }

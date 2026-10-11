@@ -25,7 +25,7 @@ EffectUnderwater::EffectUnderwater(uint32_t type) {
     this->m_passes.New(pass);
 }
 
-// OFFSET: [%0x00A4FDB0, %0x00A50430]
+// INLINED
 EffectUnderwater::~EffectUnderwater() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {
@@ -34,7 +34,7 @@ EffectUnderwater::~EffectUnderwater() {
     }
 }
 
-// OFFSET: [%0x00A7BFB0, %0x00A7C060]
+// INLINED
 PassUnderwater::~PassUnderwater() {
     if (this->m_pixelShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_pixelShader);

@@ -94,7 +94,7 @@ CodecFSBCache CodecFSB::gCacheHead;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00912EC0
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecFSB::getDescriptionEx()
 {
     FMOD_memset(&fsbcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -134,7 +134,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecFSB::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00911FD0
+// INLINED
 FMOD_RESULT CodecFSB::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     unsigned int    rd;
@@ -682,7 +682,7 @@ FMOD_RESULT CodecFSB::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009106F0
+// INLINED
 FMOD_RESULT CodecFSB::closeInternal()
 {
     if (mCacheEntry)
@@ -808,7 +808,7 @@ FMOD_RESULT CodecFSB::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00911210
+// INLINED
 FMOD_RESULT CodecFSB::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1097,7 +1097,7 @@ FMOD_RESULT CodecFSB::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009117B0
+// INLINED
 FMOD_RESULT CodecFSB::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1341,7 +1341,7 @@ FMOD_RESULT CodecFSB::soundcreateInternal(int subsound, FMOD_SOUND *sound)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00910B00
+// INLINED
 FMOD_RESULT CodecFSB::getWaveFormatInternal(int index, FMOD_CODEC_WAVEFORMAT *waveformat_out)
 {
     FMOD_memset(waveformat_out, 0, sizeof(FMOD_CODEC_WAVEFORMAT));

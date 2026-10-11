@@ -100,7 +100,7 @@ void CScriptObject::SetName(const char* name) {
     }
 }
 
-// OFFSET: [%0x005209F0, %0x00520A20]
+// INLINED
 CScriptObject::~CScriptObject() {
     if (this->m_name.m_str) {
         this->UnregisterScriptObject(this->m_name.m_str);

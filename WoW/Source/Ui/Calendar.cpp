@@ -1989,7 +1989,7 @@ void CGCalendar::SetEventTextureID(uint32_t index) {
     }
 }
 
-// OFFSET: #0x005B96A0
+// INLINED
 void CGCalendar::RemoveEvent() {
     if (CGCalendar::m_actionPending || !CGCalendar::m_curEvent || CGCalendar::m_curEvent->m_new) {
         return;

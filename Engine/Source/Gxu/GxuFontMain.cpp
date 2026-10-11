@@ -1316,7 +1316,7 @@ CGxStringBatch* GxuFontCreateBatch(bool billboarded, bool worldSpace, bool noDep
     return batch;
 }
 
-// OFFSET: #0x006BF2D0
+// INLINED
 void GxuFontShutdown() {
     g_strings.Clear();
     g_fonts.Clear();

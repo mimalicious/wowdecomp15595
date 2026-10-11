@@ -336,7 +336,7 @@ static void null_method(j_compress_ptr cinfo) {
  * Module initialization routine for input colorspace conversion.
  */
 
-// OFFSET: %0x00A96A80
+// INLINED
 void jinit_color_converter(j_compress_ptr cinfo) {
   my_cconvert_ptr cconvert;
 

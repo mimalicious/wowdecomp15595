@@ -101,7 +101,7 @@ FMOD_RESULT ReverbI::validate(Reverb *reverb, ReverbI **reverbi)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E6540
+// INLINED
 FMOD_RESULT ReverbI::init(SystemI* system, bool is_3d, FMOD_REVERB_MODE mode)
 {
     FMOD_REVERB_PROPERTIES prop = FMOD_PRESET_OFF;             // then initialise them to 'off'
@@ -235,7 +235,7 @@ FMOD_RESULT ReverbI::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E55D0
+// INLINED
 FMOD_RESULT ReverbI::createDSP()
 {
     if (!mSystem)
@@ -560,7 +560,7 @@ FMOD_RESULT ReverbI::get3DAttributes(FMOD_VECTOR *position, float *mindistance, 
 ]
 */
 
-// OFFSET: #0x008E57C0
+// INLINED
 FMOD_RESULT ReverbI::setProperties(const FMOD_REVERB_PROPERTIES* prop_source)
 {
     FMOD_REVERB_PROPERTIES oldprops;
@@ -1146,7 +1146,7 @@ void ReverbI::sumProps(FMOD_REVERB_STDPROPERTIES *accprops, FMOD_REVERB_PROPERTI
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E6220
+// INLINED
 void ReverbI::factorProps(FMOD_REVERB_PROPERTIES *quotientprops, FMOD_REVERB_STDPROPERTIES *divprops, float factor)
 {
     FMOD_memset(quotientprops, 0, sizeof(FMOD_REVERB_PROPERTIES));

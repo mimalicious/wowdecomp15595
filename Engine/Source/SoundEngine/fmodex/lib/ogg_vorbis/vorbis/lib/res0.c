@@ -62,7 +62,7 @@ typedef struct {
 
 } vorbis_look_residue0;
 
-// OFFSET: #0x00470AC0
+// INLINED
 void FMOD_res0_free_info(vorbis_info_residue *i){
   vorbis_info_residue0 *info=(vorbis_info_residue0 *)i;
   if(info){
@@ -71,7 +71,7 @@ void FMOD_res0_free_info(vorbis_info_residue *i){
   }
 }
 
-// OFFSET: #0x00470AF0
+// INLINED
 void FMOD_res0_free_look(vorbis_look_residue *i){
   int j;
   if(i){
@@ -200,7 +200,7 @@ void FMOD_res0_pack(vorbis_info_residue *vr,oggpack_buffer *opb){
 #endif
 
 /* vorbis_info is for range checking */
-// OFFSET: #0x00470BC0
+// INLINED
 vorbis_info_residue *FMOD_res0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   int j,acc=0;
   vorbis_info_residue0 *info=_ogg_calloc(1,sizeof(*info));
@@ -238,7 +238,7 @@ vorbis_info_residue *FMOD_res0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   return(NULL);
 }
 
-// OFFSET: #0x00470D20
+// INLINED
 vorbis_look_residue *FMOD_res0_look(vorbis_dsp_state *vd,
                                vorbis_info_residue *vr){
   vorbis_info_residue0 *info=(vorbis_info_residue0 *)vr;
@@ -649,7 +649,7 @@ static int _01forward(oggpack_buffer *opb,
 #endif
 
 /* a truncated packet here just means 'stop working'; it's not an error */
-// OFFSET: #0x00470F70
+// INLINED
 static int _FMOD_01inverse(vorbis_block *vb,vorbis_look_residue *vl,
                       float **in,int ch,
                       ogg_int32_t (*decodepart)(codebook *, float *,
@@ -886,7 +886,7 @@ int FMOD_res2_forward(oggpack_buffer *opb,
 #endif
 
 /* duplicate code here as speed is somewhat more important */
-// OFFSET: #0x00471240
+// INLINED
 int FMOD_res2_inverse(vorbis_block *vb,vorbis_look_residue *vl,
                  float **in,int *nonzero,int ch){
   ogg_int32_t i,k,l,s;

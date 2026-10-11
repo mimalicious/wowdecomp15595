@@ -63,7 +63,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F8B60
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecASF::getDescriptionEx()
 {
     FMOD_memset(&asfcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -609,7 +609,7 @@ FMOD_RESULT CodecASF::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F7DD0
+// INLINED
 FMOD_RESULT CodecASF::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     HRESULT       hr           = S_OK;
@@ -920,7 +920,7 @@ HRESULT CROStream::Stat( STATSTG *pstatstg, DWORD grfStatFlag )
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F8050
+// INLINED
 HRESULT CROStream::QueryInterface( REFIID riid, void **ppv )
 {
     if( ( IID_IUnknown == riid ) || ( IID_IStream == riid ) )

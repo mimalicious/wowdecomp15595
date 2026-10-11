@@ -3,7 +3,7 @@
 #include "WoW/Source/DB/Rec/LightRec.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// OFFSET: #0x007EAF60
+// INLINED
 static void TransformMapCoord(LightRec* rec, bool transform) {
     if ((rec->m_gameCoords[0] != 0.0f || rec->m_gameCoords[1] != 0.0f || rec->m_gameCoords[2] != 0.0f) && transform) {
         rec->m_gameCoords[0] *= 1.0f / 36.0f;
@@ -28,7 +28,7 @@ static void TransformMapCoord(LightRec* rec, bool transform) {
     }
 }
 
-// OFFSET: #0x007EB010
+// INLINED
 static void TransformLights(bool transform) {
     for (int32_t i = 0; i < g_lightDB.m_numRecords; i++) {
         LightRec* rec = g_lightDB.GetRecordByIndex(i);
@@ -36,7 +36,7 @@ static void TransformLights(bool transform) {
     }
 }
 
-// OFFSET: %0x004F0CE0
+// INLINED
 void InitLights(bool transform) {
     TransformLights(transform);
 }

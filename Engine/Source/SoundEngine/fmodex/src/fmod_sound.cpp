@@ -392,7 +392,7 @@ FMOD_RESULT Sound::setSubSoundSentence(int *subsoundlist, int numsubsounds)
 }
 
 
-// OFFSET: #0x008D1A40
+// INLINED
 FMOD_RESULT Sound::getName(char *name, int namelen)
 {
     FMOD_RESULT result;
@@ -581,7 +581,7 @@ FMOD_RESULT Sound::seekData(unsigned int pcm)
 }
 
 
-// OFFSET: #0x008D1AC0
+// INLINED
 FMOD_RESULT Sound::setSoundGroup(SoundGroup *soundgroup)
 {
     FMOD_RESULT result;
@@ -874,7 +874,7 @@ FMOD_RESULT Sound::setUserData(void *_userdata)
 }
 
 
-// OFFSET: #0x008D1B00
+// INLINED
 FMOD_RESULT Sound::getUserData(void **_userdata)
 {
     FMOD_RESULT result;

@@ -78,7 +78,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093CBD0
+// INLINED
 FMOD_OUTPUT_DESCRIPTION_EX *OutputDSound::getDescriptionEx()
 {
     FMOD_memset(&dsoundoutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -136,7 +136,7 @@ FMOD_OUTPUT_DESCRIPTION_EX *OutputDSound::getDescriptionEx()
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x0093AAE0
+// INLINED
 FMOD_RESULT OutputDSound::registerDLL()
 {
     char szPath[512];
@@ -239,7 +239,7 @@ FMOD_RESULT OutputDSound::registerDLL()
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x0093ACA0
+// INLINED
 BOOL CALLBACK FMOD_Output_DSound_EnumProc(LPGUID lpGUID, LPCSTR lpszDesc, LPCSTR lpszDrvName, LPVOID lpContext)
 {
     FMOD::OutputDSound *outputdsound = (FMOD::OutputDSound *)lpContext;
@@ -420,7 +420,7 @@ FMOD_RESULT OutputDSound::getDriverName(int driver, char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093BEA0
+// INLINED
 FMOD_RESULT OutputDSound::getDriverCapsEx(int id, FMOD_CAPS *caps, int *minfrequency, int *maxfrequency, FMOD_SPEAKERMODE *controlpanelspeakermode, int *num2dchannels, int *num3dchannels, int *totalchannels)
 {
     FMOD_RESULT result;
@@ -691,7 +691,7 @@ FMOD_RESULT OutputDSound::getDriverCapsEx(int id, FMOD_CAPS *caps, int *minfrequ
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093C180
+// INLINED
 FMOD_RESULT OutputDSound::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, FMOD_SPEAKERMODE *speakermode, int dspbufferlength, int dspnumbuffers, int max2dchannels, int max3dchannels, void *extradriverdata)
 {
     FMOD_RESULT           result;
@@ -1501,7 +1501,7 @@ FMOD_RESULT OutputDSound::update()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093B2C0
+// INLINED
 FMOD_RESULT OutputDSound::createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *waveformat, Sample **sample)
 {
 	WAVE_FORMATEXTENSIBLE pcmwf;
@@ -2128,7 +2128,7 @@ FMOD_RESULT OutputDSound::stop()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093C7F0
+// INLINED
 FMOD_RESULT OutputDSound::getPosition(unsigned int *pcm)
 {
     SampleDSound   *sample;
@@ -2736,7 +2736,7 @@ FMOD_RESULT F_CALLBACK OutputDSound::recordGetDriverInfoCallback(FMOD_OUTPUT_STA
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093BD00
+// INLINED
 FMOD_RESULT F_CALLBACK OutputDSound::recordStartCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_SOUND *sound, int loop)
 {
     OutputDSound *dsound = (OutputDSound *)output;

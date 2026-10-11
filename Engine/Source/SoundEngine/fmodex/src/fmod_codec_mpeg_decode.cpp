@@ -136,7 +136,7 @@ unsigned int CodecMPEG::getBitsFast(int number_of_bits)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092C330
+// INLINED
 FMOD_RESULT CodecMPEG::decodeHeader(void *in, int *samplerate, int *channels, int *framesize)
 {
 #ifdef FMOD_SUPPORT_MPEG_SONYDECODER
@@ -705,7 +705,7 @@ FMOD_RESULT CodecMPEG::resetFrame()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092C930
+// INLINED
 void CodecMPEG::dct64(float *out0,float *out1,float *samples)
 {
     float b1[32], b2[32];

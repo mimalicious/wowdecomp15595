@@ -1653,7 +1653,7 @@ uint32_t CM2Model::GetFallbackSequenceIdFromSequenceId(uint32_t id, M2SequenceFa
     return fallback->m_id;
 }
 
-// OFFSET: %0x0077D8A0
+// INLINED
 int32_t CM2Model::IsSequenceLoaded(uint32_t id) {
     if (id >= ANIM_COUNT) {
         return 0;
@@ -1711,7 +1711,7 @@ uint16_t CM2Model::FindSequenceIndex(const M2Data* data, uint32_t id, int32_t va
     return static_cast<uint16_t>(index);
 }
 
-// OFFSET: %0x0077DA00
+// INLINED
 uint32_t CM2Model::FindSequenceVariationCount(const M2Data* data, uint32_t id) {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);
@@ -1759,7 +1759,7 @@ uint32_t CM2Model::FindSequenceVariationCount(const M2Data* data, uint32_t id) {
     return count;
 }
 
-// OFFSET: %0x0077DB50
+// INLINED
 uint32_t CM2Model::GetSequenceVariationCount(uint32_t id) {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);
@@ -1990,7 +1990,7 @@ uint32_t CM2Model::GetBoneSequenceId(uint32_t boneId) {
     return 0;
 }
 
-// OFFSET: %0x0077E0C0
+// INLINED
 uint32_t CM2Model::GetBoneSequenceAnimId(uint32_t boneId, uint32_t* variation) {
     if (variation) {
         *variation = 0;
@@ -2076,7 +2076,7 @@ uint32_t CM2Model::GetBoneSequenceTime(uint32_t boneId) {
     return result;
 }
 
-// OFFSET: %0x0077E260
+// INLINED
 float CM2Model::GetBoneSequenceSpeed(uint32_t boneId) {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);
@@ -2124,7 +2124,7 @@ int32_t CM2Model::OnSequenceInterrupted(uint32_t boneId, uint16_t boneIndex) {
     return result ? 1 : result;
 }
 
-// OFFSET: %0x0077E2F0
+// INLINED
 int32_t CM2Model::BoneHasParent(uint32_t boneId) {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);
@@ -8675,7 +8675,7 @@ void CM2Model::SetWorldTransform(const C44Matrix& matrix) {
     this->m_worldTransform = matrix;
 }
 
-// OFFSET: #0x004E2730
+// INLINED
 void CM2Lighting::Reset() {
     this->m_sunAmbient = C3Vector(0.0f, 0.0f, 0.0f);
     this->m_sunDiffuse = C3Vector(0.0f, 0.0f, 0.0f);

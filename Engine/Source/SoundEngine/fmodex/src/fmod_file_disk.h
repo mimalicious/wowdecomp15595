@@ -16,7 +16,7 @@ namespace FMOD
 
       public:
 
-        // OFFSET: #0x008D2750
+        // INLINED
         DiskFile() { mDeviceType = DEVICE_DISK; }
 
         FMOD_RESULT reallyOpen(const char *name_or_data, unsigned int *filesize);

@@ -263,7 +263,7 @@ static void FMOD_FLAC_ErrorCallback(const FLAC__StreamDecoder *decoder, FLAC__St
 }
 
 
-// OFFSET: #0x0090D040
+// INLINED
 static void FMOD_FLAC_MetadataCallback(const FLAC__StreamDecoder *decoder, const FLAC__StreamMetadata *metadata, void *client_data)
 {
     CodecFLAC *codec;
@@ -325,7 +325,7 @@ static void FMOD_FLAC_MetadataCallback(const FLAC__StreamDecoder *decoder, const
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090D680
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecFLAC::getDescriptionEx()
 {
     FMOD_memset(&flaccodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -361,7 +361,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecFLAC::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090D340
+// INLINED
 FMOD_RESULT CodecFLAC::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     unsigned int    rd;
@@ -522,7 +522,7 @@ FMOD_RESULT CodecFLAC::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090D1B0
+// INLINED
 FMOD_RESULT CodecFLAC::closeInternal()
 {
     if (mDecoder)
@@ -561,7 +561,7 @@ FMOD_RESULT CodecFLAC::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090D210
+// INLINED
 FMOD_RESULT CodecFLAC::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -733,7 +733,7 @@ FMOD_RESULT F_CALLBACK CodecFLAC::readCallback(FMOD_CODEC_STATE *codec, void *bu
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090D2E0
+// INLINED
 FMOD_RESULT F_CALLBACK CodecFLAC::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecFLAC *flac = (CodecFLAC *)codec;

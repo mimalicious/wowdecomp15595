@@ -176,7 +176,7 @@ int32_t STORMAPI SFile::FileIsLocal(SFileImpl* file, int64_t offset, uint32_t si
     return 1;
 }
 
-// OFFSET: %0x00708180
+// INLINED
 int32_t STORMAPI SFile::FileRangeIsLocal(SFileImpl* file, int64_t offset, uint32_t size) {
     if (!file->m_stream) {
         return 1;
@@ -262,7 +262,7 @@ int32_t STORMAPI SFile::MakeFileLocal(SFileImpl* file, bool wait, int64_t chunk,
     return result;
 }
 
-// OFFSET: %0x007083E0
+// INLINED
 int32_t STORMAPI SFile::MakeFileRangeLocal(SFileImpl* file, int32_t queue, bool wait, int64_t offset, uint32_t size) {
     int32_t result = SFile::FileIsLocal(file, 0, 0);
 
@@ -910,7 +910,7 @@ int32_t SFile::IsBackgroundStreamingInProgress() {
     return BGLoading::IsStreamingInProgress();
 }
 
-// OFFSET: %0x00708F90
+// INLINED
 float SFile::GetStreamingBandwidth() {
     return BGLoading::GetBandwidth();
 }

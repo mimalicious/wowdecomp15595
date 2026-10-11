@@ -591,13 +591,13 @@ void CBLPFile::DecompPalARGB2565DitherFloydSteinberg(uint8_t* out, const void* i
     }
 }
 
-// OFFSET: %0x004CAC10
+// INLINED
 uint32_t CBLPFile::Width(uint32_t mipLevel) const {
     uint32_t width = this->m_header.m_width >> mipLevel;
     return width > 1 ? width : 1;
 }
 
-// OFFSET: %0x004CAC30
+// INLINED
 uint32_t CBLPFile::Height(uint32_t mipLevel) const {
     uint32_t height = this->m_header.m_height >> mipLevel;
     return height > 1 ? height : 1;
@@ -771,7 +771,7 @@ int32_t CBLPFile::Lock(PIXEL_FORMAT format, uint32_t mipLevel, uint8_t*& data, u
     }
 }
 
-// OFFSET: %0x004CB140
+// INLINED
 int32_t CBLPFile::LockChain(PIXEL_FORMAT format, MipBits*& images, uint32_t mipLevel) {
     if (!this->IsValidMip(mipLevel)) {
         return 0;
@@ -810,7 +810,7 @@ int32_t CBLPFile::LockChain(PIXEL_FORMAT format, MipBits*& images, uint32_t mipL
     return 1;
 }
 
-// OFFSET: %0x004CB2B0
+// INLINED
 int32_t CBLPFile::Lock2(const char* fileName, PIXEL_FORMAT format, uint32_t mipLevel, uint8_t* data, uint32_t& stride) {
     if (!this->m_inMemoryImage) {
         DebugValidate("m_inMemoryImage");
@@ -920,7 +920,7 @@ int32_t CBLPFile::OpenAddBlp(const char* fileName, int32_t flags) {
     return this->Open(path, flags);
 }
 
-// OFFSET: %0x004CB5A0
+// INLINED
 int32_t CBLPFile::LockChain2(const char* fileName, PIXEL_FORMAT format, MipBits*& images, uint32_t mipLevel, int32_t inPlace) {
     if (!this->IsValidMip(mipLevel)) {
         return 0;

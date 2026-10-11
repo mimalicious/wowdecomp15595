@@ -71,7 +71,7 @@ FMOD_DSP_PARAMETERDESC dsplowpass_param[2] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3790
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPLowPass::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -563,7 +563,7 @@ FMOD_RESULT DSPLowPass::prewarp(float *a0, float *a1, float *a2, float fc, float
  *             On return, set coef z-domain coefficients
  * ----------------------------------------------------------
  */
-// OFFSET: #0x008F2AA0
+// INLINED
 FMOD_RESULT DSPLowPass::bilinear(
     float a0, float a1, float a2,    /* numerator coefficients */
     float b0, float b1, float b2,    /* denominator coefficients */
@@ -609,7 +609,7 @@ FMOD_RESULT DSPLowPass::bilinear(
  * Note: frequencies are in Hz.
  * ----------------------------------------------------------
  */
-// OFFSET: #0x008F2B70
+// INLINED
 FMOD_RESULT DSPLowPass::szxform(
     float *a0, float *a1, float *a2, /* numerator coefficients */
     float *b0, float *b1, float *b2, /* denominator coefficients */
@@ -857,7 +857,7 @@ FMOD_RESULT F_CALLBACK DSPLowPass::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3760
+// INLINED
 FMOD_RESULT F_CALLBACK DSPLowPass::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPLowPass *lowpass = (DSPLowPass *)dsp;

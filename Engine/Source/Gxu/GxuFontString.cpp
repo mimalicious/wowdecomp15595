@@ -10,7 +10,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// OFFSET: #0x006C5E60
+// INLINED
 void CGxString::RemoveShadow() {
     this->m_flags &= ~1;
 }

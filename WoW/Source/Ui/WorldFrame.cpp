@@ -2878,7 +2878,7 @@ void CGWorldFrame::RegisterFrames() {
     FrameXML_RegisterFactory("ArchaeologyDigSiteFrame", CGArchaeologyDigSiteFrame::Create, false);
 }
 
-// OFFSET: #0x004F5910
+// INLINED
 int32_t CGWorldFrame::MissileEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4) {
     CMissile* missile = reinterpret_cast<CMissile*>(a4);
     return !missile || missile->m_mapEntity != NULL;

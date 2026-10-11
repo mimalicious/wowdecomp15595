@@ -92,7 +92,7 @@ static const float s_smoothViewDataMax[2] = { 100.0f, 100.0f };
 // STATIC: 0x00C99274
 static float s_minCollideHeight = 0.00000095367432f;
 
-// OFFSET: #0x005FD5C0
+// INLINED
 static float UnwrapAngleToward(float target, float current, float lo, float hi) {
     while (target - current < lo) {
         current -= 6.2831855f;
@@ -105,7 +105,7 @@ static float UnwrapAngleToward(float target, float current, float lo, float hi) 
     return current;
 }
 
-// OFFSET: #0x005FE3C0
+// INLINED
 static float WrapAngle0To2Pi(float angle) {
     if (angle < 0.0f) {
         return angle + 6.2831855f;

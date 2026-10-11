@@ -49,7 +49,7 @@ ComSat::Vector<T>::~Vector() {
     }
 }
 
-// OFFSET: [%0x00974120<unsigned __int64>, %0x00978CA0<ComSat::Network::Endpoint*>, %0x009798A0<ComSat::Network::Session::LocalTalker>]
+// INLINED
 template <class T>
 bool ComSat::Vector<T>::Find(const T& value, uint32_t& index) const {
     index = 0;
@@ -81,7 +81,7 @@ bool ComSat::Vector<T>::Reserve(uint32_t size) {
     return true;
 }
 
-// OFFSET: [%0x009749C0<unsigned __int64>, %0x00974A00<ComSat::Session*>]
+// INLINED
 template <class T>
 T* ComSat::Vector<T>::PushBack(const T& value) {
     if (this->m_used == this->m_capacity) {
@@ -92,7 +92,7 @@ T* ComSat::Vector<T>::PushBack(const T& value) {
     return element;
 }
 
-// OFFSET: [%0x009745F0<unsigned __int64>, %0x00979BE0<ComSat::Network::Endpoint*>, %0x00979B90<ComSat::Network::Session::LocalTalker>]
+// INLINED
 template <class T>
 bool ComSat::Vector<T>::Remove(const T& value) {
     uint32_t index;

@@ -2355,7 +2355,7 @@ WOWGUID CGBattlefieldInfo::GetArenaOpponent(uint32_t index) {
     return WOWGUID::Make(0);
 }
 
-// OFFSET: #0x006CF670
+// INLINED
 int32_t CGBattlefieldInfo::GetArenaOpponentIndex(const WOWGUID& guid, int32_t* index) {
     for (int32_t i = 0; i < 5; i++) {
         if (CGBattlefieldInfo::m_arenaOpponents[i] == guid) {

@@ -29,7 +29,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091AA80
+// INLINED
 OutputSoftware::OutputSoftware()
 {
     FMOD_memset(&mDescription, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -65,7 +65,7 @@ OutputSoftware::OutputSoftware()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A07CC0
+// INLINED
 FMOD_RESULT OutputSoftware::init(int maxchannels)
 {
     FMOD_RESULT     result;
@@ -161,7 +161,7 @@ FMOD_RESULT OutputSoftware::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091AB00
+// INLINED
 FMOD_RESULT OutputSoftware::createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *waveformat, Sample **sample)
 {
     FMOD_RESULT      result;
@@ -327,7 +327,7 @@ int OutputSoftware::getSampleMaxChannels(FMOD_MODE mode, FMOD_SOUND_FORMAT forma
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091AA70
+// INLINED
 int F_CALLBACK OutputSoftware::getSampleMaxChannelsCallback(FMOD_OUTPUT_STATE *output, FMOD_MODE mode, FMOD_SOUND_FORMAT format)
 {
     OutputSoftware *outputsoftware = (OutputSoftware *)output;

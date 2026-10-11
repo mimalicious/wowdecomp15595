@@ -116,7 +116,7 @@ void GruntLogin::Logon(const char* loginServer, const char* portal) {
     this->m_clientLink->Connect(loginServer ? loginServer : "us.logon.worldofwarcraft.com:3724");
 }
 
-// OFFSET: [#0x008CAB80, #0x008CAC20]
+// INLINED
 GruntLogin::~GruntLogin() {
     if (this->m_matrixCoordinates) {
         delete[] this->m_matrixCoordinates;
@@ -590,7 +590,7 @@ void GruntLogin::MATRIXINPUT::Finish(SHA1::Digest& digest) {
     this->m_valid = false;
 }
 
-// OFFSET: #0x00468F60
+// INLINED
 static void ProcessMatrixRC4(uint8_t* data, uint32_t length, SARC4Key* key) {
     uint8_t x = key->m_x;
     uint8_t y = key->m_y;

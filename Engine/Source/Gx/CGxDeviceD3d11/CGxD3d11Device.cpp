@@ -1946,7 +1946,7 @@ CGxDeviceD3d11::CGxDeviceD3d11() {
     this->DeviceCreateStreamBufs();
 }
 
-// OFFSET: [%0x007B5200, %0x007B5340]
+// INLINED
 CGxDeviceD3d11::~CGxDeviceD3d11() {
 }
 

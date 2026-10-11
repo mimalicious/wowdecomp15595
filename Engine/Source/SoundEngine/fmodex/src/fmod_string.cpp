@@ -117,7 +117,7 @@ char *FMOD_strlwr(char *string)
     return(string);
 }
 
-// OFFSET: #0x008D2400
+// INLINED
 int FMOD_strcmp( const char *string1, const char *string2 )
 {
     register char c1, c2;
@@ -131,7 +131,7 @@ int FMOD_strcmp( const char *string1, const char *string2 )
 }
 
 
-// OFFSET: #0x008D2430
+// INLINED
 int FMOD_strncmp( const char *string1, const char *string2, int len )
 {
     register char c1, c2;
@@ -147,7 +147,7 @@ int FMOD_strncmp( const char *string1, const char *string2, int len )
 }
 
 
-// OFFSET: #0x008D2470
+// INLINED
 int FMOD_stricmp( const char *string1, const char *string2 )
 {
     register char c1, c2;
@@ -160,7 +160,7 @@ int FMOD_stricmp( const char *string1, const char *string2 )
     return c1 - c2;
 }
 
-// OFFSET: #0x008D24C0
+// INLINED
 int FMOD_strnicmp( const char *string1, const char *string2, int len )
 {
     register char c1, c2;

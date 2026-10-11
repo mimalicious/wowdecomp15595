@@ -98,7 +98,7 @@ static void GxuLightSetGridSizeImpl(float gridSize) {
     GxuLightInvalidate();
 }
 
-// OFFSET: %0x00621470
+// INLINED
 static void GxuLightInvalidateImpl() {
     s_dirty = 1;
 }
@@ -356,7 +356,7 @@ void (*GxuLightSetGridSize)(float gridSize) = GxuLightSetGridSizeImpl;
 // STATIC: %0x00BBD36C
 void (*GxuLightInvalidate)() = GxuLightInvalidateImpl;
 
-// OFFSET: %0x00621710
+// INLINED
 CGxuLightQueue::CGxuLightQueue(const uint32_t (&params)[2]) : CMemBlock(sizeof(CGxuLight*) * params[0], 0, typeid(CGxuLight*).raw_name(), SLOG_OBJECT) {
     uint32_t count = params[0];
     uint32_t chunk = params[1];

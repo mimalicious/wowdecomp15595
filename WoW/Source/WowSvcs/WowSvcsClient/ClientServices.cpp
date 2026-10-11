@@ -452,7 +452,7 @@ void ClientServices::LoadCDKey() {
     SFile::CloseArchive(archive);
 }
 
-// OFFSET: #0x006B0850
+// INLINED
 void ClientConnection::Cleanup() {
     if (this->m_cleanup) {
         this->m_cleanup();
@@ -957,7 +957,7 @@ LoginResponse* ClientServices::CreateLoginResponse() {
     return ClientServices::m_instance;
 }
 
-// OFFSET: #0x006B0810
+// INLINED
 void ClientConnection::Initiate(WOWCS_OPS op, int32_t errorCode, void (*cleanup)()) {
     this->m_cleanup = cleanup;
     this->m_statusOp = op;
@@ -966,7 +966,7 @@ void ClientConnection::Initiate(WOWCS_OPS op, int32_t errorCode, void (*cleanup)
     LogConnectionStatus(op, errorCode, 1, 0);
 }
 
-// OFFSET: #0x006B0E10
+// INLINED
 void ClientServices::GetRealmList() {
     ClientConnection* connection = ClientServices::s_currentConnection;
     connection->Initiate(COP_GET_REALMS, 35, NULL);
@@ -1317,7 +1317,7 @@ void ClientConnection::RequestCharacterDelete(WOWGUID guid) {
 void ClientRealmResponseAdapter::GameServerResult(RealmConnection* connection, const char* message1, const char* message2, const char* message3) {
 }
 
-// OFFSET: #0x006B1B90
+// INLINED
 void ClientRealmResponseAdapter::LoginServerResult(LOGIN_STATE state, LOGIN_RESULT result, const char* message1, const char* message2, const char* message3) {
 }
 
@@ -1331,7 +1331,7 @@ void ClientRealmResponseAdapter::RealmListReceived(TSFixedArray<REALM_INFO>& rea
 void ClientRealmResponseAdapter::MessageReceived(RealmConnection* connection, uint32_t message) {
 }
 
-// OFFSET: #0x006B1B90
+// INLINED
 void ClientRealmResponseAdapter::OnChatReceived(RealmConnection* connection, WOWGUID guid, const char* text, uint8_t type) {
 }
 
@@ -1561,7 +1561,7 @@ void ClientServices::EnterMatrix(uint8_t value) {
     }
 }
 
-// OFFSET: #0x006B0A10
+// INLINED
 void ClientServices::RevertMatrix() {
     if (ClientServices::s_loginObj) {
         ClientServices::s_loginObj->RevertMatrix();

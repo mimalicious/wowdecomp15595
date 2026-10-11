@@ -11402,7 +11402,7 @@ void Spell_C_Initialize() {
     s_numPendingSpellCasts = 0;
 }
 
-// OFFSET: #0x007FE4B0
+// INLINED
 const char* GetPowerString(uint32_t powerType) {
     const char* tokens[7] = { "MANA", "RAGE", "FOCUS", "ENERGY", "HAPPINESS", "RUNES", "RUNIC_POWER" };
 

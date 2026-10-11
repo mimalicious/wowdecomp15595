@@ -917,7 +917,7 @@ void CLayoutFrame::OnFrameSizeChanged(const CRect& rect) {
     }
 }
 
-// OFFSET: [0x00509140/0x140150DB0, %0x005190E0]
+// OFFSET: [0x00509140/0x140150DB0]
 void CLayoutFrame::MarkFramePointsUnused() {
     for (int32_t i = 0; i < FRAMEPOINT_NUMPOINTS; i++) {
         CFramePoint* framePoint = this->m_framePoints[i];
@@ -1384,7 +1384,7 @@ void CLayoutFrame::DestroyLayout() {
     s_resizePendingList.UnlinkNode(this);
 }
 
-// OFFSET: [%0x0051A1E0, %0x0051A440]
+// INLINED
 CLayoutFrame::~CLayoutFrame() {
     if (this->m_animData) {
         delete this->m_animData;

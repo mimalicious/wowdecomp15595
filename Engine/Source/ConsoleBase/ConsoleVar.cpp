@@ -932,7 +932,7 @@ void ConsoleDestroyClientCVar() {
     s_configFile = NULL;
 }
 
-// OFFSET: #0x005300D0
+// INLINED
 void CVarIntListWrapper::WriteVersionTag() {
     this->m_buffer[1] = 1;
     this->m_buffer[0] = 'v';

@@ -129,7 +129,7 @@ void ComSat::Map<K, V>::Clear() {
     }
 }
 
-// OFFSET: [%0x00975220<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>, %0x009751A0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>]
+// INLINED
 template <class K, class V>
 bool ComSat::Map<K, V>::Find(const ComSat::MapKey<K>& key, uint32_t& index) const {
     if (!this->m_capacity) {
@@ -150,7 +150,7 @@ bool ComSat::Map<K, V>::Find(const ComSat::MapKey<K>& key, uint32_t& index) cons
     return false;
 }
 
-// OFFSET: [%0x00975430<unsigned __int64, unsigned char>, %0x00975470<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x009754B0<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
+// INLINED
 template <class K, class V>
 bool ComSat::Map<K, V>::Get(const ComSat::MapKey<K>& key, V& value) const {
     uint32_t index;
@@ -161,7 +161,7 @@ bool ComSat::Map<K, V>::Get(const ComSat::MapKey<K>& key, V& value) const {
     return true;
 }
 
-// OFFSET: [%0x00976FC0<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>, %0x0097AB70<unsigned char, ComSat::Sound::Manager::LocalPlayer*>]
+// INLINED
 template <class K, class V>
 bool ComSat::Map<K, V>::Insert(const ComSat::MapKey<K>& key, const V& value) {
     if (this->m_used >= (3 * this->m_capacity) >> 2) {
@@ -176,7 +176,7 @@ bool ComSat::Map<K, V>::Insert(const ComSat::MapKey<K>& key, const V& value) {
     return true;
 }
 
-// OFFSET: [%0x00975020<unsigned __int64, unsigned char>, %0x00975090<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>, %0x0097A6E0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>]
+// INLINED
 template <class K, class V>
 bool ComSat::Map<K, V>::Next(uint32_t& iterator, ComSat::MapKey<K>& key, V& value) const {
     if (iterator >= this->m_capacity) {
@@ -209,7 +209,7 @@ uint32_t ComSat::Map<K, V>::Reinsert(const Entry* entries, uint32_t count) {
     return inserted;
 }
 
-// OFFSET: [%0x00977050<unsigned __int64, unsigned char>, %0x00977140<unsigned __int64, float>, %0x00977230<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>, %0x0097AC00<unsigned char, ComSat::Sound::Manager::LocalPlayer*>]
+// INLINED
 template <class K, class V>
 bool ComSat::Map<K, V>::Remove(const ComSat::MapKey<K>& key, V& value) {
     uint32_t index;
@@ -232,7 +232,7 @@ bool ComSat::Map<K, V>::Remove(const ComSat::MapKey<K>& key, V& value) {
     return true;
 }
 
-// OFFSET: [%0x009754F0<unsigned __int64, unsigned char>, %0x00975580<unsigned __int64, float>, %0x0097A7B0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x00975610<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
+// INLINED
 template <class K, class V>
 void ComSat::Map<K, V>::Resize(uint32_t capacity) {
     uint32_t oldCapacity = this->m_capacity;
@@ -251,7 +251,7 @@ void ComSat::Map<K, V>::Resize(uint32_t capacity) {
     }
 }
 
-// OFFSET: [%0x0097AB20<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x00976630<unsigned __int64, unsigned char>, %0x00976680<unsigned __int64, float>, %0x009765E0<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
+// INLINED
 template <class K, class V>
 bool ComSat::Map<K, V>::Shrink() {
     if (this->m_used >= (3 * this->m_capacity) >> 3 || this->m_capacity <= 8) {
@@ -261,7 +261,7 @@ bool ComSat::Map<K, V>::Shrink() {
     return true;
 }
 
-// OFFSET: [%0x00976EA0<unsigned __int64, unsigned char>, %0x00976F30<unsigned __int64, float>]
+// INLINED
 template <class K, class V>
 V& ComSat::Map<K, V>::operator[](const ComSat::MapKey<K>& key) {
     if (this->m_used >= (3 * this->m_capacity) >> 2) {

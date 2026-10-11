@@ -8,11 +8,11 @@ CParticle::~CParticle() {
     this->m_age = 0.0f;
 }
 
-// OFFSET: %0x00A5FC60
+// INLINED
 CParticleEmitter::~CParticleEmitter() {
 }
 
-// OFFSET: %0x00A5FCD0
+// INLINED
 void CParticleEmitter::DecRef() {
     if (this->m_refCount-- == 1) {
         delete this;

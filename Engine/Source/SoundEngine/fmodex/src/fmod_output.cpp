@@ -91,7 +91,7 @@ FMOD_RESULT Output::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00916120
+// INLINED
 FMOD_RESULT Output::recordRead(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     FMOD_RESULT          result        = FMOD_OK;
@@ -204,7 +204,7 @@ FMOD_RESULT F_CALLBACK Output::recordResamplerReadCallback(FMOD_DSP_STATE *dsp_s
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009165F0
+// INLINED
 FMOD_RESULT Output::recordFill(unsigned int length)
 {
     FMOD_RESULT          result;
@@ -399,7 +399,7 @@ FMOD_RESULT Output::recordUpdate()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00916BC0
+// INLINED
 FMOD_RESULT Output::mix(void *buffer, unsigned int numsamples)
 {
     FMOD_RESULT           result;

@@ -609,7 +609,7 @@ void CGBarberShop::EnterWorld() {
     CGBarberShop::m_currentSkinColor = CGBarberShop::GetStyle(3, player->m_unit->m_unitFieldBytes0[0], player->m_player->m_playerBytes3[0], player->m_player->m_playerBytes[0]);
 }
 
-// OFFSET: #0x0052F190
+// INLINED
 USEABLESTYLE::~USEABLESTYLE() {
     this->m_styles.Clear();
 }

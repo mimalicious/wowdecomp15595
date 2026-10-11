@@ -54,7 +54,7 @@ static const FMOD_GUID _KSDATAFORMAT_SUBTYPE_PCM        = { 0x00000001, 0x0000, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00915F10
+// INLINED
 FMOD_OUTPUT_DESCRIPTION_EX *OutputWavWriter::getDescriptionEx()
 {
     FMOD_memset(&wavwriteroutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION));
@@ -175,7 +175,7 @@ FMOD_RESULT OutputWavWriter::getDriverCaps(int id, FMOD_CAPS *caps)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00915BA0
+// INLINED
 FMOD_RESULT OutputWavWriter::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     FMOD_RESULT result;

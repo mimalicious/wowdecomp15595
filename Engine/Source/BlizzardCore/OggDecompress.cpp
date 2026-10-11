@@ -48,7 +48,7 @@ size_t OggMemoryStream::Read(void* buffer, size_t size, size_t count) {
     return copy;
 }
 
-// OFFSET: #0x0041D300
+// INLINED
 static size_t OggRead(void* buffer, size_t size, size_t count, void* source) {
     return static_cast<OggMemoryStream*>(source)->Read(buffer, size, count);
 }
@@ -170,7 +170,7 @@ bool ShutdownOggDecompression() {
     return OggToWavConversion::ShutdownCache();
 }
 
-// OFFSET: %0x00765E40
+// INLINED
 bool InitOggDecompression() {
     return OggToWavConversion::InitCache(DecompressOgg);
 }

@@ -64,7 +64,7 @@ static void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName)
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x008D1CB0
+// INLINED
 void *FMOD_OS_Memory_Alloc(int size, FMOD_MEMORY_TYPE type)
 {
     return malloc(size);
@@ -83,7 +83,7 @@ void *FMOD_OS_Memory_Alloc(int size, FMOD_MEMORY_TYPE type)
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x008D1CC0
+// INLINED
 void *FMOD_OS_Memory_Realloc(void *ptr, int size, FMOD_MEMORY_TYPE type)
 {
     return realloc(ptr, size);
@@ -102,7 +102,7 @@ void *FMOD_OS_Memory_Realloc(void *ptr, int size, FMOD_MEMORY_TYPE type)
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x004A9CE0
+// INLINED
 void FMOD_OS_Memory_Free(void *ptr, FMOD_MEMORY_TYPE type)
 {
     free(ptr);
@@ -137,7 +137,7 @@ FMOD_RESULT FMOD_OS_File_DriveStatus()
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x008D1CD0
+// INLINED
 FMOD_RESULT FMOD_OS_File_Open(const char *name, char *mode, int unicode, unsigned int *filesize, void **handle)
 {
     if (unicode)
@@ -405,7 +405,7 @@ FMOD_RESULT FMOD_OS_Thread_GetCurrentID(FMOD_UINT_NATIVE *id)
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x008D2110
+// INLINED
 FMOD_RESULT FMOD_OS_Thread_Create(const char *name, THREAD_RETURNTYPE (THREAD_CALLCONV *func)(void *param), void *param, FMOD_THREAD_PRIORITY priority, void *stack, int stacksize, void **handle)
 {
     DWORD id;
@@ -517,7 +517,7 @@ CRITICAL_SECTION  gMemoryCrit;
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x008D1EE0
+// INLINED
 FMOD_RESULT FMOD_OS_CriticalSection_Create(FMOD_OS_CRITICALSECTION **crit, bool memorycrit)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -556,7 +556,7 @@ FMOD_RESULT FMOD_OS_CriticalSection_Create(FMOD_OS_CRITICALSECTION **crit, bool 
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x008D1F40
+// INLINED
 FMOD_RESULT FMOD_OS_CriticalSection_Free(FMOD_OS_CRITICALSECTION *crit)
 {
     if (!crit)
@@ -790,7 +790,7 @@ FMOD_RESULT FMOD_OS_Library_Load(const char *dllname, FMOD_OS_LIBRARY **handle)
 
 	[SEE_ALSO]
 */
-// OFFSET: #0x008D20A0
+// INLINED
 FMOD_RESULT FMOD_OS_Library_GetProcAddress(FMOD_OS_LIBRARY *handle, const char *procname, void **address)
 {
     if (!handle || !address)

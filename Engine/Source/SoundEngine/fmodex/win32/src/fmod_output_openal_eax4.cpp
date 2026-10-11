@@ -104,7 +104,7 @@ FMOD_RESULT OutputOpenAL::lockSlotEAX4(GUID &slotGUID)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094B250
+// INLINED
 FMOD_RESULT OutputOpenAL::setPropertiesEAX4(const FMOD_REVERB_PROPERTIES *prop)
 {
     GUID                 slotGUID;

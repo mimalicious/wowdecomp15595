@@ -55,7 +55,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00910670
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecVAG::getDescriptionEx()
 {
     FMOD_memset(&vagcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -316,7 +316,7 @@ FMOD_RESULT CodecVAG::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009105A0
+// INLINED
 FMOD_RESULT CodecVAG::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;
@@ -405,7 +405,7 @@ FMOD_RESULT F_CALLBACK CodecVAG::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00910570
+// INLINED
 FMOD_RESULT F_CALLBACK CodecVAG::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecVAG *vag = (CodecVAG *)codec;

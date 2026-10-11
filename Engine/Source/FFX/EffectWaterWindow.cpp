@@ -9,7 +9,7 @@ EffectWaterWindow::EffectWaterWindow(uint32_t type) {
     this->m_passes.New(pass);
 }
 
-// OFFSET: [%0x00A4FDB0, %0x00A50430]
+// INLINED
 EffectWaterWindow::~EffectWaterWindow() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         delete this->m_passes[i];
@@ -23,7 +23,7 @@ EffectSubmarineWindow::EffectSubmarineWindow(uint32_t type) {
     this->m_passes.New(pass);
 }
 
-// OFFSET: [%0x00A4FDB0, %0x00A50430]
+// INLINED
 EffectSubmarineWindow::~EffectSubmarineWindow() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         delete this->m_passes[i];

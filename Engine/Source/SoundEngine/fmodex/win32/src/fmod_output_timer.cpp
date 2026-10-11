@@ -35,7 +35,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094A7C0
+// INLINED
 FMOD_RESULT OutputTimer::timerFunc()
 {
     FMOD_RESULT         result          = FMOD_OK;

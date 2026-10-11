@@ -138,7 +138,7 @@ void CSimpleScrollFrame::OnFrameSizeChanged(float width, float height) {
     this->m_scrollChildUpdate = 1;
 }
 
-// OFFSET: [%0x00530080, %0x00530300]
+// INLINED
 CSimpleScrollFrame::~CSimpleScrollFrame() {
 }
 

@@ -53,7 +53,7 @@ uint32_t& Blizzard::BigBuffer::operator[](uint32_t index) {
     return this->m_data[index + this->m_offset];
 }
 
-// OFFSET: #0x00431060
+// INLINED
 uint32_t Blizzard::BigBuffer::operator[](uint32_t index) const {
     return this->IsUsed(index) ? this->m_data[index + this->m_offset] : 0;
 }
@@ -63,7 +63,7 @@ inline void Blizzard::BigBuffer::Clear() {
     this->m_data.resize(this->m_offset, 0);
 }
 
-// OFFSET: #0x0042BBA0
+// INLINED
 uint32_t Blizzard::BigBuffer::Count() const {
     return static_cast<uint32_t>(this->m_data.size()) - this->m_offset;
 }

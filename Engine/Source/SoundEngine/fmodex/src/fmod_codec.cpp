@@ -296,7 +296,7 @@ FMOD_RESULT Codec::getLength(unsigned int *length, FMOD_TIMEUNIT lengthtype)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091D4B0
+// INLINED
 FMOD_RESULT Codec::setPosition(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;

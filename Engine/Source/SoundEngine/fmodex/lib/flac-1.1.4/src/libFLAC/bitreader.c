@@ -162,7 +162,7 @@ static _inline FLAC__uint32 local_swap32_(FLAC__uint32 x)
 }
 #endif
 
-// OFFSET: #0x00956410
+// INLINED
 static FLaC__INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
 {
 	register unsigned crc = br->read_crc16;
@@ -192,7 +192,7 @@ static FLaC__INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
 	br->crc16_align = 0;
 }
 
-// OFFSET: #0x009564D0
+// INLINED
 static FLAC__bool bitreader_read_from_client_(FLAC__BitReader *br)
 {
 	unsigned start, end;
@@ -274,7 +274,7 @@ static FLAC__bool bitreader_read_from_client_(FLAC__BitReader *br)
  *
  ***********************************************************************/
 
-// OFFSET: #0x009565F0
+// INLINED
 FLAC__BitReader *FLAC__bitreader_new(void)
 {
 	FLAC__BitReader *br = (FLAC__BitReader*)calloc(1, sizeof(FLAC__BitReader));
@@ -291,7 +291,7 @@ FLAC__BitReader *FLAC__bitreader_new(void)
 	return br;
 }
 
-// OFFSET: #0x00957320
+// INLINED
 void FLAC__bitreader_delete(FLAC__BitReader *br)
 {
 	FLAC__ASSERT(0 != br);
@@ -306,7 +306,7 @@ void FLAC__bitreader_delete(FLAC__BitReader *br)
  *
  ***********************************************************************/
 
-// OFFSET: #0x00956600
+// INLINED
 FLAC__bool FLAC__bitreader_init(FLAC__BitReader *br, FLAC__BitReaderReadCallback rcb, void *cd)
 {
 	FLAC__ASSERT(0 != br);
@@ -323,7 +323,7 @@ FLAC__bool FLAC__bitreader_init(FLAC__BitReader *br, FLAC__BitReaderReadCallback
 	return true;
 }
 
-// OFFSET: #0x00956650
+// INLINED
 void FLAC__bitreader_free(FLAC__BitReader *br)
 {
 	FLAC__ASSERT(0 != br);
@@ -338,7 +338,7 @@ void FLAC__bitreader_free(FLAC__BitReader *br)
 	br->client_data = 0;
 }
 
-// OFFSET: #0x00956690
+// INLINED
 FLAC__bool FLAC__bitreader_clear(FLAC__BitReader *br)
 {
 	br->words = br->bytes = 0;
@@ -376,7 +376,7 @@ void FLAC__bitreader_dump(const FLAC__BitReader *br, FILE *out)
 	}
 }
 
-// OFFSET: #0x009566B0
+// INLINED
 void FLAC__bitreader_reset_read_crc16(FLAC__BitReader *br, FLAC__uint16 seed)
 {
 	FLAC__ASSERT(0 != br);
@@ -387,7 +387,7 @@ void FLAC__bitreader_reset_read_crc16(FLAC__BitReader *br, FLAC__uint16 seed)
 	br->crc16_align = br->consumed_bits;
 }
 
-// OFFSET: #0x009566D0
+// INLINED
 FLAC__uint16 FLAC__bitreader_get_read_crc16(FLAC__BitReader *br)
 {
 	FLAC__ASSERT(0 != br);
@@ -404,25 +404,25 @@ FLAC__uint16 FLAC__bitreader_get_read_crc16(FLAC__BitReader *br)
 	return br->read_crc16;
 }
 
-// OFFSET: #0x00956740
+// INLINED
 FLaC__INLINE FLAC__bool FLAC__bitreader_is_consumed_byte_aligned(const FLAC__BitReader *br)
 {
 	return ((br->consumed_bits & 7) == 0);
 }
 
-// OFFSET: #0x00956760
+// INLINED
 FLaC__INLINE unsigned FLAC__bitreader_bits_left_for_byte_alignment(const FLAC__BitReader *br)
 {
 	return 8 - (br->consumed_bits & 7);
 }
 
-// OFFSET: #0x00956780
+// INLINED
 FLaC__INLINE unsigned FLAC__bitreader_get_input_bits_unconsumed(const FLAC__BitReader *br)
 {
 	return (br->words-br->consumed_words)*FLAC__BITS_PER_WORD + br->bytes*8 - br->consumed_bits;
 }
 
-// OFFSET: #0x009567A0
+// INLINED
 FLaC__INLINE FLAC__bool FLAC__bitreader_read_raw_uint32(FLAC__BitReader *br, FLAC__uint32 *val, unsigned bits)
 {
 	FLAC__ASSERT(0 != br);
@@ -502,7 +502,7 @@ FLaC__INLINE FLAC__bool FLAC__bitreader_read_raw_uint32(FLAC__BitReader *br, FLA
 	}
 }
 
-// OFFSET: #0x00956920
+// INLINED
 FLAC__bool FLAC__bitreader_read_raw_int32(FLAC__BitReader *br, FLAC__int32 *val, unsigned bits)
 {
 	/* OPT: inline raw uint32 code here, or make into a macro if possible in the .h file */
@@ -514,7 +514,7 @@ FLAC__bool FLAC__bitreader_read_raw_int32(FLAC__BitReader *br, FLAC__int32 *val,
 	return true;
 }
 
-// OFFSET: #0x00956960
+// INLINED
 FLAC__bool FLAC__bitreader_read_raw_uint64(FLAC__BitReader *br, FLAC__uint64 *val, unsigned bits)
 {
 	FLAC__uint32 hi, lo;
@@ -536,7 +536,7 @@ FLAC__bool FLAC__bitreader_read_raw_uint64(FLAC__BitReader *br, FLAC__uint64 *va
 	return true;
 }
 
-// OFFSET: #0x00956A00
+// INLINED
 FLaC__INLINE FLAC__bool FLAC__bitreader_read_uint32_little_endian(FLAC__BitReader *br, FLAC__uint32 *val)
 {
 	FLAC__uint32 x8, x32 = 0;
@@ -562,7 +562,7 @@ FLaC__INLINE FLAC__bool FLAC__bitreader_read_uint32_little_endian(FLAC__BitReade
 	return true;
 }
 
-// OFFSET: #0x00957360
+// INLINED
 FLAC__bool FLAC__bitreader_skip_bits_no_crc(FLAC__BitReader *br, unsigned bits)
 {
 	/*
@@ -598,7 +598,7 @@ FLAC__bool FLAC__bitreader_skip_bits_no_crc(FLAC__BitReader *br, unsigned bits)
 	return true;
 }
 
-// OFFSET: #0x00956AA0
+// INLINED
 FLAC__bool FLAC__bitreader_skip_byte_block_aligned_no_crc(FLAC__BitReader *br, unsigned nvals)
 {
 	FLAC__uint32 x;
@@ -634,7 +634,7 @@ FLAC__bool FLAC__bitreader_skip_byte_block_aligned_no_crc(FLAC__BitReader *br, u
 	return true;
 }
 
-// OFFSET: #0x00956B40
+// INLINED
 FLAC__bool FLAC__bitreader_read_byte_block_aligned_no_crc(FLAC__BitReader *br, FLAC__byte *val, unsigned nvals)
 {
 	FLAC__uint32 x;
@@ -691,7 +691,7 @@ FLAC__bool FLAC__bitreader_read_byte_block_aligned_no_crc(FLAC__BitReader *br, F
 	return true;
 }
 
-// OFFSET: #0x00956C10
+// INLINED
 FLaC__INLINE FLAC__bool FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br, unsigned *val)
 #ifdef FLAC__NO_MANUAL_INLINING
 {
@@ -812,7 +812,7 @@ FLAC__bool FLAC__bitreader_read_rice_signed(FLAC__BitReader *br, int *val, unsig
 
 /* this is by far the most heavily used reader call.  it ain't pretty but it's fast */
 /* a lot of the logic is copied, then adapted, from FLAC__bitreader_read_unary_unsigned() and FLAC__bitreader_read_raw_uint32() */
-// OFFSET: #0x00956DC0
+// INLINED
 FLAC__bool FLAC__bitreader_read_rice_signed_block(FLAC__BitReader *br, int vals[], unsigned nvals, unsigned parameter)
 {
 	unsigned i;
@@ -1082,7 +1082,7 @@ FLAC__bool FLAC__bitreader_read_golomb_unsigned(FLAC__BitReader *br, unsigned *v
 #endif /* UNUSED */
 
 /* on return, if *val == 0xffffffff then the utf-8 sequence was invalid, but the return value will be true */
-// OFFSET: #0x009570A0
+// INLINED
 FLAC__bool FLAC__bitreader_read_utf8_uint32(FLAC__BitReader *br, FLAC__uint32 *val, FLAC__byte *raw, unsigned *rawlen)
 {
 	FLAC__uint32 v = 0;
@@ -1138,7 +1138,7 @@ FLAC__bool FLAC__bitreader_read_utf8_uint32(FLAC__BitReader *br, FLAC__uint32 *v
 }
 
 /* on return, if *val == 0xffffffffffffffff then the utf-8 sequence was invalid, but the return value will be true */
-// OFFSET: #0x009571D0
+// INLINED
 FLAC__bool FLAC__bitreader_read_utf8_uint64(FLAC__BitReader *br, FLAC__uint64 *val, FLAC__byte *raw, unsigned *rawlen)
 {
 	FLAC__uint64 v = 0;

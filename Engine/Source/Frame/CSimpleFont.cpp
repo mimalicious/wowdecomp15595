@@ -100,7 +100,7 @@ CSimpleFont::CSimpleFont() {
     s_fontCount++;
 }
 
-// OFFSET: [%0x00535D70, %0x00535E60, %0x00536110]
+// INLINED
 CSimpleFont::~CSimpleFont() {
     if (this->m_name) {
         this->UnregisterScriptObject(this->m_name);

@@ -26,7 +26,7 @@
 #include "scales.h"
 
 /**** pack/unpack helpers ******************************************/
-// OFFSET: #0x0046E200
+// INLINED
 int _FMOD_ilog(unsigned int v){
   int ret=0;
   while(v){
@@ -71,7 +71,7 @@ float _FMOD_float32_unpack(ogg_int32_t val){
 /* given a list of word lengths, generate a list of codewords.  Works
    for length ordered or unordered, always assigns the lowest valued
    codewords first.  Extended to handle unused entries (length 0) */
-// OFFSET: #0x0046E220
+// INLINED
 ogg_uint32_t *_FMOD_make_words(ogg_int32_t *l,ogg_int32_t n,ogg_int32_t sparsecount){
   ogg_int32_t i,j,count=0;
   ogg_uint32_t marker[33];
@@ -153,7 +153,7 @@ ogg_uint32_t *_FMOD_make_words(ogg_int32_t *l,ogg_int32_t n,ogg_int32_t sparseco
 /* there might be a straightforward one-line way to do the below
    that's portable and totally safe against roundoff, but I haven't
    thought of it.  Therefore, we opt on the side of caution */
-// OFFSET: #0x0046E3B0
+// INLINED
 ogg_int32_t _FMOD_book_maptype1_quantvals(const static_codebook *b){
   ogg_int32_t vals=(ogg_int32_t)FMOD_ogg_floor(FMOD_ogg_pow((float)b->entries,1.f/b->dim));
 
@@ -187,7 +187,7 @@ ogg_int32_t _FMOD_book_maptype1_quantvals(const static_codebook *b){
    generated algorithmically (each column of the vector counts through
    the values in the quant vector). in map type 2, all the values came
    in in an explicit list.  Both value lists must be unpacked */
-// OFFSET: #0x0046E430
+// INLINED
 float *_FMOD_book_unquantize(const static_codebook *b,int n,int *sparsemap){
   ogg_int32_t j,k,count=0;
   if(b->maptype==1 || b->maptype==2){
@@ -257,7 +257,7 @@ float *_FMOD_book_unquantize(const static_codebook *b,int n,int *sparsemap){
   return(NULL);
 }
 
-// OFFSET: #0x0046E670
+// INLINED
 void FMOD_vorbis_staticbook_clear(static_codebook *b){
   if(b->quantlist)_ogg_free(b->quantlist);
   if(b->lengthlist)_ogg_free(b->lengthlist);
@@ -265,13 +265,13 @@ void FMOD_vorbis_staticbook_clear(static_codebook *b){
   FMOD_memset(b,0,sizeof(*b));
 }
 
-// OFFSET: #0x0046E6D0
+// INLINED
 void FMOD_vorbis_staticbook_destroy(static_codebook *b){
   FMOD_vorbis_staticbook_clear(b);
   _ogg_free(b);
 }
 
-// OFFSET: #0x0046E700
+// INLINED
 void FMOD_vorbis_book_clear(codebook *b){
   /* static book is not cleared; we're likely called on the lookup and
      the static codebook belongs to the info struct */
@@ -308,14 +308,14 @@ static ogg_uint32_t bitreverse(ogg_uint32_t x){
   return((x>> 1)&0x55555555) | ((x<< 1)&0xaaaaaaaa);
 }
 
-// OFFSET: #0x0046E7A0
+// INLINED
 static int sort32a(const void *a,const void *b){
   return ( **(ogg_uint32_t **)a>**(ogg_uint32_t **)b)-
     ( **(ogg_uint32_t **)a<**(ogg_uint32_t **)b);
 }
 
 /* decode codebook arrangement is more heavily optimized than encode */
-// OFFSET: #0x0046E7D0
+// INLINED
 int FMOD_vorbis_book_init_decode(codebook *c,const static_codebook *s){
   int i,j,n=0,tabn;
   int *sortindex;

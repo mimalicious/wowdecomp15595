@@ -816,7 +816,7 @@ IWEncoder::IWEncoder() {
     this->m_checkBitCount = 0;
 }
 
-// OFFSET: %0x00A6CC70
+// INLINED
 IWEncoder::~IWEncoder() {
 }
 
@@ -836,7 +836,7 @@ IWLdpcEncoder::IWLdpcEncoder() {
     this->m_bitNodes = NULL;
 }
 
-// OFFSET: %0x00A6B2D0
+// INLINED
 IWLdpcEncoder::~IWLdpcEncoder() {
 }
 

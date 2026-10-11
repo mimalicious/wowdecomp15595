@@ -41,7 +41,7 @@ static AsioDriver *theAsioDriver = 0;
 #endif
 
 //-----------------------------------------------------------------------------------------------------
-// OFFSET: #0x0094D1F0
+// INLINED
 ASIOError ASIOInit(ASIODriverInfo *info)
 {
 #if MAC || SGI || SUN || BEOS || LINUX
@@ -93,7 +93,7 @@ ASIOError ASIOInit(ASIODriverInfo *info)
 #endif	// !MAC
 }
 
-// OFFSET: #0x0094D2D0
+// INLINED
 ASIOError ASIOExit(void)
 {
 	if(theAsioDriver)
@@ -111,7 +111,7 @@ ASIOError ASIOExit(void)
 	return ASE_OK;
 }
 
-// OFFSET: #0x0094D300
+// INLINED
 ASIOError ASIOStart(void)
 {
 	if(!theAsioDriver)
@@ -119,7 +119,7 @@ ASIOError ASIOStart(void)
 	return theAsioDriver->start();
 }
 
-// OFFSET: #0x0094D320
+// INLINED
 ASIOError ASIOStop(void)
 {
 	if(!theAsioDriver)
@@ -127,7 +127,7 @@ ASIOError ASIOStop(void)
 	return theAsioDriver->stop();
 }
 
-// OFFSET: #0x0094D340
+// INLINED
 ASIOError ASIOGetChannels(long *numInputChannels, long *numOutputChannels)
 {
 	if(!theAsioDriver)
@@ -148,7 +148,7 @@ ASIOError ASIOGetLatencies(long *inputLatency, long *outputLatency)
 	return theAsioDriver->getLatencies(inputLatency, outputLatency);
 }
 
-// OFFSET: #0x0094D370
+// INLINED
 ASIOError ASIOGetBufferSize(long *minSize, long *maxSize, long *preferredSize, long *granularity)
 {
 	if(!theAsioDriver)
@@ -166,7 +166,7 @@ ASIOError ASIOCanSampleRate(ASIOSampleRate sampleRate)
 	return theAsioDriver->canSampleRate(sampleRate);
 }
 
-// OFFSET: #0x0094D3C0
+// INLINED
 ASIOError ASIOGetSampleRate(ASIOSampleRate *currentRate)
 {
 	if(!theAsioDriver)
@@ -198,7 +198,7 @@ ASIOError ASIOSetClockSource(long reference)
 	return theAsioDriver->setClockSource(reference);
 }
 
-// OFFSET: #0x0094D3F0
+// INLINED
 ASIOError ASIOGetSamplePosition(ASIOSamples *sPos, ASIOTimeStamp *tStamp)
 {
 	if(!theAsioDriver)
@@ -206,7 +206,7 @@ ASIOError ASIOGetSamplePosition(ASIOSamples *sPos, ASIOTimeStamp *tStamp)
 	return theAsioDriver->getSamplePosition(sPos, tStamp);
 }
 
-// OFFSET: #0x0094D420
+// INLINED
 ASIOError ASIOGetChannelInfo(ASIOChannelInfo *info)
 {
 	if(!theAsioDriver)
@@ -219,7 +219,7 @@ ASIOError ASIOGetChannelInfo(ASIOChannelInfo *info)
 	return theAsioDriver->getChannelInfo(info);
 }
 
-// OFFSET: #0x0094D460
+// INLINED
 ASIOError ASIOCreateBuffers(ASIOBufferInfo *bufferInfos, long numChannels,
 	long bufferSize, ASIOCallbacks *callbacks)
 {
@@ -233,7 +233,7 @@ ASIOError ASIOCreateBuffers(ASIOBufferInfo *bufferInfos, long numChannels,
 	return theAsioDriver->createBuffers(bufferInfos, numChannels, bufferSize, callbacks);
 }
 
-// OFFSET: #0x0094D4B0
+// INLINED
 ASIOError ASIODisposeBuffers(void)
 {
 	if(!theAsioDriver)
@@ -255,7 +255,7 @@ ASIOError ASIOFuture(long selector, void *opt)
 	return theAsioDriver->future(selector, opt);
 }
 
-// OFFSET: #0x0094D4D0
+// INLINED
 ASIOError ASIOOutputReady(void)
 {
 	if(!theAsioDriver)

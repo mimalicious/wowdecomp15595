@@ -69,7 +69,7 @@ static LSTATUS ILoadValue(HKEY parentkey, const char* subkeyname, const char* va
     return result;
 }
 
-// OFFSET: #0x00770490
+// INLINED
 static int32_t InternalLoadEntry(const char* keyname, const char* valuename, uint32_t flags, DWORD* datatype, void* buffer, DWORD bytes, DWORD* bytesread) {
     *bytesread = 0;
     *datatype = REG_DWORD;
@@ -99,7 +99,7 @@ static int32_t InternalLoadEntry(const char* keyname, const char* valuename, uin
     return 0;
 }
 
-// OFFSET: #0x00770580
+// INLINED
 static int32_t InternalSaveEntry(const char* keyname, const char* valuename, uint32_t flags, DWORD datatype, const void* buffer, DWORD bytes) {
     char fullkeyname[MAX_PATH];
     BuildFullKeyName(keyname, flags, fullkeyname, MAX_PATH);
@@ -220,7 +220,7 @@ int32_t STORMAPI SRegLoadValue(const char* keyname, const char* valuename, uint3
     return 1;
 }
 
-// OFFSET: #0x007708F0
+// INLINED
 int32_t STORMAPI SRegSaveString(const char* keyname, const char* valuename, uint32_t flags, const char* string) {
     if (!keyname || !*keyname || !valuename || !*valuename || !string) {
         SErrSetLastError(ERROR_INVALID_PARAMETER);

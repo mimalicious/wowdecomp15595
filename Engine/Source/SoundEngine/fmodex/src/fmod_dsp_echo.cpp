@@ -61,7 +61,7 @@ FMOD_DSP_PARAMETERDESC dspecho_param[5] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F0910
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPEcho::getDescriptionEx()
 {
     FMOD_memset(&dspecho_desc, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));
@@ -367,7 +367,7 @@ FMOD_RESULT DSPEcho::readInternal(float *inbuffer, float *outbuffer, unsigned in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F0530
+// INLINED
 FMOD_RESULT DSPEcho::setParameterInternal(int index, float value)
 {
     float olddelay    = mDelay;
@@ -454,7 +454,7 @@ FMOD_RESULT DSPEcho::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F06D0
+// INLINED
 FMOD_RESULT DSPEcho::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)

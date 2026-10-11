@@ -197,7 +197,7 @@ bool CSimpleSlider::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleSlider::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: [%0x00531120, %0x00531620]
+// INLINED
 CSimpleSlider::~CSimpleSlider() {
     if (this->m_thumbTexture) {
         delete this->m_thumbTexture;

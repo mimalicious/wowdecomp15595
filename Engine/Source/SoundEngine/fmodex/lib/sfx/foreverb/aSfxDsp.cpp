@@ -427,7 +427,7 @@ void ASfxDsp::ClearReverbInternalBuffers()
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~ DoDSPProcessing ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// OFFSET: #0x00927A40
+// INLINED
 void ASfxDsp::DoDSPProcessing (float * inAudio, float * outAudio, int channels, unsigned int l_sampframes,
 							float rate, float drymix)
 {
@@ -863,7 +863,7 @@ void ASfxDsp::DoDSPProcessing (float * inAudio, float * outAudio, int channels, 
 
 
 // Copy input into our input buffer. This may be faster than doing it inside the big loop (?).
-// OFFSET: #0x00927340
+// INLINED
 void ASfxDsp::BlockProcessInput(unsigned int sampframes, int channels, float *inAudio, float rate)
 {
 	unsigned int i;
@@ -912,7 +912,7 @@ void ASfxDsp::SetLate_EarlyLateDelayTaps(float refPlusRevDelaySec, float nextLen
 	}
 }
 
-// OFFSET: #0x00927470
+// INLINED
 void ASfxDsp::SetAllpassDelays(float rate)
 {
 	mAllpassDelayLenSec[0] = kAllpassDelayLenSec0;

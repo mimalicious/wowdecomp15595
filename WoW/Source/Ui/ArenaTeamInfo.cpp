@@ -33,7 +33,7 @@ ArenaTeamSort CGArenaTeamInfo::m_sortOrder[7];
 // STATIC: 0x00F4CCC8
 WOWGUID CGArenaTeamInfo::m_selectedMember;
 
-// OFFSET: #0x005A1F00
+// INLINED
 ArenaTeam* CGArenaTeamInfo::GetArenaTeam(uint32_t index) {
     if (index >= 3) {
         return NULL;

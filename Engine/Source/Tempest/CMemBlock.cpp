@@ -4,7 +4,7 @@
 #include "Engine/Source/Tempest/CMemBlock.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00A46DD0
+// INLINED
 void CMemBlock::Set32b_(uint32_t* dest, uint32_t value, uint32_t bytes) {
     uint32_t blocks = bytes >> 4;
     uint32_t remaining = (bytes >> 2) - 4 * (bytes >> 4);
@@ -27,7 +27,7 @@ void CMemBlock::Set32b_(uint32_t* dest, uint32_t value, uint32_t bytes) {
     }
 }
 
-// OFFSET: %0x00A46E60
+// INLINED
 void CMemBlock::Set32b_(uint8_t* dest, uint8_t value, uint32_t bytes) {
     uint32_t head = static_cast<uint32_t>(-reinterpret_cast<intptr_t>(dest)) & 3;
     uint32_t tail = (bytes - head) & 3;
@@ -59,7 +59,7 @@ void CMemBlock::Set32b_(uint8_t* dest, uint8_t value, uint32_t bytes) {
     }
 }
 
-// OFFSET: %0x00A46EF0
+// INLINED
 void CMemBlock::SetM_(uint8_t* dest, uint8_t value, uint32_t bytes) {
     if (bytes >= 16) {
         CMemBlock::Set32b_(dest, value, bytes);
@@ -100,7 +100,7 @@ void CMemBlock::SetM_(uint8_t* dest, uint8_t value, uint32_t bytes) {
     }
 }
 
-// OFFSET: [%0x00A46F90, %0x00A47090]
+// INLINED
 CMemBlock::~CMemBlock() {
     if (this->m_block) {
         if (this->m_block != reinterpret_cast<uint8_t*>(-1)) {
@@ -114,7 +114,7 @@ CMemBlock::~CMemBlock() {
     }
 }
 
-// OFFSET: %0x00A46FD0
+// INLINED
 void CMemBlock::Constructor_(uint32_t size, uint32_t offset, const char* name, int32_t line) {
     if (this->m_block) {
         if (this->m_block != reinterpret_cast<uint8_t*>(-1)) {
@@ -135,13 +135,13 @@ void CMemBlock::Constructor_(uint32_t size, uint32_t offset, const char* name, i
     this->m_data = block + offset;
 }
 
-// OFFSET: %0x00A47050
+// INLINED
 CMemBlock::CMemBlock(uint32_t size, uint32_t offset, const char* name, int32_t line) {
     this->m_block = NULL;
     this->Constructor_(size, offset, name, line);
 }
 
-// OFFSET: %0x00A470F0
+// INLINED
 bool CMemBlock::Resize(uint32_t size, bool keep) {
     if (size != this->m_size) {
         uint32_t offset = this->m_blockSize - this->m_size;

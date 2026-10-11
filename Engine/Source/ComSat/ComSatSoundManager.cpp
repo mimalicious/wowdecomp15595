@@ -81,7 +81,7 @@ bool ComSat::Sound::Manager::CanBitpackEncodedData() {
     return ComSat::Sound::CODEC::CanBitpackFrames();
 }
 
-// OFFSET: #0x00881370
+// INLINED
 bool ComSat::Sound::Manager::IsUsingVariableBitrateCodec() {
     return ComSat::Sound::CODEC::IsEncodedBitrateVariable();
 }
@@ -964,7 +964,7 @@ void ComSat::Sound::Manager::EncodeAvailableVoiceData() {
     }
 }
 
-// OFFSET: [%0x009782C0, %0x00978870]
+// INLINED
 ComSat::Sound::Manager::~Manager() {
     uint32_t iterator = 0;
     ComSat::MapKey<uint8_t> playerKey;

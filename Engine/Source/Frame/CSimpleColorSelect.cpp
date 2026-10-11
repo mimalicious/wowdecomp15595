@@ -142,7 +142,7 @@ int32_t CSimpleColorSelect::OnLayerMouseUp(const CMouseEvent& evt, const char* b
     return CSimpleFrame::OnLayerMouseUp(evt, btn);
 }
 
-// OFFSET: [%0x00532FC0, %0x00533240]
+// INLINED
 CSimpleColorSelect::~CSimpleColorSelect() {
 }
 

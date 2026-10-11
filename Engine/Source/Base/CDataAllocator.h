@@ -35,14 +35,14 @@ class CDataAllocator {
     void Delete(T* object);
 };
 
-// OFFSET: [#0x007D4920, #0x007E55F0, #0x007E6C60, 0x00709CC0<SE3CombinableSoundKitPosition>, 0x00709D10<SE3CreateSoundEmitterMessage>, 0x00590AF0<CAnimKitInst>, 0x008010A0<CharacterEmoteSpellStartData>, 0x00462770<CCameraTrackNode>, 0x004E25D0<WORLDTEXTSTRING>]
+// OFFSET: [0x00709CC0<SE3CombinableSoundKitPosition>, 0x00709D10<SE3CreateSoundEmitterMessage>, 0x00590AF0<CAnimKitInst>, 0x008010A0<CharacterEmoteSpellStartData>, 0x00462770<CCameraTrackNode>, 0x004E25D0<WORLDTEXTSTRING>]
 template <class T>
 T* CDataAllocator::New(int32_t zero) {
     void* data = this->GetData(zero, typeid(T).raw_name(), SLOG_OBJECT);
     return data ? new (data) T : NULL;
 }
 
-// OFFSET: [#0x007E4C60, %0x008217A0]
+// INLINED
 template <class T>
 void CDataAllocator::Delete(T* object) {
     object->~T();

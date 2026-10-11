@@ -444,7 +444,7 @@ void DBCache_ClearTemporaryCaches() {
     }
 }
 
-// OFFSET: #0x0066FFE0
+// INLINED
 template <>
 DBCache<NameCache, uint64_t, CHashKeyGUID>::REVERSEENTRY* DBCache<NameCache, uint64_t, CHashKeyGUID>::FindReverseEntry(const char* name) {
     if (this->m_reverse.m_slotmask == 0xFFFFFFFF) {
@@ -489,14 +489,14 @@ DBCache<PetNameCache, int32_t, HASHKEY_INT>::REVERSEENTRY* DBCache<PetNameCache,
     return NULL;
 }
 
-// OFFSET: #0x006701F0
+// INLINED
 template <>
 PetNameCache* DBCache<PetNameCache, int32_t, HASHKEY_INT>::GetRecordByName(const char* name) {
     REVERSEENTRY* entry = this->FindReverseEntry(name);
     return entry ? entry->m_record : NULL;
 }
 
-// OFFSET: #0x00678F20
+// INLINED
 template <>
 void DBCache<NameCache, uint64_t, CHashKeyGUID>::RemoveReverseEntry(const char* name) {
     REVERSEENTRY* entry = this->FindReverseEntry(name);
@@ -509,7 +509,7 @@ void DBCache<NameCache, uint64_t, CHashKeyGUID>::RemoveReverseEntry(const char* 
     this->m_reverse.Delete(entry);
 }
 
-// OFFSET: #0x00680C20
+// INLINED
 template <>
 void DBCache<NameCache, uint64_t, CHashKeyGUID>::ItemAdded(NameCache* item) {
     if (this->FindReverseEntry(item->m_name)) {
@@ -542,7 +542,7 @@ void DBCache<NameCache, uint64_t, CHashKeyGUID>::Invalidate(uint64_t key) {
     }
 }
 
-// OFFSET: #0x00680C60
+// INLINED
 template <>
 void DBCache<NameCache, uint64_t, CHashKeyGUID>::AddItem(NameCache* item, uint64_t key) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);

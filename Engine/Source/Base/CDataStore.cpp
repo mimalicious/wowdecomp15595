@@ -67,7 +67,7 @@ void CDataStore::Finalize() {
     this->m_read = 0;
 }
 
-// OFFSET: [%0x004033B0, %0x004033D0]
+// INLINED
 CDataStore::~CDataStore() {
     if (this->m_alloc != -1) {
         this->InternalDestroy(this->m_data, this->m_base, this->m_alloc);
@@ -525,7 +525,7 @@ CDataStore& CDataStore::GetInt8(uint32_t& val) {
     return *this;
 }
 
-// OFFSET: [%0x00560930, #0x004D3870]
+// INLINED
 uint8_t CDataStore::GetByte() {
     uint8_t val = 0;
     this->Get(val);

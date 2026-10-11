@@ -82,7 +82,7 @@ bool Blizzard::Repair::RepairKey::operator<(const RepairKey& other) const {
     return this->m_md5 < other.m_md5;
 }
 
-// OFFSET: #0x00440970
+// INLINED
 Blizzard::Repair::RepairCache::~RepairCache() {
     if (s_reportCallback && this->m_repairedCount) {
         s_reportCallback(s_reportContext, this->m_entries.size(), this->m_repairedCount, this->m_repairedSize);
@@ -101,7 +101,7 @@ Blizzard::Repair::RepairCache::~RepairCache() {
     }
 }
 
-// OFFSET: #0x00440B10
+// INLINED
 bool Blizzard::Repair::RepairCache::AddEntry(const Blizzard::Util::Digest<16>& md5, int64_t index, uint32_t offset, uint32_t size) {
     RepairKey key;
     key.m_md5 = md5;
@@ -120,7 +120,7 @@ bool Blizzard::Repair::RepairCache::AddEntry(const Blizzard::Util::Digest<16>& m
     return true;
 }
 
-// OFFSET: #0x00440BD0
+// INLINED
 bool Blizzard::Repair::RepairCache::Load(Blizzard::File::StreamRecord* file) {
     int64_t offset = 32 * static_cast<int64_t>(this->m_entries.size());
 
@@ -139,7 +139,7 @@ bool Blizzard::Repair::RepairCache::Load(Blizzard::File::StreamRecord* file) {
     return true;
 }
 
-// OFFSET: #0x00443EE0
+// INLINED
 Blizzard::Repair::RepairCache::RepairCache() {
     char directory[260];
     Blizzard::Process::GetProcessDirectory(directory, sizeof(directory));

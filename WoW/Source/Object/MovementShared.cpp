@@ -690,7 +690,7 @@ void CMovementShared::Hover(int32_t enable) {
     }
 }
 
-// OFFSET: #0x00723350
+// INLINED
 int32_t CMovementShared::IsFalling() const {
     uint32_t flags = this->m_flags;
 
@@ -724,7 +724,7 @@ int32_t CMovementShared::IsJumpingUp() const {
     return (this->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_fallVelocity && this->m_fallVelocity * -0.051837362f > this->m_fallTimeMs * 0.001f;
 }
 
-// OFFSET: %0x00581240
+// INLINED
 int32_t CMovementShared::IsOnFallingSpline() const {
     CMoveSpline* spline = this->m_spline;
 
@@ -746,7 +746,7 @@ int32_t CMovementShared::IsOnFlyingSpline() const {
     return 0;
 }
 
-// OFFSET: %0x00581270
+// INLINED
 int32_t CMovementShared::IsOnParabolicSpline() const {
     CMoveSpline* spline = this->m_spline;
 
@@ -769,7 +769,7 @@ int32_t CMovementShared::IsOnSpline() const {
     return this->m_spline && !(this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE);
 }
 
-// OFFSET: #0x0075EDA0
+// INLINED
 int32_t CMovementShared::IsSplineFlyerOrFlyingOrSwimming() const {
     if (this->IsGravityDisabled()) {
         return 1;
@@ -778,7 +778,7 @@ int32_t CMovementShared::IsSplineFlyerOrFlyingOrSwimming() const {
     return (this->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) != 0;
 }
 
-// OFFSET: #0x0071C660
+// INLINED
 int32_t CMovementShared::IsSplineFlyerOrSwimmingOrSafeFalling() const {
     if (this->IsGravityDisabled()) {
         return 1;
@@ -787,7 +787,7 @@ int32_t CMovementShared::IsSplineFlyerOrSwimmingOrSafeFalling() const {
     return (this->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_SAFE_FALL)) != 0;
 }
 
-// OFFSET: #0x0071C720
+// INLINED
 int32_t CMovementShared::IsSplineFlyerOrHoveringFlyingOrSwimming() const {
     if (this->IsGravityDisabled()) {
         return 1;
@@ -1457,7 +1457,7 @@ int32_t CMovementShared::StartFlight() {
     return 1;
 }
 
-// OFFSET: %0x0095DBA0
+// INLINED
 int32_t CMovementShared::StopStrafe(uint32_t moveFlags) {
     if (!(moveFlags & (MOVEMENTFLAG_STRAFE_LEFT | MOVEMENTFLAG_STRAFE_RIGHT)) || (this->m_flags & MOVEMENTFLAG_FALLING)) {
         return 0;
@@ -1526,7 +1526,7 @@ void CMovementShared::StartSwim() {
     this->CalcCurrentSpeed(0);
 }
 
-// OFFSET: %0x00962AF0
+// INLINED
 int32_t CMovementShared::StopMove(uint32_t moveFlags) {
     if (!(moveFlags & (MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_BACKWARD)) || (this->m_flags & MOVEMENTFLAG_FALLING)) {
         return 0;

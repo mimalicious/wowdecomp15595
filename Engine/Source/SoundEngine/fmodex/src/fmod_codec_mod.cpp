@@ -61,7 +61,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090CD00
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecMOD::getDescriptionEx()
 {
     FMOD_memset(&modcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -216,7 +216,7 @@ FMOD_RESULT MusicChannelMOD::portamento()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090A630
+// INLINED
 FMOD_RESULT MusicChannelMOD::vibrato() 
 {
 	int delta;
@@ -282,7 +282,7 @@ FMOD_RESULT MusicChannelMOD::vibrato()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090A6F0
+// INLINED
 FMOD_RESULT MusicChannelMOD::tremolo() 
 {
 	int delta;
@@ -354,7 +354,7 @@ FMOD_RESULT MusicChannelMOD::tremolo()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090A7C0
+// INLINED
 FMOD_RESULT CodecMOD::updateNote(bool audible)
 {
 	MusicNote   *current;
@@ -827,7 +827,7 @@ FMOD_RESULT CodecMOD::updateNote(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090AF70
+// INLINED
 FMOD_RESULT CodecMOD::updateEffects() 
 {
 	MusicNote   *current;
@@ -2049,7 +2049,7 @@ FMOD_RESULT CodecMOD::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090B9B0
+// INLINED
 FMOD_RESULT CodecMOD::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

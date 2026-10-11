@@ -109,7 +109,7 @@ FMOD_RESULT Channel::setVolume(float volume)
 }
 
 
-// OFFSET: #0x008D09C0
+// INLINED
 FMOD_RESULT Channel::getVolume(float *volume)
 {
     FMOD_RESULT result;
@@ -451,7 +451,7 @@ FMOD_RESULT Channel::setPriority(int priority)
 }
 
 
-// OFFSET: #0x008D0B00
+// INLINED
 FMOD_RESULT Channel::getPriority(int *priority)
 {
     FMOD_RESULT result;
@@ -624,7 +624,7 @@ FMOD_RESULT Channel::set3DAttributes(const FMOD_VECTOR *pos, const FMOD_VECTOR *
 }
 
 
-// OFFSET: #0x008D0CA0
+// INLINED
 FMOD_RESULT Channel::get3DAttributes(FMOD_VECTOR *pos, FMOD_VECTOR *vel)
 {
     FMOD_RESULT result;
@@ -921,7 +921,7 @@ FMOD_RESULT Channel::set3DPanLevel(float level)
 }
 
 
-// OFFSET: #0x008D0E30
+// INLINED
 FMOD_RESULT Channel::get3DPanLevel(float *level)
 {
     FMOD_RESULT result;
@@ -1087,7 +1087,7 @@ FMOD_RESULT Channel::getAudibility(float *audibility)
 }
 
 
-// OFFSET: #0x008D0F60
+// INLINED
 FMOD_RESULT Channel::getFadeVolume(float *fadevolume)
 {
     FMOD_RESULT result;

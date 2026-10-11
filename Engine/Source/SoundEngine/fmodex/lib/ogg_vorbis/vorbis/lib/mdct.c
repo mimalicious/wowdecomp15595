@@ -49,7 +49,7 @@
 /* build lookups for trig functions; also pre-figure scaling and
    some window function algebra. */
 
-// OFFSET: #0x0046F5A0
+// INLINED
 int FMOD_mdct_init(mdct_lookup *lookup,int n){
   int   *bitrev=_ogg_malloc(sizeof(*bitrev)*(n/4));
   DATA_TYPE *T=_ogg_malloc(sizeof(*T)*(n+n/4));
@@ -99,7 +99,7 @@ int FMOD_mdct_init(mdct_lookup *lookup,int n){
 }
 
 /* 8 point butterfly (in place, 4 register) */
-// OFFSET: #0x0046F790
+// INLINED
 STIN void mdct_butterfly_8(DATA_TYPE *x){
   REG_TYPE r0   = x[6] + x[2];
   REG_TYPE r1   = x[6] - x[2];
@@ -124,7 +124,7 @@ STIN void mdct_butterfly_8(DATA_TYPE *x){
 }
 
 /* 16 point butterfly (in place, 4 register) */
-// OFFSET: #0x0046F800
+// INLINED
 STIN void mdct_butterfly_16(DATA_TYPE *x){
   REG_TYPE r0     = x[1]  - x[9];
   REG_TYPE r1     = x[0]  - x[8];
@@ -160,7 +160,7 @@ STIN void mdct_butterfly_16(DATA_TYPE *x){
 }
 
 /* 32 point butterfly (in place, 4 register) */
-// OFFSET: #0x0046F8C0
+// INLINED
 STIN void mdct_butterfly_32(DATA_TYPE *x){
   REG_TYPE r0     = x[30] - x[14];
   REG_TYPE r1     = x[31] - x[15];
@@ -225,7 +225,7 @@ STIN void mdct_butterfly_32(DATA_TYPE *x){
 }
 
 /* N point first stage butterfly (in place, 2 register) */
-// OFFSET: #0x0046FA70
+// INLINED
 STIN void mdct_butterfly_first(DATA_TYPE *T,
                                         DATA_TYPE *x,
                                         int points){
@@ -273,7 +273,7 @@ STIN void mdct_butterfly_first(DATA_TYPE *T,
 }
 
 /* N/stage point generic N stage butterfly (in place, 2 register) */
-// OFFSET: #0x0046FB80
+// INLINED
 STIN void mdct_butterfly_generic(DATA_TYPE *T,
                                           DATA_TYPE *x,
                                           int points,
@@ -327,7 +327,7 @@ STIN void mdct_butterfly_generic(DATA_TYPE *T,
   }while(x2>=x);
 }
 
-// OFFSET: #0x0046FCA0
+// INLINED
 STIN void mdct_butterflies(mdct_lookup *init,
                              DATA_TYPE *x,
                              int points){
@@ -350,7 +350,7 @@ STIN void mdct_butterflies(mdct_lookup *init,
 
 }
 
-// OFFSET: #0x0046FD60
+// INLINED
 void FMOD_mdct_clear(mdct_lookup *l){
   if(l){
     if(l->trig)_ogg_free(l->trig);
@@ -359,7 +359,7 @@ void FMOD_mdct_clear(mdct_lookup *l){
   }
 }
 
-// OFFSET: #0x0046FDC0
+// INLINED
 STIN void mdct_bitreverse(mdct_lookup *init,
                             DATA_TYPE *x){
   int        n       = init->n;
@@ -410,7 +410,7 @@ STIN void mdct_bitreverse(mdct_lookup *init,
   }while(w0<w1);
 }
 
-// OFFSET: #0x0046FED0
+// INLINED
 void FMOD_mdct_backward(mdct_lookup *init, DATA_TYPE *in, DATA_TYPE *out){
   int n=init->n;
   int n2=n>>1;

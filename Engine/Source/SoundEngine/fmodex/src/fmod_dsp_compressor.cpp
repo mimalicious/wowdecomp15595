@@ -74,7 +74,7 @@ FMOD_DSP_PARAMETERDESC dspcompressor_param[4] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EAB70
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPCompressor::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -348,7 +348,7 @@ FMOD_RESULT DSPCompressor::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EA9F0
+// INLINED
 FMOD_RESULT DSPCompressor::getParameterInternal(int index, float *value, char *valuestr)
 {
 
@@ -481,7 +481,7 @@ FMOD_RESULT F_CALLBACK DSPCompressor::readCallback(FMOD_DSP_STATE *dsp, float *i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EAB00
+// INLINED
 FMOD_RESULT F_CALLBACK DSPCompressor::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPCompressor *compressor = (DSPCompressor *)dsp;

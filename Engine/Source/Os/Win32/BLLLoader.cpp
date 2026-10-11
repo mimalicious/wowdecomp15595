@@ -6,7 +6,7 @@
 #include "Engine/Source/Os/BLLLoader.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007E1A70
+// INLINED
 void BLLLoader::Unload() {
     if (!this->m_image) {
         return;
@@ -24,7 +24,7 @@ void BLLLoader::Unload() {
     this->m_imageSize = 0;
 }
 
-// OFFSET: %0x007E1B00
+// INLINED
 bool BLLLoader::Load(const void* data, uint32_t size) {
     bool failed = true;
 

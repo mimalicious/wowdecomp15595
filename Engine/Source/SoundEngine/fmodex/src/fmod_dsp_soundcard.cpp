@@ -79,7 +79,7 @@ FMOD_RESULT DSPSoundCard::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00929D00
+// INLINED
 FMOD_RESULT DSPSoundCard::execute(void *inbuffer, void **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     FMOD_RESULT result;

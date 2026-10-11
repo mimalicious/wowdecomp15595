@@ -363,7 +363,7 @@ static int32_t OpenLogFile(const char* filename, void** file, uint32_t flags) {
     return result;
 }
 
-// OFFSET: #0x007757E0
+// INLINED
 int32_t STORMAPI SLogCreate(const char* filename, uint32_t flags, HSLOG* log) {
     if (!filename || !*filename || !log) {
         SErrSetLastError(ERROR_INVALID_PARAMETER);
@@ -403,7 +403,7 @@ int32_t STORMAPI SLogCreate(const char* filename, uint32_t flags, HSLOG* log) {
     return 1;
 }
 
-// OFFSET: #0x007758E0
+// INLINED
 void STORMAPI SLogDestroy() {
     SLogFlushAll();
 
@@ -443,7 +443,7 @@ static int32_t PrepareLog(_LOG* logptr) {
     return 0;
 }
 
-// OFFSET: #0x00775A90
+// INLINED
 void STORMAPI SLogVWrite(HSLOG log, const char* format, va_list arglist) {
     HLOCKEDLOG lockedhandle;
     _LOG* logptr = LockLog(log, &lockedhandle, 0);

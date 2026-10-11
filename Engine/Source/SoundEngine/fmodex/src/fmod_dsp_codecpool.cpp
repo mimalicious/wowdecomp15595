@@ -39,7 +39,7 @@ namespace FMOD
 ]
 */
 
-// OFFSET: #0x008E86B0
+// INLINED
 FMOD_RESULT DSPCodecPool::init(FMOD_DSP_CATEGORY category, int resamplerpcmblocksize, int numdspcodecs)
 {
     int count;
@@ -295,7 +295,7 @@ FMOD_RESULT DSPCodecPool::alloc(DSPCodec **dspcodec)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E8660
+// INLINED
 FMOD_RESULT DSPCodecPool::areAnyFree()
 {
     int count;

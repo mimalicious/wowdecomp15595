@@ -133,7 +133,7 @@ void Login::SetRawAccountName(const char* accountName) {
     SStrCopy(this->m_rawUsername, accountName, sizeof(this->m_rawUsername));
 }
 
-// OFFSET: [#0x004656B0, #0x00465750]
+// INLINED
 Login::~Login() {
     if (this->m_password) {
         memset(this->m_password, 0, SStrLen(this->m_password));
@@ -193,7 +193,7 @@ Login::Login() {
     this->unk_10E8 = 0;
 }
 
-// OFFSET: #0x004DA000
+// INLINED
 LoginResponse::~LoginResponse() {
 }
 

@@ -185,7 +185,7 @@ void CloseMeteredSection(LPMETERED_SECTION lpMetSect)
 /*
  * InitMeteredSection
  */
-// OFFSET: #0x008E5070
+// INLINED
 BOOL InitMeteredSection(LPMETERED_SECTION lpMetSect, 
          LONG lInitialCount, LONG lMaximumCount,
                         LPCTSTR lpName, BOOL bOpenOnly)
@@ -216,7 +216,7 @@ BOOL InitMeteredSection(LPMETERED_SECTION lpMetSect,
 /*
  * CreateMetSectEvent
  */
-// OFFSET: #0x008E4DC0
+// INLINED
 BOOL CreateMetSectEvent(LPMETERED_SECTION lpMetSect, 
          LPCTSTR lpName, BOOL bOpenOnly)
 {
@@ -251,7 +251,7 @@ BOOL CreateMetSectEvent(LPMETERED_SECTION lpMetSect,
 /*
  * CreateMetSectFileView
  */
-// OFFSET: #0x008E4E20
+// INLINED
 BOOL CreateMetSectFileView(LPMETERED_SECTION lpMetSect, 
          LONG lInitialCount, LONG lMaximumCount,
                            LPCTSTR lpName, BOOL bOpenOnly)

@@ -437,7 +437,7 @@ CDataStore& operator>>(CDataStore& msg, WowTime& time) {
     return msg;
 }
 
-// OFFSET: #0x0076CBA0
+// INLINED
 void WowTime::ConvertToLocal(WowTime& time) const {
     if (!this->m_tzHours) {
         return;

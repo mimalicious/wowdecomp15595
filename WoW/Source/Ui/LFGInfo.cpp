@@ -473,7 +473,7 @@ void LFGQueueStatus::Clear() {
     this->m_queuedTime = 0;
 }
 
-// OFFSET: #0x00552900
+// INLINED
 void CGLookingForGroup::ShowProposal(int32_t silent) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LFG_PROPOSAL_UPDATE, NULL);
 
@@ -639,7 +639,7 @@ LFGInfo& LFGInfo::CopyFrom(const LFGInfo& other) {
     return *this;
 }
 
-// OFFSET: #0x00558C30
+// INLINED
 static void ClearSearchResults() {
     CGLookingForGroup::m_searchResults.Clear();
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
@@ -1826,7 +1826,7 @@ int32_t CGLookingForGroup::GetBestRFChoice() {
     return 0;
 }
 
-// OFFSET: #0x00555A00
+// INLINED
 void CGLookingForGroup::RequestLFGPartyInfo() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_LFG_PARTY_LOCK_INFO_REQUEST));

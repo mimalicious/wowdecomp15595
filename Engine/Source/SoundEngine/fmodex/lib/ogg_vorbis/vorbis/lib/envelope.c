@@ -28,7 +28,7 @@
 #include "mdct.h"
 #include "misc.h"
 
-// OFFSET: #0x00470170
+// INLINED
 void _ve_envelope_clear(envelope_lookup *e){
   int i;
   FMOD_mdct_clear(&e->mdct);

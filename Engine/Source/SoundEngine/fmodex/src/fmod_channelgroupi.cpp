@@ -246,7 +246,7 @@ FMOD_RESULT ChannelGroupI::setVolume(float volume)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E48A0
+// INLINED
 FMOD_RESULT ChannelGroupI::setVolumeInternal()
 {
     LinkedListNode *current;
@@ -369,7 +369,7 @@ FMOD_RESULT ChannelGroupI::setPitch(float pitch)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E4930
+// INLINED
 FMOD_RESULT ChannelGroupI::setPitchInternal()
 {
     LinkedListNode *current;
@@ -1058,7 +1058,7 @@ FMOD_RESULT ChannelGroupI::overrideSpeakerMix(float frontleft, float frontright,
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E4B10
+// INLINED
 FMOD_RESULT ChannelGroupI::addGroup(ChannelGroupI *group)
 {
     FMOD_RESULT result;

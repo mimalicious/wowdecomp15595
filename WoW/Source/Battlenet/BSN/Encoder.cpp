@@ -366,7 +366,7 @@ int32_t BSN::Decoder::GetAlignedData(uint32_t bytes, uint8_t* data) {
     return this->GetData(8 * bytes, data);
 }
 
-// OFFSET: #0x0077A200
+// INLINED
 BSN::SizeEncoder::~SizeEncoder() {
 }
 

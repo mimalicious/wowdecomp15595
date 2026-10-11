@@ -483,7 +483,7 @@ bool CSimpleAnimGroup::AddAnimListNode(TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEAN
     return true;
 }
 
-// OFFSET: [%0x0053A250, %0x0053A9F0]
+// INLINED
 CSimpleAnimGroup::~CSimpleAnimGroup() {
     for (uint32_t i = 0; i < this->m_animLists.Count(); i++) {
         this->m_animLists[i]->Clear();

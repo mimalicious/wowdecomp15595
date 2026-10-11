@@ -226,7 +226,7 @@ CSimpleFrame::CSimpleFrame(CSimpleFrame* parent) {
     this->Show();
 }
 
-// OFFSET: [%0x005162F0, %0x005162C0, %0x00516950]
+// INLINED
 CSimpleFrame::~CSimpleFrame() {
     this->m_frameState = 3;
     this->m_simpleTop->UnregisterFrame(this);

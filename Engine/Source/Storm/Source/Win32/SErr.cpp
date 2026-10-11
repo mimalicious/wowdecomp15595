@@ -1003,7 +1003,7 @@ void STORMAPI SErrReportNamedResourceLeak(const char* handlename, const char* re
     }
 }
 
-// OFFSET: #0x00772760
+// INLINED
 static LONG WINAPI ExceptionFilterWin32(EXCEPTION_POINTERS* exceptionpointers) {
     EXCEPTION_RECORD* record = exceptionpointers->ExceptionRecord;
 
@@ -1094,7 +1094,7 @@ void SErrDisplayAppFatal(const char* format, ...) {
     SErrDisplayAppFatalCustomV(STORM_ERROR_FATAL_CONDITION, format, args);
 }
 
-// OFFSET: #0x00772AC0
+// INLINED
 int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
     char buffer[2048];
     va_list args;
@@ -1126,7 +1126,7 @@ void STORMAPI SErrCatchUnhandledExceptions() {
     }
 }
 
-// OFFSET: #0x008889B0
+// INLINED
 void SErrDisplayAppFatalMessage(const char* message, const char* filename, int32_t linenumber) {
     SErrPrepareAppFatal(filename, linenumber);
     SErrDisplayAppFatal("%s", message);

@@ -5588,7 +5588,7 @@ void CCharacterComponent::AddItemByType(INVENTORY_TYPES invType, int32_t display
     }
 }
 
-// OFFSET: #0x004E7A30
+// INLINED
 ITEM_SLOT CCharacterComponent::GetItemSlotForInvType(INVENTORY_TYPES invType) {
     switch (invType) {
         case INVTYPE_HEAD:

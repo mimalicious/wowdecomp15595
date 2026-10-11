@@ -15,7 +15,7 @@ static int32_t s_bannedAddOnCount;
 // STATIC: 0x00D391D8
 static TSHashTable<_BANNEDADDON, HASHKEY_NONE> s_bannedAddOns;
 
-// OFFSET: #0x005F3410
+// INLINED
 static void CopyMd5(uint8_t* dest, const uint8_t* source) {
     for (int32_t i = 0; i < 16; i++) {
         dest[i] = source[i];
@@ -149,7 +149,7 @@ int32_t SaveBannedAddOns() {
     return SaveCache();
 }
 
-// OFFSET: #0x005F3960
+// INLINED
 int32_t GetLatestBannedAddOnTimestamp() {
     int32_t latest = 0;
 
@@ -262,7 +262,7 @@ static void LoadDatabase() {
     }
 }
 
-// OFFSET: #0x005F4660
+// INLINED
 static int32_t LoadCache() {
     char directory[260];
 

@@ -1,16 +1,16 @@
 #include "Engine/Source/Model2/M2Data.h"
 
-// OFFSET: #0x0081CE60
+// INLINED
 ubyte4::operator uint32_t() const {
     return *reinterpret_cast<const uint32_t*>(this->b);
 }
 
-// OFFSET: #0x008248B0
+// INLINED
 uint8_t ubyte4::operator[](uint32_t index) const {
     return this->b[index];
 }
 
-// OFFSET: #0x00978AD0
+// INLINED
 fixed16::fixed16(float value) {
     if (value < 1.0f) {
         if (value > -1.0f) {

@@ -158,7 +158,7 @@ void CSimpleAnim::LoadXML_Scripts(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00537510
+// INLINED
 void CSimpleAnim::RunOnStopScript(bool requested) {
     if (this->HasScript(this->m_onStop)) {
         lua_State* L = FrameScript_GetContext();
@@ -332,7 +332,7 @@ float CSimpleAnim::UpdateProgress(float elapsedSec) {
     return elapsed - prevElapsed;
 }
 
-// OFFSET: [%0x00538340, %0x00538F20]
+// INLINED
 CSimpleAnim::~CSimpleAnim() {
     delete this->m_smoother;
 }

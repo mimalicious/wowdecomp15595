@@ -81,7 +81,7 @@ const char *note[128] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FD340
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecMIDI::getDescriptionEx()
 {
     FMOD_memset(&midicodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -409,7 +409,7 @@ FMOD_RESULT CodecMIDISubChannel::findArticulator(int src, int dest)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FA030
+// INLINED
 FMOD_RESULT CodecMIDISubChannel::articulateDest(CONN_SRC_FLAGS srcflags, int dest, int *usDestination)
 {
     int blockcount;
@@ -655,7 +655,7 @@ static float gTimeCentsTable[TIMECENTSTABLENUM] =
 
 #endif
 
-// OFFSET: #0x008FA390
+// INLINED
 float CodecMIDISubChannel::getTimeCentsFromlScale(int lScale)
 {
     if ((unsigned int)lScale == 0x80000000)
@@ -954,7 +954,7 @@ static float gDBToLinearTable[(96*2) + 1] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FA880
+// INLINED
 FMOD_RESULT CodecMIDISubChannel::updateVolume()
 {
     float eg1 = 1.0f, velocity, channelvol, expression, attenuation, tremolo = 1.0f;
@@ -1104,7 +1104,7 @@ FMOD_RESULT CodecMIDISubChannel::updateVolume()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FAB40
+// INLINED
 FMOD_RESULT CodecMIDISubChannel::updatePitch()
 {
     float eg2 = 0;
@@ -1372,7 +1372,7 @@ FMOD_RESULT CodecMIDIChannel::getSound(int key, SoundI **sound, CodecDLSInstrume
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FB560
+// INLINED
 FMOD_RESULT CodecMIDIChannel::process(unsigned char event, bool reuse, unsigned char runningdata, bool calledfromopen)
 {
     FMOD_RESULT result;
@@ -2246,7 +2246,7 @@ FMOD_RESULT CodecMIDIChannel::update()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FB0C0
+// INLINED
 FMOD_RESULT CodecMIDITrack::readVarLen(unsigned int *result)
 {
     register unsigned int   value       = 0;
@@ -2403,7 +2403,7 @@ FMOD_RESULT CodecMIDITrack::addTag(const char *name, int length, bool calledfrom
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FBD90
+// INLINED
 FMOD_RESULT CodecMIDITrack::process(bool calledfromopen)
 {
     unsigned char event;
@@ -2796,7 +2796,7 @@ FMOD_RESULT CodecMIDI::update(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FB270
+// INLINED
 FMOD_RESULT CodecMIDI::play()
 {
     int count;
@@ -3375,7 +3375,7 @@ FMOD_RESULT CodecMIDI::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FC430
+// INLINED
 FMOD_RESULT CodecMIDI::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

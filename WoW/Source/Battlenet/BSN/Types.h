@@ -173,7 +173,7 @@ BSN::AsciiString<N>::AsciiString(const char* source) {
     this->m_length = BSN::AsciiStringCopy(this->m_data, source, N);
 }
 
-// OFFSET: [#0x008C63C0<255>, #0x008C63F0<320>, #0x008C6480<31>]
+// INLINED
 template <uint32_t N>
 BSN::AsciiString<N>& BSN::AsciiString<N>::operator=(const char* source) {
     this->m_length = BSN::AsciiStringCopy(this->m_data, source, N);
@@ -210,13 +210,13 @@ BSN::String<N>& BSN::String<N>::operator+=(const char* source) {
     return *this;
 }
 
-// OFFSET: [#0x008C6B90<Battlenet::Authentication::ModuleParam, 4>, #0x00537B30<BattlenetUIFriend, 100>]
+// INLINED
 template <class T, uint32_t N>
 BSN::Array<T, N>::Array() {
     this->m_count = 0;
 }
 
-// OFFSET: [#0x008C6390<Battlenet::IP4::Address, 127>, #0x00531000<Battlenet::Friends::FriendInvite, 100>, #0x005310C0<BattlenetUIFriend, 100>]
+// INLINED
 template <class T, uint32_t N>
 T& BSN::Array<T, N>::operator[](uint32_t index) {
     if (index >= this->m_count) {
@@ -226,7 +226,7 @@ T& BSN::Array<T, N>::operator[](uint32_t index) {
     return this->m_data[index];
 }
 
-// OFFSET: [#0x008C6420<Battlenet::Authentication::ModuleParam, 4>, #0x008C6450<Battlenet::Realm::CharacterCount, 64>]
+// INLINED
 template <class T, uint32_t N>
 const T& BSN::Array<T, N>::operator[](uint32_t index) const {
     if (index >= this->m_count) {
@@ -236,7 +236,7 @@ const T& BSN::Array<T, N>::operator[](uint32_t index) const {
     return this->m_data[index];
 }
 
-// OFFSET: #0x00531030<Battlenet::Friends::FriendInvite, 100>
+// INLINED
 template <class T, uint32_t N>
 T* BSN::Array<T, N>::New() {
     if (this->m_count >= N) {
@@ -281,7 +281,7 @@ BSN::Optional<T>& BSN::Optional<T>::operator=(const Optional<T>& other) {
     return *this;
 }
 
-// OFFSET: #0x00530FE0<BSN::String<127>>
+// INLINED
 template <class T>
 const T& BSN::Optional<T>::Get() const {
     if (!this->m_exists) {
@@ -301,7 +301,7 @@ T& BSN::Choice::Get() {
     return *reinterpret_cast<T*>(this + 1);
 }
 
-// OFFSET: [#0x00531060<Battlenet::Friends::FriendInvite, 100>, #0x005310F0<BattlenetUIFriend, 100>]
+// INLINED
 template <class T, uint32_t N>
 void BSN::Array<T, N>::Remove(uint32_t index) {
     if (index >= this->m_count) {
@@ -329,7 +329,7 @@ void BSN::Array<T, N>::SetCount(uint32_t count) {
     this->m_count = count;
 }
 
-// OFFSET: [#0x008C66E0<2, Battlenet::Realm::JoinResponse>, #0x008C6700<3, uint32_t>, #0x008C6720<0, Battlenet::Authentication::ModuleRequest>, #0x008C6740<1, uint32_t>, #0x008C6760<9, Battlenet::Realm::Response>, #0x00531180<6, int32_t>, #0x005311A0<17, Battlenet::Toon::FullName>, #0x005311C0<18, Battlenet::Presence::AccountName>]
+// INLINED
 template <int32_t TAG, class T>
 const T& BSN::Choice::Get() const {
     if (this->m_tag != TAG) {
@@ -339,7 +339,7 @@ const T& BSN::Choice::Get() const {
     return *reinterpret_cast<const T*>(this + 1);
 }
 
-// OFFSET: [#0x008C7000<0, Battlenet::Authentication::Request>, #0x008C6FD0<2, Battlenet::Authentication::ModuleMessage>, #0x008C6C90<1, BSN::AsciiString<320>>, #0x008C6CB0<0, BSN::AsciiString<31>>, #0x008C6CD0<12, Battlenet::Event::Creep::Portal>, 0x006287F0<1, Battlenet::Event::Creep::Invoke::Authentication::Logon>, 0x00628810<0, Battlenet::Event::Creep::Invoke::DarkPortal::Select>, 0x00628830<6, Battlenet::Event::Creep::Invoke::WoW>]
+// OFFSET: [0x006287F0<1, Battlenet::Event::Creep::Invoke::Authentication::Logon>, 0x00628810<0, Battlenet::Event::Creep::Invoke::DarkPortal::Select>, 0x00628830<6, Battlenet::Event::Creep::Invoke::WoW>]
 template <int32_t TAG, class T>
 T* BSN::Choice::Set() {
     this->m_tag = TAG;

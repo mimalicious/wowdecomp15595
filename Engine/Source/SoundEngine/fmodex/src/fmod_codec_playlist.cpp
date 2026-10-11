@@ -56,7 +56,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F7BC0
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecPlaylist::getDescriptionEx()
 {
     FMOD_memset(&playlistcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -214,7 +214,7 @@ FMOD_RESULT CodecPlaylist::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXIN
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F7470
+// INLINED
 FMOD_RESULT CodecPlaylist::readASX()
 {
     FMOD_RESULT result;
@@ -685,7 +685,7 @@ FMOD_RESULT CodecPlaylist::getNextXMLTag(char *tagname, int *tagnamesize, char *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F6EF0
+// INLINED
 FMOD_RESULT CodecPlaylist::readM3U()
 {
     FMOD_RESULT     result;

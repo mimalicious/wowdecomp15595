@@ -2248,7 +2248,7 @@ void CVehiclePassenger_C::OnUpdateTransport(WOWGUID transport, uint8_t seat, CGU
     this->m_unit->VehicleCameraOnUpdateTransport(transport, seat);
 }
 
-// OFFSET: %0x005F9AF0
+// INLINED
 int32_t CVehiclePassenger_C::GetUpperAnim(const VehicleSeatRec* seat) const {
     if (!seat || this->m_state != 3 || !(seat->m_flags & 0x4)) {
         return ANIM_COUNT;
@@ -2267,7 +2267,7 @@ int32_t CVehiclePassenger_C::GetUpperAnim(const VehicleSeatRec* seat) const {
     return anim;
 }
 
-// OFFSET: #0x007482A0
+// INLINED
 C3Vector CVehiclePassenger_C::ComputeInterpolatedUnitPosition() const {
     switch (this->m_state) {
         case 1:

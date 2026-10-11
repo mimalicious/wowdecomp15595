@@ -54,7 +54,7 @@ OutputEmulated::OutputEmulated()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00922250
+// INLINED
 FMOD_RESULT OutputEmulated::init(int maxchannels)
 {
     FMOD_RESULT  result;

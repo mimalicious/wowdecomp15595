@@ -55,7 +55,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090E2E0
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecAIFF::getDescriptionEx()
 {
     FMOD_memset(&aiffcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -144,7 +144,7 @@ float ConvertFromIeeeExtended(unsigned char *bytes)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090D990
+// INLINED
 FMOD_RESULT CodecAIFF::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;
@@ -692,7 +692,7 @@ FMOD_RESULT CodecAIFF::readInternal(void *buffer, unsigned int sizebytes, unsign
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090E0B0
+// INLINED
 FMOD_RESULT CodecAIFF::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;

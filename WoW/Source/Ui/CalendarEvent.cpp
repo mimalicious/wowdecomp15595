@@ -433,7 +433,7 @@ void CGCalendarEvent::SelectInvite(uint32_t index) {
     }
 }
 
-// OFFSET: #0x005F1B10
+// INLINED
 static void InviteNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CGCalendarEvent* event = static_cast<CGCalendarEvent*>(param);
 
@@ -559,7 +559,7 @@ bool CGCalendarEvent::AddEvent() {
     return true;
 }
 
-// OFFSET: #0x005F1E30
+// INLINED
 bool CGCalendarEvent::RemoveEvent() {
     if (!this->IsModerator()) {
         CGCalendar::CalendarError("CALENDAR_ERROR_PERMISSIONS", 0);

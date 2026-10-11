@@ -46,7 +46,7 @@ void CSimpleStatusBar::RunOnMinMaxChangedScript() {
     }
 }
 
-// OFFSET: [%0x0051F550, %0x0051F700, %0x0051F240]
+// INLINED
 CSimpleStatusBar::~CSimpleStatusBar() {
 }
 

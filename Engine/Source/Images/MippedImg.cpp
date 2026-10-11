@@ -115,7 +115,7 @@ void MippedImgSet(uint32_t format, uint32_t width, uint32_t height, MipBits* ima
     }
 }
 
-// OFFSET: %0x00645B30
+// INLINED
 void FullShrink(C4Pixel* dest, uint32_t destWidth, uint32_t destHeight, C4Pixel* source, uint32_t sourceWidth, uint32_t sourceHeight) {
     uint32_t xRatio = sourceWidth / destWidth;
     uint32_t yRatio = sourceHeight / destHeight;

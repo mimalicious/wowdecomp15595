@@ -297,7 +297,7 @@ inline int32_t MakeDirectory(const uint16_t* path) {
     return (attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-// OFFSET: #0x007711C0
+// INLINED
 static HANDLE CreateErrorLogFile(const char* suffix, const char* ext, char* logpath, uint32_t logpathchars, const SYSTEMTIME* time) {
     char exefullpath[2 * MAX_PATH];
     uint16_t exefullpathW[MAX_PATH];
@@ -334,7 +334,7 @@ static HANDLE CreateErrorLogFile(const char* suffix, const char* ext, char* logp
     return CreateFileW(reinterpret_cast<LPCWSTR>(logpathW), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
-// OFFSET: #0x007712D0
+// INLINED
 static HANDLE CreateErrorLog(const char* suffix, const char* message, const SYSTEMTIME* time) {
     char logpath[MAX_PATH];
     SYSTEMTIME localTime;
@@ -617,7 +617,7 @@ void STORMAPI SErrSetLogCallback(int32_t (STORMAPI* callback)(char*, uint32_t)) 
     InternalLeaveCriticalSection(&s_critsect);
 }
 
-// OFFSET: #0x00771960
+// INLINED
 int32_t STORMAPI SErrGetLogLastPath(char* buf, uint32_t size) {
     InternalEnterCriticalSection(&s_critsect);
     int32_t result = 0;
@@ -759,7 +759,7 @@ int32_t STORMAPI SErrDestroy() {
     return 1;
 }
 
-// OFFSET: #0x00771D10
+// INLINED
 int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t skipframes, uint32_t unknown) {
     // STATIC: #0x00CAE934
     static int32_t lastlinenumber;
@@ -1003,7 +1003,7 @@ void STORMAPI SErrReportNamedResourceLeak(const char* handlename, const char* re
     }
 }
 
-// OFFSET: #0x00772760
+// INLINED
 static LONG WINAPI ExceptionFilterWin32(EXCEPTION_POINTERS* exceptionpointers) {
     EXCEPTION_RECORD* record = exceptionpointers->ExceptionRecord;
 
@@ -1055,7 +1055,7 @@ static LONG WINAPI ExceptionFilterWin32(EXCEPTION_POINTERS* exceptionpointers) {
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-// OFFSET: #0x007729B0
+// INLINED
 void SErrDisplayAppFatalCustomV(uint32_t errorcode, const char* format, va_list args) {
     const char* filename = NULL;
     int32_t linenumber = 0;
@@ -1093,7 +1093,7 @@ void SErrDisplayAppFatal(const char* format, ...) {
     SErrDisplayAppFatalCustomV(STORM_ERROR_FATAL_CONDITION, format, args);
 }
 
-// OFFSET: #0x00772AC0
+// INLINED
 int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
     char buffer[2048];
     va_list args;
@@ -1125,7 +1125,7 @@ void STORMAPI SErrCatchUnhandledExceptions() {
     }
 }
 
-// OFFSET: #0x008889B0
+// INLINED
 void SErrDisplayAppFatalMessage(const char* message, const char* filename, int32_t linenumber) {
     SErrPrepareAppFatal(filename, linenumber);
     SErrDisplayAppFatal("%s", message);

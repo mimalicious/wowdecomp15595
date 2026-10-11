@@ -406,7 +406,7 @@ FMOD_RESULT ChannelGroup::getParentGroup(ChannelGroup **group)
 }
 
 
-// OFFSET: #0x008D1C50
+// INLINED
 FMOD_RESULT ChannelGroup::getDSPHead(DSP **dsp)
 {
     FMOD_RESULT result;

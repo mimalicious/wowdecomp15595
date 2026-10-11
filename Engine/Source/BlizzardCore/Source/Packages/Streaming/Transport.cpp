@@ -212,7 +212,7 @@ Blizzard::URL::DownloadCallback::Cookie Blizzard::Streaming::Transport::Transpor
     return cookie;
 }
 
-// OFFSET: %0x00725110
+// INLINED
 Blizzard::Streaming::AddLatency::~AddLatency() {
     int64_t delta = s_ReadAccessTimeNs + this->m_start + static_cast<int64_t>(this->m_bytes * s_NsPerByte) - Blizzard::Time::GetTimestamp();
     accumulatorNs += delta;

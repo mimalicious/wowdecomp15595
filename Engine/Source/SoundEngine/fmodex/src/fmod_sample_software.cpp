@@ -32,7 +32,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093D7F0
+// INLINED
 SampleSoftware::SampleSoftware()
 {
     mBuffer = 0;

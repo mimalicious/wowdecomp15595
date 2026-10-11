@@ -29,7 +29,7 @@ void CBitArray::Set(uint32_t bitIdx, bool value) {
     }
 }
 
-// OFFSET: #0x0095DA80
+// INLINED
 CBitArray::~CBitArray() {
     if (this->m_array && this->unk_0008) {
         delete[] this->m_array;

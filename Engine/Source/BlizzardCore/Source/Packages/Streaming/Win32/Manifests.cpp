@@ -35,7 +35,7 @@ void System_Streaming::HttpCallback::WaitForCompletion() {
     WaitForSingleObject(this->m_event, INFINITE);
 }
 
-// OFFSET: #0x004567A0
+// INLINED
 bool Blizzard::Streaming::FileManifest::ReadIndirectFile(const char* url) {
     System_Streaming::HttpCallback* callback = new System_Streaming::HttpCallback();
 
@@ -79,7 +79,7 @@ bool Blizzard::Streaming::FileManifest::ReadIndirectFile(const char* url) {
     return result;
 }
 
-// OFFSET: #0x00459050
+// INLINED
 bool Blizzard::Streaming::Transport::ReadIndirectFile(const char* url) {
     System_Streaming::HttpCallback* callback = new System_Streaming::HttpCallback();
 
@@ -124,7 +124,7 @@ bool Blizzard::Streaming::Transport::ReadIndirectFile(const char* url) {
     return result;
 }
 
-// OFFSET: #0x00459400
+// INLINED
 bool Blizzard::Streaming::SourceManifest::ReadIndirectFile(const char* url) {
     System_Streaming::HttpCallback* callback = new System_Streaming::HttpCallback();
 

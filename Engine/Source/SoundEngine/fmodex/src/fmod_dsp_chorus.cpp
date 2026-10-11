@@ -64,7 +64,7 @@ FMOD_DSP_PARAMETERDESC dspchorus_param[8] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EC3A0
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPChorus::getDescriptionEx()
 {
     FMOD_memset(&dspchorus, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));
@@ -377,7 +377,7 @@ FMOD_RESULT DSPChorus::readInternal(float *inbuffer, float *outbuffer, unsigned 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EBFF0
+// INLINED
 FMOD_RESULT DSPChorus::setParameterInternal(int index, float value)
 {
     float olddelay;
@@ -463,7 +463,7 @@ FMOD_RESULT DSPChorus::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EC130
+// INLINED
 FMOD_RESULT DSPChorus::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)
@@ -639,7 +639,7 @@ FMOD_RESULT F_CALLBACK DSPChorus::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EC300
+// INLINED
 FMOD_RESULT F_CALLBACK DSPChorus::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPChorus *chorus = (DSPChorus *)dsp;

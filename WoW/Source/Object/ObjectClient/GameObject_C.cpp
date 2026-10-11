@@ -2430,7 +2430,7 @@ void CGGameObject_C_TypeAnimated::ModelLoaded() {
     this->ResetAnimState();
 }
 
-// OFFSET: #0x0070CBA0
+// INLINED
 void CGGameObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
     this->m_gameObject = reinterpret_cast<CGGameObjectData*>(storage + OBJECT_END);

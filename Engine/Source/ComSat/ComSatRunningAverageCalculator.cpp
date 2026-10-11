@@ -9,7 +9,7 @@ ComSat::RunningAverageCalculator::RunningAverageCalculator(ComSat::Allocator& al
     this->m_index = 0;
 }
 
-// OFFSET: [0x00A39F60, %0x0097A2B0]
+// OFFSET: [0x00A39F60]
 ComSat::RunningAverageCalculator::~RunningAverageCalculator() {
     if (this->m_values) {
         this->m_allocator->Free(this->m_values);

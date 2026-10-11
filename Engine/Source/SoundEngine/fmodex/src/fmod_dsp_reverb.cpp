@@ -60,7 +60,7 @@ FMOD_DSP_PARAMETERDESC dspreverb_param[6] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EB900
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPReverb::getDescriptionEx()
 {
     FMOD_memset(&dspreverb, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));
@@ -328,7 +328,7 @@ FMOD_RESULT DSPReverb::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EB680
+// INLINED
 FMOD_RESULT DSPReverb::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)
@@ -522,7 +522,7 @@ FMOD_RESULT F_CALLBACK DSPReverb::readCallback(FMOD_DSP_STATE *dsp, float *inbuf
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EB890
+// INLINED
 FMOD_RESULT F_CALLBACK DSPReverb::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPReverb *reverb = (DSPReverb *)dsp;

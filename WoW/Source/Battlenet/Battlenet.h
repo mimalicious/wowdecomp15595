@@ -110,7 +110,7 @@ template <class T>
 void Delete(T* object);
 }
 
-// OFFSET: #0x008C65F0<Battlenet::TumorManager>
+// INLINED
 template <class T>
 void Battlenet::Allocator::Delete(T*& object) {
     if (object) {

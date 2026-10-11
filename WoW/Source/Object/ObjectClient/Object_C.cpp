@@ -2303,7 +2303,7 @@ bool CGObject_C::LoadGuildTextures(uint64_t guildGUID) {
     return true;
 }
 
-// OFFSET: %0x005E8F80
+// INLINED
 void CGObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_obj = reinterpret_cast<CGObjectData*>(storage);
     this->m_objMirror = saved;

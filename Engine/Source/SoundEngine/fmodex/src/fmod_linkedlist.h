@@ -80,7 +80,7 @@ namespace FMOD
 
             return false;
         }
-        // OFFSET: #0x008D0510
+        // INLINED
         inline bool isEmpty() const
         {
             if (mNodeNext == this && mNodePrev == this)
@@ -129,7 +129,7 @@ namespace FMOD
 
             return current;
         }
-        // OFFSET: #0x008F3820
+        // INLINED
         int getNodeIndex(LinkedListNode *node) const
         {
             LinkedListNode *current = this->mNodeNext;
@@ -170,7 +170,7 @@ namespace FMOD
             mNodeData            = 0;
         }
 
-        // OFFSET: #0x008DCD20
+        // INLINED
         void addAt(SortedLinkedListNode *head, unsigned int priority)
         {
             SortedLinkedListNode *current = SAFE_CAST(SortedLinkedListNode, head->mNodeNext);

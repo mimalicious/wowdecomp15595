@@ -51,7 +51,7 @@ void DeclinedWordsInitialize() {
     }
 }
 
-// OFFSET: #0x007E0A50
+// INLINED
 int32_t GetDeclinedWord(const char* word, int32_t declension, char* buffer, uint32_t bufferSize) {
     if (!s_declinedWords.m_fulllist.Head()) {
         DeclinedWordsInitialize();

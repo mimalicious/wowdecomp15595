@@ -136,7 +136,7 @@ int      CodecMPEG::gIntWinBase[] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F6CC0
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecMPEG::getDescriptionEx()
 {
     FMOD_memset(&mpegcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -173,7 +173,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecMPEG::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F57E0
+// INLINED
 FMOD_RESULT CodecMPEG::makeTables(int scaleval)
 {
 	int i,j,k,kr,divv;
@@ -249,7 +249,7 @@ FMOD_RESULT CodecMPEG::makeTables(int scaleval)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F5C70
+// INLINED
 FMOD_RESULT CodecMPEG::initAll() 
 {
     FMOD_RESULT result;
@@ -1088,7 +1088,7 @@ FMOD_RESULT CodecMPEG::readInternal(void *buffer, unsigned int sizebytes, unsign
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F60E0
+// INLINED
 FMOD_RESULT CodecMPEG::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
 #ifndef PLATFORM_PS3_SPU_STREAMDECODE

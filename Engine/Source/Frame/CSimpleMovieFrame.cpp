@@ -882,7 +882,7 @@ void CSimpleMovieFrame::Render() {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: [%0x005352F0, %0x00534670]
+// INLINED
 CSimpleMovieFrame::~CSimpleMovieFrame() {
     this->Cleanup();
 }

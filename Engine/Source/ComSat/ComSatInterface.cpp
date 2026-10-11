@@ -14,7 +14,7 @@ static ComSat::Network::Manager* s_networkManager;
 ComSat::Allocator::~Allocator() {
 }
 
-// OFFSET: #0x007DC350
+// INLINED
 ComSat::Interface::Callback::~Callback() {
 }
 

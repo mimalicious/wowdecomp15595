@@ -13,7 +13,7 @@ const BSN::Utf8Sequence BSN::s_utf8Sequences[9] = {
     { 4, { { 0xF4, 0xF4 }, { 0x80, 0x8F }, { 0x80, 0xBF }, { 0x80, 0xBF } } },
 };
 
-// OFFSET: #0x008BFD00
+// INLINED
 BSN::FourCC::FourCC(const char* string) {
     this->m_value = 0;
 

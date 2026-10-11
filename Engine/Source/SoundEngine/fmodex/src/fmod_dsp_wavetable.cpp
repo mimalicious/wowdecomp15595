@@ -31,7 +31,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A17FD0
+// INLINED
 FMOD_RESULT DSPWaveTable::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 {
     FMOD_RESULT result;
@@ -90,7 +90,7 @@ FMOD_RESULT DSPWaveTable::addInput(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00929DF0
+// INLINED
 FMOD_RESULT DSPWaveTable::execute(float *inbuffer, float **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     *outbuffer = inbuffer;
@@ -469,7 +469,7 @@ FMOD_RESULT DSPWaveTable::getFrequency(float *frequency)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A18490
+// INLINED
 FMOD_RESULT F_CALLBACK DSPWaveTable::setPositionCallback(FMOD_DSP_STATE *dsp, unsigned int position)
 {
     DSPWaveTable *wavetable = (DSPWaveTable *)dsp;

@@ -65,7 +65,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092C160
+// INLINED
 FMOD_OUTPUT_DESCRIPTION_EX *OutputOpenAL::getDescriptionEx()
 {
     openaloutput.name                   = "FMOD OpenAL Output";
@@ -178,7 +178,7 @@ FMOD_RESULT OutputOpenAL::registerDLL()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092A340
+// INLINED
 FMOD_RESULT OutputOpenAL::enumerate()
 {
     FMOD_RESULT  result        = FMOD_OK;
@@ -587,7 +587,7 @@ FMOD_RESULT OutputOpenAL::initEAX()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092B700
+// INLINED
 FMOD_RESULT OutputOpenAL::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     FMOD_RESULT result    = FMOD_OK;
@@ -1456,7 +1456,7 @@ FMOD_RESULT OutputOpenAL::unlock(void *ptr1, void *ptr2, unsigned int len1, unsi
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092BD30
+// INLINED
 FMOD_RESULT OutputOpenAL::createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *waveformat, Sample **sample)
 {
     FMOD_RESULT    result         = FMOD_OK;
@@ -1681,7 +1681,7 @@ int OutputOpenAL::getSampleMaxChannels(FMOD_MODE mode, FMOD_SOUND_FORMAT format)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092B2C0
+// INLINED
 FMOD_RESULT OutputOpenAL::getFreeChannel(FMOD_MODE mode, ChannelReal **realchannel, int numchannels, int numsoundchannels, int *found)
 {
     FMOD_RESULT        result          = FMOD_OK;
@@ -2135,7 +2135,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::createSampleCallback(FMOD_OUTPUT_STATE *out
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092B610
+// INLINED
 FMOD_RESULT F_CALLBACK OutputOpenAL::setReverbPropertiesCallback(FMOD_OUTPUT_STATE *output, const FMOD_REVERB_PROPERTIES *prop)
 {
     OutputOpenAL *openal = (OutputOpenAL *)output;

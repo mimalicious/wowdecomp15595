@@ -27,7 +27,7 @@ void LFGLIST::AddPlayer(LFGListPlayer* player) {
     }
 }
 
-// OFFSET: #0x00556F90
+// INLINED
 void LFGLIST::RemovePlayer(LFGListPlayer* player) {
     int32_t index = player->m_index;
 
@@ -48,7 +48,7 @@ void LFGLIST::RemovePlayer(LFGListPlayer* player) {
     }
 }
 
-// OFFSET: #0x00557030
+// INLINED
 void LFGLIST::RemoveParty(LFGListParty* party) {
     int32_t index = party->m_index;
 
@@ -79,7 +79,7 @@ void LFGLIST::DeleteParty(LFGListParty* party) {
     delete party;
 }
 
-// OFFSET: #0x00558AF0
+// INLINED
 void LFGLIST::Clear() {
     LFGListPlayer* player = this->m_players.m_fulllist.Head();
 
@@ -110,7 +110,7 @@ void LFGLIST::Clear() {
     this->m_pendingNames = 0;
 }
 
-// OFFSET: #0x0055AA40
+// INLINED
 LFGLIST::~LFGLIST() {
     for (int32_t i = this->m_partyList.Count() - 1; i >= 0; i--) {
         this->DeleteParty(this->m_partyList.m_data[i]);

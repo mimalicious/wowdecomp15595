@@ -350,7 +350,7 @@ void FLAC__lpc_compute_residual_from_qlp_coefficients_wide(const FLAC__int32 *da
 
 #endif /* !defined FLAC__INTEGER_ONLY_LIBRARY */
 
-// OFFSET: #0x00958C80
+// INLINED
 void FLAC__lpc_restore_signal(const FLAC__int32 residual[], unsigned data_len, const FLAC__int32 qlp_coeff[], unsigned order, int lp_quantization, FLAC__int32 data[])
 {
 #ifdef FLAC__OVERFLOW_DETECT
@@ -400,7 +400,7 @@ void FLAC__lpc_restore_signal(const FLAC__int32 residual[], unsigned data_len, c
 	*/
 }
 
-// OFFSET: #0x00958CF0
+// INLINED
 void FLAC__lpc_restore_signal_wide(const FLAC__int32 residual[], unsigned data_len, const FLAC__int32 qlp_coeff[], unsigned order, int lp_quantization, FLAC__int32 data[])
 {
 	unsigned i, j;

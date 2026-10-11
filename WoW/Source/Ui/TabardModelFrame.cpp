@@ -63,7 +63,7 @@ int32_t CGTabardModelFrame::GetScriptMetaTable() {
     return CGTabardModelFrame::s_metatable;
 }
 
-// OFFSET: [#0x005990C0, #0x00599190]
+// INLINED
 CGTabardModelFrame::~CGTabardModelFrame() {
 }
 

@@ -4484,7 +4484,7 @@ void CGGameUI::OpenPlayerSkinned(bool a1) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_SKINNED, "%d", a1 != 0);
 }
 
-// OFFSET: #0x00512540
+// INLINED
 void SignalEvent_EVENT_PARTY_INVITE_REQUEST(const char* name) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PARTY_INVITE_REQUEST, "%s", name);
 }
@@ -5851,7 +5851,7 @@ int32_t CGGameUI::IsDynamicDifficultyMap() {
     return 0;
 }
 
-// OFFSET: #0x00519680
+// INLINED
 uint32_t CGGameUI::GetEffectiveRaidDifficulty() {
     MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
 
@@ -6548,7 +6548,7 @@ static void AccountVariablesLoadedCallback(HOSFILE localFile, HOSFILE cacheFile,
     }
 }
 
-// OFFSET: #0x00518C80
+// INLINED
 void LoadAccountVariables() {
     s_accountDataPending = 0x30;
 
@@ -6731,7 +6731,7 @@ void CGGameUI::AutoMouseOver() {
     CGGameUI::HandleObjectTrackChange(data.m_bestGuid, WOWGUID());
 }
 
-// OFFSET: #0x00513960
+// INLINED
 void CGGameUI::SetPhaseShift(uint32_t phase) {
     if (static_cast<int32_t>(phase) != CGGameUI::m_phaseMask) {
         CGGameUI::m_phaseMask = phase;
@@ -8199,7 +8199,7 @@ void CGGameUI::ProposeLevelGrant(WOWGUID guid) {
     CGGameUI::m_pendingLevelGranter = guid;
 }
 
-// OFFSET: #0x00518700
+// INLINED
 static int32_t FindMovieFileDataID(int32_t movieId) {
     if (!g_movieDB.GetRecord(movieId)) {
         return -1;
@@ -8276,7 +8276,7 @@ void CGGameUI::UpdateComboPoints(const WOWGUID& guid, uint32_t points) {
     Script_SendUnitSignal(ClntObjMgrGetActivePlayer(), SCRIPT_EVENT_UNIT_COMBO_POINTS);
 }
 
-// OFFSET: #0x0051D710
+// INLINED
 static void PlayMovie() {
     FileDataRec* file = g_fileDataDB.GetRecord(CGGameUI::m_movieFileDataID);
 
@@ -8344,7 +8344,7 @@ void BroadcastUIError(int32_t error, const char* name) {
     }
 }
 
-// OFFSET: #0x00522180
+// INLINED
 void CGGameUI::DisplayPvPQueueRemovedError(int32_t reason) {
     if (!reason) {
         CGGameUI::DisplayError(ERR_REMOVE_FROM_PVP_QUEUE_GRANT_LEVEL);

@@ -132,7 +132,7 @@ FMOD_DSP_PARAMETERDESC dspsfxreverb_param[] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EA410
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPSfxReverb::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -625,7 +625,7 @@ FMOD_RESULT DSPSfxReverb::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E91D0
+// INLINED
 FMOD_RESULT DSPSfxReverb::getParameterInternal(int index, float *value, char *valuestr)
 {
 
@@ -1030,7 +1030,7 @@ bool DSPSfxReverb::SetDelayLineLengths(I3DL2_LISTENERPROPERTIES *pProps)
 // Ratio of high-frequency decay time relative to low-frequency decay time. Decay_HF_Ratio would typically
 // control one or several filters located in the feedback loop of the reverberator, whereas Room_HF should
 // control a filter located at the input or output of the reverberator (outside of the feedback loop).
-// OFFSET: #0x008E9C20
+// INLINED
 bool DSPSfxReverb::SetDecayHFRatio(I3DL2_LISTENERPROPERTIES *pProps)		// [0.1, 2.0]       default: 0.5
 {
 	if (pProps->flDecayHFRatio < I3DL2LISTENER_MINDECAYHFRATIO)
@@ -1224,7 +1224,7 @@ bool DSPSfxReverb::SetDiffusion(I3DL2_LISTENERPROPERTIES *pProps)					// [0.0, 1
 }
 
 // Controls the modal density in the late reverberation decay. 0% = minimum, 100% = maximum.
-// OFFSET: #0x008E9DC0
+// INLINED
 bool DSPSfxReverb::SetDensity(I3DL2_LISTENERPROPERTIES *pProps)						// [0.0, 100.0]     default: 100.0 %
 {
 	if (pProps->flDensity < I3DL2LISTENER_MINDENSITY)
@@ -1256,7 +1256,7 @@ bool DSPSfxReverb::SetHFReference(I3DL2_LISTENERPROPERTIES *pProps)				// [20.0,
 }
 
 // Reference low frequency.
-// OFFSET: #0x008E9E70
+// INLINED
 bool DSPSfxReverb::SetLFReference(float lfReference)				// [20.0, 20000.0]  default: 5000.0 Hz
 {
 	if (lfReference < FMODLISTENER_MINLFREFERENCE)
@@ -1426,7 +1426,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::readCallback(FMOD_DSP_STATE *dsp, float *in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E9870
+// INLINED
 FMOD_RESULT F_CALLBACK DSPSfxReverb::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPSfxReverb *sfxreverb = (DSPSfxReverb *)dsp;

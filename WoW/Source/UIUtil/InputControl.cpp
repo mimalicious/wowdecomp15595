@@ -56,7 +56,7 @@ CGInputControl* CGInputControl::GetActive() {
     return CGInputControl::s_inputControl;
 }
 
-// OFFSET: #0x005F9670
+// INLINED
 void CGInputControl::UpdateJoystickMouseMode() {
     int32_t enable = s_joystickMouseEnabled && !s_cvCinematicJoystick->m_intValue && (this->m_joystickMouseFlags & 0x2) && (this->m_mouseModeFlags & 0x1);
 
@@ -90,7 +90,7 @@ CGInputControl::CGInputControl() : m_flags(0), m_lookStartTime(0), m_pendingDefa
     this->m_time = OsGetAsyncTimeMs();
 }
 
-// OFFSET: #0x005FD2C0
+// INLINED
 void InputControlInitialize() {
     CVar::Register("Joystick", "enable joystick control", 0, "0", JoystickCallback, 5, false, NULL, false);
     s_cvCinematicJoystick = CVar::Register("CinematicJoystick", "enable cinematic joystick control", 0, "0", NULL, 5, false, NULL, false);
@@ -147,7 +147,7 @@ void CGInputControl::Destroy() {
     CGInputControl::s_inputControl = NULL;
 }
 
-// OFFSET: #0x005FD430
+// INLINED
 void InputControlDestroy() {
     CGInputControl::Destroy();
 }

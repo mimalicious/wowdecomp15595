@@ -47,7 +47,7 @@ typedef struct {
 
 /***********************************************/
 
-// OFFSET: #0x00471E90
+// INLINED
 static void floor0_free_info(vorbis_info_floor *i){
   vorbis_info_floor0 *info=(vorbis_info_floor0 *)i;
   if(info){
@@ -56,7 +56,7 @@ static void floor0_free_info(vorbis_info_floor *i){
   }
 }
 
-// OFFSET: #0x00471EC0
+// INLINED
 static void floor0_free_look(vorbis_look_floor *i){
   vorbis_look_floor0 *look=(vorbis_look_floor0 *)i;
   if(look){
@@ -73,7 +73,7 @@ static void floor0_free_look(vorbis_look_floor *i){
   }
 }
 
-// OFFSET: #0x00471F50
+// INLINED
 static vorbis_info_floor *floor0_unpack (vorbis_info *vi,oggpack_buffer *opb){
   codec_setup_info     *ci=vi->codec_setup;
   int j;
@@ -111,7 +111,7 @@ static vorbis_info_floor *floor0_unpack (vorbis_info *vi,oggpack_buffer *opb){
    Note that the scale depends on the sampling rate as well as the
    linear block and mapping sizes */
 
-// OFFSET: #0x00472050
+// INLINED
 static int floor0_map_lazy_init(vorbis_block      *vb,
                                 vorbis_info_floor *infoX,
                                 vorbis_look_floor0 *look){
@@ -148,7 +148,7 @@ static int floor0_map_lazy_init(vorbis_block      *vb,
   return(0);
 }
 
-// OFFSET: #0x004721C0
+// INLINED
 static vorbis_look_floor *floor0_look(vorbis_dsp_state *vd,
                                       vorbis_info_floor *i){
   vorbis_info_floor0 *info=(vorbis_info_floor0 *)i;
@@ -164,7 +164,7 @@ static vorbis_look_floor *floor0_look(vorbis_dsp_state *vd,
   return look;
 }
 
-// OFFSET: #0x00472220
+// INLINED
 static void *floor0_inverse1(vorbis_block *vb,vorbis_look_floor *i){
   vorbis_look_floor0 *look=(vorbis_look_floor0 *)i;
   vorbis_info_floor0 *info=look->vi;
@@ -202,7 +202,7 @@ static void *floor0_inverse1(vorbis_block *vb,vorbis_look_floor *i){
   return(NULL);
 }
 
-// OFFSET: #0x00472360
+// INLINED
 static int floor0_inverse2(vorbis_block *vb,vorbis_look_floor *i,
                            void *memo,float *out){
   vorbis_look_floor0 *look=(vorbis_look_floor0 *)i;

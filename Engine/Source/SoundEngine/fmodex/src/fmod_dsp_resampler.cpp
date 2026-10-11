@@ -99,7 +99,7 @@ FMOD_RESULT DSPResampler::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091C4D0
+// INLINED
 FMOD_RESULT DSPResampler::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 {
     FMOD_RESULT result;
@@ -209,7 +209,7 @@ FMOD_RESULT DSPResampler::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091C710
+// INLINED
 FMOD_RESULT DSPResampler::execute(float *inbuffer, float **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     FMOD_RESULT  result = FMOD_OK;

@@ -87,7 +87,7 @@ void ConsoleAccessSetEnabled(int32_t enable) {
     s_consoleAccessEnabled = enable;
 }
 
-// OFFSET: %0x0061E3A0
+// INLINED
 int32_t IsConsoleEnabled() {
     return s_consoleAccessEnabled;
 }

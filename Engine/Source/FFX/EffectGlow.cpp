@@ -89,7 +89,7 @@ EffectGlow::EffectGlow() {
     this->m_mode = 0;
 }
 
-// OFFSET: [%0x008026D0, %0x00802760]
+// INLINED
 EffectGlow::~EffectGlow() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         delete this->m_passes[i];

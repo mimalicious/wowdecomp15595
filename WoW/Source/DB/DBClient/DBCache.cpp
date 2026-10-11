@@ -82,7 +82,7 @@ uint32_t DBCacheHashKey(const CWardenKey& key) {
     return key.Hash();
 }
 
-// OFFSET: %0x004A20E0
+// INLINED
 CWardenKey& CWardenKey::operator=(const CWardenKey& key) {
     memcpy(this->m_key, key.m_key, sizeof(this->m_key));
     return *this;

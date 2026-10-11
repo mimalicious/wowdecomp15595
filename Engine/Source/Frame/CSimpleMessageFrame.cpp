@@ -382,7 +382,7 @@ void CSimpleMessageFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: [%0x0052C2B0, %0x0052C340, %0x0052C950]
+// INLINED
 CSimpleMessageFrame::~CSimpleMessageFrame() {
     this->m_lines.Clear();
     this->ClearPending();

@@ -37,7 +37,7 @@ bool Blizzard::Streaming::Manifests::ManifestItem::HandleTag(const char* tag, co
     return false;
 }
 
-// OFFSET: %0x0070E890
+// INLINED
 bool Blizzard::Streaming::SplitLine(char* line, char** value, char** tag, int32_t* length) {
     if (!*line) {
         return false;
@@ -206,7 +206,7 @@ bool Blizzard::Streaming::Manifests::TimeslotItem::HandleTag(const char* tag, co
 Blizzard::Streaming::Manifests::ManifestItem::~ManifestItem() {
 }
 
-// OFFSET: [#0x00437D20, 0x007C37E0]
+// OFFSET: [0x007C37E0]
 Blizzard::Streaming::Manifests::ParameterItem::~ParameterItem() {
 }
 
@@ -230,7 +230,7 @@ int32_t Blizzard::Streaming::Manifests::ServerItem::GetUsage(Blizzard::Time::Tim
     return usage;
 }
 
-// OFFSET: #0x0043ACA0
+// INLINED
 bool Blizzard::Streaming::FileManifest::SplitItem(char* line, MANIFEST_ITEM* item) {
     char* field = line;
 
@@ -306,7 +306,7 @@ bool Blizzard::Streaming::FileManifest::SplitItem(char* line, MANIFEST_ITEM* ite
     return true;
 }
 
-// OFFSET: #0x0043AE10
+// INLINED
 bool Blizzard::Streaming::SourceManifest::SplitItem(char* line, MANIFEST_ITEM* item) {
     char* field = line;
 
@@ -363,7 +363,7 @@ bool Blizzard::Streaming::Manifests::ParameterItem::HandleTag(const char* tag, c
     return true;
 }
 
-// OFFSET: #0x0043DD90
+// INLINED
 bool Blizzard::Streaming::FileManifest::SplitServerItem(char* line, std::string& base, std::string& path) {
     if (!*line) {
         return false;
@@ -413,7 +413,7 @@ std::string Blizzard::Streaming::Manifests::FileItem::GetRemotePath() {
     return this->m_path + this->m_fileName;
 }
 
-// OFFSET: [#0x00444000, 0x007D5A30/0x1404D66A0]
+// OFFSET: [0x007D5A30/0x1404D66A0]
 Blizzard::Streaming::Manifests::ServerItem::~ServerItem() {
 }
 
@@ -557,7 +557,7 @@ bool Blizzard::Streaming::ManifestInfo::FinalizeManifestItems() {
     return result;
 }
 
-// OFFSET: #0x0044C630
+// INLINED
 bool Blizzard::Streaming::Transport::SplitItem(char* line, TRANSPORT_ITEM* item) {
     char* field = line;
 
@@ -813,7 +813,7 @@ Blizzard::Streaming::ManifestInfo::ManifestInfo() {
     this->m_randomGenerator = new ManifestRandomNumberGenerator();
 }
 
-// OFFSET: #0x00452040
+// INLINED
 Blizzard::Streaming::ManifestInfo::~ManifestInfo() {
 }
 
@@ -836,7 +836,7 @@ Blizzard::Streaming::ManifestInfo* Blizzard::Streaming::ManifestInfo::Get() {
     return s_instance;
 }
 
-// OFFSET: %0x00747460
+// INLINED
 std::string Blizzard::Streaming::ManifestInfo::GetParameter(const char* name) {
     std::map<std::string, Manifests::ParameterItem>::iterator it = Get()->m_parameters.find(std::string(name));
 
@@ -847,7 +847,7 @@ std::string Blizzard::Streaming::ManifestInfo::GetParameter(const char* name) {
     return it->second.m_value;
 }
 
-// OFFSET: %0x00747580
+// INLINED
 void Blizzard::Streaming::ManifestInfo::SetParameter(const char* name, const char* value) {
     Manifests::ParameterItem item;
     item.m_name.assign(name, strlen(name));
@@ -855,7 +855,7 @@ void Blizzard::Streaming::ManifestInfo::SetParameter(const char* name, const cha
     Get()->m_parameters[std::string(name)] = item;
 }
 
-// OFFSET: %0x00747690
+// INLINED
 void Blizzard::Streaming::ManifestInfo::SetParameter(const char* name, int32_t value) {
     char text[16];
     Blizzard::String::Format(text, sizeof(text), "%d", value);
@@ -866,7 +866,7 @@ void Blizzard::Streaming::ManifestInfo::SetParameter(const char* name, int32_t v
     Get()->m_parameters[std::string(name)] = item;
 }
 
-// OFFSET: #0x00452970
+// INLINED
 void Blizzard::Streaming::ManifestInfo::SetServerPathItem(std::string name, std::string path) {
     std::string serverPathName = name;
     std::string serverPathPath = path;
@@ -876,12 +876,12 @@ void Blizzard::Streaming::ManifestInfo::SetServerPathItem(std::string name, std:
     serverPath.m_path = serverPathPath;
 }
 
-// OFFSET: #0x00452A90
+// INLINED
 void Blizzard::Streaming::ManifestInfo::SetTransportItem(std::string name, const Manifests::TransportItem& item) {
     Get()->m_transports[name] = item;
 }
 
-// OFFSET: #0x00452B10
+// INLINED
 void Blizzard::Streaming::ManifestInfo::SetFileItem(std::string name, const Manifests::FileItem& item) {
     Get()->m_files[name] = item;
 
@@ -894,7 +894,7 @@ void Blizzard::Streaming::ManifestInfo::SetFileItem(std::string name, const Mani
     }
 }
 
-// OFFSET: #0x00452C30
+// INLINED
 void Blizzard::Streaming::ManifestInfo::SetServerItem(std::string name, const Manifests::ServerItem& item) {
     Get()->m_servers[name] = item;
 }
@@ -1152,7 +1152,7 @@ int32_t Blizzard::Streaming::ManifestInfo::GetServerItemMaxRetry(const std::stri
     return 5;
 }
 
-// OFFSET: #0x004533E0
+// INLINED
 int32_t Blizzard::Streaming::FileManifest::GetBGPreloadSleep() {
     std::string value = ManifestInfo::Get()->GetParameter("bgpreloadsleep");
 
@@ -1169,7 +1169,7 @@ int32_t Blizzard::Streaming::FileManifest::GetBGPreloadSleep() {
     return sleep;
 }
 
-// OFFSET: #0x00453480
+// INLINED
 bool Blizzard::Streaming::FileManifest::GetIsStreamingTrial() {
     std::string value = ManifestInfo::Get()->GetParameter("istrial");
 
@@ -1180,7 +1180,7 @@ bool Blizzard::Streaming::FileManifest::GetIsStreamingTrial() {
     return atoi(value.c_str()) != 0;
 }
 
-// OFFSET: #0x00453510
+// INLINED
 bool Blizzard::Streaming::FileManifest::SetSpeedTest(int32_t speedTest) {
     if (speedTest) {
         int32_t minimum = 1;
@@ -1198,12 +1198,12 @@ bool Blizzard::Streaming::FileManifest::SetSpeedTest(int32_t speedTest) {
     return true;
 }
 
-// OFFSET: #0x004536E0
+// INLINED
 void Blizzard::Streaming::FileManifest::SetDefaultBgPreloadSleep(int32_t sleep) {
     ManifestInfo::Get()->SetParameter("bgpreloadsleep", sleep);
 }
 
-// OFFSET: #0x00455D40
+// INLINED
 bool Blizzard::Streaming::Transport::ReadDirectFileFromBuffer(char* buffer, int32_t size) {
     char* line = buffer;
 
@@ -1249,7 +1249,7 @@ bool Blizzard::Streaming::Transport::ReadDirectFileFromBuffer(char* buffer, int3
     return true;
 }
 
-// OFFSET: %0x007561A0
+// INLINED
 bool Blizzard::Streaming::SourceManifest::Initialize(const char* path) {
     if (!path || !*path) {
         return true;
@@ -1282,7 +1282,7 @@ bool Blizzard::Streaming::ManifestInfo::ReadDirectFile(const char* path) {
     return result;
 }
 
-// OFFSET: %0x00750DB0
+// INLINED
 bool Blizzard::Streaming::FileManifest::ReadDirectFile(const char* path) {
     void* data;
     uint32_t size;
@@ -1302,7 +1302,7 @@ bool Blizzard::Streaming::FileManifest::ReadDirectFile(const char* path) {
     return result;
 }
 
-// OFFSET: #0x00456A00
+// INLINED
 bool Blizzard::Streaming::SourceManifest::ReadDirectFileFromBuffer(char* buffer, int32_t size) {
     std::string base;
     std::string path;
@@ -1384,7 +1384,7 @@ bool Blizzard::Streaming::SourceManifest::ReadDirectFileFromBuffer(char* buffer,
     return true;
 }
 
-// OFFSET: %0x00754AE0
+// INLINED
 bool Blizzard::Streaming::Transport::ReadDirectFile(const char* path) {
     void* data;
     uint32_t size;
@@ -1400,7 +1400,7 @@ bool Blizzard::Streaming::Transport::ReadDirectFile(const char* path) {
     return result;
 }
 
-// OFFSET: %0x00754E50
+// INLINED
 bool Blizzard::Streaming::SourceManifest::ReadDirectFile(const char* path) {
     void* data;
     uint32_t size;
@@ -1416,7 +1416,7 @@ bool Blizzard::Streaming::SourceManifest::ReadDirectFile(const char* path) {
     return result;
 }
 
-// OFFSET: #0x0045D1E0
+// INLINED
 bool Blizzard::Streaming::FileManifest::ReadDirectFileFromBuffer(char* buffer, int32_t size) {
     char* line = buffer;
 

@@ -75,7 +75,7 @@ FMOD_RESULT	OutputOpenAL::setupSessionEAX5()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094A170
+// INLINED
 FMOD_RESULT OutputOpenAL::getSpeakerModeEAX5(FMOD_SPEAKERMODE *speakerMode)
 {
     EAXGet                eaxGet          = NULL;
@@ -242,7 +242,7 @@ FMOD_RESULT OutputOpenAL::lockSlotEAX5(GUID &slotGUID)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0094A440
+// INLINED
 FMOD_RESULT OutputOpenAL::setPropertiesEAX5(const FMOD_REVERB_PROPERTIES *prop)
 {
     GUID                 slotGUID;

@@ -576,7 +576,7 @@ bool BSN::BSNPrimitiveEncoder::WalkAndGet(const PrimitiveEncoder* encoder, const
     return walker.Copy(walkContext) == BSN::WALK_VALID;
 }
 
-// OFFSET: #0x0077A200
+// INLINED
 BSN::BSNPrimitiveWalker::~BSNPrimitiveWalker() {
 }
 

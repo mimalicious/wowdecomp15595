@@ -379,12 +379,12 @@ void CGCooldown::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// OFFSET: #0x005EBE70
+// INLINED
 bool CGCooldown::IsA(int32_t type) {
     return type == CGCooldown::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: #0x005EBEB0
+// INLINED
 bool CGCooldown::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGCooldown::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

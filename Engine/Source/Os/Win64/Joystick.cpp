@@ -307,7 +307,7 @@ void OsJoystickMapHat(uint32_t index, int32_t hat, int32_t up, int32_t right, in
     }
 }
 
-// OFFSET: #0x008709E0
+// INLINED
 void OsJoystickSetMouseMode(uint32_t index, int32_t enable) {
     if (index >= OsJoystickCount()) {
         return;

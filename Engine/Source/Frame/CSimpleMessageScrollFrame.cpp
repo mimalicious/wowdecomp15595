@@ -100,7 +100,7 @@ void CSimpleFontStringRecord::operator delete(void* ptr) {
     }
 }
 
-// OFFSET: [%0x0052CF60, %0x0052CF70, %0x0052CF80, %0x0052D2D0]
+// INLINED
 CSimpleFontStringRecord::~CSimpleFontStringRecord() {
 }
 

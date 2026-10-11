@@ -30,7 +30,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00943900
+// INLINED
 ChannelReal::ChannelReal()
 {
     int count;
@@ -66,7 +66,7 @@ ChannelReal::ChannelReal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00943970
+// INLINED
 FMOD_RESULT ChannelReal::init(int index, SystemI *system, Output *output, DSPI *dspmixtarget)
 {
     mSound              = 0;
@@ -504,7 +504,7 @@ FMOD_RESULT ChannelReal::setDelay(unsigned int startdelay, unsigned int enddelay
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00943AE0
+// INLINED
 FMOD_RESULT ChannelReal::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright)
 {
     int numsubchannels = 0;
@@ -709,7 +709,7 @@ FMOD_RESULT ChannelReal::updateSpeakerLevels(float volume)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009442D0
+// INLINED
 FMOD_RESULT ChannelReal::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 {
     if (postype != FMOD_TIMEUNIT_MS && postype != FMOD_TIMEUNIT_PCM && postype != FMOD_TIMEUNIT_PCMBYTES)
@@ -769,7 +769,7 @@ FMOD_RESULT ChannelReal::setPosition(unsigned int position, FMOD_TIMEUNIT postyp
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009444A0
+// INLINED
 FMOD_RESULT ChannelReal::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {   
     bool getsubsoundtime = false;

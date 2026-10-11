@@ -6849,7 +6849,7 @@ void CGUnit_C::RenderAutoTrackCursor() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: %0x005CD740
+// INLINED
 void CGUnit_C::Render() {
     this->RenderAutoTrackCursor();
 }
@@ -11812,7 +11812,7 @@ void CGUnit_C::DestroyLiquidPerturbator() {
     }
 }
 
-// OFFSET: #0x00714C10
+// INLINED
 float CopySign(float value, float sign) {
     uint32_t bits = (*reinterpret_cast<uint32_t*>(&sign) ^ *reinterpret_cast<uint32_t*>(&value)) & 0x7FFFFFFF;
     bits ^= *reinterpret_cast<uint32_t*>(&sign);
@@ -13524,7 +13524,7 @@ void CGUnit_C::UpdateWorldTransform(float elapsed) {
     model->SetWorldTransform(this->GetPosition(), facing, scale, this->m_groundNormal, animFlags ? 3 : 0xFFFFFFFF);
 }
 
-// OFFSET: #0x00735A60
+// INLINED
 int32_t CGUnit_C::UnsetKeyBoneSequence(CM2Model* model, uint32_t boneId, int32_t blend, int32_t primary, int32_t force) {
     if (!model) {
         return 0;
@@ -14334,7 +14334,7 @@ void CGUnit_C::PostReenable(const CClientObjCreate& create) {
     }
 }
 
-// OFFSET: #0x0070CBA0
+// INLINED
 void CGUnit_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
     this->m_unit = reinterpret_cast<CGUnitData*>(storage + OBJECT_END);
@@ -17868,7 +17868,7 @@ void CGUnit_C::AddWorldDamageText(const WOWGUID& source, int32_t amount, const S
     PlayerNameCreateText(this->m_nameDesc, crit ? 2 : 0, text, color, NULL);
 }
 
-// OFFSET: #0x0073C220
+// INLINED
 void CGUnit_C::SetUpdateInfo(const CClientMoveUpdate& update, int32_t activeMover) {
     this->m_movementData.SetUpdateInfo(OsGetAsyncTimeMs(), &update, activeMover);
 
@@ -18589,7 +18589,7 @@ float CGUnit_C::GetSpellChanceToCrit() const {
     return (ratio * (intellect < 0 ? 0 : intellect) + base) * 100.0f;
 }
 
-// OFFSET: #0x00715D60
+// INLINED
 void CGUnit_C::TriggerDamageFeedback() {
     if (this->m_namePlateFrame) {
         this->m_namePlateFrame->TriggerDamageFeedback();
@@ -21329,7 +21329,7 @@ void CGUnit_C::SetWeaponTrail(CM2Model* model, uint32_t hand) {
     }
 }
 
-// OFFSET: #0x006CF350
+// INLINED
 float CGUnit_C::GetScaledModelScale(const CreatureDisplayInfoRec* displayInfo, const CreatureModelDataRec* modelData, float* modelScale) {
     float scale = this->GetScale();
 
@@ -21574,7 +21574,7 @@ void CGUnit_C::UpdatePartyMemberPetState() {
     }
 }
 
-// OFFSET: #0x0072CC30
+// INLINED
 int32_t CGUnit_C::IsHostileCritter() {
     if (this->GetCreatureType() != 7) {
         return 0;

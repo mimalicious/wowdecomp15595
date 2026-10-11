@@ -111,7 +111,7 @@ FMOD_RESULT Thread::threadFunc()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E5260
+// INLINED
 Thread::Thread()
 {
     mHandle       = 0;
@@ -140,7 +140,7 @@ Thread::Thread()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E52A0
+// INLINED
 FMOD_RESULT Thread::initThread(const char *name, void (*func)(void *userdata), void *userdata, PRIORITY priority, void *stack, int stacksize, bool usesemaphore, int sleepperiod)
 {
     FMOD_RESULT result;

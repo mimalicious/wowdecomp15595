@@ -27,7 +27,7 @@ FMOD_FILE_SEEKCALLBACK  UserFile::gSeekCallback  = 0;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E8230
+// INLINED
 FMOD_RESULT UserFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -64,7 +64,7 @@ FMOD_RESULT UserFile::reallyOpen(const char *name_or_data, unsigned int *filesiz
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E8270
+// INLINED
 FMOD_RESULT UserFile::reallyClose()
 {
 	if (mCloseCallback)
@@ -97,7 +97,7 @@ FMOD_RESULT UserFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E82A0
+// INLINED
 FMOD_RESULT UserFile::reallyRead(void *buffer, unsigned int size, unsigned int *rd)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -132,7 +132,7 @@ FMOD_RESULT UserFile::reallyRead(void *buffer, unsigned int size, unsigned int *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E82E0
+// INLINED
 FMOD_RESULT UserFile::reallySeek(unsigned int pos)
 {
 	if (mSeekCallback)

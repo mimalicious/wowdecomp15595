@@ -74,7 +74,7 @@ void Report::Initialize(const std::string& app, const std::string& version, cons
     s_initialized = true;
 }
 
-// OFFSET: [%0x00762EC0<int32_t>, %0x00762F80<int64_t>, %0x00763050<std::string>]
+// INLINED
 template <class T>
 Report::TrackerData<T>::TrackerData(std::string key, const T& value) {
     this->m_key = key;

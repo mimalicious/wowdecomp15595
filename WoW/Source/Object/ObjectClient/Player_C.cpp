@@ -2870,7 +2870,7 @@ void CGPlayer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_playerMirror = saved + CGUnit::TotalFields();
 }
 
-// OFFSET: #0x006CF3A0
+// INLINED
 static float ClampPitch(float pitch) {
     if (pitch > 1.5707964f) {
         return 1.5707964f;
@@ -9763,7 +9763,7 @@ void CGPlayer_C::CastRandomCritter() {
     }
 }
 
-// OFFSET: #0x006D7320
+// INLINED
 int32_t ClientPlaySpellVisualHandler(WOWGUID guid, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -9789,7 +9789,7 @@ int32_t ClientPlaySpellVisualHandler(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: %0x0056D0C0
+// INLINED
 void EnumVisibleForAuraEffect(const SpellRec* spell, int32_t a2, int32_t a3) {
     s_unk_C9EAB0 = a2;
     s_unk_C9EAB4 = a2 ? a3 : 0;
@@ -10978,7 +10978,7 @@ void CGPlayer_C::UpdateHandItemVisual(GEOCOMPONENTLINKS link, int32_t hand) {
     }
 }
 
-// OFFSET: #0x005E82C0
+// INLINED
 int32_t CGItem::GetEnchantmentCharges(int32_t slot) {
     if (this->GetItemStaticFlags(0) & 0x2000) {
         return 0;
@@ -11433,12 +11433,12 @@ TSGrowableArray<int32_t>* CGPlayer_C::GetTradeSkills(int32_t skillLine) {
     return line ? &line->m_spells : NULL;
 }
 
-// OFFSET: %0x00564BB0
+// INLINED
 uint32_t GetVisibleAuraEffectDisplay() {
     return s_unk_C9EAB0;
 }
 
-// OFFSET: %0x00564BC0
+// INLINED
 uint32_t GetVisibleAuraEffectFlags() {
     return s_unk_C9EAB4;
 }
@@ -11741,7 +11741,7 @@ void CGPlayer_C::PlayerShutdownMessageHandlers() {
     ClientUpdateActionButtons::s_handler = NULL;
 }
 
-// OFFSET: #0x007261B0
+// INLINED
 bool CGPlayer_C::IsInFlyableZone(int32_t checkContinent) {
     return IsInFlyableArea() && (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !checkContinent || CGGameUI::m_iCurrentMapID != 571 || HasSpell(static_cast<uint32_t>(54197)));
 }

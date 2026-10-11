@@ -250,7 +250,7 @@ TIMESTAMPCALLBACK* CGameTime::GameTimeRegisterCallback(const WowTime* time, void
     return node;
 }
 
-// OFFSET: #0x004C9730
+// INLINED
 TIMESTAMPSTRUCT::~TIMESTAMPSTRUCT() {
     this->m_callbacks.Clear();
 }

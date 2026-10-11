@@ -42,7 +42,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DC390
+// INLINED
 FMOD_RESULT DSPI::doesUnitExist(DSPI *target)
 {
     FMOD_RESULT result;
@@ -96,7 +96,7 @@ FMOD_RESULT DSPI::doesUnitExist(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DA410
+// INLINED
 FMOD_RESULT DSPI::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 {
     FMOD_RESULT result;
@@ -403,7 +403,7 @@ FMOD_RESULT DSPI::execute(void *inbuffer, void **outbuffer, unsigned int *length
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DA4C0
+// INLINED
 FMOD_RESULT DSPI::resetVisited()
 {
     LinkedListNode *current;
@@ -548,7 +548,7 @@ FMOD_RESULT DSPI::validate(DSP *dsp, DSPI **dspi)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DC420
+// INLINED
 FMOD_RESULT DSPI::setPosition(unsigned int position, bool processinputs)
 {
     if (processinputs)
@@ -600,7 +600,7 @@ FMOD_RESULT DSPI::setPosition(unsigned int position, bool processinputs)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DA550
+// INLINED
 FMOD_RESULT DSPI::calculateSpeakerLevels(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright, FMOD_SPEAKERMODE speakermode, int channels, FMOD_SPEAKERMAPTYPE speakermap, float *outlevels, int *numinputlevels)
 {
     *numinputlevels = 0;
@@ -1380,7 +1380,7 @@ FMOD_RESULT DSPI::calculateSpeakerLevels(float frontleft, float frontright, floa
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DC4A0
+// INLINED
 DSPI::DSPI()
 {
     mBuffer             = 0;
@@ -1508,7 +1508,7 @@ FMOD_RESULT DSPI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DB720
+// INLINED
 FMOD_RESULT DSPI::updateTreeLevel(int level)
 {
     LinkedListNode *current;
@@ -1678,7 +1678,7 @@ FMOD_RESULT DSPI::addInputInternal(DSPI *target, bool checkcircular, DSPConnecti
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DCC10
+// INLINED
 FMOD_RESULT DSPI::addInput(DSPI *target)
 {
     FMOD_RESULT result;
@@ -1750,7 +1750,7 @@ FMOD_RESULT DSPI::addInput(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DC820
+// INLINED
 FMOD_RESULT DSPI::addInputQueued(DSPI *target, bool checkcircular, DSPConnectionI *connection_old, DSPConnectionI **connection_out)
 {
     FMOD_RESULT result;
@@ -1832,7 +1832,7 @@ FMOD_RESULT DSPI::addInputQueued(DSPI *target, bool checkcircular, DSPConnection
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DC030
+// INLINED
 FMOD_RESULT DSPI::disconnectFromInternal(DSPI *target)
 {
     FMOD_RESULT result;
@@ -2028,7 +2028,7 @@ FMOD_RESULT DSPI::disconnectFrom(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DC950
+// INLINED
 FMOD_RESULT DSPI::disconnectAllInternal(bool inputs, bool outputs)
 {
     FMOD_RESULT result;
@@ -2194,7 +2194,7 @@ FMOD_RESULT DSPI::disconnectAll(bool inputs, bool outputs)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008DCAC0
+// INLINED
 FMOD_RESULT DSPI::remove()
 {
     FMOD_RESULT result;

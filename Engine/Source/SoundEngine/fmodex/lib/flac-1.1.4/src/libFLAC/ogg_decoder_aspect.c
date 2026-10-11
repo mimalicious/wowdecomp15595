@@ -49,7 +49,7 @@
  *
  ***********************************************************************/
 
-// OFFSET: #0x00955F00
+// INLINED
 FLAC__bool FLAC__ogg_decoder_aspect_init(FLAC__OggDecoderAspect *aspect)
 {
 	/* we will determine the serial number later if necessary */
@@ -70,7 +70,7 @@ FLAC__bool FLAC__ogg_decoder_aspect_init(FLAC__OggDecoderAspect *aspect)
 	return true;
 }
 
-// OFFSET: #0x00955F60
+// INLINED
 void FLAC__ogg_decoder_aspect_finish(FLAC__OggDecoderAspect *aspect)
 {
 	(void)FMOD_ogg_sync_clear(&aspect->sync_state);
@@ -83,13 +83,13 @@ void FLAC__ogg_decoder_aspect_set_serial_number(FLAC__OggDecoderAspect *aspect, 
 	aspect->serial_number = value;
 }
 
-// OFFSET: #0x00955F90
+// INLINED
 void FLAC__ogg_decoder_aspect_set_defaults(FLAC__OggDecoderAspect *aspect)
 {
 	aspect->use_first_serial_number = true;
 }
 
-// OFFSET: #0x00955FA0
+// INLINED
 void FLAC__ogg_decoder_aspect_flush(FLAC__OggDecoderAspect *aspect)
 {
 	(void)FMOD_ogg_stream_reset(&aspect->stream_state);
@@ -98,7 +98,7 @@ void FLAC__ogg_decoder_aspect_flush(FLAC__OggDecoderAspect *aspect)
 	aspect->have_working_page = false;
 }
 
-// OFFSET: #0x00955FD0
+// INLINED
 void FLAC__ogg_decoder_aspect_reset(FLAC__OggDecoderAspect *aspect)
 {
 	FLAC__ogg_decoder_aspect_flush(aspect);
@@ -107,7 +107,7 @@ void FLAC__ogg_decoder_aspect_reset(FLAC__OggDecoderAspect *aspect)
 		aspect->need_serial_number = true;
 }
 
-// OFFSET: #0x00956010
+// INLINED
 FLAC__OggDecoderAspectReadStatus FLAC__ogg_decoder_aspect_read_callback_wrapper(FLAC__OggDecoderAspect *aspect, FLAC__byte buffer[], size_t *bytes, FLAC__OggDecoderAspectReadCallbackProxy read_callback, const FLAC__StreamDecoder *decoder, void *client_data)
 {
 	static const size_t OGG_BYTES_CHUNK = 8192;

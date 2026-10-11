@@ -3010,7 +3010,7 @@ void ClientUpdateTaxiBenchmarkMode() {
     }
 }
 
-// OFFSET: #0x00403FC0
+// INLINED
 void CheckAndSendBotDetected() {
     if (!s_botCheckEnabled) {
         return;
@@ -3101,17 +3101,17 @@ void ClientKillTimer(uint32_t id, EVENTHANDLERFUNC handler, const char* name) {
     EventKillTimer(id, handler, name);
 }
 
-// OFFSET: #0x00402720
+// INLINED
 void* Client_MemAlloc(uint32_t bytes) {
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: #0x00402740
+// INLINED
 void Client_MemFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: #0x00404610
+// INLINED
 void SendBotDetected2(uint32_t msgId, uint32_t code) {
     WDataStore msg;
     msg.Put(msgId);

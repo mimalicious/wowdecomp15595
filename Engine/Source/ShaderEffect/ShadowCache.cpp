@@ -1118,7 +1118,7 @@ void CShadowCache::Create() {
     CShadowCache::s_shadowMapPixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "ShadowMapSL");
 }
 
-// OFFSET: %0x00442750
+// INLINED
 int32_t CShadowCache::Init() {
     CShadowCache::Create();
 

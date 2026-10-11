@@ -405,7 +405,7 @@ FMOD_RESULT SystemI::updateStreams()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D29C0
+// INLINED
 FMOD_RESULT SystemI::updateChannels(int delta)
 {
     int       emulatedused;
@@ -873,7 +873,7 @@ FMOD_RESULT SystemI::updateChannels(int delta)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D3230
+// INLINED
 FMOD_RESULT SystemI::updateSoundGroups(int delta)
 {
     SoundGroupI *soundgroup;
@@ -986,7 +986,7 @@ FMOD_RESULT SystemI::updateSoundGroups(int delta)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D5210
+// INLINED
 FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, SoundI *sound, ChannelI **channel)
 {
     ChannelI       *chan = 0;
@@ -1217,7 +1217,7 @@ FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, SoundI *sound, ChannelI *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D3420
+// INLINED
 FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, DSPI *dsp, ChannelI **channel)
 {
     ChannelI       *chan = 0;
@@ -1318,7 +1318,7 @@ FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, DSPI *dsp, ChannelI **cha
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D5590
+// INLINED
 FMOD_RESULT SystemI::createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *waveformat, Sample **sample_out)
 {
     FMOD_RESULT  result;
@@ -3185,7 +3185,7 @@ FMOD_RESULT SystemI::sortSpeakerList()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D3A70
+// INLINED
 FMOD_RESULT SystemI::allocDSPCodec(FMOD_SOUND_FORMAT format, DSPCodec **dsp)
 {
     if (0)
@@ -3222,7 +3222,7 @@ FMOD_RESULT SystemI::allocDSPCodec(FMOD_SOUND_FORMAT format, DSPCodec **dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D8A10
+// INLINED
 SystemI::SystemI()
 {
     mInitialized                = false;
@@ -3395,7 +3395,7 @@ FMOD_RESULT SystemI::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D3AB0
+// INLINED
 FMOD_RESULT SystemI::setOutput(FMOD_OUTPUTTYPE outputtype)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -3794,7 +3794,7 @@ FMOD_RESULT SystemI::getDriverCaps(int id, FMOD_CAPS *caps, int *minfrequency, i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D3F30
+// INLINED
 FMOD_RESULT SystemI::setDriver(int driver)
 {
     FMOD_RESULT        result       = FMOD_OK;
@@ -4378,7 +4378,7 @@ FMOD_RESULT SystemI::getAdvancedSettings(FMOD_ADVANCEDSETTINGS *settings)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D5A50
+// INLINED
 FMOD_RESULT SystemI::setSpeakerMode(FMOD_SPEAKERMODE speakermode)
 {
 	if (mInitialized)
@@ -5418,7 +5418,7 @@ FMOD_RESULT SystemI::close()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D9550
+// INLINED
 FMOD_RESULT SystemI::closeEx(bool calledfrominit)
 {
     FMOD_RESULT result;
@@ -5721,7 +5721,7 @@ FMOD_RESULT SystemI::closeEx(bool calledfrominit)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D8FD0
+// INLINED
 FMOD_RESULT SystemI::update()
 {
     FMOD_RESULT  result;
@@ -6174,7 +6174,7 @@ FMOD_RESULT SystemI::set3DRolloffCallback(FMOD_3D_ROLLOFFCALLBACK callback)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C2810
+// INLINED
 FMOD_RESULT SystemI::set3DSpeakerPosition(FMOD_SPEAKER speaker, float x, float y, bool active)
 {
     if (speaker < 0 || speaker >= FMOD_SPEAKER_MAX)
@@ -7204,7 +7204,7 @@ FMOD_RESULT SystemI::createDSP(FMOD_DSP_DESCRIPTION *description, DSPI **dsp)
 	[SEE_ALSO]
 ]
 */                                    
-// OFFSET: #0x008D5DE0
+// INLINED
 FMOD_RESULT SystemI::createDSP(FMOD_DSP_DESCRIPTION_EX *description, DSPI **dsp, bool allocate)
 {
     FMOD_RESULT             result;
@@ -7329,7 +7329,7 @@ FMOD_RESULT SystemI::createDSPByIndex(int index, DSPI **dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D5F10
+// INLINED
 FMOD_RESULT SystemI::createDSPByType(FMOD_DSP_TYPE type, DSPI **dsp)
 {
     FMOD_RESULT result;
@@ -7491,7 +7491,7 @@ FMOD_RESULT SystemI::createChannelGroup(const char *name, ChannelGroupI **channe
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D4750
+// INLINED
 FMOD_RESULT SystemI::createSoundGroup(const char *name, SoundGroupI **soundgroup)
 {
     SoundGroupI *newsoundgroup;
@@ -7544,7 +7544,7 @@ FMOD_RESULT SystemI::createSoundGroup(const char *name, SoundGroupI **soundgroup
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D61A0
+// INLINED
 FMOD_RESULT SystemI::playSound(FMOD_CHANNELINDEX channelid, SoundI *sound, bool paused, ChannelI **channel)
 {
     FMOD_RESULT  result;
@@ -8075,7 +8075,7 @@ FMOD_RESULT SystemI::get3DReverbActive(bool *state)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D49F0
+// INLINED
 FMOD_RESULT SystemI::setReverbProperties(const FMOD_REVERB_PROPERTIES *prop, bool force_create)
 {
 #ifdef FMOD_SUPPORT_REVERB
@@ -8178,7 +8178,7 @@ FMOD_RESULT SystemI::getReverbProperties(FMOD_REVERB_PROPERTIES *prop)
 ]
 */
 #ifdef FMOD_SUPPORT_MULTIREVERB
-// OFFSET: #0x008D4AD0
+// INLINED
 FMOD_RESULT SystemI::set3DReverbProperties(const FMOD_REVERB_PROPERTIES *prop, bool force_create)
 {
 #if defined(FMOD_SUPPORT_REVERB) && defined(FMOD_SUPPORT_MULTIREVERB)
@@ -8511,7 +8511,7 @@ FMOD_RESULT SystemI::getRecordNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D6380
+// INLINED
 FMOD_RESULT SystemI::setRecordDriver(int driver)
 {
 #ifdef FMOD_SUPPORT_RECORDING
@@ -8713,7 +8713,7 @@ FMOD_RESULT SystemI::getRecordDriverCaps(int id, FMOD_CAPS *caps, int *minfreque
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D63D0
+// INLINED
 FMOD_RESULT SystemI::recordStart(SoundI *sound, bool loop)
 {
 #ifdef FMOD_SUPPORT_RECORDING
@@ -8814,7 +8814,7 @@ FMOD_RESULT SystemI::recordStart(SoundI *sound, bool loop)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D4D20
+// INLINED
 FMOD_RESULT SystemI::recordStop()
 {
 #ifdef FMOD_SUPPORT_RECORDING
@@ -9592,7 +9592,7 @@ FMOD_RESULT SystemI::getListenerObject(int listener, Listener **listenerobject)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D50A0
+// INLINED
 FMOD_RESULT SystemI::flushDSPConnectionRequests(bool calledfrommainthread)
 {
     DSPConnectionRequest *request;

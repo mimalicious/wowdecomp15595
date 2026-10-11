@@ -62,7 +62,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090A5A0
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecS3M::getDescriptionEx()
 {
     FMOD_memset(&s3mcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -306,7 +306,7 @@ FMOD_RESULT MusicChannelS3M::vibrato()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00907750
+// INLINED
 FMOD_RESULT MusicChannelS3M::tremolo() 
 {
 	int 			delta;
@@ -380,7 +380,7 @@ FMOD_RESULT MusicChannelS3M::tremolo()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00907830
+// INLINED
 FMOD_RESULT MusicChannelS3M::fineVibrato() 
 {
 	int				delta;
@@ -446,7 +446,7 @@ FMOD_RESULT MusicChannelS3M::fineVibrato()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009078F0
+// INLINED
 FMOD_RESULT CodecS3M::updateNote(bool audible)
 {
 	MusicNote   *current;
@@ -1071,7 +1071,7 @@ FMOD_RESULT CodecS3M::updateNote(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00908320
+// INLINED
 FMOD_RESULT CodecS3M::updateEffects() 
 {
 	MusicNote   *current;
@@ -2600,7 +2600,7 @@ FMOD_RESULT CodecS3M::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00908F40
+// INLINED
 FMOD_RESULT CodecS3M::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

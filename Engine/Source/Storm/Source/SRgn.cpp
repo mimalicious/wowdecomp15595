@@ -12,7 +12,7 @@
 // STATIC: %0x00CA6950
 static TSExportTableSyncReuse<RGN, HSRGN, HLOCKEDRGN, CCritSect> s_rgntable;
 
-// OFFSET: #0x00776070
+// INLINED
 static int32_t IsNullRect(const RECTF* rect) {
     return rect->left >= rect->right || rect->bottom >= rect->top;
 }

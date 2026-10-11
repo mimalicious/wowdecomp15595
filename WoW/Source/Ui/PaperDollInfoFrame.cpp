@@ -87,7 +87,7 @@ uint32_t CGCharacterInfo::m_inspectRatedBGWon;
 // STATIC: 0x00D13668
 uint8_t CGCharacterInfo::m_avgItemLevelDirty = 1;
 
-// OFFSET: #0x005E83E0
+// INLINED
 int32_t PlayerEquipmentChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -147,7 +147,7 @@ void CGCharacterInfo::InitializeGame() {
     ClientServices::SetMessageHandler(MSG_INSPECT_ARENA_TEAMS, Packet_MSG_INSPECT_ARENA_TEAMS, NULL);
 }
 
-// OFFSET: #0x005E8470
+// INLINED
 void CGCharacterInfo::RegisterMirrorHandlers(WOWGUID guid) {
     if (!guid) {
         return;
@@ -190,7 +190,7 @@ void CGCharacterInfo::EnterWorld() {
     CGCharacterInfo::m_avgItemLevelDirty = 1;
 }
 
-// OFFSET: #0x005E7660
+// INLINED
 void UnitInventoryChangedCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_INVENTORY_CHANGED, "%s", "player");
@@ -210,7 +210,7 @@ bool CGCharacterInfo::CanInspect(const CGPlayer_C* unit) {
     return false;
 }
 
-// OFFSET: #0x005E8300
+// INLINED
 int32_t CGCharacterInfo::GetActivePlayerAmmoID(const CGPlayer_C* player) {
     return 0;
 }
@@ -294,7 +294,7 @@ void CGCharacterInfo::UpdateItem(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x005E79D0
+// INLINED
 static void BuyItemInBag(WOWGUID merchant, const VendorItem* item, uint32_t count, WOWGUID bag) {
     CGPlayer_C::BuyItemInSlot(merchant, item, count, bag, 0xFF);
 }

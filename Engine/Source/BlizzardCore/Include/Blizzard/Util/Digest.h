@@ -36,7 +36,7 @@ Blizzard::Util::Digest<N>& Blizzard::Util::Digest<N>::FromHexString(const char* 
     return *this;
 }
 
-// OFFSET: #0x00429540
+// INLINED
 template <int N>
 bool Blizzard::Util::Digest<N>::operator<(const Digest& other) const {
     for (int32_t i = 0; i < N; i++) {

@@ -905,7 +905,7 @@ int32_t World::GetActiveMapLogical(int32_t a1, int32_t a2) {
     return -1;
 }
 
-// OFFSET: #0x0077EC80
+// INLINED
 bool World::MapIsDungeon() {
     CWorldMap* worldMap = ActiveWorldMap();
     return worldMap && worldMap->m_isGlobalMapObj;

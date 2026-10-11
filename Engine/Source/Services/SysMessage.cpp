@@ -150,7 +150,7 @@ void SysMsgInitialize() {
 void SysMsgSetCallback(void (*callback)(const char* text, STATUS_TYPE severity)) {
 }
 
-// OFFSET: %0x0054F370
+// INLINED
 void SysMsgShutdown() {
     s_enabled = 0;
 }

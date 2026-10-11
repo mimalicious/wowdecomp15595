@@ -1,7 +1,7 @@
 #ifndef WOW_SOURCE_UIUTIL_TOOLTIP_INL
 #define WOW_SOURCE_UIUTIL_TOOLTIP_INL
 
-// OFFSET: #0x00514410
+// INLINED
 inline int32_t CGTooltip::GetObjectType() {
     if (!CGTooltip::s_objectType) {
         CGTooltip::s_objectType = ++FrameScript_Object::s_objectTypes;

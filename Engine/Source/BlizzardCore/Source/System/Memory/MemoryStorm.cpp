@@ -50,7 +50,7 @@ void* operator new(size_t bytes, uint32_t flags, const char* fileName, int32_t l
     return Blizzard::Memory::Allocate(static_cast<uint32_t>(bytes), flags | 0x80, fileName, lineNumber);
 }
 
-// OFFSET: #0x004284B0
+// INLINED
 void operator delete(void* ptr, uint32_t flags, const char* fileName, int32_t lineNumber) {
     if (ptr) {
         SMemFree(ptr, fileName, lineNumber, (flags & 1) ? SMEM_FLAG_ZEROMEMORY : 0);

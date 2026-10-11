@@ -22,7 +22,7 @@ EvtContext::EvtContext(uint32_t flags, uint32_t idleTime, uint32_t schedWeight, 
     this->m_startWatchdog = startWatchdog;
 }
 
-// OFFSET: [%0x00806F50, %0x008071D0]
+// INLINED
 EvtContext::~EvtContext() {
     for (uint32_t i = 0; i < EVENTIDS; i++) {
         this->m_queueHandlerList[i].Clear();

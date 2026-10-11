@@ -74,7 +74,7 @@ static bool CheckWowExeVersion() {
 
 extern "C" int WinMainCRTStartup();
 
-// OFFSET: %0x004012F0
+// INLINED
 extern "C" int start() {
     StormRtlInitialize();
     return WinMainCRTStartup();

@@ -269,7 +269,7 @@ FMOD_RESULT DSPConnectionI::setUnity()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00923D50
+// INLINED
 FMOD_RESULT DSPConnectionI::mix(float * FMOD_RESTRICT outbuffer, float * FMOD_RESTRICT inbuffer, int outchannels, int inchannels, unsigned int length)
 {
     unsigned int count;
@@ -1297,7 +1297,7 @@ FMOD_RESULT DSPConnectionI::mix(float * FMOD_RESTRICT outbuffer, float * FMOD_RE
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009231B0
+// INLINED
 FMOD_RESULT DSPConnectionI::mixAndRamp(float * FMOD_RESTRICT outbuffer, float * FMOD_RESTRICT inbuffer, int outchannels, int inchannels, unsigned int length)
 {
     unsigned int count;
@@ -1543,7 +1543,7 @@ FMOD_RESULT DSPConnectionI::checkMono(int outchannels, int inchannels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00923500
+// INLINED
 FMOD_RESULT DSPConnectionI::setPan(float pan, int outchannels, int inchannels, FMOD_SPEAKERMODE speakermode)
 {
     int count, count2;

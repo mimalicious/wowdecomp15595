@@ -62,7 +62,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009075F0
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecXM::getDescriptionEx()
 {
     FMOD_memset(&xmcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -146,7 +146,7 @@ FMOD_RESULT CodecXM::calculateLength()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00903AA0
+// INLINED
 FMOD_RESULT CodecXM::spawnNewChannel(MusicChannel *cptr, MusicVirtualChannel *oldvcptr, MusicSample *sptr, MusicVirtualChannel **newvcptr)
 {
     if (oldvcptr == &gDummyVirtualChannel) /* bugfix - fmod 3.11 - instrument starting with no channel was just ignoring settings. */
@@ -352,7 +352,7 @@ FMOD_RESULT MusicChannelXM::portamento()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00903CA0
+// INLINED
 FMOD_RESULT MusicChannelXM::vibrato() 
 {
 	int delta;
@@ -414,7 +414,7 @@ FMOD_RESULT MusicChannelXM::vibrato()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00903D40
+// INLINED
 FMOD_RESULT MusicChannelXM::tremolo() 
 {
 	unsigned char temp;
@@ -588,7 +588,7 @@ FMOD_RESULT CodecXM::processEnvelope(MusicEnvelopeState *env, MusicVirtualChanne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00903F70
+// INLINED
 FMOD_RESULT MusicChannelXM::instrumentVibrato(MusicInstrument *iptr) 
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -655,7 +655,7 @@ FMOD_RESULT MusicChannelXM::instrumentVibrato(MusicInstrument *iptr)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009040B0
+// INLINED
 FMOD_RESULT MusicChannelXM::processVolumeByte(unsigned char volume)
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -768,7 +768,7 @@ FMOD_RESULT MusicChannelXM::processVolumeByte(unsigned char volume)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00904220
+// INLINED
 FMOD_RESULT CodecXM::getAmigaPeriod(int note, int finetune, int *period)
 {
 	*period = gPeriodTable[note];
@@ -919,7 +919,7 @@ FMOD_RESULT CodecXM::processNote(MusicNote *current, MusicChannelXM *cptr, Music
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00904440
+// INLINED
 FMOD_RESULT CodecXM::updateNote(bool audible)
 {
 	MusicNote  *current;
@@ -1577,7 +1577,7 @@ FMOD_RESULT CodecXM::updateNote(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00904F00
+// INLINED
 FMOD_RESULT CodecXM::updateEffects() 
 {
 	MusicNote  *current;
@@ -3613,7 +3613,7 @@ FMOD_RESULT CodecXM::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00905E80
+// INLINED
 FMOD_RESULT CodecXM::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

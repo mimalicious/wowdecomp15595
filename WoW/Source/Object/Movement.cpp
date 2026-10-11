@@ -1941,7 +1941,7 @@ int32_t CMovement_C::IsFacetOverhead(uint32_t facet) const {
     return 0;
 }
 
-// OFFSET: #0x0075D2D0
+// INLINED
 int32_t CMovement_C::IsFacetWall(uint32_t facet) const {
     const CFacet& data = s_moveFacets.facets.m_data[facet];
 
@@ -2077,7 +2077,7 @@ int32_t CMovement_C::IsJumping() const {
     return (this->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_fallVelocity;
 }
 
-// OFFSET: #0x006E9440
+// INLINED
 int32_t CMovement_C::IsValidPosition() const {
     return World::IsValidPosition(this->m_position, 2.0f) != 0;
 }
@@ -3437,7 +3437,7 @@ static int32_t IsSurfaceTooSteep(uint32_t facet) {
     return s_moveFacets.facets.m_data[facet].plane.n.z <= 0.64278764f;
 }
 
-// OFFSET: #0x0075B6C0
+// INLINED
 static int32_t IsTooSteepForUnit(const CGUnit_C* unit, uint32_t facet) {
     if (unit->IsClientControlled()) {
         return !(s_moveFacets.facets.m_data[facet].plane.n.z > 0.64278764f);
@@ -3722,7 +3722,7 @@ static int32_t ClipPolygonToFrustum(ClipPolygon& polygon, const CAaBox& box) {
     return polygon.m_count != 0;
 }
 
-// OFFSET: #0x0075C6F0
+// INLINED
 static int32_t PolygonAtPoint(const ClipPolygon& polygon, const C3Vector& point) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(polygon.m_count); i++) {
         float dy = point.y - polygon.m_v[i].y;

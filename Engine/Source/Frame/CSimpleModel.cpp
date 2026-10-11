@@ -91,7 +91,7 @@ int32_t CSimpleModel::AdvanceTime() {
     return 1;
 }
 
-// OFFSET: [%0x0052EBA0, %0x0052EED0, %0x0052F170]
+// INLINED
 CSimpleModel::~CSimpleModel() {
     if (this->m_camera) {
         CameraRelease(this->m_camera);

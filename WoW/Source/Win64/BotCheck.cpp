@@ -8,7 +8,7 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/AccountData.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/FriendList.h"
 
-// OFFSET: #0x004046C0
+// INLINED
 void AdditionalCheck1() {
     if (!s_botCheckEnabled || s_botCheckDelay <= 0 || s_botCheckDelay > 420) {
         return;
@@ -40,11 +40,11 @@ void AdditionalCheck1() {
     }
 }
 
-// OFFSET: #0x004042C0
+// INLINED
 void InitTokenSeed(const uint8_t* key) {
 }
 
-// OFFSET: #0x006B9670
+// INLINED
 int32_t Packet_SMSG_CHECK_FOR_BOTS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t key[16];
     msg->GetArray(key, sizeof(key));
@@ -52,7 +52,7 @@ int32_t Packet_SMSG_CHECK_FOR_BOTS(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: #0x0086C3C0
+// INLINED
 int32_t GatherAdditionalChecks(uint8_t* check1, uint8_t* check2, uint8_t* check3) {
     *check1 = 0;
     *check2 = 0;
@@ -65,6 +65,6 @@ uint8_t AdditionalCheck1Scan(const AdditionalCheckInterface* iface, int32_t a2) 
     return 0;
 }
 
-// OFFSET: #0x009C56E0
+// INLINED
 void LoadEncryptedModule(const uint8_t* key, uint32_t length, void (*callback)()) {
 }

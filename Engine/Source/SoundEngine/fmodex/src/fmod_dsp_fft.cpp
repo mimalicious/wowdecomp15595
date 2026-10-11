@@ -205,7 +205,7 @@ FMOD_RESULT DSPFFT::process(int bits)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009190A0
+// INLINED
 FMOD_RESULT DSPFFT::getSpectrum(float *pcmbuffer, unsigned int pcmposition, unsigned int pcmlength, float *spectrum, int length, int channel, int numchannels, FMOD_DSP_FFT_WINDOW windowtype)
 {
     int count, bits, bitslength, nyquist;

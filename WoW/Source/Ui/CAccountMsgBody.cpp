@@ -9,7 +9,7 @@
 // STATIC: 0x00F76B18
 CAccountMsgBody g_accountMsgBody;
 
-// OFFSET: #0x0054FB10
+// INLINED
 CAccountMsgBody::~CAccountMsgBody() {
 }
 

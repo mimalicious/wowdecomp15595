@@ -61,7 +61,7 @@ const char* Blizzard::String::FindExtensionWithLeadingDot(const char* str) {
     return System_String::FindExtension(str, 0);
 }
 
-// OFFSET: #0x00428640
+// INLINED
 char Blizzard::String::FirstPathSeparator(const char* str) {
     if (!str) {
         return '\\';

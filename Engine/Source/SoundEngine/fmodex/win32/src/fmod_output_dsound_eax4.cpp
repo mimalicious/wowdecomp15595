@@ -231,7 +231,7 @@ FMOD_RESULT OutputDSound::closeEAX4()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00950280
+// INLINED
 FMOD_RESULT OutputDSound::setPropertiesEAX4(const FMOD_REVERB_PROPERTIES *prop)
 {
     HRESULT hr;

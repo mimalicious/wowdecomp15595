@@ -69,7 +69,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F5760
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecRaw::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -116,7 +116,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecRaw::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F5440
+// INLINED
 FMOD_RESULT CodecRaw::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;

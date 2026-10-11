@@ -160,7 +160,7 @@ void CStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     }
 }
 
-// OFFSET: [%0x007D7560, %0x004CB750]
+// INLINED
 CStatus::~CStatus() {
     this->Clear();
 }

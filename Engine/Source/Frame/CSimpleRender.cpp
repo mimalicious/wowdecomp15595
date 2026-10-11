@@ -1036,7 +1036,7 @@ CSimpleFontString::CSimpleFontString(CSimpleFrame* frame, uint32_t drawLayer, bo
     s_fontStringCount++;
 }
 
-// OFFSET: [%0x0050C5E0, %0x0050BF80, %0x0050BF90, %0x0050CA40]
+// INLINED
 CSimpleFontString::~CSimpleFontString() {
     this->FreeEmbeddedTextures();
 
@@ -2242,7 +2242,7 @@ CGxTex* CSimpleTexture::GetGxTex() {
     return this->m_texture ? TextureGetGxTexBlocking(this->m_texture) : NULL;
 }
 
-// OFFSET: %0x005077B0
+// INLINED
 void CSimpleTexture::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     CSimpleRegion::AddAnimAlpha(region, alpha);
 }
@@ -2629,7 +2629,7 @@ void CSimpleTexture::Draw(CRenderBatch* batch) {
     }
 }
 
-// OFFSET: [%0x0050BDD0, %0x0050C480, %0x0050AF10]
+// INLINED
 CSimpleTexture::~CSimpleTexture() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);

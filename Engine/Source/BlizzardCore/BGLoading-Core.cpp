@@ -372,7 +372,7 @@ bool BGLoading::SetBandwidthThrottlePercentage(int32_t percent) {
     return true;
 }
 
-// OFFSET: %0x00762480
+// INLINED
 float BGLoading::GetBandwidth() {
     if (Blizzard::Streaming::IsStreamingMode()) {
         return BGLoadManager::Get()->m_bandwidth;

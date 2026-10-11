@@ -144,7 +144,7 @@ int32_t CKBSetup::BeginLoading(int32_t numArticles, int32_t pageNumber) {
     return 1;
 }
 
-// OFFSET: [#0x00550B10, #0x005526D0]
+// INLINED
 CKBPage::~CKBPage() {
     if (this->m_tree) {
         XMLTree_Free(this->m_tree);
@@ -186,7 +186,7 @@ XMLNode* CKBPage::_GetRoot(CKBIterator& iterator) {
     return root;
 }
 
-// OFFSET: [#0x00550D40, #0x00551010]
+// INLINED
 int32_t CKBPage::_GetInt(XMLNode* node, const char* attribute) const {
     if (this->m_state != 2 || !this->m_tree || !node) {
         return 0;
@@ -216,7 +216,7 @@ bool CKBPage::_GetBodyBool(const char* element, const char* child) const {
     return false;
 }
 
-// OFFSET: [#0x005510B0, #0x005512B0]
+// INLINED
 bool CKBPage::_GetBool(XMLNode* node, const char* attribute) const {
     if (this->m_state != 2 || !this->m_tree || !node) {
         return false;
@@ -270,7 +270,7 @@ const char* CKBPage::_GetBodyString(const char* element, const char* child) cons
     return node ? node->m_body : NULL;
 }
 
-// OFFSET: [#0x00551550, #0x005515A0]
+// INLINED
 int32_t CKBPage::_GetBodyInt(const char* element, const char* child) const {
     const char* body = this->_GetBodyString(element, child);
     return body ? atol(body) : 0;

@@ -13,7 +13,7 @@ namespace FMOD
     {
       public:
         
-        // OFFSET: #0x0093AAC0
+        // INLINED
         ChannelDSoundEAX4() { };
 
         FMOD_RESULT  setReverbProperties  (const FMOD_REVERB_CHANNELPROPERTIES *prop);

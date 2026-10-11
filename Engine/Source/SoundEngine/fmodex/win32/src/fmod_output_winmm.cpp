@@ -60,7 +60,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093A960
+// INLINED
 FMOD_OUTPUT_DESCRIPTION_EX *OutputWinMM::getDescriptionEx()
 {
     FMOD_memset(&winmmoutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -289,7 +289,7 @@ FMOD_RESULT OutputWinMM::getDriverCaps(int id, FMOD_CAPS *caps)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0093A520
+// INLINED
 FMOD_RESULT OutputWinMM::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
 	WAVE_FORMATEXTENSIBLE   pcmwf;
@@ -627,7 +627,7 @@ FMOD_RESULT OutputWinMM::stop()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00939A70
+// INLINED
 FMOD_RESULT OutputWinMM::getPosition(unsigned int *pcm)
 {
     FMOD_RESULT         result;
@@ -763,7 +763,7 @@ FMOD_RESULT OutputWinMM::recordThread()
     [SEE_ALSO]
 ]
 */
-// OFFSET: #0x00939C20
+// INLINED
 void OutputWinMM::recordThreadCallback(void *data)
 {
     OutputWinMM *winmm = (OutputWinMM *)data;
@@ -882,7 +882,7 @@ FMOD_RESULT OutputWinMM::recordGetDriverInfo(int id, char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00939C60
+// INLINED
 FMOD_RESULT OutputWinMM::recordStart(int id, Sound *sound, bool loop)
 {
     FMOD_RESULT             result;

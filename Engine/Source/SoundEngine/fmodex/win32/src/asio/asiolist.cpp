@@ -103,7 +103,7 @@ static LPASIODRVSTRUCT newDrvStruct (HKEY hkey,char *keyname,int drvID,LPASIODRV
 	return lpdrv;
 }
 
-// OFFSET: #0x0094D880
+// INLINED
 static void deleteDrvStruct (LPASIODRVSTRUCT lpdrv)
 {
 	IASIO	*iasio;

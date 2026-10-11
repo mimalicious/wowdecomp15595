@@ -4,7 +4,7 @@
 #include "WoW/Source/Object/CClientMoveUpdate.h"
 #include "WoW/Source/Object/Types.h"
 
-// OFFSET: #0x004D4EA0
+// INLINED
 CMoveSpline::CMoveSpline() {
     this->m_finalDestination.x = 0.0f;
     this->m_finalDestination.y = 0.0f;
@@ -24,7 +24,7 @@ CDataStore& operator>>(CDataStore& msg, C3Vector& vector) {
     return msg;
 }
 
-// OFFSET: #0x004F4B50
+// INLINED
 CDataStore& operator>>(CDataStore& msg, CMoveSpline& spline) {
     msg.Get(spline.m_flags);
 

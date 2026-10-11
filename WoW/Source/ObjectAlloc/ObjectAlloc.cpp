@@ -76,14 +76,14 @@ bool CObjectHeap::Allocate(uint32_t objSize, uint32_t count) {
     return this->m_obj != NULL;
 }
 
-// OFFSET: %0x0048F420
+// INLINED
 OBJALLOCGLOBALS* GetObjAllocGlobals() {
     s_globalsLock.Enter();
 
     return &s_globals;
 }
 
-// OFFSET: %0x0048F430
+// INLINED
 void ReleaseObjAllocGlobals() {
     s_globalsLock.Leave();
 }
@@ -140,7 +140,7 @@ void CObjectHeapList::FreeEmptyHeaps() {
     this->m_hasEmptyHeaps = emptyHeaps != 0;
 }
 
-// OFFSET: %0x0048F700
+// INLINED
 uint32_t CObjectHeapList::BlocksAllocated() {
     uint32_t allocated = 0;
 
@@ -151,7 +151,7 @@ uint32_t CObjectHeapList::BlocksAllocated() {
     return allocated;
 }
 
-// OFFSET: %0x0048F760
+// INLINED
 uint32_t CObjectHeapList::TotalHeaps() {
     uint32_t heaps = 0;
 
@@ -164,7 +164,7 @@ uint32_t CObjectHeapList::TotalHeaps() {
     return heaps;
 }
 
-// OFFSET: %0x0048F780
+// INLINED
 uint32_t CObjectHeapList::PercentUsed() {
     uint32_t capacity = 0;
     uint32_t allocated = 0;
@@ -202,7 +202,7 @@ int32_t CObjectHeap::New(uint32_t objSize, uint32_t count, uint32_t* index, void
     return 1;
 }
 
-// OFFSET: %0x0048F840
+// INLINED
 void* ObjectPtr(uint32_t heapId, uint32_t memHandle) {
     s_globalsLock.Enter();
 

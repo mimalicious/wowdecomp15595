@@ -65,7 +65,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00903A10
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecIT::getDescriptionEx()
 {
     FMOD_memset(&itcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -760,7 +760,7 @@ FMOD_RESULT MusicChannelIT::portamento()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FDA10
+// INLINED
 FMOD_RESULT MusicChannelIT::vibrato() 
 {
 	int delta;
@@ -846,7 +846,7 @@ FMOD_RESULT MusicChannelIT::vibrato()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FDAF0
+// INLINED
 FMOD_RESULT MusicChannelIT::fineVibrato() 
 {
 	int delta;
@@ -932,7 +932,7 @@ FMOD_RESULT MusicChannelIT::fineVibrato()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FDBC0
+// INLINED
 FMOD_RESULT MusicChannelIT::tremolo() 
 {
 	unsigned char temp;
@@ -1015,7 +1015,7 @@ FMOD_RESULT MusicChannelIT::tremolo()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FDCB0
+// INLINED
 FMOD_RESULT MusicChannelIT::panbrello() 
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -1217,7 +1217,7 @@ FMOD_RESULT CodecIT::processEnvelope(MusicEnvelopeState *env, MusicVirtualChanne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FDF30
+// INLINED
 FMOD_RESULT CodecIT::processPitchEnvelope(MusicVirtualChannel *vcptr, MusicInstrument *iptr, int note)
 {
 	/*
@@ -1425,7 +1425,7 @@ FMOD_RESULT CodecIT::processPitchEnvelope(MusicVirtualChannel *vcptr, MusicInstr
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FE4D0
+// INLINED
 FMOD_RESULT CodecIT::sampleVibrato(MusicVirtualChannel *vcptr) 
 {
 	int delta = 0;
@@ -1830,7 +1830,7 @@ FMOD_RESULT CodecIT::unpackRow()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FE980
+// INLINED
 FMOD_RESULT CodecIT::updateRow(bool audible)
 {
 	MusicNote    *current;
@@ -6342,7 +6342,7 @@ FMOD_RESULT CodecIT::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00900FC0
+// INLINED
 FMOD_RESULT CodecIT::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

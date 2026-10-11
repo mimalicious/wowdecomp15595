@@ -19,7 +19,7 @@ inline Battlenet::EventSubscriber::EventSubscriber() {
 inline Battlenet::SystemClient::~SystemClient() {
 }
 
-// OFFSET: #0x008C50E0
+// INLINED
 inline Battlenet::SystemServer::~SystemServer() {
 }
 

@@ -72,7 +72,7 @@ FMOD_DSP_PARAMETERDESC dspflange_param[4] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EFE00
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPFlange::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -413,7 +413,7 @@ FMOD_RESULT DSPFlange::readInternal(float *inbuffer, float *outbuffer, unsigned 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EFAC0
+// INLINED
 FMOD_RESULT DSPFlange::setParameterInternal(int index, float value)
 {
     float olddepth;
@@ -482,7 +482,7 @@ FMOD_RESULT DSPFlange::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EFBD0
+// INLINED
 FMOD_RESULT DSPFlange::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)
@@ -639,7 +639,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EFD60
+// INLINED
 FMOD_RESULT F_CALLBACK DSPFlange::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPFlange *flange = (DSPFlange *)dsp;

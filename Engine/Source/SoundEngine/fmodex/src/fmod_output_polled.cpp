@@ -36,7 +36,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00922950
+// INLINED
 OutputPolled::OutputPolled()
 {
     mCursorBlock = 0;
@@ -59,7 +59,7 @@ OutputPolled::OutputPolled()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00922B00
+// INLINED
 FMOD_RESULT OutputPolled::threadFunc()
 {
 #ifdef FMOD_SUPPORT_SOFTWARE

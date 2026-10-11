@@ -187,7 +187,7 @@ static void buffreplace (LexState *ls, char from, char to) {
 }
 
 
-// OFFSET: %0x004377F0
+// INLINED
 static void trydecpoint (LexState *ls, SemInfo *seminfo) {
   /* format error: try to update decimal point separator */
   struct lconv *cv = localeconv();

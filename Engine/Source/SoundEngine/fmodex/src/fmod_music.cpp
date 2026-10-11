@@ -333,7 +333,7 @@ signed short gITFineTuneTable[FMUSIC_ITFINETUNETABLESIZE] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00935520
+// INLINED
 FMOD_RESULT MusicSong::play()
 {
     FMOD_RESULT result;
@@ -751,7 +751,7 @@ FMOD_RESULT MusicSong::playSound(MusicSample *sample, MusicVirtualChannel *vcptr
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00935280
+// INLINED
 FMOD_RESULT MusicSong::fineTune2Hz(unsigned char ft, unsigned int *hz) 
 {
     if (!hz)

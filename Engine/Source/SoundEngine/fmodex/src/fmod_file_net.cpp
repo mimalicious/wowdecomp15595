@@ -33,7 +33,7 @@ static const unsigned int SIZEOF_METABUF = (255 * 16) + 1;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00920FA0
+// INLINED
 NetFile::NetFile()
 {
     mHandle           = (void *)-1;
@@ -256,7 +256,7 @@ FMOD_RESULT NetFile::parseUrl(char *url, char *host, int hostlen, char *auth, in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091FCA0
+// INLINED
 FMOD_RESULT NetFile::openAsHTTP(const char *name_or_data, char *host, char *file, char *auth, unsigned short port, unsigned int *filesize)
 {
     FMOD_RESULT result;

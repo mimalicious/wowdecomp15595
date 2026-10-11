@@ -54,7 +54,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00927000
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPCodec::getDescriptionEx()
 {
     FMOD_memset(&dspcodec, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));
@@ -212,7 +212,7 @@ FMOD_RESULT DSPCodec::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00926CD0
+// INLINED
 FMOD_RESULT DSPCodec::readInternal(signed short *inbuffer, signed short *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     FMOD_RESULT result;

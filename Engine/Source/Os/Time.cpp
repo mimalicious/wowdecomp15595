@@ -8,7 +8,7 @@ float OsGetAsyncTimeSec() {
     return static_cast<float>(OsGetAsyncTimeMs()) * 0.001f;
 }
 
-// OFFSET: %0x007DE2C0
+// INLINED
 void OsTimeStartup(OsTimeManager::TimingMethod method) {
     OsTimeManagerCreate(method);
 }

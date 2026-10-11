@@ -67,7 +67,7 @@ static const FMOD_GUID _KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = { 0x00000003, 0x0000, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009101E0
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecWav::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -128,7 +128,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecWav::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090EBC0
+// INLINED
 FMOD_RESULT CodecWav::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result;
@@ -807,7 +807,7 @@ FMOD_RESULT CodecWav::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090FE20
+// INLINED
 FMOD_RESULT CodecWav::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;

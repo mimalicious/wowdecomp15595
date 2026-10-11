@@ -289,7 +289,7 @@ static void emit_symbol(phuff_entropy_ptr entropy, int tbl_no, int symbol) {
  * Emit bits from a correction bit buffer.
  */
 
-// OFFSET: %0x00A93EF0
+// INLINED
 static void emit_buffered_bits(phuff_entropy_ptr entropy, char * bufstart, unsigned int nbits) {
   if (entropy->gather_statistics)
     return;			/* no real work */

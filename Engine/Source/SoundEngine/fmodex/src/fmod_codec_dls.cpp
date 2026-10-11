@@ -53,7 +53,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F9F60
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecDLS::getDescriptionEx()
 {
     FMOD_memset(&dlscodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -89,7 +89,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecDLS::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F8E40
+// INLINED
 FMOD_RESULT CodecDLS::parseChunk(char *parentchunk, unsigned int chunksize)
 {
 	unsigned int    offset, fileoffset;
@@ -830,7 +830,7 @@ FMOD_RESULT CodecDLS::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F9D00
+// INLINED
 FMOD_RESULT CodecDLS::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result = FMOD_OK;

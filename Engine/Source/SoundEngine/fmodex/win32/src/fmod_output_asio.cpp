@@ -55,7 +55,7 @@ OutputASIO *gASIOObject = 0;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00937280
+// INLINED
 FMOD_OUTPUT_DESCRIPTION_EX *OutputASIO::getDescriptionEx()
 {
     FMOD_memset(&asiooutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -108,7 +108,7 @@ FMOD_OUTPUT_DESCRIPTION_EX *OutputASIO::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00936910
+// INLINED
 void OutputASIO::bufferSwitch(long index, ASIOBool processNow)
 {
 	ASIOTime  timeInfo;
@@ -163,7 +163,7 @@ void OutputASIO::sampleRateDidChange(ASIOSampleRate sRate)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00935E20
+// INLINED
 long OutputASIO::asioMessage(long selector, long value, void* message, double* opt)
 {
 	// currently the parameters "value", "message" and "opt" are not used.
@@ -245,7 +245,7 @@ long OutputASIO::asioMessage(long selector, long value, void* message, double* o
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00935E90
+// INLINED
 FMOD_RESULT OutputASIO::updateMixer(ASIOTime* params, long doubleBufferIndex, ASIOBool directProcess)
 {
     FMOD_RESULT result;
@@ -626,7 +626,7 @@ FMOD_RESULT OutputASIO::updateMixer(ASIOTime* params, long doubleBufferIndex, AS
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009363C0
+// INLINED
 ASIOTime * OutputASIO::bufferSwitchTimeInfo(ASIOTime* params, long doubleBufferIndex, ASIOBool directProcess)
 {
 #ifdef FMOD_SUPPORT_SOFTWARE
@@ -775,7 +775,7 @@ FMOD_RESULT OutputASIO::getDriverCaps(int id, FMOD_CAPS *caps)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00936970
+// INLINED
 FMOD_RESULT OutputASIO::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     ASIODriverInfo      asioinf;
@@ -1192,7 +1192,7 @@ FMOD_RESULT OutputASIO::recordGetNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009366A0
+// INLINED
 FMOD_RESULT OutputASIO::recordGetDriverInfo(int id, char *name, int namelen)
 {
     if (!name || namelen < 1)
@@ -1337,7 +1337,7 @@ FMOD_RESULT OutputASIO::recordGetPosition(unsigned int *pcm)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00936FD0
+// INLINED
 FMOD_RESULT OutputASIO::recordLock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
     FMOD_RESULT result;
@@ -1572,7 +1572,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::closeCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00936810
+// INLINED
 FMOD_RESULT F_CALLBACK OutputASIO::startCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputASIO *asio = (OutputASIO *)output;
@@ -1598,7 +1598,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::startCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00936820
+// INLINED
 FMOD_RESULT F_CALLBACK OutputASIO::stopCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputASIO *asio = (OutputASIO *)output;

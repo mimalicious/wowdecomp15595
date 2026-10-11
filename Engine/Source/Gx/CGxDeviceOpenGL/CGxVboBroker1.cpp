@@ -52,7 +52,7 @@ CGxVboBroker1::CGxVboBroker1(GLenum target, uint32_t maxBits, CGxDeviceOpenGl* d
     this->m_selectCount = 0;
 }
 
-// OFFSET: [%0x007AF5A0, %0x007B0160]
+// INLINED
 CGxVboBroker1::~CGxVboBroker1() {
     glBindBufferARB(this->m_target, 0);
 

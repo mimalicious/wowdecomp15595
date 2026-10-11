@@ -32,7 +32,7 @@ CGSimpleHealthBar::CGSimpleHealthBar(CSimpleFrame* parent) : CSimpleStatusBar(pa
     this->m_autoColor = 1;
 }
 
-// OFFSET: #0x00990310
+// INLINED
 CGSimpleHealthBar::~CGSimpleHealthBar() {
     if (ClntObjMgrGetCurrent()) {
         this->RemoveMirrorHandlers();

@@ -2563,7 +2563,7 @@ static int32_t FileIsLocal(const char* name) {
     return result;
 }
 
-// OFFSET: %0x0075CAC0
+// INLINED
 int32_t Blizzard::Mopaq::SFileFileIsLocal(const char* name, int32_t option) {
     return FileIsLocal(name);
 }
@@ -2641,7 +2641,7 @@ bool Blizzard::Mopaq::SFileMakeFileRangeLocal(HSFILERecord* file, int64_t offset
     return Blizzard::Streaming::MakeLocalBlocking(stream, offset + entry.m_offset, size, params, chunk);
 }
 
-// OFFSET: %0x0075CE10
+// INLINED
 bool Blizzard::Mopaq::SFileMakeFileLocal(const char* name, int32_t option, bool wait, Blizzard::Streaming::MakeLocalParams* params) {
     ArchiveStreamInfo info;
 

@@ -157,7 +157,7 @@ int32_t CAccountMsgHeaders::SetMsgRead(int32_t index) {
     return 1;
 }
 
-// OFFSET: #0x00550650
+// INLINED
 CAccountMsgHeaders::~CAccountMsgHeaders() {
 }
 

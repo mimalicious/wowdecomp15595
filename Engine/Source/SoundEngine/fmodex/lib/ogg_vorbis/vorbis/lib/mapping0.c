@@ -37,7 +37,7 @@
    blocksize is set by the mode, and low backend lookups may require
    parameters from other areas of the mode/mapping */
 
-// OFFSET: #0x004703E0
+// INLINED
 static void mapping0_free_info(vorbis_info_mapping *i){
   vorbis_info_mapping0 *info=(vorbis_info_mapping0 *)i;
   if(info){
@@ -102,7 +102,7 @@ static void mapping0_pack(vorbis_info *vi,vorbis_info_mapping *vm,
 #endif
 
 /* also responsible for range checking */
-// OFFSET: #0x00470410
+// INLINED
 static vorbis_info_mapping *mapping0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   int i;
   vorbis_info_mapping0 *info=_ogg_calloc(1,sizeof(*info));

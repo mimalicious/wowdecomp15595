@@ -22,7 +22,7 @@ char* System_Debug::s_CanonHead = System_Debug::s_CanonBuffer;
 // STATIC: 0x00D07414
 char* System_Debug::s_CanonTail = System_Debug::s_CanonBuffer;
 
-// OFFSET: #0x00426FE0
+// INLINED
 void Blizzard::Debug::SetAssertHandler(AssertCallback handler) {
     System_Debug::s_AssertCallback = handler;
 }
@@ -55,7 +55,7 @@ void Blizzard::Debug::StderrOutput(const char* text) {
     }
 }
 
-// OFFSET: #0x0042CE40
+// INLINED
 void Blizzard::Debug::Printf(void (*output)(const char*), const char* format, ...) {
     char buffer[4096];
 

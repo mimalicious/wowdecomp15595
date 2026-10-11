@@ -75,7 +75,7 @@ PluginFactory::PluginFactory()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F4190
+// INLINED
 FMOD_RESULT PluginFactory::release()
 {
     FMOD_RESULT result;
@@ -1066,7 +1066,7 @@ FMOD_RESULT PluginFactory::registerOutput(FMOD_OUTPUT_DESCRIPTION *description, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3D00
+// INLINED
 FMOD_RESULT PluginFactory::getNumCodecs(int *numcodecs)
 {
     FMOD_CODEC_DESCRIPTION_EX *current;
@@ -1142,7 +1142,7 @@ FMOD_RESULT PluginFactory::getNumDSPs(int *numdsps)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3DA0
+// INLINED
 FMOD_RESULT PluginFactory::getNumOutputs(int *numoutputs)
 {
     FMOD_OUTPUT_DESCRIPTION_EX *current;
@@ -1180,7 +1180,7 @@ FMOD_RESULT PluginFactory::getNumOutputs(int *numoutputs)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3DF0
+// INLINED
 FMOD_RESULT PluginFactory::getCodec(int handle, FMOD_CODEC_DESCRIPTION_EX **codecdesc)
 {
     FMOD_CODEC_DESCRIPTION_EX *current;
@@ -1272,7 +1272,7 @@ FMOD_RESULT PluginFactory::getDSP(int handle, FMOD_DSP_DESCRIPTION_EX **dspdesc)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3ED0
+// INLINED
 FMOD_RESULT PluginFactory::getOutput(int handle, FMOD_OUTPUT_DESCRIPTION_EX **outputdesc)
 {
     FMOD_OUTPUT_DESCRIPTION_EX *current;

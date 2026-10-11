@@ -118,7 +118,7 @@ long AsioDrivers::getDriverNames(char **names, long maxDrivers)
 	return asioGetNumDev() < maxDrivers ? asioGetNumDev() : maxDrivers;
 }
 
-// OFFSET: #0x0094DB70
+// INLINED
 bool AsioDrivers::loadDriver(char *name)
 {
 	char dname[64];

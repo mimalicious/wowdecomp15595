@@ -100,7 +100,7 @@ FMOD_DSP_PARAMETERDESC dsppitchshift_param[4] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EDE90
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPPitchShift::getDescriptionEx()
 {
     FMOD_memset(&dsppitchshift, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));
@@ -736,7 +736,7 @@ void DSPPitchShiftSMB::fft(float *fftBuffer, int sign)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EC450
+// INLINED
 void DSPPitchShiftSMB::smbInit()
 {   
 	/* initialize our static arrays */
@@ -1437,7 +1437,7 @@ static float vwin1024[513] = {
 #define kINVPI2 0.1591549430918F
 
 
-// OFFSET: #0x008ECF60
+// INLINED
 void DSPPitchShiftSMB::smbPitchShift(float pitchShift, int numSampsToProcess, int osamp, float sampleRate, float *indata, float *outdata, int channel, int numchannels)
 {
 	float   window;
@@ -1797,7 +1797,7 @@ void DSPPitchShiftSMB::smbPitchShift(float pitchShift, int numSampsToProcess, in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EC5C0
+// INLINED
 void DSPPitchShiftSMB::smbFft(float *fftBuffer, int sign)
 {
 	float wr, wi, arg, *p1, *p2, temp;
@@ -2034,7 +2034,7 @@ FMOD_RESULT DSPPitchShift::readInternal(float *inbuffer, float *outbuffer, unsig
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EC900
+// INLINED
 FMOD_RESULT DSPPitchShift::setParameterInternal(int index, float value)
 {
     FMOD_RESULT result;
@@ -2326,7 +2326,7 @@ FMOD_RESULT DSPPitchShift::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008ECD60
+// INLINED
 FMOD_RESULT DSPPitchShift::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)

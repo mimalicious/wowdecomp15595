@@ -37,7 +37,7 @@ static const FMOD_GUID _KSDATAFORMAT_SUBTYPE_IEEE_FLOAT     = { 0x00000003, 0x00
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009512C0
+// INLINED
 BOOL CALLBACK FMOD_Output_DSound_RecordEnumProc(LPGUID lpGUID, LPCSTR lpszDesc, LPCSTR lpszDrvName, LPVOID lpContext)
 {
     FMOD::OutputDSound *outputdsound = (FMOD::OutputDSound *)lpContext;

@@ -135,7 +135,7 @@ static uint32_t SmartScreenRectGridPos(const CRect& rect) {
     return columns * rows;
 }
 
-// OFFSET: #0x00615240
+// INLINED
 static void SmartScreenRectClipRect(CRect& rect) {
     float height = rect.minY - rect.maxY;
     float width = rect.maxX - rect.minX;
@@ -163,7 +163,7 @@ static void SmartScreenRectClipRect(CRect& rect) {
     }
 }
 
-// OFFSET: #0x00615380
+// INLINED
 static int32_t SmartScreenRectFindOverlap(uint32_t grid, const CRect& rect, uint32_t direction, float* distance) {
     TSGrowableArray<CRect>& rects = s_grids[grid];
 
@@ -244,7 +244,7 @@ static CRect SmartScreenRectMoveDown(uint32_t grid, CRect rect) {
     return rect;
 }
 
-// OFFSET: #0x006157C0
+// INLINED
 static void SmartScreenRectRecycleNodes() {
     s_freeNodes.Combine(&s_searchQueue, 2, NULL);
 }
@@ -356,7 +356,7 @@ static CRect SmartScreenRectFindFreeRect(uint32_t grid, const CRect& rect) {
     return result;
 }
 
-// OFFSET: #0x00615C50
+// INLINED
 static C2Vector SmartScreenRectFindPosition(uint32_t grid, const CRect& rect, int32_t* changed) {
     CRect found = SmartScreenRectFindFreeRect(grid, rect);
 

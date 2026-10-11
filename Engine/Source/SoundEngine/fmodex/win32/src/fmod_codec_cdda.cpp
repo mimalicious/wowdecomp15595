@@ -61,7 +61,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00913420
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecCDDA::getDescriptionEx()
 {
     FMOD_memset(&cddacodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -237,7 +237,7 @@ FMOD_RESULT CodecCDDA::readInternal(void *buffer, unsigned int sizebytes, unsign
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00912FF0
+// INLINED
 FMOD_RESULT CodecCDDA::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CddaFile    *cddafile;

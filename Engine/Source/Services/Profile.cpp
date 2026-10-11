@@ -122,7 +122,7 @@ void ProfileInternal::STRINGBLOCK::FreeString(TSList<STRINGBLOCK, TSGetLink<STRI
     }
 }
 
-// OFFSET: [%0x00558790, %0x00558810]
+// INLINED
 ProfileInternal::PROFILE::~PROFILE() {
     this->m_sections.Clear();
     this->m_strings.Clear();
@@ -165,7 +165,7 @@ int32_t ProfileGetValue(void* profile, const char* section, const char* key, int
     return 1;
 }
 
-// OFFSET: %0x00558BE0
+// INLINED
 int32_t ProfileGetValue(void* profile, const char* section, const char* key, char* buffer, uint32_t bufferSize, uint32_t index) {
     if (!section) {
         DebugValidate("section");

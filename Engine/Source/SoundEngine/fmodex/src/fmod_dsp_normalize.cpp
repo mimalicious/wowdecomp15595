@@ -71,7 +71,7 @@ FMOD_DSP_PARAMETERDESC dspnormalize_param[3] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EF1B0
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPNormalize::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU

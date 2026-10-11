@@ -78,7 +78,7 @@ FMOD_DSP_PARAMETERDESC dspitecho_param[5] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EB330
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPITEcho::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -353,7 +353,7 @@ FMOD_RESULT DSPITEcho::readInternal(float *inbuffer, float *outbuffer, unsigned 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EAF20
+// INLINED
 FMOD_RESULT DSPITEcho::setParameterInternal(int index, float value)
 {
     FMOD_RESULT result;
@@ -468,7 +468,7 @@ FMOD_RESULT DSPITEcho::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EB0C0
+// INLINED
 FMOD_RESULT DSPITEcho::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)

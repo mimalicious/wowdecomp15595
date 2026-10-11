@@ -65,7 +65,7 @@ void C33Matrix::Scale(float scale) {
     this->c2 = scale * this->c2;
 }
 
-// OFFSET: %0x004D3700
+// INLINED
 void C33Matrix::Scale(float x, float y, float z) {
     this->a0 = this->a0 * x;
     this->a1 = this->a1 * x;

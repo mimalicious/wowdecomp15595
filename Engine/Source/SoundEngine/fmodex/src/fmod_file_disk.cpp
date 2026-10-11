@@ -26,7 +26,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E80A0
+// INLINED
 FMOD_RESULT DiskFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
     FMOD_RESULT result;
@@ -120,7 +120,7 @@ FMOD_RESULT DiskFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E8170
+// INLINED
 FMOD_RESULT DiskFile::reallyRead(void *buffer, unsigned int size, unsigned int *rd)
 {
     FMOD_RESULT result;

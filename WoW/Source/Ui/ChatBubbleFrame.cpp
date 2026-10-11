@@ -503,7 +503,7 @@ void CGChatBubbleFrame::Remove(CGChatBubbleFrame* bubble) {
     s_freeChatBubbles.LinkToTail(bubble);
 }
 
-// OFFSET: #0x0056CF80
+// INLINED
 void CGChatBubbleFrame::ClearAll() {
     CGChatBubbleFrame* next;
 
@@ -575,6 +575,6 @@ void CGChatBubbleFrame::OnWorldLayerUpdate() {
     }
 }
 
-// OFFSET: [#0x0098FFE0, #0x0056CF50]
+// INLINED
 CGChatBubbleFrame::~CGChatBubbleFrame() {
 }

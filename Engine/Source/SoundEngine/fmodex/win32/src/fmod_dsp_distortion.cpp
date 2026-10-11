@@ -64,7 +64,7 @@ extern "C"
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EF4E0
+// INLINED
 FMOD_DSP_DESCRIPTION_EX *DSPDistortion::getDescriptionEx()
 {
     FMOD_memset(&dspdistortion, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));
@@ -417,7 +417,7 @@ FMOD_RESULT F_CALLBACK DSPDistortion::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EF440
+// INLINED
 FMOD_RESULT F_CALLBACK DSPDistortion::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPDistortion *distortion = (DSPDistortion *)dsp;

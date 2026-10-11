@@ -178,7 +178,7 @@ void C44Matrix::FromQuaternion(const C4Quaternion& q, C44Matrix& m) {
     m.c2 = 1.0f - (xx + yy);
 }
 
-// OFFSET: %0x004CD0A0
+// INLINED
 C44Matrix::C44Matrix(const C33Matrix& m) {
     this->a0 = m.a0;
     this->a1 = m.a1;

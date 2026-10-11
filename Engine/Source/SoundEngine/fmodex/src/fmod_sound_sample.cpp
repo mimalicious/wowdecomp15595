@@ -46,7 +46,7 @@ Sample::Sample()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091B2E0
+// INLINED
 FMOD_RESULT Sample::lock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {   
     int count;
@@ -340,7 +340,7 @@ FMOD_RESULT Sample::lock(unsigned int offset, unsigned int length, void **ptr1, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091BB80
+// INLINED
 FMOD_RESULT Sample::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     int count;

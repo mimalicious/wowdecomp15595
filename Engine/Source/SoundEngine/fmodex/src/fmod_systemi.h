@@ -289,7 +289,7 @@ namespace FMOD
 #ifdef FMOD_SUPPORT_DSPCODEC
         FMOD_RESULT                     allocDSPCodec(FMOD_SOUND_FORMAT format, DSPCodec **dsp);
 #endif
-        // OFFSET: #0x008D1050
+        // INLINED
         FMOD_RESULT                     getSoftwareFormat(int *samplerate, FMOD_SOUND_FORMAT *format, int *numoutputchannels, int *maxinputchannels, FMOD_DSP_RESAMPLER *resamplemethod, int *bits)
         {
             if (samplerate)
@@ -345,7 +345,7 @@ namespace FMOD
         FMOD_RESULT       setAdvancedSettings    (FMOD_ADVANCEDSETTINGS *settings);
         FMOD_RESULT       getAdvancedSettings    (FMOD_ADVANCEDSETTINGS *settings);
         FMOD_RESULT       setSpeakerMode         (FMOD_SPEAKERMODE speakermode);
-        // OFFSET: #0x008D1120
+        // INLINED
         FMOD_RESULT       getSpeakerMode         (FMOD_SPEAKERMODE *speakermode) { if (!speakermode) { return FMOD_ERR_INVALID_PARAM; } *speakermode = mSpeakerMode; return FMOD_OK; }
         FMOD_RESULT       setCallback            (FMOD_SYSTEM_CALLBACKTYPE type, FMOD_SYSTEM_CALLBACK callback);
 

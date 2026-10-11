@@ -223,7 +223,7 @@ int32_t ConvertUTF8toUTF16(uint16_t* dst, uint32_t dstmaxchars, const char* src,
     return result;
 }
 
-// OFFSET: [%0x007D6CE0, #0x00852210]
+// INLINED
 uint32_t sgetu8(const uint8_t* strptr, int32_t* chars) {
     if (chars) {
         *chars = 0;
@@ -287,7 +287,7 @@ uint32_t sgetu8(const uint8_t* strptr, int32_t* chars) {
     return c;
 }
 
-// OFFSET: [%0x007D6DE0, #0x00852320]
+// INLINED
 char* sputu8(uint32_t c, char* strptr) {
     if (!strptr) {
         return strptr;

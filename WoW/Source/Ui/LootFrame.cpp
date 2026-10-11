@@ -1112,7 +1112,7 @@ void CGLootInfo::InitializeGame() {
     ClientLootContents::s_handler = CGLootInfo::OnLootContents;
 }
 
-// OFFSET: #0x00589100
+// INLINED
 void CGPlayer_C::OnLootClearMoney() {
     if (CGLootInfo::m_coins > 0) {
         CGLootInfo::m_coins = -1;

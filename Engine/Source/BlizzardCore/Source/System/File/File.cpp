@@ -442,7 +442,7 @@ bool Blizzard::File::GetFileInfo(StreamRecord* file, FileInfo* info) {
     return false;
 }
 
-// OFFSET: #0x00427330
+// INLINED
 bool Blizzard::File::GetFileInfo(Filesystem* fs, const char* path, FileInfo* info) {
     System_File::Stacked::FileParms parms;
     parms.m_path = const_cast<char*>(path);
@@ -675,7 +675,7 @@ bool Blizzard::File::Read(StreamRecord* file, void* data, int64_t offset, int32_
     return false;
 }
 
-// OFFSET: #0x00427790
+// INLINED
 bool Blizzard::File::Read(Filesystem* fs, StreamRecord* file, void* data, int64_t offset, int32_t* count) {
     System_File::Stacked::FileParms parms;
     parms.m_stream = file;
@@ -1060,7 +1060,7 @@ void System_File::Shutdown() {
         fs->m_verbs.verb = NULL; \
     }
 
-// OFFSET: %0x00716950
+// INLINED
 void System_File::Stacked::HoistAll() {
     HOIST(m_cd);
     HOIST(m_close);

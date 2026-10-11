@@ -36,7 +36,7 @@ PrefetchNode::~PrefetchNode() {
 void BaseFileInitialize() {
 }
 
-// OFFSET: %0x007D8460
+// INLINED
 void BaseFileDestroy() {
     s_critSect.Enter();
     s_activeFiles.Clear();

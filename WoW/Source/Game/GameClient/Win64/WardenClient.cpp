@@ -14,7 +14,7 @@ static uint32_t s_lastProcessTime;
 // STATIC: #0x00D31A60
 static SCritSect s_wardenCritSect;
 
-// OFFSET: #0x007DA850
+// INLINED
 static int32_t ReceiveWardenData(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (msgId != SMSG_WARDEN_DATA) {
         return 0;
@@ -30,21 +30,21 @@ static int32_t ReceiveWardenData(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: %0x004DECB0
+// INLINED
 void WardenClient_Process() {
     s_wardenCritSect.Enter();
     s_lastProcessTime = OsGetAsyncTimeMs();
     s_wardenCritSect.Leave();
 }
 
-// OFFSET: #0x007DA420
+// INLINED
 void WardenClient_Destroy() {
     s_wardenCritSect.Enter();
     ClientServices::ClearMessageHandler(SMSG_WARDEN_DATA);
     s_wardenCritSect.Leave();
 }
 
-// OFFSET: #0x007DA8C0
+// INLINED
 bool WardenClient_Initialize() {
     s_wardenCritSect.Enter();
     WardenClient_Destroy();
@@ -55,7 +55,7 @@ bool WardenClient_Initialize() {
     return false;
 }
 
-// OFFSET: %0x004DEA70
+// INLINED
 CDataStore& operator<<(CDataStore& msg, const CWardenKey& key) {
     for (uint32_t i = 0; i < sizeof(key.m_key); i++) {
         msg.Put(key.m_key[i]);
@@ -64,7 +64,7 @@ CDataStore& operator<<(CDataStore& msg, const CWardenKey& key) {
     return msg;
 }
 
-// OFFSET: %0x004DEAA0
+// INLINED
 CDataStore& operator>>(CDataStore& msg, CWardenKey& key) {
     for (uint32_t i = 0; i < sizeof(key.m_key); i++) {
         msg.Get(key.m_key[i]);
@@ -88,7 +88,7 @@ WardenCachedModule::~WardenCachedModule() {
     }
 }
 
-// OFFSET: #0x007DA220
+// INLINED
 void WardenCachedModule::Pack(CDataStore* msg) {
     msg->Put(this->m_data ? this->m_size : 0);
 
@@ -97,7 +97,7 @@ void WardenCachedModule::Pack(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x007DA260
+// INLINED
 void WardenCachedModule::Unpack(CDataStore* msg) {
     msg->Get(this->m_size);
 

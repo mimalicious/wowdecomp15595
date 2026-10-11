@@ -721,7 +721,7 @@ RealmConnection::~RealmConnection() {
     RealmConnection::s_allRealmConnectionsCrit.Leave();
 }
 
-// OFFSET: #0x006B1B90
+// INLINED
 void RealmResponse::JoinRealmResult(uint32_t realmID, int32_t result, int32_t a3, int32_t a4, int32_t a5) {
 }
 

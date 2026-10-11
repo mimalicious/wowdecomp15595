@@ -1,6 +1,6 @@
 #include "Engine/Source/ComSat/ComSatSession.h"
 
-// OFFSET: #0x0087F960
+// INLINED
 ComSat::SessionCallback::~SessionCallback() {
 }
 

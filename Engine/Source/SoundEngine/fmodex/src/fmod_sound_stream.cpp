@@ -57,7 +57,7 @@ Stream::Stream()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091DE80
+// INLINED
 FMOD_RESULT Stream::fill(unsigned int offset, unsigned int length)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -341,7 +341,7 @@ FMOD_RESULT Stream::flush()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091E200
+// INLINED
 FMOD_RESULT Stream::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result = FMOD_OK;

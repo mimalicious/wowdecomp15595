@@ -55,7 +55,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E8F30
+// INLINED
 FMOD_CODEC_DESCRIPTION_EX *CodecUser::getDescriptionEx()
 {
     FMOD_memset(&usercodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -91,7 +91,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecUser::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E8CF0
+// INLINED
 FMOD_RESULT CodecUser::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;

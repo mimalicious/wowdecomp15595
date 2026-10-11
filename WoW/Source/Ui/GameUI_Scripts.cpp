@@ -215,13 +215,13 @@ static int32_t Script_GetTimeToWellRested(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510DC0
+// INLINED
 int32_t Script_RestoreVideoResolutionDefaults(lua_State* L) {
     ConsoleDeviceDefaults(OPTION_PAGE_0);
     return 0;
 }
 
-// OFFSET: #0x00510DD0
+// INLINED
 int32_t Script_RestoreVideoEffectsDefaults(lua_State* L) {
     ConsoleDeviceDefaults(OPTION_PAGE_1);
     return 0;
@@ -5230,7 +5230,7 @@ static int32_t Script_GrantLevel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00523210
+// INLINED
 static void SummonFriendErrorCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;

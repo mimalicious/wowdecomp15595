@@ -73,7 +73,7 @@ void CDataAllocator::PutData(void* data, const char* fileName, int32_t lineNumbe
     this->m_dataList = node;
 }
 
-// OFFSET: #0x0095D1D0
+// INLINED
 CDataAllocator::~CDataAllocator() {
     this->Clear(NULL, 0, 1);
 }

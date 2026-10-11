@@ -420,7 +420,7 @@ static T ReadValue(CDataStore& msg) {
     return value;
 }
 
-// OFFSET: %0x009635C0
+// INLINED
 CDataStore& operator>>(CDataStore& msg, C3Spline_CatmullRom& spline) {
     uint32_t count = ReadValue<uint32_t>(msg);
 

@@ -55,7 +55,7 @@ void ScriptEventsInitialize() {
 #undef SCRIPT_EVENT_NAME
 }
 
-// OFFSET: #0x006081B0
+// INLINED
 static const WOWGUID* GetCurrentQuestGiverGUID() {
     if (CGQuestInfo::m_npcInform != WOWGUID()) {
         return &CGQuestInfo::m_npcInform;
@@ -424,7 +424,7 @@ void UnitNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
-// OFFSET: %0x0045AD50
+// INLINED
 WOWGUID GetGuidByKeyword(const char* token) {
     WOWGUID guid = WOWGUID();
     Script_GetGUIDFromToken(token, guid, false, false);
