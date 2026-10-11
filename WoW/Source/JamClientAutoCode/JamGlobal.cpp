@@ -1174,3 +1174,198 @@ void GlobalGuildSetMemberNote::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(this->m_noteData.m_memberGUID[2] ^ 1));
     }
 }
+
+// OFFSET: 0x0069B5A0
+GlobalLFGuildGetGuildPost::GlobalLFGuildGetGuildPost() {
+}
+
+// OFFSET: 0x0069A360
+GlobalLFGuildGetGuildPost::~GlobalLFGuildGetGuildPost() {
+}
+
+// OFFSET: 0x0069A1E0/0x140346760
+void GlobalLFGuildGetGuildPost::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3237));
+}
+
+// OFFSET: 0x0069C0F0/0x1403485D0
+GlobalLFGuildGetRecruits::GlobalLFGuildGetRecruits(int32_t lastUpdate) {
+    this->m_lastUpdate = lastUpdate;
+}
+
+// OFFSET: 0x0069A100/0x140346670
+GlobalLFGuildGetRecruits::~GlobalLFGuildGetRecruits() {
+}
+
+// OFFSET: 0x0069A140/0x1403466B0
+void GlobalLFGuildGetRecruits::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3230));
+    msg->Put(static_cast<uint32_t>(this->m_lastUpdate));
+}
+
+// OFFSET: 0x0069C510/0x140348A70
+GlobalLFGuildGetApplications::GlobalLFGuildGetApplications() {
+}
+
+// OFFSET: 0x0069A450/0x140346990
+GlobalLFGuildGetApplications::~GlobalLFGuildGetApplications() {
+}
+
+// OFFSET: 0x0069A2B0/0x140346820
+void GlobalLFGuildGetApplications::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1230));
+}
+
+// OFFSET: 0x0069B760
+GlobalLFGuildDeclineRecruit::GlobalLFGuildDeclineRecruit(uint64_t recruitGUID) {
+    memcpy(this->m_recruitGUID, &recruitGUID, sizeof(this->m_recruitGUID));
+}
+
+// OFFSET: 0x0069A310/0x140346880
+GlobalLFGuildDeclineRecruit::~GlobalLFGuildDeclineRecruit() {
+}
+
+// OFFSET: 0x0069C590/0x140348AD0
+void GlobalLFGuildDeclineRecruit::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1031));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_recruitGUID[1] != 0);
+    bits.WriteBit(this->m_recruitGUID[4] != 0);
+    bits.WriteBit(this->m_recruitGUID[5] != 0);
+    bits.WriteBit(this->m_recruitGUID[2] != 0);
+    bits.WriteBit(this->m_recruitGUID[6] != 0);
+    bits.WriteBit(this->m_recruitGUID[7] != 0);
+    bits.WriteBit(this->m_recruitGUID[0] != 0);
+    bits.WriteBit(this->m_recruitGUID[3] != 0);
+    bits.Flush();
+
+    if (this->m_recruitGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[5] ^ 1));
+    }
+
+    if (this->m_recruitGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[7] ^ 1));
+    }
+
+    if (this->m_recruitGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[2] ^ 1));
+    }
+
+    if (this->m_recruitGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[3] ^ 1));
+    }
+
+    if (this->m_recruitGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[4] ^ 1));
+    }
+
+    if (this->m_recruitGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[1] ^ 1));
+    }
+
+    if (this->m_recruitGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[0] ^ 1));
+    }
+
+    if (this->m_recruitGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_recruitGUID[6] ^ 1));
+    }
+}
+
+// OFFSET: 0x0069C150
+GlobalLFGuildRemoveRecruit::GlobalLFGuildRemoveRecruit() {
+}
+
+// OFFSET: 0x0069A130/0x1403466A0
+GlobalLFGuildRemoveRecruit::~GlobalLFGuildRemoveRecruit() {
+}
+
+// OFFSET: 0x0069B940/0x140347E40
+void GlobalLFGuildRemoveRecruit::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3027));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_guildGUID[0] != 0);
+    bits.WriteBit(this->m_guildGUID[4] != 0);
+    bits.WriteBit(this->m_guildGUID[3] != 0);
+    bits.WriteBit(this->m_guildGUID[5] != 0);
+    bits.WriteBit(this->m_guildGUID[7] != 0);
+    bits.WriteBit(this->m_guildGUID[6] != 0);
+    bits.WriteBit(this->m_guildGUID[2] != 0);
+    bits.WriteBit(this->m_guildGUID[1] != 0);
+    bits.Flush();
+
+    if (this->m_guildGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[4] ^ 1));
+    }
+
+    if (this->m_guildGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[0] ^ 1));
+    }
+
+    if (this->m_guildGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[3] ^ 1));
+    }
+
+    if (this->m_guildGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[6] ^ 1));
+    }
+
+    if (this->m_guildGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[5] ^ 1));
+    }
+
+    if (this->m_guildGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[1] ^ 1));
+    }
+
+    if (this->m_guildGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[2] ^ 1));
+    }
+
+    if (this->m_guildGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[7] ^ 1));
+    }
+}
+
+// OFFSET: 0x00B3BD80
+GlobalLFGuildSetGuildPost::GlobalLFGuildSetGuildPost() {
+}
+
+// OFFSET: 0x00B3BD10
+GlobalLFGuildSetGuildPost::~GlobalLFGuildSetGuildPost() {
+}
+
+// OFFSET: 0x00B3BDA0/0x140908C60
+void GlobalLFGuildSetGuildPost::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x448));
+    msg->Put(this->m_level);
+    msg->Put(this->m_availability);
+    msg->Put(this->m_interests);
+    msg->Put(this->m_classRoles);
+
+    JamBitWriter bits(msg);
+    uint32_t length = strlen(this->m_comment);
+    bits.WriteBits<11>(length);
+    bits.WriteBit(this->m_listed);
+    bits.Flush();
+    msg->PutData(this->m_comment, strlen(this->m_comment));
+}
+
+// OFFSET: 0x00B3BD70/0x140908C00
+GlobalLFGuildBrowse::GlobalLFGuildBrowse() {
+}
+
+// OFFSET: 0x00B3BD00/0x140908B80
+GlobalLFGuildBrowse::~GlobalLFGuildBrowse() {
+}
+
+// OFFSET: 0x00B3BD20/0x140908BA0
+void GlobalLFGuildBrowse::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x548));
+    msg->Put(this->m_classRoles);
+    msg->Put(this->m_availability);
+    msg->Put(this->m_interests);
+    msg->Put(static_cast<uint32_t>(this->m_characterLevel));
+}

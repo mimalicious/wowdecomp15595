@@ -623,7 +623,6 @@ int32_t Script_SendSoRByText(lua_State* L);
 void SpellActivationOverlayRegisterScriptFunctions();
 void SpellActivationOverlayUnregisterScriptFunctions();
 void LFGuildRegisterScriptFunctions();
-void LFGuildUnregisterScriptFunctions();
 void ReforgeRegisterScriptFunctions();
 void ReforgeUnregisterScriptFunctions();
 void ResearchRegisterScriptFunctions();

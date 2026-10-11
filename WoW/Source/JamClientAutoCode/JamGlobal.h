@@ -306,4 +306,82 @@ class GlobalGuildSetMemberNote : public JamClientMessage {
     ~GlobalGuildSetMemberNote();
 };
 
+class GlobalLFGuildGetGuildPost : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    GlobalLFGuildGetGuildPost();
+    ~GlobalLFGuildGetGuildPost();
+};
+
+class GlobalLFGuildGetRecruits : public JamClientMessage {
+    public:
+    /* 0010 */ int32_t m_lastUpdate;
+
+    void Put(CDataStore* msg) override;
+
+    GlobalLFGuildGetRecruits(int32_t lastUpdate);
+    ~GlobalLFGuildGetRecruits();
+};
+
+class GlobalLFGuildGetApplications : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    GlobalLFGuildGetApplications();
+    ~GlobalLFGuildGetApplications();
+};
+
+class GlobalLFGuildDeclineRecruit : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_recruitGUID[8];
+
+    void Put(CDataStore* msg) override;
+
+    GlobalLFGuildDeclineRecruit(uint64_t recruitGUID);
+    ~GlobalLFGuildDeclineRecruit();
+};
+
+class GlobalLFGuildRemoveRecruit : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_guildGUID[8];
+
+    void Put(CDataStore* msg) override;
+
+    GlobalLFGuildRemoveRecruit();
+    ~GlobalLFGuildRemoveRecruit();
+};
+
+class GlobalLFGuildSetGuildPost : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_classRoles;
+    /* 0014 */ char m_comment[1024];
+    /* 0414 */ bool m_listed;
+    /* 0418 */ uint32_t m_availability;
+    /* 041C */ uint32_t m_interests;
+    /* 0420 */ uint32_t m_level;
+
+    void Put(CDataStore* msg) override;
+
+    GlobalLFGuildSetGuildPost();
+    ~GlobalLFGuildSetGuildPost();
+};
+
+class GlobalLFGuildBrowse : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_availability;
+    /* 0014 */ uint32_t m_interests;
+    /* 0018 */ int32_t m_characterLevel;
+    /* 001C */ uint32_t m_classRoles;
+
+    void Put(CDataStore* msg) override;
+
+    GlobalLFGuildBrowse();
+    ~GlobalLFGuildBrowse();
+};
+
 #endif

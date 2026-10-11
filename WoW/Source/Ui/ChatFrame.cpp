@@ -5520,6 +5520,11 @@ static void LogTradeSkillCreateCallback(int32_t id, const WOWGUID& guid, void* p
     }
 }
 
+// OFFSET: 0x008E61F0/0x140614450
+int32_t CGChat::IsProfanityFilterEnabled() {
+    return g_profanityFilterCVar->m_intValue;
+}
+
 // PROVEN: 01b94acb IDENTICAL/NONE
 // OFFSET: 0x008E62A0/0x140614520
 int32_t CGChat::IsVoiceChatEnabled() {

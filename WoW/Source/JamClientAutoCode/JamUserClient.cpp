@@ -1013,3 +1013,69 @@ UserClientRequestPartyJoinUpdates::~UserClientRequestPartyJoinUpdates() {
 void UserClientRequestPartyJoinUpdates::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2583));
 }
+
+// OFFSET: 0x00B3BD90/0x140908C40
+UserLFGuildAddRecruit::UserLFGuildAddRecruit() {
+}
+
+// OFFSET: 0x00B3BCF0/0x140908B70
+UserLFGuildAddRecruit::~UserLFGuildAddRecruit() {
+}
+
+// OFFSET: 0x00B3BE80/0x140908D40
+void UserLFGuildAddRecruit::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x4448));
+    msg->Put(this->m_classRoles);
+    msg->Put(this->m_interests);
+    msg->Put(this->m_availability);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_guildGUID[3] != 0);
+    bits.WriteBit(this->m_guildGUID[0] != 0);
+    bits.WriteBit(this->m_guildGUID[6] != 0);
+    bits.WriteBit(this->m_guildGUID[1] != 0);
+    uint32_t length = strlen(this->m_comment);
+    bits.WriteBits<11>(length);
+    bits.WriteBit(this->m_guildGUID[5] != 0);
+    bits.WriteBit(this->m_guildGUID[4] != 0);
+    bits.WriteBit(this->m_guildGUID[7] != 0);
+    length = strlen(this->m_name);
+    bits.WriteBits<7>(length);
+    bits.WriteBit(this->m_guildGUID[2] != 0);
+    bits.Flush();
+
+    if (this->m_guildGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[4] ^ 1));
+    }
+
+    if (this->m_guildGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[5] ^ 1));
+    }
+
+    msg->PutData(this->m_comment, strlen(this->m_comment));
+    msg->PutData(this->m_name, strlen(this->m_name));
+
+    if (this->m_guildGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[7] ^ 1));
+    }
+
+    if (this->m_guildGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[2] ^ 1));
+    }
+
+    if (this->m_guildGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[0] ^ 1));
+    }
+
+    if (this->m_guildGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[6] ^ 1));
+    }
+
+    if (this->m_guildGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[1] ^ 1));
+    }
+
+    if (this->m_guildGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[3] ^ 1));
+    }
+}

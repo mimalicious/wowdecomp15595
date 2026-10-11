@@ -1,5 +1,7 @@
 #include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include <cstring>
 #include "Engine/Source/Base/CDataStore.h"
+#include "Engine/Source/Storm/H/storm.h"
 
 // PROVEN: 9574b3a0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
@@ -78,6 +80,27 @@ bool (*ClientVoidStorageTransferChanges::s_handler)(ClientVoidStorageTransferCha
 
 // STATIC: 0x00E4D5A4
 bool (*ClientVoidTransferResult::s_handler)(ClientVoidTransferResult* msg);
+
+// STATIC: 0x00E4D468
+bool (*ClientLfGuildPostUpdated::s_handler)(ClientLfGuildPostUpdated* msg);
+
+// STATIC: 0x00E4D598
+bool (*ClientLfGuildBrowseUpdated::s_handler)(ClientLfGuildBrowseUpdated* msg);
+
+// STATIC: 0x00E4D718
+bool (*ClientLfGuildRecruitListUpdated::s_handler)(ClientLfGuildRecruitListUpdated* msg);
+
+// STATIC: 0x00E4D508
+bool (*ClientLfGuildCommandResult::s_handler)(ClientLfGuildCommandResult* msg);
+
+// STATIC: 0x00E4D664
+bool (*ClientLfGuildMembershipListUpdated::s_handler)(ClientLfGuildMembershipListUpdated* msg);
+
+// STATIC: 0x00E4D704
+bool (*ClientLfGuildApplicantListUpdated::s_handler)(ClientLfGuildApplicantListUpdated* msg);
+
+// STATIC: 0x00E4D6FC
+bool (*ClientLfGuildApplicationsListChanged::s_handler)(ClientLfGuildApplicationsListChanged* msg);
 
 // STATIC: 0x00E4D5A8
 bool (*ClientVoidItemSwapResponse::s_handler)(ClientVoidItemSwapResponse* msg);
@@ -7370,4 +7393,659 @@ bool ClientVoidItemSwapResponse::Handle() {
     }
 
     return ClientVoidItemSwapResponse::s_handler(this);
+}
+
+// OFFSET: 0x006A9D70
+LFGuildBrowseData& LFGuildBrowseData::operator=(const LFGuildBrowseData& source) {
+    this->m_numMembers = source.m_numMembers;
+    memcpy(this->m_guildGUID, source.m_guildGUID, sizeof(this->m_guildGUID));
+    this->m_membershipRequested = source.m_membershipRequested;
+    this->m_cached = source.m_cached;
+    this->unk_008C = source.unk_008C;
+    this->m_emblemStyle = source.m_emblemStyle;
+    this->m_achievementPoints = source.m_achievementPoints;
+    this->m_background = source.m_background;
+    SStrCopy(this->m_comment, source.m_comment, sizeof(this->m_comment));
+    this->m_classRoles = source.m_classRoles;
+    this->m_availability = source.m_availability;
+    this->m_interests = source.m_interests;
+    this->m_guildLevel = source.m_guildLevel;
+    this->m_emblemColor = source.m_emblemColor;
+    SStrCopy(this->m_name, source.m_name, sizeof(this->m_name));
+    this->unk_0080 = source.unk_0080;
+    this->m_borderColor = source.m_borderColor;
+    return *this;
+}
+
+// OFFSET: 0x006AA920
+LFGuildRecruitData& LFGuildRecruitData::operator=(const LFGuildRecruitData& source) {
+    this->m_classID = source.m_classID;
+    this->m_timeLeft = source.m_timeLeft;
+    this->m_level = source.m_level;
+    this->unk_043C = source.unk_043C;
+    SStrCopy(this->m_name, source.m_name, sizeof(this->m_name));
+    this->m_classRoles = source.m_classRoles;
+    this->m_timeSince = source.m_timeSince;
+    SStrCopy(this->m_comment, source.m_comment, sizeof(this->m_comment));
+    this->m_interests = source.m_interests;
+    memcpy(this->m_recruitGUID, source.m_recruitGUID, sizeof(this->m_recruitGUID));
+    this->m_availability = source.m_availability;
+    return *this;
+}
+
+// OFFSET: 0x006B5650
+LFGuildApplicationData& LFGuildApplicationData::operator=(const LFGuildApplicationData& source) {
+    this->m_availability = source.m_availability;
+    this->m_timeLeft = source.m_timeLeft;
+    this->m_timeSince = source.m_timeSince;
+    this->m_interests = source.m_interests;
+    this->m_classRoles = source.m_classRoles;
+    memcpy(this->m_guildGUID, source.m_guildGUID, sizeof(this->m_guildGUID));
+    SStrCopy(this->m_guildName, source.m_guildName, sizeof(this->m_guildName));
+    SStrCopy(this->m_comment, source.m_comment, sizeof(this->m_comment));
+    return *this;
+}
+
+// OFFSET: 0x006D7340/0x140394FF0
+ClientLfGuildPostUpdated::ClientLfGuildPostUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->m_hasPost = false;
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006D4FB0/0x140391DF0
+ClientLfGuildPostUpdated::~ClientLfGuildPostUpdated() {
+}
+
+// OFFSET: 0x006D1F00/0x14038D4C0
+void ClientLfGuildPostUpdated::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_hasPost = bits.ReadBit();
+
+    if (this->m_hasPost) {
+        this->m_post.m_listed = bits.ReadBit();
+        uint32_t length = bits.ReadBits<11>();
+        *reinterpret_cast<uint32_t*>(this->m_post.m_settings.m_comment) = length;
+    }
+
+    if (this->m_hasPost) {
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_level = value;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(this->m_post.m_settings.m_comment);
+            msg->GetData(this->m_post.m_settings.m_comment, length);
+            this->m_post.m_settings.m_comment[length] = 0;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.unk_0010 = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_availability = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_classRoles = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_interests = value;
+        }
+    }
+}
+
+// OFFSET: 0x006BED20/0x140373C10
+bool ClientLfGuildPostUpdated::Handle() {
+    if (!ClientLfGuildPostUpdated::s_handler) {
+        return false;
+    }
+
+    return ClientLfGuildPostUpdated::s_handler(this);
+}
+
+// OFFSET: 0x006F07A0/0x1403B6160
+ClientLfGuildBrowseUpdated::ClientLfGuildBrowseUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E57F0/0x1403A6CF0
+ClientLfGuildBrowseUpdated::~ClientLfGuildBrowseUpdated() {
+}
+
+// OFFSET: 0x006E8120/0x1403AA800
+void ClientLfGuildBrowseUpdated::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_guilds.SetCount(bits.ReadBits<19>());
+
+    for (uint32_t i = 0; i < this->m_guilds.m_count; i++) {
+        LFGuildBrowseData& guild = this->m_guilds.m_data[i];
+        guild.m_guildGUID[7] = bits.ReadBit();
+        guild.m_guildGUID[5] = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(guild.m_name) = bits.ReadBits<8>();
+        guild.m_guildGUID[0] = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(guild.m_comment) = bits.ReadBits<11>();
+        guild.m_guildGUID[4] = bits.ReadBit();
+        guild.m_guildGUID[1] = bits.ReadBit();
+        guild.m_guildGUID[2] = bits.ReadBit();
+        guild.m_guildGUID[6] = bits.ReadBit();
+        guild.m_guildGUID[3] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_guilds.m_count; i++) {
+        LFGuildBrowseData& guild = this->m_guilds.m_data[i];
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_emblemColor = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.unk_008C = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_emblemStyle = value;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(guild.m_comment);
+            msg->GetData(guild.m_comment, length);
+            guild.m_comment[length] = 0;
+        }
+
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            guild.m_cached = value;
+        }
+
+        if (guild.m_guildGUID[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[5] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_interests = value;
+        }
+
+        if (guild.m_guildGUID[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[6] ^= byteValue;
+        }
+
+        if (guild.m_guildGUID[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[4] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_guildLevel = value;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(guild.m_name);
+            msg->GetData(guild.m_name, length);
+            guild.m_name[length] = 0;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_achievementPoints = value;
+        }
+
+        if (guild.m_guildGUID[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[7] ^= byteValue;
+        }
+
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            guild.m_membershipRequested = value;
+        }
+
+        if (guild.m_guildGUID[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[2] ^= byteValue;
+        }
+
+        if (guild.m_guildGUID[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[0] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_availability = value;
+        }
+
+        if (guild.m_guildGUID[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[1] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_background = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.unk_0080 = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_borderColor = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_classRoles = value;
+        }
+
+        if (guild.m_guildGUID[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guild.m_guildGUID[3] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            guild.m_numMembers = value;
+        }
+    }
+}
+
+// OFFSET: 0x006AD100/0x14035D1B0
+bool ClientLfGuildBrowseUpdated::Handle() {
+    if (!ClientLfGuildBrowseUpdated::s_handler) {
+        return false;
+    }
+
+    return ClientLfGuildBrowseUpdated::s_handler(this);
+}
+
+// OFFSET: 0x006F3670/0x1403BA390
+ClientLfGuildRecruitListUpdated::ClientLfGuildRecruitListUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E76A0/0x1403A98C0
+ClientLfGuildRecruitListUpdated::~ClientLfGuildRecruitListUpdated() {
+}
+
+// OFFSET: 0x006ECE50/0x1403B1280
+void ClientLfGuildRecruitListUpdated::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_recruits.SetCount(bits.ReadBits<20>());
+
+    for (uint32_t i = 0; i < this->m_recruits.m_count; i++) {
+        LFGuildRecruitData& recruit = this->m_recruits.m_data[i];
+        *reinterpret_cast<uint32_t*>(recruit.m_comment) = bits.ReadBits<11>();
+        recruit.m_recruitGUID[2] = bits.ReadBit();
+        recruit.m_recruitGUID[4] = bits.ReadBit();
+        recruit.m_recruitGUID[3] = bits.ReadBit();
+        recruit.m_recruitGUID[7] = bits.ReadBit();
+        recruit.m_recruitGUID[0] = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(recruit.m_name) = bits.ReadBits<7>();
+        recruit.m_recruitGUID[5] = bits.ReadBit();
+        recruit.m_recruitGUID[1] = bits.ReadBit();
+        recruit.m_recruitGUID[6] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_recruits.m_count; i++) {
+        LFGuildRecruitData& recruit = this->m_recruits.m_data[i];
+        if (recruit.m_recruitGUID[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[4] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.unk_043C = value;
+        }
+
+        if (recruit.m_recruitGUID[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[3] ^= byteValue;
+        }
+
+        if (recruit.m_recruitGUID[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[0] ^= byteValue;
+        }
+
+        if (recruit.m_recruitGUID[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[1] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.m_level = value;
+        }
+
+        if (recruit.m_recruitGUID[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[6] ^= byteValue;
+        }
+
+        if (recruit.m_recruitGUID[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[7] ^= byteValue;
+        }
+
+        if (recruit.m_recruitGUID[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[2] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.m_timeSince = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.m_availability = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.m_classRoles = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.m_interests = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.m_timeLeft = value;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(recruit.m_name);
+            msg->GetData(recruit.m_name, length);
+            recruit.m_name[length] = 0;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(recruit.m_comment);
+            msg->GetData(recruit.m_comment, length);
+            recruit.m_comment[length] = 0;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            recruit.m_classID = value;
+        }
+
+        if (recruit.m_recruitGUID[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            recruit.m_recruitGUID[5] ^= byteValue;
+        }
+    }
+
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_updateTime = value;
+    }
+}
+
+// OFFSET: 0x006BE0D0/0x140372CC0
+bool ClientLfGuildRecruitListUpdated::Handle() {
+    if (!ClientLfGuildRecruitListUpdated::s_handler) {
+        return false;
+    }
+
+    return ClientLfGuildRecruitListUpdated::s_handler(this);
+}
+
+// OFFSET: 0x006AEF10/0x14034ED70
+ClientLfGuildCommandResult::ClientLfGuildCommandResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    uint8_t result = 0;
+    msg->Get(result);
+    this->m_result = result;
+
+    uint32_t command = 0;
+    msg->Get(command);
+    this->m_command = command;
+}
+
+// OFFSET: 0x006B1AE0/0x140350000
+ClientLfGuildCommandResult::~ClientLfGuildCommandResult() {
+}
+
+// OFFSET: 0x006A6650/0x1403549C0
+bool ClientLfGuildCommandResult::Handle() {
+    if (!ClientLfGuildCommandResult::s_handler) {
+        return false;
+    }
+
+    return ClientLfGuildCommandResult::s_handler(this);
+}
+
+// OFFSET: 0x006EF880/0x1403B4D60
+ClientLfGuildMembershipListUpdated::ClientLfGuildMembershipListUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DAF00/0x1403996F0
+ClientLfGuildMembershipListUpdated::~ClientLfGuildMembershipListUpdated() {
+}
+
+// OFFSET: 0x006EEB50/0x1403B3AE0
+void ClientLfGuildMembershipListUpdated::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_applications.SetCount(bits.ReadBits<20>());
+
+    for (uint32_t i = 0; i < this->m_applications.m_count; i++) {
+        LFGuildApplicationData& application = this->m_applications.m_data[i];
+        application.m_guildGUID[1] = bits.ReadBit();
+        application.m_guildGUID[0] = bits.ReadBit();
+        application.m_guildGUID[5] = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(application.m_comment) = bits.ReadBits<11>();
+        application.m_guildGUID[3] = bits.ReadBit();
+        application.m_guildGUID[7] = bits.ReadBit();
+        application.m_guildGUID[4] = bits.ReadBit();
+        application.m_guildGUID[6] = bits.ReadBit();
+        application.m_guildGUID[2] = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(application.m_guildName) = bits.ReadBits<8>();
+    }
+
+    for (uint32_t i = 0; i < this->m_applications.m_count; i++) {
+        LFGuildApplicationData& application = this->m_applications.m_data[i];
+        if (application.m_guildGUID[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[2] ^= byteValue;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(application.m_comment);
+            msg->GetData(application.m_comment, length);
+            application.m_comment[length] = 0;
+        }
+
+        if (application.m_guildGUID[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[5] ^= byteValue;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(application.m_guildName);
+            msg->GetData(application.m_guildName, length);
+            application.m_guildName[length] = 0;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            application.m_availability = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            application.m_timeLeft = value;
+        }
+
+        if (application.m_guildGUID[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[0] ^= byteValue;
+        }
+
+        if (application.m_guildGUID[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[6] ^= byteValue;
+        }
+
+        if (application.m_guildGUID[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[3] ^= byteValue;
+        }
+
+        if (application.m_guildGUID[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[7] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            application.m_classRoles = value;
+        }
+
+        if (application.m_guildGUID[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[4] ^= byteValue;
+        }
+
+        if (application.m_guildGUID[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            application.m_guildGUID[1] ^= byteValue;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            application.m_timeSince = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            application.m_interests = value;
+        }
+    }
+
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_numRemaining = value;
+    }
+}
+
+// OFFSET: 0x006AA9F0/0x14035A1B0
+bool ClientLfGuildMembershipListUpdated::Handle() {
+    if (!ClientLfGuildMembershipListUpdated::s_handler) {
+        return false;
+    }
+
+    return ClientLfGuildMembershipListUpdated::s_handler(this);
+}
+
+// OFFSET: 0x006A2E40/0x14036ACB0
+ClientLfGuildApplicantListUpdated::ClientLfGuildApplicantListUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+}
+
+// OFFSET: 0x006A1120/0x14033F780
+ClientLfGuildApplicantListUpdated::~ClientLfGuildApplicantListUpdated() {
+}
+
+// OFFSET: 0x006A78B0/0x140356460
+bool ClientLfGuildApplicantListUpdated::Handle() {
+    if (!ClientLfGuildApplicantListUpdated::s_handler) {
+        return false;
+    }
+
+    return ClientLfGuildApplicantListUpdated::s_handler(this);
+}
+
+// OFFSET: 0x006A2E40/0x14036ACB0
+ClientLfGuildApplicationsListChanged::ClientLfGuildApplicationsListChanged(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+}
+
+// OFFSET: 0x006A1120/0x14033F780
+ClientLfGuildApplicationsListChanged::~ClientLfGuildApplicationsListChanged() {
+}
+
+// OFFSET: 0x006A9B20/0x140358F60
+bool ClientLfGuildApplicationsListChanged::Handle() {
+    if (!ClientLfGuildApplicationsListChanged::s_handler) {
+        return false;
+    }
+
+    return ClientLfGuildApplicationsListChanged::s_handler(this);
 }

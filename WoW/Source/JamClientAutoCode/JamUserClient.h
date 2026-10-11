@@ -266,4 +266,20 @@ class UserClientRequestPartyJoinUpdates : public JamClientMessage {
     ~UserClientRequestPartyJoinUpdates();
 };
 
+class UserLFGuildAddRecruit : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_classRoles;
+    /* 0014 */ char m_comment[1024];
+    /* 0414 */ char m_name[48];
+    /* 0444 */ uint8_t unk_0444[4];
+    /* 0448 */ uint8_t m_guildGUID[8];
+    /* 0450 */ uint32_t m_interests;
+    /* 0454 */ uint32_t m_availability;
+
+    void Put(CDataStore* msg) override;
+
+    UserLFGuildAddRecruit();
+    ~UserLFGuildAddRecruit();
+};
+
 #endif

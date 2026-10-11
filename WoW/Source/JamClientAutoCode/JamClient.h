@@ -323,6 +323,75 @@ struct JamVoidItem {
     /* 001C */ uint32_t m_slot;
 };
 
+struct JamLFGuildSettings {
+    /* 0000 */ uint32_t m_interests;
+    /* 0004 */ uint32_t m_availability;
+    /* 0008 */ uint32_t m_classRoles;
+    /* 000C */ uint32_t m_level;
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ char m_comment[1024];
+
+    JamLFGuildSettings& operator=(const JamLFGuildSettings& source);
+};
+
+struct JamLFGuildPost {
+    /* 0000 */ bool m_listed;
+    /* 0004 */ JamLFGuildSettings m_settings;
+};
+
+struct LFGuildBrowseData {
+    /* 0000 */ char m_name[96];
+    /* 0060 */ uint8_t m_guildGUID[8];
+    /* 0068 */ int32_t m_guildLevel;
+    /* 006C */ int32_t m_numMembers;
+    /* 0070 */ int32_t m_achievementPoints;
+    /* 0074 */ uint32_t m_interests;
+    /* 0078 */ uint32_t m_availability;
+    /* 007C */ uint32_t m_classRoles;
+    /* 0080 */ int32_t unk_0080;
+    /* 0084 */ int32_t m_emblemStyle;
+    /* 0088 */ int32_t m_emblemColor;
+    /* 008C */ int32_t unk_008C;
+    /* 0090 */ int32_t m_borderColor;
+    /* 0094 */ int32_t m_background;
+    /* 0098 */ char m_comment[1024];
+    /* 0498 */ bool m_cached;
+    /* 0499 */ bool m_membershipRequested;
+    /* 049A */ uint8_t unk_049A[6];
+
+    LFGuildBrowseData& operator=(const LFGuildBrowseData& source);
+};
+
+struct LFGuildRecruitData {
+    /* 0000 */ uint8_t m_recruitGUID[8];
+    /* 0008 */ char m_name[48];
+    /* 0038 */ char m_comment[1024];
+    /* 0438 */ int32_t m_classID;
+    /* 043C */ int32_t unk_043C;
+    /* 0440 */ int32_t m_level;
+    /* 0444 */ uint32_t m_classRoles;
+    /* 0448 */ uint32_t m_interests;
+    /* 044C */ uint32_t m_availability;
+    /* 0450 */ int32_t m_timeSince;
+    /* 0454 */ int32_t m_timeLeft;
+
+    LFGuildRecruitData& operator=(const LFGuildRecruitData& source);
+};
+
+struct LFGuildApplicationData {
+    /* 0000 */ uint8_t m_guildGUID[8];
+    /* 0008 */ char m_guildName[96];
+    /* 0068 */ uint32_t m_classRoles;
+    /* 006C */ uint32_t m_interests;
+    /* 0070 */ uint32_t m_availability;
+    /* 0074 */ int32_t m_timeSince;
+    /* 0078 */ int32_t m_timeLeft;
+    /* 007C */ char m_comment[1024];
+    /* 047C */ uint8_t unk_047C[4];
+
+    LFGuildApplicationData& operator=(const LFGuildApplicationData& source);
+};
+
 struct JamWeeklySpellUse {
     /* 0000 */ int32_t m_category;
     /* 0004 */ uint8_t m_uses;
@@ -829,9 +898,13 @@ class ClientLfGuildMembershipListUpdated : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfGuildMembershipListUpdated* msg);
 
+    /* 0010 */ TSGrowableArray<LFGuildApplicationData> m_applications;
+    /* 0020 */ int32_t m_numRemaining;
+
     ClientLfGuildMembershipListUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildMembershipListUpdated();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildMemberRecipes : public JamClientMessage {
@@ -854,9 +927,13 @@ class ClientLfGuildRecruitListUpdated : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfGuildRecruitListUpdated* msg);
 
+    /* 0010 */ TSGrowableArray<LFGuildRecruitData> m_recruits;
+    /* 0020 */ int32_t m_updateTime;
+
     ClientLfGuildRecruitListUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildRecruitListUpdated();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildReset : public JamClientMessage {
@@ -889,9 +966,12 @@ class ClientLfGuildBrowseUpdated : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfGuildBrowseUpdated* msg);
 
+    /* 0010 */ TSGrowableArray<LFGuildBrowseData> m_guilds;
+
     ClientLfGuildBrowseUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildBrowseUpdated();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientVoidTransferResult : public JamClientMessage {
@@ -1272,9 +1352,13 @@ class ClientLfGuildPostUpdated : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfGuildPostUpdated* msg);
 
+    /* 0010 */ bool m_hasPost;
+    /* 0014 */ JamLFGuildPost m_post;
+
     ClientLfGuildPostUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildPostUpdated();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientDontAutoPushSpellsToActionBar : public JamClientMessage {
@@ -1684,6 +1768,9 @@ class ClientBattlefieldRatedInfo : public JamClientMessage {
 class ClientLfGuildCommandResult : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfGuildCommandResult* msg);
+
+    /* 0010 */ uint32_t m_command;
+    /* 0014 */ uint8_t m_result;
 
     ClientLfGuildCommandResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildCommandResult();

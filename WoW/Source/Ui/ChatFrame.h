@@ -375,6 +375,7 @@ class CGChat {
     static void AddThrottledChat(int32_t type, uint32_t language, const char* target, const char* text);
     static int32_t GetActiveVoiceSession();
     static void SetGuildRecruitmentMode(int32_t mode, bool fromJoin);
+    static int32_t IsProfanityFilterEnabled();
     static int32_t IsVoiceChatEnabled();
     static bool CanComplain(WOWGUID guid);
     static void VoiceSessionUpdate(const char* name, int32_t type);
