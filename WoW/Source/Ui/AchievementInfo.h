@@ -46,10 +46,16 @@ struct ACHIEVEMENT : public TSHashObject<ACHIEVEMENT, HASHKEY_NONE> {
     /* 001C */ TSList<SPECIFIC_CRITERIA, TSGetLink<SPECIFIC_CRITERIA>> m_criteria;
 };
 
+struct GuildAchievementMember {
+    /* 0000 */ WOWGUID m_guid;
+};
+
+struct GUILDACHIEVEMENTMEMBERLIST : public TSHashObject<GUILDACHIEVEMENTMEMBERLIST, HASHKEY_NONE> {
+    /* 0018 */ TSGrowableArray<GuildAchievementMember> m_members;
+};
+
 int32_t Packet_SMSG_ACHIEVEMENT_EARNED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CRITERIA_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_RESPOND_INSPECT_ACHIEVEMENTS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_ALL_ACHIEVEMENT_DATA(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CRITERIA_DELETED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_ACHIEVEMENT_DELETED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_QUERY_QUESTS_COMPLETED_RESPONSE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -57,6 +63,7 @@ int32_t Packet_SMSG_QUERY_QUESTS_COMPLETED_RESPONSE(void* param, NETMESSAGE msgI
 class CGAchievementInfo {
     public:
     static void PostInitActivePlayer();
+    static void SetFocusedAchievement(int32_t id);
     static void EnterWorld();
     static void ClearGuildInfo();
     static void LeaveWorld();
@@ -65,7 +72,7 @@ class CGAchievementInfo {
     static void LoadTrackedAchievements();
     static void RemoveTrackedAchievement(int32_t id);
     static WOWGUID m_inspect;
-    static bool IsRealAchievement(int32_t id);
+    static bool IsRealAchievement(int32_t id, bool guild);
     static CLIENT_ACHIEVEMENTS* GetAchievement(int32_t id);
     static bool IsSupersededByCompleted(int32_t id);
     static uint64_t BuildOutputString(char* buffer, int32_t size, uint64_t sum, uint64_t highest, int32_t highestId, uint64_t count, uint64_t value, CLIENT_ACHIEVEMENT_CRITERIA* criteria, int32_t flags, int32_t criteriaFlags, bool completed, const AchievementRec* achievement, const Achievement_CriteriaRec* criteriaRec, int32_t required);
@@ -89,6 +96,7 @@ extern TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_trackedAchi
 extern TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_inspectAchievements;
 extern TSList<COMPLETED_QUESTS, TSGetLink<COMPLETED_QUESTS>> s_completedQuests;
 extern TSHashTable<ACHIEVEMENT, HASHKEY_NONE> s_achievements;
+extern TSHashTable<GUILDACHIEVEMENTMEMBERLIST, HASHKEY_NONE> s_guildAchievementMembers;
 
 int32_t AddTrackedAchievement(int32_t id);
 void AchievementInfoRegisterScriptFunctions();

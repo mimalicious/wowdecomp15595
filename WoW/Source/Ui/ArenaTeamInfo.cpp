@@ -9,13 +9,14 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "Engine/Source/Os/TimeManager.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include <cstdlib>
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/ChrClassesRec.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: #0x00A15ABC
+// STATIC: 0x00C04154
 static const int32_t s_arenaBracketTypes[3] = { 2, 3, 5 };
 
 // STATIC: 0x00D15300
@@ -23,11 +24,10 @@ int32_t CGArenaTeamInfo::m_showOffline = 1;
 // STATIC: 0x00F4CCD0
 ArenaTeam CGArenaTeamInfo::m_arenaTeams[3];
 
-
 // STATIC: 0x00F4CC80
 uint32_t CGArenaTeamInfo::m_nextAllowedQuery[3];
 
-// STATIC: #0x00C0F7FC
+// STATIC: 0x00F4CC8C
 ArenaTeamSort CGArenaTeamInfo::m_sortOrder[7];
 
 // STATIC: 0x00F4CCC8
@@ -42,7 +42,7 @@ ArenaTeam* CGArenaTeamInfo::GetArenaTeam(uint32_t index) {
     return &CGArenaTeamInfo::m_arenaTeams[index];
 }
 
-// OFFSET: #0x005A28E0
+// OFFSET: 0x009A90E0
 void CGArenaTeamInfo::UpdateRoster(uint32_t index, int32_t reset) {
     if (index >= 3) {
         return;
@@ -58,32 +58,37 @@ void CGArenaTeamInfo::UpdateRoster(uint32_t index, int32_t reset) {
 
 // PROVEN: 439683be IDENTICAL/NONE
 // OFFSET: 0x009A9390
-ArenaTeamMember* CGArenaTeamInfo::SelectMember(uint32_t team, uint32_t index) {
+ArenaTeamMemberInfo* CGArenaTeamInfo::SelectMember(uint32_t team, uint32_t index) {
     if (team >= 3 || index >= CGArenaTeamInfo::m_arenaTeams[team].m_numMembers) {
         CGArenaTeamInfo::m_selectedMember = WOWGUID();
         return NULL;
     }
 
-    ArenaTeamMember* member = CGArenaTeamInfo::m_arenaTeams[team].m_members.m_data[index];
+    ArenaTeamMemberInfo* member = CGArenaTeamInfo::m_arenaTeams[team].m_members.m_data[index];
     CGArenaTeamInfo::m_selectedMember = member->m_guid;
     return member;
 }
 
-// OFFSET: #0x005A2BD0
+// OFFSET: 0x009A93E0
 static int32_t QSortRoster(const void* a, const void* b) {
-    const ArenaTeamMember* member1 = *static_cast<ArenaTeamMember* const*>(a);
-    const ArenaTeamMember* member2 = *static_cast<ArenaTeamMember* const*>(b);
+    const ArenaTeamMemberInfo* member1 = *static_cast<ArenaTeamMemberInfo* const*>(a);
+    const ArenaTeamMemberInfo* member2 = *static_cast<ArenaTeamMemberInfo* const*>(b);
 
     if (!CGArenaTeamInfo::m_showOffline && (!member1->m_online || !member2->m_online) && member1->m_online != member2->m_online) {
-        return 2 * (member1->m_online == 0) - 1;
+        return member1->m_online ? -1 : 1;
     }
 
     for (uint32_t i = 0; i < 7; i++) {
         int32_t result;
         uint32_t value1;
         uint32_t value2;
+        ArenaTeamSort* sort = i < 7 ? &CGArenaTeamInfo::m_sortOrder[i] : NULL;
 
-        switch (CGArenaTeamInfo::m_sortOrder[i].m_column) {
+        if (!sort) {
+            continue;
+        }
+
+        switch (sort->m_column) {
             case 0:
                 result = SStrCmp(member1->m_name, member2->m_name, STORM_MAX_STR);
                 break;
@@ -156,7 +161,7 @@ static int32_t QSortRoster(const void* a, const void* b) {
             continue;
         }
 
-        if (CGArenaTeamInfo::m_sortOrder[i].m_reverse) {
+        if (sort->m_reverse) {
             result = -result;
         }
 
@@ -170,35 +175,37 @@ static int32_t QSortRoster(const void* a, const void* b) {
 int32_t Packet_SMSG_ARENA_TEAM_STATS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t teamId;
     msg->Get(teamId);
-    uint32_t index = 0;
-
-    while (CGArenaTeamInfo::m_arenaTeams[index].m_teamId != teamId) {
-        if (++index >= 3) {
+    for (uint32_t index = 0; index < 3; index++) {
+        if (CGArenaTeamInfo::m_arenaTeams[index].m_teamId == teamId) {
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_rating);
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_weekGames);
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_weekWins);
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_seasonGames);
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_seasonWins);
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_rank);
+            FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_TEAM_UPDATE, NULL);
             return 1;
         }
     }
 
-    ArenaTeam& team = CGArenaTeamInfo::m_arenaTeams[index];
-    msg->Get(team.m_rating);
-    msg->Get(team.m_weekGames);
-    msg->Get(team.m_weekWins);
-    msg->Get(team.m_seasonGames);
-    msg->Get(team.m_seasonWins);
-    msg->Get(team.m_rank);
-    FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_TEAM_UPDATE, NULL);
     return 1;
 }
 
-// OFFSET: #0x005A3D60
+// OFFSET: 0x009AA530
 void ArenaTeam::FreeMemberArray() {
     this->m_teamId = 0;
 
     for (uint32_t i = 0; i < this->m_members.m_count; i++) {
-        delete this->m_members.m_data[i];
+        ArenaTeamMemberInfo* member = this->m_members.m_data[i];
+
+        if (member) {
+            SMemFree(member, "delete", -1, 0);
+        }
+
         this->m_members.m_data[i] = NULL;
     }
 
-    this->m_members.m_count = 0;
+    this->m_members.SetCount(0);
     this->m_type = 0;
     this->m_numMembers = 0;
     this->m_numOnline = 0;
@@ -216,11 +223,11 @@ int32_t Packet_SMSG_ARENA_TEAM_ROSTER(void* param, NETMESSAGE msgId, uint32_t ti
     msg->Get(teamId);
     uint8_t hasRatings = 0;
     msg->Get(hasRatings);
-    uint32_t index = 0;
+    uint32_t index;
 
-    while (CGArenaTeamInfo::m_arenaTeams[index].m_teamId != teamId) {
-        if (++index >= 3) {
-            return 1;
+    for (index = 0; index < 3; index++) {
+        if (CGArenaTeamInfo::m_arenaTeams[index].m_teamId == teamId) {
+            break;
         }
     }
 
@@ -228,58 +235,57 @@ int32_t Packet_SMSG_ARENA_TEAM_ROSTER(void* param, NETMESSAGE msgId, uint32_t ti
         return 1;
     }
 
-    ArenaTeam* team = &CGArenaTeamInfo::m_arenaTeams[index];
-    uint32_t oldCount = team->m_members.m_count;
-    team->m_numOnline = 0;
-    msg->Get(team->m_numMembers);
-    msg->Get(team->m_type);
+    uint32_t oldCount = CGArenaTeamInfo::m_arenaTeams[index].m_members.m_count;
+    CGArenaTeamInfo::m_arenaTeams[index].m_numOnline = 0;
+    msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_numMembers);
+    msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_type);
 
-    if (team->m_numMembers > oldCount) {
-        team->m_members.SetCount(team->m_numMembers);
+    if (CGArenaTeamInfo::m_arenaTeams[index].m_numMembers > oldCount) {
+        CGArenaTeamInfo::m_arenaTeams[index].m_members.SetCount(CGArenaTeamInfo::m_arenaTeams[index].m_numMembers);
 
-        for (uint32_t i = oldCount; i < team->m_numMembers; i++) {
-            team->m_members.m_data[i] = static_cast<ArenaTeamMember*>(SMemAlloc(sizeof(ArenaTeamMember), __FILE__, __LINE__, 0));
+        for (uint32_t i = oldCount; i < CGArenaTeamInfo::m_arenaTeams[index].m_numMembers; i++) {
+            CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i] = static_cast<ArenaTeamMemberInfo*>(SMemAlloc(sizeof(ArenaTeamMemberInfo), __FILE__, __LINE__, 0));
         }
     }
 
-    for (uint32_t i = 0; i < team->m_numMembers; i++) {
-        msg->Get(team->m_members.m_data[i]->m_guid.m_guid);
+    for (uint32_t i = 0; i < CGArenaTeamInfo::m_arenaTeams[index].m_numMembers; i++) {
+        msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_guid.m_guid);
         uint8_t online;
         msg->Get(online);
-        team->m_members.m_data[i]->m_online = online != 0;
-        msg->GetString(team->m_members.m_data[i]->m_name, sizeof(team->m_members.m_data[i]->m_name));
-        msg->Get(team->m_members.m_data[i]->m_rank);
+        CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_online = online != 0;
+        msg->GetString(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_name, sizeof(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_name));
+        msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_rank);
         uint8_t level;
         uint8_t classId;
         msg->Get(level);
         msg->Get(classId);
-        team->m_members.m_data[i]->m_level = level;
-        team->m_members.m_data[i]->m_class = classId;
-        msg->Get(team->m_members.m_data[i]->m_weekGames);
-        msg->Get(team->m_members.m_data[i]->m_weekWins);
-        msg->Get(team->m_members.m_data[i]->m_seasonGames);
-        msg->Get(team->m_members.m_data[i]->m_seasonWins);
-        msg->Get(team->m_members.m_data[i]->m_personalRating);
+        CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_level = level;
+        CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_class = classId;
+        msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_weekGames);
+        msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_weekWins);
+        msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_seasonGames);
+        msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_seasonWins);
+        msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_personalRating);
 
         if (hasRatings) {
-            msg->Get(team->m_members.m_data[i]->m_matchmakerRatingBefore);
-            msg->Get(team->m_members.m_data[i]->m_matchmakerRatingAfter);
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_matchmakerRatingBefore);
+            msg->Get(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_matchmakerRatingAfter);
         } else {
-            team->m_members.m_data[i]->m_matchmakerRatingBefore = 0.0f;
-            team->m_members.m_data[i]->m_matchmakerRatingAfter = 0.0f;
+            CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_matchmakerRatingBefore = 0.0f;
+            CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_matchmakerRatingAfter = 0.0f;
         }
 
-        if (team->m_members.m_data[i]->m_online) {
-            team->m_numOnline++;
+        if (CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data[i]->m_online) {
+            CGArenaTeamInfo::m_arenaTeams[index].m_numOnline++;
         }
     }
 
-    qsort(team->m_members.m_data, team->m_numMembers, sizeof(ArenaTeamMember*), QSortRoster);
+    qsort(CGArenaTeamInfo::m_arenaTeams[index].m_members.m_data, CGArenaTeamInfo::m_arenaTeams[index].m_numMembers, sizeof(ArenaTeamMemberInfo*), QSortRoster);
     FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_TEAM_ROSTER_UPDATE, NULL);
     return 1;
 }
 
-// OFFSET: #0x005A40E0
+// OFFSET: 0x009AA8C0
 void CGArenaTeamInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_ARENA_TEAM_ROSTER, Packet_SMSG_ARENA_TEAM_ROSTER, NULL);
     ClientServices::SetMessageHandler(SMSG_ARENA_TEAM_STATS, Packet_SMSG_ARENA_TEAM_STATS, NULL);
@@ -305,7 +311,7 @@ void CGArenaTeamInfo::InitializeGame() {
     }
 }
 
-// OFFSET: #0x005A37B0
+// OFFSET: 0x009A9F70
 bool CGArenaTeamInfo::CheckPersonalAndTeamRating(uint32_t rating, int32_t bracket) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -313,23 +319,25 @@ bool CGArenaTeamInfo::CheckPersonalAndTeamRating(uint32_t rating, int32_t bracke
         return false;
     }
 
-    for (uint32_t i = 0; i < 3; i++) {
-        uint32_t* info = &player->m_player->m_playerFieldArenaTeamInfo11[i * 7];
+    if (player->m_player->m_playerFieldBattlegroundRating >= rating && static_cast<uint32_t>(s_arenaBracketTypes[bracket]) <= 3) {
+        return true;
+    }
+
+    for (int32_t i = 0; i < 3; i++) {
+        uint32_t* info = static_cast<uint32_t>(i) < 3 ? &player->m_player->m_playerFieldArenaTeamInfo11[i * 7] : NULL;
 
         if (!info) {
             continue;
         }
 
-        int32_t type = info[1];
-
-        if (type < s_arenaBracketTypes[bracket] || info[6] < rating) {
+        if (static_cast<int32_t>(info[1]) < s_arenaBracketTypes[bracket] || info[6] < rating) {
             continue;
         }
 
-        for (uint32_t j = 0; j < 3; j++) {
-            ArenaTeam* team = &CGArenaTeamInfo::m_arenaTeams[j];
+        for (int32_t j = 0; j < 3; j++) {
+            ArenaTeam* team = CGArenaTeamInfo::GetArenaTeam(j);
 
-            if (team && team->m_type == static_cast<uint32_t>(type) && team->m_rating >= rating) {
+            if (team && team->m_type == info[1] && team->m_rating >= rating) {
                 return true;
             }
         }
@@ -338,7 +346,7 @@ bool CGArenaTeamInfo::CheckPersonalAndTeamRating(uint32_t rating, int32_t bracke
     return false;
 }
 
-// OFFSET: #0x005A2E10
+// OFFSET: 0x009A9630
 void CGArenaTeamInfo::SetRosterShowOffline(int32_t showOffline) {
     if (showOffline == CGArenaTeamInfo::m_showOffline) {
         return;
@@ -348,7 +356,7 @@ void CGArenaTeamInfo::SetRosterShowOffline(int32_t showOffline) {
 
     for (uint32_t i = 0; i < 3; i++) {
         if (CGArenaTeamInfo::m_arenaTeams[i].m_numMembers) {
-            qsort(CGArenaTeamInfo::m_arenaTeams[i].m_members.m_data, CGArenaTeamInfo::m_arenaTeams[i].m_numMembers, sizeof(ArenaTeamMember*), QSortRoster);
+            qsort(CGArenaTeamInfo::m_arenaTeams[i].m_members.m_data, CGArenaTeamInfo::m_arenaTeams[i].m_numMembers, sizeof(ArenaTeamMemberInfo*), QSortRoster);
 
             if (i < 3) {
                 FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_TEAM_ROSTER_UPDATE, NULL);
@@ -357,7 +365,7 @@ void CGArenaTeamInfo::SetRosterShowOffline(int32_t showOffline) {
     }
 }
 
-// OFFSET: #0x005A2E80
+// OFFSET: 0x009A96A0
 void CGArenaTeamInfo::SortRoster(int32_t column) {
     for (uint32_t i = 0; i < 7; i++) {
         if (CGArenaTeamInfo::m_sortOrder[i].m_column != column) {
@@ -370,8 +378,9 @@ void CGArenaTeamInfo::SortRoster(int32_t column) {
             reverse = reverse == 0;
         }
 
-        for (uint32_t j = i; j; j--) {
-            CGArenaTeamInfo::m_sortOrder[j] = CGArenaTeamInfo::m_sortOrder[j - 1];
+        for (uint32_t j = i; j > 0; j--) {
+            CGArenaTeamInfo::m_sortOrder[j].m_column = CGArenaTeamInfo::m_sortOrder[j - 1].m_column;
+            CGArenaTeamInfo::m_sortOrder[j].m_reverse = CGArenaTeamInfo::m_sortOrder[j - 1].m_reverse;
         }
 
         CGArenaTeamInfo::m_sortOrder[0].m_column = column;
@@ -381,7 +390,7 @@ void CGArenaTeamInfo::SortRoster(int32_t column) {
 
     for (uint32_t i = 0; i < 3; i++) {
         if (CGArenaTeamInfo::m_arenaTeams[i].m_numMembers) {
-            qsort(CGArenaTeamInfo::m_arenaTeams[i].m_members.m_data, CGArenaTeamInfo::m_arenaTeams[i].m_numMembers, sizeof(ArenaTeamMember*), QSortRoster);
+            qsort(CGArenaTeamInfo::m_arenaTeams[i].m_members.m_data, CGArenaTeamInfo::m_arenaTeams[i].m_numMembers, sizeof(ArenaTeamMemberInfo*), QSortRoster);
 
             if (i < 3) {
                 FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_TEAM_ROSTER_UPDATE, NULL);
@@ -390,29 +399,26 @@ void CGArenaTeamInfo::SortRoster(int32_t column) {
     }
 }
 
-// OFFSET: #0x005A2F40
+// OFFSET: 0x009A9750
 int32_t CGArenaTeamInfo::GetSelectedMemberIndex(uint32_t team) {
-    if (team >= 3 || !CGArenaTeamInfo::m_selectedMember) {
+    if (team >= 3) {
         return -1;
     }
 
-    uint32_t count = CGArenaTeamInfo::m_arenaTeams[team].m_numMembers;
-    int32_t index = 0;
-
-    if (!count) {
+    if (!CGArenaTeamInfo::m_selectedMember) {
         return -1;
     }
 
-    for (ArenaTeamMember** member = CGArenaTeamInfo::m_arenaTeams[team].m_members.m_data; (*member)->m_guid != CGArenaTeamInfo::m_selectedMember; member++) {
-        if (++index >= count) {
-            return -1;
+    for (uint32_t i = 0; i < CGArenaTeamInfo::m_arenaTeams[team].m_numMembers; i++) {
+        if (CGArenaTeamInfo::m_arenaTeams[team].m_members.m_data[i]->m_guid == CGArenaTeamInfo::m_selectedMember) {
+            return i;
         }
     }
 
-    return index;
+    return -1;
 }
 
-// OFFSET: #0x005A3600
+// OFFSET: 0x009A9DB0
 void CGArenaTeamInfo::QueryRoster(uint32_t index) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -426,7 +432,7 @@ void CGArenaTeamInfo::QueryRoster(uint32_t index) {
         return;
     }
 
-    uint32_t now = OsGetAsyncTimeMs();
+    uint32_t now = FrameTime::GetCurTimeMs();
 
     if (CGArenaTeamInfo::m_nextAllowedQuery[index] && static_cast<int32_t>(now - CGArenaTeamInfo::m_nextAllowedQuery[index]) < 0) {
         return;
@@ -437,10 +443,10 @@ void CGArenaTeamInfo::QueryRoster(uint32_t index) {
     msg.Put(*info);
     msg.Finalize();
     ClientServices::Send2(&msg);
-    CGArenaTeamInfo::m_nextAllowedQuery[index] = now + 10000;
+    CGArenaTeamInfo::m_nextAllowedQuery[index] = now + 500;
 }
 
-// OFFSET: #0x005A3700
+// OFFSET: 0x009A9EB0
 void CGArenaTeamInfo::UpdateTeams(int32_t signal) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -477,7 +483,7 @@ void CGArenaTeamInfo::EnterWorld() {
     CGArenaTeamInfo::UpdateTeams(0);
 }
 
-// OFFSET: #0x005A3DD0
+// OFFSET: 0x009AA5A0
 void CGArenaTeamInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_ARENA_TEAM_ROSTER);
     ClientServices::ClearMessageHandler(SMSG_ARENA_TEAM_STATS);

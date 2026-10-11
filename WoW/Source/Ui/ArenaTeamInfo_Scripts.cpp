@@ -40,12 +40,14 @@ static int32_t Script_GetNumArenaTeamMembers(lua_State* L) {
     int32_t showOffline = StringToBOOL(L, 2, 0);
     uint32_t count;
 
-    if (team >= 3) {
-        count = 0;
-    } else if (CGArenaTeamInfo::m_showOffline || showOffline) {
-        count = CGArenaTeamInfo::m_arenaTeams[team].m_numMembers;
+    if (team < 3) {
+        if (CGArenaTeamInfo::m_showOffline || showOffline) {
+            count = CGArenaTeamInfo::m_arenaTeams[team].m_numMembers;
+        } else {
+            count = CGArenaTeamInfo::m_arenaTeams[team].m_numOnline;
+        }
     } else {
-        count = CGArenaTeamInfo::m_arenaTeams[team].m_numOnline;
+        count = 0;
     }
 
     lua_pushnumber(L, count);
@@ -61,7 +63,7 @@ static int32_t Script_GetArenaTeamGdfInfo(lua_State* L) {
 
     uint32_t team = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
-    ArenaTeamMember* member;
+    ArenaTeamMemberInfo* member;
 
     if (team < 3 && index < CGArenaTeamInfo::m_arenaTeams[team].m_numMembers && (member = CGArenaTeamInfo::m_arenaTeams[team].m_members.m_data[index])) {
         lua_pushnumber(L, member->m_matchmakerRatingBefore);
@@ -74,7 +76,7 @@ static int32_t Script_GetArenaTeamGdfInfo(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005A28C0
+// OFFSET: 0x009A90C0
 static void ArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_TEAM_UPDATE, NULL);
@@ -89,48 +91,63 @@ static int32_t Script_GetArenaTeam(lua_State* L) {
     }
 
     lua_checkstack(L, 22);
-    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)) - 1);
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t* info = player && index < 3 ? &player->m_player->m_playerFieldArenaTeamInfo11[index * 7] : NULL;
     ArenaTeam* team = index < 3 ? &CGArenaTeamInfo::m_arenaTeams[index] : NULL;
-    ArenaTeamCache* cache = NULL;
-
     if (player && info && info[0] && team) {
-        cache = g_arenaTeamCache.GetRecord(info[0], player->m_obj->m_guid, ArenaTeamCacheCallback, NULL, false);
-    }
+        WOWGUID guid = player->m_obj->m_guid;
+        ArenaTeamCache* cache = g_arenaTeamCache.GetRecord(info[0], guid, ArenaTeamCacheCallback, NULL, false);
 
-    if (!cache) {
-        lua_pushnil(L);
-
-        for (int32_t i = 0; i < 21; i++) {
-            lua_pushnumber(L, 0.0);
+        if (cache) {
+                lua_pushstring(L, cache->m_name);
+                lua_pushnumber(L, static_cast<int32_t>(cache->m_type));
+                lua_pushnumber(L, team->m_rating);
+                lua_pushnumber(L, team->m_weekGames);
+                lua_pushnumber(L, team->m_weekWins);
+                lua_pushnumber(L, team->m_seasonGames);
+                lua_pushnumber(L, team->m_seasonWins);
+                lua_pushnumber(L, info[3]);
+                lua_pushnumber(L, info[4]);
+                lua_pushnumber(L, team->m_rank);
+                lua_pushnumber(L, info[6]);
+                lua_pushnumber(L, static_cast<int32_t>((cache->m_backgroundColor >> 16) & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>((cache->m_backgroundColor >> 8) & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>(cache->m_backgroundColor & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>(cache->m_emblemStyle));
+                lua_pushnumber(L, static_cast<int32_t>((cache->m_emblemColor >> 16) & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>((cache->m_emblemColor >> 8) & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>(cache->m_emblemColor & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>(cache->m_borderStyle));
+                lua_pushnumber(L, static_cast<int32_t>((cache->m_borderColor >> 16) & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>((cache->m_borderColor >> 8) & 0xFF) * (1.0f / 255.0f));
+                lua_pushnumber(L, static_cast<int32_t>(cache->m_borderColor & 0xFF) * (1.0f / 255.0f));
+            return 22;
         }
-
-        return 22;
     }
 
-    lua_pushstring(L, cache->m_name);
-    lua_pushnumber(L, static_cast<int32_t>(cache->m_type));
-    lua_pushnumber(L, team->m_rating);
-    lua_pushnumber(L, team->m_weekGames);
-    lua_pushnumber(L, team->m_weekWins);
-    lua_pushnumber(L, team->m_seasonGames);
-    lua_pushnumber(L, team->m_seasonWins);
-    lua_pushnumber(L, info[3]);
-    lua_pushnumber(L, info[4]);
-    lua_pushnumber(L, team->m_rank);
-    lua_pushnumber(L, info[6]);
-    lua_pushnumber(L, static_cast<int32_t>((cache->m_backgroundColor >> 16) & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>((cache->m_backgroundColor >> 8) & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>(cache->m_backgroundColor & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>(cache->m_emblemStyle));
-    lua_pushnumber(L, static_cast<int32_t>((cache->m_emblemColor >> 16) & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>((cache->m_emblemColor >> 8) & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>(cache->m_emblemColor & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>(cache->m_borderStyle));
-    lua_pushnumber(L, static_cast<int32_t>((cache->m_borderColor >> 16) & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>((cache->m_borderColor >> 8) & 0xFF) * (1.0f / 255.0f));
-    lua_pushnumber(L, static_cast<int32_t>(cache->m_borderColor & 0xFF) * (1.0f / 255.0f));
+    lua_pushnil(L);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
     return 22;
 }
 
@@ -157,7 +174,7 @@ static int32_t Script_GetArenaTeamRosterInfo(lua_State* L) {
 
     uint32_t team = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
-    ArenaTeamMember* member;
+    ArenaTeamMemberInfo* member;
 
     if (team >= 3 || index >= CGArenaTeamInfo::m_arenaTeams[team].m_numMembers || !(member = CGArenaTeamInfo::m_arenaTeams[team].m_members.m_data[index])) {
         lua_pushnil(L);
@@ -179,14 +196,7 @@ static int32_t Script_GetArenaTeamRosterInfo(lua_State* L) {
     ChrClassesRec* chrClass = g_chrClassesDB.GetRecord(member->m_class);
 
     if (chrClass) {
-        WOWGUID none = WOWGUID();
-        const char* className = CGUnit_C::GetDisplayClassName(NULL, g_nameDBCache.GetRecord(member->m_guid.m_guid, none, NULL, NULL, false));
-
-        if (className) {
-            lua_pushstring(L, className);
-        } else {
-            lua_pushstring(L, chrClass->m_name);
-        }
+        lua_pushstring(L, chrClass->m_filename);
     } else {
         lua_pushnil(L);
     }
@@ -242,36 +252,18 @@ static int32_t Script_SortArenaTeamRoster(lua_State* L) {
     const char* type = lua_tolstring(L, 1, NULL);
 
     if (!SStrCmpI(type, "name", STORM_MAX_STR)) {
-        CGArenaTeamInfo::SortRoster(0);
-        return 0;
-    }
-
-    if (!SStrCmpI(type, "class", STORM_MAX_STR)) {
-        CGArenaTeamInfo::SortRoster(1);
-        return 0;
-    }
-
-    if (!SStrCmpI(type, "played", STORM_MAX_STR)) {
-        CGArenaTeamInfo::SortRoster(2);
-        return 0;
-    }
-
-    if (!SStrCmpI(type, "won", STORM_MAX_STR)) {
-        CGArenaTeamInfo::SortRoster(3);
-        return 0;
-    }
-
-    if (!SStrCmpI(type, "seasonplayed", STORM_MAX_STR)) {
-        CGArenaTeamInfo::SortRoster(4);
-        return 0;
-    }
-
-    if (!SStrCmpI(type, "seasonwon", STORM_MAX_STR)) {
-        CGArenaTeamInfo::SortRoster(5);
-        return 0;
-    }
-
-    if (!SStrCmpI(type, "rating", STORM_MAX_STR)) {
+        column = 0;
+    } else if (!SStrCmpI(type, "class", STORM_MAX_STR)) {
+        column = 1;
+    } else if (!SStrCmpI(type, "played", STORM_MAX_STR)) {
+        column = 2;
+    } else if (!SStrCmpI(type, "won", STORM_MAX_STR)) {
+        column = 3;
+    } else if (!SStrCmpI(type, "seasonplayed", STORM_MAX_STR)) {
+        column = 4;
+    } else if (!SStrCmpI(type, "seasonwon", STORM_MAX_STR)) {
+        column = 5;
+    } else if (!SStrCmpI(type, "rating", STORM_MAX_STR)) {
         column = 6;
     }
 

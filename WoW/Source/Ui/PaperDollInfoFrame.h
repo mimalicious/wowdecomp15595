@@ -10,7 +10,13 @@ struct lua_State;
 
 class CGPlayer_C;
 class CGItem_C;
-class ItemStats_C;
+class ItemRecSparse;
+
+enum INV_ALERT_STATUS {
+    INV_ALERT_NONE = 0,
+    INV_ALERT_YELLOW = 1,
+    INV_ALERT_RED = 2,
+};
 
 struct InspectArenaTeam {
     /* 0000 */ uint32_t m_teamId;
@@ -23,21 +29,27 @@ struct InspectArenaTeam {
 
 class CGCharacterInfo {
     public:
-    static TSFixedArray<int32_t> m_invAlertStatus;
+    static TSFixedArray<INV_ALERT_STATUS> m_invAlertStatus;
     static void AverageItemLevelDirty();
     static int32_t m_hasHonorData;
     static int32_t m_honorRequestPending;
     static uint32_t m_inspectLifetimeHonorableKills;
-    static uint32_t m_inspectYesterdayHonor;
-    static uint32_t m_inspectTodayHonor;
     static uint16_t m_inspectYesterdayHonorableKills;
     static uint8_t m_inspectLifetimeHighestRank;
     static uint16_t m_inspectTodayHonorableKills;
     static InspectArenaTeam m_inspectArenaTeams[3];
-    static int32_t CalculateInventoryAlertStatus(CGPlayer_C* player, uint32_t slot);
+    static int32_t m_avgItemLevelPending;
+    static float m_avgItemLevel;
+    static float m_avgItemLevelEquipped;
+    static uint32_t m_inspectRatedBGPlayed;
+    static uint32_t m_inspectRatedBGRating;
+    static uint32_t m_inspectRatedBGWon;
+    static uint8_t m_avgItemLevelDirty;
+    static INV_ALERT_STATUS CalculateInventoryAlertStatus(CGPlayer_C* player, uint32_t slot);
+    static float CalculateAverageItemLevel(bool equippedOnly);
     static void RegisterMirrorHandlers(WOWGUID guid);
     static WOWGUID m_inspectTarget;
-    static int32_t CanInspect(const CGPlayer_C* unit);
+    static bool CanInspect(const CGPlayer_C* unit);
     static int32_t GetActivePlayerAmmoID(const CGPlayer_C* player);
     static void PickupInventoryItem(int32_t slot);
     static int32_t PutItemInBackpack(uint32_t slot);
@@ -52,11 +64,11 @@ class CGCharacterInfo {
     static void PickupBag(uint32_t slot);
     static void SocketInventoryItem(int32_t slot);
     static void RequestInspectHonorData();
-    static bool CanEquipItemInSlot(const ItemStats_C* stats, uint32_t slot);
-    static bool CanEquipItem(CGItem_C* item, uint32_t slot);
+    static int32_t CanEquipItemInSlot(const ItemRecSparse* stats, uint32_t slot);
+    static int32_t CanEquipItem(CGItem_C* item, uint32_t slot);
 };
 
-void GuildNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
+void GuildNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
 void CharacterInfoRegisterScriptFunctions();
 void CharacterInfoUnregisterScriptFunctions();
 
@@ -68,8 +80,6 @@ int32_t Packet_MSG_INSPECT_ARENA_TEAMS(void* param, NETMESSAGE msgId, uint32_t t
 int32_t PlayerCharacterPointsUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 int32_t PlayerEquipmentChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 
-int32_t ResolveInventorySlotArg(lua_State* L, int32_t index, int32_t& slot);
-int32_t GetUnitAndSlotFromLua(lua_State* L, const char*& unit, int32_t& slot);
 void UnitInventoryChangedCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 
 #endif

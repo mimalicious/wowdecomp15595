@@ -9,7 +9,7 @@
 struct lua_State;
 class CDataStore;
 
-struct ArenaTeamMember {
+struct ArenaTeamMemberInfo {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ char m_name[48];
     /* 0038 */ uint32_t m_level;
@@ -28,7 +28,7 @@ struct ArenaTeamMember {
 
 struct ArenaTeam {
     /* 0000 */ uint32_t m_teamId;
-    /* 0004 */ TSGrowableArray<ArenaTeamMember*> m_members;
+    /* 0004 */ TSGrowableArray<ArenaTeamMemberInfo*> m_members;
     /* 0014 */ uint32_t m_type;
     /* 0018 */ uint32_t m_numMembers;
     /* 001C */ uint32_t m_numOnline;
@@ -61,7 +61,7 @@ class CGArenaTeamInfo {
     static void UpdateRoster(uint32_t index, int32_t reset);
     static void UpdateTeams(int32_t signal);
     static bool CheckPersonalAndTeamRating(uint32_t rating, int32_t bracket);
-    static ArenaTeamMember* SelectMember(uint32_t team, uint32_t index);
+    static ArenaTeamMemberInfo* SelectMember(uint32_t team, uint32_t index);
     static void SetRosterShowOffline(int32_t showOffline);
     static void SortRoster(int32_t column);
     static int32_t GetSelectedMemberIndex(uint32_t team);
