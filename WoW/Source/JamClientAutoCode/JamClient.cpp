@@ -381,6 +381,21 @@ bool (*ClientPvpOptionsEnabled::s_handler)(ClientPvpOptionsEnabled* msg);
 // STATIC: 0x00E4D504
 bool (*ClientShowRatings::s_handler)(ClientShowRatings* msg);
 
+// STATIC: 0x00E4D548
+bool (*ClientBattlefieldStatusNeedconfirmation::s_handler)(ClientBattlefieldStatusNeedconfirmation* msg);
+
+// STATIC: 0x00E4D584
+bool (*ClientGameEventDebugLog::s_handler)(ClientGameEventDebugLog* msg);
+
+// STATIC: 0x00E4D5DC
+bool (*ClientGuildAchievementDeleted::s_handler)(ClientGuildAchievementDeleted* msg);
+
+// STATIC: 0x00E4D4C8
+bool (*ClientGuildAchievementEarned::s_handler)(ClientGuildAchievementEarned* msg);
+
+// STATIC: 0x00E4D45C
+bool (*ClientGuildCriteriaDeleted::s_handler)(ClientGuildCriteriaDeleted* msg);
+
 // OFFSET: 0x006C98F0/0x140381330
 ClientAuthResponse::ClientAuthResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasSuccessInfo = false;
@@ -10133,4 +10148,500 @@ bool ClientShowRatings::Handle() {
     }
 
     return ClientShowRatings::s_handler(this);
+}
+
+// OFFSET: 0x006C4720/0x14037A620
+ClientBattlefieldStatusNeedconfirmation::ClientBattlefieldStatusNeedconfirmation(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006C0D90/0x140376230
+ClientBattlefieldStatusNeedconfirmation::~ClientBattlefieldStatusNeedconfirmation() {
+}
+
+// OFFSET: 0x006BCD50/0x140371340
+void ClientBattlefieldStatusNeedconfirmation::Unpack(CDataStore* msg, bool full) {
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_003C = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0014 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0038 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0020 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0028 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0039 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0024 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_003A = value;
+    }
+
+    JamBitReader bits(msg);
+    this->unk_0018[5] = bits.ReadBit();
+    this->unk_0018[2] = bits.ReadBit();
+    this->unk_0018[1] = bits.ReadBit();
+    this->unk_0030[2] = bits.ReadBit();
+    this->unk_0018[4] = bits.ReadBit();
+    this->unk_0030[6] = bits.ReadBit();
+    this->unk_0030[3] = bits.ReadBit();
+    this->unk_0040 = bits.ReadBit();
+    this->unk_0018[7] = bits.ReadBit();
+    this->unk_0018[3] = bits.ReadBit();
+    this->unk_0030[7] = bits.ReadBit();
+    this->unk_0030[0] = bits.ReadBit();
+    this->unk_0030[4] = bits.ReadBit();
+    this->unk_0018[6] = bits.ReadBit();
+    this->unk_0030[5] = bits.ReadBit();
+    this->unk_0030[1] = bits.ReadBit();
+    this->unk_0018[0] = bits.ReadBit();
+    if (this->unk_0030[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[6] ^= byteValue;
+    }
+    if (this->unk_0030[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[5] ^= byteValue;
+    }
+    if (this->unk_0030[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[7] ^= byteValue;
+    }
+    if (this->unk_0030[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[2] ^= byteValue;
+    }
+    if (this->unk_0018[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[0] ^= byteValue;
+    }
+    if (this->unk_0018[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[7] ^= byteValue;
+    }
+    if (this->unk_0030[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[4] ^= byteValue;
+    }
+    if (this->unk_0018[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[1] ^= byteValue;
+    }
+    if (this->unk_0030[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[0] ^= byteValue;
+    }
+    if (this->unk_0018[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[4] ^= byteValue;
+    }
+    if (this->unk_0030[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[1] ^= byteValue;
+    }
+    if (this->unk_0018[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[5] ^= byteValue;
+    }
+    if (this->unk_0030[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[3] ^= byteValue;
+    }
+    if (this->unk_0018[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[6] ^= byteValue;
+    }
+    if (this->unk_0018[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[2] ^= byteValue;
+    }
+    if (this->unk_0018[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[3] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006B12F0/0x140362400
+bool ClientBattlefieldStatusNeedconfirmation::Handle() {
+    if (!ClientBattlefieldStatusNeedconfirmation::s_handler) {
+        return false;
+    }
+
+    return ClientBattlefieldStatusNeedconfirmation::s_handler(this);
+}
+
+// OFFSET: 0x006B2E00/0x1403646F0
+ClientGameEventDebugLog::ClientGameEventDebugLog(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1680/0x14034E9C0
+ClientGameEventDebugLog::~ClientGameEventDebugLog() {
+}
+
+// OFFSET: 0x006AF3B0/0x14035FD70
+void ClientGameEventDebugLog::Unpack(CDataStore* msg, bool full) {
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_00E0 = value;
+    }
+
+    JamBitReader bits(msg);
+    *reinterpret_cast<uint32_t*>(this->unk_00E4) = bits.ReadBits<8>();
+    this->unk_0018[0] = bits.ReadBit();
+    this->unk_0018[4] = bits.ReadBit();
+    this->unk_0018[5] = bits.ReadBit();
+    this->unk_0018[7] = bits.ReadBit();
+    this->unk_0018[2] = bits.ReadBit();
+    this->unk_0018[6] = bits.ReadBit();
+    this->unk_0018[1] = bits.ReadBit();
+    this->unk_0018[3] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->unk_0060) = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->unk_0020) = bits.ReadBits<7>();
+    if (this->unk_0018[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[5] ^= byteValue;
+    }
+    if (this->unk_0018[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[6] ^= byteValue;
+    }
+    if (this->unk_0018[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[4] ^= byteValue;
+    }
+    if (this->unk_0018[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[0] ^= byteValue;
+    }
+    if (this->unk_0018[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[3] ^= byteValue;
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_0020);
+        msg->GetData(this->unk_0020, length);
+        this->unk_0020[length] = 0;
+    }
+    if (this->unk_0018[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[1] ^= byteValue;
+    }
+    if (this->unk_0018[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[2] ^= byteValue;
+    }
+    if (this->unk_0018[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[7] ^= byteValue;
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_0060);
+        msg->GetData(this->unk_0060, length);
+        this->unk_0060[length] = 0;
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_00E4);
+        msg->GetData(this->unk_00E4, length);
+        this->unk_00E4[length] = 0;
+    }
+}
+
+// OFFSET: 0x006AD5C0/0x14035D820
+bool ClientGameEventDebugLog::Handle() {
+    if (!ClientGameEventDebugLog::s_handler) {
+        return false;
+    }
+
+    return ClientGameEventDebugLog::s_handler(this);
+}
+
+// OFFSET: 0x006C4820/0x14037A750
+ClientGuildAchievementDeleted::ClientGuildAchievementDeleted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2120/0x14034F570
+ClientGuildAchievementDeleted::~ClientGuildAchievementDeleted() {
+}
+
+// OFFSET: 0x006A5D00/0x140353D20
+void ClientGuildAchievementDeleted::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0038[4] = bits.ReadBit();
+    this->unk_0038[1] = bits.ReadBit();
+    this->unk_0038[2] = bits.ReadBit();
+    this->unk_0038[3] = bits.ReadBit();
+    this->unk_0038[0] = bits.ReadBit();
+    this->unk_0038[7] = bits.ReadBit();
+    this->unk_0038[5] = bits.ReadBit();
+    this->unk_0038[6] = bits.ReadBit();
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0030 = value;
+    }
+    if (this->unk_0038[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[5] ^= byteValue;
+    }
+    if (this->unk_0038[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[1] ^= byteValue;
+    }
+    if (this->unk_0038[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[3] ^= byteValue;
+    }
+    if (this->unk_0038[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[6] ^= byteValue;
+    }
+    if (this->unk_0038[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[0] ^= byteValue;
+    }
+    if (this->unk_0038[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[7] ^= byteValue;
+    }
+    *msg >> this->unk_0010;
+    if (this->unk_0038[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[4] ^= byteValue;
+    }
+    if (this->unk_0038[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[2] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006BEDA0/0x140373CD0
+bool ClientGuildAchievementDeleted::Handle() {
+    if (!ClientGuildAchievementDeleted::s_handler) {
+        return false;
+    }
+
+    return ClientGuildAchievementDeleted::s_handler(this);
+}
+
+// OFFSET: 0x006BE920/0x1403736E0
+ClientGuildAchievementEarned::ClientGuildAchievementEarned(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2F40/0x140350450
+ClientGuildAchievementEarned::~ClientGuildAchievementEarned() {
+}
+
+// OFFSET: 0x006AF8B0/0x1403602F0
+void ClientGuildAchievementEarned::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0018[3] = bits.ReadBit();
+    this->unk_0018[1] = bits.ReadBit();
+    this->unk_0018[0] = bits.ReadBit();
+    this->unk_0018[7] = bits.ReadBit();
+    this->unk_0018[4] = bits.ReadBit();
+    this->unk_0018[6] = bits.ReadBit();
+    this->unk_0018[2] = bits.ReadBit();
+    this->unk_0018[5] = bits.ReadBit();
+    if (this->unk_0018[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[2] ^= byteValue;
+    }
+    *msg >> this->unk_0020;
+    if (this->unk_0018[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[0] ^= byteValue;
+    }
+    if (this->unk_0018[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[4] ^= byteValue;
+    }
+    if (this->unk_0018[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[1] ^= byteValue;
+    }
+    if (this->unk_0018[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[3] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    if (this->unk_0018[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[7] ^= byteValue;
+    }
+    if (this->unk_0018[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[5] ^= byteValue;
+    }
+    if (this->unk_0018[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[6] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006B5440/0x140367750
+bool ClientGuildAchievementEarned::Handle() {
+    if (!ClientGuildAchievementEarned::s_handler) {
+        return false;
+    }
+
+    return ClientGuildAchievementEarned::s_handler(this);
+}
+
+// OFFSET: 0x006C3FD0/0x140379F90
+ClientGuildCriteriaDeleted::ClientGuildCriteriaDeleted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1F00/0x14034F380
+ClientGuildCriteriaDeleted::~ClientGuildCriteriaDeleted() {
+}
+
+// OFFSET: 0x006BC2C0/0x1403705F0
+void ClientGuildCriteriaDeleted::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010[6] = bits.ReadBit();
+    this->unk_0010[5] = bits.ReadBit();
+    this->unk_0010[7] = bits.ReadBit();
+    this->unk_0010[0] = bits.ReadBit();
+    this->unk_0010[1] = bits.ReadBit();
+    this->unk_0010[3] = bits.ReadBit();
+    this->unk_0010[2] = bits.ReadBit();
+    this->unk_0010[4] = bits.ReadBit();
+    if (this->unk_0010[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[2] ^= byteValue;
+    }
+    if (this->unk_0010[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[3] ^= byteValue;
+    }
+    if (this->unk_0010[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[4] ^= byteValue;
+    }
+    if (this->unk_0010[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[1] ^= byteValue;
+    }
+    if (this->unk_0010[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[7] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0018 = value;
+    }
+    if (this->unk_0010[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[5] ^= byteValue;
+    }
+    if (this->unk_0010[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[0] ^= byteValue;
+    }
+    if (this->unk_0010[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[6] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006BFF80/0x1403751F0
+bool ClientGuildCriteriaDeleted::Handle() {
+    if (!ClientGuildCriteriaDeleted::s_handler) {
+        return false;
+    }
+
+    return ClientGuildCriteriaDeleted::s_handler(this);
 }

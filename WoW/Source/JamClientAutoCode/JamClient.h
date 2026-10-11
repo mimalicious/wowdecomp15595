@@ -1230,9 +1230,18 @@ class ClientGameEventDebugLog : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientGameEventDebugLog* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint8_t unk_0018[8];
+    /* 0020 */ char unk_0020[64];
+    /* 0060 */ char unk_0060[128];
+    /* 00E0 */ uint32_t unk_00E0;
+    /* 00E4 */ char unk_00E4[256];
+
     ClientGameEventDebugLog(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGameEventDebugLog();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientPartyInvite : public JamClientMessage {
@@ -1373,9 +1382,15 @@ class ClientGuildAchievementDeleted : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientGuildAchievementDeleted* msg);
 
+    /* 0010 */ WowTime unk_0010;
+    /* 0030 */ uint32_t unk_0030;
+    /* 0034 */ uint32_t unk_0034;
+    /* 0038 */ uint8_t unk_0038[8];
+
     ClientGuildAchievementDeleted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildAchievementDeleted();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientBattlefieldStatusQueued : public JamClientMessage {
@@ -1902,9 +1917,15 @@ class ClientGuildAchievementEarned : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientGuildAchievementEarned* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint8_t unk_0018[8];
+    /* 0020 */ WowTime unk_0020;
+
     ClientGuildAchievementEarned(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildAchievementEarned();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientPetSlotUpdated : public JamClientMessage {
@@ -2062,9 +2083,13 @@ class ClientGuildCriteriaDeleted : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientGuildCriteriaDeleted* msg);
 
+    /* 0010 */ uint8_t unk_0010[8];
+    /* 0018 */ uint32_t unk_0018;
+
     ClientGuildCriteriaDeleted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildCriteriaDeleted();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientMoneyNotify : public JamClientMessage {
@@ -2125,9 +2150,25 @@ class ClientBattlefieldStatusNeedconfirmation : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldStatusNeedconfirmation* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint8_t unk_0018[8];
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ uint32_t unk_0028;
+    /* 002C */ uint32_t unk_002C;
+    /* 0030 */ uint8_t unk_0030[8];
+    /* 0038 */ uint8_t unk_0038;
+    /* 0039 */ uint8_t unk_0039;
+    /* 003A */ uint8_t unk_003A;
+    /* 003B */ uint8_t unk_003B;
+    /* 003C */ uint32_t unk_003C;
+    /* 0040 */ bool unk_0040;
+
     ClientBattlefieldStatusNeedconfirmation(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatusNeedconfirmation();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientStartTimer : public JamClientMessage {
