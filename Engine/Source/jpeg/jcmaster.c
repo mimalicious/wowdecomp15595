@@ -137,7 +137,7 @@ static void initial_setup(j_compress_ptr cinfo) {
 /* Verify that the scan script in cinfo->scan_info[] is valid; also
  * determine whether it uses progressive JPEG, and set cinfo->progressive_mode.
  */
-// OFFSET: %0x00A96E40
+// OFFSET: 0x00B64BF0
 static void validate_script(j_compress_ptr cinfo) {
   const jpeg_scan_info * scanptr;
   int scanno, ncomps, ci, coefi, thisi;
@@ -624,7 +624,7 @@ static void finish_pass_master(j_compress_ptr cinfo) {
  * Initialize master compression control.
  */
 
-// OFFSET: %0x00A977D0
+// OFFSET: 0x00B65580
 void jinit_c_master_control(j_compress_ptr cinfo, boolean transcode_only) {
   my_master_ptr master;
 

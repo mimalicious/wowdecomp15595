@@ -46,7 +46,7 @@ static void start_input_mem(j_compress_ptr cinfo, mem_source_ptr sinfo) {
 static void finish_input_mem(j_compress_ptr cinfo, mem_source_ptr sinfo) {
 }
 
-// OFFSET: %0x00A90580
+// OFFSET: 0x00B5E330
 mem_source_ptr jinit_read_mem(j_compress_ptr cinfo) {
   mem_source_ptr source;
 

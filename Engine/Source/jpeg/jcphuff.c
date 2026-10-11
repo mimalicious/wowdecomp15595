@@ -226,7 +226,7 @@ static void dump_buffer(phuff_entropy_ptr entropy) {
 
 INLINE
 /* Emit some bits, unless we are in gather mode */
-// OFFSET: %0x00A93DB0
+// OFFSET: 0x00B61B60
 static void emit_bits(phuff_entropy_ptr entropy, unsigned int code, int size) {
   /* This routine is heavily used, so it's worth coding tightly. */
   register INT32 put_buffer = (INT32) code;
@@ -336,7 +336,7 @@ static void emit_eobrun(phuff_entropy_ptr entropy) {
  * Emit a restart marker & resynchronize predictions.
  */
 
-// OFFSET: %0x00A93FC0
+// OFFSET: 0x00B61D70
 static void emit_restart(phuff_entropy_ptr entropy, int restart_num) {
   int ci;
 
@@ -456,7 +456,7 @@ static boolean encode_mcu_DC_first(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
  * or first pass of successive approximation).
  */
 
-// OFFSET: %0x00A941E0
+// OFFSET: 0x00B61F90
 static boolean encode_mcu_AC_first(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
   register int temp, temp2;
@@ -566,7 +566,7 @@ static boolean encode_mcu_AC_first(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
  * is not very clear on the point.
  */
 
-// OFFSET: %0x00A943F0
+// OFFSET: 0x00B621A0
 static boolean encode_mcu_DC_refine(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
   register int temp;
@@ -614,7 +614,7 @@ static boolean encode_mcu_DC_refine(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
  * MCU encoding for AC successive approximation refinement scan.
  */
 
-// OFFSET: %0x00A944C0
+// OFFSET: 0x00B62270
 static boolean encode_mcu_AC_refine(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
   register int temp;
@@ -741,7 +741,7 @@ static boolean encode_mcu_AC_refine(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
  * Finish up at the end of a Huffman-compressed progressive scan.
  */
 
-// OFFSET: %0x00A94760
+// OFFSET: 0x00B62510
 static void finish_pass_phuff(j_compress_ptr cinfo) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
 

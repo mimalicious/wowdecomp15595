@@ -77,7 +77,7 @@ static void init_destination(j_compress_ptr cinfo) {
  * write it out when emptying the buffer externally.
  */
 
-// OFFSET: %0x00A8FB00
+// OFFSET: 0x00B5D8B0
 static boolean empty_output_buffer(j_compress_ptr cinfo) {
   my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
 
@@ -101,7 +101,7 @@ static boolean empty_output_buffer(j_compress_ptr cinfo) {
  * for error exit.
  */
 
-// OFFSET: %0x00A8FB60
+// OFFSET: 0x00B5D910
 static void term_destination(j_compress_ptr cinfo) {
   my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
   size_t datacount = OUTPUT_BUF_SIZE - dest->pub.free_in_buffer;

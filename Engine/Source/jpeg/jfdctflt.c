@@ -55,7 +55,7 @@
  * Perform the forward DCT on one block of samples.
  */
 
-// OFFSET: #0x004B3F80
+// OFFSET: 0x00B66000
 void jpeg_fdct_float(FAST_FLOAT * data) {
   FAST_FLOAT tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
   FAST_FLOAT tmp10, tmp11, tmp12, tmp13;

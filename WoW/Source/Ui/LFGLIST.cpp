@@ -67,7 +67,7 @@ void LFGLIST::RemoveParty(LFGListParty* party) {
     party->m_index = -1;
 }
 
-// OFFSET: #0x005589D0
+// OFFSET: 0x009872E0
 void LFGLIST::DeleteParty(LFGListParty* party) {
     for (int32_t i = party->m_members.Count() - 1; i >= 0; i--) {
         LFGListPlayer* player = party->m_members.m_data[i];

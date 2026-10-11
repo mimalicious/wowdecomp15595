@@ -81,7 +81,7 @@ static void start_pass_downsample(j_compress_ptr cinfo) {
  * by duplicating the rightmost samples.
  */
 
-// OFFSET: %0x00A95CC0
+// OFFSET: 0x00B63A70
 static void expand_right_edge(JSAMPARRAY image_data, int num_rows, JDIMENSION input_cols, JDIMENSION output_cols) {
   register JSAMPROW ptr;
   register JSAMPLE pixval;
@@ -175,7 +175,7 @@ static void int_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, 
  * without smoothing.
  */
 
-// OFFSET: %0x00A95EE0
+// OFFSET: 0x00B63C90
 static void fullsize_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY input_data, JSAMPARRAY output_data) {
   /* Copy the data */
   jcopy_sample_rows(input_data, 0, output_data, 0,

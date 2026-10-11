@@ -419,7 +419,7 @@ void LFGPartyLockInfo::Clear() {
     }
 }
 
-// OFFSET: #0x006349F0
+// OFFSET: 0x004952D0
 LfgDungeonExpansionRec* GetLfgDungeonExpansionRec(int32_t dungeonID, int32_t expansionLevel) {
     for (int32_t i = 0; i < g_lfgDungeonExpansionDB.m_numRecords; i++) {
         if (g_lfgDungeonExpansionDB.GetRecordByIndex(i)->m_lfgID != dungeonID) {
