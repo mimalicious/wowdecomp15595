@@ -1,4 +1,5 @@
 #include <cstdint>
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include <cstring>
 #include <malloc.h>
 #include "Engine/Source/Base/Handle.h"
@@ -58,11 +59,14 @@ static const BackgroundImage s_miniTextureInfo[2] = {
     { "Interface\\Glues\\LoadingBar\\Loading-BarBorder", false, 0.5f, 0.975f, 0.6f, 0.05f },
 };
 
-// STATIC: #0x00AB63B4
+// STATIC: 0x00C9761C
 static float s_normalAspect = 4.0f / 3.0f;
 
-// STATIC: #0x00AB63B8
+// STATIC: 0x00C97620
 static float s_wideAspect = 1.6f;
+
+// STATIC: 0x00C97624
+static int32_t s_preparedSpellID = -1;
 
 // STATIC: 0x00C97628
 static int32_t s_simpleMapID = -1;
@@ -128,28 +132,31 @@ static uint32_t s_lastUpdateTime;
 // STATIC: 0x00D36558
 static uint32_t s_nextPingTime;
 
-// STATIC: #0x00B2FE74
+// STATIC: 0x00D3655C
 static CTexture* s_dynamicElementsTexture;
 
-// STATIC: #0x00B2FE78
+// STATIC: 0x00D36560
 static CTexture* s_dynamicBackgroundTextures[12];
 
-// STATIC: #0x00B2FEA8
+// STATIC: 0x00D36590
 static CTexture* s_simpleBackgroundTexture;
 
-// STATIC: #0x00B2FEAC
+// STATIC: 0x00D36594
 static float s_progress;
 
-// STATIC: #0x00B2FEB0
+// STATIC: 0x00D3659C
 static float s_worldProgress;
 
-// STATIC: #0x00B2FEB4
+// STATIC: 0x00D365A0
 static float s_asyncProgress;
 
-// STATIC: #0x00B2FEB8
+// STATIC: 0x00D365A4
 static float s_xmlProgress;
 
-// STATIC: #0x00B2FEBC
+// STATIC: 0x00D365A8
+static float s_preloadProgress;
+
+// STATIC: 0x00D365AC
 static bool s_loadingWorld;
 
 // STATIC: #0x00B2FEC0
@@ -158,34 +165,46 @@ static HLAYER s_miniLoadingLayer;
 // STATIC: #0x00B2FEC4
 static CTexture* unk_B2FEC4[2];
 
-// STATIC: #0x00B2FECC
+// STATIC: 0x00D365BC
 static CTexture* s_textures[2];
 
 // STATIC: 0x00D365C4
 static HLAYER s_loadingScreenLayer;
 
-// STATIC: #0x00B2FED8
+// STATIC: 0x00D365C8
 static bool s_usingWideScreen;
+
+// STATIC: 0x00D365CC
+static int32_t s_preparedLoadingScreenID;
+
+// STATIC: 0x00D365D0
+static int32_t s_preparedSplineID;
 
 // STATIC: 0x00D365D4
 static int32_t s_backgroundLocal;
 
+// STATIC: 0x00D365D8
+static int32_t s_dynamicBarEnabled;
+
 // STATIC: #0x00B2FED9
 static bool s_raceDataTip;
 
-// STATIC: #0x00B2FEDC
+// STATIC: 0x00D36598
 static float s_spellProgress;
 
-// STATIC: #0x00B2FEE0
+// STATIC: 0x00D365DC
 static HTEXTFONT s_textFont;
 
-// STATIC: #0x00B2FEE4
+// STATIC: 0x00D365E0
 static CGxString* s_tipStr;
+
+// STATIC: 0x00D365E4
+static CGxString* s_tipStr2;
 
 // STATIC: 0x00D365E8
 static const char* s_gameTip;
 
-// STATIC: #0x00B2FEEC
+// STATIC: 0x00D365EC
 static CGxStringBatch* s_batch;
 
 // STATIC: 0x00D365F0
@@ -197,7 +216,7 @@ static C3Vector s_tileVertices[12][4];
 // STATIC: 0x00D36838
 static C2Vector s_tileTexCoords[12][4];
 
-// STATIC: #0x00B302C0
+// STATIC: 0x00D369B8
 static TSGrowableArray<DYNAMICELEMENTVERT> s_dynamicElements;
 
 // STATIC: 0x00D369C8
@@ -276,32 +295,34 @@ static int32_t SwallowEvent(const void* data, void* param) {
 
 // OFFSET: 0x00409440/0x14000BB20
 static void UpdateProgressValue() {
-    float xmlProgress = 0.0f;
-    float worldScale = 1.0f;
+    float preloadScale = 0.0f;
+    float xmlScale = 1.0f;
+    float worldScale = 0.0f;
+    float spellScale = 0.0f;
 
-    if (s_xmlProgress != 0.0f) {
-        xmlProgress = s_xmlProgress;
-
-        if (s_loadingWorld) {
-            worldScale = 0.5f;
-            xmlProgress = 0.5f * s_xmlProgress;
+    if (s_loadingWorld) {
+        if (s_preloadProgress > 0.0f) {
+            preloadScale = 0.3f;
+            xmlScale = 0.175f;
+            worldScale = 0.455f;
+            spellScale = 0.07f;
+        } else if (s_xmlProgress > 0.0f) {
+            xmlScale = 0.25f;
+            worldScale = 0.65f;
+            spellScale = 0.1f;
+        } else {
+            xmlScale = 0.0f;
+            spellScale = 0.0f;
+            worldScale = 1.0f;
         }
     }
 
-    s_progress = xmlProgress + s_asyncProgress * 0.0f + worldScale * s_worldProgress;
+    s_progress = s_preloadProgress * preloadScale + s_xmlProgress * xmlScale + s_worldProgress * worldScale + s_spellProgress * spellScale;
 
     if (s_progress < 0.0f) {
         s_progress = 0.0f;
     } else if (s_progress >= 1.0f) {
         s_progress = 1.0f;
-    }
-
-    if (SFile::IsTrial() && s_raceDataTip) {
-        if (StreamingIsRaceDataReady(StreamingGetRace())) {
-            s_progress = s_progress * 0.3f + 0.7f;
-        } else {
-            s_progress = s_spellProgress * 0.7f;
-        }
     }
 }
 
@@ -350,7 +371,7 @@ void LoadingScreenSetTransparent(bool transparent) {
     }
 }
 
-// OFFSET: #0x00408520
+// OFFSET: 0x0040A330/0x14000CAF0
 static void ProgressBarSendKeepAlive(uint32_t time) {
     if (static_cast<int32_t>(time - s_nextPingTime) < 0) {
         return;
@@ -385,12 +406,17 @@ static bool PaintSimpleBackground() {
     GxPrimUnlockVertexPtrs();
     GxuFontRenderBatch(s_batch);
 
+    if (s_dynamicBarEnabled) {
+        PaintDynamicLoadingBar();
+        return false;
+    }
+
     return true;
 }
 
 // OFFSET: 0x0040B300
 static bool PaintBackgroundImage() {
-    if (!s_dynamicElements.Count()) {
+    if (s_backgroundLocal || !s_dynamicElements.Count()) {
         return false;
     }
 
@@ -408,8 +434,8 @@ static bool PaintBackgroundImage() {
     return true;
 }
 
-// OFFSET: 0x0040B580
-static void PaintLoadingBar(const BackgroundImage* images, int32_t count, CTexture** textures) {
+// OFFSET: 0x0040B3B0
+static void PaintProgressBar(const BackgroundImage* images, int32_t count, CTexture** textures) {
     for (int32_t i = 0; i < count; i++) {
         if (!textures[i]) {
             continue;
@@ -431,6 +457,61 @@ static void PaintLoadingBar(const BackgroundImage* images, int32_t count, CTextu
 
         if (image.m_fill) {
             vertices[1].x = vertices[0].x + image.m_width * s_progress;
+            vertices[3].x = vertices[1].x;
+        }
+
+        vertices[0].z = 0.0f;
+        vertices[1].z = 0.0f;
+        vertices[2].z = 0.0f;
+        vertices[3].z = 0.0f;
+
+        CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
+
+        GxPrimLockVertexPtrs(4, vertices, sizeof(C3Vector), NULL, 0, &color, 0, NULL, 0, s_texCoord, sizeof(C2Vector), NULL, 0);
+        g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTexBlocking(textures[i]));
+        GxDrawLockedElements(GxPrim_TriangleStrip, 4, s_indices);
+        GxPrimUnlockVertexPtrs();
+    }
+}
+
+// OFFSET: 0x0040B580
+static void PaintLoadingBar(const BackgroundImage* images, int32_t count, CTexture** textures) {
+    if (!s_fileBarEnabled) {
+        return;
+    }
+
+    AsyncFileNetQueueStatus status;
+    AsyncFileGetNetQueueStatus(&status);
+
+    if (!status.m_active) {
+        return;
+    }
+
+    float fraction = static_cast<float>(static_cast<double>(status.m_local) / static_cast<double>(status.m_total));
+
+    for (int32_t i = 0; i < count; i++) {
+        if (!textures[i]) {
+            continue;
+        }
+
+        GxRsSet(GxRs_BlendingMode, 2);
+        GxUpdateAlphaRef(GxRs_AlphaRef);
+
+        BackgroundImage image = images[i];
+        float halfHeight = image.m_height * 0.6f * 0.5f;
+        float halfWidth = image.m_width * 0.5f * 0.5f;
+        C3Vector vertices[4];
+        vertices[0].x = image.m_x - halfWidth;
+        vertices[2].x = vertices[0].x;
+        vertices[0].y = 0.03f - halfHeight;
+        vertices[1].y = vertices[0].y;
+        vertices[1].x = halfWidth + image.m_x;
+        vertices[3].x = vertices[1].x;
+        vertices[2].y = halfHeight + 0.03f;
+        vertices[3].y = vertices[2].y;
+
+        if (image.m_fill) {
+            vertices[1].x = image.m_width * 0.5f * fraction + (image.m_x - halfWidth);
             vertices[3].x = vertices[1].x;
         }
 
@@ -491,16 +572,16 @@ static bool LoadSimpleBackgroundTexture() {
     bool result = false;
     char path[260];
 
-    if (LoadingScreenGetBackgroundTexturePath(s_simpleMapID, path, sizeof(path), &s_usingWideScreen)) {
+    if (LoadingScreenGetBackgroundTexturePath(s_preparedLoadingScreenID, path, sizeof(path), &s_usingWideScreen)) {
         if (SFile::IsStreamingMode() && SFile::FileIsLocal(path) != 1) {
             s_backgroundLocal = 0;
-            s_simpleMapID = 0;
+            s_preparedLoadingScreenID = 0;
             AsyncFileReadCreateObject(path, 5, 0, 0, NULL, NULL, NULL, AsyncFileReadDestroyObject, AsyncFileReadDestroyObject, 0, 0, 0);
             SStrCopy(path, "Interface\\Glues\\loading", sizeof(path));
         }
     } else {
         s_backgroundLocal = 0;
-        s_simpleMapID = 0;
+        s_preparedLoadingScreenID = 0;
         SStrCopy(path, "Interface\\Glues\\loading", sizeof(path));
     }
 
@@ -513,6 +594,46 @@ static bool LoadSimpleBackgroundTexture() {
     }
 
     return result;
+}
+
+// OFFSET: 0x0040BA40/0x14000E860
+static void ClearDynamicData() {
+    if (s_dynamicElementsTexture) {
+        TextureRelease(s_dynamicElementsTexture);
+    }
+
+    s_dynamicElementsTexture = NULL;
+
+    for (uint32_t i = 0; i < sizeof(s_dynamicBackgroundTextures) / sizeof(s_dynamicBackgroundTextures[0]); i++) {
+        if (s_dynamicBackgroundTextures[i]) {
+            TextureRelease(s_dynamicBackgroundTextures[i]);
+        }
+
+        s_dynamicBackgroundTextures[i] = NULL;
+    }
+
+    s_dynamicElements.Clear();
+}
+
+// OFFSET: 0x0040C8A0
+static bool LoadMapBackgroundTexture() {
+    MapRec* map = g_mapDB.GetRecord(s_simpleMapID);
+    char path[260];
+    s_usingWideScreen = false;
+
+    if (map && LoadingScreenGetBackgroundTexturePath(map->m_loadingScreenID, path, sizeof(path), &s_usingWideScreen)) {
+        if (SFile::IsStreamingMode() && SFile::FileIsLocal(path) != 1) {
+            AsyncFileReadCreateObject(path, 5, 0, 0, NULL, NULL, NULL, AsyncFileReadDestroyObject, AsyncFileReadDestroyObject, 0, 0, 0);
+            SStrCopy(path, "Interface\\Glues\\loading", sizeof(path));
+        }
+    } else {
+        SStrCopy(path, "Interface\\Glues\\loading", sizeof(path));
+    }
+
+    CStatus status;
+    CGxTexFlags flags;
+    s_simpleBackgroundTexture = TextureCreate(path, flags, &status, 1, NULL, 2);
+    return s_simpleBackgroundTexture != NULL;
 }
 
 // OFFSET: 0x0040BEE0
@@ -543,8 +664,15 @@ static void LoadingScreenPaint(void* param, const RECTF* rect, const RECTF* visi
         return;
     }
 
-    if (!s_simpleBackgroundTexture && s_simpleMapID != -1 && !LoadSimpleBackgroundTexture()) {
-        s_simpleMapID = -1;
+    if (!s_simpleBackgroundTexture) {
+        if (s_backgroundLocal) {
+            if (!LoadSimpleBackgroundTexture()) {
+                LoadingScreenClearPrepared();
+                ClearDynamicData();
+            }
+        } else if (s_simpleMapID != -1 && !LoadMapBackgroundTexture()) {
+            s_simpleMapID = -1;
+        }
     }
 
     float minX;
@@ -559,7 +687,7 @@ static void LoadingScreenPaint(void* param, const RECTF* rect, const RECTF* visi
 
     CImVector black;
     *reinterpret_cast<uint32_t*>(&black) = 0xFF000000;
-    GxSceneClear(1, black);
+    GxSceneClear(15, black);
 
     float aspect = CoordinateGetAspectCompensation();
     float ratio = s_usingWideScreen ? s_wideAspect / s_normalAspect : 1.0f;
@@ -601,13 +729,12 @@ static void LoadingScreenPaint(void* param, const RECTF* rect, const RECTF* visi
 
     GxRsSet(GxRs_Fog, 0);
 
-    if (!PaintBackgroundImage()) {
-        PaintSimpleBackground();
-
+    if (!PaintBackgroundImage() && PaintSimpleBackground()) {
         if (s_vertexShader && s_vertexShader->m_permutes[0].Valid() && GxShaderValid(s_pixelShader, 0)) {
             GxShaderConstantsSet(GxSh_Vertex, 0, &transform.a0, 4);
         }
 
+        PaintProgressBar(s_textureInfo, 2, s_textures);
         PaintLoadingBar(s_textureInfo, 2, s_textures);
     }
 
@@ -620,7 +747,7 @@ static void UpdateProgressBar(int32_t force) {
     uint32_t time = OsGetAsyncTimeMs();
     EventInputProcess(EventGetCurrentContext());
 
-    if (!force && time - s_lastUpdateTime < 250) {
+    if (!force && time - s_lastUpdateTime < 100) {
         return;
     }
 
@@ -638,10 +765,12 @@ static void InitializeProgressBar(bool loadingWorld) {
         ScrnLayerSetFlags(s_loadingScreenLayer, ScrnLayerGetFlags(s_loadingScreenLayer) & ~0x1u);
     }
 
+    s_loadingWorld = loadingWorld;
+    s_preloadProgress = 0.0f;
     s_xmlProgress = 0.0f;
     s_asyncProgress = 0.0f;
     s_worldProgress = 0.0f;
-    s_loadingWorld = loadingWorld;
+    s_spellProgress = 0.0f;
 
     if (!s_loadingScreenLayer) {
         CStatus status;
@@ -658,7 +787,7 @@ static void InitializeProgressBar(bool loadingWorld) {
         rect.left = 0.0f;
         rect.top = 1.0f;
         rect.right = 1.0f;
-        ScrnLayerCreate(&rect, 9.0f, 6, NULL, LoadingScreenPaint, &s_loadingScreenLayer);
+        ScrnLayerCreate(&rect, 10.0f, 6, NULL, LoadingScreenPaint, &s_loadingScreenLayer);
         InitializeProgressBarEvents();
     }
 
@@ -667,7 +796,7 @@ static void InitializeProgressBar(bool loadingWorld) {
     uint32_t time = OsGetAsyncTimeMs();
     EventInputProcess(EventGetCurrentContext());
 
-    if (time - s_lastUpdateTime >= 250) {
+    if (time - s_lastUpdateTime >= 100) {
         s_lastUpdateTime = time;
         SE3::HeartBeat(NULL, NULL);
         ProgressBarSendKeepAlive(time);
@@ -677,7 +806,7 @@ static void InitializeProgressBar(bool loadingWorld) {
     }
 }
 
-// OFFSET: #0x0040AB20
+// OFFSET: 0x0040DA30
 void LoadingScreenSpellUpdateProgress(float progress) {
     if (progress <= s_spellProgress) {
         return;
@@ -689,10 +818,23 @@ void LoadingScreenSpellUpdateProgress(float progress) {
 
 // OFFSET: 0x0040D490/0x140010B20
 void LoadingScreenEnable(int32_t mapID, bool loadingWorld) {
+    s_preparedSpellID = -1;
+    s_preparedLoadingScreenID = 0;
+    s_preparedSplineID = 0;
+    s_backgroundLocal = 0;
+    s_dynamicBarEnabled = 0;
+
+    UserClientOpcode2422 msg;
+    msg.unk_0010 = mapID;
+    msg.unk_0014 = 1;
+    ClientServices::Send(&msg);
     CGGameUI::SetAspect();
 
-    if (s_gameTip) {
-        s_textFont = TextBlockGenerateFont(s_fontNames[s_locale], 1, NDCToDDCHeight(0.018f));
+    if (s_gameTip && *s_gameTip) {
+        if (!s_textFont) {
+            s_textFont = TextBlockGenerateFont(s_fontNames[s_locale], 1, NDCToDDCHeight(0.018f));
+        }
+
         CGxFont* font = TextBlockGetFontPtr(s_textFont);
 
         float width = DDCToNDCWidth(NDCToDDCWidth(515.0f / (CoordinateGetAspectCompensation() * 1024.0f)));
@@ -722,7 +864,10 @@ void LoadingScreenEnable(int32_t mapID, bool loadingWorld) {
         CImVector shadowColor(0, 0, 0, 0xFF);
         GxuFontAddShadow(s_tipStr, shadowColor, shadowOffset);
 
-        s_batch = GxuFontCreateBatch(false, false, false);
+        if (!s_batch) {
+            s_batch = GxuFontCreateBatch(false, false, false);
+        }
+
         GxuFontAddToBatch(s_batch, s_tipStr);
     }
 
@@ -750,7 +895,7 @@ void LoadingScreenWorldCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: #0x0040AF90
+// OFFSET: 0x0040D9E0
 void LoadingScreenXMLCallback(float progress, void* param) {
     if (progress <= s_xmlProgress) {
         return;
@@ -773,25 +918,6 @@ static void LoadingScreenDisableEvents() {
     if (s_sizeEventPosted) {
         EventQueuePost(EventGetCurrentContext(), EVENT_ID_SIZE, &s_sizeEvent, sizeof(s_sizeEvent));
     }
-}
-
-// OFFSET: 0x0040BA40/0x14000E860
-static void ClearDynamicData() {
-    if (s_dynamicElementsTexture) {
-        TextureRelease(s_dynamicElementsTexture);
-    }
-
-    s_dynamicElementsTexture = NULL;
-
-    for (uint32_t i = 0; i < sizeof(s_dynamicBackgroundTextures) / sizeof(s_dynamicBackgroundTextures[0]); i++) {
-        if (s_dynamicBackgroundTextures[i]) {
-            TextureRelease(s_dynamicBackgroundTextures[i]);
-        }
-
-        s_dynamicBackgroundTextures[i] = NULL;
-    }
-
-    s_dynamicElements.Clear();
 }
 
 // OFFSET: 0x0040BBE0/0x14000EA90
@@ -818,7 +944,11 @@ void LoadingScreenDisable() {
 
     LoadingScreenDisableEvents();
     ClearDynamicData();
-
+    s_preparedSpellID = -1;
+    s_preparedLoadingScreenID = 0;
+    s_preparedSplineID = 0;
+    s_backgroundLocal = 0;
+    s_dynamicBarEnabled = 0;
     s_gameTip = NULL;
 
     if (s_batch) {
@@ -833,6 +963,12 @@ void LoadingScreenDisable() {
 
     s_tipStr = NULL;
 
+    if (s_tipStr2) {
+        GxuFontDestroyString(s_tipStr2);
+    }
+
+    s_tipStr2 = NULL;
+
     if (s_textFont) {
         HandleClose(reinterpret_cast<HOBJECT>(s_textFont));
     }
@@ -845,6 +981,11 @@ void LoadingScreenDisable() {
     if (SFile::IsStreamingMode()) {
         CGSpellBook::MakeKnownSpellModelsLocal();
     }
+
+    UserClientOpcode2422 msg;
+    msg.unk_0010 = s_simpleMapID;
+    msg.unk_0014 = 0;
+    ClientServices::Send(&msg);
 }
 
 // OFFSET: 0x0040BD20
@@ -885,8 +1026,8 @@ void LoadingScreenMiniUpdate(float progress) {
     s_progress = progress;
 }
 
-// OFFSET: 0x0040CA70/0x14000FDA0
-bool LoadDynamicBackground() {
+// OFFSET: 0x0040C9F0/0x14000FCF0
+static bool LoadDynamicElementsTexture() {
     CStatus status;
 
     if (!s_dynamicElementsTexture) {
@@ -896,6 +1037,17 @@ bool LoadDynamicBackground() {
         if (!s_dynamicElementsTexture) {
             return false;
         }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0040CA70/0x14000FDA0
+bool LoadDynamicBackground() {
+    CStatus status;
+
+    if (!LoadDynamicElementsTexture()) {
+        return false;
     }
 
     for (uint32_t i = 0; i < 12; i++) {
@@ -968,7 +1120,7 @@ static void LoadingScreenMiniPaint(void* param, const RECTF* rect, const RECTF* 
     }
 
     GxRsSet(GxRs_Fog, 0);
-    PaintLoadingBar(s_miniTextureInfo, 2, unk_B2FEC4);
+    PaintProgressBar(s_miniTextureInfo, 2, unk_B2FEC4);
     g_theGxDevicePtr->RsPop();
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
@@ -1062,7 +1214,7 @@ static void BuildPathVertices(C3Spline* spline, int32_t segments) {
     }
 }
 
-// OFFSET: #0x00408BB0
+// OFFSET: 0x0040AB40
 static LoadingScreenTaxiSplinesRec* FindTaxiSpline(int32_t pathID, int32_t legIndex) {
     for (int32_t i = 0; i < g_loadingScreenTaxiSplinesDB.m_numRecords; i++) {
         LoadingScreenTaxiSplinesRec* rec = g_loadingScreenTaxiSplinesDB.GetRecordByIndex(i);
@@ -1267,4 +1419,58 @@ void LoadingScreenEnableShipLeg(int32_t entryId, uint32_t leg) {
 // OFFSET: 0x004097F0/0x14000BF20
 void LoadingScreenEnableFileBar(bool enable) {
     s_fileBarEnabled = enable;
+}
+
+// OFFSET: 0x004096D0/0x14000BDF0
+bool LoadingScreenIsPreparedForSpell(int32_t spellID) {
+    bool prepared = s_preparedLoadingScreenID || s_preparedSplineID;
+
+    if (spellID != -1 && spellID != s_preparedSpellID) {
+        return false;
+    }
+
+    return prepared;
+}
+
+// OFFSET: 0x00409710
+void LoadingScreenClearPrepared() {
+    s_preparedSpellID = -1;
+    s_preparedLoadingScreenID = 0;
+    s_preparedSplineID = 0;
+    s_backgroundLocal = 0;
+    s_dynamicBarEnabled = 0;
+}
+
+// OFFSET: 0x0040D710/0x140010E50
+void LoadingScreenEnablePrepared(int32_t mapID) {
+    s_simpleMapID = mapID;
+    s_backgroundLocal = 0;
+    s_dynamicBarEnabled = 0;
+
+    if (s_preparedLoadingScreenID) {
+        s_backgroundLocal = 1;
+    } else if (!LoadDynamicBackground()) {
+        ClearDynamicData();
+    }
+
+    if (s_preparedSplineID) {
+        if (InitializeSpline(s_preparedSplineID, 0) && LoadDynamicElementsTexture()) {
+            s_dynamicBarEnabled = 1;
+            InitializeProgressBar(true);
+            return;
+        }
+
+        ClearDynamicData();
+    }
+
+    InitializeProgressBar(true);
+}
+
+// OFFSET: 0x0040DA80/0x140011190
+void LoadingScreenUpdateProgress(float progress, int32_t a2) {
+    if (progress > s_preloadProgress) {
+        s_preloadProgress = progress;
+    }
+
+    UpdateProgressBar(1.0f == s_preloadProgress);
 }

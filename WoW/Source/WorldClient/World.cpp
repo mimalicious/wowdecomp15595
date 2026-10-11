@@ -2117,8 +2117,8 @@ void World::Preload(const C3Vector& pos, int32_t loadingScreen) {
         World::s_loadProgressParam = NULL;
         AsyncFileReadProgressCallback(LoadingScreenAsyncCallback, NULL);
 
-        if (LoadingScreenIsEnabled(-1)) {
-            LoadingScreenSetMap(worldMap->m_mapId);
+        if (LoadingScreenIsPreparedForSpell(-1)) {
+            LoadingScreenEnablePrepared(worldMap->m_mapId);
         } else {
             LoadingScreenEnable(worldMap->m_mapId, 1);
         }
