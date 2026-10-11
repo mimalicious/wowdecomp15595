@@ -49,6 +49,25 @@ class UserClientWorldPortResponse : public JamClientMessage {
     ~UserClientWorldPortResponse();
 };
 
+struct JamTransmogrifyItem {
+    /* 0000 */ uint8_t m_itemGuid[8];
+    /* 0008 */ int32_t m_itemID;
+    /* 000C */ uint32_t m_slot;
+
+    JamTransmogrifyItem();
+};
+
+class UserClientTransmogrifyItems : public JamClientMessage {
+    public:
+    /* 0010 */ TSGrowableArray<JamTransmogrifyItem> m_items;
+    /* 0020 */ uint8_t m_npc[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientTransmogrifyItems();
+    ~UserClientTransmogrifyItems();
+};
+
 class UserClientReforgeItem : public JamClientMessage {
     public:
     /* 0010 */ uint32_t m_flags;

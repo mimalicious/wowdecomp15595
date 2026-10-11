@@ -276,6 +276,117 @@ UserClientUnlearnSpecialization::UserClientUnlearnSpecialization() {
 UserClientUnlearnSpecialization::~UserClientUnlearnSpecialization() {
 }
 
+// OFFSET: [0x0066BC00/0x140312430]
+JamTransmogrifyItem::JamTransmogrifyItem() {
+}
+
+// OFFSET: 0x00688120
+UserClientTransmogrifyItems::UserClientTransmogrifyItems() {
+}
+
+// OFFSET: 0x00688140/0x140332EA0
+UserClientTransmogrifyItems::~UserClientTransmogrifyItems() {
+}
+
+// OFFSET: 0x0067F1F0/0x140328810
+void UserClientTransmogrifyItems::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3B0E));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<22>(this->m_items.m_count);
+
+    for (uint32_t i = 0; i < this->m_items.m_count; i++) {
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[0] != 0);
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[5] != 0);
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[6] != 0);
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[2] != 0);
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[3] != 0);
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[7] != 0);
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[4] != 0);
+        bits.WriteBit(this->m_items.m_data[i].m_itemGuid[1] != 0);
+    }
+
+    bits.WriteBit(this->m_npc[7] != 0);
+    bits.WriteBit(this->m_npc[3] != 0);
+    bits.WriteBit(this->m_npc[5] != 0);
+    bits.WriteBit(this->m_npc[6] != 0);
+    bits.WriteBit(this->m_npc[1] != 0);
+    bits.WriteBit(this->m_npc[4] != 0);
+    bits.WriteBit(this->m_npc[0] != 0);
+    bits.WriteBit(this->m_npc[2] != 0);
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_items.m_count; i++) {
+        msg->Put(static_cast<uint32_t>(this->m_items.m_data[i].m_itemID));
+
+        if (this->m_items.m_data[i].m_itemGuid[1]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[1] ^ 1));
+        }
+
+        if (this->m_items.m_data[i].m_itemGuid[5]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[5] ^ 1));
+        }
+
+        if (this->m_items.m_data[i].m_itemGuid[0]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[0] ^ 1));
+        }
+
+        if (this->m_items.m_data[i].m_itemGuid[4]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[4] ^ 1));
+        }
+
+        if (this->m_items.m_data[i].m_itemGuid[6]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[6] ^ 1));
+        }
+
+        if (this->m_items.m_data[i].m_itemGuid[7]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[7] ^ 1));
+        }
+
+        if (this->m_items.m_data[i].m_itemGuid[3]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[3] ^ 1));
+        }
+
+        if (this->m_items.m_data[i].m_itemGuid[2]) {
+            msg->Put(static_cast<uint8_t>(this->m_items.m_data[i].m_itemGuid[2] ^ 1));
+        }
+
+        msg->Put(this->m_items.m_data[i].m_slot);
+    }
+
+    if (this->m_npc[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[7] ^ 1));
+    }
+
+    if (this->m_npc[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[2] ^ 1));
+    }
+
+    if (this->m_npc[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[5] ^ 1));
+    }
+
+    if (this->m_npc[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[4] ^ 1));
+    }
+
+    if (this->m_npc[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[3] ^ 1));
+    }
+
+    if (this->m_npc[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[1] ^ 1));
+    }
+
+    if (this->m_npc[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[6] ^ 1));
+    }
+
+    if (this->m_npc[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[0] ^ 1));
+    }
+}
+
 // OFFSET: 0x006736F0
 UserClientReforgeItem::UserClientReforgeItem() {
     this->m_flags = 0;
