@@ -88,7 +88,7 @@ CWardenKey& CWardenKey::operator=(const CWardenKey& key) {
     return *this;
 }
 
-// OFFSET: #0x00668750
+// OFFSET: 0x0049B240
 bool CWardenKey::operator==(const CWardenKey& key) {
     return memcmp(this->m_key, key.m_key, sizeof(this->m_key)) == 0;
 }

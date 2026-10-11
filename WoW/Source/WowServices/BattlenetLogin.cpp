@@ -72,7 +72,7 @@ uint64_t BattlenetApplication::GetCurrentTick() const {
     return OsGetAsyncTimeMs();
 }
 
-// OFFSET: [#0x008C5210, #0x008C6A10]
+// OFFSET: 0x00627450
 BattlenetApplication::~BattlenetApplication() {
     if (this->m_wowConnection) {
         this->m_wowConnection->Disconnect();

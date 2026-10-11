@@ -6,9 +6,10 @@
 #include "Engine/Source/pcre/pcreposix.h"
 
 extern TSFixedArray<regex_t> g_chatSpamTokens;
-extern TSFixedArray<regex_t> g_profanityTokens[9];
-extern TSFixedArray<regex_t> g_chatProfanityTokens[9];
-extern TSFixedArray<regex_t> g_reservedNameTokens[9];
+extern TSFixedArray<regex_t> g_expectedSpamTokens;
+extern TSFixedArray<regex_t> g_profanityTokens[11];
+extern TSFixedArray<regex_t> g_chatProfanityTokens[11];
+extern TSFixedArray<regex_t> g_reservedNameTokens[11];
 
 bool IsAlphaChinese(uint16_t c);
 bool IsAlphaEnglish(uint16_t c);

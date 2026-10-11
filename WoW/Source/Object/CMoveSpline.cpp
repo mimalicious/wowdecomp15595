@@ -54,7 +54,7 @@ CDataStore& operator>>(CDataStore& msg, CMoveSpline& spline) {
     return msg;
 }
 
-// OFFSET: #0x006F1240
+// OFFSET: 0x005FF7B0
 CMoveSpline& CMoveSpline::CopyFrom(const CMoveSpline& source) {
     this->unk_0008 = source.unk_0008;
     this->m_face = source.m_face;

@@ -17,7 +17,7 @@ static const char* s_bloodSpurtTexture = "BloodSpurtSmall01.blp";
 // STATIC: #0x00D3920C
 int32_t s_violenceLevel;
 
-// OFFSET: #0x007F39B0
+// OFFSET: 0x00B11460
 bool ViolenceLevelChanged(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t level = SStrToInt(value);
     s_violenceLevel = level;

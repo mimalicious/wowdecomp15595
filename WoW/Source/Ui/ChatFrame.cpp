@@ -282,9 +282,6 @@ static TSHashTable<SPAMCHECK, HASHKEY_STR> s_spamCache;
 // STATIC: 0x00F33310
 static uint32_t s_profanityReplacementIndex;
 
-// STATIC: 0x00DC7304
-static TSFixedArray<regex_t> s_expectedSpamRecords;
-
 // STATIC: 0x00BF15C8
 const ChatMessageGroup s_chatMessageGroups[49] = {
     { "SYSTEM", true, 0 },
@@ -1234,11 +1231,11 @@ bool SpamFilter(char* text, bool cache) {
         }
     }
 
-    for (uint32_t i = 0; i < s_expectedSpamRecords.Count(); i++) {
+    for (uint32_t i = 0; i < g_expectedSpamTokens.Count(); i++) {
         const char* current = text;
         regmatch_t match;
 
-        while (!regexec(&s_expectedSpamRecords.m_data[i], current, 1, &match, 0)) {
+        while (!regexec(&g_expectedSpamTokens.m_data[i], current, 1, &match, 0)) {
             if (match.rm_so < 0) {
                 break;
             }
@@ -2218,7 +2215,7 @@ void ChatWindowInfo::Init() {
 int32_t CGChat::OnCheckReloadSpamFilter(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count;
     msg->Get(count);
-    s_expectedSpamRecords.SetCount(count);
+    g_expectedSpamTokens.SetCount(count);
 
     uint32_t valid = 0;
 
@@ -2226,12 +2223,12 @@ int32_t CGChat::OnCheckReloadSpamFilter(void* param, NETMESSAGE msgId, uint32_t 
         char expression[512];
         msg->GetString(expression, sizeof(expression));
 
-        if (!regcomp(&s_expectedSpamRecords.m_data[valid], expression, REG_ICASE)) {
+        if (!regcomp(&g_expectedSpamTokens.m_data[valid], expression, REG_ICASE)) {
             valid++;
         }
     }
 
-    s_expectedSpamRecords.SetCount(valid);
+    g_expectedSpamTokens.SetCount(valid);
     return 1;
 }
 

@@ -3,6 +3,7 @@
 #include "Engine/Source/Base/ConvertUTF.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/Storm/H/storm.h"
+#include "ThirdParty/pcre/pcre.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
 // STATIC: #0x00AF2B98
@@ -305,26 +306,32 @@ static const RussianDeclensionRule s_russianDeclensionRules[55] = {
     { { { 0x0451, 0x0446, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 } }, 2, { 0x0451, 0x0446, 0x0000, 0x0000, 0x0000 }, { 69, 70, 0 } },
 };
 
-// STATIC: #0x00D37E10
+// STATIC: 0x00DC71E0
 static bool s_charsetCached;
 
-// STATIC: #0x00D37E14
+// STATIC: 0x00DC71E4
 static int32_t s_cachedLocaleMask;
 
-// STATIC: #0x00D37E18
+// STATIC: 0x00DC71E8
 static int32_t s_cachedCharsetMask;
 
-// STATIC: #0x00D37E1C
+// STATIC: 0x00DC71EC
+static int32_t s_cachedExistingCharsetMask;
+
+// STATIC: 0x00DC71F0
+TSFixedArray<regex_t> g_profanityTokens[11];
+
+// STATIC: 0x00DC7274
 TSFixedArray<regex_t> g_chatSpamTokens;
 
-// STATIC: #0x00D37E28
-TSFixedArray<regex_t> g_profanityTokens[9];
+// STATIC: 0x00DC7280
+TSFixedArray<regex_t> g_reservedNameTokens[11];
 
-// STATIC: #0x00D37EA0
-TSFixedArray<regex_t> g_chatProfanityTokens[9];
+// STATIC: 0x00DC7304
+TSFixedArray<regex_t> g_expectedSpamTokens;
 
-// STATIC: #0x00D37F10
-TSFixedArray<regex_t> g_reservedNameTokens[9];
+// STATIC: 0x00DC7310
+TSFixedArray<regex_t> g_chatProfanityTokens[11];
 
 // INLINED
 static inline uint16_t LowerNameChar(uint16_t c) {
@@ -425,17 +432,21 @@ int32_t ValidateName(uint32_t language, const uint16_t* allowed, const char* nam
 
     uint16_t buffer[1024];
 
-    if (SUniConvertUTF8to16(buffer, 1024, name, STORM_MAX_STR, NULL, NULL) || language > 8) {
+    if (SUniConvertUTF8to16(buffer, 1024, name, STORM_MAX_STR, NULL, NULL) || language > 10) {
         return 1;
     }
 
     if (charsetMask == -1) {
-        CVar* forceEnglish;
+        if (english) {
+            CVar* forceEnglish = CVar::Lookup("forceEnglishNames");
 
-        if (english && (forceEnglish = CVar::Lookup("forceEnglishNames")) && forceEnglish->m_intValue) {
-            charsetMask = 2;
+            if (forceEnglish && forceEnglish->m_intValue) {
+                charsetMask = 2;
+            } else {
+                charsetMask = s_cachedCharsetMask;
+            }
         } else {
-            charsetMask = s_cachedCharsetMask;
+            charsetMask = s_cachedExistingCharsetMask;
         }
     }
 
@@ -639,21 +650,57 @@ int32_t ValidateGuildBankTabName(uint32_t language, const char* name) {
     return result;
 }
 
-// OFFSET: #0x007E21B0
+// OFFSET: 0x004E65E0
+static void* RegexAlloc(size_t bytes) {
+    return SMemAlloc(bytes, __FILE__, __LINE__, 0);
+}
+
+// OFFSET: 0x004E6600
+static void RegexFree(void* ptr) {
+    SMemFree(ptr, __FILE__, __LINE__, 0);
+}
+
+// OFFSET: 0x004E7B20
 void ValidateNameDestroy() {
+    if (!s_charsetCached) {
+        return;
+    }
+
     for (uint32_t i = 0; i < sizeof(g_profanityTokens) / sizeof(g_profanityTokens[0]); i++) {
+        for (uint32_t j = 0; j < g_profanityTokens[i].Count(); j++) {
+            regfree(&g_profanityTokens[i].m_data[j]);
+        }
+
+        for (uint32_t j = 0; j < g_chatProfanityTokens[i].Count(); j++) {
+            regfree(&g_chatProfanityTokens[i].m_data[j]);
+        }
+
+        for (uint32_t j = 0; j < g_reservedNameTokens[i].Count(); j++) {
+            regfree(&g_reservedNameTokens[i].m_data[j]);
+        }
+
         g_profanityTokens[i].Clear();
         g_chatProfanityTokens[i].Clear();
         g_reservedNameTokens[i].Clear();
     }
 
+    for (uint32_t j = 0; j < g_chatSpamTokens.Count(); j++) {
+        regfree(&g_chatSpamTokens.m_data[j]);
+    }
+
+    for (uint32_t j = 0; j < g_expectedSpamTokens.Count(); j++) {
+        regfree(&g_expectedSpamTokens.m_data[j]);
+    }
+
+    g_chatSpamTokens.Clear();
+    g_expectedSpamTokens.Clear();
     s_charsetCached = false;
 }
 
 // OFFSET: 0x004E7D30
 void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t existingCharsetMask) {
     if (s_charsetCached) {
-        if (localeMask == s_cachedLocaleMask && charsetMask == s_cachedCharsetMask) {
+        if (localeMask == s_cachedLocaleMask && charsetMask == s_cachedCharsetMask && existingCharsetMask == s_cachedExistingCharsetMask) {
             return;
         }
 
@@ -662,8 +709,13 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
 
     s_charsetCached = true;
     CVar::Register("forceEnglishNames", NULL, 0, "0", NULL, 5, false, NULL, false);
-    s_cachedLocaleMask = localeMask;
     s_cachedCharsetMask = charsetMask;
+    pcre_stack_malloc = RegexAlloc;
+    pcre_malloc = RegexAlloc;
+    s_cachedLocaleMask = localeMask;
+    s_cachedExistingCharsetMask = existingCharsetMask;
+    pcre_stack_free = RegexFree;
+    pcre_free = RegexFree;
 
     for (int32_t language = 0; language < static_cast<int32_t>(sizeof(g_profanityTokens) / sizeof(g_profanityTokens[0])); language++) {
         if (localeMask && !((1 << language) & localeMask)) {

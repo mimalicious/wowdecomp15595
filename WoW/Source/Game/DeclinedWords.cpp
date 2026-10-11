@@ -14,9 +14,11 @@
 // STATIC: 0x00DC71B0
 static TSHashTable<DECLINEDWORD, HASHKEY_CONSTSTRI> s_declinedWords;
 
-// OFFSET: #0x007E01B0
+// OFFSET: 0x004E5730
 void DeclinedWordsDestroy() {
     s_declinedWords.Clear();
+    g_declinedWordDB.Unload(&DeclinedWordRec::s_meta);
+    g_declinedWordCasesDB.Unload(&DeclinedWordCasesRec::s_meta);
 }
 
 // OFFSET: 0x004E5E00

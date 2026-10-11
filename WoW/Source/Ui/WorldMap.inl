@@ -1,4 +1,4 @@
-// INLINED
+// OFFSET: 0x0091FE40
 inline WorldMapContinentInfo::WorldMapContinentInfo() {
     this->m_top = 0.0f;
     this->m_left = 0.0f;
