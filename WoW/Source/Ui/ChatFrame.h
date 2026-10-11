@@ -165,6 +165,13 @@ class ChatChannel {
     /* 00A0 */ int32_t m_unkA0;
     /* 00A4 */ uint8_t m_unkA4;
     /* 00A5 */ uint8_t m_unkA5;
+    /* 00A6 */ uint8_t unk_00A6[2];
+    /* 00A8 */ uint32_t m_messageTimes[32];
+    /* 0128 */ uint32_t m_messageTimeIndex;
+    /* 012C */ char m_password[128];
+    /* 01AC */ uint8_t m_unk1AC;
+    /* 01AD */ uint8_t m_joinPending;
+    /* 01AE */ uint8_t unk_01AE[2];
 
     ChatChannel();
 };

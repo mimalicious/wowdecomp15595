@@ -1601,7 +1601,7 @@ void LFGNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool suc
     }
 }
 
-// OFFSET: #0x005528D0
+// OFFSET: 0x0097EFE0
 int32_t Packet_SMSG_LFG_OPEN_FROM_GOSSIP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t slot;
     msg->Get(slot);

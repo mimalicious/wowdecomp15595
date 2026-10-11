@@ -166,7 +166,7 @@ static int32_t QSortRoster(const void* a, const void* b) {
     return 0;
 }
 
-// OFFSET: #0x005A2D50
+// OFFSET: 0x009A9570
 int32_t Packet_SMSG_ARENA_TEAM_STATS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t teamId;
     msg->Get(teamId);
@@ -210,7 +210,7 @@ void ArenaTeam::FreeMemberArray() {
     this->m_rank = 0;
 }
 
-// OFFSET: #0x005A3E10
+// OFFSET: 0x009AA5F0
 int32_t Packet_SMSG_ARENA_TEAM_ROSTER(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t teamId;
     msg->Get(teamId);

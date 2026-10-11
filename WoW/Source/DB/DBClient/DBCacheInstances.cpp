@@ -171,7 +171,7 @@ static int32_t ReceivePetName(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// OFFSET: #0x00635390
+// OFFSET: 0x00496DB0
 static int32_t ReceivePetition(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGPetition petition;
     petition.Unpack(msg);
@@ -185,7 +185,7 @@ static int32_t ReceivePetition(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: #0x00635400
+// OFFSET: 0x00496E20
 static int32_t ReceiveInvalidatePlayer(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -200,7 +200,7 @@ static int32_t ReceiveInvalidatePlayer(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: #0x00635480
+// OFFSET: 0x00496EA0
 static int32_t ReceiveArenaTeam(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     ArenaTeamCache arenaTeam;
     arenaTeam.Unpack(msg);
@@ -221,7 +221,7 @@ static int32_t ReceiveSingleItem(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x006354F0
+// OFFSET: 0x00496EF0
 static int32_t ReceiveInvalidateDance(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t danceID;
     msg->Get(danceID);
@@ -250,7 +250,7 @@ void SetClientCacheVersion(uint32_t version) {
     g_danceCache.VerifyAndUpdateVersion(version);
 }
 
-// OFFSET: #0x006357D0
+// OFFSET: 0x00497100
 static int32_t ReceiveName(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     NameCache name;
     SmartGUID guid;
@@ -318,7 +318,7 @@ static int32_t ReceiveName(void* param, NETMESSAGE msgId, uint32_t time, CDataSt
     return 1;
 }
 
-// OFFSET: #0x006359E0
+// OFFSET: 0x00497330
 static int32_t ReceiveGuildInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     GuildStats_C guild;
     guild.Unpack(msg);
@@ -349,7 +349,7 @@ static int32_t ReceiveItemText(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: #0x00635AB0
+// OFFSET: 0x00497400
 static int32_t ReceiveDance(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     DanceCache dance;
     dance.Unpack(msg);

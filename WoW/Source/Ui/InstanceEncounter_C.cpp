@@ -230,7 +230,7 @@ static void OnObjectiveMessage(int32_t type, uint8_t value) {
     }
 }
 
-// OFFSET: #0x005EDDD0
+// OFFSET: 0x0094FD80
 int32_t Packet_SMSG_UPDATE_INSTANCE_ENCOUNTER_UNIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t type;
     SmartGUID guid;

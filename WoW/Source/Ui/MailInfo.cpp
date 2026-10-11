@@ -345,7 +345,7 @@ int32_t Packet_SMSG_SEND_MAIL_RESULT(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: %0x008C9660
+// OFFSET: 0x0096F610
 int32_t Packet_SMSG_RECEIVED_MAIL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     float delay;
     msg->Get(delay);
@@ -353,7 +353,7 @@ int32_t Packet_SMSG_RECEIVED_MAIL(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: #0x00571C50
+// OFFSET: 0x00970E00
 int32_t Packet_SMSG_MAIL_LIST_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t total = 0;
     msg->Get(total);
@@ -617,7 +617,7 @@ void CGMailInfo::UpdatePendingMail(float elapsed) {
     }
 }
 
-// OFFSET: #0x0056DBC0
+// OFFSET: 0x0096E0B0
 int32_t Packet_SMSG_SHOW_MAILBOX(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID mailbox;
     msg->Get(mailbox.m_guid);
@@ -1402,7 +1402,7 @@ void CGMailInfo::ParseInboxSubject(uint32_t messageID) {
     }
 }
 
-// OFFSET: #0x0056DAF0
+// OFFSET: 0x0096D850
 int32_t Packet_MSG_QUERY_NEXT_MAIL_TIME(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(CGMailInfo::m_nextMailTime);
     uint32_t count;

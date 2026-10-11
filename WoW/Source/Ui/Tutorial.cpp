@@ -24,7 +24,7 @@ TSBitField<TSFixedArray<uint32_t> > CGTutorial::m_tutorialShown;
 // STATIC: #0x00BD1AF0
 TSBitField<TSFixedArray<uint32_t> > CGTutorial::m_tutorialFlags;
 
-// OFFSET: #0x00530920
+// OFFSET: 0x00901F70
 int32_t CGTutorial::OnTutorialFlags(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t bytes = msg->m_size - msg->m_read;
     void* data;

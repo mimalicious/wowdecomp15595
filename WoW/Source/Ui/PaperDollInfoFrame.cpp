@@ -216,7 +216,7 @@ int32_t Packet_MSG_INSPECT_HONOR_STATS(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: #0x005E7B00
+// OFFSET: 0x0097B210
 int32_t Packet_MSG_INSPECT_ARENA_TEAMS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);

@@ -4778,7 +4778,7 @@ void CGGameUI::ClearInteractTarget(const WOWGUID& guid, int32_t a2) {
     }
 }
 
-// OFFSET: #0x00519A50
+// OFFSET: 0x008CB7C0
 int32_t CGGameUI::OnMirrorTimerEvent(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (msgId == SMSG_START_MIRROR_TIMER) {
         uint32_t type;

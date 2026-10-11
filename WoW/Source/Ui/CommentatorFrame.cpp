@@ -205,7 +205,7 @@ void CGCommentator::SetMoveSpeed(float speed) {
     }
 }
 
-// OFFSET: #0x00568420
+// OFFSET: 0x00928180
 int32_t CGCommentator::OnSkirmishPlayersModeState(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t mode = 0;
     msg->Get(mode);
@@ -471,7 +471,7 @@ uint64_t CGCommentator::GetArenaMember(int32_t index) {
     return 0;
 }
 
-// OFFSET: #0x0056B280
+// OFFSET: 0x0092BA80
 int32_t CGCommentator::OnReceivePlayerInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t mapID;
     CommentatorInstanceKey key;
@@ -539,7 +539,7 @@ int32_t CGCommentator::OnReceivePlayerInfo(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// OFFSET: #0x0056B8A0
+// OFFSET: 0x0092C0E0
 int32_t CGCommentator::OnStateChanged(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     guid.m_guid = 0;
@@ -600,7 +600,7 @@ void CGCommentator::SetPlayersInQueue(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x0056BB70
+// OFFSET: 0x0092C3B0
 int32_t CGCommentator::OnSkirmishPlayersInQueue(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGCommentator::s_Commentator.SetPlayersInQueue(msg);
     FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_SKIRMISH_QUEUE_REQUEST, NULL);

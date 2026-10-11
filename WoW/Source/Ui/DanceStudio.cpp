@@ -20,7 +20,7 @@ uint64_t CGDanceStudio::m_learnedDanceMoves;
 // STATIC: 0x00F4D580
 static TSHashTable<KNOWNDANCES, HASHKEY_STRI> s_knownDances;
 
-// OFFSET: #0x00576730
+// OFFSET: 0x009B8C40
 int32_t Packet_SMSG_NOTIFY_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t flags;
     msg->Get(flags);
@@ -105,7 +105,7 @@ void CGDanceStudio::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_LEARNED_DANCE_MOVES, Packet_SMSG_LEARNED_DANCE_MOVES, NULL);
 }
 
-// OFFSET: %0x0090CAA0
+// OFFSET: 0x009B7D70
 int32_t Packet_SMSG_LEARNED_DANCE_MOVES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(CGDanceStudio::m_learnedDanceMoves);
     return 1;
@@ -133,7 +133,7 @@ static bool IsDanceMoveAvailable(const DanceMovesRec* move, uint8_t race) {
     return !move->m_lockID || (CGDanceStudio::m_learnedDanceMoves & (1ull << (move->m_lockID - 1)));
 }
 
-// OFFSET: %0x0090CA50
+// OFFSET: 0x009B7D20
 int32_t Packet_SMSG_STOP_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -203,7 +203,7 @@ static void DanceSequenceCallBack(int32_t id, const WOWGUID& guid, void* param, 
     delete request;
 }
 
-// OFFSET: #0x00575AB0
+// OFFSET: 0x009B7F80
 int32_t Packet_SMSG_PLAY_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     int32_t danceId;

@@ -54,7 +54,7 @@ int32_t CGAchievementInfo::m_showAchievementUI;
 WOWGUID CGAchievementInfo::m_inspect;
 
 
-// OFFSET: #0x005B5190
+// OFFSET: 0x0094E0D0
 int32_t Packet_SMSG_QUERY_QUESTS_COMPLETED_RESPONSE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count;
     msg->Get(count);
@@ -393,7 +393,7 @@ int32_t Packet_SMSG_RESPOND_INSPECT_ACHIEVEMENTS(void* param, NETMESSAGE msgId, 
     return 1;
 }
 
-// OFFSET: #0x005B3610
+// OFFSET: 0x00949150
 int32_t Packet_SMSG_ACHIEVEMENT_DELETED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t id;
     msg->Get(reinterpret_cast<uint32_t&>(id));
@@ -410,7 +410,7 @@ int32_t Packet_SMSG_ACHIEVEMENT_DELETED(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x005B36F0
+// OFFSET: 0x00949230
 int32_t Packet_SMSG_CRITERIA_DELETED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t id;
     msg->Get(reinterpret_cast<uint32_t&>(id));
@@ -638,7 +638,7 @@ void CGAchievementInfo::UpdateInspectCriteria(WOWGUID guid, int32_t id, uint64_t
     }
 }
 
-// OFFSET: #0x005B3020
+// OFFSET: 0x0094D620
 int32_t Packet_SMSG_ACHIEVEMENT_EARNED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WowTime date;
     SmartGUID player;
@@ -676,7 +676,7 @@ int32_t Packet_SMSG_ACHIEVEMENT_EARNED(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: #0x005B3160
+// OFFSET: 0x0094B2C0
 int32_t Packet_SMSG_CRITERIA_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGAchievementInfo::m_showAchievementUI = 1;
     WowTime date;

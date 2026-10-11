@@ -1186,7 +1186,7 @@ bool CGAuctionHouse::IsSellItemValid(CGItem_C* item, int32_t showError) {
     return false;
 }
 
-// OFFSET: #0x0059E160
+// OFFSET: 0x00978560
 int32_t Packet_SMSG_AUCTION_LIST_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (--CGAuctionHouse::m_queryPending[0] < 0) {
         CGAuctionHouse::m_queryPending[0] = 0;
@@ -1344,7 +1344,7 @@ int32_t Packet_SMSG_AUCTION_OWNER_LIST_RESULT(void* param, NETMESSAGE msgId, uin
     return 1;
 }
 
-// OFFSET: #0x0059E880
+// OFFSET: 0x00978C90
 int32_t Packet_SMSG_AUCTION_LIST_PENDING_SALES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (--CGAuctionHouse::m_queryPending[2] < 0) {
         CGAuctionHouse::m_queryPending[2] = 0;
@@ -1717,7 +1717,7 @@ int32_t FindSellableItems(int32_t itemId) {
     return find.m_total;
 }
 
-// OFFSET: #0x0059FF40
+// OFFSET: 0x00975DC0
 int32_t Packet_MSG_AUCTION_HELLO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID auctioneer;
     uint32_t auctionHouseID;
@@ -1736,7 +1736,7 @@ int32_t Packet_MSG_AUCTION_HELLO(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x0059FFB0
+// OFFSET: 0x00975E30
 int32_t Packet_SMSG_AUCTION_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t inventoryError = 40;
     uint32_t auctionID;
@@ -1882,7 +1882,7 @@ int32_t Packet_SMSG_AUCTION_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32
     }
 }
 
-// OFFSET: #0x005A0480
+// OFFSET: 0x00976AE0
 int32_t Packet_SMSG_AUCTION_BIDDER_NOTIFICATION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t auctionHouseID;
     uint32_t auctionID;
@@ -1969,7 +1969,7 @@ int32_t Packet_SMSG_AUCTION_BIDDER_NOTIFICATION(void* param, NETMESSAGE msgId, u
     return 1;
 }
 
-// OFFSET: #0x005A0790
+// OFFSET: 0x00976E60
 int32_t Packet_SMSG_AUCTION_OWNER_NOTIFICATION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t auctionID;
     uint32_t bid;
@@ -2054,7 +2054,7 @@ int32_t Packet_SMSG_AUCTION_OWNER_NOTIFICATION(void* param, NETMESSAGE msgId, ui
     return 1;
 }
 
-// OFFSET: #0x005A0AC0
+// OFFSET: 0x009771E0
 int32_t Packet_SMSG_AUCTION_REMOVED_NOTIFICATION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t auctionID;
     uint32_t itemID;

@@ -1620,7 +1620,7 @@ int32_t CGChat::OnMessageChat(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return CGChat::ChatMessageReceived(msg, false);
 }
 
-// OFFSET: %0x0085B260
+// OFFSET: 0x008FBC50
 int32_t CGChat::OnGMMessageChat(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     return CGChat::ChatMessageReceived(msg, true);
 }
@@ -1827,7 +1827,7 @@ ChatChannel* CGChat::GetChannelByChatChannelID(uint32_t id) {
     return NULL;
 }
 
-// OFFSET: %0x00846DA0
+// OFFSET: 0x008E5D10
 int32_t CGChat::OnChannelMemberCount(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char channel[128];
     uint8_t flags;
@@ -1873,7 +1873,7 @@ int32_t CGChat::OnVoicesessionFull(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: %0x008471F0
+// OFFSET: 0x008E61C0
 int32_t CGChat::OnUpdateInstanceOwnership(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t owns;
     msg->Get(reinterpret_cast<uint32_t&>(owns));
@@ -1881,7 +1881,7 @@ int32_t CGChat::OnUpdateInstanceOwnership(void* param, NETMESSAGE msgId, uint32_
     return 1;
 }
 
-// OFFSET: #0x004FE100
+// OFFSET: 0x008E8CF0
 int32_t CGChat::OnUpdateInstance(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t mapId;
     msg->Get(reinterpret_cast<uint32_t&>(mapId));
@@ -1921,7 +1921,7 @@ void ChatWindowInfo::Init() {
     this->m_height = 120.0f;
 }
 
-// OFFSET: #0x00501C70
+// OFFSET: 0x008ED870
 int32_t CGChat::OnCheckReloadSpamFilter(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count;
     msg->Get(count);
@@ -2151,7 +2151,7 @@ void CGChat::ResetChannel(uint32_t id, const char* name) {
     CGChat::OnChannelsUpdated();
 }
 
-// OFFSET: #0x0050B010
+// OFFSET: 0x008F78B0
 int32_t CGChat::OnServerFirstAchievement(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char name[96];
     WOWGUID guid;
@@ -2209,7 +2209,7 @@ int32_t CGChat::OnZoneUnderAttack(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: #0x0050C810
+// OFFSET: 0x008F92D0
 int32_t CGChat::OnDurabilityDamageDeath(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGChat::AddChatMessage(FrameScript_GetText("DURABILITYDAMAGE_DEATH", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_COMBAT_MISC_INFO, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
     return 1;
@@ -2275,7 +2275,7 @@ int32_t CGChat::OnServerMessage(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x0050CA80
+// OFFSET: 0x008F95A0
 int32_t CGChat::OnRaidInstanceMessage(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t type;
     int32_t mapId;
@@ -2328,7 +2328,7 @@ int32_t CGChat::OnRaidInstanceMessage(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x0050CCD0
+// OFFSET: 0x008F97A0
 int32_t CGChat::OnInstanceReset(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t mapId;
     char mapName[256];
@@ -2350,7 +2350,7 @@ int32_t CGChat::OnInstanceReset(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x0050CDA0
+// OFFSET: 0x008F9870
 int32_t CGChat::OnInstanceResetFailed(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t reason;
     int32_t mapId;
@@ -2386,7 +2386,7 @@ int32_t CGChat::OnResetFailedNotify(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// OFFSET: #0x0050E120
+// OFFSET: 0x008FACB0
 int32_t CGChat::OnChannelNotify(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t notify;
     char channelName[128];
@@ -3015,7 +3015,7 @@ void CGChat::LogXPGain(CGUnit_C* unit, int32_t amount, int32_t type, int32_t bon
     CGChat::AddChatMessage(text, 33, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
 }
 
-// OFFSET: #0x0050C720
+// OFFSET: 0x008F91E0
 int32_t Packet_SMSG_LOG_XPGAIN(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid = WOWGUID();
     msg->Get(guid.m_guid);
@@ -3235,7 +3235,7 @@ void CGChat::AddTextEmoteMessage(const WOWGUID& guid, uint32_t emote, const char
     }
 }
 
-// OFFSET: #0x00504070
+// OFFSET: 0x008F04B0
 int32_t CGChat::OnTextEmote(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint32_t emote;
@@ -3263,7 +3263,7 @@ int32_t CGChat::OnTextEmote(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// OFFSET: #0x00505DC0
+// OFFSET: 0x008F1E80
 int32_t CGChat::OnChannelList(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t display = 0;
     msg->Get(display);
@@ -5039,7 +5039,7 @@ void CGChat::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_SERVER_FIRST_ACHIEVEMENT);
 }
 
-// OFFSET: #0x00500380
+// OFFSET: 0x008EB670
 int32_t CGChat::OnUserListUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint8_t memberFlags;
@@ -5607,7 +5607,7 @@ void CGChat::NewVoiceSession(const char* name, int32_t type) {
     }
 }
 
-// OFFSET: #0x00500240
+// OFFSET: 0x008EB530
 int32_t CGChat::OnVoiceStatusChanged(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t status;
     msg->Get(status);
@@ -5775,7 +5775,7 @@ void CGChat::DisplayPendingUserList(ChatChannel* channel) {
     users.Clear();
 }
 
-// OFFSET: #0x00504130
+// OFFSET: 0x008F0570
 int32_t CGChat::OnUserListAdded(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint8_t flags;
@@ -5822,7 +5822,7 @@ int32_t CGChat::OnUserListAdded(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x005042F0
+// OFFSET: 0x008F0740
 int32_t CGChat::OnUserListRemove(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint8_t channelFlags;
@@ -5975,7 +5975,7 @@ void CGChat::LogTradeSkillCreate(const WOWGUID& guid, int32_t itemId) {
     CGChat::AddChatMessage(text, CHAT_MSG_TRADESKILLS, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
 }
 
-// OFFSET: #0x0050C520
+// OFFSET: 0x008F8F80
 int32_t CGChat::OnTitleEarned(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t titleId;
     uint32_t earned;

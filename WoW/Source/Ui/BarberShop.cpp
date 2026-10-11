@@ -76,7 +76,7 @@ void CGBarberShop::AppearanceApplied() {
     CGBarberShop::m_resetPortrait = 1;
 }
 
-// OFFSET: #0x0052E5B0
+// OFFSET: 0x008FF6B0
 int32_t Packet_SMSG_BARBER_SHOP_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t result = 0xFFFFFFFF;
     msg->Get(result);
@@ -140,7 +140,7 @@ void CGBarberShop::Reset() {
     CGBarberShop::ResetAppearance();
 }
 
-// OFFSET: #0x0052F9B0
+// OFFSET: 0x00900600
 int32_t Packet_SMSG_ENABLE_BARBER_SHOP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

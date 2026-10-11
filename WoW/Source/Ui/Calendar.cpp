@@ -315,7 +315,7 @@ uint32_t CGCalendar::CountPendingInvites() {
     return count > static_cast<uint32_t>(CGCalendar::m_numInitialPending) ? count : CGCalendar::m_numInitialPending;
 }
 
-// OFFSET: #0x005C3FE0
+// OFFSET: 0x009B7790
 int32_t PH_CALENDAR_GROUP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t clearPending = 1;
 
