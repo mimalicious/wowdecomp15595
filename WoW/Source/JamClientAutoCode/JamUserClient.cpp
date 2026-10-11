@@ -1223,3 +1223,935 @@ UserClientInitiateRolePoll::~UserClientInitiateRolePoll() {
 void UserClientInitiateRolePoll::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x430));
 }
+
+// OFFSET: 0x0066D720/0x140314800
+UserClientBattlefieldStatus::UserClientBattlefieldStatus() {
+}
+
+// OFFSET: 0x0066BA30/0x140312220
+UserClientBattlefieldStatus::~UserClientBattlefieldStatus() {
+}
+
+// OFFSET: 0x0066BAC0
+void UserClientBattlefieldStatus::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2500));
+}
+
+// OFFSET: 0x0066DEE0/0x140312320
+UserClientGuildAccept::UserClientGuildAccept() {
+}
+
+// OFFSET: 0x0066BA70/0x140312260
+UserClientGuildAccept::~UserClientGuildAccept() {
+}
+
+// OFFSET: 0x0066BB80
+void UserClientGuildAccept::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2531));
+}
+
+// OFFSET: 0x0066E560/0x1403123E0
+UserClientLfgSetRoles::UserClientLfgSetRoles() {
+}
+
+// OFFSET: 0x0066B9E0/0x1403121D0
+UserClientLfgSetRoles::~UserClientLfgSetRoles() {
+}
+
+// OFFSET: 0x0066D0E0
+void UserClientLfgSetRoles::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x480));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x0066D920
+UserClientLfgLfrJoin::UserClientLfgLfrJoin() {
+}
+
+// OFFSET: 0x0066B950
+UserClientLfgLfrJoin::~UserClientLfgLfrJoin() {
+}
+
+// OFFSET: 0x0066D110
+void UserClientLfgLfrJoin::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x531));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x0066D3D0/0x140314460
+UserClientArenaTeamCreate::UserClientArenaTeamCreate() {
+}
+
+// OFFSET: 0x0066B930
+UserClientArenaTeamCreate::~UserClientArenaTeamCreate() {
+}
+
+// OFFSET: 0x0066D820
+void UserClientArenaTeamCreate::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x4A1));
+    msg->Put(this->unk_0010);
+    msg->Put(this->unk_0084);
+    msg->Put(this->unk_0014);
+    msg->Put(this->unk_0018);
+    msg->Put(this->unk_001C);
+    msg->Put(this->unk_0020);
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0024));
+    bits.Flush();
+
+    msg->PutData(this->unk_0024, strlen(this->unk_0024));
+}
+
+// OFFSET: 0x0066D750/0x140314860
+UserClientLfgLfrLeave::UserClientLfgLfrLeave() {
+}
+
+// OFFSET: 0x0066BC10/0x140312440
+UserClientLfgLfrLeave::~UserClientLfgLfrLeave() {
+}
+
+// OFFSET: 0x0066DB10
+void UserClientLfgLfrLeave::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x500));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x0066CF50/0x140313F20
+UserClientGuildInvite::UserClientGuildInvite() {
+}
+
+// OFFSET: 0x0066B9F0/0x1403121E0
+UserClientGuildInvite::~UserClientGuildInvite() {
+}
+
+// OFFSET: 0x0066E050
+void UserClientGuildInvite::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x24B0));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0066DE70/0x140315050
+UserClientLfgSetComment::UserClientLfgSetComment() {
+}
+
+// OFFSET: 0x0066BB70/0x140312360
+UserClientLfgSetComment::~UserClientLfgSetComment() {
+}
+
+// OFFSET: 0x0066F2E0
+void UserClientLfgSetComment::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x530));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<9>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x00670890/0x140318540
+UserClientBattlefieldLeave::UserClientBattlefieldLeave() {
+}
+
+// OFFSET: 0x00670550/0x140317E80
+UserClientBattlefieldLeave::~UserClientBattlefieldLeave() {
+}
+
+// OFFSET: 0x006705C0
+void UserClientBattlefieldLeave::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3018));
+}
+
+// OFFSET: 0x00670D00/0x140318FF0
+UserClientBattlemasterJoinArena::UserClientBattlemasterJoinArena(uint8_t a1) {
+    this->unk_0010 = a1;
+}
+
+// OFFSET: 0x006708C0/0x140318620
+UserClientBattlemasterJoinArena::~UserClientBattlemasterJoinArena() {
+}
+
+// OFFSET: 0x00670A20
+void UserClientBattlemasterJoinArena::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x701C));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x00673470
+UserClientBattlefieldList::UserClientBattlefieldList(uint32_t a1) {
+    this->unk_0010 = a1;
+}
+
+// OFFSET: 0x00670D20
+UserClientBattlefieldList::~UserClientBattlefieldList() {
+}
+
+// OFFSET: 0x00670E30
+void UserClientBattlefieldList::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3814));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x00673690/0x140317E10
+UserClientBattlemasterJoin::UserClientBattlemasterJoin() {
+}
+
+// OFFSET: 0x00670430/0x140317CB0
+UserClientBattlemasterJoin::~UserClientBattlemasterJoin() {
+}
+
+// OFFSET: 0x006734A0
+void UserClientBattlemasterJoin::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7902));
+    msg->Put(this->unk_0010);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0018[2] != 0);
+    bits.WriteBit(this->unk_0018[0] != 0);
+    bits.WriteBit(this->unk_0018[3] != 0);
+    bits.WriteBit(this->unk_0018[1] != 0);
+    bits.WriteBit(this->unk_0018[5] != 0);
+    bits.WriteBit(this->unk_0014);
+    bits.WriteBit(this->unk_0018[4] != 0);
+    bits.WriteBit(this->unk_0018[6] != 0);
+    bits.WriteBit(this->unk_0018[7] != 0);
+    bits.Flush();
+
+    if (this->unk_0018[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[2] ^ 1));
+    }
+    if (this->unk_0018[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[6] ^ 1));
+    }
+    if (this->unk_0018[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[4] ^ 1));
+    }
+    if (this->unk_0018[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[3] ^ 1));
+    }
+    if (this->unk_0018[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[7] ^ 1));
+    }
+    if (this->unk_0018[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[0] ^ 1));
+    }
+    if (this->unk_0018[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[5] ^ 1));
+    }
+    if (this->unk_0018[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[1] ^ 1));
+    }
+}
+
+// OFFSET: 0x0069C160/0x140348660
+UserClientGuildDisband::UserClientGuildDisband() {
+}
+
+// OFFSET: 0x0069A420/0x140346970
+UserClientGuildDisband::~UserClientGuildDisband() {
+}
+
+// OFFSET: 0x00699FE0/0x140346560
+void UserClientGuildDisband::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3226));
+}
+
+// OFFSET: 0x0069C200/0x140348750
+UserClientGuildLeave::UserClientGuildLeave() {
+}
+
+// OFFSET: 0x0069A1C0/0x140346740
+UserClientGuildLeave::~UserClientGuildLeave() {
+}
+
+// OFFSET: 0x0069A3B0/0x140346910
+void UserClientGuildLeave::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1021));
+}
+
+// OFFSET: 0x0069C330/0x1403488A0
+UserClientGuildLeader::UserClientGuildLeader(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069A200/0x140346770
+UserClientGuildLeader::~UserClientGuildLeader() {
+}
+
+// OFFSET: 0x0069A880/0x140346E20
+void UserClientGuildLeader::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3034));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069C210/0x140348770
+UserClientGuildRemove::UserClientGuildRemove(uint64_t a1) {
+    *reinterpret_cast<uint64_t*>(this->unk_0010) = a1;
+}
+
+// OFFSET: 0x0069A180/0x140346700
+UserClientGuildRemove::~UserClientGuildRemove() {
+}
+
+// OFFSET: 0x0069AF20/0x140347440
+void UserClientGuildRemove::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1231));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+}
+
+// OFFSET: 0x0069AB80/0x140347120
+UserClientGuildPromote::UserClientGuildPromote(uint64_t a1) {
+    *reinterpret_cast<uint64_t*>(this->unk_0010) = a1;
+}
+
+// OFFSET: 0x0069A110/0x140346680
+UserClientGuildPromote::~UserClientGuildPromote() {
+}
+
+// OFFSET: 0x0069B070/0x1403475A0
+void UserClientGuildPromote::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1030));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+}
+
+// OFFSET: 0x0069B730/0x140347C60
+UserClientGuildDemote::UserClientGuildDemote(uint64_t a1) {
+    *reinterpret_cast<uint64_t*>(this->unk_0010) = a1;
+}
+
+// OFFSET: 0x0069A2A0/0x140346810
+UserClientGuildDemote::~UserClientGuildDemote() {
+}
+
+// OFFSET: 0x0069B200/0x140347730
+void UserClientGuildDemote::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1020));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+}
+
+// OFFSET: 0x0069B8E0/0x140347DE0
+UserClientGuildMotd::UserClientGuildMotd(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069A390/0x1403468F0
+UserClientGuildMotd::~UserClientGuildMotd() {
+}
+
+// OFFSET: 0x0069CBA0/0x140349080
+void UserClientGuildMotd::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1035));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<11>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069E800/0x14034B210
+UserClientChatChannelVoiceOn::UserClientChatChannelVoiceOn(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069CF20/0x140349440
+UserClientChatChannelVoiceOn::~UserClientChatChannelVoiceOn() {
+}
+
+// OFFSET: 0x0069D000/0x1403494E0
+void UserClientChatChannelVoiceOn::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1144));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069D5F0
+UserClientChatChannelKick::UserClientChatChannelKick(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CD70
+UserClientChatChannelKick::~UserClientChatChannelKick() {
+}
+
+// OFFSET: 0x0069D070/0x140349570
+void UserClientChatChannelKick::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3156));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+}
+
+// OFFSET: 0x0069DEF0/0x14034A730
+UserClientChatChannelOwner::UserClientChatChannelOwner(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069CF80/0x1403494A0
+UserClientChatChannelOwner::~UserClientChatChannelOwner() {
+}
+
+// OFFSET: 0x0069D130/0x140349650
+void UserClientChatChannelOwner::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3D44));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069D670
+UserClientChatChannelBan::UserClientChatChannelBan(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CE00
+UserClientChatChannelBan::~UserClientChatChannelBan() {
+}
+
+// OFFSET: 0x0069D1A0/0x1403496E0
+void UserClientChatChannelBan::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3D56));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.Flush();
+
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069ECD0
+UserClientChatChannelUnsilenceAll::UserClientChatChannelUnsilenceAll(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CCF0
+UserClientChatChannelUnsilenceAll::~UserClientChatChannelUnsilenceAll() {
+}
+
+// OFFSET: 0x0069D530/0x140349AB0
+void UserClientChatChannelUnsilenceAll::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2546));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.Flush();
+
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069EED0
+UserClientChatChannelSilenceAll::UserClientChatChannelSilenceAll(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
+}
+
+// OFFSET: 0x0069CE50
+UserClientChatChannelSilenceAll::~UserClientChatChannelSilenceAll() {
+}
+
+// OFFSET: 0x0069D6F0/0x140349CB0
+void UserClientChatChannelSilenceAll::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2154));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.WriteBits<8>(strlen(this->unk_0040));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+    msg->PutData(this->unk_0040, strlen(this->unk_0040));
+}
+
+// OFFSET: 0x0069D260/0x1403497C0
+UserClientChatChannelDisplayList::UserClientChatChannelDisplayList(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069CE10/0x140349340
+UserClientChatChannelDisplayList::~UserClientChatChannelDisplayList() {
+}
+
+// OFFSET: 0x0069DA40/0x14034A0C0
+void UserClientChatChannelDisplayList::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2144));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069EC80/0x14034B700
+UserClientChatChannelList::UserClientChatChannelList(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069CF50/0x140349470
+UserClientChatChannelList::~UserClientChatChannelList() {
+}
+
+// OFFSET: 0x0069DB20/0x14034A1A0
+void UserClientChatChannelList::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1556));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069D7F0
+UserClientChatChannelUnban::UserClientChatChannelUnban(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
+}
+
+// OFFSET: 0x0069CEF0
+UserClientChatChannelUnban::~UserClientChatChannelUnban() {
+}
+
+// OFFSET: 0x0069DD20/0x14034A440
+void UserClientChatChannelUnban::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2D46));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.WriteBits<8>(strlen(this->unk_0040));
+    bits.Flush();
+
+    msg->PutData(this->unk_0040, strlen(this->unk_0040));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069D860
+UserClientChatChannelInvite::UserClientChatChannelInvite(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
+}
+
+// OFFSET: 0x0069CDA0
+UserClientChatChannelInvite::~UserClientChatChannelInvite() {
+}
+
+// OFFSET: 0x0069DDD0/0x14034A570
+void UserClientChatChannelInvite::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x144));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.WriteBits<8>(strlen(this->unk_0040));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+    msg->PutData(this->unk_0040, strlen(this->unk_0040));
+}
+
+// OFFSET: 0x0069E640
+UserClientChatChannelVoiceOff::UserClientChatChannelVoiceOff(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069CE80/0x1403493A0
+UserClientChatChannelVoiceOff::~UserClientChatChannelVoiceOff() {
+}
+
+// OFFSET: 0x0069E0E0/0x14034A920
+void UserClientChatChannelVoiceOff::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3144));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069DE80/0x14034A6A0
+UserClientChatChannelPassword::UserClientChatChannelPassword(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
+}
+
+// OFFSET: 0x0069CFA0/0x1403494C0
+UserClientChatChannelPassword::~UserClientChatChannelPassword() {
+}
+
+// OFFSET: 0x0069E150/0x14034A9B0
+void UserClientChatChannelPassword::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2556));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0040));
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0040, strlen(this->unk_0040));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069E5D0
+UserClientChatChannelUnmute::UserClientChatChannelUnmute(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
+}
+
+// OFFSET: 0x0069CD80
+UserClientChatChannelUnmute::~UserClientChatChannelUnmute() {
+}
+
+// OFFSET: 0x0069E2C0/0x14034AB70
+void UserClientChatChannelUnmute::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3554));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0040));
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0040, strlen(this->unk_0040));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069E990
+UserClientChatChannelUnsilenceVoice::UserClientChatChannelUnsilenceVoice(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
+}
+
+// OFFSET: 0x0069CF30
+UserClientChatChannelUnsilenceVoice::~UserClientChatChannelUnsilenceVoice() {
+}
+
+// OFFSET: 0x0069E690/0x14034AFB0
+void UserClientChatChannelUnsilenceVoice::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3146));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0010));
+    bits.WriteBits<8>(strlen(this->unk_0040));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+    msg->PutData(this->unk_0040, strlen(this->unk_0040));
+}
+
+// OFFSET: 0x0069EF40
+UserClientChatChannelUnmoderator::UserClientChatChannelUnmoderator(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CD40
+UserClientChatChannelUnmoderator::~UserClientChatChannelUnmoderator() {
+}
+
+// OFFSET: 0x0069E740/0x14034B0E0
+void UserClientChatChannelUnmoderator::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1954));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+}
+
+// OFFSET: 0x0069D9C0
+UserClientChatChannelSilenceVoice::UserClientChatChannelSilenceVoice(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CF40
+UserClientChatChannelSilenceVoice::~UserClientChatChannelSilenceVoice() {
+}
+
+// OFFSET: 0x0069EA80/0x14034B4E0
+void UserClientChatChannelSilenceVoice::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2D54));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+}
+
+// OFFSET: 0x0069EFC0
+UserClientChatChannelSetOwner::UserClientChatChannelSetOwner(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CE60
+UserClientChatChannelSetOwner::~UserClientChatChannelSetOwner() {
+}
+
+// OFFSET: 0x0069ED50/0x14034B7E0
+void UserClientChatChannelSetOwner::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3556));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.Flush();
+
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069D8D0
+UserClientChatChannelMute::UserClientChatChannelMute(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CDD0
+UserClientChatChannelMute::~UserClientChatChannelMute() {
+}
+
+// OFFSET: 0x0069EE10/0x14034B8C0
+void UserClientChatChannelMute::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2554));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+}
+
+// OFFSET: 0x0069D440
+UserClientChatChannelModerator::UserClientChatChannelModerator(const char* a1, const char* a2) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+    SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
+}
+
+// OFFSET: 0x0069CDE0
+UserClientChatChannelModerator::~UserClientChatChannelModerator() {
+}
+
+// OFFSET: 0x0069F040/0x14034BB50
+void UserClientChatChannelModerator::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x146));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.WriteBits<7>(strlen(this->unk_0090));
+    bits.Flush();
+
+    msg->PutData(this->unk_0090, strlen(this->unk_0090));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069D320/0x1403498A0
+UserClientChatChannelAnnouncements::UserClientChatChannelAnnouncements(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069CD00/0x140349230
+UserClientChatChannelAnnouncements::~UserClientChatChannelAnnouncements() {
+}
+
+// OFFSET: 0x0069F100/0x14034BC30
+void UserClientChatChannelAnnouncements::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1146));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0069E4D0/0x14034ADD0
+UserClientGetdeathbindzone::UserClientGetdeathbindzone(uint32_t a1, bool a2, bool a3, const char* a4, const char* a5) {
+    this->unk_0011 = a3;
+    this->unk_0010 = a2;
+    SStrCopy(this->unk_0012, a4, sizeof(this->unk_0012));
+    this->unk_0094 = a1;
+    SStrCopy(this->unk_0098, a5, sizeof(this->unk_0098));
+}
+
+// OFFSET: 0x0069CEA0/0x1403493C0
+UserClientGetdeathbindzone::~UserClientGetdeathbindzone() {
+}
+
+// OFFSET: 0x0069F170/0x14034BCC0
+void UserClientGetdeathbindzone::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x156));
+    msg->Put(this->unk_0094);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0011);
+    bits.WriteBit(this->unk_0010);
+    bits.WriteBits<8>(strlen(this->unk_0012));
+    bits.WriteBits<8>(strlen(this->unk_0098));
+    bits.Flush();
+
+    msg->PutData(this->unk_0012, strlen(this->unk_0012));
+    msg->PutData(this->unk_0098, strlen(this->unk_0098));
+}
+
+// OFFSET: 0x0069E200/0x14034AA90
+UserClientMessageChatAfk::UserClientMessageChatAfk(const char* a1) {
+    SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
+}
+
+// OFFSET: 0x0069CDB0/0x1403492E0
+UserClientMessageChatAfk::~UserClientMessageChatAfk() {
+}
+
+// OFFSET: 0x0069F420/0x14034C090
+void UserClientMessageChatAfk::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0xD44));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<9>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}

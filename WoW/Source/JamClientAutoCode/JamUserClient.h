@@ -324,4 +324,430 @@ class UserClientInitiateRolePoll : public JamClientMessage {
     ~UserClientInitiateRolePoll();
 };
 
+class UserClientBattlefieldStatus : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientBattlefieldStatus();
+    ~UserClientBattlefieldStatus();
+};
+
+class UserClientGuildAccept : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildAccept();
+    ~UserClientGuildAccept();
+};
+
+class UserClientLfgSetRoles : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgSetRoles();
+    ~UserClientLfgSetRoles();
+};
+
+class UserClientLfgLfrJoin : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgLfrJoin();
+    ~UserClientLfgLfrJoin();
+};
+
+class UserClientArenaTeamCreate : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ char unk_0024[96];
+    /* 0084 */ uint32_t unk_0084;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientArenaTeamCreate();
+    ~UserClientArenaTeamCreate();
+};
+
+class UserClientLfgLfrLeave : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgLfrLeave();
+    ~UserClientLfgLfrLeave();
+};
+
+class UserClientGuildInvite : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildInvite();
+    ~UserClientGuildInvite();
+};
+
+class UserClientLfgSetComment : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgSetComment();
+    ~UserClientLfgSetComment();
+};
+
+class UserClientBattlefieldLeave : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientBattlefieldLeave();
+    ~UserClientBattlefieldLeave();
+};
+
+class UserClientBattlemasterJoinArena : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBattlemasterJoinArena(uint8_t a1);
+    ~UserClientBattlemasterJoinArena();
+};
+
+class UserClientBattlefieldList : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBattlefieldList(uint32_t a1);
+    ~UserClientBattlefieldList();
+};
+
+class UserClientBattlemasterJoin : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ bool unk_0014;
+    /* 0018 */ uint8_t unk_0018[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBattlemasterJoin();
+    ~UserClientBattlemasterJoin();
+};
+
+class UserClientGuildDisband : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildDisband();
+    ~UserClientGuildDisband();
+};
+
+class UserClientGuildLeave : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildLeave();
+    ~UserClientGuildLeave();
+};
+
+class UserClientGuildLeader : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildLeader(const char* a1);
+    ~UserClientGuildLeader();
+};
+
+class UserClientGuildRemove : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildRemove(uint64_t a1);
+    ~UserClientGuildRemove();
+};
+
+class UserClientGuildPromote : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildPromote(uint64_t a1);
+    ~UserClientGuildPromote();
+};
+
+class UserClientGuildDemote : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildDemote(uint64_t a1);
+    ~UserClientGuildDemote();
+};
+
+class UserClientGuildMotd : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[516];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildMotd(const char* a1);
+    ~UserClientGuildMotd();
+};
+
+class UserClientChatChannelVoiceOn : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelVoiceOn(const char* a1);
+    ~UserClientChatChannelVoiceOn();
+};
+
+class UserClientChatChannelKick : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelKick(const char* a1, const char* a2);
+    ~UserClientChatChannelKick();
+};
+
+class UserClientChatChannelOwner : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelOwner(const char* a1);
+    ~UserClientChatChannelOwner();
+};
+
+class UserClientChatChannelBan : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelBan(const char* a1, const char* a2);
+    ~UserClientChatChannelBan();
+};
+
+class UserClientChatChannelUnsilenceAll : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelUnsilenceAll(const char* a1, const char* a2);
+    ~UserClientChatChannelUnsilenceAll();
+};
+
+class UserClientChatChannelSilenceAll : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[48];
+    /* 0040 */ char unk_0040[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelSilenceAll(const char* a1, const char* a2);
+    ~UserClientChatChannelSilenceAll();
+};
+
+class UserClientChatChannelDisplayList : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelDisplayList(const char* a1);
+    ~UserClientChatChannelDisplayList();
+};
+
+class UserClientChatChannelList : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelList(const char* a1);
+    ~UserClientChatChannelList();
+};
+
+class UserClientChatChannelUnban : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[48];
+    /* 0040 */ char unk_0040[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelUnban(const char* a1, const char* a2);
+    ~UserClientChatChannelUnban();
+};
+
+class UserClientChatChannelInvite : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[48];
+    /* 0040 */ char unk_0040[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelInvite(const char* a1, const char* a2);
+    ~UserClientChatChannelInvite();
+};
+
+class UserClientChatChannelVoiceOff : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelVoiceOff(const char* a1);
+    ~UserClientChatChannelVoiceOff();
+};
+
+class UserClientChatChannelPassword : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[48];
+    /* 0040 */ char unk_0040[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelPassword(const char* a1, const char* a2);
+    ~UserClientChatChannelPassword();
+};
+
+class UserClientChatChannelUnmute : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[48];
+    /* 0040 */ char unk_0040[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelUnmute(const char* a1, const char* a2);
+    ~UserClientChatChannelUnmute();
+};
+
+class UserClientChatChannelUnsilenceVoice : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[48];
+    /* 0040 */ char unk_0040[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelUnsilenceVoice(const char* a1, const char* a2);
+    ~UserClientChatChannelUnsilenceVoice();
+};
+
+class UserClientChatChannelUnmoderator : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelUnmoderator(const char* a1, const char* a2);
+    ~UserClientChatChannelUnmoderator();
+};
+
+class UserClientChatChannelSilenceVoice : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelSilenceVoice(const char* a1, const char* a2);
+    ~UserClientChatChannelSilenceVoice();
+};
+
+class UserClientChatChannelSetOwner : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelSetOwner(const char* a1, const char* a2);
+    ~UserClientChatChannelSetOwner();
+};
+
+class UserClientChatChannelMute : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelMute(const char* a1, const char* a2);
+    ~UserClientChatChannelMute();
+};
+
+class UserClientChatChannelModerator : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+    /* 0090 */ char unk_0090[48];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelModerator(const char* a1, const char* a2);
+    ~UserClientChatChannelModerator();
+};
+
+class UserClientChatChannelAnnouncements : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatChannelAnnouncements(const char* a1);
+    ~UserClientChatChannelAnnouncements();
+};
+
+class UserClientGetdeathbindzone : public JamClientMessage {
+    public:
+    /* 0010 */ bool unk_0010;
+    /* 0011 */ bool unk_0011;
+    /* 0012 */ char unk_0012[128];
+    /* 0094 */ uint32_t unk_0094;
+    /* 0098 */ char unk_0098[128];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGetdeathbindzone(uint32_t a1, bool a2, bool a3, const char* a4, const char* a5);
+    ~UserClientGetdeathbindzone();
+};
+
+class UserClientMessageChatAfk : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatAfk(const char* a1);
+    ~UserClientMessageChatAfk();
+};
+
 #endif
