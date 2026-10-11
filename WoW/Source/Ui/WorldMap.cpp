@@ -416,7 +416,7 @@ int32_t CGWorldMap::GetDungeonMapFromChunk(int32_t mapID, int32_t wmoGroupID, fl
     return dungeonMap;
 }
 
-// OFFSET: #0x00544090
+// OFFSET: 0x0091B070
 WorldMapContinentRec* CGWorldMap::GetContinentRec(int32_t mapID) {
     for (int32_t i = g_worldMapContinentDB.m_numRecords - 1; i >= 0; i--) {
         WorldMapContinentRec* rec = g_worldMapContinentDB.GetRecordByIndex(i);
@@ -537,7 +537,7 @@ bool CGWorldMap::GetWorldPosition(const C3Vector& position, int32_t mapID, float
     return true;
 }
 
-// OFFSET: #0x005445F0
+// OFFSET: 0x0091DED0
 void CGWorldMap::GetPOIPosition(const AreaPOIRec* poi, float* x, float* y) {
     *x = 0.0f;
     *y = 0.0f;
@@ -952,7 +952,7 @@ void CGWorldMap::UpdateArrowFrames() {
     }
 }
 
-// OFFSET: #0x00546190
+// OFFSET: 0x0091D440
 int32_t CGWorldMap::GetNumDungeonLevels() {
     int32_t count = 0;
     uint32_t floors = 0;
@@ -1378,7 +1378,7 @@ int32_t PlayerExploredZonesUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uin
     return 1;
 }
 
-// OFFSET: #0x00543920
+// OFFSET: 0x0091A880
 bool WorldMapTransformPosition(int32_t mapID, float x, float y, int32_t* outMapID, float* outX, float* outY, int32_t* outDungeonMapID) {
     *outX = x;
     *outY = y;

@@ -19381,7 +19381,7 @@ void CGUnit_C::UpdateThreatStatus() {
     }
 }
 
-// OFFSET: #0x007417A0
+// OFFSET: 0x005DB230
 void CGUnit_C::UpdateThreat(CDataStore* msg, bool highest) {
     WOWGUID activePlayer = ClntObjMgrGetActivePlayer();
     bool highestInList = highest;

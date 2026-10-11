@@ -1148,7 +1148,7 @@ void CGAuctionHouse::SortBrowseList(int32_t column) {
     CGAuctionHouse::ApplyBrowseSort();
 }
 
-// OFFSET: #0x0059CFF0
+// OFFSET: 0x009794B0
 void CGAuctionHouse::SortOwnedList(int32_t column) {
     if (CGAuctionHouse::m_ownedSortCriteria[0].m_column == column && CGAuctionHouse::m_ownedSortCriteria[0].m_valid) {
         CGAuctionHouse::SetOwnedSortCriteria(column, !CGAuctionHouse::m_ownedSortCriteria[0].m_reverse);

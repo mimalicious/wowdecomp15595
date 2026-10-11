@@ -79,7 +79,7 @@ const char* CGQuestPOIFrame::GetObjectTypeName() {
     return CGQuestPOIFrame::s_objectTypeName;
 }
 
-// OFFSET: %0x009433D0
+// OFFSET: 0x00A02AE0
 int32_t CGQuestPOIFrame::GetScriptMetaTable() {
     return CGQuestPOIFrame::s_metatable;
 }
@@ -598,7 +598,7 @@ bool CGQuestPOIFrame::BuildRenderData(uint32_t index) {
     return true;
 }
 
-// OFFSET: #0x00590560
+// OFFSET: 0x00A021F0
 void CGQuestPOIFrame::AddQuest(QuestPOIInfo* info) {
     if (!info) {
         return;

@@ -62,7 +62,7 @@ void CGPetitionInfo::SetPetitionStats(int32_t id) {
     }
 }
 
-// OFFSET: #0x005CEBF0
+// OFFSET: 0x009E0300
 void SignatureNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (CGPetitionInfo::m_pendingNameQueries && !--CGPetitionInfo::m_pendingNameQueries && CGPetitionInfo::m_petition) {
         FrameScript_SignalEvent(SCRIPT_EVENT_PETITION_SHOW, NULL);
@@ -135,7 +135,7 @@ void CGPetitionInfo::EnterWorld() {
     CGPetitionInfo::m_signers.SetCount(10);
 }
 
-// OFFSET: #0x005CE9F0
+// OFFSET: 0x009E0370
 void CGPetitionInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_OFFER_PETITION_ERROR);
 }
@@ -193,7 +193,7 @@ void CGPetitionInfo::AddSignature(WOWGUID petition, WOWGUID signer) {
     }
 }
 
-// OFFSET: #0x005CF610
+// OFFSET: 0x009E0D40
 void CGPetitionInfo::LeaveWorld() {
     CGPetitionInfo::m_signers.Clear();
 }

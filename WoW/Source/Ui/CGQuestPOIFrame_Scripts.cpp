@@ -50,7 +50,7 @@ static int32_t Script_SetNumSplinePoints(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058E990
+// OFFSET: 0x00A004F0
 static int32_t Script_UpdateQuestPOI(lua_State* L) {
     FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType());
     return 0;

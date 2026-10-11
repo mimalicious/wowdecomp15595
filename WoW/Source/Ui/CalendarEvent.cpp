@@ -211,7 +211,7 @@ void CGCalendarEvent::ClearFlag(uint32_t flag) {
     }
 }
 
-// OFFSET: %0x00949D90
+// OFFSET: 0x00A0B370
 void CGCalendarEvent::SetSignalType(uint32_t signalType) {
     this->m_signalType = signalType;
 }

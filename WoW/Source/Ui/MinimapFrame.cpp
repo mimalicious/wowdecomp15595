@@ -1014,7 +1014,7 @@ void MinimapInitialize(int32_t mapId) {
     LoadMD5Names();
 }
 
-// OFFSET: #0x0057C260
+// OFFSET: 0x009CF120
 static uint32_t ColorToLuminance(CImVector color) {
     return (77 * color.r + 151 * color.g + 28 * color.b) >> 8;
 }
@@ -3084,7 +3084,7 @@ void CGMinimapFrame::RenderInsideTexture(const CImVector* color) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: #0x00581CD0
+// OFFSET: 0x009D8F10
 void CGMinimapFrame::MinimapTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command != GxTex_Latch) {
         return;
@@ -3166,7 +3166,7 @@ void CGMinimapFrame::RenderInside(float scale, const C2Vector* center, const CIm
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: #0x0057E020
+// OFFSET: 0x009D1110
 static int32_t UpdateObjectInteractIcon(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -3491,7 +3491,7 @@ void RefreshWorldStatePOIs(uint32_t state) {
     }
 }
 
-// OFFSET: #0x0057BD90
+// OFFSET: 0x009CEB00
 void CGMinimapFrame::ShutdownGame() {
     if (s_maskTexture) {
         TextureRelease(s_maskTexture);

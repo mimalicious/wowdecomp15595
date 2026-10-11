@@ -111,7 +111,7 @@ int32_t ConsoleCommand_DefaultSettings(const char* command, const char* argument
     return 1;
 }
 
-// OFFSET: #0x007650A0
+// OFFSET: 0x0060E850
 int32_t ConsoleCommand_FontSize(const char* command, const char* arguments) {
     float height = SStrToFloat(arguments) * 0.001f;
 

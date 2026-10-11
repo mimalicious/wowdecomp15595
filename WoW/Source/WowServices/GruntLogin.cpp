@@ -343,7 +343,7 @@ void GruntLogin::SetTokenInfo(bool enabled, uint8_t required) {
     this->m_tokenRequired = required;
 }
 
-// OFFSET: #0x008CA420
+// OFFSET: 0x00625F70
 void GruntLogin::GetTokenInfo(bool* enabled, char* token) {
     *enabled = this->m_tokenEnabled;
     SStrCopy(token, this->m_token, sizeof(this->m_token));

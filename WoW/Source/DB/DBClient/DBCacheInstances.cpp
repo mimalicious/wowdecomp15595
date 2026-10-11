@@ -123,7 +123,7 @@ static int32_t ReceiveNPCText(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// OFFSET: #0x00635230
+// OFFSET: 0x00496C40
 static int32_t ReceiveQuest(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     QuestCache quest;
     quest.Unpack(msg);
@@ -332,7 +332,7 @@ static int32_t ReceiveGuildInfo(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x00635A40
+// OFFSET: 0x00497390
 static int32_t ReceiveItemText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     ItemTextCache_C itemText;
 
@@ -388,7 +388,7 @@ void DBCache_Destroy() {
     g_danceCache.Destroy();
 }
 
-// OFFSET: #0x006355E0
+// OFFSET: 0x004975F0
 void DBCache_ClearHandlers() {
     ClientServices::ClearMessageHandler(SMSG_QUERY_CREATURE_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_QUERY_GAME_OBJECT_RESPONSE);

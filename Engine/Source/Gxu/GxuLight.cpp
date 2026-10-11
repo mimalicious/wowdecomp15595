@@ -190,7 +190,7 @@ static CGxuLight* GxuLightCreateImpl() {
     return light;
 }
 
-// OFFSET: %0x00621DA0
+// OFFSET: 0x00610ED0
 static void GxuLightApplyImpl(float x, float y, int32_t unused, const C3Vector& viewPos, uint32_t maxLights) {
     if (!s_lights.Head()) {
         return;

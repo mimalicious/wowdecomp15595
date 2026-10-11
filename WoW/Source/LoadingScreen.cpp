@@ -405,7 +405,7 @@ static bool PaintBackgroundImage() {
     return true;
 }
 
-// OFFSET: #0x004090C0
+// OFFSET: 0x0040B580
 static void PaintLoadingBar(const BackgroundImage* images, int32_t count, CTexture** textures) {
     for (int32_t i = 0; i < count; i++) {
         if (!textures[i]) {

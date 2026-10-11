@@ -495,7 +495,7 @@ void BattlenetApplication::Disconnect(uint32_t connection) {
     }
 }
 
-// OFFSET: #0x008C69D0
+// OFFSET: 0x00628860
 BattlenetApplication::BattlenetApplication() {
     this->m_eventId = Battlenet::Event::APP;
     this->m_login = NULL;

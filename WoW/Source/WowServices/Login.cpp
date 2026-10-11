@@ -100,7 +100,7 @@ void LoginResponse::UpdateLoginStatus(LOGIN_STATE state, LOGIN_RESULT result, co
     this->LoginServerStatus(state, result, addressString, stateString, resultString, flags);
 }
 
-// OFFSET: #0x00465550
+// OFFSET: 0x004C51D0
 void Login::GetFileStatus(const char* fileName, uint64_t size, const uint8_t* md5) {
     this->m_fileSize = size;
     SStrCopy(this->m_fileName, fileName, sizeof(this->m_fileName));
@@ -128,7 +128,7 @@ void Login::SetLogonCreds(const char* accountName, const char* password) {
     this->m_password = SStrDupA(password, __FILE__, __LINE__);
 }
 
-// OFFSET: #0x00465690
+// OFFSET: 0x004C52E0
 void Login::SetRawAccountName(const char* accountName) {
     SStrCopy(this->m_rawUsername, accountName, sizeof(this->m_rawUsername));
 }
@@ -359,7 +359,7 @@ void LoginResponse::HandleRealmData(uint32_t result, CDataStore* msg) {
     this->RealmEnumCallback(4);
 }
 
-// OFFSET: #0x00465F10
+// OFFSET: 0x004C5BF0
 void Login::RealmListResult(CDataStore* msg) {
     if (!msg || msg->m_read == -1) {
         this->m_loginResponse->HandleRealmData(4, NULL);

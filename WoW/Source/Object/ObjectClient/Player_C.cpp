@@ -1034,7 +1034,7 @@ uint32_t CGPlayer_C::GetProficiency(uint8_t itemClass) {
     return s_proficiency[itemClass];
 }
 
-// OFFSET: %0x00563270
+// OFFSET: 0x00553AF0
 int32_t Packet_SMSG_SET_PROFICIENCY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t itemClass;
     uint32_t mask;

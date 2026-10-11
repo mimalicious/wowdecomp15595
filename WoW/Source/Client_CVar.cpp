@@ -152,7 +152,7 @@ CVar* g_disableServerNagleVar;
 // STATIC: 0x00D36218
 CVar* g_useIPv6Var;
 
-// OFFSET: %0x004015C0
+// OFFSET: 0x00401400
 static bool MouseSpeedCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     OsInputSetMouseSpeed(SStrToFloat(value));
     return true;
@@ -397,7 +397,7 @@ static bool DesktopGammaCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// OFFSET: %0x00401910
+// OFFSET: 0x00401750
 static bool ScreenshotFormatCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotFormat(value);
     return true;

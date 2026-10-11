@@ -624,7 +624,7 @@ int32_t FindItemClassCallback(const CGItem_C* item, void* param) {
     return item->GetClassID() == classParam[0] && (!classParam[1] || ((1 << item->GetSubtypeID()) & classParam[1]));
 }
 
-// OFFSET: #0x00754A80
+// OFFSET: 0x005F2E00
 CGItem_C* CGBag_C::FindItemOfClass(int32_t classId, uint32_t subclassMask, uint32_t flags) {
     uint32_t param[2];
     param[0] = classId;

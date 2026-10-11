@@ -177,7 +177,7 @@ void CGCommentator::PostInit(CGPlayer_C* player) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_ENTER_WORLD, NULL);
 }
 
-// OFFSET: #0x00568340
+// OFFSET: 0x00928580
 void CGCommentator::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_PLAYER_INFO);
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_MAP_INFO);
@@ -607,7 +607,7 @@ int32_t CGCommentator::OnSkirmishPlayersInQueue(void* param, NETMESSAGE msgId, u
     return 1;
 }
 
-// OFFSET: #0x0056BF30
+// OFFSET: 0x0092C7E0
 int32_t CGCommentator::OnReceiveMapInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count = 0;
     msg->Get(count);

@@ -5239,7 +5239,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "LoadURLIndex", &Script_LoadURLIndex },
 };
 
-// OFFSET: #0x0060A170
+// OFFSET: 0x0044E140
 void ScriptEventsRegisterFunctions() {
     SystemRegisterFunctions();
 
@@ -5248,7 +5248,7 @@ void ScriptEventsRegisterFunctions() {
     }
 }
 
-// OFFSET: #0x00614FD0
+// OFFSET: 0x0045AAC0
 void ScriptEventsUnregisterFunctions() {
     SystemUnregisterFunctions();
 

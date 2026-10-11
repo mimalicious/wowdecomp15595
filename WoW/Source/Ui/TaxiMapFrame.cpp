@@ -100,7 +100,7 @@ static float GetNodeY(const TaxiNodesRec* node) {
     return y;
 }
 
-// OFFSET: #0x00590B20
+// OFFSET: 0x009E25F0
 static TaxiNodesRec* GetNodeMaskBit(int32_t nodeID, uint32_t* word, uint32_t* bit) {
     TaxiNodesRec* node = g_taxiNodesDB.GetRecord(nodeID);
 
@@ -466,7 +466,7 @@ void CGTaxiMap::GeneratePaths() {
     }
 }
 
-// OFFSET: #0x005932E0
+// OFFSET: 0x009E50E0
 void CGTaxiMap::SetupMap(const WOWGUID& unit, int32_t currentNode, const uint64_t* nodeMask) {
     if (CGTaxiMap::m_unit == unit) {
         return;

@@ -3,7 +3,7 @@
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
 
-// OFFSET: %0x0092A5D0
+// OFFSET: 0x009DFF80
 static int32_t Script_GetTabardCreationCost(lua_State* L) {
     lua_pushnumber(L, GuildGetTabardCost());
     return 1;

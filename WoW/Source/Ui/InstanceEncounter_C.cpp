@@ -46,7 +46,7 @@ int32_t ENCOUNTER_UNIT::Compare(const void* a, const void* b) {
     return *unitA < *unitB ? -1 : 1;
 }
 
-// OFFSET: #0x005ED6C0
+// OFFSET: 0x0094F4D0
 static ENCOUNTER_UNIT* FindUnit(const WOWGUID& guid) {
     for (uint32_t i = 0; i < CGInstanceEncounter_C::m_units.Count(); i++) {
         if (CGInstanceEncounter_C::m_units.m_data[i].m_guid == guid) {
@@ -199,7 +199,7 @@ void CGInstanceEncounter_C::EnableObjective(int32_t id) {
     objective->m_progress = 0;
 }
 
-// OFFSET: #0x005EDD10
+// OFFSET: 0x0094F8F0
 static void UpdateObjective(int32_t id, int32_t delta) {
     for (ENCOUNTER_OBJECTIVE* objective = CGInstanceEncounter_C::m_objectives.Head(); objective; objective = CGInstanceEncounter_C::m_objectives.Next(objective)) {
         if (objective->m_id == id) {

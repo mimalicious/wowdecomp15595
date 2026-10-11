@@ -578,7 +578,7 @@ static void PaintText(void* param, const RECTF* rect, const RECTF* visible, floa
     GxuFontRenderBatch(s_batch);
 }
 
-// OFFSET: #0x00764790
+// OFFSET: 0x0060E410
 static CONSOLELINE* GetLineAtMousePosition(float y) {
     int32_t lineIndex = static_cast<int32_t>((s_consoleHeight - (1.0f - y)) / s_fontHeight);
 
@@ -1262,7 +1262,7 @@ void ConsoleScreenInitialize(const char* title) {
     s_batch = GxuFontCreateBatch(false, false, false);
 }
 
-// OFFSET: #0x007662A0
+// OFFSET: 0x006102D0
 void ConsoleScreenDestroy() {
     EventSetConfirmCloseCallback(NULL, NULL);
     UnregisterHandlers();

@@ -95,7 +95,7 @@ static bool ReadCacheRecord(HOSFILE file, BannedAddOnCache* record, uint32_t* by
     return file != OS_INVALID_FILE && OsReadFile(file, &record->m_id, sizeof(record->m_id), bytes) && OsReadFile(file, record->m_nameMd5, sizeof(record->m_nameMd5), bytes) && OsReadFile(file, record->m_versionMd5, sizeof(record->m_versionMd5), bytes) && OsReadFile(file, &record->m_lastModified, sizeof(record->m_lastModified), bytes) && OsReadFile(file, &record->m_flags, sizeof(record->m_flags), bytes);
 }
 
-// OFFSET: #0x005F3750
+// OFFSET: 0x00446530
 static bool WriteCacheRecord(HOSFILE file, const BannedAddOnCache* record, uint32_t* bytes) {
     return file != OS_INVALID_FILE && OsWriteFile(file, &record->m_id, sizeof(record->m_id), bytes) && OsWriteFile(file, record->m_nameMd5, sizeof(record->m_nameMd5), bytes) && OsWriteFile(file, record->m_versionMd5, sizeof(record->m_versionMd5), bytes) && OsWriteFile(file, &record->m_lastModified, sizeof(record->m_lastModified), bytes) && OsWriteFile(file, &record->m_flags, sizeof(record->m_flags), bytes);
 }

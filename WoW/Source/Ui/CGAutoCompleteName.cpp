@@ -27,7 +27,7 @@ bool CGAutoCompleteName::s_whenEditingFromCenter;
 // STATIC: #0x00BEB996
 bool CGAutoCompleteName::s_useContext;
 
-// OFFSET: #0x0057B130
+// OFFSET: 0x009CB590
 static void SortNameNode(AUTOCOMPLETE_NAMENODE* node) {
     for (AUTOCOMPLETE_NAMENODE* current = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(current); current = current->RawNext()) {
         if (CGAutoCompleteName::s_resortNamesOnRecency) {

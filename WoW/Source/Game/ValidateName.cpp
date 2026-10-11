@@ -383,7 +383,7 @@ bool IsAlphaKorean(uint16_t c) {
     return false;
 }
 
-// OFFSET: #0x007E0FF0
+// OFFSET: 0x004E6770
 bool IsAlphaChinese(uint16_t c) {
     return (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DFF) || static_cast<uint16_t>(c + 0x700) <= 0x1FF;
 }
