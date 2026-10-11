@@ -16,6 +16,6 @@ const DBCMeta JournalEncounterRec::s_meta = { "DBFilesClient\\JournalEncounter.d
 // OFFSET: 0x00A2EB10/0x1407D8290
 void JournalEncounterRec::FixupStrings(void* record, const char* strings) {
     JournalEncounterRec* rec = static_cast<JournalEncounterRec*>(record);
-    DBCFixupString(rec->unk_0024, strings);
-    DBCFixupString(rec->unk_0028, strings);
+    DBCFixupString(rec->m_name, strings);
+    DBCFixupString(rec->m_description, strings);
 }

@@ -16,6 +16,6 @@ const DBCMeta JournalInstanceRec::s_meta = { "DBFilesClient\\JournalInstance.dbc
 // OFFSET: 0x00A2EAF0/0x1407D8250
 void JournalInstanceRec::FixupStrings(void* record, const char* strings) {
     JournalInstanceRec* rec = static_cast<JournalInstanceRec*>(record);
-    DBCFixupString(rec->unk_001C, strings);
-    DBCFixupString(rec->unk_0020, strings);
+    DBCFixupString(rec->m_name, strings);
+    DBCFixupString(rec->m_description, strings);
 }
