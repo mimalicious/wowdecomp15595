@@ -2547,12 +2547,12 @@ static int32_t Script_LeaveChannelByName(lua_State* L) {
         return 0;
     }
 
-    InternalLeaveChannel(lua_tolstring(L, 1, NULL), true, false);
+    InternalLeaveChannel(lua_tolstring(L, 1, NULL), false);
     return 0;
 }
 
 // OFFSET: #0x0050D900
-static int32_t JoinChannelFromScript(lua_State* L, int32_t permanent) {
+static int32_t JoinChannelFromScript(lua_State* L, bool permanent) {
     if (!lua_isstring(L, 1)) {
         char function[1024];
         luaL_error(L, "Usage: %s(\"name\" [,\"password\"] [,index] [,hasVoice])", FrameScript_GetCurrentFunction(L, function, sizeof(function)));
@@ -2579,11 +2579,11 @@ static int32_t JoinChannelFromScript(lua_State* L, int32_t permanent) {
         window = static_cast<uint32_t>(lua_tonumber(L, 3)) - 1;
     }
 
-    int32_t voice = StringToBOOL(L, 4, 0);
+    bool voice = StringToBOOL(L, 4, 0) != 0;
     const char* zoneChannelName = NULL;
     int32_t zoneChannelID = 0;
 
-    if (!InternalJoinChannel(name, password, window, true, &zoneChannelName, &zoneChannelID, false, voice, permanent, 0)) {
+    if (!InternalJoinChannel(name, password, window, &zoneChannelName, &zoneChannelID, false, voice, permanent, 0)) {
         return 0;
     }
 
@@ -2600,17 +2600,17 @@ static int32_t JoinChannelFromScript(lua_State* L, int32_t permanent) {
 
 // OFFSET: 0x008FA540/0x14062DE80
 static int32_t Script_JoinChannelByName(lua_State* L) {
-    return JoinChannelFromScript(L, 0);
+    return JoinChannelFromScript(L, false);
 }
 
 // OFFSET: 0x008FA540/0x14062DE80
 static int32_t Script_JoinTemporaryChannel(lua_State* L) {
-    return JoinChannelFromScript(L, 0);
+    return JoinChannelFromScript(L, false);
 }
 
 // OFFSET: 0x008FA560/0x14062DE90
 static int32_t Script_JoinPermanentChannel(lua_State* L) {
-    return JoinChannelFromScript(L, 1);
+    return JoinChannelFromScript(L, true);
 }
 
 // OFFSET: 0x008FA6B0/0x14062E010

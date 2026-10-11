@@ -1162,6 +1162,17 @@ class UserClientAcceptWargameInvite : public JamClientMessage {
     ~UserClientAcceptWargameInvite();
 };
 
+class UserClientChatLeaveChannel : public JamClientMessage {
+    public:
+    /* 0010 */ char m_channelName[128];
+    /* 0090 */ uint32_t m_channelID;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatLeaveChannel(uint32_t channelID, const char* channelName);
+    ~UserClientChatLeaveChannel();
+};
+
 class UserClientChatReportFiltered : public JamClientMessage {
     public:
     /* 0010 */ uint8_t m_filteredGUID[8];

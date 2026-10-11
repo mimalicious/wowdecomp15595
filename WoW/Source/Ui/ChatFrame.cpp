@@ -4610,8 +4610,8 @@ void ChatWindowInfo::AddChannel(const char* name, int32_t id) {
     }
 }
 
-// OFFSET: #0x005076B0
-int32_t CGChat::AddChatChannel(const char* name, uint32_t id, bool silent, bool a4, bool a5, uint32_t number) {
+// OFFSET: 0x008F3E60/0x140625B40
+int32_t CGChat::AddChatChannel(const char* name, uint32_t id, bool silent, bool a4, bool a5, uint32_t number, const char* password) {
     if (GetChannelByName(name)) {
         return 0;
     }
@@ -4663,11 +4663,14 @@ int32_t CGChat::AddChatChannel(const char* name, uint32_t id, bool silent, bool 
     channel->m_unkA0 = 0;
     channel->m_unkA4 = a4;
     channel->m_unkA5 = a5;
+    SStrCopy(channel->m_password, password, sizeof(channel->m_password));
+    channel->m_unk1AC = silent;
+    channel->m_joinPending = 0;
     return 1;
 }
 
-// OFFSET: #0x00507A80
-bool InternalJoinChannel(const char* channelName, const char* password, uint32_t window, bool checkRecruitment, const char** zoneChannelName, int32_t* zoneChannelID, bool silent, int32_t a8, int32_t a9, uint32_t number) {
+// OFFSET: 0x008F42F0/0x1406260C0
+bool InternalJoinChannel(const char* channelName, const char* password, uint32_t window, const char** zoneChannelName, int32_t* zoneChannelID, bool silent, bool a7, bool a8, uint32_t number) {
     *zoneChannelName = NULL;
     *zoneChannelID = 0;
 
@@ -4693,30 +4696,18 @@ bool InternalJoinChannel(const char* channelName, const char* password, uint32_t
         *zoneChannelID = rec->m_id;
         SStrPrintf(name, sizeof(name), static_cast<const char*>(rec->m_name), text);
         password = "";
-
-        if (checkRecruitment && (rec->m_flags & 0x20000)) {
-            CGChat::SetGuildRecruitmentMode(0, true);
-        }
-
         break;
     }
 
     ChatChannel* channel = *zoneChannelID ? CGChat::GetChannelByChatChannelID(*zoneChannelID) : GetChannelByName(name);
 
     if (!channel) {
-        if (!CGChat::AddChatChannel(name, *zoneChannelID, silent, a8 != 0, a9 != 0, number)) {
+        if (!CGChat::AddChatChannel(name, *zoneChannelID, silent, a7, a8, number, password)) {
             return false;
         }
 
-        CDataStore msg;
-        msg.Put(static_cast<uint32_t>(CMSG_CHAT_JOIN_CHANNEL));
-        msg.Put(static_cast<uint32_t>(*zoneChannelID));
-        msg.Put(static_cast<uint8_t>(silent));
-        msg.Put(static_cast<uint8_t>(a8));
-        msg.PutString(name);
-        msg.PutString(password);
-        msg.Finalize();
-        ClientServices::Send2(&msg);
+        UserClientChatJoinChannel msg(*zoneChannelID, silent, a7, name, password);
+        ClientServices::Send(&msg);
     }
 
     if (window < 10) {
@@ -4743,13 +4734,13 @@ void CGChat::UpdateGuildStatus() {
 
     if (player->GetGuildGUID()) {
         if (channel) {
-            InternalLeaveChannel(s_recruitmentChannelName, false, true);
+            InternalLeaveChannel(s_recruitmentChannelName, true);
             FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
         }
     } else if (!channel) {
         const char* zoneChannelName = NULL;
         int32_t zoneChannelID = 0;
-        InternalJoinChannel(s_recruitmentChannelName, "", 0, false, &zoneChannelName, &zoneChannelID, true, 0, 1, 0);
+        InternalJoinChannel(s_recruitmentChannelName, "", 0, &zoneChannelName, &zoneChannelID, true, false, true, 0);
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
     }
 }
@@ -4775,13 +4766,13 @@ void CGChat::ZoneUpdate() {
                 ChatChannelsRec* rec = g_chatChannelsDB.GetRecordByIndex(i);
 
                 if ((1 << (rec->m_id - 1)) & s_joinedZoneChannels) {
-                    InternalJoinChannel(rec->m_shortcut, "", 10, false, &zoneChannelName, &zoneChannelID, true, 0, 1, 0);
+                    InternalJoinChannel(rec->m_shortcut, "", 10, &zoneChannelName, &zoneChannelID, true, false, true, 0);
                 }
             }
 
             if (s_pendingChannelNames.m_count) {
                 for (uint32_t i = 0; i < s_pendingChannelNames.m_count; i++) {
-                    InternalJoinChannel(s_pendingChannelNames.m_data[i], "", 10, false, &zoneChannelName, &zoneChannelID, true, s_pendingChannelFlags.m_data[i], 1, s_pendingChannelNumbers.m_data[i]);
+                    InternalJoinChannel(s_pendingChannelNames.m_data[i], "", 10, &zoneChannelName, &zoneChannelID, true, s_pendingChannelFlags.m_data[i] != 0, true, s_pendingChannelNumbers.m_data[i]);
 
                     if (s_pendingChannelNames.m_data[i]) {
                         SMemFree(s_pendingChannelNames.m_data[i], __FILE__, __LINE__, 0);
@@ -4815,7 +4806,7 @@ void CGChat::SetGuildRecruitmentMode(int32_t mode, bool fromJoin) {
     if (mode == 1) {
         CGChat::UpdateGuildStatus();
     } else if (!fromJoin && FindGuildRecruitmentChannel()) {
-        InternalLeaveChannel(s_recruitmentChannelName, false, true);
+        InternalLeaveChannel(s_recruitmentChannelName, true);
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
     }
 }
@@ -5243,8 +5234,8 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
     CGChat::ZoneUpdate();
 }
 
-// OFFSET: #0x005093F0
-int32_t InternalLeaveChannel(const char* channelName, bool clearRecruitment, bool force) {
+// OFFSET: 0x008F4530/0x140626430
+int32_t InternalLeaveChannel(const char* channelName, bool force) {
     const char* channelString = force ? channelName : CGChat::GetChannelString(channelName);
 
     if (!channelString) {
@@ -5274,11 +5265,6 @@ int32_t InternalLeaveChannel(const char* channelName, bool clearRecruitment, boo
         zoneChannelName = rec->m_shortcut;
         zoneChannelID = rec->m_id;
         SStrPrintf(name, sizeof(name), static_cast<const char*>(rec->m_name), text);
-
-        if (clearRecruitment && (rec->m_flags & 0x20000) && CGChat::m_guildRecruitmentMode) {
-            CGChat::m_guildRecruitmentMode = 0;
-        }
-
         break;
     }
 
@@ -5289,12 +5275,8 @@ int32_t InternalLeaveChannel(const char* channelName, bool clearRecruitment, boo
     ChatChannel* channel = zoneChannelID ? CGChat::GetChannelByChatChannelID(zoneChannelID) : GetChannelByName(name);
 
     if (channel && (!channel->m_unk9C || force)) {
-        CDataStore msg;
-        msg.Put(static_cast<uint32_t>(CMSG_CHAT_LEAVE_CHANNEL));
-        msg.Put(static_cast<uint32_t>(channel->m_zoneChannelID));
-        msg.PutString(channel->m_name);
-        msg.Finalize();
-        ClientServices::Send2(&msg);
+        UserClientChatLeaveChannel msg(channel->m_zoneChannelID, channel->m_name);
+        ClientServices::Send(&msg);
 
         uint32_t id = channel->m_zoneChannelID;
         channel->m_unkA0 = 1;

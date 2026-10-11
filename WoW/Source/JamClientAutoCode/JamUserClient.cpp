@@ -1284,6 +1284,10 @@ void UserClientChatUnregisterAllAddonPrefixes::Put(CDataStore* msg) {
 UserClientChatReportIgnored::~UserClientChatReportIgnored() {
 }
 
+// OFFSET: 0x0069CF00
+UserClientChatLeaveChannel::~UserClientChatLeaveChannel() {
+}
+
 // OFFSET: 0x0069DC10
 UserClientChatReportFiltered::UserClientChatReportFiltered() {
 }
@@ -1332,6 +1336,24 @@ void UserClientChatReportIgnored::Put(CDataStore* msg) {
     if (this->m_ignoredGUID[2]) {
         msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[2] ^ 1));
     }
+}
+
+// OFFSET: 0x0069E460
+UserClientChatLeaveChannel::UserClientChatLeaveChannel(uint32_t channelID, const char* channelName) {
+    SStrCopy(this->m_channelName, channelName, sizeof(this->m_channelName));
+    this->m_channelID = channelID;
+}
+
+// OFFSET: 0x0069E850/0x14034B260
+void UserClientChatLeaveChannel::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2D56));
+    msg->Put(this->m_channelID);
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<8>(strlen(this->m_channelName));
+    bits.Flush();
+
+    msg->PutData(this->m_channelName, strlen(this->m_channelName));
 }
 
 // OFFSET: 0x0069EA70
