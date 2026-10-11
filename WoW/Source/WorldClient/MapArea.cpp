@@ -1,3 +1,4 @@
+#include "Engine/Source/Base/BlzAlgorithm.h"
 #include "WoW/Source/WorldClient/MapArea.h"
 #include <algorithm>
 #include <cmath>
@@ -751,7 +752,7 @@ void CMapArea::QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableAr
     }
 
     LiquidChunkAndDistance* end = &liquids.m_data[liquids.Count()];
-    std::sort(liquids.m_data, end);
+    blz::sort(liquids.m_data, end);
 
     for (LiquidChunkAndDistance* entry = liquids.m_data; entry != end; entry++) {
         CChunkLiquid* liquid = entry->m_liquid;

@@ -1,3 +1,4 @@
+#include "Engine/Source/Base/BlzAlgorithm.h"
 #include "VideoOptions.h"
 #include <algorithm>
 #include <cstdint>
@@ -721,7 +722,7 @@ static void SetupRefreshRates(uint32_t monitor, int32_t width, int32_t height) {
     }
 
     if (s_refreshRates.Count()) {
-        std::sort(s_refreshRates.Ptr(), s_refreshRates.Ptr() + s_refreshRates.Count(), CompareRefreshRates);
+        blz::sort(s_refreshRates.Ptr(), s_refreshRates.Ptr() + s_refreshRates.Count(), CompareRefreshRates);
     }
 }
 

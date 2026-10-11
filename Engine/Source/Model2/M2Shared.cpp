@@ -5,6 +5,7 @@
 #include <malloc.h>
 #include <new>
 #include <typeinfo>
+#include "Engine/Source/Base/BlzAlgorithm.h"
 #include "Engine/Source/Model2/M2Shared.h"
 #include "Engine/Source/Base/Handle.h"
 #include "Engine/Source/Base/SIMD.h"
@@ -1395,5 +1396,5 @@ void M2HeapSort(int32_t (*compare)(uint32_t, uint32_t, const void*), uint32_t* a
     M2SortCompare predicate;
     predicate.m_compare = compare;
     predicate.m_param = param;
-    std::sort(array, array + count, predicate);
+    blz::sort(array, array + count, predicate);
 }

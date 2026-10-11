@@ -12,6 +12,7 @@
 #else
 #include <alloca.h>
 #endif
+#include "Engine/Source/Base/BlzAlgorithm.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Base/Handle.h"
 #include "Engine/Source/Base/ObjectAlloc.h"
@@ -7702,7 +7703,7 @@ bool SModelBatchLessThan::operator()(const CModelBatch& a, const CModelBatch& b)
 
 // OFFSET: 0x00820970
 void CModelBatchList::Optimize() {
-    std::sort(this->m_batches, this->m_batches + this->m_count, SModelBatchLessThan());
+    blz::sort(this->m_batches, this->m_batches + this->m_count, SModelBatchLessThan());
 
     for (uint16_t i = this->m_optimizedCount; i < this->m_count; i += this->m_batches[i].m_count) {
         uint16_t j = i + 1;
