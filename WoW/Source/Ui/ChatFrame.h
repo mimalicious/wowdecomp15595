@@ -326,7 +326,6 @@ class CGChat {
     static void AddCombatMessage(const char* text);
     static int32_t m_afk;
     static int32_t m_dnd;
-    static int32_t m_guildRecruitmentMode;
     static int32_t m_areaID;
     static int32_t m_paused;
     static int32_t m_voiceChatSystemStatus;
@@ -411,7 +410,6 @@ class CGChat {
     static void AddChannelThrottled(const char* channel, uint32_t time);
     static void AddThrottledChat(int32_t type, uint32_t language, const char* target, const char* text);
     static int32_t GetActiveVoiceSession();
-    static void SetGuildRecruitmentMode(int32_t mode, bool fromJoin);
     static int32_t IsProfanityFilterEnabled();
     static int32_t IsVoiceChatEnabled();
     static bool CanComplain(WOWGUID guid);
@@ -432,7 +430,6 @@ class CGChat {
     static void Pause();
     static void Resume();
     static int32_t SetActiveVoiceSession(const char* channel, int32_t type, int32_t index);
-    static void UpdateGuildStatus();
     static int32_t OnChatDown(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnChatIsDown(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnChatReconnect(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

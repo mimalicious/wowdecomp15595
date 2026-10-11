@@ -666,7 +666,6 @@ static int32_t GuildIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t
         player->OnGuildChanged(1);
 
         if (guid == ClntObjMgrGetActivePlayer()) {
-            CGChat::UpdateGuildStatus();
             CGGuildInfo::QueryPermissions();
 
             if (CGMerchantInfo::m_merchant) {

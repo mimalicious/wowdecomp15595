@@ -139,9 +139,6 @@ CVar* g_guildShowOfflineCVar;
 // STATIC: 0x00ED76A4
 CVar* g_guildMemberNotifyCVar;
 
-// STATIC: #0x00BD0978
-CVar* g_guildRecruitmentChannelCVar;
-
 // STATIC: 0x00ED76B0
 CVar* g_secureAbilityToggleCVar;
 
@@ -340,12 +337,6 @@ bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const cha
 // OFFSET: 0x008C4260/0x140633DC0
 bool GuildShowOfflineCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGuildInfo::SetShowOffline(StringToBOOL(value));
-    return true;
-}
-
-// OFFSET: %0x00825E50
-bool CVarHandler_guildRecruitmentChannel(CVar* var, const char* oldValue, const char* value, void* arg) {
-    CGChat::SetGuildRecruitmentMode(SStrToInt(value), 0);
     return true;
 }
 

@@ -404,20 +404,11 @@ TSGrowableArray<PENDINGUSERLIST> s_pendingUsers;
 // STATIC: 0x00D104F0
 TSExplicitList<PENDINGTEXTEMOTE, 0> CGChat::s_pendingTextEmotes;
 
-// STATIC: #0x00AC7A3C
-int32_t CGChat::m_guildRecruitmentMode = 1;
-
-// STATIC: #0x00BCEFF0
+// STATIC: 0x00F32704
 int32_t CGChat::m_areaID;
-
-// STATIC: #0x00AC7A54
-static const char* s_guildRecruitmentOption = "OPTION_GUILD_RECRUITMENT_CHANNEL";
 
 // STATIC: #0x009FB9E8
 static const ZoneChannelDefault s_zoneChannelDefaults[1] = { { 26, 4 } };
-
-// STATIC: #0x00B759E0
-static char s_recruitmentChannelName[128];
 
 // STATIC: 0x00F326F0
 static int32_t s_chatSettingsDirty;
@@ -440,20 +431,14 @@ static UserClientChatRegisterAddonPrefixes s_addonPrefixMessage;
 // STATIC: 0x00F327CC
 TSHashTable<ADDONPREFIX, HASHKEY_STR> s_addonPrefixes;
 
-// STATIC: #0x00BCF008
-static bool s_recruitmentChannelFound;
-
-// STATIC: #0x00BCF00C
-static int32_t s_recruitmentChannelID;
-
-// STATIC: #0x00BCFAB0
+// STATIC: 0x00F33240
 static TSGrowableArray<char*> s_pendingChannelNames;
 
-// STATIC: #0x00BCFAC0
-static TSGrowableArray<int32_t> s_pendingChannelFlags;
+// STATIC: 0x00F33250
+static TSGrowableArray<bool> s_pendingChannelFlags;
 
-// STATIC: #0x00BCFAD0
-static TSGrowableArray<int32_t> s_pendingChannelNumbers;
+// STATIC: 0x00F33260
+static TSGrowableArray<uint32_t> s_pendingChannelNumbers;
 
 // STATIC: #0x00AC7FB4
 static const char* s_exhaustionTokens[7] = { NULL, "COMBATLOG_XPGAIN_EXHAUSTION1", "COMBATLOG_XPGAIN_EXHAUSTION2", "NULL", "COMBATLOG_XPGAIN_EXHAUSTION4", "COMBATLOG_XPGAIN_EXHAUSTION5", "COMBATLOG_XPGAIN_EXHAUSTION1" };
@@ -4593,26 +4578,6 @@ const char* CGChat::GetChannelString(const char* name) {
     return NULL;
 }
 
-// OFFSET: #0x004FE260
-static bool FindGuildRecruitmentChannel() {
-    bool found = s_recruitmentChannelFound;
-
-    if (!found) {
-        for (int32_t i = 0; i < g_chatChannelsDB.m_numRecords; i++) {
-            ChatChannelsRec* rec = g_chatChannelsDB.GetRecordByIndex(i);
-
-            if (rec && (rec->m_flags & 0x20000)) {
-                s_recruitmentChannelID = rec->m_id;
-                SStrCopy(s_recruitmentChannelName, rec->m_shortcut, sizeof(s_recruitmentChannelName));
-                found = true;
-                s_recruitmentChannelFound = true;
-            }
-        }
-    }
-
-    return found;
-}
-
 // OFFSET: #0x00501A70
 void ChatWindowInfo::AddChannel(const char* name, int32_t id) {
     for (uint32_t i = 0; i < this->m_channels.m_count; i++) {
@@ -4750,33 +4715,6 @@ bool InternalJoinChannel(const char* channelName, const char* password, uint32_t
     return true;
 }
 
-// OFFSET: #0x00507D30
-void CGChat::UpdateGuildStatus() {
-    if (CGChat::m_guildRecruitmentMode != 1 || !CGChat::m_registered) {
-        return;
-    }
-
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player || !FindGuildRecruitmentChannel()) {
-        return;
-    }
-
-    ChatChannel* channel = CGChat::GetChannelByChatChannelID(s_recruitmentChannelID);
-
-    if (player->GetGuildGUID()) {
-        if (channel) {
-            InternalLeaveChannel(s_recruitmentChannelName, true);
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
-        }
-    } else if (!channel) {
-        const char* zoneChannelName = NULL;
-        int32_t zoneChannelID = 0;
-        InternalJoinChannel(s_recruitmentChannelName, "", 0, &zoneChannelName, &zoneChannelID, true, false, true, 0);
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
-    }
-}
-
 // OFFSET: 0x008F4AE0/0x140626880
 void CGChat::ZoneUpdate() {
     if (!CGChat::m_loaded) {
@@ -4804,7 +4742,7 @@ void CGChat::ZoneUpdate() {
 
             if (s_pendingChannelNames.m_count) {
                 for (uint32_t i = 0; i < s_pendingChannelNames.m_count; i++) {
-                    InternalJoinChannel(s_pendingChannelNames.m_data[i], "", 10, &zoneChannelName, &zoneChannelID, true, s_pendingChannelFlags.m_data[i] != 0, true, s_pendingChannelNumbers.m_data[i]);
+                    InternalJoinChannel(s_pendingChannelNames.m_data[i], "", 10, &zoneChannelName, &zoneChannelID, true, s_pendingChannelFlags.m_data[i], true, s_pendingChannelNumbers.m_data[i]);
 
                     if (s_pendingChannelNames.m_data[i]) {
                         SMemFree(s_pendingChannelNames.m_data[i], __FILE__, __LINE__, 0);
@@ -4820,30 +4758,9 @@ void CGChat::ZoneUpdate() {
         }
     }
 
-    CGChat::UpdateGuildStatus();
 }
 
-// OFFSET: #0x00508260
-void CGChat::SetGuildRecruitmentMode(int32_t mode, bool fromJoin) {
-    if (CGChat::m_guildRecruitmentMode == mode) {
-        return;
-    }
-
-    CGChat::m_guildRecruitmentMode = mode;
-
-    if (!CGChat::m_registered) {
-        return;
-    }
-
-    if (mode == 1) {
-        CGChat::UpdateGuildStatus();
-    } else if (!fromJoin && FindGuildRecruitmentChannel()) {
-        InternalLeaveChannel(s_recruitmentChannelName, true);
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
-    }
-}
-
-// OFFSET: #0x00508320
+// OFFSET: 0x008F4D80
 void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     int32_t version = 0;
     int32_t addedVersion = 0;
@@ -4851,11 +4768,6 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
 
     for (int32_t i = 0; i < g_chatChannelsDB.m_numRecords; i++) {
         ChatChannelsRec* rec = g_chatChannelsDB.GetRecordByIndex(i);
-
-        if (rec->m_id > 32) {
-            SErrDisplayAppFatalMessage("", "", 0);
-        }
-
         allChannels |= 1 << (rec->m_id - 1);
     }
 
@@ -4870,9 +4782,6 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
             uint32_t bytesRead;
 
             if (!OsReadFile(file, buffer, size, &bytesRead)) {
-                buffer = NULL;
-            } else if (bytesRead != size) {
-                SErrDisplayAppFatalMessage("", "", 0);
                 buffer = NULL;
             }
         }
@@ -4962,30 +4871,6 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
                     continue;
                 }
 
-                if (SStrCmpI(line, s_guildRecruitmentOption, SStrLen(s_guildRecruitmentOption))) {
-                    continue;
-                }
-
-                const char* rest = &line[SStrLen(s_guildRecruitmentOption)];
-                SStrTokenize(&rest, token, sizeof(token), " \r\n", NULL);
-                int32_t mode = 1;
-
-                if (!SStrCmpI(token, "STANDARD", STORM_MAX_STR)) {
-                    mode = 0;
-                } else {
-                    SStrCmpI(token, "AUTO", STORM_MAX_STR);
-                }
-
-                if (CGChat::m_guildRecruitmentMode == mode) {
-                    continue;
-                }
-
-                CGChat::m_guildRecruitmentMode = mode;
-
-                if (CGChat::m_registered && mode == 1) {
-                    CGChat::UpdateGuildStatus();
-                }
-
                 continue;
             }
 
@@ -5026,9 +4911,9 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
                     s_pendingChannelNames.SetCount(s_pendingChannelNames.m_count + 1);
                     s_pendingChannelNames.m_data[s_pendingChannelNames.m_count - 1] = SStrDupA(word, __FILE__, __LINE__);
                     s_pendingChannelFlags.SetCount(s_pendingChannelFlags.m_count + 1);
-                    s_pendingChannelFlags.m_data[s_pendingChannelFlags.m_count - 1] = atol(token);
+                    s_pendingChannelFlags.m_data[s_pendingChannelFlags.m_count - 1] = atoi(token) != 0;
                     s_pendingChannelNumbers.SetCount(s_pendingChannelNumbers.m_count + 1);
-                    s_pendingChannelNumbers.m_data[s_pendingChannelNumbers.m_count - 1] = atol(value);
+                    s_pendingChannelNumbers.m_data[s_pendingChannelNumbers.m_count - 1] = atoi(value);
                     break;
                 }
 
@@ -5180,7 +5065,7 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
             }
         } while (cursor && *cursor);
 
-        if (addedVersion < 13) {
+        if (addedVersion < 16) {
             for (uint32_t i = 0; i < sizeof(s_zoneChannelDefaults) / sizeof(s_zoneChannelDefaults[0]); i++) {
                 if (s_zoneChannelDefaults[i].m_addedVersion <= addedVersion) {
                     continue;
@@ -5190,10 +5075,6 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
 
                 if (!rec || !(rec->m_flags & 1)) {
                     continue;
-                }
-
-                if (rec->m_id > 32) {
-                    SErrDisplayAppFatalMessage("", "", 0);
                 }
 
                 uint32_t bit = 1 << (rec->m_id - 1);
@@ -5206,7 +5087,7 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
 
             for (uint32_t i = 0; i < sizeof(s_chatMessageGroups) / sizeof(s_chatMessageGroups[0]); i++) {
                 if (s_chatMessageGroups[i].m_default && s_chatMessageGroups[i].m_type > addedVersion) {
-                    s_chatWindows[i < 40 ? 0 : 1].m_messageGroups[i] = 1;
+                    s_chatWindows[i < 42 ? 0 : 1].m_messageGroups[i] = 1;
                 }
             }
 
@@ -5238,10 +5119,6 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
 
             if (!(rec->m_flags & 1)) {
                 continue;
-            }
-
-            if (rec->m_id >= 32) {
-                SErrDisplayAppFatalMessage("", "", 0);
             }
 
             s_joinedZoneChannels |= 1 << (rec->m_id - 1);

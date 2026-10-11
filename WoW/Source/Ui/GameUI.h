@@ -566,7 +566,6 @@ bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const cha
 bool CVarHandler_autoCompleteResortNamesOnRecency(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_autoCompleteUseContext(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_autoCompleteWhenEditingFromCenter(CVar* var, const char* oldValue, const char* value, void* arg);
-bool CVarHandler_guildRecruitmentChannel(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_threatWarning(CVar* var, const char* oldValue, const char* value, void* arg);
