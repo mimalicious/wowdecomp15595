@@ -98,7 +98,6 @@ class CWorldScene {
     static void GetFrustumCornersInWorldSpace(const C44Matrix& view, const C44Matrix& proj, const C3Vector& camPos, C3Vector* corners);
     static void Initialize();
     static CM2Model* LoadModel(const char* name, const C44Matrix& mat, void (*eventCallback)(CM2Model*, uint32_t, uint32_t, uint32_t, const C3Vector&, uint32_t, uint64_t), uint64_t eventParam, void (*lightingCallback)(CM2Model*, CM2Lighting*, void*), void* lightingParam, int32_t a7, int32_t a8, int32_t a9, int32_t a10);
-    static void OnMapUnload();
     static void Render(const C3Vector& pos, float elapsedSec);
     static void RenderAlphaWater(CWorldView* view);
     static void RenderAlphaWaterFog(CWorldView* view);

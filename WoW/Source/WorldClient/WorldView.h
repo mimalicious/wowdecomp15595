@@ -219,7 +219,6 @@ class CWorldView {
     void FrustumPop();
     void FrustumPush();
     void FrustumSet(const CAaRect& rect);
-    int32_t FrustumCull(const CAaBox& box);
     void Gather();
     void GatherMapObjDefGroup(CMapObjDef* mapObjDef, CMapObjDefGroup* group, CMapObj* mapObj, CMapObjGroup* mapObjGroup);
     void GatherMapObjDefGroupLiquids(CMapObjDef* mapObjDef, CMapObjDefGroup* group, CMapObj* mapObj, CMapObjGroup* mapObjGroup);

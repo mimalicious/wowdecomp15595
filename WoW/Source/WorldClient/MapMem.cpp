@@ -248,3 +248,70 @@ void CMap::MapMemInitialize() {
     CMap::s_mapObjDefHeap = NewPool<CMapObjDef>("WMAPOBJDEF", 64, __LINE__);
     CMap::s_chunkLiquidHeap = NewPool<CChunkLiquid>("WCHUNKLIQUID", 64, __LINE__);
 }
+
+// OFFSET: 0x00776DD0
+void CMap::MapMemDestroy() {
+    if (CMap::s_lightHeap) {
+        delete CMap::s_lightHeap;
+    }
+
+    if (CMap::s_mapObjGroupHeap) {
+        delete CMap::s_mapObjGroupHeap;
+    }
+
+    if (CMap::s_mapObjHeap) {
+        delete CMap::s_mapObjHeap;
+    }
+
+    if (CMap::s_baseObjLinkHeap) {
+        delete CMap::s_baseObjLinkHeap;
+    }
+
+    if (CMap::s_areaHeap) {
+        delete CMap::s_areaHeap;
+    }
+
+    if (CMap::s_areaMedHeap) {
+        delete CMap::s_areaMedHeap;
+    }
+
+    if (CMap::s_areaLowHeap) {
+        delete CMap::s_areaLowHeap;
+    }
+
+    if (CMap::s_chunkHeap) {
+        delete CMap::s_chunkHeap;
+    }
+
+    if (CMap::s_renderChunkHeap) {
+        delete CMap::s_renderChunkHeap;
+    }
+
+    if (CMap::s_chunkBufHeap) {
+        delete CMap::s_chunkBufHeap;
+    }
+
+    if (CMap::s_chunkInfoHeap) {
+        delete CMap::s_chunkInfoHeap;
+    }
+
+    if (CMap::s_doodadDefHeap) {
+        delete CMap::s_doodadDefHeap;
+    }
+
+    if (CMap::s_entityHeap) {
+        delete CMap::s_entityHeap;
+    }
+
+    if (CMap::s_mapObjDefGroupHeap) {
+        delete CMap::s_mapObjDefGroupHeap;
+    }
+
+    if (CMap::s_mapObjDefHeap) {
+        delete CMap::s_mapObjDefHeap;
+    }
+
+    if (CMap::s_chunkLiquidHeap) {
+        delete CMap::s_chunkLiquidHeap;
+    }
+}

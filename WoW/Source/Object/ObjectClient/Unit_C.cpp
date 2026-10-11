@@ -5559,7 +5559,7 @@ void CGUnit_C::UpdateDisplayInfo(int32_t force) {
                     this->OnDisplayModelLoaded(model);
                 } else {
                     this->m_pendingDisplayModel = model;
-                    model->SetLoadedCallback(CGUnit_C::DisplayModelLoadedCallback, this);
+                    model->SetLoadedCallback(CGObject_C::ModelLoadedCallback, this);
                 }
             }
         }

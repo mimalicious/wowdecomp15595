@@ -1067,7 +1067,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void RenderAttackIndicators();
     void UpdateMovementAnimKit(int32_t force);
     void UpdateAlphaEffectAlpha();
-    static void DisplayModelLoadedCallback(CM2Model* model, void* param);
     static void SequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary);
     float GetModelScale(uint32_t displayId);
     float GetDisplayModelScale();

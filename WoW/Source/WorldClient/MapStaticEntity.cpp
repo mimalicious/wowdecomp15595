@@ -7,6 +7,7 @@
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
+#include "WoW/Source/WorldClient/MapEntity.h"
 #include "WoW/Source/WorldClient/MapObj.h"
 #include "WoW/Source/WorldClient/MapObjDef.h"
 
@@ -75,6 +76,50 @@ void CMapStaticEntity::SelectUnderwater(CM2Lighting* lighting) {
         lighting->m_flags = (lighting->m_flags & ~0x61u) | 0x40;
     } else {
         lighting->m_flags = (lighting->m_flags & ~0x60u) | 0x20;
+    }
+}
+
+// OFFSET: 0x00762830/0x140447880
+void CMapStaticEntity::ModelEventCallback(CM2Model* model, uint32_t a2, uint32_t a3, uint32_t a4, const C3Vector& a5, uint32_t a6, uint64_t param) {
+    CMapStaticEntity* entity = reinterpret_cast<CMapStaticEntity*>(static_cast<uintptr_t>(param));
+
+    switch (a3) {
+        case 'ESD$': {
+            if (entity->m_soundEmitter) {
+                SE3::EmitterMangerSendMessage_DestroyEmitter(entity->m_soundEmitter);
+            }
+
+            break;
+        }
+
+        case 'LSD$': {
+            if (!SE3::EmitterManagerEmitterExists(entity->m_soundEmitter) && !SE3::IsTooCloseToExistingSoundKit(a4, a5)) {
+                SE3SoundKitProperties properties;
+                properties.m_bit0 = 1;
+                properties.m_fadeInTime = 3000;
+                properties.m_maxAudibleBehavior = 1;
+                properties.m_priority = 128;
+                properties.m_usage = 1;
+                SE3SoundChunk* chunk = SE3::EmitterManagerGetOrCreateSoundChunk(SE3::EmitterManagerGetSoundChunkHandle(a5));
+                SE3::EmitterManagerSendMessage_CreateEmitter(&entity->m_soundEmitter, chunk, a4, a5, &properties, NULL, 0);
+            }
+
+            break;
+        }
+
+        case 'OSD$': {
+            SE3SoundKitProperties properties;
+            SE3::PlaySoundKit(a4, &a5, &properties, NULL, __FILE__, 53, "CMapStaticEntity::ModelEventCallback", 0, NULL);
+            break;
+        }
+
+        default: {
+            if ((entity->m_type & 0x200) && World::GetUserModelEventCallback()) {
+                World::GetUserModelEventCallback()(model, a2, a3, a4, a5, a6, static_cast<CMapEntity*>(entity)->m_param64);
+            }
+
+            break;
+        }
     }
 }
 

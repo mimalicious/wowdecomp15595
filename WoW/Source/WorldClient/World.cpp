@@ -937,7 +937,7 @@ void World::SetActivePlayerPos(const C3Vector& pos) {
 
 // OFFSET: 0x00722850
 int32_t World::FrustumCull(const CAaBox& box) {
-    return CWorldScene::s_activeWorldView->FrustumCull(box);
+    return CWorldScene::s_activeWorldView->CullModel(box);
 }
 
 // PROVEN: f5ab264f IDENTICAL/NONE

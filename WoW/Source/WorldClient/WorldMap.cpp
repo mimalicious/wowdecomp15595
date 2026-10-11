@@ -669,7 +669,7 @@ void CWorldMap::Unload() {
     TextureGxCacheFlush();
     DayNight::UnloadMap();
     CWorldMap::ClearAllFootprints();
-    CWorldScene::OnMapUnload();
+    CWorldScene::FreeSceneLights();
     this->DestroyLiquidPerturbators();
 }
 
