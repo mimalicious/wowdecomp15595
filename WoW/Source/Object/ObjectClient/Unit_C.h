@@ -263,7 +263,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static int32_t s_initialized;
     static void StopMissileTrajectoryTargeting();
     static void RenderMissileTrajectoryTargetingTexture();
-    static void UnitNameplatesReposition(CGWorldFrame* worldFrame);
+    static bool UnitNameplatesReposition(CGWorldFrame* worldFrame);
     static void UpdateAllSmoothFacing();
     static void ClearNamePlateFocus();
     static void SetNamePlateFocus(const C2Vector& position);
@@ -315,6 +315,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void NamePlateSetResortAll(bool enable);
     static void NamePlateUpdateLevels(bool enable);
     static void NamePlateUpdateColor(bool enable);
+    static uint32_t GetNamePlateFlags();
     static uint32_t GetTrackingType();
     static float GetTrackingTurn();
     static void PitchMissileTrajectoryTargetingNextFrame();
@@ -1126,6 +1127,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void CheckApplyPeriodicClientTriggers();
     void DestroyNamePlate();
     void NamePlateUpdateRaidTarget();
+    uint8_t GetNamePlateAlpha(int32_t inCombat) const;
     void UpdateUnitNameText();
     void HandleScaleUpdate(float scale);
     void NPCFlagChanged(uint32_t oldFlags);

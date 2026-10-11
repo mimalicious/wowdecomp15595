@@ -269,14 +269,17 @@ static uint32_t s_trackCursorPeriod = 500;
 // STATIC: 0x00CA64CC
 static uint8_t s_rippleDirectional[4] = { 0, 0, 1, 0 };
 
+// STATIC: 0x00CA628C
+static uint8_t s_namePlateCombatAlpha = 0x80;
+
+// STATIC: 0x00CA628D
+static uint8_t s_namePlateAlpha = 0xFF;
+
 // STATIC: 0x00CA630C
 static uint8_t s_attackTargetColor[4] = { 0x00, 0x00, 0xFF, 0xFF };
 
 // STATIC: 0x00DD61B8
 float CGUnit_C::s_trackingFacing;
-
-// STATIC: 0x00F76374
-uint32_t CGUnit_C::s_namePlateFlags;
 
 // STATIC: 0x00DD57C8
 uint32_t CGUnit_C::s_missileTrajectoryTargetingSpell;
@@ -319,15 +322,6 @@ WOWGUID CGUnit_C::s_trackingGUID;
 
 // STATIC: 0x00DD61E0
 uint32_t CGUnit_C::s_trackingFlags;
-
-// STATIC: 0x00F76370
-CGNamePlateFrame* CGUnit_C::s_namePlateFocus;
-
-// STATIC: #0x00ADAA80
-static TSList<CGNamePlateFrame> s_namePlates;
-
-// STATIC: #0x00ADAA8C
-static TSList<CGNamePlateFrame> s_unusedNamePlates;
 
 // STATIC: 0x00CA6328
 static ClickToMoveActionInfo s_clickToMoveActions[12] = {
@@ -10372,36 +10366,6 @@ void CGUnit_C::RotateFacing(float delta) {
     this->m_renderFacing = CMath::normalizeangle0to2pi_(delta + this->m_renderFacing);
 }
 
-// PROVEN: f184d2ce IDENTICAL/NONE
-// OFFSET: 0x009E72F0/0x14077FCB0
-void CGUnit_C::NamePlateSetResortAll(bool enable) {
-    if (enable) {
-        s_namePlateFlags |= 0x1;
-    } else {
-        s_namePlateFlags &= ~0x1;
-    }
-}
-
-// PROVEN: 453941c5 IDENTICAL/NONE
-// OFFSET: 0x009E7310/0x14077FCD0
-void CGUnit_C::NamePlateUpdateLevels(bool enable) {
-    if (enable) {
-        s_namePlateFlags |= 0x2;
-    } else {
-        s_namePlateFlags &= ~0x2;
-    }
-}
-
-// PROVEN: 8c91925f IDENTICAL/NONE
-// OFFSET: 0x009E7330/0x14077FCF0
-void CGUnit_C::NamePlateUpdateColor(bool enable) {
-    if (enable) {
-        s_namePlateFlags |= 0x4;
-    } else {
-        s_namePlateFlags &= ~0x4;
-    }
-}
-
 // PROVEN: ca975137 IDENTICAL/NONE
 // OFFSET: 0x005AB840/0x14021DD20
 uint32_t CGUnit_C::GetCreatureFamily() const {
@@ -19260,19 +19224,28 @@ void CGUnit_C::ClearThreatList() {
 
 // OFFSET: 0x005B0990/0x1402238E0
 void CGUnit_C::AddWorldThreatUpdateText(int32_t oldStatus, int32_t newStatus) {
-    if (!CGGameUI::m_threatWarningEnabled || !g_threatWorldTextCVar->m_intValue) {
+    if (!CGGameUI::m_threatWarningEnabled || !g_threatWorldTextCVar->m_intValue || (!CGPartyInfo::m_members[0] && !CGRaidInfo::m_numMembers)) {
         return;
     }
 
     if ((oldStatus == 2 && newStatus == 1) || (oldStatus == 3 && newStatus == 4)) {
+        if (this->m_namePlateFrame && CGNamePlateFrame::IsBloatThreat()) {
+            this->m_namePlateFrame->SetBloat(0.0f, false);
+        }
+
         return;
     }
 
     char token[32];
-    SStrPrintf(token, sizeof(token), "COMBAT_THREAT_%s_%d", newStatus > oldStatus ? "INCREASE" : "DECREASE", newStatus);
+    SStrPrintf(token, sizeof(token), "COMBAT_THREAT_%s_%d", newStatus > oldStatus ? "INCREASE" : "DECREASE", newStatus > 0 ? newStatus - 1 : 0);
     const char* text = FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE);
 
-    if (*text) {
+    if (text && *text) {
+        if (this->m_namePlateFrame && CGNamePlateFrame::IsBloatThreat() && oldStatus + newStatus * 5 != 21) {
+            this->m_namePlateFrame->m_bloatTime = 5000;
+            this->m_namePlateFrame->SetBloat(1.0f, false);
+        }
+
         PlayerNameDeleteText(this->m_nameDesc, 10);
         PlayerNameCreateText(this->m_nameDesc, 10, text, NULL, NULL);
     }
@@ -19416,25 +19389,41 @@ void CGUnit_C::UpdateThreat(CDataStore* msg, bool highest) {
         entries[i] = entry;
     }
 
+    float bloat = CGNamePlateFrame::GetBloatNamePlates();
+
+    if (bloat > 0.01f) {
+        highestInList = true;
+    }
+
     bool changed = false;
     UnitThreat* top = this->m_threats.Ptr(static_cast<uint32_t>(this->m_highestThreatGuid.m_guid), CHashKeyGUID(this->m_highestThreatGuid.m_guid));
 
     if (this->m_highestThreatGuid && top) {
         int32_t highestThreat = top->m_threat;
+        int32_t otherThreat = -1;
 
-        if (highestInList) {
-            for (UnitThreat* entry = this->m_threats.m_fulllist.Head(); entry; entry = this->m_threats.m_fulllist.Next(entry)) {
-                if (entry->m_key.m_guid != this->m_highestThreatGuid && this->UpdateThreatEntry(entry, highestThreat, entry->m_key.m_guid == activePlayer)) {
+        for (UnitThreat* entry = this->m_threats.m_fulllist.Head(); entry;) {
+            UnitThreat* next = this->m_threats.m_fulllist.Next(entry);
+
+            if (entry->m_key.m_guid != this->m_highestThreatGuid) {
+                if (entry->m_threat > otherThreat) {
+                    otherThreat = entry->m_threat;
+                }
+
+                if (this->UpdateThreatEntry(entry, highestThreat, entry->m_key.m_guid == activePlayer)) {
                     changed = true;
                 }
             }
-        } else {
-            for (uint32_t i = 0; i < count; i++) {
-                UnitThreat* entry = entries[i];
 
-                if (entry->m_key.m_guid != this->m_highestThreatGuid && this->UpdateThreatEntry(entry, highestThreat, entry->m_key.m_guid == activePlayer)) {
-                    changed = true;
-                }
+            entry = next;
+        }
+
+        if (highestInList && this->m_namePlateFrame && bloat > 0.01f) {
+            float ratio = static_cast<float>(otherThreat) / static_cast<float>(highestThreat);
+            float value = ratio <= bloat ? 0.0f : (ratio - bloat) / (1.0f - bloat);
+
+            if (this->m_namePlateFrame->SetBloat(value, false)) {
+                CGUnit_C::NamePlateSetResortAll(true);
             }
         }
     }
@@ -21194,25 +21183,6 @@ const char* GetCombatLogObjectName(const WOWGUID& guid) {
     return name;
 }
 
-// OFFSET: #0x00715760
-static float NamePlateScreenCenterDistanceSquared(C3Vector position) {
-    static C3Vector s_screenCenter(0.4f, 0.3f, 0.0f);
-
-    C3Vector delta(position.x - s_screenCenter.x, position.y - s_screenCenter.y, position.z - s_screenCenter.z);
-    C2Vector delta2(delta);
-
-    return delta2.x * delta2.x + delta2.y * delta2.y;
-}
-
-// OFFSET: 0x009E8FD0/0x140781DD0
-void CGUnit_C::ClearNamePlateFocus() {
-    if (CGUnit_C::s_namePlateFocus) {
-        CGUnit_C::s_namePlateFocus->OnLoseFocus();
-    }
-
-    CGUnit_C::s_namePlateFocus = NULL;
-}
-
 // OFFSET: 0x005B1020
 void CGUnit_C::NamePlateUpdateRaidTarget() {
     if (this->m_namePlateFrame) {
@@ -21220,41 +21190,13 @@ void CGUnit_C::NamePlateUpdateRaidTarget() {
     }
 }
 
-// OFFSET: 0x009E8FF0
-void CGNamePlateFrame::ReleaseNameplateFrame(CGNamePlateFrame* frame) {
-    if (frame) {
-        s_unusedNamePlates.LinkToTail(frame);
-    }
-}
-
-// OFFSET: #0x007254E0
-CGNamePlateFrame* CGNamePlateFrame::GetNewNameplateFrame(CSimpleFrame* parent) {
-    CGNamePlateFrame* frame = s_unusedNamePlates.Head();
-
-    if (!frame) {
-        void* data = CGNamePlateFrame::s_namePlateHeap.GetData(0, typeid(CGNamePlateFrame).raw_name(), SLOG_OBJECT);
-        return data ? new (data) CGNamePlateFrame(parent) : NULL;
+// OFFSET: 0x005B99A0
+uint8_t CGUnit_C::GetNamePlateAlpha(int32_t inCombat) const {
+    if (!inCombat || (this->m_unit->m_unitFieldFlags & 0x800) || this->m_combat.m_attacking) {
+        return s_namePlateAlpha;
     }
 
-    s_unusedNamePlates.UnlinkNode(frame);
-
-    return frame;
-}
-
-// OFFSET: #0x00725530
-static void NamePlateSort(CGNamePlateFrame* frame) {
-    s_namePlates.UnlinkNode(frame);
-
-    float distance = NamePlateScreenCenterDistanceSquared(frame->m_position);
-
-    for (CGNamePlateFrame* node = s_namePlates.Head(); node; node = s_namePlates.Next(node)) {
-        if (NamePlateScreenCenterDistanceSquared(node->m_position) <= distance) {
-            s_namePlates.LinkNode(frame, 2, node);
-            return;
-        }
-    }
-
-    s_namePlates.LinkToTail(frame);
+    return s_namePlateCombatAlpha;
 }
 
 // OFFSET: 0x005BF090
@@ -21263,25 +21205,21 @@ void CGUnit_C::NamePlateAddOrUpdate(const C3Vector& position, CGWorldFrame* worl
         this->m_namePlateFrame = CGNamePlateFrame::GetNewNameplateFrame(worldFrame);
         this->m_namePlateFrame->Initialize(this);
         this->m_namePlateFrame->Show();
-        this->m_namePlateFrame->m_position = position;
-        NamePlateSort(this->m_namePlateFrame);
+        this->m_namePlateFrame->SetPosition(position);
+        CGNamePlateFrame::NamePlateSort(this->m_namePlateFrame);
         worldFrame->SetNamePlateUpdate();
-
-        if (this->m_chatBubble) {
-            CGChatBubbleFrame::Remove(this->m_chatBubble);
-            this->m_chatBubble = NULL;
-        }
-
         this->UpdateSpellCastBars();
         this->ObjectNameVisibilityChanged();
         return;
     }
 
-    if (CGUnit_C::s_namePlateFlags & 0x2) {
+    uint32_t flags = CGUnit_C::GetNamePlateFlags();
+
+    if (flags & 0x2) {
         this->m_namePlateFrame->UpdateLevelDisplay(this);
     }
 
-    if (CGUnit_C::s_namePlateFlags & 0x4) {
+    if (flags & 0x4) {
         this->m_namePlateFrame->UpdateColorDisplay(this);
     }
 
@@ -21289,92 +21227,12 @@ void CGUnit_C::NamePlateAddOrUpdate(const C3Vector& position, CGWorldFrame* worl
     C3Vector delta(position.x - oldPosition.x, position.y - oldPosition.y, position.z - oldPosition.z);
     C2Vector delta2(delta);
 
-    if ((CGUnit_C::s_namePlateFlags & 0x1) || delta2.y * delta2.y + delta2.x * delta2.x != 0.0f) {
-        this->m_namePlateFrame->m_position = position;
-        NamePlateSort(this->m_namePlateFrame);
+    if ((flags & 0x1) || delta2.y * delta2.y + delta2.x * delta2.x != 0.0f) {
+        this->m_namePlateFrame->SetPosition(position);
+        CGNamePlateFrame::NamePlateSort(this->m_namePlateFrame);
         worldFrame->SetNamePlateUpdate();
-    }
-}
-
-// OFFSET: #0x00725890
-void CGUnit_C::UnitNameplatesReposition(CGWorldFrame* worldFrame) {
-    CGNamePlateFrame* frame = s_namePlates.Head();
-
-    while (frame) {
-        CGNamePlateFrame* next = s_namePlates.Next(frame);
-
-        if (s_cvNameplateAllowOverlap && s_cvNameplateAllowOverlap->m_intValue) {
-            C3Vector position = frame->m_position;
-            frame->SetPoint(FRAMEPOINT_TOP, worldFrame, FRAMEPOINT_BOTTOMLEFT, position.x, position.y, 1);
-            frame->SetFrameDepth(position.z - worldFrame->m_layoutDepth, true);
-        } else {
-            C3Vector position = frame->m_position;
-            SmartScreenRectPositionFrame(0, frame, worldFrame, position, 0);
-        }
-
-        frame = next;
-    }
-
-    CLayoutFrame::ResizePending();
-}
-
-// OFFSET: #0x00727130
-void CGUnit_C::NamePlateClearAll() {
-    CGNamePlateFrame* frame = s_namePlates.Head();
-
-    while (frame) {
-        CGNamePlateFrame* next = s_namePlates.Next(frame);
-        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(frame->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-        if (unit && unit->m_namePlateFrame) {
-            if (CGUnit_C::s_namePlateFocus == unit->m_namePlateFrame) {
-                CGUnit_C::s_namePlateFocus = NULL;
-            }
-
-            s_unusedNamePlates.LinkToTail(unit->m_namePlateFrame);
-            unit->m_namePlateFrame->Hide();
-            unit->m_namePlateFrame = NULL;
-            unit->ObjectNameVisibilityChanged();
-        }
-
-        frame = next;
-    }
-}
-
-// OFFSET: 0x009E8EE0
-void CGUnit_C::SetNamePlateFocus(const C2Vector& position) {
-    if (CGInputControl::GetActive()->m_flags & 0x6000003) {
-        return;
-    }
-
-    CGNamePlateFrame* focus = NULL;
-
-    for (CGNamePlateFrame* frame = s_namePlates.Head(); frame; frame = s_namePlates.Next(frame)) {
-        if (frame->m_guid == CGGameUI::m_lockedTarget) {
-            continue;
-        }
-
-        if (!frame->PtInFrameRect(position)) {
-            continue;
-        }
-
-        if (!focus || focus->m_position.z > frame->m_position.z) {
-            focus = frame;
-        }
-    }
-
-    if (focus == CGUnit_C::s_namePlateFocus) {
-        return;
-    }
-
-    if (CGUnit_C::s_namePlateFocus) {
-        CGUnit_C::s_namePlateFocus->OnLoseFocus();
-    }
-
-    CGUnit_C::s_namePlateFocus = focus;
-
-    if (focus) {
-        focus->OnGainFocus();
+    } else if (CGNamePlateFrame::GetNamePlateMotion() == 2) {
+        worldFrame->SetNamePlateUpdate();
     }
 }
 
@@ -22240,14 +22098,7 @@ void CGUnit_C::SequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t 
 // OFFSET: #0x00724EA0
 void CGUnit_C::PostShutdown() {
     CMissile::Destroy();
-    CGNamePlateFrame* plate = s_unusedNamePlates.Head();
-
-    while (!s_unusedNamePlates.IsEnd(plate)) {
-        CGNamePlateFrame* next = s_unusedNamePlates.RawNext(plate);
-        s_unusedNamePlates.UnlinkNode(plate);
-        delete plate;
-        plate = next;
-    }
+    CGNamePlateFrame::DestroyUnusedNameplateFrames();
 
     CGUnit_C::s_lastNPCSoundGUID = WOWGUID();
     CVehicle_C::UninitSystem();
