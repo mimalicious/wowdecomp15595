@@ -7385,6 +7385,7 @@ void CGPlayer_C::PlayerInitializeMessageHandlers() {
     ClientServices::SetMessageHandler(SMSG_QUEST_GIVER_QUEST_LIST_MESSAGE, Packet_Group_12, NULL);
     ClientServices::SetMessageHandler(SMSG_QUEST_GIVER_INVALID_QUEST, Packet_Group_12, NULL);
     ClientServices::SetMessageHandler(SMSG_QUEST_GIVER_QUEST_DETAILS, Packet_Group_12, NULL);
+    ClientServices::SetMessageHandler(SMSG_QUEST_GIVER_REQUEST_ITEMS, Packet_Group_12, NULL);
     ClientServices::SetMessageHandler(SMSG_QUEST_GIVER_OFFER_REWARD_MESSAGE, Packet_Group_12, NULL);
     ClientServices::SetMessageHandler(SMSG_QUEST_GIVER_QUEST_FAILED, Packet_Group_12, NULL);
     ClientServices::SetMessageHandler(SMSG_QUEST_GIVER_STATUS, Packet_Group_12, NULL);
@@ -7392,6 +7393,7 @@ void CGPlayer_C::PlayerInitializeMessageHandlers() {
     ClientServices::SetMessageHandler(SMSG_QUEST_LOG_FULL, Packet_Group_12, NULL);
     ClientServices::SetMessageHandler(SMSG_TRAINER_LIST, Packet_Group_13, NULL);
     ClientServices::SetMessageHandler(CMSG_QUERY_OBJECT_POSITION, Packet_Group_13, NULL);
+    ClientServices::SetMessageHandler(SMSG_SET_PROFICIENCY, Packet_SMSG_SET_PROFICIENCY, NULL);
     ClientServices::SetMessageHandler(SMSG_RESURRECT_REQUEST, Packet_SMSG_RESURRECT_REQUEST, NULL);
     ClientServices::SetMessageHandler(SMSG_PLAYER_SKINNED, Packet_SMSG_PLAYER_SKINNED, NULL);
     ClientServices::SetMessageHandler(SMSG_INSPECT_RESULTS_UPDATE, Packet_SMSG_INSPECT, NULL);
@@ -7473,6 +7475,7 @@ void CGPlayer_C::PlayerInitializeMessageHandlers() {
     ClientServices::SetMessageHandler(SMSG_RAID_GROUP_ONLY, Packet_SMSG_RAID_GROUP_ONLY, NULL);
     ClientServices::SetMessageHandler(SMSG_INSTANCE_LOCK_WARNING_QUERY, Packet_SMSG_INSTANCE_LOCK_WARNING_QUERY, NULL);
     ClientServices::SetMessageHandler(SMSG_LOOT_START_ROLL, PH_LOOT_OPCODES, NULL);
+    ClientServices::SetMessageHandler(SMSG_LOOT_ALL_PASSED, PH_LOOT_OPCODES, NULL);
     ClientServices::SetMessageHandler(SMSG_LOOT_ROLL_WON, PH_LOOT_OPCODES, NULL);
     ClientServices::SetMessageHandler(SMSG_LOOT_ROLL, PH_LOOT_OPCODES, NULL);
     ClientServices::SetMessageHandler(SMSG_LOOT_MASTER_LIST, PH_LOOT_OPCODES, NULL);
@@ -7497,6 +7500,7 @@ void CGPlayer_C::PlayerInitializeMessageHandlers() {
     ClientServices::SetMessageHandler(SMSG_GROUP_ACTION_THROTTLED, Packet_SMSG_GROUPACTION_THROTTLED, NULL);
     ClientServices::SetMessageHandler(SMSG_SEND_UNLEARN_SPELLS, Packet_SMSG_SEND_UNLEARN_SPELLS, NULL);
     ClientServices::SetMessageHandler(SMSG_CONVERT_RUNE, Packet_SMSG_CONVERT_RUNE, NULL);
+    ClientServices::SetMessageHandler(SMSG_RESYNC_RUNES, Packet_Group_9, NULL);
     ClientServices::SetMessageHandler(SMSG_ADD_RUNE_POWER, Packet_Group_9, NULL);
     ClientServices::SetMessageHandler(SMSG_UPDATE_TALENT_DATA, Packet_SMSG_TALENTS_INFO, NULL);
     ClientServices::SetMessageHandler(SMSG_ARENA_TEAM_CHANGE_FAILED_QUEUED, Packet_Group_9, NULL);
