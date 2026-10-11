@@ -683,8 +683,8 @@ class ClientSuspendToken : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientSuspendToken* msg);
 
-    /* 0010 */ uint32_t m_sequence;
-    /* 0014 */ uint8_t m_reason;
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ bool unk_0014;
 
     ClientSuspendToken(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSuspendToken();
@@ -713,9 +713,12 @@ class ClientRatedBgRating : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientRatedBgRating* msg);
 
+    /* 0010 */ int32_t unk_0010;
+
     ClientRatedBgRating(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientRatedBgRating();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientItemRefundInfoResponse : public JamClientMessage {
@@ -881,18 +884,34 @@ class ClientFailedPlayerCondition : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientFailedPlayerCondition* msg);
 
+    /* 0010 */ int32_t unk_0010;
+
     ClientFailedPlayerCondition(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientFailedPlayerCondition();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientInspectRatedBgStats : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientInspectRatedBgStats* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint32_t unk_0020;
+
     ClientInspectRatedBgStats(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientInspectRatedBgStats();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientItemExpirePurchaseRefund : public JamClientMessage {
@@ -1042,9 +1061,12 @@ class ClientCustomLoadScreen : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientCustomLoadScreen* msg);
 
+    /* 0010 */ int32_t unk_0010;
+
     ClientCustomLoadScreen(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientCustomLoadScreen();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientCurrencyLootRestored : public JamClientMessage {
@@ -1064,8 +1086,6 @@ class ClientCurrencyLootRestored : public JamClientMessage {
 class ClientMessageBox : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientMessageBox* msg);
-
-    /* 0010 */ WDataStore m_text;
 
     ClientMessageBox(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMessageBox();
@@ -1235,18 +1255,49 @@ class ClientRatedBgStats : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientRatedBgStats* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ uint32_t unk_0028;
+    /* 002C */ uint32_t unk_002C;
+    /* 0030 */ uint32_t unk_0030;
+    /* 0034 */ uint32_t unk_0034;
+    /* 0038 */ uint32_t unk_0038;
+    /* 003C */ uint32_t unk_003C;
+    /* 0040 */ uint32_t unk_0040;
+    /* 0044 */ uint32_t unk_0044;
+    /* 0048 */ uint32_t unk_0048;
+    /* 004C */ uint32_t unk_004C;
+    /* 0050 */ uint32_t unk_0050;
+    /* 0054 */ uint32_t unk_0054;
+
     ClientRatedBgStats(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientRatedBgStats();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientBattlefieldMgrEjectPending : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldMgrEjectPending* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+    /* 0018 */ uint8_t unk_0018;
+
     ClientBattlefieldMgrEjectPending(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldMgrEjectPending();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildPermissionsQueryResults : public JamClientMessage {
@@ -1278,9 +1329,21 @@ class ClientBattlefieldMgrEntryInvite : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldMgrEntryInvite* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0018 */ uint8_t unk_0018;
+    /* 0019 */ uint8_t unk_0019;
+    /* 001A */ uint8_t unk_001A;
+    /* 001B */ uint8_t unk_001B;
+    /* 001C */ uint8_t unk_001C;
+    /* 001D */ uint8_t unk_001D;
+    /* 001E */ uint8_t unk_001E;
+    /* 001F */ uint8_t unk_001F;
+    /* 0020 */ uint32_t unk_0020;
+
     ClientBattlefieldMgrEntryInvite(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldMgrEntryInvite();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildAchievementDeleted : public JamClientMessage {
@@ -1296,9 +1359,40 @@ class ClientBattlefieldStatusQueued : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldStatusQueued* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint8_t unk_001C;
+    /* 0020 */ uint8_t unk_0020;
+    /* 0021 */ uint8_t unk_0021;
+    /* 0022 */ uint8_t unk_0022;
+    /* 0023 */ uint8_t unk_0023;
+    /* 0024 */ uint8_t unk_0024;
+    /* 0025 */ uint8_t unk_0025;
+    /* 0026 */ uint8_t unk_0026;
+    /* 0027 */ uint8_t unk_0027;
+    /* 0028 */ uint32_t unk_0028;
+    /* 002C */ uint32_t unk_002C;
+    /* 0030 */ uint32_t unk_0030;
+    /* 0038 */ uint8_t unk_0038;
+    /* 0039 */ uint8_t unk_0039;
+    /* 003A */ uint8_t unk_003A;
+    /* 003B */ uint8_t unk_003B;
+    /* 003C */ uint8_t unk_003C;
+    /* 003D */ uint8_t unk_003D;
+    /* 003E */ uint8_t unk_003E;
+    /* 003F */ uint8_t unk_003F;
+    /* 0040 */ uint8_t unk_0040;
+    /* 0041 */ uint8_t unk_0041;
+    /* 0042 */ uint8_t unk_0042;
+    /* 0044 */ uint32_t unk_0044;
+    /* 0048 */ uint8_t unk_0048;
+
     ClientBattlefieldStatusQueued(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatusQueued();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientBattlefieldPortDenied : public JamClientMessage {
@@ -1350,18 +1444,32 @@ class ClientBattlefieldMgrStateChange : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldMgrStateChange* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+    /* 0018 */ uint32_t unk_0018;
+
     ClientBattlefieldMgrStateChange(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldMgrStateChange();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientSetDfFastLaunchResult : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientSetDfFastLaunchResult* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+
     ClientSetDfFastLaunchResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSetDfFastLaunchResult();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientLfGuildPostUpdated : public JamClientMessage {
@@ -1577,9 +1685,28 @@ class ClientWargameCheckEntry : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientWargameCheckEntry* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+    /* 0018 */ uint8_t unk_0018;
+    /* 0019 */ uint8_t unk_0019;
+    /* 001A */ uint8_t unk_001A;
+    /* 001B */ uint8_t unk_001B;
+    /* 001C */ uint8_t unk_001C;
+    /* 001D */ uint8_t unk_001D;
+    /* 001E */ uint8_t unk_001E;
+    /* 001F */ uint8_t unk_001F;
+    /* 0020 */ uint32_t unk_0020;
+
     ClientWargameCheckEntry(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientWargameCheckEntry();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildSendGuildXP : public JamClientMessage {
@@ -1602,18 +1729,38 @@ class ClientAreaTriggerMovementUpdate : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientAreaTriggerMovementUpdate* msg);
 
+    /* 0010 */ float unk_0010;
+    /* 0014 */ float unk_0014;
+    /* 0018 */ float unk_0018;
+    /* 001C */ float unk_001C;
+    /* 0020 */ float unk_0020;
+    /* 0024 */ float unk_0024;
+
     ClientAreaTriggerMovementUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientAreaTriggerMovementUpdate();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientMissileCancel : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientMissileCancel* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0018 */ uint8_t unk_0018;
+    /* 0019 */ uint8_t unk_0019;
+    /* 001A */ uint8_t unk_001A;
+    /* 001B */ uint8_t unk_001B;
+    /* 001C */ uint8_t unk_001C;
+    /* 001D */ uint8_t unk_001D;
+    /* 001E */ uint8_t unk_001E;
+    /* 001F */ uint8_t unk_001F;
+
     ClientMissileCancel(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMissileCancel();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientFeatureSystemStatus : public JamClientMessage {
@@ -1655,9 +1802,12 @@ class ClientWeeklyLastReset : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientWeeklyLastReset* msg);
 
+    /* 0010 */ int32_t unk_0010;
+
     ClientWeeklyLastReset(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientWeeklyLastReset();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildPartyState : public JamClientMessage {
@@ -1679,9 +1829,19 @@ class ClientBattlegroundPlayerJoined : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlegroundPlayerJoined* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+
     ClientBattlegroundPlayerJoined(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlegroundPlayerJoined();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientLoadCufProfiles : public JamClientMessage {
@@ -1776,9 +1936,19 @@ class ClientBattlefieldRatedInfo : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldRatedInfo* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ uint32_t unk_0028;
+    /* 002C */ uint8_t unk_002C;
+
     ClientBattlefieldRatedInfo(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldRatedInfo();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientLfGuildCommandResult : public JamClientMessage {
@@ -1797,9 +1967,12 @@ class ClientLfgSlotInvalid : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfgSlotInvalid* msg);
 
+    /* 0010 */ JamResearchHistory unk_0010;
+
     ClientLfgSlotInvalid(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfgSlotInvalid();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildAchievementData : public JamClientMessage {
@@ -1868,9 +2041,12 @@ class ClientMoneyNotify : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientMoneyNotify* msg);
 
+    /* 0010 */ uint64_t unk_0010;
+
     ClientMoneyNotify(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoneyNotify();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientLearnedSpell : public JamClientMessage {
@@ -1942,9 +2118,19 @@ class ClientBattlegroundPlayerLeft : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlegroundPlayerLeft* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+
     ClientBattlegroundPlayerLeft(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlegroundPlayerLeft();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientSetCurrency : public JamClientMessage {
@@ -1969,9 +2155,19 @@ class ClientWargameRequestSent : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientWargameRequestSent* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+
     ClientWargameRequestSent(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientWargameRequestSent();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientClearCooldowns : public JamClientMessage {
@@ -2071,9 +2267,17 @@ class ClientRequestPvpRewardsResponse : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientRequestPvpRewardsResponse* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ uint32_t unk_0024;
+
     ClientRequestPvpRewardsResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientRequestPvpRewardsResponse();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientAverageItemLevelInform : public JamClientMessage {
@@ -2242,9 +2446,39 @@ class ClientBattlefieldStatusFailed : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldStatusFailed* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+    /* 0018 */ uint32_t unk_0018;
+    /* 0020 */ uint8_t unk_0020;
+    /* 0021 */ uint8_t unk_0021;
+    /* 0022 */ uint8_t unk_0022;
+    /* 0023 */ uint8_t unk_0023;
+    /* 0024 */ uint8_t unk_0024;
+    /* 0025 */ uint8_t unk_0025;
+    /* 0026 */ uint8_t unk_0026;
+    /* 0027 */ uint8_t unk_0027;
+    /* 0028 */ uint8_t unk_0028;
+    /* 0029 */ uint8_t unk_0029;
+    /* 002A */ uint8_t unk_002A;
+    /* 002B */ uint8_t unk_002B;
+    /* 002C */ uint8_t unk_002C;
+    /* 002D */ uint8_t unk_002D;
+    /* 002E */ uint8_t unk_002E;
+    /* 002F */ uint8_t unk_002F;
+    /* 0030 */ uint32_t unk_0030;
+    /* 0034 */ uint32_t unk_0034;
+    /* 0038 */ uint32_t unk_0038;
+
     ClientBattlefieldStatusFailed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatusFailed();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientBattlefieldList : public JamClientMessage {
@@ -2344,9 +2578,41 @@ class ClientBattlefieldStatusWaitforgroups : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldStatusWaitforgroups* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint32_t unk_0020;
+    /* 0028 */ uint8_t unk_0028;
+    /* 0029 */ uint8_t unk_0029;
+    /* 002A */ uint8_t unk_002A;
+    /* 002B */ uint8_t unk_002B;
+    /* 002C */ uint8_t unk_002C;
+    /* 002D */ uint8_t unk_002D;
+    /* 002E */ uint8_t unk_002E;
+    /* 002F */ uint8_t unk_002F;
+    /* 0030 */ uint8_t unk_0030;
+    /* 0031 */ uint8_t unk_0031;
+    /* 0032 */ uint8_t unk_0032;
+    /* 0034 */ uint32_t unk_0034;
+    /* 0038 */ uint8_t unk_0038;
+    /* 0040 */ uint32_t unk_0040;
+    /* 0044 */ uint32_t unk_0044;
+    /* 0048 */ uint8_t unk_0048;
+    /* 0049 */ uint8_t unk_0049;
+    /* 004A */ uint8_t unk_004A;
+    /* 004B */ uint8_t unk_004B;
+
     ClientBattlefieldStatusWaitforgroups(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatusWaitforgroups();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildBankTextQueryResult : public JamClientMessage {
@@ -2419,9 +2685,23 @@ class ClientInspectHonorStats : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientInspectHonorStats* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011;
+    /* 0012 */ uint8_t unk_0012;
+    /* 0013 */ uint8_t unk_0013;
+    /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015;
+    /* 0016 */ uint8_t unk_0016;
+    /* 0017 */ uint8_t unk_0017;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint16_t unk_001C;
+    /* 001E */ uint16_t unk_001E;
+    /* 0020 */ uint8_t unk_0020;
+
     ClientInspectHonorStats(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientInspectHonorStats();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientNewWorld : public JamClientMessage {
@@ -2576,9 +2856,22 @@ class ClientBattlefieldMgrEjected : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldMgrEjected* msg);
 
+    /* 0010 */ uint8_t unk_0010;
+    /* 0018 */ uint8_t unk_0018;
+    /* 0019 */ uint8_t unk_0019;
+    /* 001A */ uint8_t unk_001A;
+    /* 001B */ uint8_t unk_001B;
+    /* 001C */ uint8_t unk_001C;
+    /* 001D */ uint8_t unk_001D;
+    /* 001E */ uint8_t unk_001E;
+    /* 001F */ uint8_t unk_001F;
+    /* 0020 */ uint8_t unk_0020;
+    /* 0021 */ uint8_t unk_0021;
+
     ClientBattlefieldMgrEjected(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldMgrEjected();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 #include "WoW/Source/JamClientAutoCode/JamClient.inl"
