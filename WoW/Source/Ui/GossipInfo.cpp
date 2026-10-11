@@ -18,13 +18,13 @@
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Ui/MinimapFrame.h"
 
-// STATIC: #0x00A12FD0
+// STATIC: 0x00BFB6E0
 static const int32_t s_questGreenRange[20] = { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
 
-// STATIC: #0x00BFC968
+// STATIC: 0x00F710B0
 GossipQuestInfo CGGossipInfo::m_quests[32];
 
-// STATIC: #0x00C00BE8
+// STATIC: 0x00F75330
 int32_t CGGossipInfo::m_textPending;
 
 // STATIC: 0x00F75E40
@@ -36,7 +36,7 @@ WOWGUID CGGossipInfo::m_gossip;
 // STATIC: #0x00C016FC
 uint32_t CGGossipInfo::m_gossipOptionsCount;
 
-// STATIC: #0x00C00BF0
+// STATIC: 0x00F75338
 GossipOption CGGossipInfo::m_options[32];
 
 // STATIC: #0x00C00EF0

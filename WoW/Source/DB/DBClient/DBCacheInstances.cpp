@@ -24,10 +24,10 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00C5D690
+// STATIC: 0x00D97EF8
 DBCache<CreatureStats_C, int32_t, HASHKEY_INT> g_creatureDBCache('WMOB', "creaturecache.wdb", CMSG_QUERY_CREATURE, 0, true, true, 0);
 
-// STATIC: #0x00C5D718
+// STATIC: 0x00D97F88
 DBCache<GameObjectStats_C, int32_t, HASHKEY_INT> g_gameObjectDBCache('WGOB', "gameobjectcache.wdb", CMSG_QUERY_GAME_OBJECT, 0, true, true, 0);
 
 // STATIC: #0x00C5D7A0
@@ -39,34 +39,34 @@ DBCache<ItemStats_C, int32_t, HASHKEY_INT> g_itemDBCache('WIDB', "itemcache.wdb"
 // STATIC: #0x00C5D8B0
 DBCache<NPCText, int32_t, HASHKEY_INT> g_npcTextDBCache('WNPC', "npccache.wdb", CMSG_QUERY_NPC_TEXT, 0, true, true, 0);
 
-// STATIC: #0x00C5D938
+// STATIC: 0x00D980A8
 DBCache<NameCache, uint64_t, CHashKeyGUID> g_nameDBCache('WNAM', "namecache.wdb", CMSG_NAME_QUERY, 0, false, false, 256);
 
 // STATIC: #0x00C5D9C0
 DBCache<GuildStats_C, uint64_t, CHashKeyGUID> g_guildInfoCache('WGLD', "guildcache.wdb", CMSG_QUERY_GUILD_INFO, 0, false, false, 0);
 
-// STATIC: #0x00C5DA48
+// STATIC: 0x00D981C8
 DBCache<QuestCache, int32_t, HASHKEY_INT> g_questDBCache('WQST', "questcache.wdb", CMSG_QUERY_QUEST_INFO, 0, false, true, 0);
 
-// STATIC: #0x00C5DAD0
+// STATIC: 0x00D98258
 DBCache<PageTextCache_C, int32_t, HASHKEY_INT> g_pageTextCache('WPTX', "pagetextcache.wdb", CMSG_QUERY_PAGE_TEXT, 0, true, true, 0);
 
-// STATIC: #0x00C5DB58
+// STATIC: 0x00D982E8
 DBCache<PetNameCache, int32_t, HASHKEY_INT> g_petNameCache('WPNM', "petnamecache.wdb", CMSG_QUERY_PET_NAME, 0, true, false, 0);
 
-// STATIC: #0x00C5DBE0
+// STATIC: 0x00D98378
 DBCache<CGPetition, int32_t, HASHKEY_INT> g_petitionCache('WPTN', "petitioncache.wdb", CMSG_PETITION_QUERY, 0, true, false, 0);
 
-// STATIC: #0x00C5DC68
+// STATIC: 0x00D98408
 DBCache<ItemTextCache_C, uint64_t, CHashKeyGUID> g_itemTextDBCache('WITX', "itemtextcache.wdb", CMSG_ITEM_TEXT_QUERY, 0, false, true, 0);
 
 // STATIC: #0x00C5DCF0
 DBCache<WardenCachedModule, CWardenKey, CWardenKey> g_wardenCache('WRDN', "wowcache.wdb", 0, 0, true, true, 0);
 
-// STATIC: #0x00C5DD78
+// STATIC: 0x00D98528
 DBCache<ArenaTeamCache, int32_t, HASHKEY_INT> g_arenaTeamCache('WATM', "arenateamcache.wdb", CMSG_ARENA_TEAM_QUERY, 0, false, false, 0);
 
-// STATIC: #0x00C5DE00
+// STATIC: 0x00D985B8
 DBCache<DanceCache, int32_t, HASHKEY_INT> g_danceCache('WDAN', "dancecache.wdb", CMSG_DANCE_QUERY, 0, false, false, 0);
 
 // OFFSET: #0x00635060

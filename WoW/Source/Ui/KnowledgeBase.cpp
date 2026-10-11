@@ -12,10 +12,10 @@
 #include "WoW/Source/Ui/Types.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 
-// STATIC: #0x00ACD538
+// STATIC: 0x00D17320
 CKBSetup g_KnowledgeBaseSetup;
 
-// STATIC: #0x00BEA7F8
+// STATIC: 0x00F76B60
 CKBPage* CKBPage::s_pLoadingQueue_Head;
 
 // OFFSET: #0x00550AE0

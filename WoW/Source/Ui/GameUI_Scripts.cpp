@@ -171,13 +171,13 @@
 #include "WoW/Source/DB/Rec/PaperDollItemFrameRec.h"
 #include "WoW/Source/Object/WGUID.h"
 
-// STATIC: #0x00BD0CC4
+// STATIC: 0x00ED79E8
 static CWOWClientStatus* s_loadAddOnStatus;
 
-// STATIC: #0x00BD0CC8
+// STATIC: 0x00ED79EC
 static int32_t s_loadAddOnDepth;
 
-// STATIC: #0x00AC8074
+// STATIC: 0x00D0B27C
 static const char* s_instanceTypeTokens[5] = { "none", "party", "raid", "pvp", "arena" };
 
 // STATIC: #0x00ACC600

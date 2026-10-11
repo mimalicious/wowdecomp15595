@@ -41,52 +41,52 @@ TSList<POIIcon, TSGetLink<POIIcon> > CGLCD::m_POIIcons;
 // STATIC: #0x00B1C0C8
 TSList<MAPDATA, TSGetLink<MAPDATA> > CGLCD::m_mapData;
 
-// STATIC: #0x00D41314
+// STATIC: 0x0100A62C
 CEzLcd* CGLCD::m_lcd;
 
-// STATIC: #0x00D41330
+// STATIC: 0x0100A648
 int32_t CGLCD::m_chatAlertLines;
 
-// STATIC: #0x00D41338
+// STATIC: 0x0100A650
 uint8_t CGLCD::initComplete;
 
-// STATIC: #0x00D41348
+// STATIC: 0x0100A660
 TSHashTable<LCDHANDLE, HASHKEY_CONSTSTRI> CGLCD::m_handles;
 
-// STATIC: #0x00D41318
+// STATIC: 0x0100A630
 CGPlayer_C* CGLCD::m_player;
 
-// STATIC: #0x00D4131C
+// STATIC: 0x0100A634
 uint8_t CGLCD::m_inWorld;
 
 // STATIC: #0x00D4131D
 static uint8_t s_classFlag8;
 
-// STATIC: #0x00D4131E
+// STATIC: 0x0100A636
 static uint8_t s_inBattlefield;
 
-// STATIC: #0x00D412D0
+// STATIC: 0x0100A5E8
 static char s_battlefieldAlert[64];
 
-// STATIC: #0x00D41320
+// STATIC: 0x0100A638
 static uint32_t s_battlefieldPortExpiration;
 
-// STATIC: #0x00D4132C
+// STATIC: 0x0100A644
 static uint32_t s_battlefieldStartTime;
 
-// STATIC: #0x00B1C098
+// STATIC: 0x00D27F08
 static int32_t s_currentScreen = -1;
 
-// STATIC: #0x00B1C09C
+// STATIC: 0x00D27F0C
 static int32_t s_previousScreen = -1;
 
-// STATIC: #0x00B1C0A0
+// STATIC: 0x00D27F10
 static int32_t s_subscreen;
 
 // STATIC: #0x00B1C0A4
 static int32_t s_alertDuration = 30000;
 
-// STATIC: #0x00B1C0A8
+// STATIC: 0x00D27F18
 static uint8_t s_alertExpired = 1;
 
 // STATIC: #0x00D41270
@@ -98,10 +98,10 @@ static char s_outbidText[32];
 // STATIC: #0x00D412B0
 static char s_whisperFromText[32];
 
-// STATIC: #0x00D4131F
+// STATIC: 0x0100A637
 static uint8_t s_battlefieldAlertShown;
 
-// STATIC: #0x00D41334
+// STATIC: 0x0100A64C
 static uint32_t s_alertExpireTime;
 
 // STATIC: #0x00D41339
@@ -110,7 +110,7 @@ static uint8_t s_loginPending;
 // STATIC: #0x00D4133C
 static TSFixedArray<CHATMESSAGE> s_chatMessages;
 
-// STATIC: #0x00D41370
+// STATIC: 0x0100A68C
 static HBITMAP s_lastBitmap;
 
 // OFFSET: #0x00848030

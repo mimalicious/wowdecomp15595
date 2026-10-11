@@ -169,10 +169,10 @@
 // STATIC: 0x00CA64E4
 static INVENTORY_SLOTS s_virtualItemInvSlots[2] = { INVSLOT_MAINHAND, INVSLOT_OFFHAND };
 
-// STATIC: #0x00CA1398
+// STATIC: 0x00DD82F8
 static char s_objectNameBuffers[2][305];
 
-// STATIC: #0x00CA15FC
+// STATIC: 0x00DD855C
 static uint32_t s_objectNameIndex;
 
 // STATIC: #0x00ADAA10
@@ -268,10 +268,10 @@ static uint8_t s_rippleDirectional[4] = { 0, 0, 1, 0 };
 // STATIC: 0x00CA630C
 static uint8_t s_attackTargetColor[4] = { 0x00, 0x00, 0xFF, 0xFF };
 
-// STATIC: #0x00CA11D8
+// STATIC: 0x00DD61B8
 float CGUnit_C::s_trackingFacing;
 
-// STATIC: #0x00CA1208
+// STATIC: 0x00F76374
 uint32_t CGUnit_C::s_namePlateFlags;
 
 // STATIC: 0x00DD57C8
@@ -313,10 +313,10 @@ uint32_t CGUnit_C::s_unk_CA11D4;
 // STATIC: #0x00CA11F8
 WOWGUID CGUnit_C::s_trackingGUID;
 
-// STATIC: #0x00CA1200
+// STATIC: 0x00DD61E0
 uint32_t CGUnit_C::s_trackingFlags;
 
-// STATIC: #0x00CA1204
+// STATIC: 0x00F76370
 CGNamePlateFrame* CGUnit_C::s_namePlateFocus;
 
 // STATIC: #0x00ADAA80
@@ -325,7 +325,7 @@ static TSList<CGNamePlateFrame> s_namePlates;
 // STATIC: #0x00ADAA8C
 static TSList<CGNamePlateFrame> s_unusedNamePlates;
 
-// STATIC: #0x00ADAAB8
+// STATIC: 0x00CA6328
 static ClickToMoveActionInfo s_clickToMoveActions[12] = {
     { 0, { 0, 0, 0 }, 0.0f, 0, 0, { 0, 0 } },
     { 0, { 0, 0, 0 }, 0.0f, 0, 0, { 0, 0 } },
@@ -344,7 +344,7 @@ static ClickToMoveActionInfo s_clickToMoveActions[12] = {
 // STATIC: 0x00CA6290
 static const uint32_t s_effectAttachmentIds[16] = { 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16, 37, 38, 22, 47, 48 };
 
-// STATIC: #0x00CA1190
+// STATIC: 0x00DD5F8C
 static int32_t s_lastNPCSoundCount;
 
 // STATIC: #0x00CA11A4
@@ -395,7 +395,7 @@ static const uint32_t s_combatTextTypes[12] = { 11, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1
 // STATIC: #0x00ADAA6C
 static uint32_t s_petSpellDamageColor = 0xFFFFDE00;
 
-// STATIC: #0x00ADAA70
+// STATIC: 0x00CA62EC
 static uint32_t s_petMeleeDamageColor = 0xFFFF8400;
 
 // STATIC: 0x00CA64B8

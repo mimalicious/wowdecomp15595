@@ -140,7 +140,7 @@ static int32_t Script_GetUpperEmblemTexture(lua_State* L) {
         return 0;
     }
 
-    // STATIC: #0x00C0E538
+    // STATIC: 0x00F76CC0
     static TSGrowableArray<CImVector> s_texels;
 
     if (!s_texels.m_count) {
@@ -202,7 +202,7 @@ static int32_t Script_GetLowerEmblemTexture(lua_State* L) {
         luaL_error(L, "%s:GetLowerEmblemTexture(): Wrong object type, expected texture", name ? name : "<unnamed>");
     }
 
-    // STATIC: #0x00C0E548
+    // STATIC: 0x00F76CD0
     static TSGrowableArray<CImVector> s_texels;
 
     if (!s_texels.m_count) {

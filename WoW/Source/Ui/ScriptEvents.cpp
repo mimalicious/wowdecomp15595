@@ -27,7 +27,7 @@
 // STATIC: 0x00D39228
 const char* g_scriptEvents[NUM_SCRIPT_EVENTS];
 
-// STATIC: #0x00C259FC
+// STATIC: 0x00D39F38
 static TSGrowableArray<UniqueSignal> s_uniqueSignals;
 
 // STATIC: #0x00C25A28
@@ -36,13 +36,13 @@ static char s_nameWithRealm[305];
 // STATIC: #0x00C25BA0
 static char s_tokenBuffers[8][32];
 
-// STATIC: #0x00AD2780
+// STATIC: 0x00C99BD8
 static char* s_tokenIDs[8] = { s_tokenBuffers[0], s_tokenBuffers[1], s_tokenBuffers[2], s_tokenBuffers[3], s_tokenBuffers[4], s_tokenBuffers[5], s_tokenBuffers[6], s_tokenBuffers[7] };
 
-// STATIC: #0x00C25B7C
+// STATIC: 0x00D3A0D4
 static char s_auraToken[32];
 
-// STATIC: #0x00C25B5C
+// STATIC: 0x00D3A0B4
 static char s_tokenFromGUID[32];
 
 // OFFSET: 0x0044C420/0x140059B00

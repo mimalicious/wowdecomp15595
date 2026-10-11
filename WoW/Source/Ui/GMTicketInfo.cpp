@@ -13,10 +13,10 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/ChatFrame.h"
 
-// STATIC: #0x00C1E8D0
+// STATIC: 0x00F76304
 int32_t CGGMTicketInfo::m_ticketID;
 
-// STATIC: #0x00C1E8D4
+// STATIC: 0x00F76308
 int32_t CGGMTicketInfo::m_responseID;
 
 // STATIC: 0x00D169F0

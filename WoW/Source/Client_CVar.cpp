@@ -29,28 +29,28 @@
 // STATIC: #0x00AB6004
 static const char* s_filterNames[] = { "general", "world", "ui", "animation", "models", "objects", "sound", "movement", "network" };
 
-// STATIC: #0x00B2F000
+// STATIC: 0x00D361E8
 static CVar* s_M2ForceAdditiveParticleSortVar;
 
-// STATIC: #0x00B2F004
+// STATIC: 0x00D36220
 static CVar* s_M2BatchParticlesVar;
 
-// STATIC: #0x00B2F008
+// STATIC: 0x00D36214
 static CVar* s_M2BatchDoodadsVar;
 
-// STATIC: #0x00B2F00C
+// STATIC: 0x00D361EC
 static CVar* s_M2UseThreadsVar;
 
-// STATIC: #0x00B2F010
+// STATIC: 0x00D36340
 static CVar* s_M2UseClipPlanesVar;
 
-// STATIC: #0x00B2F014
+// STATIC: 0x00D36208
 static CVar* s_M2UseZFillVar;
 
-// STATIC: #0x00B2F018
+// STATIC: 0x00D3620C
 static CVar* s_M2FasterDebugVar;
 
-// STATIC: #0x00B2F01C
+// STATIC: 0x00D361CC
 static CVar* s_M2FasterVar;
 
 // STATIC: 0x00D361E4
@@ -137,7 +137,7 @@ CVar* s_cvTextureCacheSize;
 // STATIC: #0x00B2FA00
 CVar* s_cvTextureFilteringMode;
 
-// STATIC: #0x00B2FA04
+// STATIC: 0x00D364C0
 static CVar* s_cvAsyncThreadSleep;
 
 // STATIC: #0x00B2FA08

@@ -5,7 +5,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: #0x00ACD600
+// STATIC: 0x00D173E8
 CKBArticle g_KnowledgeBaseArticle;
 
 // INLINED

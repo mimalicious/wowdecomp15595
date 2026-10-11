@@ -10,22 +10,22 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/WowSysMessageOutput.h"
 
-// STATIC: #0x00B30758
+// STATIC: 0x00D36B50
 static bool s_initialized;
 
-// STATIC: #0x00B30759
+// STATIC: 0x00D36B51
 static bool s_enabled;
 
-// STATIC: #0x00B3075A
+// STATIC: 0x00D36B52
 static bool s_hidden;
 
 // STATIC: #0x00B3075B
 static bool s_moved;
 
-// STATIC: #0x00B3075C
+// STATIC: 0x00D36B54
 static HLAYER s_layer;
 
-// STATIC: #0x00B30760
+// STATIC: 0x00D36B58
 static CGxStringBatch* s_batch;
 
 // STATIC: #0x00B30764

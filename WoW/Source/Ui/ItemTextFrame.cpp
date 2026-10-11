@@ -15,19 +15,19 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: #0x00BFC948
+// STATIC: 0x00F70FF8
 WOWGUID CGItemText::m_itemGUID;
 
-// STATIC: #0x00BFC940
+// STATIC: 0x00F70FF0
 uint32_t CGItemText::m_currentPage;
 
-// STATIC: #0x00BFA9F8
+// STATIC: 0x00F6F0A8
 uint8_t CGItemText::m_hasItemText;
 
-// STATIC: #0x00BFAA00
+// STATIC: 0x00F6F0B0
 char CGItemText::m_text[8000];
 
-// STATIC: #0x00BFC958
+// STATIC: 0x00F71000
 TSGrowableArray<int32_t> CGItemText::m_pages;
 
 // OFFSET: #0x00589DC0

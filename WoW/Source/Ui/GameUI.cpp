@@ -253,7 +253,7 @@ WOWGUID CGGameUI::m_cursorVoidStorageItem;
 // STATIC: #0x00ACC3F8
 CImVector s_deadSelectionColor = CImVector(0x7F, 0x7F, 0x7F, 0xFF);
 
-// STATIC: #0x00AC804C
+// STATIC: 0x00D0B254
 const char* g_macroTaint = "";
 
 // STATIC: #0x00AC8088
@@ -1093,10 +1093,10 @@ WOWGUID CGGameUI::m_cursorItem;
 // STATIC: 0x00ED740C
 CGTooltip* CGGameUI::m_gameTooltip;
 
-// STATIC: #0x00BD0C0C
+// STATIC: 0x00ED77A4
 static TAINTEVENT s_lastTaintEvent;
 
-// STATIC: #0x00BD0C40
+// STATIC: 0x00ED7934
 static TSHashTable<TAINTEVENT, HASHKEY_STR> s_taintEvents;
 
 // STATIC: 0x00ED7410
@@ -6249,13 +6249,13 @@ void CGGameUI::GetSelectionHighlightColor(const WOWGUID& guid, CImVector* color,
     // STATIC: #0x00BD0C8C
     static CImVector s_playerColors[2] = { CImVector(0xFF, 0x00, 0x00, 0xFF), CImVector(0xFF, 0x60, 0x60, 0xFF) };
 
-    // STATIC: #0x00BD0C88
+    // STATIC: 0x00ED79AC
     static CImVector s_partyColor = CImVector(0xFF, 0xAA, 0xAA, 0xFF);
 
-    // STATIC: #0x00BD0C84
+    // STATIC: 0x00ED79A8
     static CImVector s_partyPvpColor = CImVector(0xAA, 0xFF, 0xAA, 0xFF);
 
-    // STATIC: #0x00BD0C80
+    // STATIC: 0x00ED79A4
     static CImVector s_friendColor = CImVector(0xFF, 0xC8, 0x53, 0xFF);
 
     if (!color) {

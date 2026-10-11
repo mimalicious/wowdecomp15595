@@ -43,13 +43,13 @@ TSGrowableArray<int32_t> CGBattlefieldInfo::m_battlegroundTypes;
 // STATIC: #0x00BE9EE0
 int32_t CGBattlefieldInfo::m_arenaOpponentSeen[5];
 
-// STATIC: #0x00BE9EF8
+// STATIC: 0x00F360F0
 WOWGUID CGBattlefieldInfo::m_arenaOpponentPets[5][2];
 
-// STATIC: #0x00BE9F48
+// STATIC: 0x00F36140
 WOWGUID CGBattlefieldInfo::m_arenaOpponents[5];
 
-// STATIC: #0x00BE8F90
+// STATIC: 0x00F36930
 PartyMemberState CGBattlefieldInfo::m_arenaOpponentStats[5];
 
 // STATIC: #0x00BEA580
@@ -58,10 +58,10 @@ uint32_t CGBattlefieldInfo::m_numScores;
 // STATIC: #0x00BEA5AC
 uint32_t CGBattlefieldInfo::m_numWorldStateStats;
 
-// STATIC: #0x00BEA5B8
+// STATIC: 0x00F36790
 uint32_t CGBattlefieldInfo::m_numVehicles;
 
-// STATIC: #0x00BE9F70
+// STATIC: 0x00F36168
 WOWGUID CGBattlefieldInfo::m_vehicleGuids[40];
 
 // STATIC: #0x00BEA578
@@ -70,7 +70,7 @@ uint32_t CGBattlefieldInfo::m_instanceStartTime;
 // STATIC: #0x00BEA588
 int32_t CGBattlefieldInfo::m_mapDone;
 
-// STATIC: #0x00BEA58C
+// STATIC: 0x00F36764
 uint32_t CGBattlefieldInfo::m_winner;
 
 // STATIC: #0x00BEA574
@@ -94,10 +94,10 @@ int32_t CGBattlefieldInfo::m_activeIndex = -1;
 // STATIC: #0x00BEA4B8
 BattlefieldStatus CGBattlefieldInfo::m_status[2];
 
-// STATIC: #0x00BEA564
+// STATIC: 0x00F36744
 uint32_t CGBattlefieldInfo::m_activeMapID;
 
-// STATIC: #0x00BEA570
+// STATIC: 0x00F36748
 int32_t CGBattlefieldInfo::m_instanceType;
 
 // STATIC: #0x00BEA538
@@ -142,10 +142,10 @@ int32_t CGBattlefieldInfo::m_logFilterFaction = -1;
 // STATIC: #0x00ACD174
 int32_t CGBattlefieldInfo::m_allowJoin = 1;
 
-// STATIC: #0x00BEA170
+// STATIC: 0x00F36370
 WOWGUID CGBattlefieldInfo::m_flagCarriers[2];
 
-// STATIC: #0x00BEA368
+// STATIC: 0x00F36590
 BattlefieldScore* CGBattlefieldInfo::m_scores[80];
 
 // STATIC: #0x00BEA540
@@ -154,19 +154,19 @@ uint32_t CGBattlefieldInfo::m_minLevel;
 // STATIC: #0x00BEA544
 uint32_t CGBattlefieldInfo::m_maxLevel;
 
-// STATIC: #0x00BEA568
+// STATIC: 0x00F36738
 WOWGUID CGBattlefieldInfo::m_battlemaster;
 
-// STATIC: #0x00BEA57C
+// STATIC: 0x00F36754
 uint32_t CGBattlefieldInfo::m_numScoreEntries;
 
 // STATIC: #0x00BEA584
 uint32_t CGBattlefieldInfo::m_nextLogUpdate;
 
-// STATIC: #0x00BEA590
+// STATIC: 0x00F36768
 int32_t CGBattlefieldInfo::m_nameCachePending;
 
-// STATIC: #0x00BEA5B0
+// STATIC: 0x00F36788
 uint32_t CGBattlefieldInfo::m_numPlayerPositions;
 
 // STATIC: #0x00BEA5B4

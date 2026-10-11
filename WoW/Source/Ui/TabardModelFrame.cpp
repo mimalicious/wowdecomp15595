@@ -25,13 +25,13 @@ const char* CGTabardModelFrame::s_objectTypeName = "TabardModel";
 // STATIC: #0x00ACF584
 int32_t CGTabardModelFrame::s_metatable = LUA_NOREF;
 
-// STATIC: #0x00C0E520
+// STATIC: 0x00F76CA8
 int32_t CGTabardModelFrame::s_objectType;
 
 // STATIC: #0x00C0E524
 CDataAllocator CGTabardModelFrame::s_tabardModelHeap(sizeof(CGTabardModelFrame), 1);
 
-// STATIC: #0x00A14908
+// STATIC: 0x00C0DFF0
 static const int32_t s_tabardVariationCounts[5] = { 170, 17, 6, 17, 51 };
 
 // INLINED

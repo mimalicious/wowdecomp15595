@@ -33,13 +33,13 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: #0x00BEB210
+// STATIC: 0x00F49160
 static char s_stationeryTexture[260];
 
 // STATIC: #0x00BEB318
 static char s_packageTexture[260];
 
-// STATIC: #0x00BEB420
+// STATIC: 0x00F49268
 static char s_headerTexture[260];
 
 // OFFSET: 0x0096DB10/0x1406E4B30
@@ -1264,7 +1264,7 @@ static int32_t Script_GetNumStationeries(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ACE610
+// STATIC: 0x00D13348
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseMail", &Script_CloseMail },
     { "ClearSendMail", &Script_ClearSendMail },

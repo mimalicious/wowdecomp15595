@@ -27,16 +27,16 @@ static const char* s_addOnLoadableTokens[12] = { "LOADABLE", "MISSING", "DISABLE
 // STATIC: #0x00AD17A8
 static TSList<ADDONSTATELIST> s_addOnStates;
 
-// STATIC: #0x00C2491C
+// STATIC: 0x00D3A71C
 static TSHashTable<UIADDON, HASHKEY_STRI> s_addons;
 
-// STATIC: #0x00C24944
+// STATIC: 0x00D3A748
 static TSGrowableArray<const char*> s_addOnInfo;
 
 // STATIC: #0x00C24410
 static uint32_t s_dataInterfaceVersion;
 
-// STATIC: #0x00C24418
+// STATIC: 0x00D3A218
 static char s_addOnAccountName[1280];
 
 // STATIC: #0x00C24918

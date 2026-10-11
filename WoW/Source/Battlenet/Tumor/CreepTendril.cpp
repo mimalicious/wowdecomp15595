@@ -4,22 +4,22 @@
 #include <new>
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00DCED30
+// STATIC: 0x00E4D3F4
 uint32_t Battlenet::CreepTendril::s_instances;
 
-// STATIC: #0x00DCED34
+// STATIC: 0x00E4D3F8
 Battlenet::CreepTendril::CreepInitializeFunc Battlenet::CreepTendril::s_creepInitialize;
 
-// STATIC: #0x00DCED38
+// STATIC: 0x00E4D3FC
 Battlenet::CreepTendril::CreepTeardownFunc Battlenet::CreepTendril::s_creepTeardown;
 
-// STATIC: #0x00DCED3C
+// STATIC: 0x00E4D400
 Battlenet::CreepTendril::CreepCreateFunc Battlenet::CreepTendril::s_creepCreate;
 
-// STATIC: #0x00DCED40
+// STATIC: 0x00E4D404
 Battlenet::CreepTendril::CreepDestroyFunc Battlenet::CreepTendril::s_creepDestroy;
 
-// STATIC: #0x00DCED44
+// STATIC: 0x00E4D408
 Battlenet::Library* Battlenet::CreepTendril::s_creepModule;
 
 // OFFSET: 0x00662290

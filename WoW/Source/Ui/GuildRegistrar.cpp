@@ -11,7 +11,7 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
-// STATIC: #0x00C0E570
+// STATIC: 0x00F763E8
 WOWGUID CGGuildRegistrar::m_registrar;
 
 // STATIC: #0x00C0E558

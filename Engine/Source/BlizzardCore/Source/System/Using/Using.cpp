@@ -11,13 +11,13 @@ System_Using::Depends System_Using::s_Depends[DEPENDS_MAX];
 // STATIC: #0x00B32DE0
 System_Using::UsingRec System_Using::use[USING_MAX];
 
-// STATIC: #0x00B33060
+// STATIC: 0x00EB54C0
 System_Using::UsingHashTable System_Using::s_Using;
 
-// STATIC: #0x00B382B8
+// STATIC: 0x00EBA64C
 char* System_Using::s_UsingNamesTail;
 
-// STATIC: #0x00B382BC
+// STATIC: 0x00EBA650
 int16_t System_Using::s_NextUsingID;
 
 // STATIC: 0x00EBA654

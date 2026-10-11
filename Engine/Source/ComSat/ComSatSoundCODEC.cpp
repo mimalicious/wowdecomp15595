@@ -23,7 +23,7 @@ const int32_t ComSat::Sound::CODECIPMR6000::s_samplesPerFrame = 800;
 // STATIC: 0x00C27694
 const int32_t ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength = 360;
 
-// STATIC: #0x00A503B8
+// STATIC: 0x00C27698
 const int32_t ComSat::Sound::CODECIPMR6000::s_maxEncodedFrameLength = 960;
 
 // STATIC: #0x00A503BC

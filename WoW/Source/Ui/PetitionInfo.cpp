@@ -10,25 +10,25 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: #0x00C22B20
+// STATIC: 0x00F71078
 WOWGUID CGPetitionInfo::m_petitionGUID;
 
-// STATIC: #0x00C22B28
+// STATIC: 0x00F71080
 WOWGUID CGPetitionInfo::m_petitionItem;
 
-// STATIC: #0x00C22B30
+// STATIC: 0x00F71088
 uint32_t CGPetitionInfo::m_petitionId;
 
-// STATIC: #0x00C22B34
+// STATIC: 0x00F7108C
 int32_t CGPetitionInfo::m_signed;
 
-// STATIC: #0x00C22B38
+// STATIC: 0x00F71090
 uint32_t CGPetitionInfo::m_numPetitionNames;
 
-// STATIC: #0x00C22B3C
+// STATIC: 0x00F71094
 int32_t CGPetitionInfo::m_pendingNameQueries;
 
-// STATIC: #0x00C22B40
+// STATIC: 0x00F71098
 CGPetition* CGPetitionInfo::m_petition;
 
 // STATIC: #0x00C22B44

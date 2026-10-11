@@ -50,7 +50,7 @@ TSFixedArray<CGLookingForGroup::LFGEntryInfo> CGLookingForGroup::m_lfdEntries;
 // STATIC: #0x00BEAA88
 TSFixedArray<CGLookingForGroup::LFGEntryInfo> CGLookingForGroup::m_lfrEntries;
 
-// STATIC: #0x00BEA820
+// STATIC: 0x00F4A368
 CGLookingForGroup::LFGEntryInfo CGLookingForGroup::m_unkBEA820[7];
 
 // STATIC: #0x00BEA858
@@ -62,13 +62,13 @@ LFGProposal CGLookingForGroup::m_proposal;
 // STATIC: #0x00BEAA10
 uint8_t CGLookingForGroup::m_unkBEAA10;
 
-// STATIC: #0x00BEAA98
+// STATIC: 0x00F4ABD0
 LFGLIST CGLookingForGroup::m_prevSearchResults;
 
-// STATIC: #0x00ACD660
+// STATIC: 0x00D137C4
 uint8_t CGLookingForGroup::m_unkACD660;
 
-// STATIC: #0x00BEAB20
+// STATIC: 0x00F4AC60
 LFGLIST CGLookingForGroup::m_searchResults;
 
 // STATIC: #0x00ACD880
@@ -83,7 +83,7 @@ LFGInfo CGLookingForGroup::m_partyInfo;
 // STATIC: #0x00ACDBE0
 LFGLockInfo CGLookingForGroup::m_playerLockInfo;
 
-// STATIC: #0x00ACDC08
+// STATIC: 0x00D13A60
 LFGPartyLockInfo CGLookingForGroup::m_partyLockInfo;
 
 // STATIC: #0x00ACDC18

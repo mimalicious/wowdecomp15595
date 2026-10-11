@@ -13,7 +13,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: #0x00ACE4A8
+// STATIC: 0x00D119A0
 CGCommentator CGCommentator::s_Commentator;
 
 // OFFSET: #0x0056B5C0

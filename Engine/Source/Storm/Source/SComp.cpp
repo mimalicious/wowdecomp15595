@@ -284,13 +284,13 @@ static const uint8_t s_probability[9][258] = {
     },
 };
 
-// STATIC: #0x00A3B308
+// STATIC: 0x00BA0430
 static const int32_t s_ima_adjtable[32] = {
     -1, 0, -1, 4, -1, 2, -1, 6, -1, 1, -1, 5, -1, 3, -1, 7,
     -1, 1, -1, 5, -1, 3, -1, 7, -1, 2, -1, 4, -1, 6, -1, 8,
 };
 
-// STATIC: #0x00A3B388
+// STATIC: 0x00BA04B0
 static const uint32_t s_ima_steptable[89] = {
     7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 19, 21, 23, 25, 28, 31,
     34, 37, 41, 45, 50, 55, 60, 66, 73, 80, 88, 97, 107, 118, 130, 143,

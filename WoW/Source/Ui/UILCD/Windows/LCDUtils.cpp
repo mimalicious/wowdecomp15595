@@ -3,7 +3,7 @@
 #include <cstring>
 #include "Engine/Source/BLPFile/blp.h"
 
-// STATIC: #0x00D41374
+// STATIC: 0x0100A690
 TSHashTable<BITMAPBYICON, HASHKEY_NONE> CLCDUtils::m_bitmapCache;
 
 // OFFSET: #0x0084B400

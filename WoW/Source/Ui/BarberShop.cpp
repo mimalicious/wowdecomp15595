@@ -20,7 +20,7 @@
 #include "Engine/Source/Model2/M2Model.h"
 #include "WoW/Source/Net/Types.h"
 
-// STATIC: #0x00BD19B8
+// STATIC: 0x00F33728
 uint8_t CGBarberShop::m_barberShopEnabled;
 
 // STATIC: #0x00BD19B9
@@ -38,13 +38,13 @@ uint8_t CGBarberShop::m_initialized;
 // STATIC: #0x00BD19BB
 uint8_t CGBarberShop::m_resetPortrait;
 
-// STATIC: #0x00BD19AC
+// STATIC: 0x00F33718
 STYLEREC* CGBarberShop::m_currentHairStyle;
 
-// STATIC: #0x00BD19B0
+// STATIC: 0x00F3371C
 STYLEREC* CGBarberShop::m_currentFacialHair;
 
-// STATIC: #0x00BD19B4
+// STATIC: 0x00F33720
 STYLEREC* CGBarberShop::m_currentSkinColor;
 
 // STATIC: #0x00BD19C4

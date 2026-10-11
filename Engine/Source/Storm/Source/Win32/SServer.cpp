@@ -3,7 +3,7 @@
 #include <windows.h>
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00CB74F0
+// STATIC: 0x00DA609C
 static BOOL (WINAPI* s_tryEnterPtr)(LPCRITICAL_SECTION);
 
 // STATIC: %0x00CA691C

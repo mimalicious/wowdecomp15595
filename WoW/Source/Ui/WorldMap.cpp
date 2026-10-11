@@ -39,28 +39,28 @@ uint32_t CGWorldMap::m_numLandmarks;
 // STATIC: #0x00BE8EE4
 uint32_t CGWorldMap::m_numOverlays;
 
-// STATIC: #0x00BE8EE8
+// STATIC: 0x00F33E50
 CSimpleModel* CGWorldMap::m_playerArrowFrame;
 
-// STATIC: #0x00BE8EEC
+// STATIC: 0x00F33E54
 CSimpleModel* CGWorldMap::m_playerMiniArrowFrame;
 
-// STATIC: #0x00BE8EF0
+// STATIC: 0x00F33E58
 CSimpleModel* CGWorldMap::m_playerArrowEffectFrame;
 
-// STATIC: #0x00BE8EF4
+// STATIC: 0x00F33E5C
 CSimpleModel* CGWorldMap::m_playerMiniArrowEffectFrame;
 
-// STATIC: #0x00ACCF04
+// STATIC: 0x00D112B8
 int32_t CGWorldMap::m_currentContinent = -1;
 
-// STATIC: #0x00ACCF08
+// STATIC: 0x00D112BC
 int32_t CGWorldMap::m_currentZone = -1;
 
-// STATIC: #0x00ACCF0C
+// STATIC: 0x00D112C0
 int32_t CGWorldMap::m_currentDungeonMap = -1;
 
-// STATIC: #0x00ACCF10
+// STATIC: 0x00D112C4
 int32_t CGWorldMap::m_currentOrphanZone = -1;
 
 // STATIC: #0x00BE8F08

@@ -144,7 +144,7 @@ Blizzard::Thread::LocalObject<System_File::FileError> System_File::s_error;
 // STATIC: #0x00AB9130
 int64_t System_File::Stacked::s_throttleRate = 56888;
 
-// STATIC: #0x00B332C8
+// STATIC: 0x00EB5870
 int64_t System_File::Stacked::s_throttleDebt;
 
 // STATIC: #0x00B38024

@@ -11,7 +11,7 @@
 // STATIC: %0x00CA66C8
 static int32_t s_logsysteminit;
 
-// STATIC: #0x00CB7224
+// STATIC: 0x00DA5E44
 static uintptr_t s_sequence;
 
 // STATIC: #0x00CB7228
@@ -20,7 +20,7 @@ static char s_defaultdir[MAX_PATH];
 // STATIC: %0x00CA67D4
 static CRITICAL_SECTION s_defaultdir_critsect;
 
-// STATIC: #0x00CB7344
+// STATIC: 0x00DA5F64
 static _LOG* s_loghead[4];
 
 // STATIC: %0x00CA6800
@@ -142,11 +142,11 @@ static void OutputReturn(_LOG* logptr) {
 // PROVEN: 6e052f51 IDENTICAL/UNPROVEN
 // OFFSET: 0x004BDED0/0x1400F7A20
 static void OutputTime(_LOG* logptr, int32_t show) {
-    // STATIC: #0x00CB7400
+    // STATIC: 0x00DA6020
     static uint32_t lasttime;
-    // STATIC: #0x00CB73C0
+    // STATIC: 0x00DA5FE0
     static char timestr[64];
-    // STATIC: #0x00CB73B8
+    // STATIC: 0x00DA5FD8
     static uint32_t timestrlen;
 
     if (!logptr->timeStamp) {

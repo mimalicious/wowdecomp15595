@@ -36,13 +36,13 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/UIUtil/InputControl.h"
 
-// STATIC: #0x00AD192C
+// STATIC: 0x00C992F8
 uint32_t s_joystick = 0xFFFFFFFF;
 
-// STATIC: #0x00AD1930
+// STATIC: 0x00C992FC
 int32_t s_joystickMouseEnabled = 1;
 
-// STATIC: #0x00C24954
+// STATIC: 0x00D39204
 CGInputControl* CGInputControl::s_inputControl;
 
 // STATIC: #0x00C24958

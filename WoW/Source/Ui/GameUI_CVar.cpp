@@ -22,7 +22,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// STATIC: #0x00BD0794
+// STATIC: 0x00ED7428
 HSLOG s_taintLog;
 
 // STATIC: 0x00ED7614
@@ -175,7 +175,7 @@ CVar* s_cvCalendarShowLockouts;
 // STATIC: 0x00ED76DC
 CVar* s_cvCalendarShowResets;
 
-// STATIC: #0x00BD09AC
+// STATIC: 0x00ED76E0
 CVar* unk_BD09AC;
 
 // STATIC: 0x00ED76E4

@@ -50,76 +50,76 @@ uint32_t CGAuctionHouse::m_multisellStackSize;
 // STATIC: #0x00C0E760
 uint32_t CGAuctionHouse::m_multisellTotal;
 
-// STATIC: #0x00C0E764
+// STATIC: 0x00F49564
 uint32_t CGAuctionHouse::m_numSellItems;
 
-// STATIC: #0x00C0E768
+// STATIC: 0x00F49570
 AuctionSellItem CGAuctionHouse::m_sellItems[200];
 
-// STATIC: #0x00C0F434
+// STATIC: 0x00F4A23C
 int32_t CGAuctionHouse::m_havePendingSell;
 
-// STATIC: #0x00C0F3F5
+// STATIC: 0x00F4A1FD
 uint8_t CGAuctionHouse::m_auctionsTabShowing;
 
-// STATIC: #0x00C0F3F0
+// STATIC: 0x00F4A1F8
 int32_t CGAuctionHouse::m_auctionHouseID;
 
-// STATIC: #0x00C0F3E8
+// STATIC: 0x00F4A1F0
 WOWGUID CGAuctionHouse::m_auctioneer;
 
-// STATIC: #0x00C0F408
+// STATIC: 0x00F4A210
 uint32_t CGAuctionHouse::m_numTotalItems;
 
-// STATIC: #0x00C0F410
+// STATIC: 0x00F4A218
 uint32_t CGAuctionHouse::m_numTotalBid;
 
-// STATIC: #0x00C0F440
+// STATIC: 0x00F4A250
 TSGrowableArray<AuctionItemInfo> CGAuctionHouse::m_browseList;
 
-// STATIC: #0x00C0F450
+// STATIC: 0x00F4A260
 TSGrowableArray<AuctionItemInfo> CGAuctionHouse::m_ownerList;
 
-// STATIC: #0x00C0F460
+// STATIC: 0x00F4A270
 TSGrowableArray<AuctionItemInfo> CGAuctionHouse::m_bidderList;
 
-// STATIC: #0x00ACF628
+// STATIC: 0x00D134C0
 int32_t CGAuctionHouse::m_desiredDelayTime = 5000;
 
-// STATIC: #0x00ACF62C
+// STATIC: 0x00D134C4
 int32_t CGAuctionHouse::m_selectedBrowseItem = -1;
 
-// STATIC: #0x00ACF630
+// STATIC: 0x00D134C8
 int32_t CGAuctionHouse::m_selectedOwnedItem = -1;
 
-// STATIC: #0x00ACF634
+// STATIC: 0x00D134CC
 int32_t CGAuctionHouse::m_selectedBidItem = -1;
 
-// STATIC: #0x00C0E728
+// STATIC: 0x00F49520
 uint32_t CGAuctionHouse::m_lastQueryTime[3];
 
-// STATIC: #0x00C0E734
+// STATIC: 0x00F4952C
 int32_t CGAuctionHouse::m_queryPending[3];
 
-// STATIC: #0x00C0F3F4
+// STATIC: 0x00F4A1FC
 uint8_t CGAuctionHouse::m_sellItemSlot;
 
-// STATIC: #0x00C0F3F8
+// STATIC: 0x00F4A200
 WOWGUID CGAuctionHouse::m_sellItem;
 
-// STATIC: #0x00C0F400
+// STATIC: 0x00F4A208
 WOWGUID CGAuctionHouse::m_sellItemContainer;
 
 // STATIC: #0x00C0F40C
 uint32_t CGAuctionHouse::m_numTotalOwned;
 
-// STATIC: #0x00C0F41C
+// STATIC: 0x00F4A224
 int32_t CGAuctionHouse::m_canGetOwnerList;
 
-// STATIC: #0x00C0F420
+// STATIC: 0x00F4A228
 int32_t CGAuctionHouse::m_canGetBidderList;
 
-// STATIC: #0x00C0F424
+// STATIC: 0x00F4A22C
 int32_t CGAuctionHouse::m_pendingBrowseItems;
 
 // STATIC: #0x00C0F428
@@ -128,7 +128,7 @@ int32_t CGAuctionHouse::m_pendingOwnedItems;
 // STATIC: #0x00C0F42C
 int32_t CGAuctionHouse::m_pendingSoldItems;
 
-// STATIC: #0x00C0F430
+// STATIC: 0x00F4A238
 int32_t CGAuctionHouse::m_pendingBidItems;
 
 // STATIC: #0x00C0F438
@@ -137,19 +137,19 @@ int32_t CGAuctionHouse::m_lastBidderPage;
 // STATIC: #0x00C0F43C
 uint32_t CGAuctionHouse::m_lastBidAmount;
 
-// STATIC: #0x00C0E578
+// STATIC: 0x00F49370
 AuctionSortCriteria CGAuctionHouse::m_bidSortCriteria[12];
 
-// STATIC: #0x00C0E608
+// STATIC: 0x00F49400
 AuctionSortCriteria CGAuctionHouse::m_ownedSortCriteria[12];
 
-// STATIC: #0x00C0E698
+// STATIC: 0x00F49490
 AuctionSortCriteria CGAuctionHouse::m_listSortCriteria[12];
 
-// STATIC: #0x00C0F414
+// STATIC: 0x00F4A21C
 int32_t CGAuctionHouse::m_numOutbidItems;
 
-// STATIC: #0x00C0F418
+// STATIC: 0x00F4A220
 uint32_t CGAuctionHouse::m_lastGetAllTime;
 
 // STATIC: #0x00C0F470

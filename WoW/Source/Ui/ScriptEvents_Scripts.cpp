@@ -153,7 +153,7 @@ int32_t Script_UnitIsControlling(lua_State* L);
 int32_t Script_CanEjectPassengerFromSeat(lua_State* L);
 int32_t Script_IsXPUserDisabled(lua_State* L);
 
-// STATIC: #0x009FE7EC
+// STATIC: 0x00BE4580
 const int32_t s_unitSexValues[3] = { 2, 3, 1 };
 
 // STATIC: #0x00AD21BC
@@ -165,7 +165,7 @@ extern const char* s_vehicleSkinNames[2] = { "Natural", "Mechanical" };
 // STATIC: #0x00C25A0C
 static int32_t s_vehicleUIIndicatorID;
 
-// STATIC: #0x00C25A10
+// STATIC: 0x00D39220
 static const char* s_vehicleUIIndicatorTexture;
 
 // STATIC: #0x00C25A14

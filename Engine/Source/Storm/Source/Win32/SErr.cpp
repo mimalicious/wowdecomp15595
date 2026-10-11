@@ -95,7 +95,7 @@ static LONG s_critsectinit = -1;
 // STATIC: %0x00BB3468
 static TSListWinHeap<HANDLER> s_handlerlist;
 
-// STATIC: #0x00CAD7E8
+// STATIC: 0x00D9B158
 static EXCEPTION_POINTERS* s_exceptionPointers;
 
 // STATIC: %0x00C9B9FC
@@ -119,7 +119,7 @@ static int32_t s_msgsrcinit;
 // STATIC: %0x00C9BA44
 static uint32_t s_lasterror;
 
-// STATIC: #0x00CAD838
+// STATIC: 0x00D9B1A8
 static char s_logtitle[128];
 
 // STATIC: %0x00C9BAC8
@@ -761,9 +761,9 @@ int32_t STORMAPI SErrDestroy() {
 
 // OFFSET: #0x00771D10
 int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t skipframes, uint32_t unknown) {
-    // STATIC: #0x00CAE934
+    // STATIC: 0x00D9C4F4
     static int32_t lastlinenumber;
-    // STATIC: #0x00CAE938
+    // STATIC: 0x00D9C4F8
     static const char* lastfilename;
 
     if (g_opt.unk_0030 && recoverable) {
@@ -785,7 +785,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
 
     s_displaying = 1;
 
-    // STATIC: #0x00CAE830
+    // STATIC: 0x00D9C3F0
     static char appfilename[MAX_PATH];
     // STATIC: #0x00CAE728
     static char appname[MAX_PATH];
@@ -793,7 +793,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
     appname[0] = 0;
     GetModuleFileNameA(NULL, appfilename, sizeof(appfilename));
 
-    // STATIC: #0x00CAE5E8
+    // STATIC: 0x00D9C1A8
     static WIN32_FIND_DATAA findfiledata;
     memset(&findfiledata, 0, sizeof(findfiledata));
 
@@ -825,7 +825,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
 
     // STATIC: #0x00CADBE0
     static char outstr[2048];
-    // STATIC: #0x00ADE884
+    // STATIC: 0x00C9F7CC
     static char* outptr = outstr;
     // STATIC: #0x00ADE880
     static char* outend = outstr + sizeof(outstr);
@@ -890,7 +890,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         LoadMachineStateSymbols();
         InternalEnterCriticalSection(&s_exceptioncritsect);
 
-        // STATIC: #0x00CADBDC
+        // STATIC: 0x00D9B798
         static EXCEPTION_POINTERS* exceptionPointers = s_exceptionPointers;
         s_exceptionPointers = NULL;
         InternalLeaveCriticalSection(&s_exceptioncritsect);
@@ -906,7 +906,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
             }
         }
 
-        // STATIC: #0x00CADBCC
+        // STATIC: 0x00D9B788
         static SYSTEMTIME time;
         GetLocalTime(&time);
 
@@ -972,9 +972,9 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
 
 // OFFSET: 0x004B58F0/0x1400ECEF0
 void STORMAPI SErrReportNamedResourceLeak(const char* handlename, const char* resourcename) {
-    // STATIC: #0x00CAE940
+    // STATIC: 0x00D9C500
     static int32_t checked;
-    // STATIC: #0x00CAE93C
+    // STATIC: 0x00D9C4FC
     static uint32_t debugmode;
 
     if (!checked) {

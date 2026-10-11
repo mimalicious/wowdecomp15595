@@ -758,7 +758,7 @@ static int32_t Script_MoveAndSteerStart(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00AD1938
+// STATIC: 0x00C99300
 static FrameScript_Method s_ScriptFunctions[] = {
     { "JumpOrAscendStart", &Script_JumpOrAscendStart },
     { "AscendStop", &Script_AscendStop },

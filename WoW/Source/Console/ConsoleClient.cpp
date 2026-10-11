@@ -27,16 +27,16 @@
 #include "Engine/Source/BlizzardCore/BackgroundCache.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
-// STATIC: #0x00ADBAB4
+// STATIC: 0x00CA8260
 static RECTF s_rect = { 0.0f, 1.0f, 1.0f, 1.0f };
 
 // STATIC: #0x00ADBAC4
 static KEY s_consoleHotKey = KEY_TILDE;
 
-// STATIC: #0x00ADBAC8
+// STATIC: 0x00CA8274
 static int32_t s_historyIndex = -1;
 
-// STATIC: #0x00ADBACC
+// STATIC: 0x00CA8278
 float s_fontHeight = 0.02f;
 
 // STATIC: #0x00ADBAD0
@@ -45,7 +45,7 @@ float s_consoleLines = 10.0f;
 // STATIC: #0x00ADBAD4
 static RECTF s_hRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 
-// STATIC: #0x00ADBAE4
+// STATIC: 0x00CA8290
 uint32_t s_baseTextFlags = 8;
 
 // STATIC: #0x00ADBAE8
@@ -57,25 +57,25 @@ static const char* s_consoleCommandHelp[] = { "[ColorClassName] [Red 0-255] [Gre
 // STATIC: #0x00A38308
 static const COMMANDHANDLER s_consoleCommandHandlers[] = { ConsoleCommand_FontColor, ConsoleCommand_BackGroundColor, ConsoleCommand_HighLightColor, ConsoleCommand_FontSize, ConsoleCommand_Font, ConsoleCommand_BufferSize, ConsoleCommand_ClearConsole, ConsoleCommand_Proportional, ConsoleCommand_CharSpacing, ConsoleCommand_CurrentSettings, ConsoleCommand_DefaultSettings, ConsoleCommand_CloseConsole, ConsoleCommand_RepeatHandler, ConsoleCommand_AppendLogToFile };
 
-// STATIC: #0x00ADBBB0
+// STATIC: 0x00CA8374
 TSList<CONSOLELINE, TSGetLink<CONSOLELINE> > s_linelist;
 
-// STATIC: #0x00ADBBBC
+// STATIC: 0x00CA8380
 uint32_t s_colorArray[NUM_COLORTYPES] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFF808080, 0xFFFF0000, 0xFFFFFF00, 0xFFFFFFFF, 0xFFFFFFFF, 0x80FFFFFF, 0xC0000000 };
 
 // STATIC: #0x00CA1690
 static float s_caretpixheight;
 
-// STATIC: #0x00CA1694
+// STATIC: 0x00DD8724
 static int32_t s_caret;
 
-// STATIC: #0x00CA1698
+// STATIC: 0x00DD8728
 static char s_copyText[128];
 
 // STATIC: #0x00CA1718
 static float s_caretpixwidth;
 
-// STATIC: #0x00CA171C
+// STATIC: 0x00DD87AC
 static CGxString* s_inputString;
 
 // STATIC: #0x00CA1720
@@ -87,7 +87,7 @@ static HLAYER s_layerBackground;
 // STATIC: #0x00CA1728
 char s_repeatBuffer[64];
 
-// STATIC: #0x00CA1768
+// STATIC: 0x00DD8800
 char s_fontName[260];
 
 // STATIC: #0x00CA186C
@@ -96,19 +96,19 @@ uint32_t s_repeatCount;
 // STATIC: #0x00CA1870
 static HLAYER s_layerText;
 
-// STATIC: #0x00CA1874
+// STATIC: 0x00DD8908
 static CGxStringBatch* s_batch;
 
 // STATIC: #0x00CA1878
 static char s_partial[256];
 
-// STATIC: #0x00CA1978
+// STATIC: 0x00DD890C
 int32_t s_active;
 
 // STATIC: #0x00CA197C
 uint32_t s_NumLines;
 
-// STATIC: #0x00CA1980
+// STATIC: 0x00DD8A1C
 static int32_t s_completionMode;
 
 // STATIC: #0x00CA1984
@@ -117,13 +117,13 @@ static const char* s_completedCmd;
 // STATIC: 0x00DD87F8
 static int32_t s_completionIndex;
 
-// STATIC: #0x00CA198C
+// STATIC: 0x00DD8A28
 HTEXTFONT s_textFont;
 
-// STATIC: #0x00CA1990
+// STATIC: 0x00DD8A2C
 static int32_t s_consoleResizeState;
 
-// STATIC: #0x00CA1994
+// STATIC: 0x00DD8A30
 static int32_t s_highlightState;
 
 // STATIC: #0x00CA1998
@@ -135,10 +135,10 @@ static float s_highlightHEnd;
 // STATIC: #0x00CA19A0
 static uint32_t s_highlightLeftCharIndex;
 
-// STATIC: #0x00CA19A4
+// STATIC: 0x00DD8A40
 static uint32_t s_highlightRightCharIndex;
 
-// STATIC: #0x00CA19A8
+// STATIC: 0x00DD8A44
 float s_charSpacing;
 
 // STATIC: #0x00CA19AC
@@ -147,7 +147,7 @@ static const char* s_consoleMessage;
 // STATIC: #0x00CA19B0
 float s_consoleHeight;
 
-// STATIC: #0x00CA19B4
+// STATIC: 0x00DD8A58
 static SCritSect s_critsect;
 
 // STATIC: 0x00DD8A98

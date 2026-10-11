@@ -2,7 +2,7 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00DCED2C
+// STATIC: 0x00E4D3F0
 Battlenet::Allocator* Battlenet::g_allocator;
 
 // PROVEN: feb762da IDENTICAL/NONE

@@ -7,7 +7,7 @@
 #include "WoW/Source/Glue/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00BEA750
+// STATIC: 0x00F76AB8
 CAccountMsgHeaders g_accountMsgHeaders;
 
 // PROVEN: 8cf57339 IDENTICAL/IDENTICAL

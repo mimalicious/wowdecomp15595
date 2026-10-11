@@ -70,31 +70,31 @@ static const char* s_cursorNames[54] = {
     NULL,
 };
 
-// STATIC: #0x00C25CD0
+// STATIC: 0x00D3C138
 static char s_cursorFile[260];
 
-// STATIC: #0x00C25DD4
+// STATIC: 0x00D3C23C
 static uint32_t s_cursorItemMipsHeight;
 
-// STATIC: #0x00C25DD8
+// STATIC: 0x00D3C240
 static uint32_t s_cursorItemMipsWidth;
 
-// STATIC: #0x00C25DDC
+// STATIC: 0x00D3C244
 static MipBits* s_cursorItemMips;
 
-// STATIC: #0x00C25DE0
+// STATIC: 0x00D3C248
 static uint32_t s_cursorItemType;
 
-// STATIC: #0x00C25DE4
+// STATIC: 0x00D3C24C
 static uint32_t s_cursorResetMode;
 
-// STATIC: #0x00C25DE8
+// STATIC: 0x00D3C250
 static uint32_t s_cursorItem[1024];
 
-// STATIC: #0x00C26DE8
+// STATIC: 0x00D3D250
 static uint32_t s_cursorMode;
 
-// STATIC: #0x00C26DF0
+// STATIC: 0x00D3D258
 static uint32_t s_cursorImages[54][1024];
 
 // PROVEN: 80f3c29c IDENTICAL/NONE

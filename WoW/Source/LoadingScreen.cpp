@@ -64,10 +64,10 @@ static float s_normalAspect = 4.0f / 3.0f;
 // STATIC: #0x00AB63B8
 static float s_wideAspect = 1.6f;
 
-// STATIC: #0x00AB63BC
+// STATIC: 0x00C97628
 static int32_t s_simpleMapID = -1;
 
-// STATIC: #0x00AB63C0
+// STATIC: 0x00C9762C
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
 // STATIC: #0x00AB63C8
@@ -110,7 +110,7 @@ static C2Vector s_pathTexCoords[4] = {
     C2Vector(0.5f, 0.5f),
 };
 
-// STATIC: #0x00AB6470
+// STATIC: 0x00C976D4
 static CSizeEvent s_sizeEvent;
 
 // STATIC: 0x00D3654C
@@ -119,10 +119,10 @@ static CGxShader* s_pixelShader;
 // STATIC: 0x00D36550
 static CGxShader* s_vertexShader;
 
-// STATIC: #0x00B2FE6C
+// STATIC: 0x00D36554
 static uint32_t s_lastUpdateTime;
 
-// STATIC: #0x00B2FE70
+// STATIC: 0x00D36558
 static uint32_t s_nextPingTime;
 
 // STATIC: #0x00B2FE74
@@ -158,7 +158,7 @@ static CTexture* unk_B2FEC4[2];
 // STATIC: #0x00B2FECC
 static CTexture* s_textures[2];
 
-// STATIC: #0x00B2FED4
+// STATIC: 0x00D365C4
 static HLAYER s_loadingScreenLayer;
 
 // STATIC: #0x00B2FED8
@@ -185,7 +185,7 @@ static const char* s_gameTip;
 // STATIC: #0x00B2FEEC
 static CGxStringBatch* s_batch;
 
-// STATIC: #0x00B2FEF0
+// STATIC: 0x00D365F0
 static int32_t s_sizeEventPosted;
 
 // STATIC: 0x00D365F8
@@ -197,7 +197,7 @@ static C2Vector s_tileTexCoords[12][4];
 // STATIC: #0x00B302C0
 static TSGrowableArray<DYNAMICELEMENTVERT> s_dynamicElements;
 
-// STATIC: #0x00B302D0
+// STATIC: 0x00D369C8
 static CLoadingScreenShipInfo<TaxiPathNodeRec> s_shipInfo;
 
 // STATIC: 0x00D369E8

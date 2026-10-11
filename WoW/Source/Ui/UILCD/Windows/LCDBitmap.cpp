@@ -4,10 +4,10 @@
 
 typedef BOOL (WINAPI* ALPHABLENDPROC)(HDC hdcDest, int xDest, int yDest, int widthDest, int heightDest, HDC hdcSrc, int xSrc, int ySrc, int widthSrc, int heightSrc, BLENDFUNCTION blend);
 
-// STATIC: #0x00DCE1A8
+// STATIC: 0x0100AACC
 static bool s_alphaBlendLoaded;
 
-// STATIC: #0x00DCE1AC
+// STATIC: 0x0100AAD0
 static ALPHABLENDPROC s_alphaBlend;
 
 // OFFSET: #0x0095AD90

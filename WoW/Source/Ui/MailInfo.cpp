@@ -31,7 +31,7 @@
 // STATIC: 0x00F48E78
 SendMailItem CGMailInfo::m_sendItems[16];
 
-// STATIC: #0x00BEB1B8
+// STATIC: 0x00F48FF8
 uint8_t CGMailInfo::m_lockSendItems;
 
 // STATIC: #0x00BEB1C4
@@ -40,7 +40,7 @@ uint32_t CGMailInfo::m_sendPending;
 // STATIC: #0x00BEAFE8
 MailSenderInfo s_recentSenders[3];
 
-// STATIC: #0x00BEB1BC
+// STATIC: 0x00F49000
 uint32_t CGMailInfo::m_sendMoney;
 
 // STATIC: #0x00BEB1C0
@@ -55,34 +55,34 @@ uint32_t CGMailInfo::m_numInboxItems;
 // STATIC: #0x00BEB1DC
 uint32_t CGMailInfo::m_totalInboxItems;
 
-// STATIC: #0x00BEB1CC
+// STATIC: 0x00F49018
 int32_t CGMailInfo::m_selectedStationery;
 
 // STATIC: #0x00BEB1D0
 int32_t CGMailInfo::m_selectedPackage;
 
-// STATIC: #0x00BEB030
+// STATIC: 0x00F48E70
 WOWGUID CGMailInfo::m_object;
 
-// STATIC: #0x00BEB1E0
+// STATIC: 0x00F4902C
 uint32_t CGMailInfo::m_nextUpdateTime;
 
-// STATIC: #0x00BEB1E4
+// STATIC: 0x00F49030
 int32_t CGMailInfo::m_commandPending;
 
 // STATIC: #0x00BEB1B9
 uint8_t CGMailInfo::m_sendMailShowing;
 
-// STATIC: #0x00BEB1C8
+// STATIC: 0x00F49014
 uint32_t CGMailInfo::m_numStationeries;
 
 // STATIC: #0x00BEB1D4
 uint32_t CGMailInfo::m_pendingStationeryCallbacks;
 
-// STATIC: #0x00BEB1E8
+// STATIC: 0x00F49034
 int32_t CGMailInfo::m_doPendingQuery;
 
-// STATIC: #0x00BEB1EC
+// STATIC: 0x00F49038
 MailboxMessageInfo* CGMailInfo::m_autoLooting;
 
 // STATIC: #0x00BEB1F0

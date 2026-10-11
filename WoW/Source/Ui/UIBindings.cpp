@@ -84,22 +84,22 @@ static BINDINGPREFIX s_modifierPrefixes[3] = {
     { "ALT-", 4 },
 };
 
-// STATIC: #0x00BEADD4
+// STATIC: 0x00F33EA8
 static uint32_t s_loadPendingMask;
 
-// STATIC: #0x00BEADD8
+// STATIC: 0x00F33EAC
 CGUIBindings* CGUIBindings::s_bindings;
 
-// STATIC: #0x00BEADDC
+// STATIC: 0x00F33EB0
 static uint16_t s_initRound;
 
-// STATIC: #0x00BEADE8
+// STATIC: 0x00F33EB4
 static TSHashTable<CLICKFRAME, HASHKEY_STR> s_clickFrames;
 
 // STATIC: #0x00BEAE10
 static char s_keyName[8];
 
-// STATIC: #0x00BEAE18
+// STATIC: 0x00F33EE8
 static char s_bindKey[2];
 
 // OFFSET: #0x0055DAB0

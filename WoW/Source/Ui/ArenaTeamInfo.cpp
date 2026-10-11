@@ -18,19 +18,19 @@
 // STATIC: #0x00A15ABC
 static const int32_t s_arenaBracketTypes[3] = { 2, 3, 5 };
 
-// STATIC: #0x00ACF834
+// STATIC: 0x00D15300
 int32_t CGArenaTeamInfo::m_showOffline = 1;
-// STATIC: #0x00C0F840
+// STATIC: 0x00F4CCD0
 ArenaTeam CGArenaTeamInfo::m_arenaTeams[3];
 
 
-// STATIC: #0x00C0F7F0
+// STATIC: 0x00F4CC80
 uint32_t CGArenaTeamInfo::m_nextAllowedQuery[3];
 
 // STATIC: #0x00C0F7FC
 ArenaTeamSort CGArenaTeamInfo::m_sortOrder[7];
 
-// STATIC: #0x00C0F838
+// STATIC: 0x00F4CCC8
 WOWGUID CGArenaTeamInfo::m_selectedMember;
 
 // OFFSET: #0x005A1F00

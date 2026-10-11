@@ -220,16 +220,16 @@ static int32_t s_areaTriggerStart;
 // STATIC: #0x00C9D330
 static AreaTriggerRec* s_currentAreaTrigger;
 
-// STATIC: #0x00C9D334
+// STATIC: 0x00DD4D2C
 static uint32_t s_areaTriggerTimer;
 
-// STATIC: #0x00C9D338
+// STATIC: 0x00DD4D30
 static int32_t s_areaTriggerMapID;
 
 // STATIC: 0x00DD4D34
 static int32_t s_defenseSpellId;
 
-// STATIC: #0x00C9D4F0
+// STATIC: 0x00DD4D38
 static uint32_t s_proficiency[17];
 
 // STATIC: 0x00DD4D7C
@@ -265,16 +265,16 @@ static uint32_t s_pendingMovieID;
 // STATIC: 0x00DD4D88
 static uint32_t s_unk_DD4D88;
 
-// STATIC: #0x00C9EAB8
+// STATIC: 0x00DD5030
 WOWGUID CGPlayer_C::s_resurrectOfferer;
 
 // STATIC: #0x00C9EAB0
 static uint32_t s_unk_C9EAB0;
 
-// STATIC: #0x00C9EAC0
+// STATIC: 0x00DD5038
 uint32_t CGPlayer_C::s_resurrectOfferSickness;
 
-// STATIC: #0x00C9EAC4
+// STATIC: 0x00DD503C
 uint32_t CGPlayer_C::s_resurrectOfferUseTimer;
 
 // STATIC: #0x00C9EAB4
@@ -292,7 +292,7 @@ static WOWGUID s_giftWrapItem;
 // STATIC: 0x00DD5058
 static InspectData* s_inspectData;
 
-// STATIC: #0x00C9EC78
+// STATIC: 0x00DD5200
 static InspectItem s_emptyInspectItem;
 
 // STATIC: 0x00DD505C
@@ -349,7 +349,7 @@ static WOWGUID s_spiritHealer;
 // STATIC: #0x00C9EB18
 static WOWGUID s_talentMaster;
 
-// STATIC: #0x00C9EB20
+// STATIC: 0x00DD5098
 static WOWGUID s_binder;
 
 // STATIC: 0x00DD50A0
@@ -394,10 +394,10 @@ static const RestStateInfo s_restStateInfo[3] = {
     { ERR_EXHAUSTION_NORMAL, 65 },
 };
 
-// STATIC: #0x00C9EC68
+// STATIC: 0x00DD51F8
 static int32_t s_zoneUpdateCounter;
 
-// STATIC: #0x00C9EC6C
+// STATIC: 0x00DD51FC
 static bool s_dailyQuestsUntouched;
 
 struct DamageCalcLabel {

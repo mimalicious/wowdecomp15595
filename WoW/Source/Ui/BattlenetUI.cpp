@@ -43,7 +43,7 @@ BattlenetUI::EventCallback BattlenetUI::s_eventCallbacks[26] = {
     { "BattlenetEvent_SettingChanged", BattlenetUI::SettingChangedCB, 0 },
 };
 
-// STATIC: #0x00ACC9E8
+// STATIC: 0x00D10B18
 BattlenetUI::PresenceCallback BattlenetUI::s_presenceCallbacks[NUM_BN_PRESENCE_FIELDS] = {
     { 0x10002, BattlenetUI::OnlinePresenceChangedCB, 0 },
     { 0x10003, BattlenetUI::OnlineTimeChangedCB, 0 },
@@ -68,19 +68,19 @@ BattlenetUI::PresenceCallback BattlenetUI::s_presenceCallbacks[NUM_BN_PRESENCE_F
     { 0x40001, BattlenetUI::FactionUpdateCB, 0 },
 };
 
-// STATIC: #0x00ACCCB0
+// STATIC: 0x00D10E2C
 BattlenetUI::FriendInviteSentCB BattlenetUI::s_friendInviteSentCB;
 
-// STATIC: #0x00ACCCB8
+// STATIC: 0x00D10EA8
 int32_t BattlenetUI::s_broadcastCount = 2;
 
-// STATIC: #0x00BD1B00
+// STATIC: 0x00F3387C
 uint32_t BattlenetUI::s_selfRealm;
 
 // STATIC: #0x00BD1B04
 bool BattlenetUI::s_initialized;
 
-// STATIC: #0x00BD1B05
+// STATIC: 0x00F33881
 bool BattlenetUI::m_friendListLoaded;
 
 // STATIC: #0x00BD1B08
@@ -89,10 +89,10 @@ BSN::BSNEncodedObject<Battlenet::Friends::FriendInviteContainer, Protocol>* Batt
 // STATIC: #0x00BD1B0C
 BSN::BSNEncodedObject<Battlenet::Friends::FriendsOfFriendList, Protocol>* BattlenetUI::s_friendsOfFriend;
 
-// STATIC: #0x00BD1B10
+// STATIC: 0x00F33884
 GeneralFunction::Callback* BattlenetUI::s_createConversationCB;
 
-// STATIC: #0x00BD1B14
+// STATIC: 0x00F33888
 GeneralFunction::Callback* BattlenetUI::s_inviteToConversationCB;
 
 // STATIC: #0x00BD1B18
@@ -116,7 +116,7 @@ char BattlenetUI::s_programString[16];
 // STATIC: #0x00BE5D1C
 float BattlenetUI::s_broadcastTime;
 
-// STATIC: #0x00BE5D20
+// STATIC: 0x00F33918
 char BattlenetUI::s_displayName[72];
 
 // OFFSET: #0x00530D00

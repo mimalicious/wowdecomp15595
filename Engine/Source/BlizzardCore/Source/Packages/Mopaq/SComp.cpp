@@ -16,19 +16,19 @@ extern "C" {
 #include "ThirdParty/lzma/LzmaDecode.h"
 }
 
-// STATIC: #0x00B38324
+// STATIC: 0x00EBA790
 Blizzard::Thread::LocalObject<System_SComp::ZlibAllocBuffer> System_SComp::s_zlibAllocBuffer;
 
 // STATIC: #0x009E6DF8
 static const System_SComp::COMPRESSOR s_rleCompressor = { 0x20, System_SComp::RLEZeroCompress };
 
-// STATIC: #0x009E6E00
+// STATIC: 0x00BCBBDC
 static const System_SComp::COMPRESSOR s_zlibCompressor = { 0x02, System_SComp::ZlibCompress };
 
 // STATIC: #0x009E6E08
 static const System_SComp::COMPRESSOR s_pkwareCompressor = { 0x08, System_SComp::PkwareCompress };
 
-// STATIC: #0x009E6E10
+// STATIC: 0x00BCBBEC
 static const System_SComp::COMPRESSOR s_bzip2Compressor = { 0x10, System_SComp::Bzip2Compress };
 
 // OFFSET: 0x007FCC60

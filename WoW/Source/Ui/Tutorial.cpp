@@ -15,10 +15,10 @@ static const uint32_t s_forcedTutorials[] = { 56, 33, 3, 4, 10, 54, 65 };
 // STATIC: 0x00D10994
 static const uint32_t s_repeatableTutorials[] = { 56, 65 };
 
-// STATIC: #0x00BD19F0
+// STATIC: 0x00F33758
 static int32_t s_tutorialsCompleted[60];
 
-// STATIC: #0x00BD1AE0
+// STATIC: 0x00F3385C
 TSBitField<TSFixedArray<uint32_t> > CGTutorial::m_tutorialShown;
 
 // STATIC: #0x00BD1AF0

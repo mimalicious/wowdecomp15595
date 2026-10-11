@@ -6,16 +6,16 @@
 // STATIC: #0x00CB74F8
 static int32_t s_modified;
 
-// STATIC: #0x00CB7500
+// STATIC: 0x00DA60AC
 static _TYPEHASHENTRY** s_typehashtable;
 
-// STATIC: #0x00CB7504
+// STATIC: 0x00DA60B0
 static uint32_t s_typehashtablesize;
 
 // STATIC: #0x00CB7508
 static uint32_t s_typehashtableused;
 
-// STATIC: #0x00CB750C
+// STATIC: 0x00DA60B8
 static CCritSect s_critsect;
 
 // OFFSET: 0x004C17C0/0x1400FC090

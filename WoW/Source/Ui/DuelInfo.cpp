@@ -16,13 +16,13 @@
 // STATIC: #0x00C22B58
 static WOWGUID s_duelArbiter;
 
-// STATIC: #0x00C22B60
+// STATIC: 0x00F76888
 WOWGUID CGDuelInfo::m_dueler;
 
-// STATIC: #0x00C22B68
+// STATIC: 0x00F76890
 static uint32_t s_countdown;
 
-// STATIC: #0x00C22B6C
+// STATIC: 0x00F76894
 static uint32_t s_countdownTimer;
 
 // OFFSET: %0x00931E90

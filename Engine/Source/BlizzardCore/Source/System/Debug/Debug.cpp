@@ -19,7 +19,7 @@ char System_Debug::s_CanonBuffer[1024];
 // STATIC: #0x00AB9348
 char* System_Debug::s_CanonHead = System_Debug::s_CanonBuffer;
 
-// STATIC: #0x00AB934C
+// STATIC: 0x00D07414
 char* System_Debug::s_CanonTail = System_Debug::s_CanonBuffer;
 
 // OFFSET: #0x00426FE0

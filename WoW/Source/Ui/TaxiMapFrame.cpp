@@ -26,7 +26,7 @@
 // STATIC: #0x00C0D7E0
 CTexture* CGTaxiMap::m_mapTexture;
 
-// STATIC: #0x00C0D7E4
+// STATIC: 0x00F75E4C
 int32_t CGTaxiMap::m_numNodes;
 
 // STATIC: #0x00C0DC30
@@ -35,7 +35,7 @@ TSGrowableArray<TaxiNodeInfo> CGTaxiMap::m_nodes;
 // STATIC: #0x00C0DC80
 TSFixedArray<TSGrowableArray<TAXIROUTELINE>> CGTaxiMap::m_routeLines;
 
-// STATIC: #0x00C0DBF0
+// STATIC: 0x00F76260
 WOWGUID CGTaxiMap::m_unit;
 
 // STATIC: #0x00C9EA98

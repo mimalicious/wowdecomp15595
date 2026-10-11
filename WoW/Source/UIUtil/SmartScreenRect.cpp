@@ -44,13 +44,13 @@ static CRect (*s_moveFunctions[4])(uint32_t grid, CRect rect) = {
     SmartScreenRectMoveDown,
 };
 
-// STATIC: #0x00AD27B4
+// STATIC: 0x00C99DF4
 static TSList<BFSNODE> s_searchQueue;
 
-// STATIC: #0x00AD27C0
+// STATIC: 0x00C99E00
 static TSList<BFSNODE> s_freeNodes;
 
-// STATIC: #0x00C25CAC
+// STATIC: 0x00D3A774
 static TSGrowableArray<CRect> s_grids[3];
 
 // INLINED

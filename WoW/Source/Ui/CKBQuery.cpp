@@ -7,10 +7,10 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: #0x00ACD5B0
+// STATIC: 0x00D17398
 CKBQuery g_KnowledgeBaseQuery;
 
-// STATIC: #0x00ACD474
+// STATIC: 0x00D17258
 static char s_hexDigits[] = "0123456789ABCDEF";
 
 // INLINED

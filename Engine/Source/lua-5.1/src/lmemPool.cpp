@@ -2,7 +2,7 @@
 #include "lmemPool.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00A47FBC
+// STATIC: 0x00C1C594
 static const uint32_t s_blocksizes[] = { 16, 24, 32, 40, 64, 80, 128, 160, 256 };
 
 // OFFSET: 0x00A2E330/0x1407D71F0

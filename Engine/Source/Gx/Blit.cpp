@@ -511,7 +511,7 @@ static void Blit_generic128_generic128(const C2iVector& size, const void* in, ui
 
 // OFFSET: 0x0063A880
 void DxtDecodeBlock(const Dxt3Block* block, CImVector** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
-    // STATIC: #0x00C6082C
+    // STATIC: 0x00E28EB0
     static CImVector colors[4];
 
     DxtMakeTable(&block->m_color, colors);
@@ -538,7 +538,7 @@ void DxtDecodeBlock(const Dxt3Block* block, CImVector** rows, const DxtRect& rec
 
 // OFFSET: 0x0063A9A0
 void DxtDecodeBlock(const Dxt3Block* block, CArgb4444** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
-    // STATIC: #0x00C60840
+    // STATIC: 0x00E28EC4
     static CArgb4444 colors[4];
 
     DxtMakeTable(&block->m_color, colors);
@@ -559,7 +559,7 @@ void DxtDecodeBlock(const Dxt3Block* block, CArgb4444** rows, const DxtRect& rec
 
 // OFFSET: 0x0063AA90
 void DxtDecodeBlock(const Dxt5Block* block, CImVector** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
-    // STATIC: #0x00C6084C
+    // STATIC: 0x00E28ED0
     static CImVector colors[4];
 
     DxtMakeTable(&block->m_color, colors);
@@ -596,7 +596,7 @@ void DxtDecodeBlock(const Dxt5Block* block, CImVector** rows, const DxtRect& rec
 
 // OFFSET: 0x0063ABE0
 void DxtDecodeBlock(const Dxt5Block* block, CArgb4444** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
-    // STATIC: #0x00C60860
+    // STATIC: 0x00E28EE4
     static CArgb4444 colors[4];
 
     DxtMakeTable(&block->m_color, colors);
@@ -626,7 +626,7 @@ void DxtDecodeBlock(const Dxt5Block* block, CArgb4444** rows, const DxtRect& rec
 
 // OFFSET: 0x0063AD20
 void DxtDecodeBlock(const Dxt1Block* block, CRgb565** rows, const DxtRect& rect) {
-    // STATIC: #0x00C6086C
+    // STATIC: 0x00E28EF0
     static CRgb565 colors[4];
 
     DxtMakeTableAlpha(&block->m_color, colors);
@@ -645,7 +645,7 @@ void DxtDecodeBlock(const Dxt1Block* block, CRgb565** rows, const DxtRect& rect)
 
 // OFFSET: 0x0063ADC0
 void DxtDecodeBlock(const Dxt1Block* block, CArgb1555** rows, const DxtRect& rect) {
-    // STATIC: #0x00C60878
+    // STATIC: 0x00E28EFC
     static CArgb1555 colors[4];
 
     DxtMakeTableAlpha(&block->m_color, colors);
@@ -664,7 +664,7 @@ void DxtDecodeBlock(const Dxt1Block* block, CArgb1555** rows, const DxtRect& rec
 
 // OFFSET: 0x0063AE60
 void DxtDecodeBlock(const Dxt1Block* block, CImVector** rows, const DxtRect& rect) {
-    // STATIC: #0x00C60884
+    // STATIC: 0x00E28F08
     static CImVector colors[4];
 
     DxtMakeTableAlpha(&block->m_color, colors);
@@ -853,7 +853,7 @@ static void InitBlit() {
 
 // OFFSET: #0x006AE7C0
 int32_t Blit(const C2iVector& size, BlitAlpha alpha, const void* in, uint32_t inStride, BlitFormat inFormat, void* out, uint32_t outStride, BlitFormat outFormat) {
-    // STATIC: #0x00C613C4
+    // STATIC: 0x00E29FBC
     static int32_t initBlit;
 
     if (!initBlit) {

@@ -16,7 +16,7 @@
 // STATIC: #0x00BE8F40
 uint32_t CGWorldStateInfo::m_nextUITimeUpdate;
 
-// STATIC: #0x00BE8F44
+// STATIC: 0x00F6103C
 uint32_t CGWorldStateInfo::m_UITimeOffset;
 
 // STATIC: #0x00BE8F48
@@ -31,7 +31,7 @@ int32_t CGWorldStateInfo::m_areaID;
 // STATIC: #0x00BE8F54
 int32_t CGWorldStateInfo::m_mapID;
 
-// STATIC: #0x00BE8F58
+// STATIC: 0x00F61050
 TSHashTable<WORLDSTATE, HASHKEY_NONE> CGWorldStateInfo::m_worldStates;
 
 // STATIC: #0x00BE8F80

@@ -363,10 +363,10 @@ int32_t s_isPvPRealm;
 // STATIC: 0x00D36470
 static int32_t s_gameInitialized;
 
-// STATIC: #0x00B2F9A8
+// STATIC: 0x00D36478
 static int32_t s_clientTaxiBenchIsOnTaxi;
 
-// STATIC: #0x00B2F9AC
+// STATIC: 0x00D3647C
 static int32_t s_clientTaxiBenchEnabled;
 
 // STATIC: #0x00B2F9B0

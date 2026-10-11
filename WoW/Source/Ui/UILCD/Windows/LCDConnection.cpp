@@ -3,7 +3,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDOutput.h"
 
-// STATIC: #0x00DCE1A4
+// STATIC: 0x0100AAC8
 LONG CLCDConnection::g_lInitCount;
 
 // OFFSET: #0x0095A6E0

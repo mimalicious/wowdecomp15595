@@ -35,7 +35,7 @@
 #include "Engine/Source/Os/OsFile.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: #0x00AC7A48
+// STATIC: 0x00D101E4
 static const char* s_channelCategories[3] = { "CHANNEL_CATEGORY_GROUP", "CHANNEL_CATEGORY_WORLD", "CHANNEL_CATEGORY_CUSTOM" };
 
 // STATIC: 0x00D101DC

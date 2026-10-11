@@ -614,7 +614,7 @@ static int32_t Script_GetClickFrame(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ACDE38
+// STATIC: 0x00D114D0
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumBindings", &Script_GetNumBindings },
     { "GetBinding", &Script_GetBinding },

@@ -26,10 +26,10 @@ static volatile LONG s_eventIds[2][2048];
 // STATIC: %0x00CA1E48
 static HANDLE s_events[2][1024];
 
-// STATIC: #0x00CB49A0
+// STATIC: 0x00DA35C0
 static int32_t s_refCount;
 
-// STATIC: #0x00CB49A4
+// STATIC: 0x00DA35C4
 static CInitCritSect s_refCritsect;
 
 // STATIC: [#0x00CB49C8, #0x00CB5DC8]

@@ -91,7 +91,7 @@ float CGMinimapFrame::s_blipHalfSize1;
 // STATIC: #0x00BEBA5C
 float CGMinimapFrame::s_blipSize1;
 
-// STATIC: #0x00BEBA60
+// STATIC: 0x00F611C4
 int32_t CGMinimapFrame::s_objectType;
 
 // STATIC: #0x00BEBA6C
@@ -157,7 +157,7 @@ static C2Vector s_blipTexCoords[32][4];
 // STATIC: #0x00BEBA40
 static int32_t s_unkBEBA40;
 
-// STATIC: #0x00BEB9A8
+// STATIC: 0x00F610A8
 static uint32_t s_hoverObjects[23];
 
 // STATIC: #0x00BEBA74
@@ -166,10 +166,10 @@ static uint32_t s_hoverPOIs;
 // STATIC: #0x00BEBA78
 static uint32_t s_hoverPOIDirections;
 
-// STATIC: #0x00BEBA7C
+// STATIC: 0x00F611E0
 static uint32_t s_hoverParty;
 
-// STATIC: #0x00BEBA80
+// STATIC: 0x00F611E8
 static uint64_t s_hoverRaid;
 
 // STATIC: #0x00A11C50
@@ -215,7 +215,7 @@ static float s_closestPOIFacing[3];
 // STATIC: #0x00D3921C
 static int32_t s_closestPOIs[3];
 
-// STATIC: #0x00D39228
+// STATIC: 0x00DC73B0
 static int32_t s_poisChanged;
 
 // STATIC: #0x00D39230
@@ -265,7 +265,7 @@ static MINIMAPQUAD s_quads[4] = {
 // STATIC: 0x00F61278
 static MINIMAPTILE s_tiles[256];
 
-// STATIC: #0x00BF5F10
+// STATIC: 0x00D164A0
 static MINIMAPINDOOR s_indoor;
 
 // STATIC: #0x00BF5FB8

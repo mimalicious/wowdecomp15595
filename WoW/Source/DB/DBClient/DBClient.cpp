@@ -18,7 +18,7 @@
 // STATIC: 0x00C9A990
 const char* g_localeNames[15] = { "deDE", "enGB", "enUS", "esES", "frFR", "koKR", "zhCN", "zhTW", "enCN", "enTW", "esMX", "ruRU", "enUS", "ptBR", "ptPT" };
 
-// STATIC: #0x00AD2F90
+// STATIC: 0x00C9AD60
 static int32_t s_physicalDamageClassID = -1;
 
 // STATIC: #0x00C5D660

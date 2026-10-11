@@ -5,7 +5,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00C20FEC
+// STATIC: 0x00F771A8
 CMinigame_C* CGMinigameInfo::m_minigame;
 
 // OFFSET: #0x005C5720

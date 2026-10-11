@@ -53,7 +53,7 @@
 // STATIC: #0x00BCEFEC
 int32_t CGChat::m_afk;
 
-// STATIC: #0x00BCF004
+// STATIC: 0x00F32718
 int32_t CGChat::m_voiceChatSystemStatus;
 
 // STATIC: #0x00B4AE40
@@ -225,22 +225,22 @@ TSExplicitList<THROTTLEDCHAT, 0> CGChat::s_throttledChat;
 // STATIC: #0x00AC7D3C
 TSExplicitList<PENDINGCHAT, 0> CGChat::s_pendingChat;
 
-// STATIC: #0x00B759D0
+// STATIC: 0x00ED9160
 int32_t s_chatLogging[2];
 
 // STATIC: 0x00ED9168
 HSLOG s_chatLog[2];
 
-// STATIC: #0x00B75A60
+// STATIC: 0x00ED9170
 ChatRecord CGChat::m_chatHistory[60];
 
-// STATIC: #0x00BCEB60
+// STATIC: 0x00F32270
 WOWGUID CGChat::m_whisperDstHistory[128];
 
 // STATIC: #0x00BCEF60
 WOWGUID CGChat::m_whisperSrcHistory[16];
 
-// STATIC: #0x00BCEFF4
+// STATIC: 0x00F32708
 uint32_t CGChat::m_currentChatIndex;
 
 // STATIC: #0x00BCEFF8
@@ -273,7 +273,7 @@ static uint32_t s_profanityReplacementIndex;
 // STATIC: #0x00D37E94
 static TSFixedArray<regex_t> s_expectedSpamRecords;
 
-// STATIC: #0x009FB7C0
+// STATIC: 0x00BF15C8
 const ChatMessageGroup s_chatMessageGroups[46] = {
     { "SYSTEM", true, 0 },
     { "SYSTEM_NOMENU", true, 5 },
@@ -323,40 +323,40 @@ const ChatMessageGroup s_chatMessageGroups[46] = {
     { "COMBAT_MISC_INFO", true, 0 },
 };
 
-// STATIC: #0x00B743CC
+// STATIC: 0x00ED7A74
 uint32_t s_activeVoiceChannel;
 
-// STATIC: #0x00B743D0
+// STATIC: 0x00ED7A78
 uint8_t s_collapsedHeaders[3];
 
-// STATIC: #0x00B743D3
+// STATIC: 0x00ED7A7B
 static bool s_pendingUserListActive;
 
 // STATIC: #0x00B743D4
 uint32_t s_activeDisplayChannelFlags;
 
-// STATIC: #0x00B743D8
+// STATIC: 0x00ED7A80
 int32_t s_displayChannelMemberCount;
 
-// STATIC: #0x00B743DC
+// STATIC: 0x00ED7A84
 int32_t s_activeDisplayChannelType;
 
-// STATIC: #0x00B743E0
+// STATIC: 0x00ED7A88
 char CGChat::s_activeDisplayChannelName[128];
 
-// STATIC: #0x00B74460
+// STATIC: 0x00ED7B08
 uint32_t s_numDisplayChannels;
 
 // STATIC: #0x00B74464
 static AreaTableRec* s_cityArea;
 
-// STATIC: #0x00B74468
+// STATIC: 0x00ED7B10
 DisplayChannel CGChat::s_displayChannels[20];
 
 // STATIC: #0x00B746E8
 ChatColorInfo s_chatColors[CHAT_MSG_MAX];
 
-// STATIC: #0x00B75950
+// STATIC: 0x00ED90E0
 static char s_inviteChannelName[128];
 
 // STATIC: #0x00BCEFE4
@@ -365,22 +365,22 @@ int32_t CGChat::m_loaded;
 // STATIC: #0x00BCEFE8
 int32_t CGChat::m_registered;
 
-// STATIC: #0x00BCEFFC
+// STATIC: 0x00F32710
 int32_t CGChat::m_complaintsSystemStatus;
 
-// STATIC: #0x00BCF010
+// STATIC: 0x00F32738
 uint32_t s_joinedZoneChannels;
 
-// STATIC: #0x00BCF09C
+// STATIC: 0x00F32808
 TSGrowableArray<ChatColorInfo> s_channelColors;
 
-// STATIC: #0x00BCF0B0
+// STATIC: 0x00F32818
 ChatWindowInfo s_chatWindows[10];
 
-// STATIC: #0x00BCFAF0
+// STATIC: 0x00F33270
 static TSHashTable<WORDLIST, HASHKEY_LANGUAGE> s_wordLists;
 
-// STATIC: #0x00BCFB68
+// STATIC: 0x00F332F4
 TSGrowableArray<PENDINGUSERLIST> s_pendingUsers;
 
 // STATIC: #0x00AC7D48
@@ -401,7 +401,7 @@ static const ZoneChannelDefault s_zoneChannelDefaults[1] = { { 26, 4 } };
 // STATIC: #0x00B759E0
 static char s_recruitmentChannelName[128];
 
-// STATIC: #0x00BCEFE0
+// STATIC: 0x00F326F0
 static int32_t s_chatSettingsDirty;
 
 // STATIC: #0x00BCF008

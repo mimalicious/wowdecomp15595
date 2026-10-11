@@ -4,10 +4,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Battlenet/Tumor/CreepTendril.h"
 
-// STATIC: #0x00DCEE58
+// STATIC: 0x01008DDC
 BSN::FourCC Battlenet::Event::CREEP("Crep");
 
-// STATIC: #0x00DCEE5C
+// STATIC: 0x01008DE0
 BSN::FourCC Battlenet::Event::APP("App");
 
 // STATIC: #0x00DCEE60

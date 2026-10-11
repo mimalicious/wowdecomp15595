@@ -34,10 +34,10 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include <malloc.h>
 
-// STATIC: #0x00AD0340
+// STATIC: 0x00D1579C
 static TSList<CalendarPendingInvite, TSGetLink<CalendarPendingInvite> > s_pendingInvites;
 
-// STATIC: #0x00AD0350
+// STATIC: 0x00D157A8
 CalendarEventData s_eventClipboard;
 
 // STATIC: #0x00AD0328
@@ -52,46 +52,46 @@ static TSGrowableArray<CalendarDayEvent*> s_days[3][31];
 // STATIC: #0x00C20DD8
 static CalendarEventTables s_eventTables;
 
-// STATIC: #0x00C20F38
+// STATIC: 0x00F4CD94
 TSHashTable<DYNAMICHOLIDAYHASH, HASHKEY_NONE> s_dynamicHolidays;
 
 // STATIC: #0x00C20F60
 TSFixedArray<int32_t> s_eventTextures[2];
 
-// STATIC: #0x00C207EC
+// STATIC: 0x00F4CD7C
 CGCalendarEvent* CGCalendar::m_curEvent;
 
 // STATIC: #0x00C207F0
 uint8_t CGCalendar::m_initialize;
 
-// STATIC: #0x00C207F1
+// STATIC: 0x00F4CD81
 uint8_t CGCalendar::m_openedCalendar;
 
 // STATIC: #0x00C207F2
 uint8_t CGCalendar::m_calendarReceived;
 
-// STATIC: #0x00C207E8
+// STATIC: 0x00F4CD78
 CalendarDayEvent* CGCalendar::m_contextEventInfo;
 
-// STATIC: #0x00C207FC
+// STATIC: 0x00F4CD8C
 uint32_t CGCalendar::m_lastEventTime;
 
-// STATIC: #0x00C207F4
+// STATIC: 0x00F4CD84
 int32_t CGCalendar::m_numInitialPending;
 
-// STATIC: #0x00C207F3
+// STATIC: 0x00F4CD83
 uint8_t CGCalendar::m_actionPending;
 
 // STATIC: #0x00ACFFE4
 static const char* s_fullDateMonthNames[12] = { "FULLDATE_MONTH_JANUARY", "FULLDATE_MONTH_FEBRUARY", "FULLDATE_MONTH_MARCH", "FULLDATE_MONTH_APRIL", "FULLDATE_MONTH_MAY", "FULLDATE_MONTH_JUNE", "FULLDATE_MONTH_JULY", "FULLDATE_MONTH_AUGUST", "FULLDATE_MONTH_SEPTEMBER", "FULLDATE_MONTH_OCTOBER", "FULLDATE_MONTH_NOVEMBER", "FULLDATE_MONTH_DECEMBER" };
 
-// STATIC: #0x00ACFF8C
+// STATIC: 0x00D15398
 int32_t CGCalendar::m_absMonth = -1;
 
-// STATIC: #0x00ACFF90
+// STATIC: 0x00D1539C
 int32_t CGCalendar::m_absYear = 4;
 
-// STATIC: #0x00C20800
+// STATIC: 0x00F4CD90
 int32_t CGCalendar::m_absMonthDays;
 
 // STATIC: #0x00C20F78
@@ -100,7 +100,7 @@ CalendarEventSelection CGCalendar::m_selectedEvent;
 // STATIC: #0x00C20F90
 CalendarEventSelection CGCalendar::m_contextEvent;
 
-// STATIC: #0x00C207F8
+// STATIC: 0x00F4CD88
 uint32_t CGCalendar::m_lastInviteTime;
 
 // STATIC: #0x00ACFF94

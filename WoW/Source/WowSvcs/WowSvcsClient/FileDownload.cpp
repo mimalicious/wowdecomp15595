@@ -11,7 +11,7 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/HttpDownload.h"
 
-// STATIC: #0x00C7C000
+// STATIC: 0x010089C0
 static SCritSect s_downloadLock;
 
 // INLINED

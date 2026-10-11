@@ -9,10 +9,10 @@
 // STATIC: #0x00C1E8C4
 uint8_t CGGMSurveyInfo::m_surveyAnswers[10];
 
-// STATIC: #0x00C1E8D8
+// STATIC: 0x00F7630C
 char* CGGMSurveyInfo::m_surveyAnswerComments[10];
 
-// STATIC: #0x00C1E900
+// STATIC: 0x00F76348
 char* CGGMSurveyInfo::m_surveyComment;
 
 // OFFSET: #0x005AC530

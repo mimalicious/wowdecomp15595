@@ -5,13 +5,13 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "Engine/Source/Base/DynamicString.h"
 
-// STATIC: #0x00CA1610
+// STATIC: 0x00DD8698
 void (*CSimpleScriptManager::s_callbacks[16])(uint32_t);
 
-// STATIC: #0x00CA1654
+// STATIC: 0x00DD86DC
 uint32_t CSimpleScriptManager::s_callbackCount;
 
-// STATIC: #0x00CA1650
+// STATIC: 0x00DD86D8
 CSimpleScriptManager* CSimpleScriptManager::s_instance;
 
 // INLINED

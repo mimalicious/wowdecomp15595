@@ -41,13 +41,13 @@ static uint32_t s_lastRenderFrame;
 // STATIC: #0x00D380A8
 static CGxStringBatch* s_playerNameBatch;
 
-// STATIC: #0x00D380AC
+// STATIC: 0x00DC70D8
 static CGxFont* s_playerNameFont;
 
-// STATIC: #0x00D380B0
+// STATIC: 0x00DC70DC
 static CTexture* s_playerNameIcons;
 
-// STATIC: #0x00D380B4
+// STATIC: 0x00DC70E0
 static CDataAllocator s_freePlayerNames(sizeof(PLAYERNAMEDESC), 256);
 
 // STATIC: #0x00AF46AC
@@ -66,7 +66,7 @@ static C2Vector s_iconTexCoords[4] = {
     C2Vector(0.0f, 0.25f),
 };
 
-// STATIC: #0x00AF46FC
+// STATIC: 0x00CA1148
 TSExplicitList<PLAYERNAMEDESC, offsetof(PLAYERNAMEDESC, m_link)> s_playerNames;
 
 // OFFSET: #0x007E53A0

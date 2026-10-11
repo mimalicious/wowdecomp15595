@@ -6,13 +6,13 @@
 #include "WoW/Source/Client.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00A1D648
+// STATIC: 0x00B8D974
 static const uint8_t s_emptyMd5[16] = { 0xD4, 0x1D, 0x8C, 0xD9, 0x8F, 0x00, 0xB2, 0x04, 0xE9, 0x80, 0x09, 0x98, 0xEC, 0xF8, 0x42, 0x7E };
 
-// STATIC: #0x00C243E4
+// STATIC: 0x00D391D4
 static int32_t s_bannedAddOnCount;
 
-// STATIC: #0x00C243E8
+// STATIC: 0x00D391D8
 static TSHashTable<_BANNEDADDON, HASHKEY_NONE> s_bannedAddOns;
 
 // OFFSET: #0x005F3410

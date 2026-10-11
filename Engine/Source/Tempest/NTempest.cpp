@@ -12,7 +12,7 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/NTempest.h"
 
-// STATIC: #0x00B2D6F4
+// STATIC: 0x00D27A68
 static uint32_t s_planeAxes[3][2] = { { 1, 2 }, { 2, 0 }, { 0, 1 } };
 
 // INLINED

@@ -8,7 +8,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: #0x00C0E518
+// STATIC: 0x00F71070
 WOWGUID CGTabardCreationFrame::m_vendor;
 
 // PROVEN: b2cf592f IDENTICAL/NONE
