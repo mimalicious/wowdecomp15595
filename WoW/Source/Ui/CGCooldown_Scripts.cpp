@@ -44,13 +44,13 @@ static int32_t Script_SetCooldown(lua_State* L) {
         return 0;
     }
 
-    int32_t start = static_cast<int32_t>(lua_tonumber(L, 2) * 1000.0);
-    int32_t duration = static_cast<int32_t>(lua_tonumber(L, 3) * 1000.0);
+    uint32_t start = static_cast<uint32_t>(lua_tonumber(L, 2) * 1000.0);
+    uint32_t duration = static_cast<uint32_t>(lua_tonumber(L, 3) * 1000.0);
     cooldown->SetCooldown(start, duration);
     return 0;
 }
 
-// OFFSET: #0x005EBE30
+// OFFSET: 0x009FE940
 void CGCooldown::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGCooldown::s_metatable);
@@ -63,7 +63,7 @@ void CGCooldown::CreateScriptMetaTable() {
     CGCooldown::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGCooldown::RegisterScriptMethods);
 }
 
-// STATIC: #0x00AD13A4
+// STATIC: 0x00D17524
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetCooldown", &Script_SetCooldown },
     { "SetReverse", &Script_SetReverse },

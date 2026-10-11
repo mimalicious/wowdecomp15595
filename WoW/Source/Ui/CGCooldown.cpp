@@ -21,16 +21,16 @@
 // STATIC: 0x00F76BF0
 int32_t CGCooldown::s_objectType;
 
-// STATIC: #0x00AD13CC
+// STATIC: 0x00D1754C
 int32_t CGCooldown::s_metatable = LUA_NOREF;
 
-// STATIC: #0x00AD1398
+// STATIC: 0x00D17518
 const char* CGCooldown::s_objectTypeName = "Cooldown";
 
-// STATIC: #0x00AD139C
+// STATIC: 0x00D1751C
 const char* CGCooldown::s_starTextureName = "interface\\cooldown\\star4.blp";
 
-// STATIC: #0x00AD13A0
+// STATIC: 0x00D17520
 const char* CGCooldown::s_edgeTextureName = "interface\\cooldown\\edge.blp";
 
 // STATIC: #0x00AD13D0
@@ -65,7 +65,7 @@ CSimpleFrame* CGCooldown::Create(CSimpleFrame* parent) {
     return data ? new (data) CGCooldown(parent) : NULL;
 }
 
-// OFFSET: [#0x005EB040, #0x005EBE60, #0x005EBEF0]
+// OFFSET: [0x009FDB50, 0x009FE970]
 CGCooldown::~CGCooldown() {
     if (this->m_starTexture) {
         TextureRelease(this->m_starTexture);
@@ -79,17 +79,17 @@ CGCooldown::~CGCooldown() {
     this->m_edgeTexture = NULL;
 }
 
-// OFFSET: #0x005EB0A0
+// OFFSET: 0x009FDBB0
 const char* CGCooldown::GetObjectTypeName() {
     return CGCooldown::s_objectTypeName;
 }
 
-// OFFSET: %0x0093E7B0
+// OFFSET: 0x009FDBC0
 int32_t CGCooldown::GetScriptMetaTable() {
     return CGCooldown::s_metatable;
 }
 
-// OFFSET: #0x005EB130
+// OFFSET: 0x009FDC20
 void CGCooldown::AnimateOctants01(uint32_t octant, float t) {
     float cx = (this->m_rect.minX + this->m_rect.maxX) * 0.5f;
     float cy = 0.5f * (this->m_rect.maxY + this->m_rect.minY);
@@ -144,7 +144,7 @@ void CGCooldown::AnimateOctants01(uint32_t octant, float t) {
     }
 }
 
-// OFFSET: #0x005EB3A0
+// OFFSET: 0x009FDEB0
 void CGCooldown::AnimateOctants23(uint32_t octant, float t) {
     float cx = (this->m_rect.minX + this->m_rect.maxX) * 0.5f;
     float cy = 0.5f * (this->m_rect.maxY + this->m_rect.minY);
@@ -207,7 +207,7 @@ void CGCooldown::AnimateOctants23(uint32_t octant, float t) {
     }
 }
 
-// OFFSET: #0x005EB670
+// OFFSET: 0x009FE1D0
 void CGCooldown::AnimateOctants45(uint32_t octant, float t) {
     float cx = (this->m_rect.minX + this->m_rect.maxX) * 0.5f;
     float cy = 0.5f * (this->m_rect.maxY + this->m_rect.minY);
@@ -276,7 +276,7 @@ void CGCooldown::AnimateOctants45(uint32_t octant, float t) {
     }
 }
 
-// OFFSET: #0x005EB9A0
+// OFFSET: 0x009FE4F0
 void CGCooldown::AnimateOctants67(uint32_t octant, float t) {
     float cx = (this->m_rect.minX + this->m_rect.maxX) * 0.5f;
     float cy = 0.5f * (this->m_rect.maxY + this->m_rect.minY);
@@ -342,7 +342,7 @@ void CGCooldown::AnimateOctants67(uint32_t octant, float t) {
     }
 }
 
-// OFFSET: #0x005EB0C0
+// OFFSET: 0x009FDBD0
 void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 
@@ -361,7 +361,7 @@ void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: #0x005EBD20
+// OFFSET: 0x009FE830
 void CGCooldown::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
 
@@ -389,7 +389,7 @@ bool CGCooldown::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGCooldown::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: #0x005EBF20
+// OFFSET: 0x009FEA30
 void CGCooldown::ResetVerts() {
     for (uint32_t i = 0; i < 9; i++) {
         this->m_starVerts[i] = C3Vector(0.0f, 0.0f, 1.0f);
@@ -424,7 +424,7 @@ void CGCooldown::ResetVerts() {
     }
 }
 
-// OFFSET: #0x005EC1E0
+// OFFSET: 0x009FED40
 void CGCooldown::AnimateVerts() {
     if (!this->m_flashing) {
         float elapsed = static_cast<float>(this->m_elapsed);
@@ -552,7 +552,7 @@ void CGCooldown::AnimateVerts() {
     }
 }
 
-// OFFSET: #0x005EC790
+// OFFSET: 0x009FF460
 void CGCooldown::UpdateColors() {
     CImVector starColor;
     CImVector edgeColor;
@@ -597,7 +597,7 @@ void CGCooldown::UpdateColors() {
     }
 }
 
-// OFFSET: %0x00940130
+// OFFSET: 0x009FF570
 void CGCooldown::UpdateAlpha() {
     CSimpleFrame::UpdateAlpha();
     this->UpdateColors();
@@ -610,20 +610,22 @@ void CGCooldown::OnFrameSizeChanged(const CRect& rect) {
     this->ResetVerts();
 }
 
-// OFFSET: #0x005EC8F0
+// OFFSET: 0x009FF5A0
 void CGCooldown::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
-    this->m_elapsed = OsGetAsyncTimeMs() - this->m_startTime;
+    uint32_t now = OsGetAsyncTimeMs();
+    uint32_t elapsed = now <= this->m_startTime ? 0 : now - this->m_startTime;
+    this->m_elapsed = elapsed;
 
-    if (this->m_elapsed >= this->m_duration) {
+    if (elapsed >= this->m_duration) {
         if (this->m_flashing) {
             this->m_flashing = 0;
             this->Hide();
         } else if (this->m_reverse) {
             this->m_elapsed = this->m_duration - 1;
         } else {
-            this->m_startTime = OsGetAsyncTimeMs();
+            this->m_startTime = now;
             this->m_flashing = 1;
             this->m_duration = 1000;
             this->m_elapsed = 0;
@@ -634,7 +636,7 @@ void CGCooldown::OnLayerUpdate(float elapsedSec) {
     this->AnimateVerts();
 }
 
-// OFFSET: #0x005ECAE0
+// OFFSET: 0x009FF790
 CGCooldown::CGCooldown(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_starTexture = NULL;
     this->m_edgeTexture = NULL;
@@ -646,7 +648,7 @@ CGCooldown::CGCooldown(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_drawEdge = 0;
 }
 
-// OFFSET: #0x005ECD70
+// OFFSET: 0x009FFAD0
 void CGCooldown::SetCooldown(uint32_t start, uint32_t duration) {
     this->m_startTime = start;
     this->m_duration = duration;
