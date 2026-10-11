@@ -40,7 +40,7 @@
 */
 
 
-// OFFSET: %0x0096BA20
+// INLINED
 LUALIB_API int luaL_argerror (lua_State *L, int narg, const char *extramsg) {
   lua_Debug ar;
   if (!lua_getstack(L, 0, &ar))  /* no stack frame? */
@@ -86,7 +86,7 @@ LUALIB_API void luaL_where (lua_State *L, int level) {
 }
 
 
-// OFFSET: %0x0096B3F0
+// INLINED
 LUALIB_API int luaL_error (lua_State *L, const char *fmt, ...) {
   va_list argp;
   va_start(argp, fmt);
@@ -254,7 +254,7 @@ LUALIB_API int luaL_callmeta (lua_State *L, int obj, const char *event) {
 }
 
 
-// OFFSET: %0x0096BF60
+// INLINED
 LUALIB_API void (luaL_register) (lua_State *L, const char *libname,
                                 const luaL_Reg *l) {
   luaI_openlib(L, libname, l, 0);

@@ -337,7 +337,7 @@ LUA_API int lua_isuserdata (lua_State *L, int idx) {
 }
 
 
-// OFFSET: %0x004361D0
+// INLINED
 LUA_API int lua_rawequal (lua_State *L, int index1, int index2) {
   StkId o1 = index2adr(L, index1);
   StkId o2 = index2adr(L, index2);
@@ -358,7 +358,7 @@ LUA_API int lua_equal (lua_State *L, int index1, int index2) {
 }
 
 
-// OFFSET: %0x00436220
+// INLINED
 LUA_API int lua_lessthan (lua_State *L, int index1, int index2) {
   StkId o1, o2;
   int i;
@@ -727,7 +727,7 @@ LUA_API int lua_getmetatable (lua_State *L, int objindex) {
 }
 
 
-// OFFSET: %0x004369D0
+// INLINED
 LUA_API void lua_getfenv (lua_State *L, int idx) {
   StkId o;
   lua_lock(L);
@@ -1171,7 +1171,7 @@ LUA_API void lua_gcresettimes (lua_State *L) {
 */
 
 
-// OFFSET: %0x00437160
+// INLINED
 LUA_API int lua_error (lua_State *L) {
   lua_lock(L);
   api_checknelems(L, 1);
@@ -1225,7 +1225,7 @@ LUA_API void lua_setdecimalconversion (int convert) {
 }
 
 
-// OFFSET: %0x00437260
+// INLINED
 LUA_API void lua_convertdecimal (char *s) {
   if (lua_decimalconvert) {
     char *end = s + strlen(s);

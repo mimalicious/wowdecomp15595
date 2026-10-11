@@ -292,7 +292,7 @@ static const luaL_Reg mathlib[] = {
 /*
 ** Open math library
 */
-// OFFSET: %0x0096CA10
+// INLINED
 LUALIB_API int luaopen_math (lua_State *L) {
   luaL_register(L, LUA_MATHLIBNAME, mathlib);
   lua_pushnumber(L, PI);

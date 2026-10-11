@@ -395,7 +395,7 @@ static int singlematch (int c, const char *p, const char *ep) {
 static const char *match (MatchState *ms, const char *s, const char *p);
 
 
-// OFFSET: %0x0096DF10
+// OFFSET: 0x00A2BEA0
 static const char *matchbalance (MatchState *ms, const char *s,
                                    const char *p) {
   if (*p == 0 || *(p+1) == 0)
@@ -433,7 +433,7 @@ static const char *max_expand (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: %0x0096E020
+// OFFSET: 0x00A2BFB0
 static const char *min_expand (MatchState *ms, const char *s,
                                  const char *p, const char *ep) {
   for (;;) {
@@ -447,7 +447,7 @@ static const char *min_expand (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: %0x0096E0B0
+// OFFSET: 0x00A2C040
 static const char *start_capture (MatchState *ms, const char *s,
                                     const char *p, int what) {
   const char *res;
@@ -462,7 +462,7 @@ static const char *start_capture (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: %0x0096E100
+// OFFSET: 0x00A2C090
 static const char *end_capture (MatchState *ms, const char *s,
                                   const char *p) {
   int l = capture_to_close(ms);
@@ -474,7 +474,7 @@ static const char *end_capture (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: %0x0096E160
+// OFFSET: 0x00A2C0F0
 static const char *match_capture (MatchState *ms, const char *s, int l) {
   size_t len;
   l = check_capture(ms, l);
@@ -622,7 +622,7 @@ static int push_captures (MatchState *ms, const char *s, const char *e) {
 }
 
 
-// OFFSET: %0x0096E640
+// OFFSET: 0x00A2C5D0
 static int str_find_aux (lua_State *L, int find) {
   size_t l1, l2;
   const char *s = luaL_checklstring(L, 1, &l1);
@@ -725,7 +725,7 @@ static int gfind_nodef (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096EA50
+// OFFSET: 0x00A2C9E0
 static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
                                                    const char *e) {
   size_t l, i;
@@ -748,7 +748,7 @@ static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
 }
 
 
-// OFFSET: %0x0096EB30
+// OFFSET: 0x00A2CAC0
 static void add_value (MatchState *ms, luaL_Buffer *b, const char *s,
                                                        const char *e) {
   lua_State *L = ms->L;
@@ -1012,7 +1012,7 @@ static void createmetatable (lua_State *L) {
 /*
 ** Open string library
 */
-// OFFSET: %0x0096F3A0
+// INLINED
 LUALIB_API int luaopen_string (lua_State *L) {
   luaL_register(L, LUA_STRLIBNAME, strlib);
 #if defined(LUA_COMPAT_GFIND)

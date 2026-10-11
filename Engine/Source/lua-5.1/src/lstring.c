@@ -49,7 +49,7 @@ void luaS_resize (lua_State *L, int newsize) {
 }
 
 
-// OFFSET: %0x0042B710
+// OFFSET: 0x00421200
 static TString *newlstr (lua_State *L, const char *str, size_t l,
                                        unsigned int h) {
   TString *ts;
@@ -76,7 +76,7 @@ static TString *newlstr (lua_State *L, const char *str, size_t l,
 }
 
 
-// OFFSET: %0x0042B7D0
+// INLINED
 TString *luaS_newlstr (lua_State *L, const char *str, size_t l) {
   GCObject *o;
   unsigned int h = cast(unsigned int, l);  /* seed */

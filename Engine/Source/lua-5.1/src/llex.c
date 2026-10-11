@@ -48,7 +48,7 @@ const char *const luaX_tokens [] = {
 #define save_and_next(ls) (save(ls, ls->current), next(ls))
 
 
-// OFFSET: %0x00437430
+// OFFSET: 0x0042D000
 static void save (LexState *ls, int c) {
   Mbuffer *b = ls->buff;
   if (b->n + 1 > b->buffsize) {
@@ -62,7 +62,7 @@ static void save (LexState *ls, int c) {
 }
 
 
-// OFFSET: %0x004374B0
+// INLINED
 void luaX_init (lua_State *L) {
   int i;
   for (i=0; i<NUM_RESERVED; i++) {
@@ -103,7 +103,7 @@ static const char *txtToken (LexState *ls, int token) {
 }
 
 
-// OFFSET: %0x00437560
+// INLINED
 void luaX_lexerror (LexState *ls, const char *msg, int token) {
   char buff[MAXSRC];
   luaO_chunkid(buff, getstr(ls->source), MAXSRC);
@@ -114,7 +114,7 @@ void luaX_lexerror (LexState *ls, const char *msg, int token) {
 }
 
 
-// OFFSET: %0x00437600
+// INLINED
 void luaX_syntaxerror (LexState *ls, const char *msg) {
   luaX_lexerror(ls, msg, ls->t.token);
 }
@@ -203,7 +203,7 @@ static void trydecpoint (LexState *ls, SemInfo *seminfo) {
 
 
 /* LUA_NUMBER */
-// OFFSET: %0x004378D0
+// OFFSET: 0x0042D4A0
 static void read_numeral (LexState *ls, SemInfo *seminfo) {
   lua_assert(isdigit(ls->current));
   do {
@@ -220,7 +220,7 @@ static void read_numeral (LexState *ls, SemInfo *seminfo) {
 }
 
 
-// OFFSET: %0x004379D0
+// OFFSET: 0x0042D5A0
 static int skip_sep (LexState *ls) {
   int count = 0;
   int s = ls->current;
@@ -347,7 +347,7 @@ static void read_string (LexState *ls, int del, SemInfo *seminfo) {
 }
 
 
-// OFFSET: %0x004381F0
+// OFFSET: 0x0042DDC0
 static int llex (LexState *ls, SemInfo *seminfo) {
   luaZ_resetbuffer(ls->buff);
   for (;;) {

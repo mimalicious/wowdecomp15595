@@ -71,7 +71,7 @@ static void removeentry (Node *n) {
 }
 
 
-// OFFSET: %0x004337D0
+// OFFSET: 0x004292F0
 static void reallymarkobject (global_State *g, GCObject *o) {
   lua_assert(iswhite(o) && !isdead(g, o));
   white2gray(o);
@@ -163,7 +163,7 @@ size_t luaC_separateudata (lua_State *L, int all) {
 }
 
 
-// OFFSET: %0x00433960
+// OFFSET: 0x00429480
 static int traversetable (global_State *g, Table *h) {
   int i;
   int weakkey = 0;
@@ -289,7 +289,7 @@ static void traversestack (global_State *g, lua_State *l) {
 ** traverse one gray object, turning it to black.
 ** Returns `quantity' traversed.
 */
-// OFFSET: %0x00433D80
+// OFFSET: 0x004298A0
 static l_mem propagatemark (global_State *g) {
   GCObject *o = g->gray;
   lua_assert(isgray(o));
@@ -454,7 +454,7 @@ static lu_mem sizeobj (GCObject *o) {
 }
 
 
-// OFFSET: %0x004340F0
+// OFFSET: 0x00429C10
 static void updatesizes (lua_State *L, GCObject *o) {
   for (; o; o = o->gch.next) {
     const char *tag = o->gch.taint;
@@ -480,7 +480,7 @@ static void updatesizes (lua_State *L, GCObject *o) {
 }
 
 
-// OFFSET: %0x00434160
+// OFFSET: 0x00429C80
 static void addtimetotag (lua_State *L, const char *tag, __int64 time) {
   global_State *g = G(L);
   GCTime *t;
@@ -512,7 +512,7 @@ static void updatetimes (lua_State *L, GCObject *o) {
 #define sweepwholelist(L,p)	sweeplist(L,p,MAX_LUMEM)
 
 
-// OFFSET: %0x00434200
+// OFFSET: 0x00429D20
 static GCObject **sweeplist (lua_State *L, GCObject **p, lu_mem count) {
   GCObject *curr;
   global_State *g = G(L);
@@ -537,7 +537,7 @@ static GCObject **sweeplist (lua_State *L, GCObject **p, lu_mem count) {
 }
 
 
-// OFFSET: %0x00434290
+// OFFSET: 0x00429DB0
 static void checkSizes (lua_State *L) {
   global_State *g = G(L);
   /* check size of string hash */
@@ -594,7 +594,7 @@ void luaC_callGCTM (lua_State *L) {
 }
 
 
-// OFFSET: %0x00434440
+// INLINED
 void luaC_freeall (lua_State *L) {
   global_State *g = G(L);
   int i;
@@ -628,7 +628,7 @@ void luaC_sizeall (lua_State *L) {
 }
 
 
-// OFFSET: %0x00434530
+// INLINED
 lu_mem luaC_getsize (lua_State *L, const char *tag) {
   GCUsage *u;
   for (u = G(L)->gcusage; u; u = u->next) {
@@ -639,7 +639,7 @@ lu_mem luaC_getsize (lua_State *L, const char *tag) {
 }
 
 
-// OFFSET: %0x00434560
+// INLINED
 void luaC_timeall (lua_State *L) {
   global_State *g = G(L);
   if (g->profile) {
@@ -651,7 +651,7 @@ void luaC_timeall (lua_State *L) {
 }
 
 
-// OFFSET: %0x004345A0
+// INLINED
 double luaC_gettime (lua_State *L, const char *tag) {
   GCTime *t;
   for (t = G(L)->gctime; t; t = t->next) {
@@ -696,7 +696,7 @@ static void markmt (global_State *g) {
 
 
 /* mark root set */
-// OFFSET: %0x004346A0
+// OFFSET: 0x0042A1C0
 static void markroot (lua_State *L) {
   global_State *g = G(L);
   g->gray = NULL;
@@ -723,7 +723,7 @@ static void remarkupvals (global_State *g) {
 }
 
 
-// OFFSET: %0x00434750
+// OFFSET: 0x0042A270
 static void atomic (lua_State *L) {
   global_State *g = G(L);
   size_t udsize;  /* total size of userdata to be finalized */
@@ -755,7 +755,7 @@ static void atomic (lua_State *L) {
 }
 
 
-// OFFSET: %0x00434850
+// OFFSET: 0x0042A370
 static l_mem singlestep (lua_State *L) {
   global_State *g = G(L);
   /*lua_checkmemory(L);*/

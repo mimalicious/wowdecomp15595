@@ -499,7 +499,7 @@ static int luaB_costatus (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FFB0
+// OFFSET: 0x00A2DF40
 static int auxresume (lua_State *L, lua_State *co, int narg) {
   int status = costatus(L, co);
   if (!lua_checkstack(co, narg))
@@ -544,7 +544,7 @@ static int luaB_coresume (lua_State *L) {
 }
 
 
-// OFFSET: %0x00970100
+// OFFSET: 0x00A2E090
 static int luaB_auxwrap (lua_State *L) {
   lua_State *co = lua_tothread(L, lua_upvalueindex(1));
   int r = auxresume(L, co, lua_gettop(L));
@@ -618,7 +618,7 @@ static void auxopen (lua_State *L, const char *name,
 }
 
 
-// OFFSET: %0x00970250
+// OFFSET: 0x00A2E1E0
 static void base_open (lua_State *L) {
   /* set global _G */
   lua_pushvalue(L, LUA_GLOBALSINDEX);
@@ -641,7 +641,7 @@ static void base_open (lua_State *L) {
 }
 
 
-// OFFSET: %0x00970370
+// INLINED
 LUALIB_API int luaopen_base (lua_State *L) {
   base_open(L);
   luaL_register(L, LUA_COLIBNAME, co_funcs);

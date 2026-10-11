@@ -21,7 +21,7 @@
 
 
 
-// OFFSET: %0x004304A0
+// INLINED
 Closure *luaF_newCclosure (lua_State *L, int nelems, Table *e) {
   Closure *c = cast(Closure *, luaM_malloc(L, sizeCclosure(nelems)));
   luaC_link(L, obj2gco(c), LUA_TFUNCTION);
@@ -38,7 +38,7 @@ Closure *luaF_newCclosure (lua_State *L, int nelems, Table *e) {
 }
 
 
-// OFFSET: %0x00430520
+// INLINED
 Closure *luaF_newLclosure (lua_State *L, int nelems, Table *e) {
   Closure *c = cast(Closure *, luaM_malloc(L, sizeLclosure(nelems)));
   luaC_link(L, obj2gco(c), LUA_TFUNCTION);
