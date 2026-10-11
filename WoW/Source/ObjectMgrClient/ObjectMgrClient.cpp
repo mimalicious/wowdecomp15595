@@ -250,6 +250,27 @@ int32_t ClntObjMgrEnumVisibleObjects(OBJECTENUMFUNC func, void* param) {
     return 1;
 }
 
+// OFFSET: 0x0048E340/0x1400B2430
+CGCorpse_C* ClntObjMgrFindCorpseByOwner(const WOWGUID& owner) {
+    if (!s_curMgr) {
+        return NULL;
+    }
+
+    for (CGObject_C* object = s_curMgr->m_visibleObjects.Head(), * next; object; object = next) {
+        next = s_curMgr->m_visibleObjects.Next(object);
+
+        if (object->m_obj->m_type & TYPEMASK_CORPSE) {
+            CGCorpse_C* corpse = static_cast<CGCorpse_C*>(object);
+
+            if (corpse->m_corpse->m_corpseFieldOwner == owner && !(corpse->m_corpse->m_corpseFieldFlags & 0x1)) {
+                return corpse;
+            }
+        }
+    }
+
+    return NULL;
+}
+
 // PROVEN: 4ea93bf0 IDENTICAL/NONE
 // OFFSET: 0x0048D190/0x1400B1000
 ObjectMgr* ClntObjMgrGetCurrent() {

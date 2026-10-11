@@ -182,6 +182,9 @@ static const char* s_talentLinkColor = "ff4e96f7";
 // STATIC: 0x00C99FAC
 static const char* s_instanceLockLinkColor = "ffff8000";
 
+// STATIC: 0x00C99FB0
+static const char* s_currencyLinkColor = "ff00aa00";
+
 // STATIC: 0x00C99FDC
 static const char* s_gemColorTokens[5] = { NULL, "META_GEM", "RED_GEM", "YELLOW_GEM", "BLUE_GEM" };
 
@@ -8473,4 +8476,17 @@ void CGTooltip::SetDefaultAnchor() {
     if (this->HasScript(this->m_onTooltipSetDefaultAnchor)) {
         this->RunScript(this->m_onTooltipSetDefaultAnchor, 0, NULL);
     }
+}
+
+// OFFSET: 0x004663A0/0x140079AB0
+const char* CGTooltip::GetCurrencyHyperlinkString(int32_t currencyId) {
+    const char* reset = *s_currencyLinkColor ? "|r" : "";
+    CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(currencyId);
+
+    if (!currency) {
+        return NULL;
+    }
+
+    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hcurrency:%d|h[%s]|h%s", s_currencyLinkColor, currencyId, static_cast<const char*>(currency->m_name), reset);
+    return s_itemLink;
 }

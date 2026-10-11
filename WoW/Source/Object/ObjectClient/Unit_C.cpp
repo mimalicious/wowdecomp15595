@@ -10388,7 +10388,7 @@ void CGUnit_C::SaveChainSpellLocation(const C3Vector* location) {
     }
 }
 
-// OFFSET: 0x005AB8A0
+// OFFSET: 0x005AB8A0/0x14021DD80
 int32_t FactionTemplateReaction(const FactionTemplateRec* faction, const FactionTemplateRec* other) {
     int32_t otherGroup = other->m_factionGroup;
 
@@ -10883,7 +10883,7 @@ CreatureSoundDataRec* CGUnit_C::GetMountSoundDataRec() const {
     return g_creatureSoundDataDB.GetRecord(modelData->m_soundID);
 }
 
-// OFFSET: 0x005B1160
+// OFFSET: 0x005B1160/0x1402243B0
 int32_t __stdcall CGUnit_C::GetRecordForTitle(int32_t maskId) {
     for (int32_t i = 0; i < g_charTitlesDB.m_numRecords; i++) {
         CharTitlesRec* rec = g_charTitlesDB.GetRecordByIndex(i);
@@ -11350,7 +11350,7 @@ uint32_t CGUnit_C::GetCurrentMountAnimId() const {
     return 0xFFFFFFFF;
 }
 
-// OFFSET: 0x005AE450
+// OFFSET: 0x005AE450/0x140220D20
 void CGUnit_C::GetCurrentAnimationInfo(M2BoneSequenceInfo* mount, M2BoneSequenceInfo* base, M2BoneSequenceInfo* torso, int32_t keepFinished) const {
     mount->m_sequenceId = 0;
     mount->m_variationIndex = 0;
@@ -18523,7 +18523,7 @@ void CGUnit_C::PlayEmoteAnimation(uint32_t emote, int32_t force, int32_t ignoreC
     }
 }
 
-// OFFSET: 0x005BA050
+// OFFSET: 0x005BA050/0x14022E2F0
 void CGUnit_C::RequestTalkEmote(int32_t index) {
     if (!s_talkEmotes[index]) {
         return;
@@ -18612,7 +18612,7 @@ uint8_t CGUnit_C::GetActivePlayerFieldBytes0() {
     return static_cast<CGPlayer_C*>(this)->m_player->m_playerFieldBytes[0];
 }
 
-// OFFSET: 0x005C2670
+// OFFSET: 0x005C2670/0x140238900
 void CGUnit_C::InsertSortedAura(uint32_t list, uint32_t auraIndex, int32_t position) {
     AuraData* aura = auraIndex < this->GetAuraCount() ? &this->m_auras[auraIndex] : NULL;
     WOWGUID player = ClntObjMgrGetActivePlayer();
@@ -20855,7 +20855,7 @@ void CGUnit_C::ChatBubbleShow(int32_t type, const char* text) {
     }
 }
 
-// OFFSET: 0x005B3210
+// OFFSET: 0x005B3210/0x14075F890
 bool CGUnit_C::IsTracked() const {
     return CGMinimapFrame::IsTrackingNPC(this->m_unit->m_unitNpcFlags);
 }
@@ -24613,4 +24613,33 @@ int32_t CGUnit_C::GetHighestThreatExcluding(const WOWGUID& guid) const {
     }
 
     return highest;
+}
+
+// OFFSET: 0x005C7E80/0x14023F470
+bool CGUnit_C::FlyingMountAllowed(bool checkContinent) const {
+    uint32_t flags = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? CGGameUI::m_areaMountFlags : const_cast<CGUnit_C*>(this)->GetMountFlags();
+
+    if (!(flags & 0x2)) {
+        return false;
+    }
+
+    if ((this->m_obj->m_type & TYPEMASK_PLAYER) && checkContinent) {
+        bool known;
+
+        if (CGGameUI::m_iCurrentMapID == 571) {
+            known = HasSpell(static_cast<uint32_t>(54197));
+        } else {
+            if (static_cast<uint32_t>(CGGameUI::m_iCurrentMapID) >= 2 && CGGameUI::m_iCurrentMapID != 646) {
+                return true;
+            }
+
+            known = HasSpell(static_cast<uint32_t>(90267));
+        }
+
+        if (!known) {
+            return false;
+        }
+    }
+
+    return true;
 }
