@@ -615,7 +615,7 @@ void DBCache<T, TKey, THashKey>::AddItems(CDataStore* msg, bool single) {
     } while (--count);
 }
 
-// OFFSET: [#0x0067DAD0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004AE740<QuestCache, int, HASHKEY_INT>, 0x004AF2A0<PetNameCache, int, HASHKEY_INT>, 0x004AF7D0<CGPetition, int, HASHKEY_INT>, 0x004AFD40<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004B09C0<ArenaTeamCache, int, HASHKEY_INT>, 0x004B0F00<DanceCache, int, HASHKEY_INT>, #0x0067FC90]
+// OFFSET: [0x004AE1B0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004AE740<QuestCache, int, HASHKEY_INT>, 0x004AF2A0<PetNameCache, int, HASHKEY_INT>, 0x004AF7D0<CGPetition, int, HASHKEY_INT>, 0x004AFD40<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004B09C0<ArenaTeamCache, int, HASHKEY_INT>, 0x004B0F00<DanceCache, int, HASHKEY_INT>, #0x0067FC90]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::AddItem(T* item, TKey key) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);
