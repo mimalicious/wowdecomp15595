@@ -144,7 +144,6 @@ int32_t Packet_MSG_QUERY_NEXT_MAIL_TIME(void* param, NETMESSAGE msgId, uint32_t 
 int32_t Packet_SMSG_RECEIVED_MAIL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_SHOW_MAILBOX(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 
-MailAttachmentInfo* GetFirstAttachment(MailboxMessageInfo* message);
 MailAttachmentInfo* GetAttachment(MailboxMessageInfo* message, uint32_t index);
 MailAttachmentInfo* GetInboxAttachment(uint32_t index, uint32_t attachment);
 uint32_t GetNumAttachments(const MailboxMessageInfo* message);

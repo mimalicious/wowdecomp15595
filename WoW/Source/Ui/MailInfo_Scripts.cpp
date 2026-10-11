@@ -410,7 +410,7 @@ static int32_t Script_GetInboxHeaderInfo(lua_State* L) {
     }
 
     uint32_t numAttachments = GetNumAttachments(message);
-    MailAttachmentInfo* attachment = numAttachments == 1 ? GetFirstAttachment(message) : NULL;
+    MailAttachmentInfo* attachment = numAttachments == 1 ? CGMailInfo::GetFirstAttachment(message) : NULL;
     const char* iconPath = ClientDBStringLookup(3);
     SStrPrintf(s_headerTexture, sizeof(s_headerTexture), "%s%s", iconPath, *iconPath ? "\\" : "");
     PackageRec* package = message->m_package ? g_packageDB.GetRecord(message->m_package) : NULL;
