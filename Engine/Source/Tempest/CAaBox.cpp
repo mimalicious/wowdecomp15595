@@ -53,11 +53,6 @@ bool CAaBox::IntersectsExclusive(const CAaBox& box) const {
     return this->t.x > box.b.x && this->t.y > box.b.y && this->t.z > box.b.z && box.t.x > this->b.x && box.t.y > this->b.y && box.t.z > this->b.z;
 }
 
-// OFFSET: #0x007AE2B0
-bool CAaBox::IntersectsXY(const CAaBox& box) const {
-    return this->t.x >= box.b.x && this->t.y >= box.b.y && this->b.x <= box.t.x && this->b.y <= box.t.y;
-}
-
 // OFFSET: 0x004CE3F0/0x14010A360
 CAaBox CAaBox::Transform(const CAaBox& box, const C44Matrix& m) {
     const C3Vector& translation = *reinterpret_cast<const C3Vector*>(&m.d0);

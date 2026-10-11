@@ -191,16 +191,6 @@ void __fastcall CShadowCache::NotifyTexturesRecreate() {
     CShadowCache::s_recreateTextures = 1;
 }
 
-// OFFSET: #0x00873F50
-uint32_t CShadowCache::GetMaxShadowMode() {
-    return NUM_SHADOW_MODES - 1;
-}
-
-// OFFSET: #0x00873FF0
-uint32_t CShadowCache::GetShadowValue() {
-    return CShadowCache::GetShadowMode();
-}
-
 // PROVEN: 1aebd967 IDENTICAL/NONE
 // OFFSET: 0x004353E0
 void CShadowCache::SetDebugParams(float aspect, int32_t level) {

@@ -96,16 +96,6 @@ bool Blizzard::Streaming::IsStreamingMode() {
     return Blizzard::Streaming::s_streamingReady;
 }
 
-// OFFSET: #0x00437A00
-void Blizzard::Time::GetElapsedSinceStart(bool start) {
-    // STATIC: #0x00B38A48
-    static Blizzard::Time::Timestamp s_startTime = Blizzard::Time::GetTimestamp();
-
-    if (!start) {
-        Blizzard::Streaming::s_elapsedSinceStart = Blizzard::Time::GetTimestamp() - s_startTime;
-    }
-}
-
 // INLINED
 Blizzard::Streaming::DownloadProgress::DownloadProgress() {
     this->ResetTime();

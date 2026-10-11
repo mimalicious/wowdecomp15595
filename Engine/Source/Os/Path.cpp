@@ -67,11 +67,6 @@ char* IOsPathFindExtension(char* path, int32_t offset) {
     }
 }
 
-// OFFSET: #0x0086BD60
-char* OsPathFindExtensionWithoutDot(char* path) {
-    return IOsPathFindExtension(path, 1);
-}
-
 // OFFSET: 0x008760A0
 const char* OsPathFindFilename(const char* path) {
     const char* filename = path;

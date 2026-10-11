@@ -78,7 +78,6 @@ class SFile {
     static void STORMAPI EnableHash(bool enable);
     static int32_t STORMAPI FileExists(const char* name);
     static int32_t STORMAPI FileExistsEx(const char* name, uint32_t flags);
-    static int32_t STORMAPI FileExistsInArchives(const char* name);
     static bool STORMAPI FileGetIsLocalAmount(const char* name, int64_t& local, int64_t& total);
     static void STORMAPI FileGetIsLocalAmount(SFileImpl* file, int64_t& local, int64_t& total);
     static int32_t STORMAPI FileHasHigherPriority(const char* name, const char* extension, uint32_t size);

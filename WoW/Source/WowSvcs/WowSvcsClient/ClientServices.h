@@ -59,7 +59,6 @@ class ClientConnection : public RealmConnection {
     void Connect();
     int32_t Disconnect(DISCONNECT_REASON reason);
     void HandleAuthResult(int32_t result);
-    int32_t EnumerateCharacters(void (*callback)(CHARACTER_INFO& info, void* param), void* param);
     void GetCharacterList();
     void RequestCharacterCreate(const CHARACTER_CREATE_INFO& info);
     void RequestCharacterDelete(WOWGUID guid);

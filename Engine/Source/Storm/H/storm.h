@@ -282,7 +282,6 @@ int32_t STORMAPI zlib_uncompress(uint8_t* dest, uint32_t* destLen, const uint8_t
 
 int32_t StormCallService(int32_t selector, ...);
 void STORMAPI StormDestroy();
-STORM_NORETURN void StormExit(int32_t code);
 STORM_NORETURN void StormExitProcess(int32_t code);
 HINSTANCE__* STORMAPI StormGetInstance();
 void STORMAPI StormInitialize();

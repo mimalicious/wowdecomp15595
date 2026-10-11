@@ -113,7 +113,6 @@ class CCharacterComponent {
     static void FreeComponent(CCharacterComponent* component);
     static CCharacterComponent* GetClosestComponent();
     static int32_t GetClosestComponentSortVal();
-    static INVENTORY_SLOTS GetInvSlotForItemSlot(ITEM_SLOT itemSlot);
     static INVENTORY_SLOTS GetInvSlotForInvType(INVENTORY_TYPES invType);
     static ITEM_SLOT GetItemSlotForInvSlot(INVENTORY_SLOTS invSlot);
     static ITEM_SLOT GetItemSlotForInvType(INVENTORY_TYPES invType);

@@ -22,7 +22,6 @@ class CAaBox {
     bool ContainsPointExclusive(const C3Vector& point) const;
     bool Intersects(const CAaBox& box) const;
     bool IntersectsExclusive(const CAaBox& box) const;
-    bool IntersectsXY(const CAaBox& box) const;
     bool IsEmpty() const;
     bool IsInverted() const;
     bool IsNonDegenerate() const;

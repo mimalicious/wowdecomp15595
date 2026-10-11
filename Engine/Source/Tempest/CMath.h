@@ -8,17 +8,14 @@
 class CMath {
     public:
     static float cos_(float x);
-    static double exp_(float x);
     static double exp2_(double x);
     static bool fequal(float a, float b);
     static int32_t fint_(float f);
     static int32_t fint_n(float f);
     static int32_t fuint8_n(float f);
-    static int32_t ftrunc(float f);
     static int32_t ftol_round_0_255_(float f);
     static double log2_(double x);
     static bool fnotequal(float a, float b);
-    static float normalizeAnglePi(float angle);
     static float normalizeAngleNegPiToPi_(float angle);
     static float normalizeangle0to2pi_(float angle);
     static float sin_(float x);
@@ -60,7 +57,6 @@ int32_t FloatToInt64(float value);
 int32_t RoundToInt64(float value);
 void ClampInPlace(float& value, float min, float max);
 bool fnotequal(float a, float b);
-int32_t IsNaN(double value);
 int32_t IsFinite(double value);
 
 float OrganicSmooth(float from, float to, float t);

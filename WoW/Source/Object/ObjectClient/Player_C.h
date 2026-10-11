@@ -341,7 +341,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     int16_t GetSkillModifier(int32_t index) const;
     uint16_t GetSkillStep(int32_t index) const;
     int32_t GetCharacterPoints(int32_t index) const;
-    int32_t GetSkillLineForSlot(int32_t hand);
     int32_t GetEquipBypassSkill(uint32_t index) const;
     uint32_t GetEquippedAmmoDisplayId() const;
     bool GetExpandedSkillRank(int32_t skillId, int32_t& rank, int32_t& bonus) const;
@@ -398,7 +397,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void RemoveItemPassive(int32_t spellId);
     void AddCategoryCooldown(int32_t category, int32_t cooldown);
     void LootMoney();
-    void PutLootInSlot(WOWGUID bagGuid, uint8_t slot, uint8_t lootSlot);
     void QueueItemEnchantTime(WOWGUID item, int32_t slot, int32_t duration);
     void ReadItem(WOWGUID guid, uint8_t slot);
     void SetFarSightFocus(CGObject_C* object);
@@ -427,7 +425,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void UpdateXRayVision(const SpellRec* spell);
     static int32_t XRayVisionEffectProc(WOWGUID guid, void* param);
     bool ToggleFarSight(CGObject_C* object);
-    void UpdateAttackPosition(const CGUnit_C* target);
     void UpdateQuestStatus(CGObject_C* object);
     void UpdateTaxiStatus(CGUnit_C* unit);
     void HandleRepopRequest(bool a2);
@@ -445,7 +442,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     float CalcRewardHonor(float honor);
     float GetQuestXPMultiplier();
     int32_t CanUseItem(const ItemRecSparse* stats, int32_t& error);
-    static void BuyItem(WOWGUID vendor, const VendorItem* item, uint32_t count, uint8_t a5);
     void DelKnownSpell(int32_t spellId, int32_t silent);
     bool VehicleAllowsInteraction() const;
     void SetAutoLoot(int32_t autoLoot);
@@ -616,11 +612,8 @@ int32_t Packet_SMSG_TALENTS_INFO(void* param, NETMESSAGE msgId, uint32_t time, C
 int32_t Packet_SMSG_QUEST_POI_QUERY_RESPONSE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_DEBUG_SERVER_GEO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_QUEST_FORCE_REMOVE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Player_C_SetPlayerRenderDisabled(int32_t disabled);
 int32_t Player_C_TogglePlayerRender();
 void SetAttackSwingError(int32_t error);
-void __stdcall SignalPlayerAttackEvent(int32_t a1);
-void SignalPlayerSkillStatEvents();
 void PlayerSignalSkillStatChanges();
 void SendQuestGiverStatusMultipleQuery();
 int32_t SignalPetSpellPowerUpdate(WOWGUID guid);

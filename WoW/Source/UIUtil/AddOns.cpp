@@ -109,15 +109,6 @@ uint32_t GetCodeInterfaceVersion() {
     return 30300;
 }
 
-// OFFSET: #0x005F4C20
-uint32_t GetDataInterfaceVersion() {
-    if (!s_dataInterfaceVersion) {
-        ReadDataInterfaceVersion();
-    }
-
-    return s_dataInterfaceVersion;
-}
-
 // OFFSET: #0x005F4C40
 char* AddOnUnloadableToken(UIADDON_LOADABLE_REASON reason, UIADDON_LOADABLE_REASON dependencyReason, char* buffer, uint32_t size) {
     if (reason) {

@@ -322,11 +322,6 @@ float CMath::normalizeAngleNegPiToPi_(float angle) {
     return result;
 }
 
-// OFFSET: #0x006E9360
-int32_t IsNaN(double value) {
-    return _isnan(value);
-}
-
 // OFFSET: 0x00585370
 int32_t IsFinite(double value) {
     return _finite(value);
@@ -368,11 +363,6 @@ uint32_t CMath::fuint_pi(float f) {
     }
 
     return static_cast<uint32_t>(f);
-}
-
-// OFFSET: #0x00577370
-int32_t CMath::ftrunc(float f) {
-    return static_cast<int32_t>(f);
 }
 
 // OFFSET: 0x004319B0
@@ -423,24 +413,6 @@ void ClampInPlace(float& value, float min, float max) {
 // OFFSET: 0x004CD5C0
 bool CMath::fnotequal(float a, float b) {
     return !CMath::fequal(a, b);
-}
-
-// OFFSET: #0x007156C0
-float CMath::normalizeAnglePi(float angle) {
-    if (angle > 3.1415927f) {
-        return static_cast<float>(fmod(static_cast<double>(angle + 3.1415927f), static_cast<double>(6.2831855f)) - 3.1415927f);
-    }
-
-    if (angle < -3.1415927f) {
-        return static_cast<float>(fmod(static_cast<double>(angle - 3.1415927f), static_cast<double>(6.2831855f)) + 3.1415927f);
-    }
-
-    return angle;
-}
-
-// OFFSET: #0x00783B10
-double CMath::exp_(float x) {
-    return CMath::exp2_(x * 1.442695f);
 }
 
 // PROVEN: 5657e8d9 IDENTICAL/NONE

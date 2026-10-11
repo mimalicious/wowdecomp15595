@@ -15,7 +15,6 @@ void LoadAddOnEnableState(const char* character);
 void ShutdownAddOns();
 
 uint32_t GetCodeInterfaceVersion();
-uint32_t GetDataInterfaceVersion();
 int32_t GetAddOnEnableState(const char* name, const char* character, bool compute);
 bool IsAddOnLoadable(const char* name, bool demandLoad, UIADDON_LOADABLE_REASON& reason, UIADDON_LOADABLE_REASON& dependencyReason, const char* character);
 bool IsAddOnLoaded(const char* name);

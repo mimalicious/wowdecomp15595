@@ -655,27 +655,6 @@ static int32_t OnUpdatePlayerFacialStyle(WOWGUID guid, uint32_t fieldOffset, uin
     return 1;
 }
 
-// OFFSET: #0x006E1BB0
-static int32_t GuildIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (player) {
-        player->OnGuildChanged(1);
-
-        if (guid == ClntObjMgrGetActivePlayer()) {
-            CGGuildInfo::QueryPermissions();
-
-            if (CGMerchantInfo::m_merchant) {
-                FrameScript_SignalEvent(SCRIPT_EVENT_MERCHANT_UPDATE, NULL);
-            }
-
-            CGGuildBankInfo::ClearContents();
-        }
-    }
-
-    return 1;
-}
-
 // PROVEN: 85b4f868 IDENTICAL/NONE
 // OFFSET: 0x005676C0/0x1401C6040
 static int32_t OnUpdatePlayerFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
@@ -1139,18 +1118,6 @@ void CGPlayer_C::SaveBindPoint(CDataStore* msg) {
 // OFFSET: 0x005547A0/0x1401B0AE0
 uint32_t CGPlayer_C::GetBindAreaID() {
     return s_bindAreaId;
-}
-
-// OFFSET: #0x006CEF20
-void __stdcall SignalPlayerAttackEvent(int32_t a1) {
-    FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_ATTACK, "%s", "player");
-}
-
-// OFFSET: #0x006CEF40
-void SignalPlayerSkillStatEvents() {
-    FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_ATTACK, "%s", "player");
-    FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_DEFENSE, "%s", "player");
-    FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_RANGED_ATTACK_POWER, "%s", "player");
 }
 
 // OFFSET: 0x00554820
@@ -1955,14 +1922,6 @@ void CGPlayer_C::QueueItemEnchantTime(WOWGUID item, int32_t slot, int32_t durati
     expiration->m_duration = duration;
 }
 
-// OFFSET: #0x006CEE50
-int32_t Player_C_SetPlayerRenderDisabled(int32_t disabled) {
-    int32_t previous = s_playerRenderDisabled;
-    s_playerRenderDisabled = disabled;
-
-    return previous;
-}
-
 // OFFSET: 0x0055C390
 void __stdcall CGPlayer_C::OnTaxiNodeStatus(CDataStore* msg) {
     WOWGUID guid = WOWGUID();
@@ -2116,17 +2075,6 @@ void CGPlayer_C::AutoBankItem(WOWGUID bagGuid, uint32_t slot) {
     msg.Put(static_cast<uint32_t>(CMSG_AUTOBANK_ITEM));
     msg.Put(bagIndex);
     msg.Put(static_cast<uint8_t>(slot));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x006D2CA0
-void CGPlayer_C::PutLootInSlot(WOWGUID bagGuid, uint8_t slot, uint8_t lootSlot) {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_STORE_LOOT_IN_SLOT));
-    msg.Put(this->FindSlotIndex(bagGuid));
-    msg.Put(slot);
-    msg.Put(lootSlot);
     msg.Finalize();
     ClientServices::Send2(&msg);
 }
@@ -2307,34 +2255,6 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverStatusMultiple(CDataStore* msg) {
     }
 
     return 1;
-}
-
-// OFFSET: #0x006D4AD0
-void CGPlayer_C::UpdateAttackPosition(const CGUnit_C* target) {
-    s_attackSwingError = 0;
-    s_attackSwingErrorTime = FrameTime::s_curTimeMs;
-
-    if (!target) {
-        return;
-    }
-
-    float range = this->m_unit->m_unitFieldCombatreach + target->m_unit->m_unitFieldCombatreach + 1.3333334f;
-
-    if (range < 5.0f) {
-        range = 5.0f;
-    }
-
-    range *= 4.0f;
-
-    C3Vector targetPosition = target->GetPosition();
-    C3Vector position = this->GetPosition();
-    float dx = position.x - targetPosition.x;
-    float dy = position.y - targetPosition.y;
-    float dz = position.z - targetPosition.z;
-
-    if (range * range <= dx * dx + dz * dz + dy * dy) {
-        this->StopAttack(true);
-    }
 }
 
 // OFFSET: 0x00554540/0x1401B05D0
@@ -8723,23 +8643,6 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverSendQuest(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006D2DE0
-void CGPlayer_C::BuyItem(WOWGUID vendor, const VendorItem* item, uint32_t count, uint8_t a5) {
-    if (!item) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_BUY_ITEM));
-    msg.Put(vendor.m_guid);
-    msg.Put(static_cast<uint32_t>(item->m_itemID));
-    msg.Put(static_cast<uint32_t>(item->m_slot));
-    msg.Put(count);
-    msg.Put(a5);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
 // OFFSET: 0x005616D0/0x1401BF5E0
 int32_t CGPlayer_C::CanUseItem(const ItemRecSparse* stats, int32_t& error) {
     error = ERR_MAX_VALUE;
@@ -11234,31 +11137,6 @@ uint32_t CGPlayer_C::GetSkillValue(int32_t index) const {
     }
 
     return value;
-}
-
-// OFFSET: #0x006D6660
-int32_t CGPlayer_C::GetSkillLineForSlot(int32_t hand) {
-    int32_t spell = 0;
-
-    if (hand < 3) {
-        const CGUnitVirtualItem* item = this->GetVirtualItem(hand, false);
-
-        if (!item || item->m_classID == 2) {
-            uint32_t subclass = item ? item->m_subclassID : ClientDBGetUnarmedWeapon();
-
-            if (subclass < s_weaponSkills.Count()) {
-                spell = s_weaponSkills.m_data[subclass];
-            }
-        }
-    }
-
-    SkillLineAbilityRec* ability = SpellTableLookupAbility(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], spell);
-
-    if (ability && ability->m_spell == spell) {
-        return ability->m_skillLine;
-    }
-
-    return 0;
 }
 
 // OFFSET: 0x00553E40/0x1401AEF20

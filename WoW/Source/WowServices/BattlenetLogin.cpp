@@ -41,12 +41,6 @@ bool BattlenetLogin::s_toolPatch;
 // STATIC: 0x00DDA018
 char BattlenetLogin::s_monolithicPlatform[5];
 
-// OFFSET: #0x008C51D0
-void BattlenetAssert(const char* message, const char* file, int32_t line) {
-    SErrDisplayErrorFmt(0x85100000, file ? file : "", line, 0, 1, "Internal Battle.net Error: %s", message ? message : "");
-    abort();
-}
-
 // PROVEN: 0fdc9e0a IDENTICAL/NONE
 // OFFSET: 0x006273B0/0x1402B9400
 void* BattlenetAllocator::Alloc(uint32_t size) {

@@ -743,17 +743,6 @@ int32_t STORMAPI SFile::IsArchiveComplete(SArchive* archive) {
     return Blizzard::Mopaq::IsArchiveComplete(archive->m_archive);
 }
 
-// OFFSET: #0x00421FC0
-int32_t STORMAPI SFile::FileExistsInArchives(const char* name) {
-    int32_t result = Blizzard::Mopaq::SFileFileExists(NULL, name, 0, NULL);
-
-    if (result) {
-        SErrSetLastError(2);
-    }
-
-    return result;
-}
-
 // PROVEN: 1ededb30 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5AF0/0x14049A8C0
 int32_t STORMAPI SFileLoadFileEx(SArchive* archive, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags, SOVERLAPPED* overlapped) {

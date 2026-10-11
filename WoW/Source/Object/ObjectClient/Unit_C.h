@@ -234,7 +234,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void AddHandItem(int32_t hand);
     void ClearWeaponTrail(int32_t hand);
     float GetMeleeChanceToCrit() const;
-    float GetHealthRegenRateFromSpirit() const;
     float GetManaRegenRateFromSpirit() const;
     CGUnit_C* GetVehicleUnit() const;
     void SetWeaponTrail(CM2Model* model, uint32_t hand);
@@ -799,7 +798,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void StartFlash(const CImVector& color, uint32_t delay, uint32_t duration);
     bool AnimSuppressesMovement() const;
     CAaBox GetStandBox() const;
-    uint32_t GetHappinessIndex() const;
     bool DoNotPlayWoundAnim() const;
     void CreateFishingLineEffect();
     void SaveChainSpellTargets(const TSStackArray<WOWGUID>& targets);
@@ -1282,9 +1280,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void AddWorldDamageText(const WOWGUID& source, int32_t amount, const SpellRec* spell, bool crit, bool periodic, bool spellColor);
     void UpdateSpellCastBars();
     void OnChannelUpdate(uint32_t remaining);
-    void ClearUIChannel();
     void RemoveChannelEffects(int32_t spellId);
-    void DelayCast(int32_t delay);
     void SetUICastingDirect(const SpellRec* spell, const WOWGUID& target, uint32_t start, uint32_t end);
     void SetUIChannelDirect(const SpellRec* spell, uint32_t start, uint32_t end);
     void UpdateChainTargets(const TSStackArray<WOWGUID>& targets, int32_t spellId);

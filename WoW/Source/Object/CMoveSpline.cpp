@@ -4,29 +4,6 @@
 #include "WoW/Source/Object/CClientMoveUpdate.h"
 #include "WoW/Source/Object/Types.h"
 
-// OFFSET: #0x004F4A50
-void CMoveSpline::Skip(CDataStore* msg) {
-    uint32_t flags = 0;
-    msg->Get(flags);
-
-    uint32_t faceSize = 0;
-
-    if (flags & SPLINEFLAG_FINAL_ANGLE) {
-        faceSize = 4;
-    } else if (flags & SPLINEFLAG_FINAL_TARGET) {
-        faceSize = 8;
-    } else if (flags & SPLINEFLAG_FINAL_POINT) {
-        faceSize = 12;
-    }
-
-    void* data;
-    msg->GetDataInSitu(data, faceSize + 28);
-
-    uint32_t count = 0;
-    msg->Get(count);
-    msg->GetDataInSitu(data, 12 * count + 13);
-}
-
 // OFFSET: #0x004D4EA0
 CMoveSpline::CMoveSpline() {
     this->m_finalDestination.x = 0.0f;

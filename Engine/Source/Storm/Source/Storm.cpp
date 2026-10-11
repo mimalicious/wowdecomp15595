@@ -47,12 +47,6 @@ HINSTANCE STORMAPI StormGetInstance() {
     return GetModuleHandleA(NULL);
 }
 
-// OFFSET: #0x00773A40
-void StormExit(int32_t code) {
-    s_exitcode = code;
-    exit(code);
-}
-
 // PROVEN: 1a673566 DIFFERENT/IDENTICAL
 // OFFSET: 0x004B89F0/0x1400F10C0
 void StormExitProcess(int32_t code) {

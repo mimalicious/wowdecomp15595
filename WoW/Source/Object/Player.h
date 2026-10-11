@@ -30,7 +30,6 @@ class CGPlayer {
     PlayerQuestLogEntry* GetQuestLogEntryByID(int32_t questId) const;
     uint32_t GetBuybackPrice(uint32_t slot);
     bool HasPvpMedal(uint8_t medal);
-    bool HasAuraVision(uint8_t vision);
     static const uint32_t s_mirrorFields[299];
     static const uint32_t s_localMirrorFields[805];
 

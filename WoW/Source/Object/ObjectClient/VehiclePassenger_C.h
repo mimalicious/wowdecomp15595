@@ -151,10 +151,7 @@ class CVehiclePassenger_C {
     int32_t CheckForVehicleTransitionAnimTimeout();
     void OnUpdateTransport(WOWGUID transport, uint8_t seat, CGUnit_C* vehicle, int32_t deferred);
 
-    int32_t ChooseSeatExitAnim(uint32_t flags, uint32_t* anim) const;
     int32_t GetUpperAnim(const VehicleSeatRec* seat) const;
-    void StopBoneAnimIfSameBone(WOWGUID guid, const VehicleSeatRec* seat);
-    int32_t PickHighPriorityAnimation(int32_t a2, uint32_t* anim) const;
     C3Vector ComputeInterpolatedUnitPosition() const;
     int32_t IsInTransitionMotion() const;
     int32_t IsEntering() const;

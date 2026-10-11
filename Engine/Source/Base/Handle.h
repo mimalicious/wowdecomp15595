@@ -15,7 +15,6 @@ class CHandleObject {
 };
 
 void HandleClose(HOBJECT handle);
-int32_t HandleCompare(HOBJECT a, HOBJECT b);
 HOBJECT HandleCreate(CHandleObject* ptr, const char* handleName);
 CHandleObject* HandleDereference(HOBJECT handle);
 void HandleDestroy();

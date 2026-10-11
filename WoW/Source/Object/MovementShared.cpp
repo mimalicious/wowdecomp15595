@@ -680,38 +680,6 @@ float CMovementShared::GetModifiedSplineDuration() const {
     return this->m_spline->m_duration * this->m_spline->m_durationMod;
 }
 
-// OFFSET: #0x006E9870
-NETMESSAGE CMovementShared::GetMoveEventMsgId(uint32_t oldFlags, int32_t ignoreJump) const {
-    uint32_t flags = this->m_flags;
-    uint32_t changed = flags ^ oldFlags;
-
-    if (changed & (MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_BACKWARD)) {
-        if (flags & MOVEMENTFLAG_FORWARD) {
-            return MSG_MOVE_START_FORWARD;
-        }
-
-        return (flags & MOVEMENTFLAG_BACKWARD) ? MSG_MOVE_START_BACKWARD : MSG_MOVE_STOP;
-    }
-
-    if (changed & (MOVEMENTFLAG_STRAFE_LEFT | MOVEMENTFLAG_STRAFE_RIGHT)) {
-        if (flags & MOVEMENTFLAG_STRAFE_LEFT) {
-            return MSG_MOVE_START_STRAFE_LEFT;
-        }
-
-        return (flags & MOVEMENTFLAG_STRAFE_RIGHT) ? MSG_MOVE_START_STRAFE_RIGHT : MSG_MOVE_STOP_STRAFE;
-    }
-
-    if ((flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_fallVelocity && !ignoreJump) {
-        return MSG_MOVE_JUMP;
-    }
-
-    if (changed & MOVEMENTFLAG_SWIMMING) {
-        return (flags & MOVEMENTFLAG_SWIMMING) ? MSG_MOVE_START_SWIM : MSG_MOVE_STOP_SWIM;
-    }
-
-    return MSG_MOVE_STOP;
-}
-
 // PROVEN: b5ee02dd IDENTICAL/NONE
 // OFFSET: 0x00A20400
 void CMovementShared::Hover(int32_t enable) {
@@ -810,15 +778,6 @@ int32_t CMovementShared::IsSplineFlyerOrFlyingOrSwimming() const {
     return (this->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) != 0;
 }
 
-// OFFSET: #0x00716110
-C3Vector CMovementShared::GetDestination() const {
-    if (this->m_spline) {
-        return this->m_spline->m_finalDestination;
-    }
-
-    return this->m_position;
-}
-
 // OFFSET: #0x0071C660
 int32_t CMovementShared::IsSplineFlyerOrSwimmingOrSafeFalling() const {
     if (this->IsGravityDisabled()) {
@@ -826,15 +785,6 @@ int32_t CMovementShared::IsSplineFlyerOrSwimmingOrSafeFalling() const {
     }
 
     return (this->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_SAFE_FALL)) != 0;
-}
-
-// OFFSET: #0x0071C6C0
-int32_t CMovementShared::IsSplineFlyerOrHovering() const {
-    if (this->IsGravityDisabled()) {
-        return 1;
-    }
-
-    return (this->m_flags & MOVEMENTFLAG_HOVER) != 0;
 }
 
 // OFFSET: #0x0071C720

@@ -91,7 +91,6 @@ class CMovementShared : public CPassenger {
     float GetDistanceFallen() const;
     float GetFeatherFallVelocity() const;
     float GetModifiedSplineDuration() const;
-    NETMESSAGE GetMoveEventMsgId(uint32_t oldFlags, int32_t ignoreJump) const;
     void GetMoveStatus(uint32_t gameTime, int32_t changeTransport, int32_t includeFall, CMovementStatus* status) const;
     C3Vector GetPosition() const;
     void Hover(int32_t enable);
@@ -105,10 +104,8 @@ class CMovementShared : public CPassenger {
     int32_t HasFallVelocity() const;
     int32_t IsOnSpline() const;
     int32_t IsSplineFlyerOrFlyingOrSwimming() const;
-    int32_t IsSplineFlyerOrHovering() const;
     int32_t IsSplineFlyerOrHoveringFlyingOrSwimming() const;
     int32_t IsSplineFlyerOrSwimmingOrSafeFalling() const;
-    C3Vector GetDestination() const;
     void PlotAscendDescend(float dt, C3Vector* move) const;
     float PlotFacing(float dt) const;
     void PlotHorzCircularPosition(float dt, C3Vector* move) const;

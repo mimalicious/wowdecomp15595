@@ -157,11 +157,6 @@ bool CGPlayer::HasPvpMedal(uint8_t medal) {
     return (this->m_player->m_playerFieldPvpMedals & (1 << (medal - 1))) != 0;
 }
 
-// OFFSET: #0x004F72E0
-bool CGPlayer::HasAuraVision(uint8_t vision) {
-    return (reinterpret_cast<const uint8_t*>(&this->m_player->m_playerFieldBytes2)[3] & (1 << (vision - 1))) != 0;
-}
-
 // OFFSET: 0x0055E1F0
 PlayerQuestLogEntry* CGPlayer::GetQuestLogEntry(int32_t slot) const {
     if (slot < 0 || slot > 50) {

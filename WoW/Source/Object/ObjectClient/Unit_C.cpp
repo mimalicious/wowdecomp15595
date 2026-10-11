@@ -12330,25 +12330,6 @@ CAaBox CGUnit_C::GetStandBox() const {
     return box;
 }
 
-// OFFSET: #0x0071F400
-uint32_t CGUnit_C::GetHappinessIndex() const {
-    PetPersonalityRec* personality = this->GetPetPersonality();
-
-    if (!personality) {
-        return 0;
-    }
-
-    uint32_t index = 1;
-
-    while (this->m_unit->m_unitFieldPower[4] >= static_cast<uint32_t>(personality->m_happinessThreshold[index])) {
-        if (++index >= 3) {
-            break;
-        }
-    }
-
-    return index - 1;
-}
-
 // OFFSET: 0x005B8890
 const CGUnitVirtualItem* CGUnit_C::GetVirtualItem(uint32_t slot, bool ignoreDisarm) const {
     if (!this->GetVirtualItemDisplayID(slot)) {
@@ -18412,24 +18393,6 @@ const char* CGUnit_C::GetDisplayClassName(const CGUnit_C* unit, const NameCache*
     return CGUnit_C::GetDisplayClassName(unit, name, NULL);
 }
 
-// OFFSET: #0x00726220
-void CGUnit_C::ClearUIChannel() {
-    this->m_channelSpellId = 0;
-    this->m_channelStartTime = 0;
-    this->m_channelEndTime = 0;
-    this->UpdateSpellCastBars();
-}
-
-// OFFSET: #0x00726240
-void CGUnit_C::DelayCast(int32_t delay) {
-    this->m_castStartTime += delay;
-    this->m_castEndTime += delay;
-    this->m_channelSpellId = 0;
-    this->m_channelStartTime = 0;
-    this->m_channelEndTime = 0;
-    this->UpdateSpellCastBars();
-}
-
 // OFFSET: 0x005B78A0/0x14022B240
 void WriteMovementPacket(CGUnit_C* unit, CDataStore* msg) {
     if (!unit || unit->m_obj->m_guid != CGUnit_C::s_activeMover || unit->m_movement->IsOnSpline()) {
@@ -20894,17 +20857,6 @@ float CGUnit_C::GetManaRegenRateFromSpirit() const {
     int32_t spirit = this->m_unit->m_unitFieldStat[4] < 0 ? 0 : this->m_unit->m_unitFieldStat[4];
     int32_t intellect = this->m_unit->m_unitFieldStat[3] < 0 ? 0 : this->m_unit->m_unitFieldStat[3];
     return GameFormulaEvaluateTable(10, this->m_unit->m_unitFieldLevel - 1, this->m_unit->m_unitFieldBytes0[1] - 1) * sqrt(static_cast<double>(intellect)) * spirit;
-}
-
-// OFFSET: #0x0071BA60
-float CGUnit_C::GetHealthRegenRateFromSpirit() const {
-    int32_t spirit = this->m_unit->m_unitFieldStat[4] < 0 ? 0 : this->m_unit->m_unitFieldStat[4];
-    int32_t baseSpirit = spirit <= s_baseSpiritRegenCap ? spirit : s_baseSpiritRegenCap;
-    int32_t classIndex = this->m_unit->m_unitFieldBytes0[1] - 1;
-    int32_t levelIndex = this->m_unit->m_unitFieldLevel - 1;
-    float baseRatio = GameFormulaEvaluateTable(7, levelIndex, classIndex);
-    float ratio = GameFormulaEvaluateTable(9, levelIndex, classIndex);
-    return ratio * (spirit - baseSpirit) + baseSpirit * baseRatio;
 }
 
 // PROVEN: 70afced5 IDENTICAL/NONE

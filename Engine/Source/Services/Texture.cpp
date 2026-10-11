@@ -386,16 +386,6 @@ int32_t TextureGetAtlasOffsetAndScale(CTexture* texture, C2Vector& offset, float
     return 1;
 }
 
-// OFFSET: #0x004B54F0
-int32_t TextureIsOpaque(CTexture* texture) {
-    if (!texture) {
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
-    return texture->m_flags & 1;
-}
-
 // OFFSET: 0x00540D40/0x140193880
 int32_t TextureCalcMipCount(uint32_t width, uint32_t height) {
     int32_t count = 1;
@@ -529,11 +519,6 @@ void TextureGetGxTexFlags(CTexture* texture, CGxTexFlags* texFlags) {
     }
 
     *texFlags = texture->m_gxTexFlags;
-}
-
-// OFFSET: #0x004B5770
-uint32_t TextureGetBytesPerBlock(PIXEL_FORMAT format) {
-    return s_pixelFormatBytesPerBlock[format];
 }
 
 // PROVEN: 660b7d26 IDENTICAL/NONE

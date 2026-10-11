@@ -41,7 +41,6 @@ class CMoveSpline {
     /* 0214 */ TSLink<void> unk_0214;
     /* 021C */ uint32_t unk_021C;
 
-    static void Skip(CDataStore* msg);
 
     CMoveSpline();
     ~CMoveSpline();

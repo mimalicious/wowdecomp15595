@@ -18,7 +18,6 @@ class CRndSeed {
 
 class CRandom {
     public:
-    static C2Vector C2Vector_(CRndSeed& seed);
     static C3Vector C3Vector_(CRndSeed& seed);
     static uint32_t dice_(uint32_t sides, CRndSeed& seed);
     static float sfloat_(CRndSeed& seed);

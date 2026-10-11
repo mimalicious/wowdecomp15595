@@ -1196,21 +1196,6 @@ void ClientRealmResponseAdapter::CharacterListReceived(RealmConnection* connecti
     }
 }
 
-// OFFSET: #0x006B1560
-int32_t ClientConnection::EnumerateCharacters(void (*callback)(CHARACTER_INFO& info, void* param), void* param) {
-    if (!callback) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    int32_t count = this->m_characterList.Count();
-
-    for (int32_t i = 0; i < count; i++) {
-        callback(this->m_characterList.m_data[i], param);
-    }
-
-    return count;
-}
-
 // PROVEN: f56dca74 IDENTICAL/NONE
 // OFFSET: 0x004CF140
 int32_t ClientServices::ValidDisconnect(const void* connection) {

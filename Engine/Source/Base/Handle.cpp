@@ -16,11 +16,6 @@ const char* CHandleObject::GetObjectName() {
     return NULL;
 }
 
-// OFFSET: #0x0047BF20
-int32_t HandleCompare(HOBJECT a, HOBJECT b) {
-    return static_cast<int32_t>(a - b);
-}
-
 // OFFSET: 0x008722E0/0x1405A8700
 void HandleClose(HOBJECT handle) {
     CHandleObject* object = HandleDereference(handle);

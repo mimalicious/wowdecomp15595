@@ -103,18 +103,6 @@ uint32_t CRandom::dice_(uint32_t sides, CRndSeed& seed) {
     return static_cast<uint32_t>((static_cast<uint64_t>(sides) * CRandom::uint32_(seed)) >> 32);
 }
 
-// OFFSET: #0x004C1620
-C2Vector CRandom::C2Vector_(CRndSeed& seed) {
-    float angle = CRandom::ufloat_(seed) * 6.2831855f;
-    float c = cos(angle);
-    float s = sin(angle);
-
-    C2Vector result;
-    result.x = c;
-    result.y = s;
-    return result;
-}
-
 // OFFSET: 0x004C6870/0x140101AC0
 C3Vector CRandom::C3Vector_(CRndSeed& seed) {
     float c;

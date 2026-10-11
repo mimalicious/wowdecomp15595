@@ -455,17 +455,6 @@ int32_t CGInputControl::CanSyncFreeLookFacing(CGUnit_C* unit) const {
     return CGInputControl::CanControl(unit) && !(unit->m_unit->m_unitFieldFlags & 0x40000) && !unit->IsVehiclePreventingTurning() && (this->m_flags & 0x2000001) && !unit->GetClientStandState();
 }
 
-// OFFSET: #0x005FA420
-int32_t CGInputControl::IsMouseDragMoving() const {
-    int32_t result = this->IsMouseDrag(OsGetAsyncTimeMs());
-
-    if (result) {
-        return g_theGxDevicePtr->m_frameCount - this->m_lastMouseMoveFrame < 2;
-    }
-
-    return result;
-}
-
 // OFFSET: 0x00448AA0
 int32_t CGInputControl::CameraCanPitchPlayer() {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));

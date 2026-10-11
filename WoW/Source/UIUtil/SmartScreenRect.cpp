@@ -389,45 +389,6 @@ void SmartScreenRectPlace(uint32_t grid, CRect& rect) {
     *s_grids[grid].New() = rect;
 }
 
-// OFFSET: #0x00615E10
-void SmartScreenRectPositionFrame(uint32_t grid, CSimpleFrame* frame, CSimpleFrame* parent, const C3Vector& position, int32_t center) {
-    float halfWidth = frame->GetWidth();
-    float height = frame->GetHeight();
-    halfWidth = halfWidth * 0.5f;
-    float halfHeight = height * 0.5f;
-    float screenWidth = NDCToDDCWidth(1.0f);
-    float screenHeight = NDCToDDCHeight(1.0f);
-
-    CRect rect;
-    rect.minY = position.y;
-    rect.minX = position.x - halfWidth;
-    rect.maxY = position.y - height;
-    rect.maxX = position.x + halfWidth;
-    SmartScreenRectClipRect(rect);
-
-    int32_t changed;
-    C2Vector point = SmartScreenRectFindPosition(grid, rect, &changed);
-
-    float minX = halfWidth > point.x ? halfWidth : point.x;
-    point.x = screenWidth - halfWidth <= minX ? screenWidth - halfWidth : minX;
-
-    float minY = halfHeight > point.y ? halfHeight : point.y;
-    point.y = screenHeight - halfHeight <= minY ? screenHeight - halfHeight : minY;
-
-    rect.minY = point.y;
-    rect.minX = point.x - halfWidth;
-    rect.maxY = point.y - height;
-    rect.maxX = point.x + halfWidth;
-    SmartScreenRectClipRect(rect);
-
-    *s_grids[grid].New() = rect;
-
-    frame->MarkFramePointsUnused();
-    float depth = position.z - parent->m_layoutDepth;
-    frame->SetPoint(center ? FRAMEPOINT_CENTER : FRAMEPOINT_TOP, parent, FRAMEPOINT_BOTTOMLEFT, point.x, point.y, 1);
-    frame->SetFrameDepth(depth, true);
-}
-
 // OFFSET: #0x00616060
 void SmartScreenRectShutdown() {
     s_searchQueue.Clear();

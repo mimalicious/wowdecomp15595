@@ -1999,15 +1999,6 @@ int32_t CCommand_Whois(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: #0x006B5220
-void FriendListModuleLoaded() {
-    WDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_BOT_DETECTED2));
-    msg.Put(static_cast<uint32_t>(0x2BD76673));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
 // OFFSET: 0x004D4550/0x140111860
 void FriendList::SetNotes(WOWGUID guid, const char* notes) {
     uint32_t i;

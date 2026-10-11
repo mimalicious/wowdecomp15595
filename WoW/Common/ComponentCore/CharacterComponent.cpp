@@ -5630,47 +5630,6 @@ ITEM_SLOT CCharacterComponent::GetItemSlotForInvType(INVENTORY_TYPES invType) {
     }
 }
 
-// OFFSET: #0x004E7AF0
-INVENTORY_SLOTS CCharacterComponent::GetInvSlotForItemSlot(ITEM_SLOT itemSlot) {
-    switch (itemSlot) {
-        case ITEMSLOT_HEAD:
-            return INVSLOT_HEAD;
-
-        case ITEMSLOT_SHOULDER:
-            return INVSLOT_SHOULDER;
-
-        case ITEMSLOT_SHIRT:
-            return INVSLOT_BODY;
-
-        case ITEMSLOT_CHEST:
-            return INVSLOT_CHEST;
-
-        case ITEMSLOT_BELT:
-            return INVSLOT_WAIST;
-
-        case ITEMSLOT_PANTS:
-            return INVSLOT_LEGS;
-
-        case ITEMSLOT_BOOTS:
-            return INVSLOT_FEET;
-
-        case ITEMSLOT_BRACERS:
-            return INVSLOT_WRIST;
-
-        case ITEMSLOT_GLOVES:
-            return INVSLOT_HAND;
-
-        case ITEMSLOT_TABARD:
-            return INVSLOT_TABARD;
-
-        case ITEMSLOT_CAPE:
-            return INVSLOT_BACK;
-
-        default:
-            return INVSLOT_NONE;
-    }
-}
-
 // PROVEN: 48c37d5b IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CCharacterComponent::UpdateItemHU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {

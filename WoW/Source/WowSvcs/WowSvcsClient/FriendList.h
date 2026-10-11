@@ -151,7 +151,6 @@ void FriendListNameCallbackWithSort(int32_t id, const WOWGUID& guid, void* param
 void FriendListIgnoreNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 void FriendListMuteNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 void FriendListNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
-void FriendListModuleLoaded();
 void LoadEncryptedModule(const uint8_t* key, uint32_t length, void (*callback)());
 int32_t Packet_SMSG_WHO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_WHOIS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

@@ -2248,40 +2248,6 @@ void CVehiclePassenger_C::OnUpdateTransport(WOWGUID transport, uint8_t seat, CGU
     this->m_unit->VehicleCameraOnUpdateTransport(transport, seat);
 }
 
-// OFFSET: #0x007485B0
-int32_t CVehiclePassenger_C::ChooseSeatExitAnim(uint32_t flags, uint32_t* anim) const {
-    uint32_t state = this->m_state;
-
-    if (state != 3 && this->m_unit->m_unit->m_unitFieldHealth > 0) {
-        return 0;
-    }
-
-    const VehicleSeatRec* seat = this->m_seatRec;
-
-    if (!seat || state != 3 || !(seat->m_flags & 0x4)) {
-        return 0;
-    }
-
-    int32_t exitAnim;
-
-    if ((this->m_flags & 0x4) || seat->m_rideUpperAnimStart == -1) {
-        exitAnim = seat->m_rideUpperAnimLoop;
-
-        if (exitAnim == -1) {
-            return 0;
-        }
-    } else {
-        exitAnim = seat->m_rideUpperAnimStart;
-    }
-
-    if (exitAnim != ANIM_COUNT) {
-        *anim = exitAnim;
-        return 1;
-    }
-
-    return 0;
-}
-
 // OFFSET: %0x005F9AF0
 int32_t CVehiclePassenger_C::GetUpperAnim(const VehicleSeatRec* seat) const {
     if (!seat || this->m_state != 3 || !(seat->m_flags & 0x4)) {
@@ -2299,49 +2265,6 @@ int32_t CVehiclePassenger_C::GetUpperAnim(const VehicleSeatRec* seat) const {
     }
 
     return anim;
-}
-
-// OFFSET: #0x007479E0
-void CVehiclePassenger_C::StopBoneAnimIfSameBone(WOWGUID guid, const VehicleSeatRec* seat) {
-    if (guid != this->m_boneAnimGuid) {
-        return;
-    }
-
-    int32_t enterBone = seat->m_vehicleRideAnimLoopBone;
-
-    if (enterBone >= 35) {
-        enterBone = 26;
-    }
-
-    int32_t exitBone = seat->m_vehicleExitAnimBone;
-
-    if (exitBone >= 35) {
-        exitBone = 26;
-    }
-
-    if (enterBone == exitBone) {
-        this->m_boneAnimGuid = WOWGUID();
-    }
-}
-
-// OFFSET: #0x00748560
-int32_t CVehiclePassenger_C::PickHighPriorityAnimation(int32_t a2, uint32_t* anim) const {
-    if ((this->m_state == 0 || this->m_state == 3) && this->m_unit->m_unit->m_unitFieldHealth > 0) {
-        return 0;
-    }
-
-    if (!this->m_seatRec) {
-        return 0;
-    }
-
-    int32_t lower = this->GetLowerAnim(this->m_seatRec);
-
-    if (lower == ANIM_COUNT) {
-        return 0;
-    }
-
-    *anim = lower;
-    return 1;
 }
 
 // OFFSET: #0x007482A0

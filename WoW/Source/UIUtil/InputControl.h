@@ -69,7 +69,6 @@ class CGInputControl {
     int32_t CanSyncFreeLookFacing(CGUnit_C* unit) const;
     int32_t IsIdle() const;
     int32_t IsMouseDrag(uint32_t time) const;
-    int32_t IsMouseDragMoving() const;
     int32_t IsMouseDragging() const;
     void OnPitchToAngleStop();
     void SetMouselookOverrideBinding(const char* key, const char* binding);

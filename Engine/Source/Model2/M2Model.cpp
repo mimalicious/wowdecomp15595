@@ -8770,11 +8770,3 @@ void M2SequenceInfo::Clear() {
     this->m_radius = 0.0f;
 }
 
-// OFFSET: #0x007BABA0
-uint32_t CM2Model::GetBillboardBoneCount() const {
-    if (this->m_fFlags & 0x1) {
-        return this->m_shared->m_billboardBoneCount;
-    }
-
-    return 0;
-}

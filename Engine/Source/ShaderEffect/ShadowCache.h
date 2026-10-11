@@ -99,10 +99,8 @@ class CShadowCache {
     static void CreateResources();
     static void Destroy();
     static void GatherBands(CShadowCacheQueryData& data, const C3Vector& pos, CFrustum& frustum, int32_t useCullFrustum);
-    static uint32_t GetMaxShadowMode();
     static EShadowMode GetShadowMode();
     static const char* GetShadowModeDesc(uint32_t mode);
-    static uint32_t GetShadowValue();
     static int32_t Init();
     static void InitPcfOffsets();
     static void __fastcall NotifyTexturesRecreate();

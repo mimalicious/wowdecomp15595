@@ -304,12 +304,6 @@ int32_t CGUnit::GetQuestGreenRange() const {
     return band < 20 ? s_questGreenRange[band] : 8;
 }
 
-// OFFSET: #0x00716190
-bool CGUnit::IsSitting() const {
-    uint8_t standState = this->m_unit->m_unitFieldBytes1[0];
-    return standState == 1 || (standState >= 4 && standState <= 6);
-}
-
 // OFFSET: #0x006FED70
 C3Vector CGUnit::GetVelocity() const {
     float speed = this->m_movement->m_currentSpeed;

@@ -19,7 +19,6 @@ void OsGetExePath(char* path, uint32_t size);
 bool OsPathCheckExtension(const char* path, const char* extension);
 const char* OsPathFindExtensionWithDot(const char* path);
 char* OsPathFindExtensionWithDot(char* path);
-char* OsPathFindExtensionWithoutDot(char* path);
 const char* OsPathFindFilename(const char* path);
 char* OsPathFindFilename(char* path);
 uint32_t OsPathGetRootChars(const char* path);
