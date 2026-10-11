@@ -783,7 +783,7 @@ void BattlenetUI::FriendInviteListInitializedCB(void* param, int32_t argc, const
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_LIST_INITIALIZED, "%d", BattlenetUI::m_friendInvites->m_data.m_invites.m_count);
 
     if (s_cvShowToastFriendRequest && s_cvShowToastFriendRequest->m_intValue) {
-        CGChat::AddChatMessage("FRIEND_PENDING", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage("FRIEND_PENDING", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL);
     }
 
     DebugLog("BNUI: Friend Invite List Initialized");
@@ -825,7 +825,7 @@ void BattlenetUI::FriendInviteAddedCB(void* param, int32_t argc, const GeneralFu
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_ADDED, "%u", presenceId);
 
     if (s_cvShowToastFriendRequest && s_cvShowToastFriendRequest->m_intValue) {
-        CGChat::AddChatMessage("FRIEND_REQUEST", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage("FRIEND_REQUEST", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL);
     }
 
     DebugLog("BNUI: Friend Invite Added. ID %u", presenceId);
@@ -1010,7 +1010,10 @@ void BattlenetUI::OnlineTimeChangedCB(void* param, int32_t argc, const GeneralFu
                 ChatConversation conversation;
                 conversation.m_presenceID = update.m_data.m_presenceId;
                 conversation.m_inactive = 1;
-                CGChat::AddChatMessage("FRIEND_ONLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+                ChatMessageParams params;
+                params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId);
+                params.m_conversation = &conversation;
+                CGChat::AddChatMessage("FRIEND_ONLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
             }
 
             DebugLog("BNUI: >> ACCOUNT %s Online Time changed. ID %u", BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), update.m_data.m_presenceId);
@@ -1097,7 +1100,10 @@ void BattlenetUI::CustomMessageChangedCB(void* param, int32_t argc, const Genera
                 ChatConversation conversation;
                 conversation.m_presenceID = update.m_data.m_presenceId;
                 conversation.m_inactive = 1;
-                CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST, BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+                ChatMessageParams params;
+                params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId);
+                params.m_conversation = &conversation;
+                CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST, &params);
             }
         }
 
@@ -1108,7 +1114,7 @@ void BattlenetUI::CustomMessageChangedCB(void* param, int32_t argc, const Genera
     if (onlineTime && broadcastTime >= onlineTime) {
         BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_CHANGED, NULL);
         FilterChatLinks(message, text, 509);
-        CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST_INFORM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST_INFORM, NULL);
     } else {
         BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_LOADED, NULL);
     }
@@ -1148,7 +1154,11 @@ void BattlenetUI::ChatWhisperSentCB(void* param, int32_t argc, const GeneralFunc
     ChatConversation conversation;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 1;
-    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER_INFORM, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, flags, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_flags = flags;
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER_INFORM, &params);
 
     DebugLog("BNUI: Whisper Sent to %s, ID %u. %s", toon.m_tag == 17 ? toon.Value<Battlenet::Toon::FullName>().m_name.m_data : "unknown", presenceId, message);
 }
@@ -1187,7 +1197,11 @@ void BattlenetUI::ChatWhisperReceivedCB(void* param, int32_t argc, const General
     ChatConversation conversation;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 1;
-    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, flags, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_flags = flags;
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER, &params);
 
     DebugLog("BNUI: Whisper Received From %s, ID %u. %s", toon.m_tag == 17 ? toon.Value<Battlenet::Toon::FullName>().m_name.m_data : "unknown", presenceId, message);
 }
@@ -1220,7 +1234,10 @@ void BattlenetUI::ChatChannelJoinedCB(void* param, int32_t argc, const GeneralFu
         conversation.m_presenceID = BattlenetAPI::GetPresenceIDForCurrentAccount();
         conversation.m_index = channel;
         conversation.m_inactive = 0;
-        CGChat::AddChatMessage("YOU_JOINED_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount()), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+        ChatMessageParams params;
+        params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount());
+        params.m_conversation = &conversation;
+        CGChat::AddChatMessage("YOU_JOINED_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
         BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_JOINED, "%d", channel + 1);
 
         if (s_cvShowToastConversation && s_cvShowToastConversation->m_intValue) {
@@ -1243,7 +1260,10 @@ void BattlenetUI::ChatChannelJoinedCB(void* param, int32_t argc, const GeneralFu
                 }
             }
 
-            CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_CONVERSATION, BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount()), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+            ChatMessageParams params2;
+            params2.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount());
+            params2.m_conversation = &conversation;
+            CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_CONVERSATION, &params2);
         }
     }
 
@@ -1268,7 +1288,10 @@ void BattlenetUI::ChatChannelLeftCB(void* param, int32_t argc, const GeneralFunc
     conversation.m_presenceID = BattlenetAPI::GetPresenceIDForCurrentAccount();
     conversation.m_index = channel;
     conversation.m_inactive = 0;
-    CGChat::AddChatMessage("YOU_LEFT_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount()), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount());
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("YOU_LEFT_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_LEFT, "%d", channel + 1);
     DebugLog("BNUI: Chat Channel Left. Channel %d", channel + 1);
 }
@@ -1292,7 +1315,10 @@ void BattlenetUI::ChatChannelClosedCB(void* param, int32_t argc, const GeneralFu
     conversation.m_index = channel;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 0;
-    CGChat::AddChatMessage("CONVERSATION_CONVERTED_TO_WHISPER", CHAT_MSG_BN_CONVERSATION_NOTICE, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("CONVERSATION_CONVERTED_TO_WHISPER", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_CLOSED, "%d%s", channel + 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
     DebugLog("BNUI: Chat Channel Closed channel, index %d, remaining ID %u", channel + 1, presenceId);
 }
@@ -1325,7 +1351,10 @@ void BattlenetUI::ChatChannelMessageReceivedCB(void* param, int32_t argc, const 
     conversation.m_index = channel;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 0;
-    CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION, &params);
     DebugLog("BNUI: Chat Channel Message Recieved. channel %d, ID %u, msg: %s", channel + 1, presenceId, message);
 }
 
@@ -1369,7 +1398,10 @@ void BattlenetUI::ChatChannelMemberJoinedCB(void* param, int32_t argc, const Gen
     conversation.m_index = channel;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 0;
-    CGChat::AddChatMessage("MEMBER_JOINED", CHAT_MSG_BN_CONVERSATION_NOTICE, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("MEMBER_JOINED", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_JOINED, "%d%u", channel + 1, presenceId);
     DebugLog("BNUI: Chat Channel Member Joined. channel %d, id %u", channel + 1, presenceId);
 }
@@ -1393,7 +1425,10 @@ void BattlenetUI::ChatChannelMemberLeftCB(void* param, int32_t argc, const Gener
     conversation.m_index = channel;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 0;
-    CGChat::AddChatMessage("MEMBER_LEFT", CHAT_MSG_BN_CONVERSATION_NOTICE, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("MEMBER_LEFT", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_LEFT, "%d%u", channel + 1, presenceId);
     DebugLog("BNUI: Chat Channel Member Left. channel %d, id %u", channel + 1, presenceId);
 }
@@ -1446,7 +1481,7 @@ void BattlenetUI::DisplayError(uint16_t error, uint32_t presenceId) {
         SStrPrintf(text, sizeof(text), FrameScript_GetText("INTERNAL_STRING_ERROR", -1, GENDER_NOT_APPLICABLE), error);
     }
 
-    CGChat::AddChatMessage(text, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
 
     if (error != 318) {
         CGGameUI::AddErrorMessage(text, 0);
@@ -1661,7 +1696,10 @@ void BattlenetUI::FriendAddedCB(void* param, int32_t argc, const GeneralFunction
     ChatConversation conversation;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 1;
-    CGChat::AddChatMessage("FRIEND_ADDED", CHAT_MSG_BN_INLINE_TOAST_ALERT, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("FRIEND_ADDED", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
 }
 
 // OFFSET: #0x0053AA70
@@ -1700,7 +1738,10 @@ void BattlenetUI::FriendRemovedCB(void* param, int32_t argc, const GeneralFuncti
     ChatConversation conversation;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 1;
-    CGChat::AddChatMessage("FRIEND_REMOVED", CHAT_MSG_BN_INLINE_TOAST_ALERT, BattlenetUI::GetNameForPresenceIdHelper(presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("FRIEND_REMOVED", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
 }
 
 // OFFSET: #0x0053ABC0
@@ -1746,7 +1787,10 @@ void BattlenetUI::OnlinePresenceChangedCB(void* param, int32_t argc, const Gener
             ChatConversation conversation;
             conversation.m_presenceID = update.m_data.m_presenceId;
             conversation.m_inactive = 1;
-            CGChat::AddChatMessage("FRIEND_OFFLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+            ChatMessageParams params;
+            params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId);
+            params.m_conversation = &conversation;
+            CGChat::AddChatMessage("FRIEND_OFFLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
         }
 
         DebugLog("BNUI: >> ACCOUNT %s is now OFFLINE. ID %u", BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), update.m_data.m_presenceId);

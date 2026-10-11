@@ -36,7 +36,9 @@ static int32_t Packet_SMSG_MOTD(void* param, NETMESSAGE msgId, uint32_t time, CD
 
         char line[100];
         msg->GetString(line, sizeof(line));
-        CGChat::AddChatMessage(line, 0, 0, 0, 0, 0, "MOTD", WOWGUID(), 0, WOWGUID(), 0, 0, 0);
+        ChatMessageParams params;
+        params.m_flags = "MOTD";
+        CGChat::AddChatMessage(line, static_cast<SLASH_COMMAND_ID>(0), &params);
         s_motd += line;
     }
 

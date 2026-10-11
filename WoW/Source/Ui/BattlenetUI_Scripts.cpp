@@ -1051,7 +1051,7 @@ static int32_t Script_BNReportPlayer(lua_State* L) {
         }
 
         if (!BattlenetAPI::ReportPlayer(static_cast<uint32_t>(lua_tonumber(L, 1)), reason, note)) {
-            CGChat::AddChatMessage(FrameScript_GetText("BNET_REPORT_SENT", -1, GENDER_NOT_APPLICABLE), 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+            CGChat::AddChatMessage(FrameScript_GetText("BNET_REPORT_SENT", -1, GENDER_NOT_APPLICABLE), static_cast<SLASH_COMMAND_ID>(0), NULL);
         }
     }
 
@@ -1573,7 +1573,9 @@ static int32_t Script_BNListConversation(lua_State* L) {
                     if (SStrLen(name) + delimiterLength + SStrLen(text) < 256) {
                         SStrPrintf(text, sizeof(text), "%s%s%s", text, delimiter, name);
                     } else {
-                        CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION_LIST, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+                        ChatMessageParams params;
+                        params.m_conversation = &conversation;
+                        CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION_LIST, &params);
                         text[0] = '\0';
                         SStrCopyUTF8(text, name, sizeof(text), sizeof(text));
                     }
@@ -1584,7 +1586,9 @@ static int32_t Script_BNListConversation(lua_State* L) {
             }
 
             if (started) {
-                CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION_LIST, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, &conversation);
+                ChatMessageParams params2;
+                params2.m_conversation = &conversation;
+                CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION_LIST, &params2);
             }
         }
     }

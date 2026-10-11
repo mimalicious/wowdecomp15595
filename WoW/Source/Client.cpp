@@ -2835,13 +2835,13 @@ static void ClientEndTaxiBenchmarkMode(int32_t silent) {
     }
 
     char text[3000];
-    CGChat::AddChatMessage(FrameScript_GetText("BENCHMARK_TAXI_RESULTS", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(FrameScript_GetText("BENCHMARK_TAXI_RESULTS", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL);
     SStrPrintf(text, sizeof(text), FrameScript_GetText("BENCHMARK_TAXI_MIN_FPS", -1, GENDER_NOT_APPLICABLE), s_clientTaxiBenchMinFPS);
-    CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
     SStrPrintf(text, sizeof(text), FrameScript_GetText("BENCHMARK_TAXI_MAX_FPS", -1, GENDER_NOT_APPLICABLE), s_clientTaxiBenchMaxFPS);
-    CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
     SStrPrintf(text, sizeof(text), FrameScript_GetText("BENCHMARK_TAXI_AVERAGE_FPS", -1, GENDER_NOT_APPLICABLE), s_clientTaxiBenchTotalFrames / s_clientTaxiBenchTotalTime);
-    CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
 }
 
 // OFFSET: #0x00405130

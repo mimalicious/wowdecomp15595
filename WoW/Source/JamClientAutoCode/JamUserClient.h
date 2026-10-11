@@ -1162,6 +1162,16 @@ class UserClientAcceptWargameInvite : public JamClientMessage {
     ~UserClientAcceptWargameInvite();
 };
 
+class UserClientChatReportFiltered : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_filteredGUID[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatReportFiltered();
+    ~UserClientChatReportFiltered();
+};
+
 class UserClientChatReportIgnored : public JamClientMessage {
     public:
     /* 0010 */ uint8_t m_ignoredGUID[8];

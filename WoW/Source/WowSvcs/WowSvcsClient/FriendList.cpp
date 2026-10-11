@@ -557,7 +557,7 @@ static void PrintWho(const char* name, int32_t race, int32_t classId, const char
         SStrPrintf(text, sizeof(text), FrameScript_GetText("WHO_LIST_FORMAT", -1, GENDER_NOT_APPLICABLE), name, name, level, raceName, className, zoneName);
     }
 
-    CGChat::AddChatMessage(text, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
 }
 
 // OFFSET: 0x004D43D0/0x140111680
@@ -1020,7 +1020,7 @@ int32_t Packet_SMSG_WHO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
     if (print) {
         char text[3000];
         SStrPrintf(text, sizeof(text), FrameScript_GetText("WHO_NUM_RESULTS", -1, GENDER_NOT_APPLICABLE), count);
-        CGChat::AddChatMessage(text, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
     } else {
         FrameScript_SignalEvent(SCRIPT_EVENT_WHO_LIST_UPDATE, NULL);
     }

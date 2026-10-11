@@ -1267,6 +1267,10 @@ void UserClientRequestPartyJoinUpdates::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2583));
 }
 
+// OFFSET: 0x0069CD50/0x140349280
+UserClientChatReportFiltered::~UserClientChatReportFiltered() {
+}
+
 // OFFSET: 0x0069CDF0
 UserClientChatUnregisterAllAddonPrefixes::~UserClientChatUnregisterAllAddonPrefixes() {
 }
@@ -1278,6 +1282,10 @@ void UserClientChatUnregisterAllAddonPrefixes::Put(CDataStore* msg) {
 
 // OFFSET: 0x0069CEB0/0x1403493D0
 UserClientChatReportIgnored::~UserClientChatReportIgnored() {
+}
+
+// OFFSET: 0x0069DC10
+UserClientChatReportFiltered::UserClientChatReportFiltered() {
 }
 
 // OFFSET: 0x0069DC20/0x14034A2F0
@@ -1328,6 +1336,47 @@ void UserClientChatReportIgnored::Put(CDataStore* msg) {
 
 // OFFSET: 0x0069EA70
 UserClientChatUnregisterAllAddonPrefixes::UserClientChatUnregisterAllAddonPrefixes() {
+}
+
+// OFFSET: 0x0069EB40/0x14034B5C0
+void UserClientChatReportFiltered::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x946));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_filteredGUID[7] != 0);
+    bits.WriteBit(this->m_filteredGUID[1] != 0);
+    bits.WriteBit(this->m_filteredGUID[5] != 0);
+    bits.WriteBit(this->m_filteredGUID[6] != 0);
+    bits.WriteBit(this->m_filteredGUID[2] != 0);
+    bits.WriteBit(this->m_filteredGUID[3] != 0);
+    bits.WriteBit(this->m_filteredGUID[0] != 0);
+    bits.WriteBit(this->m_filteredGUID[4] != 0);
+    bits.Flush();
+
+    if (this->m_filteredGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[1] ^ 1));
+    }
+    if (this->m_filteredGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[2] ^ 1));
+    }
+    if (this->m_filteredGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[7] ^ 1));
+    }
+    if (this->m_filteredGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[5] ^ 1));
+    }
+    if (this->m_filteredGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[6] ^ 1));
+    }
+    if (this->m_filteredGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[0] ^ 1));
+    }
+    if (this->m_filteredGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[4] ^ 1));
+    }
+    if (this->m_filteredGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_filteredGUID[3] ^ 1));
+    }
 }
 
 // OFFSET: 0x0069FD40/0x14034CEB0

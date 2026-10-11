@@ -75,7 +75,7 @@ int32_t Packet_SMSG_DUEL_WINNER(void* param, NETMESSAGE msgId, uint32_t time, CD
 
     char buffer[3000];
     SStrPrintf(buffer, sizeof(buffer), format, winner, loser);
-    CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
     return 1;
 }
 
@@ -139,7 +139,7 @@ void CGDuelInfo::InitializeGame() {
 int32_t CGDuelInfo::ProcessCountdown(const void* data, void* param) {
     char buffer[3000];
     SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("DUEL_COUNTDOWN", -1, GENDER_NOT_APPLICABLE), s_countdown);
-    CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
 
     if (--s_countdown) {
         s_countdownTimer = ClientSetTimer(1000, CGDuelInfo::ProcessCountdown, NULL);

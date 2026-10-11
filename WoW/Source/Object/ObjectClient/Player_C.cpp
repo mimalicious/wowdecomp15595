@@ -2348,7 +2348,7 @@ void __stdcall CGPlayer_C::ClearAFK(int32_t force) {
     }
 
     CGChat::m_afk = 0;
-    CGChat::AddChatMessage(FrameScript_GetText("CLEARED_AFK", -1, GENDER_NOT_APPLICABLE), 0, 0, 0, 0, 0, NULL, WOWGUID(), 0, WOWGUID(), 0, 0, 0);
+    CGChat::AddChatMessage(FrameScript_GetText("CLEARED_AFK", -1, GENDER_NOT_APPLICABLE), static_cast<SLASH_COMMAND_ID>(0), NULL);
 
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_MESSAGECHAT));
@@ -4629,7 +4629,7 @@ static void RandomRollNameQueryCallback(int32_t id, const WOWGUID& guid, void* p
         if (name) {
             char text[3000];
             SStrPrintf(text, sizeof(text), FrameScript_GetText("RANDOM_ROLL_RESULT", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name), roll[2], roll[0], roll[1]);
-            CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+            CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
         }
     }
 
@@ -7930,7 +7930,7 @@ void __stdcall CGPlayer_C::ReportPVPAFK(WOWGUID guid) {
     if (name) {
         char buffer[3000];
         SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("REPORT_PVP_AFK_SENT", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name));
-        CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
     }
 }
 
@@ -9620,7 +9620,7 @@ static void CrossedInebriationThresholdItemCallback(int32_t id, const WOWGUID& g
             SStrPrintf(token, sizeof(token), "DRUNK_MESSAGE_ITEM_OTHER%d", threshold + 1);
             const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0, 0);
             SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), player->GetUnitName(NULL, 1), link);
-            CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+            CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
             return;
         }
 
@@ -9637,7 +9637,7 @@ static void CrossedInebriationThresholdItemCallback(int32_t id, const WOWGUID& g
         SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), player->GetUnitName(NULL, 1));
     }
 
-    CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
 }
 
 // OFFSET: 0x0056BC00
@@ -10245,7 +10245,7 @@ int32_t __stdcall CGPlayer_C::OnLootMoneyNotify(CDataStore* msg) {
         GetCurrencyText(amount, money, sizeof(money), ", ");
         char text[3000];
         SStrPrintf(text, sizeof(text), FrameScript_GetText(alone ? "YOU_LOOT_MONEY" : "LOOT_MONEY_SPLIT", -1, GENDER_NOT_APPLICABLE), money);
-        CGChat::AddChatMessage(text, 28, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(28), NULL);
     }
 
     return 1;
@@ -12049,7 +12049,7 @@ int32_t ReportDailyQuestsRemaining(WOWGUID guid, uint32_t offset, uint32_t count
     }
 
     if (text[0]) {
-        CGChat::AddChatMessage(text, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
     }
 
     return 1;
@@ -12964,7 +12964,7 @@ void CGPlayer_C::TogglePlayerFlag(uint32_t oldFlags) {
             text = FrameScript_GetText("PVP_TOGGLE_OFF_VERBOSE", -1, GENDER_NOT_APPLICABLE);
         }
 
-        CGChat::AddChatMessage(text, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
     }
 
     if (changed & 0x3000) {
@@ -13523,12 +13523,12 @@ void CGPlayer_C::SetAFK(const char* message) {
 
     if (!CGChat::m_afk) {
         if (this->m_player->m_playerFlags & 0x4) {
-            CGChat::AddChatMessage(FrameScript_GetText("CLEARED_DND", -1, GENDER_NOT_APPLICABLE), 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+            CGChat::AddChatMessage(FrameScript_GetText("CLEARED_DND", -1, GENDER_NOT_APPLICABLE), static_cast<SLASH_COMMAND_ID>(0), NULL);
         }
 
         char buffer[3000];
         SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("MARKED_AFK_MESSAGE", -1, GENDER_NOT_APPLICABLE), text);
-        CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
         CGChat::m_afk = 1;
     }
 

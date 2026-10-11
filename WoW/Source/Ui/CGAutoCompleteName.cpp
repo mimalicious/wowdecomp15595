@@ -7,6 +7,7 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
+#include "WoW/Source/Ui/BattlenetUI.h"
 
 // STATIC: #0x00ACEB70
 TSList<AUTOCOMPLETE_NAMENODE, TSGetLink<AUTOCOMPLETE_NAMENODE>> CGAutoCompleteName::m_list;
@@ -81,6 +82,20 @@ int32_t CGAutoCompleteName::GetPresenceID(const char* name, uint32_t* presenceId
     }
 
     return 0;
+}
+
+// OFFSET: 0x009CB260
+const char* CGAutoCompleteName::GetDisplayName(const char* name) {
+    if (name[0] == '|' && name[1] == 'K' && name[2] == 'f') {
+        uint32_t presenceId = 0;
+        sscanf(name, "|Kf%d", &presenceId);
+
+        if (presenceId) {
+            return BattlenetUI::GetKStringText('f', presenceId);
+        }
+    }
+
+    return name;
 }
 
 // OFFSET: 0x009CB870

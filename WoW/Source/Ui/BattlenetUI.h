@@ -96,6 +96,7 @@ class BattlenetUI {
     static void FriendRemovedCB(void* param, int32_t argc, const GeneralFunction::Arg* args);
     static void FriendsOfFriendCB(void* param, int32_t argc, const GeneralFunction::Arg* args);
     static const char* GetNameForPresenceIdHelper(uint32_t presenceId);
+    static const char* GetKStringText(int32_t kind, uint32_t presenceId);
     static uint32_t GetSelfRealmID();
     static void IgnoredFieldCB(void* param, int32_t argc, const GeneralFunction::Arg* args);
     static void Init();

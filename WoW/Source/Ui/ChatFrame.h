@@ -18,7 +18,6 @@ class SpellRec;
 class ItemStats_C;
 class GameObjectStats_C;
 
-struct ChatMessageParams;
 
 enum SLASH_COMMAND_ID {
     CHAT_MSG_SYSTEM = 0,
@@ -95,6 +94,28 @@ struct ChatConversation {
     /* 0008 */ uint8_t m_inactive;
 };
 
+struct ChatMessageParams {
+    /* 0000 */ const char* m_senderName;
+    /* 0004 */ uint32_t m_language;
+    /* 0008 */ const char* m_channelName;
+    /* 000C */ const char* m_addonPrefix;
+    /* 0010 */ const char* m_targetName;
+    /* 0014 */ const char* m_flags;
+    /* 0018 */ WOWGUID m_senderGuid;
+    /* 0020 */ uint32_t m_senderUnk;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ WOWGUID m_targetGuid;
+    /* 0030 */ int32_t m_achievementID;
+    /* 0034 */ bool m_isGM;
+    /* 0038 */ const ChatConversation* m_conversation;
+    /* 003C */ bool m_mobile;
+    /* 003D */ bool m_playSound;
+    /* 003E */ bool m_hideChatLog;
+    /* 0040 */ float m_displayTime;
+
+    ChatMessageParams();
+};
+
 struct PENDINGCHAT {
     /* 0000 */ TSLink<PENDINGCHAT> m_link;
     /* 0008 */ int32_t m_type;
@@ -114,7 +135,7 @@ struct PENDINGCHAT {
     /* 00C8 */ int32_t m_achievementID;
     /* 00CC */ bool m_isGM;
     /* 00D0 */ ChatConversation* m_conversation;
-    /* 00D4 */ uint32_t unk_00D4;
+    /* 00D4 */ bool m_mobile;
 
     PENDINGCHAT();
 
@@ -380,7 +401,7 @@ class CGChat {
     static void InviteNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
     static int32_t IsRecordedType(int32_t type);
     static void RecordChat(const char* text, int32_t type, const char* senderName, WOWGUID senderGuid, uint32_t senderUnk, uint32_t a6, const char* channelName, uint32_t lineID, const CGPlayer_C* player);
-    static void QueueChatText(const char* text, int32_t type, const char* senderName, const char* targetName, uint32_t language, const char* channelName, const char* flags, int32_t queued, int32_t a9, WOWGUID senderGuid, uint32_t senderUnk, WOWGUID targetGuid, int32_t achievementID, bool isGM, const ChatConversation* conversation);
+    static void QueueChatText(const char* text, int32_t queued, int32_t a3, SLASH_COMMAND_ID type, const ChatMessageParams* params);
     static void NameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
     static void TranslateMessage(uint32_t language, uint32_t skill, const char* text, char* buffer, uint32_t size, int32_t a6, int32_t a7);
     static void AddWhisperThrottled(uint32_t time);

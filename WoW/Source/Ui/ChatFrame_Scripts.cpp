@@ -273,9 +273,9 @@ static int32_t Script_SendChatMessage(lua_State* L) {
         if (*text) {
             char buffer[3000];
             SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("MARKED_DND", -1, GENDER_NOT_APPLICABLE), text);
-            CGChat::AddChatMessage(buffer, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+            CGChat::AddChatMessage(buffer, CHAT_MSG_SYSTEM, NULL);
         } else {
-            CGChat::AddChatMessage(FrameScript_GetText("CLEARED_DND", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+            CGChat::AddChatMessage(FrameScript_GetText("CLEARED_DND", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL);
         }
     }
 
@@ -401,7 +401,7 @@ static int32_t Script_SendSystemMessage(lua_State* L) {
         return 0;
     }
 
-    CGChat::AddChatMessage(lua_tolstring(L, 1, NULL), CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(lua_tolstring(L, 1, NULL), CHAT_MSG_SYSTEM, NULL);
     return 0;
 }
 
@@ -818,7 +818,7 @@ static int32_t Script_ListChannels(lua_State* L) {
             SStrPrintf(entry, sizeof(entry), "[%d. %s] ", channel->m_channelNumber, static_cast<const char*>(channel->m_name));
 
             if (SStrLen(&text[SStrLen(entry)]) >= sizeof(text)) {
-                CGChat::AddChatMessage(text, CHAT_MSG_CHANNEL_LIST, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+                CGChat::AddChatMessage(text, CHAT_MSG_CHANNEL_LIST, NULL);
                 text[0] = 0;
             }
 
@@ -826,7 +826,7 @@ static int32_t Script_ListChannels(lua_State* L) {
         }
     }
 
-    CGChat::AddChatMessage(text, CHAT_MSG_CHANNEL_LIST, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+    CGChat::AddChatMessage(text, CHAT_MSG_CHANNEL_LIST, NULL);
     return 0;
 }
 
