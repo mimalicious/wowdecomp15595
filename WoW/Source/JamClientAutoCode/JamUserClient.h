@@ -750,4 +750,203 @@ class UserClientMessageChatAfk : public JamClientMessage {
     ~UserClientMessageChatAfk();
 };
 
+class UserClientMessageChatAddonRaid : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[17];
+    /* 0021 */ char unk_0021[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatAddonRaid(const char* a1, const char* a2);
+    ~UserClientMessageChatAddonRaid();
+};
+
+class UserClientMessageChatRaidWarning : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ char unk_0014[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatRaidWarning(uint32_t a1, const char* a2);
+    ~UserClientMessageChatRaidWarning();
+};
+
+class UserClientMessageChatSay : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ uint32_t unk_0110;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatSay(uint32_t a1, const char* a2);
+    ~UserClientMessageChatSay();
+};
+
+class UserClientMessageChatAddonOfficer : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ char unk_0110[17];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatAddonOfficer(const char* a1, const char* a2);
+    ~UserClientMessageChatAddonOfficer();
+};
+
+class UserClientMessageChatAddonParty : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[17];
+    /* 0021 */ char unk_0021[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatAddonParty(const char* a1, const char* a2);
+    ~UserClientMessageChatAddonParty();
+};
+
+class UserClientMessageChatEmote : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatEmote(const char* a1);
+    ~UserClientMessageChatEmote();
+};
+
+class UserClientMessageChatYell : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ uint32_t unk_0110;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatYell(uint32_t a1, const char* a2);
+    ~UserClientMessageChatYell();
+};
+
+class UserClientMessageChatAddonWhisper : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ char unk_0110[17];
+    /* 0121 */ char unk_0121[305];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatAddonWhisper(const char* a1, const char* a2, const char* a3);
+    ~UserClientMessageChatAddonWhisper();
+};
+
+class UserClientMessageChatAddonGuild : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[17];
+    /* 0021 */ char unk_0021[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatAddonGuild(const char* a1, const char* a2);
+    ~UserClientMessageChatAddonGuild();
+};
+
+class UserClientMessageChatParty : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ uint32_t unk_0110;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatParty(uint32_t a1, const char* a2);
+    ~UserClientMessageChatParty();
+};
+
+class UserClientMessageChatBattleground : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ char unk_0014[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatBattleground(uint32_t a1, const char* a2);
+    ~UserClientMessageChatBattleground();
+};
+
+class UserClientMessageChatChannel : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[305];
+    /* 0144 */ uint32_t unk_0144;
+    /* 0148 */ char unk_0148[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatChannel(uint32_t a1, const char* a2, const char* a3);
+    ~UserClientMessageChatChannel();
+};
+
+class UserClientMessageChatAddonBattleground : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[17];
+    /* 0021 */ char unk_0021[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatAddonBattleground(const char* a1, const char* a2);
+    ~UserClientMessageChatAddonBattleground();
+};
+
+class UserClientMessageChatDnd : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatDnd(const char* a1);
+    ~UserClientMessageChatDnd();
+};
+
+class UserClientMessageChatWhisper : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ uint32_t unk_0110;
+    /* 0114 */ char unk_0114[305];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatWhisper(uint32_t a1, const char* a2, const char* a3);
+    ~UserClientMessageChatWhisper();
+};
+
+class UserClientMessageChatGuild : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ char unk_0014[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatGuild(uint32_t a1, const char* a2);
+    ~UserClientMessageChatGuild();
+};
+
+class UserClientMessageChatRaid : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ uint32_t unk_0110;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatRaid(uint32_t a1, const char* a2);
+    ~UserClientMessageChatRaid();
+};
+
+class UserClientMessageChatOfficer : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[256];
+    /* 0110 */ uint32_t unk_0110;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientMessageChatOfficer(uint32_t a1, const char* a2);
+    ~UserClientMessageChatOfficer();
+};
+
 #endif
