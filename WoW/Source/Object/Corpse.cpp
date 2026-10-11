@@ -13,7 +13,7 @@ uint32_t CGCorpse::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int3
     return (offset & 3) + 4 * (total + CGCorpse::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
-// OFFSET: %0x00964130
+// OFFSET: 0x00A281C0
 int32_t CGCorpse::TotalFieldsSaved() {
     return CGObject::TotalFieldsSaved() + sizeof(CGCorpse::s_mirrorFields) / sizeof(CGCorpse::s_mirrorFields[0]);
 }

@@ -24,7 +24,7 @@ uint32_t CGGameObject::MirrorIndexFromFieldIndex(uint32_t fieldIndex, uint32_t c
     return 12;
 }
 
-// OFFSET: %0x00963D30
+// OFFSET: 0x00A27DC0
 int32_t CGGameObject::TotalFieldsSaved() {
     return CGObject::TotalFieldsSaved() + sizeof(CGGameObject::s_mirrorFieldIndex) / sizeof(CGGameObject::s_mirrorFieldIndex[0]);
 }

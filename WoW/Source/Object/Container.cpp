@@ -29,7 +29,7 @@ uint32_t CGContainer::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, i
     return (offset & 3) + 4 * (total + CGContainer::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
-// OFFSET: %0x00963C80
+// OFFSET: 0x00A27D10
 int32_t CGContainer::TotalFieldsSaved() {
     return CGItem::TotalFieldsSaved() + sizeof(CGContainer::s_mirrorFields) / sizeof(CGContainer::s_mirrorFields[0]);
 }
