@@ -1,4 +1,5 @@
 #include "GameUI.h"
+#include "WoW/Common/ThrottleObject.h"
 #include "WoW/Source/Ui/BlobFrame.h"
 #include "WoW/Source/Ui/ArchaeologyDigSiteFrame.h"
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
@@ -170,6 +171,9 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "WoW/Source/DB/Rec/PaperDollItemFrameRec.h"
 #include "WoW/Source/Object/WGUID.h"
+
+// STATIC: 0x00D0BD20
+static ThrottleObject s_guildInviteThrottle(10, 1);
 
 // STATIC: 0x00ED79E8
 static CWOWClientStatus* s_loadAddOnStatus;
@@ -822,19 +826,24 @@ static int32_t Script_GetRaidDifficulty(lua_State* L) {
 
 // OFFSET: 0x008D43C0/0x14063E870
 static int32_t Script_GuildLeave(lua_State* L) {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_LEAVE));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        if (player->m_obj->m_dataType == 1 && player->m_obj->m_data) {
+            CGPlayer_C::LeaveGuild();
+            return 0;
+        }
+
+        CGGameUI::DisplayError(ERR_GUILD_PLAYER_NOT_IN_GUILD);
+    }
+
     return 0;
 }
 
 // OFFSET: 0x008C25E0/0x140631E40
 static int32_t Script_GuildDisband(lua_State* L) {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_DISBAND));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    UserClientGuildDisband msg;
+    ClientServices::Send(&msg);
     return 0;
 }
 
@@ -1137,11 +1146,24 @@ static int32_t Script_GuildInvite(lua_State* L) {
         return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_INVITE));
-    msg.PutString(target);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player && player->m_obj->m_guid == Script_GetGUIDFromName(target)) {
+        CGGameUI::DisplayError(ERR_ALREADY_IN_GUILD);
+        return 0;
+    }
+
+    if (!CGGameUI::CanPerformAction(25)) {
+        return 0;
+    }
+
+    if (!s_guildInviteThrottle.IncrementAndCheck()) {
+        return 0;
+    }
+
+    UserClientGuildInvite msg;
+    SStrCopy(msg.unk_0010, target, 48);
+    ClientServices::Send(&msg);
     return 0;
 }
 
@@ -3569,19 +3591,21 @@ static int32_t Script_GuildSetMOTD(lua_State* L) {
         return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_MOTD));
-    const char* text = lua_tolstring(L, 1, NULL);
-    char motd[516];
-    motd[0] = 0;
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (text && *text) {
-        ScrubString(text, motd, 129, sizeof(motd), 1);
+    if (player || (player->m_obj->m_dataType == 1 && player->m_obj->m_data)) {
+        const char* text = lua_tolstring(L, 1, NULL);
+        char motd[516];
+        motd[0] = 0;
+
+        if (text && *text) {
+            ScrubString(text, motd, 129, sizeof(motd), 1);
+        }
+
+        UserClientGuildMotd msg(motd);
+        ClientServices::Send(&msg);
     }
 
-    msg.PutString(motd);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
     return 0;
 }
 

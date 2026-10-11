@@ -1417,20 +1417,22 @@ void __stdcall CGPlayer_C::SetLootMethod(uint32_t method, WOWGUID master, uint32
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4760
+// OFFSET: 0x005543B0
 void __stdcall CGPlayer_C::AcceptGuild() {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_ACCEPT));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    UserClientGuildAccept msg;
+    ClientServices::Send(&msg);
 }
 
-// OFFSET: #0x006D47D0
+// OFFSET: 0x005543E0
 void __stdcall CGPlayer_C::DeclineGuild() {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_DECLINE_INVITATION));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    UserClientOpcode3231 msg;
+    ClientServices::Send(&msg);
+}
+
+// OFFSET: 0x00554410
+void __stdcall CGPlayer_C::LeaveGuild() {
+    UserClientGuildLeave msg;
+    ClientServices::Send(&msg);
 }
 
 // OFFSET: 0x0055AE40/0x1401B7B50
@@ -1612,7 +1614,7 @@ const CGUnitVirtualItem* CGPlayer_C::GetDefendingItem() const {
     return this->CGUnit_C::GetDefendingItem();
 }
 
-// OFFSET: #0x006D5C90
+// OFFSET: 0x0055C0A0
 void __stdcall CGPlayer_C::ReadItem(uint8_t bag, uint8_t slot) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_READ_ITEM));
@@ -2133,7 +2135,7 @@ void CGPlayer_C::PutLootInSlot(WOWGUID bagGuid, uint8_t slot, uint8_t lootSlot) 
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D5D10
+// OFFSET: 0x0055C120
 void CGPlayer_C::ReadItem(WOWGUID guid, uint8_t slot) {
     if (guid == this->m_obj->m_guid) {
         CGPlayer_C::ReadItem(static_cast<uint8_t>(255), slot);

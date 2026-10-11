@@ -136,6 +136,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void __stdcall CompleteQuest(const WOWGUID& questGiver, int32_t questId, int32_t fromScript);
     static void __stdcall DeclineArenaTeam();
     static void __stdcall DeclineGuild();
+    static void __stdcall LeaveGuild();
     static void __stdcall EnableTaxiNode(const WOWGUID& guid);
     static uint32_t GetBindAreaID();
     static int32_t GetCombatModeFlashDuration();
