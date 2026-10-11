@@ -66,11 +66,11 @@ void CWorldMap::LinkIntersectMapObjDefGroup(CMapObjDef* mapObjDef, uint32_t grou
     }
 
     float t = 1.05f;
-    uint32_t portalGroup;
+    uint32_t portalGroup[2];
 
-    if (mapObj->VectorIntersectPortals(groupNum, seg, t, &portalGroup) && t - front.m_t < 0.000099999997f) {
+    if (mapObj->VectorIntersectPortals(groupNum, seg, t, portalGroup) && t - front.m_t < 0.000099999997f) {
         front.m_mapObjDef = mapObjDef;
-        CMapObjDefGroup* defGroup = mapObjDef->m_defGroups[portalGroup];
+        CMapObjDefGroup* defGroup = mapObjDef->m_defGroups[portalGroup[0]];
         front.m_group = defGroup;
         front.m_polyIndex = 0xFFFF;
         front.m_t = t;
