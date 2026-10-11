@@ -14,6 +14,7 @@
 #include "WoW/Source/DB/Rec/SpellIconRec.h"
 #include "WoW/Source/Ui/LFGInfo.h"
 #include <cstdlib>
+#include <cstring>
 #include "WoW/Source/DB/Rec/AreaTableRec.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
@@ -34,26 +35,14 @@
 // STATIC: 0x00C273B8
 static const uint8_t s_classRoles[11] = { 0x0A, 0x0E, 0x08, 0x08, 0x0C, 0x0A, 0x0C, 0x08, 0x08, 0x00, 0x0E };
 
-// STATIC: #0x00ACDD6C
-static int32_t s_joinAttempts;
-
-// STATIC: #0x00BEABC4
-static float s_lastJoinTime;
-
 // STATIC: 0x00C9F524
 const char* s_roleTokens[3] = { "TANK", "HEALER", "DAMAGER" };
-
-// STATIC: #0x00ACDD58
-static int32_t s_proposalResponseCount = 2;
-
-// STATIC: #0x00BEABB0
-static float s_proposalResponseTime;
 
 // STATIC: 0x00F4A4D0
 static uint32_t s_lastQueueSlot;
 
-// OFFSET: 0x00A30410
-uint8_t CGLookingForGroup::GetClassRoles(uint32_t classID) {
+// OFFSET: 0x00A30410/0x1407DA340
+uint32_t CGLookingForGroup::GetClassRoles(uint32_t classID) {
     if (!classID) {
         return 0;
     }
@@ -177,19 +166,6 @@ int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty
     return 4;
 }
 
-// OFFSET: 0x0097EF80
-static int32_t GetLFGDungeonSubtype(const LfgDungeonsRec* rec) {
-    if (rec->m_typeID != 1) {
-        return 0;
-    }
-
-    if (rec->IsRaid()) {
-        return 3;
-    }
-
-    return rec->IsHeroic() ? 2 : 1;
-}
-
 // OFFSET: 0x00982070
 int32_t CGLookingForGroup::GetLFGRoleUpdate(lua_State* L) {
     lua_pushboolean(L, CGLookingForGroup::m_roleCheckState == 2);
@@ -223,71 +199,59 @@ int32_t CGLookingForGroup::GetLFGRoleUpdateSlot(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005572D0
+// OFFSET: 0x009851A0/0x140700360
 void CGLookingForGroup::JoinLFG() {
     if ((CGLookingForGroup::m_localInfo.m_joined && !CGLookingForGroup::m_localInfo.unk_0003) || !s_cvLfgSelectedRoles) {
         return;
     }
 
-    if (++s_joinAttempts > 2) {
-        float now = OsGetAsyncTimeSec();
+    static ThrottleObject s_throttle(2, 10);
 
-        if (now - s_lastJoinTime < 10.0f) {
-            if (s_joinAttempts > 2) {
-                return;
-            }
-        } else {
-            s_lastJoinTime = now;
-            s_joinAttempts = 0;
-        }
-    }
-
-    CDataStore msg;
-    uint32_t roles = static_cast<uint8_t>(s_cvLfgSelectedRoles->m_intValue) & (CGLookingForGroup::GetClassRoles(ClientServices::GetCharacterClass()) | 1);
-
-    if (!(roles & ~0x1)) {
+    if (!s_throttle.IncrementAndCheck()) {
         return;
     }
 
-    msg.Put(static_cast<uint32_t>(CMSG_LFG_JOIN));
-    msg.Put(roles);
-    msg.Put(static_cast<uint8_t>(CGLookingForGroup::m_localInfo.unk_0004 != 0));
-    msg.Put(static_cast<uint8_t>(CGLookingForGroup::m_localInfo.unk_0005 != 0));
-    msg.Put(static_cast<uint8_t>(CGLookingForGroup::m_localInfo.m_numDungeons));
+    uint8_t roles = static_cast<uint8_t>(s_cvLfgSelectedRoles->m_intValue) & (CGLookingForGroup::GetClassRoles(ClientServices::GetCharacterClass()) | 1);
 
-    for (LFGDungeonEntry* dungeon = CGLookingForGroup::m_localInfo.m_dungeons.Head(); dungeon; dungeon = CGLookingForGroup::m_localInfo.m_dungeons.Next(dungeon)) {
-        msg.Put(dungeon->m_slot);
+    if (!(roles & 0xE)) {
+        return;
     }
 
-    msg.Put(static_cast<uint8_t>(3));
+    UserClientLfgJoin request;
+    request.m_roles = roles;
 
-    for (uint32_t i = 0; i < 3; i++) {
-        msg.Put(CGLookingForGroup::m_localInfo.m_roles[i]);
+    LFGDungeonEntry* next;
+
+    for (LFGDungeonEntry* entry = CGLookingForGroup::m_localInfo.m_dungeons.Head(); !CGLookingForGroup::m_localInfo.m_dungeons.IsEnd(entry); entry = next) {
+        next = entry->RawNext();
+        request.m_slots.New(entry->m_slot);
     }
 
-    msg.PutString(CGLookingForGroup::m_localInfo.m_comment);
-    msg.Finalize();
+    request.m_needs[0] = CGLookingForGroup::m_localInfo.m_roles[0];
+    request.m_needs[1] = CGLookingForGroup::m_localInfo.m_roles[1];
+    request.m_needs[2] = CGLookingForGroup::m_localInfo.m_roles[2];
+    SStrCopy(request.m_comment, CGLookingForGroup::m_localInfo.m_comment, sizeof(request.m_comment));
+    ClientServices::Send(&request);
     CGLookingForGroup::m_localInfo.m_joined = 1;
     CGLookingForGroup::m_localInfo.unk_0003 = 0;
-    ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00553AB0
+// OFFSET: 0x00980E90/0x1406FB390
 void CGLookingForGroup::LeaveLFG() {
     if (!CGLookingForGroup::m_localInfo.m_joined) {
-        LFGInfo* info = (CGPartyInfo::m_members[0] || CGRaidInfo::m_numMembers) ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
+        LFGInfo* info = CGPartyInfo::m_members[0] || CGPartyInfo::m_onePersonParty || CGRaidInfo::m_numMembers ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
 
         if (!info->m_joined) {
             return;
         }
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_LFG_LEAVE));
-    msg.Finalize();
+    UserClientLfgLeave request;
+    request.m_ticket = (CGPartyInfo::m_members[0] || CGPartyInfo::m_onePersonParty || CGRaidInfo::m_numMembers ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo)->m_ticket;
+    request.unk_0028 = 8;
+    ClientServices::Send(&request);
     CGLookingForGroup::m_localInfo.m_joined = 0;
     CGLookingForGroup::m_localInfo.unk_0003 = 0;
-    ClientServices::Send2(&msg);
 }
 
 // OFFSET: 0x00981D70
@@ -330,34 +294,28 @@ int32_t CGLookingForGroup::GetLFGProposalEncounter(lua_State* L) {
     return PushDungeonEncounterInfo(L, 0, 0, 0, 0, 0);
 }
 
-// OFFSET: #0x00554450
+// OFFSET: 0x00981F30/0x1406FC8E0
 void CGLookingForGroup::ProposalResponse(bool accept) {
     if (!CGLookingForGroup::m_proposal.m_id) {
         return;
     }
 
-    if (++s_proposalResponseCount > 2) {
-        float now = OsGetAsyncTimeSec();
+    static ThrottleObject s_throttle(2, 10);
 
-        if (now - s_proposalResponseTime < 10.0) {
-            if (s_proposalResponseCount > 2) {
-                return;
-            }
-        } else {
-            s_proposalResponseTime = now;
-            s_proposalResponseCount = 0;
-        }
+    if (!s_throttle.IncrementAndCheck()) {
+        return;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_LFG_PROPOSAL_RESULT));
-    msg.Put(CGLookingForGroup::m_proposal.unk_0008);
-    msg.Put(static_cast<uint8_t>(accept));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    DebugLog("LFGC: Sending a proposal response of: %d", accept);
+    UserClientLfgProposalResponse request;
+    request.m_ticket = CGLookingForGroup::m_proposal.m_ticket;
+    *reinterpret_cast<uint64_t*>(request.m_instanceGuid) = *reinterpret_cast<uint64_t*>(&CGLookingForGroup::m_proposal.unk_0018);
+    request.m_proposalID = CGLookingForGroup::m_proposal.unk_0008;
+    request.m_accept = accept;
+    ClientServices::Send(&request);
 
     if (accept) {
-        for (uint32_t i = 0; i < 5; i++) {
+        for (uint32_t i = 0; i < CGLookingForGroup::m_proposal.m_numMembers; i++) {
             if (CGLookingForGroup::m_proposal.m_members[i].m_isLocal) {
                 CGLookingForGroup::m_proposal.m_members[i].m_accepted = 1;
                 CGLookingForGroup::m_proposal.m_members[i].unk_0014 = 1;
@@ -549,12 +507,51 @@ void CGLookingForGroup::ClearPartyInfo() {
     }
 }
 
+// OFFSET: 0x0097FF60
+bool CGLookingForGroup::GetLFGListEntryDisplayed(uint32_t index, const LFGListParty*& party, const LFGListPlayer*& player) {
+    LFGLIST* list = &CGLookingForGroup::m_searchResults;
+
+    if (CGLookingForGroup::m_unkACD660) {
+        if (index < list->m_playerList.m_count) {
+            party = NULL;
+            player = list->m_playerList.m_data[index];
+            return true;
+        }
+
+        index -= list->m_playerList.m_count;
+
+        if (index < list->m_partyList.m_count) {
+            party = list->m_partyList.m_data[index];
+            player = party && party->m_members.m_count > 0 ? party->m_members.m_data[0] : NULL;
+            return true;
+        }
+
+        return false;
+    }
+
+    if (index < list->m_partyList.m_count) {
+        party = list->m_partyList.m_data[index];
+        player = party && party->m_members.m_count > 0 ? party->m_members.m_data[0] : NULL;
+        return true;
+    }
+
+    index -= list->m_partyList.m_count;
+
+    if (index < list->m_playerList.m_count) {
+        party = NULL;
+        player = list->m_playerList.m_data[index];
+        return true;
+    }
+
+    return false;
+}
+
 // OFFSET: 0x0097FA50
 static int QSortLFGParty(const void* a, const void* b) {
     LFGListParty* partyA = *static_cast<LFGListParty* const*>(a);
     LFGListParty* partyB = *static_cast<LFGListParty* const*>(b);
-    LFGListPlayer* leaderA = partyA->m_members.m_count ? partyA->m_members.m_data[0] : NULL;
-    LFGListPlayer* leaderB = partyB->m_members.m_count ? partyB->m_members.m_data[0] : NULL;
+    LFGListPlayer* leaderA = partyA->m_members.m_count > 0 ? partyA->m_members.m_data[0] : NULL;
+    LFGListPlayer* leaderB = partyB->m_members.m_count > 0 ? partyB->m_members.m_data[0] : NULL;
 
     if (!leaderA) {
         return leaderB ? -1 : 0;
@@ -589,11 +586,14 @@ static int QSortLFGParty(const void* a, const void* b) {
             case 2: {
                 NameCache* nameA = g_nameDBCache.GetRecord(leaderA->m_key.m_guid.m_guid, WOWGUID(), NULL, NULL, false);
                 NameCache* nameB = g_nameDBCache.GetRecord(leaderB->m_key.m_guid.m_guid, WOWGUID(), NULL, NULL, false);
-                ChrClassesRec* classA;
-                ChrClassesRec* classB;
 
-                if (nameA && nameB && (classA = g_chrClassesDB.GetRecord(nameA->m_class)) && (classB = g_chrClassesDB.GetRecord(nameB->m_class))) {
-                    result = SStrSortUTF8I(classA->m_name, classB->m_name, STORM_MAX_STR);
+                if (nameA && nameB) {
+                    ChrClassesRec* classA = g_chrClassesDB.GetRecord(nameA->m_class);
+                    ChrClassesRec* classB = g_chrClassesDB.GetRecord(nameB->m_class);
+
+                    if (classA && classB) {
+                        result = SStrSortUTF8I(classA->m_name, classB->m_name, STORM_MAX_STR);
+                    }
                 }
 
                 break;
@@ -604,7 +604,7 @@ static int QSortLFGParty(const void* a, const void* b) {
                 NameCache* nameB = g_nameDBCache.GetRecord(leaderB->m_key.m_guid.m_guid, WOWGUID(), NULL, NULL, false);
 
                 if (nameA && nameB) {
-                    result = SStrCmp(nameA->m_name, nameB->m_name, STORM_MAX_STR);
+                    result = strcmp(nameA->m_name, nameB->m_name);
                 }
 
                 break;
@@ -652,11 +652,14 @@ static int QSortLFGPlayer(const void* a, const void* b) {
             case 2: {
                 NameCache* nameA = g_nameDBCache.GetRecord(playerA->m_key.m_guid.m_guid, WOWGUID(), NULL, NULL, false);
                 NameCache* nameB = g_nameDBCache.GetRecord(playerB->m_key.m_guid.m_guid, WOWGUID(), NULL, NULL, false);
-                ChrClassesRec* classA;
-                ChrClassesRec* classB;
 
-                if (nameA && nameB && (classA = g_chrClassesDB.GetRecord(nameA->m_class)) && (classB = g_chrClassesDB.GetRecord(nameB->m_class))) {
-                    result = SStrSortUTF8I(classA->m_name, classB->m_name, STORM_MAX_STR);
+                if (nameA && nameB) {
+                    ChrClassesRec* classA = g_chrClassesDB.GetRecord(nameA->m_class);
+                    ChrClassesRec* classB = g_chrClassesDB.GetRecord(nameB->m_class);
+
+                    if (classA && classB) {
+                        result = SStrSortUTF8I(classA->m_name, classB->m_name, STORM_MAX_STR);
+                    }
                 }
 
                 break;
@@ -667,7 +670,7 @@ static int QSortLFGPlayer(const void* a, const void* b) {
                 NameCache* nameB = g_nameDBCache.GetRecord(playerB->m_key.m_guid.m_guid, WOWGUID(), NULL, NULL, false);
 
                 if (nameA && nameB) {
-                    result = SStrCmp(nameA->m_name, nameB->m_name, STORM_MAX_STR);
+                    result = strcmp(nameA->m_name, nameB->m_name);
                 }
 
                 break;

@@ -2,22 +2,22 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x00553490
-LFGListPlayer* LFGListParty::GetMember(uint32_t index) {
-    if (index + 1 >= this->m_members.Count()) {
-        return NULL;
+// OFFSET: 0x0097F9E0
+LFGListPlayer* LFGListParty::GetMember(uint32_t index) const {
+    if (index + 1 < this->m_members.m_count) {
+        return this->m_members.m_data[index + 1];
     }
 
-    return this->m_members.m_data[index + 1];
+    return NULL;
 }
 
-// OFFSET: #0x005534C0
-uint32_t LFGListParty::GetNumMembers() {
-    uint32_t count = this->m_members.Count();
+// INLINED
+uint32_t LFGListParty::GetNumMembers() const {
+    uint32_t count = this->m_members.m_count;
     return count <= 1 ? 0 : count - 1;
 }
 
-// OFFSET: #0x00556E60
+// OFFSET: 0x00984190
 void LFGListParty::AddPlayer(LFGListPlayer* player) {
     if (player->m_partyIndex >= 0) {
         return;
@@ -40,7 +40,7 @@ void LFGListParty::AddPlayer(LFGListPlayer* player) {
     }
 }
 
-// OFFSET: #0x00556EF0
+// OFFSET: 0x00984220
 void LFGListParty::RemovePlayer(LFGListPlayer* player) {
     int32_t index = player->m_partyIndex;
 
@@ -50,7 +50,7 @@ void LFGListParty::RemovePlayer(LFGListPlayer* player) {
 
     uint32_t count = this->m_members.Count();
 
-    for (; static_cast<uint32_t>(index) < count - 1; index++) {
+    for (; index < static_cast<int32_t>(count - 1); index++) {
         this->m_members.m_data[index] = this->m_members.m_data[index + 1];
         this->m_members.m_data[index]->m_partyIndex = index;
     }
@@ -59,8 +59,9 @@ void LFGListParty::RemovePlayer(LFGListPlayer* player) {
     player->m_partyIndex = -1;
 }
 
-// OFFSET: #0x00558160
-LFGListParty::LFGListParty(const LFGListParty& source) : m_index(-1) {
+// OFFSET: 0x00986580
+LFGListParty::LFGListParty(const LFGListParty& source) {
+    this->m_index = -1;
     SStrCopy(this->m_comment, source.m_comment, sizeof(this->m_comment));
     this->m_roles[0] = source.m_roles[0];
     this->m_roles[1] = source.m_roles[1];
@@ -69,10 +70,41 @@ LFGListParty::LFGListParty(const LFGListParty& source) : m_index(-1) {
     this->m_encounterMask = source.m_encounterMask;
 }
 
-// OFFSET: #0x00558200
-LFGListPlayer::LFGListPlayer(const LFGListPlayer& source) : m_index(source.m_index), m_partyIndex(source.m_partyIndex), m_party(source.m_party), m_level(source.m_level), m_class(source.m_class), m_race(source.m_race), m_armor(source.m_armor), m_spellDamage(source.m_spellDamage), m_spellHeal(source.m_spellHeal), m_critMelee(source.m_critMelee), m_critRanged(source.m_critRanged), m_critSpell(source.m_critSpell), m_mp5(source.m_mp5), m_mp5Combat(source.m_mp5Combat), m_attackPower(source.m_attackPower), m_agility(source.m_agility), m_maxHealth(source.m_maxHealth), m_maxMana(source.m_maxMana), unk_0064(source.unk_0064), m_avgItemLevel(source.m_avgItemLevel), m_defenseSkill(source.m_defenseSkill), m_dodge(source.m_dodge), m_block(source.m_block), m_parry(source.m_parry), m_haste(source.m_haste), m_expertise(source.m_expertise), m_areaID(source.m_areaID), unk_0088(source.unk_0088), m_leader(source.m_leader), m_roles(source.m_roles), unk_0198(source.unk_0198), m_encounterMask(source.m_encounterMask) {
-    this->m_talents[0] = source.m_talents[0];
-    this->m_talents[1] = source.m_talents[1];
-    this->m_talents[2] = source.m_talents[2];
+// OFFSET: 0x00986640
+LFGListPlayer::LFGListPlayer(const LFGListPlayer& source) {
+    this->m_index = source.m_index;
+    this->m_partyIndex = source.m_partyIndex;
+    this->m_party = source.m_party;
+    this->m_level = source.m_level;
+    this->m_class = source.m_class;
+    this->m_race = source.m_race;
+    memcpy(this->m_talents, source.m_talents, sizeof(this->m_talents));
+    this->m_armor = source.m_armor;
+    this->m_spellDamage = source.m_spellDamage;
+    this->m_spellHeal = source.m_spellHeal;
+    this->m_critMelee = source.m_critMelee;
+    this->m_critRanged = source.m_critRanged;
+    this->m_critSpell = source.m_critSpell;
+    this->m_mp5 = source.m_mp5;
+    this->m_mp5Combat = source.m_mp5Combat;
+    this->m_attackPower = source.m_attackPower;
+    this->m_agility = source.m_agility;
+    this->m_maxHealth = source.m_maxHealth;
+    this->m_maxMana = source.m_maxMana;
+    this->unk_0064 = source.unk_0064;
+    this->m_gearRating = source.m_gearRating;
+    this->m_avgItemLevel = source.m_avgItemLevel;
+    this->m_defenseSkill = source.m_defenseSkill;
+    this->m_dodge = source.m_dodge;
+    this->m_block = source.m_block;
+    this->m_parry = source.m_parry;
+    this->m_haste = source.m_haste;
+    this->m_expertise = source.m_expertise;
+    this->m_areaID = source.m_areaID;
+    this->unk_008C = source.unk_008C;
+    this->m_leader = source.m_leader;
+    this->m_roles = source.m_roles;
     memcpy(this->m_comment, source.m_comment, sizeof(this->m_comment));
+    this->unk_0190 = source.unk_0190;
+    this->m_encounterMask = source.m_encounterMask;
 }

@@ -113,7 +113,7 @@ static TSFixedArray<CHATMESSAGE> s_chatMessages;
 // STATIC: 0x0100A68C
 static HBITMAP s_lastBitmap;
 
-// OFFSET: #0x00848030
+// OFFSET: 0x00B2F430
 static bool IsLCDAvailable() {
     if (CGLCD::m_lcd->IsDeviceAvailable(1)) {
         return true;
@@ -670,21 +670,25 @@ static int32_t GetAmmoCount() {
     return 0;
 }
 
-// OFFSET: #0x00848B50
+// OFFSET: 0x00B2FB90
 void* CGLCD::GetHandle(const char* name) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
     return handle ? handle->m_handle : NULL;
 }
 
-// OFFSET: #0x00848D50
+// OFFSET: 0x00B2FC70
 void CGLCD::UpdateMapPositions() {
     C3Vector position(0.0f, 0.0f, 0.0f);
     CGWorldMap::GetPlayerPosition(ClntObjMgrGetActivePlayer(), &position.x, &position.y);
 
-    MAPDATA* map;
+    MAPDATA* map = NULL;
+    MAPDATA* nextMap;
 
-    for (map = CGLCD::m_mapData.Head(); map; map = CGLCD::m_mapData.Next(map)) {
-        if (map->m_screen == s_currentScreen) {
+    for (MAPDATA* data = CGLCD::m_mapData.Head(); !CGLCD::m_mapData.IsEnd(data); data = nextMap) {
+        nextMap = data->RawNext();
+
+        if (data->m_screen == s_currentScreen) {
+            map = data;
             break;
         }
     }
@@ -695,7 +699,7 @@ void CGLCD::UpdateMapPositions() {
     CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("PlayerIcon"), 1);
 
     for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
-        CGRaidMember* member = CGRaidInfo::m_members[i];
+        CGRaidMember* member = CGRaidInfo::GetMember(i);
 
         if (member->m_guid != ClntObjMgrGetActivePlayer() && member->m_guid) {
             CGWorldMap::GetPlayerPosition(member->m_guid, &position.x, &position.y);
@@ -710,27 +714,29 @@ void CGLCD::UpdateMapPositions() {
     }
 
     CGBattlefieldInfo::RequestPlayerPositions();
-    uint32_t numLandmarks = CGWorldMap::m_numLandmarks;
+    int32_t numLandmarks = CGWorldMap::m_numLandmarks;
+    POIIcon* nextIcon;
 
-    for (POIIcon* icon = CGLCD::m_POIIcons.Head(); icon; icon = CGLCD::m_POIIcons.Next(icon)) {
+    for (POIIcon* icon = CGLCD::m_POIIcons.Head(); !CGLCD::m_POIIcons.IsEnd(icon); icon = nextIcon) {
+        nextIcon = icon->RawNext();
         uint8_t visible = 0;
 
-        for (uint32_t i = 0; i < numLandmarks; i++) {
+        for (int32_t i = 0; i < numLandmarks; i++) {
             WorldMapLandmarkInfo* landmark = &CGWorldMap::m_landmarks.m_data[i];
 
-            if (i >= CGWorldMap::m_numLandmarks || !landmark || landmark->m_id != icon->m_id) {
+            if (static_cast<uint32_t>(i) >= CGWorldMap::m_numLandmarks || !landmark || landmark->m_id != icon->m_id) {
                 continue;
             }
 
             AreaPOIRec* rec = g_areaPOIDB.GetRecord(landmark->m_id);
 
-            if ((landmark->m_type == 2 || CGWorldMap::m_currentZone == -1) && rec->m_flags < 0) {
-                uint32_t iconIndex = 0;
+            if ((landmark->m_type == 2 || CGWorldMap::m_currentZone == -1) && (rec->m_flags & 0x80)) {
+                int32_t iconIndex = 0;
 
                 if (rec->m_worldStateID) {
                     iconIndex = GetWorldState(rec->m_worldStateID) - 1;
 
-                    if (iconIndex >= 9) {
+                    if (iconIndex < 0 || static_cast<uint32_t>(iconIndex) >= 9) {
                         iconIndex = 0;
                     }
                 }
@@ -771,12 +777,12 @@ void CGLCD::UpdateMapPositions() {
 
         const char* token = CGBattlefieldInfo::GetFlagToken(i);
 
-        if (!SStrCmpI(token, "AllianceFlag", STORM_MAX_STR)) {
+        if (!_stricmp(token, "AllianceFlag")) {
             allianceVisible = 1;
             int32_t flagY = CMath::fint_(map->m_sizeY * flag.y + map->m_offsetY - 8.0f);
             int32_t flagX = CMath::fint_(map->m_sizeX * flag.x + map->m_offsetX - 8.0f);
             CGLCD::m_lcd->SetOrigin(CGLCD::GetHandle("AllianceFlag"), flagX, flagY);
-        } else if (!SStrCmpI(token, "HordeFlag", STORM_MAX_STR)) {
+        } else if (!_stricmp(token, "HordeFlag")) {
             hordeVisible = 1;
             int32_t flagY = CMath::fint_(map->m_sizeY * flag.y + map->m_offsetY - 8.0f);
             int32_t flagX = CMath::fint_(map->m_sizeX * flag.x + map->m_offsetX - 8.0f);
@@ -888,7 +894,7 @@ void CGLCD::SetStat(const char* name, const char* value) {
     }
 }
 
-// OFFSET: #0x008496A0
+// OFFSET: 0x00B30640
 void CGLCD::SetHandleText(const char* name, const char* text) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
 

@@ -137,10 +137,10 @@ int32_t CGLookingForGroup::m_randomSlotMinLevel;
 // STATIC: 0x00F4A3A0
 int32_t CGLookingForGroup::m_randomSlotMaxLevel;
 
-// STATIC: #0x00BEAA1C
+// STATIC: 0x00F4A4E0
 static uint32_t s_searchType;
 
-// STATIC: #0x00BEAA20
+// STATIC: 0x00F4A4E4
 static uint32_t s_searchID;
 
 // OFFSET: 0x00985040
@@ -442,7 +442,7 @@ LfgDungeonExpansionRec* GetLfgDungeonExpansionRec(int32_t dungeonID, int32_t exp
     return NULL;
 }
 
-// INLINED
+// OFFSET: 0x0097EF40
 void LFGProposal::Clear() {
     *reinterpret_cast<uint64_t*>(this->m_ticket.m_requesterGuid) = 0;
     this->m_ticket.m_id = 0;
@@ -1224,6 +1224,98 @@ static bool OnLfgUpdateStatus(ClientLfgUpdateStatus* msg) {
     return true;
 }
 
+// OFFSET: 0x0098AA40
+static bool OnLfgSearchResult(ClientLfgSearchResult* msg) {
+    bool changed = false;
+    s_searchType = msg->unk_006C;
+    s_searchID = msg->unk_0024;
+    int32_t lfgID = (s_searchID & 0xFFFFFF) | (s_searchType << 24);
+
+    if (lfgID != CGLookingForGroup::m_searchJoinedID) {
+        return true;
+    }
+
+    LFGLIST* list = &CGLookingForGroup::m_prevSearchResults;
+
+    if (static_cast<uint32_t>(lfgID) != list->m_lfgID) {
+        changed = true;
+    }
+
+    if (!msg->unk_0028) {
+        list->Clear();
+    } else {
+        for (uint32_t i = 0; i < msg->m_removed.Count(); i++) {
+            uint64_t guid = *reinterpret_cast<uint64_t*>(msg->m_removed.m_data[i].m_guid);
+
+            if ((guid & 0xF000000000000000ull) || !(guid & 0xF07FFFFFFFFFFFFFull)) {
+                LFGListParty* party = list->m_parties.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid));
+
+                if (party) {
+                    list->DeleteParty(party);
+                }
+            } else {
+                LFGListPlayer* player = list->m_players.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid));
+
+                if (player) {
+                    list->RemovePlayer(player);
+                    player->~LFGListPlayer();
+                    SMemFree(player, "delete", -1, 0);
+                }
+            }
+        }
+    }
+
+    list->m_lfgID = lfgID;
+    list->m_totalParties = msg->unk_0058;
+
+    for (uint32_t i = 0; i < msg->m_parties.Count(); i++) {
+        JamLfgSearchResultParty* source = &msg->m_parties.m_data[i];
+        uint64_t guid = *reinterpret_cast<uint64_t*>(source->m_guid);
+        LFGListParty* party = list->m_parties.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid));
+
+        if (!party) {
+            party = new (__FILE__, __LINE__) LFGListParty();
+            list->m_parties.Insert(party, static_cast<uint32_t>(guid), CHashKeyGUID(guid));
+        }
+
+        LFGHandler::ReadGroupInfo(source, party);
+
+        if (party->m_index < 0) {
+            uint32_t index = list->m_partyList.Count();
+            list->m_partyList.SetCount(index + 1);
+            list->m_partyList.m_data[index] = party;
+            party->m_index = index;
+        }
+    }
+
+    list->m_totalPlayers = msg->unk_0010;
+
+    for (uint32_t i = 0; i < msg->m_players.Count(); i++) {
+        JamLfgSearchResultPlayer* source = &msg->m_players.m_data[i];
+        uint64_t guid = *reinterpret_cast<uint64_t*>(source->m_guid);
+        LFGListPlayer* player = list->m_players.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid));
+
+        if (!player) {
+            player = new (__FILE__, __LINE__) LFGListPlayer();
+            list->m_players.Insert(player, static_cast<uint32_t>(guid), CHashKeyGUID(guid));
+
+            if (!g_nameDBCache.GetRecord(*reinterpret_cast<uint64_t*>(source->m_guid), *reinterpret_cast<WOWGUID*>(source->m_guid), LFGNameCacheCallback, NULL, false)) {
+                list->m_pendingNames++;
+            }
+        }
+
+        LFGHandler::ReadPlayerInfo(source, list, player);
+        list->AddPlayer(player);
+    }
+
+    if (changed) {
+        CGLookingForGroup::m_searchResults.Copy(*list);
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
+    }
+
+    return true;
+}
+
 // OFFSET: 0x0098B200
 void CGLookingForGroup::InitializeGame() {
     CGLookingForGroup::m_prevSearchResults.Clear();
@@ -1287,6 +1379,7 @@ void CGLookingForGroup::InitializeGame() {
     ClientLfgQueueStatus::s_handler = OnLfgQueueStatus;
     CGLookingForGroup::m_randomSlotCount = 0;
     CGLookingForGroup::m_unkACD660 = 1;
+    ClientLfgSearchResult::s_handler = OnLfgSearchResult;
     ClientUpdateDungeonEncounterForLoot::s_handler = OnUpdateDungeonEncounterForLoot;
     CGLookingForGroup::m_randomSlotMinLevel = -1;
     CGLookingForGroup::m_randomSlotMaxLevel = -1;
@@ -1789,115 +1882,5 @@ int32_t Packet_SMSG_LFG_OPEN_FROM_GOSSIP(void* param, NETMESSAGE msgId, uint32_t
     uint32_t slot;
     msg->Get(slot);
     FrameScript_SignalEvent(SCRIPT_EVENT_LFG_OPEN_FROM_GOSSIP, "%d", slot);
-    return 1;
-}
-
-// OFFSET: #0x0055B770
-int32_t Packet_SMSG_LFG_SEARCH_RESULTS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    bool changed = false;
-    msg->Get(s_searchType);
-    msg->Get(s_searchID);
-    int32_t lfgID = (s_searchID & 0xFFFFFF) | (s_searchType << 24);
-
-    if (lfgID != CGLookingForGroup::m_searchJoinedID) {
-        msg->m_read = msg->m_size;
-        return 1;
-    }
-
-    LFGLIST* list = &CGLookingForGroup::m_prevSearchResults;
-
-    if (static_cast<uint32_t>(lfgID) != list->m_lfgID) {
-        changed = true;
-    }
-
-    uint8_t incremental = 0;
-    msg->Get(incremental);
-
-    if (incremental) {
-        uint32_t count;
-        msg->Get(count);
-
-        for (uint32_t i = 0; i < count; i++) {
-            uint64_t guid;
-            msg->Get(guid);
-
-            if ((guid & 0xF000000000000000ull) || !(guid & 0xF07FFFFFFFFFFFFFull)) {
-                LFGListParty* party = list->m_parties.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid));
-
-                if (party) {
-                    list->DeleteParty(party);
-                }
-            } else {
-                LFGListPlayer* player = list->m_players.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid));
-
-                if (player) {
-                    list->RemovePlayer(player);
-                    delete player;
-                }
-            }
-        }
-    } else {
-        list->Clear();
-    }
-
-    list->m_lfgID = lfgID;
-    uint32_t count;
-    msg->Get(count);
-    msg->Get(list->m_totalParties);
-
-    for (uint32_t i = 0; i < count; i++) {
-        uint64_t guid;
-        msg->Get(guid);
-        LFGListParty* party = list->m_parties.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid));
-
-        if (!party) {
-            party = new (__FILE__, __LINE__) LFGListParty();
-            list->m_parties.Insert(party, static_cast<uint32_t>(guid), CHashKeyGUID(guid));
-        }
-
-        LFGHandler::ReadGroupInfo(msg, party);
-
-        if (party->m_index < 0) {
-            uint32_t index = list->m_partyList.Count();
-            list->m_partyList.SetCount(index + 1);
-            list->m_partyList.m_data[index] = party;
-            party->m_index = index;
-        }
-    }
-
-    msg->Get(count);
-    msg->Get(list->m_totalPlayers);
-
-    for (uint32_t i = 0; i < count; i++) {
-        WOWGUID guid;
-        msg->Get(guid.m_guid);
-        LFGListPlayer* player = list->m_players.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
-
-        if (!player) {
-            player = new (__FILE__, __LINE__) LFGListPlayer();
-            list->m_players.Insert(player, static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
-
-            if (!g_nameDBCache.GetRecord(guid.m_guid, guid, LFGNameCacheCallback, NULL, false)) {
-                list->m_pendingNames++;
-            }
-        }
-
-        LFGHandler::ReadPlayerInfo(msg, list, player);
-
-        if (player->m_party) {
-            player->m_party->AddPlayer(player);
-        } else if (player->m_index < 0) {
-            uint32_t index = list->m_playerList.Count();
-            list->m_playerList.SetCount(index + 1);
-            list->m_playerList.m_data[index] = player;
-            player->m_index = index;
-        }
-    }
-
-    if (changed) {
-        CGLookingForGroup::m_searchResults.Copy(*list);
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
-    }
-
     return 1;
 }

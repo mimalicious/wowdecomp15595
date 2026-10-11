@@ -13,7 +13,7 @@ class TaxiPathNodeRec;
 class TaxiPathRec;
 struct lua_State;
 
-struct TaxiNodeInfo {
+struct TaxiWaypoint {
     /* 0000 */ TaxiNodesRec* m_rec;
     /* 0004 */ float m_x;
     /* 0008 */ float m_y;
@@ -43,32 +43,29 @@ struct TAXIROUTELINE {
 
 class CGTaxiMap {
     public:
-    static void EnterWorld();
-    static void CloseMap();
-    static void LeaveWorld();
     static CTexture* m_mapTexture;
-    static int32_t m_numNodes;
-    static TSGrowableArray<TaxiNodeInfo> m_nodes;
+    static uint32_t m_numNodes;
+    static TSGrowableArray<TaxiWaypoint> m_nodes;
     static TSFixedArray<TSGrowableArray<TAXIROUTELINE>> m_routeLines;
     static WOWGUID m_unit;
     static uint32_t m_maxNodeID;
-    static uint32_t m_nodeMaskSize;
+    static void EnterWorld();
+    static void CloseMap();
+    static void LeaveWorld();
     static void InitializeGame();
     static void ShutdownGame();
-    static void FreeRouteLines();
     static void RegisterScriptFunctions();
     static void UnregisterScriptFunctions();
-    static void SetupMap(const WOWGUID& unit, int32_t currentNode, const uint64_t* nodeMask);
+    static void SetupMap(const WOWGUID& unit, uint32_t currentNode, const uint8_t* nodeMask, int32_t nodeMaskSize);
     static void GeneratePaths();
     static void RecursePath(uint32_t index, uint32_t parent, int32_t cost);
     static float CalculateAccurateDistance(uint32_t index, uint32_t parent);
     static void TaxiNodeSetCurrent(uint32_t index);
-    static void TakeTaxiNode(uint32_t index);
-    static const char* TaxiNodeType(uint32_t index);
+    static void TakeTaxi(uint32_t index);
+    static const char* GetNodeType(uint32_t index);
+    static int32_t GetNodeCost(uint32_t index);
 };
 
-bool TaxiRouteExists(uint32_t from, uint32_t to);
-int32_t TaxiNodeCost(uint32_t index);
-
+uint32_t GetRouteSegmentCount(uint32_t index);
 
 #endif

@@ -1,72 +1,65 @@
 #include "LFGHandler.h"
-#include "Engine/Source/Base/CDataStore.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "WoW/Source/Ui/LFGLIST.h"
 
-// OFFSET: %0x008D74D0
-void LFGHandler::ReadGroupInfo(CDataStore* msg, LFGListParty* party) {
-    uint32_t flags = 0;
-    msg->Get(flags);
-
-    if (flags & 0x2) {
-        msg->GetString(party->m_comment, sizeof(party->m_comment));
+// OFFSET: 0x00980050
+void LFGHandler::ReadGroupInfo(const JamLfgSearchResultParty* source, LFGListParty* party) {
+    if (source->unk_0008 & 0x2) {
+        SStrCopy(party->m_comment, source->m_comment, sizeof(party->m_comment));
     }
 
-    if (flags & 0x10) {
-        for (uint32_t i = 0; i < 3; i++) {
-            msg->Get(party->m_roles[i]);
-        }
+    if (source->unk_0008 & 0x10) {
+        party->m_roles[0] = source->unk_011C[0];
+        party->m_roles[1] = source->unk_011C[1];
+        party->m_roles[2] = source->unk_011C[2];
     }
 
-    if (flags & 0x80) {
-        msg->Get(party->unk_0128);
-        msg->Get(party->m_encounterMask);
+    if (source->unk_0008 & 0x80) {
+        party->unk_0128 = *reinterpret_cast<const uint64_t*>(source->m_leaderGUID);
+        party->m_encounterMask = source->unk_0118;
     }
 }
 
-// OFFSET: #0x00559050
-void LFGHandler::ReadPlayerInfo(CDataStore* msg, LFGLIST* list, LFGListPlayer* player) {
-    uint32_t flags = 0;
-    msg->Get(flags);
-
-    if (flags & 0x1) {
-        msg->Get(player->m_level);
-        msg->Get(player->m_class);
-        msg->Get(player->m_race);
-
-        for (uint32_t i = 0; i < 3; i++) {
-            msg->Get(player->m_talents[i]);
-        }
-
-        msg->Get(player->m_armor);
-        msg->Get(player->m_spellDamage);
-        msg->Get(player->m_spellHeal);
-        msg->Get(player->m_critMelee);
-        msg->Get(player->m_critRanged);
-        msg->Get(player->m_critSpell);
-        msg->Get(player->m_mp5);
-        msg->Get(player->m_mp5Combat);
-        msg->Get(player->m_attackPower);
-        msg->Get(player->m_agility);
-        msg->Get(player->m_maxHealth);
-        msg->Get(player->m_maxMana);
-        msg->Get(player->unk_0064);
-        msg->Get(player->m_avgItemLevel);
-        msg->Get(player->m_defenseSkill);
-        msg->Get(player->m_dodge);
-        msg->Get(player->m_block);
-        msg->Get(player->m_parry);
-        msg->Get(player->m_haste);
-        msg->Get(player->m_expertise);
+// OFFSET: 0x00986A30
+void LFGHandler::ReadPlayerInfo(const JamLfgSearchResultPlayer* source, LFGLIST* list, LFGListPlayer* player) {
+    if (source->unk_0008 & 0x1) {
+        player->m_level = source->unk_000C;
+        player->m_class = source->unk_000D;
+        player->m_race = source->unk_000E;
+        player->m_talents[0] = source->unk_018C;
+        player->m_talents[1] = source->unk_018D;
+        player->m_talents[2] = source->unk_018E;
+        player->m_armor = source->unk_0010;
+        player->m_spellDamage = source->unk_0014;
+        player->m_spellHeal = source->unk_0018;
+        player->m_critMelee = source->unk_001C;
+        player->m_critRanged = source->unk_0020;
+        player->m_critSpell = source->unk_0024;
+        player->m_mp5 = source->unk_0028;
+        player->m_mp5Combat = source->unk_002C;
+        player->m_attackPower = source->unk_0030;
+        player->m_agility = source->unk_0034;
+        player->m_maxHealth = source->unk_0038;
+        player->m_maxMana = source->unk_003C;
+        player->unk_0064 = source->unk_0040;
+        player->m_gearRating = source->unk_0044;
+        player->m_avgItemLevel = source->unk_0048;
+        player->m_defenseSkill = source->unk_004C;
+        player->m_dodge = source->unk_0050;
+        player->m_block = source->unk_0054;
+        player->m_parry = source->unk_0058;
+        player->m_haste = source->unk_005C;
+        player->m_expertise = source->unk_0060;
     }
 
-    if (flags & 0x2) {
-        msg->GetString(player->m_comment, sizeof(player->m_comment));
+    if (source->unk_0008 & 0x2) {
+        SStrCopy(player->m_comment, source->m_comment, sizeof(player->m_comment));
     }
 
-    if (flags & 0x4) {
-        uint32_t wasLeader = player->m_leader;
-        uint8_t leader = 0;
-        msg->Get(leader);
+    if (source->unk_0008 & 0x4) {
+        uint8_t leader = source->unk_0164;
+        uint8_t wasLeader = player->m_leader;
         player->m_leader = leader;
 
         if ((wasLeader != 0) != (leader != 0) && player->m_party) {
@@ -75,41 +68,31 @@ void LFGHandler::ReadPlayerInfo(CDataStore* msg, LFGLIST* list, LFGListPlayer* p
         }
     }
 
-    if (flags & 0x8) {
+    if (source->unk_0008 & 0x8) {
         uint64_t current = player->m_party ? player->m_party->m_key.m_guid.m_guid : 0;
-        uint64_t guid = 0;
-        msg->Get(guid);
+        uint64_t guid = *reinterpret_cast<const uint64_t*>(source->m_partyGUID);
 
         if (current != guid) {
             list->RemovePlayer(player);
-            LFGListParty* party = guid ? list->m_parties.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid)) : NULL;
-            player->m_party = party;
-
-            if (party) {
-                party->AddPlayer(player);
-            } else if (player->m_index < 0) {
-                uint32_t count = list->m_playerList.Count();
-                list->m_playerList.SetCount(count + 1);
-                list->m_playerList.m_data[count] = player;
-                player->m_index = count;
-            }
+            player->m_party = guid ? list->m_parties.Ptr(static_cast<uint32_t>(guid), CHashKeyGUID(guid)) : NULL;
+            list->AddPlayer(player);
         }
     }
 
-    if (flags & 0x10) {
-        msg->Get(player->m_roles);
+    if (source->unk_0008 & 0x10) {
+        player->m_roles = source->unk_0170;
     }
 
-    if (flags & 0x20) {
-        msg->Get(reinterpret_cast<uint32_t&>(player->m_areaID));
+    if (source->unk_0008 & 0x20) {
+        player->m_areaID = source->unk_0174;
     }
 
-    if (flags & 0x40) {
-        msg->Get(player->unk_0088);
+    if (source->unk_0008 & 0x40) {
+        player->unk_008C = source->unk_0178;
     }
 
-    if (flags & 0x80) {
-        msg->Get(player->unk_0198);
-        msg->Get(player->m_encounterMask);
+    if (source->unk_0008 & 0x80) {
+        player->unk_0190 = *reinterpret_cast<const uint64_t*>(source->m_guildGUID);
+        player->m_encounterMask = source->unk_0188;
     }
 }

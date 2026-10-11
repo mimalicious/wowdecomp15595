@@ -434,30 +434,6 @@ bool CGWorldMap::DetermineAlternateMapPosition(int32_t mapID, int32_t areaID, fl
     return false;
 }
 
-// OFFSET: #0x00543920
-bool WorldMapTransformPosition(int32_t mapID, float x, float y, int32_t* outMapID, float* outX, float* outY, int32_t* outDungeonMapID) {
-    *outX = x;
-    *outY = y;
-    *outMapID = mapID;
-    *outDungeonMapID = 0;
-
-    for (int32_t i = 0; i < g_worldMapTransformsDB.m_numRecords; i++) {
-        WorldMapTransformsRec* transform = g_worldMapTransformsDB.GetRecordByIndex(i);
-
-        if (!transform || mapID != transform->m_mapID || transform->m_regionMin[0] > x || transform->m_regionMax[0] < x || y < transform->m_regionMin[1] || y > transform->m_regionMax[1]) {
-            continue;
-        }
-
-        *outMapID = transform->m_newMapID;
-        *outX = transform->m_regionOffset[0] + *outX;
-        *outY = transform->m_regionOffset[1] + *outY;
-        *outDungeonMapID = transform->m_newDungeonMapID;
-        return true;
-    }
-
-    return false;
-}
-
 // OFFSET: 0x0091A960
 int32_t CGWorldMap::GetDungeonMapFromChunk(int32_t mapID, int32_t wmoGroupID, float z, int32_t worldMapAreaID) {
     int32_t start = 0;

@@ -92,19 +92,6 @@ LFG_SLOT_INFO_LOOT* CGLookingForGroup::GetDungeonReward(uint32_t dungeonKey, uin
     return &entry->m_rewards.m_data[index];
 }
 
-// OFFSET: 0x0097EF80
-static int32_t GetLFGDungeonSubtype(const LfgDungeonsRec* rec) {
-    if (rec->m_typeID != 1) {
-        return 0;
-    }
-
-    if (rec->IsRaid()) {
-        return 3;
-    }
-
-    return rec->IsHeroic() ? 2 : 1;
-}
-
 // OFFSET: 0x00980F40
 static bool CanPartyLFGBackfill() {
     int32_t members = CGRaidInfo::m_realNumMembers;
@@ -1305,8 +1292,8 @@ static int32_t Script_SearchLFGLeave(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005529E0
-static int32_t AddLFGPlayerInfo(lua_State* L, LFGListPlayer* player) {
+// OFFSET: 0x0097F050
+static int32_t AddLFGPlayerInfo(lua_State* L, const LFGListPlayer* player) {
     if (player) {
         lua_pushboolean(L, player->m_roles & 0x1);
         lua_pushboolean(L, player->m_roles & 0x2);
@@ -1323,12 +1310,13 @@ static int32_t AddLFGPlayerInfo(lua_State* L, LFGListPlayer* player) {
         lua_pushnumber(L, player->m_critMelee);
         lua_pushnumber(L, player->m_critRanged);
         lua_pushnumber(L, player->m_critSpell);
-        lua_pushnumber(L, player->m_mp5);
-        lua_pushnumber(L, player->m_mp5Combat);
+        lua_pushnumber(L, static_cast<uint32_t>(player->m_mp5));
+        lua_pushnumber(L, static_cast<uint32_t>(player->m_mp5Combat));
         lua_pushnumber(L, player->m_attackPower);
         lua_pushnumber(L, player->m_agility);
         lua_pushnumber(L, player->m_maxHealth);
         lua_pushnumber(L, player->m_maxMana);
+        lua_pushnumber(L, static_cast<uint32_t>(player->m_gearRating));
         lua_pushnumber(L, player->m_avgItemLevel);
         lua_pushnumber(L, player->m_defenseSkill);
         lua_pushnumber(L, player->m_dodge);
@@ -1365,51 +1353,15 @@ static int32_t AddLFGPlayerInfo(lua_State* L, LFGListPlayer* player) {
         lua_pushnil(L);
         lua_pushnil(L);
         lua_pushnil(L);
+        lua_pushnil(L);
     }
 
-    return 28;
+    return 29;
 }
 
 // OFFSET: 0x00981E50/0x1406FC800
 static int32_t Script_GetLFGProposalMember(lua_State* L) {
     return CGLookingForGroup::GetLFGProposalMember(L);
-}
-
-// OFFSET: #0x00553530
-static bool GetLFGInfoByIndex(uint32_t index, LFGListParty** party, LFGListPlayer** player) {
-    LFGLIST* list = &CGLookingForGroup::m_searchResults;
-
-    if (CGLookingForGroup::m_unkACD660) {
-        if (index < list->m_playerList.m_count) {
-            *party = NULL;
-            *player = list->m_playerList.m_data[index];
-            return true;
-        }
-
-        if (index - list->m_playerList.m_count < list->m_partyList.m_count) {
-            LFGListParty* entry = list->m_partyList.m_data[index - list->m_playerList.m_count];
-            *party = entry;
-            *player = entry && entry->m_members.m_count ? entry->m_members.m_data[0] : NULL;
-            return true;
-        }
-
-        return false;
-    }
-
-    if (index >= list->m_partyList.m_count) {
-        if (index - list->m_partyList.m_count < list->m_playerList.m_count) {
-            *party = NULL;
-            *player = list->m_playerList.m_data[index - list->m_partyList.m_count];
-            return true;
-        }
-
-        return false;
-    }
-
-    LFGListParty* entry = list->m_partyList.m_data[index];
-    *party = entry;
-    *player = entry && entry->m_members.m_count ? entry->m_members.m_data[0] : NULL;
-    return true;
 }
 
 // OFFSET: 0x00981380/0x1406FBA90
@@ -1427,10 +1379,10 @@ static int32_t Script_SearchLFGGetEncounterResults(lua_State* L) {
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
     double encounter = lua_tonumber(L, 2);
-    LFGListPlayer* player = NULL;
-    LFGListParty* party = NULL;
+    const LFGListPlayer* player = NULL;
+    const LFGListParty* party = NULL;
 
-    if (!GetLFGInfoByIndex(index - 1, &party, &player)) {
+    if (!CGLookingForGroup::GetLFGListEntryDisplayed(index - 1, party, player)) {
         return 0;
     }
 
@@ -1543,10 +1495,10 @@ static int32_t Script_SearchLFGGetResults(lua_State* L) {
         return 0;
     }
 
-    LFGListPlayer* player = NULL;
-    LFGListParty* party = NULL;
+    const LFGListPlayer* player = NULL;
+    const LFGListParty* party = NULL;
 
-    if (!GetLFGInfoByIndex(index, &party, &player) || !player) {
+    if (!CGLookingForGroup::GetLFGListEntryDisplayed(index, party, player) || !player) {
         return 0;
     }
 
@@ -1566,15 +1518,15 @@ static int32_t Script_SearchLFGGetResults(lua_State* L) {
     char comment[256];
 
     if (party) {
-        SStrCopy(comment, party->m_comment, STORM_MAX_STR);
+        SStrCopy(comment, party->m_comment, sizeof(comment));
     } else {
-        SStrCopy(comment, player->m_comment, STORM_MAX_STR);
+        SStrCopy(comment, player->m_comment, sizeof(comment));
     }
 
     ProfanityFilter(comment, false, false);
     lua_pushstring(L, comment);
     lua_pushnumber(L, party ? party->GetNumMembers() : 0);
-    lua_pushboolean(L, player->unk_0088 != 0);
+    lua_pushboolean(L, player->unk_008C != 0);
     ChrClassesRec* classRec;
 
     if (name && (classRec = g_chrClassesDB.GetRecord(name->m_class)) && classRec->m_filename) {
@@ -1599,16 +1551,16 @@ static int32_t Script_SearchLFGGetPartyResults(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t partyIndex = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
-    LFGListParty* party = NULL;
-    LFGListPlayer* leader;
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t partyIndex = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
+    const LFGListParty* party = NULL;
+    const LFGListPlayer* leader;
 
-    if (!GetLFGInfoByIndex(index, &party, &leader)) {
+    if (!CGLookingForGroup::GetLFGListEntryDisplayed(index, party, leader)) {
         return 0;
     }
 
-    LFGListPlayer* player;
+    const LFGListPlayer* player;
     NameCache* name;
 
     if (party && (player = party->GetMember(partyIndex)) && (name = g_nameDBCache.GetRecord(player->m_key.m_guid.m_guid, WOWGUID(), NULL, NULL, false))) {
@@ -1628,7 +1580,7 @@ static int32_t Script_SearchLFGGetPartyResults(lua_State* L) {
         AreaTableRec* area = g_areaTableDB.GetRecord(player->m_areaID);
         lua_pushstring(L, area ? area->m_areaName : FrameScript_GetText("UNKNOWN", -1, GENDER_NOT_APPLICABLE));
         char comment[256];
-        SStrCopy(comment, player->m_comment, STORM_MAX_STR);
+        SStrCopy(comment, player->m_comment, sizeof(comment));
         ProfanityFilter(comment, false, false);
         lua_pushstring(L, comment);
         return AddLFGPlayerInfo(L, player) + 6;

@@ -12363,26 +12363,44 @@ void __stdcall CGPlayer_C::HandleActivateTaxiReply(uint32_t reply) {
 
 // OFFSET: 0x0055C410/0x1401B9110
 void __stdcall CGPlayer_C::ShowTaxiNodes(CDataStore* msg) {
+    uint32_t knownNodes = 0;
     WOWGUID unit;
     uint32_t currentNode = 0;
     uint32_t show = 0;
     msg->Get(show);
 
     if (show) {
-        msg->Get(unit.m_guid);
-        msg->Get(currentNode);
+        uint64_t guid = 0;
+        msg->Get(guid);
+        unit.m_guid = guid;
+        uint32_t node = 0;
+        msg->Get(node);
+        currentNode = node;
     }
 
-    uint64_t* nodeMask = new (__FILE__, __LINE__) uint64_t[CGTaxiMap::m_nodeMaskSize];
-    uint32_t knownNodes = 0;
+    uint32_t nodeMaskSize = 0;
+    msg->Get(nodeMaskSize);
 
-    for (uint32_t i = 0; i < CGTaxiMap::m_nodeMaskSize; i++) {
-        uint64_t mask = 0;
+    if (!nodeMaskSize) {
+        if (show) {
+            CGGameUI::DisplayError(ERR_TAXINOPATHS);
+            CGGossipInfo::SetGossip(WOWGUID());
+        } else {
+            ConsolePrintf("ShowTaxiNodes : No nodes found\n");
+        }
+
+        return;
+    }
+
+    uint8_t* nodeMask = new (__FILE__, __LINE__) uint8_t[nodeMaskSize];
+
+    for (uint32_t i = 0; i < nodeMaskSize; i++) {
+        uint8_t mask = 0;
         msg->Get(mask);
         nodeMask[i] = mask;
 
-        for (uint32_t bit = 0; bit < 64; bit++) {
-            if (mask & (1ull << bit)) {
+        for (uint32_t bit = 0; bit < 8; bit++) {
+            if (mask & (1 << bit)) {
                 knownNodes++;
             }
         }
@@ -12390,7 +12408,7 @@ void __stdcall CGPlayer_C::ShowTaxiNodes(CDataStore* msg) {
 
     if (show) {
         if (knownNodes >= 2) {
-            CGTaxiMap::SetupMap(unit, currentNode, nodeMask);
+            CGTaxiMap::SetupMap(unit, currentNode, nodeMask, nodeMaskSize);
         } else {
             CGGameUI::DisplayError(ERR_TAXINOPATHS);
             CGGossipInfo::SetGossip(WOWGUID());
@@ -12398,11 +12416,11 @@ void __stdcall CGPlayer_C::ShowTaxiNodes(CDataStore* msg) {
     } else {
         int32_t nodeID = 1;
 
-        for (uint32_t i = 0; i < CGTaxiMap::m_nodeMaskSize; i++) {
-            for (uint32_t bit = 0; bit < 64; bit++) {
+        for (int32_t i = 0; i < static_cast<int32_t>(nodeMaskSize); i++) {
+            for (uint32_t bit = 0; bit < 8; bit++) {
                 TaxiNodesRec* node;
 
-                if ((nodeMask[i] & (1ull << bit)) && (node = g_taxiNodesDB.GetRecord(nodeID))) {
+                if ((nodeMask[i] & (1 << bit)) && (node = g_taxiNodesDB.GetRecord(nodeID))) {
                     ConsolePrintf("[%02d]: %s", nodeID, static_cast<const char*>(node->m_name));
                 }
 
@@ -12411,7 +12429,9 @@ void __stdcall CGPlayer_C::ShowTaxiNodes(CDataStore* msg) {
         }
     }
 
-    delete[] nodeMask;
+    if (nodeMask) {
+        SMemFree(nodeMask, "delete[]", -1, 0);
+    }
 }
 
 // OFFSET: 0x00564600/0x1401C2730

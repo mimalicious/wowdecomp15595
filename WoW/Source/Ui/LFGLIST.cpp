@@ -15,6 +15,18 @@ void LFGLIST::Reindex() {
     }
 }
 
+// OFFSET: 0x009842C0
+void LFGLIST::AddPlayer(LFGListPlayer* player) {
+    if (player->m_party) {
+        player->m_party->AddPlayer(player);
+    } else if (player->m_index < 0) {
+        uint32_t count = this->m_playerList.Count();
+        this->m_playerList.SetCount(count + 1);
+        this->m_playerList.m_data[count] = player;
+        player->m_index = count;
+    }
+}
+
 // OFFSET: #0x00556F90
 void LFGLIST::RemovePlayer(LFGListPlayer* player) {
     int32_t index = player->m_index;

@@ -1337,4 +1337,45 @@ class UserClientOpcode3231 : public JamClientMessage {
     ~UserClientOpcode3231();
 };
 
+class UserClientLfgJoin : public JamClientMessage {
+    public:
+    /* 0010 */ char m_comment[256];
+    /* 0110 */ uint32_t m_roles;
+    /* 0114 */ TSGrowableArray<uint32_t> m_slots;
+    /* 0124 */ uint32_t m_needs[3];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgJoin();
+    ~UserClientLfgJoin();
+};
+
+class UserClientLfgLeave : public JamClientMessage {
+    public:
+    /* 0010 */ JamClientRideTicket m_ticket;
+    /* 0024 */ uint8_t unk_0024[4];
+    /* 0028 */ uint32_t unk_0028;
+    /* 002C */ uint8_t unk_002C[4];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgLeave();
+    ~UserClientLfgLeave();
+};
+
+class UserClientLfgProposalResponse : public JamClientMessage {
+    public:
+    /* 0010 */ JamClientRideTicket m_ticket;
+    /* 0024 */ uint8_t unk_0024[4];
+    /* 0028 */ uint32_t m_proposalID;
+    /* 002C */ bool m_accept;
+    /* 002D */ uint8_t unk_002D[3];
+    /* 0030 */ uint8_t m_instanceGuid[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgProposalResponse();
+    ~UserClientLfgProposalResponse();
+};
+
 #endif

@@ -8,6 +8,7 @@
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/DB/Rec/LfgDungeonsRec.h"
 
 class CDataStore;
 class LfgDungeonExpansionRec;
@@ -244,7 +245,7 @@ class CGLookingForGroup {
     static LFG_SLOT_INFO_LOOT* GetDungeonReward(uint32_t dungeonKey, uint32_t index);
     static void RequestLFGPlayerInfo();
     static void ClearPartyInfo();
-    static uint8_t GetClassRoles(uint32_t classID);
+    static uint32_t GetClassRoles(uint32_t classID);
     static bool HasRaidDungeon(LFGInfo* info);
     static bool HasRFDungeon(LFGInfo* info);
     static void UpdateLFDEntries();
@@ -278,13 +279,13 @@ class CGLookingForGroup {
     static void ClearLFGDungeon(uint32_t slot);
     static int32_t GetQueueStatusIndex();
     static void ResortLFGLists();
+    static bool GetLFGListEntryDisplayed(uint32_t index, const LFGListParty*& party, const LFGListPlayer*& player);
 };
 
 extern const char* s_roleTokens[3];
 
 LfgDungeonExpansionRec* GetLfgDungeonExpansionRec(int32_t dungeonID, int32_t expansionLevel);
 int32_t Packet_SMSG_LFG_OPEN_FROM_GOSSIP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_LFG_SEARCH_RESULTS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 
 void LookingForGroupRegisterScriptFunctions();
 void LookingForGroupUnregisterScriptFunctions();
@@ -292,8 +293,10 @@ void LookingForGroupUnregisterScriptFunctions();
 void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32_t completedMask, uint32_t* total, uint32_t* completed);
 int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty, int32_t index, uint32_t completedMask, uint32_t otherMask);
 void CountDungeonEncounters(int32_t mapId, int32_t difficulty, uint32_t completedMask, uint32_t& total, uint32_t& completed);
+static int32_t GetLFGDungeonSubtype(const LfgDungeonsRec* rec);
 const char* GetRoleTokenFromFlags(uint32_t flags);
 uint32_t GetRoleFlagFromToken(const char* token);
-uint32_t FilterRolesByClass(uint8_t roles);
+
+#include "WoW/Source/Ui/LFGInfo.inl"
 
 #endif

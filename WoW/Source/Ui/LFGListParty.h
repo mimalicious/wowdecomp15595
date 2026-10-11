@@ -30,20 +30,21 @@ class LFGListPlayer : public TSHashObject<LFGListPlayer, CHashKeyGUID> {
     /* 005C */ uint32_t m_maxHealth;
     /* 0060 */ uint32_t m_maxMana;
     /* 0064 */ uint32_t unk_0064;
-    /* 0068 */ float m_avgItemLevel;
-    /* 006C */ uint32_t m_defenseSkill;
-    /* 0070 */ uint32_t m_dodge;
-    /* 0074 */ uint32_t m_block;
-    /* 0078 */ uint32_t m_parry;
-    /* 007C */ uint32_t m_haste;
-    /* 0080 */ uint32_t m_expertise;
-    /* 0084 */ int32_t m_areaID;
-    /* 0088 */ uint8_t unk_0088;
-    /* 008C */ uint32_t m_leader;
-    /* 0090 */ uint8_t m_roles;
-    /* 0091 */ char m_comment[256];
-    /* 0198 */ uint64_t unk_0198;
-    /* 01A0 */ uint32_t m_encounterMask;
+    /* 0068 */ float m_gearRating;
+    /* 006C */ float m_avgItemLevel;
+    /* 0070 */ uint32_t m_defenseSkill;
+    /* 0074 */ uint32_t m_dodge;
+    /* 0078 */ uint32_t m_block;
+    /* 007C */ uint32_t m_parry;
+    /* 0080 */ uint32_t m_haste;
+    /* 0084 */ uint32_t m_expertise;
+    /* 0088 */ int32_t m_areaID;
+    /* 008C */ uint8_t unk_008C;
+    /* 008D */ uint8_t m_leader;
+    /* 008E */ uint8_t m_roles;
+    /* 008F */ char m_comment[256];
+    /* 0190 */ uint64_t unk_0190;
+    /* 0198 */ uint32_t m_encounterMask;
 
     LFGListPlayer();
 
@@ -64,8 +65,8 @@ class LFGListParty : public TSHashObject<LFGListParty, CHashKeyGUID> {
     LFGListParty(const LFGListParty& source);
     void AddPlayer(LFGListPlayer* player);
     void RemovePlayer(LFGListPlayer* player);
-    LFGListPlayer* GetMember(uint32_t index);
-    uint32_t GetNumMembers();
+    LFGListPlayer* GetMember(uint32_t index) const;
+    uint32_t GetNumMembers() const;
 };
 
 #include "WoW/Source/Ui/LFGListParty.inl"

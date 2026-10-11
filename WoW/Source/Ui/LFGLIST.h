@@ -23,6 +23,7 @@ class LFGLIST {
     ~LFGLIST();
     void Clear();
     bool Copy(LFGLIST& source);
+    void AddPlayer(LFGListPlayer* player);
     void DeleteParty(LFGListParty* party);
     void Reindex();
     void RemoveParty(LFGListParty* party);

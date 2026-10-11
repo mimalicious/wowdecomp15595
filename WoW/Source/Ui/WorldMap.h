@@ -65,7 +65,6 @@ struct WorldMapLandmarkInfo {
     /* 000C */ int32_t m_type;
 };
 
-bool WorldMapTransformPosition(int32_t mapID, float x, float y, int32_t* outMapID, float* outX, float* outY, int32_t* outDungeonMapID);
 
 class CGWorldMap {
     public:
