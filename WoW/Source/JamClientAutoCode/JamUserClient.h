@@ -1162,6 +1162,36 @@ class UserClientAcceptWargameInvite : public JamClientMessage {
     ~UserClientAcceptWargameInvite();
 };
 
+class UserClientChatReportIgnored : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_ignoredGUID[8];
+    /* 0018 */ uint8_t m_reason;
+    /* 0019 */ uint8_t unk_0019[7];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatReportIgnored();
+    ~UserClientChatReportIgnored();
+};
+
+class UserClientChatUnregisterAllAddonPrefixes : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientChatUnregisterAllAddonPrefixes();
+    ~UserClientChatUnregisterAllAddonPrefixes();
+};
+
+class UserClientChatRegisterAddonPrefixes : public JamClientMessage {
+    public:
+    /* 0010 */ TSGrowableArray<JamCliStructAddonPrefix> m_prefixes;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientChatRegisterAddonPrefixes();
+    ~UserClientChatRegisterAddonPrefixes();
+};
+
 class UserClientSupportTicketSubmitComplaint : public JamClientMessage {
     public:
     /* 0010 */ uint8_t m_targetCharacterGUID[8];

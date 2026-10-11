@@ -1267,6 +1267,95 @@ void UserClientRequestPartyJoinUpdates::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2583));
 }
 
+// OFFSET: 0x0069CDF0
+UserClientChatUnregisterAllAddonPrefixes::~UserClientChatUnregisterAllAddonPrefixes() {
+}
+
+// OFFSET: 0x0069CE30/0x140349360
+void UserClientChatUnregisterAllAddonPrefixes::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3D54));
+}
+
+// OFFSET: 0x0069CEB0/0x1403493D0
+UserClientChatReportIgnored::~UserClientChatReportIgnored() {
+}
+
+// OFFSET: 0x0069DC20/0x14034A2F0
+UserClientChatReportIgnored::UserClientChatReportIgnored() {
+}
+
+// OFFSET: 0x0069DF40/0x14034A780
+void UserClientChatReportIgnored::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0xD54));
+    msg->Put(this->m_reason);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_ignoredGUID[2] != 0);
+    bits.WriteBit(this->m_ignoredGUID[5] != 0);
+    bits.WriteBit(this->m_ignoredGUID[6] != 0);
+    bits.WriteBit(this->m_ignoredGUID[4] != 0);
+    bits.WriteBit(this->m_ignoredGUID[7] != 0);
+    bits.WriteBit(this->m_ignoredGUID[0] != 0);
+    bits.WriteBit(this->m_ignoredGUID[1] != 0);
+    bits.WriteBit(this->m_ignoredGUID[3] != 0);
+    bits.Flush();
+
+    if (this->m_ignoredGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[0] ^ 1));
+    }
+    if (this->m_ignoredGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[6] ^ 1));
+    }
+    if (this->m_ignoredGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[5] ^ 1));
+    }
+    if (this->m_ignoredGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[1] ^ 1));
+    }
+    if (this->m_ignoredGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[4] ^ 1));
+    }
+    if (this->m_ignoredGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[3] ^ 1));
+    }
+    if (this->m_ignoredGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[7] ^ 1));
+    }
+    if (this->m_ignoredGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_ignoredGUID[2] ^ 1));
+    }
+}
+
+// OFFSET: 0x0069EA70
+UserClientChatUnregisterAllAddonPrefixes::UserClientChatUnregisterAllAddonPrefixes() {
+}
+
+// OFFSET: 0x0069FD40/0x14034CEB0
+void UserClientChatRegisterAddonPrefixes::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x954));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<25>(this->m_prefixes.m_count);
+
+    for (uint32_t i = 0; i < this->m_prefixes.m_count; i++) {
+        bits.WriteBits<5>(strlen(this->m_prefixes.m_data[i].m_prefix));
+    }
+
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_prefixes.m_count; i++) {
+        msg->PutData(this->m_prefixes.m_data[i].m_prefix, strlen(this->m_prefixes.m_data[i].m_prefix));
+    }
+}
+
+// OFFSET: 0x0069FF50/0x14034D1E0
+UserClientChatRegisterAddonPrefixes::UserClientChatRegisterAddonPrefixes() {
+}
+
+// OFFSET: 0x0069FF70/0x14034D200
+UserClientChatRegisterAddonPrefixes::~UserClientChatRegisterAddonPrefixes() {
+}
+
 // OFFSET: 0x00B3BD90/0x140908C40
 UserLFGuildAddRecruit::UserLFGuildAddRecruit() {
 }

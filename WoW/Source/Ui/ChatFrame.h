@@ -165,13 +165,13 @@ class ChatChannel {
     /* 0098 */ int32_t m_unk98;
     /* 009C */ int32_t m_unk9C;
     /* 00A0 */ int32_t m_unkA0;
-    /* 00A4 */ uint8_t m_unkA4;
+    /* 00A4 */ bool m_unkA4;
     /* 00A5 */ uint8_t m_unkA5;
     /* 00A6 */ uint8_t unk_00A6[2];
     /* 00A8 */ uint32_t m_messageTimes[32];
     /* 0128 */ uint32_t m_messageTimeIndex;
     /* 012C */ char m_password[128];
-    /* 01AC */ uint8_t m_unk1AC;
+    /* 01AC */ bool m_unk1AC;
     /* 01AD */ uint8_t m_joinPending;
     /* 01AE */ uint8_t unk_01AE[2];
 
@@ -213,6 +213,9 @@ class LanguageWordsRec;
 
 struct WORDLIST : public TSHashObject<WORDLIST, HASHKEY_LANGUAGE> {
     /* 001C */ TSGrowableArray<const LanguageWordsRec*> m_words;
+};
+
+struct ADDONPREFIX : public TSHashObject<ADDONPREFIX, HASHKEY_STR> {
 };
 
 struct ZoneChannelDefault {
@@ -300,6 +303,7 @@ class CGChat {
     static int32_t IsChatLogging(int32_t type);
     static void AddCombatMessage(const char* text);
     static int32_t m_afk;
+    static int32_t m_dnd;
     static int32_t m_guildRecruitmentMode;
     static int32_t m_areaID;
     static int32_t m_paused;
@@ -407,6 +411,13 @@ class CGChat {
     static void Resume();
     static int32_t SetActiveVoiceSession(const char* channel, int32_t type, int32_t index);
     static void UpdateGuildStatus();
+    static int32_t OnChatDown(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+    static int32_t OnChatIsDown(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+    static int32_t OnChatReconnect(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+    static const char* GetChannelName(int32_t number, bool includeInactive);
+    static ChatChannel* GetChannelByNumber(int32_t number);
+    static void SendChat(int32_t language, const char* text, int32_t type, const char* target, const char* prefix);
+    static void RejoinChannels();
 };
 
 extern int32_t s_activeDisplayChannelType;
@@ -424,6 +435,8 @@ extern HSLOG s_chatLog[2];
 extern const ChatColorInfo s_chatTypeInfo[CHAT_MSG_MAX];
 extern uint32_t s_activeDisplayChannelFlags;
 extern uint32_t s_joinedZoneChannels;
+extern WOWGUID s_pendingReportTarget;
+extern TSHashTable<ADDONPREFIX, HASHKEY_STR> s_addonPrefixes;
 
 int32_t StringToChatType(const char* string, int32_t* type);
 int32_t StringToLanguage(const char* string, uint32_t* language);
@@ -438,6 +451,7 @@ bool ChannelNamesEqual(const char* activeName, const char* name, int32_t activeT
 ChatRecord* GetChatRecordEx(const char* name, const char* text, uint32_t lineID);
 void ComplainChat(const char* name, const char* text, uint32_t lineID);
 uint32_t BuildPartyDisplayList();
+bool RegisterAddonMessagePrefix(const char* prefix);
 uint32_t BuildRaidDisplayList(int32_t type);
 void RebuildDisplayChannelList(int32_t a1);
 bool SpamFilter(char* text, bool cache);

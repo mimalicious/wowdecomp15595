@@ -391,6 +391,13 @@ struct JamCliCUFProfile {
     JamCliCUFProfile();
 };
 
+struct JamCliStructAddonPrefix {
+    /* 0000 */ char m_prefix[17];
+
+    JamCliStructAddonPrefix();
+    ~JamCliStructAddonPrefix();
+};
+
 struct JamCliSupportTicketChatLine {
     /* 0000 */ uint32_t m_timestamp;
     /* 0004 */ char m_text[3000];

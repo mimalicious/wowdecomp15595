@@ -12,6 +12,14 @@ JamGuildRewardItem::~JamGuildRewardItem() {
 JamCliSupportTicketHeader::~JamCliSupportTicketHeader() {
 }
 
+// OFFSET: [0x00401000]
+JamCliStructAddonPrefix::~JamCliStructAddonPrefix() {
+}
+
+// OFFSET: [0x0066BC00]
+JamCliStructAddonPrefix::JamCliStructAddonPrefix() {
+}
+
 // OFFSET: 0x00696AB0
 void JamCliSupportTicketHeader::Put(CDataStore* msg) const {
     msg->Put(this->m_position.y);

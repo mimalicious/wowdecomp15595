@@ -481,7 +481,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void UpdateInventoryComponent(INVENTORY_SLOTS slot, const VisibleItem_C* oldItem);
     void UnequipVisibleItem(uint32_t slot, const VisibleItem_C* oldItem);
     void HideHelmForBarberShop(int32_t hide);
-    static void ClearEmote();
+    void ClearEmote();
     bool CanChangeTalentsInRaid() const;
     uint32_t GetEquippedItemDisplayId();
     int32_t GetAttackPowerContributionFromStat(int32_t stat, int32_t value);
