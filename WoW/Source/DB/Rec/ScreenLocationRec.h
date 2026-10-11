@@ -11,7 +11,7 @@ class ScreenLocationRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ DBCString unk_0004;
+    /* 0004 */ DBCString m_name;
 };
 
 #endif

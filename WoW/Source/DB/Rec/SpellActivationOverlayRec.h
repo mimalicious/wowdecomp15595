@@ -12,15 +12,13 @@ class SpellActivationOverlayRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_spellID;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ float unk_0014;
-    /* 0018 */ int32_t unk_0018;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ int32_t unk_0020;
+    /* 0008 */ int32_t m_overlayFileDataID;
+    /* 000C */ int32_t m_screenLocationID;
+    /* 0010 */ uint32_t m_color;
+    /* 0014 */ float m_scale;
+    /* 0018 */ int32_t m_spellClassMask[3];
     /* 0024 */ int32_t m_triggerType;
-    /* 0028 */ int32_t unk_0028;
+    /* 0028 */ int32_t m_soundEntriesID;
 };
 
 #endif
