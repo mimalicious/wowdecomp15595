@@ -13,6 +13,10 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Services/SysMessage.h"
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Source/Object/ObjectClient/GuildStats_C.h"
+#include "WoW/Source/Ui/ReputationInfo.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRandom.h"
 #include "Engine/Source/pcre/pcreposix.h"
@@ -248,7 +252,7 @@ ChatRecord CGChat::m_chatHistory[60];
 // STATIC: 0x00F32270
 WOWGUID CGChat::m_whisperDstHistory[128];
 
-// STATIC: #0x00BCEF60
+// STATIC: 0x00F32670
 WOWGUID CGChat::m_whisperSrcHistory[16];
 
 // STATIC: 0x00F32708
@@ -260,10 +264,10 @@ static int32_t s_chatHistoryInitialized;
 // STATIC: 0x00F32714
 static uint32_t s_chatLineID;
 
-// STATIC: #0x00BCF038
+// STATIC: 0x00F32780
 static uint32_t s_whisperThrottleIndex;
 
-// STATIC: #0x00BCF03C
+// STATIC: 0x00F32784
 static uint32_t s_whisperThrottleTimes[10];
 
 // STATIC: #0x00BCF064
@@ -346,7 +350,7 @@ uint8_t s_collapsedHeaders[3];
 // STATIC: 0x00ED7A7B
 static bool s_pendingUserListActive;
 
-// STATIC: #0x00B743D4
+// STATIC: 0x00ED7A7C
 uint32_t s_activeDisplayChannelFlags;
 
 // STATIC: 0x00ED7A80
@@ -361,7 +365,7 @@ char CGChat::s_activeDisplayChannelName[128];
 // STATIC: 0x00ED7B08
 uint32_t s_numDisplayChannels;
 
-// STATIC: #0x00B74464
+// STATIC: 0x00ED7B0C
 static AreaTableRec* s_cityArea;
 
 // STATIC: 0x00ED7B10
@@ -373,10 +377,10 @@ ChatColorInfo s_chatColors[CHAT_MSG_MAX];
 // STATIC: 0x00ED90E0
 static char s_inviteChannelName[128];
 
-// STATIC: #0x00BCEFE4
+// STATIC: 0x00F326F4
 int32_t CGChat::m_loaded;
 
-// STATIC: #0x00BCEFE8
+// STATIC: 0x00F326F8
 int32_t CGChat::m_registered;
 
 // STATIC: 0x00F32710
@@ -2231,25 +2235,25 @@ void CGChat::InviteNameQueryCallback(int32_t id, const WOWGUID& guid, void* para
     }
 }
 
-// OFFSET: #0x004FB620
+// OFFSET: 0x008E5E30
 int32_t CGChat::OnComsatReconnectAttempt(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_COMSAT_RECONNECT_ATTEMPT);
     return 1;
 }
 
-// OFFSET: #0x004FB640
+// OFFSET: 0x008E5E50
 int32_t CGChat::OnComsatDisconnect(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_COMSAT_DISCONNECT);
     return 1;
 }
 
-// OFFSET: #0x004FB660
+// OFFSET: 0x008E5E70
 int32_t CGChat::OnComsatConnectFail(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_COMSAT_CONNECT_FAIL);
     return 1;
 }
 
-// OFFSET: #0x004FB680
+// OFFSET: 0x008E5E90
 int32_t CGChat::OnVoicesessionFull(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_VOICESESSION_FULL);
     return 1;
@@ -2561,7 +2565,7 @@ int32_t CGChat::OnServerFirstAchievement(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// OFFSET: #0x0050C3C0
+// OFFSET: 0x008F8E20
 int32_t CGChat::OnZoneUnderAttack(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t areaId;
     msg->Get(reinterpret_cast<uint32_t&>(areaId));
@@ -2575,7 +2579,7 @@ int32_t CGChat::OnZoneUnderAttack(void* param, NETMESSAGE msgId, uint32_t time, 
     char text[3000];
     SStrPrintf(text, sizeof(text), FrameScript_GetText("ZONE_UNDER_ATTACK", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(area->m_areaName));
 
-    if (area->m_parentAreaID) {
+    if (area->m_flags & 0x40000000) {
         areaId = area->m_parentAreaID;
     }
 
@@ -2604,7 +2608,7 @@ int32_t CGChat::OnDurabilityDamageDeath(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x0050C850
+// OFFSET: 0x008F9330
 int32_t CGChat::OnDefenseMessage(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t areaId;
     uint32_t length;
@@ -2617,7 +2621,7 @@ int32_t CGChat::OnDefenseMessage(void* param, NETMESSAGE msgId, uint32_t time, C
 
     AreaTableRec* area = g_areaTableDB.GetRecord(areaId);
 
-    if (area && area->m_parentAreaID) {
+    if (area && (area->m_flags & 0x40000000)) {
         areaId = area->m_parentAreaID;
     }
 
@@ -2640,7 +2644,7 @@ int32_t CGChat::OnDefenseMessage(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x0050C980
+// OFFSET: 0x008F94A0
 int32_t CGChat::OnServerMessage(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t id;
     char argument[1024];
@@ -2771,7 +2775,7 @@ int32_t CGChat::OnInstanceResetFailed(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x0050CEE0
+// OFFSET: 0x008F99B0
 int32_t CGChat::OnResetFailedNotify(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGChat::AddChatMessage(FrameScript_GetText("RESET_FAILED_NOTIFY", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL);
     return 1;
@@ -3169,7 +3173,13 @@ int32_t CGChat::OnChannelNotify(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x0050EDD0
+// OFFSET: 0x008E5EB0
+static bool OnClearBossEmotes(ClientClearBossEmotes* msg) {
+    FrameScript_SignalEvent(SCRIPT_EVENT_CLEAR_BOSS_EMOTES, NULL);
+    return true;
+}
+
+// OFFSET: 0x008FBD40/0x14062FE70
 void CGChat::InitializeGame() {
     for (int32_t i = 0; i < g_languageWordsDB.m_numRecords; i++) {
         LanguageWordsRec* rec = g_languageWordsDB.GetRecordByIndex(i);
@@ -3214,12 +3224,12 @@ void CGChat::InitializeGame() {
         if (i == 0) {
             s_chatWindows[i].m_shown = 1;
             s_chatWindows[i].m_docked = 1;
-            memset(s_chatWindows[i].m_messageGroups, 1, 40);
+            memset(s_chatWindows[i].m_messageGroups, 1, 42);
         } else if (i == 1) {
             s_chatWindows[i].m_shown = 1;
             s_chatWindows[i].m_docked = 2;
 
-            for (uint32_t j = 40; j < 46; j++) {
+            for (uint32_t j = 42; j < 49; j++) {
                 s_chatWindows[i].m_messageGroups[j] = s_chatMessageGroups[j].m_default != 0;
             }
         } else {
@@ -3240,6 +3250,11 @@ void CGChat::InitializeGame() {
     CGChat::m_loaded = 0;
     CGChat::m_registered = 0;
     CGChat::m_complaintsSystemStatus = 0;
+    s_queueAddonPrefixes = 1;
+    s_addonPrefixMessage.m_prefixes.Clear();
+    s_addonPrefixes.Clear();
+    s_numAddonPrefixes = 0;
+    s_pendingReportTarget.m_guid = 0;
     s_joinedZoneChannels = 0;
     memset(CGChat::m_whisperSrcHistory, 0, sizeof(((CGChat*)0)->m_whisperSrcHistory));
     memset(CGChat::m_whisperDstHistory, 0, sizeof(((CGChat*)0)->m_whisperDstHistory));
@@ -3250,6 +3265,7 @@ void CGChat::InitializeGame() {
     }
 
     CGChat::m_voiceChatSystemStatus = 0;
+    s_chatServerDown = 0;
     memset(CGChat::s_displayChannels, 0, sizeof(CGChat::s_displayChannels));
     s_numDisplayChannels = 0;
     memset(CGChat::s_activeDisplayChannelName, 0, sizeof(CGChat::s_activeDisplayChannelName));
@@ -3263,6 +3279,9 @@ void CGChat::InitializeGame() {
     s_inviteChannelName[0] = 0;
 
     ClientServices::SetMessageHandler(SMSG_CHANNEL_NOTIFY, CGChat::OnChannelNotify, NULL);
+    ClientServices::SetMessageHandler(SMSG_CHAT_DOWN, CGChat::OnChatDown, NULL);
+    ClientServices::SetMessageHandler(SMSG_CHAT_IS_DOWN, CGChat::OnChatIsDown, NULL);
+    ClientServices::SetMessageHandler(SMSG_CHAT_RECONNECT, CGChat::OnChatReconnect, NULL);
     ClientServices::SetMessageHandler(SMSG_CHANNEL_LIST, CGChat::OnChannelList, NULL);
     ClientServices::SetMessageHandler(SMSG_CHAT, CGChat::OnMessageChat, NULL);
     ClientServices::SetMessageHandler(SMSG_TEXT_EMOTE, CGChat::OnTextEmote, NULL);
@@ -3290,9 +3309,10 @@ void CGChat::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_USERLIST_UPDATE, CGChat::OnUserListUpdate, NULL);
     ClientServices::SetMessageHandler(SMSG_VOICESESSION_FULL, CGChat::OnVoicesessionFull, NULL);
     ClientServices::SetMessageHandler(SMSG_SERVER_FIRST_ACHIEVEMENT, CGChat::OnServerFirstAchievement, NULL);
+    ClientClearBossEmotes::s_handler = OnClearBossEmotes;
 }
 
-// OFFSET: #0x0050B660
+// OFFSET: 0x008F7F10
 void CGChat::OnLogXPGain(int32_t amount) {
     char text[3000];
     SStrPrintf(text, sizeof(text), FrameScript_GetText("COMBATLOG_XPLOSS_FIRSTPERSON_UNNAMED", -1, GENDER_NOT_APPLICABLE), -amount);
@@ -3322,7 +3342,7 @@ void CGChat::InformTargetIcon(WOWGUID setter, WOWGUID target, int32_t index) {
     }
 }
 
-// OFFSET: #0x0050B1D0
+// OFFSET: 0x008F7A90/0x14062A9F0
 static void UnitCombatLogShowXPGained(CGUnit_C* unit, int32_t amount, float groupMult) {
     char text[3000];
     int32_t base = static_cast<int32_t>(amount / groupMult);
@@ -3344,7 +3364,7 @@ static void UnitCombatLogShowXPGained(CGUnit_C* unit, int32_t amount, float grou
     CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(33), NULL);
 }
 
-// OFFSET: #0x0050B300
+// OFFSET: 0x008F7BD0/0x14062AB80
 void CGChat::LogXPGain(CGUnit_C* unit, int32_t amount, int32_t type, int32_t bonus, float groupMult, bool referAFriend) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -3366,10 +3386,6 @@ void CGChat::LogXPGain(CGUnit_C* unit, int32_t amount, int32_t type, int32_t bon
         ExhaustionRec* exhaustion = g_exhaustionDB.GetRecord(restState);
 
         if (exhaustion && !fequal(exhaustion->m_factor, 0.0f) && !fequal(exhaustion->m_factor, 1.0f)) {
-            if (restState >= 7) {
-                SErrDisplayAppFatalMessage("", "", 0);
-            }
-
             char token[256];
             int32_t base = static_cast<int32_t>(bonus / groupMult);
 
@@ -3877,7 +3893,7 @@ void CGChat::NameQueryCallback(int32_t id, const WOWGUID& guid, void* param, boo
     }
 }
 
-// OFFSET: #0x00503FB0
+// OFFSET: 0x008F03D0
 void CGChat::TextEmoteNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     PENDINGTEXTEMOTE* next;
 
@@ -4240,7 +4256,22 @@ void CGChat::OnChannelsUpdated() {
     RebuildDisplayChannelList(1);
 }
 
-// OFFSET: #0x0050CFC0
+// OFFSET: 0x008F9A60
+static void NotifyFlagChanged(WOWGUID guid, const char* name, uint8_t oldFlags, uint8_t newFlags, const char* channel, uint8_t mask, const char* setText, const char* unsetText) {
+    if (!(mask & oldFlags) && (newFlags & mask)) {
+        ChatMessageParams params;
+        params.m_senderName = name;
+        params.m_channelName = channel;
+        CGChat::AddChatMessage(setText, CHAT_MSG_CHANNEL_NOTICE_USER, &params);
+    } else if ((mask & oldFlags) && !(newFlags & mask)) {
+        ChatMessageParams params;
+        params.m_senderName = name;
+        params.m_channelName = channel;
+        CGChat::AddChatMessage(unsetText, CHAT_MSG_CHANNEL_NOTICE_USER, &params);
+    }
+}
+
+// OFFSET: 0x008F9B20/0x14062D050
 void CGChat::HandleFlagsChanged(WOWGUID guid, uint8_t oldFlags, uint8_t newFlags, const char* channel) {
     NameCache* record = g_nameDBCache.GetRecord(guid.m_guid, guid, CGChat::NameQueryCallback, NULL, false);
 
@@ -4252,41 +4283,9 @@ void CGChat::HandleFlagsChanged(WOWGUID guid, uint8_t oldFlags, uint8_t newFlags
         s_activeDisplayChannelFlags = newFlags;
     }
 
-    if (!(oldFlags & 0x2) && (newFlags & 0x2)) {
-        ChatMessageParams params;
-        params.m_senderName = record->m_name;
-        params.m_channelName = channel;
-        CGChat::AddChatMessage("SET_MODERATOR", CHAT_MSG_CHANNEL_NOTICE_USER, &params);
-    } else if ((oldFlags & 0x2) && !(newFlags & 0x2)) {
-        ChatMessageParams params2;
-        params2.m_senderName = record->m_name;
-        params2.m_channelName = channel;
-        CGChat::AddChatMessage("UNSET_MODERATOR", CHAT_MSG_CHANNEL_NOTICE_USER, &params2);
-    }
-
-    if (!(oldFlags & 0x4) && (newFlags & 0x4)) {
-        ChatMessageParams params3;
-        params3.m_senderName = record->m_name;
-        params3.m_channelName = channel;
-        CGChat::AddChatMessage("SET_VOICE", CHAT_MSG_CHANNEL_NOTICE_USER, &params3);
-    } else if ((oldFlags & 0x4) && !(newFlags & 0x4)) {
-        ChatMessageParams params4;
-        params4.m_senderName = record->m_name;
-        params4.m_channelName = channel;
-        CGChat::AddChatMessage("UNSET_VOICE", CHAT_MSG_CHANNEL_NOTICE_USER, &params4);
-    }
-
-    if (!(oldFlags & 0x10) && (newFlags & 0x10)) {
-        ChatMessageParams params5;
-        params5.m_senderName = record->m_name;
-        params5.m_channelName = channel;
-        CGChat::AddChatMessage("SET_SPEAK", CHAT_MSG_CHANNEL_NOTICE_USER, &params5);
-    } else if ((oldFlags & 0x10) && !(newFlags & 0x10)) {
-        ChatMessageParams params6;
-        params6.m_senderName = record->m_name;
-        params6.m_channelName = channel;
-        CGChat::AddChatMessage("UNSET_SPEAK", CHAT_MSG_CHANNEL_NOTICE_USER, &params6);
-    }
+    NotifyFlagChanged(guid, record->m_name, oldFlags, newFlags, channel, 0x2, "SET_MODERATOR", "UNSET_MODERATOR");
+    NotifyFlagChanged(guid, record->m_name, oldFlags, newFlags, channel, 0x4, "SET_VOICE", "UNSET_VOICE");
+    NotifyFlagChanged(guid, record->m_name, oldFlags, newFlags, channel, 0x10, "SET_SPEAK", "UNSET_SPEAK");
 }
 
 // OFFSET: 0x008F7670/0x14062A380
@@ -4375,7 +4374,33 @@ void CGChat::EnterWorld() {
     s_queueAddonPrefixes = 0;
 }
 
-// OFFSET: #0x0050BA10
+// OFFSET: 0x008F8280/0x14062B3E0
+static void LogGuildReactionCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (!success) {
+        return;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || !player->GetGuildGUID()) {
+        return;
+    }
+
+    char token[64];
+    SStrPrintf(token, sizeof(token), "FACTION_STANDING_LABEL%d", CGReputationInfo::GetFactionStandingReaction(1168) + 1);
+    const char* label = player->GetFrameScriptText(token, -1);
+    const char* format = FrameScript_GetText("FACTION_STANDING_CHANGED_GUILDNAME", -1, GENDER_NOT_APPLICABLE);
+    WOWGUID requester = WOWGUID();
+    GuildStats_C* stats = g_guildInfoCache.GetRecord(player->GetGuildGUID().m_guid, requester, NULL, NULL, false);
+
+    if (stats) {
+        char text[3000];
+        SStrPrintf(text, sizeof(text), format, label, stats->m_name);
+        CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
+    }
+}
+
+// OFFSET: 0x008F8380/0x14062B530
 void CGChat::LogReactionChanged(int32_t faction, int32_t reaction) {
     FactionRec* rec = g_factionDB.GetRecord(faction);
 
@@ -4393,11 +4418,26 @@ void CGChat::LogReactionChanged(int32_t faction, int32_t reaction) {
     SStrPrintf(token, sizeof(token), "FACTION_STANDING_LABEL%d", reaction + 1);
     const char* label = player->GetFrameScriptText(token, -1);
     char text[3000];
-    SStrPrintf(text, sizeof(text), FrameScript_GetText("FACTION_STANDING_CHANGED", -1, GENDER_NOT_APPLICABLE), label, static_cast<const char*>(rec->m_name));
+
+    if (faction != 1168) {
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("FACTION_STANDING_CHANGED", -1, GENDER_NOT_APPLICABLE), label, static_cast<const char*>(rec->m_name));
+    } else if (!player->GetGuildGUID()) {
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("FACTION_STANDING_CHANGED_GUILD", -1, GENDER_NOT_APPLICABLE), label);
+    } else {
+        WOWGUID requester = WOWGUID();
+        GuildStats_C* stats = g_guildInfoCache.GetRecord(player->GetGuildGUID().m_guid, requester, LogGuildReactionCallback, NULL, false);
+
+        if (!stats) {
+            return;
+        }
+
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("FACTION_STANDING_CHANGED_GUILDNAME", -1, GENDER_NOT_APPLICABLE), label, stats->m_name);
+    }
+
     CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
 }
 
-// OFFSET: #0x0050B8C0
+// OFFSET: 0x008F8160/0x14062B250
 void CGChat::LogFactionChanged(int32_t faction, int32_t delta, int32_t generic, float bonus) {
     FactionRec* rec = g_factionDB.GetRecord(faction);
 
@@ -6473,25 +6513,24 @@ void CGChat::DisplayParentControlsNotice(UIErrors error) {
     CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
 }
 
-// OFFSET: #0x0050DDE0
-void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const ItemStats_C* stats) {
-    if (!stats) {
+// OFFSET: 0x008FAAC0
+void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, ItemRecSparse* item) {
+    if (!item) {
         return;
     }
 
     char text[3000];
 
     if (guid == ClntObjMgrGetActivePlayer()) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(spell->m_name), stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(spell->m_name), item->GetName(0));
     } else {
-        const char* name = GetCombatLogObjectName(guid);
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, static_cast<const char*>(spell->m_name), stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), GetCombatLogObjectName(guid), static_cast<const char*>(spell->m_name), item->GetName(0));
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_OPENING, NULL);
 }
 
-// OFFSET: #0x0050DEB0
+// OFFSET: 0x008FAB80
 void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const GameObjectStats_C* stats) {
     if (!stats) {
         return;
@@ -6502,8 +6541,7 @@ void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const GameO
     if (guid == ClntObjMgrGetActivePlayer()) {
         SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(spell->m_name), stats->m_name[0]);
     } else {
-        const char* name = GetCombatLogObjectName(guid);
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, static_cast<const char*>(spell->m_name), stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), GetCombatLogObjectName(guid), static_cast<const char*>(spell->m_name), stats->m_name[0]);
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_OPENING, NULL);
@@ -6530,25 +6568,23 @@ void ComplainChat(const char* name, const char* text, uint32_t lineID) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x0050EBE0
-void CombatLog::GetSpellLogLinkInfo(const WOWGUID& source, const WOWGUID& dest, int32_t spellId) {
-    SpellRec* spell;
-
-    if (!(spell = g_spellDB.GetRecord(spellId)) || (spell->m_attributes & 0x180) || !*spell->m_name) {
+// OFFSET: 0x008FBC70
+void CGChat::LogOpenLock(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell) {
+    if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name) {
         return;
     }
 
-    CGObject_C* object = ClntObjMgrObjectPtr(dest, TYPEMASK_OBJECT, __FILE__, __LINE__);
+    CGObject_C* object = ClntObjMgrObjectPtr(target, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (!object) {
         return;
     }
 
     if (object->m_obj->m_type & TYPEMASK_ITEM) {
-        ItemStats_C* stats = g_itemDBCache.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
-        CGChat::LogOpenLock(source, spell, stats);
+        ItemRecSparse* item = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
+        CGChat::LogOpenLock(caster, spell, item);
     } else if (object->m_obj->m_type & TYPEMASK_GAMEOBJECT) {
         GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
-        CGChat::LogOpenLock(source, spell, stats);
+        CGChat::LogOpenLock(caster, spell, stats);
     }
 }

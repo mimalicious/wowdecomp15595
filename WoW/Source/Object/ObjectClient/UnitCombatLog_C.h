@@ -107,7 +107,6 @@ class CombatLog {
     static int32_t HandleSpellLogEnergizeLog(CDataStore* msg, int32_t timeOffset);
     static int32_t HandleSpellRemoveLog(NETMESSAGE msgId, CDataStore* msg, int32_t timeOffset);
     static int32_t HandlePeriodicAuraLog(CDataStore* msg, int32_t timeOffset);
-    static void GetSpellLogLinkInfo(const WOWGUID& source, const WOWGUID& dest, int32_t spellId);
 };
 
 extern TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_entries;

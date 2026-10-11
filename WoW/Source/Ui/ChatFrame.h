@@ -16,6 +16,7 @@ class CGPlayer_C;
 class CGUnit_C;
 class SpellRec;
 class ItemStats_C;
+class ItemRecSparse;
 class GameObjectStats_C;
 
 
@@ -420,7 +421,7 @@ class CGChat {
     static void UpdateRosterMember(WOWGUID guid);
     static void LogHonorGain(CGUnit_C* unit, const WOWGUID& victim, int32_t rank, int32_t honor);
     static void DisplayParentControlsNotice(UIErrors error);
-    static void LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const ItemStats_C* stats);
+    static void LogOpenLock(const WOWGUID& guid, const SpellRec* spell, ItemRecSparse* item);
     static void LogOpenLock(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
     static void LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const GameObjectStats_C* stats);
     static const char* GetChannelStringForDisplay(int32_t session, int32_t* type);
