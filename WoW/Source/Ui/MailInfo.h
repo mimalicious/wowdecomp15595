@@ -50,19 +50,19 @@ struct MailboxMessageInfo {
     /* 0114 */ char m_body[8000];
     /* 2054 */ int32_t m_package;
     /* 2058 */ int32_t m_stationery;
-    /* 205C */ int32_t m_money;
-    /* 2060 */ int32_t m_cod;
-    /* 2064 */ uint32_t m_flags;
-    /* 2068 */ float m_expireTime;
-    /* 206C */ char m_invoiceSubject[256];
-    /* 216C */ int32_t m_invoiceItemID;
-    /* 2170 */ int32_t m_invoiceRandomPropertiesID;
-    /* 2174 */ int32_t m_invoiceType;
-    /* 2178 */ int32_t m_mailTemplateID;
-    /* 217C */ uint32_t m_invoiceValue;
-    /* 2180 */ uint32_t unk_2180[4];
+    /* 2060 */ uint64_t m_money;
+    /* 2068 */ uint64_t m_cod;
+    /* 2070 */ uint32_t m_flags;
+    /* 2074 */ float m_expireTime;
+    /* 2078 */ char m_invoiceSubject[256];
+    /* 2178 */ int32_t m_invoiceItemID;
+    /* 217C */ int32_t m_invoiceRandomPropertiesID;
+    /* 2180 */ int32_t m_invoiceType;
+    /* 2184 */ int32_t m_mailTemplateID;
+    /* 2188 */ uint32_t m_invoiceValue;
+    /* 218C */ int32_t m_invoiceStackCount;
     /* 2190 */ MailAttachmentInfo m_attachments[16];
-    /* 2B90 */ uint32_t m_deletePending;
+    /* 2B90 */ uint8_t m_deletePending;
     /* 2B94 */ uint32_t unk_2B94;
 };
 
@@ -80,7 +80,7 @@ class CGMailInfo {
     static uint32_t m_sendPending;
     static void ClearSendMail(bool signal);
     static MailAttachmentInfo* GetFirstAttachment(MailboxMessageInfo* mail);
-    static bool IsSendItem(WOWGUID item);
+    static int32_t IsSendItem(WOWGUID item);
     static void CloseMail(bool leavingWorld);
     static uint8_t m_sendMailShowing;
     static bool AddItemToOutgoingMail(uint32_t index, WOWGUID item, WOWGUID container, uint8_t slot);
@@ -91,8 +91,8 @@ class CGMailInfo {
     static void ShutdownGame();
     static void LeaveWorld();
     static void UpdatePendingMail(float elapsed);
-    static uint32_t m_sendMoney;
-    static uint32_t m_sendCOD;
+    static uint64_t m_sendMoney;
+    static uint64_t m_sendCOD;
     static float m_nextMailTime;
     static uint32_t m_numInboxItems;
     static uint32_t m_totalInboxItems;
@@ -110,7 +110,7 @@ class CGMailInfo {
     static void ParseInboxSubject(MailboxMessageInfo* message);
     static void ParseInboxSubject(uint32_t messageID);
     static void RemoveMoney(uint32_t messageID);
-    static void RemoveItem(uint32_t messageID, uint32_t itemGuid);
+    static void RemoveItem(uint32_t messageID, uint32_t itemGuid, uint32_t itemCount);
     static void ProcessAutoLootAttachments(MailboxMessageInfo* message);
     static void ReceivedMail(float delay);
 
@@ -123,7 +123,8 @@ class CGMailInfo {
     static void UpdateRecentSenders();
     static bool CanComplain(uint32_t index);
     static void Complain(uint32_t index);
-    static int32_t SetSendMoney(uint32_t money);
+    static int32_t SetSendMoney(uint64_t money);
+    static void SetSendCOD(uint64_t amount);
     static void MarkAsRead(uint32_t index);
     static void AutoLoot(uint32_t index);
     static void QueryNextMailTime();
@@ -145,7 +146,8 @@ int32_t Packet_SMSG_SHOW_MAILBOX(void* param, NETMESSAGE msgId, uint32_t time, C
 
 MailAttachmentInfo* GetFirstAttachment(MailboxMessageInfo* message);
 MailAttachmentInfo* GetAttachment(MailboxMessageInfo* message, uint32_t index);
-int32_t GetNumAttachments(const MailboxMessageInfo* message);
+MailAttachmentInfo* GetInboxAttachment(uint32_t index, uint32_t attachment);
+uint32_t GetNumAttachments(const MailboxMessageInfo* message);
 const char* GetSenderName(int32_t entry, int32_t type, WOWGUID guid, int32_t stationery);
 void SendItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 void InboxItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);

@@ -69,9 +69,10 @@ struct CalendarEventData {
     /* 00A8 */ uint8_t m_inviteStatus;
     /* 00B0 */ uint64_t m_inviteID;
     /* 00B8 */ WOWGUID m_creatorGUID;
-    /* 00C0 */ TIMESTAMPCALLBACK* m_alarmCallback;
-    /* 00C4 */ uint32_t m_sequenceIndex;
-    /* 00C8 */ uint32_t m_sequenceLength;
+    /* 00C0 */ WOWGUID m_guildGUID;
+    /* 00C8 */ TIMESTAMPCALLBACK* m_alarmCallback;
+    /* 00CC */ uint32_t m_sequenceIndex;
+    /* 00D0 */ uint32_t m_sequenceLength;
 };
 
 struct CalendarDayEvent : public CalendarEventData {
@@ -86,7 +87,7 @@ struct CalendarEventSelection {
     /* 0008 */ uint32_t m_startTime;
     /* 000C */ uint32_t m_endTime;
     /* 0010 */ uint32_t m_holidayID;
-    /* 0014 */ int32_t unk_0014;
+    /* 0014 */ uint32_t m_type;
 };
 
 class CalendarEventTables {
@@ -117,7 +118,8 @@ class CGCalendar {
     static void LeaveWorld();
     static void GuildChanged();
     static uint32_t CountPendingInvites();
-    static void UpdateDisplayList(bool signal);
+    static void UpdateDisplayList(bool signal, bool updateGuildEvents);
+    static void UpdateGuildEvents();
     static uint8_t m_actionPending;
     static void CalendarError(const char* error, uintptr_t arg);
     static size_t GetDateTimeText(char* buffer, uint32_t size, uint32_t time);
@@ -126,7 +128,7 @@ class CGCalendar {
     static uint8_t m_openedCalendar;
     static uint8_t m_calendarReceived;
     static CalendarDayEvent* m_contextEventInfo;
-    static uint32_t m_lastEventTime;
+    static int32_t m_lastEventTime;
     static int32_t m_numInitialPending;
 
     static void EnterWorld();
@@ -152,7 +154,7 @@ class CGCalendar {
     static void ProcessInviteNotesAlert(CDataStore* msg);
     static void UpdatePendingInvites(CDataStore* msg);
     static int32_t m_absMonth;
-    static uint32_t m_lastInviteTime;
+    static int32_t m_lastInviteTime;
     static int32_t m_absYear;
     static int32_t m_absMonthDays;
     static CalendarEventSelection m_selectedEvent;
@@ -163,13 +165,15 @@ class CGCalendar {
     static bool ComputeEventIndex(const CalendarEventSelection* selection, int32_t* monthOffset, int32_t* day, int32_t* index);
     static void CalculateEvents(bool a1);
     static void InitHolidays();
-    static bool ValidateDate(const WowTime* date);
+    static bool ValidateDate(const WowTime* date, int32_t* error);
     static bool GetDayEvent(uint32_t offset, uint32_t day);
-    static int32_t GetNumDayEvents(uint32_t offset, uint32_t day);
+    static uint32_t GetNumDayEvents(uint32_t offset, uint32_t day);
     static int32_t GetFirstPendingInviteIndex(uint32_t offset, uint32_t day);
     static void InsertEvent(CalendarDayEvent* event, int32_t table);
-    static bool ValidateCreateDate(const WowTime* date);
+    static bool ValidateCreateDate(const WowTime* date, const WowTime* now, int32_t* error);
     static bool CanEditCurrentEvent();
+    static bool CanEditEvent(CalendarDayEvent* event);
+    static bool CanRemoveEvent(CalendarDayEvent* event);
     static void SetInviteStatus(uint32_t index, uint32_t status);
     static void SetModeratorStatus(uint32_t index, uint32_t status);
     static void SetActionPending(uint8_t pending);
@@ -217,13 +221,16 @@ class CGCalendar {
 extern const char* s_weekdayNames[7];
 extern CalendarEventData s_eventClipboard;
 extern TSHashTable<DYNAMICHOLIDAYHASH, HASHKEY_NONE> s_dynamicHolidays;
-extern TSFixedArray<int32_t> s_eventTextures[2];
+extern TSFixedArray<int32_t> s_eventTextures[3];
+extern TSGrowableArray<CalendarDayEvent*> s_guildEvents;
 
 void CalendarRegisterScriptFunctions();
 void CalendarUnregisterScriptFunctions();
 const char* GetHolidayName(int32_t holidayId);
 const char* GetEventTypeString(uint32_t type);
-bool GameCalendarGetMaxCreateDate(WowTime* date);
+bool GameCalendarGetMaxCreateDate(WowTime* date, const WowTime* now);
+bool GameCalendarGetMinDate(WowTime* date);
+bool GameCalendarGetMaxDate(WowTime* date);
 const char* GetHolidayDescription(int32_t holidayId);
 DYNAMICHOLIDAYHASH* CalendarGetHolidayInfo(int32_t holidayId);
 const char* GetEventRepeatString(uint32_t repeat);

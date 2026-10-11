@@ -258,7 +258,7 @@ void FriendList::ReadPacket(CDataStore* msg) {
                 if (!this->m_ignores[i].m_guid.m_guid) {
                     this->m_ignores[i].m_guid = ignoreGuid;
                     this->m_ignores[i].m_flags = 0;
-                    CGCalendar::UpdateDisplayList(1);
+                    CGCalendar::UpdateDisplayList(true, false);
                     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_UPDATE_PENDING_INVITES, NULL);
                     break;
                 }
@@ -1287,7 +1287,7 @@ void FriendList::IgnoreRemoved(WOWGUID guid) {
         if (this->m_ignores[i].m_guid == guid) {
             this->m_ignores[i].m_guid = WOWGUID();
             this->m_ignores[i].m_flags = 0;
-            CGCalendar::UpdateDisplayList(1);
+            CGCalendar::UpdateDisplayList(true, false);
             FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_UPDATE_PENDING_INVITES, NULL);
 
             if (!this->m_pendingIgnoreNames) {
@@ -1481,7 +1481,7 @@ void FriendList::IgnoreAdded(WOWGUID guid, int32_t lookupName) {
         if (!this->m_ignores[i].m_guid) {
             this->m_ignores[i].m_guid = guid;
             this->m_ignores[i].m_flags = 0;
-            CGCalendar::UpdateDisplayList(1);
+            CGCalendar::UpdateDisplayList(true, false);
             FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_UPDATE_PENDING_INVITES, NULL);
 
             if (lookupName) {
