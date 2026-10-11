@@ -17,7 +17,6 @@ struct ItemTypeCountParam {
     /* 0004 */ int32_t m_count;
 };
 
-class ItemStats_C;
 class ItemRecSparse;
 
 class CGBag_C {

@@ -11,8 +11,6 @@
 #include "WoW/Source/Object/ArenaTeamCache.h"
 #include "WoW/Source/Object/CGPetition.h"
 #include "WoW/Source/Object/DanceCache.h"
-#include "WoW/Source/Object/ItemNameCache.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ItemTextCache.h"
 #include "WoW/Source/Object/NPCText.h"
 #include "WoW/Source/Object/ObjectClient/GuildStats_C.h"
@@ -29,12 +27,6 @@ DBCache<CreatureStats_C, int32_t, HASHKEY_INT> g_creatureDBCache('WMOB', "creatu
 
 // STATIC: 0x00D97F88
 DBCache<GameObjectStats_C, int32_t, HASHKEY_INT> g_gameObjectDBCache('WGOB', "gameobjectcache.wdb", CMSG_QUERY_GAME_OBJECT, 0, true, true, 0);
-
-// STATIC: #0x00C5D7A0
-DBCache<ItemNameCache_C, int32_t, HASHKEY_INT> g_itemNameDBCache('WNDB', "itemnamecache.wdb", CMSG_ITEM_NAME_QUERY, 0, true, true, 0);
-
-// STATIC: #0x00C5D828
-DBCache<ItemStats_C, int32_t, HASHKEY_INT> g_itemDBCache('WIDB', "itemcache.wdb", CMSG_ITEM_QUERY_SINGLE, CMSG_ITEM_QUERY_MULTIPLE, false, true, 512);
 
 // STATIC: 0x00D98018
 DBCache<NPCText, int32_t, HASHKEY_INT> g_npcTextDBCache('WNPC', "npccache.wdb", CMSG_QUERY_NPC_TEXT, 0, true, true, 0);

@@ -51,7 +51,6 @@
 #include "WoW/Source/DB/Rec/CharTitlesRec.h"
 #include "WoW/Source/DB/Rec/FactionTemplateRec.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/DB/DBClient/GameObjectStats_C.h"
 #include "WoW/Source/Object/ObjectClient/Effect_C.h"
 #include "Engine/Source/Event/FrameTime.h"
@@ -6192,9 +6191,9 @@ void CGChat::LogHonorGain(CGUnit_C* unit, const WOWGUID& victim, int32_t rank, i
     }
 }
 
-// OFFSET: 0x008F8500
+// OFFSET: 0x008F8500/0x14062B6F0
 void CGChat::LogFeedPet(const WOWGUID& guid, int32_t itemId) {
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, guid, LogFeedPetCallback, NULL, false);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemId, guid, LogFeedPetCallback, NULL, false);
 
     if (!stats) {
         return;
@@ -6203,7 +6202,7 @@ void CGChat::LogFeedPet(const WOWGUID& guid, int32_t itemId) {
     char text[3000];
 
     if (guid == ClntObjMgrGetActivePlayer()) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("FEEDPET_LOG_FIRSTPERSON", -1, GENDER_NOT_APPLICABLE), stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("FEEDPET_LOG_FIRSTPERSON", -1, GENDER_NOT_APPLICABLE), stats->GetName(0));
     } else {
         NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, WOWGUID(), NULL, NULL, false);
 
@@ -6211,15 +6210,15 @@ void CGChat::LogFeedPet(const WOWGUID& guid, int32_t itemId) {
             return;
         }
 
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("FEEDPET_LOG_THIRDPERSON", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name), stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("FEEDPET_LOG_THIRDPERSON", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name), stats->GetName(0));
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_PET_INFO, NULL);
 }
 
-// OFFSET: 0x008F86A0
+// OFFSET: 0x008F86A0/0x14062B8D0
 void CGChat::LogTradeSkillCreate(const WOWGUID& guid, int32_t itemId) {
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, guid, LogTradeSkillCreateCallback, NULL, false);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemId, guid, LogTradeSkillCreateCallback, NULL, false);
 
     if (!stats) {
         return;
@@ -6228,10 +6227,9 @@ void CGChat::LogTradeSkillCreate(const WOWGUID& guid, int32_t itemId) {
     char text[3000];
 
     if (guid == ClntObjMgrGetActivePlayer()) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("TRADESKILL_LOG_FIRSTPERSON", -1, GENDER_NOT_APPLICABLE), stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("TRADESKILL_LOG_FIRSTPERSON", -1, GENDER_NOT_APPLICABLE), stats->GetName(0));
     } else {
-        const char* name = GetCombatLogObjectName(guid);
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("TRADESKILL_LOG_THIRDPERSON", -1, GENDER_NOT_APPLICABLE), name, stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("TRADESKILL_LOG_THIRDPERSON", -1, GENDER_NOT_APPLICABLE), GetCombatLogObjectName(guid), stats->GetName(0));
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_TRADESKILLS, NULL);

@@ -30,7 +30,6 @@
 #include "WoW/Source/DB/Rec/QuestXPRec.h"
 #include "WoW/Source/Object/CreatureStats.h"
 #include "WoW/Source/Object/GameObjectStats.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Ui/QuestLogLeaderBoardParams.h"
 #include "WoW/Source/Ui/WorldMap.h"
 #include <cmath>

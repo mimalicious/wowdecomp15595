@@ -24,6 +24,7 @@
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CMath.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/DBClient/GameObjectStats_C.h"
 #include "WoW/Source/DB/Rec/DestructibleModelDataRec.h"
@@ -4935,7 +4936,7 @@ bool CGGameObject_C_TypeBase::Use() {
         }
 
         WOWGUID guid = owner->m_obj->m_guid;
-        ItemStats_C* stats = g_itemDBCache.GetRecord(lock->m_index[0], guid, NULL, NULL, false);
+        ItemRecSparse* stats = g_itemSparseDB.GetRecord(lock->m_index[0], guid, NULL, NULL, false);
 
         if (stats) {
             CGGameUI::DisplayError(ERR_USE_LOCKED_WITH_ITEM_S, stats->GetName(0));

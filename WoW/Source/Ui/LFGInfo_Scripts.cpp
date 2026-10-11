@@ -24,7 +24,6 @@
 #include "WoW/Source/DB/Rec/LfgDungeonExpansionRec.h"
 #include "WoW/Source/DB/Rec/MapDifficultyRec.h"
 #include "WoW/Source/WowServices/RealmConnection.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"

@@ -10,7 +10,7 @@
 #include "WoW/Source/DB/Rec/PageTextMaterialRec.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"
 #include "WoW/Source/Object/Item.h"
-#include "WoW/Source/Object/ItemStats.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Object/ObjectClient/GameObject_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 
@@ -73,8 +73,7 @@ static int32_t Script_ItemTextGetMaterial(lua_State* L) {
         int32_t material;
 
         if (object->m_obj->m_type & TYPEMASK_ITEM) {
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(object->m_obj->m_entryID, none, NULL, NULL, false);
+            ItemRecSparse* stats = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
             if (!stats) {
                 lua_pushnil(L);

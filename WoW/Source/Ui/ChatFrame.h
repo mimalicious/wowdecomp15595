@@ -15,7 +15,6 @@ class CDataStore;
 class CGPlayer_C;
 class CGUnit_C;
 class SpellRec;
-class ItemStats_C;
 class ItemRecSparse;
 class GameObjectStats_C;
 

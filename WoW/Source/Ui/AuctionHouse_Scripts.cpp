@@ -12,7 +12,6 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/AuctionHouseRec.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/UIUtil/Tooltip.h"

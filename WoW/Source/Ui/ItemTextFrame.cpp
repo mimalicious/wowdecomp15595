@@ -3,7 +3,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/Object/Item.h"
-#include "WoW/Source/Object/ItemStats.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Object/ItemTextCache.h"
 #include "WoW/Source/Object/PageTextCache.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
@@ -30,7 +30,7 @@ char CGItemText::m_text[8000];
 // STATIC: 0x00F71000
 TSGrowableArray<int32_t> CGItemText::m_pages;
 
-// OFFSET: 0x009DE0C0
+// OFFSET: 0x009DE0C0/0x1407741D0
 void CGItemText::InitializeGame() {
     CGItemText::m_itemGUID.m_guid = 0;
     CGItemText::m_hasItemText = 0;
@@ -47,7 +47,7 @@ void CGItemText::ShutdownGame() {
     CGItemText::m_pages.Clear();
 }
 
-// OFFSET: 0x009DE150
+// OFFSET: 0x009DE150/0x140774260
 void CGItemText::DisplayText(const WOWGUID& guid, int32_t translate) {
     if (CGItemText::m_itemGUID != guid) {
         return;
@@ -93,19 +93,18 @@ void CGItemText::DisplayText(const WOWGUID& guid, int32_t translate) {
         if (static_cast<CGItem_C*>(object)->m_item->m_itemFieldFlags & 2) {
             SStrCopy(CGItemText::m_text, buffer, sizeof(((CGItemText*)0)->m_text));
         } else {
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(object->m_obj->m_entryID, none, NULL, NULL, false);
+            ItemRecSparse* stats = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
             uint32_t skill = 0;
 
             if (translate) {
                 CGPlayer_C* activePlayer = ClntObjMgrGetActivePlayerObj();
 
                 if (activePlayer) {
-                    activePlayer->GetLanguageSkill(stats->m_languageId, skill);
+                    activePlayer->GetLanguageSkill(stats->m_languageID, skill);
                 }
             }
 
-            CGChat::TranslateMessage(stats->m_languageId, skill, buffer, CGItemText::m_text, sizeof(((CGItemText*)0)->m_text), 1, 1);
+            CGChat::TranslateMessage(stats->m_languageID, skill, buffer, CGItemText::m_text, sizeof(((CGItemText*)0)->m_text), 1, 1);
         }
     } else if (object->m_obj->m_type & TYPEMASK_GAMEOBJECT) {
         int32_t language = static_cast<CGGameObject_C*>(object)->GetPageTextLanguage();
@@ -125,7 +124,7 @@ void CGItemText::DisplayText(const WOWGUID& guid, int32_t translate) {
     FrameScript_SignalEvent(SCRIPT_EVENT_ITEM_TEXT_READY, NULL);
 }
 
-// OFFSET: 0x009DE550
+// OFFSET: 0x009DE550/0x140774720
 void CGItemText::SetItem(const WOWGUID& guid, int32_t a2) {
     if (guid != CGItemText::m_itemGUID) {
         CGGameUI::ClearInteractTarget(CGItemText::m_itemGUID, 0);

@@ -12,8 +12,6 @@
 #include "WoW/Source/Object/ArenaTeamCache.h"
 #include "WoW/Source/Object/CGPetition.h"
 #include "WoW/Source/Object/DanceCache.h"
-#include "WoW/Source/Object/ItemNameCache.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ItemTextCache.h"
 #include "WoW/Source/Object/NPCText.h"
 #include "WoW/Source/Object/ObjectClient/GuildStats_C.h"
@@ -23,8 +21,6 @@
 
 extern DBCache<CreatureStats_C, int32_t, HASHKEY_INT> g_creatureDBCache;
 extern DBCache<GameObjectStats_C, int32_t, HASHKEY_INT> g_gameObjectDBCache;
-extern DBCache<ItemNameCache_C, int32_t, HASHKEY_INT> g_itemNameDBCache;
-extern DBCache<ItemStats_C, int32_t, HASHKEY_INT> g_itemDBCache;
 extern DBCache<NPCText, int32_t, HASHKEY_INT> g_npcTextDBCache;
 extern DBCache<NameCache, uint64_t, CHashKeyGUID> g_nameDBCache;
 extern DBCache<GuildStats_C, uint64_t, CHashKeyGUID> g_guildInfoCache;

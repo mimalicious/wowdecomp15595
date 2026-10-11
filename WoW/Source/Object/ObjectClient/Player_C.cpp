@@ -44,7 +44,6 @@
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Object/CGPetition.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Effect_C.h"
 #include "WoW/Source/Object/ObjectClient/GameObject_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
@@ -9500,9 +9499,9 @@ static void CrossedInebriationThresholdItemCallback(int32_t id, const WOWGUID& g
     char token[32];
     char buffer[3000];
     WOWGUID none = WOWGUID();
-    ItemStats_C* stats;
+    ItemRecSparse* stats;
 
-    if (id && (stats = g_itemDBCache.GetRecord(id, none, NULL, NULL, false)) != NULL) {
+    if (id && (stats = g_itemSparseDB.GetRecord(id, none, NULL, NULL, false)) != NULL) {
         if (player->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
             SStrPrintf(token, sizeof(token), "DRUNK_MESSAGE_ITEM_OTHER%d", threshold + 1);
             const char* link = CGTooltip::GetItemHyperlinkString(id, stats->m_quality, 0, 0, 0, 0);
@@ -9541,7 +9540,7 @@ int32_t Packet_SMSG_CROSSED_INEBRIATION_THRESHOLD(void* param, NETMESSAGE msgId,
         return 1;
     }
 
-    if (g_itemDBCache.GetRecord(itemId, guid, &CrossedInebriationThresholdItemCallback, reinterpret_cast<void*>(static_cast<intptr_t>(threshold)), false)) {
+    if (g_itemSparseDB.GetRecord(itemId, guid, &CrossedInebriationThresholdItemCallback, reinterpret_cast<void*>(static_cast<intptr_t>(threshold)), false)) {
         CrossedInebriationThresholdItemCallback(itemId, guid, reinterpret_cast<void*>(static_cast<intptr_t>(threshold)), true);
     }
 
@@ -10537,7 +10536,7 @@ uint8_t CGPlayer_C::FindItemSlot(WOWGUID container, const CGItem_C* item) {
 // OFFSET: 0x0056C5A0/0x1401CC5F0
 static void AutoEquipItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(id, none, NULL, NULL, false);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(id, none, NULL, NULL, false);
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     for (uint32_t i = 0; i < s_itemSwaps.m_count; i++) {
@@ -10618,7 +10617,7 @@ void CGPlayer_C::SplitItem(WOWGUID item, WOWGUID srcContainer, uint32_t srcSlot,
 // OFFSET: 0x0056C4D0/0x1401CC4D0
 static void SwapItemsStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(id, none, NULL, NULL, false);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(id, none, NULL, NULL, false);
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     for (uint32_t i = 0; i < s_itemSwaps.m_count; i++) {
@@ -10804,7 +10803,7 @@ static void AutoEquipStatsCallback(int32_t id, const WOWGUID& guid, void* param,
 
     WOWGUID none = WOWGUID();
 
-    if (!g_itemDBCache.GetRecord(id, none, NULL, NULL, false)) {
+    if (!g_itemSparseDB.GetRecord(id, none, NULL, NULL, false)) {
         return;
     }
 

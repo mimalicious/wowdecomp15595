@@ -31,7 +31,6 @@ class SpellVisualKitRec;
 class ItemSubClassRec;
 
 class CMapEntity;
-class ItemStats_C;
 class ItemRecSparse;
 class OverrideSpellDataRec;
 class CGItem_C;

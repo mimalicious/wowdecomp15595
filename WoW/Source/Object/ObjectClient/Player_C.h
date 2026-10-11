@@ -79,7 +79,6 @@ struct PlayerPendingItemExpiration : public TSLinkedNode<PlayerPendingItemExpira
 
 struct VendorItem;
 class ItemRecSparse;
-class ItemStats_C;
 class EmotesTextRec;
 struct PlayerDance {
     /* 0000 */ int16_t* m_moves;

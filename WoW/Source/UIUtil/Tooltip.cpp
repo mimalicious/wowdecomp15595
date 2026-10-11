@@ -53,8 +53,6 @@
 #include "WoW/Source/Magic/MagicClient/SpellTable.h"
 #include "WoW/Source/Object/CreatureStats.h"
 #include "WoW/Source/Object/Item.h"
-#include "WoW/Source/Object/ItemNameCache.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/AuraData.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Corpse_C.h"

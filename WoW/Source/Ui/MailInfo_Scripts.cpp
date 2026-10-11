@@ -18,7 +18,6 @@
 #include "WoW/Source/Ui/Types.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include <cstdio>
 #include "WoW/Common/WowTime.h"

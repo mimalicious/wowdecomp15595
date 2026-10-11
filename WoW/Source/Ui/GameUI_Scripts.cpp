@@ -61,7 +61,7 @@
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "WoW/Source/Net/NetClient/NetClient.h"
 #include "WoW/Source/Net/Types.h"
-#include "WoW/Source/Object/ItemStats.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Object/Movement.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
@@ -747,7 +747,7 @@ static int32_t Script_GetPVPTimer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0093FBD0
+// OFFSET: 0x0093FBD0/0x1406ABB60
 int32_t Script_CanHearthAndResurrectFromArea(lua_State* L) {
     const AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_areaID);
 
@@ -1791,7 +1791,7 @@ static int32_t Script_GetMouseButtonClicked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008C8F50
+// OFFSET: 0x008C8F50/0x140632F80
 static int32_t ToggleInteractModelIcon(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -2295,6 +2295,13 @@ static int32_t Script_GetItemCooldown(lua_State* L) {
     return 3;
 }
 
+// OFFSET: 0x008C28B0/0x140632330
+static void GetItemInfoCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (success) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_GET_ITEM_INFO_RECEIVED, NULL);
+    }
+}
+
 // OFFSET: 0x008D9B80/0x14064D5E0
 static int32_t Script_GetItemInfo(lua_State* L) {
     TooltipExtendedItemInfo linkInfo;
@@ -2311,36 +2318,41 @@ static int32_t Script_GetItemInfo(lua_State* L) {
 
         const char* text = lua_tolstring(L, 1, NULL);
 
-        if (SStrStr(text, "item:")) {
+        if (strstr(text, "item:")) {
             itemId = linkInfo.GetItemIdFromLink(text);
         } else {
             itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
         }
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemId, WOWGUID(), GetItemInfoCallback, NULL, true);
 
     if (!stats) {
+        return 0;
+    }
+
+    ItemRec* rec = stats->GetNonSparse();
+
+    if (!rec) {
         return 0;
     }
 
     char name[1024];
     CGItem_C::BuildItemName(name, sizeof(name), itemId, linkInfo.m_randomPropertiesId);
     lua_pushstring(L, name);
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, linkInfo.m_enchants[0], reinterpret_cast<const int32_t*>(&linkInfo.m_enchants[2]), linkInfo.m_randomPropertiesId, linkInfo.m_propertySeed, 0));
-    lua_pushnumber(L, static_cast<int32_t>(stats->m_quality));
-    lua_pushnumber(L, static_cast<int32_t>(stats->m_itemLevel));
-    lua_pushnumber(L, static_cast<int32_t>(stats->m_requiredLevel));
-    ItemClassRec* itemClass = g_itemClassDB.GetRecord(stats->m_class);
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, linkInfo.m_enchants[0], &linkInfo.m_enchants[2], linkInfo.m_randomPropertiesId, linkInfo.m_propertySeed, linkInfo.m_enchants[8]));
+    lua_pushnumber(L, stats->m_quality);
+    lua_pushnumber(L, stats->m_itemLevel);
+    lua_pushnumber(L, stats->m_requiredLevel);
+    ItemClassRec* itemClass = g_itemClassDB.GetRecord(rec->m_classID);
     lua_pushstring(L, itemClass ? itemClass->m_className : "");
     const ItemSubClassRec* subClass = NULL;
 
     for (int32_t i = 0; i < g_itemSubClassDB.m_numRecords; i++) {
-        const ItemSubClassRec* rec = g_itemSubClassDB.GetRecordByIndex(i);
+        const ItemSubClassRec* subRec = g_itemSubClassDB.GetRecordByIndex(i);
 
-        if (rec && rec->m_classID == static_cast<int32_t>(stats->m_class) && rec->m_subClassID == static_cast<int32_t>(stats->m_subClass)) {
-            subClass = rec;
+        if (subRec && subRec->m_classID == rec->m_classID && subRec->m_subClassID == rec->m_subclassID) {
+            subClass = subRec;
             break;
         }
     }
@@ -2356,9 +2368,9 @@ static int32_t Script_GetItemInfo(lua_State* L) {
     const char* path = ClientDBStringLookup(3);
     const char* separator = *path ? "\\" : "";
     char texture[260];
-    SStrPrintf(texture, sizeof(texture), "%s%s%s", path, separator, CGItem_C::GetInventoryArt(stats->m_displayId));
+    SStrPrintf(texture, sizeof(texture), "%s%s%s", path, separator, CGItem_C::GetInventoryArt(rec->m_displayInfoID));
     lua_pushstring(L, texture);
-    lua_pushnumber(L, static_cast<int32_t>(stats->m_sellPrice));
+    lua_pushnumber(L, stats->GetSellPrice());
     return 11;
 }
 
@@ -3011,7 +3023,7 @@ static int32_t Script_SetConsoleKey(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008C1CB0
+// OFFSET: 0x008C1CB0/0x140631120
 static int32_t RegisterCVar(lua_State* L, uint32_t flags) {
     if (!lua_isstring(L, 1)) {
         char function[1024];
@@ -3158,7 +3170,7 @@ static int32_t Script_GetItemFamily(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemId, none, NULL, NULL, false);
 
     if (!stats) {
         return 0;
@@ -3202,8 +3214,7 @@ static int32_t Script_IsEquippableItem(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
 
     if (stats && stats->m_inventoryType) {
         lua_pushnumber(L, 1.0);
@@ -3716,7 +3727,7 @@ static int32_t Script_GetItemUniqueness(lua_State* L) {
 
         const char* text = lua_tolstring(L, 1, NULL);
 
-        if (SStrStr(text, "item:")) {
+        if (strstr(text, "item:")) {
             itemId = linkInfo.GetItemIdFromLink(text);
         } else {
             itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
@@ -3736,7 +3747,7 @@ static int32_t Script_GetItemUniqueness(lua_State* L) {
         return 2;
     }
 
-    uint32_t limitCategory = stats->m_itemLimitCategory;
+    int32_t limitCategory = stats->m_itemLimitCategory;
 
     if (!limitCategory) {
         return 0;
@@ -4395,7 +4406,7 @@ static int32_t Script_GetItemGem(lua_State* L) {
 
     const char* text = lua_tolstring(L, 1, NULL);
 
-    if (SStrStr(text, "item:")) {
+    if (strstr(text, "item:")) {
         TooltipExtendedItemInfo info;
         info.Clear();
         info.GetItemIdFromLink(text);
@@ -4466,8 +4477,7 @@ static int32_t Script_GetItemCount(lua_State* L) {
         int32_t total = player->m_bag.GetItemTypeCount(itemId, flags);
 
         if (total && includeCharges) {
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+            ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
 
             if (stats && stats->m_stackable <= 1) {
                 CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
@@ -4568,24 +4578,22 @@ static int32_t Script_IsUsableItem(lua_State* L) {
     return 2;
 }
 
-// OFFSET: 0x008DAA70
+// OFFSET: 0x008DAA70/0x14064EA20
 int32_t CanEquipInSlotCallback(const CGItem_C* item, void* param) {
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
-    return stats && static_cast<int32_t>(stats->m_inventoryType) == *static_cast<int32_t*>(param);
+    ItemRec* rec = g_itemDB.GetRecord(item->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
+    return rec && rec->m_inventoryType == *static_cast<int32_t*>(param);
 }
 
-// OFFSET: 0x008DAAC0
+// OFFSET: 0x008DAAC0/0x14064EA80
 int32_t FindItemClassTypeCallback(const CGItem_C* item, void* param) {
     const char* type = static_cast<const char*>(param);
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
+    ItemRec* stats = g_itemDB.GetRecord(item->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
     if (!stats) {
         return 0;
     }
 
-    ItemClassRec* itemClass = g_itemClassDB.GetRecord(stats->m_class);
+    ItemClassRec* itemClass = g_itemClassDB.GetRecord(stats->m_classID);
 
     if (itemClass && !SStrCmpUTF8I(itemClass->m_className, type, STORM_MAX_STR)) {
         return 1;
@@ -4597,7 +4605,7 @@ int32_t FindItemClassTypeCallback(const CGItem_C* item, void* param) {
         i--;
         const ItemSubClassRec* rec = g_itemSubClassDB.GetRecordByIndex(i);
 
-        if (rec && rec->m_classID == static_cast<int32_t>(stats->m_class) && rec->m_subClassID == static_cast<int32_t>(stats->m_subClass)) {
+        if (rec && rec->m_classID == stats->m_classID && rec->m_subClassID == stats->m_subclassID) {
             if (!SStrCmpUTF8I(rec->m_verboseName, type, STORM_MAX_STR) || !SStrCmpUTF8I(rec->m_displayName, type, STORM_MAX_STR)) {
                 return 1;
             }
@@ -4612,7 +4620,7 @@ int32_t FindItemClassTypeCallback(const CGItem_C* item, void* param) {
         i--;
         const ItemSubClassMaskRec* rec = g_itemSubClassMaskDB.GetRecordByIndex(i);
 
-        if (rec->m_classID == static_cast<int32_t>(stats->m_class) && ((1 << stats->m_subClass) & rec->m_mask) && !SStrCmpUTF8I(rec->m_name, type, STORM_MAX_STR)) {
+        if (rec->m_classID == stats->m_classID && ((1 << stats->m_subclassID) & rec->m_mask) && !SStrCmpUTF8I(rec->m_name, type, STORM_MAX_STR)) {
             return 1;
         }
     }

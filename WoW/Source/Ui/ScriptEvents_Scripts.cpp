@@ -32,7 +32,7 @@
 #include "WoW/Source/Ui/PartyFrame.h"
 #include "WoW/Source/Game/GameClient/PetNameCache.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
-#include "WoW/Source/Object/ItemStats.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Object/ObjectClient/Corpse_C.h"
 #include "WoW/Source/Object/ObjectClient/GameObject_C.h"
 #include "WoW/Source/Object/ObjectClient/Vehicle_C.h"
@@ -779,7 +779,7 @@ static int32_t Script_UnitName(lua_State* L) {
 
     const char* token = lua_tolstring(L, 1, NULL);
 
-    if (!SStrCmpI(token, "player", STORM_MAX_STR)) {
+    if (!_stricmp(token, "player")) {
         lua_pushstring(L, ClientServices::GetCharacterName());
         lua_pushnil(L);
         return 2;
@@ -803,12 +803,11 @@ static int32_t Script_UnitName(lua_State* L) {
         uint32_t type = object->m_obj->m_type;
 
         if (type & TYPEMASK_UNIT) {
-            name = static_cast<CGUnit_C*>(object)->GetUnitName(&realm, 1);
+            name = static_cast<CGUnit_C*>(object)->GetVisibleUnitName(&realm, 1);
         } else if (type & TYPEMASK_GAMEOBJECT) {
             name = static_cast<CGGameObject_C*>(object)->CGGameObject_C::GetObjectName();
         } else if (type & TYPEMASK_ITEM) {
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(object->m_obj->m_entryID, none, NULL, NULL, false);
+            ItemRecSparse* stats = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
             if (stats) {
                 name = stats->GetName(0);
@@ -3574,34 +3573,21 @@ static int32_t Script_UnitRangedDamage(lua_State* L) {
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(unit);
-    uint32_t school = 0;
+    int32_t school = 0;
     const VisibleItem_C* item = player->GetVisibleItem(17);
 
     if (item) {
-        WOWGUID none = WOWGUID();
-        ItemStats_C* stats = g_itemDBCache.GetRecord(abs(item->m_itemId), none, NULL, NULL, false);
+        ItemRecSparse* stats = g_itemSparseDB.GetRecord(abs(item->m_itemId), WOWGUID(), NULL, NULL, false);
 
         if (stats) {
-            for (uint32_t i = 0; i < 2; i++) {
-                if (stats->m_damageMin[i] > 0.0f) {
-                    school = stats->m_damageType[i];
-                    break;
-                }
-            }
+            school = stats->m_damageType;
         }
     }
 
-    uint32_t positive = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerFieldModDamageDonePos[school] : 0;
-    lua_pushnumber(L, positive);
-    uint32_t negative = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerFieldModDamageDoneNeg[school] : 0;
-    lua_pushnumber(L, negative);
-
-    if (player->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        lua_pushnumber(L, *reinterpret_cast<float*>(&player->m_player->m_playerFieldModDamageDonePct[school]));
-    } else {
-        lua_pushnumber(L, 0.0);
-    }
-
+    int32_t schoolMask = 1 << school;
+    lua_pushnumber(L, player->GetModDamageDonePos(schoolMask));
+    lua_pushnumber(L, player->GetModDamageDoneNeg(schoolMask));
+    lua_pushnumber(L, player->GetModDamageDonePct(schoolMask));
     return 6;
 }
 

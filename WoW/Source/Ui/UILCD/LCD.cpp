@@ -21,7 +21,6 @@
 #include "WoW/Source/DB/Rec/MapRec.h"
 #include "WoW/Source/Glue/CGlueMgr.h"
 #include "WoW/Source/Glue/CWOWClientStatus.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
@@ -113,7 +112,7 @@ static TSFixedArray<CHATMESSAGE> s_chatMessages;
 // STATIC: 0x0100A68C
 static HBITMAP s_lastBitmap;
 
-// OFFSET: 0x00B2F430
+// OFFSET: 0x00B2F430/0x14090ADF0
 static bool IsLCDAvailable() {
     if (CGLCD::m_lcd->IsDeviceAvailable(1)) {
         return true;
@@ -670,13 +669,13 @@ static int32_t GetAmmoCount() {
     return 0;
 }
 
-// OFFSET: 0x00B2FB90
+// OFFSET: 0x00B2FB90/0x1408F89D0
 void* CGLCD::GetHandle(const char* name) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
     return handle ? handle->m_handle : NULL;
 }
 
-// OFFSET: 0x00B2FC70
+// OFFSET: 0x00B2FC70/0x1408F8B40
 void CGLCD::UpdateMapPositions() {
     C3Vector position(0.0f, 0.0f, 0.0f);
     CGWorldMap::GetPlayerPosition(ClntObjMgrGetActivePlayer(), &position.x, &position.y);
@@ -794,7 +793,7 @@ void CGLCD::UpdateMapPositions() {
     CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("HordeFlag"), hordeVisible);
 }
 
-// OFFSET: #0x00849310
+// OFFSET: 0x00B30300/0x1408F9580
 void CGLCD::SetStat(const char* name, int32_t value) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
 
@@ -802,20 +801,7 @@ void CGLCD::SetStat(const char* name, int32_t value) {
         return;
     }
 
-    if (SStrCmpI(name, "SOUL_SHARD", STORM_MAX_STR)) {
-        CEzLcd::SetText(handle->m_handle, FrameScript_GetText(handle->m_text.m_str, -1, GENDER_NOT_APPLICABLE));
-    } else if (CGLCD::m_lcd->IsDeviceAvailable(1)) {
-        ItemStats_C* stats = g_itemDBCache.GetRecord(6265, WOWGUID::Make(0), NULL, NULL, false);
-
-        if (stats) {
-            CEzLcd::SetText(handle->m_handle, stats->GetName(1));
-        } else {
-            CEzLcd::SetText(handle->m_handle, "SOUL_SHARD");
-        }
-    } else {
-        CEzLcd::SetText(handle->m_handle, FrameScript_GetText("SHARDS", -1, GENDER_NOT_APPLICABLE));
-    }
-
+    CEzLcd::SetText(handle->m_handle, FrameScript_GetText(handle->m_text.m_str, -1, GENDER_NOT_APPLICABLE));
     char text[32];
     SStrPrintf(text, sizeof(text), "%d", value);
     char fieldName[32];
@@ -854,7 +840,7 @@ void CGLCD::SetStat(const char* name, float value, bool percent) {
     }
 }
 
-// OFFSET: #0x00849520
+// OFFSET: 0x00B304C0/0x1408F9960
 void CGLCD::SetStat(const char* name, int32_t minValue, int32_t maxValue) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
 
@@ -874,7 +860,7 @@ void CGLCD::SetStat(const char* name, int32_t minValue, int32_t maxValue) {
     }
 }
 
-// OFFSET: #0x008495E0
+// OFFSET: 0x00B30580/0x1408F9B30
 void CGLCD::SetStat(const char* name, const char* value) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
 

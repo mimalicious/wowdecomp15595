@@ -51,6 +51,7 @@
 #include "WoW/Source/DB/Rec/FactionTemplateRec.h"
 #include "WoW/Source/DB/Rec/ItemDisplayInfoRec.h"
 #include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
 #include "WoW/Source/DB/Rec/SpellVisualKitRec.h"
 #include "WoW/Source/DB/Rec/SpellVisualRec.h"
@@ -4920,12 +4921,12 @@ bool CGUnit_C::CheckAndReportSpellInhibitFlags(PendingSpellCast* cast, const Spe
 
             if (!learn) {
                 WOWGUID none = WOWGUID();
-                ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
+                ItemRecSparse* stats = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
 
                 if (stats) {
                     for (uint32_t j = 0; j < 5; j++) {
                         if (stats->m_spellTrigger[j] == 6) {
-                            learn = stats->m_spellId[j];
+                            learn = stats->m_spellID[j];
                             break;
                         }
                     }
@@ -21364,22 +21365,21 @@ int32_t CGUnit_C::ShouldShowNamePlate(CGWorldFrame* worldFrame, C3Vector* positi
 }
 
 // OFFSET: 0x005ABA40/0x14021DF30
-void CGUnit_C::AddWorldHonorGainText(int32_t honor, int32_t pvpRank, const char* victimName) {
-    char text[64];
-    memset(text, 0, sizeof(text));
+void CGUnit_C::AddWorldHonorGainText(float honor, int32_t pvpRank, const char* victimName) {
+    char text[64] = { 0 };
     const char* label;
 
-    if (honor <= 0) {
-        label = FrameScript_GetText("DK", -1, GENDER_NOT_APPLICABLE);
-
-        if (!label || !*label) {
-            label = "DK";
-        }
-    } else {
+    if (honor > 0.0f) {
         label = FrameScript_GetText("HK", -1, GENDER_NOT_APPLICABLE);
 
         if (!label || !*label) {
             label = "HK";
+        }
+    } else {
+        label = FrameScript_GetText("DK", -1, GENDER_NOT_APPLICABLE);
+
+        if (!label || !*label) {
+            label = "DK";
         }
     }
 

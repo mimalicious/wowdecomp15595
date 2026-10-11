@@ -14,7 +14,6 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Cursor.h"

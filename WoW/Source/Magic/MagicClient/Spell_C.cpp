@@ -12,7 +12,6 @@
 #include "WoW/Source/DB/Rec/UnitPowerBarRec.h"
 #include "WoW/Source/DB/Rec/SpellDifficultyRec.h"
 #include "WoW/Source/DB/Rec/SpellShapeshiftFormRec.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"

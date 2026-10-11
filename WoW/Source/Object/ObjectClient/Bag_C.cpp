@@ -1,7 +1,6 @@
 #include "Bag_C.h"
-#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
-#include "WoW/Source/Object/ItemStats.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/CGBankInfo.h"
@@ -472,10 +471,10 @@ bool CGBag_C::FindTotemCategory(int32_t type, int32_t& mask, bool recurse, uint3
 
             if (item && (!this->m_hasBank || slot < 74 || slot > 85)) {
                 WOWGUID none = { 0 };
-                ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
+                ItemRecSparse* stats = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
 
-                if (stats && stats->m_totemCategory) {
-                    TotemCategoryRec* category = g_totemCategoryDB.GetRecord(stats->m_totemCategory);
+                if (stats && stats->m_totemCategoryID) {
+                    TotemCategoryRec* category = g_totemCategoryDB.GetRecord(stats->m_totemCategoryID);
 
                     if (category && category->m_totemCategoryType == type) {
                         mask &= ~category->m_totemCategoryMask;
