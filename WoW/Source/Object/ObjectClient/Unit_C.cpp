@@ -157,6 +157,7 @@
 #include "WoW/Source/Ui/TotemInfo.h"
 #include "WoW/Source/Ui/Tutorial.h"
 #include "WoW/Source/Ui/WorldFrame.h"
+#include "Engine/Source/Gxu/GxuDebugDraw.h"
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/UIUtil/Cursor.h"
 #include "WoW/Source/UIUtil/InputControl.h"
@@ -186,6 +187,9 @@ static WOWGUID s_pendingInteractTarget;
 
 // STATIC: 0x00DD6190
 static WOWGUID s_pendingSkinTarget;
+
+// STATIC: 0x00DD62CC
+static int32_t s_showAttackIndicators;
 
 // STATIC: 0x00E283B8
 static uint32_t s_npcFeedbackSuppressCount;
@@ -1275,6 +1279,94 @@ void CGUnit_C::ThreatMapRemove(const WOWGUID& target) {
     }
 }
 
+// OFFSET: 0x005B5D30
+static void AddAttackIndicatorCandidate(WOWGUID guid, uint8_t type, UnitAttackCandidateList* list) {
+    if (!guid) {
+        return;
+    }
+
+    uint32_t count = list->m_count;
+
+    for (uint32_t i = 0; i < count; i++) {
+        if (list->m_data[i].m_guid == guid) {
+            return;
+        }
+    }
+
+    UnitAttackCandidate* candidate = &list->m_data[count];
+    list->m_count = count + 1;
+
+    if (candidate) {
+        candidate->m_guid = guid;
+        candidate->m_type = type;
+    }
+}
+
+// OFFSET: 0x005B5DA0/0x140229650
+void CGUnit_C::RenderAttackIndicators() {
+    if (!s_showAttackIndicators) {
+        return;
+    }
+
+    CGWorldFrame* frame = CGWorldFrame::s_currentWorldFrame;
+
+    if (!frame) {
+        return;
+    }
+
+    CRect rect;
+    rect.minY = 0.0f;
+    rect.minX = 0.0f;
+    rect.maxY = 0.0f;
+    rect.maxX = 0.0f;
+
+    if (!frame->GetRect(&rect)) {
+        return;
+    }
+
+    for (uint32_t i = this->m_attackIndicators.Count(); i;) {
+        i--;
+        UnitAttackIndicator* indicator = &this->m_attackIndicators[i];
+        C3Vector screen(0.0f, 0.0f, 0.0f);
+        uint32_t result = 0;
+        frame->GetScreenCoordinates(indicator->m_position, &screen, &result, NULL);
+
+        if (!(result & 0xF)) {
+            continue;
+        }
+
+        const char* label = NULL;
+        CImVector color;
+        *reinterpret_cast<uint32_t*>(&color) = 0;
+
+        switch (indicator->m_type) {
+            case 1:
+                *reinterpret_cast<uint32_t*>(&color) = 0xFFFFFF00;
+                label = "TARGET";
+                break;
+
+            case 2:
+                *reinterpret_cast<uint32_t*>(&color) = 0xFFFF0000;
+                label = "ATTACKER";
+                break;
+
+            case 3:
+                *reinterpret_cast<uint32_t*>(&color) = 0xFF888888;
+                label = "NEARBY";
+                break;
+        }
+
+        char text[64];
+        SStrPrintf(text, sizeof(text), "%s: guid=%u, hitFraction=%.1f", label, static_cast<uint32_t>(indicator->m_guid.m_guid), indicator->m_hitFraction);
+        screen.y = screen.y / rect.maxY;
+        screen.x = screen.x / rect.maxX;
+        CImVector shadow;
+        *reinterpret_cast<uint32_t*>(&shadow) = 0xFF000000;
+        GxuDebugDrawText(screen.x + 0.001f, screen.y - 0.002f, text, shadow, 0.0f);
+        GxuDebugDrawText(screen.x, screen.y, text, color, 0.0f);
+    }
+}
+
 // PROVEN: ac89fbbf IDENTICAL/NONE
 // OFFSET: 0x005B68F0
 int32_t NPCFlagsHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
@@ -1540,6 +1632,84 @@ void CGUnit_C::ThreatMapAdd(const WOWGUID& target) {
     }
 
     *empty = this->m_obj->m_guid;
+}
+
+// OFFSET: 0x005C3AD0/0x14023A300
+void CGUnit_C::UpdateAttackIndicatorList() {
+    UnitAttackCandidateList list;
+    list.m_data = static_cast<UnitAttackCandidate*>(alloca((this->m_attackers.Count() + 1) * sizeof(UnitAttackCandidate)));
+    list.m_count = 0;
+    WOWGUID target = this->m_unit->m_unitFieldTarget;
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        target = CGGameUI::m_lockedTarget;
+    }
+
+    AddAttackIndicatorCandidate(target, 1, &list);
+
+    for (uint32_t i = 0; i < this->m_attackers.Count(); i++) {
+        AddAttackIndicatorCandidate(this->m_attackers[i], 2, &list);
+    }
+
+    this->m_attackIndicators.Clear();
+    C3Vector origin = this->GetModelPosition();
+
+    for (uint32_t i = 0; i < list.m_count; i++) {
+        UnitAttackCandidate* candidate = &list.m_data[i];
+        UnitAttackIndicator indicator;
+        memset(&indicator.m_position, 0, sizeof(C3Vector) * 2);
+        indicator.m_guid = candidate->m_guid;
+        indicator.m_type = candidate->m_type;
+
+        if (!indicator.m_guid) {
+            continue;
+        }
+
+        CGObject_C* object = ClntObjMgrObjectPtr(indicator.m_guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
+
+        if (!object) {
+            continue;
+        }
+
+        C3Vector position = object->GetModelPosition();
+        indicator.m_position = position;
+        C3Vector direction(position.x - origin.x, position.y - origin.y, position.z - origin.z);
+        float length = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+        indicator.m_hitFraction = length;
+
+        if (length <= 1.1920929e-7f) {
+            length = 0.0f;
+            direction = C3Vector(0.0f, 0.0f, 0.0f);
+            indicator.m_hitFraction = 0.0f;
+        } else {
+            float scale = 1.0f / indicator.m_hitFraction;
+            length = indicator.m_hitFraction;
+            direction.x = direction.x * scale;
+            direction.y = direction.y * scale;
+            direction.z = direction.z * scale;
+        }
+
+        indicator.m_direction = direction;
+        uint32_t index = 0;
+
+        for (; index < this->m_attackIndicators.Count(); index++) {
+            UnitAttackIndicator* other = &this->m_attackIndicators[index];
+
+            if (indicator.m_type < other->m_type || (indicator.m_type == other->m_type && other->m_hitFraction > length)) {
+                break;
+            }
+        }
+
+        *this->m_attackIndicators.New() = indicator;
+
+        for (uint32_t j = this->m_attackIndicators.Count() - 1; j > index; j--) {
+            UnitAttackIndicator swap = this->m_attackIndicators[j - 1];
+            this->m_attackIndicators[j - 1] = this->m_attackIndicators[j];
+            this->m_attackIndicators[j] = swap;
+        }
+    }
+
+    this->RenderAttackIndicators();
 }
 
 // OFFSET: 0x005C4380/0x14023ADA0

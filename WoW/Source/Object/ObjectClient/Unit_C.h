@@ -138,7 +138,18 @@ struct UnitAttackIndicator {
     /* 0009 */ uint8_t unk_0009 [3];
     /* 000C */ float m_hitFraction;
     /* 0010 */ C3Vector m_position;
-    /* 001C */ uint32_t unk_001C [3];
+    /* 001C */ C3Vector m_direction;
+};
+
+struct UnitAttackCandidate {
+    /* 0000 */ WOWGUID m_guid;
+    /* 0008 */ uint8_t m_type;
+    /* 0009 */ uint8_t unk_0009[7];
+};
+
+struct UnitAttackCandidateList {
+    /* 0000 */ uint32_t m_count;
+    /* 0004 */ UnitAttackCandidate* m_data;
 };
 
 struct QUESTGIVEREMOTENODE {
@@ -1055,6 +1066,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void AnimKitMgrExpressionCallback(CAnimKitManager* manager, uint64_t param);
     void UpdateActiveHeadLook();
     void UpdateAttackIndicatorList();
+    void RenderAttackIndicators();
     void UpdateMovementAnimKit(int32_t force);
     void UpdateAlphaEffectAlpha();
     static void DisplayModelLoadedCallback(CM2Model* model, void* param);
