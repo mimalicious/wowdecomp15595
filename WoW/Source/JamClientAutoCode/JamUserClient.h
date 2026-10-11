@@ -49,6 +49,50 @@ class UserClientWorldPortResponse : public JamClientMessage {
     ~UserClientWorldPortResponse();
 };
 
+class UserClientVoidStorageQuery : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_npc[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientVoidStorageQuery();
+    ~UserClientVoidStorageQuery();
+};
+
+class UserClientVoidStorageUnlock : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_npc[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientVoidStorageUnlock();
+    ~UserClientVoidStorageUnlock();
+};
+
+class UserClientVoidSwapItem : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_npc[8];
+    /* 0018 */ uint8_t m_item[8];
+    /* 0020 */ uint32_t m_slot;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientVoidSwapItem();
+    ~UserClientVoidSwapItem();
+};
+
+class UserClientVoidStorageTransfer : public JamClientMessage {
+    public:
+    /* 0010 */ TSGrowableArray<uint64_t> m_deposits;
+    /* 0020 */ TSGrowableArray<uint64_t> m_withdrawals;
+    /* 0030 */ uint8_t m_npc[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientVoidStorageTransfer();
+    ~UserClientVoidStorageTransfer();
+};
+
 struct JamTransmogrifyItem {
     /* 0000 */ uint8_t m_itemGuid[8];
     /* 0008 */ int32_t m_itemID;

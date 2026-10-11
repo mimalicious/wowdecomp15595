@@ -6,6 +6,8 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/ObjectClient/VoidStorage_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
 // STATIC: 0x00DD8660
 CGVoidTransfer* CGVoidTransfer::s_instance;
@@ -189,4 +191,35 @@ CGVoidTransfer* CGVoidTransfer::Get(bool create) {
     }
 
     return CGVoidTransfer::s_instance;
+}
+
+// OFFSET: 0x005FA0C0/0x14027EFD0
+bool CGVoidTransfer::SendTransfer(WOWGUID npc) {
+    if (this->m_storage->m_state != 2) {
+        return false;
+    }
+
+    UserClientVoidStorageTransfer msg;
+    memcpy(msg.m_npc, &npc, sizeof(msg.m_npc));
+
+    for (uint32_t i = 0; i < 9; i++) {
+        if (this->m_deposits[i]) {
+            msg.m_deposits.Add(1, &this->m_deposits[i].m_guid);
+        }
+    }
+
+    for (uint32_t i = 0; i < 9; i++) {
+        if (this->m_withdrawals[i]) {
+            msg.m_withdrawals.Add(1, &this->m_withdrawals[i].m_guid);
+        }
+    }
+
+    if (!msg.m_deposits.m_count && !msg.m_withdrawals.m_count) {
+        return false;
+    }
+
+    ClientServices::Send(&msg);
+    this->m_storage->m_state = 3;
+
+    return true;
 }

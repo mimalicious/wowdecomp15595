@@ -67,6 +67,21 @@ bool (*ClientGuildXPEarned::s_handler)(ClientGuildXPEarned* msg);
 // STATIC: 0x00E4D6B4
 bool (*ClientGuildBankMoneyWithdrawn::s_handler)(ClientGuildBankMoneyWithdrawn* msg);
 
+// STATIC: 0x00E4D810
+bool (*ClientVoidStorageContents::s_handler)(ClientVoidStorageContents* msg);
+
+// STATIC: 0x00E4D59C
+bool (*ClientVoidStorageFailed::s_handler)(ClientVoidStorageFailed* msg);
+
+// STATIC: 0x00E4D7C4
+bool (*ClientVoidStorageTransferChanges::s_handler)(ClientVoidStorageTransferChanges* msg);
+
+// STATIC: 0x00E4D5A4
+bool (*ClientVoidTransferResult::s_handler)(ClientVoidTransferResult* msg);
+
+// STATIC: 0x00E4D5A8
+bool (*ClientVoidItemSwapResponse::s_handler)(ClientVoidItemSwapResponse* msg);
+
 // STATIC: 0x00E4D80C
 bool (*ClientReforgeResult::s_handler)(ClientReforgeResult* msg);
 
@@ -6751,4 +6766,608 @@ bool ClientForgeMasterSet::Handle() {
     }
 
     return ClientForgeMasterSet::s_handler(this);
+}
+
+// OFFSET: 0x006A3270/0x14034F7C0
+ClientVoidStorageFailed::ClientVoidStorageFailed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A19B0/0x14034E9E0
+ClientVoidStorageFailed::~ClientVoidStorageFailed() {
+}
+
+// INLINED
+void ClientVoidStorageFailed::Unpack(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_reason = byteValue;
+}
+
+// OFFSET: 0x006AD480/0x14035D660
+bool ClientVoidStorageFailed::Handle() {
+    if (!ClientVoidStorageFailed::s_handler) {
+        return false;
+    }
+
+    return ClientVoidStorageFailed::s_handler(this);
+}
+
+// OFFSET: 0x006A1EB0/0x14036EC10
+ClientVoidTransferResult::ClientVoidTransferResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A25E0/0x14034EC80
+ClientVoidTransferResult::~ClientVoidTransferResult() {
+}
+
+// INLINED
+void ClientVoidTransferResult::Unpack(CDataStore* msg, bool full) {
+    uint32_t value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_result = value;
+}
+
+// OFFSET: 0x006A3CC0/0x140351560
+bool ClientVoidTransferResult::Handle() {
+    if (!ClientVoidTransferResult::s_handler) {
+        return false;
+    }
+
+    return ClientVoidTransferResult::s_handler(this);
+}
+
+// OFFSET: 0x006E5370/0x1403A66E0
+ClientVoidStorageContents::ClientVoidStorageContents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E5980/0x1403A6EC0
+ClientVoidStorageContents::~ClientVoidStorageContents() {
+}
+
+// OFFSET: 0x006DDEE0/0x14039D940
+void ClientVoidStorageContents::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_items.SetCount(bits.ReadBits<8>());
+
+    for (uint32_t i = 0; i < this->m_items.m_count; i++) {
+        uint8_t* guid = this->m_items.m_data[i].m_guid;
+        uint8_t* creator = this->m_items.m_data[i].m_creator;
+        creator[3] = bits.ReadBit();
+        guid[5] = bits.ReadBit();
+        creator[6] = bits.ReadBit();
+        creator[1] = bits.ReadBit();
+        guid[1] = bits.ReadBit();
+        guid[3] = bits.ReadBit();
+        guid[6] = bits.ReadBit();
+        creator[5] = bits.ReadBit();
+        creator[2] = bits.ReadBit();
+        guid[2] = bits.ReadBit();
+        creator[4] = bits.ReadBit();
+        guid[0] = bits.ReadBit();
+        guid[4] = bits.ReadBit();
+        guid[7] = bits.ReadBit();
+        creator[0] = bits.ReadBit();
+        creator[7] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_items.m_count; i++) {
+        JamVoidItem& item = this->m_items.m_data[i];
+        if (item.m_creator[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[3] ^= byteValue;
+        }
+
+        uint32_t value20 = 0;
+        msg->Get(value20);
+        item.m_propertySeed = value20;
+
+        if (item.m_creator[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[4] ^= byteValue;
+        }
+
+        uint32_t value28 = 0;
+        msg->Get(value28);
+        item.m_slot = value28;
+
+        if (item.m_guid[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[0] ^= byteValue;
+        }
+
+        if (item.m_guid[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[6] ^= byteValue;
+        }
+
+        if (item.m_creator[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[0] ^= byteValue;
+        }
+
+        if (item.m_creator[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[1] ^= byteValue;
+        }
+
+        uint32_t value24 = 0;
+        msg->Get(value24);
+        item.m_randomPropertiesId = value24;
+
+        if (item.m_guid[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[4] ^= byteValue;
+        }
+
+        if (item.m_guid[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[5] ^= byteValue;
+        }
+
+        if (item.m_guid[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[2] ^= byteValue;
+        }
+
+        if (item.m_creator[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[2] ^= byteValue;
+        }
+
+        if (item.m_creator[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[6] ^= byteValue;
+        }
+
+        if (item.m_guid[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[1] ^= byteValue;
+        }
+
+        if (item.m_guid[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[3] ^= byteValue;
+        }
+
+        if (item.m_creator[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[5] ^= byteValue;
+        }
+
+        if (item.m_creator[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[7] ^= byteValue;
+        }
+
+        uint32_t value16 = 0;
+        msg->Get(value16);
+        item.m_itemID = value16;
+
+        if (item.m_guid[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[7] ^= byteValue;
+        }
+    }
+}
+
+// OFFSET: 0x006B06A0/0x140361450
+bool ClientVoidStorageContents::Handle() {
+    if (!ClientVoidStorageContents::s_handler) {
+        return false;
+    }
+
+    return ClientVoidStorageContents::s_handler(this);
+}
+
+// OFFSET: 0x006DEAD0/0x14039E610
+ClientVoidStorageTransferChanges::ClientVoidStorageTransferChanges(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DA920/0x140399040
+ClientVoidStorageTransferChanges::~ClientVoidStorageTransferChanges() {
+}
+
+// OFFSET: 0x006DBBA0/0x14039AC60
+void ClientVoidStorageTransferChanges::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_added.SetCount(bits.ReadBits<5>());
+    this->m_removed.SetCount(bits.ReadBits<5>());
+
+    for (uint32_t i = 0; i < this->m_added.m_count; i++) {
+        uint8_t* guid = this->m_added.m_data[i].m_guid;
+        uint8_t* creator = this->m_added.m_data[i].m_creator;
+        creator[5] = bits.ReadBit();
+        guid[7] = bits.ReadBit();
+        guid[4] = bits.ReadBit();
+        creator[7] = bits.ReadBit();
+        creator[6] = bits.ReadBit();
+        guid[3] = bits.ReadBit();
+        guid[5] = bits.ReadBit();
+        creator[4] = bits.ReadBit();
+        creator[2] = bits.ReadBit();
+        creator[0] = bits.ReadBit();
+        creator[3] = bits.ReadBit();
+        creator[1] = bits.ReadBit();
+        guid[2] = bits.ReadBit();
+        guid[0] = bits.ReadBit();
+        guid[1] = bits.ReadBit();
+        guid[6] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_removed.m_count; i++) {
+        uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_removed.m_data[i]);
+        guid[1] = bits.ReadBit();
+        guid[7] = bits.ReadBit();
+        guid[3] = bits.ReadBit();
+        guid[5] = bits.ReadBit();
+        guid[6] = bits.ReadBit();
+        guid[2] = bits.ReadBit();
+        guid[4] = bits.ReadBit();
+        guid[0] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_removed.m_count; i++) {
+        uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_removed.m_data[i]);
+
+        if (guid[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[3] ^= byteValue;
+        }
+
+        if (guid[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[1] ^= byteValue;
+        }
+
+        if (guid[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[0] ^= byteValue;
+        }
+
+        if (guid[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[2] ^= byteValue;
+        }
+
+        if (guid[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[7] ^= byteValue;
+        }
+
+        if (guid[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[5] ^= byteValue;
+        }
+
+        if (guid[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[6] ^= byteValue;
+        }
+
+        if (guid[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[4] ^= byteValue;
+        }
+    }
+
+    for (uint32_t i = 0; i < this->m_added.m_count; i++) {
+        JamVoidItem& item = this->m_added.m_data[i];
+        uint32_t value20 = 0;
+        msg->Get(value20);
+        item.m_propertySeed = value20;
+
+        if (item.m_guid[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[6] ^= byteValue;
+        }
+
+        if (item.m_guid[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[4] ^= byteValue;
+        }
+
+        if (item.m_creator[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[4] ^= byteValue;
+        }
+
+        if (item.m_guid[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[2] ^= byteValue;
+        }
+
+        if (item.m_creator[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[1] ^= byteValue;
+        }
+
+        if (item.m_creator[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[3] ^= byteValue;
+        }
+
+        if (item.m_guid[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[3] ^= byteValue;
+        }
+
+        if (item.m_creator[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[0] ^= byteValue;
+        }
+
+        if (item.m_guid[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[0] ^= byteValue;
+        }
+
+        if (item.m_creator[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[6] ^= byteValue;
+        }
+
+        if (item.m_guid[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[5] ^= byteValue;
+        }
+
+        if (item.m_creator[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[5] ^= byteValue;
+        }
+
+        if (item.m_creator[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[7] ^= byteValue;
+        }
+
+        uint32_t value16 = 0;
+        msg->Get(value16);
+        item.m_itemID = value16;
+
+        if (item.m_guid[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[1] ^= byteValue;
+        }
+
+        uint32_t value28 = 0;
+        msg->Get(value28);
+        item.m_slot = value28;
+
+        if (item.m_creator[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_creator[2] ^= byteValue;
+        }
+
+        if (item.m_guid[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            item.m_guid[7] ^= byteValue;
+        }
+
+        uint32_t value24 = 0;
+        msg->Get(value24);
+        item.m_randomPropertiesId = value24;
+    }
+}
+
+// OFFSET: 0x006A6DB0/0x1403556D0
+bool ClientVoidStorageTransferChanges::Handle() {
+    if (!ClientVoidStorageTransferChanges::s_handler) {
+        return false;
+    }
+
+    return ClientVoidStorageTransferChanges::s_handler(this);
+}
+
+// OFFSET: 0x006C9940/0x140381380
+ClientVoidItemSwapResponse::ClientVoidItemSwapResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2E70/0x1403503A0
+ClientVoidItemSwapResponse::~ClientVoidItemSwapResponse() {
+}
+
+// OFFSET: 0x006B8470/0x14036B600
+void ClientVoidItemSwapResponse::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint8_t* second = reinterpret_cast<uint8_t*>(&this->m_secondItem);
+    uint8_t* first = reinterpret_cast<uint8_t*>(&this->m_firstItem);
+    this->m_secondItem = !bits.ReadBit();
+    this->m_firstItem = !bits.ReadBit();
+
+    if (this->m_firstItem) {
+        first[5] = bits.ReadBit();
+        first[2] = bits.ReadBit();
+        first[1] = bits.ReadBit();
+        first[4] = bits.ReadBit();
+        first[0] = bits.ReadBit();
+        first[6] = bits.ReadBit();
+        first[7] = bits.ReadBit();
+        first[3] = bits.ReadBit();
+    }
+
+    this->m_secondSlot = !bits.ReadBit();
+
+    if (this->m_secondItem) {
+        second[7] = bits.ReadBit();
+        second[3] = bits.ReadBit();
+        second[4] = bits.ReadBit();
+        second[0] = bits.ReadBit();
+        second[5] = bits.ReadBit();
+        second[1] = bits.ReadBit();
+        second[2] = bits.ReadBit();
+        second[6] = bits.ReadBit();
+    }
+
+    this->m_firstSlot = !bits.ReadBit();
+
+    if (this->m_secondItem) {
+        if (second[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[4] ^= byteValue;
+        }
+
+        if (second[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[6] ^= byteValue;
+        }
+
+        if (second[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[5] ^= byteValue;
+        }
+
+        if (second[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[2] ^= byteValue;
+        }
+
+        if (second[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[3] ^= byteValue;
+        }
+
+        if (second[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[1] ^= byteValue;
+        }
+
+        if (second[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[7] ^= byteValue;
+        }
+
+        if (second[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[0] ^= byteValue;
+        }
+    }
+
+    if (this->m_firstItem) {
+        if (first[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[6] ^= byteValue;
+        }
+
+        if (first[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[3] ^= byteValue;
+        }
+
+        if (first[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[5] ^= byteValue;
+        }
+
+        if (first[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[0] ^= byteValue;
+        }
+
+        if (first[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[1] ^= byteValue;
+        }
+
+        if (first[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[2] ^= byteValue;
+        }
+
+        if (first[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[4] ^= byteValue;
+        }
+
+        if (first[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[7] ^= byteValue;
+        }
+    }
+
+    if (this->m_secondSlot) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_secondSlot = value;
+    }
+
+    if (this->m_firstSlot) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_firstSlot = value;
+    }
+}
+
+// OFFSET: 0x006A5170/0x1403530D0
+bool ClientVoidItemSwapResponse::Handle() {
+    if (!ClientVoidItemSwapResponse::s_handler) {
+        return false;
+    }
+
+    return ClientVoidItemSwapResponse::s_handler(this);
 }

@@ -314,6 +314,15 @@ struct JamCategoryCooldown {
     /* 0004 */ int32_t m_modCooldown;
 };
 
+struct JamVoidItem {
+    /* 0000 */ uint8_t m_guid[8];
+    /* 0008 */ uint8_t m_creator[8];
+    /* 0010 */ int32_t m_itemID;
+    /* 0014 */ uint32_t m_propertySeed;
+    /* 0018 */ int32_t m_randomPropertiesId;
+    /* 001C */ uint32_t m_slot;
+};
+
 struct JamWeeklySpellUse {
     /* 0000 */ int32_t m_category;
     /* 0004 */ uint8_t m_uses;
@@ -729,9 +738,12 @@ class ClientVoidStorageFailed : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientVoidStorageFailed* msg);
 
+    /* 0010 */ uint8_t m_reason;
+
     ClientVoidStorageFailed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVoidStorageFailed();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildRosterUpdate : public JamClientMessage {
@@ -886,9 +898,12 @@ class ClientVoidTransferResult : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientVoidTransferResult* msg);
 
+    /* 0010 */ uint32_t m_result;
+
     ClientVoidTransferResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVoidTransferResult();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientSpellinterruptlog : public JamClientMessage {
@@ -1621,9 +1636,13 @@ class ClientVoidStorageTransferChanges : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientVoidStorageTransferChanges* msg);
 
+    /* 0010 */ TSGrowableArray<JamVoidItem> m_added;
+    /* 0020 */ TSGrowableArray<uint64_t> m_removed;
+
     ClientVoidStorageTransferChanges(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVoidStorageTransferChanges();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientAccountRestrictedWarning : public JamClientMessage {
@@ -2244,18 +2263,27 @@ class ClientVoidStorageContents : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientVoidStorageContents* msg);
 
+    /* 0010 */ TSGrowableArray<JamVoidItem> m_items;
+
     ClientVoidStorageContents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVoidStorageContents();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientVoidItemSwapResponse : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientVoidItemSwapResponse* msg);
 
+    /* 0010 */ uint64_t m_secondItem;
+    /* 0018 */ uint64_t m_firstItem;
+    /* 0020 */ uint32_t m_firstSlot;
+    /* 0024 */ uint32_t m_secondSlot;
+
     ClientVoidItemSwapResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVoidItemSwapResponse();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildBankQueryResults : public JamClientMessage {

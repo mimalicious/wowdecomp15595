@@ -102,6 +102,7 @@
 #include "WoW/Source/Ui/DuelInfo.h"
 #include "WoW/Source/Ui/EquipmentManager.h"
 #include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/VoidStorageInfo.h"
 #include "WoW/Source/Ui/Flyout.h"
 #include "WoW/Source/Ui/GlyphInfo.h"
 #include "WoW/Source/Ui/GMSurveyInfo.h"
@@ -6329,6 +6330,7 @@ void LoadScriptFunctions() {
     CompactUnitFrameProfilesRegisterScriptFunctions();
     IncomingResurrectionRegisterScriptFunctions();
     TransmogrifyRegisterScriptFunctions();
+    VoidStorageRegisterScriptFunctions();
 }
 
 // OFFSET: 0x008C3C80
@@ -6421,4 +6423,5 @@ void UnloadScriptFunctions() {
     CompactUnitFrameProfilesUnregisterScriptFunctions();
     IncomingResurrectionUnregisterScriptFunctions();
     TransmogrifyUnregisterScriptFunctions();
+    VoidStorageUnregisterScriptFunctions();
 }

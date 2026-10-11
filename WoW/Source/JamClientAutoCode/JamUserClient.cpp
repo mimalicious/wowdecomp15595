@@ -276,6 +276,371 @@ UserClientUnlearnSpecialization::UserClientUnlearnSpecialization() {
 UserClientUnlearnSpecialization::~UserClientUnlearnSpecialization() {
 }
 
+// OFFSET: 0x006708E0/0x140318700
+UserClientVoidStorageQuery::UserClientVoidStorageQuery() {
+}
+
+// OFFSET: 0x006708B0/0x1403185A0
+UserClientVoidStorageQuery::~UserClientVoidStorageQuery() {
+}
+
+// OFFSET: 0x00674250
+void UserClientVoidStorageQuery::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x790A));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_npc[4] != 0);
+    bits.WriteBit(this->m_npc[0] != 0);
+    bits.WriteBit(this->m_npc[5] != 0);
+    bits.WriteBit(this->m_npc[7] != 0);
+    bits.WriteBit(this->m_npc[6] != 0);
+    bits.WriteBit(this->m_npc[3] != 0);
+    bits.WriteBit(this->m_npc[1] != 0);
+    bits.WriteBit(this->m_npc[2] != 0);
+    bits.Flush();
+
+    if (this->m_npc[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[5] ^ 1));
+    }
+
+    if (this->m_npc[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[6] ^ 1));
+    }
+
+    if (this->m_npc[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[3] ^ 1));
+    }
+
+    if (this->m_npc[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[7] ^ 1));
+    }
+
+    if (this->m_npc[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[1] ^ 1));
+    }
+
+    if (this->m_npc[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[0] ^ 1));
+    }
+
+    if (this->m_npc[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[4] ^ 1));
+    }
+
+    if (this->m_npc[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[2] ^ 1));
+    }
+}
+
+// OFFSET: 0x00670560/0x140317E90
+UserClientVoidStorageUnlock::UserClientVoidStorageUnlock() {
+}
+
+// OFFSET: 0x00670810/0x140318330
+UserClientVoidStorageUnlock::~UserClientVoidStorageUnlock() {
+}
+
+// OFFSET: 0x006738B0
+void UserClientVoidStorageUnlock::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7B14));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_npc[4] != 0);
+    bits.WriteBit(this->m_npc[5] != 0);
+    bits.WriteBit(this->m_npc[3] != 0);
+    bits.WriteBit(this->m_npc[0] != 0);
+    bits.WriteBit(this->m_npc[2] != 0);
+    bits.WriteBit(this->m_npc[1] != 0);
+    bits.WriteBit(this->m_npc[7] != 0);
+    bits.WriteBit(this->m_npc[6] != 0);
+    bits.Flush();
+
+    if (this->m_npc[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[7] ^ 1));
+    }
+
+    if (this->m_npc[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[1] ^ 1));
+    }
+
+    if (this->m_npc[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[2] ^ 1));
+    }
+
+    if (this->m_npc[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[3] ^ 1));
+    }
+
+    if (this->m_npc[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[5] ^ 1));
+    }
+
+    if (this->m_npc[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[0] ^ 1));
+    }
+
+    if (this->m_npc[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[6] ^ 1));
+    }
+
+    if (this->m_npc[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[4] ^ 1));
+    }
+}
+
+// OFFSET: 0x00673110/0x140317BD0
+UserClientVoidSwapItem::UserClientVoidSwapItem() {
+}
+
+// OFFSET: 0x00670500/0x140317DE0
+UserClientVoidSwapItem::~UserClientVoidSwapItem() {
+}
+
+// OFFSET: 0x00675000
+void UserClientVoidSwapItem::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3204));
+    msg->Put(this->m_slot);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_npc[2] != 0);
+    bits.WriteBit(this->m_npc[4] != 0);
+    bits.WriteBit(this->m_npc[0] != 0);
+    bits.WriteBit(this->m_item[2] != 0);
+    bits.WriteBit(this->m_item[6] != 0);
+    bits.WriteBit(this->m_item[5] != 0);
+    bits.WriteBit(this->m_npc[1] != 0);
+    bits.WriteBit(this->m_npc[7] != 0);
+    bits.WriteBit(this->m_item[3] != 0);
+    bits.WriteBit(this->m_item[7] != 0);
+    bits.WriteBit(this->m_item[0] != 0);
+    bits.WriteBit(this->m_npc[6] != 0);
+    bits.WriteBit(this->m_npc[5] != 0);
+    bits.WriteBit(this->m_npc[3] != 0);
+    bits.WriteBit(this->m_item[1] != 0);
+    bits.WriteBit(this->m_item[4] != 0);
+    bits.Flush();
+
+    if (this->m_npc[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[1] ^ 1));
+    }
+
+    if (this->m_item[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[3] ^ 1));
+    }
+
+    if (this->m_item[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[2] ^ 1));
+    }
+
+    if (this->m_item[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[4] ^ 1));
+    }
+
+    if (this->m_npc[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[3] ^ 1));
+    }
+
+    if (this->m_npc[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[0] ^ 1));
+    }
+
+    if (this->m_item[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[6] ^ 1));
+    }
+
+    if (this->m_item[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[1] ^ 1));
+    }
+
+    if (this->m_npc[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[5] ^ 1));
+    }
+
+    if (this->m_item[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[5] ^ 1));
+    }
+
+    if (this->m_npc[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[6] ^ 1));
+    }
+
+    if (this->m_item[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[0] ^ 1));
+    }
+
+    if (this->m_npc[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[2] ^ 1));
+    }
+
+    if (this->m_npc[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[7] ^ 1));
+    }
+
+    if (this->m_npc[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[4] ^ 1));
+    }
+
+    if (this->m_item[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_item[7] ^ 1));
+    }
+}
+
+// OFFSET: 0x006880F0/0x140332F20
+UserClientVoidStorageTransfer::UserClientVoidStorageTransfer() {
+}
+
+// OFFSET: 0x00688060/0x14032F260
+UserClientVoidStorageTransfer::~UserClientVoidStorageTransfer() {
+}
+
+// OFFSET: 0x006837D0
+void UserClientVoidStorageTransfer::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x380E));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_npc[1] != 0);
+    bits.WriteBits<26>(this->m_deposits.m_count);
+
+    for (uint32_t i = 0; i < this->m_deposits.m_count; i++) {
+        const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_deposits.m_data[i]);
+        bits.WriteBit(guid[4] != 0);
+        bits.WriteBit(guid[6] != 0);
+        bits.WriteBit(guid[7] != 0);
+        bits.WriteBit(guid[0] != 0);
+        bits.WriteBit(guid[1] != 0);
+        bits.WriteBit(guid[5] != 0);
+        bits.WriteBit(guid[3] != 0);
+        bits.WriteBit(guid[2] != 0);
+    }
+
+    bits.WriteBit(this->m_npc[2] != 0);
+    bits.WriteBit(this->m_npc[0] != 0);
+    bits.WriteBit(this->m_npc[3] != 0);
+    bits.WriteBit(this->m_npc[5] != 0);
+    bits.WriteBit(this->m_npc[6] != 0);
+    bits.WriteBit(this->m_npc[4] != 0);
+    bits.WriteBits<26>(this->m_withdrawals.m_count);
+
+    for (uint32_t i = 0; i < this->m_withdrawals.m_count; i++) {
+        const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_withdrawals.m_data[i]);
+        bits.WriteBit(guid[4] != 0);
+        bits.WriteBit(guid[7] != 0);
+        bits.WriteBit(guid[1] != 0);
+        bits.WriteBit(guid[0] != 0);
+        bits.WriteBit(guid[2] != 0);
+        bits.WriteBit(guid[3] != 0);
+        bits.WriteBit(guid[5] != 0);
+        bits.WriteBit(guid[6] != 0);
+    }
+
+    bits.WriteBit(this->m_npc[7] != 0);
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_deposits.m_count; i++) {
+        const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_deposits.m_data[i]);
+
+        if (guid[6]) {
+            msg->Put(static_cast<uint8_t>(guid[6] ^ 1));
+        }
+
+        if (guid[1]) {
+            msg->Put(static_cast<uint8_t>(guid[1] ^ 1));
+        }
+
+        if (guid[0]) {
+            msg->Put(static_cast<uint8_t>(guid[0] ^ 1));
+        }
+
+        if (guid[2]) {
+            msg->Put(static_cast<uint8_t>(guid[2] ^ 1));
+        }
+
+        if (guid[4]) {
+            msg->Put(static_cast<uint8_t>(guid[4] ^ 1));
+        }
+
+        if (guid[5]) {
+            msg->Put(static_cast<uint8_t>(guid[5] ^ 1));
+        }
+
+        if (guid[3]) {
+            msg->Put(static_cast<uint8_t>(guid[3] ^ 1));
+        }
+
+        if (guid[7]) {
+            msg->Put(static_cast<uint8_t>(guid[7] ^ 1));
+        }
+    }
+
+    if (this->m_npc[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[5] ^ 1));
+    }
+
+    if (this->m_npc[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[6] ^ 1));
+    }
+
+    for (uint32_t i = 0; i < this->m_withdrawals.m_count; i++) {
+        const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_withdrawals.m_data[i]);
+
+        if (guid[3]) {
+            msg->Put(static_cast<uint8_t>(guid[3] ^ 1));
+        }
+
+        if (guid[0]) {
+            msg->Put(static_cast<uint8_t>(guid[0] ^ 1));
+        }
+
+        if (guid[1]) {
+            msg->Put(static_cast<uint8_t>(guid[1] ^ 1));
+        }
+
+        if (guid[6]) {
+            msg->Put(static_cast<uint8_t>(guid[6] ^ 1));
+        }
+
+        if (guid[2]) {
+            msg->Put(static_cast<uint8_t>(guid[2] ^ 1));
+        }
+
+        if (guid[7]) {
+            msg->Put(static_cast<uint8_t>(guid[7] ^ 1));
+        }
+
+        if (guid[5]) {
+            msg->Put(static_cast<uint8_t>(guid[5] ^ 1));
+        }
+
+        if (guid[4]) {
+            msg->Put(static_cast<uint8_t>(guid[4] ^ 1));
+        }
+    }
+
+    if (this->m_npc[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[1] ^ 1));
+    }
+
+    if (this->m_npc[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[4] ^ 1));
+    }
+
+    if (this->m_npc[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[7] ^ 1));
+    }
+
+    if (this->m_npc[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[3] ^ 1));
+    }
+
+    if (this->m_npc[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[2] ^ 1));
+    }
+
+    if (this->m_npc[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_npc[0] ^ 1));
+    }
+}
+
 // OFFSET: [0x0066BC00/0x140312430]
 JamTransmogrifyItem::JamTransmogrifyItem() {
 }
