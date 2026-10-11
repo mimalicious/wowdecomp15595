@@ -1017,6 +1017,38 @@ THROTTLEDCHAT::~THROTTLEDCHAT() {
     SMemFree(this->m_text, __FILE__, __LINE__, 0);
 }
 
+// OFFSET: 0x008EAFE0
+int32_t CGChat::CanSendChannelMessage(const char* channelName) {
+    ChatChannel* channel = GetChannelByName(channelName);
+
+    if (!channel) {
+        return 0;
+    }
+
+    if (channel->m_flags & 0x8) {
+        int32_t cutoff = static_cast<int32_t>(time(NULL)) - 30;
+        uint32_t recent = 0;
+
+        for (uint32_t i = 0; i < sizeof(channel->m_messageTimes) / sizeof(channel->m_messageTimes[0]); i++) {
+            if (channel->m_messageTimes[i] > cutoff) {
+                recent++;
+            }
+        }
+
+        if (recent >= 2) {
+            return 0;
+        }
+
+        channel->m_messageTimes[channel->m_messageTimeIndex++] = static_cast<int32_t>(time(NULL));
+
+        if (channel->m_messageTimeIndex >= sizeof(channel->m_messageTimes) / sizeof(channel->m_messageTimes[0])) {
+            channel->m_messageTimeIndex = 0;
+        }
+    }
+
+    return 1;
+}
+
 // OFFSET: 0x008EEF90
 void CGChat::QueueChatText(const char* text, int32_t queued, int32_t a3, SLASH_COMMAND_ID type, const ChatMessageParams* params) {
     PENDINGCHAT* chat = CGChat::s_pendingChat.NewNode(2, 0, 0);

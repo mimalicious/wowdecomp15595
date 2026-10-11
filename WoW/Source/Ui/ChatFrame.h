@@ -190,7 +190,7 @@ class ChatChannel {
     /* 00A4 */ bool m_unkA4;
     /* 00A5 */ uint8_t m_unkA5;
     /* 00A6 */ uint8_t unk_00A6[2];
-    /* 00A8 */ uint32_t m_messageTimes[32];
+    /* 00A8 */ int32_t m_messageTimes[32];
     /* 0128 */ uint32_t m_messageTimeIndex;
     /* 012C */ char m_password[128];
     /* 01AC */ bool m_unk1AC;
@@ -440,6 +440,7 @@ class CGChat {
     static ChatChannel* GetChannelByNumber(int32_t number);
     static void SendChat(int32_t language, const char* text, int32_t type, const char* target, const char* prefix);
     static void RejoinChannels();
+    static int32_t CanSendChannelMessage(const char* channel);
 };
 
 extern int32_t s_activeDisplayChannelType;

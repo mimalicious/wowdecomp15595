@@ -5,6 +5,7 @@
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
 #include "Engine/Source/Os/TimeManager.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "WoW/Source/Game/ValidateName.h"
@@ -234,19 +235,18 @@ static int32_t Script_SendChatMessage(lua_State* L) {
             return 0;
         }
 
-        int32_t number = SStrToInt(target);
+        target = CGChat::GetChannelName(SStrToInt(target), false);
 
-        if (number < 1 || number > static_cast<int32_t>(CGChat::s_channels.Count())) {
+        if (!target) {
             return 0;
         }
 
-        ChatChannel* channel = &CGChat::s_channels.m_data[number - 1];
-
-        if (channel->m_channelNumber != number || channel->m_unk9C) {
+        if (!(player->m_player->m_playerFlags & 0x8) && !(player->m_player->m_playerFlags & 0x80000) && !CGChat::CanSendChannelMessage(target)) {
+            ChatMessageParams params;
+            params.m_channelName = target;
+            CGChat::AddChatMessage("THROTTLED", CHAT_MSG_CHANNEL_NOTICE, &params);
             return 0;
         }
-
-        target = channel->m_name;
     } else if (type == CHAT_MSG_AFK) {
         if (!CGChat::m_afk && !*text) {
             text = FrameScript_GetText("DEFAULT_AFK_MESSAGE", -1, GENDER_NOT_APPLICABLE);
@@ -274,8 +274,10 @@ static int32_t Script_SendChatMessage(lua_State* L) {
             char buffer[3000];
             SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("MARKED_DND", -1, GENDER_NOT_APPLICABLE), text);
             CGChat::AddChatMessage(buffer, CHAT_MSG_SYSTEM, NULL);
+            CGChat::m_dnd = 1;
         } else {
             CGChat::AddChatMessage(FrameScript_GetText("CLEARED_DND", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL);
+            CGChat::m_dnd = 0;
         }
     }
 
@@ -291,7 +293,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     char* message = parsed;
     char drunk[256];
 
-    if (player->IsDrunk()) {
+    if (type != CHAT_MSG_EMOTE && type != CHAT_MSG_DND && player->IsDrunk()) {
         InebriatedParseText(parsed, drunk, sizeof(drunk), player->GetDrunknessTurnValue());
         message = drunk;
     }
@@ -322,12 +324,12 @@ static int32_t Script_SendChatMessage(lua_State* L) {
         escape = SStrChr(next, '|');
     }
 
-    if ((type == CHAT_MSG_WHISPER || type == CHAT_MSG_CHANNEL || type == CHAT_MSG_BATTLENET) && language != 0xFFFFFFFF) {
+    if ((type == CHAT_MSG_WHISPER || type == CHAT_MSG_CHANNEL || type == CHAT_MSG_BATTLENET) && language != 0xFFFFFFFF && !(player->m_player->m_playerFlags & 0x8) && !(player->m_player->m_playerFlags & 0x80000)) {
         CGChat::ProcessThrottledChat();
 
         if (type == CHAT_MSG_WHISPER || type == CHAT_MSG_BATTLENET) {
             if (!CGChat::IsInWhisperSourceHistory(target)) {
-                uint32_t time = OsGetAsyncTimeMs();
+                uint32_t time = FrameTime::GetCurTimeMs();
 
                 if (CGChat::IsWhisperThrottled(time)) {
                     CGChat::AddThrottledChat(type, language, target, message);
@@ -337,7 +339,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
                 CGChat::AddWhisperThrottled(time);
             }
         } else {
-            uint32_t time = OsGetAsyncTimeMs();
+            uint32_t time = FrameTime::GetCurTimeMs();
 
             if (CGChat::IsChannelThrottled(target, time)) {
                 CGChat::AddThrottledChat(type, language, target, message);
@@ -348,19 +350,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
         }
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_MESSAGECHAT));
-    msg.Put(static_cast<uint32_t>(type));
-    msg.Put(language);
-
-    if (type == CHAT_MSG_WHISPER || type == CHAT_MSG_CHANNEL) {
-        msg.PutString(target);
-    }
-
-    msg.PutString(message);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-
+    CGChat::SendChat(language, message, type, target, NULL);
     return 0;
 }
 
@@ -948,25 +938,37 @@ static int32_t Script_SendAddonMessage(lua_State* L) {
 
     if (!*prefix && !*text) {
         luaL_error(L, "Usage: SendAddonMessage(\"prefix\", \"message\" [,\"type\"] [,\"target\"])");
+        return 0;
     }
 
-    char message[3000];
-    SStrPrintf(message, sizeof(message), "%s\t%s", prefix, text);
     int32_t type = CHAT_MSG_PARTY;
 
     if (lua_isstring(L, 3)) {
-        if (!StringToChatType(lua_tolstring(L, 3, NULL), &type)) {
+        if (!StringToChatType(lua_tolstring(L, 3, NULL), &type) || (type != CHAT_MSG_PARTY && type != CHAT_MSG_RAID && type != CHAT_MSG_GUILD && type != CHAT_MSG_OFFICER && type != CHAT_MSG_BATTLEGROUND && type != CHAT_MSG_WHISPER)) {
             luaL_error(L, "Unknown addon chat type");
-        } else if (type == CHAT_MSG_RAID) {
-            if (!CGRaidInfo::m_numMembers) {
-                type = CHAT_MSG_PARTY;
-            }
-        } else if (type != CHAT_MSG_PARTY && type != CHAT_MSG_GUILD && type != CHAT_MSG_BATTLEGROUND && type != CHAT_MSG_WHISPER) {
-            luaL_error(L, "Unknown addon chat type");
+            return 0;
         }
     }
 
-    if (type == CHAT_MSG_PARTY && !CGPartyInfo::m_members[0]) {
+    uint32_t length = SStrLen(prefix);
+
+    if (SStrLen(prefix) >= 17) {
+        luaL_error(L, "Prefix is too long");
+        return 0;
+    }
+
+    if (!length) {
+        luaL_error(L, "Prefix cannot be an empty string");
+        return 0;
+    }
+
+    if (type == CHAT_MSG_RAID) {
+        if (!CGRaidInfo::m_numMembers) {
+            type = CHAT_MSG_PARTY;
+        }
+    }
+
+    if (type == CHAT_MSG_PARTY && !CGPartyInfo::InParty()) {
         return 0;
     }
 
@@ -974,20 +976,10 @@ static int32_t Script_SendAddonMessage(lua_State* L) {
 
     if (type == CHAT_MSG_WHISPER && (!target || !*target)) {
         luaL_error(L, "SendAddonMessage(): Whisper message missing target player!");
+        return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_MESSAGECHAT));
-    msg.Put(static_cast<uint32_t>(type));
-    msg.Put(static_cast<uint32_t>(0xFFFFFFFF));
-
-    if (type == CHAT_MSG_WHISPER) {
-        msg.PutString(target);
-    }
-
-    msg.PutString(message);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    CGChat::SendChat(0xFFFFFFFF, text, type, target, prefix);
     return 0;
 }
 
