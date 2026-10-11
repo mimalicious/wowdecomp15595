@@ -97,7 +97,7 @@ int32_t Packet_SMSG_NOTIFY_DANCE(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x00576A90
+// OFFSET: 0x009B8FD0
 void CGDanceStudio::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_PLAY_DANCE, Packet_SMSG_PLAY_DANCE, NULL);
     ClientServices::SetMessageHandler(SMSG_STOP_DANCE, Packet_SMSG_STOP_DANCE, NULL);

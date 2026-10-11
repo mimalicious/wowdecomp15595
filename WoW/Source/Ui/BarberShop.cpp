@@ -561,7 +561,7 @@ void CGBarberShop::SetNextBarberShopStyle(int32_t type, bool backward) {
     CGBarberShop::UpdateAlternateForm();
 }
 
-// OFFSET: #0x0052FE60
+// OFFSET: 0x00900BE0
 void CGBarberShop::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_ENABLE_BARBER_SHOP, Packet_SMSG_ENABLE_BARBER_SHOP, NULL);
     ClientServices::SetMessageHandler(SMSG_BARBER_SHOP_RESULT, Packet_SMSG_BARBER_SHOP_RESULT, NULL);

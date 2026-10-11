@@ -14,7 +14,7 @@ CDynamicString s_serverStatus;
 // STATIC: #0x00BEA814
 CDynamicString s_serverNotice;
 
-// OFFSET: #0x00551660
+// OFFSET: 0x009FBBB0
 static int32_t Packet_SMSG_MOTD(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (msgId != SMSG_MOTD) {
         return 0;
@@ -47,7 +47,7 @@ static int32_t Packet_SMSG_MOTD(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x00552380
+// OFFSET: 0x009FC980
 void CKBSystem::Initialize() {
     ClientServices::SetMessageHandler(SMSG_MOTD, Packet_SMSG_MOTD, NULL);
 }

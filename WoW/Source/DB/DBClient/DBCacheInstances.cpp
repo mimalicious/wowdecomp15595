@@ -88,35 +88,21 @@ static void LoadDBCaches() {
     g_danceCache.Load();
 }
 
-// OFFSET: #0x00635190
+// OFFSET: 0x00496BE0
 static int32_t ReceiveCreature(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_creatureDBCache.AddItems(msg, true);
 
     return 1;
 }
 
-// OFFSET: #0x006351B0
+// OFFSET: 0x00496C00
 static int32_t ReceiveGameObject(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_gameObjectDBCache.AddItems(msg, true);
 
     return 1;
 }
 
-// OFFSET: #0x006351D0
-static int32_t ReceiveItemName(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    g_itemNameDBCache.AddItems(msg, true);
-
-    return 1;
-}
-
-// OFFSET: #0x006351F0
-static int32_t ReceiveMultipleItems(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    g_itemDBCache.AddItems(msg, false);
-
-    return 1;
-}
-
-// OFFSET: #0x00635210
+// OFFSET: 0x00496C20
 static int32_t ReceiveNPCText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_npcTextDBCache.AddItems(msg, true);
 
@@ -137,14 +123,14 @@ static int32_t ReceiveQuest(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// OFFSET: #0x006352A0
+// OFFSET: 0x00496CB0
 static int32_t ReceivePageText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_pageTextCache.AddItems(msg, true);
 
     return 1;
 }
 
-// OFFSET: #0x006352C0
+// OFFSET: 0x00496CD0
 static int32_t ReceivePetName(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     PetNameCache petName;
     msg->Get(petName.m_petNumber);
@@ -210,13 +196,6 @@ static int32_t ReceiveArenaTeam(void* param, NETMESSAGE msgId, uint32_t time, CD
     } else {
         g_arenaTeamCache.DenyItem(arenaTeam.m_id);
     }
-
-    return 1;
-}
-
-// OFFSET: #0x006354D0
-static int32_t ReceiveSingleItem(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    g_itemDBCache.AddItems(msg, true);
 
     return 1;
 }
@@ -392,9 +371,6 @@ void DBCache_Destroy() {
 void DBCache_ClearHandlers() {
     ClientServices::ClearMessageHandler(SMSG_QUERY_CREATURE_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_QUERY_GAME_OBJECT_RESPONSE);
-    ClientServices::ClearMessageHandler(SMSG_ITEM_NAME_QUERY_RESPONSE);
-    ClientServices::ClearMessageHandler(SMSG_ITEM_QUERY_SINGLE_RESPONSE);
-    ClientServices::ClearMessageHandler(SMSG_ITEM_QUERY_MULTIPLE_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_QUERY_NPC_TEXT_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_QUERY_PLAYER_NAME_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_QUERY_GUILD_INFO_RESPONSE);
@@ -405,18 +381,14 @@ void DBCache_ClearHandlers() {
     ClientServices::ClearMessageHandler(SMSG_QUERY_ITEM_TEXT_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_INVALIDATE_PLAYER);
     ClientServices::ClearMessageHandler(SMSG_ARENA_TEAM_QUERY_RESPONSE);
-    ClientServices::ClearMessageHandler(SMSG_CHEAT_DUMP_ITEMS_DEBUG_ONLY_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_INVALIDATE_DANCE);
     ClientServices::ClearMessageHandler(SMSG_DANCE_QUERY_RESPONSE);
 }
 
-// OFFSET: #0x00635B40
+// OFFSET: 0x00497490
 void DBCache_RegisterHandlers() {
     ClientServices::SetMessageHandler(SMSG_QUERY_CREATURE_RESPONSE, ReceiveCreature, NULL);
     ClientServices::SetMessageHandler(SMSG_QUERY_GAME_OBJECT_RESPONSE, ReceiveGameObject, NULL);
-    ClientServices::SetMessageHandler(SMSG_ITEM_NAME_QUERY_RESPONSE, ReceiveItemName, NULL);
-    ClientServices::SetMessageHandler(SMSG_ITEM_QUERY_SINGLE_RESPONSE, ReceiveSingleItem, NULL);
-    ClientServices::SetMessageHandler(SMSG_ITEM_QUERY_MULTIPLE_RESPONSE, ReceiveMultipleItems, NULL);
     ClientServices::SetMessageHandler(SMSG_QUERY_NPC_TEXT_RESPONSE, ReceiveNPCText, NULL);
     ClientServices::SetMessageHandler(SMSG_QUERY_PLAYER_NAME_RESPONSE, ReceiveName, NULL);
     ClientServices::SetMessageHandler(SMSG_QUERY_GUILD_INFO_RESPONSE, ReceiveGuildInfo, NULL);
@@ -427,7 +399,6 @@ void DBCache_RegisterHandlers() {
     ClientServices::SetMessageHandler(SMSG_QUERY_ITEM_TEXT_RESPONSE, ReceiveItemText, NULL);
     ClientServices::SetMessageHandler(SMSG_INVALIDATE_PLAYER, ReceiveInvalidatePlayer, NULL);
     ClientServices::SetMessageHandler(SMSG_ARENA_TEAM_QUERY_RESPONSE, ReceiveArenaTeam, NULL);
-    ClientServices::SetMessageHandler(SMSG_CHEAT_DUMP_ITEMS_DEBUG_ONLY_RESPONSE, ReceiveSingleItem, NULL);
     ClientServices::SetMessageHandler(SMSG_INVALIDATE_DANCE, ReceiveInvalidateDance, NULL);
     ClientServices::SetMessageHandler(SMSG_DANCE_QUERY_RESPONSE, ReceiveDance, NULL);
 }

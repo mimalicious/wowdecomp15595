@@ -195,7 +195,7 @@ void CGGossipInfo::SetGossipText(int32_t textId) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GOSSIP_SHOW, NULL);
 }
 
-// OFFSET: #0x0058B1B0
+// OFFSET: 0x009E1DC0
 int32_t Packet_SMSG_GOSSIP_MESSAGE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -456,13 +456,13 @@ void CGGossipInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_GOSSIP_POI);
 }
 
-// OFFSET: %0x0092B8F0
+// OFFSET: 0x009E1270
 int32_t Packet_SMSG_GOSSIP_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGossipInfo::SetGossip(WOWGUID());
     return 1;
 }
 
-// OFFSET: %0x0092B920
+// OFFSET: 0x009E12A0
 int32_t Packet_SMSG_GOSSIP_POI(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t flags;
     float x;

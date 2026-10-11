@@ -269,7 +269,7 @@ int32_t Packet_SMSG_UPDATE_INSTANCE_ENCOUNTER_UNIT(void* param, NETMESSAGE msgId
     return 1;
 }
 
-// OFFSET: #0x005EDED0
+// OFFSET: 0x0094FE80
 void CGInstanceEncounter_C::EnterWorld() {
     if (!CGGameUI::m_currentlyReloadingUI) {
         ClientServices::SetMessageHandler(SMSG_UPDATE_INSTANCE_ENCOUNTER_UNIT, Packet_SMSG_UPDATE_INSTANCE_ENCOUNTER_UNIT, NULL);

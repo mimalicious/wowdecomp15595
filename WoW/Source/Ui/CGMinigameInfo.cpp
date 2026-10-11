@@ -8,7 +8,7 @@
 // STATIC: 0x00F771A8
 CMinigame_C* CGMinigameInfo::m_minigame;
 
-// OFFSET: #0x005C5720
+// OFFSET: 0x00A0A220
 void CGMinigameInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_MINIGAME_SETUP, Packet_SMSG_MINIGAME_SETUP, NULL);
     ClientServices::SetMessageHandler(SMSG_MINIGAME_STATE, Packet_SMSG_MINIGAME_STATE, NULL);
@@ -20,7 +20,7 @@ void CGMinigameInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_MINIGAME_STATE);
 }
 
-// OFFSET: #0x005C54D0
+// OFFSET: 0x00A09FA0
 int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (CGMinigameInfo::m_minigame) {
         CGMinigameInfo::m_minigame->UpdateState(msg);
@@ -38,7 +38,7 @@ void CGMinigameInfo::LeaveWorld() {
     }
 }
 
-// OFFSET: #0x005C5690
+// OFFSET: 0x00A0A190
 int32_t Packet_SMSG_MINIGAME_SETUP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t guid;
     uint8_t type;

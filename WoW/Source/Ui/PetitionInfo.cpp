@@ -34,7 +34,7 @@ CGPetition* CGPetitionInfo::m_petition;
 // STATIC: #0x00C22B44
 TSGrowableArray<PetitionSignerInfo> CGPetitionInfo::m_signers;
 
-// OFFSET: #0x005CEA00
+// OFFSET: 0x009E0100
 int32_t Packet_SMSG_OFFER_PETITION_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -77,7 +77,7 @@ void PetitionQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
-// OFFSET: #0x005CEC40
+// OFFSET: 0x009E0350
 void CGPetitionInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_OFFER_PETITION_ERROR, Packet_SMSG_OFFER_PETITION_ERROR, NULL);
 }
