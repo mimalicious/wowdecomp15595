@@ -852,18 +852,7 @@ bool System_SFile::s_OpenArchive(ARCHIVEREC* archive, uint32_t flags, ARCHIVEREC
                 goto missing;
             }
 
-            Blizzard::Mopaq::HSFILERecord* file = archive->m_file;
-            Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected Mopaq signature error: offset = %lld, length = %d\n", bufferPos, 4096);
-
-            Blizzard::Mopaq::MpqHandleRecord* handle = file->m_handle;
-            Blizzard::File::StreamRecord* stream = handle ? handle->m_file : NULL;
-
-            if (!stream || !stream->m_streaming || !stream->m_streaming->m_unit) {
-                Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Could not repair because the storage file is not streamed.\n");
-                goto missing;
-            }
-
-            if (!Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleArchiveSignatureError(file, bufferPos)) {
+            if (!Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleArchiveSignatureError(archive->m_file, bufferPos)) {
                 goto missing;
             }
 

@@ -167,6 +167,21 @@ static bool RepairFile(Blizzard::Mopaq::MpqHandleRecord* handle, uint8_t* buffer
     }
 }
 
+// INLINED
+bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleArchiveSignatureError(HSFILERecord* file, int64_t offset) {
+    Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected Mopaq signature error: offset = %lld, length = %d\n", offset, 4096);
+
+    Blizzard::Mopaq::MpqHandleRecord* handle = file->m_handle;
+    Blizzard::File::StreamRecord* stream = handle ? handle->m_file : NULL;
+
+    if (!stream || !stream->m_streaming || !stream->m_streaming->m_unit) {
+        Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Could not repair because the storage file is not streamed.\n");
+        return false;
+    }
+
+    return RepairChunk(file, offset, 4096);
+}
+
 // OFFSET: 0x007EE710
 bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleLoadAndVerify(HSFILERecord* file, uint8_t* buffer, int64_t offset, uint32_t size, const Blizzard::Util::Digest<16>& md5) {
     Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected Mopaq B/H table error: offset = %lld, length = %d\n", offset, size);
