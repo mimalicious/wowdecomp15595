@@ -18,6 +18,9 @@ struct TalentTabInfo {
     /* 0000 */ int32_t m_tabId;
     /* 0004 */ uint32_t m_numTalents;
     /* 0008 */ const TalentRec* m_talents;
+    /* 000C */ TSGrowableArray<int32_t> m_primarySpells;
+
+    ~TalentTabInfo();
 };
 
 struct TalentGroupItem_C : public TSHashObject<TalentGroupItem_C, HASHKEY_NONE> {
@@ -53,9 +56,11 @@ struct TalentGroupTab_C {
 class CGTalentGroup_C {
     public:
     /* 0004 */ TSHashTable<TalentGroupItem_C, HASHKEY_NONE> m_items;
-    /* 002C */ TSFixedArray<TalentGroupTab_C> m_tabs;
-    /* 0038 */ uint32_t m_unspentPoints;
-    /* 003C */ uint32_t m_glyphs[6];
+    /* 0030 */ TSFixedArray<TalentGroupTab_C> m_tabs;
+    /* 003C */ uint32_t m_unspentPoints;
+    /* 0040 */ uint32_t m_glyphs[9];
+    /* 0064 */ int32_t m_primaryTree;
+    /* 0068 */ int32_t m_previewPrimaryTree;
 
     CGTalentGroup_C();
     virtual ~CGTalentGroup_C();
@@ -65,6 +70,8 @@ class CGTalentGroup_C {
     TalentGroupTab_C* GetTabFromID(int32_t tabId) const;
     TalentGroupTab_C* GetTabFromTalentID(int32_t talentId);
     TalentGroupItem_C* GetTalentItem(int32_t talentId) const;
+    int32_t GetPreviewPointsSpent() const;
+    uint32_t GetPointsSpent() const;
     void AddTalentItem(int32_t talentId, int32_t rank);
     void UpdateTabs(const TSFixedArray<TalentTabInfo*>* tabs);
     void ResetPreviewTalentPoints(uint32_t tabIndex);
@@ -74,7 +81,7 @@ class CGTalentGroup_C {
     void AddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t pet);
 };
 
-int32_t TalentInfoGetPrimaryTalentTree(uint32_t group, int32_t pet, int32_t a3);
+int32_t TalentInfoGetPrimaryTalentTree(uint32_t group, int32_t inspect, int32_t pet);
 
 class CGTalentInfo {
     public:
@@ -102,11 +109,11 @@ class CGTalentInfo {
     static void AddPreviewTalentPoints(uint32_t group, uint32_t tab, uint32_t talentIndex, int32_t points, int32_t pet);
     static void ResetPreviewTalentPoints(uint32_t group, uint32_t tab, int32_t pet);
     static void ResetGroupPreviewTalentPoints(uint32_t group, int32_t pet);
-    static void RecalculatePreviewPoints(int32_t pet);
     static int32_t GetAllGroupPreviewTalentPointsSpent(int32_t pet);
     static void ResetAllGroupPreviewTalentPoints(int32_t pet);
     static void ResetAllGroupPreviewPrimaryTalentTree(int32_t pet);
-    static int32_t SumPreviewPointsSpent(int32_t pet);
+    static void SetPreviewPrimaryTalentTree(uint32_t group, bool pet, int32_t tree);
+    static int32_t GetTabPreviewPointsSpent(uint32_t group, uint32_t tab, int32_t pet);
     static void ResetTabInfo(int32_t pet);
     static void ResetTalentGroups(int32_t pet);
     static void UpdatePetTabInfo(int32_t family);
@@ -117,6 +124,7 @@ class CGTalentInfo {
 void TalentInfoRegisterScriptFunctions();
 void TalentInfoUnregisterScriptFunctions();
 int32_t TalentInfoIsSpellKnown(int32_t spellId, int32_t isInspect, int32_t isPet);
+uint32_t TalentInfoGetActiveTalentGroup(int32_t inspect, int32_t pet);
 uint32_t TalentInfoGetScriptGroupIndex(lua_State* L, int32_t inspect, int32_t pet, int32_t index);
 CGTalentGroup_C* TalentInfoGetTalentGroup(uint32_t index, int32_t inspect, int32_t pet);
 TalentGroupItem_C* TalentInfoGetTalentItem(uint32_t group, int32_t talentId, int32_t inspect, int32_t pet);

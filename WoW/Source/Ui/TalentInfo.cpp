@@ -14,7 +14,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: #0x00C21008
+// STATIC: 0x00F4B5F8
 WOWGUID CGTalentInfo_Inspect::m_inspectTarget;
 
 // STATIC: 0x00F4B5E4
@@ -23,40 +23,40 @@ uint32_t CGTalentInfo::m_activeTalentGroup;
 // STATIC: 0x00F4B5F4
 uint32_t CGTalentInfo_Inspect::m_activeTalentGroup;
 
-// STATIC: #0x00C20FF8
+// STATIC: 0x00F4B5E8
 uint32_t CGTalentInfo::m_numTalentGroups;
 
-// STATIC: #0x00C21000
+// STATIC: 0x00F4B5F0
 int32_t CGTalentInfo::m_petTalentTab;
 
-// STATIC: #0x00C21018
+// STATIC: 0x00F4B608
 TSFixedArray<TalentTabInfo*> CGTalentInfo::m_tabs;
 
-// STATIC: #0x00C21024
+// STATIC: 0x00F4B614
 TSFixedArray<TalentTabInfo*> CGTalentInfo::m_petTabs;
 
-// STATIC: #0x00C21030
+// STATIC: 0x00F4B620
 CGTalentGroup_C CGTalentInfo::m_talentGroups[2];
 
-// STATIC: #0x00C210D8
+// STATIC: 0x00F4B6F8
 CGTalentGroup_C CGTalentInfo::m_petTalentGroup;
 
-// STATIC: #0x00C20FF0
+// STATIC: 0x00F4B5E0
 int32_t CGTalentInfo::m_tabsInitialized;
 
-// STATIC: #0x00C20FFC
+// STATIC: 0x00F4B5EC
 int32_t CGTalentInfo::m_unspentTalentPoints;
 
-// STATIC: #0x00C21010
+// STATIC: 0x00F4B600
 uint32_t CGTalentInfo_Inspect::m_numTalentGroups;
 
-// STATIC: #0x00C21014
+// STATIC: 0x00F4B604
 int32_t CGTalentInfo_Inspect::m_unspentTalentPoints;
 
-// STATIC: #0x00C2112C
+// STATIC: 0x00F4B764
 TSFixedArray<TalentTabInfo*> CGTalentInfo_Inspect::m_tabs;
 
-// STATIC: #0x00C21138
+// STATIC: 0x00F4B770
 CGTalentGroup_C CGTalentInfo_Inspect::m_talentGroups[2];
 
 // PROVEN: 2e1f5e89 IDENTICAL/NONE
@@ -65,51 +65,13 @@ void CGTalentInfo_Inspect::EnterWorld() {
     CGTalentInfo_Inspect::m_inspectTarget = WOWGUID::Make(0);
 }
 
-// OFFSET: #0x005C5BE0
-int32_t CGTalentInfo::SumPreviewPointsSpent(int32_t pet) {
-    int32_t total = 0;
-
-    if (pet) {
-        if (CGTalentInfo::m_petTalentTab && CGTalentInfo::m_petTabs.m_count) {
-            for (uint32_t i = 0; i < CGTalentInfo::m_petTalentGroup.m_tabs.m_count; i++) {
-                total += CGTalentInfo::m_petTalentGroup.m_tabs.m_data[i].m_previewPointsSpent;
-            }
-        }
-    } else {
-        for (uint32_t group = 0; group < CGTalentInfo::m_numTalentGroups; group++) {
-            int32_t spent = 0;
-
-            for (uint32_t i = 0; i < CGTalentInfo::m_talentGroups[group].m_tabs.m_count; i++) {
-                spent += CGTalentInfo::m_talentGroups[group].m_tabs.m_data[i].m_previewPointsSpent;
-            }
-
-            total += spent;
-        }
-    }
-
-    return total;
-}
-
-// OFFSET: #0x005C70D0
-void CGTalentInfo::RecalculatePreviewPoints(int32_t pet) {
-    if (pet) {
-        if (CGTalentInfo::m_petTalentTab && CGTalentInfo::m_petTabs.m_count) {
-            CGTalentInfo::m_petTalentGroup.ResetAllPreviewTalentPoints();
-        }
-    } else {
-        for (uint32_t group = 0; group < CGTalentInfo::m_numTalentGroups; group++) {
-            CGTalentInfo::m_talentGroups[group].ResetAllPreviewTalentPoints();
-        }
-    }
-}
-
 // PROVEN: 05d4d10e IDENTICAL/NONE
 // OFFSET: 0x00999C60/0x14071BA00
 uint32_t CGTalentInfo::GetActiveTalentGroup(int32_t pet) {
     return pet == 0 ? CGTalentInfo::m_activeTalentGroup : 0;
 }
 
-// OFFSET: #0x005C5B30
+// OFFSET: 0x0099A020/0x14071BE60
 TalentGroupTab_C* CGTalentGroup_C::GetTabFromID(int32_t tabId) const {
     for (uint32_t i = 0; i < this->m_tabs.m_count; i++) {
         if (this->m_tabs.m_data[i].m_tabId == tabId) {
@@ -196,15 +158,18 @@ static int TierCompare(const void* a, const void* b) {
     return (*static_cast<TalentGroupTier_C* const*>(a))->m_tier - (*static_cast<TalentGroupTier_C* const*>(b))->m_tier;
 }
 
-// OFFSET: #0x005C5770
+// OFFSET: 0x00999C40/0x14071B9E0
 uint32_t CGTalentGroup_C::GetGlyph(uint32_t index) {
-    return index < 6 ? this->m_glyphs[index] : 6;
+    return index < 9 ? this->m_glyphs[index] : 9;
 }
 
-// OFFSET: #0x005C5790
-void CGTalentInfo::LeaveWorld() {
-    CGTalentInfo::m_tabsInitialized = 0;
-    CGTalentInfo::m_petTalentTab = 0;
+// OFFSET: 0x00999C90/0x14071BA20
+uint32_t TalentInfoGetActiveTalentGroup(int32_t inspect, int32_t pet) {
+    if (inspect) {
+        return CGTalentInfo_Inspect::m_activeTalentGroup;
+    }
+
+    return CGTalentInfo::GetActiveTalentGroup(pet);
 }
 
 // OFFSET: 0x00999CC0/0x14071BA40
@@ -1158,4 +1123,129 @@ void CGTalentInfo_Inspect::UpdateTalentData(CDataStore* msg) {
     if (CGTalentInfo_Inspect::m_inspectTarget.m_guid) {
         UpdateTalentGroups(&CGTalentInfo_Inspect::m_tabs, CGTalentInfo_Inspect::m_talentGroups, 2, CGTalentInfo_Inspect::m_activeTalentGroup, CGTalentInfo_Inspect::m_numTalentGroups, CGTalentInfo_Inspect::m_unspentTalentPoints);
     }
+}
+
+// OFFSET: 0x0099A0D0/0x14071BEF0
+int32_t CGTalentGroup_C::GetPreviewPointsSpent() const {
+    int32_t total = 0;
+
+    for (uint32_t i = 0; i < this->m_tabs.m_count; i++) {
+        total += this->m_tabs.m_data[i].m_previewPointsSpent;
+    }
+
+    return total;
+}
+
+// OFFSET: 0x0099A130/0x14071BF70
+uint32_t CGTalentGroup_C::GetPointsSpent() const {
+    uint32_t total = 0;
+
+    for (uint32_t i = 0; i < this->m_tabs.m_count; i++) {
+        total += this->m_tabs.m_data[i].m_pointsSpent;
+    }
+
+    return total;
+}
+
+// OFFSET: 0x0099A190/0x14071BFF0
+int32_t CGTalentInfo::GetNumTabs(int32_t pet) {
+    return pet ? CGTalentInfo::m_petTabs.m_count : CGTalentInfo::m_tabs.m_count;
+}
+
+// OFFSET: 0x0099A1B0/0x14071C000
+TalentTabInfo* CGTalentInfo::GetTab(uint32_t index, int32_t pet) {
+    if (pet) {
+        if (index < CGTalentInfo::m_petTabs.m_count) {
+            return CGTalentInfo::m_petTabs.m_data[index];
+        }
+    } else if (index < CGTalentInfo::m_tabs.m_count) {
+        return CGTalentInfo::m_tabs.m_data[index];
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x0099A1F0/0x14071C040
+void CGTalentInfo::ResetAllGroupPreviewPrimaryTalentTree(int32_t pet) {
+    if (pet) {
+        if (CGTalentInfo::m_petTalentTab && CGTalentInfo::m_petTabs.m_count) {
+            CGTalentInfo::m_petTalentGroup.m_previewPrimaryTree = 0;
+        }
+    } else {
+        for (uint32_t i = 0; i < CGTalentInfo::m_numTalentGroups; i++) {
+            CGTalentInfo::m_talentGroups[i].m_previewPrimaryTree = 0;
+        }
+    }
+}
+
+// OFFSET: 0x0099A240/0x14071C090
+int32_t CGTalentInfo::GetAllGroupPreviewTalentPointsSpent(int32_t pet) {
+    int32_t total = 0;
+
+    if (pet) {
+        if (CGTalentInfo::m_petTalentTab && CGTalentInfo::m_petTabs.m_count) {
+            return CGTalentInfo::m_petTalentGroup.GetPreviewPointsSpent();
+        }
+    } else {
+        for (uint32_t i = 0; i < CGTalentInfo::m_numTalentGroups; i++) {
+            total += CGTalentInfo::m_talentGroups[i].GetPreviewPointsSpent();
+        }
+    }
+
+    return total;
+}
+
+// OFFSET: 0x0099A930/0x14071C9A0
+void CGTalentInfo::SetPreviewPrimaryTalentTree(uint32_t group, bool pet, int32_t tree) {
+    CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
+
+    if (talentGroup) {
+        talentGroup->m_previewPrimaryTree = tree;
+    }
+}
+
+// OFFSET: 0x0099A990/0x14071CA00
+int32_t CGTalentInfo::GetTabPreviewPointsSpent(uint32_t group, uint32_t tab, int32_t pet) {
+    CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
+
+    if (!talentGroup) {
+        return 0;
+    }
+
+    return tab < talentGroup->m_tabs.m_count ? talentGroup->m_tabs.m_data[tab].m_previewPointsSpent : 0;
+}
+
+// OFFSET: 0x0099AAA0/0x14071CB50
+int32_t TalentInfoGetPrimaryTalentTree(uint32_t group, int32_t inspect, int32_t pet) {
+    CGTalentGroup_C* talentGroup = TalentInfoGetTalentGroup(group, inspect, pet);
+
+    return talentGroup ? talentGroup->m_primaryTree : 0;
+}
+
+// OFFSET: 0x0099B740
+TalentTabInfo::~TalentTabInfo() {
+    this->m_primarySpells.Clear();
+}
+
+// OFFSET: 0x0099C3B0
+void CGTalentInfo::ResetAllGroupPreviewTalentPoints(int32_t pet) {
+    if (pet) {
+        if (CGTalentInfo::m_petTalentTab && CGTalentInfo::m_petTabs.m_count) {
+            CGTalentInfo::m_petTalentGroup.ResetAllPreviewTalentPoints();
+        }
+    } else {
+        for (uint32_t i = 0; i < CGTalentInfo::m_numTalentGroups; i++) {
+            CGTalentInfo::m_talentGroups[i].ResetAllPreviewTalentPoints();
+        }
+    }
+}
+
+// OFFSET: 0x0099D6D0/0x140720700
+void CGTalentInfo::LeaveWorld() {
+    CGTalentInfo::ResetAllGroupPreviewTalentPoints(0);
+    CGTalentInfo::ResetAllGroupPreviewTalentPoints(1);
+    CGTalentInfo::ResetAllGroupPreviewPrimaryTalentTree(0);
+    CGTalentInfo::m_tabsInitialized = 0;
+    CGTalentInfo::ResetAllGroupPreviewPrimaryTalentTree(1);
+    CGTalentInfo::m_petTalentTab = 0;
 }

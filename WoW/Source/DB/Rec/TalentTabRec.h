@@ -18,7 +18,7 @@ class TalentTabRec {
     /* 0014 */ int32_t m_orderIndex;
     /* 0018 */ DBCString m_backgroundFile;
     /* 001C */ DBCString unk_001C;
-    /* 0020 */ int32_t unk_0020;
+    /* 0020 */ int32_t m_roleMask;
     /* 0024 */ int32_t m_masterySpellID [2];
 };
 

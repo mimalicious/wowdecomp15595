@@ -7471,7 +7471,7 @@ void CGGameUI::ShutdownGame() {
     CGMinimapFrame::ShutdownGame();
     CGChat::ShutdownGame();
     CGPartyInfo::ShutdownGame();
-    CGGlyphInfo::InitializeGame();
+    CGGlyphInfo::ShutdownGame();
     CGSpellBook::ShutdownGame();
     CGSpellActivationOverlay::ShutdownGame();
     CGActionBar::ShutdownGame();

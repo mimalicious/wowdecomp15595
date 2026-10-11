@@ -19,8 +19,12 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
+#include "WoW/Source/Ui/LFGInfo.h"
+#include "WoW/Source/DB/Rec/NumTalentsAtLevelRec.h"
+#include "WoW/Source/DB/Rec/TalentTreePrimarySpellsRec.h"
+#include "WoW/Source/Object/Player.h"
 
-// STATIC: #0x00AD05E8
+// STATIC: 0x00D14CD0
 static int32_t s_activateTalentGroupSpells[2] = { 63645, 63644 };
 
 // OFFSET: 0x0099A300/0x14071C170
@@ -587,25 +591,352 @@ static int32_t Script_GetPreviewTalentPointsSpent(lua_State* L) {
         return 0;
     }
 
-    lua_tointeger(L, 1);
-    StringToBOOL(L, 2, 0);
-
-    if (lua_isnumber(L, 3)) {
-        lua_tointeger(L, 3);
-    }
-
-    lua_pushinteger(L, 0);
+    uint32_t tab = lua_tointeger(L, 1) - 1;
+    int32_t pet = StringToBOOL(L, 2, 0);
+    uint32_t group = lua_isnumber(L, 3) ? lua_tointeger(L, 3) - 1 : CGTalentInfo::GetActiveTalentGroup(pet);
+    lua_pushinteger(L, CGTalentInfo::GetTabPreviewPointsSpent(group, tab, pet));
     return 1;
 }
 
-// STATIC: #0x00AD05F0
+// OFFSET: 0x0099A380/0x14071C1F0
+static int32_t Script_GetTalentTreeRoles(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetTalentTreeRoles(treeIndex[, isInspect[, isPet]])");
+        return 0;
+    }
+
+    uint32_t tabIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t pet = StringToBOOL(L, 3, 0);
+    int32_t inspect = StringToBOOL(L, 2, 0);
+    TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, inspect, pet);
+
+    if (!tab) {
+        return 0;
+    }
+
+    TalentTabRec* tabRec = g_talentTabDB.GetRecord(tab->m_tabId);
+
+    if (!tabRec) {
+        return 0;
+    }
+
+    int32_t count = 0;
+
+    if (tabRec->m_roleMask & 2) {
+        lua_pushstring(L, s_roleTokens[0]);
+        count = 1;
+    }
+
+    if (tabRec->m_roleMask & 8) {
+        lua_pushstring(L, s_roleTokens[2]);
+        count++;
+    }
+
+    if (tabRec->m_roleMask & 4) {
+        lua_pushstring(L, s_roleTokens[1]);
+        count++;
+    }
+
+    return count;
+}
+
+// OFFSET: 0x0099A5B0/0x14071C4D0
+static int32_t Script_GetNextPetTalentLevel(lua_State* L) {
+    CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!pet || !pet->CanGainXP()) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int32_t level = pet->m_unit->m_unitFieldLevel;
+
+    if (lua_isnumber(L, 1)) {
+        level = lua_tointeger(L, 1);
+    }
+
+    if (level < 20) {
+        lua_pushinteger(L, 20);
+    } else {
+        lua_pushinteger(L, 4 * ((level - 20) / 4) + 24);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0099A670/0x14071C5B0
+static int32_t Script_SetPrimaryTalentTree(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: SetPrimaryTalentTree(talentTabID)");
+        return 0;
+    }
+
+    uint32_t tree = lua_tointeger(L, 1) - 1;
+
+    if (tree <= 2) {
+        CDataStore msg;
+        msg.Put(static_cast<uint32_t>(CMSG_SET_PRIMARY_TALENT_TREE));
+        msg.Put(tree);
+        msg.Finalize();
+        ClientServices::Send2(&msg);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0099A730/0x14071C6A0
+static int32_t Script_GetTalentTreeMasterySpells(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetTalentTreeEarlySpells(tabIndex[, isInspect[, isPet]])");
+        return 0;
+    }
+
+    uint32_t tabIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t inspect = StringToBOOL(L, 2, 0);
+    int32_t pet = StringToBOOL(L, 3, 0);
+    TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, inspect, pet);
+
+    if (!tab) {
+        return 0;
+    }
+
+    TalentTabRec* tabRec = g_talentTabDB.GetRecord(tab->m_tabId);
+
+    if (!tabRec) {
+        return 0;
+    }
+
+    int32_t count = 0;
+
+    if (tabRec->m_masterySpellID[0]) {
+        lua_pushinteger(L, tabRec->m_masterySpellID[0]);
+        count = 1;
+    }
+
+    if (tabRec->m_masterySpellID[1]) {
+        lua_pushinteger(L, tabRec->m_masterySpellID[1]);
+        count++;
+    }
+
+    return count;
+}
+
+// OFFSET: 0x0099AE20/0x14071D070
+static int32_t Script_GetNumTalentPoints(lua_State* L) {
+    uint32_t group = CGTalentInfo::m_activeTalentGroup;
+    CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, 0);
+    uint32_t spent = talentGroup ? talentGroup->GetPointsSpent() : 0;
+    lua_pushinteger(L, spent + CGTalentInfo::GetUnspentTalentPoints(group, 0));
+    return 1;
+}
+
+// OFFSET: 0x0099B0F0/0x14071D420
+static int32_t Script_GetNextTalentLevel(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    int32_t level = player->m_unit->m_unitFieldLevel;
+
+    if (lua_isnumber(L, 1)) {
+        level = lua_tointeger(L, 1);
+    }
+
+    NumTalentsAtLevelRec* current = g_numTalentsAtLevelDB.GetRecord(level);
+
+    if (!current) {
+        return 0;
+    }
+
+    int32_t maxLevel = player->m_player->m_playerFieldMaxLevel;
+
+    for (int32_t next = level + 1; next < maxLevel; next++) {
+        NumTalentsAtLevelRec* rec = g_numTalentsAtLevelDB.GetRecord(next);
+
+        if (rec && rec->m_numTalents > current->m_numTalents) {
+            lua_pushinteger(L, next);
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0099B1E0/0x14071D530
+static int32_t Script_SetPreviewPrimaryTalentTree(lua_State* L) {
+    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: SetPreviewPrimaryTalentTree(talentTree, groupIndex)");
+        return 0;
+    }
+
+    uint32_t tree = lua_tointeger(L, 1) - 1;
+
+    if (tree > 2) {
+        return 0;
+    }
+
+    uint32_t group = lua_isnumber(L, 2) ? lua_tointeger(L, 2) - 1 : CGTalentInfo::m_activeTalentGroup;
+    CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, 0);
+
+    if (!talentGroup) {
+        return 0;
+    }
+
+    TalentTabInfo* tab = CGTalentInfo::GetTab(tree, 0);
+    int32_t previous = talentGroup->m_previewPrimaryTree;
+    CGTalentInfo::SetPreviewPrimaryTalentTree(group, false, tab->m_tabId);
+
+    if (previous != tab->m_tabId) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_PREVIEW_TALENT_PRIMARY_TREE_CHANGED, "%d", tree + 1);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0099B2C0/0x14071D640
+static int32_t Script_GetPrimaryTalentTree(lua_State* L) {
+    int32_t inspect = StringToBOOL(L, 1, 0);
+    int32_t pet = StringToBOOL(L, 2, 0);
+    uint32_t group = lua_isnumber(L, 3) ? lua_tointeger(L, 3) - 1 : TalentInfoGetActiveTalentGroup(inspect, pet);
+    CGTalentGroup_C* talentGroup = TalentInfoGetTalentGroup(group, inspect, pet);
+    TalentTabRec* tabRec = g_talentTabDB.GetRecord(talentGroup ? talentGroup->m_primaryTree : 0);
+
+    if (tabRec) {
+        lua_pushinteger(L, tabRec->m_orderIndex + 1);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0099B3A0/0x14071D730
+static int32_t Script_GetPreviewPrimaryTalentTree(lua_State* L) {
+    int32_t inspect = StringToBOOL(L, 1, 0);
+    int32_t pet = StringToBOOL(L, 2, 0);
+    uint32_t group = lua_isnumber(L, 3) ? lua_tointeger(L, 3) - 1 : TalentInfoGetActiveTalentGroup(inspect, pet);
+    CGTalentGroup_C* talentGroup = TalentInfoGetTalentGroup(group, inspect, pet);
+    TalentTabRec* tabRec = g_talentTabDB.GetRecord(talentGroup ? talentGroup->m_previewPrimaryTree : 0);
+
+    if (tabRec) {
+        lua_pushinteger(L, tabRec->m_orderIndex + 1);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0099B480/0x14071D820
+static int32_t PushTalentTreeBonuses(lua_State* L, bool major, bool early) {
+    uint32_t tabIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t inspect = StringToBOOL(L, 2, 0);
+    int32_t pet = StringToBOOL(L, 3, 0);
+    TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, inspect, pet);
+    int32_t count = 0;
+
+    if (!tab) {
+        return count;
+    }
+
+    TalentTabRec* tabRec = g_talentTabDB.GetRecord(tab->m_tabId);
+
+    if (!tabRec) {
+        return count;
+    }
+
+    for (int32_t i = 0; i < g_talentTreePrimarySpellsDB.m_numRecords; i++) {
+        TalentTreePrimarySpellsRec* rec = g_talentTreePrimarySpellsDB.GetRecordByIndex(i);
+
+        if (!rec || rec->m_talentTabID != tabRec->m_id) {
+            continue;
+        }
+
+        if (early) {
+            if (!(rec->m_flags & 1)) {
+                continue;
+            }
+
+            if (inspect || pet) {
+                lua_pushinteger(L, rec->m_spellID);
+                count++;
+            } else {
+                CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+                if (player) {
+                    int32_t level = 0;
+                    player->CanLearnSpell(rec->m_spellID, level, false);
+
+                    if (level > static_cast<int32_t>(player->m_unit->m_unitFieldLevel)) {
+                        lua_pushinteger(L, rec->m_spellID);
+                        count++;
+                    }
+                }
+            }
+        } else {
+            int32_t flags = rec->m_flags;
+
+            if (!(flags & 1)) {
+                int32_t spellID = rec->m_spellID;
+                SpellRec* spell = g_spellDB.GetRecord(spellID);
+
+                if (spell) {
+                    bool isMajor = (flags & 2) || !(spell->m_attributes & 0x40);
+
+                    if (isMajor == major) {
+                        lua_pushinteger(L, spellID);
+                        count++;
+                    }
+                }
+            }
+        }
+    }
+
+    return count;
+}
+
+// OFFSET: 0x0099B630/0x14071DB20
+static int32_t Script_GetMajorTalentTreeBonuses(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetMajorTalentTreeBonuses(tabIndex[, isInspect[, isPet]])");
+        return 0;
+    }
+
+    return PushTalentTreeBonuses(L, true, false);
+}
+
+// OFFSET: 0x0099B670/0x14071DB60
+static int32_t Script_GetMinorTalentTreeBonuses(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetMinorTalentTreeBonuses(tabIndex[, isInspect[, isPet]])");
+        return 0;
+    }
+
+    return PushTalentTreeBonuses(L, false, false);
+}
+
+// OFFSET: 0x0099B6B0/0x14071DBA0
+static int32_t Script_GetTalentTreeEarlySpells(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetTalentTreeEarlySpells(tabIndex[, isInspect[, isPet]])");
+        return 0;
+    }
+
+    return PushTalentTreeBonuses(L, false, true);
+}
+
+// STATIC: 0x00D14CD8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumTalentTabs", &Script_GetNumTalentTabs },
     { "GetTalentTabInfo", &Script_GetTalentTabInfo },
+    { "GetTalentTreeRoles", &Script_GetTalentTreeRoles },
     { "GetNumTalents", &Script_GetNumTalents },
     { "GetTalentInfo", &Script_GetTalentInfo },
     { "GetTalentLink", &Script_GetTalentLink },
     { "GetTalentPrereqs", &Script_GetTalentPrereqs },
+    { "GetNumTalentPoints", &Script_GetNumTalentPoints },
     { "LearnTalent", &Script_LearnTalent },
     { "GetUnspentTalentPoints", &Script_GetUnspentTalentPoints },
     { "GetNumTalentGroups", &Script_GetNumTalentGroups },
@@ -617,16 +948,26 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ResetPreviewTalentPoints", &Script_ResetPreviewTalentPoints },
     { "ResetGroupPreviewTalentPoints", &Script_ResetGroupPreviewTalentPoints },
     { "LearnPreviewTalents", &Script_LearnPreviewTalents },
+    { "GetNextTalentLevel", &Script_GetNextTalentLevel },
+    { "GetNextPetTalentLevel", &Script_GetNextPetTalentLevel },
+    { "SetPrimaryTalentTree", &Script_SetPrimaryTalentTree },
+    { "SetPreviewPrimaryTalentTree", &Script_SetPreviewPrimaryTalentTree },
+    { "GetPrimaryTalentTree", &Script_GetPrimaryTalentTree },
+    { "GetPreviewPrimaryTalentTree", &Script_GetPreviewPrimaryTalentTree },
+    { "GetMajorTalentTreeBonuses", &Script_GetMajorTalentTreeBonuses },
+    { "GetMinorTalentTreeBonuses", &Script_GetMinorTalentTreeBonuses },
+    { "GetTalentTreeEarlySpells", &Script_GetTalentTreeEarlySpells },
+    { "GetTalentTreeMasterySpells", &Script_GetTalentTreeMasterySpells },
 };
 
-// OFFSET: #0x005C5880
+// OFFSET: 0x00999D80
 void TalentInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x005C58B0
+// OFFSET: 0x00999DB0
 void TalentInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

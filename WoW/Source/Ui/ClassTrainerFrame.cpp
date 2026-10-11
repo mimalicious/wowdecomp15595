@@ -410,7 +410,7 @@ void CGClassTrainer::AddServices(uint32_t count, const int32_t* spellIds, const 
         } else {
             TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
 
-            if (service->m_talentTabReq && TalentInfoGetPrimaryTalentTree(CGTalentInfo::GetActiveTalentGroup(0), 0, 0) != service->m_talentTabReq) {
+            if (service->m_talentTabReq && TalentInfoGetPrimaryTalentTree(TalentInfoGetActiveTalentGroup(0, 0), 0, 0) != service->m_talentTabReq) {
                 CGClassTrainer::m_services.m_data[i]->m_state = 2;
             }
 
@@ -526,7 +526,7 @@ void CGClassTrainer::RefreshList() {
             }
         }
 
-        if (CGClassTrainer::m_services.m_data[i]->m_talentTabReq && TalentInfoGetPrimaryTalentTree(CGTalentInfo::GetActiveTalentGroup(0), 0, 0) != CGClassTrainer::m_services.m_data[i]->m_talentTabReq) {
+        if (CGClassTrainer::m_services.m_data[i]->m_talentTabReq && TalentInfoGetPrimaryTalentTree(TalentInfoGetActiveTalentGroup(0, 0), 0, 0) != CGClassTrainer::m_services.m_data[i]->m_talentTabReq) {
             CGClassTrainer::m_services.m_data[i]->m_state = 2;
         }
 

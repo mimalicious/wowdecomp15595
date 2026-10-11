@@ -34,7 +34,7 @@ static int32_t s_joinAttempts;
 static float s_lastJoinTime;
 
 // STATIC: 0x00C9F524
-static const char* s_roleTokens[3] = { "TANK", "HEALER", "DAMAGER" };
+const char* s_roleTokens[3] = { "TANK", "HEALER", "DAMAGER" };
 
 // STATIC: #0x00ACDD58
 static int32_t s_proposalResponseCount = 2;

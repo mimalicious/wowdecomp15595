@@ -252,6 +252,8 @@ class CGLookingForGroup {
     static void ResortLFGLists();
 };
 
+extern const char* s_roleTokens[3];
+
 LfgDungeonExpansionRec* GetLfgDungeonExpansionRec(int32_t dungeonID, int32_t expansionLevel);
 int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_LFG_OPEN_FROM_GOSSIP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

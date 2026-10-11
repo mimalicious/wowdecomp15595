@@ -3079,7 +3079,7 @@ static int32_t AuraVisionUpdateHandler(WOWGUID guid, void* param) {
 // OFFSET: 0x0056FF20
 void CGPlayer_C::PostInitActivePlayer() {
     this->SetActiveMirrorHandlers();
-    CGGlyphInfo::InitializeKnownGlyphs();
+    CGGlyphInfo::ListGlyphs();
     CGSpellBook::ClearSpells();
 
     for (uint32_t i = 0; i < s_initialSpells.Count(); i++) {
@@ -5625,7 +5625,7 @@ int32_t Packet_SMSG_LEVEL_UP_INFO(void* param, NETMESSAGE msgId, uint32_t time, 
     int32_t talentPoints = 0;
 
     if (current && previous) {
-        talentPoints = static_cast<int32_t>(current->unk_0004 - previous->unk_0004);
+        talentPoints = static_cast<int32_t>(current->m_numTalents - previous->m_numTalents);
     }
 
     if (level >= 4) {
