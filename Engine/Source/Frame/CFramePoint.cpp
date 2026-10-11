@@ -7,7 +7,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// STATIC: %0x00BB8EE8
+// STATIC: 0x00CA3B70
 float CFramePoint::UNDEFINED = std::numeric_limits<float>::infinity();
 
 // STATIC: 0x00DD3CD0

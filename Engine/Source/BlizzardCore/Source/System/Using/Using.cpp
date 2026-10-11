@@ -2,13 +2,11 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Using/Using.h"
 
-// STATIC: #0x00B325E0
 char System_Using::s_UsingNames[STRINGPOOL_SIZE];
 
 // STATIC: 0x00EB4E40
 System_Using::Depends System_Using::s_Depends[DEPENDS_MAX];
 
-// STATIC: #0x00B32DE0
 System_Using::UsingRec System_Using::use[USING_MAX];
 
 // STATIC: 0x00EB54C0
@@ -23,7 +21,6 @@ int16_t System_Using::s_NextUsingID;
 // STATIC: 0x00EBA654
 int32_t System_Using::s_NextDependsID;
 
-// STATIC: #0x00AB93F4
 static System_Using::UsingGlobalUse s_usingGlobalUse;
 
 // OFFSET: 0x007AE5A0

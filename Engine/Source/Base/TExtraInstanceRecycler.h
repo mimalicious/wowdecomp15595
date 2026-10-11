@@ -27,7 +27,7 @@ template <class T>
 TExtraInstanceRecycler<T>::TExtraInstanceRecycler(uint32_t nodesPerBlock, int32_t maxNodes, uint32_t recycleBytes) : CDataRecycler(nodesPerBlock, maxNodes), m_recycleBytes(recycleBytes) {
 }
 
-// OFFSET: [0x008A3650<EvtMessage>]
+// OFFSET: [0x008A3650/0x1405E5B10<EvtMessage>]
 template <class T>
 void TExtraInstanceRecycler<T>::Clear() {
     this->CDataRecycler::Clear();

@@ -13,17 +13,15 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00AFB210
 static const uint32_t s_texelSize[GxTexFormats_Last] = { 0, 4, 4, 2, 2, 2, 2, 2, 4, 4, 2, 4, 8, 4, 4, 16, 4, 4, 2, 4, 4, 4, 4, 4 };
 
-// STATIC: %0x00C0DBB0
+// STATIC: 0x00D08870
 static BlitFormat s_blitFormats[GxTexFormats_Last] = {
     BlitFormat_Unknown, BlitFormat_Abgr8888, BlitFormat_Argb8888, BlitFormat_Argb4444, BlitFormat_Argb1555, BlitFormat_Rgb565, BlitFormat_Uv88, BlitFormat_Dxt1,
     BlitFormat_Dxt3, BlitFormat_Dxt5, BlitFormat_Unknown, BlitFormat_Gr1616F, BlitFormat_Abgr16161616F, BlitFormat_Unknown, BlitFormat_R32F, BlitFormat_Abgr32323232F,
     BlitFormat_Unknown, BlitFormat_D24X8, BlitFormat_Unknown, BlitFormat_D32, BlitFormat_Unknown, BlitFormat_Unknown, BlitFormat_Unknown, BlitFormat_Unknown
 };
 
-// STATIC: %0x00C0D86C
 const char* g_gxApiNames[GxApis_Last] = { "OpenGL", "D3D9", "D3D11", "GLL" };
 
 // STATIC: 0x00D0853C
@@ -32,7 +30,7 @@ const char* g_gxShaderTargetNames[GxShTargets_Last] = { "Vertex", "Hull", "Domai
 // STATIC: 0x00D08554
 const char* g_gxShaderModelNames[8] = { "ff", "nvrc", "ff_ps", "1_1", "2_0", "3_0", "4_0", "5_0" };
 
-// STATIC: %0x00C0DBA0
+// STATIC: 0x00D08860
 static EGxApi s_requestedApi = GxApis_Last;
 
 // STATIC: 0x00EC6680/0x140DB87C8
@@ -53,10 +51,10 @@ static EGxPrim s_lockPrimType;
 // STATIC: 0x00EC6684/0x140DB87CC
 static uint32_t s_maxFPS;
 
-// STATIC: %0x00D8BCD4
+// STATIC: 0x00EBF474
 static uint32_t s_lockIndexCount;
 
-// STATIC: %0x00D8BCD8
+// STATIC: 0x00EBF478
 static uint32_t s_lockVertexCount;
 
 // STATIC: 0x00DD8B10
@@ -65,7 +63,7 @@ static bool s_drawListBusy;
 // STATIC: 0x00DD8B14
 static TSGrowableArray<GxDrawListEntry> s_drawLists[GxuCats_Last];
 
-// OFFSET: [0x006128A0]
+// OFFSET: [0x006128A0/0x14029DB40]
 GxuDrawListState::~GxuDrawListState() {
 }
 
@@ -133,10 +131,10 @@ static int DrawListSorterVtxStream(const void* a, const void* b) {
     return streamB < streamA;
 }
 
-// STATIC: %0x00BBD4B4
+// STATIC: 0x00CA8544
 static void (*s_drawListPreprocess[GxuSorts_Last])(GxDrawListEntry*, const C3Vector&) = { DrawListPreprocessB2F, DrawListPreprocessVtxStream };
 
-// STATIC: %0x00BBD4BC
+// STATIC: 0x00CA854C
 static int (*s_drawListSorters[GxuSorts_Last])(const void*, const void*) = { DrawListSorterB2F, DrawListSorterVtxStream };
 
 // PROVEN: d10f29a8 IDENTICAL/DIFFERENT
@@ -361,7 +359,7 @@ int32_t CreateGxDevice(EGxApi api, GxWindowProc windowProc, const CGxFormat& for
     return 0;
 }
 
-// OFFSET: 0x00840470
+// OFFSET: 0x00840470/0x14056C2C0
 uint32_t GxCalcTexelStrideInBytes(EGxTexFormat format, uint32_t width) {
     if (format < GxTex_Dxt1 || format > GxTex_Dxt5) {
         return s_texelSize[format] * width;

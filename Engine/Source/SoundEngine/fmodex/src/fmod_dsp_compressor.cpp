@@ -74,7 +74,7 @@ FMOD_DSP_PARAMETERDESC dspcompressor_param[4] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A95970/0x140855A60
 FMOD_DSP_DESCRIPTION_EX *DSPCompressor::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU

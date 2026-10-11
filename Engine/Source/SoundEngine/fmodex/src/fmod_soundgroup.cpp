@@ -11,7 +11,7 @@ namespace FMOD
 /*$ preserve end $*/
 
 
-// OFFSET: 0x00A7B780
+// OFFSET: 0x00A7B780/0x140836AD0
 FMOD_RESULT SoundGroup::release()
 {
     FMOD_RESULT result;
@@ -287,6 +287,7 @@ FMOD_RESULT SoundGroup::setUserData(void *_userdata)
 }
 
 
+// OFFSET: 0x00A7BE40/0x1408372B0
 FMOD_RESULT SoundGroup::getUserData(void **_userdata)
 {
     FMOD_RESULT result;

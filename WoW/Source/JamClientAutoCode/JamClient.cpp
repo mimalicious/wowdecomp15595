@@ -8,15 +8,15 @@
 JamGuildRewardItem::~JamGuildRewardItem() {
 }
 
-// OFFSET: [0x00401000]
+// OFFSET: [0x00401000/0x1407D7E80]
 JamCliSupportTicketHeader::~JamCliSupportTicketHeader() {
 }
 
-// OFFSET: [0x00401000]
+// OFFSET: [0x00401000/0x1407D7E80]
 JamCliStructAddonPrefix::~JamCliStructAddonPrefix() {
 }
 
-// OFFSET: [0x0066BC00]
+// OFFSET: [0x0066BC00/0x140312430]
 JamCliStructAddonPrefix::JamCliStructAddonPrefix() {
 }
 
@@ -1825,7 +1825,7 @@ bool ClientMapObjEvents::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x006D5A00
+// OFFSET: 0x006D5A00/0x140392D40
 ClientNotification::ClientNotification(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     JamBitReader bits(msg);
     uint32_t length = bits.ReadBits<13>();
@@ -1834,7 +1834,7 @@ ClientNotification::ClientNotification(NetClient* netClient, WowConnection* conn
     this->m_text[length] = 0;
 }
 
-// OFFSET: 0x006A0DF0
+// OFFSET: 0x006A0DF0/0x14034DE90
 ClientNotification::~ClientNotification() {
 }
 
@@ -2146,7 +2146,7 @@ bool ClientNewWorld::Read(CDataStore* msg, bool full) {
 JamWeeklySpellUse::JamWeeklySpellUse() {
 }
 
-// OFFSET: 0x00696A30
+// OFFSET: 0x00696A30/0x140342090
 void JamPartyMemberState::operator=(const JamPartyMemberState& source) {
     this->m_guid = source.m_guid;
     this->m_numAuras = source.m_numAuras;
@@ -2165,7 +2165,7 @@ void JamPartyMemberState::operator=(const JamPartyMemberState& source) {
     this->m_powerType = source.m_powerType;
 }
 
-// OFFSET: 0x006969C0
+// OFFSET: 0x006969C0/0x140342020
 void JamPartyMemberState::Clear() {
     this->m_guid.m_guid = 0;
     this->m_health = 0;
@@ -16133,7 +16133,7 @@ void JamGuildBankLogEntry::operator=(const JamGuildBankLogEntry& source) {
     }
 }
 
-// OFFSET: 0x00697020
+// OFFSET: 0x00697020/0x140342620
 void JamCliCUFProfile::operator=(const JamCliCUFProfile& source) {
     this->m_autoActivate10Players = source.m_autoActivate10Players;
     this->m_useClassColors = source.m_useClassColors;
@@ -26266,24 +26266,24 @@ bool ClientLfgProposalUpdate::Handle() {
     return ClientLfgProposalUpdate::s_handler(this);
 }
 
-// OFFSET: 0x006A53C0
+// OFFSET: 0x006A53C0/0x140350570
 JamPhaseShiftChange::JamPhaseShiftChange() {
 }
 
-// OFFSET: 0x006A54B0
+// OFFSET: 0x006A54B0/0x140350660
 JamPhaseShiftChange::~JamPhaseShiftChange() {
 }
 
-// OFFSET: 0x006BE960
+// OFFSET: 0x006BE960/0x140373730
 ClientPhaseShiftChange::ClientPhaseShiftChange(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006A5600
+// OFFSET: 0x006A5600/0x1403533D0
 ClientPhaseShiftChange::~ClientPhaseShiftChange() {
 }
 
-// OFFSET: 0x006ABE90
+// OFFSET: 0x006ABE90/0x14035BBE0
 bool ClientPhaseShiftChange::Handle() {
     if (!ClientPhaseShiftChange::s_handler) {
         return false;
@@ -26292,7 +26292,7 @@ bool ClientPhaseShiftChange::Handle() {
     return ClientPhaseShiftChange::s_handler(this);
 }
 
-// OFFSET: 0x006BD140
+// OFFSET: 0x006BD140/0x140371880
 void ClientPhaseShiftChange::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     this->m_data.m_guid[2] = bits.ReadBit();
@@ -26527,7 +26527,7 @@ bool ClientPhaseShiftChange::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x006F41E0
+// OFFSET: 0x006F41E0/0x1403BB570
 ClientLfgSearchResult::ClientLfgSearchResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
@@ -26536,7 +26536,7 @@ ClientLfgSearchResult::ClientLfgSearchResult(NetClient* netClient, WowConnection
 ClientLfgSearchResult::~ClientLfgSearchResult() {
 }
 
-// OFFSET: 0x006BF3C0
+// OFFSET: 0x006BF3C0/0x140374440
 bool ClientLfgSearchResult::Handle() {
     if (!ClientLfgSearchResult::s_handler) {
         return false;
@@ -26545,7 +26545,7 @@ bool ClientLfgSearchResult::Handle() {
     return ClientLfgSearchResult::s_handler(this);
 }
 
-// OFFSET: 0x006F0860
+// OFFSET: 0x006F0860/0x1403B6250
 void ClientLfgSearchResult::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t byteValue;

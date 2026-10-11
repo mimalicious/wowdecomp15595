@@ -48,7 +48,7 @@ const char *const luaX_tokens [] = {
 #define save_and_next(ls) (save(ls, ls->current), next(ls))
 
 
-// OFFSET: 0x0042D000
+// OFFSET: 0x0042D000/0x140034610
 static void save (LexState *ls, int c) {
   Mbuffer *b = ls->buff;
   if (b->n + 1 > b->buffsize) {
@@ -62,7 +62,7 @@ static void save (LexState *ls, int c) {
 }
 
 
-// OFFSET: 0x0042D080
+// OFFSET: 0x0042D080/0x1400346C0
 void luaX_init (lua_State *L) {
   int i;
   for (i=0; i<NUM_RESERVED; i++) {
@@ -103,7 +103,7 @@ static const char *txtToken (LexState *ls, int token) {
 }
 
 
-// OFFSET: 0x0042D130
+// OFFSET: 0x0042D130/0x140034840
 void luaX_lexerror (LexState *ls, const char *msg, int token) {
   char buff[MAXSRC];
   luaO_chunkid(buff, getstr(ls->source), MAXSRC);
@@ -114,7 +114,7 @@ void luaX_lexerror (LexState *ls, const char *msg, int token) {
 }
 
 
-// OFFSET: 0x0042D1D0
+// OFFSET: 0x0042D1D0/0x1400348E0
 void luaX_syntaxerror (LexState *ls, const char *msg) {
   luaX_lexerror(ls, msg, ls->t.token);
 }
@@ -203,7 +203,7 @@ static void trydecpoint (LexState *ls, SemInfo *seminfo) {
 
 
 /* LUA_NUMBER */
-// OFFSET: 0x0042D4A0
+// OFFSET: 0x0042D4A0/0x140034BD0
 static void read_numeral (LexState *ls, SemInfo *seminfo) {
   lua_assert(isdigit(ls->current));
   do {
@@ -220,7 +220,7 @@ static void read_numeral (LexState *ls, SemInfo *seminfo) {
 }
 
 
-// OFFSET: 0x0042D5A0
+// OFFSET: 0x0042D5A0/0x140034D40
 static int skip_sep (LexState *ls) {
   int count = 0;
   int s = ls->current;
@@ -234,7 +234,7 @@ static int skip_sep (LexState *ls) {
 }
 
 
-// OFFSET: 0x0042D640
+// OFFSET: 0x0042D640/0x140034E00
 static void read_long_string (LexState *ls, SemInfo *seminfo, int sep) {
   int cont = 0;
   (void)(cont);  /* avoid warnings when `cont' is not used */
@@ -290,7 +290,7 @@ static void read_long_string (LexState *ls, SemInfo *seminfo, int sep) {
 }
 
 
-// OFFSET: 0x0042D930
+// OFFSET: 0x0042D930/0x140035180
 static void read_string (LexState *ls, int del, SemInfo *seminfo) {
   save_and_next(ls);
   while (ls->current != del) {
@@ -347,7 +347,7 @@ static void read_string (LexState *ls, int del, SemInfo *seminfo) {
 }
 
 
-// OFFSET: 0x0042DDC0
+// OFFSET: 0x0042DDC0/0x140035680
 static int llex (LexState *ls, SemInfo *seminfo) {
   luaZ_resetbuffer(ls->buff);
   for (;;) {

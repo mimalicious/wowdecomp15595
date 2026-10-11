@@ -10,22 +10,21 @@
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: %0x00BACD58
+// STATIC: 0x00C98A80
 static const char* s_shaderNames[GxVertexBufferFormats_Last] = { "Default_P", "Default_PN", "Default_PNC", "Default_PNT", "Default_PNCT", NULL, NULL, "Default_PNCT2", "Default_PC", "Default_PCT", NULL, NULL, NULL, "Default_PT", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-// STATIC: %0x00C3CB18
+// STATIC: 0x00D380C8
 static CGxShader* s_pixelShaders[GxVertexBufferFormats_Last];
 
-// STATIC: %0x00C3CB70
+// STATIC: 0x00D38120
 static CGxShader* s_vertexShaders[GxVertexBufferFormats_Last];
 
-// STATIC: %0x00C3CBC8
+// STATIC: 0x00D38178
 static uint32_t s_initCount;
 
-// STATIC: %0x00C3CBCC
 static C4Vector s_fogParams;
 
-// STATIC: %0x00C3CBDC
+// STATIC: 0x00D3818C
 static C4Vector s_fogColor;
 
 // PROVEN: cdcf0ac9 IDENTICAL/UNPROVEN

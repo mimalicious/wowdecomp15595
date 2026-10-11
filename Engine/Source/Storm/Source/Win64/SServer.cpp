@@ -3,10 +3,8 @@
 #include <windows.h>
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00CB74F0
 static BOOL (WINAPI* s_tryEnterPtr)(LPCRITICAL_SECTION);
 
-// STATIC: %0x00CA691C
 static HMODULE s_kernel32lib;
 
 // PROVEN: c353344c DIFFERENT/IDENTICAL

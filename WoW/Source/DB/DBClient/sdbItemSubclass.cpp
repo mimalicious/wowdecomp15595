@@ -3,7 +3,6 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00C5DEA8
 static TSFixedArray<const ItemSubClassRec*> s_itemSubclasses[17];
 
 // OFFSET: 0x004B28D0/0x1400E93D0
@@ -15,7 +14,7 @@ const ItemSubClassRec* SDBItemSubclassGetSubClassRec(uint32_t classID, uint32_t 
     return s_itemSubclasses[classID][subClassID];
 }
 
-// OFFSET: 0x004B2900
+// OFFSET: 0x004B2900/0x1400E9400
 void SDBItemSubclassInitialize() {
     int32_t counts[sizeof(s_itemSubclasses) / sizeof(s_itemSubclasses[0])];
     memset(counts, 0, sizeof(counts));

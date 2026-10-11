@@ -22,88 +22,78 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C2Vector.h"
 
-// STATIC: #0x009F1028
 static const uint16_t s_pixelFormatBytesPerBlock[NUM_PIXEL_FORMATS] = { 8, 16, 0, 0, 0, 0, 0, 16, 0, 0 };
 
-// STATIC: %0x00ADDA54
 static const int32_t s_pixelFormatToMipBitsCache[NUM_PIXEL_FORMATS] = { -1, -1, -1, 0, 0, 0, -1, -1, -1, 1 };
 
-// STATIC: %0x00ADDB08
 static const uint32_t s_texFormatBytesPerTexel[GxTexFormats_Last] = { 0, 4, 4, 2, 2, 2, 2, 8, 16, 16, 2, 4, 8, 4, 4, 16, 4, 4, 2, 4, 4, 4, 4, 4 };
 
-// STATIC: %0x00ADDB68
 static const uint32_t s_texFormatTexelsPerBlock[GxTexFormats_Last] = { 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
-// STATIC: %0x00BB9CF0
+// STATIC: 0x00CA49C0
 static EGxTexFormat s_pixelFormatToGxTexFormat[NUM_PIXEL_FORMATS] = { GxTex_Dxt1, GxTex_Dxt3, GxTex_Argb8888, GxTex_Argb1555, GxTex_Argb4444, GxTex_Rgb565, GxTex_Unknown, GxTex_Dxt5, GxTex_Unknown, GxTex_Unknown };
 
-// STATIC: %0x00BB9D78
+// STATIC: 0x00CA4A48
 static EGxTexFilter s_filterMode = GxTex_LinearMipNearest;
 
-// STATIC: %0x00BB9D7C
+// STATIC: 0x00CA4A4C
 static uint32_t s_maxAnisotropy = 1;
 
-// STATIC: %0x00BB9D80
 static int32_t s_createBlpAsync = 1;
 
-// STATIC: %0x00BB9D84
 static uint32_t s_maxTextureWidth = 0xFFFFFFFF;
 
-// STATIC: %0x00BB9D88
 static uint32_t s_maxTextureHeight = 0xFFFFFFFF;
 
-// STATIC: %0x00BB9E28
 static TSExplicitList<CTexture, offsetof(CTexture, m_link)> s_textureList;
 
-// STATIC: %0x00BB9E34
 static uint32_t s_defaultColor = 0xFF00FF00;
 
-// STATIC: %0x00BB9E38
+// STATIC: 0x00CA4B08
 static TSExplicitList<CGxTexCache, offsetof(CGxTexCache, m_link)> s_gxTexCacheFree;
 
-// STATIC: %0x00BB9E44
+// STATIC: 0x00CA4B14
 static TSExplicitList<CMipBitsCache, offsetof(CMipBitsCache, m_link)> s_mipBitsCacheFree;
 
-// STATIC: %0x00BB9E50
+// STATIC: 0x00CA4B20
 static TSExplicitList<CTextureAtlas, offsetof(CTextureAtlas, m_link)> s_atlasList;
 
 // STATIC: 0x00CA4B2C
 static TSExplicitList<CAsyncObject, offsetof(CAsyncObject, m_link)> s_asyncTextureList;
 
-// STATIC: %0x00CD2900
+// STATIC: 0x00DD3D98
 static uint32_t s_currentTime;
 
-// STATIC: %0x00CD2904
+// STATIC: 0x00DD3D9C
 static char* s_substituteFrom;
 
-// STATIC: %0x00CD2908
+// STATIC: 0x00DD3DA0
 static char* s_substituteTo;
 
-// STATIC: %0x00CD290C
+// STATIC: 0x00DD3DA4
 static int32_t s_atlasEnable;
 
-// STATIC: %0x00CD2918
+// STATIC: 0x00DD3DB0
 static MipBits* s_mipBits;
 
-// STATIC: %0x00CD291C
+// STATIC: 0x00DD3DB4
 static int32_t s_pumping;
 
-// STATIC: %0x00CD2920
+// STATIC: 0x00DD3DB8
 static int32_t s_gxTexCacheSize;
 
-// STATIC: %0x00CD2924
+// STATIC: 0x00DD3DBC
 static int32_t s_gxTexCacheMaxSize;
 
-// STATIC: %0x00CD2928
 static uint32_t s_asyncLoadBufferUsed;
 
-// STATIC: %0x00CD292C
+// STATIC: 0x00DD3DC4
 static TSHashTableReuse<CTexture, HASHKEY_TEXTUREFILE> s_textureCache;
 
-// STATIC: %0x00CD2968
+// STATIC: 0x00DD3E00
 static TSExplicitList<CGxTexCache, offsetof(CGxTexCache, m_link)> s_gxTexCache[6][6];
 
-// STATIC: %0x00CD2B18
+// STATIC: 0x00DD3FB0
 static TSExplicitList<CMipBitsCache, offsetof(CMipBitsCache, m_link)> s_mipBitsCache[6][6][2];
 
 // INLINED
@@ -588,7 +578,7 @@ int32_t TextureGetAsyncRenderStatus(CTexture* texture) {
 
 // OFFSET: 0x005411C0/0x140193D90
 void ResolveMipLevel(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
-    // STATIC: %0x00CD2E78
+    // STATIC: 0x00DD4310
     static uint32_t s_emptyTexel;
 
     if (command == GxTex_3) {

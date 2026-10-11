@@ -119,7 +119,7 @@ int FMOD_vorbis_block_init(vorbis_dsp_state *v, vorbis_block *vb){
   return(0);
 }
 
-// INLINED
+// OFFSET: 0x00B43F60/0x140912C60
 void *_FMOD_vorbis_block_alloc(vorbis_block *vb,ogg_int32_t bytes){
   bytes=(bytes+(WORD_ALIGN-1)) & ~(WORD_ALIGN-1);
   if(bytes+vb->localtop>vb->localalloc){
@@ -152,7 +152,7 @@ void *_FMOD_vorbis_block_alloc(vorbis_block *vb,ogg_int32_t bytes){
 }
 
 /* reap the chain, pull the ripcord */
-// INLINED
+// OFFSET: 0x00B43FF0/0x140912D10
 void _FMOD_vorbis_block_ripcord(vorbis_block *vb){
   /* reap the chain */
   struct alloc_chain *reap=vb->reap;
@@ -175,7 +175,7 @@ void _FMOD_vorbis_block_ripcord(vorbis_block *vb){
   vb->reap=NULL;
 }
 
-// INLINED
+// OFFSET: 0x00B44080/0x140912DD0
 int FMOD_vorbis_block_clear(vorbis_block *vb){
   _FMOD_vorbis_block_ripcord(vb);
   if(vb->localstore)_ogg_free(vb->localstore);
@@ -188,7 +188,7 @@ int FMOD_vorbis_block_clear(vorbis_block *vb){
    here and not in analysis.c (which is for analysis transforms only).
    The init is here because some of it is shared */
 
-// INLINED
+// OFFSET: 0x00B440C0/0x140912E20
 static int _vds_shared_init(vorbis_dsp_state *v,vorbis_info *vi,int encp){
   int i;
   codec_setup_info *ci=vi->codec_setup;
@@ -288,7 +288,7 @@ static int _vds_shared_init(vorbis_dsp_state *v,vorbis_info *vi,int encp){
 //  return(0);
 //}
 
-// INLINED
+// OFFSET: 0x00B44420/0x1409131C0
 void FMOD_vorbis_dsp_clear(vorbis_dsp_state *v){
   int i;
   if(v){
@@ -689,7 +689,7 @@ int FMOD_vorbis_synthesis_restart(vorbis_dsp_state *v){
   return(0);
 }
 
-// INLINED
+// OFFSET: 0x00B44760/0x140913590
 int FMOD_vorbis_synthesis_init(vorbis_dsp_state *v,vorbis_info *vi){
   if(_vds_shared_init(v,vi,0)) return 1;
   FMOD_vorbis_synthesis_restart(v);
@@ -701,7 +701,7 @@ int FMOD_vorbis_synthesis_init(vorbis_dsp_state *v,vorbis_info *vi){
    block.  The time domain envelope is not yet handled at the point of
    calling (as it relies on the previous block). */
 
-// INLINED
+// OFFSET: 0x00B44790/0x1409135C0
 int FMOD_vorbis_synthesis_blockin(vorbis_dsp_state *v,vorbis_block *vb){
   vorbis_info *vi=v->vi;
   codec_setup_info *ci=vi->codec_setup;

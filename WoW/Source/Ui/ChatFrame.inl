@@ -11,7 +11,7 @@ inline bool HASHKEY_LANGUAGE::operator==(const HASHKEY_LANGUAGE& key) const {
     return this->m_length == key.m_length && this->m_unk04 == key.m_unk04;
 }
 
-// OFFSET: 0x008E57A0
+// OFFSET: 0x008E57A0/0x140634AD0
 inline ChatMessageParams::ChatMessageParams() {
     this->m_senderName = NULL;
     this->m_language = 0;

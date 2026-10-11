@@ -6,7 +6,7 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: %0x00BB4520
+// STATIC: 0x00CA08A0
 static const C44Matrix s_bezier3Basis(-1.0f, 3.0f, -3.0f, 1.0f, 3.0f, -6.0f, 3.0f, 0.0f, -3.0f, 3.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
 
 // INLINED
@@ -20,7 +20,6 @@ void C3Spline_Bezier3::ParametricSegT(float t, uint32_t& seg, float& segT) {
 // PROVEN: 91dbe5e0 IDENTICAL/UNPROVEN
 // OFFSET: 0x004C99E0/0x1401048D0
 void C3Spline_Bezier3::EvaluateDer1(uint32_t seg, float t, C3Vector& vel) {
-    // STATIC: #0x00B4A308
     static const C34Matrix s_bezier3Der1(-3.0f, 6.0f, -3.0f, 9.0f, -12.0f, 3.0f, -9.0f, 6.0f, 0.0f, 3.0f, 0.0f, 0.0f);
 
     C3Spline::EvaluateDer1(3 * seg, t, C44Matrix(s_bezier3Der1), vel);

@@ -69,7 +69,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA1EF0/0x140862CB0
 FMOD_CODEC_DESCRIPTION_EX *CodecRaw::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU

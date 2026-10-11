@@ -5,7 +5,7 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00C3CD58
+// STATIC: 0x00D38308
 TSHashTable<CShaderEffect, HASHKEY_STRI> CShaderEffectManager::m_ShaderList;
 
 // OFFSET: 0x004347C0

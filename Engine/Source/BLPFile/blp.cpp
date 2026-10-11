@@ -8,30 +8,29 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C2iVector.h"
 
-// STATIC: %0x00BB4260
+// STATIC: 0x00CA05C0
 uint8_t CBLPFile::s_eightBitAlphaLookup[16] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
 
-// STATIC: %0x00BB4270
+// STATIC: 0x00CA05D0
 uint8_t CBLPFile::s_oneBitAlphaLookup[2] = { 0x00, 0xFF };
 
-// STATIC: %0x00BB4274
+// STATIC: 0x00CA05D4
 static uint16_t s_oneBitAlpha4444[2] = { 0x0000, 0xF000 };
 
-// STATIC: %0x00BB4338
+// STATIC: 0x00CA0698
 static uint8_t s_twoBitAlphaMask[4] = { 0x03, 0x0C, 0x30, 0xC0 };
 
-// STATIC: %0x00BB433C
+// STATIC: 0x00CA069C
 static uint32_t s_twoBitAlphaShift[4] = { 0, 2, 4, 6 };
 
-// STATIC: %0x00BB4350
+// STATIC: 0x00CA06B0
 static uint32_t s_fourBitAlphaShift[2] = { 2, 6 };
 
-// STATIC: %0x00CBEA70
 static TSGrowableArray<uint8_t> s_blpFileLoadBuffer;
 
 // INLINED
 static BlitFormat GetBlitFormat(PIXEL_FORMAT format) {
-    // STATIC: %0x00BB436C
+    // STATIC: 0x00CA06CC
     static BlitFormat blitFmt[NUM_PIXEL_FORMATS] = {
         BlitFormat_Dxt1,
         BlitFormat_Dxt3,
@@ -197,7 +196,7 @@ void CBLPFile::DecompPalARGB8888(uint8_t* out, const void* in, uint32_t count) {
 
 // OFFSET: 0x004C3D90
 void CBLPFile::DecompPalARGB4444DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
-    // STATIC: %0x00CA69B0
+    // STATIC: 0x00DA6130
     static int32_t s_errors[2][1026][3];
 
     uint16_t* pixels = reinterpret_cast<uint16_t*>(out);
@@ -311,7 +310,7 @@ void CBLPFile::DecompPalARGB4444DitherFloydSteinberg(uint8_t* out, const void* i
 
 // OFFSET: 0x004C40B0
 void CBLPFile::DecompPalARGB1555DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
-    // STATIC: %0x00CAC9E0
+    // STATIC: 0x00DAC160
     static int32_t s_errors[2][1026][3];
 
     uint16_t* pixels = reinterpret_cast<uint16_t*>(out);
@@ -426,7 +425,7 @@ void CBLPFile::DecompPalARGB1555DitherFloydSteinberg(uint8_t* out, const void* i
 
 // OFFSET: 0x004C43F0
 void CBLPFile::DecompPalARGB565DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
-    // STATIC: %0x00CB2A10
+    // STATIC: 0x00DB2190
     static int32_t s_errors[2][1026][3];
 
     uint16_t* pixels = reinterpret_cast<uint16_t*>(out);
@@ -491,7 +490,7 @@ void CBLPFile::DecompPalARGB565DitherFloydSteinberg(uint8_t* out, const void* in
 
 // OFFSET: 0x004C45F0
 void CBLPFile::DecompPalARGB2565DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
-    // STATIC: %0x00CB8A40
+    // STATIC: 0x00DB81C0
     static int32_t s_errors[2][1026][3];
 
     uint16_t* pixels = reinterpret_cast<uint16_t*>(out);

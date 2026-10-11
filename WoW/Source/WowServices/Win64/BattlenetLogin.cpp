@@ -6,7 +6,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Battlenet/Tumor/TumorManager.h"
 
-// OFFSET: 0x00627E40
+// OFFSET: 0x00627E40/0x1402B9E90
 uint32_t BattlenetApplication::Resolve(uint32_t token, const char* hostname) {
     if (!this->m_login || !g_tumorManager) {
         SErrDisplayAppFatalMessage("", "", 0);

@@ -11,10 +11,8 @@
 #define UNI_HALF_SHIFT 10
 #define UNI_HALF_BASE 0x10000
 
-// STATIC: #0x009E9DB0
 static const uint32_t offsetsFromUTF8[6] = { 0x00000000, 0x00003080, 0x000E2080, 0x03C82080, 0xFA082080, 0x82082080 };
 
-// STATIC: #0x009E9DC8
 static const uint8_t trailingBytesForUTF8[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -26,7 +24,6 @@ static const uint8_t trailingBytesForUTF8[256] = {
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5
 };
 
-// STATIC: #0x009E9EC8
 static const uint32_t firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 
 // OFFSET: 0x004B5FC0/0x1400ED7E0
@@ -223,7 +220,7 @@ int32_t ConvertUTF8toUTF16(uint16_t* dst, uint32_t dstmaxchars, const char* src,
     return result;
 }
 
-// INLINED
+// OFFSET: 0x004B6430/0x1407D3A60
 uint32_t sgetu8(const uint8_t* strptr, int32_t* chars) {
     if (chars) {
         *chars = 0;

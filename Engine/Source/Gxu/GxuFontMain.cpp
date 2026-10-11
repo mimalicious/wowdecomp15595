@@ -25,16 +25,14 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// STATIC: %0x00AE7334
 const int32_t g_quotedCodeLengths[NUM_QUOTEDCODES] = { 0, 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
 
-// STATIC: %0x00BBD51C
+// STATIC: 0x00CA85AC
 static FT_MemoryRec_ s_GxuMemoryRecord = { NULL, FreeTypeAlloc, FreeTypeFree, FreeTypeRealloc };
 
-// STATIC: %0x00BBD52C
+// STATIC: 0x00CA85BC
 static TSList<CGxStringBatch, TSGetLink<CGxStringBatch> > s_freeBatches;
 
-// STATIC: %0x00BBD580
 static QUOTEDCODEINFO s_quotedCodeInfo[NUM_QUOTEDCODES] = {
     { 0x0, '-', 1 },
     { 0x100, 'C', 1 },
@@ -47,64 +45,57 @@ static QUOTEDCODEINFO s_quotedCodeInfo[NUM_QUOTEDCODES] = {
     { 0x1000, 't', 1 },
 };
 
-// STATIC: %0x00BBD6BC
+// STATIC: 0x00CA8764
 TSList<CGxFont, TSGetLink<CGxFont> > g_fonts;
 
-// STATIC: %0x00BBD6C8
+// STATIC: 0x00CA8770
 TSList<CGxString, TSGetLink<CGxString> > g_freeStrings;
 
-// STATIC: %0x00BBD6D4
+// STATIC: 0x00CA877C
 TSList<CGxString, TSGetLink<CGxString> > g_strings;
 
-// STATIC: %0x00CE3140
 static uint16_t s_graphIndices[30 * 6];
 
-// STATIC: %0x00CE32A8
 static uint32_t s_lastFrameTime;
 
-// STATIC: %0x00CE32B0
+// STATIC: 0x00DD8CB8
 static float s_frameTimes[30];
 
-// STATIC: %0x00CE3328
+// STATIC: 0x00DD8D30
 static const char* (*s_tokenCallback)(uint32_t, uint32_t);
 
-// STATIC: %0x00CE332C
+// STATIC: 0x00DD8D34
 static uint32_t s_frameTimeIndex;
 
-// STATIC: %0x00CE3330
 static CGxVertexPC s_graphTenths[10 * 4];
 
-// STATIC: %0x00CE35B0
 static CGxVertexPC s_graphOnes[10 * 4];
 
-// STATIC: %0x00CE3830
 static CGxVertexPC s_graphTens[10 * 4];
 
-// STATIC: %0x00CE3AB0
 static CGxVertexPC s_graphVerts[30 * 4];
 
-// STATIC: %0x00CE4488
+// STATIC: 0x00DD9E90
 FT_Library g_FTLibrary;
 
-// STATIC: %0x00CE448C
+// STATIC: 0x00DD9E94
 float g_indentNormWidth;
 
-// STATIC: %0x00CE4490
+// STATIC: 0x00DD9E98
 float g_indentPixelWidth;
 
-// STATIC: %0x00CE4494
 uint8_t g_fontStatsEnabled;
 
-// STATIC: %0x00CE4498
+// STATIC: 0x00DD9EA0
 uint32_t g_heightPixels;
 
-// STATIC: %0x00CE449C
+// STATIC: 0x00DD9EA4
 uint32_t g_widthPixels;
 
-// STATIC: %0x00CE44A0
+// STATIC: 0x00DD9EA8
 CGxShader* g_fontPixelShader;
 
-// STATIC: %0x00CE44A4
+// STATIC: 0x00DD9EAC
 CGxShader* g_fontVertexShader;
 
 // OFFSET: 0x006130E0

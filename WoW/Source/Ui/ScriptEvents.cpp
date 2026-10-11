@@ -31,10 +31,8 @@ const char* g_scriptEvents[NUM_SCRIPT_EVENTS];
 // STATIC: 0x00D39F38
 static TSGrowableArray<UniqueSignal> s_uniqueSignals;
 
-// STATIC: #0x00C25A28
 static char s_nameWithRealm[305];
 
-// STATIC: #0x00C25BA0
 static char s_tokenBuffers[8][32];
 
 // STATIC: 0x00C99BD8

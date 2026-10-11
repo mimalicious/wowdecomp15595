@@ -18,7 +18,7 @@ DanceCache::~DanceCache() {
     delete[] this->m_data;
 }
 
-// INLINED
+// OFFSET: 0x0049BD60/0x1400C7C30
 DanceCache& DanceCache::operator=(const DanceCache& source) {
     this->m_id = source.m_id;
     this->m_guid = source.m_guid;

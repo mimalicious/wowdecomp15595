@@ -25,13 +25,13 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: %0x00BB98B8
+// STATIC: 0x00CA4590
 int32_t CSimpleHTML::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A8C/0x140CB9800
 int32_t CSimpleHTML::s_objectType;
 
-// STATIC: %0x00BB87F8
+// STATIC: 0x00CA3468
 const char* CSimpleHTML::s_objectTypeName = "SimpleHTML";
 
 // STATIC: 0x00DD3A90

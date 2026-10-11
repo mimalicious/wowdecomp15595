@@ -4,7 +4,6 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00CE456C
 TSHashTable<FACEDATA, HASHKEY_STRI> s_faceHash;
 
 // PROVEN: 9e2e24b1 IDENTICAL/IDENTICAL

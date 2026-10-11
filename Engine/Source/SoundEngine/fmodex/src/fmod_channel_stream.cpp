@@ -31,7 +31,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACC220/0x140896920
 ChannelStream::ChannelStream()
 {
     mSamplesPlayed = mSamplesWritten = 0;
@@ -752,7 +752,7 @@ FMOD_RESULT ChannelStream::setFrequency(float frequency)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACBEA0/0x140896320
 FMOD_RESULT ChannelStream::setPan(float pan, float fbpan)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -880,7 +880,7 @@ FMOD_RESULT ChannelStream::setSpeakerLevels(int speaker, float *levels, int numl
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACCA00/0x1408971E0
 FMOD_RESULT ChannelStream::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -981,7 +981,7 @@ FMOD_RESULT ChannelStream::setPosition(unsigned int position, FMOD_TIMEUNIT post
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACC570/0x140896D00
 FMOD_RESULT ChannelStream::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
     Stream *stream;

@@ -104,7 +104,7 @@ static bool OnLfgSlotInvalid(ClientLfgSlotInvalid* msg) {
     return true;
 }
 
-// OFFSET: 0x00983570
+// OFFSET: 0x00983570/0x1406FE2B0
 void CGLookingForGroup::EnterWorld() {
     CGLookingForGroup::m_lastProposalID = 0;
     CGLookingForGroup::RequestLFGStatus();
@@ -113,7 +113,7 @@ void CGLookingForGroup::EnterWorld() {
     ClientLfgSlotInvalid::s_handler = OnLfgSlotInvalid;
 }
 
-// OFFSET: 0x00980C00
+// OFFSET: 0x00980C00/0x1406FB050
 void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32_t completedMask, uint32_t* total, uint32_t* completed) {
     *total = 0;
     *completed = 0;
@@ -174,7 +174,7 @@ int32_t CGLookingForGroup::GetLFGRoleUpdate(lua_State* L) {
     return 3;
 }
 
-// OFFSET: 0x009820F0
+// OFFSET: 0x009820F0/0x1406FCAE0
 int32_t CGLookingForGroup::GetLFGRoleUpdateSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGRoleUpdateSlot(index)");
@@ -254,7 +254,7 @@ void CGLookingForGroup::LeaveLFG() {
     CGLookingForGroup::m_localInfo.unk_0003 = 0;
 }
 
-// OFFSET: 0x00981D70
+// OFFSET: 0x00981D70/0x1406FC720
 int32_t CGLookingForGroup::GetLFGProposalMember(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGProposalMember(index)");
@@ -277,7 +277,7 @@ int32_t CGLookingForGroup::GetLFGProposalMember(lua_State* L) {
     return 7;
 }
 
-// OFFSET: 0x00981E60
+// OFFSET: 0x00981E60/0x1406FC810
 int32_t CGLookingForGroup::GetLFGProposalEncounter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGProposalEncounter(index)");
@@ -328,7 +328,7 @@ void CGLookingForGroup::ProposalResponse(bool accept) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LFG_PROPOSAL_UPDATE, NULL);
 }
 
-// OFFSET: 0x009821D0
+// OFFSET: 0x009821D0/0x1406FCBE0
 int32_t CGLookingForGroup::GetLFGRoleUpdateMember(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLFGRoleUpdateMember(index)");
@@ -374,7 +374,7 @@ int32_t CGLookingForGroup::GetLFGRoleUpdateMember(lua_State* L) {
     return 8;
 }
 
-// OFFSET: 0x00982470
+// OFFSET: 0x00982470/0x1406FCED0
 int32_t CGLookingForGroup::SetLFGBootVote(lua_State* L) {
     bool vote = StringToBOOL(L, 1, 0) != 0;
 
@@ -392,7 +392,7 @@ int32_t CGLookingForGroup::SetLFGBootVote(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00982520
+// OFFSET: 0x00982520/0x1406FCF80
 int32_t CGLookingForGroup::GetLFGBootProposal(lua_State* L) {
     lua_pushboolean(L, CGLookingForGroup::m_bootProposal.m_inProgress);
 
@@ -419,7 +419,7 @@ int32_t CGLookingForGroup::GetLFGBootProposal(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009835E0
+// OFFSET: 0x009835E0/0x1406FE320
 bool CGLookingForGroup::SetHeaderCollapsed(uint32_t header, bool collapsed) {
     if (s_cvLfdCollapsedHeaders) {
         CVarArrayWrapper wrapper(s_cvLfdCollapsedHeaders);
@@ -429,7 +429,7 @@ bool CGLookingForGroup::SetHeaderCollapsed(uint32_t header, bool collapsed) {
     return false;
 }
 
-// OFFSET: 0x00983630
+// OFFSET: 0x00983630/0x1406FE3A0
 bool CGLookingForGroup::SetDungeonEnabled(uint32_t dungeon, bool enabled) {
     if (s_cvLfdSelectedDungeons) {
         CVarArrayWrapper wrapper(s_cvLfdSelectedDungeons);
@@ -453,7 +453,7 @@ void CGLookingForGroup::JoinLFGSearch(int32_t lfgID) {
     }
 }
 
-// OFFSET: 0x00987960
+// OFFSET: 0x00987960/0x140703790
 void CGLookingForGroup::ClearLFGDungeon(uint32_t slot) {
     LFGDungeonEntry* next;
 
@@ -470,7 +470,7 @@ void CGLookingForGroup::ClearLFGDungeon(uint32_t slot) {
     }
 }
 
-// OFFSET: 0x00985140
+// OFFSET: 0x00985140/0x1407002F0
 int32_t CGLookingForGroup::GetQueueStatusIndex() {
     LFGInfo* info = CGPartyInfo::m_members[0] || CGPartyInfo::m_onePersonParty || CGRaidInfo::m_numMembers ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
     int32_t index = 0;

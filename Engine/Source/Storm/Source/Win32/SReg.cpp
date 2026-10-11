@@ -99,7 +99,7 @@ static int32_t InternalLoadEntry(const char* keyname, const char* valuename, uin
     return 0;
 }
 
-// OFFSET: 0x004B7F70
+// OFFSET: 0x004B7F70/0x1400F0320
 static int32_t InternalSaveEntry(const char* keyname, const char* valuename, uint32_t flags, DWORD datatype, const void* buffer, DWORD bytes) {
     char fullkeyname[MAX_PATH];
     BuildFullKeyName(keyname, flags, fullkeyname, MAX_PATH);
@@ -220,7 +220,7 @@ int32_t STORMAPI SRegLoadValue(const char* keyname, const char* valuename, uint3
     return 1;
 }
 
-// OFFSET: 0x004B82F0
+// OFFSET: 0x004B82F0/0x1400F0880
 int32_t STORMAPI SRegSaveString(const char* keyname, const char* valuename, uint32_t flags, const char* string) {
     if (!keyname || !*keyname || !valuename || !*valuename || !string) {
         SErrSetLastError(ERROR_INVALID_PARAMETER);

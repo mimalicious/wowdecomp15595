@@ -9,16 +9,16 @@
 #include "Engine/Source/ShaderEffect/SunShafts.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00ED74C8
+// STATIC: 0x01012A80
 CTexture* PassUnderwater::s_causticsTex[32];
 
-// STATIC: %0x00ED7548
+// STATIC: 0x01012B00
 CTexture* PassUnderwater::s_screenMask;
 
-// STATIC: %0x00ED754C
+// STATIC: 0x01012B04
 int32_t PassUnderwater::s_texRef;
 
-// OFFSET: 0x00B49CF0
+// OFFSET: 0x00B49CF0/0x140919CF0
 EffectUnderwater::EffectUnderwater(uint32_t type) {
     FFX::Tex* inputs[] = { &FFX::s_full[0] };
     FFX::Pass* pass = new (__FILE__, __LINE__) PassUnderwater(type, inputs, 1, &FFX::s_screen, GxBlend_Opaque);
@@ -34,7 +34,7 @@ EffectUnderwater::~EffectUnderwater() {
     }
 }
 
-// INLINED
+// OFFSET: 0x00B49D90/0x140919D90
 PassUnderwater::~PassUnderwater() {
     if (this->m_pixelShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_pixelShader);
@@ -67,7 +67,7 @@ PassUnderwater::~PassUnderwater() {
     }
 }
 
-// OFFSET: 0x00B49E70
+// OFFSET: 0x00B49E70/0x140919EE0
 bool PassUnderwater::Valid() {
     int32_t valid = this->m_vertexShader ? this->m_vertexShader->m_permutes[0].Valid() : 0;
 
@@ -78,7 +78,7 @@ bool PassUnderwater::Valid() {
     return valid != 0;
 }
 
-// OFFSET: 0x00B49EC0
+// OFFSET: 0x00B49EC0/0x140919F50
 void PassUnderwater::Execute() {
     CGxTex* caustics = NULL;
 
@@ -147,7 +147,7 @@ void PassUnderwater::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: 0x00B4A170
+// OFFSET: 0x00B4A170/0x14091A300
 PassUnderwater::PassUnderwater(uint32_t type, FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_type = type;
     this->m_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "FFXUnderWater");

@@ -20,7 +20,6 @@ float CMovementShared::s_terminalVelocity = 60.148003f;
 // STATIC: 0x00D18C44
 float CMovementShared::s_safeFallTerminalVelocity = 7.0f;
 
-// STATIC: #0x00B2D9F0
 float CMovementShared::s_twoPi = 6.2831855f;
 
 // OFFSET: 0x00572130

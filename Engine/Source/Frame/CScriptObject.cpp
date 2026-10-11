@@ -5,10 +5,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00CD12F0
+// STATIC: 0x00DD3980
 int32_t CScriptObject::s_objectType;
 
-// STATIC: %0x00BB8630
+// STATIC: 0x00CA3288
 const char* CScriptObject::s_objectTypeName = "Object";
 
 // PROVEN: 543c32af IDENTICAL/IDENTICAL
@@ -100,7 +100,7 @@ void CScriptObject::SetName(const char* name) {
     }
 }
 
-// INLINED
+// OFFSET: 0x00510640/0x140159DB0
 CScriptObject::~CScriptObject() {
     if (this->m_name.m_str) {
         this->UnregisterScriptObject(this->m_name.m_str);

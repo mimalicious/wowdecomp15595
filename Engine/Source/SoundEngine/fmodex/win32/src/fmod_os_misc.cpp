@@ -405,7 +405,7 @@ FMOD_RESULT FMOD_OS_Thread_GetCurrentID(FMOD_UINT_NATIVE *id)
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00A91190/0x140850860
 FMOD_RESULT FMOD_OS_Thread_Create(const char *name, THREAD_RETURNTYPE (THREAD_CALLCONV *func)(void *param), void *param, FMOD_THREAD_PRIORITY priority, void *stack, int stacksize, void **handle)
 {
     DWORD id;
@@ -517,7 +517,7 @@ CRITICAL_SECTION  gMemoryCrit;
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00A90F60/0x140850950
 FMOD_RESULT FMOD_OS_CriticalSection_Create(FMOD_OS_CRITICALSECTION **crit, bool memorycrit)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -556,7 +556,7 @@ FMOD_RESULT FMOD_OS_CriticalSection_Create(FMOD_OS_CRITICALSECTION **crit, bool 
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00A90FC0/0x1408509D0
 FMOD_RESULT FMOD_OS_CriticalSection_Free(FMOD_OS_CRITICALSECTION *crit)
 {
     if (!crit)

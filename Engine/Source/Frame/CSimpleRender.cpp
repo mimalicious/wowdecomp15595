@@ -48,73 +48,73 @@ static const uint8_t s_letterHasFinalConsonant[26] = { 0, 1, 1, 0, 0, 0, 0, 0, 0
 // STATIC: 0x00BA6904
 static const uint8_t s_digitHasFinalConsonant[10] = { 1, 1, 0, 1, 0, 0, 1, 1, 1, 0 };
 
-// STATIC: %0x00CC91F0
+// STATIC: 0x00DC7870
 static uint16_t s_languageWideBuffer[0x2000];
 
-// STATIC: %0x00CCD1F0
+// STATIC: 0x00DCF870
 static char s_languageBuffer[0x2000];
 
 // STATIC: 0x00CA2C00
 static TSExplicitList<CSimpleEmbeddedTexture, offsetof(CSimpleEmbeddedTexture, m_link)> s_embeddedTextureStorage;
 
-// STATIC: %0x00CCF208
+// STATIC: 0x00DD1888
 CGxShader* CSimpleRender::s_vertexShader;
 
-// STATIC: %0x00CCF20C
+// STATIC: 0x00DD188C
 int32_t CSimpleRender::s_mergeEnable;
 
-// STATIC: %0x00CCF278
+// STATIC: 0x00DD18F8
 static char s_displayText[0x2000];
 
-// STATIC: %0x00BB80E0
+// STATIC: 0x00CA2BE0
 const char* CSimpleTexture::s_objectTypeName = "Texture";
 
-// STATIC: %0x00BB80E4
+// STATIC: 0x00CA2BE4
 const char* CSimpleTexture::s_imageModePixelShaderNames[2] = { "UI", "Desaturate" };
 
-// STATIC: %0x00BB80EC
+// STATIC: 0x00CA2BEC
 EGxTexFilter CSimpleTexture::s_textureFilterMode = GxTex_Linear;
 
-// STATIC: %0x00CCF1F8
+// STATIC: 0x00DD1878
 int32_t CSimpleTexture::s_count;
 
-// STATIC: %0x00CCF1FC
+// STATIC: 0x00DD187C
 CGxShader* CSimpleTexture::s_imageModePixelShaders[2];
 
-// STATIC: %0x00CCF204
+// STATIC: 0x00DD1884
 int32_t CSimpleTexture::s_objectType;
 
-// STATIC: %0x00CCF224
+// STATIC: 0x00DD18A4
 CDataAllocator CSimpleTexture::s_allocator(sizeof(CSimpleTexture), 0x381);
 
-// STATIC: %0x00CCF210
+// STATIC: 0x00DD1890
 CDataAllocator CTextureExtension::s_allocator(sizeof(CTextureExtension), 0x14);
 
-// STATIC: %0x00CCF24C
+// STATIC: 0x00DD18CC
 TSHashTable<FILENAMEHASH, HASHKEY_STR> CSimpleTexture::s_fileNameHash;
 
-// STATIC: %0x00CD1278
+// STATIC: 0x00DD38F8
 int32_t CSimpleTexture::s_maskCount;
 
-// STATIC: %0x00CD127D
+// STATIC: 0x00DD38FD
 bool CSimpleTexture::s_defaultNonBlocking;
 
-// STATIC: %0x00CD127E
+// STATIC: 0x00DD38FE
 bool CSimpleTexture::s_unloadHiddenTextures;
 
-// STATIC: %0x00BB8D8C
+// STATIC: 0x00CA3A04
 int32_t CSimpleFontString::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CCF1F4
+// STATIC: 0x00DD1874
 int32_t CSimpleFontString::s_objectType;
 
-// STATIC: %0x00BB80FC
+// STATIC: 0x00CA2BFC
 const char* CSimpleFontString::s_objectTypeName = "FontString";
 
-// STATIC: %0x00CCF238
+// STATIC: 0x00DD18B8
 CDataAllocator CSimpleFontString::s_allocator(sizeof(CSimpleFontString), 0x35E);
 
-// STATIC: %0x00CCF1F0
+// STATIC: 0x00DD1870
 static int32_t s_fontStringCount;
 
 // INLINED
@@ -1036,7 +1036,7 @@ CSimpleFontString::CSimpleFontString(CSimpleFrame* frame, uint32_t drawLayer, bo
     s_fontStringCount++;
 }
 
-// INLINED
+// OFFSET: 0x004FC450/0x1401406B0
 CSimpleFontString::~CSimpleFontString() {
     this->FreeEmbeddedTextures();
 

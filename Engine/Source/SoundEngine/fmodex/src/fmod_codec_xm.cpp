@@ -62,7 +62,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB3E20/0x1408797C0
 FMOD_CODEC_DESCRIPTION_EX *CodecXM::getDescriptionEx()
 {
     FMOD_memset(&xmcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -146,7 +146,7 @@ FMOD_RESULT CodecXM::calculateLength()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB0300
 FMOD_RESULT CodecXM::spawnNewChannel(MusicChannel *cptr, MusicVirtualChannel *oldvcptr, MusicSample *sptr, MusicVirtualChannel **newvcptr)
 {
     if (oldvcptr == &gDummyVirtualChannel) /* bugfix - fmod 3.11 - instrument starting with no channel was just ignoring settings. */
@@ -352,7 +352,7 @@ FMOD_RESULT MusicChannelXM::portamento()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB0520/0x140875240
 FMOD_RESULT MusicChannelXM::vibrato() 
 {
 	int delta;
@@ -414,7 +414,7 @@ FMOD_RESULT MusicChannelXM::vibrato()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB05C0/0x1408752F0
 FMOD_RESULT MusicChannelXM::tremolo() 
 {
 	unsigned char temp;
@@ -588,7 +588,7 @@ FMOD_RESULT CodecXM::processEnvelope(MusicEnvelopeState *env, MusicVirtualChanne
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB07E0/0x140875570
 FMOD_RESULT MusicChannelXM::instrumentVibrato(MusicInstrument *iptr) 
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -768,7 +768,7 @@ FMOD_RESULT MusicChannelXM::processVolumeByte(unsigned char volume)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB0A80
 FMOD_RESULT CodecXM::getAmigaPeriod(int note, int finetune, int *period)
 {
 	*period = gPeriodTable[note];
@@ -919,7 +919,7 @@ FMOD_RESULT CodecXM::processNote(MusicNote *current, MusicChannelXM *cptr, Music
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB0CA0/0x140875A30
 FMOD_RESULT CodecXM::updateNote(bool audible)
 {
 	MusicNote  *current;
@@ -1577,7 +1577,7 @@ FMOD_RESULT CodecXM::updateNote(bool audible)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB1750/0x1408766B0
 FMOD_RESULT CodecXM::updateEffects() 
 {
 	MusicNote  *current;
@@ -2392,7 +2392,7 @@ int CodecXM::EncodeVAG_pcm2vag(unsigned char *vag, short *wave, int sample_len, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AB2AB0
+// OFFSET: 0x00AB2AB0/0x140877FC0
 FMOD_RESULT CodecXM::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
 	unsigned short	filenumpatterns=0;
@@ -3613,7 +3613,7 @@ FMOD_RESULT CodecXM::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB26C0
 FMOD_RESULT CodecXM::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

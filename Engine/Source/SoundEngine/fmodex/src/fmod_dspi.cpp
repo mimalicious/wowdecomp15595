@@ -42,7 +42,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8E8F0/0x14084DB70
 FMOD_RESULT DSPI::doesUnitExist(DSPI *target)
 {
     FMOD_RESULT result;
@@ -403,7 +403,7 @@ FMOD_RESULT DSPI::execute(void *inbuffer, void **outbuffer, unsigned int *length
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8C5B0/0x14084B260
 FMOD_RESULT DSPI::resetVisited()
 {
     LinkedListNode *current;
@@ -548,7 +548,7 @@ FMOD_RESULT DSPI::validate(DSP *dsp, DSPI **dspi)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8E980/0x14084DC70
 FMOD_RESULT DSPI::setPosition(unsigned int position, bool processinputs)
 {
     if (processinputs)
@@ -1380,7 +1380,7 @@ FMOD_RESULT DSPI::calculateSpeakerLevels(float frontleft, float frontright, floa
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8EA00/0x14084DDB0
 DSPI::DSPI()
 {
     mBuffer             = 0;
@@ -1508,7 +1508,7 @@ FMOD_RESULT DSPI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8DC90/0x14084CCD0
 FMOD_RESULT DSPI::updateTreeLevel(int level)
 {
     LinkedListNode *current;
@@ -1678,7 +1678,7 @@ FMOD_RESULT DSPI::addInputInternal(DSPI *target, bool checkcircular, DSPConnecti
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8F170/0x14084E6B0
 FMOD_RESULT DSPI::addInput(DSPI *target)
 {
     FMOD_RESULT result;
@@ -1750,7 +1750,7 @@ FMOD_RESULT DSPI::addInput(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8ED90/0x14084E1B0
 FMOD_RESULT DSPI::addInputQueued(DSPI *target, bool checkcircular, DSPConnectionI *connection_old, DSPConnectionI **connection_out)
 {
     FMOD_RESULT result;
@@ -1832,7 +1832,7 @@ FMOD_RESULT DSPI::addInputQueued(DSPI *target, bool checkcircular, DSPConnection
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8E5A0
 FMOD_RESULT DSPI::disconnectFromInternal(DSPI *target)
 {
     FMOD_RESULT result;
@@ -2028,7 +2028,7 @@ FMOD_RESULT DSPI::disconnectFrom(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8EEC0/0x14084E320
 FMOD_RESULT DSPI::disconnectAllInternal(bool inputs, bool outputs)
 {
     FMOD_RESULT result;

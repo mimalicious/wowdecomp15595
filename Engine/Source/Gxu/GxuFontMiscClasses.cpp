@@ -14,19 +14,18 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 
-// STATIC: %0x00BBD8E8
+// STATIC: 0x00CA8990
 TSList<TEXTLINETEXTURE, TSGetLink<TEXTLINETEXTURE> > TEXTLINETEXTURE::s_freeTextLineTextures;
 
-// STATIC: %0x00CE455C
+// STATIC: 0x00DD9F64
 int32_t TEXTLINETEXTURE::s_recycledBytes;
 
-// STATIC: %0x00CE4560
+// STATIC: 0x00DD9F68
 CGxPool* BATCHEDRENDERFONTDESC::s_indexPool;
 
-// STATIC: %0x00CE4564
+// STATIC: 0x00DD9F6C
 CGxBuf* BATCHEDRENDERFONTDESC::s_indexBuf;
 
-// STATIC: %0x00CE4568
 uint8_t BATCHEDRENDERFONTDESC::s_billboarded;
 
 // OFFSET: 0x0061C340

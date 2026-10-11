@@ -5,13 +5,13 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00BEA7FC
+// STATIC: 0x00F76B64
 CDynamicString s_motd;
 
-// STATIC: #0x00BEA808
+// STATIC: 0x00F76B70
 CDynamicString s_serverStatus;
 
-// STATIC: #0x00BEA814
+// STATIC: 0x00F76B7C
 CDynamicString s_serverNotice;
 
 // OFFSET: 0x009FBBB0
@@ -47,7 +47,7 @@ static int32_t Packet_SMSG_MOTD(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: 0x009FC980
+// OFFSET: 0x009FC980/0x14079A590
 void CKBSystem::Initialize() {
     ClientServices::SetMessageHandler(SMSG_MOTD, Packet_SMSG_MOTD, NULL);
 }

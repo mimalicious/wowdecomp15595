@@ -61,7 +61,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ABFA00/0x1408876C0
 FMOD_CODEC_DESCRIPTION_EX *CodecCDDA::getDescriptionEx()
 {
     FMOD_memset(&cddacodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));

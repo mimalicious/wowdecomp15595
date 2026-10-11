@@ -10,7 +10,6 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Services/TextBlock.h"
 
-// STATIC: %0x00BB80F0
 static uint16_t s_quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 
 // OFFSET: 0x004F8620

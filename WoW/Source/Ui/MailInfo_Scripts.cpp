@@ -37,7 +37,6 @@
 // STATIC: 0x00F49160
 static char s_stationeryTexture[260];
 
-// STATIC: #0x00BEB318
 static char s_packageTexture[260];
 
 // STATIC: 0x00F49268

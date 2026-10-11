@@ -64,7 +64,7 @@ FMOD_DSP_PARAMETERDESC dspchorus_param[8] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A97270/0x140857400
 FMOD_DSP_DESCRIPTION_EX *DSPChorus::getDescriptionEx()
 {
     FMOD_memset(&dspchorus, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));

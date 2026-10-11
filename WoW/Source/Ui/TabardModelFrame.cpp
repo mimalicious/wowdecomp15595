@@ -28,7 +28,6 @@ int32_t CGTabardModelFrame::s_metatable = LUA_NOREF;
 // STATIC: 0x00F76CA8
 int32_t CGTabardModelFrame::s_objectType;
 
-// STATIC: #0x00C0E524
 CDataAllocator CGTabardModelFrame::s_tabardModelHeap(sizeof(CGTabardModelFrame), 1);
 
 // STATIC: 0x00C0DFF0

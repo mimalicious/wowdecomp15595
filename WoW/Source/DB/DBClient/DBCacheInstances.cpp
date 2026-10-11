@@ -463,7 +463,7 @@ DBCache<NameCache, uint64_t, CHashKeyGUID>::REVERSEENTRY* DBCache<NameCache, uin
     return NULL;
 }
 
-// OFFSET: 0x0049E140
+// OFFSET: 0x0049E140/0x1400CA750
 template <>
 NameCache* DBCache<NameCache, uint64_t, CHashKeyGUID>::GetRecordByName(const char* name) {
     REVERSEENTRY* entry = this->FindReverseEntry(name);
@@ -523,7 +523,7 @@ void DBCache<NameCache, uint64_t, CHashKeyGUID>::ItemAdded(NameCache* item) {
     entry->m_record = item;
 }
 
-// OFFSET: 0x004A3520
+// OFFSET: 0x004A3520/0x1400D1BA0
 template <>
 void DBCache<NameCache, uint64_t, CHashKeyGUID>::Invalidate(uint64_t key) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);

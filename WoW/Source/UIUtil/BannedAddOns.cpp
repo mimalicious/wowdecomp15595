@@ -43,7 +43,7 @@ BannedAddOnCache& BannedAddOnCache::operator=(const BannedAddOnCache& source) {
     return *this;
 }
 
-// OFFSET: 0x004465B0
+// OFFSET: 0x004465B0/0x140052620
 static HOSFILE OpenCacheFile(const char* directory, const char* name, int32_t write) {
     if (!name) {
         return OS_INVALID_FILE;
@@ -71,7 +71,7 @@ static HOSFILE OpenCacheFile(const char* directory, const char* name, int32_t wr
     return OsCreateFile(path, OS_GENERIC_READ, 0, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
 }
 
-// OFFSET: 0x00446700
+// OFFSET: 0x00446700/0x1400527D0
 static int32_t DeleteCacheFile(const char* directory, const char* name) {
     if (!name) {
         return 0;
@@ -95,12 +95,12 @@ static bool ReadCacheRecord(HOSFILE file, BannedAddOnCache* record, uint32_t* by
     return file != OS_INVALID_FILE && OsReadFile(file, &record->m_id, sizeof(record->m_id), bytes) && OsReadFile(file, record->m_nameMd5, sizeof(record->m_nameMd5), bytes) && OsReadFile(file, record->m_versionMd5, sizeof(record->m_versionMd5), bytes) && OsReadFile(file, &record->m_lastModified, sizeof(record->m_lastModified), bytes) && OsReadFile(file, &record->m_flags, sizeof(record->m_flags), bytes);
 }
 
-// OFFSET: 0x00446530
+// OFFSET: 0x00446530/0x140052560
 static bool WriteCacheRecord(HOSFILE file, const BannedAddOnCache* record, uint32_t* bytes) {
     return file != OS_INVALID_FILE && OsWriteFile(file, &record->m_id, sizeof(record->m_id), bytes) && OsWriteFile(file, record->m_nameMd5, sizeof(record->m_nameMd5), bytes) && OsWriteFile(file, record->m_versionMd5, sizeof(record->m_versionMd5), bytes) && OsWriteFile(file, &record->m_lastModified, sizeof(record->m_lastModified), bytes) && OsWriteFile(file, &record->m_flags, sizeof(record->m_flags), bytes);
 }
 
-// OFFSET: 0x00446910
+// OFFSET: 0x00446910/0x140052950
 static int32_t SaveCache() {
     char directory[260];
 
@@ -140,7 +140,7 @@ static int32_t SaveCache() {
     return 1;
 }
 
-// OFFSET: 0x00446A50
+// OFFSET: 0x00446A50/0x140052B00
 int32_t SaveBannedAddOns() {
     if (!s_bannedAddOnCount) {
         return 0;
@@ -162,7 +162,7 @@ int32_t GetLatestBannedAddOnTimestamp() {
     return latest;
 }
 
-// OFFSET: 0x00446A70
+// OFFSET: 0x00446A70/0x140052B20
 BannedAddOnCache* FindBannedAddOn(const char* name, const char* version) {
     if (!name) {
         name = "";
@@ -206,7 +206,7 @@ void DestroyBannedAddOns() {
     s_bannedAddOnCount = 0;
 }
 
-// OFFSET: 0x004474D0
+// OFFSET: 0x004474D0/0x1400538E0
 static _BANNEDADDON* GetBannedAddOn(int32_t id, const int32_t* lastModified, int32_t* updated) {
     if (!id) {
         if (updated) {
@@ -238,7 +238,7 @@ static _BANNEDADDON* GetBannedAddOn(int32_t id, const int32_t* lastModified, int
     return entry;
 }
 
-// OFFSET: 0x004475A0
+// OFFSET: 0x004475A0/0x140053B20
 static void LoadDatabase() {
     for (int32_t i = 0; i < g_bannedAddOnsDB.m_numRecords; i++) {
         BannedAddOnsRec* record = g_bannedAddOnsDB.GetRecordByIndex(i);
@@ -318,7 +318,7 @@ int32_t LoadBannedAddOns() {
     return LoadCache();
 }
 
-// OFFSET: 0x004478B0
+// OFFSET: 0x004478B0/0x1400540D0
 BannedAddOnCache* RegisterBannedAddOn(int32_t id, const int32_t* lastModified, int32_t* updated) {
     _BANNEDADDON* entry = GetBannedAddOn(id, lastModified, updated);
 

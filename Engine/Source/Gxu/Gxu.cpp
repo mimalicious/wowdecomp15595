@@ -295,7 +295,7 @@ int32_t GxuXformCalc3dScreenCoords(const C44Matrix& toScreen, uint32_t count, co
 // PROVEN: dc6e39c7 IDENTICAL/DIFFERENT
 // OFFSET: 0x006166C0/0x1402A3210
 void GxuUpdateSingleColorTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
-    // STATIC: %0x00CE4370
+    // STATIC: 0x00DD9D78
     static CImVector s_texels[64];
 
     switch (command) {

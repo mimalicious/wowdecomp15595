@@ -230,7 +230,7 @@ void AccountMsg_RegisterScriptFunctions() {
     }
 }
 
-// OFFSET: 0x009FA3F0
+// OFFSET: 0x009FA3F0/0x1407978D0
 void AccountMsg_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_scriptFunctions[i].m_name);

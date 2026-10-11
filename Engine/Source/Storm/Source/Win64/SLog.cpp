@@ -8,22 +8,16 @@
 #include "Engine/Source/Storm/Source/SOption.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00CA66C8
 static int32_t s_logsysteminit;
 
-// STATIC: #0x00CB7224
 static uintptr_t s_sequence;
 
-// STATIC: #0x00CB7228
 static char s_defaultdir[MAX_PATH];
 
-// STATIC: %0x00CA67D4
 static CRITICAL_SECTION s_defaultdir_critsect;
 
-// STATIC: #0x00CB7344
 static _LOG* s_loghead[4];
 
-// STATIC: %0x00CA6800
 static CRITICAL_SECTION s_critsect[4];
 
 // PROVEN: 22299fbb IDENTICAL/NONE
@@ -142,11 +136,8 @@ static void OutputReturn(_LOG* logptr) {
 // PROVEN: 6e052f51 IDENTICAL/UNPROVEN
 // OFFSET: 0x004BDED0/0x1400F7A20
 static void OutputTime(_LOG* logptr, int32_t show) {
-    // STATIC: #0x00CB7400
     static uint32_t lasttime;
-    // STATIC: #0x00CB73C0
     static char timestr[64];
-    // STATIC: #0x00CB73B8
     static uint32_t timestrlen;
 
     if (!logptr->timeStamp) {

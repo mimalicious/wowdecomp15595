@@ -74,7 +74,6 @@ const char* g_LoginStateStringNames[20] = {
     "LOGIN_STATE_OUTOFBAND_CHALLENGE_WAIT",
 };
 
-// STATIC: #0x00B38CD4
 uint32_t Login::s_fourCCprogramID;
 
 // OFFSET: 0x004C5090/0x1401001A0
@@ -100,7 +99,7 @@ void LoginResponse::UpdateLoginStatus(LOGIN_STATE state, LOGIN_RESULT result, co
     this->LoginServerStatus(state, result, addressString, stateString, resultString, flags);
 }
 
-// OFFSET: 0x004C51D0
+// OFFSET: 0x004C51D0/0x1401002F0
 void Login::GetFileStatus(const char* fileName, uint64_t size, const uint8_t* md5) {
     this->m_fileSize = size;
     SStrCopy(this->m_fileName, fileName, sizeof(this->m_fileName));
@@ -128,7 +127,7 @@ void Login::SetLogonCreds(const char* accountName, const char* password) {
     this->m_password = SStrDupA(password, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x004C52E0
+// OFFSET: 0x004C52E0/0x140100430
 void Login::SetRawAccountName(const char* accountName) {
     SStrCopy(this->m_rawUsername, accountName, sizeof(this->m_rawUsername));
 }
@@ -148,12 +147,12 @@ Login::~Login() {
     this->m_loginResponse = NULL;
 }
 
-// OFFSET: 0x004C5040
+// OFFSET: 0x004C5040/0x140100130
 bool Login::IsReconnect() {
     return this->m_reconnect;
 }
 
-// OFFSET: 0x004C5050
+// OFFSET: 0x004C5050/0x140100140
 bool Login::IsLoggedOn() {
     return this->m_loggedOn;
 }
@@ -359,7 +358,7 @@ void LoginResponse::HandleRealmData(uint32_t result, CDataStore* msg) {
     this->RealmEnumCallback(4);
 }
 
-// OFFSET: 0x004C5BF0
+// OFFSET: 0x004C5BF0/0x140100EC0
 void Login::RealmListResult(CDataStore* msg) {
     if (!msg || msg->m_read == -1) {
         this->m_loginResponse->HandleRealmData(4, NULL);

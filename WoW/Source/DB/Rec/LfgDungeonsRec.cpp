@@ -27,12 +27,12 @@ void LfgDungeonsRec::FixupStrings(void* record, const char* strings) {
     DBCFixupString(rec->m_description, strings);
 }
 
-// OFFSET: 0x00B02530
+// OFFSET: 0x00B02530/0x1408C4520
 int32_t LfgDungeonsRec::GetGroupSize() const {
     return this->m_countTank + this->m_countHealer + this->m_countDamage;
 }
 
-// OFFSET: 0x00B02540
+// OFFSET: 0x00B02540/0x1408C4530
 bool LfgDungeonsRec::IsHeroic() const {
     MapRec* map = g_mapDB.GetRecord(this->m_mapID);
 
@@ -51,7 +51,7 @@ bool LfgDungeonsRec::IsHeroic() const {
     return false;
 }
 
-// OFFSET: 0x00B02590
+// OFFSET: 0x00B02590/0x1408C4580
 bool LfgDungeonsRec::IsRaid() const {
     MapRec* map = g_mapDB.GetRecord(this->m_mapID);
     return map && map->m_instanceType == 2;
@@ -74,7 +74,7 @@ bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID) const {
     return false;
 }
 
-// OFFSET: 0x00B026F0
+// OFFSET: 0x00B026F0/0x1408C4690
 bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID, int32_t expansionLevel) const {
     if (!randomID) {
         return false;
@@ -89,7 +89,7 @@ bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID, int32_t expansionLevel) c
     return this->IsInRandomGroup(randomID);
 }
 
-// OFFSET: 0x00B02640
+// OFFSET: 0x00B02640/0x1408C45C0
 int32_t LfgDungeonsRec::GetTopGroupID() const {
     int32_t groupID = this->m_groupID;
     LfgDungeonGroupRec* group = g_lfgDungeonGroupDB.GetRecord(groupID);

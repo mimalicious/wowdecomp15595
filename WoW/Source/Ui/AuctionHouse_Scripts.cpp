@@ -937,7 +937,7 @@ static int32_t Script_GetAuctionItemInfo(lua_State* L) {
     return 16;
 }
 
-// OFFSET: 0x00974A30
+// OFFSET: 0x00974A30/0x1406ECB20
 static int32_t Script_GetDetailColumnString(lua_State* L) {
     uint32_t index;
 

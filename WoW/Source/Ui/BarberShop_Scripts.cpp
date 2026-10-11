@@ -123,7 +123,7 @@ static int32_t Script_GetFacialHairCustomization(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008FFF00
+// OFFSET: 0x008FFF00/0x140657B70
 static int32_t Script_SetBarberShopAlternateFormFrame(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetAlternateFormFrame(\"frameName\")");

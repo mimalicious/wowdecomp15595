@@ -23,7 +23,7 @@ CLCDOutput::~CLCDOutput() {
     this->Close();
 }
 
-// OFFSET: [0x00B3EAC0]
+// OFFSET: [0x00B3EAC0/0x14090C260]
 void CLCDOutput::Close() {
     if (this->m_hDevice != LGLCD_INVALID_DEVICE) {
         this->OnClosingDevice(this->m_hDevice);
@@ -32,7 +32,7 @@ void CLCDOutput::Close() {
     }
 }
 
-// OFFSET: [0x00B3EAC0]
+// OFFSET: [0x00B3EAC0/0x14090C260]
 void CLCDOutput::Shutdown() {
     this->Close();
 }
@@ -103,7 +103,7 @@ void CLCDOutput::OnLCDButtonUp(int32_t button) {
     }
 }
 
-// OFFSET: [0x005282E0]
+// OFFSET: [0x005282E0/0x14090C360]
 int32_t CLCDOutput::GetDeviceId() {
     return this->m_hDevice;
 }

@@ -53,16 +53,13 @@ uint32_t CM2Model::s_errorLine;
 // STATIC: 0x00EBD584
 char* CM2Model::s_errorString;
 
-// STATIC: %0x00AF9410
 static const uint32_t s_ribbonBlendModes[] = { 0, 1, 2, 10, 3, 4, 5 };
 
-// STATIC: %0x00D89E80
 TSGrowableArray<C3Vector> CM2Model::s_collisionPositions;
 
-// STATIC: %0x00D89E90
 TSGrowableArray<uint32_t> CM2Model::s_collisionCodes;
 
-// STATIC: %0x00D89EA0
+// STATIC: 0x00EBD5AC
 TSGrowableArray<M2ModelCallback> CM2Model::s_sequenceCallbacks;
 
 // PROVEN: 4781b076 IDENTICAL/NONE

@@ -147,6 +147,7 @@ FLAC__MD5Transform(FLAC__uint32 buf[4], FLAC__uint32 const in[16])
 // INLINED
 FLaC__INLINE
 void
+// OFFSET: 0x00B5BF30
 byteSwap(FLAC__uint32 *buf, unsigned words)
 {
 	md5byte *p = (md5byte *)buf;
@@ -165,6 +166,7 @@ byteSwap(FLAC__uint32 *buf, unsigned words)
  */
 // INLINED
 void
+// OFFSET: 0x00B5BF80/0x140925420
 FLAC__MD5Init(struct FLAC__MD5Context *ctx)
 {
 	FLAC__uint32 test = 1;
@@ -189,6 +191,7 @@ FLAC__MD5Init(struct FLAC__MD5Context *ctx)
  */
 // INLINED
 void
+// OFFSET: 0x00B5BFC0
 FLAC__MD5Update(struct FLAC__MD5Context *ctx, md5byte const *buf, unsigned len)
 {
 	FLAC__uint32 t;
@@ -229,6 +232,7 @@ FLAC__MD5Update(struct FLAC__MD5Context *ctx, md5byte const *buf, unsigned len)
  */
 // INLINED
 FLAC__bool
+// OFFSET: 0x00B5C090
 FLAC__MD5Accumulate(struct FLAC__MD5Context *ctx, const FLAC__int32 * const signal[], unsigned channels, unsigned samples, unsigned bytes_per_sample)
 {
 	unsigned channel, sample, a_byte;
@@ -283,6 +287,7 @@ FLAC__MD5Accumulate(struct FLAC__MD5Context *ctx, const FLAC__int32 * const sign
  */
 // INLINED
 void
+// OFFSET: 0x00B5C1C0
 FLAC__MD5Final(md5byte digest[16], struct FLAC__MD5Context *ctx)
 {
 	int count = ctx->bytes[0] & 0x3f;	/* Number of bytes in ctx->in */

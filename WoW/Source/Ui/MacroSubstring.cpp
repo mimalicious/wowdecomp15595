@@ -46,7 +46,7 @@ bool MacroSubstring::operator==(const char* str) {
     return cursor == this->m_end;
 }
 
-// OFFSET: 0x00A0D290
+// OFFSET: 0x00A0D290/0x1407AECF0
 void MacroSubstring::GetText(char* buffer, uint32_t size) {
     uint32_t length = size - 1;
 

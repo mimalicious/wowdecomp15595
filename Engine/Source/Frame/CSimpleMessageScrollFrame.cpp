@@ -19,13 +19,13 @@
 // STATIC: 0x00DD3A30
 CDataAllocator CSimpleMessageScrollFrame::s_allocator(sizeof(CSimpleMessageScrollFrame), 5);
 
-// STATIC: %0x00BB9670
+// STATIC: 0x00CA4358
 int32_t CSimpleMessageScrollFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A2C/0x140CB9760
 int32_t CSimpleMessageScrollFrame::s_objectType;
 
-// STATIC: %0x00BB8760
+// STATIC: 0x00CA33F4
 const char* CSimpleMessageScrollFrame::s_objectTypeName = "ScrollingMessageFrame";
 
 // INLINED

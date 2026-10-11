@@ -60,7 +60,7 @@ FMOD_DSP_PARAMETERDESC dspreverb_param[6] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A96720/0x1408567D0
 FMOD_DSP_DESCRIPTION_EX *DSPReverb::getDescriptionEx()
 {
     FMOD_memset(&dspreverb, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));

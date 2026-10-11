@@ -478,7 +478,7 @@ char *FMOD_CDDA_GetString(unsigned int value, FMOD_CDDA_StringList *stringlist)
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00AC57F0/0x14088E9F0
 FMOD_RESULT FMOD_OS_CDDA_Init(bool force_aspi)
 {
     unsigned int status, error;
@@ -667,7 +667,7 @@ FMOD_RESULT FMOD_OS_CDDA_Init(bool force_aspi)
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00AC51E0/0x14088E230
 FMOD_RESULT FMOD_OS_CDDA_Shutdown()
 {
     int i;
@@ -860,7 +860,7 @@ FMOD_RESULT FMOD_OS_CDDA_GetDeviceName(int devicenum, char *name, int namelen, c
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00AC5260/0x14088E2F0
 FMOD_RESULT FMOD_OS_CDDA_GetDriveFromLetter(int letter, FMOD_CDDA_DEVICE **device)
 {
     int i;
@@ -1150,7 +1150,7 @@ FMOD_RESULT FMOD_OS_CDDA_GetDriveFromLetter(int letter, FMOD_CDDA_DEVICE **devic
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC5710/0x14088E8D0
 FMOD_RESULT FMOD_OS_CDDA_OpenDevice(char *name, FMOD_CDDA_DEVICE **device)
 {
     int               count;
@@ -1232,7 +1232,7 @@ FMOD_RESULT FMOD_OS_CDDA_OpenDevice(char *name, FMOD_CDDA_DEVICE **device)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC3D50/0x14088C700
 FMOD_RESULT FMOD_OS_CDDA_CloseDevice(FMOD_CDDA_DEVICE *device)
 {
     if (!device)
@@ -1751,7 +1751,7 @@ FMOD_RESULT FMOD_OS_CDDA_ReadToc(FMOD_CDDA_DEVICE *device, FMOD_CDDA_TOC *toc)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC3E50
 bool FMOD_CDDA_ScsiAbort(SRB_ExecSCSICmd *srb_to_abort, unsigned char adapter_id)
 {
     SRB_Abort srb;
@@ -1787,7 +1787,7 @@ bool FMOD_CDDA_ScsiAbort(SRB_ExecSCSICmd *srb_to_abort, unsigned char adapter_id
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC3E90/0x14088C770
 int FMOD_CDDA_IssueScsiCmd_Internal(FMOD_CDDA_DEVICE *cdrom, int flags, unsigned char *cdb_data, int cdb_len, char *buf, int buflen, unsigned char adapter_id, unsigned char target_id, unsigned char lun_id)
 {
     SRB_ExecSCSICmd srb;
@@ -1965,7 +1965,7 @@ FMOD_RESULT FMOD_CDDA_Close(FMOD_CDDA_DEVICE *cdrom)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC4F70/0x14088DDF0
 bool FMOD_CDDA_InquiryCommand(unsigned char adapter_id, unsigned char target_id, unsigned char lun_id)
 {
     int                   letter;
@@ -2220,7 +2220,7 @@ FMOD_RESULT FMOD_OS_CDDA_SetSpeed(FMOD_CDDA_DEVICE *cdrom, int speed)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC40B0
 int FMOD_CDDA_NTSCSI_GetNumAdapters()
 {
     int buf[256], i, num_adapters = 0;
@@ -2321,7 +2321,7 @@ HANDLE FMOD_CDDA_NTSCSI_GetFileHandle(int i)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC41F0/0x14088CB40
 bool FMOD_CDDA_NTSCSI_GetDriveInformation(int i, FMOD_CDDA_NTSCSIDRIVE *drive)
 {
     SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER spt_dwb;
@@ -2425,7 +2425,7 @@ bool FMOD_CDDA_NTSCSI_GetDriveInformation(int i, FMOD_CDDA_NTSCSIDRIVE *drive)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC4350/0x14088CD40
 FMOD_RESULT FMOD_CDDA_NTSCSI_Init()
 {
     char buf[4];
@@ -2512,7 +2512,7 @@ FMOD_RESULT FMOD_CDDA_NTSCSI_Init()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC4440/0x14088CEF0
 bool FMOD_CDDA_NTSCSI_Shutdown()
 {
     int i;
@@ -2551,7 +2551,7 @@ bool FMOD_CDDA_NTSCSI_Shutdown()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC44C0/0x14088CF80
 int FMOD_CDDA_NTSCSI_GetDeviceIndex(unsigned char ha, unsigned char tgt, unsigned char lun)
 {
     int i;
@@ -2586,7 +2586,7 @@ int FMOD_CDDA_NTSCSI_GetDeviceIndex(unsigned char ha, unsigned char tgt, unsigne
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC4500
 DWORD FMOD_CDDA_NTSCSI_HAInquiry(SRB_HAInquiry *srb)
 {
     srb->HA_Count = FMOD_CDDA_NTSCSI_NumAdapters;
@@ -2662,7 +2662,7 @@ DWORD FMOD_CDDA_NTSCSI_GetDeviceType(SRB_GDEVBlock *srb)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC45F0/0x14088D0C0
 DWORD FMOD_CDDA_NTSCSI_ExecScsiCmd(SRB_ExecSCSICmd *srb, bool retrying)
 {
     SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER spt_dwb;
@@ -2779,7 +2779,7 @@ DWORD FMOD_CDDA_NTSCSI_ExecScsiCmd(SRB_ExecSCSICmd *srb, bool retrying)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC47B0/0x14088D310
 DWORD FMOD_CDDA_NTSCSI_GetASPI32SupportInfo()
 {
     DWORD rc;
@@ -2810,7 +2810,7 @@ DWORD FMOD_CDDA_NTSCSI_GetASPI32SupportInfo()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC47D0
 DWORD FMOD_CDDA_NTSCSI_SendASPI32Command(SRB *srb)
 {
     if (!srb)

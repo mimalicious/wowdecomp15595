@@ -26,7 +26,7 @@
 #include "smallft.h"
 #include "misc.h"
 
-// INLINED
+// OFFSET: 0x00B45250/0x140914120
 void _vp_global_free(vorbis_look_psy_global *look){
   if(look){
     FMOD_memset(look,0,sizeof(*look));
@@ -34,7 +34,7 @@ void _vp_global_free(vorbis_look_psy_global *look){
   }
 }
 
-// INLINED
+// OFFSET: 0x00B45290/0x140914160
 void _vi_psy_free(vorbis_info_psy *i){
   if(i){
     FMOD_memset(i,0,sizeof(*i));
@@ -42,7 +42,7 @@ void _vi_psy_free(vorbis_info_psy *i){
   }
 }
 
-// INLINED
+// OFFSET: 0x00B452C0/0x1409141A0
 void _vp_psy_clear(vorbis_look_psy *p){
   int i,j;
   if(p){

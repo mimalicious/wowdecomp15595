@@ -250,7 +250,7 @@ const uint8_t* WowClientDB2<T>::ExportCachedRecord(int32_t id) {
     return NULL;
 }
 
-// OFFSET: [0x00582970/0x1401EA090<ItemRec>, 0x0045AC30/0x14006B460<ItemRecSparse>, 0x00525410<KeyChainRec>, 0x0046EC90<ItemExtendedCostRec>]
+// OFFSET: [0x00582970/0x1401EA090<ItemRec>, 0x0045AC30/0x14006B460<ItemRecSparse>, 0x00525410/0x140173F50<KeyChainRec>, 0x0046EC90/0x140084B80<ItemExtendedCostRec>]
 template <class T>
 T* WowClientDB2<T>::GetRecord(int32_t id, const WOWGUID& guid, RECORD_CALLBACK callback, void* param, bool unique) {
     if (id <= 0) {

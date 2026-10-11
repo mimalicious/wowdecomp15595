@@ -12,13 +12,13 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: %0x00BB9A80
+// STATIC: 0x00CA4748
 int32_t CSimpleRotationAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CC4/0x140CB9A64
 int32_t CSimpleRotationAnim::s_objectType;
 
-// STATIC: %0x00BB8BB0
+// STATIC: 0x00CA3828
 const char* CSimpleRotationAnim::s_objectTypeName = "Rotation";
 
 // PROVEN: 03507ea6 DIFFERENT/IDENTICAL

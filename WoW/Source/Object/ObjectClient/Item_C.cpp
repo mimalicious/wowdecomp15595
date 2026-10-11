@@ -675,7 +675,7 @@ void CGItem_C::UpdateSockets(uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
     FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_SUCCESS, NULL);
 }
 
-// OFFSET: 0x005A5AC0
+// OFFSET: 0x005A5AC0/0x140216B40
 bool CGItem_C::IsTemporarilyBoundForTrade() {
     return this->HasSoulboundEnchant();
 }

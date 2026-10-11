@@ -2,7 +2,6 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: %0x00BAEB20
 bool g_clientDbPerformCompress;
 
 // STATIC: 0x00C9AA10
@@ -342,7 +341,7 @@ uint8_t* DecompressRow(const uint8_t* src, uint32_t size, uint8_t* dst) {
     return out;
 }
 
-// OFFSET: 0x00872C70
+// OFFSET: 0x00872C70/0x1405A9270
 uint32_t CompressRow(const uint8_t* src, uint32_t size, uint8_t* dst) {
     uint8_t* out = dst;
     const uint8_t* end = &src[size];

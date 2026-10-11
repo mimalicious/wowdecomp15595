@@ -9,7 +9,7 @@
 #include "WoW/Source/Object/ObjectClient/GuildStats_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 
-// OFFSET: 0x00B11580
+// OFFSET: 0x00B11580/0x1408D6E80
 void CDrawBowString::DrawBowString(CM2Model* model, const CM2Lighting* lighting, CGUnit_C* unit) {
     if (unit && !unit->m_worldModel) {
         return;

@@ -33,7 +33,7 @@ static const unsigned int SIZEOF_METABUF = (255 * 16) + 1;
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACE260/0x140898C20
 NetFile::NetFile()
 {
     mHandle           = (void *)-1;
@@ -83,7 +83,7 @@ FMOD_RESULT NetFile::init()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00ACCD40
+// OFFSET: 0x00ACCD40/0x1408974F0
 FMOD_RESULT NetFile::shutDown()
 {
     return FMOD_OS_Net_Shutdown();
@@ -256,7 +256,7 @@ FMOD_RESULT NetFile::parseUrl(char *url, char *host, int hostlen, char *auth, in
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACCFA0/0x1408977E0
 FMOD_RESULT NetFile::openAsHTTP(const char *name_or_data, char *host, char *file, char *auth, unsigned short port, unsigned int *filesize)
 {
     FMOD_RESULT result;

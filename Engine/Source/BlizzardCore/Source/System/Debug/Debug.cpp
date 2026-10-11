@@ -7,16 +7,12 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Using/Using.h"
 
-// STATIC: #0x00AB9358
 static System_Debug::UsingDebug s_usingDebug;
 
-// STATIC: #0x00AB90A0
 Blizzard::Debug::AssertCallback System_Debug::s_AssertCallback = Blizzard::Debug::DefaultCallback;
 
-// STATIC: #0x00B33310
 char System_Debug::s_CanonBuffer[1024];
 
-// STATIC: #0x00AB9348
 char* System_Debug::s_CanonHead = System_Debug::s_CanonBuffer;
 
 // STATIC: 0x00D07414

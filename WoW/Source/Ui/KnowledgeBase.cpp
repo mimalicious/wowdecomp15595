@@ -18,7 +18,7 @@ CKBSetup g_KnowledgeBaseSetup;
 // STATIC: 0x00F76B60
 CKBPage* CKBPage::s_pLoadingQueue_Head;
 
-// OFFSET: 0x009FB070
+// OFFSET: 0x009FB070/0x140798850
 CKBPage::CKBPage() {
     this->m_state = 0;
     this->m_data = NULL;
@@ -27,7 +27,7 @@ CKBPage::CKBPage() {
     this->m_inQueue = 0;
 }
 
-// OFFSET: 0x009FB110
+// OFFSET: 0x009FB110/0x140798930
 bool CKBPage::LoadingCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     CKBPage* page = static_cast<CKBPage*>(param);
 
@@ -173,7 +173,7 @@ int32_t CKBPage::_BeginLoading() {
     return 1;
 }
 
-// OFFSET: 0x009FB2A0
+// OFFSET: 0x009FB2A0/0x140798AE0
 XMLNode* CKBPage::_GetRoot(CKBIterator& iterator) {
     XMLNode* root = XMLTree_GetRoot(this->m_tree);
 
@@ -196,7 +196,7 @@ int32_t CKBPage::_GetInt(XMLNode* node, const char* attribute) const {
     return value ? atol(value) : 0;
 }
 
-// OFFSET: 0x009FB310
+// OFFSET: 0x009FB310/0x140798B50
 const char* CKBPage::_GetBodyString(XMLNode* node) const {
     if (this->m_state != 2 || !this->m_tree) {
         return NULL;
@@ -299,7 +299,7 @@ XMLNode* CKBSetup::GetLanguage(int32_t index) {
     return this->m_languages.m_node;
 }
 
-// OFFSET: 0x009FB530
+// OFFSET: 0x009FB530/0x140798D00
 XMLNode* CKBSetup::GetCategoryNode(int32_t index) {
     if (this->m_state != 2 || !this->m_tree) {
         return NULL;
@@ -345,7 +345,7 @@ XMLNode* CKBSetup::GetArticleHeader(int32_t index) {
     return this->m_articleHeaders.m_node;
 }
 
-// OFFSET: 0x009FB6D0
+// OFFSET: 0x009FB6D0/0x140798D80
 void CKBSetup::_ComputeCachedData() {
     XMLNode* node = NULL;
     XMLNode* root = XMLTree_GetRoot(this->m_tree);
@@ -447,7 +447,7 @@ XMLNode* CKBSetup::GetSubCategory(int32_t category, int32_t subCategory) {
     return this->m_subCategories.m_node;
 }
 
-// OFFSET: 0x009FC700
+// OFFSET: 0x009FC700/0x14079A270
 void CKBSetup::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_SETUP_LOAD_SUCCESS, NULL);
@@ -486,7 +486,7 @@ CKBSetup::CKBSetup() {
 void CKBPage::Initialize() {
 }
 
-// OFFSET: 0x009FAED0
+// OFFSET: 0x009FAED0/0x140798640
 const char* KnowledgeBaseGetURLForLocale() {
     switch (LocaleNameToIndex(s_localeCode)) {
         case 0:
@@ -597,7 +597,7 @@ void CKBPage::Shutdown() {
     g_KnowledgeBaseArticle.m_state = 0;
 }
 
-// OFFSET: 0x009FC720
+// OFFSET: 0x009FC720/0x14079A290
 void CKBSetup::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_SETUP_LOAD_FAILURE, NULL);

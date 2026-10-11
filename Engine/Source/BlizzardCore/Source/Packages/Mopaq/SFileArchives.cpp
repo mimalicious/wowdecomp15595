@@ -32,16 +32,16 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00C0C254
+// STATIC: 0x00D06E3C
 Blizzard::Lock::Atomic System_SFile::s_nextArchiveId = { static_cast<int32_t>(0x80000000) };
 
-// STATIC: %0x00D81308
+// STATIC: 0x00EB4A18
 uint32_t System_SFile::s_lastError;
 
-// STATIC: %0x00D87268
+// STATIC: 0x00EBAC74
 Blizzard::Util::Digest<16> System_SFile::s_emptyMd5;
 
-// STATIC: %0x00C0C250
+// STATIC: 0x00D06E38
 bool System_SFile::s_threadSafe = true;
 
 // PROVEN: 0078f922 IDENTICAL/IDENTICAL

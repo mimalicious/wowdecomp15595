@@ -7,7 +7,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
 
-// OFFSET: 0x007A9460
+// OFFSET: 0x007A9460/0x14049F1F0
 static bool ShellExecuteRunAs(const char* path, const char* arguments) {
     if (!arguments) {
         arguments = "";
@@ -20,7 +20,7 @@ static bool ShellExecuteRunAs(const char* path, const char* arguments) {
     return reinterpret_cast<uintptr_t>(ShellExecuteW(NULL, reinterpret_cast<LPCWSTR>(verb.m_data), reinterpret_cast<LPCWSTR>(nativePath.m_data), reinterpret_cast<LPCWSTR>(nativeArguments.m_data), NULL, SW_SHOWNORMAL)) > 32;
 }
 
-// OFFSET: 0x007A9550
+// OFFSET: 0x007A9550/0x14049F2E0
 bool CGlueMgr::PatchDownloadExecuteCommand(const char* path, const char* arguments) {
     OSVERSIONINFOA versionInfo;
     versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);

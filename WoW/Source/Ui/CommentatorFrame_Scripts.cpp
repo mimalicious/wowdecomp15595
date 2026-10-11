@@ -983,7 +983,7 @@ static int32_t Script_CommentatorStartSkirmishMatch(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0092B8D0
+// OFFSET: 0x0092B8D0/0x140692340
 static int32_t Script_CommentatorGetPartyInfo(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 

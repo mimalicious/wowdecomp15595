@@ -102,42 +102,42 @@ GxuDebugShapeDrawer::GxuDebugShapeDrawer() {
 void IGxuDebugShapeFactory::SetLOD(float distance) {
 }
 
-// OFFSET: [0x00842700]
+// OFFSET: [0x00842700/0x1407FDD80]
 uint32_t IGxuDebugShapeFactory::GetIdxOffset() {
     return 0;
 }
 
-// OFFSET: [0x00842700]
+// OFFSET: [0x00842700/0x1407FDD80]
 uint32_t GxuNullShapeFactory::GetNumVertices() {
     return 0;
 }
 
-// OFFSET: [0x00842700]
+// OFFSET: [0x00842700/0x1407FDD80]
 uint32_t GxuNullShapeFactory::GetNumIndices() {
     return 0;
 }
 
-// OFFSET: [0x0076CA20]
+// OFFSET: [0x0076CA20/0x140586E10]
 float GxuNullShapeFactory::GetRadius() {
     return 0.0f;
 }
 
-// OFFSET: [0x00599E10]
+// OFFSET: [0x00599E10/0x1402082B0]
 float GxuConeShapeFactory::GetRadius() {
     return 1.0f;
 }
 
-// OFFSET: [0x00599E10]
+// OFFSET: [0x00599E10/0x1402082B0]
 float GxuSphereShapeFactory::GetRadius() {
     return 1.0f;
 }
 
-// OFFSET: [0x00599E10]
+// OFFSET: [0x00599E10/0x1402082B0]
 float GxuDirectionalDiamondShapeFactory::GetRadius() {
     return 1.0f;
 }
 
-// OFFSET: [0x00B41A50]
+// OFFSET: [0x00B41A50/0x14090FD50]
 uint32_t GxuSphereShapeFactory::GetNumVertices() {
     return this->m_numVertices;
 }
@@ -157,7 +157,7 @@ uint32_t GxuConeShapeFactory::GetNumVertices() {
     return 14;
 }
 
-// OFFSET: 0x00619420
+// OFFSET: 0x00619420/0x1402A6A40
 uint32_t GxuConeShapeFactory::GetNumIndices() {
     return 72;
 }
@@ -184,7 +184,7 @@ GxuSphereShapeFactory::GxuSphereShapeFactory() {
     this->m_totalIndices += this->m_numIndices[2];
 }
 
-// OFFSET: 0x006194D0
+// OFFSET: 0x006194D0/0x1402A6A70
 void GxuSphereShapeFactory::SetLOD(float distance) {
     float lod = 1.0f;
 
@@ -195,7 +195,7 @@ void GxuSphereShapeFactory::SetLOD(float distance) {
     this->m_lod = static_cast<uint32_t>(static_cast<int64_t>(lod + lod));
 }
 
-// OFFSET: 0x00619540
+// OFFSET: 0x00619540/0x1402A6A50
 uint32_t GxuSphereShapeFactory::GetIdxOffset() {
     return this->m_idxOffset[this->m_lod];
 }
@@ -204,7 +204,7 @@ uint32_t GxuSphereShapeFactory::GetIdxOffset() {
 GxuDirectionalSphereShapeFactory::GxuDirectionalSphereShapeFactory() {
 }
 
-// OFFSET: 0x006195F0
+// OFFSET: 0x006195F0/0x1402A6A60
 uint32_t GxuSphereShapeFactory::GetNumIndices() {
     return this->m_numIndices[this->m_lod];
 }
@@ -229,17 +229,17 @@ float GxuTriangleShapeFactory::GetRadius() {
     return 0.5f;
 }
 
-// OFFSET: [0x00619630]
+// OFFSET: [0x00619630/0x1402A6B50]
 uint32_t GxuTriangleShapeFactory::GetNumVertices() {
     return 6;
 }
 
-// OFFSET: [0x00619630]
+// OFFSET: [0x00619630/0x1402A6B50]
 uint32_t GxuTriangleShapeFactory::GetNumIndices() {
     return 6;
 }
 
-// OFFSET: [0x00619630]
+// OFFSET: [0x00619630/0x1402A6B50]
 uint32_t GxuDirectionalDiamondShapeFactory::GetNumVertices() {
     return 6;
 }
@@ -316,7 +316,7 @@ uint32_t GxuNullShapeFactory::CreateIndexBuffer() {
     return 0xFFFF;
 }
 
-// OFFSET: 0x00619750
+// OFFSET: 0x00619750/0x1402A6C60
 uint32_t GxuConeShapeFactory::CreateVertexBuffer() {
     if (!s_bufferCache.Exists(this->m_vertexBuffer)) {
         this->m_vertexBuffer = s_bufferCache.CreateBuffer(this->m_vertexBuffer, GxPoolTarget_Vertex, sizeof(C3Vector), 14);
@@ -348,7 +348,7 @@ uint32_t GxuConeShapeFactory::CreateVertexBuffer() {
     return this->m_vertexBuffer;
 }
 
-// OFFSET: 0x006198A0
+// OFFSET: 0x006198A0/0x1402A6E30
 uint32_t GxuConeShapeFactory::CreateIndexBuffer() {
     if (!s_bufferCache.Exists(this->m_indexBuffer)) {
         this->m_indexBuffer = s_bufferCache.CreateBuffer(this->m_indexBuffer, GxPoolTarget_Index, sizeof(uint16_t), 72);
@@ -380,11 +380,11 @@ uint32_t GxuConeShapeFactory::CreateIndexBuffer() {
     return this->m_indexBuffer;
 }
 
-// OFFSET: 0x006199B0
+// OFFSET: 0x006199B0/0x1402A6F70
 IGxuDebugShapeFactory::~IGxuDebugShapeFactory() {
 }
 
-// OFFSET: 0x006199E0
+// OFFSET: 0x006199E0/0x1402A6FB0
 uint32_t GxuSphereShapeFactory::CreateVertexBuffer() {
     if (!s_bufferCache.Exists(this->m_vertexBuffer)) {
         this->m_vertexBuffer = s_bufferCache.CreateBuffer(this->m_vertexBuffer, GxPoolTarget_Vertex, sizeof(C3Vector), this->m_numVertices);
@@ -414,7 +414,7 @@ uint32_t GxuSphereShapeFactory::CreateVertexBuffer() {
     return this->m_vertexBuffer;
 }
 
-// OFFSET: 0x00619B70
+// OFFSET: 0x00619B70/0x1402A7200
 uint32_t GxuSphereShapeFactory::CreateIndexBuffer() {
     if (!s_bufferCache.Exists(this->m_indexBuffer)) {
         this->m_indexBuffer = s_bufferCache.CreateBuffer(this->m_indexBuffer, GxPoolTarget_Index, sizeof(uint16_t), this->m_totalIndices);
@@ -737,7 +737,7 @@ void GxuDebugShapeRenderStateBlockNoDepth::End() {
 GxuDebugShapeDrawer::~GxuDebugShapeDrawer() {
 }
 
-// OFFSET: 0x0061A960
+// OFFSET: 0x0061A960/0x1402A8380
 GxuDebugShapeDrawer::GxuDebugShapeDrawer(const C44Matrix& matrix, const CImVector& color, int32_t mode, IGxuDebugShapeFactory* factory) {
     this->m_matrix = matrix;
     this->m_color = color;
@@ -774,7 +774,7 @@ GxuDebugShapeObject::GxuDebugShapeObject() : m_next(NULL), m_time(0.0f) {
 GxuDebugShapeObject::~GxuDebugShapeObject() {
 }
 
-// OFFSET: 0x0061AD60
+// OFFSET: 0x0061AD60/0x1402A8740
 void GxuDebugShapeDrawer::Draw(const C3Vector& viewPos) {
     C44Matrix matrix = this->m_matrix;
 
@@ -877,7 +877,7 @@ void GxuShutdownDebugShapeDrawer() {
     s_shapeDrawerInitialized = false;
 }
 
-// OFFSET: 0x0061B6F0
+// OFFSET: 0x0061B6F0/0x1402A9390
 static void GxuDebugDrawShape(const C44Matrix& matrix, const CImVector& color, int32_t mode, IGxuDebugShapeFactory* factory, float time) {
     if (!s_shapeDrawerInitialized) {
         s_shapeDrawerInitialized = true;

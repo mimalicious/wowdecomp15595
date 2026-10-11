@@ -11,7 +11,6 @@
 // STATIC: 0x00DC0C7C
 static uint32_t s_lastProcessTime;
 
-// STATIC: #0x00D31A60
 static SCritSect s_wardenCritSect;
 
 // INLINED

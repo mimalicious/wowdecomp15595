@@ -72,7 +72,7 @@ FMOD_DSP_PARAMETERDESC dspflange_param[4] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A9B4D0/0x14085BD90
 FMOD_DSP_DESCRIPTION_EX *DSPFlange::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU

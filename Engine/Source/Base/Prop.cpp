@@ -3,7 +3,7 @@
 #include "Engine/Source/Os/Tls.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D9332C
+// STATIC: 0x00EC6B18
 static uint32_t s_tlsIndex;
 
 // PROVEN: c94601bd IDENTICAL/UNPROVEN

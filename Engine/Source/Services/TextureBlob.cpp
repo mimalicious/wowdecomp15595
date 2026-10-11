@@ -6,10 +6,10 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00BBA2D4
+// STATIC: 0x00CA4F84
 static TSExplicitList<CTextureBlob, offsetof(CTextureBlob, m_link)> s_textureBlobList;
 
-// STATIC: %0x00CD2FC0
+// STATIC: 0x00DD4478
 static TSHashTableReuse<CTextureBlobTexture, HASHKEY_TEXTUREBLOBFILE> s_textureBlobTextureHash;
 
 // INLINED
@@ -131,7 +131,7 @@ void CTextureBlob::RemoveTextures() {
 
 // OFFSET: 0x0054B610/0x1401A4BB0
 void UpdateBlobTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
-    // STATIC: %0x00CD2F40
+    // STATIC: 0x00DD43F8
     static uint8_t s_emptyLevel[0x80];
 
     CTexture* texture = static_cast<CTexture*>(userArg);

@@ -2,32 +2,27 @@
 #include <cstdint>
 #include "Engine/Source/Gx/Buffer.h"
 
-// STATIC: %0x00AFB3D8
 static const CGxVertexAttrib s_vertexAttribsP[] = {
     { GxVA_Position, 4, 0, 0 }
 };
 
-// STATIC: %0x00AFB3E8
 static const CGxVertexAttrib s_vertexAttribsPN[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 }
 };
 
-// STATIC: %0x00AFB408
 static const CGxVertexAttrib s_vertexAttribsPNC[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
     { GxVA_Color0, 0, 24, 0 }
 };
 
-// STATIC: %0x00AFB438
 static const CGxVertexAttrib s_vertexAttribsPNT[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
     { GxVA_TexCoord0, 3, 24, 0 }
 };
 
-// STATIC: %0x00AFB468
 static const CGxVertexAttrib s_vertexAttribsPNCT[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -35,7 +30,6 @@ static const CGxVertexAttrib s_vertexAttribsPNCT[] = {
     { GxVA_TexCoord0, 3, 28, 0 }
 };
 
-// STATIC: %0x00AFB538
 static const CGxVertexAttrib s_vertexAttribsPNCT_TS[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -44,7 +38,6 @@ static const CGxVertexAttrib s_vertexAttribsPNCT_TS[] = {
     { GxVA_TexCoord1, 7, 36, 0 }
 };
 
-// STATIC: %0x00AFB4A8
 static const CGxVertexAttrib s_vertexAttribsPNT2[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -52,7 +45,6 @@ static const CGxVertexAttrib s_vertexAttribsPNT2[] = {
     { GxVA_TexCoord1, 3, 32, 0 }
 };
 
-// STATIC: %0x00AFB4E8
 static const CGxVertexAttrib s_vertexAttribsPNCT2[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -61,20 +53,17 @@ static const CGxVertexAttrib s_vertexAttribsPNCT2[] = {
     { GxVA_TexCoord1, 3, 36, 0 }
 };
 
-// STATIC: %0x00AFB588
 static const CGxVertexAttrib s_vertexAttribsPC[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Color0, 0, 12, 0 }
 };
 
-// STATIC: %0x00AFB5A8
 static const CGxVertexAttrib s_vertexAttribsPCT[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Color0, 0, 12, 0 },
     { GxVA_TexCoord0, 3, 16, 0 }
 };
 
-// STATIC: %0x00AFB5D8
 static const CGxVertexAttrib s_vertexAttribsPCT2[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Color0, 0, 12, 0 },
@@ -82,7 +71,6 @@ static const CGxVertexAttrib s_vertexAttribsPCT2[] = {
     { GxVA_TexCoord1, 3, 24, 0 }
 };
 
-// STATIC: %0x00AFB618
 static const CGxVertexAttrib s_vertexAttribsPCT3[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Color0, 0, 12, 0 },
@@ -91,7 +79,6 @@ static const CGxVertexAttrib s_vertexAttribsPCT3[] = {
     { GxVA_TexCoord2, 3, 32, 0 }
 };
 
-// STATIC: %0x00AFB668
 static const CGxVertexAttrib s_vertexAttribsPCT4[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Color0, 0, 12, 0 },
@@ -101,20 +88,17 @@ static const CGxVertexAttrib s_vertexAttribsPCT4[] = {
     { GxVA_TexCoord3, 3, 40, 0 }
 };
 
-// STATIC: %0x00AFB6C8
 static const CGxVertexAttrib s_vertexAttribsPT[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_TexCoord0, 3, 12, 0 }
 };
 
-// STATIC: %0x00AFB6E8
 static const CGxVertexAttrib s_vertexAttribsPT2[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_TexCoord0, 3, 12, 0 },
     { GxVA_TexCoord1, 3, 20, 0 }
 };
 
-// STATIC: %0x00AFB718
 static const CGxVertexAttrib s_vertexAttribsPBNT2[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_BlendWeight, 2, 12, 0 },
@@ -124,7 +108,6 @@ static const CGxVertexAttrib s_vertexAttribsPBNT2[] = {
     { GxVA_TexCoord1, 3, 40, 0 }
 };
 
-// STATIC: %0x00AFB778
 static const CGxVertexAttrib s_vertexAttribsPNC2[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -132,7 +115,6 @@ static const CGxVertexAttrib s_vertexAttribsPNC2[] = {
     { GxVA_Color1, 0, 28, 0 }
 };
 
-// STATIC: %0x00AFB7B8
 static const CGxVertexAttrib s_vertexAttribsPNC2T[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -141,7 +123,6 @@ static const CGxVertexAttrib s_vertexAttribsPNC2T[] = {
     { GxVA_TexCoord0, 3, 32, 0 }
 };
 
-// STATIC: %0x00AFB808
 static const CGxVertexAttrib s_vertexAttribsPNC2T_TS[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -151,7 +132,6 @@ static const CGxVertexAttrib s_vertexAttribsPNC2T_TS[] = {
     { GxVA_TexCoord1, 7, 40, 0 }
 };
 
-// STATIC: %0x00AFB868
 static const CGxVertexAttrib s_vertexAttribsPNC2T2[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_Normal, 4, 12, 0 },
@@ -161,7 +141,6 @@ static const CGxVertexAttrib s_vertexAttribsPNC2T2[] = {
     { GxVA_TexCoord1, 3, 40, 0 }
 };
 
-// STATIC: %0x00AFB8C8
 static const CGxVertexAttrib s_vertexAttribsPT2_iDD[] = {
     { GxVA_Position, 4, 0, 0 },
     { GxVA_TexCoord0, 3, 12, 0 },

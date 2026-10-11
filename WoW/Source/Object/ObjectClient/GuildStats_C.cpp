@@ -28,7 +28,7 @@ void GuildStats_C::Pack(CDataStore* msg) {
 }
 
 // PROVEN: 9bd6c1da IDENTICAL/NONE
-// OFFSET: 0x005FAD50
+// OFFSET: 0x005FAD50/0x14027FF50
 int32_t GuildStats_C::GetRankIndex(int32_t rankId) {
     for (int32_t i = 0; i < this->m_numRanks; i++) {
         if (this->m_rankIds[i] == rankId) {

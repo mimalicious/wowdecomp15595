@@ -35,7 +35,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB9400
+// STATIC: 0x00CA40F0
 int32_t CSimpleEditBox::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD39FC/0x140CB9710
@@ -44,7 +44,7 @@ CSimpleEditBox* CSimpleEditBox::s_currentFocus;
 // STATIC: 0x00DD39F8/0x140CB9708
 int32_t CSimpleEditBox::s_objectType;
 
-// STATIC: %0x00BB86B8
+// STATIC: 0x00CA334C
 const char* CSimpleEditBox::s_objectTypeName = "EditBox";
 
 // STATIC: 0x00CA3350

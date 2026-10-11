@@ -7,13 +7,13 @@
 #include "WoW/Source/DB/Rec/WorldStateUIRec.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// OFFSET: 0x009CD5F0
+// OFFSET: 0x009CD5F0/0x14075DD50
 static int32_t Script_GetNumWorldStateUI(lua_State* L) {
     lua_pushnumber(L, CGWorldStateInfo::m_worldStateUI.m_count);
     return 1;
 }
 
-// OFFSET: 0x009CD8A0
+// OFFSET: 0x009CD8A0/0x14075E130
 int32_t Script_GetWorldStateUIInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetWorldStateUIInfo(index)");

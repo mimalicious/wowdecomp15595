@@ -13,7 +13,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB8D88
+// STATIC: 0x00CA3A00
 int32_t CSimpleTexture::s_metatable = LUA_NOREF;
 
 // PROVEN: 7218d2b2 IDENTICAL/NONE

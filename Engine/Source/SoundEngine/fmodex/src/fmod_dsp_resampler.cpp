@@ -209,7 +209,7 @@ FMOD_RESULT DSPResampler::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC9AB0/0x1408939D0
 FMOD_RESULT DSPResampler::execute(float *inbuffer, float **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     FMOD_RESULT  result = FMOD_OK;

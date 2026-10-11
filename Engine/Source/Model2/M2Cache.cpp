@@ -19,16 +19,14 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRandom.h"
 
-// STATIC: %0x00D88D38
 CM2ModelHeap* g_modelPool;
 
 // STATIC: 0x00EBC4CC
 uint32_t CM2Cache::s_processorFeatures;
 
-// STATIC: %0x00D88D40
+// STATIC: 0x00EBC4D0
 static CM2Cache s_cache;
 
-// STATIC: %0x00ECDEA0
 static float s_randomTable[128];
 
 // PROVEN: b0fcfeec IDENTICAL/NONE

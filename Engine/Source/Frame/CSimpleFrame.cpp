@@ -33,25 +33,22 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB834C
+// STATIC: 0x00CA2FA4
 int32_t CSimpleFrame::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD128C
+// STATIC: 0x00DD3914
 int32_t CSimpleFrame::s_objectType;
 
-// STATIC: %0x00BB8260
+// STATIC: 0x00CA2EA0
 const char* CSimpleFrame::s_objectTypeName = "Frame";
 
-// STATIC: %0x00CD1288
 int32_t CSimpleFrame::s_frameCount;
 
-// STATIC: %0x00CD1290
+// STATIC: 0x00DD391C
 CDataAllocator CSimpleFrame::s_allocator(sizeof(CSimpleFrame), 100);
 
-// STATIC: %0x00BB8264
 static float s_dragThreshold = 0.0001f;
 
-// STATIC: %0x00CD127C
 bool CSimpleFrame::s_defaultPreload;
 
 // OFFSET: 0x00502600

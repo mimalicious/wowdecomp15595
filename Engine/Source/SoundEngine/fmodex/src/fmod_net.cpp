@@ -46,7 +46,7 @@ int   FMOD_Net_Timeout       = 5000;
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC7AB0/0x140891290
 FMOD_RESULT FMOD_Net_ParseHTTPStatus(char *buf, int buflen, int *version, int *statuscode)
 {
     int i, j, k;

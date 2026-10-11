@@ -78,7 +78,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AEBA50/0x1408B42A0
 FMOD_OUTPUT_DESCRIPTION_EX *OutputDSound::getDescriptionEx()
 {
     FMOD_memset(&dsoundoutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -239,7 +239,7 @@ FMOD_RESULT OutputDSound::registerDLL()
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00AE9AA0/0x1408B1D20
 BOOL CALLBACK FMOD_Output_DSound_EnumProc(LPGUID lpGUID, LPCSTR lpszDesc, LPCSTR lpszDrvName, LPVOID lpContext)
 {
     FMOD::OutputDSound *outputdsound = (FMOD::OutputDSound *)lpContext;
@@ -691,7 +691,7 @@ FMOD_RESULT OutputDSound::getDriverCapsEx(int id, FMOD_CAPS *caps, int *minfrequ
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AEAFE0/0x1408B35F0
 FMOD_RESULT OutputDSound::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, FMOD_SPEAKERMODE *speakermode, int dspbufferlength, int dspnumbuffers, int max2dchannels, int max3dchannels, void *extradriverdata)
 {
     FMOD_RESULT           result;

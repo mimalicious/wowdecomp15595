@@ -8,42 +8,39 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: %0x00BBD334
+// STATIC: 0x00CA83C4
 static uint8_t s_dirty = 1;
 
-// STATIC: %0x00BBD338
+// STATIC: 0x00CA83C8
 static uint32_t s_maxLights = 4;
 
-// STATIC: %0x00BBD370
+// STATIC: 0x00CA8400
 static float s_gridSize = 1024.0f;
 
-// STATIC: %0x00BBD374
+// STATIC: 0x00CA8404
 static float s_gridHalfSize = 512.0f;
 
-// STATIC: %0x00BBD378
+// STATIC: 0x00CA8408
 static TSList<CGxuLight, TSGetLink<CGxuLight> > s_lights;
 
-// STATIC: %0x00BBD384
+// STATIC: 0x00CA8414
 static TSList<CGxuLight, TSGetLink<CGxuLight> > s_freeLights;
 
-// STATIC: %0x00BBD390
+// STATIC: 0x00CA8420
 static TSExplicitList<CGxuLightLink, offsetof(CGxuLightLink, m_lightLink)> s_freeLinks;
 
-// STATIC: %0x00BBD39C
+// STATIC: 0x00CA842C
 static CLightList s_globalLights;
 
-// STATIC: %0x00CE3078
 static uint32_t s_lastHashval;
 
-// STATIC: %0x00CE3080
 static uint32_t s_frame;
 
-// STATIC: %0x00CE3090
+// STATIC: 0x00DD8AB4
 static TSHashTableReuse<CLightList, HASHKEY_DWORD> s_lightGrid;
 
 static const uint32_t s_lightQueueSize[2] = { 32, 32 };
 
-// STATIC: %0x00CE30C8
 static CGxuLightQueue s_lightQueue(s_lightQueueSize);
 
 // PROVEN: ec6a25f4 IDENTICAL/IDENTICAL
@@ -190,7 +187,7 @@ static CGxuLight* GxuLightCreateImpl() {
     return light;
 }
 
-// OFFSET: 0x00610ED0
+// OFFSET: 0x00610ED0/0x14029B600
 static void GxuLightApplyImpl(float x, float y, int32_t unused, const C3Vector& viewPos, uint32_t maxLights) {
     if (!s_lights.Head()) {
         return;
@@ -317,43 +314,32 @@ static void GxuLightUnlockImpl(CGxuLight* light) {
     }
 }
 
-// STATIC: %0x00BBD33C
 void (*GxuLightInitialize)() = GxuLightInitializeImpl;
 
-// STATIC: %0x00BBD340
 void (*GxuLightShutdown)() = GxuLightShutdownImpl;
 
-// STATIC: %0x00BBD344
 CGxuLight* (*GxuLightCreate)() = GxuLightCreateImpl;
 
-// STATIC: %0x00BBD348
 void (*GxuLightDestroy)(CGxuLight* light) = GxuLightDestroyImpl;
 
-// STATIC: %0x00BBD34C
+// STATIC: 0x00CA83DC
 CGxLight* (*GxuLightLock)(CGxuLight* light) = GxuLightLockImpl;
 
-// STATIC: %0x00BBD350
+// STATIC: 0x00CA83E0
 void (*GxuLightUnlock)(CGxuLight* light) = GxuLightUnlockImpl;
 
-// STATIC: %0x00BBD354
 void (*GxuLightApply)(float x, float y, int32_t unused, const C3Vector& viewPos, uint32_t maxLights) = GxuLightApplyImpl;
 
-// STATIC: %0x00BBD358
 int32_t (*GxuLightGetEnabled)(CGxuLight* light) = GxuLightGetEnabledImpl;
 
-// STATIC: %0x00BBD35C
 void (*GxuLightSetEnabled)(CGxuLight* light, bool enabled) = GxuLightSetEnabledImpl;
 
-// STATIC: %0x00BBD360
 void (*GxuLightSetMaxLights)(uint32_t maxLights) = GxuLightSetMaxLightsImpl;
 
-// STATIC: %0x00BBD364
 float (*GxuLightGetGridSize)() = GxuLightGetGridSizeImpl;
 
-// STATIC: %0x00BBD368
 void (*GxuLightSetGridSize)(float gridSize) = GxuLightSetGridSizeImpl;
 
-// STATIC: %0x00BBD36C
 void (*GxuLightInvalidate)() = GxuLightInvalidateImpl;
 
 // INLINED

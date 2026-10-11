@@ -395,7 +395,7 @@ static int singlematch (int c, const char *p, const char *ep) {
 static const char *match (MatchState *ms, const char *s, const char *p);
 
 
-// OFFSET: 0x00A2BEA0
+// OFFSET: 0x00A2BEA0/0x1407D45C0
 static const char *matchbalance (MatchState *ms, const char *s,
                                    const char *p) {
   if (*p == 0 || *(p+1) == 0)
@@ -433,7 +433,7 @@ static const char *max_expand (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: 0x00A2BFB0
+// OFFSET: 0x00A2BFB0/0x1407D4660
 static const char *min_expand (MatchState *ms, const char *s,
                                  const char *p, const char *ep) {
   for (;;) {
@@ -447,7 +447,7 @@ static const char *min_expand (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: 0x00A2C040
+// OFFSET: 0x00A2C040/0x1407D47F0
 static const char *start_capture (MatchState *ms, const char *s,
                                     const char *p, int what) {
   const char *res;
@@ -462,7 +462,7 @@ static const char *start_capture (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: 0x00A2C090
+// OFFSET: 0x00A2C090/0x1407D4880
 static const char *end_capture (MatchState *ms, const char *s,
                                   const char *p) {
   int l = capture_to_close(ms);
@@ -474,7 +474,7 @@ static const char *end_capture (MatchState *ms, const char *s,
 }
 
 
-// OFFSET: 0x00A2C0F0
+// OFFSET: 0x00A2C0F0/0x1407D4930
 static const char *match_capture (MatchState *ms, const char *s, int l) {
   size_t len;
   l = check_capture(ms, l);
@@ -486,7 +486,7 @@ static const char *match_capture (MatchState *ms, const char *s, int l) {
 }
 
 
-// OFFSET: 0x00A2C180
+// OFFSET: 0x00A2C180/0x1407D49D0
 static const char *match (MatchState *ms, const char *s, const char *p) {
   init: /* using goto's to optimize tail recursion */
   switch (*p) {
@@ -622,7 +622,7 @@ static int push_captures (MatchState *ms, const char *s, const char *e) {
 }
 
 
-// OFFSET: 0x00A2C5D0
+// OFFSET: 0x00A2C5D0/0x1407D4EA0
 static int str_find_aux (lua_State *L, int find) {
   size_t l1, l2;
   const char *s = luaL_checklstring(L, 1, &l1);
@@ -748,7 +748,7 @@ static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
 }
 
 
-// OFFSET: 0x00A2CAC0
+// OFFSET: 0x00A2CAC0/0x1407D54A0
 static void add_value (MatchState *ms, luaL_Buffer *b, const char *s,
                                                        const char *e) {
   lua_State *L = ms->L;
@@ -1012,7 +1012,7 @@ static void createmetatable (lua_State *L) {
 /*
 ** Open string library
 */
-// OFFSET: 0x00A2D330
+// OFFSET: 0x00A2D330/0x1407D5DD0
 LUALIB_API int luaopen_string (lua_State *L) {
   luaL_register(L, LUA_STRLIBNAME, strlib);
 #if defined(LUA_COMPAT_GFIND)

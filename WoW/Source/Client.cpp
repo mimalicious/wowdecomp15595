@@ -292,16 +292,14 @@ static uint32_t s_numUpdateArchives;
 // STATIC: 0x00ED742C
 PreloadList* s_startWorldCommonList;
 
-// STATIC: #0x00AB6350
 WowClientDB<Startup_StringsRec> g_startup_StringsDB;
 
-// STATIC: #0x00AD2FE0
+// STATIC: 0x00C9A938
 const char* s_iniLocaleNames[9] = { "enUS", "koKR", "frFR", "deDE", "zhCN", "zhTW", "esES", "esMX", "ruRU" };
 
 // STATIC: 0x00C9A9CC
 uint32_t s_localeIds[15] = { 'deDE', 'enGB', 'enUS', 'esES', 'frFR', 'koKR', 'zhCN', 'zhTW', 'enCN', 'enTW', 'esMX', 'ruRU', 'enUS', 'ptBR', 'ptPT' };
 
-// STATIC: #0x00B2FA18
 static uint32_t s_firstBaseArchive;
 
 // STATIC: 0x00D364E8
@@ -310,24 +308,19 @@ CRndSeed g_rndSeed(0);
 // STATIC: 0x00D364D4
 static TSGrowableArray<SArchive*> s_archiveHandles;
 
-// STATIC: #0x00B2FE48
 static char s_iniLocale[5];
-// STATIC: #0x00AB6128
 static const EGxTexFilter s_textureFilterModes[] = { GxTex_LinearMipNearest, GxTex_LinearMipLinear, GxTex_Anisotropic, GxTex_Anisotropic, GxTex_Anisotropic, GxTex_Anisotropic };
 
-// STATIC: #0x00AB6140
 static const uint32_t s_textureMaxAnisotropy[] = { 1, 1, 2, 4, 8, 16 };
 
-// STATIC: #0x00B2F050
 static uint32_t s_streamingDiag;
 
-// STATIC: #0x00B2F059
 static char s_streamingError[2051];
 
 // STATIC: 0x00D36334
 HEVENTCONTEXT g_clientEventContext;
 
-// STATIC: #0x00B2F9A4
+// STATIC: 0x00D36474
 static int32_t s_closeErrorStringId;
 
 // STATIC: 0x00D364A8
@@ -345,13 +338,10 @@ bool g_hasIsoLocale[15];
 // STATIC: 0x00D732FC/0x140DABA80
 int32_t s_locale;
 
-// STATIC: #0x00B2F040
 static const char* s_directory;
 
-// STATIC: #0x00B2F044
 static float s_spawnRotation;
 
-// STATIC: #0x00B2F048
 static uint32_t s_zoneID;
 
 // STATIC: 0x00D36350
@@ -366,37 +356,26 @@ static int32_t s_clientTaxiBenchIsOnTaxi;
 // STATIC: 0x00D3647C
 static int32_t s_clientTaxiBenchEnabled;
 
-// STATIC: #0x00B2F9B0
 static double s_clientTaxiBenchMinFPS;
 
-// STATIC: #0x00B2F9B8
 static double s_clientTaxiBenchMaxFPS;
 
-// STATIC: #0x00B2F9C0
 static double s_clientTaxiBenchTotalTime;
 
-// STATIC: #0x00B2F9C8
 static uint32_t s_clientTaxiBenchTotalFrames;
 
-// STATIC: #0x00B2F9CC
 static uint32_t s_clientTaxiBenchDelayTime;
 
-// STATIC: #0x00B2F9D0
 static uint64_t s_clientTaxiTimestamp;
 
-// STATIC: #0x00B2F9E0
 uint8_t s_botCheckEnabled;
 
-// STATIC: #0x00B2F9E4
 static uint32_t s_botCheckStartTime;
 
-// STATIC: #0x00B2F9E8
 int32_t s_botCheckDelay;
 
-// STATIC: #0x00B2FA0C
 volatile long s_additionalCheckArmed;
 
-// STATIC: #0x00B2FA1C
 static C3Vector s_spawnPosition;
 
 // STATIC: 0x00D36518

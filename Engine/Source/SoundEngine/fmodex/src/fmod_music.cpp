@@ -333,7 +333,7 @@ signed short gITFineTuneTable[FMUSIC_ITFINETUNETABLESIZE] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE4290/0x1408AF7A0
 FMOD_RESULT MusicSong::play()
 {
     FMOD_RESULT result;

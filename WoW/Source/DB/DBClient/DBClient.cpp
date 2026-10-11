@@ -21,16 +21,13 @@ const char* g_localeNames[15] = { "deDE", "enGB", "enUS", "esES", "frFR", "koKR"
 // STATIC: 0x00C9AD60
 static int32_t s_physicalDamageClassID = -1;
 
-// STATIC: #0x00C5D660
+// STATIC: 0x00D97E8C
 static const ItemSubClassRec* s_unarmedWeapon;
 
-// STATIC: #0x00C5D664
 static const ItemClassRec* s_weaponItemClass;
 
-// STATIC: #0x00C5D668
 static TSFixedArray<const ResistancesRec*> s_resistances;
 
-// STATIC: #0x00C5D674
 static TSFixedArray<uint32_t> s_terrainTypeSoundIDs;
 
 struct SPELLACTIVATIONOVERLAY : public TSHashObject<SPELLACTIVATIONOVERLAY, HASHKEY_NONE> {
@@ -1003,10 +1000,10 @@ WowClientDB<SoundFilterRec> g_soundFilterDB;
 // STATIC: 0x00D9A9B4
 WowClientDB<SoundFilterElemRec> g_soundFilterElemDB;
 
-// STATIC: %0x00C99138
+// STATIC: 0x00D98F50
 WowClientDB<DeclinedWordRec> g_declinedWordDB;
 
-// STATIC: %0x00C99154
+// STATIC: 0x00D98F6C
 WowClientDB<DeclinedWordCasesRec> g_declinedWordCasesDB;
 
 // STATIC: 0x00D98648

@@ -146,7 +146,7 @@ int                      File::gBufferSize        = FILE_SECTORSIZE;
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A928A0
 void fileThreadFunc(void *data)
 {
     FileThread *fileThread = (FileThread *)data;
@@ -240,7 +240,7 @@ FileThread::FileThread()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A928B0/0x140852400
 FMOD_RESULT FileThread::init(int devicetype, bool owned)
 {
     FMOD_RESULT result;
@@ -318,7 +318,7 @@ FMOD_RESULT FileThread::release()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A92930/0x1408524A0
 FMOD_RESULT File::getFileThread()
 {
     FMOD_RESULT     result;
@@ -398,7 +398,7 @@ FMOD_RESULT File::getFileThread()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A92730/0x140852250
 File::File()
 {
     init(0, gBufferSize);
@@ -418,7 +418,7 @@ File::File()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A916D0/0x140851040
 FMOD_RESULT File::init(unsigned int filesize, int blocksize)
 {
     mBlockSize           = blocksize;
@@ -470,7 +470,7 @@ FMOD_RESULT File::init(unsigned int filesize, int blocksize)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A91790/0x140851100
 FMOD_RESULT File::shutDown()
 {
     LinkedListNode *current, *next;
@@ -727,7 +727,7 @@ bool File::readyForClose()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A91A30/0x140851410
 FMOD_RESULT File::flip(bool frommainthread)
 {
     FMOD_RESULT   result = FMOD_OK;
@@ -869,7 +869,7 @@ FMOD_RESULT File::seekAndReset()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A91C90/0x1408516B0
 FMOD_RESULT File::checkBufferedStatus()
 {
     FMOD_RESULT result;
@@ -1011,7 +1011,7 @@ FMOD_RESULT File::checkBufferedStatus()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A91ED0/0x140851900
 FMOD_RESULT F_API File::read(void *buffer, unsigned int size, unsigned int count, unsigned int *rd)
 {
     FMOD_RESULT  result = FMOD_OK;
@@ -1582,7 +1582,7 @@ FMOD_RESULT File::getDword(signed int *val)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A92400/0x140851F00
 FMOD_RESULT F_API File::seek(int pos, int mode)
 {
     FMOD_RESULT  result = FMOD_OK;
@@ -1769,7 +1769,7 @@ FMOD_RESULT File::getStartOffset(unsigned int *offset)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A92A00/0x1408525A0
 FMOD_RESULT File::enableDoubleBuffer(unsigned int sizebytes)
 {
     FMOD_RESULT result;

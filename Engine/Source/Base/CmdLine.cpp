@@ -2,7 +2,6 @@
 #include "Engine/Source/Base/CmdLine.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00AFE368
 static const _ARGLIST s_argList[] = {
     { SCMD_TYPE_BOOL, CMD_D3D, "d3d", NULL },
     { SCMD_TYPE_BOOL, CMD_D3D9EX, "d3d9ex", NULL },
@@ -31,7 +30,7 @@ int32_t CmdLineGetBool(CMDOPT opt) {
 // PROVEN: ed2ac2bb IDENTICAL/IDENTICAL
 // OFFSET: 0x00871F80/0x1405A8260
 const char* CmdLineGetString(CMDOPT opt) {
-    // STATIC: %0x00D93228
+    // STATIC: 0x00EC6A10
     static char buffer[260];
 
     SCmdGetString(opt, buffer, sizeof(buffer));

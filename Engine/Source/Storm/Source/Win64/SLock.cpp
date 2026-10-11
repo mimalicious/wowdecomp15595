@@ -8,47 +8,34 @@
 
 #define SLOCK_SPIN_NOPS() __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop(); __nop();
 
-// STATIC: %0x00BB4108
 static uint32_t s_spinCount = 1;
 
-// STATIC: %0x00C9DE30
 static volatile LONG s_eventCount[2];
 
-// STATIC: %0x00C9DE38
 static volatile LONG s_freeIndex[2];
 
-// STATIC: %0x00C9DE40
 static volatile LONG s_allocIndex[2];
 
-// STATIC: %0x00C9DE48
 static volatile LONG s_eventIds[2][2048];
 
-// STATIC: %0x00CA1E48
 static HANDLE s_events[2][1024];
 
-// STATIC: #0x00CB49A0
 static int32_t s_refCount;
 
-// STATIC: #0x00CB49A4
 static CInitCritSect s_refCritsect;
 
-// STATIC: [#0x00CB49C8, #0x00CB5DC8]
 template <class T>
 CDebugLockEntry TDebugLock<T>::s_entries[256];
 
-// STATIC: [#0x00CB71C8, #0x00CB71F0]
 template <class T>
 uint32_t TDebugLock<T>::s_freeEntry;
 
-// STATIC: [#0x00CB71CC, #0x00CB71F4]
 template <class T>
 CInitCritSect TDebugLock<T>::s_critsect;
 
-// STATIC: [#0x00CB71EC, #0x00CB7214]
 template <class T>
 CDebugLock* TDebugLock<T>::s_lockList;
 
-// STATIC: %0x00CA66C0
 static volatile LONG s_stallCount;
 
 // OFFSET: 0x004BAFC0/0x1400F43C0

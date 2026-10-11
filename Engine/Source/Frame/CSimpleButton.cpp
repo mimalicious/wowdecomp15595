@@ -21,13 +21,13 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB9130
+// STATIC: 0x00CA3DC8
 int32_t CSimpleButton::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD39C8/0x140CB96B8
 int32_t CSimpleButton::s_objectType;
 
-// STATIC: %0x00BB86A0
+// STATIC: 0x00CA3334
 const char* CSimpleButton::s_objectTypeName = "Button";
 
 // STATIC: 0x00DD39CC

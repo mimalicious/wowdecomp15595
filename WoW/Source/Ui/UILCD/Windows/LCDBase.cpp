@@ -18,7 +18,7 @@ CLCDBase::CLCDBase() {
     this->m_crForegroundColor = RGB(255, 255, 255);
 }
 
-// OFFSET: [0x00B40A70, 0x00B40C10]
+// OFFSET: [0x00B40A70/0x14090EA10, 0x00B40C10]
 CLCDBase::~CLCDBase() {
 }
 
@@ -145,7 +145,7 @@ void CLCDBase::SetLogicalSize(SIZE& size) {
     this->m_sizeLogical = size;
 }
 
-// OFFSET: [0x00B40BA0]
+// OFFSET: [0x00B40BA0/0x14056DDC0]
 SIZE& CLCDBase::GetLogicalSize() {
     return this->m_sizeLogical;
 }

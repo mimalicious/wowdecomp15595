@@ -5,7 +5,6 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/Hash.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// STATIC: #0x00B38338
 System_SFile::SignatureHashTable System_SFile::s_signatures;
 
 // OFFSET: 0x007B6530

@@ -85,7 +85,7 @@ static void traceexec (lua_State *L, const Instruction *pc) {
 }
 
 
-// OFFSET: 0x00421580
+// OFFSET: 0x00421580/0x140026120
 static void callTMres (lua_State *L, StkId res, const TValue *f,
                         const TValue *p1, const TValue *p2) {
   ptrdiff_t result = savestack(L, res);
@@ -102,7 +102,7 @@ static void callTMres (lua_State *L, StkId res, const TValue *f,
 
 
 
-// OFFSET: 0x004216E0
+// OFFSET: 0x004216E0/0x1400262C0
 static void callTM (lua_State *L, const TValue *f, const TValue *p1,
                     const TValue *p2, const TValue *p3) {
   setobj2s(L, L->top, f);  /* push function */
@@ -115,7 +115,7 @@ static void callTM (lua_State *L, const TValue *f, const TValue *p1,
 }
 
 
-// OFFSET: 0x00421830
+// OFFSET: 0x00421830/0x140026430
 void luaV_gettable (lua_State *L, const TValue *t, TValue *key, StkId val) {
   int loop;
   for (loop = 0; loop < MAXTAGLOOP; loop++) {
@@ -144,7 +144,7 @@ void luaV_gettable (lua_State *L, const TValue *t, TValue *key, StkId val) {
 }
 
 
-// OFFSET: 0x004219A0
+// OFFSET: 0x004219A0/0x1400265D0
 void luaV_settable (lua_State *L, const TValue *t, TValue *key, StkId val) {
   int loop;
   for (loop = 0; loop < MAXTAGLOOP; loop++) {
@@ -240,7 +240,7 @@ static int l_strcmp (const TString *ls, const TString *rs) {
 }
 
 
-// OFFSET: 0x00421D00
+// OFFSET: 0x00421D00/0x140026AA0
 int luaV_lessthan (lua_State *L, const TValue *l, const TValue *r) {
   int res;
   if (ttype(l) != ttype(r))
@@ -255,7 +255,7 @@ int luaV_lessthan (lua_State *L, const TValue *l, const TValue *r) {
 }
 
 
-// OFFSET: 0x00421D90
+// OFFSET: 0x00421D90/0x140026B60
 static int lessequal (lua_State *L, const TValue *l, const TValue *r) {
   int res;
   if (ttype(l) != ttype(r))
@@ -272,7 +272,7 @@ static int lessequal (lua_State *L, const TValue *l, const TValue *r) {
 }
 
 
-// OFFSET: 0x00421E30
+// OFFSET: 0x00421E30/0x140026C50
 int luaV_equalval (lua_State *L, const TValue *t1, const TValue *t2) {
   const TValue *tm;
   lua_assert(ttype(t1) == ttype(t2));
@@ -300,7 +300,7 @@ int luaV_equalval (lua_State *L, const TValue *t1, const TValue *t2) {
 }
 
 
-// OFFSET: 0x00421F20
+// OFFSET: 0x00421F20/0x140026DA0
 void luaV_concat (lua_State *L, int total, int last) {
   do {
     StkId top = L->base + last + 1;
@@ -336,7 +336,7 @@ void luaV_concat (lua_State *L, int total, int last) {
 }
 
 
-// OFFSET: 0x00422100
+// OFFSET: 0x00422100/0x1400270A0
 static void Arith (lua_State *L, StkId ra, const TValue *rb,
                    const TValue *rc, TMS op) {
   TValue tempb, tempc;
@@ -400,7 +400,7 @@ static void Arith (lua_State *L, StkId ra, const TValue *rb,
 
 
 
-// OFFSET: 0x00422300
+// OFFSET: 0x00422300/0x140027320
 void luaV_execute (lua_State *L, int nexeccalls) {
   LClosure *cl;
   StkId base;
@@ -821,7 +821,7 @@ void luaV_execute (lua_State *L, int nexeccalls) {
 }
 
 
-// OFFSET: 0x004237B0
+// OFFSET: 0x004237B0/0x140028B30
 void luaV_execute_profile (lua_State *L, int nexeccalls) {
   LClosure *cl;
   StkId base;

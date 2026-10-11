@@ -11,10 +11,8 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00B38344
 Blizzard::Thread::LocalObject<System_SFile::RawReadInfo> System_SFile::s_rawReadInfo;
 
-// STATIC: #0x00AB9090
 const char* System_SFile::ListFileParser::k_specialFiles[3] = { "(signature)", "(listfile)", "(attributes)" };
 
 // INLINED

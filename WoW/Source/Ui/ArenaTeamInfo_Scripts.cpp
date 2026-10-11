@@ -76,7 +76,7 @@ static int32_t Script_GetArenaTeamGdfInfo(lua_State* L) {
     return 2;
 }
 
-// OFFSET: 0x009A90C0
+// OFFSET: 0x009A90C0/0x140730210
 static void ArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         FrameScript_SignalEvent(SCRIPT_EVENT_ARENA_TEAM_UPDATE, NULL);

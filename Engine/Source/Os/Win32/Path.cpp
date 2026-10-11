@@ -7,7 +7,6 @@
 #include "Engine/Source/Os/Path.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D93838
 static CommandLineUTF8 s_commandLineUTF8;
 
 // OFFSET: 0x00875FA0

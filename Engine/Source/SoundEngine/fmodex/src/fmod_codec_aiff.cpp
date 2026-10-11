@@ -55,7 +55,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ABAB90/0x140881C80
 FMOD_CODEC_DESCRIPTION_EX *CodecAIFF::getDescriptionEx()
 {
     FMOD_memset(&aiffcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));

@@ -26,7 +26,6 @@ struct GlTexEnvOp {
     GLenum m_combine;
 };
 
-// STATIC: %0x00C0E848
 static GlTexEnvOp s_texEnvOps[6] = {
     { GL_REPLACE, 1.0f, 0x8578, GL_TEXTURE, 0x8576, GL_MODULATE },
     { GL_MODULATE, 2.0f, 0x8578, GL_TEXTURE, 0x8576, GL_MODULATE },
@@ -36,28 +35,20 @@ static GlTexEnvOp s_texEnvOps[6] = {
     { GL_REPLACE, 1.0f, GL_TEXTURE, 0x8578, 0x8578, 0x8575 },
 };
 
-// STATIC: %0x00C0E8F4
 static GLfloat s_texEnvColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-// STATIC: %0x00AFBFB8
 static const GLint s_glAttribSize[8] = { 4, 4, 4, 2, 3, 2, 1, 4 };
 
-// STATIC: %0x00AFBFD8
 static const GLenum s_glAttribType[8] = { GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_FLOAT, GL_FLOAT, GL_SHORT, GL_FLOAT, GL_FLOAT };
 
-// STATIC: %0x00AFBFF8
 static const GLboolean s_glAttribNormalized[8] = { GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE };
 
-// STATIC: %0x00C0E7E0
 static GLenum s_glBlendSrc[13] = { GL_ONE, GL_ONE, GL_SRC_ALPHA, GL_SRC_ALPHA, GL_DST_COLOR, GL_DST_COLOR, GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_ONE, GL_CONSTANT_ALPHA_EXT, GL_SRC_ALPHA_SATURATE };
 
-// STATIC: %0x00C0E814
 static GLenum s_glBlendDst[13] = { GL_ZERO, GL_ZERO, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO, GL_SRC_COLOR, GL_ONE, GL_ONE, GL_ZERO, GL_ZERO, GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA_EXT, GL_ONE };
 
-// STATIC: %0x00C0E8D8
 static GLenum s_glDepthFunc[4] = { GL_LEQUAL, GL_EQUAL, GL_GEQUAL, GL_LESS };
 
-// STATIC: %0x00C0E8E8
 static GLenum s_glColorMaterial[3] = { GL_AMBIENT_AND_DIFFUSE, GL_SPECULAR, GL_EMISSION };
 
 // PROVEN: 6d58ef19 IDENTICAL/IDENTICAL
@@ -1044,7 +1035,6 @@ void CGxDeviceOpenGl::IStateSyncXforms() {
         this->DsSet(Ds_ActiveTexture, tmu, 0);
         this->DsSet(Ds_MatrixMode, GL_TEXTURE, 0);
 
-        // STATIC: %0x00D930C8
         static C44Matrix s_matrix;
 
         int32_t identity;

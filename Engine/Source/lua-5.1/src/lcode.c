@@ -85,7 +85,7 @@ static int condjump (FuncState *fs, OpCode op, int A, int B, int C) {
 }
 
 
-// OFFSET: 0x0042E4B0
+// OFFSET: 0x0042E4B0/0x140035E30
 static void fixjump (FuncState *fs, int pc, int dest) {
   Instruction *jmp = &fs->f->code[pc];
   int offset = dest-(pc+1);
@@ -163,7 +163,7 @@ static void removevalues (FuncState *fs, int list) {
 }
 
 
-// OFFSET: 0x0042E670
+// OFFSET: 0x0042E670/0x140035FA0
 static void patchlistaux (FuncState *fs, int list, int vtarget, int reg,
                           int dtarget) {
   while (list != NO_JUMP) {
@@ -203,7 +203,7 @@ void luaK_patchtohere (FuncState *fs, int list) {
 }
 
 
-// OFFSET: 0x0042E760
+// OFFSET: 0x0042E760/0x140036150
 void luaK_concat (FuncState *fs, int *l1, int l2) {
   if (l2 == NO_JUMP) return;
   else if (*l1 == NO_JUMP)
@@ -431,7 +431,7 @@ static void discharge2anyreg (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: 0x0042F240
+// OFFSET: 0x0042F240/0x140036DA0
 static void exp2reg (FuncState *fs, expdesc *e, int reg) {
   discharge2reg(fs, e, reg);
   if (e->k == VJMP)
@@ -456,7 +456,7 @@ static void exp2reg (FuncState *fs, expdesc *e, int reg) {
 }
 
 
-// OFFSET: 0x0042F360
+// OFFSET: 0x0042F360/0x140036F80
 void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   freeexp(fs, e);
@@ -465,7 +465,7 @@ void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: 0x0042F3E0
+// OFFSET: 0x0042F3E0/0x140037080
 int luaK_exp2anyreg (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   if (e->k == VNONRELOC) {
@@ -520,7 +520,7 @@ int luaK_exp2RK (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: 0x0042F570
+// OFFSET: 0x0042F570/0x140037260
 void luaK_storevar (FuncState *fs, expdesc *var, expdesc *ex) {
   switch (var->k) {
     case VLOCAL: {
@@ -577,7 +577,7 @@ static void invertjump (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: 0x0042F720
+// OFFSET: 0x0042F720/0x140037480
 static int jumponcond (FuncState *fs, expdesc *e, int cond) {
   if (e->k == VRELOCABLE) {
     Instruction ie = getcode(fs, e);
@@ -593,7 +593,7 @@ static int jumponcond (FuncState *fs, expdesc *e, int cond) {
 }
 
 
-// OFFSET: 0x0042F7A0
+// OFFSET: 0x0042F7A0/0x140037560
 void luaK_goiftrue (FuncState *fs, expdesc *e) {
   int pc;  /* pc of last jump */
   luaK_dischargevars(fs, e);
@@ -722,7 +722,7 @@ static int constfolding (OpCode op, expdesc *e1, expdesc *e2) {
 }
 
 
-// OFFSET: 0x0042F9C0
+// OFFSET: 0x0042F9C0/0x1400378D0
 static void codearith (FuncState *fs, OpCode op, expdesc *e1, expdesc *e2) {
   if (constfolding(op, e1, e2))
     return;
@@ -743,7 +743,7 @@ static void codearith (FuncState *fs, OpCode op, expdesc *e1, expdesc *e2) {
 }
 
 
-// OFFSET: 0x0042FAC0
+// OFFSET: 0x0042FAC0/0x1400379E0
 static void codecomp (FuncState *fs, OpCode op, int cond, expdesc *e1,
                                                           expdesc *e2) {
   int o1 = luaK_exp2RK(fs, e1);
@@ -760,7 +760,7 @@ static void codecomp (FuncState *fs, OpCode op, int cond, expdesc *e1,
 }
 
 
-// OFFSET: 0x0042FB60
+// OFFSET: 0x0042FB60/0x140037AC0
 void luaK_prefix (FuncState *fs, UnOpr op, expdesc *e) {
   expdesc e2;
   e2.t = e2.f = NO_JUMP; e2.k = VKNUM; e2.u.nval = 0;
@@ -782,7 +782,7 @@ void luaK_prefix (FuncState *fs, UnOpr op, expdesc *e) {
 }
 
 
-// OFFSET: 0x0042FC00
+// OFFSET: 0x0042FC00/0x140037BE0
 void luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
   switch (op) {
     case OPR_AND: {
@@ -810,7 +810,7 @@ void luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
 }
 
 
-// OFFSET: 0x0042FCB0
+// OFFSET: 0x0042FCB0/0x140037C50
 void luaK_posfix (FuncState *fs, BinOpr op, expdesc *e1, expdesc *e2) {
   switch (op) {
     case OPR_AND: {

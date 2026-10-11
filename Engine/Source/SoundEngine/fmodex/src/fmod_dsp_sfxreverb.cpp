@@ -132,7 +132,7 @@ FMOD_DSP_PARAMETERDESC dspsfxreverb_param[] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A951A0/0x1408552A0
 FMOD_DSP_DESCRIPTION_EX *DSPSfxReverb::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU

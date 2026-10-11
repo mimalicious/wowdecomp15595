@@ -90,7 +90,7 @@ FMOD_RESULT DSPWaveTable::addInput(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC36F0/0x14088C050
 FMOD_RESULT DSPWaveTable::execute(float *inbuffer, float **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     *outbuffer = inbuffer;

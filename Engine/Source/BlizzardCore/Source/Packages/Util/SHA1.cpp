@@ -3,7 +3,6 @@
 #include <malloc.h>
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/SHA1.h"
 
-// STATIC: #0x00A505D8
 static const uint8_t s_padding[64] = { 0x80 };
 
 // INLINED

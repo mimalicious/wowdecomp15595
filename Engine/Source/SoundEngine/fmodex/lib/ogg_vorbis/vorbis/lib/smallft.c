@@ -1246,7 +1246,7 @@ void drft_init(drft_lookup *l,int n){
   fdrffti(n, l->trigcache, l->splitcache);
 }
 
-// INLINED
+// OFFSET: 0x00B47860/0x140916DC0
 void drft_clear(drft_lookup *l){
   if(l){
     if(l->trigcache)_ogg_free(l->trigcache);

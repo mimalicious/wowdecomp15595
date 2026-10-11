@@ -13,22 +13,16 @@
 #include "Engine/Source/Gx/CGxDeviceD3d/CGxDeviceD3d.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00AD8CE8
 static D3DMULTISAMPLE_TYPE s_d3dMultisampleTypes[9] = { D3DMULTISAMPLE_NONE, D3DMULTISAMPLE_2_SAMPLES, D3DMULTISAMPLE_4_SAMPLES, D3DMULTISAMPLE_6_SAMPLES, D3DMULTISAMPLE_8_SAMPLES, D3DMULTISAMPLE_10_SAMPLES, D3DMULTISAMPLE_12_SAMPLES, D3DMULTISAMPLE_14_SAMPLES, D3DMULTISAMPLE_16_SAMPLES };
 
-// STATIC: #0x00AD8D0C
 static D3DFORMAT s_d3dDepthFormats[4] = { D3DFMT_D16, D3DFMT_D24X8, D3DFMT_D24S8, D3DFMT_D32 };
 
-// STATIC: #0x00AD8D1C
 static D3DFORMAT s_d3dAdapterFormats[3] = { D3DFMT_R5G6B5, D3DFMT_X8R8G8B8, D3DFMT_A8R8G8B8 };
 
-// STATIC: #0x00AD8D28
 static D3DMULTISAMPLE_TYPE s_d3d9ExMultisampleTypes[9] = { D3DMULTISAMPLE_NONE, D3DMULTISAMPLE_2_SAMPLES, D3DMULTISAMPLE_4_SAMPLES, D3DMULTISAMPLE_6_SAMPLES, D3DMULTISAMPLE_8_SAMPLES, D3DMULTISAMPLE_10_SAMPLES, D3DMULTISAMPLE_12_SAMPLES, D3DMULTISAMPLE_14_SAMPLES, D3DMULTISAMPLE_16_SAMPLES };
 
-// STATIC: #0x00AD8D4C
 static D3DFORMAT s_d3d9ExDepthFormats[4] = { D3DFMT_D16, D3DFMT_D24X8, D3DFMT_D24S8, D3DFMT_D32 };
 
-// STATIC: #0x00AD8D5C
 static D3DFORMAT s_d3d9ExAdapterFormats[3] = { D3DFMT_R5G6B5, D3DFMT_X8R8G8B8, D3DFMT_A8R8G8B8 };
 
 // OFFSET: 0x00843F60
@@ -144,7 +138,7 @@ static uint16_t HToI(const char* h, int32_t count) {
     return value;
 }
 
-// OFFSET: 0x0084FC20
+// OFFSET: 0x0084FC20/0x14057EC50
 int32_t CGxDevice::DeviceAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo) {
     int32_t result = 0;
     vendorID = 0xFFFF;
@@ -231,7 +225,7 @@ int32_t CGxDevice::AdapterD3dAvailable() {
     return result;
 }
 
-// OFFSET: 0x0084FDB0
+// OFFSET: 0x0084FDB0/0x14057EF20
 int32_t CGxDevice::DeviceAdapterInfer(uint16_t& deviceID) {
     int32_t result = 0;
     deviceID = 0;
@@ -940,7 +934,7 @@ int32_t CGxDevice::IWindowCreate(void* window, CGxFormat& format, int32_t show) 
     return hwnd != NULL;
 }
 
-// OFFSET: 0x0084FF20
+// OFFSET: 0x0084FF20/0x14057F120
 int32_t CGxDevice::D3dAdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     HINSTANCE d3dLib = NULL;
     LPDIRECT3D9 d3d = NULL;

@@ -4,7 +4,6 @@
 
 extern "C" {
 
-// STATIC: #0x00A58F70
 const float s_ipmrTableA58F70[4][3] = {
     { 0.9f, 0.93333334f, 0.96666664f },
     { 0.45f, 0.9f, 0.95f },

@@ -50,14 +50,14 @@ int32_t CKBArticle::BeginLoading(int32_t articleId, int32_t searchType) {
     return 1;
 }
 
-// OFFSET: 0x009FC940
+// OFFSET: 0x009FC940/0x14079A550
 void CKBArticle::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_ARTICLE_LOAD_SUCCESS, NULL);
     }
 }
 
-// OFFSET: 0x009FC960
+// OFFSET: 0x009FC960/0x14079A570
 void CKBArticle::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_ARTICLE_LOAD_FAILURE, NULL);

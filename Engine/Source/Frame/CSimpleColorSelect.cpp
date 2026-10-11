@@ -26,13 +26,13 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/TabardModelFrame.h"
 
-// STATIC: %0x00BB9920
+// STATIC: 0x00CA45F8
 int32_t CSimpleColorSelect::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3ABC/0x140CB9858
 int32_t CSimpleColorSelect::s_objectType;
 
-// STATIC: %0x00BB8818
+// STATIC: 0x00CA3488
 const char* CSimpleColorSelect::s_objectTypeName = "ColorSelect";
 
 // STATIC: 0x00DD3AC0

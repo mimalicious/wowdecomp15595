@@ -25,22 +25,16 @@
 #include "WoW/Source/DayNight/DayNight.h"
 #include "Engine/Source/Event/FrameTime.h"
 
-// STATIC: %0x00C2B574
 static float s_twoPi = 6.2831855f;
 
-// STATIC: %0x00C2B578
 static float s_netherCombineConstants[4] = { 0.6f, 0.6f, 0.78f, 0.0f };
 
-// STATIC: %0x00C2B588
 static int32_t s_propagateFogRate = 30;
 
-// STATIC: %0x00ECDD50
 static uint32_t* s_seedTexels;
 
-// STATIC: %0x00ECDD60
 static uint32_t s_propagateFogElapsed;
 
-// STATIC: %0x00ECDD64
 static float s_netherBlurPhase;
 
 // INLINED
@@ -77,7 +71,7 @@ PassPropagateFog::PassPropagateFog(FFX::Tex** inputs, uint32_t count, FFX::Tex* 
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXPropagateFog");
 }
 
-// OFFSET: 0x00B0B830
+// OFFSET: 0x00B0B830/0x1408CF6E0
 PassFogCombine::PassFogCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_lastSize.x = 0;
     this->m_lastSize.y = 0;
@@ -91,7 +85,7 @@ PassFogCombine::PassFogCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXFogCombine");
 }
 
-// INLINED
+// OFFSET: 0x00B0B910/0x1408CF810
 PassFogCombine::~PassFogCombine() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -119,7 +113,7 @@ PassFogCombine::~PassFogCombine() {
     }
 }
 
-// OFFSET: 0x00B0B9E0
+// OFFSET: 0x00B0B9E0/0x1408CF920
 void PassFogCombine::BuildCircularMappingVertices(const FFX::Tex& tex0, const FFX::Tex& tex1) {
     struct Vertex {
         C3Vector p;
@@ -169,7 +163,7 @@ void PassFogCombine::BuildCircularMappingVertices(const FFX::Tex& tex0, const FF
     buf->unk_001C = 1;
 }
 
-// OFFSET: 0x00B0BE10
+// OFFSET: 0x00B0BE10/0x1408CFED0
 void PassFogCombine::BuildCircularMappingIndices() {
     uint16_t* index = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(this->m_indexBuf));
 
@@ -209,7 +203,7 @@ PassDeath::PassDeath(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBle
     this->m_permute = FFX::s_useRECT != 0;
 }
 
-// INLINED
+// OFFSET: 0x00B0BF50
 PassDeath::~PassDeath() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -227,7 +221,7 @@ PassDeath::~PassDeath() {
     }
 }
 
-// OFFSET: 0x00B0BFD0
+// OFFSET: 0x00B0BFD0/0x1408D0060
 PassNetherBlur::PassNetherBlur(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_seed.SetSeed(0);
     this->m_permute = 0;
@@ -258,7 +252,7 @@ PassNetherBlur::PassNetherBlur(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_blend = 0.0f;
 }
 
-// INLINED
+// OFFSET: 0x00B0C150/0x1408D0280
 PassNetherBlur::~PassNetherBlur() {
     if (this->m_pixelShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_pixelShader);
@@ -459,7 +453,7 @@ bool PassFogCombine::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: 0x00B0CEC0
+// OFFSET: 0x00B0CEC0/0x1408D11A0
 void PassFogCombine::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -643,7 +637,7 @@ bool PassNetherBlur::Valid() {
     return this->m_vertexShader && this->m_vertexShader->m_permutes[0].Valid() && this->m_pixelShader && this->m_pixelShader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: 0x00B0D800
+// OFFSET: 0x00B0D800/0x1408D1DD0
 void PassNetherBlur::Execute() {
     float elapsed = FrameTime::s_tickTimeSec;
     float scale = 8.0f;
@@ -783,7 +777,7 @@ PassNetherCombine::~PassNetherCombine() {
     }
 }
 
-// OFFSET: [0x0089F840]
+// OFFSET: [0x0089F840/0x1405E08C0]
 bool PassNetherCombine::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
@@ -829,7 +823,7 @@ void PassNetherCombine::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: 0x00B0E790
+// OFFSET: 0x00B0E790/0x1408D32D0
 EffectDeath::EffectDeath() {
     this->m_cvar = CVar::Register("ffxDeath", "full screen death effect", 1, FFX::s_defaultEnabled ? "1" : "0", FFX::CVarCallback, 1, false, NULL, false);
 

@@ -31,7 +31,7 @@ int32_t MODIFIEDCLICK::IsActive(BINDING_SET set) {
     return !current || !SStrCmp(current, button, STORM_MAX_STR);
 }
 
-// OFFSET: 0x00921750
+// OFFSET: 0x00921750/0x1406846B0
 int32_t MODIFIEDCLICK::SetBinding(BINDING_SET set, const char* binding) {
     const char* button = NULL;
     uint32_t modifiers = 0;
@@ -62,7 +62,7 @@ int32_t MODIFIEDCLICK::SetBinding(BINDING_SET set, const char* binding) {
     return 1;
 }
 
-// OFFSET: 0x00921810
+// OFFSET: 0x00921810/0x140684790
 void MODIFIEDCLICK::GetBinding(BINDING_SET set, char* binding, int32_t maxLength, uint32_t* flags) {
     uint32_t modifiers = this->m_data[set].m_modifiers;
     const char* button = this->m_data[set].m_button;

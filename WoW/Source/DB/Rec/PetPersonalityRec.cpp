@@ -1,6 +1,5 @@
 #include "WoW/Source/DB/Rec/PetPersonalityRec.h"
 
-// STATIC: %0x00B45A48
 const DBCMeta PetPersonalityRec::s_meta = { "DBFilesClient\\PetPersonality.dbc", 4, 32, PetPersonalityRec::FixupStrings, 0, NULL, NULL, NULL };
 
 // INLINED

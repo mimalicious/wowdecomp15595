@@ -16,46 +16,44 @@
 #include "Engine/Source/Storm/H/storm.h"
 
 namespace Event {
-    // STATIC: %0x00C10034
+    // STATIC: 0x00D0AC94
     volatile long s_threadListContention = -1;
 
-    // STATIC: %0x00C10038
     TSList<EvtThread, TSGetLink<EvtThread> > s_threadList;
 
-    // STATIC: %0x00D95704
+    // STATIC: 0x00EC74BC
     EvtContext* s_currentEvtContext;
 
-    // STATIC: %0x00D95708
+    // STATIC: 0x00EC74C0
     uint32_t s_mainThread;
 
-    // STATIC: %0x00D9570C
+    // STATIC: 0x00EC74C4
     int32_t s_originalThreadPriority;
 
-    // STATIC: %0x00D95710
     volatile long s_interactiveCount;
 
-    // STATIC: %0x00D95714
+    // STATIC: 0x00EC74CC
     uint32_t s_threadSlotCount;
 
-    // STATIC: %0x00D95718
+    // STATIC: 0x00EC74D0
     EvtThread** s_threadSlots;
 
-    // STATIC: %0x00D9571C
+    // STATIC: 0x00EC74D4
     SCritSect* s_threadSlotCritsects;
 
-    // STATIC: %0x00D95720
+    // STATIC: 0x00EC74D8
     int32_t s_netServer;
 
-    // STATIC: %0x00D95728
+    // STATIC: 0x00EC74E0
     SCritSect s_threadListCritsect;
 
-    // STATIC: %0x00D95750
+    // STATIC: 0x00EC7508
     TSGrowableArray<SThread*> s_schedulerThreads;
 
-    // STATIC: %0x00D95760
+    // STATIC: 0x00EC7518
     SEvent s_startEvent(1, 0);
 
-    // STATIC: %0x00D95764
+    // STATIC: 0x00EC751C
     SEvent s_shutdownEvent(1, 0);
 }
 
@@ -167,7 +165,6 @@ int32_t IEvtSchedulerIsContextInteractive(EvtContext* context) {
 
 // OFFSET: 0x008A0DE0
 void EventForceIdleProcessing() {
-    // STATIC: %0x00D95700
     static int32_t s_watchdogStarted;
 
     EvtContext* context = Event::s_currentEvtContext;

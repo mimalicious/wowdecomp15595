@@ -78,7 +78,7 @@ const uint8_t* BSN::Protocol::Protocol::TypeInfo(uint32_t typeId) const {
     return &this->m_bytecode[offset];
 }
 
-// OFFSET: 0x00665A40
+// OFFSET: 0x00665A40/0x14030BF90
 const uint8_t* BSN::Protocol::Protocol::DumpInfo(uint32_t typeId) const {
     if (!this->m_dumpInfoSize) {
         return NULL;

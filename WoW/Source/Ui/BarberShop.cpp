@@ -24,7 +24,6 @@
 // STATIC: 0x00F33728
 uint8_t CGBarberShop::m_barberShopEnabled;
 
-// STATIC: #0x00BD19B9
 uint8_t CGBarberShop::m_helmHidden;
 
 // STATIC: 0x00D108A0

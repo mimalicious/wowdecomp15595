@@ -8,19 +8,14 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D9383C
 static HINSTANCE s_appInstance;
 
-// STATIC: %0x00D93840
 static HWND s_globalTips;
 
-// STATIC: %0x00D93858
 static TSGrowableArray<COsDialog*> s_dialogs;
 
-// STATIC: %0x00D93868
 static TSGrowableArray<COsMenuBar*> s_menubars;
 
-// STATIC: %0x00C0FC34
 static int32_t s_menuHotkeysEnabled = 1;
 
 // INLINED

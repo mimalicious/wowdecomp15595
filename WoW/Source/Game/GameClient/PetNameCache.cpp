@@ -15,7 +15,7 @@ PetNameCache::~PetNameCache() {
     delete this->m_declinedNames;
 }
 
-// INLINED
+// OFFSET: 0x0049BB50/0x1400C79B0
 PetNameCache& PetNameCache::operator=(const PetNameCache& source) {
     this->m_petNumber = source.m_petNumber;
     SStrCopy(this->m_name, source.m_name, sizeof(this->m_name));

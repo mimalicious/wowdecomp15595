@@ -192,7 +192,7 @@ struct RestStateInfo {
     uint32_t m_tutorial;
 };
 
-// STATIC: #0x00AD9C94
+// STATIC: 0x00CA52D4
 static const UIErrors s_taxiReplyErrors[13] = {
     ERR_MAX_VALUE,
     ERR_TAXIUNSPECIFIEDSERVERERROR,
@@ -212,13 +212,10 @@ static const UIErrors s_taxiReplyErrors[13] = {
 // STATIC: 0x00E4DC24
 uint32_t CGPlayer_C::s_displayId;
 
-// STATIC: #0x00C9D328
 static int32_t s_areaTriggerEnd;
 
-// STATIC: #0x00C9D32C
 static int32_t s_areaTriggerStart;
 
-// STATIC: #0x00C9D330
 static AreaTriggerRec* s_currentAreaTrigger;
 
 // STATIC: 0x00DD4D2C
@@ -248,7 +245,6 @@ static int32_t s_playerRender;
 // STATIC: 0x00DD4D8C
 static uint32_t s_attackSwingErrorTime;
 
-// STATIC: #0x00C9EA90
 WOWGUID CGPlayer_C::s_lastVendorListReceived;
 
 // STATIC: 0x00DD5020
@@ -266,7 +262,6 @@ static uint32_t s_pendingMovieID;
 // STATIC: 0x00DD5030
 WOWGUID CGPlayer_C::s_resurrectOfferer;
 
-// STATIC: #0x00C9EAB0
 static uint32_t s_unk_C9EAB0;
 
 // STATIC: 0x00DD5038
@@ -275,7 +270,6 @@ uint32_t CGPlayer_C::s_resurrectOfferSickness;
 // STATIC: 0x00DD503C
 uint32_t CGPlayer_C::s_resurrectOfferUseTimer;
 
-// STATIC: #0x00C9EAB4
 static uint32_t s_unk_C9EAB4;
 
 // STATIC: 0x00DD5044
@@ -311,13 +305,11 @@ WOWGUID CGPlayer_C::s_lastUpdateGroup;
 // STATIC: 0x00DD5078
 uint32_t CGPlayer_C::s_lastUpdateTime;
 
-// STATIC: #0x00C9EAD8
+// STATIC: 0x00DD5050
 static WOWGUID s_lastTrainerRequest;
 
-// STATIC: #0x00C9D7D0
 static VendorItem s_vendorItems[150];
 
-// STATIC: #0x00C9EB08
 static int32_t s_questsAccepted;
 
 // STATIC: 0x00DD4D90
@@ -341,10 +333,8 @@ static uint32_t s_questListRepeatable[32];
 // STATIC: 0x00DD507C
 static uint32_t s_questFailedReason;
 
-// STATIC: #0x00C9EB10
 static WOWGUID s_spiritHealer;
 
-// STATIC: #0x00C9EB18
 static WOWGUID s_talentMaster;
 
 // STATIC: 0x00DD5098
@@ -374,12 +364,10 @@ static TSGrowableArray<GUILDUPDATETIMESTAMP> s_guildUpdateTimestamps;
 // STATIC: 0x00DD50F8
 static TSGrowableArray<ITEMSWAP> s_itemSwaps;
 
-// STATIC: #0x00A31BB8
 static const int32_t s_trivialLevelDifference[20] = {
     4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
 };
 
-// STATIC: #0x00C9ECC0
 static uint32_t s_combatModeExitCount;
 
 // STATIC: 0x00DD5040
@@ -408,13 +396,12 @@ struct DamageCalcLabel {
 // STATIC: 0x00CA5028
 static const DamageCalcLabel s_damageCalcLabels[43] = { { 0, "Base", 1, 1 }, { 3, "DPS Scaler", 2, 1 }, { 2, "Chain Reduction", 3, 0 }, { 2, "Combo Point Damage", 4, 0 }, { 3, "School Damage Done", 5, 0 }, { 3, "Creature Damage Done", 6, 0 }, { 3, "Creature Weapon Damage Done", 7, 0 }, { 2, "Weapon Effect", 8, 1 }, { 2, "Weapon Effect", 9, 0 }, { 3, "Spell Modifier", 10, 1 }, { 3, "Spell Modifier", 11, 1 }, { 3, "Offhand Penalty", 12, 0 }, { 3, "Attack Power Damage", 13, 1 }, { 3, "Creature Multiplier", 14, 1 }, { 3, "School Damage Done", 15, 1 }, { 3, "Weapon Multiplier", 16, 1 }, { 3, "School Damage Taken", 17, 1 }, { 3, "Source Damage Taken", 18, 1 }, { 3, "School Damage Taken", 19, 1 }, { 3, "Source Damage Taken", 20, 1 }, { 3, "Crit Damage Multiplier", 21, 0 }, { 4, "Crit Damage", 22, 1 }, { 2, "Resistance Coefficient", 23, 1 }, { 2, "Bonus Coefficient", 24, 2 }, { 3, "Critical Chance", 25, 2 }, { 3, "Critical Roll", 26, 2 }, { 3, "Seed For Rounding", 27, 0 }, { 4, "Fraction Adjust", 28, 1 }, { 3, "Resilience Modifier", 29, 1 }, { 3, "Armor Factor", 30, 0 }, { 4, "Armor Reduction", 31, 1 }, { 2, "Shield Block", 32, 1 }, { 2, "Melee Crit/Glance/Crush", 33, 1 }, { 3, "(DEPRECATED) Pet Happiness Mult", 34, 1 }, { 3, "Creature Damage Done", 35, 0 }, { 2, "Number of Targets for Area Damage Cap", 36, 0 }, { 2, "Number of Targets", 37, 1 }, { 2, "Crowd Damage", 38, 1 }, { 3, "Mechanic Modifier Taken", 39, 0 }, { 3, "Bonus From Attack Power Coefficient", 40, 1 }, { 3, "Aura State Modifier", 41, 1 }, { 3, "Melee Autoattack Multiplier", 42, 1 }, { 3, "Mechanic Modifier Done", 250, 834 } };
 
-// STATIC: #0x00ADA1AC
+// STATIC: 0x00CA555C
 static const UIErrors s_mountResultErrors[] = { ERR_MOUNT_INVALIDMOUNTEE, ERR_MOUNT_TOOFARAWAY, ERR_MOUNT_ALREADYMOUNTED, ERR_MOUNT_NOTMOUNTABLE, ERR_MOUNT_NOTYOURPET, ERR_MOUNT_OTHER, ERR_MOUNT_LOOTING, ERR_MOUNT_RACECANTMOUNT, ERR_MOUNT_SHAPESHIFTED, ERR_MOUNT_FORCEDDISMOUNT, ERR_MAX_VALUE };
 
-// STATIC: #0x00ADA1D8
+// STATIC: 0x00CA5588
 static const UIErrors s_dismountResultErrors[] = { ERR_DISMOUNT_NOPET, ERR_DISMOUNT_NOTMOUNTED, ERR_DISMOUNT_NOTYOURPET, ERR_MAX_VALUE };
 
-// STATIC: #0x00A32618
 static const UIErrors s_buyBankSlotErrors[] = { ERR_BANKSLOT_FAILED_TOO_MANY, ERR_BANKSLOT_INSUFFICIENT_FUNDS, ERR_BANKSLOT_NOTBANKER };
 
 // STATIC: 0x00CA56D0
@@ -423,10 +410,8 @@ static uint32_t s_textEmoteStandStates = 0x10B;
 // STATIC: 0x00CA52D0
 static uint32_t s_textEmoteCooldown = 250;
 
-// STATIC: #0x00ADBA74
 static const uint32_t s_playerSoundChance[14] = { 35, 100, 30, 100, 100, 40, 100, 100, 100, 100, 100, 100, 100, 0 };
 
-// STATIC: #0x00C9EB0C
 static uint32_t s_talentWipeCost;
 
 // PROVEN: 9c2024c4 IDENTICAL/NONE

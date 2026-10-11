@@ -11,7 +11,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D86B98
+// STATIC: 0x00EBA224
 MpqSystemList::Implementation* MpqSystemList::s_list;
 
 // OFFSET: 0x007B2080

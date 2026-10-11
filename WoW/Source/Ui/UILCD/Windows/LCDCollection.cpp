@@ -5,7 +5,7 @@
 CLCDCollection::CLCDCollection() {
 }
 
-// OFFSET: [0x00B40950, 0x00B409F0]
+// OFFSET: [0x00B40950/0x14090E8A0, 0x00B409F0/0x14090E970]
 CLCDCollection::~CLCDCollection() {
     for (CLCDBASE_NODE* node = this->m_Objects.Head(); node; node = this->m_Objects.Next(node)) {
         delete node->m_pObject;

@@ -54,7 +54,7 @@ static const FMOD_GUID _KSDATAFORMAT_SUBTYPE_PCM        = { 0x00000001, 0x0000, 
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC22D0/0x14088A810
 FMOD_OUTPUT_DESCRIPTION_EX *OutputWavWriter::getDescriptionEx()
 {
     FMOD_memset(&wavwriteroutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION));

@@ -30,7 +30,7 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: %0x00BB87EC
+// STATIC: 0x00CA3458
 const char* CSimpleModel::s_objectTypeName = "Model";
 
 // STATIC: 0x00DD3A44/0x140CB9788
@@ -91,7 +91,7 @@ int32_t CSimpleModel::AdvanceTime() {
     return 1;
 }
 
-// INLINED
+// OFFSET: 0x0051EC30/0x14016BD20
 CSimpleModel::~CSimpleModel() {
     if (this->m_camera) {
         CameraRelease(this->m_camera);

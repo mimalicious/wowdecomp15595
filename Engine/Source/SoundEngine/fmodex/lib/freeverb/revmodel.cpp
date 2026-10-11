@@ -6,7 +6,7 @@
 
 #include "revmodel.h"
 
-// INLINED
+// OFFSET: 0x00AD7520/0x1408A27B0
 revmodel::revmodel()
 {
 	// Tie the components to their buffers

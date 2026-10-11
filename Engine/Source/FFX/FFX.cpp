@@ -102,7 +102,7 @@ FFX::Tex FFX::s_full[2];
 // STATIC: 0x00EC71E0
 FFX::Tex FFX::s_quart[3];
 
-// STATIC: %0x00D954FC
+// STATIC: 0x00EC7294
 static void* s_waveTexData;
 
 // STATIC: 0x00D0ABAC

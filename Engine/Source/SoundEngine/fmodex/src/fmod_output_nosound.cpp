@@ -52,7 +52,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC1460/0x1408897B0
 FMOD_OUTPUT_DESCRIPTION_EX *OutputNoSound::getDescriptionEx()
 {
     FMOD_memset(&nosoundoutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));

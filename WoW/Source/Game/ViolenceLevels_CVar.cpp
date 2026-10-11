@@ -5,19 +5,16 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Client.h"
 
-// STATIC: #0x00AF4E14
 static int32_t s_maxViolenceLevel[9] = { 2, 1, 2, 2, 1, 2, 2, 2, 2 };
 
-// STATIC: #0x00AF4E38
 static const char* s_bloodSpurtTextures[2] = { "BloodSpurtSmall01_Low.blp", "BloodSpurtSmall01_Medium.blp" };
 
-// STATIC: #0x00AF4E40
 static const char* s_bloodSpurtTexture = "BloodSpurtSmall01.blp";
 
-// STATIC: #0x00D3920C
+// STATIC: 0x01008A24
 int32_t s_violenceLevel;
 
-// OFFSET: 0x00B11460
+// OFFSET: 0x00B11460/0x1408D6D40
 bool ViolenceLevelChanged(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t level = SStrToInt(value);
     s_violenceLevel = level;
@@ -36,7 +33,7 @@ bool ViolenceLevelChanged(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
-// OFFSET: 0x00B11510
+// OFFSET: 0x00B11510/0x1408D6DF0
 void ViolenceLevelsRegisterCVars() {
     char value[12];
     SStrPrintf(value, sizeof(value), "%d", s_maxViolenceLevel[s_locale]);

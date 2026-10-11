@@ -11,7 +11,6 @@
 #include "WoW/Source/Ui/TradeFrame.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// STATIC: #0x00A37B10
 static const BAGSLOTRANGE s_bagSlotRanges[8] = { { 23, 38 }, { 19, 22 }, { 86, 117 }, { 39, 66 }, { 67, 73 }, { 118, 149 }, { 0, 18 }, { 74, 85 } };
 
 // OFFSET: 0x005F2080/0x140274A30

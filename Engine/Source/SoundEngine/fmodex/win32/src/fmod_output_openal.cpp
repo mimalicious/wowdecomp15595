@@ -178,7 +178,7 @@ FMOD_RESULT OutputOpenAL::registerDLL()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AD8030
 FMOD_RESULT OutputOpenAL::enumerate()
 {
     FMOD_RESULT  result        = FMOD_OK;
@@ -587,7 +587,7 @@ FMOD_RESULT OutputOpenAL::initEAX()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AD9460
 FMOD_RESULT OutputOpenAL::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     FMOD_RESULT result    = FMOD_OK;

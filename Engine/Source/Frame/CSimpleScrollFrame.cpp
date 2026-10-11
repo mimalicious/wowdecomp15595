@@ -20,13 +20,13 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB9788
+// STATIC: 0x00CA4470
 int32_t CSimpleScrollFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A5C/0x140CB97B0
 int32_t CSimpleScrollFrame::s_objectType;
 
-// STATIC: %0x00BB87F0
+// STATIC: 0x00CA3460
 const char* CSimpleScrollFrame::s_objectTypeName = "ScrollFrame";
 
 // STATIC: 0x00DD3A60

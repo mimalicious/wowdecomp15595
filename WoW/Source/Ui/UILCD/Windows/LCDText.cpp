@@ -167,7 +167,7 @@ void CLCDText::SetText(const WCHAR* text) {
     this->m_bRecalcExtent = 1;
 }
 
-// OFFSET: [0x005A45C0]
+// OFFSET: [0x005A45C0/0x140215130]
 const WCHAR* CLCDText::GetText() {
     return this->m_szText;
 }

@@ -14,13 +14,13 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/Tempest/C2Vector.h"
 
-// STATIC: %0x00BB9AFC
+// STATIC: 0x00CA47C4
 int32_t CSimplePathAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CB8/0x140CB9A58
 int32_t CSimplePathAnim::s_objectType;
 
-// STATIC: %0x00BB8BBC
+// STATIC: 0x00CA3834
 const char* CSimplePathAnim::s_objectTypeName = "Path";
 
 // PROVEN: 223a23c0 DIFFERENT/IDENTICAL
@@ -285,7 +285,7 @@ int32_t CSimplePathAnim::RegisterSplineControlPoint(CSimpleControlPoint* point) 
     return index;
 }
 
-// INLINED
+// OFFSET: 0x00529410/0x140178DC0
 CSimplePathAnim::~CSimplePathAnim() {
     this->m_sortedPoints.Clear();
     this->m_controlPoints.Clear();

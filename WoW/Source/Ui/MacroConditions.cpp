@@ -9,7 +9,6 @@
 #include "WoW/Source/Ui/SpellBookFrame.h"
 #include "WoW/Source/Ui/UIBindings.h"
 
-// STATIC: #0x00C2438C
 TSHashTable<MacroConditions, HASHKEY_STR> s_macroConditions;
 
 // STATIC: 0x00D17AB8

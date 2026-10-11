@@ -4,16 +4,16 @@
 #include "Engine/Source/Event/Observer.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D957AC
+// STATIC: 0x00EC7564
 static TRefCnt* s_inputObserver;
 
-// STATIC: %0x00D957B4
+// STATIC: 0x00EC756C
 static LockedDataAllocator s_eventRegAllocator(sizeof(EventReg), 1024);
 
-// STATIC: %0x00D957F0
+// STATIC: 0x00EC75A8
 static LockedDataAllocator s_callbackRegAllocator(sizeof(EventReg::EVENTCALLBACKREG), 256);
 
-// STATIC: %0x00D9582C
+// STATIC: 0x00EC75E4
 static LockedDataAllocator s_dispatchRegAllocator(sizeof(EventReg::EVENTDISPATCHREG), 1024);
 
 void InputObserverInitialize() {

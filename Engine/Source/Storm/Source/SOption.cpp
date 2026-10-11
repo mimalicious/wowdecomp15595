@@ -2,10 +2,8 @@
 #include "SOption.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00CAE950
 static int32_t s_freecount;
 
-// STATIC: #0x00CAE954
 static int32_t s_alloccount;
 
 // STATIC: 0x00D9D54C

@@ -4,10 +4,10 @@
 #include "Engine/Source/ComSat/ComSatSoundManager.h"
 #include <new>
 
-// STATIC: %0x00E457FC
+// STATIC: 0x00F80448
 static ComSat::Sound::Manager* s_soundManager;
 
-// STATIC: %0x00E45800
+// STATIC: 0x00F8044C
 static ComSat::Network::Manager* s_networkManager;
 
 // INLINED

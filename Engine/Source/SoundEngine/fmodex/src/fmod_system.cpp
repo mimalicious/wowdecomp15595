@@ -60,7 +60,7 @@ FMOD_RESULT System::setOutput(FMOD_OUTPUTTYPE output)
 }
 
 
-// OFFSET: 0x00A7AFF0
+// OFFSET: 0x00A7AFF0/0x140836110
 FMOD_RESULT System::getOutput(FMOD_OUTPUTTYPE *output)
 {
     FMOD_RESULT result;
@@ -78,7 +78,7 @@ FMOD_RESULT System::getOutput(FMOD_OUTPUTTYPE *output)
 }
 
 
-// OFFSET: 0x00A7B020
+// OFFSET: 0x00A7B020/0x140836140
 FMOD_RESULT System::getNumDrivers(int *numdrivers)
 {
     FMOD_RESULT result;
@@ -187,7 +187,7 @@ FMOD_RESULT System::setHardwareChannels(int min2d, int max2d, int min3d, int max
 }
 
 
-// OFFSET: 0x00A7B130
+// OFFSET: 0x00A7B130/0x1408362A0
 FMOD_RESULT System::setSoftwareChannels(int numsoftwarechannels)
 {
     FMOD_RESULT result;
@@ -362,7 +362,7 @@ FMOD_RESULT System::getAdvancedSettings(FMOD_ADVANCEDSETTINGS *settings)
 }
 
 
-// OFFSET: 0x00A7B1D0
+// OFFSET: 0x00A7B1D0/0x140836370
 FMOD_RESULT System::setSpeakerMode(FMOD_SPEAKERMODE speakermode)
 {
     FMOD_RESULT result;
@@ -586,7 +586,7 @@ FMOD_RESULT System::close()
 }
 
 
-// OFFSET: 0x00A7B290
+// OFFSET: 0x00A7B290/0x140836460
 FMOD_RESULT System::update()
 {
     FMOD_RESULT result;
@@ -992,7 +992,7 @@ FMOD_RESULT System::createSound(const char *name_or_data, FMOD_MODE mode, FMOD_C
 }
 
 
-// OFFSET: 0x00A7B450
+// OFFSET: 0x00A7B450/0x1408366C0
 FMOD_RESULT System::createStream(const char *name_or_data, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO *exinfo, Sound **sound)
 {
     FMOD_RESULT result;
@@ -1119,7 +1119,7 @@ FMOD_RESULT System::createReverb(Reverb **reverb)
 }
 
 
-// OFFSET: 0x00A7B550
+// OFFSET: 0x00A7B550/0x140836820
 FMOD_RESULT System::playSound(FMOD_CHANNELINDEX channelid, Sound *sound, bool paused, Channel **channel)
 {
     FMOD_RESULT result;
@@ -1137,7 +1137,7 @@ FMOD_RESULT System::playSound(FMOD_CHANNELINDEX channelid, Sound *sound, bool pa
 }
 
 
-// OFFSET: 0x00A7B590
+// OFFSET: 0x00A7B590/0x140836880
 FMOD_RESULT System::playDSP(FMOD_CHANNELINDEX channelid, DSP *dsp, bool paused, Channel **channel)
 {
     FMOD_RESULT result;
@@ -1380,7 +1380,7 @@ FMOD_RESULT System::getRecordDriver(int *driver)
         return systemi->getRecordDriver(driver);
     }
 }
-// OFFSET: 0x00A7B660
+// OFFSET: 0x00A7B660/0x140836980
 FMOD_RESULT System::getRecordNumDrivers(int *numdrivers)
 {
     FMOD_RESULT result;

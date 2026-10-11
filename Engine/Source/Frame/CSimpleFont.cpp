@@ -16,13 +16,13 @@ static TSHashTable<SIMPLEFONT, HASHKEY_STRI> s_fontList;
 // STATIC: 0x00DD3C7C
 static int32_t s_fontCount;
 
-// STATIC: %0x00BB9228
+// STATIC: 0x00CA3F00
 int32_t CSimpleFont::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3C80/0x140CB9A4C
 int32_t CSimpleFont::s_objectType;
 
-// STATIC: %0x00BB8B4C
+// STATIC: 0x00CA37C4
 const char* CSimpleFont::s_objectTypeName = "Font";
 
 // INLINED

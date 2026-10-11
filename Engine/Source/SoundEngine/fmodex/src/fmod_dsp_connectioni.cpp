@@ -1297,7 +1297,7 @@ FMOD_RESULT DSPConnectionI::mix(float * FMOD_RESTRICT outbuffer, float * FMOD_RE
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AD0580
 FMOD_RESULT DSPConnectionI::mixAndRamp(float * FMOD_RESTRICT outbuffer, float * FMOD_RESTRICT inbuffer, int outchannels, int inchannels, unsigned int length)
 {
     unsigned int count;

@@ -5,7 +5,7 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00C9DDCC
+// STATIC: 0x00D9D53C
 static int32_t s_exitcode;
 
 // STATIC: 0x00D9D540/0x140C7F664

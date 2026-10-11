@@ -111,7 +111,7 @@ static vorbis_info_floor *floor0_unpack (vorbis_info *vi,oggpack_buffer *opb){
    Note that the scale depends on the sampling rate as well as the
    linear block and mapping sizes */
 
-// INLINED
+// OFFSET: 0x00B49630/0x140919240
 static int floor0_map_lazy_init(vorbis_block      *vb,
                                 vorbis_info_floor *infoX,
                                 vorbis_look_floor0 *look){

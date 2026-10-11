@@ -27,12 +27,12 @@
 // STATIC: 0x00F77174
 static const char* s_itemQualityColorStrings[8] = { "ff9d9d9d", "ffffffff", "ff1eff00", "ff0070dd", "ffa335ee", "ffff8000", "ffe6cc80", "ffe6cc80" };
 
-// OFFSET: [0x00842700]
+// OFFSET: [0x00842700/0x1407FDD80]
 static int32_t Script_EJ_SelectTier(lua_State* L) {
     return 0;
 }
 
-// OFFSET: [0x00842700]
+// OFFSET: [0x00842700/0x1407FDD80]
 static int32_t Script_EJ_GetTierInfo(lua_State* L) {
     return 0;
 }

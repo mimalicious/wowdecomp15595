@@ -31,10 +31,10 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "WoW/Source/Game/GameClient/FFXEffects.h"
 
-// STATIC: %0x00CD1284
+// STATIC: 0x00DD3904
 CSimpleTop* CSimpleTop::s_instance;
 
-// STATIC: %0x00CD1280
+// STATIC: 0x00DD3900
 uint32_t CSimpleTop::s_eventTime;
 
 // STATIC: 0x00DD3908
@@ -67,7 +67,6 @@ static const char* s_colorblindModeNames[8] = {
     "Achromatomaly       (very rare)"
 };
 
-// STATIC: %0x00BB81F8
 static TSList<UNEEDED_TEXTURES, TSGetLink<UNEEDED_TEXTURES> > s_textureReleaseQueue;
 
 // OFFSET: 0x005017B0/0x140147290

@@ -4,7 +4,7 @@
 #include "Engine/Source/Base/Status.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00C0EA04
+// STATIC: 0x00D096E8
 static CStatus s_errorList;
 
 // INLINED
@@ -73,7 +73,7 @@ char* CStatus::GetErrorStr(char* buffer, size_t bufchars, STATUS_TYPE minSeverit
     return buffer;
 }
 
-// OFFSET: 0x00872630
+// OFFSET: 0x00872630/0x1405A8A70
 uint32_t CStatus::GetErrorStrLen(STATUS_TYPE minSeverity, const char* separator) {
     size_t separatorchars = 0;
     uint32_t length = 0;
@@ -104,7 +104,7 @@ char* CStatus::GetErrorStrAlloc(STATUS_TYPE minSeverity, const char* separator) 
     return buffer;
 }
 
-// OFFSET: 0x00872700
+// OFFSET: 0x00872700/0x1405A8B70
 void CStatus::Prepend(STATUS_TYPE severity, const char* format, ...) {
     char buffer[256];
     memset(buffer, 0, sizeof(buffer));
@@ -132,7 +132,7 @@ void CStatus::Prepend(STATUS_TYPE severity, const char* format, ...) {
     }
 }
 
-// OFFSET: 0x008727E0
+// OFFSET: 0x008727E0/0x1405A8CF0
 void CStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     char buffer[256];
     memset(buffer, 0, sizeof(buffer));
@@ -160,7 +160,7 @@ void CStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     }
 }
 
-// INLINED
+// OFFSET: 0x00872990/0x1405A8F10
 CStatus::~CStatus() {
     this->Clear();
 }

@@ -28,7 +28,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AD7A00/0x1408A2BC0
 FMOD_RESULT DSPResamplerMultiInput::execute(float *inbuffer, float **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     FMOD_RESULT   result   = FMOD_OK;

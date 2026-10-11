@@ -184,7 +184,7 @@ ogg_int32_t FMOD_OggVorbis_TellCallback(void *datasource)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ABB3D0/0x140882700
 FMOD_CODEC_DESCRIPTION_EX *CodecOggVorbis::getDescriptionEx()
 {
     FMOD_memset(&oggvorbiscodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -219,7 +219,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecOggVorbis::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ABAF60/0x140882170
 FMOD_RESULT CodecOggVorbis::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;

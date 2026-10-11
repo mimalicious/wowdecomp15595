@@ -10,10 +10,8 @@
 #include "Engine/Source/Os/OsIME.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D9388C
 static HIMC s_context;
 
-// STATIC: %0x00D93890
 static uint32_t s_enableCount;
 
 // PROVEN: a5c19eca IDENTICAL/DIFFERENT

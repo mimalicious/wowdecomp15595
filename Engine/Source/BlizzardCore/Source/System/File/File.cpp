@@ -12,7 +12,6 @@
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
-// STATIC: #0x00AB935C
 static System_File::UsingFile s_usingFile;
 
 // STATIC: 0x00D07270
@@ -135,22 +134,18 @@ Blizzard::File::Filesystem System_File::Stacked::s_basestack = {
     }
 };
 
-// STATIC: #0x009E5630
 const Blizzard::File::FileInfo System_File::s_noinfo = { NULL, 0, -1 };
 
-// STATIC: %0x00D86D94
+// STATIC: 0x00EBA6A4
 Blizzard::Thread::LocalObject<System_File::FileError> System_File::s_error;
 
-// STATIC: #0x00AB9130
 int64_t System_File::Stacked::s_throttleRate = 56888;
 
 // STATIC: 0x00EB5870
 int64_t System_File::Stacked::s_throttleDebt;
 
-// STATIC: #0x00B38024
 int32_t System_File::Stacked::s_throttleDelay;
 
-// STATIC: #0x00AB9138
 Blizzard::File::Filesystem System_File::Stacked::s_throttlestack = {
     &System_File::Stacked::s_throttlestack,
     NULL,

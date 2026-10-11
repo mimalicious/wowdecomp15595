@@ -10,7 +10,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/SHA1.h"
 #include "WoW/Source/Client.h"
 
-// STATIC: #0x00B24D00
+// STATIC: 0x00D27600
 static Grunt::Command<Grunt::ClientLink> s_authCmds[] = {
     { 0x00, {}, "ClientLink::CMD_AUTH_LOGON_CHALLENGE", &Grunt::ClientLink::CmdAuthLogonChallenge },
     { 0x01, {}, "ClientLink::CMD_AUTH_LOGON_PROOF", &Grunt::ClientLink::CmdAuthLogonProof },
@@ -21,10 +21,8 @@ static Grunt::Command<Grunt::ClientLink> s_authCmds[] = {
     { 0x31, {}, "ClientLink::CMD_XFER_DATA", &Grunt::ClientLink::CmdXferData },
 };
 
-// STATIC: #0x00D45CD0
 static char s_accountNameUnDecorated[1280];
 
-// STATIC: #0x00A94A9C
 static const uint8_t s_serverAuthKey[16] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10 };
 
 // STATIC: 0x00D27580

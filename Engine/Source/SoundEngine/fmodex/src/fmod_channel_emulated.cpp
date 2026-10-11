@@ -28,7 +28,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF4D00/0x1408BE2D0
 ChannelEmulated::ChannelEmulated()
 {
 #ifdef FMOD_SUPPORT_SOFTWARE
@@ -266,7 +266,7 @@ FMOD_RESULT ChannelEmulated::close()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF4B70/0x1408BE120
 FMOD_RESULT ChannelEmulated::update(int delta)
 {
     FMOD_RESULT result;

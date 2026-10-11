@@ -28,28 +28,27 @@
 #include "Engine/Source/Storm/Source/MD5.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB806C
 static CFrameXMLStatus s_frameXMLStatus;
 
-// STATIC: %0x00CC9124
+// STATIC: 0x00DC77C4
 static uint32_t s_progressTotal;
 
-// STATIC: %0x00CC9128
+// STATIC: 0x00DC77C8
 static uint32_t s_progressFiles;
 
-// STATIC: %0x00CC912C
+// STATIC: 0x00DC77CC
 static void* s_progressParam;
 
-// STATIC: %0x00CC9130
+// STATIC: 0x00DC77D0
 static void (*s_progressCallback)(float progress, void* param);
 
-// STATIC: %0x00CC9134
+// STATIC: 0x00DC77D4
 static int32_t s_debugLevel;
 
-// STATIC: %0x00CC9138
+// STATIC: 0x00DC77D8
 static TSHashTable<HashedNode, HASHKEY_STRI> s_virtualNodes;
 
-// STATIC: %0x00CC9164
+// STATIC: 0x00DC7804
 static TSHashTable<FrameFactoryNode, HASHKEY_STRI> s_factories;
 
 // OFFSET: 0x004EC3B0/0x14012F8D0

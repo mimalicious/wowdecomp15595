@@ -6,7 +6,6 @@
 #include "ThirdParty/pcre/pcre.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00AF2B98
 static const uint16_t s_koreanSyllables[2350] = {
     0xAC00, 0xAC01, 0xAC04, 0xAC07, 0xAC08, 0xAC09, 0xAC0A, 0xAC10, 0xAC11, 0xAC12, 0xAC13, 0xAC14, 0xAC15, 0xAC16, 0xAC17, 0xAC19,
     0xAC1A, 0xAC1B, 0xAC1C, 0xAC1D, 0xAC20, 0xAC24, 0xAC2C, 0xAC2D, 0xAC2F, 0xAC30, 0xAC31, 0xAC38, 0xAC39, 0xAC3C, 0xAC40, 0xAC4B,
@@ -172,7 +171,6 @@ struct RussianDeclensionRule {
     /* 006C */ int32_t m_sets[3];
 };
 
-// STATIC: #0x00ADC0A8
 static const uint16_t s_russianDeclensionEndings[71][5][5] = {
     { { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 } },
     { { 0x044F, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x044E, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x044F, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0435, 0x043C, 0x0000, 0x0000, 0x0000 }, { 0x0435, 0x0000, 0x0000, 0x0000, 0x0000 } },
@@ -247,7 +245,6 @@ static const uint16_t s_russianDeclensionEndings[71][5][5] = {
     { { 0x0451, 0x0446, 0x0430, 0x0000, 0x0000 }, { 0x0451, 0x0446, 0x0443, 0x0000, 0x0000 }, { 0x0451, 0x0446, 0x0430, 0x0000, 0x0000 }, { 0x0451, 0x0446, 0x043E, 0x043C, 0x0000 }, { 0x0451, 0x0446, 0x0435, 0x0000, 0x0000 } },
 };
 
-// STATIC: #0x00ADCE88
 static const RussianDeclensionRule s_russianDeclensionRules[55] = {
     { { { 0x0438, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0443, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x044B, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x044D, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x044E, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0430, 0x0430, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 } }, 2, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0, 71, 71 } },
     { { { 0x0430, 0x0439, 0x0000, 0x0000, 0x0000 }, { 0x0435, 0x0439, 0x0000, 0x0000, 0x0000 }, { 0x0443, 0x0439, 0x0000, 0x0000, 0x0000 }, { 0x044D, 0x0439, 0x0000, 0x0000, 0x0000 }, { 0x044E, 0x0439, 0x0000, 0x0000, 0x0000 }, { 0x044F, 0x0439, 0x0000, 0x0000, 0x0000 }, { 0x0451, 0x0439, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 } }, 0, { 0x0439, 0x0000, 0x0000, 0x0000, 0x0000 }, { 1, 0, 71 } },
@@ -439,7 +436,7 @@ static void GetDefaultCharsetMask(int32_t* charsetMask, bool english) {
     }
 }
 
-// OFFSET: 0x004E7300
+// OFFSET: 0x004E7300/0x140129380
 int32_t ValidateName(uint32_t language, const uint16_t* allowed, const char* name, uint32_t* length, int32_t* charset, bool profanity, bool chatProfanity, bool reserved, bool relaxed, bool english, int32_t charsetMask) {
     if (!name) {
         return 2;
@@ -702,7 +699,7 @@ void ValidateNameDestroy() {
     s_charsetCached = false;
 }
 
-// OFFSET: 0x004E7D30
+// OFFSET: 0x004E7D30/0x14012A150
 void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t existingCharsetMask) {
     if (s_charsetCached) {
         if (localeMask == s_cachedLocaleMask && charsetMask == s_cachedCharsetMask && existingCharsetMask == s_cachedExistingCharsetMask) {
@@ -802,7 +799,7 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
     g_chatSpamTokens.SetCount(numSpamTokens);
 }
 
-// OFFSET: 0x004E6620
+// OFFSET: 0x004E6620/0x1401285C0
 bool ValidateStringIsUTF8(const char* string) {
     int32_t chars;
     uint32_t c = sgetu8(reinterpret_cast<const uint8_t*>(string), &chars);
@@ -875,7 +872,7 @@ uint16_t ToUpper(uint16_t c) {
     return c;
 }
 
-// OFFSET: 0x004E6930
+// OFFSET: 0x004E6930/0x140128880
 uint16_t ToLower(uint16_t c) {
     if (static_cast<uint16_t>(c - 'A') <= 25 || static_cast<uint16_t>(c - 0xC0) <= 30) {
         return c + 32;
@@ -896,7 +893,7 @@ uint16_t ToLower(uint16_t c) {
     return c;
 }
 
-// OFFSET: 0x004E6990
+// OFFSET: 0x004E6990/0x1401288F0
 void CaseAccentInsensitiveParse(char* string, uint32_t size, int32_t locale) {
     uint16_t wide[512];
     uint16_t folded[512];
@@ -1136,7 +1133,7 @@ bool StripHyperlinks(const char* text, char* buffer, uint32_t size) {
     return stripped;
 }
 
-// OFFSET: 0x00A312A0
+// OFFSET: 0x00A312A0/0x1407DB170
 int32_t NameNeedsDeclensions(int32_t locale, const char* name) {
     return locale == 8 && RussianNameNeedsDeclensions(name);
 }
@@ -1161,7 +1158,7 @@ int32_t GetNameDeclensions(int32_t locale, char* declensions, const char* name, 
     return 0;
 }
 
-// OFFSET: 0x00A31310
+// OFFSET: 0x00A31310/0x1407DB1D0
 int32_t ValidateCharacterNameDeclension(int32_t locale, const char* name, const char* declension) {
     if (locale != 8) {
         return 1;
@@ -1176,7 +1173,7 @@ int32_t ValidateCharacterNameDeclension(int32_t locale, const char* name, const 
     return result;
 }
 
-// OFFSET: 0x00A328C0
+// OFFSET: 0x00A328C0/0x1407DCC80
 static void GetNameInfo(const char* name, RussianNameInfo* info, int32_t sex) {
     int32_t length = SStrLenUTF8(name);
     memset(info->m_name, 0, sizeof(info->m_name));
@@ -1367,14 +1364,14 @@ static int32_t FormatCase(char* declensions, uint32_t set, const RussianNameInfo
     return 1;
 }
 
-// OFFSET: 0x00A32CD0
+// OFFSET: 0x00A32CD0/0x1407DD170
 int32_t RussianNameNeedsDeclensions(const char* name) {
     uint16_t c = 0;
     SUniConvertUTF8to16(&c, 1, name, 0x7FFFFFFF, NULL, NULL);
     return IsRussian(c);
 }
 
-// OFFSET: 0x00A32D10
+// OFFSET: 0x00A32D10/0x1407DD1B0
 int32_t GetNumRussianNameDeclensionSets(const char* name, int32_t sex) {
     RussianNameInfo info;
     info.m_rule = 35;
@@ -1415,7 +1412,7 @@ int32_t GetRussianNameDeclensions(char* declensions, const char* name, int32_t s
     return FormatCase(declensions, set, &info);
 }
 
-// OFFSET: 0x00A32DF0
+// OFFSET: 0x00A32DF0/0x1407DD290
 bool IsRussianDeclensionValid(const char* name, const char* declension) {
     RussianNameInfo info;
     info.m_rule = 35;
@@ -1469,7 +1466,7 @@ static void StripPipes(const char* source, char* dest, uint32_t destSize, int32_
     *out = '\0';
 }
 
-// OFFSET: 0x004E7170
+// OFFSET: 0x004E7170/0x140129110
 bool ScrubString(const char* source, char* dest, int32_t maxChars, uint32_t destSize, int32_t flags) {
     if (!dest) {
         return false;

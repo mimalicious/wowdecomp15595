@@ -42,7 +42,6 @@ int32_t CGCharacterModelBase::s_metatable = LUA_NOREF;
 // STATIC: 0x00F76C70
 int32_t CGCharacterModelBase::s_objectType;
 
-// STATIC: #0x00C0E4E0
 CDataAllocator CGCharacterModelBase::s_characterModelHeap(sizeof(CGCharacterModelBase), 5);
 
 // OFFSET: 0x00A02EE0

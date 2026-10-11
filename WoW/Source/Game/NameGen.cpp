@@ -7,7 +7,7 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/NameGenRec.h"
 
-// OFFSET: 0x00B119D0
+// OFFSET: 0x00B119D0/0x1408D7390
 static int32_t QSortDictionary(const void* l, const void* r) {
     DictionaryRecord left = *static_cast<const DictionaryRecord*>(l);
     DictionaryRecord right = *static_cast<const DictionaryRecord*>(r);

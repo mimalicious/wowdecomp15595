@@ -392,7 +392,7 @@ C2Vector CGMinimapFrame::WorldPosToMinimapFrameCoords(C3Vector center, float rad
     return coords;
 }
 
-// OFFSET: [0x00619630]
+// OFFSET: [0x00619630/0x1402A6B50]
 int32_t MinimapGetZoomLevels() {
     return 6;
 }

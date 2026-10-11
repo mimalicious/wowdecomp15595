@@ -23,7 +23,7 @@ FMOD_OS_CRITICALSECTION         *gResolveCrit            = 0;
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00AF4520/0x1408BDA10
 FMOD_RESULT FMOD_OS_Net_Init()
 {
     FMOD_RESULT result;
@@ -59,7 +59,7 @@ FMOD_RESULT FMOD_OS_Net_Init()
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00AF4570/0x1408BDA70
 FMOD_RESULT FMOD_OS_Net_Shutdown()
 {
     if (FMOD_OS_Net_Initialised)
@@ -87,7 +87,7 @@ FMOD_RESULT FMOD_OS_Net_Shutdown()
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00AF45A0/0x1408BDAB0
 FMOD_RESULT FMOD_OS_Net_Connect(const char *host, const unsigned short port, void **handle)
 {
     struct sockaddr_in   server;

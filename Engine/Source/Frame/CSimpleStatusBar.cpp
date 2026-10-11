@@ -18,16 +18,16 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB9018
+// STATIC: 0x00CA3CB0
 int32_t CSimpleStatusBar::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD12D4
+// STATIC: 0x00DD3964
 int32_t CSimpleStatusBar::s_objectType;
 
-// STATIC: %0x00BB8608
+// STATIC: 0x00CA3260
 const char* CSimpleStatusBar::s_objectTypeName = "StatusBar";
 
-// STATIC: %0x00CD12D8
+// STATIC: 0x00DD3968
 CDataAllocator CSimpleStatusBar::s_allocator(sizeof(CSimpleStatusBar), 5);
 
 // INLINED
@@ -46,7 +46,7 @@ void CSimpleStatusBar::RunOnMinMaxChangedScript() {
     }
 }
 
-// INLINED
+// OFFSET: 0x0050EE80
 CSimpleStatusBar::~CSimpleStatusBar() {
 }
 

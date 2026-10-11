@@ -30,7 +30,7 @@
 // STATIC: 0x00CA8260
 static RECTF s_rect = { 0.0f, 1.0f, 1.0f, 1.0f };
 
-// STATIC: #0x00ADBAC4
+// STATIC: 0x00CA8270
 static KEY s_consoleHotKey = KEY_TILDE;
 
 // STATIC: 0x00CA8274
@@ -39,22 +39,19 @@ static int32_t s_historyIndex = -1;
 // STATIC: 0x00CA8278
 float s_fontHeight = 0.02f;
 
-// STATIC: #0x00ADBAD0
+// STATIC: 0x00CA827C
 float s_consoleLines = 10.0f;
 
-// STATIC: #0x00ADBAD4
+// STATIC: 0x00CA8280
 static RECTF s_hRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 // STATIC: 0x00CA8290
 uint32_t s_baseTextFlags = 8;
 
-// STATIC: #0x00ADBAE8
 static const char* s_consoleCommandNames[] = { "fontcolor", "bgcolor", "highlightcolor", "fontsize", "font", "consolelines", "clear", "proportionaltext", "spacing", "settings", "default", "closeconsole", "repeat", "AppendLogToFile" };
 
-// STATIC: #0x00ADBB20
 static const char* s_consoleCommandHelp[] = { "[ColorClassName] [Red 0-255] [Green 0-255] [Blue 0-255]", "[alpha 0-255] [Red 0-255] [Green 0-255] [Blue 0-255]", "[alpha 0-255] [Red 0-255] [Green 0-255] [Blue 0-255]", "[15-50] arbitrary font size", "[fontname] make sure to use the .ttf file name", "[number] number of lines to show in the console", "Clears the console buffer", "Toggles fixed-width text characters", "[float] specifies inter-character spacing, in pixels", "Shows current font and console settings", "Resets all the font and console settings", "Closes the Console window", "Repeats a command", "[filename = ConsoleLogs/Log<Timestamp>.txt] [numLines = all]" };
 
-// STATIC: #0x00A38308
 static const COMMANDHANDLER s_consoleCommandHandlers[] = { ConsoleCommand_FontColor, ConsoleCommand_BackGroundColor, ConsoleCommand_HighLightColor, ConsoleCommand_FontSize, ConsoleCommand_Font, ConsoleCommand_BufferSize, ConsoleCommand_ClearConsole, ConsoleCommand_Proportional, ConsoleCommand_CharSpacing, ConsoleCommand_CurrentSettings, ConsoleCommand_DefaultSettings, ConsoleCommand_CloseConsole, ConsoleCommand_RepeatHandler, ConsoleCommand_AppendLogToFile };
 
 // STATIC: 0x00CA8374
@@ -63,7 +60,6 @@ TSList<CONSOLELINE, TSGetLink<CONSOLELINE> > s_linelist;
 // STATIC: 0x00CA8380
 uint32_t s_colorArray[NUM_COLORTYPES] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFF808080, 0xFFFF0000, 0xFFFFFF00, 0xFFFFFFFF, 0xFFFFFFFF, 0x80FFFFFF, 0xC0000000 };
 
-// STATIC: #0x00CA1690
 static float s_caretpixheight;
 
 // STATIC: 0x00DD8724
@@ -72,46 +68,40 @@ static int32_t s_caret;
 // STATIC: 0x00DD8728
 static char s_copyText[128];
 
-// STATIC: #0x00CA1718
 static float s_caretpixwidth;
 
 // STATIC: 0x00DD87AC
 static CGxString* s_inputString;
 
-// STATIC: #0x00CA1720
 static CONSOLELINE* s_currlineptr;
 
-// STATIC: #0x00CA1724
+// STATIC: 0x00DD87B4
 static HLAYER s_layerBackground;
 
-// STATIC: #0x00CA1728
 char s_repeatBuffer[64];
 
 // STATIC: 0x00DD8800
 char s_fontName[260];
 
-// STATIC: #0x00CA186C
 uint32_t s_repeatCount;
 
-// STATIC: #0x00CA1870
+// STATIC: 0x00DD8904
 static HLAYER s_layerText;
 
 // STATIC: 0x00DD8908
 static CGxStringBatch* s_batch;
 
-// STATIC: #0x00CA1878
 static char s_partial[256];
 
 // STATIC: 0x00DD890C
 int32_t s_active;
 
-// STATIC: #0x00CA197C
+// STATIC: 0x00DD8A18
 uint32_t s_NumLines;
 
 // STATIC: 0x00DD8A1C
 static int32_t s_completionMode;
 
-// STATIC: #0x00CA1984
 static const char* s_completedCmd;
 
 // STATIC: 0x00DD87F8
@@ -126,13 +116,10 @@ static int32_t s_consoleResizeState;
 // STATIC: 0x00DD8A30
 static int32_t s_highlightState;
 
-// STATIC: #0x00CA1998
 static float s_highlightHStart;
 
-// STATIC: #0x00CA199C
 static float s_highlightHEnd;
 
-// STATIC: #0x00CA19A0
 static uint32_t s_highlightLeftCharIndex;
 
 // STATIC: 0x00DD8A40
@@ -141,10 +128,10 @@ static uint32_t s_highlightRightCharIndex;
 // STATIC: 0x00DD8A44
 float s_charSpacing;
 
-// STATIC: #0x00CA19AC
+// STATIC: 0x00DD8A48
 static const char* s_consoleMessage;
 
-// STATIC: #0x00CA19B0
+// STATIC: 0x00DD8A54
 float s_consoleHeight;
 
 // STATIC: 0x00DD8A58
@@ -153,7 +140,7 @@ static SCritSect s_critsect;
 // STATIC: 0x00DD8A98
 static CVar* s_bgLoadThrottleVar;
 
-// OFFSET: 0x0060DB40
+// OFFSET: 0x0060DB40/0x140297770
 void GenerateNodeString(CONSOLELINE* node) {
     CGxFont* font = TextBlockGetFontPtr(s_textFont);
 
@@ -169,7 +156,7 @@ void GenerateNodeString(CONSOLELINE* node) {
     GxuFontCreateString(font, reinterpret_cast<const char*>(node->m_buffer), s_fontHeight, position, 1.0f, s_fontHeight, 0.0f, node->m_fontPointer, GxVJ_Middle, GxHJ_Left, s_baseTextFlags, *reinterpret_cast<const CImVector*>(&s_colorArray[node->m_colorType]), s_charSpacing, 1.0f, 1.0f, 0.0f);
 }
 
-// OFFSET: 0x0060DC10
+// OFFSET: 0x0060DC10/0x1402978A0
 static void SetInputString(const char* text) {
     if (s_inputString) {
         GxuFontDestroyString(s_inputString);
@@ -275,7 +262,7 @@ static int32_t OnMouseMove(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x0060E080
+// OFFSET: 0x0060E080/0x140297DB0
 static void MakeCommandCurrent(CONSOLELINE* line, const char* command) {
     line->m_inputpos = line->m_inputstart;
     line->m_chars = line->m_inputstart;
@@ -386,7 +373,7 @@ static int32_t EventCloseCallback(void* param) {
     return 0;
 }
 
-// OFFSET: 0x0060E3A0
+// OFFSET: 0x0060E3A0/0x1402982F0
 CONSOLELINE::~CONSOLELINE() {
     if (this->m_buffer) {
         SMemFree(this->m_buffer, __FILE__, __LINE__, 0);
@@ -450,7 +437,7 @@ static void DrawHighLight() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0060EE80
+// OFFSET: 0x0060EE80/0x140298F50
 static void DrawCaret(const C3Vector& caretpos) {
     C3Vector position[4] = {
         C3Vector(caretpos.x, caretpos.y, 0.0f),
@@ -490,7 +477,7 @@ static void PaintBackground(void* param, const RECTF* rect, const RECTF* visible
     }
 }
 
-// OFFSET: 0x0060F1A0
+// OFFSET: 0x0060F1A0/0x1402992F0
 static void EnforceMaxLines() {
     if (s_NumLines <= 256) {
         return;
@@ -507,7 +494,7 @@ static void EnforceMaxLines() {
     s_NumLines--;
 }
 
-// OFFSET: 0x0060F220
+// OFFSET: 0x0060F220/0x140299390
 static CONSOLELINE* GetInputLine() {
     CONSOLELINE* head = s_linelist.Head();
 
@@ -533,9 +520,8 @@ static CONSOLELINE* GetInputLine() {
     return line;
 }
 
-// OFFSET: 0x0060F300
+// OFFSET: 0x0060F300/0x140299540
 static void PaintText(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
-    // STATIC: #0x00CA19F0
     static float carettime;
 
     if (s_rect.bottom >= 1.0f) {
@@ -839,7 +825,7 @@ static int32_t OnKeyDownRepeat(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: 0x00610350
+// OFFSET: 0x00610350/0x14029A750
 void ConsoleWrite(const char* str, COLOR_T color) {
     if (!str || !*str || !GxDevExists() || !s_textFont) {
         return;
@@ -870,7 +856,7 @@ void ConsoleWrite(const char* str, COLOR_T color) {
     s_critsect.Leave();
 }
 
-// OFFSET: 0x006538B0
+// OFFSET: 0x006538B0/0x1402F3E70
 void ConsoleWriteA(const char* format, COLOR_T color, ...) {
     if (!format || !*format || !GxDevExists()) {
         return;
@@ -884,7 +870,7 @@ void ConsoleWriteA(const char* format, COLOR_T color, ...) {
     va_end(args);
 }
 
-// OFFSET: 0x00653900
+// OFFSET: 0x00653900/0x1402F3EC0
 void ConsolePrintf(const char* format, ...) {
     if (!format || !*format || !GxDevExists()) {
         return;
@@ -898,7 +884,7 @@ void ConsolePrintf(const char* format, ...) {
     va_end(args);
 }
 
-// OFFSET: 0x00657120
+// OFFSET: 0x00657120/0x1402F8CC0
 void ConsoleCommandExecute(const char* commandLine, int32_t addToHistory) {
     if (s_execState == 1 || s_execState == 0 || s_execState == 2) {
         if (!AddLineToExecFile(commandLine)) {
@@ -989,7 +975,7 @@ static int32_t OnIdle(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x0060F790
+// OFFSET: 0x0060F790/0x140299A80
 static int32_t OnKeyDown(const void* data, void* param) {
     const EVENT_DATA_KEY* key = static_cast<const EVENT_DATA_KEY*>(data);
 
@@ -1210,7 +1196,7 @@ static int32_t OnKeyDown(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: 0x0060FFC0
+// OFFSET: 0x0060FFC0/0x14029A330
 static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_CHAR, OnChar, NULL, 7.0f);
     EventRegisterEx(EVENT_ID_IDLE, OnIdle, NULL, 7.0f);
@@ -1234,7 +1220,7 @@ static void UnregisterHandlers() {
     EventUnregister(EVENT_ID_MOUSEMOVE, OnMouseMove);
 }
 
-// OFFSET: 0x00610130
+// OFFSET: 0x00610130/0x14029A4C0
 void ConsoleScreenInitialize(const char* title) {
     CRect windowSize;
     g_theGxDevicePtr->CapsWindowSize(windowSize);
@@ -1296,7 +1282,7 @@ void ConsolePostClose() {
     EventPostCloseEx(EventGetCurrentContext());
 }
 
-// OFFSET: 0x0060E260
+// OFFSET: 0x0060E260/0x140297FF0
 int32_t ConsoleGetActive() {
     return s_active;
 }

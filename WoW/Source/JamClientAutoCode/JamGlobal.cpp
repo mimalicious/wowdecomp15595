@@ -1378,7 +1378,7 @@ GlobalGuildSetAchievementTracking::GlobalGuildSetAchievementTracking() {
 GlobalGuildSetAchievementTracking::~GlobalGuildSetAchievementTracking() {
 }
 
-// OFFSET: 0x0069C890
+// OFFSET: 0x0069C890/0x140348D00
 void GlobalGuildSetAchievementTracking::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1027));
 

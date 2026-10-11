@@ -15,10 +15,10 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00CD12EC
+// STATIC: 0x00DD397C
 int32_t CScriptRegion::s_objectType;
 
-// STATIC: %0x00BB860C
+// STATIC: 0x00CA3264
 const char* CScriptRegion::s_objectTypeName = "Region";
 
 // PROVEN: e23865aa IDENTICAL/DIFFERENT

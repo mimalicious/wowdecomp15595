@@ -13,13 +13,13 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB9AD0
+// STATIC: 0x00CA4798
 int32_t CSimpleControlPoint::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD2804
+// STATIC: 0x00DD3CBC
 int32_t CSimpleControlPoint::s_objectType;
 
-// STATIC: %0x00BB8BB8
+// STATIC: 0x00CA3830
 const char* CSimpleControlPoint::s_objectTypeName = "ControlPoint";
 
 // PROVEN: 1e3c45e4 IDENTICAL/IDENTICAL

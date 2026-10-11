@@ -18,7 +18,6 @@ char g_commandHistory[32][1024];
 // STATIC: 0x00E4D328/0x140D36100
 uint32_t g_commandHistoryIndex;
 
-// STATIC: %0x00CE29EC
 COMMANDHANDLER g_defaultCommand;
 
 // STATIC: 0x00E4D334/0x140B90620

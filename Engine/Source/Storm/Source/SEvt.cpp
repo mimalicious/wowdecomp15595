@@ -3,7 +3,6 @@
 #include "Engine/Source/Storm/H/SCritSect.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00CB74F8
 static int32_t s_modified;
 
 // STATIC: 0x00DA60AC
@@ -12,7 +11,6 @@ static _TYPEHASHENTRY** s_typehashtable;
 // STATIC: 0x00DA60B0
 static uint32_t s_typehashtablesize;
 
-// STATIC: #0x00CB7508
 static uint32_t s_typehashtableused;
 
 // STATIC: 0x00DA60B8

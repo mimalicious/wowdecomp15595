@@ -71,7 +71,7 @@ FMOD_DSP_PARAMETERDESC dspparameq_param[3] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A9A1D0/0x14085AA20
 FMOD_DSP_DESCRIPTION_EX *DSPParamEq::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -737,7 +737,7 @@ FMOD_RESULT F_CALLBACK DSPParamEq::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A99F40
 FMOD_RESULT F_CALLBACK DSPParamEq::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPParamEq *parameq = (DSPParamEq *)dsp;

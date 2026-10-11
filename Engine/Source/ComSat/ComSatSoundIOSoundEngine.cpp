@@ -200,9 +200,7 @@ void ComSat::Sound::IOSoundEngine::InitCapture() {
     SI3::VoiceChat_InitCapture(this->m_sampleRate);
     SI3::VoiceChat_SetPrimaryCaptureCallback(&this->m_captureChannel);
     SI3::VoiceChat_ActivatePrimaryCaptureCallback();
-    // STATIC: #0x00D439A0
     static CVar* s_enableMicrophone = CVar::Lookup("EnableMicrophone");
-    // STATIC: #0x00D4399C
     static CVar* s_enableVoiceChat = CVar::Lookup("EnableVoiceChat");
     if (s_enableVoiceChat && s_enableVoiceChat->m_intValue && s_enableMicrophone && s_enableMicrophone->m_intValue && !ComSatClient_IsComsatDisabledByClient()) {
         SI3::VoiceChat_StartCapture();

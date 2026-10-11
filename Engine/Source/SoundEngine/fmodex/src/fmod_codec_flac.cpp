@@ -325,7 +325,7 @@ static void FMOD_FLAC_MetadataCallback(const FLAC__StreamDecoder *decoder, const
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB9ED0/0x140880E90
 FMOD_CODEC_DESCRIPTION_EX *CodecFLAC::getDescriptionEx()
 {
     FMOD_memset(&flaccodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));

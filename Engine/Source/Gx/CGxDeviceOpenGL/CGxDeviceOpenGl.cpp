@@ -17,46 +17,37 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00AFBF9C
 static const GLenum s_glBufferTarget[GxPoolTargets_Last] = { GL_ARRAY_BUFFER_ARB, GL_ELEMENT_ARRAY_BUFFER_ARB };
 
-// STATIC: %0x00AFBFA4
 static const CGxDeviceOpenGl::EDeviceState s_bufferState[GxPoolTargets_Last] = { CGxDeviceOpenGl::Ds_ArrayBuffer, CGxDeviceOpenGl::Ds_ElementArrayBuffer };
 
-// STATIC: %0x00AFBFAC
 static const GLenum s_glBufferUsage[3] = { GL_STATIC_DRAW_ARB, GL_DYNAMIC_DRAW_ARB, GL_STREAM_DRAW_ARB };
 
 // STATIC: 0x00BD4DC8/0x0009C9D70
 const GLenum s_glTexTarget[4] = { GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_2D };
 
-// STATIC: %0x00AFC014
 static const GLenum s_glQueryTarget[1] = { GL_SAMPLES_PASSED_ARB };
 
-// STATIC: %0x00AFC020
 static const GLenum s_glAttachment[GxBuffers_Last] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT, GL_DEPTH_ATTACHMENT_EXT };
 
-// STATIC: %0x00AFD3C8
 const GLint s_glInternalFormat[GxTexFormats_Last] = { 0, 0x8058, 0x8058, 0x8056, 0x8057, 0x8050, 0x8709, 0x83F1, 0x83F2, 0x83F3, 0, 0x881B, 0, 0, 0, 0, 0, 0x81A6, 0x81A5, 0x81A7, 0, 0, 0, 0 };
 
-// STATIC: %0x00AFD488
 const GLenum s_glFormat[GxTexFormats_Last] = { 0, 0x1908, 0x80E1, 0x80E1, 0x80E1, 0x1907, 0x86F5, 0, 0, 0, 0x1907, 0x1907, 0x1908, 0x1907, 0x1907, 0x1908, 0, 0x1902, 0x1902, 0x1902, 0, 0, 0, 0 };
 
-// STATIC: %0x00AFD4E8
 const GLenum s_glType[GxTexFormats_Last] = { 0, 0x8367, 0x8367, 0x8365, 0x8366, 0x8363, 0x1400, 0, 0, 0, 0, 0x140B, 0x140B, 0, 0, 0, 0, 0x1405, 0x1405, 0x1405, 0, 0, 0, 0 };
 
-// STATIC: %0x00D92EE0
+// STATIC: 0x00EC66B8
 static bool s_dummyContextCreated;
 
 // STATIC: 0x00EC66BC/0x140DB8824
 static int32_t s_deviceChanging;
 
-// STATIC: %0x00C0E904
+// STATIC: 0x00D09694
 GLint s_glWrapMode[3] = { GL_CLAMP_TO_EDGE, GL_REPEAT, GL_MIRRORED_REPEAT_ARB };
 
-// STATIC: %0x00C0E7D8
 static int32_t s_firstAttach = 1;
 
-// STATIC: %0x00D92EA4
+// STATIC: 0x00EC6690
 static EmergencyMem s_emergencyMem[GxPoolTargets_Last];
 
 // OFFSET: 0x0084ED20/0x14057DB90

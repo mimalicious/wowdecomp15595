@@ -23,7 +23,7 @@ CLCDBitmap::CLCDBitmap() {
     }
 }
 
-// OFFSET: [0x00B3FB80, 0x00B3FBB0]
+// OFFSET: [0x00B3FB80/0x14090D6E0, 0x00B3FBB0/0x14090D720]
 CLCDBitmap::~CLCDBitmap() {
 }
 

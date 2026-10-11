@@ -12,14 +12,13 @@
 #define SCMD_STRING_SYNTAX_INCORRECT 0x5202
 #define SCMD_STRING_RESPONSE_FILE 0x5203
 
-// STATIC: #0x00A39F84
 static const char* const s_errorstr[3] = {
     "Invalid argument: %s",
     "The syntax of the command is incorrect.",
     "Unable to open response file: %s",
 };
 
-// OFFSET: 0x004B67B0
+// OFFSET: 0x004B67B0/0x1400EE0E0
 void GenerateError(void (STORMAPI* errorcallback)(_CMDERROR*), uint32_t errorcode, const char* itemstring) {
     uint32_t index;
     UINT stringid;

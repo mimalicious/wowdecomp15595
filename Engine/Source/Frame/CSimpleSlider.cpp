@@ -21,13 +21,13 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB97F8
+// STATIC: 0x00CA44E0
 int32_t CSimpleSlider::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A74/0x140CB97D8
 int32_t CSimpleSlider::s_objectType;
 
-// STATIC: %0x00BB87F4
+// STATIC: 0x00CA3464
 const char* CSimpleSlider::s_objectTypeName = "Slider";
 
 // STATIC: 0x00DD3A78

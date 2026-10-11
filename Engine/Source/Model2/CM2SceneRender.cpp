@@ -26,10 +26,8 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/Tempest/NTempest.h"
 
-// STATIC: %0x00AF94B8
 const uint32_t s_fogModes[7] = { 1, 1, 1, 2, 2, 3, 4 };
 
-// STATIC: %0x00AF94D4
 const uint32_t s_noLiquidFog[7] = { 0, 0, 0, 1, 1, 0, 0 };
 
 // STATIC: 0x00D07F20

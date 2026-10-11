@@ -36,19 +36,14 @@ class ToolhelpFunction {
     bool ModuleNext(HANDLE snapshot, char* path, uint32_t pathsize);
 };
 
-// STATIC: #0x00B33FF4
 static UINT_PTR s_timer;
 
-// STATIC: #0x00D871B0
 static ToolhelpFunction s_process32First;
 
-// STATIC: #0x00D871BC
 static ToolhelpFunction s_process32Next;
 
-// STATIC: #0x00D871C8
 static ToolhelpFunction s_module32First;
 
-// STATIC: #0x00D871D4
 static ToolhelpFunction s_module32Next;
 
 // OFFSET: 0x007DC750

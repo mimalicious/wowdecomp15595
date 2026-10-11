@@ -115,7 +115,6 @@ int32_t CGPartyInfo::m_lootMethod = 3;
 // STATIC: 0x00D107C0
 int32_t CGPartyInfo::m_lootThreshold = 2;
 
-// STATIC: #0x00BD1980
 int32_t CGPartyInfo::m_dynamicDifficulty;
 
 // OFFSET: 0x008FC540/0x1406538C0

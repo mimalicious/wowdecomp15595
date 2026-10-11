@@ -18,7 +18,6 @@ Global *gGlobal = 0;
 
 #else
 
-// STATIC: %0x00C23828
 static Global  gGlobalMem;
 
 #ifndef PLATFORM_PS3_SPU
@@ -28,7 +27,7 @@ static SystemI gSystemHeadMem;
 static MemPool gSystemPoolMem;
 #endif
 
-// STATIC: %0x00C23820
+// STATIC: 0x00D1FDF0
 Global *gGlobal = &gGlobalMem;
 
 /*

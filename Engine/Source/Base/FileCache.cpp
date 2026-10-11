@@ -4,13 +4,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/SLock.h"
 
-// STATIC: %0x00D93560
 static TSHashTable<PrefetchNode, HASHKEY_STRI> s_activeFiles;
 
-// STATIC: %0x00D9358C
 static TSHashTable<UncachableNode, HASHKEY_STRI> s_uncachableFiles;
 
-// STATIC: %0x00D935B8
 static SCritSect s_critSect;
 
 static void STORMAPI IBaseFileWaitForLoad(SOVERLAPPED* overlapped) {

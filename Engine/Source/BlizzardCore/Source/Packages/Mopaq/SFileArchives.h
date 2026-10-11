@@ -430,7 +430,7 @@ void SetSignatureErrorCallback(void (*callback)(const char* name, const char* me
 }
 }
 
-// INLINED
+// OFFSET: [0x007B6340<unsigned char>, 0x007B65A0<unsigned short>]
 template <class T>
 System_SFile::HeapArray<T>::HeapArray(uint32_t count) {
     this->m_count = count;

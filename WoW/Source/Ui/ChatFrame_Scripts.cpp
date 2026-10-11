@@ -1516,7 +1516,7 @@ static int32_t Script_GetChannelRosterInfo(lua_State* L) {
     return 6;
 }
 
-// OFFSET: 0x008E6490
+// OFFSET: 0x008E6490/0x1406147C0
 static int32_t EnableLogging(lua_State* L, int32_t index) {
     if (lua_gettop(L) > 0) {
         s_chatLogging[index] = StringToBOOL(L, 1, 1);
@@ -2552,7 +2552,7 @@ static int32_t Script_LeaveChannelByName(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008FA390
+// OFFSET: 0x008FA390/0x14062DC60
 static int32_t JoinChannelFromScript(lua_State* L, bool permanent) {
     if (!lua_isstring(L, 1)) {
         char function[1024];

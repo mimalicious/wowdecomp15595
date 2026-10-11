@@ -27,7 +27,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00ACFB30
+// OFFSET: 0x00ACFB30/0x14089A4B0
 FMOD_RESULT DSPConnectionPool::init(SystemI *system, int numconnections, int numoutputlevels, int numinputlevels)
 {
     DSP_LEVEL_TYPE *leveldata;
@@ -169,7 +169,7 @@ FMOD_RESULT DSPConnectionPool::close()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00ACF7C0
+// OFFSET: 0x00ACF7C0/0x14089A0B0
 FMOD_RESULT DSPConnectionPool::alloc(DSPConnectionI **connection)
 {
     DSPConnectionI *newconnection;

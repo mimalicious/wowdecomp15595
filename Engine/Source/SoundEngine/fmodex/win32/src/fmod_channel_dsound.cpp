@@ -433,7 +433,7 @@ FMOD_RESULT ChannelDSound::stop(bool ignoreenddelay, bool resetstate)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AFE8A0/0x1408C0330
 FMOD_RESULT ChannelDSound::setPaused(bool paused)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -539,7 +539,7 @@ FMOD_RESULT ChannelDSound::setPaused(bool paused)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AFE960
 FMOD_RESULT ChannelDSound::setVolume(float volume)
 {  
 	if (mBuffer) 

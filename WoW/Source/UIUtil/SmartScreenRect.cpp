@@ -23,7 +23,6 @@ static CRect SmartScreenRectMoveLeft(uint32_t grid, CRect rect);
 static CRect SmartScreenRectMoveRight(uint32_t grid, CRect rect);
 static CRect SmartScreenRectMoveDown(uint32_t grid, CRect rect);
 
-// STATIC: #0x00A23C08
 static int32_t s_searchDirections[9][4] = {
     { 0, 2, 3, 1 },
     { 1, 0, 2, 0 },
@@ -36,7 +35,6 @@ static int32_t s_searchDirections[9][4] = {
     { 3, 2, 3, 2 },
 };
 
-// STATIC: #0x00A23C98
 static CRect (*s_moveFunctions[4])(uint32_t grid, CRect rect) = {
     SmartScreenRectMoveUp,
     SmartScreenRectMoveLeft,
@@ -249,7 +247,7 @@ static void SmartScreenRectRecycleNodes() {
     s_freeNodes.Combine(&s_searchQueue, 2, NULL);
 }
 
-// OFFSET: 0x00460DD0
+// OFFSET: 0x00460DD0/0x14006C780
 void SmartScreenRectClearAllGrids() {
     for (uint32_t i = 0; i < 2; i++) {
         s_grids[i].SetCount(0);
@@ -369,7 +367,7 @@ static C2Vector SmartScreenRectFindPosition(uint32_t grid, const CRect& rect, in
     return position;
 }
 
-// OFFSET: 0x00461220
+// OFFSET: 0x00461220/0x14006CE00
 void SmartScreenRectPlace(uint32_t grid, CRect& rect) {
     float height = fabsf(rect.maxY - rect.minY);
     float halfWidth = fabsf(rect.maxX - rect.minX) * 0.5f;

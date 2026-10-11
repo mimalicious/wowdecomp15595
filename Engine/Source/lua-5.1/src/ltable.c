@@ -259,7 +259,7 @@ static int numusearray (const Table *t, int *nums) {
 }
 
 
-// OFFSET: 0x0042AB00
+// OFFSET: 0x0042AB00/0x1400318A0
 static int numusehash (const Table *t, int *nums, int *pnasize) {
   int totaluse = 0;  /* total number of elements */
   int ause = 0;  /* summation of `nums' */
@@ -314,7 +314,7 @@ static void setnodevector (lua_State *L, Table *t, int size) {
 }
 
 
-// OFFSET: 0x0042B160
+// OFFSET: 0x0042B160/0x140032150
 static void resize (lua_State *L, Table *t, int nasize, int nhsize) {
   int i;
   int oldasize = t->sizearray;
@@ -351,14 +351,14 @@ static void resize (lua_State *L, Table *t, int nasize, int nhsize) {
 }
 
 
-// OFFSET: 0x0042B3D0
+// OFFSET: 0x0042B3D0/0x140032400
 void luaH_resizearray (lua_State *L, Table *t, int nasize) {
   int nsize = (t->node == dummynode) ? 0 : sizenode(t);
   resize(L, t, nasize, nsize);
 }
 
 
-// OFFSET: 0x0042B420
+// OFFSET: 0x0042B420/0x140032430
 static void rehash (lua_State *L, Table *t, const TValue *ek) {
   int nasize, na;
   int nums[MAXBITS+1];  /* nums[i] = number of keys between 2^(i-1) and 2^i */
@@ -429,7 +429,7 @@ static Node *getfreepos (Table *t) {
 ** put new key in its main position; otherwise (colliding node is in its main 
 ** position), new key goes to an empty position. 
 */
-// OFFSET: 0x0042B530
+// OFFSET: 0x0042B530/0x1400325D0
 static TValue *newkey (lua_State *L, Table *t, const TValue *key) {
   Node *mp = mainposition(t, key);
   if (!ttisnil(gval(mp)) || mp == dummynode) {
@@ -466,7 +466,7 @@ static TValue *newkey (lua_State *L, Table *t, const TValue *key) {
 /*
 ** search function for integers
 */
-// OFFSET: 0x0042ADE0
+// OFFSET: 0x0042ADE0/0x140031C60
 const TValue *luaH_getnum (Table *t, int key) {
   /* (1 <= key && key <= t->sizearray) */
   if (cast(unsigned int, key-1) < cast(unsigned int, t->sizearray))
@@ -503,7 +503,7 @@ const TValue *luaH_getstr (Table *t, TString *key) {
 /*
 ** main search function
 */
-// OFFSET: 0x0042AEC0
+// OFFSET: 0x0042AEC0/0x140031D40
 const TValue *luaH_get (Table *t, const TValue *key) {
   switch (ttype(key)) {
     case LUA_TNIL: return luaO_nilobject;
@@ -531,7 +531,7 @@ const TValue *luaH_get (Table *t, const TValue *key) {
 }
 
 
-// OFFSET: 0x0042AF90
+// OFFSET: 0x0042AF90/0x140031E40
 TValue *luaH_set (lua_State *L, Table *t, const TValue *key) {
   const TValue *p = luaH_get(t, key);
   t->flags = 0;
@@ -546,7 +546,7 @@ TValue *luaH_set (lua_State *L, Table *t, const TValue *key) {
 }
 
 
-// OFFSET: 0x0042B000
+// OFFSET: 0x0042B000/0x140031EB0
 TValue *luaH_setnum (lua_State *L, Table *t, int key) {
   const TValue *p = luaH_getnum(t, key);
   if (p != luaO_nilobject)
@@ -559,7 +559,7 @@ TValue *luaH_setnum (lua_State *L, Table *t, int key) {
 }
 
 
-// OFFSET: 0x0042B640
+// OFFSET: 0x0042B640/0x140032740
 TValue *luaH_setstr (lua_State *L, Table *t, TString *key) {
   const TValue *p = luaH_getstr(t, key);
   if (p != luaO_nilobject)

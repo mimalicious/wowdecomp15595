@@ -5,7 +5,6 @@
 #include "WoW/Source/Object/Unit.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
-// STATIC: #0x00DCEC58
 CDataAllocator CGSimpleHealthBar::s_simpleHealthBarHeap(sizeof(CGSimpleHealthBar), 5);
 
 // INLINED
@@ -13,7 +12,7 @@ void CGSimpleHealthBar::operator delete(void* ptr) {
     CGSimpleHealthBar::s_simpleHealthBarHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x00A3B840
+// OFFSET: 0x00A3B840/0x1407E88D0
 static int32_t SimpleHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -26,13 +25,13 @@ static int32_t SimpleHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uin
     return 1;
 }
 
-// OFFSET: 0x00A3B7C0
+// OFFSET: 0x00A3B7C0/0x1407E8840
 CGSimpleHealthBar::CGSimpleHealthBar(CSimpleFrame* parent) : CSimpleStatusBar(parent) {
     this->m_guid.m_guid = 0;
     this->m_autoColor = 1;
 }
 
-// INLINED
+// OFFSET: 0x00A3BA80/0x1407E8BC0
 CGSimpleHealthBar::~CGSimpleHealthBar() {
     if (ClntObjMgrGetCurrent()) {
         this->RemoveMirrorHandlers();

@@ -12,7 +12,6 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
-// STATIC: #0x00B325BB
 static bool s_continueAfterAssert;
 
 // STATIC: 0x00EB5880

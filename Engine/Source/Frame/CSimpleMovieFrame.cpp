@@ -36,13 +36,13 @@
 #define MOVIE_CAPTIONS_COMPRESSED 0x5A50424D
 #define MOVIE_CAPTIONS_ENCRYPTED 0x4650424D
 
-// STATIC: %0x00BB993C
+// STATIC: 0x00CA4614
 int32_t CSimpleMovieFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3BF0
 int32_t CSimpleMovieFrame::s_objectType;
 
-// STATIC: %0x00BB8824
+// STATIC: 0x00CA3490
 const char* CSimpleMovieFrame::s_objectTypeName = "MovieFrame";
 
 // STATIC: 0x00DD3BF4
@@ -51,7 +51,7 @@ CSimpleMovieFrame* CSimpleMovieFrame::s_currentMovieFrame;
 // STATIC: 0x00DD3BF8
 int32_t CSimpleMovieFrame::s_decoderCount;
 
-// STATIC: %0x00CD2780
+// STATIC: 0x00DD3C38
 CDataAllocator CSimpleMovieFrame::s_allocator(sizeof(CSimpleMovieFrame), 5);
 
 // STATIC: 0x00DD3BFC
@@ -66,16 +66,12 @@ static int32_t s_ambienceWasMuted;
 // STATIC: 0x00DD3C08
 static int32_t s_voiceChatWasMuted;
 
-// STATIC: %0x00AD9784
 static uint32_t s_textureCount[7] = { 6, 2, 3, 4, 6, 2, 6 };
 
-// STATIC: %0x00AD97A0
 static uint32_t s_frameWidth[7] = { 800, 1024, 800, 1024, 800, 1024, 1280 };
 
-// STATIC: %0x00AD97BC
 static uint32_t s_frameHeight[7] = { 384, 512, 512, 576, 384, 512, 768 };
 
-// STATIC: %0x00BB8890
 static MOVIETEXTURERECT s_textureRects[7][6] = {
     {
         { 0.0f, 0.64f, 0.11f, -0.33f },
@@ -135,7 +131,6 @@ static MOVIETEXTURERECT s_textureRects[7][6] = {
     },
 };
 
-// STATIC: %0x00AD97E0
 static MOVIETEXTUREINFO s_textureInfo[7][6] = {
     {
         { 512, 256, 0, 3200 },
@@ -255,13 +250,10 @@ static MOVIEUPDATERECT s_updateRects[7][6] = {
     },
 };
 
-// STATIC: %0x00AD9D20
 static uint32_t s_frameOffset[7] = { 0x4B00, 0x18000, 0x19000, 0, 0x10680, 0x26000, 0 };
 
-// STATIC: %0x00AD9D3C
 static const uint8_t s_defaultKey[32] = { 0xD7, 0xC8, 0xD9, 0xA0, 0xC8, 0xC5, 0xCC, 0xCC, 0xCF, 0xA0, 0xD4, 0xC8, 0xC5, 0xD2, 0xC5, 0xAC, 0xA0, 0xC9, 0xA7, 0xCD, 0xA0, 0xC1, 0xA0, 0xD4, 0xC5, 0xD3, 0xD4, 0xA0, 0xCB, 0xC5, 0xD9, 0xA1 };
 
-// STATIC: %0x00AC7ECC
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
 // OFFSET: 0x00523B40
@@ -851,7 +843,6 @@ void CSimpleMovieFrame::Render() {
     // STATIC: 0x00DD3C6C
     static C3Vector s_normal(0.0f, 0.0f, 1.0f);
 
-    // STATIC: %0x00CD2794
     static C2Vector s_texCoords[4] = { C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 1.0f) };
 
     g_theGxDevicePtr->RsPush();

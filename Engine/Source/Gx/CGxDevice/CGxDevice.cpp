@@ -16,79 +16,65 @@
 #include "Engine/Source/Os/Processor.h"
 #include "Engine/Source/Os/TimeManager.h"
 
-// STATIC: %0x00AFB958
 const uint32_t CGxDevice::s_texFormatBitDepth[GxTexFormats_Last] = { 0, 32, 32, 16, 16, 16, 16, 4, 8, 8, 16, 32, 64, 32, 32, 128, 32, 32, 16, 32, 32, 32, 32, 32 };
 
-// STATIC: %0x00AFB9B8
 const uint32_t CGxDevice::s_texFormatBlockSize[GxTexFormats_Last] = { 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
 // STATIC: 0x00BD40B8
 const uint32_t CGxDevice::s_texFormatIsDepth[GxTexFormats_Last] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1 };
 
-// STATIC: %0x00AFBAD8
 const float CGxDevice::s_polygonOffsetValues[3] = { 0.0f, 3.05180438e-05f, 3.81469727e-06f };
 
-// STATIC: %0x00AFBA18
 const uint32_t CGxDevice::s_texFormatBytesPerBlock[GxTexFormats_Last] = { 0, 4, 4, 2, 2, 2, 2, 8, 16, 16, 2, 4, 8, 4, 4, 16, 4, 4, 2, 4, 4, 4, 4, 4 };
 
-// STATIC: %0x00C0E2C8
+// STATIC: 0x00D08F88
 static uint32_t s_primVertsPerPrim[GxPrims_Last] = { 1, 2, 1, 3, 1, 1 };
 
-// STATIC: %0x00C0E2DC
+// STATIC: 0x00D08F9C
 static uint32_t s_primVertsExtra[GxPrims_Last] = { 0, 0, 1, 0, 2, 2 };
 
-// STATIC: #0x00AD87C4
 const char* s_formatToInt[CGxFormat::Formats_Last] = { "16", "24", "24", "30", "16", "24", "24", "32" };
 
-// STATIC: %0x00C0D87C
 const char* CGxDevice::s_shaderTargetNames[GxShTargets_Last] = { "Vertex", "Hull", "Domain", "Geometry", "Pixel", "Compute" };
 
-// STATIC: %0x00C0D894
 const char* CGxDevice::s_shaderModelNames[8] = { "ff", "nvrc", "ff_ps", "1_1", "2_0", "3_0", "4_0", "5_0" };
 
-// STATIC: %0x00C0D8C0
 const EGxShTarget CGxDevice::s_shaderProfileTarget[GxShProfiles_Last] = { GxShTargets_Last, GxSh_Vertex, GxSh_Pixel, GxSh_Vertex, GxSh_Vertex, GxSh_Vertex, GxSh_Vertex, GxSh_Vertex, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Geometry, GxSh_Geometry, GxSh_Hull, GxSh_Domain, GxSh_Compute, GxSh_Compute, GxSh_Vertex, GxSh_Vertex, GxSh_Pixel, GxSh_Vertex, GxSh_Pixel, GxSh_Compute, GxSh_Vertex, GxSh_Vertex, GxSh_Vertex, GxSh_Vertex, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Pixel, GxSh_Geometry, GxSh_Compute };
 
-// STATIC: %0x00C0D958
 const char* CGxDevice::s_shaderProfileNames[GxShProfiles_Last] = { "none", "vs_ff", "ps_ff", "vs_1_1", "vs_2_0", "vs_3_0", "vs_4_0", "vs_5_0", "ps_1_1", "ps_1_4", "ps_2_0", "ps_3_0", "ps_4_0", "ps_5_0", "gs_4_0", "gs_5_0", "hs_5_0", "ds_5_0", "cs_4_0", "cs_5_0", "arbvp1", "arbvp1_cg12", "arbfp1", "glslv", "glslf", "opencl", "vp20", "vp30", "vp40", "gp4vp", "fp10", "fp20", "fp25", "fp30", "fp40", "gp4fp", "gp4gp", "cuda" };
 
-// STATIC: %0x00C0DB40
 const char* CGxDevice::s_texFormatNames[GxTexFormats_Last] = { "Unknown", "Abgr8888", "Argb8888", "Argb4444", "Argb1555", "Rgb565", "Uv88", "Dxt1", "Dxt3", "Dxt5", "R16_UNORM", "Gr1616F", "Abgr16161616F", "R24_UNORM_X8", "R32F", "Abgr32323232F", "NULL", "D24X8", "D16", "D32", "INTZ", "RAWZ", "RESZ", "ATI_D24" };
 
 // STATIC: 0x00D08FB0
 uint32_t CGxDevice::s_alphaRef[12] = { 0, 128, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
 
-// STATIC: %0x00C0E324
 int32_t s_streamVertexPoolSize = 0x2C0000;
 
-// STATIC: %0x00C0E328
 int32_t s_streamIndexPoolSize = 0x40000;
 
-// STATIC: #0x00AD8BB4
 C3Vector CGxDevice::s_pointScaleAttenuation(1.0f, 0.0f, 0.0f);
 
 // STATIC: 0x00D09028/0x140BBAD30
 static const char* s_formatNames[CGxFormat::Formats_Last] = { "Rgb565", "ArgbX888", "Argb8888", "Argb2101010", "Ds160", "Ds24X", "Ds248", "Ds320" };
 
-// STATIC: %0x00C0E360
+// STATIC: 0x00D09020
 static C2iVector kWinMinSize = { 320, 240 };
 
 // STATIC: 0x00EBF47C/0x140DB14F0
 CGxDevice* g_theGxDevicePtr;
 
-// STATIC: %0x00D8BCEC
+// STATIC: 0x00EBF494
 uint32_t CGxDevice::m_logBytes;
 
-// STATIC: %0x00D91D20
+// STATIC: 0x00EBF498
 HSLOG CGxDevice::m_log;
 
-// STATIC: %0x00D92E88
+// STATIC: 0x00EC6660
 C2iVector CGxDevice::s_clientAdjust;
 
 // STATIC: 0x00EC6678
 static uint32_t s_nextFrameTime;
 
-// STATIC: %0x00C0E4CC
 const char* CGxDevice::s_shaderPaths[GxShTargets_Last] = { "Shaders\\Vertex", "Shaders\\Hull", "Shaders\\Domain", "Shaders\\Geometry", "Shaders\\Pixel", "Shaders\\Compute" };
 
 // STATIC: 0x00D08FEC
@@ -97,28 +83,26 @@ float CGxDevice::kWinAspect = 1.0f;
 // STATIC: 0x00EC6508
 int32_t CGxDevice::kWinAspectForce;
 
-// STATIC: %0x00D8BCE8
 CGxShader* CGxDevice::s_uiVertexShader;
 
-// STATIC: %0x00D92D34
 CGxShader* CGxDevice::s_uiPixelShader;
 
 // STATIC: 0x00EBF4A0
 ShadowConstants CGxDevice::s_shadowConstants[GxShTargets_Last];
 
-// STATIC: %0x00D92D80
+// STATIC: 0x00EC6558
 TSHashTable<CGxShader, HASHKEY_STRI> CGxDevice::s_shaderList[GxShTargets_Last];
 
-// STATIC: %0x00D92D3C
+// STATIC: 0x00EC6514
 TSGrowableArray<GxDeviceCallback> CGxDevice::s_deviceRestoredCallbacks;
 
-// STATIC: %0x00D92D4C
+// STATIC: 0x00EC6524
 TSGrowableArray<GxDeviceCallback> CGxDevice::s_textureRecreationCallbacks;
 
-// STATIC: %0x00D92D5C
+// STATIC: 0x00EC6534
 TSGrowableArray<GxDisplayChangeCallback> CGxDevice::s_displayChangeCallbacks;
 
-// STATIC: %0x00D92D6C
+// STATIC: 0x00EC6544
 TSGrowableArray<CGxDevice::ShaderModelCall> CGxDevice::s_shaderModelChangeCallbacks;
 
 // STATIC: 0x00D08FF0
@@ -130,13 +114,13 @@ TSList<CGxBuf, TSGetLink<CGxBuf> > CGxDevice::s_bufList;
 // STATIC: 0x00D09008
 TSExplicitList<CGxTex, offsetof(CGxTex, m_link)> CGxDevice::s_textureList;
 
-// STATIC: %0x00D92D2C
+// STATIC: 0x00EC6504
 int32_t CGxDevice::s_cursorVisible;
 
-// STATIC: %0x00D92D38
+// STATIC: 0x00EC6510
 int32_t CGxDevice::s_monitorsInit;
 
-// STATIC: %0x00D92E90
+// STATIC: 0x00EC6668
 TSGrowableArray<void*> CGxDevice::s_monitors;
 
 // STATIC: 0x00EC6500/0x140DB7578
@@ -145,82 +129,57 @@ uint32_t CGxDevice::s_cursorHotspotX;
 // STATIC: 0x00EBF49C/0x140DB150C
 uint32_t CGxDevice::s_cursorHotspotY;
 
-// STATIC: %0x00D91D28
+// STATIC: 0x00EC5500
 uint32_t CGxDevice::s_cursor[1024];
 
-// STATIC: %0x00C0D8B4
 static const int32_t s_shaderProfileSetC0D8B4[] = { GxShProfile_VsFf, GxShProfile_PsFf, 0 };
 
-// STATIC: %0x00C0D9F0
 static const int32_t s_shaderProfileSetC0D9F0[] = { GxShProfile_VsFf, GxShProfile_Fp10, 0 };
 
-// STATIC: %0x00C0D9FC
 static const int32_t s_shaderProfileSetC0D9FC[] = { GxShProfile_VsFf, GxShProfile_Ps20, 0 };
 
-// STATIC: %0x00C0DA08
 static const int32_t s_shaderProfileSetC0DA08[] = { GxShProfile_VsFf, GxShProfile_Arbfp1, 0 };
 
-// STATIC: %0x00C0DA14
 static const int32_t s_shaderProfileSetC0DA14[] = { GxShProfile_Vs11, GxShProfile_Ps11, 0 };
 
-// STATIC: %0x00C0DA20
 static const int32_t s_shaderProfileSetC0DA20[] = { GxShProfile_Vp20, GxShProfile_Fp20, 0 };
 
-// STATIC: %0x00C0DA2C
 static const int32_t s_shaderProfileSetC0DA2C[] = { GxShProfile_Arbvp1, GxShProfile_Fp20, 0 };
 
-// STATIC: %0x00C0DA38
 static const int32_t s_shaderProfileSetC0DA38[] = { GxShProfile_Vs20, GxShProfile_Ps20, 0 };
 
-// STATIC: %0x00C0DA44
 static const int32_t s_shaderProfileSetC0DA44[] = { GxShProfile_Arbvp1, GxShProfile_Arbfp1, 0 };
 
-// STATIC: %0x00C0DA50
 static const int32_t s_shaderProfileSetC0DA50[] = { GxShProfile_Arbvp1Cg12, GxShProfile_Arbfp1, 0 };
 
-// STATIC: %0x00C0DA5C
 static const int32_t s_shaderProfileSetC0DA5C[] = { GxShProfile_Vp30, GxShProfile_Fp30, 0 };
 
-// STATIC: %0x00C0DA68
 static const int32_t s_shaderProfileSetC0DA68[] = { GxShProfile_Vs30, GxShProfile_Ps30, 0 };
 
-// STATIC: %0x00C0DA74
 static const int32_t s_shaderProfileSetC0DA74[] = { GxShProfile_Vp40, GxShProfile_Fp40, 0 };
 
-// STATIC: %0x00C0DA80
 static const int32_t s_shaderProfileSetC0DA80[] = { GxShProfile_Vs40, GxShProfile_Gs40, GxShProfile_Ps40, GxShProfile_Cs40, 0 };
 
-// STATIC: %0x00C0DA94
 static const int32_t s_shaderProfileSetC0DA94[] = { GxShProfile_Gp4vp, GxShProfile_Gp4gp, GxShProfile_Gp4fp, 0 };
 
-// STATIC: %0x00C0DAA4
 static const int32_t s_shaderProfileSetC0DAA4[] = { GxShProfile_Vs50, GxShProfile_Hs50, GxShProfile_Ds50, GxShProfile_Gs50, GxShProfile_Ps50, GxShProfile_Cs50, 0 };
 
-// STATIC: %0x00C0DAC0
 static const int32_t* const s_shaderModel0Sets[] = { s_shaderProfileSetC0D8B4, NULL };
 
-// STATIC: %0x00C0DAC8
 static const int32_t* const s_shaderModel1Sets[] = { s_shaderProfileSetC0D9F0, NULL };
 
-// STATIC: %0x00C0DAD0
 static const int32_t* const s_shaderModel2Sets[] = { s_shaderProfileSetC0D9FC, s_shaderProfileSetC0DA08, NULL };
 
-// STATIC: %0x00C0DADC
 static const int32_t* const s_shaderModel3Sets[] = { s_shaderProfileSetC0DA14, s_shaderProfileSetC0DA20, s_shaderProfileSetC0DA2C, NULL };
 
-// STATIC: %0x00C0DAEC
 static const int32_t* const s_shaderModel4Sets[] = { s_shaderProfileSetC0DA38, s_shaderProfileSetC0DA44, s_shaderProfileSetC0DA50, s_shaderProfileSetC0DA5C, NULL };
 
-// STATIC: %0x00C0DB00
 static const int32_t* const s_shaderModel5Sets[] = { s_shaderProfileSetC0DA68, s_shaderProfileSetC0DA74, NULL };
 
-// STATIC: %0x00C0DB0C
 static const int32_t* const s_shaderModel6Sets[] = { s_shaderProfileSetC0DA80, s_shaderProfileSetC0DA94, NULL };
 
-// STATIC: %0x00C0DB18
 static const int32_t* const s_shaderModel7Sets[] = { s_shaderProfileSetC0DAA4, NULL };
 
-// STATIC: %0x00C0DB20
 static const int32_t* const* const s_shaderModelProfiles[8] = { s_shaderModel0Sets, s_shaderModel1Sets, s_shaderModel2Sets, s_shaderModel3Sets, s_shaderModel4Sets, s_shaderModel5Sets, s_shaderModel6Sets, s_shaderModel7Sets };
 
 void CGxDevice::DeviceEvictResources() {

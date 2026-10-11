@@ -10,13 +10,13 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
-// STATIC: %0x00D812E1
+// STATIC: 0x00EBAD61
 static bool s_enteredWorld;
 
-// STATIC: %0x00D812F8
+// STATIC: 0x00EBAD78
 static int32_t s_startTime;
 
-// STATIC: %0x00D81300
+// STATIC: 0x00EBAD80
 static int64_t s_initialLocal;
 
 // OFFSET: 0x007FB700/0x14050DFD0

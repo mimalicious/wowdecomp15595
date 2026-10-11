@@ -1225,14 +1225,14 @@ static int32_t Script_GetStatistic(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00947880
+// OFFSET: 0x00947880/0x1406B4E30
 static void CriteriaPlayerNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (success && g_nameDBCache.GetRecord(guid.m_guid, WOWGUID(), NULL, NULL, false)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_RECEIVED_ACHIEVEMENT_MEMBER_LIST, "%d", param);
     }
 }
 
-// OFFSET: 0x00947840
+// OFFSET: 0x00947840/0x1406B4DF0
 static bool IsCriteriaEligible(const Achievement_CriteriaRec* criteria) {
     return !criteria->unk_0040 || !CGWorldStateInfo::GetWorldStateKnown(criteria->unk_0040) || GetWorldState(criteria->unk_0040) == criteria->unk_0044;
 }
@@ -1600,7 +1600,7 @@ static int32_t Script_GetAchievementLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00948400
+// OFFSET: 0x00948400/0x1406B5B60
 static int32_t Script_GetGuildCategoryList(lua_State* L) {
     int32_t count = 1;
 
@@ -1635,7 +1635,7 @@ static int32_t Script_GetGuildCategoryList(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00948C90
+// OFFSET: 0x00948C90/0x1406B65B0
 static int32_t Script_SetFocusedAchievement(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         CGAchievementInfo::SetFocusedAchievement(static_cast<int32_t>(lua_tonumber(L, 1)));
@@ -1644,7 +1644,7 @@ static int32_t Script_SetFocusedAchievement(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0094BF10
+// OFFSET: 0x0094BF10/0x1406BA890
 static int32_t Script_IsAchievementEligible(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsAchievementEligible(achievementID)");
@@ -1682,7 +1682,7 @@ static int32_t Script_IsAchievementEligible(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0094CEB0
+// OFFSET: 0x0094CEB0/0x1406BC080
 static int32_t Script_GetGuildAchievementNumMembers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildAchievementNumMembers(achievementID)");
@@ -1702,7 +1702,7 @@ static int32_t Script_GetGuildAchievementNumMembers(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0094CF60
+// OFFSET: 0x0094CF60/0x1406BC180
 static int32_t Script_GetGuildAchievementMemberInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetGuildAchievementMemberInfo(achievementID, index)");
@@ -1740,7 +1740,7 @@ static int32_t Script_GetGuildAchievementMemberInfo(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0094D080
+// OFFSET: 0x0094D080/0x1406BC300
 static int32_t Script_GetAchievementGuildRep(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -1804,7 +1804,7 @@ static int32_t Script_GetAchievementGuildRep(lua_State* L) {
     return 3;
 }
 
-// OFFSET: 0x0094EFE0
+// OFFSET: 0x0094EFE0/0x1406BEF40
 static int32_t Script_GetGuildAchievementMembers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildAchievementMembers(achievementID)");

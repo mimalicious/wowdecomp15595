@@ -9,7 +9,7 @@ CSimpleFontable::CSimpleFontable() {
     this->m_fontObject = NULL;
 }
 
-// INLINED
+// OFFSET: 0x004FB490/0x14013F520
 CSimpleFontable::~CSimpleFontable() {
     this->SetFontObject(NULL);
 }

@@ -8,7 +8,7 @@
 // STATIC: 0x00F771A8
 CMinigame_C* CGMinigameInfo::m_minigame;
 
-// OFFSET: 0x00A0A220
+// OFFSET: 0x00A0A220/0x1407AB2A0
 void CGMinigameInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_MINIGAME_SETUP, Packet_SMSG_MINIGAME_SETUP, NULL);
     ClientServices::SetMessageHandler(SMSG_MINIGAME_STATE, Packet_SMSG_MINIGAME_STATE, NULL);
@@ -30,7 +30,7 @@ int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: 0x00A0A130
+// OFFSET: 0x00A0A130/0x1407AB190
 void CGMinigameInfo::LeaveWorld() {
     if (CGMinigameInfo::m_minigame) {
         SMemFree(CGMinigameInfo::m_minigame, "delete", -1, 0);

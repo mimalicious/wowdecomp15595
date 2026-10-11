@@ -55,7 +55,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A93A70/0x140853920
 FMOD_CODEC_DESCRIPTION_EX *CodecUser::getDescriptionEx()
 {
     FMOD_memset(&usercodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));

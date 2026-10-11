@@ -31,7 +31,6 @@
 #define HH(a, b, c, d, x, s, ac) { (a) += H((b), (c), (d)) + (x) + (uint32_t)(ac); (a) = ROTATE_LEFT((a), (s)); (a) += (b); }
 #define II(a, b, c, d, x, s, ac) { (a) += I((b), (c), (d)) + (x) + (uint32_t)(ac); (a) = ROTATE_LEFT((a), (s)); (a) += (b); }
 
-// STATIC: #0x00ADE968
 static uint8_t PADDING[64] = { 0x80 };
 
 // PROVEN: c8128402 IDENTICAL/IDENTICAL

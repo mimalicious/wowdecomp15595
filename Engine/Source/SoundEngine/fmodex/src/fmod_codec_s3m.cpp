@@ -62,7 +62,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB6DF0/0x14087D140
 FMOD_CODEC_DESCRIPTION_EX *CodecS3M::getDescriptionEx()
 {
     FMOD_memset(&s3mcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -306,7 +306,7 @@ FMOD_RESULT MusicChannelS3M::vibrato()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB3F80/0x1408798F0
 FMOD_RESULT MusicChannelS3M::tremolo() 
 {
 	int 			delta;
@@ -380,7 +380,7 @@ FMOD_RESULT MusicChannelS3M::tremolo()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB4070/0x1408799E0
 FMOD_RESULT MusicChannelS3M::fineVibrato() 
 {
 	int				delta;
@@ -446,7 +446,7 @@ FMOD_RESULT MusicChannelS3M::fineVibrato()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB4130/0x140879AB0
 FMOD_RESULT CodecS3M::updateNote(bool audible)
 {
 	MusicNote   *current;
@@ -1071,7 +1071,7 @@ FMOD_RESULT CodecS3M::updateNote(bool audible)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB4B60/0x14087A760
 FMOD_RESULT CodecS3M::updateEffects() 
 {
 	MusicNote   *current;
@@ -1533,7 +1533,7 @@ FMOD_RESULT CodecS3M::update(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AB5B60
+// OFFSET: 0x00AB5B60/0x14087BA70
 FMOD_RESULT CodecS3M::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
 	unsigned char	remap[32], st3pan, mastervol, temp[4];
@@ -2600,7 +2600,7 @@ FMOD_RESULT CodecS3M::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB5770
 FMOD_RESULT CodecS3M::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

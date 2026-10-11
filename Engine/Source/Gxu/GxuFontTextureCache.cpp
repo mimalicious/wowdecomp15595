@@ -10,7 +10,7 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00BBD970
+// STATIC: 0x00CA8A18
 static TSCArray<uint16_t, 256 * 256> s_textureData = { 256 * 256 };
 
 // OFFSET: 0x00623340

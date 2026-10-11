@@ -6,31 +6,31 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Tracker.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// STATIC: %0x00C0C844
+// STATIC: 0x00D074F4
 static const char* s_trackerAddressUS = "http://us.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: %0x00C0C848
+// STATIC: 0x00D074F8
 static const char* s_trackerAddressEU = "http://eu.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: %0x00C0C84C
+// STATIC: 0x00D074FC
 static const char* s_trackerAddressKR = "http://kr.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: %0x00C0C850
+// STATIC: 0x00D07500
 static const char* s_trackerAddressCN = "http://cn.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: %0x00C0C854
+// STATIC: 0x00D07504
 static const char* s_trackerAddressTW = "http://tw.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: %0x00D87629
+// STATIC: 0x00EBAD89
 bool Report::s_initialized;
 
-// STATIC: %0x00D87630
+// STATIC: 0x00EBAD90
 char Report::s_app[260];
 
-// STATIC: %0x00D87738
+// STATIC: 0x00EBAE98
 char Report::s_version[260];
 
-// STATIC: %0x00D87840
+// STATIC: 0x00EBAFA0
 char ReportOld::s_language[260];
 
 // PROVEN: f8b41de0 IDENTICAL/IDENTICAL

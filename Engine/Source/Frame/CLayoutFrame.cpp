@@ -15,25 +15,19 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: %0x00AD6DFC
 static const FRAMEPOINT s_centerXPoints[3] = { FRAMEPOINT_TOP, FRAMEPOINT_CENTER, FRAMEPOINT_BOTTOM };
 
-// STATIC: %0x00AD6E08
 static const FRAMEPOINT s_centerYPoints[3] = { FRAMEPOINT_LEFT, FRAMEPOINT_CENTER, FRAMEPOINT_RIGHT };
 
-// STATIC: %0x00AD6E14
 static const FRAMEPOINT s_rightPoints[3] = { FRAMEPOINT_TOPRIGHT, FRAMEPOINT_RIGHT, FRAMEPOINT_BOTTOMRIGHT };
 
-// STATIC: %0x00AD6E20
 static const FRAMEPOINT s_bottomPoints[3] = { FRAMEPOINT_BOTTOMLEFT, FRAMEPOINT_BOTTOM, FRAMEPOINT_BOTTOMRIGHT };
 
-// STATIC: %0x00AD6E2C
 static const FRAMEPOINT s_leftPoints[3] = { FRAMEPOINT_TOPLEFT, FRAMEPOINT_LEFT, FRAMEPOINT_BOTTOMLEFT };
 
-// STATIC: %0x00AD6E38
 static const FRAMEPOINT s_topPoints[3] = { FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOP, FRAMEPOINT_TOPRIGHT };
 
-// STATIC: %0x00BB8320
+// STATIC: 0x00CA2F7C
 static TSExplicitList<CLayoutFrame, offsetof(CLayoutFrame, m_resizeLink)> s_resizePendingList;
 
 // STATIC: 0x00DD3938
@@ -1384,7 +1378,7 @@ void CLayoutFrame::DestroyLayout() {
     s_resizePendingList.UnlinkNode(this);
 }
 
-// INLINED
+// OFFSET: 0x005091A0/0x140150E40
 CLayoutFrame::~CLayoutFrame() {
     if (this->m_animData) {
         delete this->m_animData;

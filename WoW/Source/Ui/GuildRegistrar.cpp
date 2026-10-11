@@ -14,7 +14,7 @@
 // STATIC: 0x00F763E8
 WOWGUID CGGuildRegistrar::m_registrar;
 
-// STATIC: #0x00C0E558
+// STATIC: 0x00F763D0
 GuildPetitionInfo CGGuildRegistrar::m_petition;
 
 // PROVEN: afa1f090 IDENTICAL/NONE
@@ -42,7 +42,7 @@ void CGGuildRegistrar::SetRegistrar(WOWGUID registrar, const GuildPetitionInfo* 
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_SHOW, NULL);
 }
 
-// OFFSET: 0x009EB610
+// OFFSET: 0x009EB610/0x14077D6D0
 void CGGuildRegistrar::CloseRegistrar() {
     if (!CGGuildRegistrar::m_registrar) {
         return;
@@ -66,7 +66,7 @@ int32_t CGGuildRegistrar::ValidateAndReportGuildName(const char* name) {
     return 0;
 }
 
-// OFFSET: 0x009EB750
+// OFFSET: 0x009EB750/0x14077D710
 void CGGuildRegistrar::BuyGuildCharter(const char* name) {
     if (!name || !*name || !CGGuildRegistrar::m_registrar) {
         return;

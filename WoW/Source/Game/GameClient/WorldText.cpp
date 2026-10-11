@@ -32,14 +32,13 @@
 #include "WoW/Source/UIUtil/SmartScreenRect.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// STATIC: #0x00A41618
 static float s_critHeightCurve[3][4] = {
     { 0.0f, 0.1f, 0.1f, 2.0f },
     { 0.1f, 0.2f, 2.0f, 1.0f },
     { 0.2f, 1.0f, 1.0f, 1.0f },
 };
 
-// STATIC: #0x00AF4748
+// STATIC: 0x00CA1198
 static WORLDTEXTTYPE s_worldTextTypes[11] = {
     { 2.0f, 150, 760, 1500, 0.018333333f, 0.018333333f, CImVector(0xFF, 0xFF, 0xFF, 0xFF) },
     { 2.0f, 150, 90, 1500, 0.018333333f, 0.018333333f, CImVector(0xFF, 0xFF, 0xFF, 0xFF) },
@@ -54,10 +53,8 @@ static WORLDTEXTTYPE s_worldTextTypes[11] = {
     { 2.0f, 150, 760, 1500, 0.018333333f, 0.018333333f, CImVector(0x00, 0x99, 0xFF, 0xFF) },
 };
 
-// STATIC: #0x00AF487C
 static C2Vector s_shadowOffset = C2Vector(0.002f, 0.002f);
 
-// STATIC: #0x00AF4884
 static C3Vector s_iconPositions[4] = {
     C3Vector(0.0f, 1.0f, 0.0f),
     C3Vector(1.0f, 1.0f, 0.0f),
@@ -65,7 +62,6 @@ static C3Vector s_iconPositions[4] = {
     C3Vector(0.0f, 0.0f, 0.0f),
 };
 
-// STATIC: #0x00AF48B4
 static C2Vector s_iconTexCoords[4] = {
     C2Vector(0.0f, 0.0f),
     C2Vector(1.0f, 0.0f),
@@ -73,22 +69,21 @@ static C2Vector s_iconTexCoords[4] = {
     C2Vector(0.0f, 1.0f),
 };
 
-// STATIC: #0x00D380C8
+// STATIC: 0x00DC70F4
 static CGxStringBatch* s_worldTextBatch;
 
-// STATIC: #0x00D380CC
+// STATIC: 0x00DC70F8
 static HTEXTFONT s_worldTextFont;
 
-// STATIC: #0x00D380D0
+// STATIC: 0x00DC70FC
 static CTexture* s_pvpRankTextures[15];
 
-// STATIC: #0x00D3810C
+// STATIC: 0x00DC7138
 static CDataAllocator s_freeStrings(sizeof(WORLDTEXTSTRING), 30);
 
-// STATIC: #0x00D38120
+// STATIC: 0x00DC714C
 static TSGrowableArray<SWorldTextIcon> s_worldTextIcons;
 
-// STATIC: #0x00AF4708
 static const char* s_pvpRankTextureNames[15] = { "Interface\\PvPRankBadges\\PvPRank01.blp", "Interface\\PvPRankBadges\\PvPRank02.blp", "Interface\\PvPRankBadges\\PvPRank03.blp", "Interface\\PvPRankBadges\\PvPRank04.blp", "Interface\\PvPRankBadges\\PvPRank05.blp", "Interface\\PvPRankBadges\\PvPRank06.blp", "Interface\\PvPRankBadges\\PvPRank07.blp", "Interface\\PvPRankBadges\\PvPRank08.blp", "Interface\\PvPRankBadges\\PvPRank09.blp", "Interface\\PvPRankBadges\\PvPRank10.blp", "Interface\\PvPRankBadges\\PvPRank11.blp", "Interface\\PvPRankBadges\\PvPRank12.blp", "Interface\\PvPRankBadges\\PvPRank13.blp", "Interface\\PvPRankBadges\\PvPRank14.blp", "Interface\\PvPRankBadges\\PvPRank15.blp" };
 
 // INLINED
@@ -102,7 +97,7 @@ inline WORLDTEXTSTRING::WORLDTEXTSTRING() {
     this->m_text[0] = '\0';
 }
 
-// OFFSET: 0x004E2000
+// OFFSET: 0x004E2000/0x140122D30
 WORLDTEXTSTRING::~WORLDTEXTSTRING() {
     if (this->m_string) {
         GxuFontDestroyString(this->m_string);
@@ -127,7 +122,7 @@ float WorldTextGetAscendDistance(uint32_t type) {
     return s_worldTextTypes[type].m_ascendDistance;
 }
 
-// OFFSET: 0x004E2040
+// OFFSET: 0x004E2040/0x140122D90
 void WORLDTEXTSTRING::RecreateString() {
     if (this->m_string) {
         GxuFontDestroyString(this->m_string);
@@ -155,7 +150,7 @@ void WORLDTEXTSTRING::RecreateString() {
     this->m_halfHeight = 0.5f * textHeight;
 }
 
-// OFFSET: 0x004E21D0
+// OFFSET: 0x004E21D0/0x140122FD0
 void WORLDTEXTSTRING::CalculateNewColor(uint32_t elapsed) {
     const WORLDTEXTTYPE& type = s_worldTextTypes[this->m_type];
     uint32_t duration = type.m_duration;
@@ -261,7 +256,7 @@ static void WorldTextSetupOrthoProjection() {
     g_theGxDevicePtr->XformSetProjection(ortho);
 }
 
-// OFFSET: 0x004E2650
+// OFFSET: 0x004E2650/0x140123460
 void WORLDTEXTSTRING::CalculateTextHeight(uint32_t elapsed) {
     const WORLDTEXTTYPE& type = s_worldTextTypes[this->m_type];
     float progress = static_cast<float>(elapsed) / static_cast<float>(type.m_duration);
@@ -292,7 +287,7 @@ void WORLDTEXTSTRING::CalculateTextHeight(uint32_t elapsed) {
     }
 }
 
-// OFFSET: 0x004E2760
+// OFFSET: 0x004E2760/0x140123570
 WORLDTEXTSTRING* WorldTextCreate(uint32_t type, const C3Vector& position, const char* text, const CImVector* color, const int32_t* pvpRank) {
     if (!text || !*text) {
         return NULL;
@@ -318,7 +313,7 @@ WORLDTEXTSTRING* WorldTextCreate(uint32_t type, const C3Vector& position, const 
     return string;
 }
 
-// OFFSET: 0x004E2AA0
+// OFFSET: 0x004E2AA0/0x140123A00
 bool WORLDTEXTSTRING::Update(uint32_t time) {
     if (static_cast<int32_t>(time - s_worldTextTypes[this->m_type].m_duration - this->m_startTime) >= 0) {
         return false;
@@ -561,7 +556,7 @@ void PlayerNameRenderWorldText() {
     WorldTextRenderBatch();
 }
 
-// OFFSET: 0x004E38E0
+// OFFSET: 0x004E38E0/0x140124AF0
 void WorldTextInitialize() {
     const char* fontName = FrameScript_GetText("DAMAGE_TEXT_FONT", -1, GENDER_NOT_APPLICABLE);
     s_worldTextFont = TextBlockGenerateFont(fontName, 0, DDCToNDCHeight(0.018333333f));

@@ -49,7 +49,7 @@ void asyncThreadFunc(void *data)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACF370/0x140899AE0
 AsyncThread::AsyncThread()
 {
     mCrit         = 0;
@@ -77,7 +77,7 @@ AsyncThread::AsyncThread()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACF3E0/0x140899B70
 FMOD_RESULT AsyncThread::shutDown()
 {
     if (gAsyncCrit)
@@ -232,7 +232,7 @@ FMOD_RESULT AsyncThread::removeCallback(FMOD_ASYNC_CALLBACK callback)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACF440/0x140899BF0
 FMOD_RESULT AsyncThread::init(bool owned)
 {
     FMOD_RESULT result;
@@ -363,7 +363,7 @@ FMOD_RESULT AsyncThread::wakeupThread()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACF0D0/0x1408997F0
 FMOD_RESULT AsyncThread::update()
 {
     if (gAsyncCrit)
@@ -535,7 +535,7 @@ FMOD_RESULT AsyncThread::threadFunc()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACF4D0/0x140899CA0
 FMOD_RESULT AsyncThread::getAsyncThread(SoundI *sound)
 {
     FMOD_RESULT     result;

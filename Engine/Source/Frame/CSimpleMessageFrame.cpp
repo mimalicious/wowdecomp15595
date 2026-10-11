@@ -18,13 +18,13 @@
 // STATIC: 0x00DD3A18
 CDataAllocator CSimpleMessageFrame::s_allocator(sizeof(CSimpleMessageFrame), 5);
 
-// STATIC: %0x00BB94E8
+// STATIC: 0x00CA41D8
 int32_t CSimpleMessageFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A14/0x140CB9738
 int32_t CSimpleMessageFrame::s_objectType;
 
-// STATIC: %0x00BB8718
+// STATIC: 0x00CA33AC
 const char* CSimpleMessageFrame::s_objectTypeName = "MessageFrame";
 
 // INLINED
@@ -382,7 +382,7 @@ void CSimpleMessageFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// INLINED
+// OFFSET: 0x0051C640/0x14016A890
 CSimpleMessageFrame::~CSimpleMessageFrame() {
     this->m_lines.Clear();
     this->ClearPending();

@@ -3,7 +3,7 @@
 #include "Engine/Source/ConsoleBase/Types.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: 0x004E0FA0
+// OFFSET: 0x004E0FA0/0x1401213D0
 bool ObjectNameShowCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t mask = s_nameMask;
 
@@ -24,7 +24,7 @@ bool ObjectNameShowCallback(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
-// OFFSET: 0x004E1010
+// OFFSET: 0x004E1010/0x140121440
 void PlayerNameRegisterCVars() {
     CVar::Register("UnitNameOwn", NULL, 0x10, "0", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x1), false);
     CVar::Register("UnitNameNPC", NULL, 0x10, "0", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x2), false);

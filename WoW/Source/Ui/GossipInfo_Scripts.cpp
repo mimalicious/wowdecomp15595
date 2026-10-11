@@ -10,7 +10,6 @@
 #include "WoW/Source/Ui/QuestFrame.h"
 #include "WoW/Source/Ui/QuestLog.h"
 
-// STATIC: #0x00ACEF20
 static const char* s_gossipTypes[22] = {
     "gossip",
     "vendor",

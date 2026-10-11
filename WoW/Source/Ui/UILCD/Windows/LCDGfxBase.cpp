@@ -14,7 +14,7 @@ CLCDGfxBase::CLCDGfxBase() {
     this->m_pBitmapBits = NULL;
 }
 
-// OFFSET: [0x00B41BF0, 0x00B41C00]
+// OFFSET: [0x00B41BF0/0x14090FF60, 0x00B41C00/0x14090FF70]
 CLCDGfxBase::~CLCDGfxBase() {
     this->Shutdown();
 }
@@ -159,7 +159,7 @@ int32_t CLCDGfxBase::GetWidth() {
     return this->m_nWidth;
 }
 
-// OFFSET: [0x007B0A80]
+// OFFSET: [0x007B0A80/0x14090FD60]
 int32_t CLCDGfxBase::GetHeight() {
     return this->m_nHeight;
 }

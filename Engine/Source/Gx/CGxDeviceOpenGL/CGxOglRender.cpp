@@ -17,16 +17,12 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00AFD398
 static const GLint s_glMinFilter[GxTexFilters_Last] = { GL_NEAREST, GL_LINEAR, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR };
 
-// STATIC: %0x00AFD3B0
 static const GLint s_glMagFilter[GxTexFilters_Last] = { GL_NEAREST, GL_LINEAR, GL_LINEAR, GL_LINEAR, GL_LINEAR, GL_LINEAR };
 
-// STATIC: %0x00AFD428
 static const uint32_t s_glBytesPerPixel[GxTexFormats_Last] = { 0, 4, 4, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-// STATIC: %0x00AFD548
 static const GLenum s_glCubeFaces[6] = { 0x8515, 0x8516, 0x8517, 0x8518, 0x8519, 0x851A };
 
 // STATIC: 0x00D096A0/0x140BBB510
@@ -251,7 +247,7 @@ void CGxDeviceOpenGl::ITexForceRecreation() {
             continue;
         }
 
-        // STATIC: %0x00D9310C
+        // STATIC: 0x00EC6974
         static CiRect s_updateRect;
 
         if (s_glFormat[texId->m_format] == GL_DEPTH_COMPONENT) {
@@ -271,7 +267,7 @@ void CGxDeviceOpenGl::ITexForceRecreation() {
 
 // OFFSET: 0x008689D0/0x14059C1B0
 void CGxDeviceOpenGl::ITexDownload(CGxTex* texId, uint32_t width, uint32_t height, uint32_t face, uint32_t mip, uint32_t baseMip, uint32_t stride, const void* texels) {
-    // STATIC: %0x00D93120
+    // STATIC: 0x00EC6988
     static TSGrowableArray<uint8_t> s_buffer;
 
     uint32_t minY = texId->m_updateRect.minY >> mip;

@@ -276,7 +276,7 @@ int32_t CDataStore::FetchRead(uint32_t pos, uint32_t bytes) {
     return 0;
 }
 
-// OFFSET: 0x00871BA0
+// OFFSET: 0x00871BA0/0x1405A7C90
 CDataStore& CDataStore::PutString(const char* string) {
     if (string) {
         this->PutArray(reinterpret_cast<const uint8_t*>(string), static_cast<uint32_t>(SStrLen(string)) + 1);

@@ -4,13 +4,13 @@
 // STATIC: 0x00D096B4/0x140BBB524
 static float s_aspectRatio = 4.0f / 3.0f;
 
-// STATIC: %0x00C0E9F8
+// STATIC: 0x00D096B8
 static float s_ddcWidthScale = 0.8f;
 
-// STATIC: %0x00C0E9FC
+// STATIC: 0x00D096BC
 static float s_ddcHeightScale = 0.6f;
 
-// STATIC: %0x00C0EA00
+// STATIC: 0x00D096C0
 static float s_aspectCompensation = 1.0f;
 
 // PROVEN: 98cbafae IDENTICAL/UNPROVEN

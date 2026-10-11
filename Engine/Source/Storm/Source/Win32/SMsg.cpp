@@ -11,10 +11,8 @@
 // STATIC: 0x00CA04D0/0x140B3C698
 static TSList<WNDREC> s_wndlist;
 
-// STATIC: %0x00CA6904
 static RECT s_defaultwindowrect;
 
-// STATIC: %0x00CA6914
 static HWND s_defaultwindow;
 
 // INLINED

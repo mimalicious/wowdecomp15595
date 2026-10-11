@@ -863,7 +863,7 @@ void ASfxDsp::DoDSPProcessing (float * inAudio, float * outAudio, int channels, 
 
 
 // Copy input into our input buffer. This may be faster than doing it inside the big loop (?).
-// INLINED
+// OFFSET: 0x00AD5240/0x14089FF70
 void ASfxDsp::BlockProcessInput(unsigned int sampframes, int channels, float *inAudio, float rate)
 {
 	unsigned int i;

@@ -13,37 +13,29 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: #0x00AD1450
 static const uint16_t s_fadeIndices[4] = { 0, 1, 2, 3 };
 
-// STATIC: #0x00C24274
 static CTexture* s_fadeTexture;
 
-// STATIC: #0x00C24278
 static void* s_fadeParam;
 
-// STATIC: #0x00C2427C
+// STATIC: 0x00F771B4
 static void (*s_fadeCallback)(void* param);
 
-// STATIC: #0x00C24280
 static uint8_t s_fadeFinished;
 
-// STATIC: #0x00C24284
 static uint32_t s_fadeStartTime;
 
-// STATIC: #0x00C24288
 static float s_fadeDuration;
 
-// STATIC: #0x00C2428C
 static int32_t s_fadeDirection;
 
-// STATIC: #0x00C24290
 static HLAYER s_fadeLayer;
 
-// STATIC: #0x00C24294
+// STATIC: 0x00F771CC
 static uint8_t s_fadeActive;
 
-// STATIC: #0x00C24295
+// STATIC: 0x00F771CD
 static uint8_t s_fadeStarted;
 
 // PROVEN: e96252b2 IDENTICAL/IDENTICAL
@@ -52,7 +44,7 @@ static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: 0x00A0A260
+// OFFSET: 0x00A0A260/0x1407AB2E0
 static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_CHAR, SwallowEvent, NULL, 9.0f);
     EventRegisterEx(EVENT_ID_KEYDOWN, SwallowEvent, NULL, 9.0f);
@@ -63,7 +55,7 @@ static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_MOUSEMOVE, SwallowEvent, NULL, 9.0f);
 }
 
-// OFFSET: 0x00A0A320
+// OFFSET: 0x00A0A320/0x1407AB3A0
 static void FadingScreenUnregisterEvents() {
     EventUnregister(EVENT_ID_CHAR, SwallowEvent);
     EventUnregister(EVENT_ID_KEYDOWN, SwallowEvent);
@@ -74,7 +66,7 @@ static void FadingScreenUnregisterEvents() {
     EventUnregister(EVENT_ID_MOUSEMOVE, SwallowEvent);
 }
 
-// OFFSET: 0x00A0A380
+// OFFSET: 0x00A0A380/0x1407AB420
 void DisableFadingScreen(float duration, void (*callback)(void*), void* param) {
     if (!s_fadeActive) {
         return;
@@ -103,7 +95,7 @@ void DisableFadingScreen(float duration, void (*callback)(void*), void* param) {
     }
 }
 
-// OFFSET: 0x00A0A420
+// OFFSET: 0x00A0A420/0x1407AB4C0
 static void FadingScreenPaint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     static C3Vector s_positions[4] = { C3Vector(0.0f, 0.0f, 0.0f), C3Vector(1.0f, 0.0f, 0.0f), C3Vector(0.0f, 1.0f, 0.0f), C3Vector(1.0f, 1.0f, 0.0f) };
     static C2Vector s_texCoords[4] = { C2Vector(0.0f, 1.0f), C2Vector(1.0f, 1.0f), C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f) };
@@ -162,7 +154,7 @@ static void FadingScreenPaint(void* param, const RECTF* rect, const RECTF* visib
     }
 }
 
-// OFFSET: 0x00A0A780
+// OFFSET: 0x00A0A780/0x1407AB850
 void EnableFadingScreen(float duration, void (*callback)(void*), void* param) {
     if (s_fadeActive) {
         HandleClose(reinterpret_cast<HOBJECT>(s_fadeLayer));

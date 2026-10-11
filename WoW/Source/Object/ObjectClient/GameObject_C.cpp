@@ -96,7 +96,7 @@
 // STATIC: 0x00BB15EC
 static const uint32_t s_oneShotAnims[7] = { 0xFFFFFFFF, 0, 8, 9, 10, 11, 12 };
 
-// STATIC: #0x00ADA974
+// STATIC: 0x00CA60F8
 static uint32_t s_buildingDamageColor = 0xFFFF8400;
 
 // STATIC: 0x00CA5FF8

@@ -105,7 +105,7 @@ FMOD_RESULT DSPNet::release()
 }
 
 
-// INLINED
+// OFFSET: 0x00ACEC00
 FMOD_RESULT DSPNet::flush(bool more)
 {
     FMOD_RESULT  result;
@@ -129,7 +129,7 @@ FMOD_RESULT DSPNet::flush(bool more)
 }
 
 
-// INLINED
+// OFFSET: 0x00ACEDD0
 FMOD_RESULT DSPNet::update(SystemI *system, unsigned int dt)
 {
     FMOD_RESULT result;

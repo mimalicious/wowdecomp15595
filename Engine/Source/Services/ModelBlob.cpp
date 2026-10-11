@@ -7,7 +7,7 @@
 // STATIC: 0x00DD4388/0x140CBA628
 static CModelBlob* s_modelBlob;
 
-// STATIC: %0x00CD2E80
+// STATIC: 0x00DD438C
 static TSHashTableReuse<CModelBlob::CHashEntry, HASHKEY_MODELBLOBFILE> s_modelBlobHT;
 
 // INLINED

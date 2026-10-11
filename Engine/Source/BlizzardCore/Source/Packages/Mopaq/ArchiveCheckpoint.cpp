@@ -8,7 +8,6 @@
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Digest.h"
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/MD5.h"
 
-// STATIC: %0x00C0AD4C
 static const char* s_extension = ".writeCacheBackup";
 
 struct RestorePointHeader {

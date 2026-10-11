@@ -6,7 +6,7 @@
 #include "Engine/Source/Event/EvtSched.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D95790
+// STATIC: 0x00EC7548
 static TExtraInstanceRecycler<EvtMessage> s_messageRecycler(64, 64, 256);
 
 void IEvtQueueInitialize() {

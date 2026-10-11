@@ -144,7 +144,7 @@ static int tagcompare(const char *s1, const char *s2, int n){
 //  return count;
 //}
 
-// INLINED
+// OFFSET: 0x00B43160/0x140911BF0
 void FMOD_vorbis_comment_clear(vorbis_comment *vc){
   if(vc){
     ogg_int32_t i;
@@ -178,7 +178,7 @@ int FMOD_vorbis_info_init(vorbis_info *vi){
   return 0;
 }
 
-// INLINED
+// OFFSET: 0x00B43270/0x140911D30
 void FMOD_vorbis_info_clear(vorbis_info *vi){
   codec_setup_info     *ci=vi->codec_setup;
   int i;
@@ -228,7 +228,7 @@ void FMOD_vorbis_info_clear(vorbis_info *vi){
 
 /* Header packing/unpacking ********************************************/
 
-// INLINED
+// OFFSET: 0x00B43410/0x140911F30
 static int _FMOD_vorbis_unpack_info(vorbis_info *vi,oggpack_buffer *opb){
   codec_setup_info     *ci=vi->codec_setup;
   if(!ci)return(OV_EFAULT);
@@ -260,7 +260,7 @@ static int _FMOD_vorbis_unpack_info(vorbis_info *vi,oggpack_buffer *opb){
   return(OV_EBADHEADER);
 }
 
-// INLINED
+// OFFSET: 0x00B434E0/0x140912080
 static int _vorbis_unpack_comment(vorbis_comment *vc,oggpack_buffer *opb){
   int i;
   int vendorlen=FMOD_oggpack_read(opb,32);
@@ -293,7 +293,7 @@ static int _vorbis_unpack_comment(vorbis_comment *vc,oggpack_buffer *opb){
 
 /* all of the real encoding details are here.  The modes, books,
    everything */
-// INLINED
+// OFFSET: 0x00B43610/0x140912210
 static int _vorbis_unpack_books(vorbis_info *vi,oggpack_buffer *opb){
   codec_setup_info     *ci=vi->codec_setup;
   int i;
@@ -397,7 +397,7 @@ int FMOD_vorbis_synthesis_idheader(ogg_packet *op){
    with bitstream comments and a third packet that holds the
    codebook. */
 
-// INLINED
+// OFFSET: 0x00B43970/0x140912640
 int FMOD_vorbis_synthesis_headerin(vorbis_info *vi,vorbis_comment *vc,ogg_packet *op){
   oggpack_buffer opb;
 

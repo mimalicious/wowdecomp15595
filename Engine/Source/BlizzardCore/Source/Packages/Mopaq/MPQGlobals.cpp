@@ -5,10 +5,9 @@
 #include "Engine/Source/BlizzardCore/Source/System/Hardware/Hardware.h"
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 
-// STATIC: %0x00D829D8
+// STATIC: 0x00EB6060
 Blizzard::Lock::ConstructOnce<System_MPQGlobals::Globals> System_MPQGlobals::s_globals;
 
-// STATIC: #0x00B382C8
 static System_MPQGlobals::RegisterGlobalStorage s_registerGlobalStorage;
 
 // INLINED

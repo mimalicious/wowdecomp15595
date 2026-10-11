@@ -29,13 +29,10 @@ struct THREADLAUNCH {
 };
 
 namespace S_Thread {
-    // STATIC: #0x00CAC7B0
     SThreadTrack s_threads[s_maxthreads];
 
-    // STATIC: %0x00C9DDA8
     int32_t s_numthreads;
 
-    // STATIC: %0x00C9DDAC
     CInitCritSect s_threadCrit;
 }
 

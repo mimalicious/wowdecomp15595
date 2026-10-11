@@ -58,17 +58,17 @@ void BattlenetAllocator::Free(void* memory) {
     SMemFree(memory, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x00627420
+// OFFSET: 0x00627420/0x1402B9470
 bool BattlenetApplication::Send(uint32_t connection, const void* data, uint32_t size) {
     return this->m_wowConnection->SendRaw(static_cast<uint8_t*>(const_cast<void*>(data)), size);
 }
 
-// OFFSET: 0x00627440
+// OFFSET: 0x00627440/0x1402B9480
 uint64_t BattlenetApplication::GetCurrentTick() const {
     return OsGetAsyncTimeMs();
 }
 
-// OFFSET: 0x00627450
+// OFFSET: 0x00627450/0x1402B9490
 BattlenetApplication::~BattlenetApplication() {
     if (this->m_wowConnection) {
         this->m_wowConnection->Disconnect();
@@ -128,7 +128,7 @@ bool BattlenetLogin::Disconnected() {
     return false;
 }
 
-// OFFSET: 0x00628170
+// OFFSET: 0x00628170/0x1402BA1F0
 void BattlenetLogin::LogonResultBN(int32_t result) {
     this->m_logonResult = result;
 
@@ -392,7 +392,7 @@ void BattlenetLogin::SetAuthModuleMatrixInfo(const char* info, const char* chall
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_MATRIX, LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: 0x006285A0
+// OFFSET: 0x006285A0/0x1402BA6B0
 void BattlenetLogin::SetAuthModulePinInfo(const char* keyMap) {
     if (!keyMap || SStrLen(keyMap) != 10) {
         return;
@@ -485,7 +485,7 @@ void BattlenetLogin::LogConnectionStatus(const char* format, ...) {
     }
 }
 
-// OFFSET: 0x00628070
+// OFFSET: 0x00628070/0x1402BA0C0
 void BattlenetApplication::Disconnect(uint32_t connection) {
     if (this->m_wowConnection) {
         this->m_wowConnection->Disconnect();
@@ -555,7 +555,7 @@ bool BattlenetApplication::SendDatagram(uint32_t connection, const void* data, u
     return false;
 }
 
-// OFFSET: 0x00842700
+// OFFSET: 0x00842700/0x1407FDD80
 uint64_t BattlenetApplication::GetCurrentTime() const {
     return 0;
 }
@@ -1060,7 +1060,7 @@ void BattlenetLogin::QueueEvent(BN_EVENT_ID id, void* data, int32_t size) {
     this->m_eventLock.Leave();
 }
 
-// OFFSET: 0x0062A770
+// OFFSET: 0x0062A770/0x1402BD5E0
 void BattlenetApplication::WCConnected(WowConnection* connection, WowConnection* inbound, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_localAddress.m_address.m_data[0] = addr->selfAddr.data[4];
     this->m_localAddress.m_address.m_data[1] = addr->selfAddr.data[5];

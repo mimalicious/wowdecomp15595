@@ -8,7 +8,6 @@
 #define MD5_I(x, y, z) ((y) ^ ((x) | ~(z)))
 #define MD5_STEP(f, a, b, c, d, k, s, ti) t = a + f(b, c, d) + x[k] + (ti); a = MD5_ROTATE_LEFT(t, s) + b
 
-// STATIC: #0x00A505D8
 static const uint8_t s_padding[64] = { 0x80 };
 
 // PROVEN: acbd927e IDENTICAL/NONE

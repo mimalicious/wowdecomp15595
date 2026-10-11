@@ -17,13 +17,13 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB9A38
+// STATIC: 0x00CA4700
 int32_t CSimpleAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CCC/0x140CB9A6C
 int32_t CSimpleAnim::s_objectType;
 
-// STATIC: %0x00BB8BA8
+// STATIC: 0x00CA3820
 const char* CSimpleAnim::s_objectTypeName = "Animation";
 
 // PROVEN: e7006d69 IDENTICAL/IDENTICAL

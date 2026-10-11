@@ -75,7 +75,7 @@ FMOD_DSP_PARAMETERDESC dsplowpass_simple_param[1] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A9E0B0/0x14085E920
 FMOD_DSP_DESCRIPTION_EX *DSPLowPassSimple::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -625,7 +625,7 @@ FMOD_RESULT F_CALLBACK DSPLowPassSimple::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A9DE90
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPLowPassSimple *lowpass_simple = (DSPLowPassSimple *)dsp;

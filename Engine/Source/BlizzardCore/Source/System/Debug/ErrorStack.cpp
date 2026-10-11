@@ -6,7 +6,6 @@
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// STATIC: #0x00AB909D
 bool Blizzard::Debug::g_ErrorStackEnabled = true;
 
 // PROVEN: 0c981958 IDENTICAL/DIFFERENT

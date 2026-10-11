@@ -177,10 +177,8 @@ static char s_objectNameBuffers[2][305];
 // STATIC: 0x00DD855C
 static uint32_t s_objectNameIndex;
 
-// STATIC: #0x00ADAA10
 static int32_t s_baseSpiritRegenCap = 50;
 
-// STATIC: #0x00ADAA14
 static const char* s_genderSuffix[2] = { "M", "F" };
 
 // STATIC: 0x00DD6188
@@ -213,7 +211,7 @@ static WOWGUID s_pendingAttackTarget;
 // STATIC: 0x00DD61E4
 int32_t g_environmentalDamageVisualKits[6];
 
-// STATIC: #0x00CA1224
+// STATIC: 0x00DD61FC
 static EmotesRec* s_talkEmotes[5];
 
 // STATIC: 0x00DD6220
@@ -255,16 +253,12 @@ static uint32_t s_attackFlashTime;
 // STATIC: 0x00B9E6CC
 extern const uint32_t s_environmentalDamageSchools[6] = { 0, 0, 0, 2, 3, 2 };
 
-// STATIC: #0x00A349B4
 static const int32_t s_animTierFallback[5] = { 0, 0, 3, 0, 0 };
 
-// STATIC: #0x00ADAC0C
 static float s_trackCursorMinSize = 0.5f;
 
-// STATIC: #0x00ADAC10
 static float s_trackCursorMaxSize = 0.75f;
 
-// STATIC: #0x00ADAC14
 static uint32_t s_trackCursorPeriod = 500;
 
 // STATIC: 0x00CA64CC
@@ -288,13 +282,10 @@ uint32_t CGUnit_C::s_missileTrajectoryTargetingSpell;
 // STATIC: 0x00DD57CC
 uint32_t CGUnit_C::s_pitchMissileTrajectoryTargetingNextFrame;
 
-// STATIC: #0x00CA1264
 C3Vector CGUnit_C::s_trackingPosition;
 
-// STATIC: #0x00CA11EC
 float CGUnit_C::s_trackingDirection;
 
-// STATIC: #0x00CA12CC
 int32_t CGUnit_C::s_dismountSoundKitId;
 
 // STATIC: 0x00DD6178
@@ -312,13 +303,11 @@ uint32_t CGUnit_C::s_flightStatusTime;
 // STATIC: 0x00DD621C
 uint32_t CGUnit_C::s_flightEndTime;
 
-// STATIC: #0x00CA11D0
 float CGUnit_C::s_unk_CA11D0;
 
 // STATIC: 0x00DD61B4
 uint32_t CGUnit_C::s_unk_CA11D4;
 
-// STATIC: #0x00CA11F8
 WOWGUID CGUnit_C::s_trackingGUID;
 
 // STATIC: 0x00DD61E0
@@ -346,49 +335,34 @@ static const uint32_t s_effectAttachmentIds[16] = { 20, 34, 19, 21, 22, 17, 23, 
 // STATIC: 0x00DD5F8C
 static int32_t s_lastNPCSoundCount;
 
-// STATIC: #0x00CA11A4
 static float s_forcedRunSpeed;
 
-// STATIC: #0x00CA11DC
 static float s_trackingTurnRate;
 
-// STATIC: #0x00CA11E0
 static float s_trackingInteractDistanceSq;
 
-// STATIC: #0x00CA11E4
 static float s_trackingInteractDistance;
 
-// STATIC: #0x00CA11E8
 static float s_trackingObjectRange;
 
-// STATIC: #0x00CA11F0
 static uint32_t s_trackingLastTime;
 
-// STATIC: #0x00CA1258
 static C3Vector s_trackingStartPosition;
 
-// STATIC: #0x00ADAA74
 static float s_trackingStuckDistanceSq = 7.71604937e-06f;
 
-// STATIC: #0x00ADAA9C
 static float s_trackingFollowDistance = 2.77777767f;
 
-// STATIC: #0x00ADAAA0
 static float s_trackingFollowDistanceSq = 9.0f;
 
-// STATIC: #0x00ADAAAC
 static float s_trackingTerrainDistanceSq = 0.25f;
 
-// STATIC: #0x00CA1270
 static float s_trackingDefaultInteractDistanceSq = s_trackingFollowDistance * s_trackingFollowDistance;
 
-// STATIC: #0x00ADAC18
 static uint32_t s_spellInterruptTrackingMask = 1;
 
-// STATIC: #0x00ADBFDC
 static const char* s_combatTextTokens[12] = { "COMBAT_TEXT_NONE", "COMBAT_TEXT_MISS", "COMBAT_TEXT_RESIST", "COMBAT_TEXT_DODGE", "COMBAT_TEXT_PARRY", "COMBAT_TEXT_BLOCK", "COMBAT_TEXT_EVADE", "COMBAT_TEXT_IMMUNE", "COMBAT_TEXT_IMMUNE", "COMBAT_TEXT_DEFLECT", "COMBAT_TEXT_ABSORB", "COMBAT_TEXT_REFLECT" };
 
-// STATIC: #0x00A34C20
 static const uint32_t s_combatTextTypes[12] = { 11, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3 };
 
 // STATIC: 0x00CA62E4
@@ -10480,7 +10454,7 @@ float CGUnit_C::GetTrackingTurn() {
     return s_trackingFacing;
 }
 
-// OFFSET: 0x005B41B0
+// OFFSET: 0x005B41B0/0x140227710
 bool CGUnit_C::IsBossMob() const {
     if (this->m_creatureCacheEntry && !this->m_unit->m_unitFieldPetnumber) {
         return (this->m_creatureCacheEntry->m_typeFlags[0] >> 2) & 1;
@@ -12671,7 +12645,7 @@ int32_t CGUnit_C::GetAuraIndex(int32_t spellId) {
     return -1;
 }
 
-// OFFSET: 0x005BBCE0
+// OFFSET: 0x005BBCE0/0x140230630
 bool CGUnit_C::IsPetBarUsed() const {
     if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x2000)) {
         return false;
@@ -23400,7 +23374,6 @@ void CGUnit_C::HandleTracking(float drunkness, float turnOffset) {
         CGUnit_C::s_unk_CA11D4 = 0;
     }
 
-    // STATIC: #0x00CA12A8
     static float s_flightAngleCos = cos(0.7853981852531433);
 
     if (!pitching && useTarget && !(this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) && (this->m_movementData.m_flags & MOVEMENTFLAG_CAN_FLY)) {
@@ -24421,7 +24394,7 @@ bool CGUnit_C::FlyingMountAllowed(bool checkContinent) const {
     return true;
 }
 
-// OFFSET: [0x009FCE20]
+// OFFSET: [0x009FCE20/0x14090EBB0]
 int32_t CGUnit_C::IsSolidSelectable() const {
     return 1;
 }
@@ -24431,7 +24404,7 @@ void CGUnit_C::OnInteract() {
     this->OnRightClick(false);
 }
 
-// OFFSET: [0x00A3AA30]
+// OFFSET: [0x00A3AA30/0x1404BDD20]
 bool CGUnit_C::IsTransport() const {
     return true;
 }

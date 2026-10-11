@@ -122,7 +122,7 @@ static int32_t Script_CalendarEventGetTypes(lua_State* L) {
     return 6;
 }
 
-// OFFSET: 0x009AB710
+// OFFSET: 0x009AB710/0x140732920
 static int32_t Script_CalendarEventGetTypesDisplayOrdered(lua_State* L) {
     lua_checkstack(L, 12);
 
@@ -310,7 +310,7 @@ static int32_t Script_CalendarGetFirstPendingInvite(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009AAA60
+// OFFSET: 0x009AAA60/0x140731CE0
 static void NameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID key = WOWGUID();
 
@@ -319,7 +319,7 @@ static void NameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool
     }
 }
 
-// OFFSET: 0x009AADC0
+// OFFSET: 0x009AADC0/0x140731FE0
 const char* GetSequenceLabel(uint32_t type, uint32_t index, uint32_t length) {
     if (!(type & 0x8) || length <= 1) {
         return "";
@@ -660,13 +660,13 @@ static int32_t Script_CalendarGetDayEventSequenceInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: 0x009ACE90
+// OFFSET: 0x009ACE90/0x140734470
 static int32_t Script_CalendarGetNumGuildEvents(lua_State* L) {
     lua_pushinteger(L, s_guildEvents.Count());
     return 1;
 }
 
-// OFFSET: 0x009ACEB0
+// OFFSET: 0x009ACEB0/0x140734490
 static int32_t Script_CalendarGetGuildEventSelectionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarGetGuildEventSelectionInfo(index)");
@@ -1066,7 +1066,7 @@ static int32_t Script_CalendarContextEventCanEdit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009B0990
+// OFFSET: 0x009B0990/0x140738C00
 static int32_t Script_CalendarContextEventCanRemove(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1972,7 +1972,7 @@ static void PushDayEventTexture(lua_State* L, CalendarDayEvent* event) {
     lua_pushstring(L, texture);
 }
 
-// OFFSET: 0x009B2970
+// OFFSET: 0x009B2970/0x14073B5E0
 static int32_t Script_CalendarGetGuildEventInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarGetGuildEventInfo(index)");

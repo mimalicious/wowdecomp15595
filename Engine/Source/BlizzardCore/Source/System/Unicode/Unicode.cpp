@@ -3,13 +3,10 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
 
-// STATIC: #0x009E5360
 const uint32_t System_Unicode::s_offsetsFromUTF8[7] = { 0x00000000, 0x00000000, 0x00003080, 0x000E2080, 0x03C82080, 0xFA082080, 0x82082080 };
 
-// STATIC: #0x009E537C
 const uint32_t System_Unicode::s_firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 
-// STATIC: #0x009E5398
 const uint8_t System_Unicode::s_bytesFromUTF8[256] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,

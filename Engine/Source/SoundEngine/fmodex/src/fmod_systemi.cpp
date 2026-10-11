@@ -405,7 +405,7 @@ FMOD_RESULT SystemI::updateStreams()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A804C0/0x14083CBD0
 FMOD_RESULT SystemI::updateChannels(int delta)
 {
     int       emulatedused;
@@ -873,7 +873,7 @@ FMOD_RESULT SystemI::updateChannels(int delta)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A80D20/0x14083D8E0
 FMOD_RESULT SystemI::updateSoundGroups(int delta)
 {
     SoundGroupI *soundgroup;
@@ -1318,7 +1318,7 @@ FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, DSPI *dsp, ChannelI **cha
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A830B0/0x140840370
 FMOD_RESULT SystemI::createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *waveformat, Sample **sample_out)
 {
     FMOD_RESULT  result;
@@ -1577,7 +1577,7 @@ FMOD_RESULT SystemI::createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *wavefor
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A84340
+// OFFSET: 0x00A84340/0x140841AB0
 FMOD_RESULT SystemI::createSoundInternal(const char *name_or_data, FMOD_MODE mode_in, FMOD_CREATESOUNDEXINFO *exinfo, bool calledfromasync, SoundI **sound)
 {
     FMOD_RESULT            result;
@@ -3185,7 +3185,7 @@ FMOD_RESULT SystemI::sortSpeakerList()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A81560/0x14083E330
 FMOD_RESULT SystemI::allocDSPCodec(FMOD_SOUND_FORMAT format, DSPCodec **dsp)
 {
     if (0)
@@ -3395,7 +3395,7 @@ FMOD_RESULT SystemI::release()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A815A0/0x14083E360
 FMOD_RESULT SystemI::setOutput(FMOD_OUTPUTTYPE outputtype)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -4937,7 +4937,7 @@ private:
 };
 
 
-// OFFSET: 0x00A87820
+// OFFSET: 0x00A87820/0x1408456E0
 FMOD_RESULT SystemI::init(int maxchannels, FMOD_INITFLAGS flags, void *extradriverdata)
 {
     int count;
@@ -5418,7 +5418,7 @@ FMOD_RESULT SystemI::close()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A872D0/0x140845110
 FMOD_RESULT SystemI::closeEx(bool calledfrominit)
 {
     FMOD_RESULT result;
@@ -5721,7 +5721,7 @@ FMOD_RESULT SystemI::closeEx(bool calledfrominit)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A86D60/0x140844AA0
 FMOD_RESULT SystemI::update()
 {
     FMOD_RESULT  result;
@@ -7329,7 +7329,7 @@ FMOD_RESULT SystemI::createDSPByIndex(int index, DSPI **dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A83A40/0x140840F50
 FMOD_RESULT SystemI::createDSPByType(FMOD_DSP_TYPE type, DSPI **dsp)
 {
     FMOD_RESULT result;
@@ -8075,7 +8075,7 @@ FMOD_RESULT SystemI::get3DReverbActive(bool *state)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A824A0/0x14083F540
 FMOD_RESULT SystemI::setReverbProperties(const FMOD_REVERB_PROPERTIES *prop, bool force_create)
 {
 #ifdef FMOD_SUPPORT_REVERB
@@ -8178,7 +8178,7 @@ FMOD_RESULT SystemI::getReverbProperties(FMOD_REVERB_PROPERTIES *prop)
 ]
 */
 #ifdef FMOD_SUPPORT_MULTIREVERB
-// INLINED
+// OFFSET: 0x00A82580/0x14083F650
 FMOD_RESULT SystemI::set3DReverbProperties(const FMOD_REVERB_PROPERTIES *prop, bool force_create)
 {
 #if defined(FMOD_SUPPORT_REVERB) && defined(FMOD_SUPPORT_MULTIREVERB)
@@ -8713,7 +8713,7 @@ FMOD_RESULT SystemI::getRecordDriverCaps(int id, FMOD_CAPS *caps, int *minfreque
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A83F10/0x1408415C0
 FMOD_RESULT SystemI::recordStart(SoundI *sound, bool loop)
 {
 #ifdef FMOD_SUPPORT_RECORDING

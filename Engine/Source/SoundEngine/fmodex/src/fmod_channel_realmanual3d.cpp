@@ -28,7 +28,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AFC310/0x1408BE490
 ChannelRealManual3D::ChannelRealManual3D()
 {
     mAngleToListener = 0.0f;
@@ -50,7 +50,7 @@ ChannelRealManual3D::ChannelRealManual3D()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AFC330/0x1408BE4C0
 FMOD_RESULT ChannelRealManual3D::set2DFreqVolumePanFor3D()
 {
 #ifdef FMOD_SUPPORT_3DSOUND

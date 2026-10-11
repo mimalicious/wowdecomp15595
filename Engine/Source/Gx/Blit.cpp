@@ -230,10 +230,10 @@ static void Blit_Dxt35_Dxt35(const C2iVector& size, const void* in, uint32_t inS
 
 // OFFSET: 0x00639C20
 uint32_t CalcRowStride(BlitFormat format, uint32_t width, uint32_t height) {
-    // STATIC: %0x00BDDF08
+    // STATIC: 0x00CC9100
     static uint32_t BYTES_PER_BLOCK[BlitFormats_Last] = { 0, 4, 4, 2, 2, 2, 2, 8, 16, 16, 4, 8, 4, 4, 0, 0 };
 
-    // STATIC: %0x00BDDF48
+    // STATIC: 0x00CC9140
     static uint32_t PIXELS_PER_BLOCK_SHIFT[BlitFormats_Last] = { 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0 };
 
     if (format >= BlitFormat_Dxt1 && format <= BlitFormat_Dxt5) {
@@ -684,7 +684,6 @@ void DxtDecodeBlock(const Dxt1Block* block, CImVector** rows, const DxtRect& rec
 // OFFSET: [0x0063AF10<Dxt1Block, CRgb565>, 0x0063B120<Dxt1Block, CArgb1555>, 0x0063B330<Dxt1Block, CImVector>, 0x0063B590<Dxt3Block, CArgb4444>, 0x0063B7C0<Dxt3Block, CImVector>, 0x0063BA30<Dxt5Block, CArgb4444>, 0x0063BC60<Dxt5Block, CImVector>]
 template <class Block, class Pixel>
 void Blit_DxtUnaligned(const C2iVector& size, const Block* in, uint32_t inStride, Pixel* out, uint32_t outStride) {
-    // STATIC: [#0x00C608A8, #0x00C608D8, #0x00C60908]
     static Pixel colors[4];
 
     int32_t height = size.y;
@@ -726,7 +725,6 @@ void Blit_DxtUnaligned(const C2iVector& size, const Block* in, uint32_t inStride
 // OFFSET: [0x0063B070<Dxt1Block, CRgb565>, 0x0063B280<Dxt1Block, CArgb1555>, 0x0063B4C0<Dxt1Block, CImVector>, 0x0063B700<Dxt3Block, CArgb4444>, 0x0063B950<Dxt3Block, CImVector>, 0x0063BBA0<Dxt5Block, CArgb4444>, 0x0063BDF0<Dxt5Block, CImVector>]
 template <class Block, class Pixel>
 void Blit_Dxt(const C2iVector& size, const Block* in, uint32_t inStride, Pixel* out, uint32_t outStride) {
-    // STATIC: [#0x00C608BC, #0x00C608EC, #0x00C6091C]
     static Pixel colors[4];
 
     for (int32_t y = 0; y < size.y; y += 4) {
@@ -851,7 +849,7 @@ static void InitBlit() {
     s_blits[BlitFormat_D24X8][BlitFormat_D24X8][BlitAlpha_0] = Blit_generic32_generic32;
 }
 
-// OFFSET: 0x0063C270
+// OFFSET: 0x0063C270/0x1402D18D0
 int32_t Blit(const C2iVector& size, BlitAlpha alpha, const void* in, uint32_t inStride, BlitFormat inFormat, void* out, uint32_t outStride, BlitFormat outFormat) {
     // STATIC: 0x00E29FBC
     static int32_t initBlit;

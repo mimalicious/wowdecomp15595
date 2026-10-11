@@ -581,7 +581,7 @@ static bool OnPhaseShiftChange(ClientPhaseShiftChange* msg) {
     return true;
 }
 
-// OFFSET: 0x004E52B0
+// OFFSET: 0x004E52B0/0x140126C40
 void PhaseShift_C_InitializeGame() {
     ClientPhaseShiftChange::s_handler = OnPhaseShiftChange;
 }

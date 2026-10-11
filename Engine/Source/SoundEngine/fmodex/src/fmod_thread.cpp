@@ -111,7 +111,7 @@ FMOD_RESULT Thread::threadFunc()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A913B0/0x140850C90
 Thread::Thread()
 {
     mHandle       = 0;

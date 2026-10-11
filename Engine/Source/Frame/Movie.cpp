@@ -26,10 +26,8 @@
 // STATIC: 0x00CA331C
 MoviePreloadMap MovieStreaming::s_preloads;
 
-// STATIC: %0x00CD12F8
 float MovieStreaming::s_progressBase;
 
-// STATIC: %0x00CD12FC
 float MovieStreaming::s_progressScale;
 
 // STATIC: 0x00DD39C0

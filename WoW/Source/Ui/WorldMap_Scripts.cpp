@@ -1293,7 +1293,7 @@ static int32_t Script_GetNumberOfDetailTiles(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0091FD70
+// OFFSET: 0x0091FD70/0x1406820B0
 static int32_t Script_RefreshWorldMap(lua_State* L) {
     CGWorldMap::SetMap(CGWorldMap::m_currentContinent, CGWorldMap::m_currentZone, CGWorldMap::GetCurrentDungeonMap());
     return 0;

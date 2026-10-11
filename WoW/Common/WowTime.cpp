@@ -9,7 +9,6 @@
 // STATIC: 0x00D1C924
 static const char* s_weekDayNames[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
-// STATIC: #0x00CAC11C
 static int32_t s_localTimeOffset;
 
 // OFFSET: 0x00A304D0/0x1407B9178

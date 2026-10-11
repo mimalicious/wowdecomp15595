@@ -61,7 +61,7 @@ FMOD_DSP_PARAMETERDESC dspecho_param[5] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A9C1B0/0x14085CB50
 FMOD_DSP_DESCRIPTION_EX *DSPEcho::getDescriptionEx()
 {
     FMOD_memset(&dspecho_desc, 0, sizeof(FMOD_DSP_DESCRIPTION_EX));

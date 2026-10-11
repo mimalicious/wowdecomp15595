@@ -132,7 +132,7 @@ int32_t CGPlayer::TotalFields() {
     return CGUnit::TotalFields() + 1104;
 }
 
-// OFFSET: 0x00A27D60
+// OFFSET: 0x00A27D60/0x1407CF530
 int32_t CGPlayer::TotalRemoteFields() {
     return CGUnit::TotalFields() + sizeof(CGPlayer::s_mirrorFields) / sizeof(CGPlayer::s_mirrorFields[0]);
 }

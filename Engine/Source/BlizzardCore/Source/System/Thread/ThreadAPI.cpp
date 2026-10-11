@@ -3,7 +3,6 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 
-// STATIC: #0x00B38334
 static System_Thread::UsingThread s_usingThread;
 
 // OFFSET: 0x007E9FE0

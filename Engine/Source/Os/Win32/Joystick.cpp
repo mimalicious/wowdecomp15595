@@ -62,7 +62,6 @@ struct W32Joystick {
     /* 0420 */ int32_t m_axes[2][8];
 };
 
-// STATIC: %0x00C0FCBC
 static const char* s_relativeDevices[] = {
     "SpaceNavigator",
     "SpaceNavigator for Notebooks",
@@ -71,13 +70,10 @@ static const char* s_relativeDevices[] = {
     "SpacePilot",
 };
 
-// STATIC: %0x00C0FCD0
 static W32JoystickMouseMode s_defaultMouseMode = { 1, 0, 1.5f, 0, 1, 0 };
 
-// STATIC: %0x00D93878
 static IDirectInput8A* s_directInput;
 
-// STATIC: %0x00D9387C
 static TSGrowableArray<W32Joystick> s_joysticks;
 
 // PROVEN: 99e4808e IDENTICAL/IDENTICAL

@@ -459,7 +459,7 @@ int32_t CGChat::IsVoiceChatAllowed() {
     return CGChat::m_voiceChatSystemStatus && !ComSatClient_IsComsatDisabledByClient();
 }
 
-// OFFSET: 0x008E57E0
+// OFFSET: 0x008E57E0/0x140613B30
 static int QSortDisplayListMembers(const void* a, const void* b) {
     if (!a) {
         return -1;
@@ -771,7 +771,7 @@ void CGChat::RecordChat(const char* text, int32_t type, const char* senderName, 
     }
 }
 
-// OFFSET: 0x008E8730
+// OFFSET: 0x008E8730/0x140616EE0
 ChatChannel* GetChannelByName(const char* name) {
     for (uint32_t i = 0; i < CGChat::s_channels.Count(); i++) {
         if (!SStrCmpUTF8I(CGChat::s_channels.m_data[i].m_name, name, STORM_MAX_STR)) {
@@ -2018,7 +2018,7 @@ int32_t CGChat::OnGMMessageChat(void* param, NETMESSAGE msgId, uint32_t time, CD
     return CGChat::ChatMessageReceived(msg, true);
 }
 
-// OFFSET: 0x008E6310
+// OFFSET: 0x008E6310/0x1406145B0
 int32_t StringToChatType(const char* string, int32_t* type) {
     struct {
         int32_t type;
@@ -3237,7 +3237,7 @@ void CGChat::OnLogXPGain(int32_t amount) {
     CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(33), NULL);
 }
 
-// OFFSET: 0x008F79C0
+// OFFSET: 0x008F79C0/0x14062A8E0
 void CGChat::InformTargetIcon(WOWGUID setter, WOWGUID target, int32_t index) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(target, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -3376,7 +3376,7 @@ int32_t Packet_SMSG_LOG_XPGAIN(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: 0x00994480
+// OFFSET: 0x00994480/0x140713D20
 bool InebriatedParseText(const char* text, char* buffer, uint32_t size, float drunkness) {
     if (!text) {
         return false;
@@ -3462,7 +3462,7 @@ bool InebriatedParseText(const char* text, char* buffer, uint32_t size, float dr
     return true;
 }
 
-// OFFSET: 0x008EFA20
+// OFFSET: 0x008EFA20/0x14061FC70
 void CGChat::AddTextEmoteMessage(const WOWGUID& guid, uint32_t emote, const char* target, uint32_t emoteNum) {
     if (!target) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -3678,7 +3678,7 @@ const char* CGChat::GetChannelStringForDisplay(int32_t session, int32_t* type) {
     return name;
 }
 
-// OFFSET: 0x008ECDC0
+// OFFSET: 0x008ECDC0/0x14061C350
 PENDINGCHAT::~PENDINGCHAT() {
     if (this->m_text) {
         SMemFree(this->m_text, __FILE__, __LINE__, 0);
@@ -3700,7 +3700,7 @@ PENDINGTEXTEMOTE::~PENDINGTEXTEMOTE() {
     }
 }
 
-// OFFSET: 0x008EF180
+// OFFSET: 0x008EF180/0x14061F110
 void CGChat::QueueTextEmote(const WOWGUID& guid, uint32_t emote, const char* target, int32_t queued, uint32_t emoteNum) {
     PENDINGTEXTEMOTE* pending = CGChat::s_pendingTextEmotes.NewNode(2, 0, 0);
     pending->m_guid = guid;
@@ -3837,7 +3837,7 @@ void CGChat::TextEmoteNameQueryCallback(int32_t id, const WOWGUID& guid, void* p
     }
 }
 
-// OFFSET: 0x008F08E0
+// OFFSET: 0x008F08E0/0x140621070
 void SetCurrentActiveDisplayChannel(const char* name, int32_t type) {
     if (!name) {
         memset(CGChat::s_activeDisplayChannelName, 0, sizeof(CGChat::s_activeDisplayChannelName));
@@ -3900,7 +3900,7 @@ uint32_t BuildPartyDisplayList() {
     return count;
 }
 
-// OFFSET: 0x008F0B80
+// OFFSET: 0x008F0B80/0x140621490
 uint32_t BuildRaidDisplayList(int32_t type) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -3943,7 +3943,7 @@ uint32_t BuildRaidDisplayList(int32_t type) {
     return CGRaidInfo::m_numMembers;
 }
 
-// OFFSET: 0x008F0C90
+// OFFSET: 0x008F0C90/0x140621620
 void RebuildDisplayChannelList(int32_t signal) {
     memset(CGChat::s_displayChannels, 0, sizeof(CGChat::s_displayChannels));
 
@@ -4418,7 +4418,7 @@ void CGChat::AddCombatMessage(const char* text) {
     }
 }
 
-// OFFSET: 0x008F85F0
+// OFFSET: 0x008F85F0/0x14062B810
 void CGChat::LogDismissPet(const WOWGUID& guid, const WOWGUID& pet) {
     char text[3000];
 
@@ -4432,7 +4432,7 @@ void CGChat::LogDismissPet(const WOWGUID& guid, const WOWGUID& pet) {
     CGChat::AddChatMessage(text, CHAT_MSG_PET_INFO, NULL);
 }
 
-// OFFSET: 0x008E79B0
+// OFFSET: 0x008E79B0/0x140615DF0
 void ChatWindowInfo::RemoveChannel(const char* name) {
     for (uint32_t i = 0; i < this->m_channels.m_count; i++) {
         if (this->m_channels.m_data[i] && !SStrCmpUTF8I(this->m_channels.m_data[i], name, STORM_MAX_STR)) {
@@ -4447,7 +4447,7 @@ void ChatWindowInfo::RemoveChannel(const char* name) {
     }
 }
 
-// OFFSET: 0x008E8D50
+// OFFSET: 0x008E8D50/0x140617520
 const char* CGChat::GetChannelString(const char* name) {
     if (!name || !*name) {
         return NULL;
@@ -4470,7 +4470,7 @@ const char* CGChat::GetChannelString(const char* name) {
     return NULL;
 }
 
-// OFFSET: 0x008ED090
+// OFFSET: 0x008ED090/0x14061C6B0
 void ChatWindowInfo::AddChannel(const char* name, int32_t id) {
     for (uint32_t i = 0; i < this->m_channels.m_count; i++) {
         if (this->m_channels.m_data[i] && !SStrCmpUTF8I(this->m_channels.m_data[i], name, STORM_MAX_STR)) {
@@ -5138,7 +5138,7 @@ const char* CGChat::GetChannelShortName(int32_t number, bool includeInactive) {
     return channel->m_name;
 }
 
-// OFFSET: 0x008EA7E0
+// OFFSET: 0x008EA7E0/0x140619610
 uint32_t CGChat::FindDisplayChannelIndex(const char* name, int32_t type) {
     for (uint32_t i = 0; i < s_numDisplayChannels; i++) {
         if (static_cast<uint32_t>(CGChat::s_displayChannels[i].m_channelIndex) > CGChat::s_channels.m_count || CGChat::s_displayChannels[i].m_headerIndex >= 0) {
@@ -5164,7 +5164,7 @@ uint32_t CGChat::FindDisplayChannelIndex(const char* name, int32_t type) {
     return 0;
 }
 
-// OFFSET: 0x008E5D50
+// OFFSET: 0x008E5D50/0x140614080
 bool CGChat::ChatTokenToGUID(const char* token, WOWGUID& guid) {
     NameCache* rec = g_nameDBCache.GetRecordByName(token);
 
@@ -5218,7 +5218,7 @@ void ChatWindowInfo::Reset() {
     this->m_channelIDs.Clear();
 }
 
-// OFFSET: 0x008F2010
+// OFFSET: 0x008F2010/0x140622F60
 void CGChat::JoiningParty(bool raid, int32_t pvp) {
     bool voiceEnabled = s_cvarEnableVoiceChat && s_cvarEnableVoiceChat->m_intValue;
     int32_t disabled = ComSatClient_IsComsatDisabledByClient();
@@ -5503,7 +5503,7 @@ int32_t CGChat::GetActiveVoiceSession() {
     return s_activeVoiceChannel;
 }
 
-// OFFSET: 0x008EB3F0
+// OFFSET: 0x008EB3F0/0x14061A430
 int32_t CGChat::SetActiveVoiceSession(const char* name, int32_t type, int32_t index) {
     if (type == 4) {
         if (CGChat::s_displayChannels[s_activeVoiceChannel].m_voiceEnabled) {
@@ -5817,7 +5817,7 @@ static void RebuildDisplayListMember(PENDINGUSERLIST* user, int32_t type, const 
     }
 }
 
-// OFFSET: 0x008EB080
+// OFFSET: 0x008EB080/0x140619FC0
 bool CGChat::CanComplain(WOWGUID guid) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -5853,7 +5853,7 @@ void CGChat::VoiceSessionUpdate(const char* name, int32_t type) {
     }
 }
 
-// OFFSET: 0x008EB380
+// OFFSET: 0x008EB380/0x14061A3C0
 void CGChat::NewVoiceSession(const char* name, int32_t type) {
     uint32_t index = CGChat::FindDisplayChannelIndex(name, type);
 
@@ -5974,7 +5974,7 @@ void CGChat::UpdateRosterMember(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x008EEB40
+// OFFSET: 0x008EEB40/0x14061E7D0
 void CGChat::DisplayPendingUserList(ChatChannel* channel) {
     for (PENDINGUSERLIST* user = channel->m_pendingUsers.Head(); user; user = channel->m_pendingUsers.Next(user)) {
         if (!g_nameDBCache.GetRecord(user->m_guid.m_guid, WOWGUID(), NULL, NULL, false)) {
@@ -6297,7 +6297,7 @@ int32_t CGChat::OnTitleEarned(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// OFFSET: 0x008F99E0
+// OFFSET: 0x008F99E0/0x14062CFE0
 void CGChat::DisplayParentControlsNotice(UIErrors error) {
     char text[3000];
 

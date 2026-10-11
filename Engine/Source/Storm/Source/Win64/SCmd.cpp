@@ -12,7 +12,6 @@
 #define SCMD_STRING_SYNTAX_INCORRECT 0x5202
 #define SCMD_STRING_RESPONSE_FILE 0x5203
 
-// STATIC: #0x00A39F84
 static const char* const s_errorstr[3] = {
     "Invalid argument: %s",
     "The syntax of the command is incorrect.",

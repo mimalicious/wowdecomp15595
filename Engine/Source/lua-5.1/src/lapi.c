@@ -33,25 +33,24 @@
 
 
 
-// STATIC: #0x00D4139C
 const char *lua_tainted;
 
-// STATIC: %0x00C3CAEC
+// STATIC: 0x00D38098
 int lua_taintexpected;
 
-// STATIC: %0x00C3CAF0
+// STATIC: 0x00D3809C
 int lua_taintedclosure;
 
 // STATIC: 0x00D380A0
 const char *lua_closuretaint;
 
-// STATIC: %0x00C3CAF8
+// STATIC: 0x00D380A4
 const char *lua_gctag;
 
-// STATIC: #0x00D413B0
+// STATIC: 0x00D380A8
 lua_TaintEventCallback lua_tainteventcallback;
 
-// STATIC: %0x00C3CB08
+// STATIC: 0x00D380B8
 static int lua_decimalconvert;
 
 // STATIC: 0x00D380C0/0x140BF1B30
@@ -337,7 +336,7 @@ LUA_API int lua_isuserdata (lua_State *L, int idx) {
 }
 
 
-// OFFSET: 0x0042BD60
+// OFFSET: 0x0042BD60/0x140032FF0
 LUA_API int lua_rawequal (lua_State *L, int index1, int index2) {
   StkId o1 = index2adr(L, index1);
   StkId o2 = index2adr(L, index2);
@@ -358,7 +357,7 @@ LUA_API int lua_equal (lua_State *L, int index1, int index2) {
 }
 
 
-// OFFSET: 0x0042BDB0
+// OFFSET: 0x0042BDB0/0x140033040
 LUA_API int lua_lessthan (lua_State *L, int index1, int index2) {
   StkId o1, o2;
   int i;
@@ -727,7 +726,7 @@ LUA_API int lua_getmetatable (lua_State *L, int objindex) {
 }
 
 
-// OFFSET: 0x0042C5A0
+// OFFSET: 0x0042C5A0/0x140033960
 LUA_API void lua_getfenv (lua_State *L, int idx) {
   StkId o;
   lua_lock(L);
@@ -1171,7 +1170,7 @@ LUA_API void lua_gcresettimes (lua_State *L) {
 */
 
 
-// OFFSET: 0x0042CD30
+// OFFSET: 0x0042CD30/0x1400342D0
 LUA_API int lua_error (lua_State *L) {
   lua_lock(L);
   api_checknelems(L, 1);
@@ -1225,7 +1224,7 @@ LUA_API void lua_setdecimalconversion (int convert) {
 }
 
 
-// OFFSET: 0x0042CE30
+// OFFSET: 0x0042CE30/0x1400343E0
 LUA_API void lua_convertdecimal (char *s) {
   if (lua_decimalconvert) {
     char *end = s + strlen(s);

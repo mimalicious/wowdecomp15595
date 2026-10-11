@@ -15,13 +15,10 @@ struct RepairRecord {
     /* 001C */ uint32_t m_size;
 };
 
-// STATIC: #0x00B37FF8
 static void* s_reportContext;
 
-// STATIC: #0x00B3800C
 static void (*s_reportCallback)(void* context, uint32_t count, uint32_t repaired, uint32_t size);
 
-// STATIC: #0x00B38360
 Blizzard::Repair::RepairCache Blizzard::Repair::s_repairCache;
 
 // STATIC: 0x00EBA218

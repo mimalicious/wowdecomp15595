@@ -452,7 +452,7 @@ ALboolean LoadOALLibrary(char *szOALFullPathName, LPOPENALFNTABLE lpOALFnTable)
 	return AL_TRUE;
 }
 
-// INLINED
+// OFFSET: 0x00AFA0B0
 ALvoid UnloadOALLibrary()
 {
 	// Unload the dll

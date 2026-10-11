@@ -19,7 +19,6 @@
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 #include "Engine/Source/BlizzardCore/Source/System/Using/Using.h"
 
-// STATIC: #0x00AB93E8
 static Blizzard::Using::Use s_useFile("Blizzard::File");
 
 // STATIC: 0x00D06E3A
@@ -31,7 +30,6 @@ bool Blizzard::Streaming::s_streamingReady;
 // STATIC: 0x00EBA230
 bool Blizzard::Streaming::s_streamingWrite;
 
-// STATIC: %0x00D86BB5
 bool Blizzard::Streaming::s_isStreamingTrial;
 
 // STATIC: 0x00EBA240
@@ -40,7 +38,6 @@ Blizzard::Streaming::RequestHandler* Blizzard::Streaming::s_requestHandler;
 // STATIC: 0x00EBA818
 Blizzard::Streaming::DownloadProgress Blizzard::Streaming::s_progress;
 
-// STATIC: #0x00B38038
 Blizzard::Time::Timestamp Blizzard::Streaming::s_elapsedSinceStart;
 
 // OFFSET: 0x007A7F30/0x14049D7B0

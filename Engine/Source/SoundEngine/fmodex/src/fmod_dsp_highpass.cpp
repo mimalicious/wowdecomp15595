@@ -69,7 +69,7 @@ FMOD_DSP_PARAMETERDESC dsphighpass_param[2] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A9D650/0x14085DF60
 FMOD_DSP_DESCRIPTION_EX *DSPHighPass::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -539,7 +539,7 @@ FMOD_RESULT F_CALLBACK DSPHighPass::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A9D410
 FMOD_RESULT F_CALLBACK DSPHighPass::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPHighPass *highpass = (DSPHighPass *)dsp;

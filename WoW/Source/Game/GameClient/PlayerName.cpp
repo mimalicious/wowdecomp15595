@@ -38,7 +38,6 @@ uint32_t s_nameMask;
 // STATIC: 0x00DC70D0
 static uint32_t s_lastRenderFrame;
 
-// STATIC: #0x00D380A8
 static CGxStringBatch* s_playerNameBatch;
 
 // STATIC: 0x00DC70D8
@@ -50,7 +49,6 @@ static CTexture* s_playerNameIcons;
 // STATIC: 0x00DC70E0
 static CDataAllocator s_freePlayerNames(sizeof(PLAYERNAMEDESC), 256);
 
-// STATIC: #0x00AF46AC
 static C3Vector s_iconPositions[4] = {
     C3Vector(-0.5f, 1.0f, 0.0f),
     C3Vector(0.5f, 1.0f, 0.0f),
@@ -58,7 +56,6 @@ static C3Vector s_iconPositions[4] = {
     C3Vector(-0.5f, 0.0f, 0.0f),
 };
 
-// STATIC: #0x00AF46DC
 static C2Vector s_iconTexCoords[4] = {
     C2Vector(0.0f, 0.0f),
     C2Vector(0.25f, 0.0f),

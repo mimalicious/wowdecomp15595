@@ -5,22 +5,22 @@
 
 extern "C" {
 
-// STATIC: %0x00C394B0
+// STATIC: 0x00D35D10
 const uint8_t s_ipmrTableB236F0[8] = {
     0x00, 0x00, 0x00, 0x00, 0x14, 0x28, 0x42, 0x64,
 };
 
-// STATIC: %0x00C394B8
+// STATIC: 0x00D35D18
 const uint8_t s_ipmrTableB236F8[10] = {
     0x00, 0x00, 0x00, 0x00, 0x14, 0x28, 0x42, 0x64, 0x82, 0x9C,
 };
 
-// STATIC: %0x00C394C4
+// STATIC: 0x00D35D24
 const int16_t s_ipmrTableB23704[16] = {
     0, 0, 0, 0, 20, 40, 66, 100, 130, 156, 180, 204, 228, 256, 276, 300,
 };
 
-// STATIC: %0x00C394E4
+// STATIC: 0x00D35D44
 const int32_t s_ipmrTableB23724[8] = {
     6000, 8350, 10600, 13900, 22600, 30200, 40000, 50800,
 };

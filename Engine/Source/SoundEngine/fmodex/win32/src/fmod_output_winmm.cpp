@@ -60,7 +60,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE9760/0x1408B19D0
 FMOD_OUTPUT_DESCRIPTION_EX *OutputWinMM::getDescriptionEx()
 {
     FMOD_memset(&winmmoutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -763,7 +763,7 @@ FMOD_RESULT OutputWinMM::recordThread()
     [SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE8A40/0x1408B09B0
 void OutputWinMM::recordThreadCallback(void *data)
 {
     OutputWinMM *winmm = (OutputWinMM *)data;

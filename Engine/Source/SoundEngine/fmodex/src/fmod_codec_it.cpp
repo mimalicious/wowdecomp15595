@@ -65,7 +65,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AB0270/0x140874F60
 FMOD_CODEC_DESCRIPTION_EX *CodecIT::getDescriptionEx()
 {
     FMOD_memset(&itcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -760,7 +760,7 @@ FMOD_RESULT MusicChannelIT::portamento()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAA240/0x14086CCE0
 FMOD_RESULT MusicChannelIT::vibrato() 
 {
 	int delta;
@@ -846,7 +846,7 @@ FMOD_RESULT MusicChannelIT::vibrato()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAA320/0x14086CDD0
 FMOD_RESULT MusicChannelIT::fineVibrato() 
 {
 	int delta;
@@ -932,7 +932,7 @@ FMOD_RESULT MusicChannelIT::fineVibrato()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAA3F0/0x14086CEC0
 FMOD_RESULT MusicChannelIT::tremolo() 
 {
 	unsigned char temp;
@@ -1015,7 +1015,7 @@ FMOD_RESULT MusicChannelIT::tremolo()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAA4E0/0x14086CFB0
 FMOD_RESULT MusicChannelIT::panbrello() 
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -1217,7 +1217,7 @@ FMOD_RESULT CodecIT::processEnvelope(MusicEnvelopeState *env, MusicVirtualChanne
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAA760/0x14086D2A0
 FMOD_RESULT CodecIT::processPitchEnvelope(MusicVirtualChannel *vcptr, MusicInstrument *iptr, int note)
 {
 	/*
@@ -1425,7 +1425,7 @@ FMOD_RESULT CodecIT::processPitchEnvelope(MusicVirtualChannel *vcptr, MusicInstr
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAAD00/0x14086D7D0
 FMOD_RESULT CodecIT::sampleVibrato(MusicVirtualChannel *vcptr) 
 {
 	int delta = 0;
@@ -1830,7 +1830,7 @@ FMOD_RESULT CodecIT::unpackRow()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAB1B0/0x14086DD40
 FMOD_RESULT CodecIT::updateRow(bool audible)
 {
 	MusicNote    *current;
@@ -4118,7 +4118,7 @@ FMOD_RESULT CodecIT::play()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AADC20
+// OFFSET: 0x00AADC20/0x140871EC0
 FMOD_RESULT CodecIT::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
 	int 			count, highestorder;
@@ -6342,7 +6342,7 @@ FMOD_RESULT CodecIT::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AAD830
 FMOD_RESULT CodecIT::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;

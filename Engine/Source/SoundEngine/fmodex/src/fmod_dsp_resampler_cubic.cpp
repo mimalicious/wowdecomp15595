@@ -21,7 +21,7 @@
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AF0040
+// OFFSET: 0x00AF0040/0x1408B8650
 void FMOD_Resampler_Cubic(float *out, int outlength, void *src, FMOD_SOUND_FORMAT srcformat, FMOD_UINT64P *position, FMOD_SINT64P *speed, int channels)
 {
     float scale = 1.0f;

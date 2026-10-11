@@ -15,61 +15,52 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: %0x00C3CBF0
+// STATIC: 0x00D381A0
 CTexture* CShaderEffect::s_displTex;
 
-// STATIC: %0x00C3CBF4
 int32_t CShaderEffect::s_forceAlphaTest;
 
-// STATIC: %0x00C3CBF8
+// STATIC: 0x00D381A8
 int32_t CShaderEffect::s_clipEnabled;
 
-// STATIC: %0x00C3CBFC
 int32_t CShaderEffect::s_useAlphaRef;
 
 // STATIC: 0x00D381B0
 float CShaderEffect::s_fogMul;
 
-// STATIC: %0x00C3CC04
+// STATIC: 0x00D381B4
 uint32_t CShaderEffect::s_usePcfFiltering;
 
-// STATIC: %0x00C3CC08
+// STATIC: 0x00D381B8
 uint32_t CShaderEffect::s_localLightCount;
 
-// STATIC: %0x00C3CC0C
+// STATIC: 0x00D381BC
 int32_t CShaderEffect::s_lightEnabled;
 
-// STATIC: %0x00C3CC10
+// STATIC: 0x00D381C0
 float CShaderEffect::s_terrainDisplFactor;
 
-// STATIC: %0x00C3CC14
+// STATIC: 0x00D381C4
 float CShaderEffect::s_displFactor;
 
-// STATIC: %0x00C3CC18
 float CShaderEffect::s_tesselationDist;
 
-// STATIC: %0x00C3CC1C
+// STATIC: 0x00D381CC
 float CShaderEffect::s_tesselationFactor;
 
 // STATIC: 0x00D381D0/0x140BF1D04
 int32_t CShaderEffect::s_enableShaders;
 
-// STATIC: %0x00C3CC24
 CShaderEffect* CShaderEffect::s_curEffect;
 
-// STATIC: %0x00C3CC28
 C3Vector CShaderEffect::s_sunDiffuse;
 
-// STATIC: %0x00C3CC34
 C3Vector CShaderEffect::s_sunAmbient;
 
-// STATIC: %0x00C3CC40
 C3Vector CShaderEffect::s_sunDir;
 
-// STATIC: %0x00C3CC4C
 C3Vector CShaderEffect::s_sunSpec;
 
-// STATIC: %0x00C3CC58
 LocalLights CShaderEffect::s_localLights;
 
 // STATIC: 0x00D382B8
@@ -78,10 +69,9 @@ C4Vector CShaderEffect::s_fogColorAlphaRef;
 // STATIC: 0x00D382C8
 C4Vector CShaderEffect::s_fogParams;
 
-// STATIC: %0x00C3CD48
+// STATIC: 0x00D382F8
 C4Plane CShaderEffect::s_clipPlane;
 
-// STATIC: #0x00D43010
 uint32_t CShaderEffect::s_shadowValue;
 
 // OFFSET: 0x00431CB0

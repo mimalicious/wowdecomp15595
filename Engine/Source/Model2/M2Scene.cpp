@@ -31,19 +31,15 @@
 #include "Engine/Source/Tempest/C3Ray.h"
 #include "Engine/Source/Tempest/NTempest.h"
 
-// STATIC: %0x00AF949C
 const uint32_t s_localLighting[7] = { 1, 1, 1, 1, 1, 0, 0 };
 
-// STATIC: %0x00AF94F0
 const uint32_t s_blendModes[6][7] = { { 0, 1, 2, 10, 3, 4, 5 }, { 0, 1, 2, 10, 3, 4, 5 }, { 2, 2, 2, 10, 3, 4, 5 }, { 2, 2, 2, 10, 3, 4, 5 }, { 2, 2, 2, 10, 3, 4, 5 }, { 2, 2, 2, 10, 3, 4, 5 } };
 
-// STATIC: %0x00C0D298
 uint32_t CM2Scene::s_optFlags;
 
 // STATIC: 0x00D07F14
 static float s_lightGridScale = 0.05f;
 
-// STATIC: %0x00D89EB0
 static uint32_t s_doodadHash[1571];
 
 // PROVEN: a9db6533 IDENTICAL/DIFFERENT

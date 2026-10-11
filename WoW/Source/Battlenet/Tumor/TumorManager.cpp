@@ -10,25 +10,20 @@ BSN::FourCC Battlenet::Event::CREEP("Crep");
 // STATIC: 0x01008DE0
 BSN::FourCC Battlenet::Event::APP("App");
 
-// STATIC: #0x00DCEE60
 BSN::FourCC Battlenet::Event::DATAGRAM_CONNECTION_ACK("DCAC");
 
-// STATIC: #0x00DCEE64
+// STATIC: 0x01008DE8
 BSN::FourCC Battlenet::Event::S2_LOBBY("S2Lb");
 
-// STATIC: #0x00DCEE68
 BSN::FourCC Battlenet::Event::COMSAT_UPDATE("CMSU");
 
-// STATIC: #0x00DCEE6C
 BSN::FourCC Battlenet::Event::TO_UI("ToUI");
 
-// STATIC: #0x00DCEE70
 BSN::FourCC Battlenet::Event::COMSAT_STATE("CMST");
 
-// STATIC: #0x00DCEE74
 BSN::FourCC Battlenet::Event::FROM_UI("FmUI");
 
-// STATIC: #0x00DCEE78
+// STATIC: 0x01008DFC
 BSN::FourCC Battlenet::Event::DATAGRAM_CONNECTION_INIT("DCDI");
 
 // PROVEN: 40b7f33f IDENTICAL/NONE

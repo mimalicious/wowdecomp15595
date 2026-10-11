@@ -2,7 +2,7 @@
 #include "Engine/Source/FrameXML/XMLTree.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: 0x009FAF40
+// OFFSET: 0x009FAF40/0x1407986F0
 void CKBIterator::GoToFirst() {
     if (!this->m_node) {
         return;
@@ -25,7 +25,7 @@ void CKBIterator::GoToNext() {
     this->m_node = next;
 }
 
-// OFFSET: 0x009FAF80
+// OFFSET: 0x009FAF80/0x140798740
 void CKBIterator::GoTo(int32_t index) {
     XMLNode* node = this->m_node;
 

@@ -3,12 +3,12 @@
 
 extern "C" {
 
-// STATIC: %0x00C39118
+// STATIC: 0x00D35978
 const float s_ipmrTableB23358[7] = {
     1.0f, 0.98f, 0.98f, 0.8f, 0.3f, 0.2f, 0.2f,
 };
 
-// STATIC: %0x00C39134
+// STATIC: 0x00D35994
 const float s_ipmrTableB23374[7] = {
     1.0f, 0.98f, 0.98f, 0.98f, 0.98f, 0.9f, 0.6f,
 };

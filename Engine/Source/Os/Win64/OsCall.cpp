@@ -8,19 +8,14 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Storm/Source/SThread.h"
 
-// STATIC: %0x00C2D14C
 static TSList<OsCallThread, TSGetLink<OsCallThread> > s_threadList;
 
-// STATIC: %0x00C2D158
 static TSList<OsCallContext, TSGetLink<OsCallContext> > s_contextList;
 
-// STATIC: %0x00ECF520
 static uint32_t s_tlsIndex;
 
-// STATIC: %0x00ECF524
 static int32_t s_threadCount;
 
-// STATIC: %0x00ECF528
 static CInitCritSect s_critsect;
 
 // OFFSET: 0x00B41FB0

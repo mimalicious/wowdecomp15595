@@ -33,40 +33,40 @@
 // STATIC: 0x00DBE200
 uint32_t SFile::s_locale;
 
-// STATIC: %0x00D737C8
+// STATIC: 0x00EB3F90
 char SFile::m_basePath[260];
 
-// STATIC: %0x00D738CD
+// STATIC: 0x00EB4095
 bool System_SFile2::s_trial;
 
-// STATIC: %0x00D736C0
+// STATIC: 0x00EB3E88
 char System_SFile2::s_dataPath[260];
 
-// STATIC: %0x00D735B8
+// STATIC: 0x00EB3D80
 char System_SFile2::s_dataPath2[260];
 
-// STATIC: %0x00C0AD34
+// STATIC: 0x00D058F0
 bool System_SFile2::s_checkDisk = true;
 
-// STATIC: %0x00C0AD38
+// STATIC: 0x00D058F4
 uint32_t System_SFile2::s_directAccess = 1;
 
-// STATIC: %0x00D734A8
+// STATIC: 0x00EB3C74
 uint32_t System_SFile2::s_useOldFindFile;
 
-// STATIC: %0x00D734B0
+// STATIC: 0x00EB3C78
 char System_SFile2::s_hashedBasePath[260];
 
-// STATIC: %0x00D738CC
+// STATIC: 0x00EB4094
 bool System_SFile2::s_fileHashBuilt;
 
-// STATIC: %0x00D738D0
+// STATIC: 0x00EB409C
 Blizzard::Lock::RMutex System_SFile2::s_fileHashLock;
 
-// STATIC: %0x00D738E8
+// STATIC: 0x00EB40B8
 System_SFile2::FileHash System_SFile2::s_fileHash;
 
-// STATIC: %0x00D73930
+// STATIC: 0x00EB4100
 Blizzard::Thread::LocalObject<System_SFile2::SFileFatalInfo> System_SFile2::s_fatalInfo;
 
 // STATIC: 0x00EB3C70

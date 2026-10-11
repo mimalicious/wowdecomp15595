@@ -3,7 +3,7 @@
 #include "Engine/Source/Frame/CSimpleTitleRegion.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: %0x00BB8348
+// STATIC: 0x00CA2FA0
 int32_t CSimpleTitleRegion::s_metatable = LUA_NOREF;
 
 // PROVEN: b7bf3d42 IDENTICAL/IDENTICAL

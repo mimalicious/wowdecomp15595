@@ -185,10 +185,8 @@ static int32_t s_loadAddOnDepth;
 // STATIC: 0x00D0B27C
 static const char* s_instanceTypeTokens[5] = { "none", "party", "raid", "pvp", "arena" };
 
-// STATIC: #0x00ACC600
 static int32_t s_setTitleCount = 10;
 
-// STATIC: #0x00BD0CB8
 static float s_setTitleTime;
 
 // OFFSET: 0x008C25A0/0x140631DB0
@@ -3528,7 +3526,7 @@ static int32_t Script_DownloadSettings(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x008C74D0
+// OFFSET: 0x008C74D0/0x140637340
 static void ResurrectNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID offerer = CGPlayer_C::s_resurrectOfferer;
     NameCache* name = g_nameDBCache.GetRecord(CGPlayer_C::s_resurrectOfferer.m_guid, offerer, NULL, NULL, false);
@@ -5230,7 +5228,7 @@ static int32_t Script_GrantLevel(lua_State* L) {
     return 0;
 }
 
-// INLINED
+// OFFSET: 0x008D4700/0x140640B90
 static void SummonFriendErrorCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;

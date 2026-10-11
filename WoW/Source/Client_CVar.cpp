@@ -28,7 +28,6 @@
 #include "WoW/Source/Hardware.h"
 #include "WoW/Source/WowSysMessageOutput.h"
 
-// STATIC: #0x00AB6004
 static const char* s_filterNames[] = { "general", "world", "ui", "animation", "models", "objects", "sound", "movement", "network" };
 
 // STATIC: 0x00D361E8
@@ -127,22 +126,18 @@ CVar* g_accountListVar;
 // STATIC: 0x00D361F4
 CVar* g_accountNameVar;
 
-// STATIC: %0x00C3A99C
 CVar* s_cvarEnterWorld;
 
-// STATIC: #0x00B2F9F8
 CVar* s_cvarUIFaster;
 
-// STATIC: #0x00B2F9FC
 CVar* s_cvTextureCacheSize;
 
-// STATIC: #0x00B2FA00
 CVar* s_cvTextureFilteringMode;
 
 // STATIC: 0x00D364C0
 static CVar* s_cvAsyncThreadSleep;
 
-// STATIC: #0x00B2FA08
+// STATIC: 0x00D364C4
 static CVar* s_cvAsyncHandlerTimeout;
 
 // STATIC: 0x00D732E4

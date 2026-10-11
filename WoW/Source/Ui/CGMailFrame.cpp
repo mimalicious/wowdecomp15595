@@ -7,7 +7,7 @@
 #include "WoW/Source/Ui/MailInfo.h"
 #include "WoW/Source/Ui/Types.h"
 
-// OFFSET: 0x0096D7A0
+// OFFSET: 0x0096D7A0/0x1406E4720
 void CGMailInfo::ClearSendMail(bool signal) {
     for (uint32_t i = 0; i < 16; i++) {
         if (CGMailInfo::m_sendItems[i].m_guid) {

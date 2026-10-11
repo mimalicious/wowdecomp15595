@@ -71,7 +71,7 @@ float _FMOD_float32_unpack(ogg_int32_t val){
 /* given a list of word lengths, generate a list of codewords.  Works
    for length ordered or unordered, always assigns the lowest valued
    codewords first.  Extended to handle unused entries (length 0) */
-// INLINED
+// OFFSET: 0x00B45400
 ogg_uint32_t *_FMOD_make_words(ogg_int32_t *l,ogg_int32_t n,ogg_int32_t sparsecount){
   ogg_int32_t i,j,count=0;
   ogg_uint32_t marker[33];
@@ -187,7 +187,7 @@ ogg_int32_t _FMOD_book_maptype1_quantvals(const static_codebook *b){
    generated algorithmically (each column of the vector counts through
    the values in the quant vector). in map type 2, all the values came
    in in an explicit list.  Both value lists must be unpacked */
-// INLINED
+// OFFSET: 0x00B455F0/0x140914590
 float *_FMOD_book_unquantize(const static_codebook *b,int n,int *sparsemap){
   ogg_int32_t j,k,count=0;
   if(b->maptype==1 || b->maptype==2){
@@ -257,7 +257,7 @@ float *_FMOD_book_unquantize(const static_codebook *b,int n,int *sparsemap){
   return(NULL);
 }
 
-// INLINED
+// OFFSET: 0x00B45860/0x140914850
 void FMOD_vorbis_staticbook_clear(static_codebook *b){
   if(b->quantlist)_ogg_free(b->quantlist);
   if(b->lengthlist)_ogg_free(b->lengthlist);
@@ -265,13 +265,13 @@ void FMOD_vorbis_staticbook_clear(static_codebook *b){
   FMOD_memset(b,0,sizeof(*b));
 }
 
-// INLINED
+// OFFSET: 0x00B458C0/0x1409148C0
 void FMOD_vorbis_staticbook_destroy(static_codebook *b){
   FMOD_vorbis_staticbook_clear(b);
   _ogg_free(b);
 }
 
-// INLINED
+// OFFSET: 0x00B458F0/0x1409148F0
 void FMOD_vorbis_book_clear(codebook *b){
   /* static book is not cleared; we're likely called on the lookup and
      the static codebook belongs to the info struct */

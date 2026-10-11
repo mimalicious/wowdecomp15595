@@ -109,7 +109,6 @@ class CHuffmanEncoder : public CHuffman {
     void EncodeSymbol(CBitOutput* output, int32_t symbol);
 };
 
-// STATIC: #0x00A3A9F0
 static const uint8_t s_probability[9][258] = {
     {
         0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -303,10 +302,8 @@ static const uint32_t s_ima_steptable[89] = {
 // STATIC: 0x00D9D584
 static void* s_DecompressBuffer;
 
-// STATIC: #0x00CB746C
 static CCritSect s_decompCrit;
 
-// STATIC: #0x00A3B4EC
 static const _COMPRESSALGORITHM s_compressalgorithm[6] = {
     { MPQ_COMPRESSION_ADPCM_MONO, ImaAdpcmMonoCompress },
     { MPQ_COMPRESSION_ADPCM_STEREO, ImaAdpcmStereoCompress },
@@ -316,7 +313,6 @@ static const _COMPRESSALGORITHM s_compressalgorithm[6] = {
     { MPQ_COMPRESSION_BZIP2, Bzip2Compress },
 };
 
-// STATIC: #0x00A3B51C
 static const _DECOMPRESSALGORITHM s_decompressalgorithm[6] = {
     { MPQ_COMPRESSION_ADPCM_MONO, ImaAdpcmMonoDecompress },
     { MPQ_COMPRESSION_ADPCM_STEREO, ImaAdpcmStereoDecompress },
@@ -1350,7 +1346,7 @@ uint32_t CHuffmanDecoder::Decompress(void* dest, uint32_t destsize, CBitInput* i
     return static_cast<uint32_t>(currdest - static_cast<uint8_t*>(dest));
 }
 
-// OFFSET: 0x004BAD90
+// OFFSET: 0x004BAD90/0x1400F3CE0
 uint32_t CHuffmanEncoder::Compress(CBitOutput* output, const void* source, uint32_t sourcesize, uint8_t hint) {
     this->BuildTree(hint);
     this->m_adaptive = hint == 0;

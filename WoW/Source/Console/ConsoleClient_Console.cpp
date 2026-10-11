@@ -11,14 +11,14 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/Console/ConsoleClient.h"
 
-// OFFSET: 0x0060E210
+// OFFSET: 0x0060E210/0x140297F90
 int32_t ConsoleCommand_CloseConsole(const char* command, const char* arguments) {
     s_active = 0;
 
     return 0;
 }
 
-// OFFSET: 0x0060E2B0
+// OFFSET: 0x0060E2B0/0x140298040
 int32_t ConsoleCommand_RepeatHandler(const char* command, const char* arguments) {
     if (!arguments || !*arguments) {
         s_repeatCount = 0;
@@ -49,7 +49,7 @@ int32_t ConsoleCommand_RepeatHandler(const char* command, const char* arguments)
     return 1;
 }
 
-// OFFSET: 0x00610110
+// OFFSET: 0x00610110/0x14029A490
 int32_t ConsoleCommand_ClearConsole(const char* command, const char* arguments) {
     s_NumLines = 0;
     s_linelist.Clear();
@@ -57,7 +57,7 @@ int32_t ConsoleCommand_ClearConsole(const char* command, const char* arguments) 
     return 1;
 }
 
-// OFFSET: 0x0060E610
+// OFFSET: 0x0060E610/0x1402985E0
 int32_t ConsoleCommand_Proportional(const char* command, const char* arguments) {
     s_baseTextFlags ^= 0x10;
 
@@ -68,7 +68,7 @@ int32_t ConsoleCommand_Proportional(const char* command, const char* arguments) 
     return 1;
 }
 
-// OFFSET: 0x0060E650
+// OFFSET: 0x0060E650/0x140298630
 int32_t ConsoleCommand_CharSpacing(const char* command, const char* arguments) {
     s_charSpacing = arguments && *arguments ? SStrToFloat(arguments) : 0.0f;
 
@@ -79,7 +79,7 @@ int32_t ConsoleCommand_CharSpacing(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: 0x0060E6B0
+// OFFSET: 0x0060E6B0/0x1402986A0
 int32_t ConsoleCommand_DefaultSettings(const char* command, const char* arguments) {
     s_fontHeight = 0.02f;
 
@@ -111,7 +111,7 @@ int32_t ConsoleCommand_DefaultSettings(const char* command, const char* argument
     return 1;
 }
 
-// OFFSET: 0x0060E850
+// OFFSET: 0x0060E850/0x140298890
 int32_t ConsoleCommand_FontSize(const char* command, const char* arguments) {
     float height = SStrToFloat(arguments) * 0.001f;
 
@@ -139,7 +139,7 @@ int32_t ConsoleCommand_FontSize(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: 0x0060E940
+// OFFSET: 0x0060E940/0x140298970
 int32_t ConsoleCommand_Font(const char* command, const char* arguments) {
     char fontName[260] = "Fonts\\";
     SStrPack(fontName, arguments, sizeof(fontName));
@@ -180,7 +180,7 @@ int32_t ConsoleCommand_CurrentSettings(const char* command, const char* argument
     return 1;
 }
 
-// OFFSET: 0x006104F0
+// OFFSET: 0x006104F0/0x14029A940
 int32_t ConsoleCommand_FontColor(const char* command, const char* arguments) {
     char colorClass[64];
     uint32_t red;
@@ -238,7 +238,7 @@ int32_t ConsoleCommand_FontColor(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: 0x006106B0
+// OFFSET: 0x006106B0/0x14029AB60
 int32_t ConsoleCommand_BufferSize(const char* command, const char* arguments) {
     if (!arguments || !*arguments) {
         ConsoleWrite("Please specify how many lines to display", ERROR_COLOR);
@@ -265,7 +265,7 @@ int32_t ConsoleCommand_BufferSize(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: 0x00610740
+// OFFSET: 0x00610740/0x14029AC10
 int32_t ConsoleCommand_BackGroundColor(const char* command, const char* arguments) {
     uint32_t alpha;
     uint32_t red;
@@ -296,7 +296,7 @@ int32_t ConsoleCommand_BackGroundColor(const char* command, const char* argument
     return 1;
 }
 
-// OFFSET: 0x00610800
+// OFFSET: 0x00610800/0x14029ACF0
 int32_t ConsoleCommand_HighLightColor(const char* command, const char* arguments) {
     uint32_t alpha;
     uint32_t red;

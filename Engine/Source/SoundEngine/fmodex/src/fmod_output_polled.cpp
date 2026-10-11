@@ -36,7 +36,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ACFD00
 OutputPolled::OutputPolled()
 {
     mCursorBlock = 0;

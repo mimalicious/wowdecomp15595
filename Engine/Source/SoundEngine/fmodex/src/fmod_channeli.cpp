@@ -45,7 +45,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7BF00/0x140837310
 FMOD_RESULT ChannelI::validate(Channel *channel, ChannelI **channeli)
 {
     unsigned int    handle   = (unsigned int)((FMOD_UINT_NATIVE)channel);
@@ -457,7 +457,7 @@ FMOD_RESULT ChannelI::forceVirtual(bool force)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7EF20/0x14083AB40
 FMOD_RESULT ChannelI::getChannelInfo(FMOD_CHANNEL_INFO *info)
 {
     DSPI *dsphead;
@@ -580,7 +580,7 @@ FMOD_RESULT ChannelI::setChannelInfo(FMOD_CHANNEL_INFO *info)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7C080/0x1408374C0
 FMOD_RESULT ChannelI::getRealChannel(ChannelReal **realchan, int *subchannels)
 {
 #ifdef FMOD_SUPPORT_STREAMING
@@ -1496,7 +1496,7 @@ FMOD_RESULT ChannelI::start()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7E720/0x14083A0F0
 FMOD_RESULT ChannelI::updateSyncPoints(bool seeking)
 {
     FMOD_RESULT  result;
@@ -1668,7 +1668,7 @@ FMOD_RESULT ChannelI::updateSyncPoints(bool seeking)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7F980/0x14083BE00
 FMOD_RESULT ChannelI::update(int delta)
 {
     FMOD_RESULT result;
@@ -2171,7 +2171,7 @@ FMOD_RESULT ChannelI::getPaused(bool *paused)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7CE00/0x1408383D0
 FMOD_RESULT ChannelI::setVolume(float volume, bool forceupdatepos)
 {
     FMOD_RESULT   result = FMOD_OK;
@@ -2658,7 +2658,7 @@ FMOD_RESULT ChannelI::getSpeakerMix(float *frontleft, float *frontright, float *
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7D310/0x1408389C0
 FMOD_RESULT ChannelI::setSpeakerLevels(FMOD_SPEAKER speaker, float *levels, int numlevels, bool calldriver)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -2966,7 +2966,7 @@ FMOD_RESULT ChannelI::getInputChannelMix(float *levels, int numlevels)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7D7A0/0x140838F00
 FMOD_RESULT ChannelI::setMute(bool mute)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -3247,7 +3247,7 @@ FMOD_RESULT ChannelI::get3DAttributes(FMOD_VECTOR *pos, FMOD_VECTOR *vel)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7FDA0/0x14083C400
 FMOD_RESULT ChannelI::set3DMinMaxDistance(float mindistance, float maxdistance)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -4206,7 +4206,7 @@ FMOD_RESULT ChannelI::getChannelGroup(ChannelGroupI **channelgroup)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7DDE0/0x140839680
 FMOD_RESULT ChannelI::isPlaying(bool *isplaying)
 {
     FMOD_RESULT result;
@@ -4832,7 +4832,7 @@ FMOD_RESULT ChannelI::getDSPHead(DSPI **dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7E130/0x140839980
 FMOD_RESULT ChannelI::addDSP(DSPI *dsp)
 {
     FMOD_RESULT result;
@@ -4933,7 +4933,7 @@ FMOD_RESULT ChannelI::addDSP(DSPI *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7E260/0x140839AF0
 FMOD_RESULT ChannelI::addDSPChain(DSPI *dsp)
 {
     FMOD_RESULT result;

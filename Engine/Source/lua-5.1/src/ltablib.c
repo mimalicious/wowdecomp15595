@@ -230,7 +230,7 @@ static int sort_comp (lua_State *L, int a, int b) {
     return lua_lessthan(L, a, b);
 }
 
-// OFFSET: 0x00A2AFB0
+// OFFSET: 0x00A2AFB0/0x1407D33A0
 static void auxsort (lua_State *L, int l, int u) {
   while (l < u) {  /* for tail recursion */
     int i, j;
@@ -341,7 +341,7 @@ static const luaL_Reg tab_funcs[] = {
 };
 
 
-// OFFSET: 0x00A2B470
+// OFFSET: 0x00A2B470/0x1407D3A30
 LUALIB_API int luaopen_table (lua_State *L) {
   luaL_register(L, LUA_TABLIBNAME, tab_funcs);
   return 1;

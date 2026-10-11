@@ -19,7 +19,6 @@ static bool s_enabled;
 // STATIC: 0x00D36B52
 static bool s_hidden;
 
-// STATIC: #0x00B3075B
 static bool s_moved;
 
 // STATIC: 0x00D36B54
@@ -28,16 +27,13 @@ static HLAYER s_layer;
 // STATIC: 0x00D36B58
 static CGxStringBatch* s_batch;
 
-// STATIC: #0x00B30764
 static CGxFont* s_font;
 
-// STATIC: #0x00B30768
 static float s_fontHeight;
 
-// STATIC: #0x00B3076C
 static uint32_t s_first;
 
-// STATIC: #0x00B30770
+// STATIC: 0x00D36B68
 static SYSMESSAGE s_messages[10];
 
 // PROVEN: 5b3651a7 IDENTICAL/NONE
@@ -72,7 +68,7 @@ void WowSysMessageOutput::Hide() {
     }
 }
 
-// OFFSET: 0x0040DE90
+// OFFSET: 0x0040DE90/0x1400115F0
 void WowSysMessageOutput::Output(const char* text, STATUS_TYPE severity) {
     if (!s_enabled) {
         return;
@@ -98,7 +94,7 @@ void WowSysMessageOutput::Output(const char* text, STATUS_TYPE severity) {
     ConsoleWrite(text, severity < STATUS_ERROR ? WARNING_COLOR : ERROR_COLOR);
 }
 
-// OFFSET: 0x0040DFA0
+// OFFSET: 0x0040DFA0/0x140011710
 void WowSysMessageOutput::Paint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (s_hidden) {
         return;
@@ -153,7 +149,7 @@ void WowSysMessageOutput::Paint(void* param, const RECTF* rect, const RECTF* vis
     s_moved = false;
 }
 
-// OFFSET: 0x0040E190
+// OFFSET: 0x0040E190/0x140011A00
 void WowSysMessageOutput::Initialize() {
     if (s_initialized) {
         return;

@@ -33,25 +33,21 @@ const char* CGCooldown::s_starTextureName = "interface\\cooldown\\star4.blp";
 // STATIC: 0x00D17520
 const char* CGCooldown::s_edgeTextureName = "interface\\cooldown\\edge.blp";
 
-// STATIC: #0x00AD13D0
+// STATIC: 0x00D17550
 const uint16_t CGCooldown::s_edgeIndices[6] = { 0, 2, 1, 1, 2, 3 };
 
-// STATIC: #0x00AD13DC
+// STATIC: 0x00D1755C
 const uint16_t CGCooldown::s_flashIndices[6] = { 0, 2, 1, 1, 2, 3 };
 
-// STATIC: #0x00AD13E8
+// STATIC: 0x00D17568
 const uint16_t CGCooldown::s_starIndices[24] = { 0, 9, 1, 1, 9, 2, 2, 9, 3, 3, 9, 4, 4, 9, 5, 5, 9, 6, 6, 9, 7, 7, 9, 8 };
 
-// STATIC: #0x00AD1418
 float CGCooldown::s_flashScale[7] = { 1.0f, 0.6993007f, 0.5405405f, 0.6289308f, 0.7518797f, 0.625f, 0.8695652f };
 
-// STATIC: #0x00AD1434
 float CGCooldown::s_flashAlpha[7] = { 0.0f, 0.5f, 1.0f, 0.75f, 0.5f, 0.25f, 0.0f };
 
-// STATIC: #0x00C24254
 float CGCooldown::s_flashRotation[7] = { 0.0f, -0.1303761f, -0.25918141f, -0.39269909f, -0.51836282f, -0.6518805f, -0.78539819f };
 
-// STATIC: #0x00C24240
 CDataAllocator CGCooldown::s_cooldownHeap(sizeof(CGCooldown), 100);
 
 // INLINED
@@ -389,7 +385,7 @@ bool CGCooldown::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGCooldown::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: 0x009FEA30
+// OFFSET: 0x009FEA30/0x14079CFA0
 void CGCooldown::ResetVerts() {
     for (uint32_t i = 0; i < 9; i++) {
         this->m_starVerts[i] = C3Vector(0.0f, 0.0f, 1.0f);
@@ -552,7 +548,7 @@ void CGCooldown::AnimateVerts() {
     }
 }
 
-// OFFSET: 0x009FF460
+// OFFSET: 0x009FF460/0x14079DA60
 void CGCooldown::UpdateColors() {
     CImVector starColor;
     CImVector edgeColor;
@@ -648,7 +644,7 @@ CGCooldown::CGCooldown(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_drawEdge = 0;
 }
 
-// OFFSET: 0x009FFAD0
+// OFFSET: 0x009FFAD0/0x14079E0B0
 void CGCooldown::SetCooldown(uint32_t start, uint32_t duration) {
     this->m_startTime = start;
     this->m_duration = duration;

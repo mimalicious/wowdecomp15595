@@ -106,7 +106,7 @@ template <class T>
 TInstanceId<T>::~TInstanceId() {
 }
 
-// STATIC: %0x00D955B0
+// STATIC: 0x00EC7348
 template <class T, int bucketCount>
 TInstanceIdTable<T, bucketCount> TSingletonInstanceId<T, bucketCount>::s_idTable;
 

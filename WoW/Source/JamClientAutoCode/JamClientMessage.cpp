@@ -31,15 +31,15 @@ JamClientRideTicket::JamClientRideTicket() {
 JamClientRideTicket::~JamClientRideTicket() {
 }
 
-// OFFSET: 0x00401000
+// OFFSET: 0x00401000/0x1407D7E80
 JamThrottleState::~JamThrottleState() {
 }
 
-// OFFSET: 0x00A3AA30
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool JamClientRideTicket::IsValid() const {
     return true;
 }
 
-// OFFSET: 0x00401000
+// OFFSET: 0x00401000/0x1407D7E80
 JamCliCUFProfile::~JamCliCUFProfile() {
 }

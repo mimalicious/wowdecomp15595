@@ -19,22 +19,16 @@ const DXGI_FORMAT CGxDeviceD3d11::s_GxFormatToDxgiFormat[CGxFormat::Formats_Last
 // STATIC: 0x00BD532C/0x0009CA488
 const DXGI_FORMAT CGxDeviceD3d11::s_GxFormatToDxgiTypeless[CGxFormat::Formats_Last] = { DXGI_FORMAT_B5G6R5_UNORM, DXGI_FORMAT_R8G8B8A8_TYPELESS, DXGI_FORMAT_R8G8B8A8_TYPELESS, DXGI_FORMAT_R10G10B10A2_TYPELESS, DXGI_FORMAT_R16_TYPELESS, DXGI_FORMAT_R24G8_TYPELESS, DXGI_FORMAT_R24G8_TYPELESS, DXGI_FORMAT_R32_TYPELESS };
 
-// STATIC: %0x00AFC3E4
 const uint32_t CGxDeviceD3d11::s_maxIndex[6] = { 0xFFFF, 0xFFFFF, 0xFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-// STATIC: %0x00AFC3FC
 const uint32_t CGxDeviceD3d11::s_texMaxSize2d[6] = { 0x800, 0x800, 0x1000, 0x2000, 0x2000, 0x4000 };
 
-// STATIC: %0x00AFC414
 const uint32_t CGxDeviceD3d11::s_texMaxSizeCube[6] = { 0x200, 0x200, 0x1000, 0x2000, 0x2000, 0x4000 };
 
-// STATIC: %0x00AFC42C
 const uint32_t CGxDeviceD3d11::s_texMaxSizeVolume[6] = { 0x100, 0x100, 0x100, 0x800, 0x800, 0x800 };
 
-// STATIC: %0x00AFC444
 const uint32_t CGxDeviceD3d11::s_maxAnisotropy[6] = { 2, 16, 16, 16, 16, 16 };
 
-// STATIC: %0x00AFC45C
 const uint32_t CGxDeviceD3d11::s_numRenderTargets[6] = { 1, 1, 4, 8, 8, 8 };
 
 // STATIC: 0x00BD53DC
@@ -43,19 +37,18 @@ const D3D11_QUERY CGxDeviceD3d11::s_queryTypes[1] = { D3D11_QUERY_OCCLUSION };
 // STATIC: 0x00EC66C0/0x140DB8828
 static int32_t s_d3dLibRefCount;
 
-// STATIC: %0x00D92ED0
+// STATIC: 0x00EC66C4
 static HMODULE s_d3d11Lib;
 
 // STATIC: 0x00EC66C8/0x140DB8838
 static HMODULE s_dxgiLib;
 
-// STATIC: %0x00D92ED8
+// STATIC: 0x00EC66CC
 static D3D11CreateDeviceProc s_D3D11CreateDevice;
 
-// STATIC: %0x00D92EDC
+// STATIC: 0x00EC66D0
 static CreateDXGIFactory1Proc s_CreateDXGIFactory1;
 
-// STATIC: %0x00C0E6F0
 static int32_t s_hideCursorOnCreate = 1;
 
 // PROVEN: efce7aba IDENTICAL/IDENTICAL
@@ -1946,7 +1939,7 @@ CGxDeviceD3d11::CGxDeviceD3d11() {
     this->DeviceCreateStreamBufs();
 }
 
-// INLINED
+// OFFSET: 0x00856240
 CGxDeviceD3d11::~CGxDeviceD3d11() {
 }
 

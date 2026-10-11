@@ -3,16 +3,16 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/Gx.h"
 
-// STATIC: %0x00C20400
+// STATIC: 0x00D1C90C
 static float s_zFar = 946.0f;
 
-// STATIC: %0x00C20404
+// STATIC: 0x00D1C910
 static float s_zNear = 0.2f;
 
-// STATIC: %0x00C20408
+// STATIC: 0x00D1C914
 static float s_viewportFarClip = 0.94f;
 
-// STATIC: %0x00E45780
+// STATIC: 0x00F803F0
 static int32_t s_submerged;
 
 // STATIC: 0x00F803F4
@@ -25,7 +25,7 @@ struct ViewSettingsFog {
     CImVector m_color;
 };
 
-// STATIC: %0x00E45798
+// STATIC: 0x00F80408
 static ViewSettingsFog s_fog[4];
 
 // PROVEN: 0448e23d IDENTICAL/NONE

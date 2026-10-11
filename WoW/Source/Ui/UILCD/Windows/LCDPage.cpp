@@ -11,7 +11,7 @@ CLCDPage::CLCDPage() : m_dwStartTime(0), m_dwEllapsedTime(0), m_dwExpirationTime
     this->m_dwExpirationTime = INFINITE;
 }
 
-// OFFSET: [0x00B401E0, 0x00B402F0]
+// OFFSET: [0x00B401E0/0x14090DF20, 0x00B402F0/0x14090E030]
 CLCDPage::~CLCDPage() {
 }
 

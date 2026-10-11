@@ -5,7 +5,6 @@
 #include "Engine/Source/ShaderEffect/ShaderEffectParser.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00ABD608
 const EGxTexOp CShaderEffectParser::s_gxTexOpValues[GxTexOps_Last] = {
     GxTexOp_Mod,
     GxTexOp_Mod2x,
@@ -15,7 +14,7 @@ const EGxTexOp CShaderEffectParser::s_gxTexOpValues[GxTexOps_Last] = {
     GxTexOp_Fade,
 };
 
-// STATIC: %0x00BACE40
+// STATIC: 0x00C98B64
 const char* CShaderEffectParser::s_gxTexOpNames[GxTexOps_Last] = {
     "Mod",
     "Mod2x",

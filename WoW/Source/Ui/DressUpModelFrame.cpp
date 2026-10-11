@@ -40,7 +40,6 @@ int32_t CGDressUpModelFrame::s_metatable = LUA_NOREF;
 // STATIC: 0x00F76C88
 int32_t CGDressUpModelFrame::s_objectType;
 
-// STATIC: #0x00C0E500
 CDataAllocator CGDressUpModelFrame::s_dressUpModelHeap(sizeof(CGDressUpModelFrame), 5);
 
 // STATIC: 0x00F76C8C

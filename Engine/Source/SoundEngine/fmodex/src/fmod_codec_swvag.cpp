@@ -55,7 +55,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ABCC90/0x140884390
 FMOD_CODEC_DESCRIPTION_EX *CodecVAG::getDescriptionEx()
 {
     FMOD_memset(&vagcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -405,7 +405,7 @@ FMOD_RESULT F_CALLBACK CodecVAG::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ABCB90
 FMOD_RESULT F_CALLBACK CodecVAG::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecVAG *vag = (CodecVAG *)codec;

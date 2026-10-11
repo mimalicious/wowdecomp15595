@@ -39,7 +39,6 @@ static uint8_t s_cameraPositionValid;
 // STATIC: 0x00F7689C
 static C3Vector s_cameraPosition;
 
-// STATIC: #0x00BEAFD4
 CDataAllocator CGChatBubbleFrame::s_chatBubbleHeap(sizeof(CGChatBubbleFrame), 10);
 
 struct RaidIconTag {
@@ -318,7 +317,7 @@ bool CGChatBubbleFrame::Update(CGUnit_C* player, CGUnit_C* unit) {
     return true;
 }
 
-// OFFSET: 0x009F0BC0
+// OFFSET: 0x009F0BC0/0x14078AA30
 bool CGChatBubbleFrame::AppendRaidIconTexture(char* dest, char* tag, uint32_t size) {
     for (uint32_t i = 0; i < sizeof(s_raidIconTags) / sizeof(s_raidIconTags[0]); i++) {
         if (!_stricmp(FrameScript_GetText(s_raidIconTags[i].m_token, -1, GENDER_NOT_APPLICABLE), tag)) {
@@ -379,7 +378,7 @@ void CGChatBubbleFrame::ParseRaidIcons(char* text, char* dest, uint32_t size) {
     SStrPack(dest, text, size);
 }
 
-// OFFSET: 0x009F1660
+// OFFSET: 0x009F1660/0x14078B750
 void CGChatBubbleFrame::Initialize(const WOWGUID& unit, const char* text, const CImVector& color) {
     char buffer[3000];
     char parsed[3000];
@@ -428,7 +427,7 @@ void CGChatBubbleFrame::OnWorldRender(CGWorldFrame* worldFrame) {
     CLayoutFrame::ResizePending();
 }
 
-// OFFSET: 0x009F1870
+// OFFSET: 0x009F1870/0x14078B9D0
 CGChatBubbleFrame::CGChatBubbleFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_screenX = 0.0f;
     this->m_screenY = 0.0f;
@@ -484,7 +483,7 @@ static void InsertSorted(CGChatBubbleFrame* bubble) {
     s_chatBubbles.LinkToTail(bubble);
 }
 
-// OFFSET: 0x009F1C90
+// OFFSET: 0x009F1C90/0x14078C010
 CGChatBubbleFrame* CGChatBubbleFrame::GetNewChatBubble(CSimpleFrame* parent) {
     CGChatBubbleFrame* bubble = s_freeChatBubbles.Head();
 
@@ -519,7 +518,7 @@ void CGChatBubbleFrame::ClearAll() {
     }
 }
 
-// OFFSET: 0x009F1E80
+// OFFSET: 0x009F1E80/0x14078C240
 void CGChatBubbleFrame::OnWorldLayerUpdate() {
     if (!s_chatBubbles.Head()) {
         return;

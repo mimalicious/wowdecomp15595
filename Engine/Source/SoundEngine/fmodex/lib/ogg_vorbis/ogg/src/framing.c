@@ -162,7 +162,7 @@ static const ogg_uint32_t crc_lookup[256]={
   0xbcb4666d,0xb8757bda,0xb5365d03,0xb1f740b4};
 
 /* init the encode/decode logical stream state */
-// INLINED
+// OFFSET: 0x00B3B340/0x140908000
 int FMOD_ogg_stream_init(ogg_stream_state *os,int serialno){
   if(os){
     FMOD_memset(os,0,sizeof(*os));
@@ -193,7 +193,7 @@ int FMOD_ogg_stream_init(ogg_stream_state *os,int serialno){
   return(-1);
 }
 /* _clear does not free os, only the non-flat storage within */
-// INLINED
+// OFFSET: 0x00B3B3E0/0x1409080C0
 int FMOD_ogg_stream_clear(ogg_stream_state *os){
   if(os){
     if(os->body_data)_ogg_free(os->body_data);
@@ -222,7 +222,7 @@ static void _os_body_expand(ogg_stream_state *os,int needed){
     os->body_data=_ogg_realloc(os->body_data,os->body_storage*sizeof(*os->body_data));
   }
 }
-// INLINED
+// OFFSET: 0x00B3B450
 static void _os_lacing_expand(ogg_stream_state *os,int needed){
   if(os->lacing_storage<=os->lacing_fill+needed){
     os->lacing_storage+=(needed+32);
@@ -427,7 +427,7 @@ int FMOD_ogg_sync_init(ogg_sync_state *oy){
 }
 
 /* clear non-flat storage within */
-// INLINED
+// OFFSET: 0x00B3B580/0x140908230
 int FMOD_ogg_sync_clear(ogg_sync_state *oy){
   if(oy){
     if(oy->data)_ogg_free(oy->data);
@@ -444,7 +444,7 @@ int FMOD_ogg_sync_destroy(ogg_sync_state *oy){
   return(0);
 }
 
-// INLINED
+// OFFSET: 0x00B3B5C0/0x140908280
 char *FMOD_ogg_sync_buffer(ogg_sync_state *oy, ogg_int32_t size){
   /* first, clear out any space that has been previously returned */
   if(oy->returned){
@@ -615,7 +615,7 @@ int FMOD_ogg_sync_pageout(ogg_sync_state *oy, ogg_page *og){
 /* add the incoming page to the stream state; we decompose the page
    into packet segments here as well. */
 
-// INLINED
+// OFFSET: 0x00B3B7E0/0x140908510
 int FMOD_ogg_stream_pagein(ogg_stream_state *os, ogg_page *og){
   unsigned char *header=og->header;
   unsigned char *body=og->body;

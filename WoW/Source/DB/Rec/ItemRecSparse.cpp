@@ -435,7 +435,7 @@ void ItemRecSparse::Initialize() {
     }
 }
 
-// OFFSET: 0x004B2850
+// OFFSET: 0x004B2850/0x1400E9340
 void ItemSparseInitialize() {
     ItemRecSparse::Initialize();
 }

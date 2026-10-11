@@ -468,7 +468,7 @@ float         CodecMPEG::gPow2_2[2][16];
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00ADB720
+// OFFSET: 0x00ADB720/0x1408A4FB0
 FMOD_RESULT CodecMPEG::initLayer3(int down_sample_sblimit)
 {
 	int i, j, k, l;
@@ -735,7 +735,7 @@ FMOD_RESULT CodecMPEG::initLayer3(int down_sample_sblimit)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADC110/0x1408A5D80
 FMOD_RESULT CodecMPEG::III_get_side_info_1(struct III_sideinfo *si, int stereo, int ms_stereo, int sfreq)
 {
 	int ch, gr;
@@ -850,7 +850,7 @@ FMOD_RESULT CodecMPEG::III_get_side_info_1(struct III_sideinfo *si, int stereo, 
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADC490/0x1408A61D0
 FMOD_RESULT CodecMPEG::III_get_side_info_2(struct III_sideinfo *si, int stereo, int ms_stereo, int sfreq)
 {
 	int ch;
@@ -957,7 +957,7 @@ FMOD_RESULT CodecMPEG::III_get_side_info_2(struct III_sideinfo *si, int stereo, 
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADC7C0/0x1408A65C0
 FMOD_RESULT CodecMPEG::III_get_scale_factors_1(int *scf,struct gr_info_s *gr_info, int *numbits)
 {
 	static unsigned char slen[2][16] =
@@ -1074,7 +1074,7 @@ FMOD_RESULT CodecMPEG::III_get_scale_factors_1(int *scf,struct gr_info_s *gr_inf
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADC9D0/0x1408A67E0
 FMOD_RESULT CodecMPEG::III_get_scale_factors_2(int *scf,struct gr_info_s *gr_info,int i_stereo, int *numbits)
 {
 	unsigned char	*pnt;
@@ -1191,7 +1191,7 @@ static int pretab2[22] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADCAE0/0x1408A6930
 FMOD_RESULT CodecMPEG::III_dequantize_sample(float xr[SBLIMIT][SSLIMIT],int *scf, struct gr_info_s *gr_info,int sfreq,int part2bits)
 {
     int shift = 1 + gr_info->scalefac_scale;
@@ -1646,7 +1646,7 @@ FMOD_RESULT CodecMPEG::III_dequantize_sample(float xr[SBLIMIT][SSLIMIT],int *scf
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADD760/0x1408A79B0
 FMOD_RESULT CodecMPEG::III_dequantize_sample_ms(float xr[2][SBLIMIT][SSLIMIT], int *scf, struct gr_info_s *gr_info, int sfreq, int part2bits)
 {
 	int		shift = 1 + gr_info->scalefac_scale;
@@ -2181,7 +2181,7 @@ FMOD_RESULT CodecMPEG::III_dequantize_sample_ms(float xr[2][SBLIMIT][SSLIMIT], i
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADE6B0
 FMOD_RESULT CodecMPEG::III_i_stereo(float xr_buf[2][SBLIMIT][SSLIMIT], int *scalefac, struct gr_info_s *gr_info, int sfreq, int ms_stereo, int lsf)
 {
 	float	(*xr)[SBLIMIT * SSLIMIT] = (float(*)[SBLIMIT * SSLIMIT]) xr_buf;
@@ -2377,7 +2377,7 @@ FMOD_RESULT CodecMPEG::III_i_stereo(float xr_buf[2][SBLIMIT][SSLIMIT], int *scal
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADED30/0x1408A93C0
 FMOD_RESULT CodecMPEG::III_antialias(float xr[SBLIMIT][SSLIMIT], struct gr_info_s *gr_info)
 {
 	int sblim;
@@ -2471,7 +2471,7 @@ FMOD_RESULT CodecMPEG::III_antialias(float xr[SBLIMIT][SSLIMIT], struct gr_info_
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADEFF0/0x1408A9660
 void CodecMPEG::dct36(float * inbuf, float * o1, float * o2, float * wintab, float * tsbuf)
 {
 	float tmp[18];
@@ -2634,7 +2634,7 @@ void CodecMPEG::dct36(float * inbuf, float * o1, float * o2, float * wintab, flo
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADF860/0x1408A9F70
 void CodecMPEG::dct12(float * in, float * rawout1, float * rawout2, register float * wi, register float * ts)
 {
 #define DCT12_PART1 \
@@ -2797,7 +2797,7 @@ void CodecMPEG::dct12(float * in, float * rawout1, float * rawout2, register flo
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ADFE10/0x1408AA500
 FMOD_RESULT CodecMPEG::III_hybrid(float fsIn[SBLIMIT][SSLIMIT], float tsOut[SSLIMIT][SBLIMIT], int ch, struct gr_info_s *gr_info)
 {
 	float *tspnt = (float *) tsOut;

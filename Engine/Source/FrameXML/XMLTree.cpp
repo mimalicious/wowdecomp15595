@@ -7,13 +7,13 @@
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00CC9190
+// STATIC: 0x00DC77A8
 static XML_Parser s_parser;
 
-// STATIC: %0x00CC9194
+// STATIC: 0x00DC77AC
 static XMLNode* s_freeNodes;
 
-// STATIC: %0x00CC9198
+// STATIC: 0x00DC77B0
 CDataAllocator XMLNode::s_allocator(sizeof(XMLNode), 1170);
 
 // PROVEN: c55c70e0 IDENTICAL/NONE

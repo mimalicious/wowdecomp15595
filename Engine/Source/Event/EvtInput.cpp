@@ -11,26 +11,26 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 
 namespace Input {
-    // STATIC: %0x00D95768
+    // STATIC: 0x00EC7520
     MOUSEMODE s_mouseMode;
 
-    // STATIC: %0x00D9576C
+    // STATIC: 0x00EC7524
     uint32_t s_mouseHoldButton;
 
-    // STATIC: %0x00D95770
+    // STATIC: 0x00EC7528
     uint32_t s_metaKeyState;
 
-    // STATIC: %0x00D95774
+    // STATIC: 0x00EC752C
     uint32_t s_buttonState;
 
-    // STATIC: %0x00D95780
+    // STATIC: 0x00EC7538
     CRect s_boundingRect;
 }
 
-// STATIC: %0x00D95778
+// STATIC: 0x00EC7530
 static int32_t (*s_confirmCloseCallback)(void*);
 
-// STATIC: %0x00D9577C
+// STATIC: 0x00EC7534
 static void* s_confirmCloseParam;
 
 // PROVEN: 66f5f713 IDENTICAL/NONE

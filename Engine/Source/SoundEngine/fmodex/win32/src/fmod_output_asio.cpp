@@ -55,7 +55,7 @@ OutputASIO *gASIOObject = 0;
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE6020
 FMOD_OUTPUT_DESCRIPTION_EX *OutputASIO::getDescriptionEx()
 {
     FMOD_memset(&asiooutput, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -108,7 +108,7 @@ FMOD_OUTPUT_DESCRIPTION_EX *OutputASIO::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE56C0
 void OutputASIO::bufferSwitch(long index, ASIOBool processNow)
 {
 	ASIOTime  timeInfo;
@@ -626,7 +626,7 @@ FMOD_RESULT OutputASIO::updateMixer(ASIOTime* params, long doubleBufferIndex, AS
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE5170
 ASIOTime * OutputASIO::bufferSwitchTimeInfo(ASIOTime* params, long doubleBufferIndex, ASIOBool directProcess)
 {
 #ifdef FMOD_SUPPORT_SOFTWARE
@@ -775,7 +775,7 @@ FMOD_RESULT OutputASIO::getDriverCaps(int id, FMOD_CAPS *caps)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE5720
 FMOD_RESULT OutputASIO::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     ASIODriverInfo      asioinf;
@@ -1192,7 +1192,7 @@ FMOD_RESULT OutputASIO::recordGetNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE5450
 FMOD_RESULT OutputASIO::recordGetDriverInfo(int id, char *name, int namelen)
 {
     if (!name || namelen < 1)
@@ -1572,7 +1572,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::closeCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE55C0
 FMOD_RESULT F_CALLBACK OutputASIO::startCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputASIO *asio = (OutputASIO *)output;

@@ -69,7 +69,7 @@ ArenaTeamMemberInfo* CGArenaTeamInfo::SelectMember(uint32_t team, uint32_t index
     return member;
 }
 
-// OFFSET: 0x009A93E0
+// OFFSET: 0x009A93E0/0x140730550
 static int32_t QSortRoster(const void* a, const void* b) {
     const ArenaTeamMemberInfo* member1 = *static_cast<ArenaTeamMemberInfo* const*>(a);
     const ArenaTeamMemberInfo* member2 = *static_cast<ArenaTeamMemberInfo* const*>(b);
@@ -191,7 +191,7 @@ int32_t Packet_SMSG_ARENA_TEAM_STATS(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: 0x009AA530
+// OFFSET: 0x009AA530/0x140731800
 void ArenaTeam::FreeMemberArray() {
     this->m_teamId = 0;
 
@@ -285,7 +285,7 @@ int32_t Packet_SMSG_ARENA_TEAM_ROSTER(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: 0x009AA8C0
+// OFFSET: 0x009AA8C0/0x140731C20
 void CGArenaTeamInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_ARENA_TEAM_ROSTER, Packet_SMSG_ARENA_TEAM_ROSTER, NULL);
     ClientServices::SetMessageHandler(SMSG_ARENA_TEAM_STATS, Packet_SMSG_ARENA_TEAM_STATS, NULL);
@@ -311,7 +311,7 @@ void CGArenaTeamInfo::InitializeGame() {
     }
 }
 
-// OFFSET: 0x009A9F70
+// OFFSET: 0x009A9F70/0x1407311B0
 bool CGArenaTeamInfo::CheckPersonalAndTeamRating(uint32_t rating, int32_t bracket) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -346,7 +346,7 @@ bool CGArenaTeamInfo::CheckPersonalAndTeamRating(uint32_t rating, int32_t bracke
     return false;
 }
 
-// OFFSET: 0x009A9630
+// OFFSET: 0x009A9630/0x140730860
 void CGArenaTeamInfo::SetRosterShowOffline(int32_t showOffline) {
     if (showOffline == CGArenaTeamInfo::m_showOffline) {
         return;
@@ -365,7 +365,7 @@ void CGArenaTeamInfo::SetRosterShowOffline(int32_t showOffline) {
     }
 }
 
-// OFFSET: 0x009A96A0
+// OFFSET: 0x009A96A0/0x1407308D0
 void CGArenaTeamInfo::SortRoster(int32_t column) {
     for (uint32_t i = 0; i < 7; i++) {
         if (CGArenaTeamInfo::m_sortOrder[i].m_column != column) {
@@ -418,7 +418,7 @@ int32_t CGArenaTeamInfo::GetSelectedMemberIndex(uint32_t team) {
     return -1;
 }
 
-// OFFSET: 0x009A9DB0
+// OFFSET: 0x009A9DB0/0x140730FA0
 void CGArenaTeamInfo::QueryRoster(uint32_t index) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -446,7 +446,7 @@ void CGArenaTeamInfo::QueryRoster(uint32_t index) {
     CGArenaTeamInfo::m_nextAllowedQuery[index] = now + 500;
 }
 
-// OFFSET: 0x009A9EB0
+// OFFSET: 0x009A9EB0/0x1407310E0
 void CGArenaTeamInfo::UpdateTeams(int32_t signal) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 

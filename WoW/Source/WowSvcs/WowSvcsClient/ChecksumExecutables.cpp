@@ -9,7 +9,6 @@ struct ChecksumFile {
     /* 0004 */ int32_t m_type;
 };
 
-// STATIC: #0x00AD96E8
 static ChecksumFile s_files[3] = { { NULL, 2 }, { "DivxDecoder.dll", 2 }, { "unicows.dll", 1 } };
 
 // OFFSET: 0x00B09FB0/0x1408CD990

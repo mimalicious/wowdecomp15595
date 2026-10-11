@@ -17,7 +17,7 @@
 // STATIC: 0x00DD394C
 int32_t s_numRegions;
 
-// STATIC: %0x00CD12C0
+// STATIC: 0x00DD3950
 CDataAllocator CGradient::s_allocator(sizeof(CGradient), 5);
 
 // OFFSET: 0x0050AA10
@@ -437,7 +437,7 @@ CSimpleRegion::CSimpleRegion(CSimpleFrame* frame, uint32_t drawLayer, int8_t sub
     }
 }
 
-// INLINED
+// OFFSET: 0x0050AE80
 CSimpleRegion::~CSimpleRegion() {
     this->SetFrame(NULL, 1, 0, false);
     this->EnableGradient(false);

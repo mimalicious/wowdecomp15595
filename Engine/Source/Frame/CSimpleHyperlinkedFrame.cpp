@@ -11,13 +11,13 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00CD2830
+// STATIC: 0x00DD3CE8
 CDataAllocator CSimpleHyperlinkButton::s_allocator(sizeof(CSimpleHyperlinkButton), 10);
 
-// STATIC: %0x00CD282C
+// STATIC: 0x00DD3CE4
 int32_t CSimpleHyperlinkButton::s_objectType;
 
-// STATIC: %0x00BB94EC
+// STATIC: 0x00CA3E00
 const char* CSimpleHyperlinkButton::s_objectTypeName = "HyperLinkButton";
 
 // STATIC: 0x00CA3E14

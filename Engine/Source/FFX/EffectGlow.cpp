@@ -7,7 +7,6 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D95500
 CVar* EffectGlow::s_cvarGlow;
 
 // PROVEN: 9a7d537c IDENTICAL/IDENTICAL

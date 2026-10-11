@@ -78,7 +78,6 @@ static int32_t s_recursiveTableHash = -1;
 // STATIC: 0x00D083B0
 static const char* s_savedVariablesTaint = "SavedVariables";
 
-// STATIC: %0x00C0D778
 static const char* s_compatLua =
     "-------------------------------------------------------------------\n"
     "-- Table library\n"
@@ -1192,7 +1191,7 @@ bool FrameScript_GetText(const char* token, char* buffer, uint32_t size, int32_t
 
 // OFFSET: 0x0083D310/0x140568110
 const char* FrameScript_GetText(const char* token, int32_t count, FRAMESCRIPT_GENDER gender) {
-    // STATIC: %0x00D8BCC0
+    // STATIC: 0x00EBF468
     static const char* text;
 
     text = "";

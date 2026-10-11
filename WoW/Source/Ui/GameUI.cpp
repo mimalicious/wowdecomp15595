@@ -250,13 +250,11 @@ int32_t CGGameUI::m_cursorFlyout;
 // STATIC: 0x00ED7498
 WOWGUID CGGameUI::m_cursorVoidStorageItem;
 
-// STATIC: #0x00ACC3F8
 CImVector s_deadSelectionColor = CImVector(0x7F, 0x7F, 0x7F, 0xFF);
 
 // STATIC: 0x00D0B254
 const char* g_macroTaint = "";
 
-// STATIC: #0x00AC8088
 static const char* s_readOnlyCVars[6] = { "realmList", "realmName", "decorateAccountName", "realmlistbn", "portal", "serverAlert" };
 
 // STATIC: 0x00D0BD30
@@ -1100,7 +1098,6 @@ static UIErrorInfo s_errorInfo[ERR_MAX_VALUE] = {
 // STATIC: 0x00D0B2A8
 int32_t CGGameUI::m_cursorEquipmentSet = -1;
 
-// STATIC: #0x00AC80A4
 int32_t CGGameUI::m_phaseMask;
 
 // STATIC: 0x00D0B2B4
@@ -1232,7 +1229,6 @@ float CGGameUI::m_interactMaxDistSq;
 // STATIC: 0x00ED74E0
 WOWGUID CGGameUI::m_areaSpiritHealerGUID;
 
-// STATIC: #0x00AC8A64
 float s_duelDistSq = 100.0f;
 
 // STATIC: 0x00D0BCA0
@@ -1241,7 +1237,6 @@ float s_playerInteractDistSq = 123.45678f;
 // STATIC: 0x00D0BCA4
 float s_inspectDistSq = 900.0f;
 
-// STATIC: #0x00AC8A70
 float s_followDistSq = 900.0f;
 
 // STATIC: 0x00ED7448
@@ -1286,10 +1281,8 @@ int32_t CGGameUI::m_inCinematic;
 // STATIC: 0x00ED74AC
 int32_t CGGameUI::m_inMovie;
 
-// STATIC: #0x00BD0804
 int32_t CGGameUI::m_movieFileDataID;
 
-// STATIC: #0x00BD0808
 int32_t CGGameUI::m_movieVolume;
 
 // STATIC: 0x00ED74C8
@@ -1361,7 +1354,6 @@ int32_t CGGameUI::m_threatWarningEnabled;
 // STATIC: 0x00ED75D8
 uint16_t CGGameUI::m_accountDataGeneration;
 
-// STATIC: #0x00BD08CC
 int32_t CGGameUI::unk_BD08CC;
 
 // STATIC: 0x00ED7830
@@ -1430,7 +1422,6 @@ WOWGUID CGGameUI::m_pendingLevelGranter;
 // STATIC: 0x00ED7548
 uint32_t CGGameUI::m_raidDifficulty;
 
-// STATIC: #0x00BD0780
 const char* CGGameUI::m_realZoneText;
 
 // STATIC: 0x00ED741C
@@ -1487,7 +1478,6 @@ struct NearestUnitData {
 // STATIC: 0x00ED7924
 static TSGrowableArray<NearestUnitData> s_nearestUnits;
 
-// STATIC: #0x00AC8050
 static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY", "INTERRUPT", "BLOCK", "EVADE", "IMMUNE", "DEFLECT" };
 
 // STATIC: 0x00ED74AC
@@ -6289,10 +6279,8 @@ void CGGameUI::UpdateThreatWarningFromCVar() {
 
 // OFFSET: 0x008D3120/0x14063C9B0
 void CGGameUI::GetSelectionHighlightColor(const WOWGUID& guid, CImVector* color, int32_t a3) {
-    // STATIC: #0x00BD0C94
     static CImVector s_reactionColors[8] = { CImVector(0x00, 0x00, 0xFF, 0xFF), CImVector(0x00, 0x00, 0xFF, 0xFF), CImVector(0x00, 0x80, 0xFF, 0xFF), CImVector(0x00, 0xFF, 0xFF, 0xFF), CImVector(0x00, 0xFF, 0x00, 0xFF), CImVector(0x00, 0xFF, 0x00, 0xFF), CImVector(0x00, 0xFF, 0x00, 0xFF), CImVector(0x00, 0xFF, 0x00, 0xFF) };
 
-    // STATIC: #0x00BD0C8C
     static CImVector s_playerColors[2] = { CImVector(0xFF, 0x00, 0x00, 0xFF), CImVector(0xFF, 0x60, 0x60, 0xFF) };
 
     // STATIC: 0x00ED79AC

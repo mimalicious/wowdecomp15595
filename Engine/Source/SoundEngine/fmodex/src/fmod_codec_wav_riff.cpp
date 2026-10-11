@@ -25,7 +25,7 @@ namespace FMOD
     [SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE1080/0x1408ABE20
 FMOD_RESULT CodecWav::parseChunk(unsigned int chunksize)
 {
     unsigned int    offset, fileoffset;

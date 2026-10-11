@@ -23,7 +23,7 @@
 #include "misc.h"
 #include "os.h"
 
-// INLINED
+// OFFSET: 0x00B43C60/0x140912920
 int FMOD_vorbis_synthesis(vorbis_block *vb,ogg_packet *op){
   vorbis_dsp_state     *vd=vb->vd;
   private_state        *b=vd->backend_state;

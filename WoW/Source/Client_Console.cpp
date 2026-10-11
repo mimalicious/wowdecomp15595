@@ -141,7 +141,7 @@ int32_t CCommand_CharmTeleport(const char* command, const char* arguments) {
     return TeleportCheat(arguments, 1);
 }
 
-// OFFSET: 0x00408990
+// OFFSET: 0x00408990/0x14000ADB0
 int32_t CCommand_WorldTeleport(const char* command, const char* arguments) {
     const char whitespace[] = "\t\r\n\" ";
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -232,7 +232,7 @@ int32_t CCommand_WorldTeleport(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: 0x00408C50
+// OFFSET: 0x00408C50/0x14000B150
 int32_t CCommand_SetRawPos(const char* command, const char* arguments) {
     C3Vector rawPosition;
     const char whitespace[] = "\t\r\n\" ,";

@@ -5,13 +5,10 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00BB34AC
 static TSList<CMDDEF> s_arglist;
 
-// STATIC: %0x00BB34B8
 static TSList<CMDDEF> s_flaglist;
 
-// STATIC: #0x00CAE944
 static int32_t s_addedoptional;
 
 // OFFSET: 0x004B6600
@@ -108,7 +105,7 @@ static CMDDEF* FindFlagDef(const char* string, CMDDEF* firstdef, int32_t minleng
     return bestptr;
 }
 
-// OFFSET: 0x004B6A80
+// OFFSET: 0x004B6A80/0x1400EE4A0
 static int32_t PerformConversion(CMDDEF* ptr, const char* string, int32_t* datachars) {
     *datachars = 0;
 
@@ -316,7 +313,7 @@ uint32_t STORMAPI SCmdGetNum(uint32_t id) {
     return 0;
 }
 
-// OFFSET: 0x004B6FD0
+// OFFSET: 0x004B6FD0/0x1400EEBF0
 int32_t STORMAPI SCmdGetString(uint32_t id, char* buffer, uint32_t bufferchars) {
     if (!buffer) {
         DebugValidate("buffer");

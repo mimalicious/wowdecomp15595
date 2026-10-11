@@ -10,16 +10,15 @@
 #include "Engine/Source/ShaderEffect/DepthCache.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D95508
 static CTexture* s_bumpTex;
 
-// STATIC: %0x00D95510
+// STATIC: 0x00EC72A8
 static CTexture* s_oceanTex[30];
 
-// STATIC: %0x00D95588
+// STATIC: 0x00EC7320
 static int32_t s_refCount;
 
-// INLINED
+// OFFSET: 0x0089DFE0/0x1405DEA50
 PassWaterWindow::~PassWaterWindow() {
     if (this->m_vertexShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_vertexShader);

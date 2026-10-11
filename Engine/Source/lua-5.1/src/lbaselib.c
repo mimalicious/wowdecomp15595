@@ -464,7 +464,7 @@ static const luaL_Reg base_funcs[] = {
 #define CO_NOR	2	/* 'normal' (it resumed another coroutine) */
 #define CO_DEAD	3
 
-// STATIC: %0x00B401A8
+// STATIC: 0x00C1C318
 static const char *const statnames[] =
     {"running", "suspended", "normal", "dead"};
 
@@ -499,7 +499,7 @@ static int luaB_costatus (lua_State *L) {
 }
 
 
-// OFFSET: 0x00A2DF40
+// OFFSET: 0x00A2DF40/0x1407D6CF0
 static int auxresume (lua_State *L, lua_State *co, int narg) {
   int status = costatus(L, co);
   if (!lua_checkstack(co, narg))
@@ -544,7 +544,7 @@ static int luaB_coresume (lua_State *L) {
 }
 
 
-// OFFSET: 0x00A2E090
+// OFFSET: 0x00A2E090/0x1407D6E90
 static int luaB_auxwrap (lua_State *L) {
   lua_State *co = lua_tothread(L, lua_upvalueindex(1));
   int r = auxresume(L, co, lua_gettop(L));
@@ -618,7 +618,7 @@ static void auxopen (lua_State *L, const char *name,
 }
 
 
-// OFFSET: 0x00A2E1E0
+// OFFSET: 0x00A2E1E0/0x1407D7020
 static void base_open (lua_State *L) {
   /* set global _G */
   lua_pushvalue(L, LUA_GLOBALSINDEX);
@@ -641,7 +641,7 @@ static void base_open (lua_State *L) {
 }
 
 
-// OFFSET: 0x00A2E300
+// OFFSET: 0x00A2E300/0x1407D71C0
 LUALIB_API int luaopen_base (lua_State *L) {
   base_open(L);
   luaL_register(L, LUA_COLIBNAME, co_funcs);

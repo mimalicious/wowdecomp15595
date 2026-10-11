@@ -4,10 +4,10 @@
 #include "jmemsys.h"
 #include "jmemnobs.h"
 
-// STATIC: %0x00ED7664
+// STATIC: 0x01012C1C
 static void* (*s_jpegAlloc)(size_t bytes);
 
-// STATIC: %0x00ED7668
+// STATIC: 0x01012C20
 static void (*s_jpegFree)(void* ptr);
 
 // PROVEN: 2f4b4a9f IDENTICAL/NONE

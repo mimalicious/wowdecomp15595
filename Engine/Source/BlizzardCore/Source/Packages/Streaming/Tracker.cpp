@@ -7,31 +7,30 @@
 #include "Engine/Source/BlizzardCore/Source/System/Hardware/Hardware.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// STATIC: %0x00D812E8
+// STATIC: 0x00EBAD68
 static int64_t s_repairSuccessBytes;
 
-// STATIC: %0x00D812F0
+// STATIC: 0x00EBAD70
 static int64_t s_repairFailBytes;
 
 // STATIC: 0x00EBAD88
 static bool s_trackerDisabled;
 
-// STATIC: %0x00D8762C
+// STATIC: 0x00EBAD8C
 const char* Tracker::trackerAddress;
 
-// STATIC: %0x00D812D8
+// STATIC: 0x00EBAD58
 static const char* s_localeTrackerAddress;
 
-// STATIC: %0x00D812DC
+// STATIC: 0x00EBAD5C
 static char s_locale[5];
 
-// STATIC: %0x00D812E4
 static int32_t s_buildnum;
 
-// STATIC: %0x00D87944
+// STATIC: 0x00EBB0A4
 static char s_peerId[21];
 
-// STATIC: %0x00D87970
+// STATIC: 0x00EBB0D0
 static char s_key[9];
 
 // PROVEN: e4cc653f IDENTICAL/NONE

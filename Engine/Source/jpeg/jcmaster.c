@@ -624,7 +624,7 @@ static void finish_pass_master(j_compress_ptr cinfo) {
  * Initialize master compression control.
  */
 
-// OFFSET: 0x00B65580
+// OFFSET: 0x00B65580/0x14092FAA0
 void jinit_c_master_control(j_compress_ptr cinfo, boolean transcode_only) {
   my_master_ptr master;
 

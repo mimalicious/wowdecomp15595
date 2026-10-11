@@ -51,7 +51,7 @@ FMOD_RESULT Channel::stop()
 }
 
 
-// OFFSET: 0x00A7A900
+// OFFSET: 0x00A7A900/0x140835A10
 FMOD_RESULT Channel::setPaused(bool paused)
 {
     FMOD_RESULT result;
@@ -131,7 +131,7 @@ FMOD_RESULT Channel::getVolume(float *volume)
 }
 
 
-// OFFSET: 0x00A7A960
+// OFFSET: 0x00A7A960/0x140835A80
 FMOD_RESULT Channel::setFrequency(float frequency)
 {
     FMOD_RESULT result;
@@ -473,7 +473,7 @@ FMOD_RESULT Channel::getPriority(int *priority)
 }
 
 
-// OFFSET: 0x00A7AA60
+// OFFSET: 0x00A7AA60/0x140835BE0
 FMOD_RESULT Channel::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;
@@ -588,7 +588,7 @@ FMOD_RESULT Channel::getChannelGroup(ChannelGroup **channelgroup)
 }
 
 
-// OFFSET: 0x00A7AB60
+// OFFSET: 0x00A7AB60/0x140835D00
 FMOD_RESULT Channel::setCallback(FMOD_CHANNEL_CALLBACKTYPE type, FMOD_CHANNEL_CALLBACK callback, int command)
 {
     FMOD_RESULT result;
@@ -1043,7 +1043,7 @@ FMOD_RESULT Channel::isPlaying(bool *isplaying)
 }
 
 
-// OFFSET: 0x00A7AD60
+// OFFSET: 0x00A7AD60/0x140835F80
 FMOD_RESULT Channel::isVirtual(bool *isvirtual)
 {
     FMOD_RESULT result;
@@ -1065,7 +1065,7 @@ FMOD_RESULT Channel::isVirtual(bool *isvirtual)
 }
 
 
-// OFFSET: 0x00A7ADA0
+// OFFSET: 0x00A7ADA0/0x140835FC0
 FMOD_RESULT Channel::getAudibility(float *audibility)
 {
     FMOD_RESULT result;
@@ -1312,7 +1312,7 @@ FMOD_RESULT Channel::getLoopPoints(unsigned int *loopstart, FMOD_TIMEUNIT loopst
 }
 
 
-// OFFSET: 0x00A7AE20
+// OFFSET: 0x00A7AE20/0x140836040
 FMOD_RESULT Channel::setUserData(void *_userdata)
 {
     FMOD_RESULT result;
@@ -1330,7 +1330,7 @@ FMOD_RESULT Channel::setUserData(void *_userdata)
 }
 
 
-// OFFSET: 0x00A7AE50
+// OFFSET: 0x00A7AE50/0x140836070
 FMOD_RESULT Channel::getUserData(void **_userdata)
 {
     FMOD_RESULT result;

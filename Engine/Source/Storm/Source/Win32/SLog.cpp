@@ -8,22 +8,18 @@
 #include "Engine/Source/Storm/Source/SOption.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00CA66C8
 static int32_t s_logsysteminit;
 
 // STATIC: 0x00DA5E44
 static uintptr_t s_sequence;
 
-// STATIC: #0x00CB7228
 static char s_defaultdir[MAX_PATH];
 
-// STATIC: %0x00CA67D4
 static CRITICAL_SECTION s_defaultdir_critsect;
 
 // STATIC: 0x00DA5F64
 static _LOG* s_loghead[4];
 
-// STATIC: %0x00CA6800
 static CRITICAL_SECTION s_critsect[4];
 
 // PROVEN: 22299fbb IDENTICAL/NONE
@@ -363,7 +359,7 @@ static int32_t OpenLogFile(const char* filename, void** file, uint32_t flags) {
     return result;
 }
 
-// OFFSET: 0x004BE4E0
+// OFFSET: 0x004BE4E0/0x1400F8270
 int32_t STORMAPI SLogCreate(const char* filename, uint32_t flags, HSLOG* log) {
     if (!filename || !*filename || !log) {
         SErrSetLastError(ERROR_INVALID_PARAMETER);
@@ -403,7 +399,7 @@ int32_t STORMAPI SLogCreate(const char* filename, uint32_t flags, HSLOG* log) {
     return 1;
 }
 
-// OFFSET: 0x004BE5D0
+// OFFSET: 0x004BE5D0/0x1400F83C0
 void STORMAPI SLogDestroy() {
     SLogFlushAll();
 

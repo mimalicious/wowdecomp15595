@@ -59,12 +59,12 @@ void CMinigameTicTacToe_C::UpdateState(CDataStore* msg) {
     msg->Get(this->unk_0020);
 }
 
-// OFFSET: 0x00B38140
+// OFFSET: 0x00B38140/0x140904020
 bool CMinigameTicTacToe_C::ValidateMoveClient(uint8_t moveType, int32_t param) {
     return CMinigameTicTacToe::ValidateMove(this, moveType, param);
 }
 
-// OFFSET: 0x00B38170
+// OFFSET: 0x00B38170/0x140904040
 int32_t CMinigameTicTacToe_C::PushStateToLua(lua_State* L) {
     lua_checkstack(L, 9);
 

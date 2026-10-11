@@ -53,7 +53,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA6680/0x140868420
 FMOD_CODEC_DESCRIPTION_EX *CodecDLS::getDescriptionEx()
 {
     FMOD_memset(&dlscodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -89,7 +89,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecDLS::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA5560/0x140866FF0
 FMOD_RESULT CodecDLS::parseChunk(char *parentchunk, unsigned int chunksize)
 {
 	unsigned int    offset, fileoffset;

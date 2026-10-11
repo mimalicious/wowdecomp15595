@@ -222,7 +222,6 @@ TSList<BattlefieldStatusNode, TSGetLink<BattlefieldStatusNode> > CGBattlefieldIn
 // STATIC: 0x00D124B0
 static const char* s_flagTokens[2] = { "AllianceFlag", "HordeFlag" };
 
-// STATIC: #0x00BEA4A8
 int32_t CGBattlefieldInfo::m_arenaOpponentSeen[5];
 
 // OFFSET: 0x0093D020

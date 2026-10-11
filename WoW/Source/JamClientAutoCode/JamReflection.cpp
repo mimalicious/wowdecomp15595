@@ -885,7 +885,7 @@ static bool JamFloat_FromUInt64(float* data, uint64_t value) {
     return true;
 }
 
-// OFFSET: 0x00A3AA30
+// OFFSET: 0x00A3AA30/0x1404BDD20
 static bool JamDefault_SetDefaultTrue(void* data) {
     return true;
 }
@@ -898,7 +898,7 @@ static JamValue* JamDefault_GetMember(JamValue* out, void* data, const void* met
     return out;
 }
 
-// OFFSET: 0x00842700
+// OFFSET: 0x00842700/0x1407FDD80
 static const char* JamDefault_GetMemberName(void* data, const void* meta, uint32_t index) {
     return NULL;
 }
@@ -911,12 +911,12 @@ static JamValue* JamDefault_FindMember(JamValue* out, void* data, const void* me
     return out;
 }
 
-// OFFSET: 0x00842700
+// OFFSET: 0x00842700/0x1407FDD80
 static uint32_t JamDefault_GetMemberCount(void* data, const void* meta) {
     return 0;
 }
 
-// OFFSET: 0x00842700
+// OFFSET: 0x00842700/0x1407FDD80
 static uint32_t JamDefault_GetMemberCapacity(void* data, const void* meta) {
     return 0;
 }
@@ -929,77 +929,77 @@ static JamValue* JamDefault_GetElement(JamValue* out) {
     return out;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetString(void* data, const void* meta, const char* value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetInt32(void* data, const void* meta, int32_t value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetUInt32(void* data, const void* meta, uint32_t value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetInt64(void* data, const void* meta, int64_t value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetUInt64(void* data, const void* meta, uint64_t value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetFloat(void* data, const void* meta, float value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetBool(void* data, const void* meta, bool value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetString(const void* data, const void* meta, char* buffer, uint32_t size) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetInt32(const void* data, const void* meta, int32_t* value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetInt64(const void* data, const void* meta, int64_t* value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetFloat(const void* data, const void* meta, float* value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetBool(const void* data, const void* meta, bool* value) {
     return false;
 }
 
-// OFFSET: 0x00B06D20
+// OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetDefault(void* data) {
     return false;
 }
@@ -2073,12 +2073,12 @@ static JamValue* JamC2iVector_FindMember(JamValue* out, void* data, const void* 
     return out;
 }
 
-// OFFSET: 0x00B2CAB0
+// OFFSET: 0x00B2CAB0/0x1408476E0
 static uint32_t JamDefault_GetMemberCount2(void* data, const void* meta) {
     return 2;
 }
 
-// OFFSET: 0x00B2CAB0
+// OFFSET: 0x00B2CAB0/0x1408476E0
 static uint32_t JamDefault_GetMemberCapacity2(void* data, const void* meta) {
     return 2;
 }
@@ -2427,13 +2427,13 @@ static bool JamString_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B06F70
+// OFFSET: 0x00B06F70/0x1408CA0F0
 static bool JamString_SetInt64(void* data, const void* meta, int64_t value) {
     SStrPrintf(static_cast<char*>(data), reinterpret_cast<size_t>(meta), "%lld", value);
     return true;
 }
 
-// OFFSET: 0x00B06FA0
+// OFFSET: 0x00B06FA0/0x1408CA110
 static bool JamString_SetUInt64(void* data, const void* meta, uint64_t value) {
     SStrPrintf(static_cast<char*>(data), reinterpret_cast<size_t>(meta), "%llu", value);
     return true;

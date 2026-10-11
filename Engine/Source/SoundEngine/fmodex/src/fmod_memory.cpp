@@ -128,17 +128,17 @@ int LocalMemoryCounter::getMemoryUsed()
 /*
     The wrapper is needed to handle stdcall callbacks when malloc/free is normally cdecl
 */
-// INLINED
+// OFFSET: 0x00A88430
 void * F_CALLBACK Memory_DefaultMalloc(unsigned int size, FMOD_MEMORY_TYPE type)
 {
     return FMOD_OS_Memory_Alloc(size, type);
 }
-// INLINED
+// OFFSET: 0x00A88450
 void * F_CALLBACK Memory_DefaultRealloc(void *data, unsigned int size, FMOD_MEMORY_TYPE type)
 {
     return FMOD_OS_Memory_Realloc(data, size, type);
 }
-// INLINED
+// OFFSET: 0x00A88470
 void F_CALLBACK   Memory_DefaultFree(void *ptr, FMOD_MEMORY_TYPE type)
 {
     FMOD_OS_Memory_Free(ptr, type);
@@ -519,7 +519,7 @@ void MemPool::set(int blockoffset, int value, int numblocks)
 	[REMARKS]
 ]
 */
-// INLINED
+// OFFSET: 0x00A884F0/0x140846610
 int MemPool::findFreeBlocks(int offset, int to, int numblocks)
 {
     int found = 0;
@@ -603,7 +603,7 @@ int MemPool::findFreeBlocks(int offset, int to, int numblocks)
 	[REMARKS]
 ]
 */
-// INLINED
+// OFFSET: 0x00A88720/0x1408466F0
 void *MemPool::alloc(int len, const char *file, const int line, FMOD_MEMORY_TYPE type, bool clear)
 {
 	MemBlockHeader *block = 0;

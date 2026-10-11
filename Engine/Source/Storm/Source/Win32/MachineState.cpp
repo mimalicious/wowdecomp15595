@@ -104,10 +104,8 @@ struct MODULEDEBUGINFO {
     /* 005C */ uint32_t timeDateStamp;
 };
 
-// STATIC: #0x00ADEDE8
 static char s_monthNames[12][4] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
-// STATIC: %0x00C9B35C
 int32_t g_memFullError;
 
 // STATIC: 0x00DA6028

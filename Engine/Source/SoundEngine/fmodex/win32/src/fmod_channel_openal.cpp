@@ -43,7 +43,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF73C0
 ChannelOpenAL::ChannelOpenAL()
 {
     mDSPWaveTable     = NULL;
@@ -815,7 +815,7 @@ FMOD_RESULT ChannelOpenAL::alloc(DSPI *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF5B30
 FMOD_RESULT ChannelOpenAL::start()
 {
     SampleOpenAL *sampleopenal;
@@ -1161,7 +1161,7 @@ FMOD_RESULT ChannelOpenAL::setPaused(bool paused)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6230
 FMOD_RESULT ChannelOpenAL::setVolume(float volume)
 {
     int count;
@@ -1311,7 +1311,7 @@ FMOD_RESULT ChannelOpenAL::setPan(float pan, float fbpan)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF7720
 FMOD_RESULT ChannelOpenAL::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 {
     unsigned int      pcm, endpoint;
@@ -1427,7 +1427,7 @@ FMOD_RESULT ChannelOpenAL::setPosition(unsigned int position, FMOD_TIMEUNIT post
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF79D0
 FMOD_RESULT ChannelOpenAL::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
     int channels;
@@ -1962,7 +1962,7 @@ FMOD_RESULT ChannelOpenAL::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *pr
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6CD0
 FMOD_RESULT ChannelOpenAL::isPlaying(bool *isplaying, bool includethreadlatency)
 {
     if (!isplaying)

@@ -2,19 +2,19 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Os/OsLibrary.h"
 
-// STATIC: %0x00CD2844
+// STATIC: 0x00E4D3D8
 DIVXDECODE g_divxDecode;
 
-// STATIC: %0x00CD2848
+// STATIC: 0x00E4D3DC
 INITIALIZEDIVXDECODER g_initializeDivxDecoder;
 
-// STATIC: %0x00CD284C
+// STATIC: 0x00E4D3E0
 SETOUTPUTFORMAT g_setOutputFormat;
 
-// STATIC: %0x00CD2850
+// STATIC: 0x00E4D3E4
 UNINITIALIZEDIVXDECODER g_unInitializeDivxDecoder;
 
-// STATIC: %0x00CD2854
+// STATIC: 0x00E4D3E8
 static void* s_divxModule;
 
 // OFFSET: 0x00657240

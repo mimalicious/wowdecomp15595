@@ -1,13 +1,13 @@
 #include "Engine/Source/Services/FileNotification.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00BBA0B0
+// STATIC: 0x00CA4E18
 static TSExplicitList<FileNotification::CallbackInfo, offsetof(FileNotification::CallbackInfo, m_link)> s_callbacks;
 
-// STATIC: %0x00CD2EB8
+// STATIC: 0x00DD4330
 static TSHashTable<FileNotification::DeferredFile, HASHKEY_NONE> s_deferredFiles;
 
-// STATIC: %0x00CD2EE4
+// STATIC: 0x00DD435C
 static TSHashTable<FileNotification::Manifest, HASHKEY_NONE> s_manifests;
 
 // OFFSET: 0x00547160/0x14019EC60

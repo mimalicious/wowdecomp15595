@@ -7,13 +7,11 @@
 #include <cstring>
 #include <new>
 
-// STATIC: #0x00D43990
 static uint32_t s_lastEncodeTime;
 
-// STATIC: %0x00E45808
+// STATIC: 0x00F80454
 static int32_t s_jitterBufferSize = (ComSat::Sound::CODECIPMR6000::s_sampleRate * ComSat::Sound::CODECIPMR6000::s_bitsPerSample / 8) / ComSat::Sound::CODECIPMR6000::s_bytesPerFrame;
 
-// STATIC: #0x00D43998
 static int32_t s_frameTimeWindow = (ComSat::Sound::CODECIPMR6000::s_sampleRate * ComSat::Sound::CODECIPMR6000::s_bitsPerSample / 8 * 2) / ComSat::Sound::CODECIPMR6000::s_bytesPerFrame;
 
 // OFFSET: 0x00A32F00
@@ -76,7 +74,7 @@ bool ComSat::Sound::Manager::LocalTalkerThreshold(uint8_t player, float threshol
     return true;
 }
 
-// OFFSET: 0x00A348F0
+// OFFSET: 0x00A348F0/0x1407DF170
 bool ComSat::Sound::Manager::CanBitpackEncodedData() {
     return ComSat::Sound::CODEC::CanBitpackFrames();
 }

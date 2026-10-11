@@ -498,7 +498,7 @@ FMOD_RESULT SoundI::clear(unsigned int offset, unsigned int numsamples)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A89E00/0x1408484E0
 FMOD_RESULT SoundI::release(bool freethis)
 {
     FMOD_RESULT              result;
@@ -747,7 +747,7 @@ FMOD_RESULT SoundI::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A88FB0/0x140847670
 bool SoundI::readyForRelease()
 {
     if (mCodec && !mCodec->readyForRelease())
@@ -1245,7 +1245,7 @@ FMOD_RESULT SoundI::get3DCustomRolloff(FMOD_VECTOR **points, int *numpoints)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A89310/0x140847970
 FMOD_RESULT SoundI::setSubSound(int index, SoundI *subsound)
 {
     int count;
@@ -1379,7 +1379,7 @@ FMOD_RESULT SoundI::setSubSound(int index, SoundI *subsound)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8B890/0x14084A2B0
 FMOD_RESULT SoundI::getSubSound(int index, SoundI **subsound)
 {
     if (!subsound)
@@ -1463,7 +1463,7 @@ FMOD_RESULT SoundI::getSubSound(int index, SoundI **subsound)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A894D0/0x140847B70
 FMOD_RESULT SoundI::setSubSoundSentence(int *subsoundlist, int numsubsounds)
 {
 #ifdef FMOD_SUPPORT_SENTENCING
@@ -1940,7 +1940,7 @@ FMOD_RESULT SoundI::getOpenState(FMOD_OPENSTATE *openstate, unsigned int *percen
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8BDD0/0x14084A8B0
 FMOD_RESULT SoundI::readData(void *buffer, unsigned int numbytes, unsigned int *read)
 {
     FMOD_RESULT           result;
@@ -2126,7 +2126,7 @@ FMOD_RESULT SoundI::seekData(unsigned int position)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A898D0/0x140847FE0
 FMOD_RESULT SoundI::setSoundGroup(SoundGroupI *soundgroup)
 {
     mSoundGroup = soundgroup;
@@ -2314,7 +2314,7 @@ FMOD_RESULT SoundI::getSyncPointInfo(FMOD_SYNCPOINT *point, char *name, int name
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8C130/0x14084AD00
 FMOD_RESULT SoundI::addSyncPoint(unsigned int offset, FMOD_TIMEUNIT offsettype, const char *name, FMOD_SYNCPOINT **syncpoint)
 {
     unsigned int pcm = offset;
@@ -2421,7 +2421,7 @@ FMOD_RESULT SoundI::deleteSyncPoint(FMOD_SYNCPOINT *point)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A89AB0/0x1408481C0
 FMOD_RESULT SoundI::setMode(FMOD_MODE mode)
 {
     if (mode & (FMOD_LOOP_OFF | FMOD_LOOP_NORMAL | FMOD_LOOP_BIDI))
@@ -2563,7 +2563,7 @@ FMOD_RESULT SoundI::getMode(FMOD_MODE *mode)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A89C00/0x140848300
 FMOD_RESULT SoundI::setLoopCount(int loopcount)
 {
     FMOD_RESULT result;
@@ -2632,7 +2632,7 @@ FMOD_RESULT SoundI::getLoopCount(int *loopcount)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8A640/0x140848E50
 FMOD_RESULT SoundI::setLoopPoints(unsigned int loopstart, FMOD_TIMEUNIT loopstarttype, unsigned int loopend, FMOD_TIMEUNIT loopendtype)
 {
     unsigned int loopstartpcm = 0, loopendpcm = 0;
@@ -2902,7 +2902,7 @@ FMOD_RESULT SoundI::getUserData(void **userdata)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8ADD0/0x140849640
 FMOD_RESULT SoundI::updateSubSound(int index, bool updateinfoonly)
 {
     FMOD_RESULT result;

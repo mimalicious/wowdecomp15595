@@ -20,13 +20,12 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00AD1684
+// STATIC: 0x00D17A24
 static const char* s_eventRepeatStrings[4] = { "CALENDAR_REPEAT_NEVER", "CALENDAR_REPEAT_WEEKLY", "CALENDAR_REPEAT_BIWEEKLY", "CALENDAR_REPEAT_MONTHLY" };
 
-// STATIC: #0x00AD1694
 static const char* s_eventTypeStrings[5] = { "CALENDAR_TYPE_RAID", "CALENDAR_TYPE_DUNGEON", "CALENDAR_TYPE_PVP", "CALENDAR_TYPE_MEETING", "CALENDAR_TYPE_OTHER" };
 
-// STATIC: #0x00AD16A8
+// STATIC: 0x00D17A4C
 static const char* s_eventStatusStrings[9] = { "CALENDAR_STATUS_INVITED", "CALENDAR_STATUS_ACCEPTED", "CALENDAR_STATUS_DECLINED", "CALENDAR_STATUS_CONFIRMED", "CALENDAR_STATUS_OUT", "CALENDAR_STATUS_STANDBY", "CALENDAR_STATUS_SIGNEDUP", "CALENDAR_STATUS_NOT_SIGNEDUP", "CALENDAR_STATUS_TENTATIVE" };
 
 // STATIC: 0x00D17A70
@@ -35,7 +34,6 @@ static const int32_t s_inviteStatusOrder[9] = { 9, 3, 6, 1, 7, 4, 2, 8, 5 };
 // STATIC: 0x00D17A94
 static uint32_t s_inviteSortType;
 
-// STATIC: #0x00C243B4
 static InviteSortCriterion s_inviteSortCriteria[6];
 
 // PROVEN: 245f356d IDENTICAL/NONE
@@ -48,12 +46,12 @@ const char* GetEventStatusString(uint32_t status) {
     return s_eventStatusStrings[status];
 }
 
-// OFFSET: 0x00A0AE90
+// OFFSET: 0x00A0AE90/0x1407AC0E0
 const char* GetEventTypeString(uint32_t type) {
     return type >= 5 ? NULL : s_eventTypeStrings[type];
 }
 
-// OFFSET: 0x00A0AEB0
+// OFFSET: 0x00A0AEB0/0x1407AC100
 const char* GetEventRepeatString(uint32_t repeat) {
     return repeat >= 4 ? NULL : s_eventRepeatStrings[repeat];
 }
@@ -111,7 +109,7 @@ void CGCalendarEvent::SetDescription(const char* description) {
     }
 }
 
-// OFFSET: 0x00A0B060
+// OFFSET: 0x00A0B060/0x1407AC2C0
 void CGCalendarEvent::SetType(uint32_t type) {
     if (type < 5 && type != this->m_type) {
         this->m_type = type;
@@ -119,7 +117,7 @@ void CGCalendarEvent::SetType(uint32_t type) {
     }
 }
 
-// OFFSET: 0x00A0B090
+// OFFSET: 0x00A0B090/0x1407AC2E0
 void CGCalendarEvent::SetRepeatOption(uint32_t repeatOption) {
     if (static_cast<int32_t>(repeatOption) < 4 && repeatOption != this->m_repeatOption) {
         this->m_repeatOption = repeatOption;
@@ -300,7 +298,7 @@ void CGCalendarEvent::UpdateInviteNotes(WOWGUID guid, const char* notes) {
     }
 }
 
-// OFFSET: 0x00A0B710
+// OFFSET: 0x00A0B710/0x1407AC9A0
 bool CGCalendarEvent::CanModerate(uint32_t index) {
     if (index >= this->m_numInvites) {
         return false;
@@ -314,7 +312,7 @@ bool CGCalendarEvent::CanModerate(uint32_t index) {
     return true;
 }
 
-// OFFSET: 0x00A0B750
+// OFFSET: 0x00A0B750/0x1407AC9F0
 static int32_t QSortInvites(const void* a, const void* b) {
     const EventInviteInfo* left = *static_cast<EventInviteInfo* const*>(a);
     const EventInviteInfo* right = *static_cast<EventInviteInfo* const*>(b);
@@ -396,7 +394,7 @@ static int32_t QSortInvites(const void* a, const void* b) {
     return result;
 }
 
-// OFFSET: 0x00A0B9C0
+// OFFSET: 0x00A0B9C0/0x1407ACCF0
 bool CGCalendarEvent::SortInvites(uint32_t criterion, bool toggle) {
     for (uint32_t i = 0; i < 6; i++) {
         if (i == criterion) {
@@ -474,14 +472,14 @@ static void InviteNameCacheCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
-// OFFSET: 0x00A0BB70
+// OFFSET: 0x00A0BB70/0x1407ACF00
 bool CGCalendarEvent::IsModerator() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     WOWGUID guid = player ? player->m_obj->m_guid : WOWGUID();
     return this->m_moderatorInviteID || guid == this->m_creatorGUID;
 }
 
-// OFFSET: 0x00A0BBD0
+// OFFSET: 0x00A0BBD0/0x1407ACF60
 bool CGCalendarEvent::AddEvent() {
     if (!this->m_new) {
         return false;
@@ -576,7 +574,7 @@ bool CGCalendarEvent::RemoveEvent() {
     return true;
 }
 
-// OFFSET: 0x00A0B420
+// OFFSET: 0x00A0B420/0x1407AC650
 bool CGCalendarEvent::Update() {
     if (!this->m_changed) {
         return false;
@@ -652,7 +650,7 @@ bool CGCalendarEvent::Invite(const char* name) {
     return true;
 }
 
-// OFFSET: 0x00A0C040
+// OFFSET: 0x00A0C040/0x1407AD4D0
 bool CGCalendarEvent::RemoveInvite(uint32_t index) {
     if (index >= this->m_numInvites) {
         return false;
@@ -695,7 +693,7 @@ bool CGCalendarEvent::RemoveInvite(uint32_t index) {
     return true;
 }
 
-// OFFSET: 0x00A0C1D0
+// OFFSET: 0x00A0C1D0/0x1407AD6C0
 bool CGCalendarEvent::RemoveInviteByGUID(WOWGUID guid) {
     if (guid) {
         int32_t index = this->GetInviteIndex(guid);
@@ -708,7 +706,7 @@ bool CGCalendarEvent::RemoveInviteByGUID(WOWGUID guid) {
     return false;
 }
 
-// OFFSET: 0x00A0C210
+// OFFSET: 0x00A0C210/0x1407AD710
 bool CGCalendarEvent::InviteRSVP(uint32_t status) {
     if (this->m_new || (status != 1 && status != 2 && status != 8)) {
         return false;
@@ -748,7 +746,7 @@ bool CGCalendarEvent::InviteRSVP(uint32_t status) {
     return true;
 }
 
-// OFFSET: 0x00A0C350
+// OFFSET: 0x00A0C350/0x1407AD890
 bool CGCalendarEvent::SignUp(uint8_t tentative) {
     if (this->m_new) {
         return false;
@@ -798,7 +796,7 @@ void CGCalendarEvent::UpdateInviteModeratorStatus(WOWGUID guid, uint8_t status) 
     }
 }
 
-// OFFSET: 0x00A0C510
+// OFFSET: 0x00A0C510/0x1407ADAB0
 bool CGCalendarEvent::CanSetInviteStatus(uint32_t index, uint32_t status) {
     if (!this->IsModerator() || index >= this->m_numInvites || status >= 9 || !status || status == 6 || status == 7) {
         return false;
@@ -811,7 +809,7 @@ bool CGCalendarEvent::CanSetInviteStatus(uint32_t index, uint32_t status) {
     return status != this->m_invites.m_data[index]->m_status;
 }
 
-// OFFSET: 0x00A0C570
+// OFFSET: 0x00A0C570/0x1407ADB70
 void CGCalendarEvent::SetInviteStatus(uint32_t index, uint32_t status) {
     if (!this->CanSetInviteStatus(index, status)) {
         return;
@@ -836,7 +834,7 @@ void CGCalendarEvent::SetInviteStatus(uint32_t index, uint32_t status) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x00A0C680
+// OFFSET: 0x00A0C680/0x1407ADCA0
 void CGCalendarEvent::SetModeratorStatus(uint32_t index, uint32_t status) {
     if (!this->IsModerator()) {
         CGCalendar::CalendarError("CALENDAR_ERROR_PERMISSIONS", 0);
@@ -876,7 +874,7 @@ CGCalendarEvent::CGCalendarEvent() {
     this->Clear();
 }
 
-// OFFSET: 0x00A0C840
+// OFFSET: 0x00A0C840/0x1407ADF50
 CGCalendarEvent::CGCalendarEvent(WOWGUID guid, uint8_t level, int32_t calendarType) {
     this->Clear();
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -920,7 +918,7 @@ CGCalendarEvent::CGCalendarEvent(WOWGUID guid, uint8_t level, int32_t calendarTy
     this->m_new = 1;
 }
 
-// OFFSET: 0x00A0C990
+// OFFSET: 0x00A0C990/0x1407AE0D0
 CGCalendarEvent::~CGCalendarEvent() {
     uint32_t count = this->m_invites.Count();
 

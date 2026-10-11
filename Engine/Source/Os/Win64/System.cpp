@@ -19,10 +19,8 @@
 // STATIC: 0x00D0A794/0x140BBC634
 static int32_t s_sleepInBackground = 1;
 
-// STATIC: %0x00C0FB70
 static const char* s_osTypeNames[OsType_Last] = { "Unknown", "Win95", "Win95OSR2", "Win98", "Win98SE", "WinME", "WinNT4", "Win2000", "WinXP", "Win2003", "Win9X_Other", "WinNT_Other", "MacOS9", "MacOSX", "Linux", "WinVista" };
 
-// STATIC: %0x00B018E8
 static const uint8_t s_hexDigitValues[128] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -34,48 +32,35 @@ static const uint8_t s_hexDigitValues[128] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-// STATIC: %0x00D937B8
 static int32_t s_haveProcessorFeatures;
 
-// STATIC: %0x00D937BC
 static int32_t s_processorVendor;
 
-// STATIC: %0x00D937C0
 static uint32_t s_processorFeatures;
 
-// STATIC: %0x00D937C4
 static int32_t s_processorSockets;
 
-// STATIC: %0x00D937C8
 static int32_t s_processorCores;
 
-// STATIC: %0x00D937CC
 static int32_t s_processorCount;
 
-// STATIC: %0x00D937D0
 static uintptr_t s_textStart;
 
-// STATIC: %0x00D937D4
 static uintptr_t s_textEnd;
 
-// STATIC: %0x00D937D8
 static int32_t s_cpuLogEnabled;
 
 // STATIC: 0x00EC6D1C/0x140DB905C
 static uint32_t s_backgroundSleepMs;
 
-// STATIC: %0x00D937E0
 static uint64_t s_cpuTicksPerSecond;
 
 typedef BOOLEAN (WINAPI* GetUserNameExWProc)(EXTENDED_NAME_FORMAT format, LPWSTR buffer, PULONG size);
 
-// STATIC: %0x00D937E8
 static GetUserNameExWProc s_getUserNameExW;
 
-// STATIC: %0x00D937EC
 static int32_t s_gotPowerProfFrequency;
 
-// STATIC: %0x00D937F0
 static int32_t s_checkedPowerProfInfo;
 
 static const char s_vendorIds[] = "GenuineIntel" "AuthenticAMD" "CyrixInstead" "CentaurHauls";

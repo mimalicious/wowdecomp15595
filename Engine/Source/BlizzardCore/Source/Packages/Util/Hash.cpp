@@ -26,7 +26,6 @@
         c ^= b; c -= rot(b, 24); \
     }
 
-// STATIC: %0x00AF23E0
 static const char s_hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 // OFFSET: 0x007AA1A0/0x1404A52D0

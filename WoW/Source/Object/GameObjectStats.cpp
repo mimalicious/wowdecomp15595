@@ -3,7 +3,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/GameObjectStats_C.h"
 
-// OFFSET: 0x0049B170
+// OFFSET: 0x0049B170/0x1400C6F50
 GameObjectStats::~GameObjectStats() {
     for (int32_t i = 0; i < 4; i++) {
         if (this->m_name[i]) {

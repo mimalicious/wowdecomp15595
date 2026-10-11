@@ -8,7 +8,6 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: %0x00CD2F10
 static TSHashTable<FONTHASHOBJ, HASHKEY_STR> s_fontHash;
 
 // INLINED

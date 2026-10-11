@@ -229,7 +229,7 @@ struct al_table CodecMPEG::gAlloc4[] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE0360/0x1408AAD30
 FMOD_RESULT CodecMPEG::initLayer2()
 {
 	float mulmul[27] = 
@@ -409,7 +409,7 @@ FMOD_RESULT CodecMPEG::II_step_one(unsigned int *bit_alloc,int *scale)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE0890/0x1408AB330
 FMOD_RESULT CodecMPEG::II_step_two(unsigned int *bit_alloc,float fraction[2][4][SBLIMIT],int *scale,int x1)
 {
     int				i,j,k,ba;
@@ -526,7 +526,7 @@ FMOD_RESULT CodecMPEG::II_step_two(unsigned int *bit_alloc,float fraction[2][4][
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE0D10/0x1408AB940
 FMOD_RESULT CodecMPEG::getIIStuff()
 {
 	int translate[3][2][16] = 
@@ -579,7 +579,7 @@ FMOD_RESULT CodecMPEG::getIIStuff()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE0FC0/0x1408ABD10
 FMOD_RESULT CodecMPEG::decodeLayer2(void *pcm_sample, unsigned int *outlen)
 {
 	int				i,j = 0;

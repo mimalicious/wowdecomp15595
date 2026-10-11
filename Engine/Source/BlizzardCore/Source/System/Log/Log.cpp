@@ -16,7 +16,6 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include <new>
 
-// STATIC: #0x00AB93EC
 static System_Log::UsingLog s_usingLog;
 
 // STATIC: 0x00EBA62C

@@ -19,7 +19,6 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00AD5670
 static const XMLENUMVALUE s_frameStrata[] = {
     { FRAME_STRATA_WORLD, "WORLD" },
     { FRAME_STRATA_BACKGROUND, "BACKGROUND" },
@@ -32,7 +31,6 @@ static const XMLENUMVALUE s_frameStrata[] = {
     { FRAME_STRATA_TOOLTIP, "TOOLTIP" },
 };
 
-// STATIC: %0x00AD56B8
 static const XMLENUMVALUE s_framePoints[] = {
     { FRAMEPOINT_BOTTOM, "BOTTOM" },
     { FRAMEPOINT_BOTTOMLEFT, "BOTTOMLEFT" },
@@ -45,7 +43,6 @@ static const XMLENUMVALUE s_framePoints[] = {
     { FRAMEPOINT_RIGHT, "RIGHT" },
 };
 
-// STATIC: %0x00AD5700
 static const XMLENUMVALUE s_drawLayers[] = {
     { 0, "BACKGROUND" },
     { 1, "BORDER" },
@@ -54,7 +51,6 @@ static const XMLENUMVALUE s_drawLayers[] = {
     { 4, "HIGHLIGHT" },
 };
 
-// STATIC: %0x00AD5728
 static const XMLENUMVALUE s_blendModes[] = {
     { GxBlend_Opaque, "DISABLE" },
     { GxBlend_Alpha, "BLEND" },
@@ -63,7 +59,6 @@ static const XMLENUMVALUE s_blendModes[] = {
     { GxBlend_Mod, "MOD" },
 };
 
-// STATIC: %0x00AD5750
 static const XMLENUMVALUE s_justify[] = {
     { 0x1, "LEFT" },
     { 0x2, "CENTER" },
@@ -73,20 +68,17 @@ static const XMLENUMVALUE s_justify[] = {
     { 0x20, "BOTTOM" },
 };
 
-// STATIC: %0x00AD5780
 static const XMLENUMVALUE s_orientations[] = {
     { ORIENTATION_HORIZONTAL, "HORIZONTAL" },
     { ORIENTATION_VERTICAL, "VERTICAL" },
 };
 
-// STATIC: %0x00AD5790
 static const XMLENUMVALUE s_fontFlags[] = {
     { 0x1, "OUTLINE" },
     { 0x4, "THICKOUTLINE" },
     { 0x2, "MONOCHROME" },
 };
 
-// STATIC: %0x00AD57A8
 static const SMOOTHWEIGHTS s_smoothWeights[] = {
     { 0.0f, 0.0f, "NONE" },
     { 1.0f, 0.0f, "IN" },
@@ -95,30 +87,26 @@ static const SMOOTHWEIGHTS s_smoothWeights[] = {
     { 1.0f, 1.0f, "OUT_IN" },
 };
 
-// STATIC: %0x00AD57E4
 static const XMLENUMVALUE s_loopTypes[] = {
     { ANIM_LOOPTYPE_NONE, "NONE" },
     { ANIM_LOOPTYPE_REPEAT, "REPEAT" },
     { ANIM_LOOPTYPE_BOUNCE, "BOUNCE" },
 };
 
-// STATIC: %0x00AD57FC
 static const XMLENUMVALUE s_loopStates[] = {
     { ANIM_LOOPSTATE_NONE, "NONE" },
     { ANIM_LOOPSTATE_FORWARD, "FORWARD" },
     { ANIM_LOOPSTATE_REVERSE, "REVERSE" },
 };
 
-// STATIC: %0x00AD5814
 static const XMLENUMVALUE s_curveTypes[] = {
     { ANIM_CURVE_NONE, "NONE" },
     { ANIM_CURVE_SMOOTH, "SMOOTH" },
 };
 
-// STATIC: %0x00AD58BC
 static const uint8_t s_signaturePublicExponent[4] = { 0x01, 0x00, 0x01, 0x00 };
 
-// STATIC: %0x00CC91B0
+// STATIC: 0x00DC7830
 static char s_fontFlagsString[64];
 
 // OFFSET: 0x004EEAF0/0x140132F10

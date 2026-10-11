@@ -237,7 +237,7 @@ UserClientSendMail::UserClientSendMail() {
 UserClientReorderCharacters::UserClientReorderCharacters() {
 }
 
-// OFFSET: 0x00670310
+// OFFSET: 0x00670310/0x140317480
 UserClientSendMail::~UserClientSendMail() {
 }
 
@@ -246,7 +246,7 @@ UserClientSendMail::~UserClientSendMail() {
 UserClientReorderCharacters::~UserClientReorderCharacters() {
 }
 
-// OFFSET: 0x0066ECF0
+// OFFSET: 0x0066ECF0/0x140315C60
 void UserClientSendMail::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x523));
     msg->Put(static_cast<uint32_t>(this->m_packageID));
@@ -3850,7 +3850,7 @@ UserClientLfgJoin::UserClientLfgJoin() {
 UserClientLfgJoin::~UserClientLfgJoin() {
 }
 
-// OFFSET: 0x0066FA30
+// OFFSET: 0x0066FA30/0x140316A50
 void UserClientLfgJoin::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2430));
     msg->Put(this->m_roles);
@@ -3890,7 +3890,7 @@ void UserClientLfgLeave::Put(CDataStore* msg) {
 UserClientLfgProposalResponse::UserClientLfgProposalResponse() {
 }
 
-// OFFSET: 0x0066D940
+// OFFSET: 0x0066D940/0x140314AC0
 UserClientLfgProposalResponse::~UserClientLfgProposalResponse() {
 }
 
@@ -3996,11 +3996,11 @@ void UserClientWorldTeleport::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0066D3E0
+// OFFSET: 0x0066D3E0/0x140314480
 UserClientSupportTicketSubmitBug::UserClientSupportTicketSubmitBug() {
 }
 
-// OFFSET: 0x0066D930
+// OFFSET: 0x0066D930/0x140314AA0
 UserClientSupportTicketSubmitBug::~UserClientSupportTicketSubmitBug() {
 }
 
@@ -4016,11 +4016,11 @@ void UserClientSupportTicketSubmitBug::Put(CDataStore* msg) {
     this->m_header.Put(msg);
 }
 
-// OFFSET: 0x0066DEC0
+// OFFSET: 0x0066DEC0/0x1403150F0
 UserClientSupportTicketSubmitSuggestion::UserClientSupportTicketSubmitSuggestion() {
 }
 
-// OFFSET: 0x0066E030
+// OFFSET: 0x0066E030/0x140315260
 UserClientSupportTicketSubmitSuggestion::~UserClientSupportTicketSubmitSuggestion() {
 }
 

@@ -130,25 +130,25 @@ TKey DBCacheIntKey(int32_t key) {
 template <>
 CWardenKey DBCacheIntKey<CWardenKey>(int32_t key);
 
-// OFFSET: [0x004A8F00<CreatureStats_C, int, HASHKEY_INT>, 0x004A9030<GameObjectStats_C, int, HASHKEY_INT>, 0x004A9160<NPCText, int, HASHKEY_INT>, 0x004A9290<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A93C0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A94F0<QuestCache, int, HASHKEY_INT>, 0x004A9620<PageTextCache_C, int, HASHKEY_INT>, 0x004A9750<PetNameCache, int, HASHKEY_INT>, 0x004A9880<CGPetition, int, HASHKEY_INT>, 0x004A99B0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A9AE0<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A9C10<ArenaTeamCache, int, HASHKEY_INT>, 0x004A9D40<DanceCache, int, HASHKEY_INT>]
+// OFFSET: [0x004A8F00/0x1400DA5A0<CreatureStats_C, int, HASHKEY_INT>, 0x004A9030/0x1400DA750<GameObjectStats_C, int, HASHKEY_INT>, 0x004A9160/0x1400DA900<NPCText, int, HASHKEY_INT>, 0x004A9290/0x1400DAAB0<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A93C0/0x1400DAC60<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A94F0/0x1400DAE10<QuestCache, int, HASHKEY_INT>, 0x004A9620/0x1400DAFC0<PageTextCache_C, int, HASHKEY_INT>, 0x004A9750/0x1400DB170<PetNameCache, int, HASHKEY_INT>, 0x004A9880/0x1400DB320<CGPetition, int, HASHKEY_INT>, 0x004A99B0/0x1400DB4D0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A9AE0/0x1400DB680<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A9C10/0x1400DB830<ArenaTeamCache, int, HASHKEY_INT>, 0x004A9D40/0x1400DB9E0<DanceCache, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 DBCache<T, TKey, THashKey>::DBCache(uint32_t signature, const char* fileName, uint32_t queryOpcode, uint32_t multipleQueryOpcode, bool sendRequester, bool enabled, uint32_t queriesPerMinute) : m_signature(signature), m_fileName(fileName), m_version(0), m_queryOpcode(queryOpcode), m_multipleQueryOpcode(multipleQueryOpcode), m_sendRequester(sendRequester), m_enabled(enabled), m_loaded(false), m_maxQueriesPerPump(30000 * queriesPerMinute / 60000), m_queriesSent(0), m_nextQueryTime(0) {
 }
 
-// OFFSET: [0x004A8FA0<CreatureStats_C, int, HASHKEY_INT>, 0x004A90D0<GameObjectStats_C, int, HASHKEY_INT>, 0x004A9200<NPCText, int, HASHKEY_INT>, 0x004A9330<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A9460<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A9590<QuestCache, int, HASHKEY_INT>, 0x004A96C0<PageTextCache_C, int, HASHKEY_INT>, 0x004A97F0<PetNameCache, int, HASHKEY_INT>, 0x004A9920<CGPetition, int, HASHKEY_INT>, 0x004A9A50<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A9CB0<ArenaTeamCache, int, HASHKEY_INT>, 0x004A9DE0<DanceCache, int, HASHKEY_INT>, 0x004A9B80<WardenCachedModule, CWardenKey, CWardenKey>]
+// OFFSET: [0x004A8FA0/0x1400DA680<CreatureStats_C, int, HASHKEY_INT>, 0x004A90D0/0x1400DA830<GameObjectStats_C, int, HASHKEY_INT>, 0x004A9200/0x1400DA9E0<NPCText, int, HASHKEY_INT>, 0x004A9330/0x1400DAB90<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A9460/0x1400DAD40<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A9590/0x1400DAEF0<QuestCache, int, HASHKEY_INT>, 0x004A96C0/0x1400DB0A0<PageTextCache_C, int, HASHKEY_INT>, 0x004A97F0/0x1400DB250<PetNameCache, int, HASHKEY_INT>, 0x004A9920/0x1400DB400<CGPetition, int, HASHKEY_INT>, 0x004A9A50/0x1400DB5B0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A9CB0/0x1400DB910<ArenaTeamCache, int, HASHKEY_INT>, 0x004A9DE0/0x1400DBAC0<DanceCache, int, HASHKEY_INT>, 0x004A9B80/0x1400DB760<WardenCachedModule, CWardenKey, CWardenKey>]
 template <class T, class TKey, class THashKey>
 DBCache<T, TKey, THashKey>::~DBCache() {
     this->m_entries.InternalClear(0);
     this->m_reverse.InternalClear(0);
 }
 
-// OFFSET: [0x004A73B0<QuestCache, int, HASHKEY_INT>, 0x004A7650<PageTextCache_C, int, HASHKEY_INT>, 0x004A7900<PetNameCache, int, HASHKEY_INT>, 0x004A7BB0<CGPetition, int, HASHKEY_INT>, 0x004A80F0<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A8390<ArenaTeamCache, int, HASHKEY_INT>, 0x004A6E50<NameCache, uint64_t, CHashKeyGUID>, 0x004A7110<GuildStats_C, uint64_t, CHashKeyGUID>, 0x004A7E50<ItemTextCache_C, uint64_t, CHashKeyGUID>]
+// OFFSET: [0x004A73B0/0x1400D7E80<QuestCache, int, HASHKEY_INT>, 0x004A7650/0x1400D8200<PageTextCache_C, int, HASHKEY_INT>, 0x004A7900/0x1400D8570<PetNameCache, int, HASHKEY_INT>, 0x004A7BB0/0x1400D8910<CGPetition, int, HASHKEY_INT>, 0x004A80F0/0x1400D9010<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A8390/0x1400D9390<ArenaTeamCache, int, HASHKEY_INT>, 0x004A6E50/0x1400D7760<NameCache, uint64_t, CHashKeyGUID>, 0x004A7110/0x1400D7B00<GuildStats_C, uint64_t, CHashKeyGUID>, 0x004A7E50/0x1400D8C90<ItemTextCache_C, uint64_t, CHashKeyGUID>, 0x004A6640/0x1400D6CA0<CreatureStats_C, int, HASHKEY_INT>, 0x004A68F0/0x1400D7020<GameObjectStats_C, int, HASHKEY_INT>, 0x004A6BA0/0x1400D73A0<NPCText, int, HASHKEY_INT>, 0x004A8630/0x1400D9710<DanceCache, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 DBCache<T, TKey, THashKey>::DBCACHEHASH::~DBCACHEHASH() {
     this->m_callbacks.Clear();
 }
 
-// INLINED
+// OFFSET: [0x004B1290<NameCache, unsigned __int64, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::ItemAdded(T* item) {
 }
@@ -300,7 +300,7 @@ void DBCache<T, TKey, THashKey>::Load() {
     }
 }
 
-// OFFSET: [0x004B12D0<CreatureStats_C, int, HASHKEY_INT>, 0x004B1300<GameObjectStats_C, int, HASHKEY_INT>, 0x004B1330<NPCText, int, HASHKEY_INT>, 0x004B17A0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004B1800<QuestCache, int, HASHKEY_INT>, 0x004B1830<PageTextCache_C, int, HASHKEY_INT>, 0x004B18C0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004B1960<DanceCache, int, HASHKEY_INT>, 0x004B1360<NameCache, unsigned __int64, CHashKeyGUID>, 0x004B1860<PetNameCache, int, HASHKEY_INT>, 0x004B1890<CGPetition, int, HASHKEY_INT>, 0x004B1930<ArenaTeamCache, int, HASHKEY_INT>, 0x004B18F0<WardenCachedModule, CWardenKey, CWardenKey>]
+// OFFSET: [0x004B12D0/0x1400E76C0<CreatureStats_C, int, HASHKEY_INT>, 0x004B1300/0x1400E76F0<GameObjectStats_C, int, HASHKEY_INT>, 0x004B1330/0x1400E7720<NPCText, int, HASHKEY_INT>, 0x004B17A0/0x1400E7E80<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004B1800/0x1400E7EE0<QuestCache, int, HASHKEY_INT>, 0x004B1830/0x1400E7F10<PageTextCache_C, int, HASHKEY_INT>, 0x004B18C0/0x1400E7FA0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004B1960/0x1400E8060<DanceCache, int, HASHKEY_INT>, 0x004B1360/0x1400E7750<NameCache, unsigned __int64, CHashKeyGUID>, 0x004B1860/0x1400E7F40<PetNameCache, int, HASHKEY_INT>, 0x004B1890/0x1400E7F70<CGPetition, int, HASHKEY_INT>, 0x004B1930/0x1400E8030<ArenaTeamCache, int, HASHKEY_INT>, 0x004B18F0<WardenCachedModule, CWardenKey, CWardenKey>]
 template <class T, class TKey, class THashKey>
 T* DBCache<T, TKey, THashKey>::GetRecord(TKey key, const WOWGUID& guid, void (*callback)(int32_t id, const WOWGUID& guid, void* param, bool success), void* param, bool unique) {
     return this->GetRecordInternal(key, guid, callback, 0, param, unique);
@@ -312,7 +312,7 @@ T* DBCache<T, TKey, THashKey>::GetRecord2(TKey key, const WOWGUID& guid, void (*
     return this->GetRecordInternal(key, guid, reinterpret_cast<void (*)(int32_t, const WOWGUID&, void*, bool)>(callback), 1, param, unique);
 }
 
-// OFFSET: [0x004ADFD0/0x1400E2380<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004ACB30<CreatureStats_C, int, HASHKEY_INT>, 0x004AD170<GameObjectStats_C, int, HASHKEY_INT>, 0x004ADDF0<NameCache, unsigned __int64, CHashKeyGUID>, 0x004AE590<QuestCache, int, HASHKEY_INT>, 0x004AF0F0<PetNameCache, int, HASHKEY_INT>, 0x004AF620<CGPetition, int, HASHKEY_INT>, 0x004AD7B0<NPCText, int, HASHKEY_INT>, 0x004AEAD0<PageTextCache_C, int, HASHKEY_INT>, 0x004AFB60<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004B0810<ArenaTeamCache, int, HASHKEY_INT>, 0x004B0D50<DanceCache, int, HASHKEY_INT>, 0x004B0140<WardenCachedModule, CWardenKey, CWardenKey>]
+// OFFSET: [0x004ADFD0/0x1400E2380<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004ACB30/0x1400E0360<CreatureStats_C, int, HASHKEY_INT>, 0x004AD170/0x1400E0D50<GameObjectStats_C, int, HASHKEY_INT>, 0x004ADDF0/0x1400E2130<NameCache, unsigned __int64, CHashKeyGUID>, 0x004AE590/0x1400E2C90<QuestCache, int, HASHKEY_INT>, 0x004AF0F0/0x1400E3F10<PetNameCache, int, HASHKEY_INT>, 0x004AF620/0x1400E47E0<CGPetition, int, HASHKEY_INT>, 0x004AD7B0/0x1400E1740<NPCText, int, HASHKEY_INT>, 0x004AEAD0/0x1400E3560<PageTextCache_C, int, HASHKEY_INT>, 0x004AFB60/0x1400E50B0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004B0810/0x1400E64B0<ArenaTeamCache, int, HASHKEY_INT>, 0x004B0D50/0x1400E6D90<DanceCache, int, HASHKEY_INT>, 0x004B0140<WardenCachedModule, CWardenKey, CWardenKey>]
 template <class T, class TKey, class THashKey>
 T* DBCache<T, TKey, THashKey>::GetRecordInternal(TKey key, const WOWGUID& guid, void (*callback)(int32_t id, const WOWGUID& guid, void* param, bool success), uint32_t keyCallback, void* param, bool unique) {
     if (DBCacheIsNullKey(key)) {
@@ -443,7 +443,7 @@ void DBCache<T, TKey, THashKey>::Clear() {
     this->m_reverse.InternalClear(0);
 }
 
-// OFFSET: [0x004A0620<CreatureStats_C, int, HASHKEY_INT>, 0x004A0B50<DanceCache, int, HASHKEY_INT>, 0x004A0720<NPCText, int, HASHKEY_INT>, 0x004A0790<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A0800<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A0870<QuestCache, int, HASHKEY_INT>, 0x004A08E0<PageTextCache_C, int, HASHKEY_INT>, 0x004A0940<PetNameCache, int, HASHKEY_INT>, 0x004A09A0<CGPetition, int, HASHKEY_INT>, 0x004A0A10<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A0A80<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A0AE0<ArenaTeamCache, int, HASHKEY_INT>, 0x004A06B0<GameObjectStats_C, int, HASHKEY_INT>]
+// OFFSET: [0x004A0620/0x1400CE2B0<CreatureStats_C, int, HASHKEY_INT>, 0x004A0B50/0x1400CE9A0<DanceCache, int, HASHKEY_INT>, 0x004A0720/0x1400CE3D0<NPCText, int, HASHKEY_INT>, 0x004A0790/0x1400CE460<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A0800/0x1400CE4F0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A0870/0x1400CE580<QuestCache, int, HASHKEY_INT>, 0x004A08E0/0x1400CE610<PageTextCache_C, int, HASHKEY_INT>, 0x004A0940/0x1400CE6A0<PetNameCache, int, HASHKEY_INT>, 0x004A09A0/0x1400CE760<CGPetition, int, HASHKEY_INT>, 0x004A0A10/0x1400CE7F0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A0A80/0x1400CE880<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A0AE0/0x1400CE910<ArenaTeamCache, int, HASHKEY_INT>, 0x004A06B0/0x1400CE340<GameObjectStats_C, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::ClearPending() {
     DBCACHEHASH* hash = this->m_entries.m_fulllist.Head();
@@ -459,7 +459,7 @@ void DBCache<T, TKey, THashKey>::ClearPending() {
     }
 }
 
-// INLINED
+// OFFSET: [0x0049EBF0<PageTextCache_C, int, HASHKEY_INT>, 0x0049EF30<PetNameCache, int, HASHKEY_INT>, 0x0049FD20<ArenaTeamCache, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::Save() {
     if (!this->m_enabled || !this->m_loaded) {
@@ -528,7 +528,7 @@ void DBCache<T, TKey, THashKey>::Destroy() {
     this->m_loaded = false;
 }
 
-// OFFSET: [0x004A33D0<CreatureStats_C, int, HASHKEY_INT>, 0x004A34B0<NPCText, int, HASHKEY_INT>, 0x004A35C0<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A3630<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A36A0<QuestCache, int, HASHKEY_INT>, 0x004A3710<PageTextCache_C, int, HASHKEY_INT>, 0x004A3780<PetNameCache, int, HASHKEY_INT>, 0x004A37F0<CGPetition, int, HASHKEY_INT>, 0x004A3860<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A38D0<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A3940<ArenaTeamCache, int, HASHKEY_INT>, 0x004A3440<GameObjectStats_C, int, HASHKEY_INT>, 0x004A39B0<DanceCache, int, HASHKEY_INT>]
+// OFFSET: [0x004A33D0/0x1400D19F0<CreatureStats_C, int, HASHKEY_INT>, 0x004A34B0/0x1400D1B10<NPCText, int, HASHKEY_INT>, 0x004A35C0/0x1400D1C60<NameCache, unsigned __int64, CHashKeyGUID>, 0x004A3630/0x1400D1CF0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A36A0/0x1400D1D80<QuestCache, int, HASHKEY_INT>, 0x004A3710/0x1400D1E10<PageTextCache_C, int, HASHKEY_INT>, 0x004A3780/0x1400D1EA0<PetNameCache, int, HASHKEY_INT>, 0x004A37F0/0x1400D1F30<CGPetition, int, HASHKEY_INT>, 0x004A3860/0x1400D1FC0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A38D0/0x1400D2050<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A3940/0x1400D20E0<ArenaTeamCache, int, HASHKEY_INT>, 0x004A3440/0x1400D1A80<GameObjectStats_C, int, HASHKEY_INT>, 0x004A39B0/0x1400D2170<DanceCache, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::VerifyAndUpdateVersion(uint32_t version) {
     if (!this->m_enabled || this->m_version == version) {
@@ -541,7 +541,7 @@ void DBCache<T, TKey, THashKey>::VerifyAndUpdateVersion(uint32_t version) {
     this->m_version = version;
 }
 
-// OFFSET: [0x0049C840<CreatureStats_C, int, HASHKEY_INT>, 0x0049C970<GameObjectStats_C, int, HASHKEY_INT>, 0x0049CAA0<NPCText, int, HASHKEY_INT>, 0x0049CBD0<NameCache, unsigned __int64, CHashKeyGUID>, 0x0049CD00<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x0049CE30<QuestCache, int, HASHKEY_INT>, 0x0049CF60<PageTextCache_C, int, HASHKEY_INT>, 0x0049D090<PetNameCache, int, HASHKEY_INT>, 0x0049D1C0<CGPetition, int, HASHKEY_INT>, 0x0049D2F0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x0049D420<WardenCachedModule, CWardenKey, CWardenKey>, 0x0049D580<ArenaTeamCache, int, HASHKEY_INT>, 0x0049D5E0<DanceCache, int, HASHKEY_INT>]
+// OFFSET: [0x0049C840<CreatureStats_C, int, HASHKEY_INT>, 0x0049C970<GameObjectStats_C, int, HASHKEY_INT>, 0x0049CAA0<NPCText, int, HASHKEY_INT>, 0x0049CBD0<NameCache, unsigned __int64, CHashKeyGUID>, 0x0049CD00<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x0049CE30<QuestCache, int, HASHKEY_INT>, 0x0049CF60<PageTextCache_C, int, HASHKEY_INT>, 0x0049D090<PetNameCache, int, HASHKEY_INT>, 0x0049D1C0<CGPetition, int, HASHKEY_INT>, 0x0049D2F0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x0049D420/0x1400C9390<WardenCachedModule, CWardenKey, CWardenKey>, 0x0049D580<ArenaTeamCache, int, HASHKEY_INT>, 0x0049D5E0<DanceCache, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::DispatchCallbacks(const TKey& key, DBCACHEHASH* hash, bool success) {
     for (DBCACHECALLBACK* node = hash->m_callbacks.Head(); node;) {
@@ -638,7 +638,7 @@ void DBCache<T, TKey, THashKey>::AddItem(T* item, TKey key) {
     }
 }
 
-// OFFSET: [0x0049DDF0<NPCText, int, HASHKEY_INT>, 0x0049E160<NameCache, unsigned __int64, CHashKeyGUID>, 0x0049E4D0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x0049E850<QuestCache, int, HASHKEY_INT>, 0x0049EED0<PetNameCache, int, HASHKEY_INT>, 0x0049F210<CGPetition, int, HASHKEY_INT>, 0x0049F560<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x0049F8E0<WardenCachedModule, CWardenKey, CWardenKey>, 0x0049FCC0<ArenaTeamCache, int, HASHKEY_INT>, 0x004A0010<DanceCache, int, HASHKEY_INT>, 0x0049D750<CreatureStats_C, int, HASHKEY_INT>, 0x0049DAA0<GameObjectStats_C, int, HASHKEY_INT>, 0x0049EBA0<PageTextCache_C, int, HASHKEY_INT>]
+// OFFSET: [0x0049DDF0<NPCText, int, HASHKEY_INT>, 0x0049E160<NameCache, unsigned __int64, CHashKeyGUID>, 0x0049E4D0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x0049E850<QuestCache, int, HASHKEY_INT>, 0x0049EED0<PetNameCache, int, HASHKEY_INT>, 0x0049F210<CGPetition, int, HASHKEY_INT>, 0x0049F560<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x0049F8E0/0x1400CCEA0<WardenCachedModule, CWardenKey, CWardenKey>, 0x0049FCC0<ArenaTeamCache, int, HASHKEY_INT>, 0x004A0010<DanceCache, int, HASHKEY_INT>, 0x0049D750<CreatureStats_C, int, HASHKEY_INT>, 0x0049DAA0<GameObjectStats_C, int, HASHKEY_INT>, 0x0049EBA0<PageTextCache_C, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::DenyItem(TKey key) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);
@@ -653,7 +653,7 @@ void DBCache<T, TKey, THashKey>::DenyItem(TKey key) {
     this->m_entries.Delete(hash);
 }
 
-// OFFSET: [0x0049E0D0<NPCText, int, HASHKEY_INT>, 0x0049E7D0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x0049EB30<QuestCache, int, HASHKEY_INT>, 0x0049F4F0<CGPetition, int, HASHKEY_INT>, 0x0049F860<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x0049FC00<WardenCachedModule, CWardenKey, CWardenKey>, 0x0049FFA0<ArenaTeamCache, int, HASHKEY_INT>, 0x004A02F0<DanceCache, int, HASHKEY_INT>, 0x0049DA30<CreatureStats_C, int, HASHKEY_INT>, 0x0049DD80<GameObjectStats_C, int, HASHKEY_INT>, 0x0049EE60<PageTextCache_C, int, HASHKEY_INT>, 0x0049F1A0<PetNameCache, int, HASHKEY_INT>, 0x004A3520<NameCache, unsigned __int64, CHashKeyGUID>]
+// OFFSET: [0x0049E0D0/0x1400CA6A0<NPCText, int, HASHKEY_INT>, 0x0049E7D0/0x1400CB210<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x0049EB30/0x1400CB7B0<QuestCache, int, HASHKEY_INT>, 0x0049F4F0/0x1400CC850<CGPetition, int, HASHKEY_INT>, 0x0049F860/0x1400CCDE0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x0049FC00/0x1400CD370<WardenCachedModule, CWardenKey, CWardenKey>, 0x0049FFA0/0x1400CD950<ArenaTeamCache, int, HASHKEY_INT>, 0x004A02F0/0x1400CDEE0<DanceCache, int, HASHKEY_INT>, 0x0049DA30/0x1400C9B80<CreatureStats_C, int, HASHKEY_INT>, 0x0049DD80/0x1400CA110<GameObjectStats_C, int, HASHKEY_INT>, 0x0049EE60/0x1400CBD30<PageTextCache_C, int, HASHKEY_INT>, 0x0049F1A0/0x1400CC2C0<PetNameCache, int, HASHKEY_INT>, 0x004A3520/0x1400D1BA0<NameCache, unsigned __int64, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::Invalidate(TKey key) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);
@@ -671,13 +671,13 @@ void DBCache<T, TKey, THashKey>::Invalidate(TKey key) {
     }
 }
 
-// OFFSET: [0x004A0380<NPCText, int, HASHKEY_INT>, 0x004A03E0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A0400<QuestCache, int, HASHKEY_INT>, 0x004A0420<PetNameCache, int, HASHKEY_INT>, 0x004A0430<CGPetition, int, HASHKEY_INT>, 0x004A0440<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A0490<ArenaTeamCache, int, HASHKEY_INT>, 0x004A04A0<DanceCache, int, HASHKEY_INT>, 0x004A0360<CreatureStats_C, int, HASHKEY_INT>, 0x004A0370<GameObjectStats_C, int, HASHKEY_INT>, 0x004A0410<PageTextCache_C, int, HASHKEY_INT>, 0x004A0460<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A3A70<NameCache, unsigned __int64, CHashKeyGUID>]
+// OFFSET: [0x004A0380/0x1400CE020<NPCText, int, HASHKEY_INT>, 0x004A03E0/0x1400CE030<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004A0400/0x1400CE040<QuestCache, int, HASHKEY_INT>, 0x004A0420/0x1400CE060<PetNameCache, int, HASHKEY_INT>, 0x004A0430/0x1400CE070<CGPetition, int, HASHKEY_INT>, 0x004A0440/0x1400CE080<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x004A0490/0x1400CE0C0<ArenaTeamCache, int, HASHKEY_INT>, 0x004A04A0/0x1400CE0D0<DanceCache, int, HASHKEY_INT>, 0x004A0360/0x1400CE000<CreatureStats_C, int, HASHKEY_INT>, 0x004A0370/0x1400CE010<GameObjectStats_C, int, HASHKEY_INT>, 0x004A0410/0x1400CE050<PageTextCache_C, int, HASHKEY_INT>, 0x004A0460/0x1400CE090<WardenCachedModule, CWardenKey, CWardenKey>, 0x004A3A70/0x1400D2260<NameCache, unsigned __int64, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::InvalidateIntKey(int32_t key) {
     this->Invalidate(DBCacheIntKey<TKey>(key));
 }
 
-// INLINED
+// OFFSET: [0x0049E1D0<NameCache, unsigned __int64, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::RetryItem(TKey key) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);

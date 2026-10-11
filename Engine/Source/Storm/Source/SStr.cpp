@@ -26,7 +26,6 @@ static const uint32_t s_hashtable[16] = { 0x486E26EE, 0xDCAA16B3, 0xE1918EEF, 0x
 // STATIC: 0x00B9E8F0
 static const uint32_t offsetsFromUTF8[7] = { 0x00000000, 0x00000000, 0x00003080, 0x000E2080, 0x03C82080, 0xFA082080, 0x82082080 };
 
-// STATIC: %0x00ACE408
 static const uint8_t bytesFromUTF8[256] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -38,10 +37,9 @@ static const uint8_t bytesFromUTF8[256] = {
     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6
 };
 
-// STATIC: %0x00C9B3A4
+// STATIC: 0x00D9AB14
 static int32_t s_initialized;
 
-// STATIC: #0x00CAC170
 static double s_realDigit[20][10];
 
 // OFFSET: 0x004B2D00/0x1400E98E0
@@ -486,7 +484,7 @@ size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list argl
     return ISStrVPrintf(dest, maxchars, format, arglist);
 }
 
-// OFFSET: 0x004B3480
+// OFFSET: 0x004B3480/0x1400EA0D0
 int32_t SStrToInt(const char* string) {
     const char* curr = string;
 
@@ -509,7 +507,7 @@ int32_t SStrToInt(const char* string) {
     return result;
 }
 
-// OFFSET: 0x004B34D0
+// OFFSET: 0x004B34D0/0x1400EA130
 uint32_t SStrToUnsigned(const char* string) {
     uint32_t result = 0;
     uint32_t digit;
@@ -535,7 +533,7 @@ uint32_t SStrToUnsigned(const char** string) {
     return result;
 }
 
-// OFFSET: 0x004B3540
+// OFFSET: 0x004B3540/0x1400EA1B0
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
     int32_t inquotes = 0;
     const char* curr = *string;
@@ -589,7 +587,7 @@ void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const c
     }
 }
 
-// OFFSET: 0x004B3660
+// OFFSET: 0x004B3660/0x1400EA2F0
 uint32_t SStrHash(const char* string, uint32_t flags, uint32_t seed) {
     uint32_t result = seed ? seed : 0x7FED7FED;
     uint32_t adjust = 0xEEEEEEEE;
@@ -693,7 +691,7 @@ uint32_t SStrHashHT(const char* string) {
     return bjhash(buffer, length, 0);
 }
 
-// OFFSET: 0x004B39B0
+// OFFSET: 0x004B39B0/0x1400EA730
 char* SStrStrI(const char* string, const char* search) {
     size_t length = SStrLen(search);
 
@@ -840,7 +838,7 @@ static void CheckInitialized() {
     }
 }
 
-// OFFSET: 0x004B3D00
+// OFFSET: 0x004B3D00/0x1400EAD30
 float SStrToFloat(const char* string) {
     CheckInitialized();
 

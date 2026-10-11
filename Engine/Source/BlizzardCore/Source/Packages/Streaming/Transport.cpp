@@ -18,22 +18,16 @@
 #include "Engine/Source/BlizzardCore/Source/System/URL/URL.h"
 #include "Engine/Source/BlizzardCore/Source/System/Using/Using.h"
 
-// STATIC: #0x00AB938C
 static Blizzard::Using::Use s_useFile("Blizzard::File");
 
-// STATIC: %0x00C0C6C8
 static double s_NsPerByte = 0.0085;
 
-// STATIC: %0x00D86BF8
 static int64_t s_ReadAccessTimeNs;
 
-// STATIC: %0x00D86C00
 int64_t Blizzard::Streaming::AddLatency::accumulatorNs;
 
-// STATIC: %0x00D86C18
 int32_t System_File::Stacked::count_retry;
 
-// STATIC: %0x00D87188
 static Blizzard::Thread::LocalObject<std::string> s_transportBuffer;
 
 // PROVEN: c7bea0fc IDENTICAL/IDENTICAL

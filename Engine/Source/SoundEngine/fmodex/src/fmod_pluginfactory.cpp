@@ -75,7 +75,7 @@ PluginFactory::PluginFactory()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA08B0/0x140861180
 FMOD_RESULT PluginFactory::release()
 {
     FMOD_RESULT result;
@@ -1066,7 +1066,7 @@ FMOD_RESULT PluginFactory::registerOutput(FMOD_OUTPUT_DESCRIPTION *description, 
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA0420/0x140860D80
 FMOD_RESULT PluginFactory::getNumCodecs(int *numcodecs)
 {
     FMOD_CODEC_DESCRIPTION_EX *current;
@@ -1104,7 +1104,7 @@ FMOD_RESULT PluginFactory::getNumCodecs(int *numcodecs)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AA0470
+// OFFSET: 0x00AA0470/0x140860DD0
 FMOD_RESULT PluginFactory::getNumDSPs(int *numdsps)
 {
     FMOD_DSP_DESCRIPTION_EX *current;
@@ -1142,7 +1142,7 @@ FMOD_RESULT PluginFactory::getNumDSPs(int *numdsps)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA04C0/0x140860E30
 FMOD_RESULT PluginFactory::getNumOutputs(int *numoutputs)
 {
     FMOD_OUTPUT_DESCRIPTION_EX *current;
@@ -1180,7 +1180,7 @@ FMOD_RESULT PluginFactory::getNumOutputs(int *numoutputs)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA0510
 FMOD_RESULT PluginFactory::getCodec(int handle, FMOD_CODEC_DESCRIPTION_EX **codecdesc)
 {
     FMOD_CODEC_DESCRIPTION_EX *current;
@@ -1226,7 +1226,7 @@ FMOD_RESULT PluginFactory::getCodec(int handle, FMOD_CODEC_DESCRIPTION_EX **code
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AA0580
+// OFFSET: 0x00AA0580/0x140860EE0
 FMOD_RESULT PluginFactory::getDSP(int handle, FMOD_DSP_DESCRIPTION_EX **dspdesc)
 {
     FMOD_DSP_DESCRIPTION_EX *current;
@@ -1272,7 +1272,7 @@ FMOD_RESULT PluginFactory::getDSP(int handle, FMOD_DSP_DESCRIPTION_EX **dspdesc)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA05F0/0x140860F50
 FMOD_RESULT PluginFactory::getOutput(int handle, FMOD_OUTPUT_DESCRIPTION_EX **outputdesc)
 {
     FMOD_OUTPUT_DESCRIPTION_EX *current;
@@ -1367,7 +1367,7 @@ FMOD_RESULT PluginFactory::createCodec(FMOD_CODEC_DESCRIPTION_EX *codecdesc, Cod
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AA0D80
+// OFFSET: 0x00AA0D80/0x140861980
 FMOD_RESULT PluginFactory::createDSP(FMOD_DSP_DESCRIPTION_EX *dspdesc, DSPI **dsp)
 {
     FMOD_RESULT result;

@@ -13,7 +13,7 @@ CAccountMsgBody g_accountMsgBody;
 CAccountMsgBody::~CAccountMsgBody() {
 }
 
-// OFFSET: 0x009FA550
+// OFFSET: 0x009FA550/0x140797A60
 int32_t CAccountMsgBody::LoadBody(int32_t messageId) {
     if (this->m_state == 1 || this->m_inQueue) {
         return 0;

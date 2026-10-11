@@ -22,10 +22,9 @@ class MpqPatchStream {
     bool Read(uint32_t offset, void* buffer, uint32_t size);
 };
 
-// STATIC: %0x00C0C354
 System_Mopaq::DeltaData::ApplyPatchFunc System_Mopaq::DeltaData::ApplyPatch = Blizzard::Patch::Apply;
 
-// STATIC: %0x00D86B9C
+// STATIC: 0x00EBA228
 System_Mopaq::DeltaData::PatchCompletionFunc System_Mopaq::DeltaData::s_onPatchCompletion;
 
 // INLINED

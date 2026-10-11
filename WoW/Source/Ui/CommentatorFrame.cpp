@@ -21,7 +21,7 @@
 // STATIC: 0x00D119A0
 CGCommentator CGCommentator::s_Commentator;
 
-// OFFSET: 0x0092BDD0
+// OFFSET: 0x0092BDD0/0x140692A10
 void CGCommentator::UpdateCameraVelocity(uint32_t controlFlags, int32_t canControl) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__) || !CGWorldFrame::GetActiveCamera()) {
         return;
@@ -102,7 +102,7 @@ void CGCommentator::UpdateCameraVelocity(uint32_t controlFlags, int32_t canContr
     this->m_yawVelocity = turn * 0.050000001f;
 }
 
-// OFFSET: 0x0092C4D0
+// OFFSET: 0x0092C4D0/0x1406933B0
 void CGCommentator::Init() {
     this->m_position.x = 0.0f;
     this->m_position.y = 0.0f;
@@ -133,7 +133,7 @@ void CGCommentator::Init() {
     this->m_skirmishMode = 1;
 }
 
-// OFFSET: 0x0092CA00
+// OFFSET: 0x0092CA00/0x140693A50
 void CGCommentator::InitializeGame() {
     CGCommentator::s_Commentator.Init();
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_PLAYER_INFO, CGCommentator::OnReceivePlayerInfo, NULL);
@@ -281,7 +281,7 @@ CGCommentator::MapInfo* CGCommentator::GetMapInfoByIndex(uint32_t index) {
     return NULL;
 }
 
-// OFFSET: 0x009285F0
+// OFFSET: 0x009285F0/0x14068E080
 bool CGCommentator::GetCurrentMapAndInstance(CGCommentator::MapInfo** map, CGCommentator::InstanceInfo** instance) {
     if (!this->m_mapID && (this->m_key.unk_0004 >= 15 || !this->m_key.unk_0008 || !this->m_key.unk_0000)) {
         *map = NULL;
@@ -429,7 +429,7 @@ bool CGCommentator::OnClientCommentatorPartyInfo(ClientCommentatorPartyInfo* msg
     return true;
 }
 
-// OFFSET: 0x00928F70
+// OFFSET: 0x00928F70/0x14068ED20
 void CGCommentator::OnUpdate(float elapsed) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 

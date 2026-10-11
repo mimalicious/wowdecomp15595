@@ -143,7 +143,7 @@ static uint32_t s_searchType;
 // STATIC: 0x00F4A4E4
 static uint32_t s_searchID;
 
-// OFFSET: 0x00985040
+// OFFSET: 0x00985040/0x1407001D0
 bool CGLookingForGroup::HasRaidDungeon(LFGInfo* info) {
     if (info->m_joined) {
         for (LFGDungeonEntry* entry = info->m_dungeons.Head(); !info->m_dungeons.IsEnd(entry); entry = entry->RawNext()) {
@@ -158,7 +158,7 @@ bool CGLookingForGroup::HasRaidDungeon(LFGInfo* info) {
     return false;
 }
 
-// OFFSET: 0x009850B0
+// OFFSET: 0x009850B0/0x140700240
 bool CGLookingForGroup::HasRFDungeon(LFGInfo* info) {
     if (info->m_joined) {
         for (LFGDungeonEntry* entry = info->m_dungeons.Head(); !info->m_dungeons.IsEnd(entry); entry = entry->RawNext()) {
@@ -370,7 +370,7 @@ void CGLookingForGroup::JoiningParty() {
     FrameScript_SignalEvent(SCRIPT_EVENT_LFG_UPDATE, NULL);
 }
 
-// OFFSET: 0x00987840
+// OFFSET: 0x00987840/0x140703580
 void CGLookingForGroup::ClearDungeonList() {
     for (LFGDungeonEntry* dungeon = CGLookingForGroup::m_localInfo.m_dungeons.Head(); !CGLookingForGroup::m_localInfo.m_dungeons.IsEnd(dungeon); ) {
         LFGDungeonEntry* next = dungeon->RawNext();
@@ -419,7 +419,7 @@ void LFGPartyLockInfo::Clear() {
     }
 }
 
-// OFFSET: 0x004952D0
+// OFFSET: 0x004952D0/0x1400BACE0
 LfgDungeonExpansionRec* GetLfgDungeonExpansionRec(int32_t dungeonID, int32_t expansionLevel) {
     for (int32_t i = 0; i < g_lfgDungeonExpansionDB.m_numRecords; i++) {
         if (g_lfgDungeonExpansionDB.GetRecordByIndex(i)->m_lfgID != dungeonID) {
@@ -555,7 +555,7 @@ LFGDungeonEntry::LFGDungeonEntry() {
     this->unk_006C = 0;
 }
 
-// OFFSET: 0x009868D0
+// OFFSET: 0x009868D0/0x140701DF0
 LFGDungeonEntry::~LFGDungeonEntry() {
 }
 
@@ -1316,7 +1316,7 @@ static bool OnLfgSearchResult(ClientLfgSearchResult* msg) {
     return true;
 }
 
-// OFFSET: 0x0098B200
+// OFFSET: 0x0098B200/0x140708F30
 void CGLookingForGroup::InitializeGame() {
     CGLookingForGroup::m_prevSearchResults.Clear();
     CGLookingForGroup::m_searchResults.Clear();
@@ -1501,7 +1501,7 @@ void CGLookingForGroup::UpdateRandomDungeons() {
     CGLookingForGroup::UpdateRandomDungeonBestChoice();
 }
 
-// OFFSET: 0x009878A0
+// OFFSET: 0x009878A0/0x1407035F0
 void CGLookingForGroup::SetLFGDungeon(uint32_t slot) {
     if ((slot >> 24) == 1) {
         for (LFGDungeonEntry* dungeon = CGLookingForGroup::m_localInfo.m_dungeons.Head(); !CGLookingForGroup::m_localInfo.m_dungeons.IsEnd(dungeon); dungeon = dungeon->RawNext()) {
@@ -1531,7 +1531,7 @@ void CGLookingForGroup::SetLFGDungeon(uint32_t slot) {
     CGLookingForGroup::m_localInfo.unk_0003 = 1;
 }
 
-// OFFSET: 0x00986CC0
+// OFFSET: 0x00986CC0/0x140702300
 bool CGLookingForGroup::IsSlotValidForAll(uint32_t slot) {
     if (!CGLookingForGroup::IsSlotValidForPlayer(slot)) {
         return false;
@@ -1627,7 +1627,7 @@ bool CGLookingForGroup::UpdateRandomDungeonBestChoice() {
     return previous != 0;
 }
 
-// OFFSET: 0x00980980
+// OFFSET: 0x00980980/0x1406FAD80
 void CGLookingForGroup::UpdateRandomSlots(int32_t minLevel, int32_t maxLevel) {
     if (!CGLookingForGroup::m_randomSlotCount) {
         int32_t numRecords = g_lfgDungeonsDB.m_numRecords;
@@ -1714,7 +1714,7 @@ void CGLookingForGroup::UpdateRandomSlots(int32_t minLevel, int32_t maxLevel) {
     CGLookingForGroup::m_randomSlotMaxLevel = maxLevel;
 }
 
-// OFFSET: 0x00983680
+// OFFSET: 0x00983680/0x1406FE420
 LFGRandomSlotDungeons* CGLookingForGroup::GetRandomSlot(int32_t dungeonID) {
     LfgDungeonsRec* rec = g_lfgDungeonsDB.GetRecord(dungeonID);
 
@@ -1773,7 +1773,7 @@ LFGRandomSlotDungeons* CGLookingForGroup::GetRandomSlot(int32_t dungeonID) {
     return NULL;
 }
 
-// OFFSET: 0x00987670
+// OFFSET: 0x00987670/0x140703320
 static bool IsBetterRFDungeon(const LfgDungeonsRec* candidate, const LfgDungeonsRec* best) {
     if (!candidate || !CGLookingForGroup::IsSlotValidForAll(candidate->m_id & 0xFFFFFF | (candidate->m_typeID << 24))) {
         return false;
@@ -1806,7 +1806,7 @@ static bool IsBetterRFDungeon(const LfgDungeonsRec* candidate, const LfgDungeons
     return candidate->m_orderIndex > best->m_orderIndex;
 }
 
-// OFFSET: 0x00987770
+// OFFSET: 0x00987770/0x140703480
 int32_t CGLookingForGroup::GetBestRFChoice() {
     LfgDungeonsRec* best = NULL;
 
@@ -1834,7 +1834,7 @@ void CGLookingForGroup::RequestLFGPartyInfo() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x00980D90
+// OFFSET: 0x00980D90/0x1406FB240
 void CGLookingForGroup::SetLFGComment(const char* comment) {
     char scrubbed[256];
     ScrubString(comment, scrubbed, 64, sizeof(scrubbed), 1);
@@ -1854,14 +1854,14 @@ void CGLookingForGroup::SetLFGComment(const char* comment) {
     }
 }
 
-// OFFSET: 0x009886E0
+// OFFSET: 0x009886E0/0x140704C90
 void CGLookingForGroup::LeaveWorld() {
     ClientSetDfFastLaunchResult::s_handler = NULL;
     ClientLfgSlotInvalid::s_handler = NULL;
     CGLookingForGroup::LeaveLFGSearch();
 }
 
-// OFFSET: 0x00987E90
+// OFFSET: 0x00987E90/0x140703E50
 void CGLookingForGroup::LeaveLFGSearch() {
     if (CGLookingForGroup::m_searchJoinedID) {
         UserClientLfgLfrLeave request;

@@ -43,7 +43,7 @@ XMLNode* CKBQuery::GetArticleHeader(int32_t index) {
     return this->m_articleHeaders.m_node;
 }
 
-// OFFSET: 0x009FB8D0
+// OFFSET: 0x009FB8D0/0x140798F30
 void CKBQuery::_ComputeCachedData() {
     XMLNode* node = XMLTree_GetRoot(this->m_tree);
 
@@ -75,7 +75,7 @@ void CKBQuery::_AppendMangledSearchQuery(CDynamicString& url, const char* query)
     }
 }
 
-// OFFSET: 0x009FC740
+// OFFSET: 0x009FC740/0x14079A2B0
 int32_t CKBQuery::BeginLoading(const char* query, int32_t categoryId, int32_t numArticles, int32_t pageNumber) {
     if (this->m_state == 1 || this->m_inQueue) {
         return 0;
@@ -131,14 +131,14 @@ int32_t CKBQuery::BeginLoading(const char* query, int32_t categoryId, int32_t nu
     return 1;
 }
 
-// OFFSET: 0x009FC900
+// OFFSET: 0x009FC900/0x14079A510
 void CKBQuery::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_QUERY_LOAD_SUCCESS, NULL);
     }
 }
 
-// OFFSET: 0x009FC920
+// OFFSET: 0x009FC920/0x14079A530
 void CKBQuery::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_QUERY_LOAD_FAILURE, NULL);

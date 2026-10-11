@@ -289,7 +289,7 @@ namespace FMOD
 #ifdef FMOD_SUPPORT_DSPCODEC
         FMOD_RESULT                     allocDSPCodec(FMOD_SOUND_FORMAT format, DSPCodec **dsp);
 #endif
-        // INLINED
+        // OFFSET: 0x00A7AE90
         FMOD_RESULT                     getSoftwareFormat(int *samplerate, FMOD_SOUND_FORMAT *format, int *numoutputchannels, int *maxinputchannels, FMOD_DSP_RESAMPLER *resamplemethod, int *bits)
         {
             if (samplerate)

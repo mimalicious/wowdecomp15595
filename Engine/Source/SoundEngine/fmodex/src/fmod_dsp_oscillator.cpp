@@ -72,7 +72,7 @@ FMOD_DSP_PARAMETERDESC dsposcillator_param[2] =
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA1A30/0x1408627E0
 FMOD_DSP_DESCRIPTION_EX *DSPOscillator::getDescriptionEx()
 {
 #ifndef PLATFORM_PS3_SPU
@@ -495,7 +495,7 @@ FMOD_RESULT F_CALLBACK DSPOscillator::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AA1960
 FMOD_RESULT F_CALLBACK DSPOscillator::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPOscillator *osc = (DSPOscillator *)dsp;

@@ -189,7 +189,6 @@ static CLIENTCDKEY s_cdKey;
 // STATIC: 0x00DBE7EA
 static bool s_cdKeyLoaded;
 
-// STATIC: #0x00AD93C0
 static const char* s_processorVendors[] = { "Unknown", "intel", "AMD", "PPC" };
 
 // STATIC: 0x00DBE788
@@ -931,7 +930,7 @@ void ClientServices::SendPacket(CDataStore* msg) {
     StaticSingleton<CommandManager>::Instance()->m_connection->Send(msg, CONNECTION_ROUTED);
 }
 
-// OFFSET: 0x00408680
+// OFFSET: 0x00408680/0x14000A990
 void ClientServices::SendPacket(JamClientMessage* msg) {
     CDataStore store;
     msg->Put(&store);

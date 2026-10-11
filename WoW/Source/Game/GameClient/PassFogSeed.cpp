@@ -6,7 +6,7 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: %0x00C2B570
+// STATIC: 0x00D27BC0
 int32_t PassFogSeed::s_deviceReset = 1;
 
 // PROVEN: ccf39bf9 IDENTICAL/NONE

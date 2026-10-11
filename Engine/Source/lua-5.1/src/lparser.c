@@ -68,7 +68,7 @@ static void error_expected (LexState *ls, int token) {
 }
 
 
-// OFFSET: 0x004264A0
+// OFFSET: 0x004264A0/0x14002C310
 static void errorlimit (FuncState *fs, int limit, const char *what) {
   const char *msg = (fs->f->linedefined == 0) ?
     luaO_pushfstring(fs->L, "main function has more than %d %s", limit, what) :
@@ -104,7 +104,7 @@ static void checknext (LexState *ls, int c) {
 
 
 
-// OFFSET: 0x00426510
+// OFFSET: 0x00426510/0x14002C170
 static void check_match (LexState *ls, int what, int who, int where) {
   if (!testnext(ls, what)) {
     if (where == ls->linenumber)
@@ -148,7 +148,7 @@ static void checkname(LexState *ls, expdesc *e) {
 }
 
 
-// OFFSET: 0x00426600
+// OFFSET: 0x00426600/0x14002C230
 static int registerlocalvar (LexState *ls, TString *varname) {
   FuncState *fs = ls->fs;
   Proto *f = fs->f;
@@ -193,7 +193,7 @@ static void removevars (LexState *ls, int tolevel) {
 }
 
 
-// OFFSET: 0x00426730
+// OFFSET: 0x00426730/0x14002C3D0
 static int indexupvalue (FuncState *fs, TString *name, expdesc *v) {
   int i;
   Proto *f = fs->f;
@@ -235,7 +235,7 @@ static void markupval (FuncState *fs, int level) {
 }
 
 
-// OFFSET: 0x00426880
+// OFFSET: 0x00426880/0x14002C570
 static int singlevaraux (FuncState *fs, TString *n, expdesc *var, int base) {
   if (fs == NULL) {  /* no more levels? */
     init_exp(var, VGLOBAL, NO_REG);  /* default is global variable */
@@ -260,7 +260,7 @@ static int singlevaraux (FuncState *fs, TString *n, expdesc *var, int base) {
 }
 
 
-// OFFSET: 0x00426970
+// OFFSET: 0x00426970/0x14002C6B0
 static void singlevar (LexState *ls, expdesc *var) {
   TString *varname = str_checkname(ls);
   FuncState *fs = ls->fs;
@@ -346,7 +346,7 @@ static void pushclosure (LexState *ls, FuncState *func, expdesc *v) {
 }
 
 
-// OFFSET: 0x00426B80
+// OFFSET: 0x00426B80/0x14002C940
 static void open_func (LexState *ls, FuncState *fs) {
   lua_State *L = ls->L;
   Proto *f = luaF_newproto(L);
@@ -404,7 +404,7 @@ static void close_func (LexState *ls) {
 }
 
 
-// OFFSET: 0x00429230
+// OFFSET: 0x00429230/0x14002F7A0
 Proto *luaY_parser (lua_State *L, ZIO *z, Mbuffer *buff, const char *name) {
   struct LexState lexstate;
   struct FuncState funcstate;
@@ -467,7 +467,7 @@ struct ConsControl {
 };
 
 
-// OFFSET: 0x00426E80
+// OFFSET: 0x00426E80/0x14002CD30
 static void recfield (LexState *ls, struct ConsControl *cc) {
   /* recfield -> (NAME | `['exp1`]') = exp1 */
   FuncState *fs = ls->fs;
@@ -525,7 +525,7 @@ static void listfield (LexState *ls, struct ConsControl *cc) {
 }
 
 
-// OFFSET: 0x00426FB0
+// OFFSET: 0x00426FB0/0x14002CF30
 static void constructor (LexState *ls, expdesc *t) {
   /* constructor -> ?? */
   FuncState *fs = ls->fs;
@@ -606,7 +606,7 @@ static void parlist (LexState *ls) {
 }
 
 
-// OFFSET: 0x00427340
+// OFFSET: 0x00427340/0x14002D340
 static void body (LexState *ls, expdesc *e, int needself, int line) {
   /* body ->  `(' parlist `)' chunk END */
   FuncState new_fs;
@@ -702,7 +702,7 @@ static void funcargs (LexState *ls, expdesc *f) {
 */
 
 
-// OFFSET: 0x004275F0
+// OFFSET: 0x004275F0/0x14002D630
 static void prefixexp (LexState *ls, expdesc *v) {
   /* prefixexp -> NAME | '(' expr ')' */
   switch (ls->t.token) {
@@ -726,7 +726,7 @@ static void prefixexp (LexState *ls, expdesc *v) {
 }
 
 
-// OFFSET: 0x00427660
+// OFFSET: 0x00427660/0x14002D6C0
 static void primaryexp (LexState *ls, expdesc *v) {
   /* primaryexp ->
         prefixexp { `.' NAME | `[' exp `]' | `:' NAME funcargs | funcargs } */
@@ -868,7 +868,7 @@ static const struct {
 ** subexpr -> (simpleexp | unop subexpr) { binop subexpr }
 ** where `binop' is any binary operator with a priority higher than `limit'
 */
-// OFFSET: 0x00427CD0
+// OFFSET: 0x00427CD0/0x14002DE10
 static BinOpr subexpr (LexState *ls, expdesc *v, unsigned int limit) {
   BinOpr op;
   UnOpr uop;
@@ -976,7 +976,7 @@ static void check_conflict (LexState *ls, struct LHS_assign *lh, expdesc *v) {
 }
 
 
-// OFFSET: 0x00427EC0
+// OFFSET: 0x00427EC0/0x14002DFB0
 static void assignment (LexState *ls, struct LHS_assign *lh, int nvars) {
   expdesc e;
   check_condition(ls, VLOCAL <= lh->v.k && lh->v.k <= VINDEXED,
@@ -1145,7 +1145,7 @@ static void fornum (LexState *ls, TString *varname, int line) {
 }
 
 
-// OFFSET: 0x00428690
+// OFFSET: 0x00428690/0x14002E9F0
 static void forlist (LexState *ls, TString *indexname) {
   /* forlist -> NAME {,NAME} IN explist1 forbody */
   FuncState *fs = ls->fs;
@@ -1169,7 +1169,7 @@ static void forlist (LexState *ls, TString *indexname) {
 }
 
 
-// OFFSET: 0x00428900
+// OFFSET: 0x00428900/0x14002EC40
 static void forstat (LexState *ls, int line) {
   /* forstat -> FOR (fornum | forlist) END */
   FuncState *fs = ls->fs;
@@ -1227,7 +1227,7 @@ static void ifstat (LexState *ls, int line) {
 }
 
 
-// OFFSET: 0x00428B60
+// OFFSET: 0x00428B60/0x14002EF60
 static void localfunc (LexState *ls) {
   expdesc v, b;
   FuncState *fs = ls->fs;
@@ -1242,7 +1242,7 @@ static void localfunc (LexState *ls) {
 }
 
 
-// OFFSET: 0x00428C60
+// OFFSET: 0x00428C60/0x14002F070
 static void localstat (LexState *ls) {
   /* stat -> LOCAL NAME {`,' NAME} [`=' explist1] */
   int nvars = 0;
@@ -1277,7 +1277,7 @@ static int funcname (LexState *ls, expdesc *v) {
 }
 
 
-// OFFSET: 0x00428E70
+// OFFSET: 0x00428E70/0x14002F220
 static void funcstat (LexState *ls, int line) {
   /* funcstat -> FUNCTION funcname body */
   int needself;
@@ -1341,7 +1341,7 @@ static void retstat (LexState *ls) {
 }
 
 
-// OFFSET: 0x00429040
+// OFFSET: 0x00429040/0x14002F4F0
 static int statement (LexState *ls) {
   int line = ls->linenumber;  /* may be needed for error messages */
   switch (ls->t.token) {

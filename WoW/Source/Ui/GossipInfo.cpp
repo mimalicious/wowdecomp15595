@@ -33,23 +33,23 @@ uint32_t CGGossipInfo::m_gossipID;
 // STATIC: 0x00F75E38
 WOWGUID CGGossipInfo::m_gossip;
 
-// STATIC: #0x00C016FC
+// STATIC: 0x00F75E44
 uint32_t CGGossipInfo::m_gossipOptionsCount;
 
 // STATIC: 0x00F75338
 GossipOption CGGossipInfo::m_options[32];
 
-// STATIC: #0x00C00EF0
+// STATIC: 0x00F75638
 char CGGossipInfo::m_gossipText[2048];
 
-// OFFSET: 0x009E2100
+// OFFSET: 0x009E2100/0x140779230
 void CGGossipInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_GOSSIP_MESSAGE, Packet_SMSG_GOSSIP_MESSAGE, NULL);
     ClientServices::SetMessageHandler(SMSG_GOSSIP_COMPLETE, Packet_SMSG_GOSSIP_COMPLETE, NULL);
     ClientServices::SetMessageHandler(SMSG_GOSSIP_POI, Packet_SMSG_GOSSIP_POI, NULL);
 }
 
-// OFFSET: 0x009E0FA0
+// OFFSET: 0x009E0FA0/0x140777DE0
 void CGGossipInfo::SetGossip(const WOWGUID& guid) {
     if (guid == CGGossipInfo::m_gossip) {
         return;
@@ -70,7 +70,7 @@ void CGGossipInfo::SetGossip(const WOWGUID& guid) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GOSSIP_CLOSED, NULL);
 }
 
-// OFFSET: 0x009E11E0
+// OFFSET: 0x009E11E0/0x140777E50
 void CGGossipInfo::ClearOptions() {
     CGGossipInfo::m_gossipOptionsCount = 0;
 
@@ -107,7 +107,7 @@ static void GossipTextCallback(int32_t id, const WOWGUID& guid, void* param, boo
     CGGossipInfo::SetGossip(none);
 }
 
-// OFFSET: 0x009E17E0
+// OFFSET: 0x009E17E0/0x140778740
 void CGGossipInfo::SetGossipText(int32_t textId) {
     NPCText* text = g_npcTextDBCache.GetRecord(textId, CGGossipInfo::m_gossip, GossipTextCallback, NULL, false);
 
@@ -351,7 +351,7 @@ GossipQuestInfo* CGGossipInfo::GetActiveQuest(int32_t index) {
     return NULL;
 }
 
-// OFFSET: 0x009E1B10
+// OFFSET: 0x009E1B10/0x140778AE0
 void CGGossipInfo::SelectGossipOption(int32_t index, const char* code, int32_t confirmed) {
     if (CGGossipInfo::m_textPending || index < 0 || index >= 32) {
         return;
@@ -396,7 +396,7 @@ void CGGossipInfo::SelectGossipOption(int32_t index, const char* code, int32_t c
     FrameScript_SignalEvent(SCRIPT_EVENT_GOSSIP_CONFIRM_CANCEL, NULL);
 }
 
-// OFFSET: 0x009E1C80
+// OFFSET: 0x009E1C80/0x140778CB0
 void CGGossipInfo::SelectGossipAvailableQuest(int32_t index) {
     int32_t found = 0;
 
@@ -425,7 +425,7 @@ void CGGossipInfo::SelectGossipAvailableQuest(int32_t index) {
     }
 }
 
-// OFFSET: 0x009E1D30
+// OFFSET: 0x009E1D30/0x140778D80
 void CGGossipInfo::SelectGossipActiveQuest(int32_t index) {
     int32_t found = 0;
 

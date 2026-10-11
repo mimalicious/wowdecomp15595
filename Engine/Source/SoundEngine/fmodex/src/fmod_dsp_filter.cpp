@@ -57,7 +57,7 @@ FMOD_RESULT DSPFilter::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC6660/0x14088FBB0
 FMOD_RESULT DSPFilter::execute(float *inbuffer, float **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     FMOD_RESULT      result = FMOD_OK;

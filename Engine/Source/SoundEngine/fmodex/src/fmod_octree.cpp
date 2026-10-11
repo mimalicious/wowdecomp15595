@@ -1199,7 +1199,7 @@ public:
 TestClass testClass;*/
 #endif
 
-// INLINED
+// OFFSET: 0x00AD3EF0/0x14089EA20
 void Octree::insertInternal(OctreeNode* node, OctreeNode* item)
 {
     for (;;)

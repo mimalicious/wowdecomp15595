@@ -46,7 +46,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AE2BE0
+// OFFSET: 0x00AE2BE0/0x1408ADEC0
 ChannelSoftware::ChannelSoftware()
 {
     mDSPWaveTable     = 0;
@@ -226,7 +226,7 @@ FMOD_RESULT ChannelSoftware::close()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AE1570
+// OFFSET: 0x00AE1570/0x1408AC4A0
 FMOD_RESULT ChannelSoftware::setupDSPCodec(DSPI *dsp)
 {
 #ifdef FMOD_SUPPORT_DSPCODEC
@@ -960,7 +960,7 @@ FMOD_RESULT ChannelSoftware::setPaused(bool paused)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE3260/0x1408AE700
 FMOD_RESULT ChannelSoftware::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
 #ifdef FMOD_SUPPORT_REVERB
@@ -1090,7 +1090,7 @@ FMOD_RESULT ChannelSoftware::setReverbProperties(const FMOD_REVERB_CHANNELPROPER
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AE1A00
+// OFFSET: 0x00AE1A00/0x1408AC9F0
 FMOD_RESULT ChannelSoftware::updateDirectMix(float volume)
 {
     float gainlin;
@@ -1190,7 +1190,7 @@ FMOD_RESULT ChannelSoftware::updateDirectMix(float volume)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE1BF0/0x1408ACBE0
 FMOD_RESULT ChannelSoftware::updateReverbMix(ReverbI* reverb, float volume)
 {
 #ifdef FMOD_SUPPORT_REVERB
@@ -1759,7 +1759,7 @@ FMOD_RESULT ChannelSoftware::setSpeakerLevels(int speaker, float *levels, int nu
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE34B0/0x1408AE9C0
 FMOD_RESULT ChannelSoftware::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 {
     unsigned int      pcm = 0, endpoint;
@@ -1875,7 +1875,7 @@ FMOD_RESULT ChannelSoftware::setPosition(unsigned int position, FMOD_TIMEUNIT po
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE3760/0x1408AEC50
 FMOD_RESULT ChannelSoftware::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
     int channels;
@@ -2402,7 +2402,7 @@ FMOD_RESULT ChannelSoftware::getDSPHead(DSPI **dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2980/0x1408ADBA0
 FMOD_RESULT ChannelSoftware::addToReverbs(DSPI *dsptarget)
 {
 #ifdef FMOD_SUPPORT_REVERB

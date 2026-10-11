@@ -14,7 +14,6 @@
 
 #define WM_POPUPSYSTEMMENU 0x313
 
-// STATIC: %0x00C0EAE8
 static uint32_t s_latin1lookup[32] = {
     0xFFFE, 0xFFFE, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021,
     0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0xFFFE, 0xFFFE, 0xFFFE,
@@ -22,7 +21,6 @@ static uint32_t s_latin1lookup[32] = {
     0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0xFFFE, 0xFFFE, 0x0178,
 };
 
-// STATIC: %0x00C0EB68
 static uint32_t s_latin2lookup[256] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
@@ -58,7 +56,6 @@ static uint32_t s_latin2lookup[256] = {
     0x0159, 0x016F, 0x00FA, 0x0171, 0x00FC, 0x00FD, 0x0163, 0x02D9,
 };
 
-// STATIC: %0x00C0EF68
 static uint32_t s_cyrilliclookup[256] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
@@ -94,7 +91,6 @@ static uint32_t s_cyrilliclookup[256] = {
     0x0448, 0x0449, 0x044A, 0x044B, 0x044C, 0x044D, 0x044E, 0x044F,
 };
 
-// STATIC: %0x00C0F368
 static uint32_t s_latin5lookup[256] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
@@ -130,7 +126,6 @@ static uint32_t s_latin5lookup[256] = {
     0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x0131, 0x015F, 0x00FF,
 };
 
-// STATIC: %0x00C0F768
 static uint32_t s_thailookup[256] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
@@ -165,101 +160,72 @@ static uint32_t s_thailookup[256] = {
     0x0E50, 0x0E51, 0x0E52, 0x0E53, 0x0E54, 0x0E55, 0x0E56, 0x0E57,
     0x0E58, 0x0E59, 0x0E5A, 0x0E5B, 0x0020, 0x0020, 0x0020, 0x0020,
 };
-// STATIC: %0x00C0EAE0
 static int32_t s_appActive = 1;
 
-// STATIC: %0x00C0FB68
 static uint32_t s_rshiftScanCode = 0x100;
 
-// STATIC: %0x00D935E0
 static void (*s_joystickPollFcn)(int32_t);
 
-// STATIC: %0x00D935E4
 static HHOOK s_keyboardHook;
 
-// STATIC: %0x00D935E8
 static int16_t s_numLockState;
 
-// STATIC: %0x00D935EC
 static RECT s_dragRect;
 
-// STATIC: %0x00D935FC
 static C2iVector s_dragStart;
 
-// STATIC: %0x00D93604
 static C2iVector s_centerMousePos;
 
-// STATIC: %0x00D9360C
 static HWND s_mouseWnd;
 
-// STATIC: %0x00D93610
 static C2iVector s_mousePos;
 
-// STATIC: %0x00D93618
 static int32_t s_queueHead;
 
-// STATIC: %0x00D9361C
 static int32_t s_queueTail;
 
-// STATIC: %0x00D93620
 static OSEVENT s_queue[16];
 
-// STATIC: %0x00D93760
 static int32_t s_mouseSpeed;
 
-// STATIC: %0x00D93764
 static int32_t s_savedMouseSpeed;
 
-// STATIC: %0x00D93768
 static int32_t s_releasingCapture;
 
-// STATIC: %0x00D9376C
 static uint32_t s_osButtonState;
 
-// STATIC: %0x00D93770
 static RECT s_defaultWindowRect;
 
-// STATIC: %0x00D93780
 static intptr_t s_windowSize;
 
-// STATIC: %0x00D93784
 static OS_MOUSE_MODE s_osMouseMode;
 
-// STATIC: %0x00D93788
 static int32_t s_dragHitTest;
 
-// STATIC: %0x00D9378C
 static int32_t s_dragging;
 
-// STATIC: %0x00D93790
 static int32_t s_dragCancel;
 
-// STATIC: %0x00D93794
 static uint32_t s_codePage;
 
 // STATIC: 0x00EC6CD8
 static int32_t s_WindowResizeLock;
 
-// STATIC: %0x00D9379C
 static intptr_t (*s_chainWindowProc)(void* window, uint32_t message, uintptr_t wparam, intptr_t lparam);
 
-// STATIC: %0x00D937A0
 static uint32_t s_extraButtonState;
 
-// STATIC: %0x00D937A4
 static void (*s_eventPollProc)();
 
 typedef BOOL(WINAPI* GetPhysicalCursorPosProc)(POINT* point);
 typedef BOOL(WINAPI* SetPhysicalCursorPosProc)(int32_t x, int32_t y);
 typedef BOOL(WINAPI* LogicalToPhysicalPointProc)(HWND hwnd, POINT* point);
 
-// STATIC: %0x00D937A8
 static GetPhysicalCursorPosProc s_getPhysicalCursorPos;
 
 // STATIC: 0x00EC6CEC
 static SetPhysicalCursorPosProc s_setPhysicalCursorPos;
 
-// STATIC: %0x00D937B0
 static LogicalToPhysicalPointProc s_logicalToPhysicalPoint;
 
 // OFFSET: 0x008730F0/0x1405AB690

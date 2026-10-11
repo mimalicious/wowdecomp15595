@@ -18,7 +18,7 @@ CLCDConnection::CLCDConnection() {
     InitializeCriticalSection(&this->m_csCallback);
 }
 
-// OFFSET: [0x00B3F4B0, 0x00B3F580]
+// OFFSET: [0x00B3F4B0/0x14090CE40, 0x00B3F580/0x14090CF60]
 CLCDConnection::~CLCDConnection() {
     this->Disconnect();
 
@@ -125,12 +125,12 @@ void CLCDConnection::Disconnect() {
     }
 }
 
-// OFFSET: [0x00B3F440]
+// OFFSET: [0x00B3F440/0x14090CD90]
 CLCDOutput* CLCDConnection::AllocMonoOutput() {
     return new CLCDOutput();
 }
 
-// OFFSET: [0x00B3F440]
+// OFFSET: [0x00B3F440/0x14090CD90]
 CLCDOutput* CLCDConnection::AllocColorOutput() {
     return new CLCDOutput();
 }

@@ -21,10 +21,10 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/UIBindings.h"
 
-// STATIC: #0x00AD17B4
+// STATIC: 0x00C99C64
 static const char* s_addOnLoadableTokens[12] = { "LOADABLE", "MISSING", "DISABLED", "BANNED", "CORRUPT", "INSECURE", "DEMAND_LOADED", "INTERFACE_VERSION", "INCOMPATIBLE", "SECURE", "INSECURE", "BANNED" };
 
-// STATIC: #0x00AD17A8
+// STATIC: 0x00C99C58
 static TSList<ADDONSTATELIST> s_addOnStates;
 
 // STATIC: 0x00D3A71C
@@ -33,7 +33,6 @@ static TSHashTable<UIADDON, HASHKEY_STRI> s_addons;
 // STATIC: 0x00D3A748
 static TSGrowableArray<const char*> s_addOnInfo;
 
-// STATIC: #0x00C24410
 static uint32_t s_dataInterfaceVersion;
 
 // STATIC: 0x00D3A758
@@ -51,7 +50,7 @@ static const char* s_exportArtPath = "BlizzardInterfaceArt\\";
 // STATIC: 0x00D3A218
 static char s_addOnAccountName[1280];
 
-// STATIC: #0x00C24918
+// STATIC: 0x00D3A718
 static bool s_addOnsInitialized;
 
 // OFFSET: 0x0045B6B0/0x14006D190
@@ -1134,7 +1133,7 @@ bool LoadAddOn(const char* name, bool demandLoad, CStatus* status) {
     return true;
 }
 
-// OFFSET: 0x0045DF50
+// OFFSET: 0x0045DF50/0x140070800
 void LoadAddOns(CStatus* status) {
     for (UIADDON* addon = s_addons.m_fulllist.Head(); addon; addon = s_addons.m_fulllist.Next(addon)) {
         for (uint32_t i = 0; i < addon->m_loadManagers.Count(); i++) {

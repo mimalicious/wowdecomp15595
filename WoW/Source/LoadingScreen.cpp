@@ -47,13 +47,11 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: #0x009E2DFC
 static const BackgroundImage s_textureInfo[2] = {
     { "Interface\\Glues\\LoadingBar\\Loading-BarFill", true, 0.5f, 0.075f, 0.525f, 0.025f },
     { "Interface\\Glues\\LoadingBar\\Loading-BarBorder", false, 0.5f, 0.075f, 0.6f, 0.05f },
 };
 
-// STATIC: #0x009E2E2C
 static const BackgroundImage s_miniTextureInfo[2] = {
     { "Interface\\Glues\\LoadingBar\\Loading-BarFill", true, 0.5f, 0.975f, 0.525f, 0.025f },
     { "Interface\\Glues\\LoadingBar\\Loading-BarBorder", false, 0.5f, 0.975f, 0.6f, 0.05f },
@@ -74,7 +72,6 @@ static int32_t s_simpleMapID = -1;
 // STATIC: 0x00C9762C
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
-// STATIC: #0x00AB63C8
 static const char* s_fontNames[9] = {
     "Fonts\\FRIZQT__.TTF",
     "Fonts\\2002.TTF",
@@ -87,10 +84,8 @@ static const char* s_fontNames[9] = {
     "Fonts\\NIM_____.TTF",
 };
 
-// STATIC: #0x00AB63FC
 static CImVector s_pathColor = CImVector(0xFF, 0xFF, 0xFF, 0xFF);
 
-// STATIC: #0x00AB6400
 static C2Vector s_texCoord[4] = {
     C2Vector(0.0f, 1.0f),
     C2Vector(1.0f, 1.0f),
@@ -98,7 +93,6 @@ static C2Vector s_texCoord[4] = {
     C2Vector(1.0f, 0.0f),
 };
 
-// STATIC: #0x00AB6420
 static C3Vector s_pathOffsets[4] = {
     C3Vector(-0.01f, -0.015f, 0.0f),
     C3Vector(0.01f, -0.015f, 0.0f),
@@ -106,7 +100,6 @@ static C3Vector s_pathOffsets[4] = {
     C3Vector(0.01f, 0.015f, 0.0f),
 };
 
-// STATIC: #0x00AB6450
 static C2Vector s_pathTexCoords[4] = {
     C2Vector(0.0f, 1.0f),
     C2Vector(0.5f, 1.0f),
@@ -159,10 +152,10 @@ static float s_preloadProgress;
 // STATIC: 0x00D365AC
 static bool s_loadingWorld;
 
-// STATIC: #0x00B2FEC0
+// STATIC: 0x00D365B0
 static HLAYER s_miniLoadingLayer;
 
-// STATIC: #0x00B2FEC4
+// STATIC: 0x00D365B4
 static CTexture* unk_B2FEC4[2];
 
 // STATIC: 0x00D365BC
@@ -186,7 +179,6 @@ static int32_t s_backgroundLocal;
 // STATIC: 0x00D365D8
 static int32_t s_dynamicBarEnabled;
 
-// STATIC: #0x00B2FED9
 static bool s_raceDataTip;
 
 // STATIC: 0x00D36598

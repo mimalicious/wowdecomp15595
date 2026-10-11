@@ -12,13 +12,13 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: %0x00BB9B10
+// STATIC: 0x00CA47D8
 int32_t CSimpleAlphaAnim::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD27FC
+// STATIC: 0x00DD3CB4
 int32_t CSimpleAlphaAnim::s_objectType;
 
-// STATIC: %0x00BB8BC0
+// STATIC: 0x00CA3838
 const char* CSimpleAlphaAnim::s_objectTypeName = "Alpha";
 
 // PROVEN: 224a22a3 DIFFERENT/IDENTICAL

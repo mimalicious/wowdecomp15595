@@ -52,7 +52,7 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC1050/0x1408893A0
 FMOD_OUTPUT_DESCRIPTION_EX *OutputNoSound_NRT::getDescriptionEx()
 {
     FMOD_memset(&nosoundoutput_nrt, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -174,7 +174,7 @@ FMOD_RESULT OutputNoSound_NRT::getDriverCaps(int id, FMOD_CAPS *caps)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC0E90
 FMOD_RESULT OutputNoSound_NRT::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     FMOD_RESULT         result;

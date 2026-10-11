@@ -7,13 +7,12 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/UIUtil/InputControl.h"
 
-// STATIC: #0x00C2495C
 CVar* s_cvCinematicJoystick;
 
 // STATIC: 0x00D39210
 CVar* s_cvEnableWowMouse;
 
-// OFFSET: 0x00447CC0
+// OFFSET: 0x00447CC0/0x140054560
 static void ApplyJoystickConfig(XMLNode* config) {
     char name[32];
 
@@ -114,7 +113,7 @@ static void ApplyJoystickConfig(XMLNode* config) {
     OsJoystickConfigureMouseMode(s_joystick, stick, leftButton, rightButton, value ? SStrToFloat(value) : speed);
 }
 
-// OFFSET: 0x00447F60
+// OFFSET: 0x00447F60/0x140054880
 bool JoystickCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (*value == '1') {
         if (s_joystick == 0xFFFFFFFF) {

@@ -89,7 +89,7 @@ static double GetRandomFraction(_RandomSeed* seed) {
     return value * 2.3283064e-10f;
 }
 
-// OFFSET: 0x00B130A0
+// OFFSET: 0x00B130A0/0x1408D8D10
 uint32_t GetRandomValue(uint32_t max, _RandomSeed* seed) {
     float value = static_cast<float>(GetRandomFraction(seed) * max);
     uint32_t result = CMath::fint_(value - 0.5f);

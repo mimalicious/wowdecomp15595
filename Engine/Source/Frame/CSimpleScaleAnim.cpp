@@ -12,13 +12,13 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: %0x00BB9AA4
+// STATIC: 0x00CA476C
 int32_t CSimpleScaleAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CC0/0x140CB9A60
 int32_t CSimpleScaleAnim::s_objectType;
 
-// STATIC: %0x00BB8BB4
+// STATIC: 0x00CA382C
 const char* CSimpleScaleAnim::s_objectTypeName = "Scale";
 
 // PROVEN: 62d528f7 DIFFERENT/IDENTICAL

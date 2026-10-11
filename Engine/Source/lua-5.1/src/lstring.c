@@ -76,7 +76,7 @@ static TString *newlstr (lua_State *L, const char *str, size_t l,
 }
 
 
-// OFFSET: 0x004212C0
+// OFFSET: 0x004212C0/0x140025DB0
 TString *luaS_newlstr (lua_State *L, const char *str, size_t l) {
   GCObject *o;
   unsigned int h = cast(unsigned int, l);  /* seed */

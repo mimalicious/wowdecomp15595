@@ -2963,187 +2963,187 @@ uint32_t JamHandlerKeyConst_672FD0::Get() {
     return 0xF25BB563;
 }
 
-// OFFSET: 0x00688190
+// OFFSET: 0x00688190/0x140332F90
 uint32_t JamHandlerKeyConst_688190::Get() {
     return 0xA77B1D9B;
 }
 
-// OFFSET: 0x006881C0
+// OFFSET: 0x006881C0/0x140332FC0
 uint32_t JamHandlerKeyConst_6881C0::Get() {
     return 0x7ED06A7D;
 }
 
-// OFFSET: 0x00688210
+// OFFSET: 0x00688210/0x140333010
 uint32_t JamHandlerKeyConst_688210::Get() {
     return 0x4FCCAAF2;
 }
 
-// OFFSET: 0x00688240
+// OFFSET: 0x00688240/0x140333040
 uint32_t JamHandlerKeyConst_688240::Get() {
     return 0x4CB62964;
 }
 
-// OFFSET: 0x006882E0
+// OFFSET: 0x006882E0/0x1403330E0
 uint32_t JamHandlerKeyConst_6882E0::Get() {
     return 0xCD4ED077;
 }
 
-// OFFSET: 0x006883A0
+// OFFSET: 0x006883A0/0x1403331A0
 uint32_t JamHandlerKeyConst_6883A0::Get() {
     return 0x44350808;
 }
 
-// OFFSET: 0x006883E0
+// OFFSET: 0x006883E0/0x1403331E0
 uint32_t JamHandlerKeyConst_6883E0::Get() {
     return 0xE647F7B9;
 }
 
-// OFFSET: 0x006884C0
+// OFFSET: 0x006884C0/0x1403332C0
 uint32_t JamHandlerKeyConst_6884C0::Get() {
     return 0x3B812895;
 }
 
-// OFFSET: 0x00688520
+// OFFSET: 0x00688520/0x140333320
 uint32_t JamHandlerKeyConst_688520::Get() {
     return 0x0296C963;
 }
 
-// OFFSET: 0x00688560
+// OFFSET: 0x00688560/0x140333360
 uint32_t JamHandlerKeyConst_688560::Get() {
     return 0xE40CD41B;
 }
 
-// OFFSET: 0x00688690
+// OFFSET: 0x00688690/0x140333490
 uint32_t JamHandlerKeyConst_688690::Get() {
     return 0x3E1DFBF4;
 }
 
-// OFFSET: 0x006886B0
+// OFFSET: 0x006886B0/0x1403334B0
 uint32_t JamHandlerKeyConst_6886B0::Get() {
     return 0xA08D499B;
 }
 
-// OFFSET: 0x00688740
+// OFFSET: 0x00688740/0x140333540
 uint32_t JamHandlerKeyConst_688740::Get() {
     return 0xB085061F;
 }
 
-// OFFSET: 0x00688790
+// OFFSET: 0x00688790/0x140333590
 uint32_t JamHandlerKeyConst_688790::Get() {
     return 0x87CCF7BF;
 }
 
-// OFFSET: 0x006887C0
+// OFFSET: 0x006887C0/0x1403335C0
 uint32_t JamHandlerKeyConst_6887C0::Get() {
     return 0x17494A32;
 }
 
-// OFFSET: 0x00688AB0
+// OFFSET: 0x00688AB0/0x1403338B0
 uint32_t JamHandlerKeyConst_688AB0::Get() {
     return 0xDF63C15D;
 }
 
-// OFFSET: 0x00688B40
+// OFFSET: 0x00688B40/0x140333940
 uint32_t JamHandlerKeyConst_688B40::Get() {
     return 0xCE5A8AE1;
 }
 
-// OFFSET: 0x00688BE0
+// OFFSET: 0x00688BE0/0x1403339E0
 uint32_t JamHandlerKeyConst_688BE0::Get() {
     return 0xE8D37401;
 }
 
-// OFFSET: 0x00688CA0
+// OFFSET: 0x00688CA0/0x140333AA0
 uint32_t JamHandlerKeyConst_688CA0::Get() {
     return 0x49ED0632;
 }
 
-// OFFSET: 0x00688E30
+// OFFSET: 0x00688E30/0x140333C30
 uint32_t JamHandlerKeyConst_688E30::Get() {
     return 0xB4B2AE8D;
 }
 
-// OFFSET: 0x00688EA0
+// OFFSET: 0x00688EA0/0x140333CA0
 uint32_t JamHandlerKeyConst_688EA0::Get() {
     return 0x893D84F0;
 }
 
-// OFFSET: 0x00688FB0
+// OFFSET: 0x00688FB0/0x140333DB0
 uint32_t JamHandlerKeyConst_688FB0::Get() {
     return 0xA3B281E3;
 }
 
-// OFFSET: 0x006890D0
+// OFFSET: 0x006890D0/0x140333ED0
 uint32_t JamHandlerKeyConst_6890D0::Get() {
     return 0x99BD22B3;
 }
 
-// OFFSET: 0x00689320
+// OFFSET: 0x00689320/0x140334120
 uint32_t JamHandlerKeyConst_689320::Get() {
     return 0x2D3C103E;
 }
 
-// OFFSET: 0x006894A0
+// OFFSET: 0x006894A0/0x1403342A0
 uint32_t JamHandlerKeyConst_6894A0::Get() {
     return 0x7EA693A3;
 }
 
-// OFFSET: 0x00689500
+// OFFSET: 0x00689500/0x140334300
 uint32_t JamHandlerKeyConst_689500::Get() {
     return 0x2E807D63;
 }
 
-// OFFSET: 0x00689730
+// OFFSET: 0x00689730/0x140334530
 uint32_t JamHandlerKeyConst_689730::Get() {
     return 0x30DD9923;
 }
 
-// OFFSET: 0x006897D0
+// OFFSET: 0x006897D0/0x1403345D0
 uint32_t JamHandlerKeyConst_6897D0::Get() {
     return 0xC8D2FCB1;
 }
 
-// OFFSET: 0x006898A0
+// OFFSET: 0x006898A0/0x1403346A0
 uint32_t JamHandlerKeyConst_6898A0::Get() {
     return 0x5A080865;
 }
 
-// OFFSET: 0x00689930
+// OFFSET: 0x00689930/0x140334730
 uint32_t JamHandlerKeyConst_689930::Get() {
     return 0x03C7A706;
 }
 
-// OFFSET: 0x00689BF0
+// OFFSET: 0x00689BF0/0x1403349F0
 uint32_t JamHandlerKeyConst_689BF0::Get() {
     return 0xFAEAFB68;
 }
 
-// OFFSET: 0x00689CC0
+// OFFSET: 0x00689CC0/0x140334AC0
 uint32_t JamHandlerKeyConst_689CC0::Get() {
     return 0xA60E6BD7;
 }
 
-// OFFSET: 0x00689DE0
+// OFFSET: 0x00689DE0/0x140334BE0
 uint32_t JamHandlerKeyConst_689DE0::Get() {
     return 0x01980517;
 }
 
-// OFFSET: 0x00689F40
+// OFFSET: 0x00689F40/0x140334D40
 uint32_t JamHandlerKeyConst_689F40::Get() {
     return 0x445B540C;
 }
 
-// OFFSET: 0x0068A0F0
+// OFFSET: 0x0068A0F0/0x140334EF0
 uint32_t JamHandlerKeyConst_68A0F0::Get() {
     return 0x0446CCD1;
 }
 
-// OFFSET: 0x0068A340
+// OFFSET: 0x0068A340/0x140335140
 uint32_t JamHandlerKeyConst_68A340::Get() {
     return 0xC10DF35E;
 }
 
-// OFFSET: 0x0068A780
+// OFFSET: 0x0068A780/0x140335580
 uint32_t JamHandlerKeyConst_68A780::Get() {
     return 0x5F05E7B6;
 }

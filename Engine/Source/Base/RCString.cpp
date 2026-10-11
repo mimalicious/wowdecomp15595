@@ -64,7 +64,7 @@ char* CStringMemory::New(const char* str) {
     return entry;
 }
 
-// OFFSET: 0x00872160
+// OFFSET: 0x00872160/0x1405A8490
 const char* CStringManager::Add(const char* str) {
     uint32_t index = SStrHashHT(str) % 521;
 

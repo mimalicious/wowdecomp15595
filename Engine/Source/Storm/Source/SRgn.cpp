@@ -9,7 +9,7 @@
 #define SOURCE_OVERLAPPED 0x2
 #define SOURCE_PARAMONLY 0x10000
 
-// STATIC: %0x00CA6950
+// STATIC: 0x00DA60D0
 static TSExportTableSyncReuse<RGN, HSRGN, HLOCKEDRGN, CCritSect> s_rgntable;
 
 // INLINED

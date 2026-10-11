@@ -13,7 +13,6 @@
 // STATIC: 0x00EB6204
 Blizzard::Hardware::ProcessorFeatures System_Hardware::s_processorFeatures;
 
-// STATIC: %0x00D871A0
 Blizzard::Hardware::ProcessorFeatures System_Hardware::s_extendedFeatures;
 
 // OFFSET: 0x007AD1B0/0x1404A2EB0

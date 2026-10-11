@@ -106,7 +106,7 @@ TSGrowableArray<CAsyncObject*> CCharacterCreation::m_racialTexturesLoading;
 // STATIC: 0x00EBC23C
 CGlueMgr::WeaponLoadOut CCharacterCreation::m_weaponLoadOut;
 
-// OFFSET: 0x0080C050
+// OFFSET: 0x0080C050/0x140522680
 void CCharacterCreation::SetCharCustomizeFrame(CSimpleModelFFX* modelFrame) {
     CCharacterCreation::m_charCustomizeFrame = modelFrame;
 }

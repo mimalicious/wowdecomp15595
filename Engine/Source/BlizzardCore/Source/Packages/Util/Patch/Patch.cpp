@@ -6,7 +6,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "ThirdParty/zlib/zlib.h"
 
-// STATIC: %0x00C0C74C
+// STATIC: 0x00D07418
 static Blizzard::Patch::PatchReader s_memoryReader;
 
 // INLINED

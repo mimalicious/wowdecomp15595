@@ -100,7 +100,6 @@ CVar* g_minimapZoomCVar;
 // STATIC: 0x00ED7674
 CVar* g_minimapInsideZoomCVar;
 
-// STATIC: #0x00BD0948
 CVar* g_minimapPortalMaxCVar;
 
 // STATIC: 0x00ED7678
@@ -202,7 +201,6 @@ CVar* g_nameplateShowFriendlyGuardiansCVar;
 // STATIC: 0x00ED7708
 CVar* g_nameplateShowFriendlyTotemsCVar;
 
-// STATIC: #0x00BD09D8
 CVar* s_cvNameplateAllowOverlap;
 
 // STATIC: 0x00ED770C
@@ -253,13 +251,11 @@ CVar* s_cvThreatShowNumeric;
 // STATIC: 0x00ED774C
 CVar* s_cvThreatPlaySounds;
 
-// STATIC: #0x00BD0A1C
 CVar* s_cvShowAllSpellRanks;
 
 // STATIC: 0x00ED7750
 CVar* g_ShowClassColorInNameplateCVar;
 
-// STATIC: #0x00BD0A24
 CVar* g_previewTalentsCVar;
 
 // STATIC: 0x00ED7758
@@ -271,7 +267,6 @@ CVar* s_cvLfdCollapsedHeaders;
 // STATIC: 0x00ED7760
 CVar* s_cvLfdSelectedDungeons;
 
-// STATIC: #0x00BD0A34
 CVar* s_cvQuestLogCollapseFilter;
 
 // STATIC: 0x00ED7768

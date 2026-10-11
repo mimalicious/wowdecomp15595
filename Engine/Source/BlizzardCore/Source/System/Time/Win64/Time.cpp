@@ -7,7 +7,6 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
-// STATIC: #0x009E56C0
 const int32_t System_Time::s_daysBeforeMonth[13] = { 0, 31, 59, 90, 120, 151, 182, 212, 243, 273, 304, 334, 365 };
 
 // STATIC: 0x00EBAB8C

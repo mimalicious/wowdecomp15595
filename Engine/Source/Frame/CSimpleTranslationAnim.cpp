@@ -12,13 +12,13 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: %0x00BB9A4C
+// STATIC: 0x00CA4714
 int32_t CSimpleTranslationAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CC8/0x140CB9A68
 int32_t CSimpleTranslationAnim::s_objectType;
 
-// STATIC: %0x00BB8BAC
+// STATIC: 0x00CA3824
 const char* CSimpleTranslationAnim::s_objectTypeName = "Translation";
 
 // PROVEN: 16876655 DIFFERENT/IDENTICAL

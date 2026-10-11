@@ -4,12 +4,12 @@
 
 extern "C" {
 
-// STATIC: %0x00C39504
+// STATIC: 0x00D35D64
 const int32_t s_ipmrTableB23744[4] = {
     128, 128, 128, 64,
 };
 
-// STATIC: %0x00C39518
+// STATIC: 0x00D35D78
 const int32_t s_ipmrTableB23758[3] = {
     128, 128, 64,
 };

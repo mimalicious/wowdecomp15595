@@ -32,10 +32,8 @@ namespace S_Thread {
     // STATIC: 0x00D9C508
     SThreadTrack s_threads[s_maxthreads];
 
-    // STATIC: %0x00C9DDA8
     int32_t s_numthreads;
 
-    // STATIC: %0x00C9DDAC
     CInitCritSect s_threadCrit;
 }
 
@@ -45,7 +43,7 @@ uint32_t STORMAPI SGetCurrentThreadId() {
     return GetCurrentThreadId();
 }
 
-// OFFSET: 0x004B7610
+// OFFSET: 0x004B7610/0x1400EF6A0
 uint32_t STORMAPI SGetCurrentProcessId() {
     return GetCurrentProcessId();
 }
@@ -158,7 +156,7 @@ uint32_t STORMAPI S_Thread::s_SLaunchThread(void* threadParam) {
     return threadVal;
 }
 
-// OFFSET: 0x004B79B0
+// OFFSET: 0x004B79B0/0x1400EFB10
 HANDLE SCreateThread(uint32_t dwStackSize, uint32_t (STORMAPI* lpStartAddress)(void*), void* lpParameter, uint32_t dwCreationFlags, uint32_t* lpThreadId, char* threadName) {
     if (!threadName) {
         threadName = const_cast<char*>("");

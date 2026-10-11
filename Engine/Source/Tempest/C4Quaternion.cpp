@@ -6,7 +6,6 @@
 #include "Engine/Source/Tempest/C4Quaternion.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: #0x00AA2E4C
 static const uint32_t s_nextAxis[3] = { 1, 2, 0 };
 
 // PROVEN: 64f52896 IDENTICAL/NONE

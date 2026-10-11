@@ -23,7 +23,7 @@ void GxuBufferCache::ReleaseCache() {
     }
 }
 
-// OFFSET: 0x006221A0
+// OFFSET: 0x006221A0/0x1402B2F80
 bool GxuBufferCache::Exists(uint32_t handle) {
     if (handle == 0xFFFF || handle >= this->m_entries.m_count) {
         return false;
@@ -56,18 +56,18 @@ CGxBuf* GxuBufferCache::GetBuffer(uint32_t handle) {
     return this->m_entries.m_data[handle].m_buf;
 }
 
-// OFFSET: 0x00622240
+// OFFSET: 0x00622240/0x1402B3050
 CGxBuf* GxuBufferCache::AcquireBuffer(uint32_t handle) {
     this->m_entries.m_data[handle].m_refCount++;
     return this->m_entries.m_data[handle].m_buf;
 }
 
-// OFFSET: 0x00622260
+// OFFSET: 0x00622260/0x1402B3070
 void GxuBufferCache::ReleaseBuffer(uint32_t handle) {
     this->m_entries.m_data[handle].m_refCount--;
 }
 
-// OFFSET: 0x00622400
+// OFFSET: 0x00622400/0x1402B32D0
 uint32_t GxuBufferCache::CreateBuffer(uint32_t handle, EGxPoolTarget target, uint32_t itemSize, uint32_t itemCount) {
     if (handle == 0xFFFF) {
         BufferEntry entry;

@@ -192,7 +192,7 @@ static FLaC__INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
 	br->crc16_align = 0;
 }
 
-// INLINED
+// OFFSET: 0x00B5A9F0/0x140923B20
 static FLAC__bool bitreader_read_from_client_(FLAC__BitReader *br)
 {
 	unsigned start, end;
@@ -387,7 +387,7 @@ void FLAC__bitreader_reset_read_crc16(FLAC__BitReader *br, FLAC__uint16 seed)
 	br->crc16_align = br->consumed_bits;
 }
 
-// INLINED
+// OFFSET: 0x00B5ABE0/0x140923D50
 FLAC__uint16 FLAC__bitreader_get_read_crc16(FLAC__BitReader *br)
 {
 	FLAC__ASSERT(0 != br);

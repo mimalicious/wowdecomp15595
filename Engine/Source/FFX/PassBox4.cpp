@@ -30,7 +30,6 @@ bool PassBox4::Valid() {
 
 // OFFSET: 0x0089FD90/0x1405E0E80
 void PassBox4::Execute() {
-    // STATIC: %0x00D9558C
     static const C2Vector s_offsets[4] = { C2Vector(-1.5f, -1.5f), C2Vector(0.5f, -1.5f), C2Vector(0.5f, 0.5f), C2Vector(-1.5f, 0.5f) };
 
     FFX::SetupGx(this->m_output, 0);

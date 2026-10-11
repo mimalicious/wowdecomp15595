@@ -2,7 +2,7 @@
 #include <cstdint>
 #include "Engine/Source/Model2/M2Shader.h"
 
-// STATIC: %0x00C0D310
+// STATIC: 0x00D07FB8
 static const char* s_modelPixelShaders[33] = {
     "Combiners_Opaque",
     "Combiners_Mod",
@@ -39,7 +39,7 @@ static const char* s_modelPixelShaders[33] = {
     "Guild_Opaque",
 };
 
-// STATIC: %0x00C0D398
+// STATIC: 0x00D08040
 static const char* s_modelVertexShaders[16] = {
     "Diffuse_T1",
     "Diffuse_Env",
@@ -59,7 +59,6 @@ static const char* s_modelVertexShaders[16] = {
     "Diffuse_T1_T2_T1",
 };
 
-// STATIC: %0x00C0D3D8
 static const char* s_modelHullShaders[4] = {
     "T1",
     "T1_T2",
@@ -67,7 +66,6 @@ static const char* s_modelHullShaders[4] = {
     "T1_T2_T3_T4",
 };
 
-// STATIC: %0x00C0D3E8
 static const char* s_modelDomainShaders[4] = {
     "T1",
     "T1_T2",
@@ -108,10 +106,10 @@ static M2ShaderEffect s_shaderEffects[29] = {
     { 32, 15, 2, 1, static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(0) },
 };
 
-// STATIC: %0x00C0D6B0
+// STATIC: 0x00D08358
 static EGxTexOp s_alphaOps[8] = { static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(2), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(3) };
 
-// STATIC: %0x00C0D6D0
+// STATIC: 0x00D08378
 static EGxTexOp s_colorOps[8] = { static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(4), static_cast<EGxTexOp>(2), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(5), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(2) };
 
 // OFFSET: 0x00839600/0x140563A60

@@ -21,13 +21,13 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00BB9B14
+// STATIC: 0x00CA47DC
 int32_t CSimpleAnimGroup::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CB0/0x140CB9A50
 int32_t CSimpleAnimGroup::s_objectType;
 
-// STATIC: %0x00BB8BC4
+// STATIC: 0x00CA383C
 const char* CSimpleAnimGroup::s_objectTypeName = "AnimationGroup";
 
 // OFFSET: 0x005270F0/0x140176430

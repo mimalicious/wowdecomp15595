@@ -96,7 +96,7 @@ typedef struct
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC0D70/0x140889050
 FMOD_CODEC_DESCRIPTION_EX *CodecTag::getDescriptionEx()
 {
     FMOD_memset(&tagcodec, 0, sizeof(FMOD_CODEC_DESCRIPTION_EX));
@@ -568,7 +568,7 @@ FMOD_RESULT CodecTag::readID3v1()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00ABFDD0/0x140887B80
 FMOD_RESULT CodecTag::readID3v2()
 {
     FMOD_RESULT     result;

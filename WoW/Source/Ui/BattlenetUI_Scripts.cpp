@@ -45,7 +45,7 @@ static int32_t Script_IsBNLogin(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009023C0
+// OFFSET: 0x009023C0/0x14065A9E0
 static int32_t Script_BNInviteFriend(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: BNInviteFriend(presenceID, [tank], [heal], [dps])");
@@ -147,7 +147,7 @@ static int32_t Script_BNGetNumFriends(lua_State* L) {
     return 2;
 }
 
-// OFFSET: 0x009058D0
+// OFFSET: 0x009058D0/0x14065E650
 static int32_t Script_BNSendSoR(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: BNSendSoR(presence[, \"comment\"])");
@@ -1219,7 +1219,7 @@ static int32_t Script_BNGetSelectedFriend(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00908380
+// OFFSET: 0x00908380/0x140661290
 static int32_t Script_BNGetFriendIndex(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1427,7 +1427,7 @@ static int32_t Script_BNGetToonInfo(lua_State* L) {
     return BattlenetUI::BNGetToonInfoHelper(L, static_cast<uint32_t>(lua_tonumber(L, 1)));
 }
 
-// OFFSET: 0x0090A860
+// OFFSET: 0x0090A860/0x1406643A0
 static int32_t Script_BNTokenCombineGivenAndSurname(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
     const char* rest = NULL;
@@ -1872,7 +1872,7 @@ static int32_t Script_BNGetFriendInfoByID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: [0x009546F0]
+// OFFSET: [0x009546F0/0x14065A910]
 static int32_t Script_BNGetMaxNumConversations(lua_State* L) {
     lua_pushnumber(L, 6.0);
     return 1;

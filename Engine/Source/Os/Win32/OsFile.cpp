@@ -329,7 +329,6 @@ int32_t OsFileSupportsSparse() {
 // PROVEN: 2376fe9a IDENTICAL/UNPROVEN
 // OFFSET: 0x007A9320/0x14049F070
 char* OsFileGetDownloadFolder() {
-    // STATIC: %0x00D81108
     static char s_downloadfolder[260];
 
     if (!s_downloadfolder[0]) {

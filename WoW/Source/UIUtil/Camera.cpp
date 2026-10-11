@@ -1450,7 +1450,7 @@ int32_t CGCamera::CCommand_PitchLimit(const char* command, const char* arguments
     return 1;
 }
 
-// OFFSET: 0x0043B680
+// OFFSET: 0x0043B680/0x140046130
 uint32_t CGCamera::GetCollisionQueryFlags() {
     return 0x900171;
 }

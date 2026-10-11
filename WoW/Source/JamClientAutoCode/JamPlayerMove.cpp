@@ -10054,13 +10054,13 @@ void PlayerMoveTeleportCheat::Put(CDataStore* msg) {
     msg->Put(this->m_position.z);
 }
 
-// OFFSET: 0x006740C0
+// OFFSET: 0x006740C0/0x140318240
 PlayerMoveSetRawPosition::PlayerMoveSetRawPosition(const C3Vector& position, float facing) {
     this->m_facing = facing;
     this->m_position = position;
 }
 
-// OFFSET: 0x00670990
+// OFFSET: 0x00670990/0x140318A10
 PlayerMoveSetRawPosition::~PlayerMoveSetRawPosition() {
 }
 

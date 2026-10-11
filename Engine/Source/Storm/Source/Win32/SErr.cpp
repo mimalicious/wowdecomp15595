@@ -63,7 +63,6 @@ struct _MSGSRC {
     /* 0008 */ _MSGSRC* next;
 };
 
-// STATIC: %0x00ACE880
 static const char* const s_displaystr[22] = {
     "ERROR #%u (0x%08x) %s",
     "This application has encountered a critical error:\n\n%s\n",
@@ -89,46 +88,34 @@ static const char* const s_displaystr[22] = {
     "ProcessID:\t%d\n"
 };
 
-// STATIC: %0x00BB3464
 static LONG s_critsectinit = -1;
 
-// STATIC: %0x00BB3468
 static TSListWinHeap<HANDLER> s_handlerlist;
 
 // STATIC: 0x00D9B158
 static EXCEPTION_POINTERS* s_exceptionPointers;
 
-// STATIC: %0x00C9B9FC
 static CRITICAL_SECTION s_exceptioncritsect;
 
-// STATIC: %0x00C9BA14
 static int32_t s_displaying;
 
-// STATIC: %0x00C9BA18
 static CRITICAL_SECTION s_critsect;
 
-// STATIC: %0x00C9BA30
 static APPFATINFO s_appFatInfo;
 
-// STATIC: %0x00C9BA3C
 static _MSGSRC* s_msgsrchead;
 
-// STATIC: #0x00CAD830
 static int32_t s_msgsrcinit;
 
-// STATIC: %0x00C9BA44
 static uint32_t s_lasterror;
 
 // STATIC: 0x00D9B1A8
 static char s_logtitle[128];
 
-// STATIC: %0x00C9BAC8
 static int32_t (STORMAPI* s_logCallback)(char*, uint32_t);
 
-// STATIC: %0x00C9BACC
 static uint32_t s_noMiniDumps;
 
-// STATIC: #0x00CAD8C0
 static char s_logLastFile[MAX_PATH];
 
 // STATIC: 0x00D9B334
@@ -157,7 +144,6 @@ static void Breakpoint() {
 
 // OFFSET: 0x004B3EF0/0x1400EB010
 static const char* GetErrorString(uint32_t id) {
-    // STATIC: %0x00C9BBD8
     static char buffer[256];
 
     if (!LoadStringA(StormGetInstance(), id + SERR_STRING_BASE, buffer, sizeof(buffer))) {
@@ -297,7 +283,7 @@ inline int32_t MakeDirectory(const uint16_t* path) {
     return (attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-// OFFSET: 0x004B4500
+// OFFSET: 0x004B4500/0x1400EB6F0
 static HANDLE CreateErrorLogFile(const char* suffix, const char* ext, char* logpath, uint32_t logpathchars, const SYSTEMTIME* time) {
     char exefullpath[2 * MAX_PATH];
     uint16_t exefullpathW[MAX_PATH];
@@ -334,7 +320,7 @@ static HANDLE CreateErrorLogFile(const char* suffix, const char* ext, char* logp
     return CreateFileW(reinterpret_cast<LPCWSTR>(logpathW), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
-// OFFSET: 0x004B4C20
+// OFFSET: 0x004B4C20/0x1400EBFC0
 static HANDLE CreateErrorLog(const char* suffix, const char* message, const SYSTEMTIME* time) {
     char logpath[MAX_PATH];
     SYSTEMTIME localTime;
@@ -787,7 +773,6 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
 
     // STATIC: 0x00D9C3F0
     static char appfilename[MAX_PATH];
-    // STATIC: #0x00CAE728
     static char appname[MAX_PATH];
     appfilename[0] = 0;
     appname[0] = 0;
@@ -809,25 +794,20 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         *SStrChrR(appname, '.') = 0;
     }
 
-    // STATIC: #0x00CAE4E8
     static char errorstr[256];
     errorstr[0] = 0;
     FormatErrorMessage(errorcode, errorstr, sizeof(errorstr), errorcode & 0xFFFF, errorcode);
 
-    // STATIC: #0x00CAE4E0
     static const char* localnameptr = filename;
-    // STATIC: #0x00CAE3E0
     static char localnamebuffer[256];
 
     if (localnameptr && *localnameptr && (linenumber == SLOG_OBJECT || linenumber == SLOG_HANDLE) && UndecorateObjectName(localnameptr, localnamebuffer, sizeof(localnamebuffer))) {
         localnameptr = localnamebuffer;
     }
 
-    // STATIC: #0x00CADBE0
     static char outstr[2048];
     // STATIC: 0x00C9F7CC
     static char* outptr = outstr;
-    // STATIC: #0x00ADE880
     static char* outend = outstr + sizeof(outstr);
 
     if (localnameptr) {
@@ -916,7 +896,6 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         if (logfile != INVALID_HANDLE_VALUE) {
             LogMachineState(extended | LOG_OPTION_DEFAULT | LOG_OPTION_FRAMEPARAMS, WriteLine, logfile, context ? 0 : skipframes + 2, context);
 
-            // STATIC: #0x00C9BEE8
             static WIN32_FIND_DATAA exefinddata;
             memset(&exefinddata, 0, sizeof(exefinddata));
 
@@ -926,7 +905,6 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
                 FindClose(exefind);
             }
 
-            // STATIC: #0x00C9BDE0
             static char exename[MAX_PATH];
             SStrCopy(exename, exefinddata.cFileName, sizeof(exename));
             LogRunningProcesses(logfile, exename);
@@ -940,7 +918,6 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         }
 
         if (LogMiniDumpIsAvailable() && !s_noMiniDumps) {
-            // STATIC: #0x00CADAC8
             static char logpath[MAX_PATH];
             HANDLE dumpfile = CreateErrorLogFile(suffix, "dmp", logpath, sizeof(logpath), &time);
 

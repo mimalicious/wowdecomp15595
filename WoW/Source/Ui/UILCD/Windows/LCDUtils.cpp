@@ -11,7 +11,7 @@ void CLCDUtils::Shutdown() {
     CLCDUtils::m_bitmapCache.Clear();
 }
 
-// OFFSET: 0x00B32300
+// OFFSET: 0x00B32300/0x1408FC410
 HBITMAP CLCDUtils::CreateBitmapFromBLPTex(const char* fileName, uint32_t mipLevel, C2iVector* size, int32_t top, int32_t left, int32_t bottom, int32_t right) {
     CBLPFile image;
 
@@ -54,7 +54,7 @@ HBITMAP CLCDUtils::CreateBitmapFromBLPTex(const char* fileName, uint32_t mipLeve
     return bitmap;
 }
 
-// OFFSET: 0x00B333E0
+// OFFSET: 0x00B333E0/0x1408FDB80
 HBITMAP CLCDUtils::GetBitmapForIcon(int32_t icon, C2iVector* size) {
     BITMAPBYICON* entry = CLCDUtils::m_bitmapCache.Ptr(icon, HASHKEY_NONE());
 

@@ -8,7 +8,6 @@
 // STATIC: 0x00C27680
 const uint8_t ComSat::Sound::CODECIPMR6000::s_invalidPlayer = 0xFF;
 
-// STATIC: #0x00A503A4
 const int32_t ComSat::Sound::CODECIPMR6000::s_maxFramesPerPacket = 20;
 
 // STATIC: 0x00C27688
@@ -26,7 +25,6 @@ const int32_t ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength = 360;
 // STATIC: 0x00C27698
 const int32_t ComSat::Sound::CODECIPMR6000::s_maxEncodedFrameLength = 960;
 
-// STATIC: #0x00A503BC
 const uint32_t ComSat::Sound::CODECIPMR6000::s_bytesPerFrame = 1600;
 
 // OFFSET: 0x00A3A000
@@ -49,7 +47,7 @@ ComSat::Sound::CODECIPMR6000::LocalPlayer::LocalPlayer(ComSat::Allocator& alloca
     SPIRIT_IP_MR_V3_1_Init(this->m_encoder, this->m_tables);
 }
 
-// INLINED
+// OFFSET: 0x00A3A0E0
 ComSat::Sound::CODECIPMR6000::LocalPlayer::~LocalPlayer() {
     if (this->m_decoders) {
         for (int32_t i = 0; i < this->m_channelCount; i++) {

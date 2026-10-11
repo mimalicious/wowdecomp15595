@@ -13,76 +13,52 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/SLock.h"
 
-// STATIC: %0x00C0FD0C
 const char* OsNet::OSNETERR_INTERNAL = "Internal error";
 
-// STATIC: %0x00C0FD10
 const char* OsNet::OSNETERR_WSASTARTUPFAILED = "WSAStartup failed";
 
-// STATIC: %0x00C0FD14
 const char* OsNet::OSNETERR_WSASTARTUPVERSION = "WSAStartup wrong version";
 
-// STATIC: %0x00C0FD18
 const char* OsNet::OSNETERR_SENDFAILED = "Send failed";
 
-// STATIC: %0x00C0FD1C
 const char* OsNet::OSNETERR_CREATETHREADFAILED = "CreateThread failed";
 
-// STATIC: %0x00C0FD20
 const char* OsNet::OSNETERR_CREATEEVENTFAILED = "CreateEvent failed";
 
-// STATIC: %0x00C0FD24
 const char* OsNet::OSNETERR_BINDFAILED = "Bind failed";
 
-// STATIC: %0x00C0FD28
 const char* OsNet::OSNETERR_LISTENFAILED = "Listen failed";
 
-// STATIC: %0x00C0FD2C
 const char* OsNet::OSNETERR_SOCKETFAILED = "Socket failed";
 
-// STATIC: %0x00C0FD30
 const char* OsNet::OSNETERR_SELECTFAILED = "Select failed";
 
-// STATIC: %0x00C0FD34
 const char* OsNet::OSNETERR_ACCEPTFAILED = "Accept failed";
 
-// STATIC: %0x00C0FD38
 const char* OsNet::OSNETERR_PORTFAILED = "CreateIoCompletionPort failed";
 
-// STATIC: %0x00C0FD3C
 const char* OsNet::OSNETERR_OVERLAPTYPE = "Unknown overlap type";
 
-// STATIC: %0x00C0FD40
 const char* OsNet::OSNETERR_LISTENCLOSED = "Listen closed";
 
-// STATIC: %0x00C0FD44
 const char* OsNet::OSNETERR_ACCEPTEXFAILED = "AcceptEx failed";
 
-// STATIC: %0x00D9500C
 float OsNet::TCPNET::s_qpctoms;
 
-// STATIC: %0x00D95010
 int32_t OsNet::TCPNET::s_qpcexists;
 
-// STATIC: %0x00D95014
 HSLOG OsNet::TCPNET::s_log;
 
-// STATIC: %0x00D95018
 OsNet::WSARECVPROC OsNet::TCPNET::s_WSARecv;
 
-// STATIC: %0x00D9501C
 OsNet::WSASENDPROC OsNet::TCPNET::s_WSASend;
 
-// STATIC: %0x00D95020
 LPFN_GETACCEPTEXSOCKADDRS OsNet::TCPNET::s_GetAcceptExSockaddrs;
 
-// STATIC: %0x00D95024
 LPFN_ACCEPTEX OsNet::TCPNET::s_AcceptEx;
 
-// STATIC: %0x00D951C8
 int32_t OsNet::TCPNET::s_pumpShutdown;
 
-// STATIC: %0x00D951D0
 OsNet::TCPNET* OsNet::TCPNET::s_pnet;
 
 // INLINED
