@@ -8,7 +8,7 @@
 class C44Matrix;
 class CFrustum;
 class CGxFrameBuffer;
-class CVar;
+struct CVar;
 class CWorldOcclusion;
 class CWorldView;
 struct CShadowCacheQueryData;

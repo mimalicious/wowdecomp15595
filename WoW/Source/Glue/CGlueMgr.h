@@ -206,7 +206,7 @@ class CGlueMgr {
     static void SetUIDepth(float depth);
     static void StopCharacterEmoteKits(CAnimKitManager& manager);
     static void CharacterEmoteKitFinished(CAnimKitInst* inst, uint64_t param);
-    static WeaponLoadOut AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const WOWGUID& guid, const WOWGUID& guildGUID, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg));
+    static WeaponLoadOut AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const uint64_t& guildGUID, const WOWGUID& guid, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg));
     static void ProcessAttachment(CSimpleModel* modelFrame, CM2Model* model, int32_t effectID, uint32_t attachID, int32_t sequenceCallback);
     static void PollLoginServerLogin();
     static void PollEnterWorld();

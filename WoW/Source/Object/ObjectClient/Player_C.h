@@ -484,7 +484,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     uint32_t GetEquippedItemDisplayId();
     int32_t GetAttackPowerContributionFromStat(int32_t stat, int32_t value);
     float GetCombatRatingPct(int32_t rating);
-    bool LoadGuildTextures(int32_t displayId);
     void UpdateHandItemVisual(GEOCOMPONENTLINKS link, int32_t hand);
     void UpdateObjComponentVisuals(const VisibleItem_C* item, GEOCOMPONENTLINKS link);
     void UpdateObjComponentVisualsSlot(const VisibleItem_C* item, int32_t slot);

@@ -33,7 +33,7 @@ class CCharacterSelection {
     static void GenericLightingCallback(CM2Model* model, CM2Lighting* lighting, void* arg);
     static CharacterSelectionDisplay* GetCharacterDisplay(uint32_t index);
     static uint32_t GetEquippedGuildTabardFlags(int32_t slot, int32_t index);
-    static void GuildCallback(const WOWGUID& guildGUID, const WOWGUID& guid, void* param, bool success);
+    static void GuildCallback(const uint64_t& guildGUID, const WOWGUID& guid, void* param, bool success);
     static int32_t Idle(const void* data, void* param);
     static void Initialize();
     static bool IsStreamingDataReady();

@@ -16,7 +16,7 @@ class CGUnit_C;
 class CSimpleFontString;
 class CSimpleStatusBar;
 class CSimpleTexture;
-class CVar;
+struct CVar;
 class linkObject;
 
 class CGNamePlateFrame : public TSLinkedNode<CGNamePlateFrame>, public CSimpleFrame {

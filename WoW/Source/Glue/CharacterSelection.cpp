@@ -1,4 +1,5 @@
 #include "CharacterSelection.h"
+#include "WoW/Source/Ui/CGTabardCreationFrame.h"
 #include <cstring>
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/Event/Event.h"
@@ -461,13 +462,13 @@ uint32_t CCharacterSelection::GetEquippedGuildTabardFlags(int32_t slot, int32_t 
 }
 
 // OFFSET: 0x00808AB0
-void CCharacterSelection::GuildCallback(const WOWGUID& guildGUID, const WOWGUID& guid, void* param, bool success) {
-    if (!guildGUID.m_guid || !success || static_cast<uint32_t>(CCharacterSelection::m_selectionIndex) >= CCharacterSelection::m_characterList.Count()) {
+void CCharacterSelection::GuildCallback(const uint64_t& guildGUID, const WOWGUID& guid, void* param, bool success) {
+    if (!guildGUID || !success || static_cast<uint32_t>(CCharacterSelection::m_selectionIndex) >= CCharacterSelection::m_characterList.Count()) {
         return;
     }
 
     for (int32_t i = 0; i < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()); i++) {
-        if (CCharacterSelection::m_characterList.m_data[i].m_characterInfo.m_guildGUID != guildGUID) {
+        if (CCharacterSelection::m_characterList.m_data[i].m_characterInfo.m_guildGUID.m_guid != guildGUID) {
             continue;
         }
 
@@ -477,7 +478,7 @@ void CCharacterSelection::GuildCallback(const WOWGUID& guildGUID, const WOWGUID&
         int32_t borderColor;
         int32_t background;
 
-        if (!GuildGetGuildTabard(WOWGUID(), guildGUID, NULL, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background)) {
+        if (!GuildGetGuildTabard(WOWGUID(), WOWGUID::Make(guildGUID), NULL, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background)) {
             continue;
         }
 
@@ -493,7 +494,7 @@ void CCharacterSelection::GuildCallback(const WOWGUID& guildGUID, const WOWGUID&
             component->ApplyGuildColor(flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
         }
 
-        CGObject_C::ReplaceGuildTextures(component->m_data.m_model, guildGUID.m_guid, -1);
+        CGObject_C::ReplaceGuildTextures(component->m_data.m_model, guildGUID, -1);
         flags = CCharacterSelection::GetEquippedGuildTabardFlags(3, i);
 
         if (flags) {

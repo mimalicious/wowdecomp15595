@@ -7,8 +7,8 @@
 #include "Engine/Source/Gxu/GxuScene.h"
 #include "Engine/Source/Storm/H/stpl.h"
 
-class CGxString;
-class CGxStringBatch;
+struct CGxString;
+struct CGxStringBatch;
 class CImVector;
 
 class GxuDebugText : public GxuDrawListItem {

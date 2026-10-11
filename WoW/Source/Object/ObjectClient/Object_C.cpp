@@ -1,4 +1,5 @@
 #include "Object_C.h"
+#include "WoW/Source/Ui/CGTabardCreationFrame.h"
 #include "Engine/Source/Base/ObjectAlloc.h"
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"

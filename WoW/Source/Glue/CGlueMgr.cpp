@@ -1,4 +1,5 @@
 #include "CGlueMgr.h"
+#include "WoW/Source/Ui/CGTabardCreationFrame.h"
 #include <cmath>
 #include <cstdarg>
 #include <cstring>
@@ -1887,7 +1888,7 @@ void CGlueMgr::CharacterEmoteKitFinished(CAnimKitInst* inst, uint64_t param) {
 }
 
 // OFFSET: 0x00802B10
-CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const WOWGUID& guid, const WOWGUID& guildGUID, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg)) {
+CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const uint64_t& guildGUID, const WOWGUID& guid, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg)) {
     CGlueMgr::WeaponLoadOut types;
     types.m_offHand = 0;
     types.m_mainHand = 0;

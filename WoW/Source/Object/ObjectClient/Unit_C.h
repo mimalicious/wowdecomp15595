@@ -249,7 +249,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsSpellKnown(int32_t spellId) const;
     void SuspendMovement();
     void ResumeMovement();
-    int32_t GetHighestThreatExcluding(WOWGUID exclude);
     double GetQuestExperienceModifier() const;
     uint32_t GetSpellLevel(const SpellRec* spell) const;
     bool IsSpellSuperceded(int32_t spellId);

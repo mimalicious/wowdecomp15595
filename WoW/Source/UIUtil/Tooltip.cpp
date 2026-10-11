@@ -8465,6 +8465,11 @@ int32_t SetCompareItem(CGTooltip* tooltip, int32_t itemId, int32_t offset, int32
     return 1;
 }
 
+// INLINED
+void CGTooltip::operator delete(void* ptr) {
+    CGTooltip::s_tooltipHeap.PutData(ptr, NULL, 0);
+}
+
 // OFFSET: 0x008C65E0
 CSimpleFrame* CGTooltip::Create(CSimpleFrame* parent) {
     void* data = CGTooltip::s_tooltipHeap.GetData(0, typeid(CGTooltip).raw_name(), SLOG_OBJECT);
