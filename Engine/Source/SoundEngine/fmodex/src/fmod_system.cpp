@@ -78,7 +78,7 @@ FMOD_RESULT System::getOutput(FMOD_OUTPUTTYPE *output)
 }
 
 
-// OFFSET: #0x008D11E0
+// OFFSET: 0x00A7B020
 FMOD_RESULT System::getNumDrivers(int *numdrivers)
 {
     FMOD_RESULT result;
@@ -362,7 +362,7 @@ FMOD_RESULT System::getAdvancedSettings(FMOD_ADVANCEDSETTINGS *settings)
 }
 
 
-// OFFSET: #0x008D1390
+// OFFSET: 0x00A7B1D0
 FMOD_RESULT System::setSpeakerMode(FMOD_SPEAKERMODE speakermode)
 {
     FMOD_RESULT result;
@@ -586,7 +586,7 @@ FMOD_RESULT System::close()
 }
 
 
-// OFFSET: #0x008D1450
+// OFFSET: 0x00A7B290
 FMOD_RESULT System::update()
 {
     FMOD_RESULT result;
@@ -1084,7 +1084,7 @@ FMOD_RESULT System::createChannelGroup(const char *name, ChannelGroup **channelg
 }
 
 
-// OFFSET: #0x008D16E0
+// OFFSET: 0x00A7B520
 FMOD_RESULT System::createSoundGroup(const char *name, SoundGroup **soundgroup)
 {
     FMOD_RESULT result;
@@ -1119,7 +1119,7 @@ FMOD_RESULT System::createReverb(Reverb **reverb)
 }
 
 
-// OFFSET: #0x008D1710
+// OFFSET: 0x00A7B550
 FMOD_RESULT System::playSound(FMOD_CHANNELINDEX channelid, Sound *sound, bool paused, Channel **channel)
 {
     FMOD_RESULT result;
@@ -1137,7 +1137,7 @@ FMOD_RESULT System::playSound(FMOD_CHANNELINDEX channelid, Sound *sound, bool pa
 }
 
 
-// OFFSET: #0x008D1750
+// OFFSET: 0x00A7B590
 FMOD_RESULT System::playDSP(FMOD_CHANNELINDEX channelid, DSP *dsp, bool paused, Channel **channel)
 {
     FMOD_RESULT result;
@@ -1380,7 +1380,7 @@ FMOD_RESULT System::getRecordDriver(int *driver)
         return systemi->getRecordDriver(driver);
     }
 }
-// OFFSET: #0x008D1820
+// OFFSET: 0x00A7B660
 FMOD_RESULT System::getRecordNumDrivers(int *numdrivers)
 {
     FMOD_RESULT result;

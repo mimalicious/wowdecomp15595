@@ -1,4 +1,4 @@
-// INLINED
+// OFFSET: 0x00554B80
 inline PlaySpellVisuaKitData::PlaySpellVisuaKitData(const SpellRec* spellRec, const SpellVisualKitRec* impactVisualKit, uint32_t kitType) {
     this->m_spellRec = spellRec;
     this->m_impactVisualKit = impactVisualKit;

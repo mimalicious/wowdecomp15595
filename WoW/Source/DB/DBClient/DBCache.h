@@ -152,7 +152,7 @@ template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::ItemAdded(T* item) {
 }
 
-// OFFSET: [#0x0067BA40, #0x0067C0E0, #0x0067C740, #0x0067CDD0, #0x0067D470, #0x0067DB90, #0x0067E0E0, #0x0067E740, #0x0067EC80, #0x0067F1C0, #0x0067F760, #0x0067FE00, #0x006803D0, #0x00680920, #0x00680D70]
+// OFFSET: [#0x0067BA40, #0x0067C0E0, #0x0067C740, #0x0067CDD0, #0x0067D470, #0x0067DB90, #0x0067E0E0, #0x0067E740, #0x0067EC80, #0x0067F1C0, #0x0067F760, #0x0067FE00, #0x006803D0, #0x00680920, #0x00680D70, 0x004B1480<NameCache, unsigned __int64, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::Load() {
     this->m_loaded = true;
@@ -710,7 +710,7 @@ bool DBCache<T, TKey, THashKey>::QueryLimitReached() {
     return this->m_maxQueriesPerPump && this->m_queriesSent >= this->m_maxQueriesPerPump;
 }
 
-// OFFSET: [#0x00669350<CreatureStats_C, int, HASHKEY_INT>, #0x00669420<GameObjectStats_C, int, HASHKEY_INT>, #0x00669690<NPCText, int, HASHKEY_INT>, #0x00669760<NameCache, unsigned __int64, CHashKeyGUID>, #0x00669830<GuildStats_C, unsigned __int64, CHashKeyGUID>, #0x00669900<QuestCache, int, HASHKEY_INT>, #0x006699D0<PageTextCache_C, int, HASHKEY_INT>, #0x00669AA0<PetNameCache, int, HASHKEY_INT>, #0x00669B70<CGPetition, int, HASHKEY_INT>, #0x00669C40<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, #0x00669D10<WardenCachedModule, CWardenKey, CWardenKey>, #0x00669DE0<ArenaTeamCache, int, HASHKEY_INT>]
+// OFFSET: [0x0049C770<CreatureStats_C, int, HASHKEY_INT>, 0x0049C8A0<GameObjectStats_C, int, HASHKEY_INT>, 0x0049C9D0<NPCText, int, HASHKEY_INT>, 0x0049CB00<NameCache, unsigned __int64, CHashKeyGUID>, 0x0049CC30<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x0049CD60<QuestCache, int, HASHKEY_INT>, 0x0049CE90<PageTextCache_C, int, HASHKEY_INT>, 0x0049CFC0<PetNameCache, int, HASHKEY_INT>, 0x0049D0F0<CGPetition, int, HASHKEY_INT>, 0x0049D220<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, 0x0049D350<WardenCachedModule, CWardenKey, CWardenKey>, 0x0049D4B0<ArenaTeamCache, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::Idle() {
     if (!this->m_maxQueriesPerPump || !this->m_loaded) {

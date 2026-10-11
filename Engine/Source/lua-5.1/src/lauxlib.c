@@ -86,7 +86,7 @@ LUALIB_API void luaL_where (lua_State *L, int level) {
 }
 
 
-// INLINED
+// OFFSET: 0x00A29380
 LUALIB_API int luaL_error (lua_State *L, const char *fmt, ...) {
   va_list argp;
   va_start(argp, fmt);

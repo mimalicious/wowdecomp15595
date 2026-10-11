@@ -1044,7 +1044,7 @@ void CCharacterSelection::ClearCharacterList() {
     }
 }
 
-// INLINED
+// OFFSET: 0x00807E50
 void CCharacterSelection::SetModelFrame(CSimpleModelFFX* modelFrame) {
     CCharacterSelection::m_modelFrame = modelFrame;
 }

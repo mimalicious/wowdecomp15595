@@ -40,7 +40,7 @@ inline SE3SoundChannel::SE3SoundChannel() {
     this->m_waveDataID = 0;
 }
 
-// INLINED
+// OFFSET: 0x0043B740
 inline SE3SoundKitProperties::SE3SoundKitProperties() {
     this->m_nIndexOverride = -1;
     this->ResetToDefaults();

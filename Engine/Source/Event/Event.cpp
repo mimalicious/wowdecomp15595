@@ -36,7 +36,7 @@ void EventDestroy() {
     ObserverDestroy();
 }
 
-// OFFSET: %0x00804880
+// OFFSET: 0x008A0070
 void EventDoMessageLoop() {
     IEvtSchedulerProcess();
 }

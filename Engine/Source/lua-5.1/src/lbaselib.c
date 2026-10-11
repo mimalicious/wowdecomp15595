@@ -641,7 +641,7 @@ static void base_open (lua_State *L) {
 }
 
 
-// INLINED
+// OFFSET: 0x00A2E300
 LUALIB_API int luaopen_base (lua_State *L) {
   base_open(L);
   luaL_register(L, LUA_COLIBNAME, co_funcs);

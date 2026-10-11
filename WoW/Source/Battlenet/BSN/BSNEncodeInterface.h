@@ -178,7 +178,7 @@ class BSNEncodedObjectPtr : public EncodedObject {
 };
 }
 
-// OFFSET: [#0x00532CC0<Battlenet::Toon::FullName, Protocol>, #0x00532D70<Battlenet::Friends::FriendsOfFriendList, Protocol>, #0x00537A60<Battlenet::Friends::FriendInviteContainer, Protocol>, #0x008C6BD0<Battlenet::Event::Update::Invoke, Protocol>, #0x008C6EB0<Battlenet::Event::Larva::Invoke, Protocol>]
+// OFFSET: [#0x00532CC0<Battlenet::Toon::FullName, Protocol>, #0x00532D70<Battlenet::Friends::FriendsOfFriendList, Protocol>, #0x00537A60<Battlenet::Friends::FriendInviteContainer, Protocol>, #0x008C6BD0<Battlenet::Event::Update::Invoke, Protocol>, #0x008C6EB0<Battlenet::Event::Larva::Invoke, Protocol>, 0x00904040<Battlenet::Friends::FriendList, Protocol>]
 template <class T, class P>
 BSN::BSNEncodedObject<T, P>::BSNEncodedObject() {
     this->m_context.m_protocol = &P::s_protocol;

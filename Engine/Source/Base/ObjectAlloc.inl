@@ -1,4 +1,4 @@
-// INLINED
+// OFFSET: [0x004C6180<WDATASTOREBUFFER<768>>, 0x004C61D0<WDATASTOREBUFFER<16384>>, 0x004C6220<WDATASTOREBUFFER<262208>>, 0x00704130<CACHEENTRY>, 0x009A3670<EQUIPMENT_SET>]
 template <class T>
 TSObjectAllocPool<T>::TSObjectAllocPool(const char* name, uint32_t objectsPerBlock) {
     this->m_liveCount = 0;
@@ -23,7 +23,7 @@ void TSObjectAllocPool<T>::Delete(T* object, const char* file, int32_t line) {
     ObjectFree(this->m_heapId, object->m_handle, object, file, line);
 }
 
-// OFFSET: [0x00747900<CMapObjOccluder>, 0x00775940/0x140460020<CMapObjGroup>, 0x007759C0<CMapObj>, 0x00775A40/0x140460100<CMapArea>, 0x00775AC0<CMapAreaLow>, 0x00775B40<CMapChunk>, 0x00775BC0<CMapRenderChunk>, 0x00775C40/0x1404602C0<CMapChunkBuf>, 0x00775CC0<CMapDoodadDef>, 0x00775D40/0x1404603A0<CMapEntity>, 0x00775DC0/0x140460410<CMapObjDefGroup>, 0x00775E40<CMapObjDef>, 0x00775EC0/0x1404604F0<CChunkLiquid>, 0x007765E0/0x140460C90<CMapBaseObjLink>, 0x00739330<CDetailDoodadInstBatch>, 0x00739C20<CDetailDoodadInst>, 0x008282A0/0x140547400<CM2Model>, 0x004C5E80/0x1400A7FE0<WDATASTOREBUFFER<768>>, 0x005EB310<CVehicle_C>, 0x00701960/0x1403CEC00<CCharacterComponent>, 0x00704180<CACHEENTRY>, 0x00588DC0<CMissile>, 0x009A1530<EQUIPMENT_SET>, 0x009F49E0<CGResearchFrame::BRANCH>, 0x009F4A50<CGResearchFrame::PROJECT>]
+// OFFSET: [0x00747900<CMapObjOccluder>, 0x00775940/0x140460020<CMapObjGroup>, 0x007759C0<CMapObj>, 0x00775A40/0x140460100<CMapArea>, 0x00775AC0<CMapAreaLow>, 0x00775B40<CMapChunk>, 0x00775BC0<CMapRenderChunk>, 0x00775C40/0x1404602C0<CMapChunkBuf>, 0x00775CC0<CMapDoodadDef>, 0x00775D40/0x1404603A0<CMapEntity>, 0x00775DC0/0x140460410<CMapObjDefGroup>, 0x00775E40<CMapObjDef>, 0x00775EC0/0x1404604F0<CChunkLiquid>, 0x007765E0/0x140460C90<CMapBaseObjLink>, 0x00739330<CDetailDoodadInstBatch>, 0x00739C20<CDetailDoodadInst>, 0x008282A0/0x140547400<CM2Model>, 0x004C5E80/0x1400A7FE0<WDATASTOREBUFFER<768>>, 0x005EB310<CVehicle_C>, 0x00701960/0x1403CEC00<CCharacterComponent>, 0x00704180<CACHEENTRY>, 0x00588DC0<CMissile>, 0x009A1530<EQUIPMENT_SET>, 0x009F49E0<CGResearchFrame::BRANCH>, 0x009F4A50<CGResearchFrame::PROJECT>, 0x0057D6F0<CMissileCollision>, 0x005CAC50<UnitThreat>, 0x005DF7D0<CGObject_C::FadeoutInfo>, 0x005E92F0<CVehicleCamera_C>, 0x005F1270<CVehiclePassenger_C>]
 template <class T>
 T* TSObjectAllocPool<T>::New(const char* file, int32_t line) {
     uint32_t memHandle;
@@ -46,7 +46,7 @@ T* TSObjectAllocPool<T>::New(const char* file, int32_t line) {
     return object;
 }
 
-// OFFSET: [0x00814F30/0x14052D100<CM2Model>]
+// OFFSET: [0x00814F30/0x14052D100<CM2Model>, 0x005F16F0<CVehiclePassenger_C>]
 template <class T>
 void TSObjectAllocPool<T>::Delete(T* object) {
     this->Delete(object, "", 0);

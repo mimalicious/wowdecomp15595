@@ -2764,7 +2764,7 @@ int32_t World::NDCXform(const CFrustum& frustum, C44Matrix& matrix, bool transla
     return 1;
 }
 
-// INLINED
+// OFFSET: 0x004430A0
 World::FacetData::FacetData() {
     this->facets.m_chunk = 256;
     this->facetIds.m_chunk = 256;

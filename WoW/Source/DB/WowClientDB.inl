@@ -66,7 +66,7 @@ T* WowClientDB<T>::GetRecord(int32_t id) const {
     return reinterpret_cast<T*>(this->m_recordsById[id - this->m_minID]);
 }
 
-// OFFSET: [%0x0046FFB0, %0x0046FFD0, %0x0049E630]
+// OFFSET: [%0x0046FFB0, %0x0046FFD0, %0x0049E630, 0x00465E00<ScalingStatValuesRec>, 0x004977F0<BattlemasterListRec>, 0x00497840<GameTipsRec>]
 template <class T>
 T* WowClientDB<T>::GetRecordByIndex(int32_t index) const {
     if (index < 0 || index >= this->m_numRecords) {

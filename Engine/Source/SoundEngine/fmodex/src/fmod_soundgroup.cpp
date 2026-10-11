@@ -11,7 +11,7 @@ namespace FMOD
 /*$ preserve end $*/
 
 
-// OFFSET: #0x008D1B30
+// OFFSET: 0x00A7B780
 FMOD_RESULT SoundGroup::release()
 {
     FMOD_RESULT result;
@@ -46,7 +46,7 @@ FMOD_RESULT SoundGroup::getSystemObject(System **system)
 }
 
 
-// OFFSET: #0x008D1B60
+// OFFSET: 0x00A7B7B0
 FMOD_RESULT SoundGroup::setMaxAudible(int maxaudible)
 {
     FMOD_RESULT result;
@@ -81,7 +81,7 @@ FMOD_RESULT SoundGroup::getMaxAudible(int *maxaudible)
 }
 
 
-// OFFSET: #0x008D1B90
+// OFFSET: 0x00A7B7E0
 FMOD_RESULT SoundGroup::setMaxAudibleBehavior(FMOD_SOUNDGROUP_BEHAVIOR behavior)
 {
     FMOD_RESULT result;
@@ -116,7 +116,7 @@ FMOD_RESULT SoundGroup::getMaxAudibleBehavior(FMOD_SOUNDGROUP_BEHAVIOR *behavior
 }
 
 
-// OFFSET: #0x008D1BC0
+// OFFSET: 0x00A7B810
 FMOD_RESULT SoundGroup::setMuteFadeSpeed(float speed)
 {
     FMOD_RESULT result;

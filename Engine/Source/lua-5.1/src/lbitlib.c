@@ -96,7 +96,7 @@ static const struct luaL_Reg bitlib[] = {
 };
 
 
-// INLINED
+// OFFSET: 0x00A2A260
 LUALIB_API int luaopen_bit (lua_State *L) {
   luaL_openlib(L, "bit", bitlib, 0);
   return 1;

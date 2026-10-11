@@ -129,7 +129,7 @@ static const char *findlocal (lua_State *L, CallInfo *ci, int n) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425080
 LUA_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
   CallInfo *ci = L->base_ci + ar->i_ci;
   const char *name = findlocal(L, ci, n);
@@ -239,7 +239,7 @@ static int auxgetinfo (lua_State *L, const char *what, lua_Debug *ar,
 }
 
 
-// INLINED
+// OFFSET: 0x00425C90
 LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
   int status;
   Closure *f = NULL;

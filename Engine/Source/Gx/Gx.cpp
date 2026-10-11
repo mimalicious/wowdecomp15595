@@ -491,7 +491,7 @@ void GxDrawNonIndexed(const CGxBatch& batch) {
     g_theGxDevicePtr->DrawNonIndexed(batch);
 }
 
-// OFFSET: %0x004E6690
+// OFFSET: 0x004E0640
 void GxDraw(const CGxBatch& batch) {
     g_theGxDevicePtr->Draw(batch);
 }
@@ -569,7 +569,7 @@ int32_t GxIsWindowVisible() {
     return g_theGxDevicePtr ? g_theGxDevicePtr->CapsIsWindowVisible(-1) : 0;
 }
 
-// INLINED
+// OFFSET: 0x00430AF0
 int32_t GxMasterEnable(EGxMasterEnables state) {
     return g_theGxDevicePtr->MasterEnable(state);
 }

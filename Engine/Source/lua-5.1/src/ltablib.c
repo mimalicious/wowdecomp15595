@@ -341,7 +341,7 @@ static const luaL_Reg tab_funcs[] = {
 };
 
 
-// INLINED
+// OFFSET: 0x00A2B470
 LUALIB_API int luaopen_table (lua_State *L) {
   luaL_register(L, LUA_TABLIBNAME, tab_funcs);
   return 1;

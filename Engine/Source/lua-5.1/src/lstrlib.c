@@ -1012,7 +1012,7 @@ static void createmetatable (lua_State *L) {
 /*
 ** Open string library
 */
-// INLINED
+// OFFSET: 0x00A2D330
 LUALIB_API int luaopen_string (lua_State *L) {
   luaL_register(L, LUA_STRLIBNAME, strlib);
 #if defined(LUA_COMPAT_GFIND)
