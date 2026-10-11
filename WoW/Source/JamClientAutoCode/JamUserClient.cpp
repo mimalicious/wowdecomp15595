@@ -228,14 +228,133 @@ void UserClientSupportTicketSubmitComplaint::Put(CDataStore* msg) {
     this->m_chatLog.Put(msg);
 }
 
+// OFFSET: 0x00670260
+UserClientSendMail::UserClientSendMail() {
+}
+
 // PROVEN: bb06eec1 IDENTICAL/NONE
 // OFFSET: 0x00670290
 UserClientReorderCharacters::UserClientReorderCharacters() {
 }
 
+// OFFSET: 0x00670310
+UserClientSendMail::~UserClientSendMail() {
+}
+
 // PROVEN: 2291a9d0 IDENTICAL/NONE
 // OFFSET: 0x00670360
 UserClientReorderCharacters::~UserClientReorderCharacters() {
+}
+
+// OFFSET: 0x0066ECF0
+void UserClientSendMail::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x523));
+    msg->Put(static_cast<uint32_t>(this->m_packageID));
+    msg->Put(static_cast<uint32_t>(this->m_stationeryID));
+    msg->Put(this->m_cod);
+    msg->Put(this->m_sendMoney);
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<12>(strlen(this->m_body));
+    bits.WriteBits<9>(strlen(this->m_subject));
+    bits.WriteBits<5>(this->m_attachments.Count());
+    bits.WriteBit(this->m_mailbox[0] != 0);
+
+    for (uint32_t i = 0; i < this->m_attachments.Count(); i++) {
+        const JamCliStructMailAttachment& attachment = this->m_attachments[i];
+        bits.WriteBit(attachment.m_itemGUID[2] != 0);
+        bits.WriteBit(attachment.m_itemGUID[6] != 0);
+        bits.WriteBit(attachment.m_itemGUID[3] != 0);
+        bits.WriteBit(attachment.m_itemGUID[7] != 0);
+        bits.WriteBit(attachment.m_itemGUID[1] != 0);
+        bits.WriteBit(attachment.m_itemGUID[0] != 0);
+        bits.WriteBit(attachment.m_itemGUID[4] != 0);
+        bits.WriteBit(attachment.m_itemGUID[5] != 0);
+    }
+
+    bits.WriteBit(this->m_mailbox[3] != 0);
+    bits.WriteBit(this->m_mailbox[4] != 0);
+    bits.WriteBits<7>(strlen(this->m_target));
+    bits.WriteBit(this->m_mailbox[2] != 0);
+    bits.WriteBit(this->m_mailbox[6] != 0);
+    bits.WriteBit(this->m_mailbox[1] != 0);
+    bits.WriteBit(this->m_mailbox[7] != 0);
+    bits.WriteBit(this->m_mailbox[5] != 0);
+    bits.Flush();
+
+    if (this->m_mailbox[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[4] ^ 1));
+    }
+
+    for (uint32_t i = 0; i < this->m_attachments.Count(); i++) {
+        const JamCliStructMailAttachment& attachment = this->m_attachments[i];
+        if (attachment.m_itemGUID[6]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[6] ^ 1));
+        }
+
+        if (attachment.m_itemGUID[1]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[1] ^ 1));
+        }
+
+        if (attachment.m_itemGUID[7]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[7] ^ 1));
+        }
+
+        if (attachment.m_itemGUID[2]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[2] ^ 1));
+        }
+
+        msg->Put(attachment.m_attachPosition);
+
+        if (attachment.m_itemGUID[3]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[3] ^ 1));
+        }
+
+        if (attachment.m_itemGUID[0]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[0] ^ 1));
+        }
+
+        if (attachment.m_itemGUID[4]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[4] ^ 1));
+        }
+
+        if (attachment.m_itemGUID[5]) {
+            msg->Put(static_cast<uint8_t>(attachment.m_itemGUID[5] ^ 1));
+        }
+    }
+
+    if (this->m_mailbox[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[7] ^ 1));
+    }
+
+    if (this->m_mailbox[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[3] ^ 1));
+    }
+
+    if (this->m_mailbox[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[6] ^ 1));
+    }
+
+    if (this->m_mailbox[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[5] ^ 1));
+    }
+
+    msg->PutData(this->m_subject, strlen(this->m_subject));
+    msg->PutData(this->m_target, strlen(this->m_target));
+
+    if (this->m_mailbox[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[2] ^ 1));
+    }
+
+    if (this->m_mailbox[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[0] ^ 1));
+    }
+
+    msg->PutData(this->m_body, strlen(this->m_body));
+
+    if (this->m_mailbox[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_mailbox[1] ^ 1));
+    }
 }
 
 // OFFSET: 0x0066F610

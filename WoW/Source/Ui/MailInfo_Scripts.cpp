@@ -14,6 +14,7 @@
 #include "Engine/Source/Os/Time.h"
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include "WoW/Source/Ui/Types.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
@@ -950,31 +951,29 @@ static int32_t Script_SendMail(lua_State* L) {
         return 0;
     }
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_SEND_MAIL));
-    msg.Put(mailbox.m_guid);
-    msg.PutString(target);
-    msg.PutString(subject);
-    msg.PutString(body);
-    msg.Put(static_cast<uint32_t>(stationery));
-    msg.Put(static_cast<uint32_t>(package));
-    msg.Put(static_cast<uint8_t>(count));
+    UserClientSendMail message;
+    memcpy(message.m_mailbox, &mailbox, sizeof(message.m_mailbox));
+    SStrCopy(message.m_target, target, sizeof(message.m_target));
+    SStrCopy(message.m_subject, subject, sizeof(message.m_subject));
+    SStrCopy(message.m_body, body, sizeof(message.m_body));
+    message.m_stationeryID = stationery;
+    message.m_packageID = package;
+    message.m_attachments.SetCount(count);
+    uint32_t index = 0;
 
     for (uint32_t i = 0; i < 16; i++) {
         WOWGUID guid = CGMailInfo::GetSendItemGuid(i);
 
         if (guid) {
-            msg.Put(static_cast<uint8_t>(i));
-            msg.Put(guid.m_guid);
+            message.m_attachments[index].m_attachPosition = static_cast<uint8_t>(i);
+            memcpy(message.m_attachments[index].m_itemGUID, &guid, sizeof(guid));
+            index++;
         }
     }
 
-    msg.Put(money);
-    msg.Put(cod);
-    msg.Put(static_cast<uint64_t>(0));
-    msg.Put(static_cast<uint8_t>(0));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    message.m_sendMoney = money;
+    message.m_cod = cod;
+    ClientServices::Send(&message);
     CGMailInfo::m_sendPending = 1;
     CGMailInfo::m_commandPending = 1;
     return 0;

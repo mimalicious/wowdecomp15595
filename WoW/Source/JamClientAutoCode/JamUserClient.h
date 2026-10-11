@@ -16,6 +16,12 @@ struct JamUserClientReorderEntry {
     JamUserClientReorderEntry(const JamUserClientReorderEntry& source);
 };
 
+struct JamCliStructMailAttachment {
+    /* 0000 */ uint8_t m_itemGUID[8];
+    /* 0008 */ uint8_t m_attachPosition;
+    /* 0009 */ uint8_t unk_0009[7];
+};
+
 class UserClientCancelQueuedSpell : public JamClientMessage {
     public:
     void Put(CDataStore* msg) override;
@@ -190,6 +196,24 @@ class UserClientReorderCharacters : public JamClientMessage {
 
     UserClientReorderCharacters();
     ~UserClientReorderCharacters();
+};
+
+class UserClientSendMail : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_mailbox[8];
+    /* 0018 */ char m_target[48];
+    /* 0048 */ char m_subject[256];
+    /* 0148 */ char m_body[2000];
+    /* 0918 */ int32_t m_stationeryID;
+    /* 091C */ int32_t m_packageID;
+    /* 0920 */ TSGrowableArray<JamCliStructMailAttachment> m_attachments;
+    /* 0930 */ uint64_t m_sendMoney;
+    /* 0938 */ uint64_t m_cod;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSendMail();
+    ~UserClientSendMail();
 };
 
 class UserClientGenerateRandomCharacterName : public JamClientMessage {
