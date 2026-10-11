@@ -66,7 +66,7 @@ BSN::Protocol::Protocol::Protocol(const uint8_t* bytecode, uint32_t bytecodeSize
     }
 }
 
-// OFFSET: #0x00889F80
+// OFFSET: 0x00665A10/0x14030BF60
 const uint8_t* BSN::Protocol::Protocol::TypeInfo(uint32_t typeId) const {
     const uint8_t* cursor = &this->m_typeOffsets[4 * typeId];
     uint32_t offset = 0;

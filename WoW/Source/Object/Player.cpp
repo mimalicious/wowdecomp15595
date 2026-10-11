@@ -123,9 +123,9 @@ int32_t CGPlayer::HasZoneExplored(int32_t zone) {
     return this->m_player->m_playerExploredZones1[zone / 8] & (1 << (zone % 8));
 }
 
-// OFFSET: #0x004F5530
+// OFFSET: 0x00A27D50
 int32_t CGPlayer::TotalFields() {
-    return CGUnit::TotalFields() + 1043;
+    return CGUnit::TotalFields() + 1104;
 }
 
 // OFFSET: #0x004F5540

@@ -92,7 +92,7 @@ int32_t ComSat::Sound::Manager::GetMinEncodedFrameLength() {
     return ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength;
 }
 
-// OFFSET: #0x00881390
+// OFFSET: 0x00A34910/0x1407DF190
 int32_t ComSat::Sound::Manager::GetMaxEncodedFrameLength() {
     return ComSat::Sound::CODECIPMR6000::s_maxEncodedFrameLength;
 }

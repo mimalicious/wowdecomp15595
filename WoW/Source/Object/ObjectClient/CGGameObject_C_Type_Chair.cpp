@@ -114,7 +114,7 @@ bool CGGameObject_C_Type_Chair::CanUseNow(GAME_ERROR_TYPE* error, float* distanc
     return false;
 }
 
-// OFFSET: #0x004F55F0
+// OFFSET: 0x00A27E00/0x1407CF600
 void GenerateChairPoints(const C44Matrix& matrix, uint32_t count, C3Vector* points, float offset) {
     C3Vector point;
     point.x = 0.0f;

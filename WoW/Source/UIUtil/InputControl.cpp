@@ -150,7 +150,7 @@ void InputControlDestroy() {
     CGInputControl::Destroy();
 }
 
-// OFFSET: %0x00452140
+// OFFSET: 0x00447980/0x1400541D0
 void CGInputControl::UpdateHalted() {
     this->m_flags &= ~0xF0000;
 }

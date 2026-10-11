@@ -83,7 +83,7 @@ int32_t CGAutoCompleteName::GetPresenceID(const char* name, uint32_t* presenceId
     return 0;
 }
 
-// OFFSET: #0x0057B330
+// OFFSET: 0x009CB870
 void CGAutoCompleteName::ResortAll() {
     for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
         AUTOCOMPLETE_NAMENODE* next = node->RawNext();

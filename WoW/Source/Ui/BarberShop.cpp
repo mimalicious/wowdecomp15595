@@ -50,7 +50,7 @@ STYLEREC* CGBarberShop::m_currentSkinColor;
 // STATIC: #0x00BD19C4
 TSHashTable<USEABLESTYLE, HASHKEY_NONE> CGBarberShop::m_useableStyles;
 
-// OFFSET: #0x0052E480
+// OFFSET: 0x008FF5C0
 float CGBarberShop::GetMinCameraDistance() {
     return CGBarberShop::m_minCameraDistance;
 }

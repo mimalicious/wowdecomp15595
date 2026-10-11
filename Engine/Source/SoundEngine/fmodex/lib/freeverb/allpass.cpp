@@ -29,7 +29,7 @@ void allpass::mute()
 		buffer[i]=0;
 }
 
-// OFFSET: #0x00945140
+// OFFSET: 0x00AF5430/0x1408BE430
 void allpass::setfeedback(float val) 
 {
 	feedback = val;

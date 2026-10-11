@@ -77,7 +77,7 @@ const char* g_LoginStateStringNames[20] = {
 // STATIC: #0x00B38CD4
 uint32_t Login::s_fourCCprogramID;
 
-// OFFSET: #0x00465480
+// OFFSET: 0x004C5090/0x1401001A0
 void LoginResponse::UpdateLoginStatus(LOGIN_STATE state, LOGIN_RESULT result, const char* addressString, uint16_t flags) {
     char stateString[64];
     char resultString[64];

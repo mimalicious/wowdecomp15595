@@ -277,66 +277,11 @@ void CGSkillInfo::ExpandHeader(uint32_t index) {
     }
 }
 
-// OFFSET: #0x005CD9B0
+// OFFSET: 0x009E2180/0x1407793A0
 void PlayerSignalSkillStatChanges() {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player) {
-        return;
+    if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_SKILL_LINES_CHANGED, NULL);
     }
-
-    CGSkillInfo::m_expandedTypes = -1;
-    CGSkillInfo::m_numLines = 0;
-    CGSkillInfo::m_numTypes = 0;
-    CGSkillInfo::m_numSkillLines = 0;
-    CGSkillInfo::m_skillUpPoints = 0;
-
-    for (uint32_t i = 0; i < 128; i++) {
-        CGPlayerLocalData* data = static_cast<CGPlayerLocalData*>(player->m_player);
-        uint16_t skillId = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? data->m_playerSkillLineid0[i] : 0;
-
-        if (!skillId) {
-            continue;
-        }
-
-        SkillLineRec* rec = g_skillLineDB.GetRecord(skillId);
-        const SkillRaceClassInfoRec* info = SpellTableLookupInfo(player->m_unit->m_unitFieldBytes0[0], player->m_unit->m_unitFieldBytes0[1], skillId);
-
-        if (!rec || !info || !g_skillLineCategoryDB.GetRecord(rec->m_categoryID) || (info->m_flags & 2)) {
-            continue;
-        }
-
-        uint16_t rank = data->m_playerSkillRank0[i];
-
-        if (!(info->m_flags & 1) && !rank && (!(info->m_flags & 4) || static_cast<int32_t>(player->m_unit->m_unitFieldLevel) < info->m_minLevel)) {
-            continue;
-        }
-
-        CGSkillInfo::m_lines.m_data[CGSkillInfo::m_numLines]->m_skillLineID = skillId;
-        CGSkillInfo::m_lines.m_data[CGSkillInfo::m_numLines]->m_categoryID = rec->m_categoryID;
-        CGSkillInfo::m_lines.m_data[CGSkillInfo::m_numLines]->unk_000C = rank == 0;
-        CGSkillInfo::m_lines.m_data[CGSkillInfo::m_numLines]->m_skillUps = 0;
-        CGSkillInfo::m_numLines++;
-
-        uint32_t type;
-
-        for (type = 0; type < CGSkillInfo::m_numTypes; type++) {
-            if (CGSkillInfo::m_types.m_data[type]->m_categoryID == rec->m_categoryID) {
-                break;
-            }
-        }
-
-        if (type != CGSkillInfo::m_numTypes) {
-            continue;
-        }
-
-        CGSkillInfo::m_types.m_data[CGSkillInfo::m_numTypes++]->m_categoryID = rec->m_categoryID;
-        CGSkillInfo::m_lines.m_data[CGSkillInfo::m_numLines]->m_skillLineID = 0;
-        CGSkillInfo::m_lines.m_data[CGSkillInfo::m_numLines]->m_categoryID = rec->m_categoryID;
-        CGSkillInfo::m_numLines++;
-    }
-
-    CGSkillInfo::UpdateSkillLines();
 }
 
 // OFFSET: #0x005CD710

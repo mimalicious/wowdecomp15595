@@ -1066,7 +1066,7 @@ int32_t CGWorldMap::GetCurrentMapHeight() {
     return static_cast<int32_t>(height * 1002.0 / width);
 }
 
-// OFFSET: #0x005444F0
+// OFFSET: 0x0091DA70/0x14067F640
 bool CGWorldMap::GetPlayerPosition(WOWGUID guid, float* x, float* y) {
     *x = 0.0f;
     *y = 0.0f;

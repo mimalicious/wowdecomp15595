@@ -833,7 +833,7 @@ static int32_t Script_GetLFGProposal(lua_State* L) {
     return PushLFGProposalInfo(L);
 }
 
-// OFFSET: #0x005553F0
+// OFFSET: 0x00982B70/0x1406FD740
 static int32_t PushDungeonInfo(lua_State* L, int32_t dungeonId) {
     LfgDungeonsRec* rec = g_lfgDungeonsDB.GetRecord(dungeonId);
 
