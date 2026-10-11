@@ -11527,23 +11527,6 @@ int32_t CGUnit_C::GetCreatureType() const {
     return race->m_creatureType;
 }
 
-// OFFSET: #0x0071F390
-PetPersonalityRec* CGUnit_C::GetPetPersonality() const {
-    CGUnitData* unit = this->m_unit;
-
-    if (!unit->m_unitFieldPetnumber) {
-        return NULL;
-    }
-
-    CGUnit_C* owner = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(unit->m_unitFieldCreatedby, TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!owner || owner->m_unit->m_unitFieldBytes0[1] != 3) {
-        return NULL;
-    }
-
-    return g_petPersonalityDB.GetRecord(1);
-}
-
 // OFFSET: 0x005B9060
 void CGUnit_C::GetFootprintInfo(int32_t* textureId, float* size) const {
     float length;

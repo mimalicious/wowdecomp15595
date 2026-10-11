@@ -54,56 +54,6 @@ static char s_addOnAccountName[1280];
 // STATIC: #0x00C24918
 static bool s_addOnsInitialized;
 
-// OFFSET: #0x005F4910
-static void ReadDataInterfaceVersion() {
-    void* data;
-
-    if (!SFile::ReadFile(NULL, "Interface\\FrameXML\\FrameXML.toc", &data, NULL, 1, 1)) {
-        return;
-    }
-
-    const char* text = static_cast<const char*>(data);
-
-    if (static_cast<uint8_t>(text[0]) == 0xEF && static_cast<uint8_t>(text[1]) == 0xBB && static_cast<uint8_t>(text[2]) == 0xBF) {
-        text += 3;
-    }
-
-    char line[1024];
-
-    do {
-        SStrTokenize(&text, line, sizeof(line), "\r\n", NULL);
-
-        if (!*text) {
-            break;
-        }
-
-        if (line[0] == '#' && line[1] == '#') {
-            const char* value = &line[2];
-
-            while (*value == ' ') {
-                value++;
-            }
-
-            if (!SStrCmpI(value, "Interface: ", SStrLen("Interface: "))) {
-                while (*value != ' ') {
-                    value++;
-                }
-
-                while (*value == ' ') {
-                    value++;
-                }
-
-                s_dataInterfaceVersion = SStrToUnsigned(value);
-                break;
-            }
-        } else if (!line[0]) {
-            break;
-        }
-    } while (*text);
-
-    SFile::Unload(data);
-}
-
 // OFFSET: #0x005F4C10
 uint32_t GetCodeInterfaceVersion() {
     return 30300;

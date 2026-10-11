@@ -740,7 +740,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SetManaRegenInterrupt();
     int32_t UsesNpcBakedTexture() const;
     int32_t GetCreatureType() const;
-    PetPersonalityRec* GetPetPersonality() const;
     void GetFootprintInfo(int32_t* textureId, float* size) const;
     int32_t IsControlledByViewer() const;
     bool CanAttack(const CGUnit_C* unit, bool ignoreFlags = false) const;
