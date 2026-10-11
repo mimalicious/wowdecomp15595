@@ -161,6 +161,10 @@
 #include "WoW/Source/Ui/WorldFrame.h"
 #include "WoW/Source/Ui/GMTicketInfo.h"
 #include "WoW/Source/Ui/EquipmentManager.h"
+#include "WoW/Source/Ui/Reforge.h"
+#include "WoW/Source/Ui/Transmogrify.h"
+#include "WoW/Source/Ui/VoidStorageInfo.h"
+#include "WoW/Source/DB/DBClient/CreatureStats_C.h"
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/JamClientAutoCode/JamGlobal.h"
 #include "Engine/Source/Frame/Movie.h"
@@ -8399,6 +8403,21 @@ void CGPlayer_C::HandleOnRightClick(CGUnit_C* unit, bool autoInteract) {
         return;
     }
 
+    if (unit->m_obj->m_type == (TYPEMASK_OBJECT | TYPEMASK_UNIT)) {
+        CreatureStats_C* stats = unit->m_creatureCacheEntry;
+
+        if (!stats) {
+            return;
+        }
+
+        if (stats->m_expansion > ClientServices::Connection()->m_accountExpansion) {
+            char token[64];
+            SStrPrintf(token, sizeof(token), "EXPANSION_NAME%d", stats->m_expansion);
+            CGGameUI::DisplayError(ERR_REQUIRES_EXPANSION_S, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE));
+            return;
+        }
+    }
+
     if (unit->m_obj->m_guid == CGGameUI::m_interactTarget) {
         return;
     }
@@ -8409,7 +8428,7 @@ void CGPlayer_C::HandleOnRightClick(CGUnit_C* unit, bool autoInteract) {
 
     WOWGUID guid = unit->m_obj->m_guid;
 
-    if (unit->m_interactIconType == 7) {
+    if (unit->m_interactIconType == 2) {
         CGPlayer_C::EnableTaxiNode(guid);
 
         if (!CGUnit_C::UnitCanGossip(unit)) {
@@ -8432,7 +8451,12 @@ void CGPlayer_C::HandleOnRightClick(CGUnit_C* unit, bool autoInteract) {
     uint32_t npcFlags = unit->m_unit->m_unitNpcFlags;
 
     if (npcFlags & 0x2000) {
-        CGPlayer_C::QueryTaxiNodes(guid);
+        if (unit->m_interactIconType == 3) {
+            CGGameUI::DisplayError(ERR_TAXINOTELIGIBLE);
+        } else {
+            CGPlayer_C::QueryTaxiNodes(guid);
+        }
+
         this->RequestTalkEmote(0);
     } else if (npcFlags & 0x80) {
         CGPlayer_C::ShopFromMerchant(guid);
@@ -8474,11 +8498,18 @@ void CGPlayer_C::HandleOnRightClick(CGUnit_C* unit, bool autoInteract) {
         CGPlayer_C::TalkToGuildBanker(guid);
         this->RequestTalkEmote(0);
     } else if (unit->IsInPartyOrRaid()) {
+        this->SetAutoLoot(CGGameUI::IsAutoLooting());
         CGPlayer_C::TalkToSpellClick(guid);
     } else if (unit->CanBeSpellClickedByLocalPlayer(this)) {
         CGPlayer_C::TalkToRideVehicle(guid);
     } else if (unit->m_unit->m_unitNpcFlags & 0x4000000) {
         CGPlayer_C::TalkToMailbox(unit->m_obj->m_guid);
+    } else if (unit->m_unit->m_unitNpcFlags & 0x8000000) {
+        CGReforge::SetForgeMaster(guid);
+    } else if (unit->m_unit->m_unitNpcFlags & 0x20000000) {
+        CGVoidStorageInfo::SetNPC(guid);
+    } else if (unit->m_unit->m_unitNpcFlags & 0x10000000) {
+        CGTransmogrify::SetTransmogrifier(guid);
     }
 }
 

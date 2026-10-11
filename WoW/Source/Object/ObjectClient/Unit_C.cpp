@@ -17013,7 +17013,8 @@ void CGUnit_C::OnSetActiveMover() {
 // OFFSET: 0x005B6810
 void CGUnit_C::SetLocalClientControl(bool control) {
     if (control) {
-        this->m_clientFlags |= 0xC000400;
+        this->m_clientFlags |= 0x400;
+        this->unk_09FC |= 0x300;
     } else {
         this->m_clientFlags &= ~0x400;
 
