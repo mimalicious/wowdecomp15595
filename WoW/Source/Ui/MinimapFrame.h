@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "WoW/Source/WorldClient/World.h"
+#include "WoW/Source/Game/GameClient/Minimap.h"
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Frame/CSimpleFrame.h"
 #include "Engine/Source/Gx/CGxTex.h"
@@ -35,37 +36,6 @@ struct MINIMAPQUAD {
     /* 0010 */ C2Vector m_origin;
 };
 
-struct MINIMAPTILE {
-    /* 0000 */ C3Vector m_vertices[4];
-    /* 0030 */ C2Vector m_texCoords[4];
-    /* 0050 */ C2Vector m_maskCoords[4];
-    /* 0070 */ CAaBox m_bounds;
-    /* 0088 */ MINIMAPTILE* m_nextSorted;
-    /* 008C */ float m_depth;
-    /* 0090 */ CTexture* m_texture;
-    /* 0094 */ uint32_t m_flags;
-    /* 0098 */ int32_t m_x;
-    /* 009C */ int32_t m_y;
-    /* 00A0 */ int32_t m_groupId;
-
-    void BuildQuad(const CRect& rect, uint32_t index, const C2Vector* center, float scale, const CRect& bounds, float layoutScale, float width);
-    void Render(uint32_t index, const CImVector* color);
-    void UpdateQuad(uint32_t index, C2Vector center, float scale, float layoutScale, float width);
-};
-
-struct MINIMAPINDOOR {
-    /* 0000 */ uint8_t m_active;
-    /* 0001 */ uint8_t m_pad1[3];
-    /* 0004 */ CTexture* m_texture;
-    /* 0008 */ uint8_t m_dirty;
-    /* 0009 */ uint8_t m_pad2[3];
-    /* 000C */ float m_radius;
-    /* 0010 */ C3Vector m_center;
-    /* 001C */ C3Vector m_position;
-    /* 0028 */ C44Matrix m_matrix;
-    /* 0068 */ C44Matrix m_invMatrix;
-};
-
 struct OBJINFO {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ C2Vector m_position;
@@ -79,16 +49,6 @@ struct OBJINFO {
     /* 0024 */ uint32_t unk_0024;
 };
 
-struct MEMBERINFO {
-    /* 0000 */ WOWGUID m_guid;
-    /* 0008 */ char m_name[48];
-    /* 0038 */ int32_t m_offMap;
-    /* 003C */ int32_t m_onMap;
-    /* 0040 */ C2Vector m_position;
-    /* 0048 */ float m_facing;
-    /* 004C */ int32_t m_class;
-};
-
 struct MINIMAPENUMPARAM {
     /* 0000 */ CGPlayer_C* m_player;
     /* 0004 */ int32_t m_wmoId;
@@ -97,13 +57,6 @@ struct MINIMAPENUMPARAM {
     /* 0018 */ float m_radius;
     /* 001C */ float m_scale;
     /* 0020 */ CGMinimapFrame* m_frame;
-};
-
-struct POIDIRECTIONDATA {
-    /* 0000 */ char m_name[64];
-    /* 0040 */ float m_facing;
-    /* 0044 */ int32_t m_alwaysShow;
-    /* 0048 */ int32_t m_dynamicIndex;
 };
 
 struct POIINFO {
@@ -125,7 +78,6 @@ struct TrackingTypeInfo {
     /* 0010 */ uint32_t m_classMask;
 };
 
-void DisplayQuestPoint(float x, float y, int32_t importance, const char* name);
 
 class CGMinimapFrame : public CSimpleFrame {
     public:
@@ -146,6 +98,7 @@ class CGMinimapFrame : public CSimpleFrame {
     static int32_t s_objectType;
 
     static bool IsTrackingTrivialQuests();
+    static bool IsTrackingDynamicPOI();
     static const char* s_objectTypeName;
     static CGMinimapFrame* s_minimapFrame;
     static int32_t s_rotateMinimap;
@@ -223,22 +176,9 @@ extern CTexture* s_iconTexture;
 void MinimapRegisterScriptFunctions();
 void MinimapUnregisterScriptFunctions();
 
-void MinimapInitialize(int32_t mapId);
-int32_t MinimapUpdate(uintptr_t entity, int32_t mapId, const C3Vector* position, C2Vector* center, float* scale, MINIMAPTILE* tiles, MINIMAPINDOOR* indoor, int32_t force);
-TSGrowableArray<AreaPOIRec*>* MinimapGetPOI(int32_t* changed);
-float MinimapGetViewRadius();
-AreaPOIRec* MinimapGetGossipPoi();
-void UpdatePointsOfInterest();
-void RefreshWorldStatePOIs(uint32_t state);
-void MinimapShutdown();
-void MinimapSetDynamicPOI(int32_t index, int32_t flags, float x, float y, int32_t icon, int32_t importance, const char* name);
-void MinimapSetCorpsePOI(float x, float y);
-void MinimapSetSpiritHealerPOI(float x, float y);
 
-int32_t MinimapGetZoom();
 int32_t MinimapGetZoomLevels();
 
-void MinimapSetZoom(uint32_t zoom);
 
 #include "WoW/Source/Ui/MinimapFrame.inl"
 
