@@ -53,7 +53,7 @@ CModelBlob::~CModelBlob() {
     s_modelBlobHT.Clear();
 }
 
-// OFFSET: %0x00555A30
+// OFFSET: 0x00548650
 void ModelBlobDestroy() {
     if (s_modelBlob) {
         delete s_modelBlob;

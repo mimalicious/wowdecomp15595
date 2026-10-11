@@ -306,3 +306,12 @@ void PreloadList::WaitAll() {
         LoadingScreenUpdateProgress(1.0f, 0);
     }
 }
+
+// OFFSET: 0x00547100
+void PreloadList::Shutdown() {
+    for (std::list<PreloadList*, Blizzard::Memory::AllocSTL_raw<PreloadList*> >::iterator it = s_lists.begin(); it != s_lists.end();) {
+        PreloadList* list = *it;
+        ++it;
+        PreloadList::StopDownload(list);
+    }
+}

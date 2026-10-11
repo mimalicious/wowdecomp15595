@@ -15,6 +15,7 @@ class PreloadList {
     static PreloadList* StartDownload(int32_t raceID, int32_t classID, int32_t waitAll);
     static void StopDownload(PreloadList* list);
     static void WaitAll();
+    static void Shutdown();
 
     /* 0000 */ TSGrowableArray<CAsyncObject*> m_objects;
     /* 0010 */ char m_name[260];

@@ -24,7 +24,9 @@
 #include "Engine/Source/FrameXML/XMLTree.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/Gx.h"
+#include "Engine/Source/Gxu/GxuDebugDraw.h"
 #include "Engine/Source/Gxu/GxuLight.h"
+#include "Engine/Source/Gxu/GxuScene.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "Engine/Source/Model2/M2Cache.h"
 #include "Engine/Source/Os/Gui.h"
@@ -38,6 +40,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Scrn/Scrn.h"
 #include "Engine/Source/Services/AsyncFile.h"
+#include "Engine/Source/Services/FileNotification.h"
 #include "Engine/Source/Services/ModelBlob.h"
 #include "Engine/Source/Services/Profile.h"
 #include "Engine/Source/Services/SysMessage.h"
@@ -85,6 +88,7 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/Object/ObjectClient/VoidStorage_C.h"
+#include "WoW/Source/Glue/CharacterSelection.h"
 #include "WoW/Source/ObjectAlloc/ObjectAlloc.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/SoundInterface/SI3.h"
@@ -1886,6 +1890,31 @@ static void WowClientDestroy() {
     ClientDBShutdown();
     StaticDBUnloadAll();
     SysMsgShutdown();
+}
+
+// OFFSET: 0x00407200
+int32_t DestroyEngineCallback(const void* data, void* param) {
+    RemoveConsoleDeviceDefaultCallback(SetDefaults);
+    ClientDestroyGame(0, 0, 0);
+    WowClientDestroy();
+    ClientServices::ClearMessageHandler(SMSG_TUTORIAL_FLAGS);
+    ClientServices::Destroy();
+    World::Destroy();
+    g_scene.Clear();
+    GxuShutdownDebugDraw();
+    ConsoleScreenDestroy();
+    ScrnDestroy();
+    M2Destroy();
+    ModelBlobDestroy();
+    TextureDestroy();
+    FileNotification::Destroy();
+    CharSelectStartRaceShutdown();
+    PreloadList::Shutdown();
+    AsyncFileReadDestroy();
+    GxuLightShutdown();
+    ObjectAllocDestroy();
+    BaseDestroyContext();
+    return 1;
 }
 
 // OFFSET: #0x004029B0
