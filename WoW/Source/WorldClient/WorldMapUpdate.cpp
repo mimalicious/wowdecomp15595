@@ -29,14 +29,16 @@
 
 // OFFSET: 0x007749E0/0x14045E950
 void CWorldMap::UpdateAllEnvironments() {
-    for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
-        if (*worldMap && CWorldScene::s_defaultWorldView) {
-            if ((*worldMap)->m_particulate && CWorldScene::s_defaultWorldView->m_camLiquidStatus) {
-                (*worldMap)->m_particulate->Update();
+    for (int32_t i = 0; i < 2; i++) {
+        CWorldMap* worldMap = CWorldMap::s_worldMaps[i];
+
+        if (worldMap && CWorldScene::s_defaultWorldView) {
+            if (worldMap->m_particulate && CWorldScene::s_defaultWorldView->m_camLiquidStatus) {
+                worldMap->m_particulate->Update();
             }
 
-            if ((*worldMap)->m_weather) {
-                (*worldMap)->m_weather->Update();
+            if (worldMap->m_weather) {
+                worldMap->m_weather->Update();
             }
         }
     }
@@ -485,7 +487,9 @@ void CWorldMap::UpdateAllMaps(int32_t waitLoad) {
     CMap::s_areasUnloaded = 0;
     AsyncFileReadClearStreamingObjectList();
 
-    for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
+    for (int32_t i = 0; i < 2; i++) {
+        CWorldMap** worldMap = &CWorldMap::s_worldMaps[i];
+
         if (*worldMap) {
             if (World::prepareAll) {
                 (*worldMap)->PurgeMaps();
@@ -508,7 +512,7 @@ void CWorldMap::UpdateAllMaps(int32_t waitLoad) {
 void CWorldMap::GetLowDetailAreaRect(const C3Vector& pos, CiRect& rect) {
     int32_t chunkX = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.029999999f);
     int32_t chunkY = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.029999999f);
-    int32_t range = static_cast<int32_t>(static_cast<int64_t>(World::GetHorizonFarClip() * 0.030000001f));
+    int32_t range = static_cast<uint32_t>(World::GetHorizonFarClip() * 0.030000001f);
 
     int32_t minX = ((chunkX - range) >> 4) - 1;
     int32_t minY = ((chunkY - range) >> 4) - 1;

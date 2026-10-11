@@ -66,7 +66,11 @@ void CMapObjGroup::FixColorVertexAlpha() {
     for (uint32_t i = 0; i < this->m_colorCount; i++) {
         uint8_t* color = reinterpret_cast<uint8_t*>(&this->m_colors[i]);
 
-        if (i >= firstExterior) {
+        if (i < firstExterior) {
+            color[2] >>= 1;
+            color[1] >>= 1;
+            color[0] >>= 1;
+        } else {
             uint32_t alpha = color[3];
             uint32_t b = (color[2] + ((alpha * color[2]) >> 6)) >> 1;
             uint32_t g = (color[1] + ((alpha * color[1]) >> 6)) >> 1;
@@ -75,10 +79,6 @@ void CMapObjGroup::FixColorVertexAlpha() {
             color[1] = g > 0xFF ? 0xFF : g;
             color[0] = r > 0xFF ? 0xFF : r;
             color[3] = 0xFF;
-        } else {
-            color[2] >>= 1;
-            color[1] >>= 1;
-            color[0] >>= 1;
         }
     }
 }
@@ -317,7 +317,7 @@ uint32_t CMapObjGroup::GetLiquidType(uint32_t legacyType) {
 
     switch ((legacyType - 1) & 3) {
         case 0:
-            return ((this->m_groupFlags & 0x80000) != 0) + 13;
+            return (this->m_groupFlags & 0x80000) ? 14 : 13;
 
         case 1:
             return 14;
@@ -779,7 +779,7 @@ void CMapObjGroup::CreateOccluders() {
 
         float average = (verts[0]->z + verts[1]->z + verts[2]->z) * 0.33333334f;
         uint32_t high[3];
-        uint32_t count = 0;
+        int32_t count = 0;
 
         if (verts[0]->z > average) {
             high[count++] = 0;

@@ -239,7 +239,7 @@ static int CompareAreaDist(const void* a, const void* b) {
 // OFFSET: 0x00735A80
 uint32_t CMap::GetTerrainVSPerm(int32_t displacement, int32_t lighting, uint32_t layers, uint32_t format, uint32_t material, int32_t shadow, uint32_t clip) {
     uint32_t base = layers + 4 * lighting - 1;
-    return clip + 2 * ((displacement != 0) + 2 * ((shadow != 0) + 2 * (material + 2 * (base + format + 2 * base))));
+    return clip + 2 * ((displacement != 0) + 2 * ((static_cast<uint32_t>(shadow) > 0) + 2 * (material + 2 * (base + format + 2 * base))));
 }
 
 // OFFSET: 0x00735AC0/0x140411FC0
@@ -541,7 +541,7 @@ int32_t CMap::PreloadAreasExist(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
         for (int32_t x = rect.minX; x <= rect.maxX; x++) {
             CMapAreaTableEntry* entry = this->m_areaTable.Get(x, y);
-            uint8_t flags = entry ? static_cast<uint8_t>(entry->m_flags) : 0;
+            uint32_t flags = !entry ? 0 : entry->m_flags;
 
             if (flags & 0x1) {
                 return 1;
@@ -910,7 +910,7 @@ void CMap::PreloadUpdateMap(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
         for (int32_t x = rect.minX; x <= rect.maxX; x++) {
             CMapAreaTableEntry* entry = this->m_areaTable.Get(x, y);
-            uint8_t flags = entry ? static_cast<uint8_t>(entry->m_flags) : 0;
+            uint32_t flags = !entry ? 0 : entry->m_flags;
 
             if (!(flags & 0x1)) {
                 continue;

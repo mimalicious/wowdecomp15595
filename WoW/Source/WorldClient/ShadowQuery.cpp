@@ -316,9 +316,11 @@ CShadowQuery::CShadowQuery() {
 
 // OFFSET: 0x00769FC0/0x140451860
 CShadowQuery::~CShadowQuery() {
-    if (this->m_occlusion) {
-        this->m_occlusion->~CWorldOcclusion();
-        SMemFree(this->m_occlusion, "delete", -1, 0);
+    CWorldOcclusion* occlusion = this->m_occlusion;
+
+    if (occlusion) {
+        occlusion->~CWorldOcclusion();
+        SMemFree(occlusion, "delete", -1, 0);
     }
 
     for (uint32_t i = 0; i < 3; i++) {

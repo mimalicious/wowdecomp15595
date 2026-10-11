@@ -379,6 +379,6 @@ CTexture* CMap::LoadTerrainTexture(const char* fileName, uint32_t flags) {
         return CMap::LoadTexture(fileName);
     }
 
-    CImVector black(0xFF000000);
+    CImVector black(0, 0, 0, 0xFF);
     return TextureCreateSolid(black);
 }

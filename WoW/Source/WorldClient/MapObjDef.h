@@ -26,7 +26,7 @@ class CMapObjDefGroup : public CMapBaseObj {
     /* 0044 */ int32_t m_groupNum;
     /* 0048 */ uint32_t m_frameStamp;
     /* 004C */ uint32_t m_cullStamp;
-    /* 0050 */ uint32_t unk_0050;
+    /* 0050 */ const char* m_areaName;
     /* 0054 */ Liquid::CInstance* m_liquidInstance;
     /* 0058 */ TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)> m_doodadLinks;
     /* 0064 */ TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)> m_entityLinks;

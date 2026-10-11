@@ -162,7 +162,7 @@ void CMapDoodadDef::UpdateMatrixOnly(const C44Matrix& matrix) {
     }
 
     this->m_model->m_fFlags |= 0x4000;
-    this->m_model->m_worldTransform = transform;
+    this->m_model->SetWorldTransform(transform);
 
     if (this->m_soundEmitter) {
         SE3::EmitterManagerSendMessage_Set3DPosition(this->m_soundEmitter, this->m_position);
@@ -243,21 +243,21 @@ void CMapDoodadDef::LinkToChunk(CMapBaseObj* owner) {
         CMapChunk* chunk = static_cast<CMapChunk*>(owner);
         float top = chunk->m_bbox.t.z;
 
-        if (top <= this->m_bbox.t.z) {
+        if (!(top > this->m_bbox.t.z)) {
             top = this->m_bbox.t.z;
         }
 
         CMapArea* area = chunk->m_area;
         chunk->m_bbox.t.z = top;
 
-        if (top <= area->m_bbox.t.z) {
+        if (!(top > area->m_bbox.t.z)) {
             top = area->m_bbox.t.z;
         }
 
         area->m_bbox.t.z = top;
         float bottom = chunk->m_bbox.b.z;
 
-        if (area->m_bbox.b.z <= bottom) {
+        if (!(area->m_bbox.b.z > bottom)) {
             bottom = area->m_bbox.b.z;
         }
 

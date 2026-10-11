@@ -111,7 +111,11 @@ void CWorldView::ScaleFadeDist(float scale) {
 
 // OFFSET: 0x00753510
 uint32_t CWorldView::CalcMinSizeCatFromDistSqr(float distSqr) {
-    if (distSqr < 0.0f || s_fadeOuterSqr[0] > distSqr) {
+    if (distSqr < 0.0f) {
+        return 0;
+    }
+
+    if (s_fadeOuterSqr[0] > distSqr) {
         return 0;
     }
 
@@ -123,11 +127,11 @@ uint32_t CWorldView::CalcMinSizeCatFromDistSqr(float distSqr) {
         return 2;
     }
 
-    if (s_fadeOuterSqr[3] <= distSqr) {
-        return 4;
+    if (s_fadeOuterSqr[3] > distSqr) {
+        return 3;
     }
 
-    return 3;
+    return 4;
 }
 
 // PROVEN: 9faeb6ca IDENTICAL/NONE
@@ -290,8 +294,9 @@ void CWorldView::EnableSortTable(int32_t enable) {
             this->m_sortTable = mem ? new (mem) CSortTable() : NULL;
         }
     } else if (this->m_sortTable) {
-        this->m_sortTable->~CSortTable();
-        SMemFree(this->m_sortTable, "delete", -1, 0);
+        CSortTable* sortTable = this->m_sortTable;
+        sortTable->~CSortTable();
+        SMemFree(sortTable, "delete", -1, 0);
         this->m_sortTable = NULL;
     }
 }
@@ -305,8 +310,9 @@ void CWorldView::EnableShadow(int32_t enable) {
             this->m_shadowQuery->m_worldView = this;
         }
     } else if (this->m_shadowQuery) {
-        this->m_shadowQuery->~CShadowQuery();
-        SMemFree(this->m_shadowQuery, "delete", -1, 0);
+        CShadowQuery* shadowQuery = this->m_shadowQuery;
+        shadowQuery->~CShadowQuery();
+        SMemFree(shadowQuery, "delete", -1, 0);
         this->m_shadowQuery = NULL;
     }
 }
@@ -335,7 +341,7 @@ void CWorldView::UpdateViewerUnderwater() {
     uint32_t liquidType;
     float height;
 
-    if (!worldMap->QueryLiquid(this->m_frustumPortalView.m_pos, 0, liquidType, height) || height + 0.0099999998f <= this->m_frustumPortalView.m_pos.z) {
+    if (!worldMap->QueryLiquid(this->m_frustumPortalView.m_pos, 0, liquidType, height) || !(height + 0.0099999998f > this->m_frustumPortalView.m_pos.z)) {
         return;
     }
 
@@ -414,7 +420,7 @@ void CWorldView::RenderSceneClear() {
         return;
     }
 
-    if ((this->m_flags & 0x8000) && (!Liquid::CameraSubmerged() || Liquid::GetWaterDetail()) && DayNight::ShouldClearToBlack()) {
+    if ((this->m_flags & 0x8000) && (!Liquid::CameraSubmerged() || Liquid::GetWaterDetail() > 0) && DayNight::ShouldClearToBlack()) {
         CImVector clear;
         *reinterpret_cast<uint32_t*>(&clear) = 0;
         GxSceneClear(0x1F, clear);
@@ -547,7 +553,7 @@ void CWorldView::CullModelTree(CM2Model* model) {
     } else {
         int32_t culled = 1;
 
-        if (model->IsDrawable()) {
+        if (model->IsBoundingBoxValid()) {
             CAaBox box = model->GetCurrentBoundingBox();
             culled = this->CullModel(box);
         }
@@ -567,7 +573,7 @@ void CWorldView::CullModelTree(CM2Model* model, uint32_t boneId) {
     } else {
         int32_t culled = 1;
 
-        if (model->IsDrawable()) {
+        if (model->IsBoundingBoxValid()) {
             CAaBox box = model->GetSplitBodyBoundingBox(boneId);
             culled = this->CullModel(box);
         }
@@ -795,7 +801,7 @@ void CWorldView::RenderOpaque() {
         int32_t clipEnabled = g_theGxDevicePtr->m_appRenderStates[GxRs_ClipPlaneMask].m_value.m_data.i[0];
         CShaderEffect::SetClipEnabled(0);
 
-        if (this->m_exteriorPortalView.m_maxViewDepth >= 0.0f) {
+        if (!(this->m_exteriorPortalView.m_maxViewDepth < 0.0f)) {
             int32_t interior = this->m_flags & 0x8;
 
             if (!interior) {
@@ -1948,7 +1954,7 @@ void CWorldView::AddMapEntity(CMapEntity* entity) {
 void CWorldView::AddLowDetailMapArea(CMapAreaLow* area) {
     C3Vector point;
     this->GetCameraClosestPoint(area->m_bbox, point);
-    float dist = point.z * this->m_horizPlane.n.z + point.y * this->m_horizPlane.n.y + point.x * this->m_horizPlane.n.x + this->m_horizPlane.d;
+    float dist = point.x * this->m_horizPlane.n.x + point.y * this->m_horizPlane.n.y + point.z * this->m_horizPlane.n.z + this->m_horizPlane.d;
     int32_t entry = 0;
 
     if (dist > 0.0f) {
@@ -1959,14 +1965,15 @@ void CWorldView::AddLowDetailMapArea(CMapAreaLow* area) {
         }
     }
 
-    this->m_sortTable->m_entries.m_data[entry].m_lowDetailAreas.Add(1, &area);
+    CMapAreaLow* value = area;
+    this->m_sortTable->m_entries.m_data[entry].m_lowDetailAreas.Add(1, &value);
 }
 
 // OFFSET: 0x007599B0
 void CWorldView::AddLowDetailMapObjDef(CMapObjDef* mapObjDef) {
     C3Vector point;
     this->GetCameraClosestPoint(mapObjDef->m_bbox, point);
-    float dist = point.z * this->m_horizPlane.n.z + point.y * this->m_horizPlane.n.y + point.x * this->m_horizPlane.n.x + this->m_horizPlane.d;
+    float dist = point.x * this->m_horizPlane.n.x + point.y * this->m_horizPlane.n.y + point.z * this->m_horizPlane.n.z + this->m_horizPlane.d;
     int32_t entry = 0;
 
     if (dist > 0.0f) {
@@ -1977,14 +1984,15 @@ void CWorldView::AddLowDetailMapObjDef(CMapObjDef* mapObjDef) {
         }
     }
 
-    this->m_sortTable->m_entries.m_data[entry].m_lowDetailMapObjDefs.Add(1, &mapObjDef);
+    CMapObjDef* value = mapObjDef;
+    this->m_sortTable->m_entries.m_data[entry].m_lowDetailMapObjDefs.Add(1, &value);
 }
 
 // OFFSET: 0x00759A90
 void CWorldView::AddLowDetailMapAreaOcean(CMapAreaLow* area) {
     C3Vector point;
     this->GetCameraClosestPoint(area->m_bbox, point);
-    float dist = point.z * this->m_horizPlane.n.z + point.y * this->m_horizPlane.n.y + point.x * this->m_horizPlane.n.x + this->m_horizPlane.d;
+    float dist = point.x * this->m_horizPlane.n.x + point.y * this->m_horizPlane.n.y + point.z * this->m_horizPlane.n.z + this->m_horizPlane.d;
     int32_t entry = 0;
 
     if (dist > 0.0f) {
@@ -1995,7 +2003,8 @@ void CWorldView::AddLowDetailMapAreaOcean(CMapAreaLow* area) {
         }
     }
 
-    this->m_sortTable->m_entries.m_data[entry].m_lowDetailOceans.Add(1, &area);
+    CMapAreaLow* value = area;
+    this->m_sortTable->m_entries.m_data[entry].m_lowDetailOceans.Add(1, &value);
 }
 
 // OFFSET: 0x00759B70
@@ -2285,7 +2294,7 @@ void CWorldView::UpdateViewer() {
 // OFFSET: 0x0075B930
 void CWorldView::Render() {
     g_theGxDevicePtr->RsPush();
-    GxXformPush(GxXform_View);
+    g_theGxDevicePtr->XformPush(GxXform_World);
     CWorldScene::s_activeWorldView = this;
     DayNight::SetExteriorUnderwater(this->m_exteriorUnderwater);
     this->UpdateShadows();
@@ -2297,7 +2306,13 @@ void CWorldView::Render() {
     this->RenderAlpha();
     this->ClearLists();
     CWorldScene::s_activeWorldView = NULL;
-    GxXformPop(GxXform_View);
+    CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[GxXform_World];
+
+    if (stack.m_level > 0) {
+        stack.m_level--;
+        stack.m_dirty = 1;
+    }
+
     g_theGxDevicePtr->RsPop();
 }
 

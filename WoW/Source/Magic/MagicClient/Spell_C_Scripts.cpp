@@ -18,6 +18,7 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/Ui/TalentInfo.h"
 #include "WoW/Source/Object/ObjectClient/Corpse_C.h"
+#include "WoW/Source/Ui/PetInfo.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -49,7 +50,7 @@ static int32_t Script_SpellCanTargetItem(lua_State* L) {
 
 // OFFSET: 0x008A5AF0/0x1405E86E0
 static int32_t Script_SpellCanTargetGlyph(lua_State* L) {
-    if (s_targetingSpell && (s_needTargets & 0x20000)) {
+    if (s_targetingSpell && (static_cast<uint8_t>(s_needTargets >> 17) & 1)) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -60,9 +61,7 @@ static int32_t Script_SpellCanTargetGlyph(lua_State* L) {
 
 // OFFSET: 0x008AB020
 static int32_t Script_CannotBeResurrected(lua_State* L) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (player && (player->m_auraEffectMask[314 / 8] & (1 << (314 % 8)))) {
+    if (Spell_C_CannotBeResurrected()) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -77,7 +76,7 @@ static int32_t Script_SpellTargetItem(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -139,11 +138,11 @@ static int32_t Script_SpellTargetUnit(lua_State* L) {
 // OFFSET: 0x008B7970/0x1405FF450
 static int32_t Script_SpellCanTargetUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
-        return luaL_error(L, "Usage: SpellCanTargetUnit(\"unit\")");
+        luaL_error(L, "Usage: SpellCanTargetUnit(\"unit\")");
         return 0;
     }
 
-    WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
+    WOWGUID guid = Script_GetGUIDFromName(lua_tolstring(L, 1, NULL));
 
     if (guid && Spell_C_HandleSpriteRay(guid, true)) {
         lua_pushnumber(L, 1.0);
@@ -156,20 +155,25 @@ static int32_t Script_SpellCanTargetUnit(lua_State* L) {
 
 // OFFSET: 0x008B47E0/0x1405FBAC0
 static int32_t Script_SpellStopTargeting(lua_State* L) {
-    if (CGGameUI::CanPerformAction(2)) {
-        bool targeting = s_targetingSpell != NULL;
-
-        if (s_targetingSpell) {
-            Spell_C_CancelSpell(s_targetingSpell, true, true, 27);
-        }
-
-        if (targeting) {
-            lua_pushnumber(L, 1.0);
-            return 1;
-        }
+    if (!CGGameUI::CanPerformAction(2)) {
+        lua_pushnil(L);
+        return 1;
     }
 
-    lua_pushnil(L);
+    if (!s_targetingSpell && !CGPetInfo::m_petOrderMoveTo) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    if (s_targetingSpell) {
+        Spell_C_CancelSpell(s_targetingSpell, true, true, 28);
+    }
+
+    if (CGPetInfo::m_petOrderMoveTo) {
+        CGPetInfo::ClearPetOrderMoveTo();
+    }
+
+    lua_pushnumber(L, 1.0);
     return 1;
 }
 
@@ -180,11 +184,16 @@ static int32_t Script_SpellStopCasting(lua_State* L) {
         return 1;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    uint32_t channelSpell = 0;
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (player && player->m_unit->m_unitFieldCharmedby) {
-        lua_pushnil(L);
-        return 1;
+    if (player) {
+        channelSpell = player->m_unit->m_unitChannelSpell;
+
+        if (player->m_unit->m_unitFieldCharmedby) {
+            lua_pushnil(L);
+            return 1;
+        }
     }
 
     if (OnCancelCombat()) {
@@ -198,28 +207,38 @@ static int32_t Script_SpellStopCasting(lua_State* L) {
         return 1;
     }
 
-    if (!Spell_C_GetAutoRepeatingSpell()) {
-        lua_pushnil(L);
+    if (channelSpell) {
+        Spell_C_CancelChannelSpell(channelSpell);
+        lua_pushnumber(L, 1.0);
         return 1;
     }
 
-    Spell_C_CancelAutoRepeat(true);
-    lua_pushnumber(L, 1.0);
+    if (Spell_C_GetAutoRepeatingSpell()) {
+        Spell_C_CancelAutoRepeat(true);
+        lua_pushnumber(L, 1.0);
+        return 1;
+    }
+
+    lua_pushnil(L);
     return 1;
 }
 
 // OFFSET: 0x008A86C0/0x1405EB980
 static int32_t Script_CancelItemTempEnchantment(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
     }
 
-    uint32_t slot;
+    int32_t slot;
 
-    if (!lua_isnumber(L, 1) || (slot = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1, slot > 1)) {
+    if (!lua_isnumber(L, 1) || (slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1, static_cast<uint32_t>(slot) > 2)) {
         luaL_error(L, "Usage: CancelItemTempEnchantment(slot)");
+        return 0;
+    }
+
+    if (!CGGameUI::CanPerformAction(2)) {
         return 0;
     }
 
@@ -319,7 +338,7 @@ static int32_t Script_SpellIsSelfBuff(lua_State* L) {
 
     bool selfBuff = false;
 
-    for (uint32_t i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         const SpellEffectRec* effect = SpellGetEffect(spell->m_id, i);
 
         if (!effect || effect->m_effect != 6) {
@@ -345,13 +364,17 @@ static int32_t Script_SpellGetVisibilityInfo(lua_State* L) {
         return 0;
     }
 
-    int32_t type = 0;
+    int32_t type;
 
-    while (_stricmp(lua_tostring(L, 2), s_visibilityTypes[type])) {
-        if (++type >= 3) {
-            luaL_error(L, "SpellGetVisibilityInfo: Invalid visType. Valid types: \"RAID_INCOMBAT\", \"RAID_OUTOFCOMBAT\", \"ENEMY_TARGET\"");
-            return 0;
+    for (type = 0; type < 3; type++) {
+        if (!_stricmp(lua_tostring(L, 2), s_visibilityTypes[type])) {
+            break;
         }
+    }
+
+    if (type == 3) {
+        luaL_error(L, "SpellGetVisibilityInfo: Invalid visType. Valid types: \"RAID_INCOMBAT\", \"RAID_OUTOFCOMBAT\", \"ENEMY_TARGET\"");
+        return 0;
     }
 
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {

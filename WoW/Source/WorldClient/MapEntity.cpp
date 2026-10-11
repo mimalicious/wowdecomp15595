@@ -476,13 +476,12 @@ int32_t CMapEntity::QueryMapObjSubzoneName(const char*& name, uint32_t& areaId) 
         return 0;
     }
 
-    if (!defGroup->unk_0050) {
+    if (!defGroup->m_areaName) {
         const WMOAreaTableRec* rec = SDBWMOAreaTableLookup(mapObj->m_header->m_wmoId, mapObjDef->m_nameSet, group->m_wmoGroupId);
-        const char* areaName = rec ? static_cast<const char*>(rec->m_areaName) : "";
-        defGroup->unk_0050 = reinterpret_cast<uintptr_t>(areaName);
+        defGroup->m_areaName = rec ? static_cast<const char*>(rec->m_areaName) : "";
     }
 
-    name = reinterpret_cast<const char*>(defGroup->unk_0050);
+    name = defGroup->m_areaName;
 
     if (defGroup->m_groupNum) {
         areaId = defGroup->m_groupNum;
@@ -767,9 +766,9 @@ void CMapEntity::Update() {
 
         if (status != 2) {
             const C3Vector& pos = World::GetGuardBandPosition();
-            float dz = pos.z - this->m_position.z;
+            float dx = pos.x - this->m_position.x;
             float dy = pos.y - this->m_position.y;
-            uint32_t priority = AsyncFileReadComputePriority(3, status, 1, dz * dz + dy * dy + (pos.x - this->m_position.x) * (pos.x - this->m_position.x));
+            uint32_t priority = AsyncFileReadComputePriority(3, status, 1, dx * dx + dy * dy + (pos.z - this->m_position.z) * (pos.z - this->m_position.z));
             AsyncFileReadAddStreamingObject(CMapDoodadDef::StreamingCallback, this, priority);
         }
 
@@ -782,21 +781,22 @@ void CMapEntity::Update() {
         }
     }
 
-    if (this->m_flags & 0x10000) {
-        this->m_entityFlags |= 0x4000;
+    if (!(this->m_flags & 0x10000)) {
+        this->m_entityFlags |= 0x60000;
+        this->UpdateLighting();
+
+        if ((this->m_entityFlags & 0x4000) || this->m_worldMap->unk_010C) {
+            this->m_worldMap->UpdateEntity(this);
+
+            if (this->m_staticFlags & 0x1) {
+                this->UpdatePortals();
+            }
+        }
+
         return;
     }
 
-    this->m_entityFlags |= 0x60000;
-    this->UpdateLighting();
-
-    if ((this->m_entityFlags & 0x4000) || this->m_worldMap->unk_010C) {
-        this->m_worldMap->UpdateEntity(this);
-
-        if (this->m_staticFlags & 0x1) {
-            this->UpdatePortals();
-        }
-    }
+    this->m_entityFlags |= 0x4000;
 }
 
 // OFFSET: 0x007356D0/0x140411A10

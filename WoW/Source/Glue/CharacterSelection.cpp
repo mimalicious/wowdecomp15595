@@ -195,7 +195,7 @@ void CCharacterSelection::TransferComponentToWorld() {
 void CCharacterSelection::UpdateCharacterName(WOWGUID guid, const char* name) {
     uint32_t index = 0;
 
-    if (!CCharacterSelection::m_characterList.Count()) {
+    if (CCharacterSelection::m_characterList.Count() <= 0) {
         return;
     }
 
@@ -225,7 +225,7 @@ void CCharacterSelection::UpdateCharacterName(WOWGUID guid, const char* name) {
 void CCharacterSelection::UpdateCharacterInfo(WOWGUID guid, const char* name, uint8_t sexID, uint8_t skinColorID, uint8_t hairColorID, uint8_t hairStyleID, uint8_t facialHairStyleID, uint8_t faceID, uint8_t raceID) {
     uint32_t index = 0;
 
-    if (!CCharacterSelection::m_characterList.Count()) {
+    if (CCharacterSelection::m_characterList.Count() <= 0) {
         return;
     }
 
@@ -269,7 +269,7 @@ void CCharacterSelection::UpdateCharacterInfo(WOWGUID guid, const char* name, ui
 uint32_t* CCharacterSelection::UpdateCharacterNameDeclension(WOWGUID guid) {
     uint32_t index = 0;
 
-    if (!CCharacterSelection::m_characterList.Count()) {
+    if (CCharacterSelection::m_characterList.Count() <= 0) {
         return NULL;
     }
 
@@ -296,8 +296,9 @@ void CCharacterSelection::SetNextEmoteTimer() {
         return;
     }
 
-    float random = CRandom::ufloat_(g_rndSeed);
-    CCharacterSelection::m_emoteTimerEvent = ClientSetTimer(static_cast<uint32_t>(static_cast<int64_t>((random * s_emoteIntervalMax + (1.0f - random) * s_emoteIntervalMin) * 1000.0f)), CCharacterSelection::UpdateEmote, NULL);
+    uint32_t bits = (CRandom::uint32_(g_rndSeed) & 0x7FFFFF) | 0x3F800000;
+    float random = *reinterpret_cast<float*>(&bits) - 1.0f;
+    CCharacterSelection::m_emoteTimerEvent = ClientSetTimer(static_cast<uint32_t>((random * s_emoteIntervalMax + (1.0f - random) * s_emoteIntervalMin) * 1000.0f), CCharacterSelection::UpdateEmote, NULL);
 }
 
 // OFFSET: 0x008085D0/0x14051E0B0
@@ -345,11 +346,11 @@ void CCharacterSelection::RenderPrep() {
 
 // OFFSET: 0x008086D0
 CharacterSelectionDisplay* CCharacterSelection::GetCharacterDisplay(uint32_t index) {
-    if (index >= CCharacterSelection::m_characterList.Count()) {
-        return NULL;
+    if (index < CCharacterSelection::m_characterList.Count()) {
+        return &CCharacterSelection::m_characterList.m_data[index];
     }
 
-    return &CCharacterSelection::m_characterList.m_data[index];
+    return NULL;
 }
 
 // OFFSET: 0x008086F0
@@ -359,8 +360,10 @@ int32_t CCharacterSelection::Idle(const void* data, void* param) {
     if (CCharacterSelection::m_selectionIndex >= 0 && CCharacterSelection::m_selectionIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
         CharacterSelectionDisplay& display = CCharacterSelection::m_characterList.m_data[CCharacterSelection::m_selectionIndex];
 
-        if (CCharacterSelection::m_modelFrame->m_model) {
-            CCharacterSelection::m_modelFrame->m_model->LinkToAsyncHead();
+        CM2Model* model = CCharacterSelection::m_modelFrame->m_model;
+
+        if (model) {
+            model->LinkToAsyncHead();
         }
 
         if (display.m_petModel) {
@@ -447,18 +450,18 @@ void CCharacterSelection::OnShow() {
 
 // OFFSET: 0x00808A50
 uint32_t CCharacterSelection::GetEquippedGuildTabardFlags(int32_t slot, int32_t index) {
-    if (index < 0 || index >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
-        return 0;
-    }
-
-    CharacterSelectionDisplay* display = &CCharacterSelection::m_characterList.m_data[index];
+    CharacterSelectionDisplay* display = index >= 0 && index < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? &CCharacterSelection::m_characterList.m_data[index] : NULL;
     ItemDisplayInfoRec displayRec;
 
-    if (!display || !display->m_characterInfo.m_items[slot].m_displayID || !g_itemDisplayInfoDB.GetRecord(display->m_characterInfo.m_items[slot].m_displayID, &displayRec)) {
+    if (!display) {
         return 0;
     }
 
-    return displayRec.m_flags & 0x19;
+    if (display->m_characterInfo.m_items[slot].m_displayID && g_itemDisplayInfoDB.GetRecord(display->m_characterInfo.m_items[slot].m_displayID, &displayRec)) {
+        return displayRec.m_flags & 0x19;
+    }
+
+    return 0;
 }
 
 // OFFSET: 0x00808AB0
@@ -543,8 +546,8 @@ void CCharacterSelection::StartAnimation(uint64_t param) {
 
 // OFFSET: 0x00808D90/0x14051E9C0
 int32_t CCharacterSelection::UpdateEmote(const void* data, void* param) {
-    CharacterSelectionDisplay* display = CCharacterSelection::m_selectionIndex < 0 || CCharacterSelection::m_selectionIndex >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? NULL : &CCharacterSelection::m_characterList.m_data[CCharacterSelection::m_selectionIndex];
     CharacterSelectionDisplay& selected = CCharacterSelection::m_characterList.m_data[CCharacterSelection::m_selectionIndex];
+    CharacterSelectionDisplay* display = CCharacterSelection::m_selectionIndex < 0 || CCharacterSelection::m_selectionIndex >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? NULL : &CCharacterSelection::m_characterList.m_data[CCharacterSelection::m_selectionIndex];
     CGlueMgr::PlayCharacterEmoteKits(display->m_characterInfo.m_classID, display->m_characterInfo.m_raceID, display->m_characterInfo.m_sexID, selected.m_weaponLoadOut, selected.m_animKitManager, CCharacterSelection::m_modelFrame);
     CCharacterSelection::SetNextEmoteTimer();
     return 1;
@@ -746,12 +749,18 @@ void CCharacterSelection::ShowCharacter(uint8_t raceOverride, int32_t noEffects)
     CCharacterSelection::m_emoteTimerEvent = 0;
 
     if (CCharacterSelection::m_modelFrame) {
-        if (CCharacterSelection::m_modelFrame->m_model) {
-            CCharacterSelection::m_modelFrame->m_model->DetachAllChildrenById(0);
+        CM2Model* model = CCharacterSelection::m_modelFrame->m_model;
+
+        if (model) {
+            model->DetachAllChildrenById(0);
         }
 
-        if (CCharacterSelection::m_modelFrame && CCharacterSelection::m_modelFrame->m_model) {
-            CCharacterSelection::m_modelFrame->m_model->DetachAllChildrenById(1);
+        if (CCharacterSelection::m_modelFrame) {
+            CM2Model* model = CCharacterSelection::m_modelFrame->m_model;
+
+            if (model) {
+                model->DetachAllChildrenById(1);
+            }
         }
     }
 
@@ -895,7 +904,7 @@ void CCharacterSelection::ShowCharacter(uint8_t raceOverride, int32_t noEffects)
 
 // OFFSET: 0x0080A110/0x1405202E0
 void CCharacterSelection::SelectCharacter(int32_t index) {
-    if (!CCharacterSelection::m_characterList.Count()) {
+    if (CCharacterSelection::m_characterList.Count() <= 0) {
         return;
     }
 
@@ -957,12 +966,18 @@ static void DetachCharacterModels() {
         return;
     }
 
-    if (CCharacterSelection::m_modelFrame->m_model) {
-        CCharacterSelection::m_modelFrame->m_model->DetachAllChildrenById(0);
+    CM2Model* model = CCharacterSelection::m_modelFrame->m_model;
+
+    if (model) {
+        model->DetachAllChildrenById(0);
     }
 
-    if (CCharacterSelection::m_modelFrame && CCharacterSelection::m_modelFrame->m_model) {
-        CCharacterSelection::m_modelFrame->m_model->DetachAllChildrenById(1);
+    if (CCharacterSelection::m_modelFrame) {
+        CM2Model* model = CCharacterSelection::m_modelFrame->m_model;
+
+        if (model) {
+            model->DetachAllChildrenById(1);
+        }
     }
 }
 
@@ -997,7 +1012,10 @@ void CCharacterSelection::UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>
 
     CCharacterSelection::m_characterListRcvd = 1;
 
-    if (CCharacterSelection::m_characterList.Count()) {
+    if (!CCharacterSelection::m_characterList.Count()) {
+        FrameScript_SignalEvent(GLUE_EVENT_UPDATE_SELECTED_CHARACTER, "%d", 0);
+        DetachCharacterModels();
+    } else {
         s_unk_D07A04 = 0;
         int32_t index = g_lastCharacterIndexVar->m_intValue;
 
@@ -1005,10 +1023,7 @@ void CCharacterSelection::UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>
             index = CCharacterSelection::m_characterList.Count() - 1;
         }
 
-        FrameScript_SignalEvent(GLUE_EVENT_UPDATE_SELECTED_CHARACTER, "%d", index <= 0 ? 1 : index + 1);
-    } else {
-        FrameScript_SignalEvent(GLUE_EVENT_UPDATE_SELECTED_CHARACTER, "%d", 0);
-        DetachCharacterModels();
+        FrameScript_SignalEvent(GLUE_EVENT_UPDATE_SELECTED_CHARACTER, "%d", (index <= 0 ? 0 : index) + 1);
     }
 
     FrameScript_SignalEvent(GLUE_EVENT_CHARACTER_LIST_UPDATE, "%d", CCharacterSelection::m_characterList.Count());

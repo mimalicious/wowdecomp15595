@@ -34,6 +34,8 @@ void Weather::Destroy() {
 
 // OFFSET: 0x007483D0
 int32_t Weather::GetType() const {
+    int32_t type = 0;
+
     if (this->m_rain) {
         return 1;
     }
@@ -43,10 +45,10 @@ int32_t Weather::GetType() const {
     }
 
     if (this->m_sand) {
-        return 3;
+        type = 3;
     }
 
-    return 0;
+    return type;
 }
 
 // PROVEN: 02c6d5e6 IDENTICAL/NONE
@@ -305,7 +307,7 @@ float CHMMgr::Query(const C3Vector& pos) {
     int32_t x = static_cast<int32_t>(floor(pos.x * 0.029999999f)) - this->m_minCellX;
     int32_t y = static_cast<int32_t>(floor(pos.y * 0.029999999f)) - this->m_minCellY;
 
-    if (x > 4 || y > 4) {
+    if (static_cast<uint32_t>(x) > 4 || static_cast<uint32_t>(y) > 4) {
         return FLT_MAX;
     }
 
@@ -578,23 +580,29 @@ void Weather::CalcPlayerVelocity(const C3Vector& position, const C3Vector& veloc
 
 // OFFSET: 0x00752E90
 void Weather::Clear() {
-    if (this->m_rain) {
-        this->m_rain->~Rain();
-        SMemFree(this->m_rain, "delete", -1, 0);
+    Rain* rain = this->m_rain;
+
+    if (rain) {
+        rain->~Rain();
+        SMemFree(rain, "delete", -1, 0);
     }
 
     this->m_rain = NULL;
 
-    if (this->m_snow) {
-        this->m_snow->~Snow();
-        SMemFree(this->m_snow, "delete", -1, 0);
+    Snow* snow = this->m_snow;
+
+    if (snow) {
+        snow->~Snow();
+        SMemFree(snow, "delete", -1, 0);
     }
 
     this->m_snow = NULL;
 
-    if (this->m_sand) {
-        this->m_sand->~Sand();
-        SMemFree(this->m_sand, "delete", -1, 0);
+    Sand* sand = this->m_sand;
+
+    if (sand) {
+        sand->~Sand();
+        SMemFree(sand, "delete", -1, 0);
     }
 
     this->m_sand = NULL;

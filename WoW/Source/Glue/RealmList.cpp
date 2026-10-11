@@ -169,7 +169,7 @@ void CRealmList::SortRealms(int32_t criterion) {
             reverse = reverse == 0;
         }
 
-        for (uint32_t j = i; j; j--) {
+        for (uint32_t j = i; j > 0; j--) {
             CRealmList::m_sortCriteria[j] = CRealmList::m_sortCriteria[j - 1];
         }
 
@@ -189,7 +189,7 @@ uint32_t GetCategoryIndex(int32_t visibleIndex) {
     int32_t visible = -1;
 
     for (int32_t i = 0; i < static_cast<int32_t>(CRealmList::m_categories.Count()); i++) {
-        RealmCategory* category = CRealmList::m_categories[i];
+        RealmCategory* category = static_cast<uint32_t>(i) < CRealmList::m_categories.Count() ? CRealmList::m_categories[i] : NULL;
 
         if (category && category->m_numRealms && ++visible == visibleIndex) {
             return i;

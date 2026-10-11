@@ -206,10 +206,7 @@ void CGlueLoading::StartLoad(CCharacterComponent** components, uint32_t count, i
         int64_t total;
         float progress = static_cast<float>(CGlueLoading::ComputeLoadProgress(components, count, loaded, total));
 
-        if (loaded == total) {
-            LoadingScreenMiniDisable();
-            CGlueLoading::m_loadState = 4;
-        } else {
+        if (loaded != total) {
             for (uint32_t i = 0; i < count; i++) {
                 CCharacterComponent* component = components[i];
 
@@ -238,6 +235,9 @@ void CGlueLoading::StartLoad(CCharacterComponent** components, uint32_t count, i
             CGlueLoading::m_loadState = 1;
             CGlueLoading::m_loadLastTime = FrameTime::GetCurTimeMs();
             CGlueLoading::m_loadStartTime = CGlueLoading::m_loadLastTime;
+        } else {
+            LoadingScreenMiniDisable();
+            CGlueLoading::m_loadState = 4;
         }
     } else {
         for (uint32_t i = 0; i < count; i++) {

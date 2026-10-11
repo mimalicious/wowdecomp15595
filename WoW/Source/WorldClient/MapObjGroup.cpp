@@ -551,7 +551,7 @@ bool BspQuery_Segment::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBs
 
 // OFFSET: 0x0078D5B0
 void BspQuery_SegmentLink::operator()(uint16_t face) {
-    uint8_t faceFlags = this->m_faces[face].m_flags;
+    uint32_t faceFlags = this->m_faces[face].m_flags;
 
     if (faceFlags & this->m_faceIgnoreFlags) {
         return;
@@ -570,7 +570,7 @@ void BspQuery_SegmentLink::operator()(uint16_t face) {
     }
 
     if (faceFlags & 0x20) {
-        if (t < 0.0f) {
+        if (!(t >= 0.0f)) {
             return;
         }
 
@@ -585,7 +585,7 @@ void BspQuery_SegmentLink::operator()(uint16_t face) {
         }
 
         return;
-    } else if (!(faceFlags & 0x4) || t < 0.0f) {
+    } else if (!(faceFlags & 0x4) || !(t >= 0.0f)) {
         return;
     }
 
@@ -607,7 +607,7 @@ bool BspQuery_SegmentLink::GetHits(float& frontT, uint32_t& frontFace, float& ba
     if (this->m_hitFace[1] != 0xFFFFFFFF) {
         backT = this->m_maxT[1] * this->m_oosegMag;
 
-        if (this->m_origHitT[1] <= backT) {
+        if (!(this->m_origHitT[1] > backT)) {
             backT = this->m_origHitT[1];
         }
 
@@ -617,7 +617,7 @@ bool BspQuery_SegmentLink::GetHits(float& frontT, uint32_t& frontFace, float& ba
     if (this->m_hitFace[0] != 0xFFFFFFFF) {
         frontT = this->m_maxT[0] * this->m_oosegMag;
 
-        if (this->m_origHitT[0] <= frontT) {
+        if (!(this->m_origHitT[0] > frontT)) {
             frontT = this->m_origHitT[0];
         }
 
@@ -744,7 +744,7 @@ bool BspQuery_SegmentLink::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const C
             }
 
             continue;
-        } else if (!(faceFlags & 0x4) || t < 0.0f) {
+        } else if (!(faceFlags & 0x4) || !(t >= 0.0f)) {
             continue;
         }
 
@@ -1405,7 +1405,7 @@ int32_t CMapObjGroup::GetNumSharedTiles() {
 
     for (int32_t y = 0; y < this->m_liquidTiles.y; y++) {
         for (int32_t x = 0; x < this->m_liquidTiles.x; x++) {
-            if ((*flags & 0xF) != 0xF && static_cast<int8_t>(*flags) < 0) {
+            if ((*flags & 0xF) != 0xF && (*flags & 0x80)) {
                 count++;
             }
 
@@ -1924,17 +1924,17 @@ bool CMapObjGroup::GetLiquidTris(const CFrustum& frustum, uint32_t flags, World:
 uint32_t CMapObjGroup::ComputePassCount(int32_t unified, uint32_t batch) const {
     if (unified) {
         if (batch < this->m_transBatchCount) {
-            return 3 - (CShaderEffect::s_enableShaders != 0);
+            return CShaderEffect::s_enableShaders ? 2 : 3;
         }
 
         return 1;
     }
 
-    if (!this->m_colors) {
-        return 1;
+    if (this->m_colors && batch < this->m_transBatchCount) {
+        return 2;
     }
 
-    return batch < this->m_transBatchCount ? 2 : 1;
+    return 1;
 }
 
 // OFFSET: 0x007914C0
@@ -2467,7 +2467,8 @@ void VBBList::AllocVBB(Block** owner, uint32_t itemSize, uint32_t itemCount) {
 // OFFSET: 0x00793340/0x1404851E0
 void CMapObjGroup::AllocVB() {
     if (!this->m_vertsBlock) {
-        CMapObjGroup::s_vertexList.AllocVBB(&this->m_vertsBlock, GxVertexSize(this->m_vertexFormat), this->m_vertexCount);
+        uint32_t vertexSize = GxVertexSize(this->m_vertexFormat);
+        CMapObjGroup::s_vertexList.AllocVBB(&this->m_vertsBlock, vertexSize, this->m_vertexCount);
     }
 
     if (!CShaderEffect::s_enableShaders && (this->m_parent->m_header->m_flags & 0x2) && this->m_colors && this->m_transBatchCount && !this->m_transVertsBlock) {
@@ -2519,15 +2520,11 @@ void CMapObjGroup::AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCo
 
 // OFFSET: 0x007934B0/0x1404853C0
 void CMapObjGroup::FreeLiquidVB() {
-    int32_t refCount = this->m_liquidVBRefCount;
-
-    if (!refCount) {
+    if (!this->m_liquidVBRefCount) {
         return;
     }
 
-    this->m_liquidVBRefCount = refCount - 1;
-
-    if (refCount != 1) {
+    if (--this->m_liquidVBRefCount) {
         return;
     }
 

@@ -579,7 +579,7 @@ void CGlueMgr::DisplayLoginStatus() {
     CGlueMgr::m_lastLoginResult = CGlueMgr::m_loginResult;
 
     if (CGlueMgr::m_loginState == LOGIN_STATE_FAILED) {
-        if (CGlueMgr::m_loginResult < 0 || CGlueMgr::m_loginResult >= LOGIN_RESULT_MAX) {
+        if (CGlueMgr::m_loginResult < 0 || static_cast<uint32_t>(CGlueMgr::m_loginResult) >= LOGIN_RESULT_MAX) {
             return;
         }
 
@@ -611,7 +611,7 @@ void CGlueMgr::DisplayLoginStatus() {
     }
 
     int32_t state = CGlueMgr::m_loginState;
-    bool show = state >= 0 && state < LOGIN_STATE_MAX;
+    bool show = state >= 0 && static_cast<uint32_t>(state) < LOGIN_STATE_MAX;
 
     if (state == LOGIN_STATE_DISCONNECTED || state == LOGIN_STATE_SURVEY) {
         return;
@@ -1060,7 +1060,7 @@ void CGlueMgr::PollDeleteCharacter(const char* text, int32_t complete, int32_t r
 
 // OFFSET: 0x00800F80/0x140515010
 int32_t CGlueMgr::Paint(const void* data, void* param) {
-    uint32_t now = OsGetAsyncTimeMsPrecise();
+    uint32_t now = OsGetAsyncTimeMs();
     uint32_t elapsed = now - CGlueMgr::m_timeMs;
     CGlueMgr::m_timeMs = now;
     CGlueMgr::m_elapsedMs = elapsed;
@@ -1542,10 +1542,10 @@ int32_t CGlueMgr::OnCharCustomizeResult(void* param, NETMESSAGE msgId, uint32_t 
     }
 
     if (result) {
-        if (result == 50) {
-            FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s%s", "OKAY", FrameScript_GetText(ClientServices::GetErrorToken(50), -1, GENDER_NOT_APPLICABLE));
-        } else {
+        if (result != 50) {
             FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s%s", "OKAY", FrameScript_GetText("CHAR_CUSTOMIZE_FAILED", -1, GENDER_NOT_APPLICABLE));
+        } else {
+            FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s%s", "OKAY", FrameScript_GetText(ClientServices::GetErrorToken(50), -1, GENDER_NOT_APPLICABLE));
         }
 
         return 1;
@@ -1861,7 +1861,13 @@ void CGlueMgr::StopCharacterEmoteKits(CAnimKitManager& manager) {
 // OFFSET: 0x00802A90
 void CGlueMgr::CharacterEmoteKitFinished(CAnimKitInst* inst, uint64_t param) {
     CAnimKitManager* manager = inst->m_manager;
-    CM2Model* model = manager ? manager->m_model : NULL;
+    CM2Model* model;
+
+    if (manager) {
+        model = manager->m_model;
+    } else {
+        model = NULL;
+    }
 
     if (model) {
         CCharacterComponent::RemoveVisuals(model);
@@ -2216,7 +2222,7 @@ void CGlueMgr::ApplySpellVisualKit(CSimpleModelFFX* modelFrame, CM2Model* model,
     for (int32_t i = 0; i < 4; i++) {
         switch (kitRec->m_charProc[i]) {
             case 1: {
-                uint32_t color = static_cast<uint32_t>(static_cast<int64_t>(kitRec->m_charParamZero[i])) | 0xFF000000;
+                uint32_t color = static_cast<uint32_t>(kitRec->m_charParamZero[i]) | 0xFF000000;
                 model->m_diffuseTintR = static_cast<float>(static_cast<uint8_t>(color >> 16)) * 0.0039215689f;
                 model->m_diffuseTintG = static_cast<float>(static_cast<uint8_t>(color >> 8)) * 0.0039215689f;
                 model->m_diffuseTintB = static_cast<float>(static_cast<uint8_t>(color)) * 0.0039215689f;
@@ -2355,9 +2361,7 @@ void CGlueMgr::EnterWorld() {
             int32_t start = tip;
 
             do {
-                uint32_t level = CGlueMgr::m_characterInfo->m_experienceLevel;
-
-                if ((!tipRec->m_minLevel || level >= static_cast<uint32_t>(tipRec->m_minLevel)) && (!tipRec->m_maxLevel || level <= static_cast<uint32_t>(tipRec->m_maxLevel))) {
+                if ((!tipRec->m_minLevel || CGlueMgr::m_characterInfo->m_experienceLevel >= tipRec->m_minLevel) && (!tipRec->m_maxLevel || CGlueMgr::m_characterInfo->m_experienceLevel <= tipRec->m_maxLevel)) {
                     break;
                 }
 
@@ -2373,7 +2377,7 @@ void CGlueMgr::EnterWorld() {
         }
     }
 
-    if (SFile::IsStreamingMode() && !CCharacterSelection::IsStreamingDataReady()) {
+    if (SFile::IsStreamingMode() && !CharSelectIsStartRaceComplete()) {
         LoadingScreenSetScreenTipForRaceData();
     }
 
@@ -2476,14 +2480,14 @@ bool CGlueMgr::AgreementsURLCallback(void* param, const char* data, uint32_t siz
         return true;
     }
 
-    if (size) {
+    if (size > 0) {
         agreements->m_data.Add(size, data);
     }
 
     if (done) {
         agreements->m_complete = 1;
 
-        if (agreements->m_data.Count()) {
+        if (agreements->m_data.Count() > 0) {
             CGlueMgr::ProcessAgreements(agreements);
             agreements->m_data.Clear();
         }
@@ -2508,10 +2512,10 @@ int32_t CGlueMgr::OnCharRenameResult(void* param, NETMESSAGE msgId, uint32_t tim
     FrameScript_SignalEvent(GLUE_EVENT_CLOSE_STATUS_DIALOG, NULL);
 
     if (result) {
-        if (result == 50) {
-            FrameScript_SignalEvent(GLUE_EVENT_FORCE_RENAME_CHARACTER, "%s", ClientServices::GetErrorToken(50));
-        } else {
+        if (result != 50) {
             FrameScript_SignalEvent(GLUE_EVENT_FORCE_RENAME_CHARACTER, "%s", FrameScript_GetText("CHAR_RENAME_FAILED", -1, GENDER_NOT_APPLICABLE));
+        } else {
+            FrameScript_SignalEvent(GLUE_EVENT_FORCE_RENAME_CHARACTER, "%s", ClientServices::GetErrorToken(50));
         }
 
         return 1;
@@ -2519,12 +2523,10 @@ int32_t CGlueMgr::OnCharRenameResult(void* param, NETMESSAGE msgId, uint32_t tim
 
     CCharacterSelection::UpdateCharacterName(guid, name);
 
-    if (CCharacterSelection::m_selectionIndex >= 0 && CCharacterSelection::m_selectionIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
-        CharacterSelectionDisplay* display = &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex];
+    CharacterSelectionDisplay* display = CCharacterSelection::m_selectionIndex >= 0 && CCharacterSelection::m_selectionIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex] : NULL;
 
-        if (display && display->m_characterInfo.m_guid == guid) {
-            CGlueMgr::EnterWorld();
-        }
+    if (display && display->m_characterInfo.m_guid.m_guid == guid.m_guid) {
+        CGlueMgr::EnterWorld();
     }
 
     return 1;
@@ -2546,12 +2548,10 @@ int32_t CGlueMgr::OnCharDeclineResult(void* param, NETMESSAGE msgId, uint32_t ti
     msg->Get(guid.m_guid);
     CCharacterSelection::UpdateCharacterNameDeclension(guid);
 
-    if (CCharacterSelection::m_selectionIndex >= 0 && CCharacterSelection::m_selectionIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
-        CharacterSelectionDisplay* display = &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex];
+    CharacterSelectionDisplay* display = CCharacterSelection::m_selectionIndex >= 0 && CCharacterSelection::m_selectionIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex] : NULL;
 
-        if (display && display->m_characterInfo.m_guid == guid) {
-            CGlueMgr::EnterWorld();
-        }
+    if (display && display->m_characterInfo.m_guid.m_guid == guid.m_guid) {
+        CGlueMgr::EnterWorld();
     }
 
     return 1;
@@ -2577,7 +2577,7 @@ void CGlueMgr::PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t s
         CharacterEmoteSpellStartData* data = s_emoteSpellStartAllocator.New<CharacterEmoteSpellStartData>(0);
         data->m_modelFrame = modelFrame;
         data->m_spellVisualKitID = spellVisualKitID;
-        manager.SetExpressionCallback(CGlueMgr::CharacterEmoteSpellStart, reinterpret_cast<uintptr_t>(data));
+        manager.SetExpressionCallback(CGlueMgr::CharacterEmoteSpellStart, static_cast<int64_t>(reinterpret_cast<intptr_t>(data)));
     }
 
     inst->SetStopCallback(CGlueMgr::CharacterEmoteKitFinished, 0);

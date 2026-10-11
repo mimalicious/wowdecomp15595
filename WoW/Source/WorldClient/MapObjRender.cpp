@@ -266,19 +266,17 @@ void CMapObj::UpdateMaterials() {
     float scalar = DayNight::GetSelfIlluminatedScalar();
 
     for (uint32_t i = 0; i < this->m_materialCount; i++) {
-        SMOMaterial* material = &this->m_materials[i];
-
-        if (!(material->m_flags & 0x10)) {
+        if (!(this->m_materials[i].m_flags & 0x10)) {
             continue;
         }
 
-        material->m_frameSidnColor = material->m_sidnColor;
-        uint32_t factor = static_cast<uint32_t>(static_cast<int64_t>(scalar * 255.0f));
-        uint8_t* color = reinterpret_cast<uint8_t*>(&material->m_frameSidnColor);
-        uint32_t b = static_cast<uint8_t>(static_cast<uint16_t>(factor * color[0]) >> 8);
-        uint32_t g = static_cast<uint8_t>(static_cast<uint16_t>(factor * color[1]) >> 8);
-        uint32_t r = static_cast<uint8_t>(static_cast<uint16_t>(factor * color[2]) >> 8);
-        *reinterpret_cast<uint32_t*>(&material->m_frameSidnColor) = b | ((g | (r << 8)) << 8);
+        this->m_materials[i].m_frameSidnColor = this->m_materials[i].m_sidnColor;
+        uint32_t factor = static_cast<uint32_t>(scalar * 255.0f);
+        uint8_t* color = reinterpret_cast<uint8_t*>(&this->m_materials[i].m_frameSidnColor);
+        uint32_t r = static_cast<uint8_t>((factor * color[2]) >> 8);
+        uint32_t g = static_cast<uint8_t>((factor * color[1]) >> 8);
+        uint32_t b = static_cast<uint8_t>((factor * color[0]) >> 8);
+        *reinterpret_cast<uint32_t*>(color) = b | ((g | (r << 8)) << 8);
     }
 }
 
@@ -679,7 +677,7 @@ void CMapObj::RenderMapObjGroupsColor(const CWorldQueryElement* groups, uint32_t
 
 // OFFSET: 0x0077BA60
 void CMapObjRender::UnregisterMaterial(CSceneMaterial* material) {
-    if (material->m_refCount-- != 1) {
+    if (--material->m_refCount != 0) {
         return;
     }
 

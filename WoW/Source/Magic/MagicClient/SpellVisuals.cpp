@@ -147,11 +147,11 @@ void EclipseState::Update(uint32_t time) {
     float blend = 0.0f;
 
     if (time < this->m_fadeInEnd) {
-        blend = static_cast<float>(static_cast<double>(time - this->m_start) / static_cast<double>(this->m_fadeInEnd - this->m_start));
+        blend = static_cast<float>(time - this->m_start) / static_cast<float>(this->m_fadeInEnd - this->m_start);
     } else if (time < this->m_holdEnd) {
         blend = 1.0f;
     } else if (time < this->m_end) {
-        blend = static_cast<float>(1.0 - static_cast<double>(time - this->m_holdEnd) / static_cast<double>(this->m_end - this->m_holdEnd));
+        blend = 1.0f - static_cast<float>(time - this->m_holdEnd) / static_cast<float>(this->m_end - this->m_holdEnd);
     } else {
         this->m_end = 0;
         this->m_start = 0;
@@ -259,7 +259,6 @@ CAaSphere BlizzardObject::GetBoundingSphere() {
 static void ShardEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     if ((++s_shardEventCount & 3) == 0 && eventId == 0x444E5324) {
         SE3SoundKitProperties properties;
-        properties.ResetToDefaults();
         properties.m_maxAudibleBehavior = 1;
         properties.m_priority = 128;
         SE3::PlaySoundKit(data, position, &properties, NULL, __FILE__, __LINE__, "ShardEventCallback()", 0, NULL);
@@ -315,7 +314,7 @@ void SpellVisualsHandleCastStart(CGUnit_C* unit, const SpellCast* cast, const Sp
     }
 
     if (spell->m_attributesExB & 0x20) {
-        if (unit->m_animationState & 0x8) {
+        if (static_cast<uint8_t>(unit->m_animationState >> 3) & 1) {
             return;
         }
 
@@ -452,9 +451,9 @@ bool LightningObject::Tick(uint32_t time) {
         CGObject_C* caster = static_cast<CGObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(this->m_targets[0]), TYPEMASK_OBJECT, __FILE__, __LINE__));
         CGObject_C* source = static_cast<CGObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(this->m_targets[bolt.m_source]), TYPEMASK_OBJECT, __FILE__, __LINE__));
         CGObject_C* target = static_cast<CGObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(this->m_targets[bolt.m_target]), TYPEMASK_OBJECT, __FILE__, __LINE__));
-        CGUnit_C* casterUnit = caster && (caster->m_obj->m_type & TYPEMASK_UNIT) ? static_cast<CGUnit_C*>(caster) : NULL;
-        CGUnit_C* sourceUnit = source && (source->m_obj->m_type & TYPEMASK_UNIT) ? static_cast<CGUnit_C*>(source) : NULL;
-        CGUnit_C* targetUnit = target && (target->m_obj->m_type & TYPEMASK_UNIT) ? static_cast<CGUnit_C*>(target) : NULL;
+        CGUnit_C* casterUnit = caster && (static_cast<uint8_t>(static_cast<uint32_t>(static_cast<int16_t>(caster->m_obj->m_type)) >> 3) & 1) ? static_cast<CGUnit_C*>(caster) : NULL;
+        CGUnit_C* sourceUnit = source && (static_cast<uint8_t>(static_cast<uint32_t>(static_cast<int16_t>(source->m_obj->m_type)) >> 3) & 1) ? static_cast<CGUnit_C*>(source) : NULL;
+        CGUnit_C* targetUnit = target && (static_cast<uint8_t>(static_cast<uint32_t>(static_cast<int16_t>(target->m_obj->m_type)) >> 3) & 1) ? static_cast<CGUnit_C*>(target) : NULL;
 
         if ((this->m_flags & 0x1) || (time >= bolt.m_startTime && time < bolt.m_endTime)) {
             C3Vector sourcePos(0.0f, 0.0f, 0.0f);
@@ -528,7 +527,7 @@ void SpellVisualsHandleEclipse(const CImVector& color, float fadeIn, const Spell
     uint32_t now = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     s_eclipse.m_start = now;
     s_eclipse.m_holdEnd = now + castTime;
-    s_eclipse.m_fadeInEnd = now + static_cast<int32_t>(static_cast<int64_t>(static_cast<double>(castTime) * fadeIn));
+    s_eclipse.m_fadeInEnd = now + static_cast<uint32_t>(static_cast<float>(castTime) * fadeIn);
     s_eclipse.m_end = now + castTime + 100;
 }
 
@@ -560,8 +559,8 @@ void LightningObject::InitializeBolts(CGUnit_C* caster, const WOWGUID* targets, 
             this->m_endTime = bolt.m_endTime;
         }
 
-        time += static_cast<int64_t>(this->m_chainEffects->m_delayBetweenEffects);
-        bolt.m_attachment = i ? -1 : attachment;
+        time += static_cast<uint32_t>(this->m_chainEffects->m_delayBetweenEffects);
+        bolt.m_attachment = !i ? attachment : -1;
 
         if (!this->m_targets[i + 1]) {
             continue;
@@ -623,7 +622,7 @@ int32_t MountTransitionObject::UpdateCharacterData() {
     this->m_attachPivot = mountModel->GetAttachmentPivot(0);
     M2BoneSequenceInfo info;
     model->GetBoneSequenceInfo(0xFFFFFFFF, info);
-    float rate = static_cast<float>(1.0 / static_cast<double>(info.m_endTime - info.m_startTime));
+    float rate = 1.0f / static_cast<float>(info.m_endTime - info.m_startTime);
     this->m_animRate = rate;
     uint32_t anim = unit->GetCurrentTorsoAnimId();
     uint32_t riseStart = model->GetEventSequenceTime(anim, 0x42545324);
@@ -785,7 +784,7 @@ void BlizzardObject::Render(int32_t visible) {
         }
 
         model->m_fFlags |= 0x4000;
-        model->m_worldTransform = transform;
+        model->SetWorldTransform(transform);
     }
 }
 
@@ -982,11 +981,22 @@ void SpellVisualsShutdownModelAttachLookup() {
 
     for (uint32_t i = 0; i < count; i++) {
         if ((*s_modelAttachLookup)[i]) {
-            delete (*s_modelAttachLookup)[i];
+            TSGrowableArray<const SpellVisualKitModelAttachRec*>* list = (*s_modelAttachLookup)[i];
+
+            if (list) {
+                list->~TSGrowableArray();
+                SMemFree(list, "delete", -1, 0);
+            }
         }
     }
 
-    delete s_modelAttachLookup;
+    TSGrowableArray<TSGrowableArray<const SpellVisualKitModelAttachRec*>*>* lookup = s_modelAttachLookup;
+
+    if (lookup) {
+        lookup->~TSGrowableArray();
+        SMemFree(lookup, "delete", -1, 0);
+    }
+
     s_modelAttachLookup = NULL;
 }
 
@@ -1340,7 +1350,8 @@ void SpellVisualClearLightning(LightningObject* lightning) {
     lightning->m_endTime = time;
 
     if (--lightning->m_refCount == 0) {
-        delete lightning;
+        lightning->~LightningObject();
+        SMemFree(lightning, "delete", -1, 0);
     }
 }
 
@@ -1494,7 +1505,8 @@ void SpellVisualsFreeDeleted() {
         s_lightningObjectsDeleted.UnlinkNode(lightning);
 
         if (--lightning->m_refCount == 0) {
-            delete lightning;
+            lightning->~LightningObject();
+            SMemFree(lightning, "delete", -1, 0);
         }
 
         lightning = next;
@@ -1541,8 +1553,11 @@ void SpellVisualsClear() {
 void SpellVisualsShutdown() {
     SpellVisualsClear();
 
-    if (s_lightningManager) {
-        delete s_lightningManager;
+    CLightningManager* lightningManager = s_lightningManager;
+
+    if (lightningManager) {
+        lightningManager->~CLightningManager();
+        SMemFree(lightningManager, "delete", -1, 0);
     }
 
     s_lastUpdateTime = -1;

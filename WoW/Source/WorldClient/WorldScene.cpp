@@ -409,7 +409,7 @@ CM2Model* CWorldScene::LoadModel(const char* name, const C44Matrix& mat, void (*
     }
 
     model->m_fFlags |= 0x4000;
-    model->m_worldTransform = mat;
+    model->SetWorldTransform(mat);
     model->SetEventCallback(reinterpret_cast<void*>(eventCallback), eventParam);
     model->m_lightingCallback = lightingCallback;
     model->m_lightingArg = lightingParam;
@@ -602,7 +602,7 @@ void CWorldScene::RenderBarriers(CWorldView* view) {
 
 // OFFSET: 0x00727620/0x1403FECB0
 void CWorldScene::RenderLowDetailAreas(CWorldView* view) {
-    if (!view->m_lowDetailAreas.Count()) {
+    if (view->m_lowDetailAreas.Count() <= 0) {
         return;
     }
 
@@ -838,7 +838,7 @@ void CWorldScene::UpdateFadeOutObjects() {
                 fadeout->m_callback(matrix, fadeout->m_param);
                 C44Matrix transform = fadeout->m_matrix * matrix;
                 model->m_fFlags |= 0x4000;
-                model->m_worldTransform = transform;
+                model->SetWorldTransform(transform);
             }
 
             float alpha = (1.0f - static_cast<float>(elapsed) * 0.00050000002f) * fadeout->m_alpha;
@@ -906,8 +906,7 @@ void CWorldScene::Initialize() {
     *reinterpret_cast<uint32_t*>(&gray) = 0xFF808080;
     CWorldScene::s_defaultTexture = TextureCreateSolid(gray);
 
-    CImVector black;
-    *reinterpret_cast<uint32_t*>(&black) = 0xFF000000;
+    CImVector black(0, 0, 0, 0xFF);
     CWorldScene::s_defaultBlendTexture = TextureCreateSolid(black);
 
     CWorldScene::s_m2Scene = M2CreateScene();

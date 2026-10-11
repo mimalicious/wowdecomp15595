@@ -10384,7 +10384,7 @@ const char* CGUnit_C::GetPortraitTextureName() const {
 
 // OFFSET: 0x005ABE70
 void CGUnit_C::SetAnimEventPosition(const C3Vector* position) {
-    this->m_clientFlags |= 0x80000000;
+    this->m_clientFlags |= 0x40000000;
     this->m_animEventPosition = *position;
 }
 

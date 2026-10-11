@@ -63,13 +63,11 @@ static TSObjectAllocPool<T>* NewPool(const char* name, uint32_t objectsPerBlock,
     return mem ? new (mem) TSObjectAllocPool<T>(name, objectsPerBlock) : NULL;
 }
 
-// PROVEN: bc78ff82 IDENTICAL/NONE
 // OFFSET: 0x00775900/0x14045FFE0
 void* CMap::AllocRawAreaData(uint32_t size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 9b0ed89c IDENTICAL/NONE
 // OFFSET: 0x00775920/0x140460000
 void CMap::FreeRawAreaData(void* data) {
     SMemFree(data, __FILE__, __LINE__, 0);
@@ -77,138 +75,138 @@ void CMap::FreeRawAreaData(void* data) {
 
 // OFFSET: 0x00775FC0
 CMapObj* CMap::AllocMapObj() {
-    return CMap::s_mapObjHeap->New(__FILE__, __LINE__);
+    return CMap::s_mapObjHeap->New("", 0);
 }
 
 // OFFSET: 0x00775FE0
 void CMap::FreeMapObj(CMapObj* mapObj) {
-    CMap::s_mapObjHeap->Delete(mapObj, __FILE__, __LINE__);
+    CMap::s_mapObjHeap->Delete(mapObj, "", 0);
 }
 
 // OFFSET: 0x00776030/0x140460660
 CMapObjGroup* CMap::AllocMapObjGroup() {
-    return CMap::s_mapObjGroupHeap->New(__FILE__, __LINE__);
+    return CMap::s_mapObjGroupHeap->New("", 0);
 }
 
 // OFFSET: 0x00776050/0x140460670
 void CMap::FreeMapObjGroup(CMapObjGroup* mapObjGroup) {
-    CMap::s_mapObjGroupHeap->Delete(mapObjGroup, __FILE__, __LINE__);
+    CMap::s_mapObjGroupHeap->Delete(mapObjGroup, "", 0);
 }
 
 // OFFSET: 0x007760A0/0x1404606C0
 CMapArea* CMap::AllocArea() {
-    return CMap::s_areaHeap->New(__FILE__, __LINE__);
+    return CMap::s_areaHeap->New("", 0);
 }
 
 // OFFSET: 0x007760C0/0x1404606D0
 void CMap::FreeArea(CMapArea* area) {
     area->m_mapLink.Unlink();
-    CMap::s_areaHeap->Delete(area, __FILE__, __LINE__);
+    CMap::s_areaHeap->Delete(area, "", 0);
 }
 
 // OFFSET: 0x00776140
 CMapAreaLow* CMap::AllocAreaLow() {
-    return CMap::s_areaLowHeap->New(__FILE__, __LINE__);
+    return CMap::s_areaLowHeap->New("", 0);
 }
 
 // OFFSET: 0x00776160
 void CMap::FreeAreaLow(CMapAreaLow* areaLow) {
-    CMap::s_areaLowHeap->Delete(areaLow, __FILE__, __LINE__);
+    CMap::s_areaLowHeap->Delete(areaLow, "", 0);
 }
 
 // OFFSET: 0x007761B0
 CMapChunk* CMap::AllocChunk() {
-    return CMap::s_chunkHeap->New(__FILE__, __LINE__);
+    return CMap::s_chunkHeap->New("", 0);
 }
 
 // OFFSET: 0x007761D0/0x1404607E0
 void CMap::FreeChunk(CMapChunk* chunk) {
     chunk->m_areaLink.Unlink();
-    CMap::s_chunkHeap->Delete(chunk, __FILE__, __LINE__);
+    CMap::s_chunkHeap->Delete(chunk, "", 0);
 }
 
 // OFFSET: 0x00776250
 CMapRenderChunk* CMap::AllocRenderChunk() {
-    return CMap::s_renderChunkHeap->New(__FILE__, __LINE__);
+    return CMap::s_renderChunkHeap->New("", 0);
 }
 
 // OFFSET: 0x00776270/0x140460890
 void CMap::FreeRenderChunk(CMapRenderChunk* renderChunk) {
     renderChunk->m_link.Unlink();
-    CMap::s_renderChunkHeap->Delete(renderChunk, __FILE__, __LINE__);
+    CMap::s_renderChunkHeap->Delete(renderChunk, "", 0);
 }
 
 // OFFSET: 0x007762F0/0x140460930
 CMapChunkBuf* CMap::AllocChunkBuf() {
-    return CMap::s_chunkBufHeap->New(__FILE__, __LINE__);
+    return CMap::s_chunkBufHeap->New("", 0);
 }
 
 // OFFSET: 0x00776310/0x140460940
 void CMap::FreeChunkBuf(CMapChunkBuf* chunkBuf) {
     chunkBuf->m_link.Unlink();
-    CMap::s_chunkBufHeap->Delete(chunkBuf, __FILE__, __LINE__);
+    CMap::s_chunkBufHeap->Delete(chunkBuf, "", 0);
 }
 
 // OFFSET: 0x00776390
 CMapDoodadDef* CMap::AllocDoodadDef() {
-    return CMap::s_doodadDefHeap->New(__FILE__, __LINE__);
+    return CMap::s_doodadDefHeap->New("", 0);
 }
 
 // OFFSET: 0x007763B0/0x1404609F0
 void CMap::FreeDoodadDef(CMapDoodadDef* doodadDef) {
-    CMap::s_doodadDefHeap->Delete(doodadDef, __FILE__, __LINE__);
+    CMap::s_doodadDefHeap->Delete(doodadDef, "", 0);
 }
 
 // OFFSET: 0x00776400/0x140460A40
 CMapEntity* CMap::AllocEntity() {
-    return CMap::s_entityHeap->New(__FILE__, __LINE__);
+    return CMap::s_entityHeap->New("", 0);
 }
 
 // OFFSET: 0x00776420/0x140460A50
 void CMap::FreeEntity(CMapEntity* entity) {
-    CMap::s_entityHeap->Delete(entity, __FILE__, __LINE__);
+    CMap::s_entityHeap->Delete(entity, "", 0);
 }
 
 // OFFSET: 0x00776470/0x140460AA0
 CMapObjDefGroup* CMap::AllocMapObjDefGroup() {
-    return CMap::s_mapObjDefGroupHeap->New(__FILE__, __LINE__);
+    return CMap::s_mapObjDefGroupHeap->New("", 0);
 }
 
 // OFFSET: 0x00776490/0x140460AB0
 void CMap::FreeMapObjDefGroup(CMapObjDefGroup* mapObjDefGroup) {
     mapObjDefGroup->m_mapObjDefLink.Unlink();
-    CMap::s_mapObjDefGroupHeap->Delete(mapObjDefGroup, __FILE__, __LINE__);
+    CMap::s_mapObjDefGroupHeap->Delete(mapObjDefGroup, "", 0);
 }
 
 // OFFSET: 0x00776510
 CMapObjDef* CMap::AllocMapObjDef() {
-    return CMap::s_mapObjDefHeap->New(__FILE__, __LINE__);
+    return CMap::s_mapObjDefHeap->New("", 0);
 }
 
 // OFFSET: 0x00776530/0x140460B70
 void CMap::FreeMapObjDef(CMapObjDef* mapObjDef) {
-    CMap::s_mapObjDefHeap->Delete(mapObjDef, __FILE__, __LINE__);
+    CMap::s_mapObjDefHeap->Delete(mapObjDef, "", 0);
 }
 
 // OFFSET: 0x00776580/0x140460BC0
 CChunkLiquid* CMap::AllocChunkLiquid() {
-    return CMap::s_chunkLiquidHeap->New(__FILE__, __LINE__);
+    return CMap::s_chunkLiquidHeap->New("", 0);
 }
 
 // OFFSET: 0x007765A0/0x140460BD0
 void CMap::FreeChunkLiquid(CChunkLiquid* liquid) {
-    CMap::s_chunkLiquidHeap->Delete(liquid, __FILE__, __LINE__);
+    CMap::s_chunkLiquidHeap->Delete(liquid, "", 0);
 }
 
 // OFFSET: 0x00776660
 CMapChunkInfo* CMap::AllocChunkInfo() {
-    return CMap::s_chunkInfoHeap->New(__FILE__, __LINE__);
+    return CMap::s_chunkInfoHeap->New("", 0);
 }
 
 // OFFSET: 0x00776680/0x140460D20
 CMapBaseObjLink* CMap::AllocBaseObjLink(CMapBaseObj* owner, CMapBaseObj* ref) {
     owner->m_refCount++;
-    CMapBaseObjLink* link = CMap::s_baseObjLinkHeap->New(__FILE__, __LINE__);
+    CMapBaseObjLink* link = CMap::s_baseObjLinkHeap->New("", 0);
     link->m_owner = owner;
     link->m_ref = ref;
     return link;
@@ -216,7 +214,7 @@ CMapBaseObjLink* CMap::AllocBaseObjLink(CMapBaseObj* owner, CMapBaseObj* ref) {
 
 // OFFSET: 0x007766B0/0x140460D60
 void CMap::FreeChunkInfo(CMapChunkInfo* chunkInfo) {
-    CMap::s_chunkInfoHeap->Delete(chunkInfo, __FILE__, __LINE__);
+    CMap::s_chunkInfoHeap->Delete(chunkInfo, "", 0);
 }
 
 // OFFSET: 0x00776D20/0x140461520
@@ -226,7 +224,7 @@ void CMap::FreeBaseObjLink(CMapBaseObjLink* link) {
     link->m_refLink.Unlink();
     link->m_ref = NULL;
     link->m_owner = NULL;
-    CMap::s_baseObjLinkHeap->Delete(link, __FILE__, __LINE__);
+    CMap::s_baseObjLinkHeap->Delete(link, "", 0);
 }
 
 // OFFSET: 0x007766F0/0x140460DA0

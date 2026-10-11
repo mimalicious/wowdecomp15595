@@ -64,7 +64,7 @@ static int32_t Script_SetCharacterSelectFacing(lua_State* L) {
         return 0;
     }
 
-    CharacterSelectionDisplay::SetCharacterFacing(static_cast<float>(lua_tonumber(L, 1) * 0.017453292f));
+    CharacterSelectionDisplay::SetCharacterFacing(static_cast<float>(lua_tonumber(L, 1)) * 0.017453292f);
     return 1;
 }
 
@@ -272,7 +272,7 @@ static int32_t Script_SaveCharacterOrder(lua_State* L) {
 
     int32_t count = CCharacterSelection::m_characterList.Count();
     int32_t selectionIndex = CCharacterSelection::m_selectionIndex;
-    uint32_t* order = new uint32_t[count];
+    uint32_t* order = new (__FILE__, __LINE__) uint32_t[count];
     int32_t i = 0;
 
     while (i < count) {
@@ -307,7 +307,10 @@ static int32_t Script_SaveCharacterOrder(lua_State* L) {
         }
     }
 
-    delete[] order;
+    if (order) {
+        SMemFree(order, "delete[]", -1, 0);
+    }
+
     return 0;
 }
 

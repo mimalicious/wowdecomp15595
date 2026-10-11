@@ -22,8 +22,8 @@ void CWorldQuery::FreeMapObjGroupList() {
         this->m_mapObjGroups = NULL;
     }
 
-    this->m_mapObjGroupMax = 0;
     this->m_mapObjGroupCount = 0;
+    this->m_mapObjGroupMax = 0;
 }
 
 // OFFSET: 0x0079D620/0x140492440
@@ -33,8 +33,8 @@ void CWorldQuery::FreeModelList() {
         this->m_models = NULL;
     }
 
-    this->m_modelMax = 0;
     this->m_modelCount = 0;
+    this->m_modelMax = 0;
 }
 
 // PROVEN: 200c511b IDENTICAL/NONE
@@ -82,8 +82,8 @@ void CWorldQuery::FreeModelBatchList() {
         this->m_texturedBatches.m_batches = NULL;
     }
 
-    this->m_texturedBatches.m_maxCount = 0;
     this->m_texturedBatches.m_count = 0;
+    this->m_texturedBatches.m_maxCount = 0;
 }
 
 // OFFSET: 0x0079D720
@@ -124,9 +124,9 @@ void CWorldQuery::AddMapObjGroup(CMapObjGroup* group, const C44Matrix* matrix) {
 
 // OFFSET: 0x0079D860
 int32_t CWorldView::IsBeyondFadeInner(const C3Vector& pos, uint32_t sizeCategory) {
-    float dz = pos.z - this->m_camPos.z;
+    float dx = pos.x - this->m_camPos.x;
     float dy = pos.y - this->m_camPos.y;
-    return dz * dz + dy * dy + (pos.x - this->m_camPos.x) * (pos.x - this->m_camPos.x) > CWorldView::s_fadeInnerSqr[sizeCategory];
+    return dx * dx + dy * dy + (pos.z - this->m_camPos.z) * (pos.z - this->m_camPos.z) > CWorldView::s_fadeInnerSqr[sizeCategory];
 }
 
 // OFFSET: 0x0079D8D0

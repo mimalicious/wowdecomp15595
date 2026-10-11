@@ -185,7 +185,7 @@ void CMeshGeomFactory::SetDiffuseColor(const CImVector& color) {
 
 // OFFSET: 0x0076CE70/0x140455490
 void CMeshGeomFactory::Release() {
-    if (this->m_refCount-- == 1) {
+    if (--this->m_refCount == 0) {
         CMeshGeomFactory::s_allocator.Delete(this);
     }
 }
@@ -427,7 +427,7 @@ void CChunkGeomFactory::Destroy() {
 
 // OFFSET: 0x0076D440/0x140455C90
 void CChunkGeomFactory::Release() {
-    if (this->m_refCount-- == 1) {
+    if (--this->m_refCount == 0) {
         CChunkGeomFactory::s_allocator.Delete(this);
     }
 }
@@ -446,12 +446,12 @@ bool CChunkGeomFactory::SetTransform(const C44Matrix& transform) {
 
 // OFFSET: 0x0076D4B0/0x140455D70
 float CChunkGeomFactory::GetHeight() {
-    if (!this->m_liquids.Count()) {
-        return 0.0f;
+    if (this->m_liquids.Count()) {
+        const CChunkLiquid* liquid = this->m_liquids.m_data[0];
+        return Liquid::GetChunkHeight(liquid->m_liquidObject, liquid->m_vertexData, liquid->m_vertexCount, 0);
     }
 
-    const CChunkLiquid* liquid = this->m_liquids.m_data[0];
-    return Liquid::GetChunkHeight(liquid->m_liquidObject, liquid->m_vertexData, liquid->m_vertexCount, 0);
+    return 0.0f;
 }
 
 // OFFSET: 0x0076D4E0/0x140455DA0
@@ -506,7 +506,7 @@ static void BuildChunkIndices(const CChunkLiquid* liquid, uint16_t* indices, uin
 
 // OFFSET: 0x0076D660/0x140455F70
 void CAreaGeomFactory::Release() {
-    if (this->m_refCount-- == 1) {
+    if (--this->m_refCount == 0) {
         CAreaGeomFactory::s_allocator.Delete(this);
     }
 }

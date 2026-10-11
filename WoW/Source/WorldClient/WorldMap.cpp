@@ -168,11 +168,15 @@ const float* CWorldMap::GetDepthCoordTable(uint32_t liquidType) {
 
 // OFFSET: 0x0072CAA0/0x140405C20
 void CWorldMap::ClearAllChunkBufs() {
-    for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
-        if (*worldMap) {
-            for (uint32_t i = 0; i < 12; i++) {
-                if ((*worldMap)->m_maps[i]) {
-                    (*worldMap)->m_maps[i]->ClearChunkBufs();
+    for (int32_t i = 0; i < 2; i++) {
+        CWorldMap* worldMap = CWorldMap::s_worldMaps[i];
+
+        if (worldMap) {
+            for (int32_t j = 0; j < 12; j++) {
+                CMap* map = worldMap->m_maps[j];
+
+                if (map) {
+                    map->ClearChunkBufs();
                 }
             }
         }
@@ -181,11 +185,15 @@ void CWorldMap::ClearAllChunkBufs() {
 
 // OFFSET: 0x0072CAE0/0x140405C90
 void CWorldMap::ClearAllRenderChunks() {
-    for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
-        if (*worldMap) {
-            for (uint32_t i = 0; i < 12; i++) {
-                if ((*worldMap)->m_maps[i]) {
-                    (*worldMap)->m_maps[i]->ClearRenderChunks();
+    for (int32_t i = 0; i < 2; i++) {
+        CWorldMap* worldMap = CWorldMap::s_worldMaps[i];
+
+        if (worldMap) {
+            for (int32_t j = 0; j < 12; j++) {
+                CMap* map = worldMap->m_maps[j];
+
+                if (map) {
+                    map->ClearRenderChunks();
                 }
             }
         }
@@ -194,11 +202,15 @@ void CWorldMap::ClearAllRenderChunks() {
 
 // OFFSET: 0x0072CB20
 void CWorldMap::ClearAllDetailDoodads() {
-    for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
-        if (*worldMap) {
-            for (uint32_t i = 0; i < 12; i++) {
-                if ((*worldMap)->m_maps[i]) {
-                    (*worldMap)->m_maps[i]->ClearChunkDetailDoodads();
+    for (int32_t i = 0; i < 2; i++) {
+        CWorldMap* worldMap = CWorldMap::s_worldMaps[i];
+
+        if (worldMap) {
+            for (int32_t j = 0; j < 12; j++) {
+                CMap* map = worldMap->m_maps[j];
+
+                if (map) {
+                    map->ClearChunkDetailDoodads();
                 }
             }
         }
@@ -248,7 +260,7 @@ int32_t CWorldMap::AddMap(const char* directory, int32_t mapId, int32_t preload)
 
 // OFFSET: 0x0072CCE0/0x140405E70
 void CWorldMap::RemoveMap(int32_t mapId) {
-    for (uint32_t i = 1; i < 12; i++) {
+    for (int32_t i = 1; i < 12; i++) {
         if (this->m_maps[i] && this->m_maps[i]->m_mapId == mapId) {
             CMap* map = this->m_maps[i];
             map->m_mapFlags = (map->m_mapFlags & ~(CMap::Flag_Current | CMap::Flag_Remove)) | CMap::Flag_Remove;
@@ -259,7 +271,7 @@ void CWorldMap::RemoveMap(int32_t mapId) {
 
 // OFFSET: 0x0072CD20/0x140405EC0
 void CWorldMap::SetCurrent(int32_t mapId, int32_t current) {
-    for (uint32_t i = 0; i < 12; i++) {
+    for (int32_t i = 0; i < 12; i++) {
         if (this->m_maps[i] && this->m_maps[i]->m_mapId == mapId) {
             CMap* map = this->m_maps[i];
             map->m_mapFlags ^= (map->m_mapFlags ^ (4 * (current != 0))) & CMap::Flag_Current;
@@ -562,17 +574,15 @@ void CWorldMap::WaterReset() {
 int32_t CWorldMap::GetActiveMapRecId(int32_t x, int32_t y) {
     uint8_t index = this->GetCurrentMapIndex(x, y);
 
-    if (index == 0xFF) {
-        return -1;
+    if (index != 0xFF) {
+        CMap* map = this->m_maps[index];
+
+        if (map) {
+            return map->m_mapId;
+        }
     }
 
-    CMap* map = this->m_maps[index];
-
-    if (!map) {
-        return -1;
-    }
-
-    return map->m_mapId;
+    return -1;
 }
 
 // OFFSET: 0x0072D9C0/0x1404070E0
@@ -875,7 +885,9 @@ int32_t CWorldMap::LoadWorldMap(const char* directory, int32_t mapId, int32_t pr
 
 // OFFSET: 0x0072F3F0
 void CWorldMap::UnloadAllWorldMaps() {
-    for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
+    for (int32_t i = 0; i < 2; i++) {
+        CWorldMap** worldMap = &CWorldMap::s_worldMaps[i];
+
         if (*worldMap) {
             (*worldMap)->Unload();
             CWorldMap* map = *worldMap;
@@ -1475,11 +1487,15 @@ static int32_t QueryMapObjDefModels(CMapObjDef* mapObjDef, CM2Model** models, ui
 int32_t CWorldMap::QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower) {
     CMap* map = this->GetMap(pos);
 
-    if (!map) {
-        return 0;
+    if (map) {
+        if (map->m_mapFlags & 0x40) {
+            map = this->m_maps[0];
+        }
+
+        return map->GetFlightBounds(pos, z, lower);
     }
 
-    return map->GetFlightBounds(pos, z, lower);
+    return 0;
 }
 
 // OFFSET: 0x007318B0
@@ -1487,6 +1503,10 @@ void CWorldMap::RenderFlightBounds(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
 
     if (map) {
+        if (map->m_mapFlags & 0x40) {
+            map = this->m_maps[0];
+        }
+
         map->RenderFlightBounds(pos);
     }
 }
@@ -2256,11 +2276,11 @@ static int32_t SortMapObjDefIntersects(const void* a, const void* b) {
     float distA = static_cast<const SMapObjDefVectorIntersect*>(a)->m_distSq;
     float distB = static_cast<const SMapObjDefVectorIntersect*>(b)->m_distSq;
 
-    if (distB <= distA) {
-        return distA > distB;
+    if (distB > distA) {
+        return -1;
     }
 
-    return -1;
+    return distA > distB;
 }
 
 // OFFSET: 0x00763050

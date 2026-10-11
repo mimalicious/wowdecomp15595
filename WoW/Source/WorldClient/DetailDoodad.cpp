@@ -338,9 +338,9 @@ void CDetailDoodadInstBatch::FillInstanceBuf() {
 // OFFSET: 0x00736F60
 void CDetailDoodad::DestroyModels() {
     for (uint32_t i = 0; i < CDetailDoodad::s_doodadList.Count(); i++) {
-        CDetailDoodadData* data = CDetailDoodad::s_doodadList[i];
+        if (CDetailDoodad::s_doodadList[i]) {
+            CDetailDoodadData* data = CDetailDoodad::s_doodadList[i];
 
-        if (data) {
             if (data->m_texture) {
                 TextureRelease(data->m_texture);
                 data->m_texture = NULL;
@@ -352,7 +352,7 @@ void CDetailDoodad::DestroyModels() {
             }
 
             data->m_record = NULL;
-            delete data;
+            SMemFree(data, "delete", -1, 0);
         }
 
         CDetailDoodad::s_doodadList[i] = NULL;
@@ -933,9 +933,21 @@ void CDetailDoodad::Destroy() {
     }
 
     CDetailDoodad::s_alphaRampTexture = NULL;
-    delete CDetailDoodad::s_instHeap;
+    TSObjectAllocPool<CDetailDoodadInst>* instHeap = CDetailDoodad::s_instHeap;
+
+    if (instHeap) {
+        instHeap->~TSObjectAllocPool();
+        SMemFree(instHeap, "delete", -1, 0);
+    }
+
     CDetailDoodad::s_instHeap = NULL;
-    delete CDetailDoodad::s_batchHeap;
+    TSObjectAllocPool<CDetailDoodadInstBatch>* batchHeap = CDetailDoodad::s_batchHeap;
+
+    if (batchHeap) {
+        batchHeap->~TSObjectAllocPool();
+        SMemFree(batchHeap, "delete", -1, 0);
+    }
+
     CDetailDoodad::s_batchHeap = NULL;
 
     if (CDetailDoodad::s_vertexShader) {
@@ -954,7 +966,7 @@ void CDetailDoodadInst::Free() {
     for (CDetailDoodadInstBatch* batch = this->m_batches.Head(), * next; batch; batch = next) {
         next = this->m_batches.Next(batch);
         batch->Free();
-        CDetailDoodad::s_batchHeap->Delete(batch, __FILE__, __LINE__);
+        CDetailDoodad::s_batchHeap->Delete(batch, "", 0);
     }
 }
 
@@ -1106,7 +1118,7 @@ DDMaterial::~DDMaterial() {
 
 // OFFSET: 0x0073A940
 CDetailDoodadInst* CDetailDoodad::AllocInst() {
-    return CDetailDoodad::s_instHeap->New(__FILE__, __LINE__);
+    return CDetailDoodad::s_instHeap->New("", 0);
 }
 
 // OFFSET: 0x0073A960
@@ -1116,7 +1128,7 @@ CDetailDoodadInst::~CDetailDoodadInst() {
 
 // OFFSET: 0x0073ACE0/0x140418290
 void CDetailDoodad::FreeInst(CDetailDoodadInst* inst) {
-    CDetailDoodad::s_instHeap->Delete(inst, __FILE__, __LINE__);
+    CDetailDoodad::s_instHeap->Delete(inst, "", 0);
 }
 
 // OFFSET: 0x0073AD20
@@ -1155,7 +1167,7 @@ void CDetailDoodadInst::AddDoodad(uint32_t id, const C3Vector& position, float r
     }
 
     if (!batch) {
-        batch = CDetailDoodad::s_batchHeap->New(__FILE__, __LINE__);
+        batch = CDetailDoodad::s_batchHeap->New("", 0);
         batch->m_id = id;
         batch->m_texture = data->m_texture;
         this->m_batches.LinkToHead(batch);

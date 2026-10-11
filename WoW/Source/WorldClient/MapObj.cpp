@@ -96,14 +96,18 @@ void CMapObj::AsyncFreeCallback(CAsyncObject* object) {
 
 // OFFSET: 0x00745B00/0x140423A20
 uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t flags) {
+    uint32_t ignore = 0xEE;
+
     if (flags & 0x80) {
         return 0x2CA;
     }
 
-    uint32_t ignore = (flags & 0x10) ? 0xC6 : 0xEE;
+    if (flags & 0x10) {
+        ignore = 0xC6;
+    }
 
     if (flags & 0x20) {
-        ignore &= 0xDB;
+        ignore &= ~0x24u;
     }
 
     if (!(flags & 0x40)) {
@@ -253,11 +257,11 @@ void CMapObj::GetGroupBounds(CAaBox& box, uint32_t groupNum) {
 
 // OFFSET: 0x00745F30/0x140423E70
 uint32_t CMapObj::GetGroupFlags(uint32_t groupNum) {
-    if (this->m_flags & 0x40) {
-        return this->m_groupInfos[groupNum].m_flags;
+    if (!(this->m_flags & 0x40)) {
+        return 0;
     }
 
-    return 0;
+    return this->m_groupInfos[groupNum].m_flags;
 }
 
 // OFFSET: 0x00745F60/0x140423E90
@@ -349,26 +353,25 @@ void CMapObj::WaitLoadGroup(uint32_t groupNum) {
 
 // OFFSET: 0x00746300
 const char* CMapObj::GetGroupName(uint32_t groupNum) {
-    if (!(this->m_flags & 0x40)) {
-        return NULL;
+    if (this->m_flags & 0x40) {
+        CMapObjGroup* group = this->m_groups[groupNum];
+        uint32_t loaded = group->m_flags & 0x40;
+
+        if (loaded) {
+            return group->m_groupName;
+        }
     }
 
-    CMapObjGroup* group = this->m_groups[groupNum];
-
-    if (!(group->m_flags & 0x40)) {
-        return NULL;
-    }
-
-    return group->m_groupName;
+    return NULL;
 }
 
 // OFFSET: 0x00746330
 SMOGroupInfo* CMapObj::GetGroupInfo(uint32_t groupNum) {
-    if (this->m_flags & 0x40) {
-        return &this->m_groupInfos[groupNum];
+    if (!(this->m_flags & 0x40)) {
+        return NULL;
     }
 
-    return NULL;
+    return &this->m_groupInfos[groupNum];
 }
 
 // OFFSET: 0x00746350
@@ -602,14 +605,18 @@ bool CMapObj::GetTris(const CFrustum& frustum, uint32_t flags, World::TriData& t
 
 // OFFSET: 0x00746B30/0x140424E00
 bool CMapObj::Intersect(const C3Vector& start, const C3Vector& end, float& t, uint32_t flags, uint32_t ignoreFlags, uint32_t groupNum, uint32_t& faceIndex) {
-    if (!(this->m_flags & 0x40) || !(this->m_groups[groupNum]->m_flags & 0x40)) {
-        return false;
+    if (this->m_flags & 0x40) {
+        if (!(this->m_groups[groupNum]->m_flags & 0x40)) {
+            return false;
+        }
+
+        C3Segment seg;
+        seg.b = start;
+        seg.t = end;
+        return this->m_groups[groupNum]->Intersect(seg, t, flags, ignoreFlags, faceIndex);
     }
 
-    C3Segment seg;
-    seg.b = start;
-    seg.t = end;
-    return this->m_groups[groupNum]->Intersect(seg, t, flags, ignoreFlags, faceIndex);
+    return false;
 }
 
 // OFFSET: 0x00746BA0

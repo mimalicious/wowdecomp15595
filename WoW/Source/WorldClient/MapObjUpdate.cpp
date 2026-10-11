@@ -71,7 +71,13 @@ void CMapObj::UpdateGroups(CMapObj* mapObj) {
             }
 
             if (group->m_asyncObject) {
-                int32_t priority = AsyncFileReadComputePriority(group->m_distSq < 1111.1111f ? 0 : 2, 0, 1, group->m_distSq);
+                int32_t level = 2;
+
+                if (group->m_distSq < 1111.1111f) {
+                    level = 0;
+                }
+
+                int32_t priority = AsyncFileReadComputePriority(level, 0, 1, group->m_distSq);
                 AsyncFileReadAddStreamingObject(CMapObjGroup::LinkToAsyncHead, group, priority);
             }
         }

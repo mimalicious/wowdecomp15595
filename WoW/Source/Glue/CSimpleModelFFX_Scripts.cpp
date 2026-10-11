@@ -45,7 +45,7 @@ static int32_t Script_AddLight(lua_State* L) {
             if (lights->m_lightCount < 4) {
                 lights->m_lights[lights->m_lightCount] = light;
                 lights->m_lightCount++;
-                model->m_lightArray1[index].m_hasCustomLight = 1;
+                lights->m_hasCustomLight = 1;
             }
 
             return 0;
@@ -82,7 +82,7 @@ static int32_t Script_AddCharacterLight(lua_State* L) {
             if (lights->m_lightCount < 4) {
                 lights->m_lights[lights->m_lightCount] = light;
                 lights->m_lightCount++;
-                model->m_lightArray2[index].m_hasCustomLight = 1;
+                lights->m_hasCustomLight = 1;
             }
 
             return 0;
@@ -119,7 +119,7 @@ static int32_t Script_AddPetLight(lua_State* L) {
             if (lights->m_lightCount < 4) {
                 lights->m_lights[lights->m_lightCount] = light;
                 lights->m_lightCount++;
-                model->m_lightArray3[index].m_hasCustomLight = 1;
+                lights->m_hasCustomLight = 1;
             }
 
             return 0;

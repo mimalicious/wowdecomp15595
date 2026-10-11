@@ -40,11 +40,12 @@ static int32_t Script_IsRaceClassRestricted(lua_State* L) {
         return 0;
     }
 
-    uint32_t raceID = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
-    uint32_t classID = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2)));
+    uint32_t raceID = static_cast<uint32_t>(lua_tonumber(L, 1));
+    uint32_t classID = static_cast<uint32_t>(lua_tonumber(L, 2));
     int32_t restricted = 0;
+    RealmConnection* connection;
 
-    if (classID < 32 && ClientServices::Connection() && (ClientServices::Connection()->GetFactionChangeRestriction(raceID) & (1 << classID))) {
+    if (classID < 32 && (connection = ClientServices::Connection()) != NULL && (connection->GetFactionChangeRestriction(raceID) & (1 << classID))) {
         restricted = 1;
     }
 
@@ -153,13 +154,13 @@ static int32_t Script_GetFactionForRace(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)) - 1);
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     int32_t raceID = index < CCharacterCreation::m_races.Count() ? CCharacterCreation::m_races.m_data[index] : 0;
     const ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
     const FactionTemplateRec* templateRec = raceRec ? g_factionTemplateDB.GetRecord(raceRec->m_factionID) : NULL;
 
     if (templateRec) {
-        for (int32_t i = 0; i < g_factionGroupDB.m_numRecords; i++) {
+        for (uint32_t i = 0; i < static_cast<uint32_t>(g_factionGroupDB.m_numRecords); i++) {
             const FactionGroupRec* groupRec = g_factionGroupDB.GetRecordByIndex(i);
 
             if (groupRec && groupRec->m_maskID && ((1 << groupRec->m_maskID) & templateRec->m_factionGroup)) {
@@ -177,12 +178,12 @@ static int32_t Script_GetFactionForRace(lua_State* L) {
 
 // OFFSET: 0x0080D5D0/0x140523F10
 static int32_t Script_GetAvailableClasses(lua_State* L) {
-    int32_t count = g_chrClassesDB.m_numRecords;
+    uint32_t count = g_chrClassesDB.m_numRecords;
 
-    for (int32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         const ChrClassesRec* classRec = g_chrClassesDB.GetRecordByIndex(i);
         const char* name = CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::GetSelectedSex(), NULL);
-        bool available = ClientServices::Connection()->m_accountExpansion >= classRec->m_requiredExpansion;
+        int32_t available = ClientServices::Connection()->m_accountExpansion >= classRec->m_requiredExpansion;
 
         if (name) {
             lua_pushstring(L, name);
@@ -215,17 +216,13 @@ static int32_t Script_GetHairCustomization(lua_State* L) {
 static int32_t Script_GetFacialHairCustomization(lua_State* L) {
     const ChrRacesRec* raceRec = GetSelectedRaceRec();
 
-    if (!raceRec) {
-        lua_pushstring(L, "NORMAL");
+    if (raceRec) {
+        int32_t sexID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_sexID : 0;
+        lua_pushstring(L, raceRec->m_facialHairCustomization[sexID]);
         return 1;
     }
 
-    if (CCharacterCreation::m_character) {
-        lua_pushstring(L, raceRec->m_facialHairCustomization[CCharacterCreation::m_character->m_data.m_preferences.m_sexID]);
-    } else {
-        lua_pushstring(L, raceRec->m_facialHairCustomization[0]);
-    }
-
+    lua_pushstring(L, "NORMAL");
     return 1;
 }
 
@@ -258,7 +255,7 @@ static int32_t Script_GetSelectedClass(lua_State* L) {
 
     int32_t index = 0;
 
-    for (int32_t i = 0; i < g_chrClassesDB.m_numRecords; i++) {
+    for (uint32_t i = 0; i < static_cast<uint32_t>(g_chrClassesDB.m_numRecords); i++) {
         if (g_chrClassesDB.GetRecordByIndex(i)->m_id == classID) {
             index = i;
         }
@@ -287,7 +284,7 @@ static int32_t Script_SetCharacterCreateFacing(lua_State* L) {
         return 0;
     }
 
-    CCharacterCreation::SetCharacterFacing(static_cast<float>(lua_tonumber(L, 1) * 0.017453292f));
+    CCharacterCreation::SetCharacterFacing(static_cast<float>(lua_tonumber(L, 1)) * 0.017453292f);
     return 1;
 }
 
@@ -407,9 +404,15 @@ static int32_t Script_SetPortraitTexture(lua_State* L) {
 
     if (lua_isstring(L, 1)) {
         texture = static_cast<CSimpleTexture*>(CScriptObject::GetScriptObjectByName(lua_tolstring(L, 1, NULL), CSimpleTexture::GetObjectType()));
+
+        if (!texture) {
+            luaL_error(L, "SetPortraitToTexture(): Couldn't find texture named '%s'", lua_tolstring(L, 1, NULL));
+            return 0;
+        }
     } else {
         if (lua_type(L, 1) != LUA_TTABLE) {
             luaL_error(L, "SetPortraitToTexture(): Couldn't find texture named '%s'", lua_tolstring(L, 1, NULL));
+            return 0;
         }
 
         lua_rawgeti(L, 1, 0);
@@ -418,22 +421,20 @@ static int32_t Script_SetPortraitTexture(lua_State* L) {
 
         if (!texture) {
             luaL_error(L, "SetPortraitToTexture(): Couldn't find 'this' in texture object");
+            return 0;
         }
 
         if (!texture->IsA(CSimpleTexture::GetObjectType())) {
             luaL_error(L, "SetPortraitToTexture(): Wrong object type, expected texture");
+            return 0;
         }
-    }
-
-    if (!texture) {
-        luaL_error(L, "SetPortraitToTexture(): Couldn't find texture named '%s'", lua_tolstring(L, 1, NULL));
     }
 
     if (lua_isnumber(L, 2) && lua_isnumber(L, 3)) {
         int32_t raceID = lua_tointeger(L, 2);
         int32_t sex = lua_tointeger(L, 3);
 
-        for (int32_t i = 0; i < 3; i++) {
+        for (uint32_t i = 0; i < 3; i++) {
             if (sex == g_scriptSexIndex[i]) {
                 SetPortraitTexture(texture, raceID, i, WOWGUID());
             }
@@ -456,7 +457,7 @@ static int32_t Script_GetAvailableRaces(lua_State* L) {
         lua_pushstring(L, fileRec ? static_cast<const char*>(fileRec->m_clientFileString) : NULL);
 
         const ChrRacesRec* expansionRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]);
-        bool available = expansionRec ? ClientServices::Connection()->m_accountExpansion >= expansionRec->m_requiredExpansion : false;
+        int32_t available = !expansionRec ? 0 : ClientServices::Connection()->m_accountExpansion >= expansionRec->m_requiredExpansion;
         lua_pushnumber(L, available);
     }
 
@@ -468,9 +469,9 @@ static int32_t Script_GetClassesForRace(lua_State* L) {
     uint32_t count = CCharacterCreation::m_classes.Count();
 
     for (uint32_t i = 0; i < count; i++) {
-        const ChrClassesRec* classRec = i < CCharacterCreation::m_classes.Count() ? CCharacterCreation::m_classes.m_data[i] : NULL;
+        const ChrClassesRec* classRec = i >= CCharacterCreation::m_classes.Count() ? NULL : CCharacterCreation::m_classes.m_data[i];
         const char* name = CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::GetSelectedSex(), NULL);
-        bool available = ClientServices::Connection()->m_accountExpansion >= classRec->m_requiredExpansion;
+        int32_t available = ClientServices::Connection()->m_accountExpansion >= classRec->m_requiredExpansion;
 
         if (name) {
             lua_pushstring(L, name);
@@ -506,7 +507,7 @@ static int32_t Script_SetSelectedClass(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     const ChrClassesRec* classRec = index < 0 || index >= g_chrClassesDB.m_numRecords ? NULL : g_chrClassesDB.GetRecordByIndex(index);
     CCharacterCreation::SetSelectedClass(classRec->m_id);
     return 0;
@@ -519,7 +520,7 @@ static int32_t Script_CycleCharCustomization(lua_State* L) {
         return 0;
     }
 
-    int32_t type = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
+    int32_t type = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     int32_t delta = static_cast<int32_t>(lua_tonumber(L, 2));
     CCharacterCreation::CycleCharCustomization(static_cast<CHAR_CUSTOMIZATION_TYPE>(type), delta);
     return 0;
@@ -564,7 +565,7 @@ static int32_t Script_SetSelectedRace(lua_State* L) {
         return 0;
     }
 
-    CCharacterCreation::SetSelectedRace(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1);
+    CCharacterCreation::SetSelectedRace(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
     return 0;
 }
 
@@ -582,7 +583,7 @@ static int32_t Script_CustomizeExistingCharacter(lua_State* L) {
         return 0;
     }
 
-    CCharacterCreation::SetToExistingCharacter(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1);
+    CCharacterCreation::SetToExistingCharacter(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
     return 0;
 }
 

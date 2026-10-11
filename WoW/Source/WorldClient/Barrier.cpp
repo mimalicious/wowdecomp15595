@@ -40,7 +40,9 @@ static float s_scrollPhase;
 
 // OFFSET: 0x00777190
 void CBarrier::Destroy() {
-    for (CM2Model** model = s_contactModels; model < s_contactModels + 4; model++) {
+    for (int32_t i = 0; i < 4; i++) {
+        CM2Model** model = &s_contactModels[i];
+
         if (*model) {
             (*model)->Release();
             *model = NULL;
@@ -382,7 +384,7 @@ void CBarrier::Render(const C3Vector& pos, float a2) {
         }
 
         model->m_fFlags |= 0x4000;
-        model->m_worldTransform = transform;
+        model->SetWorldTransform(transform);
         model->m_fadeAlpha = contact.m_alpha;
 
         for (uint32_t j = 0; ; j++) {

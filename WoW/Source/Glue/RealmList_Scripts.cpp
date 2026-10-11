@@ -356,7 +356,7 @@ static int32_t Script_SetPreferredInfo(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1));
     int32_t pvp = StringToBOOL(L, 2, 0);
     int32_t roleplaying = StringToBOOL(L, 3, 0);
     CRealmList::SetPreferredInfo(index, pvp, roleplaying);
@@ -376,16 +376,10 @@ static int32_t Script_SortRealms(lua_State* L) {
 
     if (SStrCmpI(type, "name", STORM_MAX_STR)) {
         if (!SStrCmpI(type, "load", STORM_MAX_STR)) {
-            CRealmList::SortRealms(1);
-            return 0;
-        }
-
-        if (!SStrCmpI(type, "characters", STORM_MAX_STR)) {
-            CRealmList::SortRealms(0);
-            return 0;
-        }
-
-        if (!SStrCmpI(type, "mode", STORM_MAX_STR)) {
+            criterion = 1;
+        } else if (!SStrCmpI(type, "characters", STORM_MAX_STR)) {
+            criterion = 0;
+        } else if (!SStrCmpI(type, "mode", STORM_MAX_STR)) {
             criterion = 3;
         }
     }
@@ -398,14 +392,15 @@ static int32_t Script_SortRealms(lua_State* L) {
 // OFFSET: 0x0080BAB0/0x140521F70
 static int32_t Script_GetSelectedCategory(lua_State* L) {
     int32_t visible = -1;
+    int32_t selected = CRealmList::m_selectedCategory;
 
-    for (uint32_t i = 0; i < CRealmList::m_categories.Count(); i++) {
-        RealmCategory* category = CRealmList::m_categories[i];
+    for (int32_t i = 0; i < static_cast<int32_t>(CRealmList::m_categories.Count()); i++) {
+        RealmCategory* category = static_cast<uint32_t>(i) < CRealmList::m_categories.Count() ? CRealmList::m_categories[i] : NULL;
 
         if (category && category->m_numRealms) {
             visible++;
 
-            if (static_cast<int32_t>(i) >= CRealmList::m_selectedCategory) {
+            if (i >= selected) {
                 lua_pushnumber(L, visible + 1);
                 return 1;
             }

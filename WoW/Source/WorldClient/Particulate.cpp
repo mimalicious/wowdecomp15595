@@ -144,10 +144,10 @@ C3Vector Particulate::ComputeMovement(float dt) {
         }
 
         case 1:
-            return C3Vector(0.0f, 0.0f, s_sinkSpeed * dt);
+            return C3Vector(0.0f, 0.0f, dt * s_sinkSpeed);
 
         case 2:
-            return C3Vector(0.0f, 0.0f, s_riseSpeed * dt);
+            return C3Vector(0.0f, 0.0f, dt * s_riseSpeed);
 
         default:
             return C3Vector(0.0f, 0.0f, 0.0f);

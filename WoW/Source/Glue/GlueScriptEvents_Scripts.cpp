@@ -125,7 +125,7 @@ static int32_t Script_SetCurrentScreen(lua_State* L) {
 
     CGlueMgr::UpdateCurrentScreen(lua_tolstring(L, 1, NULL));
 
-    if (!Blizzard::Streaming::IsStreamingMode()) {
+    if (!SFile::IsStreamingMode()) {
         AsyncFileReadWaitAll();
     }
 
@@ -158,8 +158,7 @@ static int32_t Script_PlayGlueAmbience(lua_State* L) {
         return 0;
     }
 
-    int32_t fadeInTime = lua_isnumber(L, 2) ? static_cast<int32_t>(lua_tonumber(L, 2) * 1000.0) : -1;
-    SI3::StartGlueAmbience(lua_tolstring(L, 1, NULL), fadeInTime);
+    SI3::StartGlueAmbience(lua_tolstring(L, 1, NULL), lua_isnumber(L, 2) ? static_cast<int32_t>(static_cast<float>(lua_tonumber(L, 2)) * 1000.0f) : -1);
     return 0;
 }
 
@@ -249,22 +248,22 @@ static int32_t Script_GetCursorPosition(lua_State* L) {
     float y = 0.0f;
     NDCToDDC(CSimpleTop::s_instance->m_mousePosition.m_x, CSimpleTop::s_instance->m_mousePosition.m_y, &x, &y);
 
-    lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f * x));
-    lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f * y));
+    lua_pushnumber(L, DDCToNDCWidth(x * (CoordinateGetAspectCompensation() * 1024.0f)));
+    lua_pushnumber(L, DDCToNDCWidth(y * (CoordinateGetAspectCompensation() * 1024.0f)));
     return 2;
 }
 
 // OFFSET: 0x00806840/0x14051BEC0
 static int32_t Script_GetScreenWidth(lua_State* L) {
     float width = NDCToDDCWidth(1.0f);
-    lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f * width));
+    lua_pushnumber(L, DDCToNDCWidth(width * (CoordinateGetAspectCompensation() * 1024.0f)));
     return 1;
 }
 
 // OFFSET: 0x00806890/0x14051BF20
 static int32_t Script_GetScreenHeight(lua_State* L) {
     float height = NDCToDDCHeight(1.0f);
-    lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f * height));
+    lua_pushnumber(L, DDCToNDCWidth(height * (CoordinateGetAspectCompensation() * 1024.0f)));
     return 1;
 }
 
@@ -313,7 +312,7 @@ static int32_t Script_SetCVar(lua_State* L) {
         return 0;
     }
 
-    if (var->m_flags & 0x4) {
+    if (static_cast<uint8_t>(var->m_flags >> 2) & 1) {
         luaL_error(L, "\"%s\" is read-only", name);
         return 0;
     }
@@ -342,7 +341,7 @@ static int32_t Script_ShowChangedOptionWarnings(lua_State* L) {
 
 // OFFSET: 0x00807110/0x14051C8D0
 static int32_t Script_StopAllSFX(lua_State* L) {
-    SE3::StopAllSounds(static_cast<SE3BUS>(0), static_cast<int32_t>(lua_tonumber(L, 1) * 1000.0));
+    SE3::StopAllSounds(static_cast<SE3BUS>(0), static_cast<int32_t>(static_cast<float>(lua_tonumber(L, 1)) * 1000.0f));
     return 0;
 }
 
@@ -540,7 +539,7 @@ static int32_t Script_GetServerName(lua_State* L) {
     REALM_INFO* realm = ClientServices::GetSelectedRealm();
 
     if (realm) {
-        for (int32_t i = 0; i < g_cfg_ConfigsDB.m_numRecords; i++) {
+        for (uint32_t i = 0; i < static_cast<uint32_t>(g_cfg_ConfigsDB.m_numRecords); i++) {
             Cfg_ConfigsRec* config = g_cfg_ConfigsDB.GetRecordByIndex(i);
 
             if (config->m_realmType == realm->m_type) {
@@ -620,18 +619,18 @@ static int32_t Script_GetCVarDefault(lua_State* L) {
 static int32_t Script_GetChangedOptionWarnings(lua_State* L) {
     uint32_t count = CGlueMgr::m_numChangedOptionWarnings;
 
-    if (!count) {
-        return 0;
+    if (count) {
+        lua_checkstack(L, count);
+
+        for (uint32_t i = 0; i < count; i++) {
+            const char* warning = CGlueMgr::m_changedOptionWarnings[i];
+            lua_pushlstring(L, warning, SStrLen(warning));
+        }
+
+        return count;
     }
 
-    lua_checkstack(L, count);
-
-    for (uint32_t i = 0; i < count; i++) {
-        const char* warning = CGlueMgr::m_changedOptionWarnings[i];
-        lua_pushlstring(L, warning, SStrLen(warning));
-    }
-
-    return count;
+    return 0;
 }
 
 // OFFSET: 0x008C3780/0x140633280
@@ -789,7 +788,7 @@ static int32_t Script_GetBillingTimeRemaining(lua_State* L) {
 
 // OFFSET: 0x00807A00/0x14051D280
 static int32_t Script_GetBillingPlan(lua_State* L) {
-    uint32_t flags = ClientServices::Connection()->m_billingFlags;
+    uint8_t flags = ClientServices::Connection()->m_billingFlags;
     uint32_t plan = flags & 0x16;
     int32_t type = 0;
 
@@ -804,8 +803,8 @@ static int32_t Script_GetBillingPlan(lua_State* L) {
     }
 
     lua_pushnumber(L, type);
-    lua_pushnumber(L, (flags & 0x20) != 0);
-    lua_pushnumber(L, (flags & 0x8) != 0);
+    lua_pushnumber(L, static_cast<uint8_t>(static_cast<uint8_t>(flags >> 5) & 1));
+    lua_pushnumber(L, static_cast<uint8_t>(static_cast<uint8_t>(flags >> 3) & 1));
     return 3;
 }
 
@@ -862,8 +861,10 @@ static int32_t Script_GetCreditsText(lua_State* L) {
         filename = "credits.html";
     } else if (version == 2) {
         filename = "credits_BC.html";
-    } else {
+    } else if (version == 3) {
         filename = "credits_LK.html";
+    } else {
+        filename = "credits_CT.html";
     }
 
     void* text;
@@ -978,12 +979,12 @@ static int32_t Script_SetRealmSplitState(lua_State* L) {
         return 0;
     }
 
-    uint32_t state = static_cast<uint32_t>(lua_tonumber(L, 1));
+    int32_t state = static_cast<int32_t>(lua_tonumber(L, 1));
 
-    if (state <= 2) {
+    if (static_cast<uint32_t>(state) <= 2) {
         WDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_REALM_SPLIT));
-        msg.Put(state);
+        msg.Put(static_cast<uint32_t>(state));
         msg.Finalize();
         ClientServices::Send2(&msg);
     }
@@ -1022,13 +1023,13 @@ static int32_t Script_GetNumDeclensionSets(lua_State* L) {
         return 0;
     }
 
-    int32_t sex = 2;
     const char* name = lua_tolstring(L, 1, NULL);
+    int32_t sex = 2;
 
     if (lua_isnumber(L, 2)) {
         int32_t value = lua_tointeger(L, 2);
 
-        for (int32_t i = 0; i < 3; i++) {
+        for (uint32_t i = 0; i < 3; i++) {
             if (g_scriptSexIndex[i] == value) {
                 sex = i;
                 break;
@@ -1047,13 +1048,13 @@ static int32_t Script_DeclineName(lua_State* L) {
         return 0;
     }
 
-    int32_t sex = 2;
     const char* name = lua_tolstring(L, 1, NULL);
+    int32_t sex = 2;
 
     if (lua_isnumber(L, 2)) {
         int32_t value = lua_tointeger(L, 2);
 
-        for (int32_t i = 0; i < 3; i++) {
+        for (uint32_t i = 0; i < 3; i++) {
             if (g_scriptSexIndex[i] == value) {
                 sex = i;
                 break;
@@ -1062,8 +1063,9 @@ static int32_t Script_DeclineName(lua_State* L) {
     }
 
     char declensions[5][1024];
+    int32_t set = static_cast<int32_t>(lua_tonumber(L, 3)) - 1;
 
-    if (GetNameDeclensions(s_locale, declensions[0], name, sex, static_cast<int32_t>(lua_tonumber(L, 3)) - 1)) {
+    if (GetNameDeclensions(s_locale, declensions[0], name, sex, set)) {
         for (uint32_t i = 0; i < 5; i++) {
             lua_pushstring(L, declensions[i]);
         }
@@ -1236,14 +1238,14 @@ static int32_t Script_MatrixEntered(lua_State* L) {
         return 0;
     }
 
-    double value = lua_tonumber(L, 1);
+    uint32_t value = static_cast<uint32_t>(lua_tonumber(L, 1));
 
     if (value > 9) {
         luaL_error(L, "MatrixEntered: number must be 0 to 9");
         return 0;
     }
 
-    CGlueMgr::LoginEnterMatrix(static_cast<uint8_t>(value));
+    CGlueMgr::LoginEnterMatrix(value);
     return 0;
 }
 
@@ -1301,7 +1303,7 @@ static int32_t Script_LaunchAddOnURL(lua_State* L) {
         return 0;
     }
 
-    const char* name = GetAddOnByIndex(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1);
+    const char* name = GetAddOnByIndex(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
 
     if (!name) {
         luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
@@ -1325,7 +1327,7 @@ static int32_t Script_EnableAddOn(lua_State* L) {
     }
 
     const char* character = lua_tolstring(L, 1, NULL);
-    const char* name = GetAddOnByIndex(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2))) - 1);
+    const char* name = GetAddOnByIndex(static_cast<uint32_t>(lua_tonumber(L, 2)) - 1);
 
     if (!name) {
         luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
@@ -1356,7 +1358,7 @@ static int32_t Script_DisableAddOn(lua_State* L) {
     }
 
     const char* character = lua_tolstring(L, 1, NULL);
-    const char* name = GetAddOnByIndex(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2))) - 1);
+    const char* name = GetAddOnByIndex(static_cast<uint32_t>(lua_tonumber(L, 2)) - 1);
 
     if (!name) {
         luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
@@ -1431,12 +1433,11 @@ static int32_t Script_LoadURLIndex(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1));
     static ThrottleObject s_throttle(3, 5);
 
     if (s_throttle.IncrementAndCheck()) {
-        char url[1024];
-        memset(url, 0, sizeof(url));
+        char url[1024] = { 0 };
         FormatVisitableURL(index, url, sizeof(url));
 
         if (url[0]) {

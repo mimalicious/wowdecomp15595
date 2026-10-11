@@ -679,7 +679,7 @@ CMapObjDefGroup::CMapObjDefGroup() {
     this->m_groupNum = -1;
     this->m_frameStamp = 0;
     this->m_cullStamp = 0;
-    this->unk_0050 = 0;
+    this->m_areaName = NULL;
     this->m_liquidInstance = NULL;
     this->m_materialState = 0;
 }

@@ -75,8 +75,9 @@ void CMapRenderChunk::FreeBuf() {
 // OFFSET: 0x00765F40/0x14044BC40
 void CMapRenderChunk::AddChunks(CMapChunk** chunks) {
     for (uint32_t i = 0; i < 4; i++) {
-        this->m_chunks[i] = chunks[i];
-        chunks[i]->m_chunkFlags |= 0x1;
+        CMapChunk* chunk = chunks[i];
+        this->m_chunks[i] = chunk;
+        chunk->m_chunkFlags |= 0x1;
     }
 }
 
@@ -126,7 +127,7 @@ void CMapRenderChunk::UpdateLoaded() {
     for (uint32_t i = 0; i < this->m_batchCount; i++) {
         CMapRenderChunkBatch& batch = this->m_batches[i];
 
-        for (uint32_t j = 0; j < batch.m_layerCount; j++) {
+        for (int32_t j = 0; j < static_cast<int32_t>(batch.m_layerCount); j++) {
             if (!TextureGetGxTex(batch.m_layers[j].m_texture)) {
                 return;
             }
@@ -144,7 +145,7 @@ void CMapRenderChunk::UpdateLoaded() {
 CMapChunk* CMapRenderChunk::GetBatchChunk(uint32_t chunkMask) {
     uint32_t bit = 1;
 
-    for (uint32_t i = 0; i < 4; i++, bit *= 2) {
+    for (int32_t i = 0; i < 4; i++, bit *= 2) {
         if (bit & chunkMask) {
             return this->m_chunks[i];
         }
@@ -197,7 +198,7 @@ void CMapRenderChunk::AddBatch(uint32_t chunkMask, uint8_t flags) {
 // OFFSET: 0x007668B0/0x14044C550
 void CMapRenderChunk::CreateLayer(CMapArea* area, CMapRenderChunkBatch& batch, const SMLayer* layer, int32_t merge) {
     if (merge) {
-        for (uint32_t i = 0; i < batch.m_layerCount; i++) {
+        for (int32_t i = 0; i < static_cast<int32_t>(batch.m_layerCount); i++) {
             if (batch.m_layers[i].m_textureId == layer->m_textureId) {
                 return;
             }
@@ -243,7 +244,7 @@ void CMapRenderChunk::CreateLayers() {
         CMapChunk* chunk = NULL;
         uint32_t bit = 1;
 
-        for (uint32_t j = 0; j < 4; j++, bit *= 2) {
+        for (int32_t j = 0; j < 4; j++, bit *= 2) {
             if (!(bit & batch.m_chunkMask)) {
                 continue;
             }

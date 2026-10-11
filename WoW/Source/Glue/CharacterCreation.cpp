@@ -195,11 +195,10 @@ int32_t CCharacterCreation::GetSelectedSex() {
 
 // OFFSET: 0x0080C400/0x140522AD0
 void CCharacterCreation::GetRandomRaceAndSex(ComponentData* data) {
-    int32_t races[32];
+    int32_t races[24];
+    data->m_preferences.m_sexID = static_cast<uint32_t>((static_cast<uint64_t>(2u) * CRandom::uint32_(g_rndSeed)) >> 32);
     int32_t count = 0;
-
-    data->m_preferences.m_sexID = CRandom::uint32_(g_rndSeed) >> 31;
-    uint8_t expansion = ClientServices::Connection()->m_accountExpansion;
+    int32_t expansion = ClientServices::Connection()->m_accountExpansion;
 
     for (uint32_t i = 0; i < CCharacterCreation::m_races.Count(); i++) {
         const ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]);
@@ -209,19 +208,16 @@ void CCharacterCreation::GetRandomRaceAndSex(ComponentData* data) {
         }
     }
 
-    if (count > 0) {
-        data->m_preferences.m_raceID = races[(static_cast<uint64_t>(count) * CRandom::uint32_(g_rndSeed)) >> 32];
-    } else {
-        data->m_preferences.m_raceID = races[0];
-    }
+    uint32_t index = count <= 0 ? 0 : static_cast<uint32_t>((static_cast<uint64_t>(static_cast<uint32_t>(count)) * CRandom::uint32_(g_rndSeed)) >> 32);
+    data->m_preferences.m_raceID = races[index];
 }
 
 // OFFSET: 0x0080C4D0/0x140522BD0
 bool IsRaceClassValid(int32_t raceID, int32_t classID) {
-    for (int32_t i = 0; i < g_charBaseInfoDB.m_numRecords; i++) {
+    for (uint32_t i = 0; i < static_cast<uint32_t>(g_charBaseInfoDB.m_numRecords); i++) {
         const CharBaseInfoRec* rec = g_charBaseInfoDB.GetRecordByIndex(i);
 
-        if (rec && rec->m_raceID == raceID && rec->m_classID == classID) {
+        if (rec && static_cast<uint8_t>(rec->m_raceID) == raceID && static_cast<uint8_t>(rec->m_classID) == classID) {
             return true;
         }
     }
@@ -472,7 +468,7 @@ void CCharacterCreation::SetPet() {
     CCharacterCreation::m_petModel->m_lightingArg = CCharacterCreation::m_charCustomizeFrame->m_lightArray3;
     CCharacterComponent::ReplaceMonsterSkin(CCharacterCreation::m_petModel, displayRec, modelRec);
     CCharacterCreation::m_petModel->m_fFlags |= 0x4000;
-    CCharacterCreation::m_petModel->m_worldTransform = C44Matrix(scale);
+    CCharacterCreation::m_petModel->SetWorldTransform(C44Matrix(scale));
     CCharacterCreation::m_petModel->m_fadeAlpha = static_cast<float>(displayRec->m_creatureModelAlpha) * 0.0039215689f;
 
     if (!CCharacterCreation::m_alteredCharacter) {
@@ -545,7 +541,12 @@ bool CCharacterCreation::IsClassAvailable(int32_t classID) {
 
 // OFFSET: 0x0080CE10/0x140523630
 void CCharacterCreation::RandomizeCharFeatures() {
-    COMPONENT_CONTEXT context = static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL);
+    COMPONENT_CONTEXT context = static_cast<COMPONENT_CONTEXT>(0);
+
+    if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+        context = static_cast<COMPONENT_CONTEXT>(1);
+    }
+
     CCharacterCreation::m_character->SetRandomSkin(context);
     CCharacterCreation::m_character->SetRandomFace(context);
     CCharacterCreation::m_character->SetRandomHairColor(context);
@@ -635,13 +636,11 @@ void CCharacterCreation::StartAnimation(uint64_t param) {
 int32_t CCharacterCreation::GetExistingRaceIndex() {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex);
 
-    if (!display) {
-        return -1;
-    }
-
-    for (uint32_t i = 0; i < CCharacterCreation::m_races.Count(); i++) {
-        if (CCharacterCreation::m_races.m_data[i] == display->m_characterInfo.m_raceID) {
-            return i;
+    if (display) {
+        for (uint32_t i = 0; i < CCharacterCreation::m_races.Count(); i++) {
+            if (CCharacterCreation::m_races.m_data[i] == display->m_characterInfo.m_raceID) {
+                return i;
+            }
         }
     }
 
@@ -652,13 +651,11 @@ int32_t CCharacterCreation::GetExistingRaceIndex() {
 int32_t CCharacterCreation::GetExistingClassIndex() {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex);
 
-    if (!display) {
-        return -1;
-    }
-
-    for (int32_t i = 0; i < g_chrClassesDB.m_numRecords; i++) {
-        if (g_chrClassesDB.GetRecordByIndex(i)->m_id == display->m_characterInfo.m_classID) {
-            return i;
+    if (display) {
+        for (uint32_t i = 0; i < static_cast<uint32_t>(g_chrClassesDB.m_numRecords); i++) {
+            if (g_chrClassesDB.GetRecordByIndex(i)->m_id == display->m_characterInfo.m_classID) {
+                return i;
+            }
         }
     }
 
@@ -710,7 +707,9 @@ int32_t CCharacterCreation::Idle(const void* data, void* param) {
 
     AsyncFileReadEnterQueueLock();
 
-    for (uint32_t i = 0; i < CCharacterCreation::m_racialTexturesLoading.Count(); i++) {
+    uint32_t count = CCharacterCreation::m_racialTexturesLoading.Count();
+
+    for (uint32_t i = 0; i < count; i++) {
         if (CCharacterCreation::m_racialTexturesLoading.m_data[i]) {
             AsyncFileReadLinkToPriority(CCharacterCreation::m_racialTexturesLoading.m_data[i], 1);
         }
@@ -750,27 +749,20 @@ int32_t CCharacterCreation::Idle(const void* data, void* param) {
 
 // OFFSET: 0x0080DE90/0x140524A90
 int32_t CCharacterCreation::GetRandomClassID() {
-    int32_t classes[32];
+    int32_t classes[10];
     int32_t count = 0;
-    uint8_t expansion = ClientServices::Connection()->m_accountExpansion;
-
-    if (!CCharacterCreation::m_classes.Count()) {
-        return classes[0];
-    }
+    int32_t expansion = ClientServices::Connection()->m_accountExpansion;
 
     for (uint32_t i = 0; i < CCharacterCreation::m_classes.Count(); i++) {
-        const ChrClassesRec* classRec = CCharacterCreation::m_classes.m_data[i];
+        const ChrClassesRec* classRec = i >= CCharacterCreation::m_classes.Count() ? NULL : CCharacterCreation::m_classes.m_data[i];
 
         if (expansion >= classRec->m_requiredExpansion) {
             classes[count++] = classRec->m_id;
         }
     }
 
-    if (count > 0) {
-        return classes[(static_cast<uint64_t>(count) * CRandom::uint32_(g_rndSeed)) >> 32];
-    }
-
-    return classes[0];
+    uint32_t index = count <= 0 ? 0 : static_cast<uint32_t>((static_cast<uint64_t>(static_cast<uint32_t>(count)) * CRandom::uint32_(g_rndSeed)) >> 32);
+    return classes[index];
 }
 
 // PROVEN: f00c8714 IDENTICAL/NONE
@@ -840,7 +832,13 @@ void CCharacterCreation::InitCharacterComponents(ComponentData* data, bool rando
         alteredData.m_preferences.m_facialHairId = preferences.m_facialHairId;
         alteredData.m_preferences.m_hairStyleId = preferences.m_hairStyleId;
         alteredData.m_preferences.m_raceID = raceRec->m_alteredFormRaceID;
-        CCharacterComponent::ValidateComponentData(&alteredData, static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL));
+        COMPONENT_CONTEXT validateContext = static_cast<COMPONENT_CONTEXT>(0);
+
+        if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+            validateContext = static_cast<COMPONENT_CONTEXT>(1);
+        }
+
+        CCharacterComponent::ValidateComponentData(&alteredData, validateContext);
         CCharacterCreation::InitCharacterComponent(CCharacterCreation::m_alteredCharacter, &alteredData);
     } else {
         CCharacterCreation::m_alteredFormAtFront = 0;
@@ -850,7 +848,13 @@ void CCharacterCreation::InitCharacterComponents(ComponentData* data, bool rando
         CCharacterCreation::m_alteredCharacter->m_data.m_model->SetBoneSequence(0xFFFFFFFF, 0, 0, 0, 1.0f, 1, 1, 0, 0, 0);
 
         if (CCharacterCreation::m_character && CCharacterCreation::m_alteredCharacter) {
-            CCharacterCreation::m_character->CopyChoicesToAlteredFormComponent(CCharacterCreation::m_alteredCharacter, static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL));
+            COMPONENT_CONTEXT copyContext = static_cast<COMPONENT_CONTEXT>(0);
+
+            if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+                copyContext = static_cast<COMPONENT_CONTEXT>(1);
+            }
+
+            CCharacterCreation::m_character->CopyChoicesToAlteredFormComponent(CCharacterCreation::m_alteredCharacter, copyContext);
         }
     }
 
@@ -904,7 +908,13 @@ bool CCharacterCreation::SetSelectedClass(int32_t classID) {
     data.m_preferences.m_hairColorId = CCharacterCreation::m_character->m_data.m_preferences.m_hairColorId;
     data.m_preferences.m_facialHairId = CCharacterCreation::m_character->m_data.m_preferences.m_facialHairId;
     data.m_preferences.m_faceId = CCharacterCreation::m_character->m_data.m_preferences.m_faceId;
-    CCharacterComponent::ValidateComponentData(&data, static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL));
+    COMPONENT_CONTEXT validateContext = static_cast<COMPONENT_CONTEXT>(0);
+
+    if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+        validateContext = static_cast<COMPONENT_CONTEXT>(1);
+    }
+
+    CCharacterComponent::ValidateComponentData(&data, validateContext);
 
     if (CCharacterCreation::m_character->CheckForComponentChanges(&data)) {
         CCharacterCreation::UninitCharacterComponents();
@@ -937,7 +947,11 @@ void CCharacterCreation::CycleCharCustomization(CHAR_CUSTOMIZATION_TYPE type, in
         return;
     }
 
-    COMPONENT_CONTEXT context = static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL);
+    COMPONENT_CONTEXT context = static_cast<COMPONENT_CONTEXT>(0);
+
+    if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+        context = static_cast<COMPONENT_CONTEXT>(1);
+    }
 
     switch (type) {
         case CHAR_CUSTOMIZATION_SKIN:
@@ -963,7 +977,13 @@ void CCharacterCreation::CycleCharCustomization(CHAR_CUSTOMIZATION_TYPE type, in
     }
 
     if (CCharacterCreation::m_character && CCharacterCreation::m_alteredCharacter) {
-        CCharacterCreation::m_character->CopyChoicesToAlteredFormComponent(CCharacterCreation::m_alteredCharacter, static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL));
+        COMPONENT_CONTEXT copyContext = static_cast<COMPONENT_CONTEXT>(0);
+
+        if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+            copyContext = static_cast<COMPONENT_CONTEXT>(1);
+        }
+
+        CCharacterCreation::m_character->CopyChoicesToAlteredFormComponent(CCharacterCreation::m_alteredCharacter, copyContext);
     }
 
     CCharacterComponent* components[2];
@@ -977,7 +997,13 @@ void CCharacterCreation::RandomizeCharCustomization() {
     CCharacterCreation::RandomizeCharFeatures();
 
     if (CCharacterCreation::m_character && CCharacterCreation::m_alteredCharacter) {
-        CCharacterCreation::m_character->CopyChoicesToAlteredFormComponent(CCharacterCreation::m_alteredCharacter, static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL));
+        COMPONENT_CONTEXT copyContext = static_cast<COMPONENT_CONTEXT>(0);
+
+        if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+            copyContext = static_cast<COMPONENT_CONTEXT>(1);
+        }
+
+        CCharacterCreation::m_character->CopyChoicesToAlteredFormComponent(CCharacterCreation::m_alteredCharacter, copyContext);
     }
 
     CCharacterCreation::m_weaponLoadOut = CCharacterCreation::Dress();
@@ -990,7 +1016,9 @@ void CCharacterCreation::RandomizeCharCustomization() {
 
 // OFFSET: 0x0080E910/0x140525780
 void CCharacterCreation::CancelRaceSexComponentTexturesPreload() {
-    for (uint32_t i = 0; i < CCharacterCreation::m_racialTexturesLoading.Count(); i++) {
+    uint32_t count = CCharacterCreation::m_racialTexturesLoading.Count();
+
+    for (uint32_t i = 0; i < count; i++) {
         if (CCharacterCreation::m_racialTexturesLoading.m_data[i]) {
             AsyncFileReadCancel(CCharacterCreation::m_racialTexturesLoading.m_data[i], AsyncFileReadDestroyObject);
         }
@@ -1088,10 +1116,10 @@ void CCharacterCreation::Shutdown() {
     CCharacterCreation::UninitCharacterComponents();
     CCharacterCreation::m_nameGen.Destroy();
 
-    for (int32_t i = 0; i < 24; i++) {
-        for (int32_t j = 0; j < 2; j++) {
+    for (uint32_t i = 0; i < 24; i++) {
+        for (uint32_t j = 0; j < 2; j++) {
             if (CCharacterCreation::m_charPreferences[i][j]) {
-                delete CCharacterCreation::m_charPreferences[i][j];
+                SMemFree(CCharacterCreation::m_charPreferences[i][j], "delete", -1, 0);
             }
 
             CCharacterCreation::m_charPreferences[i][j] = NULL;
@@ -1157,7 +1185,13 @@ void CCharacterCreation::SetSelectedSex(uint32_t sexID) {
         if (stored) {
             data.SetPreferences(stored);
             data.m_preferences.m_classId = CCharacterCreation::m_selectedClassID;
-            CCharacterComponent::ValidateComponentData(&data, static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL));
+            COMPONENT_CONTEXT validateContext = static_cast<COMPONENT_CONTEXT>(0);
+
+            if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+                validateContext = static_cast<COMPONENT_CONTEXT>(1);
+            }
+
+            CCharacterComponent::ValidateComponentData(&data, validateContext);
             CCharacterCreation::UninitCharacterComponents();
             CCharacterCreation::InitCharacterComponents(&data, false);
         } else {
@@ -1184,10 +1218,10 @@ loaded:
 void CCharacterCreation::CalcClasses(int32_t raceID) {
     uint32_t count = 0;
 
-    for (int32_t i = 0; i < g_charBaseInfoDB.m_numRecords; i++) {
+    for (uint32_t i = 0; i < static_cast<uint32_t>(g_charBaseInfoDB.m_numRecords); i++) {
         const CharBaseInfoRec* rec = g_charBaseInfoDB.GetRecordByIndex(i);
 
-        if (rec && rec->m_raceID == raceID) {
+        if (rec && static_cast<uint8_t>(rec->m_raceID) == raceID) {
             count++;
         }
     }
@@ -1195,10 +1229,10 @@ void CCharacterCreation::CalcClasses(int32_t raceID) {
     CCharacterCreation::m_classes.SetCount(count);
     uint32_t index = 0;
 
-    for (int32_t i = 0; i < g_charBaseInfoDB.m_numRecords; i++) {
+    for (uint32_t i = 0; i < static_cast<uint32_t>(g_charBaseInfoDB.m_numRecords); i++) {
         const CharBaseInfoRec* rec = g_charBaseInfoDB.GetRecordByIndex(i);
 
-        if (rec && rec->m_raceID == raceID) {
+        if (rec && static_cast<uint8_t>(rec->m_raceID) == raceID) {
             CCharacterCreation::m_classes.m_data[index++] = g_chrClassesDB.GetRecord(static_cast<uint8_t>(rec->m_classID));
         }
     }
@@ -1212,8 +1246,10 @@ void CCharacterCreation::ResetCharCustomizeInfo() {
 
     CCharacterCreation::m_existingCharacterIndex = -1;
 
-    if (CCharacterCreation::m_charCustomizeFrame->m_model) {
-        CCharacterCreation::m_charCustomizeFrame->m_model->DetachAllChildrenById(0);
+    CM2Model* model = CCharacterCreation::m_charCustomizeFrame->m_model;
+
+    if (model) {
+        model->DetachAllChildrenById(0);
     }
 
     ComponentData data;
@@ -1282,7 +1318,13 @@ void CCharacterCreation::SetSelectedRace(uint32_t raceIndex) {
             }
 
             data.m_preferences.m_classId = classID;
-            CCharacterComponent::ValidateComponentData(&data, static_cast<COMPONENT_CONTEXT>(CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex) != NULL));
+            COMPONENT_CONTEXT validateContext = static_cast<COMPONENT_CONTEXT>(0);
+
+            if (CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex)) {
+                validateContext = static_cast<COMPONENT_CONTEXT>(1);
+            }
+
+            CCharacterComponent::ValidateComponentData(&data, validateContext);
             CCharacterCreation::UninitCharacterComponents();
             CCharacterCreation::InitCharacterComponents(&data, false);
         } else {

@@ -211,7 +211,7 @@ void CMapArea::PurgeChunk(CMapChunk* chunk) {
 
 // OFFSET: 0x00796920/0x140489AB0
 int32_t CMapArea::IsLoading() {
-    for (uint32_t i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         if (this->m_asyncObjects[i]) {
             return 1;
         }
@@ -301,10 +301,10 @@ void CMapArea::ProcessIffChunks(int32_t fileIndex, uint32_t* data, int32_t size)
 // OFFSET: 0x00796AF0/0x140489D10
 void CMapArea::AsyncFailedCallback(CAsyncObject* object) {
     CMapArea* area = static_cast<CMapArea*>(object->m_userArg);
-    uint32_t index = 0;
+    int32_t index;
 
-    while (area->m_asyncObjects[index] != object) {
-        if (++index >= 3) {
+    for (index = 0; index < 3; index++) {
+        if (area->m_asyncObjects[index] == object) {
             break;
         }
     }
@@ -353,7 +353,12 @@ CTexture* CMapArea::LoadTexture(uint32_t index) {
     CMapAreaTexture* texture = &this->m_textures.m_data[index];
 
     if (!texture->m_texture) {
-        uint32_t flags = this->m_textureFlags ? this->m_textureFlags[index] : 0;
+        uint32_t flags = 0;
+
+        if (this->m_textureFlags) {
+            flags = this->m_textureFlags[index];
+        }
+
         texture->m_texture = CMap::LoadTerrainTexture(texture->m_name, flags);
     }
 
@@ -387,7 +392,7 @@ void CMapArea::PrepareChunk(int32_t x, int32_t y) {
 
     this->m_chunkInfo[0]->m_chunks[index].m_flags |= 0x1;
 
-    for (uint32_t i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         if (this->m_buffers[i]) {
             chunk->CreatePointers(this->m_buffers[i] + this->m_chunkInfo[i]->m_chunks[index].m_offset, isNew, i == 0);
         }
@@ -547,7 +552,7 @@ CMapArea::CMapArea() {
 
 // OFFSET: 0x00797BA0/0x14048B3D0
 void CMapArea::Create() {
-    for (uint32_t i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         uint8_t* buffer = this->m_buffers[i];
 
         if (buffer) {
@@ -571,10 +576,10 @@ void CMapArea::Create() {
 // OFFSET: 0x00797C40/0x14048B4C0
 void CMapArea::AsyncLoadCallback(CAsyncObject* object) {
     CMapArea* area = static_cast<CMapArea*>(object->m_userArg);
-    uint32_t index = 0;
+    int32_t index;
 
-    while (area->m_asyncObjects[index] != object) {
-        if (++index >= 3) {
+    for (index = 0; index < 3; index++) {
+        if (area->m_asyncObjects[index] == object) {
             break;
         }
     }
@@ -583,7 +588,7 @@ void CMapArea::AsyncLoadCallback(CAsyncObject* object) {
     area->m_asyncObjects[index] = NULL;
     area->m_files[index] = NULL;
 
-    if (area->m_numFiles-- == 1) {
+    if (--area->m_numFiles == 0) {
         static_cast<CMapArea*>(object->m_userArg)->Create();
     }
 }

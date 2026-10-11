@@ -1936,7 +1936,7 @@ void CMap::GetChunkLiquidFacets(CChunkLiquid* liquid, const CAaBox& box, const C
     World::TriData::s_nMatrices = 0;
     World::TriData tris;
 
-    if (liquid->GetTris(tris, box, rect) && World::TriData::s_nBatches) {
+    if (liquid->GetTris(tris, box, rect) && World::TriData::s_nBatches > 0) {
         World::TriDataToFacetData(tris, facets, 0, 6);
     }
 }

@@ -10,6 +10,7 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/FileDownload.h"
+#include "Engine/Source/Event/FrameTime.h"
 
 // STATIC: 0x00BD1460
 static const uint8_t s_patchExponent[4] = {
@@ -147,8 +148,8 @@ void CGlueMgr::PatchDownloadStart() {
     FrameScript_SignalEvent(GLUE_EVENT_CLOSE_STATUS_DIALOG, NULL);
     CGlueMgr::SetIdleState(IDLE_PATCH_DOWNLOAD);
     CGlueMgr::SetScreen(GLUE_SCREEN_PATCHDOWNLOAD);
-    CGlueMgr::m_patchStartTime = OsGetAsyncTimeMs();
-    CGlueMgr::m_patchLastUpdate = OsGetAsyncTimeMs();
+    CGlueMgr::m_patchStartTime = FrameTime::GetCurTimeMs();
+    CGlueMgr::m_patchLastUpdate = FrameTime::GetCurTimeMs();
 
     if (CGlueMgr::m_patchDownload) {
         delete CGlueMgr::m_patchDownload;
@@ -298,7 +299,7 @@ void CGlueMgr::PatchDownloadIdle() {
         }
 
         default: {
-            uint32_t now = OsGetAsyncTimeMs();
+            uint32_t now = FrameTime::GetCurTimeMs();
 
             if (now - CGlueMgr::m_patchLastUpdate > 250) {
                 CGlueMgr::m_patchLastUpdate = now;

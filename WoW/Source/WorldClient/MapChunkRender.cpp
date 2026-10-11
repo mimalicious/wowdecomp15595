@@ -717,7 +717,7 @@ void CMapRenderChunk::RenderPrep() {
         this->RenderPrepBufs(this->m_chunkBuf->m_vertexBuf, this->m_chunkBuf->m_indexBuf);
     }
 
-    if (static_cast<int8_t>(this->m_flags) < 0) {
+    if (this->m_flags & 0x80) {
         this->CreateLayers();
     }
 

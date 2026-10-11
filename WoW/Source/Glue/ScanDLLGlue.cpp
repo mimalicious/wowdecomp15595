@@ -50,7 +50,9 @@ void CGlueMgr::ScanDLLContinueAnyway() {
         return;
     }
 
-    if (CGlueMgr::m_scandllStatus == 2 || CGlueMgr::m_scandllStatus == 3) {
+    int32_t status = CGlueMgr::m_scandllStatus;
+
+    if (status == 2 || status == 3) {
         CGlueMgr::m_scandllOkayToLogIn = 1;
     }
 }
@@ -99,7 +101,7 @@ void CGlueMgr::ScanDLLFinished() {
 static bool DownloadDllCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     HOSFILE file = static_cast<HOSFILE>(param);
 
-    if (data && size) {
+    if (data && size > 0) {
         uint32_t written;
 
         if (!OsWriteFile(file, data, size, &written) || written != size) {
@@ -128,7 +130,7 @@ static bool VersionDownloadCallback(void* param, const char* data, uint32_t size
     CDataStore* msg = static_cast<CDataStore*>(param);
     bool failed = true;
 
-    if (data && size) {
+    if (data && size > 0) {
         msg->PutArray(reinterpret_cast<const uint8_t*>(data), size);
     }
 
@@ -233,7 +235,11 @@ static bool VersionDownloadCallback(void* param, const char* data, uint32_t size
     }
 
     s_dllURL = NULL;
-    delete[] s_localVersion;
+
+    if (s_localVersion) {
+        SMemFree(s_localVersion, "delete[]", -1, 0);
+    }
+
     s_localVersion = NULL;
 
     if (failed) {

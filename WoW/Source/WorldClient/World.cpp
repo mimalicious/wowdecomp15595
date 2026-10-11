@@ -497,11 +497,13 @@ float World::GetFramerate() {
         }
     }
 
-    if (total * 0.033333335f >= 0.001f) {
-        return 1.0f / (total * 0.033333335f);
+    float average = total * 0.033333335f;
+
+    if (0.001f > average) {
+        return 1000.0f;
     }
 
-    return 1000.0f;
+    return 1.0f / average;
 }
 
 // PROVEN: dde64a81 IDENTICAL/NONE
@@ -534,19 +536,19 @@ void World::SetDetailDoodadDist(float dist) {
 
 // OFFSET: 0x00722110/0x1403F85E0
 uint32_t World::ValidateFarClip(float farClip) {
-    if (farClip < 183.33333f || farClip > 1250.0f) {
+    if (farClip < 183.33333f) {
         return 2;
     }
 
-    if (farClip <= 727.0f) {
-        return 0;
+    if (farClip > 1250.0f) {
+        return 2;
     }
 
-    if (OsGetPhysicalMemory() > 0x40000000) {
-        return 0;
+    if (farClip > 727.0f && OsGetPhysicalMemory() <= 0x40000000) {
+        return 32;
     }
 
-    return 32;
+    return 0;
 }
 
 // PROVEN: e43dabe8 IDENTICAL/NONE
@@ -638,14 +640,19 @@ uint32_t World::GetM2PassEnables() {
     return World::s_m2PassEnables;
 }
 
-// PROVEN: 628a1f5d DIFFERENT/IDENTICAL
 // OFFSET: 0x007222D0/0x1403F8740
 float World::GetFarClip() {
-    if (World::s_farClip <= World::s_farClipOverride) {
-        return World::s_farClipOverride;
+    float farClip = World::s_farClip;
+    float farClipOverride = World::s_farClipOverride;
+    float result;
+
+    if (farClip > farClipOverride) {
+        result = farClip;
+    } else {
+        result = farClipOverride;
     }
 
-    return World::s_farClip;
+    return result;
 }
 
 // PROVEN: 6c36254e IDENTICAL/IDENTICAL
@@ -656,14 +663,19 @@ float World::GetNearClip() {
 
 // OFFSET: 0x00722320/0x1403F8770
 float World::GetHorizonFarClip() {
-    if (World::s_farClip <= World::s_farClipOverride) {
-        return World::s_farClipOverride * World::s_horizonFarClipScale;
+    float farClip = World::s_farClip;
+    float farClipOverride = World::s_farClipOverride;
+    float result;
+
+    if (farClip > farClipOverride) {
+        result = farClip;
+    } else {
+        result = farClipOverride;
     }
 
-    return World::s_farClip * World::s_horizonFarClipScale;
+    return result * World::s_horizonFarClipScale;
 }
 
-// PROVEN: 21f767d6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00722360/0x1403F87A0
 void World::SetFarClipOverride(float farClip) {
     float value = farClip;
@@ -830,7 +842,16 @@ void World::SetLoadFailed(int32_t failed, const char* name) {
 
 // OFFSET: 0x00722640
 int32_t World::AddMapById(int32_t mapId, int32_t a2) {
-    if (!CWorldMap::s_worldMaps[0] && !CWorldMap::s_worldMaps[1]) {
+    bool loaded = false;
+
+    for (int32_t i = 0; i < 2; i++) {
+        if (CWorldMap::s_worldMaps[i]) {
+            loaded = true;
+            break;
+        }
+    }
+
+    if (!loaded) {
         return 0;
     }
 
@@ -853,21 +874,23 @@ int32_t World::AddMapById(int32_t mapId, int32_t a2) {
 int32_t World::RemoveMapById(int32_t mapId) {
     CWorldMap* worldMap = ActiveWorldMap();
 
-    if (!worldMap) {
-        return 0;
+    if (worldMap) {
+        worldMap->RemoveMap(mapId);
+        return 1;
     }
 
-    worldMap->RemoveMap(mapId);
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x007226F0/0x1403F8C60
 int32_t World::SetMapActive(int32_t mapId, int32_t a2) {
-    if (mapId < 0 || !ActiveWorldMap()) {
+    CWorldMap* worldMap = ActiveWorldMap();
+
+    if (mapId < 0 || !worldMap) {
         return 0;
     }
 
-    ActiveWorldMap()->SetCurrent(mapId, a2);
+    worldMap->SetCurrent(mapId, a2);
     return 1;
 }
 
@@ -875,11 +898,11 @@ int32_t World::SetMapActive(int32_t mapId, int32_t a2) {
 int32_t World::GetActiveMapLogical(int32_t a1, int32_t a2) {
     CWorldMap* worldMap = ActiveWorldMap();
 
-    if (!worldMap) {
-        return -1;
+    if (worldMap) {
+        return worldMap->GetActiveMapRecId(a1, a2);
     }
 
-    return worldMap->GetActiveMapRecId(a1, a2);
+    return -1;
 }
 
 // OFFSET: #0x0077EC80
@@ -892,11 +915,11 @@ bool World::MapIsDungeon() {
 int32_t World::IsInfiniteOcean() {
     CWorldMap* worldMap = ActiveWorldMap();
 
-    if (!worldMap) {
-        return 0;
+    if (worldMap) {
+        return static_cast<int32_t>(worldMap->m_maps[0]->m_mapFlags << 26) >> 31;
     }
 
-    return static_cast<int32_t>(worldMap->m_maps[0]->m_mapFlags << 26) >> 31;
+    return 0;
 }
 
 // PROVEN: 4bcdc566 IDENTICAL/NONE
@@ -964,11 +987,11 @@ void World::SetWeather(int32_t type, float intensity, const WeatherRec* rec, boo
 int32_t World::QueryMapId() {
     CWorldMap* worldMap = ActiveWorldMap();
 
-    if (worldMap) {
-        return worldMap->m_mapId;
+    if (!worldMap) {
+        return -1;
     }
 
-    return -1;
+    return worldMap->m_mapId;
 }
 
 // OFFSET: 0x00722910/0x1403F8EF0
@@ -1315,8 +1338,9 @@ void World::ObjectSetModel(uintptr_t object, CM2Model* model) {
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
 
     if (entity->m_model) {
-        entity->m_model->m_lightingCallback = NULL;
-        entity->m_model->m_lightingArg = NULL;
+        CM2Model* oldModel = entity->m_model;
+        oldModel->m_lightingCallback = NULL;
+        oldModel->m_lightingArg = NULL;
         entity->m_model->Release();
     }
 
@@ -1333,8 +1357,9 @@ void World::ObjectSetModel(uintptr_t object, CM2Model* model) {
         entity->m_model->m_fFlags |= 0x2000000;
     }
 
-    entity->m_model->m_lightingCallback = CMapStaticEntity::ModelLightingCallback;
-    entity->m_model->m_lightingArg = entity;
+    CM2Model* newModel = entity->m_model;
+    newModel->m_lightingCallback = CMapStaticEntity::ModelLightingCallback;
+    newModel->m_lightingArg = entity;
     entity->m_model->m_refCount++;
 }
 
@@ -1439,7 +1464,11 @@ void World::SetCameraTarget(uintptr_t entity, uint64_t guid, const C44Matrix& ma
 bool World::Intersect(const C3Vector& start, const C3Vector& end, C3Vector* hitPoint, float* dist, uint32_t flags, HitTestDebug* debug) {
     C3Vector delta(end.x - start.x, end.y - start.y, end.z - start.z);
 
-    if (fabs(delta.z * delta.z + delta.y * delta.y + delta.x * delta.x) < 0.0000010000001 || !ActiveWorldMap()) {
+    if (fabs(delta.z * delta.z + delta.y * delta.y + delta.x * delta.x) < 0.0000010000001f) {
+        return false;
+    }
+
+    if (!ActiveWorldMap()) {
         return false;
     }
 
@@ -1466,11 +1495,11 @@ bool World::IntersectSegment(const C3Segment& seg, float& t, C4Plane& plane, uin
 int32_t World::IsFacetQueryValid() {
     CWorldMap* worldMap = ActiveWorldMap();
 
-    if (worldMap) {
-        return worldMap->m_facetQueryValid;
+    if (!worldMap) {
+        return 0;
     }
 
-    return 0;
+    return worldMap->m_facetQueryValid;
 }
 
 // OFFSET: 0x00723860
@@ -1617,7 +1646,11 @@ void World::SetShadowColor(const CImVector& color) {
 
 // OFFSET: 0x00723BB0/0x1403FA5C0
 uint32_t World::ValidateDetailDoodadDensity(uint32_t density) {
-    if (density < 16 || density > 256) {
+    if (density < 16) {
+        return 2;
+    }
+
+    if (density > 256) {
         return 2;
     }
 
@@ -1632,11 +1665,15 @@ uint32_t World::ValidateDetailDoodadDensity(uint32_t density) {
 uint32_t World::ValidateDetailDoodadDist(uint32_t dist) {
     float value = static_cast<float>(dist);
 
-    if (value < 0.0f || value > 500.0f) {
+    if (value < 0.0f) {
         return 2;
     }
 
-    if (value <= 140.0f || g_theGxDevicePtr->m_caps.unk_0304) {
+    if (value > 500.0f) {
+        return 2;
+    }
+
+    if (!(value > 140.0f) || g_theGxDevicePtr->m_caps.unk_0304) {
         return 0;
     }
 
@@ -1645,7 +1682,11 @@ uint32_t World::ValidateDetailDoodadDist(uint32_t dist) {
 
 // OFFSET: 0x00723C50/0x1403FA650
 float World::GetFarClipForMap(float farClip, int32_t mapId) {
-    float maxFarClip = OsGetPhysicalMemory() > 0x40000000 ? 1250.0f : 727.0f;
+    float maxFarClip = 1250.0f;
+
+    if (OsGetPhysicalMemory() <= 0x40000000) {
+        maxFarClip = 727.0f;
+    }
 
     if (mapId >= 0) {
         MapRec* rec = g_mapDB.GetRecord(mapId);
@@ -1659,8 +1700,8 @@ float World::GetFarClipForMap(float farClip, int32_t mapId) {
         farClip = maxFarClip;
     }
 
-    if (farClip < 183.33333f) {
-        return 183.33333f;
+    if (183.33333f > farClip) {
+        farClip = 183.33333f;
     }
 
     return farClip;
@@ -1669,7 +1710,7 @@ float World::GetFarClipForMap(float farClip, int32_t mapId) {
 // OFFSET: 0x00723CF0
 void World::SetFarClip(float farClip) {
     CWorldMap* worldMap = ActiveWorldMap();
-    float value = World::GetFarClipForMap(farClip, worldMap ? worldMap->m_mapId : -1);
+    float value = World::GetFarClipForMap(farClip, !worldMap ? -1 : worldMap->m_mapId);
 
     if (World::s_farClip != value) {
         World::prevFarClip = World::s_farClip;
@@ -1782,8 +1823,8 @@ void World::ProjectTextureCallback(const CAaBox& box, const CImVector& color, in
 // OFFSET: 0x00724330/0x1403FAF50
 int32_t World::ProjectPositionCallback(const C3Vector& pos, float& z, void* param) {
     C3Vector end(pos.x, pos.y, pos.z - 20.0f);
-    C3Vector hitPoint(0.0f, 0.0f, 0.0f);
     float dist = 1.0f;
+    C3Vector hitPoint(0.0f, 0.0f, 0.0f);
 
     if (!World::Intersect(pos, end, &hitPoint, &dist, 0x100111, NULL)) {
         return 0;
@@ -1959,9 +2000,11 @@ void World::Destroy() {
 
     World::shadowModTexture = NULL;
 
-    if (g_BspDigestCache) {
-        g_BspDigestCache->~CAaBspDigestCache();
-        SMemFree(g_BspDigestCache, "delete", -1, 0);
+    CAaBspDigestCache* cache = g_BspDigestCache;
+
+    if (cache) {
+        cache->~CAaBspDigestCache();
+        SMemFree(cache, "delete", -1, 0);
     }
 
     g_BspDigestCache = NULL;
@@ -1986,11 +2029,13 @@ uint64_t World::QueryObjectParentParam64(uintptr_t object) {
 int32_t World::ObjectHasParent(uintptr_t object) {
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
 
-    if (!(entity->m_type & MapBaseObj_Type_Entity)) {
-        return 0;
+    if (entity->m_type & MapBaseObj_Type_Entity) {
+        if (entity->m_parentLinkList.Head()) {
+            return 1;
+        }
     }
 
-    return entity->m_parentLinkList.Head() != NULL;
+    return 0;
 }
 
 // OFFSET: 0x00724BE0
@@ -2059,7 +2104,7 @@ void World::ObjectUpdate(uintptr_t object, const C44Matrix& matrix) {
         }
 
         entity->m_model->m_fFlags |= 0x4000;
-        entity->m_model->m_worldTransform = matrix;
+        entity->m_model->SetWorldTransform(matrix);
     }
 
     World::ObjectUpdate(object, matrix, box, sphere, center, 0, -1);
@@ -2357,7 +2402,7 @@ void World::AddAaBoxFacets(const CAaBox& box, uint64_t guid, FacetData& facets, 
 void World::FadeoutObject(uintptr_t object, float time, C44Matrix* matrix, WORLD_FADE_CALLBACK callback, uint64_t param) {
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
 
-    if (entity->m_model && entity->m_model->IsDrawable() && time >= 0.0099999998f) {
+    if (entity->m_model && entity->m_model->IsDrawable() && !(time < 0.0099999998f)) {
         CWorldScene::FadeoutObject(entity, time, matrix, callback, param);
     } else {
         World::ObjectDestroy(object);
@@ -2436,11 +2481,10 @@ void World::UnloadMap() {
 void World::Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect, const C3Vector& camUp, const C3Vector& weatherPosition, const C3Vector& weatherVelocity, float weatherFacing, int32_t weatherOnTaxi, const C3Spline_CatmullRom* weatherSpline, float splineElapsedTime, float splineDuration) {
     World::UpdateTextureCacheBudget();
 
-    uint32_t index = World::s_frameTimeIndex;
-    World::s_frameTimes[index] = FrameTime::GetTickTimeSec();
-    World::s_frameTimeIndex = index + 1;
+    World::s_frameTimes[World::s_frameTimeIndex] = FrameTime::GetTickTimeSec();
+    World::s_frameTimeIndex++;
 
-    if (index == 29) {
+    if (World::s_frameTimeIndex == 30) {
         World::s_frameTimeIndex = 0;
     }
 
@@ -2455,11 +2499,16 @@ void World::Update(const C3Vector& camPos, const C3Vector& camTarget, float near
         World::alphaShadowMipLevel = CWorldParam::cvar_terrainMipLevel->m_intValue;
     }
 
-    int32_t maxY = World::gbChunkRectOld.maxY >= World::gbChunkRect.maxY ? World::gbChunkRect.maxY : World::gbChunkRectOld.maxY;
-    int32_t maxX = World::gbChunkRectOld.maxX >= World::gbChunkRect.maxX ? World::gbChunkRect.maxX : World::gbChunkRectOld.maxX;
-    int32_t minY = World::gbChunkRectOld.minY <= World::gbChunkRect.minY ? World::gbChunkRect.minY : World::gbChunkRectOld.minY;
-    int32_t minX = World::gbChunkRectOld.minX <= World::gbChunkRect.minX ? World::gbChunkRect.minX : World::gbChunkRectOld.minX;
-    World::prepareAll = minX >= maxX || minY >= maxY;
+    int32_t maxX = World::gbChunkRectOld.maxX < World::gbChunkRect.maxX ? World::gbChunkRectOld.maxX : World::gbChunkRect.maxX;
+    int32_t maxY = World::gbChunkRectOld.maxY < World::gbChunkRect.maxY ? World::gbChunkRectOld.maxY : World::gbChunkRect.maxY;
+    int32_t minX = World::gbChunkRectOld.minX > World::gbChunkRect.minX ? World::gbChunkRectOld.minX : World::gbChunkRect.minX;
+    int32_t minY = World::gbChunkRectOld.minY > World::gbChunkRect.minY ? World::gbChunkRectOld.minY : World::gbChunkRect.minY;
+
+    if (minY >= maxY || minX >= maxX) {
+        World::prepareAll = 1;
+    } else {
+        World::prepareAll = 0;
+    }
 
     World::frameCnt++;
 
@@ -2467,10 +2516,12 @@ void World::Update(const C3Vector& camPos, const C3Vector& camTarget, float near
         World::s_frameCallback();
     }
 
-    for (uint32_t i = 0; i < 8; i++) {
-        C4Vector& vect = World::texVect[i];
-        vect.x = FrameTime::GetTickTimeSec() * s_texVectSpeed[2 * i] + vect.x;
-        vect.y = FrameTime::GetTickTimeSec() * s_texVectSpeed[2 * i + 1] + vect.y;
+    C4Vector* texVect = World::texVect;
+
+    for (uint32_t i = 0; i < 16; i += 2, texVect++) {
+        C4Vector& vect = *texVect;
+        vect.x = FrameTime::GetTickTimeSec() * s_texVectSpeed[i] + vect.x;
+        vect.y = FrameTime::GetTickTimeSec() * s_texVectSpeed[i + 1] + vect.y;
 
         if (vect.x >= 64.0f) {
             vect.x = 0.0f;

@@ -138,7 +138,8 @@ void CWorldParam::SetDefaults(OPTION_PAGE page) {
     const DefaultSetting* setting = CWorldParam::s_defaults[ConsoleDeviceGetDefaultSettings()->m_graphicsQuality];
 
     for (; setting->m_name; setting++) {
-        CVar::Lookup(setting->m_name)->Set(setting->m_value, true, false, false, true);
+        CVar* var = CVar::Lookup(setting->m_name);
+        var->Set(setting->m_value, true, false, false, true);
     }
 }
 
@@ -154,9 +155,9 @@ uint32_t CWorldParam::ValidateTextureFilteringMode(uint32_t mode) {
         return 0;
     }
 
-    if (mode <= 6) {
-        return g_theGxDevicePtr->m_caps.m_maxTexAnisotropy < CWorldParam::s_textureFilteringAnisotropy[mode] ? 8 : 0;
+    if (mode > 6) {
+        return 2;
     }
 
-    return 2;
+    return CWorldParam::s_textureFilteringAnisotropy[mode] > g_theGxDevicePtr->m_caps.m_maxTexAnisotropy ? 8 : 0;
 }

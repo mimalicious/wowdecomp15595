@@ -337,7 +337,8 @@ void CWorldMap::FootprintInitialize() {
     s_footprintNext = 64;
     s_footprintPlayerNext = 0;
 
-    for (CMapFootprint* footprint = s_footprints; footprint < &s_footprints[320]; footprint++) {
+    for (int32_t i = 0; i < 320; i++) {
+        CMapFootprint* footprint = &s_footprints[i];
         footprint->m_textureIndex = 0;
         footprint->m_life = 0;
         footprint->m_alpha = 0;

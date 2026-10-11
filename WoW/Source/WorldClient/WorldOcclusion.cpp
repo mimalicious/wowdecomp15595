@@ -520,7 +520,7 @@ void CWorldOcclusion::AddVolume(const C3Vector& pos, const C3Vector* verts, int3
 
 // OFFSET: 0x0079C410
 void CWorldOcclusion::Clear() {
-    for (uint32_t i = 0; i < 256; i++) {
+    for (int32_t i = 0; i < 256; i++) {
         this->m_buffer[0][i] = -99999.0f;
         this->m_buffer[1][i] = 99999.0f;
         this->m_bufferFlags[i] = 0;

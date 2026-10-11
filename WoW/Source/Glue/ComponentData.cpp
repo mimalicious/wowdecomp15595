@@ -17,10 +17,10 @@ ComponentData::ComponentData() {
     this->m_geosets[1] = 101;
     this->m_geosets[2] = 201;
     this->m_geosets[3] = 301;
+    this->m_geosets[7] = 702;
     this->m_geosets[4] = 401;
     this->m_geosets[5] = 501;
     this->m_geosets[6] = 601;
-    this->m_geosets[7] = 702;
     this->m_geosets[8] = 801;
     this->m_geosets[9] = 901;
     this->m_geosets[10] = 1001;

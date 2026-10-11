@@ -127,13 +127,13 @@ CVar* CWorldParam::cvar_terrainMipLevel;
 bool CWorldParam::TerrainMipLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t level = SStrToInt(value);
 
-    if (level <= 1) {
-        ConsoleWriteA("Terrain mip level changed to %d.", DEFAULT_COLOR, level);
-        return true;
+    if (level > 1) {
+        ConsoleWrite("Terrain mip level must be in range 0 - 1.", DEFAULT_COLOR);
+        return false;
     }
 
-    ConsoleWrite("Terrain mip level must be in range 0 - 1.", DEFAULT_COLOR);
-    return false;
+    ConsoleWriteA("Terrain mip level changed to %d.", DEFAULT_COLOR, level);
+    return true;
 }
 
 // PROVEN: 0af64cad IDENTICAL/NONE
@@ -184,13 +184,13 @@ bool CWorldParam::HorizonNearClipScaleCallback(CVar* var, const char* oldValue, 
 bool CWorldParam::ParticleDensityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t density = SStrToInt(value);
 
-    if (static_cast<uint32_t>(density - 10) > 90) {
-        ConsoleWrite("Value must be between 10 and 100.", DEFAULT_COLOR);
-        return false;
+    if (static_cast<uint32_t>(density - 10) <= 90) {
+        ParticleSystemManager::SetScaler(static_cast<float>(density) * 0.0099999998f);
+        return true;
     }
 
-    ParticleSystemManager::SetScaler(static_cast<float>(density) * 0.0099999998f);
-    return true;
+    ConsoleWrite("Value must be between 10 and 100.", DEFAULT_COLOR);
+    return false;
 }
 
 // OFFSET: 0x0076B7B0/0x140453860
@@ -395,7 +395,8 @@ bool CWorldParam::ProjectedTexturesCallback(CVar* var, const char* oldValue, con
 
 // OFFSET: 0x0076BCB0/0x140453D40
 bool CWorldParam::DetailDoodadInstancingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    CDetailDoodad::SetInstanced(SStrToInt(value) != 0);
+    bool instanced = SStrToInt(value) != 0;
+    CDetailDoodad::SetInstanced(instanced);
 
     if (CDetailDoodad::IsInstanced()) {
         ConsoleWrite("Detail doodad instancing enabled.", DEFAULT_COLOR);
@@ -538,19 +539,19 @@ bool CWorldParam::HWPCFCallback(CVar* var, const char* oldValue, const char* val
     uint32_t enables = World::GetEnables();
 
     if (enable) {
-        if (!g_theGxDevicePtr->m_caps.m_pcfFormat[GxTex_D24X8]) {
+        if (g_theGxDevicePtr->m_caps.m_pcfFormat[GxTex_D24X8]) {
+            ConsoleWrite("Hardware PCF enabled.", DEFAULT_COLOR);
+            World::SetEnables(0x10000, 1);
+        } else {
             ConsoleWrite("Hardware PCF not supported by this graphics card.", DEFAULT_COLOR);
             return false;
         }
-
-        ConsoleWrite("Hardware PCF enabled.", DEFAULT_COLOR);
-        World::SetEnables(0x10000, 1);
     } else {
         ConsoleWrite("Hardware PCF disabled.", DEFAULT_COLOR);
         World::SetEnables(0x10000, 0);
     }
 
-    if (enables != World::GetEnables()) {
+    if (enables ^ World::GetEnables()) {
         CShaderEffect::SetUsePcfFiltering((World::GetEnables() >> 16) & 1);
         CShadowCache::NotifyTexturesRecreate();
     }
