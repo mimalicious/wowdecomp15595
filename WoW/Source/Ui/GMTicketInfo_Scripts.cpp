@@ -1,4 +1,9 @@
 #include "GMTicketInfo.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Source/Object/ObjectClient/Player_C.h"
+#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
+#include "WoW/Source/Ui/Types.h"
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -63,8 +68,8 @@ static int32_t Script_GMSurveyAnswerSubmit(lua_State* L) {
     int32_t rank = static_cast<int32_t>(lua_tonumber(L, 2));
     const char* comment = lua_tolstring(L, 3, NULL);
 
-    if (question >= 10) {
-        luaL_error(L, "GMSurveyAnswerSubmit: Questions limited from %d to %d", 1, 10);
+    if (question >= 15) {
+        luaL_error(L, "GMSurveyAnswerSubmit: Questions limited from %d to %d", 1, 15);
         return 0;
     }
 
@@ -91,10 +96,10 @@ static int32_t Script_GMSurveyQuestion(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
     const char* question;
 
-    if (index >= 1 && index <= 10 && (question = CGGMSurveyInfo::GetQuestion(index))) {
+    if (index >= 1 && static_cast<uint32_t>(index) <= 15 && (question = CGGMSurveyInfo::GetQuestion(index))) {
         lua_pushstring(L, question);
     } else {
         lua_pushnil(L);
@@ -110,11 +115,11 @@ static int32_t Script_GMSurveyAnswer(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
     double answerIndex = lua_tonumber(L, 2);
     const char* answer;
 
-    if (index >= 1 && index <= 10 && (answer = CGGMSurveyInfo::GetAnswer(index, static_cast<int32_t>(answerIndex)))) {
+    if (index >= 1 && static_cast<uint32_t>(index) <= 15 && (answer = CGGMSurveyInfo::GetAnswer(index, static_cast<int32_t>(answerIndex)))) {
         lua_pushstring(L, answer);
     } else {
         lua_pushnil(L);
@@ -131,9 +136,9 @@ static int32_t Script_GMSurveyNumAnswers(lua_State* L) {
     }
 
     int32_t count = 0;
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
 
-    if (index >= 1 && index <= 10) {
+    if (index >= 1 && static_cast<uint32_t>(index) <= 15) {
         count = CGGMSurveyInfo::GetNumAnswers(index);
     }
 
@@ -215,6 +220,64 @@ static int32_t Script_GMSurveySubmit(lua_State* L) {
     return 0;
 }
 
+// OFFSET: 0x009E6980/0x14077F0C0
+static int32_t Script_GMSubmitSuggestion(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: GMSubmitSuggestion(\"suggestion\")");
+        return 0;
+    }
+
+    if (!CGGameUI::CanPerformAction(26) || !CGGMTicketInfo::s_quickTicketSystemStatus) {
+        return 0;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || !CGGMTicketInfo::s_quickTicketThrottle.IncrementAndCheck()) {
+        return 0;
+    }
+
+    UserClientSupportTicketSubmitSuggestion msg;
+    msg.m_header.m_mapID = CGGameUI::m_iCurrentMapID;
+    msg.m_header.m_position = player->GetPosition();
+    msg.m_header.m_facing = player->GetFacing();
+    SStrCopy(msg.m_note, lua_tolstring(L, 1, NULL), sizeof(msg.m_note));
+    ClientServices::Send(&msg);
+    FrameScript_SignalEvent(SCRIPT_EVENT_QUICK_TICKET_THROTTLE_CHANGED, NULL);
+    CGGameUI::DisplayError(ERR_SUGGESTION_SUBMITTED_SUCCESSFULLY);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+// OFFSET: 0x009E6AC0/0x14077F240
+static int32_t Script_GMSubmitBug(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: GMSubmitBug(\"bugInfo\")");
+        return 0;
+    }
+
+    if (!CGGameUI::CanPerformAction(26) || !CGGMTicketInfo::s_quickTicketSystemStatus) {
+        return 0;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || !CGGMTicketInfo::s_quickTicketThrottle.IncrementAndCheck()) {
+        return 0;
+    }
+
+    UserClientSupportTicketSubmitBug msg;
+    msg.m_header.m_mapID = CGGameUI::m_iCurrentMapID;
+    msg.m_header.m_position = player->GetPosition();
+    msg.m_header.m_facing = player->GetFacing();
+    SStrCopy(msg.m_note, lua_tolstring(L, 1, NULL), sizeof(msg.m_note));
+    ClientServices::Send(&msg);
+    FrameScript_SignalEvent(SCRIPT_EVENT_QUICK_TICKET_THROTTLE_CHANGED, NULL);
+    CGGameUI::DisplayError(ERR_BUG_SUBMITTED_SUCCESSFULLY);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
 // OFFSET: 0x009E5A90/0x14077DEA0
 static int32_t Script_GMQuickTicketSystemEnabled(lua_State* L) {
     lua_pushboolean(L, CGGMTicketInfo::s_quickTicketSystemStatus);
@@ -233,7 +296,7 @@ static int32_t Script_GMQuickTicketSystemThrottled(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ACFAF8
+// STATIC: 0x00D169F8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGMTicket", &Script_GetGMTicket },
     { "NewGMTicket", &Script_NewGMTicket },
@@ -250,6 +313,8 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GMSurveySubmit", &Script_GMSurveySubmit },
     { "GMReportLag", &Script_GMReportLag },
     { "RegisterStaticConstants", &Script_RegisterStaticConstants },
+    { "GMSubmitSuggestion", &Script_GMSubmitSuggestion },
+    { "GMSubmitBug", &Script_GMSubmitBug },
     { "GMQuickTicketSystemEnabled", &Script_GMQuickTicketSystemEnabled },
     { "GMItemRestorationButtonEnabled", &Script_GMItemRestorationButtonEnabled },
     { "GMQuickTicketSystemThrottled", &Script_GMQuickTicketSystemThrottled },

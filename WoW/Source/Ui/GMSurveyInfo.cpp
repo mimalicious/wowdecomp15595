@@ -6,18 +6,18 @@
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00C1E8C4
-uint8_t CGGMSurveyInfo::m_surveyAnswers[10];
+// STATIC: 0x00F762F4
+uint8_t CGGMSurveyInfo::m_surveyAnswers[15];
 
 // STATIC: 0x00F7630C
-char* CGGMSurveyInfo::m_surveyAnswerComments[10];
+char* CGGMSurveyInfo::m_surveyAnswerComments[15];
 
 // STATIC: 0x00F76348
 char* CGGMSurveyInfo::m_surveyComment;
 
 // OFFSET: 0x009E5C00
-const char* CGGMSurveyInfo::GetQuestion(uint32_t index) {
-    if (index < 1 || index > 10) {
+const char* CGGMSurveyInfo::GetQuestion(int32_t index) {
+    if (index < 1 || static_cast<uint32_t>(index) > 15) {
         return NULL;
     }
 
@@ -39,8 +39,8 @@ const char* CGGMSurveyInfo::GetQuestion(uint32_t index) {
 }
 
 // OFFSET: 0x009E5C80
-const char* CGGMSurveyInfo::GetAnswer(uint32_t index, int32_t answer) {
-    if (index < 1 || index > 10) {
+const char* CGGMSurveyInfo::GetAnswer(int32_t index, int32_t answer) {
+    if (index < 1 || static_cast<uint32_t>(index) > 15) {
         return NULL;
     }
 
@@ -69,8 +69,8 @@ const char* CGGMSurveyInfo::GetAnswer(uint32_t index, int32_t answer) {
 }
 
 // OFFSET: 0x009E5D50
-int32_t CGGMSurveyInfo::GetNumAnswers(uint32_t index) {
-    if (index < 1 || index > 10) {
+int32_t CGGMSurveyInfo::GetNumAnswers(int32_t index) {
+    if (index < 1 || static_cast<uint32_t>(index) > 15) {
         return 0;
     }
 
@@ -80,7 +80,7 @@ int32_t CGGMSurveyInfo::GetNumAnswers(uint32_t index) {
         return 0;
     }
 
-    if (static_cast<int32_t>(index - 1) <= 0 || !g_gmSurveyQuestionsDB.GetRecord(index - 1)) {
+    if (index - 1 <= 0 || !g_gmSurveyQuestionsDB.GetRecord(index - 1)) {
         return 0;
     }
 
@@ -89,7 +89,7 @@ int32_t CGGMSurveyInfo::GetNumAnswers(uint32_t index) {
     for (int32_t i = 0; i < g_gmSurveyAnswersDB.m_numRecords; i++) {
         GMSurveyAnswersRec* rec = g_gmSurveyAnswersDB.GetRecord(i);
 
-        if (rec && rec->m_gmsurveyQuestionID == static_cast<int32_t>(index - 1)) {
+        if (rec && rec->m_gmsurveyQuestionID == index - 1) {
             count++;
         }
     }
@@ -97,14 +97,14 @@ int32_t CGGMSurveyInfo::GetNumAnswers(uint32_t index) {
     return count;
 }
 
-// OFFSET: #0x005ACD50
+// OFFSET: 0x009E64A0/0x14077EB00
 void CGGMSurveyInfo::Submit() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GM_SURVEY_SUBMIT));
     GMSurveyCurrentSurveyRec* current = g_gmSurveyCurrentSurveyDB.GetRecord(s_locale);
     msg.Put(static_cast<uint32_t>(current ? current->m_gmsurveyID : 0));
 
-    for (uint32_t i = 0; i < 10; i++) {
+    for (uint32_t i = 0; i < 15; i++) {
         GMSurveyCurrentSurveyRec* currentSurvey = g_gmSurveyCurrentSurveyDB.GetRecord(s_locale);
         GMSurveySurveysRec* survey = g_gmSurveySurveysDB.GetRecord(currentSurvey ? currentSurvey->m_gmsurveyID : 0);
         int32_t questionId = survey ? survey->m_questionID[i] : 0;
@@ -129,9 +129,9 @@ void CGGMSurveyInfo::Submit() {
 void CGGMSurveyInfo::InitializeGame() {
 }
 
-// OFFSET: 0x009E57B0
+// OFFSET: 0x009E57B0/0x14077DB10
 void CGGMSurveyInfo::FreeAnswers() {
-    for (uint32_t i = 0; i < 10; i++) {
+    for (uint32_t i = 0; i < 15; i++) {
         CGGMSurveyInfo::m_surveyAnswers[i] = 0;
 
         if (CGGMSurveyInfo::m_surveyAnswerComments[i]) {
@@ -148,9 +148,9 @@ void CGGMSurveyInfo::FreeAnswers() {
     CGGMSurveyInfo::m_surveyComment = NULL;
 }
 
-// OFFSET: 0x009E5820
+// OFFSET: 0x009E5820/0x14077DBB0
 void CGGMSurveyInfo::SetAnswer(uint32_t index, uint8_t answer, const char* comment) {
-    if (index > 9) {
+    if (index > 14) {
         return;
     }
 
@@ -167,7 +167,7 @@ void CGGMSurveyInfo::SetAnswer(uint32_t index, uint8_t answer, const char* comme
     }
 }
 
-// OFFSET: 0x009E5890
+// OFFSET: 0x009E5890/0x14077DC50
 void CGGMSurveyInfo::SetComment(const char* comment) {
     if (CGGMSurveyInfo::m_surveyComment) {
         SMemFree(CGGMSurveyInfo::m_surveyComment, __FILE__, __LINE__, 0);

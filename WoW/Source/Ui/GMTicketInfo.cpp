@@ -58,7 +58,7 @@ void CGGMTicketInfo::EnterWorld() {
     CGGMTicketInfo::m_responseID = 0;
 }
 
-// OFFSET: #0x005AD600
+// OFFSET: 0x009E7000/0x14077F890
 void CGGMTicketInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_GM_TICKET_CREATE, Packet_Group_5, NULL);
     ClientServices::SetMessageHandler(SMSG_GM_TICKET_UPDATE_TEXT, Packet_Group_5, NULL);
@@ -68,9 +68,11 @@ void CGGMTicketInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_GMRESPONSE_RECEIVED, Packet_Group_5, NULL);
     ClientServices::SetMessageHandler(SMSG_GMRESPONSE_STATUS_UPDATE, Packet_Group_5, NULL);
     ClientServices::SetMessageHandler(SMSG_GM_TICKET_STATUS_UPDATE, Packet_Group_5, NULL);
+    CGGMTicketInfo::s_quickTicketSystemStatus = 1;
+    CGGMTicketInfo::s_itemRestorationButtonStatus = 1;
 }
 
-// OFFSET: 0x009E5680
+// OFFSET: 0x009E5680/0x14077D9D0
 static int32_t IsTicketTextValid(const char* text) {
     if (SStrLenUTF8(text) > 500) {
         CGGameUI::DisplayError(ERR_TICKET_TEXT_TOO_LONG);
@@ -89,7 +91,7 @@ static int32_t IsTicketTextValid(const char* text) {
     return 1;
 }
 
-// OFFSET: #0x005AC8F0
+// OFFSET: 0x009E5FC0/0x14077E520
 void CGGMTicketInfo::CreateTicket(const char* text, int32_t needResponse, uint32_t moreHelp) {
     if (moreHelp) {
         if (!CGGMTicketInfo::m_responseID) {
@@ -157,7 +159,7 @@ void CGGMTicketInfo::CreateTicket(const char* text, int32_t needResponse, uint32
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005ACB50
+// OFFSET: 0x009E62A0/0x14077E880
 void SendGMTicketUpdateText(const char* text) {
     if (!CGGMTicketInfo::m_ticketID || CGGMTicketInfo::m_responseID || !IsTicketTextValid(text)) {
         return;
@@ -170,7 +172,7 @@ void SendGMTicketUpdateText(const char* text) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005ACC60
+// OFFSET: 0x009E63B0/0x14077E9D0
 void SendGMTicketDeleteTicket() {
     if (!CGGMTicketInfo::m_ticketID || CGGMTicketInfo::m_responseID) {
         return;
@@ -182,7 +184,7 @@ void SendGMTicketDeleteTicket() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005ACCE0
+// OFFSET: 0x009E6430/0x14077EA70
 void SendGMResponseResolve() {
     if (!CGGMTicketInfo::m_responseID) {
         return;
@@ -194,7 +196,7 @@ void SendGMResponseResolve() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005ACF30
+// OFFSET: 0x009E6670
 void CGGMReportLag::Submit(int32_t type) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -215,7 +217,7 @@ void CGGMReportLag::Submit(int32_t type) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005ACBF0
+// OFFSET: 0x009E6340/0x14077E950
 void SendGetTicketOpcode() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GM_TICKET_GET_TICKET));
@@ -223,7 +225,7 @@ void SendGetTicketOpcode() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005AD240
+// OFFSET: 0x009E6C10
 int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     switch (msgId) {
         case SMSG_GM_TICKET_CREATE:
@@ -272,22 +274,21 @@ int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
             msg->GetString(text, sizeof(text));
             uint8_t category;
             msg->Get(category);
-            float ticketAge;
+            uint32_t ticketAge;
             msg->Get(ticketAge);
-
-            if (ticketAge < 0.0f) {
-                ticketAge = 0.0f;
-            }
-
-            float oldestTicketAge;
+            uint32_t oldestTicketAge;
             msg->Get(oldestTicketAge);
-            float lastUpdate;
+            uint32_t lastUpdate;
             msg->Get(lastUpdate);
             uint8_t assigned;
             msg->Get(assigned);
             uint8_t opened;
             msg->Get(opened);
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_TICKET, "%d%s%f%f%f%d%d", category, text, ticketAge, oldestTicketAge, lastUpdate, assigned, opened);
+            char waitTimeOverrideMessage[1024] = { 0 };
+            msg->GetString(waitTimeOverrideMessage, 0x7FFFFFFF);
+            uint32_t waitTimeOverrideMinutes;
+            msg->Get(waitTimeOverrideMinutes);
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_TICKET, "%d%s%d%d%d%d%d%s%d", category, text, ticketAge, oldestTicketAge, lastUpdate, assigned, opened, waitTimeOverrideMessage, waitTimeOverrideMinutes);
             break;
         }
 
@@ -346,7 +347,7 @@ int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
             for (int32_t i = 0; i < 4; i++) {
                 char line[4000];
                 msg->GetString(line, sizeof(line));
-                SStrPack(response, line, 0x7FFFFFFF);
+                SStrPack(response, line, sizeof(response));
             }
 
             FrameScript_SignalEvent(SCRIPT_EVENT_GMRESPONSE_RECEIVED, "%s%s", text, response);
@@ -356,8 +357,8 @@ int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
         case SMSG_GMRESPONSE_STATUS_UPDATE: {
             CGGMTicketInfo::m_ticketID = 0;
             CGGMTicketInfo::m_responseID = 0;
-            uint8_t showSurvey = 0;
-            msg->Get(showSurvey);
+            uint32_t showSurvey;
+            msg->GetInt8(showSurvey);
 
             if (showSurvey) {
                 FrameScript_SignalEvent(SCRIPT_EVENT_GMSURVEY_DISPLAY, NULL);
