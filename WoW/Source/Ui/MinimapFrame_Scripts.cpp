@@ -39,48 +39,190 @@ int32_t Script_SetZoom(lua_State* L);
 int32_t Script_PingLocation(lua_State* L);
 int32_t Script_GetPingPosition(lua_State* L);
 
-// OFFSET: #0x0057C060
+// OFFSET: 0x009CEE90
 void CGMinimapFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGMinimapFrame::s_metatable);
     CGMinimapFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: #0x0057E340
+// OFFSET: 0x009D19E0
 void CGMinimapFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGMinimapFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGMinimapFrame::RegisterScriptMethods);
+}
+
+// OFFSET: 0x009D13C0/0x140762820
+static int32_t Script_SetQuestBlobInsideAlpha(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetQuestBlobInsideAlpha(alpha)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    int32_t alpha = static_cast<int32_t>(lua_tonumber(L, 2));
+
+    if (alpha > 255) {
+        alpha = 255;
+    } else if (alpha < 0) {
+        alpha = 0;
+    }
+
+    minimap->m_questBlobInsideAlpha = static_cast<uint8_t>(alpha);
+    return 0;
+}
+
+// OFFSET: 0x009D1490/0x1407628E0
+static int32_t Script_SetQuestBlobOutsideAlpha(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetQuestBlobOutsideAlpha(alpha)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    int32_t alpha = static_cast<int32_t>(lua_tonumber(L, 2));
+
+    if (alpha > 255) {
+        alpha = 255;
+    } else if (alpha < 0) {
+        alpha = 0;
+    }
+
+    minimap->m_questBlobOutsideAlpha = static_cast<uint8_t>(alpha);
+    return 0;
+}
+
+// OFFSET: 0x009D1560/0x1407629A0
+static int32_t Script_SetQuestBlobRingAlpha(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetQuestBlobRingAlpha(alpha)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    int32_t alpha = static_cast<int32_t>(lua_tonumber(L, 2));
+
+    if (alpha > 255) {
+        alpha = 255;
+    } else if (alpha < 0) {
+        alpha = 0;
+    }
+
+    minimap->m_questBlobRingAlpha = static_cast<uint8_t>(alpha);
+    return 0;
+}
+
+// OFFSET: 0x009D1630/0x140762A60
+static int32_t Script_SetQuestBlobRingScalar(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetQuestBlobRingScalar(scalar)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    minimap->m_questBlobRingScalar = static_cast<float>(lua_tonumber(L, 2));
+    return 0;
+}
+
+// OFFSET: 0x009D16B0/0x140762B00
+static int32_t Script_SetArchBlobInsideAlpha(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetArchBlobInsideAlpha(alpha)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    int32_t alpha = static_cast<int32_t>(lua_tonumber(L, 2));
+
+    if (alpha > 255) {
+        alpha = 255;
+    } else if (alpha < 0) {
+        alpha = 0;
+    }
+
+    minimap->m_archBlobInsideAlpha = static_cast<uint8_t>(alpha);
+    return 0;
+}
+
+// OFFSET: 0x009D1780/0x140762BC0
+static int32_t Script_SetArchBlobOutsideAlpha(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetArchBlobOutsideAlpha(alpha)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    int32_t alpha = static_cast<int32_t>(lua_tonumber(L, 2));
+
+    if (alpha > 255) {
+        alpha = 255;
+    } else if (alpha < 0) {
+        alpha = 0;
+    }
+
+    minimap->m_archBlobOutsideAlpha = static_cast<uint8_t>(alpha);
+    return 0;
+}
+
+// OFFSET: 0x009D1850/0x140762C80
+static int32_t Script_SetArchBlobRingAlpha(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetArchBlobRingAlpha(alpha)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    int32_t alpha = static_cast<int32_t>(lua_tonumber(L, 2));
+
+    if (alpha > 255) {
+        alpha = 255;
+    } else if (alpha < 0) {
+        alpha = 0;
+    }
+
+    minimap->m_archBlobRingAlpha = static_cast<uint8_t>(alpha);
+    return 0;
+}
+
+// OFFSET: 0x009D1920/0x140762D40
+static int32_t Script_SetArchBlobRingScalar(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetArchBlobRingScalar(scalar)", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    minimap->m_archBlobRingScalar = static_cast<float>(lua_tonumber(L, 2));
+    return 0;
+}
+
+// OFFSET: 0x009D19A0/0x140762DE0
+static int32_t Script_UpdateBlips(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+    minimap->m_lastBlipUpdate = 0;
+    return 0;
 }
 
 // OFFSET: 0x009D2940/0x140763FD0
 static int32_t Script_GetNumTrackingTypes(lua_State* L) {
     uint32_t spells = s_trackingSpells.Count();
     lua_pushnumber(L, spells + CGMinimapFrame::CountAvailableTrackingTypes());
-    return 1;
-}
-
-// OFFSET: #0x0057F4F0
-static int32_t Script_GetTrackingTexture(lua_State* L) {
-    char texture[260];
-
-    if (CGMinimapFrame::s_trackingInfo) {
-        SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", static_cast<const char*>(CGMinimapFrame::s_trackingInfo->m_texture));
-    } else {
-        SpellRec* spell;
-
-        if ((spell = g_spellDB.GetRecord(CGMinimapFrame::s_trackingSpell))) {
-            SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID);
-
-            if (icon) {
-                lua_pushstring(L, icon->m_textureFilename);
-                return 1;
-            }
-        }
-
-        SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", "None");
-    }
-
-    lua_pushstring(L, texture);
     return 1;
 }
 
@@ -129,34 +271,42 @@ static int32_t Script_GetTrackingInfo(lua_State* L) {
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
 
     if (index >= static_cast<int32_t>(s_trackingSpells.Count())) {
-        const TrackingTypeInfo* info = CGMinimapFrame::GetTrackingTypeByIndex(index - s_trackingSpells.Count());
+        uint32_t type = CGMinimapFrame::GetTrackingTypeByIndex(index - s_trackingSpells.Count());
 
-        if (!info) {
+        if (type >= 19) {
             return 0;
         }
 
+        const TrackingTypeInfo* info = &CGMinimapFrame::s_trackingTypes[type];
         lua_pushstring(L, FrameScript_GetText(info->m_name, -1, GENDER_NOT_APPLICABLE));
         char texture[128];
         SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", static_cast<const char*>(info->m_texture));
         lua_pushstring(L, texture);
 
-        if (CGMinimapFrame::s_trackingInfo == info) {
+        if ((1 << type) & CGMinimapFrame::s_trackingMask) {
             lua_pushnumber(L, 1.0);
         } else {
             lua_pushnil(L);
         }
 
         lua_pushstring(L, "other");
-        return 4;
+        lua_pushinteger(L, info->m_category);
+        return 5;
     }
 
-    SpellRec* spell;
+    SpellRec* spell = g_spellDB.GetRecord(s_trackingSpells.m_data[index]);
 
-    if (!(spell = g_spellDB.GetRecord(s_trackingSpells.m_data[index]))) {
+    if (!spell) {
         return 0;
     }
 
-    bool active = CGMinimapFrame::s_trackingSpell == spell->m_id;
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    bool active = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[index], WOWGUID());
     lua_pushstring(L, spell->m_name);
     SpellIconRec* icon = g_spellIconDB.GetRecord(active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID);
 
@@ -173,7 +323,8 @@ static int32_t Script_GetTrackingInfo(lua_State* L) {
     }
 
     lua_pushstring(L, "spell");
-    return 4;
+    lua_pushinteger(L, SpellIsTrackingAura(spell));
+    return 5;
 }
 
 // OFFSET: 0x009CED80/0x14075F8D0
@@ -303,46 +454,32 @@ static int32_t Script_GetPingPosition(lua_State* L) {
 // OFFSET: 0x009D9340/0x14076DAD0
 static int32_t Script_SetTracking(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        int32_t spellId = CGMinimapFrame::s_trackingSpell;
+        return 0;
+    }
 
-        if (spellId) {
-            SpellRec* spell;
-
-            if ((spell = g_spellDB.GetRecord(spellId))) {
-                Spell_C_CancelAura(spell, ClntObjMgrGetActivePlayerObj(), -1);
-                CGMinimapFrame::s_trackingSpell = 0;
-                Script_SendUniqueSignal(SCRIPT_EVENT_MINIMAP_UPDATE_TRACKING);
-            }
-        }
-
-        CGMinimapFrame::LoadTrackingInfo(NULL);
+    if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return 0;
     }
 
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
+    bool enable = lua_toboolean(L, 2) != 0;
 
-    if (index < static_cast<int32_t>(s_trackingSpells.Count())) {
-        Spell_C_CastSpell(s_trackingSpells.m_data[index], NULL, WOWGUID(), false);
+    if (index >= static_cast<int32_t>(s_trackingSpells.Count())) {
+        CGMinimapFrame::SetTracking(CGMinimapFrame::GetTrackingTypeByIndex(index - s_trackingSpells.Count()), enable);
         return 0;
     }
 
-    const TrackingTypeInfo* info = CGMinimapFrame::GetTrackingTypeByIndex(index - s_trackingSpells.Count());
+    bool active = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[index], WOWGUID());
 
-    if (!info) {
-        return 0;
-    }
-
-    int32_t spellId = CGMinimapFrame::s_trackingSpell;
-
-    if (spellId) {
-        SpellRec* spell;
-
-        if ((spell = g_spellDB.GetRecord(spellId))) {
-            Spell_C_CancelAura(spell, ClntObjMgrGetActivePlayerObj(), -1);
+    if (enable) {
+        if (!active) {
+            Spell_C_CastSpell(s_trackingSpells.m_data[index], NULL, WOWGUID(), false);
         }
+    } else if (active) {
+        Spell_C_CancelAura(g_spellDB.GetRecord(s_trackingSpells.m_data[index]), ClntObjMgrGetActivePlayerObj(), -1);
+        CGMinimapFrame::RemoveShapeshiftTrackingSpell(s_trackingSpells.m_data[index]);
     }
 
-    CGMinimapFrame::LoadTrackingInfo(info);
     return 0;
 }
 
@@ -536,7 +673,142 @@ static int32_t Script_SetClassBlipTexture(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00ACEBB8
+// OFFSET: 0x009D9490/0x14076DC70
+static int32_t Script_ClearAllTracking(lua_State* L) {
+    for (uint32_t i = 0; i < s_trackingSpells.Count(); i++) {
+        if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+            continue;
+        }
+
+        if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[i], WOWGUID())) {
+            SpellRec* spell = g_spellDB.GetRecord(s_trackingSpells.m_data[i]);
+            Spell_C_CancelAura(spell, static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)), -1);
+            CGMinimapFrame::RemoveShapeshiftTrackingSpell(s_trackingSpells.m_data[i]);
+        }
+    }
+
+    for (uint32_t i = 0; i < 19; i++) {
+        CGMinimapFrame::SetTracking(i, false);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009DB630/0x140770900
+static int32_t Script_SetQuestBlobInsideTexture(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isstring(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetQuestBlobInsideTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    if (!minimap->SetQuestBlobInsideTexture(lua_tolstring(L, 2, NULL))) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "%s:SetQuestBlobInsideTexture(): Couldn't load the file %s", name ? name : "<unnamed>", lua_tolstring(L, 2, NULL));
+        return 0;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009DB6E0/0x1407709E0
+static int32_t Script_SetQuestBlobOutsideTexture(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isstring(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetQuestBlobOutsideTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    if (!minimap->SetQuestBlobOutsideTexture(lua_tolstring(L, 2, NULL))) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "%s:SetQuestBlobOutsideTexture(): Couldn't load the file %s", name ? name : "<unnamed>", lua_tolstring(L, 2, NULL));
+        return 0;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009DB790/0x140770AC0
+static int32_t Script_SetQuestBlobRingTexture(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isstring(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetQuestBlobRingTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    if (!minimap->SetQuestBlobRingTexture(lua_tolstring(L, 2, NULL))) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "%s:SetQuestBlobRingTexture(): Couldn't load the file %s", name ? name : "<unnamed>", lua_tolstring(L, 2, NULL));
+        return 0;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009DB840/0x140770BA0
+static int32_t Script_SetArchBlobInsideTexture(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isstring(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetArchBlobInsideTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    if (!minimap->SetArchBlobInsideTexture(lua_tolstring(L, 2, NULL))) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "%s:SetArchBlobInsideTexture(): Couldn't load the file %s", name ? name : "<unnamed>", lua_tolstring(L, 2, NULL));
+        return 0;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009DB8F0/0x140770C80
+static int32_t Script_SetArchBlobOutsideTexture(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isstring(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetArchBlobOutsideTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    if (!minimap->SetArchBlobOutsideTexture(lua_tolstring(L, 2, NULL))) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "%s:SetArchBlobOutsideTexture(): Couldn't load the file %s", name ? name : "<unnamed>", lua_tolstring(L, 2, NULL));
+        return 0;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x009DB9A0/0x140770D60
+static int32_t Script_SetArchBlobRingTexture(lua_State* L) {
+    CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
+
+    if (!lua_isstring(L, 2)) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "Usage: %s:SetArchBlobRingTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
+    }
+
+    if (!minimap->SetArchBlobRingTexture(lua_tolstring(L, 2, NULL))) {
+        const char* name = minimap->GetName();
+        luaL_error(L, "%s:SetArchBlobRingTexture(): Couldn't load the file %s", name ? name : "<unnamed>", lua_tolstring(L, 2, NULL));
+        return 0;
+    }
+
+    return 0;
+}
+
+// STATIC: 0x00D16380
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetMaskTexture", &Script_SetMaskTexture },
     { "SetIconTexture", &Script_SetIconTexture },
@@ -548,25 +820,40 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetPlayerTexture", &Script_SetPlayerTexture },
     { "SetPlayerTextureHeight", &Script_SetPlayerTextureHeight },
     { "SetPlayerTextureWidth", &Script_SetPlayerTextureWidth },
+    { "SetQuestBlobInsideTexture", &Script_SetQuestBlobInsideTexture },
+    { "SetQuestBlobOutsideTexture", &Script_SetQuestBlobOutsideTexture },
+    { "SetQuestBlobRingTexture", &Script_SetQuestBlobRingTexture },
+    { "SetQuestBlobInsideAlpha", &Script_SetQuestBlobInsideAlpha },
+    { "SetQuestBlobOutsideAlpha", &Script_SetQuestBlobOutsideAlpha },
+    { "SetQuestBlobRingAlpha", &Script_SetQuestBlobRingAlpha },
+    { "SetQuestBlobRingScalar", &Script_SetQuestBlobRingScalar },
+    { "SetArchBlobInsideTexture", &Script_SetArchBlobInsideTexture },
+    { "SetArchBlobOutsideTexture", &Script_SetArchBlobOutsideTexture },
+    { "SetArchBlobRingTexture", &Script_SetArchBlobRingTexture },
+    { "SetArchBlobInsideAlpha", &Script_SetArchBlobInsideAlpha },
+    { "SetArchBlobOutsideAlpha", &Script_SetArchBlobOutsideAlpha },
+    { "SetArchBlobRingAlpha", &Script_SetArchBlobRingAlpha },
+    { "SetArchBlobRingScalar", &Script_SetArchBlobRingScalar },
     { "GetZoomLevels", &Script_GetZoomLevels },
     { "GetZoom", &Script_GetZoom },
     { "SetZoom", &Script_SetZoom },
     { "PingLocation", &Script_PingLocation },
     { "GetPingPosition", &Script_GetPingPosition },
+    { "UpdateBlips", &Script_UpdateBlips },
 };
 
-// OFFSET: %0x0091DF20
+// OFFSET: 0x009CEE70
 void CGMinimapFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }
 
-// STATIC: #0x00ACEC30
+// STATIC: 0x00D16470
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumTrackingTypes", &Script_GetNumTrackingTypes },
     { "GetTrackingInfo", &Script_GetTrackingInfo },
     { "SetTracking", &Script_SetTracking },
-    { "GetTrackingTexture", &Script_GetTrackingTexture },
+    { "ClearAllTracking", &Script_ClearAllTracking },
 };
 
 // OFFSET: 0x009CEEC0

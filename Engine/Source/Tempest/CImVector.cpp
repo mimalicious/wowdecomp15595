@@ -53,7 +53,7 @@ CImVector& CImVector::operator=(const C3Vector& color) {
     return *this;
 }
 
-// OFFSET: #0x0057E480
+// OFFSET: 0x009D1A00
 void CImVector::InterpColorRGB(uint32_t t, const CImVector* src) {
     uint8_t r = this->r + ((t * (src->r - this->r)) >> 8);
     uint8_t g = this->g + ((t * (src->g - this->g)) >> 8);

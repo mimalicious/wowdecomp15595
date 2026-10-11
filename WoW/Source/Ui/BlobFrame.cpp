@@ -126,7 +126,7 @@ void CGBlobFrame::MergeBlobs(uint32_t index) {
 }
 
 // OFFSET: 0x009FFFF0
-static bool IntersectLines(const C3Vector& a0, const C3Vector& a1, const C3Vector& b0, const C3Vector& b1, C3Vector* result) {
+bool IntersectLines(const C3Vector& a0, const C3Vector& a1, const C3Vector& b0, const C3Vector& b1, C3Vector* result) {
     if (fequalz(a0.x, a1.x, 0.001f) || fequalz(a0.y, a1.y, 0.001f) || fequalz(a0.x, b0.x, 0.001f) || fequalz(a0.y, b0.y, 0.001f) || fequalz(a0.x, b1.x, 0.001f) || fequalz(a0.y, b1.y, 0.001f)) {
         return false;
     }

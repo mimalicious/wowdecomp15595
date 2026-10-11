@@ -20859,9 +20859,9 @@ void CGUnit_C::ChatBubbleShow(int32_t type, const char* text) {
     }
 }
 
-// OFFSET: #0x0071ACF0
+// OFFSET: 0x005B3210
 bool CGUnit_C::IsTracked() const {
-    return CGMinimapFrame::s_trackingInfo && CGMinimapFrame::s_trackingInfo->m_type == 1 && (this->m_unit->m_unitNpcFlags & CGMinimapFrame::s_trackingInfo->m_npcFlags);
+    return CGMinimapFrame::IsTrackingNPC(this->m_unit->m_unitNpcFlags);
 }
 
 // PROVEN: 581d65ff IDENTICAL/NONE

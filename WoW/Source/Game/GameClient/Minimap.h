@@ -13,6 +13,7 @@
 #include "WoW/Source/Object/WGUID.h"
 
 class AreaPOIRec;
+class CGxFrameBuffer;
 class CTexture;
 
 struct MINIMAPTILE {
@@ -37,7 +38,7 @@ struct MINIMAPINDOOR {
     /* 0000 */ uint8_t m_active;
     /* 0001 */ uint8_t m_pad1[3];
     /* 0004 */ CTexture* m_texture;
-    /* 0008 */ uint32_t unk_0008;
+    /* 0008 */ CGxFrameBuffer* m_frameBuffer;
     /* 000C */ uint8_t m_dirty;
     /* 000D */ uint8_t m_pad2[3];
     /* 0010 */ float m_radius;

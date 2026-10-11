@@ -407,8 +407,6 @@ class CGGameUI {
 
     static int32_t CameraMusicIsPlaying();
     static CinematicInfo m_cinematic;
-    static void LoadTrackedState();
-    static void LoadMinimapTrackingState(const char* state);
     static int32_t CanPerformAction(uint32_t action);
     static int32_t IsDynamicDifficultyMap();
     static bool CanChangePlayerDifficulty();

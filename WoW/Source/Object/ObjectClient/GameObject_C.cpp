@@ -3565,9 +3565,9 @@ int32_t CGGameObject_C::ObjectReaction(const CGUnit_C* unit) const {
     return 3;
 }
 
-// OFFSET: #0x0070F850
+// OFFSET: 0x0059ED00
 bool CGGameObject_C::IsTracked() const {
-    return CGMinimapFrame::s_trackingInfo && CGMinimapFrame::s_trackingInfo->m_type == 2 && CGMinimapFrame::s_trackingInfo->m_npcFlags == static_cast<uint32_t>(this->m_gameObject->m_typeID);
+    return CGMinimapFrame::IsTrackingObjectType(this->m_gameObject->m_typeID);
 }
 
 // OFFSET: 0x0059EE80

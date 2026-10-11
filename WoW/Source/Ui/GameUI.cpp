@@ -1036,7 +1036,6 @@ uint32_t CGGameUI::s_restrictedLevel;
 // STATIC: 0x00ED755C
 uint32_t CGGameUI::s_restrictedMoney;
 
-
 // STATIC: 0x00D0BD1C
 CCapturePointUIManager g_capturePointUIManager;
 
@@ -6257,18 +6256,6 @@ int32_t CGGameUI::CameraMusicIsPlaying() {
     return SE3::IsPlaying(CGGameUI::m_cinematic.m_cameraMusic);
 }
 
-// OFFSET: #0x005128D0
-void CGGameUI::LoadTrackedState() {
-    CVar* var = CVar::Lookup("minimapTrackedInfo");
-
-    if (var) {
-        CGGameUI::LoadMinimapTrackingState(var->m_stringValue.m_str);
-    }
-
-    CGAchievementInfo::LoadTrackedAchievements();
-    CGTutorial::LoadFlaggedTutorials();
-}
-
 // OFFSET: 0x008C98A0/0x140639B00
 static void PlaceFrame(CSimpleFrame* frame, int32_t level, FRAMEPOINT point, int32_t x, int32_t y, int32_t width, int32_t height) {
     if (!frame) {
@@ -7336,21 +7323,6 @@ bool CGGameUI::SetRaidDifficulty(uint32_t difficulty, uint32_t unk, uint32_t inG
     }
 
     return true;
-}
-
-// OFFSET: #0x0057EA60
-void CGGameUI::LoadMinimapTrackingState(const char* state) {
-    CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-    uint32_t classMask = player ? 1 << player->m_unit->m_unitFieldBytes0[1] : 0;
-
-    for (uint32_t i = 0; i < 15; i++) {
-        const TrackingTypeInfo& info = CGMinimapFrame::s_trackingTypes[i];
-
-        if (!SStrCmp(state, info.m_name, STORM_MAX_STR) && (!info.m_classMask || (info.m_classMask & classMask))) {
-            CGMinimapFrame::LoadTrackingInfo(&info);
-            return;
-        }
-    }
 }
 
 // OFFSET: 0x008DB580

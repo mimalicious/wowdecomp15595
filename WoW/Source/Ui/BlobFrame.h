@@ -92,6 +92,8 @@ class CGBlobFrame : public CSimpleFrame {
     void AddBlob(QuestPOIInfo* info, bool filter);
 };
 
+bool IntersectLines(const C3Vector& a0, const C3Vector& a1, const C3Vector& b0, const C3Vector& b1, C3Vector* result);
+
 #include "WoW/Source/Ui/BlobFrame.inl"
 
 #endif

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/Game/GameClient/Minimap.h"
+#include "WoW/Source/Ui/QuestLog.h"
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Frame/CSimpleFrame.h"
 #include "Engine/Source/Gx/CGxTex.h"
@@ -46,7 +47,9 @@ struct OBJINFO {
     /* 001B */ uint8_t m_pad;
     /* 001C */ int32_t m_icon;
     /* 0020 */ float m_facing;
-    /* 0024 */ uint32_t unk_0024;
+    /* 0024 */ int32_t m_marker;
+    /* 0028 */ float m_height;
+    /* 002C */ uint32_t unk_002C;
 };
 
 struct MINIMAPENUMPARAM {
@@ -66,6 +69,33 @@ struct POIINFO {
     /* 003C */ const char* m_name;
 };
 
+struct MARKEDBLIP {
+    /* 0000 */ int32_t m_list;
+    /* 0004 */ int32_t m_index;
+};
+
+struct MinimapBlobRing {
+    /* 0000 */ float m_start;
+    /* 0004 */ float m_end;
+    /* 0008 */ uint8_t m_reverse;
+
+    MinimapBlobRing();
+};
+
+struct MINIMAPBLOB {
+    /* 0000 */ TSGrowableArray<BLOBPOI> m_points;
+    /* 0010 */ CTexture* m_insideTexture;
+    /* 0014 */ CTexture* m_outsideTexture;
+    /* 0018 */ CTexture* m_ringTexture;
+    /* 001C */ uint8_t m_insideAlpha;
+    /* 001D */ uint8_t m_outsideAlpha;
+    /* 001E */ uint8_t m_ringAlpha;
+    /* 0020 */ TSGrowableArray<MinimapBlobRing> m_rings;
+
+    MINIMAPBLOB();
+    ~MINIMAPBLOB();
+};
+
 struct MINIMAPMD5NAME : public TSHashObject<MINIMAPMD5NAME, HASHKEY_STRI> {
     /* 0018 */ char m_md5Name[40];
 };
@@ -76,6 +106,7 @@ struct TrackingTypeInfo {
     /* 0008 */ const char* m_name;
     /* 000C */ const char* m_texture;
     /* 0010 */ uint32_t m_classMask;
+    /* 0014 */ int32_t m_category;
 };
 
 
@@ -90,10 +121,14 @@ class CGMinimapFrame : public CSimpleFrame {
     static CDataAllocator s_minimapHeap;
     static void SetPingPosition(const WOWGUID& guid, const C2Vector& position);
     static void MinimapTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
-    static void SetTrackingSpell(int32_t spellId);
     static void UpdateTrackingSpell();
     static void AddShapeshiftTrackingSpell(int32_t spellId);
-    static void LoadTrackingInfo(const TrackingTypeInfo* info);
+    static void RemoveShapeshiftTrackingSpell(int32_t spellId);
+    static void LoadShapeshiftTracking();
+    static bool IsTrackingObjectType(char type);
+    static bool IsTrackingNPC(uint32_t npcFlags);
+    static void SetTracking(uint32_t index, bool enable);
+    static bool SetTrackingMask(int32_t mask);
     static int32_t s_metatable;
     static int32_t s_objectType;
 
@@ -113,11 +148,11 @@ class CGMinimapFrame : public CSimpleFrame {
     static float s_blipHalfSize3;
     static float s_blipSize4;
     static C3Vector s_blipQuads[3][4];
-    static const TrackingTypeInfo* s_trackingInfo;
-    static const TrackingTypeInfo s_trackingTypes[15];
+    static uint32_t s_trackingMask;
+    static const TrackingTypeInfo s_trackingTypes[19];
+    static TSGrowableArray<int32_t> s_shapeshiftTrackingSpells;
     static int32_t CountAvailableTrackingTypes();
-    static const TrackingTypeInfo* GetTrackingTypeByIndex(int32_t index);
-    static int32_t s_trackingSpell;
+    static int32_t GetTrackingTypeByIndex(int32_t index);
 
     static void operator delete(void* ptr);
     static CSimpleFrame* Create(CSimpleFrame* parent);
@@ -128,11 +163,29 @@ class CGMinimapFrame : public CSimpleFrame {
     static void RegisterScriptMethods(lua_State* L);
     static void RenderCallback(void* param);
 
-    /* 029C */ int32_t m_blipFrameLevel;
-    /* 02A0 */ CSimpleTexture* m_playerTexture;
-    /* 02A4 */ float m_facing;
-    /* 02A8 */ CScriptRegion* m_compassTexture;
-    /* 02AC */ uint32_t unk_02AC;
+    /* 01F0 */ int32_t m_blipFrameLevel;
+    /* 01F4 */ CSimpleTexture* m_playerTexture;
+    /* 01F8 */ float m_facing;
+    /* 01FC */ CScriptRegion* m_compassTexture;
+    /* 0200 */ uint32_t m_lastBlipUpdate;
+    /* 0204 */ CTexture* m_questBlobInsideTexture;
+    /* 0208 */ CTexture* m_questBlobOutsideTexture;
+    /* 020C */ CTexture* m_questBlobRingTexture;
+    /* 0210 */ uint8_t m_questBlobInsideAlpha;
+    /* 0211 */ uint8_t m_questBlobOutsideAlpha;
+    /* 0212 */ uint8_t m_questBlobRingAlpha;
+    /* 0214 */ float m_questBlobRingSize;
+    /* 0218 */ float m_questBlobRingScalar;
+    /* 021C */ uint8_t m_questBlobVisible;
+    /* 0220 */ CTexture* m_archBlobInsideTexture;
+    /* 0224 */ CTexture* m_archBlobOutsideTexture;
+    /* 0228 */ CTexture* m_archBlobRingTexture;
+    /* 022C */ uint8_t m_archBlobInsideAlpha;
+    /* 022D */ uint8_t m_archBlobOutsideAlpha;
+    /* 022E */ uint8_t m_archBlobRingAlpha;
+    /* 0230 */ float m_archBlobRingSize;
+    /* 0234 */ float m_archBlobRingScalar;
+    /* 0238 */ TSGrowableArray<C2Vector> m_blobPoints;
 
     ~CGMinimapFrame();
     int32_t GetScriptMetaTable() override;
@@ -147,6 +200,12 @@ class CGMinimapFrame : public CSimpleFrame {
     bool UpdateScale(bool force) override;
 
     CGMinimapFrame(CSimpleFrame* parent);
+    int32_t SetQuestBlobInsideTexture(const char* fileName);
+    int32_t SetQuestBlobOutsideTexture(const char* fileName);
+    int32_t SetQuestBlobRingTexture(const char* fileName);
+    int32_t SetArchBlobInsideTexture(const char* fileName);
+    int32_t SetArchBlobOutsideTexture(const char* fileName);
+    int32_t SetArchBlobRingTexture(const char* fileName);
     void Render();
     void RenderInside(float scale, const C2Vector* center, const CImVector* color);
     static void RenderInsideTexture(const CImVector* color);
@@ -154,13 +213,28 @@ class CGMinimapFrame : public CSimpleFrame {
     static void RenderInsideQuad(MINIMAPTILE* tile, const CImVector* color);
     void SetCompassRotation(float rotation);
     void UpdateQuads(const C2Vector& center, float scale);
-    void RenderGroupBlips(const C44Matrix& rotation);
+    void RenderPartyRaidBlips(const C44Matrix& rotation);
     void RenderVehicleBlips(const C44Matrix& rotation);
     static C2Vector WorldPosToMinimapFrameCoords(C3Vector center, float radius, float x, float y, float scale, float width);
-    void RenderObjectBlips(const C44Matrix& rotation, bool tracked);
-    void RenderOverlay(const C44Matrix& rotation);
-    void RenderPartyBlips(const C44Matrix& rotation);
+    void RenderObjectBlips(const C44Matrix& rotation, bool otherFloor);
+    void RenderPOIArrows(const C44Matrix& rotation);
+    void RenderSuperTrackedQuestArrow(const C44Matrix& rotation, const C3Vector& position);
+    void RenderPartyArrows(const C44Matrix& rotation);
     void RenderRaidArrows(const C44Matrix& rotation);
+    void RenderPings(const C44Matrix& rotation);
+    void RenderQuestCompletionNPC(const C44Matrix& rotation, C3Vector position);
+    void RenderHeightArrow(const C2Vector& position, float height, const C44Matrix& rotation);
+    void RenderMarkedBlips(const C44Matrix& rotation);
+    void RenderQuestBlobs(const C44Matrix& rotation);
+    void RenderArchBlobs(const C44Matrix& rotation);
+    void RenderQuestBlob(const C44Matrix& rotation, uint32_t blobIndex);
+    void RenderArchBlob(const C44Matrix& rotation, uint32_t siteIndex);
+    void RenderBlobInside(const C44Matrix& rotation, MINIMAPBLOB* blob);
+    void RenderBlobOutside(const C44Matrix& rotation, MINIMAPBLOB* blob);
+    void RenderBlobRing(const C44Matrix& rotation, MINIMAPBLOB* blob);
+    void AddBlobRingSegment(MINIMAPBLOB* blob, float from, float to);
+    bool BuildBlobRings(MINIMAPBLOB* blob);
+    float GetBlobRingScale();
     static int32_t ObjectEnumProc(WOWGUID guid, void* param);
     void UpdateRotation(float facing);
 };

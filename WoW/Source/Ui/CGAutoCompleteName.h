@@ -59,8 +59,6 @@ class CGAutoCompleteName {
     static int32_t GetMatchingResults(lua_State* L, const char* text, uint32_t include, uint32_t exclude, int32_t numReturns, int32_t cursor, bool allowFullMatch);
 };
 
-typedef CGAutoCompleteName::AUTOCOMPLETE_NAMENODE AUTOCOMPLETE_NAMENODE;
-
 void AutoCompleteRegisterScriptFunctions();
 void AutoCompleteUnregisterScriptFunctions();
 
