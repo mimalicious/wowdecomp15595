@@ -555,3 +555,24 @@ void CGBarberShop::ShutdownGame() {
 USEABLESTYLE::~USEABLESTYLE() {
     this->m_styles.Clear();
 }
+
+// OFFSET: 0x008FFB90
+bool CGBarberShop::IsSlotHidden(int32_t slot) {
+    if (slot == INVSLOT_HEAD || slot == INVSLOT_SHOULDER) {
+        return true;
+    }
+
+    if (slot == INVSLOT_OFFHAND) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (player) {
+            VisibleItem_C* item = const_cast<VisibleItem_C*>(player->GetVisibleItem(INVSLOT_OFFHAND));
+
+            if (item->GetDisplayID() && item->GetInventoryType() == 14) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

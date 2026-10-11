@@ -36,6 +36,7 @@ class CGBarberShop {
     static const BarberShopStyleRec* GetCurrentStyle(int32_t type);
     static void ResetAppearance();
     static bool IsCurrentStyle(int32_t type);
+    static bool IsSlotHidden(int32_t slot);
     static int32_t GetTotalCost();
     static void ApplyAppearanceChange();
     static void Reset();

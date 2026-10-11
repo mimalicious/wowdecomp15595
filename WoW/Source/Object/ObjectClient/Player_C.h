@@ -394,6 +394,12 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     bool HasEquipBypassSkill(int32_t skillId) const;
     bool HasItemPassive(int32_t spellId) const;
     bool IsGuildLeader() const;
+    void OnSkillRankChanged(int32_t index, uint16_t oldRank);
+    uint64_t GetInspectGuildGUID() const;
+    uint32_t GetInspectGuildLevel() const;
+    uint32_t GetInspectGuildNumMembers() const;
+    uint64_t GetInspectGuildXP() const;
+    const VisibleItem_C* GetVirtualVisibleItem(uint32_t slot, bool ignoreDisarm) const;
     void RemoveItemPassive(int32_t spellId);
     void AddCategoryCooldown(int32_t category, int32_t cooldown);
     void LootMoney();
@@ -445,7 +451,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     float GetQuestXPMultiplier();
     int32_t CanUseItem(const ItemRecSparse* stats, int32_t& error);
     static void BuyItem(WOWGUID vendor, const VendorItem* item, uint32_t count, uint8_t a5);
-    void DelKnownSpell(int32_t spellId, int32_t a3);
+    void DelKnownSpell(int32_t spellId, int32_t silent);
     bool VehicleAllowsInteraction() const;
     void SetAutoLoot(int32_t autoLoot);
     bool CanInteract(const CGUnit_C* unit) const;
@@ -454,12 +460,12 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void HandleOnRightClick(CGUnit_C* unit, bool autoInteract);
     bool CTMAttackUnit(CGUnit_C* unit);
     void CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int32_t silent, int32_t a4, int32_t a5);
-    void MeleeModeEnter(const WOWGUID& target);
+    void MeleeModeEnter(const WOWGUID& target, int32_t force, int32_t spellId);
     void ExitAutoCombatMode();
     void OnLevelChange();
     bool CTMClickTerrain(const C3Vector& position);
     bool IsInFlyableZone(int32_t checkContinent);
-    int32_t SpellUsesWeaponSkill(const SpellRec* spell);
+    bool SpellUsesWeaponSkill(const SpellRec* spell) const;
     CGPlayer_C(uint32_t time, const CClientObjCreate& create);
     void SetStorage(uint32_t* storage, uint32_t* saved);
     int32_t RefreshVisibleItems();
@@ -474,6 +480,10 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void TogglePlayerFlag(uint32_t oldFlags);
     void UpdateGhostStatus();
     void UpdateInventoryComponent(INVENTORY_SLOTS slot, const VisibleItem_C* oldItem);
+    void UnequipVisibleItem(uint32_t slot, const VisibleItem_C* oldItem);
+    void HideHelmForBarberShop(int32_t hide);
+    static void ClearEmote();
+    bool CanChangeTalentsInRaid() const;
     uint32_t GetEquippedItemDisplayId();
     int32_t GetAttackPowerContributionFromStat(int32_t stat, int32_t value);
     float GetCombatRatingPct(int32_t rating);
@@ -570,7 +580,7 @@ int32_t Packet_SMSG_INSPECT(void* param, NETMESSAGE msgId, uint32_t time, CDataS
 int32_t Packet_SMSG_INSPECT_TALENT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_Group_14(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CANCEL_COMBAT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-void PlayerNameGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
+void PlayerNameGuildCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
 int32_t Packet_SMSG_GUILD_DECLINE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GUILD_EVENT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_SAVE_GUILD_EMBLEM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

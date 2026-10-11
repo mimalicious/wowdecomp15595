@@ -167,8 +167,9 @@
 #include "WoW/Source/UIUtil/PortraitButton.h"
 
 struct GUILDUPDATETIMESTAMP {
-    /* 0000 */ uint32_t m_guildId;
-    /* 0004 */ uint32_t m_timestamp;
+    /* 0000 */ uint64_t m_guildGUID;
+    /* 0008 */ uint32_t m_timestamp;
+    /* 000C */ uint32_t unk_000C;
 };
 
 struct RuneConvert {
@@ -225,25 +226,25 @@ static uint32_t s_areaTriggerTimer;
 // STATIC: #0x00C9D338
 static int32_t s_areaTriggerMapID;
 
-// STATIC: #0x00C9D33C
+// STATIC: 0x00DD4D34
 static int32_t s_defenseSpellId;
 
 // STATIC: #0x00C9D4F0
 static uint32_t s_proficiency[17];
 
-// STATIC: #0x00C9D534
+// STATIC: 0x00DD4D7C
 static uint32_t s_bindAreaId;
 
-// STATIC: #0x00C9D538
+// STATIC: 0x00DD4D80
 static uint32_t s_bindMapId;
 
-// STATIC: #0x00C9D53C
+// STATIC: 0x00DD4D84
 static int32_t s_bindPointSet;
 
 // STATIC: #0x00C9D540
 static int32_t s_playerRenderDisabled;
 
-// STATIC: #0x00C9D544
+// STATIC: 0x00DD4D8C
 static uint32_t s_attackSwingErrorTime;
 
 // STATIC: #0x00C9EA90
@@ -252,7 +253,7 @@ WOWGUID CGPlayer_C::s_lastVendorListReceived;
 // STATIC: 0x00DD5020
 static WOWGUID s_lastBinderGuid;
 
-// STATIC: #0x00C9EAA8
+// STATIC: 0x00DD501C
 static int32_t s_attackSwingError;
 
 // STATIC: 0x00DD5028
@@ -279,13 +280,13 @@ uint32_t CGPlayer_C::s_resurrectOfferUseTimer;
 // STATIC: #0x00C9EAB4
 static uint32_t s_unk_C9EAB4;
 
-// STATIC: #0x00C9EACC
+// STATIC: 0x00DD5044
 static uint8_t s_tabardSavePending;
 
 // STATIC: 0x00CA56B8
 static const UIErrors s_guildEmblemErrors[6] = { ERR_GUILDEMBLEM_SUCCESS, ERR_GUILDEMBLEM_INVALID_TABARD_COLORS, ERR_GUILDEMBLEM_NOGUILD, ERR_GUILDEMBLEM_NOTGUILDMASTER, ERR_GUILDEMBLEM_NOTENOUGHMONEY, ERR_MAX_VALUE };
 
-// STATIC: #0x00C9EAD0
+// STATIC: 0x00DD5048
 static WOWGUID s_giftWrapItem;
 
 // STATIC: 0x00DD5058
@@ -294,22 +295,22 @@ static InspectData* s_inspectData;
 // STATIC: #0x00C9EC78
 static InspectItem s_emptyInspectItem;
 
-// STATIC: #0x00C9EAE4
+// STATIC: 0x00DD505C
 uint32_t CGPlayer_C::s_lastUpdatePVPSequence;
 
-// STATIC: #0x00C9EAE8
+// STATIC: 0x00DD5060
 WOWGUID CGPlayer_C::s_lastUpdatePVPGroup;
 
-// STATIC: #0x00C9EAF0
+// STATIC: 0x00DD5068
 uint32_t CGPlayer_C::s_lastUpdatePVPTime;
 
-// STATIC: #0x00C9EAF4
+// STATIC: 0x00DD506C
 uint32_t CGPlayer_C::s_lastUpdateSequence;
 
-// STATIC: #0x00C9EAF8
+// STATIC: 0x00DD5070
 WOWGUID CGPlayer_C::s_lastUpdateGroup;
 
-// STATIC: #0x00C9EB00
+// STATIC: 0x00DD5078
 uint32_t CGPlayer_C::s_lastUpdateTime;
 
 // STATIC: #0x00C9EAD8
@@ -351,7 +352,7 @@ static WOWGUID s_talentMaster;
 // STATIC: #0x00C9EB20
 static WOWGUID s_binder;
 
-// STATIC: #0x00C9EB2C
+// STATIC: 0x00DD50A0
 static C3Vector s_bindPosition;
 
 // STATIC: 0x00CA531C
@@ -366,13 +367,13 @@ static TSGrowableArray<int32_t> s_initialCompanionSpells;
 // STATIC: 0x00DD50CC
 static TSGrowableArray<RuneConvert> s_pendingRuneConverts;
 
-// STATIC: #0x00C9EB48
+// STATIC: 0x00DD50DC
 static TSFixedArray<uint32_t> s_weaponSkills;
 
-// STATIC: #0x00C9EB54
+// STATIC: 0x00DD50E8
 static TSGrowableArray<GUILDUPDATETIMESTAMP> s_guildUpdateTimestamps;
 
-// STATIC: #0x00C9EB64
+// STATIC: 0x00DD50F8
 static TSGrowableArray<ITEMSWAP> s_itemSwaps;
 
 // STATIC: #0x00A31BB8
@@ -386,11 +387,11 @@ static uint32_t s_combatModeExitCount;
 // STATIC: 0x00DD5040
 static int32_t s_dualWieldSpell;
 
-// STATIC: #0x00A32450
+// STATIC: 0x00BAF60C
 static const RestStateInfo s_restStateInfo[3] = {
-    { ERR_MAX_VALUE, 60 },
+    { ERR_MAX_VALUE, 65 },
     { ERR_EXHAUSTION_RESTED, 25 },
-    { ERR_EXHAUSTION_NORMAL, 60 },
+    { ERR_EXHAUSTION_NORMAL, 65 },
 };
 
 // STATIC: #0x00C9EC68
@@ -406,8 +407,8 @@ struct DamageCalcLabel {
     /* 000C */ int32_t m_flags;
 };
 
-// STATIC: #0x00AD9CD0
-static const DamageCalcLabel s_damageCalcLabels[41] = { { 0, "Base", 1, 1 }, { 3, "DPS Scaler", 2, 1 }, { 2, "Chain Reduction", 3, 0 }, { 2, "Combo Point Damage", 4, 0 }, { 3, "School Damage Done", 5, 0 }, { 3, "Creature Damage Done", 6, 0 }, { 3, "Creature Weapon Damage Done", 7, 0 }, { 2, "Weapon Effect", 8, 1 }, { 2, "Weapon Effect", 9, 0 }, { 3, "Spell Modifier", 10, 1 }, { 3, "Spell Modifier", 11, 1 }, { 3, "Offhand Penalty", 12, 0 }, { 3, "Attack Power Damage", 13, 1 }, { 3, "Creature Multiplier", 14, 1 }, { 3, "School Damage Done", 15, 1 }, { 3, "Weapon Multiplier", 16, 1 }, { 3, "School Damage Taken", 17, 1 }, { 3, "Source Damage Taken", 18, 1 }, { 3, "School Damage Taken", 19, 1 }, { 3, "Source Damage Taken", 20, 1 }, { 3, "Crit Damage Multiplier", 21, 0 }, { 4, "Crit Damage", 22, 1 }, { 2, "Resistance Coefficient", 23, 1 }, { 2, "Bonus Coefficient", 24, 2 }, { 3, "Critical Chance", 25, 2 }, { 3, "Critical Roll", 26, 2 }, { 3, "Seed For Rounding", 27, 0 }, { 4, "Fraction Adjust", 28, 1 }, { 3, "Resilience Modifier", 29, 1 }, { 3, "Armor Factor", 30, 0 }, { 4, "Armor Reduction", 31, 0 }, { 2, "Shield Block", 32, 1 }, { 2, "Melee Crit/Glance/Crush", 33, 1 }, { 3, "Pet Happiness Mult", 34, 1 }, { 3, "Creature Damage Done", 35, 0 }, { 2, "Number of Targets for Area Damage Cap", 36, 0 }, { 2, "Number of Targets", 37, 1 }, { 2, "Crowd Damage", 38, 1 }, { 3, "Mechanic Modifier", 39, 0 }, { 3, "Bonus From Attack Power Coefficient", 40, 1 }, { 3, "Aura State Modifier", 0x3F000000, static_cast<int32_t>(0xFFFFDE00) } };
+// STATIC: 0x00CA5028
+static const DamageCalcLabel s_damageCalcLabels[43] = { { 0, "Base", 1, 1 }, { 3, "DPS Scaler", 2, 1 }, { 2, "Chain Reduction", 3, 0 }, { 2, "Combo Point Damage", 4, 0 }, { 3, "School Damage Done", 5, 0 }, { 3, "Creature Damage Done", 6, 0 }, { 3, "Creature Weapon Damage Done", 7, 0 }, { 2, "Weapon Effect", 8, 1 }, { 2, "Weapon Effect", 9, 0 }, { 3, "Spell Modifier", 10, 1 }, { 3, "Spell Modifier", 11, 1 }, { 3, "Offhand Penalty", 12, 0 }, { 3, "Attack Power Damage", 13, 1 }, { 3, "Creature Multiplier", 14, 1 }, { 3, "School Damage Done", 15, 1 }, { 3, "Weapon Multiplier", 16, 1 }, { 3, "School Damage Taken", 17, 1 }, { 3, "Source Damage Taken", 18, 1 }, { 3, "School Damage Taken", 19, 1 }, { 3, "Source Damage Taken", 20, 1 }, { 3, "Crit Damage Multiplier", 21, 0 }, { 4, "Crit Damage", 22, 1 }, { 2, "Resistance Coefficient", 23, 1 }, { 2, "Bonus Coefficient", 24, 2 }, { 3, "Critical Chance", 25, 2 }, { 3, "Critical Roll", 26, 2 }, { 3, "Seed For Rounding", 27, 0 }, { 4, "Fraction Adjust", 28, 1 }, { 3, "Resilience Modifier", 29, 1 }, { 3, "Armor Factor", 30, 0 }, { 4, "Armor Reduction", 31, 1 }, { 2, "Shield Block", 32, 1 }, { 2, "Melee Crit/Glance/Crush", 33, 1 }, { 3, "(DEPRECATED) Pet Happiness Mult", 34, 1 }, { 3, "Creature Damage Done", 35, 0 }, { 2, "Number of Targets for Area Damage Cap", 36, 0 }, { 2, "Number of Targets", 37, 1 }, { 2, "Crowd Damage", 38, 1 }, { 3, "Mechanic Modifier Taken", 39, 0 }, { 3, "Bonus From Attack Power Coefficient", 40, 1 }, { 3, "Aura State Modifier", 41, 1 }, { 3, "Melee Autoattack Multiplier", 42, 1 }, { 3, "Mechanic Modifier Done", 250, 834 } };
 
 // STATIC: #0x00ADA1AC
 static const UIErrors s_mountResultErrors[] = { ERR_MOUNT_INVALIDMOUNTEE, ERR_MOUNT_TOOFARAWAY, ERR_MOUNT_ALREADYMOUNTED, ERR_MOUNT_NOTMOUNTABLE, ERR_MOUNT_NOTYOURPET, ERR_MOUNT_OTHER, ERR_MOUNT_LOOTING, ERR_MOUNT_RACECANTMOUNT, ERR_MOUNT_SHAPESHIFTED, ERR_MOUNT_FORCEDDISMOUNT, ERR_MAX_VALUE };
@@ -438,7 +439,7 @@ static int32_t OnUpdatePVPTitle(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     return 1;
 }
 
-// OFFSET: #0x006D1970
+// OFFSET: 0x00556D80
 static int32_t PetChangeHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     if (guid == ClntObjMgrGetActivePlayer() || CGGameUI::IsPartyMember(guid)) {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -483,7 +484,7 @@ static int32_t PetChangeHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     return 1;
 }
 
-// OFFSET: #0x006D1AE0
+// OFFSET: 0x00556ED0
 static int32_t GuildRankUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         CGGuildInfo::QueryPermissions();
@@ -506,7 +507,7 @@ static int32_t DuelTeamUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_
     return 1;
 }
 
-// OFFSET: #0x006D3010
+// OFFSET: 0x005589C0
 static int32_t GetWeaponSubClassCount(int32_t* count) {
     if (!count) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -555,7 +556,7 @@ static int32_t OnUpdateInebriation(WOWGUID guid, uint32_t fieldOffset, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x006DA7F0
+// OFFSET: 0x0055FB30
 static int32_t OnUpdatePlayerHairColor(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -575,7 +576,7 @@ static int32_t OnUpdatePlayerHairColor(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
-// OFFSET: #0x006DA870
+// OFFSET: 0x0055FBB0
 static int32_t OnUpdatePlayerSkinID(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -595,7 +596,7 @@ static int32_t OnUpdatePlayerSkinID(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// OFFSET: #0x006DF530
+// OFFSET: 0x005657D0
 static int32_t OnUpdatePlayerHairStyle(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -626,7 +627,7 @@ static int32_t OnUpdatePlayerHairStyle(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
-// OFFSET: #0x006DF620
+// OFFSET: 0x005658C0
 static int32_t OnUpdatePlayerFacialStyle(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -691,7 +692,7 @@ static int32_t OnUpdatePlayerFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x006E4580
+// OFFSET: 0x0056A590
 static int32_t OnUpdateInventoryComponent(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -824,7 +825,7 @@ void CGPlayer_C::PreAnimate(CGWorldFrame* frame) {
     }
 }
 
-// OFFSET: #0x006D5C30
+// OFFSET: 0x0055C050
 uint32_t GetDisplayIdFromRaceAndGender(uint32_t race, uint32_t gender) {
     if (gender >= 3) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1017,7 +1018,7 @@ int32_t OnSummonCancel(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
     return 1;
 }
 
-// OFFSET: 0x00553890
+// OFFSET: 0x00553890/0x1401AE7F0
 int32_t OnUpdatePlayerScriptEvent(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     FrameScript_SignalEvent(reinterpret_cast<uintptr_t>(param), "%s", "player");
 
@@ -1173,7 +1174,7 @@ uint32_t CGPlayer_C::GetPendingMovie() {
     return s_pendingMovieID;
 }
 
-// OFFSET: #0x006CF2D0
+// OFFSET: 0x005549B0
 int32_t CGPlayer_C::GetCombatModeFlashDuration() {
     return 500;
 }
@@ -1229,7 +1230,7 @@ void __stdcall CGPlayer_C::AcceptResurrectRequest(int32_t accept) {
     CGPlayer_C::s_resurrectOfferer = WOWGUID();
 }
 
-// OFFSET: #0x006D1FC0
+// OFFSET: 0x00557440/0x1401B42B0
 int32_t CGPlayer_C::CheckSpiritHealerDistance() {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(s_spiritHealer, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -1247,7 +1248,7 @@ int32_t CGPlayer_C::CheckSpiritHealerDistance() {
     return dy * dy + dx * dx + dz * dz <= range * range;
 }
 
-// OFFSET: #0x006D2070
+// OFFSET: 0x00557500/0x1401B4380
 int32_t CGPlayer_C::CheckTalentMasterDistance() {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(s_talentMaster, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -1265,7 +1266,7 @@ int32_t CGPlayer_C::CheckTalentMasterDistance() {
     return dy * dy + dx * dx + dz * dz <= range * range;
 }
 
-// OFFSET: #0x006D2290
+// OFFSET: 0x00557750/0x1401B4610
 int32_t CGPlayer_C::CheckBinderDistance() {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(s_binder, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -1328,7 +1329,7 @@ void __stdcall CGPlayer_C::TalkToStableMaster(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D2740
+// OFFSET: 0x00557C10/0x1401B4BA0
 void __stdcall CGPlayer_C::TalkToSpellClick(const WOWGUID& guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_SPELL_CLICK));
@@ -1337,7 +1338,7 @@ void __stdcall CGPlayer_C::TalkToSpellClick(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D27C0
+// OFFSET: 0x00557C90
 void __stdcall CGPlayer_C::TalkToRideVehicle(const WOWGUID& guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_PLAYER_VEHICLE_ENTER));
@@ -1385,7 +1386,7 @@ void CGPlayer_C::SellItem(WOWGUID vendor, WOWGUID item, uint32_t count) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D45B0
+// OFFSET: 0x0055AB70
 void __stdcall CGPlayer_C::SilencePlayer(WOWGUID guid, bool silence) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_PARTY_SILENCE));
@@ -1395,7 +1396,7 @@ void __stdcall CGPlayer_C::SilencePlayer(WOWGUID guid, bool silence) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4640
+// OFFSET: 0x0055AC00
 void __stdcall CGPlayer_C::UnSilencePlayer(WOWGUID guid, bool silence) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_PARTY_UNSILENCE));
@@ -1432,7 +1433,7 @@ void __stdcall CGPlayer_C::DeclineGuild() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4840
+// OFFSET: 0x0055AE40/0x1401B7B50
 void __stdcall CGPlayer_C::AcceptArenaTeam() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_ARENA_TEAM_ACCEPT));
@@ -1440,7 +1441,7 @@ void __stdcall CGPlayer_C::AcceptArenaTeam() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D48B0
+// OFFSET: 0x0055AEB0/0x1401B7BD0
 void __stdcall CGPlayer_C::DeclineArenaTeam() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_ARENA_TEAM_DECLINE));
@@ -1581,7 +1582,7 @@ void __stdcall CGPlayer_C::QuestLogRemoveQuest(uint8_t slot) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D5000
+// OFFSET: 0x0055B6A0
 void __stdcall CGPlayer_C::QueryQuestGiverStatus(const WOWGUID& questGiver) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_STATUS_QUERY));
@@ -1730,7 +1731,7 @@ uint64_t CGPlayer_C::GetGuildXP() const {
     return 0;
 }
 
-// OFFSET: 0x0055AD50
+// OFFSET: 0x0055AD50/0x1401B03E0
 uint64_t CGPlayer_C::GetGuildRemainingXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
         return this->m_guildRemainingXP;
@@ -1739,7 +1740,7 @@ uint64_t CGPlayer_C::GetGuildRemainingXP() const {
     return 0;
 }
 
-// OFFSET: 0x0055AD80
+// OFFSET: 0x0055AD80/0x1401B0400
 uint64_t CGPlayer_C::GetGuildDailyXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
         return this->m_guildDailyXP;
@@ -1757,7 +1758,7 @@ uint64_t CGPlayer_C::GetGuildMaxDailyXP() const {
     return 0;
 }
 
-// OFFSET: 0x0055ADE0
+// OFFSET: 0x0055ADE0/0x1401B0440
 uint64_t CGPlayer_C::GetGuildPlayerWeeklyXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
         return this->m_guildPlayerWeeklyXP;
@@ -1766,7 +1767,7 @@ uint64_t CGPlayer_C::GetGuildPlayerWeeklyXP() const {
     return 0;
 }
 
-// OFFSET: 0x0055AE10
+// OFFSET: 0x0055AE10/0x1401B0460
 uint64_t CGPlayer_C::GetGuildPlayerTotalXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
         return this->m_guildPlayerTotalXP;
@@ -2073,7 +2074,7 @@ int32_t CGPlayer_C::HasZoneExplored(int32_t zone) {
     return this->CGPlayer::HasZoneExplored(zone);
 }
 
-// OFFSET: #0x006D2A40
+// OFFSET: 0x00558570
 void CGPlayer_C::AutoStoreBankItem(WOWGUID bagGuid, uint32_t slot) {
     CGObject_C* bagObject = ClntObjMgrObjectPtr(bagGuid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -2097,7 +2098,7 @@ void CGPlayer_C::AutoStoreBankItem(WOWGUID bagGuid, uint32_t slot) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D2B30
+// OFFSET: 0x00558660
 void CGPlayer_C::AutoBankItem(WOWGUID bagGuid, uint32_t slot) {
     CGObject_C* bagObject = ClntObjMgrObjectPtr(bagGuid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -2243,10 +2244,34 @@ void CGPlayer_C::GetPendingEnchantTime(CGItem_C* item) {
     }
 }
 
-// OFFSET: %0x0056B9E0
+// OFFSET: 0x00554700
 void SetAttackSwingError(int32_t error) {
     s_attackSwingError = error;
     s_attackSwingErrorTime = FrameTime::s_curTimeMs;
+}
+
+// OFFSET: 0x005535E0
+static uint32_t __stdcall GetQuestGiverStatusIcon(uint32_t flags) {
+    uint32_t icon = 0;
+
+    for (int32_t i = 10; i >= 0; i--) {
+        if ((1 << i) & flags) {
+            icon = i;
+            break;
+        }
+    }
+
+    if (!CGMinimapFrame::IsTrackingTrivialQuests() || icon != 5 || !(flags & 7)) {
+        return icon;
+    }
+
+    for (int32_t i = 4; i >= 2; i--) {
+        if ((1 << i) & flags) {
+            return i;
+        }
+    }
+
+    return icon;
 }
 
 // OFFSET: 0x005566C0
@@ -2254,13 +2279,13 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverStatus(CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
 
-    uint8_t status;
+    uint32_t status;
     msg->Get(status);
 
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (object && object->IsQuestGiver()) {
-        object->UpdateInteractIcon(status);
+        object->UpdateInteractIcon(GetQuestGiverStatusIcon(status));
     }
 
     return 1;
@@ -2275,13 +2300,13 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverStatusMultiple(CDataStore* msg) {
         WOWGUID guid;
         msg->Get(guid.m_guid);
 
-        uint8_t status;
+        uint32_t status;
         msg->Get(status);
 
         CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
         if (object && object->IsQuestGiver()) {
-            object->UpdateInteractIcon(status);
+            object->UpdateInteractIcon(GetQuestGiverStatusIcon(status));
         }
     }
 
@@ -2927,7 +2952,7 @@ CGPlayer_C::~CGPlayer_C() {
     this->m_dance = NULL;
 }
 
-// OFFSET: #0x006D1CF0
+// OFFSET: 0x00557170
 void CGPlayer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGUnit_C::SetStorage(storage, saved);
     this->m_player = reinterpret_cast<CGPlayerLocalData*>(storage + OBJECT_END + sizeof(CGUnitData) / sizeof(uint32_t));
@@ -4989,7 +5014,7 @@ static void GuildRosterUpdateCallback(const uint64_t& key, const WOWGUID& guid, 
     }
 }
 
-// OFFSET: 0x005520E0
+// OFFSET: 0x005520E0/0x1401ACFA0
 static int32_t HandleGuildCommandResult(uint32_t command, const char* name, uint32_t result) {
     if (result) {
         switch (result) {
@@ -5451,6 +5476,50 @@ int32_t Packet_SMSG_PLAYER_BOUND(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
+// OFFSET: 0x00559B80
+int32_t Packet_SMSG_DAMAGE_CALC_LOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    WOWGUID attacker;
+    WOWGUID target;
+    uint32_t sourceType;
+    int32_t spellId;
+    uint32_t count;
+    msg->Get(attacker.m_guid);
+    msg->Get(target.m_guid);
+    msg->Get(sourceType);
+    msg->Get(spellId);
+    msg->Get(count);
+    CGUnit_C* attackerUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
+    CGUnit_C* targetUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(target, TYPEMASK_UNIT, __FILE__, __LINE__));
+    const SpellRec* spell = g_spellDB.GetRecord(spellId);
+    const char* spellName = spell ? spell->m_name : "None";
+    const char* targetName = targetUnit ? targetUnit->GetUnitName(NULL, 1) : "Unknown Unit";
+    const char* attackerName = attackerUnit ? attackerUnit->GetUnitName(NULL, 1) : "Non-unit";
+    ConsolePrintf("DMG: '%s' attacks '%s' sourceType=%d, spell='%s'", attackerName, targetName, sourceType, spellName);
+
+    for (uint32_t i = 0; i < count; i++) {
+        char label[30];
+        uint32_t type;
+        float oldValue;
+        float newValue;
+        msg->GetString(label, sizeof(label));
+        msg->Get(type);
+        msg->Get(oldValue);
+        msg->Get(newValue);
+
+        if (!_stricmp(label, "val")) {
+            ConsolePrintf("DMG: NOT VALIDATED: Old=%f, New=%f", oldValue, newValue);
+        } else if (type > 42) {
+            ConsolePrintf("DMG: (%s) '%d'=%8.2f, total=%f", label, type, oldValue, newValue);
+        } else {
+            ConsolePrintf("DMG: (%s) '%s'=%8.2f, total=%f", label, s_damageCalcLabels[type].m_name, oldValue, newValue);
+        }
+    }
+
+    ConsolePrintf("DMG: ==============================================");
+
+    return 1;
+}
+
 // OFFSET: 0x00559D60
 static bool OnSummonRaidMemberValidateFailed(ClientSummonRaidMemberValidateFailed* msg) {
     for (uint32_t i = 0; i < msg->m_members.Count(); i++) {
@@ -5845,7 +5914,7 @@ static bool OnStartTimer(ClientStartTimer* msg) {
     return true;
 }
 
-// OFFSET: 0x005612E0
+// OFFSET: 0x005612E0/0x1401BF180
 bool CGPlayer_C::IsGuildLeader() const {
     if (this->m_obj->m_dataType != 1 || !this->m_obj->m_data) {
         return false;
@@ -6575,7 +6644,7 @@ static bool OnSupercededSpells(ClientSupercededSpells* msg) {
     return true;
 }
 
-// OFFSET: 0x005551D0
+// OFFSET: 0x005551D0/0x1401B1A30
 void CGPlayer_C::CheckQuestAutoComplete(int32_t questId, int32_t itemId, int32_t count) {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || !questId) {
         return;
@@ -6742,7 +6811,7 @@ void __stdcall CGPlayer_C::OnItemExpirePurchaseRefund(WOWGUID itemGuid) {
     }
 }
 
-// OFFSET: 0x0056BC90
+// OFFSET: 0x0056BC90/0x1401CB9D0
 static void QuestRewardItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -6764,7 +6833,7 @@ static void QuestRewardItemCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
-// OFFSET: 0x0056BD10
+// OFFSET: 0x0056BD10/0x1401CBA80
 static void QuestCompleteCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     JamQuestGiverQuestComplete* complete = static_cast<JamQuestGiverQuestComplete*>(param);
 
@@ -6847,7 +6916,7 @@ void __stdcall CGPlayer_C::OnQuestGiverQuestComplete(const JamQuestGiverQuestCom
     }
 }
 
-// OFFSET: 0x0056BFE0
+// OFFSET: 0x0056BFE0/0x1401CBED0
 static void SetPurchaseDataFromRefundCost(const JamItemPurchaseRefundCost* cost, CGItem_C::ItemPurchaseData* data) {
     data->m_money = cost->m_money;
 
@@ -6888,7 +6957,7 @@ void __stdcall CGPlayer_C::OnRefundInfo(const JamItemRefundInfo* info) {
     data->m_refundTimeLeft = info->m_refundTimeLeft;
 }
 
-// OFFSET: 0x0056C100
+// OFFSET: 0x0056C100/0x1401CC040
 void __stdcall CGPlayer_C::OnItemPurchaseRefundResult(const JamItemRefundResult* result) {
     uint8_t error = result->m_result;
 
@@ -7268,12 +7337,12 @@ int32_t Packet_SMSG_GROUP_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: 0x00A3AA30
+// OFFSET: 0x00A3AA30/0x1404BDD20
 static bool OnDebugRuneRegen(ClientDebugRuneRegen* msg) {
     return true;
 }
 
-// OFFSET: 0x005705A0
+// OFFSET: 0x005705A0/0x1401D1660
 void CGPlayer_C::PlayerInitializeMessageHandlers() {
     ClientGuildSendMaxDailyXP::s_handler = OnGuildSendMaxDailyXP;
     ClientGuildSendRankChange::s_handler = OnGuildSendRankChange;
@@ -7502,7 +7571,7 @@ void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int
     this->m_combatTarget = target;
 
     if (!rangedSpell) {
-        this->MeleeModeEnter(target);
+        this->MeleeModeEnter(target, 0, 0);
         return;
     }
 
@@ -7692,7 +7761,7 @@ int32_t Packet_SMSG_ARENA_TEAM_EVENT(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: #0x006D6520
+// OFFSET: 0x005547B0
 void CGPlayer_C::OnLootGameObject(const WOWGUID& guid) {
     this->m_lootTarget = guid;
 
@@ -7895,12 +7964,12 @@ bool __stdcall CGPlayer_C::IsRAFPlayer(WOWGUID guid) {
     return false;
 }
 
-// OFFSET: #0x006E6FD0
+// OFFSET: 0x0056E170/0x1401CED60
 const CGBag_C* CGPlayer_C::GetBag() const {
     return &this->m_bag;
 }
 
-// OFFSET: #0x006E6FD0
+// OFFSET: 0x0056E170/0x1401CED60
 CGBag_C* CGPlayer_C::GetBag() {
     return &this->m_bag;
 }
@@ -7917,33 +7986,6 @@ int32_t Player_C_ZoneUpdateHandler(const void* data, void* param) {
     }
 
     return 1;
-}
-
-// OFFSET: #0x00578210
-int32_t CGPlayer_C::GetModDamageDonePos(int32_t school) const {
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        return this->m_player->m_playerFieldModDamageDonePos[school];
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x00578250
-int32_t CGPlayer_C::GetModDamageDoneNeg(int32_t school) const {
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        return this->m_player->m_playerFieldModDamageDoneNeg[school];
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x00578290
-float CGPlayer_C::GetModDamageDonePct(int32_t school) const {
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        return this->m_player->m_playerFieldModDamageDonePct[school];
-    }
-
-    return 0.0f;
 }
 
 // OFFSET: #0x006DC550
@@ -8101,7 +8143,7 @@ void __stdcall CGPlayer_C::TalkToGossip(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D1EA0
+// OFFSET: 0x00557320/0x1401B4150
 void __stdcall CGPlayer_C::TalkToQuestUnit(const WOWGUID& guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_HELLO));
@@ -8208,7 +8250,7 @@ void __stdcall CGPlayer_C::ShopFromMerchant(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x00560430
+// OFFSET: 0x00560430/0x1401BE010
 void CGPlayer_C::TalkToSpiritHealer(const WOWGUID& guid) {
     if (!(this->m_player->m_playerFlags & 0x10)) {
         return;
@@ -9007,96 +9049,548 @@ int32_t OnUpdateQuest(WOWGUID guid, uint32_t offset, uint32_t count, const void*
     return 1;
 }
 
-// OFFSET: #0x006E5180
-void CGPlayer_C::SetActiveMirrorHandlers() {
-    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// OFFSET: 0x00553800/0x1401AE740
+static int32_t OnUpdatePlayerNameScriptEvent(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    CGGameUI::UnitNameUpdate(guid);
+    FrameScript_SignalEvent(reinterpret_cast<uintptr_t>(param), "%s", "player");
+
+    return 1;
+}
+
+// OFFSET: 0x00553840
+static int32_t OnUpdateBattlegroundRating(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    if (CGMerchantInfo::m_merchant) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_MERCHANT_UPDATE, NULL);
     }
 
+    return 1;
+}
+
+// OFFSET: 0x005538E0
+static int32_t OnUpdatePlayerMastery(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    FrameScript_SignalEvent(SCRIPT_EVENT_MASTERY_UPDATE, NULL);
+
+    return 1;
+}
+
+// OFFSET: 0x005570F0
+static int32_t OnUpdatePlayerHitModifiers(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_RATING_UPDATE, NULL);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00557130
+static int32_t OnUpdatePlayerHaste(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_RATING_UPDATE, NULL);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0055F240
+static int32_t OnUpdatePlayerGuildLevel(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    uint32_t oldLevel = *static_cast<const uint32_t*>(value);
+
+    if (guid == ClntObjMgrGetActivePlayer()) {
+        CGGuildInfo::UpdateGuildLevel();
+        FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_PERK_UPDATE, NULL);
+    }
+
+    if (oldLevel) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (player && static_cast<int32_t>(player->m_player->m_playerGuildlevel) > 1) {
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_GUILD_LEVEL, "%d", player->m_player->m_playerGuildlevel);
+            CEffect* effect = CEffect::Create();
+            effect->AddSpecialEffect(14, guid, &CGObject_C::EffectOnceHandler);
+            effect->m_flags |= 0x20;
+            effect->Release();
+
+            if (player->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+                SI3::PlayUISound(23285, NULL, true);
+            }
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0055FF50
+static int32_t OnUpdatePlayerFieldBytes(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    uint8_t oldBytes = *static_cast<const uint8_t*>(value);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        uint8_t bytes = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerFieldBytes[0] : 0;
+
+        if ((oldBytes ^ bytes) & 0x20) {
+            CGPetInfo::UpdatePetTempBar();
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0055F440/0x1401BCD30
+int32_t OnUpdateMoney(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    SE3SoundKitProperties properties;
+    SE3::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, &properties, NULL, __FILE__, __LINE__, "OnUpdateMoney()");
+    CGClassTrainer::RefreshList();
+    FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_MONEY, NULL);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        CGPlayer_C::QueryQuestGiverStatusMultiple();
+    }
+
+    uint64_t tradeMoney = CGTradeInfo::m_playerTrade.m_money;
+
+    if (tradeMoney && player && tradeMoney > player->GetCoinage()) {
+        CGTradeInfo::RemoveMoney(static_cast<int64_t>(tradeMoney - player->GetCoinage()));
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0055F520/0x1401BCE50
+int32_t OnUpdateShapeshiftForm(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        if (player->m_shapeshiftSuppressed) {
+            player->m_shapeshiftSuppressed = 0;
+        }
+
+        if (player->IsShapeShifted()) {
+            const SpellShapeshiftFormRec* form = g_spellShapeshiftFormDB.GetRecord(player->GetShapeshiftForm());
+
+            if (form && !(form->m_flags & 8)) {
+                CGGameUI::ClearInteractTarget(CGGameUI::m_interactTarget, 0);
+            }
+
+            CGMinimapFrame::RefreshShapeshiftTrackingSpells();
+        } else if (value) {
+            const SpellShapeshiftFormRec* form = g_spellShapeshiftFormDB.GetRecord(*static_cast<const uint8_t*>(value));
+
+            if (form && form->unk_0050) {
+                C3Vector position = player->GetPosition();
+
+                if (CGUnit_C::s_activeMover == player->m_obj->m_guid || player->IsActivePlayer()) {
+                    bool listenerAtCharacter = SI3::sm_pCVar_Sound_ListenerAtCharacter && SI3::sm_pCVar_Sound_ListenerAtCharacter->m_intValue;
+                    SE3SoundKitProperties properties;
+                    properties.m_priority = 110;
+                    SE3::PlaySoundKit(form->unk_0050, listenerAtCharacter ? NULL : &position, &properties, NULL, __FILE__, __LINE__, "OnUpdateShapeshiftForm", 0, NULL);
+                } else {
+                    SE3SoundKitProperties properties;
+                    SE3::PlaySoundKit(form->unk_0050, &position, &properties, NULL, __FILE__, __LINE__, "OnUpdateShapeshiftForm", 0, NULL);
+                }
+            }
+        }
+    }
+
+    CGSpellBook::UpdateUsable();
+    CGSpellBook::UpdateSelection(0);
+    CGActionBar::UpdateShapeShiftBar();
+    CGActionBar::UpdateOverrideSpellBar();
+    CGActionBar::UpdateBonusBar();
+    FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
+
+    return 1;
+}
+
+// OFFSET: 0x0055F6F0/0x1401BD0D0
+void CGPlayer_C::OnSkillRankChanged(int32_t index, uint16_t oldRank) {
+    ConsolePrintf("Skill %d increased from %d to %d", this->GetSkillLineID(index), oldRank, this->GetSkillValue(index));
+    uint16_t skillId = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? this->m_player->m_playerSkillLineid0[index] : 0;
+    const SkillLineRec* skill = g_skillLineDB.GetRecord(skillId);
+
+    if (!skill) {
+        return;
+    }
+
+    uint16_t lineId = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? this->m_player->m_playerSkillLineid0[index] : 0;
+    const SkillRaceClassInfoRec* info = SpellTableLookupInfo(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], lineId);
+
+    if (info && !(info->m_flags & 0x402)) {
+        if (oldRank) {
+            if (static_cast<int32_t>(this->GetSkillValue(index)) > 0) {
+                CGGameUI::DisplayError(ERR_SKILL_UP_SI, skill->m_displayName, this->GetSkillValue(index));
+            }
+        } else {
+            CGGameUI::DisplayError(ERR_SKILL_GAINED_S, skill->m_displayName);
+        }
+    }
+
+    if (skill->m_categoryID == 9 || skill->m_categoryID == 11) {
+        CGPlayer_C::QueryQuestGiverStatusMultiple();
+    }
+}
+
+// OFFSET: 0x0055F890
+int32_t SkillRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
+    FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_ATTACK, "%s", "player");
+    FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_DEFENSE, "%s", "player");
+    FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_RANGED_ATTACK_POWER, "%s", "player");
+    PlayerSignalSkillStatChanges();
+    const int16_t* oldRanks = static_cast<const int16_t*>(value);
+
+    for (uint32_t i = 0; i < 128; i++) {
+        if (static_cast<int16_t>(player->m_player->m_playerSkillRank0[i]) != oldRanks[i]) {
+            player->OnSkillRankChanged(i, oldRanks[i]);
+        }
+    }
+
+    CGClassTrainer::RefreshList();
+    CGTradeSkillInfo::RefreshList(0);
+    CGMerchantInfo::RefreshList();
+
+    return 1;
+}
+
+// OFFSET: 0x0056E430/0x1401CF150
+void CGPlayer_C::SetActiveMirrorHandlers() {
     ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x10, 8, CritterUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 
-    for (uint32_t i = 0x2C0; i < 0x378; i += 8) {
+    for (uint32_t i = 0x4B8; i < 0x570; i += 8) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, InventoryUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    for (uint32_t i = 0x3F8; i <= 0x4D0; i += 8) {
+    for (uint32_t i = 0x5F0; i < 0x6D0; i += 8) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, InventoryUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    for (uint32_t i = 0x4D8; i <= 0x508; i += 8) {
+    for (uint32_t i = 0x6D0; i < 0x708; i += 8) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, InventoryUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    for (uint32_t i = 0x570; i <= 0x668; i += 8) {
-        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, InventoryUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    }
-
-    for (uint32_t i = 0x670; i <= 0x768; i += 8) {
-        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, InventoryUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    }
-
-    for (uint32_t i = 0x28; i < 0x21C; i += 20) {
+    for (uint32_t i = 0x2C; i < 0x414; i += 20) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 20, OnUpdateQuest, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    for (uint32_t i = 0x11B0; i < 0x1214; i += 4) {
+    for (uint32_t i = 0x1224; i < 0x1288; i += 4) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 4, ReportDailyQuestsRemaining, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xFF8, 4, OnUpdateMoney, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1060, 4, OnUpdateMoney, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x18, 8, CharmChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x1D3, 1, OnUpdateShapeshiftForm, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x770, 8, FarsightChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x1B7, 1, OnUpdateShapeshiftForm, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x768, 8, FarsightChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
 
-    for (uint32_t i = 0x778; i < 0x790; i += 8) {
-        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_KNOWN_TITLES_UPDATE)), static_cast<HANDLER_PRIORITY>(0), 0);
+    for (uint32_t i = 0x770; i < 0x790; i += 8) {
+        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 8, OnUpdatePlayerNameScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_KNOWN_TITLES_UPDATE)), static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    for (uint32_t i = 0x7A6; i < 0xDA6; i += 12) {
-        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i - 2, 2, SkillRankChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 2, SkillMaxRankChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i + 4, 2, SkillMaxRankChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-        ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i + 2, 2, SignalPlayerSkillStatEventsAndRefresh, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    }
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x998, 0x100, SkillRankChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xA98, 0x100, SkillMaxRankChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xC98, 0x100, SkillMaxRankChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xB98, 0x100, SignalPlayerSkillStatEventsAndRefresh, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1F, 1, OnUpdateRestState, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x105C, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_UPDATE_EXHAUSTION)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x790, 8, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_XP_UPDATE)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1068, 0x5C, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10D8, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1150, 2, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_KILLS_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1154, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_KILLS_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x20, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_RANK_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x115B, 1, OnUpdatePlayerAuraVision, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1158, 2, OnUpdatePlayerOverrideSpellsID, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x115C, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_UPDATE_FACTION)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x11C8, 0x54, OnArenaTeamsChanged, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x121C, 4, OnUpdateBattlegroundRating, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1160, 0x68, SignalCombatRatingUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDE0, 4, SignalCombatRatingUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDAC, 0x34, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x78, 0x28, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
 
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1B, 1, OnUpdateRestState, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xFF4, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_UPDATE_EXHAUSTION)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x798, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_XP_UPDATE)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x79C, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_XP_UPDATE)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xFFC, 0x1C, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1018, 0x1C, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1034, 0x1C, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1050, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10D4, 2, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_KILLS_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E0, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_KILLS_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10D8, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_KILLS_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1C, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_RANK_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E7, 1, OnUpdatePlayerAuraVision, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E4, 2, OnUpdatePlayerOverrideSpellsID, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E8, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_UPDATE_FACTION)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1150, 0x54, OnArenaTeamsChanged, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x11A4, 4, reinterpret_cast<MIRRORHANDLERFUNC>(OnHonorCurrencyChanged), NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x11A8, 4, reinterpret_cast<MIRRORHANDLERFUNC>(OnArenaCurrencyChanged), NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10EC, 0x64, SignalCombatRatingUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDEC, 4, SignalCombatRatingUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDB0, 0x34, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x88, 0x38, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
-
-    for (uint32_t i = 0x1214; i < 0x1224; i += 4) {
+    for (uint32_t i = 0x1288; i < 0x1298; i += 4) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 4, OnUpdatePlayerRuneRegen, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDAC, 4, OnUpdatePlayerTrackingMask, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1060, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x105C, 4, SignalCombatRatingUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1224, 0xC, OnUpdatePlayerNoReagentCost, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDA0, 4, OnUpdatePlayerTrackingMask, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E0, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)), static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10DC, 4, SignalCombatRatingUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1298, 0xC, OnUpdatePlayerNoReagentCost, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 
-    for (uint32_t i = 0x1248; i < 0x1260; i += 4) {
+    for (uint32_t i = 0x12C8; i < 0x12EC; i += 4) {
         ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, 4, reinterpret_cast<MIRRORHANDLERFUNC>(OnUpdatePlayerGlyph), NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     }
 
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1260, 4, reinterpret_cast<MIRRORHANDLERFUNC>(OnUpdatePlayerGlyphSlotsEnabled), NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1264, 4, reinterpret_cast<MIRRORHANDLERFUNC>(SignalPetSpellPowerUpdate), NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x12EC, 4, reinterpret_cast<MIRRORHANDLERFUNC>(OnUpdatePlayerGlyphSlotsEnabled), NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x12F0, 4, reinterpret_cast<MIRRORHANDLERFUNC>(SignalPetSpellPowerUpdate), NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDE8, 4, OnUpdatePlayerMastery, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E4, 1, OnUpdatePlayerFieldBytes, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x133C, 8, OnUpdatePlayerHitModifiers, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1348, 0x10, OnUpdatePlayerHaste, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E8, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_SELF_RES_SPELL_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
+}
+
+// OFFSET: 0x0056EB60/0x1401CFB00
+void CGPlayer_C::UnsetActiveMirrorHandlers() {
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x10, CritterUpdate, NULL);
+
+    for (uint32_t i = 0x4B8; i < 0x570; i += 8) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, InventoryUpdate, NULL);
+    }
+
+    for (uint32_t i = 0x5F0; i < 0x6D0; i += 8) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, InventoryUpdate, NULL);
+    }
+
+    for (uint32_t i = 0x6D0; i < 0x708; i += 8) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, InventoryUpdate, NULL);
+    }
+
+    for (uint32_t i = 0x2C; i < 0x414; i += 20) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, OnUpdateQuest, NULL);
+    }
+
+    for (uint32_t i = 0x1224; i < 0x1288; i += 4) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, ReportDailyQuestsRemaining, NULL);
+    }
+
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1060, OnUpdateMoney, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x18, CharmChangeHandler, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x768, FarsightChangeHandler, NULL);
+
+    for (uint32_t i = 0x770; i < 0x790; i += 8) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, OnUpdatePlayerNameScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_KNOWN_TITLES_UPDATE)));
+    }
+
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x1B7, OnUpdateShapeshiftForm, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x998, SkillRankChangeHandler, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xA98, SkillMaxRankChangeHandler, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xC98, SkillMaxRankChangeHandler, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xB98, SignalPlayerSkillStatEventsAndRefresh, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1F, OnUpdateRestState, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x105C, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_UPDATE_EXHAUSTION)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x790, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_XP_UPDATE)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1068, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10D8, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1150, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_KILLS_CHANGED)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1154, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_KILLS_CHANGED)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x20, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_PVP_RANK_CHANGED)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x115B, OnUpdatePlayerAuraVision, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1158, OnUpdatePlayerOverrideSpellsID, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x115C, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_UPDATE_FACTION)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x11C8, OnArenaTeamsChanged, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x121C, OnUpdateBattlegroundRating, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1160, SignalCombatRatingUpdate, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDE0, SignalCombatRatingUpdate, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDAC, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x78, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)));
+
+    for (uint32_t i = 0x1288; i < 0x1298; i += 4) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, OnUpdatePlayerRuneRegen, NULL);
+    }
+
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDA0, OnUpdatePlayerTrackingMask, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E0, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_PLAYER_DAMAGE_DONE_MODS)));
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10DC, SignalCombatRatingUpdate, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1298, OnUpdatePlayerNoReagentCost, NULL);
+
+    for (uint32_t i = 0x12C8; i < 0x12EC; i += 4) {
+        ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, i, reinterpret_cast<MIRRORHANDLERFUNC>(OnUpdatePlayerGlyph), NULL);
+    }
+
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x12EC, reinterpret_cast<MIRRORHANDLERFUNC>(OnUpdatePlayerGlyphSlotsEnabled), NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x12F0, reinterpret_cast<MIRRORHANDLERFUNC>(SignalPetSpellPowerUpdate), NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0xDE8, OnUpdatePlayerMastery, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E4, OnUpdatePlayerFieldBytes, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x133C, OnUpdatePlayerHitModifiers, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1340, OnUpdatePlayerHitModifiers, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1348, OnUpdatePlayerHaste, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x134C, OnUpdatePlayerHaste, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1350, OnUpdatePlayerHaste, NULL);
+    ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x1354, OnUpdatePlayerHaste, NULL);
+}
+
+// OFFSET: 0x0055F0C0/0x1401BC960
+static int32_t GuildTimestampEnumCallback(WOWGUID guid, void* param) {
+    CGObject_C* object = static_cast<CGObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__));
+
+    if (object) {
+        const uint64_t& guild = *static_cast<const uint64_t*>(param);
+
+        if (!(object->m_obj->m_type & TYPEMASK_PLAYER)) {
+            uint64_t objectGuild = object->m_obj->m_dataType == 1 ? object->m_obj->m_data.m_guid : 0;
+
+            if (objectGuild == guild) {
+                object->LoadGuildTextures(guild);
+                return 1;
+            }
+        }
+
+        uint64_t objectGuild = object->m_obj->m_dataType == 1 ? object->m_obj->m_data.m_guid : 0;
+
+        if (objectGuild == guild) {
+            static_cast<CGPlayer_C*>(object)->OnGuildChanged(0);
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0055F160/0x1401BCA50
+static void GuildTimestampChanged(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
+    if (success) {
+        ClntObjMgrEnumVisibleObjects(GuildTimestampEnumCallback, const_cast<uint64_t*>(&key));
+    }
+}
+
+// OFFSET: 0x00565680/0x1401C37A0
+static int32_t OnUpdateGuildTimeStamp(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
+    uint32_t index = 0;
+
+    if (!player) {
+        return 1;
+    }
+
+    uint64_t guild = player->m_obj->m_dataType == 1 ? player->m_obj->m_data.m_guid : 0;
+    uint32_t timestamp = player->m_player->m_playerGuildTimestamp;
+
+    for (; index < s_guildUpdateTimestamps.m_count; index++) {
+        if (s_guildUpdateTimestamps.m_data[index].m_guildGUID == guild) {
+            break;
+        }
+    }
+
+    if (index < s_guildUpdateTimestamps.m_count) {
+        if (s_guildUpdateTimestamps.m_data[index].m_timestamp == timestamp) {
+            return 1;
+        }
+    } else {
+        s_guildUpdateTimestamps.SetCount(index + 1);
+        s_guildUpdateTimestamps.m_data[index].m_guildGUID = guild;
+    }
+
+    s_guildUpdateTimestamps.m_data[index].m_timestamp = timestamp;
+    g_guildInfoCache.Invalidate(guild);
+    g_guildInfoCache.GetRecord2(guild, guid, GuildTimestampChanged, NULL, false);
+
+    return 1;
+}
+
+// OFFSET: 0x00567BD0/0x1401C3F60
+static void InitializeWeaponSkills() {
+    int32_t count;
+
+    if (!GetWeaponSubClassCount(&count)) {
+        return;
+    }
+
+    s_weaponSkills.SetCount(count);
+
+    for (int32_t i = 0; i < count; i++) {
+        s_weaponSkills.m_data[i] = 0;
+    }
+
+    s_defenseSpellId = 0;
+    int32_t index = g_spellDB.m_numRecords;
+
+    while (index--) {
+        const SpellRec* spell = g_spellDB.GetRecordByIndex(index);
+
+        if (!(spell->m_attributes & 0x40)) {
+            continue;
+        }
+
+        const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
+
+        if (!s_defenseSpellId && effect && effect->m_effect == 26) {
+            s_defenseSpellId = spell->m_id;
+        }
+
+        if (!spell->m_spellEquippedItemsID) {
+            continue;
+        }
+
+        const SpellEquippedItemsRec* items = g_spellEquippedItemsDB.GetRecord(spell->m_spellEquippedItemsID);
+
+        if (items && items->m_equippedItemClass == 2) {
+            uint32_t mask = items->m_equippedItemSubclass;
+
+            if (!((mask - 1) & mask)) {
+                uint32_t bit;
+
+                if (_BitScanForward(reinterpret_cast<unsigned long*>(&bit), mask) && static_cast<int32_t>(bit) < count) {
+                    s_weaponSkills.m_data[bit] = spell->m_id;
+                }
+            }
+        }
+    }
+}
+
+// OFFSET: 0x0056A7B0/0x1401C9920
+void CGPlayer_C::Initialize() {
+    s_giftWrapItem = WOWGUID();
+    s_bindPointSet = 0;
+    s_lastUpdatePVPGroup = WOWGUID();
+    s_lastUpdatePVPSequence = 0;
+    s_lastUpdatePVPTime = 0;
+    s_lastUpdateGroup = WOWGUID();
+    s_lastUpdateSequence = 0;
+    s_lastUpdateTime = 0;
+    InitializeWeaponSkills();
+    s_attackSwingError = 0;
+    s_attackSwingErrorTime = FrameTime::GetCurTimeMs();
+
+    for (uint32_t i = 0x414; i < 0x4AC; i += 8) {
+        ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, i, 8, OnUpdateInventoryComponent, NULL, static_cast<HANDLER_PRIORITY>(1), 0);
+    }
+
+    ClntObjMgrSetTypeMirrorHandler(ID_UNIT, 0, 16, PetChangeHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0xC, 4, GuildRankUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x14, 4, OnUpdatePlayerGuildLevel, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x24, 4, DuelTeamUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x8, 4, OnUpdatePlayerFlags, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x28, 4, OnUpdateGuildTimeStamp, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x22, 1, OnUpdatePVPTitle, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x21, 1, OnUpdateInebriation, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x4AC, 4, OnUpdatePlayerNameScriptEvent, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x1B, 1, OnUpdatePlayerHairColor, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x1A, 1, OnUpdatePlayerHairStyle, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x1C, 1, OnUpdatePlayerFacialStyle, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_PLAYER, 0x18, 1, OnUpdatePlayerSkinID, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+}
+
+// OFFSET: 0x0056A940
+void CGPlayer_C::Shutdown() {
+    s_guildUpdateTimestamps.Clear();
+    s_initialSpells.Clear();
+    s_initialCompanionSpells.Clear();
+    s_pendingRuneConverts.Clear();
+    s_itemSwaps.Clear();
+    s_weaponSkills.Clear();
+    s_lastBinderGuid = WOWGUID();
+    s_tabardSavePending = 0;
+
+    if (s_inspectData) {
+        SMemFree(s_inspectData, "delete", -1, 0);
+        s_inspectData = NULL;
+    }
+
+    for (uint32_t i = 0x414; i <= 0x4A4; i += 8) {
+        ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, i, OnUpdateInventoryComponent, NULL);
+    }
+
+    ClntObjMgrUnsetTypeMirrorHandler(ID_UNIT, 0, PetChangeHandler, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0xC, GuildRankUpdateHandler, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x14, OnUpdatePlayerGuildLevel, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x24, DuelTeamUpdateHandler, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x8, OnUpdatePlayerFlags, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x28, OnUpdateGuildTimeStamp, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x22, OnUpdatePVPTitle, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x21, OnUpdateInebriation, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x4AC, OnUpdatePlayerNameScriptEvent, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x1B, OnUpdatePlayerHairColor, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x1A, OnUpdatePlayerHairStyle, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, 0x1C, OnUpdatePlayerFacialStyle, NULL);
 }
 
 struct QuestCompleteRewards {
@@ -9484,7 +9978,7 @@ void EnumVisibleForAuraEffect(const SpellRec* spell, int32_t a2, int32_t a3) {
     ClntObjMgrEnumVisibleObjects(ClientPlaySpellVisualHandler, const_cast<SpellRec*>(spell));
 }
 
-// OFFSET: %0x0056D1A0
+// OFFSET: 0x0055D950
 void CGPlayer_C::UpdateXRayVision(const SpellRec* spell) {
     ClntObjMgrEnumVisibleObjects(CGPlayer_C::XRayVisionEffectProc, const_cast<SpellRec*>(spell));
 }
@@ -9582,7 +10076,7 @@ static int32_t IsCastAnimation(uint32_t anim) {
     }
 }
 
-// OFFSET: #0x006E23A0
+// OFFSET: 0x00567EA0/0x1401C6AE0
 void CGPlayer_C::ToggleSheathe() {
     int32_t casting = 0;
 
@@ -9689,7 +10183,7 @@ int32_t CGPlayer_C::AutoCombatModeEventHandler(const void* data, void* param) {
     if (player->IsInMeleeRange(target)) {
         if (!player->CGUnit_C::IsInMelee()) {
             WOWGUID guid = target->m_obj->m_guid;
-            player->MeleeModeEnter(guid);
+            player->MeleeModeEnter(guid, 0, 0);
         }
 
         player->m_combatModeFlags &= ~4u;
@@ -9746,7 +10240,7 @@ void CGPlayer_C::OnLevelChange() {
     }
 }
 
-// OFFSET: #0x006CDDB0
+// OFFSET: 0x00553870
 int32_t SkillMaxRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGClassTrainer::RefreshList();
     CGTradeSkillInfo::RefreshList(0);
@@ -9754,7 +10248,7 @@ int32_t SkillMaxRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count,
     return 1;
 }
 
-// OFFSET: 0x00561960
+// OFFSET: 0x00561960/0x1401BF8B0
 int32_t __stdcall CGPlayer_C::OnLootMoneyNotify(CDataStore* msg) {
     uint32_t amount;
     uint8_t alone;
@@ -9971,7 +10465,7 @@ void CGPlayer_C::LootCorpse(CGCorpse_C* corpse, bool autoInteract) {
     this->PlayBaseAnimation(ANIM_LOOT, 0);
 }
 
-// OFFSET: #0x006DAD90
+// OFFSET: 0x00560160
 void CGPlayer_C::LootUnit(CGUnit_C* unit, bool autoInteract) {
     if (!this->CanLoot(unit) || !unit->CanBeLooted(FrameTime::s_curTimeMs)) {
         return;
@@ -10194,14 +10688,14 @@ static void AutoEquipItemCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 }
 
-// OFFSET: #0x006DB880
+// OFFSET: 0x005607E0
 void CGPlayer_C::SwapGuildBankItem(int32_t itemId, uint32_t virtualSlot, uint8_t bag, uint8_t slot, uint32_t count) {
     WOWGUID banker = CGGuildBankInfo::m_banker;
     uint8_t tab = virtualSlot / 98;
     uint8_t tabSlot = virtualSlot % 98;
     CDataStore msg;
 
-    if (tab < 6 && CGGuildInfo::m_rankInfo[this->m_player->m_playerGuildrank].m_tabWithdrawItemLimit[tab]) {
+    if (CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(tab, this->m_player->m_playerGuildrank)) {
         msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_SWAP_ITEMS));
         msg.Put(banker.m_guid);
         msg.Put(static_cast<uint8_t>(0));
@@ -10745,7 +11239,7 @@ int32_t InventoryUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const voi
 
 // PROVEN: 18d55527 IDENTICAL/NONE
 // OFFSET: 0x00557070/0x1401B3E60
-void PlayerNameGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+void PlayerNameGuildCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
     }
@@ -11282,7 +11776,7 @@ void PlayerClientShutdown() {
     }
 }
 
-// OFFSET: 0x0055A000
+// OFFSET: 0x0055A000/0x1401AF5C0
 void CGPlayer_C::PlayerShutdownMessageHandlers() {
     ClientGuildSendGuildXP::s_handler = NULL;
     ClientGuildSendMaxDailyXP::s_handler = NULL;
@@ -11523,7 +12017,7 @@ int32_t CharmChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const 
     return 1;
 }
 
-// OFFSET: #0x006D1BC0
+// OFFSET: 0x00556FB0
 int32_t SignalPlayerSkillStatEventsAndRefresh(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_ATTACK, "%s", "player");
@@ -11576,7 +12070,7 @@ int32_t ReportDailyQuestsRemaining(WOWGUID guid, uint32_t offset, uint32_t count
     return 1;
 }
 
-// OFFSET: #0x006DA630
+// OFFSET: 0x0055F950
 int32_t OnUpdateRestState(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_EXHAUSTION, NULL);
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -11843,23 +12337,6 @@ int32_t Packet_SMSG_RESURRECT_REQUEST(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: 0x00563F00
-void CGPlayer_C::UpdateRepopTimer() {
-    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    uint8_t bytes = this->m_player->m_playerFieldBytes[0];
-
-    if (bytes & 0x10) {
-        CGGameUI::SetRepopTimeLeft(0);
-    } else if ((bytes & 0x8) && !(this->m_player->m_playerFlags & 0x4000)) {
-        CGGameUI::SetRepopTimeLeft(360000);
-    } else {
-        CGGameUI::ClearRepopTime();
-    }
-}
-
 // OFFSET: 0x00561400/0x1401BF280
 void CGPlayer_C::OnDeath() {
     if (this->m_unit->m_unitDynamicFlags & 0x20) {
@@ -11900,7 +12377,7 @@ void __stdcall CGPlayer_C::HandleActivateTaxiReply(uint32_t reply) {
     }
 }
 
-// OFFSET: 0x0055C410
+// OFFSET: 0x0055C410/0x1401B9110
 void __stdcall CGPlayer_C::ShowTaxiNodes(CDataStore* msg) {
     WOWGUID unit;
     uint32_t currentNode = 0;
@@ -12588,17 +13065,6 @@ void CGPlayer_C::Dance() {
     this->UpdateBaseAnimation(0, -1);
 }
 
-// OFFSET: #0x006E1780
-void CGPlayer_C::StartDance(PlayerDance* dance) {
-    if (this->m_dance) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    this->m_dance = dance;
-    this->m_danceMoveIndex = dance->m_start;
-    this->Dance();
-}
-
 // OFFSET: 0x00563910/0x1401C16D0
 void CGPlayer_C::DanceMoveComplete() {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
@@ -12719,69 +13185,6 @@ void CGPlayer_C::GetAttackSkillRank(int32_t hand, int32_t& rank, int32_t& bonus)
     } else if (hand == 1) {
         bonus += static_cast<int32_t>(player->GetCombatRatingPct(21) - 0.5f);
     }
-}
-
-// OFFSET: #0x006E04D0
-const CGUnitVirtualItem* CGPlayer_C::GetVirtualItem(uint32_t slot, bool ignoreDisarm) const {
-    VisibleItem_C* item = NULL;
-
-    if (slot == 0) {
-        if (!ignoreDisarm && this->IsDisarmed(0)) {
-            return NULL;
-        }
-
-        item = &this->m_player->m_playerVisibleItems[15];
-    } else if (slot == 1) {
-        if (!ignoreDisarm && this->IsDisarmed(1)) {
-            return NULL;
-        }
-
-        item = &this->m_player->m_playerVisibleItems[16];
-    } else if (slot == 2) {
-        if (!ignoreDisarm && (this->m_unit->m_unitFieldFlags2 & 0x400)) {
-            return NULL;
-        }
-
-        item = &this->m_player->m_playerVisibleItems[17];
-    }
-
-    if ((ignoreDisarm || (item && item->m_itemId > 0)) && item && abs(item->m_itemId)) {
-        CGUnitVirtualItem* virtualItem = &const_cast<CGPlayer_C*>(this)->m_virtualItems[slot];
-        virtualItem->m_classID = item->GetClassID();
-        virtualItem->m_subclassID = item->GetSubtypeID();
-        virtualItem->m_material = item->GetMaterial();
-        virtualItem->m_inventoryType = item->GetInventoryType();
-        virtualItem->m_sheatheType = item->GetSheatheType();
-        virtualItem->m_soundOverrideSubclassID = item->GetSoundOverrideSubclassID();
-        return virtualItem;
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x006E05D0
-uint32_t CGPlayer_C::GetVirtualItemDisplayID(uint32_t slot) const {
-    VisibleItem_C* item;
-
-    if (slot == 0) {
-        if (this->IsDisarmed(0)) {
-            return 0;
-        }
-
-        item = &this->m_player->m_playerVisibleItems[15];
-    } else if (slot == 1) {
-        if (this->IsDisarmed(1)) {
-            return 0;
-        }
-
-        item = &this->m_player->m_playerVisibleItems[16];
-    } else if (slot == 2) {
-        item = &this->m_player->m_playerVisibleItems[17];
-    } else {
-        return 0;
-    }
-
-    return item ? item->GetDisplayID() : 0;
 }
 
 // OFFSET: #0x0073C1D0
@@ -13059,42 +13462,6 @@ void CGPlayer_C::HandleSkinning(CGObject_C* object, bool autoInteract, bool a4) 
     }
 }
 
-// OFFSET: #0x006D73E0
-int32_t CGPlayer_C::XRayVisionEffectProc(WOWGUID guid, void* param) {
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (!unit || !unit->UsesNpcBakedTexture()) {
-        return 1;
-    }
-
-    CCharacterComponent* component = unit->m_characterComponent;
-
-    if (component) {
-        component->RemoveItemBySlot(INVSLOT_HEAD);
-        component->RemoveItemBySlot(INVSLOT_SHOULDER);
-    }
-
-    unit->FreeComponent();
-    const SpellRec* spell = static_cast<const SpellRec*>(param);
-
-    if (!spell) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    const SpellVisualRec* visual = GetSpellVisual(spell);
-
-    if (visual) {
-        SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_targetImpactKit);
-
-        if (kit) {
-            PlaySpellVisuaKitData data(spell, kit, 6);
-            unit->PlaySpellVisualKit(data);
-        }
-    }
-
-    return 1;
-}
-
 // OFFSET: #0x006DA8F0
 int32_t OnUpdatePlayerRuneRegen(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -13169,32 +13536,6 @@ void CGPlayer_C::TalkToTalentMaster(const WOWGUID& guid, uint32_t cost) {
     } else {
         CGGameUI::DisplayError(ERR_NOT_ENOUGH_MONEY);
     }
-}
-
-// OFFSET: #0x006DB5F0
-void CGPlayer_C::TurnOffGuildTabardPurchase() {
-    if (this->m_characterComponent) {
-        this->m_characterComponent->TurnOffGuildTabardPurchase();
-    }
-
-    CGBag_C* bag = this->GetBag();
-
-    if (!bag) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    WOWGUID tabard = bag->m_numSlots > 18 ? bag->m_slots[18] : WOWGUID();
-    CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(tabard, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-    if (item && item->GetInventoryType() == 19) {
-        int32_t displayId = item->GetDisplayID();
-
-        if (displayId) {
-            this->LoadGuildTextures(displayId);
-        }
-    }
-
-    CGGameUI::UnitModelUpdate(this->m_obj->m_guid, 3);
 }
 
 // OFFSET: 0x00554460/0x1401B04F0
@@ -13631,7 +13972,1229 @@ int32_t Packet_SMSG_VOICE_PARENTAL_CONTROLS(void* param, NETMESSAGE msgId, uint3
     return 1;
 }
 
-// OFFSET: #0x006DC7E0
+// OFFSET: 0x0055BFA0/0x1401B8E30
 int32_t CGPlayer_C::GetVirtualItemDisplayRec(uint32_t slot, ItemDisplayInfoRec& rec) const {
     return g_itemDisplayInfoDB.GetRecord(this->GetVirtualItemDisplayID(slot), &rec);
+}
+
+// OFFSET: 0x0055B050/0x1401B7DE0
+bool CGPlayer_C::SpellUsesWeaponSkill(const SpellRec* spell) const {
+    if (!spell->m_spellEquippedItemsID) {
+        return false;
+    }
+
+    const SpellEquippedItemsRec* items = g_spellEquippedItemsDB.GetRecord(spell->m_spellEquippedItemsID);
+
+    if (!items) {
+        return false;
+    }
+
+    const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
+
+    if ((spell->m_attributesExB & 0x8000000) || (effect && effect->m_effect == 25)) {
+        return false;
+    }
+
+    if (items->m_equippedItemClass != 2 || !items->m_equippedItemSubclass) {
+        return false;
+    }
+
+    for (uint32_t hand = 0; hand < 3; hand++) {
+        const CGUnitVirtualItem* item = this->GetVirtualItem(hand, false);
+
+        if (item && item->m_classID == items->m_equippedItemClass && ((1 << item->m_subclassID) & items->m_equippedItemSubclass) && s_weaponSkills.m_data[item->m_subclassID]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: 0x0055CA50/0x1401B9DB0
+int32_t CGPlayer_C::GetSpellCastingTime(const SpellRec* spell) const {
+    if (!spell) {
+        return 0;
+    }
+
+    int32_t castTime = 0;
+    const SpellScalingRec* scaling = g_spellScalingDB.GetRecord(spell->m_spellScalingID);
+
+    if (scaling) {
+        if (!Spell_C_SpellScalingCastTime(this, scaling, castTime)) {
+            return 0;
+        }
+    } else {
+        const SpellCastTimesRec* times = g_spellCastTimesDB.GetRecord(spell->m_castingTimeIndex);
+
+        if (!times) {
+            return 0;
+        }
+
+        int32_t rank = this->GetSpellRank(spell);
+        int32_t baseLevel = 0;
+
+        if (spell->m_spellLevelsID) {
+            const SpellLevelsRec* levels = g_spellLevelsDB.GetRecord(spell->m_spellLevelsID);
+
+            if (levels) {
+                baseLevel = levels->m_baseLevel;
+            }
+        }
+
+        castTime = times->m_base + times->m_perLevel * (rank / 5 - baseLevel);
+
+        if (castTime < times->m_minimum) {
+            castTime = times->m_minimum;
+        }
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        Spell_C_ModifySpellValue(spell, castTime, 10);
+    }
+
+    if (!(spell->m_attributes & 0x30) && !(spell->m_attributesExC & 0x20000000) && castTime > 0) {
+        float speed = this->m_unit->m_unitModCastSpeed;
+
+        if (fnotequal(speed, 1.0f)) {
+            castTime = static_cast<int32_t>(static_cast<float>(castTime) * speed);
+        }
+    }
+
+    return castTime <= 0 ? 0 : castTime;
+}
+
+// OFFSET: 0x0055D550/0x1401B1070
+uint64_t CGPlayer_C::GetInspectGuildGUID() const {
+    if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
+        return s_inspectData->m_guildGUID;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0055D580/0x1401B10A0
+uint32_t CGPlayer_C::GetInspectGuildLevel() const {
+    if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
+        return s_inspectData->m_guildLevel;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0055D5B0/0x1401B10D0
+uint32_t CGPlayer_C::GetInspectGuildNumMembers() const {
+    if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
+        return s_inspectData->m_guildNumMembers;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0055D5E0/0x1401B1100
+uint64_t CGPlayer_C::GetInspectGuildXP() const {
+    if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
+        return s_inspectData->m_guildXP;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0055D650
+int32_t CGPlayer_C::GetAttackPowerContributionFromStat(int32_t stat, int32_t value) {
+    const ChrClassesRec* classRec = g_chrClassesDB.GetRecord(this->m_unit->m_unitFieldBytes0[1]);
+
+    if (!classRec) {
+        return 0;
+    }
+
+    int32_t bonus = value - 10;
+
+    if (bonus < 0) {
+        bonus = 0;
+    }
+
+    int32_t attackPower = 0;
+
+    if (!stat) {
+        return bonus * classRec->unk_002C;
+    }
+
+    if (stat == 1) {
+        attackPower = bonus * classRec->unk_0030;
+        const SpellShapeshiftFormRec* form = g_spellShapeshiftFormDB.GetRecord(this->GetShapeshiftForm());
+
+        if (form && (form->m_flags & 0x20)) {
+            attackPower += bonus * classRec->unk_002C;
+        }
+    }
+
+    return attackPower;
+}
+
+// OFFSET: 0x0055DB50
+bool CGPlayer_C::IsInArena() {
+    const MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
+
+    return map && map->m_instanceType == 4;
+}
+
+// OFFSET: 0x005613C0
+void CGPlayer_C::UpdateRepopTimer() {
+    uint8_t bytes = this->m_player->m_playerFieldBytes[0];
+
+    if (bytes & 0x10) {
+        CGGameUI::SetRepopTimeLeft(0);
+    } else if ((bytes & 0x8) && !(this->m_player->m_playerFlags & 0x4000)) {
+        CGGameUI::SetRepopTimeLeft(360000);
+    } else {
+        CGGameUI::ClearRepopTime();
+    }
+}
+
+// OFFSET: 0x005615C0/0x1401BF490
+int32_t CGPlayer_C::GetSkillRank(int32_t skillId) const {
+    int32_t index = this->GetSkillIndex(skillId);
+
+    if (index < 0) {
+        return 0;
+    }
+
+    uint16_t modifier = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? this->m_player->m_playerSkillModifier0[index] : 0;
+    int32_t rank = modifier + this->GetSkillValue(index);
+
+    return rank < 0 ? 0 : rank;
+}
+
+// OFFSET: 0x00561620/0x1401BF510
+int32_t CGPlayer_C::GetSpellRank(const SpellRec* spell) const {
+    if (this->SpellUsesWeaponSkill(spell)) {
+        return 5 * this->m_unit->m_unitFieldLevel;
+    }
+
+    const SkillLineAbilityRec* ability = SpellTableLookupAbility(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], spell->m_id);
+    int32_t rank = ability ? this->GetSkillRank(ability->m_skillLine) : 5 * this->m_unit->m_unitFieldLevel;
+
+    if (spell->m_spellLevelsID) {
+        const SpellLevelsRec* levels = g_spellLevelsDB.GetRecord(spell->m_spellLevelsID);
+
+        if (levels && levels->m_maxLevel > 0 && rank >= 5 * levels->m_maxLevel) {
+            rank = 5 * levels->m_maxLevel;
+        }
+    }
+
+    return rank < 0 ? 0 : rank;
+}
+
+// OFFSET: 0x00561D90/0x1401BFDA0
+void CGPlayer_C::GetComText(char* buffer, uint32_t size) const {
+    if (this->m_player->m_playerFlags & 0x80000) {
+        const char* text = FrameScript_GetText("CHAT_FLAG_COM", -1, GENDER_NOT_APPLICABLE);
+
+        if (text && *text) {
+            SStrPack(buffer, text, size);
+        }
+    }
+}
+
+// OFFSET: 0x00561F30/0x1401BFFA0
+void CGPlayer_C::ChangeStandState(uint32_t standState) {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || (this->m_mountDisplayId > 0 && !(this->m_clientFlags & 0x10000000))) {
+        return;
+    }
+
+    if ((this->m_unit->m_unitFieldFlags & 0x100000) || this->m_unit->m_unitFieldHealth <= 0 || (this->m_unit->m_unitFieldFlags2 & 1)) {
+        return;
+    }
+
+    if (this->IsInVehicle() || (this->m_animationState & 0x10) || this->m_castSpellId || !this->IsLocalClientControlled()) {
+        return;
+    }
+
+    if (this->m_unit->m_unitChannelSpell) {
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell);
+
+        if (!spell || !(spell->m_attributes & 0x8000000)) {
+            return;
+        }
+    }
+
+    uint32_t flags = this->m_movement->m_flags;
+
+    if ((flags & 0x30) && (standState == 3 || standState == 1)) {
+        return;
+    }
+
+    if (standState && (flags & 0x170080F)) {
+        return;
+    }
+
+    if (standState != this->GetClientStandState()) {
+        CDataStore msg;
+        msg.Put(static_cast<uint32_t>(CMSG_STAND_STATE_CHANGE));
+        msg.Put(standState);
+        msg.Finalize();
+        ClientServices::Send2(&msg);
+        this->UpdateClientStandState(this->m_clientStandState, standState);
+    }
+}
+
+// OFFSET: 0x00562370/0x1401B9940
+void CGPlayer_C::OpenWrappedItem(CGItem_C* item) {
+    uint8_t bag;
+    uint8_t slot;
+
+    if (!this->GetPackAndSlot(item, &bag, &slot)) {
+        return;
+    }
+
+    SE3SoundKitProperties properties;
+    SE3::PlaySoundKit("UnwrapGift", NULL, &properties, NULL, __FILE__, __LINE__, "CGPlayer_C::OpenWrappedItem");
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_OPEN_ITEM));
+    msg.Put(bag);
+    msg.Put(slot);
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x00562AE0/0x1401C0840
+void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target, int32_t silent) {
+    if (!emote || (this->m_unit->m_unitFieldFlags & 0x1000000)) {
+        return;
+    }
+
+    const EmotesRec* emoteRec = g_emotesDB.GetRecord(emote->m_emoteID);
+
+    if (!emoteRec) {
+        return;
+    }
+
+    int32_t moving;
+    int32_t inCombat;
+
+    if (!this->CanPlayEmote(emoteRec->m_emoteFlags, 1, &moving, this->m_combat.m_attacking != 0, &inCombat, (this->m_animationState & 0x10) != 0)) {
+        return;
+    }
+
+    if ((moving || inCombat) && this->IsClientControlled()) {
+        if (!silent) {
+            if (moving) {
+                CGGameUI::DisplayError(ERR_NOEMOTEWHILERUNNING);
+            } else if (inCombat) {
+                CGGameUI::DisplayError(ERR_NOT_IN_COMBAT);
+            }
+        }
+
+        return;
+    }
+
+    if (this->GetClientStandState() == 3 && emoteRec->m_emoteSpecProc != 1) {
+        return;
+    }
+
+    uint32_t now = FrameTime::GetCurTimeMs();
+
+    if (!(emoteRec->m_emoteFlags & 0x800000) && now < this->unk_217C) {
+        return;
+    }
+
+    this->unk_217C = now + s_textEmoteCooldown;
+
+    if (target == this->m_obj->m_guid) {
+        target = WOWGUID();
+    }
+
+    if (emoteRec->m_emoteSpecProc == 1 && ((1 << emoteRec->m_emoteSpecProcParam) & s_textEmoteStandStates)) {
+        this->ChangeStandState(emoteRec->m_emoteSpecProcParam);
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_SEND_TEXT_EMOTE));
+    msg.Put(static_cast<uint32_t>(emote->m_id));
+    uint32_t sex;
+    uint32_t race;
+
+    if (this->m_unit->m_unitFieldDisplayid == this->m_unit->m_unitFieldNativedisplayid) {
+        sex = this->m_unit->m_unitFieldBytes0[2];
+        race = this->GetCurrentClientRace();
+    } else {
+        sex = this->GetDisplaySex();
+        race = this->GetDisplayRace();
+    }
+
+    msg.Put(static_cast<uint32_t>(SI3::GetTextEmoteSoundIndex(emote->m_id, race, sex)));
+    msg.Put(target.m_guid);
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x00563460/0x1401C12D0
+bool CGPlayer_C::CanSaveTabardNow() {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return false;
+    }
+
+    WOWGUID none = WOWGUID();
+    WOWGUID guild = player->m_obj->m_dataType == 1 ? player->m_obj->m_data : WOWGUID();
+
+    return g_guildInfoCache.GetRecord2(guild.m_guid, none, NULL, NULL, false) && !s_tabardSavePending;
+}
+
+// OFFSET: 0x005634E0
+const CGItem_C* CGPlayer_C::GetEquippedItemForSpell(const SpellEquippedItemsRec* items, uint32_t slotMask) {
+    if ((this->m_unit->m_unitFieldFlags & 0x200000) || static_cast<int8_t>(this->m_unit->m_unitFieldFlags2) < 0) {
+        if (this->IsDisarmed(0)) {
+            slotMask &= ~0x8000u;
+        }
+
+        if (this->IsDisarmed(1)) {
+            slotMask &= ~0x10000u;
+        }
+    }
+
+    if (this->m_unit->m_unitFieldFlags2 & 0x400) {
+        slotMask &= ~0x20000u;
+    }
+
+    for (uint32_t slot = 0; slot < 23; slot++) {
+        if (!((1 << slot) & slotMask)) {
+            continue;
+        }
+
+        CGItem_C* item = this->m_bag.GetItemPointer(slot);
+
+        if (!item) {
+            continue;
+        }
+
+        const CGItemData* data = item->m_item;
+
+        if (((data->m_itemFieldFlags & 8) || !data->m_itemFieldMaxdurability || data->m_itemFieldDurability) && !(data->m_itemFieldFlags & 0x10) && items->m_equippedItemClass == static_cast<int32_t>(item->GetClassID()) && ((1 << item->GetSubtypeID()) & items->m_equippedItemSubclass)) {
+            return item;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x00565A40/0x1401C3BF0
+void CGPlayer_C::SaveTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background, WOWGUID npc) {
+    if (emblemStyle < 0 || emblemColor < 0 || borderStyle < 0 || borderColor < 0 || background < 0 || emblemStyle >= 196 || emblemColor >= 17 || borderStyle >= 6 || borderColor >= 17 || background >= 51) {
+        CGGameUI::DisplayError(ERR_GUILDEMBLEM_INVALID_TABARD_COLORS);
+        return;
+    }
+
+    WOWGUID none = WOWGUID();
+    GuildStats_C* stats = g_guildInfoCache.GetRecord2(this->GetGuildGUID().m_guid, none, NULL, NULL, false);
+
+    if (!stats) {
+        CGGameUI::DisplayError(ERR_GUILDEMBLEM_NOGUILD);
+        return;
+    }
+
+    if (emblemStyle == stats->m_emblemStyle && emblemColor == stats->m_emblemColor && borderStyle == stats->m_borderStyle && borderColor == stats->m_borderColor && background == stats->m_background) {
+        CGGameUI::DisplayError(ERR_GUILDEMBLEM_SAME);
+        return;
+    }
+
+    if (!this->IsGuildLeader()) {
+        CGGameUI::DisplayError(ERR_GUILDEMBLEM_NOTGUILDMASTER);
+        return;
+    }
+
+    if (this->GetCoinage() < static_cast<uint32_t>(GuildGetTabardCost())) {
+        CGGameUI::DisplayError(ERR_NOT_ENOUGH_MONEY);
+        return;
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(MSG_SAVE_GUILD_EMBLEM));
+    msg.Put(npc.m_guid);
+    msg.Put(static_cast<uint32_t>(emblemStyle));
+    msg.Put(static_cast<uint32_t>(emblemColor));
+    msg.Put(static_cast<uint32_t>(borderStyle));
+    msg.Put(static_cast<uint32_t>(borderColor));
+    msg.Put(static_cast<uint32_t>(background));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+    s_tabardSavePending = 1;
+    FrameScript_SignalEvent(SCRIPT_EVENT_TABARD_SAVE_PENDING, NULL);
+}
+
+// OFFSET: 0x00566B30
+void CGPlayer_C::ModifyCategoryCooldown(int32_t& cooldown, int32_t category) {
+    for (CATEGORYCOOLDOWN* entry = this->m_categoryCooldowns.Head(); entry; entry = this->m_categoryCooldowns.Next(entry)) {
+        if (entry->m_category == category) {
+            if (entry->m_cooldown <= cooldown) {
+                cooldown -= entry->m_cooldown;
+            } else {
+                cooldown = 0;
+            }
+
+            return;
+        }
+    }
+}
+
+// OFFSET: 0x00567150/0x1401C5A90
+int32_t CGPlayer_C::GetModDamageDonePos(int32_t schoolMask) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return 0;
+    }
+
+    if ((schoolMask & 0x7E) && (this->m_auraEffectMask[45] & 0x40)) {
+        return static_cast<int32_t>(static_cast<float>(this->m_unit->m_unitFieldAttackPower + this->m_unit->m_unitFieldAttackPowerModPos + this->m_unit->m_unitFieldAttackPowerModNeg) * (this->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * this->m_player->m_playerFieldOverrideSpellPowerByApPct * 0.0099999998f);
+    }
+
+    int32_t result = 0;
+    bool found = false;
+    uint32_t bit = 1;
+
+    for (uint32_t i = 0; i < 7; i++) {
+        if ((schoolMask & bit) && (!found || static_cast<int32_t>(static_cast<float>(static_cast<int32_t>(this->m_player->m_playerFieldModDamageDonePos[i])) * this->m_player->m_playerFieldModSpellPowerPct) > result)) {
+            result = static_cast<int32_t>(static_cast<float>(static_cast<int32_t>(this->m_player->m_playerFieldModDamageDonePos[i])) * this->m_player->m_playerFieldModSpellPowerPct);
+            found = true;
+        }
+
+        bit = _rotl(bit, 1);
+    }
+
+    return result;
+}
+
+// OFFSET: 0x00567280/0x1401C5BD0
+int32_t CGPlayer_C::GetModDamageDoneNeg(int32_t schoolMask) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || ((schoolMask & 0x7E) && (this->m_auraEffectMask[45] & 0x40))) {
+        return 0;
+    }
+
+    int32_t result = 0;
+    bool found = false;
+    uint32_t bit = 1;
+
+    for (uint32_t i = 0; i < 7; i++) {
+        if ((schoolMask & bit) && (!found || static_cast<int32_t>(static_cast<float>(static_cast<int32_t>(this->m_player->m_playerFieldModDamageDoneNeg[i])) * this->m_player->m_playerFieldModSpellPowerPct) < result)) {
+            result = static_cast<int32_t>(static_cast<float>(static_cast<int32_t>(this->m_player->m_playerFieldModDamageDoneNeg[i])) * this->m_player->m_playerFieldModSpellPowerPct);
+            found = true;
+        }
+
+        bit = _rotl(bit, 1);
+    }
+
+    return result;
+}
+
+// OFFSET: 0x00567360/0x1401C5CB0
+int32_t CGPlayer_C::GetModHealingDonePos() const {
+    if (this->m_auraEffectMask[45] & 0x40) {
+        return static_cast<int32_t>(static_cast<float>(this->m_unit->m_unitFieldAttackPower + this->m_unit->m_unitFieldAttackPowerModPos + this->m_unit->m_unitFieldAttackPowerModNeg) * (this->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * this->m_player->m_playerFieldOverrideSpellPowerByApPct * 0.0099999998f);
+    }
+
+    return static_cast<int32_t>(static_cast<float>(static_cast<int32_t>(this->m_player->m_playerFieldModHealingDonePos)) * this->m_player->m_playerFieldModSpellPowerPct);
+}
+
+// OFFSET: 0x00563F00/0x1401C1E70
+float CGPlayer_C::GetModDamageDonePct(int32_t schoolMask) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return 0.0f;
+    }
+
+    float result = 1.0f;
+    bool found = false;
+    uint32_t bit = 1;
+
+    for (uint32_t i = 0; i < 7; i++) {
+        if ((bit & schoolMask) && (!found || *reinterpret_cast<const float*>(&this->m_player->m_playerFieldModDamageDonePct[i]) > result)) {
+            result = *reinterpret_cast<const float*>(&this->m_player->m_playerFieldModDamageDonePct[i]);
+            found = true;
+        }
+
+        bit = _rotl(bit, 1);
+    }
+
+    return result;
+}
+
+// OFFSET: 0x00565DA0/0x1401C4300
+const VisibleItem_C* CGPlayer_C::GetVirtualVisibleItem(uint32_t slot, bool ignoreDisarm) const {
+    const VisibleItem_C* effectItem = NULL;
+    const CEffectVirtualItem* effect = this->FindVirtualItemEffect(slot);
+
+    if (effect) {
+        effectItem = &effect->m_item;
+    }
+
+    if (slot == 0) {
+        if (ignoreDisarm || !this->IsDisarmed(0)) {
+            return effectItem ? effectItem : &this->m_player->m_playerVisibleItems[15];
+        }
+    } else if (slot == 1) {
+        if (ignoreDisarm || !this->IsDisarmed(1)) {
+            return effectItem ? effectItem : &this->m_player->m_playerVisibleItems[16];
+        }
+    } else if (slot == 2 && (ignoreDisarm || !(this->m_unit->m_unitFieldFlags2 & 0x400))) {
+        return effectItem ? effectItem : &this->m_player->m_playerVisibleItems[17];
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x00565E70/0x1401C43F0
+const CGUnitVirtualItem* CGPlayer_C::GetVirtualItem(uint32_t slot, bool ignoreDisarm) const {
+    const VisibleItem_C* item = this->GetVirtualVisibleItem(slot, ignoreDisarm);
+
+    if ((!ignoreDisarm && (!item || item->m_itemId <= 0)) || !item || !abs(item->m_itemId)) {
+        return NULL;
+    }
+
+    CGUnitVirtualItem* virtualItem = const_cast<CGUnitVirtualItem*>(&this->m_virtualItems[slot]);
+    VisibleItem_C* visible = const_cast<VisibleItem_C*>(item);
+    virtualItem->m_classID = visible->GetClassID();
+    virtualItem->m_subclassID = visible->GetSubtypeID();
+    virtualItem->m_material = visible->GetMaterial();
+    virtualItem->m_inventoryType = visible->GetInventoryType();
+    virtualItem->m_sheatheType = visible->GetSheatheType();
+    virtualItem->m_soundOverrideSubclassID = visible->GetSoundOverrideSubclassID();
+
+    return virtualItem;
+}
+
+// OFFSET: 0x00565F00
+uint32_t CGPlayer_C::GetVirtualItemDisplayID(uint32_t slot) const {
+    const VisibleItem_C* item = this->GetVirtualVisibleItem(slot, false);
+
+    return item ? const_cast<VisibleItem_C*>(item)->GetDisplayID() : 0;
+}
+
+// OFFSET: 0x00558360/0x1401B5510
+const char* CGPlayer_C::GetPlayerGuildNameText() {
+    if (this->m_obj->m_dataType != 1 || !this->m_obj->m_data) {
+        return NULL;
+    }
+
+    WOWGUID guid = this->m_obj->m_guid;
+    WOWGUID guild = this->m_obj->m_dataType == 1 ? this->m_obj->m_data : WOWGUID();
+    GuildStats_C* stats = g_guildInfoCache.GetRecord2(guild.m_guid, guid, PlayerNameGuildCallback, this, false);
+
+    return stats ? stats->m_name : NULL;
+}
+
+// OFFSET: 0x005583D0/0x1401B5590
+void CGPlayer_C::GetPlayerGuildNameTextWithTitle(char* buffer, uint32_t size, bool showRank) {
+    if (!buffer) {
+        return;
+    }
+
+    const char* name = this->GetPlayerGuildNameText();
+
+    if (!name) {
+        *buffer = 0;
+        return;
+    }
+
+    const char* title;
+
+    if (showRank && (title = CGGuildInfo::GetGuildReputationTitleString(this->m_obj->m_guid.m_guid)) != NULL) {
+        SStrPrintf(buffer, size, title, name);
+    } else {
+        SStrCopy(buffer, name, size);
+    }
+}
+
+// OFFSET: 0x00557E10
+void CGPlayer_C::ApplyShirtGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background) {
+    if (this->m_characterComponent) {
+        this->m_characterComponent->ApplyShirtGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+        CImVector backgroundColor = 0;
+        CImVector border = 0;
+        CImVector emblem = 0;
+        char fileName[64];
+        CGObject_C::GetGuildLogoInfo(background, borderColor, emblemColor, emblemStyle, backgroundColor, border, emblem, fileName, sizeof(fileName));
+        CGObject_C::ReplaceGuildTextures(this->m_characterComponent->m_data.m_model, backgroundColor, border, emblem, fileName);
+        CGGameUI::UnitModelUpdate(this->m_obj->m_guid, 3);
+    }
+
+    if (this->m_displayTransition) {
+        this->m_displayTransition->ApplyShirtGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+    }
+}
+
+// OFFSET: 0x00558260/0x1401AEA70
+void CGPlayer_C::TurnOffGuildTabardPurchase() {
+    if (this->m_characterComponent) {
+        this->m_characterComponent->TurnOffGuildTabardPurchase();
+    }
+
+    this->LoadGuildTextures(this->m_obj->m_dataType == 1 ? this->m_obj->m_data.m_guid : 0);
+    CGGameUI::UnitModelUpdate(this->m_obj->m_guid, 3);
+}
+
+// OFFSET: 0x0055D270/0x1401BA540
+void CGPlayer_C::ClearEmote() {
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_EMOTE));
+    msg.Put(static_cast<uint32_t>(0));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x0055D400
+bool CGPlayer_C::CanChangeTalentsInRaid() const {
+    return !CGRaidInfo::IsPVPRaid() || (this->m_unit->m_unitFieldAurastate & 0x80000);
+}
+
+// OFFSET: 0x00563A20/0x1401C1810
+void CGPlayer_C::PlayDanceMove(const DanceMovesRec* move) {
+    switch (move->m_type) {
+        case 1: {
+            const SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(move->m_param);
+
+            if (kit) {
+                PlaySpellVisuaKitData data(NULL, kit, 0);
+                this->PlaySpellVisualKit(data);
+            }
+
+            break;
+        }
+
+        case 2: {
+            C3Vector position = this->GetPosition();
+            CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+            if (player && (CGPartyInfo::IsMember(this->m_obj->m_guid) || player->m_unit->m_unitFieldTarget == this->m_obj->m_guid || ClntObjMgrGetActivePlayer() == this->m_obj->m_guid)) {
+                SE3SoundKitProperties properties;
+                SE3::PlaySoundKit(move->m_param, &position, &properties, NULL, __FILE__, __LINE__, "CGPlayer_C::PlayDanceMove", 0, NULL);
+            }
+
+            this->DanceMoveComplete();
+            break;
+        }
+
+        case 3:
+        case 4:
+            ClientSetTimer(1000 * move->m_param, DanceTimerCallback, this->m_obj->m_guid.m_guid, NULL);
+
+            if (move->m_type == 4) {
+                this->PlayDanceMove(g_danceMovesDB.GetRecord(this->m_dance->m_moves[this->m_danceMoveIndex - 1]));
+            }
+
+            break;
+    }
+}
+
+// OFFSET: 0x005638F0/0x1401C16B0
+void CGPlayer_C::StartDance(PlayerDance* dance) {
+    this->m_dance = dance;
+    this->m_danceMoveIndex = dance->m_start;
+    this->Dance();
+}
+
+// OFFSET: 0x0055D8A0
+int32_t CGPlayer_C::XRayVisionEffectProc(WOWGUID guid, void* param) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit && unit->UsesNpcBakedTexture()) {
+        if (unit->m_characterComponent) {
+            unit->m_characterComponent->RemoveItemBySlot(INVSLOT_HEAD);
+            unit->m_characterComponent->RemoveItemBySlot(INVSLOT_SHOULDER);
+        }
+
+        unit->FreeComponent();
+        const SpellRec* spell = static_cast<const SpellRec*>(param);
+        const SpellVisualRec* visual = GetSpellVisual(spell, unit);
+
+        if (visual) {
+            const SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_targetImpactKit);
+
+            if (kit) {
+                PlaySpellVisuaKitData data(spell, kit, 6);
+                unit->PlaySpellVisualKit(data);
+            }
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00566510
+void CGPlayer_C::HideHelmForBarberShop(int32_t hide) {
+    if (hide) {
+        if (!(this->m_combatModeFlags & 0x10)) {
+            this->m_combatModeFlags |= 0x10;
+
+            if (!(this->m_player->m_playerFlags & 0x400) && this->CanEquipItemsInThisForm()) {
+                this->m_characterComponent->RemoveItemBySlot(INVSLOT_HEAD);
+            }
+        }
+    } else if (this->m_combatModeFlags & 0x10) {
+        this->m_combatModeFlags &= ~0x10u;
+
+        if (!(this->m_player->m_playerFlags & 0x400) && this->CanEquipItemsInThisForm()) {
+            VisibleItem_C* head = &this->m_player->m_playerVisibleItems[0];
+
+            if (head && head->GetDisplayID()) {
+                this->m_characterComponent->AddItemBySlot(INVSLOT_HEAD, head->GetDisplayID(), 0);
+            }
+        }
+    }
+}
+
+// OFFSET: 0x005661C0
+void CGPlayer_C::EquipVisibleItem(const VisibleItem_C* item, int32_t slot) {
+    VisibleItem_C* visible = const_cast<VisibleItem_C*>(item);
+
+    if (!item || !abs(item->m_itemId) || static_cast<int32_t>(visible->GetDisplayID()) <= 0 || ((this->m_combatModeFlags & 0x10) && CGBarberShop::IsSlotHidden(slot))) {
+        return;
+    }
+
+    switch (slot) {
+        case INVSLOT_MAINHAND:
+            this->AddHandItem(0);
+            this->SetWeaponTrail(this->m_worldModel, 0);
+            return;
+
+        case INVSLOT_OFFHAND:
+            this->AddHandItem(1);
+            this->SetWeaponTrail(this->m_worldModel, 1);
+            return;
+
+        case INVSLOT_RANGED:
+            this->AddHandItem(2);
+            this->SetWeaponTrail(this->m_worldModel, 2);
+            return;
+    }
+
+    if (!this->m_characterComponent || !this->CanEquipItemsInThisForm() || (CGPlayer_C::IsXRayVisionActive() && this->UsesNpcBakedTexture())) {
+        return;
+    }
+
+    if (slot != INVSLOT_TABARD && slot != INVSLOT_BODY) {
+        if (slot == INVSLOT_HEAD) {
+            if (this->m_player->m_playerFlags & 0x400) {
+                return;
+            }
+        } else if (slot == INVSLOT_BACK) {
+            if (this->m_player->m_playerFlags & 0x800) {
+                return;
+            }
+        }
+
+        this->m_characterComponent->AddItemBySlot(static_cast<INVENTORY_SLOTS>(slot), visible->GetDisplayID(), 0);
+
+        if (slot != INVSLOT_BACK) {
+            return;
+        }
+    }
+
+    this->LoadGuildTextures(this->GetGuildGUID().m_guid);
+}
+
+// OFFSET: 0x00566320/0x1401C4A00
+int32_t CGPlayer_C::RefreshVisibleItems() {
+    if (!this->CanEquipItemsInThisForm()) {
+        return 0;
+    }
+
+    if (!this->GetBag()) {
+        return 1;
+    }
+
+    for (uint32_t slot = 0; slot <= INVSLOT_TABARD; slot++) {
+        VisibleItem_C* item = &this->m_player->m_playerVisibleItems[slot];
+        int32_t itemId = item->m_itemId;
+
+        if (abs(itemId) && (itemId <= 0 || !this->m_sheatheState)) {
+            if (slot == INVSLOT_MAINHAND) {
+                if (this->m_sheatheState <= 1) {
+                    this->RemoveHandItemModel(INVSLOT_MAINHAND, 0, 0);
+                }
+            } else if (slot == INVSLOT_OFFHAND) {
+                if (this->m_sheatheState <= 1) {
+                    this->RemoveHandItemModel(INVSLOT_OFFHAND, 0, 0);
+                    this->RemoveHandItemModel(INVSLOT_OFFHAND, 0, 1);
+                }
+            } else if (slot == INVSLOT_RANGED) {
+                uint32_t state = this->m_sheatheState;
+
+                if (state == 2 || !state) {
+                    this->RemoveHandItemModel(INVSLOT_RANGED, 0, 0);
+                }
+
+                if (this->m_sheatheState == 2) {
+                    this->RemoveHandItemModel(INVSLOT_OFFHAND, 0, 0);
+                    this->RemoveHandItemModel(INVSLOT_MAINHAND, 0, 0);
+                }
+            } else if (itemId <= 0 && this->m_characterComponent) {
+                this->m_characterComponent->RemoveItemBySlot(static_cast<INVENTORY_SLOTS>(slot));
+            }
+        }
+
+        this->EquipVisibleItem(item, slot);
+
+        if (!item->m_itemId && slot == INVSLOT_MAINHAND) {
+            this->RemoveHandItemModel(INVSLOT_MAINHAND, 0, 0);
+            this->RemoveHandItemModel(INVSLOT_MAINHAND, 1, 0);
+            this->RemoveHandItemModel(INVSLOT_MAINHAND, 2, 0);
+            this->RemoveHandItemModel(INVSLOT_MAINHAND, 3, 0);
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00567910
+void CGPlayer_C::UnequipVisibleItem(uint32_t slot, const VisibleItem_C* oldItem) {
+    bool rangedRight = false;
+    const VisibleItem_C* item = slot > INVSLOT_TABARD ? NULL : &this->m_player->m_playerVisibleItems[slot];
+    VisibleItem_C* old = const_cast<VisibleItem_C*>(oldItem);
+    const CGUnitVirtualItem* ranged = this->GetVirtualItem(2, false);
+
+    if (ranged && (ranged->m_inventoryType == 26 || ranged->m_inventoryType == 25)) {
+        rangedRight = true;
+    }
+
+    if (slot == INVSLOT_MAINHAND) {
+        this->ClearWeaponTrail(0);
+
+        if (rangedRight && this->m_sheatheState == 2) {
+            CM2Model* child = this->m_worldModel->m_attachList;
+
+            for (; child; child = child->m_attachNext) {
+                if (child->m_attachmentId == 1) {
+                    break;
+                }
+            }
+
+            if (child) {
+                child->m_refCount++;
+                child->DetachFromParent();
+            }
+
+            this->RemoveHandItemModel(INVSLOT_MAINHAND, old->GetSheatheType(), 0);
+
+            if (child) {
+                child->AttachToParent(this->m_worldModel, 1, NULL, 0);
+                child->Release();
+            }
+        } else {
+            this->RemoveHandItemModel(INVSLOT_MAINHAND, old->GetSheatheType(), 0);
+        }
+
+        this->UpdateCombatReadyAnimKit(0);
+    } else if (slot == INVSLOT_OFFHAND) {
+        this->ClearWeaponTrail(1);
+
+        if (rangedRight || this->m_sheatheState != 2) {
+            bool shield = old->GetInventoryType() == 14;
+            this->RemoveHandItemModel(INVSLOT_OFFHAND, old->GetSheatheType(), shield);
+        } else {
+            CM2Model* child = this->m_worldModel->m_attachList;
+
+            for (; child; child = child->m_attachNext) {
+                if (child->m_attachmentId == 2) {
+                    break;
+                }
+            }
+
+            if (child) {
+                child->m_refCount++;
+                child->DetachFromParent();
+            }
+
+            bool shield = old->GetInventoryType() == 14;
+            this->RemoveHandItemModel(INVSLOT_OFFHAND, old->GetSheatheType(), shield);
+
+            if (child) {
+                child->AttachToParent(this->m_worldModel, 2, NULL, 0);
+                child->Release();
+            }
+        }
+
+        this->UpdateCombatReadyAnimKit(0);
+    } else if (slot != INVSLOT_RANGED) {
+        if (this->CanEquipItemsInThisForm() && this->m_characterComponent) {
+            this->m_characterComponent->RemoveItemBySlot(static_cast<INVENTORY_SLOTS>(slot));
+        }
+    } else {
+        if (this->m_sheatheState == 2) {
+            uint32_t inventoryType = old->GetInventoryType();
+
+            if (inventoryType == 26 || inventoryType == 25) {
+                this->m_worldModel->DetachAllChildrenById(1);
+            } else {
+                this->m_worldModel->DetachAllChildrenById(2);
+            }
+        }
+
+        if (this->m_characterComponent) {
+            this->m_characterComponent->RemoveItem(ITEMSLOT_11);
+        }
+
+        this->UpdateCombatReadyAnimKit(0);
+        CM2Model* model = this->m_rangedWeaponModel;
+
+        if (!model) {
+            return;
+        }
+
+        if (this->m_sheatheState != 2) {
+            if (model->m_attachParent) {
+                model->DetachFromParent();
+            }
+
+            this->m_rangedWeaponModel->m_drawCallback = NULL;
+            this->m_rangedWeaponModel->Release();
+            this->m_rangedWeaponModel = NULL;
+            return;
+        }
+    }
+
+    this->EquipVisibleItem(item, slot);
+}
+
+// OFFSET: 0x00568E10
+void CGPlayer_C::UpdateInventoryComponent(INVENTORY_SLOTS slot, const VisibleItem_C* oldItem) {
+    const VisibleItem_C* item = slot > INVSLOT_TABARD ? NULL : &this->m_player->m_playerVisibleItems[slot];
+    this->ExpediteDisplayTransition(1);
+
+    if (abs(oldItem->m_itemId) == abs(item->m_itemId) && (oldItem->m_itemId > 0) == (item->m_itemId > 0)) {
+        this->UpdateObjComponentVisualsSlot(item, slot);
+        return;
+    }
+
+    CGTradeSkillInfo::RefreshList(0);
+    CGCharacterInfo::UpdateInventoryAlerts();
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        CGActionBar::UpdateUsable();
+        CGActionBar::UpdateItem(abs(oldItem->m_itemId));
+        CGActionBar::UpdateItem(abs(item->m_itemId));
+
+        switch (slot) {
+            case INVSLOT_MAINHAND:
+                FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_ATTACK, "%s", "player");
+                CGSpellBook::UpdateSpells(0, 0, 0);
+                break;
+
+            case INVSLOT_OFFHAND:
+                FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_ATTACK, "%s", "player");
+                break;
+
+            case INVSLOT_RANGED:
+                FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_RANGED_ATTACK_POWER, "%s", "player");
+                CGSpellBook::UpdateSpells(0, 0, 0);
+                break;
+        }
+    }
+
+    this->UnequipVisibleItem(slot, oldItem);
+    this->ApplyComponentItemsFromEffects();
+
+    if (this->m_sheatheState == 2 && slot == INVSLOT_RANGED) {
+        this->SetSheatheState(2, 0, 0);
+    }
+
+    WOWGUID guid = this->m_obj->m_guid;
+    CGGameUI::UnitModelUpdate(guid, 3);
+}
+
+// OFFSET: 0x00568140/0x1401C6DF0
+void CGPlayer_C::MeleeModeEnter(const WOWGUID& target, int32_t force, int32_t spellId) {
+    if (!CGGameUI::CanPerformAction(1) || this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return;
+    }
+
+    if ((this->m_unit->m_unitFieldFlags & 0x20000) || (this->m_unit->m_unitFieldFlags2 & 0x800000) || !CGGameUI::m_hasControl || (this->m_player->m_playerFlags & 0x1000000)) {
+        return;
+    }
+
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(target, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return;
+    }
+
+    if (!this->CanAttackNow(unit)) {
+        if (this->IsInMelee()) {
+            this->SetCombatMode(true);
+        }
+
+        return;
+    }
+
+    uint16_t overrideSpells = *reinterpret_cast<const uint16_t*>(this->m_player->m_playerFieldBytes2);
+    const OverrideSpellDataRec* overrideRec;
+
+    if (overrideSpells && (overrideRec = g_overrideSpellDataDB.GetRecord(overrideSpells)) != NULL && !(overrideRec->m_flags & 0xA)) {
+        return;
+    }
+
+    if (this->IsVehiclePassengerSeated()) {
+        CGUnit_C* vehicle = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(this->GetTransportGUID()), TYPEMASK_UNIT, __FILE__, __LINE__));
+        const VehicleSeatRec* seat;
+
+        if (!vehicle || (seat = vehicle->GetVehicleSeatRec(this->m_movementData.m_transportSeat)) == NULL || !(seat->m_flags & 0x4000)) {
+            return;
+        }
+    }
+
+    if (spellId) {
+        Spell_C_CancelOtherRangedSpells(spellId);
+    } else {
+        Spell_C_CancelRangedSpells();
+    }
+
+    if (this->m_unit->m_unitFieldBytes1[0]) {
+        this->ChangeStandState(0);
+    }
+
+    CGGameUI::Target(unit->m_obj->m_guid);
+
+    if (!force && Spell_C_IsCastingInterruptedByCombat(this->m_obj->m_guid) && !this->m_combat.m_attacking) {
+        return;
+    }
+
+    if (this->m_stopAttackSent || (!this->m_combat.m_attacking && this->m_combat.m_attackSent == 0)) {
+        CDataStore msg;
+        msg.Put(static_cast<uint32_t>(CMSG_ATTACK_SWING));
+        msg.Put(unit->m_obj->m_guid.m_guid);
+        msg.Finalize();
+        ClientServices::Send2(&msg);
+        this->m_combat.SetAttackSent(unit->m_obj->m_guid);
+    }
+
+    const EmotesRec* emote = g_emotesDB.GetRecord(this->m_unit->m_unitNpcEmotestate);
+
+    if (emote && (emote->m_emoteFlags & 0x40000)) {
+        CGPlayer_C::ClearEmote();
+    }
+
+    const SpellRec* spell;
+
+    if (!spellId || (spell = g_spellDB.GetRecord(spellId)) == NULL || !(spell->m_attributes & 2) || this->m_unit->m_unitFieldBytes2[0] != 2) {
+        this->SetSheatheState(1, 1, 0);
+    }
+
+    Spell_C_SetAutoRangedCombatSpell(0);
+    this->SpellInterrupted(this->m_castCount, this->m_castSpellId);
+    Spell_C_CancelAutoRepeat(1);
+    Spell_C_ClearLastAutoRangedCombatError();
+}
+
+// OFFSET: 0x005690D0
+void CGPlayer_C::DelKnownSpell(int32_t spellId, int32_t silent) {
+    if (spellId > g_spellDB.m_maxID) {
+        SysMsgPrintf(STATUS_WARNING, 2, "NOSPELLIDFOUND|%d", spellId);
+        return;
+    }
+
+    const SpellRec* spell = g_spellDB.GetRecord(spellId);
+
+    if (!spell) {
+        return;
+    }
+
+    const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
+    bool notify = silent == 0;
+
+    if (spell->m_attributes & 0x20) {
+        SkillLineAbilityRec* ability = SpellTableLookupAbility(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], spellId);
+
+        if (ability) {
+            SkillLineRec* skillLine = g_skillLineDB.GetRecord(ability->m_skillLine);
+
+            if (skillLine) {
+                TRADESKILLLINE* line = this->m_tradeSkillLines.Ptr(skillLine->m_id, HASHKEY_NONE());
+
+                if (line) {
+                    uint32_t count = line->m_spells.m_count;
+
+                    for (uint32_t i = count; i; ) {
+                        i--;
+
+                        if (line->m_spells.m_data[i] == spellId) {
+                            if (i < count - 1) {
+                                memcpy(&line->m_spells.m_data[i], &line->m_spells.m_data[i + 1], sizeof(int32_t) * (count - 1 - i));
+                            }
+
+                            line->m_spells.SetCount(count - 1);
+                            CGTradeSkillInfo::RefreshList(1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        if (effect && effect->m_effect == 155) {
+            this->RemoveEquipBypassSkill(spellId);
+        }
+
+        if (notify && !(spell->m_attributes & 0x80) && !IsGuildPerkSpell(spellId)) {
+            CGGameUI::DisplayError(ERR_SPELL_UNLEARNED_S, CGTooltip::GetSpellHyperlinkString(spell->m_id));
+        }
+    }
+
+    CGSpellBook::DelKnownSpell(spellId, 0);
+    CGActionBar::UpdateSpell(spellId);
+
+    if (!silent) {
+        CGClassTrainer::RefreshList();
+    }
+
+    if (spellId == s_dualWieldSpell) {
+        s_dualWieldSpell = 0;
+    }
+
+    if (spellId == CGGameUI::GetCursorSpell()) {
+        CGGameUI::DropCursorSpell();
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        CGQuestLog::UpdateQuestSpell(spellId);
+    }
+
+    this->UpdateAuraEffectMask();
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        this->RefreshSpellCategoryCooldowns(spell);
+    }
+}
+
+// OFFSET: 0x0056D230
+static int32_t IsSoulstone(const CGItem_C* item, void* param) {
+    WOWGUID none = WOWGUID();
+    const ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
+
+    if (!rec) {
+        return 0;
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        const SpellRec* spell = g_spellDB.GetRecord(rec->m_spellID[i]);
+
+        if (!spell || rec->m_spellTrigger[i]) {
+            continue;
+        }
+
+        uint32_t count;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+        for (uint32_t j = 0; j < count; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effect == 94) {
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0056D2F0
+CGItem_C* CGPlayer_C::GetSoulstone() {
+    return this->m_bag.FindItem(IsSoulstone, NULL, 0);
 }
