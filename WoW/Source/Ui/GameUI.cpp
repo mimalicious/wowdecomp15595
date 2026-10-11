@@ -5,6 +5,7 @@
 #include "WoW/Source/UIUtil/CameraManager.h"
 #include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/WoWReport.h"
+#include "WoW/Source/Ui/CGQuestObjectiveCache.h"
 #include "WoW/Source/Ui/SpellActivationOverlay.h"
 #include "WoW/Source/Ui/GlyphInfo.h"
 #include "WoW/Source/Ui/Reforge.h"
@@ -4186,7 +4187,7 @@ void CGGameUI::EnterWorld() {
     CGAchievementInfo::EnterWorld();
     CGReforge::EnterWorld();
     CGResearchFrame::EnterWorld();
-    CGResearchFrame::s_enteredWorld = 1;
+    CGQuestObjectiveCache::s_dirty = 1;
     CGSpellActivationOverlay::EnterWorld();
     CGCUFProfiles::EnterWorld(CGGameUI::m_currentlyReloadingUI);
     CGVoidStorageInfo::EnterWorld();

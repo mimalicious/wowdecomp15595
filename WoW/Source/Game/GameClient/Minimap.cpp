@@ -197,6 +197,13 @@ void MinimapShutdown() {
     s_minimapUpdateFlags = 0;
 }
 
+// OFFSET: 0x004E8560
+void MinimapLoadZoom() {
+    s_outdoorZoom = g_minimapZoomCVar->m_intValue;
+    s_indoorZoom = g_minimapInsideZoomCVar->m_intValue;
+    FrameScript_SignalEvent(SCRIPT_EVENT_MINIMAP_UPDATE_ZOOM, NULL);
+}
+
 // OFFSET: 0x004E8590/0x14012AB20
 void MinimapSetZoom(uint32_t zoom) {
     uint8_t indoors = s_isIndoors;

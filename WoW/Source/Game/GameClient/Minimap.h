@@ -65,6 +65,7 @@ struct POIDIRECTIONDATA {
 };
 
 void MinimapShutdown();
+void MinimapLoadZoom();
 void MinimapSetZoom(uint32_t zoom);
 void MinimapSetForceUpdate();
 int32_t MinimapGetZoom();

@@ -11,6 +11,7 @@
 #include "Engine/Source/ConsoleBase/IConsole.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/Object/QuestCache.h"
+#include "WoW/Source/Ui/CGQuestObjectiveCache.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/MinimapFrame.h"
 #include "WoW/Source/Ui/ReputationInfo.h"
@@ -2662,7 +2663,7 @@ void CGQuestLog::LeaveWorld() {
 
 // OFFSET: 0x00963FC0/0x1406D8E40
 void CGQuestLog::Update(int32_t rebuild) {
-    CGResearchFrame::s_enteredWorld = 1;
+    CGQuestObjectiveCache::s_dirty = 1;
 
     if (!rebuild) {
         Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);

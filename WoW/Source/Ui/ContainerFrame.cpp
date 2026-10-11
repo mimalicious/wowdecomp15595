@@ -18,6 +18,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
+#include "WoW/Source/Ui/CGQuestObjectiveCache.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include "WoW/Source/Ui/CGBankInfo.h"
 #include "WoW/Source/Ui/EquipmentManager.h"
@@ -88,7 +89,7 @@ void CGContainerInfo::SetItemSearch(const char* search) {
 // OFFSET: 0x009BB4B0/0x140746CF0
 void CGContainerInfo::UpdateContents(WOWGUID guid) {
     CGActionBar::UpdateUsable();
-    CGResearchFrame::s_enteredWorld = 1;
+    CGQuestObjectiveCache::s_dirty = 1;
     CGCharacterInfo::AverageItemLevelDirty();
 
     if (guid == ClntObjMgrGetActivePlayer()) {

@@ -59,7 +59,6 @@ class CGResearchFrame {
         /* 0018 */ BLOBPOIDATA m_data;
     };
 
-    static uint8_t s_enteredWorld;
     static int32_t m_itemCount;
     static const ResearchFieldRec* m_fieldRec;
     static const ResearchProjectRec* m_projectRec;
