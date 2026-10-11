@@ -480,7 +480,7 @@ void CGUIBindings::LoadBindings() {
     LoadAccountData(3, CGUIBindings::LoadBindingsCallback, reinterpret_cast<void*>(static_cast<uintptr_t>((s_initRound << 16) | BINDING_SET_CHARACTER)));
 }
 
-// OFFSET: #0x005641C0
+// OFFSET: 0x00927A00
 void CGUIBindings::LoadBindings(BINDING_SET set, const char* data) {
     CGUIBindings* bindings = CGUIBindings::s_bindings;
 

@@ -322,7 +322,7 @@ void PlayDance(const char* name) {
     }
 }
 
-// OFFSET: #0x005761D0
+// OFFSET: 0x009B8360
 bool CGDanceStudio::HasDance(const char* name) {
     return s_knownDances.Ptr(name) != NULL;
 }

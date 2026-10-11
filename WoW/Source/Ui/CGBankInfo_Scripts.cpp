@@ -73,7 +73,7 @@ static int32_t Script_CloseBankFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0057BA30
+// OFFSET: 0x009EE890
 static uint32_t GetBankSlotCost(int32_t slot) {
     BankBagSlotPricesRec* rec = g_bankBagSlotPricesDB.GetRecord(slot);
 

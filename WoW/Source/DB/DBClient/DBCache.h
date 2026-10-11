@@ -693,7 +693,7 @@ void DBCache<T, TKey, THashKey>::RetryItem(TKey key) {
     }
 }
 
-// OFFSET: #0x0067A4C0
+// OFFSET: 0x0049E4A0
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::SetTemporary(TKey key) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);

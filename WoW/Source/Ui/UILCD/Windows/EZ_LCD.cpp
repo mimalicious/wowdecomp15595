@@ -43,7 +43,7 @@ CEzLcd::CEzLcd() {
     }
 }
 
-// OFFSET: #0x00959AE0
+// OFFSET: 0x00B3E850
 CEzLcd::~CEzLcd() {
     for (uint32_t i = 0; i < this->m_monoPages.Count(); i++) {
         if (this->m_monoPages[i]) {
@@ -305,7 +305,7 @@ HRESULT CEzLcd::SetAlpha(void* handle, int32_t alpha) {
     return S_OK;
 }
 
-// OFFSET: #0x00959040
+// OFFSET: 0x00B3DD90
 int32_t CEzLcd::ButtonReleased(int32_t button) {
     switch (button) {
         case 0:

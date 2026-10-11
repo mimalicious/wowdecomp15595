@@ -226,7 +226,7 @@ int32_t CGInputControl::IsIdle() const {
     return !(flags & 0x1030) && !(flags & 0xC0) && (!(flags & 0x2000001) || !(flags & 0x300)) && (!(flags & 0x300) || (flags & 0x2000001)) && !(flags & 0x1E00000);
 }
 
-// OFFSET: #0x005F9890
+// OFFSET: 0x00447B70
 XMLTree* LoadJoystickConfig(XMLNode*& config) {
     config = NULL;
 
@@ -569,7 +569,7 @@ void CGInputControl::VehicleAimChange(uint32_t time, float delta) {
     this->SetPlayerPitch(mover, time, aim + delta);
 }
 
-// OFFSET: #0x005FB510
+// OFFSET: 0x004498C0
 void CGInputControl::OnPitchToAngleStop() {
     this->m_vehicleAimValid = 0;
 

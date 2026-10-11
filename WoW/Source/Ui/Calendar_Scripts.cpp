@@ -319,7 +319,7 @@ static void NameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool
     }
 }
 
-// OFFSET: #0x005B8040
+// OFFSET: 0x009AADC0
 const char* GetSequenceLabel(uint32_t type, uint32_t index, uint32_t length) {
     if (!(type & 0x8) || length <= 1) {
         return "";
@@ -350,7 +350,7 @@ static const char* GetInviteRoleLabel(uint32_t flags) {
     return "";
 }
 
-// OFFSET: #0x005B80B0
+// OFFSET: 0x009AAE30
 int32_t IsSignUpInvite(const CalendarDayEvent* event) {
     return (event->m_type & 0x400) && (event->m_flags & 0x8);
 }

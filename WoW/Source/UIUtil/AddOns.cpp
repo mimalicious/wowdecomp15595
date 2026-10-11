@@ -294,7 +294,7 @@ void UIADDON::LoadURL() {
     ReadURL(path, &this->m_url);
 }
 
-// OFFSET: #0x005F4FF0
+// OFFSET: 0x0045BB60
 uint32_t GetNumAddOns() {
     return s_addOnInfo.Count();
 }

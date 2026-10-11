@@ -1515,7 +1515,7 @@ static int32_t Script_GetChannelRosterInfo(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x004FBC60
+// OFFSET: 0x008E6490
 static int32_t EnableLogging(lua_State* L, int32_t index) {
     if (lua_gettop(L) > 0) {
         s_chatLogging[index] = StringToBOOL(L, 1, 1);

@@ -182,7 +182,7 @@ bool ComSat::Manager::DoesTalkerHaveHeadset(uint64_t talker) {
     return true;
 }
 
-// OFFSET: #0x008873A0
+// OFFSET: [0x00A332C0]
 bool ComSat::Manager::DoesLocalPlayerHaveHeadset(uint8_t localTalker) {
     return true;
 }

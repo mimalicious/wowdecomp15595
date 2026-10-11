@@ -186,7 +186,7 @@ void CLCDConnection::OnDeviceRemoval(uint32_t displayType) {
     }
 }
 
-// OFFSET: #0x0095A4E0
+// OFFSET: 0x00B3F260
 void CLCDConnection::OnNotification(uint32_t notification, uint32_t param1) {
     switch (notification) {
         case LGLCD_NOTIFICATION_DEVICE_ARRIVAL:

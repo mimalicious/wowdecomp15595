@@ -745,7 +745,7 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
     g_chatSpamTokens.SetCount(numSpamTokens);
 }
 
-// OFFSET: #0x007E0EC0
+// OFFSET: 0x004E6620
 bool ValidateStringIsUTF8(const char* string) {
     int32_t chars;
     uint32_t c = sgetu8(reinterpret_cast<const uint8_t*>(string), &chars);

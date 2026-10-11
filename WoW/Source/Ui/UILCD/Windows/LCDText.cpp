@@ -167,7 +167,7 @@ void CLCDText::SetText(const WCHAR* text) {
     this->m_bRecalcExtent = 1;
 }
 
-// OFFSET: #0x00714230
+// OFFSET: [0x005A45C0]
 const WCHAR* CLCDText::GetText() {
     return this->m_szText;
 }
@@ -249,7 +249,7 @@ void CLCDText::SetAlignment(int32_t alignment) {
     this->m_nTextFormat = alignment | format;
 }
 
-// OFFSET: #0x0095C6A0
+// OFFSET: 0x00B41240
 void CLCDText::DrawControlText(CLCDGfxBase& gfx) {
     RECT rect;
     rect.left = 0;

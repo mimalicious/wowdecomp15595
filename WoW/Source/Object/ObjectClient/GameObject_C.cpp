@@ -2282,7 +2282,7 @@ float CGGameObject_C_TypeBase::GetBaseAlpha() const {
     return 1.0f;
 }
 
-// OFFSET: #0x006B1B80
+// OFFSET: [0x00762820]
 void CGGameObject_C_TypeBase::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time) {
 }
 

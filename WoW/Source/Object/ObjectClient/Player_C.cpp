@@ -746,7 +746,7 @@ void CGPlayer_C::UpdateTaxiStatus(CGUnit_C* unit) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D2900
+// OFFSET: 0x00558210
 void CGPlayer_C::TurnOnGuildTabardPurchase() {
     if (this->m_characterComponent) {
         this->m_characterComponent->m_flags |= 0x44;
@@ -918,7 +918,7 @@ bool CGPlayer_C::VehicleAllowsInteraction() const {
     return seat && (seat->m_flags & 0x80000000);
 }
 
-// OFFSET: #0x006CDE50
+// OFFSET: 0x00553A90
 void CGPlayer_C::SetAutoLoot(int32_t autoLoot) {
     this->m_autoLoot = autoLoot != 0;
 
@@ -1199,7 +1199,7 @@ CGVoidStorage_C* CGPlayer_C::GetVoidStorage() {
     return this->m_voidStorage;
 }
 
-// OFFSET: #0x006CF470
+// OFFSET: 0x00554AB0
 void CGPlayer_C::SetPlayedTime(int32_t playedTime) {
     this->m_playedTime = playedTime;
     this->m_playedTimeBase = static_cast<uint32_t>(time(NULL));
@@ -10039,7 +10039,7 @@ void CGPlayer_C::RemoveEquipBypassSkill(int32_t spellId) {
     }
 }
 
-// OFFSET: #0x006CF2A0
+// OFFSET: 0x00554980
 void CGPlayer_C::ExitAutoCombatMode() {
     Spell_C_SetAutoRangedCombatSpell(0);
     EventUnregister(EVENT_ID_IDLE, CGPlayer_C::AutoCombatModeEventHandler);
@@ -12160,7 +12160,7 @@ int32_t __stdcall CGPlayer_C::OnBuySucceeded(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006CDE20
+// OFFSET: 0x00553A60
 void CGPlayer_C::ReceiveResurrectRequest(const char* name) {
     if (name && *name && this->IsDeadOrGhost()) {
         CGGameUI::OpenResurrectRequest(name);
@@ -13074,7 +13074,7 @@ static int32_t DanceTimerCallback(const void* data, uint64_t guid, void* param) 
     return 1;
 }
 
-// OFFSET: #0x006E2E10
+// OFFSET: 0x00567000
 void CGPlayer_C::DanceMoveAnimComplete() {
     PlayerDance* dance = this->m_dance;
 

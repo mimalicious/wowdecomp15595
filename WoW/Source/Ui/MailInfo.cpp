@@ -123,7 +123,7 @@ MailAttachmentInfo* GetFirstAttachment(MailboxMessageInfo* message) {
     return NULL;
 }
 
-// OFFSET: #0x0056D900
+// OFFSET: 0x00466140
 MailboxMessageInfo* CGMailInfo::GetInboxItem(uint32_t index) {
     if (index >= CGMailInfo::m_numInboxItems) {
         return NULL;
@@ -132,7 +132,7 @@ MailboxMessageInfo* CGMailInfo::GetInboxItem(uint32_t index) {
     return CGMailInfo::m_inbox.m_data[index];
 }
 
-// OFFSET: #0x0056D920
+// OFFSET: 0x00466160
 MailAttachmentInfo* GetAttachment(MailboxMessageInfo* message, uint32_t index) {
     if (!message) {
         return NULL;
@@ -1332,7 +1332,7 @@ void CGMailInfo::SetSendItem(uint32_t index, WOWGUID item, WOWGUID container, ui
     CGMailInfo::m_sendItems[index].m_slot = slot;
 }
 
-// OFFSET: #0x0056D320
+// OFFSET: 0x0096D660
 void CGMailInfo::GetSendItem(uint32_t index, WOWGUID& item, WOWGUID& container, uint8_t& slot) {
     if (index < 16) {
         item = CGMailInfo::m_sendItems[index].m_guid;
@@ -1368,7 +1368,7 @@ uint32_t CGMailInfo::GetNumSendItems() {
     return count;
 }
 
-// OFFSET: #0x00753A10
+// OFFSET: 0x005F2000
 int32_t CGMailInfo::IsSendItem(WOWGUID item) {
     if (!item) {
         return 0;
@@ -1507,7 +1507,7 @@ void CGMailInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_SHOW_MAILBOX);
 }
 
-// OFFSET: #0x00571730
+// OFFSET: 0x0096F590
 void CGMailInfo::CloseMail(bool leavingWorld) {
     CGMailInfo::ClearSendMail(false);
 

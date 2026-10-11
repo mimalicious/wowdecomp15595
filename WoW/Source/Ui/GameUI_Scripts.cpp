@@ -742,7 +742,7 @@ static int32_t Script_GetPVPTimer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054C810
+// OFFSET: 0x0093FBD0
 int32_t Script_CanHearthAndResurrectFromArea(lua_State* L) {
     const AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_areaID);
 
@@ -1753,7 +1753,7 @@ static int32_t Script_GetMouseButtonClicked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00517BE0
+// OFFSET: 0x008C8F50
 static int32_t ToggleInteractModelIcon(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -3844,7 +3844,7 @@ static int32_t Script_IsConsumableItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510EF0
+// OFFSET: 0x008C28D0
 static int32_t GetItemSpell(int32_t itemId) {
     CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
 
@@ -5314,7 +5314,7 @@ static int32_t Script_EndBoundTradeable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005259E0
+// OFFSET: 0x008D7270
 static void TargetIfValid(const WOWGUID& guid) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__) || CGPartyInfo::IsMemberOrPet(guid) || CGRaidInfo::IsPlayerOrPetInRaid(guid)) {
         CGGameUI::Target(guid);

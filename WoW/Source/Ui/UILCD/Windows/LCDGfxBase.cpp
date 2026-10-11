@@ -159,7 +159,7 @@ int32_t CLCDGfxBase::GetWidth() {
     return this->m_nWidth;
 }
 
-// OFFSET: #0x008C32F0
+// OFFSET: [0x007B0A80]
 int32_t CLCDGfxBase::GetHeight() {
     return this->m_nHeight;
 }

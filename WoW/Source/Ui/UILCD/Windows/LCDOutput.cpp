@@ -103,7 +103,7 @@ void CLCDOutput::OnLCDButtonUp(int32_t button) {
     }
 }
 
-// OFFSET: #0x00959E30
+// OFFSET: [0x005282E0]
 int32_t CLCDOutput::GetDeviceId() {
     return this->m_hDevice;
 }

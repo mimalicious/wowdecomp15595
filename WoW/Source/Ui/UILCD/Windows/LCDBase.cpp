@@ -145,7 +145,7 @@ void CLCDBase::SetLogicalSize(SIZE& size) {
     this->m_sizeLogical = size;
 }
 
-// OFFSET: #0x009C2590
+// OFFSET: [0x00B40BA0]
 SIZE& CLCDBase::GetLogicalSize() {
     return this->m_sizeLogical;
 }

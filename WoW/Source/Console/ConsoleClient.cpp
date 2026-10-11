@@ -169,7 +169,7 @@ void GenerateNodeString(CONSOLELINE* node) {
     GxuFontCreateString(font, reinterpret_cast<const char*>(node->m_buffer), s_fontHeight, position, 1.0f, s_fontHeight, 0.0f, node->m_fontPointer, GxVJ_Middle, GxHJ_Left, s_baseTextFlags, *reinterpret_cast<const CImVector*>(&s_colorArray[node->m_colorType]), s_charSpacing, 1.0f, 1.0f, 0.0f);
 }
 
-// OFFSET: #0x00763730
+// OFFSET: 0x0060DC10
 static void SetInputString(const char* text) {
     if (s_inputString) {
         GxuFontDestroyString(s_inputString);
@@ -1222,7 +1222,7 @@ static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_MOUSEMOVE, OnMouseMove, NULL, 7.0f);
 }
 
-// OFFSET: #0x007660D0
+// OFFSET: 0x006100A0
 static void UnregisterHandlers() {
     EventUnregister(EVENT_ID_CHAR, OnChar);
     EventUnregister(EVENT_ID_IDLE, OnIdle);

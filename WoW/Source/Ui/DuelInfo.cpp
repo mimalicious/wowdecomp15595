@@ -135,7 +135,7 @@ void CGDuelInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_DUEL_WINNER, Packet_SMSG_DUEL_WINNER, NULL);
 }
 
-// OFFSET: #0x005CF870
+// OFFSET: 0x009F0500
 int32_t CGDuelInfo::ProcessCountdown(const void* data, void* param) {
     char buffer[3000];
     SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("DUEL_COUNTDOWN", -1, GENDER_NOT_APPLICABLE), s_countdown);

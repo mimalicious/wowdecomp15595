@@ -10556,7 +10556,7 @@ float CGUnit_C::GetTrackingTurn() {
     return s_trackingFacing;
 }
 
-// OFFSET: #0x00715D70
+// OFFSET: [0x00507A70]
 bool CGUnit_C::IsBossMob() const {
     if (this->m_creatureCacheEntry) {
         return (this->m_creatureCacheEntry->m_typeFlags[0] >> 2) & 1;

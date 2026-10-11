@@ -773,7 +773,7 @@ void CGChat::RecordChat(const char* text, int32_t type, const char* senderName, 
     }
 }
 
-// OFFSET: #0x004FDFC0
+// OFFSET: 0x008E8730
 ChatChannel* GetChannelByName(const char* name) {
     for (uint32_t i = 0; i < CGChat::s_channels.Count(); i++) {
         if (!SStrCmpUTF8I(CGChat::s_channels.m_data[i].m_name, name, STORM_MAX_STR)) {
@@ -2120,7 +2120,7 @@ int32_t CGChat::GetChannelID(const char* name) {
     return 0;
 }
 
-// OFFSET: #0x004FE020
+// OFFSET: 0x008E87A0
 ChatChannel* CGChat::GetChannelByChatChannelID(uint32_t id) {
     for (uint32_t i = 0; i < CGChat::s_channels.Count(); i++) {
         if (CGChat::s_channels.m_data[i].m_zoneChannelID == id) {
@@ -4169,7 +4169,7 @@ void RebuildDisplayChannelList(int32_t signal) {
     }
 }
 
-// OFFSET: #0x00505D40
+// OFFSET: 0x008F1E00
 void CGChat::OnChannelsUpdated() {
     for (uint32_t i = 0; i < CGChat::s_channels.Count(); i++) {
         ChatChannel* channel = &CGChat::s_channels.m_data[i];
@@ -4411,7 +4411,7 @@ ChatRecord* GetChatRecord(int32_t index) {
     return &CGChat::m_chatHistory[static_cast<int32_t>(CGChat::m_currentChatIndex + index) % 60];
 }
 
-// OFFSET: #0x004FB3C0
+// OFFSET: 0x008E5B70
 void CGChat::AddCombatMessage(const char* text) {
     if (!text) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -4455,7 +4455,7 @@ void CGChat::LogDismissPet(const WOWGUID& guid, const WOWGUID& pet) {
     CGChat::AddChatMessage(text, CHAT_MSG_PET_INFO, NULL);
 }
 
-// OFFSET: #0x004FD260
+// OFFSET: 0x008E79B0
 void ChatWindowInfo::RemoveChannel(const char* name) {
     for (uint32_t i = 0; i < this->m_channels.m_count; i++) {
         if (this->m_channels.m_data[i] && !SStrCmpUTF8I(this->m_channels.m_data[i], name, STORM_MAX_STR)) {
@@ -5223,7 +5223,7 @@ int32_t FormatTime(char* buffer, uint32_t size, int32_t seconds) {
     return SStrPrintf(buffer, size, "%dd %dh %dm %ds", days, hours, minutes, seconds % 60);
 }
 
-// OFFSET: #0x005019D0
+// OFFSET: 0x008EC240
 void ChatWindowInfo::Reset() {
     for (uint32_t i = 0; i < this->m_channels.m_count; i++) {
         if (this->m_channels.m_data[i]) {
@@ -6317,7 +6317,7 @@ int32_t CGChat::OnTitleEarned(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// OFFSET: #0x0050CF20
+// OFFSET: 0x008F99E0
 void CGChat::DisplayParentControlsNotice(UIErrors error) {
     char text[3000];
 

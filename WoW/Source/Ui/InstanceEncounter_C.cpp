@@ -219,7 +219,7 @@ void CGInstanceEncounter_C::DisableObjective(int32_t id) {
     }
 }
 
-// OFFSET: #0x005EDD90
+// OFFSET: [0x007089F0]
 static void OnObjectiveMessage(int32_t type, uint8_t value) {
     if (type == 3) {
         CGInstanceEncounter_C::AddTimer(value);

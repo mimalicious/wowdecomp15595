@@ -24,7 +24,7 @@ GameObjectStats::~GameObjectStats() {
     }
 }
 
-// OFFSET: #0x004FD1E0
+// OFFSET: 0x00554D80
 const char* GameObjectStats::GetName(int32_t index) {
     const char* name = this->m_name[index];
 

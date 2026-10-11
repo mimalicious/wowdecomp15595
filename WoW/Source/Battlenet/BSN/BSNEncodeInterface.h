@@ -230,7 +230,7 @@ const BSN::EncodeContext* BSN::BSNEncodedObject<T, P>::GetContext() const {
     return &this->m_context;
 }
 
-// OFFSET: #0x00532950
+// OFFSET: [0x00904350]
 template <class T, class P>
 void BSN::BSNEncodedObject<T, P>::Destroy() const {
     delete this;

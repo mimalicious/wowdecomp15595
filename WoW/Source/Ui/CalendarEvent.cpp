@@ -273,7 +273,7 @@ void CGCalendarEvent::InviteRemoved(WOWGUID guid) {
     this->m_invites.m_data[index] = invite;
 }
 
-// OFFSET: #0x005F1600
+// OFFSET: 0x00A0B620
 void CGCalendarEvent::UpdateInviteStatus(WOWGUID guid, uint8_t status, uint32_t responseTime) {
     for (uint32_t i = 0; i < this->m_numInvites; i++) {
         if (this->m_invites.m_data[i]->m_guid == guid) {
@@ -289,7 +289,7 @@ void CGCalendarEvent::UpdateInviteStatus(WOWGUID guid, uint8_t status, uint32_t 
     }
 }
 
-// OFFSET: #0x005F1670
+// OFFSET: 0x00A0B690
 void CGCalendarEvent::UpdateInviteNotes(WOWGUID guid, const char* notes) {
     for (uint32_t i = 0; i < this->m_numInvites; i++) {
         if (this->m_invites.m_data[i]->m_guid == guid) {
