@@ -103,7 +103,7 @@ int32_t Packet_SMSG_BARBER_SHOP_RESULT(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: 0x008FF730
+// OFFSET: 0x008FF730/0x1406571E0
 void CGBarberShop::UpdateAlternateForm() {
     if (!CGBarberShop::m_alternateFormFrame) {
         return;
@@ -124,7 +124,7 @@ void CGBarberShop::UpdateAlternateForm() {
     }
 }
 
-// OFFSET: 0x008FF860
+// OFFSET: 0x008FF860/0x1406573A0
 bool CGBarberShop::IsCurrentStyle(int32_t type) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     CCharacterComponent* component = player->m_characterComponent;
@@ -168,7 +168,7 @@ bool CGBarberShop::IsSlotHidden(int32_t slot) {
     return false;
 }
 
-// OFFSET: 0x008FFC00
+// OFFSET: 0x008FFC00/0x1406577F0
 void CGBarberShop::ResetAppearance() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -190,7 +190,7 @@ void CGBarberShop::ResetAppearance() {
     CGBarberShop::UpdateAlternateForm();
 }
 
-// OFFSET: 0x008FFCA0
+// OFFSET: 0x008FFCA0/0x1406578C0
 void CGBarberShop::SetAlternateForm() {
     CGBarberShop::m_alternateFormFrame->SetBarberShopAlternateForm();
     CCharacterComponent* altered = CGBarberShop::m_alternateFormFrame->m_component;
@@ -203,7 +203,7 @@ void CGBarberShop::SetAlternateForm() {
     }
 }
 
-// OFFSET: 0x008FFCF0
+// OFFSET: 0x008FFCF0/0x140657920
 int32_t CGBarberShop::GetTotalCost() {
     if (!CGBarberShop::m_barberShopEnabled) {
         return 0;
@@ -306,7 +306,7 @@ void CGBarberShop::DisableBarberShop() {
     }
 }
 
-// OFFSET: 0x009000F0
+// OFFSET: 0x009000F0/0x140657DD0
 void CGBarberShop::ApplyAppearanceChange() {
     if (!CGBarberShop::m_barberShopEnabled) {
         return;
@@ -351,7 +351,7 @@ void CGBarberShop::ApplyAppearanceChange() {
     ClientServices::SendPacket(&msg);
 }
 
-// OFFSET: 0x00900250
+// OFFSET: 0x00900250/0x140657FE0
 STYLEREC* CGBarberShop::GetStyle(int32_t type, int32_t race, int32_t sex, int32_t data) {
     HASHKEY_NONE key;
     USEABLESTYLE* useable = CGBarberShop::m_useableStyles.Ptr(type, key);
@@ -403,7 +403,7 @@ STYLEREC* CGBarberShop::GetStyle(int32_t type, int32_t race, int32_t sex, int32_
     return NULL;
 }
 
-// OFFSET: 0x00900370
+// OFFSET: 0x00900370/0x140658160
 void CGBarberShop::Reset() {
     if (!CGBarberShop::m_barberShopEnabled) {
         return;
@@ -518,7 +518,7 @@ int32_t Packet_SMSG_ENABLE_BARBER_SHOP(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: 0x009008C0
+// OFFSET: 0x009008C0/0x1406588E0
 void CGBarberShop::SetNextBarberShopStyle(int32_t type, bool backward) {
     if (!CGBarberShop::m_barberShopEnabled) {
         return;
@@ -561,14 +561,14 @@ void CGBarberShop::SetNextBarberShopStyle(int32_t type, bool backward) {
     CGBarberShop::UpdateAlternateForm();
 }
 
-// OFFSET: 0x00900BE0
+// OFFSET: 0x00900BE0/0x140658BC0
 void CGBarberShop::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_ENABLE_BARBER_SHOP, Packet_SMSG_ENABLE_BARBER_SHOP, NULL);
     ClientServices::SetMessageHandler(SMSG_BARBER_SHOP_RESULT, Packet_SMSG_BARBER_SHOP_RESULT, NULL);
     CGBarberShop::m_initialized = 0;
 }
 
-// OFFSET: #0x0052FE90
+// OFFSET: 0x00901310/0x1406595D0
 void CGBarberShop::EnterWorld() {
     if (CGBarberShop::m_initialized) {
         return;
