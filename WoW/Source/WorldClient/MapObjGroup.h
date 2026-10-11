@@ -26,6 +26,7 @@ struct CGxBuf;
 struct CGxPool;
 
 namespace World {
+    struct HitTestDebugItem;
     struct LiquidQueryResult;
 
     struct TriData {
@@ -298,6 +299,7 @@ class CMapObjGroup : public CMapBaseObj {
     CMapObjGroup();
     void AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCount, uint32_t indexCount, CGxBatch*& batch);
     void AllocVB();
+    void GetHitTestDebugTextures(World::HitTestDebugItem* item);
     void Clear(int32_t force);
     uint32_t ComputePassCount(int32_t unified, uint32_t batch) const;
     void Create();

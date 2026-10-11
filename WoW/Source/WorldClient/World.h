@@ -41,6 +41,10 @@ const WMOAreaTableRec* SDBWMOAreaTableLookup(uint32_t wmoId, uint32_t nameSet, u
 
 struct WOWGUID;
 
+namespace Liquid {
+    class CInstance;
+}
+
 namespace World {
     struct HitTestDebug;
     struct MinimapQuad;
@@ -53,47 +57,57 @@ namespace World {
     struct HitTestDebugItem {
         struct TextureInfo {
             /* 0000 */ const char* m_name;
-            /* 0004 */ uint32_t unk_0004;
+            /* 0004 */ uint32_t m_id;
         };
 
         /* 0000 */ const char* m_name;
-        /* 0004 */ uint32_t unk_0004;
+        /* 0004 */ uint32_t m_depth;
         /* 0008 */ C3Vector m_position;
-        /* 0014 */ uint32_t unk_0014[6];
+        /* 0014 */ CAaBox m_portalBox;
         /* 002C */ CAaBox m_box;
         /* 0044 */ C3Vector m_center;
         /* 0050 */ float m_radius;
-        /* 0054 */ uint32_t unk_0054;
-        /* 0058 */ uint32_t unk_0058;
-        /* 005C */ uint32_t unk_005C[5];
-        /* 0070 */ float unk_0070;
-        /* 0074 */ void* unk_0074;
-        /* 0078 */ uint32_t unk_0078;
-        /* 007C */ uint32_t unk_007C;
-        /* 0080 */ void* unk_0080;
-        /* 0084 */ uint32_t unk_0084;
-        /* 0088 */ uint32_t unk_0088;
-        /* 008C */ uint32_t m_flags;
+        /* 0054 */ uint32_t m_batchCount;
+        /* 0058 */ uint32_t m_polyCount;
+        /* 005C */ uint32_t m_extraBatchCount;
+        /* 0060 */ uint32_t m_boneCount;
+        /* 0064 */ uint32_t m_lightCount;
+        /* 0068 */ uint32_t m_currentLightCount;
+        /* 006C */ uint32_t m_attachmentId;
+        /* 0070 */ float m_attachmentScale;
+        /* 0074 */ CM2Model* m_model;
+        /* 0078 */ uint32_t m_combinableBatchCount;
+        /* 007C */ uint32_t m_instanceCountMax;
+        /* 0080 */ const char* m_groupName;
+        /* 0084 */ uint32_t m_groupNum;
+        /* 0088 */ uint32_t m_doodadSet;
+        /* 008C */ uint32_t m_exterior : 1;
+        /* 008C */ uint32_t m_exteriorLit : 1;
         /* 0090 */ TSGrowableArray<TextureInfo> m_textures;
 
         HitTestDebugItem();
     };
 
+    struct HitTestDebugLink {
+        /* 0000 */ const char* m_name;
+        /* 0004 */ const char* m_groupName;
+        /* 0008 */ int32_t m_indexX;
+        /* 000C */ int32_t m_indexY;
+    };
+
     struct HitTestDebug {
         /* 0000 */ uint32_t m_type;
         /* 0004 */ uint32_t m_count;
-        /* 0008 */ void* unk_0008;
+        /* 0008 */ uint32_t m_linkCount;
         /* 000C */ HitTestDebugItem m_items[16];
-        /* 0A0C */ CM2Model* m_models[16];
-        /* 0A4C */ uint32_t unk_0A4C[16];
+        /* 0A0C */ HitTestDebugLink m_links[8];
         /* 0A8C */ CAaBox m_box;
         /* 0AA4 */ C3Vector unk_0AA4;
         /* 0AB0 */ float unk_0AB0;
         /* 0AB4 */ C3Vector unk_0AB4;
         /* 0AC0 */ C3Vector unk_0AC0;
-        /* 0ACC */ float unk_0ACC;
-        /* 0AD0 */ float unk_0AD0;
-        /* 0AD4 */ float unk_0AD4;
+        /* 0ACC */ Liquid::CInstance* m_liquid;
+        /* 0AD0 */ uint64_t m_guid;
 
         HitTestDebug();
     };

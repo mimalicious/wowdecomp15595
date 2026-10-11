@@ -21,9 +21,12 @@ inline World::HitTestDebugItem::HitTestDebugItem() {
     this->m_position.y = 0.0f;
     this->m_position.z = 0.0f;
 
-    for (uint32_t i = 0; i < 6; i++) {
-        this->unk_0014[i] = 0;
-    }
+    this->m_portalBox.b.x = 0.0f;
+    this->m_portalBox.b.y = 0.0f;
+    this->m_portalBox.b.z = 0.0f;
+    this->m_portalBox.t.x = 0.0f;
+    this->m_portalBox.t.y = 0.0f;
+    this->m_portalBox.t.z = 0.0f;
 
     this->m_box.b.x = 0.0f;
     this->m_box.b.y = 0.0f;

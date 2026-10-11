@@ -2603,6 +2603,287 @@ void CWorldMap::VectorIntersectMapObjDefs(TSExplicitList<CMapBaseObjLink, offset
     }
 }
 
+// OFFSET: 0x0076AA90/0x140452830
+static const char* GetBaseName(const char* path) {
+    const char* name = path;
+
+    for (const char* slash = strchr(path, '\\'); slash; slash = strchr(slash + 1, '\\')) {
+        name = slash + 1;
+    }
+
+    return name;
+}
+
+// OFFSET: 0x0076AB00/0x140452870
+void CWorldMap::SetHitTestDebug(World::HitTestDebug* debug, Liquid::CInstance* liquid) {
+    debug->m_count = 0;
+    debug->m_linkCount = 0;
+    debug->m_box.b.x = 0.0f;
+    debug->m_box.b.y = 0.0f;
+    debug->m_box.b.z = 0.0f;
+    debug->m_box.t.x = 0.0f;
+    debug->m_box.t.y = 0.0f;
+    debug->m_box.t.z = 0.0f;
+    debug->unk_0AA4.x = 0.0f;
+    debug->unk_0AA4.y = 0.0f;
+    debug->unk_0AA4.z = 0.0f;
+    debug->unk_0AB0 = 0.0f;
+    debug->unk_0AB4.x = 0.0f;
+    debug->unk_0AC0.x = 0.0f;
+    debug->unk_0AB4.y = 0.0f;
+    debug->unk_0AC0.y = 0.0f;
+    debug->unk_0AB4.z = 0.0f;
+    debug->unk_0AC0.z = 0.0f;
+    debug->m_type = 8;
+    debug->m_liquid = liquid;
+}
+
+// OFFSET: 0x0076AD00/0x140452B30
+static void AddModelHitTestDebug(World::HitTestDebug* debug, uint32_t depth, CM2Model* model) {
+    for (; model; model = model->m_attachNext) {
+        if (!model->IsLoaded() || debug->m_count == 16) {
+            break;
+        }
+
+        World::HitTestDebugItem* item = &debug->m_items[debug->m_count++];
+        item->m_name = GetBaseName(model->m_shared->m_fileName);
+        item->m_depth = depth;
+        item->m_position.x = model->m_worldTransform.d0;
+        item->m_position.y = model->m_worldTransform.d1;
+        item->m_position.z = model->m_worldTransform.d2;
+        item->m_portalBox.b.x = 1.0f;
+        item->m_portalBox.b.y = 1.0f;
+        item->m_portalBox.b.z = 1.0f;
+        item->m_portalBox.t.x = -1.0f;
+        item->m_portalBox.t.y = -1.0f;
+        item->m_portalBox.t.z = -1.0f;
+        item->m_box = model->GetCurrentBoundingBox();
+
+        CAaSphere sphere = model->GetCurrentBoundingSphere();
+        item->m_center = sphere.c;
+        item->m_radius = sphere.r;
+        item->m_batchCount = model->GetNumGeometryBatches();
+        item->m_polyCount = model->GetNumPrimitives();
+        item->m_extraBatchCount = model->GetNumBatches() - item->m_batchCount;
+        item->m_boneCount = (model->m_fFlags & 0x1) ? model->m_shared->m_data->m_bones.m_count : 0;
+
+        if (!(model->m_fFlags & 0x1)) {
+            model->WaitForLoad(NULL);
+        }
+
+        item->m_lightCount = model->m_shared->m_data->m_lights.m_count;
+        item->m_currentLightCount = model->GetCurrentLightCount();
+        item->m_attachmentId = model->m_attachmentId;
+        item->m_attachmentScale = 1.0f;
+
+        if (model->m_attachmentId != 0xFFFFFFFF && model->m_attachParent) {
+            item->m_attachmentScale = model->m_attachParent->GetAttachmentWorldScale(model->m_attachmentId);
+        }
+
+        item->m_model = model;
+
+        if (!(model->m_fFlags & 0x1)) {
+            model->WaitForLoad(NULL);
+        }
+
+        uint32_t textureCount = model->m_shared->m_data->m_textures.m_count;
+        item->m_textures.SetCount(textureCount);
+
+        for (uint32_t i = 0; i < textureCount; i++) {
+            item->m_textures.m_data[i].m_name = model->GetTextureObjectName(i);
+            item->m_textures.m_data[i].m_id = model->GetTextureID(i);
+        }
+
+        item->m_combinableBatchCount = model->GetNumCombinableDoodadBatches();
+        item->m_instanceCountMax = model->GetInstanceCountMax();
+        item->m_exterior = 0;
+        item->m_groupName = NULL;
+        AddModelHitTestDebug(debug, depth + 1, model->m_attachList);
+    }
+}
+
+// OFFSET: 0x0076AF70/0x140452E90
+void CWorldMap::SetHitTestDebug(World::HitTestDebug* debug, CMapBaseObj* object) {
+    debug->m_box.b.x = 0.0f;
+    debug->m_box.b.y = 0.0f;
+    debug->m_box.b.z = 0.0f;
+    debug->m_box.t.x = 0.0f;
+    debug->m_box.t.y = 0.0f;
+    debug->m_box.t.z = 0.0f;
+    debug->unk_0AA4.x = 0.0f;
+    debug->unk_0AA4.y = 0.0f;
+    debug->unk_0AA4.z = 0.0f;
+    debug->unk_0AB0 = 0.0f;
+    debug->unk_0AB4.x = 0.0f;
+    debug->unk_0AC0.x = 0.0f;
+    debug->unk_0AB4.y = 0.0f;
+    debug->unk_0AC0.y = 0.0f;
+    debug->m_type = 0;
+    debug->m_count = 0;
+    debug->m_linkCount = 0;
+    debug->unk_0AB4.z = 0.0f;
+    debug->unk_0AC0.z = 0.0f;
+    debug->m_liquid = NULL;
+
+    if (!object) {
+        return;
+    }
+
+    CM2Model* model = NULL;
+    TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_ownerLink)>* links;
+
+    if (object->m_type & MapBaseObj_Type_DoodadDef) {
+        CMapStaticEntity* entity = static_cast<CMapStaticEntity*>(object);
+        model = entity->m_model;
+        debug->m_type = 1;
+        debug->m_box = entity->m_bbox;
+        links = &entity->m_parentLinkList;
+        debug->unk_0AA4 = entity->m_sphere.c;
+        debug->unk_0AB0 = entity->m_sphere.r;
+
+        CAaBox box;
+        box.b.x = 0.0f;
+        box.b.y = 0.0f;
+        box.b.z = 0.0f;
+        box.t.x = 0.0f;
+        box.t.y = 0.0f;
+        box.t.z = 0.0f;
+        CWorldMath::TransformAABox(model->m_worldTransform, model->GetBoundingBox(), box);
+
+        float x = model->m_worldTransform.d0;
+        float y = model->m_worldTransform.d1;
+        float z = model->m_worldTransform.d2;
+        float halfHeight = (box.t.z - box.b.z) * 0.5f;
+        debug->unk_0AB4.x = x;
+        debug->unk_0AB4.y = y;
+        debug->unk_0AC0.x = x;
+        debug->unk_0AB4.z = z;
+        debug->unk_0AC0.y = y;
+        debug->unk_0AB4.z = halfHeight + debug->unk_0AB4.z;
+        debug->unk_0AC0.z = z;
+        debug->unk_0AC0.z = model->GetBoundingSphere().r + debug->unk_0AC0.z;
+    } else if (object->m_type & MapBaseObj_Type_Entity) {
+        CMapEntity* entity = static_cast<CMapEntity*>(object);
+        model = entity->m_model;
+        debug->m_type = 2;
+        debug->m_box = entity->m_bbox;
+        links = &entity->m_parentLinkList;
+        debug->unk_0AA4 = entity->m_sphere.c;
+        debug->unk_0AB0 = entity->m_sphere.r;
+        debug->unk_0AB4 = entity->m_vec2;
+
+        if (entity->m_entityFlags & 0x1000) {
+            float z = debug->unk_0AB4.z + 4.0f;
+
+            if (entity->m_bbox.t.z + 0.1f <= z) {
+                z = entity->m_bbox.t.z + 0.1f;
+            }
+
+            debug->unk_0AB4.z = z;
+        }
+
+        debug->unk_0AC0 = debug->unk_0AB4;
+        debug->m_guid = entity->m_param64;
+    } else if (object->m_type & MapBaseObj_Type_MapObjDefGroup) {
+        CMapObjDefGroup* defGroup = static_cast<CMapObjDefGroup*>(object);
+        CMapObjDef* mapObjDef = defGroup->m_mapObjDef;
+        CMapObj* mapObj = mapObjDef->m_mapObj;
+        CMapObjGroup* group = mapObj->GetGroup(defGroup->m_groupNum, 0);
+        links = &mapObjDef->m_parentLinkList;
+        debug->m_type = 4;
+
+        if (debug->m_count < 16) {
+            World::HitTestDebugItem* item = &debug->m_items[debug->m_count++];
+            item->m_name = GetBaseName(mapObj->m_name);
+            item->m_depth = 0;
+
+            C3Vector center;
+            center.x = (defGroup->m_bbox.b.x + defGroup->m_bbox.t.x) * 0.5f;
+            center.y = (defGroup->m_bbox.t.y + defGroup->m_bbox.b.y) * 0.5f;
+            center.z = (defGroup->m_bbox.t.z + defGroup->m_bbox.b.z) * 0.5f;
+            item->m_center = center;
+
+            float dx = defGroup->m_bbox.t.x - defGroup->m_bbox.b.x;
+            float dy = defGroup->m_bbox.t.y - defGroup->m_bbox.b.y;
+            float dz = defGroup->m_bbox.t.z - defGroup->m_bbox.b.z;
+            item->m_position = center;
+            item->m_radius = static_cast<float>(sqrt(dx * dx + dy * dy + dz * dz) * 0.5);
+            item->m_portalBox = defGroup->m_portalBox;
+            item->m_box = defGroup->m_bbox;
+            item->m_batchCount = group->m_batchCount;
+            item->m_polyCount = group->m_polyCount;
+            item->m_model = NULL;
+            item->m_extraBatchCount = 0;
+            item->m_boneCount = 0;
+            item->m_lightCount = 0;
+            item->m_currentLightCount = 0;
+            item->m_attachmentId = 0;
+            item->m_combinableBatchCount = 0;
+            item->m_instanceCountMax = 0;
+            item->m_attachmentScale = 1.0f;
+            item->m_groupName = group->m_groupName;
+            item->m_groupNum = defGroup->m_groupNum;
+            item->m_exterior = (group->m_groupFlags >> 3) & 1;
+            item->m_exteriorLit = (group->m_groupFlags & 0x48) != 0;
+            item->m_doodadSet = mapObjDef->m_doodadSet;
+            group->GetHitTestDebugTextures(item);
+        }
+    } else {
+        return;
+    }
+
+    for (CMapBaseObjLink* link = links->Head(); link; link = links->Next(link)) {
+        CMapBaseObj* ref = link->m_ref;
+
+        if (!ref) {
+            continue;
+        }
+
+        if (ref->m_type & 0x4) {
+            ref = static_cast<CMapChunk*>(ref)->m_area;
+        } else if (!(ref->m_type & 0x2)) {
+            if (ref->m_type & MapBaseObj_Type_MapObjDefGroup) {
+                CMapObjDefGroup* defGroup = static_cast<CMapObjDefGroup*>(ref);
+                CMapObj* mapObj = defGroup->m_mapObjDef->m_mapObj;
+                CMapObjGroup* group = mapObj->GetGroup(defGroup->m_groupNum, 0);
+
+                if (debug->m_linkCount < 8) {
+                    World::HitTestDebugLink* entry = &debug->m_links[debug->m_linkCount++];
+                    entry->m_name = GetBaseName(mapObj->m_name);
+
+                    if (group) {
+                        entry->m_groupName = group->m_groupName;
+                        entry->m_indexX = 0;
+                        entry->m_indexY = 0;
+                    } else {
+                        entry->m_groupName = "NOT LOADED";
+                        entry->m_indexX = 0;
+                        entry->m_indexY = 0;
+                    }
+                }
+            }
+
+            continue;
+        }
+
+        if (debug->m_linkCount < 8) {
+            World::HitTestDebugLink* entry = &debug->m_links[debug->m_linkCount++];
+            entry->m_name = "Terrain";
+            entry->m_groupName = NULL;
+            entry->m_indexX = static_cast<CMapArea*>(ref)->m_indexX;
+            entry->m_indexY = static_cast<CMapArea*>(ref)->m_indexY;
+        }
+    }
+
+    if (model) {
+        while (model->m_attachParent) {
+            model = model->m_attachParent;
+        }
+
+        AddModelHitTestDebug(debug, 0, model);
+    }
+}
+
 // OFFSET: 0x00763A90
 bool CWorldMap::VectorIntersectSubChunkList(const C3Vector& start, const C3Vector& end, float& t, uint32_t flags, CMapChunk*& hitChunk, Liquid::CInstance*& hitLiquid) {
     const uint32_t* span = CWorldMap::s_rasterSpans.m_data;

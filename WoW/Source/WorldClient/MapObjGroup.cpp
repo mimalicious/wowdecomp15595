@@ -2621,6 +2621,48 @@ void CMapObjGroup::Clear(int32_t force) {
     this->m_renderFlags &= ~0x4;
 }
 
+// OFFSET: 0x00793D70/0x140485FA0
+void CMapObjGroup::GetHitTestDebugTextures(World::HitTestDebugItem* item) {
+    struct TEXTURENAME : public TSHashObject<TEXTURENAME, HASHKEY_CONSTSTRI> {
+    };
+
+    TSHashTable<TEXTURENAME, HASHKEY_CONSTSTRI> seen;
+    item->m_textures.m_count = 0;
+    item->m_textures.Reserve(3 * this->m_batchCount, 0);
+
+    for (uint32_t i = 0; i < this->m_batchCount; i++) {
+        SMOMaterial* material = &this->m_parent->m_materials[this->m_batches[i].m_materialId];
+        const char* name = this->m_parent->m_textureNames + material->m_texture1;
+
+        if (*name && !seen.Ptr(name)) {
+            seen.New(name, 0, 0);
+            World::HitTestDebugItem::TextureInfo* info = item->m_textures.New();
+            info->m_name = name;
+            info->m_id = 0;
+        }
+
+        name = this->m_parent->m_textureNames + material->m_texture2;
+
+        if (*name && !seen.Ptr(name)) {
+            seen.New(name, 0, 0);
+            World::HitTestDebugItem::TextureInfo* info = item->m_textures.New();
+            info->m_name = name;
+            info->m_id = 0;
+        }
+
+        if (material->m_shader >= 6) {
+            name = this->m_parent->m_textureNames + material->m_texture3;
+
+            if (*name && !seen.Ptr(name)) {
+                seen.New(name, 0, 0);
+                World::HitTestDebugItem::TextureInfo* info = item->m_textures.New();
+                info->m_name = name;
+                info->m_id = 0;
+            }
+        }
+    }
+}
+
 // OFFSET: 0x00793C40
 CMapObjGroup::~CMapObjGroup() {
     this->Clear(1);
