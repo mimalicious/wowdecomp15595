@@ -240,6 +240,7 @@ class UserClientPartyInvite : public JamClientMessage {
 class UserClientPartyInviteResponse : public JamClientMessage {
     public:
     /* 0010 */ bool m_accept;
+    /* 0011 */ uint8_t unk_0011[3];
     /* 0014 */ bool m_hasRolesDesired;
     /* 0018 */ uint32_t m_rolesDesired;
 
@@ -324,12 +325,12 @@ class UserClientInitiateRolePoll : public JamClientMessage {
     ~UserClientInitiateRolePoll();
 };
 
-class UserClientBattlefieldStatus : public JamClientMessage {
+class UserClientRequestBattlefieldStatus : public JamClientMessage {
     public:
     void Put(CDataStore* msg) override;
 
-    UserClientBattlefieldStatus();
-    ~UserClientBattlefieldStatus();
+    UserClientRequestBattlefieldStatus();
+    ~UserClientRequestBattlefieldStatus();
 };
 
 class UserClientGuildAccept : public JamClientMessage {
@@ -438,6 +439,7 @@ class UserClientBattlemasterJoin : public JamClientMessage {
     public:
     /* 0010 */ uint32_t unk_0010;
     /* 0014 */ bool unk_0014;
+    /* 0015 */ uint8_t unk_0015[3];
     /* 0018 */ uint8_t unk_0018[8];
 
     void Put(CDataStore* msg) override;
@@ -957,12 +959,12 @@ class UserClientRequestRatedBgInfo : public JamClientMessage {
     ~UserClientRequestRatedBgInfo();
 };
 
-class UserClientRequestPvpOptionsEnabled : public JamClientMessage {
+class UserClientGetPVPOptionsEnabled : public JamClientMessage {
     public:
     void Put(CDataStore* msg) override;
 
-    UserClientRequestPvpOptionsEnabled();
-    ~UserClientRequestPvpOptionsEnabled();
+    UserClientGetPVPOptionsEnabled();
+    ~UserClientGetPVPOptionsEnabled();
 };
 
 class UserClientLfgLockInfoRequest : public JamClientMessage {
@@ -985,15 +987,15 @@ class UserClientLfgSetBootVote : public JamClientMessage {
     ~UserClientLfgSetBootVote();
 };
 
-class UserClientStartWargame : public JamClientMessage {
+class UserClientStartWarGame : public JamClientMessage {
     public:
     /* 0010 */ uint8_t unk_0010[8];
     /* 0018 */ uint8_t unk_0018[8];
 
     void Put(CDataStore* msg) override;
 
-    UserClientStartWargame();
-    ~UserClientStartWargame();
+    UserClientStartWarGame();
+    ~UserClientStartWarGame();
 };
 
 class UserClientLfgTeleport : public JamClientMessage {
@@ -1087,6 +1089,89 @@ class UserClientGuildAchievementMembers : public JamClientMessage {
 
     UserClientGuildAchievementMembers(uint64_t a1, uint64_t a3, uint32_t a5);
     ~UserClientGuildAchievementMembers();
+};
+
+class UserClientBFMgrQueueInviteResponse : public JamClientMessage {
+    public:
+    /* 0010 */ bool unk_0010;
+    /* 0011 */ uint8_t unk_0011[7];
+    /* 0018 */ uint8_t unk_0018[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBFMgrQueueInviteResponse(uint64_t queueID, bool accept);
+    ~UserClientBFMgrQueueInviteResponse();
+};
+
+class UserClientBFMgrQueueExitRequest : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBFMgrQueueExitRequest(uint64_t queueID);
+    ~UserClientBFMgrQueueExitRequest();
+};
+
+class UserClientBFMgrEntryInviteResponse : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+    /* 0018 */ bool unk_0018;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBFMgrEntryInviteResponse();
+    ~UserClientBFMgrEntryInviteResponse();
+};
+
+class UserClientRequestPvpLogData : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestPvpLogData();
+    ~UserClientRequestPvpLogData();
+};
+
+class UserClientRequestBattlefieldPositions : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestBattlefieldPositions();
+    ~UserClientRequestBattlefieldPositions();
+};
+
+class UserClientBFMgrQueueRequest : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBFMgrQueueRequest(uint64_t queueID);
+    ~UserClientBFMgrQueueRequest();
+};
+
+class UserClientAcceptWargameInvite : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_opposingPartyMemberGUID[8];
+    /* 0018 */ uint8_t m_queueID[8];
+    /* 0020 */ bool m_accept;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientAcceptWargameInvite();
+    ~UserClientAcceptWargameInvite();
+};
+
+class UserClientBattlefieldPort : public JamClientMessage {
+    public:
+    /* 0010 */ JamClientRideTicket m_ticket;
+    /* 0024 */ uint8_t unk_0024[4];
+    /* 0028 */ bool m_accept;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientBattlefieldPort();
+    ~UserClientBattlefieldPort();
 };
 
 #endif

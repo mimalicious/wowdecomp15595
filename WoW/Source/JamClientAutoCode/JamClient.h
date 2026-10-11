@@ -455,6 +455,29 @@ struct JamLfgJoinResultSlot {
     /* 0008 */ TSGrowableArray<JamLfgJoinResultLock> unk_0008;
 };
 
+struct JamClientRideTicket {
+    /* 0000 */ uint8_t m_requesterGuid[8];
+    /* 0008 */ uint32_t m_id;
+    /* 000C */ uint32_t m_type;
+    /* 0010 */ uint32_t m_time;
+
+    JamClientRideTicket();
+    ~JamClientRideTicket();
+    JamClientRideTicket& operator=(const JamClientRideTicket& source);
+};
+
+struct JamClientBattlefieldStatusHeader {
+    /* 0000 */ JamClientRideTicket m_ticket;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint8_t m_queueID[8];
+    /* 0020 */ uint8_t m_rangeMin;
+    /* 0021 */ uint8_t m_rangeMax;
+    /* 0022 */ uint8_t m_teamSize;
+    /* 0024 */ uint32_t m_instanceID;
+    /* 0028 */ bool m_registeredMatch;
+    /* 0029 */ uint8_t unk_0029[7];
+};
+
 struct JamBattlefieldPlayerPosition {
     /* 0000 */ uint8_t unk_0000[8];
     /* 0008 */ float unk_0008;
@@ -1394,6 +1417,7 @@ class ClientWorldServerInfo : public JamClientMessage {
     /* 0014 */ bool m_hasRestrictedMoney;
     /* 0018 */ uint32_t m_restrictedMoney;
     /* 001C */ uint8_t m_isTournamentRealm;
+    /* 001D */ uint8_t unk_001D[3];
     /* 0020 */ bool m_hasRestrictedLevel;
     /* 0024 */ uint32_t m_restrictedLevel;
     /* 0028 */ uint32_t m_difficultyID;
@@ -1595,6 +1619,7 @@ class ClientBattlefieldMgrEntryInvite : public JamClientMessage {
     static bool (*s_handler)(ClientBattlefieldMgrEntryInvite* msg);
 
     /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint8_t unk_0014[4];
     /* 0018 */ uint8_t unk_0018;
     /* 0019 */ uint8_t unk_0019;
     /* 001A */ uint8_t unk_001A;
@@ -1639,30 +1664,7 @@ class ClientBattlefieldStatusQueued : public JamClientMessage {
     /* 0015 */ uint8_t unk_0015;
     /* 0018 */ uint32_t unk_0018;
     /* 001C */ uint8_t unk_001C;
-    /* 0020 */ uint8_t unk_0020;
-    /* 0021 */ uint8_t unk_0021;
-    /* 0022 */ uint8_t unk_0022;
-    /* 0023 */ uint8_t unk_0023;
-    /* 0024 */ uint8_t unk_0024;
-    /* 0025 */ uint8_t unk_0025;
-    /* 0026 */ uint8_t unk_0026;
-    /* 0027 */ uint8_t unk_0027;
-    /* 0028 */ uint32_t unk_0028;
-    /* 002C */ uint32_t unk_002C;
-    /* 0030 */ uint32_t unk_0030;
-    /* 0038 */ uint8_t unk_0038;
-    /* 0039 */ uint8_t unk_0039;
-    /* 003A */ uint8_t unk_003A;
-    /* 003B */ uint8_t unk_003B;
-    /* 003C */ uint8_t unk_003C;
-    /* 003D */ uint8_t unk_003D;
-    /* 003E */ uint8_t unk_003E;
-    /* 003F */ uint8_t unk_003F;
-    /* 0040 */ uint8_t unk_0040;
-    /* 0041 */ uint8_t unk_0041;
-    /* 0042 */ uint8_t unk_0042;
-    /* 0044 */ uint32_t unk_0044;
-    /* 0048 */ uint8_t unk_0048;
+    /* 0020 */ JamClientBattlefieldStatusHeader m_header;
 
     ClientBattlefieldStatusQueued(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatusQueued();
@@ -2072,6 +2074,7 @@ class ClientMissileCancel : public JamClientMessage {
 
     /* 0010 */ uint32_t unk_0010;
     /* 0014 */ uint8_t unk_0014;
+    /* 0015 */ uint8_t unk_0015[3];
     /* 0018 */ uint8_t unk_0018;
     /* 0019 */ uint8_t unk_0019;
     /* 001A */ uint8_t unk_001A;
@@ -2106,6 +2109,7 @@ class ClientFeatureSystemStatus : public JamClientMessage {
     /* 0038 */ bool m_itemRestorationButtonEnabled;
     /* 0039 */ bool m_voiceEnabled;
     /* 003A */ bool m_travelPassEnabled;
+    /* 003B */ uint8_t unk_003B[1];
     /* 003C */ bool m_europaTicketSystemEnabled;
     /* 0040 */ JamThrottleState m_europaTicketThrottle;
 
@@ -2481,18 +2485,7 @@ class ClientBattlefieldStatusNeedconfirmation : public JamClientMessage {
 
     /* 0010 */ uint32_t unk_0010;
     /* 0014 */ uint32_t unk_0014;
-    /* 0018 */ uint8_t unk_0018[8];
-    /* 0020 */ uint32_t unk_0020;
-    /* 0024 */ uint32_t unk_0024;
-    /* 0028 */ uint32_t unk_0028;
-    /* 002C */ uint32_t unk_002C;
-    /* 0030 */ uint8_t unk_0030[8];
-    /* 0038 */ uint8_t unk_0038;
-    /* 0039 */ uint8_t unk_0039;
-    /* 003A */ uint8_t unk_003A;
-    /* 003B */ uint8_t unk_003B;
-    /* 003C */ uint32_t unk_003C;
-    /* 0040 */ bool unk_0040;
+    /* 0018 */ JamClientBattlefieldStatusHeader m_header;
 
     ClientBattlefieldStatusNeedconfirmation(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatusNeedconfirmation();
@@ -2546,6 +2539,7 @@ class ClientSetCurrency : public JamClientMessage {
     /* 0010 */ int32_t m_quantity;
     /* 0014 */ int32_t m_type;
     /* 0018 */ bool m_suppressChatLog;
+    /* 0019 */ uint8_t unk_0019[3];
     /* 001C */ bool m_hasWeeklyQuantity;
     /* 0020 */ int32_t m_weeklyQuantity;
     /* 0024 */ bool m_hasTrackedQuantity;
@@ -2649,6 +2643,7 @@ class ClientGuildSendRankChange : public JamClientMessage {
     static bool (*s_handler)(ClientGuildSendRankChange* msg);
 
     /* 0010 */ uint32_t m_rankID;
+    /* 0014 */ uint8_t unk_0014[4];
     /* 0018 */ uint8_t m_officerGUID[8];
     /* 0020 */ uint8_t m_otherGUID[8];
     /* 0028 */ bool m_promote;
@@ -2894,6 +2889,7 @@ class ClientBattlefieldStatusFailed : public JamClientMessage {
     /* 0016 */ uint8_t unk_0016;
     /* 0017 */ uint8_t unk_0017;
     /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint8_t unk_001C[4];
     /* 0020 */ uint8_t unk_0020;
     /* 0021 */ uint8_t unk_0021;
     /* 0022 */ uint8_t unk_0022;
@@ -2902,17 +2898,7 @@ class ClientBattlefieldStatusFailed : public JamClientMessage {
     /* 0025 */ uint8_t unk_0025;
     /* 0026 */ uint8_t unk_0026;
     /* 0027 */ uint8_t unk_0027;
-    /* 0028 */ uint8_t unk_0028;
-    /* 0029 */ uint8_t unk_0029;
-    /* 002A */ uint8_t unk_002A;
-    /* 002B */ uint8_t unk_002B;
-    /* 002C */ uint8_t unk_002C;
-    /* 002D */ uint8_t unk_002D;
-    /* 002E */ uint8_t unk_002E;
-    /* 002F */ uint8_t unk_002F;
-    /* 0030 */ uint32_t unk_0030;
-    /* 0034 */ uint32_t unk_0034;
-    /* 0038 */ uint32_t unk_0038;
+    /* 0028 */ JamClientRideTicket m_ticket;
 
     ClientBattlefieldStatusFailed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatusFailed();
@@ -2976,19 +2962,7 @@ class ClientBattlefieldStatusActive : public JamClientMessage {
 
     /* 0010 */ uint32_t unk_0010;
     /* 0014 */ uint32_t unk_0014;
-    /* 0018 */ uint8_t unk_0018[8];
-    /* 0020 */ uint32_t unk_0020;
-    /* 0024 */ uint32_t unk_0024;
-    /* 0028 */ uint32_t unk_0028;
-    /* 002C */ uint32_t unk_002C;
-    /* 0030 */ uint8_t unk_0030[8];
-    /* 0038 */ uint8_t unk_0038;
-    /* 0039 */ uint8_t unk_0039;
-    /* 003A */ uint8_t unk_003A;
-    /* 003B */ uint8_t unk_003B;
-    /* 003C */ uint32_t unk_003C;
-    /* 0040 */ bool unk_0040;
-    /* 0041 */ uint8_t unk_0041[7];
+    /* 0018 */ JamClientBattlefieldStatusHeader m_header;
     /* 0048 */ uint32_t unk_0048;
     /* 004C */ uint8_t unk_004C;
     /* 004D */ uint8_t unk_004D[3];
@@ -3072,30 +3046,7 @@ class ClientBattlefieldStatusWaitforgroups : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldStatusWaitforgroups* msg);
 
-    /* 0010 */ uint8_t unk_0010;
-    /* 0011 */ uint8_t unk_0011;
-    /* 0012 */ uint8_t unk_0012;
-    /* 0013 */ uint8_t unk_0013;
-    /* 0014 */ uint8_t unk_0014;
-    /* 0015 */ uint8_t unk_0015;
-    /* 0016 */ uint8_t unk_0016;
-    /* 0017 */ uint8_t unk_0017;
-    /* 0018 */ uint32_t unk_0018;
-    /* 001C */ uint32_t unk_001C;
-    /* 0020 */ uint32_t unk_0020;
-    /* 0028 */ uint8_t unk_0028;
-    /* 0029 */ uint8_t unk_0029;
-    /* 002A */ uint8_t unk_002A;
-    /* 002B */ uint8_t unk_002B;
-    /* 002C */ uint8_t unk_002C;
-    /* 002D */ uint8_t unk_002D;
-    /* 002E */ uint8_t unk_002E;
-    /* 002F */ uint8_t unk_002F;
-    /* 0030 */ uint8_t unk_0030;
-    /* 0031 */ uint8_t unk_0031;
-    /* 0032 */ uint8_t unk_0032;
-    /* 0034 */ uint32_t unk_0034;
-    /* 0038 */ uint8_t unk_0038;
+    /* 0010 */ JamClientBattlefieldStatusHeader m_header;
     /* 0040 */ uint32_t unk_0040;
     /* 0044 */ uint32_t unk_0044;
     /* 0048 */ uint8_t unk_0048;
@@ -3287,6 +3238,7 @@ class ClientGuildMemberUpdateNote : public JamClientMessage {
     static bool (*s_handler)(ClientGuildMemberUpdateNote* msg);
 
     /* 0010 */ bool m_isPublic;
+    /* 0011 */ uint8_t unk_0011[7];
     /* 0018 */ uint8_t m_memberGUID[8];
     /* 0020 */ char m_note[256];
 
@@ -3335,6 +3287,7 @@ class ClientVendorInventory : public JamClientMessage {
 
     /* 0010 */ uint8_t m_reason;
     /* 0014 */ TSGrowableArray<JamVendorItem> m_items;
+    /* 0024 */ uint8_t unk_0024[4];
     /* 0028 */ uint8_t m_vendor[8];
 
     ClientVendorInventory(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
@@ -3358,10 +3311,7 @@ class ClientBattlefieldStatus : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientBattlefieldStatus* msg);
 
-    /* 0010 */ uint8_t unk_0010[8];
-    /* 0018 */ uint32_t unk_0018;
-    /* 001C */ uint32_t unk_001C;
-    /* 0020 */ uint32_t unk_0020;
+    /* 0010 */ JamClientRideTicket m_ticket;
 
     ClientBattlefieldStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldStatus();
@@ -3416,6 +3366,7 @@ class ClientBattlefieldMgrEjected : public JamClientMessage {
     static bool (*s_handler)(ClientBattlefieldMgrEjected* msg);
 
     /* 0010 */ uint8_t unk_0010;
+    /* 0011 */ uint8_t unk_0011[7];
     /* 0018 */ uint8_t unk_0018;
     /* 0019 */ uint8_t unk_0019;
     /* 001A */ uint8_t unk_001A;

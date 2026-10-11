@@ -13,6 +13,10 @@ JamUserClientReorderEntry::JamUserClientReorderEntry(const JamUserClientReorderE
     this->m_newIndex = source.m_newIndex;
 }
 
+// OFFSET: 0x0066BC90/0x1403124F0
+UserClientAcceptWargameInvite::~UserClientAcceptWargameInvite() {
+}
+
 // PROVEN: b446fdc0 IDENTICAL/NONE
 // OFFSET: 0x0066D370
 UserClientEnumCharacters::UserClientEnumCharacters() {
@@ -38,6 +42,10 @@ UserClientPlayerLogin::UserClientPlayerLogin(uint64_t guid) {
 // PROVEN: eabc7c9b IDENTICAL/NONE
 // OFFSET: 0x0066BC20
 UserClientPlayerLogin::~UserClientPlayerLogin() {
+}
+
+// OFFSET: 0x0066DE90/0x140315090
+UserClientAcceptWargameInvite::UserClientAcceptWargameInvite() {
 }
 
 // PROVEN: 54ede3e3 IDENTICAL/NONE
@@ -86,6 +94,80 @@ void UserClientPlayerLogin::Put(CDataStore* msg) {
 
     if (this->m_guid[4]) {
         msg->Put(static_cast<uint8_t>(this->m_guid[4] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066E280
+void UserClientAcceptWargameInvite::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2410));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_accept);
+    bits.WriteBit(this->m_queueID[3] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[3] != 0);
+    bits.WriteBit(this->m_queueID[7] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[2] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[0] != 0);
+    bits.WriteBit(this->m_queueID[1] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[5] != 0);
+    bits.WriteBit(this->m_queueID[6] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[6] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[1] != 0);
+    bits.WriteBit(this->m_queueID[0] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[7] != 0);
+    bits.WriteBit(this->m_opposingPartyMemberGUID[4] != 0);
+    bits.WriteBit(this->m_queueID[5] != 0);
+    bits.WriteBit(this->m_queueID[4] != 0);
+    bits.WriteBit(this->m_queueID[2] != 0);
+    bits.Flush();
+
+    if (this->m_queueID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[2] ^ 1));
+    }
+    if (this->m_queueID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[6] ^ 1));
+    }
+    if (this->m_queueID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[4] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[0] ^ 1));
+    }
+    if (this->m_queueID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[5] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[1] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[6] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[3] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[5] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[2] ^ 1));
+    }
+    if (this->m_queueID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[3] ^ 1));
+    }
+    if (this->m_queueID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[1] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[7] ^ 1));
+    }
+    if (this->m_queueID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[0] ^ 1));
+    }
+    if (this->m_queueID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_queueID[7] ^ 1));
+    }
+    if (this->m_opposingPartyMemberGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_opposingPartyMemberGUID[4] ^ 1));
     }
 }
 
@@ -268,6 +350,10 @@ void UserClientWorldPortResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2411));
 }
 
+// OFFSET: 0x00670B30
+UserClientBattlefieldPort::~UserClientBattlefieldPort() {
+}
+
 // OFFSET: 0x00673680/0x140317DF0
 UserClientUnlearnSpecialization::UserClientUnlearnSpecialization() {
 }
@@ -282,6 +368,10 @@ UserClientVoidStorageQuery::UserClientVoidStorageQuery() {
 
 // OFFSET: 0x006708B0/0x1403185A0
 UserClientVoidStorageQuery::~UserClientVoidStorageQuery() {
+}
+
+// OFFSET: 0x00673DA0
+UserClientBattlefieldPort::UserClientBattlefieldPort() {
 }
 
 // OFFSET: 0x00674250
@@ -482,6 +572,51 @@ void UserClientVoidSwapItem::Put(CDataStore* msg) {
 
     if (this->m_item[7]) {
         msg->Put(static_cast<uint8_t>(this->m_item[7] ^ 1));
+    }
+}
+
+// OFFSET: 0x00675250
+void UserClientBattlefieldPort::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x711A));
+    msg->Put(this->m_ticket.m_time);
+    msg->Put(this->m_ticket.m_id);
+    msg->Put(this->m_ticket.m_type);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[0] != 0);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[1] != 0);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[5] != 0);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[6] != 0);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[7] != 0);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[4] != 0);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[3] != 0);
+    bits.WriteBit(this->m_ticket.m_requesterGuid[2] != 0);
+    bits.WriteBit(this->m_accept);
+    bits.Flush();
+
+    if (this->m_ticket.m_requesterGuid[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[1] ^ 1));
+    }
+    if (this->m_ticket.m_requesterGuid[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[3] ^ 1));
+    }
+    if (this->m_ticket.m_requesterGuid[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[5] ^ 1));
+    }
+    if (this->m_ticket.m_requesterGuid[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[7] ^ 1));
+    }
+    if (this->m_ticket.m_requesterGuid[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[0] ^ 1));
+    }
+    if (this->m_ticket.m_requesterGuid[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[2] ^ 1));
+    }
+    if (this->m_ticket.m_requesterGuid[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[6] ^ 1));
+    }
+    if (this->m_ticket.m_requesterGuid[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[4] ^ 1));
     }
 }
 
@@ -1225,15 +1360,15 @@ void UserClientInitiateRolePoll::Put(CDataStore* msg) {
 }
 
 // OFFSET: 0x0066D720/0x140314800
-UserClientBattlefieldStatus::UserClientBattlefieldStatus() {
+UserClientRequestBattlefieldStatus::UserClientRequestBattlefieldStatus() {
 }
 
 // OFFSET: 0x0066BA30/0x140312220
-UserClientBattlefieldStatus::~UserClientBattlefieldStatus() {
+UserClientRequestBattlefieldStatus::~UserClientRequestBattlefieldStatus() {
 }
 
 // OFFSET: 0x0066BAC0
-void UserClientBattlefieldStatus::Put(CDataStore* msg) {
+void UserClientRequestBattlefieldStatus::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2500));
 }
 
@@ -2577,15 +2712,15 @@ void UserClientRequestRatedBgInfo::Put(CDataStore* msg) {
 }
 
 // OFFSET: 0x0066E120/0x140312380
-UserClientRequestPvpOptionsEnabled::UserClientRequestPvpOptionsEnabled() {
+UserClientGetPVPOptionsEnabled::UserClientGetPVPOptionsEnabled() {
 }
 
 // OFFSET: 0x0066BB40/0x140312300
-UserClientRequestPvpOptionsEnabled::~UserClientRequestPvpOptionsEnabled() {
+UserClientGetPVPOptionsEnabled::~UserClientGetPVPOptionsEnabled() {
 }
 
 // OFFSET: 0x0066BA80
-void UserClientRequestPvpOptionsEnabled::Put(CDataStore* msg) {
+void UserClientGetPVPOptionsEnabled::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x24A1));
 }
 
@@ -2624,15 +2759,15 @@ void UserClientLfgSetBootVote::Put(CDataStore* msg) {
 }
 
 // OFFSET: 0x0066D730/0x140314820
-UserClientStartWargame::UserClientStartWargame() {
+UserClientStartWarGame::UserClientStartWarGame() {
 }
 
 // OFFSET: 0x0066BB00/0x1403122D0
-UserClientStartWargame::~UserClientStartWargame() {
+UserClientStartWarGame::~UserClientStartWarGame() {
 }
 
 // OFFSET: 0x0066D440
-void UserClientStartWargame::Put(CDataStore* msg) {
+void UserClientStartWarGame::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x5A0));
 
     JamBitWriter bits(msg);
@@ -2957,5 +3092,233 @@ void UserClientGuildAchievementMembers::Put(CDataStore* msg) {
     }
     if (this->unk_0010[6]) {
         msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066D340/0x1403143A0
+UserClientBFMgrQueueInviteResponse::UserClientBFMgrQueueInviteResponse(uint64_t queueID, bool accept) {
+    this->unk_0010 = accept;
+    *reinterpret_cast<uint64_t*>(this->unk_0018) = queueID;
+}
+
+// OFFSET: 0x0066BAE0/0x1403122B0
+UserClientBFMgrQueueInviteResponse::~UserClientBFMgrQueueInviteResponse() {
+}
+
+// OFFSET: 0x0066D1C0
+void UserClientBFMgrQueueInviteResponse::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x413));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0018[2] != 0);
+    bits.WriteBit(this->unk_0018[0] != 0);
+    bits.WriteBit(this->unk_0018[4] != 0);
+    bits.WriteBit(this->unk_0018[3] != 0);
+    bits.WriteBit(this->unk_0018[5] != 0);
+    bits.WriteBit(this->unk_0018[7] != 0);
+    bits.WriteBit(this->unk_0010);
+    bits.WriteBit(this->unk_0018[1] != 0);
+    bits.WriteBit(this->unk_0018[6] != 0);
+    bits.Flush();
+
+    if (this->unk_0018[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[1] ^ 1));
+    }
+    if (this->unk_0018[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[3] ^ 1));
+    }
+    if (this->unk_0018[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[2] ^ 1));
+    }
+    if (this->unk_0018[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[4] ^ 1));
+    }
+    if (this->unk_0018[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[6] ^ 1));
+    }
+    if (this->unk_0018[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[7] ^ 1));
+    }
+    if (this->unk_0018[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[0] ^ 1));
+    }
+    if (this->unk_0018[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[5] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066E880
+UserClientBFMgrQueueExitRequest::UserClientBFMgrQueueExitRequest(uint64_t queueID) {
+    *reinterpret_cast<uint64_t*>(this->unk_0010) = queueID;
+}
+
+// OFFSET: 0x0066B980
+UserClientBFMgrQueueExitRequest::~UserClientBFMgrQueueExitRequest() {
+}
+
+// OFFSET: 0x0066D950
+void UserClientBFMgrQueueExitRequest::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2490));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066E4C0/0x1403123C0
+UserClientBFMgrEntryInviteResponse::UserClientBFMgrEntryInviteResponse() {
+}
+
+// OFFSET: 0x0066BA60/0x140312250
+UserClientBFMgrEntryInviteResponse::~UserClientBFMgrEntryInviteResponse() {
+}
+
+// OFFSET: 0x0066E570
+void UserClientBFMgrEntryInviteResponse::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x5A3));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0018);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+}
+
+// OFFSET: 0x006705A0/0x140317F00
+UserClientRequestPvpLogData::UserClientRequestPvpLogData() {
+}
+
+// OFFSET: 0x006706E0/0x1403180B0
+UserClientRequestPvpLogData::~UserClientRequestPvpLogData() {
+}
+
+// OFFSET: 0x00670480
+void UserClientRequestPvpLogData::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7308));
+}
+
+// OFFSET: 0x00670630/0x140317FB0
+UserClientRequestBattlefieldPositions::UserClientRequestBattlefieldPositions() {
+}
+
+// OFFSET: 0x00670390/0x140317BC0
+UserClientRequestBattlefieldPositions::~UserClientRequestBattlefieldPositions() {
+}
+
+// OFFSET: 0x006707B0
+void UserClientRequestBattlefieldPositions::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3902));
+}
+
+// OFFSET: 0x00674960
+UserClientBFMgrQueueRequest::UserClientBFMgrQueueRequest(uint64_t queueID) {
+    *reinterpret_cast<uint64_t*>(this->unk_0010) = queueID;
+}
+
+// OFFSET: 0x00670E80
+UserClientBFMgrQueueRequest::~UserClientBFMgrQueueRequest() {
+}
+
+// OFFSET: 0x00674110
+void UserClientBFMgrQueueRequest::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x710C));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
     }
 }
