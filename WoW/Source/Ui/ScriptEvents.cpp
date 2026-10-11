@@ -201,7 +201,7 @@ WOWGUID Script_GetGUIDFromName(const char* name) {
     return guid;
 }
 
-// OFFSET: #0x0060C1F0
+// OFFSET: 0x00450AD0/0x14005EEF0
 CGUnit_C* Script_GetUnitFromName(const char* token) {
     WOWGUID guid;
 

@@ -50,7 +50,7 @@ TSHashTable<ACHIEVEMENT, HASHKEY_NONE> s_achievements;
 
 // STATIC: #0x00C1F454
 int32_t CGAchievementInfo::m_showAchievementUI;
-// STATIC: #0x00C1F458
+// STATIC: 0x00F43AF0
 WOWGUID CGAchievementInfo::m_inspect;
 
 

@@ -67,6 +67,17 @@ const char* GetRoleTokenFromFlags(uint32_t flags) {
     return "NONE";
 }
 
+// OFFSET: 0x00A30470/0x1407DA390
+uint32_t GetRoleFlagFromToken(const char* token) {
+    for (uint32_t i = 0; i < 3; i++) {
+        if (!_stricmp(token, s_roleTokens[i])) {
+            return 2 << i;
+        }
+    }
+
+    return 0;
+}
+
 // OFFSET: #0x00555920
 void CGLookingForGroup::RequestLFGStatus() {
     CDataStore msg;

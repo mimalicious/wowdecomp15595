@@ -953,6 +953,9 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsInMyParty(const CGUnit_C* unit) const;
     static uint8_t GetThreatSituation(const WOWGUID& guid);
     bool CalculateThreat(const WOWGUID& guid, uint8_t* status, uint8_t* rawPercent, float* percent, int32_t* threat);
+    int32_t GetHighestThreatExcluding(const WOWGUID& guid) const;
+    int32_t GetIncomingHealsFrom(const WOWGUID& healer);
+    int32_t GetIncomingHeals();
     UnitThreat* CreateThreatEntry(const WOWGUID& guid);
     void UpdateThreat(CDataStore* msg, bool highest);
     bool UpdateThreatEntry(UnitThreat* entry, int32_t highestThreat, bool activePlayer);

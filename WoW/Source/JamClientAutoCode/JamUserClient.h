@@ -292,4 +292,25 @@ class PlayerRequestResearchHistory : public JamClientMessage {
     ~PlayerRequestResearchHistory();
 };
 
+class UserClientSetRole : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_targetGUID[8];
+    /* 0018 */ uint32_t m_role;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSetRole();
+    ~UserClientSetRole();
+};
+
+class UserClientInitiateRolePoll : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientInitiateRolePoll();
+    ~UserClientInitiateRolePoll();
+};
+
 #endif

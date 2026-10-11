@@ -1092,3 +1092,73 @@ PlayerRequestResearchHistory::~PlayerRequestResearchHistory() {
 void PlayerRequestResearchHistory::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3306));
 }
+
+// OFFSET: 0x0066E710/0x140312490
+UserClientSetRole::UserClientSetRole() {
+}
+
+// OFFSET: 0x0066BA40/0x140312230
+UserClientSetRole::~UserClientSetRole() {
+}
+
+// OFFSET: 0x0066E730
+void UserClientSetRole::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x25B1));
+    msg->Put(this->m_role);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_targetGUID[2] != 0);
+    bits.WriteBit(this->m_targetGUID[6] != 0);
+    bits.WriteBit(this->m_targetGUID[3] != 0);
+    bits.WriteBit(this->m_targetGUID[7] != 0);
+    bits.WriteBit(this->m_targetGUID[5] != 0);
+    bits.WriteBit(this->m_targetGUID[1] != 0);
+    bits.WriteBit(this->m_targetGUID[0] != 0);
+    bits.WriteBit(this->m_targetGUID[4] != 0);
+    bits.Flush();
+
+    if (this->m_targetGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[6] ^ 1));
+    }
+
+    if (this->m_targetGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[4] ^ 1));
+    }
+
+    if (this->m_targetGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[1] ^ 1));
+    }
+
+    if (this->m_targetGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[3] ^ 1));
+    }
+
+    if (this->m_targetGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[0] ^ 1));
+    }
+
+    if (this->m_targetGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[5] ^ 1));
+    }
+
+    if (this->m_targetGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[2] ^ 1));
+    }
+
+    if (this->m_targetGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[7] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066DB00/0x140314C90
+UserClientInitiateRolePoll::UserClientInitiateRolePoll() {
+}
+
+// OFFSET: 0x0066BAF0/0x1403122C0
+UserClientInitiateRolePoll::~UserClientInitiateRolePoll() {
+}
+
+// OFFSET: 0x0066BC40
+void UserClientInitiateRolePoll::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x430));
+}

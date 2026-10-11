@@ -8,6 +8,17 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Game/GameTime.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
+#include <cstring>
+#include "Engine/Source/Event/FrameTime.h"
+#include "WoW/Source/WowServices/Login.h"
+#include "WoW/Source/Game/GameClient/PhaseShift_C.h"
+#include "WoW/Common/ThrottleObject.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Source/Ui/SharedScripts.h"
+#include "WoW/Source/Ui/LFGInfo.h"
+#include "WoW/Source/Ui/AchievementInfo.h"
+#include "WoW/Source/DB/Rec/FileDataRec.h"
+#include "WoW/Source/DB/Rec/UnitPowerBarRec.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
@@ -61,7 +72,6 @@
 #include "WoW/Source/DB/Rec/VehicleUIIndSeatRec.h"
 #include "WoW/Source/WowServices/WDataStore.h"
 
-int32_t Script_GetAccountExpansionLevel(lua_State* L);
 int32_t Script_UnitIsPartyLeader(lua_State* L);
 int32_t Script_UnitInParty(lua_State* L);
 int32_t Script_UnitIsDND(lua_State* L);
@@ -3233,24 +3243,6 @@ static int32_t Script_GetArmorPenetration(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00612980
-static int32_t Script_GetUnitHealthRegenRateFromSpirit(lua_State* L) {
-    if (!lua_isstring(L, 1)) {
-        luaL_error(L, "Usage: GetUnitHealthRegenRateFromSpirit(\"unit\")");
-        return 0;
-    }
-
-    CGUnit_C* unit = Script_GetUnitFromName(lua_tolstring(L, 1, NULL));
-
-    if (unit && (unit->IsActivePlayer() || unit->m_unit->m_unitFieldPetnumber)) {
-        lua_pushnumber(L, unit->GetHealthRegenRateFromSpirit());
-    } else {
-        lua_pushnumber(L, 0.0);
-    }
-
-    return 1;
-}
-
 // OFFSET: 0x0044C140/0x140059780
 static int32_t PushItemStatsTable(lua_State* L, const CGItemStatsSummary* summary) {
     float dps = summary->m_dps;
@@ -4147,7 +4139,807 @@ static int32_t Script_UnitSwitchToVehicleSeat(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00AD2184
+// OFFSET: 0x0044BCD0/0x1400592F0
+static int32_t Script_GetSessionTime(lua_State* L) {
+    lua_pushnumber(L, FrameTime::GetSessionTimeMs() * 0.001);
+    return 1;
+}
+
+// OFFSET: 0x0044BE30/0x140059430
+static int32_t Script_ResistancePercent(lua_State* L) {
+    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: ResistancePercent(resistance, casterLevel)");
+    }
+
+    float resistance = lua_tonumber(L, 1);
+    int32_t level = lua_tointeger(L, 2);
+    float total;
+
+    if (level < 20) {
+        level = 20;
+        total = static_cast<float>(level) * 2.5f + resistance;
+    } else if (level <= 60) {
+        total = static_cast<float>(level) * 2.5f + resistance;
+    } else {
+        total = static_cast<float>(level * level) + resistance - static_cast<float>(level) * 127.5f + 4200.0f;
+    }
+
+    if (total != 0.0f) {
+        resistance = resistance / total;
+    }
+
+    if (resistance > 0.75f) {
+        resistance = 0.75f;
+    }
+
+    lua_pushnumber(L, resistance * 100.0f);
+    return 1;
+}
+
+// OFFSET: 0x0044C3F0/0x140059AE0
+static int32_t Script_GetMaxPlayerLevel(lua_State* L) {
+    lua_pushnumber(L, 85.0);
+    return 1;
+}
+
+// OFFSET: 0x0044E670/0x14005C8B0
+static int32_t PushPowerBarInfo(lua_State* L, int32_t barID) {
+    const UnitPowerBarRec* bar = g_unitPowerBarDB.GetRecord(barID);
+
+    if (!bar) {
+        return 0;
+    }
+
+    lua_pushnumber(L, bar->m_barType);
+    lua_pushnumber(L, bar->m_minPower);
+    lua_pushnumber(L, bar->unk_0064);
+    lua_pushnumber(L, bar->unk_0068);
+    lua_pushboolean(L, bar->m_flags & 2);
+    lua_pushboolean(L, bar->m_flags & 4);
+    lua_pushboolean(L, bar->m_flags & 8);
+    lua_pushboolean(L, bar->m_flags & 0x20);
+    lua_pushboolean(L, bar->m_flags & 0x40);
+    lua_pushstring(L, bar->unk_0054);
+    lua_pushstring(L, bar->unk_0060);
+    lua_pushstring(L, bar->m_costString);
+    return 12;
+}
+
+// OFFSET: 0x0044E740/0x14005CA00
+static int32_t Script_GetAlternatePowerInfoByID(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetAlternatePowerInfoByID(id)");
+    }
+
+    return PushPowerBarInfo(L, lua_tointeger(L, 1));
+}
+
+// OFFSET: 0x0044E780/0x14005CA50
+static int32_t Script_SetAchievementComparisonPortrait(lua_State* L) {
+    CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
+    int32_t failed = 1;
+
+    uint32_t inspectHigh = static_cast<uint32_t>(CGAchievementInfo::m_inspect.m_guid >> 32);
+
+    if (!(inspectHigh & 0xF0000000) && ((inspectHigh & 0xF07FFFFF) | static_cast<uint32_t>(CGAchievementInfo::m_inspect.m_guid))) {
+        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGAchievementInfo::m_inspect, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+        if (unit) {
+            SetPortraitTexture(texture, unit);
+            failed = 0;
+        } else {
+            NameCache* name = g_nameDBCache.GetRecord(CGAchievementInfo::m_inspect.m_guid, CGAchievementInfo::m_inspect, PortraitQueryCallback, NULL, false);
+
+            if (name) {
+                SetPortraitTexture(texture, name->m_race, name->m_sex, name->m_guid);
+                failed = 0;
+            } else {
+                texture->SetTexture("", 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
+            }
+        }
+    } else {
+        texture->SetTexture("", 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
+    }
+
+    lua_pushboolean(L, failed == 0);
+    return 1;
+}
+
+// OFFSET: 0x0044EA30/0x14005CD50
+static int32_t Script_InitiateRolePoll(lua_State* L) {
+    static ThrottleObject s_throttle(2, 10);
+
+    if (!s_throttle.IncrementAndCheck()) {
+        return 0;
+    }
+
+    WOWGUID player = ClntObjMgrGetActivePlayer();
+
+    if (!CGPartyInfo::NumMembers() && !CGRaidInfo::m_numMembers) {
+        return 0;
+    }
+
+    if (!CGPartyInfo::m_leader && !CGRaidInfo::IsPlayerRaidOfficer(player)) {
+        return 0;
+    }
+
+    UserClientInitiateRolePoll msg;
+    ClientServices::Send(&msg);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+// OFFSET: 0x0044EAF0/0x14005CE20
+static int32_t Script_LoadURLIndex(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: LoadURLIndex(index)");
+    }
+
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1));
+    static ThrottleObject s_throttle(3, 5);
+
+    if (!s_throttle.IncrementAndCheck()) {
+        return 0;
+    }
+
+    char url[1024];
+    memset(url, 0, sizeof(url));
+
+    if (index == 1) {
+        Login* login = ClientServices::LoginConnection();
+        const char* account = login ? login->GetAccountName() : ClientServices::GetAccountName();
+        const char* format = GetVisitableURL(1);
+        WOWGUID player = ClntObjMgrGetActivePlayer();
+        SStrPrintf(url, sizeof(url), format, account, CGGameUI::s_cfgRealmRecID, static_cast<uint32_t>(player.m_guid >> 32) & 0xF07FFFFF, static_cast<uint32_t>(player.m_guid));
+    } else if (index == 3) {
+        SStrPrintf(url, sizeof(url), GetVisitableURL(3));
+    } else {
+        FormatVisitableURL(index, url, sizeof(url));
+    }
+
+    if (url[0]) {
+        ClientServices::LaunchURL(url);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x004522F0/0x140060CD0
+static int32_t Script_UnitIsQuestBoss(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitIsQuestBoss(\"unit\")");
+    }
+
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
+    CreatureStats_C* stats;
+
+    if (unit && (stats = unit->m_creatureCacheEntry) != NULL && !unit->m_unit->m_unitFieldPetnumber && static_cast<int32_t>(stats->m_typeFlags[0]) < 0) {
+        lua_pushboolean(L, 1);
+        return 1;
+    }
+
+    lua_pushboolean(L, 0);
+    return 1;
+}
+
+// OFFSET: 0x00452A50/0x1400614E0
+static int32_t Script_IsDualWielding(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    CGBag_C* bag;
+    CGItem_C* item;
+
+    if (player && (bag = player->GetBag()) != NULL && (item = bag->GetItemPointer(16)) != NULL && item->GetClassID() == 2 && CGPlayer_C::CanDualWield()) {
+        lua_pushboolean(L, 1);
+        return 1;
+    }
+
+    lua_pushboolean(L, 0);
+    return 1;
+}
+
+// OFFSET: 0x004530B0/0x140061C40
+static int32_t Script_GetMeleeHaste(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        lua_pushnumber(L, 0.0);
+        return 1;
+    }
+
+    float haste = player->m_player->m_playerFieldModHaste;
+
+    if (haste != 0.0f) {
+        haste = 1.0f / haste * 100.0f - 100.0f;
+    }
+
+    lua_pushnumber(L, haste);
+    return 1;
+}
+
+// OFFSET: 0x00453150/0x140061CE0
+static int32_t Script_GetRangedHaste(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        lua_pushnumber(L, 0.0);
+        return 1;
+    }
+
+    float haste = player->m_player->m_playerFieldModRangedHaste;
+
+    if (haste != 0.0f) {
+        haste = 1.0f / haste * 100.0f - 100.0f;
+    }
+
+    lua_pushnumber(L, haste);
+    return 1;
+}
+
+// OFFSET: 0x004531F0/0x140061D80
+static int32_t Script_GetPetMeleeHaste(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        lua_pushnumber(L, 0.0);
+        return 1;
+    }
+
+    float haste = player->m_player->m_playerFieldModPetHaste;
+
+    if (haste != 0.0f) {
+        haste = 1.0f / haste * 100.0f - 100.0f;
+    }
+
+    lua_pushnumber(L, haste);
+    return 1;
+}
+
+// OFFSET: 0x00453290/0x140061E20
+static int32_t Script_GetOverrideSpellPowerByAP(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || !player->HasAuraEffect(366)) {
+        return 0;
+    }
+
+    lua_pushnumber(L, player->m_player->m_playerFieldOverrideSpellPowerByApPct * 0.01f);
+    return 1;
+}
+
+// OFFSET: 0x004545A0/0x140063430
+static int32_t Script_UnitInPhase(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitInPhase(\"unit\")");
+    }
+
+    WOWGUID guid = WOWGUID();
+    Script_GetGUIDFromToken(lua_tostring(L, 1), guid, false);
+    WOWGUID member = guid;
+    PartyMemberState* state;
+
+    if (ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__) || ((state = CGGameUI::GetPartyMemberState(member)) != NULL && PhaseShift_C_HasSharedPhase(&state->m_phaseShift))) {
+        lua_pushnumber(L, 1.0);
+        return 1;
+    }
+
+    lua_pushnil(L);
+    return 1;
+}
+
+// OFFSET: 0x004555B0/0x140064850
+static int32_t Script_UnitSpellHaste(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitSpellHaste(\"unit\")");
+    }
+
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
+    float haste;
+
+    if (unit && (unit->m_obj->m_type & TYPEMASK_UNIT)) {
+        float value = unit->m_unit->m_unitModCastHaste;
+        haste = value;
+
+        if (value != 0.0f) {
+            haste = 1.0f / value * 100.0f - 100.0f;
+        }
+    } else {
+        haste = 0.0f;
+    }
+
+    lua_pushnumber(L, haste);
+    return 1;
+}
+
+// OFFSET: 0x00456CA0/0x140066540
+static int32_t Script_IsSubmerged(lua_State* L) {
+    CGUnit_C* unit;
+
+    if (lua_isstring(L, 1)) {
+        unit = Script_GetUnitFromName(lua_tostring(L, 1));
+    } else {
+        unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    }
+
+    if (unit && (unit->m_clientFlags & 0x200000)) {
+        lua_pushnumber(L, 1.0);
+        return 1;
+    }
+
+    lua_pushnil(L);
+    return 1;
+}
+
+// OFFSET: 0x00457550/0x140067010
+static int32_t Script_GetMastery(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        lua_pushnumber(L, player->m_player->m_playerMastery);
+    } else {
+        lua_pushnumber(L, 0.0);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x004580F0/0x140067D50
+static int32_t Script_UnitHasVehiclePlayerFrameUI(lua_State* L) {
+    VehicleSeatRec* seat = GetVehicleSeatRecAsPassengerFromLua(L);
+
+    if (seat) {
+        lua_pushboolean(L, seat->m_flagsB >= 0);
+    } else {
+        lua_pushboolean(L, 0);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00458660/0x1400683A0
+static int32_t Script_UnitThreatPercentageOfLead(lua_State* L) {
+    WOWGUID unitGUID;
+    WOWGUID mobGUID;
+
+    if (!Script_GetGUIDFromToken(lua_tostring(L, 1), unitGUID, false) || !Script_GetGUIDFromToken(lua_tostring(L, 2), mobGUID, false)) {
+        luaL_error(L, "Usage: UnitThreatLeadPercentage(\"unit\" [, \"mob\"])");
+    }
+
+    CGUnit_C* mob = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(mobGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!mob) {
+        return 0;
+    }
+
+    uint8_t status;
+    uint8_t rawPercent;
+    float percent;
+    int32_t threat;
+    mob->CalculateThreat(unitGUID, &status, &rawPercent, &percent, &threat);
+    int32_t lead = mob->GetHighestThreatExcluding(unitGUID);
+
+    if (lead) {
+        lua_pushnumber(L, threat * 100.0 / lead);
+        return 1;
+    }
+
+    lua_pushnumber(L, 0.0);
+    return 0;
+}
+
+// OFFSET: 0x00458C60/0x140068B20
+static int32_t Script_UnitGetGuildXP(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitGetGuildXP(\"unit\")");
+    }
+
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
+
+    if (!unit || !(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
+        lua_pushboolean(L, 0);
+        return 7;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(unit);
+    lua_pushnumber(L, static_cast<double>(player->GetGuildXP()));
+    lua_pushnumber(L, static_cast<double>(player->GetGuildRemainingXP()));
+    lua_pushnumber(L, static_cast<double>(player->GetGuildDailyXP()));
+    lua_pushnumber(L, static_cast<double>(player->GetGuildMaxDailyXP()));
+    lua_pushnumber(L, static_cast<double>(player->GetGuildPlayerWeeklyXP()));
+    lua_pushnumber(L, static_cast<double>(player->GetGuildPlayerTotalXP()));
+    lua_pushboolean(L, player->m_player->m_playerGuildlevel >= 20);
+    return 7;
+}
+
+// OFFSET: 0x00458DF0/0x140068CF0
+static int32_t Script_UnitGetGuildLevel(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitGetGuildLevel(\"unit\")");
+    }
+
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
+    double level;
+
+    if (unit && (unit->m_obj->m_type & TYPEMASK_PLAYER)) {
+        level = static_cast<int32_t>(static_cast<CGPlayer_C*>(unit)->m_player->m_playerGuildlevel);
+    } else {
+        level = 0.0;
+    }
+
+    lua_pushnumber(L, level);
+    return 1;
+}
+
+// OFFSET: 0x00458E70/0x140068DB0
+static int32_t Script_UnitGetIncomingHeals(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitGetIncomingHeals(\"unit\"[, \"healer\"]");
+    }
+
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
+    CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!unit || !player || !player->IsFriendly(unit)) {
+        return 0;
+    }
+
+    int32_t heals;
+
+    if (lua_isstring(L, 2)) {
+        WOWGUID healer = Script_GetGUIDFromName(lua_tostring(L, 2));
+        heals = unit->GetIncomingHealsFrom(healer);
+    } else {
+        heals = unit->GetIncomingHeals();
+    }
+
+    lua_pushnumber(L, heals);
+    return 1;
+}
+
+// OFFSET: 0x00458F50/0x140068F00
+static int32_t Script_UnitSetRole(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitSetRole(\"unit\", \"role\"");
+    }
+
+    uint32_t role = 0;
+    WOWGUID guid = WOWGUID();
+    Script_GetGUIDFromToken(lua_tostring(L, 1), guid, false);
+
+    if (!guid) {
+        return 0;
+    }
+
+    if (lua_isstring(L, 2)) {
+        role = GetRoleFlagFromToken(lua_tostring(L, 2));
+    }
+
+    WOWGUID player = ClntObjMgrGetActivePlayer();
+    bool officer = CGPartyInfo::m_leader == player || CGRaidInfo::IsPlayerRaidOfficer(player);
+
+    if ((!CGPartyInfo::NumMembers() && !CGRaidInfo::m_numMembers) || (guid != player && !officer)) {
+        return 0;
+    }
+
+    static ThrottleObject s_throttle(2, 10);
+
+    if (officer) {
+        s_throttle.m_limit = 45;
+        s_throttle.m_period = 60;
+    } else {
+        s_throttle.m_limit = 2;
+        s_throttle.m_period = 10;
+    }
+
+    if (!s_throttle.IncrementAndCheck()) {
+        return 0;
+    }
+
+    UserClientSetRole msg;
+    memcpy(msg.m_targetGUID, &guid, sizeof(msg.m_targetGUID));
+    msg.m_role = role;
+    ClientServices::Send(&msg);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+// OFFSET: 0x004590E0/0x1400690B0
+static int32_t Script_GetHitModifier(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    lua_pushnumber(L, player->m_player->m_playerFieldUiHitModifier);
+    return 1;
+}
+
+// OFFSET: 0x00459130/0x140069110
+static int32_t Script_GetSpellHitModifier(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    lua_pushnumber(L, player->m_player->m_playerFieldUiSpellHitModifier);
+    return 1;
+}
+
+// OFFSET: 0x00459180/0x140069170
+static int32_t Script_GetEclipseDirection(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    if (player->HasAura(67483, WOWGUID())) {
+        lua_pushstring(L, "sun");
+    } else if (player->HasAura(67484, WOWGUID())) {
+        lua_pushstring(L, "moon");
+    } else {
+        lua_pushstring(L, "none");
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00459220/0x140069210
+static int32_t Script_UnitHPPerStamina(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitHPPerStamina(\"unit\")");
+    }
+
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
+
+    if (!unit) {
+        return 0;
+    }
+
+    if (unit->m_obj->m_type & TYPEMASK_PLAYER) {
+        lua_pushnumber(L, GameFormulaEvaluateTable(9, unit->m_unit->m_unitFieldLevel - 1, 0));
+    } else {
+        lua_pushnumber(L, 10.0);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00459950/0x1400699D0
+static int32_t GetUnitPowerBarID(const char* token, int32_t timerIndex) {
+    WOWGUID guid = WOWGUID();
+    Script_GetGUIDFromToken(token, guid, false);
+
+    if (!guid) {
+        return 0;
+    }
+
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return 0;
+    }
+
+    if (timerIndex < 0) {
+        return unit->m_powerBarID;
+    }
+
+    if (!unit->HasAuraEffect(369)) {
+        return 0;
+    }
+
+    int32_t index = 0;
+
+    for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
+        AuraData* aura = unit->GetAura(i);
+        const SpellRec* spell = g_spellDB.GetRecord(aura->m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t count;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+        for (uint32_t j = 0; j < count; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 369 && (aura->m_flags & (1 << j))) {
+                if (index == timerIndex) {
+                    return effects->m_data[j]->m_effectMiscValue;
+                }
+
+                index++;
+            }
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x00459AB0/0x140069B70
+static int32_t Script_UnitAlternatePowerInfo(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitAlternatePowerInfo(\"unit\")");
+    }
+
+    return PushPowerBarInfo(L, GetUnitPowerBarID(lua_tostring(L, 1), -1));
+}
+
+// OFFSET: 0x00459B00/0x140069C10
+static int32_t Script_UnitAlternatePowerCounterInfo(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: UnitAlternatePowerInfo(\"unit\")");
+    }
+
+    const UnitPowerBarRec* bar = g_unitPowerBarDB.GetRecord(GetUnitPowerBarID(lua_tostring(L, 1), -1));
+
+    if (!bar) {
+        return 0;
+    }
+
+    lua_pushboolean(L, bar->m_flags & 0x80);
+    lua_pushboolean(L, bar->m_flags & 0x100);
+    return 2;
+}
+
+// OFFSET: 0x00459BA0/0x140069D00
+static int32_t Script_UnitAlternatePowerTextureInfo(lua_State* L) {
+    if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: UnitAlternatePowerTextureInfo(\"unit\", textureIndex, [timerIndex])");
+    }
+
+    int32_t timerIndex = -1;
+
+    if (lua_isnumber(L, 3)) {
+        timerIndex = lua_tointeger(L, 3) - 1;
+    }
+
+    int32_t barID = GetUnitPowerBarID(lua_tostring(L, 1), timerIndex);
+
+    if (!barID) {
+        return 0;
+    }
+
+    const UnitPowerBarRec* bar = g_unitPowerBarDB.GetRecord(barID);
+    int32_t textureIndex = lua_tointeger(L, 2);
+
+    if (textureIndex > 6) {
+        luaL_error(L, "Invalid texture index");
+    }
+
+    int32_t fileDataID = bar->m_fileDataID[textureIndex];
+
+    if (!fileDataID) {
+        lua_pushnil(L);
+        lua_pushnumber(L, 1.0);
+        lua_pushnumber(L, 1.0);
+        lua_pushnumber(L, 1.0);
+        lua_pushnumber(L, 1.0);
+        return 5;
+    }
+
+    const FileDataRec* fileData = g_fileDataDB.GetRecord(fileDataID);
+    char texture[260];
+    SStrCopy(texture, fileData->m_filepath, sizeof(texture));
+    SStrPack(texture, fileData->m_filename, sizeof(texture));
+    lua_pushstring(L, texture);
+    uint32_t color = bar->m_color[textureIndex];
+    lua_pushnumber(L, ((color >> 16) & 0xFF) * 0.0039215689);
+    lua_pushnumber(L, ((color >> 8) & 0xFF) * 0.0039215689);
+    lua_pushnumber(L, (color & 0xFF) * 0.0039215689);
+    lua_pushnumber(L, (color >> 24) * 0.0039215689);
+    return 5;
+}
+
+// OFFSET: 0x00459DF0/0x14006A020
+static int32_t Script_UnitPowerBarTimerInfo(lua_State* L) {
+    const char* token = lua_tostring(L, 1);
+    CGUnit_C* unit = NULL;
+    WOWGUID guid;
+
+    if (Script_GetGUIDFromToken(token, guid, false)) {
+        unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+    }
+
+    int32_t timerIndex = 0;
+
+    if (lua_isnumber(L, 2)) {
+        timerIndex = lua_tointeger(L, 2) - 1;
+    }
+
+    int32_t index = 0;
+
+    if (!unit || !unit->HasAuraEffect(369)) {
+        return 0;
+    }
+
+    for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
+        AuraData* aura = unit->GetAura(i);
+        const SpellRec* spell = g_spellDB.GetRecord(aura->m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t count;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+        for (uint32_t j = 0; j < count; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (!effect || effect->m_effectAura != 369 || !(aura->m_flags & (1 << j))) {
+                continue;
+            }
+
+            if (index != timerIndex) {
+                index++;
+                continue;
+            }
+
+            lua_pushnumber(L, aura->m_duration * 0.001);
+            lua_pushnumber(L, static_cast<uint32_t>(aura->m_endTime) * 0.001);
+            lua_pushinteger(L, effects->m_data[j]->m_effectMiscValue);
+            lua_pushinteger(L, aura->m_spellId);
+            return 4;
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x00459FD0/0x14006A230
+static int32_t Script_UnitNumPowerBarTimers(lua_State* L) {
+    const char* token = lua_tostring(L, 1);
+    CGUnit_C* unit = NULL;
+    WOWGUID guid;
+
+    if (Script_GetGUIDFromToken(token, guid, false)) {
+        unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+    }
+
+    int32_t timers = 0;
+
+    if (unit && unit->HasAuraEffect(369)) {
+        for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
+            AuraData* aura = unit->GetAura(i);
+            const SpellRec* spell = g_spellDB.GetRecord(aura->m_spellId);
+
+            if (!spell) {
+                continue;
+            }
+
+            uint32_t count;
+            const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+            for (uint32_t j = 0; j < count; j++) {
+                const SpellEffectRec* effect = effects->m_data[j];
+
+                if (effect && effect->m_effectAura == 369 && (aura->m_flags & (1 << j))) {
+                    timers++;
+                }
+            }
+        }
+    }
+
+    lua_pushnumber(L, timers);
+    return 1;
+}
+
+// OFFSET: 0x00807310/0x140631100
+static int32_t Script_IsGMClient(lua_State* L) {
+    lua_pushboolean(L, 0);
+    return 1;
+}
+
+// STATIC: 0x00C99510
 static FrameScript_Method s_SystemFunctions[] = {
     { "GetTime", &Script_GetTime },
     { "GetGameTime", &Script_GetGameTime },
@@ -4155,7 +4947,7 @@ static FrameScript_Method s_SystemFunctions[] = {
     { "ReadFile", &Script_ReadFile },
     { "DeleteFile", &Script_DeleteFile },
     { "AppendToFile", &Script_AppendToFile },
-    { "GetAccountExpansionLevel", &Script_GetAccountExpansionLevel }
+    { "GetSessionTime", &Script_GetSessionTime },
 };
 
 // PROVEN: 130561a8 IDENTICAL/NONE
@@ -4240,7 +5032,7 @@ static int32_t Script_UnitIsAFK(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00AD21D8
+// STATIC: 0x00C99560
 static FrameScript_Method s_UnitFunctions[] = {
     { "UnitExists", &Script_UnitExists },
     { "UnitIsVisible", &Script_UnitIsVisible },
@@ -4272,6 +5064,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitIsPossessed", &Script_UnitIsPossessed },
     { "PlayerCanTeleport", &Script_PlayerCanTeleport },
     { "UnitClassification", &Script_UnitClassification },
+    { "UnitIsQuestBoss", &Script_UnitIsQuestBoss },
     { "UnitSelectionColor", &Script_UnitSelectionColor },
     { "UnitGUID", &Script_UnitGUID },
     { "UnitName", &Script_UnitName },
@@ -4285,6 +5078,12 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitPower", &Script_UnitPower },
     { "UnitPowerMax", &Script_UnitPowerMax },
     { "UnitPowerType", &Script_UnitPowerType },
+    { "UnitAlternatePowerInfo", &Script_UnitAlternatePowerInfo },
+    { "UnitAlternatePowerCounterInfo", &Script_UnitAlternatePowerCounterInfo },
+    { "GetAlternatePowerInfoByID", &Script_GetAlternatePowerInfoByID },
+    { "UnitAlternatePowerTextureInfo", &Script_UnitAlternatePowerTextureInfo },
+    { "UnitPowerBarTimerInfo", &Script_UnitPowerBarTimerInfo },
+    { "UnitNumPowerBarTimers", &Script_UnitNumPowerBarTimers },
     { "UnitOnTaxi", &Script_UnitOnTaxi },
     { "UnitIsFeignDeath", &Script_UnitIsFeignDeath },
     { "UnitIsDead", &Script_UnitIsDead },
@@ -4294,11 +5093,13 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitAffectingCombat", &Script_UnitAffectingCombat },
     { "UnitSex", &Script_UnitSex },
     { "UnitLevel", &Script_UnitLevel },
+    { "UnitInPhase", &Script_UnitInPhase },
     { "GetMoney", &Script_GetMoney },
     { "UnitRace", &Script_UnitRace },
     { "UnitClass", &Script_UnitClass },
     { "UnitClassBase", &Script_UnitClassBase },
     { "UnitResistance", &Script_UnitResistance },
+    { "ResistancePercent", &Script_ResistancePercent },
     { "UnitStat", &Script_UnitStat },
     { "UnitAttackBothHands", &Script_UnitAttackBothHands },
     { "UnitDamage", &Script_UnitDamage },
@@ -4307,6 +5108,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitAttackSpeed", &Script_UnitAttackSpeed },
     { "UnitAttackPower", &Script_UnitAttackPower },
     { "UnitRangedAttackPower", &Script_UnitRangedAttackPower },
+    { "UnitSpellHaste", &Script_UnitSpellHaste },
     { "UnitDefense", &Script_UnitDefense },
     { "UnitArmor", &Script_UnitArmor },
     { "UnitBuff", &Script_UnitBuff },
@@ -4318,6 +5120,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitIsTrivial", &Script_UnitIsTrivial },
     { "UnitHasRelicSlot", &Script_UnitHasRelicSlot },
     { "SetPortraitTexture", &Script_SetPortraitTexture },
+    { "SetAchievementComparisonPortrait", &Script_SetAchievementComparisonPortrait },
     { "HasFullControl", &Script_HasFullControl },
     { "GetComboPoints", &Script_GetComboPoints },
     { "IsInGuild", &Script_IsInGuild },
@@ -4332,6 +5135,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "GetBlockChance", &Script_GetBlockChance },
     { "GetShieldBlock", &Script_GetShieldBlock },
     { "GetParryChance", &Script_GetParryChance },
+    { "IsDualWielding", &Script_IsDualWielding },
     { "GetCritChanceFromAgility", &Script_GetCritChanceFromAgility },
     { "GetSpellCritChanceFromIntellect", &Script_GetSpellCritChanceFromIntellect },
     { "GetCritChance", &Script_GetCritChance },
@@ -4343,6 +5147,10 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "GetSpellPenetration", &Script_GetSpellPenetration },
     { "GetArmorPenetration", &Script_GetArmorPenetration },
     { "GetAttackPowerForStat", &Script_GetAttackPowerForStat },
+    { "GetMeleeHaste", &Script_GetMeleeHaste },
+    { "GetRangedHaste", &Script_GetRangedHaste },
+    { "GetPetMeleeHaste", &Script_GetPetMeleeHaste },
+    { "GetOverrideSpellPowerByAP", &Script_GetOverrideSpellPowerByAP },
     { "UnitCreatureType", &Script_UnitCreatureType },
     { "UnitCreatureFamily", &Script_UnitCreatureFamily },
     { "GetResSicknessDuration", &Script_GetResSicknessDuration },
@@ -4361,6 +5169,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "IsOutOfBounds", &Script_IsOutOfBounds },
     { "IsFalling", &Script_IsFalling },
     { "IsSwimming", &Script_IsSwimming },
+    { "IsSubmerged", &Script_IsSubmerged },
     { "IsFlying", &Script_IsFlying },
     { "IsMounted", &Script_IsMounted },
     { "IsStealthed", &Script_IsStealthed },
@@ -4368,7 +5177,6 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "GetUnitHealthModifier", &Script_GetUnitHealthModifier },
     { "GetUnitMaxHealthModifier", &Script_GetUnitMaxHealthModifier },
     { "GetUnitPowerModifier", &Script_GetUnitPowerModifier },
-    { "GetUnitHealthRegenRateFromSpirit", &Script_GetUnitHealthRegenRateFromSpirit },
     { "GetUnitManaRegenRateFromSpirit", &Script_GetUnitManaRegenRateFromSpirit },
     { "GetManaRegen", &Script_GetManaRegen },
     { "GetPowerRegen", &Script_GetPowerRegen },
@@ -4379,6 +5187,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "PlayerIsPVPInactive", &Script_PlayerIsPVPInactive },
     { "GetExpertise", &Script_GetExpertise },
     { "GetExpertisePercent", &Script_GetExpertisePercent },
+    { "GetMastery", &Script_GetMastery },
     { "UnitInBattleground", &Script_UnitInBattleground },
     { "UnitInRange", &Script_UnitInRange },
     { "GetUnitSpeed", &Script_GetUnitSpeed },
@@ -4388,6 +5197,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "UnitControllingVehicle", &Script_UnitControllingVehicle },
     { "UnitInVehicleControlSeat", &Script_UnitInVehicleControlSeat },
     { "UnitHasVehicleUI", &Script_UnitHasVehicleUI },
+    { "UnitHasVehiclePlayerFrameUI", &Script_UnitHasVehiclePlayerFrameUI },
     { "UnitTargetsVehicleInRaidUI", &Script_UnitTargetsVehicleInRaidUI },
     { "UnitVehicleSkin", &Script_UnitVehicleSkin },
     { "UnitVehicleSeatCount", &Script_UnitVehicleSeatCount },
@@ -4398,6 +5208,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "GetVehicleUIIndicatorSeat", &Script_GetVehicleUIIndicatorSeat },
     { "UnitThreatSituation", &Script_UnitThreatSituation },
     { "UnitDetailedThreatSituation", &Script_UnitDetailedThreatSituation },
+    { "UnitThreatPercentageOfLead", &Script_UnitThreatPercentageOfLead },
     { "UnitIsControlling", &Script_UnitIsControlling },
     { "EjectPassengerFromSeat", &Script_EjectPassengerFromSeat },
     { "CanEjectPassengerFromSeat", &Script_CanEjectPassengerFromSeat },
@@ -4408,6 +5219,18 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "GetItemStatDelta", &Script_GetItemStatDelta },
     { "IsXPUserDisabled", &Script_IsXPUserDisabled },
     { "FillLocalizedClassList", &Script_FillLocalizedClassList },
+    { "UnitGetGuildXP", &Script_UnitGetGuildXP },
+    { "UnitGetGuildLevel", &Script_UnitGetGuildLevel },
+    { "UnitGetIncomingHeals", &Script_UnitGetIncomingHeals },
+    { "IsGMClient", &Script_IsGMClient },
+    { "UnitSetRole", &Script_UnitSetRole },
+    { "InitiateRolePoll", &Script_InitiateRolePoll },
+    { "GetHitModifier", &Script_GetHitModifier },
+    { "GetSpellHitModifier", &Script_GetSpellHitModifier },
+    { "GetEclipseDirection", &Script_GetEclipseDirection },
+    { "UnitHPPerStamina", &Script_UnitHPPerStamina },
+    { "GetMaxPlayerLevel", &Script_GetMaxPlayerLevel },
+    { "LoadURLIndex", &Script_LoadURLIndex },
 };
 
 // OFFSET: #0x0060A170

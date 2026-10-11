@@ -23804,3 +23804,48 @@ CM2Model* CGUnit_C::DuplicateModel(CM2Scene* scene) {
 
     return model;
 }
+
+// OFFSET: 0x005B5BC0
+int32_t CGUnit_C::GetIncomingHeals() {
+    if (this->IsDeadOrGhost()) {
+        return 0;
+    }
+
+    int32_t total = 0;
+
+    for (uint32_t i = 0; i < this->m_healPredictions.m_count; i++) {
+        total += this->m_healPredictions.m_data[i].m_amount;
+    }
+
+    return total;
+}
+
+// OFFSET: 0x005B5C50
+int32_t CGUnit_C::GetIncomingHealsFrom(const WOWGUID& healer) {
+    if (this->IsDeadOrGhost()) {
+        return 0;
+    }
+
+    int32_t total = 0;
+
+    for (uint32_t i = 0; i < this->m_healPredictions.m_count; i++) {
+        if (this->m_healPredictions.m_data[i].m_caster == healer) {
+            total += this->m_healPredictions.m_data[i].m_amount;
+        }
+    }
+
+    return total;
+}
+
+// OFFSET: 0x005CA9E0/0x1402429B0
+int32_t CGUnit_C::GetHighestThreatExcluding(const WOWGUID& guid) const {
+    int32_t highest = 0;
+
+    for (UnitThreat* threat = const_cast<CGUnit_C*>(this)->m_threats.Head(); threat; threat = const_cast<CGUnit_C*>(this)->m_threats.Next(threat)) {
+        if (threat->m_key.m_guid != guid && threat->m_threat > highest) {
+            highest = threat->m_threat;
+        }
+    }
+
+    return highest;
+}
