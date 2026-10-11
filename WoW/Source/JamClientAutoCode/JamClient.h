@@ -323,6 +323,15 @@ struct JamVoidItem {
     /* 001C */ uint32_t m_slot;
 };
 
+struct JamServerPerfString {
+    /* 0000 */ char m_text[128];
+};
+
+struct JamServerInfoField {
+    /* 0000 */ char m_name[32];
+    /* 0020 */ char m_value[128];
+};
+
 struct JamResearchHistory {
     /* 0000 */ int32_t m_projectID;
     /* 0004 */ int32_t m_firstCompleted;
@@ -813,9 +822,12 @@ class ClientStreamingMoviesUpdate : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientStreamingMoviesUpdate* msg);
 
+    /* 0010 */ TSGrowableArray<uint16_t> unk_0010;
+
     ClientStreamingMoviesUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientStreamingMoviesUpdate();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientTransferPending : public JamClientMessage {
@@ -2646,18 +2658,25 @@ class ClientServerInfoResponse : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientServerInfoResponse* msg);
 
+    /* 0010 */ TSGrowableArray<JamServerInfoField> unk_0010;
+    /* 0020 */ TSGrowableArray<JamServerInfoField> unk_0020;
+
     ClientServerInfoResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientServerInfoResponse();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientServerPerf : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientServerPerf* msg);
 
+    /* 0010 */ TSGrowableArray<JamServerPerfString> unk_0010;
+
     ClientServerPerf(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientServerPerf();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientQuestNpcQueryResponse : public JamClientMessage {
@@ -2774,9 +2793,23 @@ class ClientLfgQueueStatus : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfgQueueStatus* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint8_t unk_0020[8];
+    /* 0028 */ uint32_t unk_0028;
+    /* 002C */ uint32_t unk_002C;
+    /* 0030 */ uint32_t unk_0030;
+    /* 0034 */ uint32_t unk_0034;
+    /* 0038 */ uint32_t unk_0038;
+    /* 003C */ uint32_t unk_003C[3];
+    /* 0048 */ uint8_t unk_0048[3];
+
     ClientLfgQueueStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfgQueueStatus();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientInspectHonorStats : public JamClientMessage {

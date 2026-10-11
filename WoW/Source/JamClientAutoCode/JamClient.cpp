@@ -396,6 +396,18 @@ bool (*ClientGuildAchievementEarned::s_handler)(ClientGuildAchievementEarned* ms
 // STATIC: 0x00E4D45C
 bool (*ClientGuildCriteriaDeleted::s_handler)(ClientGuildCriteriaDeleted* msg);
 
+// STATIC: 0x00E4D534
+bool (*ClientLfgQueueStatus::s_handler)(ClientLfgQueueStatus* msg);
+
+// STATIC: 0x00E4D6DC
+bool (*ClientServerInfoResponse::s_handler)(ClientServerInfoResponse* msg);
+
+// STATIC: 0x00E4D538
+bool (*ClientServerPerf::s_handler)(ClientServerPerf* msg);
+
+// STATIC: 0x00E4D46C
+bool (*ClientStreamingMoviesUpdate::s_handler)(ClientStreamingMoviesUpdate* msg);
+
 // OFFSET: 0x006C98F0/0x140381330
 ClientAuthResponse::ClientAuthResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasSuccessInfo = false;
@@ -10644,4 +10656,245 @@ bool ClientGuildCriteriaDeleted::Handle() {
     }
 
     return ClientGuildCriteriaDeleted::s_handler(this);
+}
+
+// OFFSET: 0x006B5BB0/0x1403680E0
+ClientLfgQueueStatus::ClientLfgQueueStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A7A40/0x14034E1A0
+ClientLfgQueueStatus::~ClientLfgQueueStatus() {
+}
+
+// OFFSET: 0x006AF680/0x140360010
+void ClientLfgQueueStatus::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0020[3] = bits.ReadBit();
+    this->unk_0020[0] = bits.ReadBit();
+    this->unk_0020[2] = bits.ReadBit();
+    this->unk_0020[6] = bits.ReadBit();
+    this->unk_0020[5] = bits.ReadBit();
+    this->unk_0020[7] = bits.ReadBit();
+    this->unk_0020[1] = bits.ReadBit();
+    this->unk_0020[4] = bits.ReadBit();
+    if (this->unk_0020[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[0] ^= byteValue;
+    }
+
+    for (uint32_t i = 0; i < 3; i++) {
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->unk_0048[i] = value;
+        }
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->unk_003C[i] = value;
+        }
+    }
+
+    if (this->unk_0020[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[4] ^= byteValue;
+    }
+    if (this->unk_0020[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[6] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0018 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0030 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0038 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0014 = value;
+    }
+    if (this->unk_0020[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[5] ^= byteValue;
+    }
+    if (this->unk_0020[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[7] ^= byteValue;
+    }
+    if (this->unk_0020[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[3] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0028 = value;
+    }
+    if (this->unk_0020[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[1] ^= byteValue;
+    }
+    if (this->unk_0020[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[2] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_002C = value;
+    }
+}
+
+// OFFSET: 0x006BF080/0x140374090
+bool ClientLfgQueueStatus::Handle() {
+    if (!ClientLfgQueueStatus::s_handler) {
+        return false;
+    }
+
+    return ClientLfgQueueStatus::s_handler(this);
+}
+
+// OFFSET: 0x006F2300/0x1403B8A40
+ClientServerInfoResponse::ClientServerInfoResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E97C0/0x14039CDE0
+ClientServerInfoResponse::~ClientServerInfoResponse() {
+}
+
+// OFFSET: 0x006E7490/0x1403A9440
+void ClientServerInfoResponse::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0020.SetCount(bits.ReadBits<25>());
+    this->unk_0010.SetCount(bits.ReadBits<25>());
+
+    for (uint32_t i = 0; i < this->unk_0010.m_count; i++) {
+        JamServerInfoField& field = this->unk_0010.m_data[i];
+        *reinterpret_cast<uint32_t*>(field.m_value) = bits.ReadBits<9>();
+        *reinterpret_cast<uint32_t*>(field.m_name) = bits.ReadBits<7>();
+    }
+
+    for (uint32_t i = 0; i < this->unk_0020.m_count; i++) {
+        JamServerInfoField& field = this->unk_0020.m_data[i];
+        *reinterpret_cast<uint32_t*>(field.m_name) = bits.ReadBits<7>();
+        *reinterpret_cast<uint32_t*>(field.m_value) = bits.ReadBits<9>();
+    }
+
+    for (uint32_t i = 0; i < this->unk_0020.m_count; i++) {
+        JamServerInfoField& field = this->unk_0020.m_data[i];
+        uint32_t length = *reinterpret_cast<uint32_t*>(field.m_value);
+        msg->GetData(field.m_value, length);
+        field.m_value[length] = 0;
+        length = *reinterpret_cast<uint32_t*>(field.m_name);
+        msg->GetData(field.m_name, length);
+        field.m_name[length] = 0;
+    }
+
+    for (uint32_t i = 0; i < this->unk_0010.m_count; i++) {
+        JamServerInfoField& field = this->unk_0010.m_data[i];
+        uint32_t length = *reinterpret_cast<uint32_t*>(field.m_name);
+        msg->GetData(field.m_name, length);
+        field.m_name[length] = 0;
+        length = *reinterpret_cast<uint32_t*>(field.m_value);
+        msg->GetData(field.m_value, length);
+        field.m_value[length] = 0;
+    }
+}
+
+// OFFSET: 0x006A32B0/0x140350A20
+bool ClientServerInfoResponse::Handle() {
+    if (!ClientServerInfoResponse::s_handler) {
+        return false;
+    }
+
+    return ClientServerInfoResponse::s_handler(this);
+}
+
+// OFFSET: 0x006DEB20/0x14039E670
+ClientServerPerf::ClientServerPerf(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006D9240/0x140397640
+ClientServerPerf::~ClientServerPerf() {
+}
+
+// OFFSET: 0x006DBAC0/0x14039AAB0
+void ClientServerPerf::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010.SetCount(bits.ReadBits<25>());
+
+    for (uint32_t i = 0; i < this->unk_0010.m_count; i++) {
+        *reinterpret_cast<uint32_t*>(this->unk_0010.m_data[i].m_text) = bits.ReadBits<9>();
+    }
+
+    for (uint32_t i = 0; i < this->unk_0010.m_count; i++) {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_0010.m_data[i].m_text);
+        msg->GetData(this->unk_0010.m_data[i].m_text, length);
+        this->unk_0010.m_data[i].m_text[length] = 0;
+    }
+}
+
+// OFFSET: 0x006A3C10/0x140351480
+bool ClientServerPerf::Handle() {
+    if (!ClientServerPerf::s_handler) {
+        return false;
+    }
+
+    return ClientServerPerf::s_handler(this);
+}
+
+// OFFSET: 0x006DA0E0/0x1403986D0
+ClientStreamingMoviesUpdate::ClientStreamingMoviesUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DBA60/0x14039AA30
+ClientStreamingMoviesUpdate::~ClientStreamingMoviesUpdate() {
+}
+
+// OFFSET: 0x006D9830/0x140397CF0
+void ClientStreamingMoviesUpdate::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010.SetCount(bits.ReadBits<25>());
+
+    for (uint32_t i = 0; i < this->unk_0010.m_count; i++) {
+        uint16_t value = 0;
+        msg->Get(value);
+        this->unk_0010.m_data[i] = value;
+    }
+}
+
+// OFFSET: 0x006B4890/0x140366860
+bool ClientStreamingMoviesUpdate::Handle() {
+    if (!ClientStreamingMoviesUpdate::s_handler) {
+        return false;
+    }
+
+    return ClientStreamingMoviesUpdate::s_handler(this);
 }
