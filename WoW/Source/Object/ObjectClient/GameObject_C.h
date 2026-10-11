@@ -39,8 +39,6 @@ class CGGameObject_C_TypeBase {
     /* 0008 */ uint32_t m_useErrorType;
     /* 000C */ float m_interactDistance;
 
-    int32_t GetTrivialSkillLow() const;
-    int32_t GetTrivialSkillHigh() const;
     virtual ~CGGameObject_C_TypeBase();
     virtual bool CanBeSolid() const;
     virtual bool ShouldFadeIn() const;

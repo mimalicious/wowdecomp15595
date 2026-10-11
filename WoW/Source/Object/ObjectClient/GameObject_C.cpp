@@ -4748,7 +4748,7 @@ void CGGameObject_C_Type_MeetingStone::AddToolTipInfo(CGTooltip* tooltip) {
 }
 
 // OFFSET: 0x0059FCF0
-int32_t CGGameObject_C_TypeBase::GetTrivialSkillLow() const {
+int32_t CGGameObject_C_Type_Chest::GetTrivialSkillLow() const {
     CGGameObject_C* owner = this->m_owner;
     uint32_t index = CGameObjectDef::GetPropNum(owner->m_gameObject->m_typeID, 151);
     GameObjectStats* stats = owner->m_stats;
@@ -4761,7 +4761,7 @@ int32_t CGGameObject_C_TypeBase::GetTrivialSkillLow() const {
 }
 
 // OFFSET: 0x0059FD30
-int32_t CGGameObject_C_TypeBase::GetTrivialSkillHigh() const {
+int32_t CGGameObject_C_Type_Chest::GetTrivialSkillHigh() const {
     CGGameObject_C* owner = this->m_owner;
     uint32_t index = CGameObjectDef::GetPropNum(owner->m_gameObject->m_typeID, 150);
     GameObjectStats* stats = owner->m_stats;
@@ -4779,7 +4779,7 @@ void CGGameObject_C::GetLockSkillColor(int32_t requiredSkill, int32_t skillValue
         return;
     }
 
-    CGGameObject_C_TypeBase* typeData = this->m_typeData;
+    CGGameObject_C_Type_Chest* typeData = static_cast<CGGameObject_C_Type_Chest*>(this->m_typeData);
 
     if (skillValue < requiredSkill) {
         color = CImVector(s_lockSkillColors[4]);

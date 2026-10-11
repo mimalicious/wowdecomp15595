@@ -1,6 +1,6 @@
 #include "CGGameObject_C_Type_SpellFocus.h"
 
-// OFFSET: #0x00712800
+// INLINED
 CGGameObject_C_Type_SpellFocus::CGGameObject_C_Type_SpellFocus(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 

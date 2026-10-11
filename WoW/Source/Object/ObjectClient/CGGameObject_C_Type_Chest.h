@@ -8,6 +8,8 @@
 class CGGameObject_C_Type_Chest : public CGGameObject_C_TypeAnimated {
     public:
     CGGameObject_C_Type_Chest(CGGameObject_C* owner, const CClientObjCreate& create);
+    int32_t GetTrivialSkillLow() const;
+    int32_t GetTrivialSkillHigh() const;
 };
 
 #endif
