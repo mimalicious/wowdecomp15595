@@ -1026,6 +1026,122 @@ void CGUnit_C::StartProceduralFade(uint8_t alpha, uint32_t type, uint32_t time, 
     }
 }
 
+// OFFSET: 0x005B2BD0
+bool CGUnit_C::CheckSpellImmunity(const SpellRec* aura, int32_t* schoolMask, int32_t miscValue, int32_t* effectMask, bool a5) const {
+    int32_t originalMask = *effectMask;
+    CreatureImmunitiesRec* immunities = g_creatureImmunitiesDB.GetRecord(miscValue);
+
+    if (!immunities) {
+        return false;
+    }
+
+    if (a5 && (*schoolMask & immunities->m_school) && !(aura->m_attributesExB & 0x4000000) && !(*schoolMask &= ~immunities->m_school)) {
+        *effectMask = 0;
+        return true;
+    }
+
+    int32_t dispelType = 0;
+    int32_t mechanic = 0;
+
+    if (aura->m_spellCategoriesID) {
+        SpellCategoriesRec* categories = g_spellCategoriesDB.GetRecord(aura->m_spellCategoriesID);
+
+        if (categories) {
+            dispelType = categories->m_dispelType;
+            mechanic = categories->m_mechanic;
+        }
+    }
+
+    if ((1 << dispelType) & immunities->m_dispelType) {
+        *effectMask = 0;
+        return true;
+    }
+
+    if (mechanic) {
+        int32_t mechanics = immunities->m_mechanicsInverted ? ~immunities->m_mechanics : immunities->m_mechanics;
+
+        if ((1 << mechanic) & mechanics) {
+            *effectMask = 0;
+            return true;
+        }
+    }
+
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(aura->m_id, count);
+
+    for (uint32_t i = 0; i < count; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect || (effect->m_effectAttributes & 0x1)) {
+            continue;
+        }
+
+        int32_t effectMechanic = effect->m_effectMechanic;
+
+        if (effectMechanic) {
+            int32_t mechanics = immunities->m_mechanicsInverted ? ~immunities->m_mechanics : immunities->m_mechanics;
+
+            if ((1 << effectMechanic) & mechanics) {
+                *effectMask &= ~(1 << i);
+                continue;
+            }
+        }
+
+        int32_t type = effect->m_effect;
+
+        if (!type || !((1 << i) & *effectMask)) {
+            continue;
+        }
+
+        if (static_cast<uint32_t>(type / 32) < 6) {
+            int32_t bits = immunities->m_effectsInverted ? ~immunities->m_effects[type / 32] : immunities->m_effects[type / 32];
+
+            if ((1 << (type % 32)) & bits) {
+                *effectMask &= ~(1 << i);
+                continue;
+            }
+        }
+
+        switch (type) {
+            case 6:
+            case 27:
+            case 35:
+            case 65:
+            case 119:
+            case 128:
+            case 129:
+            case 143:
+            case 174: {
+                int32_t state = effect->m_effectAura;
+
+                if (static_cast<uint32_t>(state / 32) < 12) {
+                    int32_t bits = immunities->m_statesInverted ? ~immunities->m_states[state / 32] : immunities->m_states[state / 32];
+
+                    if ((1 << (state % 32)) & bits) {
+                        *effectMask &= ~(1 << i);
+                    }
+                }
+
+                break;
+            }
+
+            case 7:
+                if (!(this->m_obj->m_type & TYPEMASK_PLAYER) && !this->m_unit->m_unitFieldPetnumber) {
+                    *effectMask &= ~(1 << i);
+                }
+
+                break;
+        }
+    }
+
+    if (!(aura->m_attributesExD & 0x800) || *effectMask == originalMask) {
+        return *effectMask == 0;
+    }
+
+    *effectMask = 0;
+    return true;
+}
+
 // OFFSET: 0x005B2F80
 void CGUnit_C::ReleaseAurasBySpell(int32_t spellId, WOWGUID caster) {
     CEffect* effect = this->m_auraEffects;
@@ -1590,6 +1706,32 @@ void CGUnit_C::UpdateSwimmingStatusFlightStyle(uint32_t time, float depth, float
     }
 }
 
+// OFFSET: 0x005BD970/0x140232C80
+double CGUnit_C::GetQuestExperienceModifier() const {
+    float modifier = 1.0f;
+
+    if (!(this->m_auraEffectMask[0x24] & 0x8)) {
+        return modifier;
+    }
+
+    CGUnit_C* self = const_cast<CGUnit_C*>(this);
+
+    for (uint32_t i = 0; i < self->GetAuraCount(); i++) {
+        uint32_t count;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(self->m_auras[i].m_spellId, count);
+
+        for (uint32_t j = 0; j < count; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 291) {
+                modifier = effect->m_effectBasePoints * 0.01f + modifier;
+            }
+        }
+    }
+
+    return modifier;
+}
+
 // OFFSET: 0x005BEA20
 void CGUnit_C::UpdateSwimmingStatusDefault(uint32_t time, int32_t spline, float depth, float swimDepth, float exitDepth) {
     if ((this->m_obj->m_type & TYPEMASK_PLAYER) && this->m_obj->m_guid != CGUnit_C::s_activeMover) {
@@ -1603,6 +1745,59 @@ void CGUnit_C::UpdateSwimmingStatusDefault(uint32_t time, int32_t spline, float 
     } else if (depth > swimDepth && !this->m_movementData.IsJumpingUp()) {
         this->OnSwimStart(time, spline);
     }
+}
+
+// OFFSET: 0x005C0B60/0x140236780
+int32_t CGUnit_C::GetCategoryCooldownModifier(int32_t category) const {
+    int32_t modifier = 0;
+
+    if (!(this->m_auraEffectMask[0x2A] & 0x20)) {
+        return 0;
+    }
+
+    CGUnit_C* self = const_cast<CGUnit_C*>(this);
+
+    for (uint32_t i = 0; i < self->GetAuraCount(); i++) {
+        AuraData* aura = i < self->m_auras.Count() ? &self->m_auras[i] : NULL;
+
+        if (!aura || !g_spellDB.GetRecord(aura->m_spellId)) {
+            continue;
+        }
+
+        uint32_t count;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(self->m_auras[i].m_spellId, count);
+
+        for (uint32_t j = 0; j < count; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 341 && effect->m_effectMiscValue == category) {
+                modifier = modifier - aura->m_effectAmounts[j];
+            }
+        }
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        for (PASSIVESPELLNODE* node = CGSpellBook::s_passiveSpells.Head(); node; node = CGSpellBook::s_passiveSpells.Next(node)) {
+            const SpellRec* spell = g_spellDB.GetRecord(node->m_spellId);
+
+            if (!spell) {
+                continue;
+            }
+
+            uint32_t count;
+            const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+            for (uint32_t j = 0; j < count; j++) {
+                const SpellEffectRec* effect = effects->m_data[j];
+
+                if (effect && effect->m_effectAura == 341 && effect->m_effectMiscValue == category) {
+                    modifier = modifier - effect->m_effectBasePoints;
+                }
+            }
+        }
+    }
+
+    return modifier;
 }
 
 // OFFSET: 0x005C3A10
