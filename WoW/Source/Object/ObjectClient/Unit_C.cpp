@@ -2340,7 +2340,7 @@ void CGUnit_C::OnAuraAddedSpecial(const SpellRec* spell, AuraData* aura, int32_t
         return;
     }
 
-    CGActionBar::OnAuraChanged(spell->m_id);
+    CGActionBar::UpdateSpell(spell->m_id);
 
     if (updateSpells) {
         CGSpellBook::UpdateSpells(1, 0, 0);
@@ -3877,7 +3877,7 @@ void CGUnit_C::OnAuraRemoved(uint32_t index, AuraData* aura) {
             }
         }
 
-        CGActionBar::OnAuraChanged(spellId);
+        CGActionBar::UpdateSpell(spellId);
 
         if (updateSpells) {
             CGSpellBook::UpdateSpells(1, 0, 0);
@@ -4392,11 +4392,11 @@ void CGUnit_C::UpdateDisplay(uint32_t time) {
         this->StopDisplayTransition();
     }
 
-    if (!CGGameUI::FoundHiddenHostile() && !this->IsReadyToDraw()) {
+    if (!CGGameUI::GetStreamingWait() && !this->IsReadyToDraw()) {
         CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (this->UnitReaction(player) <= 1) {
-            CGGameUI::SetFoundHiddenHostile();
+            CGGameUI::ClearStreamingWait();
         }
     }
 

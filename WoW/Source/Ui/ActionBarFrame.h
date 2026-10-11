@@ -121,7 +121,6 @@ class CGActionBar {
     static void UpdateOverrideSpellBar();
     static void UseAction(uint32_t slot, const WOWGUID& target, const char* button);
     static void PickupAction(uint32_t slot);
-    static void OnAuraChanged(int32_t spellId);
     static bool ClearOverrideSpellclass(int32_t spellId);
     static bool SetOverrideSpellclass(const SpellRec* spell, uint32_t effectIndex, int32_t spellId);
     static int32_t GetOverrideBaseSpellByName(const char* name);

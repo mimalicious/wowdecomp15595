@@ -73,6 +73,7 @@
 #include "WoW/Source/Ui/GuildInfo.h"
 #include "WoW/Source/Ui/ItemTextFrame.h"
 #include "WoW/Source/Ui/LFGInfo.h"
+#include "WoW/Source/Ui/LFGuildInfo.h"
 #include "WoW/Source/Ui/LootFrame.h"
 #include "WoW/Source/Ui/MerchantFrame.h"
 #include "WoW/Source/Ui/PartyFrame.h"
@@ -2775,7 +2776,7 @@ void CGPlayer_C::HandleGuildIDUpdate() {
         }
 
         CGGuildBankInfo::ClearContents();
-        CGGuildInfo::ResetGuildState(true);
+        CGLFGuildInfo::ClearRecruitmentSettings(true);
         ClntObjMgrEnumVisibleObjects(GuildChangedUpdateProc, NULL);
     }
 }

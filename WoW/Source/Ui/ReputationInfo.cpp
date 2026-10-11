@@ -1223,6 +1223,13 @@ int32_t Packet_SMSG_INITIALIZE_FACTIONS(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
+// OFFSET: 0x009A8E30
+void CGReputationInfo::LoadFactions() {
+    CGReputationInfo::m_forcedReactions.m_count = 0;
+    CGReputationInfo::m_factions.InternalClear(0);
+    CGReputationInfo::EnterWorld();
+}
+
 // OFFSET: 0x009A8ED0
 int32_t Packet_SMSG_SET_FACTION_VISIBLE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t repListId;

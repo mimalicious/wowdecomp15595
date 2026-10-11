@@ -2064,7 +2064,7 @@ void CGWorldFrame::OnWorldUpdate() {
     UpdatePendingPortraits();
     this->MoveToFreeList(&this->m_modelList);
     this->MoveToFreeList(&this->m_hitModelList);
-    CGGameUI::ResetDisplayUpdateCount();
+    CGGameUI::ClearStreamingWait();
     ClntObjMgrEnumVisibleObjects(UnitUpdateProc, NULL);
     World::SetObjectRenderCallback(reinterpret_cast<World::RENDER_OBJECT_CALLBACK>(ObjectRenderCallback));
     World::SetObjectCollisionCallback(ObjectCollisionCallback);

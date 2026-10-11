@@ -203,7 +203,6 @@ class CGGuildInfo {
     static void GetGuildMemberRecipes(SkillLine& skillLine, uint8_t* data);
     static void SetSortType(GUILD_SORT_TYPE type);
     static void QueryPermissions();
-    static void ResetGuildState(bool a1);
     static int32_t GetRankIndexFromRankOrder(int32_t rankOrder);
     static int32_t GetRankOrderFromRankID(int32_t rankID);
     static int32_t GetRankIDFromRankOrder(int32_t rankOrder);

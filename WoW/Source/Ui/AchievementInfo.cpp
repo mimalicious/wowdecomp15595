@@ -16,6 +16,7 @@
 #include "WoW/Source/DB/Rec/CurrencyTypesRec.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/JamClientAutoCode/JamGlobal.h"
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/ObjectClient/GuildStats_C.h"
@@ -381,7 +382,7 @@ static bool OnGuildAchievementMembers(ClientGuildAchievementMembers* msg) {
     return true;
 }
 
-// OFFSET: 0x0094F140
+// OFFSET: 0x0094F140/0x1406BF180
 void CGAchievementInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_ACHIEVEMENT_EARNED, Packet_SMSG_ACHIEVEMENT_EARNED, NULL);
     ClientServices::SetMessageHandler(SMSG_CRITERIA_UPDATE, Packet_SMSG_CRITERIA_UPDATE, NULL);
@@ -585,6 +586,33 @@ void CGAchievementInfo::UpdateAchievement(int32_t id, WowTime date) {
 
     achievement->m_id = id;
     achievement->m_date = date;
+}
+
+// OFFSET: 0x0094B5D0
+static void SendGuildAchievementTracking() {
+    GlobalGuildSetAchievementTracking msg;
+
+    for (CLIENT_ACHIEVEMENTS* node = s_trackedAchievements.Head(); !s_trackedAchievements.IsEnd(node); ) {
+        CLIENT_ACHIEVEMENTS* next = s_trackedAchievements.RawNext(node);
+        AchievementRec* rec = g_achievementDB.GetRecord(node->m_id);
+
+        if (rec && (rec->m_flags & 0x4000)) {
+            *msg.m_achievementIDs.New() = node->m_id;
+        }
+
+        node = next;
+    }
+
+    ClientServices::Send(&msg);
+}
+
+// OFFSET: 0x0094D610
+void CGAchievementInfo::PostInitActivePlayer() {
+    SendGuildAchievementTracking();
+}
+
+// OFFSET: 0x00401000/0x1407D7E80
+void CGAchievementInfo::EnterWorld() {
 }
 
 // OFFSET: 0x0094D480
@@ -1031,7 +1059,7 @@ void CGAchievementInfo::SetFocusedAchievement(int32_t id) {
     }
 }
 
-// OFFSET: 0x00947A60
+// OFFSET: 0x00947A60/0x1406B50A0
 bool CGAchievementInfo::IsRealAchievement(int32_t id, bool guild) {
     AchievementRec* achievement = g_achievementDB.GetRecord(id);
 
@@ -1052,7 +1080,7 @@ bool CGAchievementInfo::IsRealAchievement(int32_t id, bool guild) {
     return false;
 }
 
-// OFFSET: 0x00949340
+// OFFSET: 0x00949340/0x1406B6DB0
 bool CGAchievementInfo::IsSupersededByCompleted(int32_t id) {
     for (int32_t i = 0; i < g_achievementDB.m_numRecords; i++) {
         AchievementRec* achievement = g_achievementDB.GetRecordByIndex(i);
@@ -1065,7 +1093,7 @@ bool CGAchievementInfo::IsSupersededByCompleted(int32_t id) {
     return false;
 }
 
-// OFFSET: 0x00947BD0
+// OFFSET: 0x00947BD0/0x1406B5220
 uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64_t sum, uint64_t highest, int32_t highestId, uint64_t count, uint64_t value, CLIENT_ACHIEVEMENT_CRITERIA* criteria, int32_t flags, int32_t criteriaFlags, bool completed, const AchievementRec* achievement, const Achievement_CriteriaRec* criteriaRec, uint64_t* required) {
     float perDay = 0.0f;
     CVar* colorblindMode = CVar::Lookup("colorblindMode");
@@ -1272,7 +1300,7 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
     return result;
 }
 
-// OFFSET: 0x0094B1C0
+// OFFSET: 0x0094B1C0/0x1406B9570
 void CGAchievementInfo::ReleaseInspect() {
     for (CLIENT_ACHIEVEMENT_CRITERIA* node = s_inspectCriteria.Head(); !s_inspectCriteria.IsEnd(node); ) {
         CLIENT_ACHIEVEMENT_CRITERIA* next = s_inspectCriteria.RawNext(node);
