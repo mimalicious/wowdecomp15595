@@ -284,7 +284,7 @@ FMOD_RESULT DSPParamEq::updateCoefficients(float center, float bandwidth, float 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EDFC0
+// OFFSET: 0x00A99090
 FMOD_RESULT DSPParamEq::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     unsigned int count;

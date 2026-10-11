@@ -40,7 +40,7 @@
 */
 
 
-// INLINED
+// OFFSET: 0x00A299B0
 LUALIB_API int luaL_argerror (lua_State *L, int narg, const char *extramsg) {
   lua_Debug ar;
   if (!lua_getstack(L, 0, &ar))  /* no stack frame? */

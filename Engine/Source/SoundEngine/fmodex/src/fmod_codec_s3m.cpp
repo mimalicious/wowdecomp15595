@@ -1533,7 +1533,7 @@ FMOD_RESULT CodecS3M::update(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00909330
+// OFFSET: 0x00AB5B60
 FMOD_RESULT CodecS3M::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
 	unsigned char	remap[32], st3pan, mastervol, temp[4];

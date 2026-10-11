@@ -46,7 +46,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00933EB0
+// OFFSET: 0x00AE2BE0
 ChannelSoftware::ChannelSoftware()
 {
     mDSPWaveTable     = 0;
@@ -226,7 +226,7 @@ FMOD_RESULT ChannelSoftware::close()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00932940
+// OFFSET: 0x00AE1570
 FMOD_RESULT ChannelSoftware::setupDSPCodec(DSPI *dsp)
 {
 #ifdef FMOD_SUPPORT_DSPCODEC
@@ -1090,7 +1090,7 @@ FMOD_RESULT ChannelSoftware::setReverbProperties(const FMOD_REVERB_CHANNELPROPER
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00932DC0
+// OFFSET: 0x00AE1A00
 FMOD_RESULT ChannelSoftware::updateDirectMix(float volume)
 {
     float gainlin;

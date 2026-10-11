@@ -1577,7 +1577,7 @@ FMOD_RESULT SystemI::createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *wavefor
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008D67D0
+// OFFSET: 0x00A84340
 FMOD_RESULT SystemI::createSoundInternal(const char *name_or_data, FMOD_MODE mode_in, FMOD_CREATESOUNDEXINFO *exinfo, bool calledfromasync, SoundI **sound)
 {
     FMOD_RESULT            result;
@@ -4937,7 +4937,7 @@ private:
 };
 
 
-// OFFSET: #0x008D9AA0
+// OFFSET: 0x00A87820
 FMOD_RESULT SystemI::init(int maxchannels, FMOD_INITFLAGS flags, void *extradriverdata)
 {
     int count;

@@ -1439,7 +1439,7 @@ uint32_t CParticleEmitter2::GetNumPrimitives() {
     return count;
 }
 
-// OFFSET: [%0x00A561B0, %0x00A56A70]
+// OFFSET: 0x00B198A0
 CParticleEmitter2::~CParticleEmitter2() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);

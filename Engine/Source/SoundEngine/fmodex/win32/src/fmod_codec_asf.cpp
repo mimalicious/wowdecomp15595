@@ -185,7 +185,7 @@ FMOD_RESULT CodecASF::getStreamNumbers(IWMProfile* pProfile)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F8260
+// OFFSET: 0x00AA4A70
 FMOD_RESULT CodecASF::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT             result = FMOD_OK;

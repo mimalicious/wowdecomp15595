@@ -764,7 +764,7 @@ int FMOD_res0_forward(vorbis_block *vb,vorbis_look_residue *vl,
 }
 #endif
 
-// OFFSET: #0x00471180
+// OFFSET: 0x00B486E0
 int FMOD_res0_inverse(vorbis_block *vb,vorbis_look_residue *vl,
                  float **in,int *nonzero,int ch){
   int i,used=0;
@@ -820,7 +820,7 @@ ogg_int32_t **FMOD_res1_class(vorbis_block *vb,vorbis_look_residue *vl,
     return(0);
 }
 
-// OFFSET: #0x004711E0
+// OFFSET: 0x00B48740
 int FMOD_res1_inverse(vorbis_block *vb,vorbis_look_residue *vl,
                  float **in,int *nonzero,int ch){
   int i,used=0;

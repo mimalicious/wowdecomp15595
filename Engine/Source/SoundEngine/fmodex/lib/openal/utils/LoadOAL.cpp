@@ -29,7 +29,7 @@
 
 HINSTANCE g_hOpenALDLL = NULL;
 
-// OFFSET: #0x009499D0
+// OFFSET: 0x00AF99A0
 ALboolean LoadOALLibrary(char *szOALFullPathName, LPOPENALFNTABLE lpOALFnTable)
 {
 	if (!lpOALFnTable)

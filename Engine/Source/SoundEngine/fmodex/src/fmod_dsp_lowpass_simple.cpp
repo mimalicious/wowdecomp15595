@@ -264,7 +264,7 @@ FMOD_RESULT DSPLowPassSimple::updateCoefficients(float cutoffhz)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F1AA0
+// OFFSET: 0x00A9D7C0
 FMOD_RESULT DSPLowPassSimple::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     static float dc = (float)1E-20;

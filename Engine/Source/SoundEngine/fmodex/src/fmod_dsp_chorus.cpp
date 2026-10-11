@@ -284,7 +284,7 @@ FMOD_RESULT DSPChorus::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EBAC0
+// OFFSET: 0x00A968E0
 FMOD_RESULT DSPChorus::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {   
     unsigned int  count;

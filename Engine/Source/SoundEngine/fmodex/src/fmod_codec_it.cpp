@@ -4118,7 +4118,7 @@ FMOD_RESULT CodecIT::play()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009013B0
+// OFFSET: 0x00AADC20
 FMOD_RESULT CodecIT::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
 	int 			count, highestorder;

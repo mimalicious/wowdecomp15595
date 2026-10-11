@@ -31,7 +31,7 @@ namespace FMOD
 #define kREVERB_GAIN_COEF            0.002f         // Coefficient for warping the power law for additive gain (see below)
 #define kREVERB_GAIN_COEF_INV        500.0f         // Reciprocal of kREVERB_GAIN_COEF (depends on the above)
 
-// OFFSET: #0x008E63A0
+// OFFSET: 0x00A90730
 ReverbI::ReverbI()
 {
     mDSP                    = 0;

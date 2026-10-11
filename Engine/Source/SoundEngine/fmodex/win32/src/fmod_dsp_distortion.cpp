@@ -193,7 +193,7 @@ FMOD_RESULT DSPDistortion::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EF2C0
+// OFFSET: 0x00A9A880
 FMOD_RESULT DSPDistortion::readInternal(float * inbuffer, float * outbuffer, unsigned int length, int inchannels, int outchannels)
 {   
     float k;

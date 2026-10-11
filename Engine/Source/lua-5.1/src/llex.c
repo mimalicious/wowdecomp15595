@@ -62,7 +62,7 @@ static void save (LexState *ls, int c) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042D080
 void luaX_init (lua_State *L) {
   int i;
   for (i=0; i<NUM_RESERVED; i++) {
@@ -103,7 +103,7 @@ static const char *txtToken (LexState *ls, int token) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042D130
 void luaX_lexerror (LexState *ls, const char *msg, int token) {
   char buff[MAXSRC];
   luaO_chunkid(buff, getstr(ls->source), MAXSRC);

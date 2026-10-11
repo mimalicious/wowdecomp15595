@@ -404,7 +404,7 @@ static void close_func (LexState *ls) {
 }
 
 
-// INLINED
+// OFFSET: 0x00429230
 Proto *luaY_parser (lua_State *L, ZIO *z, Mbuffer *buff, const char *name) {
   struct LexState lexstate;
   struct FuncState funcstate;

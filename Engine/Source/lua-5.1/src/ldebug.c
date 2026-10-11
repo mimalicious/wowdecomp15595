@@ -601,7 +601,7 @@ void luaG_typeerror (lua_State *L, const TValue *o, const char *op) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425DF0
 void luaG_concaterror (lua_State *L, StkId p1, StkId p2) {
   if (ttisstring(p1) || ttisnumber(p1)) p1 = p2;
   lua_assert(!ttisstring(p1) && !ttisnumber(p1));
@@ -618,7 +618,7 @@ void luaG_aritherror (lua_State *L, const TValue *p1, const TValue *p2) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425E60
 int luaG_ordererror (lua_State *L, const TValue *p1, const TValue *p2) {
   const char *t1 = luaT_typenames[ttype(p1)];
   const char *t2 = luaT_typenames[ttype(p2)];
@@ -643,7 +643,7 @@ static void addinfo (lua_State *L, const char *msg) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425A10
 void luaG_errormsg (lua_State *L) {
   if (L->errfunc != 0) {  /* is there an error handling function? */
     StkId errfunc = restorestack(L, L->errfunc);

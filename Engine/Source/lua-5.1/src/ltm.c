@@ -27,7 +27,7 @@ const char *const luaT_typenames[] = {
 };
 
 
-// INLINED
+// OFFSET: 0x00425EC0
 void luaT_init (lua_State *L) {
   static const char *const luaT_eventname[] = {  /* ORDER TM */
     "__index", "__newindex",

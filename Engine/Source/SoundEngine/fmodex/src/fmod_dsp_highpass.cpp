@@ -241,7 +241,7 @@ FMOD_RESULT DSPHighPass::updateCoefficients(float resonance, float cutoff)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F0A60
+// OFFSET: 0x00A9C2F0
 FMOD_RESULT DSPHighPass::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     unsigned int count;

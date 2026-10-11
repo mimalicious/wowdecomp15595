@@ -254,7 +254,7 @@ FMOD_INLINE float DSPLowPass::filter(float input, int channel)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F2EE0
+// OFFSET: 0x00A9F0E0
 FMOD_RESULT DSPLowPass::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     unsigned int count;

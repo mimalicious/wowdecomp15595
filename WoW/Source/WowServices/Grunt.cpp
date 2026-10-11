@@ -1057,7 +1057,7 @@ void Grunt::ClientLink::FileComplete() {
     this->Send(msg);
 }
 
-// INLINED
+// OFFSET: 0x00B02CB0
 const char* Grunt::ServerLink::GetLinkTypeName() const {
     return this->m_linkType <= 1 ? s_linkTypeNames[this->m_linkType] : "None";
 }

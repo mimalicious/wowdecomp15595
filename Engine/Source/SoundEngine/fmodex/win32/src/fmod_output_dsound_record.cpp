@@ -219,7 +219,7 @@ FMOD_RESULT OutputDSound::recordGetDriverInfo(int id, char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009514B0
+// OFFSET: 0x00B01BD0
 FMOD_RESULT OutputDSound::recordStart(int id, Sound *sound, bool loop)
 {
     FMOD_RESULT                 result;

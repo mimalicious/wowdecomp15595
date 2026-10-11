@@ -258,7 +258,7 @@ FMOD_RESULT DSPCodecPool::close()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E85F0
+// OFFSET: 0x00A93140
 FMOD_RESULT DSPCodecPool::alloc(DSPCodec **dspcodec)
 {
     int count;

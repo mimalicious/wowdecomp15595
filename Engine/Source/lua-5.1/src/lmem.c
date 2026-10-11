@@ -43,7 +43,7 @@
 #define MINSIZEARRAY	4
 
 
-// INLINED
+// OFFSET: 0x00424E70
 void *luaM_growaux_ (lua_State *L, void *block, int *size, size_t size_elems,
                      int limit, const char *errormsg) {
   void *newblock;

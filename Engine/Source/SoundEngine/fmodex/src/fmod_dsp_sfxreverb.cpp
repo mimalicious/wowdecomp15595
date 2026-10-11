@@ -502,7 +502,7 @@ FMOD_RESULT DSPSfxReverb::readInternal(float *inbuffer, float *outbuffer, unsign
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E8FB0
+// OFFSET: 0x00A93AF0
 FMOD_RESULT DSPSfxReverb::setParameterInternal(int index, float value)
 {
     FMOD_RESULT result = FMOD_OK;

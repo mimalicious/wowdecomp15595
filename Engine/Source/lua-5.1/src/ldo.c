@@ -98,7 +98,7 @@ static void resetstack (lua_State *L, int status) {
 }
 
 
-// INLINED
+// OFFSET: 0x004208F0
 void luaD_throw (lua_State *L, int errcode) {
   if (L->errorJmp) {
     L->errorJmp->status = errcode;
@@ -149,7 +149,7 @@ static void correctstack (lua_State *L, TValue *oldstack) {
 }
 
 
-// INLINED
+// OFFSET: 0x00420210
 void luaD_reallocstack (lua_State *L, int newsize) {
   TValue *oldstack = L->stack;
   int realsize = newsize + 1 + EXTRA_STACK;
@@ -285,7 +285,7 @@ static StkId tryfuncTM (lua_State *L, StkId func) {
    (condhardstacktests(luaD_reallocCI(L, L->size_ci)), ++L->ci))
 
 
-// INLINED
+// OFFSET: 0x00420980
 int luaD_precall (lua_State *L, StkId func, int nresults) {
   LClosure *cl;
   ptrdiff_t funcr;
@@ -356,7 +356,7 @@ int luaD_precall (lua_State *L, StkId func, int nresults) {
 }
 
 
-// INLINED
+// OFFSET: 0x00420B60
 int luaD_precall_profile (lua_State *L, StkId func, int nresults, __int64 start, __int64 *stop) {
   LClosure *cl;
   ptrdiff_t funcr;
@@ -582,7 +582,7 @@ LUA_API int lua_yield (lua_State *L, int nresults) {
 }
 
 
-// INLINED
+// OFFSET: 0x00420FC0
 int luaD_pcall (lua_State *L, Pfunc func, void *u,
                 ptrdiff_t old_top, ptrdiff_t ef) {
   int status;

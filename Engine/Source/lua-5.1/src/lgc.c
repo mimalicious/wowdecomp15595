@@ -594,7 +594,7 @@ void luaC_callGCTM (lua_State *L) {
 }
 
 
-// INLINED
+// OFFSET: 0x00429F60
 void luaC_freeall (lua_State *L) {
   global_State *g = G(L);
   int i;
@@ -628,7 +628,7 @@ void luaC_sizeall (lua_State *L) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042A050
 lu_mem luaC_getsize (lua_State *L, const char *tag) {
   GCUsage *u;
   for (u = G(L)->gcusage; u; u = u->next) {
@@ -639,7 +639,7 @@ lu_mem luaC_getsize (lua_State *L, const char *tag) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042A080
 void luaC_timeall (lua_State *L) {
   global_State *g = G(L);
   if (g->profile) {
@@ -651,7 +651,7 @@ void luaC_timeall (lua_State *L) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042A0C0
 double luaC_gettime (lua_State *L, const char *tag) {
   GCTime *t;
   for (t = G(L)->gctime; t; t = t->next) {

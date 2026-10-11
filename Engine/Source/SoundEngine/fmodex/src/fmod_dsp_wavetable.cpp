@@ -400,7 +400,7 @@ FMOD_RESULT DSPWaveTable::getParameterInternal(int index, float *value, char *va
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A18410
+// OFFSET: 0x00AC3AF0
 FMOD_RESULT DSPWaveTable::setFrequency(float frequency)
 {
     if (frequency < 0)

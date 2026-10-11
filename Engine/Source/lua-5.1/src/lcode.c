@@ -203,7 +203,7 @@ void luaK_patchtohere (FuncState *fs, int list) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042E760
 void luaK_concat (FuncState *fs, int *l1, int l2) {
   if (l2 == NO_JUMP) return;
   else if (*l1 == NO_JUMP)
@@ -456,7 +456,7 @@ static void exp2reg (FuncState *fs, expdesc *e, int reg) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042F360
 void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   freeexp(fs, e);
@@ -465,7 +465,7 @@ void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042F3E0
 int luaK_exp2anyreg (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   if (e->k == VNONRELOC) {
@@ -520,7 +520,7 @@ int luaK_exp2RK (FuncState *fs, expdesc *e) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042F570
 void luaK_storevar (FuncState *fs, expdesc *var, expdesc *ex) {
   switch (var->k) {
     case VLOCAL: {
@@ -760,7 +760,7 @@ static void codecomp (FuncState *fs, OpCode op, int cond, expdesc *e1,
 }
 
 
-// INLINED
+// OFFSET: 0x0042FB60
 void luaK_prefix (FuncState *fs, UnOpr op, expdesc *e) {
   expdesc e2;
   e2.t = e2.f = NO_JUMP; e2.k = VKNUM; e2.u.nval = 0;

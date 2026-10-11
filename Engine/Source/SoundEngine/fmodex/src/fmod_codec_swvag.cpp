@@ -191,7 +191,7 @@ FMOD_RESULT CodecVAG::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x009103D0
+// OFFSET: 0x00ABCA00
 FMOD_RESULT CodecVAG::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT result;

@@ -269,7 +269,7 @@ FMOD_RESULT DSPLowPass2::updateCoefficients(float resonance, float cutoff)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F2360
+// OFFSET: 0x00A9E290
 FMOD_RESULT DSPLowPass2::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     static float dc = (float)1E-20;

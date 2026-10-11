@@ -521,6 +521,7 @@ FMOD_RESULT Sound::getTag(const char *name, int index, FMOD_TAG *tag)
 }
 
 
+// OFFSET: 0x00A7BBD0
 FMOD_RESULT Sound::getOpenState(FMOD_OPENSTATE *openstate, unsigned int *percentbuffered, bool *starving)
 {
     FMOD_RESULT result;

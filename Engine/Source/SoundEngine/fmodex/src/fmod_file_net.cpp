@@ -83,7 +83,7 @@ FMOD_RESULT NetFile::init()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0091FA30
+// OFFSET: 0x00ACCD40
 FMOD_RESULT NetFile::shutDown()
 {
     return FMOD_OS_Net_Shutdown();

@@ -326,7 +326,7 @@ FMOD_RESULT DSPFlange::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EF6A0
+// OFFSET: 0x00A9ACB0
 FMOD_RESULT DSPFlange::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {   
     unsigned int count;

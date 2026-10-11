@@ -1238,7 +1238,7 @@ FMOD_RESULT CodecMOD::update(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0090BDA0
+// OFFSET: 0x00AB8610
 FMOD_RESULT CodecMOD::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;

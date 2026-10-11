@@ -124,7 +124,7 @@ FMOD_DSP_DESCRIPTION_EX *DSPOscillator::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EAC00
+// OFFSET: 0x00A95A00
 FMOD_RESULT DSPOscillator::createInternal()
 {
     int count;
@@ -186,7 +186,7 @@ FMOD_RESULT DSPOscillator::releaseInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F4920
+// OFFSET: 0x00AA1030
 FMOD_RESULT DSPOscillator::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     unsigned int count;

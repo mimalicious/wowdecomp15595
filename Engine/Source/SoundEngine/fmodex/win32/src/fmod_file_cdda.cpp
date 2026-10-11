@@ -74,7 +74,7 @@ FMOD_RESULT CddaFile::init(bool force_aspi, bool jitter_correction)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00921050
+// OFFSET: 0x00ACE310
 FMOD_RESULT CddaFile::shutDown()
 {
     return FMOD_OS_CDDA_Shutdown();

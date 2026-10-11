@@ -25,6 +25,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
+// OFFSET: 0x00A88190
 FMOD_RESULT ChannelGroupI::validate(ChannelGroup *channelgroup, ChannelGroupI **channelgroupi)
 {
     FMOD::ChannelGroupI *cg = (FMOD::ChannelGroupI *)channelgroup;
@@ -567,7 +568,7 @@ FMOD_RESULT ChannelGroupI::get3DOcclusion(float *directOcclusion, float *reverbO
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E49B0
+// OFFSET: 0x00A8F3B0
 FMOD_RESULT ChannelGroupI::setPaused(bool paused, bool setpausedflag)
 {
     LinkedListNode *current;
@@ -647,7 +648,7 @@ FMOD_RESULT ChannelGroupI::getPaused(bool *paused)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008E4A20
+// OFFSET: 0x00A8F410
 FMOD_RESULT ChannelGroupI::setMute(bool mute, bool setmuteflag)
 {
     LinkedListNode *current;

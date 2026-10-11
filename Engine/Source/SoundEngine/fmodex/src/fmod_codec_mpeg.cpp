@@ -454,7 +454,7 @@ FMOD_RESULT CodecMPEG::getPCMLength()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F64F0
+// OFFSET: 0x00AA2CF0
 FMOD_RESULT CodecMPEG::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;

@@ -1104,7 +1104,7 @@ FMOD_RESULT PluginFactory::getNumCodecs(int *numcodecs)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3D50
+// OFFSET: 0x00AA0470
 FMOD_RESULT PluginFactory::getNumDSPs(int *numdsps)
 {
     FMOD_DSP_DESCRIPTION_EX *current;
@@ -1226,7 +1226,7 @@ FMOD_RESULT PluginFactory::getCodec(int handle, FMOD_CODEC_DESCRIPTION_EX **code
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F3E60
+// OFFSET: 0x00AA0580
 FMOD_RESULT PluginFactory::getDSP(int handle, FMOD_DSP_DESCRIPTION_EX **dspdesc)
 {
     FMOD_DSP_DESCRIPTION_EX *current;

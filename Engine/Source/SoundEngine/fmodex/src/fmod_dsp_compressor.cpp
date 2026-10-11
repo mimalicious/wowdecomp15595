@@ -264,7 +264,7 @@ FMOD_RESULT DSPCompressor::readInternal(float *inbuffer, float *outbuffer, unsig
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EA8D0
+// OFFSET: 0x00A956C0
 FMOD_RESULT DSPCompressor::setParameterInternal(int index, float value)
 {
     FMOD_RESULT result;

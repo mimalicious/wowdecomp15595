@@ -337,7 +337,7 @@ LUA_API int lua_isuserdata (lua_State *L, int idx) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042BD60
 LUA_API int lua_rawequal (lua_State *L, int index1, int index2) {
   StkId o1 = index2adr(L, index1);
   StkId o2 = index2adr(L, index2);
@@ -358,7 +358,7 @@ LUA_API int lua_equal (lua_State *L, int index1, int index2) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042BDB0
 LUA_API int lua_lessthan (lua_State *L, int index1, int index2) {
   StkId o1, o2;
   int i;

@@ -60,7 +60,7 @@ FMOD_RESULT System::setOutput(FMOD_OUTPUTTYPE output)
 }
 
 
-// OFFSET: #0x008D11B0
+// OFFSET: 0x00A7AFF0
 FMOD_RESULT System::getOutput(FMOD_OUTPUTTYPE *output)
 {
     FMOD_RESULT result;
@@ -187,7 +187,7 @@ FMOD_RESULT System::setHardwareChannels(int min2d, int max2d, int min3d, int max
 }
 
 
-// OFFSET: #0x008D12F0
+// OFFSET: 0x00A7B130
 FMOD_RESULT System::setSoftwareChannels(int numsoftwarechannels)
 {
     FMOD_RESULT result;
@@ -992,7 +992,7 @@ FMOD_RESULT System::createSound(const char *name_or_data, FMOD_MODE mode, FMOD_C
 }
 
 
-// OFFSET: #0x008D1610
+// OFFSET: 0x00A7B450
 FMOD_RESULT System::createStream(const char *name_or_data, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO *exinfo, Sound **sound)
 {
     FMOD_RESULT result;

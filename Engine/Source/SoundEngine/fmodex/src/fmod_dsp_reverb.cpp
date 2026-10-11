@@ -220,7 +220,7 @@ FMOD_RESULT DSPReverb::readInternal(float *inbuffer, float *outbuffer, unsigned 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008EB440
+// OFFSET: 0x00A962E0
 FMOD_RESULT DSPReverb::setParameterInternal(int index, float value)
 {
     mSystem->lockDSP();

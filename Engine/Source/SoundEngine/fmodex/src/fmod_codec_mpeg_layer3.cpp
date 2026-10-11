@@ -468,7 +468,7 @@ float         CodecMPEG::gPow2_2[2][16];
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x0092D450
+// OFFSET: 0x00ADB720
 FMOD_RESULT CodecMPEG::initLayer3(int down_sample_sblimit)
 {
 	int i, j, k, l;

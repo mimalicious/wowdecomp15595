@@ -58,7 +58,7 @@ static LONG findDrvPath (char *clsidstr,char *dllpath,int dllpathsize)
 }
 
 
-// OFFSET: #0x0094D6C0
+// OFFSET: 0x00AFDF00
 static LPASIODRVSTRUCT newDrvStruct (HKEY hkey,char *keyname,int drvID,LPASIODRVSTRUCT lpdrv)
 {
 	HKEY	hksub;

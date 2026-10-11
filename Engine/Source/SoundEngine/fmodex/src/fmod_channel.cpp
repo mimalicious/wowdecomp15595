@@ -1312,7 +1312,7 @@ FMOD_RESULT Channel::getLoopPoints(unsigned int *loopstart, FMOD_TIMEUNIT loopst
 }
 
 
-// OFFSET: #0x008D0FE0
+// OFFSET: 0x00A7AE20
 FMOD_RESULT Channel::setUserData(void *_userdata)
 {
     FMOD_RESULT result;

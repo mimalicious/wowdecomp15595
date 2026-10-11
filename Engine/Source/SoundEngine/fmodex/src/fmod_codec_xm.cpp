@@ -2392,7 +2392,7 @@ int CodecXM::EncodeVAG_pcm2vag(unsigned char *vag, short *wave, int sample_len, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x00906270
+// OFFSET: 0x00AB2AB0
 FMOD_RESULT CodecXM::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
 	unsigned short	filenumpatterns=0;

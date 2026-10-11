@@ -11,7 +11,7 @@ inline SockAddr::~SockAddr() {
     }
 }
 
-// INLINED
+// OFFSET: 0x004031A0
 inline void SockAddr::Clear() {
     if (this->m_type == SOCKADDR_HOSTNAME && this->m_hostname) {
         SMemFree(this->m_hostname, __FILE__, __LINE__, 0);

@@ -466,7 +466,7 @@ static TValue *newkey (lua_State *L, Table *t, const TValue *key) {
 /*
 ** search function for integers
 */
-// INLINED
+// OFFSET: 0x0042ADE0
 const TValue *luaH_getnum (Table *t, int key) {
   /* (1 <= key && key <= t->sizearray) */
   if (cast(unsigned int, key-1) < cast(unsigned int, t->sizearray))
@@ -503,7 +503,7 @@ const TValue *luaH_getstr (Table *t, TString *key) {
 /*
 ** main search function
 */
-// INLINED
+// OFFSET: 0x0042AEC0
 const TValue *luaH_get (Table *t, const TValue *key) {
   switch (ttype(key)) {
     case LUA_TNIL: return luaO_nilobject;
@@ -531,7 +531,7 @@ const TValue *luaH_get (Table *t, const TValue *key) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042AF90
 TValue *luaH_set (lua_State *L, Table *t, const TValue *key) {
   const TValue *p = luaH_get(t, key);
   t->flags = 0;
@@ -546,7 +546,7 @@ TValue *luaH_set (lua_State *L, Table *t, const TValue *key) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042B000
 TValue *luaH_setnum (lua_State *L, Table *t, int key) {
   const TValue *p = luaH_getnum(t, key);
   if (p != luaO_nilobject)
@@ -559,7 +559,7 @@ TValue *luaH_setnum (lua_State *L, Table *t, int key) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042B640
 TValue *luaH_setstr (lua_State *L, Table *t, TString *key) {
   const TValue *p = luaH_getstr(t, key);
   if (p != luaO_nilobject)
