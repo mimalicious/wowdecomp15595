@@ -391,6 +391,43 @@ struct JamCliCUFProfile {
     JamCliCUFProfile();
 };
 
+struct JamAccountInfoData {
+    /* 0000 */ uint32_t unk_0000;
+    /* 0004 */ uint32_t unk_0004;
+};
+
+struct JamRideTicketString {
+    /* 0000 */ char m_text[512];
+};
+
+struct JamGuildCriteriaProgress {
+    /* 0000 */ uint32_t unk_0000;
+    /* 0004 */ uint32_t unk_0004;
+    /* 0008 */ uint32_t unk_0008;
+    /* 000C */ uint32_t unk_000C;
+    /* 0010 */ uint8_t unk_0010[8];
+    /* 0018 */ uint8_t unk_0018[8];
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ uint32_t unk_0024;
+};
+
+struct JamEarnedAchievement {
+    /* 0000 */ uint32_t unk_0000;
+    /* 0004 */ WowTime unk_0004;
+};
+
+struct JamCriteriaProgress {
+    /* 0000 */ uint32_t unk_0000;
+    /* 0004 */ uint32_t unk_0004;
+    /* 0008 */ uint8_t unk_0008[8];
+    /* 0010 */ uint8_t unk_0010[8];
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ WowTime unk_001C;
+    /* 003C */ uint32_t unk_003C;
+    /* 0040 */ uint32_t unk_0040;
+    /* 0044 */ uint32_t unk_0044;
+};
+
 struct JamLFGuildSettings {
     /* 0000 */ uint32_t m_interests;
     /* 0004 */ uint32_t m_availability;
@@ -584,9 +621,20 @@ class ClientAccountInfoResponse : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientAccountInfoResponse* msg);
 
+    /* 0010 */ char unk_0010[1280];
+    /* 0510 */ TSGrowableArray<JamAccountInfoData> unk_0510;
+    /* 0520 */ uint32_t unk_0520;
+    /* 0524 */ uint32_t unk_0524;
+    /* 0528 */ uint32_t unk_0528;
+    /* 052C */ char unk_052C[1280];
+    /* 0A2C */ uint32_t unk_0A2C;
+    /* 0A30 */ uint32_t unk_0A30;
+    /* 0A34 */ TSGrowableArray<JamAccountInfoData> unk_0A34;
+
     ClientAccountInfoResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientAccountInfoResponse();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildEventLogQueryResults : public JamClientMessage {
@@ -629,9 +677,12 @@ class ClientDumpRideTicketsResponse : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientDumpRideTicketsResponse* msg);
 
+    /* 0010 */ TSGrowableArray<JamRideTicketString> unk_0010;
+
     ClientDumpRideTicketsResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientDumpRideTicketsResponse();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 struct JamLootItem {
@@ -776,9 +827,12 @@ class ClientGuildCriteriaData : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientGuildCriteriaData* msg);
 
+    /* 0010 */ TSGrowableArray<JamGuildCriteriaProgress> unk_0010;
+
     ClientGuildCriteriaData(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildCriteriaData();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientNewWorldAbort : public JamClientMessage {
@@ -874,9 +928,14 @@ class ClientRespondInspectAchievements : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientRespondInspectAchievements* msg);
 
+    /* 0010 */ TSGrowableArray<JamEarnedAchievement> unk_0010;
+    /* 0020 */ TSGrowableArray<JamCriteriaProgress> unk_0020;
+    /* 0030 */ uint8_t unk_0030[8];
+
     ClientRespondInspectAchievements(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientRespondInspectAchievements();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientDifferentInstanceFromParty : public JamClientMessage {
@@ -1309,9 +1368,25 @@ class ClientLfgUpdateStatus : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfgUpdateStatus* msg);
 
+    /* 0010 */ bool unk_0010;
+    /* 0011 */ bool unk_0011;
+    /* 0012 */ bool unk_0012;
+    /* 0014 */ TSGrowableArray<uint32_t> unk_0014;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ uint8_t unk_0028[8];
+    /* 0030 */ uint32_t unk_0030;
+    /* 0034 */ uint32_t unk_0034;
+    /* 0038 */ uint32_t unk_0038;
+    /* 003C */ uint32_t unk_003C;
+    /* 0040 */ uint8_t unk_0040;
+    /* 0041 */ bool unk_0041;
+    /* 0042 */ char unk_0042[256];
+    /* 0142 */ uint8_t unk_0142[3];
+
     ClientLfgUpdateStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfgUpdateStatus();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientDisplayGameError : public JamClientMessage {
