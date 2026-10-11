@@ -15,7 +15,7 @@ inline DBCRelativeString& DBCRelativeString::operator=(const DBCRelativeString& 
 
 // INLINED
 inline DBCRelativeString& DBCRelativeString::operator=(const char* value) {
-    this->m_offset = static_cast<int32_t>(value - reinterpret_cast<const char*>(this));
+    this->m_offset = value && *value ? static_cast<int32_t>(value - reinterpret_cast<const char*>(this)) : 0;
     return *this;
 }
 

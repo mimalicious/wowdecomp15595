@@ -2193,9 +2193,12 @@ static void DrawSpellCursorShadow(uint32_t triFlags) {
 
 // OFFSET: 0x008E36E0/0x140610DE0
 uint64_t CGWorldFrame::FindClosestModel(const C3Vector& start, const C3Vector& end, uint32_t flags, float* distance) {
+    C44Matrix view;
+    CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[GxXform_View];
+    view = stack.m_mtx[stack.m_level];
     const C3Vector& camera = StaticSingleton<CCameraManager>::Instance()->m_shot.m_position;
-    C3Vector viewStart = start - camera;
-    C3Vector viewEnd = end - camera;
+    C3Vector viewStart = (start - camera) * view;
+    C3Vector viewEnd = (end - camera) * view;
 
     TSList<CModelRecord, TSGetLink<CModelRecord> > lowPriority;
     uint32_t time = FrameTime::GetCurTimeMs();

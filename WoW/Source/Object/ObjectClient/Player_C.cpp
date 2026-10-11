@@ -238,8 +238,8 @@ static uint32_t s_bindMapId;
 // STATIC: 0x00DD4D84
 static int32_t s_bindPointSet;
 
-// STATIC: #0x00C9D540
-static int32_t s_playerRenderDisabled;
+// STATIC: 0x00DD4D88
+static int32_t s_playerRender;
 
 // STATIC: 0x00DD4D8C
 static uint32_t s_attackSwingErrorTime;
@@ -258,9 +258,6 @@ static uint32_t s_pendingMovie;
 
 // STATIC: 0x00DD502C
 static uint32_t s_pendingMovieID;
-
-// STATIC: 0x00DD4D88
-static uint32_t s_unk_DD4D88;
 
 // STATIC: 0x00DD5030
 WOWGUID CGPlayer_C::s_resurrectOfferer;
@@ -689,7 +686,7 @@ void PlayerClientInitialize() {
     CGPlayer_C::s_resurrectOfferer = WOWGUID::Make(0);
     CGPlayer_C::s_resurrectOfferSickness = 0;
     CGPlayer_C::s_resurrectOfferUseTimer = 0;
-    s_playerRenderDisabled = 1;
+    s_playerRender = 1;
     PlayerInitializeSounds();
     AreaTriggersInitialize(ClntObjMgrGetMapID());
 }
@@ -1098,9 +1095,9 @@ int32_t __stdcall CGPlayer_C::OnLootItemNotify(CDataStore* msg) {
 // PROVEN: 82a1b839 IDENTICAL/NONE
 // OFFSET: 0x005546E0/0x1401B09A0
 int32_t Player_C_TogglePlayerRender() {
-    s_playerRenderDisabled = s_playerRenderDisabled == 0;
+    s_playerRender = s_playerRender == 0;
 
-    return s_playerRenderDisabled;
+    return s_playerRender;
 }
 
 // PROVEN: 2c9ecf30 IDENTICAL/NONE
@@ -2724,7 +2721,7 @@ void CGPlayer_C::ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) 
 
     if (this->IsCommentatorUberOrInArena() || ((this->m_clientFlags & 0x400000) && this->m_pendingItemCacheCount)) {
         hidden = 1;
-    } else if (!s_unk_DD4D88 && this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+    } else if (!s_playerRender && this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         hidden = 1;
     }
 }
