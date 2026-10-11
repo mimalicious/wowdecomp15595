@@ -117,7 +117,7 @@ static int32_t ParseFormatSpecifier(const char** format, ArgumentSize* size, int
     }
 }
 
-// OFFSET: #0x00773E10
+// OFFSET: 0x004BEA20
 static void FixUpLongLongFormatSpecifier(char* specifier) {
     char* ll = strstr(specifier, "ll");
 

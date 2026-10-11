@@ -153,7 +153,7 @@ static SCritSect s_critsect;
 // STATIC: 0x00DD8A98
 static CVar* s_bgLoadThrottleVar;
 
-// OFFSET: #0x00763680
+// OFFSET: 0x0060DB40
 void GenerateNodeString(CONSOLELINE* node) {
     CGxFont* font = TextBlockGetFontPtr(s_textFont);
 
@@ -209,7 +209,7 @@ static void ResetHighlight() {
     s_hRect.bottom = 0.0f;
 }
 
-// OFFSET: #0x00763860
+// OFFSET: 0x0060DEA0
 static void UpdateHighlight() {
     CGxFont* font = TextBlockGetFontPtr(s_textFont);
     uint32_t length = SStrLen(s_copyText);
@@ -248,7 +248,7 @@ static int32_t OnMouseUp(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x007639D0
+// OFFSET: 0x0060DFF0
 static int32_t OnMouseMove(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouse = static_cast<const EVENT_DATA_MOUSE*>(data);
 
@@ -275,7 +275,7 @@ static int32_t OnMouseMove(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x00763A60
+// OFFSET: 0x0060E080
 static void MakeCommandCurrent(CONSOLELINE* line, const char* command) {
     line->m_inputpos = line->m_inputstart;
     line->m_chars = line->m_inputstart;
@@ -289,7 +289,7 @@ static void MakeCommandCurrent(CONSOLELINE* line, const char* command) {
     line->m_chars = line->m_inputpos;
 }
 
-// OFFSET: #0x00763AB0
+// OFFSET: 0x0060E0E0
 static void Backspace(CONSOLELINE* line) {
     if (line->m_inputpos <= line->m_inputstart) {
         return;
@@ -306,7 +306,7 @@ static void Backspace(CONSOLELINE* line) {
     SetInputString(reinterpret_cast<const char*>(line->m_buffer));
 }
 
-// OFFSET: #0x00763B10
+// OFFSET: 0x0060E140
 static void Delete(CONSOLELINE* line) {
     if (line->m_inputpos > line->m_chars) {
         return;
@@ -317,7 +317,7 @@ static void Delete(CONSOLELINE* line) {
     SetInputString(reinterpret_cast<const char*>(line->m_buffer));
 }
 
-// OFFSET: #0x00763B40
+// OFFSET: 0x0060E170
 static void Up(CONSOLELINE* line) {
     if (s_historyIndex == ConsoleCommandHistoryDepth() - 1) {
         return;
@@ -333,7 +333,7 @@ static void Up(CONSOLELINE* line) {
     }
 }
 
-// OFFSET: #0x00763B90
+// OFFSET: 0x0060E1C0
 static void Down(CONSOLELINE* line) {
     if (s_historyIndex == -1) {
         return;
@@ -357,7 +357,7 @@ static void Down(CONSOLELINE* line) {
     SetInputString(reinterpret_cast<const char*>(line->m_buffer));
 }
 
-// OFFSET: %0x00618450
+// OFFSET: 0x0060E280
 static int32_t OnKeyUp(const void* data, void* param) {
     if (static_cast<const EVENT_DATA_KEY*>(data)->m_key == s_consoleHotKey && IsConsoleEnabled()) {
         return 0;
@@ -386,7 +386,7 @@ static int32_t EventCloseCallback(void* param) {
     return 0;
 }
 
-// OFFSET: #0x00763D80
+// OFFSET: 0x0060E3A0
 CONSOLELINE::~CONSOLELINE() {
     if (this->m_buffer) {
         SMemFree(this->m_buffer, __FILE__, __LINE__, 0);
@@ -479,7 +479,7 @@ static void DrawCaret(const C3Vector& caretpos) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: #0x007643F0
+// OFFSET: 0x0060F0D0
 static void PaintBackground(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (s_rect.bottom < 1.0f) {
         DrawBackground();
@@ -490,7 +490,7 @@ static void PaintBackground(void* param, const RECTF* rect, const RECTF* visible
     }
 }
 
-// OFFSET: #0x007644B0
+// OFFSET: 0x0060F1A0
 static void EnforceMaxLines() {
     if (s_NumLines <= 256) {
         return;
@@ -507,7 +507,7 @@ static void EnforceMaxLines() {
     s_NumLines--;
 }
 
-// OFFSET: #0x00764520
+// OFFSET: 0x0060F220
 static CONSOLELINE* GetInputLine() {
     CONSOLELINE* head = s_linelist.Head();
 
@@ -533,7 +533,7 @@ static CONSOLELINE* GetInputLine() {
     return line;
 }
 
-// OFFSET: #0x007645E0
+// OFFSET: 0x0060F300
 static void PaintText(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     // STATIC: #0x00CA19F0
     static float carettime;
@@ -652,7 +652,7 @@ static void PasteInInputLine(const char* text) {
     SetInputString(reinterpret_cast<const char*>(line->m_buffer));
 }
 
-// OFFSET: %0x006193A0
+// OFFSET: 0x0060F710
 static int32_t OnChar(const void* data, void* param) {
     if (EventIsKeyDown(s_consoleHotKey) && IsConsoleEnabled()) {
         return 0;
@@ -672,7 +672,7 @@ static int32_t OnChar(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x00764A10
+// OFFSET: 0x0060E480
 static int32_t OnMouseDown(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouse = static_cast<const EVENT_DATA_MOUSE*>(data);
 
@@ -718,7 +718,7 @@ static int32_t OnMouseDown(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x00764B90
+// OFFSET: 0x0060FCE0
 static int32_t OnKeyDownRepeat(const void* data, void* param) {
     const EVENT_DATA_KEY* key = static_cast<const EVENT_DATA_KEY*>(data);
 
@@ -839,7 +839,7 @@ static int32_t OnKeyDownRepeat(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x00765270
+// OFFSET: 0x00610350
 void ConsoleWrite(const char* str, COLOR_T color) {
     if (!str || !*str || !GxDevExists() || !s_textFont) {
         return;
@@ -870,7 +870,7 @@ void ConsoleWrite(const char* str, COLOR_T color) {
     s_critsect.Leave();
 }
 
-// OFFSET: %0x00619E40
+// OFFSET: 0x006538B0
 void ConsoleWriteA(const char* format, COLOR_T color, ...) {
     if (!format || !*format || !GxDevExists()) {
         return;
@@ -884,7 +884,7 @@ void ConsoleWriteA(const char* format, COLOR_T color, ...) {
     va_end(args);
 }
 
-// OFFSET: %0x00619E90
+// OFFSET: 0x00653900
 void ConsolePrintf(const char* format, ...) {
     if (!format || !*format || !GxDevExists()) {
         return;
@@ -898,7 +898,7 @@ void ConsolePrintf(const char* format, ...) {
     va_end(args);
 }
 
-// OFFSET: #0x007658A0
+// OFFSET: 0x00657120
 void ConsoleCommandExecute(const char* commandLine, int32_t addToHistory) {
     if (s_execState == 1 || s_execState == 0 || s_execState == 2) {
         if (!AddLineToExecFile(commandLine)) {
@@ -949,7 +949,7 @@ done:
     }
 }
 
-// OFFSET: #0x007659C0
+// OFFSET: 0x0060DCD0
 static int32_t OnIdle(const void* data, void* param) {
     float finalPos = s_active ? 1.0f - s_consoleHeight : 1.0f;
 
@@ -989,7 +989,7 @@ static int32_t OnIdle(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x00765AF0
+// OFFSET: 0x0060F790
 static int32_t OnKeyDown(const void* data, void* param) {
     const EVENT_DATA_KEY* key = static_cast<const EVENT_DATA_KEY*>(data);
 
@@ -1210,7 +1210,7 @@ static int32_t OnKeyDown(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x00765FF0
+// OFFSET: 0x0060FFC0
 static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_CHAR, OnChar, NULL, 7.0f);
     EventRegisterEx(EVENT_ID_IDLE, OnIdle, NULL, 7.0f);
@@ -1234,7 +1234,7 @@ static void UnregisterHandlers() {
     EventUnregister(EVENT_ID_MOUSEMOVE, OnMouseMove);
 }
 
-// OFFSET: #0x00766140
+// OFFSET: 0x00610130
 void ConsoleScreenInitialize(const char* title) {
     CRect windowSize;
     g_theGxDevicePtr->CapsWindowSize(windowSize);

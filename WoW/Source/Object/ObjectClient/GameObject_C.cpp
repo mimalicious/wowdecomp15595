@@ -3512,7 +3512,7 @@ int32_t CGGameObject_C::GetPageTextLanguage() const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 16));
 }
 
-// OFFSET: #0x00710300
+// OFFSET: 0x005A0790
 int32_t CGGameObject_C::GetPageTextMaterial() const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 17));
 }
@@ -3949,7 +3949,7 @@ void CGGameObject_C_Type_TransportBase::Disable() {
     this->DestroyWorldObj();
 }
 
-// OFFSET: #0x007100D0
+// OFFSET: 0x005A0220
 void CGGameObject_C_Type_MapObjTransport::InitializeMovement() {
     uint32_t time = OsGetAsyncTimeMs();
     CGGameObject_C* owner = this->m_owner;

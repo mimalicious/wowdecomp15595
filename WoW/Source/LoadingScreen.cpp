@@ -271,7 +271,7 @@ static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x004079D0
+// OFFSET: 0x00409440
 static void UpdateProgressValue() {
     float xmlProgress = 0.0f;
     float worldScale = 1.0f;
@@ -302,7 +302,7 @@ static void UpdateProgressValue() {
     }
 }
 
-// OFFSET: %0x00408970
+// OFFSET: 0x00409570
 static void InitializeProgressBarEvents() {
     EventRegisterEx(EVENT_ID_CHAR, SwallowEvent, NULL, 8.0f);
     EventRegisterEx(EVENT_ID_IME, SwallowEvent, NULL, 8.0f);
@@ -332,7 +332,7 @@ bool LoadingScreenDrawing() {
     return s_loadingScreenLayer != NULL;
 }
 
-// OFFSET: #0x00407EA0
+// OFFSET: 0x00409750
 void LoadingScreenSetTransparent(bool transparent) {
     if (!s_loadingScreenLayer) {
         return;
@@ -360,7 +360,7 @@ static void ProgressBarSendKeepAlive(uint32_t time) {
     s_nextPingTime = time + 30000;
 }
 
-// OFFSET: #0x004085A0
+// OFFSET: 0x0040BAC0
 static bool PaintSimpleBackground() {
     if (!s_simpleBackgroundTexture) {
         return false;
@@ -385,7 +385,7 @@ static bool PaintSimpleBackground() {
     return true;
 }
 
-// OFFSET: #0x00409010
+// OFFSET: 0x0040B300
 static bool PaintBackgroundImage() {
     if (!s_dynamicElements.Count()) {
         return false;
@@ -512,7 +512,7 @@ static bool LoadSimpleBackgroundTexture() {
     return result;
 }
 
-// OFFSET: #0x00409800
+// OFFSET: 0x0040BEE0
 int32_t IsStillLoading() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -534,7 +534,7 @@ int32_t IsStillLoading() {
     return 0;
 }
 
-// OFFSET: #0x0040A270
+// OFFSET: 0x0040CB30
 static void LoadingScreenPaint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (!GxHasContext() || !GxIsWindowVisible() || (s_progress > 0.99f && !IsStillLoading())) {
         return;
@@ -612,7 +612,7 @@ static void LoadingScreenPaint(void* param, const RECTF* rect, const RECTF* visi
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: #0x0040A920
+// OFFSET: 0x0040D280
 static void UpdateProgressBar(int32_t force) {
     uint32_t time = OsGetAsyncTimeMs();
     EventInputProcess(EventGetCurrentContext());
@@ -629,7 +629,7 @@ static void UpdateProgressBar(int32_t force) {
     GxScenePresent(NULL);
 }
 
-// OFFSET: #0x0040A990
+// OFFSET: 0x0040D2F0
 static void InitializeProgressBar(bool loadingWorld) {
     if (s_loadingScreenLayer) {
         ScrnLayerSetFlags(s_loadingScreenLayer, ScrnLayerGetFlags(s_loadingScreenLayer) & ~0x1u);
@@ -684,7 +684,7 @@ void LoadingScreenSpellUpdateProgress(float progress) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: #0x0040AB70
+// OFFSET: 0x0040D490
 void LoadingScreenEnable(int32_t mapID, bool loadingWorld) {
     CGGameUI::SetAspect();
 
@@ -757,7 +757,7 @@ void LoadingScreenXMLCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: %0x00408A40
+// OFFSET: 0x00409640
 static void LoadingScreenDisableEvents() {
     EventUnregister(EVENT_ID_CHAR, SwallowEvent);
     EventUnregister(EVENT_ID_IME, SwallowEvent);
@@ -772,7 +772,7 @@ static void LoadingScreenDisableEvents() {
     }
 }
 
-// OFFSET: #0x004094E0
+// OFFSET: 0x0040BA40
 static void ClearDynamicData() {
     if (s_dynamicElementsTexture) {
         TextureRelease(s_dynamicElementsTexture);
@@ -844,7 +844,7 @@ void LoadingScreenDisable() {
     }
 }
 
-// OFFSET: %0x0040B070
+// OFFSET: 0x0040BD20
 void LoadingScreenShutdown() {
     LoadingScreenDisable();
 
@@ -859,7 +859,7 @@ void LoadingScreenShutdown() {
     }
 }
 
-// OFFSET: #0x00407EF0
+// OFFSET: 0x004097A0
 void LoadingScreenMiniDisable() {
     if (s_miniLoadingLayer) {
         HandleClose(reinterpret_cast<HOBJECT>(s_miniLoadingLayer));
@@ -876,13 +876,13 @@ void LoadingScreenMiniDisable() {
     }
 }
 
-// OFFSET: #0x0040A770
+// OFFSET: 0x0040D120
 void LoadingScreenMiniUpdate(float progress) {
     LoadingScreenMiniEnable();
     s_progress = progress;
 }
 
-// OFFSET: #0x0040A160
+// OFFSET: 0x0040CA70
 bool LoadDynamicBackground() {
     CStatus status;
 
@@ -910,7 +910,7 @@ bool LoadDynamicBackground() {
     return true;
 }
 
-// OFFSET: #0x00409B10
+// OFFSET: 0x0040C260
 static void LoadingScreenMiniPaint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (!GxHasContext() || !GxIsWindowVisible()) {
         return;
@@ -970,7 +970,7 @@ static void LoadingScreenMiniPaint(void* param, const RECTF* rect, const RECTF* 
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: #0x0040A690
+// OFFSET: 0x0040D040
 void LoadingScreenMiniEnable() {
     if (s_miniLoadingLayer) {
         return;
@@ -994,7 +994,7 @@ void LoadingScreenMiniEnable() {
     s_progress = 0.5f;
 }
 
-// OFFSET: #0x00408690
+// OFFSET: 0x0040A560
 static void BuildEndpointVertices(const C3Vector& start, const C3Vector& end) {
     s_dynamicElements.m_data[0].m_position = C3Vector(start.x - 0.02f, start.y - 0.0265f, 0.0f);
     s_dynamicElements.m_data[0].m_texCoord.x = 0.5f;
@@ -1037,7 +1037,7 @@ static void BuildEndpointVertices(const C3Vector& start, const C3Vector& end) {
     s_dynamicElements.m_data[7].m_color = s_pathColor;
 }
 
-// OFFSET: #0x004089C0
+// OFFSET: 0x0040A910
 static void BuildPathVertices(C3Spline* spline, int32_t segments) {
     float t = 0.0f;
     float step = 1.0f / segments;
@@ -1072,7 +1072,7 @@ static LoadingScreenTaxiSplinesRec* FindTaxiSpline(int32_t pathID, int32_t legIn
     return NULL;
 }
 
-// OFFSET: #0x00408E10
+// OFFSET: 0x0040B0F0
 void PaintDynamicLoadingBar() {
     if (!s_dynamicElements.Count()) {
         return;
@@ -1134,7 +1134,7 @@ void PaintDynamicLoadingBar() {
     GxPrimUnlockVertexPtrs();
 }
 
-// OFFSET: #0x00409880
+// OFFSET: 0x0040BF70
 static bool InitializeSpline(uint32_t path, int32_t leg) {
     LoadingScreenTaxiSplinesRec* splineRec = FindTaxiSpline(path, leg);
 
@@ -1213,7 +1213,7 @@ static bool InitializeSpline(uint32_t path, int32_t leg) {
     return true;
 }
 
-// OFFSET: #0x0040AD50
+// OFFSET: 0x0040D7A0
 void LoadingScreenEnableShip(uint32_t transportEntry, int32_t transportMap, int32_t mapID) {
     s_simpleMapID = mapID;
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();

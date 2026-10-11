@@ -267,7 +267,7 @@ bool CGUnit::IsCharmed() const {
     return this->m_unit->m_unitFieldCharmedby != WOWGUID();
 }
 
-// OFFSET: #0x005EE050
+// OFFSET: 0x008A4690
 int32_t CGUnit::GetSpellCostModifier(int32_t schoolMask) const {
     int32_t result = 0;
     bool found = false;
@@ -282,7 +282,7 @@ int32_t CGUnit::GetSpellCostModifier(int32_t schoolMask) const {
     return result;
 }
 
-// OFFSET: #0x005EE0B0
+// OFFSET: 0x008A46E0
 float CGUnit::GetSpellCostMultiplier(int32_t schoolMask) const {
     float result = 0.0f;
     bool found = false;

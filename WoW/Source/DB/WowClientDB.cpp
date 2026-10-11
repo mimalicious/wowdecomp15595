@@ -342,7 +342,7 @@ uint8_t* DecompressRow(const uint8_t* src, uint32_t size, uint8_t* dst) {
     return out;
 }
 
-// OFFSET: #0x0095D980
+// OFFSET: 0x00872C70
 uint32_t CompressRow(const uint8_t* src, uint32_t size, uint8_t* dst) {
     uint8_t* out = dst;
     const uint8_t* end = &src[size];

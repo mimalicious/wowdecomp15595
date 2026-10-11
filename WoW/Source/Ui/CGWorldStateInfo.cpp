@@ -37,7 +37,7 @@ TSHashTable<WORLDSTATE, HASHKEY_NONE> CGWorldStateInfo::m_worldStates;
 // STATIC: #0x00BE8F80
 TSGrowableArray<WorldStateUIEntry> CGWorldStateInfo::m_worldStateUI;
 
-// OFFSET: %0x0091C7C0
+// OFFSET: 0x009CD470
 void CGWorldStateInfo::InitializeGame() {
     CGWorldStateInfo::m_mapID = -1;
     CGWorldStateInfo::m_areaID = 0;
@@ -52,7 +52,7 @@ int32_t CGWorldStateInfo::GetUITime() {
     return CGWorldStateInfo::m_UITimeOffset + static_cast<int32_t>(time(NULL));
 }
 
-// OFFSET: #0x00548D10
+// OFFSET: 0x009CD850
 int32_t GetWorldState(int32_t id) {
     WORLDSTATE* state = CGWorldStateInfo::m_worldStates.Ptr(id, HASHKEY_NONE());
 
@@ -107,7 +107,7 @@ bool CGWorldStateInfo::InitWorldStates(uint32_t mapId, uint32_t zoneId, uint32_t
     return true;
 }
 
-// OFFSET: #0x00549440
+// OFFSET: 0x009CE3B0
 bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value, bool hidden) {
     WORLDSTATE* worldState = CGWorldStateInfo::m_worldStates.Ptr(state, HASHKEY_NONE());
 
@@ -164,13 +164,13 @@ void CGWorldStateInfo::ResetWorldStateUI() {
     }
 }
 
-// OFFSET: #0x00548B20
+// OFFSET: 0x009CDC70
 void CGWorldStateInfo::ShutdownGame() {
     CGWorldStateInfo::m_worldStates.InternalClear(0);
     CGWorldStateInfo::m_worldStateUI.Clear();
 }
 
-// OFFSET: #0x005770D0
+// OFFSET: 0x00992F50
 bool WorldStateParseText(const char* text, char* buffer, uint32_t size) {
     if (!text) {
         return false;

@@ -49,7 +49,7 @@ CSimpleFrame* CGTabardModelFrame::Create(CSimpleFrame* parent) {
     return data ? new (data) CGTabardModelFrame(parent) : NULL;
 }
 
-// OFFSET: #0x00598F50
+// OFFSET: 0x00A05E70
 CGTabardModelFrame::CGTabardModelFrame(CSimpleFrame* parent) : CGCharacterModelBase(parent) {
 }
 
@@ -105,7 +105,7 @@ void CGTabardModelFrame::Save() {
     }
 }
 
-// OFFSET: #0x00599470
+// OFFSET: 0x00A062F0
 void CGTabardModelFrame::CycleVariation(uint32_t variation, int32_t delta) {
     int32_t count = s_tabardVariationCounts[variation];
 
@@ -116,7 +116,7 @@ void CGTabardModelFrame::CycleVariation(uint32_t variation, int32_t delta) {
     }
 }
 
-// OFFSET: #0x005995D0
+// OFFSET: 0x00A06450
 void CGTabardModelFrame::OnModelLoaded(CM2Model* model) {
     CGCharacterModelBase::OnModelLoaded(model);
 
@@ -134,7 +134,7 @@ void CGTabardModelFrame::OnModelLoaded(CM2Model* model) {
     CameraSetCoord(camera, 8, coord);
 }
 
-// OFFSET: #0x00599670
+// OFFSET: 0x00A06530
 void CGTabardModelFrame::InitializeTabardColors(CGPlayer_C* player) {
     CRndSeed seed;
     WOWGUID none = WOWGUID();

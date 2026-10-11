@@ -18,7 +18,7 @@ CSimpleScriptManager* CSimpleScriptManager::s_instance;
 inline CSimpleScriptManager::CSimpleScriptManager() : m_hashMask(-1) {
 }
 
-// OFFSET: #0x00758C50
+// OFFSET: 0x0060BEB0
 void CSimpleScriptManager::Create() {
     CSimpleScriptManager* manager = new (__FILE__, __LINE__) CSimpleScriptManager();
 
@@ -61,7 +61,7 @@ void CSimpleScriptManager::Create() {
     }
 }
 
-// OFFSET: #0x00758CD0
+// OFFSET: 0x0060BF30
 void CSimpleScriptManager::Destroy() {
     for (uint32_t i = 0; i < s_callbackCount; i++) {
         s_callbacks[i](1);
@@ -90,7 +90,7 @@ int32_t CSimpleScriptManager::RegisterCallback(void (*callback)(uint32_t)) {
     return 1;
 }
 
-// OFFSET: #0x007581A0
+// OFFSET: 0x0060B3D0
 void CSimpleScriptManager::UnregisterCallback(void (*callback)(uint32_t)) {
     for (uint32_t i = 0; i < s_callbackCount; i++) {
         if (s_callbacks[i] == callback) {
@@ -106,7 +106,7 @@ void CSimpleScriptManager::UnregisterCallback(void (*callback)(uint32_t)) {
     }
 }
 
-// OFFSET: #0x00758480
+// OFFSET: 0x0060B6C0
 int32_t CSimpleScriptManager::CallFunction(uint32_t handle, const SimpleScriptIO& in, SimpleScriptIO& out) {
     if (handle == 0xFFFFFFFF) {
         return 0;

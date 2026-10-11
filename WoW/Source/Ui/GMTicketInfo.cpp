@@ -70,7 +70,7 @@ void CGGMTicketInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_GM_TICKET_STATUS_UPDATE, Packet_Group_5, NULL);
 }
 
-// OFFSET: #0x005AC170
+// OFFSET: 0x009E5680
 static int32_t IsTicketTextValid(const char* text) {
     if (SStrLenUTF8(text) > 500) {
         CGGameUI::DisplayError(ERR_TICKET_TEXT_TOO_LONG);

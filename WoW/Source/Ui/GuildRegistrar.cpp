@@ -28,7 +28,7 @@ void CGGuildRegistrar::EnterWorld() {
     CGGuildRegistrar::m_petition.m_requiredSignatures = 0;
 }
 
-// OFFSET: #0x00599E00
+// OFFSET: 0x009EB580
 void CGGuildRegistrar::SetRegistrar(WOWGUID registrar, const GuildPetitionInfo* petition) {
     CGGameUI::SetInteractTarget(registrar);
     CGGuildRegistrar::m_petition.m_index = 0;
@@ -42,7 +42,7 @@ void CGGuildRegistrar::SetRegistrar(WOWGUID registrar, const GuildPetitionInfo* 
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_SHOW, NULL);
 }
 
-// OFFSET: #0x00599E90
+// OFFSET: 0x009EB610
 void CGGuildRegistrar::CloseRegistrar() {
     if (!CGGuildRegistrar::m_registrar) {
         return;
@@ -66,7 +66,7 @@ int32_t CGGuildRegistrar::ValidateAndReportGuildName(const char* name) {
     return 0;
 }
 
-// OFFSET: #0x0059A050
+// OFFSET: 0x009EB750
 void CGGuildRegistrar::BuyGuildCharter(const char* name) {
     if (!name || !*name || !CGGuildRegistrar::m_registrar) {
         return;

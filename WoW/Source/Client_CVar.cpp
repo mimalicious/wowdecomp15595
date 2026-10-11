@@ -281,7 +281,7 @@ static bool ErrorDisplayMaxLevelCallback(CVar* var, const char* oldValue, const 
     return true;
 }
 
-// OFFSET: #0x00401840
+// OFFSET: 0x00403BA0
 static void PrintFilterMask() {
     uint32_t filter = SysMsgGetFilter();
 
@@ -302,7 +302,7 @@ static void PrintFilterMask() {
     ConsolePrintf("Now filtering: %s", names);
 }
 
-// OFFSET: #0x004018D0
+// OFFSET: 0x004014C0
 static int32_t ErrorDisplaySetFilter(const char* filter) {
     int32_t except = 0;
     uint32_t mask = 0;
@@ -364,7 +364,7 @@ static bool ErrorDisplayFilterCallback(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// OFFSET: #0x00401A30
+// OFFSET: 0x004015F0
 static bool GammaCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     float gamma = SStrToFloat(value);
 
@@ -410,7 +410,7 @@ static bool ScreenshotQualityCallback(CVar* var, const char* oldValue, const cha
     return true;
 }
 
-// OFFSET: #0x00402100
+// OFFSET: 0x00401890
 static uint32_t GetM2FasterModifierMask(int32_t faster, int32_t debug) {
     uint32_t mask = 0;
 
@@ -465,14 +465,14 @@ static bool M2FasterChanged(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
-// OFFSET: #0x00402210
+// OFFSET: 0x004019A0
 static bool M2DebugFasterChanged(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t faster = s_M2FasterVar ? s_M2FasterVar->m_intValue : 0;
     M2SetGlobalOptFlags(GetM2FasterModifierMask(faster, SStrToInt(value)));
     return true;
 }
 
-// OFFSET: #0x00402250
+// OFFSET: 0x004019E0
 bool UIFasterCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t faster = SStrToInt(value);
 
@@ -504,7 +504,7 @@ bool UIFasterCallback(CVar* var, const char* oldValue, const char* value, void* 
     return true;
 }
 
-// OFFSET: #0x004022E0
+// OFFSET: 0x00401A70
 bool ProcessAffinityMaskCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t maxMask = 0xFFFFFFFF >> (32 - OsGetNumberOfProcessors());
     uint32_t mask = atol(value);
@@ -573,7 +573,7 @@ bool TextureCacheSizeCallback(CVar* var, const char* oldValue, const char* value
     return true;
 }
 
-// OFFSET: %0x00401DF0
+// OFFSET: 0x00401B50
 static bool BatchDoodadsCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t enable = SStrToInt(value);
     uint32_t flags = M2GetCacheFlags();
@@ -589,7 +589,7 @@ static bool BatchDoodadsCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// OFFSET: %0x00401E50
+// OFFSET: 0x00401C10
 static bool BatchParticlesCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t enable = SStrToInt(value);
     uint32_t flags = M2GetCacheFlags();
@@ -605,7 +605,7 @@ static bool BatchParticlesCallback(CVar* var, const char* oldValue, const char* 
     return true;
 }
 
-// OFFSET: %0x00401EB0
+// OFFSET: 0x00401BB0
 static bool ForceAdditiveParticleSortCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t enable = SStrToInt(value);
     uint32_t flags = M2GetCacheFlags();
@@ -631,7 +631,7 @@ static bool AsyncFileReadHandlerTimeoutCallback(CVar* var, const char* oldValue,
     return static_cast<uint32_t>(SStrToInt(value) - 20) <= 230;
 }
 
-// OFFSET: #0x00403200
+// OFFSET: 0x004025C0
 bool TimingMethodCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t method = atol(value);
 
@@ -714,14 +714,14 @@ void ClientRegisterConsoleCommands() {
     g_installLocaleVar = CVar::Register("installLocale", "The locale the original install was from", 1, "", NULL, CATEGORY_GAME, false, NULL, false);
 }
 
-// OFFSET: #0x004026B0
+// OFFSET: 0x00401DD0
 void AsyncFileReadRegisterCVars() {
     s_cvAsyncThreadSleep = CVar::Register("asyncThreadSleep", "Engine option: Async read thread sleep", 1, "0", AsyncFileReadThreadSleepCallback, CATEGORY_DEBUG, false, NULL, false);
     s_cvAsyncHandlerTimeout = CVar::Register("asyncHandlerTimeout", "Engine option: Async read main thread timeout", 1, "100", AsyncFileReadHandlerTimeoutCallback, CATEGORY_DEBUG, false, NULL, false);
     AsyncFileReadInitialize(s_cvAsyncThreadSleep->m_intValue, s_cvAsyncHandlerTimeout->m_intValue);
 }
 
-// OFFSET: #0x00402760
+// OFFSET: 0x00401E40
 uint32_t GetM2CvarFlags() {
     s_M2UseZFillVar = CVar::Register("M2UseZFill", "z-fill transparent objects", 0, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);
     s_M2UseClipPlanesVar = CVar::Register("M2UseClipPlanes", "use clip planes for sorting transparent objects", 0, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);

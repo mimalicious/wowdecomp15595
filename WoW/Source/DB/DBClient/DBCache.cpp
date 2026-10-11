@@ -93,7 +93,7 @@ bool CWardenKey::operator==(const CWardenKey& key) {
     return memcmp(this->m_key, key.m_key, sizeof(this->m_key)) == 0;
 }
 
-// OFFSET: %0x004A2190
+// OFFSET: 0x0049B2C0
 uint32_t CWardenKey::Hash() const {
     return (this->m_key[12] << 24 | this->m_key[13] << 16 | this->m_key[14] << 8 | this->m_key[15]) & 0x7FFFFFFF;
 }

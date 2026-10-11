@@ -30,7 +30,7 @@ int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: #0x005C5660
+// OFFSET: 0x00A0A130
 void CGMinigameInfo::LeaveWorld() {
     if (CGMinigameInfo::m_minigame) {
         delete CGMinigameInfo::m_minigame;

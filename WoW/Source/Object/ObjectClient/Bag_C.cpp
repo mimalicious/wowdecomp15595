@@ -20,7 +20,7 @@ static int32_t FindBagFamilyCallback(const CGItem_C* item, void* param) {
     return *static_cast<uint32_t*>(param) & item->GetBagFamily();
 }
 
-// OFFSET: #0x00753FA0
+// OFFSET: 0x005F2530
 static int32_t UnlockItemTypeCallback(const CGItem_C* item, void* param) {
     ItemTypeCountParam* count = static_cast<ItemTypeCountParam*>(param);
 
@@ -736,7 +736,7 @@ CGItem_C* CGBag_C::GetItemIdByName(const char* name, WOWGUID& container, uint32_
     return this->FindItem(&FindItemLinkCallback, &link, container, slot, flags);
 }
 
-// OFFSET: #0x00754C30
+// OFFSET: 0x005F3000
 CGItem_C* CGBag_C::FindItemByFullName(const char* name, uint32_t flags) const {
     if (!name || !*name) {
         return NULL;

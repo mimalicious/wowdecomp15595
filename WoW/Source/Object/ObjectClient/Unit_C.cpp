@@ -10387,7 +10387,7 @@ void CGUnit_C::SaveChainSpellLocation(const C3Vector* location) {
     }
 }
 
-// OFFSET: #0x00715440
+// OFFSET: 0x005AB8A0
 int32_t FactionTemplateReaction(const FactionTemplateRec* faction, const FactionTemplateRec* other) {
     int32_t otherGroup = other->m_factionGroup;
 
@@ -10882,7 +10882,7 @@ CreatureSoundDataRec* CGUnit_C::GetMountSoundDataRec() const {
     return g_creatureSoundDataDB.GetRecord(modelData->m_soundID);
 }
 
-// OFFSET: #0x00719900
+// OFFSET: 0x005B1160
 int32_t __stdcall CGUnit_C::GetRecordForTitle(int32_t maskId) {
     for (int32_t i = 0; i < g_charTitlesDB.m_numRecords; i++) {
         CharTitlesRec* rec = g_charTitlesDB.GetRecordByIndex(i);
@@ -11349,7 +11349,7 @@ uint32_t CGUnit_C::GetCurrentMountAnimId() const {
     return 0xFFFFFFFF;
 }
 
-// OFFSET: #0x007173F0
+// OFFSET: 0x005AE450
 void CGUnit_C::GetCurrentAnimationInfo(M2BoneSequenceInfo* mount, M2BoneSequenceInfo* base, M2BoneSequenceInfo* torso, int32_t keepFinished) const {
     mount->m_sequenceId = 0;
     mount->m_variationIndex = 0;
@@ -12518,7 +12518,7 @@ void CGUnit_C::CreateFishingLineEffect() {
     }
 }
 
-// OFFSET: #0x00724F50
+// OFFSET: 0x005BEAB0
 void CGUnit_C::SaveChainSpellTargets(const TSStackArray<WOWGUID>& targets) {
     this->m_chainSpellTargets.m_count = 0;
     uint32_t i = targets.m_count;
@@ -13332,7 +13332,7 @@ float CGUnit_C::GetSplineElapsedTime() {
     return spline ? static_cast<float>(static_cast<int32_t>(spline->m_start)) : 0.0f;
 }
 
-// OFFSET: #0x007178B0
+// OFFSET: 0x005AE640
 float CGUnit_C::GetSplineDuration() {
     CMoveSpline* spline = this->m_movementData.m_spline;
     return spline ? static_cast<float>(spline->m_duration) : 0.0f;
@@ -13457,7 +13457,7 @@ int32_t CGUnit_C::IsFacingUnchangedSinceSent() const {
     return fabs(this->GetRawFacing() - this->m_lastSentFacing) < 0.1f;
 }
 
-// OFFSET: #0x0071B580
+// OFFSET: 0x005B4070
 float __fastcall CGUnit_C::ComputeTrackingElevationAngle(const C3Vector& position, const C3Vector& target) {
     float dx = position.x - target.x;
     float dy = position.y - target.y;
@@ -13582,7 +13582,7 @@ void CGUnit_C::SetEmoteQueue(const QUESTGIVEREMOTENODE* nodes, uint32_t count) {
     this->m_emoteQueue[0].m_delay += FrameTime::GetCurTimeMs();
 }
 
-// OFFSET: #0x00716470
+// OFFSET: 0x0057D140
 C3Vector CGUnit_C::GetGroundNormal() const {
     return this->m_movement->GetGroundNormal();
 }
@@ -15031,7 +15031,7 @@ int32_t CGUnit_C::ClampRawAngleToLegalFacingRange(float& angle) const {
     return 0;
 }
 
-// OFFSET: #0x0072D3F0
+// OFFSET: 0x005CC330
 void CGUnit_C::OnTurnToAngleLocal(uint32_t eventTime, float facing) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover && CGUnit_C::s_trackingType != 13 && !(CGUnit_C::s_trackingFlags & 0x1)) {
         this->ClearTrackingTarget(false, true);
@@ -15044,7 +15044,7 @@ void CGUnit_C::OnTurnToAngleLocal(uint32_t eventTime, float facing) {
     }
 }
 
-// OFFSET: #0x0072D470
+// OFFSET: 0x005CC3B0
 void CGUnit_C::OnPitchToAngleLocal(uint32_t eventTime, float pitch) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover && CGUnit_C::s_trackingType != 13 && !(CGUnit_C::s_trackingFlags & 0x1)) {
         this->ClearTrackingTarget(false, true);
@@ -15057,7 +15057,7 @@ void CGUnit_C::OnPitchToAngleLocal(uint32_t eventTime, float pitch) {
     }
 }
 
-// OFFSET: #0x007189F0
+// OFFSET: 0x005AFE70
 void CGUnit_C::OnFallLocal(uint32_t eventTime) {
     this->m_movementData.OnFallLocal(eventTime);
 }
@@ -16979,7 +16979,7 @@ void AuraData::Unpack(CGUnit_C* unit, uint32_t time, CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x0072F360
+// OFFSET: 0x005CE870
 void CGUnit_C::AddAuraSlot(uint8_t slot) {
     uint32_t count = this->m_auras.m_count == 0xFFFFFFFF ? this->m_auras.Dynamic().m_count : this->m_auras.m_count;
 
@@ -17150,7 +17150,7 @@ void CGUnit_C::SetLocalClientControl(bool control) {
     }
 }
 
-// OFFSET: #0x0071D010
+// OFFSET: 0x005B7130
 int32_t CGUnit_C::InitializeExtendedDisplay(CGPlayer_C* player, int32_t hasDisplayInfo) {
     this->m_characterComponent = CCharacterComponent::AllocComponent();
     ComponentData data;
@@ -18527,7 +18527,7 @@ void CGUnit_C::PlayEmoteAnimation(uint32_t emote, int32_t force, int32_t ignoreC
     }
 }
 
-// OFFSET: #0x0073AD70
+// OFFSET: 0x005BA050
 void CGUnit_C::RequestTalkEmote(int32_t index) {
     if (!s_talkEmotes[index]) {
         return;
@@ -18616,7 +18616,7 @@ uint8_t CGUnit_C::GetActivePlayerFieldBytes0() {
     return static_cast<CGPlayer_C*>(this)->m_player->m_playerFieldBytes[0];
 }
 
-// OFFSET: #0x00727C00
+// OFFSET: 0x005C2670
 void CGUnit_C::InsertSortedAura(uint32_t list, uint32_t auraIndex, int32_t position) {
     AuraData* aura = auraIndex < this->GetAuraCount() ? &this->m_auras[auraIndex] : NULL;
     WOWGUID player = ClntObjMgrGetActivePlayer();
@@ -19715,7 +19715,7 @@ void CGUnit_C::DoPowerRegen(uint32_t elapsed) {
     this->DoPowerRegen(10, elapsed);
 }
 
-// OFFSET: #0x0072E3A0
+// OFFSET: 0x005CCDB0
 void CGUnit_C::OnLevelChange() {
     CEffect* effect = CEffect::Create();
     WOWGUID guid = this->m_obj->m_guid;
@@ -23227,7 +23227,7 @@ bool CGPlayer_C::CTMClickTerrain(const C3Vector& position) {
     return this->ClickToMove(4, &guid, &position, 0.0f);
 }
 
-// OFFSET: #0x0072B730
+// OFFSET: 0x005C8D70
 bool CGPlayer_C::CTMInteractGO(const WOWGUID& guid, float range) {
     if (!this->CanAutoInteract()) {
         return false;

@@ -52,7 +52,7 @@ void CKBSystem::Initialize() {
     ClientServices::SetMessageHandler(SMSG_MOTD, Packet_SMSG_MOTD, NULL);
 }
 
-// OFFSET: #0x005515F0
+// OFFSET: 0x009FC9A0
 void CKBSystem::Shutdown() {
     s_motd.Free();
     s_serverStatus.Free();
@@ -60,7 +60,7 @@ void CKBSystem::Shutdown() {
     ClientServices::ClearMessageHandler(SMSG_MOTD);
 }
 
-// OFFSET: #0x00551620
+// OFFSET: 0x009FBB70
 void CKBSystem::CacheServerMessage(const char* text, int32_t id) {
     if (id == 3) {
         s_serverNotice = text;

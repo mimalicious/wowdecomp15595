@@ -1,7 +1,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDPage.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 
-// OFFSET: #0x0095B4F0
+// OFFSET: 0x00B402A0
 CLCDPage::CLCDPage() : m_dwStartTime(0), m_dwEllapsedTime(0), m_dwExpirationTime(0) {
     DWORD now = GetTickCount();
     this->m_dwEllapsedTime = 0;
@@ -58,7 +58,7 @@ void CLCDPage::SetPageBackground(COLORREF color) {
     this->m_bUseBitmapBackground = 0;
 }
 
-// OFFSET: #0x0095B580
+// OFFSET: 0x00B40330
 void CLCDPage::OnDraw(CLCDGfxBase& gfx) {
     if (!this->IsVisible()) {
         return;

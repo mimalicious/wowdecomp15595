@@ -18,7 +18,7 @@ CTexture* PassUnderwater::s_screenMask;
 // STATIC: %0x00ED754C
 int32_t PassUnderwater::s_texRef;
 
-// OFFSET: %0x00A7BF40
+// OFFSET: 0x00B49CF0
 EffectUnderwater::EffectUnderwater(uint32_t type) {
     FFX::Tex* inputs[] = { &FFX::s_full[0] };
     FFX::Pass* pass = new (__FILE__, __LINE__) PassUnderwater(type, inputs, 1, &FFX::s_screen, GxBlend_Opaque);
@@ -67,7 +67,7 @@ PassUnderwater::~PassUnderwater() {
     }
 }
 
-// OFFSET: %0x00A7C090
+// OFFSET: 0x00B49E70
 bool PassUnderwater::Valid() {
     int32_t valid = this->m_vertexShader ? this->m_vertexShader->m_permutes[0].Valid() : 0;
 
@@ -78,7 +78,7 @@ bool PassUnderwater::Valid() {
     return valid != 0;
 }
 
-// OFFSET: %0x00A7C0E0
+// OFFSET: 0x00B49EC0
 void PassUnderwater::Execute() {
     CGxTex* caustics = NULL;
 
@@ -147,7 +147,7 @@ void PassUnderwater::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: %0x00A7C390
+// OFFSET: 0x00B4A170
 PassUnderwater::PassUnderwater(uint32_t type, FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_type = type;
     this->m_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "FFXUnderWater");

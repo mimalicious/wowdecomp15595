@@ -11,7 +11,7 @@ uint32_t SSignatureVerifyStream_GetSignatureLength(SSignatureData* token) {
     return token->magicBufferSize;
 }
 
-// OFFSET: #0x00770CA0
+// OFFSET: 0x004B86A0
 void SSignatureVerifyStream_ProvideData(SSignatureData* token, const uint8_t* data, uint32_t size) {
     int32_t excess = size - token->magicBufferSize;
 

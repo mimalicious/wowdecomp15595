@@ -30,7 +30,7 @@ uint32_t CGRuneInfo::m_numRunes;
 uint32_t CGRuneInfo::m_predictedRunes;
 
 
-// OFFSET: #0x005EDEF0
+// OFFSET: 0x0093C370
 void CGRuneInfo::InitializeGame() {
     for (uint32_t i = 0; i < 8; i++) {
         CGRuneInfo::m_runeLastUsed[i] = 0;
@@ -84,7 +84,7 @@ void CGRuneInfo::EnterWorld() {
     }
 }
 
-// OFFSET: #0x005EDFC0
+// OFFSET: 0x0093C430
 bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
     if (index > 7) {
         return false;
@@ -107,7 +107,7 @@ int32_t CGRuneInfo::GetRuneTypeByIndex(int32_t index, bool base) {
     return CGRuneInfo::m_runes[index];
 }
 
-// OFFSET: #0x005EE1F0
+// OFFSET: 0x0093C640
 uint32_t CGRuneInfo::GetRuneRechargeTime(int32_t index) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__) || ((1 << index) & CGRuneInfo::m_predictedRunes)) {
         return 0;
@@ -116,7 +116,7 @@ uint32_t CGRuneInfo::GetRuneRechargeTime(int32_t index) {
     return CGRuneInfo::m_runeCooldowns[index];
 }
 
-// OFFSET: #0x005EE3D0
+// OFFSET: 0x0093C8C0
 int32_t CGRuneInfo::CountPredictedRunesOfType(int32_t type) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return 0;
@@ -133,7 +133,7 @@ int32_t CGRuneInfo::CountPredictedRunesOfType(int32_t type) {
     return count;
 }
 
-// OFFSET: #0x005EE5B0
+// OFFSET: 0x0093CBA0
 bool CGRuneInfo::HasRunesForSpell(int32_t spellId, int32_t* needed) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -241,7 +241,7 @@ bool CGRuneInfo::HasRunesForSpell(int32_t spellId, int32_t* needed) {
     return false;
 }
 
-// OFFSET: #0x005EE7E0
+// OFFSET: 0x0093CDC0
 bool CGRuneInfo::ComputeRuneSpellCooldown(const SpellRec* spell, uint32_t* cooldown) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return false;
@@ -367,7 +367,7 @@ void CGRuneInfo::ComputeRuneRechargeTime(int32_t index, float progress) {
     }
 }
 
-// OFFSET: #0x005EE020
+// OFFSET: 0x0093C490
 void CGRuneInfo::ConvertRune(uint8_t rune, uint8_t type) {
     CGRuneInfo::m_runes[rune] = type;
     FrameScript_SignalEvent(SCRIPT_EVENT_RUNE_TYPE_UPDATE, "%d", rune + 1);
@@ -411,7 +411,7 @@ void CGRuneInfo::SetPredictedRunes(uint8_t available, uint8_t used, const uint8_
     CGSpellBook::UpdateUsable();
 }
 
-// OFFSET: #0x005EE440
+// OFFSET: 0x0093C920
 void CGRuneInfo::ResyncRunes(CDataStore* msg) {
     msg->Get(CGRuneInfo::m_numRunes);
 

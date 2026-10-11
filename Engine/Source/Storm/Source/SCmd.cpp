@@ -108,7 +108,7 @@ static CMDDEF* FindFlagDef(const char* string, CMDDEF* firstdef, int32_t minleng
     return bestptr;
 }
 
-// OFFSET: #0x00772F60
+// OFFSET: 0x004B6A80
 static int32_t PerformConversion(CMDDEF* ptr, const char* string, int32_t* datachars) {
     *datachars = 0;
 
@@ -316,7 +316,7 @@ uint32_t STORMAPI SCmdGetNum(uint32_t id) {
     return 0;
 }
 
-// OFFSET: #0x007734C0
+// OFFSET: 0x004B6FD0
 int32_t STORMAPI SCmdGetString(uint32_t id, char* buffer, uint32_t bufferchars) {
     if (!buffer) {
         DebugValidate("buffer");

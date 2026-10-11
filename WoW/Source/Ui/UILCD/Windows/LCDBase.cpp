@@ -1,6 +1,6 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDBase.h"
 
-// OFFSET: #0x0095BC70
+// OFFSET: 0x00B40A20
 CLCDBase::CLCDBase() {
     this->m_Size.cx = 0;
     this->m_Size.cy = 0;
@@ -58,7 +58,7 @@ void CLCDBase::SetOriginXY(int32_t x, int32_t y) {
     this->m_Origin.y = y;
 }
 
-// OFFSET: #0x0095BCF0
+// OFFSET: 0x00B40A80
 void CLCDBase::SetOrigin(POINT pt) {
     this->SetOriginXY(pt.x, pt.y);
 }

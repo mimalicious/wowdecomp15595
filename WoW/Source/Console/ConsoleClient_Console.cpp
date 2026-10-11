@@ -49,7 +49,7 @@ int32_t ConsoleCommand_RepeatHandler(const char* command, const char* arguments)
     return 1;
 }
 
-// OFFSET: #0x00764E80
+// OFFSET: 0x00610110
 int32_t ConsoleCommand_ClearConsole(const char* command, const char* arguments) {
     s_NumLines = 0;
     s_linelist.Clear();
@@ -139,7 +139,7 @@ int32_t ConsoleCommand_FontSize(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: #0x00765170
+// OFFSET: 0x0060E940
 int32_t ConsoleCommand_Font(const char* command, const char* arguments) {
     char fontName[260] = "Fonts\\";
     SStrPack(fontName, arguments, sizeof(fontName));
@@ -180,7 +180,7 @@ int32_t ConsoleCommand_CurrentSettings(const char* command, const char* argument
     return 1;
 }
 
-// OFFSET: #0x007654A0
+// OFFSET: 0x006104F0
 int32_t ConsoleCommand_FontColor(const char* command, const char* arguments) {
     char colorClass[64];
     uint32_t red;
@@ -238,7 +238,7 @@ int32_t ConsoleCommand_FontColor(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: #0x00765670
+// OFFSET: 0x006106B0
 int32_t ConsoleCommand_BufferSize(const char* command, const char* arguments) {
     if (!arguments || !*arguments) {
         ConsoleWrite("Please specify how many lines to display", ERROR_COLOR);

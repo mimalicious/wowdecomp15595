@@ -49,7 +49,7 @@ void CGChatBubbleFrame::operator delete(void* ptr) {
 void CGChatBubbleFrame::InitializeGame() {
 }
 
-// OFFSET: #0x0056C240
+// OFFSET: 0x009F0CE0
 void CGChatBubbleFrame::FadeIn() {
     if (this->m_bubbleFlags & 0x5) {
         return;
@@ -60,7 +60,7 @@ void CGChatBubbleFrame::FadeIn() {
     this->m_fadeStart = OsGetAsyncTimeMs() - static_cast<int32_t>(alpha * (1.0f / 255.0f) * 250.0f);
 }
 
-// OFFSET: #0x0056C2B0
+// OFFSET: 0x009F0D50
 void CGChatBubbleFrame::FadeOut(bool remove) {
     if (this->m_bubbleFlags & 0x4) {
         return;
@@ -144,7 +144,7 @@ void CGChatBubbleFrame::Render(CGWorldFrame* worldFrame) {
     }
 }
 
-// OFFSET: #0x0056C500
+// OFFSET: 0x009F1050
 bool CGChatBubbleFrame::Update(CGUnit_C* player, CGUnit_C* unit) {
     if (!player) {
         return false;
@@ -231,7 +231,7 @@ bool CGChatBubbleFrame::Update(CGUnit_C* player, CGUnit_C* unit) {
     return true;
 }
 
-// OFFSET: #0x0056C7F0
+// OFFSET: 0x009F1660
 void CGChatBubbleFrame::Initialize(const WOWGUID& unit, const char* text, const CImVector& color) {
     char buffer[3000];
     StripHyperlinks(LanguageProcess(text), buffer, sizeof(buffer));
@@ -266,7 +266,7 @@ void CGChatBubbleFrame::Initialize(const WOWGUID& unit, const char* text, const 
     this->FadeIn();
 }
 
-// OFFSET: #0x0056C7A0
+// OFFSET: 0x009F1C20
 void CGChatBubbleFrame::OnWorldRender(CGWorldFrame* worldFrame) {
     CGChatBubbleFrame* next;
 
@@ -278,7 +278,7 @@ void CGChatBubbleFrame::OnWorldRender(CGWorldFrame* worldFrame) {
     CLayoutFrame::ResizePending();
 }
 
-// OFFSET: #0x0056CAD0
+// OFFSET: 0x009F1870
 CGChatBubbleFrame::CGChatBubbleFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_screenX = 0.0f;
     this->m_screenY = 0.0f;
@@ -319,7 +319,7 @@ CGChatBubbleFrame::CGChatBubbleFrame(CSimpleFrame* parent) : CSimpleFrame(parent
     this->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this->m_fontString, FRAMEPOINT_BOTTOMRIGHT, 0.01f, -0.01f, 1);
 }
 
-// OFFSET: #0x0056CDC0
+// OFFSET: 0x009F1B60
 void CGChatBubbleFrame::ShutdownGame() {
     s_freeChatBubbles.Clear();
     s_cameraPositionValid = 0;
@@ -337,7 +337,7 @@ static void InsertSorted(CGChatBubbleFrame* bubble) {
     s_chatBubbles.LinkToTail(bubble);
 }
 
-// OFFSET: #0x0056CEA0
+// OFFSET: 0x009F1C90
 CGChatBubbleFrame* CGChatBubbleFrame::GetNewChatBubble(CSimpleFrame* parent) {
     CGChatBubbleFrame* bubble = s_freeChatBubbles.Head();
 
@@ -350,7 +350,7 @@ CGChatBubbleFrame* CGChatBubbleFrame::GetNewChatBubble(CSimpleFrame* parent) {
     return bubble;
 }
 
-// OFFSET: #0x0056CE80
+// OFFSET: 0x009F1C70
 void CGChatBubbleFrame::Remove(CGChatBubbleFrame* bubble) {
     bubble->Hide();
     s_freeChatBubbles.LinkToTail(bubble);

@@ -2,7 +2,7 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x00774EA0
+// OFFSET: 0x00B02740
 void STORMAPI SARC4ProcessBuffer(uint8_t* data, uint32_t length, const SARC4Key* inKey, SARC4Key* outKey) {
     SARC4Key* key = outKey;
 

@@ -12,7 +12,7 @@ CDataAllocator::CDataAllocator(uint32_t bytesPerData, uint32_t dataPerBlock) {
     this->m_dataList = NULL;
 }
 
-// OFFSET: #0x0095D0C0
+// OFFSET: 0x00872A30
 void CDataAllocator::Clear(const char* fileName, int32_t lineNumber, int32_t reportLeaks) {
     while (this->m_blockList) {
         Block* block = this->m_blockList;
@@ -24,7 +24,7 @@ void CDataAllocator::Clear(const char* fileName, int32_t lineNumber, int32_t rep
     this->m_dataUsed = 0;
 }
 
-// OFFSET: #0x0095D110
+// OFFSET: 0x00872A80
 void* CDataAllocator::GetData(int32_t zero, const char* fileName, int32_t lineNumber) {
     if (this->m_dataPerBlock == 1) {
         fileName = NULL;

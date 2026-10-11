@@ -361,7 +361,7 @@ int32_t CreateGxDevice(EGxApi api, GxWindowProc windowProc, const CGxFormat& for
     return 0;
 }
 
-// OFFSET: #0x006815F0
+// OFFSET: 0x00840470
 uint32_t GxCalcTexelStrideInBytes(EGxTexFormat format, uint32_t width) {
     if (format < GxTex_Dxt1 || format > GxTex_Dxt5) {
         return s_texelSize[format] * width;

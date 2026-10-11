@@ -13,7 +13,7 @@
 static void VisibleItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
 
-// OFFSET: #0x00758D30
+// OFFSET: 0x005FF300
 uint32_t VisibleItem_C::GetClassID() {
     WOWGUID guid = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(abs(this->m_itemId), guid, &VisibleItemCacheCallback, NULL, true);
@@ -21,7 +21,7 @@ uint32_t VisibleItem_C::GetClassID() {
     return stats ? stats->m_class : 0;
 }
 
-// OFFSET: #0x00758D80
+// OFFSET: 0x005FF350
 uint32_t VisibleItem_C::GetSubtypeID() {
     WOWGUID guid = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(abs(this->m_itemId), guid, &VisibleItemCacheCallback, NULL, true);
@@ -29,7 +29,7 @@ uint32_t VisibleItem_C::GetSubtypeID() {
     return stats ? stats->m_subClass : 0;
 }
 
-// OFFSET: #0x00758DD0
+// OFFSET: 0x005FF3A0
 uint32_t VisibleItem_C::GetInventoryType() {
     WOWGUID guid = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(abs(this->m_itemId), guid, &VisibleItemCacheCallback, NULL, true);
@@ -55,7 +55,7 @@ uint32_t VisibleItem_C::GetDisplayID() {
     return rec ? rec->m_displayInfoID : 0;
 }
 
-// OFFSET: #0x00758ED0
+// OFFSET: 0x005FF490
 uint32_t VisibleItem_C::GetMaterial() {
     WOWGUID guid = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(abs(this->m_itemId), guid, &VisibleItemCacheCallback, NULL, true);
@@ -68,7 +68,7 @@ uint32_t VisibleItem_C::GetMaterial() {
     return rec ? rec->m_material : 0;
 }
 
-// OFFSET: #0x00758F50
+// OFFSET: 0x005FF510
 uint32_t VisibleItem_C::GetSheatheType() {
     WOWGUID guid = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(abs(this->m_itemId), guid, &VisibleItemCacheCallback, NULL, true);
@@ -81,7 +81,7 @@ uint32_t VisibleItem_C::GetSheatheType() {
     return rec ? rec->m_sheatheType : 0;
 }
 
-// OFFSET: #0x00758FD0
+// OFFSET: 0x005FF590
 uint32_t VisibleItem_C::GetSoundOverrideSubclassID() {
     WOWGUID guid = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(abs(this->m_itemId), guid, &VisibleItemCacheCallback, NULL, true);

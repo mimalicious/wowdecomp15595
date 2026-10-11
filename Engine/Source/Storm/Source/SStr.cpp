@@ -535,7 +535,7 @@ uint32_t SStrToUnsigned(const char** string) {
     return result;
 }
 
-// OFFSET: #0x0076F1E0
+// OFFSET: 0x004B3540
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
     int32_t inquotes = 0;
     const char* curr = *string;
@@ -589,7 +589,7 @@ void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const c
     }
 }
 
-// OFFSET: #0x0076F340
+// OFFSET: 0x004B3660
 uint32_t SStrHash(const char* string, uint32_t flags, uint32_t seed) {
     uint32_t result = seed ? seed : 0x7FED7FED;
     uint32_t adjust = 0xEEEEEEEE;
@@ -693,7 +693,7 @@ uint32_t SStrHashHT(const char* string) {
     return bjhash(buffer, length, 0);
 }
 
-// OFFSET: #0x0076F770
+// OFFSET: 0x004B39B0
 char* SStrStrI(const char* string, const char* search) {
     size_t length = SStrLen(search);
 
@@ -800,7 +800,7 @@ void SStrInitialize() {
 void SStrDestroy() {
 }
 
-// OFFSET: #0x0076FA50
+// OFFSET: 0x004B3BF0
 int64_t SStrToInt64(const char* string) {
     int32_t negative = *string == '-';
 
@@ -840,7 +840,7 @@ static void CheckInitialized() {
     }
 }
 
-// OFFSET: #0x0076FB80
+// OFFSET: 0x004B3D00
 float SStrToFloat(const char* string) {
     CheckInitialized();
 

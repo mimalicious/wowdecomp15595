@@ -5,7 +5,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: #0x005761F0
+// OFFSET: 0x009B8380
 static int32_t Script_PlayDance(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: PlayDance(\"dance name\")");

@@ -57,7 +57,7 @@ static ENCOUNTER_UNIT* FindUnit(const WOWGUID& guid) {
     return NULL;
 }
 
-// OFFSET: #0x005ED710
+// OFFSET: 0x0094F520
 WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     if (static_cast<int32_t>(index) < 0 || static_cast<int32_t>(index) >= static_cast<int32_t>(CGInstanceEncounter_C::m_units.Count())) {
         return WOWGUID::Make(0);
@@ -66,7 +66,7 @@ WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     return CGInstanceEncounter_C::m_units.m_data[index].m_guid;
 }
 
-// OFFSET: #0x005ED740
+// OFFSET: 0x0094F550
 uint32_t CGInstanceEncounter_C::GetNumBossSlots() {
     return CGInstanceEncounter_C::m_units.Count();
 }
@@ -161,7 +161,7 @@ void CGInstanceEncounter_C::LeaveWorld() {
     CGInstanceEncounter_C::m_timers.Clear();
 }
 
-// OFFSET: #0x005EDB70
+// OFFSET: 0x0094FBE0
 void CGInstanceEncounter_C::ClearExpiredTimers() {
     if (!CGInstanceEncounter_C::m_timers.Head()) {
         return;
@@ -179,14 +179,14 @@ void CGInstanceEncounter_C::ClearExpiredTimers() {
     }
 }
 
-// OFFSET: #0x005EDBC0
+// OFFSET: 0x0094FC70
 void CGInstanceEncounter_C::AddTimer(uint32_t duration) {
     CGInstanceEncounter_C::ClearExpiredTimers();
     ENCOUNTER_TIMER* timer = CGInstanceEncounter_C::m_timers.NewNode(2, 0, 0);
     timer->m_expireTime = duration + OsGetAsyncTimeMs();
 }
 
-// OFFSET: #0x005EDC50
+// OFFSET: 0x0094F980
 void CGInstanceEncounter_C::EnableObjective(int32_t id) {
     for (ENCOUNTER_OBJECTIVE* objective = CGInstanceEncounter_C::m_objectives.Head(); objective; objective = CGInstanceEncounter_C::m_objectives.Next(objective)) {
         if (objective->m_id == id) {
@@ -209,7 +209,7 @@ static void UpdateObjective(int32_t id, int32_t delta) {
     }
 }
 
-// OFFSET: #0x005EDD50
+// OFFSET: 0x0094FC30
 void CGInstanceEncounter_C::DisableObjective(int32_t id) {
     for (ENCOUNTER_OBJECTIVE* objective = CGInstanceEncounter_C::m_objectives.Head(); objective; objective = CGInstanceEncounter_C::m_objectives.Next(objective)) {
         if (objective->m_id == id) {

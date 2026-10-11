@@ -1,7 +1,7 @@
 #include <cstdint>
 #include "Engine/Source/Gx/CGxLight.h"
 
-// OFFSET: #0x00683FB0
+// OFFSET: 0x008430A0
 CGxLight::CGxLight() {
     this->m_flags &= ~0x3u;
     this->m_dir = C3Vector(0.0f, 0.0f, 1.0f);

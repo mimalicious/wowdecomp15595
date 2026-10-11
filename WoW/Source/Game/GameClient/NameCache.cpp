@@ -37,7 +37,7 @@ void NameCache::Pack(CDataStore* msg) {
     msg->Put(this->m_class);
 }
 
-// OFFSET: #0x006680C0
+// OFFSET: 0x0049B400
 NameCache& NameCache::Copy(const NameCache& other) {
     this->m_guid = other.m_guid;
     SStrCopy(this->m_name, other.m_name, sizeof(this->m_name));

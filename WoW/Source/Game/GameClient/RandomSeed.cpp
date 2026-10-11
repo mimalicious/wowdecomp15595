@@ -42,7 +42,7 @@ static void GenerateRandomValues(_RandomSeed* seed) {
     seed->m_a = a;
 }
 
-// OFFSET: #0x007F6C10
+// OFFSET: 0x00B12FA0
 static void SeedRandomValues(_RandomSeed* seed, int32_t value) {
     seed->m_b = 0;
     seed->m_a = 0;
@@ -73,7 +73,7 @@ void InitializeRandomSeed(_RandomSeed* seed, uint32_t value) {
     SeedRandomValues(seed, rand());
 }
 
-// OFFSET: #0x007F6CC0
+// OFFSET: 0x00B13050
 static double GetRandomFraction(_RandomSeed* seed) {
     int32_t count = seed->m_count--;
     uint32_t value;

@@ -127,7 +127,7 @@ float WorldTextGetAscendDistance(uint32_t type) {
     return s_worldTextTypes[type].m_ascendDistance;
 }
 
-// OFFSET: #0x007E66F0
+// OFFSET: 0x004E2040
 void WORLDTEXTSTRING::RecreateString() {
     if (this->m_string) {
         GxuFontDestroyString(this->m_string);
@@ -155,7 +155,7 @@ void WORLDTEXTSTRING::RecreateString() {
     this->m_halfHeight = 0.5f * textHeight;
 }
 
-// OFFSET: #0x007E6850
+// OFFSET: 0x004E21D0
 void WORLDTEXTSTRING::CalculateNewColor(uint32_t elapsed) {
     const WORLDTEXTTYPE& type = s_worldTextTypes[this->m_type];
     uint32_t duration = type.m_duration;
@@ -209,7 +209,7 @@ void WORLDTEXTSTRING::CalculateNewColor(uint32_t elapsed) {
     GxuFontAddShadow(this->m_string, shadowColor, s_shadowOffset);
 }
 
-// OFFSET: #0x007E6A30
+// OFFSET: 0x004E2380
 void WorldTextShutdown() {
     if (s_worldTextFont) {
         HandleClose(reinterpret_cast<HOBJECT>(s_worldTextFont));
@@ -233,7 +233,7 @@ void WorldTextDelete(WORLDTEXTSTRING* text) {
     s_freeStrings.PutData(text, NULL, 0);
 }
 
-// OFFSET: #0x007E6AC0
+// OFFSET: 0x004E2420
 static void WorldTextSetupOrthoProjection() {
     CBoundingBox viewport = g_theGxDevicePtr->m_viewport;
     float offsetX = 0.0f;
@@ -261,7 +261,7 @@ static void WorldTextSetupOrthoProjection() {
     g_theGxDevicePtr->XformSetProjection(ortho);
 }
 
-// OFFSET: #0x007E6CC0
+// OFFSET: 0x004E2650
 void WORLDTEXTSTRING::CalculateTextHeight(uint32_t elapsed) {
     const WORLDTEXTTYPE& type = s_worldTextTypes[this->m_type];
     float progress = static_cast<float>(elapsed) / static_cast<float>(type.m_duration);
@@ -318,7 +318,7 @@ WORLDTEXTSTRING* WorldTextCreate(uint32_t type, const C3Vector& position, const 
     return string;
 }
 
-// OFFSET: #0x007E70D0
+// OFFSET: 0x004E2AA0
 bool WORLDTEXTSTRING::Update(uint32_t time) {
     if (static_cast<int32_t>(time - s_worldTextTypes[this->m_type].m_duration - this->m_startTime) >= 0) {
         return false;
@@ -411,7 +411,7 @@ bool WORLDTEXTSTRING::Update(uint32_t time) {
     return true;
 }
 
-// OFFSET: #0x007E7390
+// OFFSET: 0x004E2EB0
 void WORLDTEXTSTRING::AddIcon() {
     if (this->m_pvpRank < 5) {
         return;
@@ -442,7 +442,7 @@ void WORLDTEXTSTRING::AddIcon() {
     icon->m_color = this->m_color;
 }
 
-// OFFSET: #0x007E7450
+// OFFSET: 0x004E2FB0
 bool WorldTextUpdate(WORLDTEXTSTRING* text, uint32_t time) {
     if (!text) {
         return false;
@@ -556,7 +556,7 @@ void WorldTextRenderBatch() {
     g_theGxDevicePtr->XformSetProjection(projection);
 }
 
-// OFFSET: #0x007E7BB0
+// OFFSET: 0x004E38E0
 void WorldTextInitialize() {
     const char* fontName = FrameScript_GetText("DAMAGE_TEXT_FONT", -1, GENDER_NOT_APPLICABLE);
     s_worldTextFont = TextBlockGenerateFont(fontName, 0, DDCToNDCHeight(0.018333333f));

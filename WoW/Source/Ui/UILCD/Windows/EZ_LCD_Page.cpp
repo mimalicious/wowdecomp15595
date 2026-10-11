@@ -23,7 +23,7 @@ CEzLcdPage::CEzLcdPage(CEzLcd* container) {
 CEzLcdPage::~CEzLcdPage() {
 }
 
-// OFFSET: #0x0095B080
+// OFFSET: 0x00B3FE30
 CLCDText* CEzLcdPage::AddText(int32_t type, int32_t size, int32_t alignment, int32_t maxLengthPixels, int32_t userData, int32_t numberOfLines) {
     int32_t height = 13;
     int32_t pointSize = 8;
@@ -127,7 +127,7 @@ CLCDText* CEzLcdPage::AddColorText(int32_t type, int32_t size, int32_t alignment
     return text;
 }
 
-// OFFSET: #0x0095B370
+// OFFSET: 0x00B40120
 CLCDBitmap* CEzLcdPage::AddBitmap(int32_t width, int32_t height, int32_t bitmapWidth, int32_t bitmapHeight) {
     CLCDBitmap* bitmap = new CLCDBitmap();
     bitmap->Initialize();

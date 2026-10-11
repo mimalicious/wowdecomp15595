@@ -1,7 +1,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 #include <cstring>
 
-// OFFSET: #0x0095BF90
+// OFFSET: 0x00B40D30
 CLCDGfxColor::CLCDGfxColor() {
     this->m_pLCDScreen = &this->m_lcdBitmap.hdr;
     this->m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_QVGAx32;

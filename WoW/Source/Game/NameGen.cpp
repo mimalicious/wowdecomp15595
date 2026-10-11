@@ -14,7 +14,7 @@ static int32_t QSortDictionary(const void* l, const void* r) {
     return SStrCmp(left.m_str, right.m_str, STORM_MAX_STR);
 }
 
-// OFFSET: #0x004E63A0
+// OFFSET: 0x00B11AE0
 void CNameGen::GenerateName(char* buffer, uint32_t size) {
     int32_t choice = 0;
 
@@ -100,7 +100,7 @@ void CNameGen::GenerateName(char* buffer, uint32_t size) {
     *buffer = static_cast<char>(toupper(*buffer));
 }
 
-// OFFSET: #0x004E6560
+// OFFSET: 0x00B11D00
 void CNameGen::CreateDictionary() {
     for (int32_t i = 0; i < static_cast<int32_t>(this->m_names.Count()); i++) {
         char name[64];
@@ -132,14 +132,14 @@ void CNameGen::CreateDictionary() {
     qsort(this->m_dictionary.m_data, this->m_dictionaryCount, sizeof(DictionaryRecord), QSortDictionary);
 }
 
-// OFFSET: #0x004E6720
+// OFFSET: 0x00B11E90
 void CNameGen::ClearDictionary() {
     this->m_dictionaryCount = 0;
     this->m_dictionary.Clear();
     this->m_dictionary.SetCount(10000);
 }
 
-// OFFSET: #0x004E6790
+// OFFSET: 0x00B11F00
 void CNameGen::LoadNames(int32_t raceID, int32_t sexID) {
     this->m_names.Clear();
     this->ClearDictionary();

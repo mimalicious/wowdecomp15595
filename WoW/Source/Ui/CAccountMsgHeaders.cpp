@@ -36,7 +36,7 @@ const char* CAccountMsgHeaders::GetHeaderSubject(int32_t index) {
     return this->_GetBodyString(subject.m_node);
 }
 
-// OFFSET: #0x0054FBB0
+// OFFSET: 0x009FA100
 int32_t CAccountMsgHeaders::GetHeaderPriority(int32_t index) {
     if (this->m_state == 1 || index < 0 || index >= this->m_count) {
         return 0;
@@ -46,7 +46,7 @@ int32_t CAccountMsgHeaders::GetHeaderPriority(int32_t index) {
     return this->_GetInt(this->m_iterator.m_node, "priority");
 }
 
-// OFFSET: #0x0054FBF0
+// OFFSET: 0x009FA140
 int32_t CAccountMsgHeaders::GetMessageId(int32_t index) {
     if (this->m_state == 1 || index < 0 || index >= this->m_count) {
         return 0;
@@ -61,7 +61,7 @@ int32_t CAccountMsgHeaders::GetMessageId(int32_t index) {
     return this->_GetInt(this->m_iterator.m_node, "id");
 }
 
-// OFFSET: #0x005500D0
+// OFFSET: 0x009FA410
 int32_t CAccountMsgHeaders::GetNumUnreadUrgentMsgs() {
     int32_t count = 0;
 
@@ -74,7 +74,7 @@ int32_t CAccountMsgHeaders::GetNumUnreadUrgentMsgs() {
     return count;
 }
 
-// OFFSET: #0x00550140
+// OFFSET: 0x009FA480
 int32_t CAccountMsgHeaders::GetIndexHighestPriorityUnreadMsg() {
     if (this->m_state == 1) {
         return 0;
@@ -93,7 +93,7 @@ int32_t CAccountMsgHeaders::GetIndexHighestPriorityUnreadMsg() {
     return index;
 }
 
-// OFFSET: #0x005501C0
+// OFFSET: 0x009FA500
 int32_t CAccountMsgHeaders::GetIndexNextUnreadMsg(int32_t index) {
     if (this->m_state == 1) {
         return -1;
@@ -110,7 +110,7 @@ int32_t CAccountMsgHeaders::GetIndexNextUnreadMsg(int32_t index) {
     return -1;
 }
 
-// OFFSET: #0x00550210
+// OFFSET: 0x009FA6D0
 int32_t CAccountMsgHeaders::SetMsgRead(int32_t index) {
     int32_t messageId = this->GetMessageId(index);
 
@@ -155,7 +155,7 @@ int32_t CAccountMsgHeaders::SetMsgRead(int32_t index) {
 CAccountMsgHeaders::~CAccountMsgHeaders() {
 }
 
-// OFFSET: #0x005506A0
+// OFFSET: 0x009FAC20
 int32_t CAccountMsgHeaders::LoadHeaders() {
     if (this->m_state == 1 || this->m_inQueue) {
         return 0;
@@ -196,7 +196,7 @@ int32_t CAccountMsgHeaders::LoadHeaders() {
     return 1;
 }
 
-// OFFSET: #0x00550810
+// OFFSET: 0x009FADD0
 void CAccountMsgHeaders::_SendSuccessEvent() {
     if (!this->m_iterator.m_node) {
         this->_GetRoot(this->m_iterator);

@@ -57,7 +57,7 @@ void CGCooldown::DestroyScriptMetaTable() {
     CGCooldown::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: #0x005ECAC0
+// OFFSET: 0x009FF770
 void CGCooldown::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGCooldown::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGCooldown::RegisterScriptMethods);

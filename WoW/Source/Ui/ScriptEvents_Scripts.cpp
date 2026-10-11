@@ -2609,7 +2609,7 @@ static int32_t Script_UnitAura(lua_State* L) {
     return PushUnitAura(L, &info);
 }
 
-// OFFSET: #0x00613600
+// OFFSET: 0x00457F80
 VehicleSeatRec* GetVehicleSeatRecAsPassengerFromLua(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
     WOWGUID guid;

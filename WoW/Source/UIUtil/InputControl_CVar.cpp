@@ -13,7 +13,7 @@ CVar* s_cvCinematicJoystick;
 // STATIC: 0x00D39210
 CVar* s_cvEnableWowMouse;
 
-// OFFSET: #0x005F99F0
+// OFFSET: 0x00447CC0
 static void ApplyJoystickConfig(XMLNode* config) {
     char name[32];
 
@@ -114,7 +114,7 @@ static void ApplyJoystickConfig(XMLNode* config) {
     OsJoystickConfigureMouseMode(s_joystick, stick, leftButton, rightButton, value ? SStrToFloat(value) : speed);
 }
 
-// OFFSET: #0x005F9C80
+// OFFSET: 0x00447F60
 bool JoystickCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (*value == '1') {
         if (s_joystick == 0xFFFFFFFF) {
@@ -143,7 +143,7 @@ bool JoystickCallback(CVar* var, const char* oldValue, const char* value, void* 
     return true;
 }
 
-// OFFSET: #0x005FA9B0
+// OFFSET: 0x00448D00
 bool WowMouseCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGInputControl::s_inputControl->SetMouseCVarHandler((value ? SStrToInt(value) : 0) != 0);
     return true;

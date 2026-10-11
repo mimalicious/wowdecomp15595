@@ -30,7 +30,7 @@ char CGItemText::m_text[8000];
 // STATIC: 0x00F71000
 TSGrowableArray<int32_t> CGItemText::m_pages;
 
-// OFFSET: #0x00589DC0
+// OFFSET: 0x009DE0C0
 void CGItemText::InitializeGame() {
     CGItemText::m_itemGUID.m_guid = 0;
     CGItemText::m_hasItemText = 0;
@@ -47,7 +47,7 @@ void CGItemText::ShutdownGame() {
     CGItemText::m_pages.Clear();
 }
 
-// OFFSET: #0x00589E90
+// OFFSET: 0x009DE150
 void CGItemText::DisplayText(const WOWGUID& guid, int32_t translate) {
     if (CGItemText::m_itemGUID != guid) {
         return;
@@ -125,7 +125,7 @@ void CGItemText::DisplayText(const WOWGUID& guid, int32_t translate) {
     FrameScript_SignalEvent(SCRIPT_EVENT_ITEM_TEXT_READY, NULL);
 }
 
-// OFFSET: #0x0058A1A0
+// OFFSET: 0x009DE550
 void CGItemText::SetItem(const WOWGUID& guid, int32_t a2) {
     if (guid != CGItemText::m_itemGUID) {
         CGGameUI::ClearInteractTarget(CGItemText::m_itemGUID, 0);

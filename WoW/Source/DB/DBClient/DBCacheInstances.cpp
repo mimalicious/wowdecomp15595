@@ -69,7 +69,7 @@ DBCache<ArenaTeamCache, int32_t, HASHKEY_INT> g_arenaTeamCache('WATM', "arenatea
 // STATIC: 0x00D985B8
 DBCache<DanceCache, int32_t, HASHKEY_INT> g_danceCache('WDAN', "dancecache.wdb", CMSG_DANCE_QUERY, 0, false, false, 0);
 
-// OFFSET: #0x00635060
+// OFFSET: [0x00496AD0]
 static void LoadDBCaches() {
     g_creatureDBCache.Load();
     g_gameObjectDBCache.Load();

@@ -154,7 +154,7 @@ MailAttachmentInfo* GetInboxAttachment(uint32_t index, uint32_t attachment) {
     return GetAttachment(CGMailInfo::GetInboxItem(index), attachment);
 }
 
-// OFFSET: #0x0056D240
+// OFFSET: 0x0096D590
 uint32_t GetNumAttachments(const MailboxMessageInfo* message) {
     uint32_t count = 0;
 
@@ -189,7 +189,7 @@ void InboxItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool s
     }
 }
 
-// OFFSET: #0x0056D8A0
+// OFFSET: 0x0096DE70
 void CGMailInfo::ClearSendItem(uint32_t index) {
     if (index < 12) {
         CGMailInfo::m_sendItems[index].m_guid = WOWGUID();
@@ -198,7 +198,7 @@ void CGMailInfo::ClearSendItem(uint32_t index) {
     }
 }
 
-// OFFSET: #0x0056D8E0
+// OFFSET: 0x0096DEB0
 StationeryInfo* GetStationery(uint32_t index) {
     if (index >= CGMailInfo::m_numStationeries) {
         return NULL;
@@ -604,7 +604,7 @@ void CGMailInfo::UpdateRecentSenders() {
     }
 }
 
-// OFFSET: #0x0056DED0
+// OFFSET: 0x0096D9F0
 void CGMailInfo::UpdatePendingMail(float elapsed) {
     for (int32_t i = 0; i < 3; i++) {
         MailSenderInfo& sender = s_recentSenders[i];
@@ -642,7 +642,7 @@ int32_t Packet_SMSG_SHOW_MAILBOX(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x0056DC20
+// OFFSET: 0x0096E3F0
 void CGMailInfo::SetMailCopied(uint32_t messageID) {
     for (uint32_t i = 0; i < CGMailInfo::m_numInboxItems; i++) {
         MailboxMessageInfo* message = CGMailInfo::m_inbox.m_data[i];
@@ -655,7 +655,7 @@ void CGMailInfo::SetMailCopied(uint32_t messageID) {
     }
 }
 
-// OFFSET: #0x0056DC70
+// OFFSET: 0x0096E440
 void CGMailInfo::RemoveMail(uint32_t messageID) {
     for (uint32_t i = 0; i < CGMailInfo::m_numInboxItems; i++) {
         if (CGMailInfo::m_inbox.m_data[i]->m_messageID == static_cast<int32_t>(messageID)) {
@@ -671,7 +671,7 @@ void CGMailInfo::RemoveMail(uint32_t messageID) {
     }
 }
 
-// OFFSET: #0x0056DD00
+// OFFSET: 0x00971400
 static int32_t QSortStationery(const void* a, const void* b) {
     const StationeryInfo* infoA = *static_cast<StationeryInfo* const*>(a);
     const StationeryInfo* infoB = *static_cast<StationeryInfo* const*>(b);
@@ -863,7 +863,7 @@ int32_t CanDeleteEmptyMail(MailboxMessageInfo* message) {
     return (message->m_messageType == 2 || autoDelete || (!SStrLen(message->m_body) && !message->m_mailTemplateID)) && !message->m_deletePending && !message->m_money && !GetNumAttachments(message);
 }
 
-// OFFSET: #0x0056F770
+// OFFSET: 0x0096E110
 void CGMailInfo::RemoveMoney(uint32_t messageID) {
     uint32_t i = 0;
 
@@ -946,7 +946,7 @@ void CGMailInfo::RemoveItem(uint32_t messageID, uint32_t itemGuid, uint32_t item
     FrameScript_SignalEvent(SCRIPT_EVENT_MAIL_INBOX_UPDATE, NULL);
 }
 
-// OFFSET: #0x0056FA70
+// OFFSET: 0x0096F640
 bool CGMailInfo::CanComplain(uint32_t index) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -958,7 +958,7 @@ bool CGMailInfo::CanComplain(uint32_t index) {
     return message && !message->m_messageType && !(message->m_flags & 0x2) && message->m_stationery != 61 && message->m_sender != player->m_obj->m_guid && !FriendList::s_friendList->IsFriend(message->m_sender);
 }
 
-// OFFSET: #0x0056FAF0
+// OFFSET: 0x0096F6C0
 void CGMailInfo::Complain(uint32_t index) {
     if (CGMailInfo::m_commandPending || !CGChat::m_complaintsSystemStatus) {
         return;
@@ -999,7 +999,7 @@ void CGMailInfo::Complain(uint32_t index) {
     ClientServices::Send2(&query);
 }
 
-// OFFSET: #0x0056FC80
+// OFFSET: 0x00971520
 void CGMailInfo::UpdateStationeryList() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1052,7 +1052,7 @@ void CGMailInfo::SetSendCOD(uint64_t amount) {
     }
 }
 
-// OFFSET: #0x0056FE30
+// OFFSET: 0x0096F8F0
 void CGMailInfo::MarkAsRead(uint32_t index) {
     if (index >= CGMailInfo::m_numInboxItems || (CGMailInfo::m_inbox.m_data[index]->m_flags & 0x1)) {
         return;
@@ -1096,7 +1096,7 @@ void CGMailInfo::QueryNextMailTime() {
     CGMailInfo::m_doPendingQuery = 0;
 }
 
-// OFFSET: #0x0056FFF0
+// OFFSET: 0x00971630
 bool CGMailInfo::AddItemToOutgoingMail(uint32_t index, WOWGUID item, WOWGUID container, uint8_t slot) {
     CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -1185,7 +1185,7 @@ bool CGMailInfo::AddItemToOutgoingMail(uint32_t index, WOWGUID item, WOWGUID con
     return true;
 }
 
-// OFFSET: #0x00570270
+// OFFSET: 0x0096FA30
 void CGMailInfo::ProcessAutoLootAttachments(MailboxMessageInfo* message) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -1345,7 +1345,7 @@ void CGMailInfo::GetSendItem(uint32_t index, WOWGUID& item, WOWGUID& container, 
     }
 }
 
-// OFFSET: #0x0056D390
+// OFFSET: 0x00464760
 WOWGUID CGMailInfo::GetSendItemGuid(uint32_t index) {
     if (index < 16) {
         return CGMailInfo::m_sendItems[index].m_guid;
@@ -1383,7 +1383,7 @@ int32_t CGMailInfo::IsSendItem(WOWGUID item) {
     return 0;
 }
 
-// OFFSET: #0x0056D960
+// OFFSET: 0x0096DF20
 const char* GetSenderName(int32_t entry, int32_t type, WOWGUID guid, int32_t stationery) {
     switch (type) {
         case 0:
@@ -1528,7 +1528,7 @@ void CGMailInfo::CloseMail(bool leavingWorld) {
     }
 }
 
-// OFFSET: #0x00571BE0
+// OFFSET: 0x00972A20
 void CGMailInfo::LeaveWorld() {
     CGMailInfo::CloseMail(true);
     uint32_t count = CGMailInfo::m_stationeries.Count();

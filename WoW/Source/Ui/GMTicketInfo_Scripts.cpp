@@ -255,14 +255,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GMQuickTicketSystemThrottled", &Script_GMQuickTicketSystemThrottled },
 };
 
-// OFFSET: %0x00947400
+// OFFSET: 0x009E5B00
 void GMTicketInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x00947430
+// OFFSET: 0x009E5B30
 void GMTicketInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

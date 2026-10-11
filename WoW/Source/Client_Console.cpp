@@ -19,7 +19,7 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// OFFSET: #0x00401B00
+// OFFSET: 0x00401730
 int32_t CCommand_ReloadUI(const char* command, const char* arguments) {
     CGlueMgr::m_reload = 1;
     CGGameUI::Reload();
@@ -65,7 +65,7 @@ CDataStore& operator<<(CDataStore& msg, const C3Vector& vec) {
     return msg;
 }
 
-// OFFSET: #0x00406F90
+// OFFSET: 0x00408710
 static int32_t TeleportCheat(const char* arguments, int32_t charm) {
     C3Vector position;
     const char whitespace[] = "\t\r\n\" ,";
@@ -120,17 +120,17 @@ static int32_t TeleportCheat(const char* arguments, int32_t charm) {
     return 1;
 }
 
-// OFFSET: %0x00407EF0
+// OFFSET: 0x00408950
 int32_t CCommand_Teleport(const char* command, const char* arguments) {
     return TeleportCheat(arguments, 0);
 }
 
-// OFFSET: %0x00407F10
+// OFFSET: 0x00408970
 int32_t CCommand_CharmTeleport(const char* command, const char* arguments) {
     return TeleportCheat(arguments, 1);
 }
 
-// OFFSET: #0x00407210
+// OFFSET: 0x00408990
 int32_t CCommand_WorldTeleport(const char* command, const char* arguments) {
     const char whitespace[] = "\t\r\n\" ";
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -221,7 +221,7 @@ int32_t CCommand_WorldTeleport(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: #0x00407520
+// OFFSET: 0x00408C50
 int32_t CCommand_SetRawPos(const char* command, const char* arguments) {
     C3Vector rawPosition;
     const char whitespace[] = "\t\r\n\" ,";

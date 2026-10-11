@@ -18,7 +18,7 @@ CKBSetup g_KnowledgeBaseSetup;
 // STATIC: 0x00F76B60
 CKBPage* CKBPage::s_pLoadingQueue_Head;
 
-// OFFSET: #0x00550AE0
+// OFFSET: 0x009FB070
 CKBPage::CKBPage() {
     this->m_state = 0;
     this->m_data = NULL;
@@ -27,7 +27,7 @@ CKBPage::CKBPage() {
     this->m_inQueue = 0;
 }
 
-// OFFSET: #0x00550B80
+// OFFSET: 0x009FB110
 bool CKBPage::LoadingCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     CKBPage* page = static_cast<CKBPage*>(param);
 
@@ -173,7 +173,7 @@ int32_t CKBPage::_BeginLoading() {
     return 1;
 }
 
-// OFFSET: #0x00550D10
+// OFFSET: 0x009FB2A0
 XMLNode* CKBPage::_GetRoot(CKBIterator& iterator) {
     XMLNode* root = XMLTree_GetRoot(this->m_tree);
 
@@ -195,7 +195,7 @@ int32_t CKBPage::_GetInt(XMLNode* node, const char* attribute) const {
     return value ? atol(value) : 0;
 }
 
-// OFFSET: #0x00550D80
+// OFFSET: 0x009FB310
 const char* CKBPage::_GetBodyString(XMLNode* node) const {
     if (this->m_state != 2 || !this->m_tree) {
         return NULL;
@@ -204,7 +204,7 @@ const char* CKBPage::_GetBodyString(XMLNode* node) const {
     return node->m_body;
 }
 
-// OFFSET: #0x00550DA0
+// OFFSET: 0x009FB330
 bool CKBPage::_GetBodyBool(const char* element, const char* child) const {
     const char* body = this->_GetBodyString(element, child);
     return body && !SStrCmpI(body, "true", STORM_MAX_STR);
@@ -220,7 +220,7 @@ bool CKBPage::_GetBool(XMLNode* node, const char* attribute) const {
     return value && !SStrCmpI(value, "true", STORM_MAX_STR);
 }
 
-// OFFSET: #0x00551300
+// OFFSET: 0x009FB680
 int32_t CKBPage::_GetInt(const char* element, const char* attribute) const {
     if (this->m_state != 2 || !this->m_tree) {
         return 0;
@@ -270,7 +270,7 @@ int32_t CKBPage::_GetBodyInt(const char* element, const char* child) const {
     return body ? atol(body) : 0;
 }
 
-// OFFSET: #0x00550F50
+// OFFSET: 0x009FB4D0
 XMLNode* CKBSetup::GetLanguage(int32_t index) {
     if (this->m_state != 2 || !this->m_tree) {
         return NULL;
@@ -293,7 +293,7 @@ XMLNode* CKBSetup::GetLanguage(int32_t index) {
     return this->m_languages.m_node;
 }
 
-// OFFSET: #0x00550FB0
+// OFFSET: 0x009FB530
 XMLNode* CKBSetup::GetCategoryNode(int32_t index) {
     if (this->m_state != 2 || !this->m_tree) {
         return NULL;
@@ -316,7 +316,7 @@ XMLNode* CKBSetup::GetCategoryNode(int32_t index) {
     return this->m_categories.m_node;
 }
 
-// OFFSET: #0x00551050
+// OFFSET: 0x009FB5D0
 XMLNode* CKBSetup::GetArticleHeader(int32_t index) {
     if (this->m_state != 2 || !this->m_tree) {
         return NULL;
@@ -339,7 +339,7 @@ XMLNode* CKBSetup::GetArticleHeader(int32_t index) {
     return this->m_articleHeaders.m_node;
 }
 
-// OFFSET: #0x00551100
+// OFFSET: 0x009FB6D0
 void CKBSetup::_ComputeCachedData() {
     XMLNode* node = NULL;
     XMLNode* root = XMLTree_GetRoot(this->m_tree);
@@ -427,7 +427,7 @@ void CKBSetup::GetCategory(int32_t category) {
     } while (child);
 }
 
-// OFFSET: #0x005520B0
+// OFFSET: 0x009FC6B0
 XMLNode* CKBSetup::GetSubCategory(int32_t category, int32_t subCategory) {
     if (this->m_state != 2 || !this->m_tree || category < 0) {
         return NULL;
@@ -480,7 +480,7 @@ CKBSetup::CKBSetup() {
 void CKBPage::Initialize() {
 }
 
-// OFFSET: #0x00550940
+// OFFSET: 0x009FAED0
 const char* KnowledgeBaseGetURLForLocale() {
     switch (LocaleNameToIndex(s_localeCode)) {
         case 0:
@@ -538,7 +538,7 @@ void CKBPage::UpdateLoadingQueue() {
     }
 }
 
-// OFFSET: #0x00552740
+// OFFSET: 0x009FCD10
 void CKBPage::Shutdown() {
     while (CKBPage::s_pLoadingQueue_Head) {
         OsSleep(1);

@@ -425,7 +425,7 @@ WOWGUID GetGuidByKeyword(const char* token) {
     return guid;
 }
 
-// OFFSET: %0x00459B30
+// OFFSET: 0x0044F8B0
 bool GetUnitByKeyword(const char* token, CGUnit_C** unit, bool defaultToTarget) {
     WOWGUID guid;
 
@@ -597,7 +597,7 @@ bool Script_GetGUIDFromString(const char** name, WOWGUID& guid, bool forceRealm)
     return guid != WOWGUID();
 }
 
-// OFFSET: #0x0060B0B0
+// OFFSET: 0x0044F900
 const char* Script_GetTokenFromGUID(const WOWGUID* guid) {
     if (!*guid) {
         return NULL;
@@ -1076,7 +1076,7 @@ int32_t PushUnitAura(lua_State* L, ScriptAuraInfo* info) {
     return 17;
 }
 
-// OFFSET: #0x0060BB70
+// OFFSET: 0x00450380
 char** Script_GetTokenIDsFromGUID(const WOWGUID& guid, int32_t* count) {
     *count = 0;
 
@@ -1227,7 +1227,7 @@ void Script_SendUnitSpellSignal(const WOWGUID& guid, uint8_t castCount, const Sp
     }
 }
 
-// OFFSET: #0x00608390
+// OFFSET: 0x0044BF30
 static int32_t Script_GetAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* info) {
     if (!lua_isnumber(L, index) && !lua_isstring(L, index)) {
         return 0;
@@ -1279,7 +1279,7 @@ static int32_t Script_GetAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* i
     return 1;
 }
 
-// OFFSET: #0x006110A0
+// OFFSET: 0x00455840
 int32_t Script_GetUnitAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* info) {
     if (!lua_isstring(L, index) || (!lua_isnumber(L, index + 1) && !lua_isstring(L, index + 1))) {
         return 0;

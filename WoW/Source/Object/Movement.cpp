@@ -1612,7 +1612,7 @@ void MovementInitialize(const char* logFile) {
     s_cvSplineOpt = CVar::Register("SplineOpt", "toggles use of spline coll optimization", 0x1, "1", NULL, 0, false, NULL, false);
 }
 
-// OFFSET: #0x006F0C30
+// OFFSET: 0x0057B300
 void MovementDestroy() {
     CMovementGlobals* globals = MovementGetGlobals();
 
@@ -2072,7 +2072,7 @@ int32_t CMovement_C::Interpolate(uint32_t now, uint32_t elapsed, C3Vector* posit
     return this->m_flags2 & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT;
 }
 
-// OFFSET: #0x005FEDE0
+// OFFSET: [0x0043B770]
 int32_t CMovement_C::IsJumping() const {
     return (this->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_fallVelocity;
 }

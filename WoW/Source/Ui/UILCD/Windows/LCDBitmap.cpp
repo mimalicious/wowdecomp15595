@@ -10,7 +10,7 @@ static bool s_alphaBlendLoaded;
 // STATIC: 0x0100AAD0
 static ALPHABLENDPROC s_alphaBlend;
 
-// OFFSET: #0x0095AD90
+// OFFSET: 0x00B3FB10
 CLCDBitmap::CLCDBitmap() {
     this->m_fZoom = 1.0f;
     this->m_hBitmap = NULL;
@@ -46,7 +46,7 @@ void CLCDBitmap::SetBitmapSize(int32_t width, int32_t height) {
     this->m_nBitmapHeight = height;
 }
 
-// OFFSET: #0x0095AE70
+// OFFSET: 0x00B3FBE0
 void CLCDBitmap::OnDraw(CLCDGfxBase& gfx) {
     if (!this->m_hBitmap) {
         return;

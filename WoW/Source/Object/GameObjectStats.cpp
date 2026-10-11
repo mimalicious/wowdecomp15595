@@ -3,7 +3,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/GameObjectStats_C.h"
 
-// OFFSET: #0x00667FA0
+// OFFSET: 0x0049B170
 GameObjectStats::~GameObjectStats() {
     for (int32_t i = 0; i < 4; i++) {
         if (this->m_name[i]) {
@@ -35,7 +35,7 @@ const char* GameObjectStats::GetName(int32_t index) {
     return name;
 }
 
-// OFFSET: #0x0098D680
+// OFFSET: 0x00A28BA0
 void GameObjectStats::Pack(CDataStore* msg) {
     msg->Put(this->m_typeID);
     msg->Put(this->m_displayID);

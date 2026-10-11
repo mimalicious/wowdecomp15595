@@ -2,7 +2,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDPage.h"
 
-// OFFSET: #0x00959C80
+// OFFSET: 0x00B3EA20
 CLCDOutput::CLCDOutput() {
     this->m_pActivePage = NULL;
     this->m_pGlobalPage = NULL;
@@ -23,7 +23,7 @@ CLCDOutput::~CLCDOutput() {
     this->Close();
 }
 
-// OFFSET: #0x00959D20
+// OFFSET: [0x00B3EAC0]
 void CLCDOutput::Close() {
     if (this->m_hDevice != LGLCD_INVALID_DEVICE) {
         this->OnClosingDevice(this->m_hDevice);
@@ -32,7 +32,7 @@ void CLCDOutput::Close() {
     }
 }
 
-// OFFSET: #0x00959D20
+// OFFSET: [0x00B3EAC0]
 void CLCDOutput::Shutdown() {
     this->Close();
 }
@@ -55,7 +55,7 @@ int32_t CLCDOutput::IsOpened() {
     return this->m_hDevice != LGLCD_INVALID_DEVICE;
 }
 
-// OFFSET: #0x00959D70
+// OFFSET: 0x00B3EB10
 HRESULT CLCDOutput::HandleErrorFromAPI(DWORD result) {
     switch (result) {
         case ERROR_SUCCESS:
@@ -120,7 +120,7 @@ int32_t CLCDOutput::HasDeviceType() {
     return this->m_OpenByTypeContext.deviceType != 0;
 }
 
-// OFFSET: #0x00959E60
+// OFFSET: 0x00B3EBE0
 int32_t CLCDOutput::OpenByType(lgLcdOpenByTypeContext& context) {
     if (this->m_hDevice != LGLCD_INVALID_DEVICE) {
         this->OnClosingDevice(this->m_hDevice);
@@ -144,7 +144,7 @@ int32_t CLCDOutput::OpenByType(lgLcdOpenByTypeContext& context) {
     return 1;
 }
 
-// OFFSET: #0x00959F00
+// OFFSET: 0x00B3EC80
 int32_t CLCDOutput::ReOpenDeviceType() {
     if (this->m_OpenByTypeContext.deviceType) {
         return this->OpenByType(this->m_OpenByTypeContext);
@@ -153,7 +153,7 @@ int32_t CLCDOutput::ReOpenDeviceType() {
     return 0;
 }
 
-// OFFSET: #0x00959F20
+// OFFSET: 0x00B3ECA0
 void CLCDOutput::ShowPage(CLCDPage* page, int32_t activate) {
     if (activate) {
         this->m_pActivePage = page;
@@ -169,7 +169,7 @@ void CLCDOutput::ShowPage(CLCDPage* page, int32_t activate) {
     }
 }
 
-// OFFSET: #0x00959F80
+// OFFSET: 0x00B3ED00
 int32_t CLCDOutput::Draw() {
     uint32_t priority = this->m_nPriority;
 
@@ -291,7 +291,7 @@ void CLCDOutput::OnSoftButtonEvent(uint32_t buttons) {
     this->m_dwButtonState = buttons;
 }
 
-// OFFSET: #0x0095A2E0
+// OFFSET: 0x00B3F060
 void CLCDOutput::OnUpdate(uint32_t timestamp) {
     if (this->m_pActivePage) {
         this->m_pActivePage->OnUpdate(timestamp);

@@ -117,7 +117,7 @@ char* AddOnUnloadableToken(UIADDON_LOADABLE_REASON reason, UIADDON_LOADABLE_REAS
     return buffer;
 }
 
-// OFFSET: #0x005F4C90
+// OFFSET: 0x0045B730
 const char* AddOnSecurityToken(int32_t security) {
     return s_addOnLoadableTokens[UIADDON_SECURE + security];
 }
@@ -166,7 +166,7 @@ void DeleteInterfaceFiles() {
     }
 }
 
-// OFFSET: #0x005F4A30
+// OFFSET: 0x0045B4C0
 static void ReadPublicKey(bool* hasKey, uint8_t* key, const char* path) {
     *hasKey = false;
     memset(key, 0, 256);
@@ -201,7 +201,7 @@ static void WritePublicKey(bool hasKey, const uint8_t* key, const char* path) {
     OsCloseFile(file);
 }
 
-// OFFSET: %0x004651B0
+// OFFSET: 0x0045B580
 static void ReadURL(const char* path, char** url) {
     void* data;
 
@@ -233,7 +233,7 @@ UIADDON::METADATA::~METADATA() {
     }
 }
 
-// OFFSET: #0x005F6FF0
+// OFFSET: 0x0045F180
 ADDONSTATELIST::~ADDONSTATELIST() {
     if (this->m_name) {
         SMemFree(this->m_name, __FILE__, __LINE__, 0);
@@ -264,14 +264,14 @@ static void WriteURL(const char* path, const char* url) {
     OsCloseFile(file);
 }
 
-// OFFSET: #0x005F4EC0
+// OFFSET: 0x0045BA30
 void UIADDON::LoadPublicKey() {
     char path[260];
     SStrPrintf(path, sizeof(path), "Interface\\AddOns\\%s\\%s.pub", this->m_key.m_str, this->m_key.m_str);
     ReadPublicKey(&this->m_hasPublicKey, this->m_publicKey, path);
 }
 
-// OFFSET: #0x005F4F10
+// OFFSET: 0x0045BA80
 void UIADDON::SavePublicKey() {
     const char* name = this->m_key.m_str;
 
@@ -287,7 +287,7 @@ void UIADDON::SavePublicKey() {
     WritePublicKey(this->m_hasPublicKey, this->m_publicKey, path);
 }
 
-// OFFSET: #0x005F4FB0
+// OFFSET: 0x0045BB20
 void UIADDON::LoadURL() {
     char path[260];
     SStrPrintf(path, sizeof(path), "Interface\\AddOns\\%s\\%s.url", this->m_key.m_str, this->m_key.m_str);
@@ -299,7 +299,7 @@ uint32_t GetNumAddOns() {
     return s_addOnInfo.Count();
 }
 
-// OFFSET: #0x005F5000
+// OFFSET: 0x0045BB70
 const char* GetAddOnByIndex(uint32_t index) {
     if (index < s_addOnInfo.Count()) {
         return s_addOnInfo[index];
@@ -308,7 +308,7 @@ const char* GetAddOnByIndex(uint32_t index) {
     return NULL;
 }
 
-// OFFSET: #0x005F5440
+// OFFSET: 0x0045BFA0
 void GetAddOnInfoRequest(CDataStore* msg) {
     if (!s_addons.m_fulllist.Head()) {
         return;
@@ -361,7 +361,7 @@ void GetAddOnInfoRequest(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x005F6C20
+// OFFSET: 0x0045ED40
 UIADDON::UIADDON() {
     this->m_loading = false;
     this->m_loaded = 0;
@@ -380,7 +380,7 @@ UIADDON::UIADDON() {
     this->m_hasPublicKey = false;
 }
 
-// OFFSET: #0x005F6CF0
+// OFFSET: 0x0045EE10
 UIADDON::~UIADDON() {
     if (this->m_url) {
         SMemFree(this->m_url, __FILE__, __LINE__, 0);
@@ -425,7 +425,7 @@ UIADDON::~UIADDON() {
     this->m_metadata.Clear();
 }
 
-// OFFSET: #0x005F7410
+// OFFSET: 0x0045C1A0
 const char* GetAddOnName(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -436,7 +436,7 @@ const char* GetAddOnName(const char* name) {
     return NULL;
 }
 
-// OFFSET: #0x005F7430
+// OFFSET: 0x0045C1C0
 const char* GetAddOnTitle(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -451,7 +451,7 @@ const char* GetAddOnTitle(const char* name) {
     return NULL;
 }
 
-// OFFSET: #0x005F7470
+// OFFSET: 0x0045C200
 const char* GetAddOnNotes(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -466,7 +466,7 @@ const char* GetAddOnNotes(const char* name) {
     return NULL;
 }
 
-// OFFSET: #0x005F74E0
+// OFFSET: 0x0045C270
 const char* GetAddOnMetadata(const char* name, const char* key) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -481,7 +481,7 @@ const char* GetAddOnMetadata(const char* name, const char* key) {
     return NULL;
 }
 
-// OFFSET: #0x005F7520
+// OFFSET: 0x0045C2B0
 TSGrowableArray<char*>* GetAddonDeps(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -492,7 +492,7 @@ TSGrowableArray<char*>* GetAddonDeps(const char* name) {
     return NULL;
 }
 
-// OFFSET: #0x005F7570
+// OFFSET: 0x0045C320
 static int32_t ComputeAddOnEnableState(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -526,7 +526,7 @@ static int32_t ComputeAddOnEnableState(const char* name) {
     return 2 - (enabled < total);
 }
 
-// OFFSET: #0x005F7610
+// OFFSET: 0x0045C3C0
 bool IsAddOnLoadOnDemand(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -537,7 +537,7 @@ bool IsAddOnLoadOnDemand(const char* name) {
     return false;
 }
 
-// OFFSET: #0x005F7630
+// OFFSET: 0x0045C3E0
 bool IsAddOnLoading(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -548,7 +548,7 @@ bool IsAddOnLoading(const char* name) {
     return false;
 }
 
-// OFFSET: #0x005F7650
+// OFFSET: 0x0045C400
 bool IsAddOnLoaded(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -578,7 +578,7 @@ void ClearAddOnEnableState(const char* character) {
     }
 }
 
-// OFFSET: #0x005F78B0
+// OFFSET: 0x0045F5E0
 void ShutdownAddOns() {
     if (!s_addOnsInitialized) {
         return;
@@ -590,7 +590,7 @@ void ShutdownAddOns() {
     s_addOnsInitialized = false;
 }
 
-// OFFSET: #0x005F7910
+// OFFSET: 0x0045CFD0
 static int32_t QSortAddOns(const void* a, const void* b) {
     const char* name1 = *static_cast<const char* const*>(a);
     const char* name2 = *static_cast<const char* const*>(b);
@@ -622,7 +622,7 @@ static int32_t QSortAddOns(const void* a, const void* b) {
     return SStrCmpI(title1, title2, STORM_MAX_STR);
 }
 
-// OFFSET: #0x005F79A0
+// OFFSET: 0x0045D060
 void SetAddOnInfoRequest(CDataStore* msg) {
     for (UIADDON* addon = s_addons.m_fulllist.Head(); addon; addon = s_addons.m_fulllist.Next(addon)) {
         if (!addon->m_secure) {
@@ -742,7 +742,7 @@ void SetAddOnInfoRequest(CDataStore* msg) {
     qsort(s_addOnInfo.m_data, s_addOnInfo.Count(), sizeof(const char*), QSortAddOns);
 }
 
-// OFFSET: #0x005F7D70
+// OFFSET: 0x0045D460
 int32_t GetAddOnEnableState(const char* name, const char* character, bool compute) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -803,7 +803,7 @@ int32_t GetAddOnEnableState(const char* name, const char* character, bool comput
     return 2 - (enabled < total);
 }
 
-// OFFSET: #0x005F7E90
+// OFFSET: 0x0045D580
 bool IsAddOnLoadable(const char* name, bool demandLoad, UIADDON_LOADABLE_REASON& reason, UIADDON_LOADABLE_REASON& dependencyReason, const char* character) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -870,7 +870,7 @@ bool IsAddOnLoadable(const char* name, bool demandLoad, UIADDON_LOADABLE_REASON&
     return true;
 }
 
-// OFFSET: #0x005F7FF0
+// OFFSET: 0x0045D6E0
 uint32_t LoadAddOnFileCount() {
     uint32_t count = 0;
 
@@ -898,7 +898,7 @@ uint32_t LoadAddOnFileCount() {
     return count;
 }
 
-// OFFSET: #0x005F8530
+// OFFSET: 0x0045F640
 void UIADDON::SetMetadata(const char* key, const char* value) {
     UIADDON::METADATA* metadata = this->m_metadata.Ptr(key);
 
@@ -913,7 +913,7 @@ void UIADDON::SetMetadata(const char* key, const char* value) {
     metadata->m_value = SStrDupA(value, __FILE__, __LINE__);
 }
 
-// OFFSET: #0x005F85D0
+// OFFSET: 0x0045F6E0
 static void LoadAddOnMetadata(UIADDON* addon, const char* line) {
     const char* end = line;
     const char* locale = NULL;
@@ -964,7 +964,7 @@ static void LoadAddOnMetadata(UIADDON* addon, const char* line) {
     addon->SetMetadata(key, end);
 }
 
-// OFFSET: #0x005F80B0
+// OFFSET: 0x0045DBF0
 bool LoadAddOn(const char* name, bool demandLoad, CStatus* status) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -1089,7 +1089,7 @@ void LoadAddOns(CStatus* status) {
     }
 }
 
-// OFFSET: #0x005F86A0
+// OFFSET: 0x0045F7A0
 static void LoadAddOnInfo(const char* name) {
     if (s_addons.Ptr(name)) {
         return;
@@ -1330,7 +1330,7 @@ static void LoadAddOnInfo(const char* name) {
     }
 }
 
-// OFFSET: #0x005F8E80
+// OFFSET: 0x0045FF40
 static int32_t EnumAddOnsArchive(const char* fileName, void* param) {
     const char* extension = SStrChrR(const_cast<char*>(fileName), '.');
 
@@ -1353,7 +1353,7 @@ static int32_t EnumAddOnsArchive(const char* fileName, void* param) {
     return 1;
 }
 
-// OFFSET: #0x005F8F30
+// OFFSET: 0x0045FFF0
 static int32_t EnumAddOnsDisk(OS_FILE_DATA& data, void* param) {
     if ((data.flags & 0x10) && data.fileName[0] != '.') {
         LoadAddOnInfo(data.fileName);
@@ -1386,7 +1386,7 @@ void InitializeAddOns(const char* accountName) {
     s_addOnsInitialized = true;
 }
 
-// OFFSET: #0x005F90B0
+// OFFSET: 0x00460190
 void SetAddOnEnableState(const char* name, const char* character, int32_t state) {
     bool enabled = state != 0;
 
@@ -1414,7 +1414,7 @@ void SetAddOnEnableState(const char* name, const char* character, int32_t state)
     }
 }
 
-// OFFSET: #0x005F91E0
+// OFFSET: 0x004602D0
 void LoadAddOnEnableState(const char* character) {
     if (!character) {
         for (ADDONSTATELIST* list = s_addOnStates.Head(); !TSList<ADDONSTATELIST, TSGetLink<ADDONSTATELIST> >::IsEnd(list); list = s_addOnStates.RawNext(list)) {
@@ -1501,7 +1501,7 @@ void LoadAddOnEnableState(const char* character) {
     SFile::Unload(data);
 }
 
-// OFFSET: #0x005F5620
+// OFFSET: 0x0045C610
 void UnloadAddOns() {
     int32_t changed = 0;
     char path[260];
@@ -1652,7 +1652,7 @@ void UnloadAddOns() {
     }
 }
 
-// OFFSET: #0x005F7670
+// OFFSET: 0x0045C420
 int32_t GetAddOnSecurity(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -1663,7 +1663,7 @@ int32_t GetAddOnSecurity(const char* name) {
     return 1;
 }
 
-// OFFSET: #0x005F76A0
+// OFFSET: 0x0045C450
 void SaveAddOnEnableState() {
     int32_t created = 0;
 
@@ -1713,7 +1713,7 @@ bool IsAddonVersionCheckEnabled() {
     return g_checkAddonVersionVar->m_intValue != 0;
 }
 
-// OFFSET: #0x005F4CB0
+// OFFSET: 0x0045B740
 void SetAddonVersionCheck(int32_t enable) {
     if (enable) {
         g_checkAddonVersionVar->Set("1", true, false, false, true);
@@ -1722,7 +1722,7 @@ void SetAddonVersionCheck(int32_t enable) {
     }
 }
 
-// OFFSET: #0x005F74B0
+// OFFSET: 0x0045C240
 const char* GetAddOnURL(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
 
@@ -1739,7 +1739,7 @@ const char* GetAddOnURL(const char* name) {
     return url;
 }
 
-// OFFSET: #0x005F7540
+// OFFSET: 0x0045C2F0
 bool IsAddOnUpdateAvailable(const char* name) {
     UIADDON* addon = s_addons.Ptr(name);
     return addon ? addon->m_outOfDate : false;

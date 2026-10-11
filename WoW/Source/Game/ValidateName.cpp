@@ -358,12 +358,12 @@ static inline bool MatchesToken(TSFixedArray<regex_t>& tokens, const char* name)
     return false;
 }
 
-// OFFSET: #0x007E0F30
+// OFFSET: [0x004E6690]
 bool IsAlphaLatin1(uint16_t c) {
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (static_cast<uint16_t>(c - 0xC0) <= 0x1D && c != 0xD7) || c == 0xDF || (static_cast<uint16_t>(c - 0xE0) <= 0x1F && c != 0xF7 && c != 0xFE);
 }
 
-// OFFSET: #0x007E0F90
+// OFFSET: 0x004E6700
 bool IsAlphaEnglish(uint16_t c) {
     return (c >= 'A' && c <= 'Z') || static_cast<uint16_t>(c - 'a') <= 25;
 }
@@ -394,7 +394,7 @@ bool IsAlphaRussian(uint16_t c) {
     return (c >= 0x410 && c <= 0x44F) || c == 0x401 || c == 0x451;
 }
 
-// OFFSET: #0x007E1080
+// OFFSET: 0x004E6820
 bool IsAlphaInCharSet(uint16_t c, int32_t charset) {
     switch (charset) {
         case 0:
@@ -593,7 +593,7 @@ int32_t ValidateCharacterNameConst(uint32_t language, const char* name, bool pro
     return result;
 }
 
-// OFFSET: #0x007E1F00
+// OFFSET: 0x004E7850
 int32_t ValidatePetName(uint32_t language, const char* name, bool profanity, bool chatProfanity, bool reserved, bool english, uint32_t extraLength) {
     uint32_t length;
     int32_t charset;
@@ -650,7 +650,7 @@ void ValidateNameDestroy() {
     s_charsetCached = false;
 }
 
-// OFFSET: #0x007E2250
+// OFFSET: 0x004E7D30
 void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t existingCharsetMask) {
     if (s_charsetCached) {
         if (localeMask == s_cachedLocaleMask && charsetMask == s_cachedCharsetMask) {
@@ -762,7 +762,7 @@ bool ValidateStringIsUTF8(const char* string) {
     return true;
 }
 
-// OFFSET: #0x007E1640
+// OFFSET: 0x004E6F60
 bool TruncateNewLines(char* text) {
     for (char* c = text; c && *c; c++) {
         bool newLine;
@@ -788,7 +788,7 @@ bool IsNumeric(uint16_t c) {
     return static_cast<uint16_t>(c - '0') <= 9;
 }
 
-// OFFSET: #0x007E10F0
+// OFFSET: 0x004E6890
 bool IsUpper(uint16_t c) {
     if (static_cast<uint16_t>(c - 'a') <= 25 || static_cast<uint16_t>(c - 0xE0) <= 30 || static_cast<uint16_t>(c - 0x430) <= 31) {
         return false;
@@ -797,7 +797,7 @@ bool IsUpper(uint16_t c) {
     return c != 0x451;
 }
 
-// OFFSET: #0x007E1130
+// OFFSET: 0x004E68D0
 uint16_t ToUpper(uint16_t c) {
     if (static_cast<uint16_t>(c - 'a') <= 25 || static_cast<uint16_t>(c - 0xE0) <= 30) {
         return c - 32;
@@ -818,7 +818,7 @@ uint16_t ToUpper(uint16_t c) {
     return c;
 }
 
-// OFFSET: #0x007E1180
+// OFFSET: 0x004E6930
 uint16_t ToLower(uint16_t c) {
     if (static_cast<uint16_t>(c - 'A') <= 25 || static_cast<uint16_t>(c - 0xC0) <= 30) {
         return c + 32;
@@ -967,7 +967,7 @@ void CaseAccentInsensitiveParse(char* string, uint32_t size, int32_t locale) {
     SUniConvertUTF16to8(string, size, folded, 512, NULL, NULL);
 }
 
-// OFFSET: #0x007E1680
+// OFFSET: 0x004E6FB0
 bool StripHyperlinks(const char* text, char* buffer, uint32_t size) {
     bool stripped = false;
     char* dest = buffer;
@@ -1104,7 +1104,7 @@ int32_t GetNameDeclensions(int32_t locale, char* declensions, const char* name, 
     return 0;
 }
 
-// OFFSET: #0x0076DD90
+// OFFSET: 0x00A31310
 int32_t ValidateCharacterNameDeclension(int32_t locale, const char* name, const char* declension) {
     if (locale != 8) {
         return 1;
@@ -1119,7 +1119,7 @@ int32_t ValidateCharacterNameDeclension(int32_t locale, const char* name, const 
     return result;
 }
 
-// OFFSET: #0x0076DE70
+// OFFSET: 0x00A328C0
 static void GetNameInfo(const char* name, RussianNameInfo* info, int32_t sex) {
     int32_t length = SStrLenUTF8(name);
     memset(info->m_name, 0, sizeof(info->m_name));
@@ -1244,7 +1244,7 @@ static void GetNameInfo(const char* name, RussianNameInfo* info, int32_t sex) {
     }
 }
 
-// OFFSET: #0x0076E0B0
+// OFFSET: 0x00A32B10
 static int32_t FormatCase(char* declensions, uint32_t set, const RussianNameInfo* info) {
     int32_t id = s_russianDeclensionRules[info->m_rule].m_sets[set];
     uint16_t buffer[1024];
@@ -1310,14 +1310,14 @@ static int32_t FormatCase(char* declensions, uint32_t set, const RussianNameInfo
     return 1;
 }
 
-// OFFSET: #0x0076E270
+// OFFSET: 0x00A32CD0
 int32_t RussianNameNeedsDeclensions(const char* name) {
     uint16_t c = 0;
     SUniConvertUTF8to16(&c, 1, name, 0x7FFFFFFF, NULL, NULL);
     return IsRussian(c);
 }
 
-// OFFSET: #0x0076E2B0
+// OFFSET: 0x00A32D10
 int32_t GetNumRussianNameDeclensionSets(const char* name, int32_t sex) {
     RussianNameInfo info;
     info.m_rule = 35;
@@ -1341,7 +1341,7 @@ int32_t GetNumRussianNameDeclensionSets(const char* name, int32_t sex) {
     return count;
 }
 
-// OFFSET: #0x0076E330
+// OFFSET: 0x00A32D90
 int32_t GetRussianNameDeclensions(char* declensions, const char* name, int32_t sex, uint32_t set) {
     if (set > 2) {
         return 0;
@@ -1358,7 +1358,7 @@ int32_t GetRussianNameDeclensions(char* declensions, const char* name, int32_t s
     return FormatCase(declensions, set, &info);
 }
 
-// OFFSET: #0x0076E390
+// OFFSET: 0x00A32DF0
 bool IsRussianDeclensionValid(const char* name, const char* declension) {
     RussianNameInfo info;
     info.m_rule = 35;
@@ -1410,7 +1410,7 @@ static void StripPipes(const char* source, char* dest, uint32_t destSize) {
     *out = '\0';
 }
 
-// OFFSET: #0x007E1830
+// OFFSET: 0x004E7170
 bool ScrubString(const char* source, char* dest, int32_t maxChars, uint32_t destSize, int32_t flags) {
     if (!dest) {
         return false;

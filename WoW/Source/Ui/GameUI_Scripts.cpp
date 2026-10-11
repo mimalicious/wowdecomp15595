@@ -2973,7 +2973,7 @@ static int32_t Script_SetConsoleKey(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0050FEA0
+// OFFSET: 0x008C1CB0
 static int32_t RegisterCVar(lua_State* L, uint32_t flags) {
     if (!lua_isstring(L, 1)) {
         char function[1024];
@@ -4528,14 +4528,14 @@ static int32_t Script_IsUsableItem(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005176F0
+// OFFSET: 0x008DAA70
 int32_t CanEquipInSlotCallback(const CGItem_C* item, void* param) {
     WOWGUID none = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
     return stats && static_cast<int32_t>(stats->m_inventoryType) == *static_cast<int32_t*>(param);
 }
 
-// OFFSET: #0x00517740
+// OFFSET: 0x008DAAC0
 int32_t FindItemClassTypeCallback(const CGItem_C* item, void* param) {
     const char* type = static_cast<const char*>(param);
     WOWGUID none = WOWGUID();

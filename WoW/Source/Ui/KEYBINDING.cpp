@@ -1,7 +1,7 @@
 #include "KEYBINDING.h"
 #include <cstring>
 
-// OFFSET: #0x0055E6A0
+// OFFSET: 0x00921CB0
 KEYBINDING::KEYBINDING() : m_flags(0) {
     memset(this->m_data, 0, sizeof(this->m_data));
 }

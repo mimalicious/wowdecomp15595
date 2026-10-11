@@ -15,7 +15,7 @@ const ItemSubClassRec* SDBItemSubclassGetSubClassRec(uint32_t classID, uint32_t 
     return s_itemSubclasses[classID][subClassID];
 }
 
-// OFFSET: #0x006810C0
+// OFFSET: 0x004B2900
 void SDBItemSubclassInitialize() {
     int32_t counts[sizeof(s_itemSubclasses) / sizeof(s_itemSubclasses[0])];
     memset(counts, 0, sizeof(counts));

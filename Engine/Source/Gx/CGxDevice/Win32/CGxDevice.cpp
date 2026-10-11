@@ -144,7 +144,7 @@ static uint16_t HToI(const char* h, int32_t count) {
     return value;
 }
 
-// OFFSET: #0x00689C10
+// OFFSET: 0x0084FC20
 int32_t CGxDevice::DeviceAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo) {
     int32_t result = 0;
     vendorID = 0xFFFF;
@@ -231,7 +231,7 @@ int32_t CGxDevice::AdapterD3dAvailable() {
     return result;
 }
 
-// OFFSET: #0x00689DB0
+// OFFSET: 0x0084FDB0
 int32_t CGxDevice::DeviceAdapterInfer(uint16_t& deviceID) {
     int32_t result = 0;
     deviceID = 0;
@@ -940,7 +940,7 @@ int32_t CGxDevice::IWindowCreate(void* window, CGxFormat& format, int32_t show) 
     return hwnd != NULL;
 }
 
-// OFFSET: #0x0068A170
+// OFFSET: 0x0084FF20
 int32_t CGxDevice::D3dAdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     HINSTANCE d3dLib = NULL;
     LPDIRECT3D9 d3d = NULL;

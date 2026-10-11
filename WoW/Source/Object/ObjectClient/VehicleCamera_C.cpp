@@ -210,7 +210,7 @@ int32_t CVehicleCamera_C::IsHierarchyChasingFacing() const {
     }
 }
 
-// OFFSET: #0x005FAA10
+// OFFSET: 0x00448D80
 int32_t CVehicleCamera_C::IsTransitioningFacing() const {
     if (!(this->m_flags & 0x10)) {
         return 0;

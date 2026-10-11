@@ -5,7 +5,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/UIBindings.h"
 
-// OFFSET: #0x0055D6B0
+// OFFSET: 0x00920C70
 int32_t MODIFIEDCLICK::IsActive(BINDING_SET set) {
     const char* button = this->m_data[set].m_button;
     uint32_t modifiers = this->m_data[set].m_modifiers;
@@ -31,7 +31,7 @@ int32_t MODIFIEDCLICK::IsActive(BINDING_SET set) {
     return !current || !SStrCmp(current, button, STORM_MAX_STR);
 }
 
-// OFFSET: #0x0055E180
+// OFFSET: 0x00921750
 int32_t MODIFIEDCLICK::SetBinding(BINDING_SET set, const char* binding) {
     const char* button = NULL;
     uint32_t modifiers = 0;
@@ -62,7 +62,7 @@ int32_t MODIFIEDCLICK::SetBinding(BINDING_SET set, const char* binding) {
     return 1;
 }
 
-// OFFSET: #0x0055E230
+// OFFSET: 0x00921810
 void MODIFIEDCLICK::GetBinding(BINDING_SET set, char* binding, int32_t maxLength, uint32_t* flags) {
     uint32_t modifiers = this->m_data[set].m_modifiers;
     const char* button = this->m_data[set].m_button;

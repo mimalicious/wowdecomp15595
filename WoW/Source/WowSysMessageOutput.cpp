@@ -72,7 +72,7 @@ void WowSysMessageOutput::Hide() {
     }
 }
 
-// OFFSET: #0x0040B420
+// OFFSET: 0x0040DE90
 void WowSysMessageOutput::Output(const char* text, STATUS_TYPE severity) {
     if (!s_enabled) {
         return;
@@ -98,7 +98,7 @@ void WowSysMessageOutput::Output(const char* text, STATUS_TYPE severity) {
     ConsoleWrite(text, severity < STATUS_ERROR ? WARNING_COLOR : ERROR_COLOR);
 }
 
-// OFFSET: #0x0040B540
+// OFFSET: 0x0040DFA0
 void WowSysMessageOutput::Paint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (s_hidden) {
         return;
@@ -153,7 +153,7 @@ void WowSysMessageOutput::Paint(void* param, const RECTF* rect, const RECTF* vis
     s_moved = false;
 }
 
-// OFFSET: #0x0040B710
+// OFFSET: 0x0040E190
 void WowSysMessageOutput::Initialize() {
     if (s_initialized) {
         return;
@@ -188,7 +188,7 @@ void WowSysMessageOutput::Initialize() {
     s_initialized = 1;
 }
 
-// OFFSET: #0x0040B320
+// OFFSET: 0x0040DD90
 void WowSysMessageOutput::Shutdown() {
     if (!s_initialized) {
         return;

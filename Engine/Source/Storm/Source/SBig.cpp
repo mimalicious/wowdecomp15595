@@ -453,7 +453,7 @@ static void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: #0x0077C6A0
+// OFFSET: 0x004BD8D0
 void STORMAPI SBigDel(BigData* num) {
     delete num;
 }

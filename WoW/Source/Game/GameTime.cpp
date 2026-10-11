@@ -40,7 +40,7 @@ float CGameTime::GameTimeSetMinutesPerSecond(float minutesPerSecond) {
     return old;
 }
 
-// OFFSET: #0x0076D600
+// OFFSET: 0x00A32060
 CGameTime::CGameTime() {
     this->m_minutesPerSecond = 1.0f / 60.0f;
     this->m_fracMinutes = 0.0f;
@@ -224,7 +224,7 @@ void __stdcall CGameTime::GameTimeUnregisterCallback(TIMESTAMPCALLBACK* callback
     delete callback;
 }
 
-// OFFSET: #0x0076DB30
+// OFFSET: 0x00A321A0
 TIMESTAMPCALLBACK* CGameTime::GameTimeRegisterCallback(const WowTime* time, void (__stdcall* callback)(CGameTime* time, void* param), void* param) {
     if (!callback) {
         DebugValidate("callback");

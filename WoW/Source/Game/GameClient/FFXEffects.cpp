@@ -64,12 +64,12 @@ static C2Vector PolarCoord(float u, float v) {
     return C2Vector(static_cast<float>(acos(c) * 0.31830987f), radius);
 }
 
-// OFFSET: %0x00A4CFD0
+// OFFSET: 0x00B0B7A0
 bool EffectUnconscious::FadingOut() const {
     return this->m_fadingOut;
 }
 
-// OFFSET: %0x00A4CFE0
+// OFFSET: 0x00B0C630
 PassPropagateFog::PassPropagateFog(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, const C2Vector* params, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_strength = 0.0f;
     this->m_permute = FFX::s_useRECT != 0;
@@ -77,7 +77,7 @@ PassPropagateFog::PassPropagateFog(FFX::Tex** inputs, uint32_t count, FFX::Tex* 
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXPropagateFog");
 }
 
-// OFFSET: %0x00A4D0F0
+// OFFSET: 0x00B0B830
 PassFogCombine::PassFogCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_lastSize.x = 0;
     this->m_lastSize.y = 0;
@@ -119,7 +119,7 @@ PassFogCombine::~PassFogCombine() {
     }
 }
 
-// OFFSET: %0x00A4D2A0
+// OFFSET: 0x00B0B9E0
 void PassFogCombine::BuildCircularMappingVertices(const FFX::Tex& tex0, const FFX::Tex& tex1) {
     struct Vertex {
         C3Vector p;
@@ -169,7 +169,7 @@ void PassFogCombine::BuildCircularMappingVertices(const FFX::Tex& tex0, const FF
     buf->unk_001C = 1;
 }
 
-// OFFSET: %0x00A4D6E0
+// OFFSET: 0x00B0BE10
 void PassFogCombine::BuildCircularMappingIndices() {
     uint16_t* index = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(this->m_indexBuf));
 
@@ -191,7 +191,7 @@ void PassFogCombine::BuildCircularMappingIndices() {
     buf->unk_001C = 1;
 }
 
-// OFFSET: %0x00A4D780
+// OFFSET: 0x00B0BEB0
 PassDeath::PassDeath(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_shader = NULL;
     this->m_nvts2dShader = NULL;
@@ -227,7 +227,7 @@ PassDeath::~PassDeath() {
     }
 }
 
-// OFFSET: %0x00A4D880
+// OFFSET: 0x00B0BFD0
 PassNetherBlur::PassNetherBlur(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_seed.SetSeed(0);
     this->m_permute = 0;
@@ -271,7 +271,7 @@ PassNetherBlur::~PassNetherBlur() {
     }
 }
 
-// OFFSET: %0x00A4DA60
+// OFFSET: 0x00B0C1B0
 PassNetherCombine::PassNetherCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_permute = 0;
 
@@ -291,7 +291,7 @@ void EffectNetherWorld::End() {
     }
 }
 
-// OFFSET: %0x00A4DAE0
+// OFFSET: 0x00B0C300
 static void SeedTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     static float s_scaleX = 64.0f / width;
     static float s_scaleY = 64.0f / height;
@@ -321,7 +321,7 @@ static void SeedTextureCallback(EGxTexCommand command, uint32_t width, uint32_t 
     }
 }
 
-// OFFSET: %0x00A4DCA0
+// OFFSET: 0x00B0C4C0
 void EffectSwirlingFog::SetParameters(int32_t count, const int32_t* params) {
     float strength = params[1] * 0.0039215689f * 0.89999998f;
     float density = params[2] * 0.0099999998f;
@@ -332,7 +332,7 @@ void EffectSwirlingFog::SetParameters(int32_t count, const int32_t* params) {
     combine->m_fadeTime = 3.0f;
 }
 
-// OFFSET: %0x00A4DD00
+// OFFSET: 0x00B0C520
 void EffectUnconscious::Begin() {
     this->m_fadingOut = false;
     PassGlowFade* pass = static_cast<PassGlowFade*>(this->m_passes[2]);
@@ -378,7 +378,7 @@ PassPropagateFog::~PassPropagateFog() {
     }
 }
 
-// OFFSET: %0x00A4DE20
+// OFFSET: 0x00B0C710
 void PassPropagateFog::Execute() {
     s_propagateFogElapsed += FrameTime::s_tickTimeMs;
 
@@ -442,7 +442,7 @@ bool PassFogCombine::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x00A4E5D0
+// OFFSET: 0x00B0CEC0
 void PassFogCombine::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -516,7 +516,7 @@ void PassFogCombine::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: %0x00A4E900
+// OFFSET: 0x00B0D200
 bool PassDeath::Valid() {
     int32_t profile = g_theGxDevicePtr->m_caps.m_shaderTargets[GxSh_Pixel];
 
@@ -528,7 +528,7 @@ bool PassDeath::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x00A4E960
+// OFFSET: 0x00B0D260
 void PassDeath::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -585,12 +585,12 @@ PassDeathNVRC::~PassDeathNVRC() {
     }
 }
 
-// OFFSET: %0x00A4EC90
+// OFFSET: 0x00B0D560
 bool PassDeathNVRC::Valid() {
     return this->m_shader && this->m_shader->m_permutes[0].Valid();
 }
 
-// OFFSET: %0x00A4ECB0
+// OFFSET: 0x00B0D580
 void PassDeathNVRC::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -626,7 +626,7 @@ bool PassNetherBlur::Valid() {
     return this->m_vertexShader && this->m_vertexShader->m_permutes[0].Valid() && this->m_pixelShader && this->m_pixelShader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x00A4EF30
+// OFFSET: 0x00B0D800
 void PassNetherBlur::Execute() {
     float elapsed = FrameTime::s_tickTimeSec;
     float scale = 8.0f;
@@ -766,12 +766,12 @@ PassNetherCombine::~PassNetherCombine() {
     }
 }
 
-// OFFSET: %0x00803F70
+// OFFSET: [0x0089F840]
 bool PassNetherCombine::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x00A4F910
+// OFFSET: 0x00B0E210
 void PassNetherCombine::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -812,7 +812,7 @@ void PassNetherCombine::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: %0x00A4FBF0
+// OFFSET: 0x00B0E790
 EffectDeath::EffectDeath() {
     this->m_cvar = CVar::Register("ffxDeath", "full screen death effect", 1, FFX::s_defaultEnabled ? "1" : "0", FFX::CVarCallback, 1, false, NULL, false);
 
@@ -845,7 +845,7 @@ EffectDeath::~EffectDeath() {
     }
 }
 
-// OFFSET: %0x00A4FE00
+// OFFSET: 0x00B0E9A0
 EffectNetherWorld::EffectNetherWorld() {
     this->m_cvar = CVar::Register("ffxNetherWorld", "full screen nether world effect (for invisibility)", 1, "1", FFX::CVarCallback, 1, false, NULL, false);
 
@@ -869,7 +869,7 @@ EffectNetherWorld::~EffectNetherWorld() {
     }
 }
 
-// OFFSET: %0x00A4FF60
+// OFFSET: 0x00B0EB00
 EffectSwirlingFog::EffectSwirlingFog() {
     this->m_fogTex.m_texture = NULL;
     this->m_fogTex.m_frameBuffer = NULL;
@@ -966,7 +966,7 @@ EffectSwirlingFog::~EffectSwirlingFog() {
     this->m_seedTex.m_texelSize.y = 0.0f;
 }
 
-// OFFSET: %0x00A502D0
+// OFFSET: 0x00B0EE80
 EffectUnconscious::EffectUnconscious() {
     this->m_fadingOut = false;
 

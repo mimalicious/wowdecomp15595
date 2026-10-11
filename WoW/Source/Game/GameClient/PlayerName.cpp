@@ -69,7 +69,7 @@ static C2Vector s_iconTexCoords[4] = {
 // STATIC: 0x00CA1148
 TSExplicitList<PLAYERNAMEDESC, offsetof(PLAYERNAMEDESC, m_link)> s_playerNames;
 
-// OFFSET: #0x007E53A0
+// OFFSET: 0x004E1230
 void PlayerNameShutdown() {
     if (s_playerNameFont) {
         GxuFontDestroyFont(s_playerNameFont);
@@ -87,7 +87,7 @@ void PlayerNameShutdown() {
     }
 }
 
-// OFFSET: #0x007E64D0
+// OFFSET: 0x004E1DD0
 void PlayerNameInitialize() {
     PlayerNameShutdown();
 
@@ -177,7 +177,7 @@ bool PlayerNameShouldShowGuildTitle() {
     return (s_nameMask >> 15) & 1;
 }
 
-// OFFSET: #0x007E5580
+// OFFSET: 0x004E12F0
 void PlayerNameUpdateLate() {
     for (PLAYERNAMEDESC* desc = s_playerNames.Head(); desc; desc = s_playerNames.Next(desc)) {
         if (desc->m_renderFrame == s_lastRenderFrame || (desc->m_flags & 4)) {
@@ -206,7 +206,7 @@ inline PLAYERNAMEDESC::PLAYERNAMEDESC() {
     this->m_worldText[3] = NULL;
 }
 
-// OFFSET: #0x007E54D0
+// OFFSET: 0x004E0F20
 PLAYERNAMEDESC::~PLAYERNAMEDESC() {
     if (this->m_string) {
         GxuFontDestroyString(this->m_string);
@@ -219,7 +219,7 @@ PLAYERNAMEDESC::~PLAYERNAMEDESC() {
     }
 }
 
-// OFFSET: #0x007E5F60
+// OFFSET: 0x004E1B60
 PLAYERNAMEDESC* PlayerNameCreate(const WOWGUID& guid) {
     if (!guid) {
         return NULL;
@@ -260,7 +260,7 @@ void PlayerNameDelete(PLAYERNAMEDESC* desc) {
     s_freePlayerNames.PutData(desc, NULL, 0);
 }
 
-// OFFSET: #0x007E5340
+// OFFSET: 0x004E0850
 int32_t PLAYERNAMEDESC::ShouldRender(CGObject_C* object, uint32_t raidTarget) {
     int32_t show = 1;
 
@@ -317,7 +317,7 @@ static uint8_t PlayerNameIconAlpha(const C3Vector& position) {
     return 34;
 }
 
-// OFFSET: #0x007E5640
+// OFFSET: 0x004E1410
 void PLAYERNAMEDESC::Render() {
     if (!this->m_guid) {
         return;
@@ -469,7 +469,7 @@ void PLAYERNAMEDESC::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: #0x007E6090
+// OFFSET: 0x004E1C30
 void PLAYERNAMEDESC::RenderIfVisible(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     PLAYERNAMEDESC* desc = static_cast<PLAYERNAMEDESC*>(arg);
 
@@ -484,7 +484,7 @@ void PLAYERNAMEDESC::RenderIfVisible(CM2Model* model, const CM2Lighting* lightin
     }
 }
 
-// OFFSET: #0x007E50A0
+// OFFSET: 0x004E0480
 void PLAYERNAMEDESC::DeleteWorldText(uint32_t type) {
     for (int32_t i = 3; i >= 0; i--) {
         if (this->m_worldText[i] && (type == 11 || WorldTextGetType(this->m_worldText[i]) == type)) {
@@ -502,7 +502,7 @@ void PlayerNameDeleteText(PLAYERNAMEDESC* desc, uint32_t type) {
     }
 }
 
-// OFFSET: #0x007E5170
+// OFFSET: 0x004E0660
 void PLAYERNAMEDESC::UpdateWorldText(uint32_t time) {
     CGObject_C* object = ClntObjMgrObjectPtr(this->m_guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -528,7 +528,7 @@ void PLAYERNAMEDESC::UpdateWorldText(uint32_t time) {
     }
 }
 
-// OFFSET: #0x007E5230
+// OFFSET: 0x004E0710
 void PLAYERNAMEDESC::UpdateWorldTextIcons() {
     CGObject_C* object = ClntObjMgrObjectPtr(this->m_guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -547,14 +547,14 @@ void PLAYERNAMEDESC::UpdateWorldTextIcons() {
     }
 }
 
-// OFFSET: #0x007E5550
+// OFFSET: 0x004E12C0
 void PlayerNameTriggerColorUpdateAll() {
     for (PLAYERNAMEDESC* desc = s_playerNames.Head(); desc; desc = s_playerNames.Next(desc)) {
         desc->m_flags |= 0x2;
     }
 }
 
-// OFFSET: #0x007E5C30
+// OFFSET: 0x004E08B0
 void PLAYERNAMEDESC::CreateWorldText(uint32_t type, const char* text, const CImVector* color, const int32_t* pvpRank) {
     uint32_t slot = 0;
 
@@ -652,7 +652,7 @@ void PlayerNameCreateText(PLAYERNAMEDESC* desc, uint32_t type, const char* text,
     }
 }
 
-// OFFSET: #0x007E6480
+// OFFSET: 0x004E1360
 void PlayerNameUpdateWorldText() {
     uint32_t time = OsGetAsyncTimeMs();
 

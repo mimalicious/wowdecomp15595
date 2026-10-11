@@ -15,7 +15,7 @@ void __fastcall PassFogSeed::DeviceRestoredCallback() {
     PassFogSeed::s_deviceReset = 1;
 }
 
-// OFFSET: %0x00A4D070
+// OFFSET: 0x00B0B7B0
 PassFogSeed::PassFogSeed(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_row = 0;
     this->m_color = CImVector(0, 0, 0, 0);
@@ -41,7 +41,7 @@ bool PassFogSeed::Valid() {
     return true;
 }
 
-// OFFSET: %0x00A4E190
+// OFFSET: 0x00B0CA80
 void PassFogSeed::Execute() {
     struct Vertex {
         C3Vector p;

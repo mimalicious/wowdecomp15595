@@ -8,7 +8,7 @@
 
 typedef HANDLE (WINAPI* ADDFONTMEMRESOURCEEXPROC)(PVOID fileView, DWORD size, PVOID reserved, DWORD* numFonts);
 
-// OFFSET: #0x0095C060
+// OFFSET: 0x00B40DF0
 CLCDText::CLCDText() {
     this->m_hFont = NULL;
     this->m_nTextLength = 0;
@@ -64,7 +64,7 @@ HFONT CLCDText::GetFont() {
     return this->m_hFont;
 }
 
-// OFFSET: #0x0095C190
+// OFFSET: 0x00B415A0
 void CLCDText::SetFontFaceName(const char* faceName) {
     if (!faceName) {
         return;
@@ -194,7 +194,7 @@ SIZE& CLCDText::GetHExtent() {
     return this->m_sizeHExtent;
 }
 
-// OFFSET: #0x0095C570
+// OFFSET: 0x00B41110
 void CLCDText::CalculateExtent(int32_t singleLine) {
     HDC dc = CreateCompatibleDC(NULL);
     int oldMapMode = SetMapMode(dc, MM_TEXT);
@@ -242,7 +242,7 @@ int32_t CLCDText::GetRightMargin() {
     return this->m_dtp.iRightMargin;
 }
 
-// OFFSET: #0x0095C670
+// OFFSET: 0x00B41210
 void CLCDText::SetAlignment(int32_t alignment) {
     UINT format = this->m_nTextFormat & ~this->m_nTextAlignment;
     this->m_nTextAlignment = alignment;
@@ -263,7 +263,7 @@ void CLCDText::DrawControlText(CLCDGfxBase& gfx) {
     }
 }
 
-// OFFSET: #0x0095C730
+// OFFSET: 0x00B412D0
 void CLCDText::OnDraw(CLCDGfxBase& gfx) {
     if (this->GetBackgroundMode() == OPAQUE) {
         HBRUSH brush = CreateSolidBrush(this->m_crBackgroundColor);

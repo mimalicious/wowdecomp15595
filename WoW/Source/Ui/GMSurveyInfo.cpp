@@ -15,7 +15,7 @@ char* CGGMSurveyInfo::m_surveyAnswerComments[10];
 // STATIC: 0x00F76348
 char* CGGMSurveyInfo::m_surveyComment;
 
-// OFFSET: #0x005AC530
+// OFFSET: 0x009E5C00
 const char* CGGMSurveyInfo::GetQuestion(uint32_t index) {
     if (index < 1 || index > 10) {
         return NULL;
@@ -38,7 +38,7 @@ const char* CGGMSurveyInfo::GetQuestion(uint32_t index) {
     return question ? static_cast<const char*>(question->m_question) : NULL;
 }
 
-// OFFSET: #0x005AC5B0
+// OFFSET: 0x009E5C80
 const char* CGGMSurveyInfo::GetAnswer(uint32_t index, int32_t answer) {
     if (index < 1 || index > 10) {
         return NULL;
@@ -68,7 +68,7 @@ const char* CGGMSurveyInfo::GetAnswer(uint32_t index, int32_t answer) {
     return NULL;
 }
 
-// OFFSET: #0x005AC680
+// OFFSET: 0x009E5D50
 int32_t CGGMSurveyInfo::GetNumAnswers(uint32_t index) {
     if (index < 1 || index > 10) {
         return 0;
@@ -129,7 +129,7 @@ void CGGMSurveyInfo::Submit() {
 void CGGMSurveyInfo::InitializeGame() {
 }
 
-// OFFSET: #0x005AC1F0
+// OFFSET: 0x009E57B0
 void CGGMSurveyInfo::FreeAnswers() {
     for (uint32_t i = 0; i < 10; i++) {
         CGGMSurveyInfo::m_surveyAnswers[i] = 0;
@@ -148,7 +148,7 @@ void CGGMSurveyInfo::FreeAnswers() {
     CGGMSurveyInfo::m_surveyComment = NULL;
 }
 
-// OFFSET: #0x005AC260
+// OFFSET: 0x009E5820
 void CGGMSurveyInfo::SetAnswer(uint32_t index, uint8_t answer, const char* comment) {
     if (index > 9) {
         return;
@@ -167,7 +167,7 @@ void CGGMSurveyInfo::SetAnswer(uint32_t index, uint8_t answer, const char* comme
     }
 }
 
-// OFFSET: #0x005AC2D0
+// OFFSET: 0x009E5890
 void CGGMSurveyInfo::SetComment(const char* comment) {
     if (CGGMSurveyInfo::m_surveyComment) {
         SMemFree(CGGMSurveyInfo::m_surveyComment, __FILE__, __LINE__, 0);

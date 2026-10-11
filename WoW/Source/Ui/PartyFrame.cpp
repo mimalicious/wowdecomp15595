@@ -537,7 +537,7 @@ bool CGPartyInfo::InParty() {
     return CGPartyInfo::m_members[0].m_guid != 0;
 }
 
-// OFFSET: #0x00572420
+// OFFSET: 0x004E8260
 PartyMemberState* CGPartyInfo::GetMemberState(uint32_t index) {
     if (CGPartyInfo::m_members[index]) {
         return &s_partyMemberStates[index];

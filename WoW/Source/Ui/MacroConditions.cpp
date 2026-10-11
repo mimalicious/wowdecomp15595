@@ -24,7 +24,7 @@ static int32_t EvaluateNone(const WOWGUID* unit, const TSGrowableArray<MacroSubs
 // STATIC: #0x00AD1560
 static MACROCONDITIONFUNC s_conditionFuncs[33] = { EvaluateNone, EvaluateCombat, EvaluateExists, EvaluateHelp, EvaluateHarm, EvaluateParty, EvaluateRaid, EvaluateDead, EvaluateFlyable, EvaluateIndoors, EvaluateOutdoors, EvaluateSwimming, EvaluateFlying, EvaluateMounted, EvaluateStealth, EvaluateGroup, EvaluateStance, EvaluateStance, EvaluatePet, EvaluateModifier, EvaluateModifier, EvaluateButton, EvaluateButton, EvaluateActionBar, EvaluateActionBar, EvaluateBonusBar, EvaluateEquipped, EvaluateEquipped, EvaluateChanneling, EvaluateSpec, EvaluateVehicleUI, EvaluateUnitHasVehicleUI, EvaluateCursor };
 
-// OFFSET: #0x005F0DF0
+// OFFSET: 0x00A0F4F0
 int32_t EvaluateMacroOptions(const char* start, const char* end, MacroSubstring* result, MacroSubstring* target) {
     if (!start) {
         return 1;
@@ -112,7 +112,7 @@ int32_t EvaluateMacroOptions(const char* start, const char* end, MacroSubstring*
     return 1;
 }
 
-// OFFSET: #0x005F0BB0
+// OFFSET: 0x00A0F2D0
 void MacroConditions::Parse() {
     const char* text = this->m_key.m_str;
     const char* end = text + SStrLen(text);
@@ -189,7 +189,7 @@ void MacroConditions::Parse() {
     }
 }
 
-// OFFSET: #0x005EF5C0
+// OFFSET: 0x00A0DBC0
 int32_t MacroConditions::Evaluate(MacroSubstring* target) {
     uint32_t count = this->m_conditions.m_count;
 
@@ -298,7 +298,7 @@ void MacroCondition::Parse(const char* start, const char* end) {
     }
 }
 
-// OFFSET: #0x005EEFB0
+// OFFSET: 0x00A0D5C0
 int32_t EvaluateStance(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     uint32_t form = CGSpellBook::GetShapeshiftForm(1);
 
@@ -322,7 +322,7 @@ int32_t EvaluateStance(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
     return 0;
 }
 
-// OFFSET: #0x005EF040
+// OFFSET: 0x00A0D650
 int32_t EvaluateModifier(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGUIBindings* bindings = CGUIBindings::s_bindings;
 

@@ -73,7 +73,7 @@ char* CStatus::GetErrorStr(char* buffer, size_t bufchars, STATUS_TYPE minSeverit
     return buffer;
 }
 
-// OFFSET: #0x0047C1D0
+// OFFSET: 0x00872630
 uint32_t CStatus::GetErrorStrLen(STATUS_TYPE minSeverity, const char* separator) {
     size_t separatorchars = 0;
     uint32_t length = 0;
@@ -104,7 +104,7 @@ char* CStatus::GetErrorStrAlloc(STATUS_TYPE minSeverity, const char* separator) 
     return buffer;
 }
 
-// OFFSET: #0x0047C290
+// OFFSET: 0x00872700
 void CStatus::Prepend(STATUS_TYPE severity, const char* format, ...) {
     char buffer[256];
     memset(buffer, 0, sizeof(buffer));

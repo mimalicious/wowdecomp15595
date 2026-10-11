@@ -51,7 +51,7 @@ static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x005ECF60
+// OFFSET: 0x00A0A260
 static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_CHAR, SwallowEvent, NULL, 8.0f);
     EventRegisterEx(EVENT_ID_KEYDOWN, SwallowEvent, NULL, 8.0f);
@@ -62,7 +62,7 @@ static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_MOUSEMOVE, SwallowEvent, NULL, 8.0f);
 }
 
-// OFFSET: %0x00948DB0
+// OFFSET: 0x00A0A320
 static void FadingScreenUnregisterEvents() {
     EventUnregister(EVENT_ID_CHAR, SwallowEvent);
     EventUnregister(EVENT_ID_KEYDOWN, SwallowEvent);
@@ -73,7 +73,7 @@ static void FadingScreenUnregisterEvents() {
     EventUnregister(EVENT_ID_MOUSEMOVE, SwallowEvent);
 }
 
-// OFFSET: #0x005ED080
+// OFFSET: 0x00A0A380
 void DisableFadingScreen(float duration, void (*callback)(void*), void* param) {
     if (!s_fadeActive) {
         return;
@@ -102,7 +102,7 @@ void DisableFadingScreen(float duration, void (*callback)(void*), void* param) {
     }
 }
 
-// OFFSET: #0x005ED120
+// OFFSET: 0x00A0A420
 static void FadingScreenPaint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     static C3Vector s_positions[4] = { C3Vector(0.0f, 0.0f, 0.0f), C3Vector(1.0f, 0.0f, 0.0f), C3Vector(0.0f, 1.0f, 0.0f), C3Vector(1.0f, 1.0f, 0.0f) };
     static C2Vector s_texCoords[4] = { C2Vector(0.0f, 1.0f), C2Vector(1.0f, 1.0f), C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f) };
@@ -161,7 +161,7 @@ static void FadingScreenPaint(void* param, const RECTF* rect, const RECTF* visib
     }
 }
 
-// OFFSET: #0x005ED480
+// OFFSET: 0x00A0A780
 void EnableFadingScreen(float duration, void (*callback)(void*), void* param) {
     if (s_fadeActive) {
         HandleClose(reinterpret_cast<HOBJECT>(s_fadeLayer));

@@ -1,7 +1,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 #include <cstring>
 
-// OFFSET: #0x0095BEA0
+// OFFSET: 0x00B40C40
 CLCDGfxMono::CLCDGfxMono() {
     this->m_pLCDScreen = &this->m_lcdBitmap.hdr;
     this->m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;

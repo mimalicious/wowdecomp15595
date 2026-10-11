@@ -36,7 +36,7 @@ bool ViolenceLevelChanged(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
-// OFFSET: %0x00A4CB20
+// OFFSET: 0x00B11510
 void ViolenceLevelsRegisterCVars() {
     char value[12];
     SStrPrintf(value, sizeof(value), "%d", s_maxViolenceLevel[s_locale]);

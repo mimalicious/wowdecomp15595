@@ -803,7 +803,7 @@ void CGPlayer_C::SetClientStandState(uint32_t standState) {
     }
 }
 
-// OFFSET: #0x006D5EB0
+// OFFSET: 0x0055C2C0
 void CGPlayer_C::PreAnimate(CGWorldFrame* frame) {
     if (!frame) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1001,7 +1001,7 @@ const char* CGPlayer_C::GetFacialHairCustomizationName() {
     return "NORMAL";
 }
 
-// OFFSET: #0x0060A5D0
+// OFFSET: 0x0044EDA0
 uint32_t CGPlayer_C::GetCurrentXP() const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -1205,7 +1205,7 @@ void CGPlayer_C::SetPlayedTime(int32_t playedTime) {
     this->m_playedTimeBase = static_cast<uint32_t>(time(NULL));
 }
 
-// OFFSET: #0x006D1CB0
+// OFFSET: 0x005570B0
 int32_t SignalPetSpellPowerUpdate(WOWGUID guid) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_PET_SPELL_POWER_UPDATE, NULL);
@@ -1827,7 +1827,7 @@ void __stdcall CGPlayer_C::ClearPartyAssignment(uint8_t assignment, WOWGUID guid
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D7B70
+// OFFSET: 0x0055E2A0
 uint32_t CGPlayer_C::GetCreatureTracking() const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -1883,7 +1883,7 @@ void CGPlayer_C::GetDevText(char* buffer, uint32_t size) const {
     }
 }
 
-// OFFSET: #0x006DE130
+// OFFSET: 0x005633C0
 bool CGPlayer_C::UnitIsTrivial(const CGUnit_C* unit) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1987,7 +1987,7 @@ int32_t CGItem::IsUsable() const {
     return (((flags >> 3) & 1) || !this->m_item->m_itemFieldMaxdurability || this->m_item->m_itemFieldDurability) && !((flags >> 4) & 1);
 }
 
-// OFFSET: #0x006DAA80
+// OFFSET: 0x0055FDC0
 int32_t OnUpdatePlayerGlyph(WOWGUID guid, uint32_t offset, uint32_t count, const void* value) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2010,7 +2010,7 @@ int32_t OnUpdatePlayerGlyph(WOWGUID guid, uint32_t offset, uint32_t count, const
     return 1;
 }
 
-// OFFSET: #0x006DAB80
+// OFFSET: [0x0055FEC0]
 int32_t OnUpdatePlayerGlyphSlotsEnabled(WOWGUID guid, uint32_t offset, uint32_t count, const void* value) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2050,7 +2050,7 @@ uint32_t FindEmptySwapIndex() {
     return index;
 }
 
-// OFFSET: #0x007076F0
+// OFFSET: 0x005A5AD0
 int32_t CGPlayer_C::GetEquipBypassSkill(uint32_t index) const {
     if (index < this->m_equipBypassSkills.m_count) {
         return this->m_equipBypassSkills.m_data[index];
@@ -2064,7 +2064,7 @@ int32_t CGPlayer_C::IsInMelee() const {
     return (this->m_combatModeFlags & 0x2) || this->CGUnit_C::IsInMelee();
 }
 
-// OFFSET: #0x00546150
+// OFFSET: 0x0091C910
 int32_t CGPlayer_C::HasZoneExplored(int32_t zone) {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -2201,7 +2201,7 @@ const char* CGPlayer_C::GetPVPRankString(int32_t rank) const {
     return this->GetFrameScriptText(token, -1);
 }
 
-// OFFSET: #0x006DCA00
+// OFFSET: 0x00561E00
 bool CGPlayer_C::CanTrackUnit(const CGUnit_C* unit) {
     if (this->IsDeadOrGhost()) {
         return false;
@@ -2222,7 +2222,7 @@ bool CGPlayer_C::CanTrackUnit(const CGUnit_C* unit) {
     return creatureType && (this->GetCreatureTracking() & (1 << (creatureType - 1)));
 }
 
-// OFFSET: #0x006E6250
+// OFFSET: 0x0056AC40
 void CGPlayer_C::GetPendingEnchantTime(CGItem_C* item) {
     if (!item) {
         return;
@@ -3019,7 +3019,7 @@ int32_t CGPlayer_C::CanGrantLevel(WOWGUID guid) {
     return this->m_player->m_playerFieldBytes[1] == 0 ? 3 : 0;
 }
 
-// OFFSET: #0x006DEB30
+// OFFSET: 0x00563D70
 void CGPlayer_C::UpdateActiveMoverDisplay(uint32_t time) {
     float offset = 0.0f;
     float drunkness = this->GetDrunknessTurnValue();
@@ -7526,7 +7526,7 @@ void CGPlayer_C::PlayerInitializeMessageHandlers() {
     ClientUpdateActionButtons::s_handler = OnUpdateActionButtons;
 }
 
-// OFFSET: #0x006E4950
+// OFFSET: 0x00569380
 void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int32_t silent, int32_t a4, int32_t a5) {
     if (!CGGameUI::CanPerformAction(1)) {
         return;
@@ -7987,7 +7987,7 @@ int32_t Player_C_ZoneUpdateHandler(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x006DC550
+// OFFSET: 0x00561870
 bool CGPlayer_C::MeetsItemSetSkill(const ItemSetRec* set) const {
     if (set->m_requiredSkill) {
         int32_t index = this->GetSkillIndex(set->m_requiredSkill);
@@ -8285,7 +8285,7 @@ void CGPlayer_C::TalkToSpiritHealer(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006DB180
+// OFFSET: 0x005605B0
 void CGPlayer_C::TalkToSpiritGuide(const WOWGUID& guid) {
     if (this->m_player->m_playerFlags & 0x10) {
         WOWGUID none = { 0 };
@@ -8677,7 +8677,7 @@ void CGPlayer_C::HandleOnRightClick(CGUnit_C* unit, bool autoInteract) {
     }
 }
 
-// OFFSET: #0x006D1760
+// OFFSET: 0x00556B80
 void CGPlayer_C::RequestAllItemPurchaseData() {
     for (int32_t i = 0; i <= 18; i++) {
         if (static_cast<uint32_t>(i) >= static_cast<uint32_t>(this->m_bag.m_numSlots) || !this->m_bag.m_slots[i]) {
@@ -8992,7 +8992,7 @@ static void QuestAcceptCallback(int32_t id, const WOWGUID& guid, void* param, bo
     FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_ACCEPTED, "%d", CGQuestLog::GetQuestIndex(quest->m_id));
 }
 
-// OFFSET: #0x006DF370
+// OFFSET: 0x005654D0
 int32_t OnUpdateQuest(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -9926,7 +9926,7 @@ uint32_t CGItem::GetEnchantmentId(int32_t slot) {
     return this->m_item->m_itemFieldEnchantment[slot].m_id;
 }
 
-// OFFSET: #0x005E8290
+// OFFSET: 0x008A6580
 uint32_t CGItem::GetEnchantmentDuration(int32_t slot) {
     if (this->GetItemStaticFlags(0) & 0x2000) {
         return 0;
@@ -9935,7 +9935,7 @@ uint32_t CGItem::GetEnchantmentDuration(int32_t slot) {
     return this->m_item->m_itemFieldEnchantment[slot].m_duration;
 }
 
-// OFFSET: #0x006D7B30
+// OFFSET: 0x0055E170
 void CGPlayer_C::CastRandomCritter() {
     uint32_t count = this->m_companionSpells.m_count;
 
@@ -9995,7 +9995,7 @@ int32_t OnUpdatePlayerOverrideSpellsID(WOWGUID guid, uint32_t offset, uint32_t c
     return 1;
 }
 
-// OFFSET: #0x006DA770
+// OFFSET: 0x0055FAB0
 int32_t OnUpdatePlayerAuraVision(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -10012,7 +10012,7 @@ int32_t OnUpdatePlayerAuraVision(WOWGUID guid, uint32_t offset, uint32_t count, 
     return 1;
 }
 
-// OFFSET: #0x006E22C0
+// OFFSET: 0x00567DD0
 void CGPlayer_C::RemoveEquipBypassSkill(int32_t spellId) {
     bool found = false;
 
@@ -10214,7 +10214,7 @@ int32_t CGPlayer_C::AutoCombatModeEventHandler(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x006D66E0
+// OFFSET: 0x0055C880
 void CGPlayer_C::OnLevelChange() {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         CGSpellBook::UpdateSpells(0, 0, 0);
@@ -10417,7 +10417,7 @@ int32_t CGPlayer_C::OnLootReleaseResponse(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006DAC40
+// OFFSET: 0x0055FFF0
 void CGPlayer_C::LootCorpse(CGCorpse_C* corpse, bool autoInteract) {
     if (!this->CanLoot(corpse) || !corpse->CanBeLooted() || (this->m_movement->m_flags & 0xC010FF)) {
         return;
@@ -10548,7 +10548,7 @@ void SendQuestGiverStatusMultipleQuery() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006DCCC0
+// OFFSET: 0x005621C0
 bool CGPlayer_C::GetPackAndSlot(const CGItem_C* item, uint8_t* bag, uint8_t* slot) {
     WOWGUID container = item->m_item->m_itemFieldContained;
 
@@ -10580,7 +10580,7 @@ bool CGPlayer_C::GetPackAndSlot(const CGItem_C* item, uint8_t* bag, uint8_t* slo
     return true;
 }
 
-// OFFSET: #0x006DCD70
+// OFFSET: 0x00562270
 void CGPlayer_C::OpenLootItem(CGItem_C* item) {
     uint8_t bag;
     uint8_t slot;
@@ -10698,7 +10698,7 @@ void CGPlayer_C::SwapGuildBankItem(int32_t itemId, uint32_t virtualSlot, uint8_t
     }
 }
 
-// OFFSET: #0x006DB9D0
+// OFFSET: 0x00560920
 void CGPlayer_C::SplitItem(WOWGUID item, WOWGUID srcContainer, uint32_t srcSlot, WOWGUID dstContainer, uint32_t dstSlot, uint32_t count) {
     if (srcSlot > 255 || dstSlot > 255) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -10752,7 +10752,7 @@ static void SwapItemsStatsCallback(int32_t id, const WOWGUID& guid, void* param,
     }
 }
 
-// OFFSET: #0x006DCF20
+// OFFSET: 0x00562460
 void CGPlayer_C::GiftWrap(CGItem_C* item) {
     CGItem_C* wrap = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(s_giftWrapItem, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -10860,7 +10860,7 @@ void CGPlayer_C::SwapItems(WOWGUID item, WOWGUID srcContainer, uint32_t srcSlot,
     CGGameUI::ClearCursor(0, 1);
 }
 
-// OFFSET: #0x006D4A00
+// OFFSET: 0x0055B150
 int32_t CGPlayer_C::ValidateSlot(uint32_t slot, WOWGUID item) {
     CGItem_C* itemObject = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -11013,7 +11013,7 @@ void CGPlayer_C::AutoEquipCursorItem(int32_t ignoreBind) {
     CGGameUI::ClearCursor(clearMode, 1);
 }
 
-// OFFSET: #0x006D6C10
+// OFFSET: 0x0055CF60
 void CGPlayer_C::UpdateObjComponentVisualsSlot(const VisibleItem_C* item, int32_t slot) {
     int32_t hand;
 
@@ -11079,7 +11079,7 @@ void CGPlayer_C::AutoEquipItem(WOWGUID container, uint32_t slot, int32_t a3) {
     this->AutoEquipCursorItem(a3);
 }
 
-// OFFSET: #0x006E0D30
+// OFFSET: 0x00562130
 void CGPlayer_C::GetRangedAttackSkillRank(int32_t& rank, int32_t& bonus) {
     bonus = 0;
     rank = 0;
@@ -11168,7 +11168,7 @@ int32_t CGItem::GetEnchantmentCharges(int32_t slot) {
     return this->m_item->m_itemFieldEnchantment[slot].m_charges;
 }
 
-// OFFSET: #0x006DE410
+// OFFSET: 0x005636C0
 float CGPlayer_C::GetCombatRatingPct(int32_t rating) {
     float base = GameFormulaEvaluateTable(1, this->m_unit->m_unitFieldLevel - 1, rating);
     float scalar = GameFormulaEvaluateTable(11, rating + 1, this->m_unit->m_unitFieldBytes0[1] - 1);
@@ -11180,7 +11180,7 @@ float CGPlayer_C::GetCombatRatingPct(int32_t rating) {
     return scalar * (this->m_player->m_playerFieldCombatRating1[rating] / base);
 }
 
-// OFFSET: #0x006DEDD0
+// OFFSET: 0x0056DBD0
 int32_t InventoryUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -11373,7 +11373,7 @@ int32_t CGPlayer_C::GetSkillLineForSlot(int32_t hand) {
     return 0;
 }
 
-// OFFSET: #0x006CE140
+// OFFSET: 0x00553E40
 static bool AreaTriggerContains(const AreaTriggerRec* rec, const C3Vector& position) {
     if (rec->m_continentID != s_areaTriggerMapID) {
         return false;
@@ -11501,7 +11501,7 @@ void AreaTriggerCheckNow() {
     AreaTriggerCheck(NULL, NULL);
 }
 
-// OFFSET: #0x006D7630
+// OFFSET: 0x0055DC30
 int32_t __stdcall CGPlayer_C::CanSummonFriend(WOWGUID guid) {
     if (!guid) {
         return 8;
@@ -11544,7 +11544,7 @@ int32_t __stdcall CGPlayer_C::CanSummonFriend(WOWGUID guid) {
     return Spell_C_GetSpellCooldown(CGSpellBook::m_summonFriendSpell, 0, NULL, NULL, NULL) ? 11 : 0;
 }
 
-// OFFSET: #0x006D7720
+// OFFSET: 0x0055DD20
 int32_t CGPlayer_C::UpdateMountedCollisionBox(float mountHeight, int32_t force) {
     CreatureDisplayInfoRec* displayInfo = g_creatureDisplayInfoDB.GetRecord(this->m_unit->m_unitFieldNativedisplayid);
     CreatureModelDataRec* modelData = displayInfo ? g_creatureModelDataDB.GetRecord(displayInfo->m_modelID) : NULL;
@@ -11706,7 +11706,7 @@ void CGPlayer_C::AutoEquipItemToSlot(CGItem_C* item, uint32_t slot, int32_t igno
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006E01A0
+// OFFSET: 0x0056CF60
 void CGPlayer_C::ClearPendingEquip(uint32_t index, int32_t equip) {
     if (index >= s_itemSwaps.m_count) {
         return;
@@ -11973,7 +11973,7 @@ int32_t OnUpdatePlayerNoReagentCost(WOWGUID guid, uint32_t offset, uint32_t coun
     return 1;
 }
 
-// OFFSET: #0x006CF6C0
+// OFFSET: 0x00555150
 int32_t CritterUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -11986,7 +11986,7 @@ int32_t CritterUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const void*
     return 1;
 }
 
-// OFFSET: #0x006D1B60
+// OFFSET: 0x00556F50
 int32_t CharmChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -13138,7 +13138,7 @@ void CGPlayer_C::DestructActivePlayer() {
     this->m_voidStorage = NULL;
 }
 
-// OFFSET: #0x006DE6D0
+// OFFSET: 0x005637C0
 void CGPlayer_C::GetDefenseSkillRank(int32_t& rank, int32_t& bonus) const {
     int32_t defenseSpell = s_defenseSpellId;
     bonus = 0;
@@ -13413,7 +13413,7 @@ void CGPlayer_C::StartGiftWrap(CGItem_C* item) {
     CursorSetMode(2);
 }
 
-// OFFSET: #0x006D6BA0
+// OFFSET: 0x0055CEF0
 void CGPlayer_C::UpdateObjComponentVisuals(const VisibleItem_C* item, GEOCOMPONENTLINKS link) {
     int32_t visual = const_cast<VisibleItem_C*>(item)->GetItemEnchantmentVisualID();
 
@@ -13430,7 +13430,7 @@ void CGPlayer_C::UpdateObjComponentVisuals(const VisibleItem_C* item, GEOCOMPONE
     }
 }
 
-// OFFSET: #0x006D6F40
+// OFFSET: 0x0055D430
 void CGPlayer_C::HandleSkinning(CGObject_C* object, bool autoInteract, bool a4) {
     float minRange;
     float maxRange;
@@ -13456,7 +13456,7 @@ void CGPlayer_C::HandleSkinning(CGObject_C* object, bool autoInteract, bool a4) 
     }
 }
 
-// OFFSET: #0x006DA8F0
+// OFFSET: 0x0055FC30
 int32_t OnUpdatePlayerRuneRegen(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -13560,7 +13560,7 @@ void CGPlayer_C::SetAFK(const char* message) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006E0B90
+// OFFSET: 0x00566480
 void CGPlayer_C::EquipItem(CGItem_C* item) {
     if (!item || !this->m_characterComponent || item->GetDisplayID() <= 0) {
         return;
@@ -13809,7 +13809,7 @@ void CGPlayer_C::ClearFarSight() {
     }
 }
 
-// OFFSET: #0x006E4FD0
+// OFFSET: 0x0056A5E0
 int32_t FarsightChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (guid != ClntObjMgrGetActivePlayer()) {
         SErrDisplayAppFatalMessage("", "", 0);

@@ -13,7 +13,7 @@ void CGSimpleHealthBar::operator delete(void* ptr) {
     CGSimpleHealthBar::s_simpleHealthBarHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x009900E0
+// OFFSET: 0x00A3B840
 static int32_t SimpleHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -26,7 +26,7 @@ static int32_t SimpleHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uin
     return 1;
 }
 
-// OFFSET: #0x00990060
+// OFFSET: 0x00A3B7C0
 CGSimpleHealthBar::CGSimpleHealthBar(CSimpleFrame* parent) : CSimpleStatusBar(parent) {
     this->m_guid.m_guid = 0;
     this->m_autoColor = 1;
@@ -41,7 +41,7 @@ CGSimpleHealthBar::~CGSimpleHealthBar() {
     this->m_guid.m_guid = 0;
 }
 
-// OFFSET: %0x0097BCE0
+// OFFSET: 0x00A3B800
 void CGSimpleHealthBar::SetStatusBarColor(const CImVector& color) {
     if (this->m_barTexture) {
         this->m_barTexture->SetVertexColor(color);
@@ -50,7 +50,7 @@ void CGSimpleHealthBar::SetStatusBarColor(const CImVector& color) {
     this->m_autoColor = 0;
 }
 
-// OFFSET: #0x00990150
+// OFFSET: 0x00A3B8B0
 void CGSimpleHealthBar::SetValue(float value) {
     CSimpleStatusBar::SetValue(value);
 
@@ -65,7 +65,7 @@ void CGSimpleHealthBar::SetValue(float value) {
     this->m_autoColor = 1;
 }
 
-// OFFSET: #0x009901D0
+// OFFSET: 0x00A3B940
 void CGSimpleHealthBar::InstallMirrorHandlers() {
     if (!this->m_guid) {
         return;
@@ -75,7 +75,7 @@ void CGSimpleHealthBar::InstallMirrorHandlers() {
     ClntObjMgrSetObjMirrorHandler(this->m_guid, ID_UNIT, offsetof(CGUnitData, m_unitFieldMaxhealth), sizeof(uint32_t), SimpleHealthUpdateHandler, this, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
-// OFFSET: #0x00990230
+// OFFSET: 0x00A3B9A0
 void CGSimpleHealthBar::RemoveMirrorHandlers() {
     if (!this->m_guid) {
         return;
@@ -85,7 +85,7 @@ void CGSimpleHealthBar::RemoveMirrorHandlers() {
     ClntObjMgrUnsetObjMirrorHandler(this->m_guid, ID_UNIT, offsetof(CGUnitData, m_unitFieldMaxhealth), SimpleHealthUpdateHandler, this);
 }
 
-// OFFSET: #0x00990280
+// OFFSET: 0x00A3B9F0
 void CGSimpleHealthBar::SetUnit(CGUnit_C* unit) {
     if (ClntObjMgrGetCurrent()) {
         this->RemoveMirrorHandlers();

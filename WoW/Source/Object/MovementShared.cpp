@@ -124,7 +124,7 @@ void CMovementShared::StopAllLogging() {
     }
 }
 
-// OFFSET: #0x00988220
+// OFFSET: 0x00A1FDF0
 float CMovementShared::TimeToFallDistance(float distance, int32_t safeFall) {
     float terminal = safeFall ? s_safeFallTerminalVelocity : s_terminalVelocity;
     float accelTime = 0.051837362f * terminal;
@@ -395,7 +395,7 @@ float CMovementShared::CalcSplineHeight(uint32_t time, float z) const {
     return height;
 }
 
-// OFFSET: #0x00988280
+// OFFSET: 0x00A1FE80
 float CMovementShared::CalcTimeFallen(float distance, int32_t upward) const {
     float terminal = (this->m_flags & MOVEMENTFLAG_SAFE_FALL) ? s_safeFallTerminalVelocity : s_terminalVelocity;
     float velocity = this->m_fallVelocity;
@@ -790,7 +790,7 @@ int32_t CMovementShared::IsOnParabolicSpline() const {
 }
 
 // PROVEN: 05c18660 IDENTICAL/NONE
-// OFFSET: 0x0043B770
+// OFFSET: [0x0043B770]
 int32_t CMovementShared::HasFallVelocity() const {
     return (this->m_flags & MOVEMENTFLAG_FALLING) && this->m_fallVelocity != 0.0f;
 }
@@ -1394,7 +1394,7 @@ void CMovementShared::UpdateBaseStatus(const CMovementStatus& status) {
     this->CalcCurrentSpeed(0);
 }
 
-// OFFSET: #0x0075CF80
+// OFFSET: 0x00603860
 void CMovementShared::UpdateFallingFar() {
     uint32_t flags = this->m_flags;
 

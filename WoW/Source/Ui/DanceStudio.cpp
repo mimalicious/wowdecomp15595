@@ -146,7 +146,7 @@ int32_t Packet_SMSG_STOP_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: #0x005758C0
+// OFFSET: 0x009B7D90
 void CGDanceStudio::PlayDance(DanceCache* record, DANCE_REQUEST* request) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(request->m_guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -187,7 +187,7 @@ void CGDanceStudio::PlayDance(DanceCache* record, DANCE_REQUEST* request) {
     player->StartDance(dance);
 }
 
-// OFFSET: #0x00575A30
+// OFFSET: 0x009B7F00
 static void DanceSequenceCallBack(int32_t id, const WOWGUID& guid, void* param, bool success) {
     DANCE_REQUEST* request = static_cast<DANCE_REQUEST*>(param);
 
@@ -238,7 +238,7 @@ int32_t Packet_SMSG_PLAY_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: #0x00575BE0
+// OFFSET: 0x009B80B0
 void CGDanceStudio::DisplayDance(DanceCache* record) {
     ConsoleWrite("Dance Loaded:", DEFAULT_COLOR);
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -269,7 +269,7 @@ void CGDanceStudio::DisplayDance(DanceCache* record) {
     }
 }
 
-// OFFSET: #0x00575D10
+// OFFSET: 0x009B81E0
 static void DanceSequenceLoadCallBack(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         ConsoleWrite("Dance no longer exists", ERROR_COLOR);
@@ -284,7 +284,7 @@ static void DanceSequenceLoadCallBack(int32_t id, const WOWGUID& guid, void* par
     }
 }
 
-// OFFSET: #0x00575D70
+// OFFSET: 0x009B8240
 void CGDanceStudio::LoadDance(int32_t danceId) {
     g_danceCache.Invalidate(danceId);
     WOWGUID none = WOWGUID();
@@ -295,7 +295,7 @@ void CGDanceStudio::LoadDance(int32_t danceId) {
     }
 }
 
-// OFFSET: #0x00576100
+// OFFSET: 0x009B8290
 void PlayDance(const char* name) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

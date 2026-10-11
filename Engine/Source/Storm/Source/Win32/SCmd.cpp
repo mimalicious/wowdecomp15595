@@ -19,7 +19,7 @@ static const char* const s_errorstr[3] = {
     "Unable to open response file: %s",
 };
 
-// OFFSET: #0x00772C90
+// OFFSET: 0x004B67B0
 void GenerateError(void (STORMAPI* errorcallback)(_CMDERROR*), uint32_t errorcode, const char* itemstring) {
     uint32_t index;
     UINT stringid;

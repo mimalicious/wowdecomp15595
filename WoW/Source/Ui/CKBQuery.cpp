@@ -20,7 +20,7 @@ CKBQuery::CKBQuery() {
     this->m_articleHeaders.m_index = 0;
 }
 
-// OFFSET: #0x00551250
+// OFFSET: 0x009FB820
 XMLNode* CKBQuery::GetArticleHeader(int32_t index) {
     if (this->m_state != 2 || !this->m_tree) {
         return NULL;
@@ -43,7 +43,7 @@ XMLNode* CKBQuery::GetArticleHeader(int32_t index) {
     return this->m_articleHeaders.m_node;
 }
 
-// OFFSET: #0x00551350
+// OFFSET: 0x009FB8D0
 void CKBQuery::_ComputeCachedData() {
     XMLNode* node = XMLTree_GetRoot(this->m_tree);
 
@@ -62,7 +62,7 @@ void CKBQuery::_ComputeCachedData() {
     }
 }
 
-// OFFSET: #0x005513A0
+// OFFSET: 0x009FB920
 void CKBQuery::_AppendMangledSearchQuery(CDynamicString& url, const char* query) {
     for (uint8_t c = *query; c; c = *++query) {
         if (IsAlphaEnglish(c) || IsNumeric(c)) {
@@ -75,7 +75,7 @@ void CKBQuery::_AppendMangledSearchQuery(CDynamicString& url, const char* query)
     }
 }
 
-// OFFSET: #0x00552140
+// OFFSET: 0x009FC740
 int32_t CKBQuery::BeginLoading(const char* query, int32_t categoryId, int32_t numArticles, int32_t pageNumber) {
     if (this->m_state == 1 || this->m_inQueue) {
         return 0;

@@ -118,7 +118,7 @@ void CursorSetResetMode(uint32_t mode) {
     s_cursorResetMode = mode;
 }
 
-// OFFSET: #0x006160B0
+// OFFSET: 0x00485E50
 int32_t CopyCursorImage(uint32_t* image, MipBits* mipImages, uint32_t width, uint32_t height) {
     if (mipImages) {
         if (width == 32) {
@@ -178,7 +178,7 @@ void UpdateCursor() {
     g_theGxDevicePtr->CursorUnlock(0, 0);
 }
 
-// OFFSET: #0x006163B0
+// OFFSET: 0x00486150
 void CursorInitialize() {
     s_cursorMode = 1;
     s_cursorResetMode = 1;
@@ -227,7 +227,7 @@ uint32_t CursorGetModeFromName(const char* name) {
     return 0;
 }
 
-// OFFSET: #0x00616800
+// OFFSET: 0x004865A0
 void CursorSetMode(uint32_t mode) {
     if (mode != 53 && s_cursorMode != mode) {
         s_cursorMode = mode;
@@ -236,7 +236,7 @@ void CursorSetMode(uint32_t mode) {
     }
 }
 
-// OFFSET: %0x0048E8F0
+// OFFSET: 0x004864C0
 void CursorGrabVirtualItem(int32_t displayId) {
     if (s_cursorItemMips) {
         TextureFreeMippedImg(s_cursorItemMips);
@@ -263,7 +263,7 @@ void CursorGrabVirtualItem(int32_t displayId) {
     CursorReleaseItemMips();
 }
 
-// OFFSET: #0x00616830
+// OFFSET: 0x004865D0
 int32_t CursorSetFromName(const char* name) {
     int32_t result = !SStrCmpI(s_cursorFile, name, STORM_MAX_STR);
     int32_t changed = !result || s_cursorMode != 53;
@@ -296,7 +296,7 @@ int32_t CursorSetFromName(const char* name) {
     return result;
 }
 
-// OFFSET: #0x00616920
+// OFFSET: 0x004866E0
 void CursorResetMode() {
     if (s_cursorResetMode != 53 && s_cursorMode != s_cursorResetMode) {
         s_cursorMode = s_cursorResetMode;
@@ -305,7 +305,7 @@ void CursorResetMode() {
     }
 }
 
-// OFFSET: #0x006164B0
+// OFFSET: 0x00486250
 void CursorReleaseItemMips() {
     MipBits* mips = s_cursorItemMips;
 
@@ -326,7 +326,7 @@ void CursorReleaseItemMips() {
     UpdateCursor();
 }
 
-// OFFSET: #0x00616630
+// OFFSET: 0x004863D0
 void CursorSetHeldItem(WOWGUID item) {
     if (s_cursorItemMips) {
         TextureFreeMippedImg(s_cursorItemMips);
@@ -373,7 +373,7 @@ void CursorGrabMoney(uint64_t amount) {
     CursorReleaseItemMips();
 }
 
-// OFFSET: %0x0048E780
+// OFFSET: 0x00486350
 void CursorGrabSpell(const char* texture) {
     if (s_cursorItemMips) {
         TextureFreeMippedImg(s_cursorItemMips);

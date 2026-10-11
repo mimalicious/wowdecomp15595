@@ -334,7 +334,7 @@ static HANDLE CreateErrorLogFile(const char* suffix, const char* ext, char* logp
     return CreateFileW(reinterpret_cast<LPCWSTR>(logpathW), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
-// OFFSET: #0x007712D0
+// OFFSET: 0x004B4C20
 static HANDLE CreateErrorLog(const char* suffix, const char* message, const SYSTEMTIME* time) {
     char logpath[MAX_PATH];
     SYSTEMTIME localTime;
@@ -759,7 +759,7 @@ int32_t STORMAPI SErrDestroy() {
     return 1;
 }
 
-// OFFSET: #0x00771D10
+// OFFSET: 0x004B50B0
 int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t skipframes, uint32_t unknown) {
     // STATIC: 0x00D9C4F4
     static int32_t lastlinenumber;
@@ -1056,7 +1056,7 @@ static LONG WINAPI ExceptionFilterWin32(EXCEPTION_POINTERS* exceptionpointers) {
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-// OFFSET: #0x007729B0
+// OFFSET: 0x004B5CC0
 void SErrDisplayAppFatalCustomV(uint32_t errorcode, const char* format, va_list args) {
     const char* filename = NULL;
     int32_t linenumber = 0;

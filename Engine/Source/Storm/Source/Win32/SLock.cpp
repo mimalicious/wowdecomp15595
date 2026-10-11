@@ -472,7 +472,7 @@ void TDebugLock<T>::DumpEntries(CDebugLock* lock) {
     }
 }
 
-// OFFSET: #0x00774C00
+// OFFSET: 0x004BB9E0
 void CDebugSCritSect::DumpAllEntries() {
     LockEntries();
 
@@ -485,7 +485,7 @@ void CDebugSCritSect::DumpAllEntries() {
     s_critsect.Leave();
 }
 
-// OFFSET: #0x00774C50
+// OFFSET: 0x004BBA30
 void CDebugSRWLock::DumpAllEntries() {
     LockEntries();
 

@@ -114,7 +114,7 @@ float CGPlayer::GetDrunknessTurnValue() {
     return static_cast<uint8_t>(value) * 0.01f;
 }
 
-// OFFSET: #0x00546100
+// OFFSET: 0x0091C8C0
 int32_t CGPlayer::HasZoneExplored(int32_t zone) {
     if (static_cast<uint32_t>(zone / 8) >= sizeof(this->m_player->m_playerExploredZones1)) {
         return 1;

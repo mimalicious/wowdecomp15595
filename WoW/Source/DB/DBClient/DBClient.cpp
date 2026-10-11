@@ -1368,7 +1368,7 @@ int32_t ClientDBGetUnarmedWeapon() {
     return s_unarmedWeapon->m_subClassID;
 }
 
-// OFFSET: #0x006348C0
+// OFFSET: 0x00494FD0
 static void LocateWeaponSubclass() {
     s_weaponItemClass = NULL;
 
@@ -1381,7 +1381,7 @@ static void LocateWeaponSubclass() {
     }
 }
 
-// OFFSET: #0x00634940
+// OFFSET: 0x00495060
 int32_t ClientDBGetNumWeaponSubClasses() {
     return s_weaponSubclasses.Count();
 }
@@ -1398,7 +1398,7 @@ int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty) {
     return 0;
 }
 
-// OFFSET: #0x00634AE0
+// OFFSET: 0x004954F0
 void InitResistances() {
     uint32_t count = g_resistancesDB.m_numRecords;
     s_physicalDamageClassID = -1;
@@ -1695,7 +1695,7 @@ void ClientDBInitializeInGame() {
     InitLights(1);
 }
 
-// OFFSET: #0x00634CC0
+// OFFSET: 0x004956C0
 void InitWeaponSubclasses() {
     s_weaponSubclasses.SetCount(0);
     s_unarmedWeapon = NULL;
@@ -1963,7 +1963,7 @@ const char* ClientDBStringLookup(uint32_t lookup) {
     return rec ? static_cast<const char*>(rec->m_string) : NULL;
 }
 
-// OFFSET: #0x00634950
+// OFFSET: 0x00495240
 MapDifficultyRec* GetMapDifficultyRec(int32_t mapId, uint32_t difficulty, int32_t* index) {
     for (int32_t i = 0; i < g_mapDifficultyDB.m_numRecords; i++) {
         MapDifficultyRec* rec = g_mapDifficultyDB.GetRecordByIndex(i);

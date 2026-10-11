@@ -1,7 +1,7 @@
 #include "CMovementGlobals.h"
 #include "WoW/Source/Object/Movement.h"
 
-// OFFSET: #0x006EC000
+// OFFSET: 0x00579A90
 CMovementGlobals::~CMovementGlobals() {
     if (this->m_movementLog) {
         fclose(this->m_movementLog);

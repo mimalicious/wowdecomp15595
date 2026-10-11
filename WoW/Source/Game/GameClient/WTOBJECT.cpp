@@ -33,7 +33,7 @@ WTOBJECT::~WTOBJECT() {
     }
 }
 
-// OFFSET: #0x007E4BC0
+// OFFSET: [0x00717BD0]
 void WeaponTrailsShutdown() {
     s_freeTrails.Clear(typeid(WTOBJECT).raw_name(), SLOG_OBJECT, 1);
     s_freeSwings.Clear(typeid(SWING).raw_name(), SLOG_OBJECT, 1);
@@ -166,7 +166,7 @@ bool SWING::BuildVertexBuffer(uint32_t time, const C3Vector& top, const C3Vector
     return true;
 }
 
-// OFFSET: #0x007E4F50
+// OFFSET: 0x004E0310
 static void WeaponTrailCallback(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     if (!model->HasEvent('BTW$') || !model->HasEvent('TTW$')) {
         return;

@@ -125,7 +125,7 @@ int32_t Packet_SMSG_DUEL_REQUESTED(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: #0x005CFDD0
+// OFFSET: 0x009F0AC0
 void CGDuelInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_DUEL_REQUESTED, Packet_SMSG_DUEL_REQUESTED, NULL);
     ClientServices::SetMessageHandler(SMSG_DUEL_OUT_OF_BOUNDS, Packet_SMSG_DUEL_OUTOFBOUNDS, NULL);
@@ -172,7 +172,7 @@ void CGDuelInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_DUEL_WINNER);
 }
 
-// OFFSET: #0x005CFA10
+// OFFSET: 0x009F0710
 void CGDuelInfo::LeaveWorld() {
     s_duelArbiter = WOWGUID();
 

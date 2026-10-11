@@ -2329,7 +2329,7 @@ uint16_t CGBattlefieldInfo::GetActiveBattlefieldTypeID() {
     return 0;
 }
 
-// OFFSET: #0x00608180
+// OFFSET: 0x0044BBE0
 WOWGUID CGBattlefieldInfo::GetArenaOpponent(uint32_t index) {
     if (index >= 5) {
         return WOWGUID::Make(0);

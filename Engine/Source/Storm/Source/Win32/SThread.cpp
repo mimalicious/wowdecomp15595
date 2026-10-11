@@ -203,7 +203,7 @@ HANDLE SCreateThread(uint32_t dwStackSize, uint32_t (STORMAPI* lpStartAddress)(v
     return hThread;
 }
 
-// OFFSET: #0x007701C0
+// OFFSET: 0x004B78E0
 int32_t STORMAPI SGetThreadName(uint32_t threadId, char* buffer, int32_t bufferchars) {
     bool found = false;
 

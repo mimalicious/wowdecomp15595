@@ -35,7 +35,7 @@ CMinigame_C* CMinigame_C::CreateMinigame(MINIGAME_TYPE type, uint64_t guid) {
     return memory ? new (memory) CMinigameTicTacToe_C(guid) : NULL;
 }
 
-// OFFSET: #0x00847CA0
+// OFFSET: 0x00B380A0
 void CMinigame_C::UpdateSetup(CDataStore* msg) {
     uint8_t state;
     msg->Get(state);
@@ -59,12 +59,12 @@ void CMinigameTicTacToe_C::UpdateState(CDataStore* msg) {
     msg->Get(this->unk_0020);
 }
 
-// OFFSET: #0x00847D40
+// OFFSET: 0x00B38140
 bool CMinigameTicTacToe_C::ValidateMoveClient(uint8_t moveType, int32_t param) {
     return CMinigameTicTacToe::ValidateMove(this, moveType, param);
 }
 
-// OFFSET: #0x00847D70
+// OFFSET: 0x00B38170
 int32_t CMinigameTicTacToe_C::PushStateToLua(lua_State* L) {
     lua_checkstack(L, 9);
 
@@ -90,7 +90,7 @@ void CMinigame_C::MakeMove(uint8_t moveType, int32_t param) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00847E70
+// OFFSET: 0x00B38270
 bool CMinigameTicTacToe::ValidateMove(MiniGameData* data, uint8_t moveType, int32_t param) {
     return static_cast<uint32_t>(param) <= 9 && data->m_board[param] == 0xFF;
 }

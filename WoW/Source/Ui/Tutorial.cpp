@@ -177,7 +177,7 @@ void CGTutorial::TriggerTutorial(uint32_t tutorial) {
     }
 }
 
-// OFFSET: #0x005303A0
+// OFFSET: 0x00901C00
 void CGTutorial::LoadFlaggedTutorials() {
     memset(s_tutorialsCompleted, 0, sizeof(s_tutorialsCompleted));
     CVarIntListWrapper list;
@@ -204,7 +204,7 @@ void CGTutorial::LoadFlaggedTutorials() {
 void CGTutorial::ShutdownGame() {
 }
 
-// OFFSET: #0x00530140
+// OFFSET: 0x009016C0
 int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     bool found = false;
 
@@ -221,7 +221,7 @@ int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     return 60;
 }
 
-// OFFSET: #0x00530190
+// OFFSET: 0x00901710
 int32_t CGTutorial::GetPrevCompletedTutorial(int32_t tutorial) {
     bool found = false;
 
@@ -238,7 +238,7 @@ int32_t CGTutorial::GetPrevCompletedTutorial(int32_t tutorial) {
     return 0;
 }
 
-// OFFSET: #0x00530300
+// OFFSET: 0x00901B60
 void CGTutorial::SaveFlaggedTutorials() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("flaggedTutorials");

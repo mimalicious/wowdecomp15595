@@ -1350,7 +1350,7 @@ uint32_t CHuffmanDecoder::Decompress(void* dest, uint32_t destsize, CBitInput* i
     return static_cast<uint32_t>(currdest - static_cast<uint8_t*>(dest));
 }
 
-// OFFSET: #0x00779110
+// OFFSET: 0x004BAD90
 uint32_t CHuffmanEncoder::Compress(CBitOutput* output, const void* source, uint32_t sourcesize, uint8_t hint) {
     this->BuildTree(hint);
     this->m_adaptive = hint == 0;

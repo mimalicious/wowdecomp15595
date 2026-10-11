@@ -3139,7 +3139,7 @@ bool CanTriggerTutorial(uint32_t tutorial) {
     return CGTutorial::m_tutorialShown.m_count && !(CGTutorial::m_tutorialShown.m_bits.m_data[tutorial >> 5] & (1 << (tutorial & 0x1F)));
 }
 
-// OFFSET: #0x005222B0
+// OFFSET: 0x005640E0
 bool IsTutorialFlagged(uint32_t tutorial) {
     return CGTutorial::m_tutorialFlags.m_count && (CGTutorial::m_tutorialFlags.m_bits.m_data[tutorial >> 5] & (1 << (tutorial & 0x1F)));
 }
