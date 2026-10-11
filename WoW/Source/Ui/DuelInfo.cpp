@@ -13,7 +13,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/FriendList.h"
 
-// STATIC: #0x00C22B58
+// STATIC: 0x00F76880
 static WOWGUID s_duelArbiter;
 
 // STATIC: 0x00F76888
@@ -25,7 +25,7 @@ static uint32_t s_countdown;
 // STATIC: 0x00F76894
 static uint32_t s_countdownTimer;
 
-// OFFSET: %0x00931E90
+// OFFSET: 0x009F0760
 int32_t Packet_SMSG_DUEL_COUNTDOWN(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t countdown;
     msg->Get(countdown);
@@ -34,7 +34,7 @@ int32_t Packet_SMSG_DUEL_COUNTDOWN(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: #0x005CFA90
+// OFFSET: 0x009F07A0
 int32_t Packet_SMSG_DUEL_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t completed;
     msg->Get(completed);
@@ -57,7 +57,7 @@ int32_t Packet_SMSG_DUEL_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: #0x005CFB20
+// OFFSET: 0x009F0830
 int32_t Packet_SMSG_DUEL_WINNER(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t retreat;
     char winner[48];
@@ -79,7 +79,7 @@ int32_t Packet_SMSG_DUEL_WINNER(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x005CFBD0
+// OFFSET: 0x009F08C0/0x14078A760
 void CGDuelInfo::AcceptDuel() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_DUEL_ACCEPTED));
@@ -88,7 +88,7 @@ void CGDuelInfo::AcceptDuel() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005CFC50
+// OFFSET: 0x009F0940/0x14078A7F0
 void CGDuelInfo::CancelDuel() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_DUEL_CANCELLED));
@@ -97,7 +97,7 @@ void CGDuelInfo::CancelDuel() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005CFCD0
+// OFFSET: 0x009F09C0
 int32_t Packet_SMSG_DUEL_REQUESTED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(s_duelArbiter.m_guid);
     WOWGUID requester;
@@ -125,7 +125,7 @@ int32_t Packet_SMSG_DUEL_REQUESTED(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: 0x009F0AC0
+// OFFSET: 0x009F0AC0/0x14078A980
 void CGDuelInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_DUEL_REQUESTED, Packet_SMSG_DUEL_REQUESTED, NULL);
     ClientServices::SetMessageHandler(SMSG_DUEL_OUT_OF_BOUNDS, Packet_SMSG_DUEL_OUTOFBOUNDS, NULL);
@@ -135,7 +135,7 @@ void CGDuelInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_DUEL_WINNER, Packet_SMSG_DUEL_WINNER, NULL);
 }
 
-// OFFSET: 0x009F0500
+// OFFSET: 0x009F0500/0x14078A310
 int32_t CGDuelInfo::ProcessCountdown(const void* data, void* param) {
     char buffer[3000];
     SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("DUEL_COUNTDOWN", -1, GENDER_NOT_APPLICABLE), s_countdown);
@@ -150,13 +150,13 @@ int32_t CGDuelInfo::ProcessCountdown(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x005CF910
+// OFFSET: 0x009F0590
 int32_t Packet_SMSG_DUEL_OUTOFBOUNDS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_DUEL_OUTOFBOUNDS, NULL);
     return 1;
 }
 
-// OFFSET: #0x005CF930
+// OFFSET: 0x009F05B0
 int32_t Packet_SMSG_DUEL_INBOUNDS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_DUEL_INBOUNDS, NULL);
     return 1;
@@ -172,9 +172,11 @@ void CGDuelInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_DUEL_WINNER);
 }
 
-// OFFSET: 0x009F0710
+// OFFSET: 0x009F0710/0x14078A5A0
 void CGDuelInfo::LeaveWorld() {
-    s_duelArbiter = WOWGUID();
+    if (!CGGameUI::m_currentlyReloadingUI) {
+        s_duelArbiter = WOWGUID();
+    }
 
     if (s_countdownTimer) {
         ClientKillTimer(s_countdownTimer, CGDuelInfo::ProcessCountdown, "ProcessCountdown");
