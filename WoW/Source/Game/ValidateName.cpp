@@ -362,12 +362,12 @@ static inline bool MatchesToken(TSFixedArray<regex_t>& tokens, const char* name)
     return false;
 }
 
-// OFFSET: [0x004E6690]
+// OFFSET: [0x004E6690/0x140128620]
 bool IsAlphaLatin1(uint16_t c) {
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (static_cast<uint16_t>(c - 0xC0) <= 0x1D && c != 0xD7) || c == 0xDF || (static_cast<uint16_t>(c - 0xE0) <= 0x1F && c != 0xF7 && c != 0xFE);
 }
 
-// OFFSET: 0x004E6700
+// OFFSET: 0x004E6700/0x1401286A0
 bool IsAlphaEnglish(uint16_t c) {
     return (c >= 'A' && c <= 'Z') || static_cast<uint16_t>(c - 'a') <= 25;
 }
@@ -398,7 +398,7 @@ bool IsAlphaRussian(uint16_t c) {
     return (c >= 0x410 && c <= 0x44F) || c == 0x401 || c == 0x451;
 }
 
-// OFFSET: 0x004E6820
+// OFFSET: 0x004E6820/0x1401286E0
 bool IsAlphaInCharSet(uint16_t c, int32_t charset) {
     switch (charset) {
         case 0:
@@ -606,7 +606,7 @@ int32_t ValidateCharacterNameConst(uint32_t language, const char* name, bool pro
     return result;
 }
 
-// OFFSET: 0x004E7850
+// OFFSET: 0x004E7850/0x140129A80
 int32_t ValidatePetName(uint32_t language, const char* name, bool profanity, bool chatProfanity, bool reserved, bool english, uint32_t extraLength) {
     uint32_t length;
     int32_t charset;
@@ -638,7 +638,7 @@ int32_t ValidateGuildName(uint32_t language, const char* name) {
     return result;
 }
 
-// OFFSET: 0x004E7900
+// OFFSET: 0x004E7900/0x140129B70
 int32_t ValidateGuildBankTabName(uint32_t language, const char* name) {
     uint16_t allowed[12] = { 32, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 0 };
     uint32_t length;
@@ -816,7 +816,7 @@ bool ValidateStringIsUTF8(const char* string) {
     return true;
 }
 
-// OFFSET: 0x004E6F60
+// OFFSET: 0x004E6F60/0x140128F30
 bool TruncateNewLines(char* text) {
     for (char* c = text; c && *c; c++) {
         bool newLine;
@@ -842,7 +842,7 @@ bool IsNumeric(uint16_t c) {
     return static_cast<uint16_t>(c - '0') <= 9;
 }
 
-// OFFSET: 0x004E6890
+// OFFSET: 0x004E6890/0x1401287D0
 bool IsUpper(uint16_t c) {
     if (static_cast<uint16_t>(c - 'a') <= 25 || static_cast<uint16_t>(c - 0xE0) <= 30 || static_cast<uint16_t>(c - 0x430) <= 31) {
         return false;
@@ -851,7 +851,7 @@ bool IsUpper(uint16_t c) {
     return c != 0x451;
 }
 
-// OFFSET: 0x004E68D0
+// OFFSET: 0x004E68D0/0x140128810
 uint16_t ToUpper(uint16_t c) {
     if (static_cast<uint16_t>(c - 'a') <= 25 || static_cast<uint16_t>(c - 0xE0) <= 30) {
         return c - 32;
@@ -1298,7 +1298,7 @@ static void GetNameInfo(const char* name, RussianNameInfo* info, int32_t sex) {
     }
 }
 
-// OFFSET: 0x00A32B10
+// OFFSET: 0x00A32B10/0x1407DCF30
 static int32_t FormatCase(char* declensions, uint32_t set, const RussianNameInfo* info) {
     int32_t id = s_russianDeclensionRules[info->m_rule].m_sets[set];
     uint16_t buffer[1024];
@@ -1395,7 +1395,7 @@ int32_t GetNumRussianNameDeclensionSets(const char* name, int32_t sex) {
     return count;
 }
 
-// OFFSET: 0x00A32D90
+// OFFSET: 0x00A32D90/0x1407DD220
 int32_t GetRussianNameDeclensions(char* declensions, const char* name, int32_t sex, uint32_t set) {
     if (set > 2) {
         return 0;

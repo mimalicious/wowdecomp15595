@@ -371,7 +371,7 @@ void CGTransmogrify::OnTransmogrifySuccess(uint32_t slot) {
     FrameScript_SignalEvent(SCRIPT_EVENT_TRANSMOGRIFY_SUCCESS, "%d", slot + 1);
 }
 
-// OFFSET: 0x009BFDF0
+// OFFSET: 0x009BFDF0/0x14074C320
 void CGTransmogrify::AutoAddItem(CGItem_C* item) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 

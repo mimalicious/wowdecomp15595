@@ -32,7 +32,7 @@ void Weather::Initialize() {
 void Weather::Destroy() {
 }
 
-// OFFSET: 0x007483D0
+// OFFSET: 0x007483D0/0x140427410
 int32_t Weather::GetType() const {
     int32_t type = 0;
 
@@ -154,7 +154,7 @@ void Weather::SetType(int32_t type, float intensity, const WeatherRec* rec, bool
     this->m_fogStartTime = now;
 }
 
-// OFFSET: 0x00748BE0
+// OFFSET: 0x00748BE0/0x140428060
 void Weather::SetStormIntensity(float start, float target) {
     float range = target - start;
     uint32_t now = FrameTime::GetCurTimeMs();
@@ -302,7 +302,7 @@ CHMMgr::CHMMgr() {
     }
 }
 
-// OFFSET: 0x00749130
+// OFFSET: 0x00749130/0x140428550
 float CHMMgr::Query(const C3Vector& pos) {
     int32_t x = static_cast<int32_t>(floor(pos.x * 0.029999999f)) - this->m_minCellX;
     int32_t y = static_cast<int32_t>(floor(pos.y * 0.029999999f)) - this->m_minCellY;
@@ -425,7 +425,7 @@ bool CHMMgr::Query(const C3Vector& start, const C3Vector& end, C3Vector& hit) {
     return false;
 }
 
-// OFFSET: 0x007495C0
+// OFFSET: 0x007495C0/0x140428BB0
 void CHMMgr::Update(const C3Vector& pos) {
     int32_t originX = static_cast<int32_t>(floor(pos.x * 0.029999999f));
     int32_t originY = static_cast<int32_t>(floor(pos.y * 0.029999999f));

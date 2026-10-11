@@ -277,7 +277,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetReverseFill", &Script_SetReverseFill },
 };
 
-// OFFSET: 0x005309A0
+// OFFSET: 0x005309A0/0x140181DD0
 void CSimpleStatusBar::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

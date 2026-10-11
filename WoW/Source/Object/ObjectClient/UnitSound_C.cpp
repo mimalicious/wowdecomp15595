@@ -170,7 +170,7 @@ void CGUnit_C::PlayFidgetSound(uint32_t index) {
     SE3::PlaySoundKit(soundKitId, local && listenerAtCharacter ? NULL : &position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::PlayFidgetSound");
 }
 
-// OFFSET: 0x0060C3F0
+// OFFSET: 0x0060C3F0/0x140295BA0
 void CGUnit_C::PlayFoleySound() {
     if (SI3::sm_pCVar_Sound_EnableArmorFoleySoundForOthers && SI3::sm_pCVar_Sound_EnableArmorFoleySoundForOthers->m_intValue) {
         SI3::PlayFoleySound(this->m_modelData->m_foleyMaterialID, this->GetPosition(), 0, this);
@@ -497,7 +497,7 @@ void CGUnit_C::PlayTextEmoteSound(uint32_t emote, uint32_t emoteNum) {
 }
 
 // PROVEN: 4f014aa2 IDENTICAL/NONE
-// OFFSET: 0x0060D200
+// OFFSET: 0x0060D200/0x140296C60
 void CGUnit_C::HandlePlayStandSound(uint32_t eventId, int32_t a3) {
     if (SI3::sm_pCVar_Sound_EnablePetSounds && !SI3::sm_pCVar_Sound_EnablePetSounds->m_intValue && this->m_unit->m_unitFieldPetnumber) {
         return;
@@ -531,7 +531,7 @@ void CGUnit_C::HandlePlayStandSound(uint32_t eventId, int32_t a3) {
     }
 }
 
-// OFFSET: 0x0060D2C0
+// OFFSET: 0x0060D2C0/0x140296D40
 void CGUnit_C::HandleFootfallAnimEvent(const C3Vector& position) {
     if ((this->m_unit->m_unitFieldBytes1[2] & 0x2) || (this->m_movementData.m_flags & 0x10000000)) {
         return;

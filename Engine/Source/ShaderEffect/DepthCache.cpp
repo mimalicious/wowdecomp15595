@@ -288,7 +288,7 @@ void DepthCache::SetDepthRangeDump(float rangeMin, float rangeMax) {
     s_depthRangeMax = rangeMax;
 }
 
-// OFFSET: 0x00A2FDF0
+// OFFSET: 0x00A2FDF0/0x1407D9C20
 void DepthCache::DrawDepthRangeDump() {
     if (s_depthRangeMin < 0.0f && s_depthRangeMax < 0.0f) {
         return;

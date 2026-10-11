@@ -6,7 +6,7 @@
 // STATIC: 0x0100AAC8
 LONG CLCDConnection::g_lInitCount;
 
-// OFFSET: 0x00B3F460
+// OFFSET: 0x00B3F460/0x14090CDD0
 CLCDConnection::CLCDConnection() {
     this->m_hConnection = LGLCD_INVALID_CONNECTION;
     this->m_pColorOutput = NULL;

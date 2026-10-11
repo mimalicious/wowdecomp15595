@@ -573,7 +573,7 @@ TValue *luaH_setstr (lua_State *L, Table *t, TString *key) {
 
 
 // PROVEN: 17a2db6a IDENTICAL/NONE
-// OFFSET: 0x0042B050
+// OFFSET: 0x0042B050/0x140031F10
 static int unbound_search (Table *t, unsigned int j) {
   unsigned int i = j;  /* i is zero or a present index */
   j++;

@@ -133,7 +133,7 @@ static TaxiNodesRec* GetNodeMaskBit(int32_t nodeID, int32_t* byte, int32_t* bit)
     return node;
 }
 
-// OFFSET: 0x009E2650
+// OFFSET: 0x009E2650/0x1407798D0
 uint32_t GetRouteSegmentCount(uint32_t index) {
     if (index < CGTaxiMap::m_numNodes) {
         if (!CGTaxiMap::m_nodes.m_data[index].m_noDirectPath) {

@@ -91,7 +91,7 @@ void CGGuildBankInfo::SetGuildBanker(const WOWGUID& banker) {
 }
 
 // PROVEN: 475bf0bb IDENTICAL/NONE
-// OFFSET: 0x009C0350
+// OFFSET: 0x009C0350/0x14074CC50
 void CGGuildBankInfo::GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t& tab, uint32_t& slot) {
     tab = virtualSlot / 98;
     slot = virtualSlot % 98;
@@ -658,7 +658,7 @@ void CGGuildBankInfo::SwapBankItems(uint32_t tab, uint32_t slot, uint32_t itemID
 }
 
 // PROVEN: d331753f IDENTICAL/NONE
-// OFFSET: 0x009C29E0
+// OFFSET: 0x009C29E0/0x14074F8D0
 void CGGuildBankInfo::AutoStoreItem(uint64_t item, uint64_t container, uint32_t containerSlot) {
     if (CGGuildBankInfo::m_banker) {
         CGGuildBankInfo::SwapItems(CGGuildBankInfo::m_currentTab, 0xFF, item, container, containerSlot, 0);

@@ -336,7 +336,7 @@ void DBCache_Initialize() {
     LoadDBCaches();
 }
 
-// OFFSET: 0x00496F40
+// OFFSET: 0x00496F40/0x1400BD270
 void DBCache_Destroy() {
     g_creatureDBCache.Destroy();
     g_gameObjectDBCache.Destroy();
@@ -353,7 +353,7 @@ void DBCache_Destroy() {
     g_danceCache.Destroy();
 }
 
-// OFFSET: 0x004975F0
+// OFFSET: 0x004975F0/0x1400BDA50
 void DBCache_ClearHandlers() {
     ClientServices::ClearMessageHandler(SMSG_QUERY_CREATURE_RESPONSE);
     ClientServices::ClearMessageHandler(SMSG_QUERY_GAME_OBJECT_RESPONSE);
@@ -593,7 +593,7 @@ void ClientDBIdle() {
     DBCache_Idle();
 }
 
-// OFFSET: 0x00496FD0
+// OFFSET: 0x00496FD0/0x1400BD320
 void DBCache_ClearPending() {
     g_creatureDBCache.ClearPending();
     g_gameObjectDBCache.ClearPending();

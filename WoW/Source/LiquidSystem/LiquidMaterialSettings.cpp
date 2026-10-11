@@ -9,7 +9,7 @@
 Liquid::TEXTURE_LOAD_CALLBACK Liquid::s_textureLoadCallback;
 
 // PROVEN: 64d572f1 IDENTICAL/NONE
-// OFFSET: 0x0071C200
+// OFFSET: 0x0071C200/0x1403F10A0
 Liquid::CMaterialSettings::~CMaterialSettings() {
 }
 

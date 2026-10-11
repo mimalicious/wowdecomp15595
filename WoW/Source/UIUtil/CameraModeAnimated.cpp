@@ -23,7 +23,7 @@ CCameraModeInstanceAnimated::CCameraModeInstanceAnimated() {
 }
 
 // PROVEN: 9f4beb83 IDENTICAL/NONE
-// OFFSET: 0x00461B70
+// OFFSET: 0x00461B70/0x140074910
 int32_t CCameraModeAnimated::AllowDuplicate(const CCameraModeInstance* current, const CCameraModeInstance* instance) const {
     const CCameraModeInstanceAnimated* a = static_cast<const CCameraModeInstanceAnimated*>(current);
     const CCameraModeInstanceAnimated* b = static_cast<const CCameraModeInstanceAnimated*>(instance);
@@ -38,7 +38,7 @@ CCameraModeInstance* CCameraModeAnimated::AllocInstance(const CCameraModeInstanc
 }
 
 // PROVEN: be6bbeb5 IDENTICAL/NONE
-// OFFSET: 0x00461BF0
+// OFFSET: 0x00461BF0/0x140074990
 void CCameraModeAnimated::FreeInstance(CCameraModeInstance* instance) const {
     if (instance) {
         s_animatedInstances.PutData(instance, NULL, 0);

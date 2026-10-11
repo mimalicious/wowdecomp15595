@@ -1047,14 +1047,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CommentatorGetSkirmishMode", &Script_CommentatorGetSkirmishMode },
 };
 
-// OFFSET: 0x009281C0
+// OFFSET: 0x009281C0/0x14068DCE0
 void CGCommentator::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009281F0
+// OFFSET: 0x009281F0/0x14068DD30
 void CGCommentator::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

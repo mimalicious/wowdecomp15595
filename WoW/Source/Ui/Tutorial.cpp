@@ -227,7 +227,7 @@ void CGTutorial::LoadFlaggedTutorials() {
 void CGTutorial::ShutdownGame() {
 }
 
-// OFFSET: 0x009016C0
+// OFFSET: 0x009016C0/0x140659B30
 int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     bool found = false;
 

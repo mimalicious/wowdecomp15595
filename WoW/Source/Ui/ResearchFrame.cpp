@@ -61,7 +61,7 @@ TSCGrowableArray<const ResearchBranchRec*, 32> CGResearchFrame::m_branches;
 // STATIC: 0x00F76A54
 TSHashTable<CGResearchFrame::BLOBPOIHASH, HASHKEY_NONE> CGResearchFrame::m_blobHash;
 
-// OFFSET: 0x009F4810
+// OFFSET: 0x009F4810/0x140790170
 void CGResearchFrame::SelectProject(int32_t projectID) {
     const ResearchProjectRec* project = g_researchProjectDB.GetRecord(projectID);
     CGResearchFrame::m_itemCount = 0;
@@ -632,7 +632,7 @@ void CGResearchFrame::ShutdownGame() {
     CGResearchFrame::DestroyArchaeologyBlobs();
 }
 
-// OFFSET: 0x009F7640
+// OFFSET: 0x009F7640/0x140794160
 bool CGResearchFrame::CanCastSpell(int32_t spellId, int32_t& reason) {
     int32_t currency;
     int32_t items;

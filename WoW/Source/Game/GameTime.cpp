@@ -110,7 +110,7 @@ void CGameTime::TickMinute() {
     this->m_baseMinuteOfDay = minutes + this->m_fracMinutes;
 }
 
-// OFFSET: 0x00A31680
+// OFFSET: 0x00A31680/0x1407DB600
 void CGameTime::GameTimeSetTime(const WowTime& time, bool tick) {
     WowTime newTime = time;
 

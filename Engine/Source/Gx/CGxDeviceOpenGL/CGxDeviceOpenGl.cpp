@@ -1257,7 +1257,7 @@ void CGxDeviceOpenGl::CursorUnlock(uint32_t x, uint32_t y) {
 }
 
 // PROVEN: d88d603a IDENTICAL/NONE
-// OFFSET: 0x00850D30
+// OFFSET: 0x00850D30/0x1405802D0
 int32_t CGxDeviceOpenGl::ISetCursor() {
     if (!this->m_context || this->m_hwCursor) {
         return 0;

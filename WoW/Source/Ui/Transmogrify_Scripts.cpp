@@ -454,14 +454,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CanTransmogrifyItemWithItem", &Script_CanTransmogrifyItemWithItem },
 };
 
-// OFFSET: 0x009BEDB0
+// OFFSET: 0x009BEDB0/0x14074AEA0
 void TransmogrifyRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009BEDE0
+// OFFSET: 0x009BEDE0/0x14074AEF0
 void TransmogrifyUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

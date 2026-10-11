@@ -584,12 +584,12 @@ void PlayerMoveChangeTransport::Put(CDataStore* msg) {
 }
 
 // PROVEN: 7be1db6a IDENTICAL/NONE
-// OFFSET: [0x006747B0]
+// OFFSET: [0x006747B0/0x1403185B0]
 PlayerMoveFallLand::PlayerMoveFallLand() {
 }
 
 // PROVEN: 30e4dd41 IDENTICAL/NONE
-// OFFSET: [0x006733D0]
+// OFFSET: [0x006733D0/0x14031B820]
 PlayerMoveFallLand::~PlayerMoveFallLand() {
 }
 
@@ -762,12 +762,12 @@ void PlayerMoveFallLand::Put(CDataStore* msg) {
 }
 
 // PROVEN: 7d572095 IDENTICAL/NONE
-// OFFSET: [0x00673350]
+// OFFSET: [0x00673350/0x14031C520]
 PlayerMoveFallReset::PlayerMoveFallReset() {
 }
 
 // PROVEN: 80b2885e IDENTICAL/NONE
-// OFFSET: [0x00673860]
+// OFFSET: [0x00673860/0x140318600]
 PlayerMoveFallReset::~PlayerMoveFallReset() {
 }
 
@@ -9734,12 +9734,12 @@ void PlayerMoveWaterWalkAck::Put(CDataStore* msg) {
 }
 
 // PROVEN: 3a0270ed IDENTICAL/NONE
-// OFFSET: [0x00670BB0]
+// OFFSET: [0x00670BB0/0x140318DF0]
 PlayerSetActiveMover::PlayerSetActiveMover() {
 }
 
 // PROVEN: 0d2e09b1 IDENTICAL/NONE
-// OFFSET: [0x00670850]
+// OFFSET: [0x00670850/0x140318480]
 PlayerSetActiveMover::~PlayerSetActiveMover() {
 }
 
@@ -10035,7 +10035,7 @@ void PlayerMoveUpdateMissileTrajectory::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x00670AE0
+// OFFSET: 0x00670AE0/0x140318C40
 PlayerMoveTeleportCheat::PlayerMoveTeleportCheat(const C3Vector& position, float facing) {
     this->m_position = position;
     this->m_facing = facing;
@@ -10073,7 +10073,7 @@ void PlayerMoveSetRawPosition::Put(CDataStore* msg) {
     msg->Put(this->m_position.y);
 }
 
-// OFFSET: 0x00673A10
+// OFFSET: 0x00673A10/0x14031BEE0
 PlayerMoveCharmPortCheat::PlayerMoveCharmPortCheat(const C3Vector& position, float facing) {
     this->m_facing = facing;
     this->m_position = position;

@@ -212,7 +212,7 @@ int32_t CGWorldMap::GetCurrentDungeonMap() {
     return -1;
 }
 
-// OFFSET: 0x0091A410
+// OFFSET: 0x0091A410/0x14067B510
 uint32_t CGWorldMap::GetNumZones(uint32_t continent) {
     if (continent < CGWorldMap::m_continents.m_count) {
         return CGWorldMap::m_continents.m_data[continent].m_zones.m_count;
@@ -234,7 +234,7 @@ int32_t CGWorldMap::GetCurrentAreaID() {
     return CGWorldMap::m_currentOrphanZone;
 }
 
-// OFFSET: 0x0091A480
+// OFFSET: 0x0091A480/0x14067B570
 static int32_t QSortZones(const void* a, const void* b) {
     WorldMapAreaRec* zoneA = g_worldMapAreaDB.GetRecord(*static_cast<const int32_t*>(a));
     WorldMapAreaRec* zoneB = g_worldMapAreaDB.GetRecord(*static_cast<const int32_t*>(b));
@@ -251,7 +251,7 @@ static int32_t QSortZones(const void* a, const void* b) {
     return 0;
 }
 
-// OFFSET: 0x0091A530
+// OFFSET: 0x0091A530/0x14067B670
 static int32_t QSortOrphanZones(const void* a, const void* b) {
     WorldMapAreaRec* zoneA = g_worldMapAreaDB.GetRecord(*static_cast<const int32_t*>(a));
     WorldMapAreaRec* zoneB = g_worldMapAreaDB.GetRecord(*static_cast<const int32_t*>(b));
@@ -434,7 +434,7 @@ bool CGWorldMap::DetermineAlternateMapPosition(int32_t mapID, int32_t areaID, fl
     return false;
 }
 
-// OFFSET: 0x0091A960
+// OFFSET: 0x0091A960/0x14067BB70
 int32_t CGWorldMap::GetDungeonMapFromChunk(int32_t mapID, int32_t wmoGroupID, float z, int32_t worldMapAreaID) {
     int32_t start = 0;
 
@@ -505,7 +505,7 @@ int32_t CGWorldMap::GetDungeonMapFromChunk(int32_t mapID, int32_t wmoGroupID, fl
     return dungeonMap;
 }
 
-// OFFSET: 0x0091AC70
+// OFFSET: 0x0091AC70/0x14067BE70
 int32_t CGWorldMap::GetWorldMapAreaByZone(int32_t continent, uint32_t y, uint32_t x) {
     for (uint32_t i = 0; i < CGWorldMap::m_continents.m_data[continent].m_phasedChunks.m_count; i++) {
         if (CGWorldMap::m_continents.m_data[continent].m_phasedChunks.m_data[i].m_areaID && PhaseShift_C_IsPhasedWorldMapActive(CGWorldMap::m_continents.m_data[continent].m_phasedChunks.m_data[i].m_areaID)) {
@@ -520,7 +520,7 @@ int32_t CGWorldMap::GetWorldMapAreaByZone(int32_t continent, uint32_t y, uint32_
     return CGWorldMap::m_continents.m_data[continent].m_zoneMap[y][x];
 }
 
-// OFFSET: 0x0091AD20
+// OFFSET: 0x0091AD20/0x14067BF50
 static int32_t FindFirstDungeonMap(int32_t mapID) {
     int32_t low = 0;
     int32_t high = g_dungeonMapDB.m_numRecords - 1;
@@ -555,7 +555,7 @@ static int32_t FindFirstDungeonMap(int32_t mapID) {
     return mid + 1;
 }
 
-// OFFSET: 0x0091ADD0
+// OFFSET: 0x0091ADD0/0x14067C000
 static int32_t FindFirstOrphanZone(int32_t mapID) {
     int32_t low = 0;
     int32_t high = CGWorldMap::m_orphanZones.m_count - 1;
@@ -705,7 +705,7 @@ bool CGWorldMap::IsMapOnContinent(int32_t mapID, uint32_t continent) {
     return false;
 }
 
-// OFFSET: 0x0091B1E0
+// OFFSET: 0x0091B1E0/0x14067C430
 int32_t CGWorldMap::GetWorldMapChildDepth(int32_t parent, int32_t child, int32_t* childArea) {
     if (parent == child) {
         return 0;
@@ -1264,7 +1264,7 @@ int32_t CGWorldMap::GetNumDungeonLevels() {
     return 0;
 }
 
-// OFFSET: 0x0091D540
+// OFFSET: 0x0091D540/0x14067EF80
 int32_t CGWorldMap::GetChunkFromPos(float x, float y, uint32_t* chunkX, uint32_t* chunkY) {
     int32_t areaID = CGWorldMap::GetCurrentAreaID();
 
@@ -1460,12 +1460,12 @@ int32_t CGWorldMap::GetMapAreaFromPos(float x, float y) {
     return CGWorldMap::GetWorldMapAreaByZone(CGWorldMap::m_currentContinent, chunkY, chunkX);
 }
 
-// OFFSET: 0x0091DDB0
+// OFFSET: 0x0091DDB0/0x14067F9F0
 bool CGWorldMap::GetWorldPosition(const C3Vector& position, int32_t mapID, float* x, float* y, bool* outland, bool noClamp, int32_t dungeonMapID) {
     return CGWorldMap::GetWorldPosition(position, mapID, CGGameUI::m_wmoGroupID, x, y, outland, noClamp, dungeonMapID);
 }
 
-// OFFSET: 0x0091DDE0
+// OFFSET: 0x0091DDE0/0x14067FA30
 int32_t CGWorldMap::GetMapHighlight(float x, float y) {
     if (CGWorldMap::m_currentContinent == -2) {
         return 0;
@@ -1490,7 +1490,7 @@ int32_t CGWorldMap::GetMapHighlight(float x, float y) {
     return CGWorldMap::GetWorldMapChildDepth(current, area, &childArea) ? childArea : 0;
 }
 
-// OFFSET: 0x0091DED0
+// OFFSET: 0x0091DED0/0x14067FB50
 void CGWorldMap::GetPOIPosition(const AreaPOIRec* poi, float* x, float* y) {
     *x = 0.0f;
     *y = 0.0f;
@@ -1771,7 +1771,7 @@ void CGWorldMap::SetMap(uint32_t continent, uint32_t zone, int32_t dungeonMap) {
     FrameScript_SignalEvent(SCRIPT_EVENT_WORLD_MAP_UPDATE, NULL);
 }
 
-// OFFSET: 0x004E82B0
+// OFFSET: 0x004E82B0/0x14012A8D0
 void CGWorldMap::RefreshCurrentMap() {
     if (CGWorldMap::m_currentOrphanZone == -1) {
         CGWorldMap::SetMap(CGWorldMap::m_currentContinent, CGWorldMap::m_currentZone, CGWorldMap::m_currentOrphanZone);

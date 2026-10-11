@@ -1303,7 +1303,7 @@ int32_t Script_GetUnitAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* info
     return Script_GetAuraInfo(L, index + 1, info);
 }
 
-// OFFSET: 0x00459940
+// OFFSET: 0x00459940/0x1400699C0
 void ClearUniqueSignals() {
     s_uniqueSignals.m_count = 0;
 }

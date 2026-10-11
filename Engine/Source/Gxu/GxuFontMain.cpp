@@ -182,7 +182,7 @@ void GxuFontGetTextExtent(CGxFont* face, const char* text, uint32_t numBytes, fl
     InternalGetTextExtent(face, text, numBytes, fontHeight, extent, flags, shadowWidth, scale);
 }
 
-// OFFSET: 0x00613270
+// OFFSET: 0x00613270/0x14029E770
 uint32_t GxuFontGetMaxCharsWithinWidth(CGxFont* face, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     return InternalGetMaxCharsWithinWidth(face, text, fontHeight, maxWidth, numBytes, extent, flags, shadowWidth, scale, NULL, NULL);
 }
@@ -784,7 +784,7 @@ QUOTEDCODE GxuDetermineQuotedCode(const char* text, int32_t& advance, CImVector*
     return CODE_INVALIDCODE;
 }
 
-// OFFSET: 0x00613F10
+// OFFSET: 0x00613F10/0x14029F5A0
 int32_t GxuFontRemoveFromBatch(CGxString* string) {
     if (!string) {
         return 0;

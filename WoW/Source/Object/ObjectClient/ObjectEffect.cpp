@@ -477,7 +477,7 @@ float CObjectEffectModifier::InputNone(CObjectEffectManager* manager) {
 }
 
 // PROVEN: f4e17f14 IDENTICAL/NONE
-// OFFSET: 0x005E1130
+// OFFSET: 0x005E1130/0x14025EDD0
 float CObjectEffectModifier::InputSpeed(CObjectEffectManager* manager) {
     return manager->m_owner->GetSpeed();
 }
@@ -488,7 +488,7 @@ float CObjectEffectModifier::MapNone(float input, const float* params) {
     return input;
 }
 
-// OFFSET: 0x005E08B0
+// OFFSET: 0x005E08B0/0x14025E5B0
 float CObjectEffectModifier::MapLinear(float input, const float* params) {
     if (input <= params[0]) {
         return params[2];
@@ -506,7 +506,7 @@ float CObjectEffectModifier::MapLinear(float input, const float* params) {
 void CObjectEffectModifier::OutputNone(CObjectEffect* effect, float value) {
 }
 
-// OFFSET: 0x005E0920
+// OFFSET: 0x005E0920/0x14025E5F0
 void CObjectEffectModifier::OutputPitch(CObjectEffect* effect, float value) {
     SE3::SetFrequencyScale(effect->m_soundKitObject, value);
 }
@@ -622,7 +622,7 @@ void CObjectEffect::UpdateLoopingEffect(CObjectEffectManager* manager) {
     SE3::Set3DPosition(this->m_soundKitObject, position);
 }
 
-// OFFSET: 0x005E14D0
+// OFFSET: 0x005E14D0/0x14025F260
 void CObjectEffectManager::PropertyChanged(int32_t modifierId) {
     OBJ_EFFECT_REF_LIST_LOOKUP* refList = this->m_refLists.Ptr(modifierId, s_hashKeyNone);
 

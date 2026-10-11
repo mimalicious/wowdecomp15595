@@ -61,7 +61,7 @@ static FrameScript_Method s_ScriptMethods[] = {
 };
 
 // PROVEN: 2032fcc3 IDENTICAL/NONE
-// OFFSET: 0x0053B630
+// OFFSET: 0x0053B630/0x14018F410
 void CSimpleMovieFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

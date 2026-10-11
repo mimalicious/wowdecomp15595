@@ -71,7 +71,7 @@ double CGlueLoading::ComputeLoadProgress(CCharacterComponent** components, int32
     return 0.0;
 }
 
-// OFFSET: 0x00811540
+// OFFSET: 0x00811540/0x140528D50
 int32_t CGlueLoading::Idle(CCharacterComponent** components, int32_t count) {
     uint32_t time = FrameTime::GetCurTimeMs();
     uint32_t elapsedMs = time - CGlueLoading::m_loadLastTime;
@@ -258,14 +258,14 @@ void CGlueLoading::StartLoad(CCharacterComponent** components, uint32_t count, i
 }
 
 // PROVEN: 40ba194a IDENTICAL/NONE
-// OFFSET: 0x008119A0
+// OFFSET: 0x008119A0/0x140529360
 int32_t CGlueLoading::Idle(CCharacterComponent* component) {
     CCharacterComponent* components = component;
     return CGlueLoading::Idle(&components, 1);
 }
 
 // PROVEN: 023ec89f IDENTICAL/NONE
-// OFFSET: 0x008119C0
+// OFFSET: 0x008119C0/0x140529380
 void CGlueLoading::StartLoad(CCharacterComponent* component, int32_t keepProgress, void (*callback)(uint64_t data), uint64_t data, uint32_t delayFrames) {
     CCharacterComponent* components = component;
     CGlueLoading::StartLoad(&components, 1, keepProgress, callback, data, delayFrames);

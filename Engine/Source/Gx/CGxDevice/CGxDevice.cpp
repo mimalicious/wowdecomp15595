@@ -1138,7 +1138,7 @@ void CGxDevice::ClampRectBottom(CiRect& windowRect) {
     }
 }
 
-// OFFSET: 0x00843260
+// OFFSET: 0x00843260/0x14056F740
 void CGxDevice::DeviceGamma(CGxGammaRamp& ramp) {
     ramp = this->m_systemGammaRamp;
 }
@@ -1227,7 +1227,7 @@ void CGxDevice::TexMarkForUpdate(CGxTex* texId, const CiRect& updateRect, int32_
     }
 }
 
-// OFFSET: 0x00843B20
+// OFFSET: 0x00843B20/0x140570010
 void CGxDevice::TexSetUserData(CGxTex* texId, GxTexUserFunc userFunc, void* userArg) {
     texId->m_userFunc = userFunc;
     texId->m_userArg = userArg;

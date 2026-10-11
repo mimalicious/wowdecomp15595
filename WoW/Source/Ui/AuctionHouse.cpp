@@ -573,7 +573,7 @@ bool CGAuctionHouse::TableNameToType(const char* name, int32_t* type) {
     return false;
 }
 
-// OFFSET: 0x009733A0
+// OFFSET: 0x009733A0/0x1406EB200
 bool CGAuctionHouse::IsItemForSell(WOWGUID item) {
     if (CGAuctionHouse::m_havePendingSell) {
         for (uint32_t i = 0; i < CGAuctionHouse::m_numSellItems; i++) {
@@ -929,7 +929,7 @@ void CGAuctionHouse::ApplyBidderSort() {
     FrameScript_SignalEvent(SCRIPT_EVENT_AUCTION_BIDDER_LIST_UPDATE, NULL);
 }
 
-// OFFSET: 0x00974050
+// OFFSET: 0x00974050/0x1406EC0E0
 void CGAuctionHouse::ClearOutbidID(int32_t auctionID) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(CGAuctionHouse::m_numOutbidItems); i++) {
         if (CGAuctionHouse::m_outbidItems.m_data[i]->m_auctionID == auctionID) {

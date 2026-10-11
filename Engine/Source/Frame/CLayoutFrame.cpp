@@ -1525,7 +1525,7 @@ void CLayoutFrame::AnimData_ResetAlphaData() {
 }
 
 // PROVEN: e0115494 IDENTICAL/NONE
-// OFFSET: 0x00507A50
+// OFFSET: 0x00507A50/0x14014EF20
 bool CLayoutFrame::AnimData_HasActivePosition() {
     if (this->m_animData) {
         return this->m_animData->m_hasPosition;
@@ -1535,7 +1535,7 @@ bool CLayoutFrame::AnimData_HasActivePosition() {
 }
 
 // PROVEN: 0bbb489e IDENTICAL/NONE
-// OFFSET: 0x00507A70
+// OFFSET: 0x00507A70/0x14014EF40
 bool CLayoutFrame::AnimData_HasActiveAlpha() {
     if (this->m_animData) {
         return this->m_animData->m_hasAlpha;
@@ -1545,7 +1545,7 @@ bool CLayoutFrame::AnimData_HasActiveAlpha() {
 }
 
 // PROVEN: 5d34ab29 IDENTICAL/NONE
-// OFFSET: 0x00507A90
+// OFFSET: 0x00507A90/0x14014EF60
 void CLayoutFrame::AnimData_StorePosition(const C3Vector* position) {
     if (this->m_animData) {
         this->m_animData->StorePosition(position);
@@ -1570,7 +1570,7 @@ void CLayoutFrame::AnimData_StoreAlpha(uint8_t alpha) {
 }
 
 // PROVEN: 959e0ddf IDENTICAL/NONE
-// OFFSET: 0x00507AE0
+// OFFSET: 0x00507AE0/0x14014F000
 uint8_t CLayoutFrame::AnimData_GetAlpha() {
     if (this->m_animData) {
         return this->m_animData->m_alpha;

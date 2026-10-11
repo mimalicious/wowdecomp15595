@@ -236,7 +236,7 @@ static int CompareAreaDist(const void* a, const void* b) {
     return distA < distB;
 }
 
-// OFFSET: 0x00735A80
+// OFFSET: 0x00735A80/0x140411F80
 uint32_t CMap::GetTerrainVSPerm(int32_t displacement, int32_t lighting, uint32_t layers, uint32_t format, uint32_t material, int32_t shadow, uint32_t clip) {
     uint32_t base = layers + 4 * lighting - 1;
     return clip + 2 * ((displacement != 0) + 2 * ((static_cast<uint32_t>(shadow) > 0) + 2 * (material + 2 * (base + format + 2 * base))));

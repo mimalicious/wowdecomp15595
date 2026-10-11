@@ -305,7 +305,7 @@ void CursorResetMode() {
     }
 }
 
-// OFFSET: 0x00486250
+// OFFSET: 0x00486250/0x1400A6FC0
 void CursorReleaseItemMips() {
     MipBits* mips = s_cursorItemMips;
 

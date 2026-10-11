@@ -49,7 +49,7 @@ static uint8_t s_arc4drop1024Key[1024];
 // STATIC: 0x00BAE6F0
 static const uint8_t s_defaultSeed[32] = { 0xCC, 0x98, 0xAE, 0x04, 0xE8, 0x97, 0xEA, 0xCA, 0x12, 0xDD, 0xC0, 0x93, 0x42, 0x91, 0x53, 0x57, 0xC2, 0xB3, 0x72, 0x3C, 0xC6, 0xAE, 0xD9, 0xB5, 0x34, 0x3C, 0x53, 0xEE, 0x2F, 0x43, 0x67, 0xCE };
 
-// OFFSET: 0x0054D500
+// OFFSET: 0x0054D500/0x1401A74F0
 static void WritePacketHeader(uint8_t* header, uint32_t size, const void* data, uint32_t extraSize, const void* extraData, bool checksum) {
     uint32_t total = size + extraSize;
 
@@ -233,7 +233,7 @@ void WowConnection::Disconnect() {
     this->m_lock.Leave();
 }
 
-// OFFSET: 0x0054D830
+// OFFSET: 0x0054D830/0x1401A78D0
 void WowConnection::SetEncryptionKey(const uint8_t* key, uint8_t keyLength, uint8_t direction, const uint8_t* seed, uint8_t seedLength) {
     if (!seed) {
         seed = s_defaultSeed;
@@ -288,7 +288,7 @@ void WowConnection::SENDNODE::InitPacket(uint8_t* data, uint32_t size, const voi
     memcpy(this->m_header, this->m_data, headerCopy);
 }
 
-// OFFSET: 0x0054DAA0
+// OFFSET: 0x0054DAA0/0x1401A7BC0
 void WowConnection::SENDNODE::SetPacket(const void* data, uint32_t size, bool checksum) {
     this->m_datasize = size;
     WritePacketHeader(this->m_data, size, data, 0, NULL, checksum);
@@ -303,7 +303,7 @@ void WowConnection::SENDNODE::SetPacket(const void* data, uint32_t size, bool ch
     memcpy(this->m_header, this->m_data, headerCopy);
 }
 
-// OFFSET: 0x0054DB20
+// OFFSET: 0x0054DB20/0x1401A7C70
 void WowConnection::SetSendTime(WowConnection::SENDNODE* node) {
     int32_t delay = WowConnection::s_lagTestDelayMin;
 
@@ -350,7 +350,7 @@ WowConnection::SENDNODE::SENDNODE() {
     this->m_offset = 0;
 }
 
-// OFFSET: 0x0054E3E0
+// OFFSET: 0x0054E3E0/0x1401A8750
 WowConnection::SENDNODE* WowConnection::NewSendNodeRaw(const void* data, uint32_t size) {
     s_sendNodeCount++;
     s_sendNodeBytes += size;
@@ -367,7 +367,7 @@ WowConnection::SENDNODE* WowConnection::NewSendNodeRaw(const void* data, uint32_
     return node;
 }
 
-// OFFSET: 0x0054E470
+// OFFSET: 0x0054E470/0x1401A8800
 WowConnection::SENDNODE* WowConnection::AllocSendNodePacket(uint32_t size, uint32_t extraSize, bool checksum) {
     s_sendNodeCount++;
     s_sendNodeBytes += size;
@@ -408,7 +408,7 @@ void WowConnection::IDBITS::SetCount(uint32_t count) {
     this->m_bits.SetCount(count ? ((count - 1) >> 5) + 1 : 0);
 }
 
-// OFFSET: 0x0054F120
+// OFFSET: 0x0054F120/0x1401A98A0
 WowConnection::SENDNODE* WowConnection::NewSendNodePacket(const void* data, uint32_t size, bool checksum) {
     s_sendNodeCount++;
     s_sendNodeBytes += size;

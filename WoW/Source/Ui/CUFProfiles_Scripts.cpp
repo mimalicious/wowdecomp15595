@@ -203,7 +203,7 @@ static int32_t Script_SetRaidProfileSavedPosition(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x009C95C0
+// OFFSET: 0x009C95C0/0x140660F20
 static int32_t Script_RaidProfileHasUnsavedChanges(lua_State* L) {
     lua_pushboolean(L, CGCUFProfiles::HasUnsavedChanges());
     return 1;
@@ -312,14 +312,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "HasLoadedCUFProfiles", &Script_HasLoadedCUFProfiles },
 };
 
-// OFFSET: 0x009C8260
+// OFFSET: 0x009C8260/0x140756AB0
 void CompactUnitFrameProfilesRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009C8290
+// OFFSET: 0x009C8290/0x140756B00
 void CompactUnitFrameProfilesUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

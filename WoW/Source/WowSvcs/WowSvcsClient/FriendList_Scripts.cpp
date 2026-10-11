@@ -690,7 +690,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 0753ba7f IDENTICAL/NONE
-// OFFSET: 0x004D25A0
+// OFFSET: 0x004D25A0/0x14010F820
 void FriendList::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -698,7 +698,7 @@ void FriendList::RegisterScriptFunctions() {
 }
 
 // PROVEN: 6fc81244 IDENTICAL/NONE
-// OFFSET: 0x004D25D0
+// OFFSET: 0x004D25D0/0x14010F870
 void FriendList::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

@@ -93,7 +93,7 @@ static uint32_t SwapColor(uint32_t color) {
     return color;
 }
 
-// OFFSET: 0x00740670
+// OFFSET: 0x00740670/0x14041E920
 C3Vector World::TriData::Batch::GetNormal(uint16_t index) const {
     if (this->m_normalList) {
         return this->m_normalList[index];
@@ -549,7 +549,7 @@ bool BspQuery_Segment::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBs
     return true;
 }
 
-// OFFSET: 0x0078D5B0
+// OFFSET: 0x0078D5B0/0x14047E2D0
 void BspQuery_SegmentLink::operator()(uint16_t face) {
     uint32_t faceFlags = this->m_faces[face].m_flags;
 
@@ -757,7 +757,7 @@ bool BspQuery_SegmentLink::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const C
     return true;
 }
 
-// OFFSET: 0x0078E030
+// OFFSET: 0x0078E030/0x14047EEA0
 static bool QueryCull(const CFrustum& frustum, const C3Vector& v0, const C3Vector& v1, const C3Vector& v2) {
     uint8_t outside0;
     uint8_t outside1;
@@ -2116,7 +2116,7 @@ bool CMapObjGroup::GetTris(const C3Segment& seg, float* dist, uint32_t flags, ui
     return World::TriData::s_nBatches != batchCount;
 }
 
-// OFFSET: 0x00792750
+// OFFSET: 0x00792750/0x140484030
 bool CMapObjGroup::GetTris(const CFrustum& frustum, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef) {
     uint32_t batchCount = World::TriData::s_nBatches;
 
@@ -2145,7 +2145,7 @@ bool CMapObjGroup::GetTris(const CFrustum& frustum, uint32_t flags, uint32_t ign
     return World::TriData::s_nBatches != batchCount;
 }
 
-// OFFSET: 0x00792840
+// OFFSET: 0x00792840/0x1404841B0
 bool CMapObjGroup::GetFacesForLinking(const C3Segment& seg, float& frontT, uint32_t& frontFace, float& backT, uint32_t& backFace) {
     if (!this->m_bsp.m_nNodes) {
         return false;

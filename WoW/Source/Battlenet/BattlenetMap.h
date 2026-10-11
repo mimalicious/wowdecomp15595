@@ -239,7 +239,7 @@ bool Battlenet::Map<V>::Shrink() {
     return true;
 }
 
-// OFFSET: 0x00661180
+// OFFSET: 0x00661180/0x140306850
 template <class V>
 V& Battlenet::Map<V>::operator[](const MapKey& key) {
     uint32_t capacity = this->m_capacity;

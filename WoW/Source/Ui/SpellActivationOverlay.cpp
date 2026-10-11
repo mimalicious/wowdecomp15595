@@ -62,7 +62,7 @@ void CGSpellActivationOverlay::ShowSpellOverlay(const SpellActivationOverlayRec*
     FrameScript_SignalEvent(SCRIPT_EVENT_SPELL_ACTIVATION_OVERLAY_SHOW, "%d%s%s%f%d%d%d", overlay->m_spellID, texture, static_cast<const char*>(location->m_name), overlay->m_scale, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 }
 
-// OFFSET: 0x009F22B0
+// OFFSET: 0x009F22B0/0x14078C940
 void CGSpellActivationOverlay::DelOverlayGlowableSpell(int32_t spellId) {
     for (uint32_t i = 0; i < CGSpellActivationOverlay::s_glowableSpells.m_count; i++) {
         if (CGSpellActivationOverlay::s_glowableSpells.m_data[i] == spellId) {
@@ -87,7 +87,7 @@ void CGSpellActivationOverlay::EnableActiveMoverGlow(int32_t classSet, const int
     }
 }
 
-// OFFSET: 0x009F2360
+// OFFSET: 0x009F2360/0x14078C990
 void CGSpellActivationOverlay::AddOverlayOnAvailableSpell(int32_t spellId) {
     WatchedSpellInfo* info = CGSpellActivationOverlay::s_availableSpells.New();
     info->m_spellId = spellId;
@@ -112,7 +112,7 @@ bool CGSpellActivationOverlay::IsSpellOverlayed(int32_t spellId) {
     return false;
 }
 
-// OFFSET: 0x009F2420
+// OFFSET: 0x009F2420/0x14078CAC0
 uint32_t CGSpellActivationOverlay::AddOverlayGlowableSpell(int32_t spellId) {
     for (uint32_t i = 0; i < CGSpellActivationOverlay::s_glowableSpells.m_count; i++) {
         if (CGSpellActivationOverlay::s_glowableSpells.m_data[i] == spellId) {
@@ -123,7 +123,7 @@ uint32_t CGSpellActivationOverlay::AddOverlayGlowableSpell(int32_t spellId) {
     return CGSpellActivationOverlay::s_glowableSpells.Add(1, &spellId);
 }
 
-// OFFSET: 0x009F2790
+// OFFSET: 0x009F2790/0x14078CFC0
 void CGSpellActivationOverlay::ClearActiveMoverSpells() {
     for (uint32_t i = 0; i < 10; i++) {
         ActiveMoverSpell& spell = CGSpellActivationOverlay::s_activeMoverSpells[i];
@@ -451,7 +451,7 @@ void CGSpellActivationOverlay::ApplyChangeCheckSpells(int32_t classSet, const in
     }
 }
 
-// OFFSET: 0x009F4230
+// OFFSET: 0x009F4230/0x14078FA90
 void CGSpellActivationOverlay::AddActiveMoverSpells() {
     for (uint32_t i = 0; i < 10; i++) {
         ActiveMoverSpell& moverSpell = CGSpellActivationOverlay::s_activeMoverSpells[i];
@@ -493,7 +493,7 @@ void CGSpellActivationOverlay::OnAuraRemoved(const SpellRec* spell) {
     }
 }
 
-// OFFSET: 0x009F4350
+// OFFSET: 0x009F4350/0x14078FBF0
 void CGSpellActivationOverlay::DelOverlayOnAvailableSpell(int32_t spellId) {
     int32_t index;
 

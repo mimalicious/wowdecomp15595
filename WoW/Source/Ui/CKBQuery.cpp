@@ -62,7 +62,7 @@ void CKBQuery::_ComputeCachedData() {
     }
 }
 
-// OFFSET: 0x009FB920
+// OFFSET: 0x009FB920/0x140798FA0
 void CKBQuery::_AppendMangledSearchQuery(CDynamicString& url, const char* query) {
     for (uint8_t c = *query; c; c = *++query) {
         if (IsAlphaEnglish(c) || IsNumeric(c)) {

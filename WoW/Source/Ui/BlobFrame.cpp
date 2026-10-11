@@ -54,7 +54,7 @@ CSimpleFrame* CGBlobFrame::Create(CSimpleFrame* parent) {
     return data ? new (data) CGBlobFrame(parent) : NULL;
 }
 
-// OFFSET: 0x009FFCB0
+// OFFSET: 0x009FFCB0/0x14079E2D0
 void CGBlobFrame::RenderCallback(void* param) {
     if (param) {
         static_cast<CGBlobFrame*>(param)->Render();
@@ -386,7 +386,7 @@ void CGBlobFrame::SetBorderTexture(const char* fileName) {
     this->m_borderTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0, NULL, 2);
 }
 
-// OFFSET: [0x00A01840, 0x00A01D40]
+// OFFSET: [0x00A01840/0x1407A0370, 0x00A01D40/0x1407A0970]
 CGBlobFrame::~CGBlobFrame() {
     if (this->m_fillTexture) {
         TextureRelease(this->m_fillTexture);
@@ -404,12 +404,12 @@ const char* CGBlobFrame::GetObjectTypeName() {
     return CGBlobFrame::s_objectTypeName;
 }
 
-// OFFSET: 0x00A01910
+// OFFSET: 0x00A01910/0x1407A0470
 int32_t CGBlobFrame::GetScriptMetaTable() {
     return CGBlobFrame::s_metatable;
 }
 
-// OFFSET: 0x00A01930
+// OFFSET: 0x00A01930/0x1407A0490
 bool CGBlobFrame::IsA(int32_t type) {
     return type == CGBlobFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
@@ -419,7 +419,7 @@ bool CGBlobFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGBlobFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: 0x00A019B0
+// OFFSET: 0x00A019B0/0x1407A0530
 void CGBlobFrame::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 
@@ -468,7 +468,7 @@ void CGBlobFrame::RemoveBlob(int32_t id) {
     group->m_renderData.Clear();
 }
 
-// OFFSET: 0x00A01C30
+// OFFSET: 0x00A01C30/0x1407A0850
 CGBlobFrame::CGBlobFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->SetProtected();
     this->DisableEvent(SIMPLE_EVENT_MOUSE);

@@ -1384,7 +1384,7 @@ int32_t ClientDBGetNumWeaponSubClasses() {
 }
 
 // PROVEN: 056beead IDENTICAL/NONE
-// OFFSET: 0x00495350
+// OFFSET: 0x00495350/0x1400BAD60
 int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
 
@@ -1491,7 +1491,7 @@ static void ClientDBLoadTables() {
 }
 
 // PROVEN: 3474e97d IDENTICAL/NONE
-// OFFSET: 0x00494D60
+// OFFSET: 0x00494D60/0x1400BA540
 void ClientDBInitializeGlue() {
     for (ClientDBTable* table = s_clientDBGlueTables; table->m_db; table++) {
         table->m_db->Load(table->m_meta);
@@ -1675,7 +1675,7 @@ void ClientDBShutdown() {
     ClientHotfixNotifyBlob::s_handler = NULL;
 }
 
-// OFFSET: 0x00496790
+// OFFSET: 0x00496790/0x1400BC980
 void ClientDBInitializeInGame() {
     for (WowClientDB2_Base** table = g_clientDB2GameTables; *table; table++) {
         (*table)->Load(s_hotfixTime);
@@ -1790,7 +1790,7 @@ int32_t LocaleIdToIndex(uint32_t locale) {
 }
 
 // PROVEN: 7375dc07 IDENTICAL/NONE
-// OFFSET: 0x0048A6C0
+// OFFSET: 0x0048A6C0/0x1400ACDF0
 int32_t LocaleIndexToDB2Locale(int32_t index) {
     switch (index) {
         case 0:
@@ -1990,7 +1990,7 @@ MapDifficultyRec* GetMapDifficultyRec(int32_t mapId, uint32_t difficulty, int32_
 }
 
 // PROVEN: 97860801 IDENTICAL/NONE
-// OFFSET: 0x00495380
+// OFFSET: 0x00495380/0x1400BADE0
 int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyRec(map->m_id, difficulty, NULL);
 

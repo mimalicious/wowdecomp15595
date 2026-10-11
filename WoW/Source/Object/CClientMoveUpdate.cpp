@@ -10,7 +10,7 @@ CClientMoveSplineData::CClientMoveSplineData() {
     this->m_hasEffectStartTime = false;
 }
 
-// OFFSET: 0x00696D60
+// OFFSET: 0x00696D60/0x1403423C0
 bool CClientMoveSplineData::IsValid() const {
     return (!this->m_hasVerticalAcceleration || _finite(this->m_verticalAcceleration))
         && _finite(this->m_durationModNext)
@@ -33,7 +33,7 @@ bool CClientMoveSpline::IsValid() const {
         && (!this->m_hasData || this->m_data.IsValid());
 }
 
-// OFFSET: 0x00699DF0
+// OFFSET: 0x00699DF0/0x140346380
 CClientMoveUpdate::CClientMoveUpdate() {
     this->m_hasSpline = false;
 }

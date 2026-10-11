@@ -86,7 +86,7 @@ void EmblemTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height,
 }
 
 // PROVEN: d2491ccd IDENTICAL/NONE
-// OFFSET: 0x00A06240
+// OFFSET: 0x00A06240/0x1407A5DF0
 void CGTabardModelFrame::ApplyGuildColorFromPlayer() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -104,7 +104,7 @@ void CGTabardModelFrame::Save() {
     }
 }
 
-// OFFSET: 0x00A062F0
+// OFFSET: 0x00A062F0/0x1407A5ED0
 void CGTabardModelFrame::CycleVariation(uint32_t variation, int32_t delta) {
     int32_t count = s_tabardVariationCounts[variation];
 

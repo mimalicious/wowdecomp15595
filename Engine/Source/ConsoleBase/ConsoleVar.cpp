@@ -186,7 +186,7 @@ static int32_t CvarDefaultCommandHandler(const char* command, const char* argume
     return 1;
 }
 
-// OFFSET: 0x00656DD0
+// OFFSET: 0x00656DD0/0x1402F8760
 static int32_t SetCommandHandler(const char* command, const char* arguments) {
     char name[64];
     char value[2048];
@@ -707,7 +707,7 @@ int32_t CVar::IterateForArchive(uint32_t category, uint32_t excludeFlags, int32_
 }
 
 // PROVEN: 7265b043 IDENTICAL/NONE
-// OFFSET: 0x00655D00
+// OFFSET: 0x00655D00/0x1402F7110
 int32_t CVar::SaveAll(HOSFILE file, uint32_t category, uint32_t excludeFlags) {
     return CVar::IterateForArchive(category, excludeFlags, CVar::SaveCvar, file);
 }
@@ -788,7 +788,7 @@ void CVar::DeleteCharacterCVars() {
     }
 }
 
-// OFFSET: 0x006563A0
+// OFFSET: 0x006563A0/0x1402F78E0
 void CVar::DeleteAccountCVars() {
     CVar* var = s_registeredCVars.m_fulllist.Head();
 
@@ -899,7 +899,7 @@ void CVar::Initialize() {
 }
 
 // PROVEN: 459a1ab2 IDENTICAL/NONE
-// OFFSET: 0x0060DA50
+// OFFSET: 0x0060DA50/0x140297690
 int32_t ConsoleInitializeClientCVar(const char* fileName) {
     CVar::Initialize();
     s_configFile = SStrDupA(fileName, __FILE__, __LINE__);

@@ -238,7 +238,7 @@ int32_t GuildMemberInfo::GetProfessionRank(int32_t skillLineID) {
 }
 
 // PROVEN: a0df2800 IDENTICAL/NONE
-// OFFSET: 0x00931130
+// OFFSET: 0x00931130/0x140699170
 void CGGuildInfo::GetGuildMemberRecipes(SkillLine& skillLine, uint8_t* data) {
     skillLine = CGGuildInfo::m_guildMemberSkillLine;
 
@@ -331,7 +331,7 @@ static int32_t QSortAchievementPoints(const void* a, const void* b) {
 }
 
 // PROVEN: 1460262f IDENTICAL/NONE
-// OFFSET: 0x00931300
+// OFFSET: 0x00931300/0x140699340
 void CGGuildInfo::QueryPermissions() {
     GlobalGuildPermissionsQuery query;
     ClientServices::Send(&query);
@@ -485,7 +485,7 @@ void CGGuildInfo::SetWithdrawGoldLimitForSelectedRank(uint32_t amount) {
 }
 
 // PROVEN: 501e4870 IDENTICAL/NONE
-// OFFSET: 0x009315F0
+// OFFSET: 0x009315F0/0x1406995E0
 void CGGuildInfo::SetTabWithdrawItemLimitForSelectedRank(uint32_t tab, int32_t amount) {
     int32_t rankOrder = CGGuildInfo::m_selectedRankOrder;
 
@@ -784,7 +784,7 @@ void CGGuildInfo::EventLogNameCacheCallback(int32_t id, const WOWGUID& guid, voi
     }
 }
 
-// OFFSET: 0x00932710
+// OFFSET: 0x00932710/0x14069AD10
 int32_t CGGuildInfo::QSortRoster(const void* a, const void* b) {
     GuildMemberInfo* memberA = *static_cast<GuildMemberInfo* const*>(a);
     GuildMemberInfo* memberB = *static_cast<GuildMemberInfo* const*>(b);
@@ -1131,7 +1131,7 @@ void CGGuildInfo::SetMOTD(const char* motd) {
     SStrCopy(CGGuildInfo::m_motd, motd, sizeof(CGGuildInfo::m_motd));
 }
 
-// OFFSET: 0x00932F60
+// OFFSET: 0x00932F60/0x14069B6D0
 static int32_t QSortTradeSkillMembers(const void* a, const void* b) {
     if (!a || !b) {
         return 0;
@@ -1525,7 +1525,7 @@ bool CGGuildInfo::GetMemberGUIDFromName(const char* name, uint64_t& guid) {
 }
 
 // PROVEN: 4ce72d57 IDENTICAL/NONE
-// OFFSET: 0x00933A90
+// OFFSET: 0x00933A90/0x14069C170
 void CGGuildInfo::SetMemberMobile(uint64_t guid, bool mobile) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numMembers; i++) {
         if (CGGuildInfo::m_members[i] && CGGuildInfo::m_members[i]->m_guid == guid) {
@@ -1871,7 +1871,7 @@ bool CGGuildInfo::CanReplaceGuildMaster() {
     return guildMasterAbsent > CGGuildInfo::m_guildMasterAbsentDays && (rankOrder == 1 || rankOrder == lowestActiveRank);
 }
 
-// OFFSET: 0x00937870
+// OFFSET: 0x00937870/0x1406A0EB0
 void CGGuildInfo::InsertMemberInfoProfessionsList(uint32_t index, int32_t showOffline) {
     if (index >= CGGuildInfo::m_numMembers) {
         return;
@@ -2026,7 +2026,7 @@ bool CGGuildInfo::ClientGuildResetHandler(ClientGuildReset* msg) {
 }
 
 // PROVEN: 90696506 IDENTICAL/NONE
-// OFFSET: 0x00937C30
+// OFFSET: 0x00937C30/0x1406A11B0
 void CGGuildInfo::NameChangedGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGGuildInfo::m_nextAllowedQuery = 0;
@@ -2186,7 +2186,7 @@ int32_t CGGuildInfo::GetRecipeBitFromSpell(int32_t skillLineID, int32_t spellID)
 }
 
 // PROVEN: 13fa98e3 IDENTICAL/NONE
-// OFFSET: 0x00938620
+// OFFSET: 0x00938620/0x1406A2030
 void CGGuildInfo::ClearProfessionMembers() {
     for (GuildProfessionHeader* header = CGGuildInfo::m_professionList.Head(); !CGGuildInfo::m_professionList.IsEnd(header); ) {
         GuildProfessionHeader* next = CGGuildInfo::m_professionList.RawNext(header);
@@ -2199,7 +2199,7 @@ void CGGuildInfo::ClearProfessionMembers() {
 }
 
 // PROVEN: 2b0ef0e1 IDENTICAL/NONE
-// OFFSET: 0x00938680
+// OFFSET: 0x00938680/0x1406A20B0
 void CGGuildInfo::UpdateProfessions() {
     CGGuildInfo::ClearProfessionMembers();
 
@@ -2284,7 +2284,7 @@ void CGGuildInfo::EnterWorld() {
 }
 
 // PROVEN: 795e8803 IDENTICAL/NONE
-// OFFSET: 0x009390C0
+// OFFSET: 0x009390C0/0x1406A2EC0
 void CGGuildInfo::SetProfessionHeaderCollapsed(int32_t skillLineID, bool collapsed) {
     bool found = false;
 
@@ -2304,7 +2304,7 @@ void CGGuildInfo::SetProfessionHeaderCollapsed(int32_t skillLineID, bool collaps
     }
 }
 
-// OFFSET: 0x00939110
+// OFFSET: 0x00939110/0x1406A2F60
 void CGGuildInfo::SetProfessionCategoryFilter(int32_t skillLineID) {
     if (skillLineID == -1) {
         CGGuildInfo::m_professionCategoryFilter = -1;
@@ -2326,7 +2326,7 @@ void CGGuildInfo::SetProfessionCategoryFilter(int32_t skillLineID) {
 }
 
 // PROVEN: 6836855e IDENTICAL/NONE
-// OFFSET: 0x00939160
+// OFFSET: 0x00939160/0x1406A3030
 void CGGuildInfo::SetProfessionNameFilter(const char* filter) {
     if (filter) {
         SStrCopy(CGGuildInfo::m_professionNameFilter, filter, sizeof(CGGuildInfo::m_professionNameFilter));
@@ -2378,7 +2378,7 @@ void CGGuildInfo::InitializeProfessionsHeaderList() {
 }
 
 // PROVEN: 878c5035 IDENTICAL/NONE
-// OFFSET: 0x00939430
+// OFFSET: 0x00939430/0x1406A3450
 void CGGuildInfo::SetShowOffline(int32_t show) {
     if (show == CGGuildInfo::m_showOffline) {
         return;

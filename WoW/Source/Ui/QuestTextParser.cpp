@@ -219,7 +219,7 @@ void ParseCountDownTimerText(char* buffer, uint32_t size, int32_t time) {
     SStrPack(buffer, text, size);
 }
 
-// OFFSET: 0x00992610
+// OFFSET: 0x00992610/0x140711E10
 void GenderConditional(char* buffer, uint32_t size, int32_t gender, const CGUnit_C* unit, const NameCache* name, const char** cursor) {
     while (**cursor == ' ') {
         (*cursor)++;
@@ -331,7 +331,7 @@ static bool SpellParserParseNumber(const char** cursor, int32_t* value) {
     return true;
 }
 
-// OFFSET: 0x00992870
+// OFFSET: 0x00992870/0x1407120D0
 static bool SpellParserPluralConditional(char* buffer, uint32_t size, int32_t number, const char** cursor) {
     while (**cursor == ' ') {
         (*cursor)++;
@@ -678,7 +678,7 @@ static bool SpellParserParseConditional(const char** cursor, const char* end, co
     return condition;
 }
 
-// OFFSET: 0x00992EB0
+// OFFSET: 0x00992EB0/0x140712870
 static int32_t SpellParserVerifyConditional(const char* text, const char** trueStart, const char** trueEnd, const char** elseText, const char** falseStart, const char** falseEnd) {
     *trueStart = SStrChr(text, '[');
 
@@ -1164,7 +1164,7 @@ void MathState::ExecuteOperator(uint32_t op, MathStack* stack) {
     stack->m_values[stack->m_top] = result;
 }
 
-// OFFSET: 0x00993E60
+// OFFSET: 0x00993E60/0x140713590
 static int32_t SpellParserVariable(char* buffer, uint32_t size, const char** cursor, const char* end, int32_t* lastNumber) {
     char name[16];
     int32_t length = end - *cursor;
@@ -2858,7 +2858,7 @@ static int32_t JournalParserReplaceText(char* buffer, uint32_t size, const char*
     return 1;
 }
 
-// OFFSET: 0x00997A10
+// OFFSET: 0x00997A10/0x1407189D0
 int32_t JournalParserParseText(const char* text, char* buffer, uint32_t size, int32_t difficulty) {
     if (!text) {
         return 0;
@@ -2893,7 +2893,7 @@ int32_t JournalParserParseText(const char* text, char* buffer, uint32_t size, in
     return failed == 0;
 }
 
-// OFFSET: 0x00997BA0
+// OFFSET: 0x00997BA0/0x140718BC0
 static int32_t SpellParserConditional(const SpellRec* spell, char* buffer, uint32_t size, int32_t parsePet, int32_t parseUnit, int32_t spellLevel, int32_t scale, int32_t noModifiers, const char** cursor, bool variables, const AuraData* aura) {
     char text[1024];
     int32_t failed = 0;
@@ -3573,7 +3573,7 @@ int32_t SpellParserParseText(const SpellRec* spell, char* buffer, uint32_t size,
     return result;
 }
 
-// OFFSET: 0x009994B0
+// OFFSET: 0x009994B0/0x14071AF60
 int32_t SpellParserParseTextAsSpell(const SpellRec* spell, char* buffer, uint32_t size, const char* text, int32_t parsePet, int32_t parseUnit, int32_t spellLevel, int32_t scale, int32_t noModifiers, const AuraData* aura) {
     *buffer = '\0';
 

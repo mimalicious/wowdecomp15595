@@ -285,14 +285,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetCurrencyListLink", &Script_GetCurrencyListLink },
 };
 
-// OFFSET: 0x0099F800
+// OFFSET: 0x0099F800/0x1407237E0
 void CurrencyTypesRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0099F830
+// OFFSET: 0x0099F830/0x140723830
 void CurrencyTypesUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

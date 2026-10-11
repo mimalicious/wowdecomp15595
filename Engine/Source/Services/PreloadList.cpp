@@ -34,7 +34,7 @@ static void IngameProgressCallback(float progress, int32_t a2) {
     LoadingScreenUpdateProgress(s_progressScale * progress + s_progressBase, 0);
 }
 
-// OFFSET: 0x005468A0
+// OFFSET: 0x005468A0/0x14019E0D0
 static void ArchiveProgressCallback(float progress, int32_t a2) {
     if (s_allFilesLocal) {
         return;
@@ -67,7 +67,7 @@ void PreloadList::GetListName(char* name, int32_t raceID, int32_t classID) {
     SStrPack(name, ".lst", 260);
 }
 
-// OFFSET: 0x00546A20
+// OFFSET: 0x00546A20/0x14019E2B0
 int32_t PreloadList::ListNameChanged(int32_t raceID, int32_t classID) {
     char name[260];
     PreloadList::GetListName(name, raceID, classID);
@@ -85,7 +85,7 @@ int32_t PreloadList::IsComplete() {
     return 1;
 }
 
-// OFFSET: 0x00546B00
+// OFFSET: 0x00546B00/0x14019E330
 void PreloadList::PreloadFile(const char* name) {
     CAsyncObject* object = NULL;
 
@@ -94,7 +94,7 @@ void PreloadList::PreloadFile(const char* name) {
     }
 }
 
-// OFFSET: 0x00546B60
+// OFFSET: 0x00546B60/0x14019E3B0
 void PreloadList::ParseAndLoad(const char* name) {
     char* data;
     uint32_t size;
@@ -183,7 +183,7 @@ PreloadList::~PreloadList() {
     this->Cancel();
 }
 
-// OFFSET: 0x00546CF0
+// OFFSET: 0x00546CF0/0x14019E600
 PreloadList* PreloadList::StartDownload(int32_t raceID, int32_t classID, int32_t waitAll) {
     PreloadList* list = new (SMemAlloc(sizeof(PreloadList), __FILE__, __LINE__, 0)) PreloadList(raceID, classID, waitAll);
     s_lists.push_back(list);

@@ -2233,14 +2233,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "OpenCalendar", &Script_OpenCalendar },
 };
 
-// OFFSET: 0x009AB900
+// OFFSET: 0x009AB900/0x140732B70
 void CalendarRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009AB930
+// OFFSET: 0x009AB930/0x140732BC0
 void CalendarUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

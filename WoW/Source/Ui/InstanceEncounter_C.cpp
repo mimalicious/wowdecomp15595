@@ -55,7 +55,7 @@ static ENCOUNTER_UNIT* FindUnit(const WOWGUID& guid) {
     return NULL;
 }
 
-// OFFSET: 0x0094F520
+// OFFSET: 0x0094F520/0x1406BF6F0
 WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     if (static_cast<int32_t>(index) < 0 || static_cast<int32_t>(index) >= static_cast<int32_t>(CGInstanceEncounter_C::m_numUnits)) {
         return WOWGUID::Make(0);
@@ -64,7 +64,7 @@ WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     return CGInstanceEncounter_C::m_units[index].m_guid;
 }
 
-// OFFSET: 0x0094F550
+// OFFSET: 0x0094F550/0x1406BF710
 uint32_t CGInstanceEncounter_C::GetNumBossSlots() {
     return CGInstanceEncounter_C::m_numUnits;
 }
@@ -143,7 +143,7 @@ static void OnStateMessage(int32_t type) {
     }
 }
 
-// OFFSET: 0x0094F790
+// OFFSET: 0x0094F790/0x1406BF9C0
 void CGInstanceEncounter_C::EngageUnit(const WOWGUID& guid, uint8_t priority) {
     if (FindUnit(guid) || CGInstanceEncounter_C::m_numUnits == 16) {
         return;
@@ -160,7 +160,7 @@ void CGInstanceEncounter_C::EngageUnit(const WOWGUID& guid, uint8_t priority) {
     FrameScript_SignalEvent(SCRIPT_EVENT_INSTANCE_ENCOUNTER_ENGAGE_UNIT, NULL);
 }
 
-// OFFSET: 0x0094F800
+// OFFSET: 0x0094F800/0x1406BFA50
 void CGInstanceEncounter_C::DisengageUnit(const WOWGUID& guid) {
     if (!FindUnit(guid)) {
         return;

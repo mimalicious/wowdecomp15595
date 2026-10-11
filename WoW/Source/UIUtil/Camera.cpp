@@ -118,14 +118,14 @@ static float WrapAngle0To2Pi(float angle) {
     return angle;
 }
 
-// OFFSET: 0x0043D0A0
+// OFFSET: 0x0043D0A0/0x140048100
 float CGCamera::FOV() const {
     float fov = this->m_targetFov + this->m_fov;
     return 0.0f > fov ? 0.0f : (3.1241393f <= fov ? 3.1241393f : fov);
 }
 
 // PROVEN: b4cc1112 IDENTICAL/NONE
-// OFFSET: 0x0043D3A0
+// OFFSET: 0x0043D3A0/0x140048430
 void CGCamera::UpdateFromModelCamera() {
     C3Vector position;
     C3Vector target;
@@ -136,7 +136,7 @@ void CGCamera::UpdateFromModelCamera() {
     this->SetPositionAndTargetWithRoll(position, target, roll);
 }
 
-// OFFSET: 0x0043E790
+// OFFSET: 0x0043E790/0x140049B20
 C3Vector CGCamera::Forward() const {
     C3Vector forward(this->m_facing.a0, this->m_facing.a1, this->m_facing.a2);
 
@@ -147,7 +147,7 @@ C3Vector CGCamera::Forward() const {
     return forward * this->ParentToWorld();
 }
 
-// OFFSET: 0x0043E880
+// OFFSET: 0x0043E880/0x140049C10
 C3Vector CGCamera::Right() const {
     C3Vector right(this->m_facing.b0, this->m_facing.b1, this->m_facing.b2);
 
@@ -158,7 +158,7 @@ C3Vector CGCamera::Right() const {
     return right * this->ParentToWorld();
 }
 
-// OFFSET: 0x0043E970
+// OFFSET: 0x0043E970/0x140049D00
 C3Vector CGCamera::Up() const {
     C3Vector up(this->m_facing.c0, this->m_facing.c1, this->m_facing.c2);
 
@@ -367,7 +367,7 @@ CGCamera::~CGCamera() {
 }
 
 // PROVEN: 53db0d52 IDENTICAL/NONE
-// OFFSET: 0x00441970
+// OFFSET: 0x00441970/0x14004CDF0
 void CGCamera::BarberShopSetView(float distance, float facing, float pitch) {
     this->m_views[7][0] = distance;
     this->m_views[7][2] = facing;
@@ -824,7 +824,7 @@ void CGCamera::MakeRelativeTo(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x0043E6B0
+// OFFSET: 0x0043E6B0/0x140049A40
 C33Matrix CGCamera::ParentToWorld() const {
     CGObject_C* parent = ClntObjMgrObjectPtr(this->m_relativeTo, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -1294,7 +1294,7 @@ int32_t CGCamera::StartSmoothHeight(float height, float rate, uint32_t startTime
     return 1;
 }
 
-// OFFSET: 0x00442C10
+// OFFSET: 0x00442C10/0x14004E120
 void CGCamera::SyncFreeLookFacing() {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
     float yaw = this->m_yaw;
@@ -1443,7 +1443,7 @@ void CGCamera::UpdateYaw(float delta) {
 }
 
 // PROVEN: 8a746399 IDENTICAL/NONE
-// OFFSET: 0x0043AA00
+// OFFSET: 0x0043AA00/0x140045910
 int32_t CGCamera::CCommand_PitchLimit(const char* command, const char* arguments) {
     MAX_PITCH_ANGLE = SStrToFloat(arguments) * 0.017453292f;
     MIN_PITCH_ANGLE = SStrToFloat(arguments) * -0.017453292f;
@@ -1471,7 +1471,7 @@ void CGCamera::BeginBobbingSmooth() {
 }
 
 // PROVEN: b5fe670d IDENTICAL/NONE
-// OFFSET: 0x0043DF70
+// OFFSET: 0x0043DF70/0x140049140
 void CGCamera::CameraTeleported(float oldFacing) {
     if (!(this->m_state & 0x1)) {
         return;
@@ -1550,7 +1550,7 @@ void CGCamera::CheckUnderwater() {
     }
 }
 
-// OFFSET: 0x0043D0E0
+// OFFSET: 0x0043D0E0/0x140048130
 void CGCamera::ClampPitchAndNormalize() {
     this->m_pitch = MIN_PITCH_ANGLE > this->m_pitch ? MIN_PITCH_ANGLE : (MAX_PITCH_ANGLE <= this->m_pitch ? MAX_PITCH_ANGLE : this->m_pitch);
     this->m_yaw = CMath::normalizeangle0to2pi_(this->m_yaw);
@@ -1588,7 +1588,7 @@ void CGCamera::CreateViewFromCamera(uint32_t view) {
 }
 
 // PROVEN: 31290e6c IDENTICAL/NONE
-// OFFSET: 0x00442B10
+// OFFSET: 0x00442B10/0x14004DFE0
 void CGCamera::DisableFreeLook(int32_t keepSmoothing) {
     this->SetModeNormal();
 
@@ -1603,7 +1603,7 @@ void CGCamera::DisableFreeLook(int32_t keepSmoothing) {
     this->m_smoothTargetOffset.m_target = this->m_targetOffset;
 }
 
-// OFFSET: 0x00442AB0
+// OFFSET: 0x00442AB0/0x14004DF60
 void CGCamera::EnableFreeLook() {
     CGObject_C* target = ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -1645,7 +1645,7 @@ C3Vector CGCamera::GetCameraPosition(const C3Vector& target, float distance, con
 }
 
 // PROVEN: 249cfbe9 IDENTICAL/NONE
-// OFFSET: 0x0043A950
+// OFFSET: 0x0043A950/0x140045820
 int32_t CGCamera::HasModelCamera() {
     return this->m_modelCamera != NULL;
 }
@@ -1703,7 +1703,7 @@ int32_t CGCamera::IsFirstPersonView() {
 }
 
 // PROVEN: a8740b07 IDENTICAL/NONE
-// OFFSET: 0x0043AC20
+// OFFSET: 0x0043AC20/0x140045A50
 int32_t CGCamera::IsViewDefault(uint32_t view) {
     for (uint32_t i = 0; i < 3; i++) {
         float value = SStrToFloat(s_cameraViewDefaults[view].m_values[i]);
@@ -1757,7 +1757,7 @@ void CGCamera::RotateOffsetByRoll(C3Vector& offset) {
 }
 
 // PROVEN: dd7e6375 IDENTICAL/NONE
-// OFFSET: 0x0043CE30
+// OFFSET: 0x0043CE30/0x140047FB0
 void CGCamera::SaveCameraSettings() {
     char buffer[32];
     float distance;
@@ -1822,7 +1822,7 @@ int32_t CGCamera::SetDesiredPitchAngle(float pitch, float delay, float scale, ui
     return this->StartSmoothPitch(pitch, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// OFFSET: 0x0043F010
+// OFFSET: 0x0043F010/0x14004A300
 int32_t CGCamera::SetDesiredTargetOffset(float offset, float delay, float scale, uint32_t time) {
     this->m_targetOffset = UnwrapAngleToward(offset, this->m_targetOffset, -3.1415927f, 3.1415927f);
 
@@ -1870,7 +1870,7 @@ void CGCamera::SetDesiredVehicleYawOffset(float offset, uint32_t startTime, uint
     }
 }
 
-// OFFSET: 0x0043F190
+// OFFSET: 0x0043F190/0x14004A430
 int32_t CGCamera::SetDesiredYawAngle(float yaw, float delay, float scale, uint32_t time) {
     this->m_yaw = UnwrapAngleToward(yaw, this->m_yaw, -3.1415927f, 3.1415927f);
 
@@ -2111,7 +2111,7 @@ int32_t CGCamera::StartSmoothYaw(float yaw, float rate, uint32_t startTime) {
 }
 
 // PROVEN: a32e025a IDENTICAL/NONE
-// OFFSET: 0x0043AFB0
+// OFFSET: 0x0043AFB0/0x140045CE0
 void CGCamera::UpdateAutoInteractState(int32_t enabled) {
     if (enabled) {
         this->m_flags |= 0x1;
@@ -2597,7 +2597,7 @@ int32_t CGCamera::UpdateCallback(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x00440190
+// OFFSET: 0x00440190/0x14004B450
 void CGCamera::UpdateFreeLookFacing(float x, float y, float* pitchOut) {
     if (pitchOut) {
         *pitchOut = 0.0f;
@@ -3088,7 +3088,7 @@ void CGCamera::UpdateTrackingState(int32_t tracking) {
     this->SmoothFreeLook(CGInputControl::GetActive(), 0);
 }
 
-// OFFSET: 0x004404D0
+// OFFSET: 0x004404D0/0x14004B830
 void CGCamera::SyncFreeLookPitch(float pitch, uint32_t time, int32_t force) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -3169,7 +3169,7 @@ int32_t CGCamera::CanSmoothYaw(float yawMin, float yawMax) {
     return fnotequal(this->m_yaw, facing);
 }
 
-// OFFSET: 0x004407B0
+// OFFSET: 0x004407B0/0x14004BB80
 void CGCamera::SmoothFreeLook(CGInputControl* input, int32_t idle) {
     if (!input) {
         return;
@@ -3485,7 +3485,7 @@ void CGCamera::RunBobs(C3Vector& offset) {
 }
 
 // PROVEN: 85e968a6 IDENTICAL/NONE
-// OFFSET: 0x00440E90
+// OFFSET: 0x00440E90/0x14004C350
 void CGCamera::UpdateUncontrolledState(int32_t uncontrolled) {
     if (uncontrolled) {
         if (!(this->m_state & 0x1000)) {
@@ -3984,7 +3984,7 @@ void CGCamera::CalcModelCamera(uint32_t time) {
 }
 
 // PROVEN: d226a341 IDENTICAL/NONE
-// OFFSET: 0x00441910
+// OFFSET: 0x00441910/0x14004CDA0
 void CGCamera::CommentatorSetViewAndPosition(const C3Vector& position, float facing, float pitch) {
     this->m_views[6][0] = 0.0f;
     this->m_views[6][2] = facing;

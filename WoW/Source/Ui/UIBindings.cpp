@@ -153,7 +153,7 @@ static int32_t IsValidKeyName(const char* key) {
     return 0;
 }
 
-// OFFSET: 0x009214E0
+// OFFSET: 0x009214E0/0x140683CE0
 static const char* GetKeyName(KEY key) {
     if (key > KEY_SPACE && key < KEY_NUMPAD0) {
         sputu8(key, s_keyName);
@@ -423,7 +423,7 @@ void CGUIBindings::Initialize() {
     } while (!s_initRound);
 }
 
-// OFFSET: 0x009218D0
+// OFFSET: 0x009218D0/0x140684890
 char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_t maxLength) {
     uint32_t modifiers = evt.m_data.m_metaKeyState;
     KEY key = evt.m_data.m_key;
@@ -609,7 +609,7 @@ char* CGUIBindings::MouseEventToString(const CMouseEvent& evt, char* binding, in
     return NULL;
 }
 
-// OFFSET: 0x00921F50
+// OFFSET: 0x00921F50/0x140685210
 void CGUIBindings::SaveBindings() {
     if (s_loadPendingMask) {
         return;
@@ -643,7 +643,7 @@ void CGUIBindings::Shutdown() {
     s_initRound++;
 }
 
-// OFFSET: 0x00920D20
+// OFFSET: 0x00920D20/0x140683440
 void CGUIBindings::StripModifiers(uint32_t& modifiers, const char* binding) {
     while (*binding) {
         if (!SStrCmpI(binding, "LSHIFT", 6)) {
@@ -965,7 +965,7 @@ int32_t CGUIBindings::ExecCommand(const char* command, int32_t isDown, float pre
     return 1;
 }
 
-// OFFSET: 0x009268E0
+// OFFSET: 0x009268E0/0x14068BEB0
 int32_t CGUIBindings::ExecKey(uint32_t modifiers, const char* key, int32_t isDown, int32_t allowPressure, BINDING_MODE mode) {
     char reducedKey[128];
     KEYBINDING* binding = this->GetReducedKeyBinding(mode, key, reducedKey, sizeof(reducedKey));
@@ -1177,7 +1177,7 @@ const char* CGUIBindings::GetCommandKey(BINDING_MODE mode, const char* command, 
     return NULL;
 }
 
-// OFFSET: 0x00921FB0
+// OFFSET: 0x00921FB0/0x140685270
 KEYBINDING* CGUIBindings::GetKeyBinding(BINDING_MODE mode, const char* key) {
     if (!key || !*key) {
         return NULL;
@@ -1274,7 +1274,7 @@ int32_t CGUIBindings::GetNumCommandKeys(BINDING_SET set, BINDING_MODE mode, cons
     return count;
 }
 
-// OFFSET: 0x00922170
+// OFFSET: 0x00922170/0x1406854E0
 KEYBINDING* CGUIBindings::GetReducedKeyBinding(BINDING_MODE mode, const char* key, char* reducedKey, uint32_t maxLength) {
     char modifiers[3][32];
     uint32_t numModifiers = 0;
@@ -1528,7 +1528,7 @@ void CGUIBindings::LoadModifiedClick(const char* file, XMLNode* node, CStatus* s
     }
 }
 
-// OFFSET: 0x00921D10
+// OFFSET: 0x00921D10/0x140684ED0
 void CGUIBindings::SaveBindings(BINDING_SET set, HOSFILE file) {
     char buffer[1024];
     uint32_t written;

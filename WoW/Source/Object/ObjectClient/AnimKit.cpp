@@ -235,7 +235,7 @@ static void InitBoneSetAncestors(uint32_t boneSetID, uint32_t ancestors) {
 }
 
 // PROVEN: 5898d496 IDENTICAL/NONE
-// OFFSET: 0x0058BE20
+// OFFSET: 0x0058BE20/0x1401F55F0
 int32_t CAnimKitManager::IsFrozen() const {
     return this->m_flags & ANIM_KIT_MANAGER_FLAG_FREEZE_MASK;
 }
@@ -247,7 +247,7 @@ void CAnimKitManager::SetExpressionCallback(AnimKitExpressionCallback callback, 
     this->m_expressionCallbackParam = param;
 }
 
-// OFFSET: 0x0058BE60
+// OFFSET: 0x0058BE60/0x1401F5610
 void CAnimKitManager::PickSegmentInstVariationAndRepetitions(AnimKitSegmentInst* segmentInst) {
     int8_t variation = segmentInst->forcedVariation;
     const AnimKitSegmentRec* rec = segmentInst->rec;
@@ -299,7 +299,7 @@ repetitions:
     segmentInst->repetitions = rec->m_endConditionParam;
 }
 
-// OFFSET: 0x0058C490
+// OFFSET: 0x0058C490/0x1401F5E90
 uint32_t CAnimKitManager::FindBestAnimKitBoneSetIDForBoneDataID(uint32_t boneDataID) {
     if (boneDataID >= 35) {
         return 0;
@@ -322,7 +322,7 @@ uint32_t CAnimKitManager::FindBestAnimKitBoneSetIDForBoneDataID(uint32_t boneDat
     return 0;
 }
 
-// OFFSET: 0x0058C4F0
+// OFFSET: 0x0058C4F0/0x1401F5EF0
 void CAnimKitManager::SetBoneDataIDBlocked(int32_t boneDataID, int32_t blocked, int32_t blockAlt) {
     if (boneDataID >= 35) {
         return;
@@ -499,7 +499,7 @@ int32_t CAnimKitManager::ComputeSegmentSceneTimeDurationUntilAnimEndTime(AnimKit
     return static_cast<int32_t>(static_cast<float>(duration - elapsed) / speed);
 }
 
-// OFFSET: 0x0058C890
+// OFFSET: 0x0058C890/0x1401F62C0
 int32_t CAnimKitManager::WrapSegmentTiming(AnimKitSegmentInst* segmentInst, float speed, int32_t& time) {
     float absSpeed = fabs(speed);
 
@@ -544,7 +544,7 @@ int32_t CAnimKitManager::WrapSegmentTiming(AnimKitSegmentInst* segmentInst, floa
     return 1;
 }
 
-// OFFSET: 0x0058C970
+// OFFSET: 0x0058C970/0x1401F6390
 int32_t CAnimKitManager::FilterAnimKitBoneSetID(uint32_t boneSetID, uint32_t segmentFlags) {
     while (boneSetID) {
         const AnimKitBoneSetRec* rec = g_animKitBoneSetDB.GetRecord(boneSetID);
@@ -608,7 +608,7 @@ uint32_t CAnimKitInst::GetSegmentCount() const {
     return this->m_def->segmentRec.Count();
 }
 
-// OFFSET: 0x0058D040
+// OFFSET: 0x0058D040/0x1401F6CF0
 void CAnimKitManager::OnModelSequenceCallback(uint32_t boneId, uint32_t sequenceId, int32_t interrupted, int32_t primary) {
     if (interrupted || (this->m_flags & (ANIM_KIT_MANAGER_FLAG_EXPRESSIONS_BLOCKED | ANIM_KIT_MANAGER_FLAG_FROZEN))) {
         return;
@@ -683,7 +683,7 @@ void CAnimKitManager::OnModelSequenceCallback(uint32_t boneId, uint32_t sequence
     }
 }
 
-// OFFSET: 0x0058D240
+// OFFSET: 0x0058D240/0x1401F6FB0
 void CAnimKitManager::UpdateHandItemAnim(uint32_t type, CM2Model* model, void* callback, uint64_t param, uint32_t sheathedAnim) {
     uint32_t boneDataID;
 
@@ -828,7 +828,7 @@ AnimKitSegmentBoneSetInst* CAnimKitManager::GetSegmentBoneSetInstStackTop(AnimKi
     return NULL;
 }
 
-// OFFSET: 0x0058D530
+// OFFSET: 0x0058D530/0x1401F7440
 AnimKitSegmentInst* CAnimKitManager::GetExpressingHandItemSegmentInst(uint32_t& boneDataID, int32_t primary) {
     boneDataID = 0xFFFFFFFF;
 
@@ -860,7 +860,7 @@ AnimKitSegmentInst* CAnimKitManager::GetExpressingHandItemSegmentInst(uint32_t& 
     return NULL;
 }
 
-// OFFSET: 0x0058D5B0
+// OFFSET: 0x0058D5B0/0x1401F7650
 int32_t CAnimKitManager::HandleKitReactionToSegmentStart(CAnimKitInst* kitInst, uint8_t segmentIndex, uint32_t time, int32_t allowStop) {
     AnimKitSegmentInst* trigger = kitInst->m_segmentInsts[segmentIndex];
     uint32_t count = kitInst->m_segmentInsts.Count();
@@ -894,7 +894,7 @@ int32_t CAnimKitManager::HandleKitReactionToSegmentStart(CAnimKitInst* kitInst, 
     return 1;
 }
 
-// OFFSET: 0x0058D6C0
+// OFFSET: 0x0058D6C0/0x1401F74F0
 int32_t CAnimKitManager::HandleKitReactionToSegmentEnd(CAnimKitInst* kitInst, uint8_t segmentIndex, uint32_t time, int32_t allowStop) {
     AnimKitSegmentInst* trigger = kitInst->m_segmentInsts[segmentIndex];
     uint32_t count = kitInst->m_segmentInsts.Count();
@@ -1000,7 +1000,7 @@ void CAnimKitManager::UpdateNextKitEventTime() {
     }
 }
 
-// OFFSET: 0x0058DC40
+// OFFSET: 0x0058DC40/0x1401F7D90
 void CAnimKitManager::UpdateNextSegmentEventTime() {
     AnimKitSegmentInst* segmentInst = this->m_segmentEvents.Head();
 
@@ -1020,7 +1020,7 @@ void CAnimKitManager::UpdateNextSegmentEventTime() {
     }
 }
 
-// OFFSET: 0x0058DCB0
+// OFFSET: 0x0058DCB0/0x1401F7E20
 int32_t CAnimKitManager::OnPlaySegmentInst(AnimKitSegmentInst* segmentInst, int32_t allowStop) {
     this->ScheduleUpdate(ANIM_KIT_MANAGER_FLAG_EXPRESS);
     segmentInst->instFlags &= ~SEGMENT_INST_FLAG_RESTART_MASK;
@@ -1110,7 +1110,7 @@ react:
     return 1;
 }
 
-// OFFSET: 0x0058DE90
+// OFFSET: 0x0058DE90/0x1401F8020
 int32_t CAnimKitManager::OnStopSegmentInst(AnimKitSegmentInst* segmentInst, int32_t allowStop) {
     this->ScheduleUpdate(ANIM_KIT_MANAGER_FLAG_EXPRESS);
     segmentInst->link.Unlink();
@@ -1137,7 +1137,7 @@ int32_t CAnimKitManager::OnStopSegmentInst(AnimKitSegmentInst* segmentInst, int3
     return result;
 }
 
-// OFFSET: 0x0058DFB0
+// OFFSET: 0x0058DFB0/0x1401F81D0
 void CAnimKitManager::UninitSegmentBoneSetInst(AnimKitSegmentBoneSetInst* segmentBoneSetInst) {
     AnimKitBoneSetInst& boneSetInst = this->m_boneSetInsts[segmentBoneSetInst->animKitBoneSetID];
 
@@ -1505,7 +1505,7 @@ void CAnimKitManager::SuppressSegmentBoneSetInstStacksByAncestor(uint32_t boneSe
     }
 }
 
-// OFFSET: 0x0058F100
+// OFFSET: 0x0058F100/0x1401F9BF0
 void CAnimKitManager::UninitSegmentInst(AnimKitSegmentInst* segmentInst) {
     uint32_t count = segmentInst->boneSetInsts.Count();
 
@@ -1984,7 +1984,7 @@ uint32_t CAnimKitManager::GetExpressingAnim(uint32_t boneDataID, int32_t primary
 }
 
 // PROVEN: 693a1bd0 IDENTICAL/NONE
-// OFFSET: 0x00590660
+// OFFSET: 0x00590660/0x1401FB830
 uint32_t CAnimKitManager::GetExpressingHandItemAnim(uint32_t& boneDataID, int32_t primary, int32_t requested) {
     boneDataID = 0xFFFFFFFF;
     AnimKitSegmentInst* segmentInst = this->GetExpressingHandItemSegmentInst(boneDataID, primary);
@@ -2447,7 +2447,7 @@ CAnimKitInst* CAnimKitManager::PlayAndMaintain(uint32_t animKitID, uint32_t anim
     return this->InitKitInst(animKitID, 1, anim, params, NULL);
 }
 
-// OFFSET: 0x005923F0
+// OFFSET: 0x005923F0/0x1401FE750
 int32_t CAnimKitManager::SetSegmentInstState(AnimKitSegmentInst* segmentInst, uint32_t state, int32_t allowStop) {
     uint32_t oldState = segmentInst->instFlags & SEGMENT_INST_FLAG_STATE_MASK;
 
@@ -2572,7 +2572,7 @@ int32_t CAnimKitInst::Restart() {
     return 1;
 }
 
-// OFFSET: 0x005927F0
+// OFFSET: 0x005927F0/0x1401FEC90
 int32_t CAnimKitManager::AddSegmentEvent(AnimKitSegmentInst* segmentInst, uint32_t time, int32_t delay, ANIM_KIT_SEGMENT_EVENT_TYPE type, int32_t allowStop) {
     if (segmentInst->kitInst->m_flags & (KIT_INST_FLAG_STOPPED | KIT_INST_FLAG_PENDING_DESTROY)) {
         return 0;
@@ -2761,7 +2761,7 @@ void CAnimKitManager::ReactToSegmentInstSuppression(TSCGrowableArray<AnimKitSegm
     }
 }
 
-// OFFSET: 0x00593280
+// OFFSET: 0x00593280/0x1401FFB90
 int32_t CAnimKitManager::UpdateSegmentInstEndEvent(AnimKitSegmentInst* segmentInst, float speed, int32_t allowStop) {
     int32_t endCondition = segmentInst->rec->m_endCondition;
     uint32_t elapsed = segmentInst->kitInst->m_flags & KIT_INST_FLAG_DURATION_ELAPSED;
@@ -2990,7 +2990,7 @@ void CAnimKitManager::RestartSegmentInstDueToExpression(AnimKitSegmentInst* segm
     stopKits.New(kitInst);
 }
 
-// OFFSET: 0x00593E50
+// OFFSET: 0x00593E50/0x140200B20
 int32_t CAnimKitManager::ReinitSegmentInstAnimAndEvents(AnimKitSegmentInst* segmentInst) {
     uint32_t anim;
     int32_t result = this->ProcessSegmentRec(segmentInst->rec, segmentInst->kitInst->m_boneSetID, segmentInst->kitInst->m_anim, &anim, &segmentInst->instFlags);

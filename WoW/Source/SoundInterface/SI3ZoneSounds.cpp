@@ -385,7 +385,7 @@ int32_t SI3::GetDesiredMusicKitID(int32_t* type, int32_t* silenceMin, int32_t* s
     return result;
 }
 
-// OFFSET: 0x0062D4C0
+// OFFSET: 0x0062D4C0/0x1402C0EF0
 int32_t SI3::GetDesiredAmbienceKitID(int32_t* type) {
     if ((SI3::sm_pCVar_Sound_EnableAllSound && !SI3::sm_pCVar_Sound_EnableAllSound->m_intValue) || (SI3::sm_pCVar_Sound_EnableAmbience && !SI3::sm_pCVar_Sound_EnableAmbience->m_intValue) || CGGameUI::m_inMovie) {
         if (type) {

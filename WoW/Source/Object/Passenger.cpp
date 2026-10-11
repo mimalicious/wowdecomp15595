@@ -12,7 +12,7 @@ CPassenger::CPassenger(const WOWGUID& transportGuid, const C3Vector& position, c
     this->unk_002C = 0;
 }
 
-// OFFSET: 0x0041EB90
+// OFFSET: 0x0041EB90/0x140022AD0
 void CPassenger::PostInit(const C3Vector& position) {
     if (this->m_transportGuid) {
         if (!MovementAddToTransport(this, this->m_transportGuid, 1, 1, 0)) {
@@ -23,7 +23,7 @@ void CPassenger::PostInit(const C3Vector& position) {
 }
 
 // PROVEN: 5ac83f0c IDENTICAL/NONE
-// OFFSET: 0x0041EBE0
+// OFFSET: 0x0041EBE0/0x140022B30
 void CPassenger::Reenable(const WOWGUID& transportGuid, const C3Vector& position) {
     this->m_transportGuid = transportGuid;
     this->m_position = position;
@@ -40,7 +40,7 @@ float CPassenger::GetFacing(float facing) const {
     return CMath::normalizeangle0to2pi_(MovementGetTransportFacing(transport) + facing);
 }
 
-// OFFSET: 0x0041EC60
+// OFFSET: 0x0041EC60/0x140022BA0
 float CPassenger::GetRawFacing(float facing) const {
     if (!this->m_transportGuid) {
         return facing;
@@ -62,7 +62,7 @@ C3Vector CPassenger::GetPosition(const C3Vector& position) const {
     return position * matrix;
 }
 
-// OFFSET: 0x0041F1D0
+// OFFSET: 0x0041F1D0/0x140022F80
 C3Vector CPassenger::GetRawPosition(const C3Vector& position) const {
     WOWGUID transport = this->m_transportGuid;
 
@@ -109,7 +109,7 @@ float CPassenger::GetRawFacingFromRotation() const {
     return 0.0f <= y ? 0.5f * 3.1415927f : 1.5f * 3.1415927f;
 }
 
-// OFFSET: 0x0041F420
+// OFFSET: 0x0041F420/0x1400233C0
 float CPassenger::RemoveFromTransportFinish(const C44Matrix& matrix) {
     float facing = MovementGetTransportFacing(this->m_transportGuid);
     this->m_position *= matrix;
@@ -131,13 +131,13 @@ float CPassenger::RemoveFromTransportFinish(const C44Matrix& matrix) {
     return facing;
 }
 
-// OFFSET: 0x0041F930
+// OFFSET: 0x0041F930/0x140023B90
 float CPassenger::RemoveFromTransport(C44Matrix* matrix) {
     MovementGetTransportMtxX(this->m_transportGuid, matrix, *this->m_ownerGuid, __FILE__, __LINE__);
     return this->RemoveFromTransportFinish(*matrix);
 }
 
-// OFFSET: 0x0041F650
+// OFFSET: 0x0041F650/0x1400236D0
 float CPassenger::AddToTransport(WOWGUID transport, C44Matrix* inverse, C44Matrix* transportMatrix) {
     float facing = -MovementGetTransportFacing(transport);
 

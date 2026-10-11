@@ -246,7 +246,7 @@ WorldPvPQueueStatus* CGBattlefieldInfo::FindFreeWorldPvPQueue() {
     return NULL;
 }
 
-// OFFSET: 0x0093D0A0
+// OFFSET: 0x0093D0A0/0x1406A8BB0
 uint32_t CGBattlefieldInfo::GetNumFlagCarriers() {
     if (CGBattlefieldInfo::m_flagCarriers[1]) {
         return 2;
@@ -526,7 +526,7 @@ void CGBattlefieldInfo::JoinBattlefield(int32_t asGroup) {
     ClientServices::Send(&msg);
 }
 
-// OFFSET: 0x0093E1C0
+// OFFSET: 0x0093E1C0/0x1406A9BE0
 bool IsCurrentMapArena() {
     MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
     if (map) {
@@ -1141,7 +1141,7 @@ void ScoreNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool s
     }
 }
 
-// OFFSET: 0x009403B0
+// OFFSET: 0x009403B0/0x1406AC420
 void CGBattlefieldInfo::SetScoreSortColumn(int32_t column) {
     if (CGBattlefieldInfo::m_nameCachePending) {
         return;
@@ -1209,7 +1209,7 @@ const char* CGBattlefieldInfo::GetFlagToken(uint32_t index) {
     return s_flagTokens[faction];
 }
 
-// OFFSET: 0x00940500
+// OFFSET: 0x00940500/0x1406AC690
 void CGBattlefieldInfo::AddArenaOpponentPet(const WOWGUID& petGuid, const WOWGUID& ownerGuid) {
     WOWGUID owner = ownerGuid;
 
@@ -1604,7 +1604,7 @@ void CGBattlefieldInfo::BuildWarGameTypeList() {
     CGBattlefieldInfo::m_numWarGameTypes = CGBattlefieldInfo::m_warGameTypes.Count();
 }
 
-// OFFSET: 0x00942A80
+// OFFSET: 0x00942A80/0x1406AF390
 BattlefieldStatusNode::BattlefieldStatusNode() {
     this->m_id = 0;
     this->m_queueID = 0;

@@ -170,7 +170,7 @@ void CGVoidStorageInfo::LeaveWorld() {
     CGVoidStorageInfo::SetNPC(WOWGUID());
 }
 
-// OFFSET: 0x009EDF40
+// OFFSET: 0x009EDF40/0x140787430
 void CGVoidStorageInfo::AutoDepositItem(CGItem_C* item) {
     if (item && !(item->m_itemFlags & 1)) {
         CGVoidStorageInfo::DepositItem(item, 9, true);

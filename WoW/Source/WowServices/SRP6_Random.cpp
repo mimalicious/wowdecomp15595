@@ -15,7 +15,7 @@ SRP6_Random::SRP6_Random(const void* seed, uint32_t seedLength) {
     this->m_remaining = 0;
 }
 
-// OFFSET: 0x00B3AB50
+// OFFSET: 0x00B3AB50/0x140907800
 void SRP6_Random::GenerateRandomBytes(uint8_t* data, uint32_t length) {
     if (!length) {
         return;

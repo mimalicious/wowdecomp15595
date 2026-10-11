@@ -155,12 +155,12 @@ int32_t Liquid::CRenderer::CompareTransparent(const void* a, const void* b) {
     return r->m_transform.d3 > l->m_transform.d3;
 }
 
-// OFFSET: 0x00B3C440
+// OFFSET: 0x00B3C440/0x1409093D0
 int32_t Liquid::HasFakeReflection() {
     return s_renderer->m_instances[0].Count() + s_renderer->m_instances[1].Count() && Liquid::GetWaterDetail();
 }
 
-// OFFSET: 0x00B3C460
+// OFFSET: 0x00B3C460/0x140909400
 int32_t Liquid::HasRealReflection() {
     int32_t real = Liquid::GetWaterDetail() >= 3 && Liquid::GetReflectionMode();
 

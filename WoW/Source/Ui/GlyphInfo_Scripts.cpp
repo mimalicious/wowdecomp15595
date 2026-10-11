@@ -489,14 +489,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CastGlyphByID", &Script_CastGlyphByID },
 };
 
-// OFFSET: 0x009EECD0
+// OFFSET: 0x009EECD0/0x1407883C0
 void GlyphInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009EED00
+// OFFSET: 0x009EED00/0x140788410
 void GlyphInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

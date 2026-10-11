@@ -1132,14 +1132,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetInspectRatedBGData", &Script_GetInspectRatedBGData },
 };
 
-// OFFSET: 0x0097B5D0
+// OFFSET: 0x0097B5D0/0x1406F4B90
 void CharacterInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0097B600
+// OFFSET: 0x0097B600/0x1406F4BE0
 void CharacterInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

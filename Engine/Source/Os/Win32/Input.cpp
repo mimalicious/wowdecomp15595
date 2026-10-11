@@ -785,7 +785,7 @@ static void SaveMouse(HWND hwnd, const POINT& point) {
 }
 
 // PROVEN: 471df457 IDENTICAL/NONE
-// OFFSET: 0x00873AB0
+// OFFSET: 0x00873AB0/0x1405AA470
 void OsInputSetJoystickPollFcn(void (*pollFcn)(int32_t)) {
     s_joystickPollFcn = pollFcn;
 }

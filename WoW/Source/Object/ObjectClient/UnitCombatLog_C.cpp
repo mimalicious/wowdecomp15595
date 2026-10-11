@@ -295,7 +295,7 @@ bool CombatLogFlagsMatch(uint32_t flags, uint32_t mask, uint32_t raidFlags, uint
     return false;
 }
 
-// OFFSET: 0x005F3660
+// OFFSET: 0x005F3660/0x1402765A0
 void CombatLogEntry::SetFailReason(const char* reason) {
     this->m_infoFlags |= 0x2;
     this->m_info.m_text = SStrDupA(reason, __FILE__, __LINE__);
@@ -1102,7 +1102,7 @@ void CombatLogEntry::PackEvent(char* buffer, uint32_t size) {
     *cursor = '\0';
 }
 
-// OFFSET: 0x005F4F60
+// OFFSET: 0x005F4F60/0x1402784E0
 bool SpellHasLearnSpellEffect(const SpellRec* spell) {
     uint32_t count;
     const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
@@ -1155,7 +1155,7 @@ static bool ShouldDisplayMechanic(const SpellRec* spell, const WOWGUID& casterGu
     return false;
 }
 
-// OFFSET: 0x005F50B0
+// OFFSET: 0x005F50B0/0x1402785F0
 static void DisplayMechanicEffect(const WOWGUID& casterGuid, const WOWGUID& unitGuid, const SpellRec* spell, const SpellMechanicRec* mechanic) {
     if (!ShouldDisplayMechanic(spell, casterGuid)) {
         return;
@@ -1180,7 +1180,7 @@ static void DisplayMechanicEffect(const WOWGUID& casterGuid, const WOWGUID& unit
     }
 }
 
-// OFFSET: 0x005F51E0
+// OFFSET: 0x005F51E0/0x1402787C0
 void UnitCombatLogSpellMechanic(const WOWGUID& unitGuid, const AuraData* aura, const SpellRec* spell, uint32_t effectMask) {
     if ((spell->m_attributes & 0x180) || !*spell->m_name || SpellHasLearnSpellEffect(spell) || (spell->m_attributesExD & 0x1) || SpellHasOpenLockEffect(spell)) {
         return;
@@ -1527,7 +1527,7 @@ void SendCombatLogEvents() {
     lua_settop(L, -2);
 }
 
-// OFFSET: 0x005F5E60
+// OFFSET: 0x005F5E60/0x140279680
 PendingCombatLogData* GetPendingCombatLogData(CombatLogEntry* entry, const WOWGUID& guid, uint32_t mask) {
     PendingCombatLogData* data = s_freePendingData.Head();
 
@@ -1565,7 +1565,7 @@ CombatLogFilter::CombatLogFilter() {
     this->m_events.m_bits.SetCount(((50 - 1) >> 5) + 1);
 }
 
-// OFFSET: 0x005F6250
+// OFFSET: 0x005F6250/0x140279BA0
 const char* CombatLogEntry::ResolveName(PendingCombatLogData* data, const char** realm, bool pending) {
     void (*callback)(int32_t, const WOWGUID&, void*, bool) = pending ? CombatLogEntry::PendingCombatLogResolved : NULL;
     const char* name = NULL;
@@ -1659,7 +1659,7 @@ const char* CombatLogEntry::ResolveName(PendingCombatLogData* data, const char**
     return s_unknownObjectName;
 }
 
-// OFFSET: 0x005F64E0
+// OFFSET: 0x005F64E0/0x140279F00
 void CombatLogEntry::PendingCombatLogResolved(int32_t id, const WOWGUID& guid, void* param, bool success) {
     PendingCombatLogData* data = static_cast<PendingCombatLogData*>(param);
     CombatLogEntry* entry = data->m_entry;
@@ -1752,7 +1752,7 @@ const char* CombatLogEntry::GetObjectName(const WOWGUID& guid, uint32_t mask, co
     return s_unknownObjectName;
 }
 
-// OFFSET: 0x005F6980
+// OFFSET: 0x005F6980/0x14027A490
 void CombatLogEntry::CancelPendingCallbacks() {
     PendingCombatLogData* data = s_pendingData.Head();
 
@@ -1798,7 +1798,7 @@ void CombatLogEntry::SetSource(const WOWGUID& guid) {
     this->m_hideCaster = false;
 }
 
-// OFFSET: 0x005F6AF0
+// OFFSET: 0x005F6AF0/0x14027A6A0
 void CombatLogEntry::SetExecuteItem(int32_t itemId) {
     this->m_infoFlags |= 0x200;
     this->m_info.m_values[0] = itemId;
@@ -1808,7 +1808,7 @@ void CombatLogEntry::SetExecuteItem(int32_t itemId) {
     this->m_info.m_names[1] = this->ResolveName(data, NULL, true);
 }
 
-// OFFSET: 0x005F6B50
+// OFFSET: 0x005F6B50/0x14027A710
 void RecycleCombatLogEntry(CombatLogEntry* entry) {
     if (s_pendingEntries == entry) {
         s_pendingEntries = s_entries.Next(entry);
@@ -1822,7 +1822,7 @@ void RecycleCombatLogEntry(CombatLogEntry* entry) {
     s_freeEntries.LinkToTail(entry);
 }
 
-// OFFSET: 0x005F6BC0
+// OFFSET: 0x005F6BC0/0x14027A7F0
 CombatLogEntry* GetCombatLogEntry(const WOWGUID& source, const WOWGUID& dest, int32_t event, const SpellRec* spell) {
     CombatLogEntry* entry = s_freeEntries.Head();
 
@@ -1864,7 +1864,7 @@ CombatLogEntry* GetCombatLogEntry(const WOWGUID& source, const WOWGUID& dest, in
     return entry;
 }
 
-// OFFSET: 0x005F6CB0
+// OFFSET: 0x005F6CB0/0x14027A9F0
 void QueueCombatLogEntry(CombatLogEntry* entry, uint32_t timeOffset) {
     entry->m_timestamp = FrameTime::GetCurTimeMs() - timeOffset;
     s_entries.LinkToTail(entry);
@@ -2473,7 +2473,7 @@ void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, const Spe
     }
 }
 
-// OFFSET: 0x005F8110
+// OFFSET: 0x005F8110/0x14027C500
 void UnitCombatLogSpellFail(const WOWGUID& caster, const SpellRec* spell, const char* reason) {
     if (!reason || !*reason || !spell || (spell->m_attributes & 0x80) || !*spell->m_name) {
         return;
@@ -2644,7 +2644,7 @@ void UnitCombatLogInstakill(const WOWGUID& casterGuid, const WOWGUID& targetGuid
     }
 }
 
-// OFFSET: 0x005F86A0
+// OFFSET: 0x005F86A0/0x14027CCD0
 void UnitCombatLogSummon(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name || (spell->m_attributesExJ & 0x40)) {
         return;
@@ -2662,7 +2662,7 @@ void UnitCombatLogResurrect(const WOWGUID& casterGuid, const WOWGUID& targetGuid
     }
 }
 
-// OFFSET: 0x005F8780
+// OFFSET: 0x005F8780/0x14027CDF0
 void UnitCombatLogInterrupt(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, const SpellRec* interrupted) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name || !interrupted || (interrupted->m_attributes & 0x180) || !*interrupted->m_name) {
         return;
@@ -2684,7 +2684,7 @@ void UnitCombatLogInterrupt(const WOWGUID& casterGuid, const WOWGUID& targetGuid
     }
 }
 
-// OFFSET: 0x005F8830
+// OFFSET: 0x005F8830/0x14027CF40
 void UnitCombatLogExtraAttacks(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t count, int32_t timeOffset) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name || !count) {
         return;
@@ -2700,7 +2700,7 @@ void UnitCombatLogExtraAttacks(const WOWGUID& casterGuid, const WOWGUID& targetG
     }
 }
 
-// OFFSET: 0x005F88A0
+// OFFSET: 0x005F88A0/0x14027CFE0
 void UnitCombatLogDurabilityDamage(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t itemId) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name) {
         return;
@@ -3589,7 +3589,7 @@ void UnitCombatLogShutdown() {
     ClientServices::ClearMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE);
 }
 
-// OFFSET: 0x005FF760
+// OFFSET: 0x005FF760/0x140283870
 bool ShouldShowFeedback(const ATTACKROUNDINFO& info) {
     return !info.m_meleeSpellId || info.m_victimState == 1;
 }

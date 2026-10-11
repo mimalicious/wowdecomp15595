@@ -94,7 +94,7 @@ static void SignalReadyCheckConfirmEvents(const WOWGUID& guid, int32_t ready) {
 }
 
 // PROVEN: e4cec15d IDENTICAL/NONE
-// OFFSET: 0x0092CBB0
+// OFFSET: 0x0092CBB0/0x140693B60
 void CGRaidInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     if (count <= 40) {
         CGRaidInfo::m_realNumMembers = count;

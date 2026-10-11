@@ -34,7 +34,7 @@ int32_t QuestTextParser::SpellGetSpellIDForDifficulty(int32_t spellId, int32_t d
     return ::SpellGetSpellIDForDifficulty(spellId, difficulty);
 }
 
-// OFFSET: 0x00A0A8D0
+// OFFSET: 0x00A0A8D0/0x1407AB9F0
 void QuestTextParser::Spell_C_GetMinMaxPoints(const SpellRec* spell, int32_t effectIndex, float* minPoints, float* maxPoints, uint32_t spellLevel, int32_t parsePet, int32_t parseUnit, int32_t noModifiers) {
     ::Spell_C_GetMinMaxPoints(spell, effectIndex, minPoints, maxPoints, spellLevel, parsePet, parseUnit, noModifiers, 0);
 }
@@ -79,7 +79,7 @@ bool QuestTextParser::ToolTip_DurationIsInt(float time, float fraction) {
     return CGTooltip::DurationIsInt(time, fraction);
 }
 
-// OFFSET: 0x00A0A990
+// OFFSET: 0x00A0A990/0x1407ABAD0
 void QuestTextParser::ToolTip_GetDurationString(char* buffer, uint32_t size, uint64_t time, const char* token, const char* prefix, int32_t roundUp, bool seconds) {
     CGTooltip::GetDurationString(buffer, size, time, token, prefix, roundUp, seconds);
 }
@@ -89,7 +89,7 @@ void QuestTextParser::ToolTip_GetFloatDurationString(char* buffer, uint32_t size
     CGTooltip::GetFloatDurationString(buffer, size, time, token, prefix);
 }
 
-// OFFSET: 0x00A0A9F0
+// OFFSET: 0x00A0A9F0/0x1407ABB20
 uint32_t QuestTextParser::FrameScript_GetPluralIndex(int32_t count) {
     return ::FrameScript_GetPluralIndex(count);
 }
@@ -180,7 +180,7 @@ AreaTableRec* QuestTextParser::GetAreaTableRecord(int32_t id) {
     return g_areaTableDB.GetRecord(id);
 }
 
-// OFFSET: 0x00A0ABC0
+// OFFSET: 0x00A0ABC0/0x1407ABDA0
 SpellAuraOptionsRec* QuestTextParser::GetSpellAuraOptionsRecord(int32_t id) {
     return g_spellAuraOptionsDB.GetRecord(id);
 }
@@ -224,7 +224,7 @@ void QuestTextParser::GetPlayerLevel(int32_t& level) {
     }
 }
 
-// OFFSET: 0x00A0AD50
+// OFFSET: 0x00A0AD50/0x1407ABF40
 bool QuestTextParser::GetPlayerGenderConditional(char* buffer, uint32_t size, const NameCache* name, const char*& cursor) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 

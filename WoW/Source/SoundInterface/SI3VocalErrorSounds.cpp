@@ -20,7 +20,7 @@ static uint32_t s_vocalErrorSound;
 // STATIC: 0x0100A7FC
 static uint32_t s_vocalErrorSex;
 
-// OFFSET: 0x00B357C0
+// OFFSET: 0x00B357C0/0x140900AC0
 void SI3::InitVocalErrorSounds(int32_t race, uint32_t sex) {
     memset(s_vocalErrorSounds, 0, sizeof(s_vocalErrorSounds));
 

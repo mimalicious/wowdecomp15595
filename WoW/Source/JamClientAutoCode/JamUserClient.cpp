@@ -18,12 +18,12 @@ UserClientAcceptWargameInvite::~UserClientAcceptWargameInvite() {
 }
 
 // PROVEN: b446fdc0 IDENTICAL/NONE
-// OFFSET: 0x0066D370
+// OFFSET: 0x0066D370/0x1403143C0
 UserClientEnumCharacters::UserClientEnumCharacters() {
 }
 
 // PROVEN: 814cdb6d IDENTICAL/NONE
-// OFFSET: 0x0066B9D0
+// OFFSET: 0x0066B9D0/0x1403121C0
 UserClientEnumCharacters::~UserClientEnumCharacters() {
 }
 
@@ -33,18 +33,18 @@ void UserClientEnumCharacters::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x502));
 }
 
-// OFFSET: 0x0066D3A0
+// OFFSET: 0x0066D3A0/0x140314420
 UserClientSupportTicketSubmitComplaint::UserClientSupportTicketSubmitComplaint() {
 }
 
 // PROVEN: 71643081 IDENTICAL/NONE
-// OFFSET: 0x0066D6F0
+// OFFSET: 0x0066D6F0/0x1403147E0
 UserClientPlayerLogin::UserClientPlayerLogin(uint64_t guid) {
     memcpy(this->m_guid, &guid, sizeof(this->m_guid));
 }
 
 // PROVEN: eabc7c9b IDENTICAL/NONE
-// OFFSET: 0x0066BC20
+// OFFSET: 0x0066BC20/0x140312460
 UserClientPlayerLogin::~UserClientPlayerLogin() {
 }
 
@@ -179,7 +179,7 @@ void UserClientAcceptWargameInvite::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0066FFA0
+// OFFSET: 0x0066FFA0/0x1403170D0
 void UserClientSupportTicketSubmitComplaint::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2501));
 
@@ -228,7 +228,7 @@ void UserClientSupportTicketSubmitComplaint::Put(CDataStore* msg) {
     this->m_chatLog.Put(msg);
 }
 
-// OFFSET: 0x00670260
+// OFFSET: 0x00670260/0x1403173C0
 UserClientSendMail::UserClientSendMail() {
 }
 
@@ -357,7 +357,7 @@ void UserClientSendMail::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0066F610
+// OFFSET: 0x0066F610/0x1403165B0
 void UserClientReorderCharacters::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x593));
 
@@ -546,7 +546,7 @@ UserClientVoidStorageQuery::UserClientVoidStorageQuery() {
 UserClientVoidStorageQuery::~UserClientVoidStorageQuery() {
 }
 
-// OFFSET: 0x00673DA0
+// OFFSET: 0x00673DA0/0x14031C360
 UserClientBattlefieldPort::UserClientBattlefieldPort() {
 }
 
@@ -1403,7 +1403,7 @@ void UserClientChatUnregisterAllAddonPrefixes::Put(CDataStore* msg) {
 UserClientChatReportIgnored::~UserClientChatReportIgnored() {
 }
 
-// OFFSET: 0x0069CF00
+// OFFSET: 0x0069CF00/0x140349420
 UserClientChatLeaveChannel::~UserClientChatLeaveChannel() {
 }
 
@@ -2156,7 +2156,7 @@ void UserClientChatChannelVoiceOn::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069D5F0
+// OFFSET: 0x0069D5F0/0x140349B90
 UserClientChatChannelKick::UserClientChatChannelKick(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2199,7 +2199,7 @@ void UserClientChatChannelOwner::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069D670
+// OFFSET: 0x0069D670/0x140349C20
 UserClientChatChannelBan::UserClientChatChannelBan(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2222,7 +2222,7 @@ void UserClientChatChannelBan::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069ECD0
+// OFFSET: 0x0069ECD0/0x14034B750
 UserClientChatChannelUnsilenceAll::UserClientChatChannelUnsilenceAll(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2354,7 +2354,7 @@ void UserClientChatChannelInvite::Put(CDataStore* msg) {
     msg->PutData(this->unk_0040, strlen(this->unk_0040));
 }
 
-// OFFSET: 0x0069E640
+// OFFSET: 0x0069E640/0x14034AF60
 UserClientChatChannelVoiceOff::UserClientChatChannelVoiceOff(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
@@ -2443,7 +2443,7 @@ void UserClientChatChannelUnsilenceVoice::Put(CDataStore* msg) {
     msg->PutData(this->unk_0040, strlen(this->unk_0040));
 }
 
-// OFFSET: 0x0069EF40
+// OFFSET: 0x0069EF40/0x14034BA30
 UserClientChatChannelUnmoderator::UserClientChatChannelUnmoderator(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2466,7 +2466,7 @@ void UserClientChatChannelUnmoderator::Put(CDataStore* msg) {
     msg->PutData(this->unk_0090, strlen(this->unk_0090));
 }
 
-// OFFSET: 0x0069D9C0
+// OFFSET: 0x0069D9C0/0x14034A030
 UserClientChatChannelSilenceVoice::UserClientChatChannelSilenceVoice(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2489,7 +2489,7 @@ void UserClientChatChannelSilenceVoice::Put(CDataStore* msg) {
     msg->PutData(this->unk_0090, strlen(this->unk_0090));
 }
 
-// OFFSET: 0x0069EFC0
+// OFFSET: 0x0069EFC0/0x14034BAC0
 UserClientChatChannelSetOwner::UserClientChatChannelSetOwner(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2512,7 +2512,7 @@ void UserClientChatChannelSetOwner::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069D8D0
+// OFFSET: 0x0069D8D0/0x140349F50
 UserClientChatChannelMute::UserClientChatChannelMute(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2535,7 +2535,7 @@ void UserClientChatChannelMute::Put(CDataStore* msg) {
     msg->PutData(this->unk_0090, strlen(this->unk_0090));
 }
 
-// OFFSET: 0x0069D440
+// OFFSET: 0x0069D440/0x1403499D0
 UserClientChatChannelModerator::UserClientChatChannelModerator(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
@@ -2694,7 +2694,7 @@ void UserClientMessageChatSay::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069D3C0
+// OFFSET: 0x0069D3C0/0x140349940
 UserClientMessageChatAddonOfficer::UserClientMessageChatAddonOfficer(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0110, a1, sizeof(this->unk_0110));
@@ -2814,7 +2814,7 @@ UserClientMessageChatAddonGuild::UserClientMessageChatAddonGuild(const char* a1,
     SStrCopy(this->unk_0021, a2, sizeof(this->unk_0021));
 }
 
-// OFFSET: 0x0069CEC0
+// OFFSET: 0x0069CEC0/0x1403493E0
 UserClientMessageChatAddonGuild::~UserClientMessageChatAddonGuild() {
 }
 
@@ -2875,14 +2875,14 @@ void UserClientMessageChatBattleground::Put(CDataStore* msg) {
     msg->PutData(this->unk_0014, strlen(this->unk_0014));
 }
 
-// OFFSET: 0x0069E3E0
+// OFFSET: 0x0069E3E0/0x14034ACE0
 UserClientMessageChatChannel::UserClientMessageChatChannel(uint32_t a1, const char* a2, const char* a3) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     this->unk_0144 = a1;
     SStrCopy(this->unk_0148, a3, sizeof(this->unk_0148));
 }
 
-// OFFSET: 0x0069CCE0
+// OFFSET: 0x0069CCE0/0x140349210
 UserClientMessageChatChannel::~UserClientMessageChatChannel() {
 }
 
@@ -2943,7 +2943,7 @@ void UserClientMessageChatDnd::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069DB90
+// OFFSET: 0x0069DB90/0x14034A230
 UserClientMessageChatWhisper::UserClientMessageChatWhisper(uint32_t a1, const char* a2, const char* a3) {
     SStrCopy(this->unk_0010, a3, sizeof(this->unk_0010));
     this->unk_0110 = a1;
@@ -3886,7 +3886,7 @@ void UserClientLfgLeave::Put(CDataStore* msg) {
     this->m_ticket.Put(msg);
 }
 
-// OFFSET: 0x0066E6B0
+// OFFSET: 0x0066E6B0/0x1403158C0
 UserClientLfgProposalResponse::UserClientLfgProposalResponse() {
 }
 
@@ -3894,7 +3894,7 @@ UserClientLfgProposalResponse::UserClientLfgProposalResponse() {
 UserClientLfgProposalResponse::~UserClientLfgProposalResponse() {
 }
 
-// OFFSET: 0x0066E130
+// OFFSET: 0x0066E130/0x140315360
 void UserClientLfgProposalResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x403));
     msg->Put(this->m_proposalID);
@@ -3938,7 +3938,7 @@ void UserClientLfgProposalResponse::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0066DA90
+// OFFSET: 0x0066DA90/0x140314C20
 UserClientWorldTeleport::UserClientWorldTeleport(uint32_t mapID, uint64_t transportGUID, const C3Vector& position, float facing) {
     memcpy(this->m_transportGUID, &transportGUID, sizeof(this->m_transportGUID));
     this->m_mapID = mapID;

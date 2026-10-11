@@ -79,7 +79,7 @@ void System_Log::PrintTimestamp(FILE* file, Blizzard::Time::Timestamp time) {
     fprintf(file, "%02d:%02d:%02d.%04d ", rec.hour, rec.minute, rec.second, rec.nanosecond / 100000);
 }
 
-// OFFSET: 0x007B56B0
+// OFFSET: 0x007B56B0/0x1404AB620
 int32_t System_Log::FindBest(const char* name, uint32_t now) {
     LogFile* logs = s_LogGlobals->m_logs;
     int32_t freeIndex = -1;

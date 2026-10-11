@@ -27,7 +27,7 @@ TSObjectAllocPool<CVehicle_C>* CVehicle_C::s_vehiclePool;
 static int32_t s_inBoneAnimEnd;
 
 // PROVEN: 98aec1b5 IDENTICAL/NONE
-// OFFSET: 0x005E99E0
+// OFFSET: 0x005E99E0/0x14026AA00
 int32_t CVehicle_C::CanPlayBoneAnim() const {
     return this->m_unit->GetObjectModel() != NULL;
 }
@@ -77,7 +77,7 @@ void CVehicle_C::UninstallBoneAnimListener(WOWGUID guid) {
 }
 
 // PROVEN: 381dbad4 IDENTICAL/NONE
-// OFFSET: 0x005E9AE0
+// OFFSET: 0x005E9AE0/0x14026AAD0
 void CVehicle_C::SetBoneAnimForceFacing(WOWGUID guid, uint32_t boneId) {
     if (boneId >= 35) {
         boneId = 26;
@@ -88,7 +88,7 @@ void CVehicle_C::SetBoneAnimForceFacing(WOWGUID guid, uint32_t boneId) {
 }
 
 // PROVEN: e5aa3cc4 IDENTICAL/NONE
-// OFFSET: 0x005E9B10
+// OFFSET: 0x005E9B10/0x14026AAF0
 bool CVehicle_C::IsMirroringAnimsToPassengers() const {
     return this->m_mirroringAnimsMask != 0;
 }
@@ -100,7 +100,7 @@ void CVehicle_C::OnPassengerStartMirroringAnims(uint8_t seat) {
 }
 
 // PROVEN: 539d4178 IDENTICAL/NONE
-// OFFSET: 0x005E9B40
+// OFFSET: 0x005E9B40/0x14026AB20
 void CVehicle_C::OnPassengerStopMirroringAnims(uint8_t seat) {
     this->m_mirroringAnimsMask &= ~(1 << seat);
 }
@@ -116,7 +116,7 @@ VehicleSeatRec* CVehicle_C::GetVehicleSeatRec(uint8_t seat) const {
 }
 
 // PROVEN: c0951723 IDENTICAL/NONE
-// OFFSET: 0x005E9BA0
+// OFFSET: 0x005E9BA0/0x14026AB80
 int32_t CVehicle_C::IsSuppressingCameraPitchWhileMouseAiming() const {
     if (!(this->m_unit->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) && this->m_vehicleRec && (this->m_vehicleRec->m_flags & 0x40040000) == 0x40000) {
         return 1;
@@ -125,7 +125,7 @@ int32_t CVehicle_C::IsSuppressingCameraPitchWhileMouseAiming() const {
     return 0;
 }
 
-// OFFSET: 0x005E99C0
+// OFFSET: 0x005E99C0/0x14026A9E0
 int32_t CVehicle_C::HasHighPriorityCastingAnim() const {
     return this->m_vehicleRec && (this->m_vehicleRec->m_flags & 0x10000);
 }
@@ -156,7 +156,7 @@ int32_t CVehicle_C::RecHasVehicleEnterAnim(const VehicleSeatRec* seatRec) {
     return 1;
 }
 
-// OFFSET: 0x005E9C50
+// OFFSET: 0x005E9C50/0x14026AC10
 int32_t CVehicle_C::RecHasVehicleExitAnim(const VehicleSeatRec* seatRec, const CGUnit_C* unit) {
     if (!seatRec || !(seatRec->m_flags & (unit->IsVehicleExitVoluntary() ? 0x40000 : 0x80000))) {
         return 0;
@@ -391,7 +391,7 @@ void CVehicle_C::UpdateLargestPassengerBoundsRadius() {
     }
 }
 
-// OFFSET: 0x005EA340
+// OFFSET: 0x005EA340/0x14026B470
 void CVehicle_C::BoneAnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time) {
     if (interrupted && s_inBoneAnimEnd) {
         return;
@@ -440,7 +440,7 @@ void CVehicle_C::BoneAnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t s
 }
 
 // PROVEN: f2ded582 IDENTICAL/NONE
-// OFFSET: 0x005EA480
+// OFFSET: 0x005EA480/0x14026B610
 void CVehicle_C::StopVehicleBoneAnimKit(uint32_t boneId) {
     if (boneId >= this->m_boneAnimKits.Count() || !this->m_boneAnimKits[boneId]) {
         return;
@@ -453,7 +453,7 @@ void CVehicle_C::StopVehicleBoneAnimKit(uint32_t boneId) {
     this->BoneAnimEndHandler(this->m_unit->GetObjectModel(), boneId, 0xFFFFFFFF, 1, 0);
 }
 
-// OFFSET: 0x005EA580
+// OFFSET: 0x005EA580/0x14026B760
 void CVehicle_C::VehicleBoneAnimKitStopCallback(CAnimKitInst* kit, uint64_t param) {
     CVehicle_C* vehicle = reinterpret_cast<CVehicle_C*>(static_cast<intptr_t>(param));
     uint32_t count = vehicle->m_boneAnimKits.Count();
@@ -468,7 +468,7 @@ void CVehicle_C::VehicleBoneAnimKitStopCallback(CAnimKitInst* kit, uint64_t para
     }
 }
 
-// OFFSET: 0x005EA610
+// OFFSET: 0x005EA610/0x14026B820
 void CVehicle_C::StartMirroringAnimsToPassengers() {
     for (CPassenger* passenger = this->m_passengers.Head(); passenger; passenger = this->m_passengers.Next(passenger)) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -580,7 +580,7 @@ int32_t CVehicle_C::GetVirtualSeatCount() const {
     return count;
 }
 
-// OFFSET: 0x005EA870
+// OFFSET: 0x005EA870/0x14026BA80
 int32_t CVehicle_C::GetVehicleAndSeatFromVirtualSeatsRemaining(int32_t& remaining, const CVehicle_C*& vehicle, uint8_t& seat) const {
     if (!this->m_vehicleRec) {
         return 0;
@@ -616,7 +616,7 @@ int32_t CVehicle_C::GetVehicleAndSeatFromVirtualSeatsRemaining(int32_t& remainin
     return 0;
 }
 
-// OFFSET: 0x005EA9A0
+// OFFSET: 0x005EA9A0/0x14026BBF0
 CGUnit_C* CVehicle_C::FindPassengerUnit(uint8_t seat) const {
     for (CPassenger* passenger = const_cast<CVehicle_C*>(this)->m_passengers.Head(); passenger; passenger = const_cast<CVehicle_C*>(this)->m_passengers.Next(passenger)) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -689,7 +689,7 @@ void CVehicle_C::UpdatePassengerSoundPositions() {
 }
 
 // PROVEN: 00dd5431 IDENTICAL/NONE
-// OFFSET: 0x005EAC40
+// OFFSET: 0x005EAC40/0x14026BF90
 void CVehicle_C::ReceiveVehicleRecIDFromServer(int32_t vehicleId) {
     this->m_vehicleRec = g_vehicleDB.GetRecord(vehicleId);
     this->UpdateSeatVacancy();
@@ -815,7 +815,7 @@ void CVehicle_C::PlayVehicleBoneAnimKit(uint32_t type, uint8_t seat, uint32_t& b
     }
 }
 
-// OFFSET: 0x005EB070
+// OFFSET: 0x005EB070/0x14026C3E0
 int32_t CVehicle_C::GetVirtualSeatInfo(int32_t virtualSeat, const char*& type, const char*& occupant, const char*& realm, int32_t& canEject, int32_t& canSwitch) const {
     const CVehicle_C* vehicle;
     uint8_t seat;
@@ -928,7 +928,7 @@ void CVehicle_C::InitSystem() {
     s_vehiclePool = pool ? new (pool) TSObjectAllocPool<CVehicle_C>("Vehicle", 16) : NULL;
 }
 
-// OFFSET: 0x005EB480
+// OFFSET: 0x005EB480/0x14026C980
 CVehicle_C* CVehicle_C::Create(const CClientObjCreate* create, CGUnit_C* unit, int32_t vehicleId) {
     CVehicle_C* vehicle = s_vehiclePool->New("", 0);
     vehicle->m_unit = unit;
@@ -970,7 +970,7 @@ CVehicle_C* CVehicle_C::Create(const CClientObjCreate* create, CGUnit_C* unit, i
 }
 
 // PROVEN: 62acb291 IDENTICAL/NONE
-// OFFSET: 0x005EB5E0
+// OFFSET: 0x005EB5E0/0x14026CB30
 void CVehicle_C::Destroy(int32_t removePassengers) {
     if (removePassengers) {
         this->RemoveAllPassengersLocally(0);

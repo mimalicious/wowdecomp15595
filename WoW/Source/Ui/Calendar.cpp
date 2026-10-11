@@ -1324,7 +1324,7 @@ void CGCalendar::InitHolidays() {
     }
 }
 
-// OFFSET: 0x009B5810
+// OFFSET: 0x009B5810/0x14073F110
 void CGCalendar::InsertEvent(CalendarDayEvent* event, int32_t table) {
     uint32_t originalEnd = event->m_endTime;
     WowTime start;
@@ -1651,7 +1651,7 @@ int32_t CGCalendar::GetFirstPendingInviteIndex(uint32_t offset, uint32_t day) {
     return -1;
 }
 
-// OFFSET: 0x009ABBA0
+// OFFSET: 0x009ABBA0/0x140732D90
 static void __stdcall FireEventAlarm(CGameTime* time, void* param) {
     CalendarDayEvent* event = static_cast<CalendarDayEvent*>(param);
     WowTime alarm;
@@ -1667,7 +1667,7 @@ static void __stdcall FireEventAlarm(CGameTime* time, void* param) {
     }
 }
 
-// OFFSET: 0x009ABC40
+// OFFSET: 0x009ABC40/0x140732E40
 void CalendarDayEvent::ScheduleAlarm() {
     WowTime alarm;
     WowTime::WowDecodeTime(this->m_startTime, &alarm);
@@ -1678,7 +1678,7 @@ void CalendarDayEvent::ScheduleAlarm() {
 }
 
 // PROVEN: c0e438d6 IDENTICAL/NONE
-// OFFSET: 0x009AAB10
+// OFFSET: 0x009AAB10/0x140731D20
 static uint32_t EncodeDate(int32_t month, int32_t monthDay, int32_t year) {
     WowTime date;
     date.m_month = month;
@@ -1890,7 +1890,7 @@ void CGCalendar::GetEvent(uint32_t offset, uint32_t day, uint32_t index) {
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_OPEN_EVENT, "%s", CGCalendar::GetCalendarTypeString(event->m_type));
 }
 
-// OFFSET: 0x009AC350
+// OFFSET: 0x009AC350/0x1407335D0
 const char* GetHolidayDescription(int32_t holidayId) {
     HolidaysRec* holiday = g_holidaysDB.GetRecord(holidayId);
 

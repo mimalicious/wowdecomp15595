@@ -265,7 +265,7 @@ static void ShardEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventI
     }
 }
 
-// OFFSET: 0x008BC5E0
+// OFFSET: 0x008BC5E0/0x140605330
 C3Vector BlizzardObject::GetPolarOffset(float radius, float angle, int32_t rotate) const {
     C3Vector offset;
     offset.z = 0.0f;
@@ -368,7 +368,7 @@ void SpellVisualsHandleCastStart(CGUnit_C* unit, const SpellCast* cast, const Sp
     }
 }
 
-// OFFSET: 0x008BC970
+// OFFSET: 0x008BC970/0x140605850
 C3Vector LightningObject::GetCasterPosition(CGUnit_C* unit, uint32_t attachment, const C3Vector& offset, int32_t raw) {
     CM2Model* model = unit->m_worldModel;
     C3Vector base = unit->m_vehiclePassenger ? unit->GetModelPosition() : unit->GetPosition();
@@ -397,7 +397,7 @@ C3Vector LightningObject::GetCasterPosition(CGUnit_C* unit, uint32_t attachment,
     return position;
 }
 
-// OFFSET: 0x008BCC50
+// OFFSET: 0x008BCC50/0x140605B30
 C3Vector LightningObject::GetImpactPosition(CGUnit_C* unit, uint32_t spellId, CGUnit_C* caster) {
     CM2Model* model = unit->m_worldModel;
     C3Vector position = unit->m_vehiclePassenger ? unit->GetModelPosition() : unit->GetPosition();
@@ -439,7 +439,7 @@ C3Vector LightningObject::GetImpactPosition(CGUnit_C* unit, uint32_t spellId, CG
     return position;
 }
 
-// OFFSET: 0x008BCF20
+// OFFSET: 0x008BCF20/0x140605EE0
 bool LightningObject::Tick(uint32_t time) {
     for (uint32_t i = 0; i < this->m_bolts.Count(); i++) {
         Bolt& bolt = this->m_bolts[i];
@@ -520,7 +520,7 @@ bool LightningObject::Tick(uint32_t time) {
     return (this->m_flags & 0x1) || time < this->m_endTime;
 }
 
-// OFFSET: 0x008BD450
+// OFFSET: 0x008BD450/0x140606520
 void SpellVisualsHandleEclipse(const CImVector& color, float fadeIn, const SpellRec* spell) {
     uint32_t castTime = Spell_C_GetCastTime(spell, 0, 0, 0);
     s_eclipse.m_color = color;
@@ -585,7 +585,7 @@ void SpellVisualsRender() {
     s_lightningManager->Render(StaticSingleton<CCameraManager>::Instance()->m_shot.m_position, World::FrustumCull);
 }
 
-// OFFSET: 0x008BD6B0
+// OFFSET: 0x008BD6B0/0x1406067A0
 void SpellVisualsPlayCameraShakeID(uint32_t id, const C3Vector* position) {
     SpellEffectCameraShakesRec* rec = g_spellEffectCameraShakesDB.GetRecord(id);
 
@@ -600,7 +600,7 @@ void SpellVisualsPlayCameraShakeID(uint32_t id, const C3Vector* position) {
     }
 }
 
-// OFFSET: 0x008BD730
+// OFFSET: 0x008BD730/0x140606860
 int32_t MountTransitionObject::UpdateCharacterData() {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_unitGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -720,7 +720,7 @@ void BlizzardObject::ModelLoadedCallback(CM2Model* model, void* param) {
     }
 }
 
-// OFFSET: 0x008BDCE0
+// OFFSET: 0x008BDCE0/0x140606E80
 C3Vector BlizzardObject::GetRandomShardOffset() {
     float radius = sqrt(CRandom::ufloat_(g_rndSeed)) * this->m_radius;
     float minAngle;
@@ -788,7 +788,7 @@ void BlizzardObject::Render(int32_t visible) {
     }
 }
 
-// OFFSET: 0x008BE1D0
+// OFFSET: 0x008BE1D0/0x140607710
 void SpellVisualsBlizzardSetFrameOfReference(BlizzardObject* object, const C44Matrix* matrix) {
     object->SetFrameOfReference(matrix);
 }
@@ -871,7 +871,7 @@ LightningObject::~LightningObject() {
     }
 }
 
-// OFFSET: 0x008BE560
+// OFFSET: 0x008BE560/0x140607B30
 bool MountTransitionObject::Tick() {
     uint32_t now = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     float elapsed = static_cast<float>(static_cast<double>(now - this->m_lastTime) * 0.001);
@@ -1211,7 +1211,7 @@ void SpellVisualsInitialize() {
     SpellVisualsInitializeModelAttachLookup();
 }
 
-// OFFSET: 0x008BF6F0
+// OFFSET: 0x008BF6F0/0x140609040
 void LightningObject::CreateFromSpell(CGUnit_C* caster, CEffect* effect, uint32_t chainEffectsId, const WOWGUID* targets, uint32_t count, uint32_t spellId, bool persist, bool reverse, LightningObject** lightning, uint32_t maxLightning, const C3Vector* location, int32_t attachment) {
     if (!caster || !spellId) {
         return;
@@ -1336,7 +1336,7 @@ void LightningObject::CreateFromSpell(CGUnit_C* caster, CEffect* effect, uint32_
     } while (offset < 0x30);
 }
 
-// OFFSET: 0x008BFAF0
+// OFFSET: 0x008BFAF0/0x1406096E0
 void SpellVisualGetLightning(CGUnit_C* caster, CEffect* effect, uint32_t chainEffectsId, bool persist, bool reverse, uint32_t spellId, const WOWGUID* targets, uint32_t count, LightningObject** lightning, uint32_t maxLightning, const C3Vector* location, int32_t attachment) {
     if (caster) {
         LightningObject::CreateFromSpell(caster, effect, chainEffectsId, targets, count, spellId, persist, reverse, lightning, maxLightning, location, attachment);
@@ -1367,7 +1367,7 @@ void SpellVisualsCancelMountTransition(MountTransitionObject* transition) {
     }
 }
 
-// OFFSET: 0x008BFBA0
+// OFFSET: 0x008BFBA0/0x1406097E0
 bool BlizzardObject::Update() {
     const SpellVisualKitAreaModelRec* areaModel = this->m_areaModel;
     int32_t ring = areaModel->m_enumID & 0x1;
@@ -1443,7 +1443,7 @@ bool BlizzardObject::Update() {
     return true;
 }
 
-// OFFSET: 0x008C0000
+// OFFSET: 0x008C0000/0x140609BA0
 void SpellVisualsTick() {
     uint32_t time = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     LightningObject* lightning = s_lightningObjects.Head();

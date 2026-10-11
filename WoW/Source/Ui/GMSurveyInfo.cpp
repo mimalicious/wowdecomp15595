@@ -15,7 +15,7 @@ char* CGGMSurveyInfo::m_surveyAnswerComments[15];
 // STATIC: 0x00F76348
 char* CGGMSurveyInfo::m_surveyComment;
 
-// OFFSET: 0x009E5C00
+// OFFSET: 0x009E5C00/0x14077E060
 const char* CGGMSurveyInfo::GetQuestion(int32_t index) {
     if (index < 1 || static_cast<uint32_t>(index) > 15) {
         return NULL;
@@ -38,7 +38,7 @@ const char* CGGMSurveyInfo::GetQuestion(int32_t index) {
     return question ? static_cast<const char*>(question->m_question) : NULL;
 }
 
-// OFFSET: 0x009E5C80
+// OFFSET: 0x009E5C80/0x14077E120
 const char* CGGMSurveyInfo::GetAnswer(int32_t index, int32_t answer) {
     if (index < 1 || static_cast<uint32_t>(index) > 15) {
         return NULL;
@@ -68,7 +68,7 @@ const char* CGGMSurveyInfo::GetAnswer(int32_t index, int32_t answer) {
     return NULL;
 }
 
-// OFFSET: 0x009E5D50
+// OFFSET: 0x009E5D50/0x14077E230
 int32_t CGGMSurveyInfo::GetNumAnswers(int32_t index) {
     if (index < 1 || static_cast<uint32_t>(index) > 15) {
         return 0;

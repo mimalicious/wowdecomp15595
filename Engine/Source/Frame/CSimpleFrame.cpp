@@ -511,7 +511,7 @@ bool CSimpleFrame::IsDragging() {
 }
 
 // PROVEN: 6126f2c3 IDENTICAL/NONE
-// OFFSET: 0x00504A10
+// OFFSET: 0x00504A10/0x14014B170
 void CSimpleFrame::PreOnAnimUpdate() {
     if (this->AnimData_HasActiveAlpha()) {
         uint8_t alpha = this->AnimData_GetAlpha();
@@ -867,7 +867,7 @@ void CSimpleFrame::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     }
 }
 
-// OFFSET: 0x00503030
+// OFFSET: 0x00503030/0x1401490A0
 int32_t CSimpleFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     C2Vector pt = evt.m_data.m_mousePosition;
 
@@ -988,7 +988,7 @@ int32_t CSimpleFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) 
     return 0;
 }
 
-// OFFSET: 0x00503480
+// OFFSET: 0x00503480/0x1401495B0
 int32_t CSimpleFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     if (!btn) {
         if (this->m_dragButtons & evt.m_data.m_button) {
@@ -1024,7 +1024,7 @@ int32_t CSimpleFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     return 0;
 }
 
-// OFFSET: 0x00503560
+// OFFSET: 0x00503560/0x1401496C0
 int32_t CSimpleFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
     if (!this->m_visible || !this->HasScript(this->m_onMouseWheel)) {
         return 0;
@@ -1139,7 +1139,7 @@ void CSimpleFrame::OnLayerShow() {
 }
 
 // PROVEN: ac25ec01 IDENTICAL/NONE
-// OFFSET: 0x00503A00
+// OFFSET: 0x00503A00/0x140149D40
 void CSimpleFrame::OnLayerHide() {
     if (this->HasScript(this->m_onHide) && !this->m_isLoading) {
         this->RunScript(this->m_onHide, 0, NULL);
@@ -1306,7 +1306,7 @@ void CSimpleFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: 0x00505050
+// OFFSET: 0x00505050/0x14014B950
 void CSimpleFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     if (!(this->m_drawLayerEnabled & (1 << layer))) {
         return;
@@ -1342,7 +1342,7 @@ void CSimpleFrame::OnLayerCursorEnter(int32_t a2) {
 }
 
 // PROVEN: 75014645 IDENTICAL/NONE
-// OFFSET: 0x00505320
+// OFFSET: 0x00505320/0x14014BD20
 void CSimpleFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     if (this->m_hoverFrame) {
         this->m_hoverFrame->Hide();
@@ -1639,7 +1639,7 @@ bool CSimpleFrame::GetBoundsRect(CRect& rect) {
 }
 
 // PROVEN: 605b64c5 IDENTICAL/NONE
-// OFFSET: 0x00504400
+// OFFSET: 0x00504400/0x14014AA00
 bool CSimpleFrame::UpdateScale(bool force) {
     float scale = this->m_frameScale;
 
@@ -1667,7 +1667,7 @@ bool CSimpleFrame::UpdateScale(bool force) {
 }
 
 // PROVEN: ac34c512 IDENTICAL/NONE
-// OFFSET: 0x00504500
+// OFFSET: 0x00504500/0x14014AB10
 void CSimpleFrame::UpdateAlpha() {
     for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
         nextRegion = this->m_regions.RawNext(region);
@@ -1791,7 +1791,7 @@ void CSimpleFrame::StopAnimating() {
 }
 
 // PROVEN: b864c45b IDENTICAL/NONE
-// OFFSET: 0x00504B30
+// OFFSET: 0x00504B30/0x14014B2B0
 void CSimpleFrame::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
         this->AnimData_Init();

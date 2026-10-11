@@ -1084,7 +1084,7 @@ FMOD_RESULT System::createChannelGroup(const char *name, ChannelGroup **channelg
 }
 
 
-// OFFSET: 0x00A7B520
+// OFFSET: 0x00A7B520/0x1408367E0
 FMOD_RESULT System::createSoundGroup(const char *name, SoundGroup **soundgroup)
 {
     FMOD_RESULT result;

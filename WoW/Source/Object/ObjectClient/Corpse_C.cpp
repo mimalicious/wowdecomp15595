@@ -31,7 +31,7 @@ struct CorpseGuildRequest {
     /* 0008 */ uint32_t m_flags;
 };
 
-// OFFSET: 0x00597930
+// OFFSET: 0x00597930/0x140209980
 void CGCorpse_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
     this->m_corpse = reinterpret_cast<CGCorpseData*>(storage + OBJECT_END);
@@ -79,7 +79,7 @@ int32_t CGCorpse_C::GetModelFileName(const char** name) const {
     return *name != NULL;
 }
 
-// OFFSET: 0x00597AD0
+// OFFSET: 0x00597AD0/0x1402059D0
 const char* CGCorpse_C::GetPortraitTexture() const {
     uint32_t displayId = this->m_corpse->m_corpseFieldDisplayId;
 
@@ -110,12 +110,12 @@ int32_t CGCorpse_C::ShouldFadeout() {
     return !this->m_component || (TextureIsReadyNow(this->m_component->m_baseTexture) && this->m_component->RenderPrep(0));
 }
 
-// OFFSET: 0x00597BC0
+// OFFSET: 0x00597BC0/0x140205B00
 int32_t CGCorpse_C::CanBeLooted() const {
     return this->m_corpse->m_corpseFieldDynamicFlags & 0x1;
 }
 
-// OFFSET: 0x00597BD0
+// OFFSET: 0x00597BD0/0x140205B10
 void CGCorpse_C::ShowLootEffect() {
     if (this->m_lootEffect) {
         return;
@@ -206,7 +206,7 @@ uint32_t CGCorpse_C::GetFactionTemplate() const {
     return rec ? rec->m_factionID : 0;
 }
 
-// OFFSET: 0x00597F20
+// OFFSET: 0x00597F20/0x140205F50
 float CGCorpse_C::GetDisplayScale() const {
     CreatureDisplayInfoRec* displayRec = g_creatureDisplayInfoDB.GetRecord(this->m_corpse->m_corpseFieldDisplayId);
 
@@ -221,7 +221,7 @@ float CGCorpse_C::GetDisplayScale() const {
     return 1.0f;
 }
 
-// OFFSET: 0x00597F80
+// OFFSET: 0x00597F80/0x140205FC0
 void CGCorpse_C::SetDeathSequence(CM2Model* model, int32_t underwater) {
     uint32_t sequence = underwater ? 132 : 6;
     model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
@@ -243,7 +243,7 @@ void CGCorpse_C::SetDeathSequence(CM2Model* model, int32_t underwater) {
     }
 }
 
-// OFFSET: 0x00598030
+// OFFSET: 0x00598030/0x140206110
 void CGCorpse_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->m_passenger.PostInit(create.m_stationaryPosition);
 
@@ -396,14 +396,14 @@ void CGCorpse_C::Reenable(const CClientObjCreate& create) {
     }
 }
 
-// OFFSET: 0x00598520
+// OFFSET: 0x00598520/0x140206670
 void CGCorpse_C::ModelLoaded(CM2Model* model) {
     this->CGObject_C::ModelLoaded(model);
     this->SetDeathSequence(model, this->m_corpseFlags & 0x2);
     this->m_selectionRadius = model->GetBoundingSphere().r * 0.5f;
 }
 
-// OFFSET: 0x00598570
+// OFFSET: 0x00598570/0x1402066D0
 void CGCorpse_C::OnRightClick() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -564,17 +564,17 @@ void CGCorpse_C::RenderTargetSelection() const {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x00598A30
+// OFFSET: 0x00598A30/0x140206CA0
 CGCorpse_C::CGCorpse_C(uint32_t time, const CClientObjCreate& create) : CGObject_C(time, create), m_passenger(create.m_hasGOTransport ? create.m_goTransport.m_guid : WOWGUID::Make(0), create.m_hasGOTransport ? create.m_goTransport.m_position : create.m_stationaryPosition, this->m_obj->m_guid), m_component(NULL), m_groundNormal(0.0f, 0.0f, 1.0f), m_corpseFlags(0), m_selectionRadius(0.0f), m_lootEffect(NULL) {
     this->m_passenger.m_facing = create.m_hasGOTransport ? create.m_goTransport.m_facing : create.m_stationaryFacing;
 }
 
-// OFFSET: 0x00598B80
+// OFFSET: 0x00598B80/0x140206E00
 float CGCorpse_C::GetTrueScale() const {
     return this->GetDisplayScale() * this->m_scaleModifier * this->m_scale;
 }
 
-// OFFSET: 0x00598BA0
+// OFFSET: 0x00598BA0/0x140206E30
 int32_t CGCorpse_C::CanHighlight() const {
     return !(this->m_corpse->m_corpseFieldFlags & 0x1) || (this->m_corpse->m_corpseFieldDynamicFlags & 0x1);
 }

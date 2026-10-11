@@ -11,7 +11,7 @@
 HidManager::~HidManager() {
 }
 
-// OFFSET: 0x00881250
+// OFFSET: 0x00881250/0x1405BAEB0
 HidManager* HidManager::Create() {
     return new (SMemAlloc(sizeof(HidManagerImpl), __FILE__, __LINE__, 0)) HidManagerImpl();
 }

@@ -636,14 +636,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "DeclineGroup", &Script_DeclineGroup },
 };
 
-// OFFSET: 0x008FCD90
+// OFFSET: 0x008FCD90/0x140653FD0
 void CGPartyInfo::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x008FCDC0
+// OFFSET: 0x008FCDC0/0x140654020
 void CGPartyInfo::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

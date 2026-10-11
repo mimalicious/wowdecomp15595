@@ -154,7 +154,7 @@ void CLCDText::SetFontColor(COLORREF color) {
     this->SetForegroundColor(color);
 }
 
-// OFFSET: 0x00B40FE0
+// OFFSET: 0x00B40FE0/0x14090F020
 void CLCDText::SetText(const WCHAR* text) {
     if (!text || !wcscmp(this->m_szText, text)) {
         return;
@@ -242,7 +242,7 @@ int32_t CLCDText::GetRightMargin() {
     return this->m_dtp.iRightMargin;
 }
 
-// OFFSET: 0x00B41210
+// OFFSET: 0x00B41210/0x14090F2A0
 void CLCDText::SetAlignment(int32_t alignment) {
     UINT format = this->m_nTextFormat & ~this->m_nTextAlignment;
     this->m_nTextAlignment = alignment;

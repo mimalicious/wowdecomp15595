@@ -139,7 +139,7 @@ uint32_t Liquid::GetReflectionMode() {
 }
 
 // PROVEN: 3dd13e28 IDENTICAL/NONE
-// OFFSET: 0x0071AE50
+// OFFSET: 0x0071AE50/0x1403EF2C0
 uint32_t Liquid::GetReflectionDownscale() {
     return s_reflectionDownscale;
 }
@@ -424,7 +424,7 @@ void Liquid::Update() {
     Liquid::s_wmoWaterTexValid = 0;
 }
 
-// OFFSET: 0x0071B340
+// OFFSET: 0x0071B340/0x1403EF8C0
 Liquid::CInstance* Liquid::CreateInstance(uint32_t a1, uint32_t liquidType, IGeomFactory* factory) {
     CInstance* instance = Liquid::CInstance::Create();
     instance->m_material = Liquid::CMaterialBank::GetMaterial(liquidType);
@@ -452,7 +452,7 @@ void Liquid::AddConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback) {
     s_configChangedCallbacks.New(callback);
 }
 
-// OFFSET: 0x0071B400
+// OFFSET: 0x0071B400/0x1403EFA30
 void Liquid::RemoveConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback) {
     uint32_t count = s_configChangedCallbacks.Count();
 
@@ -505,7 +505,7 @@ void Liquid::CInstance::Destroy() {
     Liquid::s_instanceAllocator.Clear(typeid(Liquid::CInstance).raw_name(), SLOG_OBJECT, 1);
 }
 
-// OFFSET: 0x0071BE30
+// OFFSET: 0x0071BE30/0x1403F0B90
 Liquid::CInstance::CInstance() {
     this->m_material = NULL;
     this->m_settings = NULL;
@@ -520,7 +520,7 @@ Liquid::CInstance::CInstance() {
     this->m_refCount = 1;
 }
 
-// OFFSET: 0x0071BEE0
+// OFFSET: 0x0071BEE0/0x1403F0C40
 Liquid::CInstance* Liquid::CInstance::Create() {
     return Liquid::s_instanceAllocator.New<Liquid::CInstance>(0);
 }

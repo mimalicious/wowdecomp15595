@@ -601,7 +601,7 @@ void CGChat::RecordWhisperDest(WOWGUID guid) {
 }
 
 // PROVEN: 8c239c17 IDENTICAL/NONE
-// OFFSET: 0x008E6120
+// OFFSET: 0x008E6120/0x1406143B0
 int32_t CGChat::IsWhisperThrottled(uint32_t time) {
     uint32_t last = s_whisperThrottleTimes[s_whisperThrottleIndex];
     return last && static_cast<int32_t>(time - last - 10000) < 0;
@@ -1000,7 +1000,7 @@ THROTTLEDCHAT::~THROTTLEDCHAT() {
     SMemFree(this->m_text, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x008EAFE0
+// OFFSET: 0x008EAFE0/0x140619F30
 int32_t CGChat::CanSendChannelMessage(const char* channelName) {
     ChatChannel* channel = GetChannelByName(channelName);
 
@@ -2053,7 +2053,7 @@ int32_t StringToChatType(const char* string, int32_t* type) {
     return 0;
 }
 
-// OFFSET: 0x008E5BC0
+// OFFSET: 0x008E5BC0/0x140613EE0
 static void TranslateMessageCase(const char* word, char* dest, uint32_t size, const char* source) {
     size--;
 
@@ -2184,7 +2184,7 @@ int32_t CGChat::OnUpdateInstance(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: 0x008ECEB0
+// OFFSET: 0x008ECEB0/0x14061C470
 void ChatWindowInfo::Init() {
     CImVector color(0, 0, 0, 0x28);
 
@@ -2361,7 +2361,7 @@ void CGChat::TranslateMessage(uint32_t language, uint32_t skill, const char* tex
     }
 }
 
-// OFFSET: 0x008F40E0
+// OFFSET: 0x008F40E0/0x140625E60
 void CGChat::JoinedChannel(uint32_t id, const char* name, uint32_t a3, uint8_t flags) {
     ChatChannel* channel = id ? CGChat::GetChannelByChatChannelID(id) : GetChannelByName(name);
 
@@ -4164,7 +4164,7 @@ void RebuildDisplayChannelList(int32_t signal) {
     }
 }
 
-// OFFSET: 0x008F1E00
+// OFFSET: 0x008F1E00/0x140622C50
 void CGChat::OnChannelsUpdated() {
     for (uint32_t i = 0; i < CGChat::s_channels.Count(); i++) {
         ChatChannel* channel = &CGChat::s_channels.m_data[i];

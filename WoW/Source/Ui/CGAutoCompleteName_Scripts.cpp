@@ -47,14 +47,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetAutoCompletePresenceID", &Script_GetAutoCompletePresenceID },
 };
 
-// OFFSET: 0x009CB2B0
+// OFFSET: 0x009CB2B0/0x14075ACC0
 void AutoCompleteRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009CB2E0
+// OFFSET: 0x009CB2E0/0x14075AD10
 void AutoCompleteUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

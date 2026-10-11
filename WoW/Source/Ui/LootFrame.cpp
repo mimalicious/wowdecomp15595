@@ -504,7 +504,7 @@ static void MissingLootItemCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
-// OFFSET: 0x0095A500
+// OFFSET: 0x0095A500/0x1406CCBC0
 bool CGLootInfo::IsPlayerIneligible(int32_t itemId) {
     for (uint32_t i = 0; i < CGLootInfo::m_missingItems.m_count; i++) {
         if (CGLootInfo::m_missingItems.m_data[i].m_itemId == itemId) {

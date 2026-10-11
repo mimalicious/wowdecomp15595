@@ -8,7 +8,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include <cmath>
 
-// OFFSET: 0x0043BA30
+// OFFSET: 0x0043BA30/0x140046460
 float CSimpleCamera::FOV() const {
     return this->m_fov;
 }

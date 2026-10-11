@@ -15,7 +15,7 @@
 static float s_lightGridScale = 0.05f;
 
 // PROVEN: 9a8905f2 IDENTICAL/NONE
-// OFFSET: 0x00812BF0
+// OFFSET: 0x00812BF0/0x14052A850
 void CM2Light::Copy(const CM2Light& light) {
     this->m_scene = NULL;
     this->m_stamp = 0;
@@ -70,7 +70,7 @@ void CM2Lighting::SetFog(const C3Vector& color, float start, float end, float de
 }
 
 // PROVEN: 20156ce1 IDENTICAL/NONE
-// OFFSET: 0x00812E00
+// OFFSET: 0x00812E00/0x14052AB90
 int32_t CM2Lighting::GetPointLight(uint32_t index, C3Vector& pos, C3Vector& color, C3Vector& attenuation) {
     if (index >= this->m_lightCount) {
         return 0;

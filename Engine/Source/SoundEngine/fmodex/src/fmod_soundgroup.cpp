@@ -46,7 +46,7 @@ FMOD_RESULT SoundGroup::getSystemObject(System **system)
 }
 
 
-// OFFSET: 0x00A7B7B0
+// OFFSET: 0x00A7B7B0/0x140836B00
 FMOD_RESULT SoundGroup::setMaxAudible(int maxaudible)
 {
     FMOD_RESULT result;
@@ -81,7 +81,7 @@ FMOD_RESULT SoundGroup::getMaxAudible(int *maxaudible)
 }
 
 
-// OFFSET: 0x00A7B7E0
+// OFFSET: 0x00A7B7E0/0x140836B30
 FMOD_RESULT SoundGroup::setMaxAudibleBehavior(FMOD_SOUNDGROUP_BEHAVIOR behavior)
 {
     FMOD_RESULT result;
@@ -116,7 +116,7 @@ FMOD_RESULT SoundGroup::getMaxAudibleBehavior(FMOD_SOUNDGROUP_BEHAVIOR *behavior
 }
 
 
-// OFFSET: 0x00A7B810
+// OFFSET: 0x00A7B810/0x140836B60
 FMOD_RESULT SoundGroup::setMuteFadeSpeed(float speed)
 {
     FMOD_RESULT result;

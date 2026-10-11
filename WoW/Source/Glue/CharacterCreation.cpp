@@ -111,7 +111,7 @@ void CCharacterCreation::SetCharCustomizeFrame(CSimpleModelFFX* modelFrame) {
     CCharacterCreation::m_charCustomizeFrame = modelFrame;
 }
 
-// OFFSET: 0x0080C060
+// OFFSET: 0x0080C060/0x140522690
 void CCharacterCreation::UndressComponent(CCharacterComponent* component) {
     if (!component) {
         return;
@@ -410,7 +410,7 @@ void CCharacterCreation::SetViewingAlteredForm(int32_t alteredForm) {
     alteredModel->SetWorldTransform(position, CCharacterCreation::m_alteredFormAtFront ? CCharacterCreation::m_charFacing : 0.0f, 1.0f);
 }
 
-// OFFSET: 0x0080CA80
+// OFFSET: 0x0080CA80/0x140523280
 void CCharacterCreation::SetPet() {
     const CharStartOutfitRec* outfit = NULL;
     int32_t totem = 0;
@@ -503,7 +503,7 @@ void CCharacterCreation::UninitCharacterComponent(CCharacterComponent*& componen
     component = NULL;
 }
 
-// OFFSET: 0x0080CD30
+// OFFSET: 0x0080CD30/0x140523540
 void CCharacterCreation::InitCharacterComponent(CCharacterComponent*& component, ComponentData* data) {
     CreatureModelDataRec* modelRec = GetModelDataRec(data->m_preferences.m_raceID, data->m_preferences.m_sexID);
 
@@ -699,7 +699,7 @@ void CCharacterCreation::TextureMakeLocalFinishedCallback(CAsyncObject* object) 
     AsyncFileReadDestroyObject(object);
 }
 
-// OFFSET: 0x0080D230
+// OFFSET: 0x0080D230/0x140523A90
 int32_t CCharacterCreation::Idle(const void* data, void* param) {
     if (CCharacterCreation::m_charCustomizeFrame) {
         LinkModelAndTexturesToAsyncHead(CCharacterCreation::m_charCustomizeFrame->m_model);
@@ -941,7 +941,7 @@ bool CCharacterCreation::SetSelectedClass(int32_t classID) {
     return true;
 }
 
-// OFFSET: 0x0080E750
+// OFFSET: 0x0080E750/0x140525580
 void CCharacterCreation::CycleCharCustomization(CHAR_CUSTOMIZATION_TYPE type, int32_t delta) {
     if (!delta) {
         return;
@@ -1130,7 +1130,7 @@ void CCharacterCreation::Shutdown() {
 }
 
 // PROVEN: 7cf42d01 IDENTICAL/NONE
-// OFFSET: 0x0080EDE0
+// OFFSET: 0x0080EDE0/0x140525F10
 void CCharacterCreation::OnHide() {
     CCharacterCreation::CancelRaceSexComponentTexturesPreload();
     EventUnregister(EVENT_ID_IDLE, CCharacterCreation::Idle);

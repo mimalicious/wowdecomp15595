@@ -18,13 +18,13 @@ void CGGameObject_C_Type_Mailbox::StartInteraction() {
 }
 
 // PROVEN: 25d830e7 IDENTICAL/NONE
-// OFFSET: 0x00599640
+// OFFSET: 0x00599640/0x140207A30
 int32_t CGGameObject_C_Type_Mailbox::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 15 : 41;
 }
 
 // PROVEN: 50c508d7 IDENTICAL/NONE
-// OFFSET: 0x0059AE10
+// OFFSET: 0x0059AE10/0x140209550
 bool CGGameObject_C_Type_Mailbox::Use() {
     CGPlayer_C::TalkToMailbox(this->m_owner->m_obj->m_guid);
 

@@ -198,7 +198,7 @@ void FrameScript_MemoryCleanup() {
 }
 
 // PROVEN: 9f6c1499 IDENTICAL/NONE
-// OFFSET: 0x0083AD50
+// OFFSET: 0x0083AD50/0x140565460
 void FrameScript_SetPluralRule(PLURAL_RULE rule) {
     s_pluralRule = rule;
 }
@@ -1555,7 +1555,7 @@ void FrameScript_SignalEvent(uint32_t index, lua_State* L, int32_t argCount) {
 }
 
 // PROVEN: 3d3e8f5d IDENTICAL/NONE
-// OFFSET: 0x0083EC60
+// OFFSET: 0x0083EC60/0x14056A450
 void FrameScript_Flush() {
     if (s_context) {
         FrameScript_Destroy();
@@ -1620,7 +1620,7 @@ void FrameScript_SignalEvent(uint32_t index, const char* format, ...) {
     va_end(args);
 }
 
-// OFFSET: 0x0083F450
+// OFFSET: 0x0083F450/0x14056AE40
 void FrameScript_CreateEvents(const char** names, uint32_t count) {
     s_scriptEvents.SetCount(count);
 

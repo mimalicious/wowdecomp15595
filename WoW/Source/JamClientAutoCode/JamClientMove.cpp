@@ -1075,7 +1075,7 @@ bool ClientMoveGravityEnable::Handle() {
 }
 
 // PROVEN: 8ad49aaf IDENTICAL/NONE
-// OFFSET: 0x006A2F50
+// OFFSET: 0x006A2F50/0x140350460
 ClientMoveKnockBack::ClientMoveKnockBack(WOWGUID guid, uint32_t ackIndex, const C2Vector& direction, float horizontalSpeed, float verticalSpeed) {
     this->m_guid = guid;
     this->m_horizontalSpeed = horizontalSpeed;
@@ -1811,7 +1811,7 @@ bool ClientMoveSetCanTransitionBetweenSwimAndFly::Handle() {
 }
 
 // PROVEN: c9cc0e19 IDENTICAL/NONE
-// OFFSET: 0x006A1050
+// OFFSET: 0x006A1050/0x14034E2A0
 ClientMoveSetCollisionHeight::ClientMoveSetCollisionHeight(WOWGUID guid, uint32_t ackIndex, float height, uint32_t reason) {
     this->m_guid = guid;
     this->m_height = height;
@@ -4114,7 +4114,7 @@ bool ClientMoveSetTurnRate::Handle() {
 }
 
 // PROVEN: 7462773e IDENTICAL/NONE
-// OFFSET: 0x006A1E80
+// OFFSET: 0x006A1E80/0x14034F2F0
 ClientMoveSetVehicleRecId::ClientMoveSetVehicleRecId(WOWGUID guid, uint32_t ackIndex, uint32_t vehicleRecId) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;

@@ -58,7 +58,7 @@ int32_t OsWriteFile(HOSFILE file, const void* buffer, uint32_t bytesToWrite, uin
     return Blizzard::File::Write(reinterpret_cast<Blizzard::File::StreamRecord*>(file), buffer, reinterpret_cast<int32_t*>(bytesWritten)) != 0;
 }
 
-// OFFSET: 0x007A8E10
+// OFFSET: 0x007A8E10/0x14049EBB0
 int64_t OsSetFilePointer(HOSFILE file, int64_t distance, uint32_t moveMethod) {
     int32_t whence[] = { 0, 1, 2 };
     int64_t position = 0;
@@ -82,7 +82,7 @@ uint64_t OsGetFileSize(HOSFILE file) {
 }
 
 // PROVEN: d47165be IDENTICAL/NONE
-// OFFSET: 0x007A8ED0
+// OFFSET: 0x007A8ED0/0x14049EC70
 uint64_t OsGetFileSize(const char* fileName) {
     Blizzard::File::FileInfo info;
 
@@ -94,7 +94,7 @@ uint64_t OsGetFileSize(const char* fileName) {
 }
 
 // PROVEN: abf4fa49 IDENTICAL/NONE
-// OFFSET: 0x007A8F00
+// OFFSET: 0x007A8F00/0x14049ECA0
 int32_t OsSetEndOfFile(HOSFILE file) {
     return Blizzard::File::SetEOF(reinterpret_cast<Blizzard::File::StreamRecord*>(file), 0, 1) != 0;
 }
@@ -311,13 +311,13 @@ uint32_t GetFileMode(uint32_t desiredAccess, uint32_t shareMode, uint32_t create
 }
 
 // PROVEN: 8a1fe467 IDENTICAL/NONE
-// OFFSET: 0x007A92B0
+// OFFSET: 0x007A92B0/0x14049F000
 int32_t OsFileSetSparse(HOSFILE file, int32_t sparse) {
     return Blizzard::File::SetSparse(reinterpret_cast<Blizzard::File::StreamRecord*>(file), sparse != 0) != 0;
 }
 
 // PROVEN: 95667a9b IDENTICAL/NONE
-// OFFSET: 0x007A92E0
+// OFFSET: 0x007A92E0/0x14049F020
 int32_t OsFileSupportsSparse() {
     char path[260];
     char root[4];

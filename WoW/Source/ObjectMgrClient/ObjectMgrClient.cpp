@@ -311,7 +311,7 @@ uint32_t ClntObjMgrGetPlayerType() {
     return s_curMgr->m_type;
 }
 
-// OFFSET: 0x0048E4B0
+// OFFSET: 0x0048E4B0/0x1400B25D0
 void ClntObjMgrHideObject(WOWGUID guid) {
     ObjectMgr* mgr = s_curMgr;
     CGObject_C* object = mgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -321,7 +321,7 @@ void ClntObjMgrHideObject(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x00490740
+// OFFSET: 0x00490740/0x1400B53D0
 void ClntObjMgrLinkInNewObject(CGObject_C* object) {
     WOWGUID guid = object->m_obj->m_guid;
     s_curMgr->m_objects.Insert(object, static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -362,7 +362,7 @@ void ClntObjMgrShowObject(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x0048F460
+// OFFSET: 0x0048F460/0x1400B3C30
 void ClntObjMgrUnsetTypeMirrorHandler(OBJECT_TYPE_ID typeId, uint32_t fieldOffset, MIRRORHANDLERFUNC function, void* param) {
     UnassignMirrorHandler(&s_typeMirrorHandlers[typeId][fieldOffset >> 2], function, param);
 }

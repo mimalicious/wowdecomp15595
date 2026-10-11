@@ -531,14 +531,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMissingLootItemLink", &Script_GetMissingLootItemLink },
 };
 
-// OFFSET: 0x0095A080
+// OFFSET: 0x0095A080/0x1406CC5D0
 void LootInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0095A0B0
+// OFFSET: 0x0095A0B0/0x1406CC620
 void LootInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

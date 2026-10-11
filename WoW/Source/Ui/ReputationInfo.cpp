@@ -54,7 +54,7 @@ int32_t CGReputationInfo::m_selectedFaction;
 // STATIC: 0x00B9E614
 const int32_t CGReputationInfo::m_reactionThresholds[9] = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000, 43000 };
 
-// OFFSET: 0x009A59B0
+// OFFSET: 0x009A59B0/0x14072BD90
 static int32_t GetHeaderIndex(int32_t factionId) {
     for (uint32_t i = 0; i < CGReputationInfo::m_numHeaders; i++) {
         if (CGReputationInfo::m_headers[i]->m_factionId == factionId) {
@@ -743,7 +743,7 @@ int32_t CGReputationInfo::AddVisibleFaction(uint32_t repListId, int32_t announce
     return 1;
 }
 
-// OFFSET: 0x009A75E0
+// OFFSET: 0x009A75E0/0x14072E030
 static bool FactionSortIsHidden(const FactionHeader* header) {
     FactionRec* faction = g_factionDB.GetRecord(header->m_factionId);
 

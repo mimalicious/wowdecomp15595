@@ -194,7 +194,7 @@ int32_t RealmConnection::HandleLogoutResponse(uint32_t msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: 0x006249F0
+// OFFSET: 0x006249F0/0x1402B61D0
 void RealmConnection::RequestCharacterEnum() {
     UserClientEnumCharacters msg;
     this->Send(&msg, CONNECTION_ROUTED);
@@ -394,7 +394,7 @@ bool RealmConnection::HandleAuthResponse(ClientAuthResponse* msg) {
     return true;
 }
 
-// OFFSET: 0x00625150
+// OFFSET: 0x00625150/0x1402B6B40
 void RealmConnection::RequestCharacterLogin(WOWGUID guid, int32_t a2) {
     CDataStore unused;
     UserClientPlayerLogin msg(guid.m_guid);

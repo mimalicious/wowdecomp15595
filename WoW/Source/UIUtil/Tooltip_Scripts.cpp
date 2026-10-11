@@ -414,7 +414,7 @@ static int32_t FindItemByGUID(const CGItem_C* item, void* param) {
     return item->m_obj->m_guid == *static_cast<WOWGUID*>(param);
 }
 
-// OFFSET: 0x00468890
+// OFFSET: 0x00468890/0x14007C9B0
 void CGTooltip::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGTooltip::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGTooltip::RegisterScriptMethods);
@@ -3110,7 +3110,7 @@ static int32_t Script_SetHyperlinkCompareItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00465B00
+// OFFSET: 0x00465B00/0x140079110
 void CGTooltip::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGTooltip::s_metatable);
@@ -3205,7 +3205,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetVoidWithdrawalItem", &Script_SetVoidWithdrawalItem },
 };
 
-// OFFSET: 0x00465AE0
+// OFFSET: 0x00465AE0/0x1400790E0
 void CGTooltip::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

@@ -105,7 +105,7 @@ CSimpleFontStringRecord::~CSimpleFontStringRecord() {
 }
 
 // PROVEN: e0929a7b IDENTICAL/NONE
-// OFFSET: 0x0051D290
+// OFFSET: 0x0051D290/0x140169B70
 void CSimpleMessageScrollFrame::SetTimeVisible(float seconds) {
     for (int32_t i = 0; i < this->m_numDisplayed; i++) {
         CSimpleMessageScrollFrameLine* line = this->m_displayNodes[i].m_line;
@@ -119,7 +119,7 @@ void CSimpleMessageScrollFrame::SetTimeVisible(float seconds) {
 }
 
 // PROVEN: 93525626 IDENTICAL/NONE
-// OFFSET: 0x0051D2E0
+// OFFSET: 0x0051D2E0/0x140169BB0
 void CSimpleMessageScrollFrame::SetFadeDuration(float duration) {
     for (int32_t i = 0; i < this->m_numDisplayed; i++) {
         CSimpleMessageScrollFrameLine* line = this->m_displayNodes[i].m_line;
@@ -664,7 +664,7 @@ void CSimpleMessageScrollFrame::UpdateRect() {
 }
 
 // PROVEN: 49586a00 IDENTICAL/NONE
-// OFFSET: 0x0051E600
+// OFFSET: 0x0051E600/0x14016B540
 void CSimpleMessageScrollFrame::OnLayerShow() {
     CSimpleFrame::OnLayerShow();
     this->ScrollMessages(this->m_currentScroll);

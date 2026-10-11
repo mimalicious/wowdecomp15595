@@ -358,7 +358,7 @@ float CSimpleModel::GetHeight() {
 }
 
 // PROVEN: f4cdf815 IDENTICAL/NONE
-// OFFSET: 0x0051F570
+// OFFSET: 0x0051F570/0x14016C860
 void CSimpleModel::UpdateAlpha() {
     this->CSimpleFrame::UpdateAlpha();
 
@@ -369,7 +369,7 @@ void CSimpleModel::UpdateAlpha() {
     }
 }
 
-// OFFSET: 0x0051F5C0
+// OFFSET: 0x0051F5C0/0x14016C8C0
 void CSimpleModel::UpdateModelTransform() {
     float height = NDCToDDCHeight(1.0f) * 1.6666666f;
     float layoutScale = this->m_layoutScale;
@@ -392,7 +392,7 @@ void CSimpleModel::UpdateModel() {
     this->UpdateModelTransform();
 }
 
-// OFFSET: 0x0051F690
+// OFFSET: 0x0051F690/0x14016C9A0
 void CSimpleModel::RenderModel(void* arg) {
     CSimpleModel* simpleModel = static_cast<CSimpleModel*>(arg);
 
@@ -494,7 +494,7 @@ void CSimpleModel::LightingCallback(CM2Model* model, CM2Lighting* lighting, void
     }
 }
 
-// OFFSET: 0x0051FBA0
+// OFFSET: 0x0051FBA0/0x14016D180
 void CSimpleModel::SetModel(CM2Model* model) {
     if (model) {
         model->m_refCount++;
@@ -522,7 +522,7 @@ void CSimpleModel::SetModel(CM2Model* model) {
     this->NotifyDrawLayerChanged(2);
 }
 
-// OFFSET: 0x0051FC80
+// OFFSET: 0x0051FC80/0x14016D290
 void CSimpleModel::OnModelLoaded(CM2Model* model) {
     if (this->m_pendingCameraIndex != 0xFFFFFFFF) {
         this->SetCameraByIndex(this->m_pendingCameraIndex);

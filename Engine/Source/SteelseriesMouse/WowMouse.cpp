@@ -6,7 +6,7 @@
 SteelseriesMouse::~SteelseriesMouse() {
 }
 
-// OFFSET: 0x0087EFF0
+// OFFSET: 0x0087EFF0/0x1405B80F0
 WowMouse::WowMouse() {
     void* window = OsGuiGetWindow(0);
 
@@ -25,7 +25,7 @@ WowMouse::~WowMouse() {
     }
 }
 
-// OFFSET: 0x0087EFD0
+// OFFSET: 0x0087EFD0/0x1405B80D0
 int32_t WowMouse::IsConnected() {
     return this->m_hidManager->GetDeviceCount() != 0;
 }

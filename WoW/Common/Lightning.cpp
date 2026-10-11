@@ -49,7 +49,7 @@ static C3Vector s_arcOffset;
 // STATIC: 0x01008DD4
 static CRndSeed s_rndSeed(0);
 
-// OFFSET: 0x00B28860
+// OFFSET: 0x00B28860/0x1408F1030
 void CLightning::SetTexture(CTexture* texture) {
     if (texture) {
         TextureAddRef(texture);
@@ -74,7 +74,7 @@ uint32_t CLightning::DecodeChainEffectsID(uint32_t id) {
     return (high >> 11) | ((((bits >> 4) & 0xFF800000) | bits) & 0xFFFFFF);
 }
 
-// OFFSET: 0x00B28A50
+// OFFSET: 0x00B28A50/0x1408F1300
 static float RandomFloat(float min, float max) {
     return (max - min) * CRandom::ufloat_(s_rndSeed) + min;
 }
@@ -116,7 +116,7 @@ void LightningDestroyBuffers() {
     }
 }
 
-// OFFSET: 0x00B28D90
+// OFFSET: 0x00B28D90/0x1408F1630
 void CLightning::RandomizeJoint(LightningJoint& joint, float radius, float blend) {
     float z = CRandom::sfloat_(s_rndSeed);
     float x = CRandom::sfloat_(s_rndSeed);
@@ -256,12 +256,12 @@ void CLightning::SetSrcPos(const C3Vector& pos) {
     this->m_srcPos = pos;
 }
 
-// OFFSET: 0x00B294F0
+// OFFSET: 0x00B294F0/0x1408F1FA0
 void CLightning::SetDstPos(const C3Vector& pos) {
     this->m_dstPos = pos;
 }
 
-// OFFSET: 0x00B29510
+// OFFSET: 0x00B29510/0x1408F1FC0
 CLightning* CLightningManager::GetTempPtr(uint32_t index) {
     if (index == 0xFFFFFFFF || index >= this->m_bolts.Count()) {
         return NULL;
@@ -276,7 +276,7 @@ CLightning* CLightningManager::GetTempPtr(uint32_t index) {
     return bolt;
 }
 
-// OFFSET: 0x00B29540
+// OFFSET: 0x00B29540/0x1408F1FE0
 void CLightningManager::Move(uint32_t index, C3Vector* srcPos, C3Vector* dstPos) {
     if (srcPos) {
         this->m_bolts.m_data[index]->m_srcPos = *srcPos;
@@ -292,7 +292,7 @@ void CLightningManager::Move(uint32_t index, C3Vector* srcPos, C3Vector* dstPos)
     this->m_bolts.m_data[index]->m_dstPos = *dstPos;
 }
 
-// OFFSET: 0x00B295A0
+// OFFSET: 0x00B295A0/0x1408F2040
 void CLightningManager::SetBoltVisible(uint32_t index, bool visible) {
     if (index == 0xFFFFFFFF || index >= this->m_bolts.Count()) {
         return;
@@ -1015,13 +1015,13 @@ uint32_t CLightningManager::Add(void (*coordUpdate)(void*, uint32_t, C3Vector*, 
     return index;
 }
 
-// OFFSET: 0x00B2BE10
+// OFFSET: 0x00B2BE10/0x1408F43B0
 void CLightningManager::Remove(uint32_t index) {
     this->m_bolts.m_data[index] = reinterpret_cast<CLightning*>(reinterpret_cast<uintptr_t>(this->m_bolts.m_data[index]) | 0x1);
     this->m_freeList.Add(1, &index);
 }
 
-// OFFSET: 0x00B2BFA0
+// OFFSET: 0x00B2BFA0/0x1408F44A0
 void CLightning::UpdateJointCount(float length, float radius) {
     int32_t count;
 
@@ -1076,7 +1076,7 @@ void CLightning::UpdateJointCount(float length, float radius) {
     this->m_flags |= 0x1;
 }
 
-// OFFSET: 0x00B2C120
+// OFFSET: 0x00B2C120/0x1408F4660
 void CLightning::Update(float elapsed) {
     if (!(this->m_flags & 0x2)) {
         return;
@@ -1162,7 +1162,7 @@ void CLightning::Update(float elapsed) {
     }
 }
 
-// OFFSET: 0x00B2C400
+// OFFSET: 0x00B2C400/0x1408F4980
 void CLightningManager::Update(float elapsed) {
     for (uint32_t i = this->m_bolts.Count(); i;) {
         i--;

@@ -183,7 +183,7 @@ void PolyClipper::Clip(const C4Plane& plane, int32_t sign) {
 }
 
 // PROVEN: 1e02c0ee IDENTICAL/NONE
-// OFFSET: 0x0079EC60
+// OFFSET: 0x0079EC60/0x140493EF0
 PCResultsIterator PolyClipper::GetResults(PCInterpolateFunc func) const {
     return PCResultsIterator(this, func);
 }

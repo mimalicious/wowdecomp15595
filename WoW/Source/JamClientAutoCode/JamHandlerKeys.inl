@@ -24,13 +24,13 @@ inline JamHandlerKeyAdd::JamHandlerKeyAdd(JamHandlerKey* left, JamHandlerKey* ri
 inline JamHandlerKeyXor::JamHandlerKeyXor(JamHandlerKey* left, JamHandlerKey* right) : JamHandlerKeyOp(left, right) {
 }
 
-// OFFSET: 0x0066A4C0
+// OFFSET: 0x0066A4C0/0x1403125B0
 inline uint32_t JamHandlerKeyMulXor::Get() {
     uint32_t right = this->m_right->Get();
     return right ^ ((right & 0xF) * this->m_left->Get());
 }
 
-// OFFSET: 0x0066A520
+// OFFSET: 0x0066A520/0x140312620
 inline uint32_t JamHandlerKeySub::Get() {
     uint32_t right = this->m_right->Get();
     return this->m_left->Get() - right;
@@ -43,13 +43,13 @@ inline uint32_t JamHandlerKeyRol::Get() {
     return (left << right) | (left >> (32 - right));
 }
 
-// OFFSET: 0x0066A580
+// OFFSET: 0x0066A580/0x1403126A0
 inline uint32_t JamHandlerKeyAdd::Get() {
     uint32_t right = this->m_right->Get();
     return right + this->m_left->Get();
 }
 
-// OFFSET: 0x0066A6A0
+// OFFSET: 0x0066A6A0/0x1403127D0
 inline uint32_t JamHandlerKeyXor::Get() {
     uint32_t right = this->m_right->Get();
     return right ^ this->m_left->Get();

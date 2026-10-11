@@ -24,7 +24,7 @@ const char* CSimpleHyperlinkButton::s_objectTypeName = "HyperLinkButton";
 int32_t CSimpleHyperlinkedFrame::s_metatable;
 
 // PROVEN: 0aac88eb IDENTICAL/NONE
-// OFFSET: 0x005331A0
+// OFFSET: 0x005331A0/0x1401855B0
 bool CSimpleHyperlinkButton::IsA(int32_t type) {
     return type == CSimpleHyperlinkButton::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
@@ -119,7 +119,7 @@ CSimpleHyperlinkButton::CSimpleHyperlinkButton(CSimpleHyperlinkedFrame* parent) 
     this->m_linkText = NULL;
 }
 
-// OFFSET: [0x00533220, 0x00533430]
+// OFFSET: [0x00533220/0x140185650, 0x00533430/0x140185970]
 CSimpleHyperlinkButton::~CSimpleHyperlinkButton() {
     if (this->m_linkData) {
         SMemFree(this->m_linkData, __FILE__, __LINE__, 0);
@@ -260,7 +260,7 @@ void CSimpleHyperlinkedFrame::ClearHyperlinks() {
     }
 }
 
-// OFFSET: 0x00533340
+// OFFSET: 0x00533340/0x1401857D0
 void CSimpleHyperlinkedFrame::AddHyperlinks(CSimpleFontString* string) {
     if (!string->m_string) {
         return;

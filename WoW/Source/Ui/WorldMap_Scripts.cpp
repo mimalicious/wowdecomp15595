@@ -1413,14 +1413,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CanQueueForWintergrasp", &Script_CanQueueForWintergrasp },
 };
 
-// OFFSET: 0x0091A310
+// OFFSET: 0x0091A310/0x14067B380
 void WorldMapRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0091A340
+// OFFSET: 0x0091A340/0x14067B3D0
 void WorldMapUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

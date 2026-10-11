@@ -223,7 +223,7 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "AccountMsg_SetMsgRead", &Script_AccountMsg_SetMsgRead },
 };
 
-// OFFSET: 0x009FA3C0
+// OFFSET: 0x009FA3C0/0x140797880
 void AccountMsg_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);

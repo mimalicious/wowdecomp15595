@@ -13,7 +13,7 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 
 // PROVEN: 76393933 IDENTICAL/NONE
-// OFFSET: 0x00A02EA0
+// OFFSET: 0x00A02EA0/0x1407A2070
 void CGCharacterModelBase::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGCharacterModelBase::s_metatable);
@@ -59,7 +59,7 @@ static int32_t Script_SetRotation(lua_State* L) {
 }
 
 // PROVEN: d238e798 IDENTICAL/NONE
-// OFFSET: 0x00A03710
+// OFFSET: 0x00A03710/0x1407A2990
 void CGCharacterModelBase::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGCharacterModelBase::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGCharacterModelBase::RegisterScriptMethods);
@@ -235,7 +235,7 @@ static FrameScript_Method s_ScriptMethods[] = {
 };
 
 // PROVEN: 4c0fb303 IDENTICAL/NONE
-// OFFSET: 0x00A02E80
+// OFFSET: 0x00A02E80/0x1407A2040
 void CGCharacterModelBase::RegisterScriptMethods(lua_State* L) {
     CSimpleModel::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

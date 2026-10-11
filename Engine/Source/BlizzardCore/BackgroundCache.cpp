@@ -116,7 +116,7 @@ void PatchOnDemand::Cache::ArchiveList::GenerateFilename(ListItem* item, char* b
     }
 }
 
-// OFFSET: 0x007A2FF0
+// OFFSET: 0x007A2FF0/0x14050BB40
 int32_t PatchOnDemand::Cache::ArchiveList::EnumerateArchives(ENUMARCHIVESCALLBACK callback, void* param) {
     int32_t result = 0;
 

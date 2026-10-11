@@ -479,7 +479,7 @@ void CMapObjGroup::CreateDataPointers(uint8_t* data, uint8_t* end) {
     }
 }
 
-// OFFSET: 0x00794D50
+// OFFSET: 0x00794D50/0x140487690
 void CMapObj::DistFromClosestExtPortal(uint32_t depth, uint32_t flags, const CMapObjGroup* group, const CMapObjGroup* fromGroup, const C3Vector& pos, float& dist) {
     if (depth > 3) {
         return;
@@ -507,7 +507,7 @@ void CMapObj::DistFromClosestExtPortal(uint32_t depth, uint32_t flags, const CMa
     }
 }
 
-// OFFSET: 0x00795290
+// OFFSET: 0x00795290/0x140487E30
 float CMapObj::DistFromClosestExtPortal(CMapObjGroup* group, const C3Vector& pos, int32_t outdoor) {
     uint32_t flags = 0x8;
 

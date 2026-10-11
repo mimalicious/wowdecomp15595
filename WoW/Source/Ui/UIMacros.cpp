@@ -77,7 +77,7 @@ static uint16_t s_initCounter;
 // STATIC: 0x00F60DE4
 static uint32_t s_pendingLoads;
 
-// OFFSET: 0x009C3C30
+// OFFSET: 0x009C3C30/0x140750FD0
 int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
     for (uint32_t i = 0; i < static_cast<int32_t>(sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])); i++) {
         if (CGUIMacros::m_sortedMacros[i] == id) {
@@ -239,7 +239,7 @@ void CGUIMacros::RemoveDynamicMacro(MACRONODE* macro) {
     s_dynamicMacros.UnlinkNode(macro);
 }
 
-// OFFSET: 0x009C5120
+// OFFSET: 0x009C5120/0x140752B90
 void CGUIMacros::Initialize() {
     do {
         s_initCounter++;
@@ -257,12 +257,12 @@ void CGUIMacros::LoadMacros() {
     LoadAccountData(5, CGUIMacros::LoadMacrosCallback, reinterpret_cast<void*>(static_cast<uintptr_t>(s_initCounter | 0x20000)));
 }
 
-// OFFSET: 0x009C3BF0
+// OFFSET: 0x009C3BF0/0x140750FA0
 static int32_t QSortIcons(const void* a, const void* b) {
     return _stricmp(*static_cast<char* const*>(a), *static_cast<char* const*>(b));
 }
 
-// OFFSET: 0x009C3C10
+// OFFSET: 0x009C3C10/0x140750FB0
 static int32_t QSortMacrosByName(const void* a, const void* b) {
     return _stricmp((*static_cast<MACRONODE* const*>(a))->m_name, (*static_cast<MACRONODE* const*>(b))->m_name);
 }
@@ -591,7 +591,7 @@ void CGUIMacros::CountActionBarSlots(MACRONODE* macro) {
     }
 }
 
-// OFFSET: 0x009C48E0
+// OFFSET: 0x009C48E0/0x140752100
 void CGUIMacros::SortMacros() {
     memset(CGUIMacros::m_sortedMacros, 0, sizeof(((CGUIMacros*)0)->m_sortedMacros));
     MACRONODE** sorted = static_cast<MACRONODE**>(alloca(sizeof(MACRONODE*) * 36));
@@ -615,7 +615,7 @@ void CGUIMacros::SortMacros() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_MACROS, NULL);
 }
 
-// OFFSET: 0x009C54F0
+// OFFSET: 0x009C54F0/0x1407531A0
 int32_t CGUIMacros::SetMacroBody(MACRONODE* macro, const char* body) {
     SStrCopy(macro->m_body, body, sizeof(macro->m_body));
     char* cursor = macro->m_body;

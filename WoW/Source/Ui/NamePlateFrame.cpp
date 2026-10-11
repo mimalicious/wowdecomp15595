@@ -129,7 +129,7 @@ void CGNamePlateFrame::operator delete(void* ptr) {
     CGNamePlateFrame::s_namePlateHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x009E70D0
+// OFFSET: 0x009E70D0/0x14077F990
 static float NamePlateScreenCenterDistanceSquared(C3Vector position) {
     static C3Vector s_screenCenter(0.4f, 0.3f, 0.0f);
 
@@ -210,7 +210,7 @@ void CGNamePlateFrame::UpdateCastBarSize() {
     this->m_castBarIcon->SetPoint(FRAMEPOINT_CENTER, this->m_castBarBorder, FRAMEPOINT_BOTTOMLEFT, this->GetWidth() / s_namePlateWidth * 0.0092f, iconOffsetY, 1);
 }
 
-// OFFSET: 0x009E74A0
+// OFFSET: 0x009E74A0/0x14077FEF0
 static int32_t UpdateStackDepth(CGNamePlateFrame* frame, int32_t depth) {
     if (!frame) {
         return 0;
@@ -313,7 +313,7 @@ bool CGNamePlateFrame::SetBloat(float bloat, bool force) {
     return true;
 }
 
-// OFFSET: 0x009E7C00
+// OFFSET: 0x009E7C00/0x1407807E0
 void CGNamePlateFrame::TriggerDamageFeedback() {
     CImVector color(0, 0, 0xFF, 0xFF);
     this->m_damageFeedbackTime = 5000;
@@ -356,7 +356,7 @@ static const CImVector* GetDifficultyColor(int32_t level, int32_t playerLevel) {
     return &s_difficultyColors[4];
 }
 
-// OFFSET: 0x009E7D30
+// OFFSET: 0x009E7D30/0x140780940
 void CGNamePlateFrame::UpdateEliteIcon(CGUnit_C* unit) {
     if (!this->m_eliteNameplateIcon) {
         return;
@@ -371,7 +371,7 @@ void CGNamePlateFrame::UpdateEliteIcon(CGUnit_C* unit) {
     }
 }
 
-// OFFSET: 0x009E7DA0
+// OFFSET: 0x009E7DA0/0x1407809E0
 void CGNamePlateFrame::UpdateRaidTargetDisplay(uint32_t raidTarget) {
     if (!this->m_raidTargetingIcon) {
         return;
@@ -406,7 +406,7 @@ void CGNamePlateFrame::HideCastBar() {
     this->m_castFadeTime = 0.0f;
 }
 
-// OFFSET: 0x009E7E90
+// OFFSET: 0x009E7E90/0x140780AE0
 void CGNamePlateFrame::SetScreenCoordsAndRectangle(C3Vector position) {
     CSimpleFrame* parent = this->m_parent;
     this->SetPoint(FRAMEPOINT_BOTTOM, parent, FRAMEPOINT_BOTTOMLEFT, position.x, position.y, 1);
@@ -420,7 +420,7 @@ void CGNamePlateFrame::SetScreenCoordsAndRectangle(C3Vector position) {
     this->SetScreenRect(rect);
 }
 
-// OFFSET: 0x009E7F40
+// OFFSET: 0x009E7F40/0x140780C00
 static int32_t __cdecl CompareNamePlates(const void* a, const void* b) {
     CGNamePlateFrame* frameA = *static_cast<CGNamePlateFrame* const*>(a);
     CGNamePlateFrame* frameB = *static_cast<CGNamePlateFrame* const*>(b);
@@ -448,7 +448,7 @@ static int32_t __cdecl CompareNamePlates(const void* a, const void* b) {
     return yB <= yA ? 1 : -1;
 }
 
-// OFFSET: 0x009E8180
+// OFFSET: 0x009E8180/0x140780E50
 static int32_t GetAdjustedLevel(CGPlayer_C* player, CGUnit_C* unit) {
     int32_t level = static_cast<int32_t>(unit->m_unit->m_unitFieldLevel);
 
@@ -463,7 +463,7 @@ static int32_t GetAdjustedLevel(CGPlayer_C* player, CGUnit_C* unit) {
     return level;
 }
 
-// OFFSET: 0x009E81F0
+// OFFSET: 0x009E81F0/0x140780ED0
 void CGNamePlateFrame::OnGainFocus() {
     if (this->m_namePlateGlow) {
         this->m_namePlateGlow->Show();
@@ -834,7 +834,7 @@ void CGUnit_C::ClearNamePlateFocus() {
     CGUnit_C::s_namePlateFocus = NULL;
 }
 
-// OFFSET: 0x009E8FF0
+// OFFSET: 0x009E8FF0/0x140781E00
 void CGNamePlateFrame::ReleaseNameplateFrame(CGNamePlateFrame* frame) {
     if (frame) {
         CGNamePlateFrame::s_unusedNamePlates.LinkToTail(frame);
@@ -911,7 +911,7 @@ void CGNamePlateFrame::Initialize(CGUnit_C* unit) {
     this->m_stackDepth = 0;
 }
 
-// OFFSET: 0x009E9430
+// OFFSET: 0x009E9430/0x140782370
 bool CGUnit_C::UnitNameplatesReposition(CGWorldFrame* worldFrame) {
     uint32_t elapsed = FrameTime::GetCurTimeMs() - s_lastRepositionTime;
     float overlapH = s_cvNamePlateOverlapH->m_floatValue;

@@ -206,7 +206,7 @@ int32_t CGUnit::IsOnSpline() const {
     return spline && !(spline->m_flags & 0x80);
 }
 
-// OFFSET: 0x0043B840
+// OFFSET: 0x0043B840/0x140046180
 int32_t CGUnit::IsOnFallingSpline() const {
     CMoveSpline* spline = this->m_movement->m_spline;
     return spline && !(spline->m_flags & 0x80) && (spline->m_flags & 0x200);
@@ -267,7 +267,7 @@ bool CGUnit::IsCharmed() const {
     return this->m_unit->m_unitFieldCharmedby != WOWGUID();
 }
 
-// OFFSET: 0x008A4690
+// OFFSET: 0x008A4690/0x1405E70F0
 int32_t CGUnit::GetSpellCostModifier(int32_t schoolMask) const {
     int32_t result = 0;
     bool found = false;
@@ -310,7 +310,7 @@ C3Vector CGUnit::GetVelocity() const {
     return C3Vector(this->m_movement->m_moveDir.x * speed, this->m_movement->m_moveDir.y * speed, speed * this->m_movement->m_moveDir.z);
 }
 
-// OFFSET: 0x00A27AC0
+// OFFSET: 0x00A27AC0/0x1407CF210
 void CGUnit::CalcMissileTravel(const C3Vector& target, float speed, bool speedAsTime, float* outSpeed, int32_t* outTime) const {
     if (speedAsTime) {
         if (speed <= 0.0f) {
@@ -343,7 +343,7 @@ void CGUnit::CalcMissileTravel(const C3Vector& target, float speed, bool speedAs
     }
 }
 
-// OFFSET: 0x00A27900
+// OFFSET: 0x00A27900/0x1407CF070
 float CGUnit::GetMaxSplineSpeed(uint32_t splineFlags) const {
     if (splineFlags & 0x2000A40) {
         return 50.0f;

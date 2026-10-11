@@ -46,7 +46,7 @@ uint8_t* WDataStore::GetHeaderSpace(uint32_t bytes) {
     return reinterpret_cast<uint8_t*>(this->m_bufferObj + 1) - bytes;
 }
 
-// OFFSET: 0x004C5EF0
+// OFFSET: 0x004C5EF0/0x140101040
 void* WDataStore::AllocBuffer(uint32_t size) {
     if (size <= 0x300) {
         return s_smallBufferHeap->New(__FILE__, __LINE__)->m_data;

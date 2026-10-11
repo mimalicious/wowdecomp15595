@@ -72,7 +72,7 @@ void SI3::DSP_AttachCustomDspChain(void* channel, char* name) {
     SE3::AddChannelToChannelGroup(channel, head->m_chain.m_channelGroup);
 }
 
-// OFFSET: 0x00632960
+// OFFSET: 0x00632960/0x1402C8060
 void SI3::DSP_MakeDSPsExpire(float elapsed) {
     for (DSP_CHAIN_HEAD_LOOKUP* head = s_dspChains.m_fulllist.Head(); head; head = s_dspChains.m_fulllist.Next(head)) {
         if (SE3::GetChannelGroupNumChannels(head->m_chain.m_channelGroup)) {

@@ -61,7 +61,7 @@ void CGUnit_C::VehiclePassengerOnUninit() {
 }
 
 // PROVEN: 4c495b57 IDENTICAL/NONE
-// OFFSET: 0x005EB6E0
+// OFFSET: 0x005EB6E0/0x14026CC30
 void CGUnit_C::VehiclePassengerInit() {
     if (this->m_vehiclePassenger) {
         this->m_vehiclePassenger->Free();
@@ -108,7 +108,7 @@ void CGUnit_C::SetVehicleExitVoluntary(int32_t enable) {
 }
 
 // PROVEN: c4be65a1 IDENTICAL/NONE
-// OFFSET: 0x005EB840
+// OFFSET: 0x005EB840/0x14026CD80
 int32_t CGUnit_C::IsVehicleExitVoluntary() const {
     return this->m_movementData.m_flags2 & 0x20;
 }
@@ -260,7 +260,7 @@ void CGUnit_C::SignalPlayerGainsVehicleDataEvent() {
 }
 
 // PROVEN: 7dd7d9c0 IDENTICAL/NONE
-// OFFSET: 0x005EBBA0
+// OFFSET: 0x005EBBA0/0x14026D120
 void CGUnit_C::SignalPlayerLosesVehicleDataEvent() {
     WOWGUID guid = this->m_obj->m_guid;
     int32_t count;
@@ -271,7 +271,7 @@ void CGUnit_C::SignalPlayerLosesVehicleDataEvent() {
     }
 }
 
-// OFFSET: 0x005EBC00
+// OFFSET: 0x005EBC00/0x14026D180
 int32_t CGUnit_C::VehiclePassengerShouldWaitForVehicleTransitionAnim(uint64_t transport, uint8_t seat) const {
     if (transport == this->GetTransportGUID() && seat == this->m_movementData.m_transportSeat) {
         return 0;
@@ -326,7 +326,7 @@ int32_t CGUnit_C::VehiclePassengerShouldWaitForVehicleTransitionAnim(uint64_t tr
     return animVehicle->CanPlayBoneAnim() ? 1 : 0;
 }
 
-// OFFSET: 0x005EBD40
+// OFFSET: 0x005EBD40/0x14026D310
 int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t transport, uint8_t seat) {
     uint32_t high = static_cast<uint32_t>(transport >> 32);
     int32_t entering = (high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && ((high & 0xF07FFFFF) | static_cast<uint32_t>(transport)));
@@ -398,7 +398,7 @@ int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t 
     return 1;
 }
 
-// OFFSET: 0x005EBF10
+// OFFSET: 0x005EBF10/0x14026D550
 int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnimFromSpline(CDataStore* msg, uint64_t transport, uint8_t seat) {
     CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
 
@@ -559,7 +559,7 @@ void CGUnit_C::VehiclePassengerUpdateWorldCameraState(VehicleRec* vehicleRec, Ve
     }
 }
 
-// OFFSET: 0x005EC3C0
+// OFFSET: 0x005EC3C0/0x14026DA70
 void CGUnit_C::VehiclePassengerUpdateWorldCameraStateInstantly() {
     CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
     VehicleRec* vehicleRec = passenger ? passenger->m_vehicleRec : NULL;
@@ -666,7 +666,7 @@ CGUnit_C* CGUnit_C::FindRootVehicle(CGUnit_C* stop) {
 }
 
 // PROVEN: d7cf92a8 IDENTICAL/NONE
-// OFFSET: 0x005EC600
+// OFFSET: 0x005EC600/0x14026DD50
 void CGUnit_C::CreateVehicleData(const CClientObjCreate* create, int32_t vehicleId) {
     if (this->m_vehicle) {
         this->m_vehicle->ReceiveVehicleRecIDFromServer(vehicleId);
@@ -681,7 +681,7 @@ void CGUnit_C::CreateVehicleData(const CClientObjCreate* create, int32_t vehicle
 }
 
 // PROVEN: 09442e12 IDENTICAL/NONE
-// OFFSET: 0x005EC660
+// OFFSET: 0x005EC660/0x14026DDB0
 void CGUnit_C::DestroyVehicleData(int32_t removePassengers) {
     if (!this->m_vehicle) {
         return;
@@ -873,7 +873,7 @@ void CGUnit_C::OnVehicleCameraNoLongerInUse() {
 }
 
 // PROVEN: f2325b6d IDENTICAL/NONE
-// OFFSET: 0x005ECCC0
+// OFFSET: 0x005ECCC0/0x14026E510
 void CGUnit_C::SetVehicleRecID(uint32_t vehicleRecId) {
     if (vehicleRecId) {
         this->CreateVehicleData(NULL, vehicleRecId);
@@ -882,7 +882,7 @@ void CGUnit_C::SetVehicleRecID(uint32_t vehicleRecId) {
     }
 }
 
-// OFFSET: 0x005ECD30
+// OFFSET: 0x005ECD30/0x14026E5C0
 void CGUnit_C::UpdateVehicleUISliders() {
     VehicleRec* vehicleRec = this->m_vehicle ? this->m_vehicle->m_vehicleRec : NULL;
 
@@ -1031,7 +1031,7 @@ void CGUnit_C::VehicleCameraOnUpdateTransport(WOWGUID transport, uint8_t seat) {
 }
 
 // PROVEN: a722881a IDENTICAL/NONE
-// OFFSET: 0x0057D160
+// OFFSET: 0x0057D160/0x1401E32C0
 CGUnit_C* CGUnit_C::GetRootVehicleUnit() {
     if (this->m_vehiclePassenger) {
         return this->m_vehiclePassenger->GetStoredRootVehicleUnit();

@@ -41,7 +41,7 @@ static FrameScript_Method s_ScriptMethods[] = {
 };
 
 // PROVEN: 45946981 IDENTICAL/NONE
-// OFFSET: 0x00532D00
+// OFFSET: 0x00532D00/0x140184EE0
 void CSimpleHyperlinkedFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

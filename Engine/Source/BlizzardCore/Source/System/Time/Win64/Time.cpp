@@ -190,7 +190,7 @@ bool System_Time::InitFrequency(LARGE_INTEGER* frequency) {
     return false;
 }
 
-// OFFSET: 0x007C0A10
+// OFFSET: 0x007C0A10/0x1404BA640
 System_Time::TimeInfo::TimeInfo() {
     LARGE_INTEGER frequency;
     this->m_usePerformanceCounter = InitFrequency(&frequency);

@@ -5,7 +5,7 @@
 #include "Engine/Source/Tempest/CFrustum.h"
 
 // PROVEN: 8a404508 IDENTICAL/NONE
-// OFFSET: 0x004CBEA0
+// OFFSET: 0x004CBEA0/0x140107C10
 void CFrustum::Extents(CAaBox& box) {
     box = CAaBox::Bounding(this->corners, 8);
 }

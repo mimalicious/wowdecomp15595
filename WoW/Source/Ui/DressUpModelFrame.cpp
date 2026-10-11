@@ -231,7 +231,7 @@ CM2Model* CGDressUpModelFrame::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
 }
 
 // PROVEN: c1967315 IDENTICAL/NONE
-// OFFSET: 0x00A04E40
+// OFFSET: 0x00A04E40/0x1407A4590
 void CGDressUpModelFrame::SetUpModel(CGUnit_C* unit) {
     CGCharacterModelBase::SetUpModel(unit);
 
@@ -568,7 +568,7 @@ void CGDressUpModelFrame::TryOnWithVisual(int32_t itemId, int32_t visual, int32_
     }
 }
 
-// OFFSET: 0x00A05850
+// OFFSET: 0x00A05850/0x1407A5210
 void CGDressUpModelFrame::TryOnItem(CGItem_C* item, int32_t hand) {
     if (item) {
         this->TryOnWithVisual(item->m_obj->m_entryID, item->GetItemEnchantmentVisualID(), hand);

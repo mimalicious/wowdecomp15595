@@ -42,7 +42,7 @@ int32_t CGContainer_C::GetFreeSlots() const {
     return freeSlots;
 }
 
-// OFFSET: 0x00598FD0
+// OFFSET: 0x00598FD0/0x140207430
 void CGContainer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGItem_C::SetStorage(storage, saved);
     this->m_container = reinterpret_cast<CGContainerData*>(reinterpret_cast<uint8_t*>(storage) + sizeof(CGObjectData) + sizeof(CGItemData));

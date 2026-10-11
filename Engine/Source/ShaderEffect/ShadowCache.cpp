@@ -453,7 +453,7 @@ void CShadowCache::SetShadowMapDetailDoodad() {
     }
 }
 
-// OFFSET: 0x00435F40
+// OFFSET: 0x00435F40/0x14003F850
 static C3Vector SnapBandPosition(const C3Vector& pos, float radius, uint32_t band) {
     float size = static_cast<float>(CShadowCache::s_shadowSize);
     float cell = 1.0f;
@@ -1137,7 +1137,7 @@ void CShadowCache::CreateResources() {
     CShadowCache::s_recreateTextures = 0;
 }
 
-// OFFSET: 0x004380A0
+// OFFSET: 0x004380A0/0x140041E70
 void CShadowCache::SetShadowMapAlphaTest(int32_t enable) {
     if (CShaderEffect::s_forceAlphaTest) {
         GxRsSet(GxRs_AlphaRef, enable ? 0x80 : 0);
@@ -1148,7 +1148,7 @@ void CShadowCache::SetShadowMapAlphaTest(int32_t enable) {
     g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 2, constants, 1);
 }
 
-// OFFSET: 0x00438630
+// OFFSET: 0x00438630/0x140042620
 void CShadowCache::SetShadowMapModel(uint32_t boneInfluences, int32_t untextured) {
     uint32_t vertexPermute = boneInfluences > 2 ? 2 : boneInfluences;
     uint32_t pixelPermute = untextured ? 0 : (CShaderEffect::s_forceAlphaTest != 0) + 1;

@@ -140,7 +140,7 @@ int32_t CVehicleCamera_C::ConvertFromWorldToRawOrOffset(C3Vector& position, CGOb
     return 1;
 }
 
-// OFFSET: 0x005E7F40
+// OFFSET: 0x005E7F40/0x140268BB0
 int32_t CVehicleCamera_C::ConvertSmoothFacingFromRawToWorld(float& facing, CGObject_C* relativeTo) {
     if (!relativeTo) {
         return 0;
@@ -1022,7 +1022,7 @@ void CVehicleCamera_C::BeginTransition(uint32_t time) {
 }
 
 // PROVEN: 07a6c06a IDENTICAL/NONE
-// OFFSET: 0x005E8900
+// OFFSET: 0x005E8900/0x140269670
 void CVehicleCamera_C::OnPassengerTransitionMotionBegin(uint32_t time, uint32_t duration) {
     if (this->m_flags & 0x1) {
         return;

@@ -35,7 +35,7 @@ static uint32_t s_wmoGroupID = static_cast<uint32_t>(-1);
 static int32_t s_inMapObj;
 
 // PROVEN: 9305d4f7 IDENTICAL/NONE
-// OFFSET: 0x004D9980
+// OFFSET: 0x004D9980/0x14011EE80
 void AreaListShutdown() {
     s_lastAreaID = -1;
     s_lastSubAreaID = -1;

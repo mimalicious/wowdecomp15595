@@ -92,7 +92,7 @@ int32_t IsMessageAllowedWhileOnSpline(uint32_t msgId) {
     return (s_allowedWhileOnSplineMessages[index >> 4] >> ((index >> 1) & 7)) & 1;
 }
 
-// OFFSET: 0x00571B80
+// OFFSET: 0x00571B80/0x1401D2DD0
 int32_t CMovement_C::ShouldHover() const {
     if (!(this->m_flags & MOVEMENTFLAG_HOVER)) {
         return 0;
@@ -105,7 +105,7 @@ int32_t CMovement_C::ShouldHover() const {
     return this->m_spline && !(this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE);
 }
 
-// OFFSET: 0x00571BB0
+// OFFSET: 0x00571BB0/0x1401D2E00
 C3Vector CMovement_C::GetGroundNormal() const {
     WOWGUID transport = this->m_transportGuid;
 
@@ -122,7 +122,7 @@ C3Vector CMovement_C::GetGroundNormal() const {
         this->m_groundNormal.x * matrix.a2 + matrix.c2 * this->m_groundNormal.z + matrix.b2 * this->m_groundNormal.y);
 }
 
-// OFFSET: 0x00571E60
+// OFFSET: 0x00571E60/0x1401D30A0
 void CPlayerMoveEvent::FromMoveStatus(const CMovementStatus& status) {
     this->m_moveFlags = status.m_moveFlags;
     this->m_moveExtraFlags = status.m_moveExtraFlags;
@@ -184,7 +184,7 @@ void CMovement_C::OnJumpSpline(float verticalAcceleration, uint32_t effectStartT
 }
 
 // PROVEN: faefadf4 IDENTICAL/NONE
-// OFFSET: 0x00571FB0
+// OFFSET: 0x00571FB0/0x1401D31F0
 void CMovement_C::Hover(int32_t enable, int32_t tryFall) {
     if (tryFall && !enable) {
         uint32_t oldFlags = this->m_flags;
@@ -202,7 +202,7 @@ void CMovement_C::Hover(int32_t enable, int32_t tryFall) {
     CMovementShared::Hover(enable);
 }
 
-// OFFSET: 0x00572010
+// OFFSET: 0x00572010/0x1401D3260
 void CMovement_C::OnClientControlLost() {
     uint32_t oldFlags = this->m_flags;
     this->StopFalling();
@@ -249,7 +249,7 @@ void CMovement_C::SkipTime(uint32_t time) {
     globals->m_timeCounterMaybe += time;
 }
 
-// OFFSET: 0x00572210
+// OFFSET: 0x00572210/0x1401D3400
 int32_t CMovement_C::PlotUnitSplineMovement(uint32_t time, uint32_t elapsed, C3Vector* position) {
     int32_t wasInAir = (this->m_flags2 & MOVEMENTFLAG2_JUMP_SPLINE_IN_AIR) && this->m_spline && !(this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE) && (this->m_spline->m_flags & SPLINEFLAG_PARABOLIC);
     int32_t wasAnimTier = (this->m_flags2 & MOVEMENTFLAG2_ANIM_TIER_IN_TRANS) && this->m_spline && !(this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE) && (this->m_spline->m_flags & SPLINEFLAG_ANIMATION);
@@ -296,7 +296,7 @@ int32_t CMovement_C::PlotUnitSplineMovement(uint32_t time, uint32_t elapsed, C3V
     return 0;
 }
 
-// OFFSET: 0x00572400
+// OFFSET: 0x00572400/0x1401D35F0
 uint32_t CMovement_C::RequestMove(uint32_t time, uint32_t elapsed, const C3Vector& move) {
     C3Vector target(move.x + this->m_anchorPos.x, this->m_anchorPos.y + move.y, this->m_anchorPos.z + move.z);
     CGUnit_C* unit = this->m_unit;
@@ -996,7 +996,7 @@ int32_t CMovement_C::ProcessSetCollisionHeight(uint32_t time, uint32_t oldFlags,
     return this->SendSetCollisionHeightAck(time, event, oldFlags, applied);
 }
 
-// OFFSET: 0x00576630
+// OFFSET: 0x00576630/0x1401DACA0
 void CMovement_C::UpdateMoversList() {
     uint32_t flags = this->m_flags;
 
@@ -1014,7 +1014,7 @@ void CMovement_C::UpdateMoversList() {
 }
 
 // PROVEN: 41dabe29 IDENTICAL/NONE
-// OFFSET: 0x00576950
+// OFFSET: 0x00576950/0x1401DAFF0
 void CMovement_C::OnSetFacing(float facing, int32_t flush) {
     this->SetFacing(facing);
 
@@ -1073,7 +1073,7 @@ void CMovement_C::GravityStateChanged() {
 }
 
 // PROVEN: 03481026 IDENTICAL/NONE
-// OFFSET: 0x00576AF0
+// OFFSET: 0x00576AF0/0x1401DB1E0
 void CMovement_C::OnUnsetActiveMover() {
     this->FlushMoveQueue(0, 0);
     this->m_flags &= ~MOVEMENTFLAG_STATUS_APPLIED;
@@ -1432,13 +1432,13 @@ void CPlayerMoveQueue::Enqueue(CPlayerMoveEvent* event) {
 }
 
 // PROVEN: c9583f18 IDENTICAL/NONE
-// OFFSET: 0x00577560
+// OFFSET: 0x00577560/0x1401DC0F0
 void CMovement_C::OnUnitDisable() {
     this->FlushMoveQueue(1, 1);
     this->Suspend();
 }
 
-// OFFSET: 0x00579B20
+// OFFSET: 0x00579B20/0x1401DF1D0
 void CPlayerMoveQueue::FreeAll() {
     if (MovementGetGlobals()) {
         s_freeList.Combine(this, 2, NULL);
@@ -1626,7 +1626,7 @@ void MovementDestroy() {
     CPlayerMoveQueue::s_freeList.Clear();
 }
 
-// OFFSET: 0x005757C0
+// OFFSET: 0x005757C0/0x1401D9BC0
 void CPlayerMoveQueue::FreeAllEvents() {
     CPlayerMoveEvent* event = this->Head();
 
@@ -1672,7 +1672,7 @@ ClipPolygon::ClipPolygon(const ClipPolygon& source) {
     memcpy(this->m_flags, source.m_flags, sizeof(int32_t) * source.m_count);
 }
 
-// OFFSET: 0x00571980
+// OFFSET: 0x00571980/0x1401D2BF0
 void CMovement_C::WrapFacingToRange(float& facing, float min, float max) {
     while (min > facing) {
         facing = facing + 6.2831855f;
@@ -1697,7 +1697,7 @@ void CMovement_C::WrapFacingToRange(float& facing, float min, float max) {
     }
 }
 
-// OFFSET: 0x00571770
+// OFFSET: 0x00571770/0x1401D2A70
 int32_t CMovement_C::AddTimeSkewSample(uint32_t localTime, uint32_t serverTime) {
     int32_t skew = serverTime + this->m_timeSkew - localTime;
 
@@ -1922,7 +1922,7 @@ C3Vector CMovement_C::PushOffObstacleEdge(const C3Vector& point, const C3Vector&
     return push;
 }
 
-// OFFSET: 0x006038C0
+// OFFSET: 0x006038C0/0x14028AB90
 int32_t CMovement_C::IsFacetOverhead(uint32_t facet) const {
     float left = this->m_position.x - this->m_collisionRadius;
     float right = this->m_collisionRadius + this->m_position.x;
@@ -1961,7 +1961,7 @@ void CMovement_C::FixupQueuedSetFacingEvents(float delta) {
     }
 }
 
-// OFFSET: 0x00571CF0
+// OFFSET: 0x00571CF0/0x1401D2F80
 float CMovement_C::GetRemainingStepUpHeight() const {
     float height = this->m_unit->IsClientControlled() ? this->m_stepUpHeight : 1.0f;
 
@@ -1976,7 +1976,7 @@ float CMovement_C::GetRemainingStepUpHeight() const {
     return height;
 }
 
-// OFFSET: 0x005716E0
+// OFFSET: 0x005716E0/0x1401D29E0
 float CMovement_C::GetStepUpHeight() const {
     if (this->m_unit->IsClientControlled()) {
         return this->m_stepUpHeight;
@@ -2128,7 +2128,7 @@ void CMovement_C::SaveMoveState(MoveState& state) const {
     state.m_currentSpeed = this->m_currentSpeed;
 }
 
-// OFFSET: 0x00572F70
+// OFFSET: 0x00572F70/0x1401D42F0
 void CMovement_C::SetInterpolation(uint32_t time) {
     this->m_flags2 &= ~(MOVEMENTFLAG2_INTERPOLATED_MOVEMENT | MOVEMENTFLAG2_INTERPOLATED_TURNING | MOVEMENTFLAG2_INTERPOLATED_PITCHING);
     this->m_interpolation = 0;
@@ -2371,7 +2371,7 @@ void CMovement_C::OnFlightBackSpeedChangeLocal(uint32_t eventTime, uint32_t ackC
 }
 
 // PROVEN: 36fa615f IDENTICAL/NONE
-// OFFSET: 0x00579100
+// OFFSET: 0x00579100/0x1401DE4F0
 void CMovement_C::OnFlightLocal(uint32_t eventTime, int32_t flying) {
     this->AddPlayerMoveEvent(eventTime, flying ? MOVEEVENT_SET_FLYING : MOVEEVENT_UNSET_FLYING, true, 0, 0.0f, 0.0f, 0);
 }
@@ -2452,7 +2452,7 @@ void CMovement_C::OnLaunchLocal(uint32_t eventTime, uint32_t ackCounter, const C
 }
 
 // PROVEN: 5b543c57 IDENTICAL/NONE
-// OFFSET: 0x00577870
+// OFFSET: 0x00577870/0x1401DC2C0
 void CMovement_C::OnMoveStartLocal(uint32_t eventTime, int32_t forward) {
     this->AddPlayerMoveEvent(eventTime, (MoveEventId)(forward == 0), true, 0, 0.0f, 0.0f, 0);
 }
@@ -2654,7 +2654,7 @@ void CMovement_C::OnSetPitchLocal(uint32_t eventTime, float pitch) {
 }
 
 // PROVEN: 3d34bca7 IDENTICAL/NONE
-// OFFSET: 0x00577BF0
+// OFFSET: 0x00577BF0/0x1401DC720
 void CMovement_C::OnSetRunModeLocal(uint32_t eventTime, int32_t run) {
     this->AddPlayerMoveEvent(eventTime, run ? MOVEEVENT_SET_RUN_MODE : MOVEEVENT_SET_WALK_MODE, true, 0, 0.0f, 0.0f, 0);
 }
@@ -3054,7 +3054,7 @@ void CMovement_C::SetCollisionBox(float width, float height, float scale, float 
     this->ValidateWorldPosition(CPassenger::GetPosition(this->m_position));
 }
 
-// OFFSET: 0x00571AD0
+// OFFSET: 0x00571AD0/0x1401D2D20
 void CMovement_C::SnapToSpline(const C3Vector& position, int32_t force) {
     if (!force) {
         float dx = position.x - this->m_position.x;
@@ -3083,7 +3083,7 @@ void CMovement_C::SnapToSpline(const C3Vector& position, int32_t force) {
 void CMovement_C::ValidateWorldPosition(const C3Vector& position) const {
 }
 
-// OFFSET: 0x00605BB0
+// OFFSET: 0x00605BB0/0x14028D270
 float CMovement_C::GetTimeJustFallen(float elapsed, float timeFallen, C3Vector* move, float* distance, int32_t force, float speed) {
     int32_t impact = this->CheckFallImpactThreshold(timeFallen, elapsed, *move, force);
     float moveTime = 0.0f;
@@ -3124,7 +3124,7 @@ CMovement_C::~CMovement_C() {
     this->Disable();
 }
 
-// OFFSET: 0x005773E0
+// OFFSET: 0x005773E0/0x1401DBFE0
 CMovement_C::CMovement_C(const C3Vector& position, float facing, const WOWGUID& ownerGuid, CGUnit_C* unit) : CMovementShared(WOWGUID(), position, facing, ownerGuid) {
     this->m_groundNormal.x = 0.0f;
     this->m_groundNormal.y = 0.0f;
@@ -3153,7 +3153,7 @@ CMovement_C::CMovement_C(const C3Vector& position, float facing, const WOWGUID& 
     this->m_timeSkew = 50;
 }
 
-// OFFSET: 0x00604ED0
+// OFFSET: 0x00604ED0/0x14028C340
 C3Vector CMovement_C::CalcRunWalkWalkableObstaclePush(const C3Vector& move, float* scale, C3Vector normal, int32_t useAltNormal, const C3Vector& altNormal) const {
     if (useAltNormal && normal.z <= 0.64278764f && !(fabs(altNormal.z * altNormal.z + altNormal.y * altNormal.y + altNormal.x * altNormal.x) < 2.3841858e-7f)) {
         normal.x = -altNormal.x;
@@ -3203,7 +3203,7 @@ void CMovement_C::GetMoveStatus(NETMESSAGE msgId, uint32_t gameTime, CMovementSt
     }
 }
 
-// OFFSET: 0x00573FC0
+// OFFSET: 0x00573FC0/0x1401D54D0
 int32_t CMovement_C::HandlePendingActions() {
     uint32_t oldFlags = this->m_flags;
 
@@ -3297,7 +3297,7 @@ void CMovement_C::Launch(const C2Vector& direction, float speed, float verticalS
 }
 
 // PROVEN: 571b368c IDENTICAL/NONE
-// OFFSET: 0x00577C20
+// OFFSET: 0x00577C20/0x1401DC790
 void CMovement_C::SplineToggleEnableFlying(int32_t enable) {
     if (enable) {
         if (this->StartFlight()) {
@@ -3316,7 +3316,7 @@ void CMovement_C::UpdateHeartbeatTimerA(uint32_t time) {
     }
 }
 
-// OFFSET: 0x00573400
+// OFFSET: 0x00573400/0x1401D47B0
 int32_t CMovement_C::ComputeLegalRawFacingRange(float& min, float& max) const {
     CGUnit_C* unit = this->m_unit;
     CVehicle_C* vehicle = unit->m_vehicle;
@@ -3355,7 +3355,7 @@ void CMovement_C::OnTurnToAngleLocal(uint32_t eventTime, float facing) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_TURN_TO_ANGLE, true, 0, facing, 0.0f, 0);
 }
 
-// OFFSET: 0x0057B080
+// OFFSET: 0x0057B080/0x1401E0AE0
 void CMovement_C::OnSwimStartLocal(uint32_t eventTime) {
     if (this->m_spline && !(this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE)) {
         uint32_t oldFlags = this->m_flags;
@@ -3394,7 +3394,7 @@ void CMovement_C::OnSwimStopLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_STOP_SWIM, true, 0, 0.0f, 0.0f, 0);
 }
 
-// OFFSET: 0x0057AF20
+// OFFSET: 0x0057AF20/0x1401E0920
 void CMovement_C::OnTurnStartLocal(uint32_t eventTime, int32_t left) {
     float min;
     float max;
@@ -3409,7 +3409,7 @@ void CMovement_C::OnTurnStartLocal(uint32_t eventTime, int32_t left) {
     CGInputControl::GetActive()->OnTurnToAngleStop();
 }
 
-// OFFSET: 0x0057B100
+// OFFSET: 0x0057B100/0x1401E0BD0
 void CMovement_C::OnPitchStartLocal(uint32_t eventTime, int32_t up) {
     CVehicle_C* vehicle = this->m_unit->m_vehicle;
     VehicleRec* rec = vehicle ? vehicle->m_vehicleRec : NULL;
@@ -3517,7 +3517,7 @@ static void ClipPolygonToPlane(ClipPolygon& polygon, int32_t planeIndex, const C
     }
 }
 
-// OFFSET: 0x00601F30
+// OFFSET: 0x00601F30/0x140288CD0
 static int32_t ExtrudeTriangle(const C3Vector* vertices, const uint8_t* indices, const C3Vector& normal, C4Plane* planes, const C3Vector& offset) {
     uint32_t next[3] = { 1, 2, 0 };
     uint32_t prev[3] = { 2, 0, 1 };
@@ -3612,7 +3612,7 @@ static int32_t ComputeDistanceToMoveImpl(const C3Vector* vertices, const C3Vecto
     return 1;
 }
 
-// OFFSET: 0x006024F0
+// OFFSET: 0x006024F0/0x140289430
 static int32_t ClipGenericPolygon(ClipPolygon& polygon, const C4Plane* planes, uint32_t planeIndex, float* distance, const C3Vector& direction) {
     float best = *distance;
     int32_t behind = 1;
@@ -3827,7 +3827,7 @@ int32_t CMovement_C::CollisionBoxDoesntFit(float width, float height, float scal
     return this->BoxDoesntFit(height * scale, radius);
 }
 
-// OFFSET: 0x00602A60
+// OFFSET: 0x00602A60/0x140289A00
 static int32_t ClipMovementPyramid(World::FacetData* facets, const C3Vector& direction, const C4Plane* clipPlanes, uint32_t clipCount, const C4Plane* planes, uint32_t planeIndex, float* distance, uint32_t* facetIndex) {
     int32_t found = 0;
     ClipPolygon polygon;
@@ -3931,7 +3931,7 @@ static void __stdcall DistanceToMovePyramid(World::FacetData* facets, const C3Ve
     }
 }
 
-// OFFSET: 0x006039E0
+// OFFSET: 0x006039E0/0x14028ACB0
 static int32_t WalkableFacetEnclosesPoint(uint32_t facet, const C3Vector& point) {
     C4Plane planes[4];
 
@@ -3949,7 +3949,7 @@ static int32_t WalkableFacetEnclosesPoint(uint32_t facet, const C3Vector& point)
     return 1;
 }
 
-// OFFSET: 0x00603D00
+// OFFSET: 0x00603D00/0x14028B070
 int32_t CMovement_C::IsSlopeFallable(uint32_t facet, const C3Vector& move) const {
     C3Vector point(this->m_position.x + move.x, this->m_position.y + move.y, this->m_position.z + move.z);
     float threshold = this->m_unit->IsClientControlled() ? 0.64278764f : 0.17364818f;
@@ -4147,7 +4147,7 @@ int32_t CMovement_C::SendFallReset(uint32_t time) {
     return this->m_unit->OnCollideFallReset(time);
 }
 
-// OFFSET: 0x00603BE0
+// OFFSET: 0x00603BE0/0x14028AF50
 uint32_t CMovement_C::UseWalkableRedirection(uint32_t facet, int32_t* cleared) {
     if (cleared) {
         *cleared = 0;
@@ -4178,7 +4178,7 @@ uint32_t CMovement_C::UseWalkableRedirection(uint32_t facet, int32_t* cleared) {
     return this->m_flags & MOVEMENTFLAG_SPLINE_ELEVATION;
 }
 
-// OFFSET: 0x00603D90
+// OFFSET: 0x00603D90/0x14028B110
 void CMovement_C::MoveSplineMoverWithoutCollision(const C3Vector& position, uint32_t time, uint32_t elapsed) {
     float dx = position.x - this->m_position.x;
     float dy = position.y - this->m_position.y;
@@ -5010,7 +5010,7 @@ uint32_t CMovement_C::Fall(uint32_t time, uint32_t elapsed, float distance, cons
     return result;
 }
 
-// OFFSET: 0x00609390
+// OFFSET: 0x00609390/0x140291CD0
 int32_t CMovement_C::WillPassObstacle(const C2Vector& direction, const C3Vector& position, float height) {
     uint32_t time = static_cast<uint32_t>(sqrt((height + height) * 0.051837362f) * 1000.0f);
     MoveState state;
@@ -5034,7 +5034,7 @@ int32_t CMovement_C::WillPassObstacle(const C2Vector& direction, const C3Vector&
     return length >= this->m_collisionRadius && dx * (1.0f / length) * direction.x + dy * (1.0f / length) * direction.y > 0.98480773f;
 }
 
-// OFFSET: 0x00609520
+// OFFSET: 0x00609520/0x140291F40
 int32_t CMovement_C::AttemptStepUp(const C2Vector& direction, C3Vector normal) {
     C3Vector saved = this->m_position;
     C4Plane planes[7];
@@ -5151,7 +5151,7 @@ int32_t CMovement_C::AttemptStepUp(const C2Vector& direction, C3Vector normal) {
     return 1;
 }
 
-// OFFSET: 0x00609C30
+// OFFSET: 0x00609C30/0x1402928A0
 uint32_t CMovement_C::TraceSurface(uint32_t time, uint32_t elapsed, float distance, const C2Vector& direction) {
     if (fabs(distance) < 0.00000095367432f) {
         return elapsed;
@@ -5538,7 +5538,7 @@ transport:
     return elapsed;
 }
 
-// OFFSET: 0x0060AB50
+// OFFSET: 0x0060AB50/0x140293D20
 uint32_t CMovement_C::CollideRequestMove(uint32_t time, uint32_t elapsed, C3Vector move) {
     if (!elapsed) {
         return 0;
@@ -5698,7 +5698,7 @@ void CMovement_C::OnSplineStop(uint32_t time) {
     }
 }
 
-// OFFSET: 0x00579420
+// OFFSET: 0x00579420/0x1401DE9C0
 void CMovement_C::CallMoveEventHandlers(uint32_t time, uint32_t remaining, uint32_t oldFlags, int32_t jumping, int32_t transportChanged) {
     CMoveSpline* spline = this->m_spline;
 
@@ -5768,7 +5768,7 @@ void CMovement_C::SetCollisionHeight(float height) {
     }
 }
 
-// OFFSET: 0x00573310
+// OFFSET: 0x00573310/0x1401D46B0
 int32_t CMovement_C::HeartBeat(const CPlayerMoveEvent* event) {
     int32_t result = this->UpdateTransportStatus(event->m_transportGuid, event->m_seat, 0);
 
@@ -5921,7 +5921,7 @@ int32_t CMovement_C::InsertTurnToAngleStop(uint32_t time, float facing) {
     return delta > 0.0f;
 }
 
-// OFFSET: 0x00579830
+// OFFSET: 0x00579830/0x1401DEE60
 int32_t CMovement_C::InsertPitchToAngleStop(uint32_t time, float pitch) {
     float delta = CMath::normalizeAngleNegPiToPi_(pitch - this->m_pitch);
     uint32_t stopTime = fabs(delta) / this->m_pitchRate * 1000.0f + time;
@@ -6603,7 +6603,7 @@ int32_t CMovement_C::ForceSetTransportInt(WOWGUID transport, uint8_t seat, int32
     return 1;
 }
 
-// OFFSET: 0x00575AB0
+// OFFSET: 0x00575AB0/0x1401D9FA0
 void CMovement_C::Teleport(WOWGUID transport, const C3Vector& position, float facing, int32_t removeSpline, int32_t needAck, uint8_t seat) {
     float oldFacing = this->GetFacing(this->m_facing);
 
@@ -6650,7 +6650,7 @@ void CMovement_C::Teleport(WOWGUID transport, const C3Vector& position, float fa
     }
 }
 
-// OFFSET: 0x00576690
+// OFFSET: 0x00576690/0x1401DAD20
 int32_t CMovement_C::UpdateStatusInternal(uint32_t time, const CMovementStatus& status, int32_t& timeOffset, int32_t local, int32_t force) {
     if ((!this->m_spline || (this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE)) && this->m_unit->m_vehiclePassenger && (this->m_unit->m_vehiclePassenger->m_flags & 0x200)) {
         return 0;
@@ -6746,7 +6746,7 @@ int32_t CMovement_C::UpdateStatusInternal(uint32_t time, const CMovementStatus& 
     return 1;
 }
 
-// OFFSET: 0x00577620
+// OFFSET: 0x00577620/0x1401DC150
 void CMovement_C::AddPlayerSpeedEvent(uint32_t eventTime, MoveEventId eventId, bool needAck, uint32_t ackCounter, float value, const CMovementStatus* status) {
     if (this->m_flags & MOVEMENTFLAG_UNK_40000000) {
         return;
@@ -6777,7 +6777,7 @@ void CMovement_C::AddPlayerSpeedEvent(uint32_t eventTime, MoveEventId eventId, b
     }
 }
 
-// OFFSET: 0x00575CF0
+// OFFSET: 0x00575CF0/0x1401DA210
 void CMovement_C::FlushMoveEvent(CPlayerMoveEvent* event, int32_t removeSpline) {
     uint32_t oldFlags = this->m_flags;
     uint32_t time = MovementGetGlobals()->m_idleTime;
@@ -6936,7 +6936,7 @@ void CMovement_C::SuspendMovement() {
 }
 
 // PROVEN: a3e4bf89 IDENTICAL/NONE
-// OFFSET: 0x00576360
+// OFFSET: 0x00576360/0x1401DA970
 void CMovement_C::FlushMoveQueue(int32_t removeSpline, int32_t controlLost) {
     if (s_flushingQueue) {
         return;
@@ -6966,7 +6966,7 @@ void CMovement_C::FlushMoveQueue(int32_t removeSpline, int32_t controlLost) {
     s_flushingQueue = 0;
 }
 
-// OFFSET: 0x00577DA0
+// OFFSET: 0x00577DA0/0x1401DC960
 int32_t CMovement_C::UpdateStatus(uint32_t time, const CMovementStatus& status, MoveEventId eventId, float value) {
     int32_t timeOffset;
 
@@ -7078,7 +7078,7 @@ int32_t CMovement_C::OnPitchRateChange(uint32_t time, const CMovementStatus& sta
 }
 
 // PROVEN: 7137d323 IDENTICAL/NONE
-// OFFSET: 0x00578B90
+// OFFSET: 0x00578B90/0x1401DDC30
 int32_t CMovement_C::OnSetCollisionHeight(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_COLLISION_HEIGHT, value)) {
         return 0;
@@ -7089,7 +7089,7 @@ int32_t CMovement_C::OnSetCollisionHeight(uint32_t time, const CMovementStatus& 
 }
 
 // PROVEN: d986e3fc IDENTICAL/NONE
-// OFFSET: 0x005793E0
+// OFFSET: 0x005793E0/0x1401DE980
 int32_t CMovement_C::OnHeartBeat(uint32_t time, const CMovementStatus& status) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_HEARTBEAT, 0.0f)) {
         return 0;
@@ -7099,7 +7099,7 @@ int32_t CMovement_C::OnHeartBeat(uint32_t time, const CMovementStatus& status) {
     return 1;
 }
 
-// OFFSET: 0x0057AFE0
+// OFFSET: 0x0057AFE0/0x1401E0A10
 int32_t CMovement_C::OnTeleport(uint32_t time, const CMovementStatus& status) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_TELEPORT, 0.0f)) {
         return 0;
@@ -7251,7 +7251,7 @@ void CMovement_C::OnSplineSnap(uint32_t splineId, const C3Vector& destination, u
     this->OnSplineStop(MovementGetGlobals()->m_idleTime);
 }
 
-// OFFSET: 0x00572DF0
+// OFFSET: 0x00572DF0/0x1401D4140
 void CMovement_C::Extrapolate(uint32_t time, uint32_t elapsed) {
     if (!elapsed || !(this->m_flags & 0x60080F) || (this->m_spline && !(this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE))) {
         return;
@@ -7325,7 +7325,7 @@ void CMovement_C::AddPlayerTeleportEvent(uint32_t eventTime, uint32_t ackCounter
     }
 }
 
-// OFFSET: 0x00578BD0
+// OFFSET: 0x00578BD0/0x1401DDCD0
 void CMovement_C::OnSetActiveMover() {
     this->FlushMoveQueue(1, 0);
     CMovementGlobals* globals = MovementGetGlobals();
@@ -7410,7 +7410,7 @@ void CMovement_C::OnSetRawFacingLocal(uint32_t eventTime, float facing) {
 }
 
 // PROVEN: 79be6b0b IDENTICAL/NONE
-// OFFSET: 0x0057AE80
+// OFFSET: 0x0057AE80/0x1401E0860
 void CMovement_C::Disable() {
     this->Suspend();
     this->m_moveQueue.FreeAll();

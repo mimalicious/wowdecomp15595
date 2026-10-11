@@ -325,7 +325,7 @@ bool Blizzard::Storage::LockFile::Acquire() {
 }
 
 // PROVEN: 16593951 IDENTICAL/NONE
-// OFFSET: 0x007C3980
+// OFFSET: 0x007C3980/0x1404BDFC0
 bool Blizzard::Storage::LockFile::IsStale(uint32_t seconds) {
     if (this->m_file) {
         return false;

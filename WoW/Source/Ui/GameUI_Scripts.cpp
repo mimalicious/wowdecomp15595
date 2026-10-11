@@ -3871,7 +3871,7 @@ static int32_t Script_IsConsumableItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008C28D0
+// OFFSET: 0x008C28D0/0x140632350
 static int32_t GetItemSpell(int32_t itemId) {
     CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
 
@@ -6313,7 +6313,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumSoRRemaining", &Script_GetNumSoRRemaining },
 };
 
-// OFFSET: 0x008C3AA0
+// OFFSET: 0x008C3AA0/0x140633680
 void LoadScriptFunctions() {
     RegisterSimpleFrameScriptMethods();
     CGTooltip::CreateScriptMetaTable();
@@ -6407,7 +6407,7 @@ void LoadScriptFunctions() {
     VoidStorageRegisterScriptFunctions();
 }
 
-// OFFSET: 0x008C3C80
+// OFFSET: 0x008C3C80/0x140633870
 void UnloadScriptFunctions() {
     UnregisterSimpleFrameScriptMethods();
     CGTooltip::DestroyScriptMetaTable();

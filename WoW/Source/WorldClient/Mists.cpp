@@ -25,7 +25,7 @@ Mists::Mist::Mist() {
 }
 
 // PROVEN: d1ce220f IDENTICAL/NONE
-// OFFSET: 0x007484C0
+// OFFSET: 0x007484C0/0x140427540
 void Mists::Mist::SetHeights(uint32_t count, const float* heights) {
     for (uint32_t i = 0; i < count; i++) {
         this->m_heights[i] = heights[i];
@@ -77,7 +77,7 @@ bool Mists::CreateMist(Mist& mist, uint32_t time) {
     return true;
 }
 
-// OFFSET: 0x0074B3D0
+// OFFSET: 0x0074B3D0/0x14042AD70
 Mists::Mist::Mist(const Mist& source) {
     this->SetHeights(source.m_heightCount, source.m_heights);
     this->m_numHeights = source.m_numHeights;

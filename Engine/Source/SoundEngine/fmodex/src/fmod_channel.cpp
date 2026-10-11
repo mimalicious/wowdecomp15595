@@ -433,7 +433,7 @@ FMOD_RESULT Channel::getMute(bool *mute)
 }
 
 
-// OFFSET: 0x00A7AA30
+// OFFSET: 0x00A7AA30/0x140835BB0
 FMOD_RESULT Channel::setPriority(int priority)
 {
     FMOD_RESULT result;
@@ -514,7 +514,7 @@ FMOD_RESULT Channel::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 }
 
 
-// OFFSET: 0x00A7AAD0
+// OFFSET: 0x00A7AAD0/0x140835C70
 FMOD_RESULT Channel::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     FMOD_RESULT result;
@@ -532,7 +532,7 @@ FMOD_RESULT Channel::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *pr
 }
 
 
-// OFFSET: 0x00A7AB00
+// OFFSET: 0x00A7AB00/0x140835CA0
 FMOD_RESULT Channel::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     FMOD_RESULT result;
@@ -606,7 +606,7 @@ FMOD_RESULT Channel::setCallback(FMOD_CHANNEL_CALLBACKTYPE type, FMOD_CHANNEL_CA
 }
 
 
-// OFFSET: 0x00A7AB90
+// OFFSET: 0x00A7AB90/0x140835D50
 FMOD_RESULT Channel::set3DAttributes(const FMOD_VECTOR *pos, const FMOD_VECTOR *vel)
 {
     FMOD_RESULT result;
@@ -1210,7 +1210,7 @@ FMOD_RESULT Channel::setMode(FMOD_MODE mode)
 }
 
 
-// OFFSET: 0x00A7ADE0
+// OFFSET: 0x00A7ADE0/0x140836000
 FMOD_RESULT Channel::getMode(FMOD_MODE *mode)
 {
     FMOD_RESULT result;

@@ -40,7 +40,7 @@ CGSimpleHealthBar::~CGSimpleHealthBar() {
     this->m_guid.m_guid = 0;
 }
 
-// OFFSET: 0x00A3B800
+// OFFSET: 0x00A3B800/0x1407E8890
 void CGSimpleHealthBar::SetStatusBarColor(const CImVector& color) {
     if (this->m_barTexture) {
         this->m_barTexture->SetVertexColor(color);
@@ -64,7 +64,7 @@ void CGSimpleHealthBar::SetValue(float value) {
     this->m_autoColor = 1;
 }
 
-// OFFSET: 0x00A3B940
+// OFFSET: 0x00A3B940/0x1407E89D0
 void CGSimpleHealthBar::InstallMirrorHandlers() {
     if (!this->m_guid) {
         return;
@@ -84,7 +84,7 @@ void CGSimpleHealthBar::RemoveMirrorHandlers() {
     ClntObjMgrUnsetObjMirrorHandler(this->m_guid, ID_UNIT, offsetof(CGUnitData, m_unitFieldMaxhealth), SimpleHealthUpdateHandler, this);
 }
 
-// OFFSET: 0x00A3B9F0
+// OFFSET: 0x00A3B9F0/0x1407E8A60
 void CGSimpleHealthBar::SetUnit(CGUnit_C* unit) {
     if (ClntObjMgrGetCurrent()) {
         this->RemoveMirrorHandlers();

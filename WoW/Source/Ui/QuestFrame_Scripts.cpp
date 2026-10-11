@@ -903,14 +903,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ClearAutoAcceptQuestSound", &Script_ClearAutoAcceptQuestSound },
 };
 
-// OFFSET: 0x00944FF0
+// OFFSET: 0x00944FF0/0x1406B1D90
 void QuestInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00945020
+// OFFSET: 0x00945020/0x1406B1DE0
 void QuestInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

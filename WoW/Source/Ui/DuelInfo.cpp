@@ -162,7 +162,7 @@ int32_t Packet_SMSG_DUEL_INBOUNDS(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: 0x009F06A0
+// OFFSET: 0x009F06A0/0x14078A510
 void CGDuelInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_DUEL_REQUESTED);
     ClientServices::ClearMessageHandler(SMSG_DUEL_OUT_OF_BOUNDS);

@@ -1881,14 +1881,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetAchievementGuildRep", &Script_GetAchievementGuildRep },
 };
 
-// OFFSET: 0x009478F0
+// OFFSET: 0x009478F0/0x1406B4EB0
 void AchievementInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00947920
+// OFFSET: 0x00947920/0x1406B4F00
 void AchievementInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

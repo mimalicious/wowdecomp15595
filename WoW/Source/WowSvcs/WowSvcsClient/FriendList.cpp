@@ -426,7 +426,7 @@ void FriendList::Destroy() {
 }
 
 // PROVEN: 47318e70 IDENTICAL/NONE
-// OFFSET: 0x004D2840
+// OFFSET: 0x004D2840/0x14010FA80
 bool FriendList::IsComplained(WOWGUID guid) {
     if (!guid) {
         return false;
@@ -1112,7 +1112,7 @@ void FriendList::FriendRemoved(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x004D2D30
+// OFFSET: 0x004D2D30/0x14010FE00
 uint32_t FriendList::GetFriendIndexByGuid(WOWGUID guid) {
     int32_t empty = -1;
     uint32_t index;
@@ -1936,7 +1936,7 @@ int32_t FriendList::GetFriendSelectionIndex() {
 }
 
 // PROVEN: d62f3e8a IDENTICAL/NONE
-// OFFSET: 0x004D27C0
+// OFFSET: 0x004D27C0/0x14010FA30
 uint32_t FriendList::GetNumMutes() {
     uint32_t count = 0;
 

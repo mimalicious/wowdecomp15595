@@ -121,7 +121,7 @@ inline CMissileCollision::CMissileCollision() {
     this->m_perp.y = 0.0f;
 }
 
-// OFFSET: 0x0057D060
+// OFFSET: 0x0057D060/0x1401E3250
 void CMissileCollision::RemoveUnitFromSystem(CGUnit_C* unit) {
     for (CMissileCollision* collision = CMissileCollision::s_head; collision; collision = collision->m_next) {
         uint32_t i = 0;
@@ -283,7 +283,7 @@ void CGUnit_C::UpdateMissileTrajectory() {
     }
 }
 
-// OFFSET: 0x0057EBC0
+// OFFSET: 0x0057EBC0/0x1401E53B0
 void CGUnit_C::UpdateMissileTrajectoryTargeting() {
     uint32_t pitchNextFrame = CGUnit_C::s_pitchMissileTrajectoryTargetingNextFrame;
     CGUnit_C::s_pitchMissileTrajectoryTargetingNextFrame = 0;
@@ -686,7 +686,7 @@ void CMissileCollision::ComputeHitSpheres(CAaSphere* spheres) {
     spheres[i].r = 0.0f;
 }
 
-// OFFSET: 0x0057D240
+// OFFSET: 0x0057D240/0x1401E3350
 void CGUnit_C::CorrectTrajectoryOfPendingMissiles(uint8_t castCount, const C3Vector& impact, float pitch, float speed, float time) {
     uint32_t now = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
 
@@ -701,7 +701,7 @@ void CGUnit_C::CorrectTrajectoryOfPendingMissiles(uint8_t castCount, const C3Vec
     }
 }
 
-// OFFSET: 0x0057CEF0
+// OFFSET: 0x0057CEF0/0x1401E3060
 static float ComputeTrajectoryImpact(const C3Vector* start, const C3Vector* delta, const CAaSphere* spheres) {
     float x = delta->x;
     float y = delta->y;
@@ -731,7 +731,7 @@ static float ComputeTrajectoryImpact(const C3Vector* start, const C3Vector* delt
     return -1.0f;
 }
 
-// OFFSET: 0x0057D3F0
+// OFFSET: 0x0057D3F0/0x1401E35C0
 float CMissileCollision::ComputeUnitRank(CGUnit_C* unit) {
     if (unit->m_obj->m_type & TYPEMASK_PLAYER) {
         int32_t mode = this->m_missile->m_flags & 0xC;
@@ -868,7 +868,7 @@ static void SortUnitRanks(MissileUnitRank* ranks, int32_t count) {
     }
 }
 
-// OFFSET: 0x0057D340
+// OFFSET: 0x0057D340/0x1401E3470
 float CMissileCollision::ComputeSegmentImpactTime(const C3Vector* start, const C3Vector* end) {
     CAaSphere spheres[16];
 
@@ -1300,7 +1300,7 @@ void CGUnit_C::SendFinalMissileTrajectoryUpdate() {
     this->StopUpdatingMissileTrajectory(spell->m_id, this->m_missileTrajectoryCastCount);
 }
 
-// OFFSET: 0x0057FB80
+// OFFSET: 0x0057FB80/0x1401E6760
 void CGUnit_C::StartMissileTrajectoryTargeting(const VehicleRec* vehicleRec) {
     CGUnit_C::StopMissileTrajectoryTargeting();
 

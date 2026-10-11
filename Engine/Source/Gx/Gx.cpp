@@ -297,7 +297,7 @@ int32_t GxTexResolve(CGxTex* dest, CGxTex* source) {
     return g_theGxDevicePtr->TexResolve(dest, source);
 }
 
-// OFFSET: 0x00840580
+// OFFSET: 0x00840580/0x14056C3B0
 int32_t GxXformIsValidViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     float cleanMinX = minX > 0.0f ? minX : 0.0f;
     float cleanMaxX = maxX < 1.0f ? maxX : 1.0f;
@@ -437,7 +437,7 @@ void GxXformViewProjNative(C44Matrix& matrix) {
     matrix = view * proj;
 }
 
-// OFFSET: 0x0040A090
+// OFFSET: 0x0040A090/0x14000C800
 void GxXformViewProjNativeTranspose(C44Matrix& matrix) {
     CGxDevice* device = g_theGxDevicePtr;
     C44Matrix view;
@@ -727,7 +727,7 @@ void GxXformViewProj(C44Matrix& matrix) {
 }
 
 // PROVEN: 67242db9 IDENTICAL/NONE
-// OFFSET: 0x004DFB80
+// OFFSET: 0x004DFB80/0x14011FC10
 CGxBuf* GxBufStream(EGxPoolTarget target, uint32_t itemSize, uint32_t itemCount) {
     return g_theGxDevicePtr->BufStream(target, itemSize, itemCount);
 }
@@ -744,7 +744,7 @@ void GxTexSetCannotUpdate(CGxTex* texId) {
 }
 
 // PROVEN: a2bdc28c IDENTICAL/NONE
-// OFFSET: 0x00840280
+// OFFSET: 0x00840280/0x14056C0C0
 void GxTexSetUserData(CGxTex* texId, GxTexUserFunc userFunc, void* userArg) {
     g_theGxDevicePtr->TexSetUserData(texId, userFunc, userArg);
 }

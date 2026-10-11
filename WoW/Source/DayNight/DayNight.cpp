@@ -199,7 +199,7 @@ void DayNight::ClearOverrideFog() {
 }
 
 // PROVEN: d22e86a9 IDENTICAL/NONE
-// OFFSET: 0x00646EF0
+// OFFSET: 0x00646EF0/0x1402E3CF0
 void DayNight::SetOverrideFog(float startScalar, float end, CImVector color, int32_t showSky) {
     if (!DayNight::g_bOverrideFog) {
         DayNight::g_fSaveFogEnd = DayNight::g_dnInfo.m_light.m_fogEnd;
@@ -272,7 +272,7 @@ void DayNight::ClearOverrideLightParamsID() {
     DayNight::g_dnInfo.m_overrideLightParamsId = 0;
 }
 
-// OFFSET: 0x00647050
+// OFFSET: 0x00647050/0x1402E3EB0
 const DayNight::LiquidColors* DayNight::GetLiquidColors(uint32_t index) {
     const CurrentLight* light = Liquid::CameraSubmerged() ? &DayNight::g_dnInfo.m_lightUW : &DayNight::g_dnInfo.m_light;
     LiquidColors* colors = &DayNight::g_dnInfo.m_liquidColors;
@@ -295,7 +295,7 @@ void DayNight::SetExteriorUnderwater(int32_t underwater) {
 }
 
 // PROVEN: cebed488 IDENTICAL/NONE
-// OFFSET: 0x006470F0
+// OFFSET: 0x006470F0/0x1402E3AC0
 int32_t DayNight::ShouldClearToBlack() {
     return !DayNight::g_exteriorUnderwater && (DayNight::g_dnInfo.m_showSky || !DayNight::g_bOverrideFog);
 }
@@ -683,7 +683,7 @@ DayNight::CurrentLight& DayNight::CurrentLight::operator=(const CurrentLight& ot
     return *this;
 }
 
-// OFFSET: 0x00648090
+// OFFSET: 0x00648090/0x1402E4D30
 void DayNight::CalcFog(FogInfo& fog, const float* params) {
     float end = params[0];
 

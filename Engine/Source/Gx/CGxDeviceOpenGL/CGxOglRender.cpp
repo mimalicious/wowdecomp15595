@@ -113,7 +113,7 @@ void CGxDeviceOpenGl::IXformGLModelView(const C44Matrix& view, C44Matrix& world)
     world = C44Matrix(view.a0, view.a1, -view.a2, view.a3, view.b0, view.b1, -view.b2, view.b3, view.c0, view.c1, -view.c2, view.c3, view.d0, view.d1, -view.d2, view.d3);
 }
 
-// OFFSET: 0x00869640
+// OFFSET: 0x00869640/0x14059D350
 void CGxDeviceOpenGl::IXformSetModelView(const C44Matrix& matrix) {
     C44Matrix modelView;
     this->IXformGLModelView(matrix, modelView);

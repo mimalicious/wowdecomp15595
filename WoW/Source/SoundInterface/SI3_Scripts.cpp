@@ -357,7 +357,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 196bba3d IDENTICAL/NONE
-// OFFSET: 0x00B34EF0
+// OFFSET: 0x00B34EF0/0x1408FFF80
 void SI3::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);

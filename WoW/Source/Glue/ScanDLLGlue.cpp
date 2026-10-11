@@ -63,7 +63,7 @@ bool CGlueMgr::IsScanDLLFinished() {
 }
 
 // PROVEN: 03dda93c IDENTICAL/NONE
-// OFFSET: 0x0080F880
+// OFFSET: 0x0080F880/0x140526B40
 static uint32_t STORMAPI ScanThreadProc(void* param) {
     ScanDLLThreadParams* params = static_cast<ScanDLLThreadParams*>(param);
 
@@ -97,7 +97,7 @@ void CGlueMgr::ScanDLLFinished() {
     FrameScript_SignalEvent(GLUE_EVENT_SCANDLL_FINISHED, "%s%s%d", CGlueMgr::m_scandllResult, CGlueMgr::m_scandllHackName, CGlueMgr::m_scandllShouldBlockPlaying != 0);
 }
 
-// OFFSET: 0x0080F970
+// OFFSET: 0x0080F970/0x140526C70
 static bool DownloadDllCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     HOSFILE file = static_cast<HOSFILE>(param);
 

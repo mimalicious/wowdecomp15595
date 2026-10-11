@@ -143,20 +143,20 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetNumSplinePoints", &Script_SetNumSplinePoints },
 };
 
-// OFFSET: 0x009FFCD0
+// OFFSET: 0x009FFCD0/0x14079E540
 void CGBlobFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }
 
-// OFFSET: 0x009FFCF0
+// OFFSET: 0x009FFCF0/0x14079E570
 void CGBlobFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGBlobFrame::s_metatable);
     CGBlobFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: 0x00A006C0
+// OFFSET: 0x00A006C0/0x14079ED30
 void CGBlobFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGBlobFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGBlobFrame::RegisterScriptMethods);

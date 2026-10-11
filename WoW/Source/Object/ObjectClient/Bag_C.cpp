@@ -18,7 +18,7 @@ static int32_t FindBagFamilyCallback(const CGItem_C* item, void* param) {
     return *static_cast<uint32_t*>(param) & item->GetBagFamily();
 }
 
-// OFFSET: 0x005F2530
+// OFFSET: 0x005F2530/0x140274EE0
 static int32_t UnlockItemTypeCallback(const CGItem_C* item, void* param) {
     ItemTypeCountParam* count = static_cast<ItemTypeCountParam*>(param);
 

@@ -79,7 +79,7 @@ CMapChunkBuf::CMapChunkBuf() {
     this->m_indexPool = NULL;
 }
 
-// OFFSET: 0x00796430
+// OFFSET: 0x00796430/0x140489470
 CMapChunkBuf::~CMapChunkBuf() {
     if (this->m_vertexBuf) {
         CGxBuf* buf = this->m_vertexBuf;

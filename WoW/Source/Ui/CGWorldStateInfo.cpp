@@ -134,7 +134,7 @@ bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value, bool hidden
 }
 
 // PROVEN: d4dff9de IDENTICAL/NONE
-// OFFSET: 0x009CD5B0
+// OFFSET: 0x009CD5B0/0x14075DD10
 void CGWorldStateInfo::OnUITime(uint32_t time) {
     CGWorldStateInfo::m_UITimeOffset = time - static_cast<uint32_t>(::time(NULL));
 }

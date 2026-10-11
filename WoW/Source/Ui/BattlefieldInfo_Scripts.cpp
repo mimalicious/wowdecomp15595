@@ -1812,14 +1812,14 @@ static FrameScript_Method s_scriptFunctions[74] = {
     { "ClearBattlemaster", &Script_ClearBattlemaster }
 };
 
-// OFFSET: 0x0093DD40
+// OFFSET: 0x0093DD40/0x1406A9720
 void BattlefieldInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < 74; i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0093DD70
+// OFFSET: 0x0093DD70/0x1406A9770
 void BattlefieldInfoUnregisterScriptFunctions() {
     for (int32_t i = 0; i < 74; i++) {
         FrameScript_UnregisterFunction(s_scriptFunctions[i].m_name);

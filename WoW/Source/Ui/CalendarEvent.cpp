@@ -869,7 +869,7 @@ void CGCalendarEvent::SetModeratorStatus(uint32_t index, uint32_t status) {
 }
 
 // PROVEN: b8f234ca IDENTICAL/NONE
-// OFFSET: 0x00A0C800
+// OFFSET: 0x00A0C800/0x1407ADF00
 CGCalendarEvent::CGCalendarEvent() {
     this->Clear();
 }

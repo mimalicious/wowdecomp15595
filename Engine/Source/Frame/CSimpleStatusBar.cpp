@@ -93,7 +93,7 @@ FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name
 }
 
 // PROVEN: 9a450fd0 IDENTICAL/NONE
-// OFFSET: 0x0050EF90
+// OFFSET: 0x0050EF90/0x140158120
 void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onValueChanged, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onMinMaxChanged, time, count);
@@ -134,7 +134,7 @@ void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer
 }
 
 // PROVEN: ebf163b1 IDENTICAL/NONE
-// OFFSET: 0x0050F0E0
+// OFFSET: 0x0050F0E0/0x140158300
 void CSimpleStatusBar::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
     this->m_changed = 1;
@@ -273,7 +273,7 @@ int32_t CSimpleStatusBar::SetBarTexture(const char* fileName, uint32_t drawLayer
     return 1;
 }
 
-// OFFSET: 0x0050F580
+// OFFSET: 0x0050F580/0x140158810
 void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 

@@ -84,7 +84,7 @@ void CGRuneInfo::EnterWorld() {
     }
 }
 
-// OFFSET: 0x0093C430
+// OFFSET: 0x0093C430/0x1406A7AE0
 bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
     if (!(static_cast<uint32_t>(index) > 5)) {
         if (CGRuneInfo::m_numRunes) {
@@ -340,7 +340,7 @@ void CGRuneInfo::SetRuneLastUsedTime(int32_t index, uint32_t time) {
     CGRuneInfo::m_runeLastUsed[index] = time;
 }
 
-// OFFSET: 0x0093C560
+// OFFSET: 0x0093C560/0x1406A7C30
 uint32_t CGRuneInfo::GetRuneLastUsedTime(int32_t index) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return 0;

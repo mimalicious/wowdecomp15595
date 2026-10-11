@@ -1302,14 +1302,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "RespondMailLockSendItem", &Script_RespondMailLockSendItem },
 };
 
-// OFFSET: 0x0096DCE0
+// OFFSET: 0x0096DCE0/0x1406E4C90
 void MailInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0096DD10
+// OFFSET: 0x0096DD10/0x1406E4CE0
 void MailInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

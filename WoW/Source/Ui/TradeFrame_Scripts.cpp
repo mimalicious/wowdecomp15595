@@ -475,7 +475,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 21ea7c44 IDENTICAL/NONE
-// OFFSET: 0x0096A9C0
+// OFFSET: 0x0096A9C0/0x1406E1260
 void TradeInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -483,7 +483,7 @@ void TradeInfoRegisterScriptFunctions() {
 }
 
 // PROVEN: da9efac9 IDENTICAL/NONE
-// OFFSET: 0x0096A9F0
+// OFFSET: 0x0096A9F0/0x1406E12B0
 void TradeInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

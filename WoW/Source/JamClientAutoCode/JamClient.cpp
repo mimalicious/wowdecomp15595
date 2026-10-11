@@ -61,7 +61,7 @@ void JamCliSupportTicketChatLog::Put(CDataStore* msg) const {
     }
 }
 
-// OFFSET: 0x006981E0
+// OFFSET: 0x006981E0/0x140343A20
 JamCliSupportTicketChatLog::JamCliSupportTicketChatLog() {
     this->m_hasReportLineIndex = false;
 }
@@ -70,7 +70,7 @@ JamCliSupportTicketChatLog::JamCliSupportTicketChatLog() {
 JamCliSupportTicketChatLog::~JamCliSupportTicketChatLog() {
 }
 
-// OFFSET: 0x006A2770
+// OFFSET: 0x006A2770/0x14034FC80
 void JamGuildRewardItem::operator=(const JamGuildRewardItem& other) {
     this->m_cost = other.m_cost;
     this->m_minGuildLevel = other.m_minGuildLevel;
@@ -81,7 +81,7 @@ void JamGuildRewardItem::operator=(const JamGuildRewardItem& other) {
 }
 
 // PROVEN: c4a66ca1 IDENTICAL/NONE
-// OFFSET: 0x006C8460
+// OFFSET: 0x006C8460/0x14037F500
 JamGuildNewsEvent::JamGuildNewsEvent() {
 }
 
@@ -2205,7 +2205,7 @@ void JamClientRideTicket::Clear() {
     this->m_time = 0;
 }
 
-// OFFSET: 0x00696E80
+// OFFSET: 0x00696E80/0x1403424D0
 void JamClientRideTicket::Put(CDataStore* msg) const {
     msg->Put(this->m_time);
     msg->Put(this->m_type);
@@ -2255,7 +2255,7 @@ void JamClientRideTicket::Put(CDataStore* msg) const {
     }
 }
 
-// OFFSET: 0x006A1DD0
+// OFFSET: 0x006A1DD0/0x14034F250
 void JamWeeklySpellUse::operator=(const JamWeeklySpellUse& source) {
     this->m_category = source.m_category;
     this->m_uses = source.m_uses;
@@ -5455,7 +5455,7 @@ bool ClientGuildRoster::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006A65C0
+// OFFSET: 0x006A65C0/0x1403548C0
 bool ClientGuildRoster::IsValid() const {
     for (uint32_t i = 0; i < this->m_memberData.m_count; i++) {
         if (!this->m_memberData.m_data[i].IsValid()) {
@@ -7793,7 +7793,7 @@ bool ClientGuildInvite::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006A2CE0
+// OFFSET: 0x006A2CE0/0x140350230
 bool ClientGuildInvite::IsValid() const {
     {
         bool terminated = false;
@@ -20379,7 +20379,7 @@ bool ClientBattlefieldMgrQueueRequestResponse::Read(CDataStore* msg, bool full) 
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006A18F0
+// OFFSET: 0x006A18F0/0x14034ECA0
 bool ClientBattlefieldMgrQueueRequestResponse::IsValid() const {
     const uint64_t& guid = *reinterpret_cast<const uint64_t*>(this->unk_0018);
     const uint64_t& queueID = *reinterpret_cast<const uint64_t*>(this->unk_0028);
@@ -21615,7 +21615,7 @@ bool ClientGameEventDebugLog::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006A78F0
+// OFFSET: 0x006A78F0/0x14034E050
 bool ClientGameEventDebugLog::IsValid() const {
     {
         bool terminated = false;
@@ -22455,7 +22455,7 @@ bool ClientServerInfoResponse::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006AA570
+// OFFSET: 0x006AA570/0x140359C00
 bool ClientServerInfoResponse::IsValid() const {
     for (uint32_t i = 0; i < this->unk_0010.m_count; i++) {
         if (!this->unk_0010.m_data[i].IsValid()) {
@@ -22511,7 +22511,7 @@ bool ClientServerPerf::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006E20E0
+// OFFSET: 0x006E20E0/0x1403A29A0
 bool ClientServerPerf::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint32_t count = bits.ReadBits<25>();
@@ -22597,7 +22597,7 @@ bool ClientStreamingMoviesUpdate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006D7F60
+// OFFSET: 0x006D7F60/0x140395E10
 bool ClientStreamingMoviesUpdate::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint32_t count = bits.ReadBits<25>();
@@ -23109,7 +23109,7 @@ bool ClientDumpRideTicketsResponse::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006EEA30
+// OFFSET: 0x006EEA30/0x1403B3820
 bool ClientDumpRideTicketsResponse::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint32_t count = bits.ReadBits<25>();
@@ -27963,7 +27963,7 @@ bool ClientLfgSearchResult::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006B4E20
+// OFFSET: 0x006B4E20/0x140366FA0
 bool ClientLfgSearchResult::IsValid() const {
     if (!this->m_ticket.IsValid()) {
         return false;
@@ -28061,7 +28061,7 @@ bool ClientGuildRosterMemberData::IsValid() const {
     return true;
 }
 
-// OFFSET: 0x00696A00
+// OFFSET: 0x00696A00/0x140342060
 bool JamCliCUFProfile::IsValid() const {
     bool terminated = false;
 

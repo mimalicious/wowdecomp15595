@@ -202,7 +202,7 @@ void CGGameObject_C_Type_Transport::Reenable() {
     this->InitializeMovement();
 }
 
-// OFFSET: 0x00599560
+// OFFSET: 0x00599560/0x140207950
 void CGGameObject_C_Type_Transport::PostInitWithStats() {
     this->CreateWorldObj();
 

@@ -50,20 +50,20 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetNumTooltips", &Script_GetNumTooltips },
 };
 
-// OFFSET: 0x00A022F0
+// OFFSET: 0x00A022F0/0x1407A1220
 void CGQuestPOIFrame::RegisterScriptMethods(lua_State* L) {
     CGBlobFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }
 
-// OFFSET: 0x00A02310
+// OFFSET: 0x00A02310/0x1407A1250
 void CGQuestPOIFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGQuestPOIFrame::s_metatable);
     CGQuestPOIFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: 0x00A02A80
+// OFFSET: 0x00A02A80/0x1407A1B30
 void CGQuestPOIFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGQuestPOIFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGQuestPOIFrame::RegisterScriptMethods);

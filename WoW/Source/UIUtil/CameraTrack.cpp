@@ -48,7 +48,7 @@ const CCameraMode* CCameraTrack::GetCurrentCamera() const {
     return node->m_instance ? node->m_instance->m_mode : NULL;
 }
 
-// OFFSET: 0x00461F30
+// OFFSET: 0x00461F30/0x140074D60
 void CCameraTrackBlendData::CalcDeltas(const CCameraShot& from, const CCameraShot& to) {
     CCameraTrackBlendData base;
     base.Init(from);
@@ -69,7 +69,7 @@ void CCameraTrackBlendData::CalcDeltas(const CCameraShot& from, const CCameraSho
     this->m_roll = CMath::normalizeAngleNegPiToPi_(this->m_roll);
 }
 
-// OFFSET: 0x004620B0
+// OFFSET: 0x004620B0/0x140074FA0
 CCameraShot CCameraTrackBlendData::ApplyBlend(const CCameraShot& shot, float factor, int32_t flags) const {
     CCameraShot result = shot;
     float distance = this->m_distance * factor;
@@ -121,7 +121,7 @@ CCameraTrackNode::CCameraTrackNode() {
     this->m_next = NULL;
 }
 
-// OFFSET: 0x004623A0
+// OFFSET: 0x004623A0/0x140075390
 void CCameraTrackNode::Init(const CCameraTransition* transition, CCameraModeInstance* instance, CCameraTrackNode* prev) {
     this->m_instance = instance;
     this->m_transition = transition;
@@ -371,7 +371,7 @@ void CCameraTrack::ResetCameras(WOWGUID guid) {
     action->m_guid = guid;
 }
 
-// OFFSET: 0x00462BD0
+// OFFSET: 0x00462BD0/0x140075EF0
 void CCameraTrack::SetCurrentCamera(const CCameraModeInstance* instance, const CCameraMode* mode, WOWGUID guid) {
     DeferredCameraAction* action = this->m_deferredActions.New();
     action->m_instance = instance;

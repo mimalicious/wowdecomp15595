@@ -99,7 +99,7 @@ FrameScript_Object::ScriptIx* CSimpleAnim::GetScriptByName(const char* name, Fra
 }
 
 // PROVEN: 018eb404 IDENTICAL/NONE
-// OFFSET: 0x00526EE0
+// OFFSET: 0x00526EE0/0x1401761F0
 void CSimpleAnim::GetScriptTime(lua_State* L, double* time, uint32_t* calls) {
     this->FrameScript_Object::GetScriptTime(L, this->m_onLoad, time, calls);
     this->FrameScript_Object::GetScriptTime(L, this->m_onPlay, time, calls);

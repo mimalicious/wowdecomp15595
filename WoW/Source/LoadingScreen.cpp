@@ -287,7 +287,7 @@ void LoadingScreenInitialize() {
     ClientCustomLoadScreen::s_handler = OnCustomLoadScreen;
 }
 
-// OFFSET: 0x0040DD70
+// OFFSET: 0x0040DD70/0x140011480
 void LoadingScreenInitializeInGame() {
     s_shipInfo.Initialize(&g_taxiPathNodeDB, g_taxiPathDB.m_maxID + 1);
 }
@@ -369,7 +369,7 @@ bool LoadingScreenDrawing() {
     return s_loadingScreenLayer != NULL;
 }
 
-// OFFSET: 0x00409750
+// OFFSET: 0x00409750/0x14000BE60
 void LoadingScreenSetTransparent(bool transparent) {
     if (!s_loadingScreenLayer) {
         return;
@@ -447,7 +447,7 @@ static bool PaintBackgroundImage() {
     return true;
 }
 
-// OFFSET: 0x0040B3B0
+// OFFSET: 0x0040B3B0/0x14000DE80
 static void PaintProgressBar(const BackgroundImage* images, int32_t count, CTexture** textures) {
     for (int32_t i = 0; i < count; i++) {
         if (!textures[i]) {
@@ -579,7 +579,7 @@ bool LoadingScreenGetBackgroundTexturePath(int32_t mapID, char* path, uint32_t s
     return true;
 }
 
-// OFFSET: 0x0040A510
+// OFFSET: 0x0040A510/0x14000CDC0
 bool LoadingScreenGetBackgroundTexturePathForMap(int32_t mapID, char* path, uint32_t size, bool* isWide) {
     MapRec* map = g_mapDB.GetRecord(mapID);
 
@@ -903,7 +903,7 @@ void LoadingScreenEnable(int32_t mapID, bool loadingWorld) {
     InitializeProgressBar(loadingWorld);
 }
 
-// OFFSET: 0x0040D940
+// OFFSET: 0x0040D940/0x140011090
 void LoadingScreenAsyncCallback(float progress, void* param) {
     if (progress <= s_asyncProgress) {
         return;
@@ -913,7 +913,7 @@ void LoadingScreenAsyncCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: 0x0040D990
+// OFFSET: 0x0040D990/0x1400110D0
 void LoadingScreenWorldCallback(float progress, void* param) {
     if (progress <= s_worldProgress) {
         return;
@@ -1050,7 +1050,7 @@ void LoadingScreenMiniDisable() {
     }
 }
 
-// OFFSET: 0x0040D120
+// OFFSET: 0x0040D120/0x1400106C0
 void LoadingScreenMiniUpdate(float progress) {
     LoadingScreenMiniEnable();
     s_progress = progress;
@@ -1095,7 +1095,7 @@ bool LoadDynamicBackground() {
     return true;
 }
 
-// OFFSET: 0x0040C260
+// OFFSET: 0x0040C260/0x14000F2B0
 static void LoadingScreenMiniPaint(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (!GxHasContext() || !GxIsWindowVisible()) {
         return;
@@ -1155,7 +1155,7 @@ static void LoadingScreenMiniPaint(void* param, const RECTF* rect, const RECTF* 
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: 0x0040D040
+// OFFSET: 0x0040D040/0x140010580
 void LoadingScreenMiniEnable() {
     if (s_miniLoadingLayer) {
         return;
@@ -1222,7 +1222,7 @@ static void BuildEndpointVertices(const C3Vector& start, const C3Vector& end) {
     s_dynamicElements.m_data[7].m_color = s_pathColor;
 }
 
-// OFFSET: 0x0040A910
+// OFFSET: 0x0040A910/0x14000D1E0
 static void BuildPathVertices(C3Spline* spline, int32_t segments) {
     float t = 0.0f;
     float step = 1.0f / segments;

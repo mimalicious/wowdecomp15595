@@ -449,7 +449,7 @@ void CGGossipInfo::SelectGossipActiveQuest(int32_t index) {
     }
 }
 
-// OFFSET: 0x009E1720
+// OFFSET: 0x009E1720/0x140778630
 void CGGossipInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_GOSSIP_MESSAGE);
     ClientServices::ClearMessageHandler(SMSG_GOSSIP_COMPLETE);

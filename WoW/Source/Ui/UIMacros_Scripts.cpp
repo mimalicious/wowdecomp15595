@@ -500,14 +500,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetRunningMacroButton", &Script_GetRunningMacroButton },
 };
 
-// OFFSET: 0x009C3E00
+// OFFSET: 0x009C3E00/0x1407511C0
 void UIMacrosRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009C3E30
+// OFFSET: 0x009C3E30/0x140751210
 void UIMacrosUnegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

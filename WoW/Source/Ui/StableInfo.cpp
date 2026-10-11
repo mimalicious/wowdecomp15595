@@ -53,7 +53,7 @@ void CGStableInfo::CloseStables(bool force) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_STABLE_CLOSED, NULL);
 }
 
-// OFFSET: 0x0096C8E0
+// OFFSET: 0x0096C8E0/0x1406E3680
 int32_t CGStableInfo::GetNumActivePets() {
     int32_t count = 0;
 
@@ -108,7 +108,7 @@ void CGStableInfo::LeaveWorld() {
     CGStableInfo::CloseStables(false);
 }
 
-// OFFSET: 0x0096CBC0
+// OFFSET: 0x0096CBC0/0x1406E3960
 void CGStableInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(MSG_LIST_STABLED_PETS);
     ClientServices::ClearMessageHandler(SMSG_STABLE_RESULT);

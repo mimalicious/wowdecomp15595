@@ -17,7 +17,7 @@ static Liquid::Object s_magmaObject;
 static TSHashTable<Liquid::Object, HASHKEY_NONE> s_objectHash;
 
 // PROVEN: 069029d2 IDENTICAL/NONE
-// OFFSET: 0x0071CE80
+// OFFSET: 0x0071CE80/0x1403F2130
 void Liquid::Object::SetReflectionPlane(float height) {
     this->m_reflectionPlane.n.x = 0.0f;
     this->m_reflectionPlane.n.y = 0.0f;
@@ -34,7 +34,7 @@ void Liquid::InitLiquidObjects() {
     s_oceanObject.m_reflectionType = 1;
 }
 
-// OFFSET: 0x0071CF00
+// OFFSET: 0x0071CF00/0x1403F2150
 void Liquid::UnregisterLiquidObject(Object* object) {
     object->m_refCount--;
 
@@ -43,7 +43,7 @@ void Liquid::UnregisterLiquidObject(Object* object) {
     }
 }
 
-// OFFSET: 0x0071D760
+// OFFSET: 0x0071D760/0x1403F2C90
 Liquid::Object* Liquid::RegisterLiquidObject(uint32_t a1, uint32_t liquidType, uint32_t materialId) {
     Object* object = &s_defaultObject;
 

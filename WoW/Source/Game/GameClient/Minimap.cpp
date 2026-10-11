@@ -278,7 +278,7 @@ int32_t MinimapGetIndoorZoom() {
     return s_indoorZoom;
 }
 
-// OFFSET: 0x004E8750
+// OFFSET: 0x004E8750/0x14012ACD0
 float MinimapGetOutdoorZoomTiles(int32_t zoom) {
     if (zoom >= 0 && zoom < sizeof(s_outdoorZoomTiles) / sizeof(s_outdoorZoomTiles[0])) {
         return static_cast<float>(s_outdoorZoomTiles[zoom]);
@@ -287,7 +287,7 @@ float MinimapGetOutdoorZoomTiles(int32_t zoom) {
     return 0.0f;
 }
 
-// OFFSET: 0x004E8780
+// OFFSET: 0x004E8780/0x14012AD00
 float MinimapGetIndoorZoomRadius(int32_t zoom) {
     if (zoom >= 0 && zoom < sizeof(s_indoorZoomRadius) / sizeof(s_indoorZoomRadius[0])) {
         return s_indoorZoomRadius[zoom];
@@ -647,7 +647,7 @@ void UpdatePointsOfInterest() {
     }
 }
 
-// OFFSET: 0x004E95D0
+// OFFSET: 0x004E95D0/0x14012BEA0
 void RefreshWorldStatePOIs(uint32_t state) {
     for (uint32_t i = 0; i < s_numPOIs; i++) {
         AreaPOIRec* poi = s_pois.m_data[i];
@@ -660,7 +660,7 @@ void RefreshWorldStatePOIs(uint32_t state) {
     }
 }
 
-// OFFSET: 0x004E9640
+// OFFSET: 0x004E9640/0x14012BF00
 void MinimapSetDynamicPOI(int32_t index, int32_t flags, float x, float y, int32_t icon, int32_t importance, const char* name) {
     s_dynamicPOIs[index].m_flags = flags;
     s_dynamicPOIs[index].m_pos[0] = x;

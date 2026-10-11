@@ -373,7 +373,7 @@ int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
     return 1;
 }
 
-// OFFSET: 0x009E5B50
+// OFFSET: 0x009E5B50/0x14077DFA0
 void CGGMTicketInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_GM_TICKET_CREATE);
     ClientServices::ClearMessageHandler(SMSG_GM_TICKET_UPDATE_TEXT);

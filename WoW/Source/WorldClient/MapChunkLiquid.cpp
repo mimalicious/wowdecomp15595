@@ -305,7 +305,7 @@ bool CChunkLiquid::GetTris(World::TriData& tris, const CFrustum& frustum, const 
     return this->GetTris(tris, clip, start, size);
 }
 
-// OFFSET: 0x00799460
+// OFFSET: 0x00799460/0x14048D2E0
 CChunkLiquid::CChunkLiquid() {
     this->m_position = C3Vector(0.0f, 0.0f, 0.0f);
     this->unk_0018[0] = 0;

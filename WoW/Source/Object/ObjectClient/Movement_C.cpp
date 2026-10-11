@@ -27,7 +27,7 @@ void MovementAddTransport(CGGameObject_C* transport) {
     s_transports.LinkToTail(transport);
 }
 
-// OFFSET: 0x005E6BA0
+// OFFSET: 0x005E6BA0/0x140267500
 int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t a3, int32_t reason, int32_t vehicleId) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -142,7 +142,7 @@ void MovementMoveTransports(uint32_t time, uint32_t elapsed) {
     }
 }
 
-// OFFSET: 0x005E6F40
+// OFFSET: 0x005E6F40/0x140267950
 void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, uint8_t seat) {
     uint32_t high = (uint32_t)(transport.m_guid >> 32);
 
@@ -223,7 +223,7 @@ void MovementDelSpline(CMoveSpline* spline) {
     }
 }
 
-// OFFSET: 0x005E6C30
+// OFFSET: 0x005E6C30/0x1402675C0
 void MovementUpdateCameraYaw(WOWGUID guid, WOWGUID transport) {
     uint32_t high = static_cast<uint32_t>(transport.m_guid >> 32);
 
@@ -238,7 +238,7 @@ void MovementUpdateCameraYaw(WOWGUID guid, WOWGUID transport) {
     }
 }
 
-// OFFSET: 0x005E6EF0
+// OFFSET: 0x005E6EF0/0x1402678F0
 void MovementUpdateWorld(WOWGUID guid, const C3Vector& position, int32_t preload) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 

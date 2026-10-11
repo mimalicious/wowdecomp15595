@@ -63,7 +63,7 @@ bool Blizzard::Storage::StorageUnit::IsAvailable(int64_t offset, int64_t size) {
     return false;
 }
 
-// OFFSET: 0x007ABC40
+// OFFSET: 0x007ABC40/0x1404A1BB0
 bool Blizzard::Storage::StorageUnit::FindMissingRange(int64_t offset, int64_t size, ChunkRange* range) {
     range->m_complete = false;
 

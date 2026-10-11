@@ -154,7 +154,7 @@ C3Vector CGChatBubbleFrame::GetUnitPosition() {
     return unit->GetPosition();
 }
 
-// OFFSET: 0x009F1320
+// OFFSET: 0x009F1320/0x14078B2C0
 void CGChatBubbleFrame::Render(CGWorldFrame* worldFrame) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_unit, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -331,7 +331,7 @@ bool CGChatBubbleFrame::AppendRaidIconTexture(char* dest, char* tag, uint32_t si
     return false;
 }
 
-// OFFSET: 0x009F0DE0
+// OFFSET: 0x009F0DE0/0x14078ACB0
 void CGChatBubbleFrame::ParseRaidIcons(char* text, char* dest, uint32_t size) {
     if (!text) {
         return;
@@ -415,7 +415,7 @@ void CGChatBubbleFrame::Initialize(const WOWGUID& unit, const char* text, const 
     this->FadeIn();
 }
 
-// OFFSET: 0x009F1C20
+// OFFSET: 0x009F1C20/0x14078BF20
 void CGChatBubbleFrame::OnWorldRender(CGWorldFrame* worldFrame) {
     CGChatBubbleFrame* next;
 
@@ -471,7 +471,7 @@ void CGChatBubbleFrame::ShutdownGame() {
     s_cameraPositionValid = 0;
 }
 
-// OFFSET: 0x009F1B80
+// OFFSET: 0x009F1B80/0x14078BDF0
 static void InsertSorted(CGChatBubbleFrame* bubble) {
     for (CGChatBubbleFrame* node = s_chatBubbles.Head(); node; node = s_chatBubbles.Next(node)) {
         if (static_cast<int32_t>(node->m_showTime - bubble->m_showTime) >= 0) {
@@ -496,7 +496,7 @@ CGChatBubbleFrame* CGChatBubbleFrame::GetNewChatBubble(CSimpleFrame* parent) {
     return bubble;
 }
 
-// OFFSET: 0x009F1C70
+// OFFSET: 0x009F1C70/0x14078BF80
 void CGChatBubbleFrame::Remove(CGChatBubbleFrame* bubble) {
     bubble->Hide();
     s_freeChatBubbles.LinkToTail(bubble);

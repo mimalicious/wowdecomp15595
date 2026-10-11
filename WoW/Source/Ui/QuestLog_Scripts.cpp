@@ -2070,7 +2070,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: cb18a370 IDENTICAL/NONE
-// OFFSET: 0x0095D6F0
+// OFFSET: 0x0095D6F0/0x1406D0540
 void QuestLogRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -2078,7 +2078,7 @@ void QuestLogRegisterScriptFunctions() {
 }
 
 // PROVEN: 0e94e32e IDENTICAL/NONE
-// OFFSET: 0x0095D720
+// OFFSET: 0x0095D720/0x1406D0590
 void QuestLogUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

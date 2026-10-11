@@ -847,7 +847,7 @@ FMOD_RESULT SE3::ConnectDspToChannelGroup(void* dsp, void* channelGroup) {
 }
 
 // PROVEN: 206719e8 IDENTICAL/NONE
-// OFFSET: 0x00716D00
+// OFFSET: 0x00716D00/0x1403EA1C0
 int32_t SE3::GetChannelGroupNumChannels(void* channelGroup) {
     int numChannels = 0;
     static_cast<FMOD::ChannelGroup*>(channelGroup)->getNumChannels(&numChannels);

@@ -17,7 +17,7 @@ void Liquid::CMaterialBank::Create() {
 }
 
 // PROVEN: f23c630d IDENTICAL/NONE
-// OFFSET: 0x0071C580
+// OFFSET: 0x0071C580/0x1403F1540
 void Liquid::CMaterialBank::ResetMaterials() {
     for (uint32_t i = 0; i < Liquid::CMaterialBank::s_materials.Count(); i++) {
         if (Liquid::CMaterialBank::s_materials.m_data[i]) {

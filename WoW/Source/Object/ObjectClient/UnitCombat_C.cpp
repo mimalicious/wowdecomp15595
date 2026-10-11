@@ -151,7 +151,7 @@
 static uint32_t s_nextVictimImpactTime;
 
 // PROVEN: 99326035 IDENTICAL/NONE
-// OFFSET: 0x005FF6D0
+// OFFSET: 0x005FF6D0/0x1402837D0
 void CGUnit_C::ShowPlayerPVPHonorGained(WOWGUID victim, int32_t rank, int32_t honor) {
     CGChat::LogHonorGain(this, victim, rank, honor);
 }
@@ -343,7 +343,7 @@ const CGUnitVirtualItem* CGUnit_C::GetAttackingWeapon(int32_t hand, bool require
     return NULL;
 }
 
-// OFFSET: 0x005FFBF0
+// OFFSET: 0x005FFBF0/0x140283E40
 void UnitCombatClientShutdown() {
     ClientServices::ClearMessageHandler(SMSG_ATTACK_START);
     ClientServices::ClearMessageHandler(SMSG_ATTACK_STOP);

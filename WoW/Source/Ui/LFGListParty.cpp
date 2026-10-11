@@ -17,7 +17,7 @@ uint32_t LFGListParty::GetNumMembers() const {
     return count <= 1 ? 0 : count - 1;
 }
 
-// OFFSET: 0x00984190
+// OFFSET: 0x00984190/0x1406FF190
 void LFGListParty::AddPlayer(LFGListPlayer* player) {
     if (player->m_partyIndex >= 0) {
         return;
@@ -59,7 +59,7 @@ void LFGListParty::RemovePlayer(LFGListPlayer* player) {
     player->m_partyIndex = -1;
 }
 
-// OFFSET: 0x00986580
+// OFFSET: 0x00986580/0x140701B10
 LFGListParty::LFGListParty(const LFGListParty& source) {
     this->m_index = -1;
     SStrCopy(this->m_comment, source.m_comment, sizeof(this->m_comment));
@@ -70,7 +70,7 @@ LFGListParty::LFGListParty(const LFGListParty& source) {
     this->m_encounterMask = source.m_encounterMask;
 }
 
-// OFFSET: 0x00986640
+// OFFSET: 0x00986640/0x140701BD0
 LFGListPlayer::LFGListPlayer(const LFGListPlayer& source) {
     this->m_index = source.m_index;
     this->m_partyIndex = source.m_partyIndex;

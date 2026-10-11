@@ -14,7 +14,7 @@ Battlenet::Service::Interface::~Interface() {
 }
 
 // PROVEN: eb74f12e IDENTICAL/NONE
-// OFFSET: 0x006622C0
+// OFFSET: 0x006622C0/0x140307FF0
 void Battlenet::Service::Interface::Register() {
     if (this->m_eventId.m_value) {
         Tumor* tumor = this->m_manager->GetTumor();
@@ -25,7 +25,7 @@ void Battlenet::Service::Interface::Register() {
 }
 
 // PROVEN: 2a0132f2 IDENTICAL/NONE
-// OFFSET: 0x00662310
+// OFFSET: 0x00662310/0x140308270
 void Battlenet::Service::Interface::SendEvent(const uint8_t& eventType, const BSN::FourCC& eventId, const BSN::EncodedObject* data) {
     if (this->m_eventAdapter) {
         this->m_eventAdapter->SendEvent(eventType, eventId, data);

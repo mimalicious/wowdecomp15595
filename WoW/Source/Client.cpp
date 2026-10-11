@@ -405,7 +405,7 @@ static bool GetArchivePath(char* buffer, uint32_t size, const char* name, const 
     return true;
 }
 
-// OFFSET: 0x00402110
+// OFFSET: 0x00402110/0x140001960
 static void CheckAvailableLocales() {
     for (int32_t i = 0; i < 15; i++) {
         char path[1024];
@@ -1257,7 +1257,7 @@ static bool LoadMopaqFileSigningData(const char* locale) {
     return true;
 }
 
-// OFFSET: 0x004046C0
+// OFFSET: 0x004046C0/0x140004BB0
 static bool OpenCacheArchive(ArchiveEnumParams* params, const char* path, int32_t writable) {
     int32_t priority = params->m_priority;
 
@@ -1432,7 +1432,7 @@ static bool IsUpdateArchiveInManifest(const char* path) {
     return Blizzard::Streaming::IsInManifest(manifestPath);
 }
 
-// OFFSET: 0x00404B60
+// OFFSET: 0x00404B60/0x140005180
 static int32_t AcceptArchive(const char* path, void* param, uint8_t flags) {
     ArchiveEnumParams* params = static_cast<ArchiveEnumParams*>(param);
 
@@ -1475,7 +1475,7 @@ void ListInterfaceArchive(const char* prefix, int32_t (*callback)(const char* fi
     ListArchives(prefix, 3, callback, param);
 }
 
-// OFFSET: 0x00404CB0
+// OFFSET: 0x00404CB0/0x1400053E0
 static void CloseAllArchives() {
     for (uint32_t i = s_archiveHandles.Count(); i; i--) {
         if (s_archiveHandles[i - 1]) {
@@ -1484,7 +1484,7 @@ static void CloseAllArchives() {
     }
 }
 
-// OFFSET: 0x00404CE0
+// OFFSET: 0x00404CE0/0x140005590
 static void SetLocaleCode(const char* locale) {
     int32_t index = LocaleNameToIndex(locale);
     SStrCopy(s_localeCode, g_localeNames[index], sizeof(s_localeCode));
@@ -1509,7 +1509,7 @@ static void SetLocaleCode(const char* locale) {
     }
 }
 
-// OFFSET: 0x00405DE0
+// OFFSET: 0x00405DE0/0x1400066F0
 bool OpenExpansionArchives(uint8_t accountExpansion, uint8_t activeExpansion) {
     s_startBGLoadThread = 0;
 
@@ -2241,7 +2241,7 @@ static void AbortInitializeGlobal() {
     CStringManager::DestroyManager();
 }
 
-// OFFSET: 0x008C1630
+// OFFSET: 0x008C1630/0x140630B90
 static const char* GetDefaultLocale() {
     int32_t current = GetCurrentLocaleIndex();
 
@@ -2763,7 +2763,7 @@ int32_t CommonMain() {
     return 0;
 }
 
-// OFFSET: 0x00408580
+// OFFSET: 0x00408580/0x14000A8C0
 void GameClientCommands::Uninstall() {
     ConsoleCommandUnregister("port");
     ConsoleCommandUnregister("charmport");
@@ -2774,7 +2774,7 @@ void GameClientCommands::Uninstall() {
     ConsoleCommandUnregister("togglecloak");
 }
 
-// OFFSET: 0x00408FF0
+// OFFSET: 0x00408FF0/0x14000B610
 void GameClientCommands::Install() {
     ConsoleCommandRegister("port", CCommand_Teleport, CATEGORY_DEBUG, NULL, NULL);
     ConsoleCommandRegister("charmport", CCommand_CharmTeleport, CATEGORY_DEBUG, NULL, NULL);

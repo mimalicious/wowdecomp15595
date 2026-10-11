@@ -1572,7 +1572,7 @@ static FrameScript_Method s_scriptFunctions[] = {
 };
 
 // PROVEN: bc0c7bfd IDENTICAL/NONE
-// OFFSET: 0x00807330
+// OFFSET: 0x00807330/0x14051CB00
 void GlueScriptEventsRegisterFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);

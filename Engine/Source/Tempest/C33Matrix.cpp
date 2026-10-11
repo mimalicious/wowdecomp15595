@@ -78,7 +78,7 @@ void C33Matrix::Scale(float x, float y, float z) {
     this->c2 = z * this->c2;
 }
 
-// OFFSET: 0x004CD530
+// OFFSET: 0x004CD530/0x140109300
 void C33Matrix::Scale(const C3Vector& scale) {
     this->a0 = scale.x * this->a0;
     this->a1 = this->a1 * scale.x;
@@ -140,7 +140,7 @@ C33Matrix C33Matrix::Inverse(float determinant) const {
     return result;
 }
 
-// OFFSET: 0x004CD970
+// OFFSET: 0x004CD970/0x140109750
 C33Matrix C33Matrix::Rotation(float angle) {
     float c = cos(angle);
     float s = sin(angle);

@@ -246,7 +246,7 @@ void CGTradeSkillInfo::DoRecast(int32_t spellId) {
 }
 
 // PROVEN: ec18b7d8 IDENTICAL/NONE
-// OFFSET: 0x0098D390
+// OFFSET: 0x0098D390/0x14070B830
 void CGTradeSkillInfo::ActivatePendingRecast(int32_t spellId) {
     if (spellId == CGTradeSkillInfo::m_pendingRecastSpellID) {
         CGTradeSkillInfo::m_recastSpellID = CGTradeSkillInfo::m_pendingRecastSpellID;
@@ -441,7 +441,7 @@ static int32_t QSortSubClasses(const void* a, const void* b) {
 }
 
 // PROVEN: 04fc3377 IDENTICAL/NONE
-// OFFSET: 0x0098DD70
+// OFFSET: 0x0098DD70/0x14070C3A0
 int32_t CGTradeSkillInfo::GetSubClassIndexFromSkill(uint32_t index) {
     if (index >= CGTradeSkillInfo::m_numDisplayEntries) {
         return -1;
@@ -465,7 +465,7 @@ int32_t CGTradeSkillInfo::GetSubClassIndexFromSkill(uint32_t index) {
 }
 
 // PROVEN: 9b028bbb IDENTICAL/NONE
-// OFFSET: 0x0098DDD0
+// OFFSET: 0x0098DDD0/0x14070C400
 int32_t CGTradeSkillInfo::IsCollapsedHeader(uint32_t index) {
     if (index >= CGTradeSkillInfo::m_numDisplayEntries) {
         return 0;

@@ -420,7 +420,7 @@ void SE3::SetAttachCustomDSPChainCallback(SE3SoundKitObject* sko, void (*callbac
 }
 
 // PROVEN: 92cdefe8 IDENTICAL/NONE
-// OFFSET: 0x007059B0
+// OFFSET: 0x007059B0/0x1403D2CD0
 void SE3::SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel* channel) {
     if (!sko || !channel) {
         return;
@@ -449,7 +449,7 @@ void SE3::SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel
     }
 }
 
-// OFFSET: 0x00706D90
+// OFFSET: 0x00706D90/0x1403D2ED0
 void SE3SoundKitObject::Set3DPosition(const C3Vector& position) {
     this->m_position = position;
 
@@ -666,7 +666,7 @@ float SE3::SoundBusGetSuppressedVolumeScalar(SE3BUS bus, uint32_t uid) {
 }
 
 // PROVEN: bbaf56d1 IDENTICAL/NONE
-// OFFSET: 0x00705F80
+// OFFSET: 0x00705F80/0x1403D3410
 float SE3ChatSound::GetScaledVolume() {
     return SE3::SoundBusGetSuppressedVolumeScalar(this->m_bus, this->m_uUID) * this->m_volume;
 }
@@ -1017,7 +1017,7 @@ void SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, int
 }
 
 // PROVEN: 0342c584 IDENTICAL/NONE
-// OFFSET: 0x00706850
+// OFFSET: 0x00706850/0x1403D3EF0
 SE3SoundKitDef* SE3::GetSoundKitDef(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count()) || soundKitID <= 0) {
         return NULL;
@@ -1049,7 +1049,7 @@ int32_t SE3::IsLooping_ByDef(int32_t soundKitID) {
     return 0;
 }
 
-// OFFSET: 0x00706940
+// OFFSET: 0x00706940/0x1403D3FD0
 int32_t SE3::PreloadSoundKit(int32_t soundKitID, int32_t wait) {
     SE3SoundKitDef* def = SE3::GetSoundKitDef(soundKitID);
 
@@ -1106,7 +1106,7 @@ int32_t SE3::IsLoopingOrPeriodic_ByDef(int32_t soundKitID) {
     return def->m_pSoundKitRec->m_flags & 0x200;
 }
 
-// OFFSET: 0x00706A40
+// OFFSET: 0x00706A40/0x1403D2A20
 static int32_t IsBeyondListenerRange(const C3Vector* position, float range, float* distanceSquared) {
     C3Vector listener;
     SE3::sm_pGameSystem->get3DListenerAttributes(0, reinterpret_cast<FMOD_VECTOR*>(&listener), NULL, NULL, NULL);
@@ -1290,7 +1290,7 @@ void SE3::ReleaseUnusedStreams() {
     }
 }
 
-// OFFSET: 0x007072B0
+// OFFSET: 0x007072B0/0x1403D4CE0
 void SE3::InitSoundKitDefArray(uint32_t maxID) {
     sm_SoundKitDefArray.SetCount(maxID + 1);
     memset(sm_SoundKitDefArray.Ptr(), 0, (maxID + 1) * sizeof(SE3SoundKitDef*));
@@ -1416,7 +1416,7 @@ int32_t SE3::IsTooCloseToExistingSoundKit(int32_t soundKitID, const C3Vector& po
     return 0;
 }
 
-// OFFSET: 0x007075C0
+// OFFSET: 0x007075C0/0x1403D5BC0
 static FMOD_RESULT F_CALLBACK DeviceChangedCallback(FMOD_SYSTEM* system, FMOD_SYSTEM_CALLBACKTYPE type, void* commanddata1, void* commanddata2) {
     if (type != FMOD_SYSTEM_CALLBACKTYPE_DEVICELISTCHANGED || !s_deviceChangeCallback) {
         return FMOD_OK;
@@ -2716,7 +2716,7 @@ void SE3::CreateSoundEmitter(uint32_t* handle, const SoundEmittersRec* rec, SE3S
     SE3::EmitterManagerSendMessage_CreateEmitter(handle, chunk, rec->m_soundEntriesID, rec->m_position, properties, &positions, rec->m_id);
 }
 
-// OFFSET: 0x0070E7A0
+// OFFSET: 0x0070E7A0/0x1403DEF20
 void SE3::InsertSoundKitDef(const SoundEntriesRec* rec, const SoundEntriesAdvancedRec* advancedRec, int32_t ownsRecords) {
     if (!rec) {
         return;
@@ -3065,7 +3065,7 @@ void SE3::EmitterManagerProcessEmitterMessages() {
     }
 }
 
-// OFFSET: 0x0070EA90
+// OFFSET: 0x0070EA90/0x1403E1900
 void SE3::InitSoundKitDefList() {
     SE3::InitSoundKitDefArray(g_soundEntriesDB.m_maxID);
 
@@ -4508,7 +4508,7 @@ void SE3::SetFocusScalar(float scalar) {
     SE3::sm_fFocusScalar = scalar;
 }
 
-// OFFSET: 0x007121C0
+// OFFSET: 0x007121C0/0x1403E4020
 void SE3::SoundBusInitBuses() {
     for (int32_t i = 0; i < SE3BUS_LAST; i++) {
         SE3::sm_aSoundBus[i].m_parent = SE3BUS_NONE;
@@ -4520,7 +4520,7 @@ void SE3::SoundBusInitBuses() {
     }
 }
 
-// OFFSET: 0x00712210
+// OFFSET: 0x00712210/0x1403E4060
 void SE3::SoundBusSetParameters(SE3BUS bus, SE3BUS parent, int32_t maxChannels, float volume, int32_t muted, int32_t enabled) {
     SE3::sm_aSoundBus[bus].m_parent = parent;
     SE3::sm_aSoundBus[bus].m_maxChannels = maxChannels;
@@ -4536,7 +4536,7 @@ void SE3::SoundBusSetParameters(SE3BUS bus, SE3BUS parent, int32_t maxChannels, 
     SE3::sm_aSoundBus[bus].m_enabled = enabled;
 }
 
-// OFFSET: 0x00712270
+// OFFSET: 0x00712270/0x1403E40B0
 void SE3::SoundBusSetVolume(SE3BUS bus, float volume) {
     if (volume < 0.0f) {
         volume = 0.0f;

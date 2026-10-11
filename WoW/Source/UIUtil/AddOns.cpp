@@ -153,7 +153,7 @@ static void WritePublicKey(bool hasKey, const uint8_t* key, const char* path) {
     OsCloseFile(file);
 }
 
-// OFFSET: 0x0045B580
+// OFFSET: 0x0045B580/0x14006D810
 static void ReadURL(const char* path, char** url) {
     void* data;
 
@@ -410,7 +410,7 @@ void GetAddOnInfoRequest(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0045ED40
+// OFFSET: 0x0045ED40/0x140071DC0
 UIADDON::UIADDON() {
     this->m_loading = false;
     this->m_loaded = 0;
@@ -638,7 +638,7 @@ void ClearAddOnEnableState(const char* character) {
     }
 }
 
-// OFFSET: 0x0045F5E0
+// OFFSET: 0x0045F5E0/0x1400729D0
 void ShutdownAddOns() {
     if (!s_addOnsInitialized) {
         return;
@@ -1438,7 +1438,7 @@ void InitializeAddOns() {
     }
 }
 
-// OFFSET: 0x00460140
+// OFFSET: 0x00460140/0x140073A20
 void InitializeAddOns(const char* accountName) {
     ShutdownAddOns();
     SStrCopy(s_addOnAccountName, accountName, sizeof(s_addOnAccountName));

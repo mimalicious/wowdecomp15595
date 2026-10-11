@@ -2421,14 +2421,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetBestRFChoice", &Script_GetBestRFChoice },
 };
 
-// OFFSET: 0x0097F630
+// OFFSET: 0x0097F630/0x1406F9730
 void LookingForGroupRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0097F660
+// OFFSET: 0x0097F660/0x1406F9780
 void LookingForGroupUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

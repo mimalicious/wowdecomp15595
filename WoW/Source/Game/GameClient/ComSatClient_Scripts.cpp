@@ -377,7 +377,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 23a6a688 IDENTICAL/NONE
-// OFFSET: 0x004DB2D0
+// OFFSET: 0x004DB2D0/0x140119880
 void VoiceRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -385,7 +385,7 @@ void VoiceRegisterScriptFunctions() {
 }
 
 // PROVEN: d2acb2c7 IDENTICAL/NONE
-// OFFSET: 0x004DB300
+// OFFSET: 0x004DB300/0x1401198D0
 void VoiceUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

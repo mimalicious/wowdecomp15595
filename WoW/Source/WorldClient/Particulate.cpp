@@ -201,7 +201,7 @@ void Particulate::Update() {
     }
 }
 
-// OFFSET: 0x0077E180
+// OFFSET: 0x0077E180/0x14046B080
 void Particulate::Render(CWorldView* view) {
     if (!this->m_enabled) {
         return;

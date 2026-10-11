@@ -936,14 +936,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumBuybackItems", &Script_GetNumBuybackItems },
 };
 
-// OFFSET: 0x00967E70
+// OFFSET: 0x00967E70/0x1406DE380
 void MerchantRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00967EA0
+// OFFSET: 0x00967EA0/0x1406DE3D0
 void MerchantUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

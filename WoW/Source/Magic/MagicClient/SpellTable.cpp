@@ -177,7 +177,7 @@ void SpellTableDestroy() {
     s_skillLineLinkInfo.m_count = 0;
 }
 
-// OFFSET: 0x008C1110
+// OFFSET: 0x008C1110/0x14060B350
 void SpellTableInitialize() {
     RACECLASSINFO* raceClassInfo = NULL;
     int32_t lastSkill = -1;

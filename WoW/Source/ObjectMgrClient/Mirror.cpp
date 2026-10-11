@@ -574,7 +574,7 @@ void CopyAndExpandDescriptors(const CGFieldDescriptor* descriptors, CGFieldDescr
     }
 }
 
-// OFFSET: 0x00A28260
+// OFFSET: 0x00A28260/0x1407CFA20
 void MirrorInitialize() {
     CopyAndExpandDescriptors(OBJECT_DISCRIPTORS, s_objectDescriptors, sizeof(OBJECT_DISCRIPTORS) / sizeof(OBJECT_DISCRIPTORS[0]));
     memcpy(s_itemDescriptors, s_objectDescriptors, sizeof(s_objectDescriptors));

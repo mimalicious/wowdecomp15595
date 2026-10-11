@@ -270,7 +270,7 @@ void CGObject_C::SetDisablePending(int32_t pending) {
 }
 
 // PROVEN: e7f9e1c3 IDENTICAL/NONE
-// OFFSET: 0x005DC080
+// OFFSET: 0x005DC080/0x1402581E0
 int32_t CGObject_C::IsReadyToDraw() {
     if (this->GetObjectModel() && this->GetObjectModel()->IsDrawable()) {
         return 1;
@@ -332,7 +332,7 @@ void CGObject_C::EffectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t s
 }
 
 // PROVEN: 663c472d IDENTICAL/NONE
-// OFFSET: 0x005DC1C0
+// OFFSET: 0x005DC1C0/0x140258360
 void CGObject_C::LoopEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
@@ -446,7 +446,7 @@ void CGObject_C::SetModelFinish(CM2Model* model) {
 }
 
 // PROVEN: 0c8f62a5 IDENTICAL/NONE
-// OFFSET: 0x005DC580
+// OFFSET: 0x005DC580/0x1402588A0
 void CGObject_C::SetModel(CM2Model* model) {
     if (model != this->m_worldModel) {
         this->SetModelFinish(this->SetModelStart(model));
@@ -584,7 +584,7 @@ void CGObject_C::UpdateEffectAttachments() {
 }
 
 // PROVEN: b907529f IDENTICAL/NONE
-// OFFSET: 0x005DC980
+// OFFSET: 0x005DC980/0x140258D90
 void CGObject_C::ClearSpellEffect(uint32_t spellId, int32_t all, uint64_t casterGuid) {
     if (!spellId) {
         return;
@@ -648,7 +648,7 @@ void CGObject_C::ClearEffectKitByID(uint32_t spellId, int32_t kitId, uint32_t pa
 }
 
 // PROVEN: 371a7503 IDENTICAL/NONE
-// OFFSET: 0x005DCB00
+// OFFSET: 0x005DCB00/0x140258F60
 void CGObject_C::SetBlock(uint32_t index, uint32_t value) {
     reinterpret_cast<uint32_t*>(this->m_obj)[index] = value;
 }
@@ -801,7 +801,7 @@ void CGObject_C::PreAnimate(CGWorldFrame* frame) {
 }
 
 // PROVEN: 7136ba38 IDENTICAL/NONE
-// OFFSET: 0x005DCFC0
+// OFFSET: 0x005DCFC0/0x1402594B0
 void CGObject_C::PostReenable(const CClientObjCreate& create) {
     this->RefreshInteractIcon();
     this->m_modelFlags &= ~0x20000;
@@ -910,7 +910,7 @@ void CGObject_C::GuildTextureCallback(const uint64_t& guildGUID, const WOWGUID& 
 }
 
 // PROVEN: 98849f62 IDENTICAL/NONE
-// OFFSET: 0x005DD2F0
+// OFFSET: 0x005DD2F0/0x1402597E0
 void CGObject_C::ModelChanged() {
     int32_t loaded = this->GetObjectModel()->IsLoadedRecursive();
     CAaBox box = this->GetObjectModel()->GetBoundingBox();
@@ -932,7 +932,7 @@ void CGObject_C::ModelChanged() {
     }
 }
 
-// OFFSET: 0x005DD3A0
+// OFFSET: 0x005DD3A0/0x140259900
 void CGObject_C::ModelLoaded(CM2Model* model) {
     if (model != this->GetObjectModel()) {
         return;
@@ -1058,7 +1058,7 @@ void CGObject_C::UpdateInteractIconScale() {
     }
 }
 
-// OFFSET: 0x005DD780
+// OFFSET: 0x005DD780/0x140259F80
 int32_t CGObject_C::GetQuestGiverCursor(int32_t highlighted) {
     switch (this->m_questStatus) {
         case 2:
@@ -1187,7 +1187,7 @@ void CGObject_C::EffectOnceHandler(CM2Model* model, uint32_t boneId, uint32_t se
 }
 
 // PROVEN: 9d79b5a0 IDENTICAL/NONE
-// OFFSET: 0x005DDAB0
+// OFFSET: 0x005DDAB0/0x14025A3B0
 void CGObject_C::AuraEffectHoldHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
@@ -1209,7 +1209,7 @@ void CGObject_C::AuraEffectHoldHandler(CM2Model* model, uint32_t boneId, uint32_
     }
 }
 
-// OFFSET: 0x005DDB70
+// OFFSET: 0x005DDB70/0x14025A4A0
 void CGObject_C::AuraEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
@@ -1251,7 +1251,7 @@ static int32_t GetGuildColor(T db, uint8_t index, CImVector& color) {
     return 1;
 }
 
-// OFFSET: 0x005DDCB0
+// OFFSET: 0x005DDCB0/0x14025A680
 void CGObject_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->m_modelFlags |= 0x40000;
     this->DoFade(this->GetBaseAlpha(), this->ShouldFadeIn() ? 1000 : 0);
@@ -1421,7 +1421,7 @@ void CGObject_C::Shutdown() {
     ClntObjMgrUnsetTypeMirrorHandler(ID_OBJECT, OBJECT_FIELD_DATA * sizeof(uint32_t), &GuildDataUpdateHandler, NULL);
 }
 
-// OFFSET: 0x005DE130
+// OFFSET: 0x005DE130/0x14025AC70
 int32_t CGObject_C::SetCircleRenderStates() {
     CGxTex* texture = TextureGetGxTex(CGObject_C::s_selectionTexture);
 
@@ -1902,7 +1902,7 @@ attachments:
     }
 }
 
-// OFFSET: 0x005DF8A0
+// OFFSET: 0x005DF8A0/0x14025CC20
 bool CGObject_C::GetGuildLogoInfo(uint64_t guildGUID, CImVector& backgroundColor, CImVector& border, CImVector& emblem, char* fileName, int32_t size) {
     backgroundColor.b = 0x80;
     backgroundColor.g = 0x80;
@@ -1998,7 +1998,7 @@ void CGObject_C::UpdateInteractIcon() {
     this->SetInteractIconVisible(CGGameUI::m_visible);
 }
 
-// OFFSET: 0x005DFAD0
+// OFFSET: 0x005DFAD0/0x14025D040
 void CGObject_C::PrepareToFadeInt(float alpha, uint64_t transportGuid, const C44Matrix& matrix) {
     uint32_t time = FrameTime::GetCurTimeMs();
 
@@ -2028,13 +2028,13 @@ void CGObject_C::AddNonModelToFadeoutList(float alpha, uint64_t transportGuid) {
 }
 
 // PROVEN: 56d140fe IDENTICAL/NONE
-// OFFSET: 0x005DFC40
+// OFFSET: 0x005DFC40/0x14025D2B0
 CGObject_C::CGObject_C(uint32_t time, const CClientObjCreate& create) : m_interactIcon(NULL), m_questStatus(0), m_interactIconType(0), m_scale(1.0f), m_scaleModifier(1.0f), m_scaleChangeTime(0), m_scaleChangeStart(1.0f), m_effectList(NULL), m_height(1.0f), m_nameDesc(NULL), m_worldModel(NULL), m_worldObject(0), m_modelFlags(0), m_fadeStartTime(0), m_fadeDuration(0), m_alpha(0), m_fadeStartAlpha(0), m_fadeEndAlpha(0), m_alphaScale(0xFF), m_effectManager(NULL), m_fadeoutInfo(NULL) {
     ClntObjMgrLinkInNewObject(this);
     this->m_scale = this->m_obj->m_scale;
 }
 
-// OFFSET: 0x005DFDD0
+// OFFSET: 0x005DFDD0/0x14025D4A0
 int32_t CGObject_C::PrepareToFade(float alpha, uint64_t transportGuid) {
     CM2Model* model = this->GetObjectModel();
 
@@ -2051,7 +2051,7 @@ int32_t CGObject_C::PrepareToFade(float alpha, uint64_t transportGuid) {
     return 0;
 }
 
-// OFFSET: 0x005DFE50
+// OFFSET: 0x005DFE50/0x14025D5D0
 void CGObject_C::RemoveFromFadeoutList() {
     if (this->m_fadeoutInfo) {
         CGObject_C::s_fadeoutHeap->Delete(this->m_fadeoutInfo, "", 0);
@@ -2135,7 +2135,7 @@ void CGObject_C::Disable() {
     this->m_disableTime = FrameTime::GetCurTimeMs();
 }
 
-// OFFSET: 0x005E0280
+// OFFSET: 0x005E0280/0x14025DBA0
 void CGObject_C::Reenable(const CClientObjCreate& create) {
     this->m_modelFlags = (this->m_modelFlags & 0xFFFCFFFF) | 0x20000;
     this->m_scale = this->GetScale();
@@ -2309,7 +2309,7 @@ void CGObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_objMirror = saved;
 }
 
-// OFFSET: 0x0048F630
+// OFFSET: 0x0048F630/0x1400B3D90
 CGObject_C::CGObject_C() {
 }
 
@@ -2490,7 +2490,7 @@ int32_t CGObject_C::IsHighlightSuppressed() const {
 }
 
 // PROVEN: 3c5e4b0f IDENTICAL/NONE
-// OFFSET: 0x0048F810
+// OFFSET: 0x0048F810/0x1400B3FA0
 C44Matrix CGObject_C::GetMatrix() const {
     return C44Matrix();
 }

@@ -1435,14 +1435,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetItemSearch", &Script_SetItemSearch },
 };
 
-// OFFSET: 0x009BB440
+// OFFSET: 0x009BB440/0x140746C60
 void ContainerRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009BB470
+// OFFSET: 0x009BB470/0x140746CB0
 void ContainerUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

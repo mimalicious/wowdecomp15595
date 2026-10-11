@@ -701,7 +701,7 @@ struct DetailDoodadCell {
     }
 };
 
-// OFFSET: 0x00783980
+// OFFSET: 0x00783980/0x140471E70
 void CMapChunk::CreateDetailDoodads() {
     CRndSeed seed(0);
     seed.SetSeed(this->m_chunkX | (this->m_chunkY << 16));
@@ -894,7 +894,7 @@ void CMapChunk::CreateDetailDoodads() {
 }
 
 // PROVEN: 3a34611f IDENTICAL/NONE
-// OFFSET: 0x007848B0
+// OFFSET: 0x007848B0/0x1404734B0
 void CMapChunk::CreateDetailDoodadInst() {
     if (!this->m_header.m_nLayers || !this->LoadDetailDoodadModels()) {
         return;
@@ -2362,7 +2362,7 @@ bool CMap::GetChunkFacets(CMapChunk* chunk, const CAaBox& box, const CAaBox& box
     return true;
 }
 
-// OFFSET: 0x0078CF40
+// OFFSET: 0x0078CF40/0x14047DA30
 bool CMap::GetChunkFacets(CMapChunk* chunk, const CFrustum& frustum, const CAaBox& bounds, const CiRect& rect, World::FacetData& facets, uint32_t flags) {
     uint32_t oldCount = facets.facets.Count();
     CFrustum local = frustum;

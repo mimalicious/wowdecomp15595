@@ -242,7 +242,7 @@ bool CanTradeBoundItem(CGItem_C* item) {
 }
 
 // PROVEN: 7ef05467 IDENTICAL/NONE
-// OFFSET: 0x0096A5E0
+// OFFSET: 0x0096A5E0/0x1406E0FA0
 int32_t CGTradeInfo::GetGameError(int32_t error, int32_t target) {
     switch (error) {
         case 4:
@@ -306,7 +306,7 @@ void CGTradeInfo::BusyTrade() {
 }
 
 // PROVEN: 904274db IDENTICAL/NONE
-// OFFSET: 0x0096AA10
+// OFFSET: 0x0096AA10/0x1406E12F0
 void CGTradeInfo::ShutdownGame() {
     ClientTradeStatus::s_handler = NULL;
     ClientTradeUpdated::s_handler = NULL;
@@ -787,7 +787,7 @@ void CGTradeInfo::HandleTradeMessage(int32_t status, int32_t bagResult, int32_t 
     CGTradeInfo::SetTradePartner(WOWGUID(), 0, 0);
 }
 
-// OFFSET: 0x0096BB70
+// OFFSET: 0x0096BB70/0x1406E26E0
 bool CGTradeInfo::AddPlayerItem(WOWGUID item, WOWGUID container, int32_t slot) {
     CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
 

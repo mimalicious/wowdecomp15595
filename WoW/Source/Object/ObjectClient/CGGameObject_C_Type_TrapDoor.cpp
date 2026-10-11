@@ -8,7 +8,7 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// OFFSET: 0x0059C0B0
+// OFFSET: 0x0059C0B0/0x14020ABB0
 void CGGameObject_C_Type_TrapDoor::PostInitWithStats() {
     this->CreateWorldObj();
 
@@ -89,7 +89,7 @@ void CGGameObject_C_Type_TrapDoor::PostReenable() {
     }
 }
 
-// OFFSET: 0x005A0AD0
+// OFFSET: 0x005A0AD0/0x140210610
 void CGGameObject_C_Type_TrapDoor::UpdateMovement(uint32_t time, uint32_t elapsed) {
     if (this->m_worldObject && !this->m_isLoaded && World::ObjectIsLoaded(this->m_worldObject)) {
         this->MarkTransportLoaded();

@@ -873,7 +873,7 @@ const char* GetSpellFailedResult(int32_t reason) {
     }
 }
 
-// OFFSET: 0x008A50D0
+// OFFSET: 0x008A50D0/0x1405E7B00
 void ClearSpellCastState(CGUnit_C* unit, PendingSpellCast* cast) {
     unit->ClearCastingSpell(unit->m_castSpellId, unit->m_unit->m_unitChannelSpell == 0, true);
     unit->ClearEffectKit(cast->m_data.m_spellId, 4, 0, 0, 0);
@@ -1066,22 +1066,22 @@ bool Spell_C_CanTargetUnits() {
     return (s_needTargets & 0x1878E) != 0;
 }
 
-// OFFSET: 0x008A5570
+// OFFSET: 0x008A5570/0x1405E80B0
 bool Spell_C_CanTargetParty() {
     return (s_needTargets >> 3) & 1;
 }
 
-// OFFSET: 0x008A5580
+// OFFSET: 0x008A5580/0x1405E80C0
 bool Spell_C_CanTargetRaid() {
     return (s_needTargets >> 2) & 1;
 }
 
-// OFFSET: 0x008A5590
+// OFFSET: 0x008A5590/0x1405E80D0
 bool Spell_C_CanTargetFriends() {
     return (s_needTargets >> 8) & 1;
 }
 
-// OFFSET: 0x008A55A0
+// OFFSET: 0x008A55A0/0x1405E80E0
 bool Spell_C_CanTargetEnemies() {
     return (s_needTargets >> 7) & 1;
 }
@@ -1104,7 +1104,7 @@ bool Spell_C_CanTargetObjects() {
     return (s_needTargets & 0x4800) != 0;
 }
 
-// OFFSET: 0x008A55F0
+// OFFSET: 0x008A55F0/0x1405E8120
 bool Spell_C_CanTargetObject(const CGGameObject_C* object) {
     return (s_needTargets & 0x4800) && (static_cast<uint8_t>(static_cast<uint32_t>(static_cast<int16_t>(object->m_obj->m_type)) >> 5) & 1) && object->IsValidTargetForSpell(s_targetingSpell->m_data.m_castItem, s_targetingSpell->m_data.m_spellId);
 }
@@ -1133,7 +1133,7 @@ SpellWorldObject* Spell_C_GetCursorWorldObject() {
     return s_cursorWorldObject;
 }
 
-// OFFSET: 0x008A5680
+// OFFSET: 0x008A5680/0x1405E81B0
 void Spell_C_SetCursorWorldObjectPosition(const C3Vector& position) {
     s_cursorWorldObject->m_position = position;
 }
@@ -1422,7 +1422,7 @@ int32_t Spell_C_IsOverride(int32_t spellId, const OverrideSpellDataRec* rec) {
     return 0;
 }
 
-// OFFSET: 0x008A6050
+// OFFSET: 0x008A6050/0x1405E8CB0
 float Spell_C_GetSpellScalingMultiplier(const CGUnit_C* unit, const SpellScalingRec* scaling, bool ignoreCoefficient) {
     float multiplier = 1.0f;
 
@@ -1443,7 +1443,7 @@ float Spell_C_GetSpellScalingMultiplier(const CGUnit_C* unit, const SpellScaling
     return multiplier;
 }
 
-// OFFSET: 0x008A6110
+// OFFSET: 0x008A6110/0x1405E8D80
 bool Spell_C_SpellScalingCastTime(const CGUnit_C* unit, const SpellScalingRec* scaling, int32_t& castTime) {
     if (!unit || !scaling) {
         return false;
@@ -1531,7 +1531,7 @@ PendingSpellCast* GetPendingSpellCast(uint8_t castCount, int32_t spellId, const 
     return NULL;
 }
 
-// OFFSET: 0x008A6690
+// OFFSET: 0x008A6690/0x1405E92C0
 ItemSubClassRec* FindAnyItemSubclassRec(int32_t classId, int32_t subclassMask) {
     for (int32_t i = 0; i < g_itemSubClassDB.m_numRecords; i++) {
         ItemSubClassRec* rec = g_itemSubClassDB.GetRecordByIndex(i);
@@ -1544,7 +1544,7 @@ ItemSubClassRec* FindAnyItemSubclassRec(int32_t classId, int32_t subclassMask) {
     return NULL;
 }
 
-// OFFSET: 0x008A66E0
+// OFFSET: 0x008A66E0/0x1405E9320
 void SpellClearMacroGlobalCooldownWait(const SpellRec* spell) {
     const SpellCategoriesRec* categories;
 
@@ -1821,19 +1821,19 @@ int32_t Spell_C_GetSpellLevelBonus(const SpellRec* spell, int32_t level) {
     return level;
 }
 
-// OFFSET: 0x008A6E20
+// OFFSET: 0x008A6E20/0x1405E9B90
 bool SpellRec::IsMeleeRange(const SpellRec* spell) {
     SpellRangeRec* range = g_spellRangeDB.GetRecord(spell->m_rangeIndex);
     return range && (range->m_flags & 0x1);
 }
 
-// OFFSET: 0x008A6E60
+// OFFSET: 0x008A6E60/0x1405E9BD0
 bool SpellRec::IsMinimumRange(const SpellRec* spell) {
     SpellRangeRec* range = g_spellRangeDB.GetRecord(spell->m_rangeIndex);
     return range && (range->m_flags & 0x2);
 }
 
-// OFFSET: 0x008A6EA0
+// OFFSET: 0x008A6EA0/0x1405E9C10
 bool Spell_C_SpellUsesReagent(const SpellRec* spell, int32_t itemId) {
     const SpellReagentsRec* reagents;
 
@@ -1884,7 +1884,7 @@ int32_t Spell_C_GetSpellReagentUses(const SpellRec* spell) {
     return uses;
 }
 
-// OFFSET: 0x008A6FC0
+// OFFSET: 0x008A6FC0/0x1405E9D90
 bool Spell_C_IsModal(const WOWGUID& item) {
     for (uint32_t i = 0; i < s_numPendingSpellCasts; i++) {
         if (s_pendingSpellCasts[i].m_data.m_castItem == item) {
@@ -2190,7 +2190,7 @@ check:
     return false;
 }
 
-// OFFSET: 0x008A77D0
+// OFFSET: 0x008A77D0/0x1405EA5E0
 bool Spell_C_CanTargetPossessedFriends() {
     if (s_targetingSpell) {
         SpellRec* spell = g_spellDB.GetRecord(s_targetingSpell->m_data.m_spellId);
@@ -2662,7 +2662,7 @@ int32_t Packet_SMSG_RESUME_CAST_BAR(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// OFFSET: 0x008A8590
+// OFFSET: 0x008A8590/0x1405EB830
 void Spell_C_SetPlayerClass(int32_t classId) {
     ChrClassesRec* rec = g_chrClassesDB.GetRecord(classId);
 
@@ -2708,7 +2708,7 @@ bool SpellHasAuraEffect(const SpellRec* spell, int32_t aura) {
     return false;
 }
 
-// OFFSET: 0x008A8950
+// OFFSET: 0x008A8950/0x1405EBC90
 bool SpellHasNonStanceShapeshiftAuraEffect(const SpellRec* spell) {
     uint32_t count;
     const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
@@ -2728,7 +2728,7 @@ bool SpellHasNonStanceShapeshiftAuraEffect(const SpellRec* spell) {
     return false;
 }
 
-// OFFSET: 0x008A89D0
+// OFFSET: 0x008A89D0/0x1405EBD20
 bool SpellMatchesSpellClass(const SpellRec* spell, int32_t classSet, const int32_t* classMask) {
     const SpellClassOptionsRec* options = NULL;
     int32_t spellClassSet = 0;
@@ -3048,7 +3048,7 @@ uint32_t GetRequiredAuraVisionBitmask(const SpellRec* spell) {
     return mask;
 }
 
-// OFFSET: 0x008A9220
+// OFFSET: 0x008A9220/0x1405EC710
 bool Spell_C_SpellVisualHasChainEffect(const SpellVisualRec* visual) {
     SpellVisualKitRec* kit;
 
@@ -3075,7 +3075,7 @@ bool Spell_C_SpellVisualHasChainEffect(const SpellVisualRec* visual) {
     return (kit = g_spellVisualKitDB.GetRecord(visual->m_targetImpactKit)) && SpellVisualKitHasChainEffect(kit);
 }
 
-// OFFSET: 0x008A9330
+// OFFSET: 0x008A9330/0x1405EC8B0
 SpellVisualKitRec* Spell_C_GetAppropriateImpactKit(const SpellVisualRec* visual, int32_t caster) {
     SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(caster ? visual->m_casterImpactKit : visual->m_targetImpactKit);
 
@@ -3399,7 +3399,7 @@ bool SpellAuraVisibilityHasTalentTab(int32_t auraVisibility, int32_t talentTab) 
     return bsearch(&key, g_spellAuraVisXTalentTabDB.m_numRecords <= 0 ? NULL : g_spellAuraVisXTalentTabDB.m_records, g_spellAuraVisXTalentTabDB.m_numRecords, sizeof(SpellAuraVisXTalentTabRec), CompareSpellAuraVisibility) != NULL;
 }
 
-// OFFSET: 0x008A9EE0
+// OFFSET: 0x008A9EE0/0x1405ED640
 void Spell_C_GetDefaultMinRange(const SpellRec* spell, float* minRange) {
     SpellRangeRec* range = g_spellRangeDB.GetRecord(spell->m_rangeIndex);
 
@@ -3778,7 +3778,7 @@ bool Spell_C_ModifySpellValue(const SpellRec* spell, float& value, int32_t modif
     return modified;
 }
 
-// OFFSET: 0x008AACE0
+// OFFSET: 0x008AACE0/0x1405EE880
 bool Spell_C_ModifySpellValue(const SpellRec* spell, CSoftFloat& value, int32_t modifier) {
     float flat;
     float pct;
@@ -3792,7 +3792,7 @@ bool Spell_C_ModifySpellValue(const SpellRec* spell, CSoftFloat& value, int32_t 
     return modified;
 }
 
-// OFFSET: 0x008AAD60
+// OFFSET: 0x008AAD60/0x1405EE900
 bool Spell_C_ModifyHealingAndDamage(const SpellRec* spell, CSoftFloat& minValue, CSoftFloat& maxValue, bool healing) {
     float flat;
     float pct;
@@ -4159,7 +4159,7 @@ void SpellHistory::GarbageCollect(uint32_t time) {
     }
 }
 
-// OFFSET: 0x008ABBF0
+// OFFSET: 0x008ABBF0/0x1405EFC00
 int32_t Spell_C_WasSpellRecentlyUsed(int32_t spellId, int32_t pet) {
     if (!g_secureAbilityToggleCVar->m_intValue) {
         return 0;
@@ -4701,7 +4701,7 @@ bool Spell_C_AuraStateValid(const CGUnit_C* caster, const SpellRec* spell, const
     return true;
 }
 
-// OFFSET: 0x008ACCA0
+// OFFSET: 0x008ACCA0/0x1405F1340
 float Spell_C_GetEffectRadius(const SpellRec* spell, uint32_t level) {
     if (!spell) {
         return 0.0f;
@@ -5063,7 +5063,7 @@ int32_t Spell_C_GetSpellCategoryWeeklyUses(const SpellRec* spell, uint8_t& used,
     return category->m_id;
 }
 
-// OFFSET: 0x008AD670
+// OFFSET: 0x008AD670/0x1405F1E50
 bool Spell_C_HasSpellModifiers(const SpellRec* spell, int32_t modifier) {
     float flat;
     float pct;
@@ -5350,7 +5350,7 @@ void Spell_C_CleanUpProcessedDestLocSpellCasts(uint32_t time) {
     }
 }
 
-// OFFSET: 0x008AE540
+// OFFSET: 0x008AE540/0x1405F2550
 PendingSpellCast& PendingSpellCast::operator=(const PendingSpellCast& other) {
     this->m_data = other.m_data;
     this->m_hidden = other.m_hidden;
@@ -5490,7 +5490,7 @@ SpellHistory::~SpellHistory() {
     this->m_free.Clear();
 }
 
-// OFFSET: 0x008AEFF0
+// OFFSET: 0x008AEFF0/0x1405F3150
 void ReleasePendingSpellCast(PendingSpellCast* cast) {
     uint32_t index = cast - s_pendingSpellCasts;
 
@@ -6190,7 +6190,7 @@ void Spell_C_PetSpellFailed(PendingSpellCast* cast, const SpellRec* spell, int32
     Spell_C_FailPendingCast(cast, spell, reason);
 }
 
-// OFFSET: 0x008B03E0
+// OFFSET: 0x008B03E0/0x1405F5850
 void Spell_C_ModifyCategoryRecovery(int32_t& recovery, const SpellRec* spell, int32_t pet, int32_t daily) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -7086,7 +7086,7 @@ void Spell_C_CancelSpell(PendingSpellCast* cast, bool stopRecast, bool notifySer
     }
 }
 
-// OFFSET: 0x008B1EE0
+// OFFSET: 0x008B1EE0/0x1405F7CA0
 void Spell_C_CancelSpellByCaster(const WOWGUID& caster) {
     for (uint32_t i = 0; i < s_numPendingSpellCasts; i++) {
         PendingSpellCast* cast = &s_pendingSpellCasts[i];
@@ -7143,7 +7143,7 @@ void Spell_C_CancelRangedSpells() {
     }
 }
 
-// OFFSET: 0x008B20A0
+// OFFSET: 0x008B20A0/0x1405F7F90
 void Spell_C_CancelOtherRangedSpells(int32_t spellId) {
     for (uint32_t i = 0; i < s_numPendingSpellCasts; i++) {
         int32_t castSpell = s_pendingSpellCasts[i].m_data.m_spellId;
@@ -7160,7 +7160,7 @@ void Spell_C_CancelOtherRangedSpells(int32_t spellId) {
     }
 }
 
-// OFFSET: 0x008B2120
+// OFFSET: 0x008B2120/0x1405F8050
 void Spell_C_CancelCastingSpellByMovement(CGUnit_C* unit) {
     for (uint32_t i = 0; i < s_numPendingSpellCasts; i++) {
         PendingSpellCast* cast = &s_pendingSpellCasts[i];
@@ -7399,7 +7399,7 @@ void Spell_C_CancelAutoRepeat(bool notifyServer) {
     }
 }
 
-// OFFSET: 0x008B3090
+// OFFSET: 0x008B3090/0x1405F9920
 bool SpellHistory::RefreshCategoryRecovery(int32_t category) {
     bool changed = false;
     SPELLHISTORY* next;
@@ -7961,7 +7961,7 @@ int32_t Spell_C_NeedsCooldownEvent(int32_t itemId) {
     return s_spellHistory[0].IsOnHold(itemId);
 }
 
-// OFFSET: 0x008B4040
+// OFFSET: 0x008B4040/0x1405FAE70
 void Spell_C_RefreshCategoryCooldowns(int32_t category) {
     if (s_spellHistory[0].RefreshCategoryRecovery(category)) {
         CGSpellBook::UpdateCooldowns();
@@ -7989,7 +7989,7 @@ void Spell_C_GetMinMaxRange(CGUnit_C* caster, const SpellRec* spell, float* minR
     Spell_C_GetMinMaxRange(caster, spell, minRange, maxRange, friendly, target);
 }
 
-// OFFSET: 0x008B40F0
+// OFFSET: 0x008B40F0/0x1405FAF50
 bool Spell_C_HaveSpellTokens(CGUnit_C* unit, const SpellRec* spell, bool report, PendingSpellCast* cast) {
     if (!unit->IsActivePlayer()) {
         return true;
@@ -8060,7 +8060,7 @@ bool Spell_C_HaveSpellTokens(CGUnit_C* unit, const SpellRec* spell, bool report,
     return true;
 }
 
-// OFFSET: 0x008B4350
+// OFFSET: 0x008B4350/0x1405FB1E0
 bool Spell_C_HaveEquippedSpellItems(CGUnit_C* unit, const SpellRec* spell, bool report, PendingSpellCast* cast) {
     if (!unit->IsActivePlayer()) {
         return true;
@@ -8835,7 +8835,7 @@ bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID
     return true;
 }
 
-// OFFSET: 0x008B61A0
+// OFFSET: 0x008B61A0/0x1405FD680
 bool RangeCheck(CGUnit_C* caster, int32_t spellId, CGObject_C* target, uint8_t* tooFar) {
     if (tooFar) {
         *tooFar = 0;
@@ -9312,7 +9312,7 @@ bool Spell_C_HandleSpriteClick(CGObject_C* object, PendingSpellCast* cast) {
     return result;
 }
 
-// OFFSET: 0x008B6FD0
+// OFFSET: 0x008B6FD0/0x1405FE770
 bool Spell_C_HandleTerrainClick(const CTerrainClickEvent& evt) {
     PendingSpellCast* spell = s_targetingSpell;
 

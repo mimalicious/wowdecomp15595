@@ -17,7 +17,7 @@ void C2Vector::NormalizeSafe() {
 }
 
 // PROVEN: d17bfd6a IDENTICAL/NONE
-// OFFSET: 0x004CB4F0
+// OFFSET: 0x004CB4F0/0x140107160
 C2Vector::C2Vector(const C2iVector& v) {
     this->x = static_cast<float>(v.x);
     this->y = static_cast<float>(v.y);
@@ -45,7 +45,7 @@ void C2Vector::Normalize() {
     this->y = scale * this->y;
 }
 
-// OFFSET: 0x004CB530
+// OFFSET: 0x004CB530/0x140107190
 float C2Vector::Angle(float length) const {
     if (fabs(length) < 0.00000023841858f) {
         return 0.0f;

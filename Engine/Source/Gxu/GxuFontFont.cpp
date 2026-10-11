@@ -150,7 +150,7 @@ int32_t CGxFont::CheckStringGlyphs(const char* string) {
     return 1;
 }
 
-// OFFSET: 0x0061BD50
+// OFFSET: 0x0061BD50/0x1402A9930
 float CGxFont::GetGlyphAdvance(uint32_t code) {
     CHARCODEDESC* desc = this->m_activeCharacters.Ptr(code, HASHKEY_NONE());
 

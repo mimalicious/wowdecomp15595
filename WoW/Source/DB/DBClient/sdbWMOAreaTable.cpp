@@ -6,7 +6,7 @@
 #include "WoW/Source/DB/Rec/WMOAreaTableRec.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// OFFSET: 0x00B02420
+// OFFSET: 0x00B02420/0x1408C43C0
 const LiquidTypeRec* GetLiquidTypeRecForArea(uint32_t areaId, uint32_t liquidType) {
     if (!liquidType) {
         return NULL;

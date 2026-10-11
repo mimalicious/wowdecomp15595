@@ -146,7 +146,7 @@ CCamera::CCamera() : m_position(100.0f, 0.0f, 0.0f), m_target(0.0f, 0.0f, 0.0f),
     this->m_zNear = 8.0f;
 }
 
-// OFFSET: 0x0054A860
+// OFFSET: 0x0054A860/0x1401A3910
 void CCamera::SetupWorldProjection(const CRect& rect, uint32_t flags) {
     C44Matrix projection;
     GxuXformCreateProjection_SG(this->m_fov.m_data, (rect.maxX - rect.minX) / (rect.maxY - rect.minY), this->m_zNear, this->m_zFar, projection);

@@ -422,7 +422,7 @@ bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, voi
 }
 
 // PROVEN: 9aa34c60 IDENTICAL/NONE
-// OFFSET: 0x008CA0C0
+// OFFSET: 0x008CA0C0/0x14063A400
 bool CGGameUI::UnitHighlightsCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (CGGameUI::m_initialized) {
         CGGameUI::UpdateUnitHighlights(0);

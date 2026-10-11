@@ -7,7 +7,7 @@
 // STATIC: 0x00D3A794
 static CDataAllocator s_defaultInstances(sizeof(CCameraModeInstanceDefault), 8);
 
-// OFFSET: 0x00461570
+// OFFSET: 0x00461570/0x140074200
 CCameraMode::CCameraMode(const CameraModeRec* rec) {
     this->m_rec = rec;
 }
@@ -17,7 +17,7 @@ CCameraMode::~CCameraMode() {
 }
 
 // PROVEN: 8a311a2c IDENTICAL/NONE
-// OFFSET: 0x004615A0
+// OFFSET: 0x004615A0/0x140074230
 uint32_t CCameraMode::GetID() const {
     return this->m_rec ? this->m_rec->m_id : 0;
 }
@@ -51,7 +51,7 @@ void CCameraModeInstance::Destroy() {
 }
 
 // PROVEN: 2a52ed9a IDENTICAL/NONE
-// OFFSET: 0x00461640
+// OFFSET: 0x00461640/0x1400742F0
 void CCameraModeInstance::Update(float elapsed) {
     this->m_mode->UpdateInstance(this, elapsed);
     this->m_time = elapsed + this->m_time;

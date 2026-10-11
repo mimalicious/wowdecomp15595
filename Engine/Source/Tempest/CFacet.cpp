@@ -17,7 +17,7 @@ CFacet::CFacet(const C3Vector& v0, const C3Vector& v1, const C3Vector& v2) {
     this->plane.From3Pos(v0, v1, v2);
 }
 
-// OFFSET: 0x004CD0E0
+// OFFSET: 0x004CD0E0/0x1400463F0
 void CFacet::Set(float value) {
     this->v[2].x = value;
     this->v[1].x = value;

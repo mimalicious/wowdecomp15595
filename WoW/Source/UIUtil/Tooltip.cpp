@@ -507,7 +507,7 @@ FrameScript_Object::ScriptIx* CGTooltip::GetScriptByName(const char* name, Frame
     return NULL;
 }
 
-// OFFSET: 0x00464BC0
+// OFFSET: 0x00464BC0/0x1400782A0
 void CGTooltip::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onTooltipSetDefaultAnchor, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onTooltipCleared, time, count);
@@ -879,7 +879,7 @@ void CGTooltip::FadeOut() {
     }
 }
 
-// OFFSET: 0x00465900
+// OFFSET: 0x00465900/0x140078EE0
 void CGTooltip::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -1907,7 +1907,7 @@ bool CGTooltip::GetScalingStatWeaponDPS(const ItemRecSparse* item, const Scaling
     return true;
 }
 
-// OFFSET: 0x00469040
+// OFFSET: 0x00469040/0x14007D1E0
 void TooltipObjectCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -2328,7 +2328,7 @@ void CGItemStatsSummary::ParseBasicStats(const ItemRecSparse* item) {
     }
 }
 
-// OFFSET: 0x0046A390
+// OFFSET: 0x0046A390/0x14007E8A0
 void CGItemStatsSummary::FillOutScalingItem(const ItemRecSparse* item, int32_t level) {
     this->m_flags |= 0x80;
     ScalingStatValuesRec* values = NULL;
@@ -2729,7 +2729,7 @@ void CGTooltip::AddSkinnableText(CGUnit_C* unit, char* buffer, uint32_t size) {
     }
 }
 
-// OFFSET: 0x0046BD60
+// OFFSET: 0x0046BD60/0x140080B40
 void CGTooltip::AddItemNameDescription(int32_t descriptionId) {
     ItemNameDescriptionRec* description = g_itemNameDescriptionDB.GetRecord(descriptionId);
 
@@ -3224,7 +3224,7 @@ int32_t CGTooltip::SetEquipmentSet(int32_t setId) {
     return 0;
 }
 
-// OFFSET: 0x0046D100
+// OFFSET: 0x0046D100/0x140082730
 int32_t CGTooltip::SetSpellFlyout(int32_t flyoutId, bool showDescription) {
     CFlyout* flyout = CFlyout::GetByID(flyoutId);
     const SpellFlyoutRec* rec = flyout ? flyout->m_rec : NULL;
@@ -3451,7 +3451,7 @@ void CGTooltip::AddColoredItemStat(int32_t value, const char* name, int32_t& fir
     this->AddLine(text, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
 }
 
-// OFFSET: 0x0046D9A0
+// OFFSET: 0x0046D9A0/0x140083250
 void CGTooltip::SetBuff(int32_t spellId, int32_t casterLevel, int32_t stacks, uint8_t a5, const AuraData* aura) {
     this->ClearTooltip();
     SpellRec* spell = g_spellDB.GetRecord(spellId);

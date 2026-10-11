@@ -1385,14 +1385,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetAuctionsTabShowing", &Script_SetAuctionsTabShowing },
 };
 
-// OFFSET: 0x00973A00
+// OFFSET: 0x00973A00/0x1406EB970
 void AuctionHouseRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00973A30
+// OFFSET: 0x00973A30/0x1406EB9C0
 void AuctionHouseUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

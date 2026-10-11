@@ -257,7 +257,7 @@ void CSimpleRegion::NotifyDelayedLoad() {
     }
 }
 
-// OFFSET: 0x0050A8A0
+// OFFSET: 0x0050A8A0/0x140152A60
 bool CSimpleRegion::IsColorWhite() {
     return this->m_vertexAlpha >= 0xFE && this->m_color.r == 0xFF && this->m_color.g == 0xFF && this->m_color.b == 0xFF;
 }
@@ -386,7 +386,7 @@ void CSimpleRegion::OnColorChanged(bool changed) {
 }
 
 // PROVEN: a62151d3 IDENTICAL/NONE
-// OFFSET: 0x0050AD20
+// OFFSET: 0x0050AD20/0x140152FC0
 void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
         this->AnimData_Init();
@@ -402,7 +402,7 @@ void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_
 }
 
 // PROVEN: 153a2cba IDENTICAL/NONE
-// OFFSET: 0x0050AD90
+// OFFSET: 0x0050AD90/0x140153060
 void CSimpleRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (alpha) {
         uint8_t value = this->AnimData_GetAlpha();

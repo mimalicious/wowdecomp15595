@@ -438,7 +438,7 @@ void CGCUFProfiles::GetProfilesPath(char* path, uint32_t size) {
     SStrPack(path, "\\CUFProfiles.txt", size);
 }
 
-// OFFSET: 0x009C8390
+// OFFSET: 0x009C8390/0x140756C30
 CUFProfileInfo::CUFProfileInfo(const char* name) {
     this->m_version = 3;
     this->SetDefaults();
@@ -483,7 +483,7 @@ void CGCUFProfiles::SaveProfiles() {
     }
 }
 
-// OFFSET: 0x009C8530
+// OFFSET: 0x009C8530/0x140756EA0
 void CUFProfileInfo::FromJam(const JamCliCUFProfile& jam) {
     SStrCopy(this->m_name, jam.m_name, sizeof(this->m_name));
     this->m_options.m_frameHeight = jam.m_frameHeight;
@@ -608,7 +608,7 @@ CUFProfileInfo* CGCUFProfiles::GetProfile(const char* name) {
     return node ? node->m_profile : NULL;
 }
 
-// OFFSET: 0x009C8DE0
+// OFFSET: 0x009C8DE0/0x140757950
 bool CGCUFProfiles::HasUnsavedChanges() {
     CUFProfileInfo* profile = CGCUFProfiles::GetProfile(CGCUFProfiles::s_savedName);
 
@@ -685,7 +685,7 @@ void CGCUFProfiles::SaveProfileCopy(CUFProfileInfo* profile) {
     }
 }
 
-// OFFSET: 0x009C9A40
+// OFFSET: 0x009C9A40/0x140758BC0
 void CGCUFProfiles::RestoreProfileCopy() {
     CUFProfileInfo* profile = CGCUFProfiles::GetProfile(CGCUFProfiles::s_savedName);
 

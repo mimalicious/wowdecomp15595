@@ -349,7 +349,7 @@ FrameScript_Object::ScriptIx* CSimpleEditBox::GetScriptByName(const char* name, 
 }
 
 // PROVEN: 587751d6 IDENTICAL/NONE
-// OFFSET: 0x00516430
+// OFFSET: 0x00516430/0x140160B20
 void CSimpleEditBox::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onEnterPressed, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onEscapePressed, time, count);
@@ -428,7 +428,7 @@ void CSimpleEditBox::ToggleInputLanguage() {
 }
 
 // PROVEN: 69207952 IDENTICAL/NONE
-// OFFSET: 0x00516610
+// OFFSET: 0x00516610/0x140160D70
 int32_t CSimpleEditBox::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     int32_t result = CSimpleFrame::OnLayerMouseUp(evt, btn);
 
@@ -3059,7 +3059,7 @@ int32_t CSimpleEditBox::OnLayerMouseDown(const CMouseEvent& evt, const char* btn
 }
 
 // PROVEN: bd8733e2 IDENTICAL/NONE
-// OFFSET: 0x00516CE0
+// OFFSET: 0x00516CE0/0x1401612D0
 void CSimpleEditBox::RefreshHyperlinks() {
     this->ClearHyperlinks();
 

@@ -203,7 +203,7 @@ PassDeath::PassDeath(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBle
     this->m_permute = FFX::s_useRECT != 0;
 }
 
-// OFFSET: 0x00B0BF50
+// OFFSET: 0x00B0BF50/0x1408CFFD0
 PassDeath::~PassDeath() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -278,7 +278,7 @@ PassNetherCombine::PassNetherCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex
 }
 
 // PROVEN: f38723fb IDENTICAL/NONE
-// OFFSET: 0x00B0C2B0
+// OFFSET: 0x00B0C2B0/0x1408D02F0
 void EffectDeath::SetParameters(int32_t count, const int32_t* params) {
     if (g_theGxDevicePtr->m_caps.m_shaderModel >= 2) {
         static_cast<PassDeath*>(this->m_passes[2])->m_alpha = static_cast<uint8_t>(params[0]);
@@ -365,7 +365,7 @@ float EffectUnconscious::GetFadeAmount() {
 }
 
 // PROVEN: 63c90148 IDENTICAL/NONE
-// OFFSET: 0x00B0C5B0
+// OFFSET: 0x00B0C5B0/0x1408D06A0
 void EffectUnconscious::SetGlowBlur(uint8_t glow, uint8_t blur) {
     static_cast<PassGlowFade*>(this->m_passes[2])->m_color = CImVector(blur, blur, blur, glow);
 }
@@ -527,7 +527,7 @@ void PassFogCombine::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: 0x00B0D200
+// OFFSET: 0x00B0D200/0x1408D15E0
 bool PassDeath::Valid() {
     int32_t profile = g_theGxDevicePtr->m_caps.m_shaderTargets[GxSh_Pixel];
 
@@ -1005,7 +1005,7 @@ EffectUnconscious::~EffectUnconscious() {
 }
 
 // PROVEN: cbda88b5 IDENTICAL/NONE
-// OFFSET: 0x00B0B750
+// OFFSET: 0x00B0B750/0x1408CF670
 void PassColorShift::SetParameters(int32_t count, const float* params) {
     if (count != 9) {
         return;
@@ -1037,14 +1037,14 @@ PassColorShift::PassColorShift(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
 }
 
 // PROVEN: 00a46f95 IDENTICAL/NONE
-// OFFSET: 0x00B0C610
+// OFFSET: 0x00B0C610/0x1408D0710
 void EffectColorShift::SetParameters(int32_t count, const int32_t* params) {
     if (count == 9) {
         static_cast<PassColorShift*>(this->m_passes[0])->SetParameters(9, reinterpret_cast<const float*>(params));
     }
 }
 
-// OFFSET: [0x00B0E500, 0x00B0E500]
+// OFFSET: [0x00B0E500/0x1408D2F30, 0x00B0E500/0x1408D2F30]
 PassColorShift::~PassColorShift() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -1052,12 +1052,12 @@ PassColorShift::~PassColorShift() {
     }
 }
 
-// OFFSET: 0x00B0E550
+// OFFSET: 0x00B0E550/0x1408D2FA0
 bool PassColorShift::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: 0x00B0E580
+// OFFSET: 0x00B0E580/0x1408D2FE0
 void PassColorShift::Execute() {
     FFX::SetupGx(this->m_output, 0);
 

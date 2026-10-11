@@ -11,7 +11,7 @@
 static const uint8_t s_padding[64] = { 0x80 };
 
 // PROVEN: acbd927e IDENTICAL/NONE
-// OFFSET: 0x00B3D2A0
+// OFFSET: 0x00B3D2A0/0x14090A290
 void ComSat::MD5::ProcessBlock(const uint8_t* block) {
     uint32_t a = this->m_state[0];
     uint32_t b = this->m_state[1];

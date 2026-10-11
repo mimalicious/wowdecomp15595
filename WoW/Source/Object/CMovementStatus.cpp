@@ -6,7 +6,7 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
 
-// OFFSET: 0x00696B10
+// OFFSET: 0x00696B10/0x140342160
 bool CMovementStatus::FallDirection::IsValid() const {
     if (this->m_xySpeed < 0.0f || !_finite(this->m_xySpeed)) {
         return false;
@@ -21,12 +21,12 @@ bool CMovementStatus::FallDirection::IsValid() const {
     return _finite(this->m_cosAngle) && _finite(this->m_sinAngle);
 }
 
-// OFFSET: 0x00696E20
+// OFFSET: 0x00696E20/0x140342470
 bool CMovementStatus::FallInfo::IsValid() const {
     return static_cast<int32_t>(this->m_time) >= 0 && _finite(this->m_zSpeed) && (!this->m_hasDirection || this->m_direction.IsValid());
 }
 
-// OFFSET: 0x00697240
+// OFFSET: 0x00697240/0x140342830
 bool CMovementStatus::TransportInfo::IsValid() const {
     uint32_t low = static_cast<uint32_t>(this->m_guid.m_guid);
     uint32_t high = static_cast<uint32_t>(this->m_guid.m_guid >> 32);
@@ -46,7 +46,7 @@ bool CMovementStatus::TransportInfo::IsValid() const {
         && IsFinite(this->m_position.x);
 }
 
-// OFFSET: 0x00697340
+// OFFSET: 0x00697340/0x140342930
 bool CMovementStatus::IsValid() const {
     if (!_finite(this->m_splineElevation) || (this->m_splineElevation != 0.0f && !(this->m_moveFlags & MOVEMENTFLAG_SPLINE_ELEVATION))) {
         return false;

@@ -45,7 +45,7 @@ void CSimpleHTML::operator delete(void* ptr) {
 }
 
 // PROVEN: 65fa2917 IDENTICAL/NONE
-// OFFSET: 0x00521A20
+// OFFSET: 0x00521A20/0x14016F590
 void CSimpleHTML::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
         this->m_hyperlinksDirty = 1;
@@ -379,7 +379,7 @@ void CSimpleHTML::RefreshHyperlinks() {
 }
 
 // PROVEN: a9a44334 IDENTICAL/NONE
-// OFFSET: 0x005219E0
+// OFFSET: 0x005219E0/0x14016F560
 void CSimpleHTML::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 

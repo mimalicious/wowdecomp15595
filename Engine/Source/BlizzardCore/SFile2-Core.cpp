@@ -1504,7 +1504,7 @@ int32_t STORMAPI SFileOpenFile(const char* name, SFileImpl** result) {
 }
 
 // PROVEN: 9b884dec IDENTICAL/NONE
-// OFFSET: 0x007A8C70
+// OFFSET: 0x007A8C70/0x14049EA20
 int32_t STORMAPI SFile::IsPatchFile(const char* name) {
     SFileImpl* file;
     int32_t result = SFile::OpenEx(NULL, name, 0, &file);

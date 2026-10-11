@@ -280,7 +280,7 @@ void CGReforge::SetForgeMaster(const WOWGUID& guid) {
     }
 }
 
-// OFFSET: 0x0098D100
+// OFFSET: 0x0098D100/0x14070B580
 void CGReforge::LeaveWorld() {
     CGReforge::SetForgeMaster(WOWGUID::Make(0));
     ClientReforgeResult::s_handler = NULL;

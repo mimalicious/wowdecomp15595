@@ -60,13 +60,13 @@ static CDataAllocator s_curveAllocator(sizeof(CEffectCurve), 16);
 // STATIC: 0x00DD5854
 static CDataAllocator s_curvePointAllocator(sizeof(CEffectCurvePoint), 64);
 
-// OFFSET: 0x0057FDC0
+// OFFSET: 0x0057FDC0/0x1401E6B60
 int32_t GetSpecialUnitEffectAttachment(int32_t id) {
     return s_specialUnitEffectAttachments[id];
 }
 
 // PROVEN: 19b4b8e6 IDENTICAL/NONE
-// OFFSET: 0x0057FDD0
+// OFFSET: 0x0057FDD0/0x1401E6B70
 void CEffect::UnrootFromCaster() {
     if (this->m_flags & 0x4000) {
         this->m_flags &= ~0x4004000;
@@ -108,7 +108,7 @@ void CEffect::MountTransitionSequenceCB(CM2Model* model, uint32_t boneId, uint32
 }
 
 // PROVEN: 1e7f9327 IDENTICAL/NONE
-// OFFSET: 0x0057FEA0
+// OFFSET: 0x0057FEA0/0x1401E6C20
 void CEffect::UnLinkSelf() {
     if (this->m_prevLink) {
         *this->m_prevLink = this->m_next;
@@ -257,7 +257,7 @@ float CEffectCurve::Evaluate(float time) {
 }
 
 // PROVEN: 7f0da729 IDENTICAL/NONE
-// OFFSET: 0x005802D0
+// OFFSET: 0x005802D0/0x1401E6FC0
 const SpellVisualEffectNameRec* GetSpecialSpellVisualEffectNameRec(int32_t id) {
     const SpellSpecialUnitEffectRec* rec = g_spellSpecialUnitEffectDB.GetRecord(id);
 
@@ -650,7 +650,7 @@ void CEffect::SetEnabled(int32_t enabled) {
 }
 
 // PROVEN: e59d6707 IDENTICAL/NONE
-// OFFSET: 0x00580C70
+// OFFSET: 0x00580C70/0x1401E7AF0
 void CEffect::InitLightningEndpoint() {
     this->m_lightningState = 0;
 
@@ -714,7 +714,7 @@ float __stdcall CEffect::ComputeModelScaleFromTarget(CGObject_C* object) {
 }
 
 // PROVEN: 24596baf IDENTICAL/NONE
-// OFFSET: 0x00580DE0
+// OFFSET: 0x00580DE0/0x1401E7CE0
 void CEffect::MoveToOrphanList(int32_t stopAnimKit) {
     if (stopAnimKit && this->m_animKitInst) {
         this->m_animKitInst->Stop(1, NULL);
@@ -725,7 +725,7 @@ void CEffect::MoveToOrphanList(int32_t stopAnimKit) {
     this->LinkTo(&s_orphanedEffects);
 }
 
-// OFFSET: 0x00580E30
+// OFFSET: 0x00580E30/0x1401E7D90
 void CEffect::PlayAnimKit(CGUnit_C* unit, AnimKitStopCallback callback, uint64_t param) {
     if (!this->m_kitRec || this->m_kitRec->m_animKitID <= 0 || !unit || !(unit->m_obj->m_type & TYPEMASK_UNIT)) {
         return;
@@ -981,7 +981,7 @@ void CEffect::AddEffectByPosition(C3Vector position, const C3Vector* orientation
     this->LinkTo(&object->m_effectList);
 }
 
-// OFFSET: 0x005816F0
+// OFFSET: 0x005816F0/0x1401E87E0
 void CEffect::AddOrphanedEffect(uint32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, uint32_t flags, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7), const C3Vector& position, uint32_t param, WOWGUID transport) {
     this->m_effectNameRec = effectName;
     this->m_attachmentId = -1;
@@ -1064,7 +1064,7 @@ void CEffect::AddAnimKitEffect(uint32_t spellId, const SpellVisualKitRec* kit, c
     this->m_flags |= 0x800;
 }
 
-// OFFSET: 0x00581950
+// OFFSET: 0x00581950/0x1401E8BC0
 void CEffect::AddLightning(uint32_t expireTime, uint32_t spellId, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target, uint32_t flags) {
     CGObject_C* object = ClntObjMgrObjectPtr(source, TYPEMASK_UNIT, __FILE__, __LINE__);
 
@@ -1082,7 +1082,7 @@ void CEffect::AddLightning(uint32_t expireTime, uint32_t spellId, const SpellVis
     this->m_flags = flags;
 }
 
-// OFFSET: 0x005819D0
+// OFFSET: 0x005819D0/0x1401E8CC0
 void CEffect::AddFreeze(uint32_t expireTime, float duration, uint32_t spellId, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target, uint32_t flags) {
     CGObject_C* object = ClntObjMgrObjectPtr(source, TYPEMASK_UNIT, __FILE__, __LINE__);
 
@@ -1131,7 +1131,7 @@ void CEffect::AddFreeze(uint32_t expireTime, float duration, uint32_t spellId, c
 }
 
 // PROVEN: 95ae8c4f IDENTICAL/NONE
-// OFFSET: 0x00581B30
+// OFFSET: 0x00581B30/0x1401E8E90
 void CEffect::AddCamouflage(uint32_t expireTime, float alpha, float fadeTime, uint32_t spellId, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target, uint32_t flags) {
     CGObject_C* object = ClntObjMgrObjectPtr(source, TYPEMASK_UNIT, __FILE__, __LINE__);
 
@@ -1152,7 +1152,7 @@ void CEffect::AddCamouflage(uint32_t expireTime, float alpha, float fadeTime, ui
 }
 
 // PROVEN: f73f2609 IDENTICAL/NONE
-// OFFSET: 0x00581BD0
+// OFFSET: 0x00581BD0/0x1401E8FB0
 void CEffect::AddOrientation(uint32_t expireTime, float yaw, float pitch, uint32_t spellId, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target, uint32_t flags) {
     CGObject_C* object = ClntObjMgrObjectPtr(source, TYPEMASK_UNIT, __FILE__, __LINE__);
 
@@ -1172,7 +1172,7 @@ void CEffect::AddOrientation(uint32_t expireTime, float yaw, float pitch, uint32
     this->m_refCount++;
 }
 
-// OFFSET: 0x00581C80
+// OFFSET: 0x00581C80/0x1401E90E0
 void CEffect::AddCurveEffect(uint32_t duration, CEffectCurve* curve, uint32_t spellId, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target, uint32_t flags) {
     CGObject_C* object = ClntObjMgrObjectPtr(source, TYPEMASK_UNIT, __FILE__, __LINE__);
 
@@ -1505,7 +1505,7 @@ void CEffect::AddFishingLine(CGObject_C* object, const WOWGUID& target) {
     this->m_attachGuid = target;
 }
 
-// OFFSET: 0x00582E20
+// OFFSET: 0x00582E20/0x1401EA660
 void CEffect::ItemCacheCB(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CEffect* effect = static_cast<CEffect*>(param);
     ItemRec* item = g_itemDB.GetRecord(id, WOWGUID(), NULL, NULL, false);
@@ -1519,7 +1519,7 @@ void CEffect::ItemCacheCB(int32_t id, const WOWGUID& guid, void* param, bool suc
     effect->ApplyItemVisual();
 }
 
-// OFFSET: 0x00582E70
+// OFFSET: 0x00582E70/0x1401EA6C0
 void CEffect::AddItemVisual(uint32_t expireTime, int32_t itemId, uint32_t spellId, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target, uint32_t flags) {
     CGObject_C* object = ClntObjMgrObjectPtr(source, TYPEMASK_UNIT, __FILE__, __LINE__);
 
@@ -1713,7 +1713,7 @@ void CEffect::UpdateWorldObject(float elapsed, uint32_t flags) {
 }
 
 // PROVEN: b70ee3d7 IDENTICAL/NONE
-// OFFSET: 0x00583370
+// OFFSET: 0x00583370/0x1401EAD60
 void __stdcall CEffect::DestroyMatchingEffects(CGObject_C* object, const SpellVisualEffectNameRec* effectName, int32_t attachType, int32_t spellId, int32_t kitId, const SpellVisualKitModelAttachRec* attach) {
     if (attachType == -1) {
         return;
@@ -1887,7 +1887,7 @@ void CEffect::ReleaseLightningRef() {
 }
 
 // PROVEN: b55583c2 IDENTICAL/NONE
-// OFFSET: 0x00583850
+// OFFSET: 0x00583850/0x1401EB410
 void CEffect::BlizzardStoppedCallback(BlizzardObject* blizzard, void* param) {
     CEffect* effect = static_cast<CEffect*>(param);
 
@@ -2020,7 +2020,7 @@ void CEffect::AddEffect(int32_t attachType, uint32_t spellId, const SpellVisualK
     this->LinkTo(&object->m_effectList);
 }
 
-// OFFSET: 0x00583BF0
+// OFFSET: 0x00583BF0/0x1401EB9C0
 void CEffect::AddBlizzard(uint32_t expireTime, const C3Vector* position, uint32_t spellId, uint32_t index, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target, uint32_t flags) {
     if (!kit) {
         return;
@@ -2107,7 +2107,7 @@ void CEffect::MountTransitionCacheCB(int32_t id, const WOWGUID& guid, void* para
     }
 }
 
-// OFFSET: 0x00583F50
+// OFFSET: 0x00583F50/0x1401EBDD0
 void CEffect::AddMountTransition(uint32_t spellId, const SpellVisualKitRec* kit, const WOWGUID& source, const WOWGUID& target) {
     this->m_sourceGuid = source;
     this->m_targetGuid = target;

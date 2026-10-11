@@ -406,7 +406,7 @@ void CWorldView::RenderM2SkyboxPass(CM2Scene* scene) {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: 0x00754380
+// OFFSET: 0x00754380/0x140435620
 void CWorldView::RenderSceneClear() {
     if (!g_theGxDevicePtr->MasterEnable(GxMasterEnable_PolygonFill)) {
         CImVector black;

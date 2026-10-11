@@ -66,7 +66,7 @@ int32_t Liquid::CSettingsBank::UpdateRecord(uint32_t liquidType, CMaterialSettin
     return 1;
 }
 
-// OFFSET: 0x0071C3B0
+// OFFSET: 0x0071C3B0/0x1403F1290
 void Liquid::CSettingsBank::Purge() {
     for (uint32_t i = 0; i < Liquid::CSettingsBank::s_settings.Count(); i++) {
         CMaterialSettings* settings = Liquid::CSettingsBank::s_settings.m_data[i];

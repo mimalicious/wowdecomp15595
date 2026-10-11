@@ -106,7 +106,7 @@ Battlenet::Authentication::Settings::Settings() {
 }
 
 // PROVEN: e07ea298 IDENTICAL/NONE
-// OFFSET: 0x00B2E610
+// OFFSET: 0x00B2E610/0x1408F6F70
 int32_t ProtocolHard::TypeInfoOf<Battlenet::IP4::AddressPort>::Encode(const Battlenet::IP4::AddressPort& value, BSN::Hard::Encoder& encoder) {
     int32_t result = encoder.PutAlignedData(4, value.m_address.m_data);
 

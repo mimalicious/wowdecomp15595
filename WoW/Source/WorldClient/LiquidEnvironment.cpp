@@ -32,7 +32,7 @@ void CClientLiquidEnvironment::Destroy() {
     CClientLiquidEnvironment::s_allocator.Clear(typeid(CClientLiquidEnvironment).raw_name(), SLOG_OBJECT, 1);
 }
 
-// OFFSET: 0x0076C7D0
+// OFFSET: 0x0076C7D0/0x140454D30
 void CClientLiquidEnvironment::Release() {
     if (this != CClientLiquidEnvironment::s_shared) {
         CClientLiquidEnvironment::s_allocator.Delete(this);

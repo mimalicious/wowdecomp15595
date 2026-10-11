@@ -62,7 +62,7 @@ void DayNight::DNSky::Initialize() {
 }
 
 // PROVEN: 0feec97e IDENTICAL/NONE
-// OFFSET: 0x00651A10
+// OFFSET: 0x00651A10/0x1402F16F0
 void DayNight::DNSky::Destroy() {
     if (--DNSky::s_refCount) {
         return;

@@ -1944,14 +1944,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "BNInviteFriend", &Script_BNInviteFriend },
 };
 
-// OFFSET: 0x00902470
+// OFFSET: 0x00902470/0x14065AAA0
 void BattlenetUI_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009024A0
+// OFFSET: 0x009024A0/0x14065AAF0
 void BattlenetUI_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

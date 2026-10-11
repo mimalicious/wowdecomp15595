@@ -186,7 +186,7 @@ TSGrowableArray<int32_t>* CGSpellBook::GetTotemSpells(uint32_t slot) {
     return &CGSpellBook::m_totemSpells[slot];
 }
 
-// OFFSET: 0x0090E1C0
+// OFFSET: 0x0090E1C0/0x140669490
 int32_t CGSpellBook::GetCompanionType(const SpellRec* spell) {
     const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
 
@@ -271,7 +271,7 @@ uint32_t CGSpellBook::GetSkillLineOffset(uint32_t index) {
     return offset;
 }
 
-// OFFSET: 0x0090E6D0
+// OFFSET: 0x0090E6D0/0x140669A00
 int __cdecl SortSpellUsableInfo(const void* a, const void* b) {
     const SpellUsableInfo* infoA = static_cast<const SpellUsableInfo*>(a);
     const SpellUsableInfo* infoB = static_cast<const SpellUsableInfo*>(b);
@@ -337,7 +337,7 @@ int __cdecl SortCompanions(const void* a, const void* b) {
     return statsB - statsA;
 }
 
-// OFFSET: 0x0090E890
+// OFFSET: 0x0090E890/0x140669C30
 int32_t GetActionBarPageOffset(const CGPlayer_C* player, const SpellRec* spell) {
     uint8_t classId = player->m_unit->m_unitFieldBytes0[1];
 
@@ -397,7 +397,7 @@ int32_t GetActionBarPageOffset(const CGPlayer_C* player, const SpellRec* spell) 
     return 0;
 }
 
-// OFFSET: 0x0090E990
+// OFFSET: 0x0090E990/0x140669D50
 int __cdecl SortSkillInfoByName(const void* a, const void* b) {
     const SpellBookSkillInfo* infoA = *static_cast<SpellBookSkillInfo* const*>(a);
     const SpellBookSkillInfo* infoB = *static_cast<SpellBookSkillInfo* const*>(b);
@@ -501,7 +501,7 @@ static void PlaySpellPickupSound() {
     SE3::PlaySoundKit("igSpellBookSpellIconPickup", NULL, &properties, NULL, __FILE__, __LINE__, "PlaySpellPickupSound");
 }
 
-// OFFSET: 0x0090EC00
+// OFFSET: 0x0090EC00/0x140669FF0
 SpellBookItem* CGSpellBook::GetSpellBookItem(int32_t slot, int32_t petSpell) {
     if (slot >= 0) {
         if (petSpell) {
@@ -531,7 +531,7 @@ int32_t CGSpellBook::GetSkinningSpell(const CGObject_C* object) {
     return 0;
 }
 
-// OFFSET: 0x0090EC80
+// OFFSET: 0x0090EC80/0x14066A080
 int32_t CGSpellBook::IsTrackingSpell(int32_t spellId) {
     for (uint32_t i = s_trackingSpells.m_count; i; ) {
         if (spellId == s_trackingSpells.m_data[--i]) {
@@ -542,7 +542,7 @@ int32_t CGSpellBook::IsTrackingSpell(int32_t spellId) {
     return 0;
 }
 
-// OFFSET: 0x0090ECB0
+// OFFSET: 0x0090ECB0/0x14066A0C0
 int32_t CGSpellBook::IsShapeshiftSpell(int32_t spellId) {
     for (uint32_t i = s_shapeshiftSpells.m_count; i; ) {
         if (spellId == s_shapeshiftSpells.m_data[--i].m_spellId) {
@@ -718,7 +718,7 @@ static void PreloadSpellVisualEffectName(int32_t id, int32_t wait) {
     }
 }
 
-// OFFSET: 0x0090F960
+// OFFSET: 0x0090F960/0x14066AFD0
 static void PreloadSpellChainEffects(int32_t id, int32_t wait) {
     const SpellChainEffectsRec* chain = g_spellChainEffectsDB.GetRecord(id);
 
@@ -901,7 +901,7 @@ void CGSpellBook::CompanionCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
-// OFFSET: 0x0090FF70
+// OFFSET: 0x0090FF70/0x14066B790
 static int __cdecl SortTrackingSpells(const void* a, const void* b) {
     const SpellRec* spellA = g_spellDB.GetRecord(*static_cast<const int32_t*>(a));
     const SpellRec* spellB = g_spellDB.GetRecord(*static_cast<const int32_t*>(b));
@@ -1328,7 +1328,7 @@ int32_t CGSpellBook::FindRaidBuff(int32_t spellId) {
     return 1;
 }
 
-// OFFSET: 0x00910BE0
+// OFFSET: 0x00910BE0/0x14066C860
 int32_t CGSpellBook::FindCompanionSlotByID(int32_t spellId, int32_t type) {
     if (!spellId) {
         return -1;
@@ -1571,7 +1571,7 @@ void CGSpellBook::SetCursorSpell(int32_t spellId) {
     }
 }
 
-// OFFSET: 0x009127C0
+// OFFSET: 0x009127C0/0x14066EC80
 void CGSpellBook::PickupSpellBookItem(int32_t slot, int32_t petSpell) {
     if (!CGGameUI::CanPerformAction(14)) {
         return;
@@ -1658,7 +1658,7 @@ void CGSpellBook::PickupCompanion(int32_t type, uint32_t index) {
     }
 }
 
-// OFFSET: 0x009129C0
+// OFFSET: 0x009129C0/0x14066EF00
 void CGSpellBook::CastSpell(int32_t slot, int32_t petSpell, WOWGUID target) {
     if (CGGameUI::GetCursorSpell() || CGGameUI::m_cursorPetAction.m_data || CGGameUI::m_cursorFlyout) {
         CGGameUI::ClearCursor(1, 1);
@@ -1701,7 +1701,7 @@ void CGSpellBook::CastSpell(int32_t slot, int32_t petSpell, WOWGUID target) {
     }
 }
 
-// OFFSET: 0x00912AB0
+// OFFSET: 0x00912AB0/0x14066F030
 int32_t CGSpellBook::GetSpell(int32_t slot, int32_t petSpell) {
     if (slot < 0) {
         return 0;
@@ -1809,7 +1809,7 @@ bool CGActionBar::ClearOverrideSpellclass(int32_t spellId) {
     return cleared;
 }
 
-// OFFSET: 0x00912D10
+// OFFSET: 0x00912D10/0x14066F320
 int32_t CGActionBar::GetOverrideBaseSpellByName(const char* name) {
     OVERRIDE_SPELL_BY_NAME_NODE* node;
 
@@ -1875,7 +1875,7 @@ const char* CGSpellBook::GetSpellTexture(int32_t spellId) {
     return NULL;
 }
 
-// OFFSET: 0x00912ED0
+// OFFSET: 0x00912ED0/0x14066F580
 const char* CGSpellBook::GetSpellBookItemTexture(int32_t slot, int32_t petSpell) {
     SpellBookItem* item = CGSpellBook::GetSpellBookItem(slot, petSpell);
 
@@ -3149,7 +3149,7 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
 }
 
 // PROVEN: d123f581 IDENTICAL/NONE
-// OFFSET: 0x00919860
+// OFFSET: 0x00919860/0x14067A6F0
 void CGSpellBook::ReplaceSpell(int32_t oldSpell, int32_t newSpell) {
     CGSpellBook::DelKnownSpell(oldSpell, 1);
     CGSpellBook::AddKnownSpell(newSpell, 1, oldSpell);

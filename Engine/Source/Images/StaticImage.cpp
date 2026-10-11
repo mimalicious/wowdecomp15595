@@ -98,7 +98,7 @@ int32_t StaticImage::SetToBLPData(uint8_t* data, uint32_t size) {
     return 1;
 }
 
-// OFFSET: 0x0063C3E0
+// OFFSET: 0x0063C3E0/0x1402D4F90
 void StaticImage::Set(MipBits* images, uint32_t width, uint32_t height, uint32_t mipCount, COLOR_FILE_FORMAT colorFormat, PIXEL_FORMAT pixelFormat, ALPHA_FORMAT alphaFormat) {
     for (uint32_t i = 0; i < 16; i++) {
         if (i < mipCount) {
@@ -669,7 +669,7 @@ int32_t StaticImage::GetFormatSize(PIXEL_FORMAT format, uint32_t mipLevel, uint3
     }
 }
 
-// OFFSET: 0x0063D490
+// OFFSET: 0x0063D490/0x1402D62E0
 int32_t StaticImage::ConvertMip(PIXEL_FORMAT format, uint8_t* out, uint32_t mipLevel) {
     uint8_t* data = this->m_mips[mipLevel];
     uint32_t dataSize = this->m_mipSizes[mipLevel];
@@ -722,7 +722,7 @@ int32_t StaticImage::ConvertMip(PIXEL_FORMAT format, uint8_t* out, uint32_t mipL
     }
 }
 
-// OFFSET: 0x0063D5F0
+// OFFSET: 0x0063D5F0/0x1402D64B0
 int32_t StaticImage::Convert(PIXEL_FORMAT format, MipBits* images, uint32_t mipLevel) {
     uint32_t width = this->Width(mipLevel);
     uint32_t height = this->Height(mipLevel);

@@ -55,7 +55,7 @@ void CGEquipmentManager::EnterWorld() {
     CGEquipmentManager::m_pendingSetID = 0;
 }
 
-// OFFSET: 0x009A12A0
+// OFFSET: 0x009A12A0/0x140725A40
 int32_t CGEquipmentManager::CanUseEquipmentSets(bool updateActionBar) {
     uint8_t canUse = CGEquipmentManager::m_swapPending == 0;
 
@@ -71,7 +71,7 @@ int32_t CGEquipmentManager::CanUseEquipmentSets(bool updateActionBar) {
 }
 
 // PROVEN: 243b4596 IDENTICAL/NONE
-// OFFSET: 0x009A12D0
+// OFFSET: 0x009A12D0/0x140725B20
 void CGEquipmentManager::ClearIgnoredSlots() {
     for (uint32_t i = 0; i < 19; i++) {
         CGEquipmentManager::m_ignoredSlots[i] = 0;

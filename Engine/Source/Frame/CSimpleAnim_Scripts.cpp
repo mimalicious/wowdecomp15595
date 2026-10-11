@@ -406,7 +406,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "HookScript", &Script_HookScript },
 };
 
-// OFFSET: 0x0053B850
+// OFFSET: 0x0053B850/0x14018F600
 void CSimpleAnim::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

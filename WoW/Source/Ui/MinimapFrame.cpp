@@ -403,7 +403,7 @@ CSimpleFrame* CGMinimapFrame::Create(CSimpleFrame* parent) {
     return data ? new (data) CGMinimapFrame(parent) : NULL;
 }
 
-// OFFSET: 0x009CE480
+// OFFSET: 0x009CE480/0x14075F1E0
 static void ComputeIconTexCoords() {
     uint32_t width = 256;
     uint32_t height = 256;
@@ -679,7 +679,7 @@ bool CGMinimapFrame::IsTrackingObjectType(char type) {
     return false;
 }
 
-// OFFSET: 0x009CED30
+// OFFSET: 0x009CED30/0x14075F890
 bool CGMinimapFrame::IsTrackingNPC(uint32_t npcFlags) {
     for (uint32_t i = 0; i < 19; i++) {
         if (((1 << i) & CGMinimapFrame::s_trackingMask) && CGMinimapFrame::s_trackingTypes[i].m_type == 1 && (npcFlags & CGMinimapFrame::s_trackingTypes[i].m_npcFlags)) {
@@ -1050,7 +1050,7 @@ int32_t CGMinimapFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
 }
 
 // PROVEN: 0371142e IDENTICAL/NONE
-// OFFSET: 0x009D05D0
+// OFFSET: 0x009D05D0/0x140761540
 void CGMinimapFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     CGGameUI::m_gameTooltip->Hide();
     CSimpleFrame::OnLayerCursorExit(a2, a3);
@@ -1254,12 +1254,12 @@ static int32_t UpdateObjectInteractIcon(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: 0x009D1160
+// OFFSET: 0x009D1160/0x140762450
 bool CGMinimapFrame::IsTrackingTrivialQuests() {
     return IsTrackingType(3);
 }
 
-// OFFSET: 0x009D1170
+// OFFSET: 0x009D1170/0x140762480
 bool CGMinimapFrame::IsTrackingDynamicPOI() {
     return IsTrackingType(4);
 }
@@ -1351,7 +1351,7 @@ int32_t CGMinimapFrame::CountAvailableTrackingTypes() {
     return count;
 }
 
-// OFFSET: 0x009D1E60
+// OFFSET: 0x009D1E60/0x140763300
 static int32_t UpdateQuestGiverStatus(WOWGUID guid, void* param) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -1364,7 +1364,7 @@ static int32_t UpdateQuestGiverStatus(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: 0x009D1ED0
+// OFFSET: 0x009D1ED0/0x140763380
 void CGMinimapFrame::SetTracking(uint32_t index, bool enable) {
     if (index <= 18) {
         if (enable) {
@@ -1443,7 +1443,7 @@ void CGMinimapFrame::RefreshShapeshiftTrackingSpells() {
     }
 }
 
-// OFFSET: 0x009D2110
+// OFFSET: 0x009D2110/0x1407624B0
 void CGMinimapFrame::SaveShapeshiftTracking() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("minimapShapeshiftTracking");

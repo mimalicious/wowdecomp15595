@@ -34,7 +34,7 @@ static int32_t GetPacketSize(const uint8_t* data, int32_t length) {
     return ((data[0] & 0x7F) << 8) | data[1];
 }
 
-// OFFSET: 0x0054C6E0
+// OFFSET: 0x0054C6E0/0x1401A64B0
 static bool VerifyPacketChecksum(const uint8_t* data, int32_t length) {
     if (length < 1) {
         return false;
@@ -588,7 +588,7 @@ int32_t WowConnection::Release() {
     return refCount;
 }
 
-// OFFSET: 0x0054EFE0
+// OFFSET: 0x0054EFE0/0x1401A9720
 void WowConnection::DoDisconnect() {
     this->m_lock.Enter();
 
@@ -951,7 +951,7 @@ void WowConnection::DoWrites() {
     this->Release();
 }
 
-// OFFSET: 0x0054FCA0
+// OFFSET: 0x0054FCA0/0x1401AA760
 void WowConnection::DoReads() {
     this->AddRef();
     this->m_lock.Enter();
@@ -970,7 +970,7 @@ void WowConnection::DoReads() {
     this->Release();
 }
 
-// OFFSET: 0x0054FD40
+// OFFSET: 0x0054FD40/0x1401AA7E0
 void WowConnection::DoExceptions() {
     this->AddRef();
     this->m_lock.Enter();

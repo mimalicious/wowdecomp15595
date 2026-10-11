@@ -142,7 +142,7 @@ bool JoystickCallback(CVar* var, const char* oldValue, const char* value, void* 
     return true;
 }
 
-// OFFSET: 0x00448D00
+// OFFSET: 0x00448D00/0x140055820
 bool WowMouseCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGInputControl::s_inputControl->SetMouseCVarHandler((value ? SStrToInt(value) : 0) != 0);
     return true;

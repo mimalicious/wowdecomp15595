@@ -382,7 +382,7 @@ static FrameScript_Method s_scriptFunctions[] = {
 };
 
 // PROVEN: e65f2480 IDENTICAL/NONE
-// OFFSET: 0x00807F50
+// OFFSET: 0x00807F50/0x14051D8E0
 void CharSelectRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);

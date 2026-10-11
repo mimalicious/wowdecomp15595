@@ -11,7 +11,7 @@
 // STATIC: 0x00D3A7D8
 static CDataAllocator s_lockedInstances(sizeof(CCameraModeInstanceLocked), 8);
 
-// OFFSET: 0x00463640
+// OFFSET: 0x00463640/0x140076CD0
 CCameraModeLocked::CCameraModeLocked(const CameraModeRec* rec) : CCameraMode(rec) {
 }
 

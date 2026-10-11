@@ -2842,14 +2842,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetChatColorNameByClass", &Script_SetChatColorNameByClass },
 };
 
-// OFFSET: 0x008E7730
+// OFFSET: 0x008E7730/0x140615AA0
 void ChatRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x008E7760
+// OFFSET: 0x008E7760/0x140615AF0
 void ChatUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

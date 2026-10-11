@@ -127,7 +127,7 @@ void GeneralFunction::SimpleCallback::Call(int32_t argc, const Arg* args) const 
     this->m_func(this->m_param, argc, args);
 }
 
-// OFFSET: 0x00904350
+// OFFSET: 0x00904350/0x14065C8C0
 void GeneralFunction::SimpleCallback::Destroy() const {
     delete this;
 }

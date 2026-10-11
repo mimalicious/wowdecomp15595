@@ -663,7 +663,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGuildMembershipRequestSettings", &Script_GetGuildMembershipRequestSettings },
 };
 
-// OFFSET: 0x009EBBE0
+// OFFSET: 0x009EBBE0/0x140784C10
 void LFGuildRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);

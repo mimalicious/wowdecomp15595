@@ -25,14 +25,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "UnitHasIncomingResurrection", &Script_UnitHasIncomingResurrection },
 };
 
-// OFFSET: 0x009FCE30
+// OFFSET: 0x009FCE30/0x14079ABB0
 void IncomingResurrectionRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009FCE50
+// OFFSET: 0x009FCE50/0x14079ABD0
 void IncomingResurrectionUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

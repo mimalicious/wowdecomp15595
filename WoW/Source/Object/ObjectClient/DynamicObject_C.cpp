@@ -21,7 +21,7 @@ void CGDynamicObject_C::ClearSound() {
     SE3::StopSound(this->m_sound, 3000, __FILE__, __LINE__, "CGDynamicObject_C::ClearSound");
 }
 
-// OFFSET: 0x00596900
+// OFFSET: 0x00596900/0x140204370
 void CGDynamicObject_C::SetFrameOfReference(const C44Matrix* matrix) {
     CGObject_C::SetFrameOfReference(matrix);
 
@@ -45,7 +45,7 @@ void CGDynamicObject_C::BlizzardDeletedCallback(BlizzardObject* blizzard, void* 
     }
 }
 
-// OFFSET: 0x00596970
+// OFFSET: 0x00596970/0x1402043F0
 void CGDynamicObject_C::ClearVisuals() {
     for (uint32_t i = 0; i < 2; i++) {
         if (this->m_blizzardVisual[i]) {
@@ -65,7 +65,7 @@ void CGDynamicObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a
     }
 }
 
-// OFFSET: 0x00596A40
+// OFFSET: 0x00596A40/0x140204500
 static void DynamicObjectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGDynamicObject_C* object = reinterpret_cast<CGDynamicObject_C*>(static_cast<uintptr_t>(param));
 
@@ -246,7 +246,7 @@ const SpellVisualEffectNameRec* CGDynamicObject_C::GetVisualEffectNameRec(const 
     return effect;
 }
 
-// OFFSET: 0x00596FE0
+// OFFSET: 0x00596FE0/0x140204C60
 int32_t CGDynamicObject_C::GetModelFileName(const char** name) const {
     const SpellRec* spell = g_spellDB.GetRecord(this->m_dynamicObject->m_spellID);
 
@@ -442,7 +442,7 @@ CGDynamicObject_C::~CGDynamicObject_C() {
     }
 }
 
-// OFFSET: 0x00597930
+// OFFSET: 0x00597930/0x140209980
 void CGDynamicObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
     this->m_dynamicObject = reinterpret_cast<CGDynamicObjectData*>(storage + OBJECT_END);

@@ -31,7 +31,7 @@ static CDataAllocator s_freeSwings(sizeof(SWING), 8);
 static CDataAllocator s_freeTrails(sizeof(WTOBJECT), 128);
 
 // PROVEN: a5cd2e8f IDENTICAL/NONE
-// OFFSET: 0x004DFC20
+// OFFSET: 0x004DFC20/0x14011FC30
 void SWING::FillVertices(CImVector color, uint8_t fade, CGxVertexPC* vertices) {
     for (int32_t i = this->m_tail; i < this->m_head; i++, vertices++) {
         vertices->p = this->m_points[i & 0x7F];
@@ -114,7 +114,7 @@ void WeaponTrailsClearFinished() {
     s_finishedTrails.UnlinkAll();
 }
 
-// OFFSET: 0x004DFE40
+// OFFSET: 0x004DFE40/0x14011FED0
 bool SWING::BuildVertexBuffer(uint32_t time, const C3Vector& top, const C3Vector& bottom) {
     uint32_t elapsed = time - this->m_startTime;
 
@@ -213,7 +213,7 @@ bool SWING::BuildVertexBuffer(uint32_t time, const C3Vector& top, const C3Vector
     return true;
 }
 
-// OFFSET: 0x004E02C0
+// OFFSET: 0x004E02C0/0x140120530
 WTOBJECT* WeaponTrailCreate(CM2Model* model) {
     s_count++;
     WTOBJECT* trail = static_cast<WTOBJECT*>(s_freeTrails.GetData(0, typeid(WTOBJECT).raw_name(), SLOG_OBJECT));
@@ -229,7 +229,7 @@ WTOBJECT* WeaponTrailCreate(CM2Model* model) {
     return trail;
 }
 
-// OFFSET: 0x004E0310
+// OFFSET: 0x004E0310/0x140120590
 static void WeaponTrailCallback(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     if (!model->HasEvent('BTW$') || !model->HasEvent('TTW$')) {
         return;
@@ -247,7 +247,7 @@ static void WeaponTrailCallback(CM2Model* model, const CM2Lighting* lighting, vo
     }
 }
 
-// OFFSET: 0x004E03A0
+// OFFSET: 0x004E03A0/0x1401206C0
 void WTOBJECT::SetDrawTrail(const uint32_t* color, uint32_t duration) {
     if (this->m_swing) {
         this->m_swing->m_tail = 0;
@@ -272,7 +272,7 @@ void WeaponTrailClose(WTOBJECT* trail) {
     s_freeTrails.Delete(trail);
 }
 
-// OFFSET: 0x004E0460
+// OFFSET: 0x004E0460/0x1401207E0
 void WeaponTrailSetDrawTrail(WTOBJECT* trail, const uint32_t* a2, uint32_t a3) {
     if (a3 && trail) {
         trail->SetDrawTrail(a2, a3);

@@ -207,7 +207,7 @@ CGCamera* CGWorldFrame::GetActiveCamera() {
     return NULL;
 }
 
-// OFFSET: 0x008DEB70
+// OFFSET: 0x008DEB70/0x14060B8F0
 int32_t CGWorldFrame::HandleSpriteTrack(WOWGUID guid) {
     WOWGUID tracked = this->m_trackedGuid;
 
@@ -224,7 +224,7 @@ int32_t CGWorldFrame::HandleSpriteTrack(WOWGUID guid) {
 }
 
 // PROVEN: 190ea79a IDENTICAL/NONE
-// OFFSET: 0x008DEBE0
+// OFFSET: 0x008DEBE0/0x14060B950
 int32_t CGWorldFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     int32_t result = CSimpleFrame::OnLayerTrackUpdate(evt);
 
@@ -243,7 +243,7 @@ static C3Vector GetFacingVector(CGObject_C* object) {
     return C3Vector(cosf(facing), sinf(facing), 0.0f);
 }
 
-// OFFSET: 0x008DEC60
+// OFFSET: 0x008DEC60/0x14060B980
 void CGWorldFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     this->CSimpleFrame::OnLayerCursorExit(a2, a3);
     WOWGUID tracked = this->m_trackedGuid;
@@ -260,7 +260,7 @@ void CGWorldFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     s_spellShadowStyle = 3;
 }
 
-// OFFSET: 0x008DECD0
+// OFFSET: 0x008DECD0/0x14060B9E0
 int32_t CGWorldFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
     if (this->CSimpleFrame::OnLayerMouseWheel(evt)) {
         return 1;
@@ -286,7 +286,7 @@ void CGWorldFrame::OnMouseModeNormal() {
     this->m_worldFlags &= ~0x2;
 }
 
-// OFFSET: 0x008DED70
+// OFFSET: 0x008DED70/0x14060BAA0
 void CGWorldFrame::OnMouseModeRelative() {
     WOWGUID tracked = this->m_trackedGuid;
     this->m_worldFlags |= 0x2;
@@ -397,7 +397,7 @@ static const char* KeyCodeToString(KEY key) {
     }
 }
 
-// OFFSET: 0x008DF200
+// OFFSET: 0x008DF200/0x14060BEE0
 static int32_t GetObjectHitTestType(CGObject_C* object) {
     if (!object) {
         return 0;
@@ -426,7 +426,7 @@ static int32_t GetObjectHitTestType(CGObject_C* object) {
     }
 }
 
-// OFFSET: 0x008DF300
+// OFFSET: 0x008DF300/0x14060BF80
 static void AddModelToHitTest(CM2Model* model, uint32_t group, void* owner, uint32_t mode) {
     if (model->m_fFlags & 0x1) {
         if (!model->m_hitTestPrev) {
@@ -740,7 +740,7 @@ static int32_t UnitPostAnimateProc(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: 0x008DFEC0
+// OFFSET: 0x008DFEC0/0x14060CDA0
 void CGWorldFrame::RenderPostAnimateCallback(uint32_t pass, uint64_t param64) {
     CGUnit_C::UpdateMissileTrajectoryTargeting();
     SpellVisualsTick();
@@ -848,7 +848,7 @@ int32_t CGWorldFrame::OnLayerKeyUp(const CKeyEvent& evt) {
     return result;
 }
 
-// OFFSET: 0x008E0250
+// OFFSET: 0x008E0250/0x14060D1F0
 int32_t CGWorldFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) {
     if (this->CSimpleFrame::OnLayerMouseDown(evt, btn)) {
         return 1;
@@ -868,7 +868,7 @@ int32_t CGWorldFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) 
     return 0;
 }
 
-// OFFSET: 0x008E02D0
+// OFFSET: 0x008E02D0/0x14060D2A0
 int32_t CGWorldFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     if (this->CSimpleFrame::OnLayerMouseUp(evt, btn)) {
         return 1;
@@ -1044,7 +1044,7 @@ int32_t CGWorldFrame::IsUnitLegalSelection(CGUnit_C* unit, uint32_t flags) {
     return 0;
 }
 
-// OFFSET: 0x008E0A10
+// OFFSET: 0x008E0A10/0x14060DAA0
 int32_t CGWorldFrame::IsLegalSelection(CGObject_C* object, uint32_t flags) {
     switch (object->m_obj->m_type) {
         case TYPEMASK_OBJECT | TYPEMASK_UNIT:

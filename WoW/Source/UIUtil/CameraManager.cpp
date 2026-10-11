@@ -48,7 +48,7 @@ static float s_shakeFalloffStartSqr = 81.0f;
 static float s_shakeFalloffMaxSqr = 6400.0f;
 
 // PROVEN: 7aa02847 IDENTICAL/NONE
-// OFFSET: 0x00438D80
+// OFFSET: 0x00438D80/0x1400431D0
 float CCameraManager::GetYaw() {
     float yaw = 0.0f;
     float pitch = 0.0f;
@@ -73,7 +73,7 @@ void CCameraManager::ResetCameras(WOWGUID guid) {
     this->m_track->ResetCameras(guid);
 }
 
-// OFFSET: 0x00438E10
+// OFFSET: 0x00438E10/0x140043240
 CCameraMode* CCameraManager::CreateCameraMode(CCameraModeBuffer* buffer, const CameraModeRec* rec) {
     switch (rec->m_type) {
         case CAMERA_MODE_LEGACY: {
@@ -99,12 +99,12 @@ int32_t CCameraManager::IsCameraSystemEnabled() {
 }
 
 // PROVEN: 2f0054b9 IDENTICAL/NONE
-// OFFSET: 0x00438FB0
+// OFFSET: 0x00438FB0/0x1400434A0
 void CCameraManager::SetScreenAspect(const CRect& rect) {
     this->m_aspect = (rect.maxX - rect.minX) / (rect.maxY - rect.minY);
 }
 
-// OFFSET: 0x00438FE0
+// OFFSET: 0x00438FE0/0x1400434C0
 const CCameraTransition* CCameraManager::FindTransition(const CCameraMode* from, const CCameraMode* to) {
     while (true) {
         while (!from) {
@@ -135,7 +135,7 @@ const CCameraTransition* CCameraManager::FindTransition(const CCameraMode* from,
     return &CCameraManager::s_transitions[index];
 }
 
-// OFFSET: 0x00439070
+// OFFSET: 0x00439070/0x140043560
 void CCameraManager::ApplyWorldProjection(const CRect& rect) {
     C44Matrix projection;
     this->m_aspect = (rect.maxX - rect.minX) / (rect.maxY - rect.minY);
@@ -167,7 +167,7 @@ void CCameraManager::UpdateLegacyState() {
     }
 }
 
-// OFFSET: 0x004391D0
+// OFFSET: 0x004391D0/0x1400436F0
 void __stdcall CCameraManager::AddShakeOffset(C3Vector& offset, float facing, float amplitude, float time, float frequency, int32_t type, float damping, int32_t dir) {
     float value = sinf(s_shakeTwoPi * time * frequency) * amplitude;
 

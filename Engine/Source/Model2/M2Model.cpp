@@ -111,7 +111,7 @@ CM2ModelCall::~CM2ModelCall() {
     }
 }
 
-// OFFSET: 0x00813EE0
+// OFFSET: 0x00813EE0/0x14052BC90
 void CModelBatchList::Add(CM2Model* model, uint16_t batchIndex) {
     if (this->m_count < this->m_maxCount) {
         this->m_batches[this->m_count].m_model = model;
@@ -282,7 +282,7 @@ const char* CM2Model::GetTextureObjectName(uint32_t index) {
     return TextureGetObjectName(this->m_textures[index]);
 }
 
-// OFFSET: 0x00814140
+// OFFSET: 0x00814140/0x14052BF00
 int32_t CM2Model::IsDrawable() {
     if (this->m_fFlags & 2) {
         return 1;
@@ -530,7 +530,7 @@ void* CM2Model::GetCameraByIndex(uint32_t index) {
 }
 
 // PROVEN: f822c796 IDENTICAL/NONE
-// OFFSET: 0x008149B0
+// OFFSET: 0x008149B0/0x14052C9F0
 int32_t CM2Model::HasLiveRibbons() {
     if (!(this->m_fFlags & 1)) {
         return 0;
@@ -1030,7 +1030,7 @@ void CM2Model::SetWorldTransform(const C3Vector& position, float rotation, float
     matrix.d2 = position.z;
 }
 
-// OFFSET: 0x00816590
+// OFFSET: 0x00816590/0x14052EAC0
 int32_t CM2Model::HasTexture(uint32_t type, CTexture** texture) {
     if (texture) {
         *texture = NULL;
@@ -1195,7 +1195,7 @@ void CM2Model::ReplaceTextureByIndex(uint32_t index, CTexture* texture) {
     this->m_fFlags &= ~0x10u;
 }
 
-// OFFSET: 0x008169C0
+// OFFSET: 0x008169C0/0x14052F040
 int32_t CM2Model::TexturesAreLocal() {
     if (!SFile::IsStreamingMode()) {
         return 1;
@@ -1216,7 +1216,7 @@ int32_t CM2Model::TexturesAreLocal() {
     return 1;
 }
 
-// OFFSET: 0x00816A60
+// OFFSET: 0x00816A60/0x14052F140
 void CM2Model::MakeTexturesLocal() {
     if (!SFile::IsStreamingMode()) {
         return;
@@ -1525,7 +1525,7 @@ void CM2Model::GetCombinedBounds(CAaBox& box, CAaSphere& sphere) {
     sphere.r = sqrtf(x * x + y * y + z * z) * 0.5f;
 }
 
-// OFFSET: 0x00817880
+// OFFSET: 0x00817880/0x140530790
 static M2ShadowBatch* BuildShadowBatch(const M2Batch* batch, M2ShadowBatch* shadowBatch, const M2Data* data) {
     shadowBatch->m_flags = batch->m_flags;
     shadowBatch->m_flags2 = 0;
@@ -2339,7 +2339,7 @@ void CM2Model::PickRandomSequenceVariation(uint32_t* variation, uint16_t* sequen
     }
 }
 
-// OFFSET: 0x00818E20
+// OFFSET: 0x00818E20/0x140532350
 uint32_t CM2Model::PickSequenceVariation(uint32_t id) {
     if (!(this->m_shared->m_flags & 1)) {
         if (this->m_shared->m_asyncObject) {
@@ -2395,7 +2395,7 @@ uint32_t CM2Model::PickSequenceVariation(uint32_t id) {
     return variation;
 }
 
-// OFFSET: 0x0081C7A0
+// OFFSET: 0x0081C7A0/0x140535940
 uint32_t CM2Model::GetSequenceFlags(uint32_t id, uint32_t variation) {
     if (!(this->m_fFlags & 1)) {
         if (this->m_shared->m_asyncObject) {
@@ -2712,7 +2712,7 @@ int32_t CM2Model::HasAttachment(uint32_t id) {
     return data->m_attachments.m_count > 0xFFFF;
 }
 
-// OFFSET: 0x00819650
+// OFFSET: 0x00819650/0x140532DA0
 C3Vector CM2Model::GetAttachmentPivot(uint32_t id) {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);
@@ -2823,7 +2823,7 @@ C3Vector CM2Model::GetEventPivot(uint32_t id) {
     return *position;
 }
 
-// OFFSET: 0x0081C960
+// OFFSET: 0x0081C960/0x140535B80
 uint32_t CM2Model::GetEventSequenceTime(uint32_t sequenceId, uint32_t eventId) {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);
@@ -2940,7 +2940,7 @@ uint32_t CM2Model::GetTextureID(uint32_t index) {
     return this->m_shared->m_data->m_textures[index].m_type;
 }
 
-// OFFSET: 0x008199A0
+// OFFSET: 0x008199A0/0x1405331A0
 uint32_t CM2Model::GetNumGeometryBatches() {
     if (!(this->m_fFlags & 1)) {
         return 0;
@@ -3680,7 +3680,7 @@ void CM2Model::RenderModelBatchesForProjectedTexture() {
     }
 }
 
-// OFFSET: 0x0081B9B0
+// OFFSET: 0x0081B9B0/0x140534760
 void CM2Model::RenderBatchShadowMap(int32_t untextured, M2ShadowBatch* batch, const CModelBatchList& list, uint32_t index, M2SkinSection* section, M2SkinSection* prevSection) {
     if (!untextured) {
         CTexture* texture = this->m_textures[batch->m_textureIndex];
@@ -3768,7 +3768,7 @@ void CM2Model::RenderBatchShadowMap(int32_t untextured, M2ShadowBatch* batch, co
     }
 }
 
-// OFFSET: 0x0081BC70
+// OFFSET: 0x0081BC70/0x140534AA0
 void CM2Model::RenderModelBatchListShadowMap(int32_t untextured, const CModelBatchList& list) {
     M2SkinSection* prevSection = NULL;
     CM2Model* prevModel = NULL;
@@ -5177,7 +5177,7 @@ void CM2Model::RenderModelBatchesShadowMap(const CModelBatchList& untextured, co
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0081D870
+// OFFSET: 0x0081D870/0x140538160
 void CM2Model::SetWorldTransform(const C3Vector& position, float rotation, float scale, const C3Vector& up, uint32_t flags) {
     C44Matrix& transform = this->m_worldTransform;
     transform.d3 = 1.0f;
@@ -5579,7 +5579,7 @@ uint32_t CM2Model::ProcessSequenceCallback(uint32_t boneIndex, uint32_t frame, u
     return lastFrame;
 }
 
-// OFFSET: 0x0081DF50
+// OFFSET: 0x0081DF50/0x140538830
 void CM2Model::GetCollisionFacets(const CAaBox& box, const C44Matrix& transform, TSGrowableArray<CFacet>& facets) {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);

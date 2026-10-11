@@ -256,7 +256,7 @@ static const uint8_t s_defaultKey[32] = { 0xD7, 0xC8, 0xD9, 0xA0, 0xC8, 0xC5, 0x
 
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
-// OFFSET: 0x00523B40
+// OFFSET: 0x00523B40/0x1401720B0
 static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
     if (param) {
         bool playing = false;
@@ -269,7 +269,7 @@ static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
 }
 
 // PROVEN: b83e0506 IDENTICAL/NONE
-// OFFSET: 0x00523B80
+// OFFSET: 0x00523B80/0x1401720F0
 static void MovieSoundKitFinished(SE3SoundKitObject* sko) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(sko->m_playFinishedParam);
 
@@ -318,7 +318,7 @@ FrameScript_Object::ScriptIx* CSimpleMovieFrame::GetScriptByName(const char* nam
 }
 
 // PROVEN: 93efb220 IDENTICAL/NONE
-// OFFSET: 0x00523CD0
+// OFFSET: 0x00523CD0/0x140172210
 void CSimpleMovieFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onMovieFinished, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onMovieShowSubtitle, time, count);
@@ -409,7 +409,7 @@ int32_t CSimpleMovieFrame::OpenAudio() {
 }
 
 // PROVEN: b29eb7d5 IDENTICAL/NONE
-// OFFSET: 0x00523DB0
+// OFFSET: 0x00523DB0/0x140172330
 void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     if (CSimpleMovieFrame::s_currentMovieFrame) {
         CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart = 1;
@@ -417,7 +417,7 @@ void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
 }
 
 // PROVEN: 98f4c054 IDENTICAL/NONE
-// OFFSET: 0x00523DD0
+// OFFSET: 0x00523DD0/0x140172350
 void CSimpleMovieFrame::AudioDeviceChanged_Restart() {
     if (CSimpleMovieFrame::s_currentMovieFrame && CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart) {
         CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart = 0;
@@ -437,7 +437,7 @@ void CSimpleMovieFrame::CloseAudio() {
     SE3::StopMemorySound(this->m_sound);
 }
 
-// OFFSET: 0x00523E50
+// OFFSET: 0x00523E50/0x140172380
 bool CSimpleMovieFrame::DecodeFrame(bool render) {
     bool skipped;
 

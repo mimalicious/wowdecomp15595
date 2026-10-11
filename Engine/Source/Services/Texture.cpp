@@ -160,7 +160,7 @@ static void TextureBuildMipFormat(char* buffer, const char* fileName) {
     SStrPack(buffer, "_mip%d.tga", 260);
 }
 
-// OFFSET: 0x00540910
+// OFFSET: 0x00540910/0x140193390
 int32_t TextureBuildAliasPath(char* buffer, const char* fileName) {
     if (!s_substituteFrom) {
         return 0;
@@ -199,7 +199,7 @@ MipBits* GetDefaultTexture(uint32_t width, uint32_t height) {
     return images;
 }
 
-// OFFSET: 0x00543D60
+// OFFSET: 0x00543D60/0x140197930
 void AsyncTextureFailureCallback(CAsyncObject* object) {
     CTexture* texture = static_cast<CTexture*>(object->m_userArg);
     texture->m_asyncObject = NULL;
@@ -715,7 +715,7 @@ static void* TextureLoadFile(const char* fileName, int32_t flags, uint32_t* size
     return data;
 }
 
-// OFFSET: 0x00541930
+// OFFSET: 0x00541930/0x140194370
 int32_t TextureLoadBlpMips(void* data, uint32_t size, MipBits** images) {
     StaticImage image;
 
@@ -1062,7 +1062,7 @@ CTextureAtlas::CTextureAtlas() {
     memset(this->m_textures, 0, sizeof(this->m_textures));
 }
 
-// OFFSET: 0x00541CB0
+// OFFSET: 0x00541CB0/0x140194800
 void TextureCacheRemoveTexture(CTexture* texture) {
     s_textureCache.Unlink(texture);
 }
@@ -2109,7 +2109,7 @@ static int32_t CreateTextureSync(char* extension, CTexture* texture, const char*
     return 1;
 }
 
-// OFFSET: 0x00543E70
+// OFFSET: 0x00543E70/0x140197B10
 static int32_t CreateTextureAsync(const char* fileName, char* extension, CTexture* texture, int32_t type, uint32_t size, uint32_t flags, CGxTexFlags texFlags, uint8_t priority) {
     TextureAppendExtension(extension, type, fileName + size - extension);
 
@@ -2185,7 +2185,7 @@ static int32_t CreateTextureAsync(const char* fileName, char* extension, CTextur
     return 1;
 }
 
-// OFFSET: 0x00544010
+// OFFSET: 0x00544010/0x140197CC0
 static int32_t CreateTextureOfType(char* extension, const char* fileName, int32_t type, CTexture* texture, uint32_t size, uint32_t flags, CGxTexFlags texFlags, uint8_t priority) {
     char buffer[260];
 
@@ -2331,7 +2331,7 @@ CTexture* TextureCreate(uint32_t width, uint32_t height, EGxTexFormat format, EG
     return TextureCreate(GxTex_2d, width, height, 0, format, dataFormat, texFlags, userArg, userFunc, name, defaultFilter);
 }
 
-// OFFSET: 0x00544D80
+// OFFSET: 0x00544D80/0x1401993D0
 void TextureCacheNewTexture(CTexture* texture) {
     uint32_t hashval = SStrHashHT(texture->m_filename);
     HASHKEY_TEXTUREFILE key;

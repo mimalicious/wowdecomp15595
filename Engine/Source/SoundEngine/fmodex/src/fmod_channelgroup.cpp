@@ -459,7 +459,7 @@ FMOD_RESULT ChannelGroup::getName(char *name, int namelen)
 
 
 // PROVEN: 44771a11 IDENTICAL/NONE
-// OFFSET: 0x00A7BE70
+// OFFSET: 0x00A7BE70/0x1408372E0
 FMOD_RESULT ChannelGroup::getNumChannels(int *numchannels)
 {
     FMOD_RESULT result;

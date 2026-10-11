@@ -499,7 +499,7 @@ const char* ClientServices::GetPatchListURL() {
     return ClientServices::s_patchListVar->m_stringValue.m_str;
 }
 
-// OFFSET: 0x004CEFF0
+// OFFSET: 0x004CEFF0/0x14010B200
 bool ClientServices::HasNextRealmAddress() {
     return ClientServices::m_selectRealmInfo.m_addresses[1].m_type != 0;
 }
@@ -1196,7 +1196,7 @@ void ClientRealmResponseAdapter::CharacterListReceived(RealmConnection* connecti
 }
 
 // PROVEN: f56dca74 IDENTICAL/NONE
-// OFFSET: 0x004CF140
+// OFFSET: 0x004CF140/0x14010B350
 int32_t ClientServices::ValidDisconnect(const void* connection) {
     return connection == ClientServices::s_currentConnection;
 }
@@ -1261,7 +1261,7 @@ void ClientConnection::RequestCharacterCreate(const CHARACTER_CREATE_INFO& info)
     this->Send(&msg, CONNECTION_ROUTED);
 }
 
-// OFFSET: 0x004D02E0
+// OFFSET: 0x004D02E0/0x14010C920
 void ClientConnection::CharacterLogin(WOWGUID guid, int32_t a2) {
     this->Initiate(COP_LOGIN_CHARACTER, CHAR_LOGIN_IN_PROGRESS, NULL);
 
@@ -1545,7 +1545,7 @@ void ClientConnection::HandleLogoutResponse(int32_t result, int32_t instant) {
 }
 
 // PROVEN: b90a463c IDENTICAL/NONE
-// OFFSET: 0x004CEA60
+// OFFSET: 0x004CEA60/0x14010AA80
 void ClientServices::EnterPIN(int32_t count, uint8_t* digits) {
     if (ClientServices::s_loginObj) {
         ClientServices::s_loginObj->EnterPIN(count, digits);

@@ -62,7 +62,7 @@ void CGPetitionInfo::SetPetitionStats(int32_t id) {
     }
 }
 
-// OFFSET: 0x009E0300
+// OFFSET: 0x009E0300/0x140776EF0
 void SignatureNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (CGPetitionInfo::m_pendingNameQueries && !--CGPetitionInfo::m_pendingNameQueries && CGPetitionInfo::m_petition) {
         FrameScript_SignalEvent(SCRIPT_EVENT_PETITION_SHOW, NULL);
@@ -82,7 +82,7 @@ void CGPetitionInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_OFFER_PETITION_ERROR, Packet_SMSG_OFFER_PETITION_ERROR, NULL);
 }
 
-// OFFSET: 0x009E0390
+// OFFSET: 0x009E0390/0x140776FE0
 void CGPetitionInfo::ClearSignatures() {
     if (CGPetitionInfo::m_pendingNameQueries) {
         for (uint32_t i = 0; i < CGPetitionInfo::m_numPetitionNames; i++) {
@@ -135,7 +135,7 @@ void CGPetitionInfo::EnterWorld() {
     CGPetitionInfo::m_signers.SetCount(10);
 }
 
-// OFFSET: 0x009E0370
+// OFFSET: 0x009E0370/0x140776FC0
 void CGPetitionInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_OFFER_PETITION_ERROR);
 }

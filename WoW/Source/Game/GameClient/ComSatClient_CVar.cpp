@@ -42,7 +42,7 @@ bool EnableMicrophoneHandler(CVar* var, const char* oldValue, const char* value,
     return true;
 }
 
-// OFFSET: 0x004DC8A0
+// OFFSET: 0x004DC8A0/0x14011AF30
 bool InboundChatVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     float volume = SStrToFloat(value);
 

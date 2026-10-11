@@ -43,14 +43,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumNamePlateMotionTypes", &Script_GetNumNamePlateMotionTypes },
 };
 
-// OFFSET: 0x009E7520
+// OFFSET: 0x009E7520/0x14077FF70
 void NamePlateRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009E7550
+// OFFSET: 0x009E7550/0x14077FFC0
 void NamePlateUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

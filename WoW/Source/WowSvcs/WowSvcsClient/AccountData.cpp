@@ -86,7 +86,7 @@ static HOSFILE OpenAccountFile(bool global, const char* fileName, bool write) {
     return OsCreateFile(path, OS_GENERIC_READ, 0, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
 }
 
-// OFFSET: 0x004D7B20
+// OFFSET: 0x004D7B20/0x140116100
 static void MD5AccountFile(const char* fileName, uint8_t* digest, bool global) {
     memset(digest, 0, 16);
 
@@ -311,7 +311,7 @@ void DownloadAccountData(int32_t type) {
     s_accountData[type].m_downloading = true;
 }
 
-// OFFSET: 0x004D8030
+// OFFSET: 0x004D8030/0x140116860
 static int32_t SaveTimerHandler(const void* data, void* param) {
     int32_t type = static_cast<int32_t>(reinterpret_cast<intptr_t>(param));
     AccountDataInfo& info = s_accountData[type];
@@ -330,7 +330,7 @@ static int32_t SaveTimerHandler(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x004D80E0
+// OFFSET: 0x004D80E0/0x140116900
 static void ScheduleAccountDataSave(int32_t type) {
     AccountDataInfo& info = s_accountData[type];
     info.m_changed = true;
@@ -503,7 +503,7 @@ void AccountDataInitializeBasicSystem() {
 }
 
 // PROVEN: ab393978 IDENTICAL/NONE
-// OFFSET: 0x004D8160
+// OFFSET: 0x004D8160/0x140116980
 void AccountDataShutdownBasicSystem() {
     ClientServices::ClearMessageHandler(SMSG_ACCOUNT_DATA_TIMES);
     ClientServices::ClearMessageHandler(SMSG_UPDATE_ACCOUNT_DATA);
@@ -584,7 +584,7 @@ void AccountDataFlush() {
     }
 }
 
-// OFFSET: 0x004D83F0
+// OFFSET: 0x004D83F0/0x140116CB0
 void SaveAccountData(int32_t type, ACCOUNTDATALOADFUNC func, void* param) {
     AccountDataInfo& info = s_accountData[type];
 

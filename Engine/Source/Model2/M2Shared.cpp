@@ -111,7 +111,7 @@ static void MakeSkinFileName(const char* fileName, uint32_t profile, char* resul
     sprintf(&result[strlen(result)], "%02d.skin", profile);
 }
 
-// OFFSET: 0x00831230
+// OFFSET: 0x00831230/0x140552770
 SFileImpl* CM2Shared::OpenLowPrioritySequenceFile(uint32_t id, uint32_t variation) {
     char fileName[260];
     MakeAnimFileName(this->m_fileName, id, variation, fileName);
@@ -881,7 +881,7 @@ int32_t M2Init<M2Particle>(uint8_t* base, uint32_t size, const M2Data& data, M2A
     return 1;
 }
 
-// OFFSET: 0x008324F0
+// OFFSET: 0x008324F0/0x140554660
 CM2Shared::CM2Shared(CM2Cache* cache) {
     this->m_flags &= ~0x1FFu;
     this->m_cache = cache;
@@ -1166,7 +1166,7 @@ int32_t CM2Shared::Load(SFileImpl* file, int32_t flags, CAaBox* boundingBox, uin
     return 1;
 }
 
-// OFFSET: 0x008386E0
+// OFFSET: 0x008386E0/0x140562310
 void CM2Shared::CancelAllDeferredSequences() {
     for (CM2SequenceLoad* load = this->m_sequenceLoads.Head(); !this->m_sequenceLoads.IsEnd(load); load = this->m_sequenceLoads.RawNext(load)) {
         if (load->m_asyncObject) {

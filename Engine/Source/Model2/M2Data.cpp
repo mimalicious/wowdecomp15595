@@ -24,7 +24,7 @@ fixed16::fixed16(float value) {
 }
 
 // PROVEN: f4076397 IDENTICAL/NONE
-// OFFSET: 0x00830AD0
+// OFFSET: 0x00830AD0/0x140551E20
 M2Data::M2Data() {
 }
 

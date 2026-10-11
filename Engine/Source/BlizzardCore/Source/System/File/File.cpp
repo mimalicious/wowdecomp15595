@@ -460,7 +460,7 @@ bool Blizzard::File::GetFileInfo(Filesystem* fs, const char* path, FileInfo* inf
     return false;
 }
 
-// OFFSET: 0x007AC750
+// OFFSET: 0x007AC750/0x1404A24F0
 bool Blizzard::File::GetPos(StreamRecord* file, int64_t* offset) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -513,7 +513,7 @@ bool Blizzard::File::GetWorkingDirectory(char* buffer, int32_t buffersize) {
 }
 
 // PROVEN: 4a2ebde0 IDENTICAL/NONE
-// OFFSET: 0x007AC870
+// OFFSET: 0x007AC870/0x1404A2600
 bool Blizzard::File::IsAbsolutePath(const char* path) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -645,7 +645,7 @@ bool Blizzard::File::Read(StreamRecord* file, void* data, int32_t* count) {
     return false;
 }
 
-// OFFSET: 0x007ACB00
+// OFFSET: 0x007ACB00/0x1404A2860
 bool Blizzard::File::Read(StreamRecord* file, void* data, int64_t offset, int32_t* count, int32_t streamFlags) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -726,7 +726,7 @@ bool Blizzard::File::SetAttributes(const char* path, int32_t attributes) {
     return false;
 }
 
-// OFFSET: 0x007ACC30
+// OFFSET: 0x007ACC30/0x1404A9AE0
 bool Blizzard::File::SetEOF(StreamRecord* file, int64_t offset, int32_t whence) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -743,7 +743,7 @@ bool Blizzard::File::SetEOF(StreamRecord* file, int64_t offset, int32_t whence) 
 }
 
 // PROVEN: acdabe66 IDENTICAL/NONE
-// OFFSET: 0x007ACC90
+// OFFSET: 0x007ACC90/0x1404A29E0
 bool Blizzard::File::SetSparse(StreamRecord* file, bool zeroFill) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -775,7 +775,7 @@ bool Blizzard::File::SetModificationTime(StreamRecord* file, Blizzard::Time::Tim
     return false;
 }
 
-// OFFSET: 0x007AC450
+// OFFSET: 0x007AC450/0x1404A21D0
 bool Blizzard::File::SupportsSparse(const char* path) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -792,7 +792,7 @@ bool Blizzard::File::SupportsSparse(const char* path) {
     return parms.m_supportsSparse;
 }
 
-// OFFSET: 0x007ACD40
+// OFFSET: 0x007ACD40/0x1404A2A30
 bool Blizzard::File::SetPos(StreamRecord* file, int64_t offset, int32_t whence) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -893,7 +893,7 @@ bool Blizzard::File::IsDirectory(const char* path) {
 }
 
 // PROVEN: c3ec844f IDENTICAL/NONE
-// OFFSET: 0x007AD0B0
+// OFFSET: 0x007AD0B0/0x1404A2D40
 bool Blizzard::File::IsFile(const char* path) {
     return Exists(path) == 1;
 }

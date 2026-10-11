@@ -159,7 +159,7 @@ bool CLoadingScreenShipInfo<T>::GetLeg(uint32_t path, uint32_t leg, int32_t* sta
     return true;
 }
 
-// OFFSET: [0x0040AED0<TaxiPathNodeRec>]
+// OFFSET: [0x0040AED0/0x14000D7F0<TaxiPathNodeRec>]
 template <class T>
 int32_t CLoadingScreenShipInfo<T>::FindLeg(WowClientDB<T>* nodeDB, uint32_t path, int32_t continentID) {
     int32_t count = path < this->m_paths.Count() ? this->m_paths.m_data[path].m_legs.Count() : 0;

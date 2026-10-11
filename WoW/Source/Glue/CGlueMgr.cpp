@@ -1377,7 +1377,7 @@ void CGlueMgr::Suspend() {
 }
 
 // PROVEN: ddf8f35f IDENTICAL/NONE
-// OFFSET: 0x00801B20
+// OFFSET: 0x00801B20/0x140515E10
 void CGlueMgr::SetCurrentAccount(const char* accountName) {
     SStrCopy(CGlueMgr::m_accountName, accountName, sizeof(CGlueMgr::m_accountName));
     _strupr(CGlueMgr::m_accountName);
@@ -1507,7 +1507,7 @@ bool CGlueMgr::OnRandomCharacterNameResult(ClientGenerateRandomCharacterNameResu
 }
 
 // PROVEN: 548886ee IDENTICAL/NONE
-// OFFSET: 0x008020E0
+// OFFSET: 0x008020E0/0x140516570
 int32_t CGlueMgr::GetSelectedCharInfo(CHARACTER_INFO* info) {
     CGlueMgr::m_characterInfo = info;
 
@@ -1716,7 +1716,7 @@ void CGlueMgr::CancelLogin() {
     }
 }
 
-// OFFSET: 0x00802680
+// OFFSET: 0x00802680/0x140516B90
 static bool CreateIntroScene(uint8_t classID, uint8_t raceID, C3Vector& position) {
     int32_t sequenceID;
     ChrClassesRec* classRec = g_chrClassesDB.GetRecord(classID);
@@ -1801,7 +1801,7 @@ void CGlueMgr::SetUIDepth(float depth) {
     }
 }
 
-// OFFSET: 0x00802930
+// OFFSET: 0x00802930/0x140517040
 static int32_t FindGlueScreenEmote(int32_t classID, int32_t raceID, int32_t screen, const CGlueMgr::WeaponLoadOut& handItems, uint32_t* animKitID, uint32_t* spellVisualKitID) {
     *animKitID = 0;
     *spellVisualKitID = 0;
@@ -2145,7 +2145,7 @@ void CGlueMgr::PollLoginServerLogin() {
     }
 }
 
-// OFFSET: 0x00803370
+// OFFSET: 0x00803370/0x140518030
 void CGlueMgr::PollEnterWorld() {
     if (!LoadingScreenDrawing()) {
         return;

@@ -124,7 +124,7 @@ static bool MasterVolumeHandler(CVar* var, const char* oldValue, const char* val
 }
 
 // PROVEN: bf1d4362 IDENTICAL/NONE
-// OFFSET: 0x00630AC0
+// OFFSET: 0x00630AC0/0x1402C5860
 static bool SFXVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_SFX, SStrToFloat(value));
     return true;

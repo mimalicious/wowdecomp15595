@@ -72,7 +72,7 @@ CSimpleFrame* CGCharacterModelBase::Create(CSimpleFrame* parent) {
     return data ? new (data) CGCharacterModelBase(parent) : NULL;
 }
 
-// OFFSET: [0x00A02C70, 0x00A03130]
+// OFFSET: [0x00A02C70, 0x00A03130/0x1407A22D0]
 CGCharacterModelBase::~CGCharacterModelBase() {
     if (this->m_component) {
         CCharacterComponent::FreeComponent(this->m_component);
@@ -91,7 +91,7 @@ int32_t CGCharacterModelBase::GetScriptMetaTable() {
     return CGCharacterModelBase::s_metatable;
 }
 
-// OFFSET: 0x00A02CC0
+// OFFSET: 0x00A02CC0/0x1407A1DB0
 CM2Model* CGCharacterModelBase::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
     if (unit) {
         return unit->DuplicateModel(this->GetScene());
@@ -154,7 +154,7 @@ void CGCharacterModelBase::HideThis() {
 }
 
 // PROVEN: 18675790 IDENTICAL/NONE
-// OFFSET: 0x00A02F20
+// OFFSET: 0x00A02F20/0x1407A20B0
 bool CGCharacterModelBase::IsA(int32_t type) {
     return type == CGCharacterModelBase::s_objectType || type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
@@ -165,7 +165,7 @@ bool CGCharacterModelBase::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGCharacterModelBase::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleModel::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: 0x00A02FC0
+// OFFSET: 0x00A02FC0/0x1407A2130
 CGCharacterModelBase::CGCharacterModelBase(CSimpleFrame* parent) : CSimpleModel(parent) {
     this->m_sequenceVariation = -1;
     this->m_portraitZoom = 0.0f;
@@ -516,7 +516,7 @@ void CGCharacterModelBase::SetUpModel(CGUnit_C* unit) {
 }
 
 // PROVEN: 55ff4808 IDENTICAL/NONE
-// OFFSET: 0x00A03F60
+// OFFSET: 0x00A03F60/0x1407A33F0
 void CGCharacterModelBase::OnModelLoaded(CM2Model* model) {
     CSimpleModel::OnModelLoaded(model);
     this->ConfigureCamera();
@@ -618,7 +618,7 @@ void CGCharacterModelBase::SetBarberShopAlternateForm() {
     }
 }
 
-// OFFSET: 0x00A046D0
+// OFFSET: 0x00A046D0/0x1407A3D20
 void CGCharacterModelBase::ShowThis(bool loadPending) {
     if (!this->m_visible) {
         if (this->m_unitGuid) {

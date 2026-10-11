@@ -98,7 +98,7 @@ void CharSelectAttachDeathVisuals(CM2Model* model) {
 }
 
 // PROVEN: ccb98158 IDENTICAL/NONE
-// OFFSET: 0x00807E80
+// OFFSET: 0x00807E80/0x14051D800
 void LinkModelAndTexturesToAsyncHead(CM2Model* model) {
     if (model) {
         model->LinkToAsyncHead();
@@ -135,7 +135,7 @@ void CharSelectStartRaceShutdown() {
     CCharacterSelection::m_startRacePreloadList = NULL;
 }
 
-// OFFSET: 0x00807FE0
+// OFFSET: 0x00807FE0/0x14051D9B0
 void CharSelectSwitchStartRaceDownload(int32_t raceID, int32_t classID) {
     PreloadList* list = CCharacterSelection::m_startRacePreloadList;
 
@@ -157,7 +157,7 @@ void CCharacterSelection::Initialize() {
     CoordinateSetAspectRatio(g_theGxDevicePtr->CapsAspectRatio(0));
 }
 
-// OFFSET: 0x00808050
+// OFFSET: 0x00808050/0x14051DA30
 void CCharacterSelection::TransferComponentToWorld() {
     if (static_cast<uint32_t>(CCharacterSelection::m_enterWorldIndex) >= CCharacterSelection::m_characterList.Count()) {
         return;
@@ -353,7 +353,7 @@ CharacterSelectionDisplay* CCharacterSelection::GetCharacterDisplay(uint32_t ind
     return NULL;
 }
 
-// OFFSET: 0x008086F0
+// OFFSET: 0x008086F0/0x14051E200
 int32_t CCharacterSelection::Idle(const void* data, void* param) {
     CCharacterComponent* component = NULL;
 
@@ -448,7 +448,7 @@ void CCharacterSelection::OnShow() {
     EventRegisterEx(EVENT_ID_IDLE, CCharacterSelection::Idle, NULL, 0.0f);
 }
 
-// OFFSET: 0x00808A50
+// OFFSET: 0x00808A50/0x14051E5E0
 uint32_t CCharacterSelection::GetEquippedGuildTabardFlags(int32_t slot, int32_t index) {
     CharacterSelectionDisplay* display = index >= 0 && index < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? &CCharacterSelection::m_characterList.m_data[index] : NULL;
     ItemDisplayInfoRec displayRec;
@@ -464,7 +464,7 @@ uint32_t CCharacterSelection::GetEquippedGuildTabardFlags(int32_t slot, int32_t 
     return 0;
 }
 
-// OFFSET: 0x00808AB0
+// OFFSET: 0x00808AB0/0x14051E670
 void CCharacterSelection::GuildCallback(const uint64_t& guildGUID, const WOWGUID& guid, void* param, bool success) {
     if (!guildGUID || !success || static_cast<uint32_t>(CCharacterSelection::m_selectionIndex) >= CCharacterSelection::m_characterList.Count()) {
         return;
@@ -554,7 +554,7 @@ int32_t CCharacterSelection::UpdateEmote(const void* data, void* param) {
 }
 
 // PROVEN: 38548fe0 IDENTICAL/NONE
-// OFFSET: 0x00809590
+// OFFSET: 0x00809590/0x14051F3F0
 void CCharacterSelection::OnHide() {
     EventUnregister(EVENT_ID_IDLE, CCharacterSelection::Idle);
     LoadingScreenMiniDisable();
@@ -942,7 +942,7 @@ CharacterSelectionDisplay::CharacterSelectionDisplay(const CharacterSelectionDis
     this->m_weaponLoadOut = source.m_weaponLoadOut;
 }
 
-// OFFSET: 0x0080A670
+// OFFSET: 0x0080A670/0x140520930
 void CCharacterSelection::EnumerateCharactersCallback(const CHARACTER_INFO& info, void* param) {
     CharacterSelectionDisplay* display = CCharacterSelection::m_characterList.New();
     memcpy(&display->m_characterInfo, &info, sizeof(info));

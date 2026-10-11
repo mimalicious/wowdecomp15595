@@ -39,14 +39,14 @@ int32_t Script_SetZoom(lua_State* L);
 int32_t Script_PingLocation(lua_State* L);
 int32_t Script_GetPingPosition(lua_State* L);
 
-// OFFSET: 0x009CEE90
+// OFFSET: 0x009CEE90/0x14075F9B0
 void CGMinimapFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGMinimapFrame::s_metatable);
     CGMinimapFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: 0x009D19E0
+// OFFSET: 0x009D19E0/0x140762E20
 void CGMinimapFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGMinimapFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGMinimapFrame::RegisterScriptMethods);
@@ -843,7 +843,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "UpdateBlips", &Script_UpdateBlips },
 };
 
-// OFFSET: 0x009CEE70
+// OFFSET: 0x009CEE70/0x14075F980
 void CGMinimapFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
@@ -857,14 +857,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ClearAllTracking", &Script_ClearAllTracking },
 };
 
-// OFFSET: 0x009CEEC0
+// OFFSET: 0x009CEEC0/0x14075F9E0
 void MinimapRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009CEEF0
+// OFFSET: 0x009CEEF0/0x14075FA30
 void MinimapUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

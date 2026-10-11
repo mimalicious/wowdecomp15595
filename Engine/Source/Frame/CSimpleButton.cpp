@@ -368,7 +368,7 @@ void CSimpleButton::RunOnDoubleClickScript(const char* btn) {
     }
 }
 
-// OFFSET: [0x00514520, 0x00514D20]
+// OFFSET: [0x00514520/0x14015EA50, 0x00514D20/0x14015F100]
 CSimpleButton::~CSimpleButton() {
 }
 
@@ -476,7 +476,7 @@ void CSimpleButton::SetHighlight(CSimpleTexture* texture, EGxBlend blend) {
 }
 
 // PROVEN: 3c592eb7 IDENTICAL/NONE
-// OFFSET: 0x00514810
+// OFFSET: 0x00514810/0x14015ED40
 void CSimpleButton::OnLayerHide() {
     if (this->m_state != BUTTONSTATE_DISABLED && !this->m_stateLocked) {
         this->SetButtonState(BUTTONSTATE_NORMAL, 0);
@@ -1148,7 +1148,7 @@ void CSimpleFrame::RunOnEnableScript(int32_t disabled) {
     }
 }
 
-// OFFSET: 0x00515AE0
+// OFFSET: 0x00515AE0/0x140160160
 CSimpleButton::CSimpleButton(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_state = BUTTONSTATE_DISABLED;
     this->m_inClick = 0;

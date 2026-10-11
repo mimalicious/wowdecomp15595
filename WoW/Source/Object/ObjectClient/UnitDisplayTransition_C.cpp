@@ -31,7 +31,7 @@ static const uint32_t s_reattachLinks[13] = { 0, 1, 2, 26, 27, 28, 30, 31, 32, 3
 TSObjectAllocPool<CUnitDisplayTransition_C>* CUnitDisplayTransition_C::s_pool;
 
 // PROVEN: 5a7acaa7 IDENTICAL/NONE
-// OFFSET: 0x005FDB90
+// OFFSET: 0x005FDB90/0x1402860B0
 void CUnitDisplayTransition_C::HandleComponentRenderPrep() {
     if (this->m_state == 1 && this->m_component && this->m_component->RenderPrep(0)) {
         this->m_state = 2;
@@ -39,7 +39,7 @@ void CUnitDisplayTransition_C::HandleComponentRenderPrep() {
 }
 
 // PROVEN: e638c01f IDENTICAL/NONE
-// OFFSET: 0x005FDBC0
+// OFFSET: 0x005FDBC0/0x1402860E0
 void CUnitDisplayTransition_C::HandleAnimSwapEvent() {
     if (this->m_state == 4) {
         this->m_flags |= 0x1;
@@ -47,7 +47,7 @@ void CUnitDisplayTransition_C::HandleAnimSwapEvent() {
 }
 
 // PROVEN: d1ce6fa0 IDENTICAL/NONE
-// OFFSET: 0x005FDBD0
+// OFFSET: 0x005FDBD0/0x1402860F0
 int32_t CUnitDisplayTransition_C::GetTargetDisplayID() const {
     if (this->m_state <= 4 && this->m_displayInfo) {
         return this->m_displayInfo->m_id;
@@ -119,7 +119,7 @@ void CUnitDisplayTransition_C::ApplyGuildColor(uint32_t flags, int32_t emblem, i
     CGObject_C::ReplaceGuildTextures(this->m_component->m_data.m_model, backgroundColor, borderColorValue, emblemColorValue, fileName);
 }
 
-// OFFSET: 0x005FDE10
+// OFFSET: 0x005FDE10/0x140286590
 void CUnitDisplayTransition_C::ApplyShirtGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
     if (!this->m_component) {
         return;
@@ -173,7 +173,7 @@ bool CUnitDisplayTransition_C::IsReadyToBegin() const {
 }
 
 // PROVEN: b6323d67 IDENTICAL/NONE
-// OFFSET: 0x005FDF60
+// OFFSET: 0x005FDF60/0x140286790
 void CUnitDisplayTransition_C::HandleComponentPrep() {
     if (this->m_state == 1 && this->m_component) {
         this->m_component->Prep();

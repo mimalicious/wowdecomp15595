@@ -1687,7 +1687,7 @@ void CM2Scene::PreloadCommonCallback(CAsyncObject* object) {
     record->m_scene->m_preloads.Erase(record->m_key);
 }
 
-// OFFSET: 0x0082D6D0
+// OFFSET: 0x0082D6D0/0x14054D3F0
 void CM2Scene::ModelLoadSucceededCallback(CAsyncObject* object) {
     M2Data* data = static_cast<M2Data*>(object->m_buffer);
     M2PreloadRecord* record = static_cast<M2PreloadRecord*>(object->m_userArg);

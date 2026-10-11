@@ -47,7 +47,7 @@ CWorldMapPreloadData::CWorldMapPreloadData() {
     }
 }
 
-// OFFSET: 0x007735F0
+// OFFSET: 0x007735F0/0x14045D2D0
 void CWorldMap::PreloadCountMapObjGroupTextures(const CAaBox& box, CMapObjDef* mapObjDef, CMapObjDefGroup* defGroup, uint32_t* totals, uint32_t* loaded) {
     float x = (box.b.x + box.t.x) * 0.5f;
     float y = (box.t.y + box.b.y) * 0.5f;
@@ -99,7 +99,7 @@ void CWorldMap::PreloadDoodadDefs(const CAaBox& box) {
     }
 }
 
-// OFFSET: 0x007738D0
+// OFFSET: 0x007738D0/0x14045D620
 CMapChunk* CMap::GetChunk(const C3Vector& pos) {
     int32_t y = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.029999999f);
     int32_t x = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.029999999f);
@@ -180,7 +180,7 @@ void CWorldMap::PreloadMapObjDefGroups(CMapObj* mapObj, CMapObjDef* mapObjDef, c
     }
 }
 
-// OFFSET: 0x00773BD0
+// OFFSET: 0x00773BD0/0x14045D9B0
 void CWorldMap::PreloadCountDoodadDefs(const CAaBox& box, TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, uint32_t* totals, uint32_t* loaded, int32_t raisePriority) {
     if (!totals || !loaded) {
         return;
@@ -240,7 +240,7 @@ void CWorldMap::PreloadMapObjDefs(const CAaBox& box) {
     }
 }
 
-// OFFSET: 0x00773E60
+// OFFSET: 0x00773E60/0x14045DCC0
 void CWorldMap::PreloadCount(CMap* map, const CAaBox& box, uint32_t* totals, uint32_t* loaded, int32_t raisePriority) {
     C3Vector center((box.t.x + box.b.x) * 0.5f, (box.t.y + box.b.y) * 0.5f, (box.t.z + box.b.z) * 0.5f);
     CMapChunk* chunk = map->GetChunk(center);
@@ -317,7 +317,7 @@ void CWorldMap::PreloadCount(CMap* map, const CAaBox& box, uint32_t* totals, uin
     }
 }
 
-// OFFSET: 0x00774150
+// OFFSET: 0x00774150/0x14045E020
 void CWorldMap::Preload(CMap* map, CWorldMapPreloadData& data, int32_t pass, int32_t phase, float progressStart, float progressRange) {
     int32_t streaming = phase == 0;
 

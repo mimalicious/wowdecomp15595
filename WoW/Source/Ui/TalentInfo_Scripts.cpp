@@ -1053,14 +1053,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTalentTreeMasterySpells", &Script_GetTalentTreeMasterySpells },
 };
 
-// OFFSET: 0x00999D80
+// OFFSET: 0x00999D80/0x14071BB20
 void TalentInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00999DB0
+// OFFSET: 0x00999DB0/0x14071BB70
 void TalentInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

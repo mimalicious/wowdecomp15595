@@ -84,7 +84,7 @@ CFlyout::~CFlyout() {
     this->m_slots.Clear();
 }
 
-// OFFSET: 0x009A4100
+// OFFSET: 0x009A4100/0x140729A70
 void CFlyout::AddSlot(const SpellFlyoutItemRec* rec) {
     if (!rec) {
         return;
@@ -113,7 +113,7 @@ CFlyout* CFlyout::GetByID(int32_t id) {
     return s_flyouts.Ptr(id, HASHKEY_NONE());
 }
 
-// OFFSET: 0x009A4190
+// OFFSET: 0x009A4190/0x140729B70
 int32_t CFlyout::FindFlyoutForSpell(int32_t spellId) {
     SpellToFlyoutMapItem* item = s_spellToFlyout.Ptr(spellId, HASHKEY_NONE());
 

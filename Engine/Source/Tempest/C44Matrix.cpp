@@ -288,7 +288,7 @@ C3Vector operator*(const C3Vector& v, const C44Matrix& m) {
     return result;
 }
 
-// OFFSET: 0x004309B0
+// OFFSET: 0x004309B0/0x140038D20
 C4Vector operator*(const C4Vector& v, const C44Matrix& m) {
     C4Vector result;
     result.x = m.d0 * v.w + m.b0 * v.y + m.c0 * v.z + v.x * m.a0;

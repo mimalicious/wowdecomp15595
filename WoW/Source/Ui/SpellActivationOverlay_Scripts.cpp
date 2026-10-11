@@ -23,14 +23,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "IsSpellOverlayed", &Script_IsSpellOverlayed },
 };
 
-// OFFSET: 0x009F2090
+// OFFSET: 0x009F2090/0x14078C650
 void SpellActivationOverlayRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009F20B0
+// OFFSET: 0x009F20B0/0x14078C670
 void SpellActivationOverlayUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

@@ -229,7 +229,7 @@ void CScriptRegion::StopAnimating() {
     }
 }
 
-// OFFSET: 0x00510140
+// OFFSET: 0x00510140/0x1401596A0
 void CScriptRegion::NotifyAnimEnd(CSimpleAnimGroup* group) {
     if (!group || !this->m_playingAnimGroups) {
         return;

@@ -15,7 +15,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 
 // PROVEN: 2fa1cfe7 IDENTICAL/NONE
-// OFFSET: 0x00A04B60
+// OFFSET: 0x00A04B60/0x1407A4200
 void CGDressUpModelFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGDressUpModelFrame::s_metatable);
@@ -64,7 +64,7 @@ static int32_t Script_UndressSlot(lua_State* L) {
 }
 
 // PROVEN: 35eeee73 IDENTICAL/NONE
-// OFFSET: 0x00A04E20
+// OFFSET: 0x00A04E20/0x1407A4560
 void CGDressUpModelFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGDressUpModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGDressUpModelFrame::RegisterScriptMethods);
@@ -142,7 +142,7 @@ static FrameScript_Method s_ScriptMethods[] = {
 };
 
 // PROVEN: db121a66 IDENTICAL/NONE
-// OFFSET: 0x00A04B40
+// OFFSET: 0x00A04B40/0x1407A41D0
 void CGDressUpModelFrame::RegisterScriptMethods(lua_State* L) {
     CGCharacterModelBase::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

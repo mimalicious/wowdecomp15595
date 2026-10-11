@@ -158,7 +158,7 @@ int32_t PhaseShift_C_GetNumActivePhaseMaps() {
 }
 
 // PROVEN: 7987744b IDENTICAL/NONE
-// OFFSET: 0x004E43C0
+// OFFSET: 0x004E43C0/0x1401256E0
 int32_t PhaseShift_C_IsPhasedWorldMapActive(int32_t worldMapAreaID) {
     for (uint32_t i = 0; i < s_phasedWorldMaps.Count(); i++) {
         if (s_phasedWorldMaps[i] == worldMapAreaID) {
@@ -200,7 +200,7 @@ int32_t PhaseShift_C_GetPhaseMapAreaTriggers(int32_t index, int32_t* first, int3
     return 1;
 }
 
-// OFFSET: 0x004E4550
+// OFFSET: 0x004E4550/0x140125910
 int32_t CPhaseShift::CalcNormalPhase() const {
     if (!this->m_phases.Count()) {
         return 1;
@@ -256,12 +256,12 @@ void PhaseShiftShared_InitPhaseXPhaseGroupIndex() {
     }
 }
 
-// OFFSET: 0x004E4850
+// OFFSET: 0x004E4850/0x140125D40
 int32_t PhaseShift_C_HasSharedPhase(const CPhaseShift* phaseShift) {
     return s_phaseShift.HasSharedPhase(phaseShift);
 }
 
-// OFFSET: 0x004E4870
+// OFFSET: 0x004E4870/0x140125DB0
 CPhaseMapTracker* CPhaseMapTracker::LoadMap(int32_t mapID, int32_t active) {
     if (!mapID) {
         return NULL;
@@ -354,7 +354,7 @@ int32_t PhaseShift_C_HasSharedPhase(const WorldStateUIRec* rec) {
     return s_phaseShift.HasSharedPhase(&s_worldStateUIPhases[rec->m_id]);
 }
 
-// OFFSET: 0x004E4BD0
+// OFFSET: 0x004E4BD0/0x140126320
 void CPhaseShift::SetPhase(uint32_t flags, uint16_t phase) {
     this->m_flags = flags;
 
@@ -451,7 +451,7 @@ static void InitAreaTriggerPhases() {
     }
 }
 
-// OFFSET: 0x004E5490
+// OFFSET: 0x004E5490/0x140126F10
 void PhaseShift_C_InitDB() {
     PhaseShiftShared_InitPhaseXPhaseGroupIndex();
     InitAreaTriggerPhases();

@@ -26,7 +26,7 @@ int32_t SRP6_Client::BeginAuthentication(const char* accountName, const char* pa
     return 0;
 }
 
-// OFFSET: 0x00B3A580
+// OFFSET: 0x00B3A580/0x140907130
 int32_t SRP6_Client::CalculateProof(const uint8_t* largeSafePrime, uint32_t largeSafePrimeLength, const uint8_t* generator, uint32_t generatorLength, const uint8_t* salt, uint32_t saltLength, const uint8_t* serverPublicKey, uint32_t serverPublicKeyLength, SRP6_Random& random) {
     BigData* N = BigIntegerFromBytes(largeSafePrime, largeSafePrimeLength);
     BigData* g = BigIntegerFromBytes(generator, generatorLength);
@@ -138,7 +138,7 @@ int32_t SRP6_Client::CalculateProof(const uint8_t* largeSafePrime, uint32_t larg
 }
 
 // PROVEN: 085f97f1 IDENTICAL/NONE
-// OFFSET: 0x00B3AA50
+// OFFSET: 0x00B3AA50/0x140907730
 int32_t SRP6_Client::VerifyServerProof(const uint8_t* serverProof, uint32_t serverProofLength) {
     if (serverProofLength != 20) {
         return -2;

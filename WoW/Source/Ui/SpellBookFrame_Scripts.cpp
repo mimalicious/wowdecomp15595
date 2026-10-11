@@ -1980,14 +1980,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetSpellBaseCooldown", &Script_GetSpellBaseCooldown },
 };
 
-// OFFSET: 0x0090E3B0
+// OFFSET: 0x0090E3B0/0x140669620
 void SpellBookRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x0090E3E0
+// OFFSET: 0x0090E3E0/0x140669670
 void SpellBookUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

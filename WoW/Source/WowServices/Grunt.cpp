@@ -441,7 +441,7 @@ void Grunt::ClientLink::WCMessageReady(WowConnection* connection, uint32_t timeS
 void Grunt::ClientLink::Expired(Grunt::Pending::Data& data) {
 }
 
-// OFFSET: 0x00B02CD0
+// OFFSET: 0x00B02CD0/0x1408C4C90
 bool CanReadNumBytes(CDataStore& msg, uint32_t bytes) {
     return msg.m_read <= msg.m_size && msg.m_size - msg.m_read >= bytes;
 }

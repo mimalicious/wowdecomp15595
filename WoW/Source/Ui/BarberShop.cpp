@@ -73,7 +73,7 @@ const BarberShopStyleRec* CGBarberShop::GetCurrentStyle(int32_t type) {
     return NULL;
 }
 
-// OFFSET: 0x008FF610
+// OFFSET: 0x008FF610/0x140657090
 void CGBarberShop::AppearanceApplied() {
     Script_SendUniqueSignal(SCRIPT_EVENT_BARBER_SHOP_APPEARANCE_APPLIED);
     CGBarberShop::m_resetPortrait = 1;
@@ -146,7 +146,7 @@ bool CGBarberShop::IsCurrentStyle(int32_t type) {
     }
 }
 
-// OFFSET: 0x008FFB90
+// OFFSET: 0x008FFB90/0x140657760
 bool CGBarberShop::IsSlotHidden(int32_t slot) {
     switch (slot) {
         case INVSLOT_HEAD:

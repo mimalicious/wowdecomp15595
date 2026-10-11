@@ -170,7 +170,7 @@ void CMapObjDefGroup::SetSequenceSpeed(float speed, int32_t a2, uint16_t doodadS
     }
 }
 
-// OFFSET: 0x0075FAC0
+// OFFSET: 0x0075FAC0/0x140443C60
 void CMapObjDefGroup::SetSequenceFinishedCallback(WORLD_SEQUENCE_CALLBACK callback, uint64_t param, uint16_t doodadSet) {
     for (CMapBaseObjLink* link = this->m_doodadLinks.Head(), * next; link; link = next) {
         next = this->m_doodadLinks.Next(link);
@@ -356,7 +356,7 @@ void CMapObjDef::SetSequenceSpeed(float speed, int32_t a2, uint16_t doodadSet) {
     }
 }
 
-// OFFSET: 0x007600D0
+// OFFSET: 0x007600D0/0x1404444D0
 void CMapObjDef::SetSequenceFinishedCallback(WORLD_SEQUENCE_CALLBACK callback, uint64_t param, uint16_t doodadSet) {
     for (CMapObjDefGroup* group = this->m_defGroupList.Head(), * next; group; group = next) {
         next = this->m_defGroupList.Next(group);
@@ -633,7 +633,7 @@ bool CMapObjDef::GetFacets(const CAaBox& box, const CAaBox& box2, World::FacetDa
     return true;
 }
 
-// OFFSET: [0x00760A80, 0x00760DA0]
+// OFFSET: [0x00760A80/0x1404451E0, 0x00760DA0/0x140445790]
 CMapObjDefGroup::~CMapObjDefGroup() {
     if (this->m_liquidInstance) {
         this->m_liquidInstance->Release();
@@ -737,7 +737,7 @@ void CMapObjDef::CreateGroups() {
     }
 }
 
-// OFFSET: 0x00761060
+// OFFSET: 0x00761060/0x140445B20
 CMapObjDef::CMapObjDef() {
     this->m_bbox.b.x = 0.0f;
     this->m_bbox.b.y = 0.0f;
@@ -760,7 +760,7 @@ CMapObjDef::CMapObjDef() {
     this->m_skipPortal = -1;
 }
 
-// OFFSET: [0x00761260, 0x007614C0]
+// OFFSET: [0x00761260/0x140445D30, 0x007614C0/0x140446020]
 CMapObjDef::~CMapObjDef() {
     if (this->m_perturbatorMesh) {
         Liquid::DestroyPerturbatorMesh(Liquid::PertSurface_Ocean, this->m_perturbatorMesh);

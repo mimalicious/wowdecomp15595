@@ -2,7 +2,7 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
 
-// OFFSET: 0x00699EC0
+// OFFSET: 0x00699EC0/0x140346430
 CClientObjCreate::CClientObjCreate() {
     this->m_hasMovement = false;
     this->m_hasGOTransport = false;

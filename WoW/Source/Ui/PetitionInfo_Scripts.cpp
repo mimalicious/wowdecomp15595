@@ -80,7 +80,7 @@ static int32_t Script_CanSignPetition(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009E0750
+// OFFSET: 0x009E0750/0x140777400
 static int32_t Script_ClosePetition(lua_State* L) {
     CGPetitionInfo::SetPetition(WOWGUID(), 0, WOWGUID());
     return 0;

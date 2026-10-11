@@ -51,7 +51,7 @@ int32_t CGAutoCompleteName::CompareNodes(const void* a, const void* b) {
     return SStrCmpUTF8I(nodeA->m_name, nodeB->m_name, STORM_MAX_STR);
 }
 
-// OFFSET: 0x009CB260
+// OFFSET: 0x009CB260/0x14075AC60
 const char* CGAutoCompleteName::GetDisplayName(const char* name) {
     if (name[0] == '|' && name[1] == 'K' && name[2] == 'f') {
         uint32_t presenceId = 0;
@@ -263,7 +263,7 @@ int32_t CGAutoCompleteName::SetName(const WOWGUID& guid, const char* name, bool 
     return 1;
 }
 
-// OFFSET: 0x009CBC40
+// OFFSET: 0x009CBC40/0x14075B920
 int32_t CGAutoCompleteName::SetName(const uint32_t& presenceId, const char* name, bool overwrite) {
     AUTOCOMPLETE_BATTLENET_HASHNODE* hashNode = CGAutoCompleteName::m_battlenetHash.Ptr(presenceId, HASHKEY_NONE());
     AUTOCOMPLETE_NAMENODE* node;

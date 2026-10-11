@@ -86,14 +86,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CreateArenaTeam", &Script_CreateArenaTeam },
 };
 
-// OFFSET: 0x00A09D60
+// OFFSET: 0x00A09D60/0x1407AACF0
 void PetitionVendorRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00A09D80
+// OFFSET: 0x00A09D80/0x1407AAD10
 void PetitionVendorUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

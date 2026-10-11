@@ -23,7 +23,7 @@ void DayNight::DNOverrideSky::LinkToAsyncHead() {
     this->m_model->LinkToAsyncHead();
 }
 
-// OFFSET: 0x0064EDF0
+// OFFSET: 0x0064EDF0/0x1402EDE30
 void DayNight::SyncSkyAnimWithTime(DNOverrideSky* sky, int32_t minute) {
     if (!sky || !sky->m_model || !sky->m_model->IsDrawable()) {
         return;
@@ -51,7 +51,7 @@ void DayNight::SyncSkyAnimWithTime(DNOverrideSky* sky, int32_t minute) {
 }
 
 // PROVEN: 2e4d28e5 IDENTICAL/NONE
-// OFFSET: 0x0064EEC0
+// OFFSET: 0x0064EEC0/0x1402EDF30
 DayNight::DNOverrideSky::DNOverrideSky() {
     this->m_model = NULL;
     this->m_animLengthMs = 0;

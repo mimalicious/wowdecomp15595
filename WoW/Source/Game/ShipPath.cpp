@@ -387,7 +387,7 @@ uint32_t ShipPath::GetPathTime(uint32_t time) const {
 }
 
 // PROVEN: e16faa1e IDENTICAL/NONE
-// OFFSET: 0x00B0F5B0
+// OFFSET: 0x00B0F5B0/0x1408D4760
 uint32_t ShipPath::UpdatePathTime(uint32_t time, uint32_t elapsed, int32_t absolute) {
     uint32_t total = this->m_totalPathTime;
 
@@ -465,7 +465,7 @@ float ShipPath::GetAccelDecelDistance(float t, float segTime, uint32_t* sequence
     return rampTime * (0.5f * peak) + dt * ((peak * 2.0f - this->m_accelRate * dt) * 0.5f) + (segTime - 2.0f * rampTime) * this->m_moveSpeed;
 }
 
-// OFFSET: 0x00B0F440
+// OFFSET: 0x00B0F440/0x1408D45E0
 float ShipPath::DistanceMoved(float t, float segTime, uint32_t* sequence, int32_t accel, int32_t decel, float* speed) {
     if (accel) {
         if (decel) {
@@ -538,7 +538,7 @@ void ShipPath::GetRollAndPitch(uint32_t time, float speed, float turn, C3Vector*
     }
 }
 
-// OFFSET: 0x00B0FBA0
+// OFFSET: 0x00B0FBA0/0x1408D4E20
 void ShipPath::ComputeRollAndPitch(float speed, float facing, float distance, uint32_t leg, float turn, uint32_t time, C3Vector* position, float* roll, float* pitch) {
     if (speed > 0.0f) {
         float low = this->m_physics->m_speedDampThresh * 0.15000001f;

@@ -490,7 +490,7 @@ void NetClient::WCConnected(WowConnection* connection, WowConnection* inbound, u
     this->m_critSect.Leave();
 }
 
-// OFFSET: 0x00487580
+// OFFSET: 0x00487580/0x1400A89D0
 void NetClient::GetNetStats(uint32_t time, CONNECTION_ID connection, float& bytesIn, float& bytesOut, uint32_t& latency) {
     this->m_critSect.Enter();
 
@@ -523,7 +523,7 @@ void NetClient::GetNetStats(uint32_t time, CONNECTION_ID connection, float& byte
     this->m_critSect.Leave();
 }
 
-// OFFSET: 0x00487660
+// OFFSET: 0x00487660/0x1400A8AE0
 void NetClient::GetNetStats(CONNECTION_ID connection, float& bytesIn, float& bytesOut, uint32_t& latency) {
     this->GetNetStats(OsGetAsyncTimeMsPrecise(), connection, bytesIn, bytesOut, latency);
 }
@@ -748,7 +748,7 @@ int32_t NetClient::GetLocalAddress(int32_t connection) {
     return type;
 }
 
-// OFFSET: 0x00488290
+// OFFSET: 0x00488290/0x1400A96C0
 void NetClient::HandleIdle() {
     s_idleStats[0] = s_stats[0];
     s_idleStats[1] = s_stats[3];
@@ -1155,7 +1155,7 @@ void NetClient::WCDisconnected(WowConnection* connection, uint32_t timeStamp, co
     this->m_critSect.Leave();
 }
 
-// OFFSET: 0x00489130
+// OFFSET: 0x00489130/0x1400AAC50
 bool NetClient::ClientConnectionPongHandler(ClientConnectionPong* msg) {
     NetClient* client = msg->m_netClient;
 

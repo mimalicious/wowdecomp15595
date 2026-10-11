@@ -1428,7 +1428,7 @@ bool CWorldMap::QueryGroundTypeTerrain(const C3Vector& pos, uint32_t& groundType
     return map->QueryGroundTypeTerrain(pos, groundType);
 }
 
-// OFFSET: 0x007316C0
+// OFFSET: 0x007316C0/0x14040C540
 static int32_t QueryMapObjDefModels(CMapObjDef* mapObjDef, CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags) {
     int32_t count = 0;
 
@@ -1498,7 +1498,7 @@ int32_t CWorldMap::QueryFlightBounds(const C3Vector& pos, float& z, int32_t lowe
     return 0;
 }
 
-// OFFSET: 0x007318B0
+// OFFSET: 0x007318B0/0x14040C7C0
 void CWorldMap::RenderFlightBounds(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
 
@@ -1634,7 +1634,7 @@ bool CWorldMap::QueryHeight(const C3Vector& start, const C3Vector& end, float& t
     return this->QueryMapObjDefsHeight(start, end, t) != 0;
 }
 
-// OFFSET: 0x00731C70
+// OFFSET: 0x00731C70/0x14040CCD0
 void CWorldMap::QueryTris(const CAaBox& box, World::TriData& tris, uint32_t flags) {
     CWorldMap::s_queryTag++;
 
@@ -1961,7 +1961,7 @@ int32_t CWorldMap::QueryOutdoors(CMapEntity* entity) {
     return outdoors;
 }
 
-// OFFSET: 0x007324F0
+// OFFSET: 0x007324F0/0x14040D7E0
 int32_t CWorldMap::QueryIntersectingModels(CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags) {
     if (!maxModels) {
         return 0;
@@ -3243,7 +3243,7 @@ bool CWorldMap::VectorIntersect(const C3Vector& start, const C3Vector& end, C3Ve
     return hit;
 }
 
-// OFFSET: 0x00764920
+// OFFSET: 0x00764920/0x14044A150
 void CWaterRipple::Init(const C3Vector& pos, float facing, float radius, float alpha, float duration, float growth, int32_t large) {
     this->m_large = large != 0;
     this->m_position = pos;
@@ -3292,7 +3292,7 @@ void CWaterRipple::Init(const C3Vector& pos, float facing, float radius, float a
 }
 
 // PROVEN: ab810557 IDENTICAL/NONE
-// OFFSET: 0x00764D50
+// OFFSET: 0x00764D50/0x14044A5E0
 CWaterRipple* CWaterRipple::Create(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player) {
     uint32_t slot;
 
@@ -3315,7 +3315,7 @@ CWaterRipple* CWaterRipple::Create(const C3Vector& pos, float facing, float radi
     return ripple;
 }
 
-// OFFSET: 0x00764DF0
+// OFFSET: 0x00764DF0/0x14044A690
 void CWorldMap::CreateWaterRipple(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player) {
     float scale = 1.0f;
 

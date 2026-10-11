@@ -72,7 +72,7 @@ void CGInputControl::UpdateJoystickMouseMode() {
     }
 }
 
-// OFFSET: 0x00447A20
+// OFFSET: 0x00447A20/0x140054230
 void CGInputControl::SetMouseCVarHandler(bool enable) {
     if (!this->m_wowMouse) {
         if (enable) {
@@ -324,7 +324,7 @@ int32_t __stdcall CGInputControl::CanControl(CGUnit_C* unit) {
     return !unit->AnimSuppressesMovement() && (!unit->IsActivePlayer() || !(static_cast<CGPlayer_C*>(unit)->m_combatModeFlags & 0x1)) && !unit->IsVehicleTransitionPreventingAction();
 }
 
-// OFFSET: 0x004489B0
+// OFFSET: 0x004489B0/0x140055460
 int32_t CGInputControl::CameraCanTurnPlayer() const {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -451,12 +451,12 @@ int32_t __stdcall CGInputControl::CanTurn(CGUnit_C* unit) {
     return CGInputControl::CanControl(unit) && !(unit->m_unit->m_unitFieldFlags & 0x40000) && !unit->IsVehiclePreventingTurning();
 }
 
-// OFFSET: 0x00448430
+// OFFSET: 0x00448430/0x140054DB0
 int32_t CGInputControl::CanSyncFreeLookFacing(CGUnit_C* unit) const {
     return CGInputControl::CanControl(unit) && !(unit->m_unit->m_unitFieldFlags & 0x40000) && !unit->IsVehiclePreventingTurning() && (this->m_flags & 0x2000001) && !unit->GetClientStandState();
 }
 
-// OFFSET: 0x00448AA0
+// OFFSET: 0x00448AA0/0x140055590
 int32_t CGInputControl::CameraCanPitchPlayer() {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -519,7 +519,7 @@ int32_t __stdcall CGInputControl::CanMove(CGUnit_C* unit) {
     return unit->m_unit->m_unitFieldHealth > 0 && !(unit->m_movement->m_flags & 0x100A00) && unit->m_unit->m_unitFieldBytes1[0] != 7 && !unit->HasVehicleTransport();
 }
 
-// OFFSET: 0x00928E90
+// OFFSET: 0x00928E90/0x14068EC50
 void __stdcall ScaleMouseDeltaByFov(float* dx, float* dy) {
     if (!CGWorldFrame::s_currentWorldFrame) {
         return;
@@ -557,7 +557,7 @@ void CGInputControl::VehicleAimChange(uint32_t time, float delta) {
     this->SetPlayerPitch(mover, time, aim + delta);
 }
 
-// OFFSET: 0x004498C0
+// OFFSET: 0x004498C0/0x1400565A0
 void CGInputControl::OnPitchToAngleStop() {
     this->m_vehicleAimValid = 0;
 
@@ -595,7 +595,7 @@ void CGInputControl::OnUpdate(float elapsed) {
     }
 }
 
-// OFFSET: 0x00449E50
+// OFFSET: 0x00449E50/0x140056C10
 void CGInputControl::OnMouseMoveRel(const CMouseEvent& evt) {
     if (!this->m_flags) {
         return;
@@ -640,7 +640,7 @@ void CGInputControl::OnMouseMoveRel(const CMouseEvent& evt) {
     }
 }
 
-// OFFSET: 0x00449620
+// OFFSET: 0x00449620/0x1400562C0
 void CGInputControl::CameraTurnPlayer(uint32_t time, float facing) {
     if (!this->CameraCanTurnPlayer()) {
         return;
@@ -726,7 +726,7 @@ void CGInputControl::SetPlayerPitch(CGUnit_C* unit, uint32_t time, float pitch) 
     CGUnit_C::PitchMissileTrajectoryTargetingNextFrame();
 }
 
-// OFFSET: 0x0044A270
+// OFFSET: 0x0044A270/0x1400570F0
 void CGInputControl::CameraPitchPlayer(uint32_t time, float pitch) {
     if (!CGInputControl::CameraCanPitchPlayer()) {
         return;

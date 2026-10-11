@@ -80,13 +80,13 @@ int32_t CGActionBar::IsItem(uint32_t slot) {
 }
 
 // PROVEN: 19d316e3 IDENTICAL/NONE
-// OFFSET: 0x00464530
+// OFFSET: 0x00464530/0x140077F00
 int32_t CGActionBar::IsMacro(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x40000000;
 }
 
-// OFFSET: 0x00464560
+// OFFSET: 0x00464560/0x140077F30
 int32_t CGActionBar::IsPetAction(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x10000000;
@@ -205,7 +205,7 @@ uint32_t CGActionBar::GetFlyout(uint32_t slot) {
     return 0;
 }
 
-// OFFSET: 0x00954300
+// OFFSET: 0x00954300/0x1406C51C0
 static int32_t GetMultiCastTotemCategory(int32_t slot) {
     if (slot < 132 || static_cast<uint32_t>(slot) >= 144) {
         return 0;
@@ -229,7 +229,7 @@ static int32_t GetMultiCastTotemCategory(int32_t slot) {
     }
 }
 
-// OFFSET: 0x00954370
+// OFFSET: 0x00954370/0x1406C5210
 uint32_t CGActionBar::GetMultiCastSlotMaskForTotemCategory(int32_t category) {
     switch (category) {
         case 2:
@@ -253,7 +253,7 @@ uint32_t CGActionBar::GetMultiCastSlotMaskForTotemCategory(int32_t category) {
 }
 
 // PROVEN: 299cac77 IDENTICAL/NONE
-// OFFSET: 0x009543E0
+// OFFSET: 0x009543E0/0x1406C5250
 void CGActionBar::SetTemporaryActionBarFlags(uint32_t flags, int32_t enable) {
     if (enable) {
         CGActionBar::m_tempPageActiveFlags |= flags;
@@ -336,7 +336,7 @@ int32_t CGActionBar::GetPetActionSpell(uint32_t slot) {
     return data & 0xFFFFFF;
 }
 
-// OFFSET: 0x00954A10
+// OFFSET: 0x00954A10/0x1406C58C0
 int32_t IsMultiCastSpellForSlot(int32_t slot, const SpellRec* spell, int32_t* category) {
     int32_t multiCast = (spell->m_attributesExG & 0x20) != 0;
     int32_t totemCategory = GetMultiCastTotemCategory(slot);
@@ -500,7 +500,7 @@ CGItem_C* CGActionBar::FindUseEnchantItemPtr(int32_t itemId) {
     return item;
 }
 
-// OFFSET: 0x009552C0
+// OFFSET: 0x009552C0/0x1406C64A0
 int32_t CGActionBar::GetItemSpell(uint32_t slot) {
     int32_t itemId = CGActionBar::GetItem(slot);
     int32_t spellId = CGItem_C::GetUseSpell(itemId);
@@ -518,7 +518,7 @@ int32_t CGActionBar::GetItemSpell(uint32_t slot) {
     return 0;
 }
 
-// OFFSET: 0x00955300
+// OFFSET: 0x00955300/0x1406C64E0
 int32_t CGActionBar::GetMacroSpell(uint32_t slot, int32_t& petSpell) {
     MACRONODE* macro = CGUIMacros::GetMacroByID(CGActionBar::GetMacroID(slot));
 
@@ -635,7 +635,7 @@ void CGActionBar::UpdateUsablePower() {
     }
 }
 
-// OFFSET: 0x00955720
+// OFFSET: 0x00955720/0x1406C6A90
 int32_t CGActionBar::HasSpellAction(int32_t spellId) {
     for (uint32_t i = 0; i < 144; i++) {
         int32_t petSpell;
@@ -761,7 +761,7 @@ int32_t CGActionBar::IsRangedAttackAction(uint32_t slot) {
     return spell && (spell->m_attributes & 0x2) && (spell->m_attributesExB & 0x20);
 }
 
-// OFFSET: 0x009562F0
+// OFFSET: 0x009562F0/0x1406C7940
 void CGActionBar::SetActionUIButton(CSimpleCheckbox* checkbox, uint32_t slot, CGCooldown* cooldown) {
     if (!checkbox || slot >= 144) {
         return;
@@ -1177,7 +1177,7 @@ void CGActionBar::UpdateEquipmentSet(uint32_t id) {
     }
 }
 
-// OFFSET: 0x00957380
+// OFFSET: 0x00957380/0x1406C8E90
 void CGActionBar::RemoveAction(uint32_t slot, int32_t silent) {
     if (slot > 143) {
         return;
@@ -1258,7 +1258,7 @@ void CGActionBar::UpdateCritter(int32_t critter) {
     }
 }
 
-// OFFSET: 0x00957730
+// OFFSET: 0x00957730/0x1406C93A0
 void CGActionBar::UpdateSpellEffect(int32_t effect) {
     for (uint32_t i = 0; i < 144; i++) {
         int32_t petSpell;
@@ -1661,7 +1661,7 @@ void CGActionBar::UpdateMacro(uint32_t macroId) {
     }
 }
 
-// OFFSET: 0x00958820
+// OFFSET: 0x00958820/0x1406CA900
 void CGActionBar::RemoveMacro(uint32_t macroId, int32_t silent) {
     if (!macroId) {
         return;
@@ -1762,7 +1762,7 @@ void CGActionBar::SetAction(uint32_t slot, uint32_t action, int32_t sendToServer
     CGActionBar::SlotChanged(slot, sendToServer, silent);
 }
 
-// OFFSET: 0x00958AD0
+// OFFSET: 0x00958AD0/0x1406CAD00
 void CGActionBar::ReplaceSpell(int32_t oldSpell, int32_t newSpell) {
     const SpellRec* newRec = g_spellDB.GetRecord(newSpell);
     int32_t newRank = newRec ? CGSpellBook::GetSpellProgressionRank(newRec) : 0;
@@ -1925,7 +1925,7 @@ void CGActionBar::PutActionInSlot(uint32_t slot, int32_t a2) {
 }
 
 // PROVEN: 7fc56e8b IDENTICAL/NONE
-// OFFSET: 0x00959050
+// OFFSET: 0x00959050/0x1406CB3C0
 void CGActionBar::UpdateTemporaryActionBar(int32_t (*getSpell)(uint32_t index, const void* data), const void* data) {
     if (!getSpell) {
         return;
@@ -2137,7 +2137,7 @@ void CGActionBar::UseAction(uint32_t slot, const WOWGUID& target, const char* bu
     }
 }
 
-// OFFSET: 0x009597B0
+// OFFSET: 0x009597B0/0x1406CBDB0
 void CGActionBar::PickupAction(uint32_t slot) {
     if (static_cast<int32_t>(slot) < 0 || slot >= 144 || !CGGameUI::CanPerformAction(14) || (static_cast<int32_t>(slot) >= 120 && slot < 132)) {
         return;

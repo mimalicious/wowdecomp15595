@@ -629,7 +629,7 @@ static FrameScript_Method s_scriptFunctions[] = {
 };
 
 // PROVEN: a3c174fa IDENTICAL/NONE
-// OFFSET: 0x0080C3A0
+// OFFSET: 0x0080C3A0/0x140522A20
 void CharacterCreateRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);

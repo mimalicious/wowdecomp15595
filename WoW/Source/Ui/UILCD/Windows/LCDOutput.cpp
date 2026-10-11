@@ -55,7 +55,7 @@ int32_t CLCDOutput::IsOpened() {
     return this->m_hDevice != LGLCD_INVALID_DEVICE;
 }
 
-// OFFSET: 0x00B3EB10
+// OFFSET: 0x00B3EB10/0x14090C2B0
 HRESULT CLCDOutput::HandleErrorFromAPI(DWORD result) {
     switch (result) {
         case ERROR_SUCCESS:
@@ -144,7 +144,7 @@ int32_t CLCDOutput::OpenByType(lgLcdOpenByTypeContext& context) {
     return 1;
 }
 
-// OFFSET: 0x00B3EC80
+// OFFSET: 0x00B3EC80/0x14090C440
 int32_t CLCDOutput::ReOpenDeviceType() {
     if (this->m_OpenByTypeContext.deviceType) {
         return this->OpenByType(this->m_OpenByTypeContext);
@@ -169,7 +169,7 @@ void CLCDOutput::ShowPage(CLCDPage* page, int32_t activate) {
     }
 }
 
-// OFFSET: 0x00B3ED00
+// OFFSET: 0x00B3ED00/0x14090C4E0
 int32_t CLCDOutput::Draw() {
     uint32_t priority = this->m_nPriority;
 
@@ -291,7 +291,7 @@ void CLCDOutput::OnSoftButtonEvent(uint32_t buttons) {
     this->m_dwButtonState = buttons;
 }
 
-// OFFSET: 0x00B3F060
+// OFFSET: 0x00B3F060/0x14090C900
 void CLCDOutput::OnUpdate(uint32_t timestamp) {
     if (this->m_pActivePage) {
         this->m_pActivePage->OnUpdate(timestamp);

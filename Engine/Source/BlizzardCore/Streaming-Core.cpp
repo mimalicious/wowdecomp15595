@@ -29,7 +29,7 @@ void SFile::SetStreamingStatus(bool mfilReady, bool dataReady, bool disabled, ui
 }
 
 // PROVEN: 0cb8d3ea IDENTICAL/NONE
-// OFFSET: 0x007A9700
+// OFFSET: 0x007A9700/0x14049F490
 void SFile::GetStreamingStatus(bool* mfilReady, bool* dataReady, bool* disabled, uint32_t* build) {
     if (mfilReady) {
         *mfilReady = s_streamingStatus.m_mfilReady;
@@ -85,7 +85,7 @@ void System_SFile2::BufferCallback::WaitForCompletion() {
 }
 
 // PROVEN: 639bf0de IDENTICAL/NONE
-// OFFSET: 0x007A9640
+// OFFSET: 0x007A9640/0x14049F3C0
 bool System_SFile2::BufferCallback::ReceivedData(const void* data, int32_t size) {
     uint32_t length = Blizzard::String::Length(this->m_buffer);
 

@@ -144,7 +144,7 @@ uint32_t STORMAPI SCrcCompute(const void* buffer, uint32_t length, uint32_t* crc
     return SCrcBuffer(buffer, length, crc, flags);
 }
 
-// OFFSET: 0x004B9590
+// OFFSET: 0x004B9590/0x1400F1EF0
 uint64_t SCrc64Buffer(const void* buffer, uint32_t length, uint64_t* crc, uint32_t flags) {
     uint64_t result = 0;
 
@@ -177,7 +177,7 @@ uint64_t SCrc64Buffer(const void* buffer, uint32_t length, uint64_t* crc, uint32
 }
 
 // PROVEN: 2f88ad46 IDENTICAL/NONE
-// OFFSET: 0x004B9610
+// OFFSET: 0x004B9610/0x1400F1F70
 uint64_t STORMAPI SCrc64Compute(const void* buffer, uint32_t length, uint64_t* crc, uint32_t flags) {
     return SCrc64Buffer(buffer, length, crc, flags);
 }

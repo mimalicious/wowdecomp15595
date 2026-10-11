@@ -137,7 +137,7 @@ float DayNight::DNMoonGlare::GetCloudDensityFade() {
     return 1.0f - fabs(density - 0.5f + density - 0.5f);
 }
 
-// OFFSET: 0x0064F960
+// OFFSET: 0x0064F960/0x1402EEDF0
 void DayNight::DNGlare::Update(float deltaSec) {
     DNInfo& info = DayNight::g_dnInfo;
 
@@ -389,7 +389,7 @@ float DayNight::DNGlare::IsVisible() {
     return this->IsVisibleIntersect();
 }
 
-// OFFSET: 0x006506E0
+// OFFSET: 0x006506E0/0x1402EFE60
 void DayNight::DNGlare::Render() {
     if (!GlareBase::s_masterEnable || !this->m_enable || !this->m_color.a) {
         return;

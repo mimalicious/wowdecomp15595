@@ -243,7 +243,7 @@ CParticle2* CParticleEmitter2::NextParticle<CSortableParticleRecord>(uint32_t in
 }
 
 // PROVEN: 6a61881b IDENTICAL/NONE
-// OFFSET: 0x00B13EF0
+// OFFSET: 0x00B13EF0/0x1408D9D40
 void CParticleEmitter2::SetModel(CM2Scene* scene, const char* name) {
     if (scene && name && *name) {
         this->m_scene = scene;
@@ -413,7 +413,7 @@ void CParticleEmitter2::Init() {
     CParticleEmitter2::s_initCount++;
 }
 
-// OFFSET: 0x00B146D0
+// OFFSET: 0x00B146D0/0x1408DA580
 void CParticleEmitter2::Destroy() {
     if (--CParticleEmitter2::s_initCount) {
         return;
@@ -985,7 +985,7 @@ void CParticleEmitter2::SetParticleColors(const CImVector& color0, const CImVect
     this->m_params.m_simpleKeys[1].m_deltaColor[2] = color2.b - color1.b;
 }
 
-// OFFSET: 0x00B15280
+// OFFSET: 0x00B15280/0x1408DB120
 void CParticleEmitter2::GetReplacementColors(CImVector& color0, CImVector& color1, CImVector& color2) {
     color0.r = static_cast<uint8_t>(CMath::fint_(this->m_params.m_replacementColors[0].x));
     color0.g = static_cast<uint8_t>(CMath::fint_(this->m_params.m_replacementColors[0].y));
@@ -1087,7 +1087,7 @@ static void RecursiveEmitterModelLoaded(CM2Model* model, void* arg) {
 }
 
 // PROVEN: a0c8586e IDENTICAL/NONE
-// OFFSET: 0x00B154D0
+// OFFSET: 0x00B154D0/0x1408DB4B0
 void CParticleEmitter2::CreateChildEmittersFromModel(CM2Scene* scene, const char* name) {
     if (!scene) {
         return;
@@ -1877,7 +1877,7 @@ int32_t CParticleEmitter2::UpdateLiveParticle(float deltaTime, CParticle2* parti
     return 1;
 }
 
-// OFFSET: [0x00B1FD60, 0x00B1FE70]
+// OFFSET: [0x00B1FD60/0x1408E7300, 0x00B1FE70/0x1408E74F0]
 template <class P>
 void CParticleEmitter2::KillExpiredParticles() {
     uint32_t i = 0;
@@ -1901,7 +1901,7 @@ void CParticleEmitter2::KillExpiredParticles() {
     }
 }
 
-// OFFSET: 0x00B20510
+// OFFSET: 0x00B20510/0x1408E7F80
 void CParticleEmitter2::SetLifeSpan(float life) {
     int32_t longer = life >= this->m_params.m_life;
     this->m_params.m_life = life;

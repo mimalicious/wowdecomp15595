@@ -361,7 +361,7 @@ static bool ErrorDisplayFilterCallback(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// OFFSET: 0x004015F0
+// OFFSET: 0x004015F0/0x140003690
 static bool GammaCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     float gamma = SStrToFloat(value);
 
@@ -378,7 +378,7 @@ static bool GammaCallback(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
-// OFFSET: 0x00401640
+// OFFSET: 0x00401640/0x1400036E0
 static bool DesktopGammaCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value)) {
         CGxGammaRamp ramp;
@@ -397,7 +397,7 @@ static bool DesktopGammaCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// OFFSET: 0x00401750
+// OFFSET: 0x00401750/0x1400014A0
 static bool ScreenshotFormatCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotFormat(value);
     return true;

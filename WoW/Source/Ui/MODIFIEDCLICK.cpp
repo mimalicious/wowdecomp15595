@@ -5,7 +5,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/UIBindings.h"
 
-// OFFSET: 0x00920C70
+// OFFSET: 0x00920C70/0x140683390
 int32_t MODIFIEDCLICK::IsActive(BINDING_SET set) {
     const char* button = this->m_data[set].m_button;
     uint32_t modifiers = this->m_data[set].m_modifiers;

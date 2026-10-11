@@ -269,14 +269,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGuildFactionInfo", &Script_GetGuildFactionInfo },
 };
 
-// OFFSET: 0x009A5AD0
+// OFFSET: 0x009A5AD0/0x14072BEB0
 void ReputationInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009A5B00
+// OFFSET: 0x009A5B00/0x14072BF00
 void ReputationInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

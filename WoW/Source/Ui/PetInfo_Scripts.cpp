@@ -748,7 +748,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: fa9e451e IDENTICAL/NONE
-// OFFSET: 0x00950110
+// OFFSET: 0x00950110/0x1406C0470
 void PetInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -756,7 +756,7 @@ void PetInfoRegisterScriptFunctions() {
 }
 
 // PROVEN: 547bebb0 IDENTICAL/NONE
-// OFFSET: 0x00950140
+// OFFSET: 0x00950140/0x1406C04C0
 void PetInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

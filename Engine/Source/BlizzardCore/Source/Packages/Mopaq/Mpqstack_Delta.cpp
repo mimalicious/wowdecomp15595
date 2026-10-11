@@ -252,7 +252,7 @@ bool System_Mopaq::CloseFileRecord(Blizzard::Mopaq::HSFILERecord* file) {
     return true;
 }
 
-// OFFSET: 0x007F3450
+// OFFSET: 0x007F3450/0x1405007B0
 bool System_Mopaq::RepairFile(Blizzard::Mopaq::HSFILERecord* file) {
     if (!file->m_handle || System_MPQGlobals::GetMopaqGlobals()->m_disableRepair) {
         return false;

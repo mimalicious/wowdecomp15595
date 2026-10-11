@@ -132,7 +132,7 @@ Liquid::IGeomFactory::~IGeomFactory() {
 }
 
 // PROVEN: 1306526c IDENTICAL/NONE
-// OFFSET: 0x0076CA00
+// OFFSET: 0x0076CA00/0x140455010
 void CMeshGeomFactory::SetTexCoord1ValueX(float value) {
     this->m_texCoord1ValueX = value;
 }
@@ -234,7 +234,7 @@ static void BuildMapObjLiquidIndices(CMapObjGroup* group, uint16_t*& indices) {
 }
 
 // PROVEN: 462e946d IDENTICAL/NONE
-// OFFSET: 0x0076CFC0
+// OFFSET: 0x0076CFC0/0x140455610
 static void* PolyClipVtxLerpTexCoords(const void* a, const void* b, float t) {
     const uint16_t* from = static_cast<const uint16_t*>(a);
     const uint16_t* to = static_cast<const uint16_t*>(b);
@@ -245,7 +245,7 @@ static void* PolyClipVtxLerpTexCoords(const void* a, const void* b, float t) {
 }
 
 // PROVEN: bbad3458 IDENTICAL/NONE
-// OFFSET: 0x0076D030
+// OFFSET: 0x0076D030/0x140455690
 static void* PolyClipVtxLerpDepth(const void* a, const void* b, float t) {
     const uint8_t* from = static_cast<const uint8_t*>(a);
     const uint8_t* to = static_cast<const uint8_t*>(b);

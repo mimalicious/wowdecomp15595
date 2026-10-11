@@ -405,7 +405,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetIgnoreFramerateThrottle", &Script_GetIgnoreFramerateThrottle },
 };
 
-// OFFSET: 0x0053BAD0
+// OFFSET: 0x0053BAD0/0x14018F8F0
 void CSimpleAnimGroup::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

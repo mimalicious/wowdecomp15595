@@ -12,7 +12,7 @@
 #include "WoW/Source/DayNight/DNStars.h"
 #include "WoW/Source/LiquidSystem/Liquid.h"
 
-// OFFSET: 0x006532E0
+// OFFSET: 0x006532E0/0x1402F3770
 void DayNight::RenderGlares() {
     if (DayNight::g_dnInfo.m_showSky && (!Liquid::CameraSubmerged() || !Liquid::GetWaterDetail())) {
         DayNight::g_sunGlare.DNGlare::Update(DayNight::g_dnInfo.m_tickSec);

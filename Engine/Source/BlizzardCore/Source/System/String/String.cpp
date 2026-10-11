@@ -274,7 +274,7 @@ const char* Blizzard::String::FindReverse(const char* str, char c, uint32_t maxc
     return NULL;
 }
 
-// OFFSET: 0x007B5C90
+// OFFSET: 0x007B5C90/0x1404ABCE0
 const char* Blizzard::String::FindWordI(const char* str, const char* word, uint32_t maxchars) {
     while (str && word) {
         const char* found = System_String::FindI(str, word, maxchars);

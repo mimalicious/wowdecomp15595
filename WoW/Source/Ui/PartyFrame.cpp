@@ -135,7 +135,7 @@ WOWGUID CGPartyInfo::GetMember(uint32_t index) {
     return CGPartyInfo::m_members[index];
 }
 
-// OFFSET: 0x008FC5C0
+// OFFSET: 0x008FC5C0/0x140653930
 void CGPartyInfo::SetLeader(WOWGUID leader) {
     if (leader == CGPartyInfo::m_leader) {
         return;
@@ -176,7 +176,7 @@ uint32_t CGPartyInfo::NumMembers() {
 }
 
 // PROVEN: a0c63dee IDENTICAL/NONE
-// OFFSET: 0x008FC6A0
+// OFFSET: 0x008FC6A0/0x1406539D0
 void CGPartyInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     if (count <= 4) {
         CGPartyInfo::m_realNumMembers = count;
@@ -379,7 +379,7 @@ static void PartyMemberNameCallback(int32_t id, const WOWGUID& guid, void* param
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBERS_CHANGED);
 }
 
-// OFFSET: 0x008FCF10
+// OFFSET: 0x008FCF10/0x140654310
 void CGPartyInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_INSTANCE_SAVE_CREATED);
     ClientServices::ClearMessageHandler(SMSG_CHANGE_PLAYER_DIFFICULTY_RESULT);
@@ -537,7 +537,7 @@ bool CGPartyInfo::InParty() {
     return CGPartyInfo::m_members[0].m_guid != 0;
 }
 
-// OFFSET: 0x004E8260
+// OFFSET: 0x004E8260/0x14012A8A0
 PartyMemberState* CGPartyInfo::GetMemberState(uint32_t index) {
     if (CGPartyInfo::m_members[index]) {
         return &s_partyMemberStates[index];

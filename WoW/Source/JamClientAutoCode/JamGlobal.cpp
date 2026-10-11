@@ -186,7 +186,7 @@ void GlobalGuildSetRankPermissions::Put(CDataStore* msg) {
 }
 
 // PROVEN: cf5339a7 IDENTICAL/NONE
-// OFFSET: 0x0069C120
+// OFFSET: 0x0069C120/0x140348610
 GlobalGuildNewsUpdateSticky::GlobalGuildNewsUpdateSticky(uint64_t guildGUID, int32_t newsID, bool sticky) {
     memcpy(this->m_guildGUID, &guildGUID, sizeof(this->m_guildGUID));
     this->m_sticky = sticky;
@@ -305,7 +305,7 @@ void GlobalGuildAutoDeclineInvitation::Put(CDataStore* msg) {
 }
 
 // PROVEN: 0d39af72 IDENTICAL/NONE
-// OFFSET: 0x0069AEF0
+// OFFSET: 0x0069AEF0/0x140347420
 GlobalGuildShiftRank::GlobalGuildShiftRank(int32_t rankOrder, bool shiftUp) {
     this->m_shiftUp = shiftUp;
     this->m_rankOrder = rankOrder;
@@ -491,7 +491,7 @@ GlobalGuildPermissionsQuery::GlobalGuildPermissionsQuery() {
 }
 
 // PROVEN: ad1741e4 IDENTICAL/NONE
-// OFFSET: 0x0069A330
+// OFFSET: 0x0069A330/0x1403468A0
 GlobalGuildPermissionsQuery::~GlobalGuildPermissionsQuery() {
 }
 
@@ -1113,7 +1113,7 @@ void GlobalGuildQueryMembersForRecipe::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0069CB70
+// OFFSET: 0x0069CB70/0x140349020
 GlobalGuildSetMemberNote::GlobalGuildSetMemberNote(const JamGuildMemberSetNoteData& noteData) : m_noteData(noteData) {
 }
 

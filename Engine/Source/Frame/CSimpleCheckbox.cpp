@@ -30,7 +30,7 @@ void CSimpleCheckbox::operator delete(void* ptr) {
     CSimpleCheckbox::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x00515C10
+// OFFSET: 0x00515C10/0x1401602A0
 CSimpleCheckbox::CSimpleCheckbox(CSimpleFrame* parent) : CSimpleButton(parent) {
     this->m_checked = 0;
     this->m_checkedTexture = NULL;

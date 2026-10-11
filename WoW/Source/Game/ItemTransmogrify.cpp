@@ -65,7 +65,7 @@ bool CanClassDualWield(int32_t classID) {
     return classID == 1 || classID == 4 || classID == 3 || classID == 7;
 }
 
-// OFFSET: 0x00B12180
+// OFFSET: 0x00B12180/0x1408D7BA0
 bool IsRelicItem(const ItemRecInterface* item) {
     if (item->GetClassID() != 4) {
         return false;

@@ -518,7 +518,7 @@ void CWorldOcclusion::AddVolume(const C3Vector& pos, const C3Vector* verts, int3
     this->m_volumes.Add(1, &volume);
 }
 
-// OFFSET: 0x0079C410
+// OFFSET: 0x0079C410/0x140490DD0
 void CWorldOcclusion::Clear() {
     for (int32_t i = 0; i < 256; i++) {
         this->m_buffer[0][i] = -99999.0f;

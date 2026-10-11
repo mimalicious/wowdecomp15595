@@ -236,7 +236,7 @@ void __fastcall Liquid::OnTexturesDirty() {
     Liquid::SignalConfigChanged(1);
 }
 
-// OFFSET: 0x007173F0
+// OFFSET: 0x007173F0/0x1403EA960
 void Liquid::CacheProceduralTextures() {
     CGxTexFlags flags;
     TextureCacheNewTexture(s_riverDepthTex);
@@ -254,7 +254,7 @@ void Liquid::CacheProceduralTextures() {
     }
 }
 
-// OFFSET: 0x00717470
+// OFFSET: 0x00717470/0x1403EA9F0
 void Liquid::UnCacheProceduralTextures() {
     if (s_riverDepthTex) {
         TextureCacheRemoveTexture(s_riverDepthTex);
@@ -364,7 +364,7 @@ static CTexture* CreateBackBuffer() {
     return TextureCreate(GxTex_NonPow2, static_cast<uint32_t>(static_cast<int64_t>(rect.maxX)), static_cast<uint32_t>(static_cast<int64_t>(rect.maxY)), 1, GxTex_Argb8888, GxTex_Argb8888, flags, NULL, GxTexNullUserFunc, "LiquidProc BackBufferTex", 0);
 }
 
-// OFFSET: 0x00717820
+// OFFSET: 0x00717820/0x1403EAE40
 static CTexture* CreateReflectionBuffer(const char* name) {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
     g_theGxDevicePtr->CapsWindowSize(rect);
@@ -377,7 +377,7 @@ static CTexture* CreateReflectionBuffer(const char* name) {
     return TextureCreate(GxTex_NonPow2, width, height, 1, GxTex_Argb8888, GxTex_Argb8888, flags, NULL, GxTexNullUserFunc, name, 0);
 }
 
-// OFFSET: 0x007178E0
+// OFFSET: 0x007178E0/0x1403EAF10
 static CTexture* CreateDepthReflectionBuffer(const char* name) {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
     g_theGxDevicePtr->CapsWindowSize(rect);
@@ -793,7 +793,7 @@ Liquid::DisplMapPerturbationMesh* Liquid::CreatePerturbatorMesh(EPertSurface sur
     return mesh;
 }
 
-// OFFSET: 0x00718980
+// OFFSET: 0x00718980/0x1403EC690
 void Liquid::DestroyPerturbatorMesh(EPertSurface surface, DisplMapPerturbationMesh* mesh) {
     uint32_t index = Liquid::s_displMapCount - 1;
 
@@ -1325,7 +1325,7 @@ void Liquid::UpdateDisplMap(uint32_t time) {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: 0x0071A310
+// OFFSET: 0x0071A310/0x1403EE690
 void Liquid::DestroyProceduralTextures(int32_t materials) {
     g_theGxDevicePtr->RemoveTextureRecreationCallback(Liquid::OnTexturesDirty);
     g_theGxDevicePtr->RemoveDeviceRestoredCallback(Liquid::OnTexturesDirty);

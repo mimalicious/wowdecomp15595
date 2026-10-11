@@ -48,7 +48,7 @@ uint32_t BigBuffer::operator[](uint32_t index) const {
     return this->IsUsed(index) ? this->m_data[index + this->m_offset] : 0;
 }
 
-// OFFSET: 0x004BBE10
+// OFFSET: 0x004BBE10/0x1400F5320
 static int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     int32_t result = 0;
 
@@ -86,7 +86,7 @@ static uint32_t HighBitPos(const BigBuffer& a) {
 }
 
 // PROVEN: e3f3c02e IDENTICAL/NONE
-// OFFSET: 0x004BBF40
+// OFFSET: 0x004BBF40/0x1400F5470
 int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
     return Compare(a->Primary(), b->Primary());
 }
@@ -97,11 +97,11 @@ BigStack::~BigStack() {
 }
 
 // PROVEN: 3b903b75 IDENTICAL/NONE
-// OFFSET: 0x004BCC60
+// OFFSET: 0x004BCC60/0x1400F6480
 BigData::~BigData() {
 }
 
-// OFFSET: 0x004BC0D0
+// OFFSET: 0x004BC0D0/0x1400F5480
 void BigBuffer::GrowToFit(uint32_t index) {
     this->m_data.GrowToFit(index + this->m_offset, 1);
 }
@@ -111,7 +111,7 @@ void BigBuffer::SetCount(uint32_t count) {
     this->m_data.SetCount(count + this->m_offset);
 }
 
-// OFFSET: 0x004BC190
+// OFFSET: 0x004BC190/0x1400F57D0
 void BigBuffer::Trim() const {
     while (this->Count() && !*this->m_data.Top()) {
         this->m_data.SetCount(this->m_data.Count() - 1);
@@ -124,7 +124,7 @@ BigStack::BigStack() {
     this->m_used = 0;
 }
 
-// OFFSET: 0x004BC230
+// OFFSET: 0x004BC230/0x1400F5880
 static void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     uint64_t carry = 0;
     uint32_t i = 0;
@@ -168,7 +168,7 @@ static void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c) {
     a.SetCount(i);
 }
 
-// OFFSET: 0x004BC5E0
+// OFFSET: 0x004BC5E0/0x1400F5C90
 static void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     uint64_t borrow = 0;
     uint32_t i = 0;
@@ -255,7 +255,7 @@ static void FromUnsigned(BigBuffer& a, uint32_t value) {
     a.SetCount(1);
 }
 
-// OFFSET: 0x004BCB10
+// OFFSET: 0x004BCB10/0x1400F6330
 static void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& a) {
     for (uint32_t i = 0; i < 4 * a.Count(); ++i) {
         uint32_t value = a[i >> 2] >> (8 * (i & 3));
@@ -277,7 +277,7 @@ void STORMAPI SBigAdd(BigData* a, const BigData* b, const BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
 }
 
-// OFFSET: 0x004BCC00
+// OFFSET: 0x004BCC00/0x1400F6400
 void STORMAPI SBigBitLen(BigData* a, uint32_t* bits) {
     BigBuffer& buffer = a->Primary();
     buffer.Trim();
@@ -314,7 +314,7 @@ void STORMAPI SBigSub(BigData* a, const BigData* b, const BigData* c) {
     Sub(a->Primary(), b->Primary(), c->Primary());
 }
 
-// OFFSET: 0x004BCD10
+// OFFSET: 0x004BCD10/0x1400F6610
 static void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
     c.Trim();
     d.Trim();
@@ -389,7 +389,7 @@ void STORMAPI SBigNew(BigData** num) {
     *num = new (SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0)) BigData;
 }
 
-// OFFSET: 0x004BD1D0
+// OFFSET: 0x004BD1D0/0x1400F6B90
 void STORMAPI SBigToBinaryBuffer(const BigData* num, void* data, uint32_t maxBytes, uint32_t* bytes) {
     TSGrowableArray<uint8_t>& output = num->Output();
     ToBinary(output, num->Primary());
@@ -407,7 +407,7 @@ void STORMAPI SBigToBinaryBuffer(const BigData* num, void* data, uint32_t maxByt
     }
 }
 
-// OFFSET: 0x004BD230
+// OFFSET: 0x004BD230/0x1400F6C10
 static void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack) {
     BigBuffer& aa = stack.MakeDistinct(a, &a == &b || &a == &c);
     aa.Clear();
@@ -427,7 +427,7 @@ static void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& 
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: 0x004BD560
+// OFFSET: 0x004BD560/0x1400F6FE0
 static void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
     BigBuffer& aa = stack.MakeDistinct(a, &a == &b);
     aa.Clear();
@@ -453,7 +453,7 @@ static void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: 0x004BD8D0
+// OFFSET: 0x004BD8D0/0x1400F7310
 void STORMAPI SBigDel(BigData* num) {
     delete num;
 }

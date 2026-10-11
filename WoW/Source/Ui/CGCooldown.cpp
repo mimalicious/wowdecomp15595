@@ -338,7 +338,7 @@ void CGCooldown::AnimateOctants67(uint32_t octant, float t) {
     }
 }
 
-// OFFSET: 0x009FDBD0
+// OFFSET: 0x009FDBD0/0x14079BED0
 void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 
@@ -357,7 +357,7 @@ void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: 0x009FE830
+// OFFSET: 0x009FE830/0x14079CCC0
 void CGCooldown::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
 
@@ -593,7 +593,7 @@ void CGCooldown::UpdateColors() {
     }
 }
 
-// OFFSET: 0x009FF570
+// OFFSET: 0x009FF570/0x14079DB90
 void CGCooldown::UpdateAlpha() {
     CSimpleFrame::UpdateAlpha();
     this->UpdateColors();
@@ -632,7 +632,7 @@ void CGCooldown::OnLayerUpdate(float elapsedSec) {
     this->AnimateVerts();
 }
 
-// OFFSET: 0x009FF790
+// OFFSET: 0x009FF790/0x14079DE20
 CGCooldown::CGCooldown(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_starTexture = NULL;
     this->m_edgeTexture = NULL;

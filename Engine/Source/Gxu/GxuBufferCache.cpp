@@ -3,7 +3,7 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/CGxPool.h"
 
-// OFFSET: 0x00622100
+// OFFSET: 0x00622100/0x1402B2EC0
 void GxuBufferCache::ReleaseCache() {
     for (uint32_t i = 0; i < this->m_entries.m_count; i++) {
         BufferEntry* entry = &this->m_entries.m_data[i];

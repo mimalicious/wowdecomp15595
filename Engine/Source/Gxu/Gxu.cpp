@@ -319,7 +319,7 @@ void GxuUpdateSingleColorTexture(EGxTexCommand command, uint32_t width, uint32_t
     }
 }
 
-// OFFSET: 0x00616720
+// OFFSET: 0x00616720/0x1402A32A0
 void GxuXformCreateProjection_SG(float fovyInRadians, float aspect, float minZ, float maxZ, C44Matrix& dst) {
     float scale = aspect * aspect + 1.0f;
     scale = sqrt(scale);

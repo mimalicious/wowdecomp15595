@@ -63,7 +63,7 @@ bool CGVoidTransfer::IsWithdrawItem(WOWGUID guid) {
     return false;
 }
 
-// OFFSET: 0x005F9D20
+// OFFSET: 0x005F9D20/0x14027EBB0
 uint64_t CGVoidTransfer::GetDepositCost() {
     uint64_t cost = 0;
 

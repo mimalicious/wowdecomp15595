@@ -433,7 +433,7 @@ void CKBSetup::GetCategory(int32_t category) {
     } while (child);
 }
 
-// OFFSET: 0x009FC6B0
+// OFFSET: 0x009FC6B0/0x14079A210
 XMLNode* CKBSetup::GetSubCategory(int32_t category, int32_t subCategory) {
     if (this->m_state != 2 || !this->m_tree || category < 0) {
         return NULL;

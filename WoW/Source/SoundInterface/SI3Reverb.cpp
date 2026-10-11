@@ -74,7 +74,7 @@ void SI3::EnableReverb(int32_t enable) {
     SI3::sm_bReverbEnabled = enable;
 }
 
-// OFFSET: 0x00634800
+// OFFSET: 0x00634800/0x1402CAA50
 void SI3::UpdateReverb() {
     FMOD_REVERB_PROPERTIES properties;
 

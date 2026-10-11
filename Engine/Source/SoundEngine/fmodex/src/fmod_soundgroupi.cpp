@@ -182,7 +182,7 @@ FMOD_RESULT SoundGroupI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A88200
+// OFFSET: 0x00A88200/0x1408462C0
 FMOD_RESULT SoundGroupI::setMaxAudible(int maxaudible)
 {
     if (maxaudible < -1)
@@ -240,7 +240,7 @@ FMOD_RESULT SoundGroupI::getMaxAudible(int *maxaudible)
 ]
 */
 
-// OFFSET: 0x00A88220
+// OFFSET: 0x00A88220/0x1408462E0
 FMOD_RESULT SoundGroupI::setMaxAudibleBehavior(FMOD_SOUNDGROUP_BEHAVIOR behavior)
 {
     if (behavior < 0 || behavior >= FMOD_SOUNDGROUP_BEHAVIOR_MAX)

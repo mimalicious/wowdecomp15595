@@ -82,7 +82,7 @@ int32_t CACHEENTRY::LoadTexture() {
 }
 
 // PROVEN: 0a85dc2e IDENTICAL/NONE
-// OFFSET: 0x00703DA0
+// OFFSET: 0x00703DA0/0x1403D08A0
 void* TextureCacheCopyTexture(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
@@ -95,7 +95,7 @@ void* TextureCacheCopyTexture(void* handle) {
     return entry;
 }
 
-// OFFSET: 0x00703DC0
+// OFFSET: 0x00703DC0/0x1403D08C0
 void* TextureCacheGetMip(void* handle, uint32_t mipLevel) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
@@ -159,7 +159,7 @@ int32_t TextureCacheGetInfo(void* handle, TCTEXTUREINFO& info, int32_t wait) {
 }
 
 // PROVEN: 76cf2643 IDENTICAL/NONE
-// OFFSET: 0x00703F10
+// OFFSET: 0x00703F10/0x1403D0A00
 void TextureCacheIncreasePriority(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
@@ -177,7 +177,7 @@ void TextureCacheResetLoadCount() {
 }
 
 // PROVEN: 7d5e49e3 IDENTICAL/NONE
-// OFFSET: 0x00703F70
+// OFFSET: 0x00703F70/0x1403D0A60
 void TextureCacheComputeLoadProgress(void* handle, int64_t& local, int64_t& total) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 

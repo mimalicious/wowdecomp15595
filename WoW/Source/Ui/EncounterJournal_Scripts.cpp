@@ -336,7 +336,7 @@ static int32_t Script_EJ_HandleLinkPath(lua_State* L) {
     return 3;
 }
 
-// OFFSET: 0x00A078A0
+// OFFSET: 0x00A078A0/0x1407A7AA0
 static int32_t PushSectionPath(lua_State* L, int32_t sectionID) {
     JournalEncounterSectionRec* section = g_journalEncounterSectionDB.GetRecord(sectionID);
 
@@ -813,14 +813,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "EJ_GetSectionPath", &Script_EJ_GetSectionPath },
 };
 
-// OFFSET: 0x00A06F00
+// OFFSET: 0x00A06F00/0x1407A6D90
 void EncounterJournalRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00A06F30
+// OFFSET: 0x00A06F30/0x1407A6DE0
 void EncounterJournalUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

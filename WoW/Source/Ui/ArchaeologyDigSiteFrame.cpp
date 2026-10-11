@@ -61,12 +61,12 @@ void CGArchaeologyDigSiteFrame::DrawBlob(int32_t id, bool show) {
     }
 }
 
-// OFFSET: 0x00A02B30
+// OFFSET: 0x00A02B30/0x1407A1BF0
 void CGArchaeologyDigSiteFrame::RegisterScriptMethods(lua_State* L) {
     CGBlobFrame::RegisterScriptMethods(L);
 }
 
-// OFFSET: 0x00A02B40
+// OFFSET: 0x00A02B40/0x1407A1C00
 void CGArchaeologyDigSiteFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CGArchaeologyDigSiteFrame::s_metatable);
@@ -87,7 +87,7 @@ bool CGArchaeologyDigSiteFrame::IsA(const char* typeName) {
 CGArchaeologyDigSiteFrame::~CGArchaeologyDigSiteFrame() {
 }
 
-// OFFSET: 0x00A02C50
+// OFFSET: 0x00A02C50/0x1407A1D20
 void CGArchaeologyDigSiteFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGArchaeologyDigSiteFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGArchaeologyDigSiteFrame::RegisterScriptMethods);

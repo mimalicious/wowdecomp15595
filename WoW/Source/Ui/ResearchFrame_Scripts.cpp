@@ -403,14 +403,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ArchaeologyGetIconInfo", &Script_ArchaeologyGetIconInfo },
 };
 
-// OFFSET: 0x009F4720
+// OFFSET: 0x009F4720/0x14078FFF0
 void ResearchRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x009F4750
+// OFFSET: 0x009F4750/0x140790040
 void ResearchUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

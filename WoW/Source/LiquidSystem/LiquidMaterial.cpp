@@ -768,7 +768,7 @@ int32_t Liquid::IMaterial::SetupLighting(const C3Vector& camPos, CInstance* inst
 }
 
 // PROVEN: ac6cc6a4 IDENTICAL/NONE
-// OFFSET: 0x00904350
+// OFFSET: 0x00904350/0x14065C8C0
 void Liquid::IMaterial::Release() {
     delete this;
 }

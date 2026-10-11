@@ -1167,7 +1167,7 @@ void BattlenetUI::SavePrescenceID(uint32_t presenceId) {
     }
 }
 
-// OFFSET: 0x0090A780
+// OFFSET: 0x0090A780/0x140664270
 bool BattlenetUI::TokenizeName(uint32_t presenceId, const char*& name) {
     const char* text = name;
     BattlenetUI::SavePrescenceID(presenceId);

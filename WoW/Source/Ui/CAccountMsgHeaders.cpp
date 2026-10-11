@@ -46,7 +46,7 @@ int32_t CAccountMsgHeaders::GetHeaderPriority(int32_t index) {
     return this->_GetInt(this->m_iterator.m_node, "priority");
 }
 
-// OFFSET: 0x009FA140
+// OFFSET: 0x009FA140/0x140797560
 int32_t CAccountMsgHeaders::GetMessageId(int32_t index) {
     if (this->m_state == 1) {
         return 0;

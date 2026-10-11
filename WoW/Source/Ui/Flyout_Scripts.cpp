@@ -105,7 +105,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 799e8602 IDENTICAL/NONE
-// OFFSET: 0x009A3D00
+// OFFSET: 0x009A3D00/0x140729390
 void CFlyout::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -113,7 +113,7 @@ void CFlyout::RegisterScriptFunctions() {
 }
 
 // PROVEN: 7a9a4f9f IDENTICAL/NONE
-// OFFSET: 0x009A3D30
+// OFFSET: 0x009A3D30/0x1407293E0
 void CFlyout::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

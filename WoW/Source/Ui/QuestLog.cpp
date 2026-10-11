@@ -126,7 +126,7 @@ static int32_t s_poiOverlapIterations = 20;
 static const int32_t s_questGreenRange[20] = { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
 
 // PROVEN: 11c5bb76 IDENTICAL/NONE
-// OFFSET: 0x0095BF90
+// OFFSET: 0x0095BF90/0x1406CECE0
 int32_t CGQuestLog::GetQuestLogSlot(int32_t index) {
     if (index < 0 || index >= static_cast<int32_t>(CGQuestLog::m_numQuest) || CGQuestLog::m_quests[index].m_isHeader) {
         return -1;
@@ -135,7 +135,7 @@ int32_t CGQuestLog::GetQuestLogSlot(int32_t index) {
     return CGQuestLog::m_quests[index].m_logSlot;
 }
 
-// OFFSET: 0x0095BFC0
+// OFFSET: 0x0095BFC0/0x1406CED10
 static void QuestSelectQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         ConsoleWrite("Invalid quest log entry", DEFAULT_COLOR);
@@ -211,7 +211,7 @@ void CGQuestLog::RemoveQuestWatch(int32_t questId) {
 }
 
 // PROVEN: 6b6ba060 IDENTICAL/NONE
-// OFFSET: 0x0095C140
+// OFFSET: 0x0095C140/0x1406CEE70
 AutoQuestPopUp* CGQuestLog::FindAutoQuestPopUp(int32_t questId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numAutoQuestPopUps; i++) {
         if (CGQuestLog::m_autoQuestPopUps[i].m_questId == questId) {
@@ -250,7 +250,7 @@ int32_t GetQuestSortId(uint32_t index) {
     return -1;
 }
 
-// OFFSET: 0x0095C200
+// OFFSET: 0x0095C200/0x1406CEF50
 void AddQuestPointDisplay() {
     WOWGUID none = WOWGUID::Make(0);
     QuestCache* quest = g_questDBCache.GetRecord(CGQuestLog::m_selectedQuest, none, QuestSelectQueryCallback, NULL, false);
@@ -261,7 +261,7 @@ void AddQuestPointDisplay() {
 }
 
 // PROVEN: 3f2dd7d0 IDENTICAL/NONE
-// OFFSET: 0x0095C270
+// OFFSET: 0x0095C270/0x1406CEFB0
 int32_t CGQuestLog::GetSelectedLogEntry() {
     uint32_t index = 0;
 
@@ -334,7 +334,7 @@ int32_t CGQuestLog::IsQuestFailed(uint32_t index) {
     return index < CGQuestLog::m_numQuest && !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
 }
 
-// OFFSET: 0x0095C3E0
+// OFFSET: 0x0095C3E0/0x1406CF170
 int32_t CGQuestLog::IsQuestExpiredByID(int32_t questId) {
     for (uint32_t index = 0; index < CGQuestLog::m_numQuest; index++) {
         if (CGQuestLog::m_quests[index].m_questId == questId) {
@@ -512,7 +512,7 @@ void CGQuestLog::SetServerTime(int32_t serverTime, int32_t resetTime) {
 }
 
 // PROVEN: 602bed41 IDENTICAL/NONE
-// OFFSET: 0x0095DA10
+// OFFSET: 0x0095DA10/0x1406D09E0
 void CGQuestLog::SetSelectedQuest(int32_t index) {
     if (CGQuestLog::m_selectedQuest) {
         DisplayQuestPoint(0.0f, 0.0f, 0, "");
@@ -527,7 +527,7 @@ void CGQuestLog::SetSelectedQuest(int32_t index) {
 }
 
 // PROVEN: a27e2510 IDENTICAL/NONE
-// OFFSET: 0x0095DA70
+// OFFSET: 0x0095DA70/0x1406D0A50
 int32_t CGQuestLog::IsSelectedQuestExpired() {
     uint32_t index = CGQuestLog::GetSelectedLogEntry();
     return index < CGQuestLog::m_numQuest && !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
@@ -910,7 +910,7 @@ void CGQuestLog::AbandonSelectedQuest() {
     }
 }
 
-// OFFSET: 0x0095EC60
+// OFFSET: 0x0095EC60/0x1406D1FD0
 const char* CGQuestLog::GetQuestNameByID(int32_t questId) {
     WOWGUID none = WOWGUID::Make(0);
     QuestCache* quest = g_questDBCache.GetRecord(questId, none, QuestQueryCallback, NULL, false);
@@ -1922,7 +1922,7 @@ bool CGQuestLog::AddAutoQuestPopUp(int32_t questId, int32_t type) {
 }
 
 // PROVEN: e68df7f6 IDENTICAL/NONE
-// OFFSET: 0x00961B50
+// OFFSET: 0x00961B50/0x1406D58B0
 void CGQuestLog::RemoveAutoQuestPopUp(int32_t questId) {
     uint32_t count = CGQuestLog::m_numAutoQuestPopUps;
     uint32_t kept = 0;
@@ -2547,7 +2547,7 @@ int32_t CGQuestLog::SetQuestExpired(uint32_t index) {
     return 0;
 }
 
-// OFFSET: 0x00963730
+// OFFSET: 0x00963730/0x1406D8400
 int32_t CGQuestLog::SetQuestExpiredByID(int32_t questId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numQuest; i++) {
         if (CGQuestLog::m_quests[i].m_questId == questId) {

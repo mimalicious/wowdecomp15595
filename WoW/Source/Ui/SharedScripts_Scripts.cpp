@@ -205,7 +205,7 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "GetSecondsUntilParentalControlsKick", &Script_GetSecondsUntilParentalControlsKick },
 };
 
-// OFFSET: 0x00481830
+// OFFSET: 0x00481830/0x1400A0460
 void RegisterSharedScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);

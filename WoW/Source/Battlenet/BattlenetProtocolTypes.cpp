@@ -355,25 +355,25 @@ void Battlenet::Attribute::ArtId::SetDefault_visualFileIndex(uint8_t& value) {
 }
 
 // PROVEN: 16bb20c1 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_top(uint16_t& value) {
     value = 0;
 }
 
 // PROVEN: 08585f70 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_left(uint16_t& value) {
     value = 0;
 }
 
 // PROVEN: ec8584cc IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_height(uint16_t& value) {
     value = 0;
 }
 
 // PROVEN: 7b821572 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_width(uint16_t& value) {
     value = 0;
 }
@@ -391,7 +391,7 @@ void Battlenet::Attribute::LocalizedString::SetDefault_fileIndex(uint8_t& value)
 }
 
 // PROVEN: 304fd598 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::LocalizedString::SetDefault_id(uint16_t& value) {
     value = 0;
 }
@@ -454,7 +454,7 @@ void Battlenet::Attribute::Address::SetDefault_definitionHandle(Battlenet::Attri
 }
 
 // PROVEN: af8f7f90 IDENTICAL/NONE
-// OFFSET: 0x00B2C7D0
+// OFFSET: 0x00B2C7D0/0x1408F4E40
 void Battlenet::Attribute::Parent::SetDefault_address(Battlenet::Attribute::Address& value) {
     Battlenet::Attribute::Address::SetDefault_scope(value.m_scope);
     Battlenet::Attribute::Address::SetDefault_definitionHandle(value.m_definitionHandle);
@@ -684,13 +684,13 @@ void Battlenet::Cache::ResolvedStreamItem::SetDefault_publicationTime(int32_t& v
 }
 
 // PROVEN: 69a0650a IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Cache::ResolvedStreamItem::SetDefault_index(uint16_t& value) {
     value = 0;
 }
 
 // PROVEN: 4cc0c283 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Cache::ResolvedStreamItem::SetDefault_totalNumItems(uint16_t& value) {
     value = 0;
 }
@@ -766,13 +766,13 @@ void Battlenet::Conference::PublicName::SetDefault_locale(BSN::FourCC& value) {
 }
 
 // PROVEN: 7286ee4a IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::PublicName::SetDefault_name(uint16_t& value) {
     value = 0;
 }
 
 // PROVEN: 39cfa8f9 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::PublicName::SetDefault_index(uint16_t& value) {
     value = 0;
 }
@@ -826,7 +826,7 @@ void Battlenet::Conference::PublicPartialName::SetDefault_locale(BSN::FourCC& va
 }
 
 // PROVEN: 3a21c9db IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::PublicPartialName::SetDefault_name(uint16_t& value) {
     value = 0;
 }
@@ -838,7 +838,7 @@ void Battlenet::Conference::ConferenceDescription::SetDefault_parentCategory(uin
 }
 
 // PROVEN: 662f8c4a IDENTICAL/NONE
-// OFFSET: 0x00B2C850
+// OFFSET: 0x00B2C850/0x1408F4EB0
 void Battlenet::Conference::ConferenceDescription::SetDefault_name(Battlenet::Conference::PublicName& value) {
     Battlenet::Conference::PublicName::SetDefault_locale(value.m_locale);
     Battlenet::Conference::PublicName::SetDefault_name(value.m_name);
@@ -846,12 +846,12 @@ void Battlenet::Conference::ConferenceDescription::SetDefault_name(Battlenet::Co
 }
 
 // PROVEN: d6d8e128 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::ConferenceDescription::SetDefault_sortOrder(uint16_t& value) {
     value = 0;
 }
 
-// OFFSET: 0x00B2CB60
+// OFFSET: 0x00B2CB60/0x1408F51E0
 void Battlenet::Conference::ConferenceDescription::SetDefault_configuration(Battlenet::Conference::ConferenceConfiguration& value) {
     Battlenet::Conference::ConferenceConfiguration::SetDefault_maxMembers(value.m_maxMembers);
     Battlenet::Conference::ConferenceConfiguration::SetDefault_allowedPrograms(value.m_allowedPrograms);
@@ -867,13 +867,13 @@ void Battlenet::Conference::CategoryDescription::SetDefault_id(uint8_t& value) {
 }
 
 // PROVEN: ed28b80c IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::CategoryDescription::SetDefault_name(uint16_t& value) {
     value = 0;
 }
 
 // PROVEN: a0166240 IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::CategoryDescription::SetDefault_sortOrder(uint16_t& value) {
     value = 0;
 }
@@ -978,13 +978,13 @@ void Battlenet::Result::Definition::SetDefault_flags(uint8_t& value) {
 }
 
 // PROVEN: f343d8fe IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::S2Map::MapSize::SetDefault_horizontal(uint16_t& value) {
     value = 0;
 }
 
 // PROVEN: 06a84bfe IDENTICAL/NONE
-// OFFSET: 0x00B2C750
+// OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::S2Map::MapSize::SetDefault_vertical(uint16_t& value) {
     value = 0;
 }
@@ -1320,7 +1320,7 @@ void Battlenet::S2Map::InfoBase::SetDefault_name(BSN::String<80>& value) {
 }
 
 // PROVEN: 3a6014db IDENTICAL/NONE
-// OFFSET: 0x00B2C920
+// OFFSET: 0x00B2C920/0x1408F4F80
 void Battlenet::S2Map::InfoBase::SetDefault_profileRecordAddress(Battlenet::Profile::RecordAddress& value) {
     Battlenet::Profile::RecordAddress::SetDefault_label(value.m_label);
     Battlenet::Profile::RecordAddress::SetDefault_id(value.m_id);
@@ -1562,14 +1562,14 @@ void Battlenet::Result::PlayerListContainer::SetDefault_playerList(BSN::Array<Ba
 }
 
 // PROVEN: 2da04720 IDENTICAL/NONE
-// OFFSET: 0x00B2E5A0
+// OFFSET: 0x00B2E5A0/0x1408F6F20
 void Battlenet::S2Game::Summary::PlayerData::SetDefault_playerObject(Battlenet::Result::PlayerObject& value) {
     Battlenet::Result::PlayerObject::SetDefault_scope(value.m_scope);
     Battlenet::Result::PlayerObject::SetDefault_playerObjectType(value.m_playerObjectType);
 }
 
 // PROVEN: 147f551d IDENTICAL/NONE
-// OFFSET: 0x00B2E5C0
+// OFFSET: 0x00B2E5C0/0x1408F6F40
 void Battlenet::S2Game::Summary::PlayerData::SetDefault_role(Battlenet::S2Game::Summary::Role& value) {
     value.m_tag = 0;
     Battlenet::S2Game::Summary::ParticipantRole& element = *reinterpret_cast<Battlenet::S2Game::Summary::ParticipantRole*>(value.m_value);

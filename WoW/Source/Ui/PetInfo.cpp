@@ -133,7 +133,7 @@ void CGPetInfo::SetPossessedSpell(int32_t spellId) {
     }
 }
 
-// OFFSET: 0x00950000
+// OFFSET: 0x00950000/0x1406C0340
 void CGPetInfo::SetPetOrderMoveTo() {
     Spell_C_StopTargeting();
     CursorSetResetMode(2);
@@ -161,7 +161,7 @@ int32_t CGPetInfo::OnPetRenameable(void* param, NETMESSAGE msgId, uint32_t time,
 }
 
 // PROVEN: 97502d5f IDENTICAL/NONE
-// OFFSET: 0x00950160
+// OFFSET: 0x00950160/0x1406C0500
 static int32_t PetTempActionBarCallback(uint32_t index, const void* data) {
     return index < 10 ? index | 0x10000000 : 0;
 }
@@ -186,7 +186,7 @@ void CGPetInfo::LeaveWorld() {
     }
 }
 
-// OFFSET: 0x009502A0
+// OFFSET: 0x009502A0/0x1406C0650
 void CGPetInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_PET_SPELLS_MESSAGE);
     ClientServices::ClearMessageHandler(SMSG_PET_LEARNED_SPELLS);
@@ -215,7 +215,7 @@ WOWGUID CGPetInfo::GetTarget() {
     return pet ? pet->m_unit->m_unitFieldTarget : WOWGUID();
 }
 
-// OFFSET: 0x009503D0
+// OFFSET: 0x009503D0/0x1406C0780
 PetAction* CGPetInfo::GetPetSpellAction(int32_t spellId) {
     for (uint32_t i = s_petSpellActions.m_count; i; ) {
         i--;
@@ -228,7 +228,7 @@ PetAction* CGPetInfo::GetPetSpellAction(int32_t spellId) {
     return NULL;
 }
 
-// OFFSET: 0x00950410
+// OFFSET: 0x00950410/0x1406C07C0
 void CGPetInfo::UpdatePetSpellAction(const PetAction* action) {
     uint32_t value = action->m_data;
 
@@ -751,7 +751,7 @@ void CGPetInfo::SendPetAction(const PetAction& action, const WOWGUID& target, in
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x00951950
+// OFFSET: 0x00951950/0x1406C1FF0
 void CGPetInfo::PetFollow() {
     PetAction action;
     action.m_data = 0x7000001;
@@ -887,7 +887,7 @@ int32_t CGPetInfo::IsPetBarUsed() {
     return player && pet && pet->IsPetBarUsed() && (!CGPetInfo::m_petBarState || CGPetInfo::m_possessSpell || pet->CanGainXP()) && (!(player->m_player->m_playerFieldBytes[0] & 0x20) || !pet->m_unit->m_unitFieldPetnumber);
 }
 
-// OFFSET: 0x00951F30
+// OFFSET: 0x00951F30/0x1406C26A0
 void CGPetInfo::UpdatePetTempBar() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t active = 0;
@@ -921,7 +921,7 @@ void CGPetInfo::UpdatePetTempBar() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_BAR_UPDATE, NULL);
 }
 
-// OFFSET: 0x009520A0
+// OFFSET: 0x009520A0/0x1406C2830
 int32_t CGPetInfo::HandleMoveToTerrainRay(const CTerrainClickEvent& evt) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     C3Vector point = evt.m_point;
@@ -948,7 +948,7 @@ int32_t CGPetInfo::HandleMoveToTerrainRay(const CTerrainClickEvent& evt) {
     return 2;
 }
 
-// OFFSET: 0x00952220
+// OFFSET: 0x00952220/0x1406C29E0
 bool CGPetInfo::HandleTerrainClick(const CTerrainClickEvent& evt) {
     if (CGPetInfo::m_petOrderMoveTo) {
         WOWGUID guid = evt.m_guid;

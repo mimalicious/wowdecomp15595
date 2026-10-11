@@ -66,7 +66,7 @@ void GxuDebugText::Draw(const C3Vector& viewPos) {
     GxuFontRenderBatch(this->m_batch);
 }
 
-// OFFSET: 0x00612100
+// OFFSET: 0x00612100/0x14029D0A0
 void GxuDebugTextObject::Release() {
     GxuFontRemoveFromBatch(this->m_text.m_string);
     GxuFontDestroyString(this->m_text.m_string);
@@ -83,7 +83,7 @@ bool GxuDebugTextObject::IsAlive() {
     return this->m_time >= 0.0f;
 }
 
-// OFFSET: 0x00612170
+// OFFSET: 0x00612170/0x14029D120
 void GxuDebugTextObject::Update(float elapsed) {
     this->m_time = this->m_time - elapsed;
 }

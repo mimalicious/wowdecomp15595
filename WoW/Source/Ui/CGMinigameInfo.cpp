@@ -14,7 +14,7 @@ void CGMinigameInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_MINIGAME_STATE, Packet_SMSG_MINIGAME_STATE, NULL);
 }
 
-// OFFSET: 0x00A0A160
+// OFFSET: 0x00A0A160/0x1407AB1D0
 void CGMinigameInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_MINIGAME_SETUP);
     ClientServices::ClearMessageHandler(SMSG_MINIGAME_STATE);

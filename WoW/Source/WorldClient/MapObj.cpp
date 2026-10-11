@@ -351,7 +351,7 @@ void CMapObj::WaitLoadGroup(uint32_t groupNum) {
     AsyncFileReadWait(this->m_groups[groupNum]->m_asyncObject);
 }
 
-// OFFSET: 0x00746300
+// OFFSET: 0x00746300/0x1404241C0
 const char* CMapObj::GetGroupName(uint32_t groupNum) {
     if (this->m_flags & 0x40) {
         CMapObjGroup* group = this->m_groups[groupNum];
@@ -365,7 +365,7 @@ const char* CMapObj::GetGroupName(uint32_t groupNum) {
     return NULL;
 }
 
-// OFFSET: 0x00746330
+// OFFSET: 0x00746330/0x1404241E0
 SMOGroupInfo* CMapObj::GetGroupInfo(uint32_t groupNum) {
     if (!(this->m_flags & 0x40)) {
         return NULL;

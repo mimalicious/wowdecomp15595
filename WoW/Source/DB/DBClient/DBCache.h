@@ -148,7 +148,7 @@ DBCache<T, TKey, THashKey>::DBCACHEHASH::~DBCACHEHASH() {
     this->m_callbacks.Clear();
 }
 
-// OFFSET: [0x004B1290<NameCache, unsigned __int64, CHashKeyGUID>]
+// OFFSET: [0x004B1290/0x1400E7660<NameCache, unsigned __int64, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::ItemAdded(T* item) {
 }

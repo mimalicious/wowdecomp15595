@@ -281,7 +281,7 @@ uint32_t GxuDebugShapeDrawer::GetVtxStream() {
     return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(s_bufferCache.GetBuffer(this->m_vertexBuffer)));
 }
 
-// OFFSET: 0x006196B0
+// OFFSET: 0x006196B0/0x1402A6BC0
 void GxuDebugShapeObject::Release() {
     this->m_next = s_shapeObjectFreeList;
     s_shapeObjectFreeList = this;
@@ -292,7 +292,7 @@ bool GxuDebugShapeObject::IsAlive() {
     return this->m_time >= 0.0f;
 }
 
-// OFFSET: 0x006196E0
+// OFFSET: 0x006196E0/0x1402A6C00
 void GxuDebugShapeObject::Update(float elapsed) {
     this->m_time = this->m_time - elapsed;
 }
@@ -581,7 +581,7 @@ uint32_t GxuTriangleShapeFactory::CreateVertexBuffer() {
     return this->m_vertexBuffer;
 }
 
-// OFFSET: 0x0061A2D0
+// OFFSET: 0x0061A2D0/0x1402A7B70
 uint32_t GxuTriangleShapeFactory::CreateIndexBuffer() {
     if (!s_bufferCache.Exists(this->m_indexBuffer)) {
         this->m_indexBuffer = s_bufferCache.CreateBuffer(this->m_indexBuffer, GxPoolTarget_Index, sizeof(uint16_t), 6);
@@ -684,7 +684,7 @@ uint32_t GxuDirectionalDiamondShapeFactory::CreateVertexBuffer() {
     return this->m_vertexBuffer;
 }
 
-// OFFSET: 0x0061A740
+// OFFSET: 0x0061A740/0x1402A8100
 uint32_t GxuDirectionalDiamondShapeFactory::CreateIndexBuffer() {
     if (!s_bufferCache.Exists(this->m_indexBuffer)) {
         this->m_indexBuffer = s_bufferCache.CreateBuffer(this->m_indexBuffer, GxPoolTarget_Index, sizeof(uint16_t), 24);
@@ -722,7 +722,7 @@ uint32_t GxuDirectionalDiamondShapeFactory::CreateIndexBuffer() {
     return this->m_indexBuffer;
 }
 
-// OFFSET: 0x0061A8C0
+// OFFSET: 0x0061A8C0/0x1402A8290
 void GxuDebugShapeRenderStateBlock::End() {
     g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_PolygonFill, this->m_polygonFill);
     g_theGxDevicePtr->RsPop();
@@ -766,7 +766,7 @@ float GxuDebugShapeDrawer::GetDepth(const C3Vector& viewPos) {
     return static_cast<float>(sqrt(x * x + y * y + z * z)) - this->m_radius;
 }
 
-// OFFSET: 0x0061AC20
+// OFFSET: 0x0061AC20/0x1402A8630
 GxuDebugShapeObject::GxuDebugShapeObject() : m_next(NULL), m_time(0.0f) {
 }
 
@@ -812,7 +812,7 @@ void GxuDebugShapeDrawer::Draw(const C3Vector& viewPos) {
     GxXformPop(GxXform_World);
 }
 
-// OFFSET: 0x0061B120
+// OFFSET: 0x0061B120/0x1402A8BE0
 void GxuDebugShapeRenderStateBlock::Begin() {
     g_theGxDevicePtr->RsPush();
     GxRsSet(GxRs_DepthTest, 1);

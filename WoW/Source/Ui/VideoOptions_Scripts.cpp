@@ -865,7 +865,7 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "GetGraphicsAPIs", &Script_GetGraphicsAPIs },
 };
 
-// OFFSET: 0x009F86E0
+// OFFSET: 0x009F86E0/0x140795710
 void CGVideoOptions::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);

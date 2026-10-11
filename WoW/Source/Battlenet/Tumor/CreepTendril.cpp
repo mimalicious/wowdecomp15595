@@ -32,7 +32,7 @@ void Battlenet::CreepTendril::Host::Log(const char* message) {
     this->LogLevel(message, 5);
 }
 
-// OFFSET: 0x00662EB0
+// OFFSET: 0x00662EB0/0x140308D80
 bool Battlenet::CreepTendril::Initialize() {
     if (Battlenet::CreepTendril::s_creepModule) {
         return true;
@@ -134,7 +134,7 @@ void Battlenet::CreepTendril::Instance::EnumFunctions(EnumFunctionsCallback call
     this->m_creep->EnumFunctions(callback, param);
 }
 
-// OFFSET: 0x00662520
+// OFFSET: 0x00662520/0x1403082D0
 void Battlenet::CreepTendril::Instance::DoSubscriptions() {
     this->m_eventAdapter->Subscribe(Battlenet::Event::DATAGRAM_CONNECTION_INIT, this->m_tendrilId);
     this->m_eventAdapter->Subscribe(Battlenet::Event::S2_LOBBY, this->m_tendrilId);
@@ -178,7 +178,7 @@ void Battlenet::CreepTendril::Instance::Disconnected(uint32_t connection) {
 }
 
 // PROVEN: 826b8b83 IDENTICAL/NONE
-// OFFSET: 0x00662500
+// OFFSET: 0x00662500/0x1403082A0
 bool Battlenet::CreepTendril::Instance::Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) {
     return this->m_creep->Recv(connection, data, size, used);
 }
@@ -244,7 +244,7 @@ bool Battlenet::CreepTendril::Instance::Send(uint32_t connection, const void* da
 }
 
 // PROVEN: cb1c06fd IDENTICAL/NONE
-// OFFSET: 0x00662580
+// OFFSET: 0x00662580/0x140308340
 uint32_t Battlenet::CreepTendril::Instance::OpenDatagram(int32_t port) {
     return this->m_adapter->OpenDatagram(port, this->m_tendrilId);
 }

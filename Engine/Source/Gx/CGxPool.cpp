@@ -19,7 +19,7 @@ void CGxPool::Invalidate() {
 }
 
 // PROVEN: 5caf4158 IDENTICAL/NONE
-// OFFSET: 0x00844C70
+// OFFSET: 0x00844C70/0x1405719C0
 void CGxPool::Discard() {
     for (CGxBuf* buf = this->m_bufList.Head(), * nextBuf; !this->m_bufList.IsEnd(buf); buf = nextBuf) {
         nextBuf = this->m_bufList.RawNext(buf);

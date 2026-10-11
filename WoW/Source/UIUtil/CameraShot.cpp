@@ -19,7 +19,7 @@ CCameraShot::CCameraShot() {
     this->m_fade = 1.0f;
 }
 
-// OFFSET: 0x00462DB0
+// OFFSET: 0x00462DB0/0x140076200
 void CCameraShot::CalcPolarFacing(float& distance, float& yaw, float& pitch) const {
     float dx = this->m_target.x - this->m_position.x;
     float dy = this->m_target.y - this->m_position.y;
@@ -36,13 +36,13 @@ void CCameraShot::CalcPolarFacing(float& distance, float& yaw, float& pitch) con
 }
 
 // PROVEN: 9665686e IDENTICAL/NONE
-// OFFSET: 0x00462E40
+// OFFSET: 0x00462E40/0x1400762B0
 void CCameraShot::CalcYawPitch(float& yaw, float& pitch) const {
     float distance;
     this->CalcPolarFacing(distance, yaw, pitch);
 }
 
-// OFFSET: 0x00462E60
+// OFFSET: 0x00462E60/0x140076350
 C44Matrix CCameraShot::CalcRenderMatrix() const {
     C3Vector dir = this->m_target - this->m_position;
     float mag = dir.z * dir.z + dir.y * dir.y + dir.x * dir.x;

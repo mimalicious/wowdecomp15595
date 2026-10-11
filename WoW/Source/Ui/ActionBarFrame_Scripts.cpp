@@ -714,14 +714,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetActionUIButton", &Script_SetActionUIButton },
 };
 
-// OFFSET: 0x009547E0
+// OFFSET: 0x009547E0/0x1406C55F0
 void ActionBarRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: 0x00954810
+// OFFSET: 0x00954810/0x1406C5640
 void ActionBarUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

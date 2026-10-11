@@ -122,7 +122,7 @@ CGCurrencyTypes::CurrencyListInfo* CGCurrencyTypes::GetDisplayListInfo(uint32_t 
     return NULL;
 }
 
-// OFFSET: 0x0099FAD0
+// OFFSET: 0x0099FAD0/0x140723C50
 void CGCurrencyTypes::SetCategoryExpand(uint32_t index, int32_t expand) {
     if (index >= CGCurrencyTypes::s_displayList.Count() || !CGCurrencyTypes::s_displayList[index].m_isHeader) {
         return;
@@ -391,7 +391,7 @@ const CurrencyTypesRec* CGCurrencyTypes::GetBackpackCurrencyInfo(int32_t index) 
     return NULL;
 }
 
-// OFFSET: 0x009A05D0
+// OFFSET: 0x009A05D0/0x1407249F0
 void CGCurrencyTypes::SetUnused(uint32_t index, int32_t unused) {
     if (index >= CGCurrencyTypes::s_displayList.Count() || CGCurrencyTypes::s_displayList[index].m_isHeader) {
         return;
@@ -423,7 +423,7 @@ int32_t CGCurrencyTypes::IsCurrencyUnused(uint32_t index) {
     return CGCurrencyTypes::HasCurrencyFlags(rec->m_id, 0x8);
 }
 
-// OFFSET: 0x009A0680
+// OFFSET: 0x009A0680/0x140724B10
 void CGCurrencyTypes::SetBackpack(uint32_t index, int32_t backpack) {
     if (index >= CGCurrencyTypes::s_displayList.Count() || CGCurrencyTypes::s_displayList[index].m_isHeader) {
         return;
@@ -460,7 +460,7 @@ void CGCurrencyTypes::SendChatCurrency() {
     s_dumpTimer = 0;
 }
 
-// OFFSET: 0x009A0CB0
+// OFFSET: 0x009A0CB0/0x140725290
 PlayerCurrency* CGCurrencyTypes::CreateCurrency(int32_t id, int32_t quantity, int32_t weeklyQuantity, int32_t weeklyCap, int32_t trackedQuantity, uint32_t flags) {
     PlayerCurrency* currency = CGCurrencyTypes::s_currencies.NewNode(2, 0, 0);
     currency->m_rec = g_currencyTypesDB.GetRecord(id);
@@ -472,7 +472,7 @@ PlayerCurrency* CGCurrencyTypes::CreateCurrency(int32_t id, int32_t quantity, in
     return currency;
 }
 
-// OFFSET: 0x009A0D80
+// OFFSET: 0x009A0D80/0x1407253B0
 bool CGCurrencyTypes::SetCurrency(int32_t id, int32_t quantity, int32_t weeklyQuantity, int32_t trackedQuantity, bool suppressChatLog) {
     bool created = false;
     PlayerCurrency* currency = CGCurrencyTypes::GetCurrency(id);

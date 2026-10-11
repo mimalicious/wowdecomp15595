@@ -60,7 +60,7 @@ void WowConnectionNet::Start() {
 }
 
 // PROVEN: a83d2922 IDENTICAL/NONE
-// OFFSET: 0x005502C0
+// OFFSET: 0x005502C0/0x1401AAEB0
 void WowConnectionNet::Service(WowConnection* connection, uint32_t flags) {
     do {
         if (flags & 0x1) {
@@ -86,7 +86,7 @@ void WowConnectionNet::Service(WowConnection* connection, uint32_t flags) {
     } while (flags);
 }
 
-// OFFSET: 0x00550430
+// OFFSET: 0x00550430/0x1401AB070
 void WowConnectionNet::RunWorker(int32_t index) {
     if (this->m_threadInit) {
         this->m_threadInit();

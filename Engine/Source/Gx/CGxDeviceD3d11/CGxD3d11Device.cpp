@@ -1215,7 +1215,7 @@ int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
 }
 
 // PROVEN: b31065aa IDENTICAL/NONE
-// OFFSET: 0x008529E0
+// OFFSET: 0x008529E0/0x140582560
 int32_t CGxDeviceD3d11::ISetCursor() {
     if (!this->m_d3dDevice || this->m_hwCursor) {
         return 0;
@@ -1290,7 +1290,7 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
 }
 
 // PROVEN: 8d0e5d4b IDENTICAL/NONE
-// OFFSET: 0x00853280
+// OFFSET: 0x00853280/0x140582ED0
 void CGxDeviceD3d11::FrameBufferSet(CGxFrameBuffer* frameBuffer) {
     if (!this->m_context) {
         return;
@@ -1943,7 +1943,7 @@ CGxDeviceD3d11::CGxDeviceD3d11() {
 CGxDeviceD3d11::~CGxDeviceD3d11() {
 }
 
-// OFFSET: 0x008544D0
+// OFFSET: 0x008544D0/0x1405843A0
 void CGxDeviceD3d11::IReleaseD3dPools(int32_t freePools) {
     for (CGxPool* pool = CGxDevice::s_poolList.Head(), * next; !CGxDevice::s_poolList.IsEnd(pool); pool = next) {
         next = CGxDevice::s_poolList.RawNext(pool);

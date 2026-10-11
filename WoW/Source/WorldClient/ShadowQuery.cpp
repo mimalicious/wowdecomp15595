@@ -164,7 +164,7 @@ void CShadowQuery::GetFrustum(CFrustum& frustum, C44Matrix& matrix, const C3Vect
     }
 }
 
-// OFFSET: 0x00769740
+// OFFSET: 0x00769740/0x140450D90
 int32_t CShadowQuery::Query(CShadowCacheQueryData& data, uint32_t frame) {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
 

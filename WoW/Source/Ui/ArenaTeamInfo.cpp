@@ -483,7 +483,7 @@ void CGArenaTeamInfo::EnterWorld() {
     CGArenaTeamInfo::UpdateTeams(0);
 }
 
-// OFFSET: 0x009AA5A0
+// OFFSET: 0x009AA5A0/0x1407318B0
 void CGArenaTeamInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_ARENA_TEAM_ROSTER);
     ClientServices::ClearMessageHandler(SMSG_ARENA_TEAM_STATS);

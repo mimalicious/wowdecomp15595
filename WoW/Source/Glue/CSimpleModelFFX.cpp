@@ -24,7 +24,7 @@ static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId
     }
 }
 
-// OFFSET: 0x008110A0
+// OFFSET: 0x008110A0/0x140528890
 void CSimpleModelFFX::SetModel(CM2Model* model) {
     this->CSimpleModel::SetModel(model);
     this->m_model->SetEventCallback(reinterpret_cast<void*>(AnimEventCallback), reinterpret_cast<uintptr_t>(this));
@@ -47,7 +47,7 @@ void CSimpleModelFFX::LoadXML(linkObject* node, CStatus* status) {
 }
 
 // PROVEN: 5fbdd967 IDENTICAL/NONE
-// OFFSET: 0x00811010
+// OFFSET: 0x00811010/0x1405287D0
 void CSimpleModelFFX::OnLayerShow() {
     FFX::SetEffect(1, CGlueMgr::m_glowEffect);
     this->CSimpleFrame::OnLayerShow();
@@ -85,7 +85,7 @@ int32_t CSimpleModelFFX::GetScriptMetaTable() {
     return CSimpleModelFFX::s_metatable;
 }
 
-// OFFSET: 0x00811250
+// OFFSET: 0x00811250/0x140528A80
 void CSimpleModelFFX::Render(void* arg) {
     CSimpleModelFFX* model = static_cast<CSimpleModelFFX*>(arg);
 

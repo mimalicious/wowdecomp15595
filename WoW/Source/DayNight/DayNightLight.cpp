@@ -65,7 +65,7 @@ struct LightQELess {
 };
 
 // PROVEN: a610679e IDENTICAL/NONE
-// OFFSET: 0x0064AB90
+// OFFSET: 0x0064AB90/0x1402E83E0
 const LightParamsRec* DayNight::GetLightParams(const LightRec* light, int32_t index) {
     return g_lightParamsDB.GetRecord(light->m_lightParamsID[index]);
 }
@@ -115,7 +115,7 @@ CImVector* DayNight::InterpColor(CImVector* out, const CImVector* a, const CImVe
     return out;
 }
 
-// OFFSET: 0x0064AFC0
+// OFFSET: 0x0064AFC0/0x1402EAC90
 CImVector* DayNight::DarkenColor(CImVector* out, const CImVector* color, float scale) {
     C3Vector rgb(color->r * 0.0039215689f, color->g * 0.0039215689f, color->b * 0.0039215689f);
     C3Vector hsv(0.0f, 0.0f, 0.0f);
@@ -234,7 +234,7 @@ CImVector* DayNight::CalcIndividualColorFromDBRec(CImVector* out, const LightInt
     return out;
 }
 
-// OFFSET: 0x0064B330
+// OFFSET: 0x0064B330/0x1402EAB70
 float DayNight::CalcFogRate(float start, float end) {
     float farClip = 700.0f;
 

@@ -716,7 +716,7 @@ void InternalGetTextExtent(CGxFont* face, const char* text, uint32_t numBytes, f
     }
 }
 
-// OFFSET: 0x00618760
+// OFFSET: 0x00618760/0x1402A5950
 uint32_t InternalGetMaxCharsWithinWidth(CGxFont* face, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, uint32_t flags, float shadowWidth, float scale, uint32_t* bytesInString, float* widthArray) {
     if (!face || !text || !extent) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

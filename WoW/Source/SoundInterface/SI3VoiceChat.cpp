@@ -252,7 +252,7 @@ void SI3::VoiceChat_StopCapture() {
     }
 }
 
-// OFFSET: 0x00630590
+// OFFSET: 0x00630590/0x1402C5220
 static void ComputeMicrophoneLevel(int16_t* data, uint32_t samples) {
     if (!SE3::IsChatSoundInitialized()) {
         return;
@@ -348,7 +348,7 @@ void SI3::VoiceChat_SetOutputDevice(int32_t index) {
 }
 
 // PROVEN: ab9bf673 IDENTICAL/NONE
-// OFFSET: 0x00630870
+// OFFSET: 0x00630870/0x1402C55A0
 void SI3::VoiceChat_ShutDownCapture() {
     SI3::VoiceChat_StopRecordingLoopbackSound();
     SI3::VoiceChat_StopPlayingLoopbackSound();

@@ -1137,7 +1137,7 @@ static bool JamInt8_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07670
+// OFFSET: 0x00B07670/0x1408CA7D0
 static bool JamInt8_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
     int8_t converted = static_cast<int8_t>(whole);
@@ -1245,7 +1245,7 @@ static bool JamUInt8_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07740
+// OFFSET: 0x00B07740/0x1408CA890
 static bool JamUInt8_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
     uint8_t converted = static_cast<uint8_t>(whole);
@@ -1353,7 +1353,7 @@ static bool JamInt16_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07820
+// OFFSET: 0x00B07820/0x1408CA940
 static bool JamInt16_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
     int16_t converted = static_cast<int16_t>(whole);
@@ -1461,7 +1461,7 @@ static bool JamUInt16_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07920
+// OFFSET: 0x00B07920/0x1408CA9F0
 static bool JamUInt16_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
     uint16_t converted = static_cast<uint16_t>(whole);
@@ -1953,7 +1953,7 @@ static bool JamFloat_SetString(void* data, const void* meta, const char* value) 
     return true;
 }
 
-// OFFSET: 0x00B07C60
+// OFFSET: 0x00B07C60/0x1408CAC50
 static bool JamFloat_SetInt32(void* data, const void* meta, int32_t value) {
     float converted = static_cast<float>(value);
 
@@ -1965,7 +1965,7 @@ static bool JamFloat_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07C90
+// OFFSET: 0x00B07C90/0x1408CAC70
 static bool JamFloat_SetUInt32(void* data, const void* meta, uint32_t value) {
     float converted = static_cast<float>(value);
 
@@ -1977,7 +1977,7 @@ static bool JamFloat_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07CF0
+// OFFSET: 0x00B07CF0/0x1408CAC90
 static bool JamFloat_SetInt64(void* data, const void* meta, int64_t value) {
     float converted = static_cast<float>(value);
 
@@ -1989,12 +1989,12 @@ static bool JamFloat_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07D30
+// OFFSET: 0x00B07D30/0x1408CACB0
 static bool JamFloat_SetUInt64(void* data, const void* meta, uint64_t value) {
     return JamFloat_FromUInt64(static_cast<float*>(data), value);
 }
 
-// OFFSET: 0x00B07D50
+// OFFSET: 0x00B07D50/0x1408CAD10
 static bool JamFloat_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
     float converted = static_cast<float>(whole);
@@ -2466,7 +2466,7 @@ static JamValue* JamRealmAddress_GetMember(JamValue* out, void* data, const void
     return out;
 }
 
-// OFFSET: 0x00B070C0
+// OFFSET: 0x00B070C0/0x1408CA230
 static const char* JamRealmAddress_GetMemberName(void* data, const void* meta, uint32_t index) {
     switch (index) {
         case 0:
@@ -2508,7 +2508,7 @@ static bool JamBool_SetBool(void* data, const void* meta, bool value) {
     return true;
 }
 
-// OFFSET: 0x00B071F0
+// OFFSET: 0x00B071F0/0x1408CA380
 static bool JamBool_GetBool(const void* data, const void* meta, bool* value) {
     *value = *static_cast<const bool*>(data);
     return true;
@@ -2520,7 +2520,7 @@ static bool JamComplaintType_SetDefault(void* data) {
     return true;
 }
 
-// OFFSET: 0x0066B190
+// OFFSET: 0x0066B190/0x140311AF0
 static bool JamComplaintType_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("JAM_CLI_COMPLAINT_TYPE_COMPLAINT_ANY", value)) {
         *static_cast<uint32_t*>(data) = 7;
@@ -2665,7 +2665,7 @@ static bool JamSplineFace_SetDefault(void* data) {
     return true;
 }
 
-// OFFSET: 0x00696580
+// OFFSET: 0x00696580/0x140341CA0
 static bool JamSplineFace_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("SPLINE_FACE_NOTHING", value)) {
         *static_cast<uint32_t*>(data) = 3;
@@ -2720,7 +2720,7 @@ static bool JamUpdateCollisionHeightReason_SetDefault(void* data) {
     return true;
 }
 
-// OFFSET: 0x006967D0
+// OFFSET: 0x006967D0/0x140341E80
 static bool JamUpdateCollisionHeightReason_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("UPDATE_COLLISION_HEIGHT_FORCE", value)) {
         *static_cast<uint32_t*>(data) = 2;
@@ -2766,7 +2766,7 @@ static bool JamTradeStatus_SetDefault(void* data) {
     return true;
 }
 
-// OFFSET: 0x0069FFB0
+// OFFSET: 0x0069FFB0/0x14034D250
 static bool JamTradeStatus_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("TRADE_STATUS_PLAYER_BUSY", value)) {
         *static_cast<uint32_t*>(data) = 21;

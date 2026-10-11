@@ -476,7 +476,7 @@ void FFX::SetupVB_PT(const C44Matrix& posMtx, const C44Matrix& texMtx) {
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PT);
 }
 
-// OFFSET: 0x0089AA70
+// OFFSET: 0x0089AA70/0x1405DA7B0
 void FFX::SetupVB_PCT(const CImVector& color, const C44Matrix& posMtx, const C44Matrix& texMtx) {
     struct Vertex {
         C3Vector p;

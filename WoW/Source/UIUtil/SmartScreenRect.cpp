@@ -59,7 +59,7 @@ inline BFSNODE::BFSNODE() {
     this->m_rect.maxX = 0.0f;
 }
 
-// OFFSET: 0x00460650
+// OFFSET: 0x00460650/0x14006BEA0
 static uint32_t SmartScreenRectClampToScreen(CRect* out, CRect rect, int32_t testOnly) {
     float screenWidth = NDCToDDCWidth(1.0f);
     float top = NDCToDDCHeight(1.0f) - 0.0375f;
@@ -194,7 +194,7 @@ static int32_t SmartScreenRectFindOverlap(uint32_t grid, const CRect& rect, uint
     return 0;
 }
 
-// OFFSET: 0x00460940
+// OFFSET: 0x00460940/0x14006C1E0
 static CRect SmartScreenRectMoveUp(uint32_t grid, CRect rect) {
     float distance;
 
@@ -206,7 +206,7 @@ static CRect SmartScreenRectMoveUp(uint32_t grid, CRect rect) {
     return rect;
 }
 
-// OFFSET: 0x004609D0
+// OFFSET: 0x004609D0/0x14006C280
 static CRect SmartScreenRectMoveLeft(uint32_t grid, CRect rect) {
     float distance;
 
@@ -218,7 +218,7 @@ static CRect SmartScreenRectMoveLeft(uint32_t grid, CRect rect) {
     return rect;
 }
 
-// OFFSET: 0x00460A60
+// OFFSET: 0x00460A60/0x14006C320
 static CRect SmartScreenRectMoveRight(uint32_t grid, CRect rect) {
     float distance;
 
@@ -230,7 +230,7 @@ static CRect SmartScreenRectMoveRight(uint32_t grid, CRect rect) {
     return rect;
 }
 
-// OFFSET: 0x00460AF0
+// OFFSET: 0x00460AF0/0x14006C3C0
 static CRect SmartScreenRectMoveDown(uint32_t grid, CRect rect) {
     float distance;
 
@@ -254,7 +254,7 @@ void SmartScreenRectClearAllGrids() {
     }
 }
 
-// OFFSET: 0x00460E00
+// OFFSET: 0x00460E00/0x14006C7C0
 void SmartScreenRectClearGrid(uint32_t grid) {
     if (grid <= 2) {
         s_grids[grid].SetCount(0);
@@ -294,7 +294,7 @@ int32_t SmartScreenRectStartDirection(uint8_t flags) {
     return (flags >> 3) & 1;
 }
 
-// OFFSET: 0x00460F00
+// OFFSET: 0x00460F00/0x14006C980
 static CRect SmartScreenRectFindFreeRect(uint32_t grid, const CRect& rect) {
     CRect result;
     result.minY = 0.0f;

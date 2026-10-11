@@ -183,7 +183,7 @@ void CGCommentator::PostInit(CGPlayer_C* player) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_ENTER_WORLD, NULL);
 }
 
-// OFFSET: 0x00928580
+// OFFSET: 0x00928580/0x14068E000
 void CGCommentator::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_PLAYER_INFO);
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_MAP_INFO);
@@ -573,7 +573,7 @@ void CGCommentator::OnUpdate(float elapsed) {
     }
 }
 
-// OFFSET: 0x0092B9E0
+// OFFSET: 0x0092B9E0/0x1406924B0
 uint64_t CGCommentator::GetArenaMember(int32_t index) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGCommentator::MapInfo* map;

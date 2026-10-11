@@ -339,7 +339,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMaxAnimFramerate", &Script_GetMaxAnimFramerate },
 };
 
-// OFFSET: 0x0083F760
+// OFFSET: 0x0083F760/0x14056B370
 void RegisterSimpleFrameScriptMethods() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);

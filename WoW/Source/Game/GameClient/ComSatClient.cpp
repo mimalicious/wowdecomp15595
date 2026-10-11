@@ -430,7 +430,7 @@ void ComSatClient_Shutdown() {
     SE3::DestroyChatSystem();
 }
 
-// OFFSET: 0x004DC390
+// OFFSET: 0x004DC390/0x14011A860
 void UpdatePushToTalkKey() {
     s_pushToTalkKey = -1;
     s_pushToTalkMouseButton = 0;

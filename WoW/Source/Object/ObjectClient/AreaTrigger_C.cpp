@@ -30,7 +30,7 @@ void CGAreaTrigger_C::PlayStandAnim() {
     }
 }
 
-// OFFSET: 0x005FA1F0
+// OFFSET: 0x005FA1F0/0x14027F170
 void CGAreaTrigger_C::UpdateDisplay(uint32_t time) {
     CM2Model* model = this->GetObjectModel();
 
@@ -50,7 +50,7 @@ void CGAreaTrigger_C::SetFrameOfReference(const C44Matrix* matrix) {
     CGObject_C::SetFrameOfReference(matrix);
 }
 
-// OFFSET: 0x005FA240
+// OFFSET: 0x005FA240/0x14027F1D0
 static void AreaTriggerDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGAreaTrigger_C* object = reinterpret_cast<CGAreaTrigger_C*>(static_cast<uintptr_t>(param));
 
@@ -81,7 +81,7 @@ void CGAreaTrigger_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_areaTriggerMirror = saved + CGObject::TotalFieldsSaved();
 }
 
-// OFFSET: 0x005FA340
+// OFFSET: 0x005FA340/0x14027F2C0
 C3Vector CGAreaTrigger_C::GetRawPosition(uint32_t time) const {
     float progress = static_cast<float>(static_cast<int32_t>(time - this->m_createTime)) / static_cast<float>(this->m_areaTrigger->m_areatriggerDuration);
 
@@ -108,7 +108,7 @@ static void AnimFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequ
     }
 }
 
-// OFFSET: 0x005FA450
+// OFFSET: 0x005FA450/0x14027F430
 void CGAreaTrigger_C::Reenable(const CClientObjCreate& create) {
     if (create.m_hasGOTransport) {
         const CMovementStatus::TransportInfo& transport = create.m_goTransport;
@@ -135,7 +135,7 @@ void CGAreaTrigger_C::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3V
     }
 }
 
-// OFFSET: 0x005FA540
+// OFFSET: 0x005FA540/0x14027F510
 C44Matrix CGAreaTrigger_C::GetMatrix() const {
     C44Matrix matrix;
     reinterpret_cast<C3Vector&>(matrix.d0) = this->GetRawPosition(FrameTime::GetCurTimeMs());
@@ -161,7 +161,7 @@ static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId
     }
 }
 
-// OFFSET: 0x005FA680
+// OFFSET: 0x005FA680/0x14027F680
 void CGAreaTrigger_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->m_passenger.PostInit(create.m_stationaryPosition);
 
@@ -179,7 +179,7 @@ void CGAreaTrigger_C::PostInit(uint32_t time, const CClientObjCreate& create, bo
     this->Animate(0.0f);
 }
 
-// OFFSET: 0x005FA740
+// OFFSET: 0x005FA740/0x14027F770
 const SpellVisualEffectNameRec* CGAreaTrigger_C::GetVisualEffectNameRec(const SpellRec* spell, const SpellVisualKitRec*& kit) const {
     kit = NULL;
 
@@ -222,7 +222,7 @@ const SpellVisualEffectNameRec* CGAreaTrigger_C::GetVisualEffectNameRec(const Sp
     return effect;
 }
 
-// OFFSET: 0x005FA880
+// OFFSET: 0x005FA880/0x14027F900
 int32_t CGAreaTrigger_C::GetModelFileName(const char** name) const {
     const SpellRec* spell = g_spellDB.GetRecord(this->m_areaTrigger->m_areatriggerSpellid);
 
@@ -242,7 +242,7 @@ int32_t CGAreaTrigger_C::GetModelFileName(const char** name) const {
     return *name != NULL;
 }
 
-// OFFSET: 0x005FA900
+// OFFSET: 0x005FA900/0x14027F9D0
 void CGAreaTrigger_C::ModelLoaded(CM2Model* model) {
     CGObject_C::ModelLoaded(model);
     CM2Model* objectModel = this->GetObjectModel();
@@ -280,12 +280,12 @@ C3Vector CGAreaTrigger_C::GetPosition() const {
     return this->GetPosition(FrameTime::GetCurTimeMs());
 }
 
-// OFFSET: 0x005FABD0
+// OFFSET: 0x005FABD0/0x14027FD10
 C3Vector CGAreaTrigger_C::GetRawPosition() const {
     return this->m_passenger.m_position;
 }
 
-// OFFSET: 0x005FAC00
+// OFFSET: 0x005FAC00/0x14027FD50
 float CGAreaTrigger_C::GetFacing() const {
     return this->m_passenger.GetFacing(this->m_passenger.m_facing);
 }
@@ -300,11 +300,11 @@ uint64_t CGAreaTrigger_C::GetTransportGUID() const {
     return this->m_passenger.m_transportGuid.m_guid;
 }
 
-// OFFSET: 0x005FAC40
+// OFFSET: 0x005FAC40/0x14027FD70
 C3Vector CGAreaTrigger_C::GetPosition(uint32_t time) const {
     return this->m_passenger.GetPosition(this->GetRawPosition(time));
 }
 
-// OFFSET: 0x005FAC80
+// OFFSET: 0x005FAC80/0x14027FDC0
 CGAreaTrigger_C::~CGAreaTrigger_C() {
 }

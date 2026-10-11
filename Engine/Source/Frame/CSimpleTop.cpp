@@ -296,7 +296,7 @@ void CSimpleTop::HideFrame(CSimpleFrame* frame, int32_t a3) {
     }
 }
 
-// OFFSET: 0x004FF550
+// OFFSET: 0x004FF550/0x140144330
 void CSimpleTop::SetMouseFocus(CSimpleFrame* frame) {
     CSimpleFrame* oldFocus = this->m_mouseFocus;
 
@@ -838,7 +838,7 @@ void CSimpleTop::RegisterFrame(CSimpleFrame* frame) {
     this->m_frames.LinkToTail(frame);
 }
 
-// OFFSET: 0x005005F0
+// OFFSET: 0x005005F0/0x140145970
 void CSimpleTop::UnregisterFrame(CSimpleFrame* frame) {
     if (this->m_moveResizeFrame == frame) {
         this->StopMoveOrResizeFrame();

@@ -258,7 +258,7 @@ static CWorldMap* ActiveWorldMap() {
 }
 
 // PROVEN: 2f95aeb8 IDENTICAL/NONE
-// OFFSET: 0x00721CB0
+// OFFSET: 0x00721CB0/0x1403F82B0
 void World::InitializeMaps() {
     CWorldMap::Initialize();
 }
@@ -400,7 +400,7 @@ int32_t World::QueryObjectLiquid(uintptr_t object, uint32_t& liquidType, float& 
 }
 
 // PROVEN: 25342da4 IDENTICAL/NONE
-// OFFSET: 0x00721EF0
+// OFFSET: 0x00721EF0/0x1403F8420
 int32_t World::QueryObjectLiquidFlags(uintptr_t object, int32_t& a2, int32_t& a3) {
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
 
@@ -840,7 +840,7 @@ void World::SetLoadFailed(int32_t failed, const char* name) {
     }
 }
 
-// OFFSET: 0x00722640
+// OFFSET: 0x00722640/0x1403F8B90
 int32_t World::AddMapById(int32_t mapId, int32_t a2) {
     bool loaded = false;
 
@@ -911,7 +911,7 @@ bool World::MapIsDungeon() {
     return worldMap && worldMap->m_isGlobalMapObj;
 }
 
-// OFFSET: 0x00722750
+// OFFSET: 0x00722750/0x1403F8CD0
 int32_t World::IsInfiniteOcean() {
     CWorldMap* worldMap = ActiveWorldMap();
 
@@ -1205,7 +1205,7 @@ void World::ObjectSetSequenceSpeed(uintptr_t object, float speed, int32_t a3, ui
 }
 
 // PROVEN: 9554950b IDENTICAL/NONE
-// OFFSET: 0x00722CF0
+// OFFSET: 0x00722CF0/0x1403F93A0
 void World::ObjectSetSequenceFinishedCallback(uintptr_t object, WORLD_SEQUENCE_CALLBACK callback, uint64_t param, uint16_t doodadSet) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -1317,7 +1317,7 @@ void World::ObjectGetExtents(uintptr_t object, CAaBox& box) {
 }
 
 // PROVEN: afd45f83 IDENTICAL/NONE
-// OFFSET: 0x00722FE0
+// OFFSET: 0x00722FE0/0x1403F97F0
 int32_t World::ObjectIsWMO(uintptr_t object) {
     return reinterpret_cast<CMapBaseObj*>(object)->m_type & MapBaseObj_Type_MapObjDef;
 }
@@ -1491,7 +1491,7 @@ bool World::IntersectSegment(const C3Segment& seg, float& t, C4Plane& plane, uin
     return ActiveWorldMap()->Intersect(seg, t, plane, flags);
 }
 
-// OFFSET: 0x00723840
+// OFFSET: 0x00723840/0x1403FA190
 int32_t World::IsFacetQueryValid() {
     CWorldMap* worldMap = ActiveWorldMap();
 
@@ -1512,7 +1512,7 @@ int32_t World::GetFacets(const CFrustum& frustum, FacetData& facets, uint32_t fl
 }
 
 // PROVEN: 6d5ea70a IDENTICAL/NONE
-// OFFSET: 0x00723890
+// OFFSET: 0x00723890/0x1403FA1E0
 void World::GetTris(const CAaBox& box, TriData& tris, uint32_t flags) {
     if (ActiveWorldMap()) {
         ActiveWorldMap()->QueryTris(box, tris, flags);
@@ -1520,7 +1520,7 @@ void World::GetTris(const CAaBox& box, TriData& tris, uint32_t flags) {
 }
 
 // PROVEN: 132d9641 IDENTICAL/NONE
-// OFFSET: 0x007238C0
+// OFFSET: 0x007238C0/0x1403FA210
 int32_t World::GetIntersectingDoodadModels(CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags) {
     if (!ActiveWorldMap()) {
         return 0;
@@ -1584,7 +1584,7 @@ uint32_t World::SceneCamLiquidStatus(float* depth) {
 }
 
 // PROVEN: ff81fd99 IDENTICAL/NONE
-// OFFSET: 0x00723A60
+// OFFSET: 0x00723A60/0x1403FA3F0
 void World::CreateWaterRipple(const C3Vector& pos, float a2, float a3, float a4, float a5, float a6, int32_t a7, int32_t a8) {
     CWorldMap* worldMap = ActiveWorldMap();
 

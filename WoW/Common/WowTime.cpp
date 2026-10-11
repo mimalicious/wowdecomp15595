@@ -163,7 +163,7 @@ bool WowTime::SetDate(uint32_t month, uint32_t monthDay, uint32_t year) {
 }
 
 // PROVEN: 3461bd09 IDENTICAL/NONE
-// OFFSET: 0x00A30870
+// OFFSET: 0x00A30870/0x1407DA7E0
 void WowTime::AddHolidayDuration(int32_t minutes) {
     WowTime start = *this;
 

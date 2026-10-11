@@ -30,7 +30,7 @@ void MacroSubstring::SetText(const char* start, const char* end, char delimiter,
 }
 
 // PROVEN: ecd0a603 IDENTICAL/NONE
-// OFFSET: 0x00A0D2F0
+// OFFSET: 0x00A0D2F0/0x1407AED70
 bool MacroSubstring::operator==(const char* str) {
     const char* cursor = this->m_start;
 

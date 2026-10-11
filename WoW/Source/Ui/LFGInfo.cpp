@@ -177,7 +177,7 @@ bool CGLookingForGroup::HasRFDungeon(LFGInfo* info) {
     return false;
 }
 
-// OFFSET: 0x009807A0
+// OFFSET: 0x009807A0/0x1406FAAC0
 static int QSortLFGDungeons(const void* a, const void* b) {
     const CGLookingForGroup::LFGEntryInfo* left = static_cast<const CGLookingForGroup::LFGEntryInfo*>(a);
     const CGLookingForGroup::LFGEntryInfo* right = static_cast<const CGLookingForGroup::LFGEntryInfo*>(b);
@@ -529,7 +529,7 @@ LFGShortageReward::LFGShortageReward() {
     this->m_xp = 0;
 }
 
-// OFFSET: 0x00986790
+// OFFSET: 0x00986790/0x140701D10
 LFGDungeonEntry::LFGDungeonEntry() {
     this->m_slot = 0;
     this->m_rewardDone = 0;
@@ -1571,7 +1571,7 @@ bool CGLookingForGroup::IsSlotValidForPlayer(uint32_t slot) {
     return true;
 }
 
-// OFFSET: 0x00986D50
+// OFFSET: 0x00986D50/0x1407023C0
 static bool IsBetterRandomDungeon(const LfgDungeonsRec* candidate, const LfgDungeonsRec* best) {
     if (!candidate || candidate->m_typeID != 6 || !CGLookingForGroup::IsSlotValidForAll(candidate->m_id & 0xFFFFFF | 0x6000000)) {
         return false;

@@ -123,7 +123,7 @@ static int32_t IsRectOffscreen(const CRect& rect) {
 }
 
 // PROVEN: 695f0110 IDENTICAL/NONE
-// OFFSET: 0x004F76A0
+// OFFSET: 0x004F76A0/0x14013ADD0
 static const uint16_t* LanguageRule1ChooseParticle(uint32_t lastChar, const uint16_t* consonantForm, const uint16_t* vowelForm) {
     uint16_t c = static_cast<uint16_t>(lastChar);
 
@@ -937,7 +937,7 @@ bool CSimpleFontString::SetLayoutScale(float scale, bool force) {
     return true;
 }
 
-// OFFSET: 0x004FB430
+// OFFSET: 0x004FB430/0x14013F340
 void CSimpleFontString::QueueTextures(CRenderBatch* batch) {
     for (CSimpleEmbeddedTexture* embedded = this->m_textures.Head(); !TSList<CSimpleEmbeddedTexture, TSGetExplicitLink<CSimpleEmbeddedTexture> >::IsEnd(embedded); embedded = this->m_textures.RawNext(embedded)) {
         if (embedded->m_texture && embedded->m_texture->m_texture) {
@@ -1196,7 +1196,7 @@ void CSimpleFontString::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin
 }
 
 // PROVEN: 91f64d37 IDENTICAL/NONE
-// OFFSET: 0x004FA520
+// OFFSET: 0x004FA520/0x14013E260
 void CSimpleFontString::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     if (region && region != this) {
         return;
@@ -1235,7 +1235,7 @@ void CSimpleFontString::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, c
 }
 
 // PROVEN: 0e41d60a IDENTICAL/NONE
-// OFFSET: 0x004F85A0
+// OFFSET: 0x004F85A0/0x14013BEC0
 void CSimpleFontString::StoreAnimPosition() {
     this->m_animBaseRotation = this->m_rotation;
     this->m_animBaseScale = this->m_scale;
@@ -1591,7 +1591,7 @@ bool CSimpleFontString::SetLayoutDepth(float depth, bool force) {
 }
 
 // PROVEN: 60db96b8 IDENTICAL/NONE
-// OFFSET: 0x004FA380
+// OFFSET: 0x004FA380/0x14013E0A0
 void CSimpleFontString::PreOnAnimUpdate() {
     if (this->AnimData_HasActivePosition()) {
         if (this->m_string) {
@@ -2451,7 +2451,7 @@ void CSimpleTexture::OnFrameSizeChanged(const CRect& rect) {
     }
 }
 
-// OFFSET: 0x004F8F10
+// OFFSET: 0x004F8F10/0x14013C830
 void CSimpleTexture::PreOnAnimUpdate() {
     if (this->AnimData_HasActivePosition()) {
         memcpy(this->m_positions, this->AnimData_GetPositionPtr(), sizeof(this->m_positions));
@@ -2466,7 +2466,7 @@ void CSimpleTexture::PreOnAnimUpdate() {
     }
 }
 
-// OFFSET: 0x004F9030
+// OFFSET: 0x004F9030/0x14013C990
 void CSimpleTexture::StoreAnimPosition() {
     C3Vector positions[4];
     this->SetPosition(this->m_rect, positions);

@@ -303,7 +303,7 @@ uint32_t CGItem_C::GetSpellItemEnchantmentId() const {
     return 0;
 }
 
-// OFFSET: 0x005A5600
+// OFFSET: 0x005A5600/0x140216540
 void CGItem_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
     this->m_item = reinterpret_cast<CGItemData*>(reinterpret_cast<uint8_t*>(storage) + sizeof(CGObjectData));
@@ -344,7 +344,7 @@ void CGItem_C::SetTranslated() {
     this->m_item->m_itemFieldFlags |= 0x2;
 }
 
-// OFFSET: 0x005A57B0
+// OFFSET: 0x005A57B0/0x140216700
 void CGItem_C::UpdateExpirationTime(int32_t seconds) {
     if (seconds > 0) {
         this->m_expirationTime = seconds + static_cast<uint32_t>(time(NULL));
@@ -783,7 +783,7 @@ int32_t GetItemIDByName(const char* name) {
     return 0;
 }
 
-// OFFSET: 0x005A6350
+// OFFSET: 0x005A6350/0x1402175A0
 void CGItem_C::RemoveNameFromCache(const char* name) {
     ITEMBYNAME* entry = s_itemByName.Ptr(name);
 
@@ -1153,7 +1153,7 @@ uint32_t CGItem_C::GetDisplayID() const {
     return rec ? rec->m_displayInfoID : 0;
 }
 
-// OFFSET: 0x005A7420
+// OFFSET: 0x005A7420/0x140218CF0
 uint32_t CGItem_C::GetSheatheType() const {
     ItemRec* rec = g_itemDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
@@ -1490,7 +1490,7 @@ int32_t CGItem_C::IsLocked(const LockRec* lock, int32_t itemLevel, int32_t* spel
     return locked;
 }
 
-// OFFSET: 0x005A7D30
+// OFFSET: 0x005A7D30/0x1402198B0
 int32_t CGItem_C::GetRandomItemSlot() const {
     ItemRec* rec = g_itemDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
     uint32_t inventoryType = rec ? rec->m_inventoryType : 0;
@@ -1542,7 +1542,7 @@ int32_t CGItem_C::GetRandomItemSlot() const {
     }
 }
 
-// OFFSET: 0x005A7E00
+// OFFSET: 0x005A7E00/0x140219990
 int32_t CGItem_C::GetRandomPropertyPoints() const {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
@@ -1579,7 +1579,7 @@ int32_t CGItem_C::GetRandomPropertyPoints() const {
     }
 }
 
-// OFFSET: 0x005A7EB0
+// OFFSET: 0x005A7EB0/0x140219A70
 int32_t CGItem_C::GetRandomPropertyOverrideAmount(int32_t slot) {
     int32_t randomPropertiesId = this->m_item->m_itemFieldRandomPropertiesId;
     int32_t points = this->GetRandomPropertyPoints();
@@ -1676,7 +1676,7 @@ void CGItem_C::GetSpellCooldownInfo(uint32_t& cooldown, uint32_t& categoryCooldo
     CGItem_C::GetCooldowns(this->m_obj->m_entryID, cooldown, categoryCooldown, category);
 }
 
-// OFFSET: 0x005A8B40
+// OFFSET: 0x005A8B40/0x14021AC30
 int32_t CGItem_C::GetItemEnchantmentVisualID() const {
     ItemRec* rec = g_itemDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
     int32_t displayId = rec ? rec->m_displayInfoID : 0;
@@ -2378,7 +2378,7 @@ void CGItem_C::SignalEvent(CGItem_C* item, uint32_t event) {
     }
 }
 
-// OFFSET: 0x00468F40
+// OFFSET: 0x00468F40/0x14007D110
 int32_t CGItem::GetPetitionId() {
     if (this->GetItemStaticFlags(0) & 0x2000) {
         return this->m_item->m_itemFieldEnchantment[0].m_id;
