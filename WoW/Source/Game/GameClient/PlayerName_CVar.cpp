@@ -39,4 +39,6 @@ void PlayerNameRegisterCVars() {
     CVar::Register("UnitNameFriendlyGuardianName", NULL, 0x10, "0", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x2000), false);
     CVar::Register("UnitNameFriendlyTotemName", NULL, 0x10, "0", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x200), false);
     CVar::Register("UnitNameNonCombatCreatureName", NULL, 0x10, "0", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x400), false);
+    CVar::Register("UnitNameFriendlySpecialNPCName", NULL, 0x10, "1", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x4000), false);
+    CVar::Register("UnitNameGuildTitle", NULL, 0x10, "1", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x8000), false);
 }

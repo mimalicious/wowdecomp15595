@@ -7,6 +7,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C3Vector.h"
+#include "Engine/Source/Tempest/CMath.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Game/ValidateName.h"
 #include "WoW/Source/GameClientCommands.h"
@@ -111,14 +112,22 @@ static int32_t TeleportCheat(const char* arguments, int32_t charm) {
     }
 
     SStrTokenize(&arguments, token, sizeof(token), whitespace, NULL);
-    float facing = token[0] ? SStrToFloat(token) * 0.017453292f : player->GetFacing();
+    float facing;
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(charm ? CMSG_MOVE_CHARM_PORT_CHEAT : MSG_MOVE_TELEPORT_CHEAT));
-    msg << position;
-    msg.Put(facing);
-    msg.Finalize();
-    ClientServices::SendPacket(&msg);
+    if (token[0]) {
+        facing = CMath::normalizeangle0to2pi_(SStrToFloat(token) * 0.017453292f);
+    } else {
+        facing = player->GetFacing();
+    }
+
+    if (charm) {
+        PlayerMoveCharmPortCheat msg(position, facing);
+        ClientServices::Send(&msg);
+        return 1;
+    }
+
+    PlayerMoveTeleportCheat msg(position, facing);
+    ClientServices::Send(&msg);
     return 1;
 }
 
