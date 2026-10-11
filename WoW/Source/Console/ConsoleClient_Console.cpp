@@ -11,14 +11,14 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/Console/ConsoleClient.h"
 
-// OFFSET: %0x00618480
+// OFFSET: 0x0060E210
 int32_t ConsoleCommand_CloseConsole(const char* command, const char* arguments) {
     s_active = 0;
 
     return 0;
 }
 
-// OFFSET: #0x00763CB0
+// OFFSET: 0x0060E2B0
 int32_t ConsoleCommand_RepeatHandler(const char* command, const char* arguments) {
     if (!arguments || !*arguments) {
         s_repeatCount = 0;
@@ -57,7 +57,7 @@ int32_t ConsoleCommand_ClearConsole(const char* command, const char* arguments) 
     return 1;
 }
 
-// OFFSET: #0x00764EA0
+// OFFSET: 0x0060E610
 int32_t ConsoleCommand_Proportional(const char* command, const char* arguments) {
     s_baseTextFlags ^= 0x10;
 
@@ -68,7 +68,7 @@ int32_t ConsoleCommand_Proportional(const char* command, const char* arguments) 
     return 1;
 }
 
-// OFFSET: #0x00764EE0
+// OFFSET: 0x0060E650
 int32_t ConsoleCommand_CharSpacing(const char* command, const char* arguments) {
     s_charSpacing = arguments && *arguments ? SStrToFloat(arguments) : 0.0f;
 
@@ -265,7 +265,7 @@ int32_t ConsoleCommand_BufferSize(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: #0x00765700
+// OFFSET: 0x00610740
 int32_t ConsoleCommand_BackGroundColor(const char* command, const char* arguments) {
     uint32_t alpha;
     uint32_t red;
@@ -296,7 +296,7 @@ int32_t ConsoleCommand_BackGroundColor(const char* command, const char* argument
     return 1;
 }
 
-// OFFSET: #0x007657C0
+// OFFSET: 0x00610800
 int32_t ConsoleCommand_HighLightColor(const char* command, const char* arguments) {
     uint32_t alpha;
     uint32_t red;

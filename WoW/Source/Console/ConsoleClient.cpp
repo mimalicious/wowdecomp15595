@@ -1296,7 +1296,7 @@ void ConsolePostClose() {
     EventPostCloseEx(EventGetCurrentContext());
 }
 
-// OFFSET: %0x006184D0
+// OFFSET: 0x0060E260
 int32_t ConsoleGetActive() {
     return s_active;
 }
