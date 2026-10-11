@@ -255,7 +255,7 @@ int luaV_lessthan (lua_State *L, const TValue *l, const TValue *r) {
 }
 
 
-// OFFSET: %0x0042C2A0
+// OFFSET: 0x00421D90
 static int lessequal (lua_State *L, const TValue *l, const TValue *r) {
   int res;
   if (ttype(l) != ttype(r))
@@ -336,7 +336,7 @@ void luaV_concat (lua_State *L, int total, int last) {
 }
 
 
-// OFFSET: %0x0042C610
+// OFFSET: 0x00422100
 static void Arith (lua_State *L, StkId ra, const TValue *rb,
                    const TValue *rc, TMS op) {
   TValue tempb, tempc;

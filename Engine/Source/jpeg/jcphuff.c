@@ -306,7 +306,7 @@ static void emit_buffered_bits(phuff_entropy_ptr entropy, char * bufstart, unsig
  * Emit any pending EOBRUN symbol.
  */
 
-// OFFSET: %0x00A93F20
+// OFFSET: 0x00B61CD0
 static void emit_eobrun(phuff_entropy_ptr entropy) {
   register int temp, nbits;
 

@@ -1341,7 +1341,7 @@ static void retstat (LexState *ls) {
 }
 
 
-// OFFSET: %0x00433520
+// OFFSET: 0x00429040
 static int statement (LexState *ls) {
   int line = ls->linenumber;  /* may be needed for error messages */
   switch (ls->t.token) {

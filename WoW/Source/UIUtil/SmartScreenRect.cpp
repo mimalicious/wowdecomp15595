@@ -389,7 +389,7 @@ void SmartScreenRectPlace(uint32_t grid, CRect& rect) {
     *s_grids[grid].New() = rect;
 }
 
-// OFFSET: #0x00616060
+// OFFSET: 0x00461510
 void SmartScreenRectShutdown() {
     s_searchQueue.Clear();
     s_freeNodes.Clear();

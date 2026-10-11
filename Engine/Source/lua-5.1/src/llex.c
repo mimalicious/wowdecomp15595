@@ -170,7 +170,7 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source) {
 
 
 
-// OFFSET: %0x00437790
+// OFFSET: 0x0042D360
 static int check_next (LexState *ls, const char *set) {
   if (!strchr(set, ls->current))
     return 0;
@@ -234,7 +234,7 @@ static int skip_sep (LexState *ls) {
 }
 
 
-// OFFSET: %0x00437A70
+// OFFSET: 0x0042D640
 static void read_long_string (LexState *ls, SemInfo *seminfo, int sep) {
   int cont = 0;
   (void)(cont);  /* avoid warnings when `cont' is not used */
@@ -290,7 +290,7 @@ static void read_long_string (LexState *ls, SemInfo *seminfo, int sep) {
 }
 
 
-// OFFSET: %0x00437D60
+// OFFSET: 0x0042D930
 static void read_string (LexState *ls, int del, SemInfo *seminfo) {
   save_and_next(ls);
   while (ls->current != del) {

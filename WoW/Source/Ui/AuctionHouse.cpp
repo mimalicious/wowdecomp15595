@@ -1598,7 +1598,7 @@ void CGAuctionHouse::CloseAuctionHouse() {
     CGAuctionHouse::ClearSellItem();
 }
 
-// OFFSET: #0x0059F240
+// OFFSET: 0x00975880
 void CGAuctionHouse::AddOutbidID(int32_t auctionHouseID, int32_t auctionID) {
     uint32_t capacity = CGAuctionHouse::m_outbidItems.Count();
 

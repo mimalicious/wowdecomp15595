@@ -498,7 +498,7 @@ static void addtimetotag (lua_State *L, const char *tag, __int64 time) {
 }
 
 
-// OFFSET: %0x004341C0
+// OFFSET: 0x00429CE0
 static void updatetimes (lua_State *L, GCObject *o) {
   for (; o; o = o->gch.next) {
     if (o->gch.taint && o->gch.tt == LUA_TFUNCTION)
@@ -687,7 +687,7 @@ void luaC_timereset (lua_State *L) {
 
 
 
-// OFFSET: %0x00434660
+// OFFSET: 0x0042A180
 static void markmt (global_State *g) {
   int i;
   for (i=0; i<NUM_TAGS; i++)

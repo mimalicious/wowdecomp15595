@@ -83,7 +83,7 @@ void CGInputControl::SetMouseCVarHandler(bool enable) {
     }
 }
 
-// OFFSET: #0x005FD1D0
+// OFFSET: 0x0044B7A0
 CGInputControl::CGInputControl() : m_flags(0), m_lookStartTime(0), m_pendingDefaultAction(PENDING_ACTION_NONE), m_facingOverrideActive(0), m_facingOverride(0.0f), m_vehicleAimValid(0), m_vehicleAim(0.0f), m_mouseModeFlags(3), m_forceCursorOn(0), m_joystickMouseFlags(3), m_joystickLookX(0.0f), m_joystickLookY(0.0f), m_wowMouse(NULL) {
     this->m_time = OsGetAsyncTimeMs();
 }

@@ -486,7 +486,7 @@ static const char *match_capture (MatchState *ms, const char *s, int l) {
 }
 
 
-// OFFSET: %0x0096E1F0
+// OFFSET: 0x00A2C180
 static const char *match (MatchState *ms, const char *s, const char *p) {
   init: /* using goto's to optimize tail recursion */
   switch (*p) {

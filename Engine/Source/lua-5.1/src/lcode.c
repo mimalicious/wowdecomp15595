@@ -382,7 +382,7 @@ static int code_label (FuncState *fs, int A, int b, int jump) {
 }
 
 
-// OFFSET: %0x00439500
+// OFFSET: 0x0042F0D0
 static void discharge2reg (FuncState *fs, expdesc *e, int reg) {
   luaK_dischargevars(fs, e);
   switch (e->k) {
