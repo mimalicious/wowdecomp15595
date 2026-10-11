@@ -103,7 +103,7 @@ void CGReforge::ReforgeItem(int32_t index) {
     msg.m_flags |= 1;
     memcpy(msg.m_forgeMaster, &CGReforge::m_forgeMaster, sizeof(msg.m_forgeMaster));
     msg.m_flags |= 8;
-    msg.m_reforgeId = index == -1 ? 0 : reforge->m_id;
+    msg.m_reforgeId = index != -1 ? reforge->m_id : 0;
     msg.m_flags |= 2;
     msg.m_slot = CGPlayer_C::FindItemSlot(item->m_item->m_itemFieldContained, item);
     WOWGUID container = item->m_item->m_itemFieldContained;
@@ -168,7 +168,11 @@ void CGReforge::ItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, 
 bool CGReforge::CanReforge(WOWGUID guid, int32_t* reasons) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (!item || !g_itemSparseDB.GetRecord(item->m_obj->m_entryID, CGReforge::m_reforgeItem, CGReforge::ItemStatsCallback, NULL, false)) {
+    if (!item) {
+        return false;
+    }
+
+    if (!g_itemSparseDB.GetRecord(item->m_obj->m_entryID, CGReforge::m_reforgeItem, CGReforge::ItemStatsCallback, NULL, false)) {
         return false;
     }
 
@@ -257,7 +261,14 @@ void CGReforge::SetForgeMaster(const WOWGUID& guid) {
         return;
     }
 
-    if (guid) {
+    if (!guid) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_FORGE_MASTER_CLOSED, NULL);
+        CGGameUI::ClearInteractTarget(CGReforge::m_forgeMaster, 0);
+        CGReforge::SetItem(WOWGUID());
+        CGReforge::m_forgeMaster = WOWGUID();
+        CGReforge::m_reforgeItem = WOWGUID();
+        CGReforge::s_reforgeOptions.SetCount(0);
+    } else {
         CGGossipInfo::ClearGossip();
 
         if (guid != ClntObjMgrGetActivePlayer()) {
@@ -266,19 +277,12 @@ void CGReforge::SetForgeMaster(const WOWGUID& guid) {
 
         CGReforge::m_forgeMaster = guid;
         FrameScript_SignalEvent(SCRIPT_EVENT_FORGE_MASTER_OPENED, NULL);
-    } else {
-        FrameScript_SignalEvent(SCRIPT_EVENT_FORGE_MASTER_CLOSED, NULL);
-        CGGameUI::ClearInteractTarget(CGReforge::m_forgeMaster, 0);
-        CGReforge::SetItem(WOWGUID());
-        CGReforge::m_forgeMaster = WOWGUID();
-        CGReforge::m_reforgeItem = WOWGUID();
-        CGReforge::s_reforgeOptions.SetCount(0);
     }
 }
 
 // OFFSET: 0x0098D100
 void CGReforge::LeaveWorld() {
-    CGReforge::SetForgeMaster(WOWGUID());
+    CGReforge::SetForgeMaster(WOWGUID::Make(0));
     ClientReforgeResult::s_handler = NULL;
     ClientForgeMasterSet::s_handler = NULL;
 }

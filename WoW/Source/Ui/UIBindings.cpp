@@ -281,9 +281,9 @@ OVERRIDEKEYBINDING::~OVERRIDEKEYBINDING() {
     this->m_freeList.Clear();
 }
 
-// OFFSET: 0x00921C80
+// OFFSET: 0x00921C80/0x140684D30
 KEYBINDING* OVERRIDEKEYBINDING::GetActiveBinding() {
-    for (int32_t i = 1; i >= 0; i--) {
+    for (uint32_t i = 1; i >= 0; i--) {
         OVERRIDEKEYBINDINGENTRY* entry = this->m_lists[i].Head();
 
         if (entry) {
@@ -294,7 +294,7 @@ KEYBINDING* OVERRIDEKEYBINDING::GetActiveBinding() {
     return NULL;
 }
 
-// OFFSET: 0x00923930
+// OFFSET: 0x00923930/0x140687700
 void OVERRIDEKEYBINDING::SetOverrideBinding(void* owner, int32_t priority, const char* command) {
     for (int32_t i = 1; i >= 0; i--) {
         for (OVERRIDEKEYBINDINGENTRY* entry = this->m_lists[i].Head(); entry; entry = this->m_lists[i].Next(entry)) {
@@ -374,7 +374,7 @@ int32_t CGUIBindings::AddMetaPrefix(uint32_t modifiers, char*& binding, int32_t&
     return maxLength >= 0;
 }
 
-// OFFSET: 0x00920E50
+// OFFSET: 0x00920E50/0x1406835C0
 void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     while (*binding) {
         if (!SStrCmpI(binding, "LSHIFT", 6)) {
@@ -414,7 +414,6 @@ void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     }
 }
 
-// PROVEN: 28d3adfe IDENTICAL/NONE
 // OFFSET: 0x00925DA0/0x14068AF10
 void CGUIBindings::Initialize() {
     CGUIBindings::s_bindings = new (SMemAlloc(sizeof(CGUIBindings), __FILE__, __LINE__, 0)) CGUIBindings();
@@ -480,7 +479,7 @@ void CGUIBindings::LoadBindings() {
     LoadAccountData(3, CGUIBindings::LoadBindingsCallback, reinterpret_cast<void*>(static_cast<uintptr_t>((s_initRound << 16) | BINDING_SET_CHARACTER)));
 }
 
-// OFFSET: 0x00927A00
+// OFFSET: 0x00927A00/0x14068D410
 void CGUIBindings::LoadBindings(BINDING_SET set, const char* data) {
     CGUIBindings* bindings = CGUIBindings::s_bindings;
 
@@ -530,7 +529,7 @@ void CGUIBindings::LoadBindings(BINDING_SET set, const char* data) {
     }
 }
 
-// OFFSET: 0x00927B60
+// OFFSET: 0x00927B60/0x14068D600
 void CGUIBindings::LoadBindingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     uint32_t value = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(param));
 
@@ -624,7 +623,6 @@ void CGUIBindings::SaveBindings() {
     }
 }
 
-// PROVEN: 0d8d2942 IDENTICAL/NONE
 // OFFSET: 0x00921F20/0x1406851E0
 void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     BINDING_SET set = static_cast<BINDING_SET>(reinterpret_cast<uintptr_t>(param));
@@ -645,7 +643,6 @@ void CGUIBindings::Shutdown() {
     s_initRound++;
 }
 
-// PROVEN: 76723f38 IDENTICAL/NONE
 // OFFSET: 0x00920D20
 void CGUIBindings::StripModifiers(uint32_t& modifiers, const char* binding) {
     while (*binding) {
@@ -686,7 +683,7 @@ void CGUIBindings::StripModifiers(uint32_t& modifiers, const char* binding) {
     }
 }
 
-// OFFSET: 0x00925880
+// OFFSET: 0x00925880/0x14068A9D0
 CGUIBindings::CGUIBindings() {
     this->m_numCommands = 0;
     this->m_numHiddenCommands = 0;
@@ -718,7 +715,7 @@ void CGUIBindings::AdjustCommandKeyIndices(BINDING_SET set, BINDING_MODE mode, c
     }
 }
 
-// OFFSET: 0x00926650
+// OFFSET: 0x00926650/0x14068BB90
 int32_t CGUIBindings::Bind(BINDING_SET set, BINDING_MODE mode, const char* key, const char* command) {
     if (!CGGameUI::CanPerformAction(13)) {
         return 0;
@@ -807,7 +804,7 @@ void CGUIBindings::ClearOverrideBindings(void* owner, bool checkPermission) {
     }
 }
 
-// OFFSET: 0x009260D0
+// OFFSET: 0x009260D0/0x14068B3C0
 CSimpleFrame* GetClickFrame(lua_State* L, const char* name, uint32_t length) {
     char* buffer = static_cast<char*>(alloca(length + 1));
     memcpy(buffer, name, length);
@@ -864,7 +861,7 @@ CSimpleFrame* GetClickFrame(lua_State* L, const char* name, uint32_t length) {
     return entry->m_frame;
 }
 
-// OFFSET: 0x009262E0
+// OFFSET: 0x009262E0/0x14068B740
 void CGUIBindings::CopyBindings(BINDING_SET source, BINDING_SET dest) {
     if (!CGGameUI::CanPerformAction(13)) {
         return;
@@ -928,7 +925,7 @@ void CGUIBindings::EnableBindingMode(BINDING_MODE mode, int32_t enable) {
     }
 }
 
-// OFFSET: 0x009223C0
+// OFFSET: 0x009223C0/0x1406857F0
 int32_t CGUIBindings::ExecCommand(const char* command, int32_t isDown, float pressure, int32_t allowPressure, int32_t isPressure, int32_t isAngle, float angle, float precision, const char* taint) {
     if (!command || !*command) {
         return 0;
@@ -1079,7 +1076,7 @@ int32_t CGUIBindings::ExecKey(uint32_t modifiers, const char* key, int32_t isDow
     return result;
 }
 
-// OFFSET: 0x009264E0
+// OFFSET: 0x009264E0/0x14068B980
 void CGUIBindings::FinishLoadBindings() {
     this->m_dirtySets = 0;
     this->m_saveSet = this->m_bindings[BINDING_SET_CHARACTER].m_fulllist.Head() ? BINDING_SET_CHARACTER : BINDING_SET_ACCOUNT;
@@ -1092,34 +1089,34 @@ void CGUIBindings::FinishLoadBindings() {
     }
 }
 
-// OFFSET: 0x00921B30
+// OFFSET: 0x00921B30/0x140684BE0
 const char* CGUIBindings::GetBindingCommand(KEYBINDING* binding, BINDING_MODE mode) {
-    if (mode != BINDING_MODE_ACTIVE) {
-        return binding->m_data[mode].m_command.m_str;
-    }
-
-    for (int32_t i = NUM_BINDING_MODES - 1; i >= 0; i--) {
-        if ((!i || ((1 << i) & (this->m_bindingModeMask ^ this->m_bindingModeToggles))) && binding->m_data[i].m_command.m_str) {
-            return binding->m_data[i].m_command.m_str;
+    if (mode == BINDING_MODE_ACTIVE) {
+        for (int32_t i = NUM_BINDING_MODES - 1; i >= 0; i--) {
+            if ((!i || ((1 << i) & (this->m_bindingModeMask ^ this->m_bindingModeToggles))) && binding->m_data[i].m_command.m_str) {
+                return binding->m_data[i].m_command.m_str;
+            }
         }
+
+        return NULL;
     }
 
-    return NULL;
+    return binding->m_data[mode].m_command.m_str;
 }
 
-// OFFSET: 0x00921B90
+// OFFSET: 0x00921B90/0x140684C30
 int32_t CGUIBindings::GetBindingIndex(KEYBINDING* binding, BINDING_MODE mode) {
-    if (mode != BINDING_MODE_ACTIVE) {
-        return binding->m_data[mode].m_index;
-    }
-
-    for (int32_t i = NUM_BINDING_MODES - 1; i >= 0; i--) {
-        if ((!i || ((1 << i) & (this->m_bindingModeMask ^ this->m_bindingModeToggles))) && binding->m_data[i].m_command.m_str) {
-            return binding->m_data[i].m_index;
+    if (mode == BINDING_MODE_ACTIVE) {
+        for (int32_t i = NUM_BINDING_MODES - 1; i >= 0; i--) {
+            if ((!i || ((1 << i) & (this->m_bindingModeMask ^ this->m_bindingModeToggles))) && binding->m_data[i].m_command.m_str) {
+                return binding->m_data[i].m_index;
+            }
         }
+
+        return -1;
     }
 
-    return -1;
+    return binding->m_data[mode].m_index;
 }
 
 // OFFSET: 0x009224A0
@@ -1132,7 +1129,7 @@ void CGUIBindings::GetCommand(int32_t index, const char** command) {
     }
 }
 
-// OFFSET: 0x00922580
+// OFFSET: 0x00922580/0x140685AE0
 const char* CGUIBindings::GetCommandAction(BINDING_MODE mode, const char* key, int32_t checkOverride) {
     if (!key || !*key) {
         return NULL;
@@ -1264,7 +1261,7 @@ const char* CGUIBindings::GetModifiedClick(int32_t index) {
     return NULL;
 }
 
-// OFFSET: 0x00922650
+// OFFSET: 0x00922650/0x140685C00
 int32_t CGUIBindings::GetNumCommandKeys(BINDING_SET set, BINDING_MODE mode, const char* command) {
     int32_t count = 0;
 
@@ -1325,75 +1322,75 @@ KEYBINDING* CGUIBindings::GetReducedKeyBinding(BINDING_MODE mode, const char* ke
     return NULL;
 }
 
-// OFFSET: 0x009227E0
+// OFFSET: 0x009227E0/0x140685F50
 int32_t CGUIBindings::IsModifiedClick(const char* action) {
     int32_t result = 0;
 
-    if (!action) {
-        for (int32_t key = KEY_LSHIFT; key <= KEY_RALT; key++) {
-            if (CGGameUI::IsKeyDown(static_cast<KEY>(key))) {
-                return 1;
+    if (action) {
+        uint32_t modifiers = 0;
+        CGUIBindings::AddModifiers(modifiers, action);
+
+        if (!modifiers) {
+            MODIFIEDCLICK* click = this->m_modifiedClicks.Ptr(action);
+
+            if (click) {
+                result = click->IsActive(BINDING_SET_CURRENT);
+            }
+
+            return result;
+        }
+
+        result = 1;
+
+        if ((modifiers & 0x3) == 0x1) {
+            if (!CGGameUI::IsKeyDown(KEY_LSHIFT)) {
+                result = 0;
+            }
+        } else if ((modifiers & 0x3) == 0x2 || ((modifiers & 0x3) == 0x3 && !CGGameUI::IsKeyDown(KEY_LSHIFT))) {
+            if (!CGGameUI::IsKeyDown(KEY_RSHIFT)) {
+                result = 0;
             }
         }
 
-        for (MODIFIEDCLICK* click = this->m_modifiedClicks.m_fulllist.Head(); click; click = this->m_modifiedClicks.m_fulllist.Next(click)) {
-            if (click->IsActive(BINDING_SET_CURRENT)) {
-                return 1;
+        if ((modifiers & 0xC) == 0x4) {
+            if (!CGGameUI::IsKeyDown(KEY_LCONTROL)) {
+                result = 0;
+            }
+        } else if ((modifiers & 0xC) == 0x8 || ((modifiers & 0xC) == 0xC && !CGGameUI::IsKeyDown(KEY_LCONTROL))) {
+            if (!CGGameUI::IsKeyDown(KEY_RCONTROL)) {
+                result = 0;
+            }
+        }
+
+        if ((modifiers & 0x30) == 0x10) {
+            if (!CGGameUI::IsKeyDown(KEY_LALT)) {
+                result = 0;
+            }
+        } else if ((modifiers & 0x30) == 0x20 || ((modifiers & 0x30) == 0x30 && !CGGameUI::IsKeyDown(KEY_LALT))) {
+            if (!CGGameUI::IsKeyDown(KEY_RALT)) {
+                result = 0;
             }
         }
 
         return result;
     }
 
-    uint32_t modifiers = 0;
-    CGUIBindings::AddModifiers(modifiers, action);
-
-    if (!modifiers) {
-        MODIFIEDCLICK* click = this->m_modifiedClicks.Ptr(action);
-
-        if (click) {
-            result = click->IsActive(BINDING_SET_CURRENT);
-        }
-
-        return result;
-    }
-
-    result = 1;
-
-    if ((modifiers & 0x3) == 0x1) {
-        if (!CGGameUI::IsKeyDown(KEY_LSHIFT)) {
-            result = 0;
-        }
-    } else if ((modifiers & 0x3) == 0x2 || ((modifiers & 0x3) == 0x3 && !CGGameUI::IsKeyDown(KEY_LSHIFT))) {
-        if (!CGGameUI::IsKeyDown(KEY_RSHIFT)) {
-            result = 0;
+    for (int32_t key = KEY_LSHIFT; key <= KEY_RALT; key++) {
+        if (CGGameUI::IsKeyDown(static_cast<KEY>(key))) {
+            return 1;
         }
     }
 
-    if ((modifiers & 0xC) == 0x4) {
-        if (!CGGameUI::IsKeyDown(KEY_LCONTROL)) {
-            result = 0;
-        }
-    } else if ((modifiers & 0xC) == 0x8 || ((modifiers & 0xC) == 0xC && !CGGameUI::IsKeyDown(KEY_LCONTROL))) {
-        if (!CGGameUI::IsKeyDown(KEY_RCONTROL)) {
-            result = 0;
-        }
-    }
-
-    if ((modifiers & 0x30) == 0x10) {
-        if (!CGGameUI::IsKeyDown(KEY_LALT)) {
-            result = 0;
-        }
-    } else if ((modifiers & 0x30) == 0x20 || ((modifiers & 0x30) == 0x30 && !CGGameUI::IsKeyDown(KEY_LALT))) {
-        if (!CGGameUI::IsKeyDown(KEY_RALT)) {
-            result = 0;
+    for (MODIFIEDCLICK* click = this->m_modifiedClicks.m_fulllist.Head(); click; click = this->m_modifiedClicks.m_fulllist.Next(click)) {
+        if (click->IsActive(BINDING_SET_CURRENT)) {
+            return 1;
         }
     }
 
     return result;
 }
 
-// OFFSET: 0x00927F60
+// OFFSET: 0x00927F60/0x14068DB10
 int32_t CGUIBindings::Load(const char* file, MD5_CTX* md5, CStatus* status) {
     if (!status) {
         status = &s_bindingsStatus;
@@ -1431,7 +1428,7 @@ int32_t CGUIBindings::Load(const char* file, MD5_CTX* md5, CStatus* status) {
     return 1;
 }
 
-// OFFSET: 0x00927CC0
+// OFFSET: 0x00927CC0/0x14068D7B0
 void CGUIBindings::LoadBinding(const char* file, XMLNode* node, CStatus* status) {
     const char* name = node->GetAttributeByName("name");
     const char* body = node->m_body;
@@ -1536,7 +1533,7 @@ void CGUIBindings::SaveBindings(BINDING_SET set, HOSFILE file) {
     char buffer[1024];
     uint32_t written;
 
-    for (int32_t mode = 0; mode < NUM_BINDING_MODES; mode++) {
+    for (uint32_t mode = 0; mode < NUM_BINDING_MODES; mode++) {
         int32_t first = 1;
 
         for (KEYBINDING* binding = this->m_bindings[set].m_fulllist.Head(); binding; binding = this->m_bindings[set].m_fulllist.Next(binding)) {

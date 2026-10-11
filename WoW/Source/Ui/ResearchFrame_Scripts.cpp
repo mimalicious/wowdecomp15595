@@ -82,34 +82,34 @@ static int32_t Script_CloseResearch(lua_State* L) {
 
 // OFFSET: 0x009F48E0/0x1407902D0
 static int32_t PushArtifactInfo(const ResearchProjectRec* project, lua_State* L) {
-    if (!project) {
-        return 0;
-    }
+    if (project) {
+        lua_pushstring(L, project->m_name);
+        lua_pushstring(L, project->m_description);
+        lua_pushnumber(L, project->m_rarity);
+        const SpellRec* spell = g_spellDB.GetRecord(project->m_spellID);
 
-    lua_pushstring(L, project->m_name);
-    lua_pushstring(L, project->m_description);
-    lua_pushnumber(L, project->m_rarity);
-    const SpellRec* spell = g_spellDB.GetRecord(project->m_spellID);
+        if (spell) {
+            const SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_spellIconID);
 
-    if (spell) {
-        const SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_spellIconID);
+            if (icon) {
+                lua_pushstring(L, icon->m_textureFilename);
+            } else {
+                lua_pushstring(L, "");
+            }
 
-        if (icon) {
-            lua_pushstring(L, icon->m_textureFilename);
+            lua_pushstring(L, spell->m_description);
         } else {
+            lua_pushstring(L, "");
             lua_pushstring(L, "");
         }
 
-        lua_pushstring(L, spell->m_description);
-    } else {
-        lua_pushstring(L, "");
-        lua_pushstring(L, "");
+        lua_pushnumber(L, project->m_numSockets);
+        lua_pushstring(L, project->m_texture);
+
+        return 7;
     }
 
-    lua_pushnumber(L, project->m_numSockets);
-    lua_pushstring(L, project->m_texture);
-
-    return 7;
+    return 0;
 }
 
 // OFFSET: 0x009F49C0/0x140790460
@@ -146,7 +146,7 @@ static int32_t Script_GetArchaeologyRaceInfo(lua_State* L) {
     lua_pushstring(L, branch->m_texture);
     lua_pushnumber(L, branch->m_itemID);
     PlayerCurrency* currency = CGCurrencyTypes::GetCurrency(branch->m_currencyID);
-    lua_pushnumber(L, currency ? currency->m_quantity : 0.0);
+    lua_pushnumber(L, !currency ? 0.0 : currency->m_quantity);
     const ResearchProjectRec* project = CGResearchFrame::GetActiveProject(branch->m_id);
     lua_pushnumber(L, project ? project->m_requiredWeight : 0.0);
 
@@ -220,15 +220,15 @@ static int32_t Script_GetArtifactInfoByRace(lua_State* L) {
 
     CGResearchFrame::PROJECT* project = CGResearchFrame::GetProject(branchID, static_cast<int32_t>(lua_tonumber(L, 2)) - 1);
 
-    if (!project) {
-        return 0;
+    if (project) {
+        int32_t count = PushArtifactInfo(project->m_project, L);
+        lua_pushnumber(L, project->m_firstCompleted);
+        lua_pushnumber(L, project->m_completionCount);
+
+        return count + 2;
     }
 
-    int32_t count = PushArtifactInfo(project->m_project, L);
-    lua_pushnumber(L, project->m_firstCompleted);
-    lua_pushnumber(L, project->m_completionCount);
-
-    return count + 2;
+    return 0;
 }
 
 // OFFSET: 0x009F5B40/0x140791B70

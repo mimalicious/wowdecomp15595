@@ -48,14 +48,12 @@ static const int32_t s_specializationSpells[5] = { 20219, 20222, 28677, 28675, 2
 static bool GetCompanionTypeFromLua(lua_State* L, int32_t* type) {
     const char* token = lua_tolstring(L, 1, NULL);
 
-    if (!token) {
-        return false;
-    }
-
-    for (uint32_t i = 0; i < 2; i++) {
-        if (!_stricmp(token, s_companionTypes[i])) {
-            *type = i;
-            return true;
+    if (token) {
+        for (uint32_t i = 0; i < 2; i++) {
+            if (!_stricmp(token, s_companionTypes[i])) {
+                *type = i;
+                return true;
+            }
         }
     }
 
@@ -158,7 +156,10 @@ static int32_t Script_GetSpellTabInfo(lua_State* L) {
         return 5;
     }
 
-    if (info->m_skillLine) {
+    if (!info->m_skillLine) {
+        lua_pushstring(L, FrameScript_GetText("GENERAL_SPELLS", -1, GENDER_NOT_APPLICABLE));
+        lua_pushstring(L, "Interface\\Spellbook\\Spellbook-Icon");
+    } else {
         const SkillLineRec* skill = g_skillLineDB.GetRecord(info->m_skillLine);
 
         if (skill) {
@@ -174,9 +175,6 @@ static int32_t Script_GetSpellTabInfo(lua_State* L) {
             lua_pushnil(L);
             lua_pushnil(L);
         }
-    } else {
-        lua_pushstring(L, FrameScript_GetText("GENERAL_SPELLS", -1, GENDER_NOT_APPLICABLE));
-        lua_pushstring(L, "Interface\\Spellbook\\Spellbook-Icon");
     }
 
     lua_pushnumber(L, static_cast<double>(CGSpellBook::GetSkillLineOffset(index)));
@@ -258,7 +256,7 @@ static int32_t Script_CastShapeshiftForm(lua_State* L) {
     int32_t index = static_cast<int64_t>(lua_tonumber(L, 1));
 
     if (index - 1 < static_cast<int32_t>(s_shapeshiftSpells.m_count)) {
-        Spell_C_ClickSpell(s_shapeshiftSpells.m_data[index - 1].m_spellId, NULL, WOWGUID(), 0, 0);
+        Spell_C_ClickSpell(s_shapeshiftSpells.m_data[index - 1].m_spellId, NULL, WOWGUID::Make(0), 0, 0);
     }
 
     return 0;
@@ -273,20 +271,20 @@ static int32_t Script_GetShapeshiftFormCooldown(lua_State* L) {
 
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
 
-    if (index >= s_shapeshiftSpells.m_count) {
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 1.0);
+    if (!(index >= s_shapeshiftSpells.m_count)) {
+        uint32_t start = 0;
+        uint32_t duration = 0;
+        uint32_t enable = 0;
+        Spell_C_GetSpellCooldown(s_shapeshiftSpells.m_data[index].m_spellId, 0, &duration, &start, &enable, NULL);
+        lua_pushnumber(L, static_cast<double>(start) * 0.001);
+        lua_pushnumber(L, static_cast<double>(duration) * 0.001);
+        lua_pushnumber(L, static_cast<double>(enable));
         return 3;
     }
 
-    uint32_t start = 0;
-    uint32_t duration = 0;
-    uint32_t enable = 0;
-    Spell_C_GetSpellCooldown(s_shapeshiftSpells.m_data[index].m_spellId, 0, &duration, &start, &enable, NULL);
-    lua_pushnumber(L, static_cast<double>(start) * 0.001);
-    lua_pushnumber(L, static_cast<double>(duration) * 0.001);
-    lua_pushnumber(L, static_cast<double>(enable));
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 1.0);
     return 3;
 }
 
@@ -314,10 +312,10 @@ static int32_t Script_FindSpellBookSlotBySpellID(lua_State* L) {
 
     int32_t slot = CGSpellBook::FindSlotBySpellID(spellId, StringToBOOL(L, 2, 0));
 
-    if (slot >= 0) {
-        lua_pushinteger(L, slot + 1);
-    } else {
+    if (!(slot >= 0)) {
         lua_pushnil(L);
+    } else {
+        lua_pushinteger(L, slot + 1);
     }
 
     return 1;
@@ -338,39 +336,39 @@ static int32_t Script_GetCallPetSpellInfo(lua_State* L) {
 
     uint32_t index = CGStableInfo::FindPetIndexBySpellID(spell->m_id, 0);
 
-    if (index > 4) {
-        return 0;
+    if (!(index > 4)) {
+        lua_pushnumber(L, static_cast<double>(index));
+        StablePetInfo* pet = CGStableInfo::GetPetInfo(index);
+
+        if (pet) {
+            lua_pushstring(L, pet->m_name);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 2;
     }
 
-    lua_pushnumber(L, static_cast<double>(index));
-    StablePetInfo* pet = CGStableInfo::GetPetInfo(index);
-
-    if (pet) {
-        lua_pushstring(L, pet->m_name);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 2;
+    return 0;
 }
 
 // OFFSET: 0x00910C20/0x14066C8B0
 static int32_t Script_HasPetSpells(lua_State* L) {
-    if (!s_petSpellBookItems.m_count) {
-        lua_pushnil(L);
-        lua_pushnil(L);
+    if (s_petSpellBookItems.m_count) {
+        lua_pushnumber(L, static_cast<double>(s_petSpellBookItems.m_count));
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (player) {
+            lua_pushstring(L, g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1])->m_petNameToken);
+        } else {
+            lua_pushstring(L, "PET");
+        }
+
         return 2;
     }
 
-    lua_pushnumber(L, static_cast<double>(s_petSpellBookItems.m_count));
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (player) {
-        lua_pushstring(L, g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1])->m_petNameToken);
-    } else {
-        lua_pushstring(L, "PET");
-    }
-
+    lua_pushnil(L);
+    lua_pushnil(L);
     return 2;
 }
 
@@ -423,36 +421,36 @@ static int32_t Script_GetShapeshiftFormInfo(lua_State* L) {
     SpellUsableInfo& info = s_shapeshiftSpells.m_data[index];
     const SpellRec* spell = g_spellDB.GetRecord(info.m_spellId);
 
-    if (!spell) {
-        return 0;
+    if (spell) {
+        bool active = Spell_C_IsActiveSpell(spell, player);
+        bool castable = active || (info.m_usable && !info.m_noMana);
+        int32_t iconId = active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID;
+        const SpellIconRec* icon = g_spellIconDB.GetRecord(iconId);
+
+        if (icon) {
+            lua_pushstring(L, icon->m_textureFilename);
+        } else {
+            lua_pushnil(L);
+        }
+
+        lua_pushstring(L, spell->m_name);
+
+        if (active) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        if (castable) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 4;
     }
 
-    bool active = Spell_C_IsActiveSpell(spell, player);
-    bool castable = active || (info.m_usable && !info.m_noMana);
-    int32_t iconId = active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID;
-    const SpellIconRec* icon = g_spellIconDB.GetRecord(iconId);
-
-    if (icon) {
-        lua_pushstring(L, icon->m_textureFilename);
-    } else {
-        lua_pushnil(L);
-    }
-
-    lua_pushstring(L, spell->m_name);
-
-    if (active) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (castable) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 4;
+    return 0;
 }
 
 // OFFSET: 0x00910F90/0x14066CCA0
@@ -544,66 +542,66 @@ static int32_t Script_GetCompanionInfo(lua_State* L) {
     TSGrowableArray<int32_t>& companions = CGSpellBook::m_companions[type];
     uint32_t index = static_cast<int64_t>(lua_tonumber(L, 2)) - 1;
 
-    if (index >= companions.m_count) {
-        return 0;
-    }
+    if (!(index >= companions.m_count)) {
+        const SpellRec* spell = g_spellDB.GetRecord(companions.m_data[index]);
 
-    const SpellRec* spell = g_spellDB.GetRecord(companions.m_data[index]);
-
-    if (!spell) {
-        return 0;
-    }
-
-    const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
-    int32_t creature = effect ? effect->m_effectMiscValue : 0;
-    lua_pushinteger(L, creature);
-    CreatureStats_C* stats = g_creatureDBCache.GetRecord(creature, WOWGUID(), NULL, NULL, false);
-
-    if (stats) {
-        lua_pushstring(L, stats->GetName(0));
-    } else {
-        lua_pushnil(L);
-    }
-
-    lua_pushinteger(L, spell->m_id);
-    bool active = Spell_C_IsActiveSpell(spell, ClntObjMgrGetActivePlayerObj());
-    int32_t iconId = active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID;
-    const SpellIconRec* icon = g_spellIconDB.GetRecord(iconId);
-
-    if (icon) {
-        lua_pushstring(L, icon->m_textureFilename);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (active) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (!effect || effect->m_effect != 6 || effect->m_effectAura != 78) {
-        return 5;
-    }
-
-    const MountTypeRec* mountType = g_mountTypeDB.GetRecord(effect->m_effectMiscValueB);
-
-    if (!mountType) {
-        return 5;
-    }
-
-    uint32_t flags = 0;
-
-    for (int32_t i = 23; i >= 0; i--) {
-        const MountCapabilityRec* capability = g_mountCapabilityDB.GetRecord(mountType->m_capability[i]);
-
-        if (capability) {
-            flags |= capability->m_flags;
+        if (!spell) {
+            return 0;
         }
+
+        const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
+        int32_t creature = effect ? effect->m_effectMiscValue : 0;
+        lua_pushinteger(L, creature);
+        CreatureStats_C* stats = g_creatureDBCache.GetRecord(creature, WOWGUID(), NULL, NULL, false);
+
+        if (stats) {
+            lua_pushstring(L, stats->GetName(0));
+        } else {
+            lua_pushnil(L);
+        }
+
+        lua_pushinteger(L, spell->m_id);
+        bool active = Spell_C_IsActiveSpell(spell, ClntObjMgrGetActivePlayerObj());
+        int32_t iconId = active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID;
+        const SpellIconRec* icon = g_spellIconDB.GetRecord(iconId);
+
+        if (icon) {
+            lua_pushstring(L, icon->m_textureFilename);
+        } else {
+            lua_pushnil(L);
+        }
+
+        if (active) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        if (!effect || effect->m_effect != 6 || effect->m_effectAura != 78) {
+            return 5;
+        }
+
+        const MountTypeRec* mountType = g_mountTypeDB.GetRecord(effect->m_effectMiscValueB);
+
+        if (!mountType) {
+            return 5;
+        }
+
+        uint32_t flags = 0;
+
+        for (int32_t i = 23; i >= 0; i--) {
+            const MountCapabilityRec* capability = g_mountCapabilityDB.GetRecord(mountType->m_capability[i]);
+
+            if (capability) {
+                flags |= capability->m_flags;
+            }
+        }
+
+        lua_pushnumber(L, static_cast<double>(flags));
+        return 6;
     }
 
-    lua_pushnumber(L, static_cast<double>(flags));
-    return 6;
+    return 0;
 }
 
 // OFFSET: 0x00911410/0x14066D2D0
@@ -642,18 +640,17 @@ static int32_t Script_CallCompanion(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type) || lua_tonumber(L, 2) == 0.0) {
         luaL_error(L, "Usage: CallCompanion(type, index)");
-        return 0;
-    }
+    } else {
+        if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+            return 0;
+        }
 
-    if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
-        return 0;
-    }
+        TSGrowableArray<int32_t>& companions = CGSpellBook::m_companions[type];
+        uint32_t index = static_cast<int64_t>(lua_tonumber(L, 2)) - 1;
 
-    TSGrowableArray<int32_t>& companions = CGSpellBook::m_companions[type];
-    uint32_t index = static_cast<int64_t>(lua_tonumber(L, 2)) - 1;
-
-    if (index < companions.m_count) {
-        Spell_C_CastSpell(companions.m_data[index], NULL, WOWGUID(), false);
+        if (index < companions.m_count) {
+            Spell_C_CastSpell(companions.m_data[index], NULL, WOWGUID(), false);
+        }
     }
 
     return 0;
@@ -987,95 +984,95 @@ static int32_t Script_CastSpellByName(lua_State* L) {
         return 0;
     }
 
-    if (*name != '!') {
-        int32_t slot = CGSpellBook::FindSlotBySpellID(spellId, petSpell);
+    if (*name == '!') {
+        if (!petSpell) {
+            int32_t baseSpell = 0;
+            int32_t ignoreCost = 0;
+            HASHKEY_NONE key;
+            OVERRIDE_SPELL_NODE* node = CGActionBar::m_overrideSpells.Ptr(spellId, key);
 
-        if (slot < 0) {
-            int32_t base = CGActionBar::GetOverrideBaseSpell(spellId);
-
-            if (base) {
-                slot = CGSpellBook::FindSlotBySpellID(base, petSpell);
+            if (node) {
+                baseSpell = spellId;
+                spellId = node->m_overrideSpellID;
+                ignoreCost = (node->m_flags >> 1) & 0x1;
             }
-        }
 
-        if (slot >= 0) {
-            CGSpellBook::CastSpell(slot, petSpell, target);
+            Spell_C_CastSpell(spellId, NULL, target, false, false, baseSpell, ignoreCost);
             return 0;
         }
 
+        if (!CGPetInfo::PetActionsUsable(false, false)) {
+            return 0;
+        }
+
+        PetAction fallback;
         PetAction* action = CGPetInfo::FindSpellByID(spellId);
 
-        if (action) {
-            CGPetInfo::SendPetAction(*action, target, 0);
+        if (!action) {
+            if (CGSpellBook::FindSlotBySpellID(spellId, 1) < 0) {
+                return 0;
+            }
+
+            fallback.m_data = 0x1000000 | spellId;
+            action = &fallback;
+        }
+
+        CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
+
+        if (!pet) {
             return 0;
         }
 
-        if (!petSpell) {
-            Spell_C_ClickSpell(spellId, NULL, target, 0, 0);
+        const SpellRec* spell = g_spellDB.GetRecord(spellId);
+
+        if (!spell) {
+            return 0;
         }
 
+        if ((spell->m_attributesExD & 0x20) || player->GetPossessedUnit() == pet) {
+            Spell_C_CastSpell(pet, spell->m_id, NULL, target, NULL, false, false, 0, 0);
+            return 0;
+        }
+
+        Spell_C_StartSpellCooldown(spell, pet, 0, 0);
+        CDataStore msg;
+        C3Vector position = C3Vector();
+        msg.Put(static_cast<uint32_t>(CMSG_PET_ACTION));
+        msg.Put(CGPetInfo::GetPet(0).m_guid);
+        msg.Put(action->m_data);
+        msg.Put(target.m_guid);
+        msg << position;
+        msg.Finalize();
+        ClientServices::Send2(&msg);
+        return 0;
+    }
+
+    int32_t slot = CGSpellBook::FindSlotBySpellID(spellId, petSpell);
+
+    if (slot < 0) {
+        int32_t base = CGActionBar::GetOverrideBaseSpell(spellId);
+
+        if (base) {
+            slot = CGSpellBook::FindSlotBySpellID(base, petSpell);
+        }
+    }
+
+    if (slot >= 0) {
+        CGSpellBook::CastSpell(slot, petSpell, target);
+        return 0;
+    }
+
+    PetAction* action = CGPetInfo::FindSpellByID(spellId);
+
+    if (action) {
+        CGPetInfo::SendPetAction(*action, target, 0);
         return 0;
     }
 
     if (!petSpell) {
-        int32_t baseSpell = 0;
-        int32_t ignoreCost = 0;
-        HASHKEY_NONE key;
-        OVERRIDE_SPELL_NODE* node = CGActionBar::m_overrideSpells.Ptr(spellId, key);
-
-        if (node) {
-            baseSpell = spellId;
-            spellId = node->m_overrideSpellID;
-            ignoreCost = (node->m_flags >> 1) & 0x1;
-        }
-
-        Spell_C_CastSpell(spellId, NULL, target, false, false, baseSpell, ignoreCost);
-        return 0;
+        Spell_C_ClickSpell(spellId, NULL, target, 0, 0);
     }
 
-    if (!CGPetInfo::PetActionsUsable(false, false)) {
-        return 0;
-    }
-
-    PetAction fallback;
-    PetAction* action = CGPetInfo::FindSpellByID(spellId);
-
-    if (!action) {
-        if (CGSpellBook::FindSlotBySpellID(spellId, 1) < 0) {
-            return 0;
-        }
-
-        fallback.m_data = 0x1000000 | spellId;
-        action = &fallback;
-    }
-
-    CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (!pet) {
-        return 0;
-    }
-
-    const SpellRec* spell = g_spellDB.GetRecord(spellId);
-
-    if (!spell) {
-        return 0;
-    }
-
-    if ((spell->m_attributesExD & 0x20) || player->GetPossessedUnit() == pet) {
-        Spell_C_CastSpell(pet, spell->m_id, NULL, target, NULL, false, false, 0, 0);
-        return 0;
-    }
-
-    Spell_C_StartSpellCooldown(spell, pet, 0, 0);
-    CDataStore msg;
-    C3Vector position = C3Vector();
-    msg.Put(static_cast<uint32_t>(CMSG_PET_ACTION));
-    msg.Put(CGPetInfo::GetPet(0).m_guid);
-    msg.Put(action->m_data);
-    msg.Put(target.m_guid);
-    msg << position;
-    msg.Finalize();
-    ClientServices::Send2(&msg);
     return 0;
 }
 
@@ -1324,26 +1321,30 @@ static int32_t Script_GetSpellInfo(lua_State* L) {
         lua_pushnumber(L, static_cast<double>(Spell_C_GetCastTime(spell, petSpell, 0, 1)));
     }
 
-    if (!player || !caster) {
+    if (!player) {
+        return 7;
+    }
+
+    if (!caster) {
         return 7;
     }
 
     if (SpellRec::IsMeleeRange(spell)) {
         lua_pushnumber(L, 0.0);
         lua_pushnumber(L, 0.0);
-        return 9;
+    } else {
+        float minRange = 0.0f;
+        float maxRange = 0.0f;
+        Spell_C_GetMinMaxRange(caster, spell, &minRange, &maxRange, NULL);
+
+        if (SpellRec::IsMinimumRange(spell)) {
+            Spell_C_GetDefaultMinRange(spell, &minRange);
+        }
+
+        lua_pushnumber(L, minRange);
+        lua_pushnumber(L, maxRange);
     }
 
-    float minRange = 0.0f;
-    float maxRange = 0.0f;
-    Spell_C_GetMinMaxRange(caster, spell, &minRange, &maxRange, NULL);
-
-    if (SpellRec::IsMinimumRange(spell)) {
-        Spell_C_GetDefaultMinRange(spell, &minRange);
-    }
-
-    lua_pushnumber(L, minRange);
-    lua_pushnumber(L, maxRange);
     return 9;
 }
 
@@ -1366,12 +1367,12 @@ static int32_t Script_GetSpellDescription(lua_State* L) {
 
     const SpellRec* spell = g_spellDB.GetRecord(spellId);
 
-    if (!spell) {
-        return 0;
+    if (spell) {
+        lua_pushstring(L, spell->m_description);
+        return 1;
     }
 
-    lua_pushstring(L, spell->m_description);
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009156A0
@@ -1461,19 +1462,7 @@ static int32_t Script_GetSpellCooldown(lua_State* L) {
     } else {
         int32_t slot = 0;
 
-        if (GetSlotFromLua(L, &slot, &petSpell, NULL, 1)) {
-            SpellBookItem* item = CGSpellBook::GetSpellBookItem(slot, petSpell);
-
-            if (item && item->m_type == SPELLBOOK_ITEM_SPELL) {
-                spellId = item->m_id;
-                HASHKEY_NONE key;
-                OVERRIDE_SPELL_NODE* node = CGActionBar::m_overrideSpells.Ptr(spellId, key);
-
-                if (node) {
-                    spellId = node->m_overrideSpellID;
-                }
-            }
-        } else {
+        if (!GetSlotFromLua(L, &slot, &petSpell, NULL, 1)) {
             WOWGUID target;
 
             if (!lua_isstring(L, 2) || Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, false, false)) {
@@ -1488,6 +1477,18 @@ static int32_t Script_GetSpellCooldown(lua_State* L) {
 
                 if (!name || !*name || !(node = CGActionBar::m_overrideSpellsByName.Ptr(name)) || !(spellId = node->m_overrideSpellID)) {
                     return 0;
+                }
+            }
+        } else {
+            SpellBookItem* item = CGSpellBook::GetSpellBookItem(slot, petSpell);
+
+            if (item && item->m_type == SPELLBOOK_ITEM_SPELL) {
+                spellId = item->m_id;
+                HASHKEY_NONE key;
+                OVERRIDE_SPELL_NODE* node = CGActionBar::m_overrideSpells.Ptr(spellId, key);
+
+                if (node) {
+                    spellId = node->m_overrideSpellID;
                 }
             }
         }

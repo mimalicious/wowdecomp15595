@@ -2,7 +2,7 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: 0x00B41900
+// OFFSET: 0x00B41900/0x14090FBB0
 CLCDGfxBase::CLCDGfxBase() {
     this->m_pLCDScreen = NULL;
     this->m_nWidth = 0;
@@ -14,7 +14,7 @@ CLCDGfxBase::CLCDGfxBase() {
     this->m_pBitmapBits = NULL;
 }
 
-// OFFSET: [#0x0095CCE0, #0x0095CCF0]
+// OFFSET: [0x00B41BF0, 0x00B41C00]
 CLCDGfxBase::~CLCDGfxBase() {
     this->Shutdown();
 }
@@ -32,7 +32,7 @@ HRESULT CLCDGfxBase::Initialize() {
     return S_OK;
 }
 
-// OFFSET: 0x00B41A70
+// OFFSET: 0x00B41A70/0x14090FD70
 void CLCDGfxBase::Shutdown() {
     if (this->m_hBitmap) {
         DeleteObject(this->m_hBitmap);

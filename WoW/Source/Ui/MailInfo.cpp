@@ -516,7 +516,7 @@ void CGMailInfo::InitializeGame() {
     uint32_t numStationeries = g_stationeryDB.m_numRecords;
     CGMailInfo::m_stationeries.SetCount(numStationeries);
 
-    for (int32_t i = 0; i < static_cast<int32_t>(numStationeries); i++) {
+    for (uint32_t i = 0; i < static_cast<int32_t>(numStationeries); i++) {
         StationeryRec* rec = g_stationeryDB.GetRecordByIndex(i);
 
         CGMailInfo::m_stationeries.m_data[i] = static_cast<StationeryInfo*>(SMemAlloc(sizeof(StationeryInfo), __FILE__, __LINE__, 0));
@@ -675,26 +675,24 @@ static int32_t QSortStationery(const void* a, const void* b) {
     ItemRecSparse* statsA = g_itemSparseDB.GetRecord(infoA->m_itemID, WOWGUID::Make(0), NULL, NULL, false);
     ItemRecSparse* statsB = g_itemSparseDB.GetRecord(infoB->m_itemID, WOWGUID::Make(0), NULL, NULL, false);
 
-    if (!statsA) {
+    if (statsA) {
+        if (statsB) {
+            int32_t priceA = statsA->GetBuyPrice(NULL);
+            int32_t priceB = statsB->GetBuyPrice(NULL);
+
+            if (priceA != priceB) {
+                return 2 * (priceA >= priceB) - 1;
+            }
+
+            return SStrSortUTF8I(statsA->GetName(0), statsB->GetName(0), STORM_MAX_STR);
+        }
+    } else {
         if (!statsB) {
             return 0;
         }
-
-        return 2 * (statsA == NULL) - 1;
     }
 
-    if (!statsB) {
-        return 2 * (statsA == NULL) - 1;
-    }
-
-    int32_t priceA = statsA->GetBuyPrice(NULL);
-    int32_t priceB = statsB->GetBuyPrice(NULL);
-
-    if (priceA != priceB) {
-        return 2 * (priceA >= priceB) - 1;
-    }
-
-    return SStrSortUTF8I(statsA->GetName(0), statsB->GetName(0), STORM_MAX_STR);
+    return 2 * (statsA == NULL) - 1;
 }
 
 // OFFSET: 0x0096F550/0x1406E6960
@@ -711,133 +709,134 @@ static void InboxAuctionItemQueryCallback(int32_t id, const WOWGUID& guid, void*
 
 // OFFSET: 0x00970B20/0x1406E83A0
 void CGMailInfo::ParseInboxSubject(MailboxMessageInfo* message) {
-    if (message->m_messageType == 2) {
-        int32_t itemID = SStrToInt(message->m_invoiceSubject);
-        const char* field = SStrChr(message->m_invoiceSubject, ':');
-        uint32_t type = 0;
-        int32_t randomPropertiesID = 0;
-        uint32_t value = 0;
-        int32_t stackCount = 1;
+    if (message->m_messageType != 2) {
+        if (message->m_messageType == 5) {
+            const char* format;
 
-        if (field && *field) {
-            randomPropertiesID = SStrToInt(field + 1);
-            const char* next = SStrChr(field + 1, ':');
-
-            if (next && *next) {
-                type = SStrToInt(next + 1);
+            if (message->m_flags & 0x100) {
+                format = FrameScript_GetText("CALENDAR_INVITE_REMOVED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
             } else {
-                type = 0;
+                format = FrameScript_GetText("CALENDAR_EVENT_REMOVED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
             }
 
-            if (next && *next) {
-                next = SStrChr(next + 1, ':');
-
-                if (next && *next) {
-                    value = SStrToInt(next + 1);
-                } else {
-                    value = 0;
-                }
-            }
-
-            if (next && *next) {
-                next = SStrChr(next + 1, ':');
-
-                if (next && *next) {
-                    stackCount = SStrToInt(next + 1);
-                } else {
-                    stackCount = 0;
-                }
+            if (format && *format) {
+                SStrPrintf(message->m_subject, sizeof(message->m_subject), format, message->m_invoiceSubject);
+            } else {
+                message->m_subject[0] = '\0';
             }
         }
-
-        WOWGUID none = WOWGUID();
-
-        if (!g_itemSparseDB.GetRecord(itemID, none, NULL, NULL, false)) {
-            uint32_t* messageID = static_cast<uint32_t*>(SMemAlloc(sizeof(uint32_t), __FILE__, __LINE__, 0));
-            *messageID = message->m_messageID;
-            WOWGUID requester = WOWGUID();
-            g_itemSparseDB.GetRecord(itemID, requester, &InboxAuctionItemQueryCallback, messageID, false);
-            message->m_subject[0] = '\0';
-            return;
-        }
-
-        char itemName[256];
-        CGItem_C::BuildItemName(itemName, sizeof(itemName), itemID, randomPropertiesID);
-        const char* format;
-
-        switch (type) {
-            case 0: {
-                format = FrameScript_GetText("AUCTION_OUTBID_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
-                break;
-            }
-
-            case 1: {
-                format = FrameScript_GetText("AUCTION_WON_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
-                break;
-            }
-
-            case 2: {
-                format = FrameScript_GetText("AUCTION_SOLD_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
-                break;
-            }
-
-            case 3: {
-                format = FrameScript_GetText("AUCTION_EXPIRED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
-                break;
-            }
-
-            case 4:
-            case 5: {
-                format = FrameScript_GetText("AUCTION_REMOVED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
-                break;
-            }
-
-            case 6: {
-                format = FrameScript_GetText("AUCTION_INVOICE_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
-                break;
-            }
-
-            default: {
-                format = NULL;
-                break;
-            }
-        }
-
-        if (format && *format) {
-            if (stackCount > 1) {
-                SStrPrintf(itemName, sizeof(itemName), FrameScript_GetText("AUCTION_MAIL_ITEM_STACK", -1, GENDER_NOT_APPLICABLE), itemName, stackCount);
-            }
-
-            SStrPrintf(message->m_subject, sizeof(message->m_subject), format, itemName);
-        } else {
-            message->m_subject[0] = '\0';
-        }
-
-        if (type == 1 || type == 2 || type == 6) {
-            message->m_invoiceItemID = itemID;
-            message->m_invoiceRandomPropertiesID = randomPropertiesID;
-            message->m_invoiceType = type;
-            message->m_invoiceValue = value;
-            message->m_invoiceStackCount = stackCount;
-        }
-
         return;
     }
 
-    if (message->m_messageType == 5) {
-        const char* format;
+    int32_t itemID = SStrToInt(message->m_invoiceSubject);
+    const char* field = SStrChr(message->m_invoiceSubject, ':');
+    uint32_t type = 0;
+    int32_t randomPropertiesID = 0;
+    uint32_t value = 0;
+    int32_t stackCount = 1;
 
-        if (message->m_flags & 0x100) {
-            format = FrameScript_GetText("CALENDAR_INVITE_REMOVED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+    if (field && *field) {
+        randomPropertiesID = SStrToInt(field + 1);
+        const char* next = SStrChr(field + 1, ':');
+
+        if (next && *next) {
+            type = SStrToInt(next + 1);
         } else {
-            format = FrameScript_GetText("CALENDAR_EVENT_REMOVED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+            type = 0;
         }
 
-        if (format && *format) {
-            SStrPrintf(message->m_subject, sizeof(message->m_subject), format, message->m_invoiceSubject);
-        } else {
-            message->m_subject[0] = '\0';
+        if (next && *next) {
+            next = SStrChr(next + 1, ':');
+
+            if (next && *next) {
+                value = SStrToInt(next + 1);
+            } else {
+                value = 0;
+            }
         }
+
+        if (next && *next) {
+            next = SStrChr(next + 1, ':');
+
+            if (next && *next) {
+                stackCount = SStrToInt(next + 1);
+            } else {
+                stackCount = 0;
+            }
+        }
+    }
+
+    WOWGUID none;
+    none.m_guid = 0;
+
+    if (!g_itemSparseDB.GetRecord(itemID, none, NULL, NULL, false)) {
+        uint32_t* messageID = static_cast<uint32_t*>(SMemAlloc(sizeof(uint32_t), __FILE__, __LINE__, 0));
+        *messageID = message->m_messageID;
+        WOWGUID requester;
+        requester.m_guid = 0;
+        g_itemSparseDB.GetRecord(itemID, requester, &InboxAuctionItemQueryCallback, messageID, false);
+        message->m_subject[0] = '\0';
+        return;
+    }
+
+    char itemName[256];
+    CGItem_C::BuildItemName(itemName, sizeof(itemName), itemID, randomPropertiesID);
+    const char* format;
+
+    switch (type) {
+        case 0: {
+            format = FrameScript_GetText("AUCTION_OUTBID_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+            break;
+        }
+
+        case 1: {
+            format = FrameScript_GetText("AUCTION_WON_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+            break;
+        }
+
+        case 2: {
+            format = FrameScript_GetText("AUCTION_SOLD_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+            break;
+        }
+
+        case 3: {
+            format = FrameScript_GetText("AUCTION_EXPIRED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+            break;
+        }
+
+        case 4:
+        case 5: {
+            format = FrameScript_GetText("AUCTION_REMOVED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+            break;
+        }
+
+        case 6: {
+            format = FrameScript_GetText("AUCTION_INVOICE_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE);
+            break;
+        }
+
+        default: {
+            format = NULL;
+            break;
+        }
+    }
+
+    if (format && *format) {
+        if (stackCount > 1) {
+            SStrPrintf(itemName, sizeof(itemName), FrameScript_GetText("AUCTION_MAIL_ITEM_STACK", -1, GENDER_NOT_APPLICABLE), itemName, stackCount);
+        }
+
+        SStrPrintf(message->m_subject, sizeof(message->m_subject), format, itemName);
+    } else {
+        message->m_subject[0] = '\0';
+    }
+
+    if (type == 1 || type == 2 || type == 6) {
+        message->m_invoiceItemID = itemID;
+        message->m_invoiceRandomPropertiesID = randomPropertiesID;
+        message->m_invoiceType = type;
+        message->m_invoiceValue = value;
+        message->m_invoiceStackCount = stackCount;
     }
 }
 
@@ -915,7 +914,7 @@ void CGMailInfo::RemoveItem(uint32_t messageID, uint32_t itemGuid, uint32_t item
     memset(attachment, 0, sizeof(*attachment));
     message->m_cod = 0;
 
-    if ((message->m_messageType == 2 || (message->m_flags & 0x8) || (!SStrLen(message->m_body) && !message->m_mailTemplateID)) && !message->m_deletePending && !message->m_money && !GetNumAttachments(message)) {
+    if ((message->m_messageType == 2 || (message->m_flags & 0x8) || (!strlen(message->m_body) && !message->m_mailTemplateID)) && !message->m_deletePending && !message->m_money && !GetNumAttachments(message)) {
         CDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_MAIL_DELETE));
         msg.Put(CGMailInfo::m_object.m_guid);
@@ -932,9 +931,13 @@ void CGMailInfo::RemoveItem(uint32_t messageID, uint32_t itemGuid, uint32_t item
 
 // OFFSET: 0x0096F640/0x1406E6B00
 bool CGMailInfo::CanComplain(uint32_t index) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player || index >= CGMailInfo::m_numInboxItems) {
+    if (!player) {
+        return false;
+    }
+
+    if (index >= CGMailInfo::m_numInboxItems) {
         return false;
     }
 
@@ -998,7 +1001,14 @@ void CGMailInfo::UpdateStationeryList() {
     for (uint32_t i = 0; i < count; i++) {
         StationeryRec* rec = g_stationeryDB.GetRecord(CGMailInfo::m_stationeries.m_data[i]->m_id);
         CGItem_C* item = player->m_bag.FindItemOfType(rec->m_itemID, 0);
-        WOWGUID guid = item ? item->m_obj->m_guid : WOWGUID::Make(0);
+        WOWGUID guid;
+
+        if (item) {
+            guid = item->m_obj->m_guid;
+        } else {
+            guid = WOWGUID::Make(0);
+        }
+
         CGMailInfo::m_stationeries.m_data[i]->m_itemGUID = guid;
 
         if (CGMailInfo::m_stationeries.m_data[i]->m_isDefault || CGMailInfo::m_stationeries.m_data[i]->m_itemGUID) {
@@ -1013,7 +1023,7 @@ void CGMailInfo::UpdateStationeryList() {
 
 // OFFSET: 0x0096F830
 int32_t CGMailInfo::SetSendMoney(uint64_t money) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && player->GetCoinage() >= money) {
         if (!(money & 0x8000000000000000ull) && money < 10000000000ull) {
@@ -1093,7 +1103,8 @@ bool CGMailInfo::AddItemToOutgoingMail(uint32_t index, WOWGUID item, WOWGUID con
         return false;
     }
 
-    WOWGUID none = WOWGUID();
+    WOWGUID none;
+    none.m_guid = 0;
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, none, NULL, NULL, false);
 
     if (!stats) {
@@ -1171,7 +1182,7 @@ bool CGMailInfo::AddItemToOutgoingMail(uint32_t index, WOWGUID item, WOWGUID con
 
 // OFFSET: 0x0096FA30/0x1406E6FF0
 void CGMailInfo::ProcessAutoLootAttachments(MailboxMessageInfo* message) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || player->GetCoinage() < message->m_cod) {
         CGGameUI::DisplayError(ERR_NOT_ENOUGH_MONEY);
@@ -1331,11 +1342,7 @@ void CGMailInfo::GetSendItem(uint32_t index, WOWGUID& item, WOWGUID& container, 
 
 // OFFSET: 0x00464760
 WOWGUID CGMailInfo::GetSendItemGuid(uint32_t index) {
-    if (index < 16) {
-        return CGMailInfo::m_sendItems[index].m_guid;
-    }
-
-    return WOWGUID::Make(0);
+    return index < 16 ? CGMailInfo::m_sendItems[index].m_guid : WOWGUID::Make(0);
 }
 
 // PROVEN: 0c95f03f IDENTICAL/NONE
@@ -1399,7 +1406,8 @@ const char* GetSenderName(int32_t entry, int32_t type, WOWGUID guid, int32_t sta
         }
 
         case 3: {
-            WOWGUID none = WOWGUID();
+            WOWGUID none;
+            none.m_guid = 0;
             CreatureStats_C* stats = g_creatureDBCache.GetRecord(entry, none, &SenderNameQueryCallback, NULL, false);
 
             if (stats) {
@@ -1410,7 +1418,8 @@ const char* GetSenderName(int32_t entry, int32_t type, WOWGUID guid, int32_t sta
         }
 
         case 4: {
-            WOWGUID none = WOWGUID();
+            WOWGUID none;
+            none.m_guid = 0;
             GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(entry, none, &SenderNameQueryCallback, NULL, false);
 
             if (stats) {

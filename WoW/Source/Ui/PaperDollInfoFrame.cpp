@@ -99,7 +99,7 @@ int32_t PlayerEquipmentChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     return 1;
 }
 
-// OFFSET: 0x0097C3C0
+// OFFSET: 0x0097C3C0/0x1406F5B90
 int32_t PlayerCharacterPointsUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -140,7 +140,7 @@ static bool OnInspectRatedBgStats(ClientInspectRatedBgStats* msg) {
     return true;
 }
 
-// OFFSET: 0x0097C440
+// OFFSET: 0x0097C440/0x1406F5C20
 void CGCharacterInfo::InitializeGame() {
     ClientInspectHonorStats::s_handler = OnInspectHonorStats;
     ClientInspectRatedBgStats::s_handler = OnInspectRatedBgStats;
@@ -156,7 +156,7 @@ void CGCharacterInfo::RegisterMirrorHandlers(WOWGUID guid) {
     ClntObjMgrSetObjMirrorHandler(guid, ID_PLAYER, 0xD98, 4, PlayerCharacterPointsUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
-// OFFSET: 0x0097CF60
+// OFFSET: 0x0097CF60/0x1406F69A0
 void CGCharacterInfo::UpdateInventoryAlerts() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -182,7 +182,7 @@ void CGCharacterInfo::UpdateInventoryAlerts() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_INVENTORY_DURABILITY, NULL);
 }
 
-// OFFSET: 0x0097DF80
+// OFFSET: 0x0097DF80/0x1406F7C50
 void CGCharacterInfo::EnterWorld() {
     CGCharacterInfo::RegisterMirrorHandlers(ClntObjMgrGetActivePlayer());
     CGCharacterInfo::m_invAlertStatus.SetCount(11);
@@ -197,16 +197,12 @@ void UnitInventoryChangedCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 }
 
-// OFFSET: 0x0097B920
+// OFFSET: 0x0097B920/0x1406F4EE0
 bool CGCharacterInfo::CanInspect(const CGPlayer_C* unit) {
     if (unit) {
         uint64_t guid = unit->m_obj->m_guid.m_guid;
 
-        if (guid == ClntObjMgrGetActivePlayer().m_guid) {
-            return true;
-        }
-
-        if (unit->m_obj->m_guid == CGCharacterInfo::m_inspectTarget) {
+        if (guid == ClntObjMgrGetActivePlayer().m_guid || unit->m_obj->m_guid == CGCharacterInfo::m_inspectTarget) {
             return true;
         }
     }
@@ -247,7 +243,7 @@ int32_t Packet_MSG_INSPECT_ARENA_TEAMS(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: 0x0097B310
+// OFFSET: 0x0097B310/0x1406F4920
 void CGCharacterInfo::SetInspectTarget(const WOWGUID& guid) {
     WOWGUID target = guid;
 
@@ -266,7 +262,7 @@ void CGCharacterInfo::SetInspectTarget(const WOWGUID& guid) {
     CGTalentInfo_Inspect::SetInspectTarget(guid);
 }
 
-// OFFSET: 0x0097C480
+// OFFSET: 0x0097C480/0x1406F5C60
 void CGCharacterInfo::UpdateItem(WOWGUID guid) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -303,7 +299,7 @@ static void BuyItemInBag(WOWGUID merchant, const VendorItem* item, uint32_t coun
     CGPlayer_C::BuyItemInSlot(merchant, item, count, bag, 0xFF);
 }
 
-// OFFSET: 0x0097C570
+// OFFSET: 0x0097C570/0x1406F5DC0
 void CGCharacterInfo::PickupInventoryItem(int32_t slot) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -324,78 +320,78 @@ void CGCharacterInfo::PickupInventoryItem(int32_t slot) {
     CGGameUI::GetCursorVirtualItem(virtualId, virtualSlot);
     WOWGUID itemGuid = WOWGUID::Make(static_cast<uint32_t>(slot) >= static_cast<uint32_t>(player->m_bag.m_numSlots) ? 0 : player->m_bag.m_slots[slot].m_guid);
 
-    if (cursorItem) {
-        if (itemGuid != cursorItem) {
-            CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(itemGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
+    if (!cursorItem) {
+        if (virtualId) {
+            if (CGGameUI::m_cursorItemType == 5 && CGMerchantInfo::m_merchant) {
+                VendorItem* merchantItem = CGMerchantInfo::GetItem(virtualSlot);
 
-            if (item && (item->m_itemFlags & 1)) {
-                return;
+                if (merchantItem) {
+                    CGPlayer_C::BuyItemInSlot(CGMerchantInfo::m_merchant, merchantItem, merchantItem->m_buyCount, player->m_obj->m_guid, slot);
+                    CGGameUI::ClearCursor(1, 1);
+                }
             }
 
-            if (player->ValidateSlot(slot, cursorItem)) {
-                player->SwapItems(cursorItem, cursorContainer, cursorSlot, player->m_obj->m_guid, slot, 0);
-                CGGameUI::LockItem(itemGuid);
-                return;
-            }
-
-            if (cursorContainer != player->m_obj->m_guid || cursorSlot >= 19) {
-                player->AutoEquipCursorItem(0);
-                return;
-            }
+            return;
         }
 
-        CGGameUI::ClearCursor(1, 1);
-        return;
-    }
-
-    if (virtualId) {
-        if (CGGameUI::m_cursorItemType == 5 && CGMerchantInfo::m_merchant) {
-            VendorItem* merchantItem = CGMerchantInfo::GetItem(virtualSlot);
-
-            if (merchantItem) {
-                CGPlayer_C::BuyItemInSlot(CGMerchantInfo::m_merchant, merchantItem, merchantItem->m_buyCount, player->m_obj->m_guid, slot);
-                CGGameUI::ClearCursor(1, 1);
-            }
+        if (!itemGuid) {
+            return;
         }
 
-        return;
-    }
+        CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(itemGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (!itemGuid) {
-        return;
-    }
+        if (item && (item->m_itemFlags & 1)) {
+            return;
+        }
 
-    CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(itemGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
+        if (Spell_C_IsTargeting() && Spell_C_CanTargetItems()) {
+            CGGameUI::CastItemSpell(itemGuid, 0);
+        } else if (item && CursorGetResetMode() == 17 && CGMerchantInfo::CanRepair()) {
+            uint64_t cost = static_cast<uint32_t>(CGMerchantInfo::GetRepairCost(item));
 
-    if (item && (item->m_itemFlags & 1)) {
-        return;
-    }
-
-    if (Spell_C_IsTargeting() && Spell_C_CanTargetItems()) {
-        CGGameUI::CastItemSpell(itemGuid, 0);
-    } else if (item && CursorGetResetMode() == 17 && CGMerchantInfo::CanRepair()) {
-        uint64_t cost = static_cast<uint32_t>(CGMerchantInfo::GetRepairCost(item));
-
-        if (cost > player->GetCoinage()) {
-            CGGameUI::DisplayError(ERR_NOT_ENOUGH_MONEY);
+            if (cost > player->GetCoinage()) {
+                CGGameUI::DisplayError(ERR_NOT_ENOUGH_MONEY);
+            } else {
+                SE3SoundKitProperties properties;
+                SE3::PlaySoundKit("ITEM_REPAIR", NULL, &properties, NULL, __FILE__, __LINE__, "CGCharacterInfo::PickupItem");
+                WDataStore msg;
+                msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
+                msg.Put(CGMerchantInfo::m_merchant.m_guid);
+                msg.Put(itemGuid.m_guid);
+                msg.Put(static_cast<uint8_t>(0));
+                msg.Finalize();
+                ClientServices::Send2(&msg);
+            }
         } else {
-            SE3SoundKitProperties properties;
-            SE3::PlaySoundKit("ITEM_REPAIR", NULL, &properties, NULL, __FILE__, __LINE__, "CGCharacterInfo::PickupItem");
-            WDataStore msg;
-            msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
-            msg.Put(CGMerchantInfo::m_merchant.m_guid);
-            msg.Put(itemGuid.m_guid);
-            msg.Put(static_cast<uint8_t>(0));
-            msg.Finalize();
-            ClientServices::Send2(&msg);
+            CGGameUI::SetCursorItem(itemGuid, player->m_obj->m_guid, slot, 1, 0, 1);
+            CGGameUI::LockItem(itemGuid);
         }
-    } else {
-        CGGameUI::SetCursorItem(itemGuid, player->m_obj->m_guid, slot, 1, 0, 1);
-        CGGameUI::LockItem(itemGuid);
+        return;
     }
+
+    if (itemGuid != cursorItem) {
+        CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(itemGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
+
+        if (item && (item->m_itemFlags & 1)) {
+            return;
+        }
+
+        if (player->ValidateSlot(slot, cursorItem)) {
+            player->SwapItems(cursorItem, cursorContainer, cursorSlot, player->m_obj->m_guid, slot, 0);
+            CGGameUI::LockItem(itemGuid);
+            return;
+        }
+
+        if (cursorContainer != player->m_obj->m_guid || cursorSlot >= 19) {
+            player->AutoEquipCursorItem(0);
+            return;
+        }
+    }
+
+    CGGameUI::ClearCursor(1, 1);
 }
 
-// OFFSET: 0x0097C8C0
+// OFFSET: 0x0097C8C0/0x1406F6210
 void CGCharacterInfo::UseItem(int32_t slot, WOWGUID* target) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -437,7 +433,7 @@ void CGCharacterInfo::UseItem(int32_t slot, WOWGUID* target) {
     }
 }
 
-// OFFSET: 0x0097CA50
+// OFFSET: 0x0097CA50/0x1406F6460
 void CGCharacterInfo::SocketInventoryItem(int32_t slot) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -452,7 +448,7 @@ void CGCharacterInfo::SocketInventoryItem(int32_t slot) {
     }
 }
 
-// OFFSET: 0x0097CAC0
+// OFFSET: 0x0097CAC0/0x1406F64D0
 void CGCharacterInfo::PickupBag(uint32_t slot) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -484,7 +480,7 @@ void CGCharacterInfo::PickupBag(uint32_t slot) {
     }
 }
 
-// OFFSET: 0x0097B970
+// OFFSET: 0x0097B970/0x1406F4F30
 void CGCharacterInfo::RequestInspectHonorData() {
     if (!CGCharacterInfo::m_hasHonorData && !CGCharacterInfo::m_honorRequestPending && CGCharacterInfo::m_inspectTarget) {
         UserClientOpcode791E honor;
@@ -502,7 +498,7 @@ void CGCharacterInfo::RequestInspectHonorData() {
     }
 }
 
-// OFFSET: 0x0097CFD0
+// OFFSET: 0x0097CFD0/0x1406F6A40
 int32_t CGCharacterInfo::CanEquipItemInSlot(const ItemRecSparse* stats, uint32_t slot) {
     if (!stats) {
         return 0;
@@ -615,7 +611,7 @@ int32_t CGCharacterInfo::CanEquipItemInSlot(const ItemRecSparse* stats, uint32_t
     return !stats->m_requiredReputationFaction || GetRepListRepValue(stats->m_requiredReputationFaction) >= CGReputationInfo::m_reactionThresholds[stats->m_requiredReputationRank];
 }
 
-// OFFSET: 0x0097E0A0
+// OFFSET: 0x0097E0A0/0x1406F7DA0
 int32_t CGCharacterInfo::CanEquipItem(CGItem_C* item, uint32_t slot) {
     int32_t id = item->m_obj->m_entryID;
     WOWGUID none;
@@ -629,7 +625,7 @@ int32_t CGCharacterInfo::CanEquipItem(CGItem_C* item, uint32_t slot) {
     return CGCharacterInfo::CanEquipItemInSlot(stats, slot);
 }
 
-// OFFSET: 0x0097B3D0
+// OFFSET: 0x0097B3D0/0x1406F49D0
 void CGCharacterInfo::AverageItemLevelDirty() {
     if (!CGCharacterInfo::m_avgItemLevelDirty) {
         CGCharacterInfo::m_avgItemLevelDirty = 1;
@@ -663,7 +659,7 @@ static void AverageItemLevelCallback(int32_t id, const WOWGUID& guid, void* para
     }
 }
 
-// OFFSET: 0x0097E0F0
+// OFFSET: 0x0097E0F0/0x1406F7DF0
 float CGCharacterInfo::CalculateAverageItemLevel(bool equippedOnly) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -837,15 +833,11 @@ float CGCharacterInfo::CalculateAverageItemLevel(bool equippedOnly) {
     return oneHanded > twoHanded ? oneHanded : twoHanded;
 }
 
-// OFFSET: 0x0097CBC0
+// OFFSET: 0x0097CBC0/0x1406F65F0
 int32_t CGCharacterInfo::PutItemInBackpack(uint32_t slot) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player || !CGGameUI::m_hasControl) {
-        return 0;
-    }
-
-    if (slot - 67 <= 6 && !CGBankInfo::m_banker) {
+    if (!player || !CGGameUI::m_hasControl || (slot - 67 <= 6 && !CGBankInfo::m_banker)) {
         return 0;
     }
 
@@ -876,55 +868,55 @@ int32_t CGCharacterInfo::PutItemInBackpack(uint32_t slot) {
 
     CGItem_C* bagItem = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(bag, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if ((bagItem && (bagItem->m_itemFlags & 1)) || cursorItem == bag) {
-        CGGameUI::ClearCursor(1, 1);
-        return 1;
-    }
+    if (!(bagItem && (bagItem->m_itemFlags & 1)) && cursorItem != bag) {
+        if (!cursorItem && !virtualId) {
+            CGGameUI::ClearCursor(1, 1);
+            return 0;
+        }
 
-    if (!cursorItem && !virtualId) {
-        CGGameUI::ClearCursor(1, 1);
-        return 0;
-    }
+        if (cursorContainer == bag && (cursorContainer != player->m_obj->m_guid || cursorSlot - 23 <= 15)) {
+            CGGameUI::ClearCursor(1, 1);
+            return 1;
+        }
 
-    if (cursorContainer == bag && (cursorContainer != player->m_obj->m_guid || cursorSlot - 23 <= 15)) {
-        CGGameUI::ClearCursor(1, 1);
-        return 1;
-    }
+        if (!cursorItem) {
+            if (CGGameUI::m_cursorItemType == 5 && CGMerchantInfo::m_merchant) {
+                VendorItem* merchantItem = CGMerchantInfo::GetItem(virtualSlot);
 
-    if (!cursorItem) {
-        if (CGGameUI::m_cursorItemType == 5 && CGMerchantInfo::m_merchant) {
-            VendorItem* merchantItem = CGMerchantInfo::GetItem(virtualSlot);
+                if (merchantItem) {
+                    BuyItemInBag(CGMerchantInfo::m_merchant, merchantItem, merchantItem->m_buyCount, bag);
+                }
+            }
 
-            if (merchantItem) {
-                BuyItemInBag(CGMerchantInfo::m_merchant, merchantItem, merchantItem->m_buyCount, bag);
+            CGGameUI::ClearCursor(1, 1);
+            return 0;
+        }
+
+        if (slot != 0xFF) {
+            CGItem_C* cursorObject;
+
+            if ((cursorContainer == player->m_obj->m_guid && cursorSlot - 19 <= 3) || ((cursorObject = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(cursorItem, TYPEMASK_ITEM, __FILE__, __LINE__))) && (cursorObject->m_obj->m_type & TYPEMASK_CONTAINER))) {
+                CGGameUI::LockItem(bag);
+                player->SwapItems(cursorItem, cursorContainer, cursorSlot, player->m_obj->m_guid, slot, 0);
+                return 1;
             }
         }
 
-        CGGameUI::ClearCursor(1, 1);
-        return 0;
-    }
-
-    if (slot != 0xFF) {
-        CGItem_C* cursorObject;
-
-        if ((cursorContainer == player->m_obj->m_guid && cursorSlot - 19 <= 3) || ((cursorObject = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(cursorItem, TYPEMASK_ITEM, __FILE__, __LINE__))) && (cursorObject->m_obj->m_type & TYPEMASK_CONTAINER))) {
-            CGGameUI::LockItem(bag);
-            player->SwapItems(cursorItem, cursorContainer, cursorSlot, player->m_obj->m_guid, slot, 0);
-            return 1;
+        if (CGGameUI::m_stackSplit) {
+            player->SplitItem(cursorItem, cursorContainer, cursorSlot, bag, 0xFF, CGGameUI::m_stackSplit);
+        } else {
+            player->AutoStoreItemInBag(cursorItem, cursorContainer, cursorSlot, bag, 0);
         }
+
+        CGGameUI::ClearCursor(0, 1);
+        return 1;
     }
 
-    if (CGGameUI::m_stackSplit) {
-        player->SplitItem(cursorItem, cursorContainer, cursorSlot, bag, 0xFF, CGGameUI::m_stackSplit);
-    } else {
-        player->AutoStoreItemInBag(cursorItem, cursorContainer, cursorSlot, bag, 0);
-    }
-
-    CGGameUI::ClearCursor(0, 1);
+    CGGameUI::ClearCursor(1, 1);
     return 1;
 }
 
-// OFFSET: 0x0097CE70
+// OFFSET: 0x0097CE70/0x1406F68A0
 INV_ALERT_STATUS CGCharacterInfo::CalculateInventoryAlertStatus(CGPlayer_C* player, uint32_t slot) {
     CGItem_C* item = player->m_bag.GetItemPointer(s_inventoryAlertSlots[slot]);
 
@@ -936,11 +928,20 @@ INV_ALERT_STATUS CGCharacterInfo::CalculateInventoryAlertStatus(CGPlayer_C* play
         return INV_ALERT_RED;
     }
 
-    if ((item->m_item->m_itemFieldFlags & 0x8) || item->m_item->m_itemFieldMaxdurability <= 0) {
+    if ((item->m_item->m_itemFieldFlags & 0x8)) {
         return INV_ALERT_NONE;
     }
 
-    if ((item->m_item->m_itemFieldFlags & 0x8) || !item->m_item->m_itemFieldDurability) {
+    if (item->m_item->m_itemFieldMaxdurability <= 0) {
+        return INV_ALERT_NONE;
+    }
+
+    if ((item->m_item->m_itemFieldFlags & 0x8)) {
+        CGTutorial::TriggerTutorial(36);
+        return INV_ALERT_RED;
+    }
+
+    if (!item->m_item->m_itemFieldDurability) {
         CGTutorial::TriggerTutorial(36);
         return INV_ALERT_RED;
     }
@@ -962,14 +963,14 @@ void CGCharacterInfo::ShutdownGame() {
     CGCharacterInfo::m_avgItemLevelPending = 0;
 }
 
-// OFFSET: 0x0097B3F0
+// OFFSET: 0x0097B3F0/0x1406F49F0
 void GuildNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         Script_SendUnitSignal(guid, SCRIPT_EVENT_PLAYER_GUILD_UPDATE);
     }
 }
 
-// OFFSET: 0x0097DFE0
+// OFFSET: 0x0097DFE0/0x1406F7CD0
 void CGCharacterInfo::LeaveWorld() {
     WOWGUID guid = ClntObjMgrGetActivePlayer();
 

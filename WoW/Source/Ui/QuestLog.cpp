@@ -317,7 +317,11 @@ int32_t CGQuestLog::GetQuestItemID(const char* type, int32_t index) {
         return 0;
     }
 
-    if (_stricmp(type, "choice") || static_cast<uint32_t>(index) >= 6) {
+    if (_stricmp(type, "choice")) {
+        return 0;
+    }
+
+    if (static_cast<uint32_t>(index) >= 6) {
         return 0;
     }
 
@@ -389,19 +393,19 @@ bool CGQuestLog::GetQuestPOILoc(int32_t questId, bool& complete, int32_t& mapId,
 
 // OFFSET: 0x0095C540
 bool CGQuestLog::IsPOIVisibleOnWorldMap(const BLOBPOI& point, int32_t mapId, int32_t currentMapId) {
-    if (mapId != currentMapId) {
-        return false;
+    if (mapId == currentMapId) {
+        C3Vector position(static_cast<float>(point.m_x), static_cast<float>(point.m_y), 0.0f);
+        float x;
+        float y;
+        bool outland;
+        if (!CGWorldMap::GetWorldPosition(position, currentMapId, &x, &y, &outland, false, CGWorldMap::GetCurrentDungeonMap())) {
+            return false;
+        }
+
+        return !outland && fabs(fabs(x * y)) >= 0.001f;
     }
 
-    C3Vector position(static_cast<float>(point.m_x), static_cast<float>(point.m_y), 0.0f);
-    float x;
-    float y;
-    bool outland;
-    if (!CGWorldMap::GetWorldPosition(position, currentMapId, &x, &y, &outland, false, CGWorldMap::GetCurrentDungeonMap())) {
-        return false;
-    }
-
-    return !outland && fabs(fabs(x * y)) >= 0.001f;
+    return false;
 }
 
 // PROVEN: 84c84734 IDENTICAL/NONE
@@ -626,8 +630,10 @@ static void QuestLogQueryCallback(int32_t id, const WOWGUID& guid, void* param, 
         CGQuestLog::Update(1);
     }
 
-    if (ClntObjMgrGetActivePlayerObj()) {
-        CGPlayer_C::CheckForQuestAutoComplete(id, 0, 0);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        player->CheckQuestAutoComplete(id, 0, 0);
     }
 }
 
@@ -640,8 +646,10 @@ void QuestQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool succe
 
     Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
 
-    if (ClntObjMgrGetActivePlayerObj()) {
-        CGPlayer_C::CheckForQuestAutoComplete(id, 0, 0);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        player->CheckQuestAutoComplete(id, 0, 0);
     }
 }
 
@@ -751,7 +759,7 @@ static int32_t QSortQuestLogEntries(const void* a, const void* b) {
 
     int32_t firstLevel = firstQuest->m_level;
     int32_t secondLevel = secondQuest->m_level;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         if (firstLevel == -1) {
@@ -829,7 +837,7 @@ void CGQuestLog::LoadAutoQuestPopUps() {
     list.m_state = 0;
     CGQuestLog::m_numAutoQuestPopUps = 0;
     list.GetNextValue();
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     for (uint32_t questId = list.GetNextValue(); questId; questId = list.GetNextValue()) {
         if (CGQuestLog::m_numAutoQuestPopUps >= 50 || !player || !questId) {
@@ -890,7 +898,7 @@ void CGQuestLog::SaveAutoQuestPopUps() {
 
 // OFFSET: 0x0095EC00/0x1406D1F50
 void CGQuestLog::AbandonSelectedQuest() {
-    if (!CGQuestLog::m_abandonQuest || !ClntObjMgrGetActivePlayerObj()) {
+    if (!CGQuestLog::m_abandonQuest || !static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return;
     }
 
@@ -966,7 +974,7 @@ int32_t GetQuestLevel(int32_t questId) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && quest->m_level == static_cast<uint32_t>(-1)) {
         return player->m_unit->m_unitFieldLevel;
@@ -1119,14 +1127,14 @@ bool CGQuestLog::HasNoObjectives(uint32_t index) {
         return false;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
     }
 
     uint32_t slot = CGQuestLog::m_quests[index].m_logSlot;
-    PlayerQuestLogEntry* entry = slot > 50 ? NULL : &player->m_player->m_playerQuestLog[slot];
+    PlayerQuestLogEntry* entry = slot <= 50 ? &player->m_player->m_playerQuestLog[slot] : NULL;
     WOWGUID none = WOWGUID::Make(0);
     QuestCache* quest = g_questDBCache.GetRecord(CGQuestLog::m_quests[index].m_questId, none, QuestQueryCallback, NULL, false);
 
@@ -1150,11 +1158,7 @@ bool CGQuestLog::HasNoObjectives(uint32_t index) {
         return false;
     }
 
-    if (quest->m_rewardMoney < 0) {
-        return false;
-    }
-
-    return quest->m_requiredSpell == 0;
+    return quest->m_rewardMoney < 0 ? false : quest->m_requiredSpell == 0;
 }
 
 // OFFSET: 0x0095F320/0x1406D27E0
@@ -1163,14 +1167,14 @@ bool CGQuestLog::HasAutoCompleteBeenTried(uint32_t index) {
         return false;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
     }
 
     uint32_t slot = CGQuestLog::m_quests[index].m_logSlot;
-    PlayerQuestLogEntry* entry = slot > 50 ? NULL : &player->m_player->m_playerQuestLog[slot];
+    PlayerQuestLogEntry* entry = slot <= 50 ? &player->m_player->m_playerQuestLog[slot] : NULL;
     WOWGUID none = WOWGUID::Make(0);
     QuestCache* quest = g_questDBCache.GetRecord(CGQuestLog::m_quests[index].m_questId, none, QuestQueryCallback, NULL, false);
     return quest && entry && !(entry->m_state & 0x2) && !CGQuestLog::IsQuestFailed(index) && (quest->m_flags & 0x10000) && (entry->m_state & 0x4);
@@ -1216,7 +1220,7 @@ void CGQuestLog::UpdateQuestItem(int32_t itemId) {
         if (j < 6) {
             Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
 
-            if (ClntObjMgrGetActivePlayerObj()) {
+            if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
                 CGPlayer_C::QueryQuestGiverStatusMultiple();
             }
 
@@ -1242,7 +1246,7 @@ void CGQuestLog::UpdateQuestSpell(int32_t spellId) {
         if (quest && static_cast<int32_t>(quest->m_requiredSpell) == spellId) {
             Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
 
-            if (ClntObjMgrGetActivePlayerObj()) {
+            if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
                 CGPlayer_C::QueryQuestGiverStatusMultiple();
             }
 
@@ -1265,7 +1269,7 @@ void CGQuestLog::UpdateQuestCurrency(int32_t currencyId) {
             if (static_cast<int32_t>(quest->m_requiredCurrencyId[j]) == currencyId) {
                 Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
 
-                if (ClntObjMgrGetActivePlayerObj()) {
+                if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
                     CGPlayer_C::QueryQuestGiverStatusMultiple();
                 }
 
@@ -1277,29 +1281,29 @@ void CGQuestLog::UpdateQuestCurrency(int32_t currencyId) {
 
 // OFFSET: 0x0095F690
 int32_t CGQuestLog::GetQuestCriteriaSpell(int32_t questId) {
-    if (!ClntObjMgrGetActivePlayerObj()) {
-        return 0;
+    if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
+        int32_t id = questId ? questId : CGQuestLog::m_selectedQuest;
+
+        if (!id) {
+            return 0;
+        }
+
+        WOWGUID none = WOWGUID::Make(0);
+        QuestCache* quest = g_questDBCache.GetRecord(id, none, QuestQueryCallback, NULL, false);
+
+        if (!quest) {
+            return 0;
+        }
+
+        return quest->m_requiredSpell;
     }
 
-    int32_t id = questId ? questId : CGQuestLog::m_selectedQuest;
-
-    if (!id) {
-        return 0;
-    }
-
-    WOWGUID none = WOWGUID::Make(0);
-    QuestCache* quest = g_questDBCache.GetRecord(id, none, QuestQueryCallback, NULL, false);
-
-    if (!quest) {
-        return 0;
-    }
-
-    return quest->m_requiredSpell;
+    return 0;
 }
 
 // OFFSET: 0x0095F700/0x1406D2C70
 int32_t CountQuestItemDropsNeeded(int32_t questId, void (*callback)(int32_t id, const WOWGUID& guid, void* param, bool success), void* param) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -1333,7 +1337,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardForKill(const CGPlayer_C* player, int32_t
     char* type = params->m_type;
     params->m_type[0] = '\0';
     params->m_complete = 0;
-    WOWGUID none = WOWGUID::Make(0);
+    WOWGUID none = WOWGUID();
     QuestCache* quest = g_questDBCache.GetRecord(questId, none, params->m_questCallback, params->m_param, false);
     PlayerQuestLogEntry* entry = questId ? player->GetQuestLogEntryByID(questId) : NULL;
 
@@ -1429,7 +1433,7 @@ int32_t CGQuestLog::GetNumQuestItems(const CGPlayer_C* player, int32_t questId, 
 
 // OFFSET: 0x0095FBA0/0x1406D3260
 int32_t CGQuestLog::GetQuestGreenRange() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -1446,7 +1450,7 @@ int32_t CGQuestLog::GetQuestGreenRange() {
 
 // OFFSET: 0x0095FBF0
 bool CGQuestLog::HasQuestPOI(int32_t questId) {
-    if (!ClntObjMgrGetActivePlayerObj() || questId <= 0) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || questId <= 0) {
         return false;
     }
 
@@ -1461,11 +1465,11 @@ bool CGQuestLog::HasQuestPOI(int32_t questId) {
 
 // OFFSET: 0x0095FC40
 int32_t CGQuestLog::GetQuestPOIIndex(int32_t questId) {
-    if (!ClntObjMgrGetActivePlayerObj() || questId <= 0) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || questId <= 0) {
         return -1;
     }
 
-    for (int32_t i = 0; i < 50; i++) {
+    for (uint32_t i = 0; i < 50; i++) {
         if (CGQuestLog::m_questPOIs[i].m_questId == questId) {
             return i;
         }
@@ -1530,7 +1534,7 @@ uint32_t CGQuestLog::ComputeBlobQuestObjectives(int32_t questId) {
 
 // OFFSET: 0x0095FEC0
 int32_t CGQuestLog::GetQuestWorldMapAreaID(int32_t questId, int32_t& floor) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || questId <= 0) {
         return 0;
@@ -1656,7 +1660,7 @@ int32_t CGQuestLog::GetQuestWorldMapAreaID(int32_t questId, int32_t& floor) {
 
 // OFFSET: 0x00960220
 bool CGQuestLog::QuestPOIBlobIntersectsRect(int32_t questId, int32_t blobIndex, const CRect& rect) {
-    if (!ClntObjMgrGetActivePlayerObj() || blobIndex < 0) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || blobIndex < 0) {
         return false;
     }
 
@@ -1714,11 +1718,11 @@ bool CGQuestLog::QuestPOIBlobIntersectsRect(int32_t questId, int32_t blobIndex, 
 QuestPOIInfo* CGQuestLog::GetQuestPOIData(int32_t questId) {
     uint32_t index = CGQuestLog::GetQuestPOIIndex(questId);
 
-    if (index > 49) {
-        return NULL;
+    if (!(index > 49)) {
+        return &CGQuestLog::m_questPOIs[index];
     }
 
-    return &CGQuestLog::m_questPOIs[index];
+    return NULL;
 }
 
 // OFFSET: 0x00960410
@@ -1741,27 +1745,27 @@ static int32_t QSortQuestWatches(const void* a, const void* b) {
     int32_t questB = watchB->m_questId;
     int32_t sort = g_trackerSortingCVar->m_intValue;
 
-    if (sort == 1) {
-        return watchA->m_distance <= watchB->m_distance ? -1 : 1;
+    if (sort != 1) {
+        if (sort <= 1 || sort > 3) {
+            return questA - questB;
+        }
+
+        int32_t levelA = GetQuestLevel(questA);
+        int32_t levelB = GetQuestLevel(questB);
+
+        if (levelA == levelB) {
+            return questA - questB;
+        }
+
+        return sort == 3 ? levelA - levelB : levelB - levelA;
     }
 
-    if (sort <= 1 || sort > 3) {
-        return questA - questB;
-    }
-
-    int32_t levelA = GetQuestLevel(questA);
-    int32_t levelB = GetQuestLevel(questB);
-
-    if (levelA == levelB) {
-        return questA - questB;
-    }
-
-    return sort == 3 ? levelA - levelB : levelB - levelA;
+    return watchA->m_distance > watchB->m_distance ? 1 : -1;
 }
 
 // OFFSET: 0x009604F0/0x1406D3DC0
 float CGQuestLog::GetQuestDistSqr(int32_t questId, C2Vector& position) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0.0f;
@@ -1855,7 +1859,7 @@ void CGQuestLog::GetAllOfGroupsQuests(int32_t (&quests)[250]) {
         }
 
         for (uint32_t slot = 0; slot < 50; slot++) {
-            PlayerQuestLogEntry* entry = slot > 50 ? NULL : &member->m_player->m_playerQuestLog[slot];
+            PlayerQuestLogEntry* entry = slot <= 50 ? &member->m_player->m_playerQuestLog[slot] : NULL;
             int32_t questId = entry->m_questId;
 
             if (!questId) {
@@ -1887,34 +1891,34 @@ bool CGQuestLog::AddAutoQuestPopUp(int32_t questId, int32_t type) {
         }
     }
 
-    if (index >= 100 && CGQuestInfo::m_currentQuest != questId) {
-        return false;
-    }
+    if (!(index >= 100) || CGQuestInfo::m_currentQuest == questId) {
+        uint32_t count = CGQuestLog::m_numAutoQuestPopUps;
 
-    uint32_t count = CGQuestLog::m_numAutoQuestPopUps;
+        for (uint32_t i = 0; i < count; i++) {
+            if (CGQuestLog::m_autoQuestPopUps[i].m_questId == questId) {
+                if (CGQuestLog::m_autoQuestPopUps[i].m_type == type) {
+                    return false;
+                }
 
-    for (uint32_t i = 0; i < count; i++) {
-        if (CGQuestLog::m_autoQuestPopUps[i].m_questId == questId) {
-            if (CGQuestLog::m_autoQuestPopUps[i].m_type == type) {
-                return false;
+                CGQuestLog::m_autoQuestPopUps[i].m_type = type;
+                CGQuestLog::SaveAutoQuestPopUps();
+                return true;
             }
-
-            CGQuestLog::m_autoQuestPopUps[i].m_type = type;
-            CGQuestLog::SaveAutoQuestPopUps();
-            return true;
         }
+
+        if (count < 50) {
+            AutoQuestPopUp* popUp = &CGQuestLog::m_autoQuestPopUps[count];
+            popUp->m_questId = questId;
+            popUp->m_type = type;
+            popUp->m_shown = CGQuestLog::GetQuestIndex(questId) == 0;
+            CGQuestLog::m_numAutoQuestPopUps = count + 1;
+        }
+
+        CGQuestLog::SaveAutoQuestPopUps();
+        return true;
     }
 
-    if (count < 50) {
-        AutoQuestPopUp* popUp = &CGQuestLog::m_autoQuestPopUps[count];
-        popUp->m_questId = questId;
-        popUp->m_type = type;
-        popUp->m_shown = CGQuestLog::GetQuestIndex(questId) == 0;
-        CGQuestLog::m_numAutoQuestPopUps = count + 1;
-    }
-
-    CGQuestLog::SaveAutoQuestPopUps();
-    return true;
+    return false;
 }
 
 // PROVEN: e68df7f6 IDENTICAL/NONE
@@ -1968,7 +1972,7 @@ const char* CGQuestLog::GetQuestName(int32_t index) {
 
 // OFFSET: 0x00961C20/0x1406D59E0
 int32_t CGQuestLog::IsQuestComplete(uint32_t index) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     return CGQuestLog::IsQuestCompleteEx(player, index, true, 0, 0);
 }
 
@@ -1980,7 +1984,7 @@ int32_t CGQuestLog::IsQuestComplete(const CGPlayer_C* player, uint32_t index) {
 
 // OFFSET: 0x00961C70
 int32_t CGQuestLog::IsOnQuest(int32_t questId) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     return CGQuestLog::IsOnQuest(player, questId);
 }
 
@@ -2027,18 +2031,18 @@ int32_t CGQuestLog::GetNumQuestLeaderBoards(int32_t questId, void (*callback)(in
     }
 
     uint32_t index = CGQuestLog::GetQuestIndex(questId);
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!CGQuestLog::IsQuestCompleteEx(player, index - 1, true, 0, 0)) {
-        return count;
+    if (CGQuestLog::IsQuestCompleteEx(player, index - 1, true, 0, 0)) {
+        return 1;
     }
 
-    return 1;
+    return count;
 }
 
 // OFFSET: 0x00961E30
 int32_t CGQuestLog::GetQuestLeaderBoardForKill(int32_t questId, int32_t objectId, QuestLogLeaderBoardParams* params) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -2051,7 +2055,11 @@ int32_t CGQuestLog::GetQuestLeaderBoardForKill(int32_t questId, int32_t objectId
 int32_t CGQuestLog::UpdateAllQuestPOI() {
     int32_t visible = 0;
 
-    if (!g_questPOICVar->m_intValue || !ClntObjMgrGetActivePlayerObj()) {
+    if (!g_questPOICVar->m_intValue) {
+        return 0;
+    }
+
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return 0;
     }
 
@@ -2111,7 +2119,7 @@ void CGQuestLog::UpdatePOIIcons() {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -2195,7 +2203,7 @@ void CGQuestLog::UpdatePOIIcons() {
         poi->m_iconFloor = blob->m_floor;
         poi->m_iconX = blob->m_center.m_x;
         poi->m_iconY = blob->m_center.m_y;
-        CGPlayer_C* activePlayer = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* activePlayer = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (CGQuestLog::IsQuestCompleteEx(activePlayer, CGQuestLog::GetQuestIndex(poi->m_questId) - 1, true, 0, 0)) {
             completeList[numComplete++] = i;
@@ -2369,14 +2377,14 @@ int32_t CGQuestLog::GetPOIQuestIDByVisibleIndex(int32_t index) {
 
     uint32_t found = 0;
 
-    for (uint32_t i = 0; i < 50; i++) {
+    for (int32_t i = 0; i < 50; i++) {
         QuestPOIInfo* poi = &CGQuestLog::m_questPOIs[i];
 
         if (!poi->m_visible) {
             continue;
         }
 
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (CGQuestLog::IsQuestCompleteEx(player, CGQuestLog::GetQuestIndex(poi->m_questId) - 1, true, 0, 0) || CGQuestLog::HasNoObjectives(CGQuestLog::GetQuestIndex(poi->m_questId) - 1)) {
             if (static_cast<uint32_t>(index) == found++) {
@@ -2387,7 +2395,7 @@ int32_t CGQuestLog::GetPOIQuestIDByVisibleIndex(int32_t index) {
 
     for (int32_t i = 0; i < static_cast<int32_t>(CGQuestLog::m_numQuestWatches); i++) {
         QuestWatch* watch = &CGQuestLog::m_questWatches[i];
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (CGQuestLog::IsQuestCompleteEx(player, CGQuestLog::GetQuestIndex(watch->m_questId) - 1, true, 0, 0) || CGQuestLog::HasNoObjectives(CGQuestLog::GetQuestIndex(watch->m_questId) - 1)) {
             continue;
@@ -2407,7 +2415,7 @@ int32_t CGQuestLog::GetPOIQuestIDByVisibleIndex(int32_t index) {
             continue;
         }
 
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (CGQuestLog::IsQuestCompleteEx(player, CGQuestLog::GetQuestIndex(poi->m_questId) - 1, true, 0, 0) || CGQuestLog::HasNoObjectives(CGQuestLog::GetQuestIndex(poi->m_questId) - 1)) {
             continue;
@@ -2468,7 +2476,7 @@ bool CGQuestLog::SortQuestWatches() {
 // OFFSET: 0x009635C0/0x1406D8240
 bool CGQuestLog::AddQuestWatch(int32_t questId, uint32_t duration) {
     int32_t now = _time32(NULL);
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player || !questId) {
         return false;
@@ -2491,7 +2499,11 @@ bool CGQuestLog::AddQuestWatch(int32_t questId, uint32_t duration) {
     for (uint32_t i = 0; i < count; i++) {
         if (CGQuestLog::m_questWatches[i].m_questId == questId) {
             if (CGQuestLog::m_questWatches[i].m_expireTime > 0) {
-                CGQuestLog::m_questWatches[i].m_expireTime = duration ? duration + now : 0;
+                if (duration) {
+                    CGQuestLog::m_questWatches[i].m_expireTime = duration + now;
+                } else {
+                    CGQuestLog::m_questWatches[i].m_expireTime = 0;
+                }
             }
 
             return false;
@@ -2503,30 +2515,34 @@ bool CGQuestLog::AddQuestWatch(int32_t questId, uint32_t duration) {
     }
 
     CGQuestLog::m_questWatches[count].m_questId = questId;
-    CGQuestLog::m_questWatches[count].m_expireTime = duration ? duration + now : 0;
+    if (duration) {
+        CGQuestLog::m_questWatches[count].m_expireTime = duration + now;
+    } else {
+        CGQuestLog::m_questWatches[count].m_expireTime = 0;
+    }
     CGQuestLog::m_numQuestWatches = count + 1;
     return CGQuestLog::SortQuestWatches();
 }
 
 // OFFSET: 0x009636B0/0x1406D8360
 int32_t CGQuestLog::SetQuestExpired(uint32_t index) {
-    if (index >= CGQuestLog::m_numQuest) {
-        return 0;
+    if (!(index >= CGQuestLog::m_numQuest)) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (CGQuestLog::IsQuestCompleteEx(player, index, true, 0, 0)) {
+            return 0;
+        }
+
+        CGQuestLog::m_quests[index].m_expired = 1;
+
+        if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
+            CGPlayer_C::QueryQuestGiverStatusMultiple();
+        }
+
+        return 1;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (CGQuestLog::IsQuestCompleteEx(player, index, true, 0, 0)) {
-        return 0;
-    }
-
-    CGQuestLog::m_quests[index].m_expired = 1;
-
-    if (ClntObjMgrGetActivePlayerObj()) {
-        CGPlayer_C::QueryQuestGiverStatusMultiple();
-    }
-
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x00963730
@@ -2576,7 +2592,7 @@ uint32_t CGQuestLog::GetQuestPOIBlobsOnContinent(int32_t questId, TSGrowableArra
     blobs.m_count = 0;
     blobs.m_data = NULL;
 
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return 0;
     }
 
@@ -2991,18 +3007,18 @@ void CGQuestLog::EnterWorld() {
 
 // OFFSET: 0x00964B80
 int32_t CGQuestLog::FindEmptyQuestPOISlot(int32_t questId) {
-    if (!ClntObjMgrGetActivePlayerObj() || questId <= 0) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || questId <= 0) {
         return -1;
     }
 
-    for (int32_t i = 0; i < 50; i++) {
+    for (uint32_t i = 0; i < 50; i++) {
         QuestPOIInfo* poi = &CGQuestLog::m_questPOIs[i];
 
         if (poi->m_questId == questId) {
             return i;
         }
 
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (!CGQuestLog::IsOnQuest(player, poi->m_questId)) {
             poi->m_questId = 0;
@@ -3111,7 +3127,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardByID(int32_t questId, QuestLogLeaderBoard
         return 0;
     }
 
-    WOWGUID none = WOWGUID::Make(0);
+    WOWGUID none = WOWGUID();
     QuestCache* quest = g_questDBCache.GetRecord(questId, none, params->m_questCallback, params->m_param, false);
     PlayerQuestLogEntry* entry = static_cast<uint32_t>(slot) > 50 ? NULL : &player->m_player->m_playerQuestLog[slot];
 
@@ -3159,7 +3175,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardByID(int32_t questId, QuestLogLeaderBoard
         const char* objectiveText = quest->m_objectiveText[i];
 
         if (objective >= 0 && !*objectiveText) {
-            WOWGUID creatureGuid = WOWGUID::Make(0);
+            WOWGUID creatureGuid = WOWGUID();
             CreatureStats_C* creature = g_creatureDBCache.GetRecord(objective, creatureGuid, params->m_creatureCallback, params->m_param, false);
             uint32_t plural = FrameScript_GetPluralIndex(quest->m_objectiveRequiredCount[i]);
 
@@ -3179,7 +3195,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardByID(int32_t questId, QuestLogLeaderBoard
                 SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("QUEST_OBJECTS_FOUND_NOPROGRESS", -1, GENDER_NOT_APPLICABLE), objectiveText, quest->m_objectiveRequiredCount[i]);
             }
         } else {
-            WOWGUID objectGuid = WOWGUID::Make(0);
+            WOWGUID objectGuid = WOWGUID();
             GameObjectStats_C* object = g_gameObjectDBCache.GetRecord(objective & 0x7FFFFFFF, objectGuid, params->m_objectCallback, params->m_param, false);
             uint32_t plural = FrameScript_GetPluralIndex(quest->m_objectiveRequiredCount[i]);
 
@@ -3213,7 +3229,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardByID(int32_t questId, QuestLogLeaderBoard
             continue;
         }
 
-        WOWGUID itemGuid = WOWGUID::Make(0);
+        WOWGUID itemGuid = WOWGUID();
         ItemRecSparse* item = g_itemSparseDB.GetRecord(quest->m_collectItemId[i], itemGuid, params->m_itemCallback, params->m_param, false);
         uint32_t plural = FrameScript_GetPluralIndex(quest->m_collectItemCount[i]);
 
@@ -3247,7 +3263,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardByID(int32_t questId, QuestLogLeaderBoard
                 continue;
             }
 
-            WOWGUID itemGuid = WOWGUID::Make(0);
+            WOWGUID itemGuid = WOWGUID();
             ItemRecSparse* item = g_itemSparseDB.GetRecord(quest->m_intermediateItemId[i], itemGuid, params->m_itemCallback, params->m_param, false);
             uint32_t plural = FrameScript_GetPluralIndex(1);
             int32_t have = player->m_bag.GetItemTypeCount(quest->m_intermediateItemId[i], 8);
@@ -3355,7 +3371,7 @@ int32_t CGQuestLog::GetQuestLogItemDropByID(int32_t questId, QuestLogLeaderBoard
     char* type = params->m_type;
     params->m_type[0] = '\0';
     params->m_complete = 0;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -3385,7 +3401,7 @@ int32_t CGQuestLog::GetQuestLogItemDropByID(int32_t questId, QuestLogLeaderBoard
 
     WOWGUID none = WOWGUID::Make(0);
     QuestCache* quest = g_questDBCache.GetRecord(questId, none, params->m_questCallback, params->m_param, false);
-    PlayerQuestLogEntry* entry = static_cast<uint32_t>(slot) > 50 ? NULL : &player->m_player->m_playerQuestLog[slot];
+    PlayerQuestLogEntry* entry = static_cast<uint32_t>(slot) <= 50 ? &player->m_player->m_playerQuestLog[slot] : NULL;
 
     if (!quest || (params->m_requireLogEntry && !entry)) {
         return 0;
@@ -3444,7 +3460,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardForItem(const CGPlayer_C* player, int32_t
     params->m_type[0] = '\0';
     char* type = params->m_type;
     params->m_complete = 0;
-    WOWGUID none = WOWGUID::Make(0);
+    WOWGUID none = WOWGUID();
     QuestCache* quest = g_questDBCache.GetRecord(questId, none, params->m_questCallback, params->m_param, false);
     PlayerQuestLogEntry* entry = questId ? player->GetQuestLogEntryByID(questId) : NULL;
 
@@ -3460,13 +3476,13 @@ int32_t CGQuestLog::GetQuestLeaderBoardForItem(const CGPlayer_C* player, int32_t
         }
     }
 
-    WOWGUID itemGuid = WOWGUID::Make(0);
+    WOWGUID itemGuid = WOWGUID();
     ItemRecSparse* item = g_itemSparseDB.GetRecord(quest->m_collectItemId[i], itemGuid, params->m_itemCallback, params->m_param, false);
     uint32_t plural = FrameScript_GetPluralIndex(quest->m_collectItemCount[i]);
     int32_t required = quest->m_collectItemCount[i];
     int32_t have;
 
-    if (player == ClntObjMgrGetActivePlayerObj()) {
+    if (player == static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         have = player->m_bag.GetItemTypeCount(quest->m_collectItemId[i], 8) < required ? player->m_bag.GetItemTypeCount(quest->m_collectItemId[i], 8) : required;
     } else {
         have = CGQuestLog::GetNumQuestItems(player, questId, itemId) < required ? CGQuestLog::GetNumQuestItems(player, questId, itemId) : required;
@@ -3581,7 +3597,7 @@ int32_t CGQuestLog::GetQuestPOILeaderBoardByID(int32_t questId, QuestLogLeaderBo
     params->m_type[0] = '\0';
     params->m_complete = 0;
 
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return 0;
     }
 
@@ -3622,7 +3638,7 @@ int32_t CGQuestLog::GetQuestPOILeaderBoardByID(int32_t questId, QuestLogLeaderBo
         return 0;
     }
 
-    PlayerQuestLogEntry* entry = ClntObjMgrGetActivePlayerObj()->GetQuestLogEntry(CGQuestLog::GetQuestLogSlot(logIndex));
+    PlayerQuestLogEntry* entry = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->GetQuestLogEntry(CGQuestLog::GetQuestLogSlot(logIndex));
 
     if (!entry || !quest->m_endText[0]) {
         return 0;

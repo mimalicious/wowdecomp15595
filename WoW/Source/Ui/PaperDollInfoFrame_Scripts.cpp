@@ -37,7 +37,7 @@
 #include "WoW/Source/Game/ItemTransmogrify.h"
 #include "WoW/Source/Ui/Transmogrify.h"
 
-// OFFSET: 0x0097BA80
+// OFFSET: 0x0097BA80/0x1406F5060
 static int32_t ResolveInventorySlotArg(lua_State* L, int32_t index, int32_t& slot) {
     if (lua_isnumber(L, index)) {
         slot = static_cast<int32_t>(lua_tonumber(L, index)) - 1;
@@ -317,39 +317,39 @@ static int32_t Script_GetInventoryItemCount(lua_State* L) {
         return 1;
     }
 
-    if (!(item->m_obj->m_type & TYPEMASK_CONTAINER)) {
-        lua_pushnumber(L, item->m_item->m_itemFieldStackCount);
-        return 1;
-    }
-
-    if (slot > 22) {
-        lua_pushnumber(L, 0.0);
-        return 1;
-    }
-
-    uint32_t count = g_itemSubClassDB.m_numRecords;
-
-    for (uint32_t i = 0; i < count; i++) {
-        ItemSubClassRec* rec = g_itemSubClassDB.GetRecordByIndex(i);
-
-        if (rec->m_classID != static_cast<int32_t>(item->GetClassID()) || rec->m_subClassID != static_cast<int32_t>(item->GetSubtypeID())) {
-            continue;
-        }
-
-        if (!(rec->m_displayFlags & 0x4)) {
-            break;
-        }
-
-        if (item->GetBag()->GetItemTypeCount(-1, 0) <= 0) {
-            lua_pushnumber(L, 0);
+    if (item->m_obj->m_type & TYPEMASK_CONTAINER) {
+        if (slot > 22) {
+            lua_pushnumber(L, 0.0);
         } else {
-            lua_pushnumber(L, item->GetBag()->GetItemTypeCount(-1, 0));
+            uint32_t count = g_itemSubClassDB.m_numRecords;
+
+            for (uint32_t i = 0; i < count; i++) {
+                ItemSubClassRec* rec = g_itemSubClassDB.GetRecordByIndex(i);
+
+                if (rec->m_classID != static_cast<int32_t>(item->GetClassID()) || rec->m_subClassID != static_cast<int32_t>(item->GetSubtypeID())) {
+                    continue;
+                }
+
+                if (!(rec->m_displayFlags & 0x4)) {
+                    break;
+                }
+
+                if (item->GetBag()->GetItemTypeCount(-1, 0) <= 0) {
+                    lua_pushnumber(L, 0);
+                    return 1;
+                }
+
+                lua_pushnumber(L, item->GetBag()->GetItemTypeCount(-1, 0));
+                return 1;
+            }
+
+            lua_pushnumber(L, 0.0);
         }
 
         return 1;
     }
 
-    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, item->m_item->m_itemFieldStackCount);
     return 1;
 }
 
@@ -400,33 +400,33 @@ static int32_t Script_GetWeaponEnchantInfo(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t slots[3] = { 15, 16, 17 };
 
-    if (!player) {
-        return 0;
-    }
+    if (player) {
+        CGBag_C* bag = &player->m_bag;
 
-    CGBag_C* bag = &player->m_bag;
+        for (uint32_t i = 0; i < 3; i++) {
+            CGItem_C* item = bag->GetItemPointer(slots[i]);
 
-    for (uint32_t i = 0; i < 3; i++) {
-        CGItem_C* item = bag->GetItemPointer(slots[i]);
+            if (item && item->GetEnchantmentId(1)) {
+                lua_pushnumber(L, 1.0);
 
-        if (item && item->GetEnchantmentId(1)) {
-            lua_pushnumber(L, 1.0);
+                if (!item->GetEnchantmentDuration(1)) {
+                    lua_pushnil(L);
+                } else {
+                    lua_pushnumber(L, item->GetEnchantmentTimeLeft(1));
+                }
 
-            if (item->GetEnchantmentDuration(1)) {
-                lua_pushnumber(L, item->GetEnchantmentTimeLeft(1));
+                lua_pushnumber(L, item->GetEnchantmentCharges(1));
             } else {
                 lua_pushnil(L);
+                lua_pushnil(L);
+                lua_pushnil(L);
             }
-
-            lua_pushnumber(L, item->GetEnchantmentCharges(1));
-        } else {
-            lua_pushnil(L);
-            lua_pushnil(L);
-            lua_pushnil(L);
         }
+
+        return 9;
     }
 
-    return 9;
+    return 0;
 }
 
 // OFFSET: 0x0097DB90/0x1406F77C0
@@ -491,7 +491,7 @@ static int32_t Script_PutItemInBag(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0097B1F0
+// OFFSET: 0x0097B1F0/0x1406F47F0
 static void InspectArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         FrameScript_SignalEvent(SCRIPT_EVENT_INSPECT_HONOR_UPDATE, NULL);
@@ -566,7 +566,7 @@ static int32_t Script_GetInspectArenaTeamData(lua_State* L) {
     return 18;
 }
 
-// OFFSET: 0x0097E5A0
+// OFFSET: 0x0097E5A0/0x1406F83D0
 static void AddInventoryItemForSlot(CGItem_C* item, lua_State* L, int32_t location, uint32_t slot, uint8_t bypass, bool transmogrify, CGItem_C* target, const ItemRecInterface* targetRec) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -644,113 +644,113 @@ static int32_t Script_GetInventoryItemsForSlot(lua_State* L) {
         }
     }
 
-    if (lua_type(L, 2) != LUA_TTABLE) {
-        luaL_error(L, "Usage: GetInventoryItemsForSlot(slot, returnTable, [\"transmogrify\"])");
-        return 0;
-    }
+    if (lua_type(L, 2) == LUA_TTABLE) {
+        bool transmogrify = false;
 
-    bool transmogrify = false;
+        if (lua_isstring(L, 3) && !SStrCmpI(lua_tolstring(L, 3, NULL), "transmogrify", STORM_MAX_STR)) {
+            transmogrify = true;
+        }
 
-    if (lua_isstring(L, 3) && !SStrCmpI(lua_tolstring(L, 3, NULL), "transmogrify", STORM_MAX_STR)) {
-        transmogrify = true;
-    }
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player) {
-        return 0;
-    }
-
-    const CGBag_C* inventory = static_cast<const CGPlayer_C*>(player)->GetBag();
-    ItemRecSparse* targetStats = NULL;
-    CGItem_C* target = NULL;
-    uint8_t bypass = 0;
-
-    if (transmogrify) {
-        target = const_cast<CGBag_C*>(inventory)->GetItemPointer(slot);
-
-        if (!target) {
+        if (!player) {
             return 0;
         }
 
-        targetStats = target->GetStats();
-    } else {
-        ChrClassesRec* chrClass = g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1]);
+        const CGBag_C* inventory = static_cast<const CGPlayer_C*>(player)->GetBag();
+        CGItem_C* target = NULL;
+        ItemRecSparse* targetStats = NULL;
+        uint8_t bypass = 0;
 
-        if (!chrClass) {
-            return 0;
-        }
+        if (transmogrify) {
+            target = const_cast<CGBag_C*>(inventory)->GetItemPointer(slot);
 
-        bypass = (chrClass->m_flags & 0x8) != 0;
-    }
-
-    ClientItemRec targetRec(targetStats);
-
-    for (int32_t i = 0; i <= 18; i++) {
-        CGItem_C* item = const_cast<CGBag_C*>(inventory)->GetItemPointer(i);
-
-        if (item) {
-            AddInventoryItemForSlot(item, L, i + 0x100000, slot, bypass, transmogrify, target, &targetRec);
-        }
-    }
-
-    for (int32_t i = 23; i <= 38; i++) {
-        CGItem_C* item = const_cast<CGBag_C*>(inventory)->GetItemPointer(i);
-
-        if (item) {
-            AddInventoryItemForSlot(item, L, i + 0x2FFFE9, slot, bypass, transmogrify, target, &targetRec);
-        }
-    }
-
-    for (uint32_t bagIndex = 0; bagIndex < 4; bagIndex++) {
-        CGObject_C* container = ClntObjMgrObjectPtr(CGContainerInfo::GetContainer(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
-
-        if (!container) {
-            continue;
-        }
-
-        int32_t location = ((bagIndex + 1) << 8) | 0x300000;
-        CGBag_C* bag = container->GetBag();
-
-        for (int32_t i = 0; i <= bag->m_numSlots; i++) {
-            CGItem_C* item = bag->GetItemPointer(i);
-
-            if (item) {
-                AddInventoryItemForSlot(item, L, i + location, slot, bypass, transmogrify, target, &targetRec);
+            if (!target) {
+                return 0;
             }
-        }
-    }
 
-    if (CGBankInfo::m_banker && !transmogrify) {
-        for (int32_t i = 39; i <= 66; i++) {
+            targetStats = target->GetStats();
+        } else {
+            ChrClassesRec* chrClass = g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1]);
+
+            if (!chrClass) {
+                return 0;
+            }
+
+            bypass = (chrClass->m_flags & 0x8) != 0;
+        }
+
+        ClientItemRec targetRec(targetStats);
+
+        for (int32_t i = 0; i <= 18; i++) {
             CGItem_C* item = const_cast<CGBag_C*>(inventory)->GetItemPointer(i);
 
             if (item) {
-                AddInventoryItemForSlot(item, L, i + 0x400000, slot, bypass, false, target, &targetRec);
+                AddInventoryItemForSlot(item, L, i + 0x100000, slot, bypass, transmogrify, target, &targetRec);
             }
         }
 
-        for (uint32_t bagIndex = 4; bagIndex < 11; bagIndex++) {
+        for (int32_t i = 23; i <= 38; i++) {
+            CGItem_C* item = const_cast<CGBag_C*>(inventory)->GetItemPointer(i);
+
+            if (item) {
+                AddInventoryItemForSlot(item, L, i + 0x2FFFE9, slot, bypass, transmogrify, target, &targetRec);
+            }
+        }
+
+        for (uint32_t bagIndex = 0; bagIndex < 4; bagIndex++) {
             CGObject_C* container = ClntObjMgrObjectPtr(CGContainerInfo::GetContainer(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
 
             if (!container) {
                 continue;
             }
 
-            int32_t location = ((bagIndex - 3) | 0x6000) << 8;
+            int32_t location = ((bagIndex + 1) << 8) | 0x300000;
             CGBag_C* bag = container->GetBag();
 
             for (int32_t i = 0; i <= bag->m_numSlots; i++) {
                 CGItem_C* item = bag->GetItemPointer(i);
 
                 if (item) {
-                    AddInventoryItemForSlot(item, L, i + location, slot, bypass, false, target, &targetRec);
+                    AddInventoryItemForSlot(item, L, i + location, slot, bypass, transmogrify, target, &targetRec);
                 }
             }
         }
+
+        if (CGBankInfo::m_banker && !transmogrify) {
+            for (int32_t i = 39; i <= 66; i++) {
+                CGItem_C* item = const_cast<CGBag_C*>(inventory)->GetItemPointer(i);
+
+                if (item) {
+                    AddInventoryItemForSlot(item, L, i + 0x400000, slot, bypass, false, target, &targetRec);
+                }
+            }
+
+            for (uint32_t bagIndex = 4; bagIndex < 11; bagIndex++) {
+                CGObject_C* container = ClntObjMgrObjectPtr(CGContainerInfo::GetContainer(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
+
+                if (!container) {
+                    continue;
+                }
+
+                int32_t location = ((bagIndex - 3) | 0x6000) << 8;
+                CGBag_C* bag = container->GetBag();
+
+                for (int32_t i = 0; i <= bag->m_numSlots; i++) {
+                    CGItem_C* item = bag->GetItemPointer(i);
+
+                    if (item) {
+                        AddInventoryItemForSlot(item, L, i + location, slot, bypass, false, target, &targetRec);
+                    }
+                }
+            }
+        }
+
+        return 1;
     }
 
-    return 1;
+    luaL_error(L, "Usage: GetInventoryItemsForSlot(slot, returnTable, [\"transmogrify\"])");
+    return 0;
 }
 
 // OFFSET: 0x0097EC80
@@ -812,13 +812,13 @@ static int32_t Script_GetInventoryItemDurability(lua_State* L) {
     uint32_t maxDurability = item->GetMaxDurability();
     uint32_t durability = item->GetDurability();
 
-    if (!maxDurability) {
-        return 0;
+    if (maxDurability) {
+        lua_pushnumber(L, durability);
+        lua_pushnumber(L, maxDurability);
+        return 2;
     }
 
-    lua_pushnumber(L, durability);
-    lua_pushnumber(L, maxDurability);
-    return 2;
+    return 0;
 }
 
 // OFFSET: 0x0097ED50
@@ -1044,7 +1044,11 @@ static int32_t Script_GetInspectGuildInfo(lua_State* L) {
 
     CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
 
-    if (!unit || !(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
+    if (!unit) {
+        return 0;
+    }
+
+    if (!(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
         return 0;
     }
 
@@ -1056,7 +1060,7 @@ static int32_t Script_GetInspectGuildInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: 0x0097EE60
+// OFFSET: 0x0097EE60/0x1406F8FE0
 static int32_t Script_GetAverageItemLevel(lua_State* L) {
     if (CGCharacterInfo::m_avgItemLevelDirty) {
         float total = CGCharacterInfo::CalculateAverageItemLevel(false);
@@ -1088,7 +1092,7 @@ static int32_t Script_GetAverageItemLevel(lua_State* L) {
     return 2;
 }
 
-// OFFSET: 0x0097B550
+// OFFSET: 0x0097B550/0x1406F4B30
 static int32_t Script_GetInspectRatedBGData(lua_State* L) {
     lua_pushnumber(L, CGCharacterInfo::m_inspectRatedBGRating);
     lua_pushnumber(L, CGCharacterInfo::m_inspectRatedBGPlayed);

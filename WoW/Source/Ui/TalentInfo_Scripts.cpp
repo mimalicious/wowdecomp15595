@@ -510,16 +510,16 @@ static int32_t Script_GetTalentPrereqs(lua_State* L) {
                 TalentGroupItem_C* item = TalentInfoGetTalentItem(group, prereqId, inspect, pet);
 
                 if (item) {
-                    if (item->m_rank < talent->m_prereqRank[i]) {
-                        lua_pushnil(L);
-                    } else {
+                    if (item->m_rank >= talent->m_prereqRank[i]) {
                         lua_pushnumber(L, 1.0);
+                    } else {
+                        lua_pushnil(L);
                     }
 
-                    if (item->m_previewRank < talent->m_prereqRank[i]) {
-                        lua_pushnil(L);
-                    } else {
+                    if (item->m_previewRank >= talent->m_prereqRank[i]) {
                         lua_pushnumber(L, 1.0);
+                    } else {
+                        lua_pushnil(L);
                     }
                 } else {
                     lua_pushnil(L);
@@ -576,56 +576,55 @@ static int32_t Script_GetTalentLink(lua_State* L) {
 static int32_t Script_LearnTalent(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: LearnTalent(tabIndex, talentIndex[, isPet])");
-        return 0;
-    }
+    } else {
+        uint32_t tabIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+        uint32_t talentIndex = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
+        int32_t pet = StringToBOOL(L, 3, 0);
+        CGUnit_C* unit = pet ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+        TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, pet);
 
-    uint32_t tabIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    uint32_t talentIndex = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
-    int32_t pet = StringToBOOL(L, 3, 0);
-    CGUnit_C* unit = pet ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : ClntObjMgrGetActivePlayerObj();
-    TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, pet);
-
-    if (!unit || !tab || talentIndex >= tab->m_numTalents) {
-        return 0;
-    }
-
-    const TalentRec* talent = &tab->m_talents[talentIndex];
-
-    if (!talent || (pet && !CGTalentInfo::IsTalentAvailableForPet(unit, talent))) {
-        return 0;
-    }
-
-    int32_t rank = -1;
-    int32_t maxRank = -1;
-
-    for (int32_t i = 4; i >= 0; i--) {
-        if (talent->m_spellRank[i]) {
-            maxRank = i;
-            break;
-        }
-    }
-
-    TalentGroupItem_C* item = CGTalentInfo::GetTalentItem(CGTalentInfo::GetActiveTalentGroup(pet), talent->m_id, pet);
-
-    if (item) {
-        rank = item->m_rank;
-    }
-
-    if (rank < maxRank) {
-        CDataStore msg;
-
-        if (pet) {
-            msg.Put(static_cast<uint32_t>(CMSG_PET_LEARN_TALENT));
-            msg.Put(unit->m_obj->m_guid.m_guid);
-        } else {
-            msg.Put(static_cast<uint32_t>(CMSG_LEARN_TALENT));
+        if (!unit || !tab || talentIndex >= tab->m_numTalents) {
+            return 0;
         }
 
-        msg.Put(static_cast<uint32_t>(talent->m_id));
-        msg.Put(static_cast<uint32_t>(rank + 1));
-        msg.Finalize();
-        ClientServices::Send2(&msg);
-        g_talentPointsSpentCVar->Set("1", true, false, false, true);
+        const TalentRec* talent = &tab->m_talents[talentIndex];
+
+        if (!talent || (pet && !CGTalentInfo::IsTalentAvailableForPet(unit, talent))) {
+            return 0;
+        }
+
+        int32_t rank = -1;
+        int32_t maxRank = -1;
+
+        for (int32_t i = 4; i >= 0; i--) {
+            if (talent->m_spellRank[i]) {
+                maxRank = i;
+                break;
+            }
+        }
+
+        TalentGroupItem_C* item = CGTalentInfo::GetTalentItem(CGTalentInfo::GetActiveTalentGroup(pet), talent->m_id, pet);
+
+        if (item) {
+            rank = item->m_rank;
+        }
+
+        if (rank < maxRank) {
+            CDataStore msg;
+
+            if (pet) {
+                msg.Put(static_cast<uint32_t>(CMSG_PET_LEARN_TALENT));
+                msg.Put(unit->m_obj->m_guid.m_guid);
+            } else {
+                msg.Put(static_cast<uint32_t>(CMSG_LEARN_TALENT));
+            }
+
+            msg.Put(static_cast<uint32_t>(talent->m_id));
+            msg.Put(static_cast<uint32_t>(rank + 1));
+            msg.Finalize();
+            ClientServices::Send2(&msg);
+            g_talentPointsSpentCVar->Set("1", true, false, false, true);
+        }
     }
 
     return 0;
@@ -633,7 +632,12 @@ static int32_t Script_LearnTalent(lua_State* L) {
 
 // OFFSET: 0x0099EB30/0x1407225E0
 static int32_t Script_AddPreviewTalentPoints(lua_State* L) {
-    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
+    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: AddPreviewTalentPoints(tabIndex, talentIndex, points[, isPet[, groupIndex]])");
+        return 0;
+    }
+
+    if (!lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: AddPreviewTalentPoints(tabIndex, talentIndex, points[, isPet[, groupIndex]])");
         return 0;
     }
@@ -697,34 +701,34 @@ static int32_t Script_GetTalentTreeRoles(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 2, 0);
     TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, inspect, pet);
 
-    if (!tab) {
-        return 0;
+    if (tab) {
+        TalentTabRec* tabRec = g_talentTabDB.GetRecord(tab->m_tabId);
+
+        if (!tabRec) {
+            return 0;
+        }
+
+        int32_t count = 0;
+
+        if (tabRec->m_roleMask & 2) {
+            lua_pushstring(L, s_roleTokens[0]);
+            count = 1;
+        }
+
+        if (tabRec->m_roleMask & 8) {
+            lua_pushstring(L, s_roleTokens[2]);
+            count++;
+        }
+
+        if (tabRec->m_roleMask & 4) {
+            lua_pushstring(L, s_roleTokens[1]);
+            count++;
+        }
+
+        return count;
     }
 
-    TalentTabRec* tabRec = g_talentTabDB.GetRecord(tab->m_tabId);
-
-    if (!tabRec) {
-        return 0;
-    }
-
-    int32_t count = 0;
-
-    if (tabRec->m_roleMask & 2) {
-        lua_pushstring(L, s_roleTokens[0]);
-        count = 1;
-    }
-
-    if (tabRec->m_roleMask & 8) {
-        lua_pushstring(L, s_roleTokens[2]);
-        count++;
-    }
-
-    if (tabRec->m_roleMask & 4) {
-        lua_pushstring(L, s_roleTokens[1]);
-        count++;
-    }
-
-    return count;
+    return 0;
 }
 
 // OFFSET: 0x0099A5B0/0x14071C4D0
@@ -742,10 +746,10 @@ static int32_t Script_GetNextPetTalentLevel(lua_State* L) {
         level = lua_tointeger(L, 1);
     }
 
-    if (level < 20) {
-        lua_pushinteger(L, 20);
-    } else {
+    if (level >= 20) {
         lua_pushinteger(L, 4 * ((level - 20) / 4) + 24);
+    } else {
+        lua_pushinteger(L, 20);
     }
 
     return 1;
@@ -783,29 +787,29 @@ static int32_t Script_GetTalentTreeMasterySpells(lua_State* L) {
     int32_t pet = StringToBOOL(L, 3, 0);
     TalentTabInfo* tab = CGTalentInfo::GetTab(tabIndex, inspect, pet);
 
-    if (!tab) {
-        return 0;
+    if (tab) {
+        TalentTabRec* tabRec = g_talentTabDB.GetRecord(tab->m_tabId);
+
+        if (!tabRec) {
+            return 0;
+        }
+
+        int32_t count = 0;
+
+        if (tabRec->m_masterySpellID[0]) {
+            lua_pushinteger(L, tabRec->m_masterySpellID[0]);
+            count = 1;
+        }
+
+        if (tabRec->m_masterySpellID[1]) {
+            lua_pushinteger(L, tabRec->m_masterySpellID[1]);
+            count++;
+        }
+
+        return count;
     }
 
-    TalentTabRec* tabRec = g_talentTabDB.GetRecord(tab->m_tabId);
-
-    if (!tabRec) {
-        return 0;
-    }
-
-    int32_t count = 0;
-
-    if (tabRec->m_masterySpellID[0]) {
-        lua_pushinteger(L, tabRec->m_masterySpellID[0]);
-        count = 1;
-    }
-
-    if (tabRec->m_masterySpellID[1]) {
-        lua_pushinteger(L, tabRec->m_masterySpellID[1]);
-        count++;
-    }
-
-    return count;
+    return 0;
 }
 
 // OFFSET: 0x0099AE20/0x14071D070
@@ -819,7 +823,7 @@ static int32_t Script_GetNumTalentPoints(lua_State* L) {
 
 // OFFSET: 0x0099B0F0/0x14071D420
 static int32_t Script_GetNextTalentLevel(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;

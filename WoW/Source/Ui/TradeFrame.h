@@ -7,7 +7,7 @@
 class CGItem_C;
 class ClientTradeStatus;
 class ClientTradeUpdated;
-struct ClientTradeItem;
+struct JamTradeItem;
 
 struct lua_State;
 

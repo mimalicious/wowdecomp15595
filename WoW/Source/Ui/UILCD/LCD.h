@@ -75,7 +75,7 @@ class CGLCD {
     static void CheckInput();
     static void UpdateMapPositions();
     static void SetStat(const char* name, int32_t value);
-    static void SetStat(const char* name, float value, bool percent);
+    static void SetStat(const char* name, float value, bool percent, bool sign);
     static void SetStat(const char* name, int32_t minValue, int32_t maxValue);
     static void SetStat(const char* name, const char* value);
     static void SetHandleText(const char* name, const char* text);

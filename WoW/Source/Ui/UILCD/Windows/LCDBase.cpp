@@ -1,6 +1,6 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDBase.h"
 
-// OFFSET: 0x00B40A20
+// OFFSET: 0x00B40A20/0x14090E9C0
 CLCDBase::CLCDBase() {
     this->m_Size.cx = 0;
     this->m_Size.cy = 0;
@@ -18,7 +18,7 @@ CLCDBase::CLCDBase() {
     this->m_crForegroundColor = RGB(255, 255, 255);
 }
 
-// OFFSET: [#0x0095BCC0, #0x0095BE70]
+// OFFSET: [0x00B40A70, 0x00B40C10]
 CLCDBase::~CLCDBase() {
 }
 
@@ -46,7 +46,7 @@ void CLCDBase::SetBackgroundMode(int32_t mode) {
     this->m_nBkMode = mode;
 }
 
-// OFFSET: %0x00638880
+// OFFSET: [0x00903DD0]
 POINT& CLCDBase::GetOrigin() {
     return this->m_Origin;
 }
@@ -58,7 +58,7 @@ void CLCDBase::SetOriginXY(int32_t x, int32_t y) {
     this->m_Origin.y = y;
 }
 
-// OFFSET: 0x00B40A80
+// OFFSET: 0x00B40A80/0x14090EA20
 void CLCDBase::SetOrigin(POINT pt) {
     this->SetOriginXY(pt.x, pt.y);
 }

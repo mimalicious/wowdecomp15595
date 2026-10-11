@@ -16,12 +16,12 @@ static const uint32_t s_forcedTutorials[] = { 56, 33, 3, 4, 10, 54, 65 };
 static const uint32_t s_repeatableTutorials[] = { 56, 65 };
 
 // STATIC: 0x00F33758
-static int32_t s_tutorialsCompleted[60];
+static int32_t s_tutorialsCompleted[65];
 
 // STATIC: 0x00F3385C
 TSBitField<TSFixedArray<uint32_t> > CGTutorial::m_tutorialShown;
 
-// STATIC: #0x00BD1AF0
+// STATIC: 0x00F3386C
 TSBitField<TSFixedArray<uint32_t> > CGTutorial::m_tutorialFlags;
 
 // OFFSET: 0x00901F70
@@ -40,7 +40,7 @@ int32_t CGTutorial::OnTutorialFlags(void* param, NETMESSAGE msgId, uint32_t time
 void CGTutorial::InitializeGame() {
 }
 
-// OFFSET: #0x00530100
+// OFFSET: 0x00901690
 static int32_t AddCompletedTutorial(uint32_t tutorial) {
     int32_t index = 0;
 
@@ -57,18 +57,28 @@ static int32_t AddCompletedTutorial(uint32_t tutorial) {
         }
 
         index++;
-    } while (index < 60);
+    } while (index < 65);
 
     return index;
 }
 
-// OFFSET: #0x00530450
+// OFFSET: 0x00901880/0x140659D40
 void CGTutorial::FlagTutorial(uint32_t tutorial) {
     uint32_t bit = 1 << (tutorial & 0x1F);
     uint32_t index = tutorial >> 5;
 
     if (CGTutorial::m_tutorialFlags.m_bits.m_data[index] & bit) {
         return;
+    }
+
+    for (uint32_t i = 0; ; i++) {
+        if (s_repeatableTutorials[i] == tutorial) {
+            return;
+        }
+
+        if (s_repeatableTutorials[i] == 65) {
+            break;
+        }
     }
 
     CGTutorial::m_tutorialShown.m_bits.m_data[index] |= bit;
@@ -82,7 +92,7 @@ void CGTutorial::FlagTutorial(uint32_t tutorial) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00530510
+// OFFSET: 0x00901960/0x140659E90
 void CGTutorial::ClearTutorials() {
     if (CGTutorial::m_tutorialShown.m_count) {
         memset(CGTutorial::m_tutorialShown.m_bits.m_data, 0xFF, sizeof(uint32_t) * CGTutorial::m_tutorialShown.m_bits.m_count);
@@ -92,20 +102,26 @@ void CGTutorial::ClearTutorials() {
         memset(CGTutorial::m_tutorialFlags.m_bits.m_data, 0xFF, sizeof(uint32_t) * CGTutorial::m_tutorialFlags.m_bits.m_count);
     }
 
-    for (int32_t i = 0; i < 60; i++) {
+    for (uint32_t i = 0; i < 65; i++) {
         if (CGTutorial::m_tutorialFlags.m_count && (CGTutorial::m_tutorialFlags.m_bits.m_data[i >> 5] & (1 << (i & 0x1F)))) {
             continue;
         }
 
-        for (int32_t j = 0; j < 60; j++) {
-            if (s_tutorialsCompleted[j] == i + 1) {
+        bool repeatable = false;
+
+        for (uint32_t j = 0; ; j++) {
+            if (s_repeatableTutorials[j] == i) {
+                repeatable = true;
                 break;
             }
 
-            if (!s_tutorialsCompleted[j]) {
-                s_tutorialsCompleted[j] = i + 1;
+            if (s_repeatableTutorials[j] == 65) {
                 break;
             }
+        }
+
+        if (!repeatable) {
+            AddCompletedTutorial(i);
         }
     }
 
@@ -115,7 +131,7 @@ void CGTutorial::ClearTutorials() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00530630
+// OFFSET: 0x00901A90/0x140659FF0
 void CGTutorial::ResetTutorials() {
     if (CGTutorial::m_tutorialShown.m_count) {
         memset(CGTutorial::m_tutorialShown.m_bits.m_data, 0, sizeof(uint32_t) * CGTutorial::m_tutorialShown.m_bits.m_count);
@@ -140,9 +156,13 @@ void CGTutorial::TriggerTutorial(uint32_t tutorial) {
 
     bool repeatable = false;
 
-    for (uint32_t i = 0; s_repeatableTutorials[i] != 65; i++) {
+    for (uint32_t i = 0; ; i++) {
         if (s_repeatableTutorials[i] == tutorial) {
             repeatable = true;
+            break;
+        }
+
+        if (s_repeatableTutorials[i] == 65) {
             break;
         }
     }
@@ -159,9 +179,13 @@ void CGTutorial::TriggerTutorial(uint32_t tutorial) {
         SE3::PlaySoundKit("TutorialPopup", NULL, &properties, NULL, __FILE__, __LINE__, "CGTutorial::TriggerTutorial");
         bool forced = false;
 
-        for (uint32_t i = 0; s_forcedTutorials[i] != 65; i++) {
+        for (uint32_t i = 0; ; i++) {
             if (s_forcedTutorials[i] == tutorial) {
                 forced = true;
+                break;
+            }
+
+            if (s_forcedTutorials[i] == 65) {
                 break;
             }
         }
@@ -191,11 +215,10 @@ void CGTutorial::LoadFlaggedTutorials() {
     }
 
     if (list.m_state != 1) {
-        char text[256];
-        text[0] = 'v';
-        text[1] = 1;
-        text[list.m_pos] = '\0';
-        list.m_cvar->Set(text, true, false, false, true);
+        list.m_buffer[0] = 'v';
+        list.m_buffer[1] = 1;
+        list.m_buffer[list.m_pos] = 0;
+        list.m_cvar->Set(list.m_buffer, true, false, false, true);
     }
 }
 
@@ -208,7 +231,7 @@ void CGTutorial::ShutdownGame() {
 int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     bool found = false;
 
-    for (int32_t i = 0; i < 60; i++) {
+    for (int32_t i = 0; i < 65; i++) {
         if (found && s_tutorialsCompleted[i]) {
             return s_tutorialsCompleted[i];
         }
@@ -218,14 +241,14 @@ int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
         }
     }
 
-    return 60;
+    return 65;
 }
 
 // OFFSET: 0x00901710
 int32_t CGTutorial::GetPrevCompletedTutorial(int32_t tutorial) {
     bool found = false;
 
-    for (int32_t i = 60; i >= 0; i--) {
+    for (int32_t i = 65; i >= 0; i--) {
         if (found && s_tutorialsCompleted[i]) {
             return s_tutorialsCompleted[i];
         }
@@ -245,7 +268,7 @@ void CGTutorial::SaveFlaggedTutorials() {
     list.m_pos = 2;
     list.m_state = 0;
 
-    for (uint32_t i = 0; i < 60; i++) {
+    for (uint32_t i = 0; i < 65; i++) {
         if (!s_tutorialsCompleted[i]) {
             break;
         }

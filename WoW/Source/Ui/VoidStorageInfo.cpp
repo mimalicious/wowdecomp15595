@@ -41,45 +41,45 @@ void CGVoidStorageInfo::SetNPC(const WOWGUID& guid) {
         return;
     }
 
-    if (guid) {
-        CGGossipInfo::ClearGossip();
+    if (!guid) {
+        CGGameUI::ClearInteractTarget(CGVoidStorageInfo::m_npc, 0);
+        CGVoidStorageInfo::m_npc = WOWGUID();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-        if (guid != ClntObjMgrGetActivePlayer()) {
-            CGGameUI::SetInteractTarget(guid);
-        }
+        if (player) {
+            CGVoidStorage_C* storage = player->GetVoidStorage();
 
-        CGVoidStorageInfo::m_npc = guid;
-        FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_OPEN, NULL);
-        return;
-    }
-
-    CGGameUI::ClearInteractTarget(CGVoidStorageInfo::m_npc, 0);
-    CGVoidStorageInfo::m_npc = WOWGUID();
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (player) {
-        CGVoidStorage_C* storage = player->GetVoidStorage();
-
-        if (storage) {
-            storage->ClearNewItems();
-        }
-    }
-
-    CGVoidTransfer* transfer = CGVoidTransfer::Get(false);
-
-    if (transfer) {
-        for (uint32_t i = 0; i < 9; i++) {
-            WOWGUID item = transfer->GetDepositItem(i);
-
-            if (item) {
-                CGGameUI::UnlockItem(item);
+            if (storage) {
+                storage->ClearNewItems();
             }
         }
 
-        CGVoidTransfer::Destroy();
+        CGVoidTransfer* transfer = CGVoidTransfer::Get(false);
+
+        if (transfer) {
+            for (uint32_t i = 0; i < 9; i++) {
+                WOWGUID item = transfer->GetDepositItem(i);
+
+                if (item) {
+                    CGGameUI::UnlockItem(item);
+                }
+            }
+
+            CGVoidTransfer::Destroy();
+        }
+
+        FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_CLOSE, NULL);
+        return;
     }
 
-    FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_CLOSE, NULL);
+    CGGossipInfo::ClearGossip();
+
+    if (guid != ClntObjMgrGetActivePlayer()) {
+        CGGameUI::SetInteractTarget(guid);
+    }
+
+    CGVoidStorageInfo::m_npc = guid;
+    FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_OPEN, NULL);
 }
 
 // OFFSET: 0x009ED930/0x140786CF0
@@ -112,57 +112,56 @@ void CGVoidStorageInfo::DepositItem(CGItem_C* item, uint32_t slot, bool playSoun
     WOWGUID previous = transfer->GetDepositItem(slot);
     bool full = false;
 
-    if (!transfer->AddDepositItem(item->m_obj->m_guid, slot, full)) {
-        if (full) {
-            CGGameUI::DisplayError(ERR_VOID_DEPOSIT_FULL);
+    if (transfer->AddDepositItem(item->m_obj->m_guid, slot, full)) {
+        if (previous) {
+            CGItem_C* previousItem = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(previous, TYPEMASK_ITEM, __FILE__, __LINE__));
+
+            if (previousItem) {
+                uint8_t itemSlot = CGPlayer_C::FindItemSlot(previousItem->m_item->m_itemFieldContained, previousItem);
+                CGGameUI::SetCursorItem(previous, previousItem->m_item->m_itemFieldContained, itemSlot, 0, 0, 1);
+            }
+        } else {
+            CGGameUI::ClearCursor(0, 1);
         }
 
+        if (playSound) {
+            SI3::PlayItemSound(1, item);
+        }
+
+        CGGameUI::LockItem(item->m_obj->m_guid);
+        FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_DEPOSIT_UPDATE, "%d", slot + 1);
+        bool enchanted = item->GetEnchantmentId(0) != 0;
+        bool gemmed = item->GetEnchantmentId(2) || item->GetEnchantmentId(3) || item->GetEnchantmentId(4);
+        bool prismatic = item->GetEnchantmentId(6) || item->GetEnchantmentId(7);
+        bool reforged = item->GetEnchantmentId(8) != 0;
+        bool transmogrified = item->GetEnchantmentId(9) != 0;
+        bool refundable = false;
+        CGItem_C::ItemPurchaseData* purchase = item->m_itemPurchaseData;
+
+        if (purchase) {
+            uint32_t timeLeft = purchase->m_refundTimeLeft;
+
+            if (timeLeft >= item->m_item->m_itemFieldCreatePlayedTime) {
+                timeLeft = item->m_item->m_itemFieldCreatePlayedTime;
+            }
+
+            refundable = static_cast<int32_t>(timeLeft - player->GetPlayedTime()) != -7200;
+        }
+
+        bool tradeable = false;
+
+        if (item->IsBound() && !item->IsPermanentlyBoundForTrade()) {
+            tradeable = static_cast<int32_t>(item->m_item->m_itemFieldCreatePlayedTime - player->GetPlayedTime()) != -7200;
+        }
+
+        if (enchanted || gemmed || prismatic || reforged || transmogrified || refundable || tradeable) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_VOID_DEPOSIT_WARNING, "%d%s", slot + 1, CGTooltip::GetItemHyperlinkString(item));
+        }
         return;
     }
 
-    if (previous) {
-        CGItem_C* previousItem = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(previous, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-        if (previousItem) {
-            uint8_t itemSlot = CGPlayer_C::FindItemSlot(previousItem->m_item->m_itemFieldContained, previousItem);
-            CGGameUI::SetCursorItem(previous, previousItem->m_item->m_itemFieldContained, itemSlot, 0, 0, 1);
-        }
-    } else {
-        CGGameUI::ClearCursor(0, 1);
-    }
-
-    if (playSound) {
-        SI3::PlayItemSound(1, item);
-    }
-
-    CGGameUI::LockItem(item->m_obj->m_guid);
-    FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_DEPOSIT_UPDATE, "%d", slot + 1);
-    bool enchanted = item->GetEnchantmentId(0) != 0;
-    bool gemmed = item->GetEnchantmentId(2) || item->GetEnchantmentId(3) || item->GetEnchantmentId(4);
-    bool prismatic = item->GetEnchantmentId(6) || item->GetEnchantmentId(7);
-    bool reforged = item->GetEnchantmentId(8) != 0;
-    bool transmogrified = item->GetEnchantmentId(9) != 0;
-    bool refundable = false;
-    CGItem_C::ItemPurchaseData* purchase = item->m_itemPurchaseData;
-
-    if (purchase) {
-        uint32_t timeLeft = purchase->m_refundTimeLeft;
-
-        if (timeLeft >= item->m_item->m_itemFieldCreatePlayedTime) {
-            timeLeft = item->m_item->m_itemFieldCreatePlayedTime;
-        }
-
-        refundable = static_cast<int32_t>(timeLeft - player->GetPlayedTime()) != -7200;
-    }
-
-    bool tradeable = false;
-
-    if (item->IsBound() && !item->IsPermanentlyBoundForTrade()) {
-        tradeable = static_cast<int32_t>(item->m_item->m_itemFieldCreatePlayedTime - player->GetPlayedTime()) != -7200;
-    }
-
-    if (enchanted || gemmed || prismatic || reforged || transmogrified || refundable || tradeable) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_VOID_DEPOSIT_WARNING, "%d%s", slot + 1, CGTooltip::GetItemHyperlinkString(item));
+    if (full) {
+        CGGameUI::DisplayError(ERR_VOID_DEPOSIT_FULL);
     }
 }
 

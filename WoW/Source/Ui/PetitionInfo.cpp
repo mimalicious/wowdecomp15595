@@ -182,10 +182,10 @@ void CGPetitionInfo::AddSignature(WOWGUID petition, WOWGUID signer) {
     CGPetitionInfo::m_numPetitionNames++;
     NameCache* name = g_nameDBCache.GetRecord(signer.m_guid, signer, SignatureNameQueryCallback, NULL, false);
 
-    if (name) {
-        CGGameUI::DisplayError(ERR_PETITION_SIGNED_S, name->m_name);
-    } else {
+    if (!name) {
         CGPetitionInfo::m_pendingNameQueries++;
+    } else {
+        CGGameUI::DisplayError(ERR_PETITION_SIGNED_S, name->m_name);
     }
 
     if (!CGPetitionInfo::m_pendingNameQueries && CGPetitionInfo::m_petition) {

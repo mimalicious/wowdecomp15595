@@ -94,7 +94,7 @@ static float GetNodeY(const TaxiNodesRec* node) {
     return y;
 }
 
-// OFFSET: 0x008A61E0
+// OFFSET: 0x008A61E0/0x140779480
 static int CompareTaxiPath(const void* a, const void* b) {
     const TaxiPathRec* l = static_cast<const TaxiPathRec*>(a);
     const TaxiPathRec* r = static_cast<const TaxiPathRec*>(b);
@@ -187,8 +187,8 @@ static void InitializeData(uint32_t nodeMaskSize) {
     s_nodeMask.SetCount(nodeMaskSize);
     s_unkF762D4.SetCount(CGTaxiMap::m_maxNodeID);
     CGTaxiMap::m_routeLines.SetCount(CGTaxiMap::m_maxNodeID);
-    int32_t lastPathID = -1;
     TAXIPATHNODESCLIENT* pathNodes = NULL;
+    int32_t lastPathID = -1;
 
     uint32_t numRecords = g_taxiPathNodeDB.m_numRecords;
 
@@ -249,41 +249,41 @@ const char* CGTaxiMap::GetNodeType(uint32_t index) {
 int32_t CGTaxiMap::GetNodeCost(uint32_t index) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player) {
-        return 0;
+    if (player) {
+        CGUnit_C* taxiUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGTaxiMap::m_unit, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+        if (!taxiUnit) {
+            return 0;
+        }
+
+        uint32_t nodeID = CGTaxiMap::m_nodes.m_data[index].m_rec->m_id;
+
+        if (nodeID && nodeID <= CGTaxiMap::m_maxNodeID && FindTaxiPath(s_currentNode->m_id, nodeID)) {
+            float scale = 1.0f - taxiUnit->GetPlayerDiscount(player);
+            return CMath::fint_(FindTaxiPath(s_currentNode->m_id, nodeID)->m_cost * scale);
+        }
+
+        if (!CGTaxiMap::m_nodes.m_data[index].m_noDirectPath) {
+            return 0;
+        }
+
+        int32_t reaction = taxiUnit->UnitReaction(player);
+        FactionTemplateRec* factionTemplate = g_factionTemplateDB.GetRecord(taxiUnit->m_unit->m_unitFieldFactiontemplate);
+
+        if (factionTemplate && !CGUnit_C::FactionHasReputation(factionTemplate->m_faction)) {
+            reaction = 3;
+        }
+
+        int32_t cost = CGTaxiMap::m_nodes.m_data[index].m_costs[0];
+
+        if (reaction > 3) {
+            cost = CGTaxiMap::m_nodes.m_data[index].m_costs[reaction - 3];
+        }
+
+        return cost;
     }
 
-    CGUnit_C* taxiUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGTaxiMap::m_unit, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (!taxiUnit) {
-        return 0;
-    }
-
-    uint32_t nodeID = CGTaxiMap::m_nodes.m_data[index].m_rec->m_id;
-
-    if (nodeID && nodeID <= CGTaxiMap::m_maxNodeID && FindTaxiPath(s_currentNode->m_id, nodeID)) {
-        float scale = 1.0f - taxiUnit->GetPlayerDiscount(player);
-        return CMath::fint_(FindTaxiPath(s_currentNode->m_id, nodeID)->m_cost * scale);
-    }
-
-    if (!CGTaxiMap::m_nodes.m_data[index].m_noDirectPath) {
-        return 0;
-    }
-
-    int32_t reaction = taxiUnit->UnitReaction(player);
-    FactionTemplateRec* factionTemplate = g_factionTemplateDB.GetRecord(taxiUnit->m_unit->m_unitFieldFactiontemplate);
-
-    if (factionTemplate && !CGUnit_C::FactionHasReputation(factionTemplate->m_faction)) {
-        reaction = 3;
-    }
-
-    int32_t cost = CGTaxiMap::m_nodes.m_data[index].m_costs[0];
-
-    if (reaction > 3) {
-        cost = CGTaxiMap::m_nodes.m_data[index].m_costs[reaction - 3];
-    }
-
-    return cost;
+    return 0;
 }
 
 // OFFSET: 0x009E2EA0/0x14077A0D0
@@ -637,11 +637,7 @@ void CGTaxiMap::SetupMap(const WOWGUID& unit, uint32_t currentNode, const uint8_
             CGTaxiMap::m_nodes.m_data[CGTaxiMap::m_numNodes].m_x = (s_taxiBounds.maxY - GetNodeY(node)) / (s_taxiBounds.maxX - s_taxiBounds.minX);
             CGTaxiMap::m_nodes.m_data[CGTaxiMap::m_numNodes].m_y = (GetNodeX(node) - s_taxiBounds.minX) / (s_taxiBounds.maxY - s_taxiBounds.minY);
 
-            if (TaxiRouteExists(s_currentNode->m_id, node->m_id)) {
-                CGTaxiMap::m_nodes.m_data[CGTaxiMap::m_numNodes].m_noDirectPath = 0;
-            } else {
-                CGTaxiMap::m_nodes.m_data[CGTaxiMap::m_numNodes].m_noDirectPath = 1;
-            }
+            CGTaxiMap::m_nodes.m_data[CGTaxiMap::m_numNodes].m_noDirectPath = TaxiRouteExists(s_currentNode->m_id, node->m_id) ? 0 : 1;
 
             CGTaxiMap::m_nodes.m_data[CGTaxiMap::m_numNodes].m_path = NULL;
 

@@ -18,7 +18,7 @@ CLCDConnection::CLCDConnection() {
     InitializeCriticalSection(&this->m_csCallback);
 }
 
-// OFFSET: [#0x0095A730, #0x0095A800]
+// OFFSET: [0x00B3F4B0, 0x00B3F580]
 CLCDConnection::~CLCDConnection() {
     this->Disconnect();
 
@@ -43,7 +43,7 @@ CLCDConnection::~CLCDConnection() {
     }
 }
 
-// OFFSET: 0x00B3F830
+// OFFSET: 0x00B3F830/0x14090D300
 int32_t CLCDConnection::InitializeConnection(lgLcdConnectContextEx& connectContext, lgLcdSoftbuttonsChangedContext* softbuttonsChangedContext) {
     if (!connectContext.dwAppletCapabilitiesSupported || (connectContext.dwAppletCapabilitiesSupported & LGLCD_APPLET_CAP_BW)) {
         this->m_pMonoOutput = this->AllocMonoOutput();
@@ -91,7 +91,7 @@ int32_t CLCDConnection::InitializeConnection(lgLcdConnectContextEx& connectConte
     return 1;
 }
 
-// OFFSET: 0x00B3F150
+// OFFSET: 0x00B3F150/0x14090CA10
 void CLCDConnection::Shutdown() {
     this->Disconnect();
 
@@ -147,7 +147,7 @@ CLCDOutput* CLCDConnection::ColorOutput() {
     return this->m_pColorOutput;
 }
 
-// OFFSET: 0x00B3F180
+// OFFSET: 0x00B3F180/0x14090CA40
 void CLCDConnection::ConnectEx() {
     this->Disconnect();
 
@@ -168,7 +168,7 @@ int32_t CLCDConnection::GetConnectionId() {
     return this->m_hConnection;
 }
 
-// OFFSET: 0x00B3F230
+// OFFSET: 0x00B3F230/0x14090CB10
 void CLCDConnection::OnDeviceRemoval(uint32_t displayType) {
     CLCDOutput** output;
 
@@ -186,7 +186,7 @@ void CLCDConnection::OnDeviceRemoval(uint32_t displayType) {
     }
 }
 
-// OFFSET: 0x00B3F260
+// OFFSET: 0x00B3F260/0x14090CB50
 void CLCDConnection::OnNotification(uint32_t notification, uint32_t param1) {
     switch (notification) {
         case LGLCD_NOTIFICATION_DEVICE_ARRIVAL:
@@ -211,7 +211,7 @@ void CLCDConnection::OnNotification(uint32_t notification, uint32_t param1) {
     }
 }
 
-// OFFSET: 0x00B3F2D0
+// OFFSET: 0x00B3F2D0/0x14090CBB0
 void CLCDConnection::OnSoftButtonEvent(int32_t device, uint32_t buttons) {
     if (this->m_pMonoOutput && device == this->m_pMonoOutput->GetDeviceId()) {
         this->m_pMonoOutput->OnSoftButtonEvent(buttons);
@@ -238,7 +238,7 @@ void CLCDConnection::FreeColorOutput() {
     }
 }
 
-// OFFSET: 0x00B3F370
+// OFFSET: 0x00B3F370/0x14090CC70
 int32_t CLCDConnection::Initialize(lgLcdConnectContext& connectContext, lgLcdSoftbuttonsChangedContext* softbuttonsChangedContext) {
     this->m_pMonoOutput = new CLCDOutput();
     this->m_pGfxMono = new CLCDGfxMono();
@@ -276,7 +276,7 @@ void CLCDConnection::OnConfigure() {
 void CLCDConnection::OnCallbackEvent() {
 }
 
-// OFFSET: #0x0095A830
+// OFFSET: 0x00B3F5B0/0x14090CFB0
 DWORD WINAPI CLCDConnection::_OnNotificationCallback(int connection, const PVOID pContext, DWORD notificationCode, DWORD notifyParm1, DWORD notifyParm2, DWORD notifyParm3, DWORD notifyParm4) {
     CLCDConnection* self = static_cast<CLCDConnection*>(pContext);
 
@@ -292,7 +292,7 @@ DWORD WINAPI CLCDConnection::_OnNotificationCallback(int connection, const PVOID
     return 0;
 }
 
-// OFFSET: #0x0095A8F0
+// OFFSET: 0x00B3F670/0x14090D0C0
 DWORD WINAPI CLCDConnection::_OnSoftButtonsCallback(int device, DWORD buttons, const PVOID context) {
     CLCDConnection* self = static_cast<CLCDConnection*>(context);
 
@@ -307,7 +307,7 @@ DWORD WINAPI CLCDConnection::_OnSoftButtonsCallback(int device, DWORD buttons, c
     return 0;
 }
 
-// OFFSET: 0x00B3F730
+// OFFSET: 0x00B3F730/0x14090D1D0
 void CLCDConnection::OnDeviceArrival(uint32_t displayType) {
     CLCDOutput** output;
 
@@ -355,7 +355,7 @@ int32_t CLCDConnection::PopEvent(CB_EVENT& event) {
     return 1;
 }
 
-// OFFSET: 0x00B3FA20
+// OFFSET: 0x00B3FA20/0x14090D4D0
 void CLCDConnection::Update() {
     if (this->m_hConnection == LGLCD_INVALID_CONNECTION) {
         this->ConnectEx();

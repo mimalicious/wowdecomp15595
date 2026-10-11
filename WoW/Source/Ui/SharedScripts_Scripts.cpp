@@ -118,10 +118,10 @@ static int32_t Script_GetSecondsUntilParentalControlsKick(lua_State* L) {
 
     int32_t remaining = static_cast<int32_t>(ClientServices::Connection()->GetTimeRemaining());
 
-    if (remaining >= 0) {
-        lua_pushinteger(L, remaining);
-    } else {
+    if (!(remaining >= 0)) {
         lua_pushnil(L);
+    } else {
+        lua_pushinteger(L, remaining);
     }
 
     return 1;
@@ -144,12 +144,12 @@ static int32_t Script_IsTrialAccount(lua_State* L) {
         trial = converted->m_intValue == 0;
     }
 
-    if (trial) {
-        lua_pushnumber(L, 1.0);
+    if (!trial) {
+        lua_pushnil(L);
         return 1;
     }
 
-    lua_pushnil(L);
+    lua_pushnumber(L, 1.0);
     return 1;
 }
 

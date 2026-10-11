@@ -79,7 +79,7 @@ static uint32_t s_pendingLoads;
 
 // OFFSET: 0x009C3C30
 int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
-    for (int32_t i = 0; i < static_cast<int32_t>(sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])); i++) {
+    for (uint32_t i = 0; i < static_cast<int32_t>(sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])); i++) {
         if (CGUIMacros::m_sortedMacros[i] == id) {
             return i;
         }
@@ -123,7 +123,7 @@ int32_t CGUIMacros::GetSortedIndexByName(const char* name) {
         return -1;
     }
 
-    for (int32_t i = 0; i < 72; i++) {
+    for (uint32_t i = 0; i < 72; i++) {
         if (CGUIMacros::m_sortedMacros[i] == macro->m_id) {
             return i;
         }
@@ -143,11 +143,11 @@ void CGUIMacros::UpdateDynamicMacros() {
 
 // OFFSET: 0x009C53C0
 MACRONODE* CGUIMacros::GetMacroByIndex(uint32_t index) {
-    if (index < sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])) {
-        return s_macros.Ptr(CGUIMacros::m_sortedMacros[index], HASHKEY_NONE());
+    if (index >= sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])) {
+        return NULL;
     }
 
-    return NULL;
+    return s_macros.Ptr(CGUIMacros::m_sortedMacros[index], HASHKEY_NONE());
 }
 
 // OFFSET: 0x009C5430
@@ -596,7 +596,7 @@ void CGUIMacros::SortMacros() {
     memset(CGUIMacros::m_sortedMacros, 0, sizeof(((CGUIMacros*)0)->m_sortedMacros));
     MACRONODE** sorted = static_cast<MACRONODE**>(alloca(sizeof(MACRONODE*) * 36));
 
-    for (uint32_t type = 0; type < 2; type++) {
+    for (int32_t type = 0; type < 2; type++) {
         MACRONODE** out = sorted;
 
         for (MACRONODE* macro = s_macros.m_fulllist.Head(); macro; macro = s_macros.m_fulllist.Next(macro)) {
@@ -1114,9 +1114,7 @@ void MacroQueryCastSequence(MacroSubstring* text) {
     lua_rawget(L, LUA_GLOBALSINDEX);
     lua_pushlstring(L, text->m_start, text->m_end - text->m_start);
 
-    if (lua_pcall(L, 1, 3, -3)) {
-        lua_settop(L, -3);
-    } else {
+    if (!lua_pcall(L, 1, 3, -3)) {
         const char* spell = lua_tolstring(L, -2, NULL);
         const char* item = lua_tolstring(L, -1, NULL);
 
@@ -1127,6 +1125,8 @@ void MacroQueryCastSequence(MacroSubstring* text) {
         }
 
         lua_settop(L, -5);
+    } else {
+        lua_settop(L, -3);
     }
 
     if (lua_taintexpected && !lua_taintedclosure) {

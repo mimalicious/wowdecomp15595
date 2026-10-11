@@ -752,7 +752,7 @@ static float FLOOR1_fromdB_LOOKUP[256]={
 //  return(0);
 //}
 
-// OFFSET: #0x00470630
+// OFFSET: 0x00B47B80
 static int mapping0_inverse(vorbis_block *vb,vorbis_info_mapping *l){
   vorbis_dsp_state     *vd=vb->vd;
   vorbis_info          *vi=vd->vi;

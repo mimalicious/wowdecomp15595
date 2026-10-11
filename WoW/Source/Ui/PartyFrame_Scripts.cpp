@@ -92,12 +92,12 @@ static int32_t Script_IsPartyLFG(lua_State* L) {
 
 // OFFSET: 0x008FCD00/0x140653F50
 static int32_t Script_GetPartyLFGID(lua_State* L) {
-    if (!CGPartyInfo::m_lfgSlot) {
-        return 0;
+    if (CGPartyInfo::m_lfgSlot) {
+        lua_pushnumber(L, static_cast<uint32_t>(CGPartyInfo::m_lfgSlot) & 0xFFFFFF);
+        return 1;
     }
 
-    lua_pushnumber(L, static_cast<uint32_t>(CGPartyInfo::m_lfgSlot) & 0xFFFFFF);
-    return 1;
+    return 0;
 }
 
 // PROVEN: 57286fe3 IDENTICAL/NONE
@@ -180,7 +180,7 @@ static int32_t Script_GetLootMethod(lua_State* L) {
         if (master == ClntObjMgrGetActivePlayer()) {
             partyIndex = 0;
         } else {
-            for (int32_t i = 0; i < 4; i++) {
+            for (uint32_t i = 0; i < 4; i++) {
                 if (master == CGPartyInfo::m_members[i]) {
                     partyIndex = i + 1;
                     break;
@@ -204,10 +204,10 @@ static int32_t Script_GetLootMethod(lua_State* L) {
         lua_pushnil(L);
     }
 
-    if (raidIndex < 0) {
-        lua_pushnil(L);
-    } else {
+    if (raidIndex >= 0) {
         lua_pushnumber(L, raidIndex);
+    } else {
+        lua_pushnil(L);
     }
 
     return 3;
@@ -270,7 +270,7 @@ static int32_t Script_AcceptGroup(lua_State* L) {
     UserClientPartyInviteResponse msg;
     msg.m_accept = true;
 
-    if (roles) {
+    if (roles > 0) {
         msg.m_rolesDesired = roles;
         msg.m_hasRolesDesired = true;
     }
@@ -424,7 +424,8 @@ static int32_t Script_SetLootMethod(lua_State* L) {
         lootMethod = 4;
     }
 
-    WOWGUID master = WOWGUID();
+    WOWGUID master;
+    master.m_guid = 0;
 
     if (lootMethod == 2) {
         const char* name;
@@ -434,10 +435,10 @@ static int32_t Script_SetLootMethod(lua_State* L) {
             return 0;
         }
 
-        if (CGRaidInfo::m_numMembers) {
-            master = CGGameUI::ClosestObjectMatch(name, TYPEMASK_PLAYER, 6, StringToBOOL(L, 3, 0), 3.402823466e38f, 0);
-        } else {
+        if (!CGRaidInfo::m_numMembers) {
             master = CGGameUI::ClosestObjectMatch(name, TYPEMASK_PLAYER, 5, StringToBOOL(L, 3, 0), 3.402823466e38f, 0);
+        } else {
+            master = CGGameUI::ClosestObjectMatch(name, TYPEMASK_PLAYER, 6, StringToBOOL(L, 3, 0), 3.402823466e38f, 0);
         }
 
         if (!master || (!CGPartyInfo::IsMember(master) && !IsGuidInMyRaid(master))) {
@@ -462,23 +463,23 @@ static int32_t Script_SetLootThreshold(lua_State* L) {
 
     if (CGPartyInfo::m_leader != ClntObjMgrGetActivePlayer()) {
         CGGameUI::DisplayError(ERR_NOT_LEADER);
-        return 0;
-    }
+    } else {
+        if (!lua_isnumber(L, 1)) {
+            luaL_error(L, "Usage: SetLooThreshold(threshold)");
+            return 0;
+        }
 
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetLooThreshold(threshold)");
-        return 0;
-    }
+        int32_t threshold = static_cast<int32_t>(lua_tonumber(L, 1));
 
-    int32_t threshold = static_cast<int32_t>(lua_tonumber(L, 1));
+        if (!(static_cast<uint32_t>(threshold - 2) > 4)) {
+            if (ClntObjMgrGetActivePlayerObj()) {
+                CGPlayer_C::SetLootMethod(CGPartyInfo::m_lootMethod, CGPartyInfo::m_lootMaster, threshold);
+            }
 
-    if (static_cast<uint32_t>(threshold - 2) > 4) {
+            return 0;
+        }
+
         luaL_error(L, "SetLootThreshold(): threshold must be between %d and %d", 2, 6);
-        return 0;
-    }
-
-    if (ClntObjMgrGetActivePlayerObj()) {
-        CGPlayer_C::SetLootMethod(CGPartyInfo::m_lootMethod, CGPartyInfo::m_lootMaster, threshold);
     }
 
     return 0;
@@ -509,7 +510,8 @@ static int32_t SetOrClearAssignment(lua_State* L, bool set) {
         return 0;
     }
 
-    WOWGUID guid = WOWGUID();
+    WOWGUID guid;
+    guid.m_guid = 0;
     const char* assignmentName = lua_tolstring(L, 1, NULL);
     int32_t assignment;
 

@@ -24,7 +24,7 @@ static int32_t EvaluateNone(const WOWGUID* unit, const TSGrowableArray<MacroSubs
 // STATIC: #0x00AD1560
 static MACROCONDITIONFUNC s_conditionFuncs[33] = { EvaluateNone, EvaluateCombat, EvaluateExists, EvaluateHelp, EvaluateHarm, EvaluateParty, EvaluateRaid, EvaluateDead, EvaluateFlyable, EvaluateIndoors, EvaluateOutdoors, EvaluateSwimming, EvaluateFlying, EvaluateMounted, EvaluateStealth, EvaluateGroup, EvaluateStance, EvaluateStance, EvaluatePet, EvaluateModifier, EvaluateModifier, EvaluateButton, EvaluateButton, EvaluateActionBar, EvaluateActionBar, EvaluateBonusBar, EvaluateEquipped, EvaluateEquipped, EvaluateChanneling, EvaluateSpec, EvaluateVehicleUI, EvaluateUnitHasVehicleUI, EvaluateCursor };
 
-// OFFSET: 0x00A0F4F0
+// OFFSET: 0x00A0F4F0/0x1407B1E80
 int32_t EvaluateMacroOptions(const char* start, const char* end, MacroSubstring* result, MacroSubstring* target) {
     if (!start) {
         return 1;
@@ -112,7 +112,7 @@ int32_t EvaluateMacroOptions(const char* start, const char* end, MacroSubstring*
     return 1;
 }
 
-// OFFSET: 0x00A0F2D0
+// OFFSET: 0x00A0F2D0/0x1407B1C70
 void MacroConditions::Parse() {
     const char* text = this->m_key.m_str;
     const char* end = text + SStrLen(text);
@@ -189,7 +189,7 @@ void MacroConditions::Parse() {
     }
 }
 
-// OFFSET: 0x00A0DBC0
+// OFFSET: 0x00A0DBC0/0x1407AFA90
 int32_t MacroConditions::Evaluate(MacroSubstring* target) {
     uint32_t count = this->m_conditions.m_count;
 
@@ -224,7 +224,7 @@ int32_t MacroConditions::Evaluate(MacroSubstring* target) {
     return 1;
 }
 
-// OFFSET: #0x005F0040
+// OFFSET: 0x00A0E6D0/0x1407B0B70
 void MacroCondition::Parse(const char* start, const char* end) {
     MacroSubstring option;
     option.m_start = NULL;
@@ -298,54 +298,54 @@ void MacroCondition::Parse(const char* start, const char* end) {
     }
 }
 
-// OFFSET: 0x00A0D5C0
+// OFFSET: 0x00A0D5C0/0x1407AF2F0
 int32_t EvaluateStance(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     uint32_t form = CGSpellBook::GetShapeshiftForm(1);
 
-    if (!args->m_count) {
-        return form != 0;
-    }
+    if (args->m_count > 0) {
+        for (uint32_t i = args->m_count; i; i--) {
+            const MacroSubstring& arg = args->m_data[i - 1];
+            uint32_t value = 0;
 
-    for (uint32_t i = args->m_count; i; i--) {
-        const MacroSubstring& arg = args->m_data[i - 1];
-        uint32_t value = 0;
+            for (const char* c = arg.m_start; c < arg.m_end && *c >= '0' && *c <= '9'; c++) {
+                value = *c + 10 * value - '0';
+            }
 
-        for (const char* c = arg.m_start; c < arg.m_end && *c >= '0' && *c <= '9'; c++) {
-            value = *c + 10 * value - '0';
+            if (value == form) {
+                return 1;
+            }
         }
 
-        if (value == form) {
-            return 1;
-        }
+        return 0;
     }
 
-    return 0;
+    return form != 0;
 }
 
-// OFFSET: 0x00A0D650
+// OFFSET: 0x00A0D650/0x1407AF3A0
 int32_t EvaluateModifier(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGUIBindings* bindings = CGUIBindings::s_bindings;
 
-    if (!args->m_count) {
-        return bindings->IsModifiedClick(NULL);
-    }
+    if (args->m_count) {
+        for (uint32_t i = args->m_count; i; i--) {
+            const MacroSubstring& arg = args->m_data[i - 1];
+            char action[1024];
+            uint32_t length = arg.m_end - arg.m_start;
 
-    for (uint32_t i = args->m_count; i; i--) {
-        const MacroSubstring& arg = args->m_data[i - 1];
-        char action[1024];
-        uint32_t length = arg.m_end - arg.m_start;
+            if (length > 1023) {
+                length = 1023;
+            }
 
-        if (length > 1023) {
-            length = 1023;
+            memcpy(action, arg.m_start, length);
+            action[length] = '\0';
+
+            if (bindings->IsModifiedClick(action)) {
+                return 1;
+            }
         }
 
-        memcpy(action, arg.m_start, length);
-        action[length] = '\0';
-
-        if (bindings->IsModifiedClick(action)) {
-            return 1;
-        }
+        return 0;
     }
 
-    return 0;
+    return bindings->IsModifiedClick(NULL);
 }

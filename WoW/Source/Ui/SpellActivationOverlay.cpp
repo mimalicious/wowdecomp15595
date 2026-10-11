@@ -59,7 +59,7 @@ void CGSpellActivationOverlay::ShowSpellOverlay(const SpellActivationOverlayRec*
         SI3::PlayUISound(overlay->m_soundEntriesID, 0, 1);
     }
 
-    FrameScript_SignalEvent(SCRIPT_EVENT_SPELL_ACTIVATION_OVERLAY_SHOW, "%d%s%s%f%d%d%d", overlay->m_spellID, texture, location->m_name, overlay->m_scale, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
+    FrameScript_SignalEvent(SCRIPT_EVENT_SPELL_ACTIVATION_OVERLAY_SHOW, "%d%s%s%f%d%d%d", overlay->m_spellID, texture, static_cast<const char*>(location->m_name), overlay->m_scale, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 }
 
 // OFFSET: 0x009F22B0

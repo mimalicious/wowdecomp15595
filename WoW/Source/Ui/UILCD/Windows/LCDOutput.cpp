@@ -2,7 +2,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDPage.h"
 
-// OFFSET: 0x00B3EA20
+// OFFSET: 0x00B3EA20/0x14090C190
 CLCDOutput::CLCDOutput() {
     this->m_pActivePage = NULL;
     this->m_pGlobalPage = NULL;
@@ -18,7 +18,7 @@ CLCDOutput::CLCDOutput() {
     this->m_OpenByTypeContext.device = 0;
 }
 
-// OFFSET: #0x0095A290
+// OFFSET: 0x00B3F010/0x14090C890
 CLCDOutput::~CLCDOutput() {
     this->Close();
 }
@@ -120,7 +120,7 @@ int32_t CLCDOutput::HasDeviceType() {
     return this->m_OpenByTypeContext.deviceType != 0;
 }
 
-// OFFSET: 0x00B3EBE0
+// OFFSET: 0x00B3EBE0/0x14090C390
 int32_t CLCDOutput::OpenByType(lgLcdOpenByTypeContext& context) {
     if (this->m_hDevice != LGLCD_INVALID_DEVICE) {
         this->OnClosingDevice(this->m_hDevice);
@@ -153,7 +153,7 @@ int32_t CLCDOutput::ReOpenDeviceType() {
     return 0;
 }
 
-// OFFSET: 0x00B3ECA0
+// OFFSET: 0x00B3ECA0/0x14090C460
 void CLCDOutput::ShowPage(CLCDPage* page, int32_t activate) {
     if (activate) {
         this->m_pActivePage = page;

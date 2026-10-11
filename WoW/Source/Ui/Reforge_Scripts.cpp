@@ -24,17 +24,16 @@ static const int32_t s_reforgeStatOrder[33] = { 4, 3, 7, 5, 6, 13, 14, 15, 28, 2
 static int32_t Script_ReforgeItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ReforgeItem(index)");
-        return 0;
+    } else {
+        int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+
+        if (index < -1 || index >= static_cast<int32_t>(CGReforge::GetNumOptions())) {
+            luaL_error(L, "ReforgeItem(index): index out of bounds");
+            return 0;
+        }
+
+        CGReforge::ReforgeItem(index);
     }
-
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (index < -1 || index >= static_cast<int32_t>(CGReforge::GetNumOptions())) {
-        luaL_error(L, "ReforgeItem(index): index out of bounds");
-        return 0;
-    }
-
-    CGReforge::ReforgeItem(index);
 
     return 0;
 }
@@ -125,32 +124,32 @@ static int32_t Script_GetReforgeItemInfo(lua_State* L) {
     lua_pushstring(L, text);
     ItemRecSparse* stats = item->GetStats();
 
-    if (!stats) {
-        return 2;
-    }
+    if (stats) {
+        lua_pushnumber(L, stats->m_quality);
 
-    lua_pushnumber(L, stats->m_quality);
-
-    if (item->IsBound()) {
-        SStrCopy(text, FrameScript_GetText("ITEM_SOULBOUND", -1, GENDER_NOT_APPLICABLE), sizeof(text));
-        lua_pushstring(L, text);
-    } else {
-        lua_pushstring(L, "");
-    }
-
-    uint32_t cost = stats->GetSellPrice();
-
-    if (cost) {
-        if (cost <= 10000) {
-            cost = 10000;
+        if (item->IsBound()) {
+            SStrCopy(text, FrameScript_GetText("ITEM_SOULBOUND", -1, GENDER_NOT_APPLICABLE), sizeof(text));
+            lua_pushstring(L, text);
+        } else {
+            lua_pushstring(L, "");
         }
-    } else {
-        cost = 100000;
+
+        int32_t cost = stats->GetSellPrice();
+
+        if (cost) {
+            if (cost <= 10000) {
+                cost = 10000;
+            }
+        } else {
+            cost = 100000;
+        }
+
+        lua_pushnumber(L, cost);
+
+        return 6;
     }
 
-    lua_pushnumber(L, cost);
-
-    return 6;
+    return 2;
 }
 
 // OFFSET: 0x0098BD70/0x140709D30
@@ -193,10 +192,10 @@ static int32_t Script_GetSourceReforgeStats(lua_State* L) {
 
         int32_t amount;
 
-        if (slot == 10) {
-            amount = CalculateItemBonusFromRandomEnchant(reforge->m_sourceStat, item->m_item->m_itemFieldRandomPropertiesId, item->m_item->m_itemFieldPropertySeed);
-        } else {
+        if (slot != 10) {
             amount = CalculateItemBonusFromPercent(player->m_unit->m_unitFieldMaxitemlevel, stats->m_itemLevel, stats->m_statModifierBonusAmount[slot], stats->m_statPercentEditor[slot], stats->m_statPercentageOfSocket[slot], stats->m_quality, stats->m_inventoryType);
+        } else {
+            amount = CalculateItemBonusFromRandomEnchant(reforge->m_sourceStat, item->m_item->m_itemFieldRandomPropertiesId, item->m_item->m_itemFieldPropertySeed);
         }
 
         lua_pushnumber(L, static_cast<int32_t>(static_cast<float>(amount) * reforge->m_sourceMultiplier));

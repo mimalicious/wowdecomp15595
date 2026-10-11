@@ -82,61 +82,61 @@ static int32_t Script_SetMacroSpell(lua_State* L) {
 
     MACRONODE* macro = GetMacroFromLua(L);
 
-    if (!macro) {
-        return 0;
+    if (macro) {
+        int32_t spellId = CGSpellBook::FindSpellByName(lua_tolstring(L, 2, NULL), macro->m_spellFlags);
+
+        if (!spellId) {
+            spellId = -1;
+        }
+
+        WOWGUID target = { 0 };
+        Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false, false);
+
+        if (macro->m_itemID > 0 || spellId != macro->m_spellID || target != macro->m_target) {
+            macro->m_target = target;
+            macro->m_itemID = 0;
+            macro->m_spellID = spellId;
+            CGActionBar::UpdateMacro(macro->m_id);
+        }
+
+        if (macro->m_dynamic) {
+            macro->m_dynamic = 0;
+            CGUIMacros::RemoveDynamicMacro(macro);
+        }
+
+        if (spellId > 0) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 1;
     }
 
-    int32_t spellId = CGSpellBook::FindSpellByName(lua_tolstring(L, 2, NULL), macro->m_spellFlags);
-
-    if (!spellId) {
-        spellId = -1;
-    }
-
-    WOWGUID target = { 0 };
-    Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false, false);
-
-    if (macro->m_itemID > 0 || spellId != macro->m_spellID || target != macro->m_target) {
-        macro->m_target = target;
-        macro->m_itemID = 0;
-        macro->m_spellID = spellId;
-        CGActionBar::UpdateMacro(macro->m_id);
-    }
-
-    if (macro->m_dynamic) {
-        macro->m_dynamic = 0;
-        CGUIMacros::RemoveDynamicMacro(macro);
-    }
-
-    if (spellId > 0) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009C59B0
 static int32_t Script_GetMacroSpell(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
-    if (!macro) {
-        return 0;
+    if (macro) {
+        const SpellRec* spell = g_spellDB.GetRecord(macro->m_spellID);
+
+        if (spell) {
+            lua_pushstring(L, spell->m_name);
+            lua_pushstring(L, spell->m_nameSubtext);
+            lua_pushnumber(L, static_cast<double>(macro->m_spellID));
+        } else {
+            lua_pushnil(L);
+            lua_pushnil(L);
+            lua_pushnil(L);
+        }
+
+        return 3;
     }
 
-    const SpellRec* spell = g_spellDB.GetRecord(macro->m_spellID);
-
-    if (spell) {
-        lua_pushstring(L, spell->m_name);
-        lua_pushstring(L, spell->m_nameSubtext);
-        lua_pushnumber(L, static_cast<double>(macro->m_spellID));
-    } else {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnil(L);
-    }
-
-    return 3;
+    return 0;
 }
 
 // OFFSET: 0x009C3C60/0x140751000
@@ -157,10 +157,10 @@ static int32_t Script_SecureCmdOptionParse(lua_State* L) {
 
     lua_pushlstring(L, result.m_start, result.m_end - result.m_start);
 
-    if (target.m_end == target.m_start) {
-        lua_pushnil(L);
-    } else {
+    if (target.m_end != target.m_start) {
         lua_pushlstring(L, target.m_start, target.m_end - target.m_start);
+    } else {
+        lua_pushnil(L);
     }
 
     return 2;
@@ -261,34 +261,34 @@ static int32_t Script_RunMacro(lua_State* L) {
 static int32_t Script_GetMacroInfo(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
-    if (!macro) {
-        return 0;
+    if (macro) {
+        lua_pushstring(L, macro->m_name);
+        char texture[260];
+        CGUIMacros::GetFullIconPath(macro->m_id, texture, sizeof(texture));
+
+        if (texture[0]) {
+            lua_pushstring(L, texture);
+        } else {
+            lua_pushnil(L);
+        }
+
+        lua_pushstring(L, macro->m_body);
+        return 3;
     }
 
-    lua_pushstring(L, macro->m_name);
-    char texture[260];
-    CGUIMacros::GetFullIconPath(macro->m_id, texture, sizeof(texture));
-
-    if (texture[0]) {
-        lua_pushstring(L, texture);
-    } else {
-        lua_pushnil(L);
-    }
-
-    lua_pushstring(L, macro->m_body);
-    return 3;
+    return 0;
 }
 
 // OFFSET: 0x009C56E0
 static int32_t Script_GetMacroBody(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
-    if (!macro) {
-        return 0;
+    if (macro) {
+        lua_pushstring(L, macro->m_body);
+        return 1;
     }
 
-    lua_pushstring(L, macro->m_body);
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009C5710/0x140753510
@@ -359,33 +359,33 @@ static int32_t Script_SetMacroItem(lua_State* L) {
 
     MACRONODE* macro = GetMacroFromLua(L);
 
-    if (!macro) {
-        return 0;
+    if (macro) {
+        int32_t itemId = GetItemIDByName(lua_tolstring(L, 2, NULL));
+        WOWGUID target = { 0 };
+        Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false, false);
+
+        if (macro->m_spellID > 0 || itemId != macro->m_itemID || target != macro->m_target) {
+            macro->m_target = target;
+            macro->m_itemID = itemId;
+            macro->m_spellID = (itemId != 0) - 1;
+            CGActionBar::UpdateMacro(macro->m_id);
+        }
+
+        if (macro->m_dynamic) {
+            macro->m_dynamic = 0;
+            CGUIMacros::RemoveDynamicMacro(macro);
+        }
+
+        if (itemId > 0) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 1;
     }
 
-    int32_t itemId = GetItemIDByName(lua_tolstring(L, 2, NULL));
-    WOWGUID target = { 0 };
-    Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false, false);
-
-    if (macro->m_spellID > 0 || itemId != macro->m_itemID || target != macro->m_target) {
-        macro->m_target = target;
-        macro->m_itemID = itemId;
-        macro->m_spellID = (itemId != 0) - 1;
-        CGActionBar::UpdateMacro(macro->m_id);
-    }
-
-    if (macro->m_dynamic) {
-        macro->m_dynamic = 0;
-        CGUIMacros::RemoveDynamicMacro(macro);
-    }
-
-    if (itemId > 0) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009C64F0/0x140754830
@@ -398,26 +398,26 @@ static int32_t Script_GetMacroItem(lua_State* L) {
 
     ItemRecSparse* rec = g_itemSparseDB.GetRecord(macro->m_itemID, WOWGUID(), NULL, NULL, false);
 
-    if (!rec) {
-        return 0;
-    }
+    if (rec) {
+        char name[1024];
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    char name[1024];
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        if (player) {
+            CGItem_C* item = player->m_bag.FindItemOfType(macro->m_itemID, 0);
 
-    if (player) {
-        CGItem_C* item = player->m_bag.FindItemOfType(macro->m_itemID, 0);
-
-        if (item) {
-            lua_pushstring(L, item->GetFullItemName(name, sizeof(name)));
-            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item));
-            return 2;
+            if (item) {
+                lua_pushstring(L, item->GetFullItemName(name, sizeof(name)));
+                lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item));
+                return 2;
+            }
         }
+
+        lua_pushstring(L, CGItem_C::BuildItemName(name, sizeof(name), macro->m_itemID, 0));
+        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(macro->m_itemID, rec->m_quality, 0, 0, 0, 0));
+        return 2;
     }
 
-    lua_pushstring(L, CGItem_C::BuildItemName(name, sizeof(name), macro->m_itemID, 0));
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(macro->m_itemID, rec->m_quality, 0, 0, 0, 0));
-    return 2;
+    return 0;
 }
 
 // PROVEN: 943130eb IDENTICAL/NONE

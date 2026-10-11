@@ -181,16 +181,14 @@ TSHashTable<OVERRIDE_SPELL_BY_NAME_NODE, HASHKEY_UTF8I> CGActionBar::m_overrideS
 int32_t CGSpellBook::GetCompanionType(const SpellRec* spell) {
     const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
 
-    if (!effect) {
-        return 2;
-    }
+    if (effect) {
+        if (effect->m_effect == 28) {
+            return 0;
+        }
 
-    if (effect->m_effect == 28) {
-        return 0;
-    }
-
-    if (effect->m_effectAura == 78) {
-        return 1;
+        if (effect->m_effectAura == 78) {
+            return 1;
+        }
     }
 
     return 2;
@@ -230,11 +228,11 @@ int32_t CGSpellBook::GetSpellRankFromSubtext(const SpellRec* spell) {
 
 // OFFSET: 0x0090E5F0
 SpellBookSkillInfo* CGSpellBook::GetSkillInfo(uint32_t index) {
-    if (index >= s_numSkillInfos) {
-        return NULL;
+    if (!(index >= s_numSkillInfos)) {
+        return s_skillInfos.m_data[index];
     }
 
-    return s_skillInfos.m_data[index];
+    return NULL;
 }
 
 // OFFSET: 0x0090E610
@@ -456,7 +454,7 @@ void CGSpellBook::UpdateCompanions() {
     bool sorted = false;
 
     for (uint32_t i = 0; i < 2; i++) {
-        if (CGSpellBook::m_companions[i].m_count) {
+        if (CGSpellBook::m_companions[i].m_count > 0) {
             qsort(CGSpellBook::m_companions[i].m_data, CGSpellBook::m_companions[i].m_count, sizeof(int32_t), SortCompanions);
             sorted = true;
         }
@@ -471,7 +469,7 @@ void CGSpellBook::UpdateCompanions() {
 void CGSpellBook::UpdateCooldowns() {
     CGActionBar::UpdateCooldowns();
 
-    if (s_shapeshiftSpells.m_count) {
+    if (s_shapeshiftSpells.m_count > 0) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_COOLDOWN, NULL);
     }
 
@@ -1068,47 +1066,47 @@ int32_t CGSpellBook::IsSelectedSlot(int32_t slot, int32_t petSpell) {
         return 0;
     }
 
-    if (item->m_type == SPELLBOOK_ITEM_SPELL) {
-        const SpellRec* spell = g_spellDB.GetRecord(item->m_id);
-
-        if (!spell) {
+    if (item->m_type != SPELLBOOK_ITEM_SPELL) {
+        if (item->m_type != SPELLBOOK_ITEM_PETACTION) {
             return 0;
         }
 
-        uint32_t count;
-        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
-        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+        PetAction action;
+        action.m_data = item->m_id;
 
-        if (player && count && effects->m_data[0] && effects->m_data[0]->m_effect == 47) {
-            SkillLineAbilityRec* ability = player->LookupAbility(spell->m_id);
-
-            if (ability && ((!CGTradeSkillInfo::m_linkData && CGTradeSkillInfo::m_skillLineID == ability->m_skillLine) || ability->m_skillLine == CGResearchFrame::m_skillLine)) {
-                return 1;
-            }
+        if ((action.m_data & 0x3F000000) == 0x7000000 && (action.m_data & 0xFFFFFF) == 2) {
+            return 0;
         }
 
-        for (uint32_t i = 0; i < count; i++) {
-            if (effects->m_data[i] && effects->m_data[i]->m_effectAura == 36) {
-                uint32_t form = effects->m_data[i]->m_effectMiscValue;
-                return form && player && player->GetShapeshiftForm() == form;
-            }
+        return CGPetInfo::PetActionIsActive(action);
+    }
+
+    const SpellRec* spell = g_spellDB.GetRecord(item->m_id);
+
+    if (!spell) {
+        return 0;
+    }
+
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player && count && effects->m_data[0] && effects->m_data[0]->m_effect == 47) {
+        SkillLineAbilityRec* ability = player->LookupAbility(spell->m_id);
+
+        if (ability && ((!CGTradeSkillInfo::m_linkData && CGTradeSkillInfo::m_skillLineID == ability->m_skillLine) || ability->m_skillLine == CGResearchFrame::m_skillLine)) {
+            return 1;
         }
-
-        return 0;
     }
 
-    if (item->m_type != SPELLBOOK_ITEM_PETACTION) {
-        return 0;
+    for (uint32_t i = 0; i < count; i++) {
+        if (effects->m_data[i] && effects->m_data[i]->m_effectAura == 36) {
+            uint32_t form = effects->m_data[i]->m_effectMiscValue;
+            return form && player && player->GetShapeshiftForm() == form;
+        }
     }
 
-    PetAction action;
-    action.m_data = item->m_id;
-
-    if ((action.m_data & 0x3F000000) == 0x7000000 && (action.m_data & 0xFFFFFF) == 2) {
-        return 0;
-    }
-
-    return CGPetInfo::PetActionIsActive(action);
+    return 0;
 }
 
 // OFFSET: 0x00910630/0x14066C0F0
@@ -1157,11 +1155,7 @@ int32_t CGSpellBook::CanShowAura(const SpellRec* spell, const WOWGUID* caster, b
         }
     }
 
-    if (helpful ? (spell->m_attributesExE & 0x8000000) : (spell->m_attributesExE & 0x10000000)) {
-        return 0;
-    }
-
-    if ((spell->m_attributesExF & 0x100000) && !(*caster && (*caster == ClntObjMgrGetActivePlayer() || *caster == CGPetInfo::GetPet(0)))) {
+    if ((helpful ? (spell->m_attributesExE & 0x8000000) : (spell->m_attributesExE & 0x10000000)) || ((spell->m_attributesExF & 0x100000) && !(*caster && (*caster == ClntObjMgrGetActivePlayer() || *caster == CGPetInfo::GetPet(0))))) {
         return 0;
     }
 
@@ -1291,11 +1285,7 @@ int32_t CGSpellBook::FindRaidBuff(int32_t spellId) {
     uint32_t count;
     const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
 
-    if (spell->m_attributesExC & 0x4000) {
-        return 0;
-    }
-
-    if (count && effects->m_data[0] && effects->m_data[0]->m_implicitTargetA == 1) {
+    if (spell->m_attributesExC & 0x4000 || (count && effects->m_data[0] && effects->m_data[0]->m_implicitTargetA == 1)) {
         return 0;
     }
 
@@ -1585,7 +1575,7 @@ void CGSpellBook::PickupSpellBookItem(int32_t slot, int32_t petSpell) {
     int32_t cursorFlyout = CGGameUI::m_cursorFlyout;
     CGGameUI::ClearCursor(1, 1);
 
-    if (cursorSpell > 0 || cursorPetAction || cursorFlyout > 0) {
+    if (cursorSpell > 0 || cursorPetAction > 0 || cursorFlyout > 0) {
         return;
     }
 
@@ -1594,10 +1584,10 @@ void CGSpellBook::PickupSpellBookItem(int32_t slot, int32_t petSpell) {
             return;
         }
 
-        if (petSpell) {
-            CGGameUI::SetCursorPetAction(CGPetInfo::GetPetSpellAction(item->m_id));
-        } else {
+        if (!petSpell) {
             CGSpellBook::SetCursorSpell(item->m_id);
+        } else {
+            CGGameUI::SetCursorPetAction(CGPetInfo::GetPetSpellAction(item->m_id));
         }
 
         PlaySpellPickupSound();
@@ -1631,7 +1621,7 @@ void CGSpellBook::PickupSpell(int32_t spellId) {
     int32_t cursorFlyout = CGGameUI::m_cursorFlyout;
     CGGameUI::ClearCursor(1, 1);
 
-    if (cursorSpell <= 0 && !cursorPetAction && cursorFlyout <= 0 && spellId) {
+    if (cursorSpell <= 0 && cursorPetAction <= 0 && cursorFlyout <= 0 && spellId) {
         CGSpellBook::SetCursorSpell(spellId);
         PlaySpellPickupSound();
     }
@@ -1731,35 +1721,33 @@ int32_t CGSpellBook::FindSpellByName(const char* name, const char* subtext, int3
 
     SPELLSBYNAME* entry = s_spellsByName.Ptr(name);
 
-    if (!entry) {
-        return 0;
-    }
+    if (entry) {
+        SPELLRANKNODE* node = entry->m_spells.Head();
 
-    SPELLRANKNODE* node = entry->m_spells.Head();
+        if (subtext && *subtext) {
+            for (; node; node = entry->m_spells.Next(node)) {
+                if (node->m_subtext.m_str && !SStrCmpUTF8I(node->m_subtext.m_str, subtext, STORM_MAX_STR)) {
+                    break;
+                }
+            }
+        } else {
+            for (SPELLRANKNODE* rank = node; rank; rank = entry->m_spells.Next(rank)) {
+                const char* text = rank->m_subtext.m_str;
 
-    if (subtext && *subtext) {
-        for (; node; node = entry->m_spells.Next(node)) {
-            if (node->m_subtext.m_str && !SStrCmpUTF8I(node->m_subtext.m_str, subtext, STORM_MAX_STR)) {
-                break;
+                if (!text || !*text) {
+                    node = rank;
+                    break;
+                }
             }
         }
-    } else {
-        for (SPELLRANKNODE* rank = node; rank; rank = entry->m_spells.Next(rank)) {
-            const char* text = rank->m_subtext.m_str;
 
-            if (!text || !*text) {
-                node = rank;
-                break;
-            }
+        if (node) {
+            petSpell = node->m_petSpell;
+            return node->m_spellId;
         }
     }
 
-    if (!node) {
-        return 0;
-    }
-
-    petSpell = node->m_petSpell;
-    return node->m_spellId;
+    return 0;
 }
 
 // OFFSET: 0x00912BE0
@@ -2598,7 +2586,7 @@ void CGSpellBook::AddSpellToNameCache(int32_t spellId, int32_t petSpell) {
         entry = s_spellsByName.New(spell->m_name, 0, 0);
     }
 
-    int32_t rank = CGSpellBook::GetSpellProgressionRank(spell);
+    uint32_t rank = CGSpellBook::GetSpellProgressionRank(spell);
     SPELLRANKNODE* before = NULL;
 
     for (SPELLRANKNODE* node = entry->m_spells.Head(); node; node = entry->m_spells.Next(node)) {

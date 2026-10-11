@@ -61,13 +61,11 @@ TSFixedArray<TalentTabInfo*> CGTalentInfo_Inspect::m_tabs;
 // STATIC: 0x00F4B770
 CGTalentGroup_C CGTalentInfo_Inspect::m_talentGroups[2];
 
-// PROVEN: 2e1f5e89 IDENTICAL/NONE
 // OFFSET: 0x00999C80/0x14071BA10
 void CGTalentInfo_Inspect::EnterWorld() {
     CGTalentInfo_Inspect::m_inspectTarget = WOWGUID::Make(0);
 }
 
-// PROVEN: 05d4d10e IDENTICAL/NONE
 // OFFSET: 0x00999C60/0x14071BA00
 uint32_t CGTalentInfo::GetActiveTalentGroup(int32_t pet) {
     return pet == 0 ? CGTalentInfo::m_activeTalentGroup : 0;
@@ -105,7 +103,7 @@ uint32_t CGTalentInfo::GetUnspentTalentPoints(uint32_t index, int32_t pet) {
     return points;
 }
 
-// OFFSET: 0x0099A8E0
+// OFFSET: 0x0099A8E0/0x14071CAD0
 CGTalentGroup_C* CGTalentInfo::GetTalentGroup(uint32_t index, int32_t pet) {
     if (index >= CGTalentInfo::GetNumTalentGroups(pet)) {
         return NULL;
@@ -114,13 +112,13 @@ CGTalentGroup_C* CGTalentInfo::GetTalentGroup(uint32_t index, int32_t pet) {
     return pet ? &CGTalentInfo::m_petTalentGroup : &CGTalentInfo::m_talentGroups[index];
 }
 
-// OFFSET: 0x0099AAF0
+// OFFSET: 0x0099AAF0/0x14071CB70
 int32_t TalentInfoIsSpellKnown(int32_t spellId, int32_t isInspect, int32_t isPet) {
     if (isInspect) {
         return isPet == 0;
     }
 
-    CGUnit_C* unit = ClntObjMgrGetActivePlayerObj();
+    CGUnit_C* unit = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!unit) {
         return 0;
@@ -137,7 +135,6 @@ int32_t TalentInfoIsSpellKnown(int32_t spellId, int32_t isInspect, int32_t isPet
     return unit->IsSpellKnown(spellId) || unit->IsSpellSuperceded(spellId);
 }
 
-// PROVEN: ba4ef104 IDENTICAL/NONE
 // OFFSET: 0x00B48BD0/0x140918680
 static int TierCompare(const void* a, const void* b) {
     return (*static_cast<TalentGroupTier_C* const*>(a))->m_tier - (*static_cast<TalentGroupTier_C* const*>(b))->m_tier;
@@ -170,7 +167,7 @@ uint32_t TalentInfoGetScriptGroupIndex(lua_State* L, int32_t inspect, int32_t pe
     return pet == 0 ? CGTalentInfo::m_activeTalentGroup : 0;
 }
 
-// OFFSET: 0x00999F10
+// OFFSET: 0x00999F10/0x14071BD90
 int32_t CGTalentInfo::IsTalentAvailableForPet(CGUnit_C* pet, const TalentRec* talent) {
     if (!pet || !talent) {
         return 0;
@@ -205,7 +202,6 @@ int32_t CGTalentInfo::IsTalentAvailableForPet(CGUnit_C* pet, const TalentRec* ta
     return category < 0 || (talent->m_categoryMask[word] & (1 << bit)) != 0;
 }
 
-// PROVEN: 6162e3b2 IDENTICAL/NONE
 // OFFSET: 0x00999FB0
 TalentGroupTier_C* TalentGroupTab_C::FindTier(int32_t tier) {
     int32_t low = 0;
@@ -229,7 +225,6 @@ TalentGroupTier_C* TalentGroupTab_C::FindTier(int32_t tier) {
     return NULL;
 }
 
-// PROVEN: 52684b7b IDENTICAL/NONE
 // OFFSET: 0x00999FF0/0x14071E410
 TalentGroupTab_C* CGTalentGroup_C::GetTab(uint32_t index) {
     return index < this->m_tabs.m_count ? &this->m_tabs.m_data[index] : NULL;
@@ -263,7 +258,7 @@ TalentTabInfo* CGTalentInfo::GetTab(uint32_t index, int32_t inspect, int32_t pet
     return NULL;
 }
 
-// OFFSET: 0x0099AA00
+// OFFSET: 0x0099AA00/0x14071CA70
 int32_t CGTalentInfo::GetPreviewPointsSpent(uint32_t group, int32_t pet) {
     int32_t points = 0;
     CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
@@ -288,7 +283,7 @@ CGTalentGroup_C* TalentInfoGetTalentGroup(uint32_t index, int32_t inspect, int32
     return CGTalentInfo::GetTalentGroup(index, pet);
 }
 
-// OFFSET: 0x0099B950
+// OFFSET: 0x0099B950/0x14071DFA0
 static void BuildTabInfo(CGPlayer_C* player, TSFixedArray<TalentTabInfo*>* tabs, int32_t family) {
     if (!tabs) {
         return;
@@ -470,7 +465,7 @@ void CGTalentGroup_C::ResetAllPreviewTalentPoints() {
     }
 }
 
-// OFFSET: 0x0099C2F0
+// OFFSET: 0x0099C2F0/0x14071E9C0
 void CGTalentInfo::ResetPreviewTalentPoints(uint32_t group, uint32_t tab, int32_t pet) {
     CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
 
@@ -676,11 +671,11 @@ TalentGroupItem_C* TalentInfoGetTalentItem(uint32_t group, int32_t talentId, int
     if (inspect) {
         CGTalentGroup_C* talentGroup = TalentInfoGetTalentGroup(group, inspect, pet);
 
-        if (!talentGroup) {
-            return NULL;
+        if (talentGroup) {
+            return talentGroup->GetTalentItem(talentId);
         }
 
-        return talentGroup->GetTalentItem(talentId);
+        return NULL;
     }
 
     return CGTalentInfo::GetTalentItem(group, talentId, pet);
@@ -700,7 +695,7 @@ TalentGroupTier_C::~TalentGroupTier_C() {
 TalentGroupTab_C::TalentGroupTab_C() : m_tabId(0), m_pointsSpent(0), m_previewPointsSpent(0) {
 }
 
-// OFFSET: 0x0099E510
+// OFFSET: 0x0099E510/0x140721D30
 TalentGroupTab_C::~TalentGroupTab_C() {
     for (uint32_t i = 0; i < this->m_tiers.m_count; i++) {
         if (this->m_tiers.m_data[i]) {
@@ -711,7 +706,7 @@ TalentGroupTab_C::~TalentGroupTab_C() {
     this->m_tiers.Clear();
 }
 
-// OFFSET: 0x0099E7F0
+// OFFSET: 0x0099E7F0/0x1407220C0
 int32_t TalentGroupTab_C::AddTierItem(const TalentRec* talent, TalentGroupItem_C* item) {
     if (!talent || !item) {
         return 0;
@@ -782,7 +777,7 @@ void CGTalentGroup_C::AddTalentItem(int32_t talentId, int32_t rank) {
     }
 }
 
-// OFFSET: 0x0099E9F0
+// OFFSET: 0x0099E9F0/0x140722420
 void CGTalentGroup_C::AddPreviewTalentPoints(uint32_t tabIndex, const TalentRec* talent, int32_t points, int32_t pet) {
     int32_t delta;
 
@@ -804,7 +799,7 @@ void CGTalentGroup_C::AddPreviewTalentPoints(uint32_t tabIndex, const TalentRec*
     this->m_tabs.m_data[tabIndex].m_previewPointsSpent += delta;
 }
 
-// OFFSET: 0x0099EA90
+// OFFSET: 0x0099EA90/0x140722520
 void CGTalentInfo::AddPreviewTalentPoints(uint32_t group, uint32_t tab, uint32_t talentIndex, int32_t points, int32_t pet) {
     CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
 
@@ -927,7 +922,7 @@ void CGTalentGroup_C::Reset() {
     }
 }
 
-// OFFSET: 0x0099EF30
+// OFFSET: 0x0099EF30/0x140722AC0
 void CGTalentGroup_C::UpdateTabs(const TSFixedArray<TalentTabInfo*>& tabs) {
     uint32_t count = tabs.m_count;
     this->m_tabs.SetCount(count);
@@ -992,7 +987,7 @@ CGTalentGroup_C::~CGTalentGroup_C() {
     this->Reset();
 }
 
-// OFFSET: 0x0099F360
+// OFFSET: 0x0099F360/0x140723090
 static void UpdateTalentGroups(const TSFixedArray<TalentTabInfo*>* tabs, CGTalentGroup_C* groups, uint32_t count, uint32_t activeGroup, uint32_t numGroups, int32_t unspent) {
     if (!numGroups) {
         return;
@@ -1030,7 +1025,7 @@ void CGTalentInfo::EnterWorld() {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     BuildTabInfo(player, &CGTalentInfo::m_tabs, 0);
     CGTalentInfo::m_tabsInitialized = 1;
     UpdateTalentGroups(&CGTalentInfo::m_tabs, CGTalentInfo::m_talentGroups, 2, CGTalentInfo::m_activeTalentGroup, CGTalentInfo::m_numTalentGroups, CGTalentInfo::m_unspentTalentPoints);
@@ -1102,14 +1097,13 @@ void CGTalentInfo::UpdatePetTalentData(CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_TALENT_UPDATE, NULL);
 }
 
-// PROVEN: 9b609a31 IDENTICAL/NONE
 // OFFSET: 0x0099F660/0x1407235E0
 void CGTalentInfo_Inspect::ShutdownGame() {
     CGTalentInfo_Inspect::ResetTabInfo();
     CGTalentInfo_Inspect::Reset();
 }
 
-// OFFSET: 0x0099F670
+// OFFSET: 0x0099F670/0x140723600
 void CGTalentInfo_Inspect::SetInspectTarget(const WOWGUID& guid) {
     CGTalentInfo_Inspect::ResetTabInfo();
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));

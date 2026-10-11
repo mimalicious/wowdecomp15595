@@ -4,6 +4,7 @@
 #include <new>
 #include "Engine/Source/Base/ConvertUTF.h"
 #include "Engine/Source/Event/Event.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Frame/CSimpleRender.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameXML/FrameXML.h"
@@ -34,10 +35,10 @@
 #include "WoW/Source/Ui/WorldMap.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// STATIC: #0x00B1C0BC
+// STATIC: 0x00D27F28
 TSList<POIIcon, TSGetLink<POIIcon> > CGLCD::m_POIIcons;
 
-// STATIC: #0x00B1C0C8
+// STATIC: 0x00D27F34
 TSList<MAPDATA, TSGetLink<MAPDATA> > CGLCD::m_mapData;
 
 // STATIC: 0x0100A62C
@@ -58,7 +59,7 @@ CGPlayer_C* CGLCD::m_player;
 // STATIC: 0x0100A634
 uint8_t CGLCD::m_inWorld;
 
-// STATIC: #0x00D4131D
+// STATIC: 0x0100A635
 static uint8_t s_classFlag8;
 
 // STATIC: 0x0100A636
@@ -82,19 +83,19 @@ static int32_t s_previousScreen = -1;
 // STATIC: 0x00D27F10
 static int32_t s_subscreen;
 
-// STATIC: #0x00B1C0A4
+// STATIC: 0x00D27F14
 static int32_t s_alertDuration = 30000;
 
 // STATIC: 0x00D27F18
 static uint8_t s_alertExpired = 1;
 
-// STATIC: #0x00D41270
+// STATIC: 0x0100A588
 static char s_idleLogoutText[32];
 
-// STATIC: #0x00D41290
+// STATIC: 0x0100A5A8
 static char s_outbidText[32];
 
-// STATIC: #0x00D412B0
+// STATIC: 0x0100A5C8
 static char s_whisperFromText[32];
 
 // STATIC: 0x0100A637
@@ -103,10 +104,10 @@ static uint8_t s_battlefieldAlertShown;
 // STATIC: 0x0100A64C
 static uint32_t s_alertExpireTime;
 
-// STATIC: #0x00D41339
+// STATIC: 0x0100A651
 static uint8_t s_loginPending;
 
-// STATIC: #0x00D4133C
+// STATIC: 0x0100A654
 static TSFixedArray<CHATMESSAGE> s_chatMessages;
 
 // STATIC: 0x0100A68C
@@ -151,7 +152,7 @@ void CGLCD::ClearWaitQueueScreen() {
     }
 }
 
-// OFFSET: %0x00A65010
+// OFFSET: 0x00B32290/0x1408FC370
 void CGLCD::Initialize() {
     CGLCD::m_lcd = new (SMemAlloc(sizeof(CEzLcd), __FILE__, __LINE__, 0)) CEzLcd();
     CGLCD::m_lcd->Initialize("World of Warcraft", 2, 0, 1, NULL, NULL);
@@ -176,7 +177,7 @@ void CGLCD::OnBattlefieldActive() {
     }
 }
 
-// OFFSET: #0x0084AE50
+// OFFSET: 0x00B32210/0x1408FC280
 void CGLCD::Shutdown() {
     CGLCD::m_handles.Clear();
 
@@ -249,8 +250,10 @@ void CGLCD::OnBattlefieldReady(const BattlefieldStatusNode* status) {
         return;
     }
 
-    if (static_cast<uint16_t>(status->m_queueID) == 32) {
-        BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(32);
+    uint32_t queueID = status->m_queueID & 0xFFFF;
+
+    if (queueID == 32) {
+        BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(queueID);
 
         if (rec) {
             CGLCD::SetScreen(2);
@@ -286,7 +289,7 @@ void CGLCD::LeaveWorld() {
     }
 }
 
-// OFFSET: #0x00848B70
+// OFFSET: 0x00B2FBB0/0x1408F8A00
 void CGLCD::Login() {
     if (!CGLCD::m_lcd || !CGLCD::m_lcd->IsConnected() || !IsLCDAvailable() || !CGLCD::initComplete) {
         return;
@@ -302,42 +305,11 @@ void CGLCD::Login() {
     ChrClassesRec* classRec = g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1]);
 
     if (classRec) {
-        s_classFlag8 = (classRec->m_flags >> 3) & 1;
+        s_classFlag8 = (static_cast<uint32_t>(classRec->m_flags) >> 3) & 1;
     }
 
-    int32_t soulShard;
-
-    switch (player->m_unit->m_unitFieldBytes0[1]) {
-        case 1:
-        case 3:
-        case 4: {
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("AMMO"), 1);
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("AMMO_FLD"), 1);
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("SOUL_SHARD"), 0);
-            soulShard = 0;
-            break;
-        }
-
-        case 9: {
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("AMMO"), 0);
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("AMMO_FLD"), 0);
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("SOUL_SHARD"), 1);
-            soulShard = 1;
-            break;
-        }
-
-        default: {
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("AMMO"), 0);
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("AMMO_FLD"), 0);
-            CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("SOUL_SHARD"), 0);
-            soulShard = 0;
-            break;
-        }
-    }
-
-    CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("SOUL_SHARD_FLD"), soulShard);
     const char* text = FrameScript_GetText("BF_NOT_IN", -1, GENDER_NOT_APPLICABLE);
-    CGLCD::m_lcd->SetText(CGLCD::GetHandle("BF_NOT_IN"), text);
+    CEzLcd::SetText(CGLCD::GetHandle("BF_NOT_IN"), text);
 }
 
 // PROVEN: 0bb578e0 IDENTICAL/NONE
@@ -383,69 +355,77 @@ void LCDHANDLE::SetText(const char* text) {
     this->m_text.Copy(text);
 }
 
-// OFFSET: #0x00847EA0
+// OFFSET: 0x00B2F280/0x1408F7E00
 int32_t CGLCD::GetScreenFromName(const char* name) {
-    if (!SStrCmpI(name, "WoWTitleScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "WoWTitleScreen")) {
         return 0;
     }
 
-    if (!SStrCmpI(name, "PlayerInfoScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "PlayerInfoScreen")) {
         return 1;
     }
 
-    if (!SStrCmpI(name, "BattlefieldAlertScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "BattlefieldAlertScreen")) {
         return 2;
     }
 
-    if (!SStrCmpI(name, "BattlefieldStatusScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "BattlefieldStatusScreen")) {
         return 3;
     }
 
-    if (!SStrCmpI(name, "NotInBattlefieldScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "NotInBattlefieldScreen")) {
         return 4;
     }
 
-    if (!SStrCmpI(name, "WaitQueueScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "WaitQueueScreen")) {
         return 5;
     }
 
-    if (!SStrCmpI(name, "ChatAlertScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "ChatAlertScreen")) {
         return 6;
     }
 
-    if (!SStrCmpI(name, "ArathiBasinMapScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "ArathiBasinMapScreen")) {
         return 7;
     }
 
-    if (!SStrCmpI(name, "WarsongMapScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "WarsongMapScreen")) {
         return 8;
     }
 
-    if (!SStrCmpI(name, "EyeOfTheStormMapScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "EyeOfTheStormMapScreen")) {
         return 9;
     }
 
-    if (!SStrCmpI(name, "StrandOfTheAncientsMapScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "StrandOfTheAncientsMapScreen")) {
         return 10;
     }
 
-    if (!SStrCmpI(name, "AlteracValleyMapScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "AlteracValleyMapScreen")) {
         return 11;
     }
 
-    if (!SStrCmpI(name, "IsleOfConquestMapScreen", STORM_MAX_STR)) {
+    if (!_stricmp(name, "IsleOfConquestMapScreen")) {
         return 12;
+    }
+
+    if (!_stricmp(name, "TwinPeaksMapScreen")) {
+        return 13;
+    }
+
+    if (!_stricmp(name, "BattleForGilneasMapScreen")) {
+        return 14;
     }
 
     return -1;
 }
 
-// OFFSET: #0x00848010
+// OFFSET: 0x00B2F410
 static bool IsAsianLocale() {
     return s_locale == 1 || (s_locale > 3 && s_locale <= 5);
 }
 
-// OFFSET: #0x008481B0
+// OFFSET: 0x00B2F5B0
 static void SetSubscreen(int32_t subscreen) {
     if (subscreen == 3) {
         CGLCD::m_lcd->ShowSubscreen(0);
@@ -456,27 +436,7 @@ static void SetSubscreen(int32_t subscreen) {
     }
 }
 
-// OFFSET: #0x00848320
-static const char* GetAmmoToken() {
-    if (!CGLCD::m_player) {
-        return "";
-    }
-
-    switch (CGLCD::m_player->m_unit->m_unitFieldBytes0[1]) {
-        case 1:
-        case 3:
-        case 4:
-            return "AMMO";
-
-        case 9:
-            return "SOUL_SHARD";
-
-        default:
-            return "";
-    }
-}
-
-// OFFSET: #0x008484D0
+// OFFSET: 0x00B2F8D0
 void CGLCD::CheckInput() {
     if (!CGLCD::m_inWorld) {
         return;
@@ -488,7 +448,7 @@ void CGLCD::CheckInput() {
         if (CGLCD::m_lcd->ButtonReleased(1)) {
             if (s_inBattlefield) {
                 CGLCD::SetScreen(3);
-            } else if (s_battlefieldPortExpiration <= OsGetAsyncTimeMs()) {
+            } else if (s_battlefieldPortExpiration <= FrameTime::GetCurTimeMs()) {
                 CGLCD::SetScreen(4);
             } else {
                 CGLCD::SetScreen(2);
@@ -522,6 +482,8 @@ checkNavigation:
             case 9:
             case 10:
             case 11:
+            case 13:
+            case 14:
                 CGLCD::SetScreen(6);
                 break;
 
@@ -543,6 +505,8 @@ checkNavigation:
             case 9:
             case 10:
             case 11:
+            case 13:
+            case 14:
                 CGLCD::SetScreen(1);
                 break;
 
@@ -582,6 +546,14 @@ checkNavigation:
                     case 628:
                         CGLCD::SetScreen(12);
                         break;
+
+                    case 726:
+                        CGLCD::SetScreen(13);
+                        break;
+
+                    case 761:
+                        CGLCD::SetScreen(14);
+                        break;
                 }
 
                 CGWorldMap::SetMapToCurrentZone(0);
@@ -592,6 +564,8 @@ checkNavigation:
             case 9:
             case 10:
             case 11:
+            case 13:
+            case 14:
                 CGLCD::SetScreen(3);
                 break;
         }
@@ -633,6 +607,14 @@ checkNavigation:
                     case 628:
                         CGLCD::SetScreen(12);
                         break;
+
+                    case 726:
+                        CGLCD::SetScreen(13);
+                        break;
+
+                    case 761:
+                        CGLCD::SetScreen(14);
+                        break;
                 }
 
                 CGWorldMap::SetMapToCurrentZone(0);
@@ -643,30 +625,12 @@ checkNavigation:
             case 9:
             case 10:
             case 11:
+            case 13:
+            case 14:
                 CGLCD::SetScreen(3);
                 break;
         }
     }
-}
-
-// OFFSET: #0x00848780
-static int32_t GetAmmoCount() {
-    if (!CGLCD::m_player) {
-        return 0;
-    }
-
-    CGPlayer_C* player = CGLCD::m_player;
-    int32_t ammoId = 0;
-
-    if (CGLCD::m_player->m_unit->m_unitFieldBytes0[1] == 9) {
-        return CGLCD::m_player->m_bag.GetItemTypeCount(6265, 0);
-    }
-
-    if (ammoId) {
-        return CGLCD::m_player->m_bag.GetItemTypeCount(ammoId, 0);
-    }
-
-    return 0;
 }
 
 // OFFSET: 0x00B2FB90/0x1408F89D0
@@ -813,8 +777,8 @@ void CGLCD::SetStat(const char* name, int32_t value) {
     }
 }
 
-// OFFSET: #0x00849430
-void CGLCD::SetStat(const char* name, float value, bool percent) {
+// OFFSET: 0x00B303C0/0x1408F9750
+void CGLCD::SetStat(const char* name, float value, bool percent, bool sign) {
     bool showPercent = CGLCD::m_lcd->IsDeviceAvailable(1) ? percent : false;
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
 
@@ -826,7 +790,7 @@ void CGLCD::SetStat(const char* name, float value, bool percent) {
     char text[32];
 
     if (showPercent) {
-        SStrPrintf(text, sizeof(text), "%.2f%%", value);
+        SStrPrintf(text, sizeof(text), sign ? "+%.2f%%" : "%.2f%%", value);
     } else {
         SStrPrintf(text, sizeof(text), "%.2f", value);
     }
@@ -889,7 +853,7 @@ void CGLCD::SetHandleText(const char* name, const char* text) {
     }
 }
 
-// OFFSET: #0x00849700
+// OFFSET: 0x00B306A0/0x1408F9D00
 void CGLCD::DisplayMeleeStats() {
     float maxDamage = CGLCD::m_player->m_unit->m_unitFieldMaxdamage;
     int32_t minDamage = static_cast<int32_t>(floor(CGLCD::m_player->m_unit->m_unitFieldMindamage));
@@ -898,27 +862,20 @@ void CGLCD::DisplayMeleeStats() {
         minDamage = 1;
     }
 
-    CGLCD::SetStat("DAMAGE", minDamage, ceil(maxDamage) <= 1 ? 1 : static_cast<int32_t>(ceil(maxDamage)));
-    float speed = CGLCD::m_player->m_unit->m_unitFieldBaseattacktime[0] * 0.001f;
-    CGItem_C* offhand = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(CGLCD::m_player->m_bag.GetItemGuid(16)), TYPEMASK_ITEM, __FILE__, __LINE__));
-
-    if (offhand) {
-        offhand->GetClassID();
-    }
-
-    CGLCD::SetStat("SPEED", speed, false);
+    CGLCD::SetStat("DAMAGE", minDamage, static_cast<int32_t>(ceil(maxDamage)) <= 1 ? 1 : static_cast<int32_t>(ceil(maxDamage)));
+    CGLCD::SetStat("HASTE", CGLCD::m_player->GetCombatRatingPct(17), true, false);
     int32_t power = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPower);
-    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPowerModPos);
-    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldAttackPowerModNeg);
+    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * static_cast<int32_t>(CGLCD::m_player->m_unit->m_unitFieldAttackPowerModPos));
+    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldAttackPowerMultiplier + 1.0f) * static_cast<int32_t>(CGLCD::m_player->m_unit->m_unitFieldAttackPowerModNeg));
     CGLCD::SetStat("POWER", power + positive + negative);
-    CGLCD::SetStat("HIT", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldCombatRating1[5]));
-    CGLCD::SetStat("CRIT", CGLCD::m_player->m_player->m_playerCritPercentage, true);
+    CGLCD::SetStat("HIT", CGLCD::m_player->GetCombatRatingPct(5), true, true);
+    CGLCD::SetStat("CRIT", CGLCD::m_player->m_player->m_playerCritPercentage, true, false);
     CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("EXPERTISE"), 1);
     CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("EXPERTISE_FLD"), 1);
     CGLCD::SetStat("EXPERTISE", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerExpertise));
 }
 
-// OFFSET: #0x00849960
+// OFFSET: 0x00B308C0/0x1408F9F50
 void CGLCD::DisplayRangedStats() {
     const CGUnitVirtualItem* ranged = CGLCD::m_player->GetVirtualItem(2, false);
     float maxDamage = CGLCD::m_player->m_unit->m_unitFieldMaxrangeddamage;
@@ -928,7 +885,7 @@ void CGLCD::DisplayRangedStats() {
         minDamage = 1;
     }
 
-    int32_t maxValue = ceil(maxDamage) <= 1 ? 1 : static_cast<int32_t>(ceil(maxDamage));
+    int32_t maxValue = static_cast<int32_t>(ceil(maxDamage)) <= 1 ? 1 : static_cast<int32_t>(ceil(maxDamage));
 
     if (!ranged || s_classFlag8) {
         CGLCD::SetStat("DAMAGE", FrameScript_GetText("NOT_APPLICABLE", -1, GENDER_NOT_APPLICABLE));
@@ -937,22 +894,22 @@ void CGLCD::DisplayRangedStats() {
     }
 
     if (!ranged || s_classFlag8) {
-        CGLCD::SetStat("SPEED", FrameScript_GetText("NOT_APPLICABLE", -1, GENDER_NOT_APPLICABLE));
+        CGLCD::SetStat("HASTE", FrameScript_GetText("NOT_APPLICABLE", -1, GENDER_NOT_APPLICABLE));
     } else {
-        CGLCD::SetStat("SPEED", CGLCD::m_player->m_unit->m_unitFieldRangedattacktime * 0.001f, false);
+        CGLCD::SetStat("HASTE", CGLCD::m_player->GetCombatRatingPct(18), true, false);
     }
 
     int32_t power = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPower);
-    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerModPos);
-    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerModNeg);
+    int32_t positive = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * static_cast<int32_t>(CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerModPos));
+    int32_t negative = CMath::fint_((CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerMultiplier + 1.0f) * static_cast<int32_t>(CGLCD::m_player->m_unit->m_unitFieldRangedAttackPowerModNeg));
     CGLCD::SetStat("POWER", power + positive + negative);
-    CGLCD::SetStat("HIT", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldCombatRating1[6]));
-    CGLCD::SetStat("CRIT", CGLCD::m_player->m_player->m_playerRangedCritPercentage, true);
+    CGLCD::SetStat("HIT", CGLCD::m_player->GetCombatRatingPct(6), true, true);
+    CGLCD::SetStat("CRIT", CGLCD::m_player->m_player->m_playerRangedCritPercentage, true, false);
     CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("EXPERTISE"), 0);
     CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("EXPERTISE_FLD"), 0);
 }
 
-// OFFSET: #0x00849BE0
+// OFFSET: 0x00B30B30/0x1408FA1F0
 void CGLCD::DisplayDefenseStats() {
     int32_t base;
     int32_t total;
@@ -961,61 +918,48 @@ void CGLCD::DisplayDefenseStats() {
     int32_t negative;
     CGLCD::m_player->GetResistanceAndBuffs(GetPhysicalDamageClassID(), &base, &total, &effective, &positive, &negative);
     CGLCD::SetStat("ARMOR2", effective);
-
-    int32_t rank;
-    int32_t bonus;
-    CGLCD::m_player->GetDefenseSkillRank(rank, bonus);
-    CGLCD::SetStat("DEFENSE", rank + bonus);
-    CGLCD::SetStat("DODGE", CGLCD::m_player->m_player->m_playerDodgePercentage, true);
-    CGLCD::SetStat("PARRY", CGLCD::m_player->m_player->m_playerParryPercentage, true);
-    CGLCD::SetStat("BLOCK", CGLCD::m_player->m_player->m_playerBlockPercentage, true);
-
-    CGPlayerLocalData* data = CGLCD::m_player->m_player;
-    int32_t melee = static_cast<int32_t>(data->m_playerFieldCombatRating1[14]);
-    int32_t ranged = static_cast<int32_t>(data->m_playerFieldCombatRating1[15]);
-    int32_t spell = static_cast<int32_t>(data->m_playerFieldCombatRating1[16]);
-    CGLCD::SetStat("RESILIENCE", (melee < ranged ? melee : ranged) < spell ? (melee < ranged ? melee : ranged) : spell);
+    CGLCD::SetStat("DODGE", CGLCD::m_player->m_player->m_playerDodgePercentage, true, false);
+    CGLCD::SetStat("PARRY", CGLCD::m_player->m_player->m_playerParryPercentage, true, false);
+    CGLCD::SetStat("BLOCK", CGLCD::m_player->m_player->m_playerBlockPercentage, true, false);
+    CGLCD::SetStat("RESILIENCE", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldCombatRating1[14]));
 }
 
-// OFFSET: #0x00849D10
+// OFFSET: 0x00B30C10/0x1408FA2F0
 void CGLCD::DisplaySpellStats() {
-    CGPlayer_C* player = CGLCD::m_player;
-    int32_t spellDamage = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerFieldModDamageDonePos[1] : 0;
+    int32_t spellPower = CGLCD::m_player->GetModDamageDonePos(1 << 1);
 
     for (int32_t school = 2; school < 7; school++) {
-        int32_t damage = CGLCD::m_player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? CGLCD::m_player->m_player->m_playerFieldModDamageDonePos[school] : 0;
-
-        if (spellDamage >= damage) {
-            spellDamage = CGLCD::m_player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? CGLCD::m_player->m_player->m_playerFieldModDamageDonePos[school] : 0;
+        if (spellPower >= CGLCD::m_player->GetModDamageDonePos(1 << school)) {
+            spellPower = CGLCD::m_player->GetModDamageDonePos(1 << school);
         }
     }
 
-    CGLCD::SetStat("SPELL_DAMAGE", spellDamage);
-    CGLCD::SetStat("SPELL_HEALING", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldModHealingDonePos));
-    CGLCD::SetStat("SPELL_HIT", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldCombatRating1[7]));
+    CGLCD::SetStat("SPELL_POWER", spellPower);
+    CGLCD::SetStat("SPELL_HASTE", CGLCD::m_player->GetCombatRatingPct(19), true, false);
+    CGLCD::SetStat("SPELL_PENETRATION", -static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldModTargetResistance));
+    float hitModifier = CGLCD::m_player->m_player->m_playerFieldUiSpellHitModifier;
+    CGLCD::SetStat("SPELL_HIT", CGLCD::m_player->GetCombatRatingPct(7) + hitModifier, true, true);
 
-    float* crit = CGLCD::m_player->m_player->m_playerSpellCritPercentage1;
-    float spellCrit = crit[1];
+    float spellCrit = CGLCD::m_player->m_player->m_playerSpellCritPercentage1[1];
 
     for (int32_t school = 2; school < 7; school++) {
-        if (spellCrit >= crit[school]) {
-            spellCrit = crit[school];
+        if (CGLCD::m_player->m_player->m_playerSpellCritPercentage1[school] <= spellCrit) {
+            spellCrit = CGLCD::m_player->m_player->m_playerSpellCritPercentage1[school];
         }
     }
 
-    CGLCD::SetStat("SPELL_CRIT", spellCrit, true);
-    CGLCD::SetStat("SPELL_HASTE", static_cast<int32_t>(CGLCD::m_player->m_player->m_playerFieldCombatRating1[19]));
+    CGLCD::SetStat("SPELL_CRIT", spellCrit, true, false);
     int32_t manaRegen = 0;
 
     if (!CGLCD::m_player->m_unit->m_unitFieldBytes0[3]) {
         float regen = CGLCD::m_player->GetPowerRegen(0, false);
-        manaRegen = static_cast<int32_t>(floor((regen + 0.001f) * 5.0f));
+        manaRegen = CMath::fint_(static_cast<float>(floor((regen + 0.001f) * 5.0f)));
     }
 
     CGLCD::SetStat("MANA_REGEN", manaRegen);
 }
 
-// OFFSET: #0x00849F20
+// OFFSET: 0x00B30DF0/0x1408FA4E0
 void CGLCD::SetAlertText() {
     for (int32_t i = 0; i < CGLCD::m_chatAlertLines;) {
         CHATMESSAGE& message = s_chatMessages[i];
@@ -1023,31 +967,31 @@ void CGLCD::SetAlertText() {
 
         switch (message.m_type) {
             case 1:
-                SStrCopy(format, s_whisperFromText, STORM_MAX_STR);
+                SStrCopy(format, s_whisperFromText, sizeof(format));
                 break;
 
             case 2:
-                SStrCopy(format, s_idleLogoutText, STORM_MAX_STR);
+                SStrCopy(format, s_idleLogoutText, sizeof(format));
                 break;
 
             case 3:
-                SStrCopy(format, s_outbidText, STORM_MAX_STR);
+                SStrCopy(format, s_outbidText, sizeof(format));
                 break;
 
             case 4:
-                SStrCopy(format, FrameScript_GetText("AUCTION_EXPIRED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE), STORM_MAX_STR);
+                SStrCopy(format, FrameScript_GetText("AUCTION_EXPIRED_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE), sizeof(format));
                 break;
 
             case 5:
-                SStrCopy(format, FrameScript_GetText("AUCTION_WON_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE), STORM_MAX_STR);
+                SStrCopy(format, FrameScript_GetText("AUCTION_WON_MAIL_SUBJECT", -1, GENDER_NOT_APPLICABLE), sizeof(format));
                 break;
 
             case 6:
-                SStrCopy(format, FrameScript_GetText("AUCTION_ITEM_SOLD", -1, GENDER_NOT_APPLICABLE), STORM_MAX_STR);
+                SStrCopy(format, FrameScript_GetText("AUCTION_ITEM_SOLD", -1, GENDER_NOT_APPLICABLE), sizeof(format));
                 break;
 
             default:
-                SStrCopy(format, "", STORM_MAX_STR);
+                SStrCopy(format, "", sizeof(format));
                 break;
         }
 
@@ -1063,7 +1007,7 @@ void CGLCD::SetAlertText() {
     }
 }
 
-// OFFSET: #0x0084A2E0
+// OFFSET: 0x00B31040/0x1408FA920
 void CGLCD::UpdateBattlefieldStats() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1107,23 +1051,23 @@ void CGLCD::UpdateBattlefieldStats() {
 
     CGLCD::SetStat("BF_ALLIANCE", alliance);
     CGLCD::SetStat("BF_HORDE", horde);
-    CGLCD::SetStat("BF_TIME", static_cast<int32_t>((OsGetAsyncTimeMs() - s_battlefieldStartTime) / 60000));
+    CGLCD::SetStat("BF_TIME", static_cast<int32_t>((FrameTime::GetCurTimeMs() - s_battlefieldStartTime) / 60000));
     CGBattlefieldInfo::RequestScoreData();
 }
 
-// OFFSET: #0x0084A450
+// OFFSET: 0x00B311A0/0x1408FAAF0
 void CGLCD::PushAlert(const char* text, int32_t a2) {
     if (!CGLCD::m_lcd || !CGLCD::m_lcd->IsConnected() || !IsLCDAvailable() || !CGLCD::initComplete) {
         return;
     }
 
     CGLCD::SetScreen(6);
-    s_alertExpireTime = s_alertDuration + OsGetAsyncTimeMs();
+    s_alertExpireTime = s_alertDuration + FrameTime::GetCurTimeMs();
     s_alertExpired = 0;
     int32_t i = CGLCD::m_chatAlertLines - 1;
 
     for (; i > 0; i--) {
-        SStrCopy(s_chatMessages[i].m_text, s_chatMessages[i - 1].m_text, STORM_MAX_STR);
+        SStrCopy(s_chatMessages[i].m_text, s_chatMessages[i - 1].m_text, sizeof(s_chatMessages[i].m_text));
         s_chatMessages[i].m_type = s_chatMessages[i - 1].m_type;
     }
 
@@ -1140,15 +1084,15 @@ void CGLCD::IdleDisconnectWarning() {
     }
 }
 
-// OFFSET: #0x0084A790
+// OFFSET: 0x00B31AC0/0x1408FB7B0
 void CGLCD::PostInit() {
     if (!CGLCD::LoadLayout()) {
         return;
     }
 
-    SStrCopy(s_whisperFromText, FrameScript_GetText("WHISPER_FROM", -1, GENDER_NOT_APPLICABLE), STORM_MAX_STR);
-    SStrCopy(s_outbidText, FrameScript_GetText("OUTBID_ON_SHORT", -1, GENDER_NOT_APPLICABLE), STORM_MAX_STR);
-    SStrCopy(s_idleLogoutText, FrameScript_GetText("IDLE_LOGOUT_WARNING", -1, GENDER_NOT_APPLICABLE), STORM_MAX_STR);
+    SStrCopy(s_whisperFromText, FrameScript_GetText("WHISPER_FROM", -1, GENDER_NOT_APPLICABLE), sizeof(s_whisperFromText));
+    SStrCopy(s_outbidText, FrameScript_GetText("OUTBID_ON_SHORT", -1, GENDER_NOT_APPLICABLE), sizeof(s_outbidText));
+    SStrCopy(s_idleLogoutText, FrameScript_GetText("IDLE_LOGOUT_WARNING", -1, GENDER_NOT_APPLICABLE), sizeof(s_idleLogoutText));
     s_chatMessages.SetCount(CGLCD::m_chatAlertLines);
 
     for (int32_t i = 0; i < CGLCD::m_chatAlertLines; i++) {
@@ -1171,7 +1115,7 @@ void CGLCD::PostInit() {
     }
 }
 
-// OFFSET: #0x0084A940
+// OFFSET: 0x00B31CC0/0x1408FBB10
 int32_t CGLCD::Update(const void* data, void* param) {
     if (CGLCD::m_lcd && !CGLCD::initComplete) {
         CGLCD::m_lcd->Update();
@@ -1196,20 +1140,14 @@ int32_t CGLCD::Update(const void* data, void* param) {
             CGLCD::SetStat("SPIRIT", CGLCD::m_player->m_unit->m_unitFieldStat[4]);
 
             if (CGLCD::m_lcd->IsDeviceAvailable(1)) {
-                int32_t base;
-                int32_t total;
-                int32_t effective;
-                int32_t positive;
-                int32_t negative;
-                CGLCD::m_player->GetResistanceAndBuffs(GetPhysicalDamageClassID(), &base, &total, &effective, &positive, &negative);
-                CGLCD::SetStat("Armor", effective);
+                CGLCD::SetStat("MASTERY", CGLCD::m_player->m_player->m_playerMastery, false, false);
             } else if (IsAsianLocale() && !CGLCD::m_lcd->IsDeviceAvailable(1)) {
                 float minDamage = CGLCD::m_player->m_unit->m_unitFieldMindamage;
                 float maxDamage = CGLCD::m_player->m_unit->m_unitFieldMaxdamage;
-                float percent = CGLCD::m_player->GetModDamageDonePct(0);
-                int32_t positive = CGLCD::m_player->GetModDamageDonePos(0);
-                int32_t negative = CGLCD::m_player->GetModDamageDoneNeg(0);
-                float damage = (negative + (1.0f / percent * maxDamage - positive - negative + 1.0f / percent * minDamage - positive - negative) * 0.5f + positive) * percent;
+                float percent = CGLCD::m_player->GetModDamageDonePct(1);
+                int32_t positive = CGLCD::m_player->GetModDamageDonePos(1);
+                int32_t negative = CGLCD::m_player->GetModDamageDoneNeg(1);
+                float damage = (((1.0f / percent * maxDamage - positive - negative) + (1.0f / percent * minDamage - positive - negative)) * 0.5f + negative + positive) * percent;
                 float average = 1.0f;
 
                 if (damage > 1.0f) {
@@ -1239,12 +1177,11 @@ int32_t CGLCD::Update(const void* data, void* param) {
                     break;
             }
 
-            CGLCD::SetStat(GetAmmoToken(), GetAmmoCount());
             CGLCD::SetStat("BAG", CGLCD::m_player->m_bag.GetNumFreeInvSlots());
             CGLCD::SetStat("DURABILITY", static_cast<int32_t>(CGLCD::m_player->m_bag.GetAvgEquippedDurability()));
         }
 
-        uint32_t now = OsGetAsyncTimeMs();
+        uint32_t now = FrameTime::GetCurTimeMs();
 
         if (static_cast<int32_t>(now - s_alertExpireTime) >= 0 && !s_alertExpired) {
             s_alertExpired = 1;
@@ -1263,7 +1200,7 @@ int32_t CGLCD::Update(const void* data, void* param) {
                 }
             } else {
                 char duration[32];
-                CGTooltip::GetDurationString(duration, sizeof(duration), s_battlefieldPortExpiration - OsGetAsyncTimeMs(), "SPELL_TIME_REMAINING", NULL, 1, 0);
+                CGTooltip::GetDurationString(duration, sizeof(duration), s_battlefieldPortExpiration - FrameTime::GetCurTimeMs(), "SPELL_TIME_REMAINING", NULL, 1, 0);
                 const char* token = CGLCD::m_handles.Ptr("BATTLEFIELD_ALERT")->m_text.m_str;
                 const char* remaining = LanguageProcess(duration);
                 char text[128];
@@ -1277,24 +1214,24 @@ int32_t CGLCD::Update(const void* data, void* param) {
             CGLCD::UpdateBattlefieldStats();
         }
 
-        if (static_cast<uint32_t>(s_currentScreen - 7) <= 5) {
+        if (static_cast<uint32_t>(s_currentScreen - 7) <= 7) {
             CGLCD::UpdateMapPositions();
         }
     } else if (CGlueMgr::m_queuePosition[0]) {
         int32_t waitTime = CGlueMgr::m_estimatedWaitTime;
         int32_t position = CGlueMgr::m_queuePosition[0];
-        char token[32];
+        char token[64];
 
         if (waitTime <= 0) {
             waitTime = 0;
         }
 
         if (waitTime > 60000) {
-            SStrCopy(token, "QUEUE_TIME_LEFT", STORM_MAX_STR);
+            SStrCopy(token, "QUEUE_TIME_LEFT", sizeof(token));
         } else if (waitTime) {
-            SStrCopy(token, "QUEUE_TIME_LEFT_SECONDS", STORM_MAX_STR);
+            SStrCopy(token, "QUEUE_TIME_LEFT_SECONDS", sizeof(token));
         } else {
-            SStrCopy(token, "QUEUE_TIME_LEFT_UNKNOWN", STORM_MAX_STR);
+            SStrCopy(token, "QUEUE_TIME_LEFT_UNKNOWN", sizeof(token));
         }
 
         char text[128];
@@ -1307,18 +1244,18 @@ int32_t CGLCD::Update(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x0084B410
+// OFFSET: 0x00B32800/0x1408FCAB0
 bool CGLCD::LoadLCDMap(int32_t screen, XMLNode* node, CStatus* status, int32_t subscreen) {
     MAPDATA* map = CGLCD::m_mapData.NewNode(2, 0, 0);
     map->m_screen = screen;
 
     for (XMLNode* child = node->m_child; child; child = child->m_next) {
-        if (!SStrCmpI(child->m_name.m_str, "Size", STORM_MAX_STR)) {
+        if (!_stricmp(child->m_name.m_str, "Size")) {
             const char* x = child->GetAttributeByName("x");
             map->m_sizeX = x && *x ? SStrToInt(x) : 0;
             const char* y = child->GetAttributeByName("y");
             map->m_sizeY = y && *y ? SStrToInt(y) : 0;
-        } else if (!SStrCmpI(child->m_name.m_str, "Offset", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "Offset")) {
             const char* x = child->GetAttributeByName("x");
             map->m_offsetX = x && *x ? SStrToInt(x) : 0;
             const char* y = child->GetAttributeByName("y");
@@ -1329,7 +1266,7 @@ bool CGLCD::LoadLCDMap(int32_t screen, XMLNode* node, CStatus* status, int32_t s
     return true;
 }
 
-// OFFSET: #0x0084C100
+// OFFSET: 0x00B33500/0x1408FDD80
 bool CGLCD::LoadLCDText(int32_t screen, XMLNode* node, CStatus* status, int32_t subscreen) {
     int32_t size = 7;
     int32_t alignment = 0;
@@ -1355,13 +1292,13 @@ bool CGLCD::LoadLCDText(int32_t screen, XMLNode* node, CStatus* status, int32_t 
     const char* textAttr = node->GetAttributeByName("text");
 
     if (textAttr && *textAttr) {
-        SStrCopy(text, textAttr, STORM_MAX_STR);
+        SStrCopy(text, textAttr, sizeof(text));
     } else {
-        SStrCopy(text, "", STORM_MAX_STR);
+        SStrCopy(text, "", sizeof(text));
     }
 
     for (XMLNode* child = node->m_child; child; child = child->m_next) {
-        if (!SStrCmpI(child->m_name.m_str, "Font", STORM_MAX_STR)) {
+        if (!_stricmp(child->m_name.m_str, "Font")) {
             const char* fontSize = child->GetAttributeByName("Size");
 
             if (!fontSize || !*fontSize) {
@@ -1369,11 +1306,11 @@ bool CGLCD::LoadLCDText(int32_t screen, XMLNode* node, CStatus* status, int32_t 
                 return false;
             }
 
-            if (!SStrCmpI(fontSize, "LG_BIG", STORM_MAX_STR)) {
+            if (!_stricmp(fontSize, "LG_BIG")) {
                 size = 12;
-            } else if (!SStrCmpI(fontSize, "LG_MEDIUM", STORM_MAX_STR)) {
+            } else if (!_stricmp(fontSize, "LG_MEDIUM")) {
                 size = 8;
-            } else if (!SStrCmpI(fontSize, "LG_SMALL", STORM_MAX_STR)) {
+            } else if (!_stricmp(fontSize, "LG_SMALL")) {
                 size = 7;
             } else {
                 size = SStrToInt(fontSize);
@@ -1381,12 +1318,12 @@ bool CGLCD::LoadLCDText(int32_t screen, XMLNode* node, CStatus* status, int32_t 
 
             const char* align = child->GetAttributeByName("Alignment");
 
-            if (!align || !*align || !SStrCmpI(align, "LG_LEFT", STORM_MAX_STR)) {
+            if (!align || !*align || !_stricmp(align, "LG_LEFT")) {
                 alignment = 0;
-            } else if (!SStrCmpI(align, "LG_CENTER", STORM_MAX_STR)) {
+            } else if (!_stricmp(align, "LG_CENTER")) {
                 alignment = 1;
             } else {
-                alignment = SStrCmpI(align, "LG_RIGHT", STORM_MAX_STR) ? 0 : 2;
+                alignment = _stricmp(align, "LG_RIGHT") ? 0 : 2;
             }
 
             const char* maxWidthAttr = child->GetAttributeByName("MaxWidth");
@@ -1402,7 +1339,7 @@ bool CGLCD::LoadLCDText(int32_t screen, XMLNode* node, CStatus* status, int32_t 
             if (wrapAttr && *wrapAttr && (*wrapAttr == 't' || *wrapAttr == 'T')) {
                 wrap = true;
             }
-        } else if (!SStrCmpI(child->m_name.m_str, "RelOrigin", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "RelOrigin")) {
             const char* relTo = child->GetAttributeByName("RelTo");
             LCDHANDLE* relative = CGLCD::m_handles.Ptr(relTo);
 
@@ -1417,12 +1354,12 @@ bool CGLCD::LoadLCDText(int32_t screen, XMLNode* node, CStatus* status, int32_t 
             int32_t offsetY = y && *y ? SStrToInt(y) : 0;
             originX = relative->m_x + offsetX;
             originY = relative->m_y + offsetY;
-        } else if (!SStrCmpI(child->m_name.m_str, "Origin", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "Origin")) {
             const char* x = child->GetAttributeByName("x");
             originX = x && *x ? SStrToInt(x) : 0;
             const char* y = child->GetAttributeByName("y");
             originY = y && *y ? SStrToInt(y) : 0;
-        } else if (!SStrCmpI(child->m_name.m_str, "Size", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "Size")) {
             const char* x = child->GetAttributeByName("x");
             sizeX = x && *x ? SStrToInt(x) : 0;
             const char* y = child->GetAttributeByName("y");
@@ -1455,7 +1392,7 @@ bool CGLCD::LoadLCDText(int32_t screen, XMLNode* node, CStatus* status, int32_t 
     return true;
 }
 
-// OFFSET: #0x0084C660
+// OFFSET: 0x00B33AA0/0x1408FE480
 bool CGLCD::LoadLCDBitmap(int32_t screen, XMLNode* node, CStatus* status) {
     int32_t originX = 0;
     int32_t originY = 0;
@@ -1483,7 +1420,7 @@ bool CGLCD::LoadLCDBitmap(int32_t screen, XMLNode* node, CStatus* status) {
     const char* typeAttr = node->GetAttributeByName("type");
 
     if (typeAttr && *typeAttr) {
-        if (!SStrCmpI("texture", typeAttr, STORM_MAX_STR)) {
+        if (!_stricmp("texture", typeAttr)) {
             type = 2;
             const char* data = node->GetAttributeByName("data");
 
@@ -1492,8 +1429,8 @@ bool CGLCD::LoadLCDBitmap(int32_t screen, XMLNode* node, CStatus* status) {
                 return false;
             }
 
-            SStrCopy(fileName, data, STORM_MAX_STR);
-        } else if (!SStrCmpI("prevTexture", typeAttr, STORM_MAX_STR)) {
+            SStrCopy(fileName, data, sizeof(fileName));
+        } else if (!_stricmp("prevTexture", typeAttr)) {
             type = 3;
         }
     }
@@ -1523,12 +1460,12 @@ bool CGLCD::LoadLCDBitmap(int32_t screen, XMLNode* node, CStatus* status) {
     }
 
     for (XMLNode* child = node->m_child; child; child = child->m_next) {
-        if (!SStrCmpI(child->m_name.m_str, "Origin", STORM_MAX_STR)) {
+        if (!_stricmp(child->m_name.m_str, "Origin")) {
             const char* x = child->GetAttributeByName("x");
             originX = x && *x ? SStrToInt(x) : 0;
             const char* y = child->GetAttributeByName("y");
             originY = y && *y ? SStrToInt(y) : 0;
-        } else if (!SStrCmpI(child->m_name.m_str, "RelOrigin", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "RelOrigin")) {
             const char* relTo = child->GetAttributeByName("RelTo");
             LCDHANDLE* relative = CGLCD::m_handles.Ptr(relTo);
 
@@ -1543,12 +1480,12 @@ bool CGLCD::LoadLCDBitmap(int32_t screen, XMLNode* node, CStatus* status) {
             int32_t offsetY = y && *y ? SStrToInt(y) : 0;
             originX = relative->m_x + offsetX;
             originY = relative->m_y + offsetY;
-        } else if (!SStrCmpI(child->m_name.m_str, "Size", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "Size")) {
             const char* x = child->GetAttributeByName("x");
             sizeX = x && *x ? SStrToInt(x) : 0;
             const char* y = child->GetAttributeByName("y");
             sizeY = y && *y ? SStrToInt(y) : 0;
-        } else if (!SStrCmpI(child->m_name.m_str, "TexCoord", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "TexCoord")) {
             const char* x = child->GetAttributeByName("x");
 
             if (x && *x) {
@@ -1612,7 +1549,7 @@ bool CGLCD::LoadLCDBitmap(int32_t screen, XMLNode* node, CStatus* status) {
     return true;
 }
 
-// OFFSET: #0x0084CC00
+// OFFSET: 0x00B34070/0x1408FEBF0
 bool CGLCD::LoadLCDElement(int32_t screen, XMLNode* node, CStatus* status, int32_t subscreen) {
     const char* name = node->m_name.m_str;
 
@@ -1620,15 +1557,15 @@ bool CGLCD::LoadLCDElement(int32_t screen, XMLNode* node, CStatus* status, int32
         return false;
     }
 
-    if (!SStrCmpI(name, "LCDText", STORM_MAX_STR)) {
+    if (!_stricmp(name, "LCDText")) {
         return CGLCD::LoadLCDText(screen, node, status, subscreen);
     }
 
-    if (!SStrCmpI(name, "LCDBitmap", STORM_MAX_STR)) {
+    if (!_stricmp(name, "LCDBitmap")) {
         return CGLCD::LoadLCDBitmap(screen, node, status);
     }
 
-    if (!SStrCmpI(name, "LCDMap", STORM_MAX_STR)) {
+    if (!_stricmp(name, "LCDMap")) {
         return CGLCD::LoadLCDMap(screen, node, status, -1);
     }
 
@@ -1646,7 +1583,7 @@ bool CGLCD::LoadGlobals(XMLNode* node, CStatus* status) {
     return true;
 }
 
-// OFFSET: #0x0084CCF0
+// OFFSET: 0x00B34160/0x1408FECD0
 bool CGLCD::GeneratePOIs(XMLNode* node) {
     for (XMLNode* child = node->m_child; child; child = child->m_next) {
         int32_t screen = CGLCD::GetScreenFromName(child->GetAttributeByName("Screen"));
@@ -1684,7 +1621,7 @@ bool CGLCD::GeneratePOIs(XMLNode* node) {
             POIIcon* icon = CGLCD::m_POIIcons.NewNode(2, 0, 0);
             icon->m_handle = lcdBitmap;
             icon->m_id = rec->m_id;
-            SStrCopy(icon->m_name, name, STORM_MAX_STR);
+            SStrCopy(icon->m_name, name, sizeof(icon->m_name));
             x += 16;
         }
     }
@@ -1692,7 +1629,7 @@ bool CGLCD::GeneratePOIs(XMLNode* node) {
     return true;
 }
 
-// OFFSET: #0x0084CFF0
+// OFFSET: 0x00B34490/0x1408FF1D0
 bool CGLCD::LoadScreen(XMLNode* node, CStatus* status) {
     const char* name = node->GetAttributeByName("name");
 
@@ -1720,7 +1657,7 @@ bool CGLCD::LoadScreen(XMLNode* node, CStatus* status) {
     }
 
     for (XMLNode* child = node->m_child; child; child = child->m_next) {
-        if (SStrCmpI(child->m_name.m_str, "LCDSubscreen", STORM_MAX_STR)) {
+        if (_stricmp(child->m_name.m_str, "LCDSubscreen")) {
             if (!CGLCD::LoadLCDElement(screen, child, status, -1)) {
                 return false;
             }
@@ -1746,16 +1683,16 @@ bool CGLCD::LoadScreen(XMLNode* node, CStatus* status) {
     return true;
 }
 
-// OFFSET: #0x0084D1A0
+// OFFSET: 0x00B34650
 bool CGLCD::LoadLayout() {
     char fileName[260];
 
     if (CGLCD::m_lcd->IsDeviceAvailable(1)) {
         CGLCD::m_lcd->ModifyDisplay(1);
-        SStrCopy(fileName, "Interface\\LCDXML\\LCDColorLayout.xml", STORM_MAX_STR);
+        SStrCopy(fileName, "Interface\\LCDXML\\LCDColorLayout.xml", sizeof(fileName));
     } else if (CGLCD::m_lcd->IsDeviceAvailable(0)) {
         CGLCD::m_lcd->ModifyDisplay(0);
-        SStrCopy(fileName, "Interface\\LCDXML\\LCDLayout.xml", STORM_MAX_STR);
+        SStrCopy(fileName, "Interface\\LCDXML\\LCDLayout.xml", sizeof(fileName));
     } else {
         CGLCD::Shutdown();
         return false;
@@ -1772,18 +1709,18 @@ bool CGLCD::LoadLayout() {
     }
 
     for (XMLNode* child = XMLTree_GetRoot(tree)->m_child; child; child = child->m_next) {
-        if (!SStrCmpI(child->m_name.m_str, "Screen", STORM_MAX_STR)) {
+        if (!_stricmp(child->m_name.m_str, "Screen")) {
             if (!CGLCD::LoadScreen(child, &status)) {
                 CGLCD::Shutdown();
                 XMLTree_Free(tree);
                 return false;
             }
-        } else if (!SStrCmpI(child->m_name.m_str, "Globals", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "Globals")) {
             CGLCD::LoadGlobals(child, &status);
-        } else if (!SStrCmpI(child->m_name.m_str, "POI", STORM_MAX_STR)) {
+        } else if (!_stricmp(child->m_name.m_str, "POI")) {
             CGLCD::GeneratePOIs(child);
         } else {
-            status.Add(STATUS_ERROR, "Unknown element: %s");
+            status.Add(STATUS_ERROR, "Unknown element: %s", child->m_name.m_str);
         }
     }
 

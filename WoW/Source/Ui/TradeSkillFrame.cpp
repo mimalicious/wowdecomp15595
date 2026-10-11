@@ -334,7 +334,15 @@ static int32_t QSortSkills(const void* a, const void* b) {
             }
         }
 
-        if (!shownA || !shownB) {
+        if (!shownA) {
+            if (shownA == shownB) {
+                return 0;
+            }
+
+            return 2 * (shownB != 0) - 1;
+        }
+
+        if (!shownB) {
             if (shownA == shownB) {
                 return 0;
             }
@@ -358,19 +366,19 @@ static int32_t QSortSkills(const void* a, const void* b) {
         return 0;
     }
 
-    if (infoA->m_difficulty != infoB->m_difficulty) {
-        return 2 * (infoA->m_difficulty > infoB->m_difficulty) - 1;
+    if (infoA->m_difficulty == infoB->m_difficulty) {
+        if (infoA->m_skillLineRank != infoB->m_skillLineRank) {
+            return 2 * (infoA->m_skillLineRank < infoB->m_skillLineRank) - 1;
+        }
+
+        if (infoA->m_itemLevel != infoB->m_itemLevel) {
+            return 2 * (infoA->m_itemLevel < infoB->m_itemLevel) - 1;
+        }
+
+        return SStrSortUTF8I(spellA->m_name, spellB->m_name, STORM_MAX_STR);
     }
 
-    if (infoA->m_skillLineRank != infoB->m_skillLineRank) {
-        return 2 * (infoA->m_skillLineRank < infoB->m_skillLineRank) - 1;
-    }
-
-    if (infoA->m_itemLevel != infoB->m_itemLevel) {
-        return 2 * (infoA->m_itemLevel < infoB->m_itemLevel) - 1;
-    }
-
-    return SStrSortUTF8I(spellA->m_name, spellB->m_name, STORM_MAX_STR);
+    return 2 * (infoA->m_difficulty > infoB->m_difficulty) - 1;
 }
 
 // OFFSET: 0x0098DC50
@@ -564,7 +572,7 @@ bool CGTradeSkillInfo::GetTradeSkillListLink(int32_t spellId, char* buffer, uint
         chars++;
     }
 
-    if (SStrLen(buffer) + 1 + chars >= bufferSize) {
+    if (strlen(buffer) + 1 + chars >= bufferSize) {
         return false;
     }
 
@@ -572,7 +580,7 @@ bool CGTradeSkillInfo::GetTradeSkillListLink(int32_t spellId, char* buffer, uint
     int32_t classId = player->m_unit->m_unitFieldBytes0[1];
     uint8_t bits = 0;
     uint8_t bit = 0;
-    char* out = &buffer[SStrLen(buffer)];
+    char* out = &buffer[strlen(buffer)];
 
     for (uint32_t i = 0; i < count; i++) {
         if (player->IsSpellKnown(ability->m_spell) && SpellTableMatchRaceClass(race, classId, ability->m_raceMask, ability->m_classMask, 0, 0)) {
@@ -1330,7 +1338,11 @@ void CGTradeSkillInfo::RefreshList(int32_t full) {
 
                 if (spell->m_spellEquippedItemsID && (equipped = g_spellEquippedItemsDB.GetRecord(spell->m_spellEquippedItemsID))) {
                     if (equipped->m_equippedItemClass == 2) {
-                        CGTradeSkillInfo::m_displayList.m_data[i]->m_invTypeMask = (equipped->m_equippedItemSubclass & 1) ? 0x800000 : 0x1000000;
+                        if (equipped->m_equippedItemSubclass & 1) {
+                            CGTradeSkillInfo::m_displayList.m_data[i]->m_invTypeMask = 0x800000;
+                        } else {
+                            CGTradeSkillInfo::m_displayList.m_data[i]->m_invTypeMask = 0x1000000;
+                        }
                     } else if (equipped->m_equippedItemClass == 4) {
                         if (equipped->m_equippedItemInvTypes) {
                             CGTradeSkillInfo::m_displayList.m_data[i]->m_invTypeMask = 0;
@@ -1642,7 +1654,7 @@ void CGTradeSkillInfo::SetLink(const char* link) {
 
     if (g_nameDBCache.GetRecord(guid, requester, TradeSkillLinkNameCallback, copy, true)) {
         SMemFree(copy, __FILE__, __LINE__, 0);
-        const char* bits = SStrChrR(data, ':');
+        const char* bits = strrchr(data, ':');
 
         if (bits) {
             CGTradeSkillInfo::SetTradeSkill(spellId, guid, bits + 1, skillRank, skillMaxRank);

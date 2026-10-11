@@ -88,73 +88,73 @@ static int32_t Script_GetNumActiveQuests(lua_State* L) {
 
 // OFFSET: 0x009447B0/0x1406B1670
 static int32_t Script_GetAvailableTitle(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetAvailableTitle(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+
+        if (index < CGQuestInfo::m_numQuests) {
+            lua_pushstring(L, CGQuestInfo::m_availableQuests[index].m_title);
+        } else {
+            lua_pushstring(L, NULL);
+        }
+
+        return 1;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (index < CGQuestInfo::m_numQuests) {
-        lua_pushstring(L, CGQuestInfo::m_availableQuests[index].m_title);
-    } else {
-        lua_pushstring(L, NULL);
-    }
-
-    return 1;
+    luaL_error(L, "Usage: GetAvailableTitle(index)");
+    return 0;
 }
 
 // OFFSET: 0x00944850/0x1406B1700
 static int32_t Script_GetActiveTitle(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetActiveTitle(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        lua_pushstring(L, index < CGQuestInfo::m_numInProgress ? CGQuestInfo::m_inProgressQuests[index].m_title : NULL);
+        lua_pushboolean(L, CGQuestInfo::IsQuestCompleteAt(index));
+        return 2;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    lua_pushstring(L, index < CGQuestInfo::m_numInProgress ? CGQuestInfo::m_inProgressQuests[index].m_title : NULL);
-    lua_pushboolean(L, CGQuestInfo::IsQuestCompleteAt(index));
-    return 2;
+    luaL_error(L, "Usage: GetActiveTitle(index)");
+    return 0;
 }
 
 // OFFSET: 0x009448F0/0x1406B1790
 static int32_t Script_GetAvailableLevel(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetGetAvailableLevel(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        int32_t level;
+
+        if (index < CGQuestInfo::m_numQuests) {
+            level = CGQuestInfo::m_availableQuests[index].m_level;
+        } else {
+            level = 0;
+        }
+
+        lua_pushnumber(L, level);
+        return 1;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t level;
-
-    if (index < CGQuestInfo::m_numQuests) {
-        level = CGQuestInfo::m_availableQuests[index].m_level;
-    } else {
-        level = 0;
-    }
-
-    lua_pushnumber(L, level);
-    return 1;
+    luaL_error(L, "Usage: GetGetAvailableLevel(index)");
+    return 0;
 }
 
 // OFFSET: 0x00944990/0x1406B1810
 static int32_t Script_GetActiveLevel(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetGetActiveLevel(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        int32_t level;
+
+        if (index < CGQuestInfo::m_numInProgress) {
+            level = CGQuestInfo::m_inProgressQuests[index].m_level;
+        } else {
+            level = 0;
+        }
+
+        lua_pushnumber(L, level);
+        return 1;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t level;
-
-    if (index < CGQuestInfo::m_numInProgress) {
-        level = CGQuestInfo::m_inProgressQuests[index].m_level;
-    } else {
-        level = 0;
-    }
-
-    lua_pushnumber(L, level);
-    return 1;
+    luaL_error(L, "Usage: GetGetActiveLevel(index)");
+    return 0;
 }
 
 // OFFSET: 0x00944A30/0x1406B1890
@@ -461,22 +461,22 @@ static int32_t Script_GetRewardSpell(lua_State* L) {
 static int32_t Script_GetRewardSkillPoints(lua_State* L) {
     SkillLineRec* skill = g_skillLineDB.GetRecord(CGQuestInfo::m_rewards.m_skillLine);
 
-    if (!skill) {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnil(L);
+    if (skill) {
+        lua_pushstring(L, skill->m_displayName);
+
+        if (SpellIconRec* icon = g_spellIconDB.GetRecord(skill->m_spellIconID)) {
+            lua_pushstring(L, icon->m_textureFilename);
+        } else {
+            lua_pushnil(L);
+        }
+
+        lua_pushinteger(L, CGQuestInfo::m_rewards.m_skillPoints);
         return 3;
     }
 
-    lua_pushstring(L, skill->m_displayName);
-
-    if (SpellIconRec* icon = g_spellIconDB.GetRecord(skill->m_spellIconID)) {
-        lua_pushstring(L, icon->m_textureFilename);
-    } else {
-        lua_pushnil(L);
-    }
-
-    lua_pushinteger(L, CGQuestInfo::m_rewards.m_skillPoints);
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnil(L);
     return 3;
 }
 
@@ -526,61 +526,61 @@ static int32_t Script_CloseQuest(lua_State* L) {
 
 // OFFSET: 0x00946470/0x1406B36C0
 static int32_t Script_IsAvailableQuestTrivial(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: IsAvailableQuestTrivial(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        int32_t level = index < CGQuestInfo::m_numQuests ? CGQuestInfo::m_availableQuests[index].m_level : 0;
+
+        if (CGQuestInfo::IsTrivialQuest(level)) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 1;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t level = index < CGQuestInfo::m_numQuests ? CGQuestInfo::m_availableQuests[index].m_level : 0;
-
-    if (CGQuestInfo::IsTrivialQuest(level)) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
+    luaL_error(L, "Usage: IsAvailableQuestTrivial(index)");
+    return 0;
 }
 
 // OFFSET: 0x00946520/0x1406B3750
 static int32_t Script_IsActiveQuestTrivial(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: IsActiveQuestTrivial(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        int32_t level = index < CGQuestInfo::m_numInProgress ? CGQuestInfo::m_inProgressQuests[index].m_level : 0;
+
+        if (CGQuestInfo::IsTrivialQuest(level)) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 1;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t level = index < CGQuestInfo::m_numInProgress ? CGQuestInfo::m_inProgressQuests[index].m_level : 0;
-
-    if (CGQuestInfo::IsTrivialQuest(level)) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
+    luaL_error(L, "Usage: IsActiveQuestTrivial(index)");
+    return 0;
 }
 
 // OFFSET: 0x009465D0/0x1406B37E0
 static int32_t Script_SelectAvailableQuest(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SelectAvailableQuest(index)");
+    if (lua_isnumber(L, 1)) {
+        CGQuestInfo::QueryQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
         return 0;
     }
 
-    CGQuestInfo::QueryQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    luaL_error(L, "Usage: SelectAvailableQuest(index)");
     return 0;
 }
 
 // OFFSET: 0x00946640/0x1406B3830
 static int32_t Script_SelectActiveQuest(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SelectActiveQuest(index)");
+    if (lua_isnumber(L, 1)) {
+        CGQuestInfo::CompleteQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
         return 0;
     }
 
-    CGQuestInfo::CompleteQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    luaL_error(L, "Usage: SelectActiveQuest(index)");
     return 0;
 }
 
@@ -591,7 +591,7 @@ static int32_t Script_ShowQuestComplete(lua_State* L) {
         return 0;
     }
 
-    int32_t questId = CGQuestLog::GetQuestID(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    int32_t questId = CGQuestLog::GetQuestID(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
 
     if (questId) {
         WOWGUID requester = WOWGUID();
@@ -659,32 +659,32 @@ static int32_t Script_GetRewardTitle(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CharTitlesRec* title = g_charTitlesDB.GetRecord(titleId);
 
-    if (!title) {
-        lua_pushnil(L);
+    if (title) {
+        int32_t gender = player ? player->m_player->m_playerBytes3[0] : 0;
+        char format[256];
+        format[0] = 0;
+
+        if (gender == 1) {
+            if (strcmp(title->m_name1, "")) {
+                strcpy(format, title->m_name1);
+            } else {
+                strcpy(format, title->m_name);
+            }
+        } else {
+            if (strcmp(title->m_name, "")) {
+                strcpy(format, title->m_name);
+            } else {
+                strcpy(format, title->m_name1);
+            }
+        }
+
+        char text[256];
+        SStrPrintf(text, sizeof(text), format, player ? player->GetUnitName(NULL, 1) : "");
+        lua_pushstring(L, text);
         return 1;
     }
 
-    int32_t gender = player ? player->m_player->m_playerBytes3[0] : 0;
-    char format[256];
-    format[0] = 0;
-
-    if (gender == 1) {
-        if (strcmp(title->m_name1, "")) {
-            strcpy(format, title->m_name1);
-        } else {
-            strcpy(format, title->m_name);
-        }
-    } else {
-        if (strcmp(title->m_name, "")) {
-            strcpy(format, title->m_name);
-        } else {
-            strcpy(format, title->m_name1);
-        }
-    }
-
-    char text[256];
-    SStrPrintf(text, sizeof(text), format, player ? player->GetUnitName(NULL, 1) : "");
-    lua_pushstring(L, text);
+    lua_pushnil(L);
     return 1;
 }
 
@@ -707,37 +707,37 @@ static int32_t Script_GetDailyQuestsCompleted(lua_State* L) {
 
 // OFFSET: 0x00946A50/0x1406B3CA0
 static int32_t Script_GetAvailableQuestInfo(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetAvailableQuestInfo(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        int32_t level = index < CGQuestInfo::m_numQuests ? CGQuestInfo::m_availableQuests[index].m_level : 0;
+
+        if (CGQuestInfo::IsTrivialQuest(level)) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+
+        if (index < CGQuestInfo::m_numQuests && (CGQuestInfo::m_availableQuests[index].m_flags & 0x1000)) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+
+        if (index < CGQuestInfo::m_numQuests && CGQuestInfo::m_availableQuests[index].m_repeatable) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 3;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t level = index < CGQuestInfo::m_numQuests ? CGQuestInfo::m_availableQuests[index].m_level : 0;
-
-    if (CGQuestInfo::IsTrivialQuest(level)) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (index < CGQuestInfo::m_numQuests && (CGQuestInfo::m_availableQuests[index].m_flags & 0x1000)) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (index < CGQuestInfo::m_numQuests && CGQuestInfo::m_availableQuests[index].m_repeatable) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 3;
+    luaL_error(L, "Usage: GetAvailableQuestInfo(index)");
+    return 0;
 }
 
 // OFFSET: 0x00946D90/0x1406B4050
@@ -759,15 +759,15 @@ static int32_t Script_GetCriteriaSpell(lua_State* L) {
 
 // OFFSET: 0x00947490/0x1406B49C0
 static int32_t Script_ShowQuestOffer(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: ShowQuestOffer(index)");
+    if (lua_isnumber(L, 1)) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+        WOWGUID guid = player->m_obj->m_guid;
+        int32_t questId = CGQuestLog::GetQuestID(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+        CGQuestInfo::ShowOfferFromQuest(player, guid, questId);
         return 0;
     }
 
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-    WOWGUID guid = player->m_obj->m_guid;
-    int32_t questId = CGQuestLog::GetQuestID(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
-    CGQuestInfo::ShowOfferFromQuest(player, guid, questId);
+    luaL_error(L, "Usage: ShowQuestOffer(index)");
     return 0;
 }
 
@@ -805,10 +805,11 @@ static int32_t Script_GetQuestItemLink(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 2));
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 2));
     int32_t itemId = CGQuestInfo::GetQuestItemID(lua_tolstring(L, 1, NULL), index - 1);
     ItemRecSparse* rec;
-    WOWGUID requester = WOWGUID();
+    WOWGUID requester;
+    requester.m_guid = 0;
 
     if (itemId && (rec = g_itemSparseDB.GetRecord(itemId, requester, NULL, NULL, false)) != NULL) {
         lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, rec->m_quality, 0, 0, 0, 0));
@@ -828,7 +829,8 @@ static int32_t Script_GetQuestBackgroundMaterial(lua_State* L) {
         bool found = false;
 
         if (object->m_obj->m_type & TYPEMASK_ITEM) {
-            WOWGUID requester = WOWGUID();
+            WOWGUID requester;
+            requester.m_guid = 0;
 
             if (ItemRecSparse* rec = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, requester, NULL, NULL, false)) {
                 material = rec->m_pageMaterial;

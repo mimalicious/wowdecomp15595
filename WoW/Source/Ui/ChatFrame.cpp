@@ -1653,7 +1653,7 @@ emoteDone:
 
             if (params->m_language && player && params->m_language != player->GetDefaultLanguage()) {
                 char languageName[256];
-                SStrPrintf(languageName, sizeof(languageName), "[%s] ", g_languagesDB.GetRecord(params->m_language)->m_name);
+                SStrPrintf(languageName, sizeof(languageName), "[%s] ", static_cast<const char*>(g_languagesDB.GetRecord(params->m_language)->m_name));
                 SStrPack(header, languageName, sizeof(header));
             }
 

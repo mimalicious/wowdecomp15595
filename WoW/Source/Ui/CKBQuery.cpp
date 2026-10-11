@@ -131,14 +131,14 @@ int32_t CKBQuery::BeginLoading(const char* query, int32_t categoryId, int32_t nu
     return 1;
 }
 
-// OFFSET: #0x00552300
+// OFFSET: 0x009FC900
 void CKBQuery::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_QUERY_LOAD_SUCCESS, NULL);
     }
 }
 
-// OFFSET: #0x00552320
+// OFFSET: 0x009FC920
 void CKBQuery::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_QUERY_LOAD_FAILURE, NULL);

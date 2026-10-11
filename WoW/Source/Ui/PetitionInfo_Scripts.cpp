@@ -90,44 +90,44 @@ static int32_t Script_ClosePetition(lua_State* L) {
 static int32_t Script_GetPetitionInfo(lua_State* L) {
     CGPetition* petition = CGPetitionInfo::m_petition;
 
-    if (!petition) {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
+    if (petition) {
+        if (petition->m_staticType == 0) {
+            lua_pushstring(L, "guild");
+        } else if (petition->m_staticType == 1) {
+            lua_pushstring(L, "arena");
+        } else {
+            lua_pushstring(L, "other");
+        }
+
+        lua_pushstring(L, petition->m_title);
+        lua_pushstring(L, petition->m_bodyText);
+        lua_pushnumber(L, petition->m_maxSignatures);
+        WOWGUID none = WOWGUID();
+        NameCache* name = g_nameDBCache.GetRecord(petition->m_ownerGuid.m_guid, none, NULL, NULL, false);
+
+        if (name) {
+            lua_pushstring(L, name->m_name);
+        } else {
+            lua_pushnil(L);
+        }
+
+        if (petition->m_ownerGuid == ClntObjMgrGetActivePlayer()) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        lua_pushnumber(L, petition->m_minSignatures);
         return 7;
     }
 
-    if (petition->m_staticType == 0) {
-        lua_pushstring(L, "guild");
-    } else if (petition->m_staticType == 1) {
-        lua_pushstring(L, "arena");
-    } else {
-        lua_pushstring(L, "other");
-    }
-
-    lua_pushstring(L, petition->m_title);
-    lua_pushstring(L, petition->m_bodyText);
-    lua_pushnumber(L, petition->m_maxSignatures);
-    WOWGUID none = WOWGUID();
-    NameCache* name = g_nameDBCache.GetRecord(petition->m_ownerGuid.m_guid, none, NULL, NULL, false);
-
-    if (name) {
-        lua_pushstring(L, name->m_name);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (petition->m_ownerGuid == ClntObjMgrGetActivePlayer()) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    lua_pushnumber(L, petition->m_minSignatures);
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnumber(L, 0.0);
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnumber(L, 0.0);
     return 7;
 }
 
@@ -160,7 +160,7 @@ static int32_t Script_OfferPetition(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;

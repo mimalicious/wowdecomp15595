@@ -339,12 +339,12 @@ void CGQuestInfo::ConfirmAcceptQuest(int32_t questId, const char* title, const W
 
 // OFFSET: 0x00944620/0x1406B14E0
 bool CGQuestInfo::IsQuestCompleteAt(uint32_t index) {
-    if (index >= CGQuestInfo::m_numInProgress) {
-        return false;
+    if (!(index >= CGQuestInfo::m_numInProgress)) {
+        uint32_t logIndex = CGQuestLog::GetQuestIndex(CGQuestInfo::m_inProgressQuests[index].m_questID) - 1;
+        return CGQuestLog::IsQuestComplete(logIndex) || CGQuestLog::HasNoObjectives(logIndex);
     }
 
-    uint32_t logIndex = CGQuestLog::GetQuestIndex(CGQuestInfo::m_inProgressQuests[index].m_questID) - 1;
-    return CGQuestLog::IsQuestComplete(logIndex) || CGQuestLog::HasNoObjectives(logIndex);
+    return false;
 }
 
 // OFFSET: 0x00945070
@@ -728,7 +728,12 @@ void CGQuestInfo::DeclineQuest() {
 
     uint32_t type = object->m_obj->m_type;
 
-    if ((type & (TYPEMASK_ITEM | TYPEMASK_PLAYER)) || CGQuestInfo::m_autoLaunched) {
+    if ((type & (TYPEMASK_ITEM | TYPEMASK_PLAYER))) {
+        CGQuestInfo::QuestGiverFinished(0, CGQuestInfo::m_currentQuest, 1, 0);
+        return;
+    }
+
+    if (CGQuestInfo::m_autoLaunched) {
         CGQuestInfo::QuestGiverFinished(0, CGQuestInfo::m_currentQuest, 1, 0);
         return;
     }
@@ -789,12 +794,12 @@ int32_t CGQuestInfo::GetReward(int32_t choice) {
 
 // OFFSET: 0x00946280/0x1406B3480
 bool CGQuestInfo::IsTrivialQuest(int32_t level) {
-    if (level == -1) {
-        return false;
+    if (level != -1) {
+        int32_t range = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->GetQuestGreenRange();
+        return level + range < static_cast<int32_t>(static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->m_unit->m_unitFieldLevel);
     }
 
-    int32_t range = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->GetQuestGreenRange();
-    return level + range < static_cast<int32_t>(static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->m_unit->m_unitFieldLevel);
+    return false;
 }
 
 // OFFSET: 0x00946310/0x1406B3540
@@ -901,7 +906,8 @@ static void QuestItemStatsCallback(int32_t id, const WOWGUID& guid, void* param,
         return;
     }
 
-    WOWGUID requester = WOWGUID();
+    WOWGUID requester;
+    requester.m_guid = 0;
 
     if (g_itemSparseDB.GetRecord(id, requester, NULL, NULL, false)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_ITEM_UPDATE, NULL);
@@ -944,7 +950,11 @@ void CGQuestInfo::ShowOfferFromQuest(CGPlayer_C* player, WOWGUID npc, int32_t qu
 
     for (int32_t i = 0; i < numChoices; i++) {
         ItemRec* item = g_itemDB.GetRecord(quest->m_rewardChoiceItem[i], itemRequester, NULL, NULL, false);
-        rewards.m_choiceItemDisplayIDs[i] = item ? item->m_displayInfoID : 0;
+        if (item) {
+            rewards.m_choiceItemDisplayIDs[i] = item->m_displayInfoID;
+        } else {
+            rewards.m_choiceItemDisplayIDs[i] = 0;
+        }
     }
 
     for (uint32_t i = 0; i < 6; i++) {
@@ -982,7 +992,7 @@ void CGQuestInfo::ShowOfferFromQuest(CGPlayer_C* player, WOWGUID npc, int32_t qu
     rewards.m_xp = CalcQuestExp(quest->m_id, player->m_unit->m_unitFieldLevel);
     rewards.m_skillLine = quest->m_rewardSkillId;
     rewards.m_skillPoints = quest->m_rewardSkillPoints;
-    CGQuestInfo::SetState(npc, WOWGUID(), 1, quest->m_description, questId, 0, 0, 0);
+    CGQuestInfo::SetState(npc, WOWGUID::Make(0), 1, quest->m_description, questId, 0, 0, 0);
     CGQuestInfo::SetLogDescription(quest->m_objText);
     CGQuestInfo::AddReward(quest->m_name, rewards, 0, quest->m_suggestedPlayers, quest->m_flags);
     CGQuestInfo::SetPortraits(quest->m_questGiverPortrait, quest->m_questGiverTextWindow, quest->m_questGiverTargetName, quest->m_questTurnInPortrait, quest->m_questTurnTextWindow, quest->m_questTurnTargetName);
@@ -1024,7 +1034,11 @@ int32_t CGQuestInfo::GetQuestItemInfo(const char* type, uint32_t index, char* na
 
     if (rec) {
         SStrCopy(name, rec->GetName(0), nameSize);
-        quality = rec->m_inventoryType ? rec->m_quality : -1;
+        if (rec->m_inventoryType) {
+            quality = rec->m_quality;
+        } else {
+            quality = -1;
+        }
     }
 
     const char* path = ClientDBStringLookup(3);

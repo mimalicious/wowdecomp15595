@@ -13,7 +13,7 @@ DWORD WINAPI CEzLcd::OnSoftButtonCB(int device, DWORD dwButtons, const PVOID pCo
     return 0;
 }
 
-// OFFSET: 0x00B3E6B0
+// OFFSET: 0x00B3E6B0/0x14090BD10
 CEzLcd::CEzLcd() {
     this->unk_01D4 = -1;
     this->unk_01D8 = -1;
@@ -43,7 +43,7 @@ CEzLcd::CEzLcd() {
     }
 }
 
-// OFFSET: 0x00B3E850
+// OFFSET: 0x00B3E850/0x14090BF40
 CEzLcd::~CEzLcd() {
     for (uint32_t i = 0; i < this->m_monoPages.Count(); i++) {
         if (this->m_monoPages[i]) {
@@ -85,7 +85,7 @@ void CEzLcd::OnSoftButtons(uint32_t buttons) {
     LeaveCriticalSection(&this->m_buttonLock);
 }
 
-// OFFSET: 0x00B3E050
+// OFFSET: 0x00B3E050/0x14090B470
 int32_t CEzLcd::Initialize(const char* friendlyName, int32_t lcdType, int32_t isAutoStartable, int32_t isPersistent, lgLcdConfigureContext* configContext, lgLcdSoftbuttonsChangedContext* softbuttonsChangedContext) {
     if (this->unk_01A8 || this->unk_01AC) {
         return E_FAIL;
@@ -270,7 +270,7 @@ HRESULT CEzLcd::SetBitmap(void* handle, HBITMAP bitmap) {
     return S_OK;
 }
 
-// OFFSET: 0x00B3DD00
+// OFFSET: 0x00B3DD00/0x14090AFC0
 HRESULT CEzLcd::SetOrigin(void* handle, int32_t x, int32_t y) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
 
@@ -283,7 +283,7 @@ HRESULT CEzLcd::SetOrigin(void* handle, int32_t x, int32_t y) {
     return S_OK;
 }
 
-// OFFSET: 0x00B3DD30
+// OFFSET: 0x00B3DD30/0x14090AFF0
 HRESULT CEzLcd::SetVisible(void* handle, int32_t visible) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
 
@@ -295,7 +295,7 @@ HRESULT CEzLcd::SetVisible(void* handle, int32_t visible) {
     return S_OK;
 }
 
-// OFFSET: 0x00B3DD60
+// OFFSET: 0x00B3DD60/0x14090B020
 HRESULT CEzLcd::SetAlpha(void* handle, int32_t alpha) {
     if (!handle) {
         return E_FAIL;
@@ -358,7 +358,7 @@ void CEzLcd::ShowSubscreen(int32_t subscreen) {
     page->ShowSubscreen(subscreen);
 }
 
-// OFFSET: 0x00B3E210
+// OFFSET: 0x00B3E210/0x14090B6A0
 int32_t CEzLcd::AddNewPage(int32_t page) {
     CEzLcdPage* newPage = new CEzLcdPage(this);
     newPage->Initialize();
@@ -377,7 +377,7 @@ int32_t CEzLcd::AddNewPage(int32_t page) {
     return pages->Count();
 }
 
-// OFFSET: 0x00B3E2B0
+// OFFSET: 0x00B3E2B0/0x14090B770
 int32_t CEzLcd::ShowPage(int32_t page) {
     TSGrowableArray<CEzLcdPage*>* pages = &this->m_monoPages;
 
@@ -417,7 +417,7 @@ int32_t CEzLcd::ShowPage(int32_t page) {
     return S_OK;
 }
 
-// OFFSET: 0x00B3E380
+// OFFSET: 0x00B3E380/0x14090B890
 void CEzLcd::SetBackground(COLORREF color) {
     CEzLcdPage* page;
 
@@ -438,7 +438,7 @@ void CEzLcd::SetBackground(COLORREF color) {
     }
 }
 
-// OFFSET: #0x00959680
+// OFFSET: 0x00B3E3F0/0x14090B920
 CLCDText* CEzLcd::AddText(int32_t type, int32_t size, int32_t alignment, int32_t maxLengthPixels, int32_t userData, int32_t numberOfLines, int32_t fontWeight) {
     CEzLcdPage* page;
 
@@ -473,7 +473,7 @@ CLCDText* CEzLcd::AddText(int32_t type, int32_t size, int32_t alignment, int32_t
     return this->m_currentColorPage->AddColorText(type, size, alignment, maxLengthPixels, userData, numberOfLines, fontWeight);
 }
 
-// OFFSET: #0x00959750
+// OFFSET: 0x00B3E4C0/0x14090BA60
 CLCDBitmap* CEzLcd::AddBitmap(int32_t width, int32_t height, int32_t bitmapWidth, int32_t bitmapHeight) {
     CEzLcdPage* page;
 
@@ -520,7 +520,7 @@ CEzLcdPage* CEzLcd::GetGlobalPage() {
     return this->m_colorGlobalPage;
 }
 
-// OFFSET: #0x00959890
+// OFFSET: 0x00B3E600/0x14090BC30
 void CEzLcd::HideGlobals() {
     CEzLcdPage* page = this->GetGlobalPage();
 
@@ -533,7 +533,7 @@ void CEzLcd::HideGlobals() {
     }
 }
 
-// OFFSET: 0x00B3E620
+// OFFSET: 0x00B3E620/0x14090BC50
 HRESULT CEzLcd::ModifyControlsOnPage(int32_t page) {
     if (page == -1) {
         CEzLcdPage* globalPage = this->GetGlobalPage();

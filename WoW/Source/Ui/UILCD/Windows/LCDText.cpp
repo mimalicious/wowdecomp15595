@@ -8,7 +8,7 @@
 
 typedef HANDLE (WINAPI* ADDFONTMEMRESOURCEEXPROC)(PVOID fileView, DWORD size, PVOID reserved, DWORD* numFonts);
 
-// OFFSET: 0x00B40DF0
+// OFFSET: 0x00B40DF0/0x14090EDF0
 CLCDText::CLCDText() {
     this->m_hFont = NULL;
     this->m_nTextLength = 0;
@@ -28,7 +28,7 @@ CLCDText::CLCDText() {
     memset(this->m_szText, 0, sizeof(this->m_szText));
 }
 
-// OFFSET: #0x0095C9B0
+// OFFSET: 0x00B41550/0x14090F6A0
 CLCDText::~CLCDText() {
     if (this->m_hFont) {
         DeleteObject(this->m_hFont);
@@ -59,12 +59,12 @@ void CLCDText::SetFont(LOGFONTA& font) {
     this->m_bRecalcExtent = 1;
 }
 
-// OFFSET: #0x0095C180
+// OFFSET: 0x00B40F10
 HFONT CLCDText::GetFont() {
     return this->m_hFont;
 }
 
-// OFFSET: 0x00B415A0
+// OFFSET: 0x00B415A0/0x14090F710
 void CLCDText::SetFontFaceName(const char* faceName) {
     if (!faceName) {
         return;
@@ -154,14 +154,14 @@ void CLCDText::SetFontColor(COLORREF color) {
     this->SetForegroundColor(color);
 }
 
-// OFFSET: #0x0095C450
+// OFFSET: 0x00B40FE0
 void CLCDText::SetText(const WCHAR* text) {
     if (!text || !wcscmp(this->m_szText, text)) {
         return;
     }
 
     wcscpy(this->m_szText, text);
-    this->m_nTextLength = SStrLen(reinterpret_cast<const uint16_t*>(text));
+    this->m_nTextLength = wcslen(text);
     this->m_dtp.iLeftMargin = 0;
     this->m_dtp.iRightMargin = 0;
     this->m_bRecalcExtent = 1;
@@ -184,17 +184,17 @@ void CLCDText::SetWordWrap(int32_t enable) {
     }
 }
 
-// OFFSET: #0x0095C550
+// OFFSET: 0x00B410F0
 SIZE& CLCDText::GetVExtent() {
     return this->m_sizeVExtent;
 }
 
-// OFFSET: #0x0095C560
+// OFFSET: 0x00B41100
 SIZE& CLCDText::GetHExtent() {
     return this->m_sizeHExtent;
 }
 
-// OFFSET: 0x00B41110
+// OFFSET: 0x00B41110/0x14090F130
 void CLCDText::CalculateExtent(int32_t singleLine) {
     HDC dc = CreateCompatibleDC(NULL);
     int oldMapMode = SetMapMode(dc, MM_TEXT);
@@ -249,7 +249,7 @@ void CLCDText::SetAlignment(int32_t alignment) {
     this->m_nTextFormat = alignment | format;
 }
 
-// OFFSET: 0x00B41240
+// OFFSET: 0x00B41240/0x14090F2C0
 void CLCDText::DrawControlText(CLCDGfxBase& gfx) {
     RECT rect;
     rect.left = 0;
@@ -263,7 +263,7 @@ void CLCDText::DrawControlText(CLCDGfxBase& gfx) {
     }
 }
 
-// OFFSET: 0x00B412D0
+// OFFSET: 0x00B412D0/0x14090F380
 void CLCDText::OnDraw(CLCDGfxBase& gfx) {
     if (this->GetBackgroundMode() == OPAQUE) {
         HBRUSH brush = CreateSolidBrush(this->m_crBackgroundColor);

@@ -210,10 +210,10 @@ void ParseCountDownTimerText(char* buffer, uint32_t size, int32_t time) {
     int32_t seconds = remaining % 60;
     char text[16];
 
-    if (hours <= 0) {
-        SStrPrintf(text, sizeof(text), "%02d:%02d", minutes, seconds);
-    } else {
+    if (hours) {
         SStrPrintf(text, sizeof(text), "%d:%02d:%02d", hours, minutes, seconds);
+    } else {
+        SStrPrintf(text, sizeof(text), "%02d:%02d", minutes, seconds);
     }
 
     SStrPack(buffer, text, size);
@@ -244,9 +244,7 @@ void GenderConditional(char* buffer, uint32_t size, int32_t gender, const CGUnit
     }
 
     if (selector) {
-        if (selector + 1 >= semicolon) {
-            selector = NULL;
-        } else {
+        if (selector + 1 < semicolon) {
             switch (selector[1]) {
                 case 'C':
                 case 'c':
@@ -258,6 +256,8 @@ void GenderConditional(char* buffer, uint32_t size, int32_t gender, const CGUnit
                     gender = CGUnit_C::GetDisplayRaceGender(unit, name);
                     break;
             }
+        } else {
+            selector = NULL;
         }
     }
 
@@ -477,11 +477,11 @@ static bool SpellParserGetCompareValue(const char** cursor, const AuraData* aura
         const char* text = *cursor;
         bool hasIndex;
 
-        if (static_cast<uint8_t>(text[1] - '1') > 8) {
-            hasIndex = false;
-        } else {
+        if (static_cast<uint8_t>(text[1] - '1') <= 8) {
             index = text[1] - '1';
             hasIndex = true;
+        } else {
+            hasIndex = false;
         }
 
         if ((*text == 'W' || *text == 'w') && aura) {
@@ -2298,21 +2298,21 @@ static int32_t SpellParserExpression(const SpellRec* spell, char* buffer, uint32
     s_mathState.m_text = expression;
     s_mathState.CompileSum(0);
 
-    if (s_mathState.m_status == 1) {
-        return 0;
+    if (s_mathState.m_status != 1) {
+        s_mathState.m_status = 2;
+        *value = s_mathState.Evaluate(spell, spellLevel, scale, parseUnit, parsePet, noModifiers);
+
+        if (s_mathState.m_status != 2) {
+            return 0;
+        }
+
+        *intValue = static_cast<int32_t>(*value);
+        SStrPrintf(text, sizeof(text), format, *value);
+        SStrPack(buffer, text, size);
+        return 1;
     }
 
-    s_mathState.m_status = 2;
-    *value = s_mathState.Evaluate(spell, spellLevel, scale, parseUnit, parsePet, noModifiers);
-
-    if (s_mathState.m_status != 2) {
-        return 0;
-    }
-
-    *intValue = static_cast<int32_t>(*value);
-    SStrPrintf(text, sizeof(text), format, *value);
-    SStrPack(buffer, text, size);
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009963B0/0x140716B90
@@ -2573,7 +2573,7 @@ static int32_t JournalParserReplaceText(char* buffer, uint32_t size, const char*
 
             case 'E':
             case 'e': {
-                float amplitude = effect ? effect->m_effectValueMultiplier : 0.0f;
+                float amplitude = !effect ? 0.0f : effect->m_effectValueMultiplier;
                 QuestTextParser::Spell_C_ModifySpellValue(spell, amplitude, 27);
                 SStrPrintf(number, sizeof(number), "%.1f", amplitude * multiplier);
                 lua_convertdecimal(number);
@@ -2976,7 +2976,7 @@ static void SpellParserVariables(const SpellRec* spell, int32_t parsePet, int32_
 
         if (equals) {
             int32_t length = equals - name + 1;
-            uint32_t nameLength = length <= 15 ? length : 15;
+            uint32_t nameLength = length > 15 ? 15 : length;
             *cursor = SStrChr(*cursor, '$');
 
             if (!*cursor) {

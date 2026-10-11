@@ -77,10 +77,10 @@ static int32_t Script_SetSelectedFaction(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (index <= CGReputationInfo::m_numFactions) {
-        CGReputationInfo::m_selectedFaction = CGReputationInfo::m_factionList.m_data[index]->m_factionId;
-    } else {
+    if (!(index <= CGReputationInfo::m_numFactions)) {
         CGReputationInfo::m_selectedFaction = 0;
+    } else {
+        CGReputationInfo::m_selectedFaction = CGReputationInfo::m_factionList.m_data[index]->m_factionId;
     }
 
     return 0;
@@ -100,7 +100,7 @@ static int32_t Script_GetFactionInfo(lua_State* L) {
     }
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    int32_t faction = index <= CGReputationInfo::m_numFactions ? CGReputationInfo::m_factionList.m_data[index]->m_factionId : 0;
+    int32_t faction = index > CGReputationInfo::m_numFactions ? 0 : CGReputationInfo::m_factionList.m_data[index]->m_factionId;
     return GetFactionInfoHelper(L, faction);
 }
 
@@ -111,7 +111,7 @@ static int32_t Script_GetFactionInfoByID(lua_State* L) {
         return 0;
     }
 
-    return GetFactionInfoHelper(L, static_cast<int32_t>(lua_tonumber(L, 1)));
+    return GetFactionInfoHelper(L, static_cast<uint32_t>(lua_tonumber(L, 1)));
 }
 
 // OFFSET: 0x009A6E20/0x14072D600
@@ -126,23 +126,23 @@ static int32_t Script_GetWatchedFactionInfo(lua_State* L) {
         rec = g_factionDB.GetRecord(faction);
     }
 
-    if (!rec) {
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
+    if (rec) {
+        lua_pushstring(L, rec->m_name);
+        int32_t reaction = CGReputationInfo::GetFactionStandingReaction(faction);
+        lua_pushnumber(L, reaction + 1);
+        int32_t max = CGReputationInfo::m_reactionThresholds[reaction + 1];
+        int32_t value = GetRepListRepValue(faction);
+        lua_pushnumber(L, CGReputationInfo::m_reactionThresholds[reaction]);
+        lua_pushnumber(L, max);
+        lua_pushnumber(L, value);
         return 5;
     }
 
-    lua_pushstring(L, rec->m_name);
-    int32_t reaction = CGReputationInfo::GetFactionStandingReaction(faction);
-    lua_pushnumber(L, reaction + 1);
-    int32_t max = CGReputationInfo::m_reactionThresholds[reaction + 1];
-    int32_t value = GetRepListRepValue(faction);
-    lua_pushnumber(L, CGReputationInfo::m_reactionThresholds[reaction]);
-    lua_pushnumber(L, max);
-    lua_pushnumber(L, value);
+    lua_pushnil(L);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
     return 5;
 }
 
@@ -172,10 +172,10 @@ static int32_t Script_SetWatchedFactionIndex(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (index <= CGReputationInfo::m_numFactions) {
-        CGReputationInfo::SetWatchedFaction(CGReputationInfo::m_factionList.m_data[index]->m_factionId);
-    } else {
+    if (!(index <= CGReputationInfo::m_numFactions)) {
         CGReputationInfo::SetWatchedFaction(0);
+    } else {
+        CGReputationInfo::SetWatchedFaction(CGReputationInfo::m_factionList.m_data[index]->m_factionId);
     }
 
     return 0;

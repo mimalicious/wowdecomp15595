@@ -840,7 +840,7 @@ bool OnWargameCheckEntry(ClientWargameCheckEntry* msg) {
         BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(static_cast<uint16_t>(queueID));
 
         if (rec && rec->m_name) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_WARGAME_REQUESTED, "%s%s%d", player->GetObjectName(), rec->m_name, msg->unk_0020);
+            FrameScript_SignalEvent(SCRIPT_EVENT_WARGAME_REQUESTED, "%s%s%d", player->GetObjectName(), static_cast<const char*>(rec->m_name), msg->unk_0020);
         }
     }
 
@@ -1812,7 +1812,7 @@ bool OnBattlefieldStatusQueued(ClientBattlefieldStatusQueued* msg) {
 
             if (rec) {
                 if (msg->unk_0014) {
-                    CGGameUI::DisplayError(ERR_GROUP_JOIN_BATTLEGROUND_S, rec->m_name);
+                    CGGameUI::DisplayError(ERR_GROUP_JOIN_BATTLEGROUND_S, static_cast<const char*>(rec->m_name));
                 }
             } else {
                 CGGameUI::DisplayError(ERR_GROUP_JOIN_BATTLEGROUND_FAIL);

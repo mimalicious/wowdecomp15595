@@ -447,7 +447,7 @@ XMLNode* CKBSetup::GetSubCategory(int32_t category, int32_t subCategory) {
     return this->m_subCategories.m_node;
 }
 
-// OFFSET: #0x00552100
+// OFFSET: 0x009FC700
 void CKBSetup::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_SETUP_LOAD_SUCCESS, NULL);
@@ -597,7 +597,7 @@ void CKBPage::Shutdown() {
     g_KnowledgeBaseArticle.m_state = 0;
 }
 
-// OFFSET: #0x00552120
+// OFFSET: 0x009FC720
 void CKBSetup::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {
         FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_SETUP_LOAD_FAILURE, NULL);

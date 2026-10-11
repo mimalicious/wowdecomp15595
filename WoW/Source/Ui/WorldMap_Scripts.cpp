@@ -181,9 +181,7 @@ static int32_t Script_GetCurrentMapContinent(lua_State* L) {
     DungeonMapRec* rec = g_dungeonMapDB.GetRecord(CGWorldMap::m_currentOrphanZone == -1 ? -1 : CGWorldMap::m_currentDungeonMap);
     int32_t mapID;
 
-    if (rec) {
-        mapID = rec->m_mapID;
-    } else {
+    if (!rec) {
         WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(CGWorldMap::GetCurrentAreaID());
 
         if (!area || (!(area->m_flags & 0x4) && area->m_defaultDungeonFloor != -1)) {
@@ -192,6 +190,8 @@ static int32_t Script_GetCurrentMapContinent(lua_State* L) {
         }
 
         mapID = area->m_mapID;
+    } else {
+        mapID = rec->m_mapID;
     }
 
     if (mapID >= 0) {
@@ -235,7 +235,7 @@ static int32_t Script_GetCurrentMapZone(lua_State* L) {
     if (currentZone >= 0) {
         area = g_worldMapAreaDB.GetRecord(CGWorldMap::GetZoneID(CGWorldMap::m_currentContinent, currentZone));
     } else {
-        area = g_worldMapAreaDB.GetRecord(CGWorldMap::m_currentContinent < 0 ? CGWorldMap::m_currentOrphanZone : CGWorldMap::m_continents.m_data[CGWorldMap::m_currentContinent].m_areaID);
+        area = g_worldMapAreaDB.GetRecord(CGWorldMap::m_currentContinent >= 0 ? CGWorldMap::m_continents.m_data[CGWorldMap::m_currentContinent].m_areaID : CGWorldMap::m_currentOrphanZone);
 
         if (area) {
             for (uint32_t continent = 0; continent < CGWorldMap::m_continents.m_count; continent++) {
@@ -279,15 +279,15 @@ static int32_t Script_GetCurrentMapDungeonLevel(lua_State* L) {
     DungeonMapRec* rec = NULL;
     lua_pushnumber(L, CGWorldMap::GetCurrentDungeonFloor(&rec));
 
-    if (!rec) {
-        return 1;
+    if (rec) {
+        lua_pushnumber(L, rec->m_minX);
+        lua_pushnumber(L, rec->m_minY);
+        lua_pushnumber(L, rec->m_maxX);
+        lua_pushnumber(L, rec->m_maxY);
+        return 5;
     }
 
-    lua_pushnumber(L, rec->m_minX);
-    lua_pushnumber(L, rec->m_minY);
-    lua_pushnumber(L, rec->m_maxX);
-    lua_pushnumber(L, rec->m_maxY);
-    return 5;
+    return 1;
 }
 
 // OFFSET: 0x0091B920/0x14067CDE0
@@ -365,7 +365,6 @@ static int32_t Script_GetNumMapDebugObjects(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d2109180 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_HasDebugZoneMap(lua_State* L) {
     return 0;
@@ -862,7 +861,12 @@ static int32_t Script_SetMapZoom(lua_State* L) {
 
     int32_t continent = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if ((continent > 0 && static_cast<uint32_t>(continent) >= CGWorldMap::m_continents.m_count) || (continent < 0 && continent < -2)) {
+    if ((continent > 0 && static_cast<uint32_t>(continent) >= CGWorldMap::m_continents.m_count)) {
+        luaL_error(L, "Usage: SetMapZoom(continentIndex [,zoneIndex]) .. requested continent out of bounds");
+        return 0;
+    }
+
+    if ((continent < 0 && continent < -2)) {
         luaL_error(L, "Usage: SetMapZoom(continentIndex [,zoneIndex]) .. requested continent out of bounds");
         return 0;
     }
@@ -879,64 +883,64 @@ static int32_t Script_SetMapZoom(lua_State* L) {
 
 // OFFSET: 0x0091C470/0x14067DB90
 static int32_t Script_CreateWorldMapArrowFrame(lua_State* L) {
-    if (lua_type(L, 1) != LUA_TTABLE) {
-        luaL_error(L, "Usage: CreateWorldMapArrowFrame(parent)");
+    if (lua_type(L, 1) == LUA_TTABLE) {
+        lua_rawgeti(L, 1, 0);
+        CSimpleFrame* parent = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
+        lua_settop(L, -2);
+
+        if (!parent) {
+            luaL_error(L, "CreateWorldMapArrowFrame(): Couldn't find 'this' in parent object");
+            return 0;
+        }
+
+        if (!parent->IsA(CSimpleFrame::GetObjectType())) {
+            luaL_error(L, "CreateWorldMapArrowFrame(): Wrong object type, expected frame");
+            return 0;
+        }
+
+        CGWorldMap::CreateArrowFrame(parent);
         return 0;
     }
 
-    lua_rawgeti(L, 1, 0);
-    CSimpleFrame* parent = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
-    lua_settop(L, -2);
-
-    if (!parent) {
-        luaL_error(L, "CreateWorldMapArrowFrame(): Couldn't find 'this' in parent object");
-        return 0;
-    }
-
-    if (!parent->IsA(CSimpleFrame::GetObjectType())) {
-        luaL_error(L, "CreateWorldMapArrowFrame(): Wrong object type, expected frame");
-        return 0;
-    }
-
-    CGWorldMap::CreateArrowFrame(parent);
+    luaL_error(L, "Usage: CreateWorldMapArrowFrame(parent)");
     return 0;
 }
 
 // OFFSET: 0x0091C5E0/0x14067DD60
 static int32_t Script_InitWorldMapPing(lua_State* L) {
-    if (lua_type(L, 1) != LUA_TTABLE) {
-        luaL_error(L, "Usage: InitWorldMapPing(parent)");
+    if (lua_type(L, 1) == LUA_TTABLE) {
+        lua_rawgeti(L, 1, 0);
+        CSimpleFrame* parent = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
+        lua_settop(L, -2);
+
+        if (!parent) {
+            luaL_error(L, "InitWorldMapPing(): Couldn't find 'this' in parent object");
+            return 0;
+        }
+
+        if (!parent->IsA(CSimpleFrame::GetObjectType())) {
+            luaL_error(L, "InitWorldMapPing(): Wrong object type, expected frame");
+            return 0;
+        }
+
+        CLayoutFrame* layout = parent->GetLayoutFrameByName("WorldMapPing");
+
+        if (!layout) {
+            return 0;
+        }
+
+        CSimpleModel* ping = static_cast<CSimpleModel*>(layout);
+
+        if (!ping) {
+            return 0;
+        }
+
+        C3Vector position(layout->GetWidth() * 0.5f, ping->GetHeight() * 0.5f, 0.0f);
+        ping->SetPosition(position);
         return 0;
     }
 
-    lua_rawgeti(L, 1, 0);
-    CSimpleFrame* parent = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
-    lua_settop(L, -2);
-
-    if (!parent) {
-        luaL_error(L, "InitWorldMapPing(): Couldn't find 'this' in parent object");
-        return 0;
-    }
-
-    if (!parent->IsA(CSimpleFrame::GetObjectType())) {
-        luaL_error(L, "InitWorldMapPing(): Wrong object type, expected frame");
-        return 0;
-    }
-
-    CLayoutFrame* layout = parent->GetLayoutFrameByName("WorldMapPing");
-
-    if (!layout) {
-        return 0;
-    }
-
-    CSimpleModel* ping = static_cast<CSimpleModel*>(layout);
-
-    if (!ping) {
-        return 0;
-    }
-
-    C3Vector position(layout->GetWidth() * 0.5f, ping->GetHeight() * 0.5f, 0.0f);
-    ping->SetPosition(position);
+    luaL_error(L, "Usage: InitWorldMapPing(parent)");
     return 0;
 }
 
@@ -981,26 +985,26 @@ static int32_t Script_GetDeathReleasePosition(lua_State* L) {
 
 // OFFSET: 0x0091C520/0x14067DC70
 static int32_t Script_CreateMiniWorldMapArrowFrame(lua_State* L) {
-    if (lua_type(L, 1) != LUA_TTABLE) {
-        luaL_error(L, "Usage: CreateMiniWorldMapArrowFrame(parent)");
+    if (lua_type(L, 1) == LUA_TTABLE) {
+        lua_rawgeti(L, 1, 0);
+        CSimpleFrame* parent = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
+        lua_settop(L, -2);
+
+        if (!parent) {
+            luaL_error(L, "CreateMiniWorldMapArrowFrame(): Couldn't find 'this' in parent object");
+            return 0;
+        }
+
+        if (!parent->IsA(CSimpleFrame::GetObjectType())) {
+            luaL_error(L, "CreateMiniWorldMapArrowFrame(): Wrong object type, expected frame");
+            return 0;
+        }
+
+        CGWorldMap::CreateMiniArrowFrame(parent);
         return 0;
     }
 
-    lua_rawgeti(L, 1, 0);
-    CSimpleFrame* parent = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
-    lua_settop(L, -2);
-
-    if (!parent) {
-        luaL_error(L, "CreateMiniWorldMapArrowFrame(): Couldn't find 'this' in parent object");
-        return 0;
-    }
-
-    if (!parent->IsA(CSimpleFrame::GetObjectType())) {
-        luaL_error(L, "CreateMiniWorldMapArrowFrame(): Wrong object type, expected frame");
-        return 0;
-    }
-
-    CGWorldMap::CreateMiniArrowFrame(parent);
+    luaL_error(L, "Usage: CreateMiniWorldMapArrowFrame(parent)");
     return 0;
 }
 
@@ -1267,13 +1271,11 @@ static int32_t Script_SetDungeonMapLevel(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1c66de1a IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_GetMapDebugObjectInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 58a2461a IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_TeleportToDebugObject(lua_State* L) {
     return 0;
@@ -1324,19 +1326,19 @@ static int32_t Script_GetMapNameByID(lua_State* L) {
 static int32_t Script_GetCurrentMapLevelRange(lua_State* L) {
     const WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(CGWorldMap::GetCurrentAreaID());
 
-    if (!area) {
-        return 0;
+    if (area) {
+        int32_t minLevel = area->unk_0030;
+
+        if (minLevel <= 0 && area->unk_0034 <= 0) {
+            return 0;
+        }
+
+        lua_pushnumber(L, minLevel);
+        lua_pushnumber(L, area->unk_0034);
+        return 2;
     }
 
-    int32_t minLevel = area->unk_0030;
-
-    if (minLevel <= 0 && area->unk_0034 <= 0) {
-        return 0;
-    }
-
-    lua_pushnumber(L, minLevel);
-    lua_pushnumber(L, area->unk_0034);
-    return 2;
+    return 0;
 }
 
 // OFFSET: 0x0091C6F0/0x14067DEC0
@@ -1349,18 +1351,18 @@ static int32_t Script_GetOutdoorPVPWaitTime(lua_State* L) {
         }
     }
 
-    if (i >= 2) {
-        return 0;
+    if (i < 2) {
+        int32_t wait = GetWorldState(s_outdoorPVPZones[i][2]) - CGWorldStateInfo::GetUITime();
+
+        if (wait < 0) {
+            wait = 0;
+        }
+
+        lua_pushnumber(L, wait);
+        return 1;
     }
 
-    int32_t wait = GetWorldState(s_outdoorPVPZones[i][2]) - CGWorldStateInfo::GetUITime();
-
-    if (wait < 0) {
-        wait = 0;
-    }
-
-    lua_pushnumber(L, wait);
-    return 1;
+    return 0;
 }
 
 // STATIC: 0x00D112C8

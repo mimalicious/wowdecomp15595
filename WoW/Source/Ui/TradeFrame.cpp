@@ -65,41 +65,45 @@ static uint32_t s_nextTradeRequestTime;
 
 // OFFSET: 0x004646B0
 int32_t CGTradeInfo::GetTargetCount(uint32_t slot) {
-    if (slot > 6) {
-        return 0;
+    if (slot <= 6) {
+        return CGTradeInfo::m_targetTrade.m_items[slot].m_count;
     }
 
-    return CGTradeInfo::m_targetTrade.m_items[slot].m_count;
+    return 0;
 }
 
 // OFFSET: 0x004646D0
 int32_t CGTradeInfo::GetTargetEnchant(uint32_t slot) {
-    if (slot > 6) {
-        return 0;
+    if (slot <= 6) {
+        return CGTradeInfo::m_targetTrade.m_items[slot].m_enchant;
     }
 
-    return CGTradeInfo::m_targetTrade.m_items[slot].m_enchant;
+    return 0;
 }
 
 // OFFSET: 0x004646F0
 int32_t CGTradeInfo::GetTargetRandomPropertyID(uint32_t slot) {
-    if (slot > 6) {
-        return 0;
+    if (slot <= 6) {
+        return CGTradeInfo::m_targetTrade.m_items[slot].m_randomPropertyID;
     }
 
-    return CGTradeInfo::m_targetTrade.m_items[slot].m_randomPropertyID;
+    return 0;
 }
 
 // OFFSET: 0x0096A220
 void CGTradeInfo::GetPlayerItem(uint32_t slot, WOWGUID& item, WOWGUID& container, uint8_t& containerSlot) {
-    item = slot > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[slot].m_item;
-
-    if (!item) {
-        container = WOWGUID();
-        containerSlot = 0;
+    if (slot > 6) {
+        item = WOWGUID();
     } else {
+        item = CGTradeInfo::m_playerTrade.m_items[slot].m_item;
+    }
+
+    if (item) {
         container = CGTradeInfo::m_playerTrade.m_items[slot].m_container;
         containerSlot = CGTradeInfo::m_playerTrade.m_items[slot].m_containerSlot;
+    } else {
+        container = WOWGUID();
+        containerSlot = 0;
     }
 }
 
@@ -215,7 +219,13 @@ bool CGTradeInfo::IsItemBeingTraded(WOWGUID item) {
     }
 
     for (uint32_t i = 0; i < 7; i++) {
-        WOWGUID current = i > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[i].m_item;
+        WOWGUID current;
+
+        if (i > 6) {
+            current = WOWGUID();
+        } else {
+            current = CGTradeInfo::m_playerTrade.m_items[i].m_item;
+        }
 
         if (current == item) {
             return true;
@@ -303,31 +313,31 @@ void CGTradeInfo::ShutdownGame() {
 }
 
 // OFFSET: 0x0096AA20
-static void ConvertTradeItem(TradeTargetItem* dst, const ClientTradeItem* src) {
+static void ConvertTradeItem(TradeTargetItem* dst, const JamTradeItem* src) {
     dst->m_itemID = src->m_itemID;
     dst->m_count = src->m_stackCount;
     dst->m_wrapped = !src->m_hasUnwrapped;
     dst->m_giftCreator = *reinterpret_cast<const WOWGUID*>(src->m_giftCreator);
     const ClientTradeItemUnwrapped* unwrapped = src->m_hasUnwrapped ? &src->m_unwrapped : NULL;
 
-    if (!unwrapped) {
-        memset(&dst->m_enchant, 0, sizeof(TradeTargetItem) - offsetof(TradeTargetItem, m_enchant));
+    if (unwrapped) {
+        dst->m_enchant = unwrapped->m_enchantID;
+        dst->m_reforgeEnchant = unwrapped->m_reforgeID;
+        dst->m_engineeringEnchant = unwrapped->m_onUseEnchantmentID;
+        dst->m_socketEnchants[0] = unwrapped->m_socketEnchant[0];
+        dst->m_socketEnchants[1] = unwrapped->m_socketEnchant[1];
+        dst->m_socketEnchants[2] = unwrapped->m_socketEnchant[2];
+        dst->m_creator = *reinterpret_cast<const WOWGUID*>(unwrapped->m_creator);
+        dst->m_spellCharges = unwrapped->m_charges;
+        dst->m_suffixFactor = unwrapped->m_randomPropertiesSeed;
+        dst->m_randomPropertyID = unwrapped->m_randomPropertiesID;
+        dst->m_locked = unwrapped->m_lock;
+        dst->m_maxDurability = unwrapped->m_maxDurability;
+        dst->m_durability = unwrapped->m_durability;
         return;
     }
 
-    dst->m_enchant = unwrapped->m_enchantID;
-    dst->m_reforgeEnchant = unwrapped->m_reforgeID;
-    dst->m_engineeringEnchant = unwrapped->m_onUseEnchantmentID;
-    dst->m_socketEnchants[0] = unwrapped->m_socketEnchant[0];
-    dst->m_socketEnchants[1] = unwrapped->m_socketEnchant[1];
-    dst->m_socketEnchants[2] = unwrapped->m_socketEnchant[2];
-    dst->m_creator = *reinterpret_cast<const WOWGUID*>(unwrapped->m_creator);
-    dst->m_spellCharges = unwrapped->m_charges;
-    dst->m_suffixFactor = unwrapped->m_randomPropertiesSeed;
-    dst->m_randomPropertyID = unwrapped->m_randomPropertiesID;
-    dst->m_locked = unwrapped->m_lock;
-    dst->m_maxDurability = unwrapped->m_maxDurability;
-    dst->m_durability = unwrapped->m_durability;
+    memset(&dst->m_enchant, 0, sizeof(TradeTargetItem) - offsetof(TradeTargetItem, m_enchant));
 }
 
 // OFFSET: 0x0096AAC0/0x1406E13B0
@@ -338,7 +348,8 @@ void CGTradeInfo::SetEnchantingItem(CGItem_C* item) {
     }
 
     if (item) {
-        WOWGUID none = WOWGUID();
+        WOWGUID none;
+        none.m_guid = 0;
         item->UseItem(&none, 0);
         CGGameUI::LockItem(item->m_obj->m_guid);
         CGTradeInfo::m_enchantingItem = item->m_obj->m_guid;
@@ -418,45 +429,45 @@ void CGTradeInfo::SetCurrency(int32_t type, int32_t quantity) {
 
 // OFFSET: 0x0096AEE0/0x1406E1880
 int32_t CGTradeInfo::SetPlayerItem(uint32_t slot, WOWGUID item, WOWGUID container, uint8_t containerSlot) {
-    if (slot > 6) {
-        return 0;
-    }
+    if (slot <= 6) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player) {
-        return 0;
-    }
-
-    if (item) {
-        if (slot == 6) {
-            CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
-            bool bound = object && object->IsBound() && !object->IsBoundForTrade();
-            FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_POTENTIAL_BIND_ENCHANT, "%b", bound);
+        if (!player) {
+            return 0;
         }
-    } else if (slot == 6) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_POTENTIAL_BIND_ENCHANT, "%b", 0);
+
+        if (item) {
+            if (slot == 6) {
+                CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
+                bool bound = object && object->IsBound() && !object->IsBoundForTrade();
+                FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_POTENTIAL_BIND_ENCHANT, "%b", bound);
+            }
+        } else if (slot == 6) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_POTENTIAL_BIND_ENCHANT, "%b", 0);
+        }
+
+        CGTradeInfo::m_playerTrade.m_items[slot].m_item = item;
+        CGTradeInfo::m_playerTrade.m_items[slot].m_container = container;
+        CGTradeInfo::m_playerTrade.m_items[slot].m_containerSlot = containerSlot;
+
+        if (item) {
+            PlayerSetTradeItem msg;
+            msg.m_tradeSlot = static_cast<uint8_t>(slot);
+            msg.m_packSlot = player->FindSlotIndex(container);
+            msg.m_itemSlotInPack = containerSlot;
+            ClientServices::Send(&msg);
+        } else {
+            PlayerClearTradeItem msg;
+            msg.m_tradeSlot = static_cast<uint8_t>(slot);
+            ClientServices::Send(&msg);
+        }
+
+        s_clientStateIndex++;
+        FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_PLAYER_ITEM_CHANGED, "%d", slot + 1);
+        return 1;
     }
 
-    CGTradeInfo::m_playerTrade.m_items[slot].m_item = item;
-    CGTradeInfo::m_playerTrade.m_items[slot].m_container = container;
-    CGTradeInfo::m_playerTrade.m_items[slot].m_containerSlot = containerSlot;
-
-    if (item) {
-        PlayerSetTradeItem msg;
-        msg.m_tradeSlot = static_cast<uint8_t>(slot);
-        msg.m_packSlot = player->FindSlotIndex(container);
-        msg.m_itemSlotInPack = containerSlot;
-        ClientServices::Send(&msg);
-    } else {
-        PlayerClearTradeItem msg;
-        msg.m_tradeSlot = static_cast<uint8_t>(slot);
-        ClientServices::Send(&msg);
-    }
-
-    s_clientStateIndex++;
-    FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_PLAYER_ITEM_CHANGED, "%d", slot + 1);
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x0096B040
@@ -465,9 +476,9 @@ void CGTradeInfo::RemovePlayerItem(WOWGUID item) {
         return;
     }
 
-    for (uint32_t i = 0; i < 7; i++) {
+    for (int32_t i = 0; i < 7; i++) {
         if (CGTradeInfo::m_playerTrade.m_items[i].m_item == item) {
-            CGTradeInfo::SetPlayerItem(i, WOWGUID(), WOWGUID(), 0);
+            CGTradeInfo::SetPlayerItem(i, WOWGUID::Make(0), WOWGUID::Make(0), 0);
             return;
         }
     }
@@ -482,7 +493,7 @@ void CGTradeInfo::DenyPlayerItem(uint32_t slot) {
         return;
     }
 
-    CGGameUI::UnlockItem(slot > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[slot].m_item);
+    CGGameUI::UnlockItem(slot <= 6 ? CGTradeInfo::m_playerTrade.m_items[slot].m_item : WOWGUID());
     CGTradeInfo::SetPlayerItem(slot, WOWGUID(), WOWGUID(), 0);
     FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_PLAYER_ITEM_CHANGED, "%d", slot + 1);
 }
@@ -508,7 +519,13 @@ void CGTradeInfo::AddCursorItem(int32_t bound) {
         index = 6;
     } else {
         for (uint32_t i = 0; i < 6; i++) {
-            WOWGUID current = i > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[i].m_item;
+            WOWGUID current;
+
+            if (i > 6) {
+                current = WOWGUID();
+            } else {
+                current = CGTradeInfo::m_playerTrade.m_items[i].m_item;
+            }
 
             if (current == item) {
                 return;
@@ -648,7 +665,7 @@ bool CGTradeInfo::OnTradeUpdated(ClientTradeUpdated* msg) {
     memset(items, 0, sizeof(items));
 
     for (uint32_t i = 0; i < msg->m_items.Count(); i++) {
-        ClientTradeItem* item = &msg->m_items[i];
+        JamTradeItem* item = &msg->m_items[i];
         uint8_t slot = item->m_slot;
         ConvertTradeItem(&items[slot], item);
         present[slot] = true;

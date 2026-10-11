@@ -400,22 +400,22 @@ static int32_t Script_GetTradeSkillRecipeLink(lua_State* L) {
 
     SpellRec* spell = g_spellDB.GetRecord(info->m_spellId);
 
-    if (!spell || !(spell->m_attributes & 0x20)) {
-        return 0;
+    if (spell && (spell->m_attributes & 0x20)) {
+        uint64_t guid = ClntObjMgrGetActivePlayer().m_guid;
+        SkillLineRec* skillLine = CGTradeSkillInfo::GetSkillLineRec(info->m_spellId, guid);
+        char link[1024];
+
+        if (skillLine) {
+            SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s: %s]|h|r", s_tradeLinkColor, spell->m_id, static_cast<const char*>(skillLine->m_displayName), static_cast<const char*>(spell->m_name));
+        } else {
+            SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s]|h|r", s_tradeLinkColor, spell->m_id, static_cast<const char*>(spell->m_name));
+        }
+
+        lua_pushstring(L, link);
+        return 1;
     }
 
-    uint64_t guid = ClntObjMgrGetActivePlayer().m_guid;
-    SkillLineRec* skillLine = CGTradeSkillInfo::GetSkillLineRec(info->m_spellId, guid);
-    char link[1024];
-
-    if (skillLine) {
-        SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s: %s]|h|r", s_tradeLinkColor, spell->m_id, static_cast<const char*>(skillLine->m_displayName), static_cast<const char*>(spell->m_name));
-    } else {
-        SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s]|h|r", s_tradeLinkColor, spell->m_id, static_cast<const char*>(spell->m_name));
-    }
-
-    lua_pushstring(L, link);
-    return 1;
+    return 0;
 }
 
 // PROVEN: 1795e244 IDENTICAL/NONE
@@ -543,7 +543,9 @@ static int32_t Script_DoTradeSkill(lua_State* L) {
                 times = info->m_numAvailable;
             }
 
-            if (CGTradeSkillInfo::m_recastSpellID == info->m_spellId || Spell_C_CastSpell(info->m_spellId, NULL, WOWGUID(), false)) {
+            WOWGUID none;
+            none.m_guid = 0;
+            if (CGTradeSkillInfo::m_recastSpellID == info->m_spellId || Spell_C_CastSpell(info->m_spellId, NULL, none, false)) {
                 CGTradeSkillInfo::DoTradeSkill(info->m_spellId, times);
             }
         }
@@ -1123,7 +1125,7 @@ static int32_t Script_GetTradeSkillTools(lua_State* L) {
 
     int32_t count = 0;
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    TradeSkillInfo* info = index >= CGTradeSkillInfo::m_numDisplayEntries ? NULL : CGTradeSkillInfo::m_displayList.m_data[index];
+    TradeSkillInfo* info = index < CGTradeSkillInfo::m_numDisplayEntries ? CGTradeSkillInfo::m_displayList.m_data[index] : NULL;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     SpellRec* spell;
 

@@ -86,15 +86,15 @@ void CGRuneInfo::EnterWorld() {
 
 // OFFSET: 0x0093C430
 bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
-    if (static_cast<uint32_t>(index) > 5) {
-        return false;
+    if (!(static_cast<uint32_t>(index) > 5)) {
+        if (CGRuneInfo::m_numRunes) {
+            return index < static_cast<int32_t>(CGRuneInfo::m_numRunes);
+        }
+
+        return index < 6;
     }
 
-    if (CGRuneInfo::m_numRunes) {
-        return index < static_cast<int32_t>(CGRuneInfo::m_numRunes);
-    }
-
-    return index < 6;
+    return false;
 }
 
 // PROVEN: 4cf7ce2d IDENTICAL/NONE
@@ -109,7 +109,11 @@ int32_t CGRuneInfo::GetRuneTypeByIndex(int32_t index, bool base) {
 
 // OFFSET: 0x0093C640/0x1406A7D40
 uint32_t CGRuneInfo::GetRuneRechargeTime(int32_t index) {
-    if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__) || ((1 << index) & CGRuneInfo::m_predictedRunes)) {
+    if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+        return 0;
+    }
+
+    if (((1 << index) & CGRuneInfo::m_predictedRunes)) {
         return 0;
     }
 
@@ -154,11 +158,7 @@ bool CGRuneInfo::HasRunesForSpell(int32_t spellId, int32_t* needed) {
     pct = static_cast<int32_t>(player->GetSpellCostMultiplier(school) * pct);
     Spell_C_ModifySpellValue(&spell, pct, 14);
 
-    if (!pct) {
-        return true;
-    }
-
-    if (spell.m_powerType != 5) {
+    if (!pct || spell.m_powerType != 5) {
         return true;
     }
 
@@ -330,7 +330,6 @@ bool CGRuneInfo::ComputeRuneSpellCooldown(const SpellRec* spell, uint32_t* coold
     return true;
 }
 
-// PROVEN: 31a366a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGRuneInfo::ShutdownGame() {
 }
@@ -343,7 +342,7 @@ void CGRuneInfo::SetRuneLastUsedTime(int32_t index, uint32_t time) {
 
 // OFFSET: 0x0093C560
 uint32_t CGRuneInfo::GetRuneLastUsedTime(int32_t index) {
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return 0;
     }
 
@@ -352,7 +351,7 @@ uint32_t CGRuneInfo::GetRuneLastUsedTime(int32_t index) {
 
 // OFFSET: 0x0093C590/0x1406A7C80
 void CGRuneInfo::ComputeRuneRechargeTime(int32_t index, float progress) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -360,10 +359,10 @@ void CGRuneInfo::ComputeRuneRechargeTime(int32_t index, float progress) {
 
     float rate = player->m_player->m_playerRuneRegen1[CGRuneInfo::m_runes[index]];
 
-    if (rate >= 0.0099999998f) {
-        CGRuneInfo::m_runeCooldowns[index] = OsGetAsyncTimeMs() - static_cast<int32_t>(1.0f / rate * (1.0f - progress) * -1000.0f);
-    } else {
+    if (!(rate >= 0.0099999998f)) {
         CGRuneInfo::m_runeCooldowns[index] = 0;
+    } else {
+        CGRuneInfo::m_runeCooldowns[index] = OsGetAsyncTimeMs() - static_cast<int32_t>(1.0f / rate * (1.0f - progress) * -1000.0f);
     }
 }
 

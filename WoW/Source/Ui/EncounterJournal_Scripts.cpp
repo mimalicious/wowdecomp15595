@@ -140,8 +140,8 @@ static int32_t Script_EJ_GetCreatureInfo(lua_State* L) {
 
     if (fileData) {
         char path[2048];
-        SStrCopy(path, fileData->m_filepath, sizeof(path));
-        SStrPack(path, fileData->m_filename, sizeof(path));
+        SStrCopy(path, static_cast<const char*>(fileData->m_filepath), sizeof(path));
+        SStrPack(path, static_cast<const char*>(fileData->m_filename), sizeof(path));
         lua_pushstring(L, path);
     } else {
         lua_pushnil(L);
@@ -176,8 +176,8 @@ static int32_t Script_EJ_GetSectionInfo(lua_State* L) {
     FileDataRec* fileData = g_fileDataDB.GetRecord(section->m_iconFileDataID);
 
     if (fileData) {
-        SStrCopy(buffer, fileData->m_filepath, sizeof(buffer));
-        SStrPack(buffer, fileData->m_filename, sizeof(buffer));
+        SStrCopy(buffer, static_cast<const char*>(fileData->m_filepath), sizeof(buffer));
+        SStrPack(buffer, static_cast<const char*>(fileData->m_filename), sizeof(buffer));
         lua_pushstring(L, buffer);
     } else {
         lua_pushstring(L, "");
@@ -379,8 +379,8 @@ static int32_t PushInstanceInfo(lua_State* L, JournalInstanceRec* instance) {
     FileDataRec* fileData = g_fileDataDB.GetRecord(instance->m_backgroundFileDataID);
 
     if (fileData) {
-        SStrCopy(path, fileData->m_filepath, sizeof(path));
-        SStrPack(path, fileData->m_filename, sizeof(path));
+        SStrCopy(path, static_cast<const char*>(fileData->m_filepath), sizeof(path));
+        SStrPack(path, static_cast<const char*>(fileData->m_filename), sizeof(path));
         lua_pushstring(L, path);
     } else {
         lua_pushnil(L);
@@ -389,8 +389,8 @@ static int32_t PushInstanceInfo(lua_State* L, JournalInstanceRec* instance) {
     fileData = g_fileDataDB.GetRecord(instance->m_buttonFileDataID);
 
     if (fileData) {
-        SStrCopy(path, fileData->m_filepath, sizeof(path));
-        SStrPack(path, fileData->m_filename, sizeof(path));
+        SStrCopy(path, static_cast<const char*>(fileData->m_filepath), sizeof(path));
+        SStrPack(path, static_cast<const char*>(fileData->m_filename), sizeof(path));
         lua_pushstring(L, path);
     } else {
         lua_pushnil(L);
@@ -399,8 +399,8 @@ static int32_t PushInstanceInfo(lua_State* L, JournalInstanceRec* instance) {
     fileData = g_fileDataDB.GetRecord(instance->m_loreFileDataID);
 
     if (fileData) {
-        SStrCopy(path, fileData->m_filepath, sizeof(path));
-        SStrPack(path, fileData->m_filename, sizeof(path));
+        SStrCopy(path, static_cast<const char*>(fileData->m_filepath), sizeof(path));
+        SStrPack(path, static_cast<const char*>(fileData->m_filename), sizeof(path));
         lua_pushstring(L, path);
     } else {
         lua_pushnil(L);

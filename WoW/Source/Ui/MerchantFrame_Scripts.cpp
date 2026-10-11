@@ -71,10 +71,10 @@ static int32_t Script_InRepairMode(lua_State* L) {
 
 // OFFSET: 0x00967E10/0x1406DE340
 static int32_t Script_GetNumBuybackItems(lua_State* L) {
-    if (CGMerchantInfo::m_merchant) {
-        lua_pushnumber(L, CGMerchantInfo::m_numBuybackItems);
-    } else {
+    if (!CGMerchantInfo::m_merchant) {
         lua_pushnumber(L, 0.0);
+    } else {
+        lua_pushnumber(L, CGMerchantInfo::m_numBuybackItems);
     }
 
     return 1;
@@ -119,7 +119,7 @@ static int32_t Script_GetBuybackItemLink(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
     uint32_t slot = index < CGMerchantInfo::m_numBuybackItems ? CGMerchantInfo::m_buybackSlots[index] : 0;
 
@@ -139,7 +139,7 @@ static int32_t Script_GetBuybackItemLink(lua_State* L) {
 
 // OFFSET: 0x009684A0/0x1406DE950
 static int32_t Script_PickupMerchantItem(lua_State* L) {
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return 0;
     }
 
@@ -166,10 +166,10 @@ static int32_t Script_PickupMerchantItem(lua_State* L) {
 
     int32_t itemId = item->m_itemID;
 
-    if (CGGameUI::GetCursorVirtualItem() == itemId) {
-        CGGameUI::ClearCursor(1, 1);
-    } else {
+    if (CGGameUI::GetCursorVirtualItem() != itemId) {
         CGGameUI::SetCursorVirtualItem(itemId, item->m_displayID, index, 5, 0);
+    } else {
+        CGGameUI::ClearCursor(1, 1);
     }
 
     return 0;
@@ -182,7 +182,7 @@ static int32_t Script_BuyMerchantItem(lua_State* L) {
         return 0;
     }
 
-    if (!ClntObjMgrGetActivePlayerObj()) {
+    if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         return 0;
     }
 
@@ -223,7 +223,7 @@ static int32_t Script_BuyMerchantItem(lua_State* L) {
         }
     }
 
-    CGPlayer_C::BuyItemInSlot(CGMerchantInfo::m_merchant, item, count, WOWGUID::Make(0), 255);
+    CGPlayer_C::BuyItemInSlot(CGMerchantInfo::m_merchant, item, count, WOWGUID(), 255);
     return 0;
 }
 
@@ -242,7 +242,7 @@ static int32_t Script_BuybackItem(lua_State* L) {
 
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
     uint32_t slot = static_cast<uint32_t>(index - 1) < CGMerchantInfo::m_numBuybackItems ? CGMerchantInfo::m_buybackSlots[index - 1] : 0;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && slot && player->m_bag.GetItemGuid(slot)) {
         CDataStore msg;
@@ -269,7 +269,7 @@ static int32_t Script_ShowBuybackSellCursor(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
     uint32_t slot = index < CGMerchantInfo::m_numBuybackItems ? CGMerchantInfo::m_buybackSlots[index] : 0;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && slot && player->m_bag.GetItemGuid(slot)) {
         uint32_t price = player->GetBuybackPrice(slot - 74);
@@ -289,7 +289,7 @@ static int32_t Script_ShowBuybackSellCursor(lua_State* L) {
 static int32_t Script_GetRepairAllCost(lua_State* L) {
     CGPlayer_C* player;
 
-    if (!CGMerchantInfo::CanRepair() || (player = ClntObjMgrGetActivePlayerObj()) == NULL) {
+    if (!CGMerchantInfo::CanRepair() || (player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) == NULL) {
         lua_pushnumber(L, 0.0);
         return 1;
     }
@@ -364,7 +364,7 @@ static int32_t Script_RepairAllItems(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -488,7 +488,7 @@ static int32_t Script_GetMerchantItemInfo(lua_State* L) {
     lua_pushnumber(L, item->m_price);
     lua_pushnumber(L, item->m_buyCount);
     lua_pushnumber(L, item->m_maxCount);
-    WOWGUID none = WOWGUID::Make(0);
+    WOWGUID none = WOWGUID();
     ItemExtendedCostRec* cost = g_itemExtendedCostDB.GetRecord(item->m_extendedCostID, none, NULL, NULL, false);
 
     if (cost) {
@@ -709,7 +709,7 @@ static int32_t Script_GetMerchantCurrencies(lua_State* L) {
             }
         }
 
-        WOWGUID none = WOWGUID::Make(0);
+        WOWGUID none = WOWGUID();
         ItemExtendedCostRec* cost = g_itemExtendedCostDB.GetRecord(item->m_extendedCostID, none, NULL, NULL, false);
 
         if (cost) {
@@ -753,7 +753,7 @@ static int32_t Script_GetBuybackItemInfo(lua_State* L) {
         return 0;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
     uint32_t slot = index < CGMerchantInfo::m_numBuybackItems ? CGMerchantInfo::m_buybackSlots[index] : 0;
     CGItem_C* item;
@@ -867,70 +867,70 @@ static int32_t Script_ShowMerchantSellCursor(lua_State* L) {
         return 0;
     }
 
-    if (player->GetCoinage() < static_cast<uint32_t>(item->m_price)) {
-        CursorSetMode(29);
-        return 0;
-    }
+    if (!player->GetCoinage() < static_cast<uint32_t>(item->m_price)) {
+        if (item->m_type == VENDOR_ITEM_TYPE_ITEM) {
+            WOWGUID none = WOWGUID::Make(0);
+            ItemRecSparse* stats = g_itemSparseDB.GetRecord(item->m_itemID, none, NULL, NULL, false);
 
-    if (item->m_type == VENDOR_ITEM_TYPE_ITEM) {
+            if (!stats) {
+                CursorSetMode(3);
+                return 0;
+            }
+
+            if (stats->m_requiredReputationFaction && GetRepListRepValue(stats->m_requiredReputationFaction) < CGReputationInfo::m_reactionThresholds[stats->m_requiredReputationRank]) {
+                CursorSetMode(29);
+                return 0;
+            }
+        }
+
         WOWGUID none = WOWGUID::Make(0);
-        ItemRecSparse* stats = g_itemSparseDB.GetRecord(item->m_itemID, none, NULL, NULL, false);
+        ItemExtendedCostRec* cost = g_itemExtendedCostDB.GetRecord(item->m_extendedCostID, none, NULL, NULL, false);
 
-        if (!stats) {
+        if (!cost) {
             CursorSetMode(3);
             return 0;
         }
 
-        if (stats->m_requiredReputationFaction && GetRepListRepValue(stats->m_requiredReputationFaction) < CGReputationInfo::m_reactionThresholds[stats->m_requiredReputationRank]) {
-            CursorSetMode(29);
-            return 0;
+        int32_t missing = 0;
+
+        for (uint32_t i = 0; i < 5; i++) {
+            int32_t itemId = cost->m_itemID[i];
+
+            if (!itemId || cost->m_itemCount[i] <= 0) {
+                continue;
+            }
+
+            WOWGUID itemGuid = WOWGUID::Make(0);
+            ItemRec* rec = g_itemDB.GetRecord(itemId, itemGuid, NULL, NULL, false);
+
+            if (rec && rec->m_classID != 10 && player->m_bag.GetItemTypeCount(cost->m_itemID[i], 0) < cost->m_itemCount[i]) {
+                missing = 1;
+                break;
+            }
         }
-    }
 
-    WOWGUID none = WOWGUID::Make(0);
-    ItemExtendedCostRec* cost = g_itemExtendedCostDB.GetRecord(item->m_extendedCostID, none, NULL, NULL, false);
+        for (uint32_t i = 0; i < 5; i++) {
+            int32_t currencyId = cost->m_currencyID[i];
 
-    if (!cost) {
-        CursorSetMode(3);
+            if (!currencyId) {
+                continue;
+            }
+
+            if (!((s_currencyFlags[i] & cost->m_flags) ? CGCurrencyTypes::HasEarnedCurrency(currencyId, cost->m_currencyCount[i]) : CGCurrencyTypes::HasCurrency(currencyId, cost->m_currencyCount[i]))) {
+                missing = 1;
+                break;
+            }
+        }
+
+        if (cost->m_requiredArenaRating && static_cast<uint32_t>(cost->m_arenaBracket) <= 2 && !CGArenaTeamInfo::CheckPersonalAndTeamRating(cost->m_requiredArenaRating, cost->m_arenaBracket)) {
+            missing = 1;
+        }
+
+        CursorSetMode(missing ? 29 : 3);
         return 0;
     }
 
-    int32_t missing = 0;
-
-    for (uint32_t i = 0; i < 5; i++) {
-        int32_t itemId = cost->m_itemID[i];
-
-        if (!itemId || cost->m_itemCount[i] <= 0) {
-            continue;
-        }
-
-        WOWGUID itemGuid = WOWGUID::Make(0);
-        ItemRec* rec = g_itemDB.GetRecord(itemId, itemGuid, NULL, NULL, false);
-
-        if (rec && rec->m_classID != 10 && player->m_bag.GetItemTypeCount(cost->m_itemID[i], 0) < cost->m_itemCount[i]) {
-            missing = 1;
-            break;
-        }
-    }
-
-    for (uint32_t i = 0; i < 5; i++) {
-        int32_t currencyId = cost->m_currencyID[i];
-
-        if (!currencyId) {
-            continue;
-        }
-
-        if (!((s_currencyFlags[i] & cost->m_flags) ? CGCurrencyTypes::HasEarnedCurrency(currencyId, cost->m_currencyCount[i]) : CGCurrencyTypes::HasCurrency(currencyId, cost->m_currencyCount[i]))) {
-            missing = 1;
-            break;
-        }
-    }
-
-    if (cost->m_requiredArenaRating && static_cast<uint32_t>(cost->m_arenaBracket) <= 2 && !CGArenaTeamInfo::CheckPersonalAndTeamRating(cost->m_requiredArenaRating, cost->m_arenaBracket)) {
-        missing = 1;
-    }
-
-    CursorSetMode(missing ? 29 : 3);
+    CursorSetMode(29);
     return 0;
 }
 

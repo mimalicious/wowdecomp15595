@@ -129,11 +129,11 @@ static void LootMasterNameCallback(int32_t id, const WOWGUID& guid, void* param,
 
 // OFFSET: 0x008FC590/0x140653910
 WOWGUID CGPartyInfo::GetMember(uint32_t index) {
-    if (index < 4) {
-        return CGPartyInfo::m_members[index];
+    if (!(index < 4)) {
+        return WOWGUID();
     }
 
-    return WOWGUID();
+    return CGPartyInfo::m_members[index];
 }
 
 // OFFSET: 0x008FC5C0
@@ -258,13 +258,11 @@ void CGPartyInfo::SetRaidDifficulty(uint32_t difficulty) {
 
 // OFFSET: 0x008FC860/0x140653B60
 PartyMemberState* CGPartyInfo::GetRemoteStats(const WOWGUID& guid) {
-    if (!guid) {
-        return NULL;
-    }
-
-    for (uint32_t i = 0; i < 4; i++) {
-        if (CGPartyInfo::m_members[i] == guid) {
-            return &s_partyMemberStates[i];
+    if (guid) {
+        for (uint32_t i = 0; i < 4; i++) {
+            if (CGPartyInfo::m_members[i] == guid) {
+                return &s_partyMemberStates[i];
+            }
         }
     }
 
@@ -284,13 +282,11 @@ PartyMemberState* CGPartyInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
 
 // OFFSET: 0x008FC900/0x140653BF0
 PartyMemberPetState* CGPartyInfo::GetRemotePetStats(const WOWGUID& guid) {
-    if (!guid) {
-        return NULL;
-    }
-
-    for (uint32_t i = 0; i < 4; i++) {
-        if (CGPartyInfo::m_members[i] && (s_partyMemberStates[i].m_flags & 1) && s_partyMemberStates[i].m_pet.m_guid == guid) {
-            return &s_partyMemberStates[i].m_pet;
+    if (guid) {
+        for (uint32_t i = 0; i < 4; i++) {
+            if (CGPartyInfo::m_members[i] && (s_partyMemberStates[i].m_flags & 1) && s_partyMemberStates[i].m_pet.m_guid == guid) {
+                return &s_partyMemberStates[i].m_pet;
+            }
         }
     }
 
@@ -574,14 +570,14 @@ WOWGUID CGPartyInfo::GetMemberPet(uint32_t index) {
 
     if (CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(CGPartyInfo::m_members[index], TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         CGUnitData* unit = player->m_unit;
-        return unit->m_unitFieldCharm ? unit->m_unitFieldCharm : unit->m_unitFieldSummon;
+        if (unit->m_unitFieldCharm) {
+            return unit->m_unitFieldCharm;
+        }
+
+        return unit->m_unitFieldSummon;
     }
 
-    if (s_partyMemberStates[index].m_flags & 1) {
-        return s_partyMemberStates[index].m_pet.m_guid;
-    }
-
-    return WOWGUID();
+    return s_partyMemberStates[index].m_flags & 1 ? s_partyMemberStates[index].m_pet.m_guid : WOWGUID();
 }
 
 // OFFSET: 0x008FD4C0/0x140654A10
@@ -599,18 +595,18 @@ void CGPartyInfo::EnableMember(CGPlayer_C* player, int32_t enable) {
         return;
     }
 
-    if (enable) {
-        Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBER_ENABLE);
+    if (!enable) {
+        player->FillPartyMemberState(&s_partyMemberStates[index]);
+        CDataStore msg;
+        msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
+        msg.Put(player->m_obj->m_guid.m_guid);
+        msg.Finalize();
+        ClientServices::Send2(&msg);
+        Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBER_DISABLE);
         return;
     }
 
-    player->FillPartyMemberState(&s_partyMemberStates[index]);
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
-    msg.Put(player->m_obj->m_guid.m_guid);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBER_DISABLE);
+    Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBER_ENABLE);
 }
 
 // OFFSET: 0x008FD5C0
@@ -639,13 +635,13 @@ int32_t CGPartyInfo::IsPlayerOrPetInParty(const WOWGUID& guid) {
     }
 
     for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
-        WOWGUID member = i < 4 ? CGPartyInfo::m_members[i] : WOWGUID();
+        WOWGUID member = i >= 4 ? WOWGUID() : CGPartyInfo::m_members[i];
 
         if (guid == member) {
             return 1;
         }
 
-        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(i < 4 ? CGPartyInfo::m_members[i] : WOWGUID(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(i >= 4 ? WOWGUID() : CGPartyInfo::m_members[i], TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (player) {
             CGUnitData* unit = player->m_unit;
@@ -669,7 +665,13 @@ uint8_t CGPartyInfo::GetPartyAssignments(const WOWGUID& guid) {
     }
 
     for (uint32_t i = 0; i < 4; i++) {
-        WOWGUID member = i < 4 ? CGPartyInfo::m_members[i] : WOWGUID();
+        WOWGUID member;
+
+        if (i < 4) {
+            member = CGPartyInfo::m_members[i];
+        } else {
+            member = WOWGUID();
+        }
 
         if (member == guid) {
             return CGPartyInfo::m_memberAssignments[i];
@@ -697,17 +699,17 @@ int32_t CGPartyInfo::GetPartyAssignments(lua_State* L, int32_t assignment) {
         const char* name = lua_tolstring(L, 2, NULL);
         WOWGUID guid = CGGameUI::ClosestObjectMatch(name, TYPEMASK_PLAYER, 5, StringToBOOL(L, 3, 0), 3.402823466e38f, 0);
 
-        if (guid) {
-            if (CGPartyInfo::GetPartyAssignments(guid) & flag) {
-                lua_pushnumber(L, 1.0);
-            } else {
-                lua_pushnil(L);
-            }
-
-            return 1;
+        if (!guid) {
+            return 0;
         }
 
-        return 0;
+        if (CGPartyInfo::GetPartyAssignments(guid) & flag) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 1;
     }
 
     int32_t count = 0;
@@ -779,16 +781,16 @@ void CGPartyInfo::CheckClearLFGSlot() {
 int32_t CCommand_SetDifficulty(const char* command, const char* arguments) {
     uint32_t difficulty = SStrToInt(arguments);
 
-    if (difficulty > 3) {
-        ConsoleWrite("Invalid difficulty", ERROR_COLOR);
+    if (!(difficulty > 3)) {
+        WDataStore msg;
+        msg.Put(static_cast<uint32_t>(CMSG_CHANGEPLAYER_DIFFICULTY));
+        msg.Put(difficulty);
+        msg.Finalize();
+        ClientServices::Send2(&msg);
         return 1;
     }
 
-    WDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_CHANGEPLAYER_DIFFICULTY));
-    msg.Put(difficulty);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    ConsoleWrite("Invalid difficulty", ERROR_COLOR);
     return 1;
 }
 
@@ -870,7 +872,7 @@ int32_t CGPartyInfo::IsMemberPet(const WOWGUID& guid, int32_t* index) {
         }
     }
 
-    for (int32_t i = 0; i < 4; i++) {
+    for (uint32_t i = 0; i < 4; i++) {
         if (!CGPartyInfo::m_members[i]) {
             continue;
         }

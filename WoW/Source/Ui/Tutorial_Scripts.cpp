@@ -13,9 +13,9 @@ static int32_t Script_FlagTutorial(lua_State* L) {
         return 0;
     }
 
-    uint32_t tutorial = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t tutorial = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (tutorial <= 59) {
+    if (static_cast<uint32_t>(tutorial) <= 64) {
         CGTutorial::FlagTutorial(tutorial);
     }
 
@@ -25,13 +25,13 @@ static int32_t Script_FlagTutorial(lua_State* L) {
 // OFFSET: 0x00901F20/0x14065A540
 static int32_t Script_TriggerTutorial(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: TriggerTutorial(\"tutorial\")");
+        luaL_error(L, "Usage: Trigger(\"tutorial\")");
         return 0;
     }
 
-    uint32_t tutorial = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t tutorial = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (tutorial <= 59) {
+    if (static_cast<uint32_t>(tutorial) <= 64) {
         CGTutorial::TriggerTutorial(tutorial);
     }
 
@@ -45,9 +45,9 @@ static int32_t Script_IsTutorialFlagged(lua_State* L) {
         return 0;
     }
 
-    uint32_t tutorial = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t tutorial = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (tutorial > 59) {
+    if (static_cast<uint32_t>(tutorial) > 64) {
         return 0;
     }
 
@@ -98,7 +98,7 @@ static int32_t Script_GetNextCompleatedTutorial(lua_State* L) {
     int32_t tutorial = static_cast<int32_t>(lua_tonumber(L, 1));
     int32_t next = CGTutorial::GetNextCompletedTutorial(tutorial - 1);
 
-    if (next == 60) {
+    if (next == 65) {
         return 0;
     }
 

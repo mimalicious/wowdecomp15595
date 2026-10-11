@@ -155,7 +155,7 @@ void CGTabardModelFrame::InitializeTabardColors(CGPlayer_C* player) {
         this->m_variations[4] = stats->m_background;
     }
 
-    CGPlayer_C* activePlayer = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* activePlayer = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (activePlayer) {
         activePlayer->ApplyGuildTabard(this->m_variations[0], this->m_variations[1], this->m_variations[2], this->m_variations[3], this->m_variations[4]);

@@ -39,7 +39,12 @@ static int32_t Script_GetTargetTradeMoney(lua_State* L) {
 static int32_t Script_PickupTradeMoney(lua_State* L) {
     uint64_t money;
 
-    if (!lua_isnumber(L, 1) || !Script_GetMoney(L, 1, &money)) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: PickupTradeMoney(amount)");
+        return 0;
+    }
+
+    if (!Script_GetMoney(L, 1, &money)) {
         luaL_error(L, "Usage: PickupTradeMoney(amount)");
         return 0;
     }
@@ -85,7 +90,14 @@ static int32_t Script_GetTradePlayerItemLink(lua_State* L) {
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    WOWGUID guid = index > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[index].m_item;
+    WOWGUID guid;
+
+    if (index > 6) {
+        guid = WOWGUID();
+    } else {
+        guid = CGTradeInfo::m_playerTrade.m_items[index].m_item;
+    }
+
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
     if (!item) {
@@ -153,7 +165,12 @@ static int32_t Script_AddTradeMoney(lua_State* L) {
 static int32_t Script_SetTradeMoney(lua_State* L) {
     uint64_t money;
 
-    if (!lua_isnumber(L, 1) || !Script_GetMoney(L, 1, &money)) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: SetTradeMoney(amount)");
+        return 0;
+    }
+
+    if (!Script_GetMoney(L, 1, &money)) {
         luaL_error(L, "Usage: SetTradeMoney(amount)");
         return 0;
     }
@@ -371,19 +388,19 @@ static int32_t Script_GetTradeTargetItemLink(lua_State* L) {
     WOWGUID requester = WOWGUID();
     ItemRecSparse* rec = g_itemSparseDB.GetRecord(itemId, requester, NULL, NULL, false);
 
-    if (!rec) {
-        return 0;
+    if (rec) {
+        const TradeTargetItem& item = CGTradeInfo::m_targetTrade.m_items[index];
+        int32_t gems[3];
+
+        for (uint32_t i = 0; i < 3; i++) {
+            gems[i] = item.m_socketEnchants[i];
+        }
+
+        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, rec->m_quality, item.m_enchant, gems, item.m_randomPropertyID, item.m_suffixFactor, item.m_reforgeEnchant));
+        return 1;
     }
 
-    const TradeTargetItem& item = CGTradeInfo::m_targetTrade.m_items[index];
-    int32_t gems[3];
-
-    for (uint32_t i = 0; i < 3; i++) {
-        gems[i] = item.m_socketEnchants[i];
-    }
-
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, rec->m_quality, item.m_enchant, gems, item.m_randomPropertyID, item.m_suffixFactor, item.m_reforgeEnchant));
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x0096C340/0x1406E3020
@@ -394,37 +411,44 @@ static int32_t Script_GetTradePlayerItemInfo(lua_State* L) {
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    WOWGUID guid = index > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[index].m_item;
+    WOWGUID guid;
+
+    if (index > 6) {
+        guid = WOWGUID();
+    } else {
+        guid = CGTradeInfo::m_playerTrade.m_items[index].m_item;
+    }
+
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (!item) {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
+    if (item) {
+        char name[256];
+        item->GetFullItemName(name, sizeof(name));
+        lua_pushstring(L, name);
+        const char* path = ClientDBStringLookup(3);
+        char texture[260];
+        SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", item->GetInventoryArt());
+        lua_pushstring(L, texture);
+        lua_pushnumber(L, item->m_item->m_itemFieldStackCount);
+        WOWGUID requester = ClntObjMgrGetActivePlayer();
+        ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, requester, &TradeItemStatsCallback, NULL, false);
+        lua_pushnumber(L, rec && rec->m_inventoryType ? rec->m_quality : -1);
+
+        if (index == 6 && CGTradeInfo::m_targetTrade.m_proposedEnchant) {
+            if (SpellRec* spell = g_spellDB.GetRecord(CGTradeInfo::m_targetTrade.m_proposedEnchant)) {
+                lua_pushstring(L, spell->m_name);
+                return 5;
+            }
+        }
+
         lua_pushnil(L);
         return 5;
     }
 
-    char name[256];
-    item->GetFullItemName(name, sizeof(name));
-    lua_pushstring(L, name);
-    const char* path = ClientDBStringLookup(3);
-    char texture[260];
-    SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", item->GetInventoryArt());
-    lua_pushstring(L, texture);
-    lua_pushnumber(L, item->m_item->m_itemFieldStackCount);
-    WOWGUID requester = ClntObjMgrGetActivePlayer();
-    ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, requester, &TradeItemStatsCallback, NULL, false);
-    lua_pushnumber(L, rec && rec->m_inventoryType ? rec->m_quality : -1);
-
-    if (index == 6 && CGTradeInfo::m_targetTrade.m_proposedEnchant) {
-        if (SpellRec* spell = g_spellDB.GetRecord(CGTradeInfo::m_targetTrade.m_proposedEnchant)) {
-            lua_pushstring(L, spell->m_name);
-            return 5;
-        }
-    }
-
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
     lua_pushnil(L);
     return 5;
 }

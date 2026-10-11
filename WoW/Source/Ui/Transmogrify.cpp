@@ -115,7 +115,12 @@ void CGTransmogrify::SetTransmogrifier(const WOWGUID& guid) {
         return;
     }
 
-    if (guid) {
+    if (!guid) {
+        CGGameUI::ClearInteractTarget(CGTransmogrify::m_transmogrifier, 0);
+        CGTransmogrify::m_transmogrifier = WOWGUID();
+        CGTransmogrify::s_pendingItems.clear();
+        FrameScript_SignalEvent(SCRIPT_EVENT_TRANSMOGRIFY_CLOSE, NULL);
+    } else {
         CGGossipInfo::ClearGossip();
 
         if (guid != ClntObjMgrGetActivePlayer()) {
@@ -124,11 +129,6 @@ void CGTransmogrify::SetTransmogrifier(const WOWGUID& guid) {
 
         CGTransmogrify::m_transmogrifier = guid;
         FrameScript_SignalEvent(SCRIPT_EVENT_TRANSMOGRIFY_OPEN, NULL);
-    } else {
-        CGGameUI::ClearInteractTarget(CGTransmogrify::m_transmogrifier, 0);
-        CGTransmogrify::m_transmogrifier = WOWGUID();
-        CGTransmogrify::s_pendingItems.clear();
-        FrameScript_SignalEvent(SCRIPT_EVENT_TRANSMOGRIFY_CLOSE, NULL);
     }
 }
 

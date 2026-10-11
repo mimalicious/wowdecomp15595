@@ -432,12 +432,12 @@ static void ComputeIconTexCoords() {
 
 // OFFSET: 0x009CE580
 bool CGMinimapFrame::UpdateScale(bool force) {
-    if (!CSimpleFrame::UpdateScale(force)) {
-        return false;
+    if (CSimpleFrame::UpdateScale(force)) {
+        CGMinimapFrame::s_scaleChanged = 1;
+        return true;
     }
 
-    CGMinimapFrame::s_scaleChanged = 1;
-    return true;
+    return false;
 }
 
 // OFFSET: 0x009CE5B0
@@ -1416,7 +1416,7 @@ int32_t CGMinimapFrame::GetTrackingTypeByIndex(int32_t index) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t classMask = player ? 1 << player->m_unit->m_unitFieldBytes0[1] : 0;
 
-    for (int32_t i = 0; i < 19; i++) {
+    for (uint32_t i = 0; i < 19; i++) {
         uint32_t mask = CGMinimapFrame::s_trackingTypes[i].m_classMask;
 
         if (!mask || (mask & classMask)) {
@@ -3314,7 +3314,15 @@ void CGMinimapFrame::RenderMarkedBlips(const C44Matrix& rotation) {
         C2Vector texCoords[4];
         C2Vector markerTexCoords[4];
 
-        if (list < 2) {
+        if (list >= 2) {
+            for (uint32_t j = 0; j < 4; j++) {
+                texCoords[j] = s_blipTexCoords[list][j];
+            }
+
+            for (uint32_t j = 0; j < 4; j++) {
+                markerTexCoords[j] = s_blipTexCoords[(marker != 0) + 30][j];
+            }
+        } else {
             int32_t icon;
 
             if (info.m_icon) {
@@ -3333,14 +3341,6 @@ void CGMinimapFrame::RenderMarkedBlips(const C44Matrix& rotation) {
 
             for (uint32_t j = 0; j < 4; j++) {
                 markerTexCoords[j] = s_classBlipTexCoords[marker ? 31 : 15][j];
-            }
-        } else {
-            for (uint32_t j = 0; j < 4; j++) {
-                texCoords[j] = s_blipTexCoords[list][j];
-            }
-
-            for (uint32_t j = 0; j < 4; j++) {
-                markerTexCoords[j] = s_blipTexCoords[(marker != 0) + 30][j];
             }
         }
 
@@ -3393,38 +3393,7 @@ void CGMinimapFrame::RenderBlobRing(const C44Matrix& rotation, MINIMAPBLOB* blob
     float radius = static_cast<float>(MinimapGetViewRadius() * this->m_questBlobRingScalar);
 
     for (uint32_t i = 0; i < blob->m_rings.m_count; i++) {
-        if (std::fabs(blob->m_rings.m_data[i].m_start - blob->m_rings.m_data[i].m_end) >= 0.00000023841858f) {
-            uint32_t quadrant = GetAngleQuadrant(blob->m_rings.m_data[i].m_start);
-            uint32_t endQuadrant = GetAngleQuadrant(blob->m_rings.m_data[i].m_end);
-            float from = blob->m_rings.m_data[i].m_start;
-            float to = blob->m_rings.m_data[i].m_end;
-
-            while (quadrant != endQuadrant) {
-                float corner;
-
-                if (blob->m_rings.m_data[i].m_reverse) {
-                    corner = s_quadrantAngles[(quadrant + 3) % 4];
-                } else {
-                    corner = s_quadrantAngles[quadrant % 4];
-                }
-
-                this->AddBlobRingSegment(blob, from, corner);
-
-                if (blob->m_rings.m_data[i].m_reverse) {
-                    if (quadrant) {
-                        quadrant--;
-                    } else {
-                        quadrant = 3;
-                    }
-                } else {
-                    quadrant = (quadrant + 1) % 4;
-                }
-
-                from = corner;
-            }
-
-            this->AddBlobRingSegment(blob, from, to);
-        } else {
+        if (std::fabs(blob->m_rings.m_data[i].m_start - blob->m_rings.m_data[i].m_end) < 0.00000023841858f) {
             s_blipVertices.SetCount(4);
             s_blipVertices.m_data[0].x = position.x + radius;
             s_blipVertices.m_data[0].y = position.y + radius;
@@ -3454,6 +3423,37 @@ void CGMinimapFrame::RenderBlobRing(const C44Matrix& rotation, MINIMAPBLOB* blob
             s_blipIndices.m_data[3] = 0;
             s_blipIndices.m_data[4] = 2;
             s_blipIndices.m_data[5] = 3;
+        } else {
+            int32_t quadrant = GetAngleQuadrant(blob->m_rings.m_data[i].m_start);
+            uint32_t endQuadrant = GetAngleQuadrant(blob->m_rings.m_data[i].m_end);
+            float from = blob->m_rings.m_data[i].m_start;
+            float to = blob->m_rings.m_data[i].m_end;
+
+            while (quadrant != endQuadrant) {
+                float corner;
+
+                if (blob->m_rings.m_data[i].m_reverse) {
+                    corner = s_quadrantAngles[(quadrant + 3) % 4];
+                } else {
+                    corner = s_quadrantAngles[quadrant % 4];
+                }
+
+                this->AddBlobRingSegment(blob, from, corner);
+
+                if (blob->m_rings.m_data[i].m_reverse) {
+                    if (quadrant) {
+                        quadrant--;
+                    } else {
+                        quadrant = 3;
+                    }
+                } else {
+                    quadrant = (quadrant + 1) % 4;
+                }
+
+                from = corner;
+            }
+
+            this->AddBlobRingSegment(blob, from, to);
         }
 
         for (uint32_t j = 0; j < s_blipVertices.m_count; j++) {
@@ -4158,7 +4158,14 @@ void CGMinimapFrame::Render() {
         }
 
         for (uint32_t i = 0; i < CGBattlefieldInfo::m_numVehicles; i++) {
-            WOWGUID vehicleGuid = i < CGBattlefieldInfo::m_numVehicles ? CGBattlefieldInfo::m_vehicleGuids[i] : WOWGUID();
+            WOWGUID vehicleGuid;
+
+            if (i < CGBattlefieldInfo::m_numVehicles) {
+                vehicleGuid = CGBattlefieldInfo::m_vehicleGuids[i];
+            } else {
+                vehicleGuid = WOWGUID();
+            }
+
             CGUnit_C* vehicle = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(vehicleGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
             if (!vehicle || vehicle->IsDeadOrGhost()) {

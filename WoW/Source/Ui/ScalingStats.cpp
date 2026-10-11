@@ -298,22 +298,30 @@ float GetEffectiveWeaponDamage(int32_t level, int32_t itemLevel, int32_t classID
 
 // OFFSET: 0x00999AF0/0x14071B830
 int32_t CalculateItemBonusFromPercent(int32_t level, int32_t itemLevel, int32_t amount, int32_t percentEditor, int32_t socketPercentage, int32_t quality, int32_t inventoryType) {
-    if (level <= 0 || level >= itemLevel) {
+    if (level <= 0) {
+        return amount;
+    }
+
+    if (level >= itemLevel) {
         return amount;
     }
 
     int32_t points = GetRandomPropertyPointsEx(level, quality, inventoryType);
 
-    if (!points) {
-        return amount;
+    if (points) {
+        return static_cast<int32_t>(static_cast<float>(percentEditor * points) * 0.000099999997f - static_cast<float>(points) / static_cast<float>(GetRandomPropertyPointsEx(itemLevel, quality, inventoryType)) * static_cast<float>(socketPercentage) + 0.5f);
     }
 
-    return static_cast<int32_t>(static_cast<float>(percentEditor * points) * 0.000099999997f - static_cast<float>(points) / static_cast<float>(GetRandomPropertyPointsEx(itemLevel, quality, inventoryType)) * static_cast<float>(socketPercentage) + 0.5f);
+    return amount;
 }
 
 // OFFSET: 0x00999B70/0x14071B8D0
 int32_t GetScaledEnchantmentPoints(int32_t itemLevel, int32_t maxItemLevel, const SpellItemEnchantmentRec* enchant, int32_t points) {
-    if (itemLevel <= 0 || itemLevel >= maxItemLevel) {
+    if (itemLevel <= 0) {
+        return points;
+    }
+
+    if (itemLevel >= maxItemLevel) {
         return points;
     }
 

@@ -93,7 +93,7 @@ static int32_t Script_SelectPackage(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     const PackageRec* rec;
 
     if (index >= 0 && index < g_packageDB.m_numRecords && (rec = g_packageDB.GetRecordByIndex(index))) {
@@ -183,7 +183,7 @@ static int32_t Script_TakeInboxTextItem(lua_State* L) {
             if (index < CGMailInfo::m_numInboxItems) {
                 MailboxMessageInfo* mail = CGMailInfo::m_inbox.m_data[index];
 
-                if (mail && (SStrLen(mail->m_body) || mail->m_mailTemplateID) && !(mail->m_flags & 0x4)) {
+                if (mail && (strlen(mail->m_body) || mail->m_mailTemplateID) && !(mail->m_flags & 0x4)) {
                     CDataStore msg;
                     msg.Put(static_cast<uint32_t>(CMSG_MAIL_CREATE_TEXT_ITEM));
                     msg.Put(object.m_guid);
@@ -228,7 +228,7 @@ static int32_t Script_GetStationeryInfo(lua_State* L) {
     StationeryInfo* stationery;
     ItemRecSparse* stats;
     ItemRec* item;
-    WOWGUID none = { 0 };
+    WOWGUID none = WOWGUID();
 
     if (index < CGMailInfo::m_numStationeries && (stationery = CGMailInfo::m_stationeries.m_data[index]) && (stats = g_itemSparseDB.GetRecord(stationery->m_itemID, none, NULL, NULL, false)) && (item = stats->GetNonSparse())) {
         const char* path = ClientDBStringLookup(3);
@@ -269,7 +269,7 @@ static int32_t Script_GetPackageInfo(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     PackageRec* rec;
 
     if (index >= 0 && index < g_packageDB.m_numRecords && (rec = g_packageDB.GetRecordByIndex(index))) {
@@ -279,12 +279,12 @@ static int32_t Script_GetPackageInfo(lua_State* L) {
         lua_pushstring(L, rec->m_name);
         lua_pushstring(L, s_packageTexture);
         lua_pushnumber(L, rec->m_cost);
-        return 3;
+    } else {
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnumber(L, 0.0);
     }
 
-    lua_pushnil(L);
-    lua_pushnil(L);
-    lua_pushnumber(L, 0.0);
     return 3;
 }
 
@@ -340,7 +340,12 @@ static int32_t Script_ClearSendMail(lua_State* L) {
 static int32_t Script_SetSendMailCOD(lua_State* L) {
     uint64_t amount;
 
-    if (!lua_isnumber(L, 1) || !Script_GetMoney(L, 1, &amount)) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: SetSendMailCOD(amount)");
+        return 0;
+    }
+
+    if (!Script_GetMoney(L, 1, &amount)) {
         luaL_error(L, "Usage: SetSendMailCOD(amount)");
         return 0;
     }
@@ -424,7 +429,8 @@ static int32_t Script_GetInboxHeaderInfo(lua_State* L) {
         ItemRecSparse* stats = NULL;
 
         if (attachment && attachment->m_itemID) {
-            WOWGUID none = WOWGUID();
+            WOWGUID none;
+            none.m_guid = 0;
             stats = g_itemSparseDB.GetRecord(attachment->m_itemID, none, &InboxItemQueryCallback, NULL, false);
         }
 
@@ -523,65 +529,65 @@ static int32_t Script_GetInboxInvoiceInfo(lua_State* L) {
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     MailboxMessageInfo* message;
 
-    if (index >= CGMailInfo::m_numInboxItems || !(message = CGMailInfo::m_inbox.m_data[index]) || !SStrLen(message->m_body) || !message->m_invoiceItemID) {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-        return 7;
+    if (!(index >= CGMailInfo::m_numInboxItems) && (message = CGMailInfo::m_inbox.m_data[index]) && SStrLen(message->m_body) && message->m_invoiceItemID) {
+        char itemName[256];
+        CGItem_C::BuildItemName(itemName, sizeof(itemName), message->m_invoiceItemID, message->m_invoiceRandomPropertiesID);
+        WOWGUID player = WOWGUID();
+        uint64_t bid = 0;
+        uint64_t buyout = 0;
+        int32_t deposit = 0;
+        uint64_t consignment = 0;
+        uint32_t moneyDelay = 0;
+        uint32_t etaTime = 0;
+
+        switch (message->m_invoiceType) {
+            case 2:
+                sscanf(message->m_body, "%16llX:%llu:%llu:%d:%llu", &player.m_guid, &bid, &buyout, &deposit, &consignment);
+                break;
+
+            case 6:
+                sscanf(message->m_body, "%16llX:%llu:%llu:%d:%llu:%d:%d", &player.m_guid, &bid, &buyout, &deposit, &consignment, &moneyDelay, &etaTime);
+                break;
+
+            case 1:
+                sscanf(message->m_body, "%16llX:%llu:%llu", &player.m_guid, &bid, &buyout);
+                break;
+        }
+
+        WowTime eta;
+        WowTime::WowDecodeTime(etaTime, &eta);
+        eta.m_tzHours = 0;
+
+        if (message->m_invoiceType == 2) {
+            lua_pushstring(L, "seller");
+        } else if (message->m_invoiceType == 6) {
+            lua_pushstring(L, "seller_temp_invoice");
+        } else {
+            lua_pushstring(L, "buyer");
+        }
+
+        lua_pushstring(L, itemName);
+        NameCache* name = g_nameDBCache.GetRecord(player.m_guid, player, &InboxItemQueryCallback, NULL, false);
+        lua_pushstring(L, name ? name->m_name : "");
+        lua_pushnumber(L, bid);
+        lua_pushnumber(L, buyout);
+        lua_pushnumber(L, deposit);
+        lua_pushnumber(L, consignment);
+        lua_pushnumber(L, moneyDelay);
+        lua_pushnumber(L, eta.m_hour);
+        lua_pushnumber(L, eta.m_minute);
+        lua_pushnumber(L, message->m_invoiceStackCount);
+        return 11;
     }
 
-    char itemName[256];
-    CGItem_C::BuildItemName(itemName, sizeof(itemName), message->m_invoiceItemID, message->m_invoiceRandomPropertiesID);
-    WOWGUID player = WOWGUID();
-    uint64_t bid = 0;
-    uint64_t buyout = 0;
-    int32_t deposit = 0;
-    uint64_t consignment = 0;
-    uint32_t moneyDelay = 0;
-    uint32_t etaTime = 0;
-
-    switch (message->m_invoiceType) {
-        case 2:
-            sscanf(message->m_body, "%16llX:%llu:%llu:%d:%llu", &player.m_guid, &bid, &buyout, &deposit, &consignment);
-            break;
-
-        case 6:
-            sscanf(message->m_body, "%16llX:%llu:%llu:%d:%llu:%d:%d", &player.m_guid, &bid, &buyout, &deposit, &consignment, &moneyDelay, &etaTime);
-            break;
-
-        case 1:
-            sscanf(message->m_body, "%16llX:%llu:%llu", &player.m_guid, &bid, &buyout);
-            break;
-    }
-
-    WowTime eta;
-    WowTime::WowDecodeTime(etaTime, &eta);
-    eta.m_tzHours = 0;
-
-    if (message->m_invoiceType == 2) {
-        lua_pushstring(L, "seller");
-    } else if (message->m_invoiceType == 6) {
-        lua_pushstring(L, "seller_temp_invoice");
-    } else {
-        lua_pushstring(L, "buyer");
-    }
-
-    lua_pushstring(L, itemName);
-    NameCache* name = g_nameDBCache.GetRecord(player.m_guid, player, &InboxItemQueryCallback, NULL, false);
-    lua_pushstring(L, name ? name->m_name : "");
-    lua_pushnumber(L, bid);
-    lua_pushnumber(L, buyout);
-    lua_pushnumber(L, deposit);
-    lua_pushnumber(L, consignment);
-    lua_pushnumber(L, moneyDelay);
-    lua_pushnumber(L, eta.m_hour);
-    lua_pushnumber(L, eta.m_minute);
-    lua_pushnumber(L, message->m_invoiceStackCount);
-    return 11;
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    return 7;
 }
 
 // OFFSET: 0x009725F0/0x1406EA430
@@ -600,7 +606,8 @@ static int32_t Script_GetInboxItemLink(lua_State* L) {
         return 0;
     }
 
-    WOWGUID none = WOWGUID();
+    WOWGUID none;
+    none.m_guid = 0;
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(attachment->m_itemID, none, &InboxItemQueryCallback, NULL, false);
 
     if (!stats) {
@@ -772,7 +779,21 @@ static int32_t Script_RespondMailLockSendItem(lua_State* L) {
 static int32_t Script_ClickSendMailItemButton(lua_State* L) {
     uint32_t index = lua_isnumber(L, 1) ? static_cast<int32_t>(lua_tonumber(L, 1) - 1.0) : -1;
 
-    if (!lua_toboolean(L, 2)) {
+    if (lua_toboolean(L, 2)) {
+        if (index >= 16) {
+            return 0;
+        }
+
+        WOWGUID item = CGMailInfo::m_sendItems[index].m_guid;
+
+        if (!item) {
+            return 0;
+        }
+
+        CGMailInfo::ClearSendItem(index);
+        CGGameUI::UnlockItem(item);
+        FrameScript_SignalEvent(SCRIPT_EVENT_MAIL_SEND_INFO_UPDATE, NULL);
+    } else {
         WOWGUID cursorItem;
         WOWGUID cursorContainer;
         uint32_t cursorSlot;
@@ -787,32 +808,18 @@ static int32_t Script_ClickSendMailItemButton(lua_State* L) {
             return 0;
         }
 
-        if (cursorItem) {
+        if (!cursorItem) {
+            CGMailInfo::ClearSendItem(index);
+        } else {
             if (!CGMailInfo::AddItemToOutgoingMail(index, cursorItem, cursorContainer, static_cast<uint8_t>(cursorSlot))) {
                 return 0;
             }
-        } else {
-            CGMailInfo::ClearSendItem(index);
         }
 
         CGGameUI::SetCursorItem(item, container, slot, 0, 0, 1);
         FrameScript_SignalEvent(SCRIPT_EVENT_MAIL_SEND_INFO_UPDATE, NULL);
-        return 0;
     }
 
-    if (index >= 16) {
-        return 0;
-    }
-
-    WOWGUID item = CGMailInfo::m_sendItems[index].m_guid;
-
-    if (!item) {
-        return 0;
-    }
-
-    CGMailInfo::ClearSendItem(index);
-    CGGameUI::UnlockItem(item);
-    FrameScript_SignalEvent(SCRIPT_EVENT_MAIL_SEND_INFO_UPDATE, NULL);
     return 0;
 }
 
@@ -820,7 +827,12 @@ static int32_t Script_ClickSendMailItemButton(lua_State* L) {
 static int32_t Script_SetSendMailMoney(lua_State* L) {
     uint64_t amount;
 
-    if (!lua_isnumber(L, 1) || !Script_GetMoney(L, 1, &amount)) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: SetSendMailMoney(amount)");
+        return 0;
+    }
+
+    if (!Script_GetMoney(L, 1, &amount)) {
         luaL_error(L, "Usage: SetSendMailMoney(amount)");
         return 0;
     }
@@ -858,7 +870,8 @@ static int32_t Script_GetSendMailItem(lua_State* L) {
     ItemRec* itemRec = NULL;
 
     if (item) {
-        WOWGUID none = WOWGUID();
+        WOWGUID none;
+        none.m_guid = 0;
         stats = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, none, &SendItemQueryCallback, NULL, false);
     }
 
@@ -866,23 +879,23 @@ static int32_t Script_GetSendMailItem(lua_State* L) {
         itemRec = stats->GetNonSparse();
     }
 
-    if (!itemRec) {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
+    if (itemRec) {
+        char name[256];
+        item->GetFullItemName(name, sizeof(name));
+        lua_pushstring(L, name);
+        const char* iconPath = ClientDBStringLookup(3);
+        char texture[260];
+        SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", CGItem_C::GetInventoryArt(itemRec->m_displayInfoID));
+        lua_pushstring(L, texture);
+        lua_pushnumber(L, item->m_item->m_itemFieldStackCount);
+        lua_pushnumber(L, stats->m_inventoryType ? stats->m_quality : -1);
         return 4;
     }
 
-    char name[256];
-    item->GetFullItemName(name, sizeof(name));
-    lua_pushstring(L, name);
-    const char* iconPath = ClientDBStringLookup(3);
-    char texture[260];
-    SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", CGItem_C::GetInventoryArt(itemRec->m_displayInfoID));
-    lua_pushstring(L, texture);
-    lua_pushnumber(L, item->m_item->m_itemFieldStackCount);
-    lua_pushnumber(L, stats->m_inventoryType ? stats->m_quality : -1);
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
     return 4;
 }
 
@@ -1000,17 +1013,7 @@ static int32_t Script_GetInboxText(lua_State* L) {
     char buffer[8000];
     char text[8000];
 
-    if (!SStrLen(message->m_body)) {
-        MailTemplateRec* mailTemplate = message->m_mailTemplateID ? g_mailTemplateDB.GetRecord(message->m_mailTemplateID) : NULL;
-
-        if (mailTemplate) {
-            WOWGUID player = ClntObjMgrGetActivePlayer();
-            QuestParserParseText(mailTemplate->m_body, buffer, sizeof(buffer), player, NULL, 0);
-            lua_pushstring(L, buffer);
-        } else {
-            lua_pushnil(L);
-        }
-    } else {
+    if (SStrLen(message->m_body)) {
         switch (message->m_messageType) {
             case 2:
                 lua_pushnil(L);
@@ -1042,6 +1045,16 @@ static int32_t Script_GetInboxText(lua_State* L) {
                 lua_pushstring(L, text);
                 break;
             }
+        }
+    } else {
+        MailTemplateRec* mailTemplate = message->m_mailTemplateID ? g_mailTemplateDB.GetRecord(message->m_mailTemplateID) : NULL;
+
+        if (mailTemplate) {
+            WOWGUID player = ClntObjMgrGetActivePlayer();
+            QuestParserParseText(mailTemplate->m_body, buffer, sizeof(buffer), player, NULL, 0);
+            lua_pushstring(L, buffer);
+        } else {
+            lua_pushnil(L);
         }
     }
 
@@ -1093,34 +1106,34 @@ static int32_t Script_GetInboxItem(lua_State* L) {
     ItemRec* item;
     char texture[260];
 
-    if (!stats || !(item = stats->GetNonSparse())) {
-        lua_pushstring(L, FrameScript_GetText("UNKNOWNOBJECT", -1, GENDER_NOT_APPLICABLE));
+    if (stats && (item = stats->GetNonSparse())) {
+        char name[256];
+        CGItem_C::BuildItemName(name, sizeof(name), attachment->m_itemID, attachment->m_randomPropertiesID);
+        lua_pushstring(L, name);
         const char* iconPath = ClientDBStringLookup(3);
-        SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", "INV_Misc_QuestionMark");
+        SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", CGItem_C::GetInventoryArt(item->m_displayInfoID));
         lua_pushstring(L, texture);
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-        lua_pushnil(L);
+        lua_pushnumber(L, static_cast<int32_t>(attachment->m_count));
+        lua_pushnumber(L, stats->m_inventoryType ? stats->m_quality : -1);
+        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        int32_t error;
+
+        if (!player || player->CanUseItem(stats, error)) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
         return 5;
     }
 
-    char name[256];
-    CGItem_C::BuildItemName(name, sizeof(name), attachment->m_itemID, attachment->m_randomPropertiesID);
-    lua_pushstring(L, name);
+    lua_pushstring(L, FrameScript_GetText("UNKNOWNOBJECT", -1, GENDER_NOT_APPLICABLE));
     const char* iconPath = ClientDBStringLookup(3);
-    SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", CGItem_C::GetInventoryArt(item->m_displayInfoID));
+    SStrPrintf(texture, sizeof(texture), "%s%s%s", iconPath, *iconPath ? "\\" : "", "INV_Misc_QuestionMark");
     lua_pushstring(L, texture);
-    lua_pushnumber(L, static_cast<int32_t>(attachment->m_count));
-    lua_pushnumber(L, stats->m_inventoryType ? stats->m_quality : -1);
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    int32_t error;
-
-    if (!player || player->CanUseItem(stats, error)) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
+    lua_pushnil(L);
     return 5;
 }
 

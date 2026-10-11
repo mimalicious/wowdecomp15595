@@ -145,66 +145,66 @@ static int32_t Script_GetTransmogrifySlotInfo(lua_State* L) {
 
     CGItem_C* equipped = player->m_bag.GetItemPointer(slot);
 
-    if (!equipped) {
-        lua_pushboolean(L, 0);
-        lua_pushboolean(L, 0);
-        lua_pushnumber(L, 1.0);
-        return 3;
-    }
+    if (equipped) {
+        VisibleItem_C* visible = const_cast<VisibleItem_C*>(player->GetVisibleItem(slot));
+        int32_t itemId;
+        uint32_t displayId;
 
-    VisibleItem_C* visible = const_cast<VisibleItem_C*>(player->GetVisibleItem(slot));
-    int32_t itemId;
-    uint32_t displayId;
-
-    if (!visible || equipped->m_obj->m_entryID == static_cast<uint32_t>(abs(visible->m_itemId))) {
-        lua_pushboolean(L, 0);
-        itemId = equipped->m_obj->m_entryID;
-        displayId = equipped->GetDisplayID();
-    } else {
-        lua_pushboolean(L, 1);
-        itemId = abs(visible->m_itemId);
-        displayId = visible->GetDisplayID();
-    }
-
-    ClientItemRec rec(equipped->GetStats());
-    int32_t reason = 0;
-    bool canTransmogrify = CanTransmogrifyTarget(&rec, equipped->m_item->m_itemFieldFlags, equipped->m_item->m_itemFieldRandomPropertiesId, &reason) != 0;
-    lua_pushboolean(L, canTransmogrify);
-    lua_pushnumber(L, reason);
-    TransmogrifyPendingItem* pending = CGTransmogrify::GetPendingItem(slot);
-
-    if (pending) {
-        if (pending->m_item) {
-            lua_pushboolean(L, 1);
+        if (!visible || equipped->m_obj->m_entryID == static_cast<uint32_t>(abs(visible->m_itemId))) {
             lua_pushboolean(L, 0);
-            CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(pending->m_item, TYPEMASK_ITEM, __FILE__, __LINE__));
+            itemId = equipped->m_obj->m_entryID;
+            displayId = equipped->GetDisplayID();
+        } else {
+            lua_pushboolean(L, 1);
+            itemId = abs(visible->m_itemId);
+            displayId = visible->GetDisplayID();
+        }
 
-            if (item) {
-                displayId = item->GetDisplayID();
-                itemId = item->m_obj->m_entryID;
+        ClientItemRec rec(equipped->GetStats());
+        int32_t reason = 0;
+        bool canTransmogrify = CanTransmogrifyTarget(&rec, equipped->m_item->m_itemFieldFlags, equipped->m_item->m_itemFieldRandomPropertiesId, &reason) != 0;
+        lua_pushboolean(L, canTransmogrify);
+        lua_pushnumber(L, reason);
+        TransmogrifyPendingItem* pending = CGTransmogrify::GetPendingItem(slot);
+
+        if (pending) {
+            if (pending->m_item) {
+                lua_pushboolean(L, 1);
+                lua_pushboolean(L, 0);
+                CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(pending->m_item, TYPEMASK_ITEM, __FILE__, __LINE__));
+
+                if (item) {
+                    displayId = item->GetDisplayID();
+                    itemId = item->m_obj->m_entryID;
+                }
+            } else {
+                lua_pushboolean(L, 0);
+                lua_pushboolean(L, 1);
+                itemId = equipped->m_obj->m_entryID;
             }
         } else {
             lua_pushboolean(L, 0);
-            lua_pushboolean(L, 1);
-            itemId = equipped->m_obj->m_entryID;
+            lua_pushboolean(L, 0);
         }
-    } else {
-        lua_pushboolean(L, 0);
-        lua_pushboolean(L, 0);
+
+        lua_pushnumber(L, itemId);
+
+        if (displayId) {
+            const char* path = ClientDBStringLookup(3);
+            char texture[260];
+            SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(displayId));
+            lua_pushstring(L, texture);
+        } else {
+            lua_pushnil(L);
+        }
+
+        return 7;
     }
 
-    lua_pushnumber(L, itemId);
-
-    if (displayId) {
-        const char* path = ClientDBStringLookup(3);
-        char texture[260];
-        SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(displayId));
-        lua_pushstring(L, texture);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 7;
+    lua_pushboolean(L, 0);
+    lua_pushboolean(L, 0);
+    lua_pushnumber(L, 1.0);
+    return 3;
 }
 
 // OFFSET: 0x009BFAB0/0x14074BF20
@@ -219,48 +219,47 @@ static int32_t Script_ClickTransmogrifySlot(lua_State* L) {
 
     if (!GetTransmogrifySlot(L, 1, &slot)) {
         luaL_error(L, "Usage: ClickTransmogrifySlot(slot)");
-        return 0;
-    }
+    } else {
+        const ChrClassesRec* classRec = g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1]);
 
-    const ChrClassesRec* classRec = g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1]);
+        if (slot == INVSLOT_RANGED && classRec && (classRec->m_flags & 8)) {
+            return 0;
+        }
 
-    if (slot == INVSLOT_RANGED && classRec && (classRec->m_flags & 8)) {
-        return 0;
-    }
+        WOWGUID cursorItem;
+        WOWGUID container;
+        uint32_t cursorSlot;
+        CGGameUI::GetCursorItem(cursorItem, container, cursorSlot);
 
-    WOWGUID cursorItem;
-    WOWGUID container;
-    uint32_t cursorSlot;
-    CGGameUI::GetCursorItem(cursorItem, container, cursorSlot);
+        if (cursorItem) {
+            CGTransmogrify::UseItemForSlot(static_cast<CGItem_C*>(ClntObjMgrObjectPtr(cursorItem, TYPEMASK_ITEM, __FILE__, __LINE__)), slot);
+            return 0;
+        }
 
-    if (cursorItem) {
-        CGTransmogrify::UseItemForSlot(static_cast<CGItem_C*>(ClntObjMgrObjectPtr(cursorItem, TYPEMASK_ITEM, __FILE__, __LINE__)), slot);
-        return 0;
-    }
+        TransmogrifyPendingItem* pending = CGTransmogrify::GetPendingItem(slot);
 
-    TransmogrifyPendingItem* pending = CGTransmogrify::GetPendingItem(slot);
+        if (pending) {
+            if (pending->m_item) {
+                CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(pending->m_item, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (!pending) {
+                if (item) {
+                    uint8_t itemSlot = CGPlayer_C::FindItemSlot(item->m_item->m_itemFieldContained, item);
+                    CGGameUI::SetCursorItem(pending->m_item, item->m_item->m_itemFieldContained, itemSlot, 0, 0, 0);
+                }
+            }
+
+            CGTransmogrify::RemovePendingItem(slot, true);
+
+            return 0;
+        }
+
         const VisibleItem_C* visible = player->GetVisibleItem(slot);
         CGItem_C* equipped = player->m_bag.GetItemPointer(slot);
 
         if (visible && equipped && equipped->m_obj->m_entryID != static_cast<uint32_t>(abs(visible->m_itemId))) {
             CGTransmogrify::SetPendingItem(slot, WOWGUID(), true);
         }
-
-        return 0;
     }
-
-    if (pending->m_item) {
-        CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(pending->m_item, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-        if (item) {
-            uint8_t itemSlot = CGPlayer_C::FindItemSlot(item->m_item->m_itemFieldContained, item);
-            CGGameUI::SetCursorItem(pending->m_item, item->m_item->m_itemFieldContained, itemSlot, 0, 0, 0);
-        }
-    }
-
-    CGTransmogrify::RemovePendingItem(slot, true);
 
     return 0;
 }

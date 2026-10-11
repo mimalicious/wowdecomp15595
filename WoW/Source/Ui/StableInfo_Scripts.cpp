@@ -127,49 +127,49 @@ static int32_t Script_GetStablePetFoodTypes(lua_State* L) {
     int32_t index = 0;
     int32_t count = 0;
 
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetStablePetFoodTypes(slot)");
-        return 0;
-    }
+    if (lua_isnumber(L, 1)) {
+        uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (slot >= 25) {
-        return count;
-    }
-
-    StablePetInfo* pet = &CGStableInfo::m_pets[slot];
-
-    if (!pet) {
-        return count;
-    }
-
-    WOWGUID requester = ClntObjMgrGetActivePlayer();
-    CreatureStats_C* stats = g_creatureDBCache.GetRecord(pet->m_entry, requester, StablePetFoodCallback, NULL, true);
-    CreatureFamilyRec* family;
-
-    if (!stats || (family = g_creatureFamilyDB.GetRecord(stats->m_family)) == NULL) {
-        return count;
-    }
-
-    int32_t numFoods = g_itemPetFoodDB.m_numRecords;
-
-    for (; index < numFoods; index++) {
-        ItemPetFoodRec* food = g_itemPetFoodDB.GetRecordByIndex(index);
-
-        if (food && ((1 << (food->m_id - 1)) & family->m_petFoodMask)) {
-            lua_checkstack(L, 1);
-            lua_pushstring(L, food->m_name);
-            count++;
+        if (slot >= 25) {
+            return count;
         }
+
+        StablePetInfo* pet = &CGStableInfo::m_pets[slot];
+
+        if (!pet) {
+            return count;
+        }
+
+        WOWGUID requester = ClntObjMgrGetActivePlayer();
+        CreatureStats_C* stats = g_creatureDBCache.GetRecord(pet->m_entry, requester, StablePetFoodCallback, NULL, true);
+        CreatureFamilyRec* family;
+
+        if (!stats || (family = g_creatureFamilyDB.GetRecord(stats->m_family)) == NULL) {
+            return count;
+        }
+
+        int32_t numFoods = g_itemPetFoodDB.m_numRecords;
+
+        for (; index < numFoods; index++) {
+            ItemPetFoodRec* food = g_itemPetFoodDB.GetRecordByIndex(index);
+
+            if (food && ((1 << (food->m_id - 1)) & family->m_petFoodMask)) {
+                lua_checkstack(L, 1);
+                lua_pushstring(L, food->m_name);
+                count++;
+            }
+        }
+
+        return count;
     }
 
-    return count;
+    luaL_error(L, "Usage: GetStablePetFoodTypes(slot)");
+    return 0;
 }
 
 // OFFSET: 0x0096D380/0x1406E4390
 static int32_t Script_ClosePetStables(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         player->CancelOpenStable();
@@ -181,44 +181,44 @@ static int32_t Script_ClosePetStables(lua_State* L) {
 
 // OFFSET: 0x0096D3F0/0x1406E4400
 static int32_t Script_SetPetStablePaperdoll(lua_State* L) {
-    if (lua_type(L, 1) != LUA_TTABLE) {
-        luaL_error(L, "Usage: SetPetStablePaperdoll(characterModel, slot)");
+    if (lua_type(L, 1) == LUA_TTABLE) {
+        lua_rawgeti(L, 1, 0);
+        CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(lua_touserdata(L, -1));
+        lua_settop(L, -2);
+
+        if (!model) {
+            luaL_error(L, "SetPetStablePaperdoll(): Couldn't find 'this' in frame object");
+            return 0;
+        }
+
+        if (!model->IsA(CGCharacterModelBase::GetObjectType())) {
+            luaL_error(L, "SetPetStablePaperdoll(): Wrong object type, expected frame");
+            return 0;
+        }
+
+        if (!lua_isnumber(L, 2)) {
+            luaL_error(L, "Usage: SetPetStablePaperdoll(characterModel, slot)");
+            return 0;
+        }
+
+        StablePetInfo* pet = CGStableInfo::GetPetInfo(static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 2))) - 1);
+
+        if (!pet) {
+            return 0;
+        }
+
+        WOWGUID requester = ClntObjMgrGetActivePlayer();
+        CreatureStats_C* stats = g_creatureDBCache.GetRecord(pet->m_entry, requester, StablePaperdollCallback, NULL, false);
+
+        if (!stats) {
+            return 0;
+        }
+
+        model->SetCreature(stats, ClntObjMgrGetActivePlayerObj());
         return 0;
     }
 
-    lua_rawgeti(L, 1, 0);
-    CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(lua_touserdata(L, -1));
-    lua_settop(L, -2);
-
-    if (!model) {
-        luaL_error(L, "SetPetStablePaperdoll(): Couldn't find 'this' in frame object");
-        return 0;
-    }
-
-    if (!model->IsA(CGCharacterModelBase::GetObjectType())) {
-        luaL_error(L, "SetPetStablePaperdoll(): Wrong object type, expected frame");
-        return 0;
-    }
-
-    if (!lua_isnumber(L, 2)) {
-        luaL_error(L, "Usage: SetPetStablePaperdoll(characterModel, slot)");
-        return 0;
-    }
-
-    StablePetInfo* pet = CGStableInfo::GetPetInfo(static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 2))) - 1);
-
-    if (!pet) {
-        return 0;
-    }
-
-    WOWGUID requester = ClntObjMgrGetActivePlayer();
-    CreatureStats_C* stats = g_creatureDBCache.GetRecord(pet->m_entry, requester, StablePaperdollCallback, NULL, false);
-
-    if (!stats) {
-        return 0;
-    }
-
-    model->SetCreature(stats, ClntObjMgrGetActivePlayerObj());
+    luaL_error(L, "Usage: SetPetStablePaperdoll(characterModel, slot)");
     return 0;
 }
 

@@ -28,50 +28,50 @@
 void InitializeMacroOptions() {
 }
 
-// OFFSET: 0x00A0D3E0
+// OFFSET: 0x00A0D3E0/0x1407AF000
 int32_t EvaluateExists(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGObject_C* object = ClntObjMgrObjectPtr(*unit, TYPEMASK_OBJECT, __FILE__, __LINE__);
     int32_t exists = (object && object->CanBeTargetted()) || CGGameUI::IsRaidMemberOrPet(*unit);
 
-    if (args->m_count) {
-        return exists == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return exists;
     }
 
-    return exists;
+    return exists == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0D450
+// OFFSET: 0x00A0D450/0x1407AF0C0
 int32_t EvaluateParty(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     int32_t party = CGPartyInfo::IsPlayerOrPetInParty(*unit);
 
-    if (args->m_count) {
-        return party == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return party;
     }
 
-    return party;
+    return party == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0D490
+// OFFSET: 0x00A0D490/0x1407AF120
 int32_t EvaluateRaid(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     int32_t raid = CGPartyInfo::IsPlayerOrPetInParty(*unit) || CGRaidInfo::IsPlayerOrPetInRaid(*unit);
 
-    if (args->m_count) {
-        return raid == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return raid;
     }
 
-    return raid;
+    return raid == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0DF90
+// OFFSET: 0x00A0DF90/0x1407AFFF0
 int32_t EvaluateFlyable(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(*unit, TYPEMASK_UNIT, __FILE__, __LINE__));
     bool flyable = player ? player->IsInFlyableZone(1) : IsInFlyableArea() != 0;
 
-    if (args->m_count) {
-        return flyable == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return flyable;
     }
 
-    return flyable;
+    return flyable == args->m_data->ToNumber();
 }
 
 // OFFSET: #0x005EEED0
@@ -95,7 +95,7 @@ int32_t EvaluateGroup(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>
     return 0;
 }
 
-// OFFSET: 0x00A0D6E0
+// OFFSET: 0x00A0D6E0/0x1407AF470
 int32_t EvaluateButton(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     const char* button = CSimpleTop::s_instance->m_mouseButtonName;
     const char* macroButton = CGUIMacros::m_macroRunning;
@@ -139,7 +139,7 @@ int32_t EvaluateButton(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
     return 0;
 }
 
-// OFFSET: 0x00A0D820
+// OFFSET: 0x00A0D820/0x1407AF610
 int32_t EvaluateActionBar(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     if (!args->m_count) {
         return 0;
@@ -161,7 +161,7 @@ int32_t EvaluateActionBar(const WOWGUID* unit, const TSGrowableArray<MacroSubstr
     return 0;
 }
 
-// OFFSET: 0x00A0D890
+// OFFSET: 0x00A0D890/0x1407AF680
 int32_t EvaluateBonusBar(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     if (!args->m_count) {
         return 0;
@@ -183,11 +183,11 @@ int32_t EvaluateBonusBar(const WOWGUID* unit, const TSGrowableArray<MacroSubstri
     return 0;
 }
 
-// OFFSET: 0x00A0D8F0
+// OFFSET: 0x00A0D8F0/0x1407AF6F0
 int32_t EvaluateSpec(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     uint32_t group = CGTalentInfo::GetActiveTalentGroup(0) + 1;
 
-    if (!args->m_count) {
+    if (args->m_count <= 0) {
         return 0;
     }
 
@@ -207,7 +207,7 @@ int32_t EvaluateSpec(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>*
     return 0;
 }
 
-// OFFSET: 0x00A0D970
+// OFFSET: 0x00A0D970/0x1407AF770
 static VehicleSeatRec* GetVehicleSeatRec(const WOWGUID* guid) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -266,7 +266,7 @@ int32_t EvaluateUnitHasVehicleUI(const WOWGUID* unit, const TSGrowableArray<Macr
     return 0;
 }
 
-// OFFSET: 0x00A0DA90
+// OFFSET: 0x00A0DA90/0x1407AF8D0
 int32_t EvaluateCursor(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     if (!CSimpleTop::s_instance->m_allowProtectedActions) {
         return 0;
@@ -310,33 +310,33 @@ int32_t EvaluateCursor(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
             return 0;
     }
 
-    if (!args->m_count) {
-        return 1;
-    }
+    if (args->m_count) {
+        for (uint32_t i = args->m_count; i; i--) {
+            const MacroSubstring& arg = args->m_data[i - 1];
+            char text[1024];
+            uint32_t length = arg.m_end - arg.m_start;
 
-    for (uint32_t i = args->m_count; i; i--) {
-        const MacroSubstring& arg = args->m_data[i - 1];
-        char text[1024];
-        uint32_t length = arg.m_end - arg.m_start;
+            if (length > 1023) {
+                length = 1023;
+            }
 
-        if (length > 1023) {
-            length = 1023;
+            memcpy(text, arg.m_start, length);
+            text[length] = '\0';
+
+            if (!SStrCmpI(text, type, 0x7FFFFFFF)) {
+                return 1;
+            }
         }
 
-        memcpy(text, arg.m_start, length);
-        text[length] = '\0';
-
-        if (!SStrCmpI(text, type, 0x7FFFFFFF)) {
-            return 1;
-        }
+        return 0;
     }
 
-    return 0;
+    return 1;
 }
 
-// OFFSET: 0x00A0DD20
+// OFFSET: 0x00A0DD20/0x1407AFC20
 int32_t EvaluateCombat(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t combat;
 
     if (player && (player->m_unit->m_unitFieldFlags & 0x80000)) {
@@ -346,40 +346,40 @@ int32_t EvaluateCombat(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
         combat = pet && (pet->m_unit->m_unitFieldFlags & 0x80000);
     }
 
-    if (args->m_count) {
-        return combat == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return combat;
     }
 
-    return combat;
+    return combat == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0DDC0
+// OFFSET: 0x00A0DDC0/0x1407AFD10
 int32_t EvaluateHelp(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGUnit_C* target = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*unit, TYPEMASK_UNIT, __FILE__, __LINE__));
     int32_t help = player && target && player->CanAssist(target, false);
 
-    if (args->m_count) {
-        return help == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return help;
     }
 
-    return help;
+    return help == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0DE40
+// OFFSET: 0x00A0DE40/0x1407AFDF0
 int32_t EvaluateHarm(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGUnit_C* target = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*unit, TYPEMASK_UNIT, __FILE__, __LINE__));
     int32_t harm = player && target && player->CanAttack(target);
 
-    if (args->m_count) {
-        return harm == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return harm;
     }
 
-    return harm;
+    return harm == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0DEC0
+// OFFSET: 0x00A0DEC0/0x1407AFED0
 int32_t EvaluateDead(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGUnit_C* object = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*unit, TYPEMASK_UNIT, __FILE__, __LINE__));
     int32_t dead;
@@ -399,35 +399,35 @@ int32_t EvaluateDead(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>*
         dead = state ? (state->m_flags & 0xC) : 0;
     }
 
-    if (args->m_count) {
-        return dead == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return dead;
     }
 
-    return dead;
+    return dead == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0E000
+// OFFSET: 0x00A0E000/0x1407B0090
 int32_t EvaluateIndoors(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t indoors = player && !player->IsOutdoors();
 
-    if (args->m_count) {
-        return indoors == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return indoors;
     }
 
-    return indoors;
+    return indoors == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0E060
+// OFFSET: 0x00A0E060/0x1407B0140
 int32_t EvaluateOutdoors(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t outdoors = player && player->IsOutdoors();
 
-    if (args->m_count) {
-        return outdoors == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return outdoors;
     }
 
-    return outdoors;
+    return outdoors == args->m_data->ToNumber();
 }
 
 // OFFSET: #0x005EFA40
@@ -454,33 +454,33 @@ int32_t EvaluateFlying(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
     return flying;
 }
 
-// OFFSET: 0x00A0E180
+// OFFSET: 0x00A0E180/0x1407B0330
 int32_t EvaluateMounted(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t mounted = player && player->m_mountDisplayId > 0 && !(player->m_clientFlags & 0x10000000);
 
-    if (args->m_count) {
-        return mounted == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return mounted;
     }
 
-    return mounted;
+    return mounted == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0E1F0
+// OFFSET: 0x00A0E1F0/0x1407B03D0
 int32_t EvaluateStealth(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t stealth = player && (player->m_unit->m_unitFieldBytes1[2] & 0x2);
 
-    if (args->m_count) {
-        return stealth == args->m_data->ToNumber();
+    if (!args->m_count) {
+        return stealth;
     }
 
-    return stealth;
+    return stealth == args->m_data->ToNumber();
 }
 
-// OFFSET: 0x00A0E250
+// OFFSET: 0x00A0E250/0x1407B0470
 int32_t EvaluatePet(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -493,44 +493,44 @@ int32_t EvaluatePet(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* 
         return 0;
     }
 
-    if (!args->m_count) {
-        return 1;
-    }
+    if (args->m_count > 0) {
+        char name[1024] = "";
+        char family[1024] = "";
+        SStrCopy(name, pet->GetUnitName(NULL, 1), sizeof(name));
+        uint32_t familyId = pet->GetCreatureFamily();
 
-    char name[1024] = "";
-    char family[1024] = "";
-    SStrCopy(name, pet->GetUnitName(NULL, 1), sizeof(name));
-    uint32_t familyId = pet->GetCreatureFamily();
+        if (familyId) {
+            CreatureFamilyRec* rec = g_creatureFamilyDB.GetRecord(familyId);
 
-    if (familyId) {
-        CreatureFamilyRec* rec = g_creatureFamilyDB.GetRecord(familyId);
-
-        if (rec) {
-            SStrCopy(family, rec->m_name, sizeof(family));
-        }
-    }
-
-    for (uint32_t i = args->m_count; i; i--) {
-        const MacroSubstring& arg = args->m_data[i - 1];
-        char text[1024];
-        uint32_t length = arg.m_end - arg.m_start;
-
-        if (length > 1023) {
-            length = 1023;
+            if (rec) {
+                SStrCopy(family, rec->m_name, sizeof(family));
+            }
         }
 
-        memcpy(text, arg.m_start, length);
-        text[length] = '\0';
+        for (uint32_t i = args->m_count; i; i--) {
+            const MacroSubstring& arg = args->m_data[i - 1];
+            char text[1024];
+            uint32_t length = arg.m_end - arg.m_start;
 
-        if (!SStrCmpUTF8I(text, name, 0x7FFFFFFF) || !SStrCmpUTF8I(text, family, 0x7FFFFFFF)) {
-            return 1;
+            if (length > 1023) {
+                length = 1023;
+            }
+
+            memcpy(text, arg.m_start, length);
+            text[length] = '\0';
+
+            if (!SStrCmpUTF8I(text, name, 0x7FFFFFFF) || !SStrCmpUTF8I(text, family, 0x7FFFFFFF)) {
+                return 1;
+            }
         }
+
+        return 0;
     }
 
-    return 0;
+    return 1;
 }
 
-// OFFSET: 0x00A0E410
+// OFFSET: 0x00A0E410/0x1407B06E0
 int32_t EvaluateEquipped(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -552,7 +552,7 @@ int32_t EvaluateEquipped(const WOWGUID* unit, const TSGrowableArray<MacroSubstri
 
         int32_t inventoryType = -1;
 
-        for (int32_t j = 0; j < 29; j++) {
+        for (uint32_t j = 0; j < 29; j++) {
             if (!SStrCmpI(text, s_inventoryTypeTokens[j], 0x7FFFFFFF) || !SStrCmpUTF8I(text, FrameScript_GetText(s_inventoryTypeTokens[j], -1, GENDER_NOT_APPLICABLE), 0x7FFFFFFF)) {
                 inventoryType = j;
                 break;
@@ -577,9 +577,9 @@ int32_t EvaluateEquipped(const WOWGUID* unit, const TSGrowableArray<MacroSubstri
     return 0;
 }
 
-// OFFSET: 0x00A0E540
+// OFFSET: 0x00A0E540/0x1407B08D0
 int32_t EvaluateChanneling(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
@@ -592,7 +592,7 @@ int32_t EvaluateChanneling(const WOWGUID* unit, const TSGrowableArray<MacroSubst
         return 0;
     }
 
-    if (!args->m_count) {
+    if (args->m_count <= 0) {
         return 1;
     }
 

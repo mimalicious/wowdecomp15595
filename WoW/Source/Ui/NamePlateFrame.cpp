@@ -442,7 +442,7 @@ static int32_t __cdecl CompareNamePlates(const void* a, const void* b) {
         return eliteA ? -1 : 1;
     }
 
-    float yA = frameA->m_sortY <= 0.0f ? frameA->m_position.y : frameA->m_sortY;
+    float yA = frameA->m_sortY > 0.0f ? frameA->m_sortY : frameA->m_position.y;
     float yB = frameB->m_sortY <= 0.0f ? frameB->m_position.y : frameB->m_sortY;
 
     return yB <= yA ? 1 : -1;
@@ -470,7 +470,7 @@ void CGNamePlateFrame::OnGainFocus() {
     }
 
     if (this->m_damageFeedbackTime <= 0 && this->m_unitNameText) {
-        CImVector color(0x00, 0xFF, 0xFF, 0xFF);
+        CImVector color(0xFFFFFF00);
         this->m_unitNameText->SetVertexColor(color);
     }
 
@@ -484,7 +484,7 @@ void CGNamePlateFrame::OnLoseFocus() {
     }
 
     if (this->m_damageFeedbackTime <= 0 && this->m_unitNameText) {
-        CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
+        CImVector color(0xFFFFFFFF);
         this->m_unitNameText->SetVertexColor(color);
     }
 
@@ -564,7 +564,7 @@ void CGNamePlateFrame::OnLayerUpdate(float elapsedSec) {
         return;
     }
 
-    CImVector color(0, 0, 0, 0);
+    CImVector color(0x00000000);
 
     if (this->m_castHoldTime > 0.0f) {
         this->m_castHoldTime -= elapsedSec;
@@ -674,7 +674,15 @@ void CGNamePlateFrame::UpdateLevelDisplay(CGUnit_C* unit) {
     }
 
     if (this->m_levelText) {
-        if (!this->m_targetingFrameSkull || showLevel) {
+        if (!this->m_targetingFrameSkull) {
+            this->m_levelText->Show();
+            this->m_levelText->SetVertexColor(*GetDifficultyColor(level, player->m_unit->m_unitFieldLevel));
+            SetNumberText(this->m_levelText, level);
+            this->m_targetingFrameSkull->Hide();
+            return;
+        }
+
+        if (showLevel) {
             this->m_levelText->Show();
             this->m_levelText->SetVertexColor(*GetDifficultyColor(level, player->m_unit->m_unitFieldLevel));
             SetNumberText(this->m_levelText, level);
@@ -706,7 +714,7 @@ void CGNamePlateFrame::SetCastBarValues(float minValue, float maxValue, float va
         return;
     }
 
-    CImVector color(0, 0, 0, 0);
+    CImVector color(0x00000000);
 
     if (channel ? minValue != value : maxValue != value) {
         color.Set(1.0f, 1.0f, 0.7f, 0.0f);
@@ -722,7 +730,7 @@ void CGNamePlateFrame::SetCastBarValues(float minValue, float maxValue, float va
         this->m_casting = 0;
     }
 
-    color = CImVector(0xFF, 0xFF, 0xFF, 0xFF);
+    color = CImVector(0xFFFFFFFF);
 
     if (this->m_castBarIcon) {
         this->m_castBarIcon->SetVertexColor(color);
@@ -864,7 +872,7 @@ void CGNamePlateFrame::DestroyUnusedNameplateFrames() {
 // OFFSET: 0x009E92C0
 void CGNamePlateFrame::Initialize(CGUnit_C* unit) {
     if (this->m_unitNameText) {
-        this->m_unitNameText->SetVertexColor(CImVector(0xFF, 0xFF, 0xFF, 0xFF));
+        this->m_unitNameText->SetVertexColor(CImVector(0xFFFFFFFF));
     }
 
     this->m_guid = unit->m_obj->m_guid;
@@ -877,7 +885,7 @@ void CGNamePlateFrame::Initialize(CGUnit_C* unit) {
     this->m_castBar->SetMinMaxValues(0.0f, 0.0f);
     this->m_castBar->SetValue(0.0f);
 
-    CImVector castColor(0xFF, 0x00, 0xB2, 0xFF);
+    CImVector castColor(0xFFB200FF);
     this->m_castBar->SetStatusBarColor(castColor);
 
     if (this->m_namePlateGlow) {
@@ -1326,13 +1334,13 @@ CGNamePlateFrame::~CGNamePlateFrame() {
 CGNamePlateFrame* CGNamePlateFrame::GetNewNameplateFrame(CSimpleFrame* parent) {
     CGNamePlateFrame* frame = CGNamePlateFrame::s_unusedNamePlates.Head();
 
-    if (!frame) {
-        void* data = CGNamePlateFrame::s_namePlateHeap.GetData(0, typeid(CGNamePlateFrame).raw_name(), SLOG_OBJECT);
-        return data ? new (data) CGNamePlateFrame(parent) : NULL;
+    if (frame) {
+        CGNamePlateFrame::s_unusedNamePlates.UnlinkNode(frame);
+        return frame;
     }
 
-    CGNamePlateFrame::s_unusedNamePlates.UnlinkNode(frame);
-    return frame;
+    void* data = CGNamePlateFrame::s_namePlateHeap.GetData(0, typeid(CGNamePlateFrame).raw_name(), SLOG_OBJECT);
+    return data ? new (data) CGNamePlateFrame(parent) : NULL;
 }
 
 // OFFSET: 0x005ACCA0

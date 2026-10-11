@@ -54,7 +54,7 @@ static int32_t Script_CreateArenaTeam(lua_State* L) {
     }
 
     if (hasEmblem) {
-        CImVector color = CImVector(0, 0, 0, 0);
+        CImVector color = CImVector(0x00000000);
         FrameScript_GetColorNoAlpha(L, 3, color);
         background = *reinterpret_cast<uint32_t*>(&color);
         emblemStyle = static_cast<int32_t>(lua_tonumber(L, 6));

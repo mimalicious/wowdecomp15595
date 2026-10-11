@@ -270,13 +270,43 @@ static int32_t Script_SetPlayerTextureWidth(lua_State* L) {
 static int32_t Script_GetTrackingInfo(lua_State* L) {
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
 
-    if (index >= static_cast<int32_t>(s_trackingSpells.Count())) {
-        uint32_t type = CGMinimapFrame::GetTrackingTypeByIndex(index - s_trackingSpells.Count());
+    if (!(index >= static_cast<int32_t>(s_trackingSpells.Count()))) {
+        SpellRec* spell = g_spellDB.GetRecord(s_trackingSpells.m_data[index]);
 
-        if (type >= 19) {
+        if (!spell) {
             return 0;
         }
 
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (!player) {
+            return 0;
+        }
+
+        bool active = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[index], WOWGUID::Make(0));
+        lua_pushstring(L, spell->m_name);
+        SpellIconRec* icon = g_spellIconDB.GetRecord(active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID);
+
+        if (icon) {
+            lua_pushstring(L, icon->m_textureFilename);
+        } else {
+            lua_pushnil(L);
+        }
+
+        if (active) {
+            lua_pushnumber(L, 1.0);
+        } else {
+            lua_pushnil(L);
+        }
+
+        lua_pushstring(L, "spell");
+        lua_pushinteger(L, SpellIsTrackingAura(spell));
+        return 5;
+    }
+
+    uint32_t type = CGMinimapFrame::GetTrackingTypeByIndex(index - s_trackingSpells.Count());
+
+    if (!(type >= 19)) {
         const TrackingTypeInfo* info = &CGMinimapFrame::s_trackingTypes[type];
         lua_pushstring(L, FrameScript_GetText(info->m_name, -1, GENDER_NOT_APPLICABLE));
         char texture[128];
@@ -294,37 +324,7 @@ static int32_t Script_GetTrackingInfo(lua_State* L) {
         return 5;
     }
 
-    SpellRec* spell = g_spellDB.GetRecord(s_trackingSpells.m_data[index]);
-
-    if (!spell) {
-        return 0;
-    }
-
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player) {
-        return 0;
-    }
-
-    bool active = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[index], WOWGUID());
-    lua_pushstring(L, spell->m_name);
-    SpellIconRec* icon = g_spellIconDB.GetRecord(active && spell->m_activeIconID ? spell->m_activeIconID : spell->m_spellIconID);
-
-    if (icon) {
-        lua_pushstring(L, icon->m_textureFilename);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (active) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    lua_pushstring(L, "spell");
-    lua_pushinteger(L, SpellIsTrackingAura(spell));
-    return 5;
+    return 0;
 }
 
 // OFFSET: 0x009CED80/0x14075F8D0
@@ -341,12 +341,12 @@ static int32_t Script_GetZoom(lua_State* L) {
 
 // OFFSET: 0x009CEE00/0x14075F930
 static int32_t Script_SetZoom(lua_State* L) {
-    if (!lua_isnumber(L, 2)) {
-        luaL_error(L, "Usage: SetZoom(level)");
+    if (lua_isnumber(L, 2)) {
+        MinimapSetZoom(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2))));
         return 0;
     }
 
-    MinimapSetZoom(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2))));
+    luaL_error(L, "Usage: SetZoom(level)");
     return 0;
 }
 
@@ -371,14 +371,14 @@ static int32_t Script_SetPlayerTexture(lua_State* L) {
 
 // OFFSET: 0x009D2410/0x140763940
 static int32_t Script_PingLocation(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return 0;
     }
 
-    float x = 0.0f;
     float y = 0.0f;
+    float x = 0.0f;
     float radius = MinimapGetViewRadius();
     float diameter = radius + radius;
 
@@ -422,32 +422,32 @@ static int32_t Script_PingLocation(lua_State* L) {
 
 // OFFSET: 0x009D2720/0x140763D00
 static int32_t Script_GetPingPosition(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player) {
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
+    if (player) {
+        float radius = MinimapGetViewRadius();
+        float diameter = radius + radius;
+        C2Vector position(player->GetPosition());
+        float x = CGMinimapFrame::s_pingPosition.x - position.x;
+        float y = CGMinimapFrame::s_pingPosition.y - position.y;
+
+        if (g_rotateMinimapCVar->m_intValue) {
+            C44Matrix matrix;
+            matrix *= C44Matrix::Rotation(-CGMinimapFrame::s_facing, C3Vector(0.0f, 0.0f, 1.0f), true);
+            C3Vector rotated = C3Vector(x, y, 0.0f) * matrix;
+            x = rotated.x;
+            y = rotated.y;
+        }
+
+        double scale = 1.0 / diameter;
+        x = x * scale;
+        lua_pushnumber(L, -(scale * y));
+        lua_pushnumber(L, x);
         return 2;
     }
 
-    float radius = MinimapGetViewRadius();
-    float diameter = radius + radius;
-    C2Vector position(player->GetPosition());
-    float x = CGMinimapFrame::s_pingPosition.x - position.x;
-    float y = CGMinimapFrame::s_pingPosition.y - position.y;
-
-    if (g_rotateMinimapCVar->m_intValue) {
-        C44Matrix matrix;
-        matrix *= C44Matrix::Rotation(-CGMinimapFrame::s_facing, C3Vector(0.0f, 0.0f, 1.0f), true);
-        C3Vector rotated = C3Vector(x, y, 0.0f) * matrix;
-        x = rotated.x;
-        y = rotated.y;
-    }
-
-    double scale = 1.0 / diameter;
-    x = x * scale;
-    lua_pushnumber(L, -(scale * y));
-    lua_pushnumber(L, x);
+    lua_pushnumber(L, 0.0);
+    lua_pushnumber(L, 0.0);
     return 2;
 }
 
@@ -469,11 +469,11 @@ static int32_t Script_SetTracking(lua_State* L) {
         return 0;
     }
 
-    bool active = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[index], WOWGUID());
+    bool active = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[index], WOWGUID::Make(0));
 
     if (enable) {
         if (!active) {
-            Spell_C_CastSpell(s_trackingSpells.m_data[index], NULL, WOWGUID(), false);
+            Spell_C_CastSpell(s_trackingSpells.m_data[index], NULL, WOWGUID::Make(0), false);
         }
     } else if (active) {
         Spell_C_CancelAura(g_spellDB.GetRecord(s_trackingSpells.m_data[index]), ClntObjMgrGetActivePlayerObj(), -1);
@@ -617,31 +617,30 @@ static int32_t Script_SetIconTexture(lua_State* L) {
 static int32_t Script_SetBlipTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
-    if (!lua_isstring(L, 2)) {
+    if (lua_isstring(L, 2)) {
+        const char* fileName = lua_tolstring(L, 2, NULL);
+
+        if (!fileName || !*fileName) {
+            const char* name = minimap->GetName();
+            luaL_error(L, "Usage: %s:SetBlipTexture(\"file\")", name ? name : "<unnamed>");
+        }
+
+        CStatus status;
+
+        if (s_blipTexture) {
+            TextureRelease(s_blipTexture);
+        }
+
+        s_blipTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
+
+        if (status.m_highestSeverity >= STATUS_ERROR) {
+            const char* name = minimap->GetName();
+            luaL_error(L, "%s:SetBlipTexture(): Couldn't load the file %s", name ? name : "<unnamed>", fileName);
+            return 0;
+        }
+    } else {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetBlipTexture(\"file\")", name ? name : "<unnamed>");
-        return 0;
-    }
-
-    const char* fileName = lua_tolstring(L, 2, NULL);
-
-    if (!fileName || !*fileName) {
-        const char* name = minimap->GetName();
-        luaL_error(L, "Usage: %s:SetBlipTexture(\"file\")", name ? name : "<unnamed>");
-    }
-
-    CStatus status;
-
-    if (s_blipTexture) {
-        TextureRelease(s_blipTexture);
-    }
-
-    s_blipTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
-
-    if (status.m_highestSeverity >= STATUS_ERROR) {
-        const char* name = minimap->GetName();
-        luaL_error(L, "%s:SetBlipTexture(): Couldn't load the file %s", name ? name : "<unnamed>", fileName);
-        return 0;
     }
 
     return 0;
@@ -680,7 +679,7 @@ static int32_t Script_ClearAllTracking(lua_State* L) {
             continue;
         }
 
-        if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[i], WOWGUID())) {
+        if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->HasAura(s_trackingSpells.m_data[i], WOWGUID::Make(0))) {
             SpellRec* spell = g_spellDB.GetRecord(s_trackingSpells.m_data[i]);
             Spell_C_CancelAura(spell, static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)), -1);
             CGMinimapFrame::RemoveShapeshiftTrackingSpell(s_trackingSpells.m_data[i]);

@@ -78,12 +78,12 @@ static int32_t Script_SetRaidRosterSelection(lua_State* L) {
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (index >= CGRaidInfo::m_numMembers) {
-        CGRaidInfo::m_selectedMember = WOWGUID();
+    if (!(index >= CGRaidInfo::m_numMembers)) {
+        CGRaidInfo::m_selectedMember = CGRaidInfo::m_members[index]->m_guid;
         return 0;
     }
 
-    CGRaidInfo::m_selectedMember = CGRaidInfo::m_members[index]->m_guid;
+    CGRaidInfo::m_selectedMember = WOWGUID();
     return 0;
 }
 
@@ -150,7 +150,7 @@ static int32_t Script_GetRaidRosterInfo(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     CGRaidMember* member;
     NameCache* name;
     WOWGUID requester = WOWGUID();
@@ -220,10 +220,10 @@ static int32_t Script_GetRaidRosterInfo(lua_State* L) {
         dead = (member->m_stats.m_flags & 0xC) && (member->m_stats.m_flags & 1);
     }
 
-    if (dead) {
-        lua_pushnumber(L, 1.0);
-    } else {
+    if (!dead) {
         lua_pushnil(L);
+    } else {
+        lua_pushnumber(L, 1.0);
     }
 
     if (member->m_assignments & 2) {
@@ -379,35 +379,33 @@ static int32_t Script_GetReadyCheckStatus(lua_State* L) {
     WOWGUID guid = Script_GetGUIDFromName(lua_tolstring(L, 1, NULL));
     const char* status = NULL;
 
-    if (!CGRaidInfo::m_numMembers) {
-        if (!CGPartyInfo::m_members[0] || CGPartyInfo::m_leader != ClntObjMgrGetActivePlayer()) {
+    if (CGRaidInfo::m_numMembers) {
+        CGRaidMember* self = CGRaidInfo::FindMemberByGuid(ClntObjMgrGetActivePlayer());
+
+        if (!self || self->m_rank <= 0) {
             lua_pushstring(L, status);
             return 1;
         }
 
-        int32_t index = CGRaidInfo::GetPartyMemberIndex(guid);
+        CGRaidMember* member = CGRaidInfo::FindMemberByGuid(guid);
         uint32_t now = FrameTime::GetCurTimeMs();
 
-        if (!CGRaidInfo::m_readyCheckTime || static_cast<int32_t>(now - CGRaidInfo::m_readyCheckTime) >= 0 || CGRaidInfo::m_readyCheckTime == now) {
+        if (!CGRaidInfo::m_readyCheckTime || static_cast<int32_t>(now - CGRaidInfo::m_readyCheckTime) >= 0 || CGRaidInfo::m_readyCheckTime == now || !member) {
             lua_pushstring(L, status);
             return 1;
         }
 
-        if (index == -1) {
-            if (guid == CGRaidInfo::m_readyCheckInitiator) {
-                status = "ready";
-            }
-
-            lua_pushstring(L, status);
+        if (guid == CGRaidInfo::m_readyCheckInitiator) {
+            lua_pushstring(L, "ready");
             return 1;
         }
 
-        if (CGRaidInfo::IsPartyMemberReadyCheckPending(index)) {
+        if (member->m_readyCheckPending) {
             lua_pushstring(L, "waiting");
             return 1;
         }
 
-        if (CGRaidInfo::IsPartyMemberReadyCheckReady(index)) {
+        if (member->m_readyCheckReady) {
             lua_pushstring(L, "ready");
             return 1;
         }
@@ -416,32 +414,34 @@ static int32_t Script_GetReadyCheckStatus(lua_State* L) {
         return 1;
     }
 
-    CGRaidMember* self = CGRaidInfo::FindMemberByGuid(ClntObjMgrGetActivePlayer());
-
-    if (!self || self->m_rank <= 0) {
+    if (!CGPartyInfo::m_members[0] || CGPartyInfo::m_leader != ClntObjMgrGetActivePlayer()) {
         lua_pushstring(L, status);
         return 1;
     }
 
-    CGRaidMember* member = CGRaidInfo::FindMemberByGuid(guid);
+    int32_t index = CGRaidInfo::GetPartyMemberIndex(guid);
     uint32_t now = FrameTime::GetCurTimeMs();
 
-    if (!CGRaidInfo::m_readyCheckTime || static_cast<int32_t>(now - CGRaidInfo::m_readyCheckTime) >= 0 || CGRaidInfo::m_readyCheckTime == now || !member) {
+    if (!CGRaidInfo::m_readyCheckTime || static_cast<int32_t>(now - CGRaidInfo::m_readyCheckTime) >= 0 || CGRaidInfo::m_readyCheckTime == now) {
         lua_pushstring(L, status);
         return 1;
     }
 
-    if (guid == CGRaidInfo::m_readyCheckInitiator) {
-        lua_pushstring(L, "ready");
+    if (index == -1) {
+        if (guid == CGRaidInfo::m_readyCheckInitiator) {
+            status = "ready";
+        }
+
+        lua_pushstring(L, status);
         return 1;
     }
 
-    if (member->m_readyCheckPending) {
+    if (CGRaidInfo::IsPartyMemberReadyCheckPending(index)) {
         lua_pushstring(L, "waiting");
         return 1;
     }
 
-    if (member->m_readyCheckReady) {
+    if (CGRaidInfo::IsPartyMemberReadyCheckReady(index)) {
         lua_pushstring(L, "ready");
         return 1;
     }
@@ -544,21 +544,21 @@ static int32_t Script_GetSavedInstanceEncounterInfo(lua_State* L) {
 
 // OFFSET: 0x0092ECE0/0x140696310
 static int32_t Script_GetSavedInstanceChatLink(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetSavedInstanceInfo(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+
+        if (index < s_savedInstances.Count()) {
+            RaidInstanceInfo* info = &s_savedInstances.m_data[index];
+            lua_pushstring(L, CGTooltip::GetInstanceLockHyperlink(info->m_mapID, info->m_difficulty + 2 * info->m_heroic, info->m_completedMask));
+        } else {
+            lua_pushstring(L, "");
+        }
+
+        return 1;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (index >= s_savedInstances.Count()) {
-        lua_pushstring(L, "");
-    } else {
-        RaidInstanceInfo* info = &s_savedInstances.m_data[index];
-        lua_pushstring(L, CGTooltip::GetInstanceLockHyperlink(info->m_mapID, info->m_difficulty + 2 * info->m_heroic, info->m_completedMask));
-    }
-
-    return 1;
+    luaL_error(L, "Usage: GetSavedInstanceInfo(index)");
+    return 0;
 }
 
 // OFFSET: 0x0092EF70/0x1406966E0
@@ -568,7 +568,7 @@ static int32_t Script_SetSavedInstanceExtend(lua_State* L) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     int32_t extend = lua_toboolean(L, 2);
 
     if (static_cast<uint32_t>(index) >= s_savedInstances.Count()) {
@@ -647,15 +647,15 @@ static int32_t Script_ClearRaidMarker(lua_State* L) {
 static int32_t Script_SetEveryoneIsAssistant(lua_State* L) {
     ThrottleObject throttle(3, 10);
 
-    if (!throttle.IncrementAndCheck()) {
-        lua_pushboolean(L, 0);
+    if (throttle.IncrementAndCheck()) {
+        UserClientSetEveryoneIsAssistant msg;
+        msg.m_everyoneIsAssistant = lua_toboolean(L, 1) != 0;
+        ClientServices::Send(&msg);
+        lua_pushboolean(L, 1);
         return 1;
     }
 
-    UserClientSetEveryoneIsAssistant msg;
-    msg.m_everyoneIsAssistant = lua_toboolean(L, 1) != 0;
-    ClientServices::Send(&msg);
-    lua_pushboolean(L, 1);
+    lua_pushboolean(L, 0);
     return 1;
 }
 
@@ -714,7 +714,7 @@ static int32_t Script_SwapRaidSubgroup(lua_State* L) {
 
     uint32_t index1 = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     uint32_t index2 = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
-    CGRaidMember* member1 = index1 < CGRaidInfo::m_numMembers ? CGRaidInfo::m_members[index1] : NULL;
+    CGRaidMember* member1 = index1 >= CGRaidInfo::m_numMembers ? NULL : CGRaidInfo::m_members[index1];
     CGRaidMember* member2 = index2 < CGRaidInfo::m_numMembers ? CGRaidInfo::m_members[index2] : NULL;
 
     if (!member1 || !member2 || member1->m_subgroup == member2->m_subgroup) {

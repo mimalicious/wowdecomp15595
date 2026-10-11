@@ -1,11 +1,11 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDCollection.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 
-// OFFSET: 0x00B40820
+// OFFSET: 0x00B40820/0x14090E700
 CLCDCollection::CLCDCollection() {
 }
 
-// OFFSET: [#0x0095B950, #0x0095BC40]
+// OFFSET: [0x00B40950, 0x00B409F0]
 CLCDCollection::~CLCDCollection() {
     for (CLCDBASE_NODE* node = this->m_Objects.Head(); node; node = this->m_Objects.Next(node)) {
         delete node->m_pObject;
@@ -15,14 +15,14 @@ CLCDCollection::~CLCDCollection() {
     this->m_Objects.Clear();
 }
 
-// OFFSET: 0x00B40850
+// OFFSET: 0x00B40850/0x14090E740
 bool CLCDCollection::AddObject(CLCDBase* object) {
     CLCDBASE_NODE* node = this->m_Objects.NewNode(2, 0, 0);
     node->m_pObject = object;
     return true;
 }
 
-// OFFSET: 0x00B405D0
+// OFFSET: 0x00B405D0/0x14090E3F0
 void CLCDCollection::OnDraw(CLCDGfxBase& gfx) {
     if (!this->IsVisible()) {
         return;
@@ -50,7 +50,7 @@ void CLCDCollection::OnDraw(CLCDGfxBase& gfx) {
     }
 }
 
-// OFFSET: 0x00B40770
+// OFFSET: 0x00B40770/0x14090E610
 void CLCDCollection::OnUpdate(uint32_t timestamp) {
     for (CLCDBASE_NODE* node = this->m_Objects.Head(); node; node = this->m_Objects.Next(node)) {
         node->m_pObject->OnUpdate(timestamp);
@@ -59,7 +59,7 @@ void CLCDCollection::OnUpdate(uint32_t timestamp) {
     CLCDBase::OnUpdate(timestamp);
 }
 
-// OFFSET: 0x00B407C0
+// OFFSET: 0x00B407C0/0x14090E670
 void CLCDCollection::ShowSubscreen(int32_t subscreen) {
     for (CLCDBASE_NODE* node = this->m_Objects.Head(); node; node = this->m_Objects.Next(node)) {
         CLCDBase* object = node->m_pObject;

@@ -59,7 +59,7 @@ void CGMerchantInfo::UpdateItemQuantity(WOWGUID merchant, int32_t slot, int32_t 
         return;
     }
 
-    for (uint32_t i = 0; i < 150; i++) {
+    for (int32_t i = 0; i < 150; i++) {
         if (CGMerchantInfo::m_items[i].m_slot == slot) {
             CGMerchantInfo::m_items[i].m_maxCount = quantity;
             break;
@@ -75,7 +75,7 @@ VendorItem* CGMerchantInfo::FindItem(int32_t type, int32_t itemId) {
         return NULL;
     }
 
-    for (uint32_t i = 0; i < 150; i++) {
+    for (int32_t i = 0; i < 150; i++) {
         if (CGMerchantInfo::m_items[i].m_type == type && CGMerchantInfo::m_items[i].m_itemID == itemId) {
             return &CGMerchantInfo::m_items[i];
         }
@@ -98,7 +98,7 @@ static int32_t QSortBuybackTimestamps(const void* a, const void* b) {
 
 // OFFSET: 0x00967EC0
 static void MerchantItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (CGMerchantInfo::m_pendingItemStats && --CGMerchantInfo::m_pendingItemStats) {
+    if (CGMerchantInfo::m_pendingItemStats > 0 && --CGMerchantInfo::m_pendingItemStats) {
         return;
     }
 
@@ -137,7 +137,7 @@ void CGMerchantInfo::CloseMerchant() {
 // OFFSET: 0x009680B0/0x1406DE610
 int32_t CGMerchantInfo::GetRepairCost(CGItem_C* item) {
     float multiplier = 1.0f;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGUnit_C* merchant = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGMerchantInfo::m_merchant, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (player && merchant) {
@@ -151,7 +151,7 @@ int32_t CGMerchantInfo::GetRepairCost(CGItem_C* item) {
 void CGMerchantInfo::SortBuybackItems() {
     memset(CGMerchantInfo::m_buybackSlots, 0, sizeof(CGMerchantInfo::m_buybackSlots));
     CGMerchantInfo::m_numBuybackItems = 0;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
@@ -176,14 +176,20 @@ void CGMerchantInfo::SortBuybackItems() {
 
 // OFFSET: 0x00968340/0x1406DE7F0
 bool CGMerchantInfo::IsBuybackItem(WOWGUID item) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return false;
     }
 
     for (uint32_t i = 0; i < 12; i++) {
-        WOWGUID guid = i + 74 < static_cast<uint32_t>(player->m_bag.m_numSlots) ? player->m_bag.m_slots[i + 74] : WOWGUID::Make(0);
+        WOWGUID guid;
+
+        if (i + 74 >= static_cast<uint32_t>(player->m_bag.m_numSlots)) {
+            guid = WOWGUID::Make(0);
+        } else {
+            guid = player->m_bag.m_slots[i + 74];
+        }
 
         if (guid == item) {
             return true;
@@ -276,7 +282,7 @@ static bool OnVendorInventory(ClientVendorInventory* msg) {
     }
 
     if (CGMerchantInfo::m_numMerchantItems > 0 || reason == 1) {
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (player) {
             player->RequestAllItemPurchaseData();

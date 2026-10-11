@@ -78,7 +78,11 @@ static bool ParseTrailingTokens(const char* token, WOWGUID& guid, CGPlayer_C* pl
                 guid = CGGameUI::m_lockedTarget;
             } else {
                 CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-                guid = unit ? unit->m_unit->m_unitFieldTarget : WOWGUID();
+                if (unit) {
+                    guid = unit->m_unit->m_unitFieldTarget;
+                } else {
+                    guid = WOWGUID();
+                }
             }
         } else if (!SStrCmpI(token, "pet", 3) && (guid == ClntObjMgrGetActivePlayer() || CGGameUI::IsPartyMember(guid) || (player && (player->m_player->m_playerFlags & 0x80000)))) {
             token += 3;
@@ -124,7 +128,11 @@ bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTar
         token += 3;
 
         if (player) {
-            guid = player->m_unit->m_unitFieldCharm != WOWGUID() ? player->m_unit->m_unitFieldCharm : player->m_unit->m_unitFieldSummon;
+            if (player->m_unit->m_unitFieldCharm != WOWGUID()) {
+                guid = player->m_unit->m_unitFieldCharm;
+            } else {
+                guid = player->m_unit->m_unitFieldSummon;
+            }
         } else {
             guid = WOWGUID();
         }
@@ -180,16 +188,14 @@ bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTar
         if (guid == WOWGUID()) {
             guid.m_guid = 0xFFFFFFFFFFFFFFFEULL;
         }
+    } else {
+        if (guid != WOWGUID() || !Script_GetGUIDFromString(&name, guid, withRealm) || !ParseTrailingTokens(name, guid, player)) {
+            return false;
+        }
 
-        return true;
-    }
-
-    if (guid != WOWGUID() || !Script_GetGUIDFromString(&name, guid, withRealm) || !ParseTrailingTokens(name, guid, player)) {
-        return false;
-    }
-
-    if (guid == WOWGUID()) {
-        guid.m_guid = 0xFFFFFFFFFFFFFFFEULL;
+        if (guid == WOWGUID()) {
+            guid.m_guid = 0xFFFFFFFFFFFFFFFEULL;
+        }
     }
 
     return true;
@@ -206,14 +212,14 @@ WOWGUID Script_GetGUIDFromName(const char* name) {
 CGUnit_C* Script_GetUnitFromName(const char* token) {
     WOWGUID guid;
 
-    if (!Script_GetGUIDFromToken(token, guid, false, false)) {
-        return NULL;
+    if (Script_GetGUIDFromToken(token, guid, false, false)) {
+        return static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
     }
 
-    return static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+    return NULL;
 }
 
-// OFFSET: #0x006143F0
+// OFFSET: 0x00459610/0x1400695F0
 void Script_SendUniqueSignal(const WOWGUID& guid, int32_t signal) {
     for (uint32_t i = 0; i < s_uniqueSignals.Count(); i++) {
         UniqueSignal& entry = s_uniqueSignals[i];
@@ -228,7 +234,7 @@ void Script_SendUniqueSignal(const WOWGUID& guid, int32_t signal) {
     entry->m_signal = signal;
 }
 
-// OFFSET: #0x006144D0
+// OFFSET: 0x004596F0
 void Script_SendUniqueSignalToAllUnits(int32_t signal) {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -439,7 +445,8 @@ bool GetUnitByKeyword(const char* token, CGUnit_C** unit, bool defaultToTarget) 
 
 // OFFSET: 0x0044E490/0x14005C6A0
 bool Script_GetNameFromToken(const char* token, const char** name, bool defaultToTarget, bool withRealm) {
-    WOWGUID guid = WOWGUID();
+    WOWGUID guid;
+    guid.m_guid = 0;
 
     if (!Script_GetGUIDFromToken(token, guid, defaultToTarget, false)) {
         return false;
@@ -452,26 +459,27 @@ bool Script_GetNameFromToken(const char* token, const char** name, bool defaultT
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (unit) {
-        if (!withRealm) {
-            *name = unit->GetUnitName(NULL, 1);
+        if (withRealm) {
+            const char* realm = NULL;
+            const char* unitName = unit->GetUnitName(&realm, 1);
+
+            if (!unitName || !realm) {
+                *name = unitName;
+                return true;
+            }
+
+            SStrPrintf(s_nameWithRealm, sizeof(s_nameWithRealm), "%s-%s", unitName, realm);
+            *name = s_nameWithRealm;
             return true;
         }
 
-        const char* realm = NULL;
-        const char* unitName = unit->GetUnitName(&realm, 1);
-
-        if (!unitName || !realm) {
-            *name = unitName;
-            return true;
-        }
-
-        SStrPrintf(s_nameWithRealm, sizeof(s_nameWithRealm), "%s-%s", unitName, realm);
-        *name = s_nameWithRealm;
+        *name = unit->GetUnitName(NULL, 1);
         return true;
     }
 
     if (!(guid.m_guid & 0xF000000000000000ULL) && (guid.m_guid & 0xF07FFFFFFFFFFFFFULL)) {
-        WOWGUID requester = WOWGUID();
+        WOWGUID requester;
+        requester.m_guid = 0;
         NameCache* record = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false);
 
         if (!record) {
@@ -525,7 +533,11 @@ bool Script_GetGUIDFromString(const char** name, WOWGUID& guid, bool forceRealm)
     const char* unitName = NULL;
 
     if (Script_GetNameFromToken("player", &unitName, false, withRealm) && unitName && !SStrCmpUTF8I(buffer, unitName, STORM_MAX_STR)) {
-        guid = player ? player->m_obj->m_guid : WOWGUID();
+        if (player) {
+            guid = player->m_obj->m_guid;
+        } else {
+            guid = WOWGUID();
+        }
     } else if (CGRaidInfo::m_numMembers) {
         for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
             SStrPrintf(token, sizeof(token), "raid%d", i + 1);
@@ -603,7 +615,7 @@ const char* Script_GetTokenFromGUID(const WOWGUID* guid) {
         return NULL;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return NULL;
@@ -689,7 +701,7 @@ const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
         return NULL;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return NULL;
@@ -1030,12 +1042,12 @@ int32_t PushUnitAura(lua_State* L, ScriptAuraInfo* info) {
     lua_pushnumber(L, aura->m_stackCount);
     lua_pushstring(L, dispelName);
 
-    if (aura->m_duration <= 0) {
-        lua_pushnumber(L, 0.0);
-        lua_pushnumber(L, 0.0);
-    } else {
+    if (!(aura->m_duration <= 0)) {
         lua_pushnumber(L, aura->m_duration * 0.001);
         lua_pushnumber(L, static_cast<uint32_t>(aura->m_endTime) * 0.001);
+    } else {
+        lua_pushnumber(L, 0.0);
+        lua_pushnumber(L, 0.0);
     }
 
     lua_pushstring(L, Script_GetAuraTokenFromGUID(&aura->m_creator));
@@ -1080,7 +1092,9 @@ int32_t PushUnitAura(lua_State* L, ScriptAuraInfo* info) {
 char** Script_GetTokenIDsFromGUID(const WOWGUID& guid, int32_t* count) {
     *count = 0;
 
-    if (guid == WOWGUID()) {
+    WOWGUID none;
+    none.m_guid = 0;
+    if (guid == none) {
         return NULL;
     }
 
@@ -1291,7 +1305,7 @@ int32_t Script_GetUnitAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* info
     return Script_GetAuraInfo(L, index + 1, info);
 }
 
-// OFFSET: #0x006147B0
+// OFFSET: 0x00459940
 void ClearUniqueSignals() {
     s_uniqueSignals.m_count = 0;
 }

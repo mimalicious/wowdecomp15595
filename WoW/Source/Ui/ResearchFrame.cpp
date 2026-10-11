@@ -80,10 +80,10 @@ static int32_t FindFirstQuestPOIPoint(int32_t blobID) {
     do {
         int32_t mid = (high + low) / 2;
 
-        if (g_questPOIPointDB.GetRecordByIndex(0)[mid].m_questPOIBlobID >= blobID) {
-            high = mid;
-        } else {
+        if (!(g_questPOIPointDB.GetRecordByIndex(0)[mid].m_questPOIBlobID >= blobID)) {
             low = mid + 1;
+        } else {
+            high = mid;
         }
     } while (low < high);
 
@@ -145,7 +145,7 @@ const ResearchProjectRec* CGResearchFrame::GetActiveProject(int32_t branchID) {
         return NULL;
     }
 
-    for (uint32_t i = 0; i < 16; i++) {
+    for (int32_t i = 0; i < 16; i++) {
         const ResearchProjectRec* project = g_researchProjectDB.GetRecord(player->m_player->m_playerFieldResearching1[16 * CGResearchFrame::m_fieldRec->m_slot + i]);
 
         if (project && project->m_researchBranchID == branchID) {
@@ -449,7 +449,8 @@ int32_t CGResearchFrame::OnResearchSiteChanged(WOWGUID guid, uint32_t fieldOffse
 
 // OFFSET: 0x009F64A0
 bool CGResearchFrame::CanItemBeApplied(int32_t itemID) {
-    WOWGUID none = WOWGUID();
+    WOWGUID none;
+    none.m_guid = 0;
     const ResearchBranchRec* branch;
 
     return g_itemSparseDB.GetRecord(itemID, none, NULL, NULL, false) && CGResearchFrame::m_projectRec && (branch = g_researchBranchDB.GetRecord(CGResearchFrame::m_projectRec->m_researchBranchID)) != NULL && branch->m_itemID == itemID;
@@ -484,7 +485,8 @@ void CGResearchFrame::GetProgress(int32_t& currency, int32_t& items, int32_t& re
     }
 
     int32_t itemID = branch->m_itemID;
-    WOWGUID none = WOWGUID();
+    WOWGUID none;
+    none.m_guid = 0;
     const ItemRecSparse* sparse = g_itemSparseDB.GetRecord(itemID, none, NULL, NULL, false);
 
     if (sparse) {
@@ -725,7 +727,7 @@ bool CGResearchFrame::OnResearchComplete(ClientResearchComplete* msg) {
     PROJECT* node = CGResearchFrame::FindProject(project->m_id);
     node->m_firstCompleted = history.m_firstCompleted;
     node->m_completionCount = history.m_completionCount;
-    FrameScript_SignalEvent(SCRIPT_EVENT_ARTIFACT_COMPLETE, "%s", project->m_name);
+    FrameScript_SignalEvent(SCRIPT_EVENT_ARTIFACT_COMPLETE, "%s", static_cast<const char*>(project->m_name));
 
     return true;
 }

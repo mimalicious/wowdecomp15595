@@ -38,13 +38,13 @@ static int32_t Script_IsPetAttackActive(lua_State* L) {
 static int32_t Script_GetPetTimeRemaining(lua_State* L) {
     uint32_t expiration = CGPetInfo::m_expirationTime;
 
-    if (!expiration) {
-        lua_pushnil(L);
+    if (expiration) {
+        int32_t remaining = expiration != FrameTime::GetCurTimeMs() ? expiration - FrameTime::GetCurTimeMs() : 0;
+        lua_pushnumber(L, remaining);
         return 1;
     }
 
-    int32_t remaining = expiration == FrameTime::GetCurTimeMs() ? 0 : expiration - FrameTime::GetCurTimeMs();
-    lua_pushnumber(L, remaining);
+    lua_pushnil(L);
     return 1;
 }
 
@@ -190,7 +190,7 @@ static int32_t Script_GetPetTalentTree(lua_State* L) {
 
 // OFFSET: 0x00952370/0x1406C2B60
 static int32_t Script_PetHasActionBar(lua_State* L) {
-    if (s_pets.m_count && s_pets.m_data[0] && !(CGActionBar::m_tempPageActiveFlags & 1) && CGPetInfo::IsPetBarUsed()) {
+    if (s_pets.m_count > 0 && s_pets.m_data[0] && !(CGActionBar::m_tempPageActiveFlags & 1) && CGPetInfo::IsPetBarUsed()) {
         lua_pushnumber(L, 1.0);
         return 1;
     }
@@ -498,25 +498,30 @@ static int32_t Script_PetRename(lua_State* L) {
         return 0;
     }
 
-    if (!NameNeedsDeclensions(s_locale, name)) {
-        CGPetInfo::PetRename(name, NULL);
+    if (NameNeedsDeclensions(s_locale, name)) {
+        char declinedNames[5][96];
+
+        for (uint32_t i = 0; i < 5; i++) {
+            const char* declined = lua_tolstring(L, i + 2, NULL);
+
+            if (!declined) {
+                FrameScript_SignalEvent(SCRIPT_EVENT_PET_FORCE_NAME_DECLENSION, "%s", name);
+                return 0;
+            }
+
+            if (!*declined) {
+                FrameScript_SignalEvent(SCRIPT_EVENT_PET_FORCE_NAME_DECLENSION, "%s", name);
+                return 0;
+            }
+
+            SStrCopy(declinedNames[i], declined, 96);
+        }
+
+        CGPetInfo::PetRename(name, declinedNames[0]);
         return 0;
     }
 
-    char declinedNames[5][96];
-
-    for (uint32_t i = 0; i < 5; i++) {
-        const char* declined = lua_tolstring(L, i + 2, NULL);
-
-        if (!declined || !*declined) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_PET_FORCE_NAME_DECLENSION, "%s", name);
-            return 0;
-        }
-
-        SStrCopy(declinedNames[i], declined, 96);
-    }
-
-    CGPetInfo::PetRename(name, declinedNames[0]);
+    CGPetInfo::PetRename(name, NULL);
     return 0;
 }
 
@@ -584,14 +589,14 @@ static int32_t Script_GetPossessInfo(lua_State* L) {
 
 // OFFSET: 0x00952EB0/0x1406C3850
 static int32_t Script_IsPetAttackAction(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: IsPetAttackAction(index)");
-        return 0;
+    if (lua_isnumber(L, 1)) {
+        int32_t index = lua_tointeger(L, 1);
+        lua_pushboolean(L, CGPetInfo::IsAttackAction(index - 1));
+        return 1;
     }
 
-    int32_t index = lua_tointeger(L, 1);
-    lua_pushboolean(L, CGPetInfo::IsAttackAction(index - 1));
-    return 1;
+    luaL_error(L, "Usage: IsPetAttackAction(index)");
+    return 0;
 }
 
 // OFFSET: 0x00953C70/0x1406C4920

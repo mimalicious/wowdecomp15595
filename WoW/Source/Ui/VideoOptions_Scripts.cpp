@@ -77,7 +77,7 @@ static int32_t Script_GetMonitorName(lua_State* L) {
     }
 
     char name[128];
-    int32_t monitor = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t monitor = static_cast<uint32_t>(lua_tonumber(L, 1));
 
     if (static_cast<uint32_t>(monitor - 1) > GxAdapterMonitorCount() || !GxAdapterMonitorName(monitor - 1, name, sizeof(name))) {
         return 0;
@@ -187,7 +187,7 @@ static int32_t Script_GetToolTipInfo(lua_State* L) {
                 return 0;
             }
 
-            int32_t value = static_cast<int32_t>(lua_tonumber(L, index++));
+            int32_t value = static_cast<uint32_t>(lua_tonumber(L, index++));
             flags |= ValidateVideoOption(names[i], value);
         }
 
@@ -256,7 +256,7 @@ static int32_t Script_GetVideoOptions(lua_State* L) {
 static int32_t Script_GetGraphicsAPIs(lua_State* L) {
     int32_t count = 0;
 
-    for (uint32_t api = 0; api < 4; api++) {
+    for (int32_t api = 0; api < 4; api++) {
         if (GxApiSelectable(static_cast<EGxApi>(api))) {
             lua_pushstring(L, s_apiNames[api]);
             count++;
@@ -273,7 +273,7 @@ static int32_t Script_SetSelectedScreenResolutionIndex(lua_State* L) {
         return 0;
     }
 
-    s_selectedResolutionIndex = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    s_selectedResolutionIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     return 0;
 }
 
@@ -293,8 +293,8 @@ static int32_t Script_SetScreenResolution(lua_State* L) {
     CVar* gxResolution = CVar::Lookup("gxResolution");
 
     if (gxResolution && gxResolution->m_stringValue.m_str) {
-        int32_t currentWidth = 0;
         int32_t currentHeight = 0;
+        int32_t currentWidth = 0;
         char separator;
         sscanf(gxResolution->m_stringValue.m_str, "%d%c%d", &currentWidth, &separator, &currentHeight);
 
@@ -310,33 +310,33 @@ static int32_t Script_SetScreenResolution(lua_State* L) {
 
 // OFFSET: 0x009F89D0/0x140795990
 static int32_t Script_SetupFullscreenScale(lua_State* L) {
-    if (lua_type(L, 1) != LUA_TTABLE) {
-        luaL_error(L, "Usage: SetupFullscreenScale(frame)");
+    if (lua_type(L, 1) == LUA_TTABLE) {
+        lua_rawgeti(L, 1, 0);
+        CSimpleFrame* frame = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
+        lua_settop(L, -2);
+
+        if (!frame) {
+            luaL_error(L, "SetupFullscreenScale(): Couldn't find 'this' in frame object");
+            return 0;
+        }
+
+        if (!frame->IsA(CSimpleFrame::GetObjectType())) {
+            luaL_error(L, "SetupFullscreenScale(): Wrong object type, expected frame");
+            return 0;
+        }
+
+        float compensation = CoordinateGetAspectCompensation();
+
+        if (compensation < 1.0f) {
+            frame->SetFrameScale(compensation, false);
+        } else {
+            frame->SetFrameScale(1.0f, false);
+        }
+
         return 0;
     }
 
-    lua_rawgeti(L, 1, 0);
-    CSimpleFrame* frame = static_cast<CSimpleFrame*>(lua_touserdata(L, -1));
-    lua_settop(L, -2);
-
-    if (!frame) {
-        luaL_error(L, "SetupFullscreenScale(): Couldn't find 'this' in frame object");
-        return 0;
-    }
-
-    if (!frame->IsA(CSimpleFrame::GetObjectType())) {
-        luaL_error(L, "SetupFullscreenScale(): Wrong object type, expected frame");
-        return 0;
-    }
-
-    float compensation = CoordinateGetAspectCompensation();
-
-    if (compensation >= 1.0f) {
-        frame->SetFrameScale(1.0f, false);
-    } else {
-        frame->SetFrameScale(compensation, false);
-    }
-
+    luaL_error(L, "Usage: SetupFullscreenScale(frame)");
     return 0;
 }
 
@@ -357,10 +357,10 @@ static int32_t Script_GetMaxMultisampleFormatOnCvar(lua_State* L) {
     uint32_t count = s_multisampleFormats.Count();
     bool needsDepthCache;
 
-    if (!_stricmp(name, "waterDetail")) {
-        needsDepthCache = Liquid::WaterDetailNeedsDepthCache(value) != 0;
-    } else {
+    if (_stricmp(name, "waterDetail")) {
         needsDepthCache = !_stricmp(name, "sunShafts") && SunShafts::ModeNeedsDepthCache(value);
+    } else {
+        needsDepthCache = Liquid::WaterDetailNeedsDepthCache(value) != 0;
     }
 
     if (needsDepthCache && !g_theGxDevicePtr->Caps().unk_0314) {
@@ -447,12 +447,12 @@ static int32_t Script_GetMonitorAspectRatio(lua_State* L) {
     mode.m_size.x = 0;
     mode.m_size.y = 0;
 
-    if (!GxAdapterDesktopMode(monitor, mode)) {
-        return 0;
+    if (GxAdapterDesktopMode(monitor, mode)) {
+        lua_pushnumber(L, static_cast<double>(mode.m_size.x) / static_cast<double>(mode.m_size.y));
+        return 1;
     }
 
-    lua_pushnumber(L, static_cast<double>(mode.m_size.x) / static_cast<double>(mode.m_size.y));
-    return 1;
+    return 0;
 }
 
 // OFFSET: 0x009F9100/0x1407960F0
@@ -634,15 +634,15 @@ static int32_t Script_SetMultisampleFormat(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t count = s_multisampleFormats.Count();
 
-        if (static_cast<int32_t>(count) >= static_cast<int32_t>(lua_tonumber(L, 1)) - 1) {
-            index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        if (static_cast<int32_t>(count) >= static_cast<uint32_t>(lua_tonumber(L, 1)) - 1) {
+            index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
         } else {
             index = count;
         }
     }
 
     if (lua_isnumber(L, 2)) {
-        monitor = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
+        monitor = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
     }
 
     SetupFormats(monitor);
@@ -732,15 +732,15 @@ static int32_t Script_GetRefreshRates(lua_State* L) {
     uint32_t monitor = 0;
 
     if (lua_isnumber(L, 1)) {
-        width = static_cast<int32_t>(lua_tonumber(L, 1));
+        width = static_cast<uint32_t>(lua_tonumber(L, 1));
     }
 
     if (lua_isnumber(L, 2)) {
-        height = static_cast<int32_t>(lua_tonumber(L, 2));
+        height = static_cast<uint32_t>(lua_tonumber(L, 2));
     }
 
     if (lua_isnumber(L, 3)) {
-        monitor = static_cast<int32_t>(lua_tonumber(L, 3)) - 1;
+        monitor = static_cast<uint32_t>(lua_tonumber(L, 3)) - 1;
     }
 
     SetupRefreshRates(monitor, width, height);
@@ -804,23 +804,23 @@ static int32_t Script_SetRefresh(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t count = s_multisampleFormats.Count();
 
-        if (static_cast<int32_t>(count) >= static_cast<int32_t>(lua_tonumber(L, 1)) - 1) {
-            index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        if (static_cast<int32_t>(count) >= static_cast<uint32_t>(lua_tonumber(L, 1)) - 1) {
+            index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
         } else {
             index = count;
         }
     }
 
     if (lua_isnumber(L, 2)) {
-        width = static_cast<int32_t>(lua_tonumber(L, 2));
+        width = static_cast<uint32_t>(lua_tonumber(L, 2));
     }
 
     if (lua_isnumber(L, 3)) {
-        height = static_cast<int32_t>(lua_tonumber(L, 3));
+        height = static_cast<uint32_t>(lua_tonumber(L, 3));
     }
 
     if (lua_isnumber(L, 4)) {
-        monitor = static_cast<int32_t>(lua_tonumber(L, 4)) - 1;
+        monitor = static_cast<uint32_t>(lua_tonumber(L, 4)) - 1;
     }
 
     SetupRefreshRates(monitor, width, height);

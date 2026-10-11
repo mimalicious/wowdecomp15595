@@ -30,11 +30,11 @@ uint8_t CGStableInfo::m_slotChangePending;
 
 // OFFSET: 0x00464740
 StablePetInfo* CGStableInfo::GetPetInfo(uint32_t index) {
-    if (index >= 25) {
-        return NULL;
+    if (!(index >= 25)) {
+        return &CGStableInfo::m_pets[index];
     }
 
-    return &CGStableInfo::m_pets[index];
+    return NULL;
 }
 
 // OFFSET: 0x0096C880/0x1406E3630
@@ -191,7 +191,7 @@ bool CGStableInfo::OnPetSlotUpdated(ClientPetSlotUpdated* msg) {
     CGStableInfo::m_slotChangePending = 0;
     StablePetInfo* found = NULL;
 
-    for (uint32_t i = 0; i < 25; i++) {
+    for (int32_t i = 0; i < 25; i++) {
         if (CGStableInfo::m_pets[i].m_petNumber == msg->m_petNumber) {
             found = &CGStableInfo::m_pets[i];
             break;

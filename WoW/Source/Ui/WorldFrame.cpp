@@ -262,18 +262,22 @@ void CGWorldFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
 
 // OFFSET: 0x008DECD0
 int32_t CGWorldFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
-    if (this->CSimpleFrame::OnLayerMouseWheel(evt) || !evt.m_data.m_wheelAmount) {
+    if (this->CSimpleFrame::OnLayerMouseWheel(evt)) {
+        return 1;
+    }
+
+    if (!evt.m_data.m_wheelAmount) {
         return 1;
     }
 
     char binding[32];
 
-    if (!CGUIBindings::MouseEventToString(evt, binding, sizeof(binding))) {
-        return 0;
+    if (CGUIBindings::MouseEventToString(evt, binding, sizeof(binding))) {
+        int32_t down = CGUIBindings::s_bindings->ExecKey(evt.m_data.m_metaKeyState, binding, 1, 1, static_cast<BINDING_MODE>(4));
+        return CGUIBindings::s_bindings->ExecKey(evt.m_data.m_metaKeyState, binding, 0, 1, static_cast<BINDING_MODE>(4)) + down;
     }
 
-    int32_t down = CGUIBindings::s_bindings->ExecKey(evt.m_data.m_metaKeyState, binding, 1, 1, static_cast<BINDING_MODE>(4));
-    return CGUIBindings::s_bindings->ExecKey(evt.m_data.m_metaKeyState, binding, 0, 1, static_cast<BINDING_MODE>(4)) + down;
+    return 0;
 }
 
 // PROVEN: 95e3b746 IDENTICAL/NONE
@@ -452,10 +456,10 @@ static void AddModelToHitTest(CM2Model* model, uint32_t group, void* owner, uint
 void CGWorldFrame::AddObjectToHitTestList(CModelRecord* record, uint32_t flags) {
     uint32_t group;
 
-    if (record->m_guid == this->m_hitGuid) {
-        group = -1;
-    } else {
+    if (record->m_guid != this->m_hitGuid) {
         group = GetObjectHitTestType(record->m_object);
+    } else {
+        group = -1;
     }
 
     record->m_object = NULL;
@@ -578,7 +582,7 @@ void CGWorldFrame::OnLayerTrackTerrain(const HITTESTRESULT& result) {
         switch (Spell_C_HandleTerrainRay(evt, true)) {
             case 0:
                 s_spellShadowStyle = 0;
-                s_spellShadowSize = Spell_C_GetSpellRadius() >= 20.0f ? 20.0f : Spell_C_GetSpellRadius();
+                s_spellShadowSize = Spell_C_GetSpellRadius() < 20.0f ? Spell_C_GetSpellRadius() : 20.0f;
                 CursorSetMode(2);
                 break;
 
@@ -598,33 +602,33 @@ void CGWorldFrame::OnLayerTrackTerrain(const HITTESTRESULT& result) {
         SpellWorldObject* cursor = Spell_C_GetCursorWorldObject();
         uintptr_t entity = cursor->m_entity;
 
-        if (!entity) {
+        if (entity) {
+            CM2Model* model = cursor->m_model;
+            CAaBox box;
+            box.b = C3Vector(0.0f, 0.0f, 0.0f);
+            box.t = C3Vector(0.0f, 0.0f, 0.0f);
+            CAaSphere sphere;
+            sphere.c = C3Vector(0.0f, 0.0f, 0.0f);
+            sphere.r = 0.0f;
+            C3Vector center(0.0f, 0.0f, 0.0f);
+
+            if (model->IsLoaded()) {
+                box = model->GetBoundingBox();
+                sphere = model->GetBoundingSphere();
+                center = sphere.c;
+            }
+
+            C44Matrix matrix;
+            const C3Vector& position = cursor->m_position;
+            matrix.d0 = position.x;
+            matrix.d1 = position.y;
+            matrix.d2 = position.z;
+            matrix.RotateAroundZ(cursor->m_facing);
+            World::ObjectUpdate(entity, matrix, box, sphere, center, 0, 0xFFFFFFFF);
+            World::ObjectSetHidden(entity, s_spellShadowStyle != 0);
             return;
         }
 
-        CM2Model* model = cursor->m_model;
-        CAaBox box;
-        box.b = C3Vector(0.0f, 0.0f, 0.0f);
-        box.t = C3Vector(0.0f, 0.0f, 0.0f);
-        CAaSphere sphere;
-        sphere.c = C3Vector(0.0f, 0.0f, 0.0f);
-        sphere.r = 0.0f;
-        C3Vector center(0.0f, 0.0f, 0.0f);
-
-        if (model->IsLoaded()) {
-            box = model->GetBoundingBox();
-            sphere = model->GetBoundingSphere();
-            center = sphere.c;
-        }
-
-        C44Matrix matrix;
-        const C3Vector& position = cursor->m_position;
-        matrix.d0 = position.x;
-        matrix.d1 = position.y;
-        matrix.d2 = position.z;
-        matrix.RotateAroundZ(cursor->m_facing);
-        World::ObjectUpdate(entity, matrix, box, sphere, center, 0, 0xFFFFFFFF);
-        World::ObjectSetHidden(entity, s_spellShadowStyle != 0);
         return;
     }
 
@@ -759,10 +763,10 @@ void CGWorldFrame::OnFrameSizeChanged(const CRect& rect) {
     this->CSimpleFrame::OnFrameSizeChanged(rect);
 
     this->m_viewportDDC = this->m_rect;
-    this->m_viewportDDC.minX = this->m_viewportDDC.minX <= 0.0f ? 0.0f : this->m_viewportDDC.minX;
-    this->m_viewportDDC.minY = this->m_viewportDDC.minY <= 0.0f ? 0.0f : this->m_viewportDDC.minY;
+    this->m_viewportDDC.minX = this->m_viewportDDC.minX > 0.0f ? this->m_viewportDDC.minX : 0.0f;
+    this->m_viewportDDC.minY = this->m_viewportDDC.minY > 0.0f ? this->m_viewportDDC.minY : 0.0f;
     float maxX = this->m_viewportDDC.maxX;
-    this->m_viewportDDC.maxX = maxX >= NDCToDDCWidth(1.0f) ? NDCToDDCWidth(1.0f) : maxX;
+    this->m_viewportDDC.maxX = maxX < NDCToDDCWidth(1.0f) ? maxX : NDCToDDCWidth(1.0f);
     float maxY = this->m_viewportDDC.maxY;
     this->m_viewportDDC.maxY = maxY >= NDCToDDCHeight(1.0f) ? NDCToDDCHeight(1.0f) : maxY;
 
@@ -786,23 +790,23 @@ int32_t CGWorldFrame::OnLayerKeyDown(const CKeyEvent& evt) {
 
     KEY key = evt.m_data.m_key;
 
-    if (key >= KEY_LAST) {
-        return 0;
+    if (key < KEY_LAST) {
+        if (key <= KEY_RALT) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_MODIFIER_STATE_CHANGED, "%s%d", KeyCodeToString(key), 1);
+            return 1;
+        }
+
+        KEYDOWNSTATE& state = this->m_keyDown[key];
+
+        if (!CGUIBindings::KeyEventToString(evt, state.m_keyString, sizeof(state.m_keyString))) {
+            return 0;
+        }
+
+        state.m_modifiers = evt.m_data.m_metaKeyState;
+        return CGUIBindings::s_bindings->ExecKey(state.m_modifiers, state.m_keyString, 1, 1, static_cast<BINDING_MODE>(4));
     }
 
-    if (key <= KEY_RALT) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_MODIFIER_STATE_CHANGED, "%s%d", KeyCodeToString(key), 1);
-        return 1;
-    }
-
-    KEYDOWNSTATE& state = this->m_keyDown[key];
-
-    if (!CGUIBindings::KeyEventToString(evt, state.m_keyString, sizeof(state.m_keyString))) {
-        return 0;
-    }
-
-    state.m_modifiers = evt.m_data.m_metaKeyState;
-    return CGUIBindings::s_bindings->ExecKey(state.m_modifiers, state.m_keyString, 1, 1, static_cast<BINDING_MODE>(4));
+    return 0;
 }
 
 // OFFSET: 0x008E01B0
@@ -841,23 +845,31 @@ int32_t CGWorldFrame::OnLayerKeyUp(const CKeyEvent& evt) {
 
 // OFFSET: 0x008E0250
 int32_t CGWorldFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) {
-    if (this->CSimpleFrame::OnLayerMouseDown(evt, btn) || CGGameUI::HandleMouseDown(evt)) {
+    if (this->CSimpleFrame::OnLayerMouseDown(evt, btn)) {
+        return 1;
+    }
+
+    if (CGGameUI::HandleMouseDown(evt)) {
         return 1;
     }
 
     KEYDOWNSTATE& state = this->m_mouseDown[MouseButtonToIndex(evt.m_data.m_button)];
 
-    if (!CGUIBindings::MouseEventToString(evt, state.m_keyString, sizeof(state.m_keyString))) {
-        return 0;
+    if (CGUIBindings::MouseEventToString(evt, state.m_keyString, sizeof(state.m_keyString))) {
+        state.m_modifiers = evt.m_data.m_metaKeyState;
+        return CGUIBindings::s_bindings->ExecKey(state.m_modifiers, state.m_keyString, 1, 1, static_cast<BINDING_MODE>(4));
     }
 
-    state.m_modifiers = evt.m_data.m_metaKeyState;
-    return CGUIBindings::s_bindings->ExecKey(state.m_modifiers, state.m_keyString, 1, 1, static_cast<BINDING_MODE>(4));
+    return 0;
 }
 
 // OFFSET: 0x008E02D0
 int32_t CGWorldFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
-    if (this->CSimpleFrame::OnLayerMouseUp(evt, btn) || CGGameUI::HandleMouseUp(evt)) {
+    if (this->CSimpleFrame::OnLayerMouseUp(evt, btn)) {
+        return 1;
+    }
+
+    if (CGGameUI::HandleMouseUp(evt)) {
         return 1;
     }
 
@@ -966,7 +978,7 @@ static void SetWorldCameraTarget(uintptr_t entity, WOWGUID transport) {
     C44Matrix matrix;
 
     if (transport) {
-        MovementGetTransportMtxX(transport, &matrix, WOWGUID(), __FILE__, __LINE__);
+        MovementGetTransportMtxX(transport, &matrix, WOWGUID::Make(0), __FILE__, __LINE__);
     }
 
     World::SetCameraTarget(entity, transport.m_guid, matrix);
@@ -1069,86 +1081,78 @@ uint32_t CGWorldFrame::GetHitTestFilterFlags(int32_t a1) {
         return 0x3;
     }
 
-    if (Spell_C_IsTargeting()) {
+    if (!Spell_C_IsTargeting()) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
         uint32_t flags = 0;
+        CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-        if (Spell_C_CanTargetTerrain()) {
-            flags = 0x3;
-        }
+        if (mover && mover->CanAutoInteract() && !CGGameUI::m_cursorItemType) {
+            uint32_t moveFlags = mover->m_movement->m_flags;
+            flags = 1;
 
-        if (Spell_C_CanTargetObjects()) {
-            flags |= 0x4;
-        }
-
-        if (Spell_C_CanTargetUnits()) {
-            flags |= 0x18;
-
-            if (Spell_C_CanTargetMe()) {
-                flags |= 0x20;
-            }
-
-            if (Spell_C_CanTargetParty()) {
-                flags |= 0x10000;
-            }
-
-            if (Spell_C_CanTargetFriends()) {
-                flags |= 0x40000;
-            }
-
-            if (Spell_C_CanTargetEnemies()) {
-                flags |= 0x80000;
-            }
-
-            if (Spell_C_CanTargetRaid()) {
-                flags |= 0x20000;
-            }
-
-            if (Spell_C_CanTargetDead()) {
-                flags |= 0x200040;
-            }
-
-            if (Spell_C_CanTargetAlive()) {
-                flags |= 0x100000;
-            }
-
-            if (Spell_C_CanTargetNonCombatPet()) {
-                flags |= 0x400000;
-            }
-
-            if (Spell_C_CanTargetPossessedFriends()) {
-                flags |= 0x800000;
+            if ((moveFlags & 0x4000000) && !(moveFlags & 0x100000)) {
+                flags = 3;
             }
         }
 
-        if (Spell_C_CanTargetFriendCorpses()) {
-            flags |= 0x40040;
-        }
-
-        if (Spell_C_CanTargetEnemyCorpses()) {
-            return flags | 0x80040;
-        }
-
-        return flags;
+        return player ? flags | 0x5C : flags;
     }
 
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t flags = 0;
-    CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-    if (mover && mover->CanAutoInteract() && !CGGameUI::m_cursorItemType) {
-        uint32_t moveFlags = mover->m_movement->m_flags;
-        flags = 1;
+    if (Spell_C_CanTargetTerrain()) {
+        flags = 0x3;
+    }
 
-        if ((moveFlags & 0x4000000) && !(moveFlags & 0x100000)) {
-            flags = 3;
+    if (Spell_C_CanTargetObjects()) {
+        flags |= 0x4;
+    }
+
+    if (Spell_C_CanTargetUnits()) {
+        flags |= 0x18;
+
+        if (Spell_C_CanTargetMe()) {
+            flags |= 0x20;
+        }
+
+        if (Spell_C_CanTargetParty()) {
+            flags |= 0x10000;
+        }
+
+        if (Spell_C_CanTargetFriends()) {
+            flags |= 0x40000;
+        }
+
+        if (Spell_C_CanTargetEnemies()) {
+            flags |= 0x80000;
+        }
+
+        if (Spell_C_CanTargetRaid()) {
+            flags |= 0x20000;
+        }
+
+        if (Spell_C_CanTargetDead()) {
+            flags |= 0x200040;
+        }
+
+        if (Spell_C_CanTargetAlive()) {
+            flags |= 0x100000;
+        }
+
+        if (Spell_C_CanTargetNonCombatPet()) {
+            flags |= 0x400000;
+        }
+
+        if (Spell_C_CanTargetPossessedFriends()) {
+            flags |= 0x800000;
         }
     }
 
-    if (player) {
-        return flags | 0x5C;
+    if (Spell_C_CanTargetFriendCorpses()) {
+        flags |= 0x40040;
     }
 
-    return flags;
+    return Spell_C_CanTargetEnemyCorpses() ? flags | 0x80040 : flags;
 }
 
 // OFFSET: 0x008E0CB0/0x14060DCD0
@@ -1390,25 +1394,25 @@ void __stdcall CGWorldFrame::CursorTrackUnit(CGUnit_C* unit) {
 void __stdcall CGWorldFrame::CursorTrackObject(CGGameObject_C* object) {
     int32_t mode = object->CanChangeCursor();
 
-    if (!mode) {
-        CursorResetMode();
+    if (mode) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (player && (player->m_auraEffectMask[41] & 0x40)) {
+            CursorResetMode();
+            return;
+        }
+
+        if (mode == 53) {
+            char file[260];
+            object->GetCursorFile(file, sizeof(file));
+            CursorSetFromName(file);
+        } else {
+            CursorSetMode(mode);
+        }
         return;
     }
 
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (player && (player->m_auraEffectMask[41] & 0x40)) {
-        CursorResetMode();
-        return;
-    }
-
-    if (mode == 53) {
-        char file[260];
-        object->GetCursorFile(file, sizeof(file));
-        CursorSetFromName(file);
-    } else {
-        CursorSetMode(mode);
-    }
+    CursorResetMode();
 }
 
 // OFFSET: 0x008E1650/0x14060E770
@@ -1446,10 +1450,10 @@ void __stdcall CGWorldFrame::CursorTrackCorpse(CGCorpse_C* corpse) {
         float maxRange;
         Spell_C_GetMinMaxRange(player, CGSpellBook::GetSkinningSpell(asUnit), &minRange, &maxRange, NULL);
 
-        if (distance <= maxRange * maxRange) {
-            CursorSetMode(s_skinCursorModes[player->GetPVPFactionIndex()]);
-        } else {
+        if (distance > maxRange * maxRange) {
             CursorSetMode(s_skinCursorModesUnable[player->GetPVPFactionIndex()]);
+        } else {
+            CursorSetMode(s_skinCursorModes[player->GetPVPFactionIndex()]);
         }
 
         return;
@@ -1640,80 +1644,79 @@ static float GetTimeScale(float elapsedSec) {
 void CGWorldFrame::SetScreenEffect(int32_t effect) {
     ScreenEffectRec* rec = g_screenEffectDB.GetRecord(effect);
 
-    if (!rec) {
-        if (!CGWorldFrame::ffxEffectUnconscious || !FFX::EffectIsSet(CGWorldFrame::ffxEffectUnconscious) || static_cast<EffectUnconscious*>(CGWorldFrame::ffxEffectUnconscious)->FadedOut()) {
-            DayNight::ClearOverrideFog();
-            FFX::SetEffect(1, CGWorldFrame::ffxEffectGlow);
-            DayNight::ClearOverrideLightParamsID();
-            SetTimeOfDayOverride(-1);
-            SI3::SetScreenEffect(0, 0);
+    if (rec) {
+        uint32_t flags = 0;
+
+        switch (rec->m_effect) {
+            case 0:
+                flags = rec->m_param[3];
+                DayNight::ClearOverrideFog();
+                FFX::SetEffect(1, CGWorldFrame::ffxEffectGlow);
+                break;
+
+            case 1:
+                DayNight::ClearOverrideFog();
+                FFX::SetEffect(1, CGWorldFrame::ffxEffectDeath);
+                break;
+
+            case 2: {
+                CImVector color;
+
+                if (FFX::s_cvarFFX->m_intValue) {
+                    color.b = 0xFF;
+                    color.g = 0xFF;
+                    color.r = 0xFF;
+                    color.a = 0xFF;
+                } else {
+                    color.b = 0x63;
+                    color.g = 0x4C;
+                    color.r = 0x4C;
+                    color.a = 0xFF;
+                }
+
+                DayNight::SetOverrideFog(0.7f, 150.0f, color, 0);
+                FFX::SetEffect(1, CGWorldFrame::ffxEffectNetherWorld);
+                break;
+            }
+
+            case 3:
+                DayNight::ClearOverrideFog();
+
+                if (g_theGxDevicePtr->DeviceApi()) {
+                    PassFogSeed::DeviceRestoredCallback();
+                    CGWorldFrame::ffxEffectSwirlingFog->SetParameters(3, rec->m_param);
+                    FFX::SetEffect(1, CGWorldFrame::ffxEffectSwirlingFog);
+                } else {
+                    FFX::SetEffect(1, CGWorldFrame::ffxEffectGlow);
+                }
+
+                break;
+
+            case 4:
+                flags = rec->m_param[3];
+                DayNight::ClearOverrideFog();
+                FFX::SetEffect(1, CGWorldFrame::ffxEffectUnconscious);
+                CGWorldFrame::ffxEffectUnconscious->SetParameters(4, rec->m_param);
+                break;
+
+            default:
+                DebugLog("Unhandled screen effect %d", rec->m_effect);
+                break;
         }
 
+        DayNight::SetOverrideLightParamsID(rec->m_lightParamsID, flags & 2);
+        SetTimeOfDayOverride(rec->unk_0028);
+        SI3::SetScreenEffect(rec->m_soundAmbienceID, rec->m_zoneMusicID);
         return;
     }
 
-    uint32_t flags = 0;
-
-    switch (rec->m_effect) {
-        case 0:
-            flags = rec->m_param[3];
-            DayNight::ClearOverrideFog();
-            FFX::SetEffect(1, CGWorldFrame::ffxEffectGlow);
-            break;
-
-        case 1:
-            DayNight::ClearOverrideFog();
-            FFX::SetEffect(1, CGWorldFrame::ffxEffectDeath);
-            break;
-
-        case 2: {
-            CImVector color;
-
-            if (FFX::s_cvarFFX->m_intValue) {
-                color.b = 0xFF;
-                color.g = 0xFF;
-                color.r = 0xFF;
-                color.a = 0xFF;
-            } else {
-                color.b = 0x63;
-                color.g = 0x4C;
-                color.r = 0x4C;
-                color.a = 0xFF;
-            }
-
-            DayNight::SetOverrideFog(0.7f, 150.0f, color, 0);
-            FFX::SetEffect(1, CGWorldFrame::ffxEffectNetherWorld);
-            break;
-        }
-
-        case 3:
-            DayNight::ClearOverrideFog();
-
-            if (g_theGxDevicePtr->DeviceApi()) {
-                PassFogSeed::DeviceRestoredCallback();
-                CGWorldFrame::ffxEffectSwirlingFog->SetParameters(3, rec->m_param);
-                FFX::SetEffect(1, CGWorldFrame::ffxEffectSwirlingFog);
-            } else {
-                FFX::SetEffect(1, CGWorldFrame::ffxEffectGlow);
-            }
-
-            break;
-
-        case 4:
-            flags = rec->m_param[3];
-            DayNight::ClearOverrideFog();
-            FFX::SetEffect(1, CGWorldFrame::ffxEffectUnconscious);
-            CGWorldFrame::ffxEffectUnconscious->SetParameters(4, rec->m_param);
-            break;
-
-        default:
-            DebugLog("Unhandled screen effect %d", rec->m_effect);
-            break;
+    if (!CGWorldFrame::ffxEffectUnconscious || !FFX::EffectIsSet(CGWorldFrame::ffxEffectUnconscious) || static_cast<EffectUnconscious*>(CGWorldFrame::ffxEffectUnconscious)->FadedOut()) {
+        DayNight::ClearOverrideFog();
+        FFX::SetEffect(1, CGWorldFrame::ffxEffectGlow);
+        DayNight::ClearOverrideLightParamsID();
+        SetTimeOfDayOverride(-1);
+        SI3::SetScreenEffect(0, 0);
     }
-
-    DayNight::SetOverrideLightParamsID(rec->m_lightParamsID, flags & 2);
-    SetTimeOfDayOverride(rec->unk_0028);
-    SI3::SetScreenEffect(rec->m_soundAmbienceID, rec->m_zoneMusicID);
 }
 
 // OFFSET: 0x008E2040/0x14060F1A0
@@ -1851,11 +1854,7 @@ void CGWorldFrame::UpdateWorld() {
 
     CGObject_C* target = ClntObjMgrObjectPtr(this->m_camera->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
-    if (target) {
-        if (target->m_obj->m_type & TYPEMASK_PLAYER) {
-            cameraAtPlayer = (static_cast<CGPlayer_C*>(target)->m_player->m_playerFlags >> 14) & 1;
-        }
-    } else {
+    if (!target) {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
         if (player) {
@@ -1868,18 +1867,22 @@ void CGWorldFrame::UpdateWorld() {
             cameraAtPlayer = (player->m_player->m_playerFlags >> 14) & 1;
             target = player;
         }
+    } else {
+        if (target->m_obj->m_type & TYPEMASK_PLAYER) {
+            cameraAtPlayer = (static_cast<CGPlayer_C*>(target)->m_player->m_playerFlags >> 14) & 1;
+        }
     }
 
     CCameraManager* manager = StaticSingleton<CCameraManager>::Instance();
     const CCameraShot& shot = manager->m_shot;
     C3Vector focus = (this->m_camera->m_model || !target) ? shot.m_position : target->GetPosition();
 
-    if (StaticSingleton<CCameraManager>::Instance()->IsCompletelyLegacy()) {
+    if (!(StaticSingleton<CCameraManager>::Instance()->IsCompletelyLegacy())) {
+        focus = shot.m_target;
+    } else {
         if (cameraAtPlayer) {
             focus = shot.m_position;
         }
-    } else {
-        focus = shot.m_target;
     }
 
     float nearClip = World::GetNearClip();
@@ -2186,7 +2189,7 @@ static void DrawSpellCursorShadow(uint32_t triFlags) {
     GxRsSet(GxRs_ColorOp0, 0);
     GxRsSet(GxRs_AlphaOp0, 0);
 
-    CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
+    CImVector color(0xFFFFFFFF);
     World::ProjectTex2d(box, color, NULL, 0.5f, triFlags, 11, GxPolygonOffset_Default);
     g_theGxDevicePtr->RsPop();
 }
@@ -2518,7 +2521,12 @@ void CGWorldFrame::OnLayerUpdate(float elapsedSec) {
         case 3: {
             CGGameObject_C* gameObject = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(hit.m_guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
 
-            if (!gameObject || gameObject->m_gameObject->m_typeID != 33 || Spell_C_CanTargetTerrain()) {
+            if (!gameObject) {
+                this->OnLayerTrackTerrain(hit);
+                break;
+            }
+
+            if (gameObject->m_gameObject->m_typeID != 33 || Spell_C_CanTargetTerrain()) {
                 this->OnLayerTrackTerrain(hit);
                 break;
             }
@@ -2600,9 +2608,9 @@ void CGWorldFrame::OnWorldRender() {
         GxSceneClear(31, black);
     }
 
-    float minX = 0.0f;
     float minY = 0.0f;
     float minZ = 0.0f;
+    float minX = 0.0f;
     float maxX = 0.0f;
     float maxY = 0.0f;
     float maxZ = 0.0f;

@@ -4,12 +4,12 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDBitmap.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDText.h"
 
-// OFFSET: #0x0095AFF0
+// OFFSET: 0x00B3FDA0/0x14090D9E0
 CEzLcdPage::CEzLcdPage() {
     this->m_container = NULL;
 }
 
-// OFFSET: #0x0095B040
+// OFFSET: 0x00B3FDF0/0x14090DA60
 CEzLcdPage::CEzLcdPage(CEzLcd* container) {
     this->m_container = container;
 
@@ -19,11 +19,11 @@ CEzLcdPage::CEzLcdPage(CEzLcd* container) {
     }
 }
 
-// OFFSET: #0x0095B010
+// OFFSET: 0x00B3FDC0/0x14090DA10
 CEzLcdPage::~CEzLcdPage() {
 }
 
-// OFFSET: 0x00B3FE30
+// OFFSET: 0x00B3FE30/0x14090DAC0
 CLCDText* CEzLcdPage::AddText(int32_t type, int32_t size, int32_t alignment, int32_t maxLengthPixels, int32_t userData, int32_t numberOfLines) {
     int32_t height = 13;
     int32_t pointSize = 8;
@@ -77,7 +77,7 @@ CLCDText* CEzLcdPage::AddText(int32_t type, int32_t size, int32_t alignment, int
     return text;
 }
 
-// OFFSET: #0x0095B1F0
+// OFFSET: 0x00B3FFA0
 CLCDText* CEzLcdPage::AddColorText(int32_t type, int32_t size, int32_t alignment, int32_t maxLengthPixels, int32_t userData, int32_t numberOfLines, int32_t fontWeight) {
     int32_t height = 24;
     int32_t pointSize = 16;

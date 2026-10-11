@@ -198,17 +198,17 @@ static int32_t Script_GetVoidTransferDepositInfo(lua_State* L) {
 
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (!item) {
-        return 0;
+    if (item) {
+        lua_pushinteger(L, item->m_obj->m_entryID);
+        const char* path = ClientDBStringLookup(3);
+        char texture[260];
+        SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(item->GetDisplayID()));
+        lua_pushstring(L, texture);
+
+        return 2;
     }
 
-    lua_pushinteger(L, item->m_obj->m_entryID);
-    const char* path = ClientDBStringLookup(3);
-    char texture[260];
-    SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(item->GetDisplayID()));
-    lua_pushstring(L, texture);
-
-    return 2;
+    return 0;
 }
 
 // OFFSET: 0x009EDD40/0x1407871C0
@@ -308,7 +308,8 @@ static int32_t Script_GetVoidItemInfo(lua_State* L) {
     }
 
     lua_pushinteger(L, item->m_entryID);
-    WOWGUID none = WOWGUID();
+    WOWGUID none;
+    none.m_guid = 0;
     const ItemRec* rec = g_itemDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
 
     if (rec) {
@@ -342,42 +343,42 @@ static int32_t Script_GetVoidTransferWithdrawalInfo(lua_State* L) {
 
     CGVoidStorage_C* storage = player->GetVoidStorage();
 
-    if (!storage) {
-        return 0;
-    }
+    if (storage) {
+        uint32_t state = storage->m_state;
 
-    uint32_t state = storage->m_state;
+        if ((state != 2 && state != 4 && state != 3) || !CGVoidTransfer::Get(false)) {
+            return 0;
+        }
 
-    if ((state != 2 && state != 4 && state != 3) || !CGVoidTransfer::Get(false)) {
-        return 0;
-    }
+        WOWGUID guid = CGVoidTransfer::Get(false)->GetWithdrawItem(lua_tointeger(L, 1) - 1);
 
-    WOWGUID guid = CGVoidTransfer::Get(false)->GetWithdrawItem(lua_tointeger(L, 1) - 1);
+        if (!guid) {
+            return 0;
+        }
 
-    if (!guid) {
-        return 0;
-    }
+        VoidItem_C* item = storage->GetItem(guid);
 
-    VoidItem_C* item = storage->GetItem(guid);
+        if (!item) {
+            return 0;
+        }
 
-    if (!item) {
-        return 0;
-    }
+        lua_pushinteger(L, item->m_entryID);
+        WOWGUID none = WOWGUID();
+        const ItemRec* rec = g_itemDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
 
-    lua_pushinteger(L, item->m_entryID);
-    WOWGUID none = WOWGUID();
-    const ItemRec* rec = g_itemDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
+        if (rec) {
+            const char* path = ClientDBStringLookup(3);
+            char texture[260];
+            SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(rec->m_displayInfoID));
+            lua_pushstring(L, texture);
+            return 2;
+        }
 
-    if (rec) {
-        const char* path = ClientDBStringLookup(3);
-        char texture[260];
-        SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(rec->m_displayInfoID));
-        lua_pushstring(L, texture);
-    } else {
         lua_pushnil(L);
+        return 2;
     }
 
-    return 2;
+    return 0;
 }
 
 // OFFSET: 0x009EE290/0x140787820
@@ -409,22 +410,23 @@ static int32_t Script_ClickVoidStorageSlot(lua_State* L) {
 
         bool full = false;
 
-        if (!CGVoidTransfer::Get(true)->AddWithdrawItem(item->m_guid, 9, full)) {
-            if (full) {
-                CGGameUI::DisplayError(ERR_VOID_WITHDRAW_FULL);
+        if (CGVoidTransfer::Get(true)->AddWithdrawItem(item->m_guid, 9, full)) {
+            WOWGUID none;
+            none.m_guid = 0;
+            const ItemRec* rec = g_itemDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
+
+            if (rec) {
+                SI3::PlayItemSound(1, rec->m_displayInfoID);
             }
 
+            FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_CONTENTS_UPDATE, NULL);
             return 0;
         }
 
-        WOWGUID none = WOWGUID();
-        const ItemRec* rec = g_itemDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
-
-        if (rec) {
-            SI3::PlayItemSound(1, rec->m_displayInfoID);
+        if (full) {
+            CGGameUI::DisplayError(ERR_VOID_WITHDRAW_FULL);
         }
 
-        FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_CONTENTS_UPDATE, NULL);
         return 0;
     }
 
@@ -483,7 +485,8 @@ static int32_t Script_ClickVoidTransferWithdrawalSlot(lua_State* L) {
             VoidItem_C* item = storage->GetItem(guid);
 
             if (item) {
-                WOWGUID none = WOWGUID();
+                WOWGUID none;
+                none.m_guid = 0;
                 const ItemRec* rec = g_itemDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
 
                 if (rec) {
@@ -507,17 +510,15 @@ static int32_t Script_ClickVoidTransferWithdrawalSlot(lua_State* L) {
             CGGameUI::SetCursorVoidStorageItem(guid);
             FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_CONTENTS_UPDATE, NULL);
         }
+    } else {
+        if (!CGGameUI::m_cursorVoidStorageItem) {
+            return 0;
+        }
 
-        return 0;
+        bool full = false;
+        transfer->AddWithdrawItem(CGGameUI::m_cursorVoidStorageItem, slot, full);
+        CGGameUI::DropCursorVoidStorageItem();
     }
-
-    if (!CGGameUI::m_cursorVoidStorageItem) {
-        return 0;
-    }
-
-    bool full = false;
-    transfer->AddWithdrawItem(CGGameUI::m_cursorVoidStorageItem, slot, full);
-    CGGameUI::DropCursorVoidStorageItem();
 
     return 0;
 }
@@ -537,36 +538,37 @@ static int32_t Script_GetVoidItemHyperlinkString(lua_State* L) {
 
     CGVoidStorage_C* storage = player->GetVoidStorage();
 
-    if (!storage) {
-        return 0;
+    if (storage) {
+        uint32_t state = storage->m_state;
+
+        if (state != 2 && state != 4 && state != 3) {
+            return 0;
+        }
+
+        uint32_t slot = lua_tointeger(L, 1) - 1;
+
+        if (slot >= 80) {
+            return 0;
+        }
+
+        VoidItem_C* item = storage->GetItemBySlot(slot);
+
+        if (!item) {
+            return 0;
+        }
+
+        WOWGUID none;
+        none.m_guid = 0;
+        const ItemRecSparse* sparse = g_itemSparseDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
+        int32_t gems[3];
+        memset(gems, 0, sizeof(gems));
+        uint32_t quality = sparse ? sparse->m_quality : 1;
+        lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item->m_entryID, quality, 0, gems, item->m_randomPropertiesId, item->m_propertySeed, 0));
+
+        return 1;
     }
 
-    uint32_t state = storage->m_state;
-
-    if (state != 2 && state != 4 && state != 3) {
-        return 0;
-    }
-
-    uint32_t slot = lua_tointeger(L, 1) - 1;
-
-    if (slot >= 80) {
-        return 0;
-    }
-
-    VoidItem_C* item = storage->GetItemBySlot(slot);
-
-    if (!item) {
-        return 0;
-    }
-
-    WOWGUID none = WOWGUID();
-    const ItemRecSparse* sparse = g_itemSparseDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
-    int32_t gems[3];
-    memset(gems, 0, sizeof(gems));
-    uint32_t quality = sparse ? sparse->m_quality : 1;
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item->m_entryID, quality, 0, gems, item->m_randomPropertiesId, item->m_propertySeed, 0));
-
-    return 1;
+    return 0;
 }
 
 // STATIC: 0x00D16C90
