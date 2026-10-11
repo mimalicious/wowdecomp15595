@@ -5356,7 +5356,7 @@ void CGChat::JoiningParty(bool raid, int32_t pvp) {
     }
 }
 
-// OFFSET: #0x005072B0
+// OFFSET: 0x008F38A0
 void CGChat::ShutdownGame() {
     for (uint32_t i = 0; i < 2; i++) {
         if (s_chatLog[i]) {
@@ -5373,6 +5373,11 @@ void CGChat::ShutdownGame() {
     CGChat::s_pendingChat.Clear();
     CGChat::s_channels.SetCount(0);
     s_channelColors.Clear();
+    s_queueAddonPrefixes = 0;
+    s_addonPrefixMessage.m_prefixes.Clear();
+    s_addonPrefixes.Clear();
+    s_numAddonPrefixes = 0;
+    s_pendingReportTarget.m_guid = 0;
 
     for (uint32_t i = 0; i < 10; i++) {
         s_chatWindows[i].Reset();
@@ -5390,13 +5395,16 @@ void CGChat::ShutdownGame() {
     s_channelThrottle.Clear();
     CGChat::s_throttledChat.Clear();
     ClientServices::ClearMessageHandler(SMSG_CHANNEL_NOTIFY);
+    ClientServices::ClearMessageHandler(SMSG_CHAT_DOWN);
+    ClientServices::ClearMessageHandler(SMSG_CHAT_IS_DOWN);
+    ClientServices::ClearMessageHandler(SMSG_CHAT_RECONNECT);
     ClientServices::ClearMessageHandler(SMSG_CHANNEL_LIST);
     ClientServices::ClearMessageHandler(SMSG_CHAT);
     ClientServices::ClearMessageHandler(SMSG_TEXT_EMOTE);
     ClientServices::ClearMessageHandler(SMSG_ZONE_UNDER_ATTACK);
     ClientServices::ClearMessageHandler(SMSG_DEFENSE_MESSAGE);
     ClientServices::ClearMessageHandler(SMSG_CHAT_SERVER_MESSAGE);
-        ClientServices::ClearMessageHandler(SMSG_RAID_INSTANCE_MESSAGE);
+    ClientServices::ClearMessageHandler(SMSG_RAID_INSTANCE_MESSAGE);
     ClientServices::ClearMessageHandler(SMSG_INSTANCE_RESET);
     ClientServices::ClearMessageHandler(SMSG_INSTANCE_RESET_FAILED);
     ClientServices::ClearMessageHandler(SMSG_UPDATE_LAST_INSTANCE);
@@ -5417,6 +5425,7 @@ void CGChat::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_USERLIST_UPDATE);
     ClientServices::ClearMessageHandler(SMSG_VOICESESSION_FULL);
     ClientServices::ClearMessageHandler(SMSG_SERVER_FIRST_ACHIEVEMENT);
+    ClientClearBossEmotes::s_handler = NULL;
 }
 
 // OFFSET: 0x008EB670
