@@ -12,11 +12,16 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WorldClient/World.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/Object/ObjectClient/UnitCombatLog_C.h"
+#include "WoW/Source/Ui/ScriptEvents.h"
 
 // STATIC: 0x00D119A0
 CGCommentator CGCommentator::s_Commentator;
 
-// OFFSET: #0x0056B5C0
+// OFFSET: 0x0092BDD0
 void CGCommentator::UpdateCameraVelocity(uint32_t controlFlags, int32_t canControl) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__) || !CGWorldFrame::GetActiveCamera()) {
         return;
@@ -97,7 +102,7 @@ void CGCommentator::UpdateCameraVelocity(uint32_t controlFlags, int32_t canContr
     this->m_yawVelocity = turn * 0.050000001f;
 }
 
-// OFFSET: #0x0056BC80
+// OFFSET: 0x0092C4D0
 void CGCommentator::Init() {
     this->m_position.x = 0.0f;
     this->m_position.y = 0.0f;
@@ -117,7 +122,7 @@ void CGCommentator::Init() {
     this->m_targetFov = 1.5707964f;
     this->m_moveSpeed = 10.0f;
     this->m_targetHeightOffset = 0.0f;
-    this->m_key.unk_0004 = 13;
+    this->m_key.unk_0004 = 15;
     this->m_key.unk_0008 = 0;
     this->m_key.unk_0000 = 0;
     this->m_playerFaction = 0;
@@ -128,7 +133,7 @@ void CGCommentator::Init() {
     this->m_skirmishMode = 1;
 }
 
-// OFFSET: #0x0056C150
+// OFFSET: 0x0092CA00
 void CGCommentator::InitializeGame() {
     CGCommentator::s_Commentator.Init();
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_PLAYER_INFO, CGCommentator::OnReceivePlayerInfo, NULL);
@@ -136,9 +141,10 @@ void CGCommentator::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_STATE_CHANGED, CGCommentator::OnStateChanged, NULL);
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT1, CGCommentator::OnSkirmishPlayersInQueue, NULL);
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT2, CGCommentator::OnSkirmishPlayersModeState, NULL);
+    ClientCommentatorPartyInfo::s_handler = CGCommentator::OnClientCommentatorPartyInfo;
 }
 
-// OFFSET: #0x0056B510
+// OFFSET: 0x0092BD10
 void CGCommentator::SnapCameraToPlayer() {
     if (!CGWorldFrame::s_currentWorldFrame) {
         return;
@@ -184,6 +190,7 @@ void CGCommentator::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_STATE_CHANGED);
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT1);
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT2);
+    ClientCommentatorPartyInfo::s_handler = NULL;
 }
 
 // PROVEN: 1e6fb3f6 IDENTICAL/NONE
@@ -194,7 +201,7 @@ void CommentatorInstanceKey::Write(CDataStore* msg) const {
     msg->Put(static_cast<uint8_t>(this->unk_0004));
 }
 
-// OFFSET: #0x00568300
+// INLINED
 void CGCommentator::SetMoveSpeed(float speed) {
     if (speed >= 40.0f) {
         this->m_moveSpeed = 40.0f;
@@ -233,24 +240,24 @@ void CGCommentator::SetPosYawPitch(const C3Vector& position, float facing, float
     camera->CommentatorSetViewAndPosition(this->m_position, facing, pitch);
 }
 
-// OFFSET: #0x00568510
+// OFFSET: 0x00928270
 void CGCommentator::SetFov(float fov) {
     this->m_targetFov = fov;
 
-    if (fov >= 2.0943952f) {
+    if (2.0943952f <= fov) {
         fov = 2.0943952f;
     }
 
     this->m_targetFov = fov;
 
-    if (fov <= 0.017453292f) {
-        this->m_targetFov = 0.017453292f;
-    } else {
-        this->m_targetFov = fov;
+    if (0.017453292f >= fov) {
+        fov = 0.017453292f;
     }
+
+    this->m_targetFov = fov;
 }
 
-// OFFSET: #0x005686B0
+// OFFSET: 0x00928390
 void CommentatorInstanceKey::Read(CDataStore* msg) {
     uint32_t value = 0;
     msg->Get(value);
@@ -265,29 +272,33 @@ void CommentatorInstanceKey::Read(CDataStore* msg) {
     this->unk_0004 = type;
 }
 
-// OFFSET: #0x00568710
+// OFFSET: 0x009283F0
 CGCommentator::MapInfo* CGCommentator::GetMapInfoByIndex(uint32_t index) {
-    if (index >= this->m_maps.Count()) {
-        return NULL;
+    if (index < this->m_maps.Count()) {
+        return &this->m_maps.m_data[index];
     }
 
-    return &this->m_maps.m_data[index];
+    return NULL;
 }
 
-// OFFSET: #0x005688C0
-bool CGCommentator::GetCommentatorInfo(CGCommentator::MapInfo** map, CGCommentator::InstanceInfo** instance) {
-    if (this->m_mapID || (this->m_key.unk_0004 < 13 && this->m_key.unk_0008 && this->m_key.unk_0000)) {
-        for (uint32_t i = 0; i < this->m_maps.Count(); i++) {
-            CGCommentator::MapInfo* info = &this->m_maps.m_data[i];
+// OFFSET: 0x009285F0
+bool CGCommentator::GetCurrentMapAndInstance(CGCommentator::MapInfo** map, CGCommentator::InstanceInfo** instance) {
+    if (!this->m_mapID && (this->m_key.unk_0004 >= 15 || !this->m_key.unk_0008 || !this->m_key.unk_0000)) {
+        *map = NULL;
+        *instance = NULL;
+        return false;
+    }
 
-            for (uint32_t j = 0; j < info->m_instances.Count(); j++) {
-                CGCommentator::InstanceInfo* entry = &info->m_instances.m_data[j];
+    for (uint32_t i = 0; i < this->m_maps.Count(); i++) {
+        CGCommentator::MapInfo* info = &this->m_maps.m_data[i];
 
-                if (entry->m_mapID == this->m_mapID && this->m_key.unk_0000 == entry->m_key.unk_0000 && this->m_key.unk_0008 == entry->m_key.unk_0008 && this->m_key.unk_0004 == entry->m_key.unk_0004) {
-                    *map = info;
-                    *instance = entry;
-                    return true;
-                }
+        for (uint32_t j = 0; j < info->m_instances.Count(); j++) {
+            CGCommentator::InstanceInfo* entry = &info->m_instances.m_data[j];
+
+            if (entry->m_mapID == this->m_mapID && this->m_key.unk_0000 == entry->m_key.unk_0000 && this->m_key.unk_0008 == entry->m_key.unk_0008 && this->m_key.unk_0004 == entry->m_key.unk_0004) {
+                *map = info;
+                *instance = entry;
+                return true;
             }
         }
     }
@@ -297,7 +308,128 @@ bool CGCommentator::GetCommentatorInfo(CGCommentator::MapInfo** map, CGCommentat
     return false;
 }
 
-// OFFSET: #0x005689A0
+// OFFSET: 0x009286D0
+bool CGCommentator::OnClientCommentatorPartyInfo(ClientCommentatorPartyInfo* msg) {
+    if (!msg->unk_0028 || msg->unk_0014.Count() > 40) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_PARTY_INFO_REQUEST, "%u%b", msg->unk_0024, 0);
+        return true;
+    }
+
+    CDataStore names;
+    CDataStore guids;
+    CDataStore values;
+    CDataStore raceNames;
+    CDataStore raceFiles;
+    CDataStore classNames;
+    CDataStore classFiles;
+    CDataStore sexes;
+    CDataStore states;
+
+    for (uint32_t i = 0; i < msg->unk_0014.Count(); i++) {
+        JamClientCommentatorPartyMember* member = &msg->unk_0014[i];
+
+        if (i) {
+            names.Put(static_cast<uint8_t>('	'));
+            guids.Put(static_cast<uint8_t>('	'));
+            values.Put(static_cast<uint8_t>('	'));
+            raceNames.Put(static_cast<uint8_t>('	'));
+            raceFiles.Put(static_cast<uint8_t>('	'));
+            classNames.Put(static_cast<uint8_t>('	'));
+            classFiles.Put(static_cast<uint8_t>('	'));
+            sexes.Put(static_cast<uint8_t>('	'));
+            states.Put(static_cast<uint8_t>('	'));
+        }
+
+        names.PutArray(reinterpret_cast<const uint8_t*>(member->unk_0000), SStrLen(member->unk_0000));
+
+        char buffer[32];
+        GUIDToString(*reinterpret_cast<WOWGUID*>(member->unk_0030), buffer);
+        guids.PutArray(reinterpret_cast<const uint8_t*>(buffer), SStrLen(buffer));
+
+        SStrPrintf(buffer, "%u", member->unk_0038);
+        values.PutArray(reinterpret_cast<const uint8_t*>(buffer), SStrLen(buffer));
+
+        uint32_t sex = member->unk_0040;
+        ChrRacesRec* race = g_chrRacesDB.GetRecord(member->unk_003C);
+        const char* raceName = CGUnit_C::GetDisplayRaceNameFromRecord(race, sex, NULL);
+
+        if (race && raceName) {
+            raceNames.PutArray(reinterpret_cast<const uint8_t*>(raceName), SStrLen(raceName));
+            raceFiles.PutArray(reinterpret_cast<const uint8_t*>(race->m_clientFileString), SStrLen(race->m_clientFileString));
+        }
+
+        ChrClassesRec* classRec = g_chrClassesDB.GetRecord(member->unk_0044);
+        const char* className = CGUnit_C::GetDisplayClassNameFromRecord(classRec, sex, NULL);
+
+        if (classRec && className) {
+            classNames.PutArray(reinterpret_cast<const uint8_t*>(className), SStrLen(className));
+            classFiles.PutArray(reinterpret_cast<const uint8_t*>(classRec->m_filename), SStrLen(classRec->m_filename));
+        }
+
+        SStrPrintf(buffer, "%u", sex <= 3 ? s_unitSexValues[sex] : s_unitSexValues[2]);
+        sexes.PutArray(reinterpret_cast<const uint8_t*>(buffer), SStrLen(buffer));
+
+        SStrPrintf(buffer, "%u", member->unk_0048 ? 2 : member->unk_0049 != 0);
+        states.PutArray(reinterpret_cast<const uint8_t*>(buffer), SStrLen(buffer));
+    }
+
+    const char* factionName = "";
+    FactionTemplateRec* factionTemplate = g_factionTemplateDB.GetRecord(msg->unk_0010);
+
+    if (factionTemplate) {
+        for (uint32_t i = 0; i < static_cast<uint32_t>(g_factionGroupDB.m_numRecords); i++) {
+            FactionGroupRec* group = g_factionGroupDB.GetRecordByIndex(i);
+
+            if (((1 << group->m_maskID) & factionTemplate->m_factionGroup) && *group->m_name) {
+                factionName = group->m_internalName;
+            }
+        }
+    }
+
+    names.Put(static_cast<uint8_t>(0));
+    guids.Put(static_cast<uint8_t>(0));
+    values.Put(static_cast<uint8_t>(0));
+    raceNames.Put(static_cast<uint8_t>(0));
+    raceFiles.Put(static_cast<uint8_t>(0));
+    classNames.Put(static_cast<uint8_t>(0));
+    classFiles.Put(static_cast<uint8_t>(0));
+    sexes.Put(static_cast<uint8_t>(0));
+    states.Put(static_cast<uint8_t>(0));
+
+    names.Finalize();
+    guids.Finalize();
+    values.Finalize();
+    raceNames.Finalize();
+    raceFiles.Finalize();
+    classNames.Finalize();
+    classFiles.Finalize();
+    sexes.Finalize();
+    states.Finalize();
+
+    void* statesText;
+    states.GetDataInSitu(statesText, states.m_size);
+    void* sexesText;
+    sexes.GetDataInSitu(sexesText, sexes.m_size);
+    void* classFilesText;
+    classFiles.GetDataInSitu(classFilesText, classFiles.m_size);
+    void* classNamesText;
+    classNames.GetDataInSitu(classNamesText, classNames.m_size);
+    void* raceFilesText;
+    raceFiles.GetDataInSitu(raceFilesText, raceFiles.m_size);
+    void* raceNamesText;
+    raceNames.GetDataInSitu(raceNamesText, raceNames.m_size);
+    void* valuesText;
+    values.GetDataInSitu(valuesText, values.m_size);
+    void* guidsText;
+    guids.GetDataInSitu(guidsText, guids.m_size);
+    void* namesText;
+    names.GetDataInSitu(namesText, names.m_size);
+
+    FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_PARTY_INFO_REQUEST, "%u%b%u%s%s%s%s%s%s%s%s%s%s", msg->unk_0024, 1, msg->unk_0014.Count(), namesText, guidsText, valuesText, raceNamesText, raceFilesText, classNamesText, classFilesText, sexesText, statesText, factionName);
+    return true;
+}
+
+// OFFSET: 0x00928F70
 void CGCommentator::OnUpdate(float elapsed) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 
@@ -360,17 +492,11 @@ void CGCommentator::OnUpdate(float elapsed) {
         float speed = this->m_moveSpeed;
         C3Vector next(((rotation.a0 * forward * speed + rotation.b0 * strafe * speed) + rotation.c0 * vertical * speed) * elapsed + this->m_position.x, (rotation.b1 * strafe * speed + rotation.a1 * forward * speed + rotation.c1 * vertical * speed) * elapsed + this->m_position.y, (strafe * rotation.b2 * speed + speed * (forward * rotation.a2) + vertical * rotation.c2 * speed) * elapsed + this->m_position.z);
 
-        float dx = next.x - this->m_position.x;
-        float dy = next.y - this->m_position.y;
-        float dz = next.z - this->m_position.z;
+        C3Vector hit(0.0f, 0.0f, 0.0f);
+        float hitDistance = 1.0f;
 
-        if (sqrt(dx * dx + dz * dz + dy * dy) > 0.0) {
-            C3Vector hit(0.0f, 0.0f, 0.0f);
-            float hitDistance = 1.0f;
-
-            if (!this->m_cameraCollision || !World::Intersect(this->m_position, next, &hit, &hitDistance, 0x100171, NULL)) {
-                this->m_position = next;
-            }
+        if (!this->m_cameraCollision || !World::Intersect(this->m_position, next, &hit, &hitDistance, 0x100171, NULL)) {
+            this->m_position = next;
         }
 
         if (lookAt) {
@@ -447,13 +573,13 @@ void CGCommentator::OnUpdate(float elapsed) {
     }
 }
 
-// OFFSET: #0x0056B1E0
+// OFFSET: 0x0092B9E0
 uint64_t CGCommentator::GetArenaMember(int32_t index) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     CGCommentator::MapInfo* map;
     CGCommentator::InstanceInfo* instance;
 
-    if (!player || !(player->m_player->m_playerFlags & 0x80000) || !this->GetCommentatorInfo(&map, &instance)) {
+    if (!player || !(player->m_player->m_playerFlags & 0x80000) || !this->GetCurrentMapAndInstance(&map, &instance)) {
         return 0;
     }
 
@@ -572,7 +698,7 @@ int32_t CGCommentator::OnStateChanged(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x0056B9A0
+// OFFSET: 0x0092C1E0
 void CGCommentator::SetPlayersInQueue(CDataStore* msg) {
     uint32_t mode = 0;
     msg->Get(mode);

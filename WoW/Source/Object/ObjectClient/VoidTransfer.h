@@ -23,7 +23,7 @@ class CGVoidTransfer {
     WOWGUID GetWithdrawItem(uint32_t slot);
     bool RemoveWithdrawItem(uint32_t slot);
     bool IsWithdrawItem(WOWGUID guid);
-    uint32_t GetDepositCost();
+    uint64_t GetDepositCost();
     bool AddDepositItem(WOWGUID guid, uint32_t& slot, bool& full);
     bool AddWithdrawItem(WOWGUID guid, uint32_t slot, bool& full);
     bool RemoveDepositItem(uint32_t slot);

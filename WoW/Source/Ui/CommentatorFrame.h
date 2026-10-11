@@ -9,13 +9,14 @@
 #include "WoW/Source/Net/Types.h"
 
 class CDataStore;
+class ClientCommentatorPartyInfo;
 struct lua_State;
 
 class CGPlayer_C;
 
 struct CommentatorInstanceKey {
     /* 0000 */ uint32_t unk_0000;
-    /* 0004 */ uint32_t unk_0004;
+    /* 0004 */ int32_t unk_0004;
     /* 0008 */ uint32_t unk_0008;
 
     CommentatorInstanceKey();
@@ -108,6 +109,7 @@ class CGCommentator {
     static int32_t OnStateChanged(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnSkirmishPlayersInQueue(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnSkirmishPlayersModeState(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+    static bool OnClientCommentatorPartyInfo(ClientCommentatorPartyInfo* msg);
 
     uint64_t GetArenaMember(int32_t index);
     void Init();
@@ -118,7 +120,7 @@ class CGCommentator {
     void SetPosYawPitch(const C3Vector& position, float facing, float pitch);
     void SetFov(float fov);
     CGCommentator::MapInfo* GetMapInfoByIndex(uint32_t index);
-    bool GetCommentatorInfo(CGCommentator::MapInfo** map, CGCommentator::InstanceInfo** instance);
+    bool GetCurrentMapAndInstance(CGCommentator::MapInfo** map, CGCommentator::InstanceInfo** instance);
     void SetPlayersInQueue(CDataStore* msg);
 };
 

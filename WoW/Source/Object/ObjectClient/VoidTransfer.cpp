@@ -64,8 +64,8 @@ bool CGVoidTransfer::IsWithdrawItem(WOWGUID guid) {
 }
 
 // OFFSET: 0x005F9D20
-uint32_t CGVoidTransfer::GetDepositCost() {
-    uint32_t cost = 0;
+uint64_t CGVoidTransfer::GetDepositCost() {
+    uint64_t cost = 0;
 
     for (uint32_t i = 0; i < 9; i++) {
         if (this->m_deposits[i].m_guid) {
@@ -180,7 +180,7 @@ void CGVoidTransfer::Destroy() {
 CGVoidTransfer::CGVoidTransfer() {
     memset(this->m_deposits, 0, sizeof(this->m_deposits));
     memset(this->m_withdrawals, 0, sizeof(this->m_withdrawals));
-    this->m_storage = ClntObjMgrGetActivePlayerObj()->GetVoidStorage();
+    this->m_storage = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->GetVoidStorage();
 }
 
 // OFFSET: 0x005FA080/0x14027EF70
@@ -214,7 +214,7 @@ bool CGVoidTransfer::SendTransfer(WOWGUID npc) {
         }
     }
 
-    if (!msg.m_deposits.m_count && !msg.m_withdrawals.m_count) {
+    if (msg.m_deposits.m_count <= 0 && msg.m_withdrawals.m_count <= 0) {
         return false;
     }
 

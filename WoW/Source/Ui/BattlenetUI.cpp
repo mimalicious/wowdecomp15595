@@ -1,9 +1,11 @@
 #include "BattlenetUI.h"
 #include <cstdarg>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
+#include "Engine/Source/Gxu/GxuFont.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Battlenet/Tumor/TumorManager.h"
 #include "WoW/Source/Ui/CGAutoCompleteName.h"
@@ -13,7 +15,7 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00ACC8B0
+// STATIC: 0x00D109E0
 BattlenetUI::EventCallback BattlenetUI::s_eventCallbacks[26] = {
     { "BattlenetEvent_NewPresence", BattlenetUI::NewPresenceCB, 0 },
     { "BattlenetEvent_ToonOnline", BattlenetUI::SelfToonOnlineCB, 0 },
@@ -44,28 +46,30 @@ BattlenetUI::EventCallback BattlenetUI::s_eventCallbacks[26] = {
 };
 
 // STATIC: 0x00D10B18
-BattlenetUI::PresenceCallback BattlenetUI::s_presenceCallbacks[NUM_BN_PRESENCE_FIELDS] = {
+BattlenetUI::PresenceCallback BattlenetUI::s_presenceCallbacks[BattlenetUI::NUM_PRESENCE_FIELDS] = {
     { 0x10002, BattlenetUI::OnlinePresenceChangedCB, 0 },
     { 0x10003, BattlenetUI::OnlineTimeChangedCB, 0 },
     { 0x10007, BattlenetUI::LastOnlineChangedCB, 0 },
-    { 0x10010, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x10011, BattlenetUI::FriendInfoChangedCB, 0 },
+    { 0x10010, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x10011, BattlenetUI::PresenceUpdateCB, 0 },
     { 0x1000C, BattlenetUI::CustomMessageChangedCB, 0 },
-    { 0x1000D, BattlenetUI::IgnoredFieldCB, 0 },
+    { 0x1000D, BattlenetUI::NoActionCB, 0 },
     { 0x1000E, BattlenetUI::ToonNameUpdateCB, 0 },
-    { 0x10005, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x10004, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x10009, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x10008, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x30001, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x30002, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x30003, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x30004, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x30005, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x30006, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x1000A, BattlenetUI::FriendInfoChangedCB, 0 },
-    { 0x1000B, BattlenetUI::IgnoredFieldCB, 0 },
+    { 0x10005, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x10004, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x10009, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x10008, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x30001, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x30002, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x30003, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x30004, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x30005, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x30006, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x1000A, BattlenetUI::PresenceUpdateCB, 0 },
+    { 0x1000B, BattlenetUI::NoActionCB, 0 },
+    { 0x1001D, BattlenetUI::PresenceUpdateCB, 0 },
     { 0x40001, BattlenetUI::FactionUpdateCB, 0 },
+    { 0x40002, BattlenetUI::PresenceUpdateCB, 0 },
 };
 
 // STATIC: 0x00D10E2C
@@ -77,17 +81,11 @@ int32_t BattlenetUI::s_broadcastCount = 2;
 // STATIC: 0x00F3387C
 uint32_t BattlenetUI::s_selfRealm;
 
-// STATIC: #0x00BD1B04
+// STATIC: 0x00F33880
 bool BattlenetUI::s_initialized;
 
 // STATIC: 0x00F33881
 bool BattlenetUI::m_friendListLoaded;
-
-// STATIC: #0x00BD1B08
-BSN::BSNEncodedObject<Battlenet::Friends::FriendInviteContainer, Protocol>* BattlenetUI::m_friendInvites;
-
-// STATIC: #0x00BD1B0C
-BSN::BSNEncodedObject<Battlenet::Friends::FriendsOfFriendList, Protocol>* BattlenetUI::s_friendsOfFriend;
 
 // STATIC: 0x00F33884
 GeneralFunction::Callback* BattlenetUI::s_createConversationCB;
@@ -95,42 +93,63 @@ GeneralFunction::Callback* BattlenetUI::s_createConversationCB;
 // STATIC: 0x00F33888
 GeneralFunction::Callback* BattlenetUI::s_inviteToConversationCB;
 
-// STATIC: #0x00BD1B18
+// STATIC: 0x00F3388C
 GeneralFunction::Callback* BattlenetUI::s_friendsOfFriendCB;
 
-// STATIC: #0x00BD1B1C
+// STATIC: 0x00F33890
 uint32_t BattlenetUI::s_selectedFriend;
 
-// STATIC: #0x00BD1B20
+// STATIC: 0x00F33894
 uint32_t BattlenetUI::s_selectedBlock;
 
-// STATIC: #0x00BD1B24
+// STATIC: 0x00F33898
 uint32_t BattlenetUI::s_selectedToonBlock;
 
-// STATIC: #0x00BD1B28
-BSN::Array<BattlenetUIFriend, 100> BattlenetUI::m_friends;
+// STATIC: 0x00F3389C
+uint32_t BattlenetUI::s_accountIdCacheLowest;
 
-// STATIC: #0x00BE5D0C
+// STATIC: 0x00F338A0
+uint32_t BattlenetUI::s_accountIdCacheCount;
+
+// STATIC: 0x00F338A4
+TSGrowableArray<uint32_t> BattlenetUI::m_friendInvites;
+
+// STATIC: 0x00F338B4
+TSGrowableArray<uint32_t> BattlenetUI::s_friendsOfFriend;
+
+// STATIC: 0x00F338C4
+TSGrowableArray<BattlenetUI::RIDFriendData> BattlenetUI::m_friends;
+
+// STATIC: 0x00F338D4
+TSHashTable<ACCOUNTIDCACHE, HASHKEY_DWORD> BattlenetUI::s_accountIdCache;
+
+// STATIC: 0x00F33900
 char BattlenetUI::s_programString[16];
 
-// STATIC: #0x00BE5D1C
+// STATIC: 0x00F33910
 float BattlenetUI::s_broadcastTime;
 
 // STATIC: 0x00F33918
 char BattlenetUI::s_displayName[72];
 
-// OFFSET: #0x00530D00
-char* FilterChatLinks(const char* source, char* dest, uint32_t size) {
-    if (!source || !dest || !size) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
+// STATIC: 0x00F33960
+char BattlenetUI::s_tokenName[296];
 
+// STATIC: 0x00F33A88
+char BattlenetUI::s_tokenSurname[168];
+
+// STATIC: 0x00F33B30
+char BattlenetUI::s_tokenGivenName[168];
+
+// OFFSET: 0x00902130
+char* FilterChatLinks(const char* source, char* dest, uint32_t size) {
+    char* limit = &dest[size - 1];
     char* out = dest;
     const char* end = &source[SStrLen(source)];
 
     if (source < end) {
         do {
-            if (out >= &dest[size - 1]) {
+            if (out >= limit) {
                 break;
             }
 
@@ -163,7 +182,7 @@ char* FilterChatLinks(const char* source, char* dest, uint32_t size) {
     return dest;
 }
 
-// OFFSET: #0x00530DC0
+// OFFSET: 0x009021E0
 static int32_t CountFormatStrings(const char* format) {
     if (!format) {
         return 0;
@@ -218,19 +237,13 @@ static int32_t CountFormatStrings(const char* format) {
     return count;
 }
 
-// OFFSET: #0x00530E90
-int32_t BattlenetUI::QSortFriendInviteListByTimeCB(const void* a, const void* b) {
-    int32_t time1 = static_cast<const Battlenet::Friends::FriendInviteContainer*>(a)->m_createdTime;
-    int32_t time2 = static_cast<const Battlenet::Friends::FriendInviteContainer*>(b)->m_createdTime;
-
-    if (time1 > time2) {
-        return -1;
-    }
-
-    return time1 < time2;
+// OFFSET: 0x009022B0
+const char* BattlenetUI::GetProgramString(BSN::FourCC program) {
+    program.ToString(BattlenetUI::s_programString, sizeof(BattlenetUI::s_programString));
+    return BattlenetUI::s_programString;
 }
 
-// OFFSET: #0x005326D0
+// OFFSET: 0x00903C60
 void BattlenetUI::SendScriptEvent(uint32_t event, const char* format, ...) {
     va_list args;
     va_start(args, format);
@@ -240,9 +253,20 @@ void BattlenetUI::SendScriptEvent(uint32_t event, const char* format, ...) {
     }
 }
 
-// OFFSET: #0x00532700
+// OFFSET: 0x00903C90
+bool BattlenetUI::IsToonFriend(uint32_t accountId) {
+    for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
+        if (accountId == BattlenetUI::m_friends[i].m_accountId) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: 0x00903CD0
 int32_t BattlenetUI::FindFriendIndex(uint32_t presenceId) {
-    for (uint32_t i = 0; i < BattlenetUI::m_friends.m_count; i++) {
+    for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
         if (BattlenetUI::m_friends[i].m_presenceID == presenceId) {
             return i;
         }
@@ -251,23 +275,21 @@ int32_t BattlenetUI::FindFriendIndex(uint32_t presenceId) {
     return -1;
 }
 
-// OFFSET: #0x00532750
-BattlenetUIFriend* BattlenetUI::FindFriend(uint32_t presenceId) {
-    for (uint32_t i = 0; i < BattlenetUI::m_friends.m_count; i++) {
-        BattlenetUIFriend& entry = BattlenetUI::m_friends[i];
-
-        if (entry.m_presenceID == presenceId) {
-            return &entry;
+// OFFSET: 0x00903D10
+BattlenetUI::RIDFriendData* BattlenetUI::FindFriend(uint32_t presenceId) {
+    for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
+        if (BattlenetUI::m_friends[i].m_presenceID == presenceId) {
+            return &BattlenetUI::m_friends[i];
         }
     }
 
     return NULL;
 }
 
-// OFFSET: #0x00532800
+// OFFSET: 0x00903D60
 int32_t BattlenetUI::QSortDisambiguateFriendListCB(const void* a, const void* b) {
-    const BattlenetUIFriend* friend1 = static_cast<const BattlenetUIFriend*>(a);
-    const BattlenetUIFriend* friend2 = static_cast<const BattlenetUIFriend*>(b);
+    const RIDFriendData* friend1 = static_cast<const RIDFriendData*>(a);
+    const RIDFriendData* friend2 = static_cast<const RIDFriendData*>(b);
 
     int32_t result = SStrCmpUTF8I(friend1->m_givenName.m_data, friend2->m_givenName.m_data, 40);
 
@@ -275,126 +297,52 @@ int32_t BattlenetUI::QSortDisambiguateFriendListCB(const void* a, const void* b)
         result = SStrCmpUTF8I(friend1->m_sortSurname.m_data, friend2->m_sortSurname.m_data, 40);
 
         if (!result) {
-            return friend1->m_program - friend2->m_program;
+            return friend1->m_accountId - friend2->m_accountId;
         }
     }
 
     return result;
 }
 
-// OFFSET: #0x00532850
-void BattlenetUI::SortFriendInviteList() {
-    if (!BattlenetUI::m_friendInvites) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::Array<Battlenet::Friends::FriendInviteContainer, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
-
-    if (invites.m_count > 1) {
-        qsort(invites.m_data, invites.m_count, sizeof(Battlenet::Friends::FriendInviteContainer), BattlenetUI::QSortFriendInviteListByTimeCB);
-    }
-}
-
-// OFFSET: #0x00532890
-void BattlenetUI_LeaveRealm() {
-    BattlenetUI::m_friendListLoaded = false;
-    BattlenetUI::m_friends.m_count = 0;
-    BattlenetUI::s_selfRealm = 0;
-}
-
-// OFFSET: #0x005328B0
-void BattlenetUI::SetDisconnectedFromBattlenet(bool disconnected) {
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_DISCONNECTED, "%b", disconnected);
-
-    for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); node;) {
-        AUTOCOMPLETE_NAMENODE* next = CGAutoCompleteName::m_list.Next(node);
-
-        if (node->m_presenceId) {
-            CGAutoCompleteName::m_list.DeleteNode(node);
-        }
-
-        node = next;
-    }
-}
-
-// OFFSET: #0x005328D0
+// OFFSET: 0x00903DB0
 void BattlenetUI::SetBattlenetConnectionRecovered() {
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CONNECTED, NULL);
 }
 
-// OFFSET: #0x00533D40
-bool BattlenetUI::AddToFriendList(uint32_t presenceId) {
-    if (BattlenetUI::FindFriendIndex(presenceId) >= 0) {
+// OFFSET: 0x00905200
+bool BattlenetUI::RemoveFromFriendList(uint32_t presenceId) {
+    int32_t index = BattlenetUI::FindFriendIndex(presenceId);
+
+    if (index >= 0) {
+        if (index != BattlenetUI::m_friends.Count() - 1) {
+            BattlenetUI::m_friends[index] = BattlenetUI::m_friends[BattlenetUI::m_friends.Count() - 1];
+        }
+
+        BattlenetUI::m_friends.m_count--;
         return true;
     }
 
-    BattlenetUIFriend* entry = BattlenetUI::m_friends.New();
-    entry->m_presenceID = presenceId;
-
-    Battlenet::Presence::FieldVal accountName = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_NAME].m_field);
-
-    if (accountName.m_tag == 18) {
-        SStrPrintf(entry->m_name.m_data, sizeof(entry->m_name.m_data), FrameScript_GetText("BATTLENET_NAME_FORMAT", -1, GENDER_NOT_APPLICABLE), entry->m_givenName.m_data, entry->m_surname.m_data);
-        entry->m_givenName = accountName.Value<Battlenet::Presence::AccountName>().m_givenName.m_data;
-        entry->m_surname = accountName.Value<Battlenet::Presence::AccountName>().m_surname.m_data;
-        entry->m_sortSurname = accountName.Value<Battlenet::Presence::AccountName>().m_surname.m_data;
-    } else {
-        entry->m_name = "";
-        entry->m_givenName = "";
-        entry->m_surname = "";
-        entry->m_sortSurname = "";
-    }
-
-    Battlenet::Presence::FieldVal program = BattlenetAPI::GetPresenceValue(entry->m_presenceID, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_PROGRAM].m_field);
-    entry->m_program = program.m_tag != 5 ? 0 : program.Value<BSN::FourCC>().m_value;
-
-    return true;
+    return false;
 }
 
-// OFFSET: #0x00533F10
-int32_t BattlenetUI::UpdateAutoComplete(uint32_t& presenceId, uint32_t flags, int32_t add, const char* name) {
-    if (BattlenetAPI::IsSelf(presenceId)) {
-        return CGAutoCompleteName::RemoveFlags(presenceId, 0x7FFFFFFF);
-    }
-
-    const char* displayName = name;
-
-    if (BattlenetAPI::HasRIDFriendship(presenceId) && !BattlenetAPI::IsRIDFriend(presenceId)) {
-        presenceId = BattlenetAPI::GetAccountPresenceId(presenceId);
-        BattlenetUIFriend* entry = BattlenetUI::FindFriend(presenceId);
-
-        if (entry) {
-            displayName = entry->m_name.m_data;
-        }
-    }
-
-    int32_t result = CGAutoCompleteName::AddFlags(presenceId, flags, add, displayName);
-
-    if (displayName && *displayName) {
-        return CGAutoCompleteName::SetName(presenceId, displayName, true);
-    }
-
-    return result;
-}
-
-// OFFSET: #0x00533FA0
+// OFFSET: 0x00905260
 uint32_t BattlenetUI::GetSelfRealmID() {
     if (!BattlenetUI::s_selfRealm) {
-        Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(BattlenetAPI::GetPresenceIDForCurrentToon(), BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
+        uint32_t toonId = BattlenetAPI::GetPresenceIDForCurrentToon();
+        Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(toonId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
 
         if (toon.m_tag == 17) {
             BattlenetUI::s_selfRealm = toon.Value<Battlenet::Toon::FullName>().m_realm;
-            return BattlenetUI::s_selfRealm;
         }
     }
 
     return BattlenetUI::s_selfRealm;
 }
 
-// OFFSET: #0x00533FF0
+// OFFSET: 0x009052B0
 int32_t BattlenetUI::QSortFriendListCB(const void* a, const void* b) {
-    const BattlenetUIFriend* friend1 = static_cast<const BattlenetUIFriend*>(a);
-    const BattlenetUIFriend* friend2 = static_cast<const BattlenetUIFriend*>(b);
+    const RIDFriendData* friend1 = static_cast<const RIDFriendData*>(a);
+    const RIDFriendData* friend2 = static_cast<const RIDFriendData*>(b);
 
     Battlenet::Presence::FieldVal online1 = BattlenetAPI::GetPresenceValue(friend1->m_presenceID, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE].m_field);
     Battlenet::Presence::FieldVal online2 = BattlenetAPI::GetPresenceValue(friend2->m_presenceID, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE].m_field);
@@ -421,16 +369,16 @@ int32_t BattlenetUI::QSortFriendListCB(const void* a, const void* b) {
     return SStrCmpUTF8I(friend1->m_name.m_data, friend2->m_name.m_data, 72);
 }
 
-// OFFSET: #0x00534090
+// OFFSET: 0x00905350
 void BattlenetUI::DisambiguateFriendList() {
-    if (BattlenetUI::m_friends.m_count > 1) {
-        qsort(BattlenetUI::m_friends.m_data, BattlenetUI::m_friends.m_count, sizeof(BattlenetUIFriend), BattlenetUI::QSortDisambiguateFriendListCB);
+    if (BattlenetUI::m_friends.Count() > 1) {
+        qsort(BattlenetUI::m_friends.Ptr(), BattlenetUI::m_friends.Count(), sizeof(RIDFriendData), BattlenetUI::QSortDisambiguateFriendListCB);
     }
 
     uint32_t duplicates = 0;
 
-    for (uint32_t i = 0; i < BattlenetUI::m_friends.m_count; i++) {
-        if (i != BattlenetUI::m_friends.m_count - 1
+    for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
+        if (i != BattlenetUI::m_friends.Count() - 1
             && !SStrCmpUTF8I(BattlenetUI::m_friends[i].m_givenName.m_data, BattlenetUI::m_friends[i + 1].m_givenName.m_data, 40)
             && !SStrCmpUTF8I(BattlenetUI::m_friends[i].m_sortSurname.m_data, BattlenetUI::m_friends[i + 1].m_sortSurname.m_data, 40)) {
             if (++duplicates == 1) {
@@ -450,18 +398,623 @@ void BattlenetUI::DisambiguateFriendList() {
             duplicates = 0;
         }
 
-        BattlenetUIFriend& entry = BattlenetUI::m_friends[i];
+        RIDFriendData& entry = BattlenetUI::m_friends[i];
         SStrPrintf(entry.m_name.m_data, sizeof(entry.m_name.m_data), FrameScript_GetText("BATTLENET_NAME_FORMAT", -1, GENDER_NOT_APPLICABLE), entry.m_givenName.m_data, entry.m_surname.m_data);
     }
 }
 
-// OFFSET: #0x005342D0
-bool BattlenetUI_IsAvailable() {
-    Login* login = ClientServices::LoginConnection();
-    return login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled() && static_cast<BattlenetLogin*>(login)->IsConnected();
+// OFFSET: 0x00905530
+int32_t BattlenetUI::QSortFriendInviteListByTimeCB(const void* a, const void* b) {
+    Battlenet::Friends::FriendInviteContainer invite1 = BattlenetAPI::GetFriendInvite(*static_cast<const uint32_t*>(a));
+    Battlenet::Friends::FriendInviteContainer invite2 = BattlenetAPI::GetFriendInvite(*static_cast<const uint32_t*>(b));
+
+    if (invite1.m_createdTime > invite2.m_createdTime) {
+        return -1;
+    }
+
+    return invite1.m_createdTime < invite2.m_createdTime;
 }
 
-// OFFSET: #0x00534320
+// OFFSET: 0x00905590
+bool BattlenetUI::FeaturesEnabledAndConnected() {
+    Login* login = ClientServices::LoginConnection();
+
+    if (login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled()) {
+        return static_cast<BattlenetLogin*>(login)->IsConnected();
+    }
+
+    return false;
+}
+
+// OFFSET: 0x00905BA0
+bool BattlenetUI::GetToonInviteInfo(uint32_t toonId, uint32_t& realmId, uint8_t* guid, char* name, uint32_t nameSize, char* realm, uint32_t realmSize) {
+    realmId = 0;
+    *reinterpret_cast<uint64_t*>(guid) = 0;
+
+    {
+        Battlenet::Presence::FieldVal handle = BattlenetAPI::GetPresenceValue(toonId, 0x10019);
+
+        if (handle.m_tag == 24) {
+            *reinterpret_cast<uint64_t*>(guid) = handle.Value<Battlenet::Toon::Handle>().m_id;
+        } else {
+            *reinterpret_cast<uint64_t*>(guid) = 0;
+        }
+    }
+
+    {
+        Battlenet::Presence::FieldVal realmValue = BattlenetAPI::GetPresenceValue(toonId, 0x40002);
+        realmId = realmValue.m_tag != 5 ? 0 : realmValue.Value<uint32_t>();
+    }
+
+    name[0] = '\0';
+
+    {
+        Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(toonId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
+
+        if (toon.m_tag == 17) {
+            const char* toonName = BattlenetAPI::GetToonNameForPresenceId(toonId, false);
+
+            if (toonName) {
+                SStrCopy(name, toonName, nameSize);
+            }
+        }
+    }
+
+    realm[0] = '\0';
+
+    {
+        Battlenet::Presence::FieldVal realmName = BattlenetAPI::GetPresenceValue(toonId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_REALM_NAME].m_field);
+
+        if (realmName.m_tag == 13) {
+            SStrCopy(realm, realmName.Value<BSN::String<127> >().m_data, realmSize);
+        }
+    }
+
+    return (*reinterpret_cast<uint64_t*>(guid) || name[0]) && (realmId || realm[0]);
+}
+
+// OFFSET: 0x00905D30
+int32_t BattlenetUI::BNGetToonInfoHelper(lua_State* L, uint32_t presenceId) {
+    lua_pushboolean(L, BattlenetAPI::GetFocusedToon(BattlenetAPI::GetAccountPresenceId(presenceId)) == presenceId);
+
+    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
+
+    if (toon.m_tag == 17) {
+        const char* toonName = BattlenetAPI::GetToonNameForPresenceId(presenceId, false);
+
+        if (!toonName) {
+            toonName = toon.Value<Battlenet::Toon::FullName>().m_name.m_data;
+        }
+
+        lua_pushstring(L, toonName);
+        lua_pushstring(L, BattlenetUI::GetProgramString(toon.Value<Battlenet::Toon::FullName>().m_programId));
+    } else {
+        lua_pushstring(L, "");
+        lua_pushstring(L, "");
+    }
+
+    Battlenet::Presence::FieldVal realm = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_REALM_NAME].m_field);
+    if (realm.m_tag == 13) {
+        lua_pushstring(L, realm.Value<BSN::String<127> >().m_data);
+    } else {
+        lua_pushstring(L, "");
+    }
+
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[PRESENCE_FIELD_REALM_ID].m_field);
+
+        if (value.m_tag == 5) {
+            lua_pushinteger(L, value.Value<uint32_t>());
+        } else {
+            lua_pushinteger(L, 0);
+        }
+    }
+
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[PRESENCE_FIELD_FACTION].m_field);
+
+        if (value.m_tag == 1) {
+            lua_pushnumber(L, value.Value<uint8_t>());
+        } else {
+            lua_pushnumber(L, -1.0);
+        }
+    }
+
+    Battlenet::Presence::FieldVal race = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_RACE].m_field);
+    if (race.m_tag == 13) {
+        lua_pushstring(L, race.Value<BSN::String<127> >().m_data);
+    } else {
+        lua_pushstring(L, "");
+    }
+
+    Battlenet::Presence::FieldVal classValue = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_CLASS].m_field);
+    if (classValue.m_tag == 13) {
+        lua_pushstring(L, classValue.Value<BSN::String<127> >().m_data);
+    } else {
+        lua_pushstring(L, "");
+    }
+
+    Battlenet::Presence::FieldVal guild = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_GUILD].m_field);
+    if (guild.m_tag == 13) {
+        lua_pushstring(L, guild.Value<BSN::String<127> >().m_data);
+    } else {
+        lua_pushstring(L, "");
+    }
+
+    Battlenet::Presence::FieldVal area = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_AREA].m_field);
+    if (area.m_tag == 13) {
+        lua_pushstring(L, area.Value<BSN::String<127> >().m_data);
+    } else {
+        lua_pushstring(L, "");
+    }
+
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_LEVEL].m_field);
+
+        if (value.m_tag == 1) {
+            char level[8];
+            SStrPrintf(level, sizeof(level), "%u", value.Value<uint8_t>());
+            lua_pushstring(L, level);
+        } else {
+            lua_pushstring(L, "");
+        }
+    }
+
+    Battlenet::Presence::FieldVal gameText = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_GAME_TEXT].m_field);
+    if (gameText.m_tag == 13) {
+        lua_pushstring(L, gameText.Value<BSN::String<127> >().m_data);
+    } else {
+        lua_pushstring(L, "");
+    }
+
+    Battlenet::Presence::FieldVal broadcast = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST].m_field);
+    if (broadcast.m_tag == 13) {
+        lua_pushstring(L, broadcast.Value<BSN::String<127> >().m_data);
+    } else {
+        lua_pushstring(L, "");
+    }
+
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST_TIME].m_field);
+
+        if (value.m_tag == 6) {
+            lua_pushnumber(L, value.Value<int32_t>());
+        } else {
+            lua_pushnumber(L, 0.0);
+        }
+    }
+
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE].m_field);
+        bool isOnline = false;
+
+        if (value.m_tag == 1) {
+            isOnline = value.Value<bool>() != 0;
+        }
+
+        lua_pushboolean(L, isOnline);
+    }
+
+    lua_pushnumber(L, presenceId);
+
+    return 16;
+}
+
+// OFFSET: 0x00908950
+BattlenetUI::MemberListCB::MemberListCB() {
+    this->m_members = new (__FILE__, __LINE__) TSGrowableArray<uint32_t>();
+}
+
+// OFFSET: 0x009089A0
+void BattlenetUI::SelfToonOnlineCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_SELF_ONLINE, "%u", presenceId);
+    DebugLog("BNUI Self Toon Online, ID %u", presenceId);
+}
+
+// OFFSET: 0x00908A10
+void BattlenetUI::SelfToonOfflineCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_SELF_OFFLINE, NULL);
+    DebugLog("BNUI: Self Toon Offline");
+}
+
+// OFFSET: 0x00908A70
+bool BattlenetUI::AddToFriendList(uint32_t presenceId) {
+    if (BattlenetUI::FindFriendIndex(presenceId) >= 0) {
+        return true;
+    }
+
+    RIDFriendData* entry = BattlenetUI::m_friends.New();
+    entry->m_presenceID = presenceId;
+
+    Battlenet::Presence::FieldVal accountName = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_NAME].m_field);
+
+    if (accountName.m_tag == 18) {
+        SStrPrintf(entry->m_name.m_data, sizeof(entry->m_name.m_data), FrameScript_GetText("BATTLENET_NAME_FORMAT", -1, GENDER_NOT_APPLICABLE), entry->m_givenName.m_data, entry->m_surname.m_data);
+        entry->m_givenName = accountName.Value<Battlenet::Account::FullName>().m_givenName.m_data;
+        entry->m_surname = accountName.Value<Battlenet::Account::FullName>().m_surname.m_data;
+        entry->m_sortSurname = accountName.Value<Battlenet::Account::FullName>().m_surname.m_data;
+    } else {
+        entry->m_name = "";
+        entry->m_givenName = "";
+        entry->m_surname = "";
+        entry->m_sortSurname = "";
+    }
+
+    Battlenet::Presence::FieldVal accountId = BattlenetAPI::GetPresenceValue(entry->m_presenceID, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_PROGRAM].m_field);
+    entry->m_accountId = accountId.m_tag == 5 ? accountId.Value<uint32_t>() : 0;
+
+    return true;
+}
+
+// OFFSET: 0x00908C10
+const char* BattlenetUI::GetNameForPresenceIdHelper(uint32_t presenceId) {
+    uint32_t accountId = presenceId;
+
+    if (BattlenetAPI::HasRIDFriendship(presenceId)) {
+        if (!BattlenetAPI::IsRIDFriend(presenceId)) {
+            accountId = BattlenetAPI::GetAccountPresenceId(presenceId);
+        }
+
+        RIDFriendData* entry = BattlenetUI::FindFriend(accountId);
+
+        if (entry) {
+            return entry->m_name.m_data;
+        }
+
+        return BattlenetAPI::GetNameForPresenceId(accountId, false);
+    }
+
+    if (BattlenetAPI::IsSelf(presenceId)) {
+        return BattlenetAPI::GetNameForPresenceId(presenceId, false);
+    }
+
+    uint32_t realm = BattlenetUI::GetSelfRealmID();
+
+    if (!realm) {
+        return BattlenetAPI::GetNameForPresenceId(presenceId, false);
+    }
+
+    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
+
+    if (toon.m_tag != 17 || (realm == toon.Value<Battlenet::Toon::FullName>().m_realm && toon.Value<Battlenet::Toon::FullName>().m_programId.m_value == Battlenet::Program::WOW.m_value)) {
+        return BattlenetAPI::GetNameForPresenceId(presenceId, false);
+    }
+
+    SStrPrintf(BattlenetUI::s_displayName, sizeof(BattlenetUI::s_displayName), "%s*", BattlenetAPI::GetNameForPresenceId(presenceId, false));
+    return BattlenetUI::s_displayName;
+}
+
+// OFFSET: 0x00908CF0
+void BattlenetUI::FriendInviteSentCB::Call(int32_t argc, const GeneralFunction::Arg* args) const {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    UIErrors error = ERR_BN_FRIEND_REQUEST_SENT;
+    uint16_t result = static_cast<uint16_t>(args[0].ToUInt64());
+
+    if (result == 604) {
+        error = ERR_BN_FRIEND_ALREADY;
+    } else if (result == 617) {
+        error = ERR_BN_FRIEND_SELF;
+    } else if (result == 623) {
+        error = ERR_BN_FRIEND_BLOCKED;
+    }
+
+    CGGameUI::DisplayError(error);
+
+    const char* text = "success";
+
+    if (result) {
+        text = "failure";
+    }
+
+    DebugLog("BNUI: Friend Invite Send Result: %s", text);
+}
+
+// PROVEN: 0926afe1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void BattlenetUI::FriendInviteSentCB::Destroy() const {
+}
+
+// OFFSET: 0x00401000/0x1407D7E80
+void BattlenetUI::NoActionCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+}
+
+// OFFSET: 0x00908DA0
+void BattlenetUI::LastOnlineChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
+
+    if (update.m_data.m_value.m_tag == 6) {
+        DebugLog("BNUI: Last Online for ID %u is now %d", update.m_data.m_id, update.m_data.m_value.Value<int32_t>());
+    } else {
+        DebugLog("BNUI: Last Online for ID %u changed", update.m_data.m_id);
+    }
+}
+
+// OFFSET: 0x00908E40
+void BattlenetUI::MemberListCB::Call(int32_t argc, const GeneralFunction::Arg* args) const {
+    if (argc == 2) {
+        BSN::BSNEncodedObject<Battlenet::Chat::MemberList, Protocol> members(args[0].ToObject());
+
+        for (uint32_t i = 0; i < members.m_data.m_list.m_count; i++) {
+            this->m_members->New(members.m_data.m_list.m_data[i]);
+        }
+    } else {
+        DebugLog("MemberListCB called with %d parameters instead of 2", argc);
+    }
+}
+
+// OFFSET: 0x00401000
+void BattlenetUI::MemberListCB::Destroy() const {
+}
+
+// OFFSET: 0x00908F00
+void BattlenetUI::ChatChannelMessageBlockedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MESSAGE_BLOCKED, "%d%u", channel + 1, presenceId);
+    DebugLog("BNUI: Chat Channel Message Blocked. channel %d, id %u", channel + 1, presenceId);
+}
+
+// OFFSET: 0x00908F80
+void BattlenetUI::ChatChannelMemberUpdatedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_UPDATED, "%d%u", channel + 1, presenceId);
+    DebugLog("BNUI: Chat Channel Member Updated. channel %d, id %u", channel + 1, presenceId);
+}
+
+// OFFSET: 0x00909000
+void BattlenetUI::BlockListInitializedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_BLOCK_LIST_UPDATED, NULL);
+    DebugLog("BNUI: Block List Initialized");
+}
+
+// OFFSET: 0x00909060
+void BattlenetUI::BlockAddedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_BLOCK_LIST_UPDATED, NULL);
+    DebugLog("BNUI: Block Added for ID %u", presenceId);
+}
+
+// OFFSET: 0x009090C0
+void BattlenetUI::BlockRemovedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_BLOCK_LIST_UPDATED, NULL);
+    DebugLog("BNUI: Block Removed for ID %u", presenceId);
+}
+
+// OFFSET: 0x00909120
+void BattlenetUI::SystemMessageCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    const char* type = "unknown";
+    uint32_t value = 0;
+
+    switch (static_cast<uint16_t>(args[0].ToUInt64())) {
+        case 3800:
+            type = "shutdown minutes";
+            value = static_cast<uint32_t>(args[1].ToUInt64());
+            break;
+
+        case 3801:
+            type = "shutdown seconds";
+            value = static_cast<uint32_t>(args[1].ToUInt64());
+            break;
+
+        case 3802:
+            type = "shutdown now";
+            break;
+    }
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_SYSTEM_MESSAGE, "%s%u", type, value);
+    DebugLog("BNUI: SYSTEM MESSAGE RECEIVED: %s %u", type, value);
+}
+
+// OFFSET: 0x009091D0
+void BattlenetUI::SettingChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    if (!_stricmp(args[1].ToString(), "Chat.ProfanityFilterEnabled")) {
+        bool enabled = args[2].ToBool();
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_MATURE_LANGUAGE_FILTER, "%b", enabled != 0);
+    }
+}
+
+// OFFSET: 0x00909280
+void BattlenetUI::LeaveRealm() {
+    BattlenetUI::m_friendListLoaded = false;
+    BattlenetUI::m_friendInvites.Clear();
+    BattlenetUI::m_friends.Clear();
+    BattlenetUI::s_friendsOfFriend.Clear();
+    BattlenetUI::s_selfRealm = 0;
+}
+
+// OFFSET: 0x00909330
+void BattlenetUI_LeaveRealm() {
+    BattlenetUI::LeaveRealm();
+}
+
+// OFFSET: 0x00909340
+void BattlenetUI::SetDisconnectedFromBattlenet(bool disconnected) {
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_DISCONNECTED, "%b", disconnected);
+
+    CGAutoCompleteName::RemoveAllBattlenet();
+    BattlenetUI::LeaveRealm();
+}
+
+// OFFSET: 0x009096C0
+BattlenetUI::MemberListCB::~MemberListCB() {
+    if (this->m_members) {
+        delete this->m_members;
+    }
+}
+
+// OFFSET: 0x00909780
+void BattlenetUI::FriendInviteListInitializedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Friends::FriendList, Protocol> invites;
+    invites.WalkAndGet(args[0].ToObject());
+
+    uint32_t count = BattlenetUI::m_friendInvites.Count();
+    BattlenetUI::m_friendInvites.SetCount(count + invites.m_data.m_friends.m_count);
+
+    for (uint32_t i = 0; i < invites.m_data.m_friends.m_count; i++) {
+        BattlenetUI::m_friendInvites[count + i] = invites.m_data.m_friends.m_data[i];
+    }
+
+    if (!args[1].ToBool()) {
+        return;
+    }
+
+    if (BattlenetUI::m_friendInvites.Count() > 1) {
+        qsort(BattlenetUI::m_friendInvites.Ptr(), BattlenetUI::m_friendInvites.Count(), sizeof(uint32_t), BattlenetUI::QSortFriendInviteListByTimeCB);
+    }
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_LIST_INITIALIZED, "%d", BattlenetUI::m_friendInvites.Count());
+
+    if (s_cvShowToastFriendRequest && s_cvShowToastFriendRequest->m_intValue) {
+        CGChat::AddChatMessage("FRIEND_PENDING", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL);
+    }
+
+    DebugLog("BNUI: Friend Invite List Initialized");
+}
+
+// OFFSET: 0x00909940
+void BattlenetUI::FriendInviteAddedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+    Battlenet::Friends::FriendInviteContainer invite = BattlenetAPI::GetFriendInvite(presenceId);
+
+    BattlenetUI::m_friendInvites.New(presenceId);
+
+    if (BattlenetUI::m_friendInvites.Count() > 1) {
+        qsort(BattlenetUI::m_friendInvites.Ptr(), BattlenetUI::m_friendInvites.Count(), sizeof(uint32_t), BattlenetUI::QSortFriendInviteListByTimeCB);
+    }
+
+    uint32_t toonId = BattlenetAPI::GetPresenceIDForCurrentToon();
+    Battlenet::Presence::FieldVal onlineTime = BattlenetAPI::GetPresenceValue(toonId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
+
+    if (onlineTime.m_tag != 6 || invite.m_createdTime < onlineTime.Value<int32_t>()) {
+        return;
+    }
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_ADDED, "%u", presenceId);
+
+    if (s_cvShowToastFriendRequest && s_cvShowToastFriendRequest->m_intValue) {
+        CGChat::AddChatMessage("FRIEND_REQUEST", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL);
+    }
+
+    DebugLog("BNUI: Friend Invite Added. ID %u", presenceId);
+}
+
+// OFFSET: 0x00909A60
+void BattlenetUI::FriendInviteRemovedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+    int32_t index = -1;
+
+    for (uint32_t i = 0; i < BattlenetUI::m_friendInvites.Count(); i++) {
+        if (BattlenetUI::m_friendInvites[i] == presenceId) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index >= 0) {
+        if (index != BattlenetUI::m_friendInvites.Count() - 1) {
+            BattlenetUI::m_friendInvites[index] = BattlenetUI::m_friendInvites[BattlenetUI::m_friendInvites.Count() - 1];
+        }
+
+        BattlenetUI::m_friendInvites.m_count--;
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_REMOVED, "%d%u", index, presenceId);
+
+        if (BattlenetUI::m_friendInvites.Count() > 1) {
+            qsort(BattlenetUI::m_friendInvites.Ptr(), BattlenetUI::m_friendInvites.Count(), sizeof(uint32_t), BattlenetUI::QSortFriendInviteListByTimeCB);
+        }
+    }
+
+    DebugLog("BNUI: Friend Invite Removed. index %d, ID %u", index, presenceId);
+}
+
+// OFFSET: 0x00909CD0
 void BattlenetUI::Uninit() {
     BattlenetUI::s_initialized = false;
 
@@ -470,7 +1023,7 @@ void BattlenetUI::Uninit() {
         BattlenetUI::s_eventCallbacks[i].m_handle = 0;
     }
 
-    for (uint32_t i = 0; i < NUM_BN_PRESENCE_FIELDS; i++) {
+    for (uint32_t i = 0; i < NUM_PRESENCE_FIELDS; i++) {
         BattlenetAPI::UnregisterPresenceUpdateCallback(BattlenetUI::s_presenceCallbacks[i].m_handle);
         BattlenetUI::s_presenceCallbacks[i].m_handle = 0;
     }
@@ -490,26 +1043,853 @@ void BattlenetUI::Uninit() {
         BattlenetUI::s_friendsOfFriendCB = NULL;
     }
 
-    if (BattlenetUI::m_friendInvites) {
-        BattlenetUI::m_friendInvites->m_data.m_invites.m_count = 0;
-        delete BattlenetUI::m_friendInvites;
-        BattlenetUI::m_friendInvites = NULL;
+    BattlenetUI::s_accountIdCache.Clear();
+    BattlenetUI::s_accountIdCacheCount = 0;
+    DebugLog("BNUI: Uninit");
+}
+
+// OFFSET: 0x0090A470
+ACCOUNTIDCACHE* BattlenetUI::GetAccountIDCache(uint32_t presenceId) {
+    HASHKEY_DWORD key;
+    key.m_key = presenceId;
+
+    ACCOUNTIDCACHE* cache = BattlenetUI::s_accountIdCache.Ptr(presenceId, key);
+
+    if (cache) {
+        return cache;
     }
 
-    if (BattlenetUI::s_friendsOfFriend) {
-        BattlenetUI::s_friendsOfFriend->m_data.m_friends.m_count = 0;
-        delete BattlenetUI::s_friendsOfFriend;
-        BattlenetUI::s_friendsOfFriend = NULL;
+    if (BattlenetUI::s_accountIdCacheCount >= 500) {
+        ACCOUNTIDCACHE* oldest = NULL;
+        key.m_key = BattlenetUI::s_accountIdCacheLowest;
+        cache = BattlenetUI::s_accountIdCache.Ptr(BattlenetUI::s_accountIdCacheLowest, key);
+
+        if (cache) {
+            oldest = cache;
+        } else {
+            uint32_t lowest = 0xFFFFFFFF;
+
+            ACCOUNTIDCACHE* node = BattlenetUI::s_accountIdCache.Head();
+
+            while (node) {
+                ACCOUNTIDCACHE* next = BattlenetUI::s_accountIdCache.Next(node);
+
+                if (node->m_hashval <= lowest) {
+                    lowest = node->m_hashval;
+                    oldest = node;
+                }
+
+                node = next;
+            }
+
+            BattlenetUI::s_accountIdCacheLowest = lowest;
+        }
+
+        BattlenetUI::s_accountIdCache.Delete(oldest);
+        BattlenetUI::s_accountIdCacheLowest++;
+        BattlenetUI::s_accountIdCacheCount--;
+    }
+
+    if (BattlenetUI::s_accountIdCacheLowest > presenceId) {
+        BattlenetUI::s_accountIdCacheLowest = presenceId;
+    }
+
+    BattlenetUI::s_accountIdCacheCount++;
+    key.m_key = presenceId;
+
+    return BattlenetUI::s_accountIdCache.New(presenceId, key, 0, 0);
+}
+
+// OFFSET: 0x0090A5C0
+const char* BattlenetUI::GetKStringText(uint32_t kind, uint32_t presenceId) {
+    for (int32_t tries = 0; tries < 2; tries++) {
+        int32_t index = BattlenetUI::FindFriendIndex(presenceId);
+
+        if (index >= 0) {
+            switch (kind) {
+                case 'f':
+                    return BattlenetUI::m_friends[index].m_name.m_data;
+
+                case 'g':
+                    return BattlenetUI::m_friends[index].m_givenName.m_data;
+
+                case 's':
+                    return BattlenetUI::m_friends[index].m_surname.m_data;
+            }
+        }
+
+        if (kind == 'f') {
+            const char* name = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+
+            if (name && *name) {
+                return name;
+            }
+        }
+
+        Battlenet::Presence::FieldVal accountName = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_NAME].m_field);
+
+        if (accountName.m_tag == 18) {
+            if (kind == 'g') {
+                return accountName.Value<Battlenet::Account::FullName>().m_givenName.m_data;
+            }
+
+            if (kind == 's') {
+                return accountName.Value<Battlenet::Account::FullName>().m_surname.m_data;
+            }
+        }
+
+        if (tries == 1) {
+            break;
+        }
+
+        ACCOUNTIDCACHE* cache = BattlenetUI::GetAccountIDCache(presenceId);
+
+        if (cache) {
+            presenceId = BattlenetAPI::GetPresenceIDForAccount(cache->m_accountId);
+        }
+    }
+
+    return FrameScript_GetText("UNKNOWNOBJECT", -1, GENDER_NOT_APPLICABLE);
+}
+
+// OFFSET: 0x0090A710
+void BattlenetUI::SavePrescenceID(uint32_t presenceId) {
+    ACCOUNTIDCACHE* cache = BattlenetUI::GetAccountIDCache(presenceId);
+
+    if (cache && !cache->m_accountId) {
+        Battlenet::Presence::FieldVal accountId = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_PROGRAM].m_field);
+
+        if (accountId.m_tag == 5) {
+            cache->m_accountId = accountId.Value<uint32_t>();
+        } else {
+            DebugLog("Jaaacob, ACCOUNT_ID_FIELD returned something other than U32VAL: %d\n", accountId.m_tag);
+        }
     }
 }
 
-// OFFSET: #0x005346F0
+// OFFSET: 0x0090A780
+bool BattlenetUI::TokenizeName(uint32_t presenceId, const char*& name) {
+    const char* text = name;
+    BattlenetUI::SavePrescenceID(presenceId);
+    sprintf(BattlenetUI::s_tokenName, "|K%c%d|k%0*d|k", 'f', presenceId, strlen(text), 0);
+    name = BattlenetUI::s_tokenName;
+    return true;
+}
+
+// OFFSET: 0x0090A7D0
+bool BattlenetUI::TokenizeGivenAndSurname(uint32_t presenceId, const char*& givenName, const char*& surname) {
+    const char* givenText = givenName;
+    BattlenetUI::SavePrescenceID(presenceId);
+    sprintf(BattlenetUI::s_tokenGivenName, "|K%c%d|k%0*d|k", 'g', presenceId, strlen(givenText), 0);
+    givenName = BattlenetUI::s_tokenGivenName;
+
+    const char* surnameText = surname;
+    BattlenetUI::SavePrescenceID(presenceId);
+    sprintf(BattlenetUI::s_tokenSurname, "|K%c%d|k%0*d|k", 's', presenceId, strlen(surnameText), 0);
+    surname = BattlenetUI::s_tokenSurname;
+    return true;
+}
+
+// OFFSET: 0x0090A990
+const char* BattlenetUI::GetTokenizedName(uint32_t presenceId) {
+    const char* name = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    BattlenetUI::TokenizeName(presenceId, name);
+    return name;
+}
+
+// OFFSET: 0x0090A9E0
+int32_t BattlenetUI::UpdateAutoComplete(uint32_t& presenceId, uint32_t flags, int32_t add, const char* name) {
+    if (BattlenetAPI::IsSelf(presenceId)) {
+        return CGAutoCompleteName::RemoveFlags(presenceId, 0x7FFFFFFF);
+    }
+
+    if (BattlenetAPI::HasRIDFriendship(presenceId) && !BattlenetAPI::IsRIDFriend(presenceId)) {
+        presenceId = BattlenetAPI::GetAccountPresenceId(presenceId);
+        RIDFriendData* entry = BattlenetUI::FindFriend(presenceId);
+
+        if (entry) {
+            name = entry->m_name.m_data;
+        }
+    }
+
+    int32_t result = CGAutoCompleteName::AddFlags(presenceId, flags, add, name);
+
+    if (name && *name) {
+        BattlenetUI::TokenizeName(presenceId, name);
+        return CGAutoCompleteName::SetName(presenceId, name, true);
+    }
+
+    return result;
+}
+
+// OFFSET: 0x0090AA90
+void BattlenetUI::PresenceUpdateCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
+    const char* name = BattlenetUI::GetTokenizedName(update.m_data.m_id);
+
+    if (update.m_data.m_handle == BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_NAME].m_field) {
+        if (!BattlenetAPI::HasRIDFriendship(update.m_data.m_id) || BattlenetAPI::IsRIDFriend(update.m_data.m_id)) {
+            CGAutoCompleteName::SetName(update.m_data.m_id, name, true);
+        } else {
+            CGAutoCompleteName::RemoveFlags(update.m_data.m_id, 0x7FFFFFFF);
+        }
+    }
+
+    int32_t index = BattlenetUI::FindFriendIndex(update.m_data.m_id);
+
+    if (index >= 0) {
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, "%d", index + 1);
+    }
+}
+
+// OFFSET: 0x0090ABA0
+void BattlenetUI::FactionUpdateCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
+
+    if (!BattlenetAPI::IsSelf(update.m_data.m_id)) {
+        BattlenetUI::UpdateAutoComplete(update.m_data.m_id, 0x20, 0, NULL);
+    }
+}
+
+// OFFSET: 0x0090AC30
+void BattlenetUI::NewPresenceCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+
+    if (!BattlenetUI::m_friendListLoaded) {
+        DebugLog("BNUI: New Presence ID %u before Friend List initialized.", presenceId);
+        return;
+    }
+
+    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
+
+    if (toon.m_tag == 17) {
+        if (BattlenetAPI::HasRIDFriendship(presenceId)) {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_ONLINE, "%u", presenceId);
+            DebugLog("BNUI: >> TOON %s is now ONLINE. ID %u (new presence)", BattlenetUI::GetTokenizedName(presenceId), presenceId);
+        } else {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_NEW_PRESENCE, "%u%s", presenceId, toon.Value<Battlenet::Toon::FullName>().m_name.m_data);
+            DebugLog("BNUI: New Presence ID %u, name %s", presenceId, toon.Value<Battlenet::Toon::FullName>().m_name.m_data);
+        }
+    } else {
+        const char* name = BattlenetUI::GetTokenizedName(presenceId);
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_NEW_PRESENCE, "%u%s", presenceId, name);
+        DebugLog("BNUI: New Non-Toon Presence ID %u, name %s", presenceId, name);
+    }
+}
+
+// OFFSET: 0x0090AD70
+void BattlenetUI::ToonNameUpdateCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
+    bool friendship = BattlenetAPI::HasRIDFriendship(update.m_data.m_id);
+
+    if (update.m_data.m_value.m_tag == 17) {
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_TOON_NAME_UPDATED, "%u%s%b", update.m_data.m_id, update.m_data.m_value.Value<Battlenet::Toon::FullName>().m_name.m_data, friendship);
+        DebugLog("BNUI: Toon Name Updated, %s friend. ID %u, name %s", friendship ? "" : "non", update.m_data.m_id, update.m_data.m_value.Value<Battlenet::Toon::FullName>().m_name.m_data);
+    }
+
+    if (!BattlenetAPI::IsSelf(update.m_data.m_id)) {
+        BattlenetUI::UpdateAutoComplete(update.m_data.m_id, 0x20, 0, NULL);
+    }
+}
+
+// OFFSET: 0x0090AE80
+void BattlenetUI::OnlinePresenceChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
+    bool online = false;
+
+    if (update.m_data.m_value.m_tag == 1) {
+        online = update.m_data.m_value.Value<bool>() != 0;
+    }
+
+    bool ridFriend = BattlenetAPI::IsRIDFriend(update.m_data.m_id);
+    bool cidFriend = BattlenetAPI::IsCIDFriend(update.m_data.m_id);
+
+    BattlenetUI::DisambiguateFriendList();
+
+    if (BattlenetUI::m_friends.Count() > 1) {
+        qsort(BattlenetUI::m_friends.Ptr(), BattlenetUI::m_friends.Count(), sizeof(RIDFriendData), BattlenetUI::QSortFriendListCB);
+    }
+
+    if (online) {
+        BattlenetUI::UpdateAutoComplete(update.m_data.m_id, 0x20, 0, NULL);
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, NULL);
+        return;
+    }
+
+    CGAutoCompleteName::RemoveFlags(update.m_data.m_id, 0x20);
+
+    if (ridFriend) {
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_ACCOUNT_OFFLINE, "%u", update.m_data.m_id);
+
+        if (BattlenetUI::m_friendListLoaded && s_cvShowToastOffline && s_cvShowToastOffline->m_intValue) {
+            ChatConversation conversation;
+            conversation.m_presenceID = update.m_data.m_id;
+            conversation.m_inactive = 1;
+            ChatMessageParams params;
+            params.m_senderName = BattlenetUI::GetTokenizedName(update.m_data.m_id);
+            params.m_conversation = &conversation;
+            CGChat::AddChatMessage("FRIEND_OFFLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
+        }
+
+        DebugLog("BNUI: >> ACCOUNT %s is now OFFLINE. ID %u", BattlenetUI::GetTokenizedName(update.m_data.m_id), update.m_data.m_id);
+    } else if (cidFriend) {
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_OFFLINE, "%u", update.m_data.m_id);
+        DebugLog("BNUI: >> TOON %s is now OFFLINE. ID %u", BattlenetUI::GetTokenizedName(update.m_data.m_id), update.m_data.m_id);
+    }
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, NULL);
+}
+
+// OFFSET: 0x0090B070
+void BattlenetUI::OnlineTimeChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
+
+    if (BattlenetAPI::IsSelf(update.m_data.m_id) || update.m_data.m_value.m_tag != 6) {
+        return;
+    }
+
+    int32_t onlineTime = update.m_data.m_value.Value<int32_t>();
+    bool ridFriend = BattlenetAPI::IsRIDFriend(update.m_data.m_id);
+    bool cidFriend = BattlenetAPI::IsCIDFriend(update.m_data.m_id);
+
+    if (!ridFriend && !cidFriend) {
+        return;
+    }
+
+    uint32_t toonId = BattlenetAPI::GetPresenceIDForCurrentToon();
+    Battlenet::Presence::FieldVal selfTime = BattlenetAPI::GetPresenceValue(toonId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
+
+    if (selfTime.m_tag != 6) {
+        return;
+    }
+
+    int32_t selfOnlineTime = selfTime.Value<int32_t>();
+
+    if (selfOnlineTime && onlineTime && onlineTime > selfOnlineTime) {
+        if (ridFriend) {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_ACCOUNT_ONLINE, "%u", update.m_data.m_id);
+
+            if (s_cvShowToastOnline && s_cvShowToastOnline->m_intValue) {
+                ChatConversation conversation;
+                conversation.m_presenceID = update.m_data.m_id;
+                conversation.m_inactive = 1;
+                ChatMessageParams params;
+                params.m_senderName = BattlenetUI::GetTokenizedName(update.m_data.m_id);
+                params.m_conversation = &conversation;
+                CGChat::AddChatMessage("FRIEND_ONLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
+            }
+
+            DebugLog("BNUI: >> ACCOUNT %s Online Time changed. ID %u", BattlenetUI::GetTokenizedName(update.m_data.m_id), update.m_data.m_id);
+        } else if (cidFriend) {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_ONLINE, "%u", update.m_data.m_id);
+            DebugLog("BNUI: >> TOON %s is now ONLINE. ID %u", BattlenetUI::GetTokenizedName(update.m_data.m_id), update.m_data.m_id);
+        }
+    }
+
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, NULL);
+}
+
+// OFFSET: 0x0090B250
+void BattlenetUI::CustomMessageChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
+    uint32_t toonId = BattlenetAPI::GetPresenceIDForCurrentToon();
+    int32_t onlineTime = 0;
+
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(toonId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
+
+        if (value.m_tag == 6) {
+            onlineTime = value.Value<int32_t>();
+        }
+    }
+
+    const char* message = update.m_data.m_value.m_tag == 13 ? update.m_data.m_value.Value<BSN::String<127> >().m_data : "";
+    int32_t broadcastTime = 0;
+
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(update.m_data.m_id, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST_TIME].m_field);
+
+        if (value.m_tag == 6) {
+            broadcastTime = value.Value<int32_t>();
+        }
+    }
+
+    char text[512];
+
+    if (toonId == update.m_data.m_id) {
+        if (onlineTime && broadcastTime >= onlineTime) {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_CHANGED, NULL);
+            FilterChatLinks(message, text, 509);
+            CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST_INFORM, NULL);
+        } else {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_LOADED, NULL);
+        }
+
+        return;
+    }
+
+    if (BattlenetAPI::IsRIDFriend(update.m_data.m_id)) {
+        if (!onlineTime || broadcastTime < onlineTime) {
+            return;
+        }
+
+        {
+            Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(update.m_data.m_id, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
+
+            if (value.m_tag == 6 && broadcastTime < value.Value<int32_t>()) {
+                return;
+            }
+        }
+
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_CHANGED, "%u", update.m_data.m_id);
+
+        if (s_cvShowToastBroadcast && s_cvShowToastBroadcast->m_intValue) {
+            FilterChatLinks(message, text, 509);
+
+            ChatConversation conversation;
+            conversation.m_presenceID = update.m_data.m_id;
+            conversation.m_inactive = 1;
+            ChatMessageParams params;
+            params.m_senderName = BattlenetUI::GetTokenizedName(update.m_data.m_id);
+            params.m_conversation = &conversation;
+            CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST, &params);
+        }
+    }
+
+    DebugLog("BNUI: Custom Message Changed");
+}
+
+// OFFSET: 0x0090B480
+void BattlenetUI::ChatWhisperSentCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+    const char* message = args[1].ToString();
+
+    if (!message) {
+        message = "";
+    }
+
+    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetTokenizedName(presenceId));
+
+    const char* toonName = "unknown";
+    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
+
+    if (toon.m_tag == 17) {
+        toonName = toon.Value<Battlenet::Toon::FullName>().m_name.m_data;
+    }
+
+    {
+        Battlenet::Presence::FieldVal afk = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_AFK].m_field);
+    }
+
+    {
+        Battlenet::Presence::FieldVal dnd = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_DND].m_field);
+    }
+
+    char text[1024];
+    FilterChatLinks(message, text, 1021);
+
+    ChatConversation conversation;
+    conversation.m_presenceID = presenceId;
+    conversation.m_inactive = 1;
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetTokenizedName(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER_INFORM, &params);
+
+    DebugLog("BNUI: Whisper Sent to %s, ID %u. %s", toonName, presenceId, message);
+}
+
+// OFFSET: 0x0090B610
+void BattlenetUI::ChatWhisperReceivedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
+    const char* message = args[1].ToString();
+
+    if (!message) {
+        message = "";
+    }
+
+    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetTokenizedName(presenceId));
+
+    const char* toonName = "unknown";
+    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
+
+    if (toon.m_tag == 17) {
+        toonName = toon.Value<Battlenet::Toon::FullName>().m_name.m_data;
+    }
+
+    {
+        Battlenet::Presence::FieldVal afk = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_AFK].m_field);
+    }
+
+    {
+        Battlenet::Presence::FieldVal dnd = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_DND].m_field);
+    }
+
+    char text[1024];
+    FilterChatLinks(message, text, 1021);
+
+    ChatConversation conversation;
+    conversation.m_presenceID = presenceId;
+    conversation.m_inactive = 1;
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetTokenizedName(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER, &params);
+
+    DebugLog("BNUI: Whisper Received From %s, ID %u. %s", toonName, presenceId, message);
+}
+
+// OFFSET: 0x0090B7A0
+void BattlenetUI::ChatChannelJoinedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    int32_t type = static_cast<int32_t>(args[1].ToInt64());
+
+    MemberListCB members;
+    BattlenetAPI::GetChatMemberList(channel, &members);
+
+    for (uint32_t i = 0; i < members.m_members->Count(); i++) {
+        uint32_t presenceId = (*members.m_members)[i];
+        BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetTokenizedName(presenceId));
+    }
+
+    if (type == 2) {
+        ChatConversation conversation;
+        conversation.m_presenceID = BattlenetAPI::GetPresenceIDForCurrentAccount();
+        conversation.m_index = channel;
+        conversation.m_inactive = 0;
+        ChatMessageParams params;
+        params.m_senderName = BattlenetUI::GetTokenizedName(BattlenetAPI::GetPresenceIDForCurrentAccount());
+        params.m_conversation = &conversation;
+        CGChat::AddChatMessage("YOU_JOINED_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_JOINED, "%d", channel + 1);
+
+        if (s_cvShowToastConversation && s_cvShowToastConversation->m_intValue) {
+            uint32_t accountId = BattlenetAPI::GetPresenceIDForCurrentAccount();
+            uint32_t toonId = BattlenetAPI::GetPresenceIDForCurrentToon();
+            const char* delimiter = FrameScript_GetText("PLAYER_LIST_DELIMITER", -1, GENDER_NOT_APPLICABLE);
+            char text[3000];
+            bool first = true;
+
+            for (uint32_t i = 0; i < members.m_members->Count(); i++) {
+                uint32_t presenceId = (*members.m_members)[i];
+
+                if (presenceId != accountId && presenceId != toonId) {
+                    if (first) {
+                        SStrCopyUTF8(text, BattlenetUI::GetTokenizedName(presenceId), sizeof(text), sizeof(text));
+                        first = false;
+                    } else {
+                        SStrPrintf(text, sizeof(text), "%s%s%s", text, delimiter, BattlenetUI::GetTokenizedName((*members.m_members)[i]));
+                    }
+                }
+            }
+
+            ChatMessageParams params2;
+            params2.m_senderName = BattlenetUI::GetTokenizedName(BattlenetAPI::GetPresenceIDForCurrentAccount());
+            params2.m_conversation = &conversation;
+            CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_CONVERSATION, &params2);
+        }
+    }
+
+    DebugLog("BNUI: Chat Channel Joined. channel %d", channel + 1);
+}
+
+// OFFSET: 0x0090BBB0
+void BattlenetUI::ChatChannelLeftCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+
+    ChatConversation conversation;
+    conversation.m_index = channel;
+    conversation.m_presenceID = BattlenetAPI::GetPresenceIDForCurrentAccount();
+    conversation.m_inactive = 0;
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetTokenizedName(BattlenetAPI::GetPresenceIDForCurrentAccount());
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("YOU_LEFT_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_LEFT, "%d", channel + 1);
+    DebugLog("BNUI: Chat Channel Left. Channel %d", channel + 1);
+}
+
+// OFFSET: 0x0090BCB0
+void BattlenetUI::ChatChannelClosedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
+
+    ChatConversation conversation;
+    conversation.m_index = channel;
+    conversation.m_presenceID = presenceId;
+    conversation.m_inactive = 0;
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetTokenizedName(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("CONVERSATION_CONVERTED_TO_WHISPER", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_CLOSED, "%d%s", channel + 1, BattlenetUI::GetTokenizedName(presenceId));
+    DebugLog("BNUI: Chat Channel Closed channel, index %d, remaining ID %u", channel + 1, presenceId);
+}
+
+// OFFSET: 0x0090BDC0
+void BattlenetUI::ChatChannelMessageReceivedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
+    const char* message = args[2].ToString();
+
+    if (!message) {
+        message = "";
+    }
+
+    char text[1024];
+    FilterChatLinks(message, text, 1021);
+    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetTokenizedName(presenceId));
+
+    ChatConversation conversation;
+    conversation.m_index = channel;
+    conversation.m_presenceID = presenceId;
+    conversation.m_inactive = 0;
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetTokenizedName(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION, &params);
+    DebugLog("BNUI: Chat Channel Message Recieved. channel %d, ID %u, msg: %s", channel + 1, presenceId, message);
+}
+
+// OFFSET: 0x0090BF00
+void BattlenetUI::ChatChannelMemberJoinedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
+
+    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetTokenizedName(presenceId));
+
+    ChatConversation conversation;
+    conversation.m_index = channel;
+    conversation.m_presenceID = presenceId;
+    conversation.m_inactive = 0;
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetTokenizedName(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("MEMBER_JOINED", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_JOINED, "%d%u", channel + 1, presenceId);
+    DebugLog("BNUI: Chat Channel Member Joined. channel %d, id %u", channel + 1, presenceId);
+}
+
+// OFFSET: 0x0090C020
+void BattlenetUI::ChatChannelMemberLeftCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
+
+    ChatConversation conversation;
+    conversation.m_index = channel;
+    conversation.m_presenceID = presenceId;
+    conversation.m_inactive = 0;
+    ChatMessageParams params;
+    params.m_senderName = BattlenetUI::GetTokenizedName(presenceId);
+    params.m_conversation = &conversation;
+    CGChat::AddChatMessage("MEMBER_LEFT", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_LEFT, "%d%u", channel + 1, presenceId);
+    DebugLog("BNUI: Chat Channel Member Left. channel %d, id %u", channel + 1, presenceId);
+}
+
+// OFFSET: 0x0090C120
+void BattlenetUI::DisplayError(uint16_t error, uint32_t presenceId) {
+    if (!error) {
+        return;
+    }
+
+    const char* format = BattlenetAPI::GetErrorString(error);
+
+    if (!format) {
+        return;
+    }
+
+    char text[1024];
+    int32_t count = CountFormatStrings(format);
+
+    if (count == 0) {
+        SStrCopyUTF8(text, format, sizeof(text), sizeof(text));
+    } else if (count == 1) {
+        const char* name = BattlenetUI::GetTokenizedName(presenceId);
+
+        if (!name) {
+            name = FrameScript_GetText("UNKNOWNOBJECT", -1, GENDER_NOT_APPLICABLE);
+        }
+
+        SStrPrintf(text, sizeof(text), format, name);
+    } else {
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("INTERNAL_STRING_ERROR", -1, GENDER_NOT_APPLICABLE), error);
+    }
+
+    if (error != 318) {
+        CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
+        CGGameUI::AddErrorMessage(text, 0);
+    } else {
+        ChatConversation conversation;
+        conversation.m_presenceID = presenceId;
+        conversation.m_inactive = 1;
+        ChatMessageParams params;
+        const char* name = BattlenetUI::GetTokenizedName(presenceId);
+        params.m_senderName = name;
+        params.m_conversation = &conversation;
+        CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER_PLAYER_OFFLINE, &params);
+        CGAutoCompleteName::RemoveFlagsByName(name, 0x20, false, true);
+    }
+}
+
+// OFFSET: 0x0090C250
+void BattlenetUI::RequestFofInfoResultCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+    Login* login = ClientServices::LoginConnection();
+
+    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
+        return;
+    }
+
+    uint16_t error = static_cast<uint16_t>(args[0].ToUInt64());
+
+    if (!error) {
+        BSN::BSNEncodedObject<Battlenet::Friends::FriendsOfFriendList, Protocol> friends;
+        friends.WalkAndGet(args[1].ToObject());
+
+        uint32_t count = BattlenetUI::s_friendsOfFriend.Count();
+        BattlenetUI::s_friendsOfFriend.SetCount(count + friends.m_data.m_friends.m_count);
+
+        for (uint32_t i = 0; i < friends.m_data.m_friends.m_count; i++) {
+            BattlenetUI::s_friendsOfFriend[count + i] = friends.m_data.m_friends.m_data[i];
+        }
+
+        if (args[2].ToBool()) {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_REQUEST_FOF_SUCCEEDED, NULL);
+        }
+    } else {
+        BattlenetUI::DisplayError(error, 0);
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_REQUEST_FOF_FAILED, NULL);
+        DebugLog("BNUI: FOF info request failed.");
+    }
+}
+
+// OFFSET: 0x0090C390
+void BattlenetUI::PopulateAutoComplete() {
+    uint32_t count = BattlenetUI::m_friends.Count();
+
+    for (uint32_t i = 0; i < count; i++) {
+        uint32_t presenceId = BattlenetUI::m_friends[i].m_presenceID;
+        const char* name = BattlenetUI::GetTokenizedName(presenceId);
+        bool online = false;
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE].m_field);
+
+        if (value.m_tag == 1) {
+            online = value.Value<bool>() != 0;
+        }
+
+        BattlenetUI::UpdateAutoComplete(presenceId, (online ? 0x20 : 0) | 0x4, 0, name);
+    }
+
+    MemberListCB members;
+
+    for (uint8_t channel = 0; channel < 6; channel++) {
+        members.m_members->Clear();
+        BattlenetAPI::GetChatMemberList(channel, &members);
+
+        for (uint32_t i = 0; i < members.m_members->Count(); i++) {
+            uint32_t presenceId = (*members.m_members)[i];
+            BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetTokenizedName(presenceId));
+        }
+    }
+}
+
+// OFFSET: 0x0090C620
 int32_t BattlenetUI::BNGetFriendInfoHelper(lua_State* L, uint32_t index) {
-    if (index >= BattlenetUI::m_friends.m_count) {
+    if (index >= BattlenetUI::m_friends.Count()) {
         return 0;
     }
 
-    uint32_t presenceId = BattlenetUI::m_friends.m_data[index].m_presenceID;
+    uint32_t presenceId = BattlenetUI::m_friends[index].m_presenceID;
     lua_pushnumber(L, presenceId);
 
     Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
@@ -520,23 +1900,23 @@ int32_t BattlenetUI::BNGetFriendInfoHelper(lua_State* L, uint32_t index) {
     Battlenet::Presence::FieldVal broadcast = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST].m_field);
     Battlenet::Presence::FieldVal note = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_NOTE].m_field);
 
-    lua_pushstring(L, BattlenetUI::m_friends[index].m_givenName.m_data);
-    lua_pushstring(L, BattlenetUI::m_friends[index].m_surname.m_data);
+    const char* givenName = BattlenetUI::m_friends[index].m_givenName.m_data;
+    const char* surname = BattlenetUI::m_friends[index].m_surname.m_data;
+    BattlenetUI::TokenizeGivenAndSurname(presenceId, givenName, surname);
+    lua_pushstring(L, givenName);
+    lua_pushstring(L, surname);
 
     if (toon.m_tag == 17) {
         uint32_t toonId = BattlenetAPI::GetPresenceIDForToon(&toon.Value<Battlenet::Toon::FullName>());
         const char* toonName = BattlenetAPI::GetToonNameForPresenceId(presenceId, false);
 
         if (!toonName) {
-            toonName = toon.Get<17, Battlenet::Toon::FullName>().m_name.m_data;
+            toonName = toon.Value<Battlenet::Toon::FullName>().m_name.m_data;
         }
 
         lua_pushstring(L, toonName);
         lua_pushnumber(L, toonId);
-
-        BSN::FourCC program = toon.Get<17, Battlenet::Toon::FullName>().m_program;
-        program.ToString(BattlenetUI::s_programString, sizeof(BattlenetUI::s_programString));
-        lua_pushstring(L, BattlenetUI::s_programString);
+        lua_pushstring(L, BattlenetUI::GetProgramString(toon.Value<Battlenet::Toon::FullName>().m_programId));
     } else {
         lua_pushnil(L);
         lua_pushnil(L);
@@ -589,1046 +1969,26 @@ int32_t BattlenetUI::BNGetFriendInfoHelper(lua_State* L, uint32_t index) {
 
     lua_pushboolean(L, BattlenetAPI::IsRIDFriend(presenceId));
 
-    afk = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST_TIME].m_field);
-    lua_pushnumber(L, afk.m_tag == 6 ? afk.Value<int32_t>() : 0.0);
-
-    return 14;
-}
-
-// OFFSET: #0x00534B60
-int32_t BattlenetUI::BNGetToonInfoHelper(lua_State* L, uint32_t presenceId) {
-    lua_pushboolean(L, BattlenetAPI::GetFocusedToon(BattlenetAPI::GetAccountPresenceId(presenceId)) == presenceId);
-
-    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
-
-    if (toon.m_tag == 17) {
-        const char* toonName = BattlenetAPI::GetToonNameForPresenceId(presenceId, false);
-
-        if (!toonName) {
-            toonName = toon.Get<17, Battlenet::Toon::FullName>().m_name.m_data;
-        }
-
-        lua_pushstring(L, toonName);
-
-        BSN::FourCC program = toon.Get<17, Battlenet::Toon::FullName>().m_program;
-        program.ToString(BattlenetUI::s_programString, sizeof(BattlenetUI::s_programString));
-        lua_pushstring(L, BattlenetUI::s_programString);
-    } else {
-        lua_pushstring(L, "");
-        lua_pushstring(L, "");
-    }
-
-    Battlenet::Presence::FieldVal realm = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_REALM_NAME].m_field);
-    lua_pushstring(L, realm.m_tag == 13 ? realm.Value<BSN::String<127> >().m_data : "");
-
-    Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_FACTION].m_field);
-    lua_pushnumber(L, value.m_tag == 1 ? value.Value<bool>() : -1.0);
-
-    Battlenet::Presence::FieldVal race = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_RACE].m_field);
-    lua_pushstring(L, race.m_tag == 13 ? race.Value<BSN::String<127> >().m_data : "");
-
-    Battlenet::Presence::FieldVal classValue = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_CLASS].m_field);
-    lua_pushstring(L, classValue.m_tag == 13 ? classValue.Value<BSN::String<127> >().m_data : "");
-
-    Battlenet::Presence::FieldVal guild = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_GUILD].m_field);
-    lua_pushstring(L, guild.m_tag == 13 ? guild.Value<BSN::String<127> >().m_data : "");
-
-    Battlenet::Presence::FieldVal area = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_AREA].m_field);
-    lua_pushstring(L, area.m_tag == 13 ? area.Value<BSN::String<127> >().m_data : "");
-
-    value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_LEVEL].m_field);
-
-    if (value.m_tag == 1) {
-        char level[8];
-        SStrPrintf(level, sizeof(level), "%u", value.Value<bool>());
-        lua_pushstring(L, level);
-    } else {
-        lua_pushstring(L, "");
-    }
-
-    Battlenet::Presence::FieldVal gameText = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_GAME_TEXT].m_field);
-    lua_pushstring(L, gameText.m_tag == 13 ? gameText.Value<BSN::String<127> >().m_data : "");
-
-    Battlenet::Presence::FieldVal broadcast = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST].m_field);
-    lua_pushstring(L, broadcast.m_tag == 13 ? broadcast.Value<BSN::String<127> >().m_data : "");
-
-    value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST_TIME].m_field);
-    lua_pushnumber(L, value.m_tag == 6 ? value.Value<int32_t>() : 0.0);
-
-    value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE].m_field);
-
-    bool isOnline = false;
-
-    if (value.m_tag == 1) {
-        isOnline = value.Value<bool>() != 0;
-    }
-
-    lua_pushboolean(L, isOnline);
-
-    return 14;
-}
-
-// OFFSET: #0x00537B90
-void BattlenetUI::SelfToonOnlineCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_SELF_ONLINE, "%u", presenceId);
-    DebugLog("BNUI Self Toon Online, ID %u", presenceId);
-}
-
-// OFFSET: #0x00537C00
-void BattlenetUI::SelfToonOfflineCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_SELF_OFFLINE, NULL);
-    DebugLog("BNUI: Self Toon Offline");
-}
-
-// OFFSET: #0x00537C60
-const char* BattlenetUI::GetNameForPresenceIdHelper(uint32_t presenceId) {
-    uint32_t accountId = presenceId;
-
-    if (BattlenetAPI::HasRIDFriendship(presenceId)) {
-        if (!BattlenetAPI::IsRIDFriend(presenceId)) {
-            accountId = BattlenetAPI::GetAccountPresenceId(presenceId);
-        }
-
-        BattlenetUIFriend* entry = BattlenetUI::FindFriend(accountId);
-
-        if (entry) {
-            return entry->m_name.m_data;
-        }
-
-        return BattlenetAPI::GetNameForPresenceId(accountId, false);
-    }
-
-    if (BattlenetAPI::IsSelf(presenceId)) {
-        return BattlenetAPI::GetNameForPresenceId(presenceId, false);
-    }
-
-    uint32_t realm = BattlenetUI::GetSelfRealmID();
-
-    if (!realm) {
-        return BattlenetAPI::GetNameForPresenceId(presenceId, false);
-    }
-
-    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
-
-    if (toon.m_tag != 17 || (realm == toon.Value<Battlenet::Toon::FullName>().m_realm && toon.Value<Battlenet::Toon::FullName>().m_program.m_value == Battlenet::Program::WOW.m_value)) {
-        return BattlenetAPI::GetNameForPresenceId(presenceId, false);
-    }
-
-    SStrPrintf(BattlenetUI::s_displayName, sizeof(BattlenetUI::s_displayName), "%s*", BattlenetAPI::GetNameForPresenceId(presenceId, false));
-    return BattlenetUI::s_displayName;
-}
-
-// OFFSET: #0x00537D40
-void BattlenetUI::FriendInviteSentCB::Call(int32_t argc, const GeneralFunction::Arg* args) const {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    UIErrors error = ERR_BN_FRIEND_REQUEST_SENT;
-    uint16_t result = static_cast<uint16_t>(args[0].ToUInt64());
-
-    if (result == 604) {
-        error = ERR_BN_FRIEND_ALREADY;
-    } else if (result == 617) {
-        error = ERR_BN_FRIEND_SELF;
-    } else if (result == 623) {
-        error = ERR_BN_FRIEND_BLOCKED;
-    }
-
-    CGGameUI::DisplayError(error);
-
-    DebugLog("BNUI: Friend Invite Send Result: %s", result ? "failure" : "success");
-}
-
-// PROVEN: 0926afe1 IDENTICAL/IDENTICAL
-// OFFSET: 0x00401000/0x1407D7E80
-void BattlenetUI::FriendInviteSentCB::Destroy() const {
-}
-
-// PROVEN: 4c0454a7 IDENTICAL/IDENTICAL
-// OFFSET: 0x00401000/0x1407D7E80
-void BattlenetUI::IgnoredFieldCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-}
-
-// OFFSET: #0x00537DF0
-void BattlenetUI::FriendInviteListInitializedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized || !BattlenetUI::m_friendInvites) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BattlenetUI::m_friendInvites->m_data.m_invites.m_count = 0;
-    BattlenetUI::m_friendInvites->WalkAndGet(args[0].ToObject());
-    BattlenetUI::SortFriendInviteList();
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_LIST_INITIALIZED, "%d", BattlenetUI::m_friendInvites->m_data.m_invites.m_count);
-
-    if (s_cvShowToastFriendRequest && s_cvShowToastFriendRequest->m_intValue) {
-        CGChat::AddChatMessage("FRIEND_PENDING", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL);
-    }
-
-    DebugLog("BNUI: Friend Invite List Initialized");
-}
-
-// OFFSET: #0x00537F00
-void BattlenetUI::FriendInviteAddedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized || !BattlenetUI::m_friendInvites) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-
-    if (!presenceId) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    Battlenet::Friends::FriendInviteContainer invite = BattlenetAPI::GetFriendInvite(presenceId);
-
-    if (!invite.m_presenceId) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    *BattlenetUI::m_friendInvites->m_data.m_invites.New() = invite;
-    BattlenetUI::SortFriendInviteList();
-
-    Battlenet::Presence::FieldVal onlineTime = BattlenetAPI::GetPresenceValue(BattlenetAPI::GetPresenceIDForCurrentToon(), BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
-
-    if (onlineTime.m_tag != 6 || invite.m_time < onlineTime.Get<6, int32_t>()) {
-        return;
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_ADDED, "%u", presenceId);
-
-    if (s_cvShowToastFriendRequest && s_cvShowToastFriendRequest->m_intValue) {
-        CGChat::AddChatMessage("FRIEND_REQUEST", CHAT_MSG_BN_INLINE_TOAST_ALERT, NULL);
-    }
-
-    DebugLog("BNUI: Friend Invite Added. ID %u", presenceId);
-}
-
-// OFFSET: #0x00538060
-void BattlenetUI::FriendInviteRemovedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint32_t presenceId;
-
-    if (!BattlenetUI::s_initialized || !BattlenetUI::m_friendInvites || (presenceId = static_cast<uint32_t>(args[0].ToUInt64())) == 0) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::Array<Battlenet::Friends::FriendInviteContainer, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
-    int32_t index = 0;
-
-    for (; static_cast<uint32_t>(index) < invites.m_count; index++) {
-        if (invites[index].m_presenceId == presenceId) {
-            if (index >= 0) {
-                invites.Remove(index);
-                BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INVITE_REMOVED, "%d%u", index, presenceId);
-            }
-
-            break;
-        }
-    }
-
-    DebugLog("BNUI: Friend Invite Removed. index %d, ID %u", index, presenceId);
-}
-
-// OFFSET: #0x00538160
-void BattlenetUI::FriendInfoChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
-    const char* name = BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId);
-
-    if (update.m_data.m_field == BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_NAME].m_field) {
-        if (!BattlenetAPI::HasRIDFriendship(update.m_data.m_presenceId) || BattlenetAPI::IsRIDFriend(update.m_data.m_presenceId)) {
-            CGAutoCompleteName::SetName(update.m_data.m_presenceId, name, true);
+    {
+        Battlenet::Presence::FieldVal broadcastTime = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST_TIME].m_field);
+
+        if (broadcastTime.m_tag == 6) {
+            lua_pushnumber(L, broadcastTime.Value<int32_t>());
         } else {
-            CGAutoCompleteName::RemoveFlags(update.m_data.m_presenceId, 0x7FFFFFFF);
+            lua_pushnumber(L, 0.0);
         }
     }
 
-    int32_t index = BattlenetUI::FindFriendIndex(update.m_data.m_presenceId);
-
-    if (index >= 0) {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, "%d", index + 1);
+    {
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[PRESENCE_FIELD_FLAGS].m_field);
+        uint64_t flags = value.m_tag == 7 ? value.Value<uint64_t>() : 0;
+        lua_pushboolean(L, CGGameUI::s_canSendSoR && (flags & 1));
     }
+
+    return 15;
 }
 
-// OFFSET: #0x00538290
-void BattlenetUI::FactionUpdateCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
-
-    if (!BattlenetAPI::IsSelf(update.m_data.m_presenceId)) {
-        BattlenetUI::UpdateAutoComplete(update.m_data.m_presenceId, 0x20, 0, NULL);
-    }
-}
-
-// OFFSET: #0x00538320
-void BattlenetUI::NewPresenceCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-
-    if (!BattlenetUI::m_friendListLoaded) {
-        DebugLog("BNUI: New Presence ID %u before Friend List initialized.", presenceId);
-        return;
-    }
-
-    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
-
-    if (toon.m_tag == 17) {
-        if (BattlenetAPI::HasRIDFriendship(presenceId)) {
-            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_ONLINE, "%u", presenceId);
-            DebugLog("BNUI: >> TOON %s is now ONLINE. ID %u (new presence)", BattlenetUI::GetNameForPresenceIdHelper(presenceId), presenceId);
-        } else {
-            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_NEW_PRESENCE, "%u%s", presenceId, toon.Value<Battlenet::Toon::FullName>().m_name.m_data);
-            DebugLog("BNUI: New Presence ID %u, name %s", presenceId, toon.Value<Battlenet::Toon::FullName>().m_name.m_data);
-        }
-    } else {
-        const char* name = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_NEW_PRESENCE, "%u%s", presenceId, name);
-        DebugLog("BNUI: New Non-Toon Presence ID %u, name %s", presenceId, name);
-    }
-}
-
-// OFFSET: #0x00538460
-void BattlenetUI::ToonNameUpdateCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
-    bool friendship = BattlenetAPI::HasRIDFriendship(update.m_data.m_presenceId);
-
-    if (update.m_data.m_value.m_tag == 17) {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_TOON_NAME_UPDATED, "%u%s%b", update.m_data.m_presenceId, update.m_data.m_value.Value<Battlenet::Toon::FullName>().m_name.m_data, friendship);
-        DebugLog("BNUI: Toon Name Updated, %s friend. ID %u, name %s", friendship ? "" : "non", update.m_data.m_presenceId, update.m_data.m_value.Value<Battlenet::Toon::FullName>().m_name.m_data);
-    }
-
-    if (!BattlenetAPI::IsSelf(update.m_data.m_presenceId)) {
-        BattlenetUI::UpdateAutoComplete(update.m_data.m_presenceId, 0x20, 0, NULL);
-    }
-}
-
-// OFFSET: #0x00538580
-void BattlenetUI::OnlineTimeChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
-
-    if (BattlenetAPI::IsSelf(update.m_data.m_presenceId) || update.m_data.m_value.m_tag != 6) {
-        return;
-    }
-
-    int32_t onlineTime = update.m_data.m_value.Value<int32_t>();
-    bool ridFriend = BattlenetAPI::IsRIDFriend(update.m_data.m_presenceId);
-    bool cidFriend = BattlenetAPI::IsCIDFriend(update.m_data.m_presenceId);
-
-    if (!ridFriend && !cidFriend) {
-        return;
-    }
-
-    Battlenet::Presence::FieldVal selfTime = BattlenetAPI::GetPresenceValue(BattlenetAPI::GetPresenceIDForCurrentToon(), BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
-
-    if (selfTime.m_tag != 6) {
-        return;
-    }
-
-    int32_t selfOnlineTime = selfTime.Get<6, int32_t>();
-
-    if (selfOnlineTime && onlineTime && onlineTime > selfOnlineTime) {
-        if (ridFriend) {
-            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_ACCOUNT_ONLINE, "%u", update.m_data.m_presenceId);
-
-            if (s_cvShowToastOnline && s_cvShowToastOnline->m_intValue) {
-                ChatConversation conversation;
-                conversation.m_presenceID = update.m_data.m_presenceId;
-                conversation.m_inactive = 1;
-                ChatMessageParams params;
-                params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId);
-                params.m_conversation = &conversation;
-                CGChat::AddChatMessage("FRIEND_ONLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
-            }
-
-            DebugLog("BNUI: >> ACCOUNT %s Online Time changed. ID %u", BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), update.m_data.m_presenceId);
-        } else if (cidFriend) {
-            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_ONLINE, "%u", update.m_data.m_presenceId);
-            DebugLog("BNUI: >> TOON %s is now ONLINE. ID %u", BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), update.m_data.m_presenceId);
-        }
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, NULL);
-}
-
-// OFFSET: #0x00538790
-void BattlenetUI::LastOnlineChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
-
-    if (update.m_data.m_value.m_tag == 6) {
-        DebugLog("BNUI: Last Online for ID %u is now %d", update.m_data.m_presenceId, update.m_data.m_value.Value<int32_t>());
-    } else {
-        DebugLog("BNUI: Last Online for ID %u changed", update.m_data.m_presenceId);
-    }
-}
-
-// OFFSET: #0x00538850
-void BattlenetUI::CustomMessageChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
-    uint32_t toonId = BattlenetAPI::GetPresenceIDForCurrentToon();
-
-    Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(toonId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
-    int32_t onlineTime = 0;
-
-    if (value.m_tag == 6) {
-        onlineTime = value.Value<int32_t>();
-    }
-
-    const char* message = update.m_data.m_value.m_tag == 13 ? update.m_data.m_value.Value<BSN::String<127> >().m_data : "";
-    int32_t broadcastTime = 0;
-
-    value = BattlenetAPI::GetPresenceValue(update.m_data.m_presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_BROADCAST_TIME].m_field);
-
-    if (value.m_tag == 6) {
-        broadcastTime = value.Value<int32_t>();
-    }
-
-    char text[512];
-
-    if (toonId != update.m_data.m_presenceId) {
-        if (BattlenetAPI::IsRIDFriend(update.m_data.m_presenceId)) {
-            if (!onlineTime || broadcastTime < onlineTime) {
-                return;
-            }
-
-            Battlenet::Presence::FieldVal friendTime = BattlenetAPI::GetPresenceValue(update.m_data.m_presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE_TIME].m_field);
-
-            if (friendTime.m_tag == 6 && broadcastTime < friendTime.Get<6, int32_t>()) {
-                return;
-            }
-
-            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_CHANGED, "%u", update.m_data.m_presenceId);
-
-            if (s_cvShowToastBroadcast && s_cvShowToastBroadcast->m_intValue) {
-                FilterChatLinks(message, text, 509);
-
-                ChatConversation conversation;
-                conversation.m_presenceID = update.m_data.m_presenceId;
-                conversation.m_inactive = 1;
-                ChatMessageParams params;
-                params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId);
-                params.m_conversation = &conversation;
-                CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST, &params);
-            }
-        }
-
-        DebugLog("BNUI: Custom Message Changed");
-        return;
-    }
-
-    if (onlineTime && broadcastTime >= onlineTime) {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_CHANGED, NULL);
-        FilterChatLinks(message, text, 509);
-        CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_BROADCAST_INFORM, NULL);
-    } else {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CUSTOM_MESSAGE_LOADED, NULL);
-    }
-}
-
-// OFFSET: #0x00538AB0
-void BattlenetUI::ChatWhisperSentCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-    const char* message = args[1].ToString();
-
-    if (!message) {
-        message = "";
-    }
-
-    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-
-    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
-    const char* flags = NULL;
-    Battlenet::Presence::FieldVal afk = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_AFK].m_field);
-    Battlenet::Presence::FieldVal dnd = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_DND].m_field);
-
-    if (afk.m_tag == 11 && afk.Value<bool>()) {
-        flags = "AFK";
-    } else if (dnd.m_tag == 11 && dnd.Value<bool>()) {
-        flags = "DND";
-    }
-
-    char text[1024];
-    FilterChatLinks(message, text, 1021);
-
-    ChatConversation conversation;
-    conversation.m_presenceID = presenceId;
-    conversation.m_inactive = 1;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-    params.m_flags = flags;
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER_INFORM, &params);
-
-    DebugLog("BNUI: Whisper Sent to %s, ID %u. %s", toon.m_tag == 17 ? toon.Value<Battlenet::Toon::FullName>().m_name.m_data : "unknown", presenceId, message);
-}
-
-// OFFSET: #0x00538C40
-void BattlenetUI::ChatWhisperReceivedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-    const char* message = args[1].ToString();
-
-    if (!message) {
-        message = "";
-    }
-
-    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-
-    Battlenet::Presence::FieldVal toon = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_TOON_NAME].m_field);
-    const char* flags = NULL;
-    Battlenet::Presence::FieldVal afk = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_AFK].m_field);
-    Battlenet::Presence::FieldVal dnd = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_DND].m_field);
-
-    if (afk.m_tag == 11 && afk.Value<bool>()) {
-        flags = "AFK";
-    } else if (dnd.m_tag == 11 && dnd.Value<bool>()) {
-        flags = "DND";
-    }
-
-    char text[1024];
-    FilterChatLinks(message, text, 1021);
-
-    ChatConversation conversation;
-    conversation.m_presenceID = presenceId;
-    conversation.m_inactive = 1;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-    params.m_flags = flags;
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage(text, CHAT_MSG_BN_WHISPER, &params);
-
-    DebugLog("BNUI: Whisper Received From %s, ID %u. %s", toon.m_tag == 17 ? toon.Value<Battlenet::Toon::FullName>().m_name.m_data : "unknown", presenceId, message);
-}
-
-// OFFSET: #0x00538DD0
-void BattlenetUI::ChatChannelJoinedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-    int32_t type = static_cast<int32_t>(args[1].ToInt64());
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    Battlenet::Chat::MemberList members = BattlenetAPI::GetChatMemberList(channel);
-    uint32_t count = members.m_members.m_count;
-
-    for (uint32_t i = 0; i < count; i++) {
-        uint32_t presenceId = members.m_members.m_data[i];
-        BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-    }
-
-    if (type == 2) {
-        ChatConversation conversation;
-        conversation.m_presenceID = BattlenetAPI::GetPresenceIDForCurrentAccount();
-        conversation.m_index = channel;
-        conversation.m_inactive = 0;
-        ChatMessageParams params;
-        params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount());
-        params.m_conversation = &conversation;
-        CGChat::AddChatMessage("YOU_JOINED_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_JOINED, "%d", channel + 1);
-
-        if (s_cvShowToastConversation && s_cvShowToastConversation->m_intValue) {
-            uint32_t accountId = BattlenetAPI::GetPresenceIDForCurrentAccount();
-            uint32_t toonId = BattlenetAPI::GetPresenceIDForCurrentToon();
-            const char* delimiter = FrameScript_GetText("PLAYER_LIST_DELIMITER", -1, GENDER_NOT_APPLICABLE);
-            char text[3000];
-            bool first = true;
-
-            for (uint32_t i = 0; i < count; i++) {
-                uint32_t presenceId = members.m_members.m_data[i];
-
-                if (presenceId != accountId && presenceId != toonId) {
-                    if (first) {
-                        SStrCopyUTF8(text, BattlenetUI::GetNameForPresenceIdHelper(presenceId), sizeof(text), sizeof(text));
-                        first = false;
-                    } else {
-                        SStrPrintf(text, sizeof(text), "%s%s%s", text, delimiter, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-                    }
-                }
-            }
-
-            ChatMessageParams params2;
-            params2.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount());
-            params2.m_conversation = &conversation;
-            CGChat::AddChatMessage(text, CHAT_MSG_BN_INLINE_TOAST_CONVERSATION, &params2);
-        }
-    }
-
-    DebugLog("BNUI: Chat Channel Joined. channel %d", channel + 1);
-}
-
-// OFFSET: #0x00539020
-void BattlenetUI::ChatChannelLeftCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    ChatConversation conversation;
-    conversation.m_presenceID = BattlenetAPI::GetPresenceIDForCurrentAccount();
-    conversation.m_index = channel;
-    conversation.m_inactive = 0;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(BattlenetAPI::GetPresenceIDForCurrentAccount());
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage("YOU_LEFT_CONVERSATION", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_LEFT, "%d", channel + 1);
-    DebugLog("BNUI: Chat Channel Left. Channel %d", channel + 1);
-}
-
-// OFFSET: #0x00539100
-void BattlenetUI::ChatChannelClosedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    ChatConversation conversation;
-    conversation.m_index = channel;
-    conversation.m_presenceID = presenceId;
-    conversation.m_inactive = 0;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage("CONVERSATION_CONVERTED_TO_WHISPER", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_CLOSED, "%d%s", channel + 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-    DebugLog("BNUI: Chat Channel Closed channel, index %d, remaining ID %u", channel + 1, presenceId);
-}
-
-// OFFSET: #0x005391F0
-void BattlenetUI::ChatChannelMessageReceivedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
-    const char* message = args[2].ToString();
-
-    if (!message) {
-        message = "";
-    }
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    char text[1024];
-    FilterChatLinks(message, text, 1021);
-    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-
-    ChatConversation conversation;
-    conversation.m_index = channel;
-    conversation.m_presenceID = presenceId;
-    conversation.m_inactive = 0;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage(text, CHAT_MSG_BN_CONVERSATION, &params);
-    DebugLog("BNUI: Chat Channel Message Recieved. channel %d, ID %u, msg: %s", channel + 1, presenceId, message);
-}
-
-// OFFSET: #0x00539320
-void BattlenetUI::ChatChannelMessageBlockedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MESSAGE_BLOCKED, "%d%u", channel + 1, presenceId);
-    DebugLog("BNUI: Chat Channel Message Blocked. channel %d, id %u", channel + 1, presenceId);
-}
-
-// OFFSET: #0x005393C0
-void BattlenetUI::ChatChannelMemberJoinedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-
-    ChatConversation conversation;
-    conversation.m_index = channel;
-    conversation.m_presenceID = presenceId;
-    conversation.m_inactive = 0;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage("MEMBER_JOINED", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_JOINED, "%d%u", channel + 1, presenceId);
-    DebugLog("BNUI: Chat Channel Member Joined. channel %d, id %u", channel + 1, presenceId);
-}
-
-// OFFSET: #0x005394D0
-void BattlenetUI::ChatChannelMemberLeftCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    ChatConversation conversation;
-    conversation.m_index = channel;
-    conversation.m_presenceID = presenceId;
-    conversation.m_inactive = 0;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage("MEMBER_LEFT", CHAT_MSG_BN_CONVERSATION_NOTICE, &params);
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_LEFT, "%d%u", channel + 1, presenceId);
-    DebugLog("BNUI: Chat Channel Member Left. channel %d, id %u", channel + 1, presenceId);
-}
-
-// OFFSET: #0x005395C0
-void BattlenetUI::ChatChannelMemberUpdatedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
-    uint32_t presenceId = static_cast<uint32_t>(args[1].ToUInt64());
-
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MEMBER_UPDATED, "%d%u", channel + 1, presenceId);
-    DebugLog("BNUI: Chat Channel Member Updated. channel %d, id %u", channel + 1, presenceId);
-}
-
-// OFFSET: #0x00539660
-void BattlenetUI::DisplayError(uint16_t error, uint32_t presenceId) {
-    if (!error) {
-        return;
-    }
-
-    const char* format = BattlenetAPI::GetErrorString(error);
-
-    if (!format) {
-        return;
-    }
-
-    char text[1024];
-    int32_t count = CountFormatStrings(format);
-
-    if (count == 0) {
-        SStrCopyUTF8(text, format, sizeof(text), sizeof(text));
-    } else if (count == 1) {
-        const char* name = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-
-        if (!name) {
-            name = FrameScript_GetText("UNKNOWNOBJECT", -1, GENDER_NOT_APPLICABLE);
-        }
-
-        SStrPrintf(text, sizeof(text), format, name);
-    } else {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("INTERNAL_STRING_ERROR", -1, GENDER_NOT_APPLICABLE), error);
-    }
-
-    CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(0), NULL);
-
-    if (error != 318) {
-        CGGameUI::AddErrorMessage(text, 0);
-    }
-}
-
-// OFFSET: #0x00539770
-void BattlenetUI::FriendsOfFriendCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_friendsOfFriend) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    uint16_t error = static_cast<uint16_t>(args[0].ToUInt64());
-
-    if (error) {
-        BattlenetUI::DisplayError(error, 0);
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_REQUEST_FOF_FAILED, NULL);
-        DebugLog("BNUI: FOF info request failed.");
-    } else {
-        BattlenetUI::s_friendsOfFriend->WalkAndGet(args[1].ToObject());
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_REQUEST_FOF_SUCCEEDED, NULL);
-        DebugLog("BNUI: Received FOF info for ID %u. %d friends in list", BattlenetUI::s_friendsOfFriend->m_data.m_presenceId, BattlenetUI::s_friendsOfFriend->m_data.m_friends.m_count);
-    }
-}
-
-// OFFSET: #0x00539850
-void BattlenetUI::BlockListInitializedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_BLOCK_LIST_UPDATED, NULL);
-    DebugLog("BNUI: Block List Initialized");
-}
-
-// OFFSET: #0x005398B0
-void BattlenetUI::BlockAddedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_BLOCK_LIST_UPDATED, NULL);
-    DebugLog("BNUI: Block Added for ID %u", presenceId);
-}
-
-// OFFSET: #0x00539910
-void BattlenetUI::BlockRemovedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_BLOCK_LIST_UPDATED, NULL);
-    DebugLog("BNUI: Block Removed for ID %u", presenceId);
-}
-
-// OFFSET: #0x00539970
-void BattlenetUI::SystemMessageCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    const char* type = "unknown";
-    uint32_t value = 0;
-
-    switch (static_cast<uint32_t>(args[0].ToUInt64())) {
-        case 3800:
-            type = "shutdown minutes";
-            value = static_cast<uint32_t>(args[1].ToUInt64());
-            break;
-
-        case 3801:
-            type = "shutdown seconds";
-            value = static_cast<uint32_t>(args[1].ToUInt64());
-            break;
-
-        case 3802:
-            type = "shutdown now";
-            break;
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_SYSTEM_MESSAGE, "%s%u", type, value);
-    DebugLog("BNUI: SYSTEM MESSAGE RECEIVED: %s %u", type, value);
-}
-
-// OFFSET: #0x00539A20
-void BattlenetUI::SettingChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!SStrCmpI(args[1].ToString(), "Chat.ProfanityFilterEnabled", STORM_MAX_STR)) {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_MATURE_LANGUAGE_FILTER, "%b", args[2].ToBool() != 0);
-    }
-}
-
-// OFFSET: #0x00539AD0
-void BattlenetUI::PopulateAutoComplete() {
-    uint32_t count = BattlenetUI::m_friends.m_count;
-
-    for (uint32_t i = 0; i < count; i++) {
-        uint32_t presenceId = BattlenetUI::m_friends[i].m_presenceID;
-
-        if (!presenceId) {
-            SErrDisplayAppFatalMessage("", "", 0);
-        }
-
-        const char* name = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-        bool online = false;
-        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ONLINE].m_field);
-
-        if (value.m_tag == 1) {
-            online = value.Value<bool>() != 0;
-        }
-
-        BattlenetUI::UpdateAutoComplete(presenceId, (online ? 0x20 : 0) | 0x4, 0, name);
-    }
-
-    for (uint8_t channel = 0; channel < 6; channel++) {
-        Battlenet::Chat::MemberList members = BattlenetAPI::GetChatMemberList(channel);
-        uint32_t memberCount = members.m_members.m_count;
-
-        for (uint32_t i = 0; i < memberCount; i++) {
-            uint32_t presenceId = members.m_members.m_data[i];
-            BattlenetUI::UpdateAutoComplete(presenceId, 0x30, 1, BattlenetUI::GetNameForPresenceIdHelper(presenceId));
-        }
-    }
-}
-
-// OFFSET: #0x0053A750
+// OFFSET: 0x0090D590
 void BattlenetUI::FriendListInitializedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1636,34 +1996,37 @@ void BattlenetUI::FriendListInitializedCB(void* param, int32_t argc, const Gener
         return;
     }
 
-    BSN::BSNEncodedObject<Battlenet::Friends::FriendList, Protocol> friendList;
-    friendList.WalkAndGet(args[0].ToObject());
+    if (args[1].ToBool()) {
+        BSN::BSNEncodedObject<Battlenet::Friends::FriendList, Protocol> friendList;
+        friendList.WalkAndGet(args[0].ToObject());
 
-    BattlenetUI::m_friends.m_count = 0;
-
-    for (uint32_t i = 0; i < friendList.m_data.m_friends.m_count; i++) {
-        BattlenetUI::AddToFriendList(friendList.m_data.m_friends.m_data[i]);
+        for (uint32_t i = 0; i < friendList.m_data.m_friends.m_count; i++) {
+            BattlenetUI::AddToFriendList(friendList.m_data.m_friends.m_data[i]);
+        }
     }
 
-    BattlenetUI::DisambiguateFriendList();
+    if (args[2].ToBool() || !args[1].ToBool()) {
+        BattlenetUI::DisambiguateFriendList();
 
-    if (BattlenetUI::m_friends.m_count > 1) {
-        qsort(BattlenetUI::m_friends.m_data, BattlenetUI::m_friends.m_count, sizeof(BattlenetUIFriend), BattlenetUI::QSortFriendListCB);
+        if (BattlenetUI::m_friends.Count() > 1) {
+            qsort(BattlenetUI::m_friends.Ptr(), BattlenetUI::m_friends.Count(), sizeof(RIDFriendData), BattlenetUI::QSortFriendListCB);
+        }
+
+        BattlenetUI::m_friendListLoaded = true;
+
+        for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
+            BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_ONLINE, "%u", BattlenetUI::m_friends[i].m_presenceID);
+            DebugLog("BNUI: >> TOON %s is now ONLINE. ID %u (friend list initialized)", BattlenetUI::GetTokenizedName(BattlenetUI::m_friends[i].m_presenceID), BattlenetUI::m_friends[i].m_presenceID);
+        }
+
+        BattlenetUI::PopulateAutoComplete();
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_LIST_SIZE_CHANGED, NULL);
     }
 
-    BattlenetUI::m_friendListLoaded = true;
-
-    for (uint32_t i = 0; i < BattlenetUI::m_friends.m_count; i++) {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_ONLINE, "%u", BattlenetUI::m_friends.m_data[i].m_presenceID);
-        DebugLog("BNUI: >> TOON %s is now ONLINE. ID %u (friend list initialized)", BattlenetUI::GetNameForPresenceIdHelper(BattlenetUI::m_friends[i].m_presenceID));
-    }
-
-    BattlenetUI::PopulateAutoComplete();
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_LIST_SIZE_CHANGED, NULL);
-    DebugLog("BNUI: Friend List Initialized. Num friends = %d", BattlenetUI::m_friends.m_count);
+    DebugLog("BNUI: Friend List Initialized. Num friends = %d", BattlenetUI::m_friends.Count());
 }
 
-// OFFSET: #0x0053A940
+// OFFSET: 0x0090D7E0
 void BattlenetUI::FriendAddedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1671,18 +2034,14 @@ void BattlenetUI::FriendAddedCB(void* param, int32_t argc, const GeneralFunction
         return;
     }
 
-    uint32_t presenceId;
-
-    if (!BattlenetUI::s_initialized || (presenceId = static_cast<uint32_t>(args[0].ToUInt64())) == 0) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
 
     if (BattlenetAPI::IsRIDFriend(presenceId)) {
         BattlenetUI::AddToFriendList(presenceId);
         BattlenetUI::DisambiguateFriendList();
 
-        if (BattlenetUI::m_friends.m_count > 1) {
-            qsort(BattlenetUI::m_friends.m_data, BattlenetUI::m_friends.m_count, sizeof(BattlenetUIFriend), BattlenetUI::QSortFriendListCB);
+        if (BattlenetUI::m_friends.Count() > 1) {
+            qsort(BattlenetUI::m_friends.Ptr(), BattlenetUI::m_friends.Count(), sizeof(RIDFriendData), BattlenetUI::QSortFriendListCB);
         }
 
         BattlenetUI::PopulateAutoComplete();
@@ -1691,18 +2050,18 @@ void BattlenetUI::FriendAddedCB(void* param, int32_t argc, const GeneralFunction
         DebugLog("BNUI: Friend Add, %u not friend", presenceId);
     }
 
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_LIST_SIZE_CHANGED, NULL);
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_LIST_SIZE_CHANGED, "%d", presenceId);
 
     ChatConversation conversation;
     conversation.m_presenceID = presenceId;
     conversation.m_inactive = 1;
     ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
+    params.m_senderName = BattlenetUI::GetTokenizedName(presenceId);
     params.m_conversation = &conversation;
     CGChat::AddChatMessage("FRIEND_ADDED", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
 }
 
-// OFFSET: #0x0053AA70
+// OFFSET: 0x0090D910
 void BattlenetUI::FriendRemovedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1710,99 +2069,24 @@ void BattlenetUI::FriendRemovedCB(void* param, int32_t argc, const GeneralFuncti
         return;
     }
 
-    uint32_t presenceId;
+    uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
 
-    if (!BattlenetUI::s_initialized || (presenceId = static_cast<uint32_t>(args[0].ToUInt64())) == 0) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    int32_t index = BattlenetUI::FindFriendIndex(presenceId);
-
-    if (index < 0) {
-        DebugLog("BNUI: Friend Removed: ID % not found", presenceId);
+    if (!BattlenetUI::RemoveFromFriendList(presenceId)) {
         return;
     }
 
-    BattlenetUI::m_friends.Remove(index);
-    DebugLog("BNUI: Friend Removed. Index %d, ID %u", index, presenceId);
     BattlenetUI::DisambiguateFriendList();
 
-    if (BattlenetUI::m_friends.m_count > 1) {
-        qsort(BattlenetUI::m_friends.m_data, BattlenetUI::m_friends.m_count, sizeof(BattlenetUIFriend), BattlenetUI::QSortFriendListCB);
+    if (BattlenetUI::m_friends.Count() > 1) {
+        qsort(BattlenetUI::m_friends.Ptr(), BattlenetUI::m_friends.Count(), sizeof(RIDFriendData), BattlenetUI::QSortFriendListCB);
     }
 
     BattlenetUI::PopulateAutoComplete();
     CGAutoCompleteName::RemoveFlags(presenceId, 0x4);
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_LIST_SIZE_CHANGED, NULL);
-
-    ChatConversation conversation;
-    conversation.m_presenceID = presenceId;
-    conversation.m_inactive = 1;
-    ChatMessageParams params;
-    params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
-    params.m_conversation = &conversation;
-    CGChat::AddChatMessage("FRIEND_REMOVED", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_LIST_SIZE_CHANGED, "%d", presenceId);
 }
 
-// OFFSET: #0x0053ABC0
-void BattlenetUI::OnlinePresenceChangedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
-    Login* login = ClientServices::LoginConnection();
-
-    if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
-        return;
-    }
-
-    if (!BattlenetUI::s_initialized) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BSN::BSNEncodedObject<Battlenet::Presence::FieldUpdate, Protocol> update(args[0].ToObject());
-    bool online = false;
-
-    if (update.m_data.m_value.m_tag == 1) {
-        online = update.m_data.m_value.Value<bool>() != 0;
-    }
-
-    bool ridFriend = BattlenetAPI::IsRIDFriend(update.m_data.m_presenceId);
-    bool cidFriend = BattlenetAPI::IsCIDFriend(update.m_data.m_presenceId);
-
-    BattlenetUI::DisambiguateFriendList();
-
-    if (BattlenetUI::m_friends.m_count > 1) {
-        qsort(BattlenetUI::m_friends.m_data, BattlenetUI::m_friends.m_count, sizeof(BattlenetUIFriend), BattlenetUI::QSortFriendListCB);
-    }
-
-    if (online) {
-        BattlenetUI::UpdateAutoComplete(update.m_data.m_presenceId, 0x20, 0, NULL);
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, NULL);
-        return;
-    }
-
-    CGAutoCompleteName::RemoveFlags(update.m_data.m_presenceId, 0x20);
-
-    if (ridFriend) {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_ACCOUNT_OFFLINE, "%u", update.m_data.m_presenceId);
-
-        if (s_cvShowToastOffline && s_cvShowToastOffline->m_intValue) {
-            ChatConversation conversation;
-            conversation.m_presenceID = update.m_data.m_presenceId;
-            conversation.m_inactive = 1;
-            ChatMessageParams params;
-            params.m_senderName = BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId);
-            params.m_conversation = &conversation;
-            CGChat::AddChatMessage("FRIEND_OFFLINE", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
-        }
-
-        DebugLog("BNUI: >> ACCOUNT %s is now OFFLINE. ID %u", BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), update.m_data.m_presenceId);
-    } else if (cidFriend) {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_TOON_OFFLINE, "%u", update.m_data.m_presenceId);
-        DebugLog("BNUI: >> TOON %s is now OFFLINE. ID %u", BattlenetUI::GetNameForPresenceIdHelper(update.m_data.m_presenceId), update.m_data.m_presenceId);
-    }
-
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_INFO_CHANGED, NULL);
-}
-
-// OFFSET: #0x0053ADC0
+// OFFSET: 0x0090D9C0
 void BattlenetUI::ChatWhisperUndeliverableCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1811,12 +2095,13 @@ void BattlenetUI::ChatWhisperUndeliverableCB(void* param, int32_t argc, const Ge
     }
 
     uint32_t presenceId = static_cast<uint32_t>(args[0].ToUInt64());
-    BattlenetUI::DisplayError(static_cast<uint16_t>(args[1].ToUInt64()), presenceId);
+    uint16_t error = static_cast<uint16_t>(args[1].ToUInt64());
+    BattlenetUI::DisplayError(error, presenceId);
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_WHISPER_UNDELIVERABLE, "%u", presenceId);
 }
 
-// OFFSET: #0x0053AE30
-void BattlenetUI::ChatChannelCreateCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+// OFFSET: 0x0090DA30
+void BattlenetUI::ChatChannelCreationResultCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
 
     if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
@@ -1825,36 +2110,32 @@ void BattlenetUI::ChatChannelCreateCB(void* param, int32_t argc, const GeneralFu
 
     uint16_t error = static_cast<uint16_t>(args[0].ToUInt64());
 
-    if (error) {
-        uint32_t presenceId = 0;
+    if (!error) {
+        uint8_t channel = static_cast<uint8_t>(args[1].ToUInt64());
 
-        if (argc >= 2) {
-            if (args[1].m_type == GeneralFunction::Arg::TYPE_OBJECT) {
-                BSN::BSNEncodedObject<Battlenet::Toon::FullName, Protocol> toon;
-                toon.WalkAndGet(args[1].ToObject());
-                presenceId = BattlenetAPI::GetPresenceIDForToon(&toon.m_data);
-            } else if (args[1].m_type == GeneralFunction::Arg::TYPE_INT || args[1].m_type == GeneralFunction::Arg::TYPE_UINT) {
-                presenceId = static_cast<uint32_t>(args[1].ToUInt64());
-            }
-        }
-
-        BattlenetUI::DisplayError(error, presenceId);
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_CREATE_FAILED, "%u", presenceId);
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_CREATE_SUCCEEDED, "%d", channel + 1);
+        DebugLog("BNUI: Chat Channel Create Succeeded. channel = %d", channel + 1);
         return;
     }
 
-    uint8_t channel = static_cast<uint8_t>(args[1].ToUInt64());
+    uint32_t presenceId = 0;
 
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    if (argc >= 2) {
+        if (args[1].m_type == GeneralFunction::Arg::TYPE_OBJECT) {
+            BSN::BSNEncodedObject<Battlenet::Toon::FullName, Protocol> toon;
+            toon.WalkAndGet(args[1].ToObject());
+            presenceId = BattlenetAPI::GetPresenceIDForToon(&toon.m_data);
+        } else if (args[1].m_type == GeneralFunction::Arg::TYPE_INT || args[1].m_type == GeneralFunction::Arg::TYPE_UINT) {
+            presenceId = static_cast<uint32_t>(args[1].ToUInt64());
+        }
     }
 
-    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_CREATE_SUCCEEDED, "%d", channel + 1);
-    DebugLog("BNUI: Chat Channel Create Succeeded. channel = %d", channel + 1);
+    BattlenetUI::DisplayError(error, presenceId);
+    BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_CREATE_FAILED, "%u", presenceId);
 }
 
-// OFFSET: #0x0053AF70
-void BattlenetUI::ChatChannelInviteCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
+// OFFSET: 0x0090DB60
+void BattlenetUI::ChatChannelInviteResultCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
 
     if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled()) {
@@ -1867,21 +2148,17 @@ void BattlenetUI::ChatChannelInviteCB(void* param, int32_t argc, const GeneralFu
     uint32_t presenceId = BattlenetAPI::GetPresenceIDForToon(&toon.m_data);
     uint8_t channel = static_cast<uint8_t>(args[2].ToUInt64());
 
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    if (error) {
+    if (!error) {
+        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_INVITE_SUCCEEDED, "%d%u", channel + 1, presenceId);
+        DebugLog("BNUI: Chat Channel Invite Succeeded. channel %d, id %u", channel + 1, presenceId);
+    } else {
         BattlenetUI::DisplayError(error, presenceId);
         BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_INVITE_FAILED, "%d%u", channel + 1, presenceId);
         DebugLog("BNUI: Chat Channel Invite Failed. channel %d, id %d", channel + 1, presenceId);
-    } else {
-        BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_INVITE_SUCCEEDED, "%d%u", channel + 1, presenceId);
-        DebugLog("BNUI: Chat Channel Invite Succeeded. channel %d, id %u", channel + 1, presenceId);
     }
 }
 
-// OFFSET: #0x0053B0D0
+// OFFSET: 0x0090DCB0
 void BattlenetUI::ChatChannelMessageUndeliverableCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1890,62 +2167,50 @@ void BattlenetUI::ChatChannelMessageUndeliverableCB(void* param, int32_t argc, c
     }
 
     uint8_t channel = static_cast<uint8_t>(args[0].ToUInt64());
+    uint16_t error = static_cast<uint16_t>(args[1].ToUInt64());
 
-    if (channel >= 6) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BattlenetUI::DisplayError(static_cast<uint16_t>(args[1].ToUInt64()), 0);
+    BattlenetUI::DisplayError(error, 0);
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CHAT_CHANNEL_MESSAGE_UNDELIVERABLE, "%d", channel + 1);
     DebugLog("BNUI: Chat Channel Message Undeliverable. channel %d", channel + 1);
 }
 
-// OFFSET: #0x0053B170
+// OFFSET: 0x0090DD40
 void BattlenetUI::Init() {
     if (!g_tumorManager) {
         return;
     }
 
-    if (BattlenetUI::m_friendInvites) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    BattlenetUI::m_friendInvites = new (__FILE__, __LINE__) BSN::BSNEncodedObject<Battlenet::Friends::FriendInviteContainer, Protocol>();
-    BattlenetUI::s_friendsOfFriend = new (__FILE__, __LINE__) BSN::BSNEncodedObject<Battlenet::Friends::FriendsOfFriendList, Protocol>();
+    BattlenetUI::m_friends.Clear();
+    BattlenetUI::m_friendInvites.Clear();
+    BattlenetUI::s_friendsOfFriend.Clear();
 
     for (uint32_t i = 0; i < 26; i++) {
         GeneralFunction::SimpleCallback* callback = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::s_eventCallbacks[i].m_func, NULL);
         BattlenetUI::s_eventCallbacks[i].m_handle = BattlenetAPI::RegisterEvent(BattlenetUI::s_eventCallbacks[i].m_event, callback);
-
-        if (!BattlenetUI::s_eventCallbacks[i].m_handle) {
-            SErrDisplayAppFatalMessage("", "", 0);
-        }
     }
 
-    for (uint32_t i = 0; i < NUM_BN_PRESENCE_FIELDS; i++) {
+    for (uint32_t i = 0; i < NUM_PRESENCE_FIELDS; i++) {
         GeneralFunction::SimpleCallback* callback = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::s_presenceCallbacks[i].m_func, NULL);
         BattlenetUI::s_presenceCallbacks[i].m_handle = BattlenetAPI::RegisterPresenceUpdateCallback(0, BattlenetUI::s_presenceCallbacks[i].m_field, callback);
-
-        if (!BattlenetUI::s_presenceCallbacks[i].m_handle) {
-            SErrDisplayAppFatalMessage("", "", 0);
-        }
     }
 
-    BattlenetUI::s_createConversationCB = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::ChatChannelCreateCB, NULL);
+    BattlenetUI::s_createConversationCB = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::ChatChannelCreationResultCB, NULL);
     BattlenetUI::s_createConversationCB->IncRef();
 
-    BattlenetUI::s_inviteToConversationCB = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::ChatChannelInviteCB, NULL);
+    BattlenetUI::s_inviteToConversationCB = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::ChatChannelInviteResultCB, NULL);
     BattlenetUI::s_inviteToConversationCB->IncRef();
 
-    BattlenetUI::s_friendsOfFriendCB = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::FriendsOfFriendCB, NULL);
+    BattlenetUI::s_friendsOfFriendCB = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::RequestFofInfoResultCB, NULL);
     BattlenetUI::s_friendsOfFriendCB->IncRef();
+
+    GxuFontSetTokenCallback(BattlenetUI::GetKStringText);
 
     BattlenetUI::s_initialized = true;
     DebugLog("BNUI: Init");
 }
 
 // OFFSET: 0x0090DF70
-void BattlenetUI_EnterRealm() {
+void BattlenetUI::EnterRealm() {
     Login* login = ClientServices::LoginConnection();
 
     if (!login || login->GetLoginServerType() != 1 || login->IsTrialAccount() || !BattlenetAPI::IsRIDEnabled() || !static_cast<BattlenetLogin*>(login)->IsConnected()) {
@@ -1959,4 +2224,9 @@ void BattlenetUI_EnterRealm() {
     if (*nameFormat) {
         BattlenetAPI::SetAccountNameFormatString(nameFormat);
     }
+}
+
+// OFFSET: 0x0090DFE0
+void BattlenetUI_EnterRealm() {
+    BattlenetUI::EnterRealm();
 }
