@@ -949,4 +949,144 @@ class UserClientMessageChatOfficer : public JamClientMessage {
     ~UserClientMessageChatOfficer();
 };
 
+class UserClientRequestRatedBgInfo : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestRatedBgInfo();
+    ~UserClientRequestRatedBgInfo();
+};
+
+class UserClientRequestPvpOptionsEnabled : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestPvpOptionsEnabled();
+    ~UserClientRequestPvpOptionsEnabled();
+};
+
+class UserClientLfgLockInfoRequest : public JamClientMessage {
+    public:
+    /* 0010 */ bool unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgLockInfoRequest();
+    ~UserClientLfgLockInfoRequest();
+};
+
+class UserClientLfgSetBootVote : public JamClientMessage {
+    public:
+    /* 0010 */ bool unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgSetBootVote();
+    ~UserClientLfgSetBootVote();
+};
+
+class UserClientStartWargame : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+    /* 0018 */ uint8_t unk_0018[8];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientStartWargame();
+    ~UserClientStartWargame();
+};
+
+class UserClientLfgTeleport : public JamClientMessage {
+    public:
+    /* 0010 */ bool unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientLfgTeleport();
+    ~UserClientLfgTeleport();
+};
+
+class UserClientCommentatorGetPartyInfo : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ char unk_0014[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientCommentatorGetPartyInfo();
+    ~UserClientCommentatorGetPartyInfo();
+};
+
+class UserClientCommentatorStartWargame : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+    /* 0018 */ char unk_0018[48];
+    /* 0048 */ char unk_0048[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientCommentatorStartWargame();
+    ~UserClientCommentatorStartWargame();
+};
+
+class UserClientRequestRatedInfo : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestRatedInfo();
+    ~UserClientRequestRatedInfo();
+};
+
+class UserClientSendSorRequestViaAddress : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[1280];
+    /* 0510 */ char unk_0510[256];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSendSorRequestViaAddress();
+    ~UserClientSendSorRequestViaAddress();
+};
+
+class UserClientSendSorRequestViaBnetAccountId : public JamClientMessage {
+    public:
+    /* 0010 */ char unk_0010[1020];
+    /* 040C */ uint32_t unk_040C;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSendSorRequestViaBnetAccountId();
+    ~UserClientSendSorRequestViaBnetAccountId();
+};
+
+class UserClientRequestPvpRewards : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestPvpRewards();
+    ~UserClientRequestPvpRewards();
+};
+
+class UserClientBattlemasterJoinRated : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientBattlemasterJoinRated();
+    ~UserClientBattlemasterJoinRated();
+};
+
+class UserClientGuildAchievementMembers : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t unk_0010[8];
+    /* 0018 */ uint8_t unk_0018[8];
+    /* 0020 */ uint32_t unk_0020;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGuildAchievementMembers(uint64_t a1, uint64_t a3, uint32_t a5);
+    ~UserClientGuildAchievementMembers();
+};
+
 #endif

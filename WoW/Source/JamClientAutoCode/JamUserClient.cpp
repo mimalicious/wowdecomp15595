@@ -2562,3 +2562,400 @@ void UserClientMessageChatOfficer::Put(CDataStore* msg) {
 
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
+
+// OFFSET: 0x0066D170/0x1403141A0
+UserClientRequestRatedBgInfo::UserClientRequestRatedBgInfo() {
+}
+
+// OFFSET: 0x0066BBC0/0x140312400
+UserClientRequestRatedBgInfo::~UserClientRequestRatedBgInfo() {
+}
+
+// OFFSET: 0x0066B900
+void UserClientRequestRatedBgInfo::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x5B3));
+}
+
+// OFFSET: 0x0066E120/0x140312380
+UserClientRequestPvpOptionsEnabled::UserClientRequestPvpOptionsEnabled() {
+}
+
+// OFFSET: 0x0066BB40/0x140312300
+UserClientRequestPvpOptionsEnabled::~UserClientRequestPvpOptionsEnabled() {
+}
+
+// OFFSET: 0x0066BA80
+void UserClientRequestPvpOptionsEnabled::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x24A1));
+}
+
+// OFFSET: 0x0066D390/0x140314400
+UserClientLfgLockInfoRequest::UserClientLfgLockInfoRequest() {
+}
+
+// OFFSET: 0x0066BAA0/0x140312280
+UserClientLfgLockInfoRequest::~UserClientLfgLockInfoRequest() {
+}
+
+// OFFSET: 0x0066D180
+void UserClientLfgLockInfoRequest::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x412));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010);
+    bits.Flush();
+}
+
+// OFFSET: 0x0066D690/0x140314750
+UserClientLfgSetBootVote::UserClientLfgSetBootVote() {
+}
+
+// OFFSET: 0x0066BA10/0x140312200
+UserClientLfgSetBootVote::~UserClientLfgSetBootVote() {
+}
+
+// OFFSET: 0x0066D300
+void UserClientLfgSetBootVote::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x4B3));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010);
+    bits.Flush();
+}
+
+// OFFSET: 0x0066D730/0x140314820
+UserClientStartWargame::UserClientStartWargame() {
+}
+
+// OFFSET: 0x0066BB00/0x1403122D0
+UserClientStartWargame::~UserClientStartWargame() {
+}
+
+// OFFSET: 0x0066D440
+void UserClientStartWargame::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x5A0));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0018[0] != 0);
+    bits.WriteBit(this->unk_0018[7] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0018[5] != 0);
+    bits.WriteBit(this->unk_0018[1] != 0);
+    bits.WriteBit(this->unk_0018[2] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0018[4] != 0);
+    bits.WriteBit(this->unk_0018[3] != 0);
+    bits.WriteBit(this->unk_0018[6] != 0);
+    bits.Flush();
+
+    if (this->unk_0018[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[6] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0018[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[4] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0018[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[1] ^ 1));
+    }
+    if (this->unk_0018[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[3] ^ 1));
+    }
+    if (this->unk_0018[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[5] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0018[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[2] ^ 1));
+    }
+    if (this->unk_0018[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[7] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0018[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[0] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066E8B0/0x140312500
+UserClientLfgTeleport::UserClientLfgTeleport() {
+}
+
+// OFFSET: 0x0066BA00/0x1403121F0
+UserClientLfgTeleport::~UserClientLfgTeleport() {
+}
+
+// OFFSET: 0x0066D6B0
+void UserClientLfgTeleport::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2482));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010);
+    bits.Flush();
+}
+
+// OFFSET: 0x0066D380/0x1403143E0
+UserClientCommentatorGetPartyInfo::UserClientCommentatorGetPartyInfo() {
+}
+
+// OFFSET: 0x0066BC30/0x140312470
+UserClientCommentatorGetPartyInfo::~UserClientCommentatorGetPartyInfo() {
+}
+
+// OFFSET: 0x0066D7A0
+void UserClientCommentatorGetPartyInfo::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2412));
+    msg->Put(this->unk_0010);
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0014));
+    bits.Flush();
+
+    msg->PutData(this->unk_0014, strlen(this->unk_0014));
+}
+
+// OFFSET: 0x0066D740/0x140314840
+UserClientCommentatorStartWargame::UserClientCommentatorStartWargame() {
+}
+
+// OFFSET: 0x0066B920
+UserClientCommentatorStartWargame::~UserClientCommentatorStartWargame() {
+}
+
+// OFFSET: 0x0066DB60
+void UserClientCommentatorStartWargame::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x25A0));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<7>(strlen(this->unk_0048));
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBits<7>(strlen(this->unk_0018));
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    msg->PutData(this->unk_0018, strlen(this->unk_0018));
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    msg->PutData(this->unk_0048, strlen(this->unk_0048));
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066DE30/0x140315010
+UserClientRequestRatedInfo::UserClientRequestRatedInfo() {
+}
+
+// OFFSET: 0x0066B970/0x140312170
+UserClientRequestRatedInfo::~UserClientRequestRatedInfo() {
+}
+
+// OFFSET: 0x0066DE00
+void UserClientRequestRatedInfo::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2423));
+    msg->Put(this->unk_0010);
+}
+
+// OFFSET: 0x0066D6A0/0x140314770
+UserClientSendSorRequestViaAddress::UserClientSendSorRequestViaAddress() {
+}
+
+// OFFSET: 0x0066BBB0/0x1403123B0
+UserClientSendSorRequestViaAddress::~UserClientSendSorRequestViaAddress() {
+}
+
+// OFFSET: 0x0066F8D0
+void UserClientSendSorRequestViaAddress::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x420));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<12>(strlen(this->unk_0010));
+    bits.WriteBits<11>(strlen(this->unk_0510));
+    bits.Flush();
+
+    msg->PutData(this->unk_0510, strlen(this->unk_0510));
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x0066D160
+UserClientSendSorRequestViaBnetAccountId::UserClientSendSorRequestViaBnetAccountId() {
+}
+
+// OFFSET: 0x0066BA50/0x140312240
+UserClientSendSorRequestViaBnetAccountId::~UserClientSendSorRequestViaBnetAccountId() {
+}
+
+// OFFSET: 0x0066FBA0
+void UserClientSendSorRequestViaBnetAccountId::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x482));
+    msg->Put(this->unk_040C);
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<11>(strlen(this->unk_0010));
+    bits.Flush();
+
+    msg->PutData(this->unk_0010, strlen(this->unk_0010));
+}
+
+// OFFSET: 0x00670590/0x140317EE0
+UserClientRequestPvpRewards::UserClientRequestPvpRewards() {
+}
+
+// OFFSET: 0x00670440/0x140317D20
+UserClientRequestPvpRewards::~UserClientRequestPvpRewards() {
+}
+
+// OFFSET: 0x006707D0
+void UserClientRequestPvpRewards::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x780C));
+}
+
+// OFFSET: 0x00670670/0x140318030
+UserClientBattlemasterJoinRated::UserClientBattlemasterJoinRated() {
+}
+
+// OFFSET: 0x006707F0/0x1403182E0
+UserClientBattlemasterJoinRated::~UserClientBattlemasterJoinRated() {
+}
+
+// OFFSET: 0x00670D70
+void UserClientBattlemasterJoinRated::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3B18));
+}
+
+// OFFSET: 0x0069A8F0
+UserClientGuildAchievementMembers::UserClientGuildAchievementMembers(uint64_t a1, uint64_t a3, uint32_t a5) {
+    *reinterpret_cast<uint64_t*>(this->unk_0010) = a3;
+    *reinterpret_cast<uint64_t*>(this->unk_0018) = a1;
+    this->unk_0020 = a5;
+}
+
+// OFFSET: 0x0069A190/0x140346710
+UserClientGuildAchievementMembers::~UserClientGuildAchievementMembers() {
+}
+
+// OFFSET: 0x0069A930/0x140346EE0
+void UserClientGuildAchievementMembers::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3025));
+    msg->Put(this->unk_0020);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0010[0] != 0);
+    bits.WriteBit(this->unk_0018[5] != 0);
+    bits.WriteBit(this->unk_0018[4] != 0);
+    bits.WriteBit(this->unk_0018[0] != 0);
+    bits.WriteBit(this->unk_0018[7] != 0);
+    bits.WriteBit(this->unk_0010[5] != 0);
+    bits.WriteBit(this->unk_0010[7] != 0);
+    bits.WriteBit(this->unk_0018[3] != 0);
+    bits.WriteBit(this->unk_0010[3] != 0);
+    bits.WriteBit(this->unk_0018[2] != 0);
+    bits.WriteBit(this->unk_0010[4] != 0);
+    bits.WriteBit(this->unk_0010[1] != 0);
+    bits.WriteBit(this->unk_0010[6] != 0);
+    bits.WriteBit(this->unk_0018[6] != 0);
+    bits.WriteBit(this->unk_0010[2] != 0);
+    bits.WriteBit(this->unk_0018[1] != 0);
+    bits.Flush();
+
+    if (this->unk_0010[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[0] ^ 1));
+    }
+    if (this->unk_0010[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[3] ^ 1));
+    }
+    if (this->unk_0018[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[2] ^ 1));
+    }
+    if (this->unk_0010[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[7] ^ 1));
+    }
+    if (this->unk_0010[2]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[2] ^ 1));
+    }
+    if (this->unk_0018[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[5] ^ 1));
+    }
+    if (this->unk_0018[0]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[0] ^ 1));
+    }
+    if (this->unk_0018[3]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[3] ^ 1));
+    }
+    if (this->unk_0010[5]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[5] ^ 1));
+    }
+    if (this->unk_0010[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[1] ^ 1));
+    }
+    if (this->unk_0018[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[4] ^ 1));
+    }
+    if (this->unk_0018[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[6] ^ 1));
+    }
+    if (this->unk_0018[1]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[1] ^ 1));
+    }
+    if (this->unk_0018[7]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0018[7] ^ 1));
+    }
+    if (this->unk_0010[4]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[4] ^ 1));
+    }
+    if (this->unk_0010[6]) {
+        msg->Put(static_cast<uint8_t>(this->unk_0010[6] ^ 1));
+    }
+}
