@@ -2276,7 +2276,7 @@ void CWorldView::UpdateViewer() {
     if (this->m_sortTable) {
         float height = 3.402823466e38f;
 
-        if (worldMap->QueryFlightBoundsUpper(this->m_camPos, height) && height >= this->m_camPos.z && this->m_viewerExteriorDepth < 1.0f) {
+        if (worldMap->QueryTerrainHeight(this->m_camPos, height) && height >= this->m_camPos.z && this->m_viewerExteriorDepth < 1.0f) {
             this->m_viewerExteriorDepth = 1.0f;
         }
     }

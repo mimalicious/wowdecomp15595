@@ -2373,6 +2373,15 @@ void CGItem_C::SignalEvent(CGItem_C* item, uint32_t event) {
     }
 }
 
+// OFFSET: 0x00468F40
+int32_t CGItem::GetPetitionId() {
+    if (this->GetItemStaticFlags(0) & 0x2000) {
+        return this->m_item->m_itemFieldEnchantment[0].m_id;
+    }
+
+    return 0;
+}
+
 // OFFSET: 0x00468F60/0x14007D140
 int32_t CGItem::GetPetitionSignatures() {
     if (this->GetItemStaticFlags(0) & 0x2000) {

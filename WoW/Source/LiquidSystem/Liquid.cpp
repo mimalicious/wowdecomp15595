@@ -525,6 +525,11 @@ Liquid::CInstance* Liquid::CInstance::Create() {
     return Liquid::s_instanceAllocator.New<Liquid::CInstance>(0);
 }
 
+// INLINED
+void Liquid::CInstance::SetTransform(const C44Matrix& transform) {
+    this->m_transform = transform;
+}
+
 // OFFSET: 0x0071BF10/0x1403F0C80
 void Liquid::CInstance::Release() {
     if (this->m_refCount-- == 1) {

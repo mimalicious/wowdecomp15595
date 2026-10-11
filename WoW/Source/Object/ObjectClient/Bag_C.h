@@ -37,7 +37,6 @@ class CGBag_C {
     uint64_t GetItemGuid(uint32_t slot) const;
     CGItem_C* FindItemOfType(int32_t itemId, uint32_t flags) const;
     CGItem_C* FindItemWithSpellCategory(int32_t category, uint32_t flags) const;
-    CGItem_C* FindItemOfClass(int32_t classId, uint32_t subclassMask, uint32_t flags);
     CGItem_C* FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, uint32_t flags) const;
     CGItem_C* FindItemByName(const char* name, uint32_t flags) const;
     CGItem_C* FindItemByFullName(const char* name, uint32_t flags) const;
@@ -57,7 +56,6 @@ class CGBag_C {
 int32_t GetItemTypeCountCallback(const CGItem_C* item, void* param);
 int32_t GetItemTypeChargesCallback(const CGItem_C* item, void* param);
 int32_t FindItemIDCallback(const CGItem_C* item, void* param);
-int32_t FindItemClassCallback(const CGItem_C* item, void* param);
 int32_t GetItemLimitCategoryCallback(const CGItem_C* item, void* param);
 int32_t GetDisplayErrorByInventoryError(int32_t error);
 

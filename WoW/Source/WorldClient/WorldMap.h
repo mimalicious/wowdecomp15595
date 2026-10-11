@@ -250,7 +250,6 @@ class CWorldMap {
     bool QueryFacets(const CAaBox& box, World::FacetData& facets, uint32_t flags);
     bool QueryGroundTypeTerrain(const C3Vector& pos, uint32_t& groundType);
     bool QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height);
-    int32_t QueryFlightBoundsUpper(const C3Vector& pos, float& height);
     int32_t QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType, float& height);
     void QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results);
     void QueryTris(const CAaBox& box, World::TriData& tris, uint32_t flags);

@@ -292,7 +292,6 @@ void LookingForGroupUnregisterScriptFunctions();
 
 void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32_t completedMask, uint32_t* total, uint32_t* completed);
 int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty, int32_t index, uint32_t completedMask, uint32_t otherMask);
-void CountDungeonEncounters(int32_t mapId, int32_t difficulty, uint32_t completedMask, uint32_t& total, uint32_t& completed);
 static int32_t GetLFGDungeonSubtype(const LfgDungeonsRec* rec);
 const char* GetRoleTokenFromFlags(uint32_t flags);
 uint32_t GetRoleFlagFromToken(const char* token);

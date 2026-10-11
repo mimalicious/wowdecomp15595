@@ -617,20 +617,29 @@ int32_t CGBag_C::GetItemTypeCharges(int32_t itemId, uint32_t flags) const {
     return param.m_count;
 }
 
-// OFFSET: #0x00753AC0
-int32_t FindItemClassCallback(const CGItem_C* item, void* param) {
-    const uint32_t* classParam = static_cast<const uint32_t*>(param);
-    return item->GetClassID() == classParam[0] && (!classParam[1] || ((1 << item->GetSubtypeID()) & classParam[1]));
+// OFFSET: 0x005F2040/0x1402749E0
+static int32_t FindItemSpellCategoryCallback(const CGItem_C* item, void* param) {
+    int32_t category = *static_cast<const int32_t*>(param);
+    ItemRecSparse* stats = item->GetStats();
+
+    if (!stats) {
+        return 0;
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        if (stats->m_spellID[i] && stats->m_spellCategory[i] == category) {
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
-// OFFSET: 0x005F2E00
-CGItem_C* CGBag_C::FindItemOfClass(int32_t classId, uint32_t subclassMask, uint32_t flags) {
-    uint32_t param[2];
-    param[0] = classId;
-    param[1] = subclassMask;
+// OFFSET: 0x005F2E00/0x1402759B0
+CGItem_C* CGBag_C::FindItemWithSpellCategory(int32_t category, uint32_t flags) const {
     WOWGUID container;
     uint32_t slot;
-    return this->FindItem(FindItemClassCallback, param, container, slot, flags);
+    return this->FindItem(FindItemSpellCategoryCallback, &category, container, slot, flags);
 }
 
 // OFFSET: 0x0044E310
@@ -735,7 +744,7 @@ CGItem_C* CGBag_C::GetItemIdByName(const char* name, WOWGUID& container, uint32_
     return this->FindItem(&FindItemLinkCallback, &link, container, slot, flags);
 }
 
-// OFFSET: 0x005F3000
+// OFFSET: 0x005F3000/0x140275DD0
 CGItem_C* CGBag_C::FindItemByFullName(const char* name, uint32_t flags) const {
     if (!name || !*name) {
         return NULL;

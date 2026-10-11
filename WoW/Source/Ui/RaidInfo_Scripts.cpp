@@ -518,7 +518,7 @@ static int32_t Script_GetSavedInstanceInfo(lua_State* L) {
 
     uint32_t total;
     uint32_t completed;
-    CountDungeonEncounters(mapId, difficulty, info->m_completedMask, total, completed);
+    DungeonEncounterCountMatchingRows(mapId, difficulty, info->m_completedMask, &total, &completed);
     lua_pushnumber(L, total);
     lua_pushnumber(L, completed);
     return 12;

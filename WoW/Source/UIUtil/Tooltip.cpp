@@ -7387,7 +7387,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
             }
         }
 
-        canUseSet = player->CanUseItemSet(itemSet);
+        canUseSet = player->MeetsItemSetSkill(itemSet);
     }
 
     if (distribution && values) {

@@ -181,7 +181,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void __stdcall QueryQuest(const WOWGUID& questGiver, int32_t questId);
     static void __stdcall QueryQuestGiverStatus(const WOWGUID& questGiver);
     static void QueryQuestGiverStatusMultiple();
-    static void CheckForQuestAutoComplete(int32_t questId, int32_t a2, int32_t a3);
     static bool __stdcall IsRAFPlayer(WOWGUID guid);
     static int32_t __stdcall CanSummonFriend(WOWGUID guid);
     int32_t CanGrantLevel(WOWGUID guid);
@@ -379,7 +378,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     const CGItem_C* EquippedItemMeetSpellRequirements(const SpellRec* spell, uint32_t slotMask);
     const CGItem_C* GetEquippedItemForSpell(const SpellEquippedItemsRec* items, uint32_t slotMask);
     bool IsInArena();
-    int32_t CanUseItemSet(const ItemSetRec* itemSet);
     int32_t GetModHealingDonePos() const;
     void ModifyCategoryCooldown(int32_t& cooldown, int32_t category);
     int32_t HasZoneExplored(int32_t zone);
