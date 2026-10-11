@@ -2570,6 +2570,28 @@ static int32_t Script_GuildInfo(lua_State* L) {
     return 0;
 }
 
+// OFFSET: 0x00931B40/0x140699E50
+static int32_t Script_GetGuildRosterLargestContribution(lua_State* L) {
+    lua_pushnumber(L, static_cast<int32_t>(CGGuildInfo::m_largestWeeklyXPContribution));
+    lua_pushnumber(L, static_cast<int32_t>(CGGuildInfo::m_largestTotalXPContribution));
+    return 2;
+}
+
+// OFFSET: 0x00931B80/0x140699E90
+static int32_t Script_GetGuildRosterLargestAchievementPoints(lua_State* L) {
+    lua_pushnumber(L, CGGuildInfo::m_largestPersonalAchievementPoints);
+    return 1;
+}
+
+// OFFSET: 0x00932260/0x14069A680
+static int32_t Script_InGuildParty(lua_State* L) {
+    lua_pushboolean(L, CGGuildInfo::m_inGuildParty);
+    lua_pushnumber(L, CGGuildInfo::m_numGuildGroupMembers);
+    lua_pushnumber(L, CGGuildInfo::m_numGuildGroupRequired);
+    lua_pushnumber(L, CGGuildInfo::m_guildXPEarnedMult);
+    return 4;
+}
+
 // STATIC: 0x00D11CB8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumGuildMembers", &Script_GetNumGuildMembers },

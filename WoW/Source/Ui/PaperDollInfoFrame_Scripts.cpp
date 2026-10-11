@@ -104,17 +104,6 @@ static int32_t Script_HasInspectHonorData(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005E7700
-static int32_t Script_KeyRingButtonIDToInvSlotID(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: KeyRingButtonIDToInvSlotID(buttonID)");
-        return 0;
-    }
-
-    lua_pushnumber(L, static_cast<int32_t>(lua_tonumber(L, 1)) + 86);
-    return 1;
-}
-
 // OFFSET: 0x0097DCF0/0x1406F7960
 static int32_t Script_OffhandHasWeapon(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1029,6 +1018,26 @@ static int32_t Script_RequestInspectHonorData(lua_State* L) {
     return 0;
 }
 
+// OFFSET: 0x0097C2F0/0x1406F5AC0
+static int32_t Script_GetInspectGuildInfo(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        return 0;
+    }
+
+    CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
+
+    if (!unit || !(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
+        return 0;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(unit);
+    lua_pushnumber(L, static_cast<double>(player->GetInspectGuildGUID()));
+    lua_pushnumber(L, player->GetInspectGuildLevel());
+    lua_pushnumber(L, static_cast<double>(player->GetInspectGuildXP()));
+    lua_pushnumber(L, player->GetInspectGuildNumMembers());
+    return 4;
+}
+
 // STATIC: #0x00AD1270
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetInventorySlotInfo", &Script_GetInventorySlotInfo },
@@ -1042,7 +1051,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetInventoryItemLink", &Script_GetInventoryItemLink },
     { "GetInventoryItemID", &Script_GetInventoryItemID },
     { "GetInventoryItemGems", &Script_GetInventoryItemGems },
-    { "KeyRingButtonIDToInvSlotID", &Script_KeyRingButtonIDToInvSlotID },
     { "PickupInventoryItem", &Script_PickupInventoryItem },
     { "UseInventoryItem", &Script_UseInventoryItem },
     { "SocketInventoryItem", &Script_SocketInventoryItem },
@@ -1064,16 +1072,17 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ClearInspectPlayer", &Script_ClearInspectPlayer },
     { "GetWeaponEnchantInfo", &Script_GetWeaponEnchantInfo },
     { "HasWandEquipped", &Script_HasWandEquipped },
+    { "GetInspectGuildInfo", &Script_GetInspectGuildInfo },
 };
 
-// OFFSET: #0x005E78F0
+// OFFSET: 0x0097B5D0
 void CharacterInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x005E7920
+// OFFSET: 0x0097B600
 void CharacterInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

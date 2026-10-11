@@ -215,6 +215,24 @@ static int32_t Script_GMSurveySubmit(lua_State* L) {
     return 0;
 }
 
+// OFFSET: 0x009E5A90/0x14077DEA0
+static int32_t Script_GMQuickTicketSystemEnabled(lua_State* L) {
+    lua_pushboolean(L, CGGMTicketInfo::s_quickTicketSystemStatus);
+    return 1;
+}
+
+// OFFSET: 0x009E5AB0/0x14077DEC0
+static int32_t Script_GMItemRestorationButtonEnabled(lua_State* L) {
+    lua_pushboolean(L, CGGMTicketInfo::s_itemRestorationButtonStatus);
+    return 1;
+}
+
+// OFFSET: 0x009E5AD0/0x14077DEE0
+static int32_t Script_GMQuickTicketSystemThrottled(lua_State* L) {
+    lua_pushboolean(L, !CGGMTicketInfo::s_quickTicketThrottle.Check());
+    return 1;
+}
+
 // STATIC: #0x00ACFAF8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGMTicket", &Script_GetGMTicket },
@@ -232,6 +250,9 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GMSurveySubmit", &Script_GMSurveySubmit },
     { "GMReportLag", &Script_GMReportLag },
     { "RegisterStaticConstants", &Script_RegisterStaticConstants },
+    { "GMQuickTicketSystemEnabled", &Script_GMQuickTicketSystemEnabled },
+    { "GMItemRestorationButtonEnabled", &Script_GMItemRestorationButtonEnabled },
+    { "GMQuickTicketSystemThrottled", &Script_GMQuickTicketSystemThrottled },
 };
 
 // OFFSET: %0x00947400

@@ -295,7 +295,7 @@ void CGWorldMap::InitializeGame() {
     CGWorldMap::m_overlays.SetCount(32);
 }
 
-// OFFSET: #0x00543770
+// OFFSET: 0x0091A440/0x14067B530
 int32_t CGWorldMap::GetCurrentAreaID() {
     if (CGWorldMap::m_currentContinent < 0) {
         return CGWorldMap::m_currentOrphanZone;

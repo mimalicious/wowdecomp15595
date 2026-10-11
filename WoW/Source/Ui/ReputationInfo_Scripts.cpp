@@ -1,4 +1,5 @@
 #include "ReputationInfo.h"
+#include "WoW/Source/Ui/GuildInfo.h"
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -220,7 +221,34 @@ static int32_t Script_SetFactionActive(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00AD0AE8
+// OFFSET: 0x009A7090/0x14072D940
+static int32_t Script_GetGuildExpirationTime(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    lua_pushnumber(L, player->m_player->m_playerGuilddeleteDate);
+    return 1;
+}
+
+// OFFSET: 0x009A70F0/0x14072D9A0
+static int32_t Script_GetGuildFactionInfo(lua_State* L) {
+    int32_t count = GetFactionInfoHelper(L, 1168);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        uint64_t guid = player->m_obj->m_guid.m_guid;
+        lua_pushinteger(L, CGGuildInfo::GetMemberReputationToCap(guid));
+        lua_pushinteger(L, CGGuildInfo::GetGuildReputationWeeklyCap());
+        count += 2;
+    }
+
+    return count;
+}
+
+// STATIC: 0x00D151A8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumFactions", &Script_GetNumFactions },
     { "GetFactionInfo", &Script_GetFactionInfo },
@@ -237,16 +265,18 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ExpandAllFactionHeaders", &Script_ExpandAllFactionHeaders },
     { "SetSelectedFaction", &Script_SetSelectedFaction },
     { "GetSelectedFaction", &Script_GetSelectedFaction },
+    { "GetGuildExpirationTime", &Script_GetGuildExpirationTime },
+    { "GetGuildFactionInfo", &Script_GetGuildFactionInfo },
 };
 
-// OFFSET: #0x005CFF60
+// OFFSET: 0x009A5AD0
 void ReputationInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x005CFF90
+// OFFSET: 0x009A5B00
 void ReputationInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

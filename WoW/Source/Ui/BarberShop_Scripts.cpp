@@ -1,4 +1,7 @@
 #include "BarberShop.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
+#include "WoW/Source/DB/Rec/ChrRacesRec.h"
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -118,6 +121,28 @@ static int32_t Script_GetFacialHairCustomization(lua_State* L) {
     return 1;
 }
 
+// OFFSET: 0x008FFAE0/0x140657690
+static int32_t Script_HasAlternateForm(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    uint32_t race = ClientServices::GetCharacterRace();
+    const ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(race);
+
+    if (raceRec && raceRec->m_alteredFormRaceID) {
+        lua_pushboolean(L, 1);
+        lua_pushboolean(L, race != player->GetCurrentClientRace());
+        return 2;
+    }
+
+    lua_pushboolean(L, 0);
+    lua_pushboolean(L, 0);
+    return 2;
+}
+
 // STATIC: #0x00ACC790
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetBarberShopStyleInfo", &Script_GetBarberShopStyleInfo },
@@ -129,16 +154,17 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetFacialHairCustomization", &Script_GetFacialHairCustomization },
     { "BarberShopReset", &Script_BarberShopReset },
     { "CanAlterSkin", &Script_CanAlterSkin },
+    { "HasAlternateForm", &Script_HasAlternateForm },
 };
 
-// OFFSET: #0x0052E520
+// OFFSET: 0x008FF660
 void CGBarberShop::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x0052E550
+// OFFSET: 0x008FF690
 void CGBarberShop::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

@@ -29,6 +29,9 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "Engine/Source/Frame/CSimpleFrame.h"
 
+
+// STATIC: 0x00D1143C
+static const int32_t s_outdoorPVPZones[2][3] = { { 501, 3801, 4354 }, { 708, 5387, 5332 } };
 // OFFSET: 0x00919D40/0x14067AC90
 static int32_t Script_GetNumMapLandmarks(lua_State* L) {
     lua_pushnumber(L, CGWorldMap::m_numLandmarks);
@@ -391,22 +394,6 @@ static int32_t Script_GetPlayerMapPosition(lua_State* L) {
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
     return 2;
-}
-
-// OFFSET: #0x005435A0
-static int32_t Script_GetWintergraspWaitTime(lua_State* L) {
-    if (!GetWorldState(3801)) {
-        return 0;
-    }
-
-    int32_t wait = GetWorldState(4354) - CGWorldStateInfo::GetUITime();
-
-    if (wait < 0) {
-        wait = 0;
-    }
-
-    lua_pushnumber(L, wait);
-    return 1;
 }
 
 // OFFSET: 0x0091C020/0x14067D600
@@ -1135,6 +1122,77 @@ static int32_t Script_GetDebugZoneMap(lua_State* L) {
     return 0;
 }
 
+// OFFSET: 0x00919D10/0x14067AC70
+static int32_t Script_GetNumberOfDetailTiles(lua_State* L) {
+    lua_pushnumber(L, 12.0);
+    return 1;
+}
+
+// OFFSET: 0x0091B880/0x14067CD20
+static int32_t Script_GetMapNameByID(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetMapNameByID(mapID)");
+    }
+
+    const WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(static_cast<int32_t>(lua_tonumber(L, 1)));
+
+    if (!area) {
+        return 0;
+    }
+
+    const AreaTableRec* areaTable = g_areaTableDB.GetRecord(area->m_areaID);
+
+    if (!areaTable) {
+        return 0;
+    }
+
+    lua_pushstring(L, areaTable->m_areaName);
+    return 1;
+}
+
+// OFFSET: 0x0091BED0/0x14067D460
+static int32_t Script_GetCurrentMapLevelRange(lua_State* L) {
+    const WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(CGWorldMap::GetCurrentAreaID());
+
+    if (!area) {
+        return 0;
+    }
+
+    int32_t minLevel = area->unk_0030;
+
+    if (minLevel <= 0 && area->unk_0034 <= 0) {
+        return 0;
+    }
+
+    lua_pushnumber(L, minLevel);
+    lua_pushnumber(L, area->unk_0034);
+    return 2;
+}
+
+// OFFSET: 0x0091C6F0/0x14067DEC0
+static int32_t Script_GetOutdoorPVPWaitTime(lua_State* L) {
+    uint32_t i;
+
+    for (i = 0; i < 2; i++) {
+        if (CGWorldMap::GetCurrentAreaID() == s_outdoorPVPZones[i][0] && GetWorldState(s_outdoorPVPZones[i][1])) {
+            break;
+        }
+    }
+
+    if (i >= 2) {
+        return 0;
+    }
+
+    int32_t wait = GetWorldState(s_outdoorPVPZones[i][2]) - CGWorldStateInfo::GetUITime();
+
+    if (wait < 0) {
+        wait = 0;
+    }
+
+    lua_pushnumber(L, wait);
+    return 1;
+}
+
 // STATIC: #0x00ACCF18
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMapContinents", &Script_GetMapContinents },
@@ -1150,7 +1208,10 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetCurrentMapAreaID", &Script_GetCurrentMapAreaID },
     { "GetCurrentMapZone", &Script_GetCurrentMapZone },
     { "GetCurrentMapDungeonLevel", &Script_GetCurrentMapDungeonLevel },
+    { "GetCurrentMapLevelRange", &Script_GetCurrentMapLevelRange },
+    { "GetNumberOfDetailTiles", &Script_GetNumberOfDetailTiles },
     { "SetMapByID", &Script_SetMapByID },
+    { "GetMapNameByID", &Script_GetMapNameByID },
     { "IsZoomOutAvailable", &Script_IsZoomOutAvailable },
     { "ProcessMapClick", &Script_ProcessMapClick },
     { "UpdateMapHighlight", &Script_UpdateMapHighlight },
@@ -1175,19 +1236,19 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "TeleportToDebugObject", &Script_TeleportToDebugObject },
     { "HasDebugZoneMap", &Script_HasDebugZoneMap },
     { "GetDebugZoneMap", &Script_GetDebugZoneMap },
-    { "GetWintergraspWaitTime", &Script_GetWintergraspWaitTime },
+    { "GetOutdoorPVPWaitTime", &Script_GetOutdoorPVPWaitTime },
     { "CanQueueForWintergrasp", &Script_CanQueueForWintergrasp },
 };
 
 
-// OFFSET: #0x00543650
+// OFFSET: 0x0091A310
 void WorldMapRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x00543680
+// OFFSET: 0x0091A340
 void WorldMapUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);
