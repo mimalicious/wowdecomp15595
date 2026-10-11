@@ -676,6 +676,8 @@ class ClientAccountInfoResponse : public JamClientMessage {
     ClientAccountInfoResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientAccountInfoResponse();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 

@@ -16075,6 +16075,81 @@ void ClientAccountInfoResponse::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006E9890
+bool ClientAccountInfoResponse::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006DDC80
+bool ClientAccountInfoResponse::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    *reinterpret_cast<uint32_t*>(this->unk_052C) = bits.ReadBits<12>();
+    this->unk_0510.SetCount(bits.ReadBits<23>());
+    *reinterpret_cast<uint32_t*>(this->unk_0010) = bits.ReadBits<12>();
+    this->unk_0A34.SetCount(bits.ReadBits<23>());
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0520 = value;
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_0010);
+        msg->GetData(this->unk_0010, length);
+        this->unk_0010[length] = 0;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0A30 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0A2C = value;
+    }
+    for (uint32_t i = 0; i < this->unk_0510.m_count; i++) {
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->unk_0510.m_data[i].unk_0004 = value;
+        }
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->unk_0510.m_data[i].unk_0000 = value;
+        }
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0528 = value;
+    }
+    for (uint32_t i = 0; i < this->unk_0A34.m_count; i++) {
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->unk_0A34.m_data[i].unk_0000 = value;
+        }
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->unk_0A34.m_data[i].unk_0004 = value;
+        }
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_052C);
+        msg->GetData(this->unk_052C, length);
+        this->unk_052C[length] = 0;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0524 = value;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B1CF0
 bool ClientAccountInfoResponse::Handle() {
     if (!ClientAccountInfoResponse::s_handler) {
