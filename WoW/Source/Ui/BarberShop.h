@@ -10,6 +10,7 @@
 struct lua_State;
 
 class CDataStore;
+class CGCharacterModelBase;
 
 int32_t Packet_SMSG_ENABLE_BARBER_SHOP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_BARBER_SHOP_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -30,11 +31,14 @@ class CGBarberShop {
     static STYLEREC* m_currentSkinColor;
     static TSHashTable<USEABLESTYLE, HASHKEY_NONE> m_useableStyles;
     static uint8_t m_initialized;
+    static CGCharacterModelBase* m_alternateFormFrame;
 
     static void AppearanceApplied();
     static void DisableBarberShop();
     static const BarberShopStyleRec* GetCurrentStyle(int32_t type);
     static void ResetAppearance();
+    static void UpdateAlternateForm();
+    static void SetAlternateForm();
     static bool IsCurrentStyle(int32_t type);
     static bool IsSlotHidden(int32_t slot);
     static int32_t GetTotalCost();

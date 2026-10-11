@@ -1,4 +1,6 @@
 #include "BarberShop.h"
+#include "Engine/Source/Frame/CScriptObject.h"
+#include "WoW/Source/Ui/CharacterModelBase.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/DB/Rec/ChrRacesRec.h"
@@ -121,6 +123,26 @@ static int32_t Script_GetFacialHairCustomization(lua_State* L) {
     return 1;
 }
 
+// OFFSET: 0x008FFF00
+static int32_t Script_SetBarberShopAlternateFormFrame(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: SetAlternateFormFrame(\"frameName\")");
+        return 0;
+    }
+
+    CGCharacterModelBase* frame = static_cast<CGCharacterModelBase*>(CScriptObject::GetScriptObjectByName(lua_tolstring(L, 1, NULL), CGCharacterModelBase::GetObjectType()));
+
+    if (frame) {
+        CGBarberShop::m_alternateFormFrame = frame;
+
+        if (CGBarberShop::m_barberShopEnabled) {
+            CGBarberShop::SetAlternateForm();
+        }
+    }
+
+    return 0;
+}
+
 // OFFSET: 0x008FFAE0/0x140657690
 static int32_t Script_HasAlternateForm(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -143,7 +165,7 @@ static int32_t Script_HasAlternateForm(lua_State* L) {
     return 2;
 }
 
-// STATIC: #0x00ACC790
+// STATIC: 0x00D108A8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetBarberShopStyleInfo", &Script_GetBarberShopStyleInfo },
     { "SetNextBarberShopStyle", &Script_SetNextBarberShopStyle },
@@ -154,6 +176,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetFacialHairCustomization", &Script_GetFacialHairCustomization },
     { "BarberShopReset", &Script_BarberShopReset },
     { "CanAlterSkin", &Script_CanAlterSkin },
+    { "SetBarberShopAlternateFormFrame", &Script_SetBarberShopAlternateFormFrame },
     { "HasAlternateForm", &Script_HasAlternateForm },
 };
 
