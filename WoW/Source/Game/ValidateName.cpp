@@ -1485,3 +1485,20 @@ bool FixCharacterNameCase(char* dest, const char* source, uint32_t size) {
     SUniConvertUTF16to8(dest, size, buffer, STORM_MAX_STR, NULL, NULL);
     return true;
 }
+
+// OFFSET: 0x004E7A70/0x140236060
+bool UpperCaseString(char* dest, const char* source, uint32_t size) {
+    if (!dest || !size) {
+        return false;
+    }
+
+    uint16_t buffer[1024];
+    SUniConvertUTF8to16(buffer, 1024, source, STORM_MAX_STR, NULL, NULL);
+
+    for (uint32_t i = 0; buffer[i]; i++) {
+        buffer[i] = ToUpper(buffer[i]);
+    }
+
+    SUniConvertUTF16to8(dest, size, buffer, STORM_MAX_STR, NULL, NULL);
+    return true;
+}

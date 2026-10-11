@@ -1,6 +1,7 @@
 #include "WoW/Source/Ui/ScalingStats.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/RandPropPointsRec.h"
+#include "WoW/Source/DB/Rec/SpellItemEnchantmentRec.h"
 #include "WoW/Source/DB/Rec/ArmorLocationRec.h"
 #include "WoW/Source/DB/Rec/ItemArmorQualityRec.h"
 #include "WoW/Source/DB/Rec/ItemArmorShieldRec.h"
@@ -308,4 +309,34 @@ int32_t CalculateItemBonusFromPercent(int32_t level, int32_t itemLevel, int32_t 
     }
 
     return static_cast<int32_t>(static_cast<float>(percentEditor * points) * 0.000099999997f - static_cast<float>(points) / static_cast<float>(GetRandomPropertyPointsEx(itemLevel, quality, inventoryType)) * static_cast<float>(socketPercentage) + 0.5f);
+}
+
+// OFFSET: 0x00999B70/0x14071B8D0
+int32_t GetScaledEnchantmentPoints(int32_t itemLevel, int32_t maxItemLevel, const SpellItemEnchantmentRec* enchant, int32_t points) {
+    if (itemLevel <= 0 || itemLevel >= maxItemLevel) {
+        return points;
+    }
+
+    int32_t scaling = enchant->m_scalingItemLevel;
+
+    if (scaling == 1) {
+        return points;
+    }
+
+    if (!scaling) {
+        return static_cast<int32_t>(static_cast<float>(itemLevel) / static_cast<float>(maxItemLevel) * static_cast<float>(points));
+    }
+
+    RandPropPointsRec* base = g_randPropPointsDB.GetRecord(scaling);
+    int32_t basePoints = base ? base->m_superior[0] : 0;
+    float ratio = static_cast<float>(points) * 10000.0f / static_cast<float>(basePoints);
+    RandPropPointsRec* current = g_randPropPointsDB.GetRecord(itemLevel);
+    int32_t currentPoints = current ? current->m_superior[0] : 0;
+    int32_t result = static_cast<int32_t>(static_cast<float>(static_cast<int32_t>(ratio) * currentPoints) * 0.000099999997f + 0.5f);
+
+    if (result >= points) {
+        return points;
+    }
+
+    return result;
 }

@@ -24,7 +24,7 @@ class SpellItemEnchantmentRec {
     /* 004C */ int32_t m_requiredSkillID;
     /* 0050 */ int32_t m_requiredSkillRank;
     /* 0054 */ int32_t m_minLevel;
-    /* 0058 */ int32_t unk_0058;
+    /* 0058 */ int32_t m_scalingItemLevel;
 };
 
 #endif
