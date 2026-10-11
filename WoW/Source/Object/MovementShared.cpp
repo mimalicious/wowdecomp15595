@@ -767,7 +767,7 @@ int32_t CMovementShared::IsOnFallingSpline() const {
     return 0;
 }
 
-// OFFSET: %0x00446BC0
+// OFFSET: 0x0043B7C0
 int32_t CMovementShared::IsOnFlyingSpline() const {
     CMoveSpline* spline = this->m_spline;
 

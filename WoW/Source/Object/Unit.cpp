@@ -15,6 +15,19 @@ const uint32_t CGUnit::s_mirrorFieldIndices[123] = {
     0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8E,
 };
 
+// OFFSET: 0x005B64B0
+int32_t CGUnit::IsFlyingOrHovering() const {
+    CMovement_C* movement = this->m_movement;
+
+    if (!movement->IsOnFallingSpline()) {
+        if (movement->IsOnFlyingSpline() || (movement->m_flags & (MOVEMENTFLAG_DISABLE_COLLISION | MOVEMENTFLAG_DISABLE_GRAVITY))) {
+            return 1;
+        }
+    }
+
+    return (movement->m_flags & MOVEMENTFLAG_HOVER) != 0;
+}
+
 // OFFSET: 0x00A27820/0x1407CEF80
 uint32_t CGUnit::MirrorIndexFromFieldIndex(uint32_t fieldIndex) {
     for (uint32_t i = 0; i < sizeof(s_mirrorFieldIndices) / sizeof(s_mirrorFieldIndices[0]); i++) {

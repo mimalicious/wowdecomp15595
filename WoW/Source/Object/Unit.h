@@ -17,6 +17,7 @@ class CGUnit {
     static uint32_t MirrorIndexFromFieldIndex(uint32_t fieldIndex);
     static uint32_t DescriptorToMirrorOffset(uint32_t offset, uint32_t a2, uint32_t a3, uint32_t base);
     static int32_t TotalFields();
+    int32_t IsFlyingOrHovering() const;
 
     /* 0000 */ CGUnitData* m_unit;
     /* 0004 */ void* m_unitMirror;

@@ -462,6 +462,30 @@ void CGUnit_C::MarkFallingSent() {
     this->m_clientFlags |= 0x80;
 }
 
+// OFFSET: 0x005ABBD0
+CAaBox CGUnit_C::BuildSelectionCircleBox(const C3Vector& position, float radius) {
+    float height = 2.0f;
+
+    if (radius <= 2.0f) {
+        height = radius;
+
+        if (radius <= 1.5f) {
+            height = 1.5f;
+        }
+    }
+
+    CAaBox box;
+    box.b = position;
+    box.t = position;
+    box.b.x = box.b.x - radius;
+    box.b.y = box.b.y - radius;
+    box.b.z = box.b.z - height;
+    box.t.x = radius + box.t.x;
+    box.t.y = box.t.y + radius;
+    box.t.z = box.t.z + height;
+    return box;
+}
+
 // OFFSET: 0x005AC090
 void CGUnit_C::DeferFacingUpdate(uint32_t time) {
     if (!(this->unk_09FC & 0x80)) {
@@ -548,6 +572,15 @@ static CTexture* CreateTexture(const char* fileName, CStatus* status) {
     CGxTexFlags flags;
     flags.m_filter = GxTex_LinearMipNearest;
     return TextureCreate(fileName, flags, status, 0, NULL, 2);
+}
+
+// OFFSET: 0x005ACC60
+CAnimKitManager* CGUnit_C::GetActiveAnimKitManager() {
+    if (this->m_mountAnimKitManager) {
+        return this->m_mountAnimKitManager;
+    }
+
+    return &this->m_animKitManager;
 }
 
 // PROVEN: a9f729ae IDENTICAL/NONE
@@ -800,6 +833,65 @@ CEffectVirtualItem* CGUnit_C::FindVirtualItemEffect(int32_t hand) const {
     }
 
     return NULL;
+}
+
+// OFFSET: 0x005B1050
+C3Vector CGUnit_C::GetSelectionCirclePosition() const {
+    CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
+    VehicleSeatRec* seat = passenger ? passenger->m_seatRec : NULL;
+
+    if (seat && (seat->m_flagsC & 0x4) && passenger) {
+        CGUnit_C* vehicle = passenger->GetVehicleUnit();
+
+        if (vehicle) {
+            return vehicle->GetSelectionCirclePosition();
+        }
+    }
+
+    return const_cast<CGUnit_C*>(this)->GetModelPosition();
+}
+
+// OFFSET: 0x005B10B0/0x140224340
+float CGUnit_C::GetSelectionCircleRadius() const {
+    const CGUnit_C* unit = this;
+
+    while (true) {
+        CVehiclePassenger_C* passenger = unit->m_vehiclePassenger;
+        VehicleSeatRec* seat = passenger ? passenger->m_seatRec : NULL;
+
+        if (!seat || !(seat->m_flagsC & 0x4) || !passenger) {
+            break;
+        }
+
+        CGUnit_C* vehicle = passenger->GetVehicleUnit();
+
+        if (!vehicle) {
+            break;
+        }
+
+        unit = vehicle;
+    }
+
+    float radius = unit->m_selectionRadius;
+
+    if (radius >= 10.0f) {
+        return 10.0f;
+    }
+
+    return radius;
+}
+
+// OFFSET: 0x005B1120
+uint32_t CGUnit_C::GetSelectionCircleAnim() const {
+    CGUnit_C* self = const_cast<CGUnit_C*>(this);
+    uint32_t anim = this->m_vehiclePassenger ? ANIM_MOUNT : self->SelectAnimationSet()->m_stand;
+    uint32_t filtered = self->GetActiveAnimKitManager()->FilterAnim(anim, 1);
+
+    if (filtered == -1) {
+        return 0;
+    }
+
+    return filtered;
 }
 
 // OFFSET: 0x005B1A70
@@ -1263,6 +1355,57 @@ int32_t __stdcall CGUnit_C::FindMountTypeIDFromSpell(const SpellRec* spell) {
     }
 
     return 0;
+}
+
+// OFFSET: 0x005B9A90
+void CGUnit_C::SnapSelectionCirclePosition(C3Vector& position) const {
+    CM2Model* model = this->GetObjectModel();
+
+    if (!model || !model->IsLoaded()) {
+        return;
+    }
+
+    uint32_t anim = this->GetSelectionCircleAnim();
+    M2SequenceInfo info;
+    info.Clear();
+    model->GetSequenceInfo(anim, 0, info);
+
+    if (info.m_bounds.t.x < info.m_bounds.b.x || info.m_bounds.t.y < info.m_bounds.b.y || info.m_bounds.t.z < info.m_bounds.b.z) {
+        return;
+    }
+
+    float scale = this->GetTrueScale();
+    C3Vector start = position;
+    start.z = start.z + 1.0f;
+    C3Vector end = position;
+    float drop = info.m_bounds.b.z * scale;
+
+    if (!(0.0f > drop)) {
+        drop = 0.0f;
+    }
+
+    end.z = drop + end.z;
+    C3Vector hit;
+    float dist = 1.0f;
+
+    if (World::Intersect(start, end, &hit, &dist, 0x120, NULL)) {
+        position = hit;
+    } else {
+        position = end;
+    }
+}
+
+// OFFSET: 0x005B9C10/0x14022DCF0
+uint32_t CGUnit_C::GetSelectionCircleProjectFlags() const {
+    if (this->m_obj->m_type & TYPEMASK_PLAYER) {
+        CMovement_C* movement = this->m_movement;
+
+        if (!(movement->IsOnFlyingSpline() | movement->IsOnSpline() | (movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) | this->IsFlyingOrHovering())) {
+            return 1;
+        }
+    }
+
+    return 9;
 }
 
 // OFFSET: 0x005BA920/0x14022ED70
@@ -23162,52 +23305,45 @@ void CGUnit_C::RenderTargetSelection() const {
         return;
     }
 
-    C3Vector position = const_cast<CGUnit_C*>(this)->GetModelPosition();
-    float radius = this->m_selectionRadius;
-    CAaBox box;
-    box.b.x = position.x - radius;
-    box.b.y = position.y - radius;
-    box.b.z = position.z - radius;
-    box.t.x = position.x + radius;
-    box.t.y = position.y + radius;
-    box.t.z = position.z + radius;
-
-    CImVector color;
-    *reinterpret_cast<uint32_t*>(&color) = 0;
-    this->GetSelectionHighlightColor(&color);
-
-    C44Matrix matrix;
-    CGObject_C::BuildSelectionRotMatrix(matrix, position);
     g_theGxDevicePtr->RsPush();
-    int32_t states = CGObject_C::SetCircleRenderStates();
 
-    if (states) {
-        ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, 1, GxPolygonOffset_Default);
-    }
+    if (CGObject_C::SetCircleRenderStates()) {
+        C3Vector position = this->GetSelectionCirclePosition();
+        this->SnapSelectionCirclePosition(position);
+        C44Matrix matrix;
+        CGObject_C::BuildSelectionRotMatrix(matrix, position);
+        float radius = this->GetSelectionCircleRadius();
+        CAaBox box = CGUnit_C::BuildSelectionCircleBox(position, radius);
+        CImVector color;
+        *reinterpret_cast<uint32_t*>(&color) = 0;
+        this->GetSelectionHighlightColor(&color);
+        uint32_t flags = this->GetSelectionCircleProjectFlags();
+        ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, flags, GxPolygonOffset_Default);
 
-    if (this->m_clientFlags & 0x10) {
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-        uint32_t now = FrameTime::s_curTimeMs;
-        uint32_t start = player->m_combatModeTime;
-        uint32_t end = start + CGPlayer_C::GetCombatModeFlashDuration();
+        if (this->m_clientFlags & 0x10) {
+            CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+            uint32_t now = FrameTime::GetCurTimeMs();
+            uint32_t start = player->m_combatModeTime;
+            uint32_t end = start + CGPlayer_C::GetCombatModeFlashDuration();
 
-        if (static_cast<int32_t>(now - start) >= 0 && static_cast<int32_t>(now - end) < 0) {
-            float t = static_cast<float>(static_cast<int32_t>(now - start)) / CGPlayer_C::GetCombatModeFlashDuration();
-            float shrink = (1.0f - t) * ((1.0f - t) * (1.0f - t));
-            float grow = (1.6f * radius + 2.3f - radius) * shrink;
-            float fade = 1.0f - shrink;
+            if (static_cast<int32_t>(now - start) >= 0 && static_cast<int32_t>(now - end) < 0) {
+                float t = static_cast<float>(now - start) / CGPlayer_C::GetCombatModeFlashDuration();
+                float shrink = (1.0f - t) * (1.0f - t) * (1.0f - t);
+                float grow = (radius * 1.6f + 2.3f - radius) * shrink;
+                float fade = 1.0f - shrink;
 
-            if (t > 0.5f) {
-                float half = t - 0.5f + t - 0.5f;
-                fade = (1.0f - half * half) * fade;
-            }
+                if (t > 0.5f) {
+                    fade = (1.0f - (t - 0.5f) * 2.0f * ((t - 0.5f) * 2.0f)) * fade;
+                }
 
-            color.a = static_cast<uint8_t>(fade * color.a);
-            C3Vector amount(grow, grow, grow);
-            box.Expand(amount);
-
-            if (states) {
-                ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, 1, GxPolygonOffset_Default);
+                box.b.x = box.b.x - grow;
+                box.b.y = box.b.y - grow;
+                box.b.z = box.b.z - grow;
+                box.t.x = box.t.x + grow;
+                color.a = static_cast<uint8_t>(color.a * fade);
+                box.t.y = box.t.y + grow;
+                box.t.z = box.t.z + grow;
+                ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, flags, GxPolygonOffset_Default);
             }
         }
     }
@@ -23225,39 +23361,34 @@ void CGUnit_C::RenderPetTargetSelection() const {
         return;
     }
 
-    uint32_t elapsed = FrameTime::s_curTimeMs - pet->m_targetChangeTime;
+    int32_t elapsed = FrameTime::GetCurTimeMs() - pet->m_targetChangeTime;
 
-    if (static_cast<int32_t>(elapsed) < 0 || static_cast<int32_t>(elapsed - 1000) >= 0) {
+    if (elapsed < 0 || elapsed - 1000 >= 0) {
         return;
     }
 
-    C3Vector position = const_cast<CGUnit_C*>(this)->GetModelPosition();
-    float radius = this->m_selectionRadius;
-    float t = elapsed * 0.001f;
+    float t = static_cast<uint32_t>(elapsed) * 0.001f;
+    float shrink = 1.0f - t;
+    float radius = this->GetSelectionCircleRadius();
+    radius = (radius * 1.5f + 2.3f - radius) * (shrink * shrink * shrink) + radius;
     CImVector color;
     *reinterpret_cast<uint32_t*>(&color) = 0xFF605FFF;
-    float size = radius + (1.0f - t) * ((1.0f - t) * (1.0f - t)) * (radius * 1.5f + 2.3f - radius);
 
     if (t > 0.75f) {
-        float x = (t - 0.75f) * 4.0f;
-        color.a = static_cast<uint8_t>((1.0f - x * x) * 255.0f);
+        color.a = static_cast<uint8_t>((1.0f - (t - 0.75f) * 4.0f * ((t - 0.75f) * 4.0f)) * 255.0f);
     } else if (t < 0.25f) {
-        float x = t * 4.0f;
-        color.a = static_cast<uint8_t>(x * x * 255.0f);
+        color.a = static_cast<uint8_t>(t * 4.0f * (t * 4.0f) * 255.0f);
     }
 
-    C3Vector amount(size, size, size + size);
-    CAaBox box;
-    box.b = position;
-    box.t = position;
-    box.Expand(amount);
-
-    C44Matrix matrix;
-    CGObject_C::BuildSelectionRotMatrix(matrix, position);
     g_theGxDevicePtr->RsPush();
 
     if (CGObject_C::SetCircleRenderStates()) {
-        ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, 1, GxPolygonOffset_Default);
+        C3Vector position = this->GetSelectionCirclePosition();
+        this->SnapSelectionCirclePosition(position);
+        C44Matrix matrix;
+        CGObject_C::BuildSelectionRotMatrix(matrix, position);
+        CAaBox box = CGUnit_C::BuildSelectionCircleBox(position, radius);
+        ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, this->GetSelectionCircleProjectFlags(), GxPolygonOffset_Default);
     }
 
     g_theGxDevicePtr->RsPop();

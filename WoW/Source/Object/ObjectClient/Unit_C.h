@@ -856,6 +856,13 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ClearFallingClientFlag();
     uint32_t GetAnimTierTransitionTime(uint8_t animTier, uint32_t duration, uint32_t animTime);
     int32_t CanChangeCollisionHeight(float height);
+    static CAaBox BuildSelectionCircleBox(const C3Vector& position, float radius);
+    CAnimKitManager* GetActiveAnimKitManager();
+    C3Vector GetSelectionCirclePosition() const;
+    float GetSelectionCircleRadius() const;
+    uint32_t GetSelectionCircleAnim() const;
+    void SnapSelectionCirclePosition(C3Vector& position) const;
+    uint32_t GetSelectionCircleProjectFlags() const;
     int32_t IsPitchUnchangedSinceSent();
     int32_t HandleFloodsafeTurnEvent(uint32_t time, uint32_t msgId);
     int32_t HandleFloodsafePitchEvent(uint32_t time, uint32_t msgId);
