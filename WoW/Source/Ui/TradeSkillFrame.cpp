@@ -437,7 +437,7 @@ static int32_t QSortSubClasses(const void* a, const void* b) {
         return 0;
     }
 
-    return 2 * (subClassA->m_itemClass > subClassB->m_itemClass) - 1;
+    return subClassA->m_itemClass > subClassB->m_itemClass ? 1 : -1;
 }
 
 // PROVEN: 04fc3377 IDENTICAL/NONE

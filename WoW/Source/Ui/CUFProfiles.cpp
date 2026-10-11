@@ -129,6 +129,7 @@ static void SetOptionSortBy(CUFProfileInfo* profile, lua_State* L, int32_t index
     }
 
     luaL_error(L, "Invalid sort type. Valid types: \"role\", \"group\", \"alphabetical\"");
+    return;
 }
 
 // OFFSET: 0x009C7FF0/0x1407567D0
@@ -176,6 +177,7 @@ static void SetOptionHealthText(CUFProfileInfo* profile, lua_State* L, int32_t i
     }
 
     luaL_error(L, "Invalid sort type. Valid types: \"none\", \"health\", \"losthealth\", \"perc\"");
+    return;
 }
 
 // OFFSET: 0x009C7430

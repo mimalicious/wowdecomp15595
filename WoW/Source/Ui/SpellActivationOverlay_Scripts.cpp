@@ -10,6 +10,7 @@
 static int32_t Script_IsSpellOverlayed(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsSpellOverlayed(spellID)");
+        return 0;
     }
 
     lua_pushboolean(L, CGSpellActivationOverlay::IsSpellOverlayed(lua_tointeger(L, 1)));

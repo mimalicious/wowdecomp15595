@@ -53,8 +53,8 @@ static int32_t Script_TaxiNodePosition(lua_State* L) {
         return 0;
     }
 
-    float x = CGTaxiMap::m_nodes.m_data[index].m_x;
     float y = CGTaxiMap::m_nodes.m_data[index].m_y;
+    float x = CGTaxiMap::m_nodes.m_data[index].m_x;
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
     return 2;

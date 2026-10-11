@@ -569,6 +569,7 @@ static int32_t Script_EJ_SelectInstance(lua_State* L) {
 
     if (!CGEncounterJournal::SelectInstance(lua_tointeger(L, 1))) {
         luaL_error(L, "Bad Instance ID.  Usage: EJ_SelectInstance(ID)");
+        return 0;
     }
 
     return 0;

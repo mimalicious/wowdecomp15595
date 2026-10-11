@@ -177,6 +177,7 @@ static int32_t Script_GetUpperEmblemTexture(lua_State* L) {
     } else {
         const char* name = frame->GetName();
         luaL_error(L, "Usage: %s:GetUpperEmblemTexture(texture)", name ? name : "<unnamed>");
+        return 0;
     }
 
     return 0;
@@ -200,6 +201,7 @@ static int32_t Script_GetLowerEmblemTexture(lua_State* L) {
         if (!texture->IsA(CSimpleTexture::GetObjectType())) {
             const char* name = frame->GetName();
             luaL_error(L, "%s:GetLowerEmblemTexture(): Wrong object type, expected texture", name ? name : "<unnamed>");
+            return 0;
         }
 
         // STATIC: 0x00F76CD0

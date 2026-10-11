@@ -39,9 +39,9 @@ static int32_t Script_PickupStablePet(lua_State* L) {
     }
 
     double value = lua_tonumber(L, 1);
-    uint32_t index = static_cast<int32_t>(value) - 1;
+    int32_t index = static_cast<int32_t>(value) - 1;
 
-    if (index < 25) {
+    if (static_cast<uint32_t>(index) < 25) {
         StablePetInfo* pet = &CGStableInfo::m_pets[index];
 
         if (pet && pet->m_petNumber) {

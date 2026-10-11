@@ -272,7 +272,7 @@ int32_t PLAYERNAMEDESC::ShouldRender(CGObject_C* object, uint32_t raidTarget) {
     return CGGameUI::m_visible && raidTarget < 8 && show;
 }
 
-// OFFSET: #0x007E5420
+// OFFSET: 0x004E0DA0
 float PlayerNameComputeScale(CGObject_C* object) {
     float height;
 

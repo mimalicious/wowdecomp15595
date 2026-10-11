@@ -237,15 +237,13 @@ SpellBookSkillInfo* CGSpellBook::GetSkillInfo(uint32_t index) {
 
 // OFFSET: 0x0090E610
 uint32_t CGSpellBook::GetSkillInfoIndex(int32_t skillLine) {
-    uint32_t index;
-
-    for (index = 0; index < s_numSkillInfos; index++) {
+    for (uint32_t index = 0; index < s_numSkillInfos; index++) {
         if (s_skillInfos.m_data[index]->m_skillLine == skillLine) {
-            break;
+            return index;
         }
     }
 
-    return index;
+    return s_numSkillInfos;
 }
 
 // OFFSET: 0x0090E650/0x140669980
@@ -334,8 +332,14 @@ int __cdecl SortCompanions(const void* a, const void* b) {
 int32_t GetActionBarPageOffset(const CGPlayer_C* player, const SpellRec* spell) {
     uint8_t classId = player->m_unit->m_unitFieldBytes0[1];
 
-    if (classId != 1 && classId != 4 && classId != 11) {
-        return 0;
+    switch (classId) {
+        case 1:
+        case 4:
+        case 11:
+            break;
+
+        default:
+            return 0;
     }
 
     const SpellShapeshiftFormRec* form;
@@ -343,15 +347,15 @@ int32_t GetActionBarPageOffset(const CGPlayer_C* player, const SpellRec* spell) 
     uint32_t mask[2];
 
     if (spell->m_spellShapeshiftID && (shapeshift = g_spellShapeshiftDB.GetRecord(spell->m_spellShapeshiftID)) && ((mask[0] = shapeshift->m_shapeshiftMask[0]), (mask[1] = shapeshift->m_shapeshiftMask[1]), mask[0] || mask[1]) && !(spell->m_attributesExB & 0x80000)) {
-        uint32_t bits;
-        int32_t high;
+        int32_t bits;
+        bool high;
 
         if (mask[0]) {
             bits = mask[0];
-            high = 0;
+            high = false;
         } else {
             bits = mask[1];
-            high = 1;
+            high = true;
         }
 
         int32_t formId;
@@ -3146,7 +3150,7 @@ void CGSpellBook::ReplaceSpell(int32_t oldSpell, int32_t newSpell) {
 void CGSpellBook::AddPetSpell(int32_t spellId) {
     const SpellRec* spell = g_spellDB.GetRecord(spellId);
 
-    if (!spell || static_cast<int8_t>(spell->m_attributes) < 0 || (spell->m_attributesExD & 0x8000)) {
+    if (!spell || (spell->m_attributes & 0x80) || (spell->m_attributesExD & 0x8000)) {
         return;
     }
 

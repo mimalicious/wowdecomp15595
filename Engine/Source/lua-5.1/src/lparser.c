@@ -726,7 +726,7 @@ static void prefixexp (LexState *ls, expdesc *v) {
 }
 
 
-// INLINED
+// OFFSET: 0x00427660
 static void primaryexp (LexState *ls, expdesc *v) {
   /* primaryexp ->
         prefixexp { `.' NAME | `[' exp `]' | `:' NAME funcargs | funcargs } */

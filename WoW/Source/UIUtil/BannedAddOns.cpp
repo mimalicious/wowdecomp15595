@@ -71,7 +71,7 @@ static HOSFILE OpenCacheFile(const char* directory, const char* name, int32_t wr
     return OsCreateFile(path, OS_GENERIC_READ, 0, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
 }
 
-// OFFSET: #0x005F3630
+// OFFSET: 0x00446700
 static int32_t DeleteCacheFile(const char* directory, const char* name) {
     if (!name) {
         return 0;

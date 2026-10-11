@@ -579,7 +579,7 @@ void CGUIMacros::CountActionBarSlots(MACRONODE* macro) {
 
     for (uint32_t slot = 0; slot < 144; slot++) {
         uint32_t action = CGActionBar::m_slotActions[slot];
-        uint32_t id = action && (action & 0xF0000000) == 0x40000000 ? action & 0xBFFFFFFF : 0;
+        uint32_t id = action && (action & 0xF0000000) == 0x40000000 ? action & 0xB1FFFFFF : 0;
 
         if (id == macro->m_id) {
             if (macro->m_dynamic && !macro->m_actionBarCount) {

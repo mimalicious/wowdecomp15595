@@ -1243,6 +1243,7 @@ static int32_t Script_StartUnratedArena(lua_State* L) {
 
     if (strlen(targetName) > 48) {
         luaL_error(L, "Name too long");
+        return 0;
     }
 
     if (!(target = g_nameDBCache.GetRecordByName(targetName))) {

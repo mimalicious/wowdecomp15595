@@ -79,7 +79,8 @@ static int32_t Script_LoadBindings(lua_State* L) {
 // OFFSET: 0x00922D40/0x1406866E0
 static int32_t Script_GetModifiedClickAction(lua_State* L) {
     if (lua_isnumber(L, 1)) {
-        lua_pushstring(L, CGUIBindings::s_bindings->GetModifiedClick(static_cast<int32_t>(lua_tonumber(L, 1)) - 1));
+        CGUIBindings* bindings = CGUIBindings::s_bindings;
+        lua_pushstring(L, bindings->GetModifiedClick(static_cast<int32_t>(lua_tonumber(L, 1)) - 1));
         return 1;
     }
 
@@ -295,8 +296,8 @@ static int32_t Script_SetBinding(lua_State* L) {
 static int32_t Script_GetBinding(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         CGUIBindings* bindings = CGUIBindings::s_bindings;
-        int32_t count = 0;
         int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+        int32_t count = 0;
         BINDING_MODE mode = BINDING_MODE_0;
 
         if (lua_isnumber(L, 2)) {
@@ -373,7 +374,9 @@ static int32_t Script_SetBindingSpell(lua_State* L) {
     char* command = static_cast<char*>(alloca(length));
     SStrPrintf(command, length, "SPELL %s", argument);
 
-    if (bindings->Bind(BINDING_SET_CURRENT, mode, lua_tolstring(L, 1, NULL), command)) {
+    const char* key = lua_tolstring(L, 1, NULL);
+
+    if (bindings->Bind(BINDING_SET_CURRENT, mode, key, command)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_BINDINGS, NULL);
         lua_pushnumber(L, 1.0);
     } else {
@@ -406,7 +409,9 @@ static int32_t Script_SetBindingItem(lua_State* L) {
     char* command = static_cast<char*>(alloca(length));
     SStrPrintf(command, length, "ITEM %s", argument);
 
-    if (bindings->Bind(BINDING_SET_CURRENT, mode, lua_tolstring(L, 1, NULL), command)) {
+    const char* key = lua_tolstring(L, 1, NULL);
+
+    if (bindings->Bind(BINDING_SET_CURRENT, mode, key, command)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_BINDINGS, NULL);
         lua_pushnumber(L, 1.0);
     } else {
@@ -439,7 +444,9 @@ static int32_t Script_SetBindingMacro(lua_State* L) {
     char* command = static_cast<char*>(alloca(length));
     SStrPrintf(command, length, "MACRO %s", argument);
 
-    if (bindings->Bind(BINDING_SET_CURRENT, mode, lua_tolstring(L, 1, NULL), command)) {
+    const char* key = lua_tolstring(L, 1, NULL);
+
+    if (bindings->Bind(BINDING_SET_CURRENT, mode, key, command)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_BINDINGS, NULL);
         lua_pushnumber(L, 1.0);
     } else {
@@ -478,7 +485,9 @@ static int32_t Script_SetBindingClick(lua_State* L) {
     char* command = static_cast<char*>(alloca(length));
     SStrPrintf(command, length, "CLICK %s:%s", button, mouseButton);
 
-    if (bindings->Bind(BINDING_SET_CURRENT, mode, lua_tolstring(L, 1, NULL), command)) {
+    const char* key = lua_tolstring(L, 1, NULL);
+
+    if (bindings->Bind(BINDING_SET_CURRENT, mode, key, command)) {
         if (++s_setBindingClickDepth < 10) {
             FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_BINDINGS, NULL);
         }

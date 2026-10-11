@@ -351,7 +351,7 @@ static void resize (lua_State *L, Table *t, int nasize, int nhsize) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042B3D0
 void luaH_resizearray (lua_State *L, Table *t, int nasize) {
   int nsize = (t->node == dummynode) ? 0 : sizenode(t);
   resize(L, t, nasize, nsize);

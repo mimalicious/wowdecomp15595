@@ -623,6 +623,7 @@ static int32_t Script_SetBlipTexture(lua_State* L) {
         if (!fileName || !*fileName) {
             const char* name = minimap->GetName();
             luaL_error(L, "Usage: %s:SetBlipTexture(\"file\")", name ? name : "<unnamed>");
+            return 0;
         }
 
         CStatus status;
@@ -641,6 +642,7 @@ static int32_t Script_SetBlipTexture(lua_State* L) {
     } else {
         const char* name = minimap->GetName();
         luaL_error(L, "Usage: %s:SetBlipTexture(\"file\")", name ? name : "<unnamed>");
+        return 0;
     }
 
     return 0;

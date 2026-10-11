@@ -297,7 +297,7 @@ static int32_t Script_UninviteUnit(lua_State* L) {
     int32_t exact = StringToBOOL(L, 3, 0);
     WOWGUID guid;
 
-    if (Script_GetGUIDFromToken(name, guid, exact != 0, false)) {
+    if (Script_GetGUIDFromToken(name, guid, exact != 0, true)) {
         CGPlayer_C::Uninvite(guid, scrubbed);
         return 0;
     }
@@ -480,6 +480,7 @@ static int32_t Script_SetLootThreshold(lua_State* L) {
         }
 
         luaL_error(L, "SetLootThreshold(): threshold must be between %d and %d", 2, 6);
+        return 0;
     }
 
     return 0;

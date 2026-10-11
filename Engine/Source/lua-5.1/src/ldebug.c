@@ -199,7 +199,7 @@ static void collectvalidlines (lua_State *L, Closure *f) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425B50
 static int auxgetinfo (lua_State *L, const char *what, lua_Debug *ar,
                     Closure *f, CallInfo *ci) {
   int status = 1;
@@ -586,7 +586,7 @@ static int isinstack (CallInfo *ci, const TValue *o) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425D60
 void luaG_typeerror (lua_State *L, const TValue *o, const char *op) {
   const char *name = NULL;
   const char *t = luaT_typenames[ttype(o)];
@@ -609,7 +609,7 @@ void luaG_concaterror (lua_State *L, StkId p1, StkId p2) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425E20
 void luaG_aritherror (lua_State *L, const TValue *p1, const TValue *p2) {
   TValue temp;
   if (luaV_tonumber(p1, &temp) == NULL)
@@ -657,7 +657,7 @@ void luaG_errormsg (lua_State *L) {
 }
 
 
-// INLINED
+// OFFSET: 0x00425B00
 void luaG_runerror (lua_State *L, const char *fmt, ...) {
   va_list argp;
   va_start(argp, fmt);

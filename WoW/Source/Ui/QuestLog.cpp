@@ -790,7 +790,7 @@ void CGQuestLog::FilterAndSortQuests() {
 
         uint32_t sortId = GetQuestSortId(i);
 
-        if (sortId < 50 && ((1 << sortId) & g_questLogCollapseHeaderFilterCVar->m_intValue)) {
+        if (sortId < 50 && (g_questLogCollapseHeaderFilterCVar->m_intValue & (1 << sortId))) {
             CGQuestLog::m_numShownQuests--;
         }
     }
@@ -1995,7 +1995,9 @@ int32_t CGQuestLog::GetNumQuestLeaderBoards(int32_t questId, void (*callback)(in
     QuestCache* quest = g_questDBCache.GetRecord(questId, none, callback, param, false);
 
     if (quest) {
-        if (quest->m_endText[0]) {
+        const char* endText = quest->m_endText;
+
+        if (endText && *endText) {
             count = 1;
         }
 

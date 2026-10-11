@@ -681,7 +681,7 @@ static int32_t QSortStationery(const void* a, const void* b) {
             int32_t priceB = statsB->GetBuyPrice(NULL);
 
             if (priceA != priceB) {
-                return 2 * (priceA >= priceB) - 1;
+                return priceA >= priceB ? 1 : -1;
             }
 
             return SStrSortUTF8I(statsA->GetName(0), statsB->GetName(0), STORM_MAX_STR);
@@ -709,8 +709,11 @@ static void InboxAuctionItemQueryCallback(int32_t id, const WOWGUID& guid, void*
 
 // OFFSET: 0x00970B20/0x1406E83A0
 void CGMailInfo::ParseInboxSubject(MailboxMessageInfo* message) {
-    if (message->m_messageType != 2) {
-        if (message->m_messageType == 5) {
+    switch (message->m_messageType) {
+        case 2:
+            break;
+
+        case 5: {
             const char* format;
 
             if (message->m_flags & 0x100) {
@@ -724,12 +727,16 @@ void CGMailInfo::ParseInboxSubject(MailboxMessageInfo* message) {
             } else {
                 message->m_subject[0] = '\0';
             }
+
+            return;
         }
-        return;
+
+        default:
+            return;
     }
 
     int32_t itemID = SStrToInt(message->m_invoiceSubject);
-    const char* field = SStrChr(message->m_invoiceSubject, ':');
+    const char* field = strchr(message->m_invoiceSubject, ':');
     uint32_t type = 0;
     int32_t randomPropertiesID = 0;
     uint32_t value = 0;
@@ -737,7 +744,7 @@ void CGMailInfo::ParseInboxSubject(MailboxMessageInfo* message) {
 
     if (field && *field) {
         randomPropertiesID = SStrToInt(field + 1);
-        const char* next = SStrChr(field + 1, ':');
+        const char* next = strchr(field + 1, ':');
 
         if (next && *next) {
             type = SStrToInt(next + 1);
@@ -746,7 +753,7 @@ void CGMailInfo::ParseInboxSubject(MailboxMessageInfo* message) {
         }
 
         if (next && *next) {
-            next = SStrChr(next + 1, ':');
+            next = strchr(next + 1, ':');
 
             if (next && *next) {
                 value = SStrToInt(next + 1);
@@ -756,7 +763,7 @@ void CGMailInfo::ParseInboxSubject(MailboxMessageInfo* message) {
         }
 
         if (next && *next) {
-            next = SStrChr(next + 1, ':');
+            next = strchr(next + 1, ':');
 
             if (next && *next) {
                 stackCount = SStrToInt(next + 1);

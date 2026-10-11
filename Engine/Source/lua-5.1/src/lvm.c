@@ -272,7 +272,7 @@ static int lessequal (lua_State *L, const TValue *l, const TValue *r) {
 }
 
 
-// INLINED
+// OFFSET: 0x00421E30
 int luaV_equalval (lua_State *L, const TValue *t1, const TValue *t2) {
   const TValue *tm;
   lua_assert(ttype(t1) == ttype(t2));

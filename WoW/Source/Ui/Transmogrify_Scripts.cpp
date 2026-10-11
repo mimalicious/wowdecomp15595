@@ -219,6 +219,7 @@ static int32_t Script_ClickTransmogrifySlot(lua_State* L) {
 
     if (!GetTransmogrifySlot(L, 1, &slot)) {
         luaL_error(L, "Usage: ClickTransmogrifySlot(slot)");
+        return 0;
     } else {
         const ChrClassesRec* classRec = g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1]);
 

@@ -2855,7 +2855,7 @@ FMOD_RESULT CodecMIDI::play()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008FC850
+// OFFSET: 0x00AA9070
 FMOD_RESULT CodecMIDI::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;

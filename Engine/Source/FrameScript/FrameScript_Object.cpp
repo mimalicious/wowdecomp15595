@@ -229,6 +229,7 @@ void FrameScript_Object::GetScriptTime(lua_State* L, const FrameScript_Object::S
 int32_t FrameScript_Object::GetScript(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         luaL_error(L, "Usage: %s:GetScript(\"type\")", this->GetDisplayName());
+        return 0;
     }
 
     FrameScript_Object::ScriptData data;
@@ -239,6 +240,7 @@ int32_t FrameScript_Object::GetScript(lua_State* L) {
 
     if (!script) {
         luaL_error(L, "%s doesn't have a \"%s\" script", this->GetDisplayName(), lua_tostring(L, 2));
+        return 0;
     }
 
     int32_t function;
@@ -261,6 +263,7 @@ int32_t FrameScript_Object::GetScript(lua_State* L) {
 int32_t FrameScript_Object::SetScript(lua_State* L) {
     if (!lua_isstring(L, 2) || (lua_type(L, 3) != LUA_TFUNCTION && lua_type(L, 3) != LUA_TNIL)) {
         luaL_error(L, "Usage: %s:SetScript(\"type\", function)", this->GetDisplayName());
+        return 0;
     }
 
     FrameScript_Object::ScriptData data;
@@ -271,6 +274,7 @@ int32_t FrameScript_Object::SetScript(lua_State* L) {
 
     if (!script) {
         luaL_error(L, "%s doesn't have a \"%s\" script", this->GetDisplayName(), lua_tostring(L, 2));
+        return 0;
     }
 
     int32_t function = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -296,6 +300,7 @@ int32_t FrameScript_Object::SetScript(lua_State* L) {
 int32_t FrameScript_Object::HookScript(lua_State* L) {
     if (!lua_isstring(L, 2) || lua_type(L, 3) != LUA_TFUNCTION) {
         luaL_error(L, "Usage: %s:HookScript(\"type\", function)", this->GetDisplayName());
+        return 0;
     }
 
     FrameScript_Object::ScriptData data;
@@ -306,6 +311,7 @@ int32_t FrameScript_Object::HookScript(lua_State* L) {
 
     if (!script) {
         luaL_error(L, "%s doesn't have a \"%s\" script", this->GetDisplayName(), lua_tostring(L, 2));
+        return 0;
     }
 
     if (!this->HasScript(*script)) {

@@ -547,42 +547,18 @@ static int32_t Script_GetMerchantItemCostInfo(lua_State* L) {
     WOWGUID none;
 
     if (index >= 0 && index < CGMerchantInfo::m_numMerchantItems && CGMerchantInfo::m_merchant && (item = &CGMerchantInfo::m_items[index]) != NULL && item->m_itemID && (none = WOWGUID::Make(0), (cost = g_itemExtendedCostDB.GetRecord(item->m_extendedCostID, none, NULL, NULL, false)) != NULL)) {
-        uint32_t count = cost->m_itemID[0] != 0;
+        uint32_t count = 0;
 
-        if (cost->m_itemID[1]) {
-            count++;
+        for (uint32_t i = 0; i < 5; i++) {
+            if (cost->m_itemID[i]) {
+                count++;
+            }
         }
 
-        if (cost->m_itemID[2]) {
-            count++;
-        }
-
-        if (cost->m_itemID[3]) {
-            count++;
-        }
-
-        if (cost->m_itemID[4]) {
-            count++;
-        }
-
-        if (cost->m_currencyID[0] && !(s_costCurrencyFlags[0] & cost->m_flags)) {
-            count++;
-        }
-
-        if (cost->m_currencyID[1] && !(s_costCurrencyFlags[1] & cost->m_flags)) {
-            count++;
-        }
-
-        if (cost->m_currencyID[2] && !(s_costCurrencyFlags[2] & cost->m_flags)) {
-            count++;
-        }
-
-        if (cost->m_currencyID[3] && !(s_costCurrencyFlags[3] & cost->m_flags)) {
-            count++;
-        }
-
-        if (cost->m_currencyID[4] && !(s_costCurrencyFlags[4] & cost->m_flags)) {
-            count++;
+        for (uint32_t i = 0; i < 5; i++) {
+            if (cost->m_currencyID[i] && !(s_costCurrencyFlags[i] & cost->m_flags)) {
+                count++;
+            }
         }
 
         lua_pushnumber(L, count);

@@ -115,7 +115,7 @@ void CGPetInfo::SetIsAttackingTarget(int32_t attacking) {
         CGPetInfo::m_attackingTarget = attacking;
     } else {
         FrameScript_SignalEvent(SCRIPT_EVENT_PET_ATTACK_STOP, NULL);
-        CGPetInfo::m_attackingTarget = 0;
+        CGPetInfo::m_attackingTarget = attacking;
     }
 }
 
@@ -205,7 +205,7 @@ WOWGUID CGPetInfo::GetPet(uint32_t index) {
         return s_pets.m_data[index];
     }
 
-    return WOWGUID();
+    return WOWGUID::Make(0);
 }
 
 // OFFSET: 0x00950380/0x1406C0730

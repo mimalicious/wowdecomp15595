@@ -146,11 +146,16 @@ void CGPartyInfo::SetLeader(WOWGUID leader) {
     CGPartyInfo::m_leaderIndex = -1;
 
     if (leader) {
-        for (int32_t i = 0; i < 4; i++) {
+        uint32_t i;
+
+        for (i = 0; i < 4; i++) {
             if (CGPartyInfo::m_members[i] == leader) {
-                CGPartyInfo::m_leaderIndex = i;
                 break;
             }
+        }
+
+        if (i < 4) {
+            CGPartyInfo::m_leaderIndex = i;
         }
     }
 

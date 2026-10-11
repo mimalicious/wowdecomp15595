@@ -24,6 +24,7 @@ static const int32_t s_reforgeStatOrder[33] = { 4, 3, 7, 5, 6, 13, 14, 15, 28, 2
 static int32_t Script_ReforgeItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ReforgeItem(index)");
+        return 0;
     } else {
         int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 

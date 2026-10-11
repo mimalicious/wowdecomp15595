@@ -114,7 +114,7 @@ void luaX_lexerror (LexState *ls, const char *msg, int token) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042D1D0
 void luaX_syntaxerror (LexState *ls, const char *msg) {
   luaX_lexerror(ls, msg, ls->t.token);
 }

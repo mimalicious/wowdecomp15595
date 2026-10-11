@@ -1367,7 +1367,7 @@ FMOD_RESULT PluginFactory::createCodec(FMOD_CODEC_DESCRIPTION_EX *codecdesc, Cod
 	[SEE_ALSO]
 ]
 */
-// OFFSET: #0x008F4670
+// OFFSET: 0x00AA0D80
 FMOD_RESULT PluginFactory::createDSP(FMOD_DSP_DESCRIPTION_EX *dspdesc, DSPI **dsp)
 {
     FMOD_RESULT result;

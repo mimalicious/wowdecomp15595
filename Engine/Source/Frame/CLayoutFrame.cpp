@@ -120,7 +120,7 @@ static float ComputeCenterPosition(float first, float second, float size) {
     return CFramePoint::UNDEFINED;
 }
 
-// INLINED
+// OFFSET: 0x008C3E50
 void GetRectFramePoints(const CRect& rect, C2Vector* points) {
     points[FRAMEPOINT_TOPLEFT].x = rect.minX;
     points[FRAMEPOINT_TOPLEFT].y = rect.maxY;

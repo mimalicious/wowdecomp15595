@@ -101,7 +101,8 @@ static int32_t Script_SetActiveTalentGroup(lua_State* L) {
         CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
         if (player && player->CanChangeTalentsInRaid()) {
-            Spell_C_ClickSpell(s_activateTalentGroupSpells[group], NULL, ClntObjMgrGetActivePlayer());
+            int32_t spellId = s_activateTalentGroupSpells[group];
+            Spell_C_ClickSpell(spellId, NULL, ClntObjMgrGetActivePlayer());
             return 0;
         }
 
@@ -576,6 +577,7 @@ static int32_t Script_GetTalentLink(lua_State* L) {
 static int32_t Script_LearnTalent(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: LearnTalent(tabIndex, talentIndex[, isPet])");
+        return 0;
     } else {
         uint32_t tabIndex = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
         uint32_t talentIndex = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;

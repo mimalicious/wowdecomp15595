@@ -157,6 +157,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     if (lua_isstring(L, 2)) {
         if (!StringToChatType(lua_tolstring(L, 2, NULL), &type)) {
             luaL_error(L, "SendChatMessage(): Unknown chat type");
+            return 0;
         }
     }
 
@@ -175,6 +176,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     if (lua_isstring(L, 3)) {
         if (!StringToLanguage(lua_tolstring(L, 3, NULL), &language)) {
             luaL_error(L, "SendChatMessage(): Unknown language");
+            return 0;
         }
 
         uint32_t skill;

@@ -1053,7 +1053,7 @@ void AuctionBidItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, b
     CGAuctionHouse::ApplyBidderSort();
 }
 
-// OFFSET: #0x0059CC50
+// OFFSET: 0x00973D20
 void CGAuctionHouse::GetOwnerList() {
     if (!CGAuctionHouse::m_canGetOwnerList || !CGAuctionHouse::CanSendQuery(2)) {
         return;

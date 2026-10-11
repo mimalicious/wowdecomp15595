@@ -782,11 +782,11 @@ void CGResearchFrame::CreateArchaeologyBlobs() {
             poi->m_points.New(position);
         }
 
-        if (poi && poi->m_points.m_count) {
+        if (poi && poi->m_points.m_count > 0) {
             int32_t x = 0;
             int32_t y = 0;
 
-            for (uint32_t k = 0; k < poi->m_points.m_count; k++) {
+            for (int32_t k = 0; k < static_cast<int32_t>(poi->m_points.m_count); k++) {
                 x += poi->m_points.m_data[k].x;
                 y += poi->m_points.m_data[k].y;
             }

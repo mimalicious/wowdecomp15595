@@ -593,7 +593,7 @@ static int jumponcond (FuncState *fs, expdesc *e, int cond) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042F7A0
 void luaK_goiftrue (FuncState *fs, expdesc *e) {
   int pc;  /* pc of last jump */
   luaK_dischargevars(fs, e);
@@ -782,7 +782,7 @@ void luaK_prefix (FuncState *fs, UnOpr op, expdesc *e) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042FC00
 void luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
   switch (op) {
     case OPR_AND: {
@@ -810,7 +810,7 @@ void luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042FCB0
 void luaK_posfix (FuncState *fs, BinOpr op, expdesc *e1, expdesc *e2) {
   switch (op) {
     case OPR_AND: {

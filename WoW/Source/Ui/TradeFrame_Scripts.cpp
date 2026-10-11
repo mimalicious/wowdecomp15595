@@ -144,7 +144,7 @@ static int32_t Script_ClickTargetTradeButton(lua_State* L) {
             CGGameUI::ClearCursor(1, 0);
             return 0;
         }
-    } else if (static_cast<int32_t>(lua_tonumber(L, 1)) == 7) {
+    } else if (static_cast<int32_t>(lua_tonumber(L, 1)) - 1 == 6) {
         CGGameUI::TargetTradeItem();
     }
 

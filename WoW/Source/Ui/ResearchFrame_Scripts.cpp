@@ -34,6 +34,7 @@ static int32_t Script_GetArchaeologyInfo(lua_State* L) {
 static int32_t Script_ItemAddedToArtifact(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsItemAddedToProject(index)");
+        return 0;
     }
 
     lua_pushboolean(L, static_cast<int32_t>(lua_tonumber(L, 1)) - 1 < CGResearchFrame::m_itemCount);
@@ -128,6 +129,7 @@ static int32_t Script_GetNumArchaeologyRaces(lua_State* L) {
 static int32_t Script_GetArchaeologyRaceInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetBranchInfo(index)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -164,6 +166,7 @@ static int32_t Script_SocketItemToArtifact(lua_State* L) {
 static int32_t Script_GetActiveArtifactByRace(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActiveProjectByBranch(branchIndex, index)");
+        return 0;
     }
 
     int32_t branchID = -1;
@@ -184,6 +187,7 @@ static int32_t Script_GetActiveArtifactByRace(lua_State* L) {
 static int32_t Script_GetNumArtifactsByRace(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNumProjects(branchID)");
+        return 0;
     }
 
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -209,6 +213,7 @@ static int32_t Script_GetNumArtifactsByRace(lua_State* L) {
 static int32_t Script_GetArtifactInfoByRace(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetProjectInfo(branchID, index)");
+        return 0;
     }
 
     int32_t branchID = -1;
@@ -235,6 +240,7 @@ static int32_t Script_GetArtifactInfoByRace(lua_State* L) {
 static int32_t Script_SetSelectedArtifact(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetProject(branchIndex, index) or SetProject(branchIndex)");
+        return 0;
     }
 
     int32_t branchID = -1;
@@ -288,6 +294,7 @@ static int32_t Script_ArchaeologyMapUpdateAll(lua_State* L) {
 static int32_t Script_ArcheologyGetVisibleBlobID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ArcheologyGetVisibleBlobID(index)");
+        return 0;
     }
 
     lua_pushinteger(L, CGResearchFrame::GetArchaeologyBlobID(static_cast<int32_t>(lua_tonumber(L, 1)) - 1));
@@ -299,6 +306,7 @@ static int32_t Script_ArcheologyGetVisibleBlobID(lua_State* L) {
 static int32_t Script_ArchaeologyGetIconInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ArchaeologyGetIconInfo(index)");
+        return 0;
     }
 
     int32_t blobID = CGResearchFrame::GetArchaeologyBlobID(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -322,6 +330,7 @@ static int32_t Script_ArchaeologyGetIconInfo(lua_State* L) {
 static int32_t Script_CanItemBeSocketedToArtifact(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CanItemBeAppliedToProject(itemID)");
+        return 0;
     }
 
     if (CGResearchFrame::CanItemBeApplied(static_cast<int32_t>(lua_tonumber(L, 1)))) {

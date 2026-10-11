@@ -269,7 +269,7 @@ static int32_t Script_GetShapeshiftFormCooldown(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
     if (!(index >= s_shapeshiftSpells.m_count)) {
         uint32_t start = 0;
@@ -640,6 +640,7 @@ static int32_t Script_CallCompanion(lua_State* L) {
 
     if (!GetCompanionTypeFromLua(L, &type) || lua_tonumber(L, 2) == 0.0) {
         luaL_error(L, "Usage: CallCompanion(type, index)");
+        return 0;
     } else {
         if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
             return 0;

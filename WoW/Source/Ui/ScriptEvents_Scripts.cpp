@@ -71,6 +71,8 @@
 #include "WoW/Source/DB/Rec/VehicleUIIndicatorRec.h"
 #include "WoW/Source/DB/Rec/VehicleUIIndSeatRec.h"
 #include "WoW/Source/WowServices/WDataStore.h"
+#include "WoW/Source/Client.h"
+#include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
 int32_t Script_UnitIsPartyLeader(lua_State* L);
 int32_t Script_UnitInParty(lua_State* L);
@@ -758,8 +760,11 @@ static int32_t Script_ConsoleExec(lua_State* L) {
         return 0;
     }
 
-    ConsoleCommandExecute(lua_tolstring(L, 1, NULL), 0);
+    if (g_blizzconVar->m_intValue) {
+        return 0;
+    }
 
+    ConsoleCommandExecute(lua_tolstring(L, 1, NULL), 0);
     return 0;
 }
 
@@ -1811,12 +1816,12 @@ static int32_t Script_GetMaxCombatRatingBonus(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (index >= 25) {
-        luaL_error(L, "ratingIndex is in the range 1 .. %d", 25);
+    if (index >= 26) {
+        luaL_error(L, "ratingIndex is in the range 1 .. %d", 26);
         return 0;
     }
 
-    lua_pushnumber(L, index < 14 || index > 16 ? -1.0 : 33.000001311302185);
+    lua_pushnumber(L, index != 14 ? -1.0 : 33.000001311302185);
     return 1;
 }
 
@@ -1879,8 +1884,8 @@ static int32_t Script_GetCombatRating(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (index >= 25) {
-        luaL_error(L, "ratingIndex is in the range 1 .. %d", 25);
+    if (index >= 26) {
+        luaL_error(L, "ratingIndex is in the range 1 .. %d", 26);
         return 0;
     }
 
@@ -3089,15 +3094,15 @@ static int32_t Script_GetCombatRatingBonus(lua_State* L) {
         return 0;
     }
 
-    int32_t rating = static_cast<uint32_t>(lua_tonumber(L, 1));
+    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (static_cast<uint32_t>(rating - 1) >= 25) {
-        luaL_error(L, "ratingIndex is in the range 1 .. %d", 25);
+    if (index >= 26) {
+        luaL_error(L, "ratingIndex is in the range 1 .. %d", 26);
         return 0;
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-    lua_pushnumber(L, player ? player->GetCombatRatingPct(rating - 1) : 0.0);
+    lua_pushnumber(L, player ? player->GetCombatRatingPct(index) : 0.0);
     return 1;
 }
 
@@ -4040,7 +4045,7 @@ static int32_t Script_GetPlayerInfoByGUID(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x00614D90
+// OFFSET: 0x0045A890
 static void CacheVehicleUIIndicatorRec(int32_t id) {
     VehicleUIIndicatorRec* indicator = g_vehicleUIIndicatorDB.GetRecord(id);
 
@@ -4189,6 +4194,7 @@ static int32_t Script_GetSessionTime(lua_State* L) {
 static int32_t Script_ResistancePercent(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: ResistancePercent(resistance, casterLevel)");
+        return 0;
     }
 
     float resistance = lua_tonumber(L, 1);
@@ -4249,6 +4255,7 @@ static int32_t PushPowerBarInfo(lua_State* L, int32_t barID) {
 static int32_t Script_GetAlternatePowerInfoByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAlternatePowerInfoByID(id)");
+        return 0;
     }
 
     return PushPowerBarInfo(L, lua_tointeger(L, 1));
@@ -4313,6 +4320,7 @@ static int32_t Script_InitiateRolePoll(lua_State* L) {
 static int32_t Script_LoadURLIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: LoadURLIndex(index)");
+        return 0;
     }
 
     int32_t index = static_cast<uint32_t>(lua_tonumber(L, 1));
@@ -4348,12 +4356,13 @@ static int32_t Script_LoadURLIndex(lua_State* L) {
 static int32_t Script_UnitIsQuestBoss(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitIsQuestBoss(\"unit\")");
+        return 0;
     }
 
     CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
     CreatureStats_C* stats;
 
-    if (unit && (stats = unit->m_creatureCacheEntry) != NULL && !unit->m_unit->m_unitFieldPetnumber && static_cast<int32_t>(stats->m_typeFlags[0]) < 0) {
+    if (unit && (stats = unit->m_creatureCacheEntry) != NULL && !unit->m_unit->m_unitFieldPetnumber && (stats->m_typeFlags[0] & 0x80000000)) {
         lua_pushboolean(L, 1);
         return 1;
     }
@@ -4450,6 +4459,7 @@ static int32_t Script_GetOverrideSpellPowerByAP(lua_State* L) {
 static int32_t Script_UnitInPhase(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitInPhase(\"unit\")");
+        return 0;
     }
 
     WOWGUID guid = WOWGUID();
@@ -4470,6 +4480,7 @@ static int32_t Script_UnitInPhase(lua_State* L) {
 static int32_t Script_UnitSpellHaste(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitSpellHaste(\"unit\")");
+        return 0;
     }
 
     CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
@@ -4542,6 +4553,7 @@ static int32_t Script_UnitThreatPercentageOfLead(lua_State* L) {
 
     if (!Script_GetGUIDFromToken(lua_tostring(L, 1), unitGUID, false, false) || !Script_GetGUIDFromToken(lua_tostring(L, 2), mobGUID, false, false)) {
         luaL_error(L, "Usage: UnitThreatLeadPercentage(\"unit\" [, \"mob\"])");
+        return 0;
     }
 
     CGUnit_C* mob = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(mobGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -4570,6 +4582,7 @@ static int32_t Script_UnitThreatPercentageOfLead(lua_State* L) {
 static int32_t Script_UnitGetGuildXP(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitGetGuildXP(\"unit\")");
+        return 0;
     }
 
     CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
@@ -4600,6 +4613,7 @@ static int32_t Script_UnitGetGuildXP(lua_State* L) {
 static int32_t Script_UnitGetGuildLevel(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitGetGuildLevel(\"unit\")");
+        return 0;
     }
 
     CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
@@ -4619,6 +4633,7 @@ static int32_t Script_UnitGetGuildLevel(lua_State* L) {
 static int32_t Script_UnitGetIncomingHeals(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitGetIncomingHeals(\"unit\"[, \"healer\"]");
+        return 0;
     }
 
     CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
@@ -4645,6 +4660,7 @@ static int32_t Script_UnitGetIncomingHeals(lua_State* L) {
 static int32_t Script_UnitSetRole(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitSetRole(\"unit\", \"role\"");
+        return 0;
     }
 
     uint32_t role = 0;
@@ -4735,6 +4751,7 @@ static int32_t Script_GetEclipseDirection(lua_State* L) {
 static int32_t Script_UnitHPPerStamina(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitHPPerStamina(\"unit\")");
+        return 0;
     }
 
     CGUnit_C* unit = Script_GetUnitFromName(lua_tostring(L, 1));
@@ -4807,6 +4824,7 @@ static int32_t GetUnitPowerBarID(const char* token, int32_t timerIndex) {
 static int32_t Script_UnitAlternatePowerInfo(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitAlternatePowerInfo(\"unit\")");
+        return 0;
     }
 
     return PushPowerBarInfo(L, GetUnitPowerBarID(lua_tostring(L, 1), -1));
@@ -4816,6 +4834,7 @@ static int32_t Script_UnitAlternatePowerInfo(lua_State* L) {
 static int32_t Script_UnitAlternatePowerCounterInfo(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UnitAlternatePowerInfo(\"unit\")");
+        return 0;
     }
 
     const UnitPowerBarRec* bar = g_unitPowerBarDB.GetRecord(GetUnitPowerBarID(lua_tostring(L, 1), -1));
@@ -4833,6 +4852,7 @@ static int32_t Script_UnitAlternatePowerCounterInfo(lua_State* L) {
 static int32_t Script_UnitAlternatePowerTextureInfo(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: UnitAlternatePowerTextureInfo(\"unit\", textureIndex, [timerIndex])");
+        return 0;
     }
 
     int32_t timerIndex = -1;
@@ -4852,6 +4872,7 @@ static int32_t Script_UnitAlternatePowerTextureInfo(lua_State* L) {
 
     if (textureIndex > 6) {
         luaL_error(L, "Invalid texture index");
+        return 0;
     }
 
     int32_t fileDataID = bar->m_fileDataID[textureIndex];

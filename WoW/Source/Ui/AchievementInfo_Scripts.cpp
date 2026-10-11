@@ -212,6 +212,7 @@ static int32_t Script_GetCategoryInfo(lua_State* L) {
         }
     } else {
         luaL_error(L, "Usage: GetCategoryInfo(categoryID)");
+        return 0;
     }
 
     return 0;
@@ -472,6 +473,7 @@ static int32_t Script_GetAchievementInfoFromCriteria(lua_State* L) {
         }
     } else {
         luaL_error(L, "Usage: GetAchievementInfoFromCriteria(criteriaID)");
+        return 0;
     }
 
     return 0;
@@ -710,6 +712,7 @@ static int32_t Script_GetNumComparisonCompletedAchievements(lua_State* L) {
 static int32_t Script_GetNextAchievement(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNextAchievement(achievementID)");
+        return 0;
     } else {
         int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
 
@@ -1036,6 +1039,7 @@ static int32_t Script_GetAchievementComparisonInfo(lua_State* L) {
         }
     } else {
         luaL_error(L, "Usage: GetAchievementComparisonInfo(achievementID)");
+        return 0;
     }
 
     return 0;
@@ -1127,6 +1131,7 @@ static int32_t Script_GetAchievementNumCriteria(lua_State* L) {
         }
     } else {
         luaL_error(L, "Usage: GetAchievementNumCriteria(achievementID)");
+        return 0;
     }
 
     return 0;

@@ -84,6 +84,7 @@ static int32_t Script_RequestGuildMembershipList(lua_State* L) {
 static int32_t Script_SetGuildRecruitmentSettings(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetGuildRecruitmentSettings(index, true/false)");
+        return 0;
     }
 
     uint32_t flag = 1 << (static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -525,6 +526,7 @@ static int32_t Script_GetGuildMembershipRequestSettings(lua_State* L) {
 static int32_t Script_SetLookingForGuildSettings(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetLookingForGuildSettings(index, true/false)");
+        return 0;
     }
 
     CVar* var = CVar::Lookup("lfGuildSettings");

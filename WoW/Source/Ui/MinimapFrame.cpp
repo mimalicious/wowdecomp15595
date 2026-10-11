@@ -1393,7 +1393,6 @@ void CGMinimapFrame::SetTracking(uint32_t index, bool enable) {
 bool CGMinimapFrame::SetTrackingMask(int32_t mask) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t classMask = player ? 1 << player->m_unit->m_unitFieldBytes0[1] : 0;
-    uint32_t allowed = 0;
     CGMinimapFrame::s_trackingMask = 0;
 
     for (uint32_t i = 0; i < 19; i++) {
@@ -1401,12 +1400,11 @@ bool CGMinimapFrame::SetTrackingMask(int32_t mask) {
             uint32_t typeMask = CGMinimapFrame::s_trackingTypes[i].m_classMask;
 
             if (!typeMask || (typeMask & classMask)) {
-                allowed |= 1 << i;
+                CGMinimapFrame::s_trackingMask |= 1 << i;
             }
         }
     }
 
-    CGMinimapFrame::s_trackingMask = allowed;
     return false;
 }
 
@@ -1454,6 +1452,10 @@ void CGMinimapFrame::SaveShapeshiftTracking() {
 
     for (uint32_t i = 0; i < CGMinimapFrame::s_shapeshiftTrackingSpells.Count(); i++) {
         list.AddNextValue(CGMinimapFrame::s_shapeshiftTrackingSpells.m_data[i]);
+    }
+
+    if (list.m_state == 1) {
+        return;
     }
 
     list.m_buffer[0] = 'v';

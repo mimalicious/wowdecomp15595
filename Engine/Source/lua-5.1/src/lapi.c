@@ -727,7 +727,7 @@ LUA_API int lua_getmetatable (lua_State *L, int objindex) {
 }
 
 
-// INLINED
+// OFFSET: 0x0042C5A0
 LUA_API void lua_getfenv (lua_State *L, int idx) {
   StkId o;
   lua_lock(L);
@@ -1171,7 +1171,7 @@ LUA_API void lua_gcresettimes (lua_State *L) {
 */
 
 
-// INLINED
+// OFFSET: 0x0042CD30
 LUA_API int lua_error (lua_State *L) {
   lua_lock(L);
   api_checknelems(L, 1);

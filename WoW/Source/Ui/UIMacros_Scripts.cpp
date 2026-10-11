@@ -157,8 +157,10 @@ static int32_t Script_SecureCmdOptionParse(lua_State* L) {
 
     lua_pushlstring(L, result.m_start, result.m_end - result.m_start);
 
-    if (target.m_end != target.m_start) {
-        lua_pushlstring(L, target.m_start, target.m_end - target.m_start);
+    size_t length = target.m_end - target.m_start;
+
+    if (length) {
+        lua_pushlstring(L, target.m_start, length);
     } else {
         lua_pushnil(L);
     }

@@ -91,12 +91,7 @@ static int32_t Script_GetAvailableTitle(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
-        if (index < CGQuestInfo::m_numQuests) {
-            lua_pushstring(L, CGQuestInfo::m_availableQuests[index].m_title);
-        } else {
-            lua_pushstring(L, NULL);
-        }
-
+        lua_pushstring(L, index < CGQuestInfo::m_numQuests ? CGQuestInfo::m_availableQuests[index].m_title : NULL);
         return 1;
     }
 
@@ -359,18 +354,12 @@ static int32_t Script_GetRewardNumSkillUps(lua_State* L) {
 
 // OFFSET: 0x00944F00/0x1406B1CD0
 static int32_t Script_GetNumQuestCurrencies(lua_State* L) {
-    uint32_t count = CGQuestInfo::m_questRequest.m_currencies[0].m_currencyID != 0;
+    uint32_t count = 0;
 
-    if (CGQuestInfo::m_questRequest.m_currencies[1].m_currencyID) {
-        count++;
-    }
-
-    if (CGQuestInfo::m_questRequest.m_currencies[2].m_currencyID) {
-        count++;
-    }
-
-    if (CGQuestInfo::m_questRequest.m_currencies[3].m_currencyID) {
-        count++;
+    for (uint32_t i = 0; i < 4; i++) {
+        if (CGQuestInfo::m_questRequest.m_currencies[i].m_currencyID) {
+            count++;
+        }
     }
 
     lua_pushnumber(L, count);
@@ -379,18 +368,12 @@ static int32_t Script_GetNumQuestCurrencies(lua_State* L) {
 
 // OFFSET: 0x00944F60/0x1406B1D10
 static int32_t Script_GetNumRewardCurrencies(lua_State* L) {
-    uint32_t count = CGQuestInfo::m_rewards.m_currencyIDs[0] != 0;
+    uint32_t count = 0;
 
-    if (CGQuestInfo::m_rewards.m_currencyIDs[1]) {
-        count++;
-    }
-
-    if (CGQuestInfo::m_rewards.m_currencyIDs[2]) {
-        count++;
-    }
-
-    if (CGQuestInfo::m_rewards.m_currencyIDs[3]) {
-        count++;
+    for (uint32_t i = 0; i < 4; i++) {
+        if (CGQuestInfo::m_rewards.m_currencyIDs[i]) {
+            count++;
+        }
     }
 
     lua_pushnumber(L, count);
