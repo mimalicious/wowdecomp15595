@@ -2407,13 +2407,90 @@ class ClientBattlefieldMgrExitRequest : public JamClientMessage {
     bool Handle();
 };
 
+struct JamLfgSearchResultGUID {
+    /* 0000 */ uint8_t m_guid[8];
+};
+
+struct JamLfgSearchResultParty {
+    /* 0000 */ uint8_t m_guid[8];
+    /* 0008 */ uint32_t unk_0008;
+    /* 000C */ char m_comment[260];
+    /* 0110 */ uint8_t m_leaderGUID[8];
+    /* 0118 */ uint32_t unk_0118;
+    /* 011C */ uint8_t unk_011C[3];
+    /* 011F */ uint8_t unk_011F;
+};
+
+struct JamLfgSearchResultPlayer {
+    /* 0000 */ uint8_t m_guid[8];
+    /* 0008 */ uint32_t unk_0008;
+    /* 000C */ uint8_t unk_000C;
+    /* 000D */ uint8_t unk_000D;
+    /* 000E */ uint8_t unk_000E;
+    /* 000F */ uint8_t unk_000F;
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ uint32_t unk_0018;
+    /* 001C */ uint32_t unk_001C;
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ float unk_0028;
+    /* 002C */ float unk_002C;
+    /* 0030 */ uint32_t unk_0030;
+    /* 0034 */ uint32_t unk_0034;
+    /* 0038 */ uint32_t unk_0038;
+    /* 003C */ uint32_t unk_003C;
+    /* 0040 */ uint32_t unk_0040;
+    /* 0044 */ float unk_0044;
+    /* 0048 */ float unk_0048;
+    /* 004C */ uint32_t unk_004C;
+    /* 0050 */ uint32_t unk_0050;
+    /* 0054 */ uint32_t unk_0054;
+    /* 0058 */ uint32_t unk_0058;
+    /* 005C */ uint32_t unk_005C;
+    /* 0060 */ uint32_t unk_0060;
+    /* 0064 */ char m_comment[256];
+    /* 0164 */ bool unk_0164;
+    /* 0165 */ uint8_t unk_0165[3];
+    /* 0168 */ uint8_t m_partyGUID[8];
+    /* 0170 */ uint8_t unk_0170;
+    /* 0171 */ uint8_t unk_0171[3];
+    /* 0174 */ uint32_t unk_0174;
+    /* 0178 */ uint8_t unk_0178;
+    /* 0179 */ uint8_t unk_0179[7];
+    /* 0180 */ uint8_t m_guildGUID[8];
+    /* 0188 */ uint32_t unk_0188;
+    /* 018C */ uint8_t unk_018C;
+    /* 018D */ uint8_t unk_018D;
+    /* 018E */ uint8_t unk_018E;
+    /* 018F */ uint8_t unk_018F;
+};
+
 class ClientLfgSearchResult : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLfgSearchResult* msg);
 
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ TSGrowableArray<JamLfgSearchResultGUID> m_removed;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ bool unk_0028;
+    /* 0029 */ uint8_t unk_0029[7];
+    /* 0030 */ uint8_t m_guid[8];
+    /* 0038 */ uint32_t unk_0038;
+    /* 003C */ uint32_t unk_003C;
+    /* 0040 */ uint32_t unk_0040;
+    /* 0044 */ uint32_t unk_0044;
+    /* 0048 */ TSGrowableArray<JamLfgSearchResultParty> m_parties;
+    /* 0058 */ uint32_t unk_0058;
+    /* 005C */ TSGrowableArray<JamLfgSearchResultPlayer> m_players;
+    /* 006C */ uint32_t unk_006C;
+
     ClientLfgSearchResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfgSearchResult();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientBattlefieldRatedInfo : public JamClientMessage {
@@ -2905,6 +2982,8 @@ class ClientPhaseShiftChange : public JamClientMessage {
     ClientPhaseShiftChange(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPhaseShiftChange();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 

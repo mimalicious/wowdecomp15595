@@ -300,6 +300,9 @@ bool (*ClientNotification::s_handler)(ClientNotification* msg);
 // STATIC: 0x00E4D440
 bool (*ClientPhaseShiftChange::s_handler)(ClientPhaseShiftChange* msg);
 
+// STATIC: 0x00E4D804
+bool (*ClientLfgSearchResult::s_handler)(ClientLfgSearchResult* msg);
+
 // STATIC: 0x00E4D460
 bool (*ClientSuspendToken::s_handler)(ClientSuspendToken* msg);
 
@@ -22661,4 +22664,1364 @@ void ClientPhaseShiftChange::Unpack(CDataStore* msg, bool full) {
         msg->Get(byte);
         this->m_data.m_guid[5] ^= byte;
     }
+}
+
+// OFFSET: 0x006B53E0
+bool ClientPhaseShiftChange::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AFF50
+bool ClientPhaseShiftChange::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_data.m_guid[2] = bits.ReadBit();
+    this->m_data.m_guid[3] = bits.ReadBit();
+    this->m_data.m_guid[1] = bits.ReadBit();
+    this->m_data.m_guid[6] = bits.ReadBit();
+    this->m_data.m_guid[4] = bits.ReadBit();
+    this->m_data.m_guid[5] = bits.ReadBit();
+    this->m_data.m_guid[0] = bits.ReadBit();
+    this->m_data.m_guid[7] = bits.ReadBit();
+
+    uint32_t size;
+    void* data;
+
+    if (this->m_data.m_guid[7]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[7] ^= byte;
+    }
+
+    if (this->m_data.m_guid[4]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[4] ^= byte;
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_uiWorldMapAreaIDSwaps.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_uiWorldMapAreaIDSwaps.PutData(data, size);
+        this->m_data.m_uiWorldMapAreaIDSwaps.Finalize();
+    }
+
+    if (this->m_data.m_guid[1]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[1] ^= byte;
+    }
+
+    uint32_t flags = 0;
+    msg->Get(flags);
+    this->m_data.m_flags = flags;
+
+    if (this->m_data.m_guid[2]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[2] ^= byte;
+    }
+
+    if (this->m_data.m_guid[6]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[6] ^= byte;
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_preloadMapIDs.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_preloadMapIDs.PutData(data, size);
+        this->m_data.m_preloadMapIDs.Finalize();
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_phaseIDs.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_phaseIDs.PutData(data, size);
+        this->m_data.m_phaseIDs.Finalize();
+    }
+
+    if (this->m_data.m_guid[3]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[3] ^= byte;
+    }
+
+    if (this->m_data.m_guid[0]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[0] ^= byte;
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_visibleMapIDs.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_visibleMapIDs.PutData(data, size);
+        this->m_data.m_visibleMapIDs.Finalize();
+    }
+
+    if (this->m_data.m_guid[5]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[5] ^= byte;
+    }
+
+    return msg->IsRead() != 0;
+}
+
+// OFFSET: 0x006F41E0
+ClientLfgSearchResult::ClientLfgSearchResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E0290
+ClientLfgSearchResult::~ClientLfgSearchResult() {
+}
+
+// OFFSET: 0x006BF3C0
+bool ClientLfgSearchResult::Handle() {
+    if (!ClientLfgSearchResult::s_handler) {
+        return false;
+    }
+
+    return ClientLfgSearchResult::s_handler(this);
+}
+
+// OFFSET: 0x006F0860
+void ClientLfgSearchResult::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint8_t byteValue;
+    uint32_t intValue;
+    float floatValue;
+
+    this->m_guid[3] = bits.ReadBit();
+    this->m_parties.SetCount(bits.ReadBits<21>());
+
+    for (uint32_t i = 0; i < this->m_parties.Count(); i++) {
+        JamLfgSearchResultParty& party = this->m_parties[i];
+        party.m_leaderGUID[6] = bits.ReadBit();
+        party.m_guid[3] = bits.ReadBit();
+        party.m_guid[1] = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(party.m_comment) = bits.ReadBits<9>();
+        party.m_leaderGUID[0] = bits.ReadBit();
+        party.m_guid[5] = bits.ReadBit();
+        party.m_guid[2] = bits.ReadBit();
+        party.m_leaderGUID[1] = bits.ReadBit();
+        party.m_leaderGUID[4] = bits.ReadBit();
+        party.m_guid[4] = bits.ReadBit();
+        party.m_leaderGUID[7] = bits.ReadBit();
+        party.m_guid[7] = bits.ReadBit();
+        party.m_guid[0] = bits.ReadBit();
+        party.m_leaderGUID[3] = bits.ReadBit();
+        party.m_guid[6] = bits.ReadBit();
+        party.m_leaderGUID[2] = bits.ReadBit();
+        party.m_leaderGUID[5] = bits.ReadBit();
+    }
+
+    this->m_guid[6] = bits.ReadBit();
+    this->unk_0028 = bits.ReadBit() != 0;
+    this->m_guid[7] = bits.ReadBit();
+    this->m_guid[5] = bits.ReadBit();
+    this->m_guid[2] = bits.ReadBit();
+    this->m_guid[4] = bits.ReadBit();
+    this->m_players.SetCount(bits.ReadBits<18>());
+
+    for (uint32_t i = 0; i < this->m_players.Count(); i++) {
+        JamLfgSearchResultPlayer& player = this->m_players[i];
+        *reinterpret_cast<uint32_t*>(player.m_comment) = bits.ReadBits<9>();
+        player.m_partyGUID[3] = bits.ReadBit();
+        player.m_guid[7] = bits.ReadBit();
+        player.m_partyGUID[1] = bits.ReadBit();
+        player.m_guildGUID[7] = bits.ReadBit();
+        player.m_guildGUID[4] = bits.ReadBit();
+        player.m_guid[3] = bits.ReadBit();
+        player.m_guid[1] = bits.ReadBit();
+        player.m_guildGUID[6] = bits.ReadBit();
+        player.m_partyGUID[2] = bits.ReadBit();
+        player.unk_0164 = bits.ReadBit() != 0;
+        player.m_guildGUID[0] = bits.ReadBit();
+        player.m_partyGUID[0] = bits.ReadBit();
+        player.m_guid[2] = bits.ReadBit();
+        player.m_partyGUID[5] = bits.ReadBit();
+        player.m_guildGUID[3] = bits.ReadBit();
+        player.m_guid[4] = bits.ReadBit();
+        player.m_guid[6] = bits.ReadBit();
+        player.m_guildGUID[5] = bits.ReadBit();
+        player.m_guid[0] = bits.ReadBit();
+        player.m_partyGUID[7] = bits.ReadBit();
+        player.m_guildGUID[1] = bits.ReadBit();
+        player.m_partyGUID[4] = bits.ReadBit();
+        player.m_partyGUID[6] = bits.ReadBit();
+        player.m_guildGUID[2] = bits.ReadBit();
+        player.m_guid[5] = bits.ReadBit();
+    }
+
+    this->m_removed.SetCount(bits.ReadBits<26>());
+
+    for (uint32_t i = 0; i < this->m_removed.Count(); i++) {
+        this->m_removed[i].m_guid[7] = bits.ReadBit();
+        this->m_removed[i].m_guid[3] = bits.ReadBit();
+        this->m_removed[i].m_guid[6] = bits.ReadBit();
+        this->m_removed[i].m_guid[2] = bits.ReadBit();
+        this->m_removed[i].m_guid[1] = bits.ReadBit();
+        this->m_removed[i].m_guid[4] = bits.ReadBit();
+        this->m_removed[i].m_guid[0] = bits.ReadBit();
+        this->m_removed[i].m_guid[5] = bits.ReadBit();
+    }
+
+    this->m_guid[0] = bits.ReadBit();
+    this->m_guid[1] = bits.ReadBit();
+
+    for (uint32_t i = 0; i < this->m_removed.Count(); i++) {
+        if (this->m_removed[i].m_guid[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[3] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[6] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[4] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[2] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[1] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[0] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[5] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[7] ^= byteValue;
+        }
+    }
+
+    for (uint32_t i = 0; i < this->m_players.Count(); i++) {
+        JamLfgSearchResultPlayer& player = this->m_players[i];
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0020 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_018C = byteValue;
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_0044 = floatValue;
+
+        if (player.m_partyGUID[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[4] ^= byteValue;
+        }
+
+        if (player.m_guildGUID[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[5] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_004C = intValue;
+
+        if (player.m_guildGUID[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[7] ^= byteValue;
+        }
+
+        intValue = *reinterpret_cast<uint32_t*>(player.m_comment);
+        msg->GetData(player.m_comment, intValue);
+        player.m_comment[intValue] = 0;
+
+        if (player.m_guildGUID[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[4] ^= byteValue;
+        }
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_002C = floatValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0050 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_000C = byteValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0040 = intValue;
+
+        if (player.m_partyGUID[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[6] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_005C = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0060 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0058 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_000E = byteValue;
+
+        if (player.m_partyGUID[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[5] ^= byteValue;
+        }
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_0048 = floatValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0038 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0024 = intValue;
+
+        if (player.m_partyGUID[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[0] ^= byteValue;
+        }
+
+        if (player.m_guid[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[4] ^= byteValue;
+        }
+
+        if (player.m_partyGUID[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[7] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0010 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_0178 = byteValue;
+
+        if (player.m_guid[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[6] ^= byteValue;
+        }
+
+        if (player.m_partyGUID[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[2] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_018D = byteValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0034 = intValue;
+
+        if (player.m_guildGUID[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[2] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_018E = byteValue;
+
+        if (player.m_guildGUID[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[1] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_000D = byteValue;
+
+        if (player.m_guid[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[0] ^= byteValue;
+        }
+
+        if (player.m_partyGUID[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[1] ^= byteValue;
+        }
+
+        if (player.m_guid[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[7] ^= byteValue;
+        }
+
+        if (player.m_guid[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[2] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0054 = intValue;
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_0028 = floatValue;
+
+        if (player.m_guildGUID[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[0] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_0170 = byteValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_001C = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0008 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0014 = intValue;
+
+        if (player.m_guildGUID[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[6] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_003C = intValue;
+
+        if (player.m_guid[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[1] ^= byteValue;
+        }
+
+        if (player.m_guid[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[3] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0188 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0018 = intValue;
+
+        if (player.m_partyGUID[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[3] ^= byteValue;
+        }
+
+        if (player.m_guid[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[5] ^= byteValue;
+        }
+
+        if (player.m_guildGUID[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[3] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0030 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0174 = intValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0024 = intValue;
+
+    for (uint32_t i = 0; i < this->m_parties.Count(); i++) {
+        JamLfgSearchResultParty& party = this->m_parties[i];
+        intValue = *reinterpret_cast<uint32_t*>(party.m_comment);
+        msg->GetData(party.m_comment, intValue);
+        party.m_comment[intValue] = 0;
+
+        intValue = 0;
+        msg->Get(intValue);
+        party.unk_0008 = intValue;
+
+        if (party.m_guid[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[6] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        party.unk_0118 = intValue;
+
+        if (party.m_leaderGUID[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[6] ^= byteValue;
+        }
+
+        if (party.m_guid[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[2] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[4] ^= byteValue;
+        }
+
+        for (uint32_t j = 0; j < 3; j++) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.unk_011C[j] = byteValue;
+        }
+
+        if (party.m_guid[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[4] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[7] ^= byteValue;
+        }
+
+        if (party.m_guid[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[7] ^= byteValue;
+        }
+
+        if (party.m_guid[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[3] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[3] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[5] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[0] ^= byteValue;
+        }
+
+        if (party.m_guid[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[5] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[1] ^= byteValue;
+        }
+
+        if (party.m_guid[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[1] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[2] ^= byteValue;
+        }
+
+        if (party.m_guid[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[0] ^= byteValue;
+        }
+    }
+
+    if (this->m_guid[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[7] ^= byteValue;
+    }
+
+    if (this->m_guid[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[1] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0058 = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_003C = intValue;
+
+    if (this->m_guid[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[4] ^= byteValue;
+    }
+
+    if (this->m_guid[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[2] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0038 = intValue;
+
+    if (this->m_guid[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[6] ^= byteValue;
+    }
+
+    if (this->m_guid[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[5] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0010 = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0040 = intValue;
+
+    if (this->m_guid[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[0] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_006C = intValue;
+
+    if (this->m_guid[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[3] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006F2D90
+bool ClientLfgSearchResult::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006EAF70
+bool ClientLfgSearchResult::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint8_t byteValue;
+    uint32_t intValue;
+    float floatValue;
+
+    this->m_guid[3] = bits.ReadBit();
+    this->m_parties.SetCount(bits.ReadBits<21>());
+
+    for (uint32_t i = 0; i < this->m_parties.Count(); i++) {
+        JamLfgSearchResultParty& party = this->m_parties[i];
+        party.m_leaderGUID[6] = bits.ReadBit();
+        party.m_guid[3] = bits.ReadBit();
+        party.m_guid[1] = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(party.m_comment) = bits.ReadBits<9>();
+        party.m_leaderGUID[0] = bits.ReadBit();
+        party.m_guid[5] = bits.ReadBit();
+        party.m_guid[2] = bits.ReadBit();
+        party.m_leaderGUID[1] = bits.ReadBit();
+        party.m_leaderGUID[4] = bits.ReadBit();
+        party.m_guid[4] = bits.ReadBit();
+        party.m_leaderGUID[7] = bits.ReadBit();
+        party.m_guid[7] = bits.ReadBit();
+        party.m_guid[0] = bits.ReadBit();
+        party.m_leaderGUID[3] = bits.ReadBit();
+        party.m_guid[6] = bits.ReadBit();
+        party.m_leaderGUID[2] = bits.ReadBit();
+        party.m_leaderGUID[5] = bits.ReadBit();
+    }
+
+    this->m_guid[6] = bits.ReadBit();
+    this->unk_0028 = bits.ReadBit() != 0;
+    this->m_guid[7] = bits.ReadBit();
+    this->m_guid[5] = bits.ReadBit();
+    this->m_guid[2] = bits.ReadBit();
+    this->m_guid[4] = bits.ReadBit();
+    this->m_players.SetCount(bits.ReadBits<18>());
+
+    for (uint32_t i = 0; i < this->m_players.Count(); i++) {
+        JamLfgSearchResultPlayer& player = this->m_players[i];
+        *reinterpret_cast<uint32_t*>(player.m_comment) = bits.ReadBits<9>();
+        player.m_partyGUID[3] = bits.ReadBit();
+        player.m_guid[7] = bits.ReadBit();
+        player.m_partyGUID[1] = bits.ReadBit();
+        player.m_guildGUID[7] = bits.ReadBit();
+        player.m_guildGUID[4] = bits.ReadBit();
+        player.m_guid[3] = bits.ReadBit();
+        player.m_guid[1] = bits.ReadBit();
+        player.m_guildGUID[6] = bits.ReadBit();
+        player.m_partyGUID[2] = bits.ReadBit();
+        player.unk_0164 = bits.ReadBit() != 0;
+        player.m_guildGUID[0] = bits.ReadBit();
+        player.m_partyGUID[0] = bits.ReadBit();
+        player.m_guid[2] = bits.ReadBit();
+        player.m_partyGUID[5] = bits.ReadBit();
+        player.m_guildGUID[3] = bits.ReadBit();
+        player.m_guid[4] = bits.ReadBit();
+        player.m_guid[6] = bits.ReadBit();
+        player.m_guildGUID[5] = bits.ReadBit();
+        player.m_guid[0] = bits.ReadBit();
+        player.m_partyGUID[7] = bits.ReadBit();
+        player.m_guildGUID[1] = bits.ReadBit();
+        player.m_partyGUID[4] = bits.ReadBit();
+        player.m_partyGUID[6] = bits.ReadBit();
+        player.m_guildGUID[2] = bits.ReadBit();
+        player.m_guid[5] = bits.ReadBit();
+    }
+
+    this->m_removed.SetCount(bits.ReadBits<26>());
+
+    for (uint32_t i = 0; i < this->m_removed.Count(); i++) {
+        this->m_removed[i].m_guid[7] = bits.ReadBit();
+        this->m_removed[i].m_guid[3] = bits.ReadBit();
+        this->m_removed[i].m_guid[6] = bits.ReadBit();
+        this->m_removed[i].m_guid[2] = bits.ReadBit();
+        this->m_removed[i].m_guid[1] = bits.ReadBit();
+        this->m_removed[i].m_guid[4] = bits.ReadBit();
+        this->m_removed[i].m_guid[0] = bits.ReadBit();
+        this->m_removed[i].m_guid[5] = bits.ReadBit();
+    }
+
+    this->m_guid[0] = bits.ReadBit();
+    this->m_guid[1] = bits.ReadBit();
+
+    for (uint32_t i = 0; i < this->m_removed.Count(); i++) {
+        if (this->m_removed[i].m_guid[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[3] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[6] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[4] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[2] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[1] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[0] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[5] ^= byteValue;
+        }
+
+        if (this->m_removed[i].m_guid[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_removed[i].m_guid[7] ^= byteValue;
+        }
+    }
+
+    for (uint32_t i = 0; i < this->m_players.Count(); i++) {
+        JamLfgSearchResultPlayer& player = this->m_players[i];
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0020 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_018C = byteValue;
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_0044 = floatValue;
+
+        if (player.m_partyGUID[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[4] ^= byteValue;
+        }
+
+        if (player.m_guildGUID[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[5] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_004C = intValue;
+
+        if (player.m_guildGUID[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[7] ^= byteValue;
+        }
+
+        intValue = *reinterpret_cast<uint32_t*>(player.m_comment);
+        msg->GetData(player.m_comment, intValue);
+        player.m_comment[intValue] = 0;
+
+        if (player.m_guildGUID[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[4] ^= byteValue;
+        }
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_002C = floatValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0050 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_000C = byteValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0040 = intValue;
+
+        if (player.m_partyGUID[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[6] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_005C = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0060 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0058 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_000E = byteValue;
+
+        if (player.m_partyGUID[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[5] ^= byteValue;
+        }
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_0048 = floatValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0038 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0024 = intValue;
+
+        if (player.m_partyGUID[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[0] ^= byteValue;
+        }
+
+        if (player.m_guid[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[4] ^= byteValue;
+        }
+
+        if (player.m_partyGUID[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[7] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0010 = intValue;
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_0178 = byteValue;
+
+        if (player.m_guid[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[6] ^= byteValue;
+        }
+
+        if (player.m_partyGUID[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[2] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_018D = byteValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0034 = intValue;
+
+        if (player.m_guildGUID[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[2] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_018E = byteValue;
+
+        if (player.m_guildGUID[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[1] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_000D = byteValue;
+
+        if (player.m_guid[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[0] ^= byteValue;
+        }
+
+        if (player.m_partyGUID[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[1] ^= byteValue;
+        }
+
+        if (player.m_guid[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[7] ^= byteValue;
+        }
+
+        if (player.m_guid[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[2] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0054 = intValue;
+
+        floatValue = 0;
+        msg->Get(floatValue);
+        player.unk_0028 = floatValue;
+
+        if (player.m_guildGUID[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[0] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        player.unk_0170 = byteValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_001C = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0008 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0014 = intValue;
+
+        if (player.m_guildGUID[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[6] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_003C = intValue;
+
+        if (player.m_guid[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[1] ^= byteValue;
+        }
+
+        if (player.m_guid[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[3] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0188 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0018 = intValue;
+
+        if (player.m_partyGUID[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_partyGUID[3] ^= byteValue;
+        }
+
+        if (player.m_guid[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guid[5] ^= byteValue;
+        }
+
+        if (player.m_guildGUID[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_guildGUID[3] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0030 = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.unk_0174 = intValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0024 = intValue;
+
+    for (uint32_t i = 0; i < this->m_parties.Count(); i++) {
+        JamLfgSearchResultParty& party = this->m_parties[i];
+        intValue = *reinterpret_cast<uint32_t*>(party.m_comment);
+        msg->GetData(party.m_comment, intValue);
+        party.m_comment[intValue] = 0;
+
+        intValue = 0;
+        msg->Get(intValue);
+        party.unk_0008 = intValue;
+
+        if (party.m_guid[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[6] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        party.unk_0118 = intValue;
+
+        if (party.m_leaderGUID[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[6] ^= byteValue;
+        }
+
+        if (party.m_guid[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[2] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[4] ^= byteValue;
+        }
+
+        for (uint32_t j = 0; j < 3; j++) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.unk_011C[j] = byteValue;
+        }
+
+        if (party.m_guid[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[4] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[7] ^= byteValue;
+        }
+
+        if (party.m_guid[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[7] ^= byteValue;
+        }
+
+        if (party.m_guid[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[3] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[3] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[5] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[0] ^= byteValue;
+        }
+
+        if (party.m_guid[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[5] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[1] ^= byteValue;
+        }
+
+        if (party.m_guid[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[1] ^= byteValue;
+        }
+
+        if (party.m_leaderGUID[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_leaderGUID[2] ^= byteValue;
+        }
+
+        if (party.m_guid[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            party.m_guid[0] ^= byteValue;
+        }
+    }
+
+    if (this->m_guid[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[7] ^= byteValue;
+    }
+
+    if (this->m_guid[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[1] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0058 = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_003C = intValue;
+
+    if (this->m_guid[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[4] ^= byteValue;
+    }
+
+    if (this->m_guid[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[2] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0038 = intValue;
+
+    if (this->m_guid[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[6] ^= byteValue;
+    }
+
+    if (this->m_guid[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[5] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0010 = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_0040 = intValue;
+
+    if (this->m_guid[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[0] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->unk_006C = intValue;
+
+    if (this->m_guid[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[3] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
