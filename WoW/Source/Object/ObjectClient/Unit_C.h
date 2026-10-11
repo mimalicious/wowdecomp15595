@@ -1303,6 +1303,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
 };
 
 extern int32_t g_environmentalDamageVisualKits[6];
+extern uint32_t g_npcFeedbackSuppressCount;
 
 void CreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 int32_t FactionTemplateReaction(const FactionTemplateRec* faction, const FactionTemplateRec* other);
@@ -1408,7 +1409,5 @@ float CreatureSoundDataGetFidgetDelayMax(const CreatureSoundDataRec* rec);
 
 bool ClientPlaySpellVisualHandler(ClientPlaySpellVisual* msg);
 bool ClientSetPlayHoverAnimHandler(ClientSetPlayHoverAnim* msg);
-
-extern uint32_t g_npcFeedbackSuppressCount;
 
 #endif
