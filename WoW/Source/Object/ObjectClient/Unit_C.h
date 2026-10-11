@@ -934,13 +934,11 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t IsInFrontOfTargetWithGuid(const WOWGUID& guid) const;
     void UpdateWorldTransform(float elapsed);
     void SetKeyBoneSequenceSpeed(CM2Model* model, uint32_t boneId, float speed, int32_t force);
-    void SetKeyBoneSequence(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, int32_t force);
     int32_t UnsetKeyBoneSequence(CM2Model* model, uint32_t boneId, int32_t blend, int32_t primary, int32_t force);
     void OnCollideFalling(uint32_t moveFlags = 0);
     void CreateVehicleData(const CClientObjCreate* create, int32_t vehicleId);
     void RefreshDataPointers();
     void InitializeActivePlayerComponent();
-    void PlayBaseAnimation(uint32_t animId, int32_t flags);
     void SetAnimType(uint8_t animTier);
     void RegisterScript(uint32_t flags);
     void UnregisterScript(uint32_t flags);
@@ -1159,11 +1157,9 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void PlayFallLandAnimation(uint32_t oldFlags, int32_t jumping);
     void HandleEnvironmentDamage(uint32_t type, int32_t damage, int32_t absorbed, int32_t resisted);
     bool CheckSelfResurrect();
-    uint32_t ChooseAnimation(uint32_t mask, uint32_t* animFlags, int32_t* usedDefault);
     int32_t ChooseCombatAnim(uint32_t mask, uint32_t* anim, uint32_t* animFlags);
     int32_t ChooseStandStateAnim(uint32_t mask, uint32_t* anim);
     int32_t GetSpellVisualKitAnim(uint32_t* anim, uint32_t* kitFlags);
-    uint32_t ResolveAnimForModel(uint32_t animId, CM2Model* model);
     static int32_t UnitReaction(int32_t factionTemplate, const CGUnit_C* unit);
     bool IsFriendly(const CGUnit_C* unit) const;
     bool IsAlteredFormTransitionPreventingAction() const;
@@ -1174,8 +1170,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t IsVehiclePassenger(WOWGUID guid) const;
     bool IsNPCTracked() const;
     void UpdateWeaponTrails(const uint32_t* a2, uint32_t a3);
-    int32_t ApplyAttachmentAnimOverride(const M2BoneSequenceInfo* mount, const M2BoneSequenceInfo* base, const M2BoneSequenceInfo* torso, int32_t hasTorso, M2BoneSequenceInfo* mountOut, M2BoneSequenceInfo* baseOut, M2BoneSequenceInfo* torsoOut, int32_t* keepBase, int32_t* keepTorso);
-    int32_t ShouldSplitTorsoAnimation(uint32_t animId, uint32_t currentAnim);
     void UpdateHandItemAnimEffects(uint32_t anim);
     void ShowHandItemSpellEffects(int32_t a1, int32_t a2);
     void SetHandItemSpellEffectsVisible(int32_t visible);
@@ -1184,7 +1178,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void RenderAutoTrackCursor();
     void UpdateChannelEffects();
     void CreateOrDestroyObjectEffectManager();
-    void UpdateBaseAnimation(uint32_t animFlags, int32_t mask);
     void UpdatePartyMemberPetState();
     void ExecuteClientControlUpdate(WOWGUID guid, uint8_t state);
     int32_t UnitReaction(const CGUnit_C* unit) const;
@@ -1221,7 +1214,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ResetUICastingSpell();
     void ResetUIChannelSpell();
     void DelayUICastingSpell(int32_t delay);
-    void OnKeyBoneAnimEnd(CM2Model* model, uint32_t boneId, uint32_t sequenceId);
     int32_t OnAttackIconPressed(WOWGUID target, int32_t a3, int32_t a4 = 0, int32_t a5 = 0);
     int32_t VerifyAttackIconPressed(WOWGUID* target, int32_t useGiven, int32_t checkRange, bool autoTarget, bool showErrors);
     void AddAuraSlot(uint8_t slot);
@@ -1379,7 +1371,6 @@ int32_t IsDeadOrDyingAnim(uint32_t animId);
 int32_t IsMeleeAttackAnim(uint32_t animId);
 int32_t IsFullBodyAnim(uint32_t animId);
 int32_t IsLocomotionAnimId(uint32_t animId);
-int32_t IsUpperBodyAnim(uint32_t animId);
 int32_t IsWeaponSpecialAnim(uint32_t animId);
 int32_t IsRangedWeaponAnim(uint32_t animId);
 

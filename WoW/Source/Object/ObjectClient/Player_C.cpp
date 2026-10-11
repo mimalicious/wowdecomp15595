@@ -7759,7 +7759,7 @@ void CGPlayer_C::OnLootGameObject(const WOWGUID& guid) {
     this->m_lootTarget = guid;
 
     if (this->ShouldKneelForLoot()) {
-        this->PlayBaseAnimation(ANIM_LOOT, 0);
+        this->PlayLootStartAnimKit();
     }
 }
 
@@ -10140,7 +10140,7 @@ int32_t __stdcall CGPlayer_C::OnLootMoneyNotify(CDataStore* msg) {
 // OFFSET: 0x00554680/0x1401B0820
 void CGPlayer_C::ClearLootingObject() {
     this->m_lootTarget = WOWGUID();
-    this->UpdateBaseAnimation(0, -1);
+    this->UpdateLootAnimKit(0);
 }
 
 // OFFSET: 0x0055B920
@@ -10297,7 +10297,6 @@ int32_t CGPlayer_C::OnLootReleaseResponse(CDataStore* msg) {
 
     if (released && guid == this->m_lootTarget) {
         this->m_lootTarget = WOWGUID();
-        this->UpdateBaseAnimation(0, -1);
         CGGameUI::CloseLoot(false, false, false);
     }
 
@@ -10333,7 +10332,7 @@ void CGPlayer_C::LootCorpse(CGCorpse_C* corpse, bool autoInteract) {
     msg.Finalize();
     ClientServices::Send2(&msg);
     this->m_lootTarget = corpse->m_obj->m_guid;
-    this->PlayBaseAnimation(ANIM_LOOT, 0);
+    this->PlayLootStartAnimKit();
 }
 
 // OFFSET: 0x00560160
@@ -10383,7 +10382,7 @@ void CGPlayer_C::LootUnit(CGUnit_C* unit, bool autoInteract) {
     msg.Finalize();
     ClientServices::Send2(&msg);
     this->m_lootTarget = unit->m_obj->m_guid;
-    this->PlayBaseAnimation(ANIM_LOOT, 0);
+    this->PlayLootStartAnimKit();
 }
 
 // OFFSET: 0x0055B840/0x1401B87F0
@@ -12954,7 +12953,6 @@ void CGPlayer_C::Dance() {
     msg.Put(static_cast<uint8_t>(0));
     msg.Finalize();
     ClientServices::Send2(&msg);
-    this->UpdateBaseAnimation(0, -1);
 }
 
 // OFFSET: 0x00563910/0x1401C16D0
