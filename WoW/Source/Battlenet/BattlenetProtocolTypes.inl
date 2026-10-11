@@ -393,3 +393,7 @@ inline Battlenet::Presence::FieldVal::FieldVal() {
     this->m_tag = -1;
     memset(this->m_value, 0, sizeof(this->m_value));
 }
+
+// INLINED
+inline Battlenet::Presence::BlockList::BlockList() {
+}

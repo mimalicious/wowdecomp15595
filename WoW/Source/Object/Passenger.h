@@ -10,7 +10,6 @@
 
 class C44Matrix;
 
-#pragma pack(push, 4)
 class CPassenger {
     public:
     /* 0000 */ TSLink<void> m_link;
@@ -36,6 +35,5 @@ class CPassenger {
     void ForceSetTransport(WOWGUID transport);
     float RemoveFromTransport(C44Matrix* matrix);
 };
-#pragma pack(pop)
 
 #endif

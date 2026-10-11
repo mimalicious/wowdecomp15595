@@ -3621,6 +3621,8 @@ struct BlockList {
     public:
     /* 0000 */ BSN::Array<uint32_t, 100> m_ridBlocks;
     /* 0194 */ BSN::Array<uint32_t, 100> m_cidBlocks;
+
+    BlockList();
 };
 }}
 

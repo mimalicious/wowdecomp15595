@@ -162,7 +162,7 @@ static int32_t Script_BNSendSoR(lua_State* L) {
     }
 
     if (CGGameUI::s_canSendSoR) {
-        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_PROGRAM].m_field);
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_ID].m_field);
         uint32_t accountId;
 
         if (value.m_tag == 5 && (accountId = value.Value<uint32_t>()) != 0) {

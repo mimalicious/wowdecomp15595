@@ -1,6 +1,42 @@
 #include "WoW/Source/Battlenet/BattlenetProtocol.h"
 #include <cstring>
 
+// STATIC: 0x00C83010
+const uint32_t Protocol::TypeIdOf<Battlenet::Toon::FullName>::s_typeId = 412;
+
+// STATIC: 0x00C83014
+const uint32_t Protocol::TypeIdOf<Battlenet::Chat::MemberList>::s_typeId = 545;
+
+// STATIC: 0x00C83018
+const uint32_t Protocol::TypeIdOf<Battlenet::Event::Creep::Invoke>::s_typeId = 1282;
+
+// STATIC: 0x00C8301C
+const uint32_t Protocol::TypeIdOf<Battlenet::Event::Larva::Invoke>::s_typeId = 1838;
+
+// STATIC: 0x00C83020
+const uint32_t Protocol::TypeIdOf<Battlenet::Event::Update::Invoke>::s_typeId = 3158;
+
+// STATIC: 0x00C83024
+const uint32_t Protocol::TypeIdOf<Battlenet::Event::Header>::s_typeId = 3311;
+
+// STATIC: 0x00C83028
+const uint32_t Protocol::TypeIdOf<Battlenet::Friends::FriendInviteContainer>::s_typeId = 3409;
+
+// STATIC: 0x00C8302C
+const uint32_t Protocol::TypeIdOf<Battlenet::Friends::FriendList>::s_typeId = 3417;
+
+// STATIC: 0x00C83030
+const uint32_t Protocol::TypeIdOf<Battlenet::Friends::FriendsOfFriendList>::s_typeId = 3430;
+
+// STATIC: 0x00C83034
+const uint32_t Protocol::TypeIdOf<Battlenet::Presence::FieldVal>::s_typeId = 3675;
+
+// STATIC: 0x00C83038
+const uint32_t Protocol::TypeIdOf<Battlenet::Presence::FieldUpdate>::s_typeId = 3711;
+
+// STATIC: 0x00C8303C
+const uint32_t Protocol::TypeIdOf<Battlenet::Presence::BlockList>::s_typeId = 3715;
+
 // STATIC: 0x01008E00
 BSN::Protocol::Protocol Protocol::s_protocol(Protocol::s_bytecode, sizeof(Protocol::s_bytecode), Protocol::s_codeInfo, sizeof(Protocol::s_codeInfo) / sizeof(Protocol::s_codeInfo[0]));
 
@@ -58,7 +94,10 @@ BSN::AsciiString<63> Battlenet::Event::AuthModule::ShowSurveyDialog("ShowSurveyD
 // STATIC: 0x01009300
 BSN::AsciiString<63> Battlenet::Event::AuthModule::AcceptAgreement("AcceptAgreement");
 
-// STATIC: #0x00D45154
+// STATIC: 0x01009344
+BSN::FourCC Battlenet::InviteSource::MISC("Misc");
+
+// STATIC: 0x01009350
 BSN::FourCC Battlenet::Program::WOW("WoW");
 
 // OFFSET: 0x00627D80

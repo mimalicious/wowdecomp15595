@@ -5,12 +5,28 @@ inline BSN::FourCC::FourCC() {
 
 // INLINED
 inline void BSN::FourCC::ToString(char* dest, uint32_t size) const {
-    for (int32_t shift = 24; shift >= 0; shift -= 8) {
-        uint8_t c = static_cast<uint8_t>(this->m_value >> shift);
+    uint8_t c = static_cast<uint8_t>(this->m_value >> 24);
 
-        if (c && size--) {
-            *dest++ = c;
-        }
+    if (c && size-- > 0) {
+        *dest++ = c;
+    }
+
+    c = static_cast<uint8_t>(this->m_value >> 16);
+
+    if (c && size-- > 0) {
+        *dest++ = c;
+    }
+
+    c = static_cast<uint8_t>(this->m_value >> 8);
+
+    if (c && size-- > 0) {
+        *dest++ = c;
+    }
+
+    c = static_cast<uint8_t>(this->m_value);
+
+    if (c && size-- > 0) {
+        *dest++ = c;
     }
 
     if (size) {

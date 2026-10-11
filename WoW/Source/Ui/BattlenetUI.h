@@ -11,32 +11,12 @@
 
 struct lua_State;
 
-namespace Battlenet {
-namespace InviteSource {
-extern BSN::FourCC MISC;
-}
-}
-
-namespace BattlenetAPI {
-void GetChatMemberList(uint8_t channel, GeneralFunction::Callback* callback);
-uint32_t GetPresenceIDForAccount(uint32_t accountId);
-uint16_t SendRIDFriendInviteByEmail(const char* email, const char* note, BSN::FourCC source, GeneralFunction::Callback* callback);
-uint16_t SendRIDFriendInviteByPresenceId(uint32_t presenceId, const char* note, BSN::FourCC source, GeneralFunction::Callback* callback);
-}
-
 struct ACCOUNTIDCACHE : public TSHashObject<ACCOUNTIDCACHE, HASHKEY_DWORD> {
     /* 0018 */ uint32_t m_accountId;
 };
 
 class BattlenetUI {
     public:
-    enum {
-        PRESENCE_FIELD_FLAGS = 20,
-        PRESENCE_FIELD_FACTION = 21,
-        PRESENCE_FIELD_REALM_ID = 22,
-        NUM_PRESENCE_FIELDS = 23,
-    };
-
     struct RIDFriendData {
         /* 0000 */ uint32_t m_presenceID;
         /* 0004 */ uint32_t m_accountId;
@@ -76,7 +56,7 @@ class BattlenetUI {
     };
 
     static EventCallback s_eventCallbacks[26];
-    static PresenceCallback s_presenceCallbacks[NUM_PRESENCE_FIELDS];
+    static PresenceCallback s_presenceCallbacks[NUM_BN_PRESENCE_FIELDS];
     static FriendInviteSentCB s_friendInviteSentCB;
     static int32_t s_broadcastCount;
     static uint32_t s_selfRealm;

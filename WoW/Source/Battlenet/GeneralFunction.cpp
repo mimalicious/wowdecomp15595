@@ -6,7 +6,7 @@ GeneralFunction::Arg& GeneralFunction::Arg::operator=(const Arg& other) {
     this->FreeData();
     this->m_type = other.m_type;
 
-    switch (other.m_type) {
+    switch (this->m_type) {
         case TYPE_BOOL:
             this->m_bool = other.m_bool;
             break;
@@ -39,6 +39,14 @@ GeneralFunction::Arg& GeneralFunction::Arg::operator=(const Arg& other) {
             break;
     }
 
+    return *this;
+}
+
+// OFFSET: 0x00902640
+GeneralFunction::Arg& GeneralFunction::Arg::operator=(const BSN::FourCC& value) {
+    this->FreeData();
+    this->m_type = TYPE_FOURCC;
+    value.ToString(this->m_fourCC, sizeof(this->m_fourCC));
     return *this;
 }
 
@@ -96,7 +104,7 @@ uint64_t GeneralFunction::Arg::ToUInt64() const {
     }
 }
 
-// OFFSET: 0x00627350
+// OFFSET: 0x00902100/0x14065A6D0
 GeneralFunction::Callback::~Callback() {
 }
 
@@ -108,7 +116,7 @@ void GeneralFunction::Callback::IncRef() const {
 
 // OFFSET: 0x00902040/0x14065A620
 void GeneralFunction::Callback::DecRef() const {
-    if (const_cast<Callback*>(this)->m_refCount-- == 1) {
+    if (--const_cast<Callback*>(this)->m_refCount == 0) {
         this->Destroy();
     }
 }
@@ -119,7 +127,7 @@ void GeneralFunction::SimpleCallback::Call(int32_t argc, const Arg* args) const 
     this->m_func(this->m_param, argc, args);
 }
 
-// OFFSET: #0x00532950
+// OFFSET: 0x00904350
 void GeneralFunction::SimpleCallback::Destroy() const {
     delete this;
 }

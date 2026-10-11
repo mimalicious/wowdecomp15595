@@ -46,7 +46,7 @@ BattlenetUI::EventCallback BattlenetUI::s_eventCallbacks[26] = {
 };
 
 // STATIC: 0x00D10B18
-BattlenetUI::PresenceCallback BattlenetUI::s_presenceCallbacks[BattlenetUI::NUM_PRESENCE_FIELDS] = {
+BattlenetUI::PresenceCallback BattlenetUI::s_presenceCallbacks[NUM_BN_PRESENCE_FIELDS] = {
     { 0x10002, BattlenetUI::OnlinePresenceChangedCB, 0 },
     { 0x10003, BattlenetUI::OnlineTimeChangedCB, 0 },
     { 0x10007, BattlenetUI::LastOnlineChangedCB, 0 },
@@ -501,7 +501,7 @@ int32_t BattlenetUI::BNGetToonInfoHelper(lua_State* L, uint32_t presenceId) {
     }
 
     {
-        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[PRESENCE_FIELD_REALM_ID].m_field);
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_REALM_ID].m_field);
 
         if (value.m_tag == 5) {
             lua_pushinteger(L, value.Value<uint32_t>());
@@ -511,7 +511,7 @@ int32_t BattlenetUI::BNGetToonInfoHelper(lua_State* L, uint32_t presenceId) {
     }
 
     {
-        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[PRESENCE_FIELD_FACTION].m_field);
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_FACTION].m_field);
 
         if (value.m_tag == 1) {
             lua_pushnumber(L, value.Value<uint8_t>());
@@ -653,7 +653,7 @@ bool BattlenetUI::AddToFriendList(uint32_t presenceId) {
         entry->m_sortSurname = "";
     }
 
-    Battlenet::Presence::FieldVal accountId = BattlenetAPI::GetPresenceValue(entry->m_presenceID, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_PROGRAM].m_field);
+    Battlenet::Presence::FieldVal accountId = BattlenetAPI::GetPresenceValue(entry->m_presenceID, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_ID].m_field);
     entry->m_accountId = accountId.m_tag == 5 ? accountId.Value<uint32_t>() : 0;
 
     return true;
@@ -1023,7 +1023,7 @@ void BattlenetUI::Uninit() {
         BattlenetUI::s_eventCallbacks[i].m_handle = 0;
     }
 
-    for (uint32_t i = 0; i < NUM_PRESENCE_FIELDS; i++) {
+    for (uint32_t i = 0; i < NUM_BN_PRESENCE_FIELDS; i++) {
         BattlenetAPI::UnregisterPresenceUpdateCallback(BattlenetUI::s_presenceCallbacks[i].m_handle);
         BattlenetUI::s_presenceCallbacks[i].m_handle = 0;
     }
@@ -1157,7 +1157,7 @@ void BattlenetUI::SavePrescenceID(uint32_t presenceId) {
     ACCOUNTIDCACHE* cache = BattlenetUI::GetAccountIDCache(presenceId);
 
     if (cache && !cache->m_accountId) {
-        Battlenet::Presence::FieldVal accountId = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_PROGRAM].m_field);
+        Battlenet::Presence::FieldVal accountId = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_ACCOUNT_ID].m_field);
 
         if (accountId.m_tag == 5) {
             cache->m_accountId = accountId.Value<uint32_t>();
@@ -1980,7 +1980,7 @@ int32_t BattlenetUI::BNGetFriendInfoHelper(lua_State* L, uint32_t index) {
     }
 
     {
-        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[PRESENCE_FIELD_FLAGS].m_field);
+        Battlenet::Presence::FieldVal value = BattlenetAPI::GetPresenceValue(presenceId, BattlenetUI::s_presenceCallbacks[BN_PRESENCE_FLAGS].m_field);
         uint64_t flags = value.m_tag == 7 ? value.Value<uint64_t>() : 0;
         lua_pushboolean(L, CGGameUI::s_canSendSoR && (flags & 1));
     }
@@ -2189,7 +2189,7 @@ void BattlenetUI::Init() {
         BattlenetUI::s_eventCallbacks[i].m_handle = BattlenetAPI::RegisterEvent(BattlenetUI::s_eventCallbacks[i].m_event, callback);
     }
 
-    for (uint32_t i = 0; i < NUM_PRESENCE_FIELDS; i++) {
+    for (uint32_t i = 0; i < NUM_BN_PRESENCE_FIELDS; i++) {
         GeneralFunction::SimpleCallback* callback = new (__FILE__, __LINE__) GeneralFunction::SimpleCallback(BattlenetUI::s_presenceCallbacks[i].m_func, NULL);
         BattlenetUI::s_presenceCallbacks[i].m_handle = BattlenetAPI::RegisterPresenceUpdateCallback(0, BattlenetUI::s_presenceCallbacks[i].m_field, callback);
     }

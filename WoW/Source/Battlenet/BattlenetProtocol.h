@@ -9,6 +9,10 @@
 #include "WoW/Source/Battlenet/BattlenetProtocolTypes.h"
 
 namespace Battlenet {
+namespace InviteSource {
+extern BSN::FourCC MISC;
+}
+
 namespace Program {
 extern BSN::FourCC WOW;
 }
@@ -49,62 +53,62 @@ class Protocol {
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Event::Header> {
-    static const uint32_t s_typeId = 3311;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Event::Creep::Invoke> {
-    static const uint32_t s_typeId = 1282;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Event::Larva::Invoke> {
-    static const uint32_t s_typeId = 1838;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Event::Update::Invoke> {
-    static const uint32_t s_typeId = 3158;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Chat::MemberList> {
-    static const uint32_t s_typeId = 545;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Presence::FieldVal> {
-    static const uint32_t s_typeId = 3675;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Presence::BlockList> {
-    static const uint32_t s_typeId = 3715;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Presence::FieldUpdate> {
-    static const uint32_t s_typeId = 3711;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Toon::FullName> {
-    static const uint32_t s_typeId = 412;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Friends::FriendsOfFriendList> {
-    static const uint32_t s_typeId = 3430;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Friends::FriendInviteContainer> {
-    static const uint32_t s_typeId = 3409;
+    static const uint32_t s_typeId;
 };
 
 template <>
 struct Protocol::TypeIdOf<Battlenet::Friends::FriendList> {
-    static const uint32_t s_typeId = 3417;
+    static const uint32_t s_typeId;
 };
 
 class ProtocolHard {

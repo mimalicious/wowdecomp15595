@@ -42,6 +42,7 @@ class Arg {
     Arg& operator=(int64_t value);
     Arg& operator=(uint64_t value);
     Arg& operator=(const char* value);
+    Arg& operator=(const BSN::FourCC& value);
     Arg& operator=(const BSN::EncodedObject* value);
     Arg& operator=(Callback* value);
     void FreeData();

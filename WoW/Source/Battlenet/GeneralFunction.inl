@@ -42,11 +42,12 @@ inline const char* GeneralFunction::Arg::ToString() const {
 
 // INLINED
 inline bool GeneralFunction::Arg::ToBool() const {
-    if (this->m_type == TYPE_BOOL) {
-        return this->m_bool;
+    switch (this->m_type) {
+        case TYPE_BOOL:
+            return this->m_bool;
+        default:
+            return static_cast<uint8_t>(this->ToUInt64()) != 0;
     }
-
-    return this->ToUInt64() != 0;
 }
 
 // INLINED

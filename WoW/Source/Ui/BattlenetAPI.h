@@ -14,7 +14,7 @@ uint16_t CreateChatConversation(const Battlenet::Toon::FullName* first, const Ba
 uint16_t DeclineFriendInvite(uint32_t presenceId);
 uint32_t GetAccountPresenceId(uint32_t presenceId);
 Battlenet::Presence::BlockList GetBlockList();
-Battlenet::Chat::MemberList GetChatMemberList(uint8_t channel);
+void GetChatMemberList(uint8_t channel, GeneralFunction::Callback* callback);
 int32_t GetChatChannelType(uint8_t channel);
 const char* GetErrorString(uint16_t error);
 const char* GetExactNameForPresenceId(uint32_t presenceId, bool full);
@@ -24,6 +24,7 @@ uint16_t GetFriendsOfFriend(uint32_t presenceId, GeneralFunction::Callback* call
 const char* GetNameForPresenceId(uint32_t presenceId, bool full);
 uint32_t GetNumChatMembers(uint8_t channel);
 uint32_t GetNumToons(uint32_t presenceId);
+uint32_t GetPresenceIDForAccount(uint32_t accountId);
 uint32_t GetPresenceIDForCurrentAccount();
 uint32_t GetPresenceIDForCurrentToon();
 uint32_t GetPresenceIDForToon(const Battlenet::Toon::FullName* toon);
@@ -49,8 +50,8 @@ uint16_t ReportPlayer(uint32_t presenceId, int32_t reason, const char* note);
 uint16_t SendChatConversationInvite(uint8_t channel, const Battlenet::Toon::FullName* toon, GeneralFunction::Callback* callback);
 uint16_t SendChatMessage(uint8_t channel, const char* message);
 uint16_t SendChatWhisper(uint32_t presenceId, const char* message);
-uint16_t SendRIDFriendInviteByEmail(const char* email, const char* note, GeneralFunction::Callback* callback);
-uint16_t SendRIDFriendInviteByPresenceId(uint32_t presenceId, const char* note, GeneralFunction::Callback* callback);
+uint16_t SendRIDFriendInviteByEmail(const char* email, const char* note, BSN::FourCC source, GeneralFunction::Callback* callback);
+uint16_t SendRIDFriendInviteByPresenceId(uint32_t presenceId, const char* note, BSN::FourCC source, GeneralFunction::Callback* callback);
 void SetAccountNameFormatString(const char* format);
 uint16_t SetFriendNote(uint32_t presenceId, const char* note);
 bool SetPresenceValue(uint32_t field, const Battlenet::Presence::FieldVal* value);

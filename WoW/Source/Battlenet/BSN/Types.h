@@ -194,7 +194,7 @@ BSN::String<N>::String(const char* source) {
     this->m_size = BSN::UTF8StringCopy(this->m_data, source, N, this->m_length);
 }
 
-// OFFSET: #0x00530FB0<127>
+// OFFSET: 0x009024C0<127>
 template <uint32_t N>
 BSN::String<N>& BSN::String<N>::operator=(const char* source) {
     this->m_size = BSN::UTF8StringCopy(this->m_data, source, N, this->m_length);
@@ -205,7 +205,7 @@ BSN::String<N>& BSN::String<N>::operator=(const char* source) {
 template <uint32_t N>
 BSN::String<N>& BSN::String<N>::operator+=(const char* source) {
     uint32_t length;
-    this->m_size += BSN::UTF8StringCopy(&this->m_data[this->m_size], source, N - this->m_length, length);
+    this->m_size += BSN::UTF8StringCopy(&this->m_data[this->m_length], source, N - this->m_size, length);
     this->m_length += length;
     return *this;
 }
