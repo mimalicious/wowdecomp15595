@@ -267,11 +267,32 @@ static void BuildTiles() {
     }
 }
 
+// OFFSET: 0x0040ADF0
+static bool OnCustomLoadScreen(ClientCustomLoadScreen* msg) {
+    int32_t spellID = msg->unk_0010;
+
+    if (spellID) {
+        for (uint32_t i = 0; i < 3; i++) {
+            const SpellEffectRec* effect = SpellGetEffect(spellID, i);
+
+            if (effect && effect->m_effect == 5) {
+                s_preparedSpellID = spellID;
+                s_preparedLoadingScreenID = effect->m_effectMiscValue;
+                s_preparedSplineID = effect->m_effectMiscValueB;
+                break;
+            }
+        }
+    }
+
+    return true;
+}
+
 // OFFSET: 0x0040AE40/0x14000D790
 void LoadingScreenInitialize() {
     s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
     s_pixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "UI");
     BuildTiles();
+    ClientCustomLoadScreen::s_handler = OnCustomLoadScreen;
 }
 
 // OFFSET: 0x0040DD70
@@ -1001,6 +1022,8 @@ void LoadingScreenShutdown() {
         g_theGxDevicePtr->ShaderRelease(s_pixelShader);
         s_pixelShader = NULL;
     }
+
+    ClientCustomLoadScreen::s_handler = NULL;
 }
 
 // OFFSET: 0x004097A0/0x14000BEA0

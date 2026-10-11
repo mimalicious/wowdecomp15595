@@ -2361,11 +2361,18 @@ void CMissile::UpdateStaticLists() {
     }
 }
 
+// OFFSET: 0x0058B780
+static bool OnMissileCancel(ClientMissileCancel* msg) {
+    CMissile::ClearInFlightMissiles(msg->unk_0014, *reinterpret_cast<WOWGUID*>(&msg->unk_0018), msg->unk_0010);
+    return true;
+}
+
 // OFFSET: 0x0058B850/0x1401F4E80
 void CMissile::Initialize() {
     void* pool = SMemAlloc(sizeof(TSObjectAllocPool<CMissile>), __FILE__, __LINE__, 0);
     CMissile::s_pool = pool ? new (pool) TSObjectAllocPool<CMissile>("CMissile", 64) : NULL;
     CSimpleScriptManager::RegisterCallback(CMissile::ScriptManagerCallback);
+    ClientMissileCancel::s_handler = OnMissileCancel;
 }
 
 // OFFSET: 0x0058B8E0

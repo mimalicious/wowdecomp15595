@@ -128,10 +128,6 @@ class CMovieStreamer {
     bool StreamFrame(bool decode, bool& skipped);
 };
 
-namespace ClientStreamingMovies {
-    extern uint32_t s_handler;
-}
-
 namespace MovieStreaming {
     extern MoviePreloadMap s_preloads;
     extern float s_progressBase;

@@ -12,6 +12,7 @@
 #include "Engine/Source/Services/Types.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "WoW/Source/LoadingScreen.h"
 #include "WoW/Source/Ui/GameUI.h"
 
@@ -21,12 +22,6 @@
 #define MOVIE_CHUNK_SKIPPED 0x20000000
 #define MOVIE_CHUNK_PREFETCHING 0x40000000
 #define MOVIE_CHUNK_LOCAL 0x80000000
-
-// STATIC: 0x00BA8468
-static uint32_t s_handlerKey = 0x47BF003B;
-
-// STATIC: 0x00E4D46C
-uint32_t ClientStreamingMovies::s_handler;
 
 // STATIC: 0x00CA331C
 MoviePreloadMap MovieStreaming::s_preloads;
@@ -1219,13 +1214,27 @@ bool MovieStreaming::IsMoviePlayable(int32_t movieID) {
 }
 
 // PROVEN: 37004c8c IDENTICAL/NONE
+// OFFSET: 0x00513A40
+static bool OnStreamingMoviesUpdate(ClientStreamingMoviesUpdate* msg) {
+    for (uint32_t i = 0; i < msg->unk_0010.m_count; i++) {
+        uint16_t movieID = msg->unk_0010.m_data[i];
+        int32_t fileDataID = MovieStreaming::FindBestMovieResolutionFileDataID(movieID, true);
+
+        if (!g_fileDataDB.GetRecord(fileDataID)) {
+            MovieStreaming::PreloadMovie(movieID);
+        }
+    }
+
+    return true;
+}
+
 // OFFSET: 0x00513AA0/0x14015E230
 void MovieStreaming::InitializeGame() {
-    ClientStreamingMovies::s_handler = s_handlerKey;
+    ClientStreamingMoviesUpdate::s_handler = OnStreamingMoviesUpdate;
 }
 
 // PROVEN: 8fa8d028 IDENTICAL/NONE
 // OFFSET: 0x00511A20
 void MovieStreaming::ShutdownGame() {
-    ClientStreamingMovies::s_handler = 0;
+    ClientStreamingMoviesUpdate::s_handler = NULL;
 }
