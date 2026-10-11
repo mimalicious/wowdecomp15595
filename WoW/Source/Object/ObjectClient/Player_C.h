@@ -128,9 +128,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void __stdcall AcceptResurrectRequest(int32_t accept);
     static void __stdcall AutoStoreLootItem(uint8_t slot);
     static void __stdcall BuyPetition(const WOWGUID& vendor, CGPetition* petition);
-    static int32_t s_turnInArenaCharter;
     void TurnInGuildCharter();
-    int32_t TurnInArenaCharter(int32_t turnIn);
     static void __stdcall ClearAFK(int32_t force);
     static void __stdcall ClearPartyAssignment(uint8_t assignment, WOWGUID guid);
     static void __stdcall CompleteQuest(const WOWGUID& questGiver, int32_t questId, int32_t fromScript);
@@ -586,7 +584,6 @@ int32_t Packet_SMSG_GUILD_EVENT(void* param, NETMESSAGE msgId, uint32_t time, CD
 int32_t Packet_MSG_SAVE_GUILD_EMBLEM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_TABARDVENDOR_ACTIVATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 void GuildCharterTurnInCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
-void ArenaCharterTurnInCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 int32_t Packet_Group_15(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_EMOTE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

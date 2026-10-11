@@ -155,7 +155,6 @@
 #include "WoW/Source/Ui/ArenaTeamInfo.h"
 #include "WoW/Source/Ui/GuildRegistrar.h"
 #include "WoW/Source/Ui/PetitionInfo.h"
-#include "WoW/Source/Ui/PetitionVendor.h"
 #include "WoW/Source/Ui/SpellBookFrame.h"
 #include "WoW/Source/Ui/TaxiMapFrame.h"
 #include "WoW/Source/Ui/Tutorial.h"
@@ -188,9 +187,6 @@ struct RestStateInfo {
     UIErrors m_error;
     uint32_t m_tutorial;
 };
-
-// STATIC: #0x00C9EB28
-int32_t CGPlayer_C::s_turnInArenaCharter;
 
 // STATIC: #0x00AD9C94
 static const UIErrors s_taxiReplyErrors[13] = {
@@ -2178,10 +2174,8 @@ int32_t CGPlayer_C::OnPetitionShowList(CDataStore* msg) {
 
     if ((unit->m_unit->m_unitNpcFlags & 0x40000) && (unit->m_unit->m_unitNpcFlags & 0x80000)) {
         CGGuildRegistrar::SetRegistrar(vendor, petitionList);
-        return 1;
     }
 
-    CGPetitionVendorInfo::ShowPetitionList(vendor, petitionList, count);
     return 1;
 }
 
@@ -8438,113 +8432,6 @@ void CGPlayer_C::TurnInGuildCharter() {
     }
 
     CGGameUI::DisplayError(ERR_NO_GUILD_CHARTER);
-}
-
-// OFFSET: #0x006DD630
-void ArenaCharterTurnInCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (!success) {
-        return;
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (player && player->TurnInArenaCharter(CGPlayer_C::s_turnInArenaCharter)) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_PETITION_VENDOR_UPDATE, NULL);
-    }
-}
-
-// OFFSET: #0x006DD680
-int32_t CGPlayer_C::TurnInArenaCharter(int32_t turnIn) {
-    int32_t found = 0;
-    CGItem_C* charter = NULL;
-    uint32_t teamSize = CGPetitionVendorInfo::m_arenaTeamSize;
-    uint32_t background = CGPetitionVendorInfo::m_arenaBackgroundColor;
-    uint32_t emblemStyle = CGPetitionVendorInfo::m_arenaEmblemStyle;
-    uint32_t emblemColor = CGPetitionVendorInfo::m_arenaEmblemColor;
-    uint32_t borderStyle = CGPetitionVendorInfo::m_arenaBorderStyle;
-    uint32_t borderColor = CGPetitionVendorInfo::m_arenaBorderColor;
-    CGPlayer_C::s_turnInArenaCharter = turnIn;
-
-    for (uint32_t i = 23; i <= 38 && !found; i++) {
-        WOWGUID guid = i < static_cast<uint32_t>(this->m_bag.m_numSlots) ? this->m_bag.m_slots[i] : WOWGUID();
-
-        if (!guid) {
-            continue;
-        }
-
-        CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
-        charter = item;
-
-        if (!item || !(item->GetItemStaticFlags(0) & 0x2000)) {
-            continue;
-        }
-
-        int32_t id = (item->GetItemStaticFlags(0) & 0x2000) ? item->m_item->m_itemFieldEnchantment[0].m_id : 0;
-        CGPetition* petition = g_petitionCache.GetRecord(id, guid, ArenaCharterTurnInCallback, NULL, false);
-
-        if (petition && petition->m_staticType == 1 && (!turnIn || petition->m_minSignatures == teamSize - 1)) {
-            found = 1;
-        }
-    }
-
-    for (uint32_t i = 19; i <= 22 && !found; i++) {
-        WOWGUID bagGuid = i < static_cast<uint32_t>(this->m_bag.m_numSlots) ? this->m_bag.m_slots[i] : WOWGUID();
-        CGItem_C* container = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(bagGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-        if (!container) {
-            continue;
-        }
-
-        for (uint32_t j = 0; j < static_cast<uint32_t>(container->GetBag()->m_numSlots); j++) {
-            CGBag_C* bag = container->GetBag();
-            WOWGUID guid = j < static_cast<uint32_t>(bag->m_numSlots) ? bag->m_slots[j] : WOWGUID();
-
-            if (!guid) {
-                continue;
-            }
-
-            CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-            if (!item) {
-                continue;
-            }
-
-            charter = item;
-
-            if (!(item->GetItemStaticFlags(0) & 0x2000)) {
-                continue;
-            }
-
-            int32_t id = (item->GetItemStaticFlags(0) & 0x2000) ? item->m_item->m_itemFieldEnchantment[0].m_id : 0;
-            CGPetition* petition = g_petitionCache.GetRecord(id, guid, ArenaCharterTurnInCallback, NULL, false);
-
-            if (petition && petition->m_staticType == 1 && (!turnIn || petition->m_minSignatures == teamSize - 1)) {
-                found = 1;
-                break;
-            }
-        }
-    }
-
-    if (!turnIn) {
-        return found;
-    }
-
-    if (!found) {
-        CGGameUI::DisplayError(ERR_NO_ARENA_CHARTER);
-        return 0;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_TURN_IN_PETITION));
-    msg.Put(charter->m_obj->m_guid.m_guid);
-    msg.Put(background);
-    msg.Put(emblemStyle);
-    msg.Put(emblemColor);
-    msg.Put(borderStyle);
-    msg.Put(borderColor);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    return 1;
 }
 
 // OFFSET: 0x00562D00
