@@ -2482,7 +2482,7 @@ void CGChat::TranslateMessage(uint32_t language, uint32_t skill, const char* tex
     }
 }
 
-// OFFSET: #0x00507880
+// OFFSET: 0x008F40E0
 void CGChat::JoinedChannel(uint32_t id, const char* name, uint32_t a3, uint8_t flags) {
     ChatChannel* channel = id ? CGChat::GetChannelByChatChannelID(id) : GetChannelByName(name);
 
@@ -2503,7 +2503,7 @@ void CGChat::JoinedChannel(uint32_t id, const char* name, uint32_t a3, uint8_t f
     CGChat::OnChannelsUpdated();
 }
 
-// OFFSET: #0x00507900
+// OFFSET: 0x008F4170
 void CGChat::LeftChannel(uint32_t id, const char* name) {
     ChatChannel* channel = id ? CGChat::GetChannelByChatChannelID(id) : GetChannelByName(name);
 
@@ -2860,18 +2860,28 @@ int32_t CGChat::OnChannelNotify(void* param, NETMESSAGE msgId, uint32_t time, CD
 
             type = CHAT_MSG_CHANNEL_NOTICE;
             ChatChannel* channel = zoneChannelID ? CGChat::GetChannelByChatChannelID(zoneChannelID) : GetChannelByName(channelName);
+            bool silent = false;
 
-            if (!channel || channel->m_unk9C) {
-                SStrCopy(text, "YOU_JOINED", sizeof(text));
-            } else {
+            if (channel && channel->m_joinPending) {
+                channel->m_joinPending = 0;
+                silent = true;
+            } else if (channel && !channel->m_unk9C) {
                 SStrCopy(text, "YOU_CHANGED", sizeof(text));
 
                 if (!s_activeDisplayChannelType && !SStrCmpUTF8I(channel->m_name, CGChat::s_activeDisplayChannelName, STORM_MAX_STR)) {
                     SetCurrentActiveDisplayChannel(NULL, 0);
                 }
+            } else {
+                SStrCopy(text, "YOU_JOINED", sizeof(text));
             }
 
             CGChat::JoinedChannel(zoneChannelID, channelName, channelFlags, flags);
+
+            if (silent) {
+                msg->m_read = msg->m_size;
+                return 1;
+            }
+
             break;
         }
 
@@ -3155,14 +3165,17 @@ int32_t CGChat::OnChannelNotify(void* param, NETMESSAGE msgId, uint32_t time, CD
 
             if (channel) {
                 channel->m_flags |= 0x80;
-                rebuild = 1;
-            }
-
-            if (rebuild) {
                 RebuildDisplayChannelList(1);
             }
 
+            msg->m_read = msg->m_size;
             return 1;
+        }
+
+        case 37: {
+            type = CHAT_MSG_CHANNEL_NOTICE;
+            SStrCopy(text, "TRIAL_RESTRICTED", sizeof(text));
+            break;
         }
     }
 
@@ -3173,20 +3186,21 @@ int32_t CGChat::OnChannelNotify(void* param, NETMESSAGE msgId, uint32_t time, CD
     params.m_targetGuid = targetGuid;
     CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(type), &params);
 
-    if (reset) {
-        CGChat::ResetChannel(zoneChannelID, channelName);
-    }
-
     if (notify == 2 && extra[0]) {
         ChatMessageParams params2;
         params2.m_channelName = channelName;
         CGChat::AddChatMessage(extra, static_cast<SLASH_COMMAND_ID>(type), &params2);
     }
 
+    if (reset) {
+        CGChat::ResetChannel(zoneChannelID, channelName);
+    }
+
     if (rebuild) {
         RebuildDisplayChannelList(1);
     }
 
+    msg->m_read = msg->m_size;
     return 1;
 }
 
@@ -5779,7 +5793,7 @@ int32_t CGChat::IsPaused() {
     return CGChat::m_paused;
 }
 
-// OFFSET: #0x00502960
+// OFFSET: 0x008EEA20
 ChatChannel::ChatChannel() {
     this->m_channelNumber = 0;
     this->m_name[0] = 0;
@@ -5787,10 +5801,15 @@ ChatChannel::ChatChannel() {
     this->m_flags = 0;
     this->m_zoneChannelID = 0;
     this->m_unk98 = 0;
-    this->m_unkA4 = 0;
-    this->m_unkA5 = 0;
     this->m_unk9C = 1;
     this->m_unkA0 = 1;
+    this->m_unkA4 = false;
+    this->m_unkA5 = 0;
+    memset(this->m_messageTimes, 0, sizeof(this->m_messageTimes));
+    this->m_messageTimeIndex = 0;
+    this->m_password[0] = 0;
+    this->m_unk1AC = false;
+    this->m_joinPending = 0;
 }
 
 // OFFSET: 0x008E5890/0x140613C00
