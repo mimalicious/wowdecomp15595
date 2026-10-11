@@ -474,6 +474,65 @@ void ClientAuthResponse::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006D7380
+bool ClientAuthResponse::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006CB520
+bool ClientAuthResponse::Read(CDataStore* msg, bool full) {
+    uint8_t bits = 0;
+    msg->Get(bits);
+
+    uint8_t value = bits << 1;
+    this->m_hasWaitInfo = (bits >> 7) != 0;
+
+    if (this->m_hasWaitInfo) {
+        this->m_freeCharacterMigration = (value >> 7) != 0;
+        value <<= 1;
+    }
+
+    this->m_hasSuccessInfo = value >> 7;
+
+    if (this->m_hasSuccessInfo) {
+        uint32_t billingTimeRemaining = 0;
+        msg->Get(billingTimeRemaining);
+        this->m_billingTimeRemaining = billingTimeRemaining;
+
+        uint8_t accountExpansion = 0;
+        msg->Get(accountExpansion);
+        this->m_accountExpansion = accountExpansion;
+
+        uint32_t timeRemaining = 0;
+        msg->Get(timeRemaining);
+        this->m_timeRemaining = timeRemaining;
+
+        uint8_t activeExpansion = 0;
+        msg->Get(activeExpansion);
+        this->m_activeExpansion = activeExpansion;
+
+        uint32_t billingTimeRested = 0;
+        msg->Get(billingTimeRested);
+        this->m_billingTimeRested = billingTimeRested;
+
+        uint8_t billingFlags = 0;
+        msg->Get(billingFlags);
+        this->m_billingFlags = billingFlags;
+    }
+
+    uint8_t result = 0;
+    msg->Get(result);
+    this->m_result = result;
+
+    if (this->m_hasWaitInfo) {
+        uint32_t waitCount = 0;
+        msg->Get(waitCount);
+        this->m_waitCount = waitCount;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B72D0/0x14036A040
 bool ClientAuthResponse::Handle() {
     if (!ClientAuthResponse::s_handler) {
@@ -810,6 +869,29 @@ void ClientGenerateRandomCharacterNameResult::Unpack(CDataStore* msg, bool full)
     this->m_name[length] = '\0';
 }
 
+// OFFSET: 0x006C60B0
+bool ClientGenerateRandomCharacterNameResult::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C4620
+bool ClientGenerateRandomCharacterNameResult::Read(CDataStore* msg, bool full) {
+    uint8_t value = 0;
+    msg->Get(value);
+    this->m_success = (value >> 7) != 0;
+
+    JamBitReader bits(msg);
+    bits.m_value = value << 1;
+    bits.m_bits = 1;
+
+    uint32_t length = bits.ReadBits<7>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = length;
+    msg->GetData(this->m_name, length);
+    this->m_name[length] = '\0';
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A4D80/0x140352C70
 bool ClientGenerateRandomCharacterNameResult::Handle() {
     if (!ClientGenerateRandomCharacterNameResult::s_handler) {
@@ -863,6 +945,41 @@ void ClientDBReply::Unpack(CDataStore* msg, bool full) {
         this->m_data.PutData(data, size);
         this->m_data.Finalize();
     }
+}
+
+// OFFSET: 0x006C05F0
+bool ClientDBReply::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BDA10
+bool ClientDBReply::Read(CDataStore* msg, bool full) {
+    uint32_t recordID = 0;
+    msg->Get(recordID);
+    this->m_recordID = recordID;
+
+    uint32_t tableHash = 0;
+    msg->Get(tableHash);
+    this->m_tableHash = tableHash;
+
+    uint32_t timestamp = 0;
+    msg->Get(timestamp);
+    this->m_timestamp = timestamp;
+
+    uint32_t size = 0;
+    msg->Get(size);
+
+    void* data;
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.PutData(data, size);
+        this->m_data.Finalize();
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006E1E10/0x1403A2620
@@ -934,6 +1051,28 @@ void ClientHotfixNotifyBlob::Unpack(CDataStore* msg, bool full) {
     uint32_t recordID = 0;
     msg->Get(recordID);
     this->m_recordID = recordID;
+}
+
+// OFFSET: 0x006CF050
+bool ClientHotfixNotifyBlob::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BF7C0
+bool ClientHotfixNotifyBlob::Read(CDataStore* msg, bool full) {
+    uint32_t tableHash = 0;
+    msg->Get(tableHash);
+    this->m_tableHash = tableHash;
+
+    uint32_t timestamp = 0;
+    msg->Get(timestamp);
+    this->m_timestamp = timestamp;
+
+    uint32_t recordID = 0;
+    msg->Get(recordID);
+    this->m_recordID = recordID;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BE8D0/0x140373690
@@ -1022,6 +1161,81 @@ void ClientGameObjectActivateAnimKit::Unpack(CDataStore* msg, bool full) {
     this->m_animKitID = animKitID;
 }
 
+// OFFSET: 0x006ADB80
+bool ClientGameObjectActivateAnimKit::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A7FF0
+bool ClientGameObjectActivateAnimKit::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+
+    this->m_objectGUID[5] = bits.ReadBit();
+    this->m_objectGUID[1] = bits.ReadBit();
+    this->m_objectGUID[0] = bits.ReadBit();
+    this->m_objectGUID[4] = bits.ReadBit();
+    this->m_objectGUID[7] = bits.ReadBit();
+    this->m_objectGUID[2] = bits.ReadBit();
+    this->m_objectGUID[3] = bits.ReadBit();
+    this->m_objectGUID[6] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_objectGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[5] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[1] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[0] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[3] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[4] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[6] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[2] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[7] ^= byteValue;
+    }
+
+    uint32_t animKitID = 0;
+    msg->Get(animKitID);
+    this->m_animKitID = animKitID;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B2750/0x140363E60
 ClientMapObjEvents::ClientMapObjEvents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
@@ -1058,6 +1272,33 @@ void ClientMapObjEvents::Unpack(CDataStore* msg, bool full) {
         this->m_data.PutData(data, size);
         this->m_data.Finalize();
     }
+}
+
+// OFFSET: 0x006C50E0
+bool ClientMapObjEvents::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BCA30
+bool ClientMapObjEvents::Read(CDataStore* msg, bool full) {
+    uint32_t uniqueID = 0;
+    msg->Get(uniqueID);
+    this->m_uniqueID = uniqueID;
+
+    uint32_t size = 0;
+    msg->Get(size);
+
+    void* data;
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.PutData(data, size);
+        this->m_data.Finalize();
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A9870/0x140358BD0
@@ -1133,6 +1374,43 @@ void ClientTransferPending::Unpack(CDataStore* msg, bool full) {
     this->m_mapID = mapID;
 }
 
+// OFFSET: 0x006D1EF0
+bool ClientTransferPending::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BBB00
+bool ClientTransferPending::Read(CDataStore* msg, bool full) {
+    uint8_t bits = 0;
+    msg->Get(bits);
+
+    uint8_t value = bits << 1;
+    this->m_hasTransferSpellID = (bits >> 7) != 0;
+    this->m_hasShip = value >> 7;
+
+    if (this->m_hasShip) {
+        uint32_t shipOriginMapID = 0;
+        msg->Get(shipOriginMapID);
+        this->m_shipOriginMapID = shipOriginMapID;
+
+        uint32_t shipID = 0;
+        msg->Get(shipID);
+        this->m_shipID = shipID;
+    }
+
+    if (this->m_hasTransferSpellID) {
+        uint32_t transferSpellID = 0;
+        msg->Get(transferSpellID);
+        this->m_transferSpellID = transferSpellID;
+    }
+
+    uint32_t mapID = 0;
+    msg->Get(mapID);
+    this->m_mapID = mapID;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B05D0/0x140361340
 bool ClientMessageBox::Handle() {
     if (!ClientMessageBox::s_handler) {
@@ -1180,6 +1458,36 @@ void ClientNewWorld::Unpack(CDataStore* msg, bool full) {
     float z = 0.0f;
     msg->Get(z);
     this->m_position.z = z;
+}
+
+// OFFSET: 0x006D7300
+bool ClientNewWorld::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C8360
+bool ClientNewWorld::Read(CDataStore* msg, bool full) {
+    float x = 0.0f;
+    msg->Get(x);
+    this->m_position.x = x;
+
+    float facing = 0.0f;
+    msg->Get(facing);
+    this->m_facing = facing;
+
+    float y = 0.0f;
+    msg->Get(y);
+    this->m_position.y = y;
+
+    uint32_t mapID = 0;
+    msg->Get(mapID);
+    this->m_mapID = mapID;
+
+    float z = 0.0f;
+    msg->Get(z);
+    this->m_position.z = z;
+
+    return msg->IsRead() != 0;
 }
 
 // PROVEN: 48018d85 IDENTICAL/NONE
@@ -1883,6 +2191,43 @@ void ClientSetCurrency::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006BF180
+bool ClientSetCurrency::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B9470
+bool ClientSetCurrency::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_hasWeeklyQuantity = bits.ReadBit() != 0;
+    this->m_hasTrackedQuantity = bits.ReadBit() != 0;
+    this->m_suppressChatLog = bits.ReadBit() != 0;
+
+    uint32_t value;
+
+    if (this->m_hasTrackedQuantity) {
+        value = 0;
+        msg->Get(value);
+        this->m_trackedQuantity = value;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_quantity = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_type = value;
+
+    if (this->m_hasWeeklyQuantity) {
+        value = 0;
+        msg->Get(value);
+        this->m_weeklyQuantity = value;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006BFD40/0x140374F80
 bool ClientSetCurrency::Handle() {
     if (!ClientSetCurrency::s_handler) {
@@ -1929,6 +2274,24 @@ void ClientUpdateCurrencyWeekLimit::Unpack(CDataStore* msg, bool full) {
     value = 0;
     msg->Get(value);
     this->m_type = value;
+}
+
+// OFFSET: 0x006C8450
+bool ClientUpdateCurrencyWeekLimit::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B7A90
+bool ClientUpdateCurrencyWeekLimit::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_weekCap = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_type = value;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A6E40/0x1403557A0
@@ -2109,6 +2472,32 @@ void ClientPetSlotUpdated::Unpack(CDataStore* msg, bool full) {
     this->m_prevSlot = value;
 }
 
+// OFFSET: 0x006CAB10
+bool ClientPetSlotUpdated::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C47A0
+bool ClientPetSlotUpdated::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_newSlot = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_prevPetNumber = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_petNumber = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_prevSlot = value;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A92A0/0x140358420
 bool ClientPetSlotUpdated::Handle() {
     if (!ClientPetSlotUpdated::s_handler) {
@@ -2154,6 +2543,42 @@ void ClientPetAdded::Unpack(CDataStore* msg, bool full) {
     *reinterpret_cast<uint32_t*>(this->m_name) = length;
     msg->GetData(this->m_name, length);
     this->m_name[length] = 0;
+}
+
+// OFFSET: 0x006ADFB0
+bool ClientPetAdded::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A98B0
+bool ClientPetAdded::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_level = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_slot = value;
+
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_flags = byteValue;
+
+    value = 0;
+    msg->Get(value);
+    this->m_creatureID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_petNumber = value;
+
+    JamBitReader bits(msg);
+    uint32_t length = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = length;
+    msg->GetData(this->m_name, length);
+    this->m_name[length] = 0;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B6D40/0x140369940
@@ -2205,6 +2630,26 @@ void ClientCurrencyLootRestored::Unpack(CDataStore* msg, bool full) {
     value = 0;
     msg->Get(value);
     this->m_currencyID = value;
+}
+
+// OFFSET: 0x006B2E40
+bool ClientCurrencyLootRestored::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A2140
+bool ClientCurrencyLootRestored::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_quantity = value;
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_lootListID = byteValue;
+    value = 0;
+    msg->Get(value);
+    this->m_currencyID = value;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B06E0/0x1403614B0
@@ -2492,6 +2937,120 @@ void ClientTradeStatus::Unpack(CDataStore* msg, bool full) {
         msg->Get(intValue);
         this->m_id = intValue;
     }
+}
+
+// OFFSET: 0x006CAB20
+bool ClientTradeStatus::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C61B0
+bool ClientTradeStatus::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_partnerIsSameBnetAccount = bits.ReadBit() != 0;
+    this->m_status = bits.ReadBits<5>();
+
+    if (this->m_status == 12) {
+        this->m_partner[2] = bits.ReadBit();
+        this->m_partner[4] = bits.ReadBit();
+        this->m_partner[6] = bits.ReadBit();
+        this->m_partner[0] = bits.ReadBit();
+        this->m_partner[1] = bits.ReadBit();
+        this->m_partner[3] = bits.ReadBit();
+        this->m_partner[7] = bits.ReadBit();
+        this->m_partner[5] = bits.ReadBit();
+    }
+
+    if (this->m_status == 31) {
+        this->m_failureForYou = bits.ReadBit() != 0;
+    }
+
+    uint8_t byteValue;
+    uint32_t intValue;
+
+    if (this->m_status == 31) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_itemID = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_bagResult = intValue;
+    }
+
+    if (this->m_status == 12) {
+        if (this->m_partner[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[4] ^= byteValue;
+        }
+
+        if (this->m_partner[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[1] ^= byteValue;
+        }
+
+        if (this->m_partner[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[2] ^= byteValue;
+        }
+
+        if (this->m_partner[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[3] ^= byteValue;
+        }
+
+        if (this->m_partner[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[0] ^= byteValue;
+        }
+
+        if (this->m_partner[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[7] ^= byteValue;
+        }
+
+        if (this->m_partner[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[6] ^= byteValue;
+        }
+
+        if (this->m_partner[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[5] ^= byteValue;
+        }
+    }
+
+    if (this->m_status == 24 || this->m_status == 19) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_currencyQuantity = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_currencyType = intValue;
+    }
+
+    if (this->m_status == 2 || this->m_status == 26) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_tradeSlot = byteValue;
+    }
+
+    if (this->m_status == 0) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_id = intValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006C08D0/0x140375C50
@@ -3350,6 +3909,174 @@ void ClientGuildNews::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006F6310
+bool ClientGuildNews::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006F56E0
+bool ClientGuildNews::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+    uint32_t intValue;
+
+    JamBitReader bits(msg);
+    this->m_newsEvents.SetCount(bits.ReadBits<21>());
+
+    for (uint32_t i = 0; i < this->m_newsEvents.Count(); i++) {
+        JamGuildNewsEvent& news = this->m_newsEvents[i];
+        news.m_memberList.SetCount(bits.ReadBits<26>());
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[7] = bits.ReadBit();
+
+        for (uint32_t j = 0; j < news.m_memberList.Count(); j++) {
+            uint8_t* member = reinterpret_cast<uint8_t*>(&news.m_memberList[j]);
+            member[7] = bits.ReadBit();
+            member[1] = bits.ReadBit();
+            member[5] = bits.ReadBit();
+            member[3] = bits.ReadBit();
+            member[4] = bits.ReadBit();
+            member[6] = bits.ReadBit();
+            member[0] = bits.ReadBit();
+            member[2] = bits.ReadBit();
+        }
+
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[0] = bits.ReadBit();
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[6] = bits.ReadBit();
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[5] = bits.ReadBit();
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[4] = bits.ReadBit();
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[3] = bits.ReadBit();
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[1] = bits.ReadBit();
+        reinterpret_cast<uint8_t*>(&news.m_memberGUID)[2] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_newsEvents.Count(); i++) {
+        JamGuildNewsEvent& news = this->m_newsEvents[i];
+
+        for (uint32_t j = 0; j < news.m_memberList.Count(); j++) {
+            uint8_t* member = reinterpret_cast<uint8_t*>(&news.m_memberList[j]);
+
+            if (member[0]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[0] ^= byteValue;
+            }
+
+            if (member[1]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[1] ^= byteValue;
+            }
+
+            if (member[4]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[4] ^= byteValue;
+            }
+
+            if (member[7]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[7] ^= byteValue;
+            }
+
+            if (member[5]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[5] ^= byteValue;
+            }
+
+            if (member[6]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[6] ^= byteValue;
+            }
+
+            if (member[3]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[3] ^= byteValue;
+            }
+
+            if (member[2]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                member[2] ^= byteValue;
+            }
+        }
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[5] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        news.m_flags = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        news.m_data[0] = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        news.m_data[1] = intValue;
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[7] ^= byteValue;
+        }
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[6] ^= byteValue;
+        }
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[2] ^= byteValue;
+        }
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[3] ^= byteValue;
+        }
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[0] ^= byteValue;
+        }
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[4] ^= byteValue;
+        }
+
+        if (reinterpret_cast<uint8_t*>(&news.m_memberGUID)[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            reinterpret_cast<uint8_t*>(&news.m_memberGUID)[1] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        news.m_id = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        news.m_type = intValue;
+
+        *msg >> news.m_date;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AE160/0x14035E710
 bool ClientGuildNews::Handle() {
     if (!ClientGuildNews::s_handler) {
@@ -3375,6 +4102,17 @@ void ClientGuildNewsDeleted::Unpack(CDataStore* msg, bool full) {
     intValue = 0;
     msg->Get(intValue);
     this->m_newsID = intValue;
+}
+
+// OFFSET: 0x006CDE50
+bool ClientGuildNewsDeleted::Get(CDataStore* msg, bool full) {
+    uint32_t intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_newsID = intValue;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B47E0/0x140366800
@@ -3404,6 +4142,17 @@ void ClientGuildReputationWeeklyCap::Unpack(CDataStore* msg, bool full) {
     this->m_repToCap = intValue;
 }
 
+// OFFSET: 0x006CDE50
+bool ClientGuildReputationWeeklyCap::Get(CDataStore* msg, bool full) {
+    uint32_t intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_repToCap = intValue;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B3B10/0x140365750
 bool ClientGuildReputationWeeklyCap::Handle() {
     if (!ClientGuildReputationWeeklyCap::s_handler) {
@@ -3429,6 +4178,17 @@ void ClientGuildXPEarned::Unpack(CDataStore* msg, bool full) {
     longValue = 0;
     msg->Get(longValue);
     this->m_xp = longValue;
+}
+
+// OFFSET: 0x006C3F80
+bool ClientGuildXPEarned::Get(CDataStore* msg, bool full) {
+    uint64_t longValue;
+
+    longValue = 0;
+    msg->Get(longValue);
+    this->m_xp = longValue;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BC8A0/0x140370D80
@@ -3458,6 +4218,17 @@ void ClientGuildBankMoneyWithdrawn::Unpack(CDataStore* msg, bool full) {
     this->m_remainingWithdrawMoney = longValue;
 }
 
+// OFFSET: 0x006C3F80
+bool ClientGuildBankMoneyWithdrawn::Get(CDataStore* msg, bool full) {
+    uint64_t longValue;
+
+    longValue = 0;
+    msg->Get(longValue);
+    this->m_remainingWithdrawMoney = longValue;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B6060/0x1403686D0
 bool ClientGuildBankMoneyWithdrawn::Handle() {
     if (!ClientGuildBankMoneyWithdrawn::s_handler) {
@@ -3485,6 +4256,17 @@ void ClientGuildChangeNameResult::Unpack(CDataStore* msg, bool full) {
     this->m_success = byteValue;
 }
 
+// OFFSET: 0x006C9980
+bool ClientGuildChangeNameResult::Get(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_success = byteValue;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B93B0/0x14036C950
 bool ClientGuildChangeNameResult::Handle() {
     if (!ClientGuildChangeNameResult::s_handler) {
@@ -3510,6 +4292,17 @@ void ClientGuildFlaggedForRename::Unpack(CDataStore* msg, bool full) {
     byteValue = 0;
     msg->Get(byteValue);
     this->m_flagSet = byteValue;
+}
+
+// OFFSET: 0x006C9980
+bool ClientGuildFlaggedForRename::Get(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_flagSet = byteValue;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B3C50/0x140365900
@@ -3662,6 +4455,83 @@ void ClientGuildMemberUpdateNote::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->m_memberGUID[4] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006B0430
+bool ClientGuildMemberUpdateNote::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AC300
+bool ClientGuildMemberUpdateNote::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+    uint32_t length;
+
+    JamBitReader bits(msg);
+    this->m_memberGUID[7] = bits.ReadBit();
+    this->m_memberGUID[2] = bits.ReadBit();
+    this->m_memberGUID[3] = bits.ReadBit();
+    this->m_memberGUID[5] = bits.ReadBit();
+    this->m_memberGUID[0] = bits.ReadBit();
+    this->m_memberGUID[6] = bits.ReadBit();
+    this->m_memberGUID[4] = bits.ReadBit();
+    this->m_isPublic = bits.ReadBit() != 0;
+    *reinterpret_cast<uint32_t*>(this->m_note) = bits.ReadBits<8>();
+    this->m_memberGUID[1] = bits.ReadBit();
+
+    if (this->m_memberGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[3] ^= byteValue;
+    }
+
+    if (this->m_memberGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[0] ^= byteValue;
+    }
+
+    if (this->m_memberGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[2] ^= byteValue;
+    }
+
+    if (this->m_memberGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[5] ^= byteValue;
+    }
+
+    length = *reinterpret_cast<uint32_t*>(this->m_note);
+    msg->GetData(this->m_note, length);
+    this->m_note[length] = 0;
+
+    if (this->m_memberGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[6] ^= byteValue;
+    }
+
+    if (this->m_memberGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[7] ^= byteValue;
+    }
+
+    if (this->m_memberGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[1] ^= byteValue;
+    }
+
+    if (this->m_memberGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_memberGUID[4] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A5610/0x1403533F0
@@ -3842,6 +4712,173 @@ void ClientGuildInvite::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006CF290
+bool ClientGuildInvite::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C79B0
+bool ClientGuildInvite::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+    uint32_t intValue;
+    uint32_t length;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_guildLevel = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_achievementPoints = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_borderColor = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_emblemStyle = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_background = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_emblemColor = intValue;
+
+    JamBitReader bits(msg);
+    this->m_guildGUID[3] = bits.ReadBit();
+    this->m_guildGUID[2] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->m_oldGuildName) = bits.ReadBits<8>();
+    this->m_guildGUID[1] = bits.ReadBit();
+    this->m_oldGuildGUID[6] = bits.ReadBit();
+    this->m_oldGuildGUID[4] = bits.ReadBit();
+    this->m_oldGuildGUID[1] = bits.ReadBit();
+    this->m_oldGuildGUID[5] = bits.ReadBit();
+    this->m_oldGuildGUID[7] = bits.ReadBit();
+    this->m_oldGuildGUID[2] = bits.ReadBit();
+    this->m_guildGUID[7] = bits.ReadBit();
+    this->m_guildGUID[0] = bits.ReadBit();
+    this->m_guildGUID[6] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->m_guildName) = bits.ReadBits<8>();
+    this->m_oldGuildGUID[3] = bits.ReadBit();
+    this->m_oldGuildGUID[0] = bits.ReadBit();
+    this->m_guildGUID[5] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->m_inviterName) = bits.ReadBits<7>();
+    this->m_guildGUID[4] = bits.ReadBit();
+
+    if (this->m_guildGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[1] ^= byteValue;
+    }
+
+    if (this->m_oldGuildGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[3] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[6] ^= byteValue;
+    }
+
+    if (this->m_oldGuildGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[2] ^= byteValue;
+    }
+
+    if (this->m_oldGuildGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[1] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[0] ^= byteValue;
+    }
+
+    length = *reinterpret_cast<uint32_t*>(this->m_oldGuildName);
+    msg->GetData(this->m_oldGuildName, length);
+    this->m_oldGuildName[length] = 0;
+
+    if (this->m_guildGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[7] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[2] ^= byteValue;
+    }
+
+    length = *reinterpret_cast<uint32_t*>(this->m_inviterName);
+    msg->GetData(this->m_inviterName, length);
+    this->m_inviterName[length] = 0;
+
+    if (this->m_oldGuildGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[7] ^= byteValue;
+    }
+
+    if (this->m_oldGuildGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[6] ^= byteValue;
+    }
+
+    if (this->m_oldGuildGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[5] ^= byteValue;
+    }
+
+    if (this->m_oldGuildGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[0] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[4] ^= byteValue;
+    }
+
+    length = *reinterpret_cast<uint32_t*>(this->m_guildName);
+    msg->GetData(this->m_guildName, length);
+    this->m_guildName[length] = 0;
+
+    if (this->m_guildGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[5] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[3] ^= byteValue;
+    }
+
+    if (this->m_oldGuildGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_oldGuildGUID[4] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006BEEB0/0x140373E20
 bool ClientGuildInvite::Handle() {
     if (!ClientGuildInvite::s_handler) {
@@ -3879,6 +4916,34 @@ void ClientGuildPartyState::Unpack(CDataStore* msg, bool full) {
     intValue = 0;
     msg->Get(intValue);
     this->m_numGuildGroupRequired = intValue;
+}
+
+// OFFSET: 0x006CF340
+bool ClientGuildPartyState::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C4CC0
+bool ClientGuildPartyState::Read(CDataStore* msg, bool full) {
+    uint32_t intValue;
+    float floatValue;
+
+    JamBitReader bits(msg);
+    this->m_inGuildParty = bits.ReadBit() != 0;
+
+    floatValue = 0.0f;
+    msg->Get(floatValue);
+    this->m_guildXPEarnedMult = floatValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_numGuildGroupMembers = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_numGuildGroupRequired = intValue;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006C07C0/0x140375B00
@@ -3963,6 +5028,76 @@ void ClientGuildReputationReactionChanged::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006CAD50
+bool ClientGuildReputationReactionChanged::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B3050
+bool ClientGuildReputationReactionChanged::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    JamBitReader bits(msg);
+    this->m_guid[1] = bits.ReadBit();
+    this->m_guid[6] = bits.ReadBit();
+    this->m_guid[2] = bits.ReadBit();
+    this->m_guid[4] = bits.ReadBit();
+    this->m_guid[0] = bits.ReadBit();
+    this->m_guid[3] = bits.ReadBit();
+    this->m_guid[7] = bits.ReadBit();
+    this->m_guid[5] = bits.ReadBit();
+
+    if (this->m_guid[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[4] ^= byteValue;
+    }
+
+    if (this->m_guid[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[6] ^= byteValue;
+    }
+
+    if (this->m_guid[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[5] ^= byteValue;
+    }
+
+    if (this->m_guid[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[7] ^= byteValue;
+    }
+
+    if (this->m_guid[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[2] ^= byteValue;
+    }
+
+    if (this->m_guid[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[0] ^= byteValue;
+    }
+
+    if (this->m_guid[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[3] ^= byteValue;
+    }
+
+    if (this->m_guid[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guid[1] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006BC180/0x140370470
 bool ClientGuildReputationReactionChanged::Handle() {
     if (!ClientGuildReputationReactionChanged::s_handler) {
@@ -4017,6 +5152,48 @@ void ClientGuildChallengeUpdate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006C6100
+bool ClientGuildChallengeUpdate::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B9530
+bool ClientGuildChallengeUpdate::Read(CDataStore* msg, bool full) {
+    uint32_t intValue;
+
+    for (uint32_t i = 0; i < 4; i++) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_challengeGoldReward[i] = intValue;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_challengeXPReward[i] = intValue;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_challengeMaxCount[i] = intValue;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_challengeMaxLevelGoldReward[i] = intValue;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_challengeCurrentCount[i] = intValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006ADB30/0x14035DF40
 bool ClientGuildChallengeUpdate::Handle() {
     if (!ClientGuildChallengeUpdate::s_handler) {
@@ -4058,6 +5235,38 @@ void ClientGuildChallengeCompleted::Unpack(CDataStore* msg, bool full) {
     intValue = 0;
     msg->Get(intValue);
     this->m_maxCount = intValue;
+}
+
+// OFFSET: 0x006BE870
+bool ClientGuildChallengeCompleted::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B7870
+bool ClientGuildChallengeCompleted::Read(CDataStore* msg, bool full) {
+    uint32_t intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_challengeType = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_goldAwarded = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_currentCount = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_xpAwarded = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_maxCount = intValue;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A8CB0/0x140357C90
@@ -4140,6 +5349,76 @@ void ClientGuildReset::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->m_guildGUID[6] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006C3E00
+bool ClientGuildReset::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A9C10
+bool ClientGuildReset::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    JamBitReader bits(msg);
+    this->m_guildGUID[4] = bits.ReadBit();
+    this->m_guildGUID[1] = bits.ReadBit();
+    this->m_guildGUID[3] = bits.ReadBit();
+    this->m_guildGUID[6] = bits.ReadBit();
+    this->m_guildGUID[5] = bits.ReadBit();
+    this->m_guildGUID[7] = bits.ReadBit();
+    this->m_guildGUID[0] = bits.ReadBit();
+    this->m_guildGUID[2] = bits.ReadBit();
+
+    if (this->m_guildGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[5] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[7] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[1] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[3] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[4] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[2] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[0] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[6] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A3230/0x1403509C0
@@ -4229,6 +5508,82 @@ void ClientGuildMoveComplete::Unpack(CDataStore* msg, bool full) {
     this->m_guildName[length] = 0;
 }
 
+// OFFSET: 0x006C9AC0
+bool ClientGuildMoveComplete::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C8480
+bool ClientGuildMoveComplete::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+    uint32_t length;
+
+    JamBitReader bits(msg);
+    this->m_guildGUID[7] = bits.ReadBit();
+    this->m_guildGUID[3] = bits.ReadBit();
+    this->m_guildGUID[5] = bits.ReadBit();
+    this->m_guildGUID[2] = bits.ReadBit();
+    this->m_guildGUID[1] = bits.ReadBit();
+    this->m_guildGUID[4] = bits.ReadBit();
+    this->m_guildGUID[6] = bits.ReadBit();
+    this->m_guildGUID[0] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->m_guildName) = bits.ReadBits<9>();
+
+    if (this->m_guildGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[7] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[1] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[0] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[5] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[3] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[6] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[4] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[2] ^= byteValue;
+    }
+
+    length = *reinterpret_cast<uint32_t*>(this->m_guildName);
+    msg->GetData(this->m_guildName, length);
+    this->m_guildName[length] = 0;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006ADB90/0x14035DFB0
 bool ClientGuildMoveComplete::Handle() {
     if (!ClientGuildMoveComplete::s_handler) {
@@ -4309,6 +5664,76 @@ void ClientGuildNameChanged::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->m_guildGUID[3] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006B74C0
+bool ClientGuildNameChanged::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A5970
+bool ClientGuildNameChanged::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    JamBitReader bits(msg);
+    this->m_guildGUID[6] = bits.ReadBit();
+    this->m_guildGUID[2] = bits.ReadBit();
+    this->m_guildGUID[0] = bits.ReadBit();
+    this->m_guildGUID[5] = bits.ReadBit();
+    this->m_guildGUID[4] = bits.ReadBit();
+    this->m_guildGUID[7] = bits.ReadBit();
+    this->m_guildGUID[3] = bits.ReadBit();
+    this->m_guildGUID[1] = bits.ReadBit();
+
+    if (this->m_guildGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[0] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[1] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[6] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[4] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[5] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[2] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[7] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[3] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B6D80/0x1403699A0
@@ -4396,6 +5821,82 @@ void ClientGuildMoveStarting::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->m_guildGUID[5] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006C09A0
+bool ClientGuildMoveStarting::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AC570
+bool ClientGuildMoveStarting::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+    uint32_t length;
+
+    JamBitReader bits(msg);
+    this->m_guildGUID[5] = bits.ReadBit();
+    this->m_guildGUID[4] = bits.ReadBit();
+    this->m_guildGUID[0] = bits.ReadBit();
+    this->m_guildGUID[6] = bits.ReadBit();
+    this->m_guildGUID[3] = bits.ReadBit();
+    this->m_guildGUID[1] = bits.ReadBit();
+    this->m_guildGUID[7] = bits.ReadBit();
+    this->m_guildGUID[2] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->m_guildName) = bits.ReadBits<8>();
+
+    if (this->m_guildGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[3] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[2] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[7] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[1] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[0] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[6] ^= byteValue;
+    }
+
+    length = *reinterpret_cast<uint32_t*>(this->m_guildName);
+    msg->GetData(this->m_guildName, length);
+    this->m_guildName[length] = 0;
+
+    if (this->m_guildGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[4] ^= byteValue;
+    }
+
+    if (this->m_guildGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_guildGUID[5] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006AC860/0x14035C710
@@ -4927,6 +6428,30 @@ void ClientGuildBankTextQueryResult::Unpack(CDataStore* msg, bool full) {
     this->m_text[length] = 0;
 }
 
+// OFFSET: 0x006D90C0
+bool ClientGuildBankTextQueryResult::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006D45D0
+bool ClientGuildBankTextQueryResult::Read(CDataStore* msg, bool full) {
+    uint32_t intValue;
+    uint32_t length;
+
+    JamBitReader bits(msg);
+    *reinterpret_cast<uint32_t*>(this->m_text) = bits.ReadBits<14>();
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_tab = intValue;
+
+    length = *reinterpret_cast<uint32_t*>(this->m_text);
+    msg->GetData(this->m_text, length);
+    this->m_text[length] = 0;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B4220/0x140366080
 bool ClientGuildBankTextQueryResult::Handle() {
     if (!ClientGuildBankTextQueryResult::s_handler) {
@@ -5007,6 +6532,77 @@ void ClientMoveSetActiveMover::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->m_moverGUID[4] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006CAB60
+bool ClientMoveSetActiveMover::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B3FA0
+bool ClientMoveSetActiveMover::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+
+    this->m_moverGUID[5] = bits.ReadBit();
+    this->m_moverGUID[7] = bits.ReadBit();
+    this->m_moverGUID[3] = bits.ReadBit();
+    this->m_moverGUID[6] = bits.ReadBit();
+    this->m_moverGUID[0] = bits.ReadBit();
+    this->m_moverGUID[4] = bits.ReadBit();
+    this->m_moverGUID[1] = bits.ReadBit();
+    this->m_moverGUID[2] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_moverGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[6] ^= byteValue;
+    }
+
+    if (this->m_moverGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[2] ^= byteValue;
+    }
+
+    if (this->m_moverGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[3] ^= byteValue;
+    }
+
+    if (this->m_moverGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[0] ^= byteValue;
+    }
+
+    if (this->m_moverGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[5] ^= byteValue;
+    }
+
+    if (this->m_moverGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[7] ^= byteValue;
+    }
+
+    if (this->m_moverGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[1] ^= byteValue;
+    }
+
+    if (this->m_moverGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_moverGUID[4] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B2A30/0x140364170
@@ -5103,6 +6699,54 @@ void ClientWorldServerInfo::Unpack(CDataStore* msg, bool full) {
     this->m_difficultyID = value;
 }
 
+// OFFSET: 0x006C7950
+bool ClientWorldServerInfo::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B4260
+bool ClientWorldServerInfo::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+
+    this->m_hasRestrictedLevel = bits.ReadBit() != 0;
+    this->m_hasRestrictedMoney = bits.ReadBit() != 0;
+    this->m_hasIneligibleForLootMask = bits.ReadBit() != 0;
+
+    uint32_t value;
+
+    if (this->m_hasIneligibleForLootMask) {
+        value = 0;
+        msg->Get(value);
+        this->m_ineligibleForLootMask = value;
+    }
+
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_isTournamentRealm = byteValue;
+
+    if (this->m_hasRestrictedMoney) {
+        value = 0;
+        msg->Get(value);
+        this->m_restrictedMoney = value;
+    }
+
+    if (this->m_hasRestrictedLevel) {
+        value = 0;
+        msg->Get(value);
+        this->m_restrictedLevel = value;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_weeklyReset = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_difficultyID = value;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006BF840/0x1403749E0
 bool ClientWorldServerInfo::Handle() {
     if (!ClientWorldServerInfo::s_handler) {
@@ -5132,6 +6776,26 @@ void ClientUpdateActionButtons::Unpack(CDataStore* msg, bool full) {
     uint8_t byteValue = 0;
     msg->Get(byteValue);
     this->m_reason = byteValue;
+}
+
+// OFFSET: 0x006BF190
+bool ClientUpdateActionButtons::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AE760
+bool ClientUpdateActionButtons::Read(CDataStore* msg, bool full) {
+    for (uint32_t i = 0; i < 144; i++) {
+        int32_t value = 0;
+        msg->Get(value);
+        this->m_actionButtons[i] = value;
+    }
+
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_reason = byteValue;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A9220/0x140358360
@@ -5235,6 +6899,76 @@ void ClientFeatureSystemStatus::Unpack(CDataStore* msg, bool full) {
         msg->Get(alert);
         this->m_sessionAlertDisplayTime = alert;
     }
+}
+
+// OFFSET: 0x006D9600
+bool ClientFeatureSystemStatus::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006D5800
+bool ClientFeatureSystemStatus::Read(CDataStore* msg, bool full) {
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_complaintStatus = byteValue;
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_scrollOfResurrectionMaxRequestsPerDay = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_scrollOfResurrectionRequestsRemaining = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_cfgRealmID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_cfgRealmRecID = value;
+
+    JamBitReader bits(msg);
+    this->m_itemRestorationButtonEnabled = bits.ReadBit() != 0;
+    this->m_travelPassEnabled = bits.ReadBit() != 0;
+    this->m_scrollOfResurrectionEnabled = bits.ReadBit() != 0;
+    this->m_europaTicketSystemEnabled = bits.ReadBit() != 0;
+    this->m_sessionAlertEnabled = bits.ReadBit() != 0;
+    this->m_voiceEnabled = bits.ReadBit() != 0;
+
+    if (this->m_europaTicketSystemEnabled) {
+        value = 0;
+        msg->Get(value);
+        this->m_europaTicketThrottle.m_tryCount = value;
+
+        value = 0;
+        msg->Get(value);
+        this->m_europaTicketThrottle.m_lastResetTimeBeforeNow = value;
+
+        value = 0;
+        msg->Get(value);
+        this->m_europaTicketThrottle.m_maxTries = value;
+
+        value = 0;
+        msg->Get(value);
+        this->m_europaTicketThrottle.m_perMilliseconds = value;
+    }
+
+    if (this->m_sessionAlertEnabled) {
+        int32_t alert = 0;
+        msg->Get(alert);
+        this->m_sessionAlertPeriod = alert;
+
+        alert = 0;
+        msg->Get(alert);
+        this->m_sessionAlertDelay = alert;
+
+        alert = 0;
+        msg->Get(alert);
+        this->m_sessionAlertDisplayTime = alert;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A72E0/0x140355D30
@@ -5383,6 +7117,89 @@ void ClientDisenchantCredit::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->m_lootedGUID[0] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006C4390
+bool ClientDisenchantCredit::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BFD90
+bool ClientDisenchantCredit::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+
+    this->m_lootedGUID[0] = bits.ReadBit();
+    this->m_lootedGUID[6] = bits.ReadBit();
+    this->m_lootedGUID[3] = bits.ReadBit();
+    this->m_lootedGUID[1] = bits.ReadBit();
+    this->m_lootedGUID[7] = bits.ReadBit();
+    this->m_lootedGUID[5] = bits.ReadBit();
+    this->m_lootedGUID[2] = bits.ReadBit();
+    this->m_lootedGUID[4] = bits.ReadBit();
+
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_itemID = value;
+
+    uint8_t byteValue;
+
+    if (this->m_lootedGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[4] ^= byteValue;
+    }
+
+    if (this->m_lootedGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[1] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_randomPropertiesSeed = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_randomPropertiesID = value;
+
+    if (this->m_lootedGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[6] ^= byteValue;
+    }
+
+    if (this->m_lootedGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[5] ^= byteValue;
+    }
+
+    if (this->m_lootedGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[2] ^= byteValue;
+    }
+
+    if (this->m_lootedGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[7] ^= byteValue;
+    }
+
+    if (this->m_lootedGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[3] ^= byteValue;
+    }
+
+    if (this->m_lootedGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_lootedGUID[0] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BC580/0x140370980
@@ -5545,6 +7362,30 @@ void ClientGuildCommandResult::Unpack(CDataStore* msg, bool full) {
     this->m_name[length] = 0;
 }
 
+// OFFSET: 0x006B5BA0
+bool ClientGuildCommandResult::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B3B60
+bool ClientGuildCommandResult::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_command = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_result = value;
+
+    JamBitReader bits(msg);
+    uint32_t length = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = length;
+    msg->GetData(this->m_name, length);
+    this->m_name[length] = 0;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006BD100/0x140371820
 bool ClientGuildCommandResult::Handle() {
     if (!ClientGuildCommandResult::s_handler) {
@@ -5583,6 +7424,35 @@ void ClientArenaTeamCommandResult::Unpack(CDataStore* msg, bool full) {
 
     msg->GetData(this->m_teamName, teamLength);
     this->m_teamName[teamLength] = 0;
+}
+
+// OFFSET: 0x006BF0D0
+bool ClientArenaTeamCommandResult::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AEDD0
+bool ClientArenaTeamCommandResult::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint32_t nameLength = bits.ReadBits<7>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = nameLength;
+    uint32_t teamLength = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->m_teamName) = teamLength;
+    msg->GetData(this->m_name, nameLength);
+    this->m_name[nameLength] = 0;
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_action = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_result = value;
+
+    msg->GetData(this->m_teamName, teamLength);
+    this->m_teamName[teamLength] = 0;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B3E10/0x140365B50
@@ -5787,6 +7657,140 @@ void ClientRoleChangedInform::Unpack(CDataStore* msg, bool full) {
     this->m_oldRole = value;
 }
 
+// OFFSET: 0x006A6DF0
+bool ClientRoleChangedInform::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A68D0
+bool ClientRoleChangedInform::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_changedByGUID[1] = bits.ReadBit();
+    this->m_targetGUID[0] = bits.ReadBit();
+    this->m_targetGUID[2] = bits.ReadBit();
+    this->m_targetGUID[4] = bits.ReadBit();
+    this->m_targetGUID[7] = bits.ReadBit();
+    this->m_targetGUID[3] = bits.ReadBit();
+    this->m_changedByGUID[7] = bits.ReadBit();
+    this->m_targetGUID[5] = bits.ReadBit();
+    this->m_changedByGUID[5] = bits.ReadBit();
+    this->m_changedByGUID[4] = bits.ReadBit();
+    this->m_changedByGUID[3] = bits.ReadBit();
+    this->m_targetGUID[6] = bits.ReadBit();
+    this->m_changedByGUID[2] = bits.ReadBit();
+    this->m_changedByGUID[6] = bits.ReadBit();
+    this->m_targetGUID[1] = bits.ReadBit();
+    this->m_changedByGUID[0] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_changedByGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[7] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[3] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[6] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[4] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[0] ^= byteValue;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_newRole = value;
+
+    if (this->m_targetGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[6] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[2] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[0] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[4] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[1] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[3] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[5] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[2] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[5] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[7] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[1] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_oldRole = value;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AB430/0x14035AF30
 bool ClientRoleChangedInform::Handle() {
     if (!ClientRoleChangedInform::s_handler) {
@@ -5826,6 +7830,36 @@ void ClientRolePollBegin::Unpack(CDataStore* msg, bool full) {
             this->m_initiatorGUID[order[i]] ^= byteValue;
         }
     }
+}
+
+// OFFSET: 0x006B02D0
+bool ClientRolePollBegin::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AC160
+bool ClientRolePollBegin::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_initiatorGUID[1] = bits.ReadBit();
+    this->m_initiatorGUID[5] = bits.ReadBit();
+    this->m_initiatorGUID[7] = bits.ReadBit();
+    this->m_initiatorGUID[3] = bits.ReadBit();
+    this->m_initiatorGUID[2] = bits.ReadBit();
+    this->m_initiatorGUID[4] = bits.ReadBit();
+    this->m_initiatorGUID[0] = bits.ReadBit();
+    this->m_initiatorGUID[6] = bits.ReadBit();
+
+    static const uint8_t order[8] = { 4, 7, 0, 5, 1, 6, 2, 3 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (this->m_initiatorGUID[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_initiatorGUID[order[i]] ^= byteValue;
+        }
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006AE720/0x14035EDF0
@@ -5887,6 +7921,36 @@ void ClientPetitionAlreadySigned::Unpack(CDataStore* msg, bool full) {
             this->m_signerGUID[order[i]] ^= byteValue;
         }
     }
+}
+
+// OFFSET: 0x006BC650
+bool ClientPetitionAlreadySigned::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B1D40
+bool ClientPetitionAlreadySigned::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_signerGUID[2] = bits.ReadBit();
+    this->m_signerGUID[3] = bits.ReadBit();
+    this->m_signerGUID[7] = bits.ReadBit();
+    this->m_signerGUID[6] = bits.ReadBit();
+    this->m_signerGUID[1] = bits.ReadBit();
+    this->m_signerGUID[5] = bits.ReadBit();
+    this->m_signerGUID[4] = bits.ReadBit();
+    this->m_signerGUID[0] = bits.ReadBit();
+
+    static const uint8_t order[8] = { 4, 0, 3, 1, 5, 6, 7, 2 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (this->m_signerGUID[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_signerGUID[order[i]] ^= byteValue;
+        }
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A97D0/0x140358B10
@@ -5989,6 +8053,35 @@ void ClientQuestNpcQueryResponse::Unpack(CDataStore* msg, bool full) {
             this->m_quests.m_data[i].m_npcs.m_data[j] = value;
         }
     }
+}
+
+// OFFSET: 0x006F6500
+bool ClientQuestNpcQueryResponse::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006F6320
+bool ClientQuestNpcQueryResponse::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_quests.SetCount(bits.ReadBits<23>());
+
+    for (uint32_t i = 0; i < this->m_quests.Count(); i++) {
+        this->m_quests.m_data[i].m_npcs.SetCount(bits.ReadBits<24>());
+    }
+
+    for (uint32_t i = 0; i < this->m_quests.Count(); i++) {
+        int32_t value = 0;
+        msg->Get(value);
+        this->m_quests.m_data[i].m_questID = value;
+
+        for (uint32_t j = 0; j < this->m_quests.m_data[i].m_npcs.Count(); j++) {
+            value = 0;
+            msg->Get(value);
+            this->m_quests.m_data[i].m_npcs.m_data[j] = value;
+        }
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B5090/0x140367280
@@ -6136,6 +8229,140 @@ void ClientSpellinterruptlog::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006BF370
+bool ClientSpellinterruptlog::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BDCB0
+bool ClientSpellinterruptlog::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_victimGUID[4] = bits.ReadBit();
+    this->m_casterGUID[5] = bits.ReadBit();
+    this->m_casterGUID[6] = bits.ReadBit();
+    this->m_casterGUID[1] = bits.ReadBit();
+    this->m_casterGUID[3] = bits.ReadBit();
+    this->m_casterGUID[0] = bits.ReadBit();
+    this->m_victimGUID[3] = bits.ReadBit();
+    this->m_victimGUID[5] = bits.ReadBit();
+    this->m_victimGUID[1] = bits.ReadBit();
+    this->m_casterGUID[4] = bits.ReadBit();
+    this->m_casterGUID[7] = bits.ReadBit();
+    this->m_victimGUID[7] = bits.ReadBit();
+    this->m_victimGUID[6] = bits.ReadBit();
+    this->m_casterGUID[2] = bits.ReadBit();
+    this->m_victimGUID[2] = bits.ReadBit();
+    this->m_victimGUID[0] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_casterGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[7] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[6] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[3] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[2] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[3] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[6] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[2] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[4] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[7] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[0] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[4] ^= byteValue;
+    }
+
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_interruptingSpellID = value;
+
+    if (this->m_victimGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[1] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[0] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[5] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[1] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_interruptedSpellID = value;
+
+    if (this->m_victimGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[5] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006C0800/0x140375B60
 bool ClientSpellinterruptlog::Handle() {
     if (!ClientSpellinterruptlog::s_handler) {
@@ -6229,6 +8456,88 @@ void ClientXpGainAborted::Unpack(CDataStore* msg, bool full) {
     this->m_xp = value;
 }
 
+// OFFSET: 0x006CB4B0
+bool ClientXpGainAborted::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C4050
+bool ClientXpGainAborted::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_victimGUID[4] = bits.ReadBit();
+    this->m_victimGUID[0] = bits.ReadBit();
+    this->m_victimGUID[1] = bits.ReadBit();
+    this->m_victimGUID[7] = bits.ReadBit();
+    this->m_victimGUID[2] = bits.ReadBit();
+    this->m_victimGUID[6] = bits.ReadBit();
+    this->m_victimGUID[5] = bits.ReadBit();
+    this->m_victimGUID[3] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_victimGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[7] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[1] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[4] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[0] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[2] ^= byteValue;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_xpBonus = value;
+
+    if (this->m_victimGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[6] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_reason = value;
+
+    if (this->m_victimGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[3] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[5] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_xp = value;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AD340/0x14035D480
 bool ClientXpGainAborted::Handle() {
     if (!ClientXpGainAborted::s_handler) {
@@ -6270,6 +8579,36 @@ void ClientItemExpirePurchaseRefund::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006AF240
+bool ClientItemExpirePurchaseRefund::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A30D0
+bool ClientItemExpirePurchaseRefund::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_itemGUID[3] = bits.ReadBit();
+    this->m_itemGUID[0] = bits.ReadBit();
+    this->m_itemGUID[5] = bits.ReadBit();
+    this->m_itemGUID[4] = bits.ReadBit();
+    this->m_itemGUID[6] = bits.ReadBit();
+    this->m_itemGUID[2] = bits.ReadBit();
+    this->m_itemGUID[1] = bits.ReadBit();
+    this->m_itemGUID[7] = bits.ReadBit();
+
+    static const uint8_t order[8] = { 1, 0, 3, 4, 7, 6, 5, 2 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (this->m_itemGUID[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_itemGUID[order[i]] ^= byteValue;
+        }
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006BE2C0/0x140372F50
 bool ClientItemExpirePurchaseRefund::Handle() {
     if (!ClientItemExpirePurchaseRefund::s_handler) {
@@ -6309,6 +8648,36 @@ void ClientGuildSendGuildXP::Unpack(CDataStore* msg, bool full) {
     value = 0;
     msg->Get(value);
     this->m_guildCurrentXP = value;
+}
+
+// OFFSET: 0x006C4D50
+bool ClientGuildSendGuildXP::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B4EC0
+bool ClientGuildSendGuildXP::Read(CDataStore* msg, bool full) {
+    uint64_t value = 0;
+    msg->Get(value);
+    this->m_memberTotalXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_guildRemainingXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_guildTodayXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_memberWeeklyXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_guildCurrentXP = value;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B5720/0x140367AF0
@@ -6386,6 +8755,50 @@ void ClientGuildSendRankChange::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006C4570
+bool ClientGuildSendRankChange::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B5760
+bool ClientGuildSendRankChange::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_officerGUID[7] = bits.ReadBit();
+    this->m_officerGUID[2] = bits.ReadBit();
+    this->m_otherGUID[2] = bits.ReadBit();
+    this->m_officerGUID[1] = bits.ReadBit();
+    this->m_otherGUID[1] = bits.ReadBit();
+    this->m_otherGUID[7] = bits.ReadBit();
+    this->m_otherGUID[0] = bits.ReadBit();
+    this->m_otherGUID[5] = bits.ReadBit();
+    this->m_otherGUID[4] = bits.ReadBit();
+    this->m_promote = bits.ReadBit() != 0;
+    this->m_officerGUID[5] = bits.ReadBit();
+    this->m_officerGUID[0] = bits.ReadBit();
+    this->m_otherGUID[6] = bits.ReadBit();
+    this->m_officerGUID[3] = bits.ReadBit();
+    this->m_officerGUID[6] = bits.ReadBit();
+    this->m_otherGUID[3] = bits.ReadBit();
+    this->m_officerGUID[4] = bits.ReadBit();
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_rankID = value;
+
+    uint8_t* guids = this->m_officerGUID;
+    static const uint8_t order[16] = { 3, 15, 6, 2, 13, 8, 7, 5, 10, 9, 0, 4, 1, 11, 14, 12 };
+
+    for (uint32_t i = 0; i < 16; i++) {
+        if (guids[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guids[order[i]] ^= byteValue;
+        }
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AB240/0x14035ACA0
 bool ClientGuildSendRankChange::Handle() {
     if (!ClientGuildSendRankChange::s_handler) {
@@ -6452,6 +8865,63 @@ void ClientGuildMemberRecipes::Unpack(CDataStore* msg, bool full) {
     value = 0;
     msg->Get(value);
     this->m_skillStep = value;
+}
+
+// OFFSET: 0x006C1170
+bool ClientGuildMemberRecipes::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B0E30
+bool ClientGuildMemberRecipes::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_memberGUID[0] = bits.ReadBit();
+    this->m_memberGUID[3] = bits.ReadBit();
+    this->m_memberGUID[7] = bits.ReadBit();
+    this->m_memberGUID[4] = bits.ReadBit();
+    this->m_memberGUID[6] = bits.ReadBit();
+    this->m_memberGUID[2] = bits.ReadBit();
+    this->m_memberGUID[1] = bits.ReadBit();
+    this->m_memberGUID[5] = bits.ReadBit();
+
+    static const uint8_t first[5] = { 0, 1, 7, 4, 5 };
+    static const uint8_t last[3] = { 3, 6, 2 };
+
+    for (uint32_t i = 0; i < 5; i++) {
+        if (this->m_memberGUID[first[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_memberGUID[first[i]] ^= byteValue;
+        }
+    }
+
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_skillRank = value;
+
+    for (uint32_t i = 0; i < 300; i++) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_skillLineBitArray[i] = byteValue;
+    }
+
+    for (uint32_t i = 0; i < 3; i++) {
+        if (this->m_memberGUID[last[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_memberGUID[last[i]] ^= byteValue;
+        }
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_skillLineID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_skillStep = value;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BE7F0/0x140373580
@@ -6522,6 +8992,28 @@ void ClientStartTimer::Unpack(CDataStore* msg, bool full) {
     value = 0;
     msg->Get(value);
     this->m_totalTime = value;
+}
+
+// OFFSET: 0x006B8420
+bool ClientStartTimer::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AE3E0
+bool ClientStartTimer::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_type = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_timeLeft = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_totalTime = value;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B64E0/0x140368C60
@@ -6624,6 +9116,95 @@ void ClientItemRefundInfoResponse::Unpack(CDataStore* msg, bool full) {
     this->m_info.m_cost.m_money = value;
 }
 
+// OFFSET: 0x006E1F80
+bool ClientItemRefundInfoResponse::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006D98D0
+bool ClientItemRefundInfoResponse::Read(CDataStore* msg, bool full) {
+    uint8_t* guid = this->m_info.m_itemGUID;
+    JamBitReader bits(msg);
+    guid[3] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
+    guid[4] = bits.ReadBit();
+    guid[0] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (guid[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[7] ^= byteValue;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_info.m_refundTimeLeft = value;
+
+    for (uint32_t i = 0; i < 5; i++) {
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_items[i].m_count = value;
+
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_items[i].m_id = value;
+    }
+
+    static const uint8_t middle[4] = { 6, 4, 3, 2 };
+
+    for (uint32_t i = 0; i < 4; i++) {
+        if (guid[middle[i]]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            guid[middle[i]] ^= byteValue;
+        }
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_currencies[i].m_count = value;
+
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_currencies[i].m_id = value;
+    }
+
+    if (guid[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[1] ^= byteValue;
+    }
+
+    if (guid[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[5] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_info.m_flags = value;
+
+    if (guid[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[0] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_info.m_cost.m_money = value;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006ABBF0/0x14035B8E0
 bool ClientItemRefundInfoResponse::Handle() {
     if (!ClientItemRefundInfoResponse::s_handler) {
@@ -6700,6 +9281,70 @@ void ClientItemRefundResult::Unpack(CDataStore* msg, bool full) {
     this->m_result.m_result = byteValue;
 }
 
+// OFFSET: 0x006E1F60
+bool ClientItemRefundResult::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006DD910
+bool ClientItemRefundResult::Read(CDataStore* msg, bool full) {
+    uint8_t* guid = this->m_result.m_itemGUID;
+    JamBitReader bits(msg);
+    guid[4] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[0] = bits.ReadBit();
+    guid[3] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
+    this->m_result.m_hasCost = bits.ReadBit() != 0;
+
+    if (this->m_result.m_hasCost) {
+        uint32_t value;
+
+        for (uint32_t i = 0; i < 5; i++) {
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_currencies[i].m_count = value;
+
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_currencies[i].m_id = value;
+        }
+
+        value = 0;
+        msg->Get(value);
+        this->m_result.m_cost.m_money = value;
+
+        for (uint32_t i = 0; i < 5; i++) {
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_items[i].m_count = value;
+
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_items[i].m_id = value;
+        }
+    }
+
+    static const uint8_t order[8] = { 0, 3, 1, 6, 4, 2, 7, 5 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (guid[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[order[i]] ^= byteValue;
+        }
+    }
+
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_result.m_result = byteValue;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006BB780/0x14036F740
 bool ClientItemRefundResult::Handle() {
     if (!ClientItemRefundResult::s_handler) {
@@ -6747,6 +9392,44 @@ void ClientQuestGiverQuestComplete::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     this->m_complete.m_useQuestReward = bits.ReadBit() != 0;
     this->m_complete.m_launchGossip = bits.ReadBit() != 0;
+}
+
+// OFFSET: 0x006C7910
+bool ClientQuestGiverQuestComplete::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B6C70
+bool ClientQuestGiverQuestComplete::Read(CDataStore* msg, bool full) {
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_complete.m_talentReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_numSkillUpsReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_moneyReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_xpReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_questID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_skillLineIDReward = value;
+
+    JamBitReader bits(msg);
+    this->m_complete.m_useQuestReward = bits.ReadBit() != 0;
+    this->m_complete.m_launchGossip = bits.ReadBit() != 0;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B07E0/0x1403615F0
@@ -6844,6 +9527,42 @@ void ClientDebugRuneRegen::Unpack(CDataStore* msg, bool full) {
     this->m_runeState = value;
 }
 
+// OFFSET: 0x006C43A0
+bool ClientDebugRuneRegen::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006ACD80
+bool ClientDebugRuneRegen::Read(CDataStore* msg, bool full) {
+    for (uint32_t i = 0; i < 6; i++) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_runeCount[i] = value;
+    }
+
+    for (uint32_t i = 0; i < 6; i++) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_runeCooldown[i] = value;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        float value = 0.0f;
+        msg->Get(value);
+        this->m_regen[i] = value;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_runeMask = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_runeState = value;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A8D50/0x140357D00
 bool ClientDebugRuneRegen::Handle() {
     if (!ClientDebugRuneRegen::s_handler) {
@@ -6869,6 +9588,17 @@ void ClientReforgeResult::Unpack(CDataStore* msg, bool full) {
     byteValue = 0;
     msg->Get(byteValue);
     this->m_success = byteValue;
+}
+
+// OFFSET: 0x006C9980
+bool ClientReforgeResult::Get(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_success = byteValue;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A4A80/0x140352890
@@ -6950,6 +9680,74 @@ void ClientForgeMasterSet::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006BED10
+bool ClientForgeMasterSet::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A4230
+bool ClientForgeMasterSet::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_forgeMaster[1] = bits.ReadBit();
+    this->m_forgeMaster[3] = bits.ReadBit();
+    this->m_forgeMaster[4] = bits.ReadBit();
+    this->m_forgeMaster[2] = bits.ReadBit();
+    this->m_forgeMaster[6] = bits.ReadBit();
+    this->m_forgeMaster[0] = bits.ReadBit();
+    this->m_forgeMaster[7] = bits.ReadBit();
+    this->m_forgeMaster[5] = bits.ReadBit();
+
+    if (this->m_forgeMaster[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[6] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[2] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[3] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[4] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[5] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[0] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[7] ^= byteValue;
+    }
+
+    if (this->m_forgeMaster[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_forgeMaster[1] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A8160/0x140356E40
 bool ClientForgeMasterSet::Handle() {
     if (!ClientForgeMasterSet::s_handler) {
@@ -6977,6 +9775,17 @@ void ClientVoidStorageFailed::Unpack(CDataStore* msg, bool full) {
     this->m_reason = byteValue;
 }
 
+// OFFSET: 0x006BA100
+bool ClientVoidStorageFailed::Get(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_reason = byteValue;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AD480/0x14035D660
 bool ClientVoidStorageFailed::Handle() {
     if (!ClientVoidStorageFailed::s_handler) {
@@ -7002,6 +9811,17 @@ void ClientVoidTransferResult::Unpack(CDataStore* msg, bool full) {
     value = 0;
     msg->Get(value);
     this->m_result = value;
+}
+
+// OFFSET: 0x006CDE50
+bool ClientVoidTransferResult::Get(CDataStore* msg, bool full) {
+    uint32_t value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_result = value;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A3CC0/0x140351560
@@ -7554,6 +10374,160 @@ void ClientVoidItemSwapResponse::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006B5B90
+bool ClientVoidItemSwapResponse::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A6E90
+bool ClientVoidItemSwapResponse::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint8_t* second = reinterpret_cast<uint8_t*>(&this->m_secondItem);
+    uint8_t* first = reinterpret_cast<uint8_t*>(&this->m_firstItem);
+    this->m_secondItem = !bits.ReadBit();
+    this->m_firstItem = !bits.ReadBit();
+
+    if (this->m_firstItem) {
+        first[5] = bits.ReadBit();
+        first[2] = bits.ReadBit();
+        first[1] = bits.ReadBit();
+        first[4] = bits.ReadBit();
+        first[0] = bits.ReadBit();
+        first[6] = bits.ReadBit();
+        first[7] = bits.ReadBit();
+        first[3] = bits.ReadBit();
+    }
+
+    this->m_secondSlot = !bits.ReadBit();
+
+    if (this->m_secondItem) {
+        second[7] = bits.ReadBit();
+        second[3] = bits.ReadBit();
+        second[4] = bits.ReadBit();
+        second[0] = bits.ReadBit();
+        second[5] = bits.ReadBit();
+        second[1] = bits.ReadBit();
+        second[2] = bits.ReadBit();
+        second[6] = bits.ReadBit();
+    }
+
+    this->m_firstSlot = !bits.ReadBit();
+
+    if (this->m_secondItem) {
+        if (second[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[4] ^= byteValue;
+        }
+
+        if (second[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[6] ^= byteValue;
+        }
+
+        if (second[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[5] ^= byteValue;
+        }
+
+        if (second[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[2] ^= byteValue;
+        }
+
+        if (second[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[3] ^= byteValue;
+        }
+
+        if (second[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[1] ^= byteValue;
+        }
+
+        if (second[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[7] ^= byteValue;
+        }
+
+        if (second[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            second[0] ^= byteValue;
+        }
+    }
+
+    if (this->m_firstItem) {
+        if (first[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[6] ^= byteValue;
+        }
+
+        if (first[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[3] ^= byteValue;
+        }
+
+        if (first[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[5] ^= byteValue;
+        }
+
+        if (first[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[0] ^= byteValue;
+        }
+
+        if (first[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[1] ^= byteValue;
+        }
+
+        if (first[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[2] ^= byteValue;
+        }
+
+        if (first[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[4] ^= byteValue;
+        }
+
+        if (first[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            first[7] ^= byteValue;
+        }
+    }
+
+    if (this->m_secondSlot) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_secondSlot = value;
+    }
+
+    if (this->m_firstSlot) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_firstSlot = value;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A5170/0x1403530D0
 bool ClientVoidItemSwapResponse::Handle() {
     if (!ClientVoidItemSwapResponse::s_handler) {
@@ -7672,6 +10646,63 @@ void ClientLfGuildPostUpdated::Unpack(CDataStore* msg, bool full) {
             this->m_post.m_settings.m_interests = value;
         }
     }
+}
+
+// OFFSET: 0x006CAB70
+bool ClientLfGuildPostUpdated::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C5D80
+bool ClientLfGuildPostUpdated::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_hasPost = bits.ReadBit();
+
+    if (this->m_hasPost) {
+        this->m_post.m_listed = bits.ReadBit();
+        uint32_t length = bits.ReadBits<11>();
+        *reinterpret_cast<uint32_t*>(this->m_post.m_settings.m_comment) = length;
+    }
+
+    if (this->m_hasPost) {
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_level = value;
+        }
+
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(this->m_post.m_settings.m_comment);
+            msg->GetData(this->m_post.m_settings.m_comment, length);
+            this->m_post.m_settings.m_comment[length] = 0;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.unk_0010 = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_availability = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_classRoles = value;
+        }
+
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->m_post.m_settings.m_interests = value;
+        }
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BED20/0x140373C10
@@ -8298,6 +11329,26 @@ void ClientResearchComplete::Unpack(CDataStore* msg, bool full) {
     this->m_research.m_projectID = value;
 }
 
+// OFFSET: 0x006B53F0
+bool ClientResearchComplete::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AB7E0
+bool ClientResearchComplete::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_research.m_firstCompleted = value;
+    value = 0;
+    msg->Get(value);
+    this->m_research.m_completionCount = value;
+    value = 0;
+    msg->Get(value);
+    this->m_research.m_projectID = value;
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A51B0/0x140353130
 bool ClientResearchComplete::Handle() {
     if (!ClientResearchComplete::s_handler) {
@@ -8341,6 +11392,23 @@ void ClientAreaTriggerMovementUpdate::Unpack(CDataStore* msg, bool full) {
     { float value = 0; msg->Get(value); this->unk_0010 = value; }
     { float value = 0; msg->Get(value); this->unk_0020 = value; }
     { float value = 0; msg->Get(value); this->unk_001C = value; }
+}
+
+// OFFSET: 0x006C45C0
+bool ClientAreaTriggerMovementUpdate::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B4110
+bool ClientAreaTriggerMovementUpdate::Read(CDataStore* msg, bool full) {
+    { float value = 0; msg->Get(value); this->unk_0018 = value; }
+    { float value = 0; msg->Get(value); this->unk_0024 = value; }
+    { float value = 0; msg->Get(value); this->unk_0014 = value; }
+    { float value = 0; msg->Get(value); this->unk_0010 = value; }
+    { float value = 0; msg->Get(value); this->unk_0020 = value; }
+    { float value = 0; msg->Get(value); this->unk_001C = value; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B6520/0x140368ED0
@@ -8400,6 +11468,35 @@ void ClientBattlefieldMgrEjectPending::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
 }
 
+// OFFSET: 0x006C54B0
+bool ClientBattlefieldMgrEjectPending::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A99A0
+bool ClientBattlefieldMgrEjectPending::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0018 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B7E40/0x14036ADE0
 bool ClientBattlefieldMgrEjectPending::Handle() {
     if (!ClientBattlefieldMgrEjectPending::s_handler) {
@@ -8442,6 +11539,37 @@ void ClientBattlefieldMgrEjected::Unpack(CDataStore* msg, bool full) {
     if (this->unk_001D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001D ^= byteValue; }
 }
 
+// OFFSET: 0x006A78A0
+bool ClientBattlefieldMgrEjected::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A4F50
+bool ClientBattlefieldMgrEjected::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_001A = bits.ReadBit();
+    this->unk_001D = bits.ReadBit();
+    this->unk_0019 = bits.ReadBit();
+    this->unk_0018 = bits.ReadBit();
+    this->unk_001B = bits.ReadBit();
+    this->unk_001E = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_001F = bits.ReadBit();
+    this->unk_001C = bits.ReadBit();
+    { uint8_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    if (this->unk_0019) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0019 ^= byteValue; }
+    if (this->unk_001F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001F ^= byteValue; }
+    if (this->unk_001C) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001C ^= byteValue; }
+    if (this->unk_001A) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001A ^= byteValue; }
+    if (this->unk_001B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001B ^= byteValue; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0021 = value; }
+    if (this->unk_001E) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001E ^= byteValue; }
+    if (this->unk_0018) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0018 ^= byteValue; }
+    if (this->unk_001D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001D ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B9370/0x14036C8F0
 bool ClientBattlefieldMgrEjected::Handle() {
     if (!ClientBattlefieldMgrEjected::s_handler) {
@@ -8481,6 +11609,36 @@ void ClientBattlefieldMgrEntryInvite::Unpack(CDataStore* msg, bool full) {
     { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
     if (this->unk_001F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001F ^= byteValue; }
     if (this->unk_001D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001D ^= byteValue; }
+}
+
+// OFFSET: 0x006C7930
+bool ClientBattlefieldMgrEntryInvite::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006ABED0
+bool ClientBattlefieldMgrEntryInvite::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_001D = bits.ReadBit();
+    this->unk_001B = bits.ReadBit();
+    this->unk_001F = bits.ReadBit();
+    this->unk_001A = bits.ReadBit();
+    this->unk_001E = bits.ReadBit();
+    this->unk_001C = bits.ReadBit();
+    this->unk_0019 = bits.ReadBit();
+    this->unk_0018 = bits.ReadBit();
+    if (this->unk_001E) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001E ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    if (this->unk_0019) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0019 ^= byteValue; }
+    if (this->unk_001B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001B ^= byteValue; }
+    if (this->unk_001C) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001C ^= byteValue; }
+    if (this->unk_001A) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001A ^= byteValue; }
+    if (this->unk_0018) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0018 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
+    if (this->unk_001F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001F ^= byteValue; }
+    if (this->unk_001D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001D ^= byteValue; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006AA0C0/0x1403596D0
@@ -8540,6 +11698,35 @@ void ClientBattlefieldMgrStateChange::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
 }
 
+// OFFSET: 0x006CA810
+bool ClientBattlefieldMgrStateChange::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C01C0
+bool ClientBattlefieldMgrStateChange::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B4510/0x140366460
 bool ClientBattlefieldMgrStateChange::Handle() {
     if (!ClientBattlefieldMgrStateChange::s_handler) {
@@ -8585,6 +11772,25 @@ void ClientBattlefieldRatedInfo::Unpack(CDataStore* msg, bool full) {
     { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
     { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
     { uint32_t value = 0; msg->Get(value); this->unk_0028 = value; }
+}
+
+// OFFSET: 0x006C0060
+bool ClientBattlefieldRatedInfo::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AF0E0
+bool ClientBattlefieldRatedInfo::Read(CDataStore* msg, bool full) {
+    { uint32_t value = 0; msg->Get(value); this->unk_001C = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_002C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0014 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0024 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0028 = value; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B5CE0/0x140368250
@@ -8662,6 +11868,70 @@ void ClientBattlefieldStatusFailed::Unpack(CDataStore* msg, bool full) {
     if (this->unk_002D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002D ^= byteValue; }
 }
 
+// OFFSET: 0x006BC7C0
+bool ClientBattlefieldStatusFailed::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BA8F0
+bool ClientBattlefieldStatusFailed::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0013 = bits.ReadBit();
+    this->unk_002B = bits.ReadBit();
+    this->unk_0023 = bits.ReadBit();
+    this->unk_0028 = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0025 = bits.ReadBit();
+    this->unk_0026 = bits.ReadBit();
+    this->unk_0024 = bits.ReadBit();
+    this->unk_0022 = bits.ReadBit();
+    this->unk_0029 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_002D = bits.ReadBit();
+    this->unk_002E = bits.ReadBit();
+    this->unk_0021 = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_002C = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_002F = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0020 = bits.ReadBit();
+    this->unk_002A = bits.ReadBit();
+    this->unk_0027 = bits.ReadBit();
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0034 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0030 = value; }
+    if (this->unk_0026) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0026 ^= byteValue; }
+    if (this->unk_0023) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0023 ^= byteValue; }
+    if (this->unk_0027) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0027 ^= byteValue; }
+    if (this->unk_0024) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0024 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_0025) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0025 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_002E) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002E ^= byteValue; }
+    if (this->unk_002B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002B ^= byteValue; }
+    if (this->unk_0021) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0021 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0028) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0028 ^= byteValue; }
+    if (this->unk_0029) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0029 ^= byteValue; }
+    if (this->unk_002C) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002C ^= byteValue; }
+    if (this->unk_0020) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0020 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_002F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002F ^= byteValue; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0022) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0022 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    if (this->unk_002A) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002A ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0038 = value; }
+    if (this->unk_002D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002D ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AF1B0/0x14035FB40
 bool ClientBattlefieldStatusFailed::Handle() {
     if (!ClientBattlefieldStatusFailed::s_handler) {
@@ -8728,6 +11998,63 @@ void ClientBattlefieldStatusQueued::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0025) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0025 ^= byteValue; }
     { uint32_t value = 0; msg->Get(value); this->unk_0044 = value; }
     if (this->unk_0024) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0024 ^= byteValue; }
+}
+
+// OFFSET: 0x006CA470
+bool ClientBattlefieldStatusQueued::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C31F0
+bool ClientBattlefieldStatusQueued::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0023 = bits.ReadBit();
+    this->unk_0020 = bits.ReadBit();
+    this->unk_003B = bits.ReadBit();
+    this->unk_0022 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_003A = bits.ReadBit();
+    this->unk_0021 = bits.ReadBit();
+    this->unk_0038 = bits.ReadBit();
+    this->unk_003E = bits.ReadBit();
+    this->unk_003C = bits.ReadBit();
+    this->unk_0026 = bits.ReadBit();
+    this->unk_0027 = bits.ReadBit();
+    this->unk_003F = bits.ReadBit();
+    this->unk_003D = bits.ReadBit();
+    this->unk_0024 = bits.ReadBit();
+    this->unk_0025 = bits.ReadBit();
+    this->unk_0048 = bits.ReadBit();
+    this->unk_001C = bits.ReadBit();
+    this->unk_0039 = bits.ReadBit();
+    if (this->unk_0020) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0020 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_002C = value; }
+    if (this->unk_003D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_003D ^= byteValue; }
+    if (this->unk_0023) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0023 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    if (this->unk_003F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_003F ^= byteValue; }
+    if (this->unk_0039) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0039 ^= byteValue; }
+    if (this->unk_003A) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_003A ^= byteValue; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0040 = value; }
+    if (this->unk_003C) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_003C ^= byteValue; }
+    if (this->unk_0022) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0022 ^= byteValue; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0042 = value; }
+    if (this->unk_003E) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_003E ^= byteValue; }
+    if (this->unk_0027) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0027 ^= byteValue; }
+    if (this->unk_003B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_003B ^= byteValue; }
+    if (this->unk_0026) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0026 ^= byteValue; }
+    if (this->unk_0038) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0038 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0030 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0028 = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0041 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
+    if (this->unk_0021) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0021 ^= byteValue; }
+    if (this->unk_0025) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0025 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0044 = value; }
+    if (this->unk_0024) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0024 ^= byteValue; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A9080/0x140358150
@@ -8799,6 +12126,64 @@ void ClientBattlefieldStatusWaitforgroups::Unpack(CDataStore* msg, bool full) {
     if (this->unk_002B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002B ^= byteValue; }
 }
 
+// OFFSET: 0x006D8660
+bool ClientBattlefieldStatusWaitforgroups::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006CCAA0
+bool ClientBattlefieldStatusWaitforgroups::Read(CDataStore* msg, bool full) {
+    { uint8_t value = 0; msg->Get(value); this->unk_004A = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_001C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0040 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0034 = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0049 = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_004B = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0031 = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0048 = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0032 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0044 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    { uint8_t value = 0; msg->Get(value); this->unk_0030 = value; }
+    JamBitReader bits(msg);
+    this->unk_0028 = bits.ReadBit();
+    this->unk_0029 = bits.ReadBit();
+    this->unk_002F = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_002C = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_002B = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_002D = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_002A = bits.ReadBit();
+    this->unk_0038 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_002E = bits.ReadBit();
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_002C) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002C ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0029) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0029 ^= byteValue; }
+    if (this->unk_0028) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0028 ^= byteValue; }
+    if (this->unk_002A) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002A ^= byteValue; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_002F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002F ^= byteValue; }
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    if (this->unk_002E) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002E ^= byteValue; }
+    if (this->unk_002D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002D ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_002B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_002B ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A75F0/0x1403560C0
 bool ClientBattlefieldStatusWaitforgroups::Handle() {
     if (!ClientBattlefieldStatusWaitforgroups::s_handler) {
@@ -8838,6 +12223,34 @@ void ClientBattlegroundPlayerJoined::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
 }
 
+// OFFSET: 0x006C79A0
+bool ClientBattlegroundPlayerJoined::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B9650
+bool ClientBattlegroundPlayerJoined::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B31F0/0x140364C10
 bool ClientBattlegroundPlayerJoined::Handle() {
     if (!ClientBattlegroundPlayerJoined::s_handler) {
@@ -8875,6 +12288,34 @@ void ClientBattlegroundPlayerLeft::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
     if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
     if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+}
+
+// OFFSET: 0x006AFA70
+bool ClientBattlegroundPlayerLeft::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A4030
+bool ClientBattlegroundPlayerLeft::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006AB480/0x14035AF90
@@ -9007,6 +12448,38 @@ void ClientInspectHonorStats::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
 }
 
+// OFFSET: 0x006D9300
+bool ClientInspectHonorStats::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006CB6F0
+bool ClientInspectHonorStats::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0014 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    { uint8_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    { uint16_t value = 0; msg->Get(value); this->unk_001E = value; }
+    { uint16_t value = 0; msg->Get(value); this->unk_001C = value; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B48E0/0x1403668C0
 bool ClientInspectHonorStats::Handle() {
     if (!ClientInspectHonorStats::s_handler) {
@@ -9049,6 +12522,37 @@ void ClientInspectRatedBgStats::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
 }
 
+// OFFSET: 0x006CA850
+bool ClientInspectRatedBgStats::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BEEF0
+bool ClientInspectRatedBgStats::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_001C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A4190/0x140351B80
 bool ClientInspectRatedBgStats::Handle() {
     if (!ClientInspectRatedBgStats::s_handler) {
@@ -9078,6 +12582,26 @@ void ClientLfgSlotInvalid::Unpack(CDataStore* msg, bool full) {
     value = 0;
     msg->Get(value);
     this->unk_0010.m_projectID = value;
+}
+
+// OFFSET: 0x006B53F0
+bool ClientLfgSlotInvalid::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AB7E0
+bool ClientLfgSlotInvalid::Read(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->unk_0010.m_firstCompleted = value;
+    value = 0;
+    msg->Get(value);
+    this->unk_0010.m_completionCount = value;
+    value = 0;
+    msg->Get(value);
+    this->unk_0010.m_projectID = value;
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B2040/0x140363550
@@ -9144,6 +12668,36 @@ void ClientMissileCancel::Unpack(CDataStore* msg, bool full) {
     { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
     if (this->unk_0018) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0018 ^= byteValue; }
     if (this->unk_001B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001B ^= byteValue; }
+}
+
+// OFFSET: 0x006CA8C0
+bool ClientMissileCancel::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B7FD0
+bool ClientMissileCancel::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_001F = bits.ReadBit();
+    this->unk_001A = bits.ReadBit();
+    this->unk_001C = bits.ReadBit();
+    this->unk_001E = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_0019 = bits.ReadBit();
+    this->unk_0018 = bits.ReadBit();
+    this->unk_001B = bits.ReadBit();
+    this->unk_001D = bits.ReadBit();
+    if (this->unk_001E) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001E ^= byteValue; }
+    if (this->unk_0019) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0019 ^= byteValue; }
+    if (this->unk_001C) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001C ^= byteValue; }
+    if (this->unk_001A) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001A ^= byteValue; }
+    if (this->unk_001D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001D ^= byteValue; }
+    if (this->unk_001F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001F ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
+    if (this->unk_0018) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0018 ^= byteValue; }
+    if (this->unk_001B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001B ^= byteValue; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BA460/0x14036DE50
@@ -9234,6 +12788,35 @@ void ClientRatedBgStats::Unpack(CDataStore* msg, bool full) {
     { uint32_t value = 0; msg->Get(value); this->unk_0050 = value; }
 }
 
+// OFFSET: 0x006C54A0
+bool ClientRatedBgStats::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B7660
+bool ClientRatedBgStats::Read(CDataStore* msg, bool full) {
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_003C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0038 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0044 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0048 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0028 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0014 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0054 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_001C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_002C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0040 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0024 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_004C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0034 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0030 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0050 = value; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AAD80/0x14035A640
 bool ClientRatedBgStats::Handle() {
     if (!ClientRatedBgStats::s_handler) {
@@ -9260,6 +12843,23 @@ void ClientRequestPvpRewardsResponse::Unpack(CDataStore* msg, bool full) {
     { uint32_t value = 0; msg->Get(value); this->unk_0014 = value; }
     { uint32_t value = 0; msg->Get(value); this->unk_001C = value; }
     { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+}
+
+// OFFSET: 0x006D7150
+bool ClientRequestPvpRewardsResponse::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006CAA70
+bool ClientRequestPvpRewardsResponse::Read(CDataStore* msg, bool full) {
+    { uint32_t value = 0; msg->Get(value); this->unk_0018 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0024 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0010 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0014 = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_001C = value; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006C10A0/0x140376590
@@ -9406,6 +13006,51 @@ void ClientWargameCheckEntry::Unpack(CDataStore* msg, bool full) {
     if (this->unk_001B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001B ^= byteValue; }
 }
 
+// OFFSET: 0x006C8100
+bool ClientWargameCheckEntry::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B8990
+bool ClientWargameCheckEntry::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0019 = bits.ReadBit();
+    this->unk_001A = bits.ReadBit();
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    this->unk_001C = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_001D = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_001F = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0018 = bits.ReadBit();
+    this->unk_001B = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_001E = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    { uint32_t value = 0; msg->Get(value); this->unk_0020 = value; }
+    if (this->unk_0018) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0018 ^= byteValue; }
+    if (this->unk_001A) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001A ^= byteValue; }
+    if (this->unk_001C) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001C ^= byteValue; }
+    if (this->unk_001E) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001E ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_001D) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001D ^= byteValue; }
+    if (this->unk_001F) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001F ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_0019) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0019 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    if (this->unk_001B) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_001B ^= byteValue; }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B4FC0/0x140367180
 bool ClientWargameCheckEntry::Handle() {
     if (!ClientWargameCheckEntry::s_handler) {
@@ -9443,6 +13088,34 @@ void ClientWargameRequestSent::Unpack(CDataStore* msg, bool full) {
     if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
     if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
     if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+}
+
+// OFFSET: 0x006C7F80
+bool ClientWargameRequestSent::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BBFE0
+bool ClientWargameRequestSent::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0017 = bits.ReadBit();
+    this->unk_0016 = bits.ReadBit();
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0015 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+    if (this->unk_0015) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0015 ^= byteValue; }
+    if (this->unk_0016) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0016 ^= byteValue; }
+    if (this->unk_0013) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0013 ^= byteValue; }
+    if (this->unk_0010) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0010 ^= byteValue; }
+    if (this->unk_0017) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0017 ^= byteValue; }
+    if (this->unk_0014) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0014 ^= byteValue; }
+    if (this->unk_0012) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0012 ^= byteValue; }
+    if (this->unk_0011) { uint8_t byteValue = 0; msg->Get(byteValue); this->unk_0011 ^= byteValue; }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BAD90/0x14036EA20
@@ -9535,6 +13208,69 @@ void ClientBattlefieldMgrEntered::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->unk_0010[6] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006BC420
+bool ClientBattlefieldMgrEntered::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B66C0
+bool ClientBattlefieldMgrEntered::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0018 = bits.ReadBit();
+    this->unk_0019 = bits.ReadBit();
+    this->unk_0010[1] = bits.ReadBit();
+    this->unk_0010[4] = bits.ReadBit();
+    this->unk_0010[5] = bits.ReadBit();
+    this->unk_0010[0] = bits.ReadBit();
+    this->unk_0010[3] = bits.ReadBit();
+    this->unk_001A = bits.ReadBit();
+    this->unk_0010[6] = bits.ReadBit();
+    this->unk_0010[7] = bits.ReadBit();
+    this->unk_0010[2] = bits.ReadBit();
+    if (this->unk_0010[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[5] ^= byteValue;
+    }
+    if (this->unk_0010[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[3] ^= byteValue;
+    }
+    if (this->unk_0010[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[0] ^= byteValue;
+    }
+    if (this->unk_0010[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[4] ^= byteValue;
+    }
+    if (this->unk_0010[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[1] ^= byteValue;
+    }
+    if (this->unk_0010[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[7] ^= byteValue;
+    }
+    if (this->unk_0010[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[2] ^= byteValue;
+    }
+    if (this->unk_0010[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[6] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B56E0/0x140367A90
@@ -9643,6 +13379,103 @@ void ClientBattlefieldMgrQueueInvite::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->unk_0010[7] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006AE830
+bool ClientBattlefieldMgrQueueInvite::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A7A50
+bool ClientBattlefieldMgrQueueInvite::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0018 = bits.ReadBit() ? -1 : 0;
+    this->unk_0024 = !bits.ReadBit();
+    this->unk_0028 = !bits.ReadBit();
+    this->unk_0010[0] = bits.ReadBit();
+    this->unk_0020 = !bits.ReadBit();
+    this->unk_0010[2] = bits.ReadBit();
+    this->unk_0010[6] = bits.ReadBit();
+    this->unk_0010[3] = bits.ReadBit();
+    this->unk_001C = !bits.ReadBit();
+    this->unk_0030 = bits.ReadBit();
+    this->unk_0010[1] = bits.ReadBit();
+    this->unk_0010[5] = bits.ReadBit();
+    this->unk_0010[4] = bits.ReadBit();
+    this->unk_002C = !bits.ReadBit();
+    this->unk_0010[7] = bits.ReadBit();
+    if (this->unk_0010[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[2] ^= byteValue;
+    }
+    if (this->unk_0028) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0028 = value;
+    }
+    if (this->unk_0010[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[3] ^= byteValue;
+    }
+    if (this->unk_0010[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[6] ^= byteValue;
+    }
+    if (this->unk_0024) {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0024 = value;
+    }
+    if (this->unk_0010[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[5] ^= byteValue;
+    }
+    if (this->unk_0010[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[0] ^= byteValue;
+    }
+    if (this->unk_0018 != -1) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0018 = value;
+    }
+    if (this->unk_002C) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_002C = value;
+    }
+    if (this->unk_0020) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0020 = value;
+    }
+    if (this->unk_0010[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[4] ^= byteValue;
+    }
+    if (this->unk_001C) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_001C = value;
+    }
+    if (this->unk_0010[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[1] ^= byteValue;
+    }
+    if (this->unk_0010[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[7] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B83A0/0x14036B510
@@ -9789,6 +13622,139 @@ void ClientBattlefieldMgrQueueRequestResponse::Unpack(CDataStore* msg, bool full
     }
 }
 
+// OFFSET: 0x006B1290
+bool ClientBattlefieldMgrQueueRequestResponse::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A3D00
+bool ClientBattlefieldMgrQueueRequestResponse::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0028[1] = bits.ReadBit();
+    this->unk_0028[6] = bits.ReadBit();
+    this->unk_0028[5] = bits.ReadBit();
+    this->unk_0028[7] = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_0028[0] = bits.ReadBit();
+    *reinterpret_cast<uint64_t*>(this->unk_0018) = !bits.ReadBit();
+    this->unk_0028[4] = bits.ReadBit();
+
+    if (*reinterpret_cast<uint64_t*>(this->unk_0018)) {
+        this->unk_0018[7] = bits.ReadBit();
+        this->unk_0018[3] = bits.ReadBit();
+        this->unk_0018[0] = bits.ReadBit();
+        this->unk_0018[4] = bits.ReadBit();
+        this->unk_0018[2] = bits.ReadBit();
+        this->unk_0018[6] = bits.ReadBit();
+        this->unk_0018[1] = bits.ReadBit();
+        this->unk_0018[5] = bits.ReadBit();
+    }
+
+    this->unk_0028[3] = bits.ReadBit();
+    this->unk_0028[2] = bits.ReadBit();
+
+    if (*reinterpret_cast<uint64_t*>(this->unk_0018)) {
+        if (this->unk_0018[2]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[2] ^= byteValue;
+        }
+        if (this->unk_0018[5]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[5] ^= byteValue;
+        }
+        if (this->unk_0018[3]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[3] ^= byteValue;
+        }
+        if (this->unk_0018[0]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[0] ^= byteValue;
+        }
+        if (this->unk_0018[4]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[4] ^= byteValue;
+        }
+        if (this->unk_0018[6]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[6] ^= byteValue;
+        }
+        if (this->unk_0018[1]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[1] ^= byteValue;
+        }
+        if (this->unk_0018[7]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->unk_0018[7] ^= byteValue;
+        }
+    }
+
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0012 = value;
+    }
+    if (this->unk_0028[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[1] ^= byteValue;
+    }
+    if (this->unk_0028[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[3] ^= byteValue;
+    }
+    if (this->unk_0028[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[6] ^= byteValue;
+    }
+    if (this->unk_0028[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[7] ^= byteValue;
+    }
+    if (this->unk_0028[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[0] ^= byteValue;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    if (this->unk_0028[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[2] ^= byteValue;
+    }
+    if (this->unk_0028[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[4] ^= byteValue;
+    }
+    if (this->unk_0028[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0028[5] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0020 = value;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A4390/0x140351E00
 bool ClientBattlefieldMgrQueueRequestResponse::Handle() {
     if (!ClientBattlefieldMgrQueueRequestResponse::s_handler) {
@@ -9873,6 +13839,81 @@ void ClientBattlefieldStatus::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->unk_0010[4] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006D59F0
+bool ClientBattlefieldStatus::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C6510
+bool ClientBattlefieldStatus::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010[0] = bits.ReadBit();
+    this->unk_0010[4] = bits.ReadBit();
+    this->unk_0010[7] = bits.ReadBit();
+    this->unk_0010[1] = bits.ReadBit();
+    this->unk_0010[6] = bits.ReadBit();
+    this->unk_0010[3] = bits.ReadBit();
+    this->unk_0010[5] = bits.ReadBit();
+    this->unk_0010[2] = bits.ReadBit();
+    if (this->unk_0010[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[5] ^= byteValue;
+    }
+    if (this->unk_0010[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[6] ^= byteValue;
+    }
+    if (this->unk_0010[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[7] ^= byteValue;
+    }
+    if (this->unk_0010[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[2] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_001C = value;
+    }
+    if (this->unk_0010[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[3] ^= byteValue;
+    }
+    if (this->unk_0010[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[1] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0018 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0020 = value;
+    }
+    if (this->unk_0010[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[0] ^= byteValue;
+    }
+    if (this->unk_0010[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[4] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006A7A00/0x1403564C0
@@ -10046,6 +14087,166 @@ void ClientBattlefieldStatusActive::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006C4710
+bool ClientBattlefieldStatusActive::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006BD4B0
+bool ClientBattlefieldStatusActive::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0018[2] = bits.ReadBit();
+    this->unk_0018[7] = bits.ReadBit();
+    this->unk_0030[7] = bits.ReadBit();
+    this->unk_0030[1] = bits.ReadBit();
+    this->unk_0018[5] = bits.ReadBit();
+    this->unk_004C = bits.ReadBit();
+    this->unk_0030[0] = bits.ReadBit();
+    this->unk_0018[1] = bits.ReadBit();
+    this->unk_0030[3] = bits.ReadBit();
+    this->unk_0018[6] = bits.ReadBit();
+    this->unk_0030[5] = bits.ReadBit();
+    this->unk_0040 = bits.ReadBit();
+    this->unk_0018[4] = bits.ReadBit();
+    this->unk_0030[6] = bits.ReadBit();
+    this->unk_0030[4] = bits.ReadBit();
+    this->unk_0030[2] = bits.ReadBit();
+    this->unk_0018[3] = bits.ReadBit();
+    this->unk_0018[0] = bits.ReadBit();
+    if (this->unk_0030[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[4] ^= byteValue;
+    }
+    if (this->unk_0030[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[5] ^= byteValue;
+    }
+    if (this->unk_0018[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[5] ^= byteValue;
+    }
+    if (this->unk_0030[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[1] ^= byteValue;
+    }
+    if (this->unk_0030[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[6] ^= byteValue;
+    }
+    if (this->unk_0030[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[3] ^= byteValue;
+    }
+    if (this->unk_0030[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[7] ^= byteValue;
+    }
+    if (this->unk_0018[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[6] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0028 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0038 = value;
+    }
+    if (this->unk_0018[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[4] ^= byteValue;
+    }
+    if (this->unk_0018[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[1] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0020 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_003A = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0024 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0050 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0039 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0048 = value;
+    }
+    if (this->unk_0018[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[2] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    if (this->unk_0018[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[0] ^= byteValue;
+    }
+    if (this->unk_0018[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[3] ^= byteValue;
+    }
+    if (this->unk_0030[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[2] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_003C = value;
+    }
+    if (this->unk_0030[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[0] ^= byteValue;
+    }
+    if (this->unk_0018[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[7] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006A9820/0x140358B70
 bool ClientBattlefieldStatusActive::Handle() {
     if (!ClientBattlefieldStatusActive::s_handler) {
@@ -10089,6 +14290,38 @@ void ClientDisplayGameError::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006C87E0
+bool ClientDisplayGameError::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B2D60
+bool ClientDisplayGameError::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0018 = bits.ReadBit();
+
+    if (this->unk_0010) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0014 = value;
+    }
+
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0020 = value;
+    }
+
+    if (this->unk_0018) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_001C = value;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B6E90/0x140369AE0
 bool ClientDisplayGameError::Handle() {
     if (!ClientDisplayGameError::s_handler) {
@@ -10115,6 +14348,23 @@ void ClientPvpOptionsEnabled::Unpack(CDataStore* msg, bool full) {
     this->unk_0013 = bits.ReadBit();
     this->unk_0012 = bits.ReadBit();
     this->unk_0014 = bits.ReadBit();
+}
+
+// OFFSET: 0x006C45D0
+bool ClientPvpOptionsEnabled::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C0850
+bool ClientPvpOptionsEnabled::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010 = bits.ReadBit();
+    this->unk_0011 = bits.ReadBit();
+    this->unk_0013 = bits.ReadBit();
+    this->unk_0012 = bits.ReadBit();
+    this->unk_0014 = bits.ReadBit();
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006B6E50/0x140369A80
@@ -10160,6 +14410,40 @@ void ClientShowRatings::Unpack(CDataStore* msg, bool full) {
         msg->Get(value);
         this->unk_0010[i] = value;
     }
+}
+
+// OFFSET: 0x006C48A0
+bool ClientShowRatings::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B8F50
+bool ClientShowRatings::Read(CDataStore* msg, bool full) {
+    for (uint32_t i = 0; i < 4; i++) {
+        float value = 0;
+        msg->Get(value);
+        this->unk_0040[i] = value;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0030[i] = value;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        float value = 0;
+        msg->Get(value);
+        this->unk_0020[i] = value;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010[i] = value;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BB740/0x14036F6E0
@@ -10328,6 +14612,161 @@ void ClientBattlefieldStatusNeedconfirmation::Unpack(CDataStore* msg, bool full)
     }
 }
 
+// OFFSET: 0x006D7770
+bool ClientBattlefieldStatusNeedconfirmation::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006CA490
+bool ClientBattlefieldStatusNeedconfirmation::Read(CDataStore* msg, bool full) {
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_003C = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0014 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0038 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0020 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0028 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_0039 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0024 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    {
+        uint8_t value = 0;
+        msg->Get(value);
+        this->unk_003A = value;
+    }
+
+    JamBitReader bits(msg);
+    this->unk_0018[5] = bits.ReadBit();
+    this->unk_0018[2] = bits.ReadBit();
+    this->unk_0018[1] = bits.ReadBit();
+    this->unk_0030[2] = bits.ReadBit();
+    this->unk_0018[4] = bits.ReadBit();
+    this->unk_0030[6] = bits.ReadBit();
+    this->unk_0030[3] = bits.ReadBit();
+    this->unk_0040 = bits.ReadBit();
+    this->unk_0018[7] = bits.ReadBit();
+    this->unk_0018[3] = bits.ReadBit();
+    this->unk_0030[7] = bits.ReadBit();
+    this->unk_0030[0] = bits.ReadBit();
+    this->unk_0030[4] = bits.ReadBit();
+    this->unk_0018[6] = bits.ReadBit();
+    this->unk_0030[5] = bits.ReadBit();
+    this->unk_0030[1] = bits.ReadBit();
+    this->unk_0018[0] = bits.ReadBit();
+    if (this->unk_0030[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[6] ^= byteValue;
+    }
+    if (this->unk_0030[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[5] ^= byteValue;
+    }
+    if (this->unk_0030[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[7] ^= byteValue;
+    }
+    if (this->unk_0030[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[2] ^= byteValue;
+    }
+    if (this->unk_0018[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[0] ^= byteValue;
+    }
+    if (this->unk_0018[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[7] ^= byteValue;
+    }
+    if (this->unk_0030[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[4] ^= byteValue;
+    }
+    if (this->unk_0018[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[1] ^= byteValue;
+    }
+    if (this->unk_0030[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[0] ^= byteValue;
+    }
+    if (this->unk_0018[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[4] ^= byteValue;
+    }
+    if (this->unk_0030[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[1] ^= byteValue;
+    }
+    if (this->unk_0018[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[5] ^= byteValue;
+    }
+    if (this->unk_0030[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0030[3] ^= byteValue;
+    }
+    if (this->unk_0018[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[6] ^= byteValue;
+    }
+    if (this->unk_0018[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[2] ^= byteValue;
+    }
+    if (this->unk_0018[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[3] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B12F0/0x140362400
 bool ClientBattlefieldStatusNeedconfirmation::Handle() {
     if (!ClientBattlefieldStatusNeedconfirmation::s_handler) {
@@ -10428,6 +14867,95 @@ void ClientGameEventDebugLog::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006D71F0
+bool ClientGameEventDebugLog::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006C4990
+bool ClientGameEventDebugLog::Read(CDataStore* msg, bool full) {
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_00E0 = value;
+    }
+
+    JamBitReader bits(msg);
+    *reinterpret_cast<uint32_t*>(this->unk_00E4) = bits.ReadBits<8>();
+    this->unk_0018[0] = bits.ReadBit();
+    this->unk_0018[4] = bits.ReadBit();
+    this->unk_0018[5] = bits.ReadBit();
+    this->unk_0018[7] = bits.ReadBit();
+    this->unk_0018[2] = bits.ReadBit();
+    this->unk_0018[6] = bits.ReadBit();
+    this->unk_0018[1] = bits.ReadBit();
+    this->unk_0018[3] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->unk_0060) = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->unk_0020) = bits.ReadBits<7>();
+    if (this->unk_0018[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[5] ^= byteValue;
+    }
+    if (this->unk_0018[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[6] ^= byteValue;
+    }
+    if (this->unk_0018[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[4] ^= byteValue;
+    }
+    if (this->unk_0018[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[0] ^= byteValue;
+    }
+    if (this->unk_0018[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[3] ^= byteValue;
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_0020);
+        msg->GetData(this->unk_0020, length);
+        this->unk_0020[length] = 0;
+    }
+    if (this->unk_0018[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[1] ^= byteValue;
+    }
+    if (this->unk_0018[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[2] ^= byteValue;
+    }
+    if (this->unk_0018[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[7] ^= byteValue;
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_0060);
+        msg->GetData(this->unk_0060, length);
+        this->unk_0060[length] = 0;
+    }
+    {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->unk_00E4);
+        msg->GetData(this->unk_00E4, length);
+        this->unk_00E4[length] = 0;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006AD5C0/0x14035D820
 bool ClientGameEventDebugLog::Handle() {
     if (!ClientGameEventDebugLog::s_handler) {
@@ -10503,6 +15031,72 @@ void ClientGuildAchievementDeleted::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->unk_0038[2] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006C50D0
+bool ClientGuildAchievementDeleted::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B3280
+bool ClientGuildAchievementDeleted::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0038[4] = bits.ReadBit();
+    this->unk_0038[1] = bits.ReadBit();
+    this->unk_0038[2] = bits.ReadBit();
+    this->unk_0038[3] = bits.ReadBit();
+    this->unk_0038[0] = bits.ReadBit();
+    this->unk_0038[7] = bits.ReadBit();
+    this->unk_0038[5] = bits.ReadBit();
+    this->unk_0038[6] = bits.ReadBit();
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0030 = value;
+    }
+    if (this->unk_0038[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[5] ^= byteValue;
+    }
+    if (this->unk_0038[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[1] ^= byteValue;
+    }
+    if (this->unk_0038[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[3] ^= byteValue;
+    }
+    if (this->unk_0038[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[6] ^= byteValue;
+    }
+    if (this->unk_0038[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[0] ^= byteValue;
+    }
+    if (this->unk_0038[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[7] ^= byteValue;
+    }
+    *msg >> this->unk_0010;
+    if (this->unk_0038[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[4] ^= byteValue;
+    }
+    if (this->unk_0038[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0038[2] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BEDA0/0x140373CD0
@@ -10582,6 +15176,72 @@ void ClientGuildAchievementEarned::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// OFFSET: 0x006C4900
+bool ClientGuildAchievementEarned::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006A7380
+bool ClientGuildAchievementEarned::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0018[3] = bits.ReadBit();
+    this->unk_0018[1] = bits.ReadBit();
+    this->unk_0018[0] = bits.ReadBit();
+    this->unk_0018[7] = bits.ReadBit();
+    this->unk_0018[4] = bits.ReadBit();
+    this->unk_0018[6] = bits.ReadBit();
+    this->unk_0018[2] = bits.ReadBit();
+    this->unk_0018[5] = bits.ReadBit();
+    if (this->unk_0018[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[2] ^= byteValue;
+    }
+    *msg >> this->unk_0020;
+    if (this->unk_0018[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[0] ^= byteValue;
+    }
+    if (this->unk_0018[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[4] ^= byteValue;
+    }
+    if (this->unk_0018[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[1] ^= byteValue;
+    }
+    if (this->unk_0018[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[3] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    if (this->unk_0018[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[7] ^= byteValue;
+    }
+    if (this->unk_0018[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[5] ^= byteValue;
+    }
+    if (this->unk_0018[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0018[6] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
+}
+
 // OFFSET: 0x006B5440/0x140367750
 bool ClientGuildAchievementEarned::Handle() {
     if (!ClientGuildAchievementEarned::s_handler) {
@@ -10656,6 +15316,71 @@ void ClientGuildCriteriaDeleted::Unpack(CDataStore* msg, bool full) {
         msg->Get(byteValue);
         this->unk_0010[6] ^= byteValue;
     }
+}
+
+// OFFSET: 0x006B5CD0
+bool ClientGuildCriteriaDeleted::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006AD600
+bool ClientGuildCriteriaDeleted::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0010[6] = bits.ReadBit();
+    this->unk_0010[5] = bits.ReadBit();
+    this->unk_0010[7] = bits.ReadBit();
+    this->unk_0010[0] = bits.ReadBit();
+    this->unk_0010[1] = bits.ReadBit();
+    this->unk_0010[3] = bits.ReadBit();
+    this->unk_0010[2] = bits.ReadBit();
+    this->unk_0010[4] = bits.ReadBit();
+    if (this->unk_0010[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[2] ^= byteValue;
+    }
+    if (this->unk_0010[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[3] ^= byteValue;
+    }
+    if (this->unk_0010[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[4] ^= byteValue;
+    }
+    if (this->unk_0010[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[1] ^= byteValue;
+    }
+    if (this->unk_0010[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[7] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0018 = value;
+    }
+    if (this->unk_0010[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[5] ^= byteValue;
+    }
+    if (this->unk_0010[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[0] ^= byteValue;
+    }
+    if (this->unk_0010[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0010[6] ^= byteValue;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BFF80/0x1403751F0
@@ -10776,6 +15501,115 @@ void ClientLfgQueueStatus::Unpack(CDataStore* msg, bool full) {
         msg->Get(value);
         this->unk_002C = value;
     }
+}
+
+// OFFSET: 0x006BE910
+bool ClientLfgQueueStatus::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006B5DD0
+bool ClientLfgQueueStatus::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->unk_0020[3] = bits.ReadBit();
+    this->unk_0020[0] = bits.ReadBit();
+    this->unk_0020[2] = bits.ReadBit();
+    this->unk_0020[6] = bits.ReadBit();
+    this->unk_0020[5] = bits.ReadBit();
+    this->unk_0020[7] = bits.ReadBit();
+    this->unk_0020[1] = bits.ReadBit();
+    this->unk_0020[4] = bits.ReadBit();
+    if (this->unk_0020[0]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[0] ^= byteValue;
+    }
+
+    for (uint32_t i = 0; i < 3; i++) {
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->unk_0048[i] = value;
+        }
+        {
+            uint32_t value = 0;
+            msg->Get(value);
+            this->unk_003C[i] = value;
+        }
+    }
+
+    if (this->unk_0020[4]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[4] ^= byteValue;
+    }
+    if (this->unk_0020[6]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[6] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0018 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0030 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0038 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0014 = value;
+    }
+    if (this->unk_0020[5]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[5] ^= byteValue;
+    }
+    if (this->unk_0020[7]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[7] ^= byteValue;
+    }
+    if (this->unk_0020[3]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[3] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0028 = value;
+    }
+    if (this->unk_0020[1]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[1] ^= byteValue;
+    }
+    if (this->unk_0020[2]) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->unk_0020[2] ^= byteValue;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010 = value;
+    }
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_002C = value;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006BF080/0x140374090
@@ -11011,6 +15845,109 @@ void ClientLoadCufProfiles::Unpack(CDataStore* msg, bool full) {
         }
         this->m_profiles.m_data[i].m_fieldMask |= 0x7E001E;
     }
+}
+
+// OFFSET: 0x006D9610
+bool ClientLoadCufProfiles::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// OFFSET: 0x006D7790
+bool ClientLoadCufProfiles::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_profiles.SetCount(bits.ReadBits<20>());
+
+    for (uint32_t i = 0; i < this->m_profiles.m_count; i++) {
+        this->m_profiles.m_data[i].m_shown = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate10Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate5Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate25Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayHealPrediction = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivatePvE = bits.ReadBit();
+        this->m_profiles.m_data[i].m_horizontalGroups = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate40Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate3Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayAggroHighlight = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayBorder = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate2Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayNonBossDebuffs = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayMainTankAndAssist = bits.ReadBit();
+        this->m_profiles.m_data[i].m_locked = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivateSpec2 = bits.ReadBit();
+        this->m_profiles.m_data[i].m_useClassColors = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayPowerBar = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivateSpec1 = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(this->m_profiles.m_data[i].m_name) = bits.ReadBits<8>();
+        this->m_profiles.m_data[i].m_displayOnlyDispellableDebuffs = bits.ReadBit();
+        this->m_profiles.m_data[i].m_keepGroupsTogether = bits.ReadBit();
+        this->m_profiles.m_data[i].m_dynamicPosition = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate15Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayPets = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivatePvP = bits.ReadBit();
+        this->m_profiles.m_data[i].m_fieldMask |= 0xFF81FFE1;
+        this->m_profiles.m_data[i].m_fieldMask2 |= 0xF;
+    }
+
+    for (uint32_t i = 0; i < this->m_profiles.m_count; i++) {
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_leftOffset = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_frameHeight = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_bottomOffset = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_bottomPoint = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_topOffset = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_topPoint = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_healthText = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_sortBy = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_frameWidth = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_leftPoint = value;
+        }
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(this->m_profiles.m_data[i].m_name);
+            msg->GetData(this->m_profiles.m_data[i].m_name, length);
+            this->m_profiles.m_data[i].m_name[length] = 0;
+        }
+        this->m_profiles.m_data[i].m_fieldMask |= 0x7E001E;
+    }
+
+    return msg->IsRead() != 0;
 }
 
 // OFFSET: 0x006ACB90/0x14035CB40
