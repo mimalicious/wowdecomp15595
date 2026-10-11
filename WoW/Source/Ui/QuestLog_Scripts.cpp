@@ -18,7 +18,6 @@
 #include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/Object/Player.h"
-#include "WoW/Source/Ui/ChatFrame.h"
 #include "WoW/Source/Ui/QuestFrame.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
@@ -66,8 +65,10 @@ static int32_t Script_GetNumQuestLogEntries(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::m_numShownQuests);
     uint32_t count = 0;
 
-    for (int32_t i = 0; i < static_cast<int32_t>(CGQuestLog::m_numQuest); i++) {
-        if (i < 0 || i >= static_cast<int32_t>(CGQuestLog::m_numQuest) || !CGQuestLog::m_quests[i].m_isHeader) {
+    for (uint32_t i = 0; i < CGQuestLog::m_numQuest; i++) {
+        int32_t index = i;
+
+        if (index < 0 || index >= static_cast<int32_t>(CGQuestLog::m_numQuest) || !CGQuestLog::m_quests[index].m_isHeader) {
             count++;
         }
     }
@@ -321,7 +322,7 @@ static int32_t Script_ProcessQuestLogRewardFactions(lua_State* L) {
 
 // OFFSET: 0x0095CE00/0x1406CFC40
 static int32_t Script_GetNumQuestLogRewardFactions(lua_State* L) {
-    lua_pushnumber(L, CGQuestInfo::m_numRewardFactions);
+    lua_pushnumber(L, static_cast<int32_t>(CGQuestInfo::m_numRewardFactions));
     return 1;
 }
 
@@ -390,10 +391,10 @@ static int32_t Script_SetPOIIconOverlapPushDistance(lua_State* L) {
         return 0;
     }
 
-    double distance = lua_tonumber(L, 1);
+    float distance = static_cast<float>(lua_tonumber(L, 1));
 
     if (distance >= CGQuestLog::m_questIconOverlapDist) {
-        CGQuestLog::m_questIconOverlapPushDist = static_cast<float>(distance);
+        CGQuestLog::m_questIconOverlapPushDist = distance;
     }
 
     return 0;
@@ -561,12 +562,12 @@ static int32_t Script_GetSuperTrackedQuestID(lua_State* L) {
 
 // OFFSET: 0x0095DC30/0x1406D0D10
 static int32_t Script_SelectQuestLogEntry(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SelectQuestLogEntry(index)");
+    if (lua_isnumber(L, 1)) {
+        CGQuestLog::SetSelectedQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
         return 0;
     }
 
-    CGQuestLog::SetSelectedQuest(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
+    luaL_error(L, "Usage: SelectQuestLogEntry(index)");
     return 0;
 }
 
@@ -713,7 +714,7 @@ static int32_t Script_QuestPOIGetIconInfo(lua_State* L) {
     float mapY;
     bool outland;
 
-    if (!CGWorldMap::GetWorldPosition(position, mapId, &mapX, &mapY, &outland, false, dungeonMap ? dungeonMap->m_id : 0) || outland || fabs(fabs(mapX * mapY)) < 0.001) {
+    if (!CGWorldMap::GetWorldPosition(position, mapId, &mapX, &mapY, &outland, false, dungeonMap ? dungeonMap->m_id : 0) || outland || fabs(fabs(mapX * mapY)) < 0.001f) {
         return 0;
     }
 
@@ -785,20 +786,22 @@ static int32_t Script_GetQuestLogQuestText(lua_State* L) {
     WOWGUID none = WOWGUID::Make(0);
     QuestCache* quest = g_questDBCache.GetRecord(CGQuestLog::m_selectedQuest, none, QuestQueryCallback, NULL, false);
 
-    if (!quest) {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        return 2;
-    }
-
     char description[3000];
     char objectives[3000];
-    WOWGUID player = ClntObjMgrGetActivePlayer();
-    QuestParserParseText(quest->m_description, description, sizeof(description), player, NULL, 0);
-    player = ClntObjMgrGetActivePlayer();
-    QuestParserParseText(quest->m_objText, objectives, sizeof(objectives), player, NULL, 0);
-    lua_pushstring(L, description);
-    lua_pushstring(L, objectives);
+    WOWGUID player;
+
+    if (quest) {
+        player = ClntObjMgrGetActivePlayer();
+        QuestParserParseText(quest->m_description, description, sizeof(description), player, NULL, 0);
+        player = ClntObjMgrGetActivePlayer();
+        QuestParserParseText(quest->m_objText, objectives, sizeof(objectives), player, NULL, 0);
+        lua_pushstring(L, description);
+        lua_pushstring(L, objectives);
+    } else {
+        lua_pushnil(L);
+        lua_pushnil(L);
+    }
+
     return 2;
 }
 
@@ -1201,8 +1204,9 @@ static int32_t Script_GetQuestWorldMapAreaID(lua_State* L) {
         return 0;
     }
 
+    int32_t questId = static_cast<int32_t>(lua_tonumber(L, 1));
     int32_t floor = 0;
-    int32_t areaId = CGQuestLog::GetQuestWorldMapAreaID(static_cast<int32_t>(lua_tonumber(L, 1)), floor);
+    int32_t areaId = CGQuestLog::GetQuestWorldMapAreaID(questId, floor);
     lua_pushnumber(L, areaId);
     WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(areaId);
 
@@ -1342,7 +1346,8 @@ static int32_t Script_GetQuestLogCriteriaSpell(lua_State* L) {
     lua_pushinteger(L, spellId);
     lua_pushstring(L, spell->m_name);
     lua_pushstring(L, icon ? static_cast<const char*>(icon->m_textureFilename) : NULL);
-    lua_pushboolean(L, static_cast<uint32_t>(spellId) <= static_cast<uint32_t>(g_spellDB.m_maxID) && ((1 << (spellId & 0x1F)) & s_knownSpellBits.m_bits.m_data[static_cast<uint32_t>(spellId) >> 5]));
+    bool known = static_cast<uint32_t>(spellId) > static_cast<uint32_t>(g_spellDB.m_maxID) ? false : ((1 << (spellId & 0x1F)) & s_knownSpellBits.m_bits.m_data[static_cast<uint32_t>(spellId) >> 5]) != 0;
+    lua_pushboolean(L, known);
     return 4;
 }
 
@@ -1386,13 +1391,13 @@ static int32_t Script_QuestPOIGetQuestIDByVisibleIndex(lua_State* L) {
 
     int32_t questId = CGQuestLog::GetPOIQuestIDByVisibleIndex(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
 
-    if (questId < 0) {
-        return 0;
+    if (questId >= 0) {
+        lua_pushnumber(L, questId);
+        lua_pushnumber(L, CGQuestLog::GetQuestIndex(questId));
+        return 2;
     }
 
-    lua_pushnumber(L, questId);
-    lua_pushnumber(L, CGQuestLog::GetQuestIndex(questId));
-    return 2;
+    return 0;
 }
 
 // PROVEN: 3c87843e IDENTICAL/NONE
@@ -1411,15 +1416,15 @@ static int32_t Script_AddAutoQuestPopUp(lua_State* L) {
 
     int32_t questId = static_cast<int32_t>(lua_tonumber(L, 1));
     const char* name = lua_tolstring(L, 2, NULL);
-    int32_t type = _stricmp(name, "OFFER");
+    int32_t type;
 
-    if (type) {
-        if (_stricmp(name, "COMPLETE")) {
-            luaL_error(L, "AddAutoQuestPopUp: Unknown pop-up type %s", name);
-            return 0;
-        }
-
+    if (!_stricmp(name, "OFFER")) {
+        type = 0;
+    } else if (!_stricmp(name, "COMPLETE")) {
         type = 1;
+    } else {
+        luaL_error(L, "AddAutoQuestPopUp: Unknown pop-up type %s", name);
+        return 0;
     }
 
     if (questId) {

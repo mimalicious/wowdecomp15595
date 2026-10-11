@@ -238,7 +238,7 @@ void CGTradeSkillInfo::DoRecast(int32_t spellId) {
     }
 
     if (--CGTradeSkillInfo::m_recastTimes) {
-        Spell_C_CastSpell(spellId, NULL, WOWGUID::Make(0), false);
+        Spell_C_CastSpell(spellId, NULL, WOWGUID(), false);
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_TRADESKILL_RECAST, NULL);
     } else {
         CGTradeSkillInfo::m_recastSpellID = 0;
@@ -321,7 +321,7 @@ static int32_t QSortSkills(const void* a, const void* b) {
         uint32_t indexB = 0;
 
         for (uint32_t i = 0; i < CGTradeSkillInfo::m_numSubClasses; i++) {
-            TradeSkillSubClassInfo* subClass = CGTradeSkillInfo::m_subClassList.m_data[i];
+            TradeSkillSubClassInfo* subClass = i < CGTradeSkillInfo::m_numSubClasses ? CGTradeSkillInfo::m_subClassList.m_data[i] : NULL;
 
             if (subClass->m_itemClass == infoA->m_itemClass && subClass->m_itemSubClass == infoA->m_itemSubClass) {
                 indexA = i;
@@ -673,6 +673,9 @@ bool Profession_FilterSpell(int32_t spellId, int32_t minLevel, int32_t maxLevel,
 
     char text[1024];
     char format[1024];
+    char schoolName[1024];
+    char token[32];
+    char colorName[32];
 
     if (item) {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -734,8 +737,6 @@ bool Profession_FilterSpell(int32_t spellId, int32_t minLevel, int32_t maxLevel,
                 }
 
                 int32_t value = CalculateItemBonusFromPercent(player->m_unit->m_unitFieldMaxitemlevel, item->m_itemLevel, item->m_statModifierBonusAmount[i], item->m_statPercentEditor[i], item->m_statPercentageOfSocket[i], item->m_quality, item->m_inventoryType);
-                char token[32];
-                char schoolName[1024];
                 SStrPrintf(token, 64, "SPELL_SCHOOL%d_CAP", GetDamageClassFromBonusStat(stat));
                 SStrCopy(schoolName, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), sizeof(schoolName));
                 SStrCopy(format, FrameScript_GetText("ITEM_RESIST_SINGLE", -1, GENDER_NOT_APPLICABLE), sizeof(format));
@@ -784,7 +785,6 @@ bool Profession_FilterSpell(int32_t spellId, int32_t minLevel, int32_t maxLevel,
                 continue;
             }
 
-            char colorName[32];
             SStrCopy(colorName, GetSocketIdentifier(item->m_socketColor[i - 2]), sizeof(colorName));
             SStrUpper(colorName);
             SStrPrintf(format, sizeof(format), "%s%s", "EMPTY_SOCKET_", colorName);
@@ -961,13 +961,16 @@ void CGTradeSkillInfo::FilterAndSortSkills(int32_t resetSubClasses) {
             }
         }
 
-        if (!(CGTradeSkillInfo::m_invTypeFilter & info->m_invTypeMask) || (CGTradeSkillInfo::m_showOnlyMakeable && !info->m_numAvailable) || (CGTradeSkillInfo::m_showOnlySkillUps && info->m_difficulty > 2)) {
+        if (!(CGTradeSkillInfo::m_invTypeFilter & info->m_invTypeMask)) {
             info->m_visible = 0;
             CGTradeSkillInfo::m_filteredSkills--;
-            continue;
-        }
-
-        if ((CGTradeSkillInfo::m_itemNameFilter || CGTradeSkillInfo::m_itemMinLevelFilter || CGTradeSkillInfo::m_itemMaxLevelFilter) && !Profession_FilterSpell(CGTradeSkillInfo::m_displayList.m_data[i]->m_spellId, CGTradeSkillInfo::m_itemMinLevelFilter, CGTradeSkillInfo::m_itemMaxLevelFilter, CGTradeSkillInfo::m_itemNameFilter)) {
+        } else if (CGTradeSkillInfo::m_showOnlyMakeable && !info->m_numAvailable) {
+            info->m_visible = 0;
+            CGTradeSkillInfo::m_filteredSkills--;
+        } else if (CGTradeSkillInfo::m_showOnlySkillUps && info->m_difficulty > 2) {
+            info->m_visible = 0;
+            CGTradeSkillInfo::m_filteredSkills--;
+        } else if ((CGTradeSkillInfo::m_itemNameFilter || CGTradeSkillInfo::m_itemMinLevelFilter || CGTradeSkillInfo::m_itemMaxLevelFilter) && !Profession_FilterSpell(CGTradeSkillInfo::m_displayList.m_data[i]->m_spellId, CGTradeSkillInfo::m_itemMinLevelFilter, CGTradeSkillInfo::m_itemMaxLevelFilter, CGTradeSkillInfo::m_itemNameFilter)) {
             CGTradeSkillInfo::m_displayList.m_data[i]->m_visible = 0;
             CGTradeSkillInfo::m_filteredSkills--;
         }

@@ -215,10 +215,10 @@ class CGGuildInfo {
     static void SetWithdrawGoldLimitForSelectedRank(uint32_t amount);
     static void SetTabWithdrawItemLimitForSelectedRank(uint32_t tab, int32_t amount);
     static uint32_t GetTabFlagsForSelectedRank(uint32_t tab);
-    static uint32_t GetGuildBankTabPermissionsByRankID(uint8_t tab, uint32_t rankID);
+    static uint32_t GetGuildBankTabPermissionsByRankID(uint32_t tab, uint32_t rankID);
     static int32_t SetTabFlagsForSelectedRank(int32_t tab, uint32_t flags);
     static int32_t GetTabWithdrawItemLimitForSelectedRank(uint32_t tab);
-    static int32_t GetNumGuildBankTabItemWithdrawalsByRankID(uint8_t tab, uint32_t rankID);
+    static int32_t GetNumGuildBankTabItemWithdrawalsByRankID(uint32_t tab, uint32_t rankID);
     static void UpdateRoster(int32_t force);
     static void GuildRewardsItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
     static void GuildNewsItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success);

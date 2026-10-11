@@ -386,12 +386,12 @@ static int32_t Script_SetGuildRosterSelection(lua_State* L) {
 
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
 
-    if (index >= CGGuildInfo::m_numMembers) {
-        CGGuildInfo::m_selectedMember = 0;
+    if (index < CGGuildInfo::m_numMembers) {
+        CGGuildInfo::m_selectedMember = CGGuildInfo::m_members[index]->m_guid;
         return 0;
     }
 
-    CGGuildInfo::m_selectedMember = CGGuildInfo::m_members[index]->m_guid;
+    CGGuildInfo::m_selectedMember = 0;
     return 0;
 }
 
@@ -1026,19 +1026,20 @@ static int32_t Script_GuildControlShiftRankUp(lua_State* L) {
         return 0;
     }
 
-    int32_t rankOrder = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t rankOrder = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t numRanks = CGGuildInfo::m_numUsedRanks;
 
-    if (rankOrder - 1 <= 0 || rankOrder - 1 >= static_cast<int32_t>(CGGuildInfo::m_numUsedRanks)) {
+    if (rankOrder <= 0 || rankOrder >= numRanks) {
         luaL_error(L, "invalid rank order");
         return 0;
     }
 
-    if (rankOrder - 1 == static_cast<int32_t>(CGGuildInfo::m_numUsedRanks) - 1 && (CGGuildInfo::GetPermissionsByRankOrder(rankOrder - 2) & 0x200000)) {
+    if (rankOrder == numRanks - 1 && (CGGuildInfo::GetPermissionsByRankOrder(rankOrder - 1) & 0x200000)) {
         luaL_error(L, "Lowest rank can't require authenticator");
         return 0;
     }
 
-    GlobalGuildShiftRank request(rankOrder - 1, true);
+    GlobalGuildShiftRank request(rankOrder, true);
     ClientServices::Send(&request);
     return 0;
 }
@@ -1050,19 +1051,20 @@ static int32_t Script_GuildControlShiftRankDown(lua_State* L) {
         return 0;
     }
 
-    int32_t rankOrder = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t rankOrder = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t numRanks = CGGuildInfo::m_numUsedRanks;
 
-    if (rankOrder - 1 <= 0 || rankOrder - 1 >= static_cast<int32_t>(CGGuildInfo::m_numUsedRanks)) {
+    if (rankOrder <= 0 || rankOrder >= numRanks) {
         luaL_error(L, "invalid rank order");
         return 0;
     }
 
-    if (rankOrder == static_cast<int32_t>(CGGuildInfo::m_numUsedRanks) - 1 && (CGGuildInfo::GetPermissionsByRankOrder(rankOrder - 1) & 0x200000)) {
+    if (rankOrder + 1 == numRanks - 1 && (CGGuildInfo::GetPermissionsByRankOrder(rankOrder) & 0x200000)) {
         luaL_error(L, "Lowest rank can't require authenticator");
         return 0;
     }
 
-    GlobalGuildShiftRank request(rankOrder - 1, false);
+    GlobalGuildShiftRank request(rankOrder, false);
     ClientServices::Send(&request);
     return 0;
 }
@@ -1074,22 +1076,28 @@ static int32_t Script_GuildControlGetAllowedShifts(lua_State* L) {
         return 0;
     }
 
-    int32_t rankOrder = static_cast<int32_t>(lua_tonumber(L, 1));
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     int32_t numRanks = CGGuildInfo::m_numUsedRanks;
-    int32_t index = rankOrder - 1;
 
     if (index <= 0 || index >= numRanks) {
         luaL_error(L, "invalid rank order");
         return 0;
     }
 
-    if (index <= 1 || (index == numRanks - 1 && (CGGuildInfo::GetPermissionsByRankOrder(rankOrder - 2) & 0x200000))) {
+    if (index <= 1) {
+        lua_pushboolean(L, 0);
+    } else if (index == numRanks - 1 && (CGGuildInfo::GetPermissionsByRankOrder(index - 1) & 0x200000)) {
         lua_pushboolean(L, 0);
     } else {
         lua_pushboolean(L, 1);
     }
 
-    if (index >= numRanks - 1 || (index + 1 == numRanks - 1 && (CGGuildInfo::GetPermissionsByRankOrder(index) & 0x200000))) {
+    if (index >= numRanks - 1) {
+        lua_pushboolean(L, 0);
+        return 2;
+    }
+
+    if (index + 1 == numRanks - 1 && (CGGuildInfo::GetPermissionsByRankOrder(index) & 0x200000)) {
         lua_pushboolean(L, 0);
         return 2;
     }
@@ -1292,7 +1300,7 @@ static int32_t Script_GetGuildBankTabPermissions(lua_State* L) {
     }
 
     uint32_t tab = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    uint8_t flags = CGGuildInfo::GetTabFlagsForSelectedRank(tab);
+    uint32_t flags = CGGuildInfo::GetTabFlagsForSelectedRank(tab);
 
     if (flags & 0x1) {
         lua_pushnumber(L, 1.0);
@@ -1575,12 +1583,12 @@ static int32_t Script_GetGuildLevel(lua_State* L) {
 static int32_t Script_GetGuildFactionGroup(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player) {
-        return 0;
+    if (player) {
+        lua_pushnumber(L, player->GetPVPFactionIndex());
+        return 1;
     }
 
-    lua_pushnumber(L, player->GetPVPFactionIndex());
-    return 1;
+    return 0;
 }
 
 // PROVEN: b1e1f9cf IDENTICAL/NONE
@@ -1823,10 +1831,11 @@ static int32_t Script_GetGuildRecipeMember(lua_State* L) {
     }
 
     char className[128];
-    char name[51];
+    char name[48];
     bool online;
+    int32_t index = lua_tointeger(L, 1) - 1;
 
-    if (!CGGuildInfo::GetGuildRecipeInfoMember(lua_tointeger(L, 1) - 1, name, className, online)) {
+    if (!CGGuildInfo::GetGuildRecipeInfoMember(index, name, className, online)) {
         return 0;
     }
 
@@ -1983,15 +1992,12 @@ static int32_t Script_SortGuildTradeSkill(lua_State* L) {
     GUILD_SORT_TYPE type = GUILD_SORT_NAME;
     const char* name = lua_tolstring(L, 1, NULL);
 
-    if (_stricmp(name, "name")) {
-        if (!_stricmp(name, "zone")) {
-            CGGuildInfo::SortTradeSkillMembers(GUILD_SORT_ZONE);
-            return 0;
-        }
-
-        if (!_stricmp(name, "skill")) {
-            type = GUILD_SORT_SKILL;
-        }
+    if (!_stricmp(name, "name")) {
+        type = GUILD_SORT_NAME;
+    } else if (!_stricmp(name, "zone")) {
+        type = GUILD_SORT_ZONE;
+    } else if (!_stricmp(name, "skill")) {
+        type = GUILD_SORT_SKILL;
     }
 
     CGGuildInfo::SortTradeSkillMembers(type);
@@ -2034,7 +2040,8 @@ static int32_t Script_CollapseGuildTradeSkillHeader(lua_State* L) {
         return 0;
     }
 
-    CGGuildInfo::SetProfessionHeaderCollapsed(lua_tointeger(L, 1), true);
+    int32_t skillLineID = lua_tointeger(L, 1);
+    CGGuildInfo::SetProfessionHeaderCollapsed(skillLineID, true);
     return 0;
 }
 
@@ -2045,7 +2052,8 @@ static int32_t Script_ExpandGuildTradeSkillHeader(lua_State* L) {
         return 0;
     }
 
-    CGGuildInfo::SetProfessionHeaderCollapsed(lua_tointeger(L, 1), false);
+    int32_t skillLineID = lua_tointeger(L, 1);
+    CGGuildInfo::SetProfessionHeaderCollapsed(skillLineID, false);
     return 0;
 }
 
@@ -2261,15 +2269,17 @@ static int32_t Script_SetGuildNewsFilter(lua_State* L) {
     }
 
     int32_t index = lua_tointeger(L, 1) - 1;
+    int32_t value = lua_tointeger(L, 2);
+    int32_t current = CGGuildInfo::m_guildNewsFilter;
     int32_t filter;
 
-    if (lua_tointeger(L, 2)) {
-        filter = CGGuildInfo::m_guildNewsFilter | (1 << index);
+    if (value) {
+        filter = current | (1 << index);
     } else {
-        filter = CGGuildInfo::m_guildNewsFilter & ~(1 << index);
+        filter = current & ~(1 << index);
     }
 
-    if (filter != CGGuildInfo::m_guildNewsFilter) {
+    if (filter != current) {
         CGGuildInfo::SetGuildNewsFilter(filter);
     }
 
@@ -2297,8 +2307,8 @@ static int32_t Script_GuildNewsSort(lua_State* L) {
         return 0;
     }
 
-    int32_t byDate = lua_tointeger(L, 1);
-    CGGuildInfo::m_newsSortByDate = byDate != 0;
+    bool byDate = lua_tointeger(L, 1) != 0;
+    CGGuildInfo::m_newsSortByDate = byDate;
 
     if (byDate) {
         CGGuildInfo::SortGuildNewsByDate();
@@ -2456,7 +2466,7 @@ static int32_t Script_GetGuildChallengeInfo(lua_State* L) {
 
     uint32_t current = 0;
 
-    for (uint32_t i = 0; i < 4; i++) {
+    for (int32_t i = 0; i < 4; i++) {
         if (CGGuildInfo::m_challengeMaxCount[i] <= 0) {
             continue;
         }
@@ -2516,7 +2526,8 @@ static int32_t Script_GuildMasterAbsent(lua_State* L) {
         }
     }
 
-    lua_pushboolean(L, lastSave > CGGuildInfo::m_guildMasterAbsentDays);
+    bool absent = lastSave > CGGuildInfo::m_guildMasterAbsentDays;
+    lua_pushboolean(L, absent);
     return 1;
 }
 
@@ -2535,7 +2546,7 @@ static int32_t Script_SubmitRequiredGuildRename(lua_State* L) {
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player || !player->IsGuildMaster()) {
+    if (!player || !player->IsGuildLeader()) {
         return 0;
     }
 
@@ -2568,28 +2579,6 @@ static int32_t Script_GuildInfo(lua_State* L) {
     }
 
     return 0;
-}
-
-// OFFSET: 0x00931B40/0x140699E50
-static int32_t Script_GetGuildRosterLargestContribution(lua_State* L) {
-    lua_pushnumber(L, static_cast<int32_t>(CGGuildInfo::m_largestWeeklyXPContribution));
-    lua_pushnumber(L, static_cast<int32_t>(CGGuildInfo::m_largestTotalXPContribution));
-    return 2;
-}
-
-// OFFSET: 0x00931B80/0x140699E90
-static int32_t Script_GetGuildRosterLargestAchievementPoints(lua_State* L) {
-    lua_pushnumber(L, CGGuildInfo::m_largestPersonalAchievementPoints);
-    return 1;
-}
-
-// OFFSET: 0x00932260/0x14069A680
-static int32_t Script_InGuildParty(lua_State* L) {
-    lua_pushboolean(L, CGGuildInfo::m_inGuildParty);
-    lua_pushnumber(L, CGGuildInfo::m_numGuildGroupMembers);
-    lua_pushnumber(L, CGGuildInfo::m_numGuildGroupRequired);
-    lua_pushnumber(L, CGGuildInfo::m_guildXPEarnedMult);
-    return 4;
 }
 
 // STATIC: 0x00D11CB8

@@ -30,7 +30,6 @@
 #include "WoW/Source/Object/CreatureStats.h"
 #include "WoW/Source/Object/GameObjectStats.h"
 #include "WoW/Source/Object/ItemStats.h"
-#include "WoW/Source/Ui/ChatFrame.h"
 #include "WoW/Source/Ui/QuestLogLeaderBoardParams.h"
 #include "WoW/Source/Ui/WorldMap.h"
 #include <cmath>
@@ -138,10 +137,10 @@ int32_t CGQuestLog::GetQuestLogSlot(int32_t index) {
 
 // OFFSET: 0x0095BFC0
 static void QuestSelectQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (success) {
-        AddQuestPointDisplay();
-    } else {
+    if (!success) {
         ConsoleWrite("Invalid quest log entry", DEFAULT_COLOR);
+    } else {
+        AddQuestPointDisplay();
     }
 }
 
@@ -162,19 +161,19 @@ void DisplayQuestFailed(int32_t id, const WOWGUID& guid, void* param, bool succe
 
 // OFFSET: 0x0095C040/0x1406CED90
 void QuestCreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (success) {
-        Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
-    } else {
+    if (!success) {
         ConsoleWrite("Invalid creature in quest", DEFAULT_COLOR);
+    } else {
+        Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
     }
 }
 
 // OFFSET: 0x0095C070/0x1406CEDB0
 void ObjectQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (success) {
-        Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
-    } else {
+    if (!success) {
         ConsoleWrite("Invalid object in quest", DEFAULT_COLOR);
+    } else {
+        Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
     }
 }
 
@@ -333,19 +332,13 @@ int32_t CGQuestLog::IsQuestFailed(uint32_t index) {
 
 // OFFSET: 0x0095C3E0
 int32_t CGQuestLog::IsQuestExpiredByID(int32_t questId) {
-    uint32_t index = 0;
-
-    for (; index < CGQuestLog::m_numQuest; index++) {
+    for (uint32_t index = 0; index < CGQuestLog::m_numQuest; index++) {
         if (CGQuestLog::m_quests[index].m_questId == questId) {
-            break;
+            return !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
         }
     }
 
-    if (index >= CGQuestLog::m_numQuest) {
-        return 0;
-    }
-
-    return !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
+    return 0;
 }
 
 // OFFSET: 0x0095C430/0x1406CF1C0
@@ -361,7 +354,7 @@ uint32_t IsQuestStartEvent(uint32_t index) {
 
 // OFFSET: 0x0095C490/0x1406CF230
 int32_t CGQuestLog::GetQuestIndex(int32_t questId) {
-    for (int32_t i = 0; i < 100; i++) {
+    for (uint32_t i = 0; i < 100; i++) {
         if (!CGQuestLog::m_quests[i].m_isHeader && CGQuestLog::m_quests[i].m_questId == questId) {
             return i + 1;
         }
@@ -408,7 +401,7 @@ bool CGQuestLog::IsPOIVisibleOnWorldMap(const BLOBPOI& point, int32_t mapId, int
         return false;
     }
 
-    return !outland && fabs(fabs(x * y)) >= 0.001;
+    return !outland && fabs(fabs(x * y)) >= 0.001f;
 }
 
 // PROVEN: 84c84734 IDENTICAL/NONE
@@ -450,36 +443,34 @@ static int32_t QSortQuestSortTypes(const void* a, const void* b) {
         return 1;
     }
 
-    char nameA[256];
-    char nameB[256];
-    memset(nameA, 0, sizeof(nameA));
-    memset(nameB, 0, sizeof(nameB));
+    char nameA[256] = { 0 };
+    char nameB[256] = { 0 };
 
-    if (sortA >= 0) {
-        AreaTableRec* area = g_areaTableDB.GetRecord(sortA);
-
-        if (area) {
-            SStrCopy(nameA, area->m_areaName, 256);
-        }
-    } else {
+    if (sortA < 0) {
         QuestSortRec* sort = g_questSortDB.GetRecord(-sortA);
 
         if (sort) {
             SStrCopy(nameA, sort->m_sortName, 256);
         }
-    }
-
-    if (sortB >= 0) {
-        AreaTableRec* area = g_areaTableDB.GetRecord(sortB);
+    } else {
+        AreaTableRec* area = g_areaTableDB.GetRecord(sortA);
 
         if (area) {
-            SStrCopy(nameB, area->m_areaName, 256);
+            SStrCopy(nameA, area->m_areaName, 256);
         }
-    } else {
+    }
+
+    if (sortB < 0) {
         QuestSortRec* sort = g_questSortDB.GetRecord(-sortB);
 
         if (sort) {
             SStrCopy(nameB, sort->m_sortName, 256);
+        }
+    } else {
+        AreaTableRec* area = g_areaTableDB.GetRecord(sortB);
+
+        if (area) {
+            SStrCopy(nameB, area->m_areaName, 256);
         }
     }
 
@@ -502,7 +493,7 @@ void CGQuestLog::SetServerTime(int32_t serverTime, int32_t resetTime) {
     int32_t now = _time32(NULL);
     CGQuestLog::m_timeOffset = now - serverTime;
 
-    if (now == serverTime) {
+    if (!CGQuestLog::m_timeOffset) {
         CGQuestLog::m_timeOffset = 1;
     }
 
@@ -562,20 +553,18 @@ void CGQuestLog::GetBlobBounds(const TSGrowableArray<BLOBPOI>& points, CRect& bo
 bool CGQuestLog::IsPOIVisibleOnDungeonMap(const BLOBPOI& point, int32_t mapId, int32_t floor, int32_t dungeonMapId) {
     DungeonMapRec* dungeonMap = g_dungeonMapDB.GetRecord(dungeonMapId);
 
-    if (!dungeonMap || mapId != dungeonMap->m_mapID || floor != dungeonMap->m_floorIndex) {
-        return false;
+    if (dungeonMap && mapId == dungeonMap->m_mapID && floor == dungeonMap->m_floorIndex) {
+        C3Vector position(static_cast<float>(point.m_x), static_cast<float>(point.m_y), 0.0f);
+        float x;
+        float y;
+        bool outland;
+
+        if (CGWorldMap::GetWorldPosition(position, mapId, &x, &y, &outland, false, dungeonMapId) && !outland && !fequalz(fabs(x * y), 0.0f, 0.001f)) {
+            return true;
+        }
     }
 
-    C3Vector position(static_cast<float>(point.m_x), static_cast<float>(point.m_y), 0.0f);
-    float x;
-    float y;
-    bool outland;
-
-    if (!CGWorldMap::GetWorldPosition(position, mapId, &x, &y, &outland, false, dungeonMapId) || outland) {
-        return false;
-    }
-
-    return !fequalz(fabs(x * y), 0.0f, 0.001f);
+    return false;
 }
 
 // OFFSET: 0x0095DE40/0x1406D0FE0
@@ -801,36 +790,35 @@ void CGQuestLog::FilterAndSortQuests() {
 
 // OFFSET: 0x0095E950
 void CGQuestLog::CollapseHeader(uint32_t index, int32_t collapse) {
-    if (index >= CGQuestLog::m_numQuest || !CGQuestLog::m_quests[index].m_isHeader) {
-        g_questLogCollapseHeaderFilterCVar->Set(-(collapse != 0), true, false, false, true);
+    if (index < CGQuestLog::m_numQuest && CGQuestLog::m_quests[index].m_isHeader) {
+        uint32_t i = 0;
+
+        for (; i < CGQuestLog::m_numSortTypes; i++) {
+            if (CGQuestLog::m_sortTypes[i] == CGQuestLog::m_quests[index].m_questId) {
+                break;
+            }
+        }
+
+        if (i != CGQuestLog::m_numSortTypes) {
+            int32_t filter = g_questLogCollapseHeaderFilterCVar->m_intValue;
+            int32_t bit = 1 << i;
+            int32_t value;
+
+            if (!collapse) {
+                value = ~bit & filter;
+            } else {
+                value = bit | filter;
+            }
+
+            g_questLogCollapseHeaderFilterCVar->Set(value, true, false, false, true);
+            CGQuestLog::FilterAndSortQuests();
+            Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
+        }
+    } else {
+        g_questLogCollapseHeaderFilterCVar->Set(collapse ? -1 : 0, true, false, false, true);
         CGQuestLog::FilterAndSortQuests();
         Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
-        return;
     }
-
-    uint32_t i = 0;
-
-    for (; i < CGQuestLog::m_numSortTypes; i++) {
-        if (CGQuestLog::m_sortTypes[i] == CGQuestLog::m_quests[index].m_questId) {
-            break;
-        }
-    }
-
-    if (i == CGQuestLog::m_numSortTypes) {
-        return;
-    }
-
-    int32_t filter = g_questLogCollapseHeaderFilterCVar->m_intValue;
-
-    if (collapse) {
-        filter |= 1 << i;
-    } else {
-        filter &= ~(1 << i);
-    }
-
-    g_questLogCollapseHeaderFilterCVar->Set(filter, true, false, false, true);
-    CGQuestLog::FilterAndSortQuests();
-    Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
 }
 
 // OFFSET: 0x0095EA10/0x1406D1D10
@@ -872,11 +860,10 @@ void CGQuestLog::LoadAutoQuestPopUps() {
     }
 
     if (list.m_state != 1) {
-        char value[256];
-        value[0] = 'v';
-        value[1] = 1;
-        value[list.m_pos] = '\0';
-        list.m_cvar->Set(value, true, false, false, true);
+        list.m_buffer[0] = 'v';
+        list.m_buffer[1] = 1;
+        list.m_buffer[list.m_pos] = 0;
+        list.m_cvar->Set(list.m_buffer, true, false, false, true);
     }
 }
 
@@ -893,11 +880,12 @@ void CGQuestLog::SaveAutoQuestPopUps() {
         list.AddNextValue(CGQuestLog::m_autoQuestPopUps[i].m_type);
     }
 
-    char value[256];
-    value[0] = 'v';
-    value[1] = 1;
-    value[2] = '\0';
-    list.m_cvar->Set(value, true, false, false, true);
+    if (list.m_state != 1) {
+        list.m_buffer[0] = 'v';
+        list.m_buffer[1] = 1;
+        list.m_buffer[list.m_pos] = 0;
+        list.m_cvar->Set(list.m_buffer, true, false, false, true);
+    }
 }
 
 // OFFSET: 0x0095EC00/0x1406D1F50
@@ -1447,7 +1435,7 @@ int32_t CGQuestLog::GetQuestGreenRange() {
         return 0;
     }
 
-    uint32_t index = player->m_unit->m_unitFieldLevel / 5;
+    uint32_t index = static_cast<int32_t>(player->m_unit->m_unitFieldLevel) / 5;
 
     if (index >= 20) {
         index = 19;
@@ -1953,34 +1941,26 @@ void CGQuestLog::RemoveAutoQuestPopUp(int32_t questId) {
 
 // OFFSET: 0x00961BB0/0x1406D5920
 const char* CGQuestLog::GetQuestName(int32_t index) {
-    if (index < 0 || index >= static_cast<int32_t>(CGQuestLog::m_numQuest)) {
-        return NULL;
-    }
+    if (index >= 0 && index < static_cast<int32_t>(CGQuestLog::m_numQuest)) {
+        if (CGQuestLog::m_quests[index].m_isHeader) {
+            if (CGQuestLog::m_quests[index].m_questId > 0) {
+                AreaTableRec* area = g_areaTableDB.GetRecord(CGQuestLog::m_quests[index].m_questId);
 
-    int32_t id = CGQuestLog::m_quests[index].m_questId;
+                if (area) {
+                    return area->m_areaName;
+                }
+            } else if (CGQuestLog::m_quests[index].m_questId < 0) {
+                QuestSortRec* sort = g_questSortDB.GetRecord(-CGQuestLog::m_quests[index].m_questId);
 
-    if (!CGQuestLog::m_quests[index].m_isHeader) {
-        return CGQuestLog::GetQuestNameByID(id);
-    }
-
-    if (id > 0) {
-        AreaTableRec* area = g_areaTableDB.GetRecord(id);
-
-        if (area) {
-            return area->m_areaName;
+                if (sort) {
+                    return sort->m_sortName;
+                }
+            } else {
+                return "Missing header! (quest designers)";
+            }
+        } else {
+            return CGQuestLog::GetQuestNameByID(CGQuestLog::m_quests[index].m_questId);
         }
-
-        return NULL;
-    }
-
-    if (id >= 0) {
-        return "Missing header! (quest designers)";
-    }
-
-    QuestSortRec* sort = g_questSortDB.GetRecord(-id);
-
-    if (sort) {
-        return sort->m_sortName;
     }
 
     return NULL;
@@ -2468,10 +2448,10 @@ bool CGQuestLog::SortQuestWatches() {
             CGQuestLog::m_questWatches[i].m_distance = distance;
 
             if (sorted) {
-                if (previous <= distance) {
-                    previous = distance;
-                } else {
+                if (previous > distance) {
                     sorted = false;
+                } else {
+                    previous = distance;
                 }
             }
         }

@@ -271,26 +271,23 @@ int32_t CGGuildInfo::GetMemberProfessionRank(GuildMemberInfo* member, int32_t sk
 
 // OFFSET: 0x009311E0/0x140699230
 void CGGuildInfo::SetSortType(GUILD_SORT_TYPE type) {
-    uint32_t index = 0;
+    for (uint32_t index = 0; index < NUM_GUILD_SORT_TYPES; index++) {
+        if (CGGuildInfo::m_sortCriteria[index].m_type == type) {
+            int32_t reverse = CGGuildInfo::m_sortCriteria[index].m_reverse;
 
-    while (CGGuildInfo::m_sortCriteria[index].m_type != type) {
-        if (++index >= NUM_GUILD_SORT_TYPES) {
+            if (!index) {
+                reverse = reverse == 0;
+            }
+
+            for (uint32_t i = index; i > 0; i--) {
+                CGGuildInfo::m_sortCriteria[i] = CGGuildInfo::m_sortCriteria[i - 1];
+            }
+
+            CGGuildInfo::m_sortCriteria[0].m_type = type;
+            CGGuildInfo::m_sortCriteria[0].m_reverse = reverse;
             return;
         }
     }
-
-    int32_t reverse = CGGuildInfo::m_sortCriteria[index].m_reverse;
-
-    if (!index) {
-        reverse = reverse == 0;
-    }
-
-    for (uint32_t i = index; i; i--) {
-        CGGuildInfo::m_sortCriteria[i] = CGGuildInfo::m_sortCriteria[i - 1];
-    }
-
-    CGGuildInfo::m_sortCriteria[0].m_type = type;
-    CGGuildInfo::m_sortCriteria[0].m_reverse = reverse;
 }
 
 // PROVEN: fd4f309a IDENTICAL/NONE
@@ -532,15 +529,19 @@ uint32_t CGGuildInfo::GetTabFlagsForSelectedRank(uint32_t tab) {
         }
     }
 
-    if (index >= 0 && tab < 8) {
-        return CGGuildInfo::m_rankInfo[index].m_tabFlags[tab];
+    if (index < 0) {
+        return 0;
     }
 
-    return 0;
+    if (tab >= 8) {
+        return 0;
+    }
+
+    return CGGuildInfo::m_rankInfo[index].m_tabFlags[tab];
 }
 
 // OFFSET: 0x009316C0/0x1406996D0
-uint32_t CGGuildInfo::GetGuildBankTabPermissionsByRankID(uint8_t tab, uint32_t rankID) {
+uint32_t CGGuildInfo::GetGuildBankTabPermissionsByRankID(uint32_t tab, uint32_t rankID) {
     int32_t index = -1;
 
     for (uint32_t i = 0; i < CGGuildInfo::m_numUsedRanks; i++) {
@@ -598,15 +599,19 @@ int32_t CGGuildInfo::GetTabWithdrawItemLimitForSelectedRank(uint32_t tab) {
         }
     }
 
-    if (index >= 0 && tab < 8) {
-        return CGGuildInfo::m_rankInfo[index].m_tabWithdrawItemLimit[tab];
+    if (index < 0) {
+        return 0;
     }
 
-    return 0;
+    if (tab >= 8) {
+        return 0;
+    }
+
+    return CGGuildInfo::m_rankInfo[index].m_tabWithdrawItemLimit[tab];
 }
 
 // OFFSET: 0x009317D0/0x140699800
-int32_t CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(uint8_t tab, uint32_t rankID) {
+int32_t CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(uint32_t tab, uint32_t rankID) {
     int32_t index = -1;
 
     for (uint32_t i = 0; i < CGGuildInfo::m_numUsedRanks; i++) {
@@ -616,11 +621,15 @@ int32_t CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(uint8_t tab, uint
         }
     }
 
-    if (index >= 0 && tab < 8) {
-        return CGGuildInfo::m_rankInfo[index].m_tabWithdrawItemLimit[tab];
+    if (index < 0) {
+        return 0;
     }
 
-    return 0;
+    if (tab >= 8) {
+        return 0;
+    }
+
+    return CGGuildInfo::m_rankInfo[index].m_tabWithdrawItemLimit[tab];
 }
 
 // PROVEN: b056c625 IDENTICAL/NONE
@@ -664,11 +673,11 @@ static int32_t QSortGuildNews(const void* a, const void* b) {
     }
 
     if (newsA->m_flags & 0x1) {
-        if (newsB->m_flags) {
-            return newsA->m_date.Compare(newsB->m_date);
+        if (!newsB->m_flags & 0x1) {
+            return -1;
         }
 
-        return -1;
+        return newsA->m_date.Compare(newsB->m_date);
     }
 
     if (newsB->m_flags & 0x1) {
@@ -698,11 +707,11 @@ static int32_t QSortGuildNewsByDate(const void* a, const void* b) {
     const GuildNewsEvent* newsB = static_cast<const GuildNewsEvent*>(b);
 
     if (newsA->m_flags & 0x1) {
-        if (newsB->m_flags) {
-            return newsA->m_date.Compare(newsB->m_date);
+        if (!newsB->m_flags & 0x1) {
+            return -1;
         }
 
-        return -1;
+        return newsA->m_date.Compare(newsB->m_date);
     }
 
     if ((newsB->m_flags & 0x1) || newsA->m_isHeader) {
@@ -1570,14 +1579,14 @@ static int32_t QSortRecipeMembers(const void* a, const void* b) {
     GuildMemberInfo* memberB = indexB >= CGGuildInfo::m_numMembers ? NULL : CGGuildInfo::m_members[indexB];
 
     if (memberA && memberB) {
-        if (memberA->m_online == memberB->m_online) {
-            return SStrCmpUTF8I(memberA->m_name, memberB->m_name, STORM_MAX_STR);
+        if (memberA->m_online != memberB->m_online) {
+            return 2 * (memberA->m_online == 0) - 1;
         }
 
-        return 2 * (memberA->m_online == 0) - 1;
+        return SStrCmpUTF8I(memberA->m_name, memberB->m_name, STORM_MAX_STR);
     }
 
-    return guidA >= guidB ? 1 : -1;
+    return guidA < guidB ? -1 : 1;
 }
 
 // PROVEN: ad83d57c IDENTICAL/NONE
@@ -1731,11 +1740,13 @@ bool CGGuildInfo::ClientGuildMemberUpdateNoteHandler(ClientGuildMemberUpdateNote
 
     uint32_t index = CGGuildInfo::GetMemberIndex(*reinterpret_cast<uint64_t*>(msg->m_memberGUID));
 
-    if (index < CGGuildInfo::m_numMembers && CGGuildInfo::m_members[index]) {
+    GuildMemberInfo* member;
+
+    if (index < CGGuildInfo::m_numMembers && (member = CGGuildInfo::m_members[index]) != NULL) {
         if (msg->m_isPublic) {
-            SStrCopy(CGGuildInfo::m_members[index]->m_note, msg->m_note, sizeof(CGGuildInfo::m_members[index]->m_note));
+            SStrCopy(member->m_note, msg->m_note, sizeof(member->m_note));
         } else {
-            SStrCopy(CGGuildInfo::m_members[index]->m_officerNote, msg->m_note, sizeof(CGGuildInfo::m_members[index]->m_officerNote));
+            SStrCopy(member->m_officerNote, msg->m_note, sizeof(member->m_officerNote));
         }
     }
 
@@ -1812,8 +1823,10 @@ bool CGGuildInfo::ClientGuildReputationWeeklyCapHandler(ClientGuildReputationWee
     uint64_t guid = player->m_obj->m_guid.m_guid;
     uint32_t index = CGGuildInfo::GetMemberIndex(guid);
 
-    if (index < CGGuildInfo::m_numMembers && CGGuildInfo::m_members[index]) {
-        CGGuildInfo::m_members[index]->m_guildRepToCap = msg->m_repToCap;
+    GuildMemberInfo* member;
+
+    if (index < CGGuildInfo::m_numMembers && (member = CGGuildInfo::m_members[index]) != NULL) {
+        member->m_guildRepToCap = msg->m_repToCap;
         FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REP_UPDATED, NULL);
     }
 
@@ -2125,7 +2138,7 @@ bool CGGuildInfo::GetGuildKnownRecipes(int32_t skillLineID, uint8_t* data, int32
         return false;
     }
 
-    memcpy(data, recipes->m_recipes, bytes >= 300 ? 300 : bytes);
+    memcpy(data, recipes->m_recipes, bytes < 300 ? bytes : 300);
     size = static_cast<uint32_t>(size) >= 300 ? 300 : size;
     return true;
 }
@@ -2219,7 +2232,8 @@ void CGGuildInfo::SetMemberOnlineStatus(uint64_t guid, bool online) {
                 CGGuildInfo::m_numOnline = CGGuildInfo::m_numMembers;
             }
         } else if (member->m_online) {
-            CGGuildInfo::m_numOnline = CGGuildInfo::m_numOnline != 1 ? CGGuildInfo::m_numOnline - 1 : 0;
+            uint32_t count = CGGuildInfo::m_numOnline - 1;
+            CGGuildInfo::m_numOnline = count > 0 ? count : 0;
         }
 
         CGGuildInfo::m_members[i]->m_online = online;
@@ -2304,16 +2318,16 @@ void CGGuildInfo::SetProfessionCategoryFilter(int32_t skillLineID) {
         return;
     }
 
-    for (GuildProfessionHeader* header = CGGuildInfo::m_professionList.Head(); !CGGuildInfo::m_professionList.IsEnd(header); ) {
-        GuildProfessionHeader* next = CGGuildInfo::m_professionList.RawNext(header);
+    GuildProfessionHeader* next;
+
+    for (GuildProfessionHeader* header = CGGuildInfo::m_professionList.Head(); !CGGuildInfo::m_professionList.IsEnd(header); header = next) {
+        next = CGGuildInfo::m_professionList.RawNext(header);
 
         if (header->m_skillLineID == skillLineID) {
             CGGuildInfo::m_professionCategoryFilter = skillLineID;
             CGGuildInfo::UpdateProfessions();
             return;
         }
-
-        header = next;
     }
 }
 
