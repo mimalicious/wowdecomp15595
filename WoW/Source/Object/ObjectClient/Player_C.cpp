@@ -13187,16 +13187,6 @@ void CGPlayer_C::GetAttackSkillRank(int32_t hand, int32_t& rank, int32_t& bonus)
     }
 }
 
-// OFFSET: #0x0073C1D0
-void CGPlayer_C::OnSpellEffectClear(CEffect* effect) {
-    bool updateAnimation = effect->m_kitRec && effect->m_kitRec->m_animID > 0 && (effect->m_flags & 0x1000);
-    CGObject_C::OnSpellEffectClear(effect);
-
-    if (updateAnimation) {
-        this->UpdateBaseAnimation(0, -1);
-    }
-}
-
 // OFFSET: 0x0055D100
 int32_t CGPlayer_C::OnSignedResults(CDataStore* msg) {
     WOWGUID petition;

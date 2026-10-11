@@ -547,6 +547,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     float GetRawFacing() const override;
     uint64_t GetTransportGUID() const override;
     int32_t CanBeTargetted() const override;
+    void OnSpellEffectClear(CEffect* effect) override;
     int32_t IsHighlightSuppressed() const override;
     CM2Model* GetObjectModel() const override;
     float GetBaseAlpha() const override;
@@ -631,9 +632,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     uint8_t GetAuraStackCount(uint32_t index);
     int32_t IsControllable() const;
     VehicleSeatRec* GetVehicleSeatRec(uint8_t seat) const;
-    void PreStartUpdatingMissileTrajectory(int32_t spellId, uint32_t castId);
     void StartUpdatingMissileTrajectory(int32_t spellId, uint32_t start, uint32_t end);
-    void StopUpdatingMissileTrajectory(int32_t spellId);
     int32_t IsUpdatingMissileTrajectory() const;
     int32_t IsMissileTrajectoryUpdateWaitingForMissileRelease() const;
     void SendFinalMissileTrajectoryUpdate();
