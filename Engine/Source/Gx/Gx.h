@@ -131,6 +131,7 @@ void GxRsSet(EGxRenderState which, CGxShader* shader, uint32_t permute);
 int32_t GxShaderValid(CGxShader* shader, uint32_t permute);
 void GxRsSet(EGxRenderState which, int32_t value);
 void GxRsSet(EGxRenderState which, float value);
+void GxRsSet(EGxRenderState which, CImVector value);
 void GxUpdateAlphaRef(EGxRenderState which);
 void GxSceneClear(uint32_t mask, CImVector color);
 void GxScenePresent(void* window);

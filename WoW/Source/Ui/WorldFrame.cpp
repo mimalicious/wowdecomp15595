@@ -2768,7 +2768,7 @@ CGWorldFrame::CGWorldFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     World::AddRenderCallback(0, static_cast<WORLD_RENDER_CALLBACK>(&CGWorldFrame::RenderPostAnimateCallback), this, 0);
     World::AddRenderCallback(1, CGWorldFrame::RenderOpaqueCallback, this, 0);
     World::AddRenderCallback(2, static_cast<WORLD_RENDER_CALLBACK>(&CGWorldFrame::RenderTransparentCallback), this, 0);
-    g_theGxDevicePtr->AddDeviceRestoredCallback(CGWorldFrame::WaterResetCallback);
+    g_theGxDevicePtr->AddDeviceRestoredCallback(reinterpret_cast<GxDeviceCallback>(&CGWorldFrame::WaterResetCallback));
     Liquid::AddConfigChangedCallback(CGWorldFrame::WaterResetCallback);
 }
 
@@ -2822,7 +2822,7 @@ CGWorldFrame::~CGWorldFrame() {
     World::RemoveRenderCallback(0, static_cast<WORLD_RENDER_CALLBACK>(&CGWorldFrame::RenderPostAnimateCallback), this);
     World::RemoveRenderCallback(1, CGWorldFrame::RenderOpaqueCallback, this);
     World::RemoveRenderCallback(2, static_cast<WORLD_RENDER_CALLBACK>(&CGWorldFrame::RenderTransparentCallback), this);
-    g_theGxDevicePtr->RemoveDeviceRestoredCallback(CGWorldFrame::WaterResetCallback);
+    g_theGxDevicePtr->RemoveDeviceRestoredCallback(reinterpret_cast<GxDeviceCallback>(&CGWorldFrame::WaterResetCallback));
     Liquid::RemoveConfigChangedCallback(CGWorldFrame::WaterResetCallback);
 }
 

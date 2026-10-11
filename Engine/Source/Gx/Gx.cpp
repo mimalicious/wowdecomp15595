@@ -1003,6 +1003,21 @@ void GxRsSet(EGxRenderState which, int32_t value) {
     }
 }
 
+// OFFSET: 0x00430BE0
+void GxRsSet(EGxRenderState which, CImVector value) {
+    if (!g_theGxDevicePtr->m_context) {
+        return;
+    }
+
+    CGxAppRenderState& state = g_theGxDevicePtr->m_appRenderStates[which];
+    int32_t color = *reinterpret_cast<int32_t*>(&value);
+
+    if (state.m_value.m_data.p != reinterpret_cast<void*>(static_cast<intptr_t>(color))) {
+        g_theGxDevicePtr->IRsDirty(which);
+        state.m_value.m_data.p = reinterpret_cast<void*>(static_cast<intptr_t>(color));
+    }
+}
+
 // OFFSET: 0x0040B0A0/0x14000D9A0
 void GxUpdateAlphaRef(EGxRenderState which) {
     if (which != GxRs_AlphaRef || !g_theGxDevicePtr->m_context) {
