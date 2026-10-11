@@ -299,7 +299,7 @@ void DBCache<T, TKey, THashKey>::Load() {
     }
 }
 
-// OFFSET: [#0x0067B6A0<CreatureStats_C, int, HASHKEY_INT>, #0x0067BD40<GameObjectStats_C, int, HASHKEY_INT>, #0x0067D0D0<NPCText, int, HASHKEY_INT>, #0x0067D930<GuildStats_C, unsigned __int64, CHashKeyGUID>, #0x0067DE90<QuestCache, int, HASHKEY_INT>, #0x0067E3E0<PageTextCache_C, int, HASHKEY_INT>, #0x0067F4C0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, #0x006806D0<DanceCache, int, HASHKEY_INT>, #0x0067C3E0, #0x0067FA80, #0x0067D770<NameCache, unsigned __int64, CHashKeyGUID>, #0x0067EA30<PetNameCache, int, HASHKEY_INT>, #0x0067EF70<CGPetition, int, HASHKEY_INT>, #0x00680170<ArenaTeamCache, int, HASHKEY_INT>]
+// OFFSET: [0x004B12D0<CreatureStats_C, int, HASHKEY_INT>, 0x004B1300<GameObjectStats_C, int, HASHKEY_INT>, #0x0067D0D0<NPCText, int, HASHKEY_INT>, 0x004B17A0<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004B1800<QuestCache, int, HASHKEY_INT>, #0x0067E3E0<PageTextCache_C, int, HASHKEY_INT>, #0x0067F4C0<ItemTextCache_C, unsigned __int64, CHashKeyGUID>, #0x006806D0<DanceCache, int, HASHKEY_INT>, #0x0067C3E0, #0x0067FA80, 0x004B1360<NameCache, unsigned __int64, CHashKeyGUID>, 0x004B1860<PetNameCache, int, HASHKEY_INT>, 0x004B1890<CGPetition, int, HASHKEY_INT>, #0x00680170<ArenaTeamCache, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 T* DBCache<T, TKey, THashKey>::GetRecord(TKey key, const WOWGUID& guid, void (*callback)(int32_t id, const WOWGUID& guid, void* param, bool success), void* param, bool unique) {
     return this->GetRecordInternal(key, guid, callback, 0, param, unique);
@@ -311,7 +311,7 @@ T* DBCache<T, TKey, THashKey>::GetRecord2(TKey key, const WOWGUID& guid, void (*
     return this->GetRecordInternal(key, guid, reinterpret_cast<void (*)(int32_t, const WOWGUID&, void*, bool)>(callback), 1, param, unique);
 }
 
-// OFFSET: [0x004ADFD0/0x1400E2380<GuildStats_C, unsigned __int64, CHashKeyGUID>]
+// OFFSET: [0x004ADFD0/0x1400E2380<GuildStats_C, unsigned __int64, CHashKeyGUID>, 0x004ACB30<CreatureStats_C, int, HASHKEY_INT>, 0x004AD170<GameObjectStats_C, int, HASHKEY_INT>, 0x004ADDF0<NameCache, unsigned __int64, CHashKeyGUID>, 0x004AE590<QuestCache, int, HASHKEY_INT>, 0x004AF0F0<PetNameCache, int, HASHKEY_INT>, 0x004AF620<CGPetition, int, HASHKEY_INT>]
 template <class T, class TKey, class THashKey>
 T* DBCache<T, TKey, THashKey>::GetRecordInternal(TKey key, const WOWGUID& guid, void (*callback)(int32_t id, const WOWGUID& guid, void* param, bool success), uint32_t keyCallback, void* param, bool unique) {
     if (DBCacheIsNullKey(key)) {

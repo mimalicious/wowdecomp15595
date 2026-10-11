@@ -6827,7 +6827,7 @@ void CGUnit_C::ScaleChangeFinished() {
     }
 }
 
-// OFFSET: #0x007275C0
+// OFFSET: 0x005C20E0
 void CGUnit_C::RenderAutoTrackCursor() {
     if (this->m_obj->m_guid != CGUnit_C::s_activeMover || CGUnit_C::s_trackingType == 13 || (CGUnit_C::s_trackingType != 4 && CGUnit_C::s_trackingType != 10)) {
         return;

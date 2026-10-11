@@ -515,7 +515,7 @@ bool CGBag_C::FindTotemCategory(int32_t type, int32_t& mask, bool recurse, uint3
     return false;
 }
 
-// OFFSET: #0x007540B0
+// OFFSET: 0x005F2640
 bool CGBag_C::ContainsItem(WOWGUID guid, bool recurse, uint32_t flags) const {
     int32_t hasBank = this->m_hasBank;
     uint32_t slot = hasBank ? s_bagSlotRanges[0].m_first : 0;
