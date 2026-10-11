@@ -1,3 +1,4 @@
+#include <cctype>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -23,6 +24,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Console/ConsoleClient.h"
 #include "WoW/Source/ConsoleDevice/ConsoleDevice.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Hardware.h"
 #include "WoW/Source/WowSysMessageOutput.h"
 
@@ -194,7 +196,7 @@ static bool ErrorDisplayShowCallback(CVar* var, const char* oldValue, const char
     return true;
 }
 
-// OFFSET: #0x004016A0
+// OFFSET: 0x00403890/0x140003100
 static void DisplayErrorLevelStatus() {
     uint32_t minLevel = SysMsgGetMinDisplayLevel();
     uint32_t maxLevel = SysMsgGetMaxDisplayLevel();
@@ -208,24 +210,24 @@ static void DisplayErrorLevelStatus() {
     SStrCopy(status, "Displaying ", sizeof(status));
 
     if (minLevel == maxLevel) {
-        SStrPack(status, "only ", STORM_MAX_STR);
+        SStrPack(status, "only ", sizeof(status));
     }
 
     switch (minLevel) {
         case 0:
-            SStrPack(status, "informational messages", STORM_MAX_STR);
+            SStrPack(status, "informational messages", sizeof(status));
             break;
 
         case 1:
-            SStrPack(status, "warnings", STORM_MAX_STR);
+            SStrPack(status, "warnings", sizeof(status));
             break;
 
         case 2:
-            SStrPack(status, "errors", STORM_MAX_STR);
+            SStrPack(status, "errors", sizeof(status));
             break;
 
         case 3:
-            SStrPack(status, "fatal errors", STORM_MAX_STR);
+            SStrPack(status, "fatal errors", sizeof(status));
             break;
 
         default:
@@ -235,15 +237,15 @@ static void DisplayErrorLevelStatus() {
     if (minLevel != maxLevel) {
         switch (maxLevel) {
             case 1:
-                SStrPack(status, " through warnings", STORM_MAX_STR);
+                SStrPack(status, " through warnings", sizeof(status));
                 break;
 
             case 2:
-                SStrPack(status, " through errors", STORM_MAX_STR);
+                SStrPack(status, " through errors", sizeof(status));
                 break;
 
             case 3:
-                SStrPack(status, " through fatal errors", STORM_MAX_STR);
+                SStrPack(status, " through fatal errors", sizeof(status));
                 break;
         }
     }
@@ -251,7 +253,7 @@ static void DisplayErrorLevelStatus() {
     ConsoleWrite(status, DEFAULT_COLOR);
 }
 
-// OFFSET: #0x004017C0
+// OFFSET: 0x00403B20
 static bool ErrorDisplayMinLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t level = SStrToInt(value);
 
@@ -266,7 +268,7 @@ static bool ErrorDisplayMinLevelCallback(CVar* var, const char* oldValue, const 
     return true;
 }
 
-// OFFSET: #0x00401800
+// OFFSET: 0x00403B60
 static bool ErrorDisplayMaxLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t level = SStrToInt(value);
 
@@ -381,10 +383,14 @@ static bool GammaCallback(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
-// OFFSET: #0x00401A80
+// OFFSET: 0x00401640
 static bool DesktopGammaCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    // WoWFix335 windowed-mode-gamma-fix: desktopGamma ignored, original applies the desktop ramp when set
-    SStrToInt(value);
+    if (SStrToInt(value)) {
+        CGxGammaRamp ramp;
+        g_theGxDevicePtr->DeviceGamma(ramp);
+        g_theGxDevicePtr->DeviceSetGamma(ramp);
+        return true;
+    }
 
     float gamma = s_gammaCvar ? s_gammaCvar->m_floatValue : 1.0f;
 
@@ -393,7 +399,6 @@ static bool DesktopGammaCallback(CVar* var, const char* oldValue, const char* va
     }
 
     g_theGxDevicePtr->DeviceSetGamma(gamma);
-
     return true;
 }
 
@@ -452,7 +457,7 @@ static uint32_t GetM2FasterModifierMask(int32_t faster, int32_t debug) {
     }
 }
 
-// OFFSET: #0x004021C0
+// OFFSET: 0x00401950
 static bool M2FasterChanged(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t faster = SStrToInt(value);
 
@@ -621,12 +626,12 @@ static bool ForceAdditiveParticleSortCallback(CVar* var, const char* oldValue, c
     return true;
 }
 
-// OFFSET: #0x00402670
+// OFFSET: 0x00401D90
 static bool AsyncFileReadThreadSleepCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     return static_cast<uint32_t>(SStrToInt(value)) <= 100;
 }
 
-// OFFSET: #0x00402690
+// OFFSET: 0x00401DB0
 static bool AsyncFileReadHandlerTimeoutCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     return static_cast<uint32_t>(SStrToInt(value) - 20) <= 230;
 }
@@ -658,11 +663,30 @@ bool TimingMethodCallback(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
-// OFFSET: #0x00403320
+// OFFSET: 0x00402730
 bool LocaleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    SStrCopy(s_localeCode, value, sizeof(s_localeCode));
+    if (strlen(value) != 4) {
+        return false;
+    }
 
-    return true;
+    char locale[5];
+    locale[0] = static_cast<char>(tolower(value[0]));
+    locale[1] = static_cast<char>(tolower(value[1]));
+    locale[2] = static_cast<char>(toupper(value[2]));
+    locale[3] = static_cast<char>(toupper(value[3]));
+    locale[4] = 0;
+
+    int32_t index = LocaleNameToIndex(locale);
+
+    if (!strcmp(g_localeNames[index], value)) {
+        return true;
+    }
+
+    if (!_stricmp(g_localeNames[index], value)) {
+        var->Set(g_localeNames[index], true, false, false, true);
+    }
+
+    return false;
 }
 
 // OFFSET: 0x00403CC0/0x140003770

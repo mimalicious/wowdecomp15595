@@ -74,7 +74,6 @@ extern CVar* g_playIntroMovie;
 extern CVar* s_cvTextureCacheSize;
 extern CVar* s_cvTextureFilteringMode;
 extern CVar* s_desktopGammaCvar;
-extern uint8_t s_expansionLevel;
 extern CVar* s_gammaCvar;
 extern int32_t s_locale;
 extern const char* s_raceFileNames[24];
@@ -106,8 +105,6 @@ uint32_t ClientSetTimer(uint32_t delay, EVENTHANDLERGUIDFUNC handler, uint64_t g
 void ClientRegisterConsoleCommands();
 int32_t CommonMain();
 int32_t DestroyEngineCallback(const void* data, void* param);
-uint8_t GetClientExpansionLevel();
-const char* GetInstallLocationString();
 uint32_t GetM2CvarFlags();
 int32_t InitializeEngineCallback(const void* data, void* param);
 bool InitializeGlobal();

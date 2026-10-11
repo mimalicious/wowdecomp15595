@@ -115,7 +115,6 @@
 #include "WoW/Source/WorldClient/shadow.h"
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldParam.h"
-#include "WoW/Source/WowServices/PatchFiles.h"
 #include "WoW/Source/WowServices/RealmConnection.h"
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/AccountData.h"
@@ -302,9 +301,6 @@ const char* s_iniLocaleNames[9] = { "enUS", "koKR", "frFR", "deDE", "zhCN", "zhT
 // STATIC: 0x00C9A9CC
 uint32_t s_localeIds[15] = { 'deDE', 'enGB', 'enUS', 'esES', 'frFR', 'koKR', 'zhCN', 'zhTW', 'enCN', 'enTW', 'esMX', 'ruRU', 'enUS', 'ptBR', 'ptPT' };
 
-// STATIC: #0x00B2F9E1
-uint8_t s_expansionLevel;
-
 // STATIC: #0x00B2FA18
 static uint32_t s_firstBaseArchive;
 
@@ -342,9 +338,6 @@ static uint32_t s_unk_B2FA10;
 
 // STATIC: 0x00D36354/0x140BEF888
 static char* s_mfilDownloadErrors;
-
-// STATIC: #0x00B2FA48
-static char s_installLocation[1024];
 
 // STATIC: 0x00D732EC
 bool g_hasIsoLocale[15];
@@ -1917,40 +1910,6 @@ int32_t DestroyEngineCallback(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x004029B0
-static bool IsPTRBuild() {
-    bool isPTR = false;
-    uint32_t size = 0;
-    char* data = GetComponentVersionData(&size);
-
-    if (data) {
-        XMLTree* tree = XMLTree_Load(data, size);
-
-        if (tree) {
-            XMLNode* root = XMLTree_GetRoot(tree)->m_child;
-
-            if (root) {
-                XMLNode* product = root->GetChildByName("product");
-
-                if (product && !SStrCmp(product->m_body, "WoWT", STORM_MAX_STR)) {
-                    isPTR = true;
-                }
-            }
-
-            XMLTree_Free(tree);
-        }
-
-        delete[] data;
-    }
-
-    return isPTR;
-}
-
-// OFFSET: #0x00402A40
-uint8_t GetClientExpansionLevel() {
-    return s_expansionLevel;
-}
-
 // OFFSET: 0x004020A0
 void SetPaths() {
     SFile::DisableSFileCheckDisk();
@@ -1968,24 +1927,6 @@ void SetPaths() {
     SFile::SetBasePath(path);
     s_unk_B2FA10 = 0;
     SFile::SetDataPath(s_dataDirectory);
-}
-
-// OFFSET: #0x00402A50
-const char* GetInstallLocationString() {
-    if (!SFile::IsTrial()) {
-        return NULL;
-    }
-
-    if (!s_installLocation[0]) {
-        if (IsPTRBuild()) {
-            SRegLoadString("World of Warcraft\\PTR", "RetailInstallPath", 1, s_installLocation, sizeof(s_installLocation));
-            return s_installLocation;
-        }
-
-        SRegLoadString("World of Warcraft", "RetailInstallPath", 1, s_installLocation, sizeof(s_installLocation));
-    }
-
-    return s_installLocation;
 }
 
 // OFFSET: 0x004026C0/0x1400020D0
@@ -2136,7 +2077,7 @@ static int32_t Packet_SMSG_LOGIN_VERIFY_WORLD(void* param, NETMESSAGE msgId, uin
     return ClientLoadNewWorld(mapID, &position, facing);
 }
 
-// OFFSET: #0x004033C0
+// OFFSET: 0x004029B0/0x140002250
 void ClientPostClose(int32_t reason) {
     s_closeErrorStringId = reason;
     EventPostClose();
@@ -2157,7 +2098,7 @@ static void LogRealmInfo(char* buffer, uint32_t size) {
     }
 }
 
-// OFFSET: #0x00403460
+// OFFSET: 0x00402C50/0x140005B60
 static void LogObjectInfo(CGObject_C* object, const char* label, char* buffer, uint32_t size) {
     if (!SMemIsValidPointer(object, sizeof(CGObject_C), 0)) {
         return;
@@ -2183,7 +2124,7 @@ static void LogZoneInfo(CGObject_C* object, char* buffer, uint32_t size) {
     SStrPack(buffer, "\r\n", size);
 }
 
-// OFFSET: #0x00404B80
+// OFFSET: 0x00404D60/0x140006D20
 int32_t STORMAPI WowLogHeader(char* buffer, uint32_t bufferchars) {
     SStrPrintf(buffer, bufferchars, "WoWBuild: %d\r\n", 12340);
 
@@ -2721,32 +2662,80 @@ void ClientDestroyGame(int32_t charSelect, int32_t resumeGlue, int32_t worldLogi
     }
 }
 
-// OFFSET: #0x00406B70
+// OFFSET: 0x00402810/0x140005660
+static void CreatePlaceholderArchive() {
+    const char* locale = CVar::Lookup("locale")->m_stringValue.m_str;
+
+    for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
+        char path[260];
+        GetArchivePath(path, sizeof(path), s_archives[i].m_name, locale);
+
+        int64_t fileSize = OsGetFileSize(path);
+        int64_t streamedSize = 0;
+
+        if (fileSize == 0xFFFFFFFF) {
+            fileSize = 0;
+        }
+
+        fileSize += 8;
+
+        if (Blizzard::Streaming::GetStreamedFileSize(path, &streamedSize) && streamedSize > fileSize) {
+            s_placeholderArchiveSize += streamedSize - fileSize;
+        }
+    }
+
+    if (s_placeholderArchiveSize > 0) {
+        HOSFILE file = OsCreateFile(s_placeholderArchivePath, 0x40000000, 0, 2, 0x80, 0x3F3F3F3F);
+
+        if (file != OS_INVALID_FILE) {
+            OsSetFilePointer(file, s_placeholderArchiveSize, 0);
+            OsSetEndOfFile(file);
+            OsCloseFile(file);
+        }
+    }
+}
+
+// OFFSET: 0x00407C20/0x140009C20
 void BeginCloseGame() {
     WoWReport::Shutdown();
+    BGLoading::StopBGLoadThread();
     SMemSetDebugFlags(0, 8);
-    OsIMEDestroy();
     OsTimeShutdown();
     EventDestroy();
-    ConsoleDeviceDestroy();
+
+    if (s_engineInitialized) {
+        OsIMEDestroy();
+        DefaultShaders::Destroy();
+        ConsoleDeviceDestroy();
+    }
 
     {
         ForEveryRunOnceWTF runOnce;
         runOnce.Execute(CVar::Delete);
     }
 
+    CreatePlaceholderArchive();
     ConsoleDestroyClientCVar();
     ConsoleDestroyClientCommand();
     BaseDestroyGlobal();
+
+    if (SFile::IsStreamingMode()) {
+        ShutdownOggDecompression();
+    }
+
+    PatchOnDemand::Cache::Shutdown();
+    BackgroundCache::ShutdownManager();
     CloseAllArchives();
-    ShutdownStreamingIfTrial();
-    Blizzard::Streaming::ShutdownStreaming();
+    SFile::ShutdownStreaming();
+    DestroyArchivePreloads();
 
     if (s_closeErrorStringId) {
         Startup_StringsRec* title = g_startup_StringsDB.GetRecord(1);
         Startup_StringsRec* message = g_startup_StringsDB.GetRecord(s_closeErrorStringId);
-        OsGuiMessageBox(NULL, 0, message ? message->m_message : "Unknown Error", title ? title->m_message : "World of Warcraft");
+        OsGuiMessageBox(NULL, 1, message ? message->m_message : "Unknown Error", title ? title->m_message : "World of Warcraft");
     }
+
+    g_startup_StringsDB.Unload(&Startup_StringsRec::s_meta);
 }
 
 // OFFSET: 0x00408340/0x14000A610
@@ -2790,24 +2779,24 @@ int32_t CommonMain() {
     return 0;
 }
 
-// OFFSET: #0x00406EF0
+// OFFSET: 0x00408580
 void GameClientCommands::Uninstall() {
     ConsoleCommandUnregister("port");
     ConsoleCommandUnregister("charmport");
     ConsoleCommandUnregister("worldport");
     ConsoleCommandUnregister("setrawpos");
-    ConsoleCommandUnregister("showplayer");
+    ConsoleCommandUnregister("showPlayer");
     ConsoleCommandUnregister("togglehelm");
     ConsoleCommandUnregister("togglecloak");
 }
 
-// OFFSET: #0x00407870
+// OFFSET: 0x00408FF0
 void GameClientCommands::Install() {
     ConsoleCommandRegister("port", CCommand_Teleport, CATEGORY_DEBUG, NULL, NULL);
     ConsoleCommandRegister("charmport", CCommand_CharmTeleport, CATEGORY_DEBUG, NULL, NULL);
     ConsoleCommandRegister("worldport", CCommand_WorldTeleport, CATEGORY_DEBUG, NULL, NULL);
     ConsoleCommandRegister("setrawpos", CCommand_SetRawPos, CATEGORY_DEBUG, NULL, NULL);
-    ConsoleCommandRegister("showplayer", CCommand_TogglePlayer, CATEGORY_GRAPHICS, NULL, NULL);
+    ConsoleCommandRegister("showPlayer", CCommand_TogglePlayer, CATEGORY_GRAPHICS, NULL, NULL);
     ConsoleCommandRegister("togglehelm", CCommand_ToggleHelm, CATEGORY_GAME, NULL, NULL);
     ConsoleCommandRegister("togglecloak", CCommand_ToggleCloak, CATEGORY_GAME, NULL, NULL);
 }
@@ -2911,7 +2900,7 @@ int32_t Packet_SMSG_TRANSFER_ABORTED(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: #0x004034F0
+// OFFSET: 0x00402D20/0x140002260
 int32_t STORMAPI SendErrorLog(uint32_t errorcode, const char* description, const char* filename, int32_t linenumber, const char* errorstring) {
     char path[260];
 
@@ -2924,7 +2913,7 @@ int32_t STORMAPI SendErrorLog(uint32_t errorcode, const char* description, const
     return 1;
 }
 
-// OFFSET: #0x00404EE0
+// OFFSET: 0x00405600
 static void ClientBeginTaxiBenchmarkMode() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2938,10 +2927,10 @@ static void ClientBeginTaxiBenchmarkMode() {
     s_clientTaxiBenchTotalFrames = 0;
     s_clientTaxiBenchMaxFPS = 0.0;
     s_clientTaxiBenchTotalTime = 0.0;
-    s_clientTaxiBenchDelayTime = OsGetAsyncTimeMs() + 5000;
+    s_clientTaxiBenchDelayTime = FrameTime::GetCurTimeMs() + 5000;
 }
 
-// OFFSET: #0x00404F60
+// OFFSET: 0x00405680/0x1400074E0
 static void ClientEndTaxiBenchmarkMode(int32_t silent) {
     if (!s_clientTaxiBenchEnabled) {
         return;
@@ -2970,7 +2959,7 @@ static void ClientEndTaxiBenchmarkMode(int32_t silent) {
     CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
 }
 
-// OFFSET: #0x00405130
+// OFFSET: 0x004057F0
 void ClientUpdateTaxiBenchmarkMode() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2999,7 +2988,7 @@ void ClientUpdateTaxiBenchmarkMode() {
 
     s_clientTaxiTimestamp = now;
 
-    if (static_cast<int32_t>(OsGetAsyncTimeMs() - s_clientTaxiBenchDelayTime) < 0) {
+    if (static_cast<int32_t>(FrameTime::GetCurTimeMs() - s_clientTaxiBenchDelayTime) < 0) {
         return;
     }
 
@@ -3102,7 +3091,7 @@ int32_t Packet_SMSG_PLAYED_TIME(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x004033B0
+// OFFSET: 0x004029A0/0x140002240
 void ClientKillTimer(uint32_t id, EVENTHANDLERFUNC handler, const char* name) {
     EventKillTimer(id, handler, name);
 }
@@ -3126,12 +3115,12 @@ void SendBotDetected2(uint32_t msgId, uint32_t code) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00403370
+// OFFSET: 0x00402960/0x140002220
 uint32_t ClientSetTimer(uint32_t delay, EVENTHANDLERFUNC handler, void* param) {
     return EventSetTimer(delay, handler, param);
 }
 
-// OFFSET: #0x00403380
+// OFFSET: 0x00402970
 uint32_t ClientSetTimer(uint32_t delay, EVENTHANDLERGUIDFUNC handler, uint64_t guid, void* param) {
     return EventSetTimer(delay, handler, guid, param);
 }

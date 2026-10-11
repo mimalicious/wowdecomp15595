@@ -22,9 +22,6 @@
 // STATIC: #0x00AB93E8
 static Blizzard::Using::Use s_useFile("Blizzard::File");
 
-// STATIC: #0x00AB7AC8
-static uint8_t s_clientInitialized = 1;
-
 // STATIC: 0x00D06E3A
 bool Blizzard::Streaming::s_throttleProgress = true;
 
@@ -99,22 +96,6 @@ bool Blizzard::Streaming::IsStreamingMode() {
     return Blizzard::Streaming::s_streamingReady;
 }
 
-// OFFSET: #0x00428010
-bool CheckIfStreamingAndTrial() {
-    return Blizzard::Streaming::s_streamingReady && Blizzard::Streaming::s_isStreamingTrial;
-}
-
-// OFFSET: #0x00428800
-void StringToLower(char* str) {
-    if (!str) {
-        return;
-    }
-
-    for (; *str; str++) {
-        *str = tolower(*str);
-    }
-}
-
 // OFFSET: #0x00437A00
 void Blizzard::Time::GetElapsedSinceStart(bool start) {
     // STATIC: #0x00B38A48
@@ -140,18 +121,6 @@ Blizzard::Streaming::DownloadProgress::~DownloadProgress() {
 // INLINED
 void Blizzard::Streaming::DownloadProgress::ResetTime() {
     this->m_lastTime = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
-}
-
-// OFFSET: %0x0075FC10
-void ShutdownStreamingIfTrial() {
-    if (CheckIfStreamingAndTrial()) {
-        GetStreamingManagerSingleton()->Shutdown();
-    }
-}
-
-// OFFSET: #0x0041E4E0
-void SetClientInitialized(uint8_t initialized) {
-    s_clientInitialized = initialized;
 }
 
 // PROVEN: 9c1c3fbf IDENTICAL/NONE

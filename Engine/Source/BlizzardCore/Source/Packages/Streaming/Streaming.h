@@ -3,11 +3,12 @@
 
 #include <cstdint>
 #include <deque>
+#include <map>
 #include <string>
+#include <vector>
 #include "Engine/Source/BlizzardCore/Source/System/File/Types.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Manifests.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Storage.h"
-#include "Engine/Source/BlizzardCore/Source/Packages/Streaming/StreamingManager.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
@@ -150,22 +151,7 @@ void SetZone(int32_t areaId, int32_t subzoneId);
 }
 }
 
-bool CheckIfStreamingAndTrial();
-void StringToLower(char* str);
-StreamingManager* GetStreamingManagerSingleton();
-void SetClientInitialized(uint8_t initialized);
-void ShutdownStreamingIfTrial();
-int32_t StreamingGetRace();
-bool StreamingIsRaceDataReady(int32_t raceID);
-void StreamingSetAreaOfInterest(int32_t chunkY, int32_t chunkX);
-void StreamingSetMapId(int32_t mapId);
-void StreamingSetRace(int32_t raceID);
-void StreamingSetState(int32_t state);
 char* GetComponentVersionData(uint32_t* size);
-void SetActiveDataSource(bool restore);
-void StartDataPreloadThread();
-void StreamingSetEnabled(bool enabled);
-float StreamingGetLoadFraction(int32_t raceID);
 
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Streaming.inl"
 
