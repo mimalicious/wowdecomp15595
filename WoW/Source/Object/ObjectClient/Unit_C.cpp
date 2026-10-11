@@ -396,8 +396,11 @@ static const char* s_combatTextTokens[12] = { "COMBAT_TEXT_NONE", "COMBAT_TEXT_M
 // STATIC: #0x00A34C20
 static const uint32_t s_combatTextTypes[12] = { 11, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3 };
 
-// STATIC: #0x00ADAA6C
+// STATIC: 0x00CA62E4
 static uint32_t s_petSpellDamageColor = 0xFFFFDE00;
+
+// STATIC: 0x00CA62E8
+static uint32_t s_petSpellAlternateColor = 0xFF19FF19;
 
 // STATIC: 0x00CA62EC
 static uint32_t s_petMeleeDamageColor = 0xFFFF8400;
@@ -17951,7 +17954,7 @@ void CGUnit_C::UpdateAllSmoothFacing() {
     }
 }
 
-// OFFSET: #0x007190A0
+// OFFSET: 0x005B07F0/0x1402236F0
 static bool IsOwnedByActivePlayer(const WOWGUID& guid, bool* isPlayer) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         *isPlayer = true;
@@ -17974,12 +17977,27 @@ static bool IsOwnedByActivePlayer(const WOWGUID& guid, bool* isPlayer) {
     return false;
 }
 
+// OFFSET: 0x005B8E30/0x14022CCF0
+static bool IsGameObjectOwnedByActivePlayer(const WOWGUID& guid) {
+    bool isPlayer;
+    CGGameObject_C* gameObject = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
+    return gameObject && IsOwnedByActivePlayer(gameObject->m_gameObject->m_createdBy, &isPlayer);
+}
+
 // OFFSET: 0x005B8E80
-void CGUnit_C::AddWorldText(const WOWGUID& source, int32_t reason, const SpellRec* spell, bool periodic) {
+void CGUnit_C::AddWorldText(const WOWGUID& source, int32_t reason, const SpellRec* spell, bool periodic, bool alternateColor) {
     bool melee = !spell || (spell->m_attributesExC & 0x8000);
     bool isPlayer;
 
-    if (this->m_obj->m_guid == CGUnit_C::s_activeMover || !IsOwnedByActivePlayer(source, &isPlayer) || !g_combatDamageCVar->m_intValue || (periodic && !s_cvCombatLogPeriodicSpells->m_intValue)) {
+    if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
+        return;
+    }
+
+    if (!IsOwnedByActivePlayer(source, &isPlayer) && !IsGameObjectOwnedByActivePlayer(source)) {
+        return;
+    }
+
+    if (!g_combatDamageCVar->m_intValue || (periodic && !s_cvCombatLogPeriodicSpells->m_intValue)) {
         return;
     }
 
@@ -18000,7 +18018,7 @@ void CGUnit_C::AddWorldText(const WOWGUID& source, int32_t reason, const SpellRe
             return;
         }
 
-        color = reinterpret_cast<const CImVector*>(&s_petSpellDamageColor);
+        color = reinterpret_cast<const CImVector*>(alternateColor ? &s_petSpellAlternateColor : &s_petSpellDamageColor);
     }
 
     const char* text = FrameScript_GetText(s_combatTextTokens[reason], -1, GENDER_NOT_APPLICABLE);
@@ -18015,7 +18033,15 @@ void CGUnit_C::AddWorldDamageText(const WOWGUID& source, int32_t amount, const S
     bool melee = !spellColor && (!spell || (spell->m_attributesExC & 0x8000));
     bool isPlayer;
 
-    if (!amount || this->m_obj->m_guid == CGUnit_C::s_activeMover || !IsOwnedByActivePlayer(source, &isPlayer) || !g_combatDamageCVar->m_intValue || (periodic && !s_cvCombatLogPeriodicSpells->m_intValue)) {
+    if (!amount || this->m_obj->m_guid == CGUnit_C::s_activeMover) {
+        return;
+    }
+
+    if (!IsOwnedByActivePlayer(source, &isPlayer) && !IsGameObjectOwnedByActivePlayer(source)) {
+        return;
+    }
+
+    if (!g_combatDamageCVar->m_intValue || (periodic && !s_cvCombatLogPeriodicSpells->m_intValue)) {
         return;
     }
 
@@ -21474,7 +21500,15 @@ void CGUnit_C::AddWorldHonorGainText(int32_t honor, int32_t pvpRank, const char*
 void CGUnit_C::AddWorldHealingText(const WOWGUID& source, int32_t amount, const SpellRec* spell, bool crit, int32_t a6) {
     bool isPlayer;
 
-    if (!amount || this->m_obj->m_guid == CGUnit_C::s_activeMover || !IsOwnedByActivePlayer(source, &isPlayer) || !g_combatHealingCVar->m_intValue) {
+    if (!amount || this->m_obj->m_guid == CGUnit_C::s_activeMover) {
+        return;
+    }
+
+    if (!IsOwnedByActivePlayer(source, &isPlayer) && !IsGameObjectOwnedByActivePlayer(source)) {
+        return;
+    }
+
+    if (!g_combatHealingCVar->m_intValue) {
         return;
     }
 
