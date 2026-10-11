@@ -1792,7 +1792,7 @@ static int32_t Script_CancelLogout(lua_State* L) {
 static int32_t Script_FocusUnit(lua_State* L) {
     WOWGUID guid;
 
-    if (Script_GetGUIDFromToken(lua_tolstring(L, 1, NULL), guid, true)) {
+    if (Script_GetGUIDFromToken(lua_tolstring(L, 1, NULL), guid, true, false)) {
         CGGameUI::SetFocusTarget(guid);
     }
 
@@ -4692,7 +4692,7 @@ static int32_t Script_IsItemInRange(lua_State* L) {
         WOWGUID target;
         uint8_t inRange;
 
-        if (player && Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true) && Spell_C_RangeCheckSelected(player, spell, target, &inRange, false, NULL)) {
+        if (player && Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false) && Spell_C_RangeCheckSelected(player, spell, target, &inRange, false, NULL)) {
             if (inRange) {
                 lua_pushnumber(L, 1.0);
             } else {
@@ -4723,7 +4723,7 @@ static int32_t Script_UseItemByName(lua_State* L) {
         if (item) {
             WOWGUID target;
 
-            if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
+            if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false)) {
                 item->UseItem(&target, 0);
             }
         }
@@ -5174,7 +5174,7 @@ static int32_t Script_StartAttack(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
 
     if (token && *token) {
-        if (!Script_GetGUIDFromToken(token, guid, false)) {
+        if (!Script_GetGUIDFromToken(token, guid, false, false)) {
             guid = CGGameUI::ClosestObjectMatch(token, TYPEMASK_UNIT, 1, StringToBOOL(L, 2, 0), FLT_MAX, 1);
         }
 

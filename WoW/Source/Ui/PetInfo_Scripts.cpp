@@ -434,7 +434,7 @@ static int32_t Script_PetAttack(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
 
     if (token && *token) {
-        if (!Script_GetGUIDFromToken(token, target, false)) {
+        if (!Script_GetGUIDFromToken(token, target, false, false)) {
             int32_t exact = StringToBOOL(L, 2, 0);
             target = CGGameUI::ClosestObjectMatch(token, TYPEMASK_UNIT, 1, exact, FLT_MAX, 1);
         }
@@ -697,7 +697,7 @@ static int32_t Script_CastPetAction(lua_State* L) {
 
     WOWGUID target;
 
-    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
+    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false)) {
         CGPetInfo::SendPetAction(*action, target, 0);
         SE3SoundKitProperties properties;
         SE3::PlaySoundKit("GAMEABILITYACTIVATE", NULL, &properties, NULL, __FILE__, __LINE__, "Script_CastPetAction");

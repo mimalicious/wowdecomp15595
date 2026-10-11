@@ -1083,7 +1083,7 @@ static int32_t Script_GetChatWindowMessages(lua_State* L) {
 
     int32_t count = 0;
 
-    for (uint32_t i = 0; i < 46; i++) {
+    for (uint32_t i = 0; i < 49; i++) {
         if (s_chatWindows[index].m_messageGroups[i]) {
             lua_checkstack(L, 1);
             lua_pushstring(L, s_chatMessageGroups[i].m_name);
@@ -1109,7 +1109,7 @@ static int32_t Script_AddChatWindowMessages(lua_State* L) {
 
     const char* group = lua_tolstring(L, 2, NULL);
 
-    for (uint32_t i = 0; i < 46; i++) {
+    for (uint32_t i = 0; i < 49; i++) {
         if (!SStrCmpI(group, s_chatMessageGroups[i].m_name, STORM_MAX_STR)) {
             s_chatWindows[index].m_messageGroups[i] = 1;
             return 0;
@@ -1134,7 +1134,7 @@ static int32_t Script_RemoveChatWindowMessages(lua_State* L) {
 
     const char* group = lua_tolstring(L, 2, NULL);
 
-    for (uint32_t i = 0; i < 46; i++) {
+    for (uint32_t i = 0; i < 49; i++) {
         if (!SStrCmpI(group, s_chatMessageGroups[i].m_name, STORM_MAX_STR)) {
             s_chatWindows[index].m_messageGroups[i] = 0;
             return 0;
@@ -1464,7 +1464,7 @@ static int32_t Script_UnitIsSilenced(lua_State* L) {
     if (record) {
         guid = record->m_guid;
     } else {
-        Script_GetGUIDFromToken(name, guid, false);
+        Script_GetGUIDFromToken(name, guid, false, false);
     }
 
     if (guid) {
@@ -1760,7 +1760,7 @@ static int32_t Script_IsSilenced(lua_State* L) {
     if (record) {
         guid = record->m_guid;
     } else {
-        Script_GetGUIDFromToken(name, guid, false);
+        Script_GetGUIDFromToken(name, guid, false, false);
     }
 
     if (guid) {

@@ -83,7 +83,7 @@ static bool GetSlotFromLua(lua_State* L, int32_t* slot, int32_t* petSpell, int32
     } else if (allowName && lua_isstring(L, 1)) {
         WOWGUID target;
 
-        if (!lua_isstring(L, 2) || Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, false)) {
+        if (!lua_isstring(L, 2) || Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, false, false)) {
             *slot = CGSpellBook::FindSlotByName(lua_tolstring(L, 1, NULL), *petSpell);
 
             if (type) {
@@ -233,7 +233,7 @@ static int32_t Script_SetSpellbookPetAction(lua_State* L) {
     action.m_data = s_actions[slot - 1];
     WOWGUID target;
 
-    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
+    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false)) {
         CGPetInfo::SendPetAction(action, target, 0);
         SE3SoundKitProperties properties;
         SE3::PlaySoundKit("GAMEABILITYACTIVATE", NULL, &properties, NULL, __FILE__, __LINE__, "Script_SetSpellbookPetAction");
@@ -470,7 +470,7 @@ static int32_t Script_CastSpellByID(lua_State* L) {
 
     WOWGUID target;
 
-    if (!Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
+    if (!Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false)) {
         return 0;
     }
 
@@ -975,7 +975,7 @@ static int32_t Script_CastSpellByName(lua_State* L) {
 
     WOWGUID target;
 
-    if (!Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
+    if (!Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false)) {
         return 0;
     }
 
@@ -1476,7 +1476,7 @@ static int32_t Script_GetSpellCooldown(lua_State* L) {
         } else {
             WOWGUID target;
 
-            if (!lua_isstring(L, 2) || Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, false)) {
+            if (!lua_isstring(L, 2) || Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, false, false)) {
                 spellId = CGSpellBook::FindSpellByName(lua_tolstring(L, 1, NULL), petSpell);
             } else {
                 spellId = CGSpellBook::FindSpellByName(lua_tolstring(L, 1, NULL), lua_tolstring(L, 2, NULL), petSpell);
@@ -1907,7 +1907,7 @@ static int32_t Script_IsSpellInRange(lua_State* L) {
     WOWGUID target;
     uint8_t inRange;
 
-    if (spell && (caster = petSpell ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) && Script_GetGUIDFromToken(lua_tolstring(L, type, NULL), target, true) && Spell_C_RangeCheckSelected(caster, spell, target, &inRange, false, NULL)) {
+    if (spell && (caster = petSpell ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) && Script_GetGUIDFromToken(lua_tolstring(L, type, NULL), target, true, false) && Spell_C_RangeCheckSelected(caster, spell, target, &inRange, false, NULL)) {
         lua_pushnumber(L, inRange ? 1.0 : 0.0);
         return 1;
     }

@@ -1185,7 +1185,7 @@ static int32_t Script_IsQuestLogSpecialItemInRange(lua_State* L) {
     CGPlayer_C* player;
     uint8_t inRange;
 
-    if ((spell = g_spellDB.GetRecord(spellId)) != NULL && (player = ClntObjMgrGetActivePlayerObj()) != NULL && Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true) && Spell_C_RangeCheckSelected(player, spell, target, &inRange, false, NULL)) {
+    if ((spell = g_spellDB.GetRecord(spellId)) != NULL && (player = ClntObjMgrGetActivePlayerObj()) != NULL && Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false) && Spell_C_RangeCheckSelected(player, spell, target, &inRange, false, NULL)) {
         lua_pushnumber(L, inRange ? 1.0 : 0.0);
         return 1;
     }

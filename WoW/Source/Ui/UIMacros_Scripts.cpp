@@ -94,7 +94,7 @@ static int32_t Script_SetMacroSpell(lua_State* L) {
     }
 
     WOWGUID target = { 0 };
-    Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false);
+    Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false, false);
 
     if (macro->m_itemID > 0 || spellId != macro->m_spellID || target != macro->m_target) {
         macro->m_target = target;
@@ -366,7 +366,7 @@ static int32_t Script_SetMacroItem(lua_State* L) {
 
     int32_t itemId = GetItemIDByName(lua_tolstring(L, 2, NULL));
     WOWGUID target = { 0 };
-    Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false);
+    Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, false, false);
 
     if (macro->m_spellID > 0 || itemId != macro->m_itemID || target != macro->m_target) {
         macro->m_target = target;

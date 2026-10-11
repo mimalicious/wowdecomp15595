@@ -2474,7 +2474,7 @@ void CGWorldFrame::OnLayerUpdate(float elapsedSec) {
         if (!lua_pcall(L, 2, 1, -4)) {
             const char* token = lua_tolstring(L, -1, NULL);
 
-            if (token && !lua_tainted && Script_GetGUIDFromToken(token, hit.m_guid, false)) {
+            if (token && !lua_tainted && Script_GetGUIDFromToken(token, hit.m_guid, false, false)) {
                 kind = 2;
             }
         }

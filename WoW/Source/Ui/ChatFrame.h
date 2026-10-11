@@ -83,8 +83,10 @@ enum SLASH_COMMAND_ID {
     CHAT_MSG_BN_INLINE_TOAST_BROADCAST = 59,
     CHAT_MSG_BN_INLINE_TOAST_BROADCAST_INFORM = 60,
     CHAT_MSG_BN_INLINE_TOAST_CONVERSATION = 61,
-    CHAT_MSG_MAX = 62,
-    CHAT_MSG_COMBAT_GUILD_XP_GAIN = 63,
+    CHAT_MSG_COMBAT_GUILD_XP_GAIN = 62,
+    CHAT_MSG_CURRENCY = 63,
+    CHAT_MSG_BN_WHISPER_PLAYER_OFFLINE = 64,
+    CHAT_MSG_MAX = 65,
 };
 
 struct ChatConversation {
@@ -227,21 +229,23 @@ struct ChatMessageGroup {
 class ChatWindowInfo {
     public:
     /* 0000 */ char m_name[128];
-    /* 0080 */ uint8_t m_messageGroups[46];
-    /* 00B0 */ TSGrowableArray<char*> m_channels;
-    /* 00C0 */ TSGrowableArray<int32_t> m_channelIDs;
-    /* 00D0 */ int32_t m_unkD0;
-    /* 00D4 */ CImVector m_color;
-    /* 00D8 */ uint32_t m_unkD8;
-    /* 00DC */ int32_t m_docked;
-    /* 00E0 */ uint32_t m_shown;
-    /* 00E4 */ int32_t m_unkE4;
-    /* 00E8 */ uint32_t m_unkE8;
-    /* 00EC */ float m_unkEC;
-    /* 00F0 */ float m_unkF0;
-    /* 00F4 */ uint8_t m_unkF4;
-    /* 00F8 */ float m_width;
-    /* 00FC */ float m_height;
+    /* 0080 */ uint8_t m_messageGroups[49];
+    /* 00B1 */ uint8_t unk_00B1[3];
+    /* 00B4 */ TSGrowableArray<char*> m_channels;
+    /* 00C4 */ TSGrowableArray<int32_t> m_channelIDs;
+    /* 00D4 */ uint32_t m_unkD0;
+    /* 00D8 */ CImVector m_color;
+    /* 00DC */ uint32_t m_unkD8;
+    /* 00E0 */ int32_t m_docked;
+    /* 00E4 */ uint32_t m_shown;
+    /* 00E8 */ int32_t m_unkE4;
+    /* 00EC */ uint32_t m_unkE8;
+    /* 00F0 */ float m_unkEC;
+    /* 00F4 */ float m_unkF0;
+    /* 00F8 */ uint8_t m_unkF4;
+    /* 00F9 */ uint8_t unk_00F9[3];
+    /* 00FC */ float m_width;
+    /* 0100 */ float m_height;
 
     void AddChannel(const char* name, int32_t id);
     void Init();
@@ -412,7 +416,7 @@ extern uint32_t s_numDisplayChannels;
 extern uint32_t s_activeVoiceChannel;
 extern uint8_t s_collapsedHeaders[3];
 extern ChatWindowInfo s_chatWindows[10];
-extern const ChatMessageGroup s_chatMessageGroups[46];
+extern const ChatMessageGroup s_chatMessageGroups[49];
 extern ChatColorInfo s_chatColors[CHAT_MSG_MAX];
 extern TSGrowableArray<ChatColorInfo> s_channelColors;
 extern int32_t s_chatLogging[2];

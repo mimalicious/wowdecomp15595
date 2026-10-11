@@ -13,6 +13,7 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"
+#include "WoW/Source/Game/GameClient/PetNameCache.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Ui/CommentatorFrame.h"
 #include "WoW/Source/Ui/InstanceEncounter_C.h"
@@ -63,7 +64,7 @@ static const WOWGUID* GetCurrentQuestGiverGUID() {
     return &CGQuestInfo::m_npc;
 }
 
-// OFFSET: #0x0060AAA0
+// OFFSET: 0x0044F2E0/0x14005D740
 static bool ParseTrailingTokens(const char* token, WOWGUID& guid, CGPlayer_C* player) {
     while (*token) {
         if (*token == '-') {
@@ -97,8 +98,8 @@ static bool ParseTrailingTokens(const char* token, WOWGUID& guid, CGPlayer_C* pl
     return true;
 }
 
-// OFFSET: #0x0060ABF0
-bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTarget) {
+// OFFSET: 0x0044F430/0x14005D8A0
+bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTarget, bool withRealm) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!token || !*token) {
@@ -183,7 +184,7 @@ bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTar
         return true;
     }
 
-    if (guid != WOWGUID() || !Script_GetGUIDFromString(&name, guid) || !ParseTrailingTokens(name, guid, player)) {
+    if (guid != WOWGUID() || !Script_GetGUIDFromString(&name, guid, withRealm) || !ParseTrailingTokens(name, guid, player)) {
         return false;
     }
 
@@ -197,7 +198,7 @@ bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTar
 // OFFSET: 0x00450AA0/0x14005EEC0
 WOWGUID Script_GetGUIDFromName(const char* name) {
     WOWGUID guid = WOWGUID::Make(0);
-    Script_GetGUIDFromToken(name, guid, false);
+    Script_GetGUIDFromToken(name, guid, false, false);
     return guid;
 }
 
@@ -205,7 +206,7 @@ WOWGUID Script_GetGUIDFromName(const char* name) {
 CGUnit_C* Script_GetUnitFromName(const char* token) {
     WOWGUID guid;
 
-    if (!Script_GetGUIDFromToken(token, guid, false)) {
+    if (!Script_GetGUIDFromToken(token, guid, false, false)) {
         return NULL;
     }
 
@@ -347,13 +348,13 @@ static int32_t UnitFieldChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
-// OFFSET: #0x0060C260
+// OFFSET: 0x00450B40
 static int32_t PlayerInventoryChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_INVENTORY_CHANGED);
     return 1;
 }
 
-// OFFSET: #0x0060C280
+// OFFSET: 0x00450B60
 static int32_t PlayerQuestLogChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_QUEST_LOG_CHANGED);
     return 1;
@@ -420,7 +421,7 @@ void UnitNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
 // OFFSET: %0x0045AD50
 WOWGUID GetGuidByKeyword(const char* token) {
     WOWGUID guid = WOWGUID();
-    Script_GetGUIDFromToken(token, guid, false);
+    Script_GetGUIDFromToken(token, guid, false, false);
     return guid;
 }
 
@@ -428,7 +429,7 @@ WOWGUID GetGuidByKeyword(const char* token) {
 bool GetUnitByKeyword(const char* token, CGUnit_C** unit, bool defaultToTarget) {
     WOWGUID guid;
 
-    if (!Script_GetGUIDFromToken(token, guid, defaultToTarget)) {
+    if (!Script_GetGUIDFromToken(token, guid, defaultToTarget, false)) {
         return false;
     }
 
@@ -436,12 +437,16 @@ bool GetUnitByKeyword(const char* token, CGUnit_C** unit, bool defaultToTarget) 
     return true;
 }
 
-// OFFSET: #0x0060A360
+// OFFSET: 0x0044E490/0x14005C6A0
 bool Script_GetNameFromToken(const char* token, const char** name, bool defaultToTarget, bool withRealm) {
-    WOWGUID guid;
+    WOWGUID guid = WOWGUID();
 
-    if (!Script_GetGUIDFromToken(token, guid, defaultToTarget)) {
+    if (!Script_GetGUIDFromToken(token, guid, defaultToTarget, false)) {
         return false;
+    }
+
+    if (guid.m_guid == 0xFFFFFFFFFFFFFFFEULL) {
+        return true;
     }
 
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -465,25 +470,39 @@ bool Script_GetNameFromToken(const char* token, const char** name, bool defaultT
         return true;
     }
 
-    WOWGUID requester = { 0 };
-    NameCache* record = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false);
+    if (!(guid.m_guid & 0xF000000000000000ULL) && (guid.m_guid & 0xF07FFFFFFFFFFFFFULL)) {
+        WOWGUID requester = WOWGUID();
+        NameCache* record = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false);
 
-    if (!record) {
+        if (!record) {
+            return true;
+        }
+
+        if (!withRealm || !record->m_realmName[0]) {
+            *name = record->m_name;
+            return true;
+        }
+
+        SStrPrintf(s_nameWithRealm, sizeof(s_nameWithRealm), "%s-%s", static_cast<const char*>(record->m_name), record->m_realmName);
+        *name = s_nameWithRealm;
         return true;
     }
 
-    if (!withRealm || !record->m_realmName[0]) {
-        *name = record->m_name;
+    if ((guid.m_guid & 0xF0F0000000000000ULL) != 0xF040000000000000ULL) {
         return true;
     }
 
-    SStrPrintf(s_nameWithRealm, sizeof(s_nameWithRealm), "%s-%s", static_cast<const char*>(record->m_name), record->m_realmName);
-    *name = s_nameWithRealm;
+    PetNameCache* pet = g_petNameCache.GetRecord(static_cast<int32_t>((guid.m_guid >> 24) & 0xFFFFFFF), guid, NULL, NULL, false);
+
+    if (pet) {
+        *name = pet->m_name;
+    }
+
     return true;
 }
 
-// OFFSET: #0x0060A630
-bool Script_GetGUIDFromString(const char** name, WOWGUID& guid) {
+// OFFSET: 0x0044EE40/0x14005D160
+bool Script_GetGUIDFromString(const char** name, WOWGUID& guid, bool forceRealm) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     char buffer[49];
     char token[10];
@@ -943,7 +962,48 @@ void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal) {
     }
 }
 
-// OFFSET: #0x0060BF60
+// OFFSET: 0x004507B0/0x14005EAA0
+void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    int32_t count;
+    char** tokens = Script_GetTokenIDsFromGUID(guid, &count);
+
+    for (int32_t i = 0; i < count; i++) {
+        if (!FrameScript_ShouldSignalEvent(signal)) {
+            continue;
+        }
+
+        lua_State* L = FrameScript_GetContext();
+        const char* taint = lua_tainted;
+
+        if (++lua_taintexpected && !lua_taintedclosure) {
+            lua_tainted = NULL;
+        }
+
+        FrameScript_PushEventName(signal);
+        lua_pushstring(L, tokens[i]);
+        int32_t argCount = 2;
+
+        if (format) {
+            argCount = vFrameScript_PushEventArgs(format, args) + 2;
+        }
+
+        FrameScript_SignalEvent(signal, L, argCount);
+        lua_settop(L, -1 - argCount);
+
+        if (lua_taintexpected && !lua_taintedclosure) {
+            lua_tainted = taint;
+        }
+
+        if (--lua_taintexpected <= 0) {
+            lua_taintexpected = 0;
+        }
+    }
+}
+
+// OFFSET: 0x004508B0
 void Script_SendUnitSpellSignal(const WOWGUID& guid, uint8_t castCount, const SpellRec* spell, int32_t signal) {
     if (!spell) {
         Script_SendUnitSignal(guid, signal);
@@ -954,7 +1014,7 @@ void Script_SendUnitSpellSignal(const WOWGUID& guid, uint8_t castCount, const Sp
     char** tokens = Script_GetTokenIDsFromGUID(guid, &count);
 
     for (int32_t i = 0; i < count; i++) {
-        FrameScript_SignalEvent(signal, "%s%s%s%d", tokens[i], static_cast<const char*>(spell->m_name), static_cast<const char*>(spell->m_nameSubtext), castCount);
+        FrameScript_SignalEvent(signal, "%s%s%s%d%d", tokens[i], static_cast<const char*>(spell->m_name), static_cast<const char*>(spell->m_nameSubtext), castCount, spell->m_id);
     }
 }
 
@@ -1017,7 +1077,7 @@ int32_t Script_GetUnitAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* info
     }
 
     WOWGUID guid;
-    Script_GetGUIDFromToken(lua_tostring(L, index), guid, false);
+    Script_GetGUIDFromToken(lua_tostring(L, index), guid, false, false);
     info->m_guid = guid;
     return Script_GetAuraInfo(L, index + 1, info);
 }

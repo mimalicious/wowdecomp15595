@@ -297,7 +297,7 @@ static int32_t Script_UninviteUnit(lua_State* L) {
     int32_t exact = StringToBOOL(L, 3, 0);
     WOWGUID guid;
 
-    if (Script_GetGUIDFromToken(name, guid, exact != 0)) {
+    if (Script_GetGUIDFromToken(name, guid, exact != 0, false)) {
         CGPlayer_C::Uninvite(guid, scrubbed);
         return 0;
     }

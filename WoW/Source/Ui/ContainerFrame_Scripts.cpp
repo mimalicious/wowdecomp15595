@@ -977,7 +977,7 @@ static int32_t Script_UseContainerItem(lua_State* L) {
 
     WOWGUID target;
 
-    if (!Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, true)) {
+    if (!Script_GetGUIDFromToken(lua_tolstring(L, 3, NULL), target, true, false)) {
         return 0;
     }
 

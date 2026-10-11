@@ -422,7 +422,7 @@ static int32_t Script_IsActionInRange(lua_State* L) {
         uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
         int32_t inRange = 0;
         WOWGUID target = WOWGUID();
-        Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, false);
+        Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, false, false);
 
         if (CGActionBar::HasValidTarget(slot, target, inRange)) {
             lua_pushnumber(L, inRange ? 1.0 : 0.0);
@@ -630,7 +630,7 @@ static int32_t Script_UseAction(lua_State* L) {
     uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     WOWGUID target;
 
-    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
+    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false)) {
         CGActionBar::UseAction(slot, target, lua_tolstring(L, 3, NULL));
     }
 

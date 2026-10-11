@@ -922,7 +922,7 @@ static int32_t Script_UseInventoryItem(lua_State* L) {
 
     WOWGUID target;
 
-    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
+    if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true, false)) {
         CGCharacterInfo::UseItem(slot, &target);
     }
 

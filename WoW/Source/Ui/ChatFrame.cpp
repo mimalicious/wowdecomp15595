@@ -59,7 +59,7 @@ int32_t CGChat::m_voiceChatSystemStatus;
 // STATIC: #0x00B4AE40
 int32_t CGChat::m_paused;
 
-// STATIC: #0x009FA558
+// STATIC: 0x00BF0278
 const ChatColorInfo s_chatTypeInfo[CHAT_MSG_MAX] = {
     { "SYSTEM", { 0xFF, 0xFF, 0x00, 0x00 }, 0, 0 },
     { "SAY", { 0xFF, 0xFF, 0xFF, 0x00 }, 0, 0 },
@@ -123,9 +123,12 @@ const ChatColorInfo s_chatTypeInfo[CHAT_MSG_MAX] = {
     { "BN_INLINE_TOAST_BROADCAST", { 0x82, 0xC5, 0xFF, 0x00 }, 13, 0 },
     { "BN_INLINE_TOAST_BROADCAST_INFORM", { 0x82, 0xC5, 0xFF, 0x00 }, 13, 0 },
     { "BN_INLINE_TOAST_CONVERSATION", { 0x82, 0xC5, 0xFF, 0x00 }, 13, 0 },
+    { "COMBAT_GUILD_XP_GAIN", { 0x6F, 0x6F, 0xFF, 0x00 }, 14, 0 },
+    { "CURRENCY", { 0x00, 0xAA, 0x00, 0x00 }, 15, 0 },
+    { "BN_WHISPER_PLAYER_OFFLINE", { 0xFF, 0xFF, 0x00, 0x00 }, 16, 0 },
 };
 
-// STATIC: #0x009FBE80
+// STATIC: 0x00BF1C70
 static const uint32_t s_chatEvents[CHAT_MSG_MAX] = {
     SCRIPT_EVENT_CHAT_MSG_SYSTEM,
     SCRIPT_EVENT_CHAT_MSG_SAY,
@@ -177,7 +180,7 @@ static const uint32_t s_chatEvents[CHAT_MSG_MAX] = {
     236,
     SCRIPT_EVENT_CHAT_MSG_ACHIEVEMENT,
     SCRIPT_EVENT_CHAT_MSG_GUILD_ACHIEVEMENT,
-    658,
+    666,
     SCRIPT_EVENT_CHAT_MSG_PARTY_LEADER,
     SCRIPT_EVENT_CHAT_MSG_TARGETICONS,
     SCRIPT_EVENT_CHAT_MSG_BN_WHISPER,
@@ -189,6 +192,9 @@ static const uint32_t s_chatEvents[CHAT_MSG_MAX] = {
     SCRIPT_EVENT_CHAT_MSG_BN_INLINE_TOAST_BROADCAST,
     SCRIPT_EVENT_CHAT_MSG_BN_INLINE_TOAST_BROADCAST_INFORM,
     SCRIPT_EVENT_CHAT_MSG_BN_INLINE_TOAST_CONVERSATION,
+    SCRIPT_EVENT_CHAT_MSG_BN_WHISPER_PLAYER_OFFLINE,
+    SCRIPT_EVENT_CHAT_MSG_COMBAT_GUILD_XP_GAIN,
+    SCRIPT_EVENT_CHAT_MSG_CURRENCY,
 };
 
 // STATIC: #0x009FA510
@@ -274,7 +280,7 @@ static uint32_t s_profanityReplacementIndex;
 static TSFixedArray<regex_t> s_expectedSpamRecords;
 
 // STATIC: 0x00BF15C8
-const ChatMessageGroup s_chatMessageGroups[46] = {
+const ChatMessageGroup s_chatMessageGroups[49] = {
     { "SYSTEM", true, 0 },
     { "SYSTEM_NOMENU", true, 5 },
     { "SAY", true, 0 },
@@ -289,7 +295,7 @@ const ChatMessageGroup s_chatMessageGroups[46] = {
     { "BATTLEGROUND", true, 7 },
     { "BATTLEGROUND_LEADER", true, 7 },
     { "GUILD", true, 0 },
-    { "OFFICER", true, 7 },
+    { "OFFICER", true, 13 },
     { "MONSTER_SAY", true, 7 },
     { "MONSTER_YELL", true, 7 },
     { "MONSTER_EMOTE", true, 7 },
@@ -315,12 +321,15 @@ const ChatMessageGroup s_chatMessageGroups[46] = {
     { "BN_WHISPER_INFORM", true, 12 },
     { "BN_CONVERSATION", true, 12 },
     { "BN_INLINE_TOAST_ALERT", true, 13 },
+    { "CURRENCY", true, 15 },
+    { "BN_WHISPER_PLAYER_OFFLINE", true, 16 },
     { "OPENING", true, 6 },
     { "TRADESKILLS", true, 6 },
     { "PET_INFO", true, 6 },
     { "COMBAT_XP_GAIN", true, 0 },
     { "COMBAT_HONOR_GAIN", true, 0 },
     { "COMBAT_MISC_INFO", true, 0 },
+    { "COMBAT_GUILD_XP_GAIN", true, 14 },
 };
 
 // STATIC: 0x00ED7A74
@@ -4907,7 +4916,7 @@ bool CGChat::ChatTokenToGUID(const char* token, WOWGUID& guid) {
     NameCache* rec = g_nameDBCache.GetRecordByName(token);
 
     if (!rec) {
-        return Script_GetGUIDFromToken(token, guid, false);
+        return Script_GetGUIDFromToken(token, guid, false, false);
     }
 
     guid = rec->m_guid;
@@ -5183,7 +5192,7 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
 
         OsWriteFile(file, "MESSAGES\n", SStrLen("MESSAGES\n"), &written);
 
-        for (uint32_t i = 0; i < 46; i++) {
+        for (uint32_t i = 0; i < 49; i++) {
             if (info->m_messageGroups[i]) {
                 SStrPrintf(line, sizeof(line), "%s\n", static_cast<const char*>(s_chatMessageGroups[i].m_name));
                 OsWriteFile(file, line, SStrLen(line), &written);

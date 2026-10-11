@@ -115,7 +115,7 @@ static int32_t Script_SpellTargetUnit(lua_State* L) {
     SpellRec* spell = g_spellDB.GetRecord(s_targetingSpell->m_data.m_spellId);
     WOWGUID guid = WOWGUID::Make(0);
 
-    if (Script_GetGUIDFromToken(lua_tostring(L, 1), guid, false) && guid) {
+    if (Script_GetGUIDFromToken(lua_tostring(L, 1), guid, false, false) && guid) {
         CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
         if (!(guid.m_guid & 0xF000000000000000ull) && (guid.m_guid & 0xF07FFFFFFFFFFFFFull) && ((s_needTargets & 0x8000) || (spell && (spell->m_attributesExI & 0x8000000)))) {

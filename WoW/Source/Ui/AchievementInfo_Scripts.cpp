@@ -117,7 +117,7 @@ static int32_t Script_SetAchievementComparisonUnit(lua_State* L) {
         return 0;
     }
 
-    Script_GetGUIDFromToken(lua_tolstring(L, 1, NULL), guid, false);
+    Script_GetGUIDFromToken(lua_tolstring(L, 1, NULL), guid, false, false);
 
     if (!guid) {
         return 0;
