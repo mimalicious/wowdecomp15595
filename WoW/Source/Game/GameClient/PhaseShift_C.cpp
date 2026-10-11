@@ -2,7 +2,11 @@
 #include <malloc.h>
 #include "WoW/Source/Game/GameClient/PhaseShift_C.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
 #include "WoW/Source/Game/GameClient/Minimap.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/Ui/CGWorldStateInfo.h"
+#include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/WorldClient/World.h"
 
@@ -40,6 +44,11 @@ CPhaseMapTracker::CPhaseMapTracker() {
     this->m_used = 0;
     this->m_firstAreaTrigger = -1;
     this->m_lastAreaTrigger = -1;
+}
+
+// OFFSET: 0x004E3F70
+void PhaseShift_C_ShutdownGame() {
+    ClientPhaseShiftChange::s_handler = NULL;
 }
 
 // PROVEN: 2565ab92 IDENTICAL/NONE
@@ -460,4 +469,119 @@ void PhaseShift_C_CleanupDB() {
     s_phaseGroupLookup.Clear();
     s_areaTriggerPhases.Clear();
     s_worldStateUIPhases.Clear();
+}
+
+// OFFSET: 0x004E4E40
+static void SetPhasedWorldMaps(uint32_t count, const uint16_t* maps) {
+    uint32_t merged = 0;
+
+    if (!count || !maps) {
+        s_phasedWorldMaps.Clear();
+        return;
+    }
+
+    uint16_t* result = static_cast<uint16_t*>(alloca(sizeof(uint16_t) * count));
+    uint16_t* incoming = static_cast<uint16_t*>(alloca(sizeof(uint16_t) * count));
+
+    for (uint32_t i = 0; i < count; i++) {
+        incoming[i] = maps[i];
+    }
+
+    for (uint32_t i = 0; i < s_phasedWorldMaps.m_count; i++) {
+        uint16_t map = s_phasedWorldMaps.m_data[i];
+
+        for (uint32_t j = 0; j < count; j++) {
+            if (map == incoming[j]) {
+                result[merged++] = map;
+                incoming[j] = 0;
+                break;
+            }
+        }
+    }
+
+    uint32_t kept = merged;
+
+    for (uint32_t i = 0; i < count; i++) {
+        uint16_t map = incoming[i];
+
+        if (!map) {
+            continue;
+        }
+
+        uint32_t j = kept;
+
+        while (j < merged && map != result[j]) {
+            j++;
+        }
+
+        if (j >= merged) {
+            result[merged++] = map;
+        }
+    }
+
+    if (merged) {
+        s_phasedWorldMaps.Set(merged, result);
+    } else {
+        s_phasedWorldMaps.Clear();
+    }
+}
+
+// OFFSET: 0x004E4FD0
+void CPhaseShift::SetPhasesFromMessage(ClientPhaseShiftChange* msg) {
+    uint32_t count = msg->m_data.m_phaseIDs.m_size >> 1;
+    void* data = NULL;
+
+    if (count) {
+        msg->m_data.m_phaseIDs.GetDataInSitu(data, count);
+        msg->m_data.m_phaseIDs.m_read = 0;
+    }
+
+    this->m_flags = msg->m_data.m_flags;
+    this->m_phases.SetCount(count);
+
+    if (data) {
+        memcpy(this->m_phases.Ptr(), data, sizeof(uint16_t) * count);
+    }
+}
+
+// OFFSET: 0x004E5060
+static bool OnPhaseShiftChange(ClientPhaseShiftChange* msg) {
+    uint32_t activeCount = msg->m_data.m_visibleMapIDs.m_size >> 1;
+    void* activeMaps = NULL;
+
+    if (activeCount) {
+        msg->m_data.m_visibleMapIDs.GetDataInSitu(activeMaps, 2 * activeCount);
+    }
+
+    uint32_t inactiveCount = msg->m_data.m_preloadMapIDs.m_size >> 1;
+    void* inactiveMaps = NULL;
+
+    if (inactiveCount) {
+        msg->m_data.m_preloadMapIDs.GetDataInSitu(inactiveMaps, 2 * inactiveCount);
+    }
+
+    uint32_t worldMapCount = msg->m_data.m_uiWorldMapAreaIDSwaps.m_size >> 1;
+    void* worldMaps = NULL;
+
+    if (worldMapCount) {
+        msg->m_data.m_uiWorldMapAreaIDSwaps.GetDataInSitu(worldMaps, 2 * worldMapCount);
+    }
+
+    SetPhasedWorldMaps(worldMapCount, static_cast<const uint16_t*>(worldMaps));
+    CPhaseShift phaseShift;
+    phaseShift.SetPhasesFromMessage(msg);
+
+    if (!(s_phaseShift == phaseShift)) {
+        s_phaseShift = phaseShift;
+        CGWorldStateInfo::ResetWorldStateUI();
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_WORLD_STATES, NULL);
+    }
+
+    CPhaseMapTracker::UpdateMaps(activeCount, static_cast<const uint16_t*>(activeMaps), inactiveCount, static_cast<const uint16_t*>(inactiveMaps));
+    return true;
+}
+
+// OFFSET: 0x004E52B0
+void PhaseShift_C_InitializeGame() {
+    ClientPhaseShiftChange::s_handler = OnPhaseShiftChange;
 }

@@ -297,6 +297,9 @@ bool (*ClientMapObjEvents::s_handler)(ClientMapObjEvents* msg);
 // STATIC: 0x00E4D5B0
 bool (*ClientNotification::s_handler)(ClientNotification* msg);
 
+// STATIC: 0x00E4D440
+bool (*ClientPhaseShiftChange::s_handler)(ClientPhaseShiftChange* msg);
+
 // STATIC: 0x00E4D460
 bool (*ClientSuspendToken::s_handler)(ClientSuspendToken* msg);
 
@@ -1683,6 +1686,19 @@ bool ClientMapObjEvents::Read(CDataStore* msg, bool full) {
     }
 
     return msg->IsRead() != 0;
+}
+
+// OFFSET: 0x006D5A00
+ClientNotification::ClientNotification(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    JamBitReader bits(msg);
+    uint32_t length = bits.ReadBits<13>();
+    *reinterpret_cast<uint32_t*>(this->m_text) = length;
+    msg->GetData(this->m_text, length);
+    this->m_text[length] = 0;
+}
+
+// OFFSET: 0x006A0DF0
+ClientNotification::~ClientNotification() {
 }
 
 // OFFSET: 0x006A9870/0x140358BD0
@@ -22507,4 +22523,142 @@ bool ClientLfgProposalUpdate::Handle() {
     }
 
     return ClientLfgProposalUpdate::s_handler(this);
+}
+
+// OFFSET: 0x006A53C0
+JamPhaseShiftChange::JamPhaseShiftChange() {
+}
+
+// OFFSET: 0x006A54B0
+JamPhaseShiftChange::~JamPhaseShiftChange() {
+}
+
+// OFFSET: 0x006BE960
+ClientPhaseShiftChange::ClientPhaseShiftChange(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A5600
+ClientPhaseShiftChange::~ClientPhaseShiftChange() {
+}
+
+// OFFSET: 0x006ABE90
+bool ClientPhaseShiftChange::Handle() {
+    if (!ClientPhaseShiftChange::s_handler) {
+        return false;
+    }
+
+    return ClientPhaseShiftChange::s_handler(this);
+}
+
+// OFFSET: 0x006BD140
+void ClientPhaseShiftChange::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_data.m_guid[2] = bits.ReadBit();
+    this->m_data.m_guid[3] = bits.ReadBit();
+    this->m_data.m_guid[1] = bits.ReadBit();
+    this->m_data.m_guid[6] = bits.ReadBit();
+    this->m_data.m_guid[4] = bits.ReadBit();
+    this->m_data.m_guid[5] = bits.ReadBit();
+    this->m_data.m_guid[0] = bits.ReadBit();
+    this->m_data.m_guid[7] = bits.ReadBit();
+
+    uint32_t size;
+    void* data;
+
+    if (this->m_data.m_guid[7]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[7] ^= byte;
+    }
+
+    if (this->m_data.m_guid[4]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[4] ^= byte;
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_uiWorldMapAreaIDSwaps.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_uiWorldMapAreaIDSwaps.PutData(data, size);
+        this->m_data.m_uiWorldMapAreaIDSwaps.Finalize();
+    }
+
+    if (this->m_data.m_guid[1]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[1] ^= byte;
+    }
+
+    uint32_t flags = 0;
+    msg->Get(flags);
+    this->m_data.m_flags = flags;
+
+    if (this->m_data.m_guid[2]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[2] ^= byte;
+    }
+
+    if (this->m_data.m_guid[6]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[6] ^= byte;
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_preloadMapIDs.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_preloadMapIDs.PutData(data, size);
+        this->m_data.m_preloadMapIDs.Finalize();
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_phaseIDs.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_phaseIDs.PutData(data, size);
+        this->m_data.m_phaseIDs.Finalize();
+    }
+
+    if (this->m_data.m_guid[3]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[3] ^= byte;
+    }
+
+    if (this->m_data.m_guid[0]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[0] ^= byte;
+    }
+
+    size = 0;
+    msg->Get(size);
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.m_visibleMapIDs.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.m_visibleMapIDs.PutData(data, size);
+        this->m_data.m_visibleMapIDs.Finalize();
+    }
+
+    if (this->m_data.m_guid[5]) {
+        uint8_t byte = 0;
+        msg->Get(byte);
+        this->m_data.m_guid[5] ^= byte;
+    }
 }

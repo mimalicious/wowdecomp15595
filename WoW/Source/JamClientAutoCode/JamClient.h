@@ -2883,13 +2883,29 @@ class ClientGuildBankMoneyWithdrawn : public JamClientMessage {
     void Unpack(CDataStore* msg, bool full);
 };
 
+struct JamPhaseShiftChange {
+    /* 0000 */ uint32_t m_flags;
+    /* 0004 */ uint32_t unk_0004;
+    /* 0008 */ uint8_t m_guid[8];
+    /* 0010 */ WDataStore m_preloadMapIDs;
+    /* 0034 */ WDataStore m_visibleMapIDs;
+    /* 0058 */ WDataStore m_phaseIDs;
+    /* 007C */ WDataStore m_uiWorldMapAreaIDSwaps;
+
+    JamPhaseShiftChange();
+    ~JamPhaseShiftChange();
+};
+
 class ClientPhaseShiftChange : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientPhaseShiftChange* msg);
 
+    /* 0010 */ JamPhaseShiftChange m_data;
+
     ClientPhaseShiftChange(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPhaseShiftChange();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 struct ClientTradeItemUnwrapped {

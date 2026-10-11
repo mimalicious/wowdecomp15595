@@ -6,6 +6,7 @@
 #include "Engine/Source/Storm/H/stpl.h"
 
 class CDataStore;
+class ClientPhaseShiftChange;
 
 class CPhaseShift {
     public:
@@ -20,6 +21,7 @@ class CPhaseShift {
     int32_t HasSharedPhase(const CPhaseShift* other) const;
     void SetPhase(uint32_t flags, uint16_t phase);
     void SetPhasesFromDataStore(CDataStore* msg);
+    void SetPhasesFromMessage(ClientPhaseShiftChange* msg);
     void SetPhasesFromDB(uint32_t flags, uint32_t phaseID, uint32_t phaseGroupID);
 };
 
