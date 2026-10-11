@@ -645,6 +645,67 @@ void UserClientVoidStorageTransfer::Put(CDataStore* msg) {
 JamTransmogrifyItem::JamTransmogrifyItem() {
 }
 
+// OFFSET: 0x006880D0
+UserClientSaveCufProfiles::UserClientSaveCufProfiles() {
+}
+
+// OFFSET: 0x00688050/0x140332E80
+UserClientSaveCufProfiles::~UserClientSaveCufProfiles() {
+}
+
+// OFFSET: 0x006874D0
+void UserClientSaveCufProfiles::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x730E));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<20>(this->m_profiles.m_count);
+
+    for (uint32_t i = 0; i < this->m_profiles.m_count; i++) {
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivateSpec2);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivate10Players);
+        bits.WriteBit(this->m_profiles.m_data[i].m_shown);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayHealPrediction);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivateSpec1);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivatePvP);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayPowerBar);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivate15Players);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivate40Players);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayPets);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivate5Players);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayOnlyDispellableDebuffs);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivate2Players);
+        bits.WriteBit(this->m_profiles.m_data[i].m_locked);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayNonBossDebuffs);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayMainTankAndAssist);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayAggroHighlight);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivate3Players);
+        bits.WriteBit(this->m_profiles.m_data[i].m_displayBorder);
+        bits.WriteBit(this->m_profiles.m_data[i].m_useClassColors);
+        bits.WriteBit(this->m_profiles.m_data[i].m_dynamicPosition);
+        bits.WriteBits<8>(strlen(this->m_profiles.m_data[i].m_name));
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivatePvE);
+        bits.WriteBit(this->m_profiles.m_data[i].m_horizontalGroups);
+        bits.WriteBit(this->m_profiles.m_data[i].m_autoActivate25Players);
+        bits.WriteBit(this->m_profiles.m_data[i].m_keepGroupsTogether);
+    }
+
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_profiles.m_count; i++) {
+        msg->Put(this->m_profiles.m_data[i].m_topPoint);
+        msg->PutData(this->m_profiles.m_data[i].m_name, strlen(this->m_profiles.m_data[i].m_name));
+        msg->Put(this->m_profiles.m_data[i].m_bottomOffset);
+        msg->Put(this->m_profiles.m_data[i].m_frameHeight);
+        msg->Put(this->m_profiles.m_data[i].m_frameWidth);
+        msg->Put(this->m_profiles.m_data[i].m_topOffset);
+        msg->Put(this->m_profiles.m_data[i].m_healthText);
+        msg->Put(this->m_profiles.m_data[i].m_bottomPoint);
+        msg->Put(this->m_profiles.m_data[i].m_sortBy);
+        msg->Put(this->m_profiles.m_data[i].m_leftOffset);
+        msg->Put(this->m_profiles.m_data[i].m_leftPoint);
+    }
+}
+
 // OFFSET: 0x00688120
 UserClientTransmogrifyItems::UserClientTransmogrifyItems() {
 }

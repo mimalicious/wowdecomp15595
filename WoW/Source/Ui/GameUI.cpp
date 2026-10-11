@@ -16,7 +16,7 @@
 #include "WoW/Source/Ui/Flyout.h"
 #include "WoW/Source/Ui/LFGuildInfo.h"
 #include "WoW/Source/Ui/EncounterJournal.h"
-#include "WoW/Source/Ui/CompactUnitFrameProfiles.h"
+#include "WoW/Source/Ui/CUFProfiles.h"
 #include "WoW/Source/Ui/TradeFrame.h"
 #include "WoW/Source/Ui/ResearchFrame.h"
 #include "WoW/Source/Glue/CharacterSelection.h"
@@ -2469,7 +2469,7 @@ void CGGameUI::InitializeGame() {
     PhaseShift_C_InitializeGame();
     MovieStreaming::InitializeGame();
     CGEncounterJournal::InitializeGame();
-    CGCompactUnitFrameProfiles::InitializeGame();
+    CGCUFProfiles::InitializeGame();
     CGIncomingResurrection::Reset();
     CGTransmogrify::InitializeGame();
 
@@ -4191,7 +4191,7 @@ void CGGameUI::EnterWorld() {
     CGResearchFrame::EnterWorld();
     CGResearchFrame::s_enteredWorld = 1;
     CGSpellActivationOverlay::EnterWorld();
-    CGCompactUnitFrameProfiles::EnterWorld(CGGameUI::m_currentlyReloadingUI);
+    CGCUFProfiles::EnterWorld(CGGameUI::m_currentlyReloadingUI);
     CGVoidStorageInfo::EnterWorld();
 
     WOWGUID lockedTarget = CGGameUI::m_lockedTarget;
@@ -4464,16 +4464,16 @@ void CGGameUI::DestroyTotem(int32_t slot, WOWGUID guid) {
 // OFFSET: 0x008C44B0/0x140634040
 static int32_t GetSavedVariablesPath(char* path, uint32_t size, int32_t perCharacter) {
     if (perCharacter) {
-        SStrPrintf(path, size, "WTF\Account\%s\%s\%s", ClientServices::GetAccountName(), ClientServices::GetSelectedRealmName(), ClientServices::GetCharacterName());
+        SStrPrintf(path, size, "WTF\\Account\\%s\\%s\\%s", ClientServices::GetAccountName(), ClientServices::GetSelectedRealmName(), ClientServices::GetCharacterName());
     } else {
-        SStrPrintf(path, size, "WTF\Account\%s", ClientServices::GetAccountName());
+        SStrPrintf(path, size, "WTF\\Account\\%s", ClientServices::GetAccountName());
     }
 
     if (!OsDirectoryExists(path)) {
         OsCreateDirectory(path, 1);
     }
 
-    SStrPack(path, "\SavedVariables.lua", size);
+    SStrPack(path, "\\SavedVariables.lua", size);
     return 1;
 }
 
@@ -7520,7 +7520,7 @@ void CGGameUI::ShutdownGame() {
     PhaseShift_C_ShutdownGame();
     MovieStreaming::ShutdownGame();
     CGEncounterJournal::ShutdownGame();
-    CGCompactUnitFrameProfiles::ShutdownGame();
+    CGCUFProfiles::ShutdownGame();
     CGIncomingResurrection::Reset();
     CGTransmogrify::ShutdownGame();
     CGVoidStorageInfo::ShutdownGame();

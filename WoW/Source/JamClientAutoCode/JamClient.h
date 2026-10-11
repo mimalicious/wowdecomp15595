@@ -342,6 +342,51 @@ struct JamResearchHistory {
     ~JamResearchHistory();
 };
 
+struct JamCliCUFProfile {
+    /* 0000 */ char m_name[128];
+    /* 0080 */ uint16_t m_frameHeight;
+    /* 0082 */ uint16_t m_frameWidth;
+    /* 0084 */ uint8_t m_sortBy;
+    /* 0085 */ uint8_t m_healthText;
+    /* 0086 */ bool m_keepGroupsTogether;
+    /* 0087 */ bool m_displayPets;
+    /* 0088 */ bool m_displayMainTankAndAssist;
+    /* 0089 */ bool m_displayHealPrediction;
+    /* 008A */ bool m_displayAggroHighlight;
+    /* 008B */ bool m_displayOnlyDispellableDebuffs;
+    /* 008C */ bool m_displayPowerBar;
+    /* 008D */ bool m_displayBorder;
+    /* 008E */ bool m_useClassColors;
+    /* 008F */ bool m_horizontalGroups;
+    /* 0090 */ bool m_displayNonBossDebuffs;
+    /* 0091 */ bool m_dynamicPosition;
+    /* 0092 */ uint8_t m_topPoint;
+    /* 0093 */ uint8_t m_bottomPoint;
+    /* 0094 */ uint8_t m_leftPoint;
+    /* 0095 */ uint8_t unk_0095;
+    /* 0096 */ uint16_t m_topOffset;
+    /* 0098 */ uint16_t m_bottomOffset;
+    /* 009A */ uint16_t m_leftOffset;
+    /* 009C */ bool m_locked;
+    /* 009D */ bool m_shown;
+    /* 009E */ bool m_autoActivate2Players;
+    /* 009F */ bool m_autoActivate3Players;
+    /* 00A0 */ bool m_autoActivate5Players;
+    /* 00A1 */ bool m_autoActivate10Players;
+    /* 00A2 */ bool m_autoActivate15Players;
+    /* 00A3 */ bool m_autoActivate25Players;
+    /* 00A4 */ bool m_autoActivate40Players;
+    /* 00A5 */ bool m_autoActivateSpec1;
+    /* 00A6 */ bool m_autoActivateSpec2;
+    /* 00A7 */ bool m_autoActivatePvP;
+    /* 00A8 */ bool m_autoActivatePvE;
+    /* 00A9 */ uint8_t unk_00A9[3];
+    /* 00AC */ uint32_t m_fieldMask;
+    /* 00B0 */ uint32_t m_fieldMask2;
+
+    JamCliCUFProfile();
+};
+
 struct JamLFGuildSettings {
     /* 0000 */ uint32_t m_interests;
     /* 0004 */ uint32_t m_availability;
@@ -1905,9 +1950,12 @@ class ClientLoadCufProfiles : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLoadCufProfiles* msg);
 
+    /* 0010 */ TSGrowableArray<JamCliCUFProfile> m_profiles;
+
     ClientLoadCufProfiles(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLoadCufProfiles();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientXpGainAborted : public JamClientMessage {

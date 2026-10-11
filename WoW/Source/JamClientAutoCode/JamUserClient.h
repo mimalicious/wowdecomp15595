@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/Storm/H/stpl.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
 
 struct JamUserClientReorderEntry {
@@ -99,6 +100,16 @@ struct JamTransmogrifyItem {
     /* 000C */ uint32_t m_slot;
 
     JamTransmogrifyItem();
+};
+
+class UserClientSaveCufProfiles : public JamClientMessage {
+    public:
+    /* 0010 */ TSGrowableArray<JamCliCUFProfile> m_profiles;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSaveCufProfiles();
+    ~UserClientSaveCufProfiles();
 };
 
 class UserClientTransmogrifyItems : public JamClientMessage {

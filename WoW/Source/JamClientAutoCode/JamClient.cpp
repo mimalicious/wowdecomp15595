@@ -408,6 +408,9 @@ bool (*ClientServerPerf::s_handler)(ClientServerPerf* msg);
 // STATIC: 0x00E4D46C
 bool (*ClientStreamingMoviesUpdate::s_handler)(ClientStreamingMoviesUpdate* msg);
 
+// STATIC: 0x00E4D5F8
+bool (*ClientLoadCufProfiles::s_handler)(ClientLoadCufProfiles* msg);
+
 // OFFSET: 0x006C98F0/0x140381330
 ClientAuthResponse::ClientAuthResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasSuccessInfo = false;
@@ -8206,6 +8209,12 @@ ClientLfGuildApplicationsListChanged::ClientLfGuildApplicationsListChanged(NetCl
 ClientLfGuildApplicationsListChanged::~ClientLfGuildApplicationsListChanged() {
 }
 
+// OFFSET: 0x00696970/0x140341FE0
+JamCliCUFProfile::JamCliCUFProfile() {
+    this->m_fieldMask = 0;
+    this->m_fieldMask2 = 0;
+}
+
 // OFFSET: 0x006A9B20/0x140358F60
 bool ClientLfGuildApplicationsListChanged::Handle() {
     if (!ClientLfGuildApplicationsListChanged::s_handler) {
@@ -10897,4 +10906,118 @@ bool ClientStreamingMoviesUpdate::Handle() {
     }
 
     return ClientStreamingMoviesUpdate::s_handler(this);
+}
+
+// OFFSET: 0x006DD5D0/0x14039CA70
+ClientLoadCufProfiles::ClientLoadCufProfiles(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DD580/0x140394FD0
+ClientLoadCufProfiles::~ClientLoadCufProfiles() {
+}
+
+// OFFSET: 0x006DA130/0x140398730
+void ClientLoadCufProfiles::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_profiles.SetCount(bits.ReadBits<20>());
+
+    for (uint32_t i = 0; i < this->m_profiles.m_count; i++) {
+        this->m_profiles.m_data[i].m_shown = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate10Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate5Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate25Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayHealPrediction = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivatePvE = bits.ReadBit();
+        this->m_profiles.m_data[i].m_horizontalGroups = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate40Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate3Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayAggroHighlight = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayBorder = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate2Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayNonBossDebuffs = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayMainTankAndAssist = bits.ReadBit();
+        this->m_profiles.m_data[i].m_locked = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivateSpec2 = bits.ReadBit();
+        this->m_profiles.m_data[i].m_useClassColors = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayPowerBar = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivateSpec1 = bits.ReadBit();
+        *reinterpret_cast<uint32_t*>(this->m_profiles.m_data[i].m_name) = bits.ReadBits<8>();
+        this->m_profiles.m_data[i].m_displayOnlyDispellableDebuffs = bits.ReadBit();
+        this->m_profiles.m_data[i].m_keepGroupsTogether = bits.ReadBit();
+        this->m_profiles.m_data[i].m_dynamicPosition = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivate15Players = bits.ReadBit();
+        this->m_profiles.m_data[i].m_displayPets = bits.ReadBit();
+        this->m_profiles.m_data[i].m_autoActivatePvP = bits.ReadBit();
+        this->m_profiles.m_data[i].m_fieldMask |= 0xFF81FFE1;
+        this->m_profiles.m_data[i].m_fieldMask2 |= 0xF;
+    }
+
+    for (uint32_t i = 0; i < this->m_profiles.m_count; i++) {
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_leftOffset = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_frameHeight = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_bottomOffset = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_bottomPoint = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_topOffset = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_topPoint = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_healthText = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_sortBy = value;
+        }
+        {
+            uint16_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_frameWidth = value;
+        }
+        {
+            uint8_t value = 0;
+            msg->Get(value);
+            this->m_profiles.m_data[i].m_leftPoint = value;
+        }
+        {
+            uint32_t length = *reinterpret_cast<uint32_t*>(this->m_profiles.m_data[i].m_name);
+            msg->GetData(this->m_profiles.m_data[i].m_name, length);
+            this->m_profiles.m_data[i].m_name[length] = 0;
+        }
+        this->m_profiles.m_data[i].m_fieldMask |= 0x7E001E;
+    }
+}
+
+// OFFSET: 0x006ACB90/0x14035CB40
+bool ClientLoadCufProfiles::Handle() {
+    if (!ClientLoadCufProfiles::s_handler) {
+        return false;
+    }
+
+    return ClientLoadCufProfiles::s_handler(this);
 }

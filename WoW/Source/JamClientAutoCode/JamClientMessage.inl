@@ -177,7 +177,7 @@ inline void JamBitWriter::WriteBits<8>(uint32_t value, JamBitCount<false>) {
     this->m_value = value & ((1 << this->m_bits) - 1);
 }
 
-// OFFSET: [0x0066E960<9>, 0x0066E9E0<10>, 0x0066EA50<11>, 0x0066AF20<12>, 0x0069C820<14>, 0x0066EB50<24>, 0x006757D0<30>]
+// OFFSET: [0x0066E960<9>, 0x0066E9E0<10>, 0x0066EA50<11>, 0x0066AF20<12>, 0x0069C820<14>, 0x00675620<20>, 0x0066EB50<24>, 0x006757D0<30>]
 template <uint32_t count>
 void JamBitWriter::WriteBits(uint32_t value, JamBitCount<true>) {
     for (int32_t i = 0; i < static_cast<int32_t>(count / 8 * 8); i += 8) {

@@ -30,6 +30,7 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/AddOns.h"
+#include "WoW/Source/Ui/CUFProfiles.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/UIUtil/PortraitButton.h"
@@ -1515,6 +1516,10 @@ void ClientConnection::CharacterLogout(bool quit, bool instant) {
 
     if (!instant) {
         this->m_loggingOut = 1;
+    }
+
+    if (CGCUFProfiles::s_dirty) {
+        CGCUFProfiles::SendProfiles(true);
     }
 
     CDataStore msg;
