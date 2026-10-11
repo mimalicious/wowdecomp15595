@@ -75,7 +75,7 @@ int32_t CMinigameTicTacToe_C::PushStateToLua(lua_State* L) {
     return 9;
 }
 
-// OFFSET: #0x00847DC0
+// OFFSET: 0x00B381C0
 void CMinigame_C::MakeMove(uint8_t moveType, int32_t param) {
     if (!this->ValidateMoveClient(moveType, param)) {
         return;

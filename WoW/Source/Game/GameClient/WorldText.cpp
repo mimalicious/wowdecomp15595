@@ -102,7 +102,7 @@ inline WORLDTEXTSTRING::WORLDTEXTSTRING() {
     this->m_text[0] = '\0';
 }
 
-// OFFSET: #0x007E66B0
+// OFFSET: 0x004E2000
 WORLDTEXTSTRING::~WORLDTEXTSTRING() {
     if (this->m_string) {
         GxuFontDestroyString(this->m_string);

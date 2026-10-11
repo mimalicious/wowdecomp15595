@@ -69,7 +69,7 @@ static LSTATUS ILoadValue(HKEY parentkey, const char* subkeyname, const char* va
     return result;
 }
 
-// OFFSET: #0x00770490
+// OFFSET: 0x004B7E50
 static int32_t InternalLoadEntry(const char* keyname, const char* valuename, uint32_t flags, DWORD* datatype, void* buffer, DWORD bytes, DWORD* bytesread) {
     *bytesread = 0;
     *datatype = REG_DWORD;

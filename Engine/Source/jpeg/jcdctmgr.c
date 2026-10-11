@@ -266,7 +266,7 @@ static void forward_DCT(j_compress_ptr cinfo, jpeg_component_info * compptr, JSA
 #ifdef DCT_FLOAT_SUPPORTED
 
 /* This version is used for floating-point DCT implementations. */
-// OFFSET: #0x004B0C70
+// OFFSET: 0x00B62E80
 static void forward_DCT_float(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY sample_data, JBLOCKROW coef_blocks, JDIMENSION start_row, JDIMENSION start_col, JDIMENSION num_blocks) {
   /* This routine is heavily used, so it's worth coding it tightly. */
   my_fdct_ptr fdct = (my_fdct_ptr) cinfo->fdct;

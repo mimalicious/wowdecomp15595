@@ -368,7 +368,7 @@ bool IsAlphaEnglish(uint16_t c) {
     return (c >= 'A' && c <= 'Z') || static_cast<uint16_t>(c - 'a') <= 25;
 }
 
-// OFFSET: #0x007E0FC0
+// OFFSET: 0x004E6730
 bool IsAlphaKorean(uint16_t c) {
     if (static_cast<uint16_t>(c + 0x5400) > 0x2BA3) {
         return false;
@@ -417,7 +417,7 @@ bool IsAlphaInCharSet(uint16_t c, int32_t charset) {
     }
 }
 
-// OFFSET: #0x007E18C0
+// OFFSET: 0x004E7300
 int32_t ValidateName(uint32_t language, const uint16_t* allowed, const char* name, uint32_t* length, int32_t* charset, bool profanity, bool chatProfanity, bool reserved, bool relaxed, bool english, int32_t charsetMask) {
     if (!name) {
         return 2;
@@ -839,7 +839,7 @@ uint16_t ToLower(uint16_t c) {
     return c;
 }
 
-// OFFSET: #0x007E11D0
+// OFFSET: 0x004E6990
 void CaseAccentInsensitiveParse(char* string, uint32_t size, int32_t locale) {
     uint16_t wide[512];
     uint16_t folded[512];
@@ -1079,7 +1079,7 @@ bool StripHyperlinks(const char* text, char* buffer, uint32_t size) {
     return stripped;
 }
 
-// OFFSET: #0x0076DD20
+// OFFSET: 0x00A312A0
 int32_t NameNeedsDeclensions(int32_t locale, const char* name) {
     return locale == 8 && RussianNameNeedsDeclensions(name);
 }

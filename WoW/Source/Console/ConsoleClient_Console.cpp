@@ -79,7 +79,7 @@ int32_t ConsoleCommand_CharSpacing(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: #0x00764F30
+// OFFSET: 0x0060E6B0
 int32_t ConsoleCommand_DefaultSettings(const char* command, const char* arguments) {
     s_fontHeight = 0.02f;
 

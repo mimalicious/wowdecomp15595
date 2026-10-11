@@ -7,7 +7,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
 
-// OFFSET: #0x004620A0
+// OFFSET: 0x007A9460
 static bool ShellExecuteRunAs(const char* path, const char* arguments) {
     if (!arguments) {
         arguments = "";

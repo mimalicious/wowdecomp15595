@@ -100,7 +100,7 @@ static bool WriteCacheRecord(HOSFILE file, const BannedAddOnCache* record, uint3
     return file != OS_INVALID_FILE && OsWriteFile(file, &record->m_id, sizeof(record->m_id), bytes) && OsWriteFile(file, record->m_nameMd5, sizeof(record->m_nameMd5), bytes) && OsWriteFile(file, record->m_versionMd5, sizeof(record->m_versionMd5), bytes) && OsWriteFile(file, &record->m_lastModified, sizeof(record->m_lastModified), bytes) && OsWriteFile(file, &record->m_flags, sizeof(record->m_flags), bytes);
 }
 
-// OFFSET: #0x005F3820
+// OFFSET: 0x00446910
 static int32_t SaveCache() {
     char directory[260];
 

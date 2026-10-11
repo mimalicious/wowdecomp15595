@@ -148,12 +148,12 @@ Login::~Login() {
     this->m_loginResponse = NULL;
 }
 
-// OFFSET: #0x00465730
+// OFFSET: 0x004C5040
 bool Login::IsReconnect() {
     return this->m_reconnect;
 }
 
-// OFFSET: #0x00465740
+// OFFSET: 0x004C5050
 bool Login::IsLoggedOn() {
     return this->m_loggedOn;
 }

@@ -45,7 +45,7 @@ uint32_t STORMAPI SGetCurrentThreadId() {
     return GetCurrentThreadId();
 }
 
-// OFFSET: #0x0076FDC0
+// OFFSET: 0x004B7610
 uint32_t STORMAPI SGetCurrentProcessId() {
     return GetCurrentProcessId();
 }
@@ -158,7 +158,7 @@ uint32_t STORMAPI S_Thread::s_SLaunchThread(void* threadParam) {
     return threadVal;
 }
 
-// OFFSET: #0x007700A0
+// OFFSET: 0x004B79B0
 HANDLE SCreateThread(uint32_t dwStackSize, uint32_t (STORMAPI* lpStartAddress)(void*), void* lpParameter, uint32_t dwCreationFlags, uint32_t* lpThreadId, char* threadName) {
     if (!threadName) {
         threadName = const_cast<char*>("");

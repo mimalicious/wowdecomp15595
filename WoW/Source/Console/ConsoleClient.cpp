@@ -238,7 +238,7 @@ static void UpdateHighlight() {
     s_highlightRightCharIndex = GxuFontGetMaxCharsWithinWidth(font, s_copyText, s_fontHeight, right, length, &s_hRect.right, 0.0f, 1.0f, s_charSpacing, s_baseTextFlags);
 }
 
-// OFFSET: #0x007639A0
+// OFFSET: 0x0060DFC0
 static int32_t OnMouseUp(const void* data, void* param) {
     if (!EventIsKeyDown(s_consoleHotKey) && s_active) {
         s_highlightState = 2;
@@ -397,7 +397,7 @@ CONSOLELINE::~CONSOLELINE() {
     }
 }
 
-// OFFSET: #0x00763DF0
+// OFFSET: 0x0060EAA0
 static void DrawBackground() {
     C3Vector position[4] = {
         C3Vector(s_rect.left, s_rect.bottom, 0.0f),
@@ -426,7 +426,7 @@ static void DrawBackground() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: #0x00764040
+// OFFSET: 0x0060ECF0
 static void DrawHighLight() {
     C3Vector position[4] = {
         C3Vector(s_hRect.left, s_hRect.bottom, 0.0f),

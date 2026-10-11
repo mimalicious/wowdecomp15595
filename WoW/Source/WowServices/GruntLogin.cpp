@@ -292,7 +292,7 @@ void GruntLogin::GetVersionProof(const uint8_t* versionChallenge) {
     this->m_loginResponse->UpdateLoginStatus(this->NextSecurityState(LOGIN_STATE_FIRST_SECURITY), LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: #0x008CA2F0
+// OFFSET: 0x00625E50
 void GruntLogin::EncodePinDigits(uint32_t seed) {
     uint8_t digits[10];
 

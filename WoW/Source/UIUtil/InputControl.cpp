@@ -420,7 +420,7 @@ int32_t CGInputControl::IsVehicleSeatFlagSet(uint32_t flags) const {
     return seat && (seat->m_flags & flags);
 }
 
-// OFFSET: #0x005FD440
+// OFFSET: 0x0044B970
 void CGInputControl::SetMouselookOverrideBinding(const char* key, const char* binding) {
     if (!binding) {
         MOUSELOOKBINDING* entry = this->m_mouseLookBindings.Ptr(key);
@@ -1326,7 +1326,7 @@ void CGInputControl::OnFocusChange(const CFocusEvent& event) {
     this->UpdateMouseMode(0);
 }
 
-// OFFSET: #0x005FCB20
+// OFFSET: 0x0044AE30
 void CGInputControl::SetMouselookOverrideBindings() {
     CGUIBindings* bindings = CGUIBindings::s_bindings;
 

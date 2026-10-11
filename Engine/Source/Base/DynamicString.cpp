@@ -100,7 +100,7 @@ void CDynamicString::Grow() {
     }
 }
 
-// OFFSET: #0x0095D870
+// OFFSET: 0x00872FC0
 void CDynamicString::operator+=(const char* str) {
     if (str) {
         int32_t length = this->m_length;
@@ -128,7 +128,7 @@ void CDynamicString::operator+=(char c) {
     }
 }
 
-// OFFSET: #0x0095D8F0
+// OFFSET: 0x00873050
 void CDynamicString::operator+=(int32_t value) {
     if (this->m_length + 15 >= this->m_capacity) {
         this->Grow();

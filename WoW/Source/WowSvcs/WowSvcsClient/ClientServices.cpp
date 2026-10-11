@@ -1354,7 +1354,7 @@ void ClientRealmResponseAdapter::OnChatReceived(RealmConnection* connection, WOW
 void ClientRealmResponseAdapter::OnAccountOnline(RealmConnection* connection, int32_t a2, WOWGUID guid) {
 }
 
-// OFFSET: #0x006B1BA0
+// OFFSET: 0x004D0680
 void ClientRealmResponseAdapter::OnAFKMonitorInfoResponse(RealmConnection* connection, WOWGUID guid, int32_t a3, int32_t a4, int32_t a5, int32_t a6) {
 }
 

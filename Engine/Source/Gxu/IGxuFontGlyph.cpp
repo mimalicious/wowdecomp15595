@@ -5,7 +5,7 @@
 #include "Engine/Source/Gxu/GxuFontMiscClasses.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x006C8C10
+// OFFSET: 0x006230A0
 static int32_t FREETYPE_RenderGlyph(FT_Face face, uint32_t code, bool monochrome) {
     FT_UInt index = FT_Get_Char_Index(face, code);
 

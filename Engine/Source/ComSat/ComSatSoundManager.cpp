@@ -76,7 +76,7 @@ bool ComSat::Sound::Manager::LocalTalkerThreshold(uint8_t player, float threshol
     return true;
 }
 
-// OFFSET: #0x00881370
+// OFFSET: 0x00A348F0
 bool ComSat::Sound::Manager::CanBitpackEncodedData() {
     return ComSat::Sound::CODEC::CanBitpackFrames();
 }

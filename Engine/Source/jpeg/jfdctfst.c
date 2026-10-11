@@ -110,7 +110,7 @@
  * Perform the forward DCT on one block of samples.
  */
 
-// OFFSET: #0x004B38D0
+// OFFSET: 0x00B65950
 void jpeg_fdct_ifast(DCTELEM * data) {
   DCTELEM tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
   DCTELEM tmp10, tmp11, tmp12, tmp13;

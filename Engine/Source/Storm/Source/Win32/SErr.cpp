@@ -297,7 +297,7 @@ inline int32_t MakeDirectory(const uint16_t* path) {
     return (attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-// OFFSET: #0x007711C0
+// OFFSET: 0x004B4500
 static HANDLE CreateErrorLogFile(const char* suffix, const char* ext, char* logpath, uint32_t logpathchars, const SYSTEMTIME* time) {
     char exefullpath[2 * MAX_PATH];
     uint16_t exefullpathW[MAX_PATH];
@@ -617,7 +617,7 @@ void STORMAPI SErrSetLogCallback(int32_t (STORMAPI* callback)(char*, uint32_t)) 
     InternalLeaveCriticalSection(&s_critsect);
 }
 
-// OFFSET: #0x00771960
+// OFFSET: 0x004B4AE0
 int32_t STORMAPI SErrGetLogLastPath(char* buf, uint32_t size) {
     InternalEnterCriticalSection(&s_critsect);
     int32_t result = 0;

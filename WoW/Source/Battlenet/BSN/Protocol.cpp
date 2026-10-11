@@ -1,6 +1,6 @@
 #include "WoW/Source/Battlenet/BSN/Protocol.h"
 
-// OFFSET: #0x00889E50
+// OFFSET: 0x00665900
 uint32_t BSN::Protocol::GetUInt32(const uint8_t*& cursor) {
     uint32_t value = 0;
 
@@ -78,7 +78,7 @@ const uint8_t* BSN::Protocol::Protocol::TypeInfo(uint32_t typeId) const {
     return &this->m_bytecode[offset];
 }
 
-// OFFSET: #0x00889FC0
+// OFFSET: 0x00665A40
 const uint8_t* BSN::Protocol::Protocol::DumpInfo(uint32_t typeId) const {
     if (!this->m_dumpInfoSize) {
         return NULL;

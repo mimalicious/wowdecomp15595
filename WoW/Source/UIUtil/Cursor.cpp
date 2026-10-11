@@ -153,7 +153,7 @@ int32_t CopyCursorImage(uint32_t* image, MipBits* mipImages, uint32_t width, uin
     return 0;
 }
 
-// OFFSET: #0x006162C0
+// OFFSET: 0x00486060
 void UpdateCursor() {
     uint32_t* pixels = g_theGxDevicePtr->CursorLock();
 

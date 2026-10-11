@@ -1482,7 +1482,7 @@ static int32_t EnumAddOnsDisk(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x005F8F50
+// OFFSET: 0x00460010
 void InitializeAddOns() {
     ListInterfaceArchive("Interface\\AddOns\\", EnumAddOnsArchive, NULL);
     OsFileList("Interface\\AddOns\\", "*", EnumAddOnsDisk, NULL, 0);

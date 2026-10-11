@@ -3,7 +3,7 @@
 #include <ctime>
 #include "Engine/Source/Tempest/CMath.h"
 
-// OFFSET: #0x007F6AA0
+// OFFSET: 0x00B12E20
 static void GenerateRandomValues(_RandomSeed* seed) {
     uint32_t a = seed->m_a;
     uint32_t b = seed->m_b;
@@ -62,7 +62,7 @@ static void SeedRandomValues(_RandomSeed* seed, int32_t value) {
     seed->m_count = 256;
 }
 
-// OFFSET: #0x007F6C70
+// OFFSET: 0x00B13000
 void InitializeRandomSeed(_RandomSeed* seed, uint32_t value) {
     if (value) {
         srand(value);
@@ -89,7 +89,7 @@ static double GetRandomFraction(_RandomSeed* seed) {
     return value * 2.3283064e-10f;
 }
 
-// OFFSET: #0x007F6D10
+// OFFSET: 0x00B130A0
 uint32_t GetRandomValue(uint32_t max, _RandomSeed* seed) {
     float value = static_cast<float>(GetRandomFraction(seed) * max);
     uint32_t result = CMath::fint_(value - 0.5f);

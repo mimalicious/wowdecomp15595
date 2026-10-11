@@ -303,7 +303,7 @@ IOWin32FileUnit::~IOWin32FileUnit() {
     this->m_handle = NULL;
 }
 
-// OFFSET: #0x0077A270
+// OFFSET: 0x00B67DC0
 IOUnbufferedFileUnit::IOUnbufferedFileUnit(void* handle, const IOFileParam* param) {
     this->m_unit = new IOWin32FileUnit(handle);
     this->m_size = 0;

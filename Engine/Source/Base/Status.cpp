@@ -132,7 +132,7 @@ void CStatus::Prepend(STATUS_TYPE severity, const char* format, ...) {
     }
 }
 
-// OFFSET: #0x0047C360
+// OFFSET: 0x008727E0
 void CStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     char buffer[256];
     memset(buffer, 0, sizeof(buffer));

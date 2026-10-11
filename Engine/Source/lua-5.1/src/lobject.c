@@ -46,7 +46,7 @@ int luaO_int2fb (unsigned int x) {
 
 
 /* converts back */
-// OFFSET: #0x0084D3D0
+// OFFSET: 0x0041FA70
 int luaO_fb2int (int x) {
   int e = (x >> 3) & 31;
   if (e == 0) return x;

@@ -1137,7 +1137,7 @@ void CMovementShared::PostFeatherFall() {
     }
 }
 
-// OFFSET: #0x00987050
+// OFFSET: 0x00A20180
 float CMovementShared::RelDistanceFallen(uint32_t time, float z) const {
     uint32_t flags = this->m_flags;
     float velocity = this->m_fallVelocity;
@@ -1568,7 +1568,7 @@ C3Vector CMovementShared::GetDirection() const {
         this->m_moveDir.x * matrix.a2 + matrix.c2 * this->m_moveDir.z + matrix.b2 * this->m_moveDir.y);
 }
 
-// OFFSET: #0x00989660
+// OFFSET: 0x00A23980
 void CMovementShared::StartSwim() {
     this->m_flags = (this->m_flags & ~(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING | MOVEMENTFLAG_SPLINE_ELEVATION)) | MOVEMENTFLAG_SWIMMING;
     this->UpdateAnchors(0);

@@ -730,7 +730,7 @@ void RealmResponse::JoinRealmResult(uint32_t realmID, int32_t result, int32_t a3
 void RealmResponse::OnChatPlayerNotFound(RealmConnection* connection, const char* name) {
 }
 
-// OFFSET: #0x006B0960
+// OFFSET: 0x004CF270
 void RealmResponse::OnCharacterRestored(RealmConnection* connection, bool success, uint32_t a3, uint32_t a4, uint32_t a5, uint64_t a6, uint64_t a7, uint32_t a8, const char* a9, uint32_t a10, CDataStore* msg, uint64_t a12, uint64_t a13) {
 }
 

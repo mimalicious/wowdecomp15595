@@ -486,7 +486,7 @@ size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list argl
     return ISStrVPrintf(dest, maxchars, format, arglist);
 }
 
-// OFFSET: #0x0076F0D0
+// OFFSET: 0x004B3480
 int32_t SStrToInt(const char* string) {
     const char* curr = string;
 
@@ -509,7 +509,7 @@ int32_t SStrToInt(const char* string) {
     return result;
 }
 
-// OFFSET: #0x0076F140
+// OFFSET: 0x004B34D0
 uint32_t SStrToUnsigned(const char* string) {
     uint32_t result = 0;
     uint32_t digit;

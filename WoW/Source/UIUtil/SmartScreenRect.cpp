@@ -249,7 +249,7 @@ static void SmartScreenRectRecycleNodes() {
     s_freeNodes.Combine(&s_searchQueue, 2, NULL);
 }
 
-// OFFSET: #0x00615860
+// OFFSET: 0x00460DD0
 void SmartScreenRectClearAllGrids() {
     for (uint32_t i = 0; i < 2; i++) {
         s_grids[i].SetCount(0);
