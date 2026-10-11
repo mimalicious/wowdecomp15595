@@ -2609,7 +2609,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x184: {
-            ClientGuildNameChanged message(this, connection, msg, timeStamp);
+            ClientGuildMoveStarting message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 
@@ -2679,7 +2679,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x1A6: {
-            ClientGuildMoveStarting message(this, connection, msg, timeStamp);
+            ClientGuildNameChanged message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 

@@ -614,4 +614,37 @@ class PlayerMoveUpdateMissileTrajectory : public JamClientMessage {
     ~PlayerMoveUpdateMissileTrajectory();
 };
 
+class PlayerMoveTeleportCheat : public JamClientMessage {
+    public:
+    /* 0010 */ C3Vector m_position;
+    /* 001C */ float m_facing;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerMoveTeleportCheat(const C3Vector& position, float facing);
+    ~PlayerMoveTeleportCheat();
+};
+
+class PlayerMoveSetRawPosition : public JamClientMessage {
+    public:
+    /* 0010 */ float m_facing;
+    /* 0014 */ C3Vector m_position;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerMoveSetRawPosition(const C3Vector& position, float facing);
+    ~PlayerMoveSetRawPosition();
+};
+
+class PlayerMoveCharmPortCheat : public JamClientMessage {
+    public:
+    /* 0010 */ float m_facing;
+    /* 0014 */ C3Vector m_position;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerMoveCharmPortCheat(const C3Vector& position, float facing);
+    ~PlayerMoveCharmPortCheat();
+};
+
 #endif

@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Storm/H/stpl.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
 
 struct JamGuildMemberSetNoteData {
@@ -382,6 +383,16 @@ class GlobalLFGuildBrowse : public JamClientMessage {
 
     GlobalLFGuildBrowse();
     ~GlobalLFGuildBrowse();
+};
+
+class GlobalGuildSetAchievementTracking : public JamClientMessage {
+    public:
+    /* 0010 */ TSGrowableArray<int32_t> m_achievementIDs;
+
+    void Put(CDataStore* msg) override;
+
+    GlobalGuildSetAchievementTracking();
+    ~GlobalGuildSetAchievementTracking();
 };
 
 #endif

@@ -17940,14 +17940,14 @@ void ClientMoveSetCompoundState::Unpack(CDataStore* msg, bool full) {
     guid[6] = bits.ReadBit();
     guid[2] = bits.ReadBit();
     guid[3] = bits.ReadBit();
-    this->m_changes.SetCount(bits.ReadBits<22>());
+    this->m_changes.SetCount(bits.ReadBits<23>());
 
     for (uint32_t i = 0; i < this->m_changes.Count(); i++) {
         JamMoveStateChange& change = this->m_changes[i];
-        change.m_hasVehicleRecId = bits.ReadBit();
-        change.m_hasSpeed = bits.ReadBit();
-        change.m_hasKnockBack = bits.ReadBit();
-        change.m_hasCollisionHeight = bits.ReadBit();
+        change.m_hasVehicleRecId = bits.ReadBit() != 0;
+        change.m_hasSpeed = bits.ReadBit() != 0;
+        change.m_hasKnockBack = bits.ReadBit() != 0;
+        change.m_hasCollisionHeight = bits.ReadBit() != 0;
 
         if (change.m_hasCollisionHeight) {
             change.m_collisionHeight.m_reason = bits.ReadBits<2>();
@@ -18096,14 +18096,20 @@ bool ClientMoveSetCompoundState::Read(CDataStore* msg, bool full) {
     guid[6] = bits.ReadBit();
     guid[2] = bits.ReadBit();
     guid[3] = bits.ReadBit();
-    this->m_changes.SetCount(bits.ReadBits<22>());
+    uint32_t count = bits.ReadBits<23>();
+
+    if (msg->m_size - msg->m_read < ((4 * count + 7) >> 3) + 6 * count) {
+        return false;
+    }
+
+    this->m_changes.SetCount(count);
 
     for (uint32_t i = 0; i < this->m_changes.Count(); i++) {
         JamMoveStateChange& change = this->m_changes[i];
-        change.m_hasVehicleRecId = bits.ReadBit();
-        change.m_hasSpeed = bits.ReadBit();
-        change.m_hasKnockBack = bits.ReadBit();
-        change.m_hasCollisionHeight = bits.ReadBit();
+        change.m_hasVehicleRecId = bits.ReadBit() != 0;
+        change.m_hasSpeed = bits.ReadBit() != 0;
+        change.m_hasKnockBack = bits.ReadBit() != 0;
+        change.m_hasCollisionHeight = bits.ReadBit() != 0;
 
         if (change.m_hasCollisionHeight) {
             change.m_collisionHeight.m_reason = bits.ReadBits<2>();
@@ -18225,4 +18231,35 @@ bool ClientMoveSetCompoundState::Handle() {
     }
 
     return ClientMoveSetCompoundState::s_handler(this);
+}
+
+// OFFSET: 0x006C0480
+void JamMoveStateChange::operator=(const JamMoveStateChange& source) {
+    this->m_hasCollisionHeight = source.m_hasCollisionHeight;
+    this->m_hasKnockBack = source.m_hasKnockBack;
+
+    if (this->m_hasCollisionHeight) {
+        this->m_collisionHeight.m_height = source.m_collisionHeight.m_height;
+        this->m_collisionHeight.m_reason = source.m_collisionHeight.m_reason;
+    }
+
+    this->m_ackIndex = source.m_ackIndex;
+
+    if (this->m_hasKnockBack) {
+        this->m_knockBack.m_direction = source.m_knockBack.m_direction;
+        this->m_knockBack.m_horizontalSpeed = source.m_knockBack.m_horizontalSpeed;
+        this->m_knockBack.m_verticalSpeed = source.m_knockBack.m_verticalSpeed;
+    }
+
+    this->m_hasVehicleRecId = source.m_hasVehicleRecId;
+    this->m_messageId = source.m_messageId;
+    this->m_hasSpeed = source.m_hasSpeed;
+
+    if (this->m_hasSpeed) {
+        this->m_speed = source.m_speed;
+    }
+
+    if (this->m_hasVehicleRecId) {
+        this->m_vehicleRecId = source.m_vehicleRecId;
+    }
 }

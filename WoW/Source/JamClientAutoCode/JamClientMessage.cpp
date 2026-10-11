@@ -1,8 +1,6 @@
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
 #include "Engine/Source/Base/CDataStore.h"
-
-// STATIC: 0x00C45F90
-static const uint32_t s_messageInfoDesc[1] = { 0 };
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
 
 // PROVEN: 9f34f71d IDENTICAL/NONE
 // OFFSET: [0x00847950]
@@ -15,13 +13,33 @@ bool JamClientMessage::Get(CDataStore* msg, bool full) {
     return false;
 }
 
-// PROVEN: 23ba05d7 IDENTICAL/NONE
 // OFFSET: [0x006F8320/0x1403C1250]
-JAMMESSAGEINFO JamClientMessage::GetInfo() {
-    JAMMESSAGEINFO info;
-    info.m_desc = s_messageInfoDesc;
-    info.m_size = 0;
-    info.m_flags = 0;
+JamValue JamClientMessage::GetInfo() {
+    JamValue info;
+    info.m_type = &g_jamTypeNone;
+    info.m_data = NULL;
+    info.m_meta = NULL;
 
     return info;
+}
+
+// OFFSET: [0x0066BC00/0x140312430]
+JamClientRideTicket::JamClientRideTicket() {
+}
+
+// OFFSET: [0x00401000/0x1407D7E80]
+JamClientRideTicket::~JamClientRideTicket() {
+}
+
+// OFFSET: 0x00401000
+JamThrottleState::~JamThrottleState() {
+}
+
+// OFFSET: 0x00A3AA30
+bool JamClientRideTicket::IsValid() const {
+    return true;
+}
+
+// OFFSET: 0x00401000
+JamCliCUFProfile::~JamCliCUFProfile() {
 }

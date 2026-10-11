@@ -1182,6 +1182,8 @@ struct JamMoveStateChange {
     /* 0028 */ uint32_t m_vehicleRecId;
     /* 002C */ bool m_hasCollisionHeight;
     /* 0030 */ JamMoveCollisionHeight m_collisionHeight;
+
+    void operator=(const JamMoveStateChange& source);
 };
 
 class ClientMoveSetCompoundState : public JamClientMessage {

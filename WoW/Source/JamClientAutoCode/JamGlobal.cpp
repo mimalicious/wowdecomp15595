@@ -1369,3 +1369,24 @@ void GlobalLFGuildBrowse::Put(CDataStore* msg) {
     msg->Put(this->m_interests);
     msg->Put(static_cast<uint32_t>(this->m_characterLevel));
 }
+
+// OFFSET: 0x0069CCC0
+GlobalGuildSetAchievementTracking::GlobalGuildSetAchievementTracking() {
+}
+
+// OFFSET: 0x0069CC90
+GlobalGuildSetAchievementTracking::~GlobalGuildSetAchievementTracking() {
+}
+
+// OFFSET: 0x0069C890
+void GlobalGuildSetAchievementTracking::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x1027));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<24>(this->m_achievementIDs.Count(), JamBitCount<true>());
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_achievementIDs.Count(); i++) {
+        msg->Put(static_cast<uint32_t>(this->m_achievementIDs[i]));
+    }
+}

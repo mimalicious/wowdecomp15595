@@ -10034,3 +10034,60 @@ void PlayerMoveUpdateMissileTrajectory::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(moverGuid[6] ^ 1));
     }
 }
+
+// OFFSET: 0x00670AE0
+PlayerMoveTeleportCheat::PlayerMoveTeleportCheat(const C3Vector& position, float facing) {
+    this->m_position = position;
+    this->m_facing = facing;
+}
+
+// OFFSET: 0x00670570
+PlayerMoveTeleportCheat::~PlayerMoveTeleportCheat() {
+}
+
+// OFFSET: 0x00674A30
+void PlayerMoveTeleportCheat::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3A10));
+    msg->Put(this->m_position.x);
+    msg->Put(this->m_position.y);
+    msg->Put(this->m_facing);
+    msg->Put(this->m_position.z);
+}
+
+// OFFSET: 0x006740C0
+PlayerMoveSetRawPosition::PlayerMoveSetRawPosition(const C3Vector& position, float facing) {
+    this->m_facing = facing;
+    this->m_position = position;
+}
+
+// OFFSET: 0x00670990
+PlayerMoveSetRawPosition::~PlayerMoveSetRawPosition() {
+}
+
+// OFFSET: 0x00674420
+void PlayerMoveSetRawPosition::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x311A));
+    msg->Put(this->m_position.x);
+    msg->Put(this->m_position.z);
+    msg->Put(this->m_facing);
+    msg->Put(this->m_position.y);
+}
+
+// OFFSET: 0x00673A10
+PlayerMoveCharmPortCheat::PlayerMoveCharmPortCheat(const C3Vector& position, float facing) {
+    this->m_facing = facing;
+    this->m_position = position;
+}
+
+// OFFSET: 0x006709F0
+PlayerMoveCharmPortCheat::~PlayerMoveCharmPortCheat() {
+}
+
+// OFFSET: 0x00670A80
+void PlayerMoveCharmPortCheat::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7A08));
+    msg->Put(this->m_facing);
+    msg->Put(this->m_position.y);
+    msg->Put(this->m_position.x);
+    msg->Put(this->m_position.z);
+}

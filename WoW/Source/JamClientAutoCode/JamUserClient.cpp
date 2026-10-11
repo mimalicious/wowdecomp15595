@@ -3686,6 +3686,7 @@ void UserClientOpcode2422::Put(CDataStore* msg) {
     msg->Put(this->unk_0010);
 
     JamBitWriter bits(msg);
+    bits.WriteBit(this->unk_0014);
     bits.Flush();
 }
 
@@ -3882,45 +3883,7 @@ UserClientLfgLeave::~UserClientLfgLeave() {
 void UserClientLfgLeave::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2433));
     msg->Put(this->unk_0028);
-    msg->Put(this->m_ticket.m_time);
-    msg->Put(this->m_ticket.m_type);
-    msg->Put(this->m_ticket.m_id);
-
-    JamBitWriter bits(msg);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[4] != 0);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[5] != 0);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[0] != 0);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[6] != 0);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[2] != 0);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[7] != 0);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[1] != 0);
-    bits.WriteBit(this->m_ticket.m_requesterGuid[3] != 0);
-    bits.Flush();
-
-    if (this->m_ticket.m_requesterGuid[7]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[7] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[4]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[4] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[3]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[3] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[2]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[2] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[6]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[6] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[0]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[0] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[1]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[1] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[5]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[5] ^ 1));
-    }
+    this->m_ticket.Put(msg);
 }
 
 // OFFSET: 0x0066E6B0
@@ -3935,45 +3898,7 @@ UserClientLfgProposalResponse::~UserClientLfgProposalResponse() {
 void UserClientLfgProposalResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x403));
     msg->Put(this->m_proposalID);
-    msg->Put(this->m_ticket.m_time);
-    msg->Put(this->m_ticket.m_type);
-    msg->Put(this->m_ticket.m_id);
-
-    JamBitWriter ticketBits(msg);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[4] != 0);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[5] != 0);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[0] != 0);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[6] != 0);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[2] != 0);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[7] != 0);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[1] != 0);
-    ticketBits.WriteBit(this->m_ticket.m_requesterGuid[3] != 0);
-    ticketBits.Flush();
-
-    if (this->m_ticket.m_requesterGuid[7]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[7] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[4]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[4] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[3]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[3] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[2]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[2] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[6]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[6] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[0]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[0] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[1]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[1] ^ 1));
-    }
-    if (this->m_ticket.m_requesterGuid[5]) {
-        msg->Put(static_cast<uint8_t>(this->m_ticket.m_requesterGuid[5] ^ 1));
-    }
+    this->m_ticket.Put(msg);
 
     JamBitWriter bits(msg);
     bits.WriteBit(this->m_instanceGuid[7] != 0);
@@ -4011,4 +3936,117 @@ void UserClientLfgProposalResponse::Put(CDataStore* msg) {
     if (this->m_instanceGuid[2]) {
         msg->Put(static_cast<uint8_t>(this->m_instanceGuid[2] ^ 1));
     }
+}
+
+// OFFSET: 0x0066DA90
+UserClientWorldTeleport::UserClientWorldTeleport(uint32_t mapID, uint64_t transportGUID, const C3Vector& position, float facing) {
+    memcpy(this->m_transportGUID, &transportGUID, sizeof(this->m_transportGUID));
+    this->m_mapID = mapID;
+    this->m_facing = facing;
+    this->m_position = position;
+}
+
+// OFFSET: 0x0066B990
+UserClientWorldTeleport::~UserClientWorldTeleport() {
+}
+
+// OFFSET: 0x0066CF60
+void UserClientWorldTeleport::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x24B2));
+    msg->Put(this->m_mapID);
+    msg->Put(this->m_facing);
+    msg->Put(this->m_position.y);
+    msg->Put(this->m_position.x);
+    msg->Put(this->m_position.z);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_transportGUID[6] != 0);
+    bits.WriteBit(this->m_transportGUID[0] != 0);
+    bits.WriteBit(this->m_transportGUID[5] != 0);
+    bits.WriteBit(this->m_transportGUID[4] != 0);
+    bits.WriteBit(this->m_transportGUID[3] != 0);
+    bits.WriteBit(this->m_transportGUID[7] != 0);
+    bits.WriteBit(this->m_transportGUID[1] != 0);
+    bits.WriteBit(this->m_transportGUID[2] != 0);
+    bits.Flush();
+
+    if (this->m_transportGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[1] ^ 1));
+    }
+    if (this->m_transportGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[0] ^ 1));
+    }
+    if (this->m_transportGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[2] ^ 1));
+    }
+    if (this->m_transportGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[7] ^ 1));
+    }
+    if (this->m_transportGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[4] ^ 1));
+    }
+    if (this->m_transportGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[5] ^ 1));
+    }
+    if (this->m_transportGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[6] ^ 1));
+    }
+    if (this->m_transportGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_transportGUID[3] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066D3E0
+UserClientSupportTicketSubmitBug::UserClientSupportTicketSubmitBug() {
+}
+
+// OFFSET: 0x0066D930
+UserClientSupportTicketSubmitBug::~UserClientSupportTicketSubmitBug() {
+}
+
+// OFFSET: 0x0066FB20
+void UserClientSupportTicketSubmitBug::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2520));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<12>(strlen(this->m_note), JamBitCount<true>());
+    bits.Flush();
+
+    msg->PutData(this->m_note, strlen(this->m_note));
+    this->m_header.Put(msg);
+}
+
+// OFFSET: 0x0066DEC0
+UserClientSupportTicketSubmitSuggestion::UserClientSupportTicketSubmitSuggestion() {
+}
+
+// OFFSET: 0x0066E030
+UserClientSupportTicketSubmitSuggestion::~UserClientSupportTicketSubmitSuggestion() {
+}
+
+// OFFSET: 0x0066F990
+void UserClientSupportTicketSubmitSuggestion::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2512));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<12>(strlen(this->m_note), JamBitCount<true>());
+    bits.Flush();
+
+    msg->PutData(this->m_note, strlen(this->m_note));
+    this->m_header.Put(msg);
+}
+
+// OFFSET: 0x0066FEF0
+UserClientWardenData::UserClientWardenData() {
+}
+
+// OFFSET: 0x0066FF50
+UserClientWardenData::~UserClientWardenData() {
+}
+
+// OFFSET: 0x0066D400
+void UserClientWardenData::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x25A2));
+    msg->Put(this->m_data.m_size);
+    msg->PutData(this->m_data.m_data, this->m_data.m_size);
 }

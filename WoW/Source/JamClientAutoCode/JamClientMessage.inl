@@ -17,7 +17,7 @@ inline JamBitReader::JamBitReader(CDataStore* msg) {
     this->m_bits = 8;
 }
 
-// INLINED
+// OFFSET: 0x0066CEA0
 inline uint32_t JamBitReader::ReadBit() {
     if (this->m_bits == 8) {
         uint8_t value = 0;
@@ -27,8 +27,8 @@ inline uint32_t JamBitReader::ReadBit() {
     }
 
     uint32_t bit = this->m_value >> 7;
-    this->m_bits++;
     this->m_value <<= 1;
+    this->m_bits++;
 
     return bit;
 }
@@ -61,9 +61,10 @@ uint32_t JamBitReader::ReadBits(JamBitCount<false>) {
         } else {
             uint32_t high = this->m_value >> bits;
             this->m_msg->Get(value);
-            this->m_bits -= 8 - count;
-            result = (high << this->m_bits) | (value >> (8 - this->m_bits));
-            this->m_value = value << this->m_bits;
+            uint8_t remain = this->m_bits - (8 - count);
+            result = (high << remain) | (value >> (8 - remain));
+            this->m_bits = remain;
+            this->m_value = value << remain;
         }
     }
 
@@ -82,24 +83,26 @@ inline uint32_t JamBitReader::ReadBits<1>(JamBitCount<false>) {
     return this->ReadBit();
 }
 
-// OFFSET: [0x0066EBD0/0x140315BA0<9>, 0x006C2BC0<11>, 0x0066EC70<12>, 0x006975E0<13>, 0x006C2C50<14>, 0x006C2D90<18>, 0x006C2E30<19>, 0x006C2ED0<20>, 0x006C2F70<21>, 0x00697660<22>, 0x006C3010<23>, 0x00697700/0x1403BB7A0<24>, 0x006977A0<25>, 0x006C30B0<26>, 0x00697860/0x140342E40<30>]
+// OFFSET: [0x0066EBD0/0x140315BA0<9>, 0x006C2BC0<11>, 0x0066EC70<12>, 0x006975E0<13>, 0x006C2C50<14>, 0x006C2CD0/0x1403A8680<17>, 0x006C2D90<18>, 0x006C2E30<19>, 0x006C2ED0<20>, 0x006C2F70<21>, 0x00697660<22>, 0x006C3010<23>, 0x00697700/0x1403BB7A0<24>, 0x006977A0<25>, 0x006C30B0<26>, 0x00697860/0x140342E40<30>]
 template <uint32_t count>
 uint32_t JamBitReader::ReadBits(JamBitCount<true>) {
     uint32_t result = 0;
 
     for (int32_t i = 0; i < static_cast<int32_t>(count / 8 * 8); i += 8) {
         uint32_t byte;
+        uint8_t whole;
 
         if (this->m_bits == 8) {
-            uint8_t value = 0;
-            this->m_msg->Get(value);
-            byte = value;
+            whole = 0;
+            this->m_msg->Get(whole);
+            byte = whole;
         } else {
             uint32_t high = this->m_value >> this->m_bits;
             uint8_t value = 0;
             this->m_msg->Get(value);
-            byte = (high << this->m_bits) | (value >> (8 - this->m_bits));
-            this->m_value = value << this->m_bits;
+            uint8_t bits = this->m_bits;
+            byte = (value >> static_cast<uint8_t>(8 - bits)) | (high << bits);
+            this->m_value = value << bits;
         }
 
         result |= byte << (count - 8 - i);
@@ -177,7 +180,7 @@ inline void JamBitWriter::WriteBits<8>(uint32_t value, JamBitCount<false>) {
     this->m_value = value & ((1 << this->m_bits) - 1);
 }
 
-// OFFSET: [0x0066E960<9>, 0x0066E9E0<10>, 0x0066EA50<11>, 0x0066AF20<12>, 0x0069C820<14>, 0x00675620<20>, 0x006756B0<22>, 0x0066EB50<24>, 0x006757D0<30>]
+// OFFSET: [0x0066E960<9>, 0x0066E9E0<10>, 0x0066EA50<11>, 0x0066AF20<12>, 0x0069C820<14>, 0x00675620<20>, 0x006756B0<22>, 0x0066EAC0<23>, 0x0066EB50<24>, 0x00697540<25>, 0x00675740<26>, 0x006757D0<30>]
 template <uint32_t count>
 void JamBitWriter::WriteBits(uint32_t value, JamBitCount<true>) {
     for (int32_t i = 0; i < static_cast<int32_t>(count / 8 * 8); i += 8) {

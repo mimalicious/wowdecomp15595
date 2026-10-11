@@ -20,6 +20,7 @@ class ClientConnectionAuthChallenge : public JamClientMessage {
     ClientConnectionAuthChallenge(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientConnectionAuthChallenge();
     bool Handle();
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -49,6 +50,7 @@ class ClientConnectionConnectTo : public JamClientMessage {
     ClientConnectionConnectTo(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientConnectionConnectTo();
     bool Handle();
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -171,6 +173,8 @@ class UserRouterClientSuspendTokenResponse : public JamClientMessage {
 
 class UserRouterClientEnableNagle : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserRouterClientEnableNagle();

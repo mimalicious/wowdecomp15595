@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/Base/CDataStore.h"
+#include "WoW/Source/JamClientAutoCode/JamReflection.h"
 
 class NetClient;
 class WowConnection;
@@ -45,12 +46,6 @@ class JamBitWriter {
     void WriteBits(uint32_t value, JamBitCount<true>);
 };
 
-struct JAMMESSAGEINFO {
-    /* 0000 */ const void* m_desc;
-    /* 0004 */ uint32_t m_size;
-    /* 0008 */ uint32_t m_flags;
-};
-
 class JamClientMessage {
     public:
     /* 0004 */ NetClient* m_netClient;
@@ -59,7 +54,7 @@ class JamClientMessage {
 
     virtual void Put(CDataStore* msg);
     virtual bool Get(CDataStore* msg, bool full);
-    virtual JAMMESSAGEINFO GetInfo();
+    virtual JamValue GetInfo();
 
     JamClientMessage();
     JamClientMessage(NetClient* netClient, WowConnection* connection, uint32_t time);

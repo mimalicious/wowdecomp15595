@@ -24,6 +24,8 @@ struct JamCliStructMailAttachment {
 
 class UserClientCancelQueuedSpell : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientCancelQueuedSpell();
@@ -32,6 +34,8 @@ class UserClientCancelQueuedSpell : public JamClientMessage {
 
 class UserClientEnumCharacters : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientEnumCharacters();
@@ -50,6 +54,8 @@ class UserClientPlayerLogin : public JamClientMessage {
 
 class UserClientWorldPortResponse : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientWorldPortResponse();
@@ -156,6 +162,8 @@ class UserClientUnlearnSpecialization : public JamClientMessage {
 
 class UserClientReturnToGraveyard : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientReturnToGraveyard();
@@ -164,6 +172,8 @@ class UserClientReturnToGraveyard : public JamClientMessage {
 
 class UserClientQueryBattlefieldState : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientQueryBattlefieldState();
@@ -172,6 +182,8 @@ class UserClientQueryBattlefieldState : public JamClientMessage {
 
 class UserClientRequestCemeteryList : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientRequestCemeteryList();
@@ -296,6 +308,8 @@ class UserClientClearRaidMarker : public JamClientMessage {
 
 class UserClientRequestPartyJoinUpdates : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientRequestPartyJoinUpdates();
@@ -351,6 +365,8 @@ class UserClientInitiateRolePoll : public JamClientMessage {
 
 class UserClientRequestBattlefieldStatus : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientRequestBattlefieldStatus();
@@ -359,6 +375,8 @@ class UserClientRequestBattlefieldStatus : public JamClientMessage {
 
 class UserClientGuildAccept : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientGuildAccept();
@@ -433,6 +451,8 @@ class UserClientLfgSetComment : public JamClientMessage {
 
 class UserClientBattlefieldLeave : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientBattlefieldLeave();
@@ -474,6 +494,8 @@ class UserClientBattlemasterJoin : public JamClientMessage {
 
 class UserClientGuildDisband : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientGuildDisband();
@@ -482,6 +504,8 @@ class UserClientGuildDisband : public JamClientMessage {
 
 class UserClientGuildLeave : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientGuildLeave();
@@ -977,6 +1001,8 @@ class UserClientMessageChatOfficer : public JamClientMessage {
 
 class UserClientRequestRatedBgInfo : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientRequestRatedBgInfo();
@@ -985,6 +1011,8 @@ class UserClientRequestRatedBgInfo : public JamClientMessage {
 
 class UserClientGetPVPOptionsEnabled : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientGetPVPOptionsEnabled();
@@ -1068,7 +1096,7 @@ class UserClientRequestRatedInfo : public JamClientMessage {
 class UserClientSendSorRequestViaAddress : public JamClientMessage {
     public:
     /* 0010 */ char unk_0010[1280];
-    /* 0510 */ char unk_0510[256];
+    /* 0510 */ char unk_0510[1020];
 
     void Put(CDataStore* msg) override;
 
@@ -1089,6 +1117,8 @@ class UserClientSendSorRequestViaBnetAccountId : public JamClientMessage {
 
 class UserClientRequestPvpRewards : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientRequestPvpRewards();
@@ -1097,6 +1127,8 @@ class UserClientRequestPvpRewards : public JamClientMessage {
 
 class UserClientBattlemasterJoinRated : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientBattlemasterJoinRated();
@@ -1150,6 +1182,8 @@ class UserClientBFMgrEntryInviteResponse : public JamClientMessage {
 
 class UserClientRequestPvpLogData : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientRequestPvpLogData();
@@ -1158,6 +1192,8 @@ class UserClientRequestPvpLogData : public JamClientMessage {
 
 class UserClientRequestBattlefieldPositions : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientRequestBattlefieldPositions();
@@ -1221,6 +1257,8 @@ class UserClientChatReportIgnored : public JamClientMessage {
 
 class UserClientChatUnregisterAllAddonPrefixes : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientChatUnregisterAllAddonPrefixes();
@@ -1265,6 +1303,8 @@ class UserClientBattlefieldPort : public JamClientMessage {
 
 class UserClientOpcode2581 : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientOpcode2581();
@@ -1274,6 +1314,7 @@ class UserClientOpcode2581 : public JamClientMessage {
 class UserClientOpcode2422 : public JamClientMessage {
     public:
     /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint8_t unk_0014;
 
     void Put(CDataStore* msg) override;
 
@@ -1283,6 +1324,8 @@ class UserClientOpcode2422 : public JamClientMessage {
 
 class UserClientOpcode7912 : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientOpcode7912();
@@ -1331,6 +1374,8 @@ class UserClientOpcode3235 : public JamClientMessage {
 
 class UserClientOpcode3231 : public JamClientMessage {
     public:
+    /* 0010 */ uint8_t unk_0010;
+
     void Put(CDataStore* msg) override;
 
     UserClientOpcode3231();
@@ -1376,6 +1421,51 @@ class UserClientLfgProposalResponse : public JamClientMessage {
 
     UserClientLfgProposalResponse();
     ~UserClientLfgProposalResponse();
+};
+
+class UserClientWorldTeleport : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_transportGUID[8];
+    /* 0018 */ float m_facing;
+    /* 001C */ uint32_t m_mapID;
+    /* 0020 */ C3Vector m_position;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientWorldTeleport(uint32_t mapID, uint64_t transportGUID, const C3Vector& position, float facing);
+    ~UserClientWorldTeleport();
+};
+
+class UserClientSupportTicketSubmitBug : public JamClientMessage {
+    public:
+    /* 0010 */ JamCliSupportTicketHeader m_header;
+    /* 0024 */ char m_note[1024];
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSupportTicketSubmitBug();
+    ~UserClientSupportTicketSubmitBug();
+};
+
+class UserClientSupportTicketSubmitSuggestion : public JamClientMessage {
+    public:
+    /* 0010 */ char m_note[1024];
+    /* 0410 */ JamCliSupportTicketHeader m_header;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSupportTicketSubmitSuggestion();
+    ~UserClientSupportTicketSubmitSuggestion();
+};
+
+class UserClientWardenData : public JamClientMessage {
+    public:
+    /* 0010 */ WDataStore m_data;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientWardenData();
+    ~UserClientWardenData();
 };
 
 #endif
