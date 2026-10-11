@@ -665,7 +665,7 @@ const char* GetMirrorTimerLabel(int32_t type, int32_t spellId);
 void BroadcastUIError(int32_t error, const char* name);
 void DBClient_ClearDB2Caches();
 void DBClient_Idle();
-int32_t Script_GetMoney(lua_State* L, int32_t index, uint64_t* money);
+bool Script_GetMoney(lua_State* L, int32_t index, uint64_t* money);
 uint32_t MouseButtonNumberToMask(int32_t button);
 bool SessionTime_IsAlternate();
 int32_t SessionTime_GetElapsed();

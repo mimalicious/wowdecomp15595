@@ -2024,15 +2024,15 @@ int32_t CGGameUI::GetWeeklyTimeRemaining() {
 }
 
 // OFFSET: 0x008C5FE0/0x140636120
-int32_t Script_GetMoney(lua_State* L, int32_t index, uint64_t* money) {
+bool Script_GetMoney(lua_State* L, int32_t index, uint64_t* money) {
     double value = lua_tonumber(L, index);
 
     if (value < 0.0 || value > static_cast<double>(0x7FFFFFFFFFFFFFFFLL)) {
-        return 0;
+        return false;
     }
 
     *money = static_cast<uint64_t>(value);
-    return 1;
+    return true;
 }
 
 // OFFSET: 0x008C6050

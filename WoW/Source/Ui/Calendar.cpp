@@ -252,7 +252,7 @@ void CGCalendar::EnterWorld() {
     memset(&s_eventClipboard, 0, sizeof(s_eventClipboard));
     CGCalendar::QueryPendingInvites();
 
-    uint32_t counts[2] = { 0, 0 };
+    uint32_t counts[3] = { 0, 0, 0 };
     int32_t numRecords = g_lfgDungeonsDB.m_numRecords;
 
     for (int32_t i = 0; i < numRecords; i++) {
@@ -272,18 +272,23 @@ void CGCalendar::EnterWorld() {
         }
 
         if (rec->m_typeID == 1) {
-            counts[0]++;
+            if (rec->IsHeroic()) {
+                counts[2]++;
+            } else {
+                counts[0]++;
+            }
         } else if (rec->m_typeID == 2) {
             counts[1]++;
         }
     }
 
-    for (uint32_t i = 0; i < 2; i++) {
+    for (uint32_t i = 0; i < 3; i++) {
         s_eventTextures[i].SetCount(counts[i]);
     }
 
     counts[0] = 0;
     counts[1] = 0;
+    counts[2] = 0;
 
     for (int32_t i = 0; i < numRecords; i++) {
         LfgDungeonsRec* rec = g_lfgDungeonsDB.GetRecordByIndex(i);
@@ -302,7 +307,11 @@ void CGCalendar::EnterWorld() {
         }
 
         if (rec->m_typeID == 1) {
-            s_eventTextures[0].m_data[counts[0]++] = rec->m_id;
+            if (rec->IsHeroic()) {
+                s_eventTextures[2].m_data[counts[2]++] = rec->m_id;
+            } else {
+                s_eventTextures[0].m_data[counts[0]++] = rec->m_id;
+            }
         } else if (rec->m_typeID == 2) {
             s_eventTextures[1].m_data[counts[1]++] = rec->m_id;
         }
@@ -310,6 +319,7 @@ void CGCalendar::EnterWorld() {
 
     qsort(s_eventTextures[0].m_data, counts[0], sizeof(int32_t), QSortTextures);
     qsort(s_eventTextures[1].m_data, counts[1], sizeof(int32_t), QSortTextures);
+    qsort(s_eventTextures[2].m_data, counts[2], sizeof(int32_t), QSortTextures);
     CGCalendar::m_initialize = 0;
 }
 

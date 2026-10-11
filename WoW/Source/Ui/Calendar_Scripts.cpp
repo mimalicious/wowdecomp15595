@@ -1486,7 +1486,14 @@ static int32_t Script_CalendarEventGetTextures(lua_State* L) {
         LfgDungeonsRec* dungeon = g_lfgDungeonsDB.GetRecord(textures->m_data[i]);
 
         if (dungeon) {
-            lua_pushstring(L, dungeon->m_name);
+            if (dungeon->IsHeroic()) {
+                char name[512];
+                SStrPrintf(name, sizeof(name), FrameScript_GetText("HEROIC_PREFIX", -1, GENDER_NOT_APPLICABLE), dungeon->m_name);
+                lua_pushstring(L, name);
+            } else {
+                lua_pushstring(L, dungeon->m_name);
+            }
+
             lua_pushstring(L, dungeon->m_textureFilename);
             lua_pushinteger(L, dungeon->m_expansionLevel);
             MapDifficultyRec* difficulty;

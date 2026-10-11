@@ -9,6 +9,11 @@ class LfgDungeonsRec {
     static const DBCMeta s_meta;
 
     static void FixupStrings(void* record, const char* strings);
+    int32_t GetGroupSize() const;
+    bool IsHeroic() const;
+    bool IsRaid() const;
+    bool IsInRandomGroup(int32_t randomID) const;
+    int32_t GetTopGroupID() const;
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_name;
@@ -27,10 +32,10 @@ class LfgDungeonsRec {
     /* 0038 */ int32_t m_orderIndex;
     /* 003C */ int32_t m_groupID;
     /* 0040 */ DBCString m_description;
-    /* 0044 */ int32_t unk_0044;
-    /* 0048 */ int32_t unk_0048;
-    /* 004C */ int32_t unk_004C;
-    /* 0050 */ int32_t unk_0050;
+    /* 0044 */ int32_t m_randomID;
+    /* 0048 */ int32_t m_countTank;
+    /* 004C */ int32_t m_countHealer;
+    /* 0050 */ int32_t m_countDamage;
 };
 
 #endif
