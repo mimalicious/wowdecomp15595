@@ -1702,6 +1702,11 @@ CommandManager::~CommandManager() {
     }
 }
 
+// INLINED
+void CommandManager::InternalSend(CDataStore* msg) {
+    this->m_connection->Send(msg, static_cast<CONNECTION_ID>(2));
+}
+
 // OFFSET: 0x004011E0/0x1400010B0
 static void ClientProcessNotification(const char* text) {
     const char* message = text;

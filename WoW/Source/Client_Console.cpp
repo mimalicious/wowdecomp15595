@@ -10,6 +10,7 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Game/ValidateName.h"
 #include "WoW/Source/GameClientCommands.h"
+#include "WoW/Source/StaticSingleton.h"
 #include "WoW/Source/Glue/CGlueMgr.h"
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Object/Movement.h"
@@ -270,7 +271,7 @@ int32_t CCommand_SetRawPos(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: #0x00407710
+// OFFSET: 0x00408E30
 int32_t CCommand_ToggleHelm(const char* command, const char* arguments) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -279,13 +280,13 @@ int32_t CCommand_ToggleHelm(const char* command, const char* arguments) {
         msg.Put(static_cast<uint32_t>(CMSG_SHOWING_HELM));
         msg.Put(static_cast<uint8_t>((player->m_player->m_playerFlags >> 10) & 1));
         msg.Finalize();
-        ClientServices::SendPacket(&msg);
+        StaticSingleton<CommandManager>::Instance()->InternalSend(&msg);
     }
 
     return 1;
 }
 
-// OFFSET: #0x004077C0
+// OFFSET: 0x00408F10
 int32_t CCommand_ToggleCloak(const char* command, const char* arguments) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -294,7 +295,7 @@ int32_t CCommand_ToggleCloak(const char* command, const char* arguments) {
         msg.Put(static_cast<uint32_t>(CMSG_SHOWING_CLOAK));
         msg.Put(static_cast<uint8_t>((player->m_player->m_playerFlags >> 11) & 1));
         msg.Finalize();
-        ClientServices::SendPacket(&msg);
+        StaticSingleton<CommandManager>::Instance()->InternalSend(&msg);
     }
 
     return 1;
