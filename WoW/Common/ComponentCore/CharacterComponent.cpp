@@ -1,4 +1,5 @@
 #include <cstddef>
+#include "Engine/Source/Services/AsyncFile.h"
 #include <cstdint>
 #include <cmath>
 #include <cstring>
@@ -5684,4 +5685,22 @@ void CCharacterComponent::UpdateItemHL(ITEM_SLOT itemSlot, const ItemDisplayInfo
 // OFFSET: 0x006FBE90/0x1403C6820
 void CCharacterComponent::UpdateItemLL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     this->UpdateItem(itemSlot, SECTION_LEG_LOWER, displayRec, apply);
+}
+
+// OFFSET: 0x00B3C200/0x140909110
+static void StreamingCallback(void* param) {
+    CCharacterComponent* component = CCharacterComponent::GetClosestComponent();
+
+    if (component) {
+        component->LinkToAsyncHead();
+    }
+
+    CCharacterComponent::ResetClosestComponent();
+}
+
+// OFFSET: 0x00B3C220/0x140909130
+void CCharacterComponent::StreamingUpdate() {
+    if (CCharacterComponent::GetClosestComponent()) {
+        AsyncFileReadAddStreamingObject(StreamingCallback, NULL, CCharacterComponent::GetClosestComponentSortVal());
+    }
 }

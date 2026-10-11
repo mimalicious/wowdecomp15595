@@ -1,4 +1,9 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
+#include "Engine/Source/Model2/M2Model.h"
+#include "WoW/Source/WorldClient/MapBaseObj.h"
+#include "WoW/Source/LiquidSystem/Liquid.h"
+#include "WoW/Source/WorldClient/MapChunkLiquid.h"
+#include "WoW/Source/WorldClient/MapDoodadDef.h"
 #include <cfloat>
 #include <malloc.h>
 #include "Engine/Source/Services/AsyncFile.h"
@@ -640,6 +645,57 @@ int32_t CWorldMap::LocateViewerMapObjDefs(CMapChunk* chunk, const C3Vector& star
     groups[1][0] = 0xFFFF;
     groups[1][1] = 0xFFFF;
     return 1;
+}
+
+// OFFSET: 0x0079EFC0/0x1404943A0
+void CWorldMap::UpdateStreaming(CMapChunk* chunk) {
+    const C3Vector& position = World::GetGuardBandPosition();
+    float distSqr = CWorldView::DistSqrToBox(chunk->m_bbox, position);
+
+    if (distSqr < 10000.0f) {
+        for (CMapBaseObjLink* link = chunk->m_doodadDefLinkList.Head(), * next; link; link = next) {
+            next = chunk->m_doodadDefLinkList.Next(link);
+            CMapDoodadDef* doodadDef = static_cast<CMapDoodadDef*>(link->m_owner);
+
+            if (doodadDef->unk_0020 == CWorldMap::s_queryTag) {
+                continue;
+            }
+
+            if (doodadDef->m_flags & 0x40) {
+                int32_t status = doodadDef->m_model->GetAsyncRenderStatusRecursive();
+
+                if (status != 2) {
+                    bool hasModelBox = doodadDef->m_modelBox.t.x >= doodadDef->m_modelBox.b.x && doodadDef->m_modelBox.t.y >= doodadDef->m_modelBox.b.y && doodadDef->m_modelBox.t.z >= doodadDef->m_modelBox.b.z;
+                    float doodadDistSqr = CWorldView::DistSqrToBox(doodadDef->m_bbox, position);
+                    int32_t priority = AsyncFileReadComputePriority(2 * !hasModelBox + 2, status, 1, doodadDistSqr);
+                    AsyncFileReadAddStreamingObject(CMapDoodadDef::StreamingCallback, doodadDef, priority);
+                }
+            }
+
+            doodadDef->unk_0020 = CWorldMap::s_queryTag;
+        }
+    }
+
+    if (distSqr < 1.0f) {
+        bool pending = !chunk->AreTexturesLoaded();
+
+        if (!chunk->LoadDetailDoodadModels()) {
+            pending = true;
+        }
+
+        for (CChunkLiquid* liquid = chunk->m_liquidList.Head(), * next; liquid; liquid = next) {
+            next = chunk->m_liquidList.Next(liquid);
+
+            if (!Liquid::IsAllLoaded(liquid->m_liquidType)) {
+                pending = true;
+                break;
+            }
+        }
+
+        if (pending) {
+            AsyncFileReadAddStreamingObject(CMapChunk::LinkToAsyncHead, chunk, 0);
+        }
+    }
 }
 
 // OFFSET: 0x0079F160/0x140494580
