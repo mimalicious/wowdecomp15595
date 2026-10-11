@@ -6543,7 +6543,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                             this->AddLine(text, NULL, s_tooltipGrayColor, s_tooltipGrayColor, 0);
                             SStrPrintf(text, sizeof(text), "Interface\\ItemSocketingFrame\\UI-EmptySocket-%s.blp", identifier);
                             CAaRect coords = { 0.0f, 0.0f, 1.0f, 1.0f };
-                            CImVector textureColor = { 0xFFFFFFFF };
+                            CImVector textureColor(0xFF, 0xFF, 0xFF, 0xFF);
                             this->AddTexture(text, coords, textureColor);
                             continue;
                         }
@@ -6565,7 +6565,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                             const CImVector& socketColor = skillOk && levelOk ? s_tooltipGrayColor : s_tooltipRedColor;
                             this->AddLine(FrameScript_GetText("EMPTY_SOCKET_PRISMATIC", -1, GENDER_NOT_APPLICABLE), NULL, socketColor, socketColor, 0);
                             CAaRect coords = { 0.0f, 0.0f, 1.0f, 1.0f };
-                            CImVector textureColor = { 0xFFFFFFFF };
+                            CImVector textureColor(0xFF, 0xFF, 0xFF, 0xFF);
                             this->AddTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic.blp", coords, textureColor);
 
                             if (!skillOk) {
@@ -6588,7 +6588,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                         } else {
                             this->AddLine(FrameScript_GetText("EMPTY_SOCKET_PRISMATIC", -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipGrayColor, s_tooltipGrayColor, 0);
                             CAaRect coords = { 0.0f, 0.0f, 1.0f, 1.0f };
-                            CImVector textureColor = { 0xFFFFFFFF };
+                            CImVector textureColor(0xFF, 0xFF, 0xFF, 0xFF);
                             this->AddTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic.blp", coords, textureColor);
                         }
 
@@ -6744,7 +6744,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                             const char* path = ClientDBStringLookup(3);
                             SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(gemRec->m_displayInfoID));
                             CAaRect coords = { 0.0f, 0.0f, 1.0f, 1.0f };
-                            CImVector textureColor = { 0xFFFFFFFF };
+                            CImVector textureColor(0xFF, 0xFF, 0xFF, 0xFF);
                             this->AddTexture(texture, coords, textureColor);
                         }
                     }
@@ -6830,7 +6830,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                     this->AddLine(text, NULL, s_tooltipGrayColor, s_tooltipGrayColor, 0);
                     SStrPrintf(text, sizeof(text), "Interface\\ItemSocketingFrame\\UI-EmptySocket-%s.blp", identifier);
                     CAaRect coords = { 0.0f, 0.0f, 1.0f, 1.0f };
-                    CImVector textureColor = { 0xFFFFFFFF };
+                    CImVector textureColor(0xFF, 0xFF, 0xFF, 0xFF);
                     this->AddTexture(text, coords, textureColor);
                 }
 

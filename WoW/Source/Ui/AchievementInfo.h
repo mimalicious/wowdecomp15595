@@ -75,7 +75,7 @@ class CGAchievementInfo {
     static bool IsRealAchievement(int32_t id, bool guild);
     static CLIENT_ACHIEVEMENTS* GetAchievement(int32_t id);
     static bool IsSupersededByCompleted(int32_t id);
-    static uint64_t BuildOutputString(char* buffer, int32_t size, uint64_t sum, uint64_t highest, int32_t highestId, uint64_t count, uint64_t value, CLIENT_ACHIEVEMENT_CRITERIA* criteria, int32_t flags, int32_t criteriaFlags, bool completed, const AchievementRec* achievement, const Achievement_CriteriaRec* criteriaRec, int32_t required);
+    static uint64_t BuildOutputString(char* buffer, int32_t size, uint64_t sum, uint64_t highest, int32_t highestId, uint64_t count, uint64_t value, CLIENT_ACHIEVEMENT_CRITERIA* criteria, int32_t flags, int32_t criteriaFlags, bool completed, const AchievementRec* achievement, const Achievement_CriteriaRec* criteriaRec, uint64_t* required);
     static void ReleaseInspect();
 
     static void InitializeGame();

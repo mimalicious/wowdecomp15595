@@ -1184,7 +1184,7 @@ static int32_t Script_GetStatistic(lua_State* L) {
                     }
                 }
 
-                if ((flags & 0x20) && node->m_counter >= static_cast<uint64_t>(static_cast<int64_t>(spec->m_criteria->m_quantity))) {
+                if ((flags & 0x20) && node->m_counter >= spec->m_criteria->m_quantity) {
                     count++;
                 }
 
@@ -1213,9 +1213,22 @@ static int32_t Script_GetStatistic(lua_State* L) {
     }
 
     char text[3000];
-    CGAchievementInfo::BuildOutputString(text, sizeof(text), sum, highest, highestId, count, value, earliest, achievement->m_rec->m_flags, criteriaFlags, false, achievement->m_rec, earliestRec, 0);
+    uint64_t required = 0;
+    CGAchievementInfo::BuildOutputString(text, sizeof(text), sum, highest, highestId, count, value, earliest, achievement->m_rec->m_flags, criteriaFlags, false, achievement->m_rec, earliestRec, &required);
     lua_pushstring(L, text);
     return 1;
+}
+
+// OFFSET: 0x00947880
+static void CriteriaPlayerNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
+    if (success && g_nameDBCache.GetRecord(guid.m_guid, WOWGUID(), NULL, NULL, false)) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_RECEIVED_ACHIEVEMENT_MEMBER_LIST, "%d", param);
+    }
+}
+
+// OFFSET: 0x00947840
+static bool IsCriteriaEligible(const Achievement_CriteriaRec* criteria) {
+    return !criteria->unk_0040 || !CGWorldStateInfo::m_worldStates.Ptr(criteria->unk_0040, HASHKEY_NONE()) || GetWorldState(criteria->unk_0040) == criteria->unk_0044;
 }
 
 // OFFSET: 0x0094C280/0x1406BAE10
@@ -1334,7 +1347,7 @@ static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
                 }
             }
 
-            if ((flags & 0x20) && node->m_counter >= static_cast<uint64_t>(static_cast<int64_t>(spec->m_criteria->m_quantity))) {
+            if ((flags & 0x20) && node->m_counter >= spec->m_criteria->m_quantity) {
                 count++;
             }
         }
@@ -1347,13 +1360,13 @@ static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
     AchievementRec* rec = achievement->m_rec;
     int32_t criteriaFlags = criteria->m_flags;
     int32_t flags = rec->m_flags;
-    int32_t required = 0;
+    uint64_t required = 0;
 
     if (flags & 0x80) {
         criteriaFlags |= 0x1;
 
         if (done && (flags & 0x8)) {
-            sum = static_cast<int64_t>(criteria->m_quantity);
+            sum = criteria->m_quantity;
         }
 
         if (flags & 0x20) {
@@ -1362,7 +1375,7 @@ static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
     }
 
     char text[3000];
-    int64_t shown = CGAchievementInfo::BuildOutputString(text, sizeof(text), sum, highest, highestId, count, progress ? progress->m_counter : 0, progress, flags, criteriaFlags, done != NULL, rec, criteria, required);
+    int64_t shown = CGAchievementInfo::BuildOutputString(text, sizeof(text), sum, highest, highestId, count, progress ? progress->m_counter : 0, progress, flags, criteriaFlags, done != NULL, rec, criteria, &required);
 
     if (!progress || showAll) {
         lua_pushstring(L, criteria->m_description);
@@ -1371,11 +1384,11 @@ static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
         if (!done || achievement->m_rec->m_minimumCriteria) {
             lua_pushboolean(L, 0);
             lua_pushnumber(L, static_cast<double>(shown));
-            lua_pushnumber(L, required ? required : criteria->m_quantity);
+            lua_pushnumber(L, static_cast<double>(required ? required : criteria->m_quantity));
         } else {
             lua_pushboolean(L, 1);
-            lua_pushnumber(L, required ? required : criteria->m_quantity);
-            lua_pushnumber(L, required ? required : criteria->m_quantity);
+            lua_pushnumber(L, static_cast<double>(required ? required : criteria->m_quantity));
+            lua_pushnumber(L, static_cast<double>(required ? required : criteria->m_quantity));
         }
 
         lua_pushnil(L);
@@ -1383,15 +1396,25 @@ static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
         lua_pushstring(L, criteria->m_description);
         lua_pushnumber(L, criteria->m_type);
 
-        if ((!done || achievementRec->m_minimumCriteria) && progress->m_counter < static_cast<uint64_t>(static_cast<int64_t>(criteria->m_quantity))) {
+        if ((!done || achievementRec->m_minimumCriteria) && progress->m_counter < criteria->m_quantity) {
             lua_pushboolean(L, 0);
         } else {
             lua_pushboolean(L, 1);
         }
 
         lua_pushnumber(L, static_cast<double>(shown));
-        lua_pushnumber(L, required ? required : criteria->m_quantity);
-        NameCache* name = g_nameDBCache.GetRecord(progress->m_player.m_guid, WOWGUID(), NULL, NULL, false);
+        lua_pushnumber(L, static_cast<double>(required ? required : criteria->m_quantity));
+        NameCache* name = NULL;
+
+        if (progress->m_player) {
+            CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+            if (player) {
+                name = g_nameDBCache.GetRecord2(progress->m_player.m_guid, player->m_obj->m_guid, CriteriaPlayerNameCallback, reinterpret_cast<void*>(achievementRec->m_id), true);
+            } else {
+                name = g_nameDBCache.GetRecord(progress->m_player.m_guid, WOWGUID(), NULL, NULL, false);
+            }
+        }
 
         if (name) {
             lua_pushstring(L, name->m_name);
@@ -1404,7 +1427,8 @@ static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
     lua_pushnumber(L, criteria->m_assetID);
     lua_pushstring(L, text);
     lua_pushnumber(L, criteriaId);
-    return 10;
+    lua_pushboolean(L, IsCriteriaEligible(criteria));
+    return 11;
 }
 
 // OFFSET: 0x0094C940/0x1406BB7D0
@@ -1462,7 +1486,7 @@ static int32_t Script_GetComparisonStatistic(lua_State* L) {
                     }
                 }
 
-                if ((flags & 0x20) && node->m_counter >= static_cast<uint64_t>(static_cast<int64_t>(spec->m_criteria->m_quantity))) {
+                if ((flags & 0x20) && node->m_counter >= spec->m_criteria->m_quantity) {
                     count++;
                 }
 
@@ -1491,7 +1515,8 @@ static int32_t Script_GetComparisonStatistic(lua_State* L) {
     }
 
     char text[3000];
-    CGAchievementInfo::BuildOutputString(text, sizeof(text), sum, highest, highestId, count, value, earliest, achievement->m_rec->m_flags, criteriaFlags, false, achievement->m_rec, earliestRec, 0);
+    uint64_t required = 0;
+    CGAchievementInfo::BuildOutputString(text, sizeof(text), sum, highest, highestId, count, value, earliest, achievement->m_rec->m_flags, criteriaFlags, false, achievement->m_rec, earliestRec, &required);
     lua_pushstring(L, text);
     return 1;
 }
@@ -1533,7 +1558,7 @@ static int32_t Script_GetAchievementLink(lua_State* L) {
                     continue;
                 }
 
-                if (node->m_counter >= static_cast<uint64_t>(static_cast<int64_t>(spec->m_criteria->m_quantity))) {
+                if (node->m_counter >= spec->m_criteria->m_quantity) {
                     if (index < 32) {
                         criteriaBits[0] |= 1 << index;
                     } else if (index < 64) {

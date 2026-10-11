@@ -13,6 +13,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Object/WGUID.h"
 #include "WoW/Source/Ui/LootFrame.h"
+#include "WoW/Source/DB/Rec/CurrencyTypesRec.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
@@ -1064,8 +1065,8 @@ bool CGAchievementInfo::IsSupersededByCompleted(int32_t id) {
     return false;
 }
 
-// OFFSET: #0x005B0EA0
-uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64_t sum, uint64_t highest, int32_t highestId, uint64_t count, uint64_t value, CLIENT_ACHIEVEMENT_CRITERIA* criteria, int32_t flags, int32_t criteriaFlags, bool completed, const AchievementRec* achievement, const Achievement_CriteriaRec* criteriaRec, int32_t required) {
+// OFFSET: 0x00947BD0
+uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64_t sum, uint64_t highest, int32_t highestId, uint64_t count, uint64_t value, CLIENT_ACHIEVEMENT_CRITERIA* criteria, int32_t flags, int32_t criteriaFlags, bool completed, const AchievementRec* achievement, const Achievement_CriteriaRec* criteriaRec, uint64_t* required) {
     float perDay = 0.0f;
     CVar* colorblindMode = CVar::Lookup("colorblindMode");
     uint64_t result;
@@ -1073,25 +1074,38 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
     if (flags & 0x8) {
         result = sum;
 
-        if (criteria && (flags & 0x40)) {
-            uint32_t days = static_cast<uint32_t>(::time(NULL) - criteria->m_timer2) / 86400;
+        if (criteria) {
+            if (flags & 0x40) {
+                uint32_t days = static_cast<uint32_t>(::time(NULL) - criteria->m_timer2) / 86400;
 
-            if (days) {
-                perDay = static_cast<float>(sum) / static_cast<float>(days);
-                result = static_cast<int64_t>(perDay);
+                if (days) {
+                    double average = static_cast<double>(sum) / static_cast<double>(days);
+                    perDay = static_cast<float>(average);
+                    result = static_cast<uint64_t>(average);
+                }
+            }
+
+            Achievement_CriteriaRec* rec = g_achievement_CriteriaDB.GetRecord(criteria->m_id);
+
+            if (rec && rec->m_type == 12) {
+                CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(rec->m_assetID);
+
+                if (currency && (currency->m_flags & 0x8)) {
+                    result /= 100;
+                }
             }
         }
 
         if (criteriaFlags & 0x20) {
             if (colorblindMode && colorblindMode->m_intValue) {
-                GetCurrencyShortText(static_cast<int32_t>(result), buffer, size, " ");
+                GetCurrencyShortText(result, buffer, size, " ");
             } else {
-                GetCurrencyTextureString(static_cast<int32_t>(result), buffer, size, 0);
+                GetCurrencyTextureString(result, buffer, size, 0);
             }
         } else if (perDay != 0.0f) {
             SStrPrintf(buffer, size, "%0.2f", perDay);
         } else if (result) {
-            SStrPrintf(buffer, size, "%I64d", result);
+            SStrPrintf(buffer, size, "%llu", result);
         } else if (flags & 0x1) {
             SStrPrintf(buffer, size, "--");
         } else {
@@ -1101,14 +1115,22 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
         Achievement_CriteriaRec* best = g_achievement_CriteriaDB.GetRecord(highestId);
         result = highest;
 
+        if (best && best->m_type == 12) {
+            CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(best->m_assetID);
+
+            if (currency && (currency->m_flags & 0x8)) {
+                result = highest / 100;
+            }
+        }
+
         if (best) {
             if (flags & 0x1) {
-                SStrPrintf(buffer, size, "%I64d (%s)", highest, static_cast<const char*>(best->m_description));
+                SStrPrintf(buffer, size, "%llu (%s)", result, static_cast<const char*>(best->m_description));
             } else {
-                SStrPrintf(buffer, size, "%I64d", highest);
+                SStrPrintf(buffer, size, "%llu", result);
             }
         } else if (result) {
-            SStrPrintf(buffer, size, "%I64d", result);
+            SStrPrintf(buffer, size, "%llu", result);
         } else if (flags & 0x1) {
             SStrPrintf(buffer, size, "--");
         } else {
@@ -1118,7 +1140,7 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
         result = count;
 
         if (result) {
-            SStrPrintf(buffer, size, "%I64d", result);
+            SStrPrintf(buffer, size, "%llu", result);
         } else if (flags & 0x1) {
             SStrPrintf(buffer, size, "--");
         } else {
@@ -1127,20 +1149,33 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
     } else if (value) {
         result = value;
 
-        if (criteriaRec && !(flags & 0x1) && result >= static_cast<uint64_t>(static_cast<int64_t>(criteriaRec->m_quantity))) {
-            result = static_cast<int64_t>(criteriaRec->m_quantity);
+        if (criteriaRec && !(flags & 0x1)) {
+            if (completed) {
+                result = criteriaRec->m_quantity;
+            } else if (value >= criteriaRec->m_quantity) {
+                result = criteriaRec->m_quantity;
+            }
         }
 
         if (flags & 0x40) {
             uint32_t days = static_cast<uint32_t>(::time(NULL) - criteria->m_timer2) / 86400;
 
             if (days) {
-                perDay = static_cast<float>(result) / static_cast<float>(days);
-                result = static_cast<int64_t>(perDay);
+                double average = static_cast<double>(result) / static_cast<double>(days);
+                perDay = static_cast<float>(average);
+                result = static_cast<uint64_t>(average);
             }
         }
 
         Achievement_CriteriaRec* rec = g_achievement_CriteriaDB.GetRecord(criteria->m_id);
+
+        if (rec && rec->m_type == 12) {
+            CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(rec->m_assetID);
+
+            if (currency && (currency->m_flags & 0x8)) {
+                result /= 100;
+            }
+        }
 
         if (rec && (rec->m_flags & 0x10)) {
             WowTime time;
@@ -1149,21 +1184,29 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
             SStrPrintf(buffer, size, "%02d/%02d/%d", date.m_month, date.m_day, static_cast<int16_t>(date.m_year));
         } else if (rec && (rec->m_flags & 0x20)) {
             if (colorblindMode && colorblindMode->m_intValue) {
-                GetCurrencyShortText(static_cast<int32_t>(result), buffer, size, " ");
+                GetCurrencyShortText(result, buffer, size, " ");
             } else {
-                GetCurrencyTextureString(static_cast<int32_t>(result), buffer, size, 0);
+                GetCurrencyTextureString(result, buffer, size, 0);
             }
         } else if (!(flags & 0x1)) {
-            SStrPrintf(buffer, size, "%I64d", result);
+            SStrPrintf(buffer, size, "%llu", result);
         } else if (perDay != 0.0f) {
             SStrPrintf(buffer, size, "%0.2f", perDay);
         } else if (result) {
-            SStrPrintf(buffer, size, "%I64d", result);
+            SStrPrintf(buffer, size, "%llu", result);
         } else {
             SStrPrintf(buffer, size, "--");
         }
     } else if (completed && !achievement->m_minimumCriteria) {
-        result = static_cast<int64_t>(criteriaRec->m_quantity);
+        result = criteriaRec->m_quantity;
+
+        if (criteriaRec->m_type == 12) {
+            CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(criteriaRec->m_assetID);
+
+            if (currency && (currency->m_flags & 0x8)) {
+                result = criteriaRec->m_quantity / 100;
+            }
+        }
 
         if (!result) {
             if (flags & 0x1) {
@@ -1173,12 +1216,12 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
             }
         } else if (criteriaFlags & 0x20) {
             if (colorblindMode && colorblindMode->m_intValue) {
-                GetCurrencyShortText(static_cast<int32_t>(result), buffer, size, " ");
+                GetCurrencyShortText(result, buffer, size, " ");
             } else {
-                GetCurrencyTextureString(static_cast<int32_t>(result), buffer, size, 0);
+                GetCurrencyTextureString(result, buffer, size, 0);
             }
         } else {
-            SStrPrintf(buffer, size, "%I64d", result);
+            SStrPrintf(buffer, size, "%llu", criteriaRec->m_quantity);
         }
     } else {
         if ((criteriaFlags & 0x20) && (criteriaFlags & 0x1)) {
@@ -1190,10 +1233,24 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
         } else if (flags & 0x1) {
             SStrPrintf(buffer, size, "--");
         } else {
-            SStrPrintf(buffer, size, "%I64d", static_cast<int64_t>(0));
+            SStrPrintf(buffer, size, "%llu", static_cast<uint64_t>(0));
         }
 
         result = 0;
+    }
+
+    if (criteriaRec) {
+        if (!*required) {
+            *required = criteriaRec->m_quantity;
+        }
+
+        if (criteriaRec->m_type == 12 && !(flags & 0x20)) {
+            CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(criteriaRec->m_assetID);
+
+            if (currency && (currency->m_flags & 0x8)) {
+                *required /= 100;
+            }
+        }
     }
 
     if ((criteriaFlags & 0x1) && criteriaRec) {
@@ -1201,12 +1258,12 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
 
         if (criteriaFlags & 0x20) {
             if (colorblindMode && colorblindMode->m_intValue) {
-                GetCurrencyShortText(required ? required : criteriaRec->m_quantity, total, sizeof(total), " ");
+                GetCurrencyShortText(*required, total, sizeof(total), " ");
             } else {
-                GetCurrencyTextureString(required ? required : criteriaRec->m_quantity, total, sizeof(total), 0);
+                GetCurrencyTextureString(*required, total, sizeof(total), 0);
             }
         } else {
-            SStrPrintf(total, sizeof(total), "%d", required ? required : criteriaRec->m_quantity);
+            SStrPrintf(total, sizeof(total), "%llu", *required);
         }
 
         SStrPrintf(buffer, size, "%s / %s", buffer, total);

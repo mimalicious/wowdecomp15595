@@ -14,8 +14,7 @@ class Achievement_CriteriaRec {
     /* 0004 */ int32_t m_achievementID;
     /* 0008 */ int32_t m_type;
     /* 000C */ int32_t m_assetID;
-    /* 0010 */ int32_t m_quantity;
-    /* 0014 */ int32_t unk_0014;
+    /* 0010 */ uint64_t m_quantity;
     /* 0018 */ int32_t m_startEvent;
     /* 001C */ int32_t m_startAsset;
     /* 0020 */ int32_t m_failEvent;
