@@ -466,6 +466,11 @@ void CGWorldFrame::AddObjectToHitTestList(CModelRecord* record, uint32_t flags) 
     AddModelToHitTest(record->m_model, group, record, (flags >> 25) & 0x4);
 }
 
+// OFFSET: 0x008DEDD0
+float CGWorldFrame::GetUIFadeAmount() {
+    return FFX::GetEffectFadeAmount(1);
+}
+
 // OFFSET: 0x008DF3E0
 int32_t CGWorldFrame::GetLineSegment(float mouseX, float mouseY, C3Vector* start, C3Vector* end) {
     float x = (mouseX - this->m_viewportDDC.minX) / (this->m_viewportDDC.maxX - this->m_viewportDDC.minX);

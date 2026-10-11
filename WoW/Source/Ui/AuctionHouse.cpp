@@ -1082,7 +1082,7 @@ void CGAuctionHouse::GetOwnerList() {
     CGAuctionHouse::m_canGetOwnerList = 0;
 }
 
-// OFFSET: #0x0059CD90
+// OFFSET: 0x00973E60
 void RequestListPendingSales() {
     if (!CGAuctionHouse::CanSendQuery(2)) {
         return;

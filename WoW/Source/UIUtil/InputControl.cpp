@@ -14,6 +14,8 @@
 #include "Engine/Source/SteelseriesMouse/WowMouse.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C2Vector.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
+#include "WoW/Source/StaticSingleton.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
 #include "WoW/Source/DB/Rec/VehicleRec.h"
@@ -518,19 +520,17 @@ int32_t __stdcall CGInputControl::CanMove(CGUnit_C* unit) {
     return unit->m_unit->m_unitFieldHealth > 0 && !(unit->m_movement->m_flags & 0x100A00) && unit->m_unit->m_unitFieldBytes1[0] != 7 && !unit->HasVehicleTransport();
 }
 
-// OFFSET: #0x00568560
+// OFFSET: 0x00928E90
 void __stdcall ScaleMouseDeltaByFov(float* dx, float* dy) {
     if (!CGWorldFrame::s_currentWorldFrame) {
         return;
     }
 
-    CGCamera* camera = CGWorldFrame::GetActiveCamera();
-
-    if (!camera) {
+    if (!StaticSingleton<CCameraManager>::Instance()->GetGameCamera()) {
         return;
     }
 
-    float fovScale = camera->FOV() * 0.81851113f;
+    float fovScale = StaticSingleton<CCameraManager>::Instance()->m_shot.m_fov * 0.81851113f;
     float clamped = 1.0f;
 
     if (fovScale < 1.0f) {

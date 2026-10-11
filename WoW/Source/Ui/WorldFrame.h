@@ -58,6 +58,7 @@ struct KEYDOWNSTATE {
 class CGWorldFrame : public CSimpleFrame {
     public:
     static CDataAllocator s_worldFrameHeap;
+    static float GetUIFadeAmount();
     static FFX::Effect* ffxEffectSwirlingFog;
     static FFX::Effect* ffxEffectNetherWorld;
     static FFX::Effect* ffxEffectGlow;

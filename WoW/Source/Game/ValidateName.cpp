@@ -1445,8 +1445,8 @@ bool IsRussian(uint16_t c) {
     return static_cast<uint16_t>(c - 0x400) <= 0xFF;
 }
 
-// OFFSET: #0x007E17F0
-static void StripPipes(const char* source, char* dest, uint32_t destSize) {
+// OFFSET: 0x004E7110
+static void StripPipes(const char* source, char* dest, uint32_t destSize, int32_t flags) {
     char* out = dest;
 
     for (; *source; source++) {
@@ -1454,8 +1454,10 @@ static void StripPipes(const char* source, char* dest, uint32_t destSize) {
             break;
         }
 
-        if (*source != '|') {
-            *out++ = *source;
+        char c = *source;
+
+        if (((flags & 2) || c != '|') && (!(flags & 4) || static_cast<uint8_t>(c - 1) > 0x1E || c == '\n' || c == '\t')) {
+            *out++ = c;
         }
     }
 
@@ -1475,7 +1477,7 @@ bool ScrubString(const char* source, char* dest, int32_t maxChars, uint32_t dest
     }
 
     bool valid = ValidateStringIsUTF8(source);
-    StripPipes(source, dest, destSize);
+    StripPipes(source, dest, destSize, flags);
 
     if ((flags & 1) && TruncateNewLines(dest)) {
         valid = false;
@@ -1497,7 +1499,7 @@ bool ScrubString(const char* source, char* dest, int32_t maxChars, uint32_t dest
     return valid;
 }
 
-// OFFSET: #0x007E2040
+// OFFSET: 0x004E79B0
 bool FixCharacterNameCase(char* dest, const char* source, uint32_t size) {
     if (!dest || !size) {
         return false;
@@ -1507,31 +1509,11 @@ bool FixCharacterNameCase(char* dest, const char* source, uint32_t size) {
     SUniConvertUTF8to16(buffer, 1024, source, STORM_MAX_STR, NULL, NULL);
 
     for (uint32_t i = 0; buffer[i]; i++) {
-        uint16_t c = buffer[i];
-
         if (i) {
-            if (static_cast<uint16_t>(c - 'A') <= 25 || static_cast<uint16_t>(c - 0xC0) <= 30) {
-                c += 32;
-            } else if (c == 0x152) {
-                c = 0x153;
-            } else if (static_cast<uint16_t>(c - 0x410) <= 31) {
-                c += 32;
-            } else if (c == 0x401) {
-                c = 0x451;
-            }
-        } else if (c >= 'a' && c <= 'z') {
-            c -= 32;
-        } else if (c >= 0xE0 && c <= 0xFE) {
-            c -= 32;
-        } else if (c == 0x153) {
-            c = 0x152;
-        } else if (c >= 0x430 && c <= 0x44F) {
-            c -= 32;
-        } else if (c == 0x451) {
-            c = 0x401;
+            buffer[i] = ToLower(buffer[i]);
+        } else {
+            buffer[0] = ToUpper(buffer[0]);
         }
-
-        buffer[i] = c;
     }
 
     SUniConvertUTF16to8(dest, size, buffer, STORM_MAX_STR, NULL, NULL);

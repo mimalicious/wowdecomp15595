@@ -20,7 +20,7 @@ static bool ShellExecuteRunAs(const char* path, const char* arguments) {
     return reinterpret_cast<uintptr_t>(ShellExecuteW(NULL, reinterpret_cast<LPCWSTR>(verb.m_data), reinterpret_cast<LPCWSTR>(nativePath.m_data), reinterpret_cast<LPCWSTR>(nativeArguments.m_data), NULL, SW_SHOWNORMAL)) > 32;
 }
 
-// OFFSET: #0x00462190
+// OFFSET: 0x007A9550
 bool CGlueMgr::PatchDownloadExecuteCommand(const char* path, const char* arguments) {
     OSVERSIONINFOA versionInfo;
     versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);

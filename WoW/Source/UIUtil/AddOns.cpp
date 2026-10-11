@@ -1134,7 +1134,7 @@ bool LoadAddOn(const char* name, bool demandLoad, CStatus* status) {
     return true;
 }
 
-// OFFSET: #0x005F84A0
+// OFFSET: 0x0045DF50
 void LoadAddOns(CStatus* status) {
     for (UIADDON* addon = s_addons.m_fulllist.Head(); addon; addon = s_addons.m_fulllist.Next(addon)) {
         for (uint32_t i = 0; i < addon->m_loadManagers.Count(); i++) {
