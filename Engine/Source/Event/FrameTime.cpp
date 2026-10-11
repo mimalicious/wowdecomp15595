@@ -53,6 +53,26 @@ uint32_t FrameTime::GetSessionTimeMs() {
 }
 
 // PROVEN: c2318d4e IDENTICAL/IDENTICAL
+// OFFSET: 0x008A0A00
+int32_t SessionTime_GetElapsed() {
+    return FrameTime::s_curTimeMs - FrameTime::s_unk_EC74B4;
+}
+
+// OFFSET: 0x008A0A10
+void SessionTime_ResetElapsed() {
+    FrameTime::s_unk_EC74B4 = FrameTime::s_curTimeMs;
+}
+
+// OFFSET: 0x008A0A20
+bool SessionTime_IsAlternate() {
+    return FrameTime::s_unk_EC74AC;
+}
+
+// OFFSET: 0x008A0A30
+void SessionTime_ResetAlternate() {
+    FrameTime::s_unk_EC74AC = 1;
+}
+
 // OFFSET: 0x008A0A50/0x1405E2230
 void FrameTime::Update(float elapsedSec, uint32_t time) {
     FrameTime::s_curTimeMs = time;
