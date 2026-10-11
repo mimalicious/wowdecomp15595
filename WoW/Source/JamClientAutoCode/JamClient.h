@@ -455,6 +455,36 @@ struct JamLfgJoinResultSlot {
     /* 0008 */ TSGrowableArray<JamLfgJoinResultLock> unk_0008;
 };
 
+struct JamPvpLogDataPlayer {
+    /* 0000 */ uint8_t m_playerGUID[8];
+    /* 0008 */ uint32_t m_kills;
+    /* 000C */ uint8_t m_faction;
+    /* 000D */ bool unk_000D;
+    /* 000E */ uint8_t unk_000E[2];
+    /* 0010 */ bool m_hasHonor;
+    /* 0011 */ uint8_t unk_0011[3];
+    /* 0014 */ uint32_t m_honorKills;
+    /* 0018 */ uint32_t m_deaths;
+    /* 001C */ uint32_t m_contributionPoints;
+    /* 0020 */ uint32_t m_damageDone;
+    /* 0024 */ uint32_t m_healingDone;
+    /* 0028 */ bool m_hasRating;
+    /* 0029 */ uint8_t unk_0029[3];
+    /* 002C */ uint32_t m_rating;
+    /* 0030 */ bool m_hasRatingChange;
+    /* 0031 */ uint8_t unk_0031[3];
+    /* 0034 */ int32_t m_ratingChange;
+    /* 0038 */ bool m_hasPreMatchMMR;
+    /* 0039 */ uint8_t unk_0039[3];
+    /* 003C */ uint32_t m_preMatchMMR;
+    /* 0040 */ bool m_hasMmrChange;
+    /* 0041 */ uint8_t unk_0041[3];
+    /* 0044 */ int32_t m_mmrChange;
+    /* 0048 */ TSGrowableArray<uint32_t> m_stats;
+    /* 0058 */ uint32_t m_primaryTalentTree;
+    /* 005C */ uint8_t unk_005C[4];
+};
+
 struct JamClientRideTicket {
     /* 0000 */ uint8_t m_requesterGuid[8];
     /* 0008 */ uint32_t m_id;
@@ -2633,9 +2663,23 @@ class ClientPvpLogData : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientPvpLogData* msg);
 
+    /* 0010 */ TSGrowableArray<JamPvpLogDataPlayer> m_players;
+    /* 0020 */ bool m_hasTeamNames;
+    /* 0021 */ char m_teamNames[2][96];
+    /* 00E1 */ bool m_hasWinner;
+    /* 00E2 */ uint8_t m_winner;
+    /* 00E3 */ uint8_t unk_00E3;
+    /* 00E4 */ bool m_hasRatings;
+    /* 00E5 */ uint8_t unk_00E5[3];
+    /* 00E8 */ uint32_t m_prematchRating[2];
+    /* 00F0 */ uint32_t m_newRating[2];
+    /* 00F8 */ uint32_t m_matchmakingRating[2];
+    /* 0100 */ int8_t m_playerCount[2];
+
     ClientPvpLogData(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPvpLogData();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildSendRankChange : public JamClientMessage {

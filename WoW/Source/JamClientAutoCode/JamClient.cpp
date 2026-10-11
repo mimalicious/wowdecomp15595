@@ -333,6 +333,9 @@ bool (*ClientRatedBgRating::s_handler)(ClientRatedBgRating* msg);
 // STATIC: 0x00E4D4B8
 bool (*ClientRatedBgStats::s_handler)(ClientRatedBgStats* msg);
 
+// STATIC: 0x00E4D6A0
+bool (*ClientPvpLogData::s_handler)(ClientPvpLogData* msg);
+
 // STATIC: 0x00E4D620
 bool (*ClientRequestPvpRewardsResponse::s_handler)(ClientRequestPvpRewardsResponse* msg);
 
@@ -622,6 +625,10 @@ bool ClientWaitQueueFinish::Handle() {
     }
 
     return ClientWaitQueueFinish::s_handler(this);
+}
+
+// OFFSET: 0x006F4180/0x1403AA150
+ClientPvpLogData::~ClientPvpLogData() {
 }
 
 // OFFSET: 0x006F4330/0x1403BB740
@@ -1695,6 +1702,15 @@ bool (*ClientTimeAdjustment::s_handler)(ClientTimeAdjustment* msg);
 
 // STATIC: 0x00E4D4F8
 bool (*ClientItemAddPassive::s_handler)(ClientItemAddPassive* msg);
+
+// OFFSET: 0x006C10E0/0x1403765F0
+bool ClientPvpLogData::Handle() {
+    if (!ClientPvpLogData::s_handler) {
+        return false;
+    }
+
+    return ClientPvpLogData::s_handler(this);
+}
 
 // PROVEN: 87b01d44 IDENTICAL/NONE
 // OFFSET: 0x006C1130/0x140376650
@@ -3793,6 +3809,208 @@ bool ClientGuildRewardList::Handle() {
     }
 
     return ClientGuildRewardList::s_handler(this);
+}
+
+// OFFSET: 0x006F4EC0/0x1403BC680
+void ClientPvpLogData::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+
+    this->m_hasTeamNames = bits.ReadBit();
+    this->m_hasRatings = bits.ReadBit();
+
+    if (this->m_hasTeamNames) {
+        *reinterpret_cast<uint32_t*>(this->m_teamNames[1]) = bits.ReadBits<8>();
+        *reinterpret_cast<uint32_t*>(this->m_teamNames[0]) = bits.ReadBits<8>();
+    }
+
+    this->m_players.SetCount(bits.ReadBits<21>());
+
+    for (uint32_t i = 0; i < this->m_players.Count(); i++) {
+        JamPvpLogDataPlayer& player = this->m_players[i];
+        player.unk_000D = bits.ReadBit();
+        player.m_hasRating = bits.ReadBit();
+        player.m_playerGUID[2] = bits.ReadBit();
+        player.m_hasHonor = bits.ReadBit();
+        player.m_hasPreMatchMMR = bits.ReadBit();
+        player.m_hasRatingChange = bits.ReadBit();
+        player.m_hasMmrChange = bits.ReadBit();
+        player.m_playerGUID[3] = bits.ReadBit();
+        player.m_playerGUID[0] = bits.ReadBit();
+        player.m_playerGUID[5] = bits.ReadBit();
+        player.m_playerGUID[1] = bits.ReadBit();
+        player.m_playerGUID[6] = bits.ReadBit();
+        player.m_faction = bits.ReadBit();
+        player.m_playerGUID[7] = bits.ReadBit();
+        player.m_stats.SetCount(bits.ReadBits<24>());
+        player.m_playerGUID[4] = bits.ReadBit();
+    }
+
+    this->m_hasWinner = bits.ReadBit();
+
+    if (this->m_hasRatings) {
+        uint32_t intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_matchmakingRating[0] = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_prematchRating[0] = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_newRating[0] = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_matchmakingRating[1] = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_prematchRating[1] = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_newRating[1] = intValue;
+    }
+
+    for (uint32_t i = 0; i < this->m_players.Count(); i++) {
+        JamPvpLogDataPlayer& player = this->m_players[i];
+        uint8_t byteValue;
+        uint32_t intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.m_healingDone = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.m_damageDone = intValue;
+
+        if (player.m_hasHonor) {
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_contributionPoints = intValue;
+
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_deaths = intValue;
+
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_honorKills = intValue;
+        }
+
+        if (player.m_playerGUID[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[4] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.m_kills = intValue;
+
+        if (player.m_hasRatingChange) {
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_ratingChange = intValue;
+        }
+
+        if (player.m_playerGUID[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[5] ^= byteValue;
+        }
+
+        if (player.m_hasMmrChange) {
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_mmrChange = intValue;
+        }
+
+        if (player.m_hasRating) {
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_rating = intValue;
+        }
+
+        if (player.m_playerGUID[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[1] ^= byteValue;
+        }
+
+        if (player.m_playerGUID[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[6] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        player.m_primaryTalentTree = intValue;
+
+        for (uint32_t j = 0; j < player.m_stats.Count(); j++) {
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_stats[j] = intValue;
+        }
+
+        if (player.m_playerGUID[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[0] ^= byteValue;
+        }
+
+        if (player.m_playerGUID[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[3] ^= byteValue;
+        }
+
+        if (player.m_hasPreMatchMMR) {
+            intValue = 0;
+            msg->Get(intValue);
+            player.m_preMatchMMR = intValue;
+        }
+
+        if (player.m_playerGUID[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[7] ^= byteValue;
+        }
+
+        if (player.m_playerGUID[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            player.m_playerGUID[2] ^= byteValue;
+        }
+    }
+
+    if (this->m_hasTeamNames) {
+        uint32_t length = *reinterpret_cast<uint32_t*>(this->m_teamNames[1]);
+        msg->GetData(this->m_teamNames[1], length);
+        this->m_teamNames[1][length] = '\0';
+        length = *reinterpret_cast<uint32_t*>(this->m_teamNames[0]);
+        msg->GetData(this->m_teamNames[0], length);
+        this->m_teamNames[0][length] = '\0';
+    }
+
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_playerCount[0] = byteValue;
+
+    if (this->m_hasWinner) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_winner = byteValue;
+    }
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_playerCount[1] = byteValue;
 }
 
 // OFFSET: 0x006F64C0/0x1403BDDE0
@@ -8078,6 +8296,14 @@ bool ClientSummonRaidMemberValidateFailed::Handle() {
     }
 
     return ClientSummonRaidMemberValidateFailed::s_handler(this);
+}
+
+// OFFSET: 0x006F74F0/0x1403BEE80
+ClientPvpLogData::ClientPvpLogData(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->m_hasTeamNames = false;
+    this->m_hasWinner = false;
+    this->m_hasRatings = false;
+    this->Unpack(msg, true);
 }
 
 // OFFSET: 0x006F8280/0x1403C0830
