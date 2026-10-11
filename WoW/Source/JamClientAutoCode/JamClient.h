@@ -236,6 +236,8 @@ class ClientEnumCharactersResult : public JamClientMessage {
     ClientEnumCharactersResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientEnumCharactersResult();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -667,6 +669,8 @@ class ClientHotfixNotify : public JamClientMessage {
     ClientHotfixNotify(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientHotfixNotify();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -777,6 +781,8 @@ class ClientGuildEventLogQueryResults : public JamClientMessage {
     ClientGuildEventLogQueryResults(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildEventLogQueryResults();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -789,6 +795,8 @@ class ClientGuildKnownRecipes : public JamClientMessage {
     ClientGuildKnownRecipes(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildKnownRecipes();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -801,6 +809,8 @@ class ClientSetupResearchHistory : public JamClientMessage {
     ClientSetupResearchHistory(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSetupResearchHistory();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -813,6 +823,8 @@ class ClientDumpRideTicketsResponse : public JamClientMessage {
     ClientDumpRideTicketsResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientDumpRideTicketsResponse();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -833,6 +845,8 @@ class ClientLootContents : public JamClientMessage {
     ClientLootContents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLootContents();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -963,6 +977,8 @@ class ClientGuildCriteriaData : public JamClientMessage {
     ClientGuildCriteriaData(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildCriteriaData();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1031,6 +1047,8 @@ class ClientSetupCurrency : public JamClientMessage {
     ClientSetupCurrency(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSetupCurrency();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1066,6 +1084,8 @@ class ClientRespondInspectAchievements : public JamClientMessage {
     ClientRespondInspectAchievements(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientRespondInspectAchievements();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1087,6 +1107,8 @@ class ClientStreamingMoviesUpdate : public JamClientMessage {
     ClientStreamingMoviesUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientStreamingMoviesUpdate();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1131,6 +1153,8 @@ class ClientGuildRosterUpdate : public JamClientMessage {
     ClientGuildRosterUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildRosterUpdate();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1161,6 +1185,8 @@ class ClientSummonRaidMemberValidateFailed : public JamClientMessage {
     ClientSummonRaidMemberValidateFailed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSummonRaidMemberValidateFailed();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1233,6 +1259,8 @@ class ClientLfGuildMembershipListUpdated : public JamClientMessage {
     ClientLfGuildMembershipListUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildMembershipListUpdated();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1264,6 +1292,8 @@ class ClientLfGuildRecruitListUpdated : public JamClientMessage {
     ClientLfGuildRecruitListUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildRecruitListUpdated();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1292,6 +1322,8 @@ class ClientGuildMembersWithRecipe : public JamClientMessage {
     ClientGuildMembersWithRecipe(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildMembersWithRecipe();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1304,6 +1336,8 @@ class ClientLfGuildBrowseUpdated : public JamClientMessage {
     ClientLfGuildBrowseUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfGuildBrowseUpdated();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1347,6 +1381,8 @@ class ClientGuildRewardList : public JamClientMessage {
     ClientGuildRewardList(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildRewardList();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1408,6 +1444,8 @@ class ClientRequestCemeteryListResponse : public JamClientMessage {
     ClientRequestCemeteryListResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientRequestCemeteryListResponse();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1423,6 +1461,8 @@ class ClientGuildBankLogQueryResults : public JamClientMessage {
     ClientGuildBankLogQueryResults(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildBankLogQueryResults();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1435,6 +1475,8 @@ class ClientGuildRanks : public JamClientMessage {
     ClientGuildRanks(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildRanks();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1518,6 +1560,8 @@ class ClientLfgUpdateStatus : public JamClientMessage {
     ClientLfgUpdateStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfgUpdateStatus();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1579,6 +1623,8 @@ class ClientPartyInvite : public JamClientMessage {
     ClientPartyInvite(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPartyInvite();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1666,6 +1712,8 @@ class ClientGuildPermissionsQueryResults : public JamClientMessage {
     ClientGuildPermissionsQueryResults(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildPermissionsQueryResults();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1857,6 +1905,8 @@ class ClientGuildAchievementMembers : public JamClientMessage {
     ClientGuildAchievementMembers(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildAchievementMembers();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1872,6 +1922,8 @@ class ClientCommentatorPartyInfo : public JamClientMessage {
     ClientCommentatorPartyInfo(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientCommentatorPartyInfo();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -1906,6 +1958,8 @@ class ClientLfgJoinResult : public JamClientMessage {
     ClientLfgJoinResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfgJoinResult();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2062,6 +2116,8 @@ class ClientGuildRoster : public JamClientMessage {
     ClientGuildRoster(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildRoster();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2328,6 +2384,8 @@ class ClientVoidStorageTransferChanges : public JamClientMessage {
     ClientVoidStorageTransferChanges(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVoidStorageTransferChanges();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2414,6 +2472,8 @@ class ClientGuildAchievementData : public JamClientMessage {
     ClientGuildAchievementData(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildAchievementData();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2527,6 +2587,8 @@ class ClientAllAchievementData : public JamClientMessage {
     ClientAllAchievementData(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientAllAchievementData();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2540,6 +2602,8 @@ class ClientBattlefieldPlayerPositions : public JamClientMessage {
     ClientBattlefieldPlayerPositions(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldPlayerPositions();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2713,6 +2777,8 @@ class ClientPvpLogData : public JamClientMessage {
     ClientPvpLogData(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPvpLogData();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2872,6 +2938,8 @@ class ClientTradeUpdated : public JamClientMessage {
     ClientTradeUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientTradeUpdated();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -2928,6 +2996,8 @@ class ClientItemSendPassive : public JamClientMessage {
     ClientItemSendPassive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientItemSendPassive();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3010,6 +3080,8 @@ class ClientBattlefieldList : public JamClientMessage {
     ClientBattlefieldList(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientBattlefieldList();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3022,6 +3094,8 @@ class ClientCategoryCooldown : public JamClientMessage {
     ClientCategoryCooldown(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientCategoryCooldown();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3091,6 +3165,8 @@ class ClientServerInfoResponse : public JamClientMessage {
     ClientServerInfoResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientServerInfoResponse();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3103,6 +3179,8 @@ class ClientServerPerf : public JamClientMessage {
     ClientServerPerf(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientServerPerf();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3164,6 +3242,8 @@ class ClientVoidStorageContents : public JamClientMessage {
     ClientVoidStorageContents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVoidStorageContents();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3198,6 +3278,8 @@ class ClientGuildBankQueryResults : public JamClientMessage {
     ClientGuildBankQueryResults(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGuildBankQueryResults();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3371,6 +3453,8 @@ class ClientVendorInventory : public JamClientMessage {
     ClientVendorInventory(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientVendorInventory();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
@@ -3420,6 +3504,8 @@ class ClientLfgProposalUpdate : public JamClientMessage {
     ClientLfgProposalUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLfgProposalUpdate();
     bool Handle();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
 
