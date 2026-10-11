@@ -36,13 +36,13 @@ DBCache<ItemNameCache_C, int32_t, HASHKEY_INT> g_itemNameDBCache('WNDB', "itemna
 // STATIC: #0x00C5D828
 DBCache<ItemStats_C, int32_t, HASHKEY_INT> g_itemDBCache('WIDB', "itemcache.wdb", CMSG_ITEM_QUERY_SINGLE, CMSG_ITEM_QUERY_MULTIPLE, false, true, 512);
 
-// STATIC: #0x00C5D8B0
+// STATIC: 0x00D98018
 DBCache<NPCText, int32_t, HASHKEY_INT> g_npcTextDBCache('WNPC', "npccache.wdb", CMSG_QUERY_NPC_TEXT, 0, true, true, 0);
 
 // STATIC: 0x00D980A8
 DBCache<NameCache, uint64_t, CHashKeyGUID> g_nameDBCache('WNAM', "namecache.wdb", CMSG_NAME_QUERY, 0, false, false, 256);
 
-// STATIC: #0x00C5D9C0
+// STATIC: 0x00D98138
 DBCache<GuildStats_C, uint64_t, CHashKeyGUID> g_guildInfoCache('WGLD', "guildcache.wdb", CMSG_QUERY_GUILD_INFO, 0, false, false, 0);
 
 // STATIC: 0x00D981C8
@@ -60,7 +60,7 @@ DBCache<CGPetition, int32_t, HASHKEY_INT> g_petitionCache('WPTN', "petitioncache
 // STATIC: 0x00D98408
 DBCache<ItemTextCache_C, uint64_t, CHashKeyGUID> g_itemTextDBCache('WITX', "itemtextcache.wdb", CMSG_ITEM_TEXT_QUERY, 0, false, true, 0);
 
-// STATIC: #0x00C5DCF0
+// STATIC: 0x00D98498
 DBCache<WardenCachedModule, CWardenKey, CWardenKey> g_wardenCache('WRDN', "wowcache.wdb", 0, 0, true, true, 0);
 
 // STATIC: 0x00D98528
@@ -69,12 +69,10 @@ DBCache<ArenaTeamCache, int32_t, HASHKEY_INT> g_arenaTeamCache('WATM', "arenatea
 // STATIC: 0x00D985B8
 DBCache<DanceCache, int32_t, HASHKEY_INT> g_danceCache('WDAN', "dancecache.wdb", CMSG_DANCE_QUERY, 0, false, false, 0);
 
-// OFFSET: [0x00496AD0]
+// OFFSET: 0x00496AD0
 static void LoadDBCaches() {
     g_creatureDBCache.Load();
     g_gameObjectDBCache.Load();
-    g_itemDBCache.Load();
-    g_itemNameDBCache.Load();
     g_npcTextDBCache.Load();
     g_nameDBCache.Load();
     g_guildInfoCache.Load();
@@ -209,13 +207,11 @@ static int32_t ReceiveInvalidateDance(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x00635710
+// OFFSET: 0x00497050/0x1400BD3C0
 void SetClientCacheVersion(uint32_t version) {
     g_creatureDBCache.VerifyAndUpdateVersion(version);
     g_creatureDBCache.VerifyAndUpdateVersion(version);
     g_gameObjectDBCache.VerifyAndUpdateVersion(version);
-    g_itemDBCache.VerifyAndUpdateVersion(version);
-    g_itemNameDBCache.VerifyAndUpdateVersion(version);
     g_npcTextDBCache.VerifyAndUpdateVersion(version);
     g_nameDBCache.VerifyAndUpdateVersion(version);
     g_guildInfoCache.VerifyAndUpdateVersion(version);
@@ -348,12 +344,10 @@ void DBCache_Initialize() {
     LoadDBCaches();
 }
 
-// OFFSET: #0x00635540
+// OFFSET: 0x00496F40
 void DBCache_Destroy() {
     g_creatureDBCache.Destroy();
     g_gameObjectDBCache.Destroy();
-    g_itemDBCache.Destroy();
-    g_itemNameDBCache.Destroy();
     g_npcTextDBCache.Destroy();
     g_nameDBCache.Destroy();
     g_guildInfoCache.Destroy();
@@ -403,7 +397,7 @@ void DBCache_RegisterHandlers() {
     ClientServices::SetMessageHandler(SMSG_DANCE_QUERY_RESPONSE, ReceiveDance, NULL);
 }
 
-// OFFSET: #0x00635C70
+// OFFSET: 0x004976F0/0x1400BDB80
 void DBCache_ClearTemporaryCaches() {
     if (!g_creatureDBCache.m_enabled) {
         g_creatureDBCache.Clear();
@@ -411,14 +405,6 @@ void DBCache_ClearTemporaryCaches() {
 
     if (!g_gameObjectDBCache.m_enabled) {
         g_gameObjectDBCache.Clear();
-    }
-
-    if (!g_itemDBCache.m_enabled) {
-        g_itemDBCache.Clear();
-    }
-
-    if (!g_itemNameDBCache.m_enabled) {
-        g_itemNameDBCache.Clear();
     }
 
     if (!g_npcTextDBCache.m_enabled) {
@@ -594,12 +580,10 @@ void DBCache<NameCache, uint64_t, CHashKeyGUID>::AddItem(NameCache* item, uint64
     }
 }
 
-// OFFSET: #0x00635100
+// OFFSET: 0x00496B60
 void DBCache_Idle() {
     g_creatureDBCache.Idle();
     g_gameObjectDBCache.Idle();
-    g_itemDBCache.Idle();
-    g_itemNameDBCache.Idle();
     g_npcTextDBCache.Idle();
     g_nameDBCache.Idle();
     g_guildInfoCache.Idle();
@@ -612,12 +596,10 @@ void DBCache_Idle() {
     g_arenaTeamCache.Idle();
 }
 
-// OFFSET: #0x00635680
+// OFFSET: 0x00496FD0
 void DBCache_ClearPending() {
     g_creatureDBCache.ClearPending();
     g_gameObjectDBCache.ClearPending();
-    g_itemDBCache.ClearPending();
-    g_itemNameDBCache.ClearPending();
     g_npcTextDBCache.ClearPending();
     g_nameDBCache.ClearPending();
     g_guildInfoCache.ClearPending();
