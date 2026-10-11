@@ -11,11 +11,9 @@ class CDataStore;
 struct ENCOUNTER_UNIT {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ uint8_t m_priority;
-    /* 0009 */ uint8_t m_index;
-    /* 000A */ uint8_t unk_000A[6];
+    /* 0009 */ uint8_t unk_0009[7];
 
     bool operator<(const ENCOUNTER_UNIT& other) const;
-    static int32_t Compare(const void* a, const void* b);
 };
 
 struct ENCOUNTER_TIMER : public TSLinkedNode<ENCOUNTER_TIMER> {
@@ -38,11 +36,13 @@ class CGInstanceEncounter_C {
     static uint32_t GetNumBossSlots();
     static void EngageUnit(const WOWGUID& guid, uint8_t priority);
     static void DisengageUnit(const WOWGUID& guid);
+    static void SetUnitPriority(const WOWGUID& guid, uint8_t priority);
     static void ClearExpiredTimers();
     static void AddTimer(uint32_t duration);
     static void EnableObjective(int32_t id);
     static void DisableObjective(int32_t id);
-    static TSFixedArray<ENCOUNTER_UNIT> m_units;
+    static uint32_t m_numUnits;
+    static ENCOUNTER_UNIT m_units[16];
     static TSList<ENCOUNTER_TIMER> m_timers;
     static TSList<ENCOUNTER_OBJECTIVE> m_objectives;
 };
