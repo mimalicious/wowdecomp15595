@@ -84,6 +84,12 @@ bool (*ClientVoidTransferResult::s_handler)(ClientVoidTransferResult* msg);
 // STATIC: 0x00E4D468
 bool (*ClientLfGuildPostUpdated::s_handler)(ClientLfGuildPostUpdated* msg);
 
+// STATIC: 0x00E4D5CC
+bool (*ClientSetupResearchHistory::s_handler)(ClientSetupResearchHistory* msg);
+
+// STATIC: 0x00E4D6E0
+bool (*ClientResearchComplete::s_handler)(ClientResearchComplete* msg);
+
 // STATIC: 0x00E4D598
 bool (*ClientLfGuildBrowseUpdated::s_handler)(ClientLfGuildBrowseUpdated* msg);
 
@@ -8048,4 +8054,87 @@ bool ClientLfGuildApplicationsListChanged::Handle() {
     }
 
     return ClientLfGuildApplicationsListChanged::s_handler(this);
+}
+
+// INLINED
+JamResearchHistory::JamResearchHistory() {
+}
+
+// OFFSET: 0x006A12A0
+JamResearchHistory::JamResearchHistory(const JamResearchHistory& source) {
+    this->m_completionCount = source.m_completionCount;
+    this->m_projectID = source.m_projectID;
+    this->m_firstCompleted = source.m_firstCompleted;
+}
+
+// INLINED
+JamResearchHistory::~JamResearchHistory() {
+}
+
+// OFFSET: 0x006E9370/0x1403AC260
+ClientSetupResearchHistory::ClientSetupResearchHistory(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E53C0/0x1403A6740
+ClientSetupResearchHistory::~ClientSetupResearchHistory() {
+}
+
+// OFFSET: 0x006DE550/0x14039E020
+void ClientSetupResearchHistory::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_history.SetCount(bits.ReadBits<22>());
+
+    for (uint32_t i = 0; i < this->m_history.m_count; i++) {
+        JamResearchHistory& history = this->m_history.m_data[i];
+        uint32_t value = 0;
+        msg->Get(value);
+        history.m_projectID = value;
+        value = 0;
+        msg->Get(value);
+        history.m_completionCount = value;
+        value = 0;
+        msg->Get(value);
+        history.m_firstCompleted = value;
+    }
+}
+
+// OFFSET: 0x006A72A0/0x140355CD0
+bool ClientSetupResearchHistory::Handle() {
+    if (!ClientSetupResearchHistory::s_handler) {
+        return false;
+    }
+
+    return ClientSetupResearchHistory::s_handler(this);
+}
+
+// OFFSET: 0x006AD080/0x1403590A0
+ClientResearchComplete::ClientResearchComplete(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A15D0/0x1403596C0
+ClientResearchComplete::~ClientResearchComplete() {
+}
+
+// OFFSET: 0x006A79A0/0x14034E350
+void ClientResearchComplete::Unpack(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_research.m_firstCompleted = value;
+    value = 0;
+    msg->Get(value);
+    this->m_research.m_completionCount = value;
+    value = 0;
+    msg->Get(value);
+    this->m_research.m_projectID = value;
+}
+
+// OFFSET: 0x006A51B0/0x140353130
+bool ClientResearchComplete::Handle() {
+    if (!ClientResearchComplete::s_handler) {
+        return false;
+    }
+
+    return ClientResearchComplete::s_handler(this);
 }

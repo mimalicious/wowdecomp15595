@@ -16,6 +16,6 @@ const DBCMeta ResearchBranchRec::s_meta = { "DBFilesClient\\ResearchBranch.dbc",
 // OFFSET: 0x00A2EA60/0x1407D7ED0
 void ResearchBranchRec::FixupStrings(void* record, const char* strings) {
     ResearchBranchRec* rec = static_cast<ResearchBranchRec*>(record);
-    DBCFixupString(rec->unk_0004, strings);
-    DBCFixupString(rec->unk_0010, strings);
+    DBCFixupString(rec->m_name, strings);
+    DBCFixupString(rec->m_texture, strings);
 }

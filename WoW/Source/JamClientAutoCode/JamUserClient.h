@@ -282,4 +282,14 @@ class UserLFGuildAddRecruit : public JamClientMessage {
     ~UserLFGuildAddRecruit();
 };
 
+class PlayerRequestResearchHistory : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerRequestResearchHistory();
+    ~PlayerRequestResearchHistory();
+};
+
 #endif

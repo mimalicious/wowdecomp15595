@@ -323,6 +323,16 @@ struct JamVoidItem {
     /* 001C */ uint32_t m_slot;
 };
 
+struct JamResearchHistory {
+    /* 0000 */ int32_t m_projectID;
+    /* 0004 */ int32_t m_firstCompleted;
+    /* 0008 */ int32_t m_completionCount;
+
+    JamResearchHistory();
+    JamResearchHistory(const JamResearchHistory& source);
+    ~JamResearchHistory();
+};
+
 struct JamLFGuildSettings {
     /* 0000 */ uint32_t m_interests;
     /* 0004 */ uint32_t m_availability;
@@ -541,9 +551,12 @@ class ClientSetupResearchHistory : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientSetupResearchHistory* msg);
 
+    /* 0010 */ TSGrowableArray<JamResearchHistory> m_history;
+
     ClientSetupResearchHistory(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSetupResearchHistory();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientDumpRideTicketsResponse : public JamClientMessage {
@@ -1301,9 +1314,12 @@ class ClientResearchComplete : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientResearchComplete* msg);
 
+    /* 0010 */ JamResearchHistory m_research;
+
     ClientResearchComplete(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientResearchComplete();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildNews : public JamClientMessage {

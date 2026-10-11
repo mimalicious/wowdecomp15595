@@ -1079,3 +1079,16 @@ void UserLFGuildAddRecruit::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(this->m_guildGUID[3] ^ 1));
     }
 }
+
+// OFFSET: 0x00673430/0x140317CE0
+PlayerRequestResearchHistory::PlayerRequestResearchHistory() {
+}
+
+// OFFSET: 0x006709D0/0x140318AA0
+PlayerRequestResearchHistory::~PlayerRequestResearchHistory() {
+}
+
+// OFFSET: 0x006704A0
+void PlayerRequestResearchHistory::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3306));
+}

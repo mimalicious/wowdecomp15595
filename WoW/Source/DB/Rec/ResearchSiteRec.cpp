@@ -16,5 +16,5 @@ const DBCMeta ResearchSiteRec::s_meta = { "DBFilesClient\\ResearchSite.dbc", 5, 
 // OFFSET: 0x00A2ECE0/0x1407D8380
 void ResearchSiteRec::FixupStrings(void* record, const char* strings) {
     ResearchSiteRec* rec = static_cast<ResearchSiteRec*>(record);
-    DBCFixupString(rec->unk_000C, strings);
+    DBCFixupString(rec->m_name, strings);
 }
