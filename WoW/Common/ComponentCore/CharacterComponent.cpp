@@ -409,7 +409,7 @@ static void ComputeSectionInfo(uint32_t mipLevels) {
 // PROVEN: bc8e1539 IDENTICAL/NONE
 // OFFSET: 0x006F87F0
 void* CCharacterComponent::LoadItemComponentTexture(const ItemDisplayInfoRec* displayRec, COMPONENT_SECTIONS section) {
-    SStrPrintf(s_path, sizeof(s_path), "Item\\TextureComponents\\%s\\%s_%s.blp", s_componentSections[section], displayRec->m_texture[section], s_fileDecorations[2]);
+    SStrPrintf(s_path, sizeof(s_path), "Item\\TextureComponents\\%s\\%s_%s.blp", s_componentSections[section], static_cast<const char*>(displayRec->m_texture[section]), s_fileDecorations[2]);
 
     if (!SFile::FileExists(s_path)) {
         s_path[strlen(s_path) - 5] = s_fileDecorations[this->m_data.m_preferences.m_sexID][0];
@@ -2369,7 +2369,7 @@ int32_t CCharacterComponent::BuildShoulderItemPaths(ItemDisplayInfoRec& rec, con
     char* end = s_buffer + strlen(s_buffer);
 
     if (*displayRec->m_modelName[0]) {
-        strcpy(end, displayRec->m_modelName[0]);
+        strcpy(end, static_cast<const char*>(displayRec->m_modelName[0]));
         strcpy(leftModel, s_buffer);
 
         if (leftTexture) {
@@ -2554,7 +2554,7 @@ GEOCOMPONENTLINKS CCharacterComponent::AddHandItem(CM2Model* model, uint8_t* att
         return ATTACH_NONE;
     }
 
-    SStrPrintf(s_buffer, "%s%s", folder, displayRec->m_modelName[0]);
+    SStrPrintf(s_buffer, "%s%s", folder, static_cast<const char*>(displayRec->m_modelName[0]));
     strcpy(s_pathEnd, s_buffer);
     SStrPrintf(s_buffer, "%s%s.blp", folder, displayRec->m_modelTexture[0]);
     strcpy(s_pathEnd2, s_buffer);
@@ -3817,7 +3817,7 @@ void CCharacterComponent::RenderPrepAll() {
 // OFFSET: 0x006FF530/0x1403CA120
 int32_t CCharacterComponent::ComposeHelmModelFilePath(const ChrRacesRec* raceRec, const ItemDisplayInfoRec* displayRec, char* buffer, uint32_t size) {
     char path[260];
-    SStrPrintf(path, "Item\\ObjectComponents\\Head\\%s", displayRec->m_modelName[0]);
+    SStrPrintf(path, "Item\\ObjectComponents\\Head\\%s", static_cast<const char*>(displayRec->m_modelName[0]));
     OsPathReplaceExtension(path, sizeof(path), path, "");
     CHelmPathSuffix suffix("_%s%s.m2", static_cast<const char*>(raceRec->m_clientPrefix), s_fileDecorations[this->m_data.m_preferences.m_sexID]);
     SStrPack(path, suffix.m_buffer, sizeof(path));

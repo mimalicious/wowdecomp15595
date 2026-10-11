@@ -22137,9 +22137,9 @@ CM2Model* CGUnit_C::CreateItemModel(uint32_t displayId, uint32_t inventoryType, 
             return NULL;
         }
 
-        SStrPrintf(fileName, sizeof(fileName), "%s%s_%s%s.mdx", path, rec.m_modelName[index], static_cast<const char*>(race->m_clientPrefix), s_genderSuffix[sex]);
+        SStrPrintf(fileName, sizeof(fileName), "%s%s_%s%s.mdx", path, static_cast<const char*>(rec.m_modelName[index]), static_cast<const char*>(race->m_clientPrefix), s_genderSuffix[sex]);
     } else {
-        SStrPrintf(fileName, sizeof(fileName), "%s%s", path, rec.m_modelName[index]);
+        SStrPrintf(fileName, sizeof(fileName), "%s%s", path, static_cast<const char*>(rec.m_modelName[index]));
     }
 
     CM2Model* model = World::GetScene()->CreateModel(fileName, 0, 3);

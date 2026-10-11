@@ -922,14 +922,14 @@ void SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, int
     uint32_t selectMode = properties->m_selectMode;
 
     if (selectMode > 2) {
-        SE3::SoundKitDefLog("The kit %s has invalidate play style:%d!", this->m_pSoundKitRec->m_name, selectMode);
+        SE3::SoundKitDefLog("The kit %s has invalidate play style:%d!", static_cast<const char*>(this->m_pSoundKitRec->m_name), selectMode);
         return;
     }
 
     int32_t numFiles = this->m_nNumFiles;
 
     if (numFiles <= 0) {
-        SE3::SoundKitDefLog("The kit %s has no sound variant files to select from!", this->m_pSoundKitRec->m_name);
+        SE3::SoundKitDefLog("The kit %s has no sound variant files to select from!", static_cast<const char*>(this->m_pSoundKitRec->m_name));
         return;
     }
 
@@ -959,7 +959,7 @@ void SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, int
         if (pass == 2) {
             this->m_lastIndex = -1;
         } else if (pass >= 3) {
-            SE3::SoundKitDefLog("The kit %s has multiple files of zero weight!", this->m_pSoundKitRec->m_name);
+            SE3::SoundKitDefLog("The kit %s has multiple files of zero weight!", static_cast<const char*>(this->m_pSoundKitRec->m_name));
             return;
         }
 
@@ -1013,7 +1013,7 @@ void SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, int
         }
     }
 
-    SE3::SoundKitDefLog("The kit %s fail to select a variant!", this->m_pSoundKitRec->m_name);
+    SE3::SoundKitDefLog("The kit %s fail to select a variant!", static_cast<const char*>(this->m_pSoundKitRec->m_name));
 }
 
 // PROVEN: 0342c584 IDENTICAL/NONE
