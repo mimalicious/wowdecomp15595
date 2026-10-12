@@ -25,7 +25,7 @@ PassFogSeed::PassFogSeed(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EG
     g_theGxDevicePtr->AddDeviceRestoredCallback(PassFogSeed::DeviceRestoredCallback);
 }
 
-// INLINED
+// OFFSET: 0x00B0CA20
 PassFogSeed::~PassFogSeed() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);

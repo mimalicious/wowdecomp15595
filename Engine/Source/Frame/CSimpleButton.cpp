@@ -368,7 +368,7 @@ void CSimpleButton::RunOnDoubleClickScript(const char* btn) {
     }
 }
 
-// OFFSET: [0x00514520/0x14015EA50, 0x00514D20/0x14015F100]
+// OFFSET: [0x00514520/0x14015EA50, 0x00514D20/0x14015F100, 0x00515CA0]
 CSimpleButton::~CSimpleButton() {
 }
 

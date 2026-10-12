@@ -85,7 +85,7 @@ PassFogCombine::PassFogCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXFogCombine");
 }
 
-// OFFSET: 0x00B0B910/0x1408CF810
+// OFFSET: [0x00B0B910/0x1408CF810, 0x00B0CE60]
 PassFogCombine::~PassFogCombine() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -203,7 +203,7 @@ PassDeath::PassDeath(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBle
     this->m_permute = FFX::s_useRECT != 0;
 }
 
-// OFFSET: 0x00B0BF50/0x1408CFFD0
+// OFFSET: [0x00B0BF50/0x1408CFFD0, 0x00B0D1D0]
 PassDeath::~PassDeath() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -252,7 +252,7 @@ PassNetherBlur::PassNetherBlur(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_blend = 0.0f;
 }
 
-// OFFSET: 0x00B0C150/0x1408D0280
+// OFFSET: [0x00B0C150/0x1408D0280, 0x00B0D790]
 PassNetherBlur::~PassNetherBlur() {
     if (this->m_pixelShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_pixelShader);
@@ -370,7 +370,7 @@ void EffectUnconscious::SetGlowBlur(uint8_t glow, uint8_t blur) {
     static_cast<PassGlowFade*>(this->m_passes[2])->m_color = CImVector(blur, blur, blur, glow);
 }
 
-// INLINED
+// OFFSET: 0x00B0C5E0
 bool EffectUnconscious::FadedOut() {
     if (!this->m_fadingOut) {
         static_cast<PassGlowFade*>(this->m_passes[2])->BeginFadeOut();
@@ -381,7 +381,7 @@ bool EffectUnconscious::FadedOut() {
     return pass->m_fadingOut && pass->m_fadeTime > pass->m_fadeOutTime;
 }
 
-// INLINED
+// OFFSET: 0x00B0C6C0
 PassPropagateFog::~PassPropagateFog() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -443,7 +443,7 @@ void PassPropagateFog::Execute() {
     FFX::SetupReset();
 }
 
-// INLINED
+// OFFSET: 0x00B0CE90
 bool PassPropagateFog::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
@@ -588,7 +588,7 @@ PassDeathNVRC::PassDeathNVRC(FFX::Tex** inputs, uint32_t count, FFX::Tex* output
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXDeath_nvrc");
 }
 
-// INLINED
+// OFFSET: 0x00B0D510
 PassDeathNVRC::~PassDeathNVRC() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -769,7 +769,7 @@ void PassNetherBlur::Execute() {
     FFX::SetupReset();
 }
 
-// INLINED
+// OFFSET: 0x00B0E1C0
 PassNetherCombine::~PassNetherCombine() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -871,7 +871,7 @@ EffectNetherWorld::EffectNetherWorld() {
     }
 }
 
-// INLINED
+// OFFSET: [0x00B0EAB0, 0x00B0F0E0]
 EffectNetherWorld::~EffectNetherWorld() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {
@@ -934,7 +934,7 @@ EffectSwirlingFog::EffectSwirlingFog() {
     this->m_passes.New(pass);
 }
 
-// INLINED
+// OFFSET: [0x00B0ED60, 0x00B0F110]
 EffectSwirlingFog::~EffectSwirlingFog() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {
@@ -995,7 +995,7 @@ EffectUnconscious::EffectUnconscious() {
     this->m_passes.New(pass);
 }
 
-// INLINED
+// OFFSET: [0x00B0EF90, 0x00B0F140]
 EffectUnconscious::~EffectUnconscious() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {

@@ -72,7 +72,7 @@ CSimpleFrame* CGCharacterModelBase::Create(CSimpleFrame* parent) {
     return data ? new (data) CGCharacterModelBase(parent) : NULL;
 }
 
-// OFFSET: [0x00A02C70, 0x00A03130/0x1407A22D0]
+// OFFSET: [0x00A02C70, 0x00A03130/0x1407A22D0, 0x00A06020]
 CGCharacterModelBase::~CGCharacterModelBase() {
     if (this->m_component) {
         CCharacterComponent::FreeComponent(this->m_component);

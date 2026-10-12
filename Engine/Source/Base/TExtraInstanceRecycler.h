@@ -33,7 +33,7 @@ void TExtraInstanceRecycler<T>::Clear() {
     this->CDataRecycler::Clear();
 }
 
-// INLINED
+// OFFSET: 0x008A38F0
 template <class T>
 T* TExtraInstanceRecycler<T>::New(uint32_t extraBytes) {
     uint32_t bytes = sizeof(T) + extraBytes;
@@ -56,7 +56,7 @@ T* TExtraInstanceRecycler<T>::New(uint32_t extraBytes) {
     return ptr;
 }
 
-// INLINED
+// OFFSET: 0x008A3B20
 template <class T>
 void TExtraInstanceRecycler<T>::Delete(T* ptr) {
     uint32_t bytes = ptr->m_recycleBytes;

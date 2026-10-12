@@ -1036,7 +1036,7 @@ CSimpleFontString::CSimpleFontString(CSimpleFrame* frame, uint32_t drawLayer, bo
     s_fontStringCount++;
 }
 
-// OFFSET: 0x004FC450/0x1401406B0
+// OFFSET: [0x004FC450/0x1401406B0, 0x004FC700, 0x0051D760, 0x004FBDB0, 0x004FBDC0, 0x0051D260, 0x0051D270, 0x0051D280]
 CSimpleFontString::~CSimpleFontString() {
     this->FreeEmbeddedTextures();
 
@@ -2629,7 +2629,7 @@ void CSimpleTexture::Draw(CRenderBatch* batch) {
     }
 }
 
-// INLINED
+// OFFSET: [0x004FBC00, 0x004FC2F0, 0x004FAA50]
 CSimpleTexture::~CSimpleTexture() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);

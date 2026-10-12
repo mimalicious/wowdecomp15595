@@ -437,7 +437,7 @@ CSimpleRegion::CSimpleRegion(CSimpleFrame* frame, uint32_t drawLayer, int8_t sub
     }
 }
 
-// OFFSET: 0x0050AE80
+// OFFSET: [0x0050AE80, 0x0050AF70, 0x0050AE70]
 CSimpleRegion::~CSimpleRegion() {
     this->SetFrame(NULL, 1, 0, false);
     this->EnableGradient(false);

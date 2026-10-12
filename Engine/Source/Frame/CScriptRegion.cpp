@@ -276,7 +276,7 @@ void CScriptRegion::RegisterAnimGroup(CSimpleAnimGroup* group) {
     }
 }
 
-// INLINED
+// OFFSET: [0x00510360, 0x005103C0, 0x0050FBC0]
 CScriptRegion::~CScriptRegion() {
     if (this->m_animGroups) {
         this->m_animGroups->Clear();

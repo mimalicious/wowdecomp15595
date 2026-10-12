@@ -17,7 +17,7 @@ WowMouse::WowMouse() {
     }
 }
 
-// INLINED
+// OFFSET: [0x0087EF70, 0x0087F060]
 WowMouse::~WowMouse() {
     if (this->m_hidManager) {
         delete this->m_hidManager;

@@ -89,7 +89,7 @@ CGInputControl::CGInputControl() : m_flags(0), m_lookStartTime(0), m_pendingDefa
     this->m_time = OsGetAsyncTimeMs();
 }
 
-// INLINED
+// OFFSET: 0x0044B820
 void InputControlInitialize() {
     CVar::Register("Joystick", "enable joystick control", 0, "0", JoystickCallback, 5, false, NULL, false);
     s_cvCinematicJoystick = CVar::Register("CinematicJoystick", "enable cinematic joystick control", 0, "0", NULL, 5, false, NULL, false);

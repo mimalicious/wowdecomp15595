@@ -1304,7 +1304,7 @@ CFrameStrata::~CFrameStrata() {
     }
 }
 
-// INLINED
+// OFFSET: [0x00501A90, 0x00501CF0]
 CSimpleTop::~CSimpleTop() {
     CSimpleTop::PurgeTextureReleaseQueue();
     this->ClearLoadingObjectsQueue();

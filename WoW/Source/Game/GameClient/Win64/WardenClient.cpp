@@ -54,7 +54,7 @@ bool WardenClient_Initialize() {
     return false;
 }
 
-// INLINED
+// OFFSET: 0x004D8900
 CDataStore& operator<<(CDataStore& msg, const CWardenKey& key) {
     for (uint32_t i = 0; i < sizeof(key.m_key); i++) {
         msg.Put(key.m_key[i]);
@@ -63,7 +63,7 @@ CDataStore& operator<<(CDataStore& msg, const CWardenKey& key) {
     return msg;
 }
 
-// INLINED
+// OFFSET: 0x004D8930
 CDataStore& operator>>(CDataStore& msg, CWardenKey& key) {
     for (uint32_t i = 0; i < sizeof(key.m_key); i++) {
         msg.Get(key.m_key[i]);

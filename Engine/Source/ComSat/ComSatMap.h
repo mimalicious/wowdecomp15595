@@ -176,7 +176,7 @@ bool ComSat::Map<K, V>::Insert(const ComSat::MapKey<K>& key, const V& value) {
     return true;
 }
 
-// INLINED
+// OFFSET: [0x00A34A90<unsigned __int64, unsigned char>, 0x00A34B00<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, 0x00A34B60<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
 template <class K, class V>
 bool ComSat::Map<K, V>::Next(uint32_t& iterator, ComSat::MapKey<K>& key, V& value) const {
     if (iterator >= this->m_capacity) {

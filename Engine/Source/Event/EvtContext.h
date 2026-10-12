@@ -101,7 +101,7 @@ TInstanceId<T>::TInstanceId() {
     this->m_id = 0;
 }
 
-// INLINED
+// OFFSET: [0x008A1710<EvtContext>]
 template <class T>
 TInstanceId<T>::~TInstanceId() {
 }

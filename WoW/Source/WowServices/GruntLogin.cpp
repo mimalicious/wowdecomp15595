@@ -116,7 +116,7 @@ void GruntLogin::Logon(const char* loginServer, const char* portal) {
     this->m_clientLink->Connect(loginServer ? loginServer : "us.logon.worldofwarcraft.com:3724");
 }
 
-// INLINED
+// OFFSET: [0x00626B60, 0x00626C20]
 GruntLogin::~GruntLogin() {
     if (this->m_matrixCoordinates) {
         delete[] this->m_matrixCoordinates;

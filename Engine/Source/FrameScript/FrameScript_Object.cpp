@@ -93,7 +93,7 @@ bool FrameScript_Object::GetScriptFunction(const FrameScript_Object::ScriptIx& s
     return true;
 }
 
-// OFFSET: 0x0083CC50/0x1405678E0
+// OFFSET: [0x0083CC50/0x1405678E0, 0x00510670, 0x0083DDC0]
 FrameScript_Object::~FrameScript_Object() {
     for (int32_t i = 0; i < this->m_scriptCount; i++) {
         if (this->m_scripts[i].m_luaRef) {

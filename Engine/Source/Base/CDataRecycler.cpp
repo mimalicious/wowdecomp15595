@@ -13,7 +13,7 @@ CDataRecycler::CDataRecycler(uint32_t nodesPerBlock, int32_t maxNodes) {
     this->m_nodesPerBlock = this->m_nodesPerBlock >= static_cast<uint32_t>(this->m_nodesRecyclable) ? this->m_nodesRecyclable : this->m_nodesPerBlock;
 }
 
-// OFFSET: [0x00B41C80/0x140910000]
+// OFFSET: [0x00B41C80/0x140910000, 0x00B41D10]
 CDataRecycler::~CDataRecycler() {
 }
 

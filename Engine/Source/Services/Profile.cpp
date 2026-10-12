@@ -122,7 +122,7 @@ void ProfileInternal::STRINGBLOCK::FreeString(TSList<STRINGBLOCK, TSGetLink<STRI
     }
 }
 
-// OFFSET: 0x00546080
+// OFFSET: [0x00546080, 0x00546100]
 ProfileInternal::PROFILE::~PROFILE() {
     this->m_sections.Clear();
     this->m_strings.Clear();

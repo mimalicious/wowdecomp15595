@@ -205,7 +205,7 @@ CSimpleEditBox::CSimpleEditBox(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(p
     this->EnableEvent(SIMPLE_EVENT_MOUSE, -1);
 }
 
-// OFFSET: 0x0051B010
+// OFFSET: [0x0051B010, 0x0051B500, 0x0051AF80]
 CSimpleEditBox::~CSimpleEditBox() {
     CSimpleEditBox::ClearKeyboardFocus(this, false);
 

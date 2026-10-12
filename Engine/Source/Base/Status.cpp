@@ -160,7 +160,7 @@ void CStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     }
 }
 
-// OFFSET: 0x00872990/0x1405A8F10
+// OFFSET: [0x00872990/0x1405A8F10, 0x00924100]
 CStatus::~CStatus() {
     this->Clear();
 }

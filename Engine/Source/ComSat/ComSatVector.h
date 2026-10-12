@@ -49,7 +49,7 @@ ComSat::Vector<T>::~Vector() {
     }
 }
 
-// INLINED
+// OFFSET: [0x00A33BF0<unsigned __int64>, 0x00A39590<ComSat::Network::Session::LocalTalker>]
 template <class T>
 bool ComSat::Vector<T>::Find(const T& value, uint32_t& index) const {
     index = 0;

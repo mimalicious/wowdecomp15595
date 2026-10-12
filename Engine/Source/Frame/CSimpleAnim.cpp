@@ -332,7 +332,7 @@ float CSimpleAnim::UpdateProgress(float elapsedSec) {
     return elapsed - prevElapsed;
 }
 
-// INLINED
+// OFFSET: [0x00528270, 0x00529260]
 CSimpleAnim::~CSimpleAnim() {
     delete this->m_smoother;
 }

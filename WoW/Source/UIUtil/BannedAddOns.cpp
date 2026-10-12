@@ -149,7 +149,7 @@ int32_t SaveBannedAddOns() {
     return SaveCache();
 }
 
-// INLINED
+// OFFSET: 0x00446BE0
 int32_t GetLatestBannedAddOnTimestamp() {
     int32_t latest = 0;
 
@@ -262,7 +262,7 @@ static void LoadDatabase() {
     }
 }
 
-// INLINED
+// OFFSET: 0x00447650
 static int32_t LoadCache() {
     char directory[260];
 

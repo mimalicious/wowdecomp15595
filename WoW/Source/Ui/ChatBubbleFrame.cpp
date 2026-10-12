@@ -502,7 +502,7 @@ void CGChatBubbleFrame::Remove(CGChatBubbleFrame* bubble) {
     s_freeChatBubbles.LinkToTail(bubble);
 }
 
-// INLINED
+// OFFSET: 0x009F1DB0
 void CGChatBubbleFrame::ClearAll() {
     CGChatBubbleFrame* next;
 

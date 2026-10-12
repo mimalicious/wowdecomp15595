@@ -223,7 +223,7 @@ CSimpleFrame::CSimpleFrame(CSimpleFrame* parent) {
     this->Show();
 }
 
-// OFFSET: 0x00506140
+// OFFSET: [0x00506140, 0x00506770, 0x0050F370, 0x00520420, 0x00521750, 0x00523140, 0x00506110, 0x0050F1D0, 0x005201A0, 0x00521250, 0x00522EC0]
 CSimpleFrame::~CSimpleFrame() {
     this->m_frameState = 3;
     this->m_simpleTop->UnregisterFrame(this);

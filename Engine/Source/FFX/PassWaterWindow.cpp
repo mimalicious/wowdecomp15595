@@ -18,7 +18,7 @@ static CTexture* s_oceanTex[30];
 // STATIC: 0x00EC7320
 static int32_t s_refCount;
 
-// OFFSET: 0x0089DFE0/0x1405DEA50
+// OFFSET: [0x0089DFE0/0x1405DEA50, 0x0089E1D0]
 PassWaterWindow::~PassWaterWindow() {
     if (this->m_vertexShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_vertexShader);

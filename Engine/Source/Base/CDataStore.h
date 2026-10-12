@@ -73,13 +73,13 @@ class CDataStoreCache : public CDataStore {
     CDataStoreCache();
 };
 
-// INLINED
+// OFFSET: [0x00B040C0<1024>]
 template <uint32_t size>
 CDataStoreCache<size>::CDataStoreCache() {
     this->InternalInitialize(this->m_data, this->m_base, this->m_alloc);
 }
 
-// INLINED
+// OFFSET: [0x00B041B0, 0x00B04340, 0x00B043A0]
 template <uint32_t size>
 CDataStoreCache<size>::~CDataStoreCache() {
     if (this->m_alloc != -1) {

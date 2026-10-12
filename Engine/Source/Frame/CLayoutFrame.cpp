@@ -1378,7 +1378,7 @@ void CLayoutFrame::DestroyLayout() {
     s_resizePendingList.UnlinkNode(this);
 }
 
-// OFFSET: 0x005091A0/0x140150E40
+// OFFSET: [0x005091A0/0x140150E40, 0x0050A270]
 CLayoutFrame::~CLayoutFrame() {
     if (this->m_animData) {
         delete this->m_animData;
