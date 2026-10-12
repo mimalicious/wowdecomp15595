@@ -31,7 +31,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AC3690
+// OFFSET: 0x00AC3690/0x14088BFF0
 FMOD_RESULT DSPWaveTable::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 {
     FMOD_RESULT result;

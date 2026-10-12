@@ -94,7 +94,7 @@ static void start_iMCU_row(j_compress_ptr cinfo) {
  * Initialize for a processing pass.
  */
 
-// OFFSET: 0x00B60AE0
+// OFFSET: 0x00B60AE0/0x14092A1F0
 static void start_pass_coef(j_compress_ptr cinfo, J_BUF_MODE pass_mode) {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
 

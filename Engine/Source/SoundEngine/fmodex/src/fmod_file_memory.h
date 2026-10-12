@@ -15,7 +15,7 @@ namespace FMOD
         unsigned int  mPosition;
         void         *mMem;
 
-        // OFFSET: 0x00A80190
+        // OFFSET: 0x00A80190/0x14083C870
         MemoryFile() { mDeviceType = DEVICE_MEMORY; }
 
         FMOD_RESULT reallyOpen(const char *name_or_data, unsigned int *filesize);

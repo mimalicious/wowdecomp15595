@@ -133,7 +133,7 @@ namespace FMOD
 
       public:
 
-        // OFFSET: 0x00AA0B50
+        // OFFSET: 0x00AA0B50/0x140861660
         Codec()
         {
             mType         = FMOD_SOUND_TYPE_UNKNOWN;

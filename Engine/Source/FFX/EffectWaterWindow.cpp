@@ -9,7 +9,7 @@ EffectWaterWindow::EffectWaterWindow(uint32_t type) {
     this->m_passes.New(pass);
 }
 
-// OFFSET: [0x00B49CA0, 0x00B49D60]
+// OFFSET: [0x00B49CA0/0x1405DE230, 0x00B49D60/0x1405DE380]
 EffectWaterWindow::~EffectWaterWindow() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         delete this->m_passes[i];

@@ -242,7 +242,7 @@ static CRect SmartScreenRectMoveDown(uint32_t grid, CRect rect) {
     return rect;
 }
 
-// OFFSET: 0x00460D30
+// OFFSET: 0x00460D30/0x14006C690
 static void SmartScreenRectRecycleNodes() {
     s_freeNodes.Combine(&s_searchQueue, 2, NULL);
 }

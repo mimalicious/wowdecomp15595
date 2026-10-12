@@ -84,7 +84,7 @@ SoundGroupI::SoundGroupI()
 ]
 */
 
-// OFFSET: 0x00A882F0
+// OFFSET: 0x00A882F0/0x1408463A0
 FMOD_RESULT SoundGroupI::release()
 {  
     if (this == mSystem->mSoundGroup)
@@ -297,7 +297,7 @@ FMOD_RESULT SoundGroupI::getMaxAudibleBehavior(FMOD_SOUNDGROUP_BEHAVIOR *behavio
 ]
 */
 
-// OFFSET: 0x00A88240
+// OFFSET: 0x00A88240/0x140846300
 FMOD_RESULT SoundGroupI::setMuteFadeSpeed(float speed)
 {
     if (speed < 0)

@@ -602,7 +602,7 @@ void OsNet::SLTCPCONN::Selected(TCPNET* net, SELECTSET selectSet) {
     }
 }
 
-// OFFSET: [0x0087D5B0, 0x0087D600]
+// OFFSET: [0x0087D5B0/0x1405B5D40, 0x0087D600/0x1405B5DB0]
 OsNet::NETCONN::~NETCONN() {
 }
 
@@ -789,7 +789,7 @@ void OsNet::IOTCPCONN::DecIo() {
     this->Disconnect(1);
 }
 
-// OFFSET: [0x0087DDC0, 0x0087E1D0]
+// OFFSET: [0x0087DDC0/0x1405B6810, 0x0087E1D0/0x1405B6DF0]
 OsNet::TCPCONN::~TCPCONN() {
     this->m_outputList.Clear();
     this->m_net->LinkConn(this, CONNLISTS);

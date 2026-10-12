@@ -764,7 +764,7 @@ static void primaryexp (LexState *ls, expdesc *v) {
 }
 
 
-// OFFSET: 0x00427940
+// OFFSET: 0x00427940/0x14002D990
 static void simpleexp (LexState *ls, expdesc *v) {
   /* simpleexp -> NUMBER | STRING | NIL | true | false | ... |
                   constructor | FUNCTION body | primaryexp */

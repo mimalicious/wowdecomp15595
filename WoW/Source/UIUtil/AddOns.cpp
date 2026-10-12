@@ -58,7 +58,7 @@ uint32_t GetCodeInterfaceVersion() {
     return 40300;
 }
 
-// OFFSET: 0x0045B6C0
+// OFFSET: 0x0045B6C0/0x14006D1A0
 char* AddOnUnloadableToken(UIADDON_LOADABLE_REASON reason, UIADDON_LOADABLE_REASON dependencyReason, char* buffer, uint32_t size) {
     if (reason) {
         SStrCopy(buffer, s_addOnLoadableTokens[reason], size);

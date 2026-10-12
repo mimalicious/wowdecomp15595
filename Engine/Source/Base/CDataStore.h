@@ -79,7 +79,7 @@ CDataStoreCache<size>::CDataStoreCache() {
     this->InternalInitialize(this->m_data, this->m_base, this->m_alloc);
 }
 
-// OFFSET: [0x00B041B0, 0x00B04340, 0x00B043A0]
+// OFFSET: [0x00B041B0, 0x00B04340/0x1408C6910, 0x00B043A0/0x1408C69A0]
 template <uint32_t size>
 CDataStoreCache<size>::~CDataStoreCache() {
     if (this->m_alloc != -1) {

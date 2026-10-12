@@ -79,7 +79,7 @@ static FMOD_INLINE void FMOD_Vector_AxisRotate(FMOD_VECTOR *in,FMOD_VECTOR *at,F
 	in->z=(c*(u*u+v*v)+w*(-a*u-b*v+u*x+v*y+w*z)+((z-c)*(u*u+v*v)+w*(a*u+b*v-u*x-v*y))*cost+FMOD_SQRT(u*u+v*v+w*w)*(a*v-b*u-v*x+u*y)*sint)/(u*u+v*v+w*w);
 }
 
-// OFFSET: 0x00AC3C00
+// OFFSET: 0x00AC3C00/0x14088C5D0
 static FMOD_INLINE int FMOD_Cart2Angle(int y, int x)
 {
     int coeff_1, coeff_2, abs_y;

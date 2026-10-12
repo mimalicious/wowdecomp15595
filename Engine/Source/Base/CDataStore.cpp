@@ -67,7 +67,7 @@ void CDataStore::Finalize() {
     this->m_read = 0;
 }
 
-// OFFSET: [0x00408610, 0x00408630]
+// OFFSET: [0x00408610, 0x00408630/0x14000A930]
 CDataStore::~CDataStore() {
     if (this->m_alloc != -1) {
         this->InternalDestroy(this->m_data, this->m_base, this->m_alloc);

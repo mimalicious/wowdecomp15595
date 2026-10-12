@@ -48,7 +48,7 @@ namespace FMOD
         } PRIORITY;
 
         Thread();
-        // OFFSET: 0x00A80160
+        // OFFSET: 0x00A80160/0x14083C840
         virtual ~Thread() { }
 
         FMOD_RESULT initThread(const char *name, void (*func)(void *userdata), void *userdata, PRIORITY priority, void *stack, int stacksize, bool usesemaphore, int sleepperiod);

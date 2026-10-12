@@ -787,7 +787,7 @@ void Octree::setMaxSize(float maxSize)
     mScale = 1.0f / maxSize;
 }
 
-// OFFSET: 0x00AD3E70
+// OFFSET: 0x00AD3E70/0x14089E9A0
 bool Octree::testLine(bool (*octreeLineTestCallback)(OctreeNode* item, void* data), void* data, const FMOD_VECTOR& a, const FMOD_VECTOR& b)
 {
     ASSERT(octreeLineTestCallback);    
@@ -1585,7 +1585,7 @@ void Octree::addListItem(OctreeNode* list, OctreeNode* node)
     ASSERT(node->nextItem != node);
 }
 
-// OFFSET: 0x00AD3710
+// OFFSET: 0x00AD3710/0x14089E310
 void Octree::testLine(OctreeNode* node, FMOD_VECTOR a, FMOD_VECTOR b, RecursionData* recursionData)
 {
     float t;

@@ -285,7 +285,7 @@ int32_t CSimplePathAnim::RegisterSplineControlPoint(CSimpleControlPoint* point) 
     return index;
 }
 
-// OFFSET: [0x00529410/0x140178DC0, 0x00529AC0]
+// OFFSET: [0x00529410/0x140178DC0, 0x00529AC0/0x140179740]
 CSimplePathAnim::~CSimplePathAnim() {
     this->m_sortedPoints.Clear();
     this->m_controlPoints.Clear();

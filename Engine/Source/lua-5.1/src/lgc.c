@@ -419,7 +419,7 @@ static void freeobj (lua_State *L, GCObject *o) {
   }
 }
 
-// OFFSET: 0x00429B50
+// OFFSET: 0x00429B50/0x140030340
 static lu_mem sizeobj (GCObject *o) {
   switch (o->gch.tt) {
     case LUA_TSTRING:

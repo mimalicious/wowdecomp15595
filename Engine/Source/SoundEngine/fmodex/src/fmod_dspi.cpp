@@ -2194,7 +2194,7 @@ FMOD_RESULT DSPI::disconnectAll(bool inputs, bool outputs)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A8F020
+// OFFSET: 0x00A8F020/0x14084E4F0
 FMOD_RESULT DSPI::remove()
 {
     FMOD_RESULT result;
@@ -2485,7 +2485,7 @@ FMOD_RESULT DSPI::getParameter(int index, float *value, char *valuestr, int valu
 }
 
 
-// OFFSET: 0x00A8E0C0
+// OFFSET: 0x00A8E0C0/0x140847E30
 /*
 [
 	[DESCRIPTION]

@@ -1036,7 +1036,7 @@ CSimpleFontString::CSimpleFontString(CSimpleFrame* frame, uint32_t drawLayer, bo
     s_fontStringCount++;
 }
 
-// OFFSET: [0x004FC450/0x1401406B0, 0x004FC700, 0x0051D760, 0x004FBDB0, 0x004FBDC0, 0x0051D260, 0x0051D270, 0x0051D280]
+// OFFSET: [0x004FC450/0x1401406B0, 0x004FC700/0x140140AC0, 0x0051D760, 0x004FBDB0/0x14013FFC0, 0x004FBDC0, 0x0051D260, 0x0051D270, 0x0051D280]
 CSimpleFontString::~CSimpleFontString() {
     this->FreeEmbeddedTextures();
 

@@ -1304,7 +1304,7 @@ CFrameStrata::~CFrameStrata() {
     }
 }
 
-// OFFSET: [0x00501A90, 0x00501CF0]
+// OFFSET: [0x00501A90/0x1401475E0, 0x00501CF0/0x140147920]
 CSimpleTop::~CSimpleTop() {
     CSimpleTop::PurgeTextureReleaseQueue();
     this->ClearLoadingObjectsQueue();

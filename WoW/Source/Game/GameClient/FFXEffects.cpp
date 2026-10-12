@@ -85,7 +85,7 @@ PassFogCombine::PassFogCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXFogCombine");
 }
 
-// OFFSET: [0x00B0B910/0x1408CF810, 0x00B0CE60]
+// OFFSET: [0x00B0B910/0x1408CF810, 0x00B0CE60/0x1408D1150]
 PassFogCombine::~PassFogCombine() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -252,7 +252,7 @@ PassNetherBlur::PassNetherBlur(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_blend = 0.0f;
 }
 
-// OFFSET: [0x00B0C150/0x1408D0280, 0x00B0D790]
+// OFFSET: [0x00B0C150/0x1408D0280, 0x00B0D790/0x1408D1D20]
 PassNetherBlur::~PassNetherBlur() {
     if (this->m_pixelShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_pixelShader);
@@ -443,7 +443,7 @@ void PassPropagateFog::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: 0x00B0CE90
+// OFFSET: 0x00B0CE90/0x1408D07A0
 bool PassPropagateFog::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }

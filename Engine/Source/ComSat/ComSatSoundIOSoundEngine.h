@@ -166,7 +166,7 @@ uint32_t ComSat::Sound::RingBuffer<T>::Read(T* samples, uint32_t count) {
     return read;
 }
 
-// OFFSET: [0x00A3ABE0<float>, 0x00A3AD30<short>]
+// OFFSET: [0x00A3ABE0<float>, 0x00A3AD30/0x1407E7770<short>]
 template <class T>
 bool ComSat::Sound::RingBuffer<T>::Write(const T* samples, uint32_t count) {
     this->m_lock.Enter();

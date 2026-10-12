@@ -1,4 +1,4 @@
-// OFFSET: 0x00627E10
+// OFFSET: 0x00627E10/0x1402B9E50
 inline Battlenet::Allocator::~Allocator() {
 }
 

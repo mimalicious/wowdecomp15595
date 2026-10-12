@@ -68,7 +68,7 @@ extern "C"
     File_GetDiskBusy
 ]
 */
-// OFFSET: 0x00A91620
+// OFFSET: 0x00A91620/0x140850F70
 FMOD_RESULT F_API FMOD_File_SetDiskBusy(int busy)
 {
     if (busy)

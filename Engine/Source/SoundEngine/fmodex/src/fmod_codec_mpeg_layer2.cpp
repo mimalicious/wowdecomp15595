@@ -305,7 +305,7 @@ FMOD_RESULT CodecMPEG::initLayer2()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AE0660
+// OFFSET: 0x00AE0660/0x1408AB0B0
 FMOD_RESULT CodecMPEG::II_step_one(unsigned int *bit_alloc,int *scale)
 {
     int				stereo   = mMemoryBlock->mFrame.stereo-1;

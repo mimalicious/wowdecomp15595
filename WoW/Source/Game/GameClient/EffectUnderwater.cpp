@@ -34,7 +34,7 @@ EffectUnderwater::~EffectUnderwater() {
     }
 }
 
-// OFFSET: [0x00B49D90/0x140919D90, 0x00B49E40]
+// OFFSET: [0x00B49D90/0x140919D90, 0x00B49E40/0x140919E90]
 PassUnderwater::~PassUnderwater() {
     if (this->m_pixelShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_pixelShader);

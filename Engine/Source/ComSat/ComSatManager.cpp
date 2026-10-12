@@ -647,7 +647,7 @@ ComSat::Manager::Manager(ComSat::Sound::Manager& soundManager, ComSat::Network::
     soundManager.SetCallback(this);
 }
 
-// OFFSET: [0x00A346D0/0x1407DEEF0, 0x00A347D0]
+// OFFSET: [0x00A346D0/0x1407DEEF0, 0x00A347D0/0x1407DF030]
 ComSat::Manager::~Manager() {
     for (uint32_t i = 0; i < this->m_maxLocalPlayers; i++) {
         if (this->m_localTalkers[i]) {

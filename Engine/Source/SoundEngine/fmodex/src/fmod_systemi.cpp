@@ -986,7 +986,7 @@ FMOD_RESULT SystemI::updateSoundGroups(int delta)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A82D30
+// OFFSET: 0x00A82D30/0x14083FF10
 FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, SoundI *sound, ChannelI **channel)
 {
     ChannelI       *chan = 0;
@@ -1217,7 +1217,7 @@ FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, SoundI *sound, ChannelI *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A80F10
+// OFFSET: 0x00A80F10/0x14083DB30
 FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, DSPI *dsp, ChannelI **channel)
 {
     ChannelI       *chan = 0;
@@ -3794,7 +3794,7 @@ FMOD_RESULT SystemI::getDriverCaps(int id, FMOD_CAPS *caps, int *minfrequency, i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A81A40
+// OFFSET: 0x00A81A40/0x14083E9A0
 FMOD_RESULT SystemI::setDriver(int driver)
 {
     FMOD_RESULT        result       = FMOD_OK;
@@ -4378,7 +4378,7 @@ FMOD_RESULT SystemI::getAdvancedSettings(FMOD_ADVANCEDSETTINGS *settings)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A83580
+// OFFSET: 0x00A83580/0x140840970
 FMOD_RESULT SystemI::setSpeakerMode(FMOD_SPEAKERMODE speakermode)
 {
 	if (mInitialized)
@@ -7204,7 +7204,7 @@ FMOD_RESULT SystemI::createDSP(FMOD_DSP_DESCRIPTION *description, DSPI **dsp)
 	[SEE_ALSO]
 ]
 */                                    
-// OFFSET: 0x00A83910
+// OFFSET: 0x00A83910/0x140840DA0
 FMOD_RESULT SystemI::createDSP(FMOD_DSP_DESCRIPTION_EX *description, DSPI **dsp, bool allocate)
 {
     FMOD_RESULT             result;
@@ -7491,7 +7491,7 @@ FMOD_RESULT SystemI::createChannelGroup(const char *name, ChannelGroupI **channe
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A82200
+// OFFSET: 0x00A82200/0x14083F230
 FMOD_RESULT SystemI::createSoundGroup(const char *name, SoundGroupI **soundgroup)
 {
     SoundGroupI *newsoundgroup;
@@ -7544,7 +7544,7 @@ FMOD_RESULT SystemI::createSoundGroup(const char *name, SoundGroupI **soundgroup
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A83CE0
+// OFFSET: 0x00A83CE0/0x1408412C0
 FMOD_RESULT SystemI::playSound(FMOD_CHANNELINDEX channelid, SoundI *sound, bool paused, ChannelI **channel)
 {
     FMOD_RESULT  result;
@@ -8511,7 +8511,7 @@ FMOD_RESULT SystemI::getRecordNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A83EC0
+// OFFSET: 0x00A83EC0/0x140841500
 FMOD_RESULT SystemI::setRecordDriver(int driver)
 {
 #ifdef FMOD_SUPPORT_RECORDING
@@ -8814,7 +8814,7 @@ FMOD_RESULT SystemI::recordStart(SoundI *sound, bool loop)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A827E0
+// OFFSET: 0x00A827E0/0x14083F900
 FMOD_RESULT SystemI::recordStop()
 {
 #ifdef FMOD_SUPPORT_RECORDING

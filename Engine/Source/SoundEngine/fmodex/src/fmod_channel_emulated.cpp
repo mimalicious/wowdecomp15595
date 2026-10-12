@@ -151,7 +151,7 @@ FMOD_RESULT ChannelEmulated::alloc()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AF4AA0
+// OFFSET: 0x00AF4AA0/0x1408BE010
 FMOD_RESULT ChannelEmulated::stop(bool ignoreenddelay, bool resetstate, bool force)
 {
     if (mFlags & CHANNELREAL_FLAG_ENDDELAY && !ignoreenddelay)

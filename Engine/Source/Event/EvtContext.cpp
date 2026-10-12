@@ -22,7 +22,7 @@ EvtContext::EvtContext(uint32_t flags, uint32_t idleTime, uint32_t schedWeight, 
     this->m_startWatchdog = startWatchdog;
 }
 
-// OFFSET: [0x008A2830, 0x008A2AB0]
+// OFFSET: [0x008A2830/0x1405E4840, 0x008A2AB0/0x1405E4CC0]
 EvtContext::~EvtContext() {
     for (uint32_t i = 0; i < EVENTIDS; i++) {
         this->m_queueHandlerList[i].Clear();

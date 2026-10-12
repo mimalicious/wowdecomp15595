@@ -144,7 +144,7 @@ int32_t CKBSetup::BeginLoading(int32_t numArticles, int32_t pageNumber) {
     return 1;
 }
 
-// OFFSET: 0x009FC640
+// OFFSET: 0x009FC640/0x14079A180
 CKBPage::~CKBPage() {
     if (this->m_tree) {
         XMLTree_Free(this->m_tree);
