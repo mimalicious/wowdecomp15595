@@ -64,8 +64,8 @@ int32_t EvaluateRaid(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>*
 
 // OFFSET: 0x00A0DF90/0x1407AFFF0
 int32_t EvaluateFlyable(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(*unit, TYPEMASK_UNIT, __FILE__, __LINE__));
-    bool flyable = player ? player->IsInFlyableZone(1) : IsInFlyableArea() != 0;
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    bool flyable = player ? player->FlyingMountAllowed(true) : IsInFlyableArea() != 0;
 
     if (!args->m_count) {
         return flyable;

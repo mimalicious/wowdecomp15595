@@ -3702,7 +3702,7 @@ static int32_t Script_IsFlyableArea(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
-        if (player->IsInFlyableZone(1)) {
+        if (player->FlyingMountAllowed(true)) {
             lua_pushnumber(L, 1.0);
         } else {
             lua_pushnil(L);

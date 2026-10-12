@@ -454,7 +454,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void ExitAutoCombatMode();
     void OnLevelChange();
     bool CTMClickTerrain(const C3Vector& position);
-    bool IsInFlyableZone(int32_t checkContinent);
     bool SpellUsesWeaponSkill(const SpellRec* spell) const;
     CGPlayer_C(uint32_t time, const CClientObjCreate& create);
     void SetStorage(uint32_t* storage, uint32_t* saved);

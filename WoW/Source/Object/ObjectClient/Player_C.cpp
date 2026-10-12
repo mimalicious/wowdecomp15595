@@ -11690,11 +11690,6 @@ void CGPlayer_C::PlayerShutdownMessageHandlers() {
     ClientUpdateActionButtons::s_handler = NULL;
 }
 
-// INLINED
-bool CGPlayer_C::IsInFlyableZone(int32_t checkContinent) {
-    return IsInFlyableArea() && (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !checkContinent || CGGameUI::m_iCurrentMapID != 571 || HasSpell(static_cast<uint32_t>(54197)));
-}
-
 // OFFSET: 0x00553830/0x1401AE780
 int32_t OnArenaTeamsChanged(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGArenaTeamInfo::UpdateTeams(1);

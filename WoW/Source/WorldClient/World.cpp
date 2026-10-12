@@ -1004,11 +1004,23 @@ int32_t World::ObjectIsLoaded(uintptr_t object) {
 
     CMapObjDef* mapObjDef = static_cast<CMapObjDef*>(baseObj);
 
-    if (!mapObjDef->IsAllLoaded()) {
+    if (!mapObjDef->IsAllDrawable()) {
         return 0;
     }
 
-    return mapObjDef->m_mapObj->IsAllLoaded();
+    CMapObj* mapObj = mapObjDef->m_mapObj;
+
+    if (!(mapObj->m_flags & 0x40)) {
+        return 0;
+    }
+
+    for (uint32_t i = 0; i < mapObj->m_groupCount; i++) {
+        if (!(mapObj->m_groups[i]->m_flags & 0x40)) {
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 // OFFSET: 0x00722B30/0x1403F91F0

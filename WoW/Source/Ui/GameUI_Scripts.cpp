@@ -2087,15 +2087,25 @@ static int32_t Script_GetInstanceInfo(lua_State* L) {
     lua_pushnumber(L, difficulty + 1);
     MapDifficultyRec* rec = GetMapDifficultyRec(mapId, difficulty, NULL);
 
+    int32_t maxPlayers = 0;
+
     if (rec) {
         lua_pushstring(L, FrameScript_GetText(rec->m_difficultystring, -1, GENDER_NOT_APPLICABLE));
-        lua_pushnumber(L, rec->m_maxPlayers);
+        maxPlayers = rec->m_maxPlayers;
     } else {
         lua_pushstring(L, "");
-        lua_pushnumber(L, 0.0);
     }
 
-    lua_pushnumber(L, CGPartyInfo::m_dynamicDifficulty);
+    if (!maxPlayers && (map->m_instanceType == 3 || map->m_instanceType == 4)) {
+        BattlemasterListRec* battlemaster = g_battlemasterListDB.GetRecord(CGBattlefieldInfo::GetActiveBattlefieldTypeID());
+
+        if (battlemaster) {
+            maxPlayers = battlemaster->m_maxPlayers;
+        }
+    }
+
+    lua_pushnumber(L, maxPlayers);
+    lua_pushnumber(L, 0.0);
     map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
     lua_pushboolean(L, map && (map->m_flags & 0x100));
     return 7;
