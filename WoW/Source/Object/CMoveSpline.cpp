@@ -11,12 +11,10 @@ CMoveSpline::CMoveSpline() {
     this->m_finalDestination.z = 0.0f;
 }
 
-// PROVEN: daf8f9b2 IDENTICAL/DIFFERENT
 // OFFSET: 0x005E70E0/0x140267B90
 CMoveSpline::~CMoveSpline() {
 }
 
-// PROVEN: dd44802f IDENTICAL/NONE
 // OFFSET: 0x004010A0
 CDataStore& operator>>(CDataStore& msg, C3Vector& vector) {
     msg.Get(vector.x);

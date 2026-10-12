@@ -406,7 +406,6 @@ static void LogConnectionStatus(WOWCS_OPS op, int32_t errorCode, int32_t initiat
     }
 }
 
-// PROVEN: 2c9a6171 DIFFERENT/IDENTICAL
 // OFFSET: 0x004CE8D0/0x14010A8E0
 ClientConnection::ClientConnection(RealmResponse* realmResponse) : RealmConnection(realmResponse) {
     this->unk_2F3C = 0;
@@ -465,7 +464,6 @@ void ClientConnection::AccountLogin(const char* accountName, const char* passwor
     this->Initiate(COP_AUTHENTICATE, CSTATUS_AUTHENTICATING, NULL);
 }
 
-// PROVEN: 90b8867e IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEA00/0x14010AA10
 int32_t ClientConnection::Disconnect(DISCONNECT_REASON reason) {
     CGlueMgr::LogConnectionStatus("Client Disconnect due to reason:%d", reason);
@@ -475,19 +473,16 @@ int32_t ClientConnection::Disconnect(DISCONNECT_REASON reason) {
     return 1;
 }
 
-// PROVEN: beeeb389 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEA40/0x14010AA60
 ClientConnection* ClientServices::Connection() {
     return ClientServices::s_currentConnection;
 }
 
-// PROVEN: 17549417 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEA50/0x14010AA70
 Login* ClientServices::LoginConnection() {
     return ClientServices::s_loginObj;
 }
 
-// PROVEN: 60398ad1 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEBD0/0x14010AC40
 void ClientServices::Send(JamClientMessage* msg) {
     if (ClientServices::s_currentConnection) {
@@ -495,19 +490,16 @@ void ClientServices::Send(JamClientMessage* msg) {
     }
 }
 
-// PROVEN: 2c448044 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEFA0/0x14010B180
 const char* ClientServices::GetPatchListURL() {
     return ClientServices::s_patchListVar->m_stringValue.m_str;
 }
 
-// PROVEN: 1f35ab3c IDENTICAL/UNPROVEN
 // OFFSET: 0x004CEFF0/0x14010B200
 bool ClientServices::HasNextRealmAddress() {
     return ClientServices::m_selectRealmInfo.m_addresses[1].m_type != 0;
 }
 
-// PROVEN: f071a55f IDENTICAL/DIFFERENT
 // OFFSET: 0x004CF000/0x14010B210
 void ClientServices::AdvanceRealmAddress() {
     if (ClientServices::s_currentConnection) {
@@ -520,7 +512,6 @@ void ClientServices::AdvanceRealmAddress() {
     ClientServices::m_selectRealmInfo.m_ports[1] = 0;
 }
 
-// PROVEN: 731dadf8 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEBB0/0x14010AC10
 void ClientServices::Send2(CDataStore* msg) {
     if (ClientServices::s_currentConnection) {
@@ -528,7 +519,6 @@ void ClientServices::Send2(CDataStore* msg) {
     }
 }
 
-// PROVEN: b94c3125 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEFB0/0x14010B190
 const char* ClientServices::GetSelectedRealmName() {
     if (!ClientServices::s_realmNameVar) {
@@ -538,19 +528,16 @@ const char* ClientServices::GetSelectedRealmName() {
     return ClientServices::s_realmNameVar->m_stringValue.m_str;
 }
 
-// PROVEN: 33feb0af IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEFE0/0x14010B1F0
 const char* ClientServices::GetServerAlertURL() {
     return ClientServices::s_serverAlertVar->m_stringValue.m_str;
 }
 
-// PROVEN: b3c5e6f9 IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF0A0/0x14010B2C0
 REALM_INFO* ClientServices::GetSelectedRealm() {
     return ClientServices::m_selectRealmInfoValid ? &ClientServices::m_selectRealmInfo : NULL;
 }
 
-// PROVEN: 9995a82a IDENTICAL/DIFFERENT
 // OFFSET: 0x004CFE40/0x14010C2B0
 void ClientConnection::Cancel(int32_t errorCode) {
     if (this->m_cleanup) {
@@ -564,7 +551,6 @@ void ClientConnection::Cancel(int32_t errorCode) {
     LogConnectionStatus(this->m_statusOp, errorCode, 0, 0);
 }
 
-// PROVEN: b4be18f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CF0C0/0x14010B2E0
 void ClientServices::FileData(const uint8_t* data, uint32_t size) {
     CGlueMgr::DownloadFeed(data, size);
@@ -579,13 +565,11 @@ const char* ClientServices::GetErrorToken(int32_t errorCode) {
     return s_errorTokens[errorCode];
 }
 
-// PROVEN: 79dd7121 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CF160/0x14010B360
 int32_t ClientServices::CharacterValidateName(const char* name) {
     return ValidateCharacterNameConst(s_locale, name, true, true, true, true, 0) + 89;
 }
 
-// PROVEN: 870122ab IDENTICAL/IDENTICAL
 // OFFSET: 0x004CF190/0x14010B3A0
 int32_t ClientServices::CharacterValidateDeclension(const char* name, const char* declension) {
     return ValidateCharacterNameDeclension(s_locale, name, declension) + 89;
@@ -620,7 +604,6 @@ int32_t ClientConnection::PollStatus(WOWCS_OPS& op, const char** text, int32_t& 
     return this->m_statusComplete;
 }
 
-// PROVEN: d9556f85 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D0690/0x14010CE30
 void ClientServices::Destroy() {
     ClientServices::m_selectRealmInfoValid = false;
@@ -909,7 +892,6 @@ char* ClientServices::GetClientStamp() {
     return s_clientStamp;
 }
 
-// PROVEN: 3330ddca IDENTICAL/IDENTICAL
 // OFFSET: 0x004D0CB0/0x14010D820
 void ClientServices::LoginServerStatus(LOGIN_STATE state, LOGIN_RESULT result, const char* addressString, const char* stateString, const char* resultString, uint16_t flags) {
     CGlueMgr::SetLoginStateAndResult(state, result, addressString, stateString, resultString, flags);
@@ -983,7 +965,6 @@ void ClientServices::GetRealmList() {
     }
 }
 
-// PROVEN: e2864986 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CFD00/0x14010C120
 void ClientConnection::Complete(int32_t result, int32_t errorCode) {
     if (this->m_cleanup) {
@@ -997,7 +978,6 @@ void ClientConnection::Complete(int32_t result, int32_t errorCode) {
     LogConnectionStatus(this->m_statusOp, errorCode, 0, result);
 }
 
-// PROVEN: 7b30a6c3 IDENTICAL/UNPROVEN
 // OFFSET: 0x004D1930/0x14010E950
 bool ClientServices::GetCdKeys(Grunt::CdKey& cdKey) {
     if (!s_cdKeyLoaded) {
@@ -1046,7 +1026,6 @@ void ClientServices::RealmEnumCallback(uint32_t result) {
     }
 }
 
-// PROVEN: 0c146b87 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CFEA0/0x14010C310
 int32_t ClientConnection::HandleConnect() {
     this->Complete(1, 5);
@@ -1056,7 +1035,6 @@ int32_t ClientConnection::HandleConnect() {
     return this->NetClient::HandleConnect();
 }
 
-// PROVEN: 0e82720a IDENTICAL/IDENTICAL
 // OFFSET: 0x004CFF10/0x14010C390
 int32_t ClientConnection::HandleDisconnect() {
     if (this->m_cleanup) {
@@ -1072,7 +1050,6 @@ int32_t ClientConnection::HandleDisconnect() {
     return this->NetClient::HandleDisconnect();
 }
 
-// PROVEN: 3941ba83 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CFF60/0x14010C3E0
 int32_t ClientConnection::HandleCantConnect() {
     this->Complete(0, 4);
@@ -1133,7 +1110,6 @@ void ClientServices::ConnectToSelectedServer() {
     ClientServices::s_currentConnection->ConnectInternal(ClientServices::m_selectRealmInfo.m_addresses[0], ClientServices::m_selectRealmInfo.m_ports[0]);
 }
 
-// PROVEN: 4b4fa192 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D1D70/0x14010EE30
 bool ClientServices::SelectRealm(const char* realmName) {
     ClientServices::s_realmNameVar->Set(realmName, true, false, false, true);
@@ -1166,13 +1142,11 @@ void ClientConnection::GetCharacterList() {
     }
 }
 
-// PROVEN: 7777b3c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D0670/0x14010CE20
 void ClientRealmResponseAdapter::AddOnListReceived(RealmConnection* connection) {
     FrameScript_SignalEvent(GLUE_EVENT_ADDON_LIST_UPDATE, NULL);
 }
 
-// PROVEN: a4788567 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D09E0/0x14010D260
 void ClientRealmResponseAdapter::HandleAuthResponse(RealmConnection* connection, uint8_t result) {
     ClientConnection* clientConnection = static_cast<ClientConnection*>(connection);
@@ -1190,7 +1164,6 @@ void ClientRealmResponseAdapter::HandleAuthResponse(RealmConnection* connection,
     AccountDataInitialize(1);
 }
 
-// PROVEN: b8d508d9 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D0A60/0x14010D2E0
 void ClientRealmResponseAdapter::CharacterListReceived(RealmConnection* connection, const TSFixedArray<CHARACTER_INFO>& characters, int32_t success) {
     ClientConnection* clientConnection = static_cast<ClientConnection*>(connection);
@@ -1203,37 +1176,31 @@ void ClientRealmResponseAdapter::CharacterListReceived(RealmConnection* connecti
     }
 }
 
-// PROVEN: f56dca74 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CF140/0x14010B350
 int32_t ClientServices::ValidDisconnect(const void* connection) {
     return connection == ClientServices::s_currentConnection;
 }
 
-// PROVEN: 289643e8 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CF1B0/0x14010B3C0
 const char* ClientServices::GetAccountName() {
     return ClientServices::s_accountName[0] ? ClientServices::s_accountName : NULL;
 }
 
-// PROVEN: 57d2151f IDENTICAL/DIFFERENT
 // OFFSET: 0x004D08F0/0x14010D110
 void ClientServices::SetAccountName(const char* accountName) {
     SStrCopy(ClientServices::s_accountName, accountName, sizeof(ClientServices::s_accountName));
 }
 
-// PROVEN: 617c03e3 IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF1D0/0x14010B3E0
 void ClientServices::SetCharacterInfo(const CHARACTER_INFO* info) {
     memcpy(&ClientServices::s_characterInfo, info, sizeof(ClientServices::s_characterInfo));
 }
 
-// PROVEN: 0dc508ae IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF1F0/0x14010B400
 CHARACTER_INFO* ClientServices::GetCharacterInfo() {
     return &ClientServices::s_characterInfo;
 }
 
-// PROVEN: 0cc12acb IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF200/0x14010B410
 const char* ClientServices::GetCharacterName() {
     return ClientServices::s_characterInfo.m_name[0] ? ClientServices::s_characterInfo.m_name : NULL;
@@ -1287,7 +1254,6 @@ bool ClientConnection::CharacterLoggingOut() {
     return this->m_loggingOut;
 }
 
-// PROVEN: 64003b7a IDENTICAL/DIFFERENT
 // OFFSET: 0x004D0360/0x14010CA00
 void ClientConnection::CharacterSetInGame(int32_t inGame) {
     this->Complete(1, CHAR_LOGIN_SUCCESS);
@@ -1320,7 +1286,6 @@ void ClientConnection::RequestCharacterDelete(WOWGUID guid) {
     this->Send(&msg, CONNECTION_ROUTED);
 }
 
-// PROVEN: 0fdcb75a DIFFERENT/IDENTICAL
 // OFFSET: 0x004CF260/0x1407D7E80
 void ClientRealmResponseAdapter::GameServerResult(RealmConnection* connection, const char* message1, const char* message2, const char* message3) {
 }
@@ -1329,12 +1294,10 @@ void ClientRealmResponseAdapter::GameServerResult(RealmConnection* connection, c
 void ClientRealmResponseAdapter::LoginServerResult(LOGIN_STATE state, LOGIN_RESULT result, const char* message1, const char* message2, const char* message3) {
 }
 
-// PROVEN: 851669dd IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void ClientRealmResponseAdapter::RealmListReceived(TSFixedArray<REALM_INFO>& realms) {
 }
 
-// PROVEN: af92e680 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void ClientRealmResponseAdapter::MessageReceived(RealmConnection* connection, uint32_t message) {
 }
@@ -1343,50 +1306,41 @@ void ClientRealmResponseAdapter::MessageReceived(RealmConnection* connection, ui
 void ClientRealmResponseAdapter::OnChatReceived(RealmConnection* connection, WOWGUID guid, const char* text, uint8_t type) {
 }
 
-// PROVEN: 01b28e4e DIFFERENT/IDENTICAL
 // OFFSET: 0x004CF260/0x1407D7E80
 void ClientRealmResponseAdapter::OnAccountOnline(RealmConnection* connection, int32_t a2, WOWGUID guid) {
 }
 
-// PROVEN: 93d4ae81 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D0680/0x1407D7E80
 void ClientRealmResponseAdapter::OnAFKMonitorInfoResponse(RealmConnection* connection, WOWGUID guid, int32_t a3, int32_t a4, int32_t a5, int32_t a6) {
 }
 
-// PROVEN: a13283da IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void ClientRealmResponseAdapter::HandleConnect(RealmConnection* connection) {
 }
 
-// PROVEN: be0ed1e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void ClientRealmResponseAdapter::HandleDisconnect(RealmConnection* connection) {
 }
 
-// PROVEN: bbda4733 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void ClientRealmResponseAdapter::HandleCantConnect(RealmConnection* connection) {
 }
 
-// PROVEN: 9c66e800 IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF220/0x14010B430
 uint8_t ClientServices::GetCharacterRace() {
     return ClientServices::s_characterInfo.m_raceID;
 }
 
-// PROVEN: b4b0f750 IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF230/0x14010B440
 uint8_t ClientServices::GetCharacterClass() {
     return ClientServices::s_characterInfo.m_classID;
 }
 
-// PROVEN: 68f06e05 IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF240/0x14010B450
 uint8_t ClientServices::GetCharacterSex() {
     return ClientServices::s_characterInfo.m_sexID;
 }
 
-// PROVEN: 5b5086fc IDENTICAL/IDENTICAL
 // OFFSET: 0x004CE9C0/0x14010A9D0
 void ClientConnection::HandleLogoutAbortAck() {
     if (this->m_loggingOut) {
@@ -1395,7 +1349,6 @@ void ClientConnection::HandleLogoutAbortAck() {
     }
 }
 
-// PROVEN: 52870fef IDENTICAL/IDENTICAL
 // OFFSET: 0x004CF0E0/0x14010B2F0
 const char* ClientServices::GetLoginServer() {
     if (ClientServices::s_loginObj->GetLoginServerType() == 1) {
@@ -1414,7 +1367,6 @@ void ClientConnection::CharacterAbortLogout() {
     this->m_loggingOut = 0;
 }
 
-// PROVEN: 3291e39d IDENTICAL/IDENTICAL
 // OFFSET: 0x004D0BC0/0x14010D620
 void ClientConnection::HandleLogoutComplete() {
     if (this->m_inGame) {
@@ -1497,7 +1449,6 @@ void ClientServices::JoinRealmResult(uint32_t realmId, const REALM_ADDRESS_LIST*
     connection->Cancel(RESPONSE_FAILED_TO_CONNECT);
 }
 
-// PROVEN: 9a0696e0 IDENTICAL/UNPROVEN
 // OFFSET: 0x004CF250/0x14010B460
 uint8_t ClientServices::GetCharacterLevel() {
     return ClientServices::s_characterInfo.m_experienceLevel;
@@ -1531,13 +1482,11 @@ void ClientConnection::CharacterLogout(bool quit, bool instant) {
     this->Send(&msg, CONNECTION_ROUTED);
 }
 
-// PROVEN: e946375b IDENTICAL/IDENTICAL
 // OFFSET: 0x004CF110/0x14010B320
 int32_t ClientServices::LaunchURL(const char* url) {
     return OsLaunchURL(url);
 }
 
-// PROVEN: c5a5b33d IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEB10/0x14010AB40
 void ClientServices::EnterToken(const char* token) {
     if (ClientServices::s_loginObj) {
@@ -1555,7 +1504,6 @@ void ClientConnection::HandleLogoutResponse(int32_t result, int32_t instant) {
     }
 }
 
-// PROVEN: b90a463c IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEA60/0x14010AA80
 void ClientServices::EnterPIN(int32_t count, uint8_t* digits) {
     if (ClientServices::s_loginObj) {
@@ -1563,7 +1511,6 @@ void ClientServices::EnterPIN(int32_t count, uint8_t* digits) {
     }
 }
 
-// PROVEN: d20b75be IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEA90/0x14010AAB0
 void ClientServices::EnterMatrix(uint8_t value) {
     if (ClientServices::s_loginObj) {
@@ -1578,7 +1525,6 @@ void ClientServices::RevertMatrix() {
     }
 }
 
-// PROVEN: 3546dff6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEAD0/0x14010AB00
 void ClientServices::CommitMatrix() {
     if (ClientServices::s_loginObj) {
@@ -1586,7 +1532,6 @@ void ClientServices::CommitMatrix() {
     }
 }
 
-// PROVEN: 6f9702f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEAF0/0x14010AB20
 void ClientServices::FinalizeMatrix() {
     if (ClientServices::s_loginObj) {
@@ -1594,38 +1539,32 @@ void ClientServices::FinalizeMatrix() {
     }
 }
 
-// PROVEN: 662f26bf IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEB30/0x14010AB70
 void ClientServices::FileAccept(bool accept, uint64_t offset) {
     ClientServices::s_loginObj->FileAccept(accept, offset);
     ClientServices::s_newLogin = true;
 }
 
-// PROVEN: 84e50bf5 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEB60/0x14010ABA0
 void ClientServices::StartDownload() {
     ClientServices::s_newLogin = true;
 }
 
-// PROVEN: 73d94135 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEB70/0x14010ABB0
 void ClientServices::SendSurveyData(uint16_t size, uint8_t* data) {
     ClientServices::s_loginObj->SendSurveyData(size, data);
 }
 
-// PROVEN: 6b3c293e IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEB90/0x14010ABD0
 void ClientServices::SendSurveyFailed() {
     ClientServices::s_loginObj->SendSurveyFailed();
 }
 
-// PROVEN: 6a7346fb IDENTICAL/IDENTICAL
 // OFFSET: 0x004CEBA0/0x14010ABF0
 int32_t ClientServices::GetSurveyId() {
     return ClientServices::s_loginObj->GetSurveyId();
 }
 
-// PROVEN: a93e7381 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D0AC0/0x14010D460
 void ClientConnection::HandleCharacterLoginFailed(uint8_t result) {
     if (this->m_inGame) {

@@ -256,7 +256,6 @@ static const uint8_t s_defaultKey[32] = { 0xD7, 0xC8, 0xD9, 0xA0, 0xC8, 0xC5, 0x
 
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
-// PROVEN: f21198e2 DIFFERENT/IDENTICAL
 // OFFSET: 0x00523B40/0x1401720B0
 static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
     if (param) {
@@ -269,7 +268,6 @@ static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
     }
 }
 
-// PROVEN: b83e0506 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523B80/0x1401720F0
 static void MovieSoundKitFinished(SE3SoundKitObject* sko) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(sko->m_playFinishedParam);
@@ -279,7 +277,6 @@ static void MovieSoundKitFinished(SE3SoundKitObject* sko) {
     }
 }
 
-// PROVEN: 0315444d DIFFERENT/IDENTICAL
 // OFFSET: 0x00523BB0/0x140172130
 static void MovieTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
@@ -294,7 +291,6 @@ void CSimpleMovieFrame::operator delete(void* ptr) {
     CSimpleMovieFrame::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 1ea1c914 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523BE0/0x140172160
 FrameScript_Object::ScriptIx* CSimpleMovieFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -319,7 +315,6 @@ FrameScript_Object::ScriptIx* CSimpleMovieFrame::GetScriptByName(const char* nam
     return NULL;
 }
 
-// PROVEN: 93efb220 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523CD0/0x140172210
 void CSimpleMovieFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onMovieFinished, time, count);
@@ -410,7 +405,6 @@ int32_t CSimpleMovieFrame::OpenAudio() {
     return 1;
 }
 
-// PROVEN: b29eb7d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523DB0/0x140172330
 void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     if (CSimpleMovieFrame::s_currentMovieFrame) {
@@ -418,7 +412,6 @@ void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     }
 }
 
-// PROVEN: 98f4c054 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523DD0/0x140172350
 void CSimpleMovieFrame::AudioDeviceChanged_Restart() {
     if (CSimpleMovieFrame::s_currentMovieFrame && CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart) {
@@ -469,13 +462,11 @@ bool CSimpleMovieFrame::DecodeFrame(bool render) {
     return true;
 }
 
-// PROVEN: 555b6dd5 IDENTICAL/NONE
 // OFFSET: 0x00523F90
 bool CSimpleMovieFrame::SubtitlesVisible() {
     return this->m_subtitlesEnabled || !SE3::IsPlaying(this->m_sound);
 }
 
-// PROVEN: 58471d3c IDENTICAL/IDENTICAL
 // OFFSET: 0x00524070/0x140172610
 void CSimpleMovieFrame::RunOnMovieFinishedScript() {
     if (this->HasScript(this->m_onMovieFinished)) {
@@ -483,7 +474,6 @@ void CSimpleMovieFrame::RunOnMovieFinishedScript() {
     }
 }
 
-// PROVEN: 711ac025 IDENTICAL/IDENTICAL
 // OFFSET: 0x005240A0/0x140172650
 void CSimpleMovieFrame::RunOnMovieShowSubtitleScript(const char* text) {
     if (this->HasScript(this->m_onMovieShowSubtitle)) {
@@ -493,7 +483,6 @@ void CSimpleMovieFrame::RunOnMovieShowSubtitleScript(const char* text) {
     }
 }
 
-// PROVEN: 82ad950b IDENTICAL/IDENTICAL
 // OFFSET: 0x005240F0/0x1401726C0
 void CSimpleMovieFrame::RunOnMovieHideSubtitleScript() {
     if (this->HasScript(this->m_onMovieHideSubtitle)) {
@@ -590,25 +579,21 @@ CSimpleMovieFrame::CSimpleMovieFrame(CSimpleFrame* parent) : CSimpleFrame(parent
     }
 }
 
-// PROVEN: bbd5c1ae IDENTICAL/NONE
 // OFFSET: 0x00524710
 const char* CSimpleMovieFrame::GetObjectTypeName() {
     return CSimpleMovieFrame::s_objectTypeName;
 }
 
-// PROVEN: 630c5040 IDENTICAL/IDENTICAL
 // OFFSET: 0x00524720/0x140172F10
 int32_t CSimpleMovieFrame::GetScriptMetaTable() {
     return CSimpleMovieFrame::s_metatable;
 }
 
-// PROVEN: 7184a3e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00524740/0x140172F30
 bool CSimpleMovieFrame::IsA(int32_t type) {
     return type == CSimpleMovieFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 56b800de IDENTICAL/NONE
 // OFFSET: 0x00524780
 bool CSimpleMovieFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMovieFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -691,7 +676,6 @@ int32_t CSimpleMovieFrame::OpenCaptions() {
     return 1;
 }
 
-// PROVEN: ac91373a IDENTICAL/IDENTICAL
 // OFFSET: 0x00524B10/0x140173370
 void CSimpleMovieFrame::CloseCaptions() {
     if (this->m_currentCaption >= 0) {
@@ -706,7 +690,6 @@ void CSimpleMovieFrame::CloseCaptions() {
     this->m_captions.Clear();
 }
 
-// PROVEN: 602601e4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00524BD0/0x140173460
 void CSimpleMovieFrame::Cleanup() {
     SE3::SoundBusMute(SE3BUS_SFX, s_sfxWasMuted);
@@ -727,7 +710,6 @@ void CSimpleMovieFrame::Cleanup() {
     this->m_streamer.Cleanup();
 }
 
-// PROVEN: cc54c1ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00524C60/0x140173520
 void CSimpleMovieFrame::StopMovie() {
     if (this->m_isPlaying) {
@@ -919,7 +901,6 @@ void CSimpleMovieFrame::StartMovieDelayed(bool success) {
     this->RunOnMovieFinishedScript();
 }
 
-// PROVEN: 4d4c54b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00525980/0x140174610
 void CSimpleMovieFrame::KeyChainCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (param) {
@@ -1008,7 +989,6 @@ void CSimpleMovieFrame::RenderMovie(void* param) {
     }
 }
 
-// PROVEN: b044b2b1 IDENTICAL/UNPROVEN
 // OFFSET: 0x00525CC0/0x140174AB0
 void CSimpleMovieFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);

@@ -40,7 +40,6 @@ void Liquid::RendererValidate() {
     s_drawStamp += 2;
 }
 
-// PROVEN: 705f4f0f IDENTICAL/UNPROVEN
 // OFFSET: 0x00B3C260/0x140909180
 void Liquid::SetCamPos(const C3Vector& pos) {
     s_camPos = pos;
@@ -61,7 +60,6 @@ float Liquid::GetClosestReflectionHeight() {
     return 0.0f;
 }
 
-// PROVEN: 3bb558e0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B3C360/0x1409092F0
 int32_t Liquid::CRenderer::CompareOpaque(const void* a, const void* b) {
     const CInstance* l = *static_cast<CInstance* const*>(a);
@@ -110,7 +108,6 @@ int32_t Liquid::CRenderer::CompareOpaque(const void* a, const void* b) {
     return 0;
 }
 
-// PROVEN: 2ebd9172 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B3C3D0/0x140909360
 int32_t Liquid::CRenderer::CompareTransparent(const void* a, const void* b) {
     const CInstance* l = *static_cast<CInstance* const*>(a);
@@ -155,13 +152,11 @@ int32_t Liquid::CRenderer::CompareTransparent(const void* a, const void* b) {
     return r->m_transform.d3 > l->m_transform.d3;
 }
 
-// PROVEN: e1910044 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3C440/0x1409093D0
 int32_t Liquid::HasFakeReflection() {
     return s_renderer->m_instances[0].Count() + s_renderer->m_instances[1].Count() && Liquid::GetWaterDetail();
 }
 
-// PROVEN: e80d4e9e DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3C460/0x140909400
 int32_t Liquid::HasRealReflection() {
     int32_t real = Liquid::GetWaterDetail() >= 3 && Liquid::GetReflectionMode();
@@ -173,12 +168,10 @@ int32_t Liquid::HasRealReflection() {
     return s_reflectionRenderer->m_instances[0].Count() + s_reflectionRenderer->m_instances[1].Count() && real;
 }
 
-// PROVEN: 3d910c8b IDENTICAL/NONE
 // OFFSET: 0x00B3C4B0
 Liquid::CRenderer::~CRenderer() {
 }
 
-// PROVEN: d3bdb673 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3C550/0x140909510
 void Liquid::CRenderer::Draw(CInstance* instance) {
     if (instance->unk_0064 == s_drawStamp) {
@@ -198,7 +191,6 @@ void Liquid::CRenderer::Draw(CInstance* instance) {
     instance->m_material->OnAddToScene();
 }
 
-// PROVEN: 6eb60f5a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3C5C0/0x140909580
 void Liquid::RendererInit() {
     void* mem = SMemAlloc(sizeof(CRenderer), __FILE__, __LINE__, 0);
@@ -241,7 +233,6 @@ void Liquid::RendererDraw(CInstance* instance) {
     s_renderer->Draw(instance);
 }
 
-// PROVEN: 47492e71 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3C750/0x140909740
 void Liquid::RendererDestroy() {
     CRenderer* renderer = s_renderer;
@@ -367,7 +358,6 @@ void Liquid::CRenderer::Flush(uint32_t time, const C3Vector& camPos, uint32_t pa
     }
 }
 
-// PROVEN: dd0bdcfc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3CCC0/0x140909C50
 void Liquid::RendererFlush(uint32_t time, const C3Vector& camPos, uint32_t pass) {
     s_renderer->Flush(time, camPos, pass);

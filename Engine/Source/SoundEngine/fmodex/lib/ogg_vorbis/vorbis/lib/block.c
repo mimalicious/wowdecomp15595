@@ -175,7 +175,6 @@ void _FMOD_vorbis_block_ripcord(vorbis_block *vb){
   vb->reap=NULL;
 }
 
-// PROVEN: 9648aff2 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B44080/0x140912DD0
 int FMOD_vorbis_block_clear(vorbis_block *vb){
   _FMOD_vorbis_block_ripcord(vb);
@@ -289,7 +288,6 @@ static int _vds_shared_init(vorbis_dsp_state *v,vorbis_info *vi,int encp){
 //  return(0);
 //}
 
-// PROVEN: b0c39182 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B44420/0x1409131C0
 void FMOD_vorbis_dsp_clear(vorbis_dsp_state *v){
   int i;
@@ -691,7 +689,6 @@ int FMOD_vorbis_synthesis_restart(vorbis_dsp_state *v){
   return(0);
 }
 
-// PROVEN: 64ccc677 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B44760/0x140913590
 int FMOD_vorbis_synthesis_init(vorbis_dsp_state *v,vorbis_info *vi){
   if(_vds_shared_init(v,vi,0)) return 1;

@@ -44,14 +44,12 @@ TSGrowableArray<CGCurrencyTypes::CurrencyCategoryInfo> CGCurrencyTypes::s_catego
 // STATIC: 0x00F4B968/0x140E3FD9C
 TSGrowableArray<CGCurrencyTypes::CurrencyListInfo> CGCurrencyTypes::s_displayList;
 
-// PROVEN: adb52398 IDENTICAL/IDENTICAL
 // OFFSET: 0x0099F760/0x140723720
 static int32_t DumpCurrencyToChat(const void* data, void* param) {
     CGCurrencyTypes::SendChatCurrency();
     return 1;
 }
 
-// PROVEN: 8a11d2e7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099F770/0x140723740
 int32_t CGCurrencyTypes::CurrencyCategorySortCallback(const void* a, const void* b) {
     const CurrencyCategoryInfo* first = static_cast<const CurrencyCategoryInfo*>(a);
@@ -114,7 +112,6 @@ int32_t CGCurrencyTypes::DisplayListSortCallback(const void* a, const void* b) {
     return SStrSortUTF8I(firstName, secondName, 0x7FFFFFFF);
 }
 
-// PROVEN: ade193f8 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099FAB0/0x140723C30
 CGCurrencyTypes::CurrencyListInfo* CGCurrencyTypes::GetDisplayListInfo(uint32_t index) {
     if (index < CGCurrencyTypes::s_displayList.Count()) {
@@ -124,7 +121,6 @@ CGCurrencyTypes::CurrencyListInfo* CGCurrencyTypes::GetDisplayListInfo(uint32_t 
     return NULL;
 }
 
-// PROVEN: 16268b59 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099FAD0/0x140723C50
 void CGCurrencyTypes::SetCategoryExpand(uint32_t index, int32_t expand) {
     if (index >= CGCurrencyTypes::s_displayList.Count() || !CGCurrencyTypes::s_displayList[index].m_isHeader) {
@@ -139,7 +135,6 @@ void CGCurrencyTypes::SetCategoryExpand(uint32_t index, int32_t expand) {
     }
 }
 
-// PROVEN: 17120f34 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099FB30/0x140723CB0
 const CurrencyTypesRec* CGCurrencyTypes::GetCurrencyRec(uint32_t index) {
     if (index >= CGCurrencyTypes::s_displayList.Count()) {
@@ -353,7 +348,6 @@ bool CGCurrencyTypes::HasCurrencyFlags(int32_t id, uint32_t flag) {
     return (flag & currency->m_flags) != 0;
 }
 
-// PROVEN: 2d132bf2 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A04E0/0x1407248A0
 void CGCurrencyTypes::EnterWorld() {
     CGCurrencyTypes::BuildDisplayList();
@@ -396,7 +390,6 @@ const CurrencyTypesRec* CGCurrencyTypes::GetBackpackCurrencyInfo(int32_t index) 
     return NULL;
 }
 
-// PROVEN: fe3740d7 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A05D0/0x1407249F0
 void CGCurrencyTypes::SetUnused(uint32_t index, int32_t unused) {
     if (index >= CGCurrencyTypes::s_displayList.Count() || CGCurrencyTypes::s_displayList[index].m_isHeader) {
@@ -410,7 +403,6 @@ void CGCurrencyTypes::SetUnused(uint32_t index, int32_t unused) {
     }
 }
 
-// PROVEN: 60009b7b IDENTICAL/DIFFERENT
 // OFFSET: 0x009A0610/0x140724A50
 int32_t CGCurrencyTypes::IsCurrencyUnused(uint32_t index) {
     if (index >= CGCurrencyTypes::s_displayList.Count()) {
@@ -430,7 +422,6 @@ int32_t CGCurrencyTypes::IsCurrencyUnused(uint32_t index) {
     return CGCurrencyTypes::HasCurrencyFlags(rec->m_id, 0x8);
 }
 
-// PROVEN: f40f2703 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A0680/0x140724B10
 void CGCurrencyTypes::SetBackpack(uint32_t index, int32_t backpack) {
     if (index >= CGCurrencyTypes::s_displayList.Count() || CGCurrencyTypes::s_displayList[index].m_isHeader) {
@@ -468,7 +459,6 @@ void CGCurrencyTypes::SendChatCurrency() {
     s_dumpTimer = 0;
 }
 
-// PROVEN: 5947a32e IDENTICAL/DIFFERENT
 // OFFSET: 0x009A0CB0/0x140725290
 PlayerCurrency* CGCurrencyTypes::CreateCurrency(int32_t id, int32_t quantity, int32_t weeklyQuantity, int32_t weeklyCap, int32_t trackedQuantity, uint32_t flags) {
     PlayerCurrency* currency = CGCurrencyTypes::s_currencies.NewNode(2, 0, 0);

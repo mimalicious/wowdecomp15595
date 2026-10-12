@@ -8,20 +8,17 @@ void BaseDestroyContext() {
     HandleDestroy();
 }
 
-// PROVEN: 307ef98b IDENTICAL/IDENTICAL
 // OFFSET: 0x00871FD0/0x1405A82D0
 void BaseDestroyGlobal() {
     PropDestroy();
     CStringManager::DestroyManager();
 }
 
-// PROVEN: 8e59252c IDENTICAL/DIFFERENT
 // OFFSET: 0x00871FE0/0x140581DE0
 void BaseInitializeContext() {
     HandleInitialize();
 }
 
-// PROVEN: b5e0be3a IDENTICAL/IDENTICAL
 // OFFSET: 0x00871FC0/0x1405A82C0
 void BaseInitializeGlobal() {
     PropInitialize();

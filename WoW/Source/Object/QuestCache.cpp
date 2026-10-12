@@ -97,7 +97,6 @@ QuestCache::QuestCache() {
     this->m_soundTurnIn = 0;
 }
 
-// PROVEN: 9c0c0b16 IDENTICAL/DIFFERENT
 // OFFSET: 0x0049B500/0x1400C72C0
 QuestCache& QuestCache::operator=(const QuestCache& source) {
     this->m_id = source.m_id;
@@ -205,7 +204,6 @@ QuestCache& QuestCache::operator=(const QuestCache& source) {
     return *this;
 }
 
-// PROVEN: 7e8b7f15 IDENTICAL/DIFFERENT
 // OFFSET: 0x004EAF00/0x14012DF40
 void QuestCache::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));
@@ -328,7 +326,6 @@ void QuestCache::Pack(CDataStore* msg) {
     msg->Put(this->m_soundTurnIn);
 }
 
-// PROVEN: 0b09a536 IDENTICAL/DIFFERENT
 // OFFSET: 0x004EB380/0x14012E3E0
 void QuestCache::Unpack(CDataStore* msg) {
     msg->Get(reinterpret_cast<uint32_t&>(this->m_id));

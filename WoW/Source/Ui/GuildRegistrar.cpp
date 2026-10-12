@@ -17,7 +17,6 @@ WOWGUID CGGuildRegistrar::m_registrar;
 // STATIC: 0x00F763D0/0x140E6C2DC
 GuildPetitionInfo CGGuildRegistrar::m_petition;
 
-// PROVEN: afa1f090 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EB550/0x14077D4D0
 void CGGuildRegistrar::EnterWorld() {
     CGGuildRegistrar::m_petition.m_index = 0;
@@ -42,7 +41,6 @@ void CGGuildRegistrar::SetRegistrar(WOWGUID registrar, const GuildPetitionInfo* 
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_SHOW, NULL);
 }
 
-// PROVEN: b2419c04 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EB610/0x14077D6D0
 void CGGuildRegistrar::CloseRegistrar() {
     if (!CGGuildRegistrar::m_registrar) {
@@ -54,7 +52,6 @@ void CGGuildRegistrar::CloseRegistrar() {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_CLOSED, NULL);
 }
 
-// PROVEN: 60b1028f IDENTICAL/IDENTICAL
 // OFFSET: 0x009EB650/0x14077D5A0
 int32_t CGGuildRegistrar::ValidateAndReportGuildName(const char* name) {
     int32_t error = ValidateGuildName(s_locale, name);

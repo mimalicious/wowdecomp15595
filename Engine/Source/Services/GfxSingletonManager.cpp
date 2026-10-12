@@ -18,13 +18,11 @@ ParticleSystemManager* ParticleSystemManager::s_instance;
 // STATIC: 0x01008B3C/0x140EE04E8
 RibbonManager* RibbonManager::s_instance;
 
-// PROVEN: 9a00f6d5 IDENTICAL/NONE
 // OFFSET: 0x00B13AD0
 float ParticleSystemManager::GetScaler() {
     return s_scaler;
 }
 
-// PROVEN: 263f2615 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B13B80/0x1408D98D0
 void ParticleSystemManager::SetScaler(float scaler) {
     if (scaler < 0.0f) {
@@ -51,7 +49,6 @@ void ParticleSystemManager::Flush() {
     this->m_pendingEmitters2.m_count = 0;
 }
 
-// PROVEN: 7f3b8824 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B13C60/0x1408D9A10
 CParticleEmitter2* ParticleSystemManager::DuplicateEmitter(const CParticleEmitter2* emitter, int32_t copyParticles) {
     if (!emitter) {
@@ -106,7 +103,6 @@ ParticleSystemManager::~ParticleSystemManager() {
     this->Flush();
 }
 
-// PROVEN: dcce1d29 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B13EA0/0x1408D9BF0
 void ParticleSystemManager::Destroy() {
     if (ParticleSystemManager::s_instance) {

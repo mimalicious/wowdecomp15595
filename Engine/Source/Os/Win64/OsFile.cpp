@@ -8,25 +8,21 @@
 #include "Engine/Source/Os/OsFile.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: b5de032f IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8D40/0x14049EAE0
 bool OsCloseFile(HOSFILE file) {
     return Blizzard::File::Close(reinterpret_cast<Blizzard::File::StreamRecord*>(file));
 }
 
-// PROVEN: 2fecd0d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8D50/0x14049EAF0
 int32_t OsFileExists(const char* fileName) {
     return Blizzard::File::IsFile(fileName) != 0;
 }
 
-// PROVEN: c55b2bfa IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8D70/0x14049EB10
 int32_t OsDirectoryExists(const char* pathName) {
     return Blizzard::File::IsDirectory(pathName) != 0;
 }
 
-// PROVEN: a9ed47d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8D90/0x14049EB30
 int32_t OsReadFile(HOSFILE file, void* buffer, uint32_t bytesToRead, uint32_t* bytesRead) {
     if (!buffer) {
@@ -43,7 +39,6 @@ int32_t OsReadFile(HOSFILE file, void* buffer, uint32_t bytesToRead, uint32_t* b
     return Blizzard::File::Read(reinterpret_cast<Blizzard::File::StreamRecord*>(file), buffer, reinterpret_cast<int32_t*>(bytesRead)) != 0;
 }
 
-// PROVEN: f63b5a33 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8DD0/0x14049EB70
 int32_t OsWriteFile(HOSFILE file, const void* buffer, uint32_t bytesToWrite, uint32_t* bytesWritten) {
     if (!buffer) {
@@ -60,7 +55,6 @@ int32_t OsWriteFile(HOSFILE file, const void* buffer, uint32_t bytesToWrite, uin
     return Blizzard::File::Write(reinterpret_cast<Blizzard::File::StreamRecord*>(file), buffer, reinterpret_cast<int32_t*>(bytesWritten)) != 0;
 }
 
-// PROVEN: 1c1b48db DIFFERENT/IDENTICAL
 // OFFSET: 0x007A8E10/0x14049EBB0
 int64_t OsSetFilePointer(HOSFILE file, int64_t distance, uint32_t moveMethod) {
     int32_t whence[] = { 0, 1, 2 };
@@ -77,14 +71,12 @@ int64_t OsSetFilePointer(HOSFILE file, int64_t distance, uint32_t moveMethod) {
     return distance + position;
 }
 
-// PROVEN: 3b7a53d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8EA0/0x14049EC40
 uint64_t OsGetFileSize(HOSFILE file) {
     Blizzard::File::FileInfo* info = Blizzard::File::GetFileInfo(reinterpret_cast<Blizzard::File::StreamRecord*>(file));
     return !info ? 0xFFFFFFFF : info->m_size;
 }
 
-// PROVEN: d47165be IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8ED0/0x14049EC70
 uint64_t OsGetFileSize(const char* fileName) {
     Blizzard::File::FileInfo info;
@@ -96,13 +88,11 @@ uint64_t OsGetFileSize(const char* fileName) {
     return 0xFFFFFFFF;
 }
 
-// PROVEN: abf4fa49 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8F00/0x14049ECA0
 int32_t OsSetEndOfFile(HOSFILE file) {
     return Blizzard::File::SetEOF(reinterpret_cast<Blizzard::File::StreamRecord*>(file), 0, 1) != 0;
 }
 
-// PROVEN: 1d127c33 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8F20/0x14049ECC0
 uint32_t OsGetFileAttributes(const char* fileName) {
     if (!fileName) {
@@ -118,7 +108,6 @@ uint32_t OsGetFileAttributes(const char* fileName) {
     return info.m_attributes;
 }
 
-// PROVEN: 4df40135 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8F60/0x1404A2930
 int32_t OsSetFileAttributes(const char* fileName, uint32_t attributes) {
     if (!fileName) {
@@ -129,7 +118,6 @@ int32_t OsSetFileAttributes(const char* fileName, uint32_t attributes) {
     return Blizzard::File::SetAttributes(fileName, attributes) != 0;
 }
 
-// PROVEN: c9df3ac1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8F90/0x14049ED00
 int32_t OsMoveFile(const char* existingFileName, const char* newFileName) {
     if (!existingFileName) {
@@ -145,7 +133,6 @@ int32_t OsMoveFile(const char* existingFileName, const char* newFileName) {
     return Blizzard::File::Move(existingFileName, newFileName) != 0;
 }
 
-// PROVEN: 52de0b8d IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8FD0/0x14049ED40
 int32_t OsCopyFile(const char* existingFileName, const char* newFileName, int32_t failIfExists) {
     if (!existingFileName) {
@@ -161,7 +148,6 @@ int32_t OsCopyFile(const char* existingFileName, const char* newFileName, int32_
     return Blizzard::File::Copy(existingFileName, newFileName, failIfExists == 0) != 0;
 }
 
-// PROVEN: 61dac228 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9010/0x14049ED80
 int32_t OsDeleteFile(const char* fileName) {
     if (!fileName) {
@@ -172,7 +158,6 @@ int32_t OsDeleteFile(const char* fileName) {
     return Blizzard::File::Delete(fileName) != 0;
 }
 
-// PROVEN: 61066313 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9040/0x14049EDB0
 int32_t OsCreateDirectory(const char* pathName, int32_t recursive) {
     if (!pathName) {
@@ -183,7 +168,6 @@ int32_t OsCreateDirectory(const char* pathName, int32_t recursive) {
     return Blizzard::File::CreateDirectory(pathName, recursive != 0) != 0;
 }
 
-// PROVEN: b55c5738 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9080/0x14049EDF0
 int32_t OsRemoveDirectory(const char* pathName) {
     if (!pathName) {
@@ -194,7 +178,6 @@ int32_t OsRemoveDirectory(const char* pathName) {
     return Blizzard::File::RemoveDirectory(pathName) != 0;
 }
 
-// PROVEN: c1b268a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A90B0/0x14049EE20
 int32_t OsRemoveDirectoryRecurse(const char* pathName, uint32_t flags) {
     if (!pathName) {
@@ -205,7 +188,6 @@ int32_t OsRemoveDirectoryRecurse(const char* pathName, uint32_t flags) {
     return Blizzard::File::RemoveDirectoryAndContents(pathName, (flags & 0x1) != 0) != 0;
 }
 
-// PROVEN: 697341bb IDENTICAL/IDENTICAL
 // OFFSET: 0x007A90F0/0x14049EE50
 int32_t OsSetCurrentDirectory(const char* path) {
     if (!path) {
@@ -216,7 +198,6 @@ int32_t OsSetCurrentDirectory(const char* path) {
     return Blizzard::File::SetWorkingDirectory(path) != 0;
 }
 
-// PROVEN: 715367bd IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9120/0x14049EE80
 int32_t OsGetCurrentDirectory(uint32_t bufferSize, char* buffer) {
     if (!buffer) {
@@ -227,7 +208,6 @@ int32_t OsGetCurrentDirectory(uint32_t bufferSize, char* buffer) {
     return Blizzard::File::GetWorkingDirectory(buffer, bufferSize) != 0;
 }
 
-// PROVEN: d753dbb6 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9150/0x14049EEC0
 bool OsFileList_Internal::Callback(const Blizzard::File::ProcessDirParms& parms) {
     bool result = true;
@@ -267,7 +247,6 @@ bool OsFileList_Internal::Callback(const Blizzard::File::ProcessDirParms& parms)
     return result;
 }
 
-// PROVEN: 6dbab928 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9230/0x14049EFA0
 uint32_t GetFileMode(uint32_t desiredAccess, uint32_t shareMode, uint32_t createDisposition) {
     uint32_t mode = 0;
@@ -313,13 +292,11 @@ uint32_t GetFileMode(uint32_t desiredAccess, uint32_t shareMode, uint32_t create
     return mode;
 }
 
-// PROVEN: 8a1fe467 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A92B0/0x14049F000
 int32_t OsFileSetSparse(HOSFILE file, int32_t sparse) {
     return Blizzard::File::SetSparse(reinterpret_cast<Blizzard::File::StreamRecord*>(file), sparse != 0) != 0;
 }
 
-// PROVEN: 95667a9b IDENTICAL/IDENTICAL
 // OFFSET: 0x007A92E0/0x14049F020
 int32_t OsFileSupportsSparse() {
     char path[260];
@@ -329,7 +306,6 @@ int32_t OsFileSupportsSparse() {
     return Blizzard::File::SupportsSparse(root);
 }
 
-// PROVEN: 8d0dbaf9 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9320/0x14049F070
 char* OsFileGetDownloadFolder() {
     static char s_downloadfolder[260];
@@ -341,7 +317,6 @@ char* OsFileGetDownloadFolder() {
     return s_downloadfolder;
 }
 
-// PROVEN: 4c5423e2 DIFFERENT/IDENTICAL
 // OFFSET: 0x007A9350/0x14049F0B0
 HOSFILE OsCreateFile(const char* fileName, uint32_t desiredAccess, uint32_t shareMode, uint32_t createDisposition, uint32_t flagsAndAttributes, uint32_t extendedFileType) {
     if (!fileName || !desiredAccess || createDisposition < CREATE_NEW || createDisposition > TRUNCATE_EXISTING) {
@@ -361,7 +336,6 @@ HOSFILE OsCreateFile(const char* fileName, uint32_t desiredAccess, uint32_t shar
     return reinterpret_cast<HOSFILE>(file);
 }
 
-// PROVEN: bddbed91 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A93C0/0x14049F130
 int32_t OsFileList(const char* dir, const char* pattern, OsFileListCallback callback, void* param, int32_t includeHidden) {
     char relative[260];

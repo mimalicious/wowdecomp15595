@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[19] = { 0, 2, 0, 0, 0, 0, 3, 3, 3, 3, 0, 3, 0,
 // STATIC: 0x00C27E64/0x140A1E4E0
 const DBCMeta LiquidTypeRec::s_meta = { "DBFilesClient\\LiquidType.dbc", 19, 180, LiquidTypeRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: f49f4a46 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B730/0x1407E8560
 void LiquidTypeRec::FixupStrings(void* record, const char* strings) {
     LiquidTypeRec* rec = static_cast<LiquidTypeRec*>(record);

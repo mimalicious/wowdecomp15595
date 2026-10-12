@@ -102,7 +102,6 @@ METHODDEF(void) finish_pass_gather_phuff JPP((j_compress_ptr cinfo));
  * Initialize for a Huffman-compressed scan using progressive JPEG.
  */
 
-// PROVEN: 3dd4da78 IDENTICAL/NONE
 // OFFSET: 0x00B62650/0x14092C240
 static void start_pass_phuff(j_compress_ptr cinfo, boolean gather_statistics) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
@@ -761,7 +760,6 @@ static void finish_pass_phuff(j_compress_ptr cinfo) {
  * Finish up a statistics-gathering pass and create the new Huffman tables.
  */
 
-// PROVEN: a180db03 IDENTICAL/NONE
 // OFFSET: 0x00B62570/0x14092C140
 static void finish_pass_gather_phuff(j_compress_ptr cinfo) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
@@ -812,7 +810,6 @@ static void finish_pass_gather_phuff(j_compress_ptr cinfo) {
  * Module initialization routine for progressive Huffman entropy encoding.
  */
 
-// PROVEN: 306368a4 IDENTICAL/NONE
 // OFFSET: 0x00B627E0/0x14092C420
 void jinit_phuff_encoder(j_compress_ptr cinfo) {
   phuff_entropy_ptr entropy;

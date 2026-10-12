@@ -106,58 +106,49 @@ static TSGrowableArray<AmbFlavorListHead> s_ambienceFlavors;
 // STATIC: 0x00E28728
 static int32_t s_phaseShiftInside;
 
-// PROVEN: 8e3b4799 IDENTICAL/DIFFERENT
 // OFFSET: 0x0062CD10/0x1402C0710
 bool SI3::IsIntroZoneSoundType(int32_t type) {
     return type == SI3ZONESOUNDTYPE_4 || type == SI3ZONESOUNDTYPE_6 || type == SI3ZONESOUNDTYPE_5 || type == SI3ZONESOUNDTYPE_7 || type == SI3ZONESOUNDTYPE_11 || type == SI3ZONESOUNDTYPE_12;
 }
 
-// PROVEN: 57437432 IDENTICAL/DIFFERENT
 // OFFSET: 0x0062CD40/0x1402C0740
 bool SI3::IsUnderwaterZoneSoundType(int32_t type) {
     return type == SI3ZONESOUNDTYPE_9 || type == SI3ZONESOUNDTYPE_10 || type == SI3ZONESOUNDTYPE_11 || type == SI3ZONESOUNDTYPE_12;
 }
 
-// PROVEN: 159a1522 IDENTICAL/NONE
 // OFFSET: 0x0062CD70
 bool SI3::IsZoneMusicZoneSoundType(uint32_t type) {
     return type == SI3ZONESOUNDTYPE_0 || type == SI3ZONESOUNDTYPE_1 || type == SI3ZONESOUNDTYPE_2 || type == SI3ZONESOUNDTYPE_3;
 }
 
-// PROVEN: 205c03cd IDENTICAL/UNPROVEN
 // OFFSET: 0x0062CDA0/0x1402C0760
 void SI3::SetWeatherKitID(int32_t soundKitID) {
     SI3::sm_aZoneSoundInfo[SI3ZONESOUNDTYPE_8].m_ambienceKitID[0] = soundKitID;
     SI3::sm_aZoneSoundInfo[SI3ZONESOUNDTYPE_8].m_ambienceKitID[1] = soundKitID;
 }
 
-// PROVEN: 99da92b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062CDC0/0x1402C0770
 static int32_t CompareSoundEmitters(const void* a, const void* b) {
     return static_cast<const SoundEmittersRec*>(a)->m_mapID - static_cast<const SoundEmittersRec*>(b)->m_mapID;
 }
 
-// PROVEN: 9f8f4130 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062CDE0/0x1402C0780
 void SI3::SetPlayerInside(bool inside) {
     SI3::sm_bPlayerIsIndoors = inside;
 }
 
-// PROVEN: c7cb4d4d IDENTICAL/UNPROVEN
 // OFFSET: 0x0062CDF0/0x1402C0790
 void SI3::SetZoneReverb(int32_t type, int32_t reverb) {
     SI3::sm_aZoneSoundInfo[type].m_reverb = reverb;
     SI3::UpdateReverb();
 }
 
-// PROVEN: 1886a8c9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0062CE10/0x1402C07B0
 void SI3::SetZoneUnderwaterReverb(int32_t reverb) {
     SI3::sm_aZoneSoundInfo[SI3ZONESOUNDTYPE_9].m_reverb = reverb;
     SI3::UpdateReverb();
 }
 
-// PROVEN: 840f9c1e IDENTICAL/NONE
 // OFFSET: 0x0062CE30
 int32_t CZoneSoundManager::Play(int32_t soundKitID, int32_t type, SE3SoundKitProperties* properties) {
     int32_t result = SE3::PlaySoundKit(soundKitID, NULL, properties, &this->m_handle, __FILE__, __LINE__, "ZoneSoundManager", 1, NULL);
@@ -170,7 +161,6 @@ int32_t CZoneSoundManager::Play(int32_t soundKitID, int32_t type, SE3SoundKitPro
     return result;
 }
 
-// PROVEN: 1da25354 IDENTICAL/UNPROVEN
 // OFFSET: 0x0062CE80/0x1402C07C0
 void SI3::SetUnderwaterStatus(int32_t underwater) {
     SI3::sm_bCameraIsUnderwater_ChangedThisFrame = underwater != SI3::sm_bCameraIsUnderwater;
@@ -178,13 +168,11 @@ void SI3::SetUnderwaterStatus(int32_t underwater) {
     SI3::ReverbUnderwaterChanged();
 }
 
-// PROVEN: c44a512d IDENTICAL/IDENTICAL
 // OFFSET: 0x0062CEB0/0x1402C07E0
 int32_t SI3::IsUnderwater() {
     return SI3::sm_bCameraIsUnderwater;
 }
 
-// PROVEN: 44a230e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062CEC0/0x1402C07F0
 void SI3::StopLuaMusic() {
     SE3::StopSound(s_luaMusic, 500, __FILE__, __LINE__, "SI3::StopLuaMusic");
@@ -437,7 +425,6 @@ void SI3::ZoneMusicFinished(SE3SoundKitObject* sko) {
     SI3::sm_uNextZoneMusicPlayTime = now + delay;
 }
 
-// PROVEN: 670317cd IDENTICAL/DIFFERENT
 // OFFSET: 0x0062D630/0x1402C10C0
 void SI3::StopZoneAmbience() {
     SI3::sm_ZoneAmbience.Stop();
@@ -519,7 +506,6 @@ void SI3::SetZoneMusicID(int32_t type, int32_t zoneMusicID) {
     }
 }
 
-// PROVEN: 4342e8c1 IDENTICAL/NONE
 // OFFSET: 0x0062D870/0x1402C13B0
 void SI3::SetScreenEffect(int32_t soundAmbienceID, int32_t zoneMusicID) {
     SI3::SetZoneAmbienceID(SI3ZONESOUNDTYPE_15, soundAmbienceID);
@@ -752,7 +738,6 @@ int32_t SI3::GetWorldStateZoneSoundOverride(int32_t areaID, int32_t zoneID, int3
     return 0;
 }
 
-// PROVEN: 7e270ab3 IDENTICAL/UNPROVEN
 // OFFSET: 0x0062E060/0x1402C1F70
 void SI3::AIMusicFinished(SE3SoundKitObject* sko) {
     if (sko && sko->m_pSoundKitDef && sko->m_pSoundKitDef->m_pSoundKitRec && sko->m_pSoundKitDef->m_pSoundKitRec->m_id != SI3::sm_aZoneSoundInfo[SI3ZONESOUNDTYPE_13].m_soundKitID[0]) {
@@ -875,7 +860,6 @@ void SI3::InitZoneIntros() {
     }
 }
 
-// PROVEN: 3d60c503 IDENTICAL/DIFFERENT
 // OFFSET: 0x0062E3D0/0x1402C2380
 void SI3::StopAllMusic() {
     SI3::sm_ZoneMusic.Stop();
@@ -939,13 +923,11 @@ void SI3::InitWorldStateZoneSoundOverrides() {
     }
 }
 
-// PROVEN: 776291af IDENTICAL/UNPROVEN
 // OFFSET: 0x0062E750/0x1402C2810
 void SI3::FreeZoneIntros() {
     SI3::sm_aIntroMusicNextValidPlayTime.Clear();
 }
 
-// PROVEN: ca6e363a IDENTICAL/UNPROVEN
 // OFFSET: 0x0062E7A0/0x1402C2860
 void SI3::FreeWorldStateZoneSoundOverrides() {
     for (uint32_t i = 0; i < SI3::sm_WorldStateZoneSoundOverridesArray.Count(); i++) {
@@ -973,7 +955,6 @@ int32_t SI3::GetZoneSoundOverride(int32_t mapID, int32_t areaX, int32_t areaY, i
     return 1;
 }
 
-// PROVEN: 620ba03e IDENTICAL/DIFFERENT
 // OFFSET: 0x0062E890/0x1402C2910
 void SI3::OverrideZoneSounds() {
     int32_t mapID;
@@ -1023,7 +1004,6 @@ void SI3::OverrideZoneSounds() {
     s_overrideChunkY = chunkY;
 }
 
-// PROVEN: f9e63ac5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0062E9B0/0x1402C2B80
 void SI3::FreeZoneSoundOverrides() {
     SI3::sm_ZoneSoundOverridesHashTable.Clear();
@@ -1038,7 +1018,6 @@ void SI3::ShutDownAmbienceFlavor() {
     }
 }
 
-// PROVEN: fb4cd3ab IDENTICAL/UNPROVEN
 // OFFSET: 0x0062ED50/0x1402C3100
 void SI3::FreePhaseShiftZoneSoundOverrides() {
     for (uint32_t i = 0; i < SI3::sm_PhaseShiftZoneSoundOverridesArray.Count(); i++) {
@@ -1152,7 +1131,6 @@ static int32_t ZoneSoundsUpdate(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 6056d7c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062F790/0x1402C3F50
 void SI3::InitZoneSoundsHandler() {
     EventRegister(EVENT_ID_IDLE, ZoneSoundsUpdate);

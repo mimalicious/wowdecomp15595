@@ -274,31 +274,26 @@ CSimpleFrame::~CSimpleFrame() {
     CSimpleFrame::s_frameCount--;
 }
 
-// PROVEN: 7167ddb4 IDENTICAL/IDENTICAL
 // OFFSET: 0x004694D0/0x14007D6E0
 bool CSimpleFrame::IsA(int32_t type) {
     return type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 5e83dbf6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00469500/0x1401712D0
 bool CSimpleFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleFrame::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: 88105321 IDENTICAL/IDENTICAL
 // OFFSET: 0x00506120/0x14014CEE0
 const char* CSimpleFrame::GetObjectTypeName() {
     return CSimpleFrame::s_objectTypeName;
 }
 
-// PROVEN: f9cb8c7f IDENTICAL/IDENTICAL
 // OFFSET: 0x00506130/0x14014CEF0
 int32_t CSimpleFrame::GetScriptMetaTable() {
     return CSimpleFrame::s_metatable;
 }
 
-// PROVEN: 41141b61 IDENTICAL/IDENTICAL
 // OFFSET: 0x00501D20/0x1401479A0
 FrameScript_Object::ScriptIx* CSimpleFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = FrameScript_Object::GetScriptByName(name, data);
@@ -407,13 +402,11 @@ FrameScript_Object::ScriptIx* CSimpleFrame::GetScriptByName(const char* name, Fr
 }
 
 
-// PROVEN: 12f982a1 IDENTICAL/NONE
 // OFFSET: 0x004F8970
 uint8_t CSimpleFrame::GetEffectiveAlpha() {
     return this->m_alpha * this->m_parentAlpha / 255;
 }
 
-// PROVEN: 8330e518 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502290/0x140147CF0
 void CSimpleFrame::SetFrameFlag(uint32_t flag, int32_t set) {
     if (set) {
@@ -423,25 +416,21 @@ void CSimpleFrame::SetFrameFlag(uint32_t flag, int32_t set) {
     }
 }
 
-// PROVEN: e79ef268 IDENTICAL/IDENTICAL
 // OFFSET: 0x005022C0/0x140147D10
 void CSimpleFrame::Raise() {
     this->m_simpleTop->RaiseFrame(this, 1);
 }
 
-// PROVEN: 4b152c86 IDENTICAL/IDENTICAL
 // OFFSET: 0x005022D0/0x140147D30
 int32_t CSimpleFrame::Lower() {
     return this->m_simpleTop->LowerFrame(this);
 }
 
-// PROVEN: 648274f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005022E0/0x140147D40
 int32_t CSimpleFrame::DragBy(float offsetX, float offsetY, FRAMEPOINT point) {
     return CLayoutFrame::DragBy(this->m_simpleTop, offsetX, offsetY, point);
 }
 
-// PROVEN: 54410507 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502310/0x140147D70
 void CSimpleFrame::PropagateProtectFlagToParent(uint32_t flag) {
     if (this->m_parent) {
@@ -449,7 +438,6 @@ void CSimpleFrame::PropagateProtectFlagToParent(uint32_t flag) {
     }
 }
 
-// PROVEN: c963bbce IDENTICAL/IDENTICAL
 // OFFSET: 0x00502380/0x140147DE0
 void CSimpleFrame::SetFrameAlpha(uint8_t alpha) {
     if (alpha != this->m_alpha) {
@@ -458,7 +446,6 @@ void CSimpleFrame::SetFrameAlpha(uint8_t alpha) {
     }
 }
 
-// PROVEN: 6d03452e IDENTICAL/IDENTICAL
 // OFFSET: 0x00502400/0x140147E40
 void CSimpleFrame::RegisterForEvents(int32_t a2) {
     for (uint32_t i = 0; i < NUM_SIMPLE_EVENTS; i++) {
@@ -468,7 +455,6 @@ void CSimpleFrame::RegisterForEvents(int32_t a2) {
     }
 }
 
-// PROVEN: dd4bb26e IDENTICAL/IDENTICAL
 // OFFSET: 0x00502440/0x140147EB0
 void CSimpleFrame::UnregisterForEvents(int32_t a2) {
     for (uint32_t i = 0; i < NUM_SIMPLE_EVENTS; i++) {
@@ -478,7 +464,6 @@ void CSimpleFrame::UnregisterForEvents(int32_t a2) {
     }
 }
 
-// PROVEN: b842938f IDENTICAL/IDENTICAL
 // OFFSET: 0x00502480/0x140147F10
 void CSimpleFrame::GetHitRectInsets(float& left, float& right, float& top, float& bottom) {
     left = this->m_hitRectInsets.minX;
@@ -487,7 +472,6 @@ void CSimpleFrame::GetHitRectInsets(float& left, float& right, float& top, float
     bottom = this->m_hitRectInsets.minY;
 }
 
-// PROVEN: f24e823b IDENTICAL/IDENTICAL
 // OFFSET: 0x005024C0/0x140147F40
 void CSimpleFrame::SetClampRectInsets(float left, float right, float top, float bottom) {
     this->m_clampRectInsets.minX = left;
@@ -496,7 +480,6 @@ void CSimpleFrame::SetClampRectInsets(float left, float right, float top, float 
     this->m_clampRectInsets.minY = bottom;
 }
 
-// PROVEN: ad4021d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502500/0x140147F70
 void CSimpleFrame::GetClampRectInsets(float& left, float& right, float& top, float& bottom) {
     left = this->m_clampRectInsets.minX;
@@ -510,7 +493,6 @@ bool CSimpleFrame::IsDragging() {
     return this->m_isMouseDragging || (this->m_parent && this->m_parent->IsDragging());
 }
 
-// PROVEN: 6126f2c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504A10/0x14014B170
 void CSimpleFrame::PreOnAnimUpdate() {
     if (this->AnimData_HasActiveAlpha()) {
@@ -539,7 +521,6 @@ void CSimpleFrame::PreOnAnimUpdate() {
     }
 }
 
-// PROVEN: 0a6bee8e IDENTICAL/IDENTICAL
 // OFFSET: 0x00503680/0x140149840
 void CSimpleFrame::RunOnAttributeChangedScript(const char* name, int32_t luaRef) {
     if (!this->HasScript(this->m_onAttributeChanged)) {
@@ -570,7 +551,6 @@ void CSimpleFrame::RunOnAttributeChangedScript(const char* name, int32_t luaRef)
     }
 }
 
-// PROVEN: f3dfa27e IDENTICAL/DIFFERENT
 // OFFSET: 0x00502570/0x140147FE0
 void CSimpleFrame::AllowAttributeChanges(int32_t allow) {
     if (allow) {
@@ -602,7 +582,6 @@ void CSimpleFrame::RunOnSizeChangedScript(float width, float height) {
     }
 }
 
-// PROVEN: 1816dafe IDENTICAL/IDENTICAL
 // OFFSET: 0x005028F0/0x140148780
 void CSimpleFrame::RunOnEnterScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorEnter)) {
@@ -612,7 +591,6 @@ void CSimpleFrame::RunOnEnterScript(int32_t motion) {
     }
 }
 
-// PROVEN: 55499e11 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502940/0x1401487F0
 void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorExit)) {
@@ -622,7 +600,6 @@ void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
     }
 }
 
-// PROVEN: f096a446 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502990/0x140148860
 void CSimpleFrame::RunOnMouseWheelScript(int32_t delta) {
     if (this->HasScript(this->m_onMouseWheel)) {
@@ -632,7 +609,6 @@ void CSimpleFrame::RunOnMouseWheelScript(int32_t delta) {
     }
 }
 
-// PROVEN: 17241e87 IDENTICAL/IDENTICAL
 // OFFSET: 0x005029E0/0x1401488D0
 void CSimpleFrame::RunOnCharScript(const char* text) {
     if (this->HasScript(this->m_onChar)) {
@@ -642,7 +618,6 @@ void CSimpleFrame::RunOnCharScript(const char* text) {
     }
 }
 
-// PROVEN: 2a038d3e IDENTICAL/IDENTICAL
 // OFFSET: 0x00502A30/0x140148940
 void CSimpleFrame::RunOnKeyDownScript(const char* key) {
     if (this->HasScript(this->m_onKeyDown)) {
@@ -652,7 +627,6 @@ void CSimpleFrame::RunOnKeyDownScript(const char* key) {
     }
 }
 
-// PROVEN: dc54f6e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502A80/0x1401489B0
 void CSimpleFrame::RunOnKeyUpScript(const char* key) {
     if (this->HasScript(this->m_onKeyUp)) {
@@ -705,7 +679,6 @@ void CSimpleFrame::NotifyDelayedLoad() {
     }
 }
 
-// PROVEN: 53f175c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502330/0x140147D90
 bool CSimpleFrame::SetFrameScale(float scale, bool force) {
     if ((!force && fabs(scale - this->m_frameScale) < 0.00000023841858f) || scale == 0.0f) {
@@ -716,7 +689,6 @@ bool CSimpleFrame::SetFrameScale(float scale, bool force) {
     return this->UpdateScale(force);
 }
 
-// PROVEN: 941257b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x005023B0/0x140147E00
 bool CSimpleFrame::SetFrameDepth(float depth, bool force) {
     if (!force && fabs(depth - this->m_depth) < 0.00000023841858f) {
@@ -812,7 +784,6 @@ int32_t CSimpleFrame::TestHitRect(const C2Vector& pt) {
     return clip.minX <= pt.x && clip.maxX >= pt.x && clip.minY <= pt.y && clip.maxY >= pt.y;
 }
 
-// PROVEN: a63b17dc IDENTICAL/IDENTICAL
 // OFFSET: 0x00502F50/0x140148FD0
 void CSimpleFrame::SetHitRectInsets(float left, float right, float top, float bottom) {
     this->m_hitRectInsets.minX = left;
@@ -915,13 +886,11 @@ void CSimpleFrame::OnFrameSizeChanged(const CRect& rect) {
     this->m_simpleTop->NotifyFrameMovedOrResized(this);
 }
 
-// PROVEN: b5db8ef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CSimpleFrame::OnLayerIme(const CImeEvent& evt) {
     return 0;
 }
 
-// PROVEN: 08408449 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CSimpleFrame::OnLayerKeyDownRepeat(const CKeyEvent& evt) {
     return 0;
@@ -988,7 +957,6 @@ int32_t CSimpleFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) 
     return 0;
 }
 
-// PROVEN: 67a4f9c1 DIFFERENT/IDENTICAL
 // OFFSET: 0x00503480/0x1401495B0
 int32_t CSimpleFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     if (!btn) {
@@ -1053,7 +1021,6 @@ void CSimpleFrame::OnDragStart(const CMouseEvent& evt) {
     }
 }
 
-// PROVEN: 75fdaf5b IDENTICAL/IDENTICAL
 // OFFSET: 0x00503620/0x1401497C0
 void CSimpleFrame::OnDragStop(const CMouseEvent& evt) {
     if (this->HasScript(this->m_onDragStop)) {
@@ -1061,7 +1028,6 @@ void CSimpleFrame::OnDragStop(const CMouseEvent& evt) {
     }
 }
 
-// PROVEN: 8b0c6d16 IDENTICAL/IDENTICAL
 // OFFSET: 0x00503650/0x140149800
 void CSimpleFrame::OnReceiveDrag(const CMouseEvent& evt) {
     if (this->HasScript(this->m_onReceiveDrag)) {
@@ -1129,7 +1095,6 @@ void CSimpleFrame::NotifyDrawLayerChanged(uint32_t drawLayer) {
     this->NotifyScrollParent();
 }
 
-// PROVEN: ae008c32 IDENTICAL/DIFFERENT
 // OFFSET: 0x005039C0/0x140149CA0
 void CSimpleFrame::OnLayerShow() {
     if (this->HasScript(this->m_onShow) && !this->m_isLoading) {
@@ -1139,7 +1104,6 @@ void CSimpleFrame::OnLayerShow() {
     this->NotifyScrollParent();
 }
 
-// PROVEN: ac25ec01 IDENTICAL/DIFFERENT
 // OFFSET: 0x00503A00/0x140149D40
 void CSimpleFrame::OnLayerHide() {
     if (this->HasScript(this->m_onHide) && !this->m_isLoading) {
@@ -1149,7 +1113,6 @@ void CSimpleFrame::OnLayerHide() {
     this->NotifyScrollParent();
 }
 
-// PROVEN: d496d9cb IDENTICAL/DIFFERENT
 // OFFSET: 0x00503A40/0x140149DE0
 void CSimpleFrame::OnFrameSizeChanged(float width, float height) {
     this->RunOnSizeChangedScript(width, height);
@@ -1239,14 +1202,12 @@ void CSimpleFrame::SetBackdrop(CBackdropGenerator* backdrop) {
     this->m_backdropGenerator = backdrop;
 }
 
-// PROVEN: 8b299b45 IDENTICAL/IDENTICAL
 // OFFSET: 0x005040A0/0x14014A600
 void CSimpleFrame::EnableDrawLayer(uint32_t drawLayer) {
     this->m_drawLayerEnabled |= 1 << drawLayer;
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// PROVEN: 3697ac9a IDENTICAL/IDENTICAL
 // OFFSET: 0x005040E0/0x14014A640
 void CSimpleFrame::DisableDrawLayer(uint32_t drawLayer) {
     this->m_drawLayerEnabled &= ~(1 << drawLayer);
@@ -1275,7 +1236,6 @@ void CSimpleFrame::UnregisterRegion(CSimpleRegion* region) {
     this->m_regions.UnlinkNode(region);
 }
 
-// PROVEN: 8f8d358a IDENTICAL/DIFFERENT
 // OFFSET: 0x005054B0/0x14014BE80
 void CSimpleFrame::AddFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     region->SetLayoutScale(this->m_layoutScale, false);
@@ -1283,14 +1243,12 @@ void CSimpleFrame::AddFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// PROVEN: 5baef935 IDENTICAL/DIFFERENT
 // OFFSET: 0x00504150/0x14014A6F0
 void CSimpleFrame::RemoveFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     this->m_drawLayers[drawLayer].UnlinkNode(region);
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// PROVEN: fcbe4345 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504FB0/0x14014B890
 void CSimpleFrame::OnLayerUpdate(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
@@ -1320,7 +1278,6 @@ void CSimpleFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// PROVEN: d01bb310 IDENTICAL/IDENTICAL
 // OFFSET: 0x00505260/0x14014BC30
 void CSimpleFrame::OnScreenSizeChanged() {
     for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
@@ -1329,7 +1286,6 @@ void CSimpleFrame::OnScreenSizeChanged() {
     }
 }
 
-// PROVEN: a6958dfb IDENTICAL/IDENTICAL
 // OFFSET: 0x005052A0/0x14014BC80
 void CSimpleFrame::OnLayerCursorEnter(int32_t a2) {
     if (this->m_hoverFrame) {
@@ -1344,7 +1300,6 @@ void CSimpleFrame::OnLayerCursorEnter(int32_t a2) {
     this->RunOnEnterScript(a2);
 }
 
-// PROVEN: 75014645 IDENTICAL/IDENTICAL
 // OFFSET: 0x00505320/0x14014BD20
 void CSimpleFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     if (this->m_hoverFrame) {
@@ -1364,7 +1319,6 @@ void CSimpleFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     this->RunOnLeaveScript(a2);
 }
 
-// PROVEN: 7611dd38 IDENTICAL/IDENTICAL
 // OFFSET: 0x005053B0/0x14014BDD0
 void CSimpleFrame::LockHighlight(int32_t lock) {
     if (lock == this->m_highlightLocked) {
@@ -1382,14 +1336,12 @@ void CSimpleFrame::LockHighlight(int32_t lock) {
     }
 }
 
-// PROVEN: f73d6996 IDENTICAL/DIFFERENT
 // OFFSET: 0x005058F0/0x14014C430
 void CSimpleFrame::ParentFrame(CSimpleFrame* child) {
     SIMPLEFRAMENODE* node = this->m_children.NewNode(2, 0, 0);
     node->m_frame = child;
 }
 
-// PROVEN: e2c67e18 IDENTICAL/IDENTICAL
 // OFFSET: 0x00503B10/0x140149F10
 void CSimpleFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onEvent, time, count);
@@ -1586,7 +1538,6 @@ void CSimpleFrame::SetParent(CSimpleFrame* parent) {
     }
 }
 
-// PROVEN: b081319b IDENTICAL/IDENTICAL
 // OFFSET: 0x005041C0/0x14014A770
 int32_t CSimpleFrame::AreChildrenProtected(int32_t& deferred) {
     for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
@@ -1642,7 +1593,6 @@ bool CSimpleFrame::GetBoundsRect(CRect& rect) {
     return rect.maxY > rect.minY && rect.maxX > rect.minX;
 }
 
-// PROVEN: 605b64c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504400/0x14014AA00
 bool CSimpleFrame::UpdateScale(bool force) {
     float scale = this->m_frameScale;
@@ -1670,7 +1620,6 @@ bool CSimpleFrame::UpdateScale(bool force) {
     return true;
 }
 
-// PROVEN: ac34c512 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504500/0x14014AB10
 void CSimpleFrame::UpdateAlpha() {
     for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
@@ -1778,7 +1727,6 @@ void CSimpleFrame::ShowThis(bool loadPending) {
     this->OnLayerShow();
 }
 
-// PROVEN: 9981fbcb IDENTICAL/IDENTICAL
 // OFFSET: 0x00504AB0/0x14014B220
 void CSimpleFrame::StopAnimating() {
     CScriptRegion::StopAnimating();
@@ -1794,7 +1742,6 @@ void CSimpleFrame::StopAnimating() {
     }
 }
 
-// PROVEN: b864c45b IDENTICAL/DIFFERENT
 // OFFSET: 0x00504B30/0x14014B2B0
 void CSimpleFrame::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
@@ -1822,7 +1769,6 @@ void CSimpleFrame::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t
     }
 }
 
-// PROVEN: db146ffa IDENTICAL/IDENTICAL
 // OFFSET: 0x00504C00/0x14014B3B0
 void CSimpleFrame::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (alpha) {
@@ -1857,7 +1803,6 @@ void CSimpleFrame::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32
     }
 }
 
-// PROVEN: 7e98ed5e IDENTICAL/IDENTICAL
 // OFFSET: 0x00504CD0/0x14014B4C0
 void CSimpleFrame::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
     if (!region || region == this) {
@@ -1875,7 +1820,6 @@ void CSimpleFrame::AddAnimTranslation(CScriptRegion* region, const C2Vector& tra
     }
 }
 
-// PROVEN: 3a87e348 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504D60/0x14014B580
 void CSimpleFrame::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     if (!region || region == this) {
@@ -1893,7 +1837,6 @@ void CSimpleFrame::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, con
     }
 }
 
-// PROVEN: 45486cf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504E10/0x14014B670
 void CSimpleFrame::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     if (!region || region == this) {
@@ -2286,7 +2229,6 @@ void CSimpleFrame::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 17362775 IDENTICAL/DIFFERENT
 // OFFSET: 0x00502830/0x140147970
 void CSimpleFrame::SetTitleRegion(CScriptRegion* region) {
     this->m_titleRegion = region;
@@ -2381,7 +2323,6 @@ void CSimpleFrame::MarkDirty() {
     }
 }
 
-// PROVEN: 05100265 IDENTICAL/IDENTICAL
 // OFFSET: 0x0046A7C0/0x14007ED40
 int32_t CSimpleFrame::IsObjectLoaded() {
     for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {

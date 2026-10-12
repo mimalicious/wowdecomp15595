@@ -1,7 +1,6 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// PROVEN: 697ef5ac IDENTICAL/NONE
 // OFFSET: 0x00B14340
 CRect::CRect(const C2Vector& v) {
     this->minY = v.y;
@@ -40,7 +39,6 @@ CRect operator/(const CRect& l, const CRect& r) {
     return result;
 }
 
-// PROVEN: d95b3d05 IDENTICAL/IDENTICAL
 // OFFSET: 0x00828420/0x140546270
 bool operator!=(const CRect& l, const CRect& r) {
     return l.minY != r.minY || l.minX != r.minX || l.maxY != r.maxY || l.maxX != r.maxX;

@@ -28,26 +28,22 @@ struct ViewSettingsFog {
 // STATIC: 0x00F80408
 static ViewSettingsFog s_fog[4];
 
-// PROVEN: 0448e23d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30110/0x1407D9FF0
 void ViewSettings::SetZNearFar(float zNear, float zFar) {
     s_zNear = zNear;
     s_zFar = zFar;
 }
 
-// PROVEN: bb1e15d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30130/0x1407DA010
 void ViewSettings::SetViewportFarClip(float farClip) {
     s_viewportFarClip = farClip;
 }
 
-// PROVEN: 888189fe IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30150/0x1407DA020
 void ViewSettings::SetSubmerged(int32_t submerged) {
     s_submerged = submerged;
 }
 
-// PROVEN: b2b601e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30160/0x1407DA030
 int32_t ViewSettings::GetSubmerged() {
     return s_submerged;
@@ -74,7 +70,6 @@ void ViewSettings::SetViewExtents(const CAaRect& extents) {
     s_viewExtents = extents;
 }
 
-// PROVEN: 6c7ea212 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A301A0/0x1407DA070
 C4Vector ViewSettings::CalculateParams() {
     C4Vector params;

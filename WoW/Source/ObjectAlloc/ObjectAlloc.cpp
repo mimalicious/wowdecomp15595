@@ -214,7 +214,6 @@ void* ObjectPtr(uint32_t heapId, uint32_t memHandle) {
     return ptr;
 }
 
-// PROVEN: 1840dc8c DIFFERENT/IDENTICAL
 // OFFSET: 0x00486AC0/0x1400A7A90
 void CObjectHeapList::Delete(uint32_t index) {
     uint32_t heapIndex = index / this->m_objsPerBlock;
@@ -263,7 +262,6 @@ static void HeapUse() {
     s_globalsLock.Leave();
 }
 
-// PROVEN: 06f4e206 IDENTICAL/UNPROVEN
 // OFFSET: 0x00486D40/0x1400A7D90
 void ObjectFree(uint32_t heapId, uint32_t memHandle, void* object, const char* file, int32_t line) {
     s_globalsLock.Enter();
@@ -343,7 +341,6 @@ int32_t ObjectAlloc(uint32_t heapId, uint32_t* memHandle, void** objectPtr, bool
     return 0;
 }
 
-// PROVEN: bae5ef52 IDENTICAL/UNPROVEN
 // OFFSET: 0x00487110/0x1400A8420
 void ObjectAllocDestroy() {
     HeapUse();

@@ -26,18 +26,15 @@ bool (*ClientConnectionDropNewConnection::s_handler)(ClientConnectionDropNewConn
 // STATIC: 0x00E4D854/0x140D36A78
 bool (*ClientConnectionConnectTo::s_handler)(ClientConnectionConnectTo* msg);
 
-// PROVEN: 2a30dabb IDENTICAL/DIFFERENT
 // OFFSET: 0x006964B0/0x14033F820
 ClientConnectionAuthChallenge::ClientConnectionAuthChallenge(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: f581d7f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00694900/0x14033F7A0
 ClientConnectionAuthChallenge::~ClientConnectionAuthChallenge() {
 }
 
-// PROVEN: 92547180 IDENTICAL/IDENTICAL
 // OFFSET: 0x00694BC0/0x14033FB90
 void ClientConnectionAuthChallenge::Unpack(CDataStore* msg, bool full) {
     for (uint32_t i = 0; i < 8; i++) {
@@ -59,13 +56,11 @@ void ClientConnectionAuthChallenge::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 7204f30c IDENTICAL/NONE
 // OFFSET: 0x006964F0
 bool ClientConnectionAuthChallenge::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 0bc30a6c DIFFERENT/IDENTICAL
 // OFFSET: 0x00694C80/0x14033FC90
 bool ClientConnectionAuthChallenge::Read(CDataStore* msg, bool full) {
     for (uint32_t i = 0; i < 8; i++) {
@@ -89,7 +84,6 @@ bool ClientConnectionAuthChallenge::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: 6840c443 IDENTICAL/DIFFERENT
 // OFFSET: 0x00694D90/0x14033FC30
 bool ClientConnectionAuthChallenge::Handle() {
     if (ClientConnectionAuthChallenge::s_handler) {
@@ -101,18 +95,15 @@ bool ClientConnectionAuthChallenge::Handle() {
     return false;
 }
 
-// PROVEN: 13fc2c7d IDENTICAL/DIFFERENT
 // OFFSET: 0x00694D00/0x14036ACB0
 ClientConnectionConnectTo::ClientConnectionConnectTo(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: f0b86afe IDENTICAL/UNPROVEN
 // OFFSET: 0x00694920/0x14033F780
 ClientConnectionConnectTo::~ClientConnectionConnectTo() {
 }
 
-// PROVEN: ed937980 IDENTICAL/IDENTICAL
 // OFFSET: 0x00694AF0/0x14033FA70
 void ClientConnectionConnectTo::Unpack(CDataStore* msg, bool full) {
     {
@@ -140,13 +131,11 @@ void ClientConnectionConnectTo::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: f8e8594a IDENTICAL/IDENTICAL
 // OFFSET: 0x00694AE0/0x140363360
 bool ClientConnectionConnectTo::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 3f8dc78a IDENTICAL/IDENTICAL
 // OFFSET: 0x00694A50/0x14033F990
 bool ClientConnectionConnectTo::Read(CDataStore* msg, bool full) {
     {
@@ -176,7 +165,6 @@ bool ClientConnectionConnectTo::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: cde029c5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00694E20/0x14033FE90
 void ClientConnectPayload::Get(CDataStore* msg, bool full) {
     uint8_t value = 0;
@@ -1708,7 +1696,6 @@ void ClientConnectPayload::Get(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: feb93af3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00694A00/0x14033FE30
 bool ClientConnectionConnectTo::Handle() {
     if (ClientConnectionConnectTo::s_handler) {
@@ -1730,12 +1717,10 @@ ClientConnectionPong::ClientConnectionPong(NetClient* netClient, WowConnection* 
     this->m_serial = serial;
 }
 
-// PROVEN: 4de97fa3 IDENTICAL/UNPROVEN
 // OFFSET: 0x00694910/0x14033F7B0
 ClientConnectionPong::~ClientConnectionPong() {
 }
 
-// PROVEN: be4720ba IDENTICAL/NONE
 // OFFSET: 0x00694B80
 bool ClientConnectionPong::Get(CDataStore* msg, bool full) {
     uint32_t serial = 0;
@@ -1746,7 +1731,6 @@ bool ClientConnectionPong::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: 00e0edc4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00694C30/0x14033FD70
 bool ClientConnectionPong::Handle() {
     if (ClientConnectionPong::s_handler) {
@@ -1768,12 +1752,10 @@ ClientConnectionSuspendComms::ClientConnectionSuspendComms(NetClient* netClient,
     this->m_serial = serial;
 }
 
-// PROVEN: f23a8ac7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00694910/0x14033F7B0
 ClientConnectionSuspendComms::~ClientConnectionSuspendComms() {
 }
 
-// PROVEN: d0e626a0 IDENTICAL/NONE
 // OFFSET: 0x00694B80
 bool ClientConnectionSuspendComms::Get(CDataStore* msg, bool full) {
     uint32_t serial = 0;
@@ -1784,7 +1766,6 @@ bool ClientConnectionSuspendComms::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: b3130309 IDENTICAL/DIFFERENT
 // OFFSET: 0x00694930/0x14033F930
 bool ClientConnectionSuspendComms::Handle() {
     if (ClientConnectionSuspendComms::s_handler) {
@@ -1796,23 +1777,19 @@ bool ClientConnectionSuspendComms::Handle() {
     return false;
 }
 
-// PROVEN: 3b318ae9 IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionResumeComms::ClientConnectionResumeComms(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: bdba72f0 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionResumeComms::~ClientConnectionResumeComms() {
 }
 
-// PROVEN: e8fe07cb IDENTICAL/IDENTICAL
 // OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionResumeComms::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: 26cc65bc IDENTICAL/DIFFERENT
 // OFFSET: 0x00694980/0x14033FDD0
 bool ClientConnectionResumeComms::Handle() {
     if (ClientConnectionResumeComms::s_handler) {
@@ -1824,23 +1801,19 @@ bool ClientConnectionResumeComms::Handle() {
     return false;
 }
 
-// PROVEN: f623d0ae IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionResetCompressionContext::ClientConnectionResetCompressionContext(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: 162fb9ed IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionResetCompressionContext::~ClientConnectionResetCompressionContext() {
 }
 
-// PROVEN: 71bff20b IDENTICAL/IDENTICAL
 // OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionResetCompressionContext::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: 1cbe5843 IDENTICAL/DIFFERENT
 // OFFSET: 0x006949C0/0x14033F7C0
 bool ClientConnectionResetCompressionContext::Handle() {
     if (ClientConnectionResetCompressionContext::s_handler) {
@@ -1852,23 +1825,19 @@ bool ClientConnectionResetCompressionContext::Handle() {
     return false;
 }
 
-// PROVEN: 6f10a356 IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionDropNewConnection::ClientConnectionDropNewConnection(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: 265d5f07 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionDropNewConnection::~ClientConnectionDropNewConnection() {
 }
 
-// PROVEN: 3d0ceb3e IDENTICAL/IDENTICAL
 // OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionDropNewConnection::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: 95137c9d IDENTICAL/DIFFERENT
 // OFFSET: 0x00694DE0/0x14033F8D0
 bool ClientConnectionDropNewConnection::Handle() {
     if (ClientConnectionDropNewConnection::s_handler) {
@@ -1880,23 +1849,19 @@ bool ClientConnectionDropNewConnection::Handle() {
     return false;
 }
 
-// PROVEN: 7d8ac1df IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionNoop::ClientConnectionNoop(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: a5e67d61 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionNoop::~ClientConnectionNoop() {
 }
 
-// PROVEN: 704133ec IDENTICAL/IDENTICAL
 // OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionNoop::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// PROVEN: 37285460 IDENTICAL/DIFFERENT
 // OFFSET: 0x00694D40/0x14033F870
 bool ClientConnectionNoop::Handle() {
     if (ClientConnectionNoop::s_handler) {
@@ -1908,18 +1873,15 @@ bool ClientConnectionNoop::Handle() {
     return false;
 }
 
-// PROVEN: 8516bb88 IDENTICAL/DIFFERENT
 // OFFSET: 0x0066A970/0x1403177D0
 UserRouterClientPing::UserRouterClientPing() {
     this->m_present = 0;
 }
 
-// PROVEN: 2b8c4c5a IDENTICAL/NONE
 // OFFSET: 0x0066A3D0
 UserRouterClientPing::~UserRouterClientPing() {
 }
 
-// PROVEN: 85a8ce9e IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A910/0x140317770
 void UserRouterClientPing::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x444D));
@@ -1934,81 +1896,67 @@ UserRouterClientLogDisconnect::UserRouterClientLogDisconnect(uint32_t reason) {
     this->m_reason = reason;
 }
 
-// PROVEN: c87ae8cb IDENTICAL/NONE
 // OFFSET: 0x0066A3E0
 UserRouterClientLogDisconnect::~UserRouterClientLogDisconnect() {
 }
 
-// PROVEN: f5d00f5a IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A9E0/0x140317840
 void UserRouterClientLogDisconnect::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x446D));
     msg->Put(this->m_reason);
 }
 
-// PROVEN: cf5255e8 IDENTICAL/NONE
 // OFFSET: 0x0066AA10
 UserRouterClientSuspendCommsAck::UserRouterClientSuspendCommsAck() {
     this->m_present = 0;
 }
 
-// PROVEN: 27b4d448 IDENTICAL/NONE
 // OFFSET: 0x0066A3F0
 UserRouterClientSuspendCommsAck::~UserRouterClientSuspendCommsAck() {
 }
 
-// PROVEN: 1408bd2d IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A990/0x1403177F0
 void UserRouterClientSuspendCommsAck::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x4469));
     msg->Put(this->m_serial);
 }
 
-// PROVEN: c72426c1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0066A950/0x1403177B0
 UserRouterClientSuspendTokenResponse::UserRouterClientSuspendTokenResponse() {
     this->m_present = 0;
 }
 
-// PROVEN: 43d88893 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A400/0x140317560
 UserRouterClientSuspendTokenResponse::~UserRouterClientSuspendTokenResponse() {
 }
 
-// PROVEN: a1d353e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A7A0/0x1403175E0
 void UserRouterClientSuspendTokenResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x46D));
     msg->Put(this->m_token);
 }
 
-// PROVEN: 57cf04cd IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A760/0x140317590
 UserRouterClientEnableNagle::UserRouterClientEnableNagle() {
 }
 
-// PROVEN: 74bf4a09 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A410/0x140317570
 UserRouterClientEnableNagle::~UserRouterClientEnableNagle() {
 }
 
-// PROVEN: 8c55ffb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A9C0/0x140317830
 void UserRouterClientEnableNagle::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x4449));
 }
 
-// PROVEN: eedd4fd9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A900/0x140317750
 UserRouterClientAuthContinuedSession::UserRouterClientAuthContinuedSession() {
 }
 
-// PROVEN: b3c07a7c IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A420/0x140317580
 UserRouterClientAuthContinuedSession::~UserRouterClientAuthContinuedSession() {
 }
 
-// PROVEN: f746efcf IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A7D0/0x140317620
 void UserRouterClientAuthContinuedSession::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x44D));
@@ -2044,7 +1992,6 @@ UserRouterClientAuthSession::UserRouterClientAuthSession() {
 UserRouterClientAuthSession::~UserRouterClientAuthSession() {
 }
 
-// PROVEN: 21e06934 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066AF90/0x140317990
 void UserRouterClientAuthSession::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x449));
@@ -2088,17 +2035,14 @@ void UserRouterClientAuthSession::Put(CDataStore* msg) {
     msg->PutData(this->m_account, strlen(this->m_account));
 }
 
-// PROVEN: 24b5eaf7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DE80/0x140315070
 UserClientConnectToFailed::UserClientConnectToFailed() {
 }
 
-// PROVEN: f332452c IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BBA0/0x1403123A0
 UserClientConnectToFailed::~UserClientConnectToFailed() {
 }
 
-// PROVEN: 65f06b2d IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E520/0x140315740
 void UserClientConnectToFailed::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2533));

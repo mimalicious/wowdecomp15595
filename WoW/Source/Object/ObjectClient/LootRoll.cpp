@@ -164,7 +164,6 @@ void LootRollShowPending() {
     }
 }
 
-// PROVEN: 840baf62 IDENTICAL/DIFFERENT
 // OFFSET: 0x0057B620/0x1401E1140
 static void AllPassedStats(const ItemRecSparse* rec, PendingLootRoll* roll) {
     const char* link = CGTooltip::GetItemHyperlinkString(roll->m_itemId, rec->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0);

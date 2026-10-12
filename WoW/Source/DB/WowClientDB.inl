@@ -55,7 +55,6 @@ int32_t WowClientDB<T>::GetRecordByIndex(int32_t index, void* rec) const {
     return 1;
 }
 
-// PROVEN: 423e017b IDENTICAL/IDENTICAL
 // OFFSET: [0x00A06F50/0x14090B320, 0x00A06F50/0x14090B320<CreatureModelDataRec>]
 template <class T>
 T* WowClientDB<T>::GetRecord(int32_t id) const {
@@ -66,7 +65,6 @@ T* WowClientDB<T>::GetRecord(int32_t id) const {
     return reinterpret_cast<T*>(this->m_recordsById[id - this->m_minID]);
 }
 
-// PROVEN: 7c539688 IDENTICAL/NONE
 // OFFSET: [0x00465E00<ScalingStatValuesRec>, 0x004977F0<BattlemasterListRec>, 0x00497840<GameTipsRec>, 0x00466030<Achievement_CriteriaRec>, 0x0048A9B0<AreaTableRec>, 0x00497860<CinematicCameraRec>, 0x00497890<AchievementRec>, 0x00465DC0<AreaTriggerRec>, 0x00465DE0<CreatureDisplayInfoExtraRec>, 0x00497820<AnimKitConfigRec>]
 template <class T>
 T* WowClientDB<T>::GetRecordByIndex(int32_t index) const {
@@ -77,7 +75,6 @@ T* WowClientDB<T>::GetRecordByIndex(int32_t index) const {
     return reinterpret_cast<T*>(&this->m_records[sizeof(T) * index]);
 }
 
-// PROVEN: 9e93d92a IDENTICAL/NONE
 // OFFSET: [0x00497C00/0x1400BDED0<ItemDisplayInfoRec>]
 template <class T>
 int32_t WowClientDB_RLE<T>::GetRecordByIndex(int32_t index, void* rec) const {
@@ -106,7 +103,6 @@ int32_t WowClientDB_RLE<T>::GetRecordByIndex(int32_t index, T* rec) const {
     return 1;
 }
 
-// PROVEN: 0ea2e991 IDENTICAL/NONE
 // OFFSET: [0x00554B30<ItemDisplayInfoRec>]
 template <class T>
 int32_t WowClientDB_RLE<T>::GetRecord(int32_t id, T* rec) const {

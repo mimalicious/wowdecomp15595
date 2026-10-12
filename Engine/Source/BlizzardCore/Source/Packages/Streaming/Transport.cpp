@@ -30,20 +30,17 @@ int32_t System_File::Stacked::count_retry;
 
 static Blizzard::Thread::LocalObject<std::string> s_transportBuffer;
 
-// PROVEN: c7bea0fc IDENTICAL/IDENTICAL
 // OFFSET: 0x007ABA80/0x1404A1AD0
 int32_t Blizzard::Streaming::Transport::TransportHttpCallback::GetTimeout() {
     return this->m_timeout;
 }
 
-// PROVEN: 02a25635 IDENTICAL/NONE
 // OFFSET: 0x007ABA90
 void Blizzard::Streaming::Transport::TransportHttpCallback::SetByteRange(int64_t start, int64_t end) {
     this->m_rangeStart = start;
     this->m_rangeEnd = end;
 }
 
-// PROVEN: d4f1202e IDENTICAL/IDENTICAL
 // OFFSET: 0x007ABAB0/0x1404A1AE0
 void Blizzard::Streaming::Transport::TransportHttpCallback::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
@@ -178,7 +175,6 @@ Blizzard::Streaming::Transport::TransportHttpCallback::~TransportHttpCallback() 
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
-// PROVEN: 9e670bcf IDENTICAL/IDENTICAL
 // OFFSET: 0x007C3680/0x1404BDD00
 Blizzard::URL::DownloadCallback::ByteRange Blizzard::Streaming::Transport::TransportHttpCallback::GetByteRange() {
     ByteRange range;
@@ -187,7 +183,6 @@ Blizzard::URL::DownloadCallback::ByteRange Blizzard::Streaming::Transport::Trans
     return range;
 }
 
-// PROVEN: a221b672 IDENTICAL/IDENTICAL
 // OFFSET: 0x007C36B0/0x1404BDD30
 bool Blizzard::Streaming::Transport::TransportHttpCallback::Stop() {
     return this->m_stop;
@@ -234,7 +229,6 @@ Blizzard::Streaming::Transport::Config* Blizzard::Streaming::Transport::GetConfi
     return &s_config;
 }
 
-// PROVEN: f9861b54 IDENTICAL/NONE
 // OFFSET: 0x007C7AC0
 bool Blizzard::Streaming::Transport::TransportHttpCallback::ShouldBlock() {
     return GetConfig()->m_shouldBlock;

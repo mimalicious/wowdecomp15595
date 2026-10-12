@@ -141,42 +141,35 @@ ComSat::Sound::CODEC::~CODEC() {
 ComSat::Sound::CODEC::CODEC(ComSat::Allocator& allocator) : m_allocator(&allocator) {
 }
 
-// PROVEN: c10502f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool ComSat::Sound::CODEC::Init() {
     return true;
 }
 
-// PROVEN: be321a10 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool ComSat::Sound::CODEC::Reset() {
     return true;
 }
 
-// PROVEN: c46dc152 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ComSat::Sound::CODEC::Shutdown() {
 }
 
-// PROVEN: e94cd971 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool ComSat::Sound::CODEC::CanBitpackFrames() {
     return true;
 }
 
-// PROVEN: 54a73a9e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool ComSat::Sound::CODEC::IsEncodedBitrateVariable() {
     return true;
 }
 
-// PROVEN: 3d548fe8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39FF0/0x14090ED00
 uint32_t ComSat::Sound::CODEC::MinimumSafeFramesBetweenResets() {
     return 32;
 }
 
-// PROVEN: a496d725 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3A360/0x1407E6780
 bool ComSat::Sound::CODECIPMR6000::Init() {
     if (this->m_initialized) {
@@ -189,13 +182,11 @@ bool ComSat::Sound::CODECIPMR6000::Init() {
     return true;
 }
 
-// PROVEN: 3100d447 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3A390/0x1404C2CC0
 bool ComSat::Sound::CODECIPMR6000::Reset() {
     return this->Init();
 }
 
-// PROVEN: 61551b6b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3A3A0/0x1407E67A0
 void ComSat::Sound::CODECIPMR6000::GenerateSilence(uint8_t* pcm, uint32_t size) {
     memset(pcm, 0, size);
@@ -282,7 +273,6 @@ bool ComSat::Sound::CODECIPMR6000::InitLocalPlayer(uint8_t player, float thresho
     return true;
 }
 
-// PROVEN: b2f9b90d UNPROVEN/IDENTICAL
 // OFFSET: 0x00A3A910/0x1407E7250
 bool ComSat::Sound::CODECIPMR6000::RemoveLocalPlayer(uint8_t player) {
     if (!this->m_initialized) {
@@ -300,7 +290,6 @@ ComSat::Sound::CODECIPMR6000::~CODECIPMR6000() {
     this->Shutdown();
 }
 
-// PROVEN: 9adda6e6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void ComSat::Sound::CODECIPMR6000::ApplyVoiceEffects(uint8_t player, uint8_t* pcm, uint32_t* size) {
 }

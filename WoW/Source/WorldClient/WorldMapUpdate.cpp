@@ -27,7 +27,6 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// PROVEN: be0f117b IDENTICAL/UNPROVEN
 // OFFSET: 0x007749E0/0x14045E950
 void CWorldMap::UpdateAllEnvironments() {
     for (int32_t i = 0; i < 2; i++) {
@@ -45,7 +44,6 @@ void CWorldMap::UpdateAllEnvironments() {
     }
 }
 
-// PROVEN: b4827ba5 IDENTICAL/NONE
 // OFFSET: 0x00774950
 void CWorldMap::UpdateLowDetailMapObjDefs() {
     for (uint32_t i = 0; i < 12; i++) {

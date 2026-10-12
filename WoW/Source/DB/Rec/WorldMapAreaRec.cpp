@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[14] = { 0, 0, 0, 2, 3, 3, 3, 3, 0, 0, 0, 0, 0,
 // STATIC: 0x00C1F460/0x140A139A0
 const DBCMeta WorldMapAreaRec::s_meta = { "DBFilesClient\\WorldMapArea.dbc", 14, 56, WorldMapAreaRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: ee10d6a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ECE0/0x1407D8380
 void WorldMapAreaRec::FixupStrings(void* record, const char* strings) {
     WorldMapAreaRec* rec = static_cast<WorldMapAreaRec*>(record);

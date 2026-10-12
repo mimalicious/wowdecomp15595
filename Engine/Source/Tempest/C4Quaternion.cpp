@@ -8,7 +8,6 @@
 
 static const uint32_t s_nextAxis[3] = { 1, 2, 0 };
 
-// PROVEN: 64f52896 IDENTICAL/NONE
 // OFFSET: [0x004CBA80/0x140107760<3>, 0x004CBBD0/0x1401078F0<4>]
 template <uint32_t N>
 static void FromRotationMatrixImpl(float trace, C4Quaternion& q, const float* m) {
@@ -45,7 +44,6 @@ static void FromRotationMatrixImpl(float trace, C4Quaternion& q, const float* m)
     out[k] = (m[i * N + k] + m[k * N + i]) * s;
 }
 
-// PROVEN: 8f6cfd43 DIFFERENT/IDENTICAL
 // OFFSET: 0x004CB5A0/0x1401071F0
 C4Quaternion::C4Quaternion(const C4QuaternionCompressed& compressed) {
     this->x = 0.0f;
@@ -61,7 +59,6 @@ C4Quaternion::C4Quaternion(const C4QuaternionCompressed& compressed) {
     this->w = fabs(length - 1.0f) < 0.00000095367432f ? 0.0f : sqrt(1.0f - length);
 }
 
-// PROVEN: 02e1bfb2 DIFFERENT/IDENTICAL
 // OFFSET: 0x004CB6A0/0x1401072A0
 void C4Quaternion::FromAngleAxis(float angle, const C3Vector& axis) {
     float half = angle * 0.5f;
@@ -137,7 +134,6 @@ C4Quaternion C4Quaternion::Nlerp(float t, const C4Quaternion& a, const C4Quatern
     return result;
 }
 
-// PROVEN: c40ecf29 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CBD10/0x140107A90
 void C4Quaternion::FromRotationMatrix(const C33Matrix& m) {
     C33Matrix transposed;
@@ -158,7 +154,6 @@ static void FromTransposedRotationMatrix(C4Quaternion& q, const C44Matrix& trans
     FromRotationMatrixImpl<4>(transposed.c2 + transposed.b1 + transposed.a0, q, &transposed.a0);
 }
 
-// PROVEN: 0de85930 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CBDA0/0x140107B10
 void C4Quaternion::FromRotationMatrix(const C44Matrix& m) {
     FromTransposedRotationMatrix(*this, m.Transpose());

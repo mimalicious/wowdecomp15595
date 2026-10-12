@@ -58,7 +58,6 @@ static int32_t ResolveInventorySlotArg(lua_State* L, int32_t index, int32_t& slo
     return (slot >= 0 && slot <= 22) || (slot >= 39 && slot <= 66) || (slot >= 67 && slot <= 73);
 }
 
-// PROVEN: 48b32302 IDENTICAL/NONE
 // OFFSET: 0x0097BB60
 static int32_t GetUnitAndSlotFromLua(lua_State* L, const char*& unit, int32_t& slot) {
     if (!lua_isstring(L, 1)) {
@@ -126,14 +125,12 @@ static int32_t Script_GetInventoryItemTexture(lua_State* L) {
     return 1;
 }
 
-// PROVEN: cf0242fb IDENTICAL/IDENTICAL
 // OFFSET: 0x0097DCE0/0x1406F7950
 static int32_t Script_UpdateInventoryAlertStatus(lua_State* L) {
     CGCharacterInfo::UpdateInventoryAlerts();
     return 0;
 }
 
-// PROVEN: 76bec5df IDENTICAL/IDENTICAL
 // OFFSET: 0x0097B410/0x1406F4A10
 static int32_t Script_HasInspectHonorData(lua_State* L) {
     if (CGCharacterInfo::m_hasHonorData) {
@@ -145,7 +142,6 @@ static int32_t Script_HasInspectHonorData(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 1763efca IDENTICAL/DIFFERENT
 // OFFSET: 0x0097DCF0/0x1406F7960
 static int32_t Script_OffhandHasWeapon(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -161,7 +157,6 @@ static int32_t Script_OffhandHasWeapon(lua_State* L) {
     return 1;
 }
 
-// PROVEN: b50fce74 IDENTICAL/UNPROVEN
 // OFFSET: 0x0097BFF0/0x1406F5770
 static int32_t Script_GetInventoryAlertStatus(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -175,7 +170,6 @@ static int32_t Script_GetInventoryAlertStatus(lua_State* L) {
     return 1;
 }
 
-// PROVEN: dc6844e7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097DEE0/0x1406F7BB0
 static int32_t Script_HasWandEquipped(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -197,7 +191,6 @@ static int32_t Script_HasWandEquipped(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 2bdbd08f IDENTICAL/IDENTICAL
 // OFFSET: 0x0097B450/0x1406F4A50
 static int32_t Script_GetInspectHonorData(lua_State* L) {
     lua_pushnumber(L, CGCharacterInfo::m_inspectTodayHonorableKills);
@@ -237,7 +230,6 @@ static int32_t Script_GetInventorySlotInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 687d8aa3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097D8C0/0x1406F74D0
 static int32_t Script_IsInventoryItemLocked(lua_State* L) {
     int32_t slot = 0;
@@ -258,7 +250,6 @@ static int32_t Script_IsInventoryItemLocked(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 25999273 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097BCC0/0x1406F52A0
 static int32_t Script_GetInventoryItemCooldown(lua_State* L) {
     const char* unitName;
@@ -362,7 +353,6 @@ static int32_t Script_GetInventoryItemCount(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5ed11f19 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097D7D0/0x1406F7400
 static int32_t Script_PickupInventoryItem(lua_State* L) {
     int32_t slot = 0;
@@ -374,7 +364,6 @@ static int32_t Script_PickupInventoryItem(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9bfc15f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097D9D0/0x1406F75E0
 static int32_t Script_PutItemInBackpack(lua_State* L) {
     if (CGCharacterInfo::PutItemInBackpack(0xFF)) {
@@ -386,7 +375,6 @@ static int32_t Script_PutItemInBackpack(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 85579ff0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097DA60/0x1406F7670
 static int32_t Script_CursorCanGoInSlot(lua_State* L) {
     int32_t slot = 0;
@@ -478,7 +466,6 @@ static int32_t Script_GetGuildInfo(lua_State* L) {
     return 3;
 }
 
-// PROVEN: fbe643c9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097D960/0x1406F7570
 static int32_t Script_PutItemInBag(lua_State* L) {
     int32_t slot = 0;
@@ -496,7 +483,6 @@ static int32_t Script_PutItemInBag(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c935ad5b IDENTICAL/IDENTICAL
 // OFFSET: 0x0097B1F0/0x1406F47F0
 static void InspectArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -504,7 +490,6 @@ static void InspectArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void*
     }
 }
 
-// PROVEN: f2aa132f IDENTICAL/DIFFERENT
 // OFFSET: 0x0097B4F0/0x1406F4AE0
 static int32_t Script_ClearInspectPlayer(lua_State* L) {
     WOWGUID none;
@@ -760,7 +745,6 @@ static int32_t Script_GetInventoryItemsForSlot(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b146aa61 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097EC80/0x1406F8C90
 static int32_t Script_GetInventoryItemQuality(lua_State* L) {
     const char* token;
@@ -829,7 +813,6 @@ static int32_t Script_GetInventoryItemDurability(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 94231ae3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097ED50/0x1406F8E10
 static int32_t Script_GetInventoryItemLink(lua_State* L) {
     const char* token;
@@ -873,7 +856,6 @@ static int32_t Script_GetInventoryItemLink(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d8bede15 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097BDF0/0x1406F54A0
 static int32_t Script_GetInventoryItemID(lua_State* L) {
     const char* token;
@@ -953,7 +935,6 @@ static int32_t Script_GetInventoryItemGems(lua_State* L) {
     return 3;
 }
 
-// PROVEN: 6c54cf38 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097D810/0x1406F7430
 static int32_t Script_UseInventoryItem(lua_State* L) {
     int32_t slot = 0;
@@ -969,7 +950,6 @@ static int32_t Script_UseInventoryItem(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b12ad219 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097D880/0x1406F74A0
 static int32_t Script_SocketInventoryItem(lua_State* L) {
     int32_t slot = 0;
@@ -981,7 +961,6 @@ static int32_t Script_SocketInventoryItem(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 47006e49 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097DA20/0x1406F7630
 static int32_t Script_PickupBagFromSlot(lua_State* L) {
     int32_t slot = 0;
@@ -993,7 +972,6 @@ static int32_t Script_PickupBagFromSlot(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 65a3f47a IDENTICAL/DIFFERENT
 // OFFSET: 0x0097DB00/0x1406F7720
 static int32_t Script_ShowInventorySellCursor(lua_State* L) {
     if (!Spell_C_IsTargeting() && CursorGetResetMode() == 1) {
@@ -1044,7 +1022,6 @@ static int32_t Script_SetInventoryPortraitTexture(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d57e4686 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097C080/0x1406F57F0
 static int32_t Script_RequestInspectHonorData(lua_State* L) {
     CGCharacterInfo::RequestInspectHonorData();
@@ -1075,7 +1052,6 @@ static int32_t Script_GetInspectGuildInfo(lua_State* L) {
     return 4;
 }
 
-// PROVEN: a718e9aa IDENTICAL/IDENTICAL
 // OFFSET: 0x0097EE60/0x1406F8FE0
 static int32_t Script_GetAverageItemLevel(lua_State* L) {
     if (CGCharacterInfo::m_avgItemLevelDirty) {
@@ -1108,7 +1084,6 @@ static int32_t Script_GetAverageItemLevel(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 2490c450 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097B550/0x1406F4B30
 static int32_t Script_GetInspectRatedBGData(lua_State* L) {
     lua_pushnumber(L, CGCharacterInfo::m_inspectRatedBGRating);
@@ -1156,7 +1131,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetInspectRatedBGData", &Script_GetInspectRatedBGData },
 };
 
-// PROVEN: 6f9f0e9d IDENTICAL/UNPROVEN
 // OFFSET: 0x0097B5D0/0x1406F4B90
 void CharacterInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1164,7 +1138,6 @@ void CharacterInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: f1a15843 IDENTICAL/UNPROVEN
 // OFFSET: 0x0097B600/0x1406F4BE0
 void CharacterInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

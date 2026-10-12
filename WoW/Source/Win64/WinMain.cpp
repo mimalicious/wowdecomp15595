@@ -33,7 +33,6 @@ static HICON s_archiveProgressIcon;
 static void InvalidParameterHandler(const wchar_t* expression, const wchar_t* function, const wchar_t* file, unsigned int line, uintptr_t reserved) {
 }
 
-// PROVEN: 5f3f6529 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool ReturnFalse() {
     return false;
@@ -137,7 +136,6 @@ void ArchiveProgressInitialize(int32_t sparse) {
     s_archiveProgressStage = sparse != 0;
 }
 
-// PROVEN: 803eb216 NONE/IDENTICAL
 // OFFSET: 0x004091A0/0x14000B860
 void ArchiveProgressSetStage(uint32_t stage) {
     s_archiveProgressStage = stage;

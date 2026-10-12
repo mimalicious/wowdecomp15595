@@ -46,7 +46,6 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2efca11a IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA0850/0x1408610F0
 PluginFactory::PluginFactory()
 {
@@ -157,7 +156,6 @@ FMOD_RESULT PluginFactory::release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4cc292e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9FFF0/0x140860720
 FMOD_RESULT PluginFactory::setSystem(SystemI *system)  
 { 
@@ -204,7 +202,6 @@ FMOD_RESULT PluginFactory::getSystem(SystemI **system)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bd070f0a IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA0010/0x140860730
 FMOD_RESULT PluginFactory::setPluginPath(const char *path)
 {
@@ -647,7 +644,6 @@ FMOD_RESULT PluginFactory::unloadPlugin(FMOD_PLUGINTYPE plugintype, int handle)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fc3eb8fe IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA0050/0x140860780
 FMOD_RESULT PluginFactory::registerCodec(FMOD_CODEC_DESCRIPTION_EX *description, FMOD_PLUGINTYPE *plugintype, int *handle)
 {
@@ -775,7 +771,6 @@ FMOD_RESULT PluginFactory::registerCodec(FMOD_CODEC_DESCRIPTION *description, FM
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 749bf5f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA0150/0x140860900
 FMOD_RESULT PluginFactory::registerDSP(FMOD_DSP_DESCRIPTION_EX *description, FMOD_PLUGINTYPE *plugintype, int *handle)
 {
@@ -917,7 +912,6 @@ FMOD_RESULT PluginFactory::registerDSP(FMOD_DSP_DESCRIPTION *description, FMOD_P
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ebf5e0b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA0280/0x140860AE0
 FMOD_RESULT PluginFactory::registerOutput(FMOD_OUTPUT_DESCRIPTION_EX *description, FMOD_PLUGINTYPE *plugintype, int *handle)
 {
@@ -1318,7 +1312,6 @@ FMOD_RESULT PluginFactory::getOutput(int handle, FMOD_OUTPUT_DESCRIPTION_EX **ou
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 30da6afb IDENTICAL/UNPROVEN
 // OFFSET: 0x00AA0AC0/0x140861520
 FMOD_RESULT PluginFactory::createCodec(FMOD_CODEC_DESCRIPTION_EX *codecdesc, Codec **codec)
 {
@@ -1556,7 +1549,6 @@ FMOD_RESULT PluginFactory::createDSP(FMOD_DSP_DESCRIPTION_EX *dspdesc, DSPI **ds
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a7f36d40 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AA06E0/0x140860FB0
 FMOD_RESULT PluginFactory::createOutput(FMOD_OUTPUT_DESCRIPTION_EX *outputdesc, Output **output)
 {

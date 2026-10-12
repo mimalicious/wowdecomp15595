@@ -23,7 +23,6 @@
 #include "WoW/Source/Ui/QuestLog.h"
 #include "WoW/Source/Ui/Types.h"
 
-// PROVEN: 5ed35569 IDENTICAL/DIFFERENT
 // OFFSET: 0x00959B70/0x1406CC0F0
 static int32_t Script_GetNumLootItems(lua_State* L) {
     lua_pushnumber(L, CGLootWindow::GetNumLootItems());
@@ -108,7 +107,6 @@ static int32_t Script_LootSlotIsCoin(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d9e7015c IDENTICAL/IDENTICAL
 // OFFSET: 0x00959DC0/0x1406CC320
 static int32_t Script_CloseLoot(lua_State* L) {
     int32_t error = StringToBOOL(L, 1, 0);
@@ -116,7 +114,6 @@ static int32_t Script_CloseLoot(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 004c3d9c IDENTICAL/IDENTICAL
 // OFFSET: 0x00959DF0/0x1406CC350
 static int32_t Script_IsFishingLoot(lua_State* L) {
     if (CGLootInfo::m_lootType == 3) {
@@ -148,7 +145,6 @@ static int32_t Script_GetMasterLootCandidate(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c5196a0b IDENTICAL/DIFFERENT
 // OFFSET: 0x00959EE0/0x1406CC440
 static int32_t Script_GetLootRollTimeLeft(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -169,7 +165,6 @@ static int32_t Script_GetLootRollTimeLeft(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 57a72c39 IDENTICAL/DIFFERENT
 // OFFSET: 0x00959F80/0x1406CC4D0
 static int32_t Script_RollOnLoot(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -183,7 +178,6 @@ static int32_t Script_RollOnLoot(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f5ebf061 IDENTICAL/DIFFERENT
 // OFFSET: 0x00959FF0/0x1406CC550
 static int32_t Script_ConfirmLootRoll(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -197,7 +191,6 @@ static int32_t Script_ConfirmLootRoll(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 002c423f IDENTICAL/DIFFERENT
 // OFFSET: 0x0095A540/0x1406CCBF0
 static int32_t Script_SetLootPortrait(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -214,14 +207,12 @@ static int32_t Script_SetLootPortrait(lua_State* L) {
     return 1;
 }
 
-// PROVEN: f9b15a9a IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A5D0/0x1406CCC90
 static int32_t Script_GetNumMissingLootItems(lua_State* L) {
     lua_pushnumber(L, static_cast<int32_t>(CGLootInfo::m_missingItems.m_count));
     return 1;
 }
 
-// PROVEN: 752e28ce IDENTICAL/DIFFERENT
 // OFFSET: 0x0095A810/0x1406CD000
 static int32_t Script_GiveMasterLoot(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -320,7 +311,6 @@ static int32_t Script_GetLootSlotInfo(lua_State* L) {
     return 8;
 }
 
-// PROVEN: 4845447a IDENTICAL/DIFFERENT
 // OFFSET: 0x0095B1C0/0x1406CDB60
 static int32_t Script_GetLootSlotLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -334,7 +324,6 @@ static int32_t Script_GetLootSlotLink(lua_State* L) {
     return 1;
 }
 
-// PROVEN: aa345775 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095B240/0x1406CDBD0
 static int32_t Script_LootSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -347,7 +336,6 @@ static int32_t Script_LootSlot(lua_State* L) {
     return 0;
 }
 
-// PROVEN: a53cd8ef IDENTICAL/DIFFERENT
 // OFFSET: 0x0095B2B0/0x1406CDC20
 static int32_t Script_ConfirmLootSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -540,7 +528,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMissingLootItemLink", &Script_GetMissingLootItemLink },
 };
 
-// PROVEN: ba89b671 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A080/0x1406CC5D0
 void LootInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -548,7 +535,6 @@ void LootInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 05ee9fd3 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A0B0/0x1406CC620
 void LootInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

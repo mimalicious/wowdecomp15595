@@ -30,7 +30,6 @@ static void LocalTimeSafe(tm* out, const time_t* t) {
     }
 }
 
-// PROVEN: f0fc6840 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A304B0/0x1407DA400
 WowTime::WowTime() {
     this->m_minute = -1;
@@ -94,7 +93,6 @@ void WowTime::AddDays(int32_t days, bool keepTime) {
     }
 }
 
-// PROVEN: fff19bf6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30680/0x1407DA690
 int32_t WowTime::GetHourAndMinutes() const {
     if (this->m_hour < 0 || this->m_minute < 0) {
@@ -104,14 +102,12 @@ int32_t WowTime::GetHourAndMinutes() const {
     return this->m_minute + 60 * this->m_hour;
 }
 
-// PROVEN: 2d07b270 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A306A0/0x1407DA6B0
 void WowTime::SetHourAndMinutes(int32_t minutes) {
     this->m_minute = minutes % 60;
     this->m_hour = minutes / 60;
 }
 
-// PROVEN: 27255e8d DIFFERENT/IDENTICAL
 // OFFSET: 0x00A306E0/0x1407DA6E0
 bool WowTime::SetHourAndMinutes(uint32_t hour, uint32_t minute) {
     if (hour >= 24 || minute >= 60) {
@@ -142,7 +138,6 @@ void WowTime::AddMinutes(int32_t minutes) {
     this->SetHourAndMinutes(total);
 }
 
-// PROVEN: ae0e0b77 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A30830/0x1407DA7A0
 bool WowTime::SetDate(uint32_t month, uint32_t monthDay, uint32_t year) {
     if (month >= 12 || monthDay >= 32) {
@@ -164,7 +159,6 @@ bool WowTime::SetDate(uint32_t month, uint32_t monthDay, uint32_t year) {
     return true;
 }
 
-// PROVEN: 3461bd09 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A30870/0x1407DA7E0
 void WowTime::AddHolidayDuration(int32_t minutes) {
     WowTime start = *this;
@@ -206,7 +200,6 @@ bool WowTime::IsSameDay(const WowTime& time) const {
     return this->m_year == time.m_year && this->m_month == time.m_month && this->m_monthDay == time.m_monthDay;
 }
 
-// PROVEN: 618d5b34 IDENTICAL/NONE
 // OFFSET: 0x00A30990
 int32_t WowTime::CompareMonthDay(const WowTime& time) const {
     if (this->m_monthDay > time.m_monthDay) {
@@ -216,7 +209,6 @@ int32_t WowTime::CompareMonthDay(const WowTime& time) const {
     return this->m_monthDay < time.m_monthDay ? -1 : 0;
 }
 
-// PROVEN: b72b7f9b IDENTICAL/NONE
 // OFFSET: 0x00A309C0
 int32_t WowTime::CompareWeekDay(const WowTime& time) const {
     if (this->m_weekDay > time.m_weekDay) {
@@ -226,7 +218,6 @@ int32_t WowTime::CompareWeekDay(const WowTime& time) const {
     return this->m_weekDay < time.m_weekDay ? -1 : 0;
 }
 
-// PROVEN: 45f88a73 IDENTICAL/NONE
 // OFFSET: 0x00A309F0
 int32_t WowTime::CompareHour(const WowTime& time) const {
     if (this->m_hour > time.m_hour) {
@@ -236,7 +227,6 @@ int32_t WowTime::CompareHour(const WowTime& time) const {
     return this->m_hour < time.m_hour ? -1 : 0;
 }
 
-// PROVEN: ad62d8c0 IDENTICAL/NONE
 // OFFSET: 0x00A30A20
 int32_t WowTime::CompareMinute(const WowTime& time) const {
     if (this->m_minute > time.m_minute) {
@@ -320,7 +310,6 @@ bool WowTime::operator>(const WowTime& time) const {
     return time.m_minute >= 0 && this->m_minute >= 0 && (result = this->CompareMinute(time)) != 0 && result > 0;
 }
 
-// PROVEN: 057bff58 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30C70/0x1407DAAD0
 bool WowTime::operator==(const WowTime& time) const {
     if (time.m_year >= 0 && this->m_year >= 0 && time.m_year != this->m_year) {
@@ -350,13 +339,11 @@ bool WowTime::operator==(const WowTime& time) const {
     return true;
 }
 
-// PROVEN: fd014c1a IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30CF0/0x1407DAB60
 void WowTime::WowEncodeTime(uint32_t& value, int32_t minute, int32_t hour, int32_t weekDay, int32_t monthDay, int32_t month, int32_t year, int32_t flags) {
     value = minute & 0x3F | ((hour & 0x1F | ((weekDay & 7 | ((monthDay & 0x3F | ((month & 0xF | ((year & 0x1F | ((flags & 3) << 5)) << 4)) << 6)) << 3)) << 5)) << 6);
 }
 
-// PROVEN: ff879b7f DIFFERENT/IDENTICAL
 // OFFSET: 0x00A30D50/0x1407DABC0
 void WowTime::WowDecodeTime(uint32_t value, int32_t* minute, int32_t* hour, int32_t* weekDay, int32_t* monthDay, int32_t* month, int32_t* year, int32_t* flags) {
     if (minute) {
@@ -395,13 +382,11 @@ void WowTime::WowDecodeTime(uint32_t value, int32_t* minute, int32_t* hour, int3
     }
 }
 
-// PROVEN: 1a163845 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30E30/0x1407DAC80
 void WowTime::WowEncodeTime(uint32_t& value, const WowTime* time) {
     value = time->m_minute & 0x3F | ((time->m_hour & 0x1F | ((time->m_weekDay & 7 | ((time->m_monthDay & 0x3F | ((time->m_month & 0xF | ((time->m_year & 0x1F | ((time->m_flags & 3) << 5)) << 4)) << 6)) << 3)) << 5)) << 6);
 }
 
-// PROVEN: e23910f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30E90/0x1407DACE0
 void WowTime::WowDecodeTime(uint32_t value, WowTime* time) {
     WowTime::WowDecodeTime(value, &time->m_minute, &time->m_hour, &time->m_weekDay, &time->m_monthDay, &time->m_month, &time->m_year, &time->m_flags);
@@ -429,7 +414,6 @@ void WowTime::WowDecodeTimeToDbDate(uint32_t value, DBDATESTRUCT* date) {
     }
 }
 
-// PROVEN: 2c307d91 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30F40/0x1407DADE0
 CDataStore& operator>>(CDataStore& msg, WowTime& time) {
     uint32_t value;
@@ -497,13 +481,11 @@ int32_t WowTime::Compare(const WowTime& time) const {
     return -(*this > time);
 }
 
-// PROVEN: 764ffdc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30FC0/0x1407DAE70
 bool WowTime::operator<=(const WowTime& time) const {
     return *this == time || *this < time;
 }
 
-// PROVEN: 330e443b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A31000/0x1407DAEA0
 bool WowTime::operator>=(const WowTime& time) const {
     return *this == time || *this > time;

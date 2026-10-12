@@ -51,7 +51,6 @@ static GLenum s_glDepthFunc[4] = { GL_LEQUAL, GL_EQUAL, GL_GEQUAL, GL_LESS };
 
 static GLenum s_glColorMaterial[3] = { GL_AMBIENT_AND_DIFFUSE, GL_SPECULAR, GL_EMISSION };
 
-// PROVEN: 6d58ef19 IDENTICAL/IDENTICAL
 // OFFSET: 0x0085C570/0x14058E5B0
 void CGxDeviceOpenGl::DsInit() {
     memset(this->m_deviceStates, 0, sizeof(this->m_deviceStates));
@@ -466,7 +465,6 @@ void CGxDeviceOpenGl::IStateSyncIndexPtr() {
     this->m_indexPtr = reinterpret_cast<uintptr_t>(pool->m_apiSpecific) + buf->m_itemSize * buf->m_index;
 }
 
-// PROVEN: 0b438639 IDENTICAL/DIFFERENT
 // OFFSET: 0x0085CD60/0x14058EEE0
 void CGxDeviceOpenGl::IStateSyncVertexFormat() {
     EGxVertexBufferFormat format = this->m_primVertexFormats[0];
@@ -562,7 +560,6 @@ void CGxDeviceOpenGl::IStateSyncEnables() {
     this->m_hwMasterEnables = this->m_appMasterEnables;
 }
 
-// PROVEN: a87f1cd3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0085D0B0/0x14058F290
 void CGxDeviceOpenGl::IStateSyncClipPlanes() {
     if (!this->m_clipPlaneMask) {

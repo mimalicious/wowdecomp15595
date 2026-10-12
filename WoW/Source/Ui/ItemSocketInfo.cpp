@@ -41,7 +41,6 @@ void CGItemSocketInfo::GetGemItemForSlot(uint32_t slot, WOWGUID& item, WOWGUID& 
     }
 }
 
-// PROVEN: 4331ca5e IDENTICAL/IDENTICAL
 // OFFSET: 0x0097A1B0/0x1406F3730
 void EnchantItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -49,7 +48,6 @@ void EnchantItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool
     }
 }
 
-// PROVEN: 0571ab78 IDENTICAL/UNPROVEN
 // OFFSET: 0x0097A1D0/0x1406F3750
 void CGItemSocketInfo::EnterWorld() {
     CGItemSocketInfo::m_socketItem = WOWGUID::Make(0);
@@ -63,7 +61,6 @@ void CGItemSocketInfo::EnterWorld() {
     memset(CGItemSocketInfo::m_gemContainerSlot, 0, sizeof(((CGItemSocketInfo*)0)->m_gemContainerSlot));
 }
 
-// PROVEN: 7d5af11b IDENTICAL/UNPROVEN
 // OFFSET: 0x0097A310/0x1406F38C0
 int32_t CGItemSocketInfo::GemMatchesSocket(const ItemRecSparse* item, const ItemRecSparse* gem, int32_t socket) {
     if (!item || !gem) {
@@ -85,7 +82,6 @@ int32_t CGItemSocketInfo::GemMatchesSocket(const ItemRecSparse* item, const Item
     return 0;
 }
 
-// PROVEN: 0dbfd0f7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097A370/0x1406F3B60
 bool CGItemSocketInfo::IsSocketItemBoundTradeable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -97,7 +93,6 @@ bool CGItemSocketInfo::IsSocketItemBoundTradeable() {
     return false;
 }
 
-// PROVEN: e2c3abdf IDENTICAL/DIFFERENT
 // OFFSET: 0x0097A660/0x1406F3BF0
 void CGItemSocketInfo::UpdateItem(WOWGUID item) {
     if (CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
@@ -135,7 +130,6 @@ void CGItemSocketInfo::Accept() {
     }
 }
 
-// PROVEN: 1059532b IDENTICAL/DIFFERENT
 // OFFSET: 0x0097A7B0/0x1406F3D50
 bool CGItemSocketInfo::IsSocketItemRefundable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -262,7 +256,6 @@ void CGItemSocketInfo::RemoveItem(WOWGUID item) {
     }
 }
 
-// PROVEN: c24c11d0 DIFFERENT/IDENTICAL
 // OFFSET: 0x0097B1E0/0x1406F47E0
 void CGItemSocketInfo::LeaveWorld() {
     CGItemSocketInfo::SetItem(WOWGUID::Make(0));

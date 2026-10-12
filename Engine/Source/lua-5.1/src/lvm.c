@@ -34,7 +34,6 @@
 #define MAXTAGLOOP	100
 
 
-// PROVEN: a1a91f07 IDENTICAL/UNPROVEN
 // OFFSET: 0x00421430/0x140025F50
 const TValue *luaV_tonumber (const TValue *obj, TValue *n) {
   lua_Number num;
@@ -48,7 +47,6 @@ const TValue *luaV_tonumber (const TValue *obj, TValue *n) {
 }
 
 
-// PROVEN: 3e3d0e20 IDENTICAL/UNPROVEN
 // OFFSET: 0x00421480/0x140025FC0
 int luaV_tostring (lua_State *L, StkId obj) {
   if (!ttisnumber(obj))
@@ -63,7 +61,6 @@ int luaV_tostring (lua_State *L, StkId obj) {
 }
 
 
-// PROVEN: 832bd8d0 IDENTICAL/NONE
 // OFFSET: 0x004214F0/0x140026050
 static void traceexec (lua_State *L, const Instruction *pc) {
   lu_byte mask = L->hookmask;
@@ -186,7 +183,6 @@ static int call_binTM (lua_State *L, const TValue *p1, const TValue *p2,
 }
 
 
-// PROVEN: 2ed5e7f7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00421B70/0x140026870
 static const TValue *get_compTM (lua_State *L, Table *mt1, Table *mt2,
                                   TMS event) {
@@ -216,7 +212,6 @@ static int call_orderTM (lua_State *L, const TValue *p1, const TValue *p2,
 }
 
 
-// PROVEN: 414d54dc IDENTICAL/IDENTICAL
 // OFFSET: 0x00421C80/0x1400269F0
 static int l_strcmp (const TString *ls, const TString *rs) {
   const char *l = getstr(ls);

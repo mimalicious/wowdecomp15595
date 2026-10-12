@@ -39,7 +39,6 @@ void CSortTable::Clear(TSExplicitList<CMapEntity, offsetof(CMapEntity, m_viewLin
     this->m_doodadDefs.m_count = 0;
 }
 
-// PROVEN: 6dc2bd2c IDENTICAL/NONE
 // OFFSET: 0x00799F60
 CSortEntry::~CSortEntry() {
 }
@@ -55,12 +54,10 @@ CSortEntry::CSortEntry() {
     this->m_doodadDefHead = -1;
 }
 
-// PROVEN: 4d54b5aa UNPROVEN/IDENTICAL
 // OFFSET: 0x0079A410/0x14048E8F0
 CSortTable::~CSortTable() {
 }
 
-// PROVEN: 11cda42e IDENTICAL/IDENTICAL
 // OFFSET: 0x0079A4F0/0x14048EA40
 CSortTable::CSortTable() {
     this->m_entries.m_chunk = 16;
@@ -69,7 +66,6 @@ CSortTable::CSortTable() {
     this->m_lastEntry = 0;
 }
 
-// PROVEN: 87a6aac6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079A520/0x14048EA70
 void CSortTable::Setup(float farClip, const C3Vector& normal, const C3Vector& pos) {
     int32_t count = 3 - static_cast<int32_t>(farClip * -0.029999999f);
@@ -91,7 +87,6 @@ void CSortTable::AddDoodadDef(CMapDoodadDef* doodadDef, int32_t entry) {
     this->m_entries.m_data[entry].m_doodadDefHead = this->m_doodadDefs.Count() - 1;
 }
 
-// PROVEN: e66dcbd7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00408540/0x14000A870
 void CSortTable::Finish() {
     this->m_doodadDefs.m_count = 0;

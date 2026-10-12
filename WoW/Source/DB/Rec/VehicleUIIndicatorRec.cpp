@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C1F750/0x140A13D58
 const DBCMeta VehicleUIIndicatorRec::s_meta = { "DBFilesClient\\VehicleUIIndicator.dbc", 2, 8, VehicleUIIndicatorRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 1ec30822 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void VehicleUIIndicatorRec::FixupStrings(void* record, const char* strings) {
     VehicleUIIndicatorRec* rec = static_cast<VehicleUIIndicatorRec*>(record);

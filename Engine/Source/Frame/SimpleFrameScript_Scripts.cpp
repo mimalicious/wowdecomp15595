@@ -42,7 +42,6 @@
 // STATIC: 0x00DD3918/0x140CB95D0
 const char* s_createFrameTaint;
 
-// PROVEN: 5948a24d IDENTICAL/DIFFERENT
 // OFFSET: 0x0083F590/0x14056B130
 static int32_t Script_GetText(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
@@ -65,7 +64,6 @@ static int32_t Script_GetText(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 4547cc46 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083F620/0x14056B1F0
 static int32_t Script_CreateFont(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -83,7 +81,6 @@ static int32_t Script_CreateFont(lua_State* L) {
     return 1;
 }
 
-// PROVEN: aaa48d54 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083F690/0x14056B280
 static int32_t Script_GetCurrentKeyBoardFocus(lua_State* L) {
     CSimpleEditBox* focus = CSimpleEditBox::s_currentFocus;
@@ -101,7 +98,6 @@ static int32_t Script_GetCurrentKeyBoardFocus(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d5778d0d IDENTICAL/IDENTICAL
 // OFFSET: 0x0083F6E0/0x14056B2E0
 static int32_t Script_SetMaxAnimFramerate(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -113,7 +109,6 @@ static int32_t Script_SetMaxAnimFramerate(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 0346a59f IDENTICAL/IDENTICAL
 // OFFSET: 0x0083F730/0x14056B340
 static int32_t Script_GetMaxAnimFramerate(lua_State* L) {
     lua_pushnumber(L, 1.0f / CSimpleAnim::s_frameInterval);
@@ -340,7 +335,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMaxAnimFramerate", &Script_GetMaxAnimFramerate },
 };
 
-// PROVEN: 9b2967f7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0083F760/0x14056B370
 void RegisterSimpleFrameScriptMethods() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -375,7 +369,6 @@ void RegisterSimpleFrameScriptMethods() {
     CSimpleMovieFrame::CreateScriptMetaTable();
 }
 
-// PROVEN: 60e3a4c2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0083F810/0x14056B440
 void UnregisterSimpleFrameScriptMethods() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

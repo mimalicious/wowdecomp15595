@@ -240,7 +240,6 @@ void CMapRenderChunk::RenderPrepBufs(CGxBuf* vertexBuf, CGxBuf* indexBuf) {
     }
 }
 
-// PROVEN: 08f48e95 IDENTICAL/UNPROVEN
 // OFFSET: 0x00781BD0/0x14046F450
 void CMapRenderChunk::UseStreamingBufs() {
     uint32_t vertexSize = GxVertexSize(static_cast<EGxVertexBufferFormat>(CMapRenderChunk::s_vertexFormat));
@@ -492,7 +491,6 @@ void CMapRenderChunk::RenderSetupFixedFunction(CWorldView* view) {
     }
 }
 
-// PROVEN: 18728209 IDENTICAL/NONE
 // OFFSET: 0x007831B0/0x140471510
 void CMapRenderChunk::RenderSetupCombiners() {
     GxRsSet(GxRs_ColorOp0, 1);
@@ -501,7 +499,6 @@ void CMapRenderChunk::RenderSetupCombiners() {
     GxRsSet(GxRs_AlphaOp1, 0);
 }
 
-// PROVEN: 27ec3540 IDENTICAL/DIFFERENT
 // OFFSET: 0x00783270/0x140471610
 void CMapRenderChunk::RenderSetupPixelShader() {
     float fogColor[4];
@@ -605,7 +602,6 @@ void CMapRenderChunk::RenderSolid(CMapRenderChunkBatch* batch) {
     GxRsSet(GxRs_Texture1, 0);
 }
 
-// PROVEN: 4288d101 IDENTICAL/NONE
 // OFFSET: 0x00783820/0x140471CE0
 void CMapRenderChunk::RenderSolidPixelShader(CMapRenderChunkBatch* batch) {
     CMapRenderChunk::RenderSolid(batch);
@@ -699,7 +695,6 @@ void CMapRenderChunk::RenderSinglePassVertexPixelShader(CWorldView* view, CMapRe
     }
 }
 
-// PROVEN: 21d83812 IDENTICAL/DIFFERENT
 // OFFSET: 0x00784810/0x1404733F0
 void CMapRenderChunk::RenderPrep() {
     uint32_t flags = this->m_flags;

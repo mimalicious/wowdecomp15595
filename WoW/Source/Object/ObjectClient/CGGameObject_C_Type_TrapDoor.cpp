@@ -75,7 +75,6 @@ void CGGameObject_C_Type_TrapDoor::UpdateState(int32_t oldState, int32_t newStat
 CGGameObject_C_Type_TrapDoor::CGGameObject_C_Type_TrapDoor(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_Type_TransportBase(owner, create) {
 }
 
-// PROVEN: ef0fde80 IDENTICAL/IDENTICAL
 // OFFSET: 0x005994F0/0x1402078E0
 void CGGameObject_C_Type_TrapDoor::PostReenable() {
     this->CreateWorldObj();
@@ -90,7 +89,6 @@ void CGGameObject_C_Type_TrapDoor::PostReenable() {
     }
 }
 
-// PROVEN: 5d419fda IDENTICAL/IDENTICAL
 // OFFSET: 0x005A0AD0/0x140210610
 void CGGameObject_C_Type_TrapDoor::UpdateMovement(uint32_t time, uint32_t elapsed) {
     if (this->m_worldObject && !this->m_isLoaded && World::ObjectIsLoaded(this->m_worldObject)) {

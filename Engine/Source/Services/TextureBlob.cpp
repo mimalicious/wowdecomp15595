@@ -71,7 +71,6 @@ const uint8_t* CTextureBlobTexture::GetLevel(uint32_t level) {
     return data;
 }
 
-// PROVEN: dcfdf1df IDENTICAL/DIFFERENT
 // OFFSET: 0x0054B2D0/0x1401A4700
 CTextureBlob::~CTextureBlob() {
     this->m_filename[0] = '\0';
@@ -87,7 +86,6 @@ CTextureBlob::~CTextureBlob() {
     this->m_levelData = NULL;
 }
 
-// PROVEN: 3a3484cd IDENTICAL/UNPROVEN
 // OFFSET: 0x0054B360/0x1401A47C0
 CTextureBlob* CTextureBlob::FindBlob(const char* fileName) {
     for (CTextureBlob* blob = s_textureBlobList.Head(), * next; !s_textureBlobList.IsEnd(blob); blob = next) {
@@ -187,7 +185,6 @@ void UpdateBlobTexture(EGxTexCommand command, uint32_t width, uint32_t height, u
     }
 }
 
-// PROVEN: 2b28394c IDENTICAL/UNPROVEN
 // OFFSET: 0x0054B8A0/0x1401A4EC0
 void CTextureBlob::UnloadAll() {
     for (CTextureBlob* blob = s_textureBlobList.Head(); !s_textureBlobList.IsEnd(blob); ) {
@@ -248,7 +245,6 @@ int32_t CTextureBlob::CreateTexture(CTexture* texture, CTextureBlobTexture* blob
     return 1;
 }
 
-// PROVEN: 9fcb3535 IDENTICAL/DIFFERENT
 // OFFSET: 0x0054C2F0/0x1401A5D20
 void CTextureBlob::HashTexture(SBlobTexture* texture) {
     const char* name = this->m_names + texture->m_nameOffset;
@@ -266,7 +262,6 @@ void CTextureBlob::HashTexture(SBlobTexture* texture) {
     blobTexture->m_texture = texture;
 }
 
-// PROVEN: ef99e261 IDENTICAL/NONE
 // OFFSET: 0x0054C3B0
 void CTextureBlob::HashTextures() {
     SBlobTexture* texture = this->m_textures;
@@ -293,7 +288,6 @@ int32_t CTextureBlob::Parse(CTextureBlob* blob, uint32_t size) {
     return 1;
 }
 
-// PROVEN: e33cbf99 IDENTICAL/DIFFERENT
 // OFFSET: 0x0054C4E0/0x1401A60F0
 int32_t CTextureBlob::Load(const char* fileName) {
     if (CTextureBlob::FindBlob(fileName)) {
@@ -317,7 +311,6 @@ int32_t CTextureBlob::Load(const char* fileName) {
     return CTextureBlob::Parse(blob, size);
 }
 
-// PROVEN: 055f9429 IDENTICAL/DIFFERENT
 // OFFSET: 0x0054C5A0/0x1401A62A0
 int32_t CTextureBlob::Load(const char* fileName, void* data, uint32_t size) {
     if (CTextureBlob::FindBlob(fileName)) {
@@ -331,7 +324,6 @@ int32_t CTextureBlob::Load(const char* fileName, void* data, uint32_t size) {
     return CTextureBlob::Parse(blob, size);
 }
 
-// PROVEN: 0c5b2ace IDENTICAL/UNPROVEN
 // OFFSET: 0x0054C450/0x1401A6020
 void CTextureBlob::RebuildHashTable() {
     for (CTextureBlob* blob = s_textureBlobList.Head(), * next; !s_textureBlobList.IsEnd(blob); blob = next) {

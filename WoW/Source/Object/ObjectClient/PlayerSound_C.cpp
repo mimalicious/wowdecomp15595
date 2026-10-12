@@ -86,7 +86,6 @@ void CGPlayer_C::PlayFoleySound() {
     }
 }
 
-// PROVEN: 0c1e808a IDENTICAL/UNPROVEN
 // OFFSET: 0x0060B240/0x140294590
 uint32_t CGPlayer_C::GetImpactType() const {
     VisibleItem_C* chest = const_cast<VisibleItem_C*>(this->GetVisibleItem(4));

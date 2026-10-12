@@ -247,7 +247,6 @@ const char* OrientationToString(ORIENTATION orientation) {
     return "UNKNOWN";
 }
 
-// PROVEN: 8bd59284 DIFFERENT/IDENTICAL
 // OFFSET: 0x004EEDF0/0x140133330
 uint32_t StringToFontFlags(const char* string) {
     uint32_t flags = 0;
@@ -389,7 +388,6 @@ static int32_t StringToBOOL(const char* string, int32_t defaultValue) {
     return defaultValue;
 }
 
-// PROVEN: 9460201f DIFFERENT/IDENTICAL
 // OFFSET: 0x004EF0A0/0x140133740
 int32_t StringToBOOL(const char* string) {
     return StringToBOOL(string, 0);
@@ -523,7 +521,6 @@ bool Insets::Load(float& left, float& right, float& top, float& bottom, CStatus*
     return false;
 }
 
-// PROVEN: 6ccead45 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF150/0x140133810
 int32_t LoadXML_Value(linkObject* node, float& value, CStatus* status) {
     return static_cast<Value*>(node)->Load(value, status) != 0;
@@ -534,7 +531,6 @@ int32_t LoadXML_Dimensions(linkObject* node, float& x, float& y, CStatus* status
     return static_cast<Dimension*>(node)->Load(x, y, status);
 }
 
-// PROVEN: 3fd4757d IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF1A0/0x140133850
 int32_t LoadXML_Insets(linkObject* node, float& left, float& right, float& top, float& bottom, CStatus* status) {
     return static_cast<Insets*>(node)->Load(left, right, top, bottom, status) != 0;
@@ -556,7 +552,6 @@ static uint32_t PackColor(float r, float g, float b, float a) {
     return static_cast<uint8_t>(static_cast<int32_t>(b * 255.0f + 0.5f)) | ((static_cast<uint8_t>(static_cast<int32_t>(g * 255.0f + 0.5f)) | ((static_cast<uint8_t>(static_cast<int32_t>(r * 255.0f + 0.5f)) | (static_cast<uint8_t>(static_cast<int32_t>(a * 255.0f + 0.5f)) << 8)) << 8)) << 8);
 }
 
-// PROVEN: 90fad40e IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF230/0x140133910
 bool Color::GetColor(CImVector& color, CStatus* status) {
     if (this->m_colorFlags & 1) {
@@ -585,7 +580,6 @@ bool Gradient::Load(ORIENTATION& orientation, CImVector& minColor, CImVector& ma
     return true;
 }
 
-// PROVEN: db749763 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF520/0x140133B30
 int32_t LoadXML_Color(linkObject* node, CImVector& color, CStatus* status) {
     Color* colorNode = static_cast<Color*>(node);
@@ -594,13 +588,11 @@ int32_t LoadXML_Color(linkObject* node, CImVector& color, CStatus* status) {
     return 1;
 }
 
-// PROVEN: 8bd70daf IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF5B0/0x140133BC0
 int32_t LoadXML_Gradient(linkObject* node, ORIENTATION& orientation, CImVector& minColor, CImVector& maxColor, CStatus* status) {
     return static_cast<Gradient*>(node)->Load(orientation, minColor, maxColor, status) != 0;
 }
 
-// PROVEN: 9a30f9fb IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF5E0/0x140133BF0
 int32_t LoadXML_AnimOrigin(linkObject* node, FRAMEPOINT& point, C2Vector& offset, CStatus* status) {
     Origin* origin = static_cast<Origin*>(node);
@@ -622,7 +614,6 @@ int32_t LoadXML_AnimOrigin(linkObject* node, FRAMEPOINT& point, C2Vector& offset
     return 1;
 }
 
-// PROVEN: 143e7a74 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF650/0x140133C50
 CSimpleTexture* LoadXML_Texture(linkObject* node, CSimpleFrame* frame, CStatus* status) {
     void* data = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
@@ -635,7 +626,6 @@ CSimpleTexture* LoadXML_Texture(linkObject* node, CSimpleFrame* frame, CStatus* 
     return texture;
 }
 
-// PROVEN: ec34bcdb IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF6C0/0x140133CF0
 CSimpleFontString* LoadXML_String(linkObject* node, CSimpleFrame* frame, CStatus* status) {
     void* data = CSimpleFontString::s_allocator.GetData(0, typeid(CSimpleFontString).raw_name(), SLOG_OBJECT);
@@ -648,7 +638,6 @@ CSimpleFontString* LoadXML_String(linkObject* node, CSimpleFrame* frame, CStatus
     return string;
 }
 
-// PROVEN: 6d9f9abd IDENTICAL/NONE
 // OFFSET: 0x004EF730
 static void ProcessTocForMakeSign(MD5_CTX* md5, const char* text, const char* basePath) {
     const char* current = text;
@@ -868,7 +857,6 @@ int32_t ProcessFileForMakeSign(MD5_CTX* md5, const char* filename, const char* b
     return 1;
 }
 
-// PROVEN: 3570744c DIFFERENT/IDENTICAL
 // OFFSET: 0x004EFC30/0x1401343C0
 static void CalculateSignatureMD5(const char* tocFile, const char* extraFile, uint8_t* digest) {
     MD5_CTX context;

@@ -8,7 +8,6 @@ static int32_t ISMemGetAllocator(va_list arglist) {
     return 1;
 }
 
-// PROVEN: 86e7dd27 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B2C60/0x1400E98D0
 int32_t STORMAPI ISMemGenerateReport(va_list arglist) {
     return va_arg(arglist, int32_t) == 0;

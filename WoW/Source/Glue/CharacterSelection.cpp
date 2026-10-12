@@ -91,13 +91,11 @@ TSGrowableArray<CharacterSelectionDisplay> CCharacterSelection::m_characterList;
 
 uint32_t CCharacterSelection::s_raceRestrictions[10];
 
-// PROVEN: eff88660 IDENTICAL/NONE
 // OFFSET: 0x00807E60
 void CharSelectAttachDeathVisuals(CM2Model* model) {
     CGlueMgr::ApplySpellVisualKit(CCharacterSelection::m_modelFrame, model, 989, 0);
 }
 
-// PROVEN: ccb98158 IDENTICAL/IDENTICAL
 // OFFSET: 0x00807E80/0x14051D800
 void LinkModelAndTexturesToAsyncHead(CM2Model* model) {
     if (model) {
@@ -105,7 +103,6 @@ void LinkModelAndTexturesToAsyncHead(CM2Model* model) {
     }
 }
 
-// PROVEN: 2f559bd8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00807EA0/0x14051D820
 void CharSelectGetBGModelPathFromRaceStr(const char* raceString, char* path) {
     strcpy(path, "Interface\\Glues\\Models\\UI_");
@@ -115,7 +112,6 @@ void CharSelectGetBGModelPathFromRaceStr(const char* raceString, char* path) {
     strcat(path, ".m2");
 }
 
-// PROVEN: 7b6d9939 IDENTICAL/IDENTICAL
 // OFFSET: 0x00807FA0/0x14051D970
 int32_t CharSelectIsStartRaceComplete() {
     if (CCharacterSelection::m_startRacePreloadList) {
@@ -130,14 +126,12 @@ bool CCharacterSelection::IsStreamingDataReady() {
     return CharSelectIsStartRaceComplete() != 0;
 }
 
-// PROVEN: 5c18fcf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00807FC0/0x14051D990
 void CharSelectStartRaceShutdown() {
     PreloadList::StopDownload(CCharacterSelection::m_startRacePreloadList);
     CCharacterSelection::m_startRacePreloadList = NULL;
 }
 
-// PROVEN: 4b714b90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00807FE0/0x14051D9B0
 void CharSelectSwitchStartRaceDownload(int32_t raceID, int32_t classID) {
     PreloadList* list = CCharacterSelection::m_startRacePreloadList;
@@ -154,13 +148,11 @@ void CharSelectSwitchStartRaceDownload(int32_t raceID, int32_t classID) {
     CCharacterSelection::m_startRacePreloadList = PreloadList::StartDownload(raceID, classID, 1);
 }
 
-// PROVEN: 671bc0ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00808030/0x14051DA10
 void CCharacterSelection::Initialize() {
     CoordinateSetAspectRatio(g_theGxDevicePtr->CapsAspectRatio(0));
 }
 
-// PROVEN: c2073e12 IDENTICAL/DIFFERENT
 // OFFSET: 0x00808050/0x14051DA30
 void CCharacterSelection::TransferComponentToWorld() {
     if (static_cast<uint32_t>(CCharacterSelection::m_enterWorldIndex) >= CCharacterSelection::m_characterList.Count()) {
@@ -195,7 +187,6 @@ void CCharacterSelection::TransferComponentToWorld() {
     display.m_component = NULL;
 }
 
-// PROVEN: 1286323d IDENTICAL/DIFFERENT
 // OFFSET: 0x00808130/0x14051DB30
 void CCharacterSelection::UpdateCharacterName(WOWGUID guid, const char* name) {
     uint32_t index = 0;
@@ -288,7 +279,6 @@ uint32_t* CCharacterSelection::UpdateCharacterNameDeclension(WOWGUID guid) {
     return &CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_flags;
 }
 
-// PROVEN: 17b5174b IDENTICAL/DIFFERENT
 // OFFSET: 0x00808510/0x14051DFE0
 void CCharacterSelection::SetNextEmoteTimer() {
     ClientKillTimer(CCharacterSelection::m_emoteTimerEvent, CCharacterSelection::UpdateEmote, "UpdateEmote");
@@ -350,7 +340,6 @@ void CCharacterSelection::RenderPrep() {
     }
 }
 
-// PROVEN: 89ee1606 IDENTICAL/DIFFERENT
 // OFFSET: 0x008086D0/0x14051E1E0
 CharacterSelectionDisplay* CCharacterSelection::GetCharacterDisplay(uint32_t index) {
     if (index < CCharacterSelection::m_characterList.Count()) {
@@ -360,7 +349,6 @@ CharacterSelectionDisplay* CCharacterSelection::GetCharacterDisplay(uint32_t ind
     return NULL;
 }
 
-// PROVEN: fab16950 IDENTICAL/DIFFERENT
 // OFFSET: 0x008086F0/0x14051E200
 int32_t CCharacterSelection::Idle(const void* data, void* param) {
     CCharacterComponent* component = NULL;
@@ -406,7 +394,6 @@ const CharStartOutfitRec* CCharacterSelection::FindStartOutfit(uint8_t raceID, u
     return NULL;
 }
 
-// PROVEN: e3c5ea55 IDENTICAL/UNPROVEN
 // OFFSET: 0x008088D0/0x14051E430
 CharacterSelectionDisplay::~CharacterSelectionDisplay() {
     CAnimKitInst* emoteKit = this->m_emoteKit;
@@ -451,7 +438,6 @@ CharacterSelectionDisplay::CharacterSelectionDisplay() {
     this->m_animKitManager.SetGlueMode(1);
 }
 
-// PROVEN: 9dd21890 IDENTICAL/IDENTICAL
 // OFFSET: 0x00808A30/0x14051E5C0
 void CCharacterSelection::OnShow() {
     EventRegisterEx(EVENT_ID_IDLE, CCharacterSelection::Idle, NULL, 0.0f);
@@ -541,7 +527,6 @@ void CCharacterSelection::ModelLoadedCallback(CM2Model* model, void* arg) {
     }
 }
 
-// PROVEN: 1effc987 IDENTICAL/DIFFERENT
 // OFFSET: 0x00808D10/0x14051E900
 void CCharacterSelection::StartAnimation(uint64_t param) {
     if (g_useAnimKitsOnGlueScreen) {
@@ -554,7 +539,6 @@ void CCharacterSelection::StartAnimation(uint64_t param) {
     CCharacterSelection::SetNextEmoteTimer();
 }
 
-// PROVEN: 8e764950 IDENTICAL/DIFFERENT
 // OFFSET: 0x00808D90/0x14051E9C0
 int32_t CCharacterSelection::UpdateEmote(const void* data, void* param) {
     CharacterSelectionDisplay& selected = CCharacterSelection::m_characterList.m_data[CCharacterSelection::m_selectionIndex];
@@ -564,7 +548,6 @@ int32_t CCharacterSelection::UpdateEmote(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 38548fe0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00809590/0x14051F3F0
 void CCharacterSelection::OnHide() {
     EventUnregister(EVENT_ID_IDLE, CCharacterSelection::Idle);
@@ -717,7 +700,6 @@ void CCharacterSelection::DeleteCharacter(int32_t index) {
     CGlueMgr::DeleteCharacter(CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_guid);
 }
 
-// PROVEN: f195d37b DIFFERENT/IDENTICAL
 // OFFSET: 0x00809A50/0x140529380
 void CCharacterSelection::StartLoadAnimation(int32_t param) {
     CCharacterComponent* component = CCharacterSelection::m_characterList.m_data[CCharacterSelection::m_selectionIndex].m_component;
@@ -954,7 +936,6 @@ CharacterSelectionDisplay::CharacterSelectionDisplay(const CharacterSelectionDis
     this->m_weaponLoadOut = source.m_weaponLoadOut;
 }
 
-// PROVEN: f11121e1 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080A670/0x140520930
 void CCharacterSelection::EnumerateCharactersCallback(const CHARACTER_INFO& info, void* param) {
     CharacterSelectionDisplay* display = CCharacterSelection::m_characterList.New();
@@ -994,7 +975,6 @@ static void DetachCharacterModels() {
     }
 }
 
-// PROVEN: 8dae57fb IDENTICAL/UNPROVEN
 // OFFSET: 0x0080A700/0x1405209C0
 void CCharacterSelection::OnGetCharacterList() {
     CCharacterSelection::m_characterList.SetCount(0);
@@ -1043,7 +1023,6 @@ void CCharacterSelection::UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>
     FrameScript_SignalEvent(GLUE_EVENT_CHARACTER_LIST_UPDATE, "%d", CCharacterSelection::m_characterList.Count());
 }
 
-// PROVEN: 5c5d6a21 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080A8C0/0x140520BC0
 void CCharacterSelection::ClearCharacterList() {
     CCharacterSelection::m_characterList.SetCount(0);
@@ -1059,7 +1038,6 @@ void CCharacterSelection::ClearCharacterList() {
     }
 }
 
-// PROVEN: 70e2fcc7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00807E50/0x14051D7F0
 void CCharacterSelection::SetModelFrame(CSimpleModelFFX* modelFrame) {
     CCharacterSelection::m_modelFrame = modelFrame;

@@ -35,7 +35,6 @@ void CCameraShot::CalcPolarFacing(float& distance, float& yaw, float& pitch) con
     }
 }
 
-// PROVEN: 9665686e IDENTICAL/DIFFERENT
 // OFFSET: 0x00462E40/0x1400762B0
 void CCameraShot::CalcYawPitch(float& yaw, float& pitch) const {
     float distance;

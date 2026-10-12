@@ -22,25 +22,21 @@ int32_t CSimpleControlPoint::s_objectType;
 // STATIC: 0x00CA3830/0x140B40AB0
 const char* CSimpleControlPoint::s_objectTypeName = "ControlPoint";
 
-// PROVEN: 1e3c45e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527DB0/0x140177140
 bool CSimpleControlPoint::IsA(int32_t type) {
     return type == CSimpleControlPoint::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: ec1fffa0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527DE0/0x140177160
 bool CSimpleControlPoint::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleControlPoint::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: d20324c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527E20/0x1401771A0
 const char* CSimpleControlPoint::GetObjectTypeName() {
     return CSimpleControlPoint::s_objectTypeName;
 }
 
-// PROVEN: 687d86fd IDENTICAL/IDENTICAL
 // OFFSET: 0x00527E30/0x1401771B0
 int32_t CSimpleControlPoint::GetScriptMetaTable() {
     return CSimpleControlPoint::s_metatable;
@@ -137,7 +133,6 @@ CSimpleControlPoint::CSimpleControlPoint(CSimplePathAnim* parent) {
     }
 }
 
-// PROVEN: c93761cf IDENTICAL/UNPROVEN
 // OFFSET: 0x00529F30/0x140179D70
 bool CSimpleControlPoint::ChangeParent(CSimplePathAnim* parent) {
     if (!parent || this->m_parent == parent) {
@@ -156,7 +151,6 @@ bool CSimpleControlPoint::ChangeParent(CSimplePathAnim* parent) {
     return true;
 }
 
-// PROVEN: 2a850839 IDENTICAL/IDENTICAL
 // OFFSET: 0x005282E0/0x14090C360
 CScriptObject* CSimpleControlPoint::GetScriptObjectParent() {
     return this->m_parent;

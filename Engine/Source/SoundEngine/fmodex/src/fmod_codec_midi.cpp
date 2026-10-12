@@ -374,7 +374,6 @@ FMOD_RESULT CodecMIDISubChannel::displayArticulators()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1efa6b57 IDENTICAL/NONE
 // OFFSET: 0x00AA6700
 FMOD_RESULT CodecMIDISubChannel::findArticulator(int src, int dest)
 {
@@ -655,7 +654,6 @@ static float gTimeCentsTable[TIMECENTSTABLENUM] =
 
 #endif
 
-// PROVEN: db7f83d3 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AA6A70/0x140868890
 float CodecMIDISubChannel::getTimeCentsFromlScale(int lScale)
 {
@@ -692,7 +690,6 @@ float CodecMIDISubChannel::getTimeCentsFromlScale(int lScale)
 }
 
 
-// PROVEN: 31e64536 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA6AE0/0x140868900
 FMOD_RESULT CodecMIDISubChannel::setUpArticulators()
 {
@@ -878,7 +875,6 @@ FMOD_RESULT CodecMIDISubChannel::setUpArticulators()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 33b0c181 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA6F50/0x140868EA0
 FMOD_RESULT CodecMIDISubChannel::stop()
 {
@@ -955,7 +951,6 @@ static float gDBToLinearTable[(96*2) + 1] =
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 655da233 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AA6FC0/0x140868F40
 FMOD_RESULT CodecMIDISubChannel::updateVolume()
 {
@@ -1233,7 +1228,6 @@ FMOD_RESULT CodecMIDISubChannel::updatePitch()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0614eb1d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA75A0/0x140869620
 FMOD_RESULT CodecMIDISubChannel::updatePan()
 {                                
@@ -1266,7 +1260,6 @@ FMOD_RESULT CodecMIDISubChannel::updatePan()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7160ebd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA75E0/0x140869660
 FMOD_RESULT CodecMIDIChannel::getSound(int key, SoundI **sound, CodecDLSInstrument **instrument, int *unitynote, int *finetune, int *sampleattenuation, bool *duplicateallowed, int *keygroup, int *numarticulators, DLS_CONNECTIONBLOCK **articulators)
 {
@@ -2192,7 +2185,6 @@ FMOD_RESULT CodecMIDIChannel::process(unsigned char event, bool reuse, unsigned 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f3c4fa13 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA77E0/0x1408698B0
 FMOD_RESULT CodecMIDIChannel::update()
 {
@@ -2286,7 +2278,6 @@ FMOD_RESULT CodecMIDITrack::readVarLen(unsigned int *result)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0a2ba4c2 IDENTICAL/NONE
 // OFFSET: 0x00AA7930
 FMOD_RESULT CodecMIDITrack::readByte(unsigned char *result)
 {
@@ -2317,7 +2308,6 @@ FMOD_RESULT CodecMIDITrack::readByte(unsigned char *result)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a9ea5bd4 IDENTICAL/NONE
 // OFFSET: 0x00AA7960/0x1408699D0
 FMOD_RESULT CodecMIDITrack::read(void *buff, int length)
 {        
@@ -2358,7 +2348,6 @@ FMOD_RESULT CodecMIDITrack::read(void *buff, int length)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6f059700 IDENTICAL/NONE
 // OFFSET: 0x00AA79B0/0x140869A40
 FMOD_RESULT CodecMIDITrack::addTag(const char *name, int length, bool calledfromopen)
 {
@@ -2756,7 +2745,6 @@ FMOD_RESULT CodecMIDITrack::process(bool calledfromopen)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 28df8440 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA8BD0/0x14086B1F0
 FMOD_RESULT CodecMIDI::update(bool audible)
 {
@@ -3310,7 +3298,6 @@ FMOD_RESULT CodecMIDI::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f6de371d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA7C10/0x140869D40
 FMOD_RESULT CodecMIDI::closeInternal()
 {
@@ -3520,7 +3507,6 @@ FMOD_RESULT CodecMIDI::setPositionInternal(int subsound, unsigned int position, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b5d3941b IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA9B30/0x14086C400
 FMOD_RESULT F_CALLBACK CodecMIDI::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -3545,7 +3531,6 @@ FMOD_RESULT F_CALLBACK CodecMIDI::openCallback(FMOD_CODEC_STATE *codec, FMOD_MOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0f75abbf IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA7D30/0x140869EC0
 FMOD_RESULT F_CALLBACK CodecMIDI::closeCallback(FMOD_CODEC_STATE *codec)
 {
@@ -3570,7 +3555,6 @@ FMOD_RESULT F_CALLBACK CodecMIDI::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fd3a718f IDENTICAL/UNPROVEN
 // OFFSET: 0x00AA8FF0/0x14086B6A0
 FMOD_RESULT F_CALLBACK CodecMIDI::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -3594,7 +3578,6 @@ FMOD_RESULT F_CALLBACK CodecMIDI::readCallback(FMOD_CODEC_STATE *codec, void *bu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4c7f3ff9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA9020/0x14086B6C0
 FMOD_RESULT F_CALLBACK CodecMIDI::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {

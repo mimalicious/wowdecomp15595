@@ -2,7 +2,6 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: 819c4892 IDENTICAL/DIFFERENT
 // OFFSET: 0x00496A50/0x1400BCC30
 CGPetition::CGPetition() {
     this->m_id = 0;
@@ -57,7 +56,6 @@ CGPetition& CGPetition::operator=(const CGPetition& source) {
     return *this;
 }
 
-// PROVEN: a79c9a1d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A283B0/0x1407CFE30
 void CGPetition::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));
@@ -84,7 +82,6 @@ void CGPetition::Pack(CDataStore* msg) {
     msg->Put(this->m_staticType);
 }
 
-// PROVEN: 16c8d30a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A284D0/0x1407CFF60
 void CGPetition::Unpack(CDataStore* msg) {
     msg->Get(reinterpret_cast<uint32_t&>(this->m_id));

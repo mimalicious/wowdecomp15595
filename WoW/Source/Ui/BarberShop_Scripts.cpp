@@ -16,7 +16,6 @@
 #include "WoW/Source/Object/Unit.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
-// PROVEN: fe191053 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FF630/0x1406570B0
 static int32_t Script_CanAlterSkin(lua_State* L) {
     lua_pushboolean(L, CGBarberShop::m_currentSkinColor != 0);
@@ -70,35 +69,30 @@ static int32_t Script_GetBarberShopStyleInfo(lua_State* L) {
     return 4;
 }
 
-// PROVEN: 9219af0f IDENTICAL/DIFFERENT
 // OFFSET: 0x008FFEE0/0x140657B40
 static int32_t Script_GetBarberShopTotalCost(lua_State* L) {
     lua_pushinteger(L, CGBarberShop::GetTotalCost());
     return 1;
 }
 
-// PROVEN: 83f63345 IDENTICAL/IDENTICAL
 // OFFSET: 0x00900420/0x140658220
 static int32_t Script_CancelBarberShop(lua_State* L) {
     CGBarberShop::DisableBarberShop();
     return 0;
 }
 
-// PROVEN: 26e4a196 IDENTICAL/IDENTICAL
 // OFFSET: 0x00900410/0x140658210
 static int32_t Script_ApplyBarberShopStyle(lua_State* L) {
     CGBarberShop::ApplyAppearanceChange();
     return 0;
 }
 
-// PROVEN: 2c5eb68e IDENTICAL/DIFFERENT
 // OFFSET: 0x00900430/0x140658230
 static int32_t Script_BarberShopReset(lua_State* L) {
     CGBarberShop::Reset();
     return 1;
 }
 
-// PROVEN: bf673153 IDENTICAL/DIFFERENT
 // OFFSET: 0x00900AC0/0x140658A70
 static int32_t Script_SetNextBarberShopStyle(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -116,21 +110,18 @@ static int32_t Script_SetNextBarberShopStyle(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 44334b35 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FFAA0/0x140657630
 static int32_t Script_GetHairCustomization(lua_State* L) {
     lua_pushstring(L, CGPlayer_C::GetHairCustomizationName());
     return 1;
 }
 
-// PROVEN: 2c79436b IDENTICAL/IDENTICAL
 // OFFSET: 0x008FFAC0/0x140657660
 static int32_t Script_GetFacialHairCustomization(lua_State* L) {
     lua_pushstring(L, CGPlayer_C::GetFacialHairCustomizationName());
     return 1;
 }
 
-// PROVEN: f5a2c6b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FFF00/0x140657B70
 static int32_t Script_SetBarberShopAlternateFormFrame(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -151,7 +142,6 @@ static int32_t Script_SetBarberShopAlternateFormFrame(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dff1e612 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FFAE0/0x140657690
 static int32_t Script_HasAlternateForm(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -189,7 +179,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "HasAlternateForm", &Script_HasAlternateForm },
 };
 
-// PROVEN: 21d0ddd6 IDENTICAL/UNPROVEN
 // OFFSET: 0x008FF660/0x1406570D0
 void CGBarberShop::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -197,7 +186,6 @@ void CGBarberShop::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: d210aef3 IDENTICAL/UNPROVEN
 // OFFSET: 0x008FF690/0x140657120
 void CGBarberShop::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

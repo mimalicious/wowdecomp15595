@@ -99,7 +99,6 @@ void LoginResponse::UpdateLoginStatus(LOGIN_STATE state, LOGIN_RESULT result, co
     this->LoginServerStatus(state, result, addressString, stateString, resultString, flags);
 }
 
-// PROVEN: 7409e670 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C51D0/0x1401002F0
 void Login::GetFileStatus(const char* fileName, uint64_t size, const uint8_t* md5) {
     this->m_fileSize = size;
@@ -108,14 +107,12 @@ void Login::GetFileStatus(const char* fileName, uint64_t size, const uint8_t* md
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_DOWNLOADFILE, LOGIN_OK, NULL, 0);
 }
 
-// PROVEN: 9d6f7337 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C4F70/0x140100050
 bool Login::OnlineIdle() {
     this->m_online = true;
     return true;
 }
 
-// PROVEN: cd701cfd IDENTICAL/DIFFERENT
 // OFFSET: 0x004C5250/0x140100370
 void Login::SetLogonCreds(const char* accountName, const char* password) {
     SStrCopy(this->m_username, accountName, sizeof(this->m_username));
@@ -128,7 +125,6 @@ void Login::SetLogonCreds(const char* accountName, const char* password) {
     this->m_password = SStrDupA(password, __FILE__, __LINE__);
 }
 
-// PROVEN: 1ed997aa IDENTICAL/DIFFERENT
 // OFFSET: 0x004C52E0/0x140100430
 void Login::SetRawAccountName(const char* accountName) {
     SStrCopy(this->m_rawUsername, accountName, sizeof(this->m_rawUsername));
@@ -149,13 +145,11 @@ Login::~Login() {
     this->m_loginResponse = NULL;
 }
 
-// PROVEN: 17f43b1c IDENTICAL/IDENTICAL
 // OFFSET: 0x004C5040/0x140100130
 bool Login::IsReconnect() {
     return this->m_reconnect;
 }
 
-// PROVEN: 19ed258d IDENTICAL/IDENTICAL
 // OFFSET: 0x004C5050/0x140100140
 bool Login::IsLoggedOn() {
     return this->m_loggedOn;
@@ -208,7 +202,6 @@ bool LoginResponse::GetCdKeys(Grunt::CdKey& cdKey) {
 void LoginResponse::FileData(const uint8_t* data, uint32_t size) {
 }
 
-// PROVEN: 93153f2a IDENTICAL/IDENTICAL
 // OFFSET: 0x004C4F80/0x140100060
 bool Login::GetCdKeys(Grunt::CdKey& cdKey) {
     return this->m_loginResponse->GetCdKeys(cdKey);
@@ -372,7 +365,6 @@ void Login::RealmListResult(CDataStore* msg) {
     }
 }
 
-// PROVEN: 34d2314c IDENTICAL/IDENTICAL
 // OFFSET: 0x004C4FA0/0x140100070
 void Login::FileData(const uint8_t* data, uint32_t size) {
     this->m_loginResponse->FileData(data, size);

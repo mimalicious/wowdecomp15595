@@ -97,7 +97,6 @@ static uint32_t s_cursorMode;
 // STATIC: 0x00D3D258/0x140BF8590
 static uint32_t s_cursorImages[54][1024];
 
-// PROVEN: 80f3c29c IDENTICAL/IDENTICAL
 // OFFSET: 0x00486580/0x1400A74C0
 void CursorDropItem() {
     if (s_cursorItemType) {
@@ -106,13 +105,11 @@ void CursorDropItem() {
     }
 }
 
-// PROVEN: c792b4e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00486000/0x1400A6D20
 uint32_t CursorGetResetMode() {
     return s_cursorResetMode;
 }
 
-// PROVEN: 5d9b37c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00486010/0x1400A6D30
 void CursorSetResetMode(uint32_t mode) {
     s_cursorResetMode = mode;
@@ -215,7 +212,6 @@ void CursorInitialize() {
     UpdateCursor();
 }
 
-// PROVEN: 69c795fc IDENTICAL/UNPROVEN
 // OFFSET: 0x00486020/0x1400A6D40
 uint32_t CursorGetModeFromName(const char* name) {
     for (uint32_t i = 1; i < 53; i++) {
@@ -227,7 +223,6 @@ uint32_t CursorGetModeFromName(const char* name) {
     return 0;
 }
 
-// PROVEN: 02b982a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004865A0/0x1400A74F0
 void CursorSetMode(uint32_t mode) {
     if (mode != 53 && s_cursorMode != mode) {
@@ -237,7 +232,6 @@ void CursorSetMode(uint32_t mode) {
     }
 }
 
-// PROVEN: 0a5a9897 IDENTICAL/DIFFERENT
 // OFFSET: 0x004864C0/0x1400A7380
 void CursorGrabVirtualItem(int32_t displayId) {
     if (s_cursorItemMips) {
@@ -298,7 +292,6 @@ int32_t CursorSetFromName(const char* name) {
     return result;
 }
 
-// PROVEN: 5c48120e IDENTICAL/IDENTICAL
 // OFFSET: 0x004866E0/0x1400A7680
 void CursorResetMode() {
     if (s_cursorResetMode != 53 && s_cursorMode != s_cursorResetMode) {
@@ -359,7 +352,6 @@ void CursorSetHeldItem(WOWGUID item) {
     CursorReleaseItemMips();
 }
 
-// PROVEN: 5d356411 IDENTICAL/DIFFERENT
 // OFFSET: 0x004862B0/0x1400A7030
 void CursorGrabMoney(uint64_t amount) {
     if (s_cursorItemMips) {
@@ -377,7 +369,6 @@ void CursorGrabMoney(uint64_t amount) {
     CursorReleaseItemMips();
 }
 
-// PROVEN: 14f4b318 IDENTICAL/DIFFERENT
 // OFFSET: 0x00486350/0x1400A7120
 void CursorGrabSpell(const char* texture) {
     if (s_cursorItemMips) {
@@ -396,7 +387,6 @@ void CursorGrabSpell(const char* texture) {
     CursorReleaseItemMips();
 }
 
-// PROVEN: e9dc305e IDENTICAL/IDENTICAL
 // OFFSET: 0x00485FC0/0x1400A6CE0
 void CursorDestroy() {
     if (!s_cursorItemMips) {

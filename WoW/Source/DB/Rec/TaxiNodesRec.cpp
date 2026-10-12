@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[7] = { 0, 0, 3, 2, 0, 0, 3 };
 // STATIC: 0x00C20224/0x140A149E8
 const DBCMeta TaxiNodesRec::s_meta = { "DBFilesClient\\TaxiNodes.dbc", 7, 44, TaxiNodesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: ed0e107b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBF0/0x1407D84B0
 void TaxiNodesRec::FixupStrings(void* record, const char* strings) {
     TaxiNodesRec* rec = static_cast<TaxiNodesRec*>(record);

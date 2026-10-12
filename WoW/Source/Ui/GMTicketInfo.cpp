@@ -28,7 +28,6 @@ uint8_t CGGMTicketInfo::s_itemRestorationButtonStatus = 1;
 // STATIC: 0x00D16A98/0x140BD10C0
 ThrottleObject CGGMTicketInfo::s_quickTicketThrottle(0, 1);
 
-// PROVEN: 99963cea IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5700/0x14077DA60
 void CGGMTicketInfo::SetQuickTicketSystemStatus(bool enabled) {
     if (static_cast<uint8_t>(enabled) != CGGMTicketInfo::s_quickTicketSystemStatus) {
@@ -37,7 +36,6 @@ void CGGMTicketInfo::SetQuickTicketSystemStatus(bool enabled) {
     }
 }
 
-// PROVEN: 39e350b0 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E5730/0x14077DA90
 void CGGMTicketInfo::SetQuickTicketThrottle(const ThrottleObject* throttle) {
     ThrottleObject saved = *throttle;
@@ -45,7 +43,6 @@ void CGGMTicketInfo::SetQuickTicketThrottle(const ThrottleObject* throttle) {
     FrameScript_SignalEvent(SCRIPT_EVENT_QUICK_TICKET_THROTTLE_CHANGED, NULL);
 }
 
-// PROVEN: 5062c212 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5780/0x14077DAE0
 void CGGMTicketInfo::SetItemRestorationButtonStatus(bool enabled) {
     if (static_cast<uint8_t>(enabled) != CGGMTicketInfo::s_itemRestorationButtonStatus) {
@@ -54,7 +51,6 @@ void CGGMTicketInfo::SetItemRestorationButtonStatus(bool enabled) {
     }
 }
 
-// PROVEN: 24dd1cb4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5670/0x14077D9C0
 void CGGMTicketInfo::EnterWorld() {
     CGGMTicketInfo::m_ticketID = 0;
@@ -376,7 +372,6 @@ int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
     return 1;
 }
 
-// PROVEN: ae89e004 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5B50/0x14077DFA0
 void CGGMTicketInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_GM_TICKET_CREATE);
@@ -389,7 +384,6 @@ void CGGMTicketInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_GM_TICKET_STATUS_UPDATE);
 }
 
-// PROVEN: db6a0166 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGGMTicketInfo::LeaveWorld() {
 }

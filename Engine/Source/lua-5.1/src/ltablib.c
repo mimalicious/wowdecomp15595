@@ -19,7 +19,6 @@
 #define aux_getn(L,n)	(luaL_checktype(L, n, LUA_TTABLE), luaL_getn(L, n))
 
 
-// PROVEN: d0a87b77 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2AA00/0x1407D2C50
 static int foreachi (lua_State *L) {
   int i;
@@ -38,7 +37,6 @@ static int foreachi (lua_State *L) {
 }
 
 
-// PROVEN: 78b2b4c6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2AA90/0x1407D2D20
 static int foreach (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
@@ -57,7 +55,6 @@ static int foreach (lua_State *L) {
 }
 
 
-// PROVEN: b465a5d1 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2AB20/0x1407D2DE0
 static int maxn (lua_State *L) {
   lua_Number max = 0;
@@ -75,7 +72,6 @@ static int maxn (lua_State *L) {
 }
 
 
-// PROVEN: 129d8c78 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ABB0/0x1407D2E80
 static int getn (lua_State *L) {
   lua_pushinteger(L, aux_getn(L, 1));
@@ -83,7 +79,6 @@ static int getn (lua_State *L) {
 }
 
 
-// PROVEN: 215ae439 IDENTICAL/NONE
 // OFFSET: 0x00A2ABE0/0x1407D2EC0
 static int setn (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
@@ -97,7 +92,6 @@ static int setn (lua_State *L) {
 }
 
 
-// PROVEN: b0340d04 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2AC10/0x1407D2F00
 static int tinsert (lua_State *L) {
   int e = aux_getn(L, 1) + 1;  /* first empty element */
@@ -127,7 +121,6 @@ static int tinsert (lua_State *L) {
 }
 
 
-// PROVEN: f2a209bb IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ACC0/0x1407D2FE0
 static int tremove (lua_State *L) {
   int e = aux_getn(L, 1);
@@ -180,7 +173,6 @@ static void addfield (lua_State *L, luaL_Buffer *b, int i) {
 }
 
 
-// PROVEN: 5f676b6a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2AE70/0x1407D3210
 static int tconcat (lua_State *L) {
   luaL_Buffer b;
@@ -295,7 +287,6 @@ static void auxsort (lua_State *L, int l, int u) {
   }  /* repeat the routine for the larger one */
 }
 
-// PROVEN: 451b7895 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2B3A0/0x1407D3900
 static int sort (lua_State *L) {
   int n = aux_getn(L, 1);
@@ -308,7 +299,6 @@ static int sort (lua_State *L) {
 }
 
 
-// PROVEN: 30064c75 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2B400/0x1407D3990
 static int twipe (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);

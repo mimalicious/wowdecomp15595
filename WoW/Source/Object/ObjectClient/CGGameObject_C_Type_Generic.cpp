@@ -15,7 +15,6 @@ bool CGGameObject_C_Type_Generic::CanHighlight() const {
     return highlight != 0;
 }
 
-// PROVEN: fe11bcfe IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_Generic::CanUse() const {
     return false;

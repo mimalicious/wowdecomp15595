@@ -32,7 +32,6 @@ int32_t COsDialog::OnEvent(int32_t itemId, int32_t notifyCode, int32_t code) {
     return 1;
 }
 
-// PROVEN: 030d3e09 IDENTICAL/IDENTICAL
 // OFFSET: 0x008763B0/0x1405AD3A0
 int32_t COsControl::SendEvent(int32_t event, int32_t code) {
     if (this->OnEvent(this->m_id, event, code)) {
@@ -105,7 +104,6 @@ int32_t COsTreeView::IsCharacterAllowed(char c) {
     return 1;
 }
 
-// PROVEN: 3678f5f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x008764E0/0x1405AD500
 void OsGuiSetWindowTitle(void* window, const char* title) {
     uint32_t length = SUniConvertUTF8to16Len(title, 0x7FFFFFFF, NULL);
@@ -118,13 +116,11 @@ void OsGuiSetWindowTitle(void* window, const char* title) {
 // STATIC: 0x00EC6D80/0x140DB9110
 static void* (*s_gxDevWindowFcn)();
 
-// PROVEN: af1107a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00876530/0x1405AD5A0
 void OsGuiSetGxDevWindowFcn(void* (*fcn)()) {
     s_gxDevWindowFcn = fcn;
 }
 
-// PROVEN: e65b8677 IDENTICAL/IDENTICAL
 // OFFSET: 0x00876540/0x1405AD5B0
 void* OsGuiGetWindow(int32_t type) {
     switch (type) {
@@ -142,7 +138,6 @@ void* OsGuiGetWindow(int32_t type) {
     }
 }
 
-// PROVEN: 274c8bd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00876570/0x1405AD5E0
 int32_t OsGuiMessageBoxW(void* parentWindow, int32_t style, const uint16_t* message, const uint16_t* title) {
     if (!title) {
@@ -200,7 +195,6 @@ int32_t OsGuiMessageBoxW(void* parentWindow, int32_t style, const uint16_t* mess
     return result;
 }
 
-// PROVEN: b0d34565 IDENTICAL/IDENTICAL
 // OFFSET: 0x008767A0/0x1405AD890
 int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, const char* title) {
     uint32_t messageLength = SUniConvertUTF8to16Len(message, 0x7FFFFFFF, NULL);
@@ -220,7 +214,6 @@ int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, 
     return OsGuiMessageBoxW(parentWindow, style, wideMessage, wideTitle);
 }
 
-// PROVEN: 80ea6ed0 DIFFERENT/IDENTICAL
 // OFFSET: 0x00876640/0x1405AD6A0
 int32_t OsGuiIsModifierKeyDown(int32_t key) {
     switch (key) {
@@ -277,7 +270,6 @@ int32_t COsDialog::IsInFront() {
     return this->m_handle == OsGuiGetWindow(2);
 }
 
-// PROVEN: d24c45ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00876690/0x1405AD6F0
 COsControl* COsDialog::FindControl(void* handle) {
     for (uint32_t i = 0; i < this->m_controls.Count(); i++) {
@@ -289,7 +281,6 @@ COsControl* COsDialog::FindControl(void* handle) {
     return NULL;
 }
 
-// PROVEN: 73a5983e DIFFERENT/IDENTICAL
 // OFFSET: 0x008766D0/0x1405AD770
 int32_t COsDialog::OnCancel() {
     if (!this->m_cancelButton || this->m_cancelButton->OnEvent(this->m_cancelButton->m_id, 0, 0)) {

@@ -224,7 +224,6 @@ static const char* s_flagTokens[2] = { "AllianceFlag", "HordeFlag" };
 
 int32_t CGBattlefieldInfo::m_arenaOpponentSeen[5];
 
-// PROVEN: 6425917b IDENTICAL/NONE
 // OFFSET: 0x0093D020
 WorldPvPQueueStatus* CGBattlefieldInfo::FindWorldPvPQueue(uint64_t queueID) {
     for (uint32_t i = 0; i < 2; i++) {
@@ -236,7 +235,6 @@ WorldPvPQueueStatus* CGBattlefieldInfo::FindWorldPvPQueue(uint64_t queueID) {
     return NULL;
 }
 
-// PROVEN: efcd4613 IDENTICAL/NONE
 // OFFSET: 0x0093D070
 WorldPvPQueueStatus* CGBattlefieldInfo::FindFreeWorldPvPQueue() {
     for (uint32_t i = 0; i < 2; i++) {
@@ -248,7 +246,6 @@ WorldPvPQueueStatus* CGBattlefieldInfo::FindFreeWorldPvPQueue() {
     return NULL;
 }
 
-// PROVEN: 119abb39 IDENTICAL/UNPROVEN
 // OFFSET: 0x0093D0A0/0x1406A8BB0
 uint32_t CGBattlefieldInfo::GetNumFlagCarriers() {
     if (CGBattlefieldInfo::m_flagCarriers[1]) {
@@ -262,7 +259,6 @@ uint32_t CGBattlefieldInfo::GetNumFlagCarriers() {
     return 0;
 }
 
-// PROVEN: 269d226b IDENTICAL/NONE
 // OFFSET: 0x0093D0D0
 WOWGUID CGBattlefieldInfo::GetFlagCarrier(uint32_t index) {
     uint32_t count;
@@ -284,7 +280,6 @@ WOWGUID CGBattlefieldInfo::GetFlagCarrier(uint32_t index) {
     return WOWGUID::Make(0);
 }
 
-// PROVEN: c46dee7d IDENTICAL/IDENTICAL
 // OFFSET: 0x0093D120/0x1406A8BD0
 void WorldMapNameUpdateCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     FrameScript_SignalEvent(SCRIPT_EVENT_WORLD_MAP_NAME_UPDATE, NULL);
@@ -304,7 +299,6 @@ void CGBattlefieldInfo::SetBattlemaster(WOWGUID battlemaster) {
     }
 }
 
-// PROVEN: a9af82f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093D1A0/0x1406A8C50
 void CGBattlefieldInfo::RequestScoreData() {
     if (CGBattlefieldInfo::m_nextLogUpdate && (CGBattlefieldInfo::m_mapDone || CGBattlefieldInfo::m_instanceType == 4)) {
@@ -320,7 +314,6 @@ void CGBattlefieldInfo::RequestScoreData() {
     }
 }
 
-// PROVEN: a55de0a1 IDENTICAL/NONE
 // OFFSET: 0x0093D210
 BattlefieldScore* CGBattlefieldInfo::FindScore(const WOWGUID& guid) {
     for (uint32_t i = 0; i < CGBattlefieldInfo::m_numScoreEntries; i++) {
@@ -351,7 +344,6 @@ void CGBattlefieldInfo::RemoveVehicle(const WOWGUID& guid) {
     CGBattlefieldInfo::m_vehicleGuids[39].m_guid = 0;
 }
 
-// PROVEN: 6ae016eb IDENTICAL/DIFFERENT
 // OFFSET: 0x0093D2E0/0x1406A8D30
 PartyMemberState* CGBattlefieldInfo::GetRemoteStats(const WOWGUID& guid) {
     if (guid) {
@@ -365,7 +357,6 @@ PartyMemberState* CGBattlefieldInfo::GetRemoteStats(const WOWGUID& guid) {
     return NULL;
 }
 
-// PROVEN: e04ab84f IDENTICAL/DIFFERENT
 // OFFSET: 0x0093D330/0x1406A8D70
 PartyMemberState* CGBattlefieldInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
     for (uint32_t i = 0; i < 5; i++) {
@@ -377,7 +368,6 @@ PartyMemberState* CGBattlefieldInfo::GetRemoteStatsFromPet(const WOWGUID& petGui
     return NULL;
 }
 
-// PROVEN: eb0a275d IDENTICAL/DIFFERENT
 // OFFSET: 0x0093D380/0x1406A8DC0
 PartyMemberPetState* CGBattlefieldInfo::GetRemotePetStats(const WOWGUID& guid) {
     if (guid) {
@@ -391,7 +381,6 @@ PartyMemberPetState* CGBattlefieldInfo::GetRemotePetStats(const WOWGUID& guid) {
     return NULL;
 }
 
-// PROVEN: befb1b0a IDENTICAL/DIFFERENT
 // OFFSET: 0x0093D3E0/0x1406A8E10
 int32_t CGBattlefieldInfo::PushPVPRewards(lua_State* L) {
     lua_pushinteger(L, CGBattlefieldInfo::m_pvpRewardTotal);
@@ -403,7 +392,6 @@ int32_t CGBattlefieldInfo::PushPVPRewards(lua_State* L) {
     return 6;
 }
 
-// PROVEN: c94020d7 NONE/IDENTICAL
 // OFFSET: 0x0093DC90/0x1406A9660
 bool OnWargameRequestSent(ClientWargameRequestSent* msg) {
     CGGameUI::DisplayError(ERR_WARGAME_REQUEST_SENT);
@@ -446,7 +434,6 @@ int32_t CGBattlefieldInfo::GetFlagPosition(uint32_t index, C3Vector* position) {
     return 0;
 }
 
-// PROVEN: 4931695c IDENTICAL/NONE
 // OFFSET: 0x0093DF10
 int32_t CGBattlefieldInfo::GetBattlegroundType(int32_t index) {
     if (index < static_cast<int32_t>(CGBattlefieldInfo::m_battlegroundTypes.Count())) {
@@ -480,7 +467,6 @@ void BattlegroundPlayerLeftNameCallback(int32_t id, const WOWGUID& guid, void* p
     }
 }
 
-// PROVEN: ded58c52 IDENTICAL/UNPROVEN
 // OFFSET: 0x0093E010/0x1406A99F0
 int32_t QSortBattlefields(const void* a, const void* b) {
     int32_t idA = *static_cast<const int32_t*>(a);
@@ -540,7 +526,6 @@ void CGBattlefieldInfo::JoinBattlefield(int32_t asGroup) {
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 1797025e IDENTICAL/UNPROVEN
 // OFFSET: 0x0093E1C0/0x1406A9BE0
 bool IsCurrentMapArena() {
     MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
@@ -724,7 +709,6 @@ int32_t QSortScoreData(const void* a, const void* b) {
     return 0;
 }
 
-// PROVEN: 27dd46eb IDENTICAL/IDENTICAL
 // OFFSET: 0x0093E5D0/0x1406AA0D0
 void BattlefieldNameCacheCallback() {
     if (CGBattlefieldInfo::m_nameCachePending) {
@@ -743,7 +727,6 @@ void BattlefieldNameCacheCallback() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_BATTLEFIELD_SCORE, NULL);
 }
 
-// PROVEN: 7d4d4b7c IDENTICAL/IDENTICAL
 // OFFSET: 0x0093E640/0x1406AA150
 void CGBattlefieldInfo::AddVehicle(const WOWGUID& guid) {
     if (guid && CGBattlefieldInfo::m_numVehicles < 40) {
@@ -753,7 +736,6 @@ void CGBattlefieldInfo::AddVehicle(const WOWGUID& guid) {
     }
 }
 
-// PROVEN: 1e386e6f DIFFERENT/IDENTICAL
 // OFFSET: 0x0093E690/0x1406AA1A0
 void CGBattlefieldInfo::OnArenaUnitOutOfRange(const WOWGUID& guid) {
     char token[32];
@@ -933,7 +915,6 @@ bool OnBattlegroundPlayerLeft(ClientBattlegroundPlayerLeft* msg) {
     return true;
 }
 
-// PROVEN: 082d6e49 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093EBB0/0x1406AA7B0
 int32_t Packet_SMSG_ARENA_OPPONENT_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
@@ -965,21 +946,18 @@ bool OnBattlefieldMgrEntered(ClientBattlefieldMgrEntered* msg) {
     return true;
 }
 
-// PROVEN: 92568da2 NONE/IDENTICAL
 // OFFSET: 0x0093EC70/0x1406AA8B0
 bool OnPvpOptionsEnabled(ClientPvpOptionsEnabled* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PVP_TYPES_ENABLED, "%b%b%b", msg->unk_0011, msg->unk_0012, msg->unk_0014);
     return true;
 }
 
-// PROVEN: 58aaf7ca NONE/IDENTICAL
 // OFFSET: 0x0093ECA0/0x1406AA8E0
 bool OnBattlefieldMgrStateChange(ClientBattlefieldMgrStateChange* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_BATTLEFIELD_MGR_STATE_CHANGE, "%d%d", static_cast<uint16_t>(*reinterpret_cast<const uint64_t*>(&msg->unk_0010)), msg->unk_0018);
     return true;
 }
 
-// PROVEN: a13d4645 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093ECD0/0x1406AA910
 void CGBattlefieldInfo::AddArenaOpponentPetToSlot(const WOWGUID& petGuid, const WOWGUID& ownerGuid, int32_t slot, int32_t registerNew) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(petGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1042,7 +1020,6 @@ int32_t QSortWarGameTypes(const void* a, const void* b) {
     return 2 * (recA->m_minPlayers >= recB->m_minPlayers) - 1;
 }
 
-// PROVEN: 196c3440 IDENTICAL/UNPROVEN
 // OFFSET: 0x0093EEA0/0x1406AAB80
 bool CGBattlefieldInfo::IsWarGameHeaderCollapsed(uint32_t index) {
     if (index < CGBattlefieldInfo::m_warGameTypes.Count()) {
@@ -1052,7 +1029,6 @@ bool CGBattlefieldInfo::IsWarGameHeaderCollapsed(uint32_t index) {
     return false;
 }
 
-// PROVEN: b4aaf047 IDENTICAL/UNPROVEN
 // OFFSET: 0x0093EEE0/0x1406AABB0
 bool CGBattlefieldInfo::GetBracketForLevel(uint32_t level, const BattlemasterListRec* rec, int32_t* bracket) {
     if (!rec || !bracket) {
@@ -1084,7 +1060,6 @@ bool CGBattlefieldInfo::GetBracketForLevel(uint32_t level, const BattlemasterLis
     return static_cast<int32_t>(level) >= rec->m_minLevel && static_cast<int32_t>(level) <= rec->m_maxLevel;
 }
 
-// PROVEN: 481cc21c IDENTICAL/DIFFERENT
 // OFFSET: 0x0093EF90/0x1406AACA0
 void CGBattlefieldInfo::UpdateWarGameTypeList() {
     CGBattlefieldInfo::m_numWarGameTypes = 0;
@@ -1104,7 +1079,6 @@ void CGBattlefieldInfo::UpdateWarGameTypeList() {
     qsort(CGBattlefieldInfo::m_warGameTypes.m_data, CGBattlefieldInfo::m_warGameTypes.Count(), sizeof(WarGameType*), QSortWarGameTypes);
 }
 
-// PROVEN: 81543bcb IDENTICAL/DIFFERENT
 // OFFSET: 0x0093F010/0x1406AAD30
 const char* CGBattlefieldInfo::GetBattlefieldMgrZoneName(uint64_t queueID) {
     World_PVP_AreaRec* rec = g_world_PVP_AreaDB.GetRecord(static_cast<int32_t>(queueID & 0xFFFF));
@@ -1160,7 +1134,6 @@ bool OnBattlefieldRatedInfo(ClientBattlefieldRatedInfo* msg) {
     return true;
 }
 
-// PROVEN: dd7f4d2d IDENTICAL/DIFFERENT
 // OFFSET: 0x00940390/0x1406AC3F0
 void ScoreNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!CGBattlefieldInfo::m_nameCachePending || (--CGBattlefieldInfo::m_nameCachePending, !CGBattlefieldInfo::m_nameCachePending)) {
@@ -1198,7 +1171,6 @@ void CGBattlefieldInfo::SetScoreSortColumn(int32_t column) {
     BattlefieldNameCacheCallback();
 }
 
-// PROVEN: 375a03f3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00940430/0x1406AC520
 const char* CGBattlefieldInfo::GetFlagToken(uint32_t index) {
     uint32_t count;
@@ -1237,7 +1209,6 @@ const char* CGBattlefieldInfo::GetFlagToken(uint32_t index) {
     return s_flagTokens[faction];
 }
 
-// PROVEN: d6f241a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00940500/0x1406AC690
 void CGBattlefieldInfo::AddArenaOpponentPet(const WOWGUID& petGuid, const WOWGUID& ownerGuid) {
     WOWGUID owner = ownerGuid;
@@ -1524,7 +1495,6 @@ BattlefieldStatusNode* CGBattlefieldInfo::FindStatus(uint32_t id) {
     return NULL;
 }
 
-// PROVEN: 2a1ef887 IDENTICAL/DIFFERENT
 // OFFSET: 0x00941F50/0x1406AE570
 void CGBattlefieldInfo::RequestBattlegroundInstanceInfo(int32_t index) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -1545,7 +1515,6 @@ void CGBattlefieldInfo::RequestBattlegroundInstanceInfo(int32_t index) {
     }
 }
 
-// PROVEN: 4a4f6c11 IDENTICAL/UNPROVEN
 // OFFSET: 0x00942000/0x1406AE660
 void CGBattlefieldInfo::ClearWarGameTypes() {
     CGBattlefieldInfo::m_numWarGameTypes = 0;
@@ -2345,7 +2314,6 @@ void CGBattlefieldInfo::AddArenaOpponent(const WOWGUID& guid) {
     }
 }
 
-// PROVEN: 657aade7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044BC10/0x140059270
 uint32_t GetArenaPetGUIDCount() {
     uint32_t count = 0;
@@ -2377,7 +2345,6 @@ uint16_t CGBattlefieldInfo::GetActiveBattlefieldTypeID() {
     return 0;
 }
 
-// PROVEN: a73aeb6d IDENTICAL/NONE
 // OFFSET: 0x0044BBE0
 WOWGUID CGBattlefieldInfo::GetArenaOpponent(uint32_t index) {
     if (index < 5) {

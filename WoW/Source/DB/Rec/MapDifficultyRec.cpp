@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[7] = { 0, 0, 0, 2, 0, 0, 2 };
 // STATIC: 0x00C2348C/0x140A18708
 const DBCMeta MapDifficultyRec::s_meta = { "DBFilesClient\\MapDifficulty.dbc", 7, 28, MapDifficultyRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 8af59ac2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EA90/0x1407D80D0
 void MapDifficultyRec::FixupStrings(void* record, const char* strings) {
     MapDifficultyRec* rec = static_cast<MapDifficultyRec*>(record);

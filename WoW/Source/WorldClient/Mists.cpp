@@ -24,7 +24,6 @@ Mists::Mist::Mist() {
     this->m_startTime = 0;
 }
 
-// PROVEN: d1ce220f IDENTICAL/IDENTICAL
 // OFFSET: 0x007484C0/0x140427540
 void Mists::Mist::SetHeights(uint32_t count, const float* heights) {
     for (uint32_t i = 0; i < count; i++) {

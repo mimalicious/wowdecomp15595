@@ -20,7 +20,6 @@ TSObjectAllocPool<CVehicleCamera_C>* CVehicleCamera_C::s_cameraPool;
 // STATIC: 0x00DD82B0/0x140CBE9F0
 uint32_t CVehicleCamera_C::s_cameraCount;
 
-// PROVEN: 938b63ad IDENTICAL/IDENTICAL
 // OFFSET: 0x005E71C0/0x140267CC0
 int32_t CVehicleCamera_C::ConvertFromRawToWorld(float& facing, CGObject_C* relativeTo) {
     if (!relativeTo) {
@@ -45,7 +44,6 @@ void CVehicleCamera_C::InitSystem() {
     }
 }
 
-// PROVEN: 700092fa IDENTICAL/DIFFERENT
 // OFFSET: 0x005E9680/0x14026A520
 void CVehicleCamera_C::UninitSystem() {
     if (s_cameraPool) {
@@ -159,7 +157,6 @@ int32_t CVehicleCamera_C::ConvertSmoothFacingFromRawToWorld(float& facing, CGObj
     return 1;
 }
 
-// PROVEN: bf184b41 IDENTICAL/DIFFERENT
 // OFFSET: 0x005E9640/0x14026A4E0
 void CVehicleCamera_C::Destroy() {
     s_cameraCount--;
@@ -1022,7 +1019,6 @@ void CVehicleCamera_C::BeginTransition(uint32_t time) {
     }
 }
 
-// PROVEN: 07a6c06a IDENTICAL/IDENTICAL
 // OFFSET: 0x005E8900/0x140269670
 void CVehicleCamera_C::OnPassengerTransitionMotionBegin(uint32_t time, uint32_t duration) {
     if (this->m_flags & 0x1) {

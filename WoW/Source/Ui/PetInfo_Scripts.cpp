@@ -28,7 +28,6 @@
 #include "Engine/Source/FrameXML/LoadXML.h"
 #include "Engine/Source/SoundEngine/SE3.h"
 
-// PROVEN: 3bfa91e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00950080/0x1406C03E0
 static int32_t Script_IsPetAttackActive(lua_State* L) {
     lua_pushboolean(L, CGPetInfo::m_attackingTarget);
@@ -374,7 +373,6 @@ static int32_t Script_GetPetActionSlotUsable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 7f8a3473 IDENTICAL/DIFFERENT
 // OFFSET: 0x00952950/0x1406C31F0
 static int32_t Script_PetPassiveMode(lua_State* L) {
     PetAction action;
@@ -383,7 +381,6 @@ static int32_t Script_PetPassiveMode(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dbec7c98 IDENTICAL/DIFFERENT
 // OFFSET: 0x00952980/0x1406C3220
 static int32_t Script_PetDefensiveMode(lua_State* L) {
     PetAction action;
@@ -392,13 +389,11 @@ static int32_t Script_PetDefensiveMode(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8b56276e IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_PetAggressiveMode(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1bf356fd IDENTICAL/DIFFERENT
 // OFFSET: 0x009529B0/0x1406C3250
 static int32_t Script_PetAssistMode(lua_State* L) {
     PetAction action;
@@ -407,7 +402,6 @@ static int32_t Script_PetAssistMode(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 871102a7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009529E0/0x1406C3280
 static int32_t Script_PetWait(lua_State* L) {
     PetAction action;
@@ -416,7 +410,6 @@ static int32_t Script_PetWait(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b98cde46 IDENTICAL/DIFFERENT
 // OFFSET: 0x00952A10/0x1406C32B0
 static int32_t Script_PetFollow(lua_State* L) {
     PetAction action;
@@ -425,7 +418,6 @@ static int32_t Script_PetFollow(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8127d9c9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00952A40/0x1406C32E0
 static int32_t Script_PetMoveTo(lua_State* L) {
     PetAction action;
@@ -455,21 +447,18 @@ static int32_t Script_PetAttack(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 09d01b29 IDENTICAL/IDENTICAL
 // OFFSET: 0x00952B10/0x1406C33D0
 static int32_t Script_PetStopAttack(lua_State* L) {
     CGPetInfo::PetClearTarget();
     return 0;
 }
 
-// PROVEN: 9ddd5360 IDENTICAL/IDENTICAL
 // OFFSET: 0x00952B20/0x1406C33E0
 static int32_t Script_PetAbandon(lua_State* L) {
     CGPetInfo::PetAbandon();
     return 0;
 }
 
-// PROVEN: 9e853059 IDENTICAL/IDENTICAL
 // OFFSET: 0x00952B30/0x1406C33F0
 static int32_t Script_PetDismiss(lua_State* L) {
     CGPetInfo::PetDismiss();
@@ -597,7 +586,6 @@ static int32_t Script_GetPossessInfo(lua_State* L) {
     return 3;
 }
 
-// PROVEN: bcfa57a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00952EB0/0x1406C3850
 static int32_t Script_IsPetAttackAction(lua_State* L) {
     if (lua_isnumber(L, 1)) {
@@ -758,7 +746,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "IsPetAttackAction", &Script_IsPetAttackAction },
 };
 
-// PROVEN: fa9e451e IDENTICAL/UNPROVEN
 // OFFSET: 0x00950110/0x1406C0470
 void PetInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -766,7 +753,6 @@ void PetInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 547bebb0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00950140/0x1406C04C0
 void PetInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

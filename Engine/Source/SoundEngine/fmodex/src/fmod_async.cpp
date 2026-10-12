@@ -27,7 +27,6 @@ LinkedListNode           AsyncThread::gAsyncHead;
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5cb21c0c IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACF360/0x140899AD0
 void asyncThreadFunc(void *data)
 {
@@ -49,7 +48,6 @@ void asyncThreadFunc(void *data)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f16e6395 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ACF370/0x140899AE0
 AsyncThread::AsyncThread()
 {
@@ -299,7 +297,6 @@ FMOD_RESULT AsyncThread::release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 186667ea IDENTICAL/DIFFERENT
 // OFFSET: 0x00ACF000/0x1408996D0
 FMOD_RESULT AsyncThread::reallyRelease()
 {
@@ -408,7 +405,6 @@ FMOD_RESULT AsyncThread::update()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 431ee7a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00ACF120/0x140899860
 FMOD_RESULT AsyncThread::threadFunc()
 {

@@ -48,14 +48,12 @@ void CGBlobFrame::operator delete(void* ptr) {
     CGBlobFrame::s_blobHeap.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 3dbdfc23 IDENTICAL/UNPROVEN
 // OFFSET: 0x008C63D0/0x140636400
 CSimpleFrame* CGBlobFrame::Create(CSimpleFrame* parent) {
     void* data = CGBlobFrame::s_blobHeap.GetData(0, typeid(CGBlobFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGBlobFrame(parent) : NULL;
 }
 
-// PROVEN: facd997f IDENTICAL/IDENTICAL
 // OFFSET: 0x009FFCB0/0x14079E2D0
 void CGBlobFrame::RenderCallback(void* param) {
     if (param) {
@@ -63,7 +61,6 @@ void CGBlobFrame::RenderCallback(void* param) {
     }
 }
 
-// PROVEN: bd1d03ec IDENTICAL/UNPROVEN
 // OFFSET: 0x009FFD60/0x14079E5A0
 void CGBlobFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
@@ -154,7 +151,6 @@ bool IntersectLines(const C3Vector& a0, const C3Vector& a1, const C3Vector& b0, 
     return true;
 }
 
-// PROVEN: 0884ad48 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A007D0/0x14079EE00
 CGBlobFrame::BlobRenderData::~BlobRenderData() {
 }
@@ -402,31 +398,26 @@ CGBlobFrame::~CGBlobFrame() {
     }
 }
 
-// PROVEN: 492dc977 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A01900/0x1407A0460
 const char* CGBlobFrame::GetObjectTypeName() {
     return CGBlobFrame::s_objectTypeName;
 }
 
-// PROVEN: ee5a68ff IDENTICAL/IDENTICAL
 // OFFSET: 0x00A01910/0x1407A0470
 int32_t CGBlobFrame::GetScriptMetaTable() {
     return CGBlobFrame::s_metatable;
 }
 
-// PROVEN: 5d1b9d93 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A01930/0x1407A0490
 bool CGBlobFrame::IsA(int32_t type) {
     return type == CGBlobFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 1c5d931d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A01970/0x1407A04C0
 bool CGBlobFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGBlobFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// PROVEN: fc5f47a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A019B0/0x1407A0530
 void CGBlobFrame::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
@@ -497,7 +488,6 @@ CGBlobFrame::CGBlobFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     }
 }
 
-// PROVEN: a8d176bd IDENTICAL/UNPROVEN
 // OFFSET: 0x00A01D70/0x1407A09C0
 void CGBlobFrame::DrawNone() {
     for (uint32_t i = 0; i < 4; i++) {
@@ -507,7 +497,6 @@ void CGBlobFrame::DrawNone() {
     }
 }
 
-// PROVEN: 7d6d0786 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A01E00/0x1407A0B20
 bool CGBlobFrame::BuildRenderData(int32_t index, bool filter) {
     if (index >= 0 && index < sizeof(this->m_groups) / sizeof(this->m_groups[0]) && this->m_groups[index].m_info) {
@@ -620,7 +609,6 @@ void CGBlobFrame::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: 1facf369 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A021F0/0x1407A10F0
 void CGBlobFrame::AddBlob(QuestPOIInfo* info, bool filter) {
     if (!info) {
@@ -645,7 +633,6 @@ void CGBlobFrame::AddBlob(QuestPOIInfo* info, bool filter) {
     }
 }
 
-// PROVEN: e233d7a0 IDENTICAL/IDENTICAL
 // OFFSET: [0x00841AE0/0x1407D7E80]
 void CGBlobFrame::DrawBlob(int32_t id, bool show) {
 }

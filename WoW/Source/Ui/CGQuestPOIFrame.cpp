@@ -39,19 +39,16 @@ CSimpleFrame* CGQuestPOIFrame::Create(CSimpleFrame* parent) {
 CGQuestPOIFrame::CGQuestPOIFrame(CSimpleFrame* parent) : CGBlobFrame(parent) {
 }
 
-// PROVEN: 3b4a4229 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02290/0x1407A11C0
 const char* CGQuestPOIFrame::GetObjectTypeName() {
     return CGQuestPOIFrame::s_objectTypeName;
 }
 
-// PROVEN: 33061a17 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A022A0/0x1407A11D0
 int32_t CGQuestPOIFrame::GetScriptMetaTable() {
     return CGQuestPOIFrame::s_metatable;
 }
 
-// PROVEN: 7cbf9dfa IDENTICAL/UNPROVEN
 // OFFSET: 0x00A022B0/0x1407A11E0
 void CGQuestPOIFrame::DrawBlob(int32_t id, bool show) {
     if (show) {
@@ -65,7 +62,6 @@ void CGQuestPOIFrame::DrawBlob(int32_t id, bool show) {
     }
 }
 
-// PROVEN: bda78837 NONE/IDENTICAL
 // OFFSET: 0x00A02350/0x1407A1290
 bool CGQuestPOIFrame::IsA(int32_t type) {
     return type == CGQuestPOIFrame::s_objectType || type == CGBlobFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;

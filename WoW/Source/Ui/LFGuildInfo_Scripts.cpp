@@ -19,7 +19,6 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: c63733c0 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EB9F0/0x140784A00
 static int32_t Script_RequestGuildRecruitmentSettings(lua_State* L) {
     GlobalLFGuildGetGuildPost msg;
@@ -28,7 +27,6 @@ static int32_t Script_RequestGuildRecruitmentSettings(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 0b10a5c7 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EBA20/0x140784A30
 static int32_t Script_GetGuildRecruitmentSettings(lua_State* L) {
     lua_pushboolean(L, CGLFGuildInfo::s_settings.m_interests & 1);
@@ -48,7 +46,6 @@ static int32_t Script_GetGuildRecruitmentSettings(lua_State* L) {
     return 13;
 }
 
-// PROVEN: ff4b84b2 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EBB20/0x140784B30
 static int32_t Script_GetGuildRecruitmentComment(lua_State* L) {
     lua_pushstring(L, CGLFGuildInfo::s_settings.m_comment);
@@ -56,7 +53,6 @@ static int32_t Script_GetGuildRecruitmentComment(lua_State* L) {
     return 1;
 }
 
-// PROVEN: f4506efc IDENTICAL/DIFFERENT
 // OFFSET: 0x009EBB40/0x140784B50
 static int32_t Script_RequestGuildApplicantsList(lua_State* L) {
     GlobalLFGuildGetRecruits msg(CGLFGuildInfo::s_recruitsLastUpdate);
@@ -65,7 +61,6 @@ static int32_t Script_RequestGuildApplicantsList(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 321b9b6c IDENTICAL/IDENTICAL
 // OFFSET: 0x009EBB70/0x140784B80
 static int32_t Script_SetLookingForGuildComment(lua_State* L) {
     CVar* var = CVar::Lookup("lfGuildComment");
@@ -77,7 +72,6 @@ static int32_t Script_SetLookingForGuildComment(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dcf3e451 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EBBB0/0x140784BE0
 static int32_t Script_RequestGuildMembershipList(lua_State* L) {
     GlobalLFGuildGetApplications msg;
@@ -236,7 +230,6 @@ static int32_t Script_SetGuildRecruitmentComment(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 44e6f0db IDENTICAL/IDENTICAL
 // OFFSET: 0x009EC1B0/0x140785100
 static int32_t Script_GetNumGuildApplicants(lua_State* L) {
     lua_pushnumber(L, CGLFGuildInfo::s_recruits.m_count);
@@ -244,7 +237,6 @@ static int32_t Script_GetNumGuildApplicants(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 816c3a12 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EC1F0/0x140785130
 static int32_t Script_GetGuildApplicantInfo(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -290,7 +282,6 @@ static int32_t Script_GetGuildApplicantInfo(lua_State* L) {
     return 16;
 }
 
-// PROVEN: 1152ee89 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EC3F0/0x140785380
 static int32_t Script_SetGuildApplicantSelection(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -321,7 +312,6 @@ static int32_t Script_GetGuildApplicantSelection(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 868797e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EC510/0x140785450
 static int32_t Script_DeclineGuildApplicant(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -334,7 +324,6 @@ static int32_t Script_DeclineGuildApplicant(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e4bb89e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EC570/0x1407854B0
 static int32_t Script_GetLookingForGuildSettings(lua_State* L) {
     CVar* var = CVar::Lookup("lfGuildSettings");
@@ -357,7 +346,6 @@ static int32_t Script_GetLookingForGuildSettings(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 56a38934 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EC640/0x140785590
 static int32_t Script_GetLookingForGuildComment(lua_State* L) {
     CVar* var = CVar::Lookup("lfGuildComment");
@@ -370,7 +358,6 @@ static int32_t Script_GetLookingForGuildComment(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8ac1880d IDENTICAL/UNPROVEN
 // OFFSET: 0x009EC670/0x1407855D0
 static int32_t Script_GetNumRecruitingGuilds(lua_State* L) {
     lua_pushnumber(L, CGLFGuildInfo::s_browseResults.m_count);
@@ -378,7 +365,6 @@ static int32_t Script_GetNumRecruitingGuilds(lua_State* L) {
     return 1;
 }
 
-// PROVEN: f72f3d49 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EC6B0/0x140785600
 static int32_t Script_GetRecruitingGuildInfo(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -408,7 +394,6 @@ static int32_t Script_GetRecruitingGuildInfo(lua_State* L) {
     return 7;
 }
 
-// PROVEN: e398bde5 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EC7D0/0x140785750
 static int32_t Script_GetRecruitingGuildSettings(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -464,7 +449,6 @@ static int32_t Script_GetRecruitingGuildTabardInfo(lua_State* L) {
     return 10;
 }
 
-// PROVEN: 894ff69b IDENTICAL/DIFFERENT
 // OFFSET: 0x009ECA40/0x140785A20
 static int32_t Script_SetRecruitingGuildSelection(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -479,7 +463,6 @@ static int32_t Script_SetRecruitingGuildSelection(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 30ae4107 IDENTICAL/UNPROVEN
 // OFFSET: 0x009ECAA0/0x140785A80
 static int32_t Script_GetRecruitingGuildSelection(lua_State* L) {
     for (int32_t i = 0; i < static_cast<int32_t>(CGLFGuildInfo::s_browseResults.m_count); i++) {
@@ -492,7 +475,6 @@ static int32_t Script_GetRecruitingGuildSelection(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 45ee6fa7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009ECB10/0x140785AE0
 static int32_t Script_GetNumGuildMembershipRequests(lua_State* L) {
     lua_pushnumber(L, CGLFGuildInfo::s_applications.m_count);
@@ -501,7 +483,6 @@ static int32_t Script_GetNumGuildMembershipRequests(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 1512cf08 IDENTICAL/DIFFERENT
 // OFFSET: 0x009ECB60/0x140785B20
 static int32_t Script_GetGuildMembershipRequestInfo(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -518,7 +499,6 @@ static int32_t Script_GetGuildMembershipRequestInfo(lua_State* L) {
     return 3;
 }
 
-// PROVEN: 7e10fa7d IDENTICAL/DIFFERENT
 // OFFSET: 0x009ECBD0/0x140785BB0
 static int32_t Script_GetGuildMembershipRequestSettings(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -579,7 +559,6 @@ static int32_t Script_SetLookingForGuildSettings(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e449dde9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009ECE60/0x140785EA0
 static int32_t Script_RequestRecruitingGuildsList(lua_State* L) {
     CGLFGuildInfo::SendBrowse();
@@ -684,7 +663,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGuildMembershipRequestSettings", &Script_GetGuildMembershipRequestSettings },
 };
 
-// PROVEN: 075fbca6 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EBBE0/0x140784C10
 void LFGuildRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

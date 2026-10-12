@@ -310,7 +310,6 @@ void InitObjectEffectStateMap() {
     s_objectEffectAnimStateMap[574].m_altStateID = 0;
 }
 
-// PROVEN: c5306f25 IDENTICAL/DIFFERENT
 // OFFSET: 0x005E2000/0x140260020
 void ObjectEffectSystem_ShutDown() {
     s_effectDefLookup.Clear();
@@ -471,19 +470,16 @@ CObjectEffect::~CObjectEffect() {
     }
 }
 
-// PROVEN: 08b6ded6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E20/0x14025E5A0
 float CObjectEffectModifier::InputNone(CObjectEffectManager* manager) {
     return -1.0f;
 }
 
-// PROVEN: f4e17f14 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E1130/0x14025EDD0
 float CObjectEffectModifier::InputSpeed(CObjectEffectManager* manager) {
     return manager->m_owner->GetSpeed();
 }
 
-// PROVEN: ea9cdb28 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A0A40/0x1407D7E80
 float CObjectEffectModifier::MapNone(float input, const float* params) {
     return input;
@@ -502,18 +498,15 @@ float CObjectEffectModifier::MapLinear(float input, const float* params) {
     return (input - params[0]) / (params[1] - params[0]) * (params[3] - params[2]) + params[2];
 }
 
-// PROVEN: 8e9ba7cd IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CObjectEffectModifier::OutputNone(CObjectEffect* effect, float value) {
 }
 
-// PROVEN: 5cb5b387 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E0920/0x14025E5F0
 void CObjectEffectModifier::OutputPitch(CObjectEffect* effect, float value) {
     SE3::SetFrequencyScale(effect->m_soundKitObject, value);
 }
 
-// PROVEN: 2d6d301a IDENTICAL/NONE
 // OFFSET: 0x005E0940
 void CObjectEffectModifier::Apply(CObjectEffectManager* manager, CObjectEffect* effect) {
     if (this->m_mapType <= 0) {
@@ -525,7 +518,6 @@ void CObjectEffectModifier::Apply(CObjectEffectManager* manager, CObjectEffect* 
     CObjectEffectModifier::s_outputFuncs[this->m_outputType](effect, value);
 }
 
-// PROVEN: 163358bf IDENTICAL/IDENTICAL
 // OFFSET: 0x005E09A0/0x14025E600
 int32_t FindObjectEffectStateFromAnimID(int32_t animId, int32_t alternate) {
     if (alternate == 1) {

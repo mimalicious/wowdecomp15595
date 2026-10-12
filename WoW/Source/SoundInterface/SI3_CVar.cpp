@@ -116,49 +116,42 @@ CVar* SI3::sm_pCVar_Sound_MaxCacheableSizeInBytes;
 // STATIC: 0x00E287E4/0x140D10420
 CVar* SI3::sm_pCVar_Sound_FootstepSounds;
 
-// PROVEN: 2e4acfbb IDENTICAL/IDENTICAL
 // OFFSET: 0x00630AA0/0x1402C5840
 static bool MasterVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_MASTER, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: bf1d4362 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630AC0/0x1402C5860
 static bool SFXVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_SFX, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: 53cf0d30 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630AE0/0x1402C5880
 static bool MusicVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_MUSIC, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: d5ec65ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00630B00/0x1402C58A0
 static bool MaxCacheSizeInBytesHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SetMaxCacheSizeInBytes(SStrToInt(value));
     return true;
 }
 
-// PROVEN: 67d4f5cc IDENTICAL/IDENTICAL
 // OFFSET: 0x00630B20/0x1402C58C0
 static bool MaxCacheableSizeInBytesHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SetMaxCacheableSizeInBytes(SStrToInt(value));
     return true;
 }
 
-// PROVEN: 3d6a6528 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630B40/0x1402C58E0
 static bool AmbienceVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_AMBIENCE, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: fe97c09a IDENTICAL/UNPROVEN
 // OFFSET: 0x00630B60/0x1402C5900
 static bool EnableSFXHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -167,7 +160,6 @@ static bool EnableSFXHandler(CVar* var, const char* oldValue, const char* value,
     return true;
 }
 
-// PROVEN: 951028de IDENTICAL/UNPROVEN
 // OFFSET: 0x00630B90/0x1402C5930
 static bool EnableMusicHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -181,7 +173,6 @@ static bool EnableMusicHandler(CVar* var, const char* oldValue, const char* valu
     return true;
 }
 
-// PROVEN: 1c0d00dc IDENTICAL/UNPROVEN
 // OFFSET: 0x00630BD0/0x1402C5970
 static bool EnableAmbienceHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -190,7 +181,6 @@ static bool EnableAmbienceHandler(CVar* var, const char* oldValue, const char* v
     return true;
 }
 
-// PROVEN: 4b3f3d36 IDENTICAL/UNPROVEN
 // OFFSET: 0x00630C00/0x1402C59B0
 static bool EnableAllSoundHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -199,7 +189,6 @@ static bool EnableAllSoundHandler(CVar* var, const char* oldValue, const char* v
     return true;
 }
 
-// PROVEN: 0e96590b IDENTICAL/UNPROVEN
 // OFFSET: 0x00630C30/0x1402C59F0
 static bool EnableErrorSpeechHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -208,7 +197,6 @@ static bool EnableErrorSpeechHandler(CVar* var, const char* oldValue, const char
     return true;
 }
 
-// PROVEN: 99e70bec IDENTICAL/UNPROVEN
 // OFFSET: 0x00630C60/0x1402C5A30
 static bool EnableReverbHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value)) {

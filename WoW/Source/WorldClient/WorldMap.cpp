@@ -138,7 +138,6 @@ void CWorldMap::InitializeLiquid() {
     CWaterRipple::Initialize();
 }
 
-// PROVEN: a3766622 IDENTICAL/DIFFERENT
 // OFFSET: 0x0072C9F0/0x140405B50
 void CWorldMap::Initialize() {
     CMap::Initialize();
@@ -167,7 +166,6 @@ const float* CWorldMap::GetDepthCoordTable(uint32_t liquidType) {
     return CWorldMap::s_emptyDepthCoordTable;
 }
 
-// PROVEN: 1a311f6f IDENTICAL/UNPROVEN
 // OFFSET: 0x0072CAA0/0x140405C20
 void CWorldMap::ClearAllChunkBufs() {
     for (int32_t i = 0; i < 2; i++) {
@@ -185,7 +183,6 @@ void CWorldMap::ClearAllChunkBufs() {
     }
 }
 
-// PROVEN: 75351ded IDENTICAL/UNPROVEN
 // OFFSET: 0x0072CAE0/0x140405C90
 void CWorldMap::ClearAllRenderChunks() {
     for (int32_t i = 0; i < 2; i++) {
@@ -203,7 +200,6 @@ void CWorldMap::ClearAllRenderChunks() {
     }
 }
 
-// PROVEN: 90222421 IDENTICAL/UNPROVEN
 // OFFSET: 0x0072CB20/0x140405D00
 void CWorldMap::ClearAllDetailDoodads() {
     for (int32_t i = 0; i < 2; i++) {
@@ -221,7 +217,6 @@ void CWorldMap::ClearAllDetailDoodads() {
     }
 }
 
-// PROVEN: 25cfaffc IDENTICAL/NONE
 // OFFSET: 0x0072CB60
 void CWorldMap::RemoveOtherMaps() {
     for (uint32_t i = 0; i < 12; i++) {
@@ -262,7 +257,6 @@ int32_t CWorldMap::AddMap(const char* directory, int32_t mapId, int32_t preload)
     return index != 12;
 }
 
-// PROVEN: 15c6b5c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0072CCE0/0x140405E70
 void CWorldMap::RemoveMap(int32_t mapId) {
     for (int32_t i = 1; i < 12; i++) {
@@ -341,7 +335,6 @@ void CWorldMap::UpdateEntity(CMapEntity* entity) {
     }
 }
 
-// PROVEN: dc043875 IDENTICAL/DIFFERENT
 // OFFSET: 0x0072D000/0x140406160
 void CWorldMap::AddChildMaps(int32_t mapId) {
     for (int32_t i = 0; i < g_mapDB.m_numRecords; i++) {
@@ -485,7 +478,6 @@ uintptr_t CWorldMap::AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_L
     return reinterpret_cast<uintptr_t>(entity);
 }
 
-// PROVEN: 0b496cbd IDENTICAL/NONE
 // OFFSET: 0x0072D4B0/0x140406860
 uintptr_t CWorldMap::AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* a8, int32_t a9) {
     CM2Model* model = CWorldScene::LoadModel(name, matrix, NULL, 0, NULL, NULL, 0, 0, 0, 0);
@@ -576,7 +568,6 @@ void CWorldMap::WaterReset() {
     this->DestroyLiquidPerturbators();
 }
 
-// PROVEN: 70bb3f73 IDENTICAL/UNPROVEN
 // OFFSET: 0x0072D980/0x1404070A0
 int32_t CWorldMap::GetActiveMapRecId(int32_t x, int32_t y) {
     uint8_t index = this->GetCurrentMapIndex(x, y);
@@ -856,7 +847,6 @@ CWorldMap::CWorldMap() {
     this->m_mapId = -1;
 }
 
-// PROVEN: 319ef575 IDENTICAL/DIFFERENT
 // OFFSET: 0x0072ED40/0x140408D70
 CWorldMap::~CWorldMap() {
 }
@@ -891,7 +881,6 @@ int32_t CWorldMap::LoadWorldMap(const char* directory, int32_t mapId, int32_t pr
     return 1;
 }
 
-// PROVEN: 2d087fc9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0072F3F0/0x140409950
 void CWorldMap::UnloadAllWorldMaps() {
     for (int32_t i = 0; i < 2; i++) {
@@ -911,7 +900,6 @@ void CWorldMap::UnloadAllWorldMaps() {
     }
 }
 
-// PROVEN: 25ebd110 IDENTICAL/UNPROVEN
 // OFFSET: 0x0072F560/0x140409AF0
 void CWorldMap::Destroy() {
     CWorldMap::UnloadAllWorldMaps();
@@ -1378,7 +1366,6 @@ CMap* CWorldMap::GetMap(const C3Vector& pos) {
     return NULL;
 }
 
-// PROVEN: 102131a9 IDENTICAL/NONE
 // OFFSET: 0x007315C0
 uint32_t CWorldMap::QueryAreaIdTerrain(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
@@ -1401,7 +1388,6 @@ int32_t CWorldMap::QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType,
     return map->QueryLiquidTerrain(pos, liquidType, height);
 }
 
-// PROVEN: 957b594a IDENTICAL/DIFFERENT
 // OFFSET: 0x00731620/0x14040C3B0
 bool CWorldMap::QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height) {
     CMap* map = this->GetMap(pos);
@@ -1413,7 +1399,6 @@ bool CWorldMap::QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liqu
     return map->QueryLiquid(pos, nearest, liquidType, height);
 }
 
-// PROVEN: bcd5592e IDENTICAL/DIFFERENT
 // OFFSET: 0x00731660/0x14040C450
 bool CWorldMap::QueryShadow(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
@@ -1425,7 +1410,6 @@ bool CWorldMap::QueryShadow(const C3Vector& pos) {
     return map->QueryShadowTerrain(pos);
 }
 
-// PROVEN: 56078b96 IDENTICAL/NONE
 // OFFSET: 0x00731690/0x14040C4C0
 bool CWorldMap::QueryGroundTypeTerrain(const C3Vector& pos, uint32_t& groundType) {
     CMap* map = this->GetMap(pos);
@@ -1492,7 +1476,6 @@ static int32_t QueryMapObjDefModels(CMapObjDef* mapObjDef, CM2Model** models, ui
     return count;
 }
 
-// PROVEN: 2fec2d0e IDENTICAL/DIFFERENT
 // OFFSET: 0x00731870/0x14040C720
 int32_t CWorldMap::QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower) {
     CMap* map = this->GetMap(pos);
@@ -1508,7 +1491,6 @@ int32_t CWorldMap::QueryFlightBounds(const C3Vector& pos, float& z, int32_t lowe
     return 0;
 }
 
-// PROVEN: bdf810df IDENTICAL/DIFFERENT
 // OFFSET: 0x007318B0/0x14040C7C0
 void CWorldMap::RenderFlightBounds(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
@@ -1694,7 +1676,6 @@ void CWorldMap::QueryTris(const CAaBox& box, World::TriData& tris, uint32_t flag
     }
 }
 
-// PROVEN: cbc913e1 IDENTICAL/NONE
 // OFFSET: 0x00731DE0/0x14040CF60
 void CWorldMap::QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results) {
     CMap* map = this->GetMap(pos);
@@ -2116,7 +2097,6 @@ bool CWorldMap::QueryFacets(const CAaBox& box, const CAaBox& box2, World::FacetD
     return true;
 }
 
-// PROVEN: 3799bb2c IDENTICAL/UNPROVEN
 // OFFSET: 0x00732AE0/0x14040E030
 bool CWorldMap::QueryFacets(const CAaBox& box, World::FacetData& facets, uint32_t flags) {
     return this->QueryFacets(box, box, facets, flags);
@@ -2283,7 +2263,6 @@ bool CWorldMap::Intersect(const C3Segment& seg, float& t, C4Plane& plane, uint32
     return hit;
 }
 
-// PROVEN: 2574e746 IDENTICAL/DIFFERENT
 // OFFSET: 0x00762F70/0x1404481B0
 static int32_t SortMapObjDefIntersects(const void* a, const void* b) {
     float distA = static_cast<const SMapObjDefVectorIntersect*>(a)->m_distSq;
@@ -2636,7 +2615,6 @@ void CWorldMap::VectorIntersectMapObjDefs(TSExplicitList<CMapBaseObjLink, offset
     }
 }
 
-// PROVEN: 64dc9328 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076AA90/0x140452830
 static const char* GetBaseName(const char* path) {
     const char* name = path;
@@ -3305,7 +3283,6 @@ void CWaterRipple::Init(const C3Vector& pos, float facing, float radius, float a
     }
 }
 
-// PROVEN: ab810557 IDENTICAL/UNPROVEN
 // OFFSET: 0x00764D50/0x14044A5E0
 CWaterRipple* CWaterRipple::Create(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player) {
     uint32_t slot;
@@ -3329,7 +3306,6 @@ CWaterRipple* CWaterRipple::Create(const C3Vector& pos, float facing, float radi
     return ripple;
 }
 
-// PROVEN: 38e72546 IDENTICAL/DIFFERENT
 // OFFSET: 0x00764DF0/0x14044A690
 void CWorldMap::CreateWaterRipple(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player) {
     float scale = 1.0f;

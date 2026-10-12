@@ -21,7 +21,6 @@
 // STATIC: 0x00F33EF0/0x140E26EC0
 static uint32_t s_partyInfoRequest;
 
-// PROVEN: 780ce83d IDENTICAL/DIFFERENT
 // OFFSET: 0x009298F0/0x14068F810
 static int32_t Script_CommentatorGetMode(lua_State* L) {
     int32_t mode = 0;
@@ -73,7 +72,6 @@ static int32_t Script_CommentatorSetMode(lua_State* L) {
     return 0;
 }
 
-// PROVEN: bfec19cf IDENTICAL/UNPROVEN
 // OFFSET: 0x00928410/0x14068DEA0
 static int32_t Script_CommentatorGetNumMaps(lua_State* L) {
     lua_pushnumber(L, CGCommentator::s_Commentator.m_maps.Count());
@@ -139,7 +137,6 @@ static int32_t Script_CommentatorGetSkirmishQueuePlayerInfo(lua_State* L) {
     return 3;
 }
 
-// PROVEN: 142ed52a IDENTICAL/DIFFERENT
 // OFFSET: 0x0092B650/0x140691FF0
 static int32_t Script_CommentatorGetSkirmishQueueCount(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -152,7 +149,6 @@ static int32_t Script_CommentatorGetSkirmishQueueCount(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ac6a1fc7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092B5F0/0x140691F90
 static int32_t Script_CommentatorGetSkirmishMode(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -591,7 +587,6 @@ static int32_t Script_CommentatorLookatPlayer(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 01a8fd46 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092A500/0x140690880
 static int32_t Script_CommentatorSetMapAndInstanceIndex(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1052,7 +1047,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CommentatorGetSkirmishMode", &Script_CommentatorGetSkirmishMode },
 };
 
-// PROVEN: 4d5d6cf1 IDENTICAL/UNPROVEN
 // OFFSET: 0x009281C0/0x14068DCE0
 void CGCommentator::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1060,7 +1054,6 @@ void CGCommentator::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 2f4e6255 IDENTICAL/UNPROVEN
 // OFFSET: 0x009281F0/0x14068DD30
 void CGCommentator::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

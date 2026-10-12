@@ -106,13 +106,11 @@ TSGrowableArray<CAsyncObject*> CCharacterCreation::m_racialTexturesLoading;
 // STATIC: 0x00EBC23C/0x140DAD1E0
 CGlueMgr::WeaponLoadOut CCharacterCreation::m_weaponLoadOut;
 
-// PROVEN: 9650f25b IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C050/0x140522680
 void CCharacterCreation::SetCharCustomizeFrame(CSimpleModelFFX* modelFrame) {
     CCharacterCreation::m_charCustomizeFrame = modelFrame;
 }
 
-// PROVEN: 8764a68e IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C060/0x140522690
 void CCharacterCreation::UndressComponent(CCharacterComponent* component) {
     if (!component) {
@@ -186,7 +184,6 @@ int32_t CCharacterCreation::GetDefaultSlotByType(int32_t inventoryType) {
     }
 }
 
-// PROVEN: ab07c054 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C3F0/0x140522AB0
 int32_t CCharacterCreation::GetSelectedSex() {
     if (CCharacterCreation::m_character) {
@@ -196,7 +193,6 @@ int32_t CCharacterCreation::GetSelectedSex() {
     return 0;
 }
 
-// PROVEN: ee35f403 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080C400/0x140522AD0
 void CCharacterCreation::GetRandomRaceAndSex(ComponentData* data) {
     int32_t races[24];
@@ -216,7 +212,6 @@ void CCharacterCreation::GetRandomRaceAndSex(ComponentData* data) {
     data->m_preferences.m_raceID = races[index];
 }
 
-// PROVEN: 0cd8e5e8 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080C4D0/0x140522BD0
 bool IsRaceClassValid(int32_t raceID, int32_t classID) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(g_charBaseInfoDB.m_numRecords); i++) {
@@ -374,7 +369,6 @@ CGlueMgr::WeaponLoadOut CCharacterCreation::Dress() {
     return CGlueMgr::AddItemsFromCharInfo(&info, CCharacterCreation::m_character, NULL, CCharacterCreation::BowModelLoadedCallback);
 }
 
-// PROVEN: 1d2ceba4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C8E0/0x1405230B0
 void CCharacterCreation::SetCharacterFacing(float facing) {
     CCharacterComponent* component = CCharacterCreation::m_alteredCharacter && CCharacterCreation::m_alteredFormAtFront ? CCharacterCreation::m_alteredCharacter : CCharacterCreation::m_character;
@@ -486,7 +480,6 @@ void CCharacterCreation::SetPet() {
     }
 }
 
-// PROVEN: 27e7b8d9 IDENTICAL/NONE
 // OFFSET: 0x0080CCC0
 void CCharacterCreation::UninitCharacterComponent(CCharacterComponent*& component) {
     if (!component) {
@@ -534,7 +527,6 @@ void CCharacterCreation::InitCharacterComponent(CCharacterComponent*& component,
     model->m_lightingArg = CCharacterCreation::m_charCustomizeFrame->m_lightArray2;
 }
 
-// PROVEN: 271c6f0f IDENTICAL/NONE
 // OFFSET: 0x0080CDD0
 bool CCharacterCreation::IsClassAvailable(int32_t classID) {
     for (uint32_t i = 0; i < CCharacterCreation::m_classes.Count(); i++) {
@@ -546,7 +538,6 @@ bool CCharacterCreation::IsClassAvailable(int32_t classID) {
     return false;
 }
 
-// PROVEN: eb061414 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080CE10/0x140523630
 void CCharacterCreation::RandomizeCharFeatures() {
     COMPONENT_CONTEXT context = static_cast<COMPONENT_CONTEXT>(0);
@@ -621,7 +612,6 @@ validated:
     }
 }
 
-// PROVEN: c8bc2a4d IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D020/0x1405238A0
 void CCharacterCreation::StartAnimation(uint64_t param) {
     if (g_useAnimKitsOnGlueScreen) {
@@ -641,7 +631,6 @@ void CCharacterCreation::StartAnimation(uint64_t param) {
     }
 }
 
-// PROVEN: 8b7bdb8a IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D0E0/0x14051E1E0
 int32_t CCharacterCreation::GetExistingRaceIndex() {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex);
@@ -657,7 +646,6 @@ int32_t CCharacterCreation::GetExistingRaceIndex() {
     return -1;
 }
 
-// PROVEN: c44721f4 IDENTICAL/NONE
 // OFFSET: 0x0080D120
 int32_t CCharacterCreation::GetExistingClassIndex() {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex);
@@ -710,7 +698,6 @@ void CCharacterCreation::TextureMakeLocalFinishedCallback(CAsyncObject* object) 
     AsyncFileReadDestroyObject(object);
 }
 
-// PROVEN: 879e6824 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D230/0x140523A90
 int32_t CCharacterCreation::Idle(const void* data, void* param) {
     if (CCharacterCreation::m_charCustomizeFrame) {
@@ -777,13 +764,11 @@ int32_t CCharacterCreation::GetRandomClassID() {
     return classes[index];
 }
 
-// PROVEN: f00c8714 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080DF10/0x140524B30
 void CCharacterCreation::OnShow() {
     EventRegisterEx(EVENT_ID_IDLE, CCharacterCreation::Idle, NULL, 0.0f);
 }
 
-// PROVEN: 228c4119 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080DF30/0x140524B50
 void CCharacterCreation::UninitCharacterComponents() {
     if (CCharacterCreation::m_standAnimKit) {
@@ -954,7 +939,6 @@ bool CCharacterCreation::SetSelectedClass(int32_t classID) {
     return true;
 }
 
-// PROVEN: cb412a64 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080E750/0x140525580
 void CCharacterCreation::CycleCharCustomization(CHAR_CUSTOMIZATION_TYPE type, int32_t delta) {
     if (!delta) {
@@ -1125,7 +1109,6 @@ void CCharacterCreation::Initialize() {
     }
 }
 
-// PROVEN: 0c014c6b IDENTICAL/NONE
 // OFFSET: 0x0080ED80
 void CCharacterCreation::Shutdown() {
     CCharacterCreation::UninitCharacterComponents();
@@ -1144,7 +1127,6 @@ void CCharacterCreation::Shutdown() {
     CCharacterCreation::CancelRaceSexComponentTexturesPreload();
 }
 
-// PROVEN: 7cf42d01 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080EDE0/0x140525F10
 void CCharacterCreation::OnHide() {
     CCharacterCreation::CancelRaceSexComponentTexturesPreload();
@@ -1253,7 +1235,6 @@ void CCharacterCreation::CalcClasses(int32_t raceID) {
     }
 }
 
-// PROVEN: 86d7c98c IDENTICAL/UNPROVEN
 // OFFSET: 0x0080F1D0/0x140526400
 void CCharacterCreation::ResetCharCustomizeInfo() {
     if (!CCharacterCreation::m_charCustomizeFrame) {
@@ -1370,7 +1351,6 @@ void CCharacterCreation::SetSelectedRace(uint32_t raceIndex) {
     CCharacterCreation::PreloadRaceSexComponentTextures();
 }
 
-// PROVEN: 92ae1953 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080F5B0/0x140526870
 void CCharacterCreation::SetToExistingCharacter(uint32_t index) {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(index);

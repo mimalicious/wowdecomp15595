@@ -60,13 +60,11 @@ static TSGrowableArray<C3iVector> s_multisampleFormats;
 // STATIC: 0x00F76AA4/0x140E6CB60
 static TSGrowableArray<C2iVector> s_refreshRates;
 
-// PROVEN: 974b7cce IDENTICAL/IDENTICAL
 // OFFSET: 0x009F80B0/0x140795010
 static bool CompareRefreshRates(const C2iVector& a, const C2iVector& b) {
     return a.x * b.y < b.x * a.y;
 }
 
-// PROVEN: 10c5340f IDENTICAL/IDENTICAL
 // OFFSET: 0x009F80D0/0x140795030
 static int32_t Script_GetMonitorCount(lua_State* L) {
     lua_pushnumber(L, GxAdapterMonitorCount());
@@ -90,7 +88,6 @@ static int32_t Script_GetMonitorName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 50c8b549 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F81A0/0x1407950F0
 static int32_t Script_SetGamma(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -105,7 +102,6 @@ static int32_t Script_SetGamma(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ac7dda11 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F8220/0x140795190
 static uint32_t ValidateVideoOption(const char* name, int32_t value) {
     if (!_stricmp(name, "componentTextureLevel")) {
@@ -217,7 +213,6 @@ static int32_t Script_SetDefaultVideoOptions(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 7628ca2b IDENTICAL/IDENTICAL
 // OFFSET: 0x009F8540/0x140795540
 static int32_t Script_GetDefaultVideoOptions(lua_State* L) {
     const CWorldParam::DefaultSetting* setting = CWorldParam::GetCurrentDefaultSettings();
@@ -232,7 +227,6 @@ static int32_t Script_GetDefaultVideoOptions(lua_State* L) {
     return count;
 }
 
-// PROVEN: 8ae9dfe3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F8590/0x1407955B0
 static int32_t Script_GetVideoOptions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -258,7 +252,6 @@ static int32_t Script_GetVideoOptions(lua_State* L) {
     return count;
 }
 
-// PROVEN: b4ea79d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F8630/0x140795660
 static int32_t Script_GetGraphicsAPIs(lua_State* L) {
     int32_t count = 0;
@@ -273,7 +266,6 @@ static int32_t Script_GetGraphicsAPIs(lua_State* L) {
     return count;
 }
 
-// PROVEN: 1e5e73e0 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F8670/0x1407956C0
 static int32_t Script_SetSelectedScreenResolutionIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -316,7 +308,6 @@ static int32_t Script_SetScreenResolution(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 40159c7f IDENTICAL/DIFFERENT
 // OFFSET: 0x009F89D0/0x140795990
 static int32_t Script_SetupFullscreenScale(lua_State* L) {
     if (lua_type(L, 1) == LUA_TTABLE) {
@@ -425,7 +416,6 @@ static int32_t Script_GetVideoCaps(lua_State* L) {
     return 7;
 }
 
-// PROVEN: 92285cc9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F8D10/0x140795CE0
 static int32_t Script_GetGamma(lua_State* L) {
     CVar* gamma = CVar::Lookup("gamma");
@@ -444,7 +434,6 @@ static int32_t Script_IsStereoVideoAvailable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 2ec2fea0 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F8E80/0x140795E00
 static int32_t Script_GetMonitorAspectRatio(lua_State* L) {
     uint32_t monitor = 0;
@@ -520,7 +509,6 @@ static void SetupFormats(uint32_t monitor) {
     }
 }
 
-// PROVEN: 96e26832 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F9260/0x140796430
 static int32_t Script_GetScreenResolutions(lua_State* L) {
     uint32_t monitor = 0;
@@ -573,7 +561,6 @@ static int32_t Script_GetCurrentResolution(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 61d77ef6 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F93E0/0x1407965D0
 static int32_t Script_GetMultisampleFormats(lua_State* L) {
     uint32_t monitor = 0;
@@ -737,7 +724,6 @@ static void SetupRefreshRates(uint32_t monitor, int32_t width, int32_t height) {
     }
 }
 
-// PROVEN: f1fa44d6 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F9BF0/0x140797110
 static int32_t Script_GetRefreshRates(lua_State* L) {
     int32_t width = 0;
@@ -877,7 +863,6 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "GetGraphicsAPIs", &Script_GetGraphicsAPIs },
 };
 
-// PROVEN: 9b8b9379 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F86E0/0x140795710
 void CGVideoOptions::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -885,7 +870,6 @@ void CGVideoOptions::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: b746fe32 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F8710/0x140795760
 void CGVideoOptions::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

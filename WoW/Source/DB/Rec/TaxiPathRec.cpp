@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[4] = { 0, 0, 0, 0 };
 // STATIC: 0x00C200E8/0x140A14860
 const DBCMeta TaxiPathRec::s_meta = { "DBFilesClient\\TaxiPath.dbc", 4, 16, TaxiPathRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 008a31da IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void TaxiPathRec::FixupStrings(void* record, const char* strings) {
 }

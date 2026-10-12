@@ -18,7 +18,6 @@ const uint32_t CGxDeviceD3d11::s_texFormatResolvable[GxTexFormats_Last] = { 0, 1
 
 const DXGI_FORMAT CGxDeviceD3d11::s_GxTexFormatToSrvFormat[GxTexFormats_Last] = { DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8_SNORM, DXGI_FORMAT_BC1_UNORM, DXGI_FORMAT_BC2_UNORM, DXGI_FORMAT_BC3_UNORM, DXGI_FORMAT_R16_UNORM, DXGI_FORMAT_R16G16_FLOAT, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN };
 
-// PROVEN: 1a9eca01 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 static void ITexNullUserFunc(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
 }
@@ -37,7 +36,6 @@ static uint32_t ScratchSizeClass(uint32_t size) {
     return sizeClass;
 }
 
-// PROVEN: 97f614d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086B0A0/0x14059F050
 void D3d11Error(const char* file, int32_t line, const char* format, ...) {
     va_list args;
@@ -283,7 +281,6 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
     return 1;
 }
 
-// PROVEN: bbd6c235 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086B6C0/0x14059F850
 void CGxDeviceD3d11::ITexScratchClear() {
     for (uint32_t i = 0; i < GxTexFormats_Last; i++) {
@@ -420,7 +417,6 @@ void CGxDeviceD3d11::ITexReleaseD3dTexture(CGxTex* texId) {
     this->IResourceTouch(texId);
 }
 
-// PROVEN: 4d5b64e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086BB60/0x14059FBC0
 void CGxDeviceD3d11::TexDestroy(CGxTex* texId) {
     if (!texId->m_needsCreation && (texId->m_apiSpecificData || texId->m_apiSpecificData2)) {
@@ -724,7 +720,6 @@ void CGxDeviceD3d11::ITexUpload(CGxTex* texId) {
     texId->m_userFunc(GxTex_Unlock, texId->m_width, texId->m_height, 0, 0, texId->m_userArg, texelStrideInBytes, texels);
 }
 
-// PROVEN: 1c651d90 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086C530/0x1405A0980
 void CGxDeviceD3d11::ITexMarkAsUpdated(CGxTex* texId) {
     if (!texId->m_needsUpdate || !this->m_context) {
@@ -1112,7 +1107,6 @@ int32_t CGxDeviceD3d11::TexResolve(CGxTex* source, CGxTex* dest) {
     return 1;
 }
 
-// PROVEN: b6cfa536 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceD3d11::IResourceTouch(const void* resource) {
 }

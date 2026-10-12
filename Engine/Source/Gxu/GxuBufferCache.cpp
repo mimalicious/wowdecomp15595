@@ -3,7 +3,6 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/CGxPool.h"
 
-// PROVEN: 5232c6f7 DIFFERENT/IDENTICAL
 // OFFSET: 0x00622100/0x1402B2EC0
 void GxuBufferCache::ReleaseCache() {
     for (uint32_t i = 0; i < this->m_entries.m_count; i++) {
@@ -63,7 +62,6 @@ CGxBuf* GxuBufferCache::AcquireBuffer(uint32_t handle) {
     return this->m_entries.m_data[handle].m_buf;
 }
 
-// PROVEN: 70b40631 DIFFERENT/IDENTICAL
 // OFFSET: 0x00622260/0x1402B3070
 void GxuBufferCache::ReleaseBuffer(uint32_t handle) {
     this->m_entries.m_data[handle].m_refCount--;

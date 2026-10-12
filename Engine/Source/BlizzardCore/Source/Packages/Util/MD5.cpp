@@ -43,7 +43,6 @@ Blizzard::Util::MD5::MD5() {
     this->m_state[3] = 0x10325476;
 }
 
-// PROVEN: 3bf4f77a IDENTICAL/DIFFERENT
 // OFFSET: 0x007B02F0/0x1404A50D0
 void Blizzard::Util::MD5::Finish(uint8_t* digest) {
     uint8_t length[8];

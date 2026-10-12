@@ -119,12 +119,10 @@ CMipBitsCache::~CMipBitsCache() {
     }
 }
 
-// PROVEN: c74642f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void GxTexNullUserFunc(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
 }
 
-// PROVEN: 450314b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00540720/0x140193230
 EGxTexFormat TexturePixelFormatToGxTexFormat(PIXEL_FORMAT format) {
     return s_pixelFormatToGxTexFormat[format];
@@ -270,19 +268,16 @@ static int32_t TextureSplitExtension(char* buffer, const char* fileName, char*& 
     return type;
 }
 
-// PROVEN: 55a942d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00540BB0/0x140193630
 EGxTexFilter TextureGetFilterMode() {
     return s_filterMode;
 }
 
-// PROVEN: 8deda106 IDENTICAL/IDENTICAL
 // OFFSET: 0x00540BC0/0x140193640
 uint32_t TextureGetMaxAnisotropy() {
     return s_maxAnisotropy;
 }
 
-// PROVEN: e3fbcd12 IDENTICAL/IDENTICAL
 // OFFSET: 0x00540BD0/0x140193650
 void TextureEnableAtlas(int32_t enable) {
     s_atlasEnable = enable;
@@ -302,7 +297,6 @@ CGxTexFlags TextureMakeTexFlags(CGxTexFlags texFlags, int32_t defaultFilter) {
     return texFlags;
 }
 
-// PROVEN: 53f3bc6c IDENTICAL/IDENTICAL
 // OFFSET: 0x00540BE0/0x140193660
 void TextureAddRef(CTexture* texture) {
     if (!texture) {
@@ -336,7 +330,6 @@ int32_t TextureIsSame(CTexture* texture, const char* fileName) {
     return SStrCmpI(name, texture->m_filename, sizeof(texture->m_filename)) == 0;
 }
 
-// PROVEN: a0a0409b IDENTICAL/IDENTICAL
 // OFFSET: 0x00540C80/0x140193790
 void TextureSetUserData(CTexture* texture, GxTexUserFunc userFunc, void* userArg) {
     if (!texture) {
@@ -347,7 +340,6 @@ void TextureSetUserData(CTexture* texture, GxTexUserFunc userFunc, void* userArg
     GxTexSetUserData(texture->m_gxTex, userFunc, userArg);
 }
 
-// PROVEN: 39642d4a IDENTICAL/IDENTICAL
 // OFFSET: 0x00540CB0/0x1401937E0
 int32_t TextureOnAtlas(CTexture* texture) {
     if (!texture) {
@@ -420,7 +412,6 @@ void TextureGenerateMips(uint32_t width, uint32_t height, uint32_t firstLevel, u
     }
 }
 
-// PROVEN: 02708afe IDENTICAL/IDENTICAL
 // OFFSET: 0x00540E20/0x140193980
 void TextureFreeMippedImg(MipBits* bits) {
     if (bits) {
@@ -428,7 +419,6 @@ void TextureFreeMippedImg(MipBits* bits) {
     }
 }
 
-// PROVEN: b2d930da IDENTICAL/DIFFERENT
 // OFFSET: 0x00540E40/0x1401939B0
 TEXFILETYPE TextureDiscoverFileType(const char* fileName) {
     const char* extension = OsPathFindExtensionWithDot(fileName);
@@ -477,7 +467,6 @@ TEXFILETYPE TexturePickAlternateFilename(const char* fileName, TEXFILETYPE type,
     return type;
 }
 
-// PROVEN: 7f3e27ce IDENTICAL/IDENTICAL
 // OFFSET: 0x00540FD0/0x140193BC0
 const char* TextureGetFilename(CTexture* texture) {
     if (!texture) {
@@ -493,14 +482,12 @@ int32_t TextureIsLoaded(CTexture* texture) {
     return texture && !texture->m_asyncObject;
 }
 
-// PROVEN: de8122be IDENTICAL/IDENTICAL
 // OFFSET: 0x00541010/0x140193C10
 void TextureSetTextureSubstitutions(const char* from, const char* to) {
     s_substituteFrom = const_cast<char*>(from);
     s_substituteTo = const_cast<char*>(to);
 }
 
-// PROVEN: 3833ca98 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541030/0x140193C20
 void TextureGetGxTexFlags(CTexture* texture, CGxTexFlags* texFlags) {
     if (!texture) {
@@ -511,25 +498,21 @@ void TextureGetGxTexFlags(CTexture* texture, CGxTexFlags* texFlags) {
     *texFlags = texture->m_gxTexFlags;
 }
 
-// PROVEN: 660b7d26 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541050/0x140193C40
 int32_t TextureLoadBlob(const char* fileName) {
     return CTextureBlob::Load(fileName);
 }
 
-// PROVEN: 15eb7a5d IDENTICAL/IDENTICAL
 // OFFSET: 0x00541060/0x140193C50
 int32_t TextureLoadBlob(const char* fileName, void* data, uint32_t size) {
     return CTextureBlob::Load(fileName, data, size);
 }
 
-// PROVEN: 4ddb0b42 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541070/0x140193C60
 int32_t TextureUnloadBlob(const char* fileName) {
     return CTextureBlob::Unload(fileName);
 }
 
-// PROVEN: 2f536430 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541080/0x140193C70
 const char* TextureGetObjectName(CTexture* texture) {
     if (!texture) {
@@ -540,7 +523,6 @@ const char* TextureGetObjectName(CTexture* texture) {
     return texture->GetObjectName();
 }
 
-// PROVEN: 73c03e4c IDENTICAL/DIFFERENT
 // OFFSET: 0x005410A0/0x140193CA0
 void TextureComputeLoadProgress(CTexture* texture, int64_t& loaded, int64_t& total) {
     char* extension = OsPathFindExtensionWithDot(texture->m_filename);
@@ -555,19 +537,16 @@ void TextureComputeLoadProgress(CTexture* texture, int64_t& loaded, int64_t& tot
     *extension = '\0';
 }
 
-// PROVEN: af02a2c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541100/0x140193D30
 int32_t TextureIsBlob(CTexture* texture) {
     return texture->m_asyncObject && texture->m_gxTex;
 }
 
-// PROVEN: 047493f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541120/0x140193D50
 int32_t TextureIsStreaming(CTexture* texture) {
     return texture->m_asyncObject && texture->m_asyncObject->m_isStreamed;
 }
 
-// PROVEN: 56119f1f IDENTICAL/IDENTICAL
 // OFFSET: 0x00541140/0x140193D70
 int32_t TextureGetAsyncRenderStatus(CTexture* texture) {
     if (texture->m_asyncObject) {
@@ -806,7 +785,6 @@ void TextureGetTextureFormats(PIXEL_FORMAT& pixelFormat, EGxTexFormat& gxTexForm
     }
 }
 
-// PROVEN: d6e405d8 DIFFERENT/IDENTICAL
 // OFFSET: 0x005416B0/0x140194180
 uint32_t TextureCacheGetMaxSize() {
     uint32_t size = 0x4000000;
@@ -1008,7 +986,6 @@ int32_t TextureGetDimensions(CTexture* texture, uint32_t* width, uint32_t* heigh
     return 1;
 }
 
-// PROVEN: 9b1ff507 DIFFERENT/IDENTICAL
 // OFFSET: 0x00543800/0x140197170
 CGxTex* TextureForceLoad(CTexture* texture) {
     if (texture->m_flags & 4) {
@@ -1030,7 +1007,6 @@ CGxTex* TextureForceLoad(CTexture* texture) {
     return texture->m_gxTex;
 }
 
-// PROVEN: 7d16056f IDENTICAL/IDENTICAL
 // OFFSET: 0x00543880/0x140197200
 CGxTex* TextureForceLoadForDiskOnly(CTexture* texture) {
     CAsyncObject* object = texture->m_asyncObject;
@@ -1065,7 +1041,6 @@ CTextureAtlas::CTextureAtlas() {
     memset(this->m_textures, 0, sizeof(this->m_textures));
 }
 
-// PROVEN: 8df25520 IDENTICAL/DIFFERENT
 // OFFSET: 0x00541CB0/0x140194800
 void TextureCacheRemoveTexture(CTexture* texture) {
     s_textureCache.Unlink(texture);
@@ -1214,7 +1189,6 @@ void TextureCacheUpdate() {
     }
 }
 
-// PROVEN: 6a289e30 DIFFERENT/IDENTICAL
 // OFFSET: 0x00541AA0/0x1401945D0
 void TextureIncreasePriority(CTexture* texture) {
     CAsyncObject* object = texture->m_asyncObject;
@@ -1262,7 +1236,6 @@ CGxTex* TextureGetGxTex(CTexture* texture) {
     return texture->m_atlas->m_gxTex;
 }
 
-// PROVEN: 983e494a IDENTICAL/IDENTICAL
 // OFFSET: 0x005444E0/0x140198510
 CGxTex* TextureGetGxTexBlocking(CTexture* texture) {
     CGxTex* gxTex = TextureGetGxTex(texture);
@@ -1305,7 +1278,6 @@ CTexture* TextureCacheGetTexture(const char* fileName) {
     return texture;
 }
 
-// PROVEN: 271e9c18 IDENTICAL/DIFFERENT
 // OFFSET: 0x00542270/0x140194FB0
 CTexture* TextureCacheGetTexture(char* fileName, char* extension, CGxTexFlags texFlags) {
     if (extension) {
@@ -1374,7 +1346,6 @@ void TextureFreeGxTex(CGxTex* gxTex, const char* name) {
     }
 }
 
-// PROVEN: f2601043 IDENTICAL/IDENTICAL
 // OFFSET: 0x00542420/0x140195370
 int32_t TextureUpdate(const void* data, void* param) {
     s_currentTime = OsGetAsyncTimeMs();
@@ -1466,7 +1437,6 @@ void TextureFreeMippedImg(MipBits* bits, PIXEL_FORMAT format, uint32_t width, ui
     s_mipBitsCache[x][y][cache].LinkToTail(entry);
 }
 
-// PROVEN: 4d409719 IDENTICAL/DIFFERENT
 // OFFSET: 0x00542920/0x140195B00
 CTextureAtlas::~CTextureAtlas() {
     if (this->m_gxTex) {
@@ -1860,7 +1830,6 @@ void AsyncTextureSuccessCallback(CAsyncObject* object) {
     texture->m_asyncObject = NULL;
 }
 
-// PROVEN: c0acde7d IDENTICAL/UNPROVEN
 // OFFSET: 0x00541EC0/0x140194B30
 int32_t AsyncTextureStatus() {
     int32_t count = 0;
@@ -2030,7 +1999,6 @@ CTexture::CTexture() {
     s_textureList.LinkToTail(this);
 }
 
-// PROVEN: 5bfcc2da IDENTICAL/IDENTICAL
 // OFFSET: 0x00543C00/0x140197750
 const char* CTexture::GetObjectName() {
     return this->m_filename;
@@ -2332,7 +2300,6 @@ CTexture* TextureCreateBlob(char* fileName, CGxTexFlags texFlags, CStatus* statu
     return texture;
 }
 
-// PROVEN: e41d405d IDENTICAL/IDENTICAL
 // OFFSET: 0x00544900/0x140198B40
 CTexture* TextureCreate(uint32_t width, uint32_t height, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags texFlags, void* userArg, GxTexUserFunc userFunc, const char* name, int32_t defaultFilter) {
     return TextureCreate(GxTex_2d, width, height, 0, format, dataFormat, texFlags, userArg, userFunc, name, defaultFilter);

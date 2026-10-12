@@ -260,7 +260,6 @@ int32_t SPIRIT_IP_MR_V3_NAME_309(int32_t index, SPIRIT_IPMR_FRAME* frame) {
     return 0;
 }
 
-// PROVEN: dcc29403 IDENTICAL/NONE
 // OFFSET: 0x00B4DEA0
 void SPIRIT_IP_MR_V3_NAME_311(SPIRIT_IPMR_FRAME* frame) {
     if (frame->m_mode == 0) {
@@ -270,7 +269,6 @@ void SPIRIT_IP_MR_V3_NAME_311(SPIRIT_IPMR_FRAME* frame) {
     }
 }
 
-// PROVEN: 2eacd73e IDENTICAL/NONE
 // OFFSET: 0x00B4DED0
 float SPIRIT_IP_MR_V3_SquaredDistance10(const float* a, const float* b) {
     float sum = 0.0f;
@@ -283,7 +281,6 @@ float SPIRIT_IP_MR_V3_SquaredDistance10(const float* a, const float* b) {
     return sum;
 }
 
-// PROVEN: 6ee886ae IDENTICAL/NONE
 // OFFSET: 0x00B4DFC0
 void SPIRIT_IP_MR_V3_NAME_85(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input) {
     SPIRIT_IP_MR_V3_NAME_189(state->unk_0010, &state->unk_0010[160], 200);
@@ -294,7 +291,6 @@ void SPIRIT_IP_MR_V3_NAME_85(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input)
     SPIRIT_IP_MR_V3_NAME_189(state->unk_1450, &state->unk_1450[160], 154);
 }
 
-// PROVEN: 47bd9e47 IDENTICAL/NONE
 // OFFSET: 0x00B50B00
 void SPIRIT_IP_MR_V3_NAME_85_Forward(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input) {
     SPIRIT_IP_MR_V3_NAME_85(state, input);

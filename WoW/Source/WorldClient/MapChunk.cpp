@@ -222,13 +222,11 @@ void CMapChunk::ProcessIffChunks(uint32_t* data, int32_t size, int32_t isNew) {
     }
 }
 
-// PROVEN: 5ac2b00d IDENTICAL/NONE
 // OFFSET: 0x0073B410
 int32_t CMapChunk::TestBit(const uint8_t* bits, uint32_t index) {
     return ((1 << (index & 7)) & bits[index >> 3]) != 0;
 }
 
-// PROVEN: b7409c74 IDENTICAL/NONE
 // OFFSET: 0x0073B440
 void CMapChunkHeader::Set(const SMChunk& chunk) {
     this->m_flags = chunk.m_flags;
@@ -893,7 +891,6 @@ void CMapChunk::CreateDetailDoodads() {
     }
 }
 
-// PROVEN: 3a34611f IDENTICAL/IDENTICAL
 // OFFSET: 0x007848B0/0x1404734B0
 void CMapChunk::CreateDetailDoodadInst() {
     if (!this->m_header.m_nLayers || !this->LoadDetailDoodadModels()) {
@@ -2521,7 +2518,6 @@ bool CMap::GetFacets(const CFrustum& frustum, const CAaBox& bounds, const CiRect
     return true;
 }
 
-// PROVEN: 50e0c5cb IDENTICAL/DIFFERENT
 // OFFSET: 0x00871FE0/0x140581DE0
 void CMapChunk::Destroy() {
 }
@@ -2551,7 +2547,6 @@ void CMapChunk::InitVertexListXY() {
     }
 }
 
-// PROVEN: 2525e2da IDENTICAL/DIFFERENT
 // OFFSET: 0x0073B360/0x140418A70
 int32_t CMapChunk::AreTexturesLoaded() {
     const SMLayer* layer = this->m_layers;
@@ -2581,7 +2576,6 @@ int32_t CMapChunk::AreTexturesLoaded() {
     return !shaderTexture || TextureIsLoaded(shaderTexture);
 }
 
-// PROVEN: 00f95295 IDENTICAL/IDENTICAL
 // OFFSET: 0x0073B4A0/0x140418B30
 void CMapChunk::Initialize() {
     CMapRenderChunk::Initialize();
@@ -2589,7 +2583,6 @@ void CMapChunk::Initialize() {
     CMapChunk::s_geoToTex = -1.0f / CMapChunk::vertexListXY[1].y;
 }
 
-// PROVEN: f3795343 IDENTICAL/IDENTICAL
 // OFFSET: 0x0073B6D0/0x140418DF0
 void CMapChunk::Batch() {
     if (this->m_chunkFlags & 0x1) {
@@ -2949,7 +2942,6 @@ uint32_t CMapChunk::CreateIndices(uint16_t* indices, uint16_t base, int32_t lowR
     return count;
 }
 
-// PROVEN: c6fc17a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x0073F520/0x14041D490
 void CMapChunk::CreateVertices(void* vertices, int32_t index, const C3Vector& origin) {
     uint8_t* buffer = static_cast<uint8_t*>(vertices);
@@ -2969,7 +2961,6 @@ void CMapChunk::CreateVertices(void* vertices, int32_t index, const C3Vector& or
     }
 }
 
-// PROVEN: 08b3341e IDENTICAL/IDENTICAL
 // OFFSET: 0x0073F5C0/0x14041D510
 void CMapChunk::CreateIndices(uint16_t* indices, uint16_t base, uint32_t& count, int32_t lowRes) {
     count = this->CreateIndices(indices, base, lowRes);

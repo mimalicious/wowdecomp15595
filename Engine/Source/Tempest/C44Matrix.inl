@@ -20,7 +20,6 @@ inline C44Matrix::C44Matrix() {
     this->d3 = 1.0f;
 }
 
-// PROVEN: 50d4481f IDENTICAL/NONE
 // OFFSET: 0x0043B6C0
 inline C44Matrix::C44Matrix(const C34Matrix& m) {
     this->a0 = m.a0;
@@ -41,7 +40,6 @@ inline C44Matrix::C44Matrix(const C34Matrix& m) {
     this->d3 = 1.0f;
 }
 
-// PROVEN: ae04ebbd IDENTICAL/NONE
 // OFFSET: 0x00435440
 inline C44Matrix C44Matrix::Inverse() const {
     return this->Inverse(this->Determinant());
@@ -185,7 +183,6 @@ inline C3Vector operator*(const C44Matrix& m, const C3Vector& v) {
     return result;
 }
 
-// PROVEN: 682e3313 IDENTICAL/IDENTICAL
 // OFFSET: 0x00409AD0/0x14000C240
 inline C44Matrix operator*(const C44Matrix& l, const C44Matrix& r) {
     C44Matrix result;
@@ -208,7 +205,6 @@ inline C44Matrix operator*(const C44Matrix& l, const C44Matrix& r) {
     return result;
 }
 
-// PROVEN: 7734393a IDENTICAL/DIFFERENT
 // OFFSET: 0x004C73F0/0x1401028E0
 inline C44Matrix::C44Matrix(const C4Quaternion& q) {
     this->a3 = 0.0f;
@@ -221,7 +217,6 @@ inline C44Matrix::C44Matrix(const C4Quaternion& q) {
     FromQuaternion(q, *this);
 }
 
-// PROVEN: aa21bd99 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C72A0/0x140102590
 inline void C44Matrix::Scale(const C3Vector& scale) {
     this->a0 = scale.x * this->a0;

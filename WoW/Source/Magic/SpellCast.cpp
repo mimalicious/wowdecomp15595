@@ -4,7 +4,6 @@
 #include "WoW/Source/Object/ObjectClient/Movement_C.h"
 #include "WoW/Source/Object/WGUID.h"
 
-// PROVEN: 3a79bfac IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3AE10/0x140907B00
 void SpellPutCastTargets(const SpellCast* data, CDataStore* msg) {
     msg->Put(data->m_targetFlags);

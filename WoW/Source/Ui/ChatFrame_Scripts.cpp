@@ -48,21 +48,18 @@ static const char* s_channelCategories[3] = { "CHANNEL_CATEGORY_GROUP", "CHANNEL
 // STATIC: 0x00D101DC/0x000BBD758
 static const char* s_chatLogNames[2] = { "Logs\\WoWChatLog.txt", "Logs\\WoWCombatLog.txt" };
 
-// PROVEN: 380004d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E6450/0x140614780
 static int32_t Script_IsChatAFK(lua_State* L) {
     lua_pushboolean(L, CGChat::m_afk);
     return 1;
 }
 
-// PROVEN: 0bb79c19 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E6470/0x1406147A0
 static int32_t Script_IsChatDND(lua_State* L) {
     lua_pushboolean(L, CGChat::m_dnd);
     return 1;
 }
 
-// PROVEN: 4559ccfc IDENTICAL/IDENTICAL
 // OFFSET: 0x008E71E0/0x1406155D0
 static int32_t Script_SetPendingReportTarget(lua_State* L) {
     WOWGUID guid;
@@ -78,7 +75,6 @@ static int32_t Script_SetPendingReportTarget(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 7a8d5e97 IDENTICAL/DIFFERENT
 // OFFSET: 0x008EBDC0/0x14061AF20
 static int32_t Script_CancelEmote(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -117,7 +113,6 @@ static int32_t Script_IsAddonMessagePrefixRegistered(lua_State* L) {
     return 1;
 }
 
-// PROVEN: f8550421 IDENTICAL/IDENTICAL
 // OFFSET: 0x008EE130/0x14061DAB0
 static int32_t Script_GetRegisteredAddonMessagePrefixes(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -128,7 +123,6 @@ static int32_t Script_GetRegisteredAddonMessagePrefixes(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a893672e IDENTICAL/IDENTICAL
 // OFFSET: 0x008F6220/0x1406284C0
 static int32_t Script_RegisterAddonMessagePrefix(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -363,7 +357,6 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     return 0;
 }
 
-// PROVEN: fe17b7c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E74F0/0x140615810
 static int32_t Script_IsVoiceChatAllowedByServer(lua_State* L) {
     if (CGChat::m_voiceChatSystemStatus) {
@@ -375,14 +368,12 @@ static int32_t Script_IsVoiceChatAllowedByServer(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 1ba5b02b IDENTICAL/IDENTICAL
 // OFFSET: 0x008E73F0/0x140615710
 static int32_t Script_GetNumDisplayChannels(lua_State* L) {
     lua_pushnumber(L, s_numDisplayChannels);
     return 1;
 }
 
-// PROVEN: e591e05f IDENTICAL/IDENTICAL
 // OFFSET: 0x008E6570/0x1406148C0
 static int32_t Script_GetActiveVoiceChannel(lua_State* L) {
     if (s_activeVoiceChannel) {
@@ -394,7 +385,6 @@ static int32_t Script_GetActiveVoiceChannel(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a2fd28c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FA340/0x14062DC10
 static int32_t Script_SendSystemMessage(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -415,7 +405,6 @@ static int32_t Script_ClearChannelWatch(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c72d5bb8 IDENTICAL/DIFFERENT
 // OFFSET: 0x008EBBB0/0x14061ACC0
 static int32_t Script_GetDefaultLanguage(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -537,7 +526,6 @@ static int32_t Script_ExpandChannelHeader(lua_State* L) {
     return 0;
 }
 
-// PROVEN: eaf7b3fc IDENTICAL/UNPROVEN
 // OFFSET: 0x008E6DF0/0x140615180
 static int32_t Script_SetChatWindowLocked(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -554,7 +542,6 @@ static int32_t Script_SetChatWindowLocked(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 016a2bb0 IDENTICAL/UNPROVEN
 // OFFSET: 0x008E6E70/0x140615200
 static int32_t Script_SetChatWindowUninteractable(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -571,7 +558,6 @@ static int32_t Script_SetChatWindowUninteractable(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8d450725 IDENTICAL/UNPROVEN
 // OFFSET: 0x008E6FA0/0x140615320
 static int32_t Script_SetChatWindowShown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -588,7 +574,6 @@ static int32_t Script_SetChatWindowShown(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e918780d IDENTICAL/UNPROVEN
 // OFFSET: 0x008E6850/0x140614BB0
 static int32_t Script_GetChatWindowSavedDimensions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -607,7 +592,6 @@ static int32_t Script_GetChatWindowSavedDimensions(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 52704785 IDENTICAL/UNPROVEN
 // OFFSET: 0x008EA660/0x140619420
 static int32_t Script_SetChatWindowName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -630,7 +614,6 @@ static int32_t Script_SetChatWindowName(lua_State* L) {
     return 0;
 }
 
-// PROVEN: cb85a7f0 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E6B60/0x140614F20
 static int32_t Script_SetChatWindowSize(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -651,7 +634,6 @@ static int32_t Script_SetChatWindowSize(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d046430c IDENTICAL/DIFFERENT
 // OFFSET: 0x008E6D40/0x1406150E0
 static int32_t Script_SetChatWindowAlpha(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -668,7 +650,6 @@ static int32_t Script_SetChatWindowAlpha(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 10a1ae53 IDENTICAL/UNPROVEN
 // OFFSET: 0x008E6EF0/0x140615280
 static int32_t Script_SetChatWindowDocked(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -712,7 +693,6 @@ static int32_t Script_SetChatWindowSavedDimensions(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d434fd78 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E6790/0x140614AD0
 static int32_t Script_GetChatWindowSavedPosition(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -861,7 +841,6 @@ static int32_t Script_SetChatWindowColor(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d81a04d8 IDENTICAL/UNPROVEN
 // OFFSET: 0x008E65C0/0x140614900
 static int32_t Script_GetChatWindowInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -935,7 +914,6 @@ static void ChannelCommand(lua_State* L, uint32_t msgId, const char* name) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 8d4a5ee2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008EAFA0/0x140619EF0
 static int32_t Script_DeclineInvite(lua_State* L) {
     ChannelCommand(L, CMSG_CHAT_REPORT_IGNORED, "DeclineInvite");
@@ -1006,7 +984,6 @@ static int32_t Script_SendAddonMessage(lua_State* L) {
     return 0;
 }
 
-// PROVEN: bcf42e74 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E9F50/0x140618BC0
 static int32_t Script_ChangeChatColor(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3) || !lua_isnumber(L, 4)) {
@@ -1047,7 +1024,6 @@ static int32_t Script_ChangeChatColor(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 26dce769 IDENTICAL/UNPROVEN
 // OFFSET: 0x008EA240/0x140618F00
 static int32_t Script_SetChatColorNameByClass(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1082,7 +1058,6 @@ static int32_t Script_SetChatColorNameByClass(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b08ab2e2 IDENTICAL/DIFFERENT
 // OFFSET: 0x008EA350/0x140619040
 static int32_t Script_GetChatTypeIndex(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1165,7 +1140,6 @@ static int32_t Script_GetChannelName(lua_State* L) {
     return 3;
 }
 
-// PROVEN: b0b603a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E74A0/0x1406157C0
 static int32_t Script_IsVoiceChatAllowed(lua_State* L) {
     if (!CGChat::m_voiceChatSystemStatus || ComSatClient_IsComsatDisabledByClient()) {
@@ -1177,7 +1151,6 @@ static int32_t Script_IsVoiceChatAllowed(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 9c610585 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E7430/0x140615740
 static int32_t Script_IsVoiceChatEnabled(lua_State* L) {
     int32_t enabled = s_cvarEnableVoiceChat && s_cvarEnableVoiceChat->m_intValue;
@@ -1192,7 +1165,6 @@ static int32_t Script_IsVoiceChatEnabled(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 40fe7e73 IDENTICAL/UNPROVEN
 // OFFSET: 0x008E68F0/0x140614C50
 static int32_t Script_GetChatWindowMessages(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1390,7 +1362,6 @@ static int32_t Script_GetChannelDisplayInfo(lua_State* L) {
     return 9;
 }
 
-// PROVEN: 88b61d4c IDENTICAL/IDENTICAL
 // OFFSET: 0x008EACF0/0x140619C30
 static int32_t Script_GetSelectedDisplayChannel(lua_State* L) {
     int32_t index = CGChat::FindDisplayChannelIndex(CGChat::s_activeDisplayChannelName, s_activeDisplayChannelType);
@@ -1541,7 +1512,6 @@ static int32_t Script_GetChannelRosterInfo(lua_State* L) {
     return 6;
 }
 
-// PROVEN: 8d77879e IDENTICAL/UNPROVEN
 // OFFSET: 0x008E6490/0x1406147C0
 static int32_t EnableLogging(lua_State* L, int32_t index) {
     if (lua_gettop(L) > 0) {
@@ -1565,13 +1535,11 @@ static int32_t EnableLogging(lua_State* L, int32_t index) {
     return 1;
 }
 
-// PROVEN: 128a3e1e IDENTICAL/IDENTICAL
 // OFFSET: 0x008E6530/0x1406148A0
 static int32_t Script_LoggingChat(lua_State* L) {
     return EnableLogging(L, 0);
 }
 
-// PROVEN: faba59c7 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E6550/0x1406148B0
 static int32_t Script_LoggingCombat(lua_State* L) {
     return EnableLogging(L, 1);
@@ -1613,7 +1581,6 @@ static int32_t Script_UnitIsSilenced(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d0f6b030 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E91A0/0x140617A10
 static int32_t Script_ListChannelByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1676,7 +1643,6 @@ static int32_t Script_SetChannelOwner(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 5b9867b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x008E9490/0x140617DD0
 static int32_t Script_DisplayChannelOwner(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1904,7 +1870,6 @@ static int32_t Script_ChannelUnban(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8e962eab IDENTICAL/IDENTICAL
 // OFFSET: 0x008E9D10/0x140618900
 static int32_t Script_ChannelToggleAnnouncements(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1964,21 +1929,18 @@ static int32_t Script_ChannelVoiceOff(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 5cd2ce13 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E9F10/0x140618B80
 static int32_t Script_DisplayChannelVoiceOn(lua_State* L) {
     ChannelDisplayCommand(L, CMSG_CHAT_CHANNEL_VOICE_ON, "DisplayChannelVoiceOn");
     return 0;
 }
 
-// PROVEN: 053cdaa1 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E9F30/0x140618BA0
 static int32_t Script_DisplayChannelVoiceOff(lua_State* L) {
     ChannelDisplayCommand(L, CMSG_CHAT_CHANNEL_VOICE_OFF, "DisplayChannelVoiceOff");
     return 0;
 }
 
-// PROVEN: 29d7155a IDENTICAL/DIFFERENT
 // OFFSET: 0x008EA170/0x140618E00
 static int32_t Script_ResetChatColors(lua_State* L) {
     for (uint32_t i = 0; i < CHAT_MSG_MAX; i++) {
@@ -2041,7 +2003,6 @@ static int32_t Script_RemoveChatWindowChannel(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c36949d7 IDENTICAL/DIFFERENT
 // OFFSET: 0x008EA720/0x140619500
 static int32_t Script_EnumerateServerChannels(lua_State* L) {
     uint32_t count = g_chatChannelsDB.m_numRecords;
@@ -2127,7 +2088,6 @@ static int32_t Script_IsSilenced(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 294d5838 IDENTICAL/IDENTICAL
 // OFFSET: 0x008EAF10/0x140619E50
 static int32_t Script_SetChannelWatch(lua_State* L) {
     ChannelCommand(L, CMSG_SET_CHANNEL_WATCH, "SetChannelWatch");
@@ -2586,7 +2546,6 @@ static int32_t Script_LeaveChannelByName(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 34ba11f0 DIFFERENT/IDENTICAL
 // OFFSET: 0x008FA390/0x14062DC60
 static int32_t JoinChannelFromScript(lua_State* L, bool permanent) {
     if (!lua_isstring(L, 1)) {
@@ -2635,19 +2594,16 @@ static int32_t JoinChannelFromScript(lua_State* L, bool permanent) {
     return 2;
 }
 
-// PROVEN: 0025c284 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FA540/0x14062DE80
 static int32_t Script_JoinChannelByName(lua_State* L) {
     return JoinChannelFromScript(L, false);
 }
 
-// PROVEN: 168829bd IDENTICAL/IDENTICAL
 // OFFSET: 0x008FA540/0x14062DE80
 static int32_t Script_JoinTemporaryChannel(lua_State* L) {
     return JoinChannelFromScript(L, false);
 }
 
-// PROVEN: d6081243 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FA560/0x14062DE90
 static int32_t Script_JoinPermanentChannel(lua_State* L) {
     return JoinChannelFromScript(L, true);
@@ -2880,7 +2836,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetChatColorNameByClass", &Script_SetChatColorNameByClass },
 };
 
-// PROVEN: b955cde1 IDENTICAL/UNPROVEN
 // OFFSET: 0x008E7730/0x140615AA0
 void ChatRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -2888,7 +2843,6 @@ void ChatRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: f3e1b047 IDENTICAL/UNPROVEN
 // OFFSET: 0x008E7760/0x140615AF0
 void ChatUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -37,7 +37,6 @@ uint32_t CGMerchantInfo::m_numBuybackItems;
 // STATIC: 0x00F48170/0x140E3C240
 uint32_t CGMerchantInfo::m_pendingItemStats;
 
-// PROVEN: 77b68947 IDENTICAL/DIFFERENT
 // OFFSET: 0x00464680/0x140634FC0
 VendorItem* CGMerchantInfo::GetItem(int32_t index) {
     if (index >= 0 && index < CGMerchantInfo::m_numMerchantItems && CGMerchantInfo::m_merchant) {
@@ -47,7 +46,6 @@ VendorItem* CGMerchantInfo::GetItem(int32_t index) {
     return NULL;
 }
 
-// PROVEN: f36225b3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00967C70/0x1406DE1C0
 void CGMerchantInfo::RefreshList() {
     if (CGMerchantInfo::m_merchant) {
@@ -55,7 +53,6 @@ void CGMerchantInfo::RefreshList() {
     }
 }
 
-// PROVEN: 2a10710b IDENTICAL/DIFFERENT
 // OFFSET: 0x00967C90/0x1406DE1E0
 void CGMerchantInfo::UpdateItemQuantity(WOWGUID merchant, int32_t slot, int32_t quantity) {
     if (merchant != CGMerchantInfo::m_merchant) {
@@ -116,7 +113,6 @@ int32_t CGMerchantInfo::CanRepair() {
     return merchant && (merchant->m_unit->m_unitNpcFlags & 0x1000);
 }
 
-// PROVEN: bd5d9c27 IDENTICAL/UNPROVEN
 // OFFSET: 0x00967F30/0x1406DE4A0
 void CGMerchantInfo::CloseMerchant() {
     if (!CGMerchantInfo::m_merchant) {
@@ -203,7 +199,6 @@ bool CGMerchantInfo::IsBuybackItem(WOWGUID item) {
     return false;
 }
 
-// PROVEN: 60d306da IDENTICAL/IDENTICAL
 // OFFSET: 0x00968EF0/0x1406DF580
 static int32_t BuybackUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGMerchantInfo::SortBuybackItems();
@@ -211,7 +206,6 @@ static int32_t BuybackUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// PROVEN: c6898be1 DIFFERENT/IDENTICAL
 // OFFSET: 0x00968F10/0x1406DF5A0
 void CGMerchantInfo::LeaveWorld() {
     CGMerchantInfo::CloseMerchant();
@@ -219,7 +213,6 @@ void CGMerchantInfo::LeaveWorld() {
     ClientVendorInventory::s_handler = NULL;
 }
 
-// PROVEN: 5f3a91ad IDENTICAL/IDENTICAL
 // OFFSET: 0x00968F40/0x1406DF5F0
 ItemRecSparse* CGMerchantInfo::GetItemStats(int32_t itemId) {
     if (!itemId) {

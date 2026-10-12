@@ -7,7 +7,6 @@ CMouseEvent::CMouseEvent() {
     this->m_data.m_mousePosition.y = 0.5f;
 }
 
-// PROVEN: 1af146e0 IDENTICAL/DIFFERENT
 // OFFSET: 0x004FF050/0x1405A87D0
 CMouseEvent& CMouseEvent::operator=(const EVENT_DATA_MOUSE& data) {
     this->m_data.m_mode = data.m_mode;

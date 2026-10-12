@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[2] = { 0, 0 };
 // STATIC: 0x00C21530/0x140A160D8
 const DBCMeta SpellEffectCameraShakesRec::s_meta = { "DBFilesClient\\SpellEffectCameraShakes.dbc", 2, 16, SpellEffectCameraShakesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: b53220ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SpellEffectCameraShakesRec::FixupStrings(void* record, const char* strings) {
 }

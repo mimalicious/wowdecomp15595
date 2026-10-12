@@ -108,7 +108,6 @@ FMOD_RESULT ChannelI::validate(Channel *channel, ChannelI **channeli)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b8e1a37f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7BFB0/0x1408373D0
 FMOD_RESULT ChannelI::returnToFreeList()
 {
@@ -141,7 +140,6 @@ FMOD_RESULT ChannelI::returnToFreeList()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f65da606 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7E410/0x140839D20
 FMOD_RESULT ChannelI::setDefaults()
 {
@@ -274,7 +272,6 @@ FMOD_RESULT ChannelI::setDefaults()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f2db4e66 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7C020/0x140837450
 FMOD_RESULT ChannelI::referenceStamp(bool newstamp)
 {
@@ -372,7 +369,6 @@ FMOD_RESULT ChannelI::updatePosition()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d3e9991d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7F5A0/0x14083B720
 FMOD_RESULT ChannelI::forceVirtual(bool force)
 {
@@ -508,7 +504,6 @@ FMOD_RESULT ChannelI::getChannelInfo(FMOD_CHANNEL_INFO *info)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1414182a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7F0C0/0x14083AD50
 FMOD_RESULT ChannelI::setChannelInfo(FMOD_CHANNEL_INFO *info)
 {
@@ -637,7 +632,6 @@ FMOD_RESULT ChannelI::getRealChannel(ChannelReal **realchan, int *subchannels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b6347482 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7C120/0x140837590
 FMOD_RESULT ChannelI::calcVolumeAndPitchFor3D(int delta)
 {
@@ -889,7 +883,6 @@ FMOD_RESULT ChannelI::calcVolumeAndPitchFor3D(int delta)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 78cedd2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7E670/0x14083A020
 ChannelI::ChannelI()
 {
@@ -935,7 +928,6 @@ ChannelI::ChannelI(int index, SystemI *system)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 904f2ce9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7C710/0x140837C40
 FMOD_RESULT ChannelI::init()
 {
@@ -1161,7 +1153,6 @@ FMOD_RESULT ChannelI::play(SoundI *sound, bool paused, bool reset, bool startmut
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 100e215f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7F490/0x14083B280
 FMOD_RESULT ChannelI::play(DSPI *dsp, bool paused, bool reset, bool startmuted)
 {
@@ -1266,7 +1257,6 @@ FMOD_RESULT ChannelI::play(DSPI *dsp, bool paused, bool reset, bool startmuted)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b11f2bd5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7C890/0x140837E00
 FMOD_RESULT ChannelI::alloc(SoundI *sound, bool reset)
 {
@@ -1453,7 +1443,6 @@ FMOD_RESULT ChannelI::alloc(DSPI *dsp, bool reset)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: adbf3031 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7CC70/0x140838270
 FMOD_RESULT ChannelI::start()
 {
@@ -1854,7 +1843,6 @@ FMOD_RESULT ChannelI::update(int delta)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 701dfa1d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7CCD0/0x14084EF00
 FMOD_RESULT ChannelI::calculate3DReverbGain(ReverbI *reverb, FMOD_VECTOR *channelpos, float *gain)
 {
@@ -1900,7 +1888,6 @@ FMOD_RESULT ChannelI::calculate3DReverbGain(ReverbI *reverb, FMOD_VECTOR *channe
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e4fb2563 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7F580/0x14083B3C0
 FMOD_RESULT ChannelI::stop()
 {
@@ -1921,7 +1908,6 @@ FMOD_RESULT ChannelI::stop()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f5f8c2ef IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7E920/0x14083A350
 FMOD_RESULT ChannelI::stopEx(bool refstamp, bool updatelist, bool resetcallbacks, bool resetstate, bool callendcallback, bool resetchannelgroup, bool force)
 {
@@ -2069,7 +2055,6 @@ FMOD_RESULT ChannelI::stopEx(bool refstamp, bool updatelist, bool resetcallbacks
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9b052bc4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7CD70/0x140838300
 FMOD_RESULT ChannelI::setPaused(bool paused)
 {
@@ -2171,7 +2156,6 @@ FMOD_RESULT ChannelI::getPaused(bool *paused)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c52a787c DIFFERENT/IDENTICAL
 // OFFSET: 0x00A7CE00/0x1408383D0
 FMOD_RESULT ChannelI::setVolume(float volume, bool forceupdatepos)
 {
@@ -2242,7 +2226,6 @@ FMOD_RESULT ChannelI::setVolume(float volume, bool forceupdatepos)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 00c9dda3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7CEF0/0x1408384E0
 FMOD_RESULT ChannelI::getVolume(float *volume)
 {
@@ -2275,7 +2258,6 @@ FMOD_RESULT ChannelI::getVolume(float *volume)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 61e0f8ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7CF20/0x140838510
 FMOD_RESULT ChannelI::setFrequency(float frequency)
 {
@@ -2326,7 +2308,6 @@ FMOD_RESULT ChannelI::setFrequency(float frequency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 29cdec83 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7CFB0/0x1408385C0
 FMOD_RESULT ChannelI::getFrequency(float *frequency)
 {
@@ -2359,7 +2340,6 @@ FMOD_RESULT ChannelI::getFrequency(float *frequency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 12354791 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7CFE0/0x1408385F0
 FMOD_RESULT ChannelI::setPan(float pan, bool calldriver)
 {
@@ -2470,7 +2450,6 @@ FMOD_RESULT ChannelI::getPan(float *pan)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2682c957 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7D0E0/0x140838710
 FMOD_RESULT ChannelI::setDelay(unsigned int startdelay, unsigned int enddelay)
 {
@@ -2543,7 +2522,6 @@ FMOD_RESULT ChannelI::getDelay(unsigned int *startdelay, unsigned int *enddelay)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 07503a44 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7D140/0x140838790
 FMOD_RESULT ChannelI::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright, bool calldriver)
 {
@@ -2808,7 +2786,6 @@ FMOD_RESULT ChannelI::setSpeakerLevels(FMOD_SPEAKER speaker, float *levels, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d4a100fe IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7D660/0x140838D90
 FMOD_RESULT ChannelI::getSpeakerLevels(FMOD_SPEAKER speaker, float *levels, int numlevels)
 {
@@ -3070,7 +3047,6 @@ FMOD_RESULT ChannelI::getMute(bool *mute)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bd65d203 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7F850/0x14083BCD0
 FMOD_RESULT ChannelI::setPriority(int priority)
 {
@@ -3125,7 +3101,6 @@ FMOD_RESULT ChannelI::getPriority(int *priority)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 59eee1df IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7D850/0x140838FF0
 FMOD_RESULT ChannelI::set3DAttributes(const FMOD_VECTOR *pos, const FMOD_VECTOR *vel)
 {
@@ -3328,7 +3303,6 @@ FMOD_RESULT ChannelI::set3DMinMaxDistance(float mindistance, float maxdistance)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 39288ece IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7D990/0x140839160
 FMOD_RESULT ChannelI::get3DMinMaxDistance(float *mindistance, float *maxdistance)
 {
@@ -3368,7 +3342,6 @@ FMOD_RESULT ChannelI::get3DMinMaxDistance(float *mindistance, float *maxdistance
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f655c404 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7D9E0/0x1408391A0
 FMOD_RESULT ChannelI::set3DConeSettings(float insideconeangle, float outsideconeangle, float outsidevolume)
 {
@@ -3460,7 +3433,6 @@ FMOD_RESULT ChannelI::get3DConeSettings(float *insideconeangle, float *outsideco
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 881efe6d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7DA60/0x140839210
 FMOD_RESULT ChannelI::set3DConeOrientation(FMOD_VECTOR *orientation)
 {
@@ -3606,7 +3578,6 @@ FMOD_RESULT ChannelI::get3DCustomRolloff(FMOD_VECTOR **points, int *numpoints)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e098897f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7F880/0x14083BCF0
 FMOD_RESULT ChannelI::set3DOcclusionInternal(float direct, float reverb, bool resettarget)
 {
@@ -3808,7 +3779,6 @@ FMOD_RESULT ChannelI::get3DSpread(float *angle)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 94c3a60b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7FEC0/0x14083C550
 FMOD_RESULT ChannelI::set3DPanLevel(float level)
 {
@@ -3965,7 +3935,6 @@ FMOD_RESULT ChannelI::get3DDopplerLevel(float *level)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5115381d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7DAC0/0x140839260
 FMOD_RESULT ChannelI::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
@@ -4005,7 +3974,6 @@ FMOD_RESULT ChannelI::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *p
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0d7db075 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7DB10/0x1408392E0
 FMOD_RESULT ChannelI::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
@@ -4045,7 +4013,6 @@ FMOD_RESULT ChannelI::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 17bbb3f2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7DB60/0x140839360
 FMOD_RESULT ChannelI::setChannelGroupInternal(ChannelGroupI *channelgroup, bool resetattributes)
 {
@@ -4160,7 +4127,6 @@ FMOD_RESULT ChannelI::setChannelGroupInternal(ChannelGroupI *channelgroup, bool 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f6d986eb IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7DDC0/0x140839670
 FMOD_RESULT ChannelI::setChannelGroup(ChannelGroupI *channelgroup)
 {
@@ -4282,7 +4248,6 @@ FMOD_RESULT ChannelI::isPlaying(bool *isplaying)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 10ab4b96 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7DEE0/0x1408397E0
 FMOD_RESULT ChannelI::isVirtual(bool *isvirtual)
 {
@@ -4314,7 +4279,6 @@ FMOD_RESULT ChannelI::isVirtual(bool *isvirtual)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 35d4b8b3 IDENTICAL/NONE
 // OFFSET: 0x00A7DF20
 FMOD_RESULT ChannelI::getAudibility(float *audibility)
 {
@@ -4354,7 +4318,6 @@ FMOD_RESULT ChannelI::getAudibility(float *audibility)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ab5810ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7DFB0/0x140839810
 FMOD_RESULT ChannelI::getFadeVolume(float *fadevolume)
 {
@@ -4387,7 +4350,6 @@ FMOD_RESULT ChannelI::getFadeVolume(float *fadevolume)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a12e5d66 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7DFE0/0x140839840
 FMOD_RESULT ChannelI::getCurrentSound(SoundI **sound)
 {
@@ -4428,7 +4390,6 @@ FMOD_RESULT ChannelI::getCurrentSound(SoundI **sound)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 11236eac IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7E030/0x140839880
 FMOD_RESULT ChannelI::getCurrentDSP(DSPI **dsp)
 {
@@ -4564,7 +4525,6 @@ FMOD_RESULT ChannelI::getIndex(int *index)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4c23ba38 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7E060/0x1408398B0
 FMOD_RESULT ChannelI::setCallback(FMOD_CHANNEL_CALLBACKTYPE type, FMOD_CHANNEL_CALLBACK callback, int command)
 {
@@ -4773,7 +4733,6 @@ FMOD_RESULT ChannelI::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a817c0f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7E0F0/0x140839950
 FMOD_RESULT ChannelI::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
@@ -5032,7 +4991,6 @@ FMOD_RESULT ChannelI::addDSPChain(DSPI *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7437a222 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A7FF40/0x14083C5C0
 FMOD_RESULT ChannelI::setMode(FMOD_MODE mode)
 {
@@ -5164,7 +5122,6 @@ FMOD_RESULT ChannelI::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 614fefd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7E390/0x140839C40
 FMOD_RESULT ChannelI::getMode(FMOD_MODE *mode)
 {
@@ -5197,7 +5154,6 @@ FMOD_RESULT ChannelI::getMode(FMOD_MODE *mode)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 90fd7579 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7E3C0/0x140839C70
 FMOD_RESULT ChannelI::setLoopCount(int loopcount)
 {

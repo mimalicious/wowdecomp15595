@@ -197,49 +197,41 @@ void SRWLock::SURWLockLeave(volatile SURWLOCK* surwlock, int32_t fromwriting) {
     }
 }
 
-// PROVEN: 79123baa IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB400/0x1400F4220
 SCritSect::SCritSect() {
     InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
-// PROVEN: 58b5a765 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB410/0x1400F4240
 SCritSect::~SCritSect() {
     DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
-// PROVEN: d449ea0a IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB420/0x1400F4250
 void SCritSect::Enter() {
     EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
-// PROVEN: 03f3aaed IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB430/0x1400F4260
 void SCritSect::Leave() {
     LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
-// PROVEN: b04316f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB460/0x1402C71C0
 SSyncObject::SSyncObject() {
     this->m_opaqueData = NULL;
 }
 
-// PROVEN: 547093eb DIFFERENT/IDENTICAL
 // OFFSET: 0x004BB440/0x1400F4970
 void CSRWLock::Leave(int32_t fromwriting) {
     SRWLock::SURWLockLeave(&this->m_opaqueData, fromwriting);
 }
 
-// PROVEN: 439612b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB470/0x1400F4270
 int32_t SSyncObject::Valid() {
     return this->m_opaqueData != NULL;
 }
 
-// PROVEN: aa98d2fe IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB4A0/0x1400F42B0
 uint32_t SSyncObject::Wait(uint32_t timeout) {
     return WaitForSingleObject(this->m_opaqueData, timeout);
@@ -264,19 +256,16 @@ uint32_t STORMAPI SSyncObject::WaitMultiplePtr(uint32_t count, SSyncObject** obj
     return WaitForMultipleObjects(handleCount, handles, waitAll, timeout);
 }
 
-// PROVEN: 9a1fa5ca IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB520/0x1404A31A0
 int32_t SEvent::Set() {
     return SetEvent(this->m_opaqueData);
 }
 
-// PROVEN: 215eee52 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB530/0x1400F4330
 int32_t SEvent::Reset() {
     return ResetEvent(this->m_opaqueData);
 }
 
-// PROVEN: 470f00f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB540/0x1400F4340
 int32_t SThread::Create(uint32_t (STORMAPI* threadProc)(void*), void* param, SThread& thread, char* threadName, uint32_t stackSize) {
     uint32_t threadId;
@@ -284,7 +273,6 @@ int32_t SThread::Create(uint32_t (STORMAPI* threadProc)(void*), void* param, STh
     return thread.m_opaqueData != NULL;
 }
 
-// PROVEN: ab2fa1bd DIFFERENT/IDENTICAL
 // OFFSET: 0x004BB570/0x1400F4380
 int32_t SThread::SetPriority(int32_t priority) {
     static const int32_t priorities[] = { THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_TIME_CRITICAL };
@@ -296,7 +284,6 @@ int32_t SThread::SetPriority(int32_t priority) {
     return 0;
 }
 
-// PROVEN: 0415e2d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB5A0/0x1400F43A0
 int32_t SSemaphore::Signal(uint32_t count) {
     return ReleaseSemaphore(this->m_opaqueData, count, NULL);
@@ -316,7 +303,6 @@ void SMutex::Create(int32_t initialOwner, const char* name) {
     }
 }
 
-// PROVEN: a7d7ca2a IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB610/0x1400F43B0
 int32_t SMutex::Release() {
     return ReleaseMutex(this->m_opaqueData);
@@ -380,7 +366,6 @@ CSRWLock::~CSRWLock() {
     SRWLock::IOsRWLockDecRef();
 }
 
-// PROVEN: 9fdf7b70 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB480/0x1400F4280
 SSyncObject::~SSyncObject() {
     if (this->m_opaqueData) {
@@ -405,7 +390,6 @@ SEvent::SEvent(int32_t manualReset, int32_t initialState) {
     }
 }
 
-// PROVEN: 7fed7c6a IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB720/0x1400F49C0
 SSemaphore::SSemaphore(int32_t initialCount, int32_t maximumCount) {
     this->m_opaqueData = CreateSemaphoreA(NULL, initialCount, maximumCount, NULL);
@@ -576,7 +560,6 @@ void SRWLock::SURWLockEnter(volatile SURWLOCK* surwlock, int32_t forwriting) {
     }
 }
 
-// PROVEN: 1055bb99 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BBC60/0x1400F5150
 void CSRWLock::Enter(int32_t forwriting) {
     SRWLock::SURWLockEnter(&this->m_opaqueData, forwriting);

@@ -51,7 +51,6 @@ static TSHashTable<HashedNode, HASHKEY_STRI> s_virtualNodes;
 // STATIC: 0x00DC7804/0x140B3F860
 static TSHashTable<FrameFactoryNode, HASHKEY_STRI> s_factories;
 
-// PROVEN: 072e9866 DIFFERENT/IDENTICAL
 // OFFSET: 0x004EC3B0/0x14012F8D0
 XMLTree* FrameXML_LoadXML(const char* filename, MD5_CTX* md5, CStatus* status) {
     void* data;
@@ -75,13 +74,11 @@ XMLTree* FrameXML_LoadXML(const char* filename, MD5_CTX* md5, CStatus* status) {
     return tree;
 }
 
-// PROVEN: 776ab6cf IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC440/0x14012F9A0
 void FrameXML_SetDebugLevel(int32_t level) {
     s_debugLevel = level;
 }
 
-// PROVEN: 04e22556 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC450/0x14012F9B0
 int32_t FrameXML_GetDebugLevel() {
     return s_debugLevel;
@@ -119,84 +116,72 @@ int32_t FrameXML_GuessNumFiles(const char* toc) {
     return count;
 }
 
-// PROVEN: 5bde4203 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC4F0/0x14012FA50
 CSimpleFrame* Create_SimpleCheckButton(CSimpleFrame* parent) {
     void* data = CSimpleCheckbox::s_allocator.GetData(0, typeid(CSimpleCheckbox).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleCheckbox(parent) : NULL;
 }
 
-// PROVEN: 8f60e292 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC530/0x14012FAA0
 CSimpleFrame* Create_SimpleEditBox(CSimpleFrame* parent) {
     void* data = CSimpleEditBox::s_allocator.GetData(0, typeid(CSimpleEditBox).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleEditBox(parent) : NULL;
 }
 
-// PROVEN: 529cb9d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC570/0x14012FAF0
 CSimpleFrame* Create_SimpleMessageFrame(CSimpleFrame* parent) {
     void* data = CSimpleMessageFrame::s_allocator.GetData(0, typeid(CSimpleMessageFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleMessageFrame(parent) : NULL;
 }
 
-// PROVEN: 50e7905a IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC5B0/0x14012FB40
 CSimpleFrame* Create_SimpleModel(CSimpleFrame* parent) {
     void* data = CSimpleModel::s_allocator.GetData(0, typeid(CSimpleModel).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleModel(parent) : NULL;
 }
 
-// PROVEN: 64fa540b IDENTICAL/UNPROVEN
 // OFFSET: 0x004EC5F0/0x14012FB90
 CSimpleFrame* Create_SimpleScrollFrame(CSimpleFrame* parent) {
     void* data = CSimpleScrollFrame::s_allocator.GetData(0, typeid(CSimpleScrollFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleScrollFrame(parent) : NULL;
 }
 
-// PROVEN: 5f7d3f39 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC630/0x14012FBE0
 CSimpleFrame* Create_SimpleScrollingMessageFrame(CSimpleFrame* parent) {
     void* data = CSimpleMessageScrollFrame::s_allocator.GetData(0, typeid(CSimpleMessageScrollFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleMessageScrollFrame(parent, 8) : NULL;
 }
 
-// PROVEN: f2314605 IDENTICAL/UNPROVEN
 // OFFSET: 0x004EC670/0x14012FC30
 CSimpleFrame* Create_SimpleSlider(CSimpleFrame* parent) {
     void* data = CSimpleSlider::s_allocator.GetData(0, typeid(CSimpleSlider).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleSlider(parent) : NULL;
 }
 
-// PROVEN: bdfdf905 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC6B0/0x14012FC80
 CSimpleFrame* Create_SimpleHTML(CSimpleFrame* parent) {
     void* data = CSimpleHTML::s_allocator.GetData(0, typeid(CSimpleHTML).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleHTML(parent) : NULL;
 }
 
-// PROVEN: 2f61b4ff IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC6F0/0x14012FCD0
 CSimpleFrame* Create_SimpleStatusBar(CSimpleFrame* parent) {
     void* data = CSimpleStatusBar::s_allocator.GetData(0, typeid(CSimpleStatusBar).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleStatusBar(parent) : NULL;
 }
 
-// PROVEN: 4ef260a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC730/0x14012FD20
 CSimpleFrame* Create_SimpleColorSelect(CSimpleFrame* parent) {
     void* data = CSimpleColorSelect::s_allocator.GetData(0, typeid(CSimpleColorSelect).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleColorSelect(parent) : NULL;
 }
 
-// PROVEN: 56d47ce6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC770/0x14012FD70
 CSimpleFrame* Create_SimpleMovieFrame(CSimpleFrame* parent) {
     void* data = CSimpleMovieFrame::s_allocator.GetData(0, typeid(CSimpleMovieFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleMovieFrame(parent) : NULL;
 }
 
-// PROVEN: 72f7d3fe IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC7B0/0x14012FDC0
 void FrameXML_RegisterLoadProgressCallback(void (*callback)(float progress, void* param), void* param, uint32_t total) {
     s_progressCallback = callback;
@@ -205,27 +190,23 @@ void FrameXML_RegisterLoadProgressCallback(void (*callback)(float progress, void
     s_progressTotal = total;
 }
 
-// PROVEN: 99ef4667 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC4B0/0x14012FA00
 CSimpleFrame* Create_SimpleButton(CSimpleFrame* parent) {
     void* data = CSimpleButton::s_allocator.GetData(0, typeid(CSimpleButton).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleButton(parent) : NULL;
 }
 
-// PROVEN: 6c5d8dab IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC860/0x14012FEA0
 CSimpleFrame* Create_SimpleFrame(CSimpleFrame* parent) {
     void* data = CSimpleFrame::s_allocator.GetData(0, typeid(CSimpleFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleFrame(parent) : NULL;
 }
 
-// PROVEN: c1531890 IDENTICAL/NONE
 // OFFSET: 0x004ECFE0
 void FrameXML_FreeHashNodes() {
     s_virtualNodes.InternalClear(0);
 }
 
-// PROVEN: 94fd7308 IDENTICAL/DIFFERENT
 // OFFSET: 0x004ECFF0/0x140130920
 void FrameXML_ClearFactories() {
     s_factories.InternalClear(0);
@@ -414,7 +395,6 @@ int32_t FrameXML_RegisterFactory(const char* name, CSimpleFrame* (*factory)(CSim
     return 1;
 }
 
-// PROVEN: 73fa6583 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EDFB0/0x140132110
 int32_t FrameXML_RegisterDefault() {
     FrameXML_RegisterFactory("Button", Create_SimpleButton, false);

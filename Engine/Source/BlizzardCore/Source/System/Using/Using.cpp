@@ -122,20 +122,17 @@ System_Using::UsingRec* System_Using::Intern(const char* name) {
     return rec;
 }
 
-// PROVEN: 498fd223 DIFFERENT/IDENTICAL
 // OFFSET: 0x007BD5E0/0x1404B5DC0
 void Blizzard::Using::StartUsing(const char* name) {
     System_Using::Intern(name)->refCount++;
 }
 
-// PROVEN: 226809d5 DIFFERENT/IDENTICAL
 // OFFSET: 0x007BD600/0x1404B5DE0
 void Blizzard::Using::StopUsing(const char* name) {
     System_Using::Intern(name)->refCount--;
     System_Using::ShutdownUnused();
 }
 
-// PROVEN: b46b5f5c IDENTICAL/DIFFERENT
 // OFFSET: 0x007BD620/0x1404AC500
 void Blizzard::Using::DependsOn(const char* me, const char* dependsOn) {
     System_Using::UsingRec* rec = System_Using::Intern(me);

@@ -256,7 +256,6 @@ int32_t System_SComp::LzmaDecompress(void* dest, uint32_t* destSize, const void*
     return LzmaMemDecode(static_cast<const uint8_t*>(source), sourceSize, static_cast<uint8_t*>(dest), *destSize, destSize, alloc_wrap, free_wrap);
 }
 
-// PROVEN: 53d7fb4d IDENTICAL/NONE
 // OFFSET: 0x007AA9A0
 unsigned int System_SComp::PkwareBufferRead(void* param, unsigned char** buffer) {
     PkwareBuffer* pkware = static_cast<PkwareBuffer*>(param);
@@ -264,7 +263,6 @@ unsigned int System_SComp::PkwareBufferRead(void* param, unsigned char** buffer)
     return pkware->m_inputSize;
 }
 
-// PROVEN: d3d378ef IDENTICAL/IDENTICAL
 // OFFSET: 0x007AA9C0/0x1404A0D30
 int System_SComp::PkwareBufferWrite(void* param, unsigned char* data, unsigned int size) {
     PkwareBuffer* pkware = static_cast<PkwareBuffer*>(param);
@@ -341,14 +339,12 @@ bool System_SComp::Decompress(void* dst, uint32_t* dstSize, const void* src, uin
     return DecompressBlock(dst, dstSize, static_cast<const uint8_t*>(src) + 1, srcSize - 1, decompressors);
 }
 
-// PROVEN: a6263b16 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AA980/0x1404A0D10
 void System_SComp::PkwareCompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     *destSize = sourceSize;
     *hint = 0;
 }
 
-// PROVEN: 09c99054 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AAA50/0x1404A0DC0
 void System_SComp::Bzip2Compress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     int32_t result = BZ2_bzBuffToBuffCompress(static_cast<char*>(dest), destSize, static_cast<char*>(const_cast<void*>(source)), sourceSize, 9, 0, 0);
@@ -577,7 +573,6 @@ int System_SComp::zlib_compress(uint8_t* dest, uint32_t* destLen, const uint8_t*
     return deflateEnd(&stream);
 }
 
-// PROVEN: 632df47d DIFFERENT/IDENTICAL
 // OFFSET: 0x007E42C0/0x1404EC220
 void System_SComp::ZlibCompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     int level2;

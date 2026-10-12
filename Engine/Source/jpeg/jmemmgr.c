@@ -213,7 +213,6 @@ static void print_mem_stats(j_common_ptr cinfo, int pool_id) {
 
 /* Report an out-of-memory error and stop execution */
 /* If we compiled MEM_STATS support, report alloc requests before dying */
-// PROVEN: a3c17b14 IDENTICAL/NONE
 // OFFSET: 0x00B5E540
 static void out_of_memory(j_common_ptr cinfo, int which) {
 #ifdef MEM_STATS
@@ -252,7 +251,6 @@ static const size_t extra_pool_slop[JPOOL_NUMPOOLS] =
 
 
 /* Allocate a "small" object */
-// PROVEN: a4893248 IDENTICAL/NONE
 // OFFSET: 0x00B5E560/0x140927470
 static void * alloc_small(j_common_ptr cinfo, int pool_id, size_t sizeofobject) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
@@ -343,7 +341,6 @@ static void * alloc_small(j_common_ptr cinfo, int pool_id, size_t sizeofobject) 
  */
 
 /* Allocate a "large" object */
-// PROVEN: dd128d8c IDENTICAL/NONE
 // OFFSET: 0x00B5E6B0/0x140927620
 static void FAR * alloc_large(j_common_ptr cinfo, int pool_id, size_t sizeofobject) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
@@ -402,7 +399,6 @@ static void FAR * alloc_large(j_common_ptr cinfo, int pool_id, size_t sizeofobje
  */
 
 /* Allocate a 2-D sample array */
-// PROVEN: 3e6324a1 IDENTICAL/NONE
 // OFFSET: 0x00B5E770/0x140927700
 static JSAMPARRAY alloc_sarray(j_common_ptr cinfo, int pool_id, JDIMENSION samplesperrow, JDIMENSION numrows) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
@@ -531,7 +527,6 @@ static JBLOCKARRAY alloc_barray(j_common_ptr cinfo, int pool_id, JDIMENSION bloc
 
 
 /* Request a virtual 2-D sample array */
-// PROVEN: 05508278 IDENTICAL/NONE
 // OFFSET: 0x00B5E8D0/0x140927930
 static jvirt_sarray_ptr request_virt_sarray(j_common_ptr cinfo, int pool_id, boolean pre_zero, JDIMENSION samplesperrow, JDIMENSION numrows, JDIMENSION maxaccess) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
@@ -561,7 +556,6 @@ static jvirt_sarray_ptr request_virt_sarray(j_common_ptr cinfo, int pool_id, boo
 
 
 /* Request a virtual 2-D coefficient-block array */
-// PROVEN: 74ecadfe IDENTICAL/NONE
 // OFFSET: 0x00B5E940/0x1409279D0
 static jvirt_barray_ptr request_virt_barray(j_common_ptr cinfo, int pool_id, boolean pre_zero, JDIMENSION blocksperrow, JDIMENSION numrows, JDIMENSION maxaccess) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
@@ -591,7 +585,6 @@ static jvirt_barray_ptr request_virt_barray(j_common_ptr cinfo, int pool_id, boo
 
 
 /* Allocate the in-memory buffers for any unrealized virtual arrays */
-// PROVEN: 950d4357 IDENTICAL/NONE
 // OFFSET: 0x00B5E9B0/0x140927A70
 static void realize_virt_arrays(j_common_ptr cinfo) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
@@ -702,7 +695,6 @@ static void realize_virt_arrays(j_common_ptr cinfo) {
 
 
 /* Do backing store read or write of a virtual sample array */
-// PROVEN: 033bca85 IDENTICAL/NONE
 // OFFSET: 0x00B5EB70
 static void do_sarray_io(j_common_ptr cinfo, jvirt_sarray_ptr ptr, boolean writing) {
   long bytesperrow, file_offset, byte_count, rows, thisrow, i;
@@ -735,7 +727,6 @@ static void do_sarray_io(j_common_ptr cinfo, jvirt_sarray_ptr ptr, boolean writi
 
 
 /* Do backing store read or write of a virtual coefficient-block array */
-// PROVEN: ccafb470 IDENTICAL/NONE
 // OFFSET: 0x00B5EC10
 static void do_barray_io(j_common_ptr cinfo, jvirt_barray_ptr ptr, boolean writing) {
   long bytesperrow, file_offset, byte_count, rows, thisrow, i;
@@ -770,7 +761,6 @@ static void do_barray_io(j_common_ptr cinfo, jvirt_barray_ptr ptr, boolean writi
 /* Access the part of a virtual sample array starting at start_row */
 /* and extending for num_rows rows.  writable is true if  */
 /* caller intends to modify the accessed area. */
-// PROVEN: 1794d8b0 IDENTICAL/NONE
 // OFFSET: 0x00B5ECB0/0x140927C70
 static JSAMPARRAY access_virt_sarray(j_common_ptr cinfo, jvirt_sarray_ptr ptr, JDIMENSION start_row, JDIMENSION num_rows, boolean writable) {
   JDIMENSION end_row = start_row + num_rows;
@@ -861,7 +851,6 @@ static JSAMPARRAY access_virt_sarray(j_common_ptr cinfo, jvirt_sarray_ptr ptr, J
 /* Access the part of a virtual block array starting at start_row */
 /* and extending for num_rows rows.  writable is true if  */
 /* caller intends to modify the accessed area. */
-// PROVEN: 888d1fd2 IDENTICAL/NONE
 // OFFSET: 0x00B5EE10/0x140927F00
 static JBLOCKARRAY access_virt_barray(j_common_ptr cinfo, jvirt_barray_ptr ptr, JDIMENSION start_row, JDIMENSION num_rows, boolean writable) {
   JDIMENSION end_row = start_row + num_rows;
@@ -953,7 +942,6 @@ static JBLOCKARRAY access_virt_barray(j_common_ptr cinfo, jvirt_barray_ptr ptr, 
  * Release all objects belonging to a specified pool.
  */
 
-// PROVEN: 11e22da5 IDENTICAL/NONE
 // OFFSET: 0x00B5EF60/0x140928190
 static void free_pool(j_common_ptr cinfo, int pool_id) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
@@ -1027,7 +1015,6 @@ static void free_pool(j_common_ptr cinfo, int pool_id) {
  * Note that this cannot be called unless cinfo->mem is non-NULL.
  */
 
-// PROVEN: d0230ace IDENTICAL/NONE
 // OFFSET: 0x00B5F070/0x1409282F0
 static void self_destruct(j_common_ptr cinfo) {
   int pool;
@@ -1053,7 +1040,6 @@ static void self_destruct(j_common_ptr cinfo) {
  * When this is called, only the error manager pointer is valid in cinfo!
  */
 
-// PROVEN: a0887af1 IDENTICAL/NONE
 // OFFSET: 0x00B5F0B0/0x140928340
 void jinit_memory_mgr(j_common_ptr cinfo) {
   my_mem_ptr mem;

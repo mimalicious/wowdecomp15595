@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[5] = { 0, 2, 0, 0, 0 };
 // STATIC: 0x00C1EFC4/0x140A13448
 const DBCMeta ZoneIntroMusicTableRec::s_meta = { "DBFilesClient\\ZoneIntroMusicTable.dbc", 5, 20, ZoneIntroMusicTableRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 46979e0c IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ZoneIntroMusicTableRec::FixupStrings(void* record, const char* strings) {
     ZoneIntroMusicTableRec* rec = static_cast<ZoneIntroMusicTableRec*>(record);

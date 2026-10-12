@@ -35,7 +35,6 @@ void CSimpleStatusBar::operator delete(void* ptr) {
     CSimpleStatusBar::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: f9cea12a IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F230/0x140158430
 void CSimpleStatusBar::RunOnMinMaxChangedScript() {
     if (this->HasScript(this->m_onMinMaxChanged)) {
@@ -46,12 +45,10 @@ void CSimpleStatusBar::RunOnMinMaxChangedScript() {
     }
 }
 
-// PROVEN: cd515e0f UNPROVEN/IDENTICAL
 // OFFSET: 0x0050EE80/0x140158020
 CSimpleStatusBar::~CSimpleStatusBar() {
 }
 
-// PROVEN: 09570588 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EEA0/0x140158040
 void CSimpleStatusBar::SetStatusBarColor(const CImVector& color) {
     if (this->m_barTexture) {
@@ -59,19 +56,16 @@ void CSimpleStatusBar::SetStatusBarColor(const CImVector& color) {
     }
 }
 
-// PROVEN: 95543938 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EEC0/0x140158060
 const char* CSimpleStatusBar::GetObjectTypeName() {
     return CSimpleStatusBar::s_objectTypeName;
 }
 
-// PROVEN: 4459af13 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EED0/0x140158070
 int32_t CSimpleStatusBar::GetScriptMetaTable() {
     return CSimpleStatusBar::s_metatable;
 }
 
-// PROVEN: 0fec43d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EEE0/0x140158080
 FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -93,7 +87,6 @@ FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name
     return NULL;
 }
 
-// PROVEN: 9a450fd0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EF90/0x140158120
 void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onValueChanged, time, count);
@@ -101,7 +94,6 @@ void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: 245976ac IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EFE0/0x1401581A0
 void CSimpleStatusBar::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_barTexture) {
@@ -111,7 +103,6 @@ void CSimpleStatusBar::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
-// PROVEN: 07f92cae IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F010/0x1401581C0
 void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer, int8_t subLevel) {
     if (texture == this->m_barTexture) {
@@ -134,21 +125,18 @@ void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer
     this->m_barTexture = texture;
 }
 
-// PROVEN: ebf163b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F0E0/0x140158300
 void CSimpleStatusBar::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
     this->m_changed = 1;
 }
 
-// PROVEN: cf2e93ab IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F110/0x140158320
 void CSimpleStatusBar::SetReverseFill(int32_t reverse) {
     this->m_reverseFill = reverse;
     this->m_changed = 1;
 }
 
-// PROVEN: 9af81927 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050F490/0x140158740
 void CSimpleStatusBar::SetMinMaxValues(float minValue, float maxValue) {
     if (minValue > maxValue) {
@@ -170,7 +158,6 @@ void CSimpleStatusBar::SetMinMaxValues(float minValue, float maxValue) {
     }
 }
 
-// PROVEN: f1af9da6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F1E0/0x1401583C0
 void CSimpleStatusBar::RunOnValueChangedScript() {
     if (this->HasScript(this->m_onValueChanged)) {
@@ -202,7 +189,6 @@ void CSimpleStatusBar::SetValue(float value) {
     this->RunOnValueChangedScript();
 }
 
-// PROVEN: 0132627d IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F190/0x140158370
 void CSimpleStatusBar::SetWidth(float width) {
     CSimpleFrame::SetWidth(width);
@@ -211,7 +197,6 @@ void CSimpleStatusBar::SetWidth(float width) {
     this->SetValue(value);
 }
 
-// PROVEN: 6eee3274 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F140/0x140158340
 float CSimpleStatusBar::GetAnimValue() const {
     float range = this->m_maxValue - this->m_minValue;
@@ -223,13 +208,11 @@ float CSimpleStatusBar::GetAnimValue() const {
     return 0.0f;
 }
 
-// PROVEN: 9a365044 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F290/0x1401584C0
 bool CSimpleStatusBar::IsA(int32_t type) {
     return type == CSimpleStatusBar::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: f2b20eb7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0050F2D0/0x1401584F0
 bool CSimpleStatusBar::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleStatusBar::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);

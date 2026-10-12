@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[4] = { 0, 3, 3, 3 };
 // STATIC: 0x00C20E48/0x140A15868
 const DBCMeta SpellRadiusRec::s_meta = { "DBFilesClient\\SpellRadius.dbc", 4, 16, SpellRadiusRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: ff33f4ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SpellRadiusRec::FixupStrings(void* record, const char* strings) {
 }

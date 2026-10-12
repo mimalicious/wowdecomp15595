@@ -21,7 +21,6 @@
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 850a600d IDENTICAL/DIFFERENT
 // OFFSET: 0x00AEE0C0/0x1408B5EE0
 void FMOD_Resampler_Spline(float *out, int outlength, void *src, FMOD_SOUND_FORMAT srcformat, FMOD_UINT64P *position, FMOD_SINT64P *speed, int channels)
 {

@@ -23,7 +23,6 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c413a964 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A912F0/0x140850B50
 THREAD_RETURNTYPE THREAD_CALLCONV Thread::callback(void *data)
 {
@@ -111,7 +110,6 @@ FMOD_RESULT Thread::threadFunc()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2b8c67a9 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A913B0/0x140850C90
 Thread::Thread()
 {
@@ -243,7 +241,6 @@ FMOD_RESULT Thread::initThread(const char *name, void (*func)(void *userdata), v
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0cbc5166 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A91510/0x140850E50
 FMOD_RESULT Thread::closeThread()
 {
@@ -347,7 +344,6 @@ FMOD_RESULT Thread::getCurrentThreadID(FMOD_UINT_NATIVE *id)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ca4e72af IDENTICAL/IDENTICAL
 // OFFSET: 0x00A915F0/0x140850F50
 FMOD_RESULT Thread::wakeupThread(bool frominterrupt)
 {

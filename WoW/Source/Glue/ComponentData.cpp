@@ -1,6 +1,5 @@
 #include "ComponentData.h"
 
-// PROVEN: 98ed5afc IDENTICAL/IDENTICAL
 // OFFSET: 0x00481DC0/0x1400A0AB0
 ComponentData::ComponentData() {
     this->m_flags &= ~0x3u;
@@ -44,7 +43,6 @@ void ComponentData::GetPreferences(CharacterPreferences* preferences) {
     *preferences = this->m_preferences;
 }
 
-// PROVEN: 84146c69 IDENTICAL/NONE
 // OFFSET: 0x006F9C80
 void ComponentData::SetPreferences(const CharacterPreferences* preferences) {
     if (!preferences) {

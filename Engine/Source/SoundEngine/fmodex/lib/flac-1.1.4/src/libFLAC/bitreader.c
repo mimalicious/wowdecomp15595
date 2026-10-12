@@ -162,7 +162,6 @@ static _inline FLAC__uint32 local_swap32_(FLAC__uint32 x)
 }
 #endif
 
-// PROVEN: cab4aae6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B5A930/0x140923A60
 static FLaC__INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
 {
@@ -388,7 +387,6 @@ void FLAC__bitreader_reset_read_crc16(FLAC__BitReader *br, FLAC__uint16 seed)
 	br->crc16_align = br->consumed_bits;
 }
 
-// PROVEN: 2c3c17f5 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B5ABE0/0x140923D50
 FLAC__uint16 FLAC__bitreader_get_read_crc16(FLAC__BitReader *br)
 {

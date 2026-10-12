@@ -28,7 +28,6 @@ uint32_t CWardenKey::Hash() const {
     return (this->m_key[12] << 24 | this->m_key[13] << 16 | this->m_key[14] << 8 | this->m_key[15]) & 0x7FFFFFFF;
 }
 
-// PROVEN: e9363243 DIFFERENT/IDENTICAL
 // OFFSET: 0x0049B380/0x1400C7080
 void GetCacheDirectory(char* path) {
     SStrCopy(path, "Cache/WDB/", 260);

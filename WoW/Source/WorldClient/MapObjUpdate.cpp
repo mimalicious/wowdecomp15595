@@ -42,7 +42,6 @@ void CMapObj::UpdateTextures(CMapObjGroup* group) {
     AsyncFileReadAddStreamingObject(CMapObjGroup::LinkToAsyncHead, group, priority);
 }
 
-// PROVEN: 50f2b2ac IDENTICAL/DIFFERENT
 // OFFSET: 0x0079ED90/0x1404940B0
 void CMapObj::UpdateGroups(CMapObj* mapObj) {
     for (uint32_t i = 0; i < mapObj->m_mapObjGroupCount; i++) {

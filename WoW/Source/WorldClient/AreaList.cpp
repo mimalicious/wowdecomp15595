@@ -34,7 +34,6 @@ static uint32_t s_wmoGroupID = static_cast<uint32_t>(-1);
 // STATIC: 0x00DC0D34/0x140CACC44
 static int32_t s_inMapObj;
 
-// PROVEN: 9305d4f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D9980/0x14011EE80
 void AreaListShutdown() {
     s_lastAreaID = -1;
@@ -131,7 +130,6 @@ void AreaListUpdateSounds(const AreaTableRec* zone, const AreaTableRec* area, co
     SI3::UpdateSoundEmitters(mapID);
 }
 
-// PROVEN: 17ee88f7 IDENTICAL/NONE
 // OFFSET: 0x004D9E60
 static bool AreaListUpdateCurrentZone(uintptr_t object, const char** zoneName, const char** subzoneName, uint32_t wmoID, uint32_t wmoHash, uint32_t wmoGroupNum, uint32_t areaID) {
     const char* wmoSubzoneName = NULL;
@@ -162,7 +160,6 @@ static bool AreaListUpdateCurrentZone(uintptr_t object, const char** zoneName, c
     return true;
 }
 
-// PROVEN: 64abac18 IDENTICAL/NONE
 // OFFSET: 0x004D9F50/0x14011F440
 static void AreaListUpdateSoundsForObject(uintptr_t object, const AreaTableRec* zone, const AreaTableRec* area) {
     const WMOAreaTableRec* groupRec = NULL;

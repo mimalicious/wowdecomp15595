@@ -33,7 +33,6 @@ static int32_t unk_C7BFF8;
 // STATIC: 0x00DC0C64/0x140CA67B4
 static int32_t unk_C7BFFC;
 
-// PROVEN: 7e58bad5 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D7890/0x140115DE0
 static int32_t CopyAccountFile(bool global, const char* source, const char* dest) {
     char sourcePath[260];
@@ -189,7 +188,6 @@ static void UpdateCachedChecksum(int32_t type, int32_t time) {
     SaveCachedChecksums(info.m_global);
 }
 
-// PROVEN: a74ca588 IDENTICAL/NONE
 // OFFSET: [0x00551020]
 static int32_t Packet_SMSG_UPDATE_ACCOUNT_DATA_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t type;
@@ -234,7 +232,6 @@ void LoadAccountData(int32_t type, ACCOUNTDATALOADFUNC func, void* param) {
     }
 }
 
-// PROVEN: a3281402 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D79A0/0x140115F40
 void SetClearConfigData(int32_t clear) {
     unk_C7BFF8 = clear;
@@ -503,7 +500,6 @@ void AccountDataInitializeBasicSystem() {
     ClientServices::SetMessageHandler(SMSG_UPDATE_ACCOUNT_DATA_COMPLETE, Packet_SMSG_UPDATE_ACCOUNT_DATA_COMPLETE, NULL);
 }
 
-// PROVEN: ab393978 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D8160/0x140116980
 void AccountDataShutdownBasicSystem() {
     ClientServices::ClearMessageHandler(SMSG_ACCOUNT_DATA_TIMES);
@@ -574,7 +570,6 @@ void AccountDataInitialize(bool global) {
     }
 }
 
-// PROVEN: 673c4585 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D8320/0x140116BB0
 void AccountDataFlush() {
     for (int32_t i = 0; i < static_cast<int32_t>(sizeof(s_accountData) / sizeof(s_accountData[0])); i++) {

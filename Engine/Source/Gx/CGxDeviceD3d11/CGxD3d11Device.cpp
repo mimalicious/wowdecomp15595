@@ -51,7 +51,6 @@ static CreateDXGIFactory1Proc s_CreateDXGIFactory1;
 
 static int32_t s_hideCursorOnCreate = 1;
 
-// PROVEN: efce7aba IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t D3d11DebugLevel() {
     return 0;
@@ -190,7 +189,6 @@ void CGxDeviceD3d11::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_deviceId = desc.DeviceId;
 }
 
-// PROVEN: 164422a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00851FD0/0x140581A00
 uint32_t CGxDeviceD3d11::IFeatureLevelIndex(D3D_FEATURE_LEVEL featureLevel) {
     switch (featureLevel) {
@@ -217,7 +215,6 @@ uint32_t CGxDeviceD3d11::IFeatureLevelIndex(D3D_FEATURE_LEVEL featureLevel) {
     }
 }
 
-// PROVEN: 0f08fa78 IDENTICAL/UNPROVEN
 // OFFSET: 0x008538D0/0x140583460
 int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -321,7 +318,6 @@ int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
     return 1;
 }
 
-// PROVEN: a42031d8 IDENTICAL/NONE
 // OFFSET: 0x00851C10
 CGxDeviceD3d11::RenderTargets::RenderTargets() {
     this->m_numRenderTargets = 0;
@@ -389,7 +385,6 @@ void CGxDeviceD3d11::IReleaseTargets() {
     }
 }
 
-// PROVEN: 56f97a97 IDENTICAL/DIFFERENT
 // OFFSET: 0x008521C0/0x140581C00
 void CGxDeviceD3d11::IUnloadD3dLib() {
     if (--s_d3dLibRefCount) {
@@ -444,7 +439,6 @@ IDXGIOutput* CGxDeviceD3d11::IGetOutputForMonitor(IDXGIAdapter* adapter, uint32_
     }
 }
 
-// PROVEN: 17bde1ee IDENTICAL/NONE
 // OFFSET: 0x00852310
 void CGxDeviceD3d11::ISetWindowFocus(int32_t focus) {
     RECT rect;
@@ -481,7 +475,6 @@ void CGxDeviceD3d11::ISetWindowFocus(int32_t focus) {
     }
 }
 
-// PROVEN: 64e8d289 IDENTICAL/UNPROVEN
 // OFFSET: 0x008523D0/0x140581DF0
 void CGxDeviceD3d11::DeviceSetBaseMipLevel(uint32_t level) {
     this->ITexForceRecreation(1);
@@ -570,13 +563,11 @@ void CGxDeviceD3d11::DeviceSetGamma(const CGxGammaRamp& ramp) {
     }
 }
 
-// PROVEN: e4b79b11 IDENTICAL/NONE
 // OFFSET: 0x008526B0
 void* CGxDeviceD3d11::DeviceWindow() {
     return this->m_hwnd;
 }
 
-// PROVEN: 1694e031 IDENTICAL/NONE
 // OFFSET: 0x008526C0
 void CGxDeviceD3d11::DeviceOverride(EGxOverride override, uint32_t value) {
     CGxDevice::DeviceOverride(override, value);
@@ -614,7 +605,6 @@ int32_t CGxDeviceD3d11::CreatePoolAPI(CGxPool* pool) {
     return 1;
 }
 
-// PROVEN: c0afe6a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00852750/0x140582200
 void CGxDeviceD3d11::PoolSizeSet(CGxPool* pool, uint32_t size) {
     if (pool->m_usage == GxPoolUsage_Stream) {
@@ -632,7 +622,6 @@ void CGxDeviceD3d11::PoolSizeSet(CGxPool* pool, uint32_t size) {
     this->CreatePoolAPI(pool);
 }
 
-// PROVEN: 62ba927f IDENTICAL/IDENTICAL
 // OFFSET: 0x008527A0/0x140582270
 void CGxDeviceD3d11::PoolDestroy(CGxPool* pool) {
     if (!pool) {
@@ -713,14 +702,12 @@ char* CGxDeviceD3d11::IBufLock(CGxBuf* buf) {
     return static_cast<char*>(mapped.pData) + buf->m_itemSize * buf->m_index;
 }
 
-// PROVEN: 2bd988f1 IDENTICAL/UNPROVEN
 // OFFSET: 0x00852960/0x140582480
 char* CGxDeviceD3d11::BufLock(CGxBuf* buf) {
     CGxDevice::BufLock(buf);
     return this->IBufLock(buf);
 }
 
-// PROVEN: 5aed507e IDENTICAL/IDENTICAL
 // OFFSET: 0x00852980/0x1405824F0
 void CGxDeviceD3d11::ICursorCreate(const CGxFormat& format) {
     CGxDevice::ICursorCreate(format);
@@ -732,7 +719,6 @@ void CGxDeviceD3d11::ICursorCreate(const CGxFormat& format) {
     }
 }
 
-// PROVEN: e4475157 IDENTICAL/UNPROVEN
 // OFFSET: 0x008529C0/0x140582530
 void CGxDeviceD3d11::ICursorDestroy() {
     CGxDevice::ICursorDestroy();
@@ -756,7 +742,6 @@ void CGxDeviceD3d11::IQueryCreateApi(CGxQuery* query) {
     }
 }
 
-// PROVEN: 2197b17b IDENTICAL/IDENTICAL
 // OFFSET: 0x00852A60/0x140582590
 void CGxDeviceD3d11::QueryCreate(CGxQuery*& query, EGxQueryType type) {
     CGxDevice::QueryCreate(query, type);
@@ -776,7 +761,6 @@ void CGxDeviceD3d11::QueryCreate(CGxQuery*& query, EGxQueryType type) {
     }
 }
 
-// PROVEN: 67f81705 DIFFERENT/IDENTICAL
 // OFFSET: 0x00852AF0/0x140582650
 int32_t CGxDeviceD3d11::QueryBegin(CGxQuery* query) {
     if (!this->m_context) {
@@ -835,7 +819,6 @@ int32_t CGxDeviceD3d11::QueryGetParam(CGxQuery* query, EGxQueryParam param, uint
     return 0;
 }
 
-// PROVEN: b9cc1e3d IDENTICAL/IDENTICAL
 // OFFSET: 0x00852C00/0x1405827D0
 int32_t CGxDeviceD3d11::QueryGetData(CGxQuery* query, uint32_t* data) {
     if (!this->m_context) {
@@ -858,7 +841,6 @@ int32_t CGxDeviceD3d11::QueryGetData(CGxQuery* query, uint32_t* data) {
     return 1;
 }
 
-// PROVEN: f57c6dfb IDENTICAL/IDENTICAL
 // OFFSET: 0x00852AC0/0x140582600
 void CGxDeviceD3d11::QueryDestroy(CGxQuery*& query) {
     CGxQuery* gxQuery = query;
@@ -1074,7 +1056,6 @@ int32_t CGxDeviceD3d11::ICreateD3dDevice(const CGxFormat& format) {
     return 1;
 }
 
-// PROVEN: 8eee5f16 DIFFERENT/IDENTICAL
 // OFFSET: 0x00852C60/0x140582870
 int32_t CGxDeviceD3d11::ILoadD3dLib() {
     if (s_d3dLibRefCount++) {
@@ -1146,7 +1127,6 @@ int32_t CGxDeviceD3d11::DeviceCreate(GxWindowProc windowProc, const CGxFormat& f
     return 0;
 }
 
-// PROVEN: 716e5d86 DIFFERENT/IDENTICAL
 // OFFSET: 0x00854540/0x140584430
 int32_t CGxDeviceD3d11::DeviceCreate(void* window, const CGxFormat& format) {
     this->m_ownhwnd = 0;
@@ -1217,7 +1197,6 @@ int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     return 0;
 }
 
-// PROVEN: b31065aa IDENTICAL/IDENTICAL
 // OFFSET: 0x008529E0/0x140582560
 int32_t CGxDeviceD3d11::ISetCursor() {
     if (!this->m_d3dDevice || this->m_hwCursor) {
@@ -1228,7 +1207,6 @@ int32_t CGxDeviceD3d11::ISetCursor() {
     return 1;
 }
 
-// PROVEN: 3776b149 IDENTICAL/DIFFERENT
 // OFFSET: 0x00852FF0/0x140582CE0
 void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     if (!this->m_context) {
@@ -1292,7 +1270,6 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
     this->m_scissorRectDirty = 1;
 }
 
-// PROVEN: 8d0e5d4b IDENTICAL/DIFFERENT
 // OFFSET: 0x00853280/0x140582ED0
 void CGxDeviceD3d11::FrameBufferSet(CGxFrameBuffer* frameBuffer) {
     if (!this->m_context) {
@@ -1376,7 +1353,6 @@ void CGxDeviceD3d11::FrameBufferSet(CGxFrameBuffer* frameBuffer) {
     this->m_frameBufferVersion = this->m_frameBuffer->m_version;
 }
 
-// PROVEN: 11628376 IDENTICAL/IDENTICAL
 // OFFSET: 0x00853590/0x140583170
 void CGxDeviceD3d11::DeviceResolveDepthBuffer(CGxTex* texture) {
     if ((texture->m_needsCreation || (!texture->m_apiSpecificData && !texture->m_apiSpecificData2)) && !this->ITexCreate(texture)) {
@@ -1417,7 +1393,6 @@ void CGxDeviceD3d11::DeviceCopyTex(CGxTex* source, uint32_t sourcePlane, CGxTex*
     }
 }
 
-// PROVEN: c6eb9add IDENTICAL/UNPROVEN
 // OFFSET: 0x008536F0/0x140583310
 void CGxDeviceD3d11::CursorUnlock(uint32_t x, uint32_t y) {
     CGxDevice::CursorUnlock(x, y);
@@ -1537,7 +1512,6 @@ void CGxDeviceD3d11::IBufUnlock(CGxBuf* buf, uint32_t size) {
     buf->unk_001D = 1;
 }
 
-// PROVEN: c1b36077 IDENTICAL/IDENTICAL
 // OFFSET: 0x00853E60/0x140583B60
 int32_t CGxDeviceD3d11::BufUnlock(CGxBuf* buf, uint32_t size) {
     CGxDevice::BufUnlock(buf, size);
@@ -1545,7 +1519,6 @@ int32_t CGxDeviceD3d11::BufUnlock(CGxBuf* buf, uint32_t size) {
     return 1;
 }
 
-// PROVEN: ed22d1e4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00853E90/0x140583BA0
 void CGxDeviceD3d11::BufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset) {
     CGxDevice::BufData(buf, data, size, offset);
@@ -1573,7 +1546,6 @@ int32_t CGxDeviceD3d11::IHardwareSupported() {
     return featureLevel >= D3D_FEATURE_LEVEL_10_0;
 }
 
-// PROVEN: d97b73ff IDENTICAL/IDENTICAL
 // OFFSET: 0x00850270/0x14057F530
 void CGxDevice::D3d11ApiQuery(int32_t& supported, int32_t& selectable) {
     if (!CGxDeviceD3d11::ILoadD3dLib()) {
@@ -1946,7 +1918,6 @@ CGxDeviceD3d11::CGxDeviceD3d11() {
 CGxDeviceD3d11::~CGxDeviceD3d11() {
 }
 
-// PROVEN: 6fb10f39 IDENTICAL/IDENTICAL
 // OFFSET: 0x008544D0/0x1405843A0
 void CGxDeviceD3d11::IReleaseD3dPools(int32_t freePools) {
     for (CGxPool* pool = CGxDevice::s_poolList.Head(), * next; !CGxDevice::s_poolList.IsEnd(pool); pool = next) {
@@ -2115,7 +2086,6 @@ void CGxDeviceD3d11::IDestroyD3d() {
     this->m_context = 0;
 }
 
-// PROVEN: e84993fa IDENTICAL/IDENTICAL
 // OFFSET: 0x00855150/0x140585530
 void CGxDeviceD3d11::DeviceDestroy() {
     CGxDevice::DeviceDestroy();
@@ -2131,7 +2101,6 @@ void CGxDeviceD3d11::DeviceDestroy() {
     this->IDestroyD3d();
 }
 
-// PROVEN: 92adf713 DIFFERENT/IDENTICAL
 // OFFSET: 0x00855190/0x140585580
 int32_t CGxDeviceD3d11::DeviceSetFormat(const CGxFormat& format) {
     CGxDevice::Log("CGxDeviceD3d11::DeviceSetFormat():");
@@ -2154,7 +2123,6 @@ int32_t CGxDeviceD3d11::DeviceSetFormat(const CGxFormat& format) {
     return 0;
 }
 
-// PROVEN: 0ba8f282 IDENTICAL/IDENTICAL
 // OFFSET: 0x00850C60/0x1405824B0
 void CGxDeviceD3d11::CursorSetVisible(int32_t visible) {
     if (visible == CGxDevice::s_cursorVisible) {
@@ -2168,51 +2136,42 @@ void CGxDeviceD3d11::CursorSetVisible(int32_t visible) {
     }
 }
 
-// PROVEN: 8fabf828 IDENTICAL/DIFFERENT
 // OFFSET: 0x00871FE0/0x140581DE0
 void CGxDeviceD3d11::DeviceEvictResources() {
     CGxDevice::DeviceEvictResources();
 }
 
-// PROVEN: ee17afde IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceD3d11::StereoSetConvergence(float convergence) {
 }
 
-// PROVEN: b3f15edd IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E10/0x1402082B0
 float CGxDeviceD3d11::StereoGetConvergence() {
     return 1.0f;
 }
 
-// PROVEN: 51e0f0a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceD3d11::StereoSetSeparation(float separation) {
 }
 
-// PROVEN: 9fec1b8c IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGxDeviceD3d11::StereoGetSeparation() {
     return 0.0f;
 }
 
-// PROVEN: 36ea16fe IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 bool CGxDeviceD3d11::StereoEnabled() {
     return false;
 }
 
-// PROVEN: 842c353c IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void CGxDeviceD3d11::DebugGroupBegin(const char* name, char* buffer) {
 }
 
-// PROVEN: 6ebcfa39 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGxDeviceD3d11::DebugGroupEnd() {
 }
 
-// PROVEN: bc9fcbbd IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void CGxDeviceD3d11::DebugEvent(const char* name, char* buffer) {
 }

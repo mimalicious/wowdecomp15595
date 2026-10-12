@@ -22,7 +22,6 @@ CCameraTrackBlendData::CCameraTrackBlendData() {
     this->m_fade = 0.0f;
 }
 
-// PROVEN: 93d6eda3 IDENTICAL/NONE
 // OFFSET: 0x00461DA0
 void CCameraTrackBlendData::Init(const CCameraShot& shot) {
     shot.CalcPolarFacing(this->m_distance, this->m_yaw, this->m_pitch);
@@ -345,12 +344,10 @@ CCameraTrack::DeferredCameraAction::DeferredCameraAction() {
     this->m_guid = WOWGUID::Make(0);
 }
 
-// PROVEN: 1ae442a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00462B20/0x140075E10
 CCameraTrack::CCameraTrack() : m_head(NULL) {
 }
 
-// PROVEN: ea8ff33b IDENTICAL/IDENTICAL
 // OFFSET: 0x00462B40/0x140075E40
 CCameraTrack::~CCameraTrack() {
     this->m_deferredActions.Clear();
@@ -373,7 +370,6 @@ void CCameraTrack::SetCurrentCamera(const CCameraModeInstance* instance, const C
     action->m_guid = guid;
 }
 
-// PROVEN: ac6dddd4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00462C00/0x140075F40
 void CCameraTrack::ProcessDeferredActions() {
     for (uint32_t i = 0; i < this->m_deferredActions.Count(); i++) {

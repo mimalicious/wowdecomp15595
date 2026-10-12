@@ -156,7 +156,6 @@ static uint32_t ReadResponseData(void* param) {
     return 0;
 }
 
-// PROVEN: 3d59253b DIFFERENT/IDENTICAL
 // OFFSET: 0x007B4A20/0x1404AA5A0
 static HINTERNET ConnectServer(Blizzard::URL::HttpRequest* request, const char* serverName, INTERNET_PORT serverPort) {
     request->m_state = 0;

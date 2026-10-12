@@ -119,19 +119,16 @@ const EGxTexFilter CWorldParam::s_textureFilteringModes[6] = { GxTex_LinearMipNe
 // STATIC: 0x00D02964/0x140BB28C0
 const uint32_t CWorldParam::s_textureFilteringAnisotropy[6] = { 1, 1, 2, 4, 8, 16 };
 
-// PROVEN: cd3eaae2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B5A0/0x140453660
 const CWorldParam::DefaultSetting* CWorldParam::GetDefaultSettings(uint32_t level) {
     return CWorldParam::s_defaults[level];
 }
 
-// PROVEN: e09f161b IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B5B0/0x140453670
 const CWorldParam::DefaultSetting* CWorldParam::GetCurrentDefaultSettings() {
     return CWorldParam::s_defaults[ConsoleDeviceGetDefaultSettings()->m_graphicsQuality];
 }
 
-// PROVEN: 69f993cf IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B5C0/0x140453690
 void CWorldParam::SetDefaults(OPTION_PAGE page) {
     if (page != OPTION_PAGE_0) {
@@ -146,13 +143,11 @@ void CWorldParam::SetDefaults(OPTION_PAGE page) {
     }
 }
 
-// PROVEN: cb6b2cea IDENTICAL/UNPROVEN
 // OFFSET: 0x0076B610/0x140453700
 void CWorldParam::Destroy() {
     RemoveConsoleDeviceDefaultCallback(CWorldParam::SetDefaults);
 }
 
-// PROVEN: 1a40b545 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C130/0x140454240
 uint32_t CWorldParam::ValidateTextureFilteringMode(uint32_t mode) {
     if (mode <= 1) {

@@ -2,7 +2,6 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: f814010c IDENTICAL/NONE
 // OFFSET: 0x0097F9E0
 LFGListPlayer* LFGListParty::GetMember(uint32_t index) const {
     if (index + 1 < this->m_members.m_count) {
@@ -12,7 +11,6 @@ LFGListPlayer* LFGListParty::GetMember(uint32_t index) const {
     return NULL;
 }
 
-// PROVEN: 2f67e4a4 DIFFERENT/IDENTICAL
 // OFFSET: 0x00984190/0x1406FF190
 void LFGListParty::AddPlayer(LFGListPlayer* player) {
     if (player->m_partyIndex >= 0) {
@@ -66,7 +64,6 @@ LFGListParty::LFGListParty(const LFGListParty& source) {
     this->m_encounterMask = source.m_encounterMask;
 }
 
-// PROVEN: 40f92e71 IDENTICAL/IDENTICAL
 // OFFSET: 0x00986640/0x140701BD0
 LFGListPlayer::LFGListPlayer(const LFGListPlayer& source) {
     this->m_index = source.m_index;

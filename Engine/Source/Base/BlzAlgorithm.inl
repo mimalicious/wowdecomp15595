@@ -231,7 +231,6 @@ void blz::internal::adjust_heap(RandomIt first, Distance holeIndex, Distance len
     blz::internal::push_heap(first, holeIndex, topIndex, value);
 }
 
-// PROVEN: 027bbdc2 IDENTICAL/NONE
 // OFFSET: [0x0077CD70/0x1404697F0<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::internal::insertion_sort(RandomIt first, RandomIt last) {
@@ -281,7 +280,6 @@ RandomIt blz::internal::median(RandomIt a, RandomIt b, RandomIt c) {
     return b;
 }
 
-// PROVEN: 8cbf0e94 IDENTICAL/NONE
 // OFFSET: [0x0077D530<LiquidChunkAndDistance*, LiquidChunkAndDistance>]
 template <class RandomIt, class T>
 RandomIt blz::internal::unguarded_partition(RandomIt first, RandomIt last, T pivot) {
@@ -307,7 +305,6 @@ RandomIt blz::internal::unguarded_partition(RandomIt first, RandomIt last, T piv
     }
 }
 
-// PROVEN: 6954cff7 IDENTICAL/NONE
 // OFFSET: [0x0077DC50<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::make_heap(RandomIt first, RandomIt last) {
@@ -331,7 +328,6 @@ void blz::make_heap(RandomIt first, RandomIt last) {
     }
 }
 
-// PROVEN: fad8b03a IDENTICAL/NONE
 // OFFSET: [0x0077DCF0<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::sort_heap(RandomIt first, RandomIt last) {
@@ -343,7 +339,6 @@ void blz::sort_heap(RandomIt first, RandomIt last) {
     }
 }
 
-// PROVEN: 394b8c53 IDENTICAL/NONE
 // OFFSET: [0x0077DE20<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::partial_sort(RandomIt first, RandomIt middle, RandomIt last) {

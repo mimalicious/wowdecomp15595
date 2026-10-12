@@ -30,7 +30,6 @@ void CMapLowDetail::LinkMapObjDefToAreas(CMapObjDef* mapObjDef) {
     }
 }
 
-// PROVEN: a54c4b04 IDENTICAL/DIFFERENT
 // OFFSET: 0x00797F40/0x14048B890
 CMapAreaLow* CMapLowDetail::CreateOcean(int32_t x, int32_t y) {
     CMapAreaLow* area = NULL;
@@ -46,7 +45,6 @@ CMapAreaLow* CMapLowDetail::CreateOcean(int32_t x, int32_t y) {
     return area;
 }
 
-// PROVEN: 218a44ed IDENTICAL/DIFFERENT
 // OFFSET: 0x00797F90/0x14048B980
 void CMapLowDetail::Purge() {
     for (int32_t y = 0; y < 64; y++) {
@@ -245,7 +243,6 @@ void CMapLowDetail::Unload() {
     }
 }
 
-// PROVEN: 78dafdd9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00798840/0x14048C3E0
 CMapLowDetail::~CMapLowDetail() {
 }

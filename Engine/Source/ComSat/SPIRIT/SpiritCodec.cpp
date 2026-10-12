@@ -3,7 +3,6 @@
 
 extern "C" {
 
-// PROVEN: de481461 IDENTICAL/NONE
 // OFFSET: 0x00B4BB80
 int32_t SPIRIT_IP_MR_V3_1_GenerateTables(void* tables) {
     if (!tables) {

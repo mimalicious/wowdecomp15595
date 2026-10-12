@@ -150,13 +150,11 @@
 // STATIC: 0x00DD8674/0x140CBEE00
 static uint32_t s_nextVictimImpactTime;
 
-// PROVEN: 99326035 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FF6D0/0x1402837D0
 void CGUnit_C::ShowPlayerPVPHonorGained(WOWGUID victim, int32_t rank, int32_t honor) {
     CGChat::LogHonorGain(this, victim, rank, honor);
 }
 
-// PROVEN: d784e696 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FF6F0/0x1402837F0
 const CGUnitVirtualItem* CGUnit_C::GetParryingItem(bool offhand) const {
     const CGUnitVirtualItem* item = this->GetVirtualItem(0, false);
@@ -172,7 +170,6 @@ const CGUnitVirtualItem* CGUnit_C::GetParryingItem(bool offhand) const {
     return item;
 }
 
-// PROVEN: bc3775bf IDENTICAL/IDENTICAL
 // OFFSET: 0x005FF740/0x140283850
 int32_t CGUnit_C::GetUnitSize() const {
     int32_t size = this->m_displayInfo->m_sizeClass;
@@ -184,7 +181,6 @@ int32_t CGUnit_C::GetUnitSize() const {
     return size;
 }
 
-// PROVEN: 8eae0b5a IDENTICAL/NONE
 // OFFSET: 0x005FF780
 void TargetAttacker(const WOWGUID& attacker) {
     if (!CGGameUI::m_lockedTarget.m_guid) {
@@ -343,7 +339,6 @@ const CGUnitVirtualItem* CGUnit_C::GetAttackingWeapon(int32_t hand, bool require
     return NULL;
 }
 
-// PROVEN: 7699e0e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FFBF0/0x140283E40
 void UnitCombatClientShutdown() {
     ClientServices::ClearMessageHandler(SMSG_ATTACK_START);

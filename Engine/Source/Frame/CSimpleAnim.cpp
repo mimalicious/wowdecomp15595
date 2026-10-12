@@ -26,7 +26,6 @@ int32_t CSimpleAnim::s_objectType;
 // STATIC: 0x00CA3820/0x140B40A90
 const char* CSimpleAnim::s_objectTypeName = "Animation";
 
-// PROVEN: e7006d69 IDENTICAL/IDENTICAL
 // STATIC: 0x00CA3840/0x140B40AD0
 float CSimpleAnim::s_frameInterval = 1.0f / 30.0f;
 
@@ -36,7 +35,6 @@ CSimpleAnimSmoother::CSimpleAnimSmoother() {
     this->m_out = 0.0f;
 }
 
-// PROVEN: e7006d69 IDENTICAL/IDENTICAL
 // OFFSET: 0x005275F0/0x140176960
 void CSimpleAnimSCurveSmoother::SetWeights(float in, float out) {
     this->m_in = in < 0.0f ? 0.0f : (in < 1.0f ? in : 1.0f);
@@ -60,7 +58,6 @@ float CSimpleAnimSCurveSmoother::GetSmoothProgress(float progress) {
     return progress;
 }
 
-// PROVEN: f6a6534e IDENTICAL/IDENTICAL
 // OFFSET: 0x00526D30/0x1401760F0
 FrameScript_Object::ScriptIx* CSimpleAnim::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = this->FrameScript_Object::GetScriptByName(name, data);
@@ -98,7 +95,6 @@ FrameScript_Object::ScriptIx* CSimpleAnim::GetScriptByName(const char* name, Fra
     return NULL;
 }
 
-// PROVEN: 018eb404 IDENTICAL/IDENTICAL
 // OFFSET: 0x00526EE0/0x1401761F0
 void CSimpleAnim::GetScriptTime(lua_State* L, double* time, uint32_t* calls) {
     this->FrameScript_Object::GetScriptTime(L, this->m_onLoad, time, calls);
@@ -109,13 +105,11 @@ void CSimpleAnim::GetScriptTime(lua_State* L, double* time, uint32_t* calls) {
     this->FrameScript_Object::GetScriptTime(L, this->m_onUpdate, time, calls);
 }
 
-// PROVEN: 3736e17f IDENTICAL/IDENTICAL
 // OFFSET: 0x00526F60/0x1401762B0
 void CSimpleAnim::SetSmoothProgress(float progress) {
     this->m_smoothProgress = progress;
 }
 
-// PROVEN: ef1299d1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00526F80/0x1401762C0
 void CSimpleAnim::SetSmoothing(float in, float out) {
     if ((in > 0.0f && in <= 1.0f) || (out > 0.0f && out <= 1.0f)) {
@@ -130,7 +124,6 @@ void CSimpleAnim::SetSmoothing(float in, float out) {
     }
 }
 
-// PROVEN: a63a4375 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527020/0x140176370
 bool CSimpleAnim::GetSmoothing(float& in, float& out) {
     CSimpleAnimSmoother* smoother = this->m_smoother;
@@ -146,7 +139,6 @@ bool CSimpleAnim::GetSmoothing(float& in, float& out) {
     return false;
 }
 
-// PROVEN: 7b271f0a IDENTICAL/UNPROVEN
 // OFFSET: 0x00526CE0/0x140176450
 void CSimpleAnim::LoadXML_Scripts(linkObject* node, CStatus* status) {
     lua_State* L = FrameScript_GetContext();
@@ -167,7 +159,6 @@ void CSimpleAnim::RunOnStopScript(bool requested) {
     }
 }
 
-// PROVEN: ba90a49c IDENTICAL/NONE
 // OFFSET: 0x005274D0
 void CSimpleAnim::RunOnFinishedScript() {
     if (this->HasScript(this->m_onFinished)) {
@@ -175,7 +166,6 @@ void CSimpleAnim::RunOnFinishedScript() {
     }
 }
 
-// PROVEN: 84e83861 IDENTICAL/NONE
 // OFFSET: 0x00527500
 void CSimpleAnim::RunOnUpdateScript(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
@@ -185,7 +175,6 @@ void CSimpleAnim::RunOnUpdateScript(float elapsedSec) {
     }
 }
 
-// PROVEN: fbda7b67 IDENTICAL/IDENTICAL
 // OFFSET: 0x005276E0/0x140176A50
 void CSimpleAnim::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_flags &= ~1;
@@ -195,7 +184,6 @@ void CSimpleAnim::PostLoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 84fdfb93 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527710/0x140176A90
 bool CSimpleAnim::Play() {
     if (this->m_targetName[0]) {
@@ -213,7 +201,6 @@ bool CSimpleAnim::Play() {
     return true;
 }
 
-// PROVEN: 618b9b25 IDENTICAL/UNPROVEN
 // OFFSET: 0x00527780/0x140176B10
 void CSimpleAnim::Pause() {
     this->m_group->Pause();
@@ -227,7 +214,6 @@ void CSimpleAnim::Pause() {
     }
 }
 
-// PROVEN: 969b1f0d IDENTICAL/IDENTICAL
 // OFFSET: 0x005277C0/0x140176B70
 void CSimpleAnim::Stop(bool requested) {
     if (!this->m_playState) {
@@ -275,7 +261,6 @@ bool CSimpleAnim::IsDelaying() {
     return total > this->m_elapsed;
 }
 
-// PROVEN: fd12db21 IDENTICAL/IDENTICAL
 // OFFSET: 0x005278D0/0x140176C80
 CScriptRegion* CSimpleAnim::GetRegionParent() {
     return this->m_group ? this->m_group->m_region : NULL;
@@ -337,25 +322,21 @@ CSimpleAnim::~CSimpleAnim() {
     delete this->m_smoother;
 }
 
-// PROVEN: defe0283 IDENTICAL/IDENTICAL
 // OFFSET: 0x005282F0/0x140177900
 bool CSimpleAnim::IsA(int32_t type) {
     return type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: bf32b965 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528320/0x140177920
 bool CSimpleAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: e7d1a958 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528360/0x140177960
 const char* CSimpleAnim::GetObjectTypeName() {
     return CSimpleAnim::s_objectTypeName;
 }
 
-// PROVEN: 8f49d2c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528370/0x140177970
 int32_t CSimpleAnim::GetScriptMetaTable() {
     return CSimpleAnim::s_metatable;
@@ -419,7 +400,6 @@ CSimpleAnim::CSimpleAnim(CSimpleAnimGroup* group) {
     }
 }
 
-// PROVEN: 1c4670ab IDENTICAL/IDENTICAL
 // OFFSET: 0x00529290/0x140178BB0
 void CSimpleAnim::SetStartDelay(float delay, bool notify) {
     this->m_startDelay = delay;
@@ -433,7 +413,6 @@ void CSimpleAnim::SetStartDelay(float delay, bool notify) {
     }
 }
 
-// PROVEN: d65997a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x005292C0/0x140178BF0
 void CSimpleAnim::SetEndDelay(float delay, bool notify) {
     this->m_endDelay = delay;
@@ -447,7 +426,6 @@ void CSimpleAnim::SetEndDelay(float delay, bool notify) {
     }
 }
 
-// PROVEN: 1b8fea6b IDENTICAL/IDENTICAL
 // OFFSET: 0x005292F0/0x140178C30
 void CSimpleAnim::SetDuration(float duration, bool notify) {
     this->m_duration = duration;
@@ -579,7 +557,6 @@ void CSimpleAnim::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 4620d55f IDENTICAL/IDENTICAL
 // OFFSET: 0x0052B7D0/0x14017BFB0
 bool CSimpleAnim::ChangeParent(CSimpleAnimGroup* group) {
     if (!group || this->m_group == group) {
@@ -593,12 +570,10 @@ bool CSimpleAnim::ChangeParent(CSimpleAnimGroup* group) {
     return true;
 }
 
-// PROVEN: f0d68712 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CSimpleAnim::Apply(float progress) {
 }
 
-// PROVEN: b05b8fdd IDENTICAL/IDENTICAL
 // OFFSET: 0x005282E0/0x14090C360
 CScriptObject* CSimpleAnim::GetScriptObjectParent() {
     return this->m_group;

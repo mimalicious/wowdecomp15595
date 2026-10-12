@@ -29,13 +29,11 @@ static int32_t s_cancelled;
 // STATIC: 0x00DD4324/0x140CBA5E8
 static std::list<PreloadList*, Blizzard::Memory::AllocSTL_raw<PreloadList*> > s_lists;
 
-// PROVEN: 0caf2bf8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00546870/0x14019E0B0
 static void IngameProgressCallback(float progress, int32_t a2) {
     LoadingScreenUpdateProgress(s_progressScale * progress + s_progressBase, 0);
 }
 
-// PROVEN: c2741ae8 IDENTICAL/IDENTICAL
 // OFFSET: 0x005468A0/0x14019E0D0
 static void ArchiveProgressCallback(float progress, int32_t a2) {
     if (s_allFilesLocal) {
@@ -76,7 +74,6 @@ int32_t PreloadList::ListNameChanged(int32_t raceID, int32_t classID) {
     return _strnicmp(name, this->m_name, 260) != 0;
 }
 
-// PROVEN: eccb27e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00546A70/0x14019E300
 int32_t PreloadList::IsComplete() {
     for (uint32_t i = 0; i < this->m_objects.Count(); i++) {
@@ -88,7 +85,6 @@ int32_t PreloadList::IsComplete() {
     return 1;
 }
 
-// PROVEN: 096d720a UNPROVEN/IDENTICAL
 // OFFSET: 0x00546B00/0x14019E330
 void PreloadList::PreloadFile(const char* name) {
     CAsyncObject* object = NULL;
@@ -155,7 +151,6 @@ void PreloadList::ParseAndLoad(const char* name) {
     SFile::Unload(data);
 }
 
-// PROVEN: 83c852a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00546C20/0x14019E4D0
 PreloadList::PreloadList(const char* name, int32_t waitAll) {
     this->m_waitAll = waitAll;
@@ -267,7 +262,6 @@ int32_t PreloadList::DownloadAndWait(const char* name, int32_t showProgress, voi
     return result;
 }
 
-// PROVEN: d1eb6bba IDENTICAL/IDENTICAL
 // OFFSET: 0x00546FE0/0x14019EA80
 void PreloadList::StopDownload(PreloadList* list) {
     if (list) {

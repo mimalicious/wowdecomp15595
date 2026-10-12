@@ -120,13 +120,11 @@ uint32_t BattlenetAPI::GetPresenceIDForAccount(uint32_t accountId) {
     return static_cast<uint32_t>(g_tumorManager->CallFunction("BattlenetAPI_GetPresenceIDForAccount", 1, &arg).ToUInt64());
 }
 
-// PROVEN: 658b7fdc IDENTICAL/IDENTICAL
 // OFFSET: 0x00903130/0x14065BA10
 uint32_t BattlenetAPI::GetPresenceIDForCurrentAccount() {
     return static_cast<uint32_t>(g_tumorManager->CallFunction("BattlenetAPI_GetPresenceIDForCurrentAccount", 0, NULL).ToUInt64());
 }
 
-// PROVEN: 6a9eaf9e IDENTICAL/IDENTICAL
 // OFFSET: 0x00903190/0x14065BA80
 uint32_t BattlenetAPI::GetPresenceIDForCurrentToon() {
     return static_cast<uint32_t>(g_tumorManager->CallFunction("BattlenetAPI_GetPresenceIDForCurrentToon", 0, NULL).ToUInt64());
@@ -222,7 +220,6 @@ uint16_t BattlenetAPI::ReportPlayer(uint32_t presenceId, int32_t reason, const c
     return static_cast<uint16_t>(g_tumorManager->CallFunction("BattlenetAPI_ReportPlayer", 3, args).ToUInt64());
 }
 
-// PROVEN: e80009bc IDENTICAL/IDENTICAL
 // OFFSET: 0x00903990/0x14065C460
 void BattlenetAPI::SetSetting(const char* name, GeneralFunction::Arg value, bool notify) {
     GeneralFunction::Arg args[3];
@@ -247,7 +244,6 @@ uint32_t BattlenetAPI::RegisterEvent(const char* name, GeneralFunction::Callback
     return static_cast<uint32_t>(g_tumorManager->CallFunction("BattlenetAPI_RegisterEvent", 2, args).ToUInt64());
 }
 
-// PROVEN: 0e81944a IDENTICAL/IDENTICAL
 // OFFSET: 0x00903BE0/0x14065C740
 void BattlenetAPI::SetAccountNameFormatString(const char* format) {
     GeneralFunction::Arg arg;
@@ -386,7 +382,6 @@ bool BattlenetAPI::IsCIDBlock(uint32_t presenceId) {
     return g_tumorManager->CallFunction("BattlenetAPI_IsCIDBlock", 1, &arg).ToBool();
 }
 
-// PROVEN: ec7d80e3 IDENTICAL/NONE
 // OFFSET: 0x009050A0
 GeneralFunction::Arg BattlenetAPI::GetSetting(const char* name) {
     GeneralFunction::Arg arg;
@@ -394,7 +389,6 @@ GeneralFunction::Arg BattlenetAPI::GetSetting(const char* name) {
     return g_tumorManager->CallFunction("BattlenetAPI_GetSetting", 1, &arg);
 }
 
-// PROVEN: 7c2007ec IDENTICAL/IDENTICAL
 // OFFSET: 0x00905100/0x14065DD50
 bool BattlenetAPI::IsRIDEnabled() {
     return g_tumorManager->CallFunction("BattlenetAPI_IsRIDEnabled", 0, NULL).ToBool();

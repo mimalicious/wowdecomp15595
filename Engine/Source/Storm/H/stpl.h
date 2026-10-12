@@ -343,7 +343,6 @@ T* TSLink<T>::Next() {
     return (reinterpret_cast<uintptr_t>(this->m_next) & 1) || !this->m_next ? NULL : this->m_next;
 }
 
-// PROVEN: 419d4b0d IDENTICAL/NONE
 // OFFSET: [0x005719F0<BFSNODE>]
 template <class T>
 TSLink<T>* TSLink<T>::NextLink(ptrdiff_t linkoffset) {
@@ -395,7 +394,6 @@ TSLink<T>* TSGetExplicitLink<T>::Link(T* nodeptr, ptrdiff_t linkoffset) {
     return reinterpret_cast<TSLink<T>*>(reinterpret_cast<uint8_t*>(nodeptr) + linkoffset);
 }
 
-// PROVEN: aaadd5d6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00401050/0x140001020
 template <class T, class TGetLink>
 int32_t TSList<T, TGetLink>::IsEnd(T* ptr) {
@@ -450,7 +448,6 @@ T* TSList<T, TGetLink>::DeleteNode(T* ptr) {
     return next;
 }
 
-// PROVEN: 89d57c33 IDENTICAL/IDENTICAL
 // OFFSET: 0x00544F70/0x1402B0D40
 template <class T, class TGetLink>
 T* TSList<T, TGetLink>::Head() {
@@ -470,7 +467,6 @@ int32_t TSList<T, TGetLink>::IsEmpty() {
     return this->Head() == NULL;
 }
 
-// PROVEN: 9b79e303 IDENTICAL/NONE
 // OFFSET: 0x005080D0
 template <class T, class TGetLink>
 int32_t TSList<T, TGetLink>::IsLinked(T* ptr) {
@@ -541,7 +537,6 @@ T* TSList<T, TGetLink>::Prev(T* ptr) {
     return this->Link(ptr)->Prev();
 }
 
-// PROVEN: 61f93719 IDENTICAL/NONE
 // OFFSET: [0x00984170<ADDONSTATELIST, TSGetLink<ADDONSTATELIST>>]
 template <class T, class TGetLink>
 T* TSList<T, TGetLink>::RawNext(T* ptr) {
@@ -612,7 +607,6 @@ void TSList<T, TGetLink>::Combine(TSList<T, TGetLink>* list, uint32_t linktype, 
     list->m_terminator.m_next = reinterpret_cast<T*>(reinterpret_cast<uintptr_t>(&list->m_terminator) | 1);
 }
 
-// PROVEN: add42485 IDENTICAL/NONE
 // OFFSET: [0x009E8D50<CGNamePlateFrame, TSGetLink<CGNamePlateFrame>>, 0x0054B280<CLayoutFrame, TSGetExplicitLink<CLayoutFrame>>, 0x008E2A70<CModelRecord, TSGetLink<CModelRecord>>]
 template <class T, class TGetLink>
 void TSList<T, TGetLink>::UnlinkNode(T* ptr) {
@@ -675,7 +669,6 @@ T* TSBaseArray<T>::Ptr() {
     return this->m_data;
 }
 
-// PROVEN: 0184908c IDENTICAL/DIFFERENT
 // OFFSET: 0x004BBC80/0x1400F5160
 template <class T>
 T* TSBaseArray<T>::Top() {
@@ -720,7 +713,6 @@ void TSFixedArray<T>::Clear() {
     this->m_data = NULL;
 }
 
-// PROVEN: f5436f46 IDENTICAL/DIFFERENT
 // OFFSET: [0x00486890/0x1400A78D0<CObjectHeap>, 0x004B1E90/0x1400E86F0<TSGrowableArray<int>>]
 template <class T>
 void TSFixedArray<T>::ReallocAndClearData(uint32_t count) {
@@ -997,7 +989,6 @@ void TSGrowableArray<T>::SetCount(uint32_t count) {
     this->m_count = count;
 }
 
-// PROVEN: ce6af5bd IDENTICAL/NONE
 // OFFSET: [0x004DE6F0/0x1400C9600<CMapObj, HASHKEY_NONE>, 0x004FC7E0/0x1402B34A0<FONTHASHOBJ, HASHKEY_STR>]
 template <class T, class TKey>
 TSHashObject<T, TKey>::~TSHashObject() {
@@ -1031,7 +1022,6 @@ TSHashTable<T, TKey>::TSHashTable() {
     this->m_maxslots = 0x2000;
 }
 
-// PROVEN: 25267197 IDENTICAL/IDENTICAL
 // OFFSET: [0x005D4E10/0x14024F2A0<RGN, HASHKEY_NONE>]
 template <class T, class TKey>
 void TSHashTable<T, TKey>::Clear() {
@@ -1063,7 +1053,6 @@ T* TSHashTable<T, TKey>::DeleteNode(T* ptr) {
     return next;
 }
 
-// PROVEN: ed33007e IDENTICAL/NONE
 // OFFSET: [0x00653A00<CVar, HASHKEY_STRI>]
 template <class T, class TKey>
 T* TSHashTable<T, TKey>::Next(T* ptr) {
@@ -1237,7 +1226,6 @@ T* TSHashTable<T, TKey>::New(uint32_t hashval, const TKey& key, size_t extrabyte
     return node;
 }
 
-// PROVEN: 0036f514 IDENTICAL/NONE
 // OFFSET: [0x00656B60<CVar, HASHKEY_STRI>, 0x008F5D30<PROFANITYCHECK, HASHKEY_STR>, 0x008F5D90<SPAMCHECK, HASHKEY_STR>, 0x009181C0<OVERRIDE_SPELL_BY_NAME_NODE, HASHKEY_UTF8I>, 0x00925FB0<KEYCOMMAND, HASHKEY_STRI>]
 template <class T, class TKey>
 T* TSHashTable<T, TKey>::New(uint32_t hashval, const char* str, size_t extrabytes, uint32_t flags) {
@@ -1589,7 +1577,6 @@ TSCGrowableArray<T, N>::TSCGrowableArray() {
     this->m_count = 0;
 }
 
-// PROVEN: aff02478 IDENTICAL/NONE
 // OFFSET: [0x0059B410<MapObjSpeedTransition, 8>, 0x0058CAD0<AnimKitSegmentInst *, 8>]
 template <class T, uint32_t N>
 uint32_t TSCGrowableArray<T, N>::Count() const {
@@ -1654,7 +1641,6 @@ TSCGrowableArray<T, N>::~TSCGrowableArray() {
     }
 }
 
-// PROVEN: 85762df8 IDENTICAL/NONE
 // OFFSET: [0x005AC6A0, 0x0058CAA0/0x1401F6490<AnimKitDesiredBoneSetInst, 10>, 0x005B6340<AuraData, 16>, 0x00755320<CMapObjDefGroup *, 8>, 0x0098B5A0<REFORGE_OPTION, 16>, 0x0058CA70<AnimKitBoneSetInst, 10>]
 template <class T, uint32_t N>
 T& TSCGrowableArray<T, N>::operator[](uint32_t index) {

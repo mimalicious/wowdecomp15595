@@ -10,7 +10,6 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: 051aeee4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00481540/0x1400A00E0
 static int32_t Script_IsMovieLocal(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -22,7 +21,6 @@ static int32_t Script_IsMovieLocal(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5e3887d5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00481590/0x1400A0140
 static int32_t Script_PreloadMovie(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -34,7 +32,6 @@ static int32_t Script_PreloadMovie(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d8521673 IDENTICAL/DIFFERENT
 // OFFSET: 0x004815D0/0x1400A0190
 static int32_t Script_CancelPreloadingMovie(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -46,7 +43,6 @@ static int32_t Script_CancelPreloadingMovie(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 09659882 IDENTICAL/DIFFERENT
 // OFFSET: 0x00481610/0x1400A01E0
 static int32_t Script_GetMovieDownloadProgress(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -63,7 +59,6 @@ static int32_t Script_GetMovieDownloadProgress(lua_State* L) {
     return 3;
 }
 
-// PROVEN: e048ba61 IDENTICAL/DIFFERENT
 // OFFSET: 0x004816A0/0x1400A0280
 static int32_t Script_IsMoviePlayable(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -75,21 +70,18 @@ static int32_t Script_IsMoviePlayable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 253fc041 IDENTICAL/IDENTICAL
 // OFFSET: 0x004816F0/0x1400A02E0
 static int32_t Script_IsWindowsClient(lua_State* L) {
     lua_pushnumber(L, 1.0);
     return 1;
 }
 
-// PROVEN: 92d6affc IDENTICAL/IDENTICAL
 // OFFSET: 0x00481710/0x1400A0300
 static int32_t Script_IsMacClient(lua_State* L) {
     lua_pushnil(L);
     return 1;
 }
 
-// PROVEN: ed3c9f2d IDENTICAL/UNPROVEN
 // OFFSET: 0x00481730/0x1400A0320
 static int32_t Script_GetExistingLocales(lua_State* L) {
     int32_t count = 0;
@@ -104,7 +96,6 @@ static int32_t Script_GetExistingLocales(lua_State* L) {
     return count;
 }
 
-// PROVEN: 20ba4ce4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00481770/0x1400A0380
 static int32_t Script_GetAvailableLocales(lua_State* L) {
     int32_t locales[15];
@@ -118,7 +109,6 @@ static int32_t Script_GetAvailableLocales(lua_State* L) {
     return count;
 }
 
-// PROVEN: 6963fd48 IDENTICAL/DIFFERENT
 // OFFSET: 0x004817D0/0x1400A0410
 static int32_t Script_GetSecondsUntilParentalControlsKick(lua_State* L) {
     if (!ClientServices::Connection()) {
@@ -163,14 +153,12 @@ static int32_t Script_IsTrialAccount(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a00b4f87 IDENTICAL/IDENTICAL
 // OFFSET: 0x00481930/0x1400A05D0
 static int32_t Script_CanUpgradeExpansion(lua_State* L) {
     lua_pushboolean(L, ClientServices::Connection()->m_activeExpansion < 3);
     return 1;
 }
 
-// PROVEN: 3efe3ecd IDENTICAL/UNPROVEN
 // OFFSET: 0x00481960/0x1400A0600
 static int32_t Script_GetOSLocale(lua_State* L) {
     const char* locale;
@@ -184,14 +172,12 @@ static int32_t Script_GetOSLocale(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 68229446 IDENTICAL/IDENTICAL
 // OFFSET: 0x004819B0/0x1400A0650
 static int32_t Script_GetExpansionLevel(lua_State* L) {
     lua_pushnumber(L, ClientServices::Connection()->m_accountExpansion);
     return 1;
 }
 
-// PROVEN: f92fce0f IDENTICAL/IDENTICAL
 // OFFSET: 0x004819F0/0x1400A0680
 static int32_t Script_GetAccountExpansionLevel(lua_State* L) {
     lua_pushnumber(L, ClientServices::Connection()->m_activeExpansion);
@@ -219,7 +205,6 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "GetSecondsUntilParentalControlsKick", &Script_GetSecondsUntilParentalControlsKick },
 };
 
-// PROVEN: ebb1804d IDENTICAL/UNPROVEN
 // OFFSET: 0x00481830/0x1400A0460
 void RegisterSharedScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -227,7 +212,6 @@ void RegisterSharedScriptFunctions() {
     }
 }
 
-// PROVEN: 54911df9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00481860/0x1400A04B0
 void UnregisterSharedScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

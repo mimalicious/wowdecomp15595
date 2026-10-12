@@ -105,14 +105,12 @@ void CGDanceStudio::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_LEARNED_DANCE_MOVES, Packet_SMSG_LEARNED_DANCE_MOVES, NULL);
 }
 
-// PROVEN: e5087bb4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009B7D70/0x1407422E0
 int32_t Packet_SMSG_LEARNED_DANCE_MOVES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(CGDanceStudio::m_learnedDanceMoves);
     return 1;
 }
 
-// PROVEN: 9ded33b6 IDENTICAL/NONE
 // OFFSET: 0x009B8540
 void CGDanceStudio::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_PLAY_DANCE);
@@ -135,7 +133,6 @@ static bool IsDanceMoveAvailable(const DanceMovesRec* move, uint8_t race) {
     return !move->m_lockID || (CGDanceStudio::m_learnedDanceMoves & (1ull << (move->m_lockID - 1)));
 }
 
-// PROVEN: 2a9da619 IDENTICAL/DIFFERENT
 // OFFSET: 0x009B7D20/0x140742290
 int32_t Packet_SMSG_STOP_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
@@ -325,13 +322,11 @@ void PlayDance(const char* name) {
     }
 }
 
-// PROVEN: ff4cf9df IDENTICAL/DIFFERENT
 // OFFSET: 0x009B8360/0x140742B10
 bool CGDanceStudio::HasDance(const char* name) {
     return s_knownDances.Ptr(name) != NULL;
 }
 
-// PROVEN: 1b286450 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGDanceStudio::LeaveWorld() {
 }

@@ -144,7 +144,6 @@ void CGCommentator::InitializeGame() {
     ClientCommentatorPartyInfo::s_handler = JamHandlerEncode(CGCommentator::OnClientCommentatorPartyInfo, g_jamHandlerKey_CFDEF0);
 }
 
-// PROVEN: 01c2b4aa IDENTICAL/DIFFERENT
 // OFFSET: 0x0092BD10/0x140692940
 void CGCommentator::SnapCameraToPlayer() {
     if (!CGWorldFrame::s_currentWorldFrame) {
@@ -184,7 +183,6 @@ void CGCommentator::PostInit(CGPlayer_C* player) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_ENTER_WORLD, NULL);
 }
 
-// PROVEN: 6265db8c IDENTICAL/IDENTICAL
 // OFFSET: 0x00928580/0x14068E000
 void CGCommentator::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_PLAYER_INFO);
@@ -195,7 +193,6 @@ void CGCommentator::ShutdownGame() {
     ClientCommentatorPartyInfo::s_handler = NULL;
 }
 
-// PROVEN: 1e6fb3f6 IDENTICAL/NONE
 // OFFSET: 0x009280A0
 void CommentatorInstanceKey::Write(CDataStore* msg) const {
     msg->Put(this->unk_0000);
@@ -203,7 +200,6 @@ void CommentatorInstanceKey::Write(CDataStore* msg) const {
     msg->Put(static_cast<uint8_t>(this->unk_0004));
 }
 
-// PROVEN: bebc80e1 IDENTICAL/UNPROVEN
 // OFFSET: 0x00928180/0x14068DCA0
 int32_t CGCommentator::OnSkirmishPlayersModeState(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t mode = 0;
@@ -213,7 +209,6 @@ int32_t CGCommentator::OnSkirmishPlayersModeState(void* param, NETMESSAGE msgId,
     return 1;
 }
 
-// PROVEN: 83187496 IDENTICAL/NONE
 // OFFSET: 0x00928210
 void CGCommentator::SetPosYawPitch(const C3Vector& position, float facing, float pitch) {
     if (!CGWorldFrame::s_currentWorldFrame) {
@@ -232,7 +227,6 @@ void CGCommentator::SetPosYawPitch(const C3Vector& position, float facing, float
     camera->CommentatorSetViewAndPosition(this->m_position, facing, pitch);
 }
 
-// PROVEN: 5ec31f8b IDENTICAL/NONE
 // OFFSET: 0x00928270
 void CGCommentator::SetFov(float fov) {
     this->m_targetFov = fov;
@@ -265,7 +259,6 @@ void CommentatorInstanceKey::Read(CDataStore* msg) {
     this->unk_0004 = type;
 }
 
-// PROVEN: 1060d43b IDENTICAL/NONE
 // OFFSET: 0x009283F0
 CGCommentator::MapInfo* CGCommentator::GetMapInfoByIndex(uint32_t index) {
     if (index < this->m_maps.Count()) {
@@ -720,7 +713,6 @@ void CGCommentator::SetPlayersInQueue(CDataStore* msg) {
     }
 }
 
-// PROVEN: fc017733 IDENTICAL/UNPROVEN
 // OFFSET: 0x0092C3B0/0x1406931F0
 int32_t CGCommentator::OnSkirmishPlayersInQueue(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGCommentator::s_Commentator.SetPlayersInQueue(msg);

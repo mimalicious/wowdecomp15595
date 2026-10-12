@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[2] = { 0, 0 };
 // STATIC: 0x00C1D2F4/0x140A111A0
 const DBCMeta HelmetGeosetVisDataRec::s_meta = { "DBFilesClient\\HelmetGeosetVisData.dbc", 2, 32, HelmetGeosetVisDataRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 938efb8d IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void HelmetGeosetVisDataRec::FixupStrings(void* record, const char* strings) {
 }

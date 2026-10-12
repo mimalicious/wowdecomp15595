@@ -120,7 +120,6 @@ static void LogSendDepthExceeded(WowConnection* connection) {
     DebugLog(0x10001, 10, "WowConnection: MaxSendDepth Reached! m_sendDepth=%d, m_maxSendDepth=%d, Dropping connection to %s", connection->m_sendDepth, connection->m_maxSendDepth, peer.m_str);
 }
 
-// PROVEN: 0ab7c327 IDENTICAL/IDENTICAL
 // OFFSET: 0x0054D420/0x1401A73F0
 bool WowConnection::GetLocalAddr(sockaddr* addr) {
     int32_t length = 32;
@@ -128,13 +127,11 @@ bool WowConnection::GetLocalAddr(sockaddr* addr) {
     return getsockname(this->m_sock, addr, &length) == 0;
 }
 
-// PROVEN: e3b5dc70 DIFFERENT/IDENTICAL
 // OFFSET: 0x0054D5E0/0x1401A7610
 void WowConnection::AddRef() {
     this->m_refCount.Increment();
 }
 
-// PROVEN: d46c8f6f IDENTICAL/IDENTICAL
 // OFFSET: 0x0054D7D0/0x1401A7850
 void WowConnection::DestroyOsNet() {
     s_osNetDestroyed = 1;
@@ -1071,7 +1068,6 @@ void WowConnection::StartConnect() {
     }
 }
 
-// PROVEN: 75d827e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00550000/0x1401AAB50
 bool WowConnection::Connect(const SockAddr& address, uint16_t port, int32_t timeout) {
     memcpy(&this->m_connectAddress, &address, sizeof(address));

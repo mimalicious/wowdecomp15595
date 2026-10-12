@@ -191,7 +191,6 @@ uint32_t CGGameObject_C_Type_Transport::GetSequenceTimeFromRealTime(int32_t stat
     return static_cast<uint32_t>(static_cast<float>(duration) * progress);
 }
 
-// PROVEN: 6d5566fc IDENTICAL/UNPROVEN
 // OFFSET: 0x005A35D0/0x140213C40
 uint32_t CGGameObject_C_Type_Transport::GetSequenceTimeFromRealTime(uint32_t time) const {
     return this->GetSequenceTimeFromRealTime(this->m_owner->m_gameObject->m_state, time);
@@ -203,7 +202,6 @@ void CGGameObject_C_Type_Transport::Reenable() {
     this->InitializeMovement();
 }
 
-// PROVEN: 9a3a330f IDENTICAL/IDENTICAL
 // OFFSET: 0x00599560/0x140207950
 void CGGameObject_C_Type_Transport::PostInitWithStats() {
     this->CreateWorldObj();
@@ -218,7 +216,6 @@ void CGGameObject_C_Type_Transport::PostInitWithStats() {
     }
 }
 
-// PROVEN: 832e8356 IDENTICAL/IDENTICAL
 // OFFSET: 0x005995D0/0x1402079C0
 void CGGameObject_C_Type_Transport::PostReenable() {
     this->m_sequence = 660;
@@ -351,7 +348,6 @@ C4Quaternion CGGameObject_C_Type_Transport::GetRotation(uint32_t time) {
     return rotation * reinterpret_cast<const C4Quaternion&>(this->m_owner->m_gameObject->m_parentRotation);
 }
 
-// PROVEN: f55f75c4 IDENTICAL/NONE
 // OFFSET: 0x0059C570
 void CGGameObject_C_Type_Transport::Interpolate(uint32_t time, C3Vector* offset, C4Quaternion* rotation) {
     uint32_t sequenceTime = this->GetSequenceTimeFromRealTime(this->m_owner->m_gameObject->m_state, time);

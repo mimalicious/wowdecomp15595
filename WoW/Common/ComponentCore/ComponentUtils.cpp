@@ -82,7 +82,6 @@ int32_t ComponentGetNumVariations(st_race* lookup, int32_t raceID, int32_t sexID
     return list.m_numVariations;
 }
 
-// PROVEN: adea3a2c IDENTICAL/DIFFERENT
 // OFFSET: 0x00704DD0/0x1403D1BD0
 int32_t ComponentGetNumColors(st_race* lookup, int32_t raceID, int32_t sexID, COMPONENT_VARIATIONS variation, int32_t variationIndex) {
     CharVariationList& list = lookup[raceID * 2 + sexID].m_variation[variation];
@@ -340,7 +339,6 @@ int32_t BuildComponentArray(uint32_t count, st_race** lookupOut) {
     return 1;
 }
 
-// PROVEN: 709dfe67 IDENTICAL/DIFFERENT
 // OFFSET: 0x007054A0/0x1403D2550
 int32_t CountFacialFeatures(uint32_t count, uint32_t** facialFeatures) {
     uint32_t* counts = static_cast<uint32_t*>(SMemAlloc(sizeof(uint32_t) * count, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));

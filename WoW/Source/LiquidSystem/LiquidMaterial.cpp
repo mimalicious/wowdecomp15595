@@ -578,23 +578,19 @@ static uint32_t AbovePermute(uint32_t reflection) {
     return permute;
 }
 
-// PROVEN: 314be33d IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void Liquid::IMaterial::Reset() {
 }
 
-// PROVEN: 4d164714 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void Liquid::IMaterial::OnAddToScene() {
 }
 
-// PROVEN: 2e7e7d46 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EB640/0x14090EBB0
 int32_t Liquid::IMaterial::SetupDefaultTransform(const C3Vector& camPos) {
     return 1;
 }
 
-// PROVEN: 203466c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EB640/0x14090EBB0
 int32_t Liquid::CMaterialDebug::IsAllLoaded(CMaterialSettings* settings) {
     return 1;
@@ -622,7 +618,6 @@ const C44Matrix* Liquid::GetTexScrollMtx(uint32_t time, const C2Vector& speed) {
     return &s_matrix;
 }
 
-// PROVEN: 2a3bc847 IDENTICAL/NONE
 // OFFSET: 0x0071B660
 void Liquid::SetMatrixConstant(C4Vector* constants, uint32_t index, const C44Matrix& matrix) {
     *reinterpret_cast<C44Matrix*>(&constants[index * 4]) = matrix;
@@ -702,7 +697,6 @@ void Liquid::SetScreenConstants(C4Vector* constants) {
     constants[2] = ViewSettings::CalculateHomToScreen(halfX, halfY);
 }
 
-// PROVEN: 01980596 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071D9D0/0x14090EBB0
 int32_t Liquid::IMaterial::SetupRender(uint32_t time, ERenderPass pass, const C3Vector& camPos, IEnvironment* environment, CMaterialSettings* settings, uint32_t reflection) {
     return 1;
@@ -722,7 +716,6 @@ void Liquid::CMaterialDebug::Render(uint32_t pass, const C3Vector& camPos, CInst
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(9), NULL, 0, 0);
 }
 
-// PROVEN: 2fc4cf37 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071E0C0/0x1403F3480
 Liquid::CMaterialDebug::CMaterialDebug() {
     if (!s_refCount++) {
@@ -739,7 +732,6 @@ Liquid::CMaterialDebug::~CMaterialDebug() {
     }
 }
 
-// PROVEN: fa32a1fe IDENTICAL/IDENTICAL
 // OFFSET: 0x0071E170/0x1403F3580
 void Liquid::CMaterialDebug::Reset() {
     ReleaseShader(s_vertexShader);
@@ -762,24 +754,20 @@ int32_t Liquid::CMaterialDebug::SetupRender(uint32_t time, ERenderPass pass, con
     return 1;
 }
 
-// PROVEN: f8069bd4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00873190/0x14090EBB0
 int32_t Liquid::IMaterial::SetupLighting(const C3Vector& camPos, CInstance* instance) {
     return 1;
 }
 
-// PROVEN: ac6cc6a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00904350/0x14065C8C0
 void Liquid::IMaterial::Release() {
     delete this;
 }
 
-// PROVEN: cda9a1fe IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void Liquid::CMaterialDebug::LinkToAsyncHead(CMaterialSettings* settings) {
 }
 
-// PROVEN: 625900ab DIFFERENT/IDENTICAL
 // OFFSET: 0x0071E370/0x1403F3810
 void Liquid::CMaterialMercury::OnAddToScene() {
     if (Liquid::GetWaterDetail()) {
@@ -842,7 +830,6 @@ int32_t Liquid::CMaterialMercury::SetupLighting(const C3Vector& camPos, CInstanc
     return 1;
 }
 
-// PROVEN: b3ead665 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071EC00/0x1403F3FF0
 Liquid::CMaterialMercury::CMaterialMercury() {
     if (!s_refCount++) {
@@ -858,7 +845,6 @@ Liquid::CMaterialMercury::~CMaterialMercury() {
     }
 }
 
-// PROVEN: fe1fcd7b IDENTICAL/IDENTICAL
 // OFFSET: 0x0071EC90/0x1403F40C0
 void Liquid::CMaterialMercury::Reset() {
     ReleaseShader(s_vertexShader);
@@ -1061,7 +1047,6 @@ void Liquid::CMaterialMagma::InitResources() {
     }
 }
 
-// PROVEN: 68e5887e IDENTICAL/IDENTICAL
 // OFFSET: 0x0071FAE0/0x1403F5610
 void Liquid::CMaterialMagma::DestroyResources() {
     ReleaseShader(s_vertexShader);
@@ -1082,7 +1067,6 @@ int32_t Liquid::CMaterialMagma::SetupLighting(const C3Vector& camPos, CInstance*
     return 1;
 }
 
-// PROVEN: 9afa6e96 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071FD50/0x1403F5880
 Liquid::CMaterialMagma::CMaterialMagma() {
     if (!s_refCount++) {
@@ -1090,7 +1074,6 @@ Liquid::CMaterialMagma::CMaterialMagma() {
     }
 }
 
-// PROVEN: 73a7b757 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071FD80/0x1403F58C0
 void Liquid::CMaterialMagma::Reset() {
     CMaterialMagma::DestroyResources();
@@ -1240,7 +1223,6 @@ int32_t Liquid::CMaterialMagma::SetupRender(uint32_t time, ERenderPass pass, con
     return 1;
 }
 
-// PROVEN: 7b5ab3c2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071E370/0x1403F3810
 void Liquid::CMaterialWater::OnAddToScene() {
     if (Liquid::GetWaterDetail()) {
@@ -1269,7 +1251,6 @@ int32_t Liquid::CMaterialWater::IsAllLoaded(CMaterialSettings* settings) {
     return settings->IsAllLoaded(3) ? 1 : 0;
 }
 
-// PROVEN: 65e0d082 IDENTICAL/IDENTICAL
 // OFFSET: 0x00720860/0x1403F6840
 void Liquid::CMaterialWater::LinkToAsyncHead(CMaterialSettings* settings) {
     settings->LinkToAsyncHead(1);
@@ -1311,7 +1292,6 @@ void Liquid::CMaterialWater::InitResources() {
     }
 }
 
-// PROVEN: 4d272018 IDENTICAL/IDENTICAL
 // OFFSET: 0x00720B80/0x1403F6BA0
 void Liquid::CMaterialWater::DestroyResources() {
     ReleaseShader(s_vertexShader);
@@ -1332,7 +1312,6 @@ int32_t Liquid::CMaterialWater::SetupLighting(const C3Vector& camPos, CInstance*
     return 1;
 }
 
-// PROVEN: 0204d080 DIFFERENT/IDENTICAL
 // OFFSET: 0x00720E80/0x1403F6E10
 Liquid::CMaterialWater::CMaterialWater() {
     if (!s_refCount++) {
@@ -1340,7 +1319,6 @@ Liquid::CMaterialWater::CMaterialWater() {
     }
 }
 
-// PROVEN: 63b580a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00720EB0/0x1403F6E50
 void Liquid::CMaterialWater::Reset() {
     CMaterialWater::DestroyResources();

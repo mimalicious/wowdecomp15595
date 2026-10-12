@@ -27,7 +27,6 @@
 
 
 
-// PROVEN: ebbea23d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2B660/0x1407D3B60
 static int str_len (lua_State *L) {
   size_t l;
@@ -44,7 +43,6 @@ static ptrdiff_t posrelat (ptrdiff_t pos, size_t len) {
 }
 
 
-// PROVEN: 74ab4794 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2B690/0x1407D3B90
 static int str_sub (lua_State *L) {
   size_t l;
@@ -60,7 +58,6 @@ static int str_sub (lua_State *L) {
 }
 
 
-// PROVEN: 3c4ab6c0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2B750/0x1407D3C70
 static int str_reverse (lua_State *L) {
   size_t l;
@@ -73,7 +70,6 @@ static int str_reverse (lua_State *L) {
 }
 
 
-// PROVEN: 8263cdd6 IDENTICAL/NONE
 // OFFSET: 0x00A2B490
 static unsigned int lstr_getu8 (const unsigned char *s, int *chars) {
   unsigned int c;
@@ -191,7 +187,6 @@ static int str_upper (lua_State *L) {
   return 1;
 }
 
-// PROVEN: 86b9cca2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2B9F0/0x1407D4010
 static int str_rep (lua_State *L) {
   size_t l;
@@ -206,7 +201,6 @@ static int str_rep (lua_State *L) {
 }
 
 
-// PROVEN: 71b5ee3d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2BA70/0x1407D40A0
 static int str_byte (lua_State *L) {
   size_t l;
@@ -227,7 +221,6 @@ static int str_byte (lua_State *L) {
 }
 
 
-// PROVEN: 38da60ab IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2BB50/0x1407D41B0
 static int str_char (lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
@@ -244,7 +237,6 @@ static int str_char (lua_State *L) {
 }
 
 
-// PROVEN: 2a319f2c IDENTICAL/NONE
 // OFFSET: 0x00A2BBF0/0x1407D4270
 static int writer (lua_State *L, const void* b, size_t size, void* B) {
   (void)L;
@@ -253,7 +245,6 @@ static int writer (lua_State *L, const void* b, size_t size, void* B) {
 }
 
 
-// PROVEN: 9b8a98c9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2BC10/0x1407D4290
 static int str_dump (lua_State *L) {
   luaL_Buffer b;
@@ -310,7 +301,6 @@ static int capture_to_close (MatchState *ms) {
 }
 
 
-// PROVEN: d4d15d1f IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2BC80/0x1407D4310
 static const char *classend (MatchState *ms, const char *p) {
   switch (*p++) {
@@ -336,7 +326,6 @@ static const char *classend (MatchState *ms, const char *p) {
 }
 
 
-// PROVEN: 5f5a8cbc IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2BCF0/0x1407D43B0
 static int match_class (int c, int cl) {
   int res;
@@ -357,7 +346,6 @@ static int match_class (int c, int cl) {
 }
 
 
-// PROVEN: b2019b7e IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2BE00/0x1407D4500
 static int matchbracketclass (int c, const char *p, const char *ec) {
   int sig = 1;
@@ -416,7 +404,6 @@ static const char *matchbalance (MatchState *ms, const char *s,
 }
 
 
-// PROVEN: b4592afe IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2BF10/0x1407D4730
 static const char *max_expand (MatchState *ms, const char *s,
                                  const char *p, const char *ep) {
@@ -589,7 +576,6 @@ static const char *lmemfind (const char *s1, size_t l1,
 }
 
 
-// PROVEN: 22280602 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2C500/0x1407D4D40
 static void push_onecapture (MatchState *ms, int i, const char *s,
                                                     const char *e) {
@@ -610,7 +596,6 @@ static void push_onecapture (MatchState *ms, int i, const char *s,
 }
 
 
-// PROVEN: 55b78951 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2C580/0x1407D4E10
 static int push_captures (MatchState *ms, const char *s, const char *e) {
   int i;
@@ -678,7 +663,6 @@ static int str_match (lua_State *L) {
 }
 
 
-// PROVEN: cca5fec6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2C7E0/0x1407D5160
 static int gmatch_aux (lua_State *L) {
   MatchState ms;
@@ -706,7 +690,6 @@ static int gmatch_aux (lua_State *L) {
 }
 
 
-// PROVEN: bf4fc996 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2C970/0x1407D5330
 static int gmatch (lua_State *L) {
   luaL_checkstring(L, 1);
@@ -718,7 +701,6 @@ static int gmatch (lua_State *L) {
 }
 
 
-// PROVEN: ea4549cf IDENTICAL/NONE
 // OFFSET: 0x00A2C9C0/0x1407D5390
 static int gfind_nodef (lua_State *L) {
   return luaL_error(L, LUA_QL("string.gfind") " was renamed to "
@@ -782,7 +764,6 @@ static void add_value (MatchState *ms, luaL_Buffer *b, const char *s,
 }
 
 
-// PROVEN: 5fdd1382 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2CBD0/0x1407D55D0
 static int str_gsub (lua_State *L) {
   size_t srcl;
@@ -836,7 +817,6 @@ static int str_gsub (lua_State *L) {
 #define MAX_FORMAT	(sizeof(FLAGS) + sizeof(LUA_INTFRMLEN) + 10)
 
 
-// PROVEN: e2c5a91e IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2CD60/0x1407D57B0
 static void addquoted (lua_State *L, luaL_Buffer *b, int arg) {
   size_t l;
@@ -996,7 +976,6 @@ static const luaL_Reg strlib[] = {
 };
 
 
-// PROVEN: 6583263b IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2D2D0/0x1407D5D50
 static void createmetatable (lua_State *L) {
   lua_createtable(L, 0, 1);  /* create metatable for strings */

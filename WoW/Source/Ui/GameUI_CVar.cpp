@@ -314,7 +314,6 @@ CVar* g_talentPointsSpentCVar;
 // STATIC: 0x00ED7754/0x140E25F00
 CVar* g_previewTalentsOptionCVar;
 
-// PROVEN: cdc5cc03 IDENTICAL/UNPROVEN
 // OFFSET: 0x008C4230/0x140633D80
 bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -326,14 +325,12 @@ bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const cha
     return true;
 }
 
-// PROVEN: 8ddd94c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4260/0x140633DC0
 bool GuildShowOfflineCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGuildInfo::SetShowOffline(StringToBOOL(value));
     return true;
 }
 
-// PROVEN: 72e8cfdc IDENTICAL/DIFFERENT
 // OFFSET: 0x008C4280/0x140633F60
 bool ShowClassColorInNameplateCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!oldValue || SStrToInt(oldValue) != SStrToInt(value)) {
@@ -343,7 +340,6 @@ bool ShowClassColorInNameplateCallback(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// PROVEN: 4625f6c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C42C0/0x140633E20
 bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (CGGameUI::m_initialized) {
@@ -353,7 +349,6 @@ bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* 
     return true;
 }
 
-// PROVEN: bb38c1c7 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C42F0/0x140633E50
 bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t spent = CGTalentInfo::GetAllGroupPreviewTalentPointsSpent(0);
@@ -370,7 +365,6 @@ bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* val
     return true;
 }
 
-// PROVEN: 15d5ece2 IDENTICAL/UNPROVEN
 // OFFSET: 0x008C4370/0x140633F00
 bool CVarHandler_autoCompleteResortNamesOnRecency(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_resortNamesOnRecency = SStrToInt(value) != 0;
@@ -378,7 +372,6 @@ bool CVarHandler_autoCompleteResortNamesOnRecency(CVar* var, const char* oldValu
     return true;
 }
 
-// PROVEN: c7700220 IDENTICAL/UNPROVEN
 // OFFSET: 0x008C43A0/0x140633F30
 bool CVarHandler_autoCompleteWhenEditingFromCenter(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_whenEditingFromCenter = SStrToInt(value) != 0;
@@ -386,7 +379,6 @@ bool CVarHandler_autoCompleteWhenEditingFromCenter(CVar* var, const char* oldVal
     return true;
 }
 
-// PROVEN: 039ce46f IDENTICAL/DIFFERENT
 // OFFSET: 0x008C43D0/0x140633F60
 bool CVarHandler_autoCompleteUseContext(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_useContext = SStrToInt(value) != 0;
@@ -394,7 +386,6 @@ bool CVarHandler_autoCompleteUseContext(CVar* var, const char* oldValue, const c
     return true;
 }
 
-// PROVEN: 4ec4248c DIFFERENT/IDENTICAL
 // OFFSET: 0x008C4400/0x140633F90
 bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char* value, void* arg) {
     CVar* reduced = CVar::Lookup("reducedLagTolerance");
@@ -412,7 +403,6 @@ bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char
     return true;
 }
 
-// PROVEN: 4004d23f IDENTICAL/NONE
 // OFFSET: 0x008CA050
 bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (g_useUiScaleCVar && g_useUiScaleCVar->m_intValue) {
@@ -428,7 +418,6 @@ bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, voi
     return true;
 }
 
-// PROVEN: 9aa34c60 IDENTICAL/IDENTICAL
 // OFFSET: 0x008CA0C0/0x14063A400
 bool CGGameUI::UnitHighlightsCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (CGGameUI::m_initialized) {
@@ -457,7 +446,6 @@ bool CVarHandler_useUiScale(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
-// PROVEN: 19598d88 IDENTICAL/IDENTICAL
 // OFFSET: 0x008DDB00/0x140652640
 bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value) > 0) {
@@ -471,7 +459,6 @@ bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, voi
     return true;
 }
 
-// PROVEN: 09d7d072 IDENTICAL/IDENTICAL
 // OFFSET: 0x008CF190/0x140641930
 bool CVarHandler_threatWarning(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGameUI::UpdateThreatWarningEnabled(SStrToInt(value));

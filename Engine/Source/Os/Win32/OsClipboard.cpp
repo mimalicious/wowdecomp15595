@@ -6,7 +6,6 @@
 #include "Engine/Source/Os/OsClipboard.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: eca019ff IDENTICAL/DIFFERENT
 // OFFSET: 0x0087C8F0/0x1405B4D80
 char* IOsClipboardGetString(void* window) {
     if (!OpenClipboard(static_cast<HWND>(window))) {
@@ -36,7 +35,6 @@ char* IOsClipboardGetString(void* window) {
     return string;
 }
 
-// PROVEN: c60281e2 IDENTICAL/DIFFERENT
 // OFFSET: 0x0087C990/0x1405B4E90
 void OsClipboardFreeString(char* string) {
     if (string) {
@@ -44,7 +42,6 @@ void OsClipboardFreeString(char* string) {
     }
 }
 
-// PROVEN: c7b837c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0087C9B0/0x1405B4EC0
 int32_t IOsClipboardPutString(const char* string, void* window) {
     uint32_t size = static_cast<uint32_t>(strlen(string) + 1);

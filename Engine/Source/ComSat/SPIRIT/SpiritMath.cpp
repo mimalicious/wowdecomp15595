@@ -47,7 +47,6 @@ void SPIRIT_IP_MR_V3_NAME_332(float* dst, int32_t count) {
     }
 }
 
-// PROVEN: 3aedf7cc IDENTICAL/NONE
 // OFFSET: 0x00B4CC50
 void SPIRIT_IP_MR_V3_NAME_334(void* dst, uint32_t size) {
     if (size) {

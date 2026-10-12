@@ -10,7 +10,6 @@ typedef DWORD (WINAPI* GETFILEVERSIONINFOSIZEWPROC)(LPCWSTR filename, LPDWORD ha
 typedef BOOL (WINAPI* GETFILEVERSIONINFOWPROC)(LPCWSTR filename, DWORD handle, DWORD size, LPVOID data);
 typedef BOOL (WINAPI* VERQUERYVALUEWPROC)(LPCVOID block, LPCWSTR subBlock, LPVOID* buffer, PUINT length);
 
-// PROVEN: ade7a2dc IDENTICAL/NONE
 // OFFSET: 0x007AE6E0
 DWORD OsGetFileVersionInfoSizeW(LPCWSTR filename, LPDWORD handle) {
     HMODULE module = LoadLibraryW(L"version.dll");
@@ -32,7 +31,6 @@ DWORD OsGetFileVersionInfoSizeW(LPCWSTR filename, LPDWORD handle) {
     return result;
 }
 
-// PROVEN: d0cf7c42 IDENTICAL/NONE
 // OFFSET: 0x007AE740/0x1404A4330
 BOOL OsGetFileVersionInfoW(LPCWSTR filename, DWORD handle, DWORD size, LPVOID data) {
     HMODULE module = LoadLibraryW(L"version.dll");
@@ -54,7 +52,6 @@ BOOL OsGetFileVersionInfoW(LPCWSTR filename, DWORD handle, DWORD size, LPVOID da
     return result;
 }
 
-// PROVEN: 9f06f563 IDENTICAL/NONE
 // OFFSET: 0x007AE7B0
 BOOL OsVerQueryValueW(LPCVOID block, LPCWSTR subBlock, LPVOID* buffer, PUINT length) {
     HMODULE module = LoadLibraryW(L"version.dll");

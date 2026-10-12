@@ -11,7 +11,6 @@ CVar* CGUnit_C::s_cvPathingDistTolerance;
 // STATIC: 0x00DD6174/0x140CBC8D0
 CVar* CGUnit_C::s_cvPathSmoothing;
 
-// PROVEN: 7cc939b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x005AB790/0x14021DC10
 void CGUnit_C::ClientInitialize() {
     CGNamePlateFrame::RegisterCVars();

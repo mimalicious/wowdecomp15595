@@ -27,7 +27,6 @@ struct OsSecureRandomEntropy {
 // STATIC: 0x00EC6DDC
 static volatile LONG s_counter;
 
-// PROVEN: 15fe9366 IDENTICAL/DIFFERENT
 // OFFSET: 0x0087BCC0/0x1405B3CA0
 void IOsSecureRandom(uint8_t* buffer, uint32_t size) {
     OsSecureRandomEntropy entropy;
@@ -76,7 +75,6 @@ void IOsSecureRandom(uint8_t* buffer, uint32_t size) {
     }
 }
 
-// PROVEN: b678e2ba IDENTICAL/IDENTICAL
 // OFFSET: 0x0087BE20/0x1405B3E60
 void OsSecureRandom(uint8_t* buffer, uint32_t size) {
     HCRYPTPROV provider;

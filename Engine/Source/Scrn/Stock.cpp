@@ -23,7 +23,6 @@ void ScrnSetStockFont(SCRNSTOCK stockID, const char* fontTexturePath) {
     s_stockObjects[stockID] = TextBlockGenerateFont(fontTexturePath, 0, NDCToDDCHeight(s_stockObjectHeights[stockID]));
 }
 
-// PROVEN: de0bfc4c IDENTICAL/UNPROVEN
 // OFFSET: 0x007FFE50/0x140513C30
 HTEXTFONT ScrnGetStockFont(SCRNSTOCK stockID) {
     if (stockID >= SCRNSTOCKOBJECTS) {
@@ -35,7 +34,6 @@ HTEXTFONT ScrnGetStockFont(SCRNSTOCK stockID) {
     return s_stockObjects[stockID];
 }
 
-// PROVEN: f534407a IDENTICAL/IDENTICAL
 // OFFSET: 0x007FFE70/0x140513C60
 float ScrnGetStockFontHeight(SCRNSTOCK stockID) {
     if (stockID >= SCRNSTOCKOBJECTS) {

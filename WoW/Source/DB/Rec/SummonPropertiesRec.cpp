@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[6] = { 0, 0, 0, 0, 0, 0 };
 // STATIC: 0x00C20494/0x140A14CC8
 const DBCMeta SummonPropertiesRec::s_meta = { "DBFilesClient\\SummonProperties.dbc", 6, 24, SummonPropertiesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 8c994a57 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SummonPropertiesRec::FixupStrings(void* record, const char* strings) {
 }

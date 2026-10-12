@@ -1,17 +1,14 @@
 #include "WoW/Source/JamClientAutoCode/JamPlayerMove.h"
 #include "Engine/Source/Base/CDataStore.h"
 
-// PROVEN: e5cd50f7 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670D50/0x140319050]
 PlayerChangeSeatsOnControlledVehicle::PlayerChangeSeatsOnControlledVehicle() {
 }
 
-// PROVEN: edd593d9 IDENTICAL/NONE
 // OFFSET: [0x00673BA0]
 PlayerChangeSeatsOnControlledVehicle::~PlayerChangeSeatsOnControlledVehicle() {
 }
 
-// PROVEN: b042741a IDENTICAL/IDENTICAL
 // OFFSET: 0x00678A60/0x140321210
 void PlayerChangeSeatsOnControlledVehicle::Put(CDataStore* msg) {
     const uint8_t* vehicleGuid = reinterpret_cast<const uint8_t*>(&this->m_vehicleGuid);
@@ -224,17 +221,14 @@ void PlayerChangeSeatsOnControlledVehicle::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 605ff5b6 IDENTICAL/NONE
 // OFFSET: [0x006749F0]
 PlayerDismissControlledVehicle::PlayerDismissControlledVehicle() {
 }
 
-// PROVEN: 69b9fa50 IDENTICAL/NONE
 // OFFSET: [0x006749A0]
 PlayerDismissControlledVehicle::~PlayerDismissControlledVehicle() {
 }
 
-// PROVEN: 3d9a643e IDENTICAL/IDENTICAL
 // OFFSET: 0x00675860/0x14031D8A0
 void PlayerDismissControlledVehicle::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -403,17 +397,14 @@ void PlayerDismissControlledVehicle::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 116cde1b IDENTICAL/IDENTICAL
 // OFFSET: [0x006744C0/0x140318450]
 PlayerMoveChangeTransport::PlayerMoveChangeTransport() {
 }
 
-// PROVEN: 47ddceaf IDENTICAL/UNPROVEN
 // OFFSET: [0x00670E00/0x140319150]
 PlayerMoveChangeTransport::~PlayerMoveChangeTransport() {
 }
 
-// PROVEN: d5cce449 IDENTICAL/IDENTICAL
 // OFFSET: 0x00677150/0x14031F5D0
 void PlayerMoveChangeTransport::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -583,17 +574,14 @@ void PlayerMoveChangeTransport::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 7be1db6a IDENTICAL/IDENTICAL
 // OFFSET: [0x006747B0/0x1403185B0]
 PlayerMoveFallLand::PlayerMoveFallLand() {
 }
 
-// PROVEN: 30e4dd41 IDENTICAL/UNPROVEN
 // OFFSET: [0x006733D0/0x14031B820]
 PlayerMoveFallLand::~PlayerMoveFallLand() {
 }
 
-// PROVEN: 881ca18d IDENTICAL/IDENTICAL
 // OFFSET: 0x00686660/0x140331080
 void PlayerMoveFallLand::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -761,17 +749,14 @@ void PlayerMoveFallLand::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 7d572095 IDENTICAL/IDENTICAL
 // OFFSET: [0x00673350/0x14031C520]
 PlayerMoveFallReset::PlayerMoveFallReset() {
 }
 
-// PROVEN: 80b2885e IDENTICAL/UNPROVEN
 // OFFSET: [0x00673860/0x140318600]
 PlayerMoveFallReset::~PlayerMoveFallReset() {
 }
 
-// PROVEN: fbd27a27 IDENTICAL/DIFFERENT
 // OFFSET: 0x00681120/0x14032B160
 void PlayerMoveFallReset::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -941,17 +926,14 @@ void PlayerMoveFallReset::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 55338a2d IDENTICAL/NONE
 // OFFSET: [0x00673B30]
 PlayerMoveFeatherFallAck::PlayerMoveFeatherFallAck() {
 }
 
-// PROVEN: 87687411 IDENTICAL/NONE
 // OFFSET: [0x00670DB0]
 PlayerMoveFeatherFallAck::~PlayerMoveFeatherFallAck() {
 }
 
-// PROVEN: fbb42c02 IDENTICAL/IDENTICAL
 // OFFSET: 0x00684370/0x14032E700
 void PlayerMoveFeatherFallAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -1122,17 +1104,14 @@ void PlayerMoveFeatherFallAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 517c3934 IDENTICAL/NONE
 // OFFSET: [0x00670E90]
 PlayerMoveFlightBackSpeedChangeAck::PlayerMoveFlightBackSpeedChangeAck() {
 }
 
-// PROVEN: 513008af IDENTICAL/NONE
 // OFFSET: [0x00673E20]
 PlayerMoveFlightBackSpeedChangeAck::~PlayerMoveFlightBackSpeedChangeAck() {
 }
 
-// PROVEN: 52e9db2a IDENTICAL/IDENTICAL
 // OFFSET: 0x0067A620/0x1403231D0
 void PlayerMoveFlightBackSpeedChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -1303,17 +1282,14 @@ void PlayerMoveFlightBackSpeedChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 135174f3 IDENTICAL/NONE
 // OFFSET: [0x00674A90]
 PlayerMoveFlightSpeedChangeAck::PlayerMoveFlightSpeedChangeAck() {
 }
 
-// PROVEN: 01f4d0df IDENTICAL/NONE
 // OFFSET: [0x00674B50]
 PlayerMoveFlightSpeedChangeAck::~PlayerMoveFlightSpeedChangeAck() {
 }
 
-// PROVEN: d5deed71 IDENTICAL/IDENTICAL
 // OFFSET: 0x00685310/0x14032F990
 void PlayerMoveFlightSpeedChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -1484,17 +1460,14 @@ void PlayerMoveFlightSpeedChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: d042563f IDENTICAL/NONE
 // OFFSET: [0x006749B0]
 PlayerMoveGravityDisableAck::PlayerMoveGravityDisableAck() {
 }
 
-// PROVEN: fb0f45ef IDENTICAL/NONE
 // OFFSET: [0x00673D00]
 PlayerMoveGravityDisableAck::~PlayerMoveGravityDisableAck() {
 }
 
-// PROVEN: 05cb3bf4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006780D0/0x1403206C0
 void PlayerMoveGravityDisableAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -1664,17 +1637,14 @@ void PlayerMoveGravityDisableAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 0a4fa1ba IDENTICAL/NONE
 // OFFSET: [0x00674E90]
 PlayerMoveGravityEnableAck::PlayerMoveGravityEnableAck() {
 }
 
-// PROVEN: f919bf8e IDENTICAL/NONE
 // OFFSET: [0x00673E70]
 PlayerMoveGravityEnableAck::~PlayerMoveGravityEnableAck() {
 }
 
-// PROVEN: c848ce85 IDENTICAL/IDENTICAL
 // OFFSET: 0x00684850/0x14032ECA0
 void PlayerMoveGravityEnableAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -1846,17 +1816,14 @@ void PlayerMoveGravityEnableAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 18317eef IDENTICAL/IDENTICAL
 // OFFSET: [0x00673190/0x14031B570]
 PlayerMoveHeartbeat::PlayerMoveHeartbeat() {
 }
 
-// PROVEN: ddd160a5 IDENTICAL/UNPROVEN
 // OFFSET: [0x00674D00/0x140318CD0]
 PlayerMoveHeartbeat::~PlayerMoveHeartbeat() {
 }
 
-// PROVEN: afe8114f IDENTICAL/DIFFERENT
 // OFFSET: 0x00687AB0/0x140332790
 void PlayerMoveHeartbeat::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -2023,17 +1990,14 @@ void PlayerMoveHeartbeat::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 50996e41 IDENTICAL/NONE
 // OFFSET: [0x00670E60]
 PlayerMoveHoverAck::PlayerMoveHoverAck() {
 }
 
-// PROVEN: 22ab5a41 IDENTICAL/NONE
 // OFFSET: [0x00673890]
 PlayerMoveHoverAck::~PlayerMoveHoverAck() {
 }
 
-// PROVEN: f3989829 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067E070/0x140327410
 void PlayerMoveHoverAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -2201,17 +2165,14 @@ void PlayerMoveHoverAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 0dba7945 IDENTICAL/IDENTICAL
 // OFFSET: [0x00673E80/0x14031C4F0]
 PlayerMoveJump::PlayerMoveJump() {
 }
 
-// PROVEN: 985e933e IDENTICAL/UNPROVEN
 // OFFSET: [0x00670D90/0x140319090]
 PlayerMoveJump::~PlayerMoveJump() {
 }
 
-// PROVEN: 92a7f02c IDENTICAL/DIFFERENT
 // OFFSET: 0x006857F0/0x14032FF40
 void PlayerMoveJump::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -2380,17 +2341,14 @@ void PlayerMoveJump::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: f718a1b1 IDENTICAL/NONE
 // OFFSET: [0x00674AF0]
 PlayerMoveKnockBackAck::PlayerMoveKnockBackAck() {
 }
 
-// PROVEN: 67651730 IDENTICAL/NONE
 // OFFSET: [0x00673D70]
 PlayerMoveKnockBackAck::~PlayerMoveKnockBackAck() {
 }
 
-// PROVEN: 8eafb13d IDENTICAL/DIFFERENT
 // OFFSET: 0x00680B20/0x14032A500
 void PlayerMoveKnockBackAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -2564,17 +2522,14 @@ void PlayerMoveKnockBackAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: c7893b7d IDENTICAL/NONE
 // OFFSET: [0x00673EA0]
 PlayerMoveNotActiveMover::PlayerMoveNotActiveMover() {
 }
 
-// PROVEN: 936de125 IDENTICAL/NONE
 // OFFSET: [0x006747E0]
 PlayerMoveNotActiveMover::~PlayerMoveNotActiveMover() {
 }
 
-// PROVEN: 48c2d1d4 IDENTICAL/NONE
 // OFFSET: 0x006815E0
 void PlayerMoveNotActiveMover::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -2745,17 +2700,14 @@ void PlayerMoveNotActiveMover::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 12d93b20 IDENTICAL/NONE
 // OFFSET: [0x00673B50]
 PlayerMovePitchRateChangeAck::PlayerMovePitchRateChangeAck() {
 }
 
-// PROVEN: 5a3e76a4 IDENTICAL/NONE
 // OFFSET: [0x00673E30]
 PlayerMovePitchRateChangeAck::~PlayerMovePitchRateChangeAck() {
 }
 
-// PROVEN: 86e51f38 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067DB90/0x140326E50
 void PlayerMovePitchRateChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -2925,17 +2877,14 @@ void PlayerMovePitchRateChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: e6d7515e IDENTICAL/NONE
 // OFFSET: [0x00673160]
 PlayerMoveRootAck::PlayerMoveRootAck() {
 }
 
-// PROVEN: ad1a769a IDENTICAL/NONE
 // OFFSET: [0x00673450]
 PlayerMoveRootAck::~PlayerMoveRootAck() {
 }
 
-// PROVEN: afbd1427 IDENTICAL/IDENTICAL
 // OFFSET: 0x00686FF0/0x140331BD0
 void PlayerMoveRootAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -3106,17 +3055,14 @@ void PlayerMoveRootAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: f5fc1a74 IDENTICAL/NONE
 // OFFSET: [0x006739F0]
 PlayerMoveRunBackSpeedChangeAck::PlayerMoveRunBackSpeedChangeAck() {
 }
 
-// PROVEN: 374d14d3 IDENTICAL/NONE
 // OFFSET: [0x006743C0]
 PlayerMoveRunBackSpeedChangeAck::~PlayerMoveRunBackSpeedChangeAck() {
 }
 
-// PROVEN: 93e55c44 IDENTICAL/IDENTICAL
 // OFFSET: 0x00683E80/0x14032E110
 void PlayerMoveRunBackSpeedChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -3289,17 +3235,14 @@ void PlayerMoveRunBackSpeedChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 4b3f1991 IDENTICAL/NONE
 // OFFSET: [0x00670F20]
 PlayerMoveRunSpeedChangeAck::PlayerMoveRunSpeedChangeAck() {
 }
 
-// PROVEN: 56f282b5 IDENTICAL/NONE
 // OFFSET: [0x00670DA0]
 PlayerMoveRunSpeedChangeAck::~PlayerMoveRunSpeedChangeAck() {
 }
 
-// PROVEN: 536582b0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00679180/0x1403219D0
 void PlayerMoveRunSpeedChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -3472,17 +3415,14 @@ void PlayerMoveRunSpeedChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 67168d91 IDENTICAL/NONE
 // OFFSET: [0x00674CE0]
 PlayerMoveSetCanFlyAck::PlayerMoveSetCanFlyAck() {
 }
 
-// PROVEN: 7f80300b IDENTICAL/NONE
 // OFFSET: [0x00673DE0]
 PlayerMoveSetCanFlyAck::~PlayerMoveSetCanFlyAck() {
 }
 
-// PROVEN: ef336828 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067A140/0x140322C20
 void PlayerMoveSetCanFlyAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -3654,17 +3594,14 @@ void PlayerMoveSetCanFlyAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 2e20c305 IDENTICAL/NONE
 // OFFSET: [0x00673AD0]
 PlayerMoveSetCanTransitionBetweenSwimAndFlyAck::PlayerMoveSetCanTransitionBetweenSwimAndFlyAck() {
 }
 
-// PROVEN: c8b6d2a7 IDENTICAL/NONE
 // OFFSET: [0x00674D10]
 PlayerMoveSetCanTransitionBetweenSwimAndFlyAck::~PlayerMoveSetCanTransitionBetweenSwimAndFlyAck() {
 }
 
-// PROVEN: d6979db2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067F6A0/0x140328CB0
 void PlayerMoveSetCanTransitionBetweenSwimAndFlyAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -3835,17 +3772,14 @@ void PlayerMoveSetCanTransitionBetweenSwimAndFlyAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 930d6b44 IDENTICAL/IDENTICAL
 // OFFSET: [0x00673140/0x14031B510]
 PlayerMoveSetCollisionHeightAck::PlayerMoveSetCollisionHeightAck() {
 }
 
-// PROVEN: 56fad513 IDENTICAL/UNPROVEN
 // OFFSET: [0x006749E0/0x1403187E0]
 PlayerMoveSetCollisionHeightAck::~PlayerMoveSetCollisionHeightAck() {
 }
 
-// PROVEN: fbc1b136 IDENTICAL/UNPROVEN
 // OFFSET: 0x0067E540/0x1403279D0
 void PlayerMoveSetCollisionHeightAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -4018,17 +3952,14 @@ void PlayerMoveSetCollisionHeightAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: e8caea3c IDENTICAL/IDENTICAL
 // OFFSET: [0x00673370/0x14031B7B0]
 PlayerMoveSetFacing::PlayerMoveSetFacing() {
 }
 
-// PROVEN: 6b4a8f60 IDENTICAL/UNPROVEN
 // OFFSET: [0x006733F0/0x14031B840]
 PlayerMoveSetFacing::~PlayerMoveSetFacing() {
 }
 
-// PROVEN: 7ae133bf IDENTICAL/IDENTICAL
 // OFFSET: 0x006785A0/0x140320C80
 void PlayerMoveSetFacing::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -4197,17 +4128,14 @@ void PlayerMoveSetFacing::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 7a130cff IDENTICAL/IDENTICAL
 // OFFSET: [0x00673A70/0x14031BF40]
 PlayerMoveSetFly::PlayerMoveSetFly() {
 }
 
-// PROVEN: eaf6606e IDENTICAL/UNPROVEN
 // OFFSET: [0x006749D0/0x140318750]
 PlayerMoveSetFly::~PlayerMoveSetFly() {
 }
 
-// PROVEN: 660b32a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00682DE0/0x14032CDE0
 void PlayerMoveSetFly::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -4377,17 +4305,14 @@ void PlayerMoveSetFly::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: ad5174bd IDENTICAL/IDENTICAL
 // OFFSET: [0x00673120/0x14031B4E0]
 PlayerMoveSetPitch::PlayerMoveSetPitch() {
 }
 
-// PROVEN: 41a52060 IDENTICAL/UNPROVEN
 // OFFSET: [0x00673670/0x14031BAF0]
 PlayerMoveSetPitch::~PlayerMoveSetPitch() {
 }
 
-// PROVEN: c37fe413 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067D210/0x140326300
 void PlayerMoveSetPitch::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -4558,17 +4483,14 @@ void PlayerMoveSetPitch::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 82fb8dcd IDENTICAL/NONE
 // OFFSET: [0x00673D80]
 PlayerMoveSetRunMode::PlayerMoveSetRunMode() {
 }
 
-// PROVEN: f67ec3a1 IDENTICAL/NONE
 // OFFSET: [0x00674410]
 PlayerMoveSetRunMode::~PlayerMoveSetRunMode() {
 }
 
-// PROVEN: aa6cb35c IDENTICAL/IDENTICAL
 // OFFSET: 0x0067B430/0x140324130
 void PlayerMoveSetRunMode::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -4738,17 +4660,14 @@ void PlayerMoveSetRunMode::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 6396cafd IDENTICAL/IDENTICAL
 // OFFSET: [0x00670D30/0x140319020]
 PlayerMoveSetVehicleRecIdAck::PlayerMoveSetVehicleRecIdAck() {
 }
 
-// PROVEN: 3951ea39 IDENTICAL/NONE
 // OFFSET: [0x00673850]
 PlayerMoveSetVehicleRecIdAck::~PlayerMoveSetVehicleRecIdAck() {
 }
 
-// PROVEN: ce83a869 IDENTICAL/DIFFERENT
 // OFFSET: 0x00685CB0/0x1403304F0
 void PlayerMoveSetVehicleRecIdAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -4917,17 +4836,14 @@ void PlayerMoveSetVehicleRecIdAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: f0fe7468 IDENTICAL/NONE
 // OFFSET: [0x006736A0]
 PlayerMoveSetWalkMode::PlayerMoveSetWalkMode() {
 }
 
-// PROVEN: f6c3445c IDENTICAL/NONE
 // OFFSET: [0x006738A0]
 PlayerMoveSetWalkMode::~PlayerMoveSetWalkMode() {
 }
 
-// PROVEN: 131c3610 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067BDC0/0x140324C80
 void PlayerMoveSetWalkMode::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -5096,17 +5012,14 @@ void PlayerMoveSetWalkMode::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: add30e9d IDENTICAL/IDENTICAL
 // OFFSET: [0x00673E40/0x14031C480]
 PlayerMoveSplineDone::PlayerMoveSplineDone() {
 }
 
-// PROVEN: 021393d3 IDENTICAL/UNPROVEN
 // OFFSET: [0x006736E0/0x14031BB70]
 PlayerMoveSplineDone::~PlayerMoveSplineDone() {
 }
 
-// PROVEN: 08e288b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00681F60/0x14032BCC0
 void PlayerMoveSplineDone::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -5274,17 +5187,14 @@ void PlayerMoveSplineDone::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: a6c82d50 IDENTICAL/NONE
 // OFFSET: [0x00674B10]
 PlayerMoveStartAscend::PlayerMoveStartAscend() {
 }
 
-// PROVEN: b19152d2 IDENTICAL/NONE
 // OFFSET: [0x00673640]
 PlayerMoveStartAscend::~PlayerMoveStartAscend() {
 }
 
-// PROVEN: 8a088aef IDENTICAL/IDENTICAL
 // OFFSET: 0x00679B40/0x140322570
 void PlayerMoveStartAscend::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -5457,17 +5367,14 @@ void PlayerMoveStartAscend::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 8421f0c4 IDENTICAL/IDENTICAL
 // OFFSET: [0x006736C0/0x14031BB40]
 PlayerMoveStartBackward::PlayerMoveStartBackward() {
 }
 
-// PROVEN: 1a75475a IDENTICAL/UNPROVEN
 // OFFSET: [0x00673EC0/0x14031C550]
 PlayerMoveStartBackward::~PlayerMoveStartBackward() {
 }
 
-// PROVEN: 379ee25c IDENTICAL/IDENTICAL
 // OFFSET: 0x00682910/0x14032C830
 void PlayerMoveStartBackward::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -5637,17 +5544,14 @@ void PlayerMoveStartBackward::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: f8e56b09 IDENTICAL/NONE
 // OFFSET: [0x00670C70]
 PlayerMoveStartDescend::PlayerMoveStartDescend() {
 }
 
-// PROVEN: e7a35b47 IDENTICAL/NONE
 // OFFSET: [0x006743D0]
 PlayerMoveStartDescend::~PlayerMoveStartDescend() {
 }
 
-// PROVEN: 5d237ef8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00686B20/0x140331630
 void PlayerMoveStartDescend::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -5817,17 +5721,14 @@ void PlayerMoveStartDescend::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: fba6efa1 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670F00/0x1403192A0]
 PlayerMoveStartForward::PlayerMoveStartForward() {
 }
 
-// PROVEN: 9384453d IDENTICAL/UNPROVEN
 // OFFSET: [0x006747F0/0x140318650]
 PlayerMoveStartForward::~PlayerMoveStartForward() {
 }
 
-// PROVEN: 14a63388 IDENTICAL/IDENTICAL
 // OFFSET: 0x00684D20/0x14032F2D0
 void PlayerMoveStartForward::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -6001,17 +5902,14 @@ void PlayerMoveStartForward::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: e8912854 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670DD0/0x140319110]
 PlayerMoveStartPitchDown::PlayerMoveStartPitchDown() {
 }
 
-// PROVEN: b30318d1 IDENTICAL/UNPROVEN
 // OFFSET: [0x00673F30/0x1403181E0]
 PlayerMoveStartPitchDown::~PlayerMoveStartPitchDown() {
 }
 
-// PROVEN: 2b7c5c5a IDENTICAL/IDENTICAL
 // OFFSET: 0x0067C280/0x140325230
 void PlayerMoveStartPitchDown::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -6180,17 +6078,14 @@ void PlayerMoveStartPitchDown::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: fb424d10 IDENTICAL/IDENTICAL
 // OFFSET: [0x00673D40/0x14031C2C0]
 PlayerMoveStartPitchUp::PlayerMoveStartPitchUp() {
 }
 
-// PROVEN: eb85b8e2 IDENTICAL/UNPROVEN
 // OFFSET: [0x00673D60/0x14031C2F0]
 PlayerMoveStartPitchUp::~PlayerMoveStartPitchUp() {
 }
 
-// PROVEN: 5a1a0515 IDENTICAL/DIFFERENT
 // OFFSET: 0x00677AE0/0x140320130
 void PlayerMoveStartPitchUp::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -6363,17 +6258,14 @@ void PlayerMoveStartPitchUp::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 1a4d0848 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670CB0/0x140318F80]
 PlayerMoveStartStrafeLeft::PlayerMoveStartStrafeLeft() {
 }
 
-// PROVEN: cec6b0ad IDENTICAL/UNPROVEN
 // OFFSET: [0x00674790/0x140318510]
 PlayerMoveStartStrafeLeft::~PlayerMoveStartStrafeLeft() {
 }
 
-// PROVEN: a833f47e IDENTICAL/IDENTICAL
 // OFFSET: 0x00680500/0x140329DD0
 void PlayerMoveStartStrafeLeft::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -6546,17 +6438,14 @@ void PlayerMoveStartStrafeLeft::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 531081da IDENTICAL/IDENTICAL
 // OFFSET: [0x00674CC0/0x140318BA0]
 PlayerMoveStartStrafeRight::PlayerMoveStartStrafeRight() {
 }
 
-// PROVEN: 424103ed IDENTICAL/UNPROVEN
 // OFFSET: [0x00673A60/0x14031BF20]
 PlayerMoveStartStrafeRight::~PlayerMoveStartStrafeRight() {
 }
 
-// PROVEN: d823f16a IDENTICAL/IDENTICAL
 // OFFSET: 0x0067ED20/0x140328260
 void PlayerMoveStartStrafeRight::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -6725,17 +6614,14 @@ void PlayerMoveStartStrafeRight::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 75b1ad98 IDENTICAL/UNPROVEN
 // OFFSET: [0x006731B0/0x14031B5A0]
 PlayerMoveStartSwim::PlayerMoveStartSwim() {
 }
 
-// PROVEN: 33842982 IDENTICAL/UNPROVEN
 // OFFSET: [0x00673D10/0x14031C270]
 PlayerMoveStartSwim::~PlayerMoveStartSwim() {
 }
 
-// PROVEN: 4693e5e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067CD40/0x140325D50
 void PlayerMoveStartSwim::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -6904,17 +6790,14 @@ void PlayerMoveStartSwim::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: f658d23f IDENTICAL/IDENTICAL
 // OFFSET: [0x00674AB0/0x1403188F0]
 PlayerMoveStartTurnLeft::PlayerMoveStartTurnLeft() {
 }
 
-// PROVEN: 4eed0b78 IDENTICAL/UNPROVEN
 // OFFSET: [0x006747D0/0x1403185E0]
 PlayerMoveStartTurnLeft::~PlayerMoveStartTurnLeft() {
 }
 
-// PROVEN: 2ffd0450 IDENTICAL/DIFFERENT
 // OFFSET: 0x0067C740/0x1403257D0
 void PlayerMoveStartTurnLeft::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -7085,17 +6968,14 @@ void PlayerMoveStartTurnLeft::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 23b5332d IDENTICAL/IDENTICAL
 // OFFSET: [0x00673F10/0x1403181B0]
 PlayerMoveStartTurnRight::PlayerMoveStartTurnRight() {
 }
 
-// PROVEN: 3701457f IDENTICAL/UNPROVEN
 // OFFSET: [0x00674990/0x1403186C0]
 PlayerMoveStartTurnRight::~PlayerMoveStartTurnRight() {
 }
 
-// PROVEN: 10c71b9b IDENTICAL/IDENTICAL
 // OFFSET: 0x0067B8F0/0x1403246D0
 void PlayerMoveStartTurnRight::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -7263,17 +7143,14 @@ void PlayerMoveStartTurnRight::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 72f070f3 IDENTICAL/UNPROVEN
 // OFFSET: [0x00670B90/0x14031B5A0]
 PlayerMoveStop::PlayerMoveStop() {
 }
 
-// PROVEN: 7343b53f IDENTICAL/UNPROVEN
 // OFFSET: [0x00673E60/0x14031C270]
 PlayerMoveStop::~PlayerMoveStop() {
 }
 
-// PROVEN: 86d882db IDENTICAL/IDENTICAL
 // OFFSET: 0x00676200/0x140325D50
 void PlayerMoveStop::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -7441,17 +7318,14 @@ void PlayerMoveStop::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 4c735107 IDENTICAL/NONE
 // OFFSET: [0x00674B30]
 PlayerMoveStopAscend::PlayerMoveStopAscend() {
 }
 
-// PROVEN: 711fd700 IDENTICAL/NONE
 // OFFSET: [0x006731D0]
 PlayerMoveStopAscend::~PlayerMoveStopAscend() {
 }
 
-// PROVEN: 6e706f11 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067FB70/0x140329260
 void PlayerMoveStopAscend::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -7621,17 +7495,14 @@ void PlayerMoveStopAscend::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 3722f506 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670B50/0x140318D20]
 PlayerMoveStopPitch::PlayerMoveStopPitch() {
 }
 
-// PROVEN: 0ec3fc0a IDENTICAL/UNPROVEN
 // OFFSET: [0x00674CB0/0x140318B20]
 PlayerMoveStopPitch::~PlayerMoveStopPitch() {
 }
 
-// PROVEN: f65d5e39 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067D6D0/0x1403268B0
 void PlayerMoveStopPitch::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -7799,17 +7670,14 @@ void PlayerMoveStopPitch::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 69a8c9cb IDENTICAL/IDENTICAL
 // OFFSET: [0x006735F0/0x14031BA30]
 PlayerMoveStopStrafe::PlayerMoveStopStrafe() {
 }
 
-// PROVEN: d8c7e9d1 IDENTICAL/UNPROVEN
 // OFFSET: [0x00674620/0x140318490]
 PlayerMoveStopStrafe::~PlayerMoveStopStrafe() {
 }
 
-// PROVEN: c896dec0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00677620/0x14031FB80
 void PlayerMoveStopStrafe::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -7978,17 +7846,14 @@ void PlayerMoveStopStrafe::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: a52c51bd IDENTICAL/IDENTICAL
 // OFFSET: [0x00673DC0/0x140318DC0]
 PlayerMoveStopSwim::PlayerMoveStopSwim() {
 }
 
-// PROVEN: e0aaa2fe IDENTICAL/UNPROVEN
 // OFFSET: [0x00673340/0x14031C4B0]
 PlayerMoveStopSwim::~PlayerMoveStopSwim() {
 }
 
-// PROVEN: 31d3bc91 IDENTICAL/DIFFERENT
 // OFFSET: 0x006766C0/0x14031E400
 void PlayerMoveStopSwim::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -8158,17 +8023,14 @@ void PlayerMoveStopSwim::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: b758bb7c IDENTICAL/IDENTICAL
 // OFFSET: [0x00670C90/0x140318F50]
 PlayerMoveStopTurn::PlayerMoveStopTurn() {
 }
 
-// PROVEN: 460fd371 IDENTICAL/UNPROVEN
 // OFFSET: [0x00670DC0/0x1403190F0]
 PlayerMoveStopTurn::~PlayerMoveStopTurn() {
 }
 
-// PROVEN: b6b845af IDENTICAL/IDENTICAL
 // OFFSET: 0x00681AA0/0x14032B710
 void PlayerMoveStopTurn::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -8338,17 +8200,14 @@ void PlayerMoveStopTurn::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: ea76337a IDENTICAL/NONE
 // OFFSET: [0x00674800]
 PlayerMoveSwimBackSpeedChangeAck::PlayerMoveSwimBackSpeedChangeAck() {
 }
 
-// PROVEN: 57c16a4d IDENTICAL/NONE
 // OFFSET: [0x00670EB0]
 PlayerMoveSwimBackSpeedChangeAck::~PlayerMoveSwimBackSpeedChangeAck() {
 }
 
-// PROVEN: 79bb3661 IDENTICAL/DIFFERENT
 // OFFSET: 0x006832A0/0x14032D390
 void PlayerMoveSwimBackSpeedChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -8519,17 +8378,14 @@ void PlayerMoveSwimBackSpeedChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 8e2cf920 IDENTICAL/NONE
 // OFFSET: [0x00673650]
 PlayerMoveSwimSpeedChangeAck::PlayerMoveSwimSpeedChangeAck() {
 }
 
-// PROVEN: 458eaa53 IDENTICAL/NONE
 // OFFSET: [0x00673420]
 PlayerMoveSwimSpeedChangeAck::~PlayerMoveSwimSpeedChangeAck() {
 }
 
-// PROVEN: f1bc4c15 IDENTICAL/IDENTICAL
 // OFFSET: 0x00675D20/0x14031DE40
 void PlayerMoveSwimSpeedChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -8700,17 +8556,14 @@ void PlayerMoveSwimSpeedChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 6ff5e793 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670600/0x140317F50]
 PlayerMoveTeleportAck::PlayerMoveTeleportAck() {
 }
 
-// PROVEN: 0ed39f64 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670930/0x1403187D0]
 PlayerMoveTeleportAck::~PlayerMoveTeleportAck() {
 }
 
-// PROVEN: 9eca6c8f IDENTICAL/IDENTICAL
 // OFFSET: 0x00673BB0/0x14031C100
 void PlayerMoveTeleportAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_guid);
@@ -8762,17 +8615,14 @@ void PlayerMoveTeleportAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: f4847976 IDENTICAL/IDENTICAL
 // OFFSET: [0x006709C0/0x140318A80]
 PlayerMoveTimeSkipped::PlayerMoveTimeSkipped() {
 }
 
-// PROVEN: 626f8db9 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670960/0x140318940]
 PlayerMoveTimeSkipped::~PlayerMoveTimeSkipped() {
 }
 
-// PROVEN: 5299da66 IDENTICAL/DIFFERENT
 // OFFSET: 0x00674EB0/0x14031D0B0
 void PlayerMoveTimeSkipped::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_guid);
@@ -8823,17 +8673,14 @@ void PlayerMoveTimeSkipped::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 1679f711 IDENTICAL/NONE
 // OFFSET: [0x00673320]
 PlayerMoveToggleCollisionCheat::PlayerMoveToggleCollisionCheat() {
 }
 
-// PROVEN: 11ce69b7 IDENTICAL/NONE
 // OFFSET: [0x006747A0]
 PlayerMoveToggleCollisionCheat::~PlayerMoveToggleCollisionCheat() {
 }
 
-// PROVEN: 44ac6577 IDENTICAL/IDENTICAL
 // OFFSET: 0x00686190/0x140330AD0
 void PlayerMoveToggleCollisionCheat::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -9003,17 +8850,14 @@ void PlayerMoveToggleCollisionCheat::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 829a0ec6 IDENTICAL/NONE
 // OFFSET: [0x00673400]
 PlayerMoveTurnRateChangeAck::PlayerMoveTurnRateChangeAck() {
 }
 
-// PROVEN: 62f34d21 IDENTICAL/NONE
 // OFFSET: [0x00673DF0]
 PlayerMoveTurnRateChangeAck::~PlayerMoveTurnRateChangeAck() {
 }
 
-// PROVEN: cec6cc19 IDENTICAL/IDENTICAL
 // OFFSET: 0x00682430/0x14032C260
 void PlayerMoveTurnRateChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -9185,17 +9029,14 @@ void PlayerMoveTurnRateChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: ebb983d4 IDENTICAL/NONE
 // OFFSET: [0x00674AD0]
 PlayerMoveUnrootAck::PlayerMoveUnrootAck() {
 }
 
-// PROVEN: bbefc9c9 IDENTICAL/NONE
 // OFFSET: [0x00673E00]
 PlayerMoveUnrootAck::~PlayerMoveUnrootAck() {
 }
 
-// PROVEN: afb0d0be IDENTICAL/DIFFERENT
 // OFFSET: 0x00676B90/0x14031EF50
 void PlayerMoveUnrootAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -9369,17 +9210,14 @@ void PlayerMoveUnrootAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: e61f7159 IDENTICAL/NONE
 // OFFSET: [0x00673D20]
 PlayerMoveWalkSpeedChangeAck::PlayerMoveWalkSpeedChangeAck() {
 }
 
-// PROVEN: 2b0217ea IDENTICAL/NONE
 // OFFSET: [0x00673E10]
 PlayerMoveWalkSpeedChangeAck::~PlayerMoveWalkSpeedChangeAck() {
 }
 
-// PROVEN: 9561ae1a IDENTICAL/IDENTICAL
 // OFFSET: 0x00679660/0x140321FA0
 void PlayerMoveWalkSpeedChangeAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_data.m_status.m_guid);
@@ -9552,17 +9390,14 @@ void PlayerMoveWalkSpeedChangeAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: a8863742 IDENTICAL/NONE
 // OFFSET: [0x00674A10]
 PlayerMoveWaterWalkAck::PlayerMoveWaterWalkAck() {
 }
 
-// PROVEN: ed74fa78 IDENTICAL/NONE
 // OFFSET: [0x00673B20]
 PlayerMoveWaterWalkAck::~PlayerMoveWaterWalkAck() {
 }
 
-// PROVEN: 334838d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00680030/0x140329810
 void PlayerMoveWaterWalkAck::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
@@ -9733,17 +9568,14 @@ void PlayerMoveWaterWalkAck::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 3a0270ed IDENTICAL/IDENTICAL
 // OFFSET: [0x00670BB0/0x140318DF0]
 PlayerSetActiveMover::PlayerSetActiveMover() {
 }
 
-// PROVEN: 0d2e09b1 IDENTICAL/IDENTICAL
 // OFFSET: [0x00670850/0x140318480]
 PlayerSetActiveMover::~PlayerSetActiveMover() {
 }
 
-// PROVEN: e18a79b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00673710/0x14031BB90
 void PlayerSetActiveMover::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_guid);
@@ -9793,17 +9625,14 @@ void PlayerSetActiveMover::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 80bd7c0a DIFFERENT/IDENTICAL
 // OFFSET: 0x00683780/0x14031CEF0
 PlayerMoveUpdateMissileTrajectory::PlayerMoveUpdateMissileTrajectory() : m_hasStatus(false) {
 }
 
-// PROVEN: 2066f20e IDENTICAL/UNPROVEN
 // OFFSET: 0x00684840/0x14031D090
 PlayerMoveUpdateMissileTrajectory::~PlayerMoveUpdateMissileTrajectory() {
 }
 
-// PROVEN: c5c496b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0067AB00/0x140323790
 void PlayerMoveUpdateMissileTrajectory::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_guid);
@@ -10036,19 +9865,16 @@ void PlayerMoveUpdateMissileTrajectory::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 86d8b891 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670AE0/0x140318C40
 PlayerMoveTeleportCheat::PlayerMoveTeleportCheat(const C3Vector& position, float facing) {
     this->m_position = position;
     this->m_facing = facing;
 }
 
-// PROVEN: 9d249209 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670570/0x140317EB0
 PlayerMoveTeleportCheat::~PlayerMoveTeleportCheat() {
 }
 
-// PROVEN: 3219e4bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00674A30/0x140318860
 void PlayerMoveTeleportCheat::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3A10));
@@ -10058,19 +9884,16 @@ void PlayerMoveTeleportCheat::Put(CDataStore* msg) {
     msg->Put(this->m_position.z);
 }
 
-// PROVEN: 67d7cbd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x006740C0/0x140318240
 PlayerMoveSetRawPosition::PlayerMoveSetRawPosition(const C3Vector& position, float facing) {
     this->m_facing = facing;
     this->m_position = position;
 }
 
-// PROVEN: 86b79f7c IDENTICAL/IDENTICAL
 // OFFSET: 0x00670990/0x140318A10
 PlayerMoveSetRawPosition::~PlayerMoveSetRawPosition() {
 }
 
-// PROVEN: 870360d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00674420/0x1403183B0
 void PlayerMoveSetRawPosition::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x311A));
@@ -10080,19 +9903,16 @@ void PlayerMoveSetRawPosition::Put(CDataStore* msg) {
     msg->Put(this->m_position.y);
 }
 
-// PROVEN: b76c6840 IDENTICAL/IDENTICAL
 // OFFSET: 0x00673A10/0x14031BEE0
 PlayerMoveCharmPortCheat::PlayerMoveCharmPortCheat(const C3Vector& position, float facing) {
     this->m_facing = facing;
     this->m_position = position;
 }
 
-// PROVEN: e25d1732 IDENTICAL/IDENTICAL
 // OFFSET: 0x006709F0/0x140318AD0
 PlayerMoveCharmPortCheat::~PlayerMoveCharmPortCheat() {
 }
 
-// PROVEN: 177860a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670A80/0x140318BE0
 void PlayerMoveCharmPortCheat::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7A08));

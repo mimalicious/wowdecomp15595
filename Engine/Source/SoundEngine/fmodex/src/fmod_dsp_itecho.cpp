@@ -165,7 +165,6 @@ FMOD_RESULT DSPITEcho::createInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9c576624 IDENTICAL/NONE
 // OFFSET: 0x00A95A50/0x140861CA0
 FMOD_RESULT DSPITEcho::releaseInternal()
 {
@@ -201,7 +200,6 @@ FMOD_RESULT DSPITEcho::releaseInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 669670f6 IDENTICAL/NONE
 // OFFSET: 0x00A95AA0
 FMOD_RESULT DSPITEcho::resetInternal()
 {
@@ -239,7 +237,6 @@ FMOD_RESULT DSPITEcho::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f3d1b801 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A95B00/0x140855B80
 FMOD_RESULT DSPITEcho::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
@@ -576,7 +573,6 @@ FMOD_RESULT F_CALLBACK DSPITEcho::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 91d201bf IDENTICAL/UNPROVEN
 // OFFSET: 0x00A960D0/0x1408561B0
 FMOD_RESULT F_CALLBACK DSPITEcho::releaseCallback(FMOD_DSP_STATE *dsp)
 {
@@ -602,7 +598,6 @@ FMOD_RESULT F_CALLBACK DSPITEcho::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 92d39991 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A96100/0x140856250
 FMOD_RESULT F_CALLBACK DSPITEcho::resetCallback(FMOD_DSP_STATE *dsp)
 {
@@ -629,7 +624,6 @@ FMOD_RESULT F_CALLBACK DSPITEcho::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: dc988851 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A96130/0x1408561D0
 FMOD_RESULT F_CALLBACK DSPITEcho::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
@@ -656,7 +650,6 @@ FMOD_RESULT F_CALLBACK DSPITEcho::readCallback(FMOD_DSP_STATE *dsp, float *inbuf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e9190091 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A96160/0x140856280
 FMOD_RESULT F_CALLBACK DSPITEcho::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
@@ -682,7 +675,6 @@ FMOD_RESULT F_CALLBACK DSPITEcho::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9f00741c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A961A0/0x1408562A0
 FMOD_RESULT F_CALLBACK DSPITEcho::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

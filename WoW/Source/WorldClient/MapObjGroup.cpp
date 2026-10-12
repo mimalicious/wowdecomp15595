@@ -133,7 +133,6 @@ World::TriData::Batch* World::TriData::AllocBatch() {
     return batch;
 }
 
-// PROVEN: fc6d5fe2 IDENTICAL/NONE
 // OFFSET: 0x00740780
 C44Matrix* World::TriData::AllocMatrix() {
     if (World::TriData::s_nMatrices + 1 < 32) {
@@ -157,7 +156,6 @@ uint16_t* World::TriData::AllocIndices(uint32_t count) {
     return &World::TriData::s_indexPool[cursor];
 }
 
-// PROVEN: 741ba07f IDENTICAL/NONE
 // OFFSET: 0x0077CC50
 void SpanRasterizer::VisitRange(int32_t x0, int32_t x1, int32_t y) {
     if (x0 <= x1) {
@@ -928,7 +926,6 @@ void CMapObjGroup::AsyncFreeCallback(CAsyncObject* object) {
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 2e9d947e IDENTICAL/IDENTICAL
 // OFFSET: 0x0078E3A0/0x14047F270
 int32_t CMapObjGroup::HasLiquidVB(CGxBatch*& batch) {
     if (!this->m_liquidVertsBlock || !this->m_liquidIndicesBlock) {
@@ -939,7 +936,6 @@ int32_t CMapObjGroup::HasLiquidVB(CGxBatch*& batch) {
     return 1;
 }
 
-// PROVEN: 92e56810 IDENTICAL/IDENTICAL
 // OFFSET: 0x0078E3D0/0x14047F290
 uint32_t CMapObjGroup::GetLiquidType() const {
     return this->m_liquidType;
@@ -1385,7 +1381,6 @@ void CMapObjGroup::FillTransparencyVB(CGxBuf* buf) const {
     buf->unk_001C = 1;
 }
 
-// PROVEN: 6d6ed7b7 IDENTICAL/NONE
 // OFFSET: 0x0078FF80
 void CMapObjGroup::UploadIndexBuffer(CGxBuf* buf) const {
     void* dst = g_theGxDevicePtr->BufLock(buf);
@@ -1394,7 +1389,6 @@ void CMapObjGroup::UploadIndexBuffer(CGxBuf* buf) const {
     buf->unk_001C = 1;
 }
 
-// PROVEN: 593be159 IDENTICAL/IDENTICAL
 // OFFSET: 0x0078FFE0/0x140480FC0
 int32_t CMapObjGroup::GetNumSharedTiles() {
     if (this->m_numSharedTiles > 0) {
@@ -1921,7 +1915,6 @@ bool CMapObjGroup::GetLiquidTris(const CFrustum& frustum, uint32_t flags, World:
     return started;
 }
 
-// PROVEN: f5992ee6 IDENTICAL/IDENTICAL
 // OFFSET: 0x007912B0/0x140482290
 uint32_t CMapObjGroup::ComputePassCount(int32_t unified, uint32_t batch) const {
     if (unified) {
@@ -2007,7 +2000,6 @@ void CMapObjGroup::SetTransparencyVB() const {
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PNCT);
 }
 
-// PROVEN: 5e357e18 IDENTICAL/IDENTICAL
 // OFFSET: 0x007916B0/0x140482710
 void CMapObjGroup::SetIndexVB() const {
     CGxBuf* buf = this->m_indicesBlock ? this->m_indicesBlock->m_buf : g_theGxDevicePtr->BufStream(GxPoolTarget_Index, 2, this->m_indexCount);
@@ -2466,7 +2458,6 @@ void VBBList::AllocVBB(Block** owner, uint32_t itemSize, uint32_t itemCount) {
     }
 }
 
-// PROVEN: 3be476e9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00793340/0x1404851E0
 void CMapObjGroup::AllocVB() {
     if (!this->m_vertsBlock) {
@@ -2484,7 +2475,6 @@ void CMapObjGroup::AllocVB() {
     }
 }
 
-// PROVEN: 00ba8ada IDENTICAL/IDENTICAL
 // OFFSET: 0x007933F0/0x1404852C0
 void CMapObjGroup::FreeVB() {
     if (this->m_vertsBlock) {
@@ -2504,7 +2494,6 @@ void CMapObjGroup::FreeVB() {
     this->m_indicesBlock = NULL;
 }
 
-// PROVEN: 476c010e IDENTICAL/UNPROVEN
 // OFFSET: 0x00793440/0x140485320
 void CMapObjGroup::AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCount, uint32_t indexCount, CGxBatch*& batch) {
     if (!this->m_liquidVertsBlock) {
@@ -2521,7 +2510,6 @@ void CMapObjGroup::AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCo
     this->m_liquidVBRefCount++;
 }
 
-// PROVEN: 19b76674 IDENTICAL/IDENTICAL
 // OFFSET: 0x007934B0/0x1404853C0
 void CMapObjGroup::FreeLiquidVB() {
     if (!this->m_liquidVBRefCount) {

@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[13] = { 0, 2, 0, 0, 3, 3, 3, 3, 3, 0, 0, 0, 0 
 // STATIC: 0x00C26734/0x140A1C6D8
 const DBCMeta CameraModeRec::s_meta = { "DBFilesClient\\CameraMode.dbc", 13, 68, CameraModeRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 39a760e4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void CameraModeRec::FixupStrings(void* record, const char* strings) {
     CameraModeRec* rec = static_cast<CameraModeRec*>(record);

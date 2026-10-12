@@ -100,7 +100,6 @@ void PlayerNameInitialize() {
     s_playerNameIcons = TextureCreate("Interface\\TargetingFrame\\UI-RaidTargetingIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
 }
 
-// PROVEN: 763e3951 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E04D0/0x140120870
 void PlayerNameTriggerColorUpdate(PLAYERNAMEDESC* desc) {
     if (desc) {
@@ -150,13 +149,11 @@ void PlayerNameUpdateDrawCallback(PLAYERNAMEDESC* desc) {
     }
 }
 
-// PROVEN: 71d4e1ae IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0500/0x1401208A0
 void PlayerNameUpdateEarly() {
     s_lastRenderFrame++;
 }
 
-// PROVEN: e0c19acc IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0510/0x1401208B0
 void PlayerNameTriggerNameRegenerate(PLAYERNAMEDESC* desc) {
     if (desc) {
@@ -164,13 +161,11 @@ void PlayerNameTriggerNameRegenerate(PLAYERNAMEDESC* desc) {
     }
 }
 
-// PROVEN: 5eb9b876 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0530/0x1401208D0
 bool PlayerNameShowing(PLAYERNAMEDESC* desc) {
     return desc && (desc->m_flags & 0x8);
 }
 
-// PROVEN: 1fc21c54 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0550/0x1401208F0
 bool PlayerNameShouldShowGuildTitle() {
     return (s_nameMask >> 15) & 1;
@@ -468,7 +463,6 @@ void PLAYERNAMEDESC::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: 80d5d221 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E1C30/0x140122850
 void PLAYERNAMEDESC::RenderIfVisible(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     PLAYERNAMEDESC* desc = static_cast<PLAYERNAMEDESC*>(arg);
@@ -494,7 +488,6 @@ void PLAYERNAMEDESC::DeleteWorldText(uint32_t type) {
     }
 }
 
-// PROVEN: d6268158 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E04E0/0x140120880
 void PlayerNameDeleteText(PLAYERNAMEDESC* desc, uint32_t type) {
     if (desc) {

@@ -24,13 +24,11 @@ CGxShader* DayNight::DNPlanet::s_vertexShader;
 // STATIC: 0x00E43284/0x140D2C030
 CGxShader* DayNight::DNPlanet::s_pixelShader;
 
-// PROVEN: d39fed51 IDENTICAL/IDENTICAL
 // OFFSET: 0x00650C80/0x1402F0670
 int32_t DayNight::DNPlanet::IsAllLoaded() {
     return TextureIsLoaded(this->m_texture);
 }
 
-// PROVEN: 1dffceaa IDENTICAL/IDENTICAL
 // OFFSET: 0x00650C90/0x1402F0680
 void DayNight::DNPlanet::LinkToAsyncHead() {
     if (this->m_texture) {
@@ -38,7 +36,6 @@ void DayNight::DNPlanet::LinkToAsyncHead() {
     }
 }
 
-// PROVEN: 3553ae41 IDENTICAL/IDENTICAL
 // OFFSET: 0x00650CA0/0x1402F06A0
 void DayNight::DNPlanet::Destroy() {
     if (this->m_texture) {
@@ -228,7 +225,6 @@ void DayNight::DNPlanet::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: a53f29e3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00651910/0x1402F15A0
 void DayNight::DNPlanet::Initialize(const char* fileName) {
     CStatus status;

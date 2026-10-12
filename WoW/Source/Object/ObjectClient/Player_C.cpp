@@ -414,7 +414,6 @@ static const uint32_t s_playerSoundChance[14] = { 35, 100, 30, 100, 100, 40, 100
 
 static uint32_t s_talentWipeCost;
 
-// PROVEN: 9c2024c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005537E0/0x1401AE720
 static int32_t OnUpdatePVPTitle(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameUI::UnitNameUpdate(guid);
@@ -467,7 +466,6 @@ static int32_t PetChangeHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     return 1;
 }
 
-// PROVEN: 96248a4b IDENTICAL/DIFFERENT
 // OFFSET: 0x00556ED0/0x1401B3CC0
 static int32_t GuildRankUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     if (guid == ClntObjMgrGetActivePlayer()) {
@@ -479,7 +477,6 @@ static int32_t GuildRankUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     return 1;
 }
 
-// PROVEN: cb1c0921 IDENTICAL/IDENTICAL
 // OFFSET: 0x00556F10/0x1401B3CF0
 static int32_t DuelTeamUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -540,7 +537,6 @@ static int32_t OnUpdateInebriation(WOWGUID guid, uint32_t fieldOffset, uint32_t 
     return 1;
 }
 
-// PROVEN: 0d33fcaf IDENTICAL/IDENTICAL
 // OFFSET: 0x0055FB30/0x1401BD590
 static int32_t OnUpdatePlayerHairColor(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -561,7 +557,6 @@ static int32_t OnUpdatePlayerHairColor(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
-// PROVEN: 12ca5f83 IDENTICAL/IDENTICAL
 // OFFSET: 0x0055FBB0/0x1401BD610
 static int32_t OnUpdatePlayerSkinID(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -644,7 +639,6 @@ static int32_t OnUpdatePlayerFacialStyle(WOWGUID guid, uint32_t fieldOffset, uin
     return 1;
 }
 
-// PROVEN: 85b4f868 IDENTICAL/IDENTICAL
 // OFFSET: 0x005676C0/0x1401C6040
 static int32_t OnUpdatePlayerFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -656,7 +650,6 @@ static int32_t OnUpdatePlayerFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t 
     return 1;
 }
 
-// PROVEN: 7508bfd9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0056A590/0x1401C96A0
 static int32_t OnUpdateInventoryComponent(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -684,7 +677,6 @@ void PlayerClientInitialize() {
     AreaTriggersInitialize(ClntObjMgrGetMapID());
 }
 
-// PROVEN: f3fc01f5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void PlayerInitializeSounds() {
 }
@@ -712,7 +704,6 @@ void CGPlayer_C::UpdateTaxiStatus(CGUnit_C* unit) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 1d41be20 IDENTICAL/IDENTICAL
 // OFFSET: 0x00558210/0x1401B54C0
 void CGPlayer_C::TurnOnGuildTabardPurchase() {
     if (this->m_characterComponent) {
@@ -885,7 +876,6 @@ bool CGPlayer_C::VehicleAllowsInteraction() const {
     return seat && (seat->m_flags & 0x80000000);
 }
 
-// PROVEN: 262a1e85 IDENTICAL/IDENTICAL
 // OFFSET: 0x00553A90/0x1401AEA40
 void CGPlayer_C::SetAutoLoot(int32_t autoLoot) {
     this->m_autoLoot = autoLoot != 0;
@@ -922,7 +912,6 @@ uint64_t CGPlayer_C::GetFarSightGuid() const {
     return this->m_player->m_playerFarsight.m_guid;
 }
 
-// PROVEN: d2a98841 IDENTICAL/IDENTICAL
 // OFFSET: 0x005692D0/0x1401C8490
 void CGPlayer_C::SetFarSightFocus(CGObject_C* object) {
     this->ToggleFarSight(object);
@@ -937,7 +926,6 @@ uint64_t CGPlayer_C::GetCoinage() const {
     return this->m_player->m_playerFieldCoinage;
 }
 
-// PROVEN: 3d6f3098 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FF7A0/0x140657270
 const char* CGPlayer_C::GetHairCustomizationName() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -953,7 +941,6 @@ const char* CGPlayer_C::GetHairCustomizationName() {
     return "NORMAL";
 }
 
-// PROVEN: 8ab8a553 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FF800/0x140657300
 const char* CGPlayer_C::GetFacialHairCustomizationName() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -978,7 +965,6 @@ uint32_t CGPlayer_C::GetCurrentXP() const {
     return this->m_player->m_playerXp;
 }
 
-// PROVEN: 909b0bdd IDENTICAL/IDENTICAL
 // OFFSET: 0x00551880/0x1401AC720
 int32_t OnSummonCancel(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_CANCEL_SUMMON, NULL);
@@ -986,7 +972,6 @@ int32_t OnSummonCancel(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
     return 1;
 }
 
-// PROVEN: f6591ae4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00553890/0x1401AE7F0
 int32_t OnUpdatePlayerScriptEvent(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     FrameScript_SignalEvent(reinterpret_cast<uintptr_t>(param), "%s", "player");
@@ -994,7 +979,6 @@ int32_t OnUpdatePlayerScriptEvent(WOWGUID guid, uint32_t offset, uint32_t count,
     return 1;
 }
 
-// PROVEN: dd2e236b IDENTICAL/IDENTICAL
 // OFFSET: 0x00553AD0/0x1401AEAD0
 uint32_t CGPlayer_C::GetProficiency(uint8_t itemClass) {
     if (itemClass >= sizeof(s_proficiency) / sizeof(s_proficiency[0])) {
@@ -1004,7 +988,6 @@ uint32_t CGPlayer_C::GetProficiency(uint8_t itemClass) {
     return s_proficiency[itemClass];
 }
 
-// PROVEN: 766efc8e IDENTICAL/IDENTICAL
 // OFFSET: 0x00553AF0/0x1401AEAF0
 int32_t Packet_SMSG_SET_PROFICIENCY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t itemClass;
@@ -1017,7 +1000,6 @@ int32_t Packet_SMSG_SET_PROFICIENCY(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: 471fba9c IDENTICAL/IDENTICAL
 // OFFSET: 0x00554450/0x1401B0490
 bool CGPlayer_C::CanDualWield() {
     return s_dualWieldSpell != 0;
@@ -1073,7 +1055,6 @@ int32_t CGPlayer_C::CanLoot(const CGObject_C* object) {
     return !this->IsDeadOrGhost() && !(this->m_movement->m_flags & MOVEMENTFLAG_FALLING) && !(this->m_unit->m_unitFieldFlags & 0x40000) && this->IsLocalClientControlled();
 }
 
-// PROVEN: 84de2510 IDENTICAL/DIFFERENT
 // OFFSET: 0x005545C0/0x1401B0740
 int32_t __stdcall CGPlayer_C::OnLootItemNotify(CDataStore* msg) {
     WOWGUID guid;
@@ -1090,7 +1071,6 @@ int32_t __stdcall CGPlayer_C::OnLootItemNotify(CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: 01a27ff5 IDENTICAL/IDENTICAL
 // OFFSET: 0x005546E0/0x1401B09A0
 int32_t Player_C_TogglePlayerRender() {
     s_playerRender = s_playerRender == 0;
@@ -1098,7 +1078,6 @@ int32_t Player_C_TogglePlayerRender() {
     return s_playerRender;
 }
 
-// PROVEN: 2c9ecf30 IDENTICAL/UNPROVEN
 // OFFSET: 0x00554750/0x1401B0A70
 void CGPlayer_C::SaveBindPoint(CDataStore* msg) {
     msg->Get(s_bindPosition.x);
@@ -1109,37 +1088,31 @@ void CGPlayer_C::SaveBindPoint(CDataStore* msg) {
     s_bindPointSet = 1;
 }
 
-// PROVEN: 31c86582 IDENTICAL/IDENTICAL
 // OFFSET: 0x005547A0/0x1401B0AE0
 uint32_t CGPlayer_C::GetBindAreaID() {
     return s_bindAreaId;
 }
 
-// PROVEN: 7c8ae4df DIFFERENT/IDENTICAL
 // OFFSET: 0x00554820/0x1401B0B90
 int32_t CGPlayer_C::IsGiftWrapping() {
     return static_cast<bool>(s_giftWrapItem);
 }
 
-// PROVEN: 645a2c7d IDENTICAL/IDENTICAL
 // OFFSET: 0x00554950/0x1401B1010
 uint32_t CGPlayer_C::GetPendingCinematic() {
     return s_pendingMovie;
 }
 
-// PROVEN: 171e8f65 IDENTICAL/IDENTICAL
 // OFFSET: 0x00554960/0x1401B1020
 uint32_t CGPlayer_C::GetPendingMovie() {
     return s_pendingMovieID;
 }
 
-// PROVEN: 6bc9eed1 IDENTICAL/IDENTICAL
 // OFFSET: 0x005549B0/0x1401B1210
 int32_t CGPlayer_C::GetCombatModeFlashDuration() {
     return 500;
 }
 
-// PROVEN: 412c715f IDENTICAL/DIFFERENT
 // OFFSET: 0x00554A80/0x1401B13D0
 int32_t CGPlayer_C::GetPlayedTime() const {
     if (this->m_playedTime < 0) {
@@ -1149,7 +1122,6 @@ int32_t CGPlayer_C::GetPlayedTime() const {
     return static_cast<int32_t>(this->m_playedTime + time(NULL) - this->m_playedTimeBase);
 }
 
-// PROVEN: f04ddedd IDENTICAL/IDENTICAL
 // OFFSET: 0x00554AE0/0x1401B1440
 CGVoidStorage_C* CGPlayer_C::GetVoidStorage() {
     if (!this->m_voidStorage) {
@@ -1160,14 +1132,12 @@ CGVoidStorage_C* CGPlayer_C::GetVoidStorage() {
     return this->m_voidStorage;
 }
 
-// PROVEN: 79435e7b IDENTICAL/IDENTICAL
 // OFFSET: 0x00554AB0/0x1401B1410
 void CGPlayer_C::SetPlayedTime(int32_t playedTime) {
     this->m_playedTime = playedTime;
     this->m_playedTimeBase = time(NULL);
 }
 
-// PROVEN: 73379f97 IDENTICAL/IDENTICAL
 // OFFSET: 0x005570B0/0x1401B3EA0
 int32_t SignalPetSpellPowerUpdate(WOWGUID guid) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -1379,21 +1349,18 @@ void __stdcall CGPlayer_C::SetLootMethod(uint32_t method, WOWGUID master, uint32
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 4c5ab3d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x005543B0/0x1401B0330
 void __stdcall CGPlayer_C::AcceptGuild() {
     UserClientGuildAccept msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 8ca1e420 IDENTICAL/IDENTICAL
 // OFFSET: 0x005543E0/0x1401B0360
 void __stdcall CGPlayer_C::DeclineGuild() {
     UserClientOpcode3231 msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 19d44db6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00554410/0x1401B0390
 void __stdcall CGPlayer_C::LeaveGuild() {
     UserClientGuildLeave msg;
@@ -1453,7 +1420,6 @@ bool CGPlayer_C::HasItemPassive(int32_t spellId) const {
     return false;
 }
 
-// PROVEN: a0a2e6a3 IDENTICAL/NONE
 // OFFSET: 0x0055B110
 bool CGPlayer_C::HasEquipBypassSkill(int32_t skillId) const {
     for (uint32_t i = 0; i < this->m_equipBypassSkills.m_count; i++) {
@@ -1589,7 +1555,6 @@ void __stdcall CGPlayer_C::ReadItem(uint8_t bag, uint8_t slot) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: bb158e16 IDENTICAL/UNPROVEN
 // OFFSET: 0x0055C280/0x1401B8FF0
 uint32_t CGPlayer_C::GetDefaultLanguage() const {
     ChrRacesRec* rec = g_chrRacesDB.GetRecord(this->m_unit->m_unitFieldBytes0[0]);
@@ -1689,7 +1654,6 @@ void __stdcall CGPlayer_C::RequestPetitionSignatures(WOWGUID petition) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: c6fa7736 DIFFERENT/IDENTICAL
 // OFFSET: 0x0055AD20/0x1401B03C0
 uint64_t CGPlayer_C::GetGuildXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
@@ -1699,7 +1663,6 @@ uint64_t CGPlayer_C::GetGuildXP() const {
     return 0;
 }
 
-// PROVEN: 629f9067 DIFFERENT/IDENTICAL
 // OFFSET: 0x0055AD50/0x1401B03E0
 uint64_t CGPlayer_C::GetGuildRemainingXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
@@ -1709,7 +1672,6 @@ uint64_t CGPlayer_C::GetGuildRemainingXP() const {
     return 0;
 }
 
-// PROVEN: ebadf41f DIFFERENT/IDENTICAL
 // OFFSET: 0x0055AD80/0x1401B0400
 uint64_t CGPlayer_C::GetGuildDailyXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
@@ -1719,7 +1681,6 @@ uint64_t CGPlayer_C::GetGuildDailyXP() const {
     return 0;
 }
 
-// PROVEN: 2207a218 DIFFERENT/IDENTICAL
 // OFFSET: 0x0055ADB0/0x1401B0420
 uint64_t CGPlayer_C::GetGuildMaxDailyXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
@@ -1729,7 +1690,6 @@ uint64_t CGPlayer_C::GetGuildMaxDailyXP() const {
     return 0;
 }
 
-// PROVEN: 0852a4d2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0055ADE0/0x1401B0440
 uint64_t CGPlayer_C::GetGuildPlayerWeeklyXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
@@ -1739,7 +1699,6 @@ uint64_t CGPlayer_C::GetGuildPlayerWeeklyXP() const {
     return 0;
 }
 
-// PROVEN: 408c39c7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0055AE10/0x1401B0460
 uint64_t CGPlayer_C::GetGuildPlayerTotalXP() const {
     if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
@@ -1953,7 +1912,6 @@ int32_t CGItem::IsUsable() const {
     return (((flags >> 3) & 1) || !this->m_item->m_itemFieldMaxdurability || this->m_item->m_itemFieldDurability) && !((flags >> 4) & 1);
 }
 
-// PROVEN: 363e2e7f IDENTICAL/UNPROVEN
 // OFFSET: 0x0055FDC0/0x1401BD8A0
 int32_t OnUpdatePlayerGlyph(WOWGUID guid, uint32_t offset, uint32_t count, const void* value) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2146,7 +2104,6 @@ void __stdcall CGPlayer_C::BuyPetition(const WOWGUID& vendor, CGPetition* petiti
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 5fb285f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0055D3C0/0x1401BA6D0
 const char* CGPlayer_C::GetPVPRankString(int32_t rank) const {
     char token[32];
@@ -2266,7 +2223,6 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverStatusMultiple(CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: 0200953f IDENTICAL/DIFFERENT
 // OFFSET: 0x00554540/0x1401B05D0
 void __stdcall CGPlayer_C::ClearAFK(int32_t force) {
     if (!CGChat::m_afk || (!force && !g_autoClearAFKCVar->m_intValue)) {
@@ -2279,7 +2235,6 @@ void __stdcall CGPlayer_C::ClearAFK(int32_t force) {
     ClientServices::Send(&msg);
 }
 
-// PROVEN: baaa92e5 IDENTICAL/DIFFERENT
 // OFFSET: 0x005539C0/0x1401AE960
 void CGPlayer_C::GetSpellTextureBlobName(const ChrClassesRec* rec, char* name) {
     strcpy(name, "World\\SpellTextureBlobs\\");
@@ -2568,7 +2523,6 @@ static bool FindArenaOpponent(const WOWGUID& guid, uint32_t* index) {
     return false;
 }
 
-// PROVEN: a7aa6a29 IDENTICAL/NONE
 // OFFSET: 0x005692E0
 void CGPlayer_C::AddCategoryCooldown(int32_t category, int32_t cooldown) {
     CATEGORYCOOLDOWN* node = this->m_categoryCooldowns.NewNode(2, 0, 0);
@@ -2740,7 +2694,6 @@ void CGPlayer_C::ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) 
     }
 }
 
-// PROVEN: df936654 IDENTICAL/IDENTICAL
 // OFFSET: 0x00553900/0x1401AE880
 void CGPlayer_C::UpdateObjectComplete(bool transport) {
     if (s_pendingMovie) {
@@ -2873,7 +2826,6 @@ CGPlayer_C::~CGPlayer_C() {
     this->m_dance = NULL;
 }
 
-// PROVEN: e06c8756 IDENTICAL/DIFFERENT
 // OFFSET: 0x00557170/0x1401B3F60
 void CGPlayer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGUnit_C::SetStorage(storage, saved);
@@ -2986,7 +2938,6 @@ static int32_t TrackingMaskUpdateProc(WOWGUID guid, void* param) {
     return 1;
 }
 
-// PROVEN: d7964a29 IDENTICAL/IDENTICAL
 // OFFSET: 0x0055D610/0x1401B1130
 static int32_t AuraVisionUpdateHandler(WOWGUID guid, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -3139,7 +3090,6 @@ void CGPlayer_C::PostInitActivePlayer() {
     CGAchievementInfo::PostInitActivePlayer();
 }
 
-// PROVEN: 55ad6dcf IDENTICAL/DIFFERENT
 // OFFSET: 0x005547F0/0x1401B0B50
 void CGPlayer_C::CancelGiftWrap() {
     CGGameUI::UnlockItem(s_giftWrapItem);
@@ -3214,7 +3164,6 @@ void CGPlayer_C::SetCombatMode(bool sendStop) {
     CGTutorial::TriggerTutorial(55);
 }
 
-// PROVEN: 3ddc7e37 IDENTICAL/UNPROVEN
 // OFFSET: 0x00551800/0x1401AC690
 int32_t Packet_SMSG_QUEST_CONFIRM_ACCEPT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (msgId == SMSG_QUEST_CONFIRM_ACCEPT) {
@@ -3230,7 +3179,6 @@ int32_t Packet_SMSG_QUEST_CONFIRM_ACCEPT(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// PROVEN: 830c8cb0 IDENTICAL/UNPROVEN
 // OFFSET: 0x005518A0/0x1401AC740
 int32_t Packet_SMSG_GROUP_CANCEL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char name[48];
@@ -3239,7 +3187,6 @@ int32_t Packet_SMSG_GROUP_CANCEL(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// PROVEN: d7d0b475 IDENTICAL/IDENTICAL
 // OFFSET: 0x005518D0/0x1401AC770
 int32_t Packet_SMSG_GROUP_DECLINE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char name[48];
@@ -3248,7 +3195,6 @@ int32_t Packet_SMSG_GROUP_DECLINE(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// PROVEN: d63ba220 IDENTICAL/UNPROVEN
 // OFFSET: 0x005519A0/0x1401AC830
 int32_t Packet_SMSG_GROUP_UNINVITE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGPartyInfo::RemoveAll(1);
@@ -3258,7 +3204,6 @@ int32_t Packet_SMSG_GROUP_UNINVITE(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// PROVEN: ffb75caa IDENTICAL/UNPROVEN
 // OFFSET: 0x005519D0/0x1401AC870
 int32_t Packet_SMSG_GROUP_DESTROYED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (CGPartyInfo::NumMembers()) {
@@ -3271,7 +3216,6 @@ int32_t Packet_SMSG_GROUP_DESTROYED(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: a94a3543 IDENTICAL/IDENTICAL
 // OFFSET: 0x00551A10/0x1401AC8B0
 int32_t Packet_SMSG_GROUPACTION_THROTTLED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_GROUP_ACTION_THROTTLED);
@@ -3477,7 +3421,6 @@ int32_t Packet_SMSG_CALENDAR_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint3
     return 1;
 }
 
-// PROVEN: 9e1b9b38 IDENTICAL/IDENTICAL
 // OFFSET: 0x005530D0/0x1401ADFF0
 int32_t Packet_SMSG_TALENTS_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t pet = 0;
@@ -3492,7 +3435,6 @@ int32_t Packet_SMSG_TALENTS_INFO(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// PROVEN: 6a201ddc IDENTICAL/IDENTICAL
 // OFFSET: 0x00553B40/0x1401AEB50
 int32_t Packet_SMSG_PLAYER_SKINNED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t freeRepop;
@@ -3501,7 +3443,6 @@ int32_t Packet_SMSG_PLAYER_SKINNED(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// PROVEN: 2c7512f4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00559210/0x1401B6730
 int32_t Packet_SMSG_SPELLINSTAKILLLOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID casterGuid;
@@ -3514,7 +3455,6 @@ int32_t Packet_SMSG_SPELLINSTAKILLLOG(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// PROVEN: 1372d418 IDENTICAL/NONE
 // OFFSET: 0x00559AA0
 int32_t Packet_Group_19(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     return CombatLog::HandleSpellRemoveLog(msgId, msg, 0);
@@ -3537,7 +3477,6 @@ int32_t Packet_SMSG_SPELLORDAMAGE_IMMUNE(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// PROVEN: 7f6fc9e1 IDENTICAL/NONE
 // OFFSET: 0x005541D0
 int32_t Packet_SMSG_RESURRECT_FAILED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::UpdateActivePlayer();
@@ -3559,7 +3498,6 @@ int32_t Packet_SMSG_EMOTE(void* param, NETMESSAGE msgId, uint32_t time, CDataSto
     return 1;
 }
 
-// PROVEN: 8f493c04 IDENTICAL/NONE
 // OFFSET: 0x00558C10
 int32_t Packet_SMSG_SPELLLOGMISS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     return CombatLog::HandleSpellLogMiss(msg, 0);
@@ -3998,7 +3936,6 @@ int32_t Packet_Group_18(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
     }
 }
 
-// PROVEN: 473e69d4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00569B30/0x1401C8250
 int32_t Packet_SMSG_REMOVED_SPELL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t spellId;
@@ -4024,7 +3961,6 @@ int32_t Packet_SMSG_DEBUG_SERVER_GEO(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// PROVEN: 2d893510 IDENTICAL/UNPROVEN
 // OFFSET: 0x00554060/0x1401AF1B0
 static bool OnTimeSyncReq(ClientTimeSyncReq* msg) {
     PlayerTimeSyncResponse response;
@@ -4061,14 +3997,12 @@ static bool OnTimeAdjustment(ClientTimeAdjustment* msg) {
     return true;
 }
 
-// PROVEN: ea30ab7f IDENTICAL/UNPROVEN
 // OFFSET: 0x00554180/0x1401AF300
 static bool OnMoveSetActiveMover(ClientMoveSetActiveMover* msg) {
     CGUnit_C::SetActiveMover(*reinterpret_cast<uint64_t*>(msg->m_moverGUID));
     return true;
 }
 
-// PROVEN: 29b08fbb IDENTICAL/IDENTICAL
 // OFFSET: 0x005541A0/0x1401AF320
 void CGPlayer_C::PlayerShutdownClientHandlers() {
     ClientTimeSyncReq::s_handler = NULL;
@@ -4126,7 +4060,6 @@ void MovementResumeActiveMover() {
     }
 }
 
-// PROVEN: 851bb769 IDENTICAL/UNPROVEN
 // OFFSET: 0x00559F00/0x1401B7810
 static bool OnRequestCemeteryListResponse(ClientRequestCemeteryListResponse* msg) {
     uint32_t count = msg->m_cemeteryIDs.Count();
@@ -4176,7 +4109,6 @@ static bool OnUpdateActionButtons(ClientUpdateActionButtons* msg) {
     return true;
 }
 
-// PROVEN: cd2b8529 IDENTICAL/DIFFERENT
 // OFFSET: 0x00560F50/0x1401BEDF0
 static bool OnItemRemovePassive(ClientItemRemovePassive* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -4272,7 +4204,6 @@ static bool OnCategoryCooldown(ClientCategoryCooldown* msg) {
     return true;
 }
 
-// PROVEN: b874080e IDENTICAL/UNPROVEN
 // OFFSET: 0x00551860/0x1401AC700
 int32_t Packet_SMSG_QUEST_POI_QUERY_RESPONSE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGQuestLog::OnQuestPOIResponse(msg);
@@ -4468,7 +4399,6 @@ int32_t Packet_SMSG_PARTY_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// PROVEN: 89b8eb45 IDENTICAL/IDENTICAL
 // OFFSET: 0x00552020/0x1401ACED0
 int32_t Packet_SMSG_GUILD_DECLINE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char name[48];
@@ -4599,7 +4529,6 @@ int32_t Packet_SMSG_FORCEACTIONSHOW(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: 3832cce9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00550F70/0x1401ABD60
 int32_t Packet_SMSG_PET_NAME_INVALID(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t error;
@@ -4623,7 +4552,6 @@ int32_t Packet_SMSG_PET_NAME_INVALID(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// PROVEN: b7b1a924 IDENTICAL/NONE
 // OFFSET: 0x00551020
 int32_t Packet_SMSG_BINDZONEREPLY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t a1;
@@ -4645,7 +4573,6 @@ int32_t Packet_SMSG_BUY_BANK_SLOT_RESULT(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// PROVEN: a5a26b0e IDENTICAL/IDENTICAL
 // OFFSET: 0x00551090/0x1401ABED0
 int32_t Packet_MSG_MINIMAP_PING(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
@@ -4686,7 +4613,6 @@ int32_t Packet_MSG_RANDOM_ROLL(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// PROVEN: d15955c7 IDENTICAL/IDENTICAL
 // OFFSET: 0x005511E0/0x1401AC070
 int32_t Packet_SMSG_CHAT_PLAYER_NOTFOUND(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char name[305];
@@ -4696,7 +4622,6 @@ int32_t Packet_SMSG_CHAT_PLAYER_NOTFOUND(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// PROVEN: e90d13fa IDENTICAL/IDENTICAL
 // OFFSET: 0x00551230/0x1401AC0C0
 int32_t Packet_SMSG_CHAT_PLAYER_AMBIGUOUS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char name[305];
@@ -4705,7 +4630,6 @@ int32_t Packet_SMSG_CHAT_PLAYER_AMBIGUOUS(void* param, NETMESSAGE msgId, uint32_
     return 1;
 }
 
-// PROVEN: 49d11833 IDENTICAL/IDENTICAL
 // OFFSET: 0x00551270/0x1401AC100
 int32_t Packet_SMSG_CHAT_RESTRICTED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t type = 0;
@@ -4732,7 +4656,6 @@ int32_t Packet_SMSG_CHAT_RESTRICTED(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: dc824873 IDENTICAL/DIFFERENT
 // OFFSET: 0x00551300/0x1401AC190
 int32_t Packet_SMSG_CHAT_NOT_IN_PARTY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t type = 0;
@@ -4858,7 +4781,6 @@ int32_t Packet_SMSG_RAID_GROUP_ONLY(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: bc419542 IDENTICAL/IDENTICAL
 // OFFSET: 0x00551610/0x1401AC460
 int32_t Packet_SMSG_COMPLAINT_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t result;
@@ -4901,7 +4823,6 @@ int32_t Packet_SMSG_REPORT_PVP_AFK_RESULT(void* param, NETMESSAGE msgId, uint32_
     return 1;
 }
 
-// PROVEN: 7556d97f IDENTICAL/UNPROVEN
 // OFFSET: 0x00551710/0x1401AC590
 int32_t Packet_SMSG_INSTANCE_LOCK_WARNING_QUERY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t lockTime = 0;
@@ -4944,21 +4865,18 @@ int32_t Packet_SMSG_TALENTS_ERROR(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// PROVEN: db36e463 IDENTICAL/IDENTICAL
 // OFFSET: 0x00551A30/0x1401AC8D0
 static bool OnBattlegroundInfoThrottled(ClientBattlegroundInfoThrottled* msg) {
     CGGameUI::DisplayError(ERR_BATTLEGROUND_INFO_THROTTLED);
     return true;
 }
 
-// PROVEN: baff44f1 IDENTICAL/NONE
 // OFFSET: 0x00552080
 int32_t Packet_SMSG_GUILD_INVITE_CANCEL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::CancelGuildInvite();
     return 1;
 }
 
-// PROVEN: 1f958700 IDENTICAL/UNPROVEN
 // OFFSET: 0x005520C0/0x1401ACF80
 static void GuildRosterUpdateCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -5131,7 +5049,6 @@ static bool OnGuildCommandResult(ClientGuildCommandResult* msg) {
     return HandleGuildCommandResult(msg->m_command, msg->m_name, msg->m_result) != 0;
 }
 
-// PROVEN: 79f7ae6c IDENTICAL/DIFFERENT
 // OFFSET: 0x00552430/0x1401AD350
 int32_t Packet_SMSG_GUILD_COMMAND_RESULT_2(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t command;
@@ -5143,7 +5060,6 @@ int32_t Packet_SMSG_GUILD_COMMAND_RESULT_2(void* param, NETMESSAGE msgId, uint32
     return static_cast<uint8_t>(HandleGuildCommandResult(command, name, result));
 }
 
-// PROVEN: 89e253dd IDENTICAL/NONE
 // OFFSET: 0x005524F0
 static bool OnArenaTeamCommandResult(ClientArenaTeamCommandResult* msg) {
     if (!msg->m_result) {
@@ -5321,7 +5237,6 @@ static void ReadInspectItems(WOWGUID guid, CDataStore* msg, bool guild) {
     FrameScript_SignalEvent(SCRIPT_EVENT_INSPECT_READY, "%s", GUIDToString(guid, text));
 }
 
-// PROVEN: 817b22fe IDENTICAL/DIFFERENT
 // OFFSET: 0x00553D60/0x1401AEE50
 int32_t Packet_SMSG_INSPECT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
@@ -5336,7 +5251,6 @@ int32_t Packet_SMSG_INSPECT(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// PROVEN: 4206c704 IDENTICAL/DIFFERENT
 // OFFSET: 0x00553DC0/0x1401AEEA0
 int32_t Packet_SMSG_INSPECT_TALENT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
@@ -5356,7 +5270,6 @@ int32_t Packet_SMSG_INSPECT_TALENT(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// PROVEN: 05796d4e IDENTICAL/UNPROVEN
 // OFFSET: 0x005541E0/0x1401AF3C0
 static bool OnGuildMembersWithRecipe(ClientGuildMembersWithRecipe* msg) {
     CGGuildInfo::SetRecipeKnownByMembers(msg->m_skillLineID, msg->m_spellID, msg->m_members);
@@ -5384,7 +5297,6 @@ static bool OnRolePollBegin(ClientRolePollBegin* msg) {
     return true;
 }
 
-// PROVEN: 95235003 IDENTICAL/NONE
 // OFFSET: 0x00554310
 static bool OnRaidMarkersChanged(ClientRaidMarkersChanged* msg) {
     CGRaidInfo::m_raidMarkers = msg->m_raidMarkers;
@@ -5402,14 +5314,12 @@ static bool OnPetitionAlreadySigned(ClientPetitionAlreadySigned* msg) {
     return true;
 }
 
-// PROVEN: 3a3a91af IDENTICAL/IDENTICAL
 // OFFSET: 0x00554380/0x1401AF570
 static bool OnChatIgnoredAccountMuted(ClientChatIgnoredAccountMuted* msg) {
     CGGameUI::DisplayError(ERR_PARENTAL_CONTROLS_CHAT_MUTED);
     return true;
 }
 
-// PROVEN: 570702a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00554390/0x1401AF590
 static bool OnSorStartExperienceIncomplete(ClientSorStartExperienceIncomplete* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_SOR_START_EXPERIENCE_INCOMPLETE, NULL);
@@ -5538,7 +5448,6 @@ static bool OnQuestNpcQueryResponse(ClientQuestNpcQueryResponse* msg) {
     return true;
 }
 
-// PROVEN: 43a84983 IDENTICAL/UNPROVEN
 // OFFSET: 0x00559F40/0x1401B7850
 static bool OnSpellInterruptLog(ClientSpellinterruptlog* msg) {
     const SpellRec* interrupting = g_spellDB.GetRecord(msg->m_interruptingSpellID);
@@ -5547,7 +5456,6 @@ static bool OnSpellInterruptLog(ClientSpellinterruptlog* msg) {
     return true;
 }
 
-// PROVEN: 33d23527 IDENTICAL/IDENTICAL
 // OFFSET: 0x00559FA0/0x1401B78D0
 static bool OnXpGainAborted(ClientXpGainAborted* msg) {
     if (msg->m_reason) {
@@ -5662,7 +5570,6 @@ int32_t Packet_SMSG_EXPLORATION_EXPERIENCE(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// PROVEN: c2eb5fde IDENTICAL/DIFFERENT
 // OFFSET: 0x0055E7A0/0x1401BBE90
 int32_t Packet_SMSG_BINDER_CONFIRM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
@@ -5766,7 +5673,6 @@ int32_t Packet_MSG_SAVE_GUILD_EMBLEM(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// PROVEN: 258fe922 IDENTICAL/DIFFERENT
 // OFFSET: 0x00560F90/0x1401BEE30
 static bool OnGuildSendGuildXP(ClientGuildSendGuildXP* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -5783,7 +5689,6 @@ static bool OnGuildSendGuildXP(ClientGuildSendGuildXP* msg) {
     return true;
 }
 
-// PROVEN: 6babf7ce IDENTICAL/DIFFERENT
 // OFFSET: 0x00561030/0x1401BEEB0
 static bool OnGuildSendMaxDailyXP(ClientGuildSendMaxDailyXP* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -5847,7 +5752,6 @@ static bool OnGuildSendRankChange(ClientGuildSendRankChange* msg) {
     return true;
 }
 
-// PROVEN: 8f672ff4 IDENTICAL/DIFFERENT
 // OFFSET: 0x005611D0/0x1401BF030
 static bool OnGuildMemberRecipes(ClientGuildMemberRecipes* msg) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -5857,7 +5761,6 @@ static bool OnGuildMemberRecipes(ClientGuildMemberRecipes* msg) {
     return true;
 }
 
-// PROVEN: 1a4443b4 IDENTICAL/NONE
 // OFFSET: 0x00561220
 static bool OnGuildKnownRecipes(ClientGuildKnownRecipes* msg) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -5908,7 +5811,6 @@ bool CGPlayer_C::IsGuildLeader() const {
     return false;
 }
 
-// PROVEN: 307996df IDENTICAL/DIFFERENT
 // OFFSET: 0x00564380/0x1401C23A0
 int32_t Packet_SMSG_SPIRIT_HEALER_CONFIRM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
@@ -6766,7 +6668,6 @@ void CGPlayer_C::CheckForQuestItemLoot(int32_t itemId, int32_t count, int32_t to
     }
 }
 
-// PROVEN: 6b215d3c IDENTICAL/NONE
 // OFFSET: 0x00556B30
 void __stdcall CGPlayer_C::OnItemExpirePurchaseRefund(WOWGUID itemGuid) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(itemGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -7306,7 +7207,6 @@ int32_t Packet_SMSG_GROUP_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// PROVEN: ce9aec7d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 static bool OnDebugRuneRegen(ClientDebugRuneRegen* msg) {
     return true;
@@ -7579,7 +7479,6 @@ void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int
     }
 }
 
-// PROVEN: 74d6b455 IDENTICAL/IDENTICAL
 // OFFSET: 0x00554970/0x1401B11C0
 int32_t GetModalNextSpell() {
     return CGSpellBook::m_autoRangedSpell;
@@ -7596,7 +7495,6 @@ int32_t CGPlayer_C::IsXRayVisionActive() {
     return (player->m_auraEffectMask[0x22] >> 1) & 1;
 }
 
-// PROVEN: d05e3c2a IDENTICAL/IDENTICAL
 // OFFSET: 0x00554440/0x1401B0480
 int32_t CGPlayer_C::GetNewContinentID() {
     return ClntObjMgrGetMapID();
@@ -7638,7 +7536,6 @@ int32_t Packet_SMSG_REAL_GROUP_UPDATE(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// PROVEN: fdf76f73 IDENTICAL/IDENTICAL
 // OFFSET: 0x00552090/0x1401ACF50
 int32_t Packet_MSG_TABARDVENDOR_ACTIVATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID vendor;
@@ -7737,7 +7634,6 @@ int32_t Packet_SMSG_ARENA_TEAM_EVENT(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// PROVEN: 21547635 IDENTICAL/UNPROVEN
 // OFFSET: 0x005547B0/0x1401B0AF0
 void CGPlayer_C::OnLootGameObject(const WOWGUID& guid) {
     this->m_lootTarget = guid;
@@ -7747,7 +7643,6 @@ void CGPlayer_C::OnLootGameObject(const WOWGUID& guid) {
     }
 }
 
-// PROVEN: 0bd4e819 IDENTICAL/IDENTICAL
 // OFFSET: 0x00552480/0x1401AD3B0
 int32_t Packet_SMSG_ARENA_TEAM_INVITE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char inviter[48];
@@ -7777,7 +7672,6 @@ int32_t Packet_SMSG_ARENA_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// PROVEN: f6ca099f IDENTICAL/IDENTICAL
 // OFFSET: 0x00551900/0x1401AC7A0
 int32_t Packet_SMSG_GROUP_SET_LEADER(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char name[48];
@@ -7913,7 +7807,6 @@ void __stdcall CGPlayer_C::ReportPVPAFK(WOWGUID guid) {
     }
 }
 
-// PROVEN: 63b86c08 IDENTICAL/DIFFERENT
 // OFFSET: 0x0055DB90/0x1401BB0F0
 bool __stdcall CGPlayer_C::IsRAFPlayer(WOWGUID guid) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -7943,13 +7836,11 @@ bool __stdcall CGPlayer_C::IsRAFPlayer(WOWGUID guid) {
     return false;
 }
 
-// PROVEN: 238fa558 IDENTICAL/IDENTICAL
 // OFFSET: 0x0056E170/0x1401CED60
 const CGBag_C* CGPlayer_C::GetBag() const {
     return &this->m_bag;
 }
 
-// PROVEN: dd73b371 IDENTICAL/IDENTICAL
 // OFFSET: 0x0056E170/0x1401CED60
 CGBag_C* CGPlayer_C::GetBag() {
     return &this->m_bag;
@@ -8016,7 +7907,6 @@ InspectItem* CGPlayer_C::GetInspectedItem(int32_t slot) {
     return &s_emptyInspectItem;
 }
 
-// PROVEN: 49ebd1d0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00563780/0x1401C1500
 static void CountGemsItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -8629,7 +8519,6 @@ void CGPlayer_C::RequestAllItemPurchaseData() {
     }
 }
 
-// PROVEN: 9321d350 IDENTICAL/IDENTICAL
 // OFFSET: 0x00553220/0x1401AE160
 static void ReadQuestRewards(CDataStore* msg, QuestRewards_C& rewards) {
     msg->Get(rewards.m_numChoiceItems);
@@ -8934,7 +8823,6 @@ int32_t OnUpdateQuest(WOWGUID guid, uint32_t offset, uint32_t count, const void*
     return 1;
 }
 
-// PROVEN: 749163fe IDENTICAL/IDENTICAL
 // OFFSET: 0x00553800/0x1401AE740
 static int32_t OnUpdatePlayerNameScriptEvent(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGGameUI::UnitNameUpdate(guid);
@@ -8943,7 +8831,6 @@ static int32_t OnUpdatePlayerNameScriptEvent(WOWGUID guid, uint32_t offset, uint
     return 1;
 }
 
-// PROVEN: 81b6414a IDENTICAL/IDENTICAL
 // OFFSET: 0x00553840/0x1401AE7A0
 static int32_t OnUpdateBattlegroundRating(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (CGMerchantInfo::m_merchant) {
@@ -8953,7 +8840,6 @@ static int32_t OnUpdateBattlegroundRating(WOWGUID guid, uint32_t offset, uint32_
     return 1;
 }
 
-// PROVEN: 08e9f4df IDENTICAL/IDENTICAL
 // OFFSET: 0x005538E0/0x1401AE860
 static int32_t OnUpdatePlayerMastery(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     FrameScript_SignalEvent(SCRIPT_EVENT_MASTERY_UPDATE, NULL);
@@ -8961,7 +8847,6 @@ static int32_t OnUpdatePlayerMastery(WOWGUID guid, uint32_t offset, uint32_t cou
     return 1;
 }
 
-// PROVEN: 01d6f0d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x005570F0/0x1401B3EE0
 static int32_t OnUpdatePlayerHitModifiers(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -8971,7 +8856,6 @@ static int32_t OnUpdatePlayerHitModifiers(WOWGUID guid, uint32_t offset, uint32_
     return 1;
 }
 
-// PROVEN: 33fe0036 IDENTICAL/IDENTICAL
 // OFFSET: 0x00557130/0x1401B3F20
 static int32_t OnUpdatePlayerHaste(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -9120,7 +9004,6 @@ void CGPlayer_C::OnSkillRankChanged(int32_t index, uint16_t oldRank) {
     }
 }
 
-// PROVEN: 3734dfcf IDENTICAL/UNPROVEN
 // OFFSET: 0x0055F890/0x1401BD2A0
 int32_t SkillRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -9143,7 +9026,6 @@ int32_t SkillRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, co
     return 1;
 }
 
-// PROVEN: 21cd323f IDENTICAL/DIFFERENT
 // OFFSET: 0x0056E430/0x1401CF150
 void CGPlayer_C::SetActiveMirrorHandlers() {
     ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x10, 8, CritterUpdate, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
@@ -9221,7 +9103,6 @@ void CGPlayer_C::SetActiveMirrorHandlers() {
     ClntObjMgrSetObjMirrorHandler(this->m_obj->m_guid, ID_PLAYER, 0x10E8, 4, OnUpdatePlayerScriptEvent, reinterpret_cast<void*>(static_cast<uintptr_t>(SCRIPT_EVENT_SELF_RES_SPELL_CHANGED)), static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
-// PROVEN: 7bfb722b IDENTICAL/DIFFERENT
 // OFFSET: 0x0056EB60/0x1401CFB00
 void CGPlayer_C::UnsetActiveMirrorHandlers() {
     ClntObjMgrUnsetObjMirrorHandler(this->m_obj->m_guid, ID_UNIT, 0x10, CritterUpdate, NULL);
@@ -9328,7 +9209,6 @@ static int32_t GuildTimestampEnumCallback(WOWGUID guid, void* param) {
     return 1;
 }
 
-// PROVEN: 0491ad62 IDENTICAL/IDENTICAL
 // OFFSET: 0x0055F160/0x1401BCA50
 static void GuildTimestampChanged(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -9872,13 +9752,11 @@ void EnumVisibleForAuraEffect(const SpellRec* spell, int32_t a2, int32_t a3) {
     ClntObjMgrEnumVisibleObjects(ClientPlaySpellVisualHandler, const_cast<SpellRec*>(spell));
 }
 
-// PROVEN: 281981d0 IDENTICAL/NONE
 // OFFSET: 0x0055D950/0x1401BADB0
 void CGPlayer_C::UpdateXRayVision(const SpellRec* spell) {
     ClntObjMgrEnumVisibleObjects(CGPlayer_C::XRayVisionEffectProc, const_cast<SpellRec*>(spell));
 }
 
-// PROVEN: 48b8bf8b IDENTICAL/UNPROVEN
 // OFFSET: 0x00557020/0x1401B3E00
 int32_t OnUpdatePlayerOverrideSpellsID(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -9935,7 +9813,6 @@ void CGPlayer_C::RemoveEquipBypassSkill(int32_t spellId) {
     }
 }
 
-// PROVEN: b006510d IDENTICAL/IDENTICAL
 // OFFSET: 0x00554980/0x1401B11D0
 void CGPlayer_C::ExitAutoCombatMode() {
     Spell_C_SetAutoRangedCombatSpell(0);
@@ -10121,7 +9998,6 @@ void CGPlayer_C::OnLevelChange() {
     }
 }
 
-// PROVEN: 5e3fc422 IDENTICAL/IDENTICAL
 // OFFSET: 0x00553870/0x1401AE7D0
 int32_t SkillMaxRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGClassTrainer::RefreshList();
@@ -10148,7 +10024,6 @@ int32_t __stdcall CGPlayer_C::OnLootMoneyNotify(CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: 12af962f IDENTICAL/DIFFERENT
 // OFFSET: 0x00554680/0x1401B0820
 void CGPlayer_C::ClearLootingObject() {
     this->m_lootTarget = WOWGUID();
@@ -10270,7 +10145,6 @@ int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: 0ff6f30e IDENTICAL/IDENTICAL
 // OFFSET: 0x0055BD30/0x1401B0650
 int32_t CGPlayer_C::OnLootRemoved(CDataStore* msg) {
     uint8_t slot;
@@ -10283,7 +10157,6 @@ int32_t CGPlayer_C::OnLootRemoved(CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: 29e9f44a IDENTICAL/DIFFERENT
 // OFFSET: 0x0055BD80/0x1401B06B0
 int32_t CGPlayer_C::OnLootSlotChanged(CDataStore* msg) {
     WOWGUID guid;
@@ -11120,7 +10993,6 @@ int32_t InventoryUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const voi
     return 1;
 }
 
-// PROVEN: e9fecd36 IDENTICAL/IDENTICAL
 // OFFSET: 0x00557070/0x1401B3E60
 void PlayerNameGuildCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -11186,7 +11058,6 @@ bool CGPlayer_C::GetExpandedSkillRank(int32_t skillId, int32_t& rank, int32_t& b
     return true;
 }
 
-// PROVEN: 726eca49 IDENTICAL/IDENTICAL
 // OFFSET: 0x00557D40/0x1401B4D80
 void CGPlayer_C::ApplyGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background) {
     if (this->m_characterComponent) {
@@ -11206,7 +11077,6 @@ void CGPlayer_C::ApplyGuildTabard(int32_t emblemStyle, int32_t emblemColor, int3
     }
 }
 
-// PROVEN: c1904e2d IDENTICAL/DIFFERENT
 // OFFSET: 0x0055E260/0x1401BB7A0
 int16_t CGPlayer_C::GetSkillModifier(int32_t index) const {
     WOWGUID guid = this->m_obj->m_guid;
@@ -11370,7 +11240,6 @@ int32_t AreaTriggerCheck(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 36c36b78 IDENTICAL/IDENTICAL
 // OFFSET: 0x00560F40/0x1401BEDE0
 void AreaTriggerCheckNow() {
     AreaTriggerCheck(NULL, NULL);
@@ -11524,7 +11393,6 @@ uint32_t GetVisibleAuraEffectFlags() {
     return s_unk_C9EAB4;
 }
 
-// PROVEN: 07b73796 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void PlayerShutdownSounds() {
 }
@@ -11635,7 +11503,6 @@ void PlayerClientShutdown() {
     }
 }
 
-// PROVEN: b175327b IDENTICAL/IDENTICAL
 // OFFSET: 0x0055A000/0x1401AF5C0
 void CGPlayer_C::PlayerShutdownMessageHandlers() {
     ClientGuildSendGuildXP::s_handler = NULL;
@@ -11828,14 +11695,12 @@ bool CGPlayer_C::IsInFlyableZone(int32_t checkContinent) {
     return IsInFlyableArea() && (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !checkContinent || CGGameUI::m_iCurrentMapID != 571 || HasSpell(static_cast<uint32_t>(54197)));
 }
 
-// PROVEN: 1722fa35 IDENTICAL/IDENTICAL
 // OFFSET: 0x00553830/0x1401AE780
 int32_t OnArenaTeamsChanged(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGArenaTeamInfo::UpdateTeams(1);
     return 1;
 }
 
-// PROVEN: c0831316 IDENTICAL/IDENTICAL
 // OFFSET: 0x005538B0/0x1401AE7F0
 int32_t SignalCombatRatingUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_RATING_UPDATE, NULL);
@@ -11843,7 +11708,6 @@ int32_t SignalCombatRatingUpdate(WOWGUID guid, uint32_t offset, uint32_t count, 
     return 1;
 }
 
-// PROVEN: 5cff6dfb IDENTICAL/IDENTICAL
 // OFFSET: 0x005538D0/0x1401AE840
 int32_t OnUpdatePlayerNoReagentCost(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGSpellBook::UpdateUsable();
@@ -11878,7 +11742,6 @@ int32_t CharmChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count, const 
     return 1;
 }
 
-// PROVEN: b57e1403 IDENTICAL/IDENTICAL
 // OFFSET: 0x00556FB0/0x1401B3D80
 int32_t SignalPlayerSkillStatEventsAndRefresh(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -11954,7 +11817,6 @@ int32_t OnUpdateRestState(WOWGUID guid, uint32_t offset, uint32_t count, const v
     return 1;
 }
 
-// PROVEN: 949ee31d IDENTICAL/IDENTICAL
 // OFFSET: 0x0055FB10/0x1401B3E40
 int32_t OnUpdatePlayerTrackingMask(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     ClntObjMgrEnumVisibleObjects(TrackingMaskUpdateProc, NULL);
@@ -12038,7 +11900,6 @@ int32_t __stdcall CGPlayer_C::OnBuySucceeded(CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: 8ac36850 IDENTICAL/IDENTICAL
 // OFFSET: 0x00553A60/0x1401AEA10
 void CGPlayer_C::ReceiveResurrectRequest(const char* name) {
     if (name && *name && this->IsDeadOrGhost()) {
@@ -12227,7 +12088,6 @@ void CGPlayer_C::OnDeath() {
     }
 }
 
-// PROVEN: 30f7f288 IDENTICAL/NONE
 // OFFSET: 0x00554720
 void __stdcall CGPlayer_C::HandleActivateTaxiReply(uint32_t reply) {
     if (reply >= 13) {
@@ -12899,7 +12759,6 @@ void CGPlayer_C::TogglePlayerFlag(uint32_t oldFlags) {
     }
 }
 
-// PROVEN: 957197e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x005549C0/0x1401B1220
 void CGPlayer_C::StopDance() {
     PlayerDance* dance = this->m_dance;
@@ -12962,7 +12821,6 @@ void CGPlayer_C::DanceMoveComplete() {
     this->Dance();
 }
 
-// PROVEN: 7eb2a76f IDENTICAL/IDENTICAL
 // OFFSET: 0x005639E0/0x1401C17D0
 static int32_t DanceTimerCallback(const void* data, uint64_t guid, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(guid), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -12974,7 +12832,6 @@ static int32_t DanceTimerCallback(const void* data, uint64_t guid, void* param) 
     return 1;
 }
 
-// PROVEN: 6de808dc IDENTICAL/UNPROVEN
 // OFFSET: 0x00567000/0x1401C58B0
 void CGPlayer_C::DanceMoveAnimComplete() {
     PlayerDance* dance = this->m_dance;
@@ -13120,7 +12977,6 @@ int32_t CGPlayer_C::OnSignedResults(CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: dc9a21b9 IDENTICAL/DIFFERENT
 // OFFSET: 0x005567D0/0x1401B34B0
 int32_t __stdcall CGPlayer_C::OnTrainerList(CDataStore* msg) {
     WOWGUID trainer;
@@ -13286,7 +13142,6 @@ bool CGPlayer_C::ReportBagItemSubtypeMismatch(uint8_t bag) {
     return true;
 }
 
-// PROVEN: b9832e48 IDENTICAL/DIFFERENT
 // OFFSET: 0x0055C980/0x1401B0B20
 void CGPlayer_C::StartGiftWrap(CGItem_C* item) {
     s_giftWrapItem = item->m_obj->m_guid;
@@ -13414,7 +13269,6 @@ void CGPlayer_C::TalkToTalentMaster(const WOWGUID& guid, uint32_t cost) {
     }
 }
 
-// PROVEN: ca2c4e55 DIFFERENT/IDENTICAL
 // OFFSET: 0x00554460/0x1401B04F0
 void CGPlayer_C::SetAFK(const char* message) {
     const char* text = message;
@@ -13673,7 +13527,6 @@ bool CGPlayer_C::ToggleFarSight(CGObject_C* object) {
     return true;
 }
 
-// PROVEN: 49de72d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00568610/0x1401C74D0
 void CGPlayer_C::ClearFarSight() {
     if (!(this->m_combatModeFlags & 0x1)) {
@@ -13793,7 +13646,6 @@ int32_t Packet_SMSG_AVAILABLE_VOICE_CHANNEL(void* param, NETMESSAGE msgId, uint3
     return 1;
 }
 
-// PROVEN: 17bde011 IDENTICAL/IDENTICAL
 // OFFSET: 0x00552B10/0x1401ADB10
 int32_t Packet_SMSG_VOICE_SESSION_LEAVE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t talker = 0;
@@ -13815,7 +13667,6 @@ int32_t Packet_SMSG_VOICE_SET_TALKER_MUTED(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// PROVEN: a08c8b08 IDENTICAL/IDENTICAL
 // OFFSET: 0x00555C70/0x1401B2650
 int32_t Packet_SMSG_VOICE_PARENTAL_CONTROLS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t value = 0;
@@ -13848,7 +13699,6 @@ int32_t Packet_SMSG_VOICE_PARENTAL_CONTROLS(void* param, NETMESSAGE msgId, uint3
     return 1;
 }
 
-// PROVEN: 5896136b IDENTICAL/UNPROVEN
 // OFFSET: 0x0055BFA0/0x1401B8E30
 int32_t CGPlayer_C::GetVirtualItemDisplayRec(uint32_t slot, ItemDisplayInfoRec& rec) const {
     return g_itemDisplayInfoDB.GetRecord(this->GetVirtualItemDisplayID(slot), &rec);
@@ -13940,7 +13790,6 @@ int32_t CGPlayer_C::GetSpellCastingTime(const SpellRec* spell) const {
     return castTime <= 0 ? 0 : castTime;
 }
 
-// PROVEN: cee4e7d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0055D550/0x1401B1070
 uint64_t CGPlayer_C::GetInspectGuildGUID() const {
     if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
@@ -13950,7 +13799,6 @@ uint64_t CGPlayer_C::GetInspectGuildGUID() const {
     return 0;
 }
 
-// PROVEN: 818b7241 IDENTICAL/IDENTICAL
 // OFFSET: 0x0055D580/0x1401B10A0
 uint32_t CGPlayer_C::GetInspectGuildLevel() const {
     if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
@@ -13960,7 +13808,6 @@ uint32_t CGPlayer_C::GetInspectGuildLevel() const {
     return 0;
 }
 
-// PROVEN: 512f9b8e IDENTICAL/IDENTICAL
 // OFFSET: 0x0055D5B0/0x1401B10D0
 uint32_t CGPlayer_C::GetInspectGuildNumMembers() const {
     if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
@@ -13970,7 +13817,6 @@ uint32_t CGPlayer_C::GetInspectGuildNumMembers() const {
     return 0;
 }
 
-// PROVEN: 9c62311b IDENTICAL/IDENTICAL
 // OFFSET: 0x0055D5E0/0x1401B1100
 uint64_t CGPlayer_C::GetInspectGuildXP() const {
     if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
@@ -14012,7 +13858,6 @@ int32_t CGPlayer_C::GetAttackPowerContributionFromStat(int32_t stat, int32_t val
     return attackPower;
 }
 
-// PROVEN: f8d4cedf IDENTICAL/UNPROVEN
 // OFFSET: 0x0055DB50/0x1401BB0B0
 bool CGPlayer_C::IsInArena() {
     const MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
@@ -14423,7 +14268,6 @@ const VisibleItem_C* CGPlayer_C::GetVirtualVisibleItem(uint32_t slot, bool ignor
     return NULL;
 }
 
-// PROVEN: c8672c1e IDENTICAL/UNPROVEN
 // OFFSET: 0x00565E70/0x1401C43F0
 const CGUnitVirtualItem* CGPlayer_C::GetVirtualItem(uint32_t slot, bool ignoreDisarm) const {
     const VisibleItem_C* item = this->GetVirtualVisibleItem(slot, ignoreDisarm);
@@ -14567,7 +14411,6 @@ void CGPlayer_C::PlayDanceMove(const DanceMovesRec* move) {
     }
 }
 
-// PROVEN: 5a91f1bb IDENTICAL/IDENTICAL
 // OFFSET: 0x005638F0/0x1401C16B0
 void CGPlayer_C::StartDance(PlayerDance* dance) {
     this->m_dance = dance;
@@ -15078,7 +14921,6 @@ static int32_t IsSoulstone(const CGItem_C* item, void* param) {
     return 0;
 }
 
-// PROVEN: 894f21f4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0056D2F0/0x1401CD670
 CGItem_C* CGPlayer_C::GetSoulstone() {
     return this->m_bag.FindItem(IsSoulstone, NULL, 0);

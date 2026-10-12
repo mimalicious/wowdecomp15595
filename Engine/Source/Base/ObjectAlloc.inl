@@ -15,7 +15,6 @@ TSObjectAllocPool<T>::~TSObjectAllocPool() {
     ObjectAllocUnregisterPool(this);
 }
 
-// PROVEN: f5a542f6 IDENTICAL/NONE
 // OFFSET: [0x007479A0/0x1404268C0<CMapObjOccluder>, 0x00825DE0/0x1405437E0<CM2Model>, 0x004C5F70<WDATASTOREBUFFER<16384>>]
 template <class T>
 void TSObjectAllocPool<T>::Delete(T* object, const char* file, int32_t line) {

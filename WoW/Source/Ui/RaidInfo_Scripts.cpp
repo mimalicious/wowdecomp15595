@@ -37,7 +37,6 @@
 // STATIC: 0x00BF8CE8
 static const int32_t s_raidMarkerSpells[5] = { 84996, 84997, 84998, 84999, 85000 };
 
-// PROVEN: 3055d738 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092D110/0x140694080
 static int32_t Script_GetRaidTargetIndex(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -56,21 +55,18 @@ static int32_t Script_GetRaidTargetIndex(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 85456542 IDENTICAL/IDENTICAL
 // OFFSET: 0x0092D1A0/0x140694130
 static int32_t Script_GetNumRaidMembers(lua_State* L) {
     lua_pushnumber(L, CGRaidInfo::m_numMembers);
     return 1;
 }
 
-// PROVEN: 24feec04 IDENTICAL/IDENTICAL
 // OFFSET: 0x0092D1E0/0x140694160
 static int32_t Script_GetRealNumRaidMembers(lua_State* L) {
     lua_pushnumber(L, CGRaidInfo::m_realNumMembers);
     return 1;
 }
 
-// PROVEN: 152939e7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092D220/0x140694190
 static int32_t Script_SetRaidRosterSelection(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -89,14 +85,12 @@ static int32_t Script_SetRaidRosterSelection(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 006e1ac5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092D2B0/0x140694210
 static int32_t Script_GetRaidRosterSelection(lua_State* L) {
     lua_pushnumber(L, CGRaidInfo::GetSelectedMemberIndex() + 1);
     return 1;
 }
 
-// PROVEN: 8787d543 IDENTICAL/UNPROVEN
 // OFFSET: 0x0092D2E0/0x140694270
 static int32_t Script_GetReadyCheckTimeLeft(lua_State* L) {
     if (CGRaidInfo::m_numMembers || CGPartyInfo::m_members[0]) {
@@ -134,14 +128,12 @@ static int32_t Script_IsRaidMarkerActive(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ee9b6656 IDENTICAL/IDENTICAL
 // OFFSET: 0x0092D3E0/0x140694360
 static int32_t Script_IsInFakeRaid(lua_State* L) {
     lua_pushboolean(L, CGRaidInfo::m_isInFakeRaid);
     return 1;
 }
 
-// PROVEN: cf69c67e IDENTICAL/IDENTICAL
 // OFFSET: 0x0092D400/0x140694380
 static int32_t Script_IsEveryoneAssistant(lua_State* L) {
     lua_pushboolean(L, CGRaidInfo::m_everyoneIsAssistant);
@@ -249,7 +241,6 @@ static int32_t Script_GetRaidRosterInfo(lua_State* L) {
     return 12;
 }
 
-// PROVEN: e85ed437 IDENTICAL/IDENTICAL
 // OFFSET: 0x0092E260/0x140695680
 static int32_t Script_IsRaidLeader(lua_State* L) {
     if (ClntObjMgrGetActivePlayer() == CGPartyInfo::m_leader) {
@@ -261,7 +252,6 @@ static int32_t Script_IsRaidLeader(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 6bb5c14d IDENTICAL/IDENTICAL
 // OFFSET: 0x0092E2B0/0x1406956D0
 static int32_t Script_IsRealRaidLeader(lua_State* L) {
     if (ClntObjMgrGetActivePlayer() == CGPartyInfo::m_realLeader) {
@@ -273,7 +263,6 @@ static int32_t Script_IsRealRaidLeader(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 68a52d7b IDENTICAL/DIFFERENT
 // OFFSET: 0x0092E300/0x140695720
 static int32_t Script_IsRaidOfficer(lua_State* L) {
     CGRaidMember* member = CGRaidInfo::FindMemberByGuid(ClntObjMgrGetActivePlayer());
@@ -352,7 +341,6 @@ static int32_t Script_DemoteAssistant(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 229f059b IDENTICAL/IDENTICAL
 // OFFSET: 0x0092E5F0/0x140695AF0
 static int32_t Script_DoReadyCheck(lua_State* L) {
     CGRaidInfo::SendReadyCheck();
@@ -464,7 +452,6 @@ static int32_t Script_RequestRaidInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6d31a8bc IDENTICAL/UNPROVEN
 // OFFSET: 0x0092E8F0/0x140695EB0
 static int32_t Script_GetNumSavedInstances(lua_State* L) {
     lua_pushnumber(L, s_savedInstances.Count());
@@ -625,7 +612,6 @@ static int32_t Script_PlaceRaidMarker(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9836bc21 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092F1E0/0x1406969D0
 static int32_t Script_ClearRaidMarker(lua_State* L) {
     if (CGRaidInfo::m_numMembers) {
@@ -650,7 +636,6 @@ static int32_t Script_ClearRaidMarker(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ec3a8c99 IDENTICAL/IDENTICAL
 // OFFSET: 0x0092F280/0x140696AA0
 static int32_t Script_SetEveryoneIsAssistant(lua_State* L) {
     ThrottleObject throttle(3, 10);
@@ -778,7 +763,6 @@ static int32_t Script_ConvertToParty(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1268b56f IDENTICAL/IDENTICAL
 // OFFSET: 0x00930030/0x140697D70
 static int32_t Script_CanBeRaidTarget(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -881,7 +865,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "IsEveryoneAssistant", &Script_IsEveryoneAssistant },
 };
 
-// PROVEN: 394f594f IDENTICAL/UNPROVEN
 // OFFSET: 0x0092D420/0x1406943A0
 void RaidInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -889,7 +872,6 @@ void RaidInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 3b90d320 IDENTICAL/UNPROVEN
 // OFFSET: 0x0092D450/0x1406943F0
 void RaidInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

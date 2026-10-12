@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[9] = { 0, 0, 0, 3, 3, 3, 3, 3, 0 };
 // STATIC: 0x00C26658/0x140A1C5D8
 const DBCMeta CameraShakesRec::s_meta = { "DBFilesClient\\CameraShakes.dbc", 9, 36, CameraShakesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 2b4e458b IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CameraShakesRec::FixupStrings(void* record, const char* strings) {
 }

@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[4] = { 0, 0, 2, 0 };
 // STATIC: 0x00C26D70/0x140A1CE80
 const DBCMeta Achievement_CategoryRec::s_meta = { "DBFilesClient\\Achievement_Category.dbc", 4, 16, Achievement_CategoryRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: d8bfa3b6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ECA0/0x1407D8230
 void Achievement_CategoryRec::FixupStrings(void* record, const char* strings) {
     Achievement_CategoryRec* rec = static_cast<Achievement_CategoryRec*>(record);

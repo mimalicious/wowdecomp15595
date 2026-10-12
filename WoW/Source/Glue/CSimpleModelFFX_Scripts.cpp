@@ -136,7 +136,6 @@ static int32_t Script_AddPetLight(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2ce82653 IDENTICAL/IDENTICAL
 // OFFSET: 0x00811D90/0x1405297C0
 void CSimpleModelFFX::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -151,7 +150,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "AddPetLight", &Script_AddPetLight },
 };
 
-// PROVEN: a3a295a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008119F0/0x1405293B0
 void CSimpleModelFFX::RegisterScriptMethods(lua_State* L) {
     CSimpleModel::RegisterScriptMethods(L);

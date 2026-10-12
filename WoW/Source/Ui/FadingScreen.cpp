@@ -38,13 +38,11 @@ static uint8_t s_fadeActive;
 // STATIC: 0x00F771CD
 static uint8_t s_fadeStarted;
 
-// PROVEN: e96252b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
 }
 
-// PROVEN: 9c98ad8f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0A260/0x1407AB2E0
 static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_CHAR, SwallowEvent, NULL, 9.0f);
@@ -56,7 +54,6 @@ static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_MOUSEMOVE, SwallowEvent, NULL, 9.0f);
 }
 
-// PROVEN: e1eb565b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0A320/0x1407AB3A0
 static void FadingScreenUnregisterEvents() {
     EventUnregister(EVENT_ID_CHAR, SwallowEvent);

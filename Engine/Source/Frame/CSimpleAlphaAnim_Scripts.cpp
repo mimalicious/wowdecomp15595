@@ -6,7 +6,6 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: f54c3ec4 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053D4D0/0x140191900
 static int32_t Script_SetChange(lua_State* L) {
     CSimpleAlphaAnim* anim = static_cast<CSimpleAlphaAnim*>(FrameScript_GetObjectThis(L, CSimpleAlphaAnim::GetObjectType()));
@@ -21,7 +20,6 @@ static int32_t Script_SetChange(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c27fa13c DIFFERENT/IDENTICAL
 // OFFSET: 0x0053D550/0x1401919A0
 static int32_t Script_GetChange(lua_State* L) {
     CSimpleAlphaAnim* anim = static_cast<CSimpleAlphaAnim*>(FrameScript_GetObjectThis(L, CSimpleAlphaAnim::GetObjectType()));
@@ -29,14 +27,12 @@ static int32_t Script_GetChange(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 04a0287c IDENTICAL/IDENTICAL
 // OFFSET: 0x0053D5B0/0x140191A00
 void CSimpleAlphaAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleAlphaAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleAlphaAnim::RegisterScriptMethods);
 }
 
-// PROVEN: 6e05b6b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053BAA0/0x14018F8C0
 void CSimpleAlphaAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();

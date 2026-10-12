@@ -5,13 +5,11 @@
 #include "SSignature.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: fbf94414 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B8690/0x140511EA0
 uint32_t SSignatureVerifyStream_GetSignatureLength(SSignatureData* token) {
     return token->magicBufferSize;
 }
 
-// PROVEN: a4878eb6 DIFFERENT/IDENTICAL
 // OFFSET: 0x004B86A0/0x1400F0C60
 void SSignatureVerifyStream_ProvideData(SSignatureData* token, const uint8_t* data, uint32_t size) {
     int32_t excess = size - token->magicBufferSize;
@@ -41,7 +39,6 @@ void SSignatureVerifyStream_ProvideData(SSignatureData* token, const uint8_t* da
     }
 }
 
-// PROVEN: 4dc733c8 IDENTICAL/DIFFERENT
 // OFFSET: 0x004B8750/0x1400F0D30
 void SSignatureVerifyStream_Begin(SSignatureData** token, uint32_t modulusSize, uint32_t pubExponentSize) {
     *token = static_cast<SSignatureData*>(SMemAlloc(sizeof(SSignatureData), __FILE__, __LINE__, 0));
@@ -78,7 +75,6 @@ int32_t SSignatureVerifyStream_Finish(SSignatureData* token, const uint8_t* modu
     return result;
 }
 
-// PROVEN: a2fa32dc IDENTICAL/DIFFERENT
 // OFFSET: 0x004B8910/0x1400F0F40
 int32_t SSignatureVerify(const uint8_t* data, uint32_t size, const uint8_t* modulus, uint32_t modulusSize, const uint8_t* pubExponent, uint32_t pubExponentSize) {
     SSignatureData* token;

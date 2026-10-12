@@ -8,7 +8,6 @@ CSimpleFontable::~CSimpleFontable() {
     this->SetFontObject(NULL);
 }
 
-// PROVEN: a7fe9839 IDENTICAL/UNPROVEN
 // OFFSET: 0x004FB3E0/0x14013F2E0
 void CSimpleFontable::SetFontObject(CSimpleFont* font) {
     if (this->m_fontObject == font) {

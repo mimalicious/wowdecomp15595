@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C226AC/0x140A175B8
 const DBCMeta ScreenLocationRec::s_meta = { "DBFilesClient\\ScreenLocation.dbc", 2, 8, ScreenLocationRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: f58a02af IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ScreenLocationRec::FixupStrings(void* record, const char* strings) {
     ScreenLocationRec* rec = static_cast<ScreenLocationRec*>(record);

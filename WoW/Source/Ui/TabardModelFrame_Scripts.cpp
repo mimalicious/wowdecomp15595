@@ -15,7 +15,6 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
 
-// PROVEN: 5e06f87c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A05F20/0x1407A5AC0
 void CGTabardModelFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -23,14 +22,12 @@ void CGTabardModelFrame::DestroyScriptMetaTable() {
     CGTabardModelFrame::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 08520c71 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06220/0x1407A5DC0
 void CGTabardModelFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGTabardModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGTabardModelFrame::RegisterScriptMethods);
 }
 
-// PROVEN: 7ed84188 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A05EC0/0x1407A5A50
 static int32_t Script_CanSaveTabardNow(lua_State* L) {
     if (CGPlayer_C::CanSaveTabardNow()) {
@@ -42,7 +39,6 @@ static int32_t Script_CanSaveTabardNow(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a377aab7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A06060/0x1407A5C00
 static int32_t Script_GetUpperBackgroundFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
@@ -52,7 +48,6 @@ static int32_t Script_GetUpperBackgroundFileName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 3cf8e342 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A060D0/0x1407A5C70
 static int32_t Script_GetLowerBackgroundFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
@@ -62,7 +57,6 @@ static int32_t Script_GetLowerBackgroundFileName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a11a27f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06140/0x1407A5CE0
 static int32_t Script_GetUpperEmblemFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
@@ -72,7 +66,6 @@ static int32_t Script_GetUpperEmblemFileName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 1c8ec45f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A061B0/0x1407A5D50
 static int32_t Script_GetLowerEmblemFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
@@ -82,7 +75,6 @@ static int32_t Script_GetLowerEmblemFileName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d61045c6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A06340/0x1407A5F20
 static int32_t Script_Save(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
@@ -268,7 +260,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "CanSaveTabardNow", &Script_CanSaveTabardNow },
 };
 
-// PROVEN: 3e29c68b IDENTICAL/UNPROVEN
 // OFFSET: 0x00A05F00/0x1407A5A90
 void CGTabardModelFrame::RegisterScriptMethods(lua_State* L) {
     CGCharacterModelBase::RegisterScriptMethods(L);

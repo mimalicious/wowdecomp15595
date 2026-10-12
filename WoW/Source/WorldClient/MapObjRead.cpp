@@ -42,7 +42,6 @@ static const SMOShaderInfo s_shaderInfo[15] = {
 // STATIC: 0x00EB3254
 static TSGrowableArray<C4Vector> s_tangentScratch;
 
-// PROVEN: 738f2391 IDENTICAL/DIFFERENT
 // OFFSET: 0x007940D0/0x1404867D0
 void CMapObj::DestroyMaterial(uint32_t materialId) {
     CMapObjMaterial* material = &this->m_runtimeMaterials[materialId];
@@ -59,7 +58,6 @@ void CMapObj::DestroyMaterial(uint32_t materialId) {
     }
 }
 
-// PROVEN: 6454f118 IDENTICAL/IDENTICAL
 // OFFSET: 0x00794120/0x140486840
 void CMapObjGroup::FixColorVertexAlpha() {
     uint32_t firstExterior = this->m_transBatchCount ? this->m_batches[this->m_transBatchCount - 1].m_maxIndex + 1 : 0;
@@ -310,7 +308,6 @@ void CMapObjGroup::AsyncFailedCallback(CAsyncObject* object) {
     World::SetLoadFailed(1, name);
 }
 
-// PROVEN: cd8d7334 IDENTICAL/IDENTICAL
 // OFFSET: 0x00794910/0x1404871D0
 uint32_t CMapObjGroup::GetLiquidType(uint32_t legacyType) {
     if (legacyType >= 21 || !legacyType) {
@@ -509,7 +506,6 @@ void CMapObj::DistFromClosestExtPortal(uint32_t depth, uint32_t flags, const CMa
     }
 }
 
-// PROVEN: 99275e7e IDENTICAL/IDENTICAL
 // OFFSET: 0x00795290/0x140487E30
 float CMapObj::DistFromClosestExtPortal(CMapObjGroup* group, const C3Vector& pos, int32_t outdoor) {
     uint32_t flags = 0x8;
@@ -772,7 +768,6 @@ void CMapObjGroup::ComputeTangents(const SMOBatch* batch, const uint16_t* indice
     }
 }
 
-// PROVEN: c4985a7c IDENTICAL/DIFFERENT
 // OFFSET: 0x00795B60/0x1404888D0
 void CMapObjGroup::CreateOccluders() {
     for (uint32_t i = 0; i < this->m_polyCount; i++) {

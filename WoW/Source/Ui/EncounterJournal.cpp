@@ -65,7 +65,6 @@ EJInstanceList CGEncounterJournal::s_instances;
 // STATIC: 0x00F7715C/0x140E6D2F0
 EJLootList CGEncounterJournal::s_loot;
 
-// PROVEN: 1f2d2623 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A06CA0/0x1407A6B70
 void CGEncounterJournal::ResetState() {
     s_tierID = 0;
@@ -83,14 +82,12 @@ void CGEncounterJournal::ResetState() {
     CGEncounterJournal::s_searchString = NULL;
 }
 
-// PROVEN: acb2d6c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06D00/0x1407A6BE0
 const char* CGEncounterJournal::BuildLink(int32_t type, int32_t id, const char* name) {
     SStrPrintf(s_linkBuffer, sizeof(s_linkBuffer), "|c%s|Hjournal:%d:%d:%d|h[%s]|h%s", s_journalLinkColor, type, id, CGEncounterJournal::s_difficulty + 1, name, *s_journalLinkColor ? "|r" : "");
     return s_linkBuffer;
 }
 
-// PROVEN: 46afb436 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06DC0/0x1407A6C50
 void CGEncounterJournal::ItemLoadedCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -239,7 +236,6 @@ int32_t CGEncounterJournal::GetInstanceByIndex(int32_t index, int32_t instanceTy
     return 0;
 }
 
-// PROVEN: 16a95514 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08490/0x1407A89E0
 bool CGEncounterJournal::SelectInstance(int32_t instanceID) {
     CGEncounterJournal::s_lootDirty = true;
@@ -396,14 +392,12 @@ int32_t CGEncounterJournal::GetCurrentInstance() {
     return 0;
 }
 
-// PROVEN: 4800e7a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08FB0/0x1407A9A10
 void CGEncounterJournal::InitializeGame() {
     CGEncounterJournal::ResetState();
     CGEncounterJournal::BuildInstances();
 }
 
-// PROVEN: 19e31617 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08FC0/0x1407A9A30
 void CGEncounterJournal::ShutdownGame() {
     CGEncounterJournal::ClearInstances();
@@ -499,7 +493,6 @@ void CGEncounterJournal::SetSearch(const char* search) {
     CGEncounterJournal::s_searchString = SStrDupA(search, __FILE__, __LINE__);
 }
 
-// PROVEN: 0504fd57 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A099E0/0x1407AA850
 void CGEncounterJournal::OnLootItemLoaded(JournalEncounterItemRec* item) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -520,7 +513,6 @@ void CGEncounterJournal::OnLootItemLoaded(JournalEncounterItemRec* item) {
     }
 }
 
-// PROVEN: 66fd1865 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A09A80/0x1407AA900
 void CGEncounterJournal::LootItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {

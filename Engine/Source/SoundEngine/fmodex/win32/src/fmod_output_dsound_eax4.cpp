@@ -31,7 +31,6 @@ bool gFXslot3set = false;
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1e8862a0 IDENTICAL/NONE
 // OFFSET: 0x00B00600
 bool OutputDSound::querySupportEAX4(FMOD_GUID guid, unsigned long ulProperty)
 {
@@ -76,7 +75,6 @@ bool OutputDSound::querySupportEAX4(FMOD_GUID guid, unsigned long ulProperty)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e703a9e5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B00660/0x1408C2580
 bool OutputDSound::initEAX4()
 {
@@ -186,7 +184,6 @@ bool OutputDSound::initEAX4()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2ec666dd IDENTICAL/UNPROVEN
 // OFFSET: 0x00B008F0/0x1408C28F0
 FMOD_RESULT OutputDSound::closeEAX4()
 {

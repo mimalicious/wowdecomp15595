@@ -41,13 +41,11 @@ void CAngle::Set_(const float& value) {
     this->m_sin = sin(this->m_data);
 }
 
-// PROVEN: 7a2f638f IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A460/0x1401A35C0
 void CameraAddRef(CCamera* camera) {
     camera->m_refCount++;
 }
 
-// PROVEN: 913dc92b IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A470/0x1401A35D0
 void CameraGetCoord(CCamera* camera, uint32_t index, C3Vector* value) {
     switch (index) {
@@ -61,7 +59,6 @@ void CameraGetCoord(CCamera* camera, uint32_t index, C3Vector* value) {
     }
 }
 
-// PROVEN: 7bd54c5b IDENTICAL/DIFFERENT
 // OFFSET: 0x0054A4C0/0x1401A3610
 float CameraGetFloat(CCamera* camera, uint32_t index) {
     switch (index) {
@@ -91,7 +88,6 @@ float CameraGetFloat(CCamera* camera, uint32_t index) {
     }
 }
 
-// PROVEN: a5a23e49 IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A530/0x1401A3680
 void CameraSetCoord(CCamera* camera, uint32_t index, const C3Vector& value) {
     switch (index) {
@@ -146,7 +142,6 @@ CCamera::CCamera() : m_position(100.0f, 0.0f, 0.0f), m_target(0.0f, 0.0f, 0.0f),
     this->m_zNear = 8.0f;
 }
 
-// PROVEN: 95b7837d IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A860/0x1401A3910
 void CCamera::SetupWorldProjection(const CRect& rect, uint32_t flags) {
     C44Matrix projection;
@@ -163,7 +158,6 @@ void CCamera::SetupWorldProjection(const CRect& rect, uint32_t flags) {
     CShaderEffect::UpdateProjMatrix();
 }
 
-// PROVEN: 27f2465f IDENTICAL/DIFFERENT
 // OFFSET: 0x0054AA40/0x1401A3B30
 CCamera* CameraCreate() {
     return new (__FILE__, __LINE__) CCamera;
@@ -230,7 +224,6 @@ void CameraSetupScreenProjection(const CRect& rect, const C2Vector& offset, floa
     GxXformSetView(view);
 }
 
-// PROVEN: 1bf5d399 IDENTICAL/IDENTICAL
 // OFFSET: 0x0054AE00/0x1401A3FF0
 void CameraSetupWorldProjection(CCamera* camera, const CRect& rect, uint32_t flags) {
     if (!camera) {

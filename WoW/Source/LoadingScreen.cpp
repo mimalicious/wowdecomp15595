@@ -287,13 +287,11 @@ void LoadingScreenInitialize() {
     ClientCustomLoadScreen::s_handler = JamHandlerEncode(OnCustomLoadScreen, g_jamHandlerKey_CFF6D4);
 }
 
-// PROVEN: 82480aa7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0040DD70/0x140011480
 void LoadingScreenInitializeInGame() {
     s_shipInfo.Initialize(&g_taxiPathNodeDB, g_taxiPathDB.m_maxID + 1);
 }
 
-// PROVEN: b1ef4bb2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00409520/0x14000BC20
 static int32_t SizeEvent(const void* data, void* param) {
     memcpy(&s_sizeEvent, data, sizeof(s_sizeEvent));
@@ -301,7 +299,6 @@ static int32_t SizeEvent(const void* data, void* param) {
     return 0;
 }
 
-// PROVEN: e96252b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
@@ -352,7 +349,6 @@ static void InitializeProgressBarEvents() {
     s_sizeEventPosted = 0;
 }
 
-// PROVEN: 268e3a50 IDENTICAL/IDENTICAL
 // OFFSET: 0x004096C0/0x14000BDE0
 void LoadingScreenSetTip(const char* tip) {
     s_gameTip = tip;
@@ -364,7 +360,6 @@ void LoadingScreenSetScreenTipForRaceData() {
     s_gameTip = s_raceDataTipText;
 }
 
-// PROVEN: 01c1912d IDENTICAL/IDENTICAL
 // OFFSET: 0x00409740/0x14000BE50
 bool LoadingScreenDrawing() {
     return s_loadingScreenLayer != NULL;
@@ -625,7 +620,6 @@ static bool LoadSimpleBackgroundTexture() {
     return result;
 }
 
-// PROVEN: 8987d523 IDENTICAL/DIFFERENT
 // OFFSET: 0x0040BA40/0x14000E860
 static void ClearDynamicData() {
     if (s_dynamicElementsTexture) {
@@ -935,7 +929,6 @@ void LoadingScreenXMLCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// PROVEN: 2de387ae IDENTICAL/DIFFERENT
 // OFFSET: 0x00409640/0x14000BD30
 static void LoadingScreenDisableEvents() {
     EventUnregister(EVENT_ID_CHAR, SwallowEvent);
@@ -951,7 +944,6 @@ static void LoadingScreenDisableEvents() {
     }
 }
 
-// PROVEN: f8767b6f IDENTICAL/DIFFERENT
 // OFFSET: 0x0040BBE0/0x14000EA90
 void LoadingScreenDisable() {
     if (s_loadingScreenLayer) {
@@ -1020,7 +1012,6 @@ void LoadingScreenDisable() {
     ClientServices::Send(&msg);
 }
 
-// PROVEN: ef1664d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0040BD20/0x14000EC10
 void LoadingScreenShutdown() {
     LoadingScreenDisable();
@@ -1038,7 +1029,6 @@ void LoadingScreenShutdown() {
     ClientCustomLoadScreen::s_handler = NULL;
 }
 
-// PROVEN: e5df3f75 IDENTICAL/DIFFERENT
 // OFFSET: 0x004097A0/0x14000BEA0
 void LoadingScreenMiniDisable() {
     if (s_miniLoadingLayer) {
@@ -1056,7 +1046,6 @@ void LoadingScreenMiniDisable() {
     }
 }
 
-// PROVEN: 9dc8f2d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0040D120/0x1400106C0
 void LoadingScreenMiniUpdate(float progress) {
     LoadingScreenMiniEnable();
@@ -1453,7 +1442,6 @@ void LoadingScreenEnableShipLeg(int32_t entryId, uint32_t leg) {
     InitializeProgressBar(true);
 }
 
-// PROVEN: cecfaf24 IDENTICAL/IDENTICAL
 // OFFSET: 0x004097F0/0x14000BF20
 void LoadingScreenEnableFileBar(bool enable) {
     s_fileBarEnabled = enable;
@@ -1470,7 +1458,6 @@ bool LoadingScreenIsPreparedForSpell(int32_t spellID) {
     return prepared;
 }
 
-// PROVEN: 0e55be59 IDENTICAL/IDENTICAL
 // OFFSET: 0x00409710/0x14000BE20
 void LoadingScreenClearPrepared() {
     s_preparedSpellID = -1;
@@ -1505,7 +1492,6 @@ void LoadingScreenEnablePrepared(int32_t mapID) {
     InitializeProgressBar(true);
 }
 
-// PROVEN: 8db79a3d DIFFERENT/IDENTICAL
 // OFFSET: 0x0040DA80/0x140011190
 void LoadingScreenUpdateProgress(float progress, int32_t a2) {
     if (progress > s_preloadProgress) {

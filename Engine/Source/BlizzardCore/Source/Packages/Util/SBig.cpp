@@ -89,7 +89,6 @@ inline void Blizzard::BigBuffer::SetOffset(uint32_t offset) {
     }
 }
 
-// PROVEN: db204ec6 IDENTICAL/UNPROVEN
 // OFFSET: 0x007C5E60/0x1404C0E80
 void Blizzard::BigBuffer::Trim() const {
     while (this->Count() && !this->m_data.back()) {
@@ -170,7 +169,6 @@ static int32_t Compare(const Blizzard::BigBuffer& a, const Blizzard::BigBuffer& 
     return result;
 }
 
-// PROVEN: 8f48d1b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B8B00/0x1404AF790
 static uint32_t HighBitPos(const Blizzard::BigBuffer& a) {
     uint32_t index = a.Count();
@@ -599,7 +597,6 @@ void Blizzard::SSignatureVerifyStream_Begin(SSignatureData** token, uint32_t mod
     (*token)->sha.Prepare();
 }
 
-// PROVEN: 59fc1c12 DIFFERENT/IDENTICAL
 // OFFSET: 0x007B1FD0/0x1404A7050
 void Blizzard::SSignatureVerifyStream_ProvideData(SSignatureData* token, const uint8_t* data, uint32_t size) {
     int32_t excess = size - token->magicBufferSize;

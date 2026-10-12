@@ -81,7 +81,6 @@ FMOD_CODEC_DESCRIPTION_EX *CodecAIFF::getDescriptionEx()
 /****************************************************************
  * Extended precision IEEE floating-point conversion routine.
  ****************************************************************/
-// PROVEN: 14450fe4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9F50/0x140880F30
 float ConvertFromIeeeExtended(unsigned char *bytes)
 {
@@ -551,7 +550,6 @@ FMOD_RESULT CodecAIFF::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 20ca495c IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABA030/0x140881040
 FMOD_RESULT CodecAIFF::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -729,7 +727,6 @@ FMOD_RESULT CodecAIFF::setPositionInternal(int subsound, unsigned int position, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6f253ded IDENTICAL/NONE
 // OFFSET: 0x00ABAB20
 FMOD_RESULT F_CALLBACK CodecAIFF::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -779,7 +776,6 @@ FMOD_RESULT F_CALLBACK CodecAIFF::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 601e51df IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABA1F0/0x140881220
 FMOD_RESULT F_CALLBACK CodecAIFF::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -804,7 +800,6 @@ FMOD_RESULT F_CALLBACK CodecAIFF::readCallback(FMOD_CODEC_STATE *codec, void *bu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 15961f15 IDENTICAL/DIFFERENT
 // OFFSET: 0x00ABAB60/0x140881C60
 FMOD_RESULT F_CALLBACK CodecAIFF::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {

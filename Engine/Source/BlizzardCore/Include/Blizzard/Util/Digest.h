@@ -52,14 +52,12 @@ bool Blizzard::Util::Digest<N>::operator<(const Digest& other) const {
     return false;
 }
 
-// PROVEN: 8868fbeb IDENTICAL/NONE
 // OFFSET: 0x007AE890<16>
 template <int N>
 bool Blizzard::Util::Digest<N>::operator==(const Digest& other) const {
     return memcmp(this->m_data, other.m_data, N) == 0;
 }
 
-// PROVEN: 42860e12 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A33A0/0x1404A7920
 template <int N>
 bool Blizzard::Util::Digest<N>::operator!=(const Digest& other) const {

@@ -101,7 +101,6 @@ FMOD_CODEC_DESCRIPTION_EX *CodecS3M::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b3ed7c8f IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB5720/0x14087B5A0
 FMOD_RESULT CodecS3M::calculateLength()
 {
@@ -136,7 +135,6 @@ FMOD_RESULT CodecS3M::calculateLength()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 84cf683c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB3EB0/0x140879880
 FMOD_RESULT MusicChannelS3M::volumeSlide() 
 {
@@ -306,7 +304,6 @@ FMOD_RESULT MusicChannelS3M::vibrato()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4a091795 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB3F80/0x1408798F0
 FMOD_RESULT MusicChannelS3M::tremolo() 
 {
@@ -381,7 +378,6 @@ FMOD_RESULT MusicChannelS3M::tremolo()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5e77ff9f DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB4070/0x1408799E0
 FMOD_RESULT MusicChannelS3M::fineVibrato() 
 {
@@ -1444,7 +1440,6 @@ FMOD_RESULT CodecS3M::updateEffects()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bb877738 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB5330/0x14087B170
 FMOD_RESULT CodecS3M::update(bool audible)
 {
@@ -2511,7 +2506,6 @@ FMOD_RESULT CodecS3M::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 37807424 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB5440/0x14087B280
 FMOD_RESULT CodecS3M::closeInternal()
 {
@@ -2704,7 +2698,6 @@ FMOD_RESULT CodecS3M::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 964267d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB5620/0x14087B4A0
 FMOD_RESULT CodecS3M::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -2772,7 +2765,6 @@ FMOD_RESULT CodecS3M::setPositionInternal(int subsound, unsigned int position, F
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c937950c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB6DB0/0x14087D120
 FMOD_RESULT F_CALLBACK CodecS3M::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -2798,7 +2790,6 @@ FMOD_RESULT F_CALLBACK CodecS3M::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2eb49015 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB56C0/0x14087B560
 FMOD_RESULT F_CALLBACK CodecS3M::closeCallback(FMOD_CODEC_STATE *codec)
 {
@@ -2824,7 +2815,6 @@ FMOD_RESULT F_CALLBACK CodecS3M::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fa3ea5ce IDENTICAL/UNPROVEN
 // OFFSET: 0x00AB5B30/0x14087BA50
 FMOD_RESULT F_CALLBACK CodecS3M::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -2849,7 +2839,6 @@ FMOD_RESULT F_CALLBACK CodecS3M::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9342b890 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB56F0/0x14087B580
 FMOD_RESULT F_CALLBACK CodecS3M::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype   )
 {

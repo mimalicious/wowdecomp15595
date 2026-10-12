@@ -3,7 +3,6 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// PROVEN: 6423c91f IDENTICAL/DIFFERENT
 // OFFSET: 0x00464E50/0x140152A90
 void CImVector::Set(float a, float r, float g, float b) {
     uint32_t value = static_cast<uint8_t>(CMath::ftol_round_0_255_(a));
@@ -13,7 +12,6 @@ void CImVector::Set(float a, float r, float g, float b) {
     *reinterpret_cast<uint32_t*>(this) = value;
 }
 
-// PROVEN: 8f7b43c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x005AD230/0x14021F6C0
 void CImVector::InterpColor(int32_t t, const CImVector* src) {
     uint32_t& value = *reinterpret_cast<uint32_t*>(this);
@@ -34,7 +32,6 @@ void CImVector::InterpColor(int32_t t, const CImVector* src) {
     value = ((((r << 8) | g) << 8) | b) | (value & 0xFF000000);
 }
 
-// PROVEN: e1d1c93b IDENTICAL/NONE
 // OFFSET: 0x00648130
 void CImVector::ScaleRGB(uint32_t scale) {
     uint32_t& value = *reinterpret_cast<uint32_t*>(this);
@@ -44,7 +41,6 @@ void CImVector::ScaleRGB(uint32_t scale) {
     value = ((((r << 8) | g) << 8) | b) | (value & 0xFF000000);
 }
 
-// PROVEN: 526c0a5e DIFFERENT/IDENTICAL
 // OFFSET: 0x00B08000/0x1408CAFD0
 CImVector& CImVector::operator=(const C3Vector& color) {
     this->a = 0xFF;

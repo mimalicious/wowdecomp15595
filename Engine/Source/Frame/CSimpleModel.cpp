@@ -39,7 +39,6 @@ int32_t CSimpleModel::s_objectType;
 // STATIC: 0x00DD3A48/0x140CB9790
 CDataAllocator CSimpleModel::s_allocator(sizeof(CSimpleModel), 3);
 
-// PROVEN: f38dfe15 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051F050/0x14016C260
 static void AnimFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
     if (!interrupted) {
@@ -56,36 +55,30 @@ void CSimpleModel::operator delete(void* ptr) {
     CSimpleModel::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: d0b5eef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EC90/0x14016BDA0
 int32_t CSimpleModel::IsDrawable() {
     return this->m_model && this->m_model->IsDrawableRecursive();
 }
 
-// PROVEN: 1eb733db IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EFD0/0x14016C1C0
 bool CSimpleModel::IsA(int32_t type) {
     return type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: f621db32 IDENTICAL/NONE
 // OFFSET: 0x0051F010/0x14016C1F0
 bool CSimpleModel::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleModel::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// PROVEN: 3029ebd5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051ECB0/0x140528780
 const char* CSimpleModel::GetObjectTypeName() {
     return CSimpleModel::s_objectTypeName;
 }
 
-// PROVEN: 504a298c IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CSimpleModel::SetGlow(float glow) {
 }
 
-// PROVEN: ae2b9613 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CSimpleModel::AdvanceTime() {
     return 1;
@@ -106,13 +99,11 @@ CSimpleModel::~CSimpleModel() {
     }
 }
 
-// PROVEN: 7069b78b IDENTICAL/IDENTICAL
 // OFFSET: 0x0051ECC0/0x14016BDE0
 int32_t CSimpleModel::GetScriptMetaTable() {
     return CSimpleModel::s_metatable;
 }
 
-// PROVEN: 8e977b6b IDENTICAL/IDENTICAL
 // OFFSET: 0x0051ECD0/0x14016BDF0
 FrameScript_Object::ScriptIx* CSimpleModel::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -132,7 +123,6 @@ FrameScript_Object::ScriptIx* CSimpleModel::GetScriptByName(const char* name, Fr
     return NULL;
 }
 
-// PROVEN: 884591cb IDENTICAL/IDENTICAL
 // OFFSET: 0x0051ED70/0x14016BE70
 void CSimpleModel::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onUpdateModel, time, count);
@@ -140,13 +130,11 @@ void CSimpleModel::GetScriptTime(lua_State* L, double* time, uint32_t* count, in
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: a2860510 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EDC0/0x14016BEF0
 void CSimpleModel::ModelLoaded(CM2Model* model, void* arg) {
     static_cast<CSimpleModel*>(arg)->OnModelLoaded(model);
 }
 
-// PROVEN: d38a5017 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EDE0/0x14016BF10
 void CSimpleModel::SetCamera(CCamera* camera) {
     if (camera) {
@@ -162,7 +150,6 @@ void CSimpleModel::SetCamera(CCamera* camera) {
     this->m_pendingCameraId = 0xFFFFFFFF;
 }
 
-// PROVEN: 62e96598 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EE30/0x14016BF80
 void CSimpleModel::SetCameraByID(uint32_t id) {
     if (!this->m_model || !this->m_model->IsLoaded()) {
@@ -184,13 +171,11 @@ void CSimpleModel::SetCameraByID(uint32_t id) {
     this->m_pendingCameraId = 0xFFFFFFFF;
 }
 
-// PROVEN: 0533821c IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EEB0/0x14016C020
 void CSimpleModel::SetLight(const CM2Light& light) {
     this->m_light = light;
 }
 
-// PROVEN: cdd2e0de IDENTICAL/DIFFERENT
 // OFFSET: 0x0051EED0/0x14016C040
 void CSimpleModel::SetSequence(uint32_t sequence) {
     if (this->m_model) {
@@ -198,7 +183,6 @@ void CSimpleModel::SetSequence(uint32_t sequence) {
     }
 }
 
-// PROVEN: 2d4c40d2 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051EF00/0x14016C0A0
 int32_t CSimpleModel::SetSequenceTime(uint32_t sequence, int32_t time) {
     if (this->m_model) {
@@ -208,7 +192,6 @@ int32_t CSimpleModel::SetSequenceTime(uint32_t sequence, int32_t time) {
     return 1;
 }
 
-// PROVEN: f2dad3f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EF40/0x14016C100
 CM2Scene* CSimpleModel::GetScene() {
     if (!this->m_scene) {
@@ -292,7 +275,6 @@ void CSimpleModel::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: dfe86bf3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051F3A0/0x14016C620
 void CSimpleModel::SetModel(const char* fileName) {
     CM2Model* model = NULL;
@@ -308,7 +290,6 @@ void CSimpleModel::SetModel(const char* fileName) {
     }
 }
 
-// PROVEN: c4181f50 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051F400/0x14016C6A0
 void CSimpleModel::SetCameraByIndex(uint32_t index) {
     if (!this->m_model || !this->m_model->IsLoaded()) {
@@ -358,7 +339,6 @@ float CSimpleModel::GetHeight() {
     return height;
 }
 
-// PROVEN: f4cdf815 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051F570/0x14016C860
 void CSimpleModel::UpdateAlpha() {
     this->CSimpleFrame::UpdateAlpha();
@@ -370,7 +350,6 @@ void CSimpleModel::UpdateAlpha() {
     }
 }
 
-// PROVEN: b1f49122 DIFFERENT/IDENTICAL
 // OFFSET: 0x0051F5C0/0x14016C8C0
 void CSimpleModel::UpdateModelTransform() {
     float height = NDCToDDCHeight(1.0f) * 1.6666666f;
@@ -384,7 +363,6 @@ void CSimpleModel::UpdateModelTransform() {
     this->m_model->SetWorldTransform(position, this->m_facing, this->m_modelScale * this->m_layoutScale * height);
 }
 
-// PROVEN: fb071cc4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0051F650/0x14016C950
 void CSimpleModel::UpdateModel() {
     if (this->HasScript(this->m_onUpdateModel)) {
@@ -569,7 +547,6 @@ void CSimpleModel::OnModelLoaded(CM2Model* model) {
     this->Resize(0);
 }
 
-// PROVEN: cc13c90d IDENTICAL/IDENTICAL
 // OFFSET: 0x0051FDD0/0x14016D430
 void CSimpleModel::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     this->CSimpleFrame::OnFrameRender(batch, layer);
@@ -619,7 +596,6 @@ void CSimpleModel::ReplaceTexture(uint32_t type, const char* fileName) {
     }
 }
 
-// PROVEN: bb4dc5e6 IDENTICAL/NONE
 // OFFSET: 0x00538510
 void CSimpleModel::SetPosition(const C3Vector& position) {
     this->m_position = position;

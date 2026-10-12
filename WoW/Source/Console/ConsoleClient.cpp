@@ -156,7 +156,6 @@ void GenerateNodeString(CONSOLELINE* node) {
     GxuFontCreateString(font, reinterpret_cast<const char*>(node->m_buffer), s_fontHeight, position, 1.0f, s_fontHeight, 0.0f, node->m_fontPointer, GxVJ_Middle, GxHJ_Left, s_baseTextFlags, *reinterpret_cast<const CImVector*>(&s_colorArray[node->m_colorType]), s_charSpacing, 1.0f, 1.0f, 0.0f);
 }
 
-// PROVEN: dbddc250 IDENTICAL/UNPROVEN
 // OFFSET: 0x0060DC10/0x1402978A0
 static void SetInputString(const char* text) {
     if (s_inputString) {
@@ -187,7 +186,6 @@ static void ReserveInputSpace(CONSOLELINE* line, uint32_t chars) {
     line->m_buffer = buffer;
 }
 
-// PROVEN: 68b147ca IDENTICAL/IDENTICAL
 // OFFSET: 0x0060DE70/0x1405B4D60
 static void ResetHighlight() {
     s_highlightState = 0;
@@ -236,7 +234,6 @@ static int32_t OnMouseUp(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 97906e39 UNPROVEN/IDENTICAL
 // OFFSET: 0x0060DFF0/0x140297D20
 static int32_t OnMouseMove(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouse = static_cast<const EVENT_DATA_MOUSE*>(data);
@@ -264,7 +261,6 @@ static int32_t OnMouseMove(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 2f485051 DIFFERENT/IDENTICAL
 // OFFSET: 0x0060E080/0x140297DB0
 static void MakeCommandCurrent(CONSOLELINE* line, const char* command) {
     line->m_inputpos = line->m_inputstart;
@@ -307,7 +303,6 @@ static void Delete(CONSOLELINE* line) {
     SetInputString(reinterpret_cast<const char*>(line->m_buffer));
 }
 
-// PROVEN: d488b31d DIFFERENT/IDENTICAL
 // OFFSET: 0x0060E170/0x140297ED0
 static void Up(CONSOLELINE* line) {
     if (s_historyIndex == ConsoleCommandHistoryDepth() - 1) {
@@ -324,7 +319,6 @@ static void Up(CONSOLELINE* line) {
     }
 }
 
-// PROVEN: 5131e634 DIFFERENT/IDENTICAL
 // OFFSET: 0x0060E1C0/0x140297F30
 static void Down(CONSOLELINE* line) {
     if (s_historyIndex == -1) {
@@ -358,19 +352,16 @@ static int32_t OnKeyUp(const void* data, void* param) {
     return !s_active;
 }
 
-// PROVEN: be85f722 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E220/0x140297FA0
 const char* GetConsoleMessage() {
     return s_consoleMessage;
 }
 
-// PROVEN: ae794803 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E230/0x140297FB0
 void SetConsoleMessage(const char* message) {
     s_consoleMessage = message;
 }
 
-// PROVEN: adb5bf75 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E380/0x140298150
 static int32_t EventCloseCallback(void* param) {
     EventPostCloseEx(EventGetCurrentContext());
@@ -378,7 +369,6 @@ static int32_t EventCloseCallback(void* param) {
     return 0;
 }
 
-// PROVEN: e08f35a5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0060E3A0/0x1402982F0
 CONSOLELINE::~CONSOLELINE() {
     if (this->m_buffer) {
@@ -472,7 +462,6 @@ static void DrawCaret(const C3Vector& caretpos) {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: 98d993c8 DIFFERENT/IDENTICAL
 // OFFSET: 0x0060F0D0/0x1402991E0
 static void PaintBackground(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (s_rect.bottom < 1.0f) {
@@ -1215,7 +1204,6 @@ static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_MOUSEMOVE, OnMouseMove, NULL, 7.0f);
 }
 
-// PROVEN: c4a11f15 IDENTICAL/IDENTICAL
 // OFFSET: 0x006100A0/0x14029A400
 static void UnregisterHandlers() {
     EventUnregister(EVENT_ID_CHAR, OnChar);
@@ -1278,25 +1266,21 @@ void ConsoleScreenDestroy() {
     s_inputString = NULL;
 }
 
-// PROVEN: 7dbc3ed8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E240/0x140297FC0
 void SetConsoleKey(KEY key) {
     s_consoleHotKey = key;
 }
 
-// PROVEN: 8d2eeaa6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E250/0x140297FD0
 void ConsolePostClose() {
     EventPostCloseEx(EventGetCurrentContext());
 }
 
-// PROVEN: 0a15ffc7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E260/0x140297FF0
 int32_t ConsoleGetActive() {
     return s_active;
 }
 
-// PROVEN: 101da83a IDENTICAL/IDENTICAL
 // OFFSET: 0x006108E0/0x14029ADF0
 static bool BGLoadThrottleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     BGLoading::SetBandwidthThrottlePercentage(SStrToInt(value));
@@ -1308,7 +1292,6 @@ void BGLoadingThrottleCVarInitialize() {
     s_bgLoadThrottleVar = CVar::Register("BGLoadThrottle", "Set the maximum percentage of available bandwidth for background streaming (0-100)", 0, "33", BGLoadThrottleCallback, CATEGORY_NET, false, NULL, false);
 }
 
-// PROVEN: 6b966aca IDENTICAL/UNPROVEN
 // OFFSET: 0x00610930/0x14029AE70
 void PatchOnDemandInitialize() {
     PatchOnDemand::Cache::Init(50000000);

@@ -55,7 +55,6 @@ int32_t CAccountMsgBody::LoadBody(int32_t messageId) {
     return 1;
 }
 
-// PROVEN: 41581364 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FA1A0/0x140797600
 void CAccountMsgBody::_SendSuccessEvent() {
     if (CGlueMgr::AreScriptFunctionsLoaded()) {
@@ -63,7 +62,6 @@ void CAccountMsgBody::_SendSuccessEvent() {
     }
 }
 
-// PROVEN: 90d7d011 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FA1C0/0x14095F320
 void CAccountMsgBody::_SendFailureEvent() {
     this->m_iterator.m_node = NULL;

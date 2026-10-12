@@ -41,7 +41,6 @@ static int32_t Script_GetOrigin(lua_State* L) {
     return 3;
 }
 
-// PROVEN: c360d6a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053CDB0/0x140191010
 static int32_t Script_SetScale(lua_State* L) {
     CSimpleScaleAnim* anim = static_cast<CSimpleScaleAnim*>(FrameScript_GetObjectThis(L, CSimpleScaleAnim::GetObjectType()));
@@ -72,14 +71,12 @@ static int32_t Script_GetScale(lua_State* L) {
     return 2;
 }
 
-// PROVEN: dd25caa4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053CED0/0x140191160
 void CSimpleScaleAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleScaleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleScaleAnim::RegisterScriptMethods);
 }
 
-// PROVEN: 478b2a94 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053B990/0x14018F780
 void CSimpleScaleAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();

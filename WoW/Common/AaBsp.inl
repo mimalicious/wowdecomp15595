@@ -8,7 +8,6 @@ inline CAaBspDigestCache::~CAaBspDigestCache() {
     this->Reset();
 }
 
-// PROVEN: 51eaabb4 IDENTICAL/NONE
 // OFFSET: [0x00791300<BspQuery_Segment>, 0x007913B0<BspQuery_SegmentLink>, 0x00792270<BspQuery_Volume<CAaBox>>, 0x00791360/0x14047F2A0<BspQuery_Volume<CFrustum>>]
 template <class T>
 void CAaBsp_Query<T>::GetFaceIndices(const CAaBspNode* node) {

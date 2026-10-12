@@ -30,12 +30,10 @@ CGxTex::CGxTex(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t de
     this->m_char5D = 1;
 }
 
-// PROVEN: bd9c61cb IDENTICAL/DIFFERENT
 // OFFSET: 0x00844580/0x140571100
 CGxTex::~CGxTex() {
 }
 
-// PROVEN: 47d8cc07 IDENTICAL/NONE
 // OFFSET: 0x0086B9F0
 CGxTex& CGxTex::operator=(const CGxTex& source) {
     this->m_updateRect = source.m_updateRect;

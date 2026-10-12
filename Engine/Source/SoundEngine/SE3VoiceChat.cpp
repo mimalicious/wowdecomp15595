@@ -112,7 +112,6 @@ FMOD_RESULT F_CALLBACK SE3ChatSound::DSPSeekCallback(FMOD_DSP_STATE* dspState, u
     return FMOD_OK;
 }
 
-// PROVEN: 76abd7b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00712560/0x1403E4370
 void SE3::CaptureWork() {
     if (!s_capturing) {
@@ -159,19 +158,16 @@ void SE3::CaptureWork() {
     s_heartBeatCritSect.Leave();
 }
 
-// PROVEN: 422455fa IDENTICAL/IDENTICAL
 // OFFSET: 0x007126B0/0x1403E4510
 void SE3::SetUserMonitorDSPCallback(void (*callback)(float*, uint32_t)) {
     s_userMonitorDSPCallback = callback;
 }
 
-// PROVEN: 7d0c9594 IDENTICAL/IDENTICAL
 // OFFSET: 0x007126C0/0x1403E4520
 FMOD_RESULT SE3::AttachMonitorDSP(FMOD::Channel* channel) {
     return channel->addDSP(s_monitorDSP);
 }
 
-// PROVEN: f375c512 IDENTICAL/IDENTICAL
 // OFFSET: 0x007126E0/0x1403E4530
 static FMOD_RESULT F_CALLBACK MonitorDSPCallback(FMOD_DSP_STATE* dspState, float* inBuffer, float* outBuffer, unsigned int length, int inChannels, int outChannels) {
     memcpy(outBuffer, inBuffer, length * sizeof(float));
@@ -269,7 +265,6 @@ bool SE3::IsCapturing() {
     return recording;
 }
 
-// PROVEN: f3ad69b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00712870/0x1403E45A0
 void SE3::StartCapture() {
     if (!SE3::sm_pChatSystem) {
@@ -296,19 +291,16 @@ void SE3::StartCapture() {
     SE3_ERRCHECK(result);
 }
 
-// PROVEN: 65a94e21 IDENTICAL/IDENTICAL
 // OFFSET: 0x007128F0/0x1403E4630
 void SE3::SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     s_primaryCaptureCallbacks = callbacks;
 }
 
-// PROVEN: 2e04463d IDENTICAL/IDENTICAL
 // OFFSET: 0x00712900/0x1403E4640
 void SE3::SetAlternateCaptureCallback(SE3CaptureCallbacks* callbacks) {
     s_alternateCaptureCallbacks = callbacks;
 }
 
-// PROVEN: 3c77d607 IDENTICAL/IDENTICAL
 // OFFSET: 0x00712910/0x1403E4650
 void SE3::ActivateAlternateCaptureCallback() {
     s_heartBeatCritSect.Enter();
@@ -316,13 +308,11 @@ void SE3::ActivateAlternateCaptureCallback() {
     s_heartBeatCritSect.Leave();
 }
 
-// PROVEN: 3cd00168 IDENTICAL/IDENTICAL
 // OFFSET: 0x00712930/0x1403E4680
 bool SE3::AlternateCaptureCallbackIsActive() {
     return s_captureCallbacks == s_alternateCaptureCallbacks;
 }
 
-// PROVEN: 49a86223 IDENTICAL/IDENTICAL
 // OFFSET: 0x00712950/0x1403E46A0
 void SE3::ActivatePrimaryCaptureCallback() {
     s_heartBeatCritSect.Enter();
@@ -330,7 +320,6 @@ void SE3::ActivatePrimaryCaptureCallback() {
     s_heartBeatCritSect.Leave();
 }
 
-// PROVEN: 2593c197 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SE3StreamCallbacks::Delete() {
 }
@@ -352,7 +341,6 @@ void SE3StreamCallbacks::DiscardSamples(uint32_t position, uint32_t count) {
     }
 }
 
-// PROVEN: e3cf17a4 DIFFERENT/IDENTICAL
 // OFFSET: 0x00712A60/0x1403E4820
 void SE3::StopCapture() {
     if (!SE3::sm_pChatSystem || !SE3::IsChatSoundInitialized()) {
@@ -371,7 +359,6 @@ void SE3::StopCapture() {
     }
 }
 
-// PROVEN: 0d05ed9c IDENTICAL/DIFFERENT
 // OFFSET: 0x00712AD0/0x1403E48A0
 void SE3::ShutDownCapture() {
     s_capturing = 0;
@@ -389,7 +376,6 @@ void SE3::ShutDownCapture() {
     SE3::HeartBeat(NULL, NULL);
 }
 
-// PROVEN: 338db020 IDENTICAL/DIFFERENT
 // OFFSET: 0x00712DB0/0x1403E4D40
 void SE3::DestroyChatSystem() {
     if (!SE3::sm_pChatSystem) {

@@ -19,7 +19,6 @@ static uint32_t s_categoryFilter = 0xFFFFFFFF;
 // STATIC: 0x00DD3CFC/0x140CB9AB8
 static int32_t s_minSeverity;
 
-// PROVEN: 31ecab71 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E840/0x140193030
 void SysMsgGetSeverityColor(STATUS_TYPE severity, float& red, float& green, float& blue) {
     red = s_severities[severity].m_red * 0.0039215689f;
@@ -27,7 +26,6 @@ void SysMsgGetSeverityColor(STATUS_TYPE severity, float& red, float& green, floa
     blue = s_severities[severity].m_blue * 0.0039215689f;
 }
 
-// PROVEN: c35867f2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053E8D0/0x1401930C0
 int32_t SysMsgAdd(const char* text, STATUS_TYPE severity) {
     if (!text || severity >= STATUS_NUMTYPES) {
@@ -86,13 +84,11 @@ int32_t SysMsgPrintf(STATUS_TYPE severity, uint32_t flags, const char* format, .
     return 0;
 }
 
-// PROVEN: 910dc464 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E7B0/0x140192FA0
 void SysMsgEnable(int32_t enable) {
     s_enabled = enable;
 }
 
-// PROVEN: 7ac02aa2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E7C0/0x140192FB0
 void SysMsgSetMinDisplayLevel(int32_t level) {
     s_minSeverity = level;
@@ -102,7 +98,6 @@ void SysMsgSetMinDisplayLevel(int32_t level) {
     }
 }
 
-// PROVEN: b3910be8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E7E0/0x140192FD0
 void SysMsgSetMaxDisplayLevel(int32_t level) {
     s_maxSeverity = level;
@@ -112,31 +107,26 @@ void SysMsgSetMaxDisplayLevel(int32_t level) {
     }
 }
 
-// PROVEN: b0437edb IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E800/0x140192FF0
 int32_t SysMsgGetMinDisplayLevel() {
     return s_minSeverity;
 }
 
-// PROVEN: abf5a958 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E810/0x140193000
 int32_t SysMsgGetMaxDisplayLevel() {
     return s_maxSeverity;
 }
 
-// PROVEN: 95b1318a IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E820/0x140193010
 void SysMsgSetFilter(uint32_t filter) {
     s_categoryFilter = filter;
 }
 
-// PROVEN: 6017db40 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E830/0x140193020
 uint32_t SysMsgGetFilter() {
     return s_categoryFilter;
 }
 
-// PROVEN: 76051731 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E8A0/0x140193090
 void SysMsgInitialize() {
     s_enabled = 1;
@@ -145,7 +135,6 @@ void SysMsgInitialize() {
     s_categoryFilter = 0xFFFFFFFF;
 }
 
-// PROVEN: f92a5b55 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SysMsgSetCallback(void (*callback)(const char* text, STATUS_TYPE severity)) {
 }

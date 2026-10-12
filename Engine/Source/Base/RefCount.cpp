@@ -1,6 +1,5 @@
 #include "Engine/Source/Base/RefCount.h"
 
-// PROVEN: 75e498ac IDENTICAL/IDENTICAL
 // OFFSET: 0x004093D0/0x14000BB00
 void TRefCnt::DeleteSelf() {
     delete this;

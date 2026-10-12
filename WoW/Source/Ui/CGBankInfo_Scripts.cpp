@@ -15,7 +15,6 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: 0a34656d IDENTICAL/IDENTICAL
 // OFFSET: 0x009EE7A0/0x140787DA0
 static int32_t Script_BankButtonIDToInvSlotID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -35,7 +34,6 @@ static int32_t Script_BankButtonIDToInvSlotID(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ebc95adf IDENTICAL/DIFFERENT
 // OFFSET: 0x009EE910/0x140787F60
 static int32_t Script_GetNumBankSlots(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -51,7 +49,6 @@ static int32_t Script_GetNumBankSlots(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 4219967c IDENTICAL/DIFFERENT
 // OFFSET: 0x009EE990/0x140787FF0
 static int32_t Script_GetBankSlotCost(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -68,7 +65,6 @@ static int32_t Script_GetBankSlotCost(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 477d33e6 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EE820/0x140787E20
 static int32_t Script_CloseBankFrame(lua_State* L) {
     WOWGUID none = WOWGUID();
@@ -76,7 +72,6 @@ static int32_t Script_CloseBankFrame(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3fe2434c IDENTICAL/NONE
 // OFFSET: 0x009EE890
 static uint32_t GetBankSlotCost(int32_t slot) {
     BankBagSlotPricesRec* rec = g_bankBagSlotPricesDB.GetRecord(slot);
@@ -120,7 +115,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseBankFrame", &Script_CloseBankFrame },
 };
 
-// PROVEN: 410eade9 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EE840/0x140787E60
 void BankRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -128,7 +122,6 @@ void BankRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 60e6f56f IDENTICAL/UNPROVEN
 // OFFSET: 0x009EE870/0x140787EB0
 void BankUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

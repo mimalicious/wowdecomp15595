@@ -66,7 +66,6 @@ WowClientDB_Common::WowClientDB_Common() {
     this->m_minID = 0;
 }
 
-// PROVEN: 854c3dfe IDENTICAL/DIFFERENT
 // OFFSET: 0x0048AB40/0x1400ADBA0
 void WowClientDB_Common::Load(const DBCMeta* meta) {
     char error[256];
@@ -104,7 +103,6 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
     this->LoadRecords(meta, data, header[1], rows, header[4], reinterpret_cast<const char*>(&rows[header[1] * meta->m_rowSize]));
 }
 
-// PROVEN: 1e707c58 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048AC70/0x1400ADD20
 void WowClientDB_Common::Unload(const DBCMeta* meta) {
     this->Free();
@@ -113,7 +111,6 @@ void WowClientDB_Common::Unload(const DBCMeta* meta) {
     this->m_minID = 0xFFFFFFF;
 }
 
-// PROVEN: b563673a IDENTICAL/IDENTICAL
 // OFFSET: 0x0048ACA0/0x1400ADD50
 WowClientDB_Base::WowClientDB_Base() {
     this->m_data = NULL;
@@ -121,7 +118,6 @@ WowClientDB_Base::WowClientDB_Base() {
     this->m_recordsById = NULL;
 }
 
-// PROVEN: 8dd94dbb IDENTICAL/DIFFERENT
 // OFFSET: 0x0048ACD0/0x1400ADD80
 void WowClientDB_Base::Free() {
     SMemFree(this->m_data, __FILE__, __LINE__, 0);
@@ -163,7 +159,6 @@ void WowClientDB_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint32_t 
     }
 }
 
-// PROVEN: 0d82be0b IDENTICAL/IDENTICAL
 // OFFSET: 0x0048AE00/0x1400ADEF0
 WowClientDB_RLE_Base::WowClientDB_RLE_Base() {
     this->m_data = NULL;
@@ -172,7 +167,6 @@ WowClientDB_RLE_Base::WowClientDB_RLE_Base() {
     this->m_recordsById = NULL;
 }
 
-// PROVEN: 8ce3b1ac IDENTICAL/IDENTICAL
 // OFFSET: 0x0048AE30/0x1400ADF20
 void WowClientDB_RLE_Base::Free() {
     if (this->m_data) {
@@ -312,7 +306,6 @@ void WowClientDB_RLE_Base::CopyRecord(void* rec, const uint8_t* row, uint8_t* bu
     }
 }
 
-// PROVEN: 070f929c IDENTICAL/DIFFERENT
 // OFFSET: 0x0048AEB0/0x1400ADFD0
 uint8_t* DecompressRow(const uint8_t* src, uint32_t size, uint8_t* dst) {
     uint8_t* end = &dst[size];

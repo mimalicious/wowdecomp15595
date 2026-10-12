@@ -237,7 +237,6 @@ CParticle2* CParticleEmitter2::NextParticle<CSortableParticleRecord>(uint32_t in
     return particle;
 }
 
-// PROVEN: 6a61881b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B13EF0/0x1408D9D40
 void CParticleEmitter2::SetModel(CM2Scene* scene, const char* name) {
     if (scene && name && *name) {
@@ -250,13 +249,11 @@ void CParticleEmitter2::SetModel(CM2Scene* scene, const char* name) {
     }
 }
 
-// PROVEN: 9226a371 IDENTICAL/NONE
 // OFFSET: 0x00903F20
 CAaBox& CParticleEmitter2::WorldBounds() {
     return this->m_worldBounds;
 }
 
-// PROVEN: 27cb204e IDENTICAL/DIFFERENT
 // OFFSET: 0x00B15230/0x1408DB0B0
 void CParticleEmitter2::SetMaterial(const CParticleMat& material, CTexture* texture) {
     if (texture) {
@@ -272,7 +269,6 @@ void CParticleEmitter2::SetMaterial(const CParticleMat& material, CTexture* text
     this->m_params.m_materialFlags = material.m_flags;
 }
 
-// PROVEN: dd36dcb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B13F40/0x1408D9DA0
 void CParticleEmitter2::SetTexture(CTexture* texture) {
     if (texture) {
@@ -305,7 +301,6 @@ void CParticleEmitter2::SetTextureDimensions(uint32_t rows, uint32_t cols) {
     this->m_textureCellHeight = 1.0f / rows;
 }
 
-// PROVEN: 2991d213 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B141A0/0x1408DA020
 void CParticleEmitter2::SetParticleStyle(int32_t head, int32_t tail, float tailLength, int32_t clampTail) {
     if (head) {
@@ -341,7 +336,6 @@ void CParticleEmitter2::SetParticleStyle(int32_t head, int32_t tail, float tailL
     }
 }
 
-// PROVEN: 9c0ba018 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B14240/0x1408DA0B0
 void CParticleEmitter2::SetZsource(float zsource) {
     this->m_params.m_zsource = zsource;
@@ -366,7 +360,6 @@ void CParticleEmitter2::SetFollowParams(float speed1, float scale1, float speed2
     this->m_followIntercept = scale1 - speed1 * slope;
 }
 
-// PROVEN: d815f24e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B142E0/0x1408DA130
 void CParticleEmitter2::SetChooseRandomTexture(int32_t choose) {
     if (this->m_textureRows * this->m_textureCols > 1 && choose) {
@@ -376,7 +369,6 @@ void CParticleEmitter2::SetChooseRandomTexture(int32_t choose) {
     }
 }
 
-// PROVEN: 6a30d9a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B14320/0x1408DA160
 CParticleEmitter2* CParticleEmitter2::AddRef() {
     this->m_refCount++;
@@ -408,7 +400,6 @@ void CParticleEmitter2::Init() {
     CParticleEmitter2::s_initCount++;
 }
 
-// PROVEN: 228a6f29 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B146D0/0x1408DA580
 void CParticleEmitter2::Destroy() {
     if (--CParticleEmitter2::s_initCount) {
@@ -947,7 +938,6 @@ int32_t CParticleEmitter2::RenderParticle(CParticle2_Model& particle, const C44M
     return 1;
 }
 
-// PROVEN: 1c81cf74 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B13F80/0x1408D9DF0
 void CParticleEmitter2::SetParticleColors(const CImVector& color0, const CImVector& color1, const CImVector& color2) {
     this->m_params.m_replacementColors[0].x = color0.r;
@@ -994,14 +984,12 @@ void CParticleEmitter2::GetReplacementColors(CImVector& color0, CImVector& color
     color2.b = static_cast<uint8_t>(CMath::fint_(this->m_params.m_replacementColors[2].z));
 }
 
-// PROVEN: d45dc428 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B15370/0x1408DB1D0
 void CParticleEmitter2::SetTwinkleScale(const CRange& scale) {
     this->m_twinkleScaleBase = scale.m_l;
     this->m_twinkleScaleSpan = scale.m_h - scale.m_l;
 }
 
-// PROVEN: 2ded3c5e IDENTICAL/NONE
 // OFFSET: 0x00B153A0
 void CParticleEmitter2::UpdateXform(const C44Matrix& transform, const C3Vector& viewPos, const C44Matrix* frameOfReference) {
     this->m_viewPos = viewPos;
@@ -1082,7 +1070,6 @@ static void RecursiveEmitterModelLoaded(CM2Model* model, void* arg) {
     }
 }
 
-// PROVEN: a0c8586e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B154D0/0x1408DB4B0
 void CParticleEmitter2::CreateChildEmittersFromModel(CM2Scene* scene, const char* name) {
     if (!scene) {
@@ -1351,7 +1338,6 @@ CParticleEmitter2::SimpleKey::SimpleKey() {
     this->m_deltaColor[3] = 0;
 }
 
-// PROVEN: 8fb0fc77 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B15800/0x1408DB830
 int32_t CParticleEmitter2::HasLiveParticles() {
     if (this->m_liveList.Count()) {
@@ -1384,7 +1370,6 @@ uint32_t CParticleEmitter2::GetNumParticleModels() {
     return count;
 }
 
-// PROVEN: f838efae DIFFERENT/IDENTICAL
 // OFFSET: 0x00B15890/0x1408DB910
 CM2Model* CParticleEmitter2::GetParticleModelInternal(uint32_t& index) {
     if (this->m_params.m_hasModel == 1) {
@@ -1425,7 +1410,6 @@ uint32_t CParticleEmitter2::GetNumBatches() {
     return count;
 }
 
-// PROVEN: 5fb3702c DIFFERENT/IDENTICAL
 // OFFSET: 0x00B15940/0x1408DBA20
 uint32_t CParticleEmitter2::GetNumPrimitives() {
     uint32_t count = this->m_liveList.Count() * this->m_indicesPerParticle / 3;
@@ -2534,7 +2518,6 @@ CParticleEmitter2::CParticleEmitter2(const CParticleEmitter2& source, int32_t co
     }
 }
 
-// PROVEN: 7bb8d416 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CParticleEmitter2::DestroyParticle(CParticle2& particle) {
 }
@@ -2589,25 +2572,21 @@ CPlaneParticleEmitter::CPlaneParticleEmitter(const CPlaneParticleEmitter& source
     this->m_longitude = source.m_longitude;
 }
 
-// PROVEN: c14c8f1d IDENTICAL/DIFFERENT
 // OFFSET: 0x00B27210/0x1408E0130
 void CPlaneParticleEmitter::SetWidth(float width) {
     this->m_width = width;
 }
 
-// PROVEN: 7b4240fb IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27230/0x1408EF650
 void CPlaneParticleEmitter::SetHeight(float height) {
     this->m_height = height;
 }
 
-// PROVEN: 3b916f09 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27250/0x1408EF660
 void CPlaneParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// PROVEN: e51bd20e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27370/0x1408EF770
 void CPlaneParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
@@ -2622,7 +2601,6 @@ CSphereParticleEmitter::CSphereParticleEmitter() {
     this->m_longitude = 0.0f;
 }
 
-// PROVEN: 2947c456 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B272B0/0x1408EF6C0
 CSphereParticleEmitter::CSphereParticleEmitter(const CSphereParticleEmitter& source, int32_t copyParticles) : CParticleEmitter2(source, copyParticles) {
     this->m_minRadius = source.m_minRadius;
@@ -2632,46 +2610,39 @@ CSphereParticleEmitter::CSphereParticleEmitter(const CSphereParticleEmitter& sou
     this->m_radiusSpan = source.m_radiusSpan;
 }
 
-// PROVEN: 5f90bd03 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27310/0x1408EF730
 void CSphereParticleEmitter::SetWidth(float width) {
     this->m_minRadius = width;
     this->m_radiusSpan = this->m_maxRadius - width;
 }
 
-// PROVEN: 46d3a505 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27340/0x1408EF750
 void CSphereParticleEmitter::SetHeight(float height) {
     this->m_maxRadius = height;
     this->m_radiusSpan = height - this->m_minRadius;
 }
 
-// PROVEN: 4a09dccc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27370/0x1408EF770
 void CSphereParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// PROVEN: a1921b28 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27390/0x1408EF780
 void CSphereParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
 }
 
-// PROVEN: 43da2e20 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B273B0/0x1408EF790
 void CSplineParticleEmitter::SetEmissionRate(float rate) {
     this->m_ratePerUnit = rate;
     this->m_params.m_emissionRate = rate * this->m_end;
 }
 
-// PROVEN: cc428db1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B273E0/0x1408EF7B0
 void CSplineParticleEmitter::SetSpline(const C3Vector* points, uint32_t count) {
     this->m_spline.SetPoints(points, count);
 }
 
-// PROVEN: 0ec91914 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B273F0/0x1408EF7C0
 CParticleEmitter2* CPlaneParticleEmitter::Clone(int32_t copyParticles) {
     void* mem = SMemAlloc(sizeof(CPlaneParticleEmitter), __FILE__, __LINE__, 0);
@@ -2679,7 +2650,6 @@ CParticleEmitter2* CPlaneParticleEmitter::Clone(int32_t copyParticles) {
     return mem ? new (mem) CPlaneParticleEmitter(*this, copyParticles) : NULL;
 }
 
-// PROVEN: f1267c0b IDENTICAL/DIFFERENT
 // OFFSET: 0x00B27430/0x1408EF870
 CParticleEmitter2* CSphereParticleEmitter::Clone(int32_t copyParticles) {
     void* mem = SMemAlloc(sizeof(CSphereParticleEmitter), __FILE__, __LINE__, 0);
@@ -2863,13 +2833,11 @@ void CSplineParticleEmitter::SetHeight(float height) {
     }
 }
 
-// PROVEN: 30258723 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27370/0x1408EF770
 void CSplineParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// PROVEN: f55f2b60 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27390/0x1408EF780
 void CSplineParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
@@ -2972,7 +2940,6 @@ CSplineParticleEmitter::CSplineParticleEmitter() {
 CSplineParticleEmitter::~CSplineParticleEmitter() {
 }
 
-// PROVEN: b78fae3c UNPROVEN/IDENTICAL
 // OFFSET: 0x00B287A0/0x1408F0F20
 CSplineParticleEmitter::CSplineParticleEmitter(const CSplineParticleEmitter& source, int32_t copyParticles) : CParticleEmitter2(source, copyParticles) {
     this->m_start = source.m_start;
@@ -2984,7 +2951,6 @@ CSplineParticleEmitter::CSplineParticleEmitter(const CSplineParticleEmitter& sou
     this->m_spline = source.m_spline;
 }
 
-// PROVEN: 24447780 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B28820/0x1408F0FD0
 CParticleEmitter2* CSplineParticleEmitter::Clone(int32_t copyParticles) {
     void* mem = SMemAlloc(sizeof(CSplineParticleEmitter), __FILE__, __LINE__, 0);

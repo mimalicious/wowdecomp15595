@@ -21,7 +21,6 @@ static CTexture* s_shadowBlobTexture;
 // STATIC: 0x00E75674/0x140D5F458
 static CVar* s_cvShadowMode;
 
-// PROVEN: 68b580f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00744F60/0x140422C20
 void ShadowDestroy() {
     if (s_shadowBlobTexture) {
@@ -35,7 +34,6 @@ static float ShadowSqrt(float value) {
     return _mm_cvtss_f32(_mm_sqrt_ss(_mm_set_ss(value)));
 }
 
-// PROVEN: f06568cd IDENTICAL/IDENTICAL
 // OFFSET: 0x00744FD0/0x140422C50
 int32_t ShadowBlobsEnabled() {
     return s_cvShadowMode && !s_cvShadowMode->m_intValue;

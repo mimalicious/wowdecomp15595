@@ -23,7 +23,6 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// PROVEN: 878cc1c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00733100/0x140475D70
 void CMapDoodadDef::StreamingCallback(void* param) {
     static_cast<CMapDoodadDef*>(param)->m_model->LinkToAsyncHead();
@@ -237,7 +236,6 @@ void CMapDoodadDef::UpdateBounds() {
     }
 }
 
-// PROVEN: 11cd35b8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00787900/0x140476FA0
 void CMapDoodadDef::LinkToChunk(CMapBaseObj* owner) {
     if (owner->m_type & 0x4) {
@@ -332,7 +330,6 @@ void CMapDoodadDef::UpdateOwners() {
     }
 }
 
-// PROVEN: ddec203f IDENTICAL/DIFFERENT
 // OFFSET: 0x00787C90/0x1404773F0
 void CMapDoodadDef::Purge() {
     if (this->m_refCount) {

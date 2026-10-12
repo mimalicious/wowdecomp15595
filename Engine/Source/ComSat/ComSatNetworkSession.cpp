@@ -13,7 +13,6 @@ bool ComSat::Network::Session::RemoteTalker::operator==(const ComSat::Network::S
     return this->m_talker == other.m_talker;
 }
 
-// PROVEN: c8a7aab6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39540/0x1407E5930
 void ComSat::Network::Session::SetNetworkId(uint16_t networkId) {
     if (this->m_networkId != networkId) {
@@ -21,13 +20,11 @@ void ComSat::Network::Session::SetNetworkId(uint16_t networkId) {
     }
 }
 
-// PROVEN: 47949663 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39560/0x1407E5940
 void ComSat::Network::Session::Recv(uint64_t talker, const uint8_t* data, uint32_t size) {
     this->m_callback->Recv(talker, data, size);
 }
 
-// PROVEN: 03f8b0c3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A39650/0x1407E59D0
 void ComSat::Network::Session::SetTalkerNetworkIdLocal(uint64_t talker, uint8_t networkId) {
     LocalTalker key;

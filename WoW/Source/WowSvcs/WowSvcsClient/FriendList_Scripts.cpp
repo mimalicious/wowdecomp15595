@@ -18,14 +18,12 @@
 #include "WoW/Source/Ui/ChatFrame.h"
 #include "WoW/Source/Ui/Types.h"
 
-// PROVEN: a4bcdc11 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D2580/0x14010F800
 static int32_t Script_SetWhoToUI(lua_State* L) {
     FriendList::s_whoToUI = StringToBOOL(L, 1, 0);
     return 0;
 }
 
-// PROVEN: bc58d40f IDENTICAL/IDENTICAL
 // OFFSET: 0x004D2520/0x14010F7C0
 static int32_t Script_GetNumWhoResults(lua_State* L) {
     lua_pushnumber(L, FriendList::s_numWhoResults);
@@ -67,7 +65,6 @@ static int32_t Script_GetNumFriends(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 56067868 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D3690/0x140110620
 static int32_t Script_GetNumIgnores(lua_State* L) {
     if (FriendList::s_friendList) {
@@ -142,7 +139,6 @@ static int32_t Script_AddFriend(lua_State* L) {
     return 0;
 }
 
-// PROVEN: cb5416e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D5A20/0x140113740
 static int32_t Script_SendWho(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -264,14 +260,12 @@ static int32_t Script_SetSelectedFriend(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 843d200e IDENTICAL/DIFFERENT
 // OFFSET: 0x004D35D0/0x140110530
 static int32_t Script_GetSelectedFriend(lua_State* L) {
     lua_pushnumber(L, FriendList::s_friendList->GetFriendSelectionIndex() + 1);
     return 1;
 }
 
-// PROVEN: df75fd91 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D36F0/0x140110680
 static int32_t Script_GetNumMutes(lua_State* L) {
     if (FriendList::s_friendList) {
@@ -383,14 +377,12 @@ static int32_t Script_SetSelectedMute(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e8796e95 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D3A90/0x140110A80
 static int32_t Script_GetSelectedIgnore(lua_State* L) {
     lua_pushnumber(L, FriendList::s_friendList->GetIgnoreSelectionIndex() + 1);
     return 1;
 }
 
-// PROVEN: c0a099a5 IDENTICAL/DIFFERENT
 // OFFSET: 0x004D3AD0/0x140110AE0
 static int32_t Script_GetSelectedMute(lua_State* L) {
     lua_pushnumber(L, FriendList::s_friendList->GetMuteSelectionIndex() + 1);
@@ -451,7 +443,6 @@ static int32_t Script_SortWho(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1afc437f IDENTICAL/IDENTICAL
 // OFFSET: 0x004D5A70/0x1401137A0
 static int32_t Script_AddOrDelIgnore(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -463,7 +454,6 @@ static int32_t Script_AddOrDelIgnore(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 807e06a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D5AA0/0x1401137D0
 static int32_t Script_AddOrDelMute(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -475,7 +465,6 @@ static int32_t Script_AddOrDelMute(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d908bd54 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D5AD0/0x140113800
 static int32_t Script_AddIgnore(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -487,7 +476,6 @@ static int32_t Script_AddIgnore(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ae257bf2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D5B00/0x140113830
 static int32_t Script_AddMute(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -553,7 +541,6 @@ static int32_t Script_IsIgnoredOrMuted(lua_State* L) {
     return 1;
 }
 
-// PROVEN: e014aa9d IDENTICAL/IDENTICAL
 // OFFSET: 0x004D6910/0x140114B60
 static int32_t Script_AddOrRemoveFriend(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -631,7 +618,6 @@ static int32_t Script_SetFriendNotes(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3bad6d1c IDENTICAL/IDENTICAL
 // OFFSET: 0x004D6B10/0x140114D60
 static int32_t Script_DelIgnore(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -643,7 +629,6 @@ static int32_t Script_DelIgnore(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1a347170 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D6B40/0x140114D90
 static int32_t Script_DelMute(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -690,7 +675,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SortWho", &Script_SortWho },
 };
 
-// PROVEN: 0753ba7f IDENTICAL/IDENTICAL
 // OFFSET: 0x004D25A0/0x14010F820
 void FriendList::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -698,7 +682,6 @@ void FriendList::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 6fc81244 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D25D0/0x14010F870
 void FriendList::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

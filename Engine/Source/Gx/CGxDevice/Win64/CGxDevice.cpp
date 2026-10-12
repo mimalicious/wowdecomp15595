@@ -191,7 +191,6 @@ int32_t CGxDevice::DeviceAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint3
     return result;
 }
 
-// PROVEN: 6ae548e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849B70/0x140577D00
 int32_t CGxDevice::AdapterHasDriver() {
     DISPLAY_DEVICEA device;
@@ -207,7 +206,6 @@ int32_t CGxDevice::AdapterHasDriver() {
     return 0;
 }
 
-// PROVEN: 0e82249c IDENTICAL/DIFFERENT
 // OFFSET: 0x0084BEA0/0x14057A750
 int32_t CGxDevice::AdapterD3dAvailable() {
     HINSTANCE d3dLib;
@@ -259,7 +257,6 @@ int32_t CGxDevice::DeviceAdapterInfer(uint16_t& deviceID) {
     return result;
 }
 
-// PROVEN: 2c8ce512 IDENTICAL/DIFFERENT
 // OFFSET: 0x00849900/0x140577A20
 static int CGxMonitorModeSort(const void* a, const void* b) {
     const CGxMonitorMode* modeA = static_cast<const CGxMonitorMode*>(a);
@@ -361,7 +358,6 @@ static BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC dc, LPRECT rect, LPAR
     return TRUE;
 }
 
-// PROVEN: bc6c872e IDENTICAL/IDENTICAL
 // OFFSET: 0x0084AC80/0x140579240
 int32_t CGxDevice::D3d11AdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes) {
     modes.SetCount(0);
@@ -412,7 +408,6 @@ int32_t CGxDevice::WinAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxM
     return modes.Count() != 0;
 }
 
-// PROVEN: 8725ddb1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0084ADE0/0x140579420
 void CGxDevice::AdapterInitMonitors() {
     CGxDevice::s_monitors.Clear();
@@ -436,20 +431,17 @@ void CGxDevice::AdapterInitMonitors() {
     CGxDevice::s_monitorsInit = 1;
 }
 
-// PROVEN: 5af231a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t CGxDevice::AdapterMonitorName(uint32_t monitor, char* name, uint32_t size) {
     return 0;
 }
 
-// PROVEN: 20389cc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849960/0x140577A80
 void CGxDevice::IWindowClassDestroy(uint16_t* windowClass) {
     UnregisterClassA(reinterpret_cast<LPCSTR>(*windowClass), GetModuleHandleA(NULL));
     *windowClass = 0;
 }
 
-// PROVEN: a56170a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849990/0x140577AB0
 void CGxDevice::IWindowDestroy(void* window) {
     HWND& hwnd = *static_cast<HWND*>(window);
@@ -511,7 +503,6 @@ void CGxDevice::IWindowCursorCreate(void* window, void* icon) {
     DeleteObject(color);
 }
 
-// PROVEN: 4e0bebef IDENTICAL/IDENTICAL
 // OFFSET: 0x00849B50/0x140577CD0
 void CGxDevice::IWindowCursorDestroy(void* icon) {
     HICON& cursor = *static_cast<HICON*>(icon);
@@ -522,7 +513,6 @@ void CGxDevice::IWindowCursorDestroy(void* icon) {
     }
 }
 
-// PROVEN: e26dae05 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849B70/0x140577D00
 int32_t CGxDevice::AdapterIsPresent() {
     DISPLAY_DEVICEA device;
@@ -798,7 +788,6 @@ LRESULT CALLBACK WindowProcGx(HWND hwnd, UINT message, WPARAM wparam, LPARAM lpa
     return DefWindowProcA(hwnd, message, wparam, lparam);
 }
 
-// PROVEN: 551048cb IDENTICAL/IDENTICAL
 // OFFSET: 0x0084A6B0/0x140578470
 uint16_t CGxDevice::IWindowClassCreate() {
     HINSTANCE instance = GetModuleHandleA(NULL);

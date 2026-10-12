@@ -51,7 +51,6 @@ void CGradient::Set(ORIENTATION orientation, const CImVector& minColor, const CI
     }
 }
 
-// PROVEN: 309df4a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A810/0x1401529C0
 void CGradient::ApplyAlpha(uint8_t alpha) {
     for (uint32_t i = this->m_colorCount; i; ) {
@@ -60,7 +59,6 @@ void CGradient::ApplyAlpha(uint8_t alpha) {
     }
 }
 
-// PROVEN: ec65a0ae IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A860/0x140152A10
 bool CGradient::IsWhite() {
     for (uint32_t i = this->m_colorCount; i; ) {
@@ -89,7 +87,6 @@ uint8_t CSimpleRegion::GetVertexAlpha() {
     return color.a;
 }
 
-// PROVEN: 74d0fb14 IDENTICAL/NONE
 // OFFSET: 0x004F87F0
 void CSimpleRegion::SetIgnoreParentAlpha(bool ignore) {
     if (ignore != this->m_ignoreParentAlpha) {
@@ -98,13 +95,11 @@ void CSimpleRegion::SetIgnoreParentAlpha(bool ignore) {
     }
 }
 
-// PROVEN: 9747124f IDENTICAL/IDENTICAL
 // OFFSET: 0x004FAA60/0x14013E7D0
 void CSimpleRegion::SetParent(CSimpleFrame* parent) {
     this->SetFrame(parent, this->m_drawLayer, this->m_subLevel, this->m_shown);
 }
 
-// PROVEN: a1cb9dc6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004FBDD0/0x14013FFE0
 void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
     char buffer[128];
@@ -117,13 +112,11 @@ void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* p
     print(buffer, param);
 }
 
-// PROVEN: 3265573d IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A450/0x1401525D0
 int32_t CSimpleRegion::CanBeAnchorFor(CLayoutFrame* frame) {
     return frame->IsProtected() == 0;
 }
 
-// PROVEN: b9f67c7d IDENTICAL/IDENTICAL
 // OFFSET: 0x004FA850/0x1401A1AA0
 void CSimpleRegion::GetBaseColor(CImVector& color) {
     const CImVector* source = this->m_hasGradient ? this->Gradient()->m_colors : (this->m_hasColor ? &this->m_color : NULL);
@@ -133,7 +126,6 @@ void CSimpleRegion::GetBaseColor(CImVector& color) {
     }
 }
 
-// PROVEN: 3c7c8b85 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A470/0x1401525F0
 void CSimpleRegion::GetVertexColor(CImVector& color) {
     if (this->m_hasColor) {
@@ -155,7 +147,6 @@ void CSimpleRegion::MarkDirty() {
     this->m_visible = 1;
 }
 
-// PROVEN: 75b95c58 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A500/0x140152680
 void CSimpleRegion::SignalLoaded() {
     this->m_loadPending = 0;
@@ -257,7 +248,6 @@ void CSimpleRegion::NotifyDelayedLoad() {
     }
 }
 
-// PROVEN: 55b3259c DIFFERENT/IDENTICAL
 // OFFSET: 0x0050A8A0/0x140152A60
 bool CSimpleRegion::IsColorWhite() {
     return this->m_vertexAlpha >= 0xFE && this->m_color.r == 0xFF && this->m_color.g == 0xFF && this->m_color.b == 0xFF;
@@ -294,7 +284,6 @@ void CSimpleRegion::SetVertexColor(const CImVector& color) {
     this->OnColorChanged(changed);
 }
 
-// PROVEN: 64591d67 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A9A0/0x140152B80
 void CSimpleRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     if (region && region != this) {
@@ -315,7 +304,6 @@ void CSimpleRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     this->SetVertexColor(color);
 }
 
-// PROVEN: 7f72230c IDENTICAL/DIFFERENT
 // OFFSET: 0x0050AA50/0x140152BF0
 void CSimpleRegion::EnableGradient(bool enable) {
     if (enable) {
@@ -336,7 +324,6 @@ void CSimpleRegion::EnableGradient(bool enable) {
     }
 }
 
-// PROVEN: 07102838 IDENTICAL/DIFFERENT
 // OFFSET: 0x0050AB00/0x140152CF0
 void CSimpleRegion::SetVertexGradient(ORIENTATION orientation, const CImVector& minColor, const CImVector& maxColor) {
     bool changed = !this->m_hasGradient;
@@ -388,7 +375,6 @@ void CSimpleRegion::OnColorChanged(bool changed) {
     }
 }
 
-// PROVEN: a62151d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050AD20/0x140152FC0
 void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
@@ -404,7 +390,6 @@ void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_
     }
 }
 
-// PROVEN: 153a2cba IDENTICAL/IDENTICAL
 // OFFSET: 0x0050AD90/0x140153060
 void CSimpleRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (alpha) {
@@ -421,7 +406,6 @@ void CSimpleRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int3
     }
 }
 
-// PROVEN: f4343a83 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CSimpleRegion::StoreAnimPosition() {
 }
@@ -447,7 +431,6 @@ CSimpleRegion::~CSimpleRegion() {
     s_numRegions--;
 }
 
-// PROVEN: a61fca48 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CSimpleRegion::OnScreenSizeChanged() {
 }
@@ -459,7 +442,6 @@ void CSimpleRegion::SetVertexColorRGBA(float r, float g, float b, float a) {
     this->SetVertexColor(color);
 }
 
-// PROVEN: 862fa581 IDENTICAL/DIFFERENT
 // OFFSET: 0x0052B890/0x14017C080
 C3Vector& ApplyTranslationAnim(C3Vector& position, const C2Vector& translation) {
     position.x = position.x + translation.x;
@@ -569,7 +551,6 @@ void ApplyRotationAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& o
     }
 }
 
-// PROVEN: 148452e7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0052BD00/0x14017C620
 void ApplyScaleAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     C2Vector center;

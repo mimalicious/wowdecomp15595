@@ -25,7 +25,6 @@ SThread ComSatThread::s_comsatThread;
 // STATIC: 0x00DC7030/0x140CACC28
 SEvent ComSatThread::s_threadShutdownEvent(0, 0);
 
-// PROVEN: 3dcefc4c IDENTICAL/UNPROVEN
 // OFFSET: 0x004DB320/0x140119910
 static void QueryPushToTalkKey() {
     if (s_voiceActivation) {
@@ -54,7 +53,6 @@ static void QueryPushToTalkKey() {
     ComSatThread::s_comsat->LocalTalkerEnable(0, s_pushToTalkDown != 0);
 }
 
-// PROVEN: 88fb2904 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DC320/0x14011A7E0
 uint32_t STORMAPI ComSatThread::Work(void* param) {
     while (ComSatThread::s_threadShutdownEvent.Wait(0)) {

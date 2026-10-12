@@ -27,7 +27,6 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7f196b5a IDENTICAL/NONE
 // OFFSET: 0x00AFAD20
 FMOD_RESULT OutputOpenAL::setPropertiesEAX2(const FMOD_REVERB_PROPERTIES *prop)
 {

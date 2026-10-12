@@ -53,7 +53,6 @@ static char s_addOnAccountName[1280];
 // STATIC: 0x00D3A718/0x140BF5A40
 static bool s_addOnsInitialized;
 
-// PROVEN: 41ff8506 IDENTICAL/IDENTICAL
 // OFFSET: 0x0045B6B0/0x14006D190
 uint32_t GetCodeInterfaceVersion() {
     return 40300;
@@ -70,13 +69,11 @@ char* AddOnUnloadableToken(UIADDON_LOADABLE_REASON reason, UIADDON_LOADABLE_REAS
     return buffer;
 }
 
-// PROVEN: a6883344 IDENTICAL/IDENTICAL
 // OFFSET: 0x0045B730/0x14006D230
 const char* AddOnSecurityToken(int32_t security) {
     return s_addOnLoadableTokens[UIADDON_SECURE + security];
 }
 
-// PROVEN: af912694 IDENTICAL/IDENTICAL
 // OFFSET: 0x0045B770/0x14006D280
 static int32_t DeleteInterfaceAddOns(OS_FILE_DATA& data, void* param) {
     char path[260];
@@ -95,7 +92,6 @@ static int32_t DeleteInterfaceAddOns(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// PROVEN: a0de687c IDENTICAL/IDENTICAL
 // OFFSET: 0x0045B820/0x14006D350
 void DeleteInterfaceFiles() {
     bool deleted = false;
@@ -140,7 +136,6 @@ static void ReadPublicKey(bool* hasKey, uint8_t* key, const char* path) {
     SFile::Unload(data);
 }
 
-// PROVEN: e19f2017 IDENTICAL/NONE
 // OFFSET: 0x0045B520
 static void WritePublicKey(bool hasKey, const uint8_t* key, const char* path) {
     HOSFILE file = OsCreateFile(path, OS_GENERIC_WRITE, 0, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
@@ -155,7 +150,6 @@ static void WritePublicKey(bool hasKey, const uint8_t* key, const char* path) {
     OsCloseFile(file);
 }
 
-// PROVEN: bc8148d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0045B580/0x14006D810
 static void ReadURL(const char* path, char** url) {
     void* data;
@@ -188,7 +182,6 @@ UIADDON::METADATA::~METADATA() {
     }
 }
 
-// PROVEN: e95d636e IDENTICAL/NONE
 // OFFSET: 0x0045F180/0x140072420
 ADDONSTATELIST::~ADDONSTATELIST() {
     if (this->m_name) {
@@ -198,7 +191,6 @@ ADDONSTATELIST::~ADDONSTATELIST() {
     this->m_states.Clear();
 }
 
-// PROVEN: f6fa3da3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0045B610/0x14006D0D0
 static void WriteURL(const char* path, const char* url) {
     if (!url || !*url) {
@@ -227,7 +219,6 @@ void UIADDON::LoadPublicKey() {
     ReadPublicKey(&this->m_hasPublicKey, this->m_publicKey, path);
 }
 
-// PROVEN: b2e912f5 DIFFERENT/IDENTICAL
 // OFFSET: 0x0045BA80/0x14006D6F0
 void UIADDON::SavePublicKey() {
     const char* name = this->m_key.m_str;
@@ -244,7 +235,6 @@ void UIADDON::SavePublicKey() {
     WritePublicKey(this->m_hasPublicKey, this->m_publicKey, path);
 }
 
-// PROVEN: b28e6a9a DIFFERENT/IDENTICAL
 // OFFSET: 0x0045BB20/0x14006D810
 void UIADDON::LoadURL() {
     char path[260];
@@ -252,7 +242,6 @@ void UIADDON::LoadURL() {
     ReadURL(path, &this->m_url);
 }
 
-// PROVEN: 31137191 IDENTICAL/IDENTICAL
 // OFFSET: 0x0045BB60/0x14006D910
 uint32_t GetNumAddOns() {
     return s_addOnInfo.Count();
@@ -295,7 +284,6 @@ static int32_t ExportArtFileCallback(const char* fileName, void* param) {
     return 1;
 }
 
-// PROVEN: ea966b25 IDENTICAL/UNPROVEN
 // OFFSET: 0x0045BD40/0x14006DC40
 void ExportInterfaceFiles(bool code) {
     if (code) {
@@ -646,7 +634,6 @@ void ClearAddOnEnableState(const char* character) {
     }
 }
 
-// PROVEN: cd1f343e IDENTICAL/DIFFERENT
 // OFFSET: 0x0045F5E0/0x1400729D0
 void ShutdownAddOns() {
     if (!s_addOnsInitialized) {
@@ -1399,7 +1386,6 @@ static void LoadAddOnInfo(const char* name) {
     }
 }
 
-// PROVEN: d60184dc DIFFERENT/IDENTICAL
 // OFFSET: 0x0045FF40/0x140073720
 static int32_t EnumAddOnsArchive(const char* fileName, void* param) {
     const char* extension = SStrChrR(const_cast<char*>(fileName), '.');
@@ -1423,7 +1409,6 @@ static int32_t EnumAddOnsArchive(const char* fileName, void* param) {
     return 1;
 }
 
-// PROVEN: 193b481d DIFFERENT/IDENTICAL
 // OFFSET: 0x0045FFF0/0x1400737E0
 static int32_t EnumAddOnsDisk(OS_FILE_DATA& data, void* param) {
     if ((data.flags & 0x10) && data.fileName[0] != '.') {
@@ -1449,7 +1434,6 @@ void InitializeAddOns() {
     }
 }
 
-// PROVEN: d2c2c394 IDENTICAL/IDENTICAL
 // OFFSET: 0x00460140/0x140073A20
 void InitializeAddOns(const char* accountName) {
     ShutdownAddOns();
@@ -1779,7 +1763,6 @@ void SaveAddOnEnableState() {
     }
 }
 
-// PROVEN: 3883429c IDENTICAL/IDENTICAL
 // OFFSET: 0x0045BB90/0x14006D940
 bool IsAddonVersionCheckEnabled() {
     return g_checkAddonVersionVar->m_intValue != 0;

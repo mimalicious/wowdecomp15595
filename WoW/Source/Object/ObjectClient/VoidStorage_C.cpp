@@ -18,7 +18,6 @@ CGVoidStorage_C::CGVoidStorage_C() {
     this->m_items = NULL;
 }
 
-// PROVEN: 2795fbcd IDENTICAL/DIFFERENT
 // OFFSET: 0x00595BB0/0x140203210
 CGVoidStorage_C::~CGVoidStorage_C() {
     if (this->m_items) {
@@ -53,7 +52,6 @@ VoidItem_C* CGVoidStorage_C::GetItem(WOWGUID guid) {
     return NULL;
 }
 
-// PROVEN: c4706133 IDENTICAL/IDENTICAL
 // OFFSET: 0x00595630/0x140202B40
 void CGVoidStorage_C::Query() {
     if (this->m_state) {
@@ -129,7 +127,6 @@ static bool OnVoidTransferResult(ClientVoidTransferResult* msg) {
     return true;
 }
 
-// PROVEN: 4d78b5a8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00595750/0x140202C90
 void VoidStorage_C_Shutdown() {
     ClientVoidStorageContents::s_handler = NULL;
@@ -140,7 +137,6 @@ void VoidStorage_C_Shutdown() {
     CGVoidTransfer::Destroy();
 }
 
-// PROVEN: 77024fcf IDENTICAL/IDENTICAL
 // OFFSET: 0x00595770/0x140202CC0
 bool CGVoidStorage_C::IsNewItem(WOWGUID guid) {
     for (uint32_t i = 0; i < this->m_newItems.m_count; i++) {
@@ -168,7 +164,6 @@ bool CGVoidStorage_C::SwapItem(WOWGUID guid, uint32_t slot) {
     return true;
 }
 
-// PROVEN: abf3f12b IDENTICAL/IDENTICAL
 // OFFSET: 0x00595A00/0x140202FF0
 void CGVoidStorage_C::ClearNewItems() {
     this->m_newItems.Clear();

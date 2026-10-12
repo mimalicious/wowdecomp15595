@@ -38,7 +38,6 @@ static CTexture* s_maskTexture;
 // STATIC: 0x00E89654/0x140D753E4
 static float s_scrollPhase;
 
-// PROVEN: e8b6b2b4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00777190/0x140461EA0
 void CBarrier::Destroy() {
     for (int32_t i = 0; i < 4; i++) {

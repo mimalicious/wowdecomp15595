@@ -20,7 +20,6 @@ ComSat::RunningAverageCalculator::~RunningAverageCalculator() {
     this->m_index = 0;
 }
 
-// PROVEN: 028b1a69 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A39E40/0x1407E62C0
 void ComSat::RunningAverageCalculator::Init(double value, uint32_t count) {
     if (this->m_values) {
@@ -38,7 +37,6 @@ void ComSat::RunningAverageCalculator::Init(double value, uint32_t count) {
     }
 }
 
-// PROVEN: 778150d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39F00/0x1407E63E0
 void ComSat::RunningAverageCalculator::SubmitData(double value) {
     if (this->m_values) {
@@ -48,7 +46,6 @@ void ComSat::RunningAverageCalculator::SubmitData(double value) {
     }
 }
 
-// PROVEN: f0094b4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39F40/0x1407E6420
 double ComSat::RunningAverageCalculator::GetCurrentAverage() {
     return this->m_sum / this->m_count;

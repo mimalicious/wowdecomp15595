@@ -121,7 +121,6 @@ inline CMissileCollision::CMissileCollision() {
     this->m_perp.y = 0.0f;
 }
 
-// PROVEN: 746814b3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0057D060/0x1401E3250
 void CMissileCollision::RemoveUnitFromSystem(CGUnit_C* unit) {
     for (CMissileCollision* collision = CMissileCollision::s_head; collision; collision = collision->m_next) {
@@ -182,7 +181,6 @@ void CMissileCollision::Free() {
     CMissileCollision::s_pool->Delete(this);
 }
 
-// PROVEN: 0dd38a9b IDENTICAL/UNPROVEN
 // OFFSET: 0x0057D9C0/0x1401E3CB0
 CMissileCollision* CMissileCollision::Alloc() {
     CMissileCollision* collision = CMissileCollision::s_pool->New("", 0);
@@ -201,7 +199,6 @@ CMissileCollision* CMissileCollision::Alloc() {
     return collision;
 }
 
-// PROVEN: d1e36231 IDENTICAL/IDENTICAL
 // OFFSET: 0x0057D8A0/0x1401E3B30
 void CMissileCollision::MaybeAddUnitToSystem(CGUnit_C* unit) {
     for (CMissileCollision* collision = CMissileCollision::s_head; collision; collision = collision->m_next) {
@@ -649,7 +646,6 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: 21a15950 IDENTICAL/IDENTICAL
 // OFFSET: 0x0057CDB0/0x1401E2F70
 void CGUnit_C::GetMissileCollisionSphere(CAaSphere* sphere, const C2Vector& direction) const {
     sphere->c = this->BuildSmoothPosition();

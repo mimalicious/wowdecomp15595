@@ -15,7 +15,6 @@ void CGxString::RemoveShadow() {
     this->m_flags &= ~1;
 }
 
-// PROVEN: 2373ed27 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061D930/0x1402AC0B0
 void CGxString::TexturePageEvicted(uint32_t texturePage) {
     if (this->m_texturePagesUsed & (1 << texturePage)) {
@@ -23,7 +22,6 @@ void CGxString::TexturePageEvicted(uint32_t texturePage) {
     }
 }
 
-// PROVEN: bebe930a IDENTICAL/IDENTICAL
 // OFFSET: 0x0061D950/0x1402AC0D0
 void CGxString::WriteGeometry(CGxVertexPCT* buf, int32_t texturePage, int32_t vertIndex, int32_t numVerts) const {
     TEXTLINETEXTURE* textLine = this->m_textLines[texturePage];
@@ -113,7 +111,6 @@ void CGxString::InitializeViewTranslation() {
     this->m_viewTranslation.y = floor(y);
 }
 
-// PROVEN: b26b0e41 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061E060/0x1402AC860
 int32_t CGxString::CalculateVertsNeeded(int32_t texturePage) {
     if (this->m_flags & 1) {
@@ -123,7 +120,6 @@ int32_t CGxString::CalculateVertsNeeded(int32_t texturePage) {
     return this->m_textLines[texturePage]->m_verts.m_count;
 }
 
-// PROVEN: ff6ef87e IDENTICAL/NONE
 // OFFSET: 0x0061E090
 void CGxString::SetStringPosition(const C3Vector& position) {
     this->m_position = position;
@@ -160,7 +156,6 @@ void CGxString::AddEmbeddedTextureParseInfo(GXUEMBEDDEDTEXTUREINFO info) {
     this->m_embeddedTextureInfo.Add(1, &info);
 }
 
-// PROVEN: 69f87f22 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061E8C0/0x1402AD390
 void CGxString::ClearInstanceData() {
     this->m_hyperlinkInfo.SetCount(0);
@@ -178,7 +173,6 @@ void CGxString::ClearInstanceData() {
     }
 }
 
-// PROVEN: 6a3f2483 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061E930/0x1402AD410
 void CGxString::Tick() {
     if (this->m_numLines && this->m_idleTicks++ > 30) {
@@ -186,7 +180,6 @@ void CGxString::Tick() {
     }
 }
 
-// PROVEN: 0b6be846 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061E960/0x1402AD440
 void CGxString::SetColor(const CImVector& color) {
     if (*reinterpret_cast<const uint32_t*>(&color) == *reinterpret_cast<const uint32_t*>(&this->m_fontColor)) {
@@ -577,7 +570,6 @@ void CGxString::InitializeTextLine(const char* text, uint32_t numBytes, CImVecto
     parseInfo.m_hyperlink.m_right = x + pos.x;
 }
 
-// PROVEN: b7dc8b51 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061F4F0/0x1402AE350
 void CGxString::AddShadow(const C2Vector& offset, const CImVector& color) {
     this->m_shadowColor = color;
@@ -590,7 +582,6 @@ void CGxString::AddShadow(const C2Vector& offset, const CImVector& color) {
     }
 }
 
-// PROVEN: 6ce9b217 IDENTICAL/DIFFERENT
 // OFFSET: 0x0061F530/0x1402AE390
 int32_t CGxString::CheckGeometry() {
     if (this->m_textureEvicted) {
@@ -649,7 +640,6 @@ int32_t CGxString::Initialize(float fontHeight, const C3Vector& position, float 
     return 1;
 }
 
-// PROVEN: b89dab4a IDENTICAL/DIFFERENT
 // OFFSET: 0x0061F6F0/0x1402AE5D0
 void CGxString::Recycle() {
     this->m_batchedStringLink.Unlink();
@@ -702,7 +692,6 @@ CGxString::CGxString() {
     }
 }
 
-// PROVEN: 8ecd2cac IDENTICAL/NONE
 // OFFSET: 0x0061F8B0
 CGxString::~CGxString() {
     for (uint32_t i = 0; i < 8; i++) {
@@ -944,7 +933,6 @@ void CGxString::CreateGeometry() {
     }
 }
 
-// PROVEN: 22b145cd IDENTICAL/IDENTICAL
 // OFFSET: 0x006201C0/0x1402AF5B0
 uint32_t CGxString::GetHyperLinkInfo(const GXUFONTHYPERLINKINFO*& info) {
     this->CreateGeometry();
@@ -960,7 +948,6 @@ uint32_t CGxString::GetHyperLinkInfo(const GXUFONTHYPERLINKINFO*& info) {
     return count;
 }
 
-// PROVEN: 1686d1d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00620200/0x1402AF610
 uint32_t CGxString::GetEmbeddedTextureInfo(const GXUEMBEDDEDTEXTUREINFO*& info) {
     this->CreateGeometry();

@@ -28,7 +28,6 @@ uint32_t CGStableInfo::m_numPets;
 // STATIC: 0x00F48E24/0x140E3CF0C
 uint8_t CGStableInfo::m_slotChangePending;
 
-// PROVEN: 0de6a6ba IDENTICAL/NONE
 // OFFSET: 0x00464740
 StablePetInfo* CGStableInfo::GetPetInfo(uint32_t index) {
     if (!(index >= 25)) {
@@ -38,13 +37,11 @@ StablePetInfo* CGStableInfo::GetPetInfo(uint32_t index) {
     return NULL;
 }
 
-// PROVEN: 875c71ba IDENTICAL/UNPROVEN
 // OFFSET: 0x0096C880/0x1406E3630
 void CGStableInfo::EnterWorld() {
     CGStableInfo::m_stableMaster = WOWGUID::Make(0);
 }
 
-// PROVEN: f68cfca5 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096C890/0x1406E3640
 void CGStableInfo::CloseStables(bool force) {
     if (!CGStableInfo::m_stableMaster && !force) {
@@ -56,7 +53,6 @@ void CGStableInfo::CloseStables(bool force) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_STABLE_CLOSED, NULL);
 }
 
-// PROVEN: 355141a4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096C8E0/0x1406E3680
 int32_t CGStableInfo::GetNumActivePets() {
     int32_t count = 0;
@@ -70,7 +66,6 @@ int32_t CGStableInfo::GetNumActivePets() {
     return count;
 }
 
-// PROVEN: 2920b91c IDENTICAL/UNPROVEN
 // OFFSET: 0x0096C950/0x1406E36B0
 void CGStableInfo::SetPetSlot(uint32_t index, uint32_t slot) {
     if (index > 24 || slot > 24 || index == slot || CGStableInfo::m_slotChangePending) {
@@ -91,7 +86,6 @@ void CGStableInfo::SetPetSlot(uint32_t index, uint32_t slot) {
     CGStableInfo::m_slotChangePending = 1;
 }
 
-// PROVEN: c8531675 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096C9D0/0x1406E3740
 int32_t CGStableInfo::FindPetIndexBySpellID(int32_t spellId, int32_t effectIndex) {
     const SpellEffectRec* effect = SpellGetEffect(spellId, effectIndex);
@@ -109,13 +103,11 @@ int32_t CGStableInfo::FindPetIndexBySpellID(int32_t spellId, int32_t effectIndex
     return index;
 }
 
-// PROVEN: e45bb16b IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CB80/0x1406E3920
 void CGStableInfo::LeaveWorld() {
     CGStableInfo::CloseStables(false);
 }
 
-// PROVEN: bab56482 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CBC0/0x1406E3960
 void CGStableInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(MSG_LIST_STABLED_PETS);
@@ -181,7 +173,6 @@ int32_t CGStableInfo::OnStableList(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// PROVEN: 6370d654 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CDE0/0x1406E3C30
 void CGStableInfo::UpdatePetName(uint32_t petNumber, const char* name) {
     if (!petNumber) {

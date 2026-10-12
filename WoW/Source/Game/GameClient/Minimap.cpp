@@ -197,7 +197,6 @@ void MinimapShutdown() {
     s_minimapUpdateFlags = 0;
 }
 
-// PROVEN: f68392d2 NONE/IDENTICAL
 // OFFSET: 0x004E8560/0x14012AAF0
 void MinimapLoadZoom() {
     s_outdoorZoom = g_minimapZoomCVar->m_intValue;
@@ -205,7 +204,6 @@ void MinimapLoadZoom() {
     FrameScript_SignalEvent(SCRIPT_EVENT_MINIMAP_UPDATE_ZOOM, NULL);
 }
 
-// PROVEN: e66fd135 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E8590/0x14012AB20
 void MinimapSetZoom(uint32_t zoom) {
     uint8_t indoors = s_isIndoors;
@@ -219,13 +217,11 @@ void MinimapSetZoom(uint32_t zoom) {
     }
 }
 
-// PROVEN: 99488e7c IDENTICAL/IDENTICAL
 // OFFSET: 0x004E85F0/0x14012AB90
 void MinimapSetForceUpdate() {
     s_minimapUpdateFlags |= 4;
 }
 
-// PROVEN: 75ff3e2e IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8600/0x14012ABA0
 int32_t MinimapGetZoom() {
     return s_isIndoors ? s_indoorZoom : s_outdoorZoom;
@@ -240,7 +236,6 @@ double MinimapGetViewRadius() {
     return s_outdoorZoomTiles[s_outdoorZoom] * 0.5f * 33.333332f;
 }
 
-// PROVEN: 0e12e837 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8680/0x14012ABC0
 TSGrowableArray<AreaPOIRec*>* MinimapGetPOI(int32_t* changed) {
     *changed = s_poisChanged;
@@ -248,7 +243,6 @@ TSGrowableArray<AreaPOIRec*>* MinimapGetPOI(int32_t* changed) {
     return &s_visiblePOIs;
 }
 
-// PROVEN: b22a18a2 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E86A0/0x14012AC30
 int32_t MinimapSetNoLiquid(int32_t noLiquid) {
     if (s_mapId || s_playerPosition.x < -8000.0f || s_playerPosition.x > -3735.0f || s_playerPosition.y < 2670.0f || s_playerPosition.x > 8000.0f) {
@@ -263,31 +257,26 @@ int32_t MinimapSetNoLiquid(int32_t noLiquid) {
     return noLiquid;
 }
 
-// PROVEN: f2a88640 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8710/0x14012AC90
 AreaPOIRec* MinimapGetGossipPoi() {
     return &s_dynamicPOIs[1];
 }
 
-// PROVEN: 2b1277f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8720/0x14012ACA0
 uint8_t MinimapIsIndoors() {
     return s_isIndoors;
 }
 
-// PROVEN: d49fb3fb IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8730/0x14012ACB0
 int32_t MinimapGetOutdoorZoom() {
     return s_outdoorZoom;
 }
 
-// PROVEN: a8abe8fb IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8740/0x14012ACC0
 int32_t MinimapGetIndoorZoom() {
     return s_indoorZoom;
 }
 
-// PROVEN: a8fcae5a IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8750/0x14012ACD0
 float MinimapGetOutdoorZoomTiles(int32_t zoom) {
     if (zoom >= 0 && zoom < sizeof(s_outdoorZoomTiles) / sizeof(s_outdoorZoomTiles[0])) {
@@ -297,7 +286,6 @@ float MinimapGetOutdoorZoomTiles(int32_t zoom) {
     return 0.0f;
 }
 
-// PROVEN: 6ec7f124 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8780/0x14012AD00
 float MinimapGetIndoorZoomRadius(int32_t zoom) {
     if (zoom >= 0 && zoom < sizeof(s_indoorZoomRadius) / sizeof(s_indoorZoomRadius[0])) {
@@ -356,7 +344,6 @@ static void MinimapSetMapObjName(uintptr_t entity) {
     }
 }
 
-// PROVEN: 221346ec IDENTICAL/NONE
 // OFFSET: 0x004E8AA0
 int32_t MinimapBuildSource(const int32_t* tile, char* path, uint32_t size) {
     *path = 0;
@@ -491,7 +478,6 @@ static void SetMemberData(WOWGUID guid, MEMBERINFO* member, CGPlayer_C* player, 
     }
 }
 
-// PROVEN: f66a839e DIFFERENT/IDENTICAL
 // OFFSET: 0x004E9080/0x14012B6B0
 void MinimapGetPartyMembers(MEMBERINFO* members) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -660,7 +646,6 @@ void UpdatePointsOfInterest() {
     }
 }
 
-// PROVEN: a14e9cd4 DIFFERENT/IDENTICAL
 // OFFSET: 0x004E95D0/0x14012BEA0
 void RefreshWorldStatePOIs(uint32_t state) {
     for (uint32_t i = 0; i < s_numPOIs; i++) {
@@ -698,13 +683,11 @@ void MinimapSetDynamicPOI(int32_t index, int32_t flags, float x, float y, int32_
     s_closestPOIsChanged = 1;
 }
 
-// PROVEN: e4f74fa8 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E9720/0x14012BFF0
 void DisplayQuestPoint(float x, float y, int32_t importance, const char* name) {
     MinimapSetDynamicPOI(0, 0, x, y, 6, importance, name);
 }
 
-// PROVEN: 8a3795a0 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E9750/0x14012C080
 void MinimapSetCorpsePOI(float x, float y) {
     MinimapSetDynamicPOI(2, 2, x, y, 8, -1, FrameScript_GetText("CORPSE_RED", -1, GENDER_NOT_APPLICABLE));

@@ -79,7 +79,6 @@ void CGChatBubbleFrame::operator delete(void* ptr) {
     CGChatBubbleFrame::s_chatBubbleHeap.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 20523c8e IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGChatBubbleFrame::InitializeGame() {
 }
@@ -114,7 +113,6 @@ void CGChatBubbleFrame::FadeOut(bool remove) {
     this->m_fadeStart = FrameTime::GetCurTimeMs() - static_cast<int32_t>((255.0f - alpha) * (1.0f / 255.0f) * 250.0f);
 }
 
-// PROVEN: 2f74ebde IDENTICAL/NONE
 // OFFSET: 0x009F0B60
 static int32_t ComputeDuration(const char* text, bool self) {
     int32_t perWord = self ? 500 : 750;
@@ -465,7 +463,6 @@ CGChatBubbleFrame::CGChatBubbleFrame(CSimpleFrame* parent) : CSimpleFrame(parent
     this->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this->m_fontString, FRAMEPOINT_BOTTOMRIGHT, 0.01f, -0.01f, 1);
 }
 
-// PROVEN: f64828f5 IDENTICAL/NONE
 // OFFSET: 0x009F1B60
 void CGChatBubbleFrame::ShutdownGame() {
     s_freeChatBubbles.Clear();
@@ -497,7 +494,6 @@ CGChatBubbleFrame* CGChatBubbleFrame::GetNewChatBubble(CSimpleFrame* parent) {
     return bubble;
 }
 
-// PROVEN: f8b40180 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F1C70/0x14078BF80
 void CGChatBubbleFrame::Remove(CGChatBubbleFrame* bubble) {
     bubble->Hide();

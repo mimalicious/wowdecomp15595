@@ -136,7 +136,6 @@ bool Blizzard::Thread::CreateFromPool(ThreadPoolRecord* pool, uint32_t (*functio
     return true;
 }
 
-// PROVEN: a0a715cd IDENTICAL/NONE
 // OFFSET: 0x007EA550
 bool Blizzard::Thread::CreateDetachedFromPool(uint32_t (*function)(void*), void* param, int32_t flags, int32_t stackSize) {
     ThreadRecord* thread;

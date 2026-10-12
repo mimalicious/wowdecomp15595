@@ -86,7 +86,6 @@ uint32_t CGPlayer::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int3
     return (offset & 3) + 4 * (total + CGPlayer::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
-// PROVEN: 171bf3df IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D70/0x1407CF550
 uint32_t CGPlayer::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int32_t local) {
     for (uint32_t i = 0; i < sizeof(CGPlayer::s_mirrorFields) / sizeof(CGPlayer::s_mirrorFields[0]); i++) {
@@ -128,19 +127,16 @@ int32_t CGPlayer::HasZoneExplored(int32_t zone) {
     return this->m_player->m_playerExploredZones1[zone / 8] & (1 << (zone % 8));
 }
 
-// PROVEN: ef7abf64 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D50/0x1407CF510
 int32_t CGPlayer::TotalFields() {
     return CGUnit::TotalFields() + 1104;
 }
 
-// PROVEN: 0afe5bb0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D60/0x1407CF530
 int32_t CGPlayer::TotalRemoteFields() {
     return CGUnit::TotalFields() + sizeof(CGPlayer::s_mirrorFields) / sizeof(CGPlayer::s_mirrorFields[0]);
 }
 
-// PROVEN: a51ceb3b IDENTICAL/NONE
 // OFFSET: 0x0044ED80
 bool CGPlayer::IsDrunk() {
     return this->m_player->m_playerBytes3[1] || this->m_player->m_playerFakeInebriation;

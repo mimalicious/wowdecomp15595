@@ -36,7 +36,6 @@ CHARCODEDESC::CHARCODEDESC() {
     this->m_glyphEndPixel = 0;
 }
 
-// PROVEN: 138b9a83 IDENTICAL/DIFFERENT
 // OFFSET: 0x00620270/0x1402AF670
 void GLYPHBITMAPDATA::CopyFrom(GLYPHBITMAPDATA* source) {
     if (this == source) {
@@ -52,7 +51,6 @@ void GLYPHBITMAPDATA::CopyFrom(GLYPHBITMAPDATA* source) {
     source->m_data = NULL;
 }
 
-// PROVEN: 7741fba4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00620240/0x1402AF750
 GLYPHBITMAPDATA::GLYPHBITMAPDATA() {
     this->m_data = NULL;
@@ -63,7 +61,6 @@ GLYPHBITMAPDATA::GLYPHBITMAPDATA() {
     this->m_textureCoords.maxX = 0.0f;
 }
 
-// PROVEN: 65ee6576 IDENTICAL/DIFFERENT
 // OFFSET: 0x006203D0/0x1402AF770
 GLYPHBITMAPDATA::~GLYPHBITMAPDATA() {
     if (this->m_data) {
@@ -215,7 +212,6 @@ void TEXTLINETEXTURE::WriteGeometry(CGxVertexPCT* buf, const CImVector& fontColo
     }
 }
 
-// PROVEN: 73c2d8b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00620870/0x1402B0BC0
 void BATCHEDRENDERFONTDESC::Initialize() {
     BATCHEDRENDERFONTDESC::s_indexPool = g_theGxDevicePtr->PoolCreate(GxPoolTarget_Index, GxPoolUsage_Static, 6144, GxPoolHintBit_Unk0, "BATCHEDRENDERFONTDESC_idx");
@@ -347,7 +343,6 @@ void BATCHEDRENDERFONTDESC::RenderBatch() {
     GxBufUnlock(buf, 0);
 }
 
-// PROVEN: 0f8ff291 IDENTICAL/DIFFERENT
 // OFFSET: 0x006210F0/0x1402B1740
 TEXTLINETEXTURE::~TEXTLINETEXTURE() {
     this->m_verts.Clear();
@@ -568,7 +563,6 @@ void CGxStringBatch::RenderBatch() {
     GxXformSetProjection(projection);
 }
 
-// PROVEN: 9038761b IDENTICAL/DIFFERENT
 // OFFSET: 0x00621B40/0x1402B2590
 BATCHEDRENDERFONTDESC::~BATCHEDRENDERFONTDESC() {
     this->m_strings.UnlinkAll();
@@ -587,7 +581,6 @@ void TEXTLINETEXTURE::Recycle(TEXTLINETEXTURE* ptr) {
     TEXTLINETEXTURE::s_freeTextLineTextures.LinkToTail(ptr);
 }
 
-// PROVEN: 807ba711 DIFFERENT/IDENTICAL
 // OFFSET: 0x00621C60/0x1402B2700
 void TEXTLINETEXTURE::Shutdown() {
     TEXTLINETEXTURE::s_recycledBytes = 0;

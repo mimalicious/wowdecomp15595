@@ -17,7 +17,6 @@ void C3Spline_Bezier3::ParametricSegT(float t, uint32_t& seg, float& segT) {
     segT = static_cast<float>(segCount * (t - 1.0 / segCount * seg));
 }
 
-// PROVEN: 47702900 IDENTICAL/UNPROVEN
 // OFFSET: 0x004C99E0/0x1401048D0
 void C3Spline_Bezier3::EvaluateDer1(uint32_t seg, float t, C3Vector& vel) {
     static const C34Matrix s_bezier3Der1(-3.0f, 6.0f, -3.0f, 9.0f, -12.0f, 3.0f, -9.0f, 6.0f, 0.0f, 3.0f, 0.0f, 0.0f);
@@ -25,13 +24,11 @@ void C3Spline_Bezier3::EvaluateDer1(uint32_t seg, float t, C3Vector& vel) {
     C3Spline::EvaluateDer1(3 * seg, t, C44Matrix(s_bezier3Der1), vel);
 }
 
-// PROVEN: 669731df IDENTICAL/IDENTICAL
 // OFFSET: 0x004C9B70/0x140104AF0
 float C3Spline_Bezier3::ILength() {
     return C3Spline::ILength(this->m_pointCount / 3);
 }
 
-// PROVEN: b35d2fb8 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C9B90/0x140104B10
 void C3Spline_Bezier3::IValidateCache() {
     uint32_t segCount = this->m_pointCount / 3;
@@ -50,7 +47,6 @@ void C3Spline_Bezier3::IPosParametric(float t, C3Vector& pos) {
     C3Spline::Evaluate(3 * seg, segT, s_bezier3Basis, pos);
 }
 
-// PROVEN: 15d7cb10 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CA930/0x140105F30
 void C3Spline_Bezier3::IPosArclength(float t, C3Vector& pos) {
     uint32_t seg;
@@ -69,7 +65,6 @@ void C3Spline_Bezier3::IVelParametric(float t, C3Vector& vel) {
     this->EvaluateDer1(seg, segT, vel);
 }
 
-// PROVEN: 7021593a IDENTICAL/DIFFERENT
 // OFFSET: 0x004CAA10/0x140106150
 void C3Spline_Bezier3::IVelArclength(float t, C3Vector& vel) {
     uint32_t seg;
@@ -115,7 +110,6 @@ void C3Spline_Bezier3::IFrameArclength(float t, C44Matrix& frame) {
     frame.c2 = frame.b1 * frame.a0 - frame.b0 * frame.a1;
 }
 
-// PROVEN: 9453f7c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CB450/0x140107080
 void C3Spline_Bezier3::ISetPoints(const C3Vector* points, uint32_t count) {
     uint32_t segCount = count / 3;

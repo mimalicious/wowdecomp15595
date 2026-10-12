@@ -105,7 +105,6 @@ typedef my_marker_writer * my_marker_ptr;
  */
 
 /* Emit a byte */
-// PROVEN: 89a0e368 IDENTICAL/NONE
 // OFFSET: 0x00B5F2B0
 static void emit_byte(j_compress_ptr cinfo, int val) {
   struct jpeg_destination_mgr * dest = cinfo->dest;
@@ -119,7 +118,6 @@ static void emit_byte(j_compress_ptr cinfo, int val) {
 
 
 /* Emit a marker code */
-// PROVEN: feb37b43 IDENTICAL/NONE
 // OFFSET: 0x00B5F2F0/0x1409285A0
 static void emit_marker(j_compress_ptr cinfo, JPEG_MARKER mark) {
   emit_byte(cinfo, 0xFF);
@@ -554,7 +552,6 @@ static void write_marker_header(j_compress_ptr cinfo, int marker, unsigned int d
 }
 
 /* Emit one byte of marker parameters following write_marker_header */
-// PROVEN: d713666b IDENTICAL/NONE
 // OFFSET: 0x00B5FCD0/0x140929100
 static void write_marker_byte(j_compress_ptr cinfo, int val) {
   emit_byte(cinfo, val);
@@ -572,7 +569,6 @@ static void write_marker_byte(j_compress_ptr cinfo, int val) {
  * jpeg_start_compress returns.
  */
 
-// PROVEN: ad4d24a5 IDENTICAL/NONE
 // OFFSET: 0x00B5FD10/0x140929140
 static void write_file_header(j_compress_ptr cinfo) {
   my_marker_ptr marker = (my_marker_ptr) cinfo->marker;
@@ -602,7 +598,6 @@ static void write_file_header(j_compress_ptr cinfo) {
  * try to error-check the quant table numbers as soon as they see the SOF.
  */
 
-// PROVEN: 25f408f0 IDENTICAL/NONE
 // OFFSET: 0x00B5FD70/0x1409291A0
 static void write_frame_header(j_compress_ptr cinfo) {
   int ci, prec;
@@ -719,7 +714,6 @@ static void write_scan_header(j_compress_ptr cinfo) {
  * Write datastream trailer.
  */
 
-// PROVEN: aef8bcac IDENTICAL/NONE
 // OFFSET: 0x00B5FF80/0x140929440
 static void write_file_trailer(j_compress_ptr cinfo) {
   emit_marker(cinfo, M_EOI);
@@ -772,7 +766,6 @@ static void write_tables_only(j_compress_ptr cinfo) {
  * Initialize the marker writer module.
  */
 
-// PROVEN: 8ffa8906 IDENTICAL/NONE
 // OFFSET: 0x00B600A0/0x140929580
 void jinit_marker_writer(j_compress_ptr cinfo) {
   my_marker_ptr marker;

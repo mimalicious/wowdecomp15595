@@ -3,7 +3,6 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "WoW/Source/Object/ObjectClient/Movement_C.h"
 
-// PROVEN: 78fb98d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0041F8E0/0x140023B50
 CPassenger::CPassenger(const WOWGUID& transportGuid, const C3Vector& position, const WOWGUID& ownerGuid) : m_transportGuid(transportGuid), m_position(position) {
     this->m_facing = 0.0f;
@@ -22,7 +21,6 @@ void CPassenger::PostInit(const C3Vector& position) {
     }
 }
 
-// PROVEN: 5ac83f0c IDENTICAL/IDENTICAL
 // OFFSET: 0x0041EBE0/0x140022B30
 void CPassenger::Reenable(const WOWGUID& transportGuid, const C3Vector& position) {
     this->m_transportGuid = transportGuid;
@@ -131,7 +129,6 @@ float CPassenger::RemoveFromTransportFinish(const C44Matrix& matrix) {
     return facing;
 }
 
-// PROVEN: 5d025902 DIFFERENT/IDENTICAL
 // OFFSET: 0x0041F930/0x140023B90
 float CPassenger::RemoveFromTransport(C44Matrix* matrix) {
     MovementGetTransportMtxX(this->m_transportGuid, matrix, *this->m_ownerGuid, __FILE__, __LINE__);

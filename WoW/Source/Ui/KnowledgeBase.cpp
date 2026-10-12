@@ -18,7 +18,6 @@ CKBSetup g_KnowledgeBaseSetup;
 // STATIC: 0x00F76B60/0x140E6CC78
 CKBPage* CKBPage::s_pLoadingQueue_Head;
 
-// PROVEN: 57afae60 UNPROVEN/IDENTICAL
 // OFFSET: 0x009FB070/0x140798850
 CKBPage::CKBPage() {
     this->m_state = 0;
@@ -107,7 +106,6 @@ bool CKBPage::LoadingCallback(void* param, const char* data, uint32_t size, bool
     return true;
 }
 
-// PROVEN: 58ea4a4d IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB390/0x140798B70
 int32_t CKBSetup::BeginLoading(int32_t numArticles, int32_t pageNumber) {
     if (this->m_state == 1 || this->m_inQueue) {
@@ -159,12 +157,10 @@ CKBPage::~CKBPage() {
     }
 }
 
-// PROVEN: 14b81430 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::_ComputeCachedData() {
 }
 
-// PROVEN: 054e076b IDENTICAL/DIFFERENT
 // OFFSET: 0x009FB0F0/0x140798900
 int32_t CKBPage::_BeginLoading() {
     this->m_state = 1;
@@ -174,7 +170,6 @@ int32_t CKBPage::_BeginLoading() {
     return 1;
 }
 
-// PROVEN: 3e7f63ea IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB2A0/0x140798AE0
 XMLNode* CKBPage::_GetRoot(CKBIterator& iterator) {
     XMLNode* root = XMLTree_GetRoot(this->m_tree);
@@ -198,7 +193,6 @@ int32_t CKBPage::_GetInt(XMLNode* node, const char* attribute) const {
     return value ? atol(value) : 0;
 }
 
-// PROVEN: 1a865b7e DIFFERENT/IDENTICAL
 // OFFSET: 0x009FB310/0x140798B50
 const char* CKBPage::_GetBodyString(XMLNode* node) const {
     if (this->m_state != 2 || !this->m_tree) {
@@ -401,7 +395,6 @@ void CKBSetup::_ComputeCachedData() {
     }
 }
 
-// PROVEN: 5fe67e59 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB7B0/0x140798EB0
 void CKBSetup::GetCategory(int32_t category) {
     this->m_subCategories.m_node = NULL;
@@ -450,7 +443,6 @@ XMLNode* CKBSetup::GetSubCategory(int32_t category, int32_t subCategory) {
     return this->m_subCategories.m_node;
 }
 
-// PROVEN: 292f1a4c IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC700/0x14079A270
 void CKBSetup::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
@@ -458,12 +450,10 @@ void CKBSetup::_SendSuccessEvent() {
     }
 }
 
-// PROVEN: f1e62326 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::_SendSuccessEvent() {
 }
 
-// PROVEN: 5d3a5e30 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::_SendFailureEvent() {
 }
@@ -485,7 +475,6 @@ CKBSetup::CKBSetup() {
     this->m_articleHeaders.m_index = 0;
 }
 
-// PROVEN: 1b2d7a48 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::Initialize() {
 }
@@ -516,7 +505,6 @@ const char* KnowledgeBaseGetURLForLocale() {
     }
 }
 
-// PROVEN: 89dddaee IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB010/0x1407987D0
 void CKBPage::UpdateLoadingQueue() {
     CKBPage* prev = NULL;
@@ -601,7 +589,6 @@ void CKBPage::Shutdown() {
     g_KnowledgeBaseArticle.m_state = 0;
 }
 
-// PROVEN: deabc69e IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC720/0x14079A290
 void CKBSetup::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {

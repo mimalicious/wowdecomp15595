@@ -206,7 +206,6 @@ static int32_t SetCommandHandler(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: d65a6a36 IDENTICAL/IDENTICAL
 // OFFSET: 0x00654E50/0x1402F5B40
 void CVar::ArchiveCodeRegisteredOnly() {
     CVar::s_archiveCodeRegisteredOnly = true;
@@ -268,7 +267,6 @@ int32_t CVar::Load(HOSFILE file, bool (*sectionCallback)(const char* section, vo
     return result;
 }
 
-// PROVEN: 23f38139 IDENTICAL/IDENTICAL
 // OFFSET: 0x00654FE0/0x1402F5D10
 int32_t CVar::Load(const char* fileName, bool (*sectionCallback)(const char* section, void* arg), void* arg) {
     HOSFILE file = OsCreateFile(fileName, OS_GENERIC_READ, OS_FILE_SHARE_READ, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
@@ -289,7 +287,6 @@ int32_t CVar::Load(const char* fileName, bool (*sectionCallback)(const char* sec
     return result;
 }
 
-// PROVEN: 55cd9cf4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060DAD0/0x140297700
 int32_t ConsoleLoadClientCVar(HOSFILE file) {
     return CVar::Load(file, NULL, NULL);
@@ -337,7 +334,6 @@ int32_t CVar::LogCvar(const char* name, const char* value, void* arg) {
     return 1;
 }
 
-// PROVEN: 3b0a414c IDENTICAL/IDENTICAL
 // OFFSET: 0x006551F0/0x1402F5F80
 void CVar::SetReadOnly(bool readOnly) {
     if (readOnly) {
@@ -347,7 +343,6 @@ void CVar::SetReadOnly(bool readOnly) {
     }
 }
 
-// PROVEN: 2e13077c IDENTICAL/IDENTICAL
 // OFFSET: 0x00655320/0x1402F6140
 void CVarIntListWrapper::AddNextValue(uint32_t value) {
     this->m_state = 2;
@@ -449,7 +444,6 @@ bool CVar::Set(const char* value, bool setValue, bool setReset, bool setDefault,
     return true;
 }
 
-// PROVEN: d63d05b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x006554C0/0x1402F6330
 bool CVar::Set(int32_t value, bool setValue, bool setReset, bool setDefault, bool setNeedsSave) {
     char buffer[32];
@@ -615,7 +609,6 @@ bool CVarArrayWrapper::RawSetValue(uint32_t index, bool value) {
     return true;
 }
 
-// PROVEN: a08db58b DIFFERENT/IDENTICAL
 // OFFSET: 0x006559D0/0x1402F6D50
 CVar::CVar() {
 }
@@ -707,13 +700,11 @@ int32_t CVar::IterateForArchive(uint32_t category, uint32_t excludeFlags, int32_
     return 1;
 }
 
-// PROVEN: 7265b043 IDENTICAL/IDENTICAL
 // OFFSET: 0x00655D00/0x1402F7110
 int32_t CVar::SaveAll(HOSFILE file, uint32_t category, uint32_t excludeFlags) {
     return CVar::IterateForArchive(category, excludeFlags, CVar::SaveCvar, file);
 }
 
-// PROVEN: 30a7d1b1 DIFFERENT/IDENTICAL
 // OFFSET: 0x00655D20/0x1402F7130
 int32_t CVar::SaveAll(const char* fileName) {
     if (!CVar::m_needsSave) {
@@ -741,7 +732,6 @@ int32_t CVar::SaveAll(const char* fileName) {
     return result;
 }
 
-// PROVEN: 90586ca4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00655E20/0x1402F7290
 int32_t CVar::LogAll(char* buffer, uint32_t size, uint32_t category, uint32_t excludeFlags) {
     CVarLogBuffer log;
@@ -805,7 +795,6 @@ void CVar::DeleteAccountCVars() {
     }
 }
 
-// PROVEN: 936dddc7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00656410/0x1402F7970
 void CVar::Destroy() {
     CVar::m_initialized = false;
@@ -901,7 +890,6 @@ void CVar::Initialize() {
     ConsoleCommandRegister("cvarlist", CvarListCommandHandler, CATEGORY_DEFAULT, "List cvars", NULL);
 }
 
-// PROVEN: 459a1ab2 IDENTICAL/DIFFERENT
 // OFFSET: 0x0060DA50/0x140297690
 int32_t ConsoleInitializeClientCVar(const char* fileName) {
     CVar::Initialize();
@@ -909,20 +897,17 @@ int32_t ConsoleInitializeClientCVar(const char* fileName) {
     return CVar::Load(fileName, NULL, NULL);
 }
 
-// PROVEN: 8d336341 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060DA90/0x1402976D0
 int32_t ConsoleLoadClientCVar(const char* fileName) {
     return CVar::Load(fileName, NULL, NULL);
 }
 
-// PROVEN: 0584b250 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060DAB0/0x1402976E0
 int32_t ConsoleLoadClientCVarAndSave(const char* fileName) {
     CVar::m_needsSave = true;
     return CVar::Load(fileName, NULL, NULL);
 }
 
-// PROVEN: 3ae7e3d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060DAF0/0x140297710
 int32_t ConsoleSaveAllClientCVar() {
     return CVar::SaveAll(s_configFile);

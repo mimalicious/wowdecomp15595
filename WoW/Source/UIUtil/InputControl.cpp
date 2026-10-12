@@ -49,7 +49,6 @@ CGInputControl* CGInputControl::s_inputControl;
 
 float s_vehicleAimNormPower;
 
-// PROVEN: 82e97808 IDENTICAL/IDENTICAL
 // OFFSET: 0x00447970/0x1400541C0
 CGInputControl* CGInputControl::GetActive() {
     return CGInputControl::s_inputControl;
@@ -151,19 +150,16 @@ void InputControlDestroy() {
     CGInputControl::Destroy();
 }
 
-// PROVEN: f22e4602 IDENTICAL/IDENTICAL
 // OFFSET: 0x00447980/0x1400541D0
 void CGInputControl::UpdateHalted() {
     this->m_flags &= ~0xF0000;
 }
 
-// PROVEN: 1e1d90d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00447990/0x1400541E0
 void CGInputControl::UpdateMoveStopped() {
     this->m_flags &= ~0x11000;
 }
 
-// PROVEN: ad9f3291 IDENTICAL/NONE
 // OFFSET: 0x004479A0
 int32_t CGInputControl::IsMouseDrag(uint32_t time) const {
     uint32_t elapsed = time - this->m_lookStartTime;
@@ -179,13 +175,11 @@ int32_t CGInputControl::IsMouseDrag(uint32_t time) const {
     return 0;
 }
 
-// PROVEN: c7ff3e4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00447A10/0x140054220
 float CGInputControl::GetUIVehiclePower() {
     return s_vehicleAimNormPower;
 }
 
-// PROVEN: ef6fb063 IDENTICAL/DIFFERENT
 // OFFSET: 0x00448D30/0x140055850
 int32_t CGInputControl::WowMouseEnabled() {
     return s_cvEnableWowMouse && s_cvEnableWowMouse->m_intValue;
@@ -212,7 +206,6 @@ bool CGInputControl::DetectWowMouse() {
     return s_cvEnableWowMouse->Set("0", true, false, false, true);
 }
 
-// PROVEN: a91e3341 IDENTICAL/NONE
 // OFFSET: 0x0043BD20
 int32_t CGInputControl::IsMouseDragging() const {
     uint32_t flags = this->m_flags;
@@ -220,7 +213,6 @@ int32_t CGInputControl::IsMouseDragging() const {
     return (flags & 0x300) && !(flags & 0x2000001);
 }
 
-// PROVEN: 89b7ef7c IDENTICAL/NONE
 // OFFSET: 0x0043BD40
 int32_t CGInputControl::IsIdle() const {
     uint32_t flags = this->m_flags;
@@ -228,7 +220,6 @@ int32_t CGInputControl::IsIdle() const {
     return !(flags & 0x1030) && !(flags & 0xC0) && (!(flags & 0x2000001) || !(flags & 0x300)) && (!(flags & 0x300) || (flags & 0x2000001)) && !(flags & 0x1E00000);
 }
 
-// PROVEN: 0c658f4a IDENTICAL/DIFFERENT
 // OFFSET: 0x00447B70/0x1400543B0
 XMLTree* LoadJoystickConfig(XMLNode*& config) {
     config = NULL;
@@ -284,7 +275,6 @@ XMLTree* LoadJoystickConfig(XMLNode*& config) {
     return NULL;
 }
 
-// PROVEN: 78680c7a DIFFERENT/IDENTICAL
 // OFFSET: 0x00448000/0x140054940
 CGUnit_C* GetVehicleUnitPtr() {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -543,7 +533,6 @@ void __stdcall ScaleMouseDeltaByFov(float* dx, float* dy) {
     *dy = scale * *dy;
 }
 
-// PROVEN: 676ec2b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00449850/0x140056510
 void CGInputControl::VehicleAimChange(uint32_t time, float delta) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -556,7 +545,6 @@ void CGInputControl::VehicleAimChange(uint32_t time, float delta) {
     this->SetPlayerPitch(mover, time, aim + delta);
 }
 
-// PROVEN: 47913f85 IDENTICAL/IDENTICAL
 // OFFSET: 0x004498C0/0x1400565A0
 void CGInputControl::OnPitchToAngleStop() {
     this->m_vehicleAimValid = 0;
@@ -753,7 +741,6 @@ void CGInputControl::CameraPitchPlayer(uint32_t time, float pitch) {
     this->m_flags &= ~0x80000;
 }
 
-// PROVEN: aacc7a9c IDENTICAL/IDENTICAL
 // OFFSET: 0x004479F0/0x1400541F0
 void CGInputControl::OnTurnToAngleStop() {
     if (this->m_facingOverrideActive) {
@@ -762,7 +749,6 @@ void CGInputControl::OnTurnToAngleStop() {
     }
 }
 
-// PROVEN: a60d3df9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00448DB0/0x140055940
 void CheckToCancelCurrentChannelSpell() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1253,7 +1239,6 @@ void CGInputControl::UpdatePlayer(uint32_t time, int32_t a2) {
     }
 }
 
-// PROVEN: b2d85fc5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044A210/0x140057060
 void CGInputControl::ToggleControlBit(uint32_t bit, int32_t enable, uint32_t time, int32_t a5) {
     int32_t changed = enable ? this->SetControlBit(bit, time) : this->UnsetControlBit(bit, time, a5);
@@ -1269,7 +1254,6 @@ void CGInputControl::ToggleControlBit(uint32_t bit, int32_t enable, uint32_t tim
     this->UpdatePlayer(time, 1);
 }
 
-// PROVEN: c7904511 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044A330/0x1400571C0
 void CGInputControl::StopMovementAndTurning(uint32_t time) {
     uint32_t bits = this->m_flags & 0x1330;
@@ -1278,7 +1262,6 @@ void CGInputControl::StopMovementAndTurning(uint32_t time) {
     this->ToggleControlBit(bits, 1, time, 0);
 }
 
-// PROVEN: 06a904b6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004478E0/0x140054100
 uint32_t GetJoystick() {
     return s_joystick;

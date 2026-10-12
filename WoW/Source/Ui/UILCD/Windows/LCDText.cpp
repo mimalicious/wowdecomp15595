@@ -28,7 +28,6 @@ CLCDText::CLCDText() {
     memset(this->m_szText, 0, sizeof(this->m_szText));
 }
 
-// PROVEN: 2390b965 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B41550/0x14090F6A0
 CLCDText::~CLCDText() {
     if (this->m_hFont) {
@@ -37,7 +36,6 @@ CLCDText::~CLCDText() {
     }
 }
 
-// PROVEN: d99c6c2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40E90/0x14090EE90
 int32_t CLCDText::Initialize() {
     if (this->m_hFont) {
@@ -48,7 +46,6 @@ int32_t CLCDText::Initialize() {
     return this->m_hFont ? S_OK : E_OUTOFMEMORY;
 }
 
-// PROVEN: 855b2053 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40ED0/0x14090EED0
 void CLCDText::SetFont(LOGFONTA& font) {
     if (this->m_hFont) {
@@ -60,7 +57,6 @@ void CLCDText::SetFont(LOGFONTA& font) {
     this->m_bRecalcExtent = 1;
 }
 
-// PROVEN: 6086772b IDENTICAL/NONE
 // OFFSET: 0x00B40F10
 HFONT CLCDText::GetFont() {
     return this->m_hFont;
@@ -130,7 +126,6 @@ void CLCDText::SetFontFaceName(const char* faceName) {
     }
 }
 
-// PROVEN: bb5982bc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40F20/0x14090EF40
 void CLCDText::SetFontPointSize(int32_t pointSize) {
     LOGFONTA font;
@@ -140,7 +135,6 @@ void CLCDText::SetFontPointSize(int32_t pointSize) {
     this->SetFont(font);
 }
 
-// PROVEN: 1ab7d2e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40F80/0x14090EFB0
 void CLCDText::SetFontWeight(int32_t weight) {
     LOGFONTA font;
@@ -150,13 +144,11 @@ void CLCDText::SetFontWeight(int32_t weight) {
     this->SetFont(font);
 }
 
-// PROVEN: d5b89b27 IDENTICAL/NONE
 // OFFSET: 0x00B40FD0/0x14090F010
 void CLCDText::SetFontColor(COLORREF color) {
     this->SetForegroundColor(color);
 }
 
-// PROVEN: 84fa6d1b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40FE0/0x14090F020
 void CLCDText::SetText(const WCHAR* text) {
     if (!text || !wcscmp(this->m_szText, text)) {
@@ -170,13 +162,11 @@ void CLCDText::SetText(const WCHAR* text) {
     this->m_bRecalcExtent = 1;
 }
 
-// PROVEN: f1c1bdea IDENTICAL/IDENTICAL
 // OFFSET: [0x005A45C0/0x140215130]
 const WCHAR* CLCDText::GetText() {
     return this->m_szText;
 }
 
-// PROVEN: f620730c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B41080/0x14090F0B0
 void CLCDText::SetWordWrap(int32_t enable) {
     this->m_bRecalcExtent = 1;
@@ -188,13 +178,11 @@ void CLCDText::SetWordWrap(int32_t enable) {
     }
 }
 
-// PROVEN: c04330c8 IDENTICAL/NONE
 // OFFSET: 0x00B410F0
 SIZE& CLCDText::GetVExtent() {
     return this->m_sizeVExtent;
 }
 
-// PROVEN: 68b3e0de IDENTICAL/NONE
 // OFFSET: 0x00B41100
 SIZE& CLCDText::GetHExtent() {
     return this->m_sizeHExtent;
@@ -224,31 +212,26 @@ void CLCDText::CalculateExtent(int32_t singleLine) {
     DeleteDC(dc);
 }
 
-// PROVEN: 20b4d1f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B410B0/0x14090F0D0
 void CLCDText::SetLeftMargin(int32_t margin) {
     this->m_dtp.iLeftMargin = margin;
 }
 
-// PROVEN: 5fa10ef7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B410D0/0x14090F0F0
 int32_t CLCDText::GetLeftMargin() {
     return this->m_dtp.iLeftMargin;
 }
 
-// PROVEN: 2903197f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B410C0/0x14090F0E0
 void CLCDText::SetRightMargin(int32_t margin) {
     this->m_dtp.iRightMargin = margin;
 }
 
-// PROVEN: 323fbe8e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B410E0/0x14090F100
 int32_t CLCDText::GetRightMargin() {
     return this->m_dtp.iRightMargin;
 }
 
-// PROVEN: 40ffb1bc DIFFERENT/IDENTICAL
 // OFFSET: 0x00B41210/0x14090F2A0
 void CLCDText::SetAlignment(int32_t alignment) {
     UINT format = this->m_nTextFormat & ~this->m_nTextAlignment;
@@ -256,7 +239,6 @@ void CLCDText::SetAlignment(int32_t alignment) {
     this->m_nTextFormat = alignment | format;
 }
 
-// PROVEN: 3e5967fa IDENTICAL/IDENTICAL
 // OFFSET: 0x00B41240/0x14090F2C0
 void CLCDText::DrawControlText(CLCDGfxBase& gfx) {
     RECT rect;

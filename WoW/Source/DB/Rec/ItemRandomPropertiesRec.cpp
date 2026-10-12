@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[4] = { 0, 2, 0, 2 };
 // STATIC: 0x00C23FF8/0x140A19530
 const DBCMeta ItemRandomPropertiesRec::s_meta = { "DBFilesClient\\ItemRandomProperties.dbc", 4, 32, ItemRandomPropertiesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 9d677c96 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EB50/0x1407D82D0
 void ItemRandomPropertiesRec::FixupStrings(void* record, const char* strings) {
     ItemRandomPropertiesRec* rec = static_cast<ItemRandomPropertiesRec*>(record);

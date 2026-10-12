@@ -170,7 +170,6 @@ FMOD_RESULT OutputTimer::timerFunc()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bf623ea3 IDENTICAL/NONE
 // OFFSET: 0x00AFAC20
 FMOD_RESULT OutputTimer::start()
 {
@@ -249,7 +248,6 @@ FMOD_RESULT OutputTimer::start()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f056110b IDENTICAL/NONE
 // OFFSET: 0x00AFA710
 FMOD_RESULT OutputTimer::stop()
 {
@@ -297,7 +295,6 @@ FMOD_RESULT OutputTimer::stop()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 138d5496 IDENTICAL/NONE
 // OFFSET: 0x00AFABE0
 void CALLBACK OutputTimer::timerFuncCallback(UINT uTimerID, UINT uMsg, UINT_PTR dwUser, UINT_PTR dw1, UINT_PTR dw2)
 {

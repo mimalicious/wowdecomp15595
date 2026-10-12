@@ -56,7 +56,6 @@ void CGxDeviceD3d11::IStateReset() {
     this->m_stateDirty = (this->m_stateDirty & 0xFFFFFF00) | 0x3F;
 }
 
-// PROVEN: 4c6bafa7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086D570/0x1405A1EA0
 void CGxDeviceD3d11::ISetIndexBuffer() {
     ID3D11Buffer* indexBuffer = static_cast<ID3D11Buffer*>(this->m_primIndexBuf->m_pool->m_apiSpecific);
@@ -67,7 +66,6 @@ void CGxDeviceD3d11::ISetIndexBuffer() {
     }
 }
 
-// PROVEN: 2ce63dde IDENTICAL/IDENTICAL
 // OFFSET: 0x0086D5B0/0x1405A1F00
 void CGxDeviceD3d11::ISetVertexBuffer() {
     ID3D11Buffer* vertexBuffer = static_cast<ID3D11Buffer*>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
@@ -79,7 +77,6 @@ void CGxDeviceD3d11::ISetVertexBuffer() {
     }
 }
 
-// PROVEN: d6040b1d IDENTICAL/IDENTICAL
 // OFFSET: 0x0086D600/0x1405A1F60
 void CGxDeviceD3d11::ISetVertexBuffers() {
     ID3D11Buffer* vertexBuffer0 = static_cast<ID3D11Buffer*>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
@@ -93,7 +90,6 @@ void CGxDeviceD3d11::ISetVertexBuffers() {
     }
 }
 
-// PROVEN: 5555e689 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086D680/0x1405A1FF0
 void CGxDeviceD3d11::IStateSyncScissorRect() {
     if (!this->m_scissorRectDirty) {
@@ -201,7 +197,6 @@ void CGxDeviceD3d11::IUpdateInputLayout() {
     SMemFree(data, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 5ab286d1 IDENTICAL/UNPROVEN
 // OFFSET: 0x0086F650/0x1405A4F20
 void CGxDeviceD3d11::ISetInputLayout() {
     this->IUpdateInputLayout();
@@ -221,7 +216,6 @@ void CGxDeviceD3d11::ISetInputLayout() {
     }
 }
 
-// PROVEN: 8a5b7d54 IDENTICAL/UNPROVEN
 // OFFSET: 0x0086F6B0/0x1405A4F90
 void CGxDeviceD3d11::ISetInputLayoutInstanced() {
     this->IUpdateInputLayout();
@@ -458,7 +452,6 @@ ID3D11SamplerState* CGxDeviceD3d11::IGetSamplerState(CGxTexFlags flags) {
     return state;
 }
 
-// PROVEN: 0ddfcbd6 IDENTICAL/UNPROVEN
 // OFFSET: 0x0086FD30/0x1405A5830
 void CGxDeviceD3d11::ISetVertexTexture(uint32_t slot, CGxTex* texId) {
     if (texId) {
@@ -480,7 +473,6 @@ void CGxDeviceD3d11::ISetVertexTexture(uint32_t slot, CGxTex* texId) {
     this->m_d3dContext->VSSetSamplers(slot, 1, &sampler);
 }
 
-// PROVEN: dab9c8ba IDENTICAL/UNPROVEN
 // OFFSET: 0x0086FDF0/0x1405A5910
 void CGxDeviceD3d11::ISetDomainTexture(uint32_t slot, CGxTex* texId) {
     if (texId) {
@@ -501,7 +493,6 @@ void CGxDeviceD3d11::ISetDomainTexture(uint32_t slot, CGxTex* texId) {
     this->m_d3dContext->DSSetSamplers(slot, 1, &sampler);
 }
 
-// PROVEN: 488472fd IDENTICAL/UNPROVEN
 // OFFSET: 0x0086FEB0/0x1405A59F0
 void CGxDeviceD3d11::ISetTexture(uint32_t slot, CGxTex* texId) {
     if (texId) {
@@ -523,7 +514,6 @@ void CGxDeviceD3d11::ISetTexture(uint32_t slot, CGxTex* texId) {
     this->m_d3dContext->PSSetSamplers(slot, 1, &sampler);
 }
 
-// PROVEN: 2ccc60ae IDENTICAL/DIFFERENT
 // OFFSET: 0x0086FF70/0x1405A5AC0
 void CGxDeviceD3d11::IRsSendToHw(EGxRenderState which) {
     CGxStateBom& value = this->m_appRenderStates[which].m_value;
@@ -607,7 +597,6 @@ void CGxDeviceD3d11::IRsSendToHw(EGxRenderState which) {
     }
 }
 
-// PROVEN: 7597b02f IDENTICAL/IDENTICAL
 // OFFSET: 0x008700E0/0x1405A5C10
 void CGxDeviceD3d11::IStateSync() {
     this->IRsSync(0);
@@ -633,7 +622,6 @@ void CGxDeviceD3d11::IStateSync() {
     this->IStateSyncDepth();
 }
 
-// PROVEN: 1d350db8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00870160/0x14058C3D0
 void CGxDeviceD3d11::CapsWindowSize(CRect& rect) {
     rect = this->DeviceCurWindow();
@@ -658,7 +646,6 @@ void CGxDeviceD3d11::CapsWindowSizeInScreenCoords(CRect& rect) {
     }
 }
 
-// PROVEN: 6af847ed IDENTICAL/UNPROVEN
 // OFFSET: 0x00870250/0x1405A5DA0
 void CGxDeviceD3d11::SceneClear(uint32_t mask, CImVector color) {
     CGxDevice::SceneClear(mask, color);
@@ -682,7 +669,6 @@ void CGxDeviceD3d11::SceneClear(uint32_t mask, CImVector color) {
     }
 }
 
-// PROVEN: 326b57a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00870310/0x1405A5E80
 void CGxDeviceD3d11::ScenePresent(void* window) {
     if (!this->m_context) {
@@ -842,7 +828,6 @@ int32_t CGxDeviceD3d11::XformIsValidViewport(float minX, float maxX, float minY,
     return height > 0.0f && minZ >= 0.0f && maxZ <= 1.0f && minZ <= maxZ && x >= 0.0f && viewY >= 0.0f && width + x <= window.maxX && height + viewY <= window.maxY;
 }
 
-// PROVEN: 5e0d7ba8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00870A00/0x1405A6670
 void CGxDeviceD3d11::IXformSetViewport() {
     const CRect& window = this->DeviceCurWindow();
@@ -898,13 +883,11 @@ void CGxDeviceD3d11::XformSetProjection(const C44Matrix& matrix) {
     this->m_projNative = projNative;
 }
 
-// PROVEN: d54f1b1c IDENTICAL/IDENTICAL
 // OFFSET: 0x00870E50/0x14058CC40
 void CGxDeviceD3d11::XformSetView(const C44Matrix& matrix) {
     CGxDevice::XformSetView(matrix);
 }
 
-// PROVEN: 59923c7e IDENTICAL/NONE
 // OFFSET: 0x00870E60
 void CGxDeviceD3d11::SetInstanceCount(uint32_t count) {
     this->m_instanceCount = count;
@@ -925,7 +908,6 @@ void CGxDeviceD3d11::ResetInstancing() {
     this->m_primVertexBufs[1] = NULL;
 }
 
-// PROVEN: b630f6a5 IDENTICAL/NONE
 // OFFSET: 0x00870EE0
 void CGxDeviceD3d11::PrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
     if (this->m_primVertexFormat != format) {
@@ -935,7 +917,6 @@ void CGxDeviceD3d11::PrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
     CGxDevice::PrimVertexPtr(buf, format);
 }
 
-// PROVEN: 6782ea7f IDENTICAL/NONE
 // OFFSET: 0x00870F10
 void CGxDeviceD3d11::PrimVertexPtrs(CGxBuf** bufs, const EGxVertexBufferFormat* formats, EGxVertexBufferFormat format) {
     if (this->m_primVertexFormat != format) {

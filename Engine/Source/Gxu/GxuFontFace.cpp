@@ -6,7 +6,6 @@
 
 TSHashTable<FACEDATA, HASHKEY_STRI> s_faceHash;
 
-// PROVEN: 9e2e24b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x006224E0/0x1402B3400
 FT_Face FontFaceGetFace(HFACE handle) {
     if (!handle) {
@@ -35,7 +34,6 @@ void FontFaceCloseHandle(HFACE handle) {
     }
 }
 
-// PROVEN: 5197b9a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00622540/0x1402B3470
 const char* FontFaceGetFontName(HFACE handle) {
     if (!handle) {

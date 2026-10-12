@@ -294,14 +294,12 @@ void SockAddrString::FormatIPv4(uint32_t address) {
     SStrPrintf(this->m_str, "%d.%d.%d.%d", host >> 24, (host >> 16) & 0xFF, (host >> 8) & 0xFF, host & 0xFF);
 }
 
-// PROVEN: b2798524 DIFFERENT/IDENTICAL
 // OFFSET: 0x00879E70/0x1405B2DC0
 void SockAddrString::FormatIPv4(uint32_t address, uint16_t port) {
     uint32_t host = ntohl(address);
     SStrPrintf(this->m_str, "%d.%d.%d.%d:%d", host >> 24, (host >> 16) & 0xFF, (host >> 8) & 0xFF, host & 0xFF, port);
 }
 
-// PROVEN: 39dcc691 DIFFERENT/IDENTICAL
 // OFFSET: 0x00879EC0/0x1405B2E20
 SockAddrString::SockAddrString(SockAddr* addr, uint16_t port) {
     addr->Normalize();

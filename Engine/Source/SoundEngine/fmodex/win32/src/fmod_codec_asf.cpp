@@ -102,7 +102,6 @@ FMOD_CODEC_DESCRIPTION_EX *CodecASF::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b76f5601 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AA4450/0x140865BE0
 FMOD_RESULT CodecASF::getStreamNumbers(IWMProfile* pProfile)
 {
@@ -562,7 +561,6 @@ FMOD_RESULT CodecASF::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8a850190 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4560/0x140865D60
 FMOD_RESULT CodecASF::closeInternal()
 {   
@@ -661,7 +659,6 @@ FMOD_RESULT CodecASF::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d7a2c312 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4690/0x140865EE0
 FMOD_RESULT CodecASF::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -782,7 +779,6 @@ HRESULT CROStream::Open( LPCTSTR ptszURL )
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bac2ef7c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4750/0x140865F70
 HRESULT CROStream::Read( void *pv, ULONG cb, ULONG *pcbRead )
 {
@@ -815,7 +811,6 @@ HRESULT CROStream::Read( void *pv, ULONG cb, ULONG *pcbRead )
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d134e493 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4780/0x140865FA0
 HRESULT CROStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *plibNewPosition)
 {
@@ -876,7 +871,6 @@ HRESULT CROStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8d917d61 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4800/0x140866030
 HRESULT CROStream::Stat( STATSTG *pstatstg, DWORD grfStatFlag )
 {
@@ -951,7 +945,6 @@ HRESULT CROStream::QueryInterface( REFIID riid, void **ppv )
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9d97dfce IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA48B0/0x140866120
 ULONG CROStream::AddRef()
 {
@@ -975,7 +968,6 @@ ULONG CROStream::AddRef()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ca1a52af IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA48D0/0x140866130
 ULONG CROStream::Release()
 {
@@ -1006,7 +998,6 @@ ULONG CROStream::Release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a3b315e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4910/0x140866180
 FMOD_RESULT CodecASF::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 {
@@ -1045,7 +1036,6 @@ FMOD_RESULT CodecASF::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 63a27712 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA5260/0x140866C70
 FMOD_RESULT F_CALLBACK CodecASF::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -1071,7 +1061,6 @@ FMOD_RESULT F_CALLBACK CodecASF::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 85ab09f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA49A0/0x140866260
 FMOD_RESULT F_CALLBACK CodecASF::closeCallback(FMOD_CODEC_STATE *codec)
 {
@@ -1097,7 +1086,6 @@ FMOD_RESULT F_CALLBACK CodecASF::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 488a7a63 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AA49D0/0x140866280
 FMOD_RESULT F_CALLBACK CodecASF::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -1123,7 +1111,6 @@ FMOD_RESULT F_CALLBACK CodecASF::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 590de3b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4A00/0x1408662A0
 FMOD_RESULT F_CALLBACK CodecASF::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -1149,7 +1136,6 @@ FMOD_RESULT F_CALLBACK CodecASF::setPositionCallback(FMOD_CODEC_STATE *codec, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3925e391 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4A30/0x1408662C0
 FMOD_RESULT F_CALLBACK CodecASF::soundCreateCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_SOUND *sound)
 {

@@ -57,7 +57,6 @@ void CMap::GatherLowDetail(CWorldView* view, int32_t x, int32_t y) {
     }
 }
 
-// PROVEN: 9ce49674 IDENTICAL/DIFFERENT
 // OFFSET: 0x0079F450/0x140494990
 void CMap::GatherInfiniteOcean(CWorldView* view, int32_t x, int32_t y) {
     CMapLowDetail::CMapAreaLowTableEntry* entry = this->m_lowDetail.m_areaTable.Get(x, y);

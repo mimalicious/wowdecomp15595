@@ -58,7 +58,6 @@ static int32_t Script_JoinArena(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 75600c18 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093D490/0x1406A8EE0
 static int32_t Script_JoinRatedBattlefield(lua_State* L) {
     UserClientBattlemasterJoinRated msg;
@@ -66,7 +65,6 @@ static int32_t Script_JoinRatedBattlefield(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dd8222a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093D4C0/0x1406A8F10
 static int32_t Script_GetMaxBattlefieldID(lua_State* L) {
     lua_pushnumber(L, CGBattlefieldInfo::m_maxBattlefieldID);
@@ -91,7 +89,6 @@ static int32_t Script_GetBattlefieldInstanceExpiration(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 9c18d546 IDENTICAL/NONE
 // OFFSET: 0x0093D590/0x1406A8FA0
 static int32_t Script_GetBattlefieldInstanceRunTime(lua_State* L) {
     uint32_t start = CGBattlefieldInfo::m_instanceStartTime;
@@ -105,14 +102,12 @@ static int32_t Script_GetBattlefieldInstanceRunTime(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5acb1791 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093D5F0/0x1406A8FF0
 static int32_t Script_RequestBattlefieldScoreData(lua_State* L) {
     CGBattlefieldInfo::RequestScoreData();
     return 0;
 }
 
-// PROVEN: 74a91775 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093D600/0x1406A9000
 static int32_t Script_GetNumBattlefieldScores(lua_State* L) {
     lua_pushnumber(L, CGBattlefieldInfo::m_numScores);
@@ -130,14 +125,12 @@ static int32_t Script_GetBattlefieldWinner(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a0081292 IDENTICAL/NONE
 // OFFSET: 0x0093D6A0/0x1406A9070
 static int32_t Script_GetNumBattlefieldStats(lua_State* L) {
     lua_pushnumber(L, CGBattlefieldInfo::m_numWorldStateStats);
     return 1;
 }
 
-// PROVEN: 1f55dd07 IDENTICAL/NONE
 // OFFSET: 0x0093D6E0/0x1406A90A0
 static int32_t Script_GetBattlefieldStatData(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -177,7 +170,6 @@ static int32_t Script_GetNumBattlefieldPositions(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 80c79fb0 IDENTICAL/NONE
 // OFFSET: 0x0093D840/0x1406A9210
 static int32_t Script_GetNumBattlefieldFlagPositions(lua_State* L) {
     uint32_t count;
@@ -194,7 +186,6 @@ static int32_t Script_GetNumBattlefieldFlagPositions(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 4e37ed50 IDENTICAL/NONE
 // OFFSET: 0x0093D8A0/0x1406A9250
 static int32_t Script_GetNumBattlefieldVehicles(lua_State* L) {
     lua_pushnumber(L, CGBattlefieldInfo::m_numVehicles);
@@ -217,21 +208,18 @@ static int32_t Script_GetBattlefieldTeamInfo(lua_State* L) {
     return 5;
 }
 
-// PROVEN: 517f1c2b IDENTICAL/NONE
 // OFFSET: 0x0093DA00/0x1406A93A0
 static int32_t Script_GetBattlefieldArenaFaction(lua_State* L) {
     lua_pushnumber(L, CGBattlefieldInfo::m_arenaFaction);
     return 1;
 }
 
-// PROVEN: 1b617c4a IDENTICAL/DIFFERENT
 // OFFSET: 0x0093DA30/0x1406A9420
 static int32_t Script_GetNumArenaOpponents(lua_State* L) {
     lua_pushnumber(L, GetArenaPetGUIDCount());
     return 1;
 }
 
-// PROVEN: b699dde8 IDENTICAL/DIFFERENT
 // OFFSET: 0x0093DA70/0x1406A9420
 static int32_t Script_GetHolidayBGHonorCurrencyBonuses(lua_State* L) {
     lua_pushboolean(L, CGBattlefieldInfo::m_hasHolidayWinToday);
@@ -242,7 +230,6 @@ static int32_t Script_GetHolidayBGHonorCurrencyBonuses(lua_State* L) {
     return 5;
 }
 
-// PROVEN: ce7f4b9e IDENTICAL/NONE
 // OFFSET: 0x0093DAE0/0x1406A9490
 static int32_t Script_GetRandomBGHonorCurrencyBonuses(lua_State* L) {
     lua_pushboolean(L, CGBattlefieldInfo::m_hasRandomWinToday);
@@ -253,7 +240,6 @@ static int32_t Script_GetRandomBGHonorCurrencyBonuses(lua_State* L) {
     return 5;
 }
 
-// PROVEN: f15be7dc IDENTICAL/DIFFERENT
 // OFFSET: 0x0093DB50/0x1406A9500
 static int32_t Script_GetPersonalRatedBGInfo(lua_State* L) {
     PersonalRatedInfo* info = &CGBattlefieldInfo::m_personalRatedInfo[3];
@@ -298,14 +284,12 @@ static int32_t Script_GetPersonalRatedArenaInfo(lua_State* L) {
     return 6;
 }
 
-// PROVEN: 43900379 IDENTICAL/DIFFERENT
 // OFFSET: 0x0093DCA0/0x1406A9680
 static int32_t Script_GetNumWarGameTypes(lua_State* L) {
     lua_pushinteger(L, CGBattlefieldInfo::m_numWarGameTypes);
     return 1;
 }
 
-// PROVEN: 87c2fd33 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093DCC0/0x1406A96A0
 static int32_t Script_RequestPVPRewards(lua_State* L) {
     UserClientRequestPvpRewards msg;
@@ -313,7 +297,6 @@ static int32_t Script_RequestPVPRewards(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4793e3df IDENTICAL/IDENTICAL
 // OFFSET: 0x0093DCF0/0x1406A96D0
 static int32_t Script_GetPVPRewards(lua_State* L) {
     return CGBattlefieldInfo::PushPVPRewards(L);
@@ -327,7 +310,6 @@ static int32_t Script_ClearBattlemaster(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c71f3cff IDENTICAL/IDENTICAL
 // OFFSET: 0x0093F180/0x1406AAED0
 static int32_t Script_GetNumWorldPVPAreas(lua_State* L) {
     lua_pushnumber(L, g_world_PVP_AreaDB.m_numRecords);
@@ -414,7 +396,6 @@ static int32_t Script_GetBattlefieldScore(lua_State* L) {
     return 16;
 }
 
-// PROVEN: b5812a08 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093F560/0x1406AB340
 static int32_t Script_SetBattlefieldScoreFaction(lua_State* L) {
     int32_t faction = -1;
@@ -427,7 +408,6 @@ static int32_t Script_SetBattlefieldScoreFaction(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b82238aa IDENTICAL/DIFFERENT
 // OFFSET: 0x0093F5B0/0x1406AB390
 static int32_t Script_GetBattlefieldStatInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -557,7 +537,6 @@ static int32_t Script_GetBattlefieldVehicleInfo(lua_State* L) {
     return 8;
 }
 
-// PROVEN: 407ca5a6 IDENTICAL/NONE
 // OFFSET: 0x0093FAA0/0x1406ABA20
 static int32_t Script_CanJoinBattlefieldAsGroup(lua_State* L) {
     BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(CGBattlefieldInfo::m_bgTypeID);
@@ -571,7 +550,6 @@ static int32_t Script_CanJoinBattlefieldAsGroup(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5fb7cd56 IDENTICAL/NONE
 // OFFSET: 0x0093FB00/0x1406ABA80
 static int32_t Script_GetBattlefieldMapIconScale(lua_State* L) {
     MapRec* map = g_mapDB.GetRecord(CGBattlefieldInfo::m_activeMapID);
@@ -594,7 +572,6 @@ static int32_t Script_HearthAndResurrectFromArea(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ff2d15ad IDENTICAL/NONE
 // OFFSET: 0x0093FC30/0x1406ABBC0
 static int32_t Script_GetNumBattlegroundTypes(lua_State* L) {
     lua_pushnumber(L, static_cast<int32_t>(CGBattlefieldInfo::m_battlegroundTypes.Count()));
@@ -655,7 +632,6 @@ static int32_t Script_GetWorldPVPQueueStatus(lua_State* L) {
     return 4;
 }
 
-// PROVEN: 5a148765 IDENTICAL/NONE
 // OFFSET: 0x0093FDC0/0x1406ABD80
 static int32_t Script_SortBGList(lua_State* L) {
     lua_pushboolean(L, 1);
@@ -663,7 +639,6 @@ static int32_t Script_SortBGList(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 57342fdb IDENTICAL/UNPROVEN
 // OFFSET: 0x0093FE00/0x1406ABDC0
 static int32_t Script_RequestRatedBattlegroundInfo(lua_State* L) {
     // STATIC: 0x00F36D78
@@ -703,7 +678,6 @@ static int32_t Script_RequestRatedArenaInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 7838606d IDENTICAL/DIFFERENT
 // OFFSET: 0x0093FF40/0x1406ABF20
 static int32_t Script_GetRatedBattleGroundInfo(lua_State* L) {
     BattlemasterListRec* rec = g_battlemasterListDB.GetRecord(GetWorldState(5508) + 99);
@@ -747,7 +721,6 @@ static int32_t Script_CommentatorStartWargame(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1516b311 IDENTICAL/UNPROVEN
 // OFFSET: 0x00940100/0x1406AC100
 static int32_t Script_RequestPVPOptionsEnabled(lua_State* L) {
     // STATIC: 0x00F36DA0
@@ -904,7 +877,6 @@ static int32_t Script_GetWorldPVPAreaInfo(lua_State* L) {
     return 6;
 }
 
-// PROVEN: fbd01dc7 IDENTICAL/NONE
 // OFFSET: 0x00940EE0/0x1406AD330
 static int32_t Script_GetBattlefieldFlagPosition(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1038,7 +1010,6 @@ static int32_t Script_SortBattlefieldScoreData(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 351e42ba IDENTICAL/NONE
 // OFFSET: 0x00941300/0x1406AD770
 static int32_t Script_GetBattlegroundInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1367,7 +1338,6 @@ static int32_t Script_IsInActiveWorldPVP(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c1e37a9c IDENTICAL/UNPROVEN
 // OFFSET: 0x00941D20/0x1406AE370
 static int32_t Script_CollapseWarGameHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1389,7 +1359,6 @@ static int32_t Script_CollapseWarGameHeader(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4f8aee50 IDENTICAL/UNPROVEN
 // OFFSET: 0x00941DB0/0x1406AE3F0
 static int32_t Script_ExpandWarGameHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1682,7 +1651,6 @@ int32_t Script_RequestBattlegroundInstanceInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d7c0e5ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00942A70/0x1406AF370
 static int32_t Script_UpdateWarGamesList(lua_State* L) {
     CGBattlefieldInfo::BuildWarGameTypeList();
@@ -1726,7 +1694,6 @@ static int32_t Script_LeaveBattlefield(lua_State* L) {
     return 0;
 }
 
-// PROVEN: a14866fe IDENTICAL/NONE
 // OFFSET: 0x00943200/0x1406AFD00
 static int32_t Script_RequestBattlefieldPositions(lua_State* L) {
     CGBattlefieldInfo::RequestPlayerPositions();
@@ -1755,7 +1722,6 @@ static int32_t Script_IsRatedBattleground(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 72417cbb IDENTICAL/DIFFERENT
 // OFFSET: 0x00943310/0x1406AFE90
 static int32_t Script_IsRatedMap(lua_State* L) {
     uint64_t queueID = CGBattlefieldInfo::GetActiveQueueID();
@@ -1842,7 +1808,6 @@ static FrameScript_Method s_scriptFunctions[74] = {
     { "ClearBattlemaster", &Script_ClearBattlemaster }
 };
 
-// PROVEN: f7a05621 IDENTICAL/UNPROVEN
 // OFFSET: 0x0093DD40/0x1406A9720
 void BattlefieldInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < 74; i++) {

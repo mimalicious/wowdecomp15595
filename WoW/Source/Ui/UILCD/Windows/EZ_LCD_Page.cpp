@@ -4,13 +4,11 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDBitmap.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDText.h"
 
-// PROVEN: 642486b3 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B3FDA0/0x14090D9E0
 CEzLcdPage::CEzLcdPage() {
     this->m_container = NULL;
 }
 
-// PROVEN: 1188ac22 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B3FDF0/0x14090DA60
 CEzLcdPage::CEzLcdPage(CEzLcd* container) {
     this->m_container = container;
@@ -21,7 +19,6 @@ CEzLcdPage::CEzLcdPage(CEzLcd* container) {
     }
 }
 
-// PROVEN: 02a82783 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3FDC0/0x14090DA10
 CEzLcdPage::~CEzLcdPage() {
 }

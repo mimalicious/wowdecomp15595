@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[6] = { 0, 0, 0, 3, 3, 2 };
 // STATIC: 0x00C27ACC/0x140A1E080
 const DBCMeta WeatherRec::s_meta = { "DBFilesClient\\Weather.dbc", 6, 32, WeatherRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 0f0d9524 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B700/0x1407E8500
 void WeatherRec::FixupStrings(void* record, const char* strings) {
     WeatherRec* rec = static_cast<WeatherRec*>(record);

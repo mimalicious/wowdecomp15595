@@ -194,7 +194,6 @@ BSN::String<N>::String(const char* source) {
     this->m_size = BSN::UTF8StringCopy(this->m_data, source, N, this->m_length);
 }
 
-// PROVEN: 0075a519 IDENTICAL/NONE
 // OFFSET: 0x009024C0<127>
 template <uint32_t N>
 BSN::String<N>& BSN::String<N>::operator=(const char* source) {

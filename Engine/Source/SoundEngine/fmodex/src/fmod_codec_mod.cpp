@@ -100,7 +100,6 @@ FMOD_CODEC_DESCRIPTION_EX *CodecMOD::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ceae9ada IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB81D0/0x14087EBD0
 FMOD_RESULT CodecMOD::calculateLength()
 {
@@ -157,7 +156,6 @@ int CodecMOD::getAmigaPeriod(int note, int middlec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b971c39b IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB3F10/0x14087D200
 FMOD_RESULT MusicChannelMOD::portamento()
 {
@@ -216,7 +214,6 @@ FMOD_RESULT MusicChannelMOD::portamento()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b51cc7e3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB6E80/0x14087D280
 FMOD_RESULT MusicChannelMOD::vibrato() 
 {
@@ -283,7 +280,6 @@ FMOD_RESULT MusicChannelMOD::vibrato()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8a28be2a DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB6F40/0x14087D350
 FMOD_RESULT MusicChannelMOD::tremolo() 
 {
@@ -1141,7 +1137,6 @@ FMOD_RESULT CodecMOD::updateEffects()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8f0b9976 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB7DB0/0x14087E780
 FMOD_RESULT CodecMOD::update(bool audible)
 {
@@ -1961,7 +1956,6 @@ FMOD_RESULT CodecMOD::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9dbf6429 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB7EF0/0x14087E8B0
 FMOD_RESULT CodecMOD::closeInternal()
 {
@@ -2151,7 +2145,6 @@ FMOD_RESULT CodecMOD::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d5bc9c7c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB80D0/0x14087EAD0
 FMOD_RESULT CodecMOD::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -2218,7 +2211,6 @@ FMOD_RESULT CodecMOD::setPositionInternal(int subsound, unsigned int position, F
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 23655340 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9520/0x140880340
 FMOD_RESULT F_CALLBACK CodecMOD::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -2243,7 +2235,6 @@ FMOD_RESULT F_CALLBACK CodecMOD::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c0ac77d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB8170/0x14087EB90
 FMOD_RESULT F_CALLBACK CodecMOD::closeCallback(FMOD_CODEC_STATE *codec)
 {
@@ -2268,7 +2259,6 @@ FMOD_RESULT F_CALLBACK CodecMOD::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 33e93be4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AB85E0/0x14087F080
 FMOD_RESULT F_CALLBACK CodecMOD::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -2293,7 +2283,6 @@ FMOD_RESULT F_CALLBACK CodecMOD::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a121cd5b IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB81A0/0x1408AF740
 FMOD_RESULT F_CALLBACK CodecMOD::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype   )
 {

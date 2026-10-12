@@ -3,7 +3,6 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: dcd6c1c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00550330/0x1401AAF40
 static uint32_t STORMAPI NetworkThreadProc(void* param) {
     WowConnectionNet* network = static_cast<WowConnectionNet*>(param);
@@ -13,7 +12,6 @@ static uint32_t STORMAPI NetworkThreadProc(void* param) {
     return 0;
 }
 
-// PROVEN: d6518a0d IDENTICAL/IDENTICAL
 // OFFSET: 0x005505D0/0x1401AB2A0
 static uint32_t STORMAPI WorkerThreadProc(void* param) {
     WowConnectionNet::WORKER* worker = static_cast<WowConnectionNet::WORKER*>(param);
@@ -59,7 +57,6 @@ void WowConnectionNet::Start() {
     }
 }
 
-// PROVEN: a83d2922 IDENTICAL/IDENTICAL
 // OFFSET: 0x005502C0/0x1401AAEB0
 void WowConnectionNet::Service(WowConnection* connection, uint32_t flags) {
     do {
@@ -156,7 +153,6 @@ void WowConnectionNet::Delete(WowConnection* connection) {
     this->m_connectionsLock.Leave();
 }
 
-// PROVEN: a5a8e9af IDENTICAL/IDENTICAL
 // OFFSET: 0x005508B0/0x1401AB6E0
 WowConnectionNet::WowConnectionNet(int32_t numThreads, void (*threadInit)()) : m_stopEvent(1, 0), m_workerSemaphore(0, numThreads), m_serviceSemaphore(0, 0x7FFFFFFF) {
     this->m_numWorkers = numThreads;
@@ -164,7 +160,6 @@ WowConnectionNet::WowConnectionNet(int32_t numThreads, void (*threadInit)()) : m
     this->m_stop = false;
 }
 
-// PROVEN: 9285fc03 IDENTICAL/UNPROVEN
 // OFFSET: 0x005506E0/0x1401AB3F0
 void WowConnectionNet::Add(WowConnection* connection) {
     this->m_connectionsLock.Enter();
@@ -177,7 +172,6 @@ void WowConnectionNet::Add(WowConnection* connection) {
     this->m_connectionsLock.Leave();
 }
 
-// PROVEN: b9fc6366 IDENTICAL/DIFFERENT
 // OFFSET: 0x00550730/0x1401AB460
 void WowConnectionNet::Remove(WowConnection* connection) {
     this->m_connectionsLock.Enter();
@@ -220,7 +214,6 @@ void WowConnectionNet::Stop() {
     }
 }
 
-// PROVEN: 91633125 IDENTICAL/DIFFERENT
 // OFFSET: 0x00550780/0x1401AB520
 WowConnectionNet::~WowConnectionNet() {
 }

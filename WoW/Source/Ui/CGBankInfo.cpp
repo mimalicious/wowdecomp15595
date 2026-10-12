@@ -8,7 +8,6 @@
 // STATIC: 0x00F76860/0x140E6C8E8
 WOWGUID CGBankInfo::m_banker;
 
-// PROVEN: c957fd14 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EE710/0x140787D10
 static int32_t BankUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYERBANKBAGSLOTS_CHANGED, NULL);
@@ -20,7 +19,6 @@ void CGBankInfo::EnterWorld() {
     ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, 0x1E, 1, BankUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
-// PROVEN: 1a2f7eda IDENTICAL/IDENTICAL
 // OFFSET: 0x009EE730/0x140787D30
 void CGBankInfo::SetBanker(const WOWGUID& banker) {
     if (!banker) {
@@ -36,7 +34,6 @@ void CGBankInfo::SetBanker(const WOWGUID& banker) {
     FrameScript_SignalEvent(SCRIPT_EVENT_BANKFRAME_OPENED, NULL);
 }
 
-// PROVEN: 2d795d4b DIFFERENT/IDENTICAL
 // OFFSET: 0x009EE8F0/0x140787F30
 void CGBankInfo::LeaveWorld() {
     ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, 0x1E, BankUpdateHandler, NULL);

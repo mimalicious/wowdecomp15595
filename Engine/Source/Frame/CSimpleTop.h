@@ -159,7 +159,6 @@ CSimpleSortedArray<T>::CSimpleSortedArray() {
     this->m_iterator = 0;
 }
 
-// PROVEN: 2d82baa4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00500E00/0x140146590
 template <class T>
 uint32_t CSimpleSortedArray<T>::Insert(T element) {

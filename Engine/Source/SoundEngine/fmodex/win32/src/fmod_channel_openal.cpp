@@ -2070,7 +2070,6 @@ FMOD_RESULT ChannelOpenAL::isPlaying(bool *isplaying, bool includethreadlatency)
     FMOD_DSP_FFT_WINDOW
 ]
 */
-// PROVEN: 1e834689 IDENTICAL/NONE
 // OFFSET: 0x00AF6DF0
 FMOD_RESULT ChannelOpenAL::getSpectrum(float *spectrumarray, int numvalues, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype)
 {
@@ -2190,7 +2189,6 @@ FMOD_RESULT ChannelOpenAL::getSpectrum(float *spectrumarray, int numvalues, int 
     FMOD_DSP_FFT_WINDOW
 ]
 */
-// PROVEN: 537dd652 IDENTICAL/NONE
 // OFFSET: 0x00AF6F30
 FMOD_RESULT ChannelOpenAL::getWaveData(float *wavearray, int numvalues, int channeloffset)
 {

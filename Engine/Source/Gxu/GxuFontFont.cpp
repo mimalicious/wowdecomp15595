@@ -30,7 +30,6 @@ const char* CGxFont::GetName() {
     return FontFaceGetFontName(this->m_fontFaceHandle);
 }
 
-// PROVEN: 5507014c IDENTICAL/IDENTICAL
 // OFFSET: 0x0061B910/0x1402A95C0
 uint32_t CGxFont::GetPixelSize() {
     return this->m_pixelSize;
@@ -126,7 +125,6 @@ float CGxFont::GetGlyphBearing(const CHARCODEDESC* desc, bool scaled, float heig
     return scale * desc->m_bitmapData.m_glyphBearing;
 }
 
-// PROVEN: 94414b78 IDENTICAL/NONE
 // OFFSET: 0x0061BCA0
 void CGxFont::RegisterEvictNotice(uint32_t texturePage) {
     for (CGxString* string = this->m_strings.Head(), * nextString; !this->m_strings.IsEnd(string); string = nextString) {
@@ -178,7 +176,6 @@ void CGxFont::ClearGlyphs() {
     this->m_kernInfo.Clear();
 }
 
-// PROVEN: c5b09f48 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061D050/0x1402AB420
 void CGxFont::HandleScreenSizeChange() {
     this->ClearGlyphs();
@@ -204,7 +201,6 @@ CGxFont::~CGxFont() {
     this->ClearGlyphs();
 }
 
-// PROVEN: 476ad0d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061D3A0/0x1402AB900
 int32_t CGxFont::Initialize(const char* name, uint32_t fontFlags, float fontHeight) {
     SStrPrintf(this->m_fontName, sizeof(this->m_fontName), "%s", name);

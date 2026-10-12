@@ -19,7 +19,6 @@
  * Quantization table setup routines
  */
 
-// PROVEN: ba9dd85a IDENTICAL/NONE
 // OFFSET: 0x00B5D9D0/0x140926490
 void jpeg_add_quant_table(j_compress_ptr cinfo, int which_tbl, const int *basic_table, boolean force_baseline) {
   JQUANT_TBL ** qtblptr;
@@ -61,7 +60,6 @@ void jpeg_add_quant_table(j_compress_ptr cinfo, int which_tbl, const int *basic_
  */
 
 /* Define a Huffman table */
-// PROVEN: 498b58ac IDENTICAL/NONE
 // OFFSET: 0x00B5DB40/0x140926580
 static void add_huff_table(j_compress_ptr cinfo, JHUFF_TBL **htblptr, const UINT8 *bits, const UINT8 *val) {
   int nsymbols, len;
@@ -93,7 +91,6 @@ static void add_huff_table(j_compress_ptr cinfo, JHUFF_TBL **htblptr, const UINT
 
 /* Set up the standard Huffman tables (cf. JPEG standard section K.3) */
 /* IMPORTANT: these are only valid for 8-bit data precision! */
-// PROVEN: a1db6d13 IDENTICAL/NONE
 // OFFSET: 0x00B5DC10
 static void std_huff_tables(j_compress_ptr cinfo) {
   static const UINT8 bits_dc_luminance[17] =
@@ -183,7 +180,6 @@ static void std_huff_tables(j_compress_ptr cinfo) {
  * your code will still work (they'll be set to reasonable defaults).
  */
 
-// PROVEN: 6eb78a8e IDENTICAL/NONE
 // OFFSET: 0x00B5E150/0x140926FD0
 void jpeg_set_defaults(j_compress_ptr cinfo) {
   int i;
@@ -276,7 +272,6 @@ void jpeg_set_defaults(j_compress_ptr cinfo) {
  * Select an appropriate JPEG colorspace for in_color_space.
  */
 
-// PROVEN: cd5032e1 IDENTICAL/NONE
 // OFFSET: 0x00B5DF70/0x140926C90
 void jpeg_default_colorspace(j_compress_ptr cinfo) {
   switch (cinfo->in_color_space) {
@@ -308,7 +303,6 @@ void jpeg_default_colorspace(j_compress_ptr cinfo) {
  * Set the JPEG colorspace, and choose colorspace-dependent default values.
  */
 
-// PROVEN: 67fe2403 IDENTICAL/NONE
 // OFFSET: 0x00B5DC80/0x140926890
 void jpeg_set_colorspace(j_compress_ptr cinfo, J_COLOR_SPACE colorspace) {
   jpeg_component_info * compptr;

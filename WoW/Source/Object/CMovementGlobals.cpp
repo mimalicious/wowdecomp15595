@@ -1,7 +1,6 @@
 #include "CMovementGlobals.h"
 #include "WoW/Source/Object/Movement.h"
 
-// PROVEN: 5d4cc510 IDENTICAL/NONE
 // OFFSET: 0x00579A90/0x1401DF120
 CMovementGlobals::~CMovementGlobals() {
     if (this->m_movementLog) {

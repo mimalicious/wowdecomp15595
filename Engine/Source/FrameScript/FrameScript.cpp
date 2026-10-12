@@ -141,13 +141,11 @@ static const char* s_compatLua =
     "str.split = strsplit\n"
     "str.join = strjoin\n";
 
-// PROVEN: c58de60e IDENTICAL/NONE
 // OFFSET: 0x00839900
 static int32_t IsNotFinite(double value) {
     return !std::isfinite(value);
 }
 
-// PROVEN: ce873ede IDENTICAL/DIFFERENT
 // OFFSET: 0x0083A0C0/0x140564620
 int32_t FrameScript_HookWrapper(lua_State* L) {
     int32_t top = lua_gettop(L);
@@ -191,13 +189,11 @@ int32_t FrameScript_HookWrapper(lua_State* L) {
     return results;
 }
 
-// PROVEN: 0610bf15 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083AD30/0x140565440
 void FrameScript_MemoryCleanup() {
     lua_gc(s_context, LUA_GCRESTART, 0);
 }
 
-// PROVEN: 9f6c1499 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083AD50/0x140565460
 void FrameScript_SetPluralRule(PLURAL_RULE rule) {
     s_pluralRule = rule;
@@ -232,19 +228,16 @@ uint32_t FrameScript_GetPluralIndex(int32_t count) {
     }
 }
 
-// PROVEN: 4eeceae9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083ADF0/0x140565500
 void SetDecimalConversion(int32_t convert) {
     lua_setdecimalconversion(convert);
 }
 
-// PROVEN: d891cbfe IDENTICAL/IDENTICAL
 // OFFSET: 0x0083AE00/0x140565510
 lua_State* FrameScript_GetContext() {
     return s_context;
 }
 
-// PROVEN: a2414502 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083AE10/0x140565520
 int32_t FrameScript_GetTotalMemoryUsed() {
     return lua_gc(s_context, LUA_GCCOUNT, 0);
@@ -306,7 +299,6 @@ char* FrameScript_GetCurrentFunction(lua_State* L, char* buffer, uint32_t buffer
     return buffer;
 }
 
-// PROVEN: 940ef983 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083B030/0x140565760
 void FrameScript_RegisterFunction(const char* name, lua_CFunction function) {
     lua_State* L = s_context;
@@ -314,7 +306,6 @@ void FrameScript_RegisterFunction(const char* name, lua_CFunction function) {
     lua_setglobal(L, name);
 }
 
-// PROVEN: 3c25bed1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083B070/0x1405657B0
 void FrameScript_UnregisterFunction(const char* name) {
     lua_State* L = s_context;
@@ -322,7 +313,6 @@ void FrameScript_UnregisterFunction(const char* name) {
     lua_setglobal(L, name);
 }
 
-// PROVEN: 082ca460 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083B0B0/0x140565800
 int32_t FrameScript_GetVariable(const char* name, const char*& value) {
     lua_State* L = s_context;
@@ -706,7 +696,6 @@ static void PrintVariable(HOSFILE file, lua_State* L, int32_t index, int32_t dep
     OsWriteFile(file, s_printBuffer, SStrLen(s_printBuffer), &written);
 }
 
-// PROVEN: 05fa48bd IDENTICAL/IDENTICAL
 // OFFSET: 0x0083BCB0/0x1405664C0
 int32_t FrameScript_PrintVariable(HOSFILE file, const char* name) {
     lua_State* L = s_context;
@@ -736,7 +725,6 @@ int32_t FrameScript_PrintVariable(HOSFILE file, const char* name) {
     return 1;
 }
 
-// PROVEN: d9a7fd5b IDENTICAL/IDENTICAL
 // OFFSET: 0x0083BDA0/0x140566610
 int32_t FrameScript_LoadVariables(const char* filename, CStatus* status) {
     lua_State* L = s_context;
@@ -810,7 +798,6 @@ int32_t FrameScript_LoadVariables(const char* filename, CStatus* status) {
     return 1;
 }
 
-// PROVEN: 47d8f14d IDENTICAL/NONE
 // OFFSET: 0x0083BFC0/0x1405668A0
 int32_t FrameScript_ExecuteBuffer(const char* buffer, size_t bytes, const char* bufferName, CStatus* status, const char* wrapper) {
     lua_State* L = s_context;
@@ -907,7 +894,6 @@ int32_t FrameScript_ExecuteFile(const char* filename, const char* wrapper, MD5_C
     return result;
 }
 
-// PROVEN: ae667a40 IDENTICAL/DIFFERENT
 // OFFSET: 0x0083C0D0/0x140566A00
 int32_t FrameScript_CompileFunction(const char* name, const char* wrapper, const char* body, CStatus* status) {
     lua_State* L = s_context;
@@ -946,13 +932,11 @@ int32_t FrameScript_CompileFunction(const char* name, const char* wrapper, const
     return function;
 }
 
-// PROVEN: 987adb75 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083C210/0x140566BA0
 void FrameScript_ReleaseFunction(int32_t function) {
     luaL_unref(s_context, LUA_REGISTRYINDEX, function);
 }
 
-// PROVEN: 17bf5c05 IDENTICAL/DIFFERENT
 // OFFSET: 0x0083C230/0x140566BC0
 void FrameScript_Execute(const char* source, const char* filename, const char* taint) {
     const char* savedTaint = lua_tainted;
@@ -985,19 +969,16 @@ void FrameScript_Execute(const char* source, const char* filename, const char* t
     }
 }
 
-// PROVEN: 71bfa199 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083C310/0x140566CD0
 double FrameScript_GetScriptCPUUsage() {
     return s_scriptTimeUsed * s_scriptTimeDivisor;
 }
 
-// PROVEN: dc3886b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083C320/0x140566CF0
 int32_t FrameScript_GetErrorHandlerReference() {
     return s_errorHandlerRef;
 }
 
-// PROVEN: ad9edd7e IDENTICAL/NONE
 // OFFSET: 0x0083C330
 static bool IsIntegerNumber(double value) {
     return _finite(value) && value >= -2147483648.0 && value <= 2147483647.0;
@@ -1110,7 +1091,6 @@ void FrameScript_PackVariable(lua_State* L, const char* name, int32_t depth, cha
     }
 }
 
-// PROVEN: 9d2f43e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CB70/0x1405677B0
 static int32_t FrameScript_HandleError(lua_State* L) {
     if (!lua_isstring(L, -1)) {
@@ -1300,7 +1280,6 @@ bool FrameScript_ShouldSignalEvent(uint32_t index) {
     return event && event->m_listeners.Head();
 }
 
-// PROVEN: 4faa3e58 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083DE40/0x140569140
 void FrameScript_Execute(int32_t function, FrameScript_Object* object, int32_t argCount, const char* taint, FrameScript_EventObject* event) {
     lua_State* L = s_context;
@@ -1438,7 +1417,6 @@ static void DestroyEvents() {
     s_scriptEvents.Clear();
 }
 
-// PROVEN: 98724317 IDENTICAL/DIFFERENT
 // OFFSET: 0x0083E810/0x140569EA0
 void FrameScript_Destroy() {
     if (s_eventTimes) {
@@ -1554,7 +1532,6 @@ void FrameScript_SignalEvent(uint32_t index, lua_State* L, int32_t argCount) {
     }
 }
 
-// PROVEN: 3d3e8f5d IDENTICAL/IDENTICAL
 // OFFSET: 0x0083EC60/0x14056A450
 void FrameScript_Flush() {
     if (s_context) {
@@ -1611,7 +1588,6 @@ TSList<EVENTLISTENERNODE>* FrameScript_GetEventListeners(const char* name) {
     return event ? &event->m_listeners : NULL;
 }
 
-// PROVEN: 4eab4056 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083F3A0/0x14056AE10
 void FrameScript_SignalEvent(uint32_t index, const char* format, ...) {
     va_list args;

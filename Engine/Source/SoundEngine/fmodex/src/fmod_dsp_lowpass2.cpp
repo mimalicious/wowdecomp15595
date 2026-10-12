@@ -120,7 +120,6 @@ FMOD_DSP_DESCRIPTION_EX *DSPLowPass2::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 459665b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9EAA0/0x14085F260
 FMOD_RESULT DSPLowPass2::createInternal()
 {
@@ -199,7 +198,6 @@ FMOD_RESULT DSPLowPass2::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fc7867bc IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9E150/0x14085E9E0
 FMOD_RESULT DSPLowPass2::updateCoefficients(float resonance, float cutoff)
 {
@@ -566,7 +564,6 @@ FMOD_RESULT DSPLowPass2::getParameterInternal(int index, float *value, char *val
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fac52758 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9EB60/0x14085F1C0
 FMOD_RESULT F_CALLBACK DSPLowPass2::createCallback(FMOD_DSP_STATE *dsp)
 {
@@ -592,7 +589,6 @@ FMOD_RESULT F_CALLBACK DSPLowPass2::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 16db5271 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9E9B0/0x14085F320
 FMOD_RESULT F_CALLBACK DSPLowPass2::resetCallback(FMOD_DSP_STATE *dsp)
 {
@@ -645,7 +641,6 @@ FMOD_RESULT F_CALLBACK DSPLowPass2::readCallback(FMOD_DSP_STATE *dsp, float *inb
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cab77fb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9EA20/0x14085F230
 FMOD_RESULT F_CALLBACK DSPLowPass2::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {

@@ -112,7 +112,6 @@ static void ComputePiDigits(int32_t digits, uint8_t* out) {
     }
 }
 
-// PROVEN: 8f67d674 IDENTICAL/IDENTICAL
 // OFFSET: 0x00487370/0x1400A8750
 static void InitializePropContext() {
     if (PropGetSelectedContext() != s_propContext) {
@@ -120,13 +119,11 @@ static void InitializePropContext() {
     }
 }
 
-// PROVEN: 4ed6cb94 IDENTICAL/NONE
 // OFFSET: 0x00487860
 static voidpf ZAlloc(voidpf opaque, uInt items, uInt size) {
     return SMemAlloc(items * size, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: eebd3447 IDENTICAL/NONE
 // OFFSET: 0x00487880
 static void ZFree(voidpf opaque, voidpf address) {
     SMemFree(address, __FILE__, __LINE__, 0);
@@ -183,7 +180,6 @@ static bool IsFromInstanceRealm(uint32_t msgId) {
     return (g_jam_ClientLegacy_has_flag_FromInstanceRealm[index >> 3] >> (index & 7)) & 1;
 }
 
-// PROVEN: debe5c24 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048A190/0x1400AC650
 NETEVENTQUEUE::NETEVENTQUEUE(NetClient* client) {
     this->m_client = client;
@@ -259,7 +255,6 @@ void NETEVENTQUEUE::Poll() {
     events.Clear();
 }
 
-// PROVEN: 4222d001 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048A460/0x1400ACAE0
 void NETEVENTQUEUE::Clear() {
     this->m_critSect.Enter();
@@ -289,7 +284,6 @@ void NETEVENTQUEUE::AddEvent(EVENTID eventId, void* connection, NetClient* clien
     this->m_critSect.Leave();
 }
 
-// PROVEN: dbe1af4d IDENTICAL/DIFFERENT
 // OFFSET: 0x0048A560/0x1400ACC60
 NETEVENTQUEUE::~NETEVENTQUEUE() {
     this->m_critSect.Enter();
@@ -399,7 +393,6 @@ void NetClient::ResetInflateStream(int32_t index) {
     this->m_inflateStreams[index] = stream;
 }
 
-// PROVEN: 5f94bda1 IDENTICAL/UNPROVEN
 // OFFSET: 0x004878A0/0x1400A8CF0
 void NetClient::DestroyInflateStream(int32_t index) {
     z_stream* stream = this->m_inflateStreams[index];
@@ -411,7 +404,6 @@ void NetClient::DestroyInflateStream(int32_t index) {
     }
 }
 
-// PROVEN: 79d93fe8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00487390/0x1400A8770
 void NetClient::SetLoginData(LoginData* loginData) {
     this->m_critSect.Enter();
@@ -419,7 +411,6 @@ void NetClient::SetLoginData(LoginData* loginData) {
     this->m_critSect.Leave();
 }
 
-// PROVEN: a91c0b00 IDENTICAL/IDENTICAL
 // OFFSET: 0x004873C0/0x1400A87C0
 uint8_t* NetClient::GetSessionKey() {
     return this->m_loginData.m_sessionKey;
@@ -526,7 +517,6 @@ void NetClient::GetNetStats(uint32_t time, CONNECTION_ID connection, float& byte
     this->m_critSect.Leave();
 }
 
-// PROVEN: a8d1254d IDENTICAL/IDENTICAL
 // OFFSET: 0x00487660/0x1400A8AE0
 void NetClient::GetNetStats(CONNECTION_ID connection, float& bytesIn, float& bytesOut, uint32_t& latency) {
     this->GetNetStats(OsGetAsyncTimeMsPrecise(), connection, bytesIn, bytesOut, latency);
@@ -573,7 +563,6 @@ void NetClient::GetNetLatency(CONNECTION_ID connection, uint32_t& latency) {
     this->m_critSect.Leave();
 }
 
-// PROVEN: 3007d186 IDENTICAL/IDENTICAL
 // OFFSET: 0x00487B00/0x1400A9290
 int32_t NetClient::HandleConnect() {
     if (this->m_objMgr) {
@@ -586,7 +575,6 @@ int32_t NetClient::HandleConnect() {
     return 1;
 }
 
-// PROVEN: 9a16649b IDENTICAL/IDENTICAL
 // OFFSET: 0x00487B30/0x1400A92D0
 int32_t NetClient::HandleDisconnect() {
     if (this->m_objMgr) {
@@ -601,7 +589,6 @@ int32_t NetClient::HandleDisconnect() {
     return 1;
 }
 
-// PROVEN: 053c8f1e IDENTICAL/IDENTICAL
 // OFFSET: 0x00487B80/0x1400A9320
 int32_t NetClient::HandleCantConnect() {
     if (this->m_objMgr) {
@@ -614,7 +601,6 @@ int32_t NetClient::HandleCantConnect() {
     return 1;
 }
 
-// PROVEN: 4bda54ba IDENTICAL/NONE
 // OFFSET: 0x00487BB0
 void NetClient::EnableEncryption(WowConnection* connection, const uint8_t* seed, uint8_t seedLength) {
     connection->SetEncryptionKey(this->m_loginData.m_sessionKey, sizeof(this->m_loginData.m_sessionKey), 1, seed, seedLength);
@@ -1276,7 +1262,6 @@ bool NetClient::DecompressAndAddToQueue(WowConnection* connection, uint16_t msgI
     return true;
 }
 
-// PROVEN: c39d7ebf IDENTICAL/DIFFERENT
 // OFFSET: 0x00489420/0x1400AB4F0
 void NetClient::CleanupConnections() {
     TSGrowableArray<WowConnection*> connections;
@@ -1372,7 +1357,6 @@ void NetClient::Send(JamClientMessage* msg, CONNECTION_ID connection) {
     this->Send(&data, connection);
 }
 
-// PROVEN: 1f6d5b67 DIFFERENT/IDENTICAL
 // OFFSET: 0x00489770/0x1400AB240
 void NetClient::WCMessageReady(WowConnection* connection, uint32_t timeStamp, CDataStore* msg) {
     InterlockedExchangeAdd(reinterpret_cast<volatile LONG*>(&this->m_bytesReceived), msg->m_size);
@@ -1413,7 +1397,6 @@ void NetClient::WCCantConnect(WowConnection* connection, uint32_t timeStamp, con
     this->m_critSect.Leave();
 }
 
-// PROVEN: 9e622144 IDENTICAL/IDENTICAL
 // OFFSET: 0x00489890/0x1400ABB30
 void NetClient::PollEventQueue() {
     this->m_netEventQueue->Poll();

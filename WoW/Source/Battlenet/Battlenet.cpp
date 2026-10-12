@@ -5,14 +5,12 @@
 // STATIC: 0x00E4D3F0/0x140D361D8
 Battlenet::Allocator* Battlenet::g_allocator;
 
-// PROVEN: feb762da IDENTICAL/IDENTICAL
 // OFFSET: 0x006616D0/0x140307140
 bool Battlenet::Initialize(Allocator& allocator) {
     Battlenet::g_allocator = &allocator;
     return true;
 }
 
-// PROVEN: 46c8d1a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006616E0/0x140307150
 void Battlenet::Teardown() {
     Battlenet::g_allocator = NULL;
@@ -36,7 +34,6 @@ uint32_t Battlenet::StringCopy(void* dest, const char* source, uint32_t size) {
     return size;
 }
 
-// PROVEN: 2daf627d IDENTICAL/IDENTICAL
 // OFFSET: 0x00627330/0x1402B9370
 void Battlenet::SystemServer::Log(const char* message) {
     this->LogLevel(message, 5);
@@ -46,7 +43,6 @@ void Battlenet::SystemServer::Log(const char* message) {
 Battlenet::Library::~Library() {
 }
 
-// PROVEN: 03711987 IDENTICAL/DIFFERENT
 // OFFSET: 0x00663440/0x140309540
 Battlenet::Library* Battlenet::Library::LoadApplicationBundle(const char* name, Allocator& allocator) {
     uint32_t length = SStrLen(name);
@@ -69,7 +65,6 @@ Battlenet::Library* Battlenet::Library::LoadApplicationBundle(const char* name, 
     return library;
 }
 
-// PROVEN: 2f2df8da IDENTICAL/IDENTICAL
 // OFFSET: 0x00663510/0x140309650
 void Battlenet::WindowsLibrary::Destroy() {
     Allocator* allocator = this->m_allocator;
@@ -77,7 +72,6 @@ void Battlenet::WindowsLibrary::Destroy() {
     allocator->Free(this);
 }
 
-// PROVEN: e66c6e92 IDENTICAL/NONE
 // OFFSET: 0x00662A60
 bool Battlenet::GetProc(Library* library, void*& proc, uint32_t ordinal) {
     proc = library->GetProc(ordinal);

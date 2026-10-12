@@ -55,7 +55,6 @@ static ENCOUNTER_UNIT* FindUnit(const WOWGUID& guid) {
     return NULL;
 }
 
-// PROVEN: eaf6bf11 IDENTICAL/IDENTICAL
 // OFFSET: 0x0094F520/0x1406BF6F0
 WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     if (static_cast<int32_t>(index) < 0 || static_cast<int32_t>(index) >= static_cast<int32_t>(CGInstanceEncounter_C::m_numUnits)) {
@@ -65,7 +64,6 @@ WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     return CGInstanceEncounter_C::m_units[index].m_guid;
 }
 
-// PROVEN: a9965003 IDENTICAL/IDENTICAL
 // OFFSET: 0x0094F550/0x1406BF710
 uint32_t CGInstanceEncounter_C::GetNumBossSlots() {
     return CGInstanceEncounter_C::m_numUnits;
@@ -278,7 +276,6 @@ void CGInstanceEncounter_C::DisableObjective(int32_t id) {
     }
 }
 
-// PROVEN: 86858859 IDENTICAL/NONE
 // OFFSET: 0x0094FC70
 void CGInstanceEncounter_C::AddTimer(uint32_t duration) {
     CGInstanceEncounter_C::ClearExpiredTimers();

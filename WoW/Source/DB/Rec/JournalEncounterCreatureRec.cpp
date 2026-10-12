@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[7] = { 0, 0, 0, 0, 0, 2, 2 };
 // STATIC: 0x00C23D8C/0x140A19210
 const DBCMeta JournalEncounterCreatureRec::s_meta = { "DBFilesClient\\JournalEncounterCreature.dbc", 7, 28, JournalEncounterCreatureRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 02b29d86 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EB30/0x1407D7E90
 void JournalEncounterCreatureRec::FixupStrings(void* record, const char* strings) {
     JournalEncounterCreatureRec* rec = static_cast<JournalEncounterCreatureRec*>(record);

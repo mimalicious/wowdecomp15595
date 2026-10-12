@@ -27,7 +27,6 @@ bool CGIncomingResurrection::HasIncomingResurrection(const WOWGUID& guid) {
     return list && list->m_resurrections.m_count;
 }
 
-// PROVEN: 51706a9b IDENTICAL/NONE
 // OFFSET: 0x009FD1E0
 void CGIncomingResurrection::Reset() {
     CGIncomingResurrection::s_incoming.Clear();

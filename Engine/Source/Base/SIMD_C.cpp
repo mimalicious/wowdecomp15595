@@ -503,7 +503,6 @@ static void Downsample2x2_C(const uint32_t* src, uint32_t width, uint32_t height
     }
 }
 
-// PROVEN: 51a426e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00494A10/0x1400BA1C0
 void SIMD::Init_C(SIMD::FunctionTable* table) {
     table->ProjectBoxTop = ProjectBoxTop_C;

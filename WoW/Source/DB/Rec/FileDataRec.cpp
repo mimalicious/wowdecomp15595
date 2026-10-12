@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[3] = { 0, 2, 2 };
 // STATIC: 0x00C1E324/0x140A12518
 const DBCMeta FileDataRec::s_meta = { "DBFilesClient\\FileData.dbc", 3, 12, FileDataRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 2850267a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E9B0/0x1407D8110
 void FileDataRec::FixupStrings(void* record, const char* strings) {
     FileDataRec* rec = static_cast<FileDataRec*>(record);

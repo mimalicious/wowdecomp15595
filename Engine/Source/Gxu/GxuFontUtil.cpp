@@ -178,13 +178,11 @@ static float GetCharacterWidth(const char* text, uint32_t flags, uint32_t code, 
     return width;
 }
 
-// PROVEN: 23686516 IDENTICAL/NONE
 // OFFSET: 0x006176E0/0x1402A4660
 void* FreeTypeAlloc(FT_Memory memory, long size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 57edaa45 IDENTICAL/NONE
 // OFFSET: 0x00617700/0x1402A4680
 void FreeTypeFree(FT_Memory memory, void* block) {
     if (block) {
@@ -192,19 +190,16 @@ void FreeTypeFree(FT_Memory memory, void* block) {
     }
 }
 
-// PROVEN: 0055a10d IDENTICAL/NONE
 // OFFSET: 0x00617720/0x1402A46B0
 void* FreeTypeRealloc(FT_Memory memory, long curSize, long newSize, void* block) {
     return SMemReAlloc(block, newSize, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 311b1b94 DIFFERENT/IDENTICAL
 // OFFSET: 0x00617740/0x1402A46E0
 float PixelToScreenHeight(int32_t height) {
     return static_cast<float>(height) / static_cast<float>(g_heightPixels);
 }
 
-// PROVEN: 4a8c5821 DIFFERENT/IDENTICAL
 // OFFSET: 0x00617770/0x1402A4700
 float GetMaxScreenHeight() {
     return 32.0f / static_cast<float>(g_heightPixels);
@@ -231,7 +226,6 @@ void InternalWipeUntilNameTokenStop(char* text) {
     } while (*text);
 }
 
-// PROVEN: 94d175ba IDENTICAL/DIFFERENT
 // OFFSET: 0x00617800/0x1402A47A0
 GXUEMBEDDEDTEXTUREINFO::GXUEMBEDDEDTEXTUREINFO() {
     this->m_lineHeight = 0.0f;

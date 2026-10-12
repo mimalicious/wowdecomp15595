@@ -20,7 +20,6 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: 02b129ae IDENTICAL/DIFFERENT
 // OFFSET: 0x00902320/0x14065A930
 static int32_t Script_BNConnected(lua_State* L) {
     bool connected = false;
@@ -235,7 +234,6 @@ static int32_t Script_BNGetNumFriendToons(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5a941215 IDENTICAL/IDENTICAL
 // OFFSET: 0x009060B0/0x14065EEB0
 static int32_t Script_BNRemoveFriend(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -378,7 +376,6 @@ static int32_t Script_BNSendFriendInviteByID(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dabe566d IDENTICAL/IDENTICAL
 // OFFSET: 0x00906580/0x14065F3E0
 static int32_t Script_BNAcceptFriendInvite(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -395,7 +392,6 @@ static int32_t Script_BNAcceptFriendInvite(lua_State* L) {
     return 0;
 }
 
-// PROVEN: a4a6da60 IDENTICAL/IDENTICAL
 // OFFSET: 0x00906620/0x14065F480
 static int32_t Script_BNDeclineFriendInvite(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -412,7 +408,6 @@ static int32_t Script_BNDeclineFriendInvite(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 25f3f4f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x009066C0/0x14065F520
 static int32_t Script_BNReportFriendInvite(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -562,7 +557,6 @@ static int32_t Script_BNGetCustomMessageTable(lua_State* L) {
     return 3;
 }
 
-// PROVEN: ba5bd625 IDENTICAL/DIFFERENT
 // OFFSET: 0x00906C00/0x14065FB40
 static int32_t Script_BNSetFocus(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1131,7 +1125,6 @@ static int32_t Script_BNReportPlayer(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 394aeb28 DIFFERENT/IDENTICAL
 // OFFSET: 0x00908010/0x140660F20
 static int32_t Script_BNFeaturesEnabledAndConnected(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1181,7 +1174,6 @@ static int32_t Script_BNGetNumFOF(lua_State* L) {
     return 2;
 }
 
-// PROVEN: c615f03c IDENTICAL/DIFFERENT
 // OFFSET: 0x009081D0/0x1406610F0
 static int32_t Script_BNSetSelectedFriend(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1310,7 +1302,6 @@ static int32_t Script_BNGetMatureLanguageFilter(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ff2e3ddc DIFFERENT/IDENTICAL
 // OFFSET: 0x00908640/0x140661600
 static int32_t Script_BNIsSelf(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1328,7 +1319,6 @@ static int32_t Script_BNIsSelf(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 71756365 DIFFERENT/IDENTICAL
 // OFFSET: 0x009086F0/0x1406616A0
 static int32_t Script_BNIsFriend(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1346,7 +1336,6 @@ static int32_t Script_BNIsFriend(lua_State* L) {
     return 1;
 }
 
-// PROVEN: f4f35ce9 DIFFERENT/IDENTICAL
 // OFFSET: 0x009087A0/0x140661740
 static int32_t Script_BNGetMaxPlayersInConversation(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1422,7 +1411,6 @@ static int32_t Script_BNGetFriendToonInfo(lua_State* L) {
     return BattlenetUI::BNGetToonInfoHelper(L, toonId);
 }
 
-// PROVEN: 2b6a85ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00909620/0x140662A10
 static int32_t Script_BNGetToonInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1835,7 +1823,6 @@ static int32_t Script_BNGetFOFInfo(lua_State* L) {
     return 4;
 }
 
-// PROVEN: 08aeba58 IDENTICAL/UNPROVEN
 // OFFSET: 0x0090DFF0/0x1406692D0
 static int32_t Script_BNGetFriendInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1863,7 +1850,6 @@ static int32_t Script_BNGetFriendInfo(lua_State* L) {
     return BattlenetUI::BNGetFriendInfoHelper(L, index);
 }
 
-// PROVEN: 66289dfe IDENTICAL/DIFFERENT
 // OFFSET: 0x0090E0C0/0x1406693A0
 static int32_t Script_BNGetFriendInfoByID(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
@@ -1886,7 +1872,6 @@ static int32_t Script_BNGetFriendInfoByID(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 38d5c526 IDENTICAL/IDENTICAL
 // OFFSET: [0x009546F0/0x14065A910]
 static int32_t Script_BNGetMaxNumConversations(lua_State* L) {
     lua_pushnumber(L, 6.0);
@@ -1959,7 +1944,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "BNInviteFriend", &Script_BNInviteFriend },
 };
 
-// PROVEN: 6d149967 IDENTICAL/UNPROVEN
 // OFFSET: 0x00902470/0x14065AAA0
 void BattlenetUI_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1967,7 +1951,6 @@ void BattlenetUI_RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: bec7142b IDENTICAL/UNPROVEN
 // OFFSET: 0x009024A0/0x14065AAF0
 void BattlenetUI_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

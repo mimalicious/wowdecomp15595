@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[3] = { 0, 3, 0 };
 // STATIC: 0x00C24580/0x140A19C80
 const DBCMeta ItemDamageOneHandCasterRec::s_meta = { "DBFilesClient\\ItemDamageOneHandCaster.dbc", 3, 36, ItemDamageOneHandCasterRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 3756692b IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ItemDamageOneHandCasterRec::FixupStrings(void* record, const char* strings) {
 }

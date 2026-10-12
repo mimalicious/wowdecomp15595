@@ -21,25 +21,21 @@ int32_t CSimpleRotationAnim::s_objectType;
 // STATIC: 0x00CA3828/0x140B40AA0
 const char* CSimpleRotationAnim::s_objectTypeName = "Rotation";
 
-// PROVEN: 03507ea6 IDENTICAL/IDENTICAL
 // OFFSET: 0x005284E0/0x140177A20
 bool CSimpleRotationAnim::IsA(int32_t type) {
     return type == CSimpleRotationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 25fa666a IDENTICAL/IDENTICAL
 // OFFSET: 0x00528510/0x140177A40
 bool CSimpleRotationAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleRotationAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: a77f96ee IDENTICAL/IDENTICAL
 // OFFSET: 0x00528570/0x140177AA0
 const char* CSimpleRotationAnim::GetObjectTypeName() {
     return CSimpleRotationAnim::s_objectTypeName;
 }
 
-// PROVEN: 2b67fd3a IDENTICAL/IDENTICAL
 // OFFSET: 0x00528580/0x140177AB0
 int32_t CSimpleRotationAnim::GetScriptMetaTable() {
     return CSimpleRotationAnim::s_metatable;
@@ -64,7 +60,6 @@ CSimpleRotationAnim::CSimpleRotationAnim(CSimpleAnimGroup* group) : CSimpleAnim(
     this->m_radians = 0.0f;
 }
 
-// PROVEN: 762dd731 IDENTICAL/IDENTICAL
 // OFFSET: 0x0052B2E0/0x14017B8E0
 void CSimpleRotationAnim::LoadXML(linkObject* node, CStatus* status) {
     VectorAnimation* animation = static_cast<VectorAnimation*>(node);

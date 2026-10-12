@@ -22,7 +22,6 @@ CCameraModeInstanceAnimated::CCameraModeInstanceAnimated() {
     this->m_active = 1;
 }
 
-// PROVEN: 9f4beb83 IDENTICAL/IDENTICAL
 // OFFSET: 0x00461B70/0x140074910
 int32_t CCameraModeAnimated::AllowDuplicate(const CCameraModeInstance* current, const CCameraModeInstance* instance) const {
     const CCameraModeInstanceAnimated* a = static_cast<const CCameraModeInstanceAnimated*>(current);
@@ -37,7 +36,6 @@ CCameraModeInstance* CCameraModeAnimated::AllocInstance(const CCameraModeInstanc
     return result;
 }
 
-// PROVEN: be6bbeb5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00461BF0/0x140074990
 void CCameraModeAnimated::FreeInstance(CCameraModeInstance* instance) const {
     if (instance) {
@@ -45,7 +43,6 @@ void CCameraModeAnimated::FreeInstance(CCameraModeInstance* instance) const {
     }
 }
 
-// PROVEN: 09890c22 IDENTICAL/DIFFERENT
 // OFFSET: 0x00461C10/0x1400749B0
 int32_t CCameraModeAnimated::CalcShotFromModel(int32_t index, CM2Model* model, CCameraShot& shot) const {
     if (!model || !model->IsLoaded()) {
@@ -105,19 +102,16 @@ void CCameraModeAnimated::InitInstance(CCameraModeInstance* instance) const {
     animated->m_shot.m_fade = 1.0f;
 }
 
-// PROVEN: e787ccad IDENTICAL/DIFFERENT
 // OFFSET: 0x00461D90/0x140074B90
 void CCameraModeAnimated::UpdateInstance(CCameraModeInstance* instance, float elapsed) const {
     this->UpdateInternal(instance);
 }
 
-// PROVEN: be81a950 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07330/0x1408CA670
 int32_t CCameraModeAnimated::GetType() const {
     return CAMERA_MODE_ANIMATED;
 }
 
-// PROVEN: 17f5f54f IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CCameraModeAnimated::DestroyInstance(CCameraModeInstance* instance) const {
 }

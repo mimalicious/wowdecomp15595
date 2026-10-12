@@ -2,7 +2,6 @@
 #include "Engine/Source/Gx/CGxDevice/CGxShader.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: cc89a821 IDENTICAL/DIFFERENT
 // OFFSET: 0x00848E30/0x140576A30
 CGxShader::~CGxShader() {
     SMemFree(this->m_data, __FILE__, __LINE__, 0);

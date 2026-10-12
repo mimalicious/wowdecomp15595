@@ -58,7 +58,6 @@ static void DumpVector(const void* b, int n, size_t size, DumpState* D)
  DumpMem(b,n,size,D);
 }
 
-// PROVEN: ba547bab IDENTICAL/IDENTICAL
 // OFFSET: 0x00430420/0x140038620
 static void DumpString(const TString* s, DumpState* D)
 {
@@ -79,7 +78,6 @@ static void DumpString(const TString* s, DumpState* D)
 
 static void DumpFunction(const Proto* f, const TString* p, DumpState* D);
 
-// PROVEN: 7e1480ea IDENTICAL/UNPROVEN
 // OFFSET: 0x004304B0/0x1400386B0
 static void DumpConstants(const Proto* f, DumpState* D)
 {
@@ -112,7 +110,6 @@ static void DumpConstants(const Proto* f, DumpState* D)
  for (i=0; i<n; i++) DumpFunction(f->p[i],f->source,D);
 }
 
-// PROVEN: 94e12637 IDENTICAL/IDENTICAL
 // OFFSET: 0x004305E0/0x140038820
 static void DumpDebug(const Proto* f, DumpState* D)
 {
@@ -132,7 +129,6 @@ static void DumpDebug(const Proto* f, DumpState* D)
  for (i=0; i<n; i++) DumpString(f->upvalues[i],D);
 }
 
-// PROVEN: 0ea6b8e5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00430750/0x140038A90
 static void DumpFunction(const Proto* f, const TString* p, DumpState* D)
 {
@@ -158,7 +154,6 @@ static void DumpHeader(DumpState* D)
 /*
 ** dump Lua function as precompiled chunk
 */
-// PROVEN: a4fd2c54 IDENTICAL/UNPROVEN
 // OFFSET: 0x004308B0/0x140038C20
 int luaU_dump (lua_State* L, const Proto* f, lua_Writer w, void* data, int strip)
 {

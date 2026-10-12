@@ -38,7 +38,6 @@ static const VideoDeviceID s_midEndDevices[] = {
     { 0, 0 },
 };
 
-// PROVEN: 4c38f067 IDENTICAL/IDENTICAL
 // OFFSET: 0x00637440/0x1402CE080
 static int CompareResolutions(const void* a, const void* b) {
     const C2iVector* left = static_cast<const C2iVector*>(a);

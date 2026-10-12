@@ -91,7 +91,6 @@ FMOD_RESULT DiskFile::reallyOpen(const char *name_or_data, unsigned int *filesiz
 	[SEE_ALSO]
 ]
 */
-// PROVEN: db92555d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A92C60/0x140852870
 FMOD_RESULT DiskFile::reallyClose()
 {
@@ -169,7 +168,6 @@ FMOD_RESULT DiskFile::reallyRead(void *buffer, unsigned int size, unsigned int *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: aeef6329 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A92D20/0x140852960
 FMOD_RESULT DiskFile::reallySeek(unsigned int pos)
 {   
@@ -190,7 +188,6 @@ FMOD_RESULT DiskFile::reallySeek(unsigned int pos)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4690e58c IDENTICAL/UNPROVEN
 // OFFSET: 0x00A92D40/0x140852970
 FMOD_RESULT DiskFile::reallyCancel()
 {

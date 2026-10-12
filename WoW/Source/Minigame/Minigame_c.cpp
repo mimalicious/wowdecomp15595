@@ -37,7 +37,6 @@ void CMinigame_C::UpdateSetup(CDataStore* msg) {
     }
 }
 
-// PROVEN: 5a310b5e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B38100/0x140903FC0
 void CMinigameTicTacToe_C::UpdateState(CDataStore* msg) {
     for (uint32_t i = 0; i < 9; i++) {
@@ -52,7 +51,6 @@ bool CMinigameTicTacToe_C::ValidateMoveClient(uint8_t moveType, int32_t param) {
     return CMinigameTicTacToe::ValidateMove(this, moveType, param);
 }
 
-// PROVEN: 320607bc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B38170/0x140904040
 int32_t CMinigameTicTacToe_C::PushStateToLua(lua_State* L) {
     lua_checkstack(L, 9);

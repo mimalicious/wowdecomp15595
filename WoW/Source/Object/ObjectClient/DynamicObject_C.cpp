@@ -21,7 +21,6 @@ void CGDynamicObject_C::ClearSound() {
     SE3::StopSound(this->m_sound, 3000, __FILE__, __LINE__, "CGDynamicObject_C::ClearSound");
 }
 
-// PROVEN: ffbb7f5f IDENTICAL/IDENTICAL
 // OFFSET: 0x00596900/0x140204370
 void CGDynamicObject_C::SetFrameOfReference(const C44Matrix* matrix) {
     CGObject_C::SetFrameOfReference(matrix);
@@ -33,7 +32,6 @@ void CGDynamicObject_C::SetFrameOfReference(const C44Matrix* matrix) {
     }
 }
 
-// PROVEN: ff7bbce8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00596940/0x1402043C0
 void CGDynamicObject_C::BlizzardDeletedCallback(BlizzardObject* blizzard, void* param) {
     CGDynamicObject_C* object = static_cast<CGDynamicObject_C*>(param);
@@ -47,7 +45,6 @@ void CGDynamicObject_C::BlizzardDeletedCallback(BlizzardObject* blizzard, void* 
     }
 }
 
-// PROVEN: d3da6d16 IDENTICAL/DIFFERENT
 // OFFSET: 0x00596970/0x1402043F0
 void CGDynamicObject_C::ClearVisuals() {
     for (uint32_t i = 0; i < 2; i++) {
@@ -59,7 +56,6 @@ void CGDynamicObject_C::ClearVisuals() {
     this->ClearSound();
 }
 
-// PROVEN: e847c2ba IDENTICAL/DIFFERENT
 // OFFSET: 0x005969C0/0x140205A20
 void CGDynamicObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     CGObject_C::ShouldRender(flags, render, a3);
@@ -69,7 +65,6 @@ void CGDynamicObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a
     }
 }
 
-// PROVEN: 74ad724e DIFFERENT/IDENTICAL
 // OFFSET: 0x00596A40/0x140204500
 static void DynamicObjectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGDynamicObject_C* object = reinterpret_cast<CGDynamicObject_C*>(static_cast<uintptr_t>(param));
@@ -79,7 +74,6 @@ static void DynamicObjectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t
     }
 }
 
-// PROVEN: be54dd87 IDENTICAL/DIFFERENT
 // OFFSET: 0x00596A70/0x140204530
 void CGDynamicObject_C::HandleOutOfRange(OUT_OF_RANGE_TYPE type) {
     if (type != 1) {
@@ -202,7 +196,6 @@ void CGDynamicObject_C::Reenable(const CClientObjCreate& create) {
     this->m_inTransit = Spell_C_IsSpellInTransit(this->m_dynamicObject->m_caster, this->m_dynamicObject->m_spellID, this->m_dynamicObject->m_castTime);
 }
 
-// PROVEN: 02734afe IDENTICAL/DIFFERENT
 // OFFSET: 0x00596E60/0x1402057F0
 void CGDynamicObject_C::PostReenable(const CClientObjCreate& create) {
     this->ObjectVisKitProc();
@@ -253,7 +246,6 @@ const SpellVisualEffectNameRec* CGDynamicObject_C::GetVisualEffectNameRec(const 
     return effect;
 }
 
-// PROVEN: 3eb000d2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00596FE0/0x140204C60
 int32_t CGDynamicObject_C::GetModelFileName(const char** name) const {
     const SpellRec* spell = g_spellDB.GetRecord(this->m_dynamicObject->m_spellID);
@@ -367,7 +359,6 @@ void CGDynamicObject_C::ModelLoaded(CM2Model* model) {
     }
 }
 
-// PROVEN: 2a66e016 IDENTICAL/NONE
 // OFFSET: 0x00597490
 static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CGDynamicObject_C* object = static_cast<CGDynamicObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_DYNAMICOBJECT, __FILE__, __LINE__));
@@ -430,13 +421,11 @@ float CGDynamicObject_C::GetFacing() const {
     return this->m_passenger.GetFacing(this->m_passenger.m_facing);
 }
 
-// PROVEN: 67147bd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00597820/0x140205620
 float CGDynamicObject_C::GetRawFacing() const {
     return this->m_passenger.m_facing;
 }
 
-// PROVEN: 5ebc7960 IDENTICAL/IDENTICAL
 // OFFSET: 0x00597830/0x140205630
 float CGDynamicObject_C::GetScale() const {
     return this->m_scale;
@@ -453,7 +442,6 @@ CGDynamicObject_C::~CGDynamicObject_C() {
     }
 }
 
-// PROVEN: f63808a4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00597930/0x140209980
 void CGDynamicObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
@@ -461,19 +449,16 @@ void CGDynamicObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_dynamicObjectMirror = saved + CGObject::TotalFieldsSaved();
 }
 
-// PROVEN: dfbf9e0d IDENTICAL/IDENTICAL
 // OFFSET: 0x00598B40/0x140206DE0
 C3Vector CGDynamicObject_C::GetRawPosition() const {
     return this->m_passenger.m_position;
 }
 
-// PROVEN: 6f187274 IDENTICAL/IDENTICAL
 // OFFSET: 0x00598B70/0x1402142E0
 uint64_t CGDynamicObject_C::GetTransportGUID() const {
     return this->m_passenger.m_transportGuid.m_guid;
 }
 
-// PROVEN: 549672d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGDynamicObject_C::Initialize() {
 }

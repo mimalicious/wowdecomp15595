@@ -62,20 +62,17 @@ TSGrowableArray<uint32_t> CM2Model::s_collisionCodes;
 // STATIC: 0x00EBD5AC/0x140DAF5E0
 TSGrowableArray<M2ModelCallback> CM2Model::s_sequenceCallbacks;
 
-// PROVEN: 4781b076 IDENTICAL/IDENTICAL
 // OFFSET: 0x00814E90/0x14052D040
 void CM2Model::ErrorSetAppFatal(int32_t appFatal) {
     CM2Model::s_errorAppFatal = appFatal;
 }
 
-// PROVEN: e9fd604a IDENTICAL/IDENTICAL
 // OFFSET: 0x00814EA0/0x14052D050
 void CM2Model::ErrorSetFileLine(const char* file, uint32_t line) {
     CM2Model::s_errorFile = file;
     CM2Model::s_errorLine = line;
 }
 
-// PROVEN: a2b80fde IDENTICAL/DIFFERENT
 // OFFSET: 0x00814EC0/0x14052D060
 void CM2Model::ErrorSet(const char* format, ...) {
     va_list args;
@@ -89,7 +86,6 @@ void CM2Model::ErrorSet(const char* format, ...) {
     va_end(args);
 }
 
-// PROVEN: 9dc8b72a IDENTICAL/IDENTICAL
 // OFFSET: 0x00814F00/0x14052D0C0
 void CM2Model::ErrorClear() {
     delete[] CM2Model::s_errorString;
@@ -112,7 +108,6 @@ CM2ModelCall::~CM2ModelCall() {
     }
 }
 
-// PROVEN: a86a2f9b DIFFERENT/IDENTICAL
 // OFFSET: 0x00813EE0/0x14052BC90
 void CModelBatchList::Add(CM2Model* model, uint16_t batchIndex) {
     if (this->m_count < this->m_maxCount) {
@@ -278,7 +273,6 @@ int32_t CM2Model::GetAsyncRenderStatusRecursive() {
     return status;
 }
 
-// PROVEN: 2a2e0dec IDENTICAL/IDENTICAL
 // OFFSET: 0x00814B00/0x14052CBD0
 const char* CM2Model::GetTextureObjectName(uint32_t index) {
     return TextureGetObjectName(this->m_textures[index]);
@@ -357,7 +351,6 @@ int32_t CM2Model::CanUpdateNonReadyTextures() {
     return 1;
 }
 
-// PROVEN: 0371b306 IDENTICAL/IDENTICAL
 // OFFSET: 0x00814440/0x14052C370
 void CM2Model::WaitForLoad(const char* reason) {
     if (this->m_shared->m_asyncObject) {
@@ -373,7 +366,6 @@ void CM2Model::WaitForLoad(const char* reason) {
     }
 }
 
-// PROVEN: 128fedcd IDENTICAL/IDENTICAL
 // OFFSET: 0x008144F0/0x14052C440
 void CM2Model::SetAnimating(int32_t animating) {
     if (this->m_flags & 0x10) {
@@ -423,7 +415,6 @@ void CM2Model::SetRenderDisabledRecursive(int32_t disabled) {
     }
 }
 
-// PROVEN: ce027263 IDENTICAL/DIFFERENT
 // OFFSET: 0x008145B0/0x14052C570
 int32_t CM2Model::TexturesAllLoaded() {
     if (!(this->m_fFlags & 1)) {
@@ -441,7 +432,6 @@ int32_t CM2Model::TexturesAllLoaded() {
     return 1;
 }
 
-// PROVEN: 23595902 IDENTICAL/NONE
 // OFFSET: 0x00814690
 static int32_t BatchesMatch(const M2Batch* a, const M2Batch* b, const M2SkinSection* sectionA, const M2SkinSection* sectionB) {
     return a->m_colorIndex == b->m_colorIndex && a->m_materialIndex == b->m_materialIndex && a->m_textureComboIndex == b->m_textureComboIndex && a->m_textureWeightComboIndex == b->m_textureWeightComboIndex && a->m_textureTransformComboIndex == b->m_textureTransformComboIndex && sectionA->m_boneComboIndex == sectionB->m_boneComboIndex;
@@ -469,7 +459,6 @@ void CM2Model::SetSequenceCallback(void* callback, uint64_t param) {
     }
 }
 
-// PROVEN: 07858334 IDENTICAL/IDENTICAL
 // OFFSET: 0x00814760/0x14052C720
 void CM2Model::SetSequenceStartCallback(M2SequenceStartCallback callback, uint64_t param) {
     this->m_sequenceStartCallback = callback;
@@ -500,7 +489,6 @@ void CM2Model::SetEventCallback(void* callback, uint64_t param) {
     }
 }
 
-// PROVEN: df2e6e4f IDENTICAL/NONE
 // OFFSET: 0x008148D0
 void CM2Model::SetLightEnabled(uint32_t index, uint32_t enabled) {
     if (this->m_fFlags & 1) {
@@ -521,7 +509,6 @@ void CM2Model::SetLightEnabled(uint32_t index, uint32_t enabled) {
     }
 }
 
-// PROVEN: b0686ebd IDENTICAL/IDENTICAL
 // OFFSET: 0x00814950/0x14052C980
 void* CM2Model::GetCameraByIndex(uint32_t index) {
     if (!(this->m_fFlags & 1)) {
@@ -531,7 +518,6 @@ void* CM2Model::GetCameraByIndex(uint32_t index) {
     return this->m_cameras[index].m_camera;
 }
 
-// PROVEN: f822c796 IDENTICAL/DIFFERENT
 // OFFSET: 0x008149B0/0x14052C9F0
 int32_t CM2Model::HasLiveRibbons() {
     if (!(this->m_fFlags & 1)) {
@@ -549,7 +535,6 @@ int32_t CM2Model::HasLiveRibbons() {
     return 0;
 }
 
-// PROVEN: 51a51721 IDENTICAL/DIFFERENT
 // OFFSET: 0x00814A10/0x14052CA80
 void CM2Model::SetRibbonsEnabled(uint32_t enabled) {
     if (this->m_fFlags & 1) {
@@ -574,7 +559,6 @@ void CM2Model::SetRibbonsEnabled(uint32_t enabled) {
     }
 }
 
-// PROVEN: 07f504a4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00814AA0/0x14052CB50
 int32_t CM2Model::HasLiveParticles() {
     if (!(this->m_fFlags & 1)) {
@@ -592,7 +576,6 @@ int32_t CM2Model::HasLiveParticles() {
     return 0;
 }
 
-// PROVEN: b7ad3080 IDENTICAL/DIFFERENT
 // OFFSET: 0x00814B20/0x14052CBF0
 uint32_t CM2Model::GetInstanceCountMax() {
     if (!(this->m_fFlags & 1)) {
@@ -602,7 +585,6 @@ uint32_t CM2Model::GetInstanceCountMax() {
     return this->m_shared->m_maxInstances;
 }
 
-// PROVEN: 90f603f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00814B80/0x14052CC60
 uint32_t CM2Model::GetCurrentLightCount() {
     if (!(this->m_fFlags & 1)) {
@@ -614,7 +596,6 @@ uint32_t CM2Model::GetCurrentLightCount() {
     return lighting ? lighting->m_lightCount : 0;
 }
 
-// PROVEN: 968cfb59 IDENTICAL/DIFFERENT
 // OFFSET: 0x00814BE0/0x14052CCD0
 void CM2Model::ChangeEmittersFrameOfReference(const C44Matrix* matrix) {
     M2Data* data = this->m_shared->m_data;
@@ -657,7 +638,6 @@ void CM2Model::ChangeFrameOfReference(const C44Matrix* matrix) {
     }
 }
 
-// PROVEN: e23199ec IDENTICAL/IDENTICAL
 // OFFSET: 0x00814CF0/0x14052CE30
 void CM2Model::LinkToCallbackListTail() {
     CM2Shared* shared = this->m_shared;
@@ -667,7 +647,6 @@ void CM2Model::LinkToCallbackListTail() {
     this->m_shared->m_callbackListTail = &this->m_callbackNext;
 }
 
-// PROVEN: 46991a67 IDENTICAL/IDENTICAL
 // OFFSET: 0x00814D10/0x14052CE60
 void CM2Model::UnlinkFromCallbackList() {
     if (!this->m_callbackPrev) {
@@ -686,7 +665,6 @@ void CM2Model::UnlinkFromCallbackList() {
     this->m_callbackNext = NULL;
 }
 
-// PROVEN: 0a714599 IDENTICAL/DIFFERENT
 // OFFSET: 0x00814D40/0x14052CEB0
 int32_t CM2Model::IsBatchDoodadCompatible(M2Batch* batch) {
     uint32_t cacheFlags = M2GetCacheFlags();
@@ -749,7 +727,6 @@ M2ModelLight::M2ModelLight() {
     this->m_enabled = 1;
 }
 
-// PROVEN: 1c8f3e9f IDENTICAL/NONE
 // OFFSET: 0x00815270
 M2ModelParticle::M2ModelParticle() {
     this->m_emitting = 1;
@@ -835,7 +812,6 @@ void CM2Model::FreeExternalResources() {
     }
 }
 
-// PROVEN: c88823ea IDENTICAL/IDENTICAL
 // OFFSET: 0x008159D0/0x14052DB60
 void CM2Model::WaitUntilLoaded() {
     if (!(this->m_fFlags & 1)) {
@@ -843,7 +819,6 @@ void CM2Model::WaitUntilLoaded() {
     }
 }
 
-// PROVEN: 43e718bf DIFFERENT/IDENTICAL
 // OFFSET: 0x00815A10/0x14052DBB0
 void CM2Model::WaitUntilLoadedRecursive() {
     if (!(this->m_fFlags & 1)) {
@@ -959,7 +934,6 @@ void CM2Model::IncreaseTexturePriority() {
     }
 }
 
-// PROVEN: 1e135c4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00814420/0x14052C350
 void CM2Model::LinkToAsyncHead() {
     AsyncFileReadEnterQueueLock();
@@ -993,7 +967,6 @@ void CM2Model::UpdateLoaded() {
     } while (model);
 }
 
-// PROVEN: 2d03403e IDENTICAL/IDENTICAL
 // OFFSET: 0x008144D0/0x14052C430
 void CM2Model::SetLoadedCallback(void (*callback)(CM2Model*, void*), void* arg) {
     this->m_loadedCallback = callback;
@@ -1001,7 +974,6 @@ void CM2Model::SetLoadedCallback(void (*callback)(CM2Model*, void*), void* arg) 
     this->UpdateLoaded();
 }
 
-// PROVEN: bdf5ada9 IDENTICAL/NONE
 // OFFSET: 0x00585480
 void CM2Model::GetWorldTransform(C44Matrix& matrix) {
     matrix = this->m_worldTransform;
@@ -1278,7 +1250,6 @@ void CM2Model::ReplaceParticleColor(uint32_t id, CImVector color0, CImVector col
     }
 }
 
-// PROVEN: 489c1569 IDENTICAL/DIFFERENT
 // OFFSET: 0x00815C60/0x14052DEB0
 void CM2Model::ForceAdditiveParticleSort() {
     if (this->m_fFlags & 1) {
@@ -1618,7 +1589,6 @@ int32_t CM2Model::HasSequence(const M2Data* data, uint32_t id) {
     return index < data->m_sequences.m_count;
 }
 
-// PROVEN: 58e3edc1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00818090/0x140531220
 int32_t CM2Model::HasSequence(uint32_t id) {
     if (!(this->m_fFlags & 1)) {
@@ -1628,7 +1598,6 @@ int32_t CM2Model::HasSequence(uint32_t id) {
     return this->HasSequence(this->m_shared->m_data, id);
 }
 
-// PROVEN: 8c72945a IDENTICAL/IDENTICAL
 // OFFSET: 0x0081C3D0/0x140535470
 uint32_t CM2Model::GetFallbackSequenceIdFromSequenceId(uint32_t id, M2SequenceFallback* fallback) {
     if (id >= ANIM_COUNT) {
@@ -2274,7 +2243,6 @@ void CM2Model::SetPrimaryBoneSequence(uint16_t sequenceIndex, uint16_t boneIndex
     }
 }
 
-// PROVEN: 3e049dd4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00818C50/0x1405320D0
 void CM2Model::SetSecondaryBoneSequence(uint16_t sequenceIndex, uint16_t boneIndex, M2SequenceFallback fallback, uint32_t time, float speed, uint32_t repetitions) {
     M2ModelBone* bone = &this->m_bones[boneIndex];
@@ -2728,7 +2696,6 @@ C3Vector CM2Model::GetAttachmentPivot(uint32_t id) {
     return data->m_attachments[index].m_position;
 }
 
-// PROVEN: b26e3e23 IDENTICAL/IDENTICAL
 // OFFSET: 0x00814790/0x14052C730
 void CM2Model::DetachFromParent() {
     if (this->m_attachPrev) {
@@ -2748,7 +2715,6 @@ void CM2Model::DetachFromParent() {
     this->Release();
 }
 
-// PROVEN: 903696a9 DIFFERENT/IDENTICAL
 // OFFSET: 0x008147D0/0x14052C7A0
 void CM2Model::DetachAllChildrenById(uint32_t id) {
     CM2Model* model = this->m_attachList;
@@ -2778,7 +2744,6 @@ void CM2Model::DetachAllChildrenById(uint32_t id) {
     }
 }
 
-// PROVEN: f9761310 IDENTICAL/DIFFERENT
 // OFFSET: 0x008196E0/0x140532E70
 int32_t CM2Model::HasEvent(uint32_t id) {
     if (!(this->m_fFlags & 1)) {
@@ -2811,7 +2776,6 @@ int32_t CM2Model::FindEvent(uint32_t id, C3Vector** position, uint16_t* bone) {
     return 0;
 }
 
-// PROVEN: bdf3ec99 IDENTICAL/DIFFERENT
 // OFFSET: 0x008197E0/0x140532F20
 C3Vector CM2Model::GetEventPivot(uint32_t id) {
     if (!(this->m_fFlags & 1)) {
@@ -2910,7 +2874,6 @@ CCamera* CM2Model::GetCameraById(uint32_t id) {
     return this->m_cameras[index].m_camera;
 }
 
-// PROVEN: d62ed185 IDENTICAL/DIFFERENT
 // OFFSET: 0x008161F0/0x14052E770
 void CM2Model::SetEmittersEnabled(int32_t enabled) {
     if (this->m_fFlags & 1) {
@@ -2939,7 +2902,6 @@ void CM2Model::SetEmittersEnabled(int32_t enabled) {
     }
 }
 
-// PROVEN: 9a114081 IDENTICAL/DIFFERENT
 // OFFSET: 0x00819980/0x140533170
 uint32_t CM2Model::GetTextureID(uint32_t index) {
     return this->m_shared->m_data->m_textures[index].m_type;
@@ -5171,7 +5133,6 @@ int32_t CM2Model::SetVerticesMultiSample(int32_t optimized, M2SkinSection* secti
     return 1;
 }
 
-// PROVEN: e76a56e2 IDENTICAL/DIFFERENT
 // OFFSET: 0x0081FF50/0x14053B450
 void CM2Model::RenderModelBatchesShadowMap(const CModelBatchList& untextured, const CModelBatchList& textured) {
     GxRsSet(GxRs_BlendingMode, static_cast<int32_t>(0));
@@ -6628,7 +6589,6 @@ void CM2Model::Animate() {
     }
 }
 
-// PROVEN: 843f9c22 IDENTICAL/IDENTICAL
 // OFFSET: 0x00825750/0x140542E10
 void CM2Model::ForceAnimate() {
     if (this->m_fFlags & 1) {
@@ -6937,7 +6897,6 @@ C3Vector CM2Model::GetEventPosition(uint32_t id) {
     return *position * this->m_boneMatrices[bone] * this->m_scene->m_viewInv;
 }
 
-// PROVEN: cdb39a72 IDENTICAL/DIFFERENT
 // OFFSET: 0x008268D0/0x140544610
 C44Matrix CM2Model::GetEventWorldTransform(uint32_t id) {
     if (!(this->m_fFlags & 1)) {
@@ -7444,7 +7403,6 @@ void CM2Model::DeactivateModel() {
     }
 }
 
-// PROVEN: 9b68cde7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00823940/0x140540000
 CM2Model::~CM2Model() {
     if (this->m_model30) {
@@ -7716,7 +7674,6 @@ bool SModelBatchLessThan::operator()(const CModelBatch& a, const CModelBatch& b)
     return a.m_key < b.m_key;
 }
 
-// PROVEN: 4229dee9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00820970/0x14053C1D0
 void CModelBatchList::Optimize() {
     blz::sort(this->m_batches, this->m_batches + this->m_count, SModelBatchLessThan());
@@ -8466,7 +8423,6 @@ void CM2Model::AttachToScene(CM2Scene* scene) {
     }
 }
 
-// PROVEN: 15641812 DIFFERENT/IDENTICAL
 // OFFSET: 0x008254E0/0x140542870
 void CM2Model::AttachToSceneRecursive(CM2Scene* scene) {
     this->AttachToScene(scene);
@@ -8710,7 +8666,6 @@ CAaSphere CM2Model::GetBoundingSphere() {
     return sphere;
 }
 
-// PROVEN: b2bd5a02 IDENTICAL/NONE
 // OFFSET: 0x0057D110
 C44Matrix CM2Model::GetAnimatedWorldTransform() {
     this->Animate();

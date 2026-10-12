@@ -137,7 +137,6 @@ static uint8_t LookupMathVariable(const char* name) {
     return 0;
 }
 
-// PROVEN: 6083d9fe IDENTICAL/NONE
 // OFFSET: 0x00992400
 uint32_t MathState::AddIntArg(int32_t value) {
     uint32_t index = this->m_numIntArgs;
@@ -183,7 +182,6 @@ int32_t MathState::NextToken(char* token, int32_t* pos, int32_t* length) {
     return 1;
 }
 
-// PROVEN: eb5b2cc2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009924F0/0x140711A00
 int32_t MathState::Expect(const char* expected, int32_t* pos) {
     char token[32];
@@ -453,7 +451,6 @@ static bool SpellParserGetCondition(const char** cursor, const AuraData* aura) {
     return false;
 }
 
-// PROVEN: 0f83756a IDENTICAL/IDENTICAL
 // OFFSET: 0x00992AD0/0x1407123C0
 static void SpellParserSkipParenthesis(const char** cursor, const char* end) {
     int32_t depth = 1;
@@ -470,7 +467,6 @@ static void SpellParserSkipParenthesis(const char** cursor, const char* end) {
     }
 }
 
-// PROVEN: 8c75acfc IDENTICAL/DIFFERENT
 // OFFSET: 0x00992B10/0x140712010
 static bool SpellParserGetCompareValue(const char** cursor, const AuraData* aura, int32_t* value) {
     uint32_t index = 0;
@@ -912,7 +908,6 @@ int32_t MathState::CompilePrimary(int32_t pos) {
     return pos;
 }
 
-// PROVEN: fdb5aef4 IDENTICAL/NONE
 // OFFSET: 0x00993900
 int32_t MathState::CompilePower(int32_t pos) {
     pos = this->CompilePrimary(pos);
@@ -959,7 +954,6 @@ int32_t MathState::CompileProduct(int32_t pos) {
     return pos;
 }
 
-// PROVEN: ddf5b05c IDENTICAL/IDENTICAL
 // OFFSET: 0x00993A00/0x140713220
 int32_t MathState::CompileSum(int32_t pos) {
     pos = this->CompileProduct(pos);
@@ -1105,7 +1099,6 @@ void MathState::ExecuteFunction(uint32_t op, MathStack* stack) {
     stack->m_values[stack->m_top] = result;
 }
 
-// PROVEN: 647254ae IDENTICAL/DIFFERENT
 // OFFSET: 0x00993CC0/0x140711B20
 void MathState::ExecuteOperator(uint32_t op, MathStack* stack) {
     float result;

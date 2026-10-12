@@ -260,7 +260,6 @@ void SPIRIT_IP_MR_V3_NAME_79(float* excitation, int16_t lag, int16_t fraction) {
     }
 }
 
-// PROVEN: 0607345b IDENTICAL/NONE
 // OFFSET: 0x00B55160
 void SPIRIT_IP_MR_V3_NAME_34(float* excitation, int16_t lag, int16_t fraction, float gain) {
     SPIRIT_IP_MR_V3_NAME_79(excitation, lag, fraction);

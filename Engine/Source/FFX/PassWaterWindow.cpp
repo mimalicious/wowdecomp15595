@@ -47,7 +47,6 @@ PassWaterWindow::~PassWaterWindow() {
     }
 }
 
-// PROVEN: 5720ef49 IDENTICAL/DIFFERENT
 // OFFSET: 0x0089E080/0x1405DEB30
 PassWaterWindow::VertexConstants::VertexConstants() {
     this->m_time.x = 0.0f;

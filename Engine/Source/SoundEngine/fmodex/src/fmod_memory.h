@@ -105,7 +105,6 @@ namespace FMOD
         { 
             return mCurrentAllocated[threadid];
         }
-        // PROVEN: 3ab1c066 IDENTICAL/DIFFERENT
         // OFFSET: 0x00A88370/0x140846610
         inline unsigned int getCurrentThreadID(FMOD_UINT_NATIVE threadid = 0)
         {

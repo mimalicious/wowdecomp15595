@@ -53,7 +53,6 @@ static void AsyncFileReadFreeA16(CAsyncObject* object) {
     SIMD::FreeA16(buffer);
 }
 
-// PROVEN: c4a19fd7 IDENTICAL/DIFFERENT
 // OFFSET: 0x008310C0/0x140552690
 uint32_t CM2Shared::AddRef() {
     if (!this->m_refCount && this->m_cache) {
@@ -75,7 +74,6 @@ uint32_t CM2Shared::AddRef() {
     return ++this->m_refCount;
 }
 
-// PROVEN: 8e3aad4c IDENTICAL/IDENTICAL
 // OFFSET: 0x00831110/0x140552700
 int32_t CM2Shared::CallbackWhenLoaded(CM2Model* model) {
     if (!(model->m_flags & 0x10)) {
@@ -980,7 +978,6 @@ void CM2Shared::SkinProfileLoadedCallback(CAsyncObject* object) {
     shared->m_asyncObject = NULL;
 }
 
-// PROVEN: df4f8f1c IDENTICAL/DIFFERENT
 // OFFSET: 0x00832640/0x1405547D0
 int32_t CM2Shared::LoadSkinProfile(uint32_t profile) {
     SFileImpl* file = this->OpenSkinFile(profile);
@@ -1303,7 +1300,6 @@ void CM2Shared::LowPrioritySequenceLoadedCallback(CAsyncObject* object) {
     }
 }
 
-// PROVEN: c901c079 IDENTICAL/IDENTICAL
 // OFFSET: 0x008389B0/0x140562840
 void CM2Shared::LowPrioritySequenceFailedCallback(CAsyncObject* object) {
     CM2SequenceLoad* load = static_cast<CM2SequenceLoad*>(object->m_userArg);
@@ -1392,7 +1388,6 @@ bool M2SortCompare::operator()(uint32_t a, uint32_t b) const {
     return this->m_compare(a, b, this->m_param) < 0;
 }
 
-// PROVEN: c2cd21ff DIFFERENT/IDENTICAL
 // OFFSET: 0x008395E0/0x140563A20
 void M2HeapSort(int32_t (*compare)(uint32_t, uint32_t, const void*), uint32_t* array, uint32_t count, const void* param) {
     M2SortCompare predicate;

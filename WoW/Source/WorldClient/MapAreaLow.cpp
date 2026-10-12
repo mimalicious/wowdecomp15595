@@ -11,12 +11,10 @@
 #include "WoW/Source/WorldClient/MapRenderChunk.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// PROVEN: 941e909f IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CMapAreaLow::Initialize() {
 }
 
-// PROVEN: 9cb3f080 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CMapAreaLow::Destroy() {
 }
@@ -73,7 +71,6 @@ static uint16_t* BuildLowDetailIndices(const uint16_t* holes, int32_t holeMode, 
     return indices;
 }
 
-// PROVEN: 0295b48a IDENTICAL/IDENTICAL
 // OFFSET: 0x0077F530/0x14046C480
 void CMapAreaLow::CreateVertices(CGxBuf* buf) {
     float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(buf));
@@ -174,7 +171,6 @@ void CMapAreaLow::Render() {
     CMap::s_mapAreaLowUpdateList.LinkToTail(this);
 }
 
-// PROVEN: 560ac273 IDENTICAL/IDENTICAL
 // OFFSET: 0x00796880/0x140489A40
 void CMapAreaLow::LiquidReset() {
     if (this->m_oceanInstance) {
@@ -263,7 +259,6 @@ void CMapAreaLow::CreateOceanInstance() {
     this->m_oceanInstance->m_isMesh = factory->GetWorldSpace() == 0;
 }
 
-// PROVEN: 403410d0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00796E60/0x14048A160
 void CMapAreaLow::RenderPrep() {
     if (!this->m_oceanInstance) {
@@ -271,7 +266,6 @@ void CMapAreaLow::RenderPrep() {
     }
 }
 
-// PROVEN: 0191818c IDENTICAL/DIFFERENT
 // OFFSET: 0x00797360/0x14048A760
 void CMapAreaLow::FreeBuf() {
     if (this->m_buf) {

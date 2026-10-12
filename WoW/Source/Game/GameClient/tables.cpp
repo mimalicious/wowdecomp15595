@@ -52,7 +52,6 @@ ClientGameTableBase::ClientGameTableBase(const char* name) {
     this->m_gameTable = NULL;
 }
 
-// PROVEN: b09df120 IDENTICAL/DIFFERENT
 // OFFSET: 0x004EAE30/0x14012DE30
 void ClientGameTableBase::Initialize() {
     for (int32_t i = 0; i <= g_gameTablesDB.m_numRecords; i++) {
@@ -66,7 +65,6 @@ void ClientGameTableBase::Initialize() {
     }
 }
 
-// PROVEN: 04f413c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EAEA0/0x14012DEC0
 void GameTablesInitialize() {
     for (uint32_t i = 0; i < sizeof(s_gameTables) / sizeof(s_gameTables[0]); i++) {
@@ -74,7 +72,6 @@ void GameTablesInitialize() {
     }
 }
 
-// PROVEN: 8c5ba323 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EAE10/0x14012DE10
 float GameFormulaEvaluateTable(int32_t table, int32_t index, int32_t a3) {
     return s_gameTables[table]->EvaluateTable(index, a3);

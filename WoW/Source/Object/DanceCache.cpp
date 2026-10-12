@@ -24,7 +24,6 @@ DanceCache& DanceCache::operator=(const DanceCache& source) {
     return *this;
 }
 
-// PROVEN: f5394072 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A286D0/0x1407D01C0
 void DanceCache::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));

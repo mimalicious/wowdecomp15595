@@ -61,19 +61,16 @@ TSFixedArray<TalentTabInfo*> CGTalentInfo_Inspect::m_tabs;
 // STATIC: 0x00F4B770/0x140E3FB50
 CGTalentGroup_C CGTalentInfo_Inspect::m_talentGroups[2];
 
-// PROVEN: 2e1f5e89 IDENTICAL/IDENTICAL
 // OFFSET: 0x00999C80/0x14071BA10
 void CGTalentInfo_Inspect::EnterWorld() {
     CGTalentInfo_Inspect::m_inspectTarget = WOWGUID::Make(0);
 }
 
-// PROVEN: 05d4d10e IDENTICAL/DIFFERENT
 // OFFSET: 0x00999C60/0x14071BA00
 uint32_t CGTalentInfo::GetActiveTalentGroup(int32_t pet) {
     return pet == 0 ? CGTalentInfo::m_activeTalentGroup : 0;
 }
 
-// PROVEN: 73c72ca1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0099A020/0x14071BE60
 TalentGroupTab_C* CGTalentGroup_C::GetTabFromID(int32_t tabId) const {
     for (uint32_t i = 0; i < this->m_tabs.m_count; i++) {
@@ -85,7 +82,6 @@ TalentGroupTab_C* CGTalentGroup_C::GetTabFromID(int32_t tabId) const {
     return NULL;
 }
 
-// PROVEN: c06ad2a0 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099A890/0x14071C8F0
 uint32_t CGTalentInfo::GetUnspentTalentPoints(uint32_t index, int32_t pet) {
     uint32_t points = 0;
@@ -98,7 +94,6 @@ uint32_t CGTalentInfo::GetUnspentTalentPoints(uint32_t index, int32_t pet) {
     return points;
 }
 
-// PROVEN: e58e4265 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099A8E0/0x14071CAD0
 CGTalentGroup_C* CGTalentInfo::GetTalentGroup(uint32_t index, int32_t pet) {
     if (index >= CGTalentInfo::GetNumTalentGroups(pet)) {
@@ -131,19 +126,16 @@ int32_t TalentInfoIsSpellKnown(int32_t spellId, int32_t isInspect, int32_t isPet
     return unit->IsSpellKnown(spellId) || unit->IsSpellSuperceded(spellId);
 }
 
-// PROVEN: ba4ef104 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B48BD0/0x140918680
 static int TierCompare(const void* a, const void* b) {
     return (*static_cast<TalentGroupTier_C* const*>(a))->m_tier - (*static_cast<TalentGroupTier_C* const*>(b))->m_tier;
 }
 
-// PROVEN: dd42add0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00999C40/0x14071B9E0
 uint32_t CGTalentGroup_C::GetGlyph(uint32_t index) const {
     return index < 9 ? this->m_glyphs[index] : 9;
 }
 
-// PROVEN: 4602da5b IDENTICAL/DIFFERENT
 // OFFSET: 0x00999C90/0x14071BA20
 uint32_t TalentInfoGetActiveTalentGroup(int32_t inspect, int32_t pet) {
     if (inspect) {
@@ -153,7 +145,6 @@ uint32_t TalentInfoGetActiveTalentGroup(int32_t inspect, int32_t pet) {
     return CGTalentInfo::GetActiveTalentGroup(pet);
 }
 
-// PROVEN: b041d379 IDENTICAL/DIFFERENT
 // OFFSET: 0x00999CC0/0x14071BA40
 uint32_t TalentInfoGetScriptGroupIndex(lua_State* L, int32_t inspect, int32_t pet, int32_t index) {
     if (lua_isnumber(L, index)) {
@@ -202,7 +193,6 @@ int32_t CGTalentInfo::IsTalentAvailableForPet(CGUnit_C* pet, const TalentRec* ta
     return category < 0 || (talent->m_categoryMask[word] & (1 << bit)) != 0;
 }
 
-// PROVEN: 6162e3b2 IDENTICAL/NONE
 // OFFSET: 0x00999FB0
 TalentGroupTier_C* TalentGroupTab_C::FindTier(int32_t tier) {
     int32_t low = 0;
@@ -226,7 +216,6 @@ TalentGroupTier_C* TalentGroupTab_C::FindTier(int32_t tier) {
     return NULL;
 }
 
-// PROVEN: 52684b7b IDENTICAL/DIFFERENT
 // OFFSET: 0x00999FF0/0x14071E410
 TalentGroupTab_C* CGTalentGroup_C::GetTab(uint32_t index) {
     return index < this->m_tabs.m_count ? &this->m_tabs.m_data[index] : NULL;
@@ -243,7 +232,6 @@ TalentGroupTab_C* CGTalentGroup_C::GetTabFromTalentID(int32_t talentId) {
     return this->GetTabFromID(talent->m_tabID);
 }
 
-// PROVEN: 2ebfabbd IDENTICAL/UNPROVEN
 // OFFSET: 0x0099A2A0/0x14071C110
 TalentTabInfo* CGTalentInfo::GetTab(uint32_t index, int32_t inspect, int32_t pet) {
     if (inspect) {
@@ -261,7 +249,6 @@ TalentTabInfo* CGTalentInfo::GetTab(uint32_t index, int32_t inspect, int32_t pet
     return NULL;
 }
 
-// PROVEN: 4d918f86 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099AA00/0x14071CA70
 int32_t CGTalentInfo::GetPreviewPointsSpent(uint32_t group, int32_t pet) {
     int32_t points = 0;
@@ -274,7 +261,6 @@ int32_t CGTalentInfo::GetPreviewPointsSpent(uint32_t group, int32_t pet) {
     return points;
 }
 
-// PROVEN: 2c7f7272 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099AA60/0x14071CAD0
 CGTalentGroup_C* TalentInfoGetTalentGroup(uint32_t index, int32_t inspect, int32_t pet) {
     if (inspect) {
@@ -404,7 +390,6 @@ static void BuildTabInfo(CGPlayer_C* player, TSFixedArray<TalentTabInfo*>* tabs,
     }
 }
 
-// PROVEN: 26c846d3 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099B7A0/0x14071DC70
 void CGTalentInfo::ResetTabInfo(int32_t pet) {
     if (pet) {
@@ -430,7 +415,6 @@ void CGTalentInfo::ResetTabInfo(int32_t pet) {
     }
 }
 
-// PROVEN: 612b8d1a IDENTICAL/UNPROVEN
 // OFFSET: 0x0099B8B0/0x14071DE80
 void CGTalentInfo_Inspect::ResetTabInfo() {
     for (uint32_t i = 0; i < CGTalentInfo_Inspect::m_tabs.m_count; i++) {
@@ -472,7 +456,6 @@ void CGTalentGroup_C::ResetAllPreviewTalentPoints() {
     }
 }
 
-// PROVEN: 2f85de7c IDENTICAL/DIFFERENT
 // OFFSET: 0x0099C2F0/0x14071E9C0
 void CGTalentInfo::ResetPreviewTalentPoints(uint32_t group, uint32_t tab, int32_t pet) {
     CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
@@ -482,7 +465,6 @@ void CGTalentInfo::ResetPreviewTalentPoints(uint32_t group, uint32_t tab, int32_
     }
 }
 
-// PROVEN: c66f76bf IDENTICAL/NONE
 // OFFSET: 0x0099C350/0x14071EA70
 void CGTalentInfo::ResetGroupPreviewTalentPoints(uint32_t group, int32_t pet) {
     CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
@@ -690,7 +672,6 @@ TalentGroupItem_C* TalentInfoGetTalentItem(uint32_t group, int32_t talentId, int
     return CGTalentInfo::GetTalentItem(group, talentId, pet);
 }
 
-// PROVEN: 83d06353 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099E380/0x140721BD0
 TalentGroupTier_C::TalentGroupTier_C() : m_tier(-1) {
     this->m_items.Clear();
@@ -705,7 +686,6 @@ TalentGroupTier_C::~TalentGroupTier_C() {
 TalentGroupTab_C::TalentGroupTab_C() : m_tabId(0), m_pointsSpent(0), m_previewPointsSpent(0) {
 }
 
-// PROVEN: bf98a676 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099E510/0x140721D30
 TalentGroupTab_C::~TalentGroupTab_C() {
     for (uint32_t i = 0; i < this->m_tiers.m_count; i++) {
@@ -717,7 +697,6 @@ TalentGroupTab_C::~TalentGroupTab_C() {
     this->m_tiers.Clear();
 }
 
-// PROVEN: 5d937501 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099E7F0/0x1407220C0
 int32_t TalentGroupTab_C::AddTierItem(const TalentRec* talent, TalentGroupItem_C* item) {
     if (!talent || !item) {
@@ -811,7 +790,6 @@ void CGTalentGroup_C::AddPreviewTalentPoints(uint32_t tabIndex, const TalentRec*
     this->m_tabs.m_data[tabIndex].m_previewPointsSpent += delta;
 }
 
-// PROVEN: 3f35fd22 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099EA90/0x140722520
 void CGTalentInfo::AddPreviewTalentPoints(uint32_t group, uint32_t tab, uint32_t talentIndex, int32_t points, int32_t pet) {
     CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
@@ -922,7 +900,6 @@ static void ReadPetTalents(CDataStore* msg, CGTalentGroup_C* group) {
     }
 }
 
-// PROVEN: 946cfaf3 IDENTICAL/NONE
 // OFFSET: 0x0099EEE0
 void CGTalentGroup_C::Reset() {
     this->m_items.Clear();
@@ -1054,7 +1031,6 @@ void CGTalentInfo::ShutdownGame() {
     CGTalentInfo::m_petTalentGroup.Reset();
 }
 
-// PROVEN: 7062072d IDENTICAL/DIFFERENT
 // OFFSET: 0x0099F4F0/0x1407232E0
 void CGTalentInfo::UpdatePetTabInfo(int32_t family) {
     if (family) {
@@ -1112,7 +1088,6 @@ void CGTalentInfo::UpdatePetTalentData(CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_TALENT_UPDATE, NULL);
 }
 
-// PROVEN: 9b609a31 IDENTICAL/IDENTICAL
 // OFFSET: 0x0099F660/0x1407235E0
 void CGTalentInfo_Inspect::ShutdownGame() {
     CGTalentInfo_Inspect::ResetTabInfo();
@@ -1145,7 +1120,6 @@ void CGTalentInfo_Inspect::UpdateTalentData(CDataStore* msg) {
     }
 }
 
-// PROVEN: 4627d976 IDENTICAL/IDENTICAL
 // OFFSET: 0x0099A0D0/0x14071BEF0
 int32_t CGTalentGroup_C::GetPreviewPointsSpent() const {
     int32_t total = 0;
@@ -1157,7 +1131,6 @@ int32_t CGTalentGroup_C::GetPreviewPointsSpent() const {
     return total;
 }
 
-// PROVEN: 17a3e191 IDENTICAL/IDENTICAL
 // OFFSET: 0x0099A130/0x14071BF70
 uint32_t CGTalentGroup_C::GetPointsSpent() const {
     uint32_t total = 0;
@@ -1169,13 +1142,11 @@ uint32_t CGTalentGroup_C::GetPointsSpent() const {
     return total;
 }
 
-// PROVEN: 5ed24592 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099A190/0x14071BFF0
 int32_t CGTalentInfo::GetNumTabs(int32_t pet) {
     return pet ? CGTalentInfo::m_petTabs.m_count : CGTalentInfo::m_tabs.m_count;
 }
 
-// PROVEN: 5dc9859c IDENTICAL/UNPROVEN
 // OFFSET: 0x0099A1B0/0x14071C000
 TalentTabInfo* CGTalentInfo::GetTab(uint32_t index, int32_t pet) {
     if (pet) {
@@ -1219,7 +1190,6 @@ int32_t CGTalentInfo::GetAllGroupPreviewTalentPointsSpent(int32_t pet) {
     return total;
 }
 
-// PROVEN: 586ca640 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099A930/0x14071C9A0
 void CGTalentInfo::SetPreviewPrimaryTalentTree(uint32_t group, bool pet, int32_t tree) {
     CGTalentGroup_C* talentGroup = CGTalentInfo::GetTalentGroup(group, pet);
@@ -1240,7 +1210,6 @@ int32_t CGTalentInfo::GetTabPreviewPointsSpent(uint32_t group, uint32_t tab, int
     return tab < talentGroup->m_tabs.m_count ? talentGroup->m_tabs.m_data[tab].m_previewPointsSpent : 0;
 }
 
-// PROVEN: 8e823431 DIFFERENT/IDENTICAL
 // OFFSET: 0x0099AAA0/0x14071CB50
 int32_t TalentInfoGetPrimaryTalentTree(uint32_t group, int32_t inspect, int32_t pet) {
     CGTalentGroup_C* talentGroup = TalentInfoGetTalentGroup(group, inspect, pet);
@@ -1248,13 +1217,11 @@ int32_t TalentInfoGetPrimaryTalentTree(uint32_t group, int32_t inspect, int32_t 
     return talentGroup ? talentGroup->m_primaryTree : 0;
 }
 
-// PROVEN: 5293c8c9 IDENTICAL/NONE
 // OFFSET: 0x0099B740
 TalentTabInfo::~TalentTabInfo() {
     this->m_primarySpells.Clear();
 }
 
-// PROVEN: 03848e47 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099C3B0/0x14071EB90
 void CGTalentInfo::ResetAllGroupPreviewTalentPoints(int32_t pet) {
     if (pet) {
@@ -1268,7 +1235,6 @@ void CGTalentInfo::ResetAllGroupPreviewTalentPoints(int32_t pet) {
     }
 }
 
-// PROVEN: 6bd148b5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099D6D0/0x140720700
 void CGTalentInfo::LeaveWorld() {
     CGTalentInfo::ResetAllGroupPreviewTalentPoints(0);

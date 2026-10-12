@@ -22,17 +22,14 @@ static float s_twoPi = 6.2831855f;
 // STATIC: 0x00E756C4
 uint8_t Weather::s_weatherTypeForced;
 
-// PROVEN: 25c70816 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void Weather::Initialize() {
 }
 
-// PROVEN: f8e1aa9a IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void Weather::Destroy() {
 }
 
-// PROVEN: 770e476e IDENTICAL/IDENTICAL
 // OFFSET: 0x007483D0/0x140427410
 int32_t Weather::GetType() const {
     int32_t type = 0;
@@ -52,7 +49,6 @@ int32_t Weather::GetType() const {
     return type;
 }
 
-// PROVEN: 02c6d5e6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00748400/0x140427440
 void Weather::FillInDefaultPrecipTexturePath(int32_t type) {
     if (type == 1) {
@@ -62,7 +58,6 @@ void Weather::FillInDefaultPrecipTexturePath(int32_t type) {
     }
 }
 
-// PROVEN: 42821182 IDENTICAL/NONE
 // OFFSET: 0x00748440/0x140427CC0
 CHMMgr::~CHMMgr() {
     for (uint32_t y = 0; y < 5; y++) {
@@ -74,7 +69,6 @@ CHMMgr::~CHMMgr() {
     }
 }
 
-// PROVEN: 25f18666 IDENTICAL/IDENTICAL
 // OFFSET: 0x00748480/0x1404274C0
 void CHMMgr::Invalidate() {
     for (uint32_t y = 0; y < 5; y++) {
@@ -579,7 +573,6 @@ void Weather::CalcPlayerVelocity(const C3Vector& position, const C3Vector& veloc
     }
 }
 
-// PROVEN: 17682527 IDENTICAL/UNPROVEN
 // OFFSET: 0x00752E90/0x140434040
 void Weather::Clear() {
     Rain* rain = this->m_rain;

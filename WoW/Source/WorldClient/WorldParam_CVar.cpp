@@ -123,7 +123,6 @@ CVar* CWorldParam::cvar_farClip;
 // STATIC: 0x00E890A4/0x140D74D68
 CVar* CWorldParam::cvar_terrainMipLevel;
 
-// PROVEN: 08f07357 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B620/0x140453710
 bool CWorldParam::TerrainMipLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t level = SStrToInt(value);
@@ -137,21 +136,18 @@ bool CWorldParam::TerrainMipLevelCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
-// PROVEN: 0af64cad IDENTICAL/UNPROVEN
 // OFFSET: 0x0076B660/0x140453750
 bool CWorldParam::FarClipCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     World::SetFarClip(SStrToFloat(value));
     return true;
 }
 
-// PROVEN: 2f179719 IDENTICAL/UNPROVEN
 // OFFSET: 0x0076B680/0x140453770
 bool CWorldParam::NearClipCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     World::SetNearClip(SStrToFloat(value));
     return true;
 }
 
-// PROVEN: a586aacc IDENTICAL/UNPROVEN
 // OFFSET: 0x0076B6A0/0x140453790
 bool CWorldParam::HorizonFarClipScaleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     float scale = SStrToFloat(value);
@@ -166,7 +162,6 @@ bool CWorldParam::HorizonFarClipScaleCallback(CVar* var, const char* oldValue, c
     return true;
 }
 
-// PROVEN: 57331204 IDENTICAL/UNPROVEN
 // OFFSET: 0x0076B700/0x1404537D0
 bool CWorldParam::HorizonNearClipScaleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     float scale = SStrToFloat(value);
@@ -181,7 +176,6 @@ bool CWorldParam::HorizonNearClipScaleCallback(CVar* var, const char* oldValue, 
     return true;
 }
 
-// PROVEN: f340035c IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B760/0x140453810
 bool CWorldParam::ParticleDensityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t density = SStrToInt(value);
@@ -270,7 +264,6 @@ bool CWorldParam::SunShaftsCallback(CVar* var, const char* oldValue, const char*
     return true;
 }
 
-// PROVEN: fbe49703 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B9E0/0x140453A90
 bool CWorldParam::WorldPoolUsageCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!SStrCmpI(value, "dynamic", STORM_MAX_STR)) {
@@ -282,7 +275,6 @@ bool CWorldParam::WorldPoolUsageCallback(CVar* var, const char* oldValue, const 
     return false;
 }
 
-// PROVEN: e8f52fc3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076BA20/0x140453AD0
 bool CWorldParam::TerrainAlphaBitDepthCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t depth = SStrToInt(value);
@@ -298,14 +290,12 @@ bool CWorldParam::TerrainAlphaBitDepthCallback(CVar* var, const char* oldValue, 
     return false;
 }
 
-// PROVEN: 00f7ac91 IDENTICAL/DIFFERENT
 // OFFSET: 0x0076BA80/0x140453B30
 bool CWorldParam::GroundEffectFadeCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     World::SetDetailDoodadDensityFade(static_cast<float>(static_cast<uint32_t>(SStrToInt(value))) * 0.0099999998f);
     return true;
 }
 
-// PROVEN: f9e54b00 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076BAC0/0x140453B60
 bool CWorldParam::ObjectFadeCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -320,7 +310,6 @@ bool CWorldParam::ObjectFadeCallback(CVar* var, const char* oldValue, const char
     return true;
 }
 
-// PROVEN: 0d942ad3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076BB00/0x140453BA0
 bool CWorldParam::ObjectFadeZFillCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -335,7 +324,6 @@ bool CWorldParam::ObjectFadeZFillCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
-// PROVEN: a5355934 IDENTICAL/UNPROVEN
 // OFFSET: 0x0076BB40/0x140453BE0
 bool CWorldParam::EnvironmentDetailCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t detail = SStrToInt(value);
@@ -380,7 +368,6 @@ bool CWorldParam::ShadowTextureSizeCallback(CVar* var, const char* oldValue, con
     return true;
 }
 
-// PROVEN: d3cf9486 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076BC70/0x140453D00
 bool CWorldParam::ProjectedTexturesCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -409,7 +396,6 @@ bool CWorldParam::DetailDoodadInstancingCallback(CVar* var, const char* oldValue
     return true;
 }
 
-// PROVEN: abac2a6d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076BD00/0x140453D80
 bool CWorldParam::CloudLODCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t lod = SStrToInt(value);
@@ -445,7 +431,6 @@ bool CWorldParam::TextureFilteringCallback(CVar* var, const char* oldValue, cons
     return true;
 }
 
-// PROVEN: 318ac6f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076BDF0/0x140453E90
 bool CWorldParam::BaseMipCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t level = SStrToInt(value);
@@ -535,7 +520,6 @@ bool CWorldParam::GroundEffectDistCallback(CVar* var, const char* oldValue, cons
     return true;
 }
 
-// PROVEN: 2e0607f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C010/0x140454100
 bool CWorldParam::HWPCFCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -562,7 +546,6 @@ bool CWorldParam::HWPCFCallback(CVar* var, const char* oldValue, const char* val
     return true;
 }
 
-// PROVEN: 2d44efb1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C0B0/0x1404541B0
 bool CWorldParam::GxTextureCacheSizeCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t size = SStrToInt(value);

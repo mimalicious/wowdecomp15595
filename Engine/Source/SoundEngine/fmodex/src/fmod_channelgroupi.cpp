@@ -62,7 +62,6 @@ FMOD_RESULT ChannelGroupI::validate(ChannelGroup *channelgroup, ChannelGroupI **
 ]
 */
 
-// PROVEN: 1ec93af0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8F760/0x14084EEA0
 FMOD_RESULT ChannelGroupI::release()
 {  
@@ -89,7 +88,6 @@ FMOD_RESULT ChannelGroupI::release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 396c0375 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8F630/0x14084ED00
 FMOD_RESULT ChannelGroupI::releaseInternal()
 {
@@ -204,7 +202,6 @@ FMOD_RESULT ChannelGroupI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1e06f163 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8F4C0/0x14084EAC0
 FMOD_RESULT ChannelGroupI::setVolume(float volume)
 {
@@ -246,7 +243,6 @@ FMOD_RESULT ChannelGroupI::setVolume(float volume)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7bacad8e DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8F280/0x14084E810
 FMOD_RESULT ChannelGroupI::setVolumeInternal()
 {
@@ -370,7 +366,6 @@ FMOD_RESULT ChannelGroupI::setPitch(float pitch)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9d483519 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8F320/0x14084E8D0
 FMOD_RESULT ChannelGroupI::setPitchInternal()
 {
@@ -1060,7 +1055,6 @@ FMOD_RESULT ChannelGroupI::overrideSpeakerMix(float frontleft, float frontright,
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 638bafe1 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A8F4F0/0x14084EAF0
 FMOD_RESULT ChannelGroupI::addGroup(ChannelGroupI *group)
 {
@@ -1421,7 +1415,6 @@ FMOD_RESULT ChannelGroupI::getName(char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 858901ce IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8F4A0/0x14084EAA0
 FMOD_RESULT ChannelGroupI::getNumChannels(int *numchannels)
 {

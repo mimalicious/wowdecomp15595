@@ -141,7 +141,6 @@ char BattlenetUI::s_tokenSurname[168];
 // STATIC: 0x00F33B30/0x140E26B00
 char BattlenetUI::s_tokenGivenName[168];
 
-// PROVEN: 0f5bbec5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00902130/0x14065A710
 char* FilterChatLinks(const char* source, char* dest, uint32_t size) {
     char* limit = &dest[size - 1];
@@ -238,14 +237,12 @@ static int32_t CountFormatStrings(const char* format) {
     return count;
 }
 
-// PROVEN: 188dab9e IDENTICAL/DIFFERENT
 // OFFSET: 0x009022B0/0x14065A8B0
 const char* BattlenetUI::GetProgramString(BSN::FourCC program) {
     program.ToString(BattlenetUI::s_programString, sizeof(BattlenetUI::s_programString));
     return BattlenetUI::s_programString;
 }
 
-// PROVEN: 8338ba86 IDENTICAL/DIFFERENT
 // OFFSET: 0x00903C60/0x14065C7E0
 void BattlenetUI::SendScriptEvent(uint32_t event, const char* format, ...) {
     va_list args;
@@ -256,7 +253,6 @@ void BattlenetUI::SendScriptEvent(uint32_t event, const char* format, ...) {
     }
 }
 
-// PROVEN: ee4dc89e IDENTICAL/DIFFERENT
 // OFFSET: 0x00903C90/0x14065C810
 bool BattlenetUI::IsToonFriend(uint32_t accountId) {
     for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
@@ -268,7 +264,6 @@ bool BattlenetUI::IsToonFriend(uint32_t accountId) {
     return false;
 }
 
-// PROVEN: 0ed519c3 IDENTICAL/NONE
 // OFFSET: 0x00903CD0
 int32_t BattlenetUI::FindFriendIndex(uint32_t presenceId) {
     for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
@@ -280,7 +275,6 @@ int32_t BattlenetUI::FindFriendIndex(uint32_t presenceId) {
     return -1;
 }
 
-// PROVEN: 4c2dd200 IDENTICAL/NONE
 // OFFSET: 0x00903D10
 BattlenetUI::RIDFriendData* BattlenetUI::FindFriend(uint32_t presenceId) {
     for (uint32_t i = 0; i < BattlenetUI::m_friends.Count(); i++) {
@@ -292,7 +286,6 @@ BattlenetUI::RIDFriendData* BattlenetUI::FindFriend(uint32_t presenceId) {
     return NULL;
 }
 
-// PROVEN: e6b5256e IDENTICAL/DIFFERENT
 // OFFSET: 0x00903D60/0x14065C850
 int32_t BattlenetUI::QSortDisambiguateFriendListCB(const void* a, const void* b) {
     const RIDFriendData* friend1 = static_cast<const RIDFriendData*>(a);
@@ -311,13 +304,11 @@ int32_t BattlenetUI::QSortDisambiguateFriendListCB(const void* a, const void* b)
     return result;
 }
 
-// PROVEN: 2ae31ade IDENTICAL/IDENTICAL
 // OFFSET: 0x00903DB0/0x14065C8B0
 void BattlenetUI::SetBattlenetConnectionRecovered() {
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_CONNECTED, NULL);
 }
 
-// PROVEN: 5ffcbd91 IDENTICAL/DIFFERENT
 // OFFSET: 0x00905200/0x14065DE80
 bool BattlenetUI::RemoveFromFriendList(uint32_t presenceId) {
     int32_t index = BattlenetUI::FindFriendIndex(presenceId);
@@ -334,7 +325,6 @@ bool BattlenetUI::RemoveFromFriendList(uint32_t presenceId) {
     return false;
 }
 
-// PROVEN: 7af81df5 IDENTICAL/NONE
 // OFFSET: 0x00905260
 uint32_t BattlenetUI::GetSelfRealmID() {
     if (!BattlenetUI::s_selfRealm) {
@@ -349,7 +339,6 @@ uint32_t BattlenetUI::GetSelfRealmID() {
     return BattlenetUI::s_selfRealm;
 }
 
-// PROVEN: 056926aa IDENTICAL/DIFFERENT
 // OFFSET: 0x009052B0/0x14065DF00
 int32_t BattlenetUI::QSortFriendListCB(const void* a, const void* b) {
     const RIDFriendData* friend1 = static_cast<const RIDFriendData*>(a);
@@ -380,7 +369,6 @@ int32_t BattlenetUI::QSortFriendListCB(const void* a, const void* b) {
     return SStrCmpUTF8I(friend1->m_name.m_data, friend2->m_name.m_data, 72);
 }
 
-// PROVEN: 2c7acb6a IDENTICAL/DIFFERENT
 // OFFSET: 0x00905350/0x14065DFC0
 void BattlenetUI::DisambiguateFriendList() {
     if (BattlenetUI::m_friends.Count() > 1) {
@@ -415,7 +403,6 @@ void BattlenetUI::DisambiguateFriendList() {
     }
 }
 
-// PROVEN: 645c45b4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00905530/0x14065E240
 int32_t BattlenetUI::QSortFriendInviteListByTimeCB(const void* a, const void* b) {
     Battlenet::Friends::FriendInviteContainer invite1 = BattlenetAPI::GetFriendInvite(*static_cast<const uint32_t*>(a));
@@ -428,7 +415,6 @@ int32_t BattlenetUI::QSortFriendInviteListByTimeCB(const void* a, const void* b)
     return invite1.m_createdTime < invite2.m_createdTime;
 }
 
-// PROVEN: b4891560 IDENTICAL/DIFFERENT
 // OFFSET: 0x00905590/0x14065E2A0
 bool BattlenetUI::FeaturesEnabledAndConnected() {
     Login* login = ClientServices::LoginConnection();
@@ -487,7 +473,6 @@ bool BattlenetUI::GetToonInviteInfo(uint32_t toonId, uint32_t& realmId, uint8_t*
     return (*reinterpret_cast<uint64_t*>(guid) || name[0]) && (realmId || realm[0]);
 }
 
-// PROVEN: 024d429d IDENTICAL/DIFFERENT
 // OFFSET: 0x00905D30/0x14065EB00
 int32_t BattlenetUI::BNGetToonInfoHelper(lua_State* L, uint32_t presenceId) {
     lua_pushboolean(L, BattlenetAPI::GetFocusedToon(BattlenetAPI::GetAccountPresenceId(presenceId)) == presenceId);
@@ -742,12 +727,10 @@ void BattlenetUI::FriendInviteSentCB::Call(int32_t argc, const GeneralFunction::
     DebugLog("BNUI: Friend Invite Send Result: %s", text);
 }
 
-// PROVEN: 0926afe1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void BattlenetUI::FriendInviteSentCB::Destroy() const {
 }
 
-// PROVEN: fe5c2602 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void BattlenetUI::NoActionCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
 }
@@ -782,7 +765,6 @@ void BattlenetUI::MemberListCB::Call(int32_t argc, const GeneralFunction::Arg* a
     }
 }
 
-// PROVEN: 7f881fd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void BattlenetUI::MemberListCB::Destroy() const {
 }
@@ -900,7 +882,6 @@ void BattlenetUI::SettingChangedCB(void* param, int32_t argc, const GeneralFunct
     }
 }
 
-// PROVEN: 497e0582 IDENTICAL/UNPROVEN
 // OFFSET: 0x00909280/0x1406625C0
 void BattlenetUI::LeaveRealm() {
     BattlenetUI::m_friendListLoaded = false;
@@ -910,7 +891,6 @@ void BattlenetUI::LeaveRealm() {
     BattlenetUI::s_selfRealm = 0;
 }
 
-// PROVEN: 3f2ca799 IDENTICAL/IDENTICAL
 // OFFSET: 0x00909330/0x1406626A0
 void BattlenetUI_LeaveRealm() {
     BattlenetUI::LeaveRealm();
@@ -1186,7 +1166,6 @@ void BattlenetUI::SavePrescenceID(uint32_t presenceId) {
     }
 }
 
-// PROVEN: 5290b917 IDENTICAL/IDENTICAL
 // OFFSET: 0x0090A780/0x140664270
 bool BattlenetUI::TokenizeName(uint32_t presenceId, const char*& name) {
     const char* text = name;
@@ -1196,7 +1175,6 @@ bool BattlenetUI::TokenizeName(uint32_t presenceId, const char*& name) {
     return true;
 }
 
-// PROVEN: ff8341c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0090A7D0/0x1406642E0
 bool BattlenetUI::TokenizeGivenAndSurname(uint32_t presenceId, const char*& givenName, const char*& surname) {
     const char* givenText = givenName;
@@ -1211,7 +1189,6 @@ bool BattlenetUI::TokenizeGivenAndSurname(uint32_t presenceId, const char*& give
     return true;
 }
 
-// PROVEN: cffb824e IDENTICAL/IDENTICAL
 // OFFSET: 0x0090A990/0x140664580
 const char* BattlenetUI::GetTokenizedName(uint32_t presenceId) {
     const char* name = BattlenetUI::GetNameForPresenceIdHelper(presenceId);
@@ -1219,7 +1196,6 @@ const char* BattlenetUI::GetTokenizedName(uint32_t presenceId) {
     return name;
 }
 
-// PROVEN: c4706e0f IDENTICAL/DIFFERENT
 // OFFSET: 0x0090A9E0/0x1406645E0
 int32_t BattlenetUI::UpdateAutoComplete(uint32_t& presenceId, uint32_t flags, int32_t add, const char* name) {
     if (BattlenetAPI::IsSelf(presenceId)) {
@@ -1800,7 +1776,6 @@ void BattlenetUI::ChatChannelMemberLeftCB(void* param, int32_t argc, const Gener
     DebugLog("BNUI: Chat Channel Member Left. channel %d, id %u", channel + 1, presenceId);
 }
 
-// PROVEN: ab2acbeb DIFFERENT/IDENTICAL
 // OFFSET: 0x0090C120/0x1406668D0
 void BattlenetUI::DisplayError(uint16_t error, uint32_t presenceId) {
     if (!error) {
@@ -2085,7 +2060,6 @@ void BattlenetUI::FriendAddedCB(void* param, int32_t argc, const GeneralFunction
     CGChat::AddChatMessage("FRIEND_ADDED", CHAT_MSG_BN_INLINE_TOAST_ALERT, &params);
 }
 
-// PROVEN: 5146740f IDENTICAL/DIFFERENT
 // OFFSET: 0x0090D910/0x140668A00
 void BattlenetUI::FriendRemovedCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
@@ -2111,7 +2085,6 @@ void BattlenetUI::FriendRemovedCB(void* param, int32_t argc, const GeneralFuncti
     BattlenetUI::SendScriptEvent(SCRIPT_EVENT_BN_FRIEND_LIST_SIZE_CHANGED, "%d", presenceId);
 }
 
-// PROVEN: 651e0e0e IDENTICAL/IDENTICAL
 // OFFSET: 0x0090D9C0/0x140668AD0
 void BattlenetUI::ChatWhisperUndeliverableCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     Login* login = ClientServices::LoginConnection();
@@ -2235,7 +2208,6 @@ void BattlenetUI::Init() {
     DebugLog("BNUI: Init");
 }
 
-// PROVEN: 7dcfac91 IDENTICAL/NONE
 // OFFSET: 0x0090DF70
 void BattlenetUI::EnterRealm() {
     Login* login = ClientServices::LoginConnection();
@@ -2253,7 +2225,6 @@ void BattlenetUI::EnterRealm() {
     }
 }
 
-// PROVEN: e2ecadae IDENTICAL/NONE
 // OFFSET: 0x0090DFE0/0x140669290
 void BattlenetUI_EnterRealm() {
     BattlenetUI::EnterRealm();

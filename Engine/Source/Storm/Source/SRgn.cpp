@@ -197,12 +197,10 @@ static void ClearRegion(RGN* rgn) {
     rgn->dirty = 0;
 }
 
-// PROVEN: ddb70c17 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C2A60/0x1400FD750
 RGN::~RGN() {
 }
 
-// PROVEN: 0581af22 IDENTICAL/NONE
 // OFFSET: 0x004C25C0
 void STORMAPI SRgnDestroy() {
     s_rgntable.Destroy();

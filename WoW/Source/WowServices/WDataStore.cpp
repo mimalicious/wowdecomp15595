@@ -27,7 +27,6 @@ WDataStore::~WDataStore() {
     }
 }
 
-// PROVEN: 4e102741 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C5D50/0x14000A800
 void WDataStore::InternalInitialize(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     this->m_bufferObj = NULL;
@@ -98,7 +97,6 @@ void WDataStore::FreeBuffer(void* buffer, uint32_t size) {
     }
 }
 
-// PROVEN: 0f827d36 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C6270/0x140101370
 void WDataStore::StaticInitialize() {
     if (s_initialized) {
@@ -190,7 +188,6 @@ int32_t WDataStore::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& d
     return 1;
 }
 
-// PROVEN: 5eed8785 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C6580/0x140101800
 void WDataStore::StaticDestroy() {
     delete s_smallBufferHeap;

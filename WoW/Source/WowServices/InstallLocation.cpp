@@ -7,13 +7,11 @@ static const char* s_installLocationPrograms[4] = { "WoWT", "WoWB", "WoW", "WoWI
 // STATIC: 0x00CA0890/0x140B3C928
 static InstallLocation s_installLocation = INSTALL_LOCATION_RETAIL;
 
-// PROVEN: abbed250 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C5C50/0x1400FFF10
 InstallLocation GetInstallLocation() {
     return s_installLocation;
 }
 
-// PROVEN: d9bb2def IDENTICAL/IDENTICAL
 // OFFSET: 0x004C5C60/0x1400FFF20
 const char* GetInstallLocationProgram() {
     return s_installLocationPrograms[s_installLocation];

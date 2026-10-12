@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[] = { 0, 0 };
 // STATIC: 0x00C27000
 const DB2Meta ItemCurrencyCostRec::s_meta = { "DBFilesClient\\ItemCurrencyCost.db2", "ItemCurrencyCost.adb", 2, 8, ItemCurrencyCostRec::FixupRecord, 0, true, false, s_fieldOffsets, s_fieldSizes, s_fieldTypes, 0x6FE05AE9, 0x00000000, 0 };
 
-// PROVEN: 954ad00b IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ItemCurrencyCostRec::FixupRecord(void* record) {
 }

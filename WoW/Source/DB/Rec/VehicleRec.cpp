@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[29] = { 0, 0, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3,
 // STATIC: 0x00C1FC1C/0x140A14278
 const DBCMeta VehicleRec::s_meta = { "DBFilesClient\\Vehicle.dbc", 29, 160, VehicleRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: b18ec0da IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E930/0x1407D7CB0
 void VehicleRec::FixupStrings(void* record, const char* strings) {
     VehicleRec* rec = static_cast<VehicleRec*>(record);

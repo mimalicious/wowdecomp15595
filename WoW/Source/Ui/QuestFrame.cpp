@@ -191,7 +191,6 @@ void CGQuestInfo::ClearState() {
     CGQuestInfo::m_autoAcceptSound = 0;
 }
 
-// PROVEN: 1dc63559 IDENTICAL/DIFFERENT
 // OFFSET: 0x009441F0/0x1406B1000
 void CGQuestInfo::ClearQuestItems() {
     for (int32_t i = 0; i < 6; i++) {
@@ -207,7 +206,6 @@ void CGQuestInfo::ClearQuestItems() {
     }
 }
 
-// PROVEN: c322aeea IDENTICAL/DIFFERENT
 // OFFSET: 0x00944310/0x1406B1150
 void CGQuestInfo::EnterWorld() {
     CGQuestInfo::m_npc = WOWGUID::Make(0);
@@ -226,13 +224,11 @@ void CGQuestInfo::EnterWorld() {
     CGQuestInfo::ClearQuestItems();
 }
 
-// PROVEN: d1f5766e IDENTICAL/IDENTICAL
 // OFFSET: 0x00944380/0x1406B11C0
 void CGQuestInfo::EndQuestList() {
     FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_GREETING, NULL);
 }
 
-// PROVEN: 444b636d IDENTICAL/IDENTICAL
 // OFFSET: 0x00944390/0x1406B11D0
 void CGQuestInfo::SetPortraits(int32_t giver, const char* giverText, const char* giverName, int32_t turnIn, const char* turnInText, const char* turnInName) {
     CGQuestInfo::m_portraitGiver = giver;
@@ -264,7 +260,6 @@ void CGQuestInfo::SetPortraits(int32_t giver, const char* giverText, const char*
     }
 }
 
-// PROVEN: b0172982 IDENTICAL/DIFFERENT
 // OFFSET: 0x00944480/0x1406B1310
 void CGQuestInfo::SetRewardFactionInfo(uint32_t index, int32_t faction, int32_t value, int32_t override) {
     if (index <= 4) {
@@ -274,13 +269,11 @@ void CGQuestInfo::SetRewardFactionInfo(uint32_t index, int32_t faction, int32_t 
     }
 }
 
-// PROVEN: b49a0b89 IDENTICAL/UNPROVEN
 // OFFSET: 0x009444B0/0x1406B1340
 void CGQuestInfo::SetRewardFactionFlags(uint32_t flags) {
     CGQuestInfo::m_rewards.m_factionFlags = flags;
 }
 
-// PROVEN: d7199a37 IDENTICAL/NONE
 // OFFSET: 0x009444C0
 int32_t CGQuestInfo::GetNumQuestChoices() {
     int32_t count = 0;
@@ -296,7 +289,6 @@ int32_t CGQuestInfo::GetNumQuestChoices() {
     return count;
 }
 
-// PROVEN: 3e372215 IDENTICAL/IDENTICAL
 // OFFSET: 0x009444E0/0x1406B1350
 int32_t CGQuestInfo::GetQuestItemID(const char* type, uint32_t index) {
     if (index > 6) {
@@ -318,7 +310,6 @@ int32_t CGQuestInfo::GetQuestItemID(const char* type, uint32_t index) {
     return 0;
 }
 
-// PROVEN: 78ebe7b8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00944560/0x1406B1400
 int32_t CGQuestInfo::GetQuestCurrencyID(const char* type, uint32_t index) {
     if (!_stricmp(type, "reward")) {
@@ -409,7 +400,6 @@ void CGQuestInfo::SetState(WOWGUID npc, WOWGUID inform, int32_t state, const cha
     CGQuestInfo::m_responseSent = 0;
 }
 
-// PROVEN: 3dec37c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00945270/0x1406B20F0
 void CGQuestInfo::SetLogDescription(const char* text) {
     if (!text || !*text) {
@@ -633,7 +623,6 @@ void CGQuestInfo::QuestGiverFinished(int32_t keepOpen, int32_t questId, int32_t 
     }
 }
 
-// PROVEN: 806b4f0f IDENTICAL/DIFFERENT
 // OFFSET: 0x00945E20/0x1406B2E40
 int32_t CGQuestInfo::IsCompletable() {
     if (!CGQuestInfo::m_canComplete) {
@@ -842,7 +831,6 @@ void CGQuestInfo::ProcessFactionRewards() {
     }
 }
 
-// PROVEN: 812da893 IDENTICAL/DIFFERENT
 // OFFSET: 0x00946BC0/0x1406B3DE0
 void CGQuestInfo::LeaveWorld() {
     CGQuestInfo::QuestGiverFinished(0, CGQuestInfo::m_currentQuest, 1, 0);
@@ -904,7 +892,6 @@ void CGQuestInfo::AddReward(const char* title, const QuestRewards_C& rewards, in
     CGQuestInfo::m_questFlags = questFlags;
 }
 
-// PROVEN: 06bdf4c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00946E70/0x1406B4190
 static void QuestItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {

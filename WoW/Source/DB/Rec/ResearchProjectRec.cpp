@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[9] = { 0, 2, 2, 0, 0, 0, 0, 2, 0 };
 // STATIC: 0x00C22AD4/0x140A17AA8
 const DBCMeta ResearchProjectRec::s_meta = { "DBFilesClient\\ResearchProject.dbc", 9, 36, ResearchProjectRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 347df19a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EA40/0x1407D8050
 void ResearchProjectRec::FixupStrings(void* record, const char* strings) {
     ResearchProjectRec* rec = static_cast<ResearchProjectRec*>(record);

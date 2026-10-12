@@ -130,7 +130,6 @@ bool CGlueMgr::PatchDownloadExecutePrepatch(SArchive* archive) {
     return result;
 }
 
-// PROVEN: ab06e423 IDENTICAL/IDENTICAL
 // OFFSET: 0x00810940/0x140527FA0
 void CGlueMgr::PatchDownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_patchDownload) {

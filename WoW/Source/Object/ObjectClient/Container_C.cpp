@@ -12,19 +12,16 @@ CGContainer_C::CGContainer_C(uint32_t time, const CClientObjCreate& create) : CG
 CGContainer_C::~CGContainer_C() {
 }
 
-// PROVEN: 86f17985 IDENTICAL/NONE
 // OFFSET: [0x00599100/0x140207560]
 const CGBag_C* CGContainer_C::GetBag() const {
     return &this->m_bag;
 }
 
-// PROVEN: ea30920d IDENTICAL/NONE
 // OFFSET: [0x00599100/0x140207560]
 CGBag_C* CGContainer_C::GetBag() {
     return &this->m_bag;
 }
 
-// PROVEN: 8d2fbe73 IDENTICAL/DIFFERENT
 // OFFSET: 0x00599010/0x140207480
 int32_t CGContainer_C::GetFreeSlots() const {
     if (!this->m_container) {
@@ -42,7 +39,6 @@ int32_t CGContainer_C::GetFreeSlots() const {
     return freeSlots;
 }
 
-// PROVEN: be711898 IDENTICAL/DIFFERENT
 // OFFSET: 0x00598FD0/0x140207430
 void CGContainer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGItem_C::SetStorage(storage, saved);
@@ -50,7 +46,6 @@ void CGContainer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_containerMirror = saved + CGItem::TotalFieldsSaved();
 }
 
-// PROVEN: 0f5f4e76 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGContainer_C::Initialize() {
 }

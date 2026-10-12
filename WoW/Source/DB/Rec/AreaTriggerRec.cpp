@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[11] = { 0, 0, 3, 0, 0, 0, 3, 3, 3, 3, 3 };
 // STATIC: 0x00C26ADC/0x140A1CB40
 const DBCMeta AreaTriggerRec::s_meta = { "DBFilesClient\\AreaTrigger.dbc", 11, 52, AreaTriggerRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 9a7beaa9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void AreaTriggerRec::FixupStrings(void* record, const char* strings) {
 }

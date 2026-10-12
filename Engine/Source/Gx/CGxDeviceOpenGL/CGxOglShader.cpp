@@ -9,7 +9,6 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: d24cdf26 IDENTICAL/IDENTICAL
 // OFFSET: 0x00869890/0x14059D580
 void NvCombinerStage::Apply(GLenum stage, GLenum portion) {
     for (uint32_t i = 0; i <= 3; i++) {
@@ -43,7 +42,6 @@ void NvPixelShader::SetupRegisterCombiners() {
     }
 }
 
-// PROVEN: ad033c45 IDENTICAL/DIFFERENT
 // OFFSET: 0x00869A00/0x14059D780
 void NvTextureShaderStage::Apply(uint32_t tmu) {
     glTexEnvi(GL_TEXTURE_SHADER_NV, GL_SHADER_OPERATION_NV, this->m_shaderOperation);
@@ -62,7 +60,6 @@ void NvTextureShaderStage::Apply(uint32_t tmu) {
     }
 }
 
-// PROVEN: 012ecb6e IDENTICAL/IDENTICAL
 // OFFSET: 0x00869AC0/0x14059D830
 void NvTextureShader::Apply() {
     for (uint32_t tmu = 0; tmu < 4; tmu++) {
@@ -197,7 +194,6 @@ void CGxDeviceOpenGl::IVertexShaderPatch(char* code, uint32_t size) {
     }
 }
 
-// PROVEN: 573fcfd5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00869EC0/0x14059DCE0
 void CGxDeviceOpenGl::IPixelShaderPatch(char* code, uint32_t size) {
     if (this->m_caps.m_shaderTargets[GxSh_Pixel] != GxShProfile_Arbfp1) {
@@ -211,7 +207,6 @@ void CGxDeviceOpenGl::IPixelShaderPatch(char* code, uint32_t size) {
     }
 }
 
-// PROVEN: 4f54f945 IDENTICAL/IDENTICAL
 // OFFSET: 0x00869F20/0x14059DD50
 void CGxDeviceOpenGl::IShaderDestroyVertex(CGxShaderPermute* permute) {
     if (permute->m_apiSpecific) {
@@ -253,7 +248,6 @@ void CGxDeviceOpenGl::IShaderDestroyPixel(CGxShaderPermute* permute) {
     permute->m_loaded = 0;
 }
 
-// PROVEN: b36674fb IDENTICAL/IDENTICAL
 // OFFSET: 0x00869FF0/0x14059DE40
 void CGxDeviceOpenGl::IShaderDestroy(CGxShaderPermute* permute) {
     switch (permute->m_target) {
@@ -439,7 +433,6 @@ void CGxDeviceOpenGl::IShaderCreateVertex(CGxShaderPermute* permute) {
     SMemFree(data, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: ea5651ed IDENTICAL/IDENTICAL
 // OFFSET: 0x0086A490/0x14059E320
 void CGxDeviceOpenGl::IShaderCreate(CGxShaderPermute* permute) {
     switch (permute->m_target) {
@@ -554,7 +547,6 @@ void CGxDeviceOpenGl::IShaderConstantsSend(EGxShTarget target, uint32_t index, c
     }
 }
 
-// PROVEN: 58d8c052 IDENTICAL/NONE
 // OFFSET: 0x0086A720
 void CGxDeviceOpenGl::IShaderConstantsFlush(EGxShTarget target) {
     ShadowConstants& shadow = CGxDevice::s_shadowConstants[target];
@@ -567,7 +559,6 @@ void CGxDeviceOpenGl::IShaderConstantsFlush(EGxShTarget target) {
     shadow.dirtyMax = 0;
 }
 
-// PROVEN: f5efa803 IDENTICAL/UNPROVEN
 // OFFSET: 0x0086A780/0x14059E5C0
 void CGxDeviceOpenGl::IShaderConstantsFlush() {
     this->IShaderConstantsFlush(GxSh_Vertex);
@@ -641,7 +632,6 @@ void CGxDeviceOpenGl::IBindPixelShader(CGxShaderPermute* permute) {
     }
 }
 
-// PROVEN: 95e0e67f IDENTICAL/UNPROVEN
 // OFFSET: 0x0086A920/0x14059E7C0
 void CGxDeviceOpenGl::IBindVertexShader(CGxShaderPermute* permute) {
     this->IResourceTouch(permute);

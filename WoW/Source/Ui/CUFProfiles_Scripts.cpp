@@ -7,28 +7,24 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// PROVEN: 957e9877 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C8210/0x140756A70
 static int32_t Script_GetMaxNumCUFProfiles(lua_State* L) {
     lua_pushnumber(L, 5.0);
     return 1;
 }
 
-// PROVEN: bb92d69c IDENTICAL/IDENTICAL
 // OFFSET: 0x009C8240/0x140756A90
 static int32_t Script_HasLoadedCUFProfiles(lua_State* L) {
     lua_pushboolean(L, CGCUFProfiles::s_loaded);
     return 1;
 }
 
-// PROVEN: 109073a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C8920/0x1407572E0
 static int32_t Script_GetNumRaidProfiles(lua_State* L) {
     lua_pushinteger(L, CGCUFProfiles::s_profiles.Count());
     return 1;
 }
 
-// PROVEN: f5e29cb2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C8940/0x140757300
 static int32_t Script_GetRaidProfileName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -207,7 +203,6 @@ static int32_t Script_SetRaidProfileSavedPosition(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2f92b9a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C95C0/0x140660F20
 static int32_t Script_RaidProfileHasUnsavedChanges(lua_State* L) {
     lua_pushboolean(L, CGCUFProfiles::HasUnsavedChanges());
@@ -241,7 +236,6 @@ static int32_t Script_SaveRaidProfileCopy(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 87d2508f IDENTICAL/DIFFERENT
 // OFFSET: 0x009C9BE0/0x140758BC0
 static int32_t Script_RestoreRaidProfileFromCopy(lua_State* L) {
     CGCUFProfiles::RestoreProfileCopy();
@@ -318,7 +312,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "HasLoadedCUFProfiles", &Script_HasLoadedCUFProfiles },
 };
 
-// PROVEN: b0f6b848 IDENTICAL/UNPROVEN
 // OFFSET: 0x009C8260/0x140756AB0
 void CompactUnitFrameProfilesRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -326,7 +319,6 @@ void CompactUnitFrameProfilesRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 8e8651c2 IDENTICAL/UNPROVEN
 // OFFSET: 0x009C8290/0x140756B00
 void CompactUnitFrameProfilesUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

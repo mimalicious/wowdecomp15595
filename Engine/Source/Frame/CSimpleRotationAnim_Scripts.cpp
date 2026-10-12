@@ -55,7 +55,6 @@ static int32_t Script_SetDegrees(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8879d7dd DIFFERENT/IDENTICAL
 // OFFSET: 0x0053CB20/0x140190CA0
 static int32_t Script_GetDegrees(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
@@ -63,7 +62,6 @@ static int32_t Script_GetDegrees(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 55a2bdb5 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053CB70/0x140190D00
 static int32_t Script_SetRadians(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
@@ -78,7 +76,6 @@ static int32_t Script_SetRadians(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 71664bf0 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053CBF0/0x140190DA0
 static int32_t Script_GetRadians(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
@@ -86,14 +83,12 @@ static int32_t Script_GetRadians(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 6091772f IDENTICAL/IDENTICAL
 // OFFSET: 0x0053CC40/0x140190DF0
 void CSimpleRotationAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleRotationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleRotationAnim::RegisterScriptMethods);
 }
 
-// PROVEN: e3adba13 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053B930/0x14018F710
 void CSimpleRotationAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();

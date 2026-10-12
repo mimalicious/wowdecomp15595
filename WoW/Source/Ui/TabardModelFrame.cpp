@@ -48,18 +48,15 @@ CSimpleFrame* CGTabardModelFrame::Create(CSimpleFrame* parent) {
     return data ? new (data) CGTabardModelFrame(parent) : NULL;
 }
 
-// PROVEN: 89cfb882 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A05E70/0x1407A5A00
 CGTabardModelFrame::CGTabardModelFrame(CSimpleFrame* parent) : CGCharacterModelBase(parent) {
 }
 
-// PROVEN: 9fca8de9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A05EA0/0x1407A5A30
 const char* CGTabardModelFrame::GetObjectTypeName() {
     return CGTabardModelFrame::s_objectTypeName;
 }
 
-// PROVEN: 7917c498 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A05EB0/0x1407A5A40
 int32_t CGTabardModelFrame::GetScriptMetaTable() {
     return CGTabardModelFrame::s_metatable;
@@ -69,19 +66,16 @@ int32_t CGTabardModelFrame::GetScriptMetaTable() {
 CGTabardModelFrame::~CGTabardModelFrame() {
 }
 
-// PROVEN: 06ed70b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A05F60/0x1407A5B00
 bool CGTabardModelFrame::IsA(int32_t type) {
     return type == CGTabardModelFrame::s_objectType || type == CGCharacterModelBase::s_objectType || type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: c45e4a23 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A05FB0/0x1407A5B40
 bool CGTabardModelFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGTabardModelFrame::s_objectTypeName, STORM_MAX_STR) || CGCharacterModelBase::IsA(typeName);
 }
 
-// PROVEN: 5e061413 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A05FF0/0x140171140
 void EmblemTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
@@ -90,7 +84,6 @@ void EmblemTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height,
     }
 }
 
-// PROVEN: d2491ccd IDENTICAL/DIFFERENT
 // OFFSET: 0x00A06240/0x1407A5DF0
 void CGTabardModelFrame::ApplyGuildColorFromPlayer() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -100,7 +93,6 @@ void CGTabardModelFrame::ApplyGuildColorFromPlayer() {
     }
 }
 
-// PROVEN: a352dac7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A06290/0x1407A5E60
 void CGTabardModelFrame::Save() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -110,7 +102,6 @@ void CGTabardModelFrame::Save() {
     }
 }
 
-// PROVEN: d785c7bc DIFFERENT/IDENTICAL
 // OFFSET: 0x00A062F0/0x1407A5ED0
 void CGTabardModelFrame::CycleVariation(uint32_t variation, int32_t delta) {
     int32_t count = s_tabardVariationCounts[variation];

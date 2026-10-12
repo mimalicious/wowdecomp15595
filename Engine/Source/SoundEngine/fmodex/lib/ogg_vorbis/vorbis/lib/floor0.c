@@ -47,7 +47,6 @@ typedef struct {
 
 /***********************************************/
 
-// PROVEN: 27323f05 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B49480/0x140919020
 static void floor0_free_info(vorbis_info_floor *i){
   vorbis_info_floor0 *info=(vorbis_info_floor0 *)i;

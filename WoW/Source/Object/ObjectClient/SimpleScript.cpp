@@ -61,7 +61,6 @@ void CSimpleScriptManager::Create() {
     }
 }
 
-// PROVEN: 25adebcc DIFFERENT/IDENTICAL
 // OFFSET: 0x0060BF30/0x140295610
 void CSimpleScriptManager::Destroy() {
     for (uint32_t i = 0; i < s_callbackCount; i++) {
@@ -78,7 +77,6 @@ void CSimpleScriptManager::Destroy() {
     s_instance = NULL;
 }
 
-// PROVEN: 08899fca IDENTICAL/DIFFERENT
 // OFFSET: 0x0060B420/0x140294850
 int32_t CSimpleScriptManager::RegisterCallback(void (*callback)(uint32_t)) {
     uint32_t count = s_callbackCount;
@@ -92,7 +90,6 @@ int32_t CSimpleScriptManager::RegisterCallback(void (*callback)(uint32_t)) {
     return 1;
 }
 
-// PROVEN: 78ccf2ff IDENTICAL/DIFFERENT
 // OFFSET: 0x0060B3D0/0x1402947F0
 void CSimpleScriptManager::UnregisterCallback(void (*callback)(uint32_t)) {
     for (uint32_t i = 0; i < s_callbackCount; i++) {
@@ -172,7 +169,6 @@ int32_t CSimpleScriptManager::CallFunction(uint32_t handle, const SimpleScriptIO
     return 1;
 }
 
-// PROVEN: da5d4460 IDENTICAL/NONE
 // OFFSET: 0x0060B450
 void CSimpleScriptManager::CopyGlobal(const char* name) {
     lua_State* L = FrameScript_GetContext();
@@ -184,7 +180,6 @@ void CSimpleScriptManager::CopyGlobal(const char* name) {
     lua_settop(L, -2);
 }
 
-// PROVEN: a0394a20 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060B4B0/0x140294880
 int32_t CSimpleScriptManager::Execute(const char* script, const char* name) {
     lua_State* L = FrameScript_GetContext();
@@ -210,7 +205,6 @@ int32_t CSimpleScriptManager::Execute(const char* script, const char* name) {
     return 1;
 }
 
-// PROVEN: 2f060677 IDENTICAL/DIFFERENT
 // OFFSET: 0x0060B640/0x140294A90
 uint32_t CSimpleScriptManager::FindFunction(int32_t id) {
     uint32_t bucketIndex = id & this->m_hashMask;

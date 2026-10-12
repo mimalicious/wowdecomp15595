@@ -50,22 +50,18 @@ static uint32_t FloatBits(float value) {
     return *reinterpret_cast<uint32_t*>(&value);
 }
 
-// PROVEN: f52cc1f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CWorldOccluder::Initialize() {
 }
 
-// PROVEN: 7665bf77 IDENTICAL/IDENTICAL
 // OFFSET: 0x007553F0/0x140436830
 CWorldOcclusion::~CWorldOcclusion() {
 }
 
-// PROVEN: f9256b59 IDENTICAL/IDENTICAL
 // OFFSET: 0x00756FD0/0x140438930
 CWorldOcclusion::CWorldOcclusion() {
 }
 
-// PROVEN: 70f4354a IDENTICAL/IDENTICAL
 // OFFSET: 0x00780D80/0x14046E220
 void CWorldOccluder::ClipBufferUpdate(CWorldOcclusion* occlusion, int32_t exterior) {
     occlusion->UpdateBuffer(&this->m_start, exterior);
@@ -128,7 +124,6 @@ void CWorldScene::AddWorldOccluders(CWorldView* view) {
     }
 }
 
-// PROVEN: 9b5556cd IDENTICAL/DIFFERENT
 // OFFSET: 0x00780F20/0x14046E2F0
 void CWorldOccluder::Free() {
     this->m_link.Unlink();
@@ -193,7 +188,6 @@ int32_t CWorldOcclusion::QueryBuffer(const CAaBox& box, uint32_t flags) {
     return 1;
 }
 
-// PROVEN: bf769bea IDENTICAL/NONE
 // OFFSET: 0x0079AB10
 void CWorldOcclusion::Update(const C44Matrix& viewProj, const C44Matrix& proj, const C3Vector& camDir, int32_t horizon) {
     this->m_viewProj = viewProj;
@@ -520,7 +514,6 @@ void CWorldOcclusion::AddVolume(const C3Vector& pos, const C3Vector* verts, int3
     this->m_volumes.Add(1, &volume);
 }
 
-// PROVEN: 156d995d DIFFERENT/IDENTICAL
 // OFFSET: 0x0079C410/0x140490DD0
 void CWorldOcclusion::Clear() {
     for (int32_t i = 0; i < 256; i++) {

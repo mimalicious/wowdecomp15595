@@ -8,7 +8,6 @@ CFrameStrataNode::CFrameStrataNode() {
     this->m_batchDirty = 0;
 }
 
-// PROVEN: 5b7a66a5 IDENTICAL/DIFFERENT
 // OFFSET: 0x004FF430/0x1401441C0
 int32_t CFrameStrataNode::RemoveFrame(CSimpleFrame* frame) {
     if (!frame->m_strataLink.IsLinked()) {

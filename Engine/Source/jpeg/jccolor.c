@@ -82,7 +82,6 @@ typedef my_color_converter * my_cconvert_ptr;
  * Initialize for RGB->YCC colorspace conversion.
  */
 
-// PROVEN: 2184c538 IDENTICAL/NONE
 // OFFSET: 0x00B64390/0x14092E6D0
 static void rgb_ycc_start(j_compress_ptr cinfo) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
@@ -126,7 +125,6 @@ static void rgb_ycc_start(j_compress_ptr cinfo) {
  * offset required on that side.
  */
 
-// PROVEN: a1e6b377 IDENTICAL/NONE
 // OFFSET: 0x00B64460/0x14092E7A0
 static void rgb_ycc_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
@@ -180,7 +178,6 @@ static void rgb_ycc_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMA
  * We assume rgb_ycc_start has been called (we only use the Y tables).
  */
 
-// PROVEN: 18f12c33 IDENTICAL/NONE
 // OFFSET: 0x00B64570/0x14092E8E0
 static void rgb_gray_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
@@ -217,7 +214,6 @@ static void rgb_gray_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIM
  * We assume rgb_ycc_start has been called.
  */
 
-// PROVEN: 99e3db5d IDENTICAL/NONE
 // OFFSET: 0x00B64600/0x14092E9A0
 static void cmyk_ycck_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
@@ -270,7 +266,6 @@ static void cmyk_ycck_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPI
  * The source can be either plain grayscale or YCbCr (since Y == gray).
  */
 
-// PROVEN: ffa52680 IDENTICAL/NONE
 // OFFSET: 0x00B64750/0x14092EB30
 static void grayscale_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   register JSAMPROW inptr;
@@ -297,7 +292,6 @@ static void grayscale_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPI
  * We assume input_components == num_components.
  */
 
-// PROVEN: da8dad0d IDENTICAL/NONE
 // OFFSET: 0x00B647B0/0x14092EBC0
 static void null_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   register JSAMPROW inptr;

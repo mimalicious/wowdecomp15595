@@ -118,7 +118,6 @@ void Sha1::Pump(uint32_t* const hash, const uint8_t* const data) {
     hash[4] += e;
 }
 
-// PROVEN: fa59eb00 IDENTICAL/IDENTICAL
 // OFFSET: 0x00658EA0/0x1402FC310
 void Sha1::Initialize() {
     this->m_size = 0;
@@ -129,7 +128,6 @@ void Sha1::Initialize() {
     this->m_hash[4] = 0xC3D2E1F0;
 }
 
-// PROVEN: 65ab97d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C1600/0x1400FBE70
 void Sha1::Append(const void* _data, uint32_t size) {
     const uint8_t* data = static_cast<const uint8_t*>(_data);
@@ -162,7 +160,6 @@ void Sha1::Append(const void* _data, uint32_t size) {
     }
 }
 
-// PROVEN: 52a31caa IDENTICAL/IDENTICAL
 // OFFSET: 0x004C16B0/0x1400FBF60
 void Sha1::Finalize(uint8_t* const hash) {
     uint8_t size[8];

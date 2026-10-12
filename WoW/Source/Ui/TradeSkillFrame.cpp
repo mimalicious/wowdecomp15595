@@ -147,7 +147,6 @@ TSGrowableArray<TradeSkillInfo*> CGTradeSkillInfo::m_displayList;
 // STATIC: 0x00F4B25C/0x140E3F5E8
 TSGrowableArray<TradeSkillSubClassInfo*> CGTradeSkillInfo::m_subClassList;
 
-// PROVEN: 687535ea IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D180/0x14070B640
 const char* GetInventorySlotToken(int32_t slot) {
     switch (slot) {
@@ -164,7 +163,6 @@ const char* GetInventorySlotToken(int32_t slot) {
     }
 }
 
-// PROVEN: 4b449387 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D1D0/0x14070B690
 static void TradeSkillLinkNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -174,7 +172,6 @@ static void TradeSkillLinkNameCallback(int32_t id, const WOWGUID& guid, void* pa
     SMemFree(param, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: f044a112 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D200/0x14070B6D0
 static void TradeSkillListItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (CGTradeSkillInfo::m_itemsPending && !--CGTradeSkillInfo::m_itemsPending) {
@@ -182,13 +179,11 @@ static void TradeSkillListItemCallback(int32_t id, const WOWGUID& guid, void* pa
     }
 }
 
-// PROVEN: 15569d12 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D220/0x14070B700
 void TradeSkillNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_SKILL_NAME_UPDATE, NULL);
 }
 
-// PROVEN: eb51866f IDENTICAL/NONE
 // OFFSET: 0x0098D230
 void CGTradeSkillInfo::DoTradeSkill(int32_t spellId, uint32_t times) {
     if (spellId == CGTradeSkillInfo::m_recastSpellID) {
@@ -201,7 +196,6 @@ void CGTradeSkillInfo::DoTradeSkill(int32_t spellId, uint32_t times) {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_TRADESKILL_RECAST, NULL);
 }
 
-// PROVEN: daed659a IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D280/0x14070B710
 void CGTradeSkillInfo::StopRecast() {
     if (CGTradeSkillInfo::m_recastSpellID || CGTradeSkillInfo::m_pendingRecastSpellID) {
@@ -211,7 +205,6 @@ void CGTradeSkillInfo::StopRecast() {
     }
 }
 
-// PROVEN: 11f97d09 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D2B0/0x14070B750
 void CGTradeSkillInfo::StopRecast(int32_t spellId) {
     if (spellId == CGTradeSkillInfo::m_recastSpellID) {
@@ -245,7 +238,6 @@ void CGTradeSkillInfo::DoRecast(int32_t spellId) {
     }
 }
 
-// PROVEN: ec18b7d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D390/0x14070B830
 void CGTradeSkillInfo::ActivatePendingRecast(int32_t spellId) {
     if (spellId == CGTradeSkillInfo::m_pendingRecastSpellID) {
@@ -257,7 +249,6 @@ void CGTradeSkillInfo::ActivatePendingRecast(int32_t spellId) {
     CGTradeSkillInfo::m_pendingRecastTimes = 0;
 }
 
-// PROVEN: d2ecce4c IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D960/0x14070BEF0
 void CGTradeSkillInfo::Close() {
     CGTradeSkillInfo::m_spellID = 0;
@@ -287,7 +278,6 @@ SkillLineRec* CGTradeSkillInfo::GetSkillLineRec(int32_t spellId, const uint64_t&
     return NULL;
 }
 
-// PROVEN: 813c8c2f IDENTICAL/UNPROVEN
 // OFFSET: 0x0098DA40/0x14070BFE0
 int32_t CGTradeSkillInfo::GetSelectionIndex() {
     if (!CGTradeSkillInfo::m_selectedSkill) {
@@ -381,7 +371,6 @@ static int32_t QSortSkills(const void* a, const void* b) {
     return 2 * (infoA->m_difficulty > infoB->m_difficulty) - 1;
 }
 
-// PROVEN: 8798667c IDENTICAL/DIFFERENT
 // OFFSET: 0x0098DC50/0x14070C230
 static int32_t QSortSubClasses(const void* a, const void* b) {
     const TradeSkillSubClassInfo* subClassA = *static_cast<TradeSkillSubClassInfo* const*>(a);
@@ -441,7 +430,6 @@ static int32_t QSortSubClasses(const void* a, const void* b) {
     return subClassA->m_itemClass > subClassB->m_itemClass ? 1 : -1;
 }
 
-// PROVEN: 04fc3377 IDENTICAL/UNPROVEN
 // OFFSET: 0x0098DD70/0x14070C3A0
 int32_t CGTradeSkillInfo::GetSubClassIndexFromSkill(uint32_t index) {
     if (index >= CGTradeSkillInfo::m_numDisplayEntries) {
@@ -465,7 +453,6 @@ int32_t CGTradeSkillInfo::GetSubClassIndexFromSkill(uint32_t index) {
     return -1;
 }
 
-// PROVEN: 9b028bbb IDENTICAL/UNPROVEN
 // OFFSET: 0x0098DDD0/0x14070C400
 int32_t CGTradeSkillInfo::IsCollapsedHeader(uint32_t index) {
     if (index >= CGTradeSkillInfo::m_numDisplayEntries) {
@@ -489,7 +476,6 @@ int32_t CGTradeSkillInfo::IsCollapsedHeader(uint32_t index) {
     return 0;
 }
 
-// PROVEN: 061e1dfa IDENTICAL/NONE
 // OFFSET: 0x0098EAA0
 uint32_t CGTradeSkillInfo::GetInvSlotFilter() {
     TradeSkillSubClassInfo* subClass;
@@ -504,7 +490,6 @@ uint32_t CGTradeSkillInfo::GetInvSlotFilter() {
     return CGTradeSkillInfo::m_invSlots & mask;
 }
 
-// PROVEN: 2937bcc1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098EAD0/0x14070D460
 int32_t CGTradeSkillInfo::GetSkillMaxRank() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -516,7 +501,6 @@ int32_t CGTradeSkillInfo::GetSkillMaxRank() {
     return player->GetSkillMaxRank(player->GetSkillIndex(CGTradeSkillInfo::m_skillLineID));
 }
 
-// PROVEN: c029f3bb IDENTICAL/DIFFERENT
 // OFFSET: 0x0098EB30/0x14070D4D0
 int32_t CGTradeSkillInfo::GetSkillModifier() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -606,7 +590,6 @@ bool CGTradeSkillInfo::GetTradeSkillListLink(int32_t spellId, char* buffer, uint
     return true;
 }
 
-// PROVEN: 0a09030e IDENTICAL/UNPROVEN
 // OFFSET: 0x0098F190/0x14070DC50
 void CGTradeSkillInfo::ShutdownGame() {
     for (uint32_t i = 0; i < CGTradeSkillInfo::m_displayList.Count(); i++) {
@@ -915,7 +898,6 @@ bool Profession_FilterSpell(int32_t spellId, int32_t minLevel, int32_t maxLevel,
     return false;
 }
 
-// PROVEN: f68bde1c IDENTICAL/DIFFERENT
 // OFFSET: 0x00990280/0x14070F2D0
 void CGTradeSkillInfo::ClearItemCallbacks() {
     if (!CGTradeSkillInfo::m_itemsPending) {
@@ -1024,7 +1006,6 @@ void CGTradeSkillInfo::FilterAndSortSkills(int32_t resetSubClasses) {
     qsort(CGTradeSkillInfo::m_displayList.m_data, CGTradeSkillInfo::m_numDisplayEntries, sizeof(TradeSkillInfo*), QSortSkills);
 }
 
-// PROVEN: 80c246c1 IDENTICAL/NONE
 // OFFSET: 0x00990590
 void CGTradeSkillInfo::SetSubClassFilter(uint32_t filter, uint32_t index) {
     CGTradeSkillInfo::m_subClassFilter = filter;
@@ -1033,7 +1014,6 @@ void CGTradeSkillInfo::SetSubClassFilter(uint32_t filter, uint32_t index) {
     FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_SKILL_UPDATE, NULL);
 }
 
-// PROVEN: 968e78b9 IDENTICAL/NONE
 // OFFSET: 0x009905C0
 void CGTradeSkillInfo::SetInvSlotFilter(uint32_t filter) {
     CGTradeSkillInfo::m_invTypeFilter = filter;
@@ -1041,7 +1021,6 @@ void CGTradeSkillInfo::SetInvSlotFilter(uint32_t filter) {
     FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_SKILL_UPDATE, NULL);
 }
 
-// PROVEN: 3ffb0ce7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009905F0/0x14070F740
 void CGTradeSkillInfo::SetItemNameFilter(const char* filter) {
     if (filter && !*filter) {
@@ -1073,7 +1052,6 @@ void CGTradeSkillInfo::SetItemNameFilter(const char* filter) {
     FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_SKILL_FILTER_UPDATE, NULL);
 }
 
-// PROVEN: 9ef5f753 IDENTICAL/NONE
 // OFFSET: 0x009906E0
 void CGTradeSkillInfo::SetItemLevelFilter(int32_t minLevel, int32_t maxLevel) {
     if (minLevel != CGTradeSkillInfo::m_itemMinLevelFilter || maxLevel != CGTradeSkillInfo::m_itemMaxLevelFilter) {
@@ -1084,7 +1062,6 @@ void CGTradeSkillInfo::SetItemLevelFilter(int32_t minLevel, int32_t maxLevel) {
     }
 }
 
-// PROVEN: ad900130 IDENTICAL/IDENTICAL
 // OFFSET: 0x00990C50/0x14070FDE0
 void CGTradeSkillInfo::LeaveWorld() {
     CGTradeSkillInfo::ClearItemCallbacks();
@@ -1460,7 +1437,6 @@ void CGTradeSkillInfo::RefreshList(int32_t full) {
     FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_SKILL_UPDATE, NULL);
 }
 
-// PROVEN: 4b2b66bc IDENTICAL/IDENTICAL
 // OFFSET: 0x00991960/0x140710D60
 void CGTradeSkillInfo::SetTradeSkill(int32_t spellId, const uint64_t& guid, const char* link, int32_t skillRank, int32_t skillMaxRank) {
     SkillLineRec* skillLine = CGTradeSkillInfo::GetSkillLineRec(spellId, guid);
@@ -1543,7 +1519,6 @@ void CGTradeSkillInfo::SetTradeSkill(int32_t spellId, const uint64_t& guid, cons
     }
 }
 
-// PROVEN: 25e89724 IDENTICAL/IDENTICAL
 // OFFSET: 0x00991B50/0x140710FA0
 void CGTradeSkillInfo::OpenGuildMemberTradeSkill(const uint64_t& guid, const SkillLine& skillLine) {
     CGTradeSkillInfo::m_playerGuid = WOWGUID::Make(guid);
@@ -1583,7 +1558,6 @@ void CGTradeSkillInfo::OpenGuildMemberTradeSkill(const uint64_t& guid, const Ski
     }
 }
 
-// PROVEN: 7754ddac IDENTICAL/IDENTICAL
 // OFFSET: 0x00991C50/0x1407110B0
 void CGTradeSkillInfo::OpenGuildTradeSkill(int32_t skillLineID) {
     CGTradeSkillInfo::m_playerGuid = WOWGUID::Make(0);

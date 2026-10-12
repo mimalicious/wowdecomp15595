@@ -295,7 +295,6 @@ bool CombatLogFlagsMatch(uint32_t flags, uint32_t mask, uint32_t raidFlags, uint
     return false;
 }
 
-// PROVEN: f32a3c90 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F3660/0x1402765A0
 void CombatLogEntry::SetFailReason(const char* reason) {
     this->m_infoFlags |= 0x2;
@@ -434,55 +433,46 @@ static void PackBool(uint32_t& remaining, char*& cursor, int32_t value) {
     }
 }
 
-// PROVEN: a7ca3f59 IDENTICAL/NONE
 // OFFSET: 0x005F38C0
 bool IsCombatTextActiveUnit(WOWGUID guid) {
     return s_combatTextActiveUnit == guid;
 }
 
-// PROVEN: 582f5d14 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F38F0/0x140276660
 void SendToCombatText(int32_t type, const char* text, int32_t amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d", s_combatTextTypes[type], text, amount);
 }
 
-// PROVEN: a0b80af3 IDENTICAL/NONE
 // OFFSET: 0x005F3920
 void SendToCombatText(int32_t type, const char* text, int32_t amount, int32_t overflow) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d%d", s_combatTextTypes[type], text, amount, overflow);
 }
 
-// PROVEN: 995ba76b IDENTICAL/NONE
 // OFFSET: 0x005F3950
 void SendToCombatText(int32_t type, int32_t amount, int32_t overflow) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%d%d", s_combatTextTypes[type], amount, overflow);
 }
 
-// PROVEN: c5148706 IDENTICAL/NONE
 // OFFSET: 0x005F3980
 void SendToCombatText(int32_t type, int32_t amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%d", s_combatTextTypes[type], amount);
 }
 
-// PROVEN: 0e1c57f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F39B0/0x1402766A0
 void SendToCombatText(int32_t type, float amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%f", s_combatTextTypes[type], amount);
 }
 
-// PROVEN: b7196b79 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F39E0/0x1402766D0
 void SendToCombatText(int32_t type, const char* text) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s", s_combatTextTypes[type], text);
 }
 
-// PROVEN: 928958aa IDENTICAL/NONE
 // OFFSET: 0x005F3A10
 void SendToCombatText(int32_t type) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s", s_combatTextTypes[type]);
 }
 
-// PROVEN: 26502f04 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F3BC0/0x1402785A0
 void UnitCombatLogProcGo(const WOWGUID& casterGuid, const SpellRec* spell) {
     if (s_combatTextActiveUnit == casterGuid && (spell->m_attributesExF & 0x40)) {
@@ -1126,7 +1116,6 @@ bool SpellHasLearnSpellEffect(const SpellRec* spell) {
     return false;
 }
 
-// PROVEN: aaebc19f DIFFERENT/IDENTICAL
 // OFFSET: 0x005F4FB0/0x140278490
 bool SpellHasOpenLockEffect(const SpellRec* spell) {
     uint32_t count;
@@ -1538,7 +1527,6 @@ void SendCombatLogEvents() {
     lua_settop(L, -2);
 }
 
-// PROVEN: 2e2f2179 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F5E60/0x140279680
 PendingCombatLogData* GetPendingCombatLogData(CombatLogEntry* entry, const WOWGUID& guid, uint32_t mask) {
     PendingCombatLogData* data = s_freePendingData.Head();
@@ -1801,7 +1789,6 @@ void CombatLogEntry::CancelPendingCallbacks() {
     }
 }
 
-// PROVEN: 6fd5fcb3 IDENTICAL/NONE
 // OFFSET: 0x005F6AA0/0x14027A610
 void CombatLogEntry::SetSource(const WOWGUID& guid) {
     this->m_sourceGuid = guid;
@@ -3536,7 +3523,6 @@ int32_t CombatLog::HandlePeriodicAuraLog(CDataStore* msg, int32_t timeOffset) {
     return 1;
 }
 
-// PROVEN: 986a7bfb IDENTICAL/NONE
 // OFFSET: 0x005F98C0
 static int32_t Packet_SMSG_SPELL_PERIODIC_AURA_LOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     return CombatLog::HandlePeriodicAuraLog(msg, 0);
@@ -3592,7 +3578,6 @@ void UnitCombatLogInitialize() {
     ClientServices::SetMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, Packet_SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, NULL);
 }
 
-// PROVEN: 678b4a9d IDENTICAL/UNPROVEN
 // OFFSET: 0x005F9BA0/0x14027EA60
 void UnitCombatLogShutdown() {
     UnitCombatLogReset();
@@ -3604,7 +3589,6 @@ void UnitCombatLogShutdown() {
     ClientServices::ClearMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE);
 }
 
-// PROVEN: 7e5f10bf IDENTICAL/IDENTICAL
 // OFFSET: 0x005FF760/0x140283870
 bool ShouldShowFeedback(const ATTACKROUNDINFO& info) {
     return !info.m_meleeSpellId || info.m_victimState == 1;

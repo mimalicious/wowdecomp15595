@@ -10,7 +10,6 @@
 // STATIC: 0x00D179FC/0x140BD2B40
 static const char* s_minigameNames[] = { "TicTacToe", NULL };
 
-// PROVEN: a1c93ff7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A09FD0/0x1407AAFF0
 static int32_t Script_GetMinigameType(lua_State* L) {
     CMinigame_C* minigame = CGMinigameInfo::m_minigame;
@@ -24,7 +23,6 @@ static int32_t Script_GetMinigameType(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 4892b6a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0A020/0x1407AB040
 static int32_t Script_MakeMinigameMove(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -42,7 +40,6 @@ static int32_t Script_MakeMinigameMove(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 41062e9b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0A0C0/0x1407AB0E0
 static int32_t Script_GetMinigameState(lua_State* L) {
     return CGMinigameInfo::m_minigame ? CGMinigameInfo::m_minigame->PushStateToLua(L) : 0;
@@ -55,7 +52,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMinigameState", &Script_GetMinigameState },
 };
 
-// PROVEN: 16239436 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A0A0E0/0x1407AB100
 void MinigameInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -63,7 +59,6 @@ void MinigameInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: fc4c8156 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A0A110/0x1407AB150
 void MinigameInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

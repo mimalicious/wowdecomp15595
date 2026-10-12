@@ -9,7 +9,6 @@ namespace FMOD
 /*$ preserve end $*/
 
 
-// PROVEN: b0108691 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BC10/0x140837040
 FMOD_RESULT DSP::release()
 {
@@ -45,7 +44,6 @@ FMOD_RESULT DSP::getSystemObject(System **system)
 }
 
 
-// PROVEN: 914d4ad2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BC40/0x140837070
 FMOD_RESULT DSP::addInput(DSP *target)
 {
@@ -81,7 +79,6 @@ FMOD_RESULT DSP::disconnectFrom(DSP *target)
 }
 
 
-// PROVEN: bf08f757 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BC70/0x1408370A0
 FMOD_RESULT DSP::disconnectAll(bool inputs, bool outputs)
 {
@@ -100,7 +97,6 @@ FMOD_RESULT DSP::disconnectAll(bool inputs, bool outputs)
 }
 
 
-// PROVEN: fbcf5c3f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BCA0/0x1408370E0
 FMOD_RESULT DSP::remove()
 {
@@ -170,7 +166,6 @@ FMOD_RESULT DSP::getInput(int index, DSP **input)
 }
 
 
-// PROVEN: db4f0341 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BCD0/0x140837110
 FMOD_RESULT DSP::getOutput(int index, DSP **output)
 {
@@ -325,7 +320,6 @@ FMOD_RESULT DSP::getOutputLevels(int index, FMOD_SPEAKER speaker, float *levels,
 }
 
 
-// PROVEN: 6e9b69c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BD00/0x140837150
 FMOD_RESULT DSP::setActive(bool active)
 {
@@ -361,7 +355,6 @@ FMOD_RESULT DSP::getActive(bool *active)
 }
 
 
-// PROVEN: 878c134d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BD40/0x140837190
 FMOD_RESULT DSP::setBypass(bool bypass)
 {
@@ -412,7 +405,6 @@ FMOD_RESULT DSP::reset()
 }
 
 
-// PROVEN: 0e8ec2ac IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BD80/0x1408371D0
 FMOD_RESULT DSP::setParameter(int index, float value)
 {
@@ -584,7 +576,6 @@ FMOD_RESULT DSP::setUserData(void *_userdata)
 }
 
 
-// PROVEN: 9b6701ec IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7BDB0/0x140837210
 FMOD_RESULT DSP::getUserData(void **_userdata)
 {

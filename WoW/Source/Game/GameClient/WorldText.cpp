@@ -104,19 +104,16 @@ WORLDTEXTSTRING::~WORLDTEXTSTRING() {
     }
 }
 
-// PROVEN: 2f4b2d6e IDENTICAL/IDENTICAL
 // OFFSET: 0x004E1ED0/0x140511EA0
 uint32_t WorldTextGetType(WORLDTEXTSTRING* text) {
     return text->m_type;
 }
 
-// PROVEN: 4f7bd00a IDENTICAL/NONE
 // OFFSET: 0x004E1E80
 float WORLDTEXTSTRING::CalculateAscendOffset(uint32_t elapsed) {
     return static_cast<float>(elapsed) / static_cast<float>(s_worldTextTypes[this->m_type].m_duration) * s_worldTextTypes[this->m_type].m_ascendDistance;
 }
 
-// PROVEN: 908329e4 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E1EE0/0x140122AF0
 float WorldTextGetAscendDistance(uint32_t type) {
     return s_worldTextTypes[type].m_ascendDistance;
@@ -204,7 +201,6 @@ void WORLDTEXTSTRING::CalculateNewColor(uint32_t elapsed) {
     GxuFontAddShadow(this->m_string, shadowColor, s_shadowOffset);
 }
 
-// PROVEN: 17a17ecf IDENTICAL/IDENTICAL
 // OFFSET: 0x004E2380/0x140123130
 void WorldTextShutdown() {
     if (s_worldTextFont) {
@@ -222,7 +218,6 @@ void WorldTextShutdown() {
     }
 }
 
-// PROVEN: a706bdb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E23F0/0x1401231D0
 void WorldTextDelete(WORLDTEXTSTRING* text) {
     text->~WORLDTEXTSTRING();
@@ -407,7 +402,6 @@ bool WORLDTEXTSTRING::Update(uint32_t time) {
     return true;
 }
 
-// PROVEN: a1ac84d7 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E2EB0/0x140123DB0
 void WORLDTEXTSTRING::AddIcon() {
     if (this->m_pvpRank < 5) {
@@ -448,7 +442,6 @@ bool WorldTextUpdate(WORLDTEXTSTRING* text, uint32_t time) {
     return text->Update(time);
 }
 
-// PROVEN: 23ca9f77 IDENTICAL/NONE
 // OFFSET: 0x004E2FD0
 void WorldTextAddIcon(WORLDTEXTSTRING* text) {
     if (text) {
@@ -553,7 +546,6 @@ void WorldTextRenderBatch() {
     g_theGxDevicePtr->XformSetProjection(projection);
 }
 
-// PROVEN: 700d254b IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0520/0x1401208C0
 void PlayerNameRenderWorldText() {
     WorldTextRenderBatch();

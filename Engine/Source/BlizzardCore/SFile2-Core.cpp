@@ -90,12 +90,10 @@ class StreamingRequestHandler : public Blizzard::Streaming::RequestHandler {
 // STATIC: 0x00EB4098/0x140D9FF38
 static StreamingRequestHandler* s_streamingHandler;
 
-// PROVEN: 4aee979d IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void SFile::LogFileAccess(SFileImpl* file, int32_t mode, bool flag) {
 }
 
-// PROVEN: 16424743 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4EC0/0x140499B40
 static void BlizzardAssertCallback(const char* expression, const char* message, const char* fileName, uint32_t lineNumber) {
     if (!*message) {
@@ -111,13 +109,11 @@ int32_t SFile::Initialize() {
     return 1;
 }
 
-// PROVEN: 157c7100 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4F20/0x140499BA0
 static void SignatureErrorCallback(const char* name, const char* message) {
     SErrDisplayError(STORM_ERROR_FILE_CORRUPTED, name, -4, message, 0, 1, 0, 0x11111111);
 }
 
-// PROVEN: a4589ec1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4F50/0x140499BE0
 int32_t STORMAPI SFile::CloseArchive(SArchive* archive) {
     int32_t result = Blizzard::Mopaq::SFileCloseArchive(archive->m_archive);
@@ -125,13 +121,11 @@ int32_t STORMAPI SFile::CloseArchive(SArchive* archive) {
     return result;
 }
 
-// PROVEN: 69b9fa80 IDENTICAL/NONE
 // OFFSET: 0x007A4F80
 void SFile::DisableSFileCheckDisk() {
     System_SFile2::s_checkDisk = false;
 }
 
-// PROVEN: eacfce5b IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4F90/0x140499C20
 int32_t STORMAPI SFile::EnableDirectAccess(uint32_t flags) {
     System_SFile2::s_directAccess = 0;
@@ -149,7 +143,6 @@ int32_t STORMAPI SFile::EnableDirectAccess(uint32_t flags) {
     return 1;
 }
 
-// PROVEN: 65080a7a IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4FD0/0x140499C60
 void STORMAPI SFile::ConvertOggToWavInBackground(const char* name) {
     if (OggToWavConversion::s_ConvertOggCallback) {
@@ -185,7 +178,6 @@ int32_t STORMAPI SFile::FileRangeIsLocal(SFileImpl* file, int64_t offset, uint32
     return Blizzard::Streaming::IsLocal(file->m_stream, offset, size);
 }
 
-// PROVEN: db1b75ff IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4FF0/0x140499C80
 bool STORMAPI SFile::FileGetIsLocalAmount(const char* name, int64_t& local, int64_t& total) {
     return Blizzard::Mopaq::SFileGetIsLocalAmount(name, local, total);
@@ -289,7 +281,6 @@ int32_t STORMAPI SFile::MakeFileRangeLocal(SFileImpl* file, int32_t queue, bool 
     return Blizzard::Streaming::MakeLocal(file->m_stream, offset, size, NULL, NULL);
 }
 
-// PROVEN: b377e194 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A50A0/0x140499D20
 int32_t STORMAPI SFile::FileHasHigherPriority(const char* name, const char* extension, uint32_t size) {
     char buffer[1024];
@@ -300,7 +291,6 @@ int32_t STORMAPI SFile::FileHasHigherPriority(const char* name, const char* exte
     return Blizzard::Mopaq::SFileHasHigherPriority(name, buffer) != 0;
 }
 
-// PROVEN: b04b438a IDENTICAL/DIFFERENT
 // OFFSET: 0x007A5100/0x140499D90
 int32_t STORMAPI SFile::GetActualFileName(SFileImpl* file, char* buffer, uint32_t size) {
     const char* name = file->m_actualName;
@@ -314,7 +304,6 @@ int32_t STORMAPI SFile::GetActualFileName(SFileImpl* file, char* buffer, uint32_
     return 1;
 }
 
-// PROVEN: 4c74c8bd IDENTICAL/NONE
 // OFFSET: 0x007A51E0/0x140499E60
 uint32_t STORMAPI SFile::GetFileCompressedSize(SFileImpl* file, uint32_t* sizeHigh) {
     switch (file->m_type) {
@@ -330,14 +319,12 @@ uint32_t STORMAPI SFile::GetFileCompressedSize(SFileImpl* file, uint32_t* sizeHi
     }
 }
 
-// PROVEN: 9ab8cf17 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5130/0x140499DC0
 int32_t STORMAPI SFile::GetBasePath(char* path, uint32_t size) {
     Blizzard::String::Copy(path, SFile::m_basePath, size);
     return 1;
 }
 
-// PROVEN: a37adce2 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5160/0x140499DE0
 const char* SFile::GetDataPath() {
     return System_SFile2::s_dataPath;
@@ -406,7 +393,6 @@ int32_t STORMAPI SFile::List(SArchive* archive, int32_t (*callback)(const char* 
     return result;
 }
 
-// PROVEN: 2fa807a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A52F0/0x140499F90
 bool STORMAPI SFile::DeleteArchive(const char* path) {
     bool result = Blizzard::File::Delete(path);
@@ -504,13 +490,11 @@ int32_t STORMAPI SFile::OpenPathAsArchive(SArchive* archive, const char* path, i
 
 
 
-// PROVEN: ccac0e90 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5590/0x14049A2D0
 void STORMAPI SFile::EnableHash(bool enable) {
     System_SFile2::s_useOldFindFile = !enable;
 }
 
-// PROVEN: 8c0e90a1 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A55B0/0x14049A2E0
 int32_t STORMAPI SFile::SetBasePath(const char* path) {
     Blizzard::String::Copy(SFile::m_basePath, path, sizeof(((SFile*)0)->m_basePath));
@@ -529,7 +513,6 @@ int32_t STORMAPI SFile::SetBasePath(const char* path) {
     return 1;
 }
 
-// PROVEN: d5c07e81 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A5620/0x14049A350
 int32_t STORMAPI SFile::SetDataPath(const char* path) {
     Blizzard::String::Copy(System_SFile2::s_dataPath, path, sizeof(System_SFile2::s_dataPath));
@@ -546,7 +529,6 @@ int32_t STORMAPI SFile::SetDataPath(const char* path) {
     return 1;
 }
 
-// PROVEN: 9e1abd79 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A5680/0x14049A3B0
 int32_t STORMAPI SFile::SetDataPathAlternate(const char* path) {
     Blizzard::String::Copy(System_SFile2::s_dataPath2, path, sizeof(System_SFile2::s_dataPath2));
@@ -614,14 +596,12 @@ int32_t STORMAPI SFile::GetFilePointer(SFileImpl* file) {
     return result;
 }
 
-// PROVEN: ba8e3f5b IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5800/0x14049A520
 int32_t STORMAPI SFile::Unload(void* data) {
     Blizzard::Memory::Free(data);
     return 1;
 }
 
-// PROVEN: 3f66fe39 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A5820/0x14049A540
 int32_t System_SFile2::OldFindFile(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type) {
     Blizzard::File::FileInfo info;
@@ -713,7 +693,6 @@ int32_t System_SFile2::OldFindFile(const char* name, char* path, uint32_t size, 
     return false;
 }
 
-// PROVEN: 5ebfbe9f IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5A40/0x14049A7F0
 int32_t STORMAPI SFileAuthenticateArchiveEx(SArchive* archive, uint32_t* result, const uint8_t* modulus, uint32_t modulusSize, const uint8_t* exponent, uint32_t exponentSize) {
     Blizzard::Mopaq::AuthResult authResult;
@@ -727,13 +706,11 @@ int32_t STORMAPI SFileAuthenticateArchiveEx(SArchive* archive, uint32_t* result,
     return success != 0;
 }
 
-// PROVEN: df5c91e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5A90/0x14049A860
 int32_t STORMAPI SFileCloseArchive(SArchive* archive) {
     return Blizzard::Mopaq::SFileCloseArchive(reinterpret_cast<System_SFile::ARCHIVEREC*>(archive)) != 0;
 }
 
-// PROVEN: 40c4376b IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5AB0/0x14049A880
 int32_t STORMAPI SFile::IsArchiveComplete(SArchive* archive) {
     if (Blizzard::Streaming::IsStreamingMode()) {
@@ -743,7 +720,6 @@ int32_t STORMAPI SFile::IsArchiveComplete(SArchive* archive) {
     return Blizzard::Mopaq::IsArchiveComplete(archive->m_archive);
 }
 
-// PROVEN: 1ededb30 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5AF0/0x14049A8C0
 int32_t STORMAPI SFileLoadFileEx(SArchive* archive, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags, SOVERLAPPED* overlapped) {
     bool result = Blizzard::Mopaq::SFileLoadFile(reinterpret_cast<System_SFile::ARCHIVEREC*>(archive), name, data, size, extra, flags);
@@ -755,7 +731,6 @@ int32_t STORMAPI SFileLoadFileEx(SArchive* archive, const char* name, void** dat
     return result != 0;
 }
 
-// PROVEN: bb1edc7e IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5B40/0x14049A900
 int32_t STORMAPI SFileOpenArchive(const char* path, int32_t priority, uint32_t flags, SArchive** archive) {
     System_SFile::ARCHIVEREC* result;
@@ -769,7 +744,6 @@ int32_t STORMAPI SFileOpenArchive(const char* path, int32_t priority, uint32_t f
     return 0;
 }
 
-// PROVEN: d10fa8cf IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5B90/0x14049A940
 int32_t STORMAPI SFileUnloadFile(void* data) {
     return Blizzard::Mopaq::SFileUnloadFile(data) != 0;
@@ -833,23 +807,19 @@ void StreamingRequestHandler::Queue(Blizzard::Storage::Request* request) {
     request->OnWriteComplete(false);
 }
 
-// PROVEN: 5002475f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A332C0/0x1404BDD20
 bool StreamingRequestHandler::Start(bool paused) {
     return true;
 }
 
-// PROVEN: 9cc0a9d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void StreamingRequestHandler::Stop() {
 }
 
-// PROVEN: 58fa913d IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void StreamingRequestHandler::Pause() {
 }
 
-// PROVEN: 1c82bf83 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void StreamingRequestHandler::Resume() {
 }
@@ -871,7 +841,6 @@ int32_t STORMAPI SFile::InitializeStreaming(const char* mfilPath, const char* da
     return 0;
 }
 
-// PROVEN: 5f86426a IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5BB0/0x14049A960
 void SFile::ShutdownStreaming() {
     if (SFile::IsStreamingDataReady()) {
@@ -882,13 +851,11 @@ void SFile::ShutdownStreaming() {
     }
 }
 
-// PROVEN: f6c844bf IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5BE0/0x14049A9A0
 int32_t SFile::IsStreamingMode() {
     return Blizzard::Streaming::IsStreamingMode();
 }
 
-// PROVEN: 9a7a04ca IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5BF0/0x14049A9C0
 int32_t STORMAPI SFile::IsPatchFile(SFileImpl* file) {
     if (!file->m_file) {
@@ -898,13 +865,11 @@ int32_t STORMAPI SFile::IsPatchFile(SFileImpl* file) {
     return Blizzard::Mopaq::SFileIsPatchFile(file->m_file);
 }
 
-// PROVEN: 4812a33f IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5C20/0x14049A9F0
 const char* SFile::GetErrorDetails() {
     return Blizzard::Debug::ErrorStackAsText(Blizzard::File::GetLastErrorStack());
 }
 
-// PROVEN: b683909c IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5C30/0x14049AA10
 int32_t SFile::IsBackgroundStreamingInProgress() {
     return BGLoading::IsStreamingInProgress();
@@ -915,32 +880,27 @@ float SFile::GetStreamingBandwidth() {
     return BGLoading::GetBandwidth();
 }
 
-// PROVEN: b294fc61 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5C40/0x14049AA30
 double SFile::GetBGStreamingDownloadedPercentage() {
     return BGLoading::GetDownloadedPercentage();
 }
 
-// PROVEN: ab5e6376 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5C50/0x14049AA40
 void STORMAPI SFile::PauseBackgroundStreaming(bool pause) {
     BGLoading::Pause(pause);
 }
 
-// PROVEN: 486e103e IDENTICAL/NONE
 // OFFSET: 0x007A5C70
 void STORMAPI SFile::InitializeRepair(const char* path) {
     Blizzard::Repair::SetRepairReportCallbacks(NULL, Tracker::RepairReportFail, Tracker::RepairReportSuccess);
 }
 
-// PROVEN: 89a1fc5f IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5C90/0x14049AA70
 int32_t SFileClearBlockTableMD5s() {
     System_SFile::ClearAllFileFlags();
     return 1;
 }
 
-// PROVEN: b32b47a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5CA0/0x14049AA90
 int32_t STORMAPI SFileSetFileBlockEntryMD5(const char* name, const MD5& md5) {
     Blizzard::Util::Digest<16> digest;
@@ -948,7 +908,6 @@ int32_t STORMAPI SFileSetFileBlockEntryMD5(const char* name, const MD5& md5) {
     return Blizzard::Mopaq::SetFileSignature(name, digest) != 0;
 }
 
-// PROVEN: efe94da0 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5CE0/0x14049AAD0
 void STORMAPI SFileSetSignatureCallbacks(int32_t enable) {
     Blizzard::Mopaq::SetSignatureCheckMode(enable);
@@ -958,25 +917,21 @@ void STORMAPI SFileSetSignatureCallbacks(int32_t enable) {
     }
 }
 
-// PROVEN: b795a6f5 IDENTICAL/UNPROVEN
 // OFFSET: 0x007A5D10/0x14049AB00
 int32_t STORMAPI SEnumProcessesByName(const char* name, void (*callback)(const char*, uint32_t, void*), void* param) {
     return Blizzard::Process::EnumProcessesByName(name, callback, param) != 0;
 }
 
-// PROVEN: 010054ff IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5D40/0x14049AB20
 void STORMAPI SFile::SetTrial(bool trial) {
     System_SFile2::s_trial = trial;
 }
 
-// PROVEN: 293f67ad IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5D50/0x14049AB30
 int32_t SFile::IsTrial() {
     return System_SFile2::s_trial;
 }
 
-// PROVEN: a3bca4d0 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A5D80/0x14049AB60
 void SFile::Destroy() {
     System_SFile2::CacheBlock* block = s_cacheBlocks;
@@ -1053,7 +1008,6 @@ SFileLock::~SFileLock() {
     Blizzard::Lock::MutexDestroy(this->m_mutex);
 }
 
-// PROVEN: c0eb6753 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A6230/0x14049B1E0
 void STORMAPI SFile::SetReadFatal(bool fatal) {
     static_cast<System_SFile2::SFileFatalInfo&>(System_SFile2::s_fatalInfo).m_fatal = fatal;
@@ -1186,7 +1140,6 @@ int32_t STORMAPI SFile::ReadAtPosition(SFileImpl* file, void* buffer, uint32_t o
     return ReadFileInternal(file, buffer, count, offset, bytesRead);
 }
 
-// PROVEN: 880ef8a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A6600/0x14049B610
 int32_t STORMAPI SFileCloseFile(SFileImpl* file) {
     if (file) {
@@ -1236,7 +1189,6 @@ bool System_SFile2::ScanDirForFileSystemHash(const char* directory) {
     return Blizzard::File::ProcessDirFast(path, &cookie, Blizzard::Streaming::ScanDirectoryForManifest, false);
 }
 
-// PROVEN: e855b34d IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8350/0x14049DDA0
 void System_SFile2::BuildFileSystemHash() {
     Blizzard::String::Copy(s_hashedBasePath, SFile::m_basePath, sizeof(s_hashedBasePath));
@@ -1324,7 +1276,6 @@ int32_t System_SFile2::HashFindFile(const char* name, char* path, uint32_t size,
     return found;
 }
 
-// PROVEN: e3289ab5 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8750/0x14049E3B0
 int32_t System_SFile2::FindFile(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type, uint32_t* fileSize, System_SFile::ARCHIVEREC** archive) {
     flags |= s_directAccess;
@@ -1369,7 +1320,6 @@ int32_t System_SFile2::FindFile(const char* name, char* path, uint32_t size, uin
     return 0;
 }
 
-// PROVEN: f3094e89 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8860/0x14049E3B0
 int32_t STORMAPI SFile::FileExistsEx(const char* name, uint32_t flags) {
     char path[260];
@@ -1448,7 +1398,6 @@ fail:
     return 0;
 }
 
-// PROVEN: 3148e2ff IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8AF0/0x14049E860
 int32_t STORMAPI SFile::FileExists(const char* name) {
     char path[260];
@@ -1491,19 +1440,16 @@ int32_t STORMAPI SFile::ReadFile(SArchive* archive, const char* name, void** dat
     return 1;
 }
 
-// PROVEN: 0f279594 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8C30/0x14049E9E0
 int32_t STORMAPI SFile::LoadFile(const char* name, void** data, uint32_t* size, uint32_t extra) {
     return SFile::ReadFile(NULL, name, data, size, extra, 0);
 }
 
-// PROVEN: 8c3d601c IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8C50/0x14049EA10
 int32_t STORMAPI SFileOpenFile(const char* name, SFileImpl** result) {
     return SFile::OpenEx(NULL, name, 0, result);
 }
 
-// PROVEN: 9b884dec IDENTICAL/IDENTICAL
 // OFFSET: 0x007A8C70/0x14049EA20
 int32_t STORMAPI SFile::IsPatchFile(const char* name) {
     SFileImpl* file;
@@ -1548,7 +1494,6 @@ int32_t STORMAPI SFile::FileIsLocal(const char* name) {
     return result;
 }
 
-// PROVEN: 38e7cbd5 IDENTICAL/UNPROVEN
 // OFFSET: 0x0079FFD0/0x140495B20
 bool SFile::IsFileCompletelyLocal(const char* name) {
     int64_t local;
@@ -1635,13 +1580,11 @@ System_SFile2::ReportCallback::~ReportCallback() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
-// PROVEN: b8e9f132 IDENTICAL/NONE
 // OFFSET: 0x007FD0B0
 int32_t System_SFile2::ReportCallback::GetTimeout() {
     return this->m_timeout;
 }
 
-// PROVEN: 25db3799 IDENTICAL/NONE
 // OFFSET: 0x007A6760
 bool System_SFile2::ReportCallback::ShouldBlock() {
     return this->m_shouldBlock;
@@ -1653,7 +1596,6 @@ bool System_SFile2::ReportCallback::ReceivedData(const void* data, int32_t size)
     return true;
 }
 
-// PROVEN: e2dca4d8 IDENTICAL/NONE
 // OFFSET: 0x007A4D90
 void System_SFile2::ReportCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     Blizzard::Lock::EventSet(this->m_event);
@@ -1670,7 +1612,6 @@ void SFile::SendBuildReport(int32_t build) {
     Blizzard::Lock::EventWaitForever(callback.m_event);
 }
 
-// PROVEN: 21c522d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A6870/0x14049B7C0
 void SFile::ReportManifestURL(const char* url) {
     int32_t build = GetBuildFromURL(url);
@@ -1680,7 +1621,6 @@ void SFile::ReportManifestURL(const char* url) {
     }
 }
 
-// PROVEN: 35f54d3b UNPROVEN/IDENTICAL
 // OFFSET: 0x007A6890/0x14049B7E0
 void SFile::EnableBuildReports() {
     Blizzard::Streaming::s_processUrlFunc = ReportManifestURL;

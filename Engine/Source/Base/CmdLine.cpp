@@ -21,13 +21,11 @@ static const _ARGLIST s_argList[] = {
     { SCMD_TYPE_BOOL, CMD_NO_WARNINGS, "nowarnings", NULL },
 };
 
-// PROVEN: 2ca58742 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871F70/0x1405A8250
 int32_t CmdLineGetBool(CMDOPT opt) {
     return SCmdGetBool(opt);
 }
 
-// PROVEN: 34992536 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871F80/0x1405A8260
 const char* CmdLineGetString(CMDOPT opt) {
     // STATIC: 0x00EC6A10/0x140DB8D10
@@ -37,7 +35,6 @@ const char* CmdLineGetString(CMDOPT opt) {
     return buffer;
 }
 
-// PROVEN: 149f747b DIFFERENT/IDENTICAL
 // OFFSET: 0x00871FA0/0x1405A8290
 int32_t CmdLineProcess() {
     SCmdRegisterArgList(s_argList, sizeof(s_argList) / sizeof(s_argList[0]));

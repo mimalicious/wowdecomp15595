@@ -239,19 +239,16 @@ static float s_speakerMixLFE;
 // STATIC: 0x00E4E2B8
 SE3SoundBus SE3::sm_aSoundBus[SE3BUS_LAST];
 
-// PROVEN: 1e5dc8b5 IDENTICAL/NONE
 // OFFSET: 0x00705520/0x1403D25E0
 static void* F_CALLBACK FSoundAllocCallback(unsigned int size, FMOD_MEMORY_TYPE type) {
     return SMemAlloc(size, "FMod FSoundAllocCallback", 0, 0);
 }
 
-// PROVEN: 0b897dc7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00705540/0x1403D2600
 static void* F_CALLBACK FSoundReallocCallback(void* ptr, unsigned int size, FMOD_MEMORY_TYPE type) {
     return SMemReAlloc(ptr, size, "FMod FSoundReallocCallback", 0, 0);
 }
 
-// PROVEN: 30c4582c IDENTICAL/IDENTICAL
 // OFFSET: 0x00705560/0x1403D2620
 static void F_CALLBACK FSoundFreeCallback(void* ptr, FMOD_MEMORY_TYPE type) {
     SMemFree(ptr, "FMod FSoundFreeCallback", 0, 0);
@@ -281,7 +278,6 @@ static float F_CALLBACK RolloffCallback(FMOD_CHANNEL* channel, float distance) {
     return rolloff;
 }
 
-// PROVEN: 85d8f425 IDENTICAL/IDENTICAL
 // OFFSET: 0x00705630/0x1403D26E0
 void SE3::CleanUpFMODGameSystem() {
     FMOD::System* system = SE3::sm_pGameSystem;
@@ -293,7 +289,6 @@ void SE3::CleanUpFMODGameSystem() {
     }
 }
 
-// PROVEN: fc528699 IDENTICAL/IDENTICAL
 // OFFSET: 0x00705660/0x1403D2720
 void SE3::SetListenerAttributes(const C3Vector& position, const C3Vector& forward, const C3Vector& up, const C3Vector* velocity) {
     if (SE3::sm_pGameSystem) {
@@ -301,7 +296,6 @@ void SE3::SetListenerAttributes(const C3Vector& position, const C3Vector& forwar
     }
 }
 
-// PROVEN: 7146445b IDENTICAL/IDENTICAL
 // OFFSET: 0x00705690/0x1403D2750
 FMOD_RESULT SE3::GetListenerPosition(C3Vector* position) {
     return SE3::sm_pGameSystem->get3DListenerAttributes(0, reinterpret_cast<FMOD_VECTOR*>(position), NULL, NULL, NULL);
@@ -410,7 +404,6 @@ static int32_t GetDownloadPriority(SE3BUS bus) {
     return 6;
 }
 
-// PROVEN: 88077c2c DIFFERENT/IDENTICAL
 // OFFSET: 0x00705940/0x1403D2C40
 void SE3::SetAttachCustomDSPChainCallback(SE3SoundKitObject* sko, void (*callback)(void*, char*), const char* name) {
     if (sko && callback && name) {
@@ -420,7 +413,6 @@ void SE3::SetAttachCustomDSPChainCallback(SE3SoundKitObject* sko, void (*callbac
     }
 }
 
-// PROVEN: 92cdefe8 IDENTICAL/IDENTICAL
 // OFFSET: 0x007059B0/0x1403D2CD0
 void SE3::SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel* channel) {
     if (!sko || !channel) {
@@ -466,7 +458,6 @@ void SE3SoundKitObject::Set3DPosition(const C3Vector& position) {
     }
 }
 
-// PROVEN: f7a93af2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00705B40/0x140835F40
 int32_t SE3SoundKitObject::IsPlaying() {
     bool playing = false;
@@ -545,7 +536,6 @@ uint32_t SE3::GetModeFlags(const C3Vector* position, const SE3SoundKitDef* def, 
     return mode;
 }
 
-// PROVEN: becf80a0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00705CA0/0x1403D32F0
 int32_t SE3::GetNumOutputDrivers_Cached(FMOD::System* system) {
     int32_t numDrivers = 0;
@@ -614,7 +604,6 @@ int32_t SE3::GetInputDriverName(int32_t index, char* name, int32_t nameLength, F
     return 1;
 }
 
-// PROVEN: eb790341 IDENTICAL/IDENTICAL
 // OFFSET: 0x00705E80/0x1403D3340
 int32_t SE3::GetOutputDriverName_Cached(int32_t index, char* name, int32_t nameLength, FMOD::System* system) {
     return SE3::GetOutputDriverName(index, name, nameLength, system);
@@ -635,13 +624,11 @@ int32_t SE3::GetNumInputDrivers(FMOD::System* system) {
     return numDrivers + 1;
 }
 
-// PROVEN: 5c41f020 IDENTICAL/IDENTICAL
 // OFFSET: 0x00705EC0/0x1403D3350
 int32_t SE3::GetInputDriverName_Cached(int32_t index, char* name, int32_t nameLength, FMOD::System* system) {
     return SE3::GetInputDriverName(index, name, nameLength, system);
 }
 
-// PROVEN: f6c72a34 IDENTICAL/IDENTICAL
 // OFFSET: 0x00705ED0/0x1403D3360
 int32_t SE3::IsChatSoundInitialized() {
     return SE3::sm_bCaptureInitialized;
@@ -666,19 +653,16 @@ float SE3::SoundBusGetSuppressedVolumeScalar(SE3BUS bus, uint32_t uid) {
     return SE3::SoundBusGetVolume(bus) * scalar;
 }
 
-// PROVEN: bbaf56d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00705F80/0x1403D3410
 float SE3ChatSound::GetScaledVolume() {
     return SE3::SoundBusGetSuppressedVolumeScalar(this->m_bus, this->m_uUID) * this->m_volume;
 }
 
-// PROVEN: 7d56e6d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00705FA0/0x1403D3430
 char* SE3::GetCurrentGameOutputDeviceName() {
     return s_gameOutputDeviceName;
 }
 
-// PROVEN: 0e48defd UNPROVEN/IDENTICAL
 // OFFSET: 0x00705FB0/0x1403D3440
 uint32_t SE3::EmitterManagerGetSoundChunkHandle(const C3Vector& position) {
     uint32_t x = 0;
@@ -688,7 +672,6 @@ uint32_t SE3::EmitterManagerGetSoundChunkHandle(const C3Vector& position) {
     return y | (x << 16);
 }
 
-// PROVEN: 9b7797cd IDENTICAL/IDENTICAL
 // OFFSET: 0x00705FE0/0x1403D3470
 static int ComparePillPoints(const void* a, const void* b) {
     return static_cast<const SoundEmitterPillPointsRec*>(a)->m_soundEmittersID - static_cast<const SoundEmitterPillPointsRec*>(b)->m_soundEmittersID;
@@ -736,13 +719,11 @@ void SE3::EmitterManagerBuildSoundChunkList(uint32_t x, uint32_t y) {
     s_soundChunkList[count] = 0x75307530;
 }
 
-// PROVEN: 1fd55391 IDENTICAL/IDENTICAL
 // OFFSET: 0x007060C0/0x1403D3550
 static void StreamingCallback(void* param) {
     AsyncFileReadLinkToPriority(static_cast<CAsyncObject*>(param), 1);
 }
 
-// PROVEN: d6ad7797 IDENTICAL/IDENTICAL
 // OFFSET: 0x007060E0/0x1403D3560
 void SE3::StreamingUpdate() {
     if (sm_SoundKitDefs_ClosestAsyncObject) {
@@ -750,7 +731,6 @@ void SE3::StreamingUpdate() {
     }
 }
 
-// PROVEN: f716d35e IDENTICAL/NONE
 // OFFSET: 0x00706250
 static int32_t DriverNameMatches(FMOD::System* system, int32_t index, const char* name) {
     char driverName[512];
@@ -861,7 +841,6 @@ int32_t SE3::GetFallbackSoundKitID(int32_t soundKitID) {
     return 0;
 }
 
-// PROVEN: db4124c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x007064D0/0x1403D3A30
 void SE3::InitGameSystemForSilence() {
     SE3::sm_eGameSystemOutputType = FMOD_OUTPUTTYPE_NOSOUND;
@@ -1019,7 +998,6 @@ void SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, int
     SE3::SoundKitDefLog("The kit %s fail to select a variant!", static_cast<const char*>(this->m_pSoundKitRec->m_name));
 }
 
-// PROVEN: 0342c584 IDENTICAL/UNPROVEN
 // OFFSET: 0x00706850/0x1403D3EF0
 SE3SoundKitDef* SE3::GetSoundKitDef(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count()) || soundKitID <= 0) {
@@ -1029,7 +1007,6 @@ SE3SoundKitDef* SE3::GetSoundKitDef(int32_t soundKitID) {
     return sm_SoundKitDefArray[soundKitID];
 }
 
-// PROVEN: 09c24d5e IDENTICAL/UNPROVEN
 // OFFSET: 0x00706880/0x1403D3F10
 int32_t SE3::GetNumSoundsInSoundKit(int32_t soundKitID) {
     SE3SoundKitDef* def;
@@ -1109,7 +1086,6 @@ int32_t SE3::IsLoopingOrPeriodic_ByDef(int32_t soundKitID) {
     return def->m_pSoundKitRec->m_flags & 0x200;
 }
 
-// PROVEN: f9f68915 DIFFERENT/IDENTICAL
 // OFFSET: 0x00706A40/0x1403D2A20
 static int32_t IsBeyondListenerRange(const C3Vector* position, float range, float* distanceSquared) {
     C3Vector listener;
@@ -1132,7 +1108,6 @@ static void PeriodicSoundFinishedCallback(SE3SoundKitObject* sko) {
     }
 }
 
-// PROVEN: bc2fc375 IDENTICAL/NONE
 // OFFSET: 0x00706C90
 float SE3SoundKitObject::GetChannelVolume(int32_t index) {
     float busVolume = SE3::SoundBusGetSuppressedVolumeScalar(this->m_properties.m_bus, this->m_uUID);
@@ -1145,7 +1120,6 @@ float SE3SoundKitObject::GetChannelVolume(int32_t index) {
     return this->m_channels[index].m_fadeVolume * this->m_fTimeOfDayScalar * this->m_properties.m_volume * this->m_randomVolume * this->m_fadeVolume * recVolume * busVolume;
 }
 
-// PROVEN: cc44c4e8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00706D00/0x1403D4230
 void SE3SoundKitObject::UpdateVolume() {
     for (int32_t i = 0; i < 2; i++) {
@@ -1211,7 +1185,6 @@ void SE3::SetNewSoundKitObjectProperties(SE3SoundKitObject* sko, const C3Vector*
     }
 }
 
-// PROVEN: 7cfe25ca IDENTICAL/UNPROVEN
 // OFFSET: 0x00706F50/0x1403D4440
 int32_t SE3::GetSoundKitUsage(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count())) {
@@ -1452,7 +1425,6 @@ static FMOD_RESULT F_CALLBACK DeviceChangedCallback(FMOD_SYSTEM* system, FMOD_SY
     return FMOD_OK;
 }
 
-// PROVEN: 2131332c IDENTICAL/IDENTICAL
 // OFFSET: 0x00707800/0x1403D5F10
 void SE3::SetDeviceChangeCallback(void (*callback)()) {
     s_deviceChangeCallback = callback;
@@ -1801,7 +1773,6 @@ void SE3::SoundKitObjects_Loading_Ready(uint32_t waveDataID) {
     }
 }
 
-// PROVEN: 0b0166a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007089F0/0x1403D59E0
 void SE3::CacheEventCallback(SE3CACHEEVENT event, uint32_t waveDataID) {
     switch (event) {
@@ -1856,12 +1827,10 @@ SE3SoundKitObject::SE3SoundKitObject() {
     SE3::SoundKitObjectLog(this, __FILE__, __LINE__, "Created() AS Handle [%d]", this->m_uUID);
 }
 
-// PROVEN: 682335a7 IDENTICAL/DIFFERENT
 // OFFSET: 0x007092E0/0x1403D7130
 SE3WaveDataNode::~SE3WaveDataNode() {
 }
 
-// PROVEN: 60a9d176 IDENTICAL/DIFFERENT
 // OFFSET: 0x00709530/0x1403D7E20
 SE3SoundKitObject::~SE3SoundKitObject() {
     SE3::UnregisterSuppressor(this->m_uUID);
@@ -1972,7 +1941,6 @@ void SE3::ProcessSoundKitObjectDeleteList() {
     }
 }
 
-// PROVEN: 3528ff77 IDENTICAL/DIFFERENT
 // OFFSET: 0x0070A300/0x1403D9A60
 static SE3StreamInfo* CreateStreamInfo(const uint8_t* key, SFileImpl* file) {
     SE3StreamInfo* info = new (__FILE__, __LINE__) SE3StreamInfo();
@@ -2273,7 +2241,6 @@ int32_t SE3::GetSoundKitID(const char* name) {
     return 0;
 }
 
-// PROVEN: 7b41e102 IDENTICAL/UNPROVEN
 // OFFSET: 0x0070B640/0x1403D9B20
 static FMOD_RESULT F_CALLBACK SoundEndedCallback(FMOD_CHANNEL* channel, FMOD_CHANNEL_CALLBACKTYPE type, int command, unsigned int commanddata1, unsigned int commanddata2) {
     if (type == FMOD_CHANNEL_CALLBACKTYPE_END) {
@@ -2293,7 +2260,6 @@ void SE3::DoneLoadingMessageQueuePut(SE3DoneLoadingMessage* message) {
     SE3::sm_DoneLoading_MessageQueue_CritSect.Leave();
 }
 
-// PROVEN: 366c7210 IDENTICAL/NONE
 // OFFSET: 0x0070C470
 SE3COMBINABLESOUNDLIST::SE3COMBINABLESOUNDLIST() {
 }
@@ -2673,13 +2639,11 @@ SE3CreateSoundEmitterMessage::~SE3CreateSoundEmitterMessage() {
 }
 
 // INLINED
-// PROVEN: fc7c4a53 IDENTICAL/DIFFERENT
 // OFFSET: 0x00708B10/0x1403D6D90
 SE3SoundEmitter::~SE3SoundEmitter() {
     SE3::StopSound(this->m_uSoundKitObjectUID, 500, __FILE__, __LINE__, "Sound Emitter Destructor, Stop Sound");
 }
 
-// PROVEN: e61508c0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00709C20/0x1403D8540
 SE3SoundChunk::~SE3SoundChunk() {
     this->m_emitters.Clear();
@@ -2795,7 +2759,6 @@ void SE3::InsertSoundKitDef(const SoundEntriesRec* rec, const SoundEntriesAdvanc
     }
 }
 
-// PROVEN: 728ab93f IDENTICAL/DIFFERENT
 // OFFSET: 0x0070E9C0/0x1403DD4B0
 SE3SoundKitObject* SE3::CreateNewSoundKitObject(uint32_t* handle, SE3SoundKitProperties* properties) {
     uint32_t uid = SE3::sm_uNextUniqueID + 1;
@@ -4513,7 +4476,6 @@ void SE3::ShutDown() {
     SE3::Log_Write(" - Shutting Down SE3 COMPLETE.");
 }
 
-// PROVEN: 62bd6cfe IDENTICAL/IDENTICAL
 // OFFSET: 0x007121A0/0x1403E4010
 void SE3::SetFocusScalar(float scalar) {
     SE3::sm_fFocusScalar = scalar;
@@ -4558,13 +4520,11 @@ void SE3::SoundBusSetVolume(SE3BUS bus, float volume) {
     SE3::sm_aSoundBus[bus].m_volume = volume;
 }
 
-// PROVEN: 9de60e68 IDENTICAL/UNPROVEN
 // OFFSET: 0x007122B0/0x1403E40E0
 void SE3::SoundBusMute(SE3BUS bus, int32_t mute) {
     SE3::sm_aSoundBus[bus].m_muted = mute;
 }
 
-// PROVEN: 71189bee IDENTICAL/UNPROVEN
 // OFFSET: 0x007122D0/0x1403E4100
 void SE3::SoundBusEnable(SE3BUS bus, int32_t enable) {
     SE3::sm_aSoundBus[bus].m_enabled = enable;

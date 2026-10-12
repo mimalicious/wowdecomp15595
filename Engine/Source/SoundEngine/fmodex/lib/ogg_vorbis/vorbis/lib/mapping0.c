@@ -37,7 +37,6 @@
    blocksize is set by the mode, and low backend lookups may require
    parameters from other areas of the mode/mapping */
 
-// PROVEN: 073b6d23 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B47940/0x140916ED0
 static void mapping0_free_info(vorbis_info_mapping *i){
   vorbis_info_mapping0 *info=(vorbis_info_mapping0 *)i;

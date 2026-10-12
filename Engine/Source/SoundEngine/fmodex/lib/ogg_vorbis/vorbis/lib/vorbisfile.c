@@ -969,7 +969,6 @@ int ov_clear(OggVorbis_File *vf){
             0) OK
 */
 
-// PROVEN: c9816a4f DIFFERENT/IDENTICAL
 // OFFSET: 0x00B37FD0/0x140903E50
 int ov_open_callbacks(void *f,OggVorbis_File *vf,char *initial,ogg_int32_t ibytes,
     ov_callbacks callbacks){
@@ -1163,7 +1162,6 @@ ogg_int64_t ov_raw_total(OggVorbis_File *vf,int i){
             OV_EINVAL if the stream is not seekable (we can't know the
             length) or only partially open
 */
-// PROVEN: 8a875b0f DIFFERENT/IDENTICAL
 // OFFSET: 0x00B36BC0/0x140902370
 ogg_int64_t ov_pcm_total(OggVorbis_File *vf,int i){
   if(vf->ready_state<OPENED)return(OV_EINVAL);

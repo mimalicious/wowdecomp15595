@@ -35,7 +35,6 @@ int32_t CGTutorial::OnTutorialFlags(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: fc48c140 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGTutorial::InitializeGame() {
 }
@@ -222,12 +221,10 @@ void CGTutorial::LoadFlaggedTutorials() {
     }
 }
 
-// PROVEN: 01796b88 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGTutorial::ShutdownGame() {
 }
 
-// PROVEN: 7d513a6f IDENTICAL/UNPROVEN
 // OFFSET: 0x009016C0/0x140659B30
 int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     bool found = false;
@@ -245,7 +242,6 @@ int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     return 65;
 }
 
-// PROVEN: a4aa1205 IDENTICAL/NONE
 // OFFSET: 0x00901710
 int32_t CGTutorial::GetPrevCompletedTutorial(int32_t tutorial) {
     bool found = false;
@@ -263,7 +259,6 @@ int32_t CGTutorial::GetPrevCompletedTutorial(int32_t tutorial) {
     return 0;
 }
 
-// PROVEN: 37b21dba IDENTICAL/UNPROVEN
 // OFFSET: 0x00901B60/0x14065A0D0
 void CGTutorial::SaveFlaggedTutorials() {
     CVarIntListWrapper list;

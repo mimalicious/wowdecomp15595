@@ -82,13 +82,11 @@ void CDrawBowString::DrawBowString(CM2Model* model, const CM2Lighting* lighting,
     g_theGxDevicePtr->Draw(batch);
 }
 
-// PROVEN: 3f3b1784 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B119B0/0x1408D7380
 void CDrawBowString::GlueDrawBowStringCB(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     CDrawBowString::DrawBowString(model, lighting, NULL);
 }
 
-// PROVEN: 89c41c35 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B119A0/0x1408D7370
 void CDrawBowString::UnitDrawBowStringCB(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     CDrawBowString::DrawBowString(model, lighting, static_cast<CGUnit_C*>(arg));

@@ -201,7 +201,6 @@ FMOD_RESULT OutputPolled::threadFunc()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c225e6ef IDENTICAL/DIFFERENT
 // OFFSET: 0x00ACFD40/0x14089A750
 FMOD_RESULT OutputPolled::start()
 {
@@ -293,7 +292,6 @@ FMOD_RESULT OutputPolled::start()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4b9f30f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACFE40/0x14089A880
 FMOD_RESULT OutputPolled::stop()
 {

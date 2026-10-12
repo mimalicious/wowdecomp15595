@@ -8,7 +8,6 @@ TSRectArray<T>::TSRectArray() {
     this->m_height = 0;
 }
 
-// PROVEN: f21f7e6d IDENTICAL/NONE
 // OFFSET: [0x0072CFA0<CWorldMap::CMapTableEntry>, 0x0072CF40/0x140475850<CMap::CMapAreaTableEntry>, 0x00797E70<CMapLowDetail::CMapAreaLowTableEntry>]
 template <class T>
 T* TSRectArray<T>::Get(int32_t x, int32_t y) {

@@ -22,7 +22,6 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fcb9358c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC82A0/0x140891CC0
 Sample::Sample()
 {
@@ -613,7 +612,6 @@ FMOD_RESULT Sample::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c10f2e08 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AC82F0/0x140891D10
 FMOD_RESULT Sample::release(bool freethis)
 {
@@ -658,7 +656,6 @@ FMOD_RESULT Sample::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f58d852e IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC8380/0x140891DD0
 FMOD_RESULT Sample::setDefaults(float frequency, float volume, float pan, int priority)
 {
@@ -695,7 +692,6 @@ FMOD_RESULT Sample::setDefaults(float frequency, float volume, float pan, int pr
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 80159514 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC8400/0x140891E80
 FMOD_RESULT Sample::setVariations(float frequencyvar, float volumevar, float panvar)
 {
@@ -732,7 +728,6 @@ FMOD_RESULT Sample::setVariations(float frequencyvar, float volumevar, float pan
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 25a7ca19 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC8470/0x140891F20
 FMOD_RESULT Sample::set3DMinMaxDistance(float min, float max)
 {
@@ -770,7 +765,6 @@ FMOD_RESULT Sample::set3DMinMaxDistance(float min, float max)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 65986e58 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC84D0/0x140891FA0
 FMOD_RESULT Sample::set3DConeSettings(float insideconeangle, float outsideconeangle, float outsidevolume)
 {
@@ -808,7 +802,6 @@ FMOD_RESULT Sample::set3DConeSettings(float insideconeangle, float outsideconean
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9fb536de IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC8540/0x140892040
 FMOD_RESULT  Sample::setMode(FMOD_MODE mode)
 {
@@ -846,7 +839,6 @@ FMOD_RESULT  Sample::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f4a561a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC8590/0x1408920C0
 FMOD_RESULT  Sample::setLoopCount(int loopcount)
 {
@@ -883,7 +875,6 @@ FMOD_RESULT  Sample::setLoopCount(int loopcount)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: febec16a IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC85E0/0x140892140
 FMOD_RESULT Sample::setLoopPoints(unsigned int loopstart, FMOD_TIMEUNIT loopstarttype, unsigned int loopend, FMOD_TIMEUNIT loopendtype)
 {

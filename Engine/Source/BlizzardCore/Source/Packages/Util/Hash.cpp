@@ -177,7 +177,6 @@ void Blizzard::Util::hashlittle2(const void* key, size_t length, uint32_t* pc, u
     *pb = b;
 }
 
-// PROVEN: da5640b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AA720/0x1404A0B60
 char Blizzard::Util::itox(uint8_t value) {
     return s_hexDigits[value & 0xF];

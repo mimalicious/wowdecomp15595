@@ -83,7 +83,6 @@ CTexture* CGObject_C::s_selectionTexture;
 // STATIC: 0x00DD6328/0x140CBCAE8
 TSObjectAllocPool<CGObject_C::FadeoutInfo>* CGObject_C::s_fadeoutHeap;
 
-// PROVEN: aa91eca0 IDENTICAL/NONE
 // OFFSET: 0x005DBCC0
 static void LoadInteractIcons(int32_t load) {
     for (uint32_t i = 0; i < sizeof(CGObject_C::s_interactIcons) / sizeof(CGObject_C::s_interactIcons[0]); i++) {
@@ -102,7 +101,6 @@ static void LoadInteractIcons(int32_t load) {
     }
 }
 
-// PROVEN: 1b2222af IDENTICAL/IDENTICAL
 // OFFSET: 0x005DBD20/0x140257E90
 void CGObject_C::ModelLoadedCallback(CM2Model* model, void* arg) {
     CGObject_C* object = static_cast<CGObject_C*>(arg);
@@ -112,7 +110,6 @@ void CGObject_C::ModelLoadedCallback(CM2Model* model, void* arg) {
     }
 }
 
-// PROVEN: ce46b500 IDENTICAL/NONE
 // OFFSET: 0x005DBD40
 void CGObject_C::SetTypeID(OBJECT_TYPE_ID typeId) {
     this->m_typeId = typeId;
@@ -159,7 +156,6 @@ void CGObject_C::SetTypeID(OBJECT_TYPE_ID typeId) {
     }
 }
 
-// PROVEN: c5445680 IDENTICAL/NONE
 // OFFSET: 0x005DBE10
 void CGObject_C::ReleaseModel() {
     if (!this->m_worldModel) {
@@ -173,7 +169,6 @@ void CGObject_C::ReleaseModel() {
     this->m_worldModel = NULL;
 }
 
-// PROVEN: ad14dc82 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DBE60/0x140257F80
 void CGObject_C::AuraDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (!interrupted) {
@@ -181,7 +176,6 @@ void CGObject_C::AuraDecayHandler(CM2Model* model, uint32_t boneId, uint32_t seq
     }
 }
 
-// PROVEN: e3342db4 IDENTICAL/DIFFERENT
 // OFFSET: 0x005DBE80/0x140257FA0
 void CGObject_C::OnSpellEffectClear(CEffect* effect) {
     uint32_t sequence = 159;
@@ -204,7 +198,6 @@ void CGObject_C::OnSpellEffectClear(CEffect* effect) {
     effect->MoveToDestroyList();
 }
 
-// PROVEN: 18c76c1b IDENTICAL/IDENTICAL
 // OFFSET: 0x005DBF30/0x140258090
 void CGObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     if (!(flags & 0x1)) {
@@ -212,7 +205,6 @@ void CGObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     }
 }
 
-// PROVEN: 3e230145 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DBF50/0x1402580A0
 void CGObject_C::SetBoundsDirty() {
     this->m_modelFlags |= 0x200000;
@@ -231,7 +223,6 @@ int32_t CGObject_C::Animate(float elapsed) {
     return 1;
 }
 
-// PROVEN: 9aaca960 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DBFC0/0x140258130
 int32_t CGObject_C::IsObjectModelLoaded() {
     if (this->GetObjectModel() && this->GetObjectModel()->IsLoaded()) {
@@ -246,7 +237,6 @@ int32_t CGObject_C::IsObjectLocked() {
     return static_cast<uint16_t>(this->m_modelFlags) > 0;
 }
 
-// PROVEN: 69ad37f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC010/0x140258190
 void CGObject_C::SetObjectLocked(int32_t locked) {
     uint32_t flags = this->m_modelFlags;
@@ -259,7 +249,6 @@ void CGObject_C::SetObjectLocked(int32_t locked) {
     }
 }
 
-// PROVEN: fb3761ba IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC050/0x1402581C0
 void CGObject_C::SetDisablePending(int32_t pending) {
     if (pending) {
@@ -269,7 +258,6 @@ void CGObject_C::SetDisablePending(int32_t pending) {
     }
 }
 
-// PROVEN: e7f9e1c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC080/0x1402581E0
 int32_t CGObject_C::IsReadyToDraw() {
     if (this->GetObjectModel() && this->GetObjectModel()->IsDrawable()) {
@@ -279,7 +267,6 @@ int32_t CGObject_C::IsReadyToDraw() {
     return 0;
 }
 
-// PROVEN: 6d10ab64 IDENTICAL/DIFFERENT
 // OFFSET: 0x005DC0C0/0x140258230
 void CGObject_C::ObjectNameVisibilityChanged() {
     if (!this->m_interactIcon) {
@@ -293,7 +280,6 @@ void CGObject_C::ObjectNameVisibilityChanged() {
     }
 }
 
-// PROVEN: c8f06044 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC120/0x1402582B0
 int32_t CGObject_C::UpdateObjectNameString(int32_t a1, char* buffer, uint32_t size) {
     if (this->GetObjectName()) {
@@ -305,7 +291,6 @@ int32_t CGObject_C::UpdateObjectNameString(int32_t a1, char* buffer, uint32_t si
     return 1;
 }
 
-// PROVEN: c3316353 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC170/0x140258320
 int32_t CGObject_C::ShouldRenderObjectName(uint32_t flags) const {
     if (this->m_interactIcon) {
@@ -315,13 +300,11 @@ int32_t CGObject_C::ShouldRenderObjectName(uint32_t flags) const {
     return (flags >> 11) & 0x1;
 }
 
-// PROVEN: f785cfca IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC190/0x1407FDD80
 int32_t CGObject_C::PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual, uint32_t a12, int32_t a13) {
     return 0;
 }
 
-// PROVEN: 16cd810e IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC1A0/0x140258340
 void CGObject_C::EffectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
@@ -331,7 +314,6 @@ void CGObject_C::EffectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t s
     }
 }
 
-// PROVEN: 663c472d IDENTICAL/DIFFERENT
 // OFFSET: 0x005DC1C0/0x140258360
 void CGObject_C::LoopEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
@@ -387,7 +369,6 @@ void CGObject_C::FadeoutWorldObject() {
     World::FadeoutObject(this->m_worldObject, alpha, NULL, NULL, 0);
 }
 
-// PROVEN: efd9192d DIFFERENT/IDENTICAL
 // OFFSET: 0x005DC460/0x140258710
 CM2Model* CGObject_C::SetModelStart(CM2Model* model) {
     if (model) {
@@ -407,7 +388,6 @@ CM2Model* CGObject_C::SetModelStart(CM2Model* model) {
     return previous;
 }
 
-// PROVEN: 2a571a25 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC4D0/0x1402587B0
 void CGObject_C::SetModelFinish(CM2Model* model) {
     CEffect* effect = this->m_effectList;
@@ -446,7 +426,6 @@ void CGObject_C::SetModelFinish(CM2Model* model) {
     }
 }
 
-// PROVEN: 0c8f62a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC580/0x1402588A0
 void CGObject_C::SetModel(CM2Model* model) {
     if (model != this->m_worldModel) {
@@ -566,7 +545,6 @@ void CGObject_C::UpdateWorldObject(int32_t a2) {
     World::ObjectUpdate(this->m_worldObject, matrix, box, sphere, position, a2);
 }
 
-// PROVEN: 89ba69ca IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC940/0x140258D30
 void CGObject_C::UpdateEffectAttachments() {
     if (this->m_worldModel && this->m_worldModel->IsLoaded()) {
@@ -584,7 +562,6 @@ void CGObject_C::UpdateEffectAttachments() {
     }
 }
 
-// PROVEN: b907529f IDENTICAL/IDENTICAL
 // OFFSET: 0x005DC980/0x140258D90
 void CGObject_C::ClearSpellEffect(uint32_t spellId, int32_t all, uint64_t casterGuid) {
     if (!spellId) {
@@ -604,7 +581,6 @@ void CGObject_C::ClearSpellEffect(uint32_t spellId, int32_t all, uint64_t caster
     }
 }
 
-// PROVEN: 39f03cfa IDENTICAL/IDENTICAL
 // OFFSET: 0x005DCA00/0x140258E40
 void CGObject_C::RetargetEffects(CEffect* effect, uint32_t spellId, uint64_t oldTarget, uint64_t newTarget) {
     if (!spellId) {
@@ -627,7 +603,6 @@ const SpellVisualRec* CGObject_C::GetAppropriateSpellVisual(const SpellRec* spel
     return GetSpellVisual(spell, NULL);
 }
 
-// PROVEN: 01d65df4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DCA90/0x140258EA0
 void CGObject_C::ClearEffectKitByID(uint32_t spellId, int32_t kitId, uint32_t param, int32_t matchSpell, int32_t matchParam) {
     if (!kitId) {
@@ -648,7 +623,6 @@ void CGObject_C::ClearEffectKitByID(uint32_t spellId, int32_t kitId, uint32_t pa
     }
 }
 
-// PROVEN: 371a7503 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DCB00/0x140258F60
 void CGObject_C::SetBlock(uint32_t index, uint32_t value) {
     reinterpret_cast<uint32_t*>(this->m_obj)[index] = value;
@@ -740,7 +714,6 @@ static int32_t GuildDataTypeUpdateHandler(WOWGUID guid, uint32_t fieldOffset, ui
     return 1;
 }
 
-// PROVEN: 0639a728 DIFFERENT/IDENTICAL
 // OFFSET: 0x005DCD80/0x140259240
 static int32_t GuildDataUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -802,7 +775,6 @@ void CGObject_C::PreAnimate(CGWorldFrame* frame) {
     }
 }
 
-// PROVEN: 7136ba38 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DCFC0/0x1402594B0
 void CGObject_C::PostReenable(const CClientObjCreate& create) {
     this->RefreshInteractIcon();
@@ -834,7 +806,6 @@ void CGObject_C::DoFade(float alpha, uint32_t time) {
     }
 }
 
-// PROVEN: 05a9c7de IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD0B0/0x1402595A0
 static int32_t UpdateAllWorldObjectsCallback(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -846,14 +817,12 @@ static int32_t UpdateAllWorldObjectsCallback(WOWGUID guid, void* param) {
     return 1;
 }
 
-// PROVEN: ceef41e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD0F0/0x1402595E0
 int32_t CGObject_C::UpdateAllWorldObjects() {
     ClntObjMgrDestroyLazyCleanupObjects();
     return ClntObjMgrEnumVisibleObjects(&UpdateAllWorldObjectsCallback, NULL);
 }
 
-// PROVEN: e51a96b6 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD110/0x140259600
 static int32_t UpdateAllObjectEffectManagersCallback(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -865,7 +834,6 @@ static int32_t UpdateAllObjectEffectManagersCallback(WOWGUID guid, void* param) 
     return 1;
 }
 
-// PROVEN: 87f4c961 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD150/0x140259640
 int32_t CGObject_C::UpdateAllObjectEffectManagers() {
     return ClntObjMgrEnumVisibleObjects(&UpdateAllObjectEffectManagersCallback, NULL);
@@ -892,13 +860,11 @@ void CGObject_C::HandleScaleUpdate(float scale) {
     }
 }
 
-// PROVEN: 603b6adc IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD260/0x140259760
 void CGObject_C::HandleGuildIDUpdate() {
     this->LoadGuildTextures(this->GetGuildGUID().m_guid);
 }
 
-// PROVEN: 656610be IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD2A0/0x140259790
 void CGObject_C::GuildTextureCallback(const uint64_t& guildGUID, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -912,7 +878,6 @@ void CGObject_C::GuildTextureCallback(const uint64_t& guildGUID, const WOWGUID& 
     }
 }
 
-// PROVEN: 98849f62 IDENTICAL/DIFFERENT
 // OFFSET: 0x005DD2F0/0x1402597E0
 void CGObject_C::ModelChanged() {
     int32_t loaded = this->GetObjectModel()->IsLoadedRecursive();
@@ -935,7 +900,6 @@ void CGObject_C::ModelChanged() {
     }
 }
 
-// PROVEN: 57c46fab IDENTICAL/DIFFERENT
 // OFFSET: 0x005DD3A0/0x140259900
 void CGObject_C::ModelLoaded(CM2Model* model) {
     if (model != this->GetObjectModel()) {
@@ -955,7 +919,6 @@ void CGObject_C::ModelLoaded(CM2Model* model) {
     this->LoadGuildTextures(this->GetGuildGUID().m_guid);
 }
 
-// PROVEN: 78491650 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD420/0x140259970
 void CGObject_C::ConnectToLightningThisFrame(uint32_t a1, int32_t a2) {
     for (CEffect* effect = this->m_effectList; effect; effect = effect->m_next) {
@@ -965,7 +928,6 @@ void CGObject_C::ConnectToLightningThisFrame(uint32_t a1, int32_t a2) {
     }
 }
 
-// PROVEN: 166bb603 IDENTICAL/DIFFERENT
 // OFFSET: 0x005DD470/0x1402599D0
 void CGObject_C::SetFrameOfReference(const C44Matrix* matrix) {
     CM2Model* model = this->m_worldModel;
@@ -982,7 +944,6 @@ void CGObject_C::SetFrameOfReference(const C44Matrix* matrix) {
     }
 }
 
-// PROVEN: 7a6cfbd2 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD4C0/0x140259A80
 void CGObject_C::RemoveInteractIcon() {
     if (!this->m_interactIcon) {
@@ -997,7 +958,6 @@ void CGObject_C::RemoveInteractIcon() {
     this->m_interactIcon = NULL;
 }
 
-// PROVEN: 921b9e05 IDENTICAL/DIFFERENT
 // OFFSET: 0x005DD4F0/0x140259AD0
 void CGObject_C::UpdateInteractIcon(uint32_t status) {
     uint32_t previous = this->m_questStatus;
@@ -1015,7 +975,6 @@ void CGObject_C::UpdateInteractIcon(uint32_t status) {
     }
 }
 
-// PROVEN: 62ef3f0f IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD550/0x140259B40
 void CGObject_C::UpdateInteractIconAttach() {
     if (!this->m_interactIcon || !this->m_worldModel || !this->m_worldModel->IsLoaded()) {
@@ -1111,7 +1070,6 @@ uint32_t CGObject_C::GetNPCInteractIcon() {
     return icon;
 }
 
-// PROVEN: 40d04b8b IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD870/0x14025A050
 C3Vector CGObject_C::GetModelPosition() {
     CM2Model* model = this->GetObjectModel();
@@ -1123,7 +1081,6 @@ C3Vector CGObject_C::GetModelPosition() {
     return this->GetPosition();
 }
 
-// PROVEN: bc846953 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DD8C0/0x14025A0B0
 C44Matrix CGObject_C::GetModelMatrix() {
     CM2Model* model = this->GetObjectModel();
@@ -1162,7 +1119,6 @@ void CGObject_C::PlayEffectName(int32_t attachType, uint32_t expireTime, uint32_
     flags &= ~0x10;
 }
 
-// PROVEN: b86acf8b IDENTICAL/DIFFERENT
 // OFFSET: 0x005DDA00/0x14025A2A0
 void CGObject_C::EffectOnceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
@@ -1190,7 +1146,6 @@ void CGObject_C::EffectOnceHandler(CM2Model* model, uint32_t boneId, uint32_t se
     effect->MoveToDestroyList();
 }
 
-// PROVEN: 9d79b5a0 IDENTICAL/DIFFERENT
 // OFFSET: 0x005DDAB0/0x14025A3B0
 void CGObject_C::AuraEffectHoldHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
@@ -1255,7 +1210,6 @@ static int32_t GetGuildColor(T db, uint8_t index, CImVector& color) {
     return 1;
 }
 
-// PROVEN: 857a40ac DIFFERENT/IDENTICAL
 // OFFSET: 0x005DDCB0/0x14025A680
 void CGObject_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->m_modelFlags |= 0x40000;
@@ -1275,7 +1229,6 @@ void CGObject_C::PostInit(uint32_t time, const CClientObjCreate& create, bool re
     }
 }
 
-// PROVEN: e6f1feff IDENTICAL/DIFFERENT
 // OFFSET: 0x005DDD60/0x14025A760
 void CGObject_C::ClearEffectList(int32_t reason) {
     CEffect* effect = this->m_effectList;
@@ -1400,7 +1353,6 @@ void CGObject_C::ClearEffectKit(uint32_t spellId, int32_t kitType, uint32_t para
     }
 }
 
-// PROVEN: b29b1188 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DE070/0x14025AB90
 static int32_t ScaleUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -1412,7 +1364,6 @@ static int32_t ScaleUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t f
     return 1;
 }
 
-// PROVEN: 6a184609 IDENTICAL/IDENTICAL
 // OFFSET: 0x005DE0B0/0x14025ABD0
 void CGObject_C::Shutdown() {
     if (CGObject_C::s_selectionTexture) {
@@ -1531,7 +1482,6 @@ void CGObject_C::SetInteractIconVisible(int32_t visible) {
     }
 }
 
-// PROVEN: 6a59f33f IDENTICAL/IDENTICAL
 // OFFSET: 0x005DE890/0x14025B480
 C3Vector CGObject_C::GetNamePosition() const {
     if (this->m_worldModel->HasAttachment(18)) {
@@ -2025,7 +1975,6 @@ void CGObject_C::PrepareToFadeInt(float alpha, uint64_t transportGuid, const C44
     }
 }
 
-// PROVEN: 1436fdce IDENTICAL/NONE
 // OFFSET: 0x005DFBB0
 void CGObject_C::AddNonModelToFadeoutList(float alpha, uint64_t transportGuid) {
     C44Matrix matrix;
@@ -2033,14 +1982,12 @@ void CGObject_C::AddNonModelToFadeoutList(float alpha, uint64_t transportGuid) {
     s_fadeoutList.LinkToTail(this);
 }
 
-// PROVEN: 56d140fe IDENTICAL/IDENTICAL
 // OFFSET: 0x005DFC40/0x14025D2B0
 CGObject_C::CGObject_C(uint32_t time, const CClientObjCreate& create) : m_interactIcon(NULL), m_questStatus(0), m_interactIconType(0), m_scale(1.0f), m_scaleModifier(1.0f), m_scaleChangeTime(0), m_scaleChangeStart(1.0f), m_effectList(NULL), m_height(1.0f), m_nameDesc(NULL), m_worldModel(NULL), m_worldObject(0), m_modelFlags(0), m_fadeStartTime(0), m_fadeDuration(0), m_alpha(0), m_fadeStartAlpha(0), m_fadeEndAlpha(0), m_alphaScale(0xFF), m_effectManager(NULL), m_fadeoutInfo(NULL) {
     ClntObjMgrLinkInNewObject(this);
     this->m_scale = this->m_obj->m_scale;
 }
 
-// PROVEN: 48d30fcd DIFFERENT/IDENTICAL
 // OFFSET: 0x005DFDD0/0x14025D4A0
 int32_t CGObject_C::PrepareToFade(float alpha, uint64_t transportGuid) {
     CM2Model* model = this->GetObjectModel();
@@ -2058,7 +2005,6 @@ int32_t CGObject_C::PrepareToFade(float alpha, uint64_t transportGuid) {
     return 0;
 }
 
-// PROVEN: 9f70ef5f IDENTICAL/DIFFERENT
 // OFFSET: 0x005DFE50/0x14025D5D0
 void CGObject_C::RemoveFromFadeoutList() {
     if (this->m_fadeoutInfo) {
@@ -2218,7 +2164,6 @@ void CGObject_C::UpdateFadeoutList() {
     }
 }
 
-// PROVEN: 63aa6d5f IDENTICAL/NONE
 // OFFSET: 0x005E04E0
 void CGObject_C::PostShutdown() {
     if (CGObject_C::s_fadeoutHeap) {
@@ -2227,7 +2172,6 @@ void CGObject_C::PostShutdown() {
     }
 }
 
-// PROVEN: d774165e DIFFERENT/IDENTICAL
 // OFFSET: 0x005E0500/0x14025DF40
 void CGObject_C::ReplaceGuildTextures(CM2Model* model, const CImVector& backgroundColor, const CImVector& border, const CImVector& emblem, const char* fileName) {
     model->m_fFlags |= 0x8000000;
@@ -2254,7 +2198,6 @@ void CGObject_C::CreateFadeoutHeap() {
     CGObject_C::s_fadeoutHeap = memory ? new (memory) TSObjectAllocPool<FadeoutInfo>("ObjectFadeout", 32) : NULL;
 }
 
-// PROVEN: af3da920 DIFFERENT/IDENTICAL
 // OFFSET: 0x005E0620/0x14025E110
 void CGObject_C::Initialize() {
     CGObject_C::s_cvObjectSelectionCircle = CVar::Register("ObjectSelectionCircle", NULL, 0, "1", NULL, 0, false, NULL, false);
@@ -2320,70 +2263,58 @@ void CGObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_objMirror = saved;
 }
 
-// PROVEN: d408d6ed IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F630/0x1400B3D90
 CGObject_C::CGObject_C() {
 }
 
-// PROVEN: 7adf9979 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CGObject_C::HandleOutOfRange(OUT_OF_RANGE_TYPE type) {
 }
 
-// PROVEN: de779f0b IDENTICAL/IDENTICAL
 // OFFSET: 0x009FCE20/0x14090EBB0
 int32_t CGObject_C::ShouldFadeout() {
     return 1;
 }
 
-// PROVEN: b5a67297 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CGObject_C::UpdateDisplayInfo(int32_t a2) {
 }
 
-// PROVEN: 3e538a10 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 const CGBag_C* CGObject_C::GetBag() const {
     return NULL;
 }
 
-// PROVEN: 420f1f3f IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 CGBag_C* CGObject_C::GetBag() {
     return NULL;
 }
 
-// PROVEN: 318a75ac IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F710/0x1400B3EC0
 C3Vector CGObject_C::GetPosition() const {
     return C3Vector(0.0f, 0.0f, 0.0f);
 }
 
-// PROVEN: c6ae701e IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F730/0x1400B3ED0
 C3Vector CGObject_C::GetRawPosition() const {
     return this->GetPosition();
 }
 
-// PROVEN: 79ed4052 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGObject_C::GetFacing() const {
     return 0.0f;
 }
 
-// PROVEN: fd340554 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F800/0x1400B3F90
 float CGObject_C::GetRawFacing() const {
     return this->GetFacing();
 }
 
-// PROVEN: 4971577f IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F750/0x1400B3EF0
 float CGObject_C::GetScale() const {
     return this->m_obj->m_scale;
 }
 
-// PROVEN: cb76c4c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F760/0x1407FDD80
 uint64_t CGObject_C::GetTransportGUID() const {
     return 0;
@@ -2400,189 +2331,156 @@ C4Quaternion CGObject_C::GetRotation() const {
     return rotation;
 }
 
-// PROVEN: ce1c9987 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t CGObject_C::IsQuestGiver() const {
     return 0;
 }
 
-// PROVEN: 5fa3d028 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::RefreshInteractIcon() {
 }
 
-// PROVEN: a0248792 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CGObject_C::GetModelFileName(const char** name) const {
     return 0;
 }
 
-// PROVEN: a13063c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::ScaleChangeUpdate() {
 }
 
-// PROVEN: 93da7744 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::ScaleChangeFinished() {
 }
 
-// PROVEN: 67768697 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::RenderTargetSelection() const {
 }
 
-// PROVEN: adf0f9a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::RenderPetTargetSelection() const {
 }
 
-// PROVEN: 2932844c IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::Render() {
 }
 
-// PROVEN: 75bd5403 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F7D0/0x1400B3F60
 int32_t CGObject_C::GetSelectionHighlightColor(CImVector* color) const {
     *reinterpret_cast<uint32_t*>(color) = 0xFFFFFFFF;
     return 1;
 }
 
-// PROVEN: 5baa8cd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F7F0/0x140206E00
 float CGObject_C::GetTrueScale() const {
     return this->m_scaleModifier * this->m_scale;
 }
 
-// PROVEN: 07784588 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F800/0x1400B3F90
 float CGObject_C::GetDisplayFacing() const {
     return this->GetFacing();
 }
 
-// PROVEN: 5c1e2d9f IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::OnSpecialMountAnim() {
 }
 
-// PROVEN: bb2ea966 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FCE20/0x14090EBB0
 int32_t CGObject_C::IsSolidSelectable() const {
     return 1;
 }
 
-// PROVEN: 4bc73cc2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t CGObject_C::CanHighlight() const {
     return 0;
 }
 
-// PROVEN: 9a25a0a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t CGObject_C::CanBeTargetted() const {
     return 0;
 }
 
-// PROVEN: 2a12800f IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t CGObject_C::FloatingTooltip() const {
     return 0;
 }
 
-// PROVEN: 6d451c6e IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::OnRightClick() {
 }
 
-// PROVEN: 569ddc38 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t CGObject_C::IsHighlightSuppressed() const {
     return 0;
 }
 
-// PROVEN: 3c5e4b0f IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F810/0x1400B3FA0
 C44Matrix CGObject_C::GetMatrix() const {
     return C44Matrix();
 }
 
-// PROVEN: 30ff07df IDENTICAL/IDENTICAL
 // OFFSET: 0x0048F880/0x1400B3FF0
 CM2Model* CGObject_C::GetObjectModel() const {
     return this->m_worldModel;
 }
 
-// PROVEN: df8f4393 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 const char* CGObject_C::GetObjectName() const {
     return NULL;
 }
 
-// PROVEN: 1b63d1ec IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CGObject_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const {
     return 0;
 }
 
-// PROVEN: 98c12193 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::CleanUpVehicleBoneAnimsBeforeObjectModelChange() {
 }
 
-// PROVEN: 4c24fcbb IDENTICAL/IDENTICAL
 // OFFSET: 0x009FCE20/0x14090EBB0
 int32_t CGObject_C::ShouldFadeIn() const {
     return 1;
 }
 
-// PROVEN: fae4e40c IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E10/0x1402082B0
 float CGObject_C::GetBaseAlpha() const {
     return 1.0f;
 }
 
-// PROVEN: d99ff856 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 bool CGObject_C::IsTransport() const {
     return false;
 }
 
-// PROVEN: 8fef785f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CGObject_C::IsPointInside(const C3Vector& point) const {
     return 0;
 }
 
-// PROVEN: 9f089fd9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00873190/0x14025E5A0
 int32_t CGObject_C::AddPassenger(CPassenger* passenger, int32_t a2) {
     return 1;
 }
 
-// PROVEN: 9716fafd IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E20/0x14025E5A0
 float CGObject_C::GetSpeed() const {
     return -1.0f;
 }
 
-// PROVEN: dd945a15 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::OnInteract() {
 }
 
-// PROVEN: 8945cde1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGObject_C::AddSquelchedEffect() {
     return 0.0f;
 }
 
-// PROVEN: 2c68a582 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CGObject_C::PlaySpellVisualKit_PlayAnims(const PlaySpellVisualKitAnimData* data) {
 }
 
-// PROVEN: 1e09d327 IDENTICAL/IDENTICAL
 // OFFSET: 0x006279A0/0x1407D7E80
 void CGObject_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect, uint32_t a9, int32_t a10) {
 }

@@ -143,7 +143,6 @@ int32_t CDbgHelpDll::Load() {
     return 0;
 }
 
-// PROVEN: 706398cf IDENTICAL/NONE
 // OFFSET: 0x004BEF40
 BOOL CDbgHelpDll::InitializeW(HANDLE process, PCWSTR path, BOOL invade) {
     if (this->SymInitializeW) {
@@ -165,7 +164,6 @@ inline void CDbgHelpDll::Unload() {
     --this->loadCount;
 }
 
-// PROVEN: d0d70864 IDENTICAL/NONE
 // OFFSET: 0x004BEFE0
 static void sLogSeparatorLine(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, char character, int32_t longLine) {
     char line[80];
@@ -175,7 +173,6 @@ static void sLogSeparatorLine(void (*logLineProc)(void*, const char*, ...), void
     logLineProc(logLineProcParam, "%s", line);
 }
 
-// PROVEN: 2c874ace IDENTICAL/NONE
 // OFFSET: 0x004BF020/0x1400F8FC0
 static void sLogHeader(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, const char* headerString) {
     logLineProc(logLineProcParam, "");
@@ -257,7 +254,6 @@ static const char* sGetPathLeaf(const char* path) {
     return leaf ? leaf + 1 : path;
 }
 
-// PROVEN: 03ee05e1 IDENTICAL/NONE
 // OFFSET: 0x004BF2C0
 static void sLogExeFile(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     char exeFullPath[MAX_PATH];
@@ -279,7 +275,6 @@ static void sLogDateTimeString(void (*logLineProc)(void*, const char*, ...), voi
     logLineProc(logLineProcParam, "%-10s%3s %2d, %4d %2d:%02d:%02d.%03d %cM", "Time:", s_monthNames[time->wMonth - 1], time->wDay, time->wYear, hour, time->wMinute, time->wSecond, time->wMilliseconds, ampm);
 }
 
-// PROVEN: 00a12d9d IDENTICAL/NONE
 // OFFSET: 0x004BF370
 static void sLogUserName(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     char userName[MAX_PATH];
@@ -292,7 +287,6 @@ static void sLogUserName(void (*logLineProc)(void*, const char*, ...), void* log
     logLineProc(logLineProcParam, "%-10s%s", "User:", userName);
 }
 
-// PROVEN: 8953dba4 IDENTICAL/NONE
 // OFFSET: 0x004BF3E0
 static void sLogComputerName(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     char computerName[16];
@@ -305,7 +299,6 @@ static void sLogComputerName(void (*logLineProc)(void*, const char*, ...), void*
     logLineProc(logLineProcParam, "%-10s%s", "Computer:", computerName);
 }
 
-// PROVEN: f0209d70 IDENTICAL/NONE
 // OFFSET: 0x004BF440
 static void sLogMemory(uint32_t logOptions, void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, uint8_t* instructionPointer, uint8_t* stackPointer) {
     sLogHeader(logLineProc, logLineProcParam, "Memory Dump");
@@ -327,7 +320,6 @@ static void sLogMemory(uint32_t logOptions, void (*logLineProc)(void*, const cha
     }
 }
 
-// PROVEN: b826b12b IDENTICAL/NONE
 // OFFSET: 0x004BF4F0/0x1400F95C0
 static int __cdecl sModuleCompareProc(const void* elem1, const void* elem2) {
     const LOADEDMODULE* module1 = static_cast<const LOADEDMODULE*>(elem1);
@@ -340,7 +332,6 @@ static int __cdecl sModuleCompareProc(const void* elem1, const void* elem2) {
     return module1->base < module2->base ? -1 : 0;
 }
 
-// PROVEN: e482edb6 IDENTICAL/NONE
 // OFFSET: 0x004BF520/0x1407B59DC
 static const char* GetFileNameFromPath(const char* path, size_t maxchars) {
     if (!memchr(path, 0, maxchars)) {
@@ -379,7 +370,6 @@ static void sReadCodeViewInfo(MODULEDEBUGINFO* info, uint32_t size, uint32_t typ
     }
 }
 
-// PROVEN: 674825ca IDENTICAL/NONE
 // OFFSET: 0x004BF570
 static void sGetLogicalAddress(void* addr, char* moduleName, uint32_t moduleNameSize, uint32_t* section, uint32_t* offset) {
     lstrcpynA(moduleName, "<unknown>", moduleNameSize);
@@ -497,7 +487,6 @@ inline void sLogVerboseMessage(uint32_t logOptions, void (*logLineProc)(void*, c
     }
 }
 
-// PROVEN: 32c4a1ba IDENTICAL/NONE
 // OFFSET: 0x004C0350
 static void sLogDbgHelpStackFrame(uint32_t logOptions, void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, const STACKFRAME64* stackFrame) {
     char symbolName[256];
@@ -529,7 +518,6 @@ static void sLogDbgHelpStackFrame(uint32_t logOptions, void (*logLineProc)(void*
     }
 }
 
-// PROVEN: 9e704fb8 IDENTICAL/NONE
 // OFFSET: 0x004BF670
 static BOOL sSymInitialize(HANDLE process) {
     wchar_t path[MAX_PATH];
@@ -550,14 +538,12 @@ static BOOL sSymInitialize(HANDLE process) {
     return sgDbgHelpDll.InitializeW(process, path, TRUE);
 }
 
-// PROVEN: 7fc2c220 IDENTICAL/NONE
 // OFFSET: 0x004BF6F0/0x1400F96F0
 static void STORMAPI CmdMemOutput(void* hOutput, const MEMREPORTENTRY* entry) {
     MEMDUMP* dump = static_cast<MEMDUMP*>(hOutput);
     dump->logLineProc(dump->logLineProcParam, "%5d %5d %s(%d)", entry->unk_0010, entry->unk_0014, entry->unk_0024, entry->unk_0020 >> 1);
 }
 
-// PROVEN: e56e3960 IDENTICAL/NONE
 // OFFSET: 0x004BF720
 static void sShowOutOfMemory(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     if (!g_memFullError) {
@@ -576,7 +562,6 @@ void SMemGenerateReport(SMEMREPORTTYPE type, void (STORMAPI* callback)(void*, co
     StormCallService(STORM_SERVICE_GENERATEREPORT, type, callback, context);
 }
 
-// PROVEN: 58205597 IDENTICAL/NONE
 // OFFSET: 0x004BF820
 static void sEnumerateThreads(DWORD* threads, uint32_t maxThreads, uint32_t* numThreads, uint32_t* totalThreads) {
     *numThreads = 0;
@@ -804,19 +789,16 @@ static void sLogX64ContextRegisters(void (*logLineProc)(void*, const char*, ...)
     }
 }
 
-// PROVEN: 0083ff3b IDENTICAL/NONE
 // OFFSET: 0x004BFD00
 void LoadMachineStateSymbols() {
     sgDbgHelpDll.Load();
 }
 
-// PROVEN: cb396cd5 IDENTICAL/NONE
 // OFFSET: 0x004BFD10
 void UnloadMachineStateSymbols() {
     sgDbgHelpDll.Unload();
 }
 
-// PROVEN: 801c4405 IDENTICAL/NONE
 // OFFSET: 0x004BFD20
 void LogComputerInfoHeader(uint32_t logOptions, void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, const char* headerTitleLine, const SYSTEMTIME* time) {
     if (InterlockedIncrement(&sgRecursionLevel) == 1) {
@@ -917,7 +899,6 @@ static DWORD WINAPI MiniDumpThreadProc(void* param) {
     return 0;
 }
 
-// PROVEN: a4a1432f IDENTICAL/NONE
 // OFFSET: 0x004BFF60/0x1400FA490
 int32_t LogMiniDump(void* logfile, EXCEPTION_POINTERS* exceptionpointers, uint32_t count, const char** strings) {
     int32_t result = 0;
@@ -1119,7 +1100,6 @@ static void sLogLoadedModules(void (*logLineProc)(void*, const char*, ...), void
     }
 }
 
-// PROVEN: e783bbd4 IDENTICAL/NONE
 // OFFSET: 0x004BF770/0x1400F97E0
 static void sLogMemoryStatus(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     MEMORYSTATUSEX status;

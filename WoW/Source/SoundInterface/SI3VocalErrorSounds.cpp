@@ -37,7 +37,6 @@ void SI3::InitVocalErrorSounds(int32_t race, uint32_t sex) {
     }
 }
 
-// PROVEN: 3578d33d IDENTICAL/DIFFERENT
 // OFFSET: 0x00B35830/0x140900B60
 void SI3::PlayVocalErrorSound(int32_t error) {
     static CVar* s_enableErrorSpeech = CVar::Lookup("Sound_EnableErrorSpeech");

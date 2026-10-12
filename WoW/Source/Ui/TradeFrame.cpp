@@ -63,7 +63,6 @@ int32_t CGTradeInfo::m_partnerIsSameBnetAccount;
 // STATIC: 0x00F484B4/0x140E3C59C
 static uint32_t s_nextTradeRequestTime;
 
-// PROVEN: 3ccabbcf IDENTICAL/NONE
 // OFFSET: 0x004646B0
 int32_t CGTradeInfo::GetTargetCount(uint32_t slot) {
     if (slot <= 6) {
@@ -73,7 +72,6 @@ int32_t CGTradeInfo::GetTargetCount(uint32_t slot) {
     return 0;
 }
 
-// PROVEN: 873151d3 IDENTICAL/DIFFERENT
 // OFFSET: 0x004646D0/0x140078080
 int32_t CGTradeInfo::GetTargetEnchant(uint32_t slot) {
     if (slot <= 6) {
@@ -83,7 +81,6 @@ int32_t CGTradeInfo::GetTargetEnchant(uint32_t slot) {
     return 0;
 }
 
-// PROVEN: ae8095a2 IDENTICAL/NONE
 // OFFSET: 0x004646F0
 int32_t CGTradeInfo::GetTargetRandomPropertyID(uint32_t slot) {
     if (slot <= 6) {
@@ -110,7 +107,6 @@ void CGTradeInfo::GetPlayerItem(uint32_t slot, WOWGUID& item, WOWGUID& container
     }
 }
 
-// PROVEN: c6b5775e IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A2A0/0x1406E0C90
 void TradeItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -168,7 +164,6 @@ void CGTradeInfo::InitiateTrade(WOWGUID guid, int32_t useCursorItem) {
     }
 }
 
-// PROVEN: 8df109c4 DIFFERENT/IDENTICAL
 // OFFSET: 0x0096A420/0x1406E0E20
 static void SetTargetAccepted(int32_t accepted) {
     if (CGTradeInfo::m_targetAccepted != accepted) {
@@ -177,7 +172,6 @@ static void SetTargetAccepted(int32_t accepted) {
     }
 }
 
-// PROVEN: e76cd299 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A450/0x1406E0E60
 void CGTradeInfo::RemoveMoney(int64_t amount) {
     if (!amount || static_cast<uint64_t>(amount) > CGTradeInfo::m_playerTrade.m_money) {
@@ -192,7 +186,6 @@ void CGTradeInfo::RemoveMoney(int64_t amount) {
     CGTradeInfo::m_playerTrade.m_money = money;
 }
 
-// PROVEN: a56a29b3 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A4C0/0x1406E0EC0
 void CGTradeInfo::UpdatePlayerItem(WOWGUID guid) {
     if (!guid) {
@@ -239,13 +232,11 @@ bool CGTradeInfo::IsItemBeingTraded(WOWGUID item) {
     return false;
 }
 
-// PROVEN: b8cac5cb IDENTICAL/DIFFERENT
 // OFFSET: 0x0096A5B0/0x1402190F0
 bool CanTradeBoundItem(CGItem_C* item) {
     return item->IsBoundToBattlenetAccount() && CGTradeInfo::m_partnerIsSameBnetAccount;
 }
 
-// PROVEN: 7ef05467 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A5E0/0x1406E0FA0
 int32_t CGTradeInfo::GetGameError(int32_t error, int32_t target) {
     switch (error) {
@@ -266,28 +257,24 @@ int32_t CGTradeInfo::GetGameError(int32_t error, int32_t target) {
     }
 }
 
-// PROVEN: 72caeb14 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A6B0/0x1406E0FF0
 void CGTradeInfo::BeginTrade() {
     PlayerCliBeginTrade msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 2961daaf IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A6E0/0x1406E1020
 void CGTradeInfo::CancelTrade() {
     PlayerCliCancelTrade msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: ba0eb945 IDENTICAL/NONE
 // OFFSET: 0x0096A710
 void CGTradeInfo::UnacceptTrade() {
     PlayerCliUnacceptTrade msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: d1bc0cb8 IDENTICAL/NONE
 // OFFSET: 0x0096A740
 void CGTradeInfo::AcceptTrade() {
     PlayerCliAcceptTrade msg;
@@ -295,21 +282,18 @@ void CGTradeInfo::AcceptTrade() {
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 89cfa6a7 IDENTICAL/NONE
 // OFFSET: 0x0096A770
 void CGTradeInfo::IgnoreTrade() {
     PlayerCliIgnoreTrade msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 68f1c970 IDENTICAL/NONE
 // OFFSET: 0x0096A7A0
 void CGTradeInfo::BusyTrade() {
     PlayerCliBusyTrade msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 904274db IDENTICAL/IDENTICAL
 // OFFSET: 0x0096AA10/0x1406E12F0
 void CGTradeInfo::ShutdownGame() {
     ClientTradeStatus::s_handler = NULL;
@@ -374,7 +358,6 @@ void CGTradeInfo::PlayerAccept() {
     }
 }
 
-// PROVEN: 2ff66143 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096ACE0/0x1406E1650
 bool CGTradeInfo::AddMoney(int64_t amount) {
     if (!amount) {
@@ -411,7 +394,6 @@ void CGTradeInfo::SetMoney(int64_t amount) {
     CGTradeInfo::m_playerTrade.m_money = amount;
 }
 
-// PROVEN: a2a2c604 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096AE50/0x1406E17F0
 void CGTradeInfo::SetCurrency(int32_t type, int32_t quantity) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__) || !CGCurrencyTypes::HasCurrency(type, quantity)) {

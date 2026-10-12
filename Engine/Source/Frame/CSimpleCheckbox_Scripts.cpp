@@ -8,7 +8,6 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: bf9a51c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00532690/0x1401847C0
 static int32_t Script_SetChecked(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
@@ -17,7 +16,6 @@ static int32_t Script_SetChecked(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2dc76d4c IDENTICAL/IDENTICAL
 // OFFSET: 0x005326E0/0x140184820
 static int32_t Script_GetChecked(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
@@ -147,7 +145,6 @@ static int32_t Script_SetDisabledCheckedTexture(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f113b968 IDENTICAL/IDENTICAL
 // OFFSET: 0x00532640/0x140184790
 void CSimpleCheckbox::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -155,7 +152,6 @@ void CSimpleCheckbox::DestroyScriptMetaTable() {
     CSimpleCheckbox::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 81972cd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00532AE0/0x140184CC0
 void CSimpleCheckbox::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -172,7 +168,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetDisabledCheckedTexture", &Script_SetDisabledCheckedTexture },
 };
 
-// PROVEN: 95e82c38 IDENTICAL/UNPROVEN
 // OFFSET: 0x00532620/0x140184760
 void CSimpleCheckbox::RegisterScriptMethods(lua_State* L) {
     CSimpleButton::RegisterScriptMethods(L);

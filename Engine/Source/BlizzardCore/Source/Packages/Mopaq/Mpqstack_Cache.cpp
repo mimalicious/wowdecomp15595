@@ -32,7 +32,6 @@ void System_Mopaq::Cache::AllocateBuffer(CacheData* data) {
     }
 }
 
-// PROVEN: 0da5c4dc DIFFERENT/IDENTICAL
 // OFFSET: 0x007B2F20/0x1404A8540
 void System_Mopaq::Cache::MoveToBack(CacheData* data, uint32_t index) {
     uint32_t count = data->m_blocks.m_count;
@@ -387,7 +386,6 @@ bool System_Mopaq::cache_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return next && CallNext(system, parms) && result;
 }
 
-// PROVEN: 6d99460e IDENTICAL/DIFFERENT
 // OFFSET: 0x007AB5B0/0x1404A1600
 bool System_Mopaq::cache_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_cache->m_size;

@@ -25,7 +25,6 @@ FileDownload::FileDownload() {
     memset(this->m_fileName, 0, sizeof(this->m_fileName));
 }
 
-// PROVEN: 0d9466ed DIFFERENT/IDENTICAL
 // OFFSET: 0x00B0A950/0x1408CE540
 FileDownload::~FileDownload() {
 }
@@ -40,7 +39,6 @@ GruntFileDownload::GruntFileDownload() {
     this->m_header.m_magic = 'DInf';
 }
 
-// PROVEN: d5afe632 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B0A980/0x1408CE580
 int32_t GruntFileDownload::Delete() {
     char path[260];
@@ -54,7 +52,6 @@ int32_t GruntFileDownload::Delete() {
     return OsDeleteFile(path);
 }
 
-// PROVEN: 282df74c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0A350/0x1408CDE60
 void GruntFileDownload::RenamePartial() {
     if (!this->m_partial) {
@@ -149,7 +146,6 @@ bool GruntFileDownload::ValidateForContinue(bool& complete) {
     return false;
 }
 
-// PROVEN: 17418ef6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0A660/0x1408CE220
 int32_t GruntFileDownload::GetStatus() {
     return this->m_status;
@@ -401,7 +397,6 @@ float BattlenetFileDownload::GetProgress() {
     return static_cast<float>(static_cast<double>(progress) / static_cast<double>(total));
 }
 
-// PROVEN: 1b0adff3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0AE50/0x1408CEAF0
 void BattlenetFileDownload::StopDownload() {
     this->m_status = 3;
@@ -447,12 +442,10 @@ GruntFileDownload::~GruntFileDownload() {
     this->Close(false, false);
 }
 
-// PROVEN: 2bf73f77 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B0B280/0x1408CEFE0
 BattlenetFileDownload::BattlenetFileDownload() {
 }
 
-// PROVEN: 8c00ef91 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0B2E0/0x1408CDE30
 int32_t GruntFileDownload::GetReason(uint32_t* data) {
     if (data) {
@@ -462,7 +455,6 @@ int32_t GruntFileDownload::GetReason(uint32_t* data) {
     return this->m_reason;
 }
 
-// PROVEN: 32e508ff IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0B2E0/0x1408CDE30
 int32_t BattlenetFileDownload::GetReason(uint32_t* data) {
     if (data) {
@@ -472,19 +464,16 @@ int32_t BattlenetFileDownload::GetReason(uint32_t* data) {
     return this->m_reason;
 }
 
-// PROVEN: d74a8d12 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0A340/0x1408CDE50
 bool GruntFileDownload::Accepted() {
     return this->m_accepted;
 }
 
-// PROVEN: 098d26f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0A340/0x1408CDE50
 bool BattlenetFileDownload::Accepted() {
     return this->m_accepted;
 }
 
-// PROVEN: f60321a0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void BattlenetFileDownload::Proceed(const uint8_t* data, uint32_t size) {
 }
@@ -562,7 +551,6 @@ void BattlenetFileDownload::Destroy(bool deleteFile) {
     this->m_downloads.Clear();
 }
 
-// PROVEN: aa9ad930 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B0B600/0x1408CF4D0
 BattlenetFileDownload::~BattlenetFileDownload() {
     this->Destroy(false);

@@ -6,21 +6,18 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// PROVEN: 12a315af IDENTICAL/IDENTICAL
 // OFFSET: 0x009E74F0/0x14077FF50
 static int32_t Script_GetNumNamePlateMotionTypes(lua_State* L) {
     lua_pushnumber(L, 3.0);
     return 1;
 }
 
-// PROVEN: 4bdc7450 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E80C0/0x140780D90
 static int32_t Script_GetNamePlateMotionType(lua_State* L) {
     lua_pushnumber(L, CGNamePlateFrame::s_cvNamePlateMotion->m_intValue + 1);
     return 1;
 }
 
-// PROVEN: 44048fec DIFFERENT/IDENTICAL
 // OFFSET: 0x009EA5A0/0x140783740
 static int32_t Script_SetNamePlateMotionType(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -46,7 +43,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumNamePlateMotionTypes", &Script_GetNumNamePlateMotionTypes },
 };
 
-// PROVEN: e507afbe IDENTICAL/UNPROVEN
 // OFFSET: 0x009E7520/0x14077FF70
 void NamePlateRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -54,7 +50,6 @@ void NamePlateRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 3b4a6f82 IDENTICAL/UNPROVEN
 // OFFSET: 0x009E7550/0x14077FFC0
 void NamePlateUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

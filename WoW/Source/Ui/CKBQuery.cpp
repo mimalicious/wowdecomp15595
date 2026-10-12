@@ -43,7 +43,6 @@ XMLNode* CKBQuery::GetArticleHeader(int32_t index) {
     return this->m_articleHeaders.m_node;
 }
 
-// PROVEN: 8dc675b3 DIFFERENT/IDENTICAL
 // OFFSET: 0x009FB8D0/0x140798F30
 void CKBQuery::_ComputeCachedData() {
     XMLNode* node = XMLTree_GetRoot(this->m_tree);
@@ -132,7 +131,6 @@ int32_t CKBQuery::BeginLoading(const char* query, int32_t categoryId, int32_t nu
     return 1;
 }
 
-// PROVEN: 632ca7f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC900/0x14079A510
 void CKBQuery::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
@@ -140,7 +138,6 @@ void CKBQuery::_SendSuccessEvent() {
     }
 }
 
-// PROVEN: 5046946d IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC920/0x14079A530
 void CKBQuery::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {

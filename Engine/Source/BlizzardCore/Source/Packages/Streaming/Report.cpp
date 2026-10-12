@@ -33,7 +33,6 @@ char Report::s_version[260];
 // STATIC: 0x00EBAFA0/0x140DABCE0
 char ReportOld::s_language[260];
 
-// PROVEN: f8b41de0 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FCE10/0x14050FA30
 void ReportOld::SetLanguage(const char* language) {
     Blizzard::String::Copy(s_language, language, sizeof(s_language));
@@ -59,13 +58,11 @@ void ReportOld::SetLanguage(const char* language) {
 Report::LogData::~LogData() {
 }
 
-// PROVEN: a6bbf819 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FCF90/0x14050FBE0
 bool Report::IsInitialized() {
     return s_initialized;
 }
 
-// PROVEN: d5967bce IDENTICAL/NONE
 // OFFSET: 0x007FCFA0/0x14050FBF0
 void Report::Initialize(const std::string& app, const std::string& version, const std::string& language) {
     Blizzard::String::Copy(s_app, app.c_str(), sizeof(s_app));
@@ -156,7 +153,6 @@ void Report::Reset() {
     GetLogData().erase(GetLogData().begin(), GetLogData().end());
 }
 
-// PROVEN: 7c7b2d1b IDENTICAL/NONE
 // OFFSET: 0x007FE3C0/0x1405112E0
 void Report::Shutdown() {
     Reset();

@@ -14,7 +14,6 @@ static HASHKEY_NONE s_footstepKey;
 // STATIC: 0x00E2885C/0x140B69430
 static TSHashTable<FOOTSTEPSNDCACHE, HASHKEY_NONE> s_footstepSounds;
 
-// PROVEN: f504e212 IDENTICAL/DIFFERENT
 // OFFSET: 0x00633C50/0x1402C9A10
 void SI3::ShutDownFootstepSounds() {
     s_footstepSounds.Clear();

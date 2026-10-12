@@ -35,7 +35,6 @@ static int32_t SortByTexture(const void* elem1, const void* elem2) {
     return static_cast<int32_t>(reinterpret_cast<uintptr_t>(mesh1->m_shader) - reinterpret_cast<uintptr_t>(mesh2->m_shader));
 }
 
-// PROVEN: ceaa3c78 IDENTICAL/UNPROVEN
 // OFFSET: 0x004FA6E0/0x14013E480
 void CRenderBatch::Finish() {
     if (this->m_texturelist.Count() > 1) {
@@ -76,14 +75,12 @@ void CRenderBatch::Queue(CTexture* texture, EGxBlend alphaMode, int32_t posCount
     this->m_count++;
 }
 
-// PROVEN: 95026a39 UNPROVEN/IDENTICAL
 // OFFSET: 0x004FC020/0x140140200
 CRenderBatch::CRenderBatch() {
     this->m_count = 0;
     this->m_stringbatch = NULL;
 }
 
-// PROVEN: 0d62026b IDENTICAL/DIFFERENT
 // OFFSET: 0x004FC580/0x1401408D0
 void CRenderBatch::QueueCallback(void (*callback)(void*), void* param) {
     RENDERCALLBACKNODE* node = this->m_callbacks.NewNode(2, 0, 0);
@@ -92,7 +89,6 @@ void CRenderBatch::QueueCallback(void (*callback)(void*), void* param) {
     this->m_count++;
 }
 
-// PROVEN: 087957c0 DIFFERENT/IDENTICAL
 // OFFSET: 0x004FC730/0x140140B10
 void CRenderBatch::Clear() {
     this->m_texturelist.SetCount(0);

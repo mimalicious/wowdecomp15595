@@ -15,7 +15,6 @@
 
 //-----------------------------------------------------------------------------
 
-// PROVEN: a079c865 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD6820/0x1408A1C20
 int ASfxDsp::init(float rate)
 {
@@ -110,7 +109,6 @@ int ASfxDsp::init(float rate)
 	return 0;
 }
 
-// PROVEN: 6ca90e73 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AD5450/0x1408A05C0
 void ASfxDsp::close()
 {
@@ -127,7 +125,6 @@ void ASfxDsp::close()
 }
 
 
-// PROVEN: 50b17985 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD54F0/0x1408A0680
 int ASfxDsp::AllocateLateDelays(int numDelays, float *delaySec, float sampleRate)
 {
@@ -164,7 +161,6 @@ int ASfxDsp::AllocateLateDelays(int numDelays, float *delaySec, float sampleRate
 	return 0;
 }
 
-// PROVEN: e0932c68 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD5620/0x1408A0800
 int ASfxDsp::AllocateEarlyLateDelay(float *delaySec, float sampleRate)
 {
@@ -191,7 +187,6 @@ int ASfxDsp::AllocateEarlyLateDelay(float *delaySec, float sampleRate)
 	return 0;
 }
 
-// PROVEN: 3d5bf7cf IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD56F0/0x1408A0910
 int ASfxDsp::AllocateAllpassDelays(int numDelays, float *delaySec, float sampleRate)
 {
@@ -227,7 +222,6 @@ int ASfxDsp::AllocateAllpassDelays(int numDelays, float *delaySec, float sampleR
 	return 0;
 }
 
-// PROVEN: 4dd5a29c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD5820/0x1408A0A90
 int ASfxDsp::AllocateEarlyDelay(float delaySec, float sampleRate)
 {
@@ -256,7 +250,6 @@ int	ASfxDsp::NextPowerOf2(int delaySamples)
 }
 
 
-// PROVEN: 630f70a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD4FA0/0x14089FBC0
 void ASfxDsp::DeallocateLateDelays()
 {
@@ -278,7 +271,6 @@ void ASfxDsp::DeallocateLateDelays()
 	mLateDelays = NULL;
 }
 
-// PROVEN: ead0aec2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD5020/0x14089FC90
 void ASfxDsp::DeallocateAllpassDelays()
 {
@@ -322,7 +314,6 @@ void ASfxDsp::DeallocateEarlyLateDelay()
 
 //-----------------------------------------------------------------------------
 //#pragma export(UpdateBufferSize)
-// PROVEN: 753933a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD50A0/0x14089FD60
 bool ASfxDsp::UpdateBufferSize(int newMaxBlockSize)
 {
@@ -348,7 +339,6 @@ bool ASfxDsp::UpdateBufferSize(int newMaxBlockSize)
 
 //-----------------------------------------------------------------------------
 //#pragma export (ASfxDsp::ClearBuffers)
-// PROVEN: 5f8efd85 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD58E0/0x1408A0B90
 void ASfxDsp::ClearBuffers()
 {
@@ -372,7 +362,6 @@ void ASfxDsp::ClearInBuff()
 
 
 //-----------------------------------------------------------------------------
-// PROVEN: bc46f1e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD5110/0x14089FE00
 void ASfxDsp::ClearReverbInternalBuffers()
 {
@@ -863,7 +852,6 @@ void ASfxDsp::DoDSPProcessing (float * inAudio, float * outAudio, int channels, 
 
 
 // Copy input into our input buffer. This may be faster than doing it inside the big loop (?).
-// PROVEN: 045542e3 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AD5240/0x14089FF70
 void ASfxDsp::BlockProcessInput(unsigned int sampframes, int channels, float *inAudio, float rate)
 {
@@ -892,7 +880,6 @@ void ASfxDsp::BlockProcessInput(unsigned int sampframes, int channels, float *in
 
 
 
-// PROVEN: eb7e447d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD5340/0x1408A0080
 void ASfxDsp::SetLate_EarlyLateDelayTaps(float refPlusRevDelaySec, float nextLengthSec, float delayRatio, float rate)	
 {
@@ -939,7 +926,6 @@ void ASfxDsp::SetEarlyDelay(float nextLengthSec, float delayRatio, float rate)
 	}
 }
 
-// PROVEN: cb4322f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD53B0/0x1408A0290
 void ASfxDsp::SetLateDelays(float nextLengthSec, float delayRatio, float nextLengthBSec, float delayRatioB, float rate)
 {

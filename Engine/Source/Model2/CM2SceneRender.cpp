@@ -33,7 +33,6 @@ const uint32_t s_noLiquidFog[7] = { 0, 0, 0, 1, 1, 0, 0 };
 // STATIC: 0x00D07F20/0x140BB91B0
 static C44Matrix s_identity;
 
-// PROVEN: d497d0b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00828980/0x1405469E0
 CM2SceneRender::CM2SceneRender(CM2Scene* scene) {
     this->m_scene = scene;
@@ -241,7 +240,6 @@ void CM2SceneRender::SetupTextures() {
     } while (i < 4);
 }
 
-// PROVEN: 95764fc2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00829020/0x140547070
 void CM2SceneRender::SetupBillboardView(const C3Vector& position) {
     C44Matrix view = this->m_scene->m_view;
@@ -254,7 +252,6 @@ void CM2SceneRender::SetupBillboardView(const C3Vector& position) {
     world.m_mtx[world.m_level] = s_identity;
 }
 
-// PROVEN: e87bee13 IDENTICAL/NONE
 // OFFSET: 0x008290A0
 void CM2SceneRender::EndFixed() {
     g_theGxDevicePtr->RsPop();
@@ -266,7 +263,6 @@ void CM2SceneRender::EndFixed() {
     world.m_mtx[world.m_level] = s_identity;
 }
 
-// PROVEN: 886701ad IDENTICAL/IDENTICAL
 // OFFSET: 0x008280A0/0x140545FD0
 void CM2SceneRender::SetBatchVertices(int32_t sharedVertices) {
     if (CShaderEffect::s_enableShaders) {

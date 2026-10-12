@@ -43,12 +43,10 @@ static const uint32_t s_lightQueueSize[2] = { 32, 32 };
 
 static CGxuLightQueue s_lightQueue(s_lightQueueSize);
 
-// PROVEN: ec6a25f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 static void GxuLightInitializeImpl() {
 }
 
-// PROVEN: 64e038cf IDENTICAL/DIFFERENT
 // OFFSET: 0x006109C0/0x14029AF40
 static CGxLight* GxuLightLockImpl(CGxuLight* light) {
     light->m_lockCount++;
@@ -63,7 +61,6 @@ static void GxuLightSetEnabledImpl(CGxuLight* light, bool enabled) {
     GxuLightUnlock(light);
 }
 
-// PROVEN: d937cbcd IDENTICAL/DIFFERENT
 // OFFSET: 0x00610A00/0x14029AF80
 static int32_t GxuLightGetEnabledImpl(CGxuLight* light) {
     int32_t enabled = GxuLightLock(light)->m_flags & 1;
@@ -72,7 +69,6 @@ static int32_t GxuLightGetEnabledImpl(CGxuLight* light) {
     return enabled;
 }
 
-// PROVEN: 6761747e IDENTICAL/DIFFERENT
 // OFFSET: 0x00610A30/0x14029AFB0
 static void GxuLightSetMaxLightsImpl(uint32_t maxLights) {
     s_maxLights = maxLights;
@@ -82,7 +78,6 @@ static void GxuLightSetMaxLightsImpl(uint32_t maxLights) {
     }
 }
 
-// PROVEN: 59b9700f IDENTICAL/IDENTICAL
 // OFFSET: 0x00610A50/0x14029AFD0
 static float GxuLightGetGridSizeImpl() {
     return s_gridSize;
@@ -111,7 +106,6 @@ float CGxuLight::CalcIntensity(const C3Vector& point, float linearAttenuation, f
     return ambientMag + intensity;
 }
 
-// PROVEN: 99f107c6 IDENTICAL/NONE
 // OFFSET: 0x00775F40/0x140460560
 CGxuLightLink::~CGxuLightLink() {
 }
@@ -153,7 +147,6 @@ CGxuLightLink* CGxuLight::NewLink() {
     return link;
 }
 
-// PROVEN: ac47e974 IDENTICAL/DIFFERENT
 // OFFSET: 0x00610E20/0x14029B4C0
 CLightList::~CLightList() {
 }
@@ -166,7 +159,6 @@ static void GxuLightDestroyImpl(CGxuLight* light) {
     s_freeLights.LinkToTail(light);
 }
 
-// PROVEN: 4e8645ef IDENTICAL/DIFFERENT
 // OFFSET: 0x006110F0/0x14029B8A0
 CGxuLight::~CGxuLight() {
 }

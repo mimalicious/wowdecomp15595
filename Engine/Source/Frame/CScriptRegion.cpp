@@ -21,31 +21,26 @@ int32_t CScriptRegion::s_objectType;
 // STATIC: 0x00CA3264/0x140B40378
 const char* CScriptRegion::s_objectTypeName = "Region";
 
-// PROVEN: e23865aa IDENTICAL/DIFFERENT
 // OFFSET: 0x00469450/0x14013FFC0
 CScriptObject* CScriptRegion::GetScriptObjectParent() {
     return this->m_parent;
 }
 
-// PROVEN: 70c65224 IDENTICAL/IDENTICAL
 // OFFSET: 0x00469460/0x14007D680
 bool CScriptRegion::IsA(int32_t type) {
     return type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: b3363a79 IDENTICAL/NONE
 // OFFSET: 0x00469490/0x14007D6A0
 bool CScriptRegion::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: ba11daed IDENTICAL/IDENTICAL
 // OFFSET: 0x005025F0/0x140148050
 const char* CScriptRegion::GetObjectTypeName() {
     return CScriptRegion::s_objectTypeName;
 }
 
-// PROVEN: 9ae23da3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050FB60/0x140158EF0
 CScriptRegion::CScriptRegion() {
     this->m_parent = NULL;
@@ -53,13 +48,11 @@ CScriptRegion::CScriptRegion() {
     this->m_playingAnimGroups = NULL;
 }
 
-// PROVEN: 17d84e01 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050FBA0/0x140158F50
 bool CScriptRegion::IsDragging() {
     return this->m_parent ? this->m_parent->IsDragging() : false;
 }
 
-// PROVEN: 95f2f5a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x005025E0/0x140148040
 void CScriptRegion::SetParent(CSimpleFrame* parent) {
     this->m_parent = parent;
@@ -83,14 +76,12 @@ void CScriptRegion::LoadXML_Animations(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 92f1b045 IDENTICAL/DIFFERENT
 // OFFSET: 0x0050FCA0/0x140159090
 CLayoutFrame* CScriptRegion::GetLayoutParent() {
     CLayoutFrame* parent = this->m_parent;
     return parent ? parent : CSimpleTop::s_instance;
 }
 
-// PROVEN: d8e36992 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050FCC0/0x1401590B0
 CLayoutFrame* CScriptRegion::GetLayoutFrameByName(const char* name) {
     char fullName[1024];
@@ -166,7 +157,6 @@ void CScriptRegion::LoadXML(linkObject* node, CStatus* status) {
     this->LoadXML_Animations(node, status);
 }
 
-// PROVEN: 89deea3a IDENTICAL/IDENTICAL
 // OFFSET: 0x0050FF30/0x1401593D0
 int32_t CScriptRegion::HasActiveAnimGroup() {
     for (CScriptRegion* region = this; region; region = region->m_parent) {
@@ -178,7 +168,6 @@ int32_t CScriptRegion::HasActiveAnimGroup() {
     return 0;
 }
 
-// PROVEN: 98a90272 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050FFA0/0x140159480
 int32_t CScriptRegion::HasActiveAlphaAnim() {
     for (CScriptRegion* region = this; region; region = region->m_parent) {
@@ -194,7 +183,6 @@ int32_t CScriptRegion::HasActiveAlphaAnim() {
     return 0;
 }
 
-// PROVEN: 90283ad6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00510010/0x140159510
 int32_t CScriptRegion::HasActivePositionAnim() {
     for (CScriptRegion* region = this; region; region = region->m_parent) {
@@ -232,7 +220,6 @@ void CScriptRegion::StopAnimating() {
     }
 }
 
-// PROVEN: ea7cc7c3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00510140/0x1401596A0
 void CScriptRegion::NotifyAnimEnd(CSimpleAnimGroup* group) {
     if (!group || !this->m_playingAnimGroups) {
@@ -245,7 +232,6 @@ void CScriptRegion::NotifyAnimEnd(CSimpleAnimGroup* group) {
     this->AnimDeactivated(group, alpha, position);
 }
 
-// PROVEN: 13a1f00e IDENTICAL/DIFFERENT
 // OFFSET: 0x005101C0/0x1401597A0
 void CScriptRegion::NotifyAnimBegin(CSimpleAnimGroup* group) {
     if (!group) {
@@ -266,7 +252,6 @@ void CScriptRegion::NotifyAnimBegin(CSimpleAnimGroup* group) {
     this->m_playingAnimGroups->LinkToTail(group);
 }
 
-// PROVEN: a0bd42a1 IDENTICAL/UNPROVEN
 // OFFSET: 0x005102F0/0x1401598B0
 void CScriptRegion::RegisterAnimGroup(CSimpleAnimGroup* group) {
     if (!group) {
@@ -294,37 +279,30 @@ CScriptRegion::~CScriptRegion() {
     }
 }
 
-// PROVEN: 4d845176 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CScriptRegion::PreOnAnimUpdate() {
 }
 
-// PROVEN: 624067b4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
 }
 
-// PROVEN: d026b161 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void CScriptRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
 }
 
-// PROVEN: 520f3671 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CScriptRegion::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
 }
 
-// PROVEN: 026f6a8a IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
 }
 
-// PROVEN: 4414fe0c IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
 }
 
-// PROVEN: 7108781d IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CScriptRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
 }

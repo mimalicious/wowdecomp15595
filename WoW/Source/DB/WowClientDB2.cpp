@@ -21,7 +21,6 @@ struct DB2SAVEWRITE {
 // STATIC: 0x00D73608/0x140B33D10
 TSHashTable<WowClientDB2_Base::DBTABLE, HASHKEY_NONE> WowClientDB2_Base::m_tableByHash;
 
-// PROVEN: 07e2e6d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048B6D0/0x1400AEA90
 static bool SaveCountCallback(const uint8_t* record, WowClientDB2_Base* db, void* param) {
     DB2SAVECOUNT* count = static_cast<DB2SAVECOUNT*>(param);
@@ -31,7 +30,6 @@ static bool SaveCountCallback(const uint8_t* record, WowClientDB2_Base* db, void
     return true;
 }
 
-// PROVEN: b97d87d0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0048B6F0/0x1400AEAC0
 static bool SaveWriteCallback(const uint8_t* record, WowClientDB2_Base* db, void* param) {
     DB2SAVEWRITE* save = static_cast<DB2SAVEWRITE*>(param);
@@ -55,7 +53,6 @@ bool WowClientDB2_Base::DBReplyMultiplex(ClientDBReply* reply) {
     return table->DBReplyHandler(reply);
 }
 
-// PROVEN: 08b305b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0048B2A0/0x1400AE4D0
 void WowClientDB2_Base::GetCacheDir(char* buffer, const char* fileName, bool create) {
     strcpy(buffer, "Cache\\ADB");
@@ -105,7 +102,6 @@ bool WowClientDB2_Base::HotfixNotifyMultiplex(ClientHotfixNotify* notify) {
     return true;
 }
 
-// PROVEN: 655b0f3e IDENTICAL/DIFFERENT
 // OFFSET: 0x0048B650/0x1400AE9E0
 void WowClientDB2_Base::Free() {
     this->m_records = NULL;
@@ -459,7 +455,6 @@ cacheLoaded:
     }
 }
 
-// PROVEN: af83934d IDENTICAL/DIFFERENT
 // OFFSET: 0x0048B360/0x1400AE5A0
 void WowClientDB2_Base::LoadRecord(uint8_t* record, const char* strings) {
     if (!strings) {
@@ -482,7 +477,6 @@ void WowClientDB2_Base::LoadRecord(uint8_t* record, const char* strings) {
     }
 }
 
-// PROVEN: 1239f2dc IDENTICAL/UNPROVEN
 // OFFSET: 0x0048C3F0/0x1400AFD70
 void WowClientDB2_Base::PurgeUnconfirmedHotfixes() {
     HOTFIX* hotfix = this->m_hotfixes.Head();
@@ -498,7 +492,6 @@ void WowClientDB2_Base::PurgeUnconfirmedHotfixes() {
     }
 }
 
-// PROVEN: 7ced4aa9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0048BF80/0x1400AF730
 void WowClientDB2_Base::RestoreHotfix(uint32_t recordID, uint32_t timestamp) {
     HOTFIX* hotfix = this->m_hotfixes.NewNode(2, 0, 0);
@@ -609,7 +602,6 @@ void WowClientDB2_Base::Save(uint32_t hotfixTime) {
     }
 }
 
-// PROVEN: 35db40fd IDENTICAL/DIFFERENT
 // OFFSET: 0x0048B5B0/0x1400AE920
 void WowClientDB2_Base::StringsFixup(uint8_t* record) {
     const DB2Meta* meta = this->m_meta;

@@ -206,7 +206,6 @@ int32_t CGGuildInfo::m_professionCategoryFilter = -1;
 // STATIC: 0x00D11FEC/0x140BC9208
 TSList<CGGuildInfo::GuildProfessionHeader, TSGetLink<CGGuildInfo::GuildProfessionHeader> > CGGuildInfo::m_professionList;
 
-// PROVEN: 28560e71 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044BB90/0x140059250
 uint32_t CGGuildInfo::GetNumMembers(int32_t includeOffline) {
     if (!CGGuildInfo::m_showOffline && !includeOffline) {
@@ -216,7 +215,6 @@ uint32_t CGGuildInfo::GetNumMembers(int32_t includeOffline) {
     return CGGuildInfo::m_numMembers;
 }
 
-// PROVEN: 9fb711da IDENTICAL/NONE
 // OFFSET: 0x0044E470
 GuildMemberInfo* CGGuildInfo::GetMember(uint32_t index) {
     if (index >= CGGuildInfo::m_numMembers) {
@@ -226,7 +224,6 @@ GuildMemberInfo* CGGuildInfo::GetMember(uint32_t index) {
     return CGGuildInfo::m_members[index];
 }
 
-// PROVEN: 22599f55 IDENTICAL/NONE
 // OFFSET: 0x00931100
 int32_t GuildMemberInfo::GetProfessionRank(int32_t skillLineID) {
     for (uint32_t i = 0; i < 2; i++) {
@@ -238,7 +235,6 @@ int32_t GuildMemberInfo::GetProfessionRank(int32_t skillLineID) {
     return 0;
 }
 
-// PROVEN: a0df2800 IDENTICAL/UNPROVEN
 // OFFSET: 0x00931130/0x140699170
 void CGGuildInfo::GetGuildMemberRecipes(SkillLine& skillLine, uint8_t* data) {
     skillLine = CGGuildInfo::m_guildMemberSkillLine;
@@ -248,7 +244,6 @@ void CGGuildInfo::GetGuildMemberRecipes(SkillLine& skillLine, uint8_t* data) {
     }
 }
 
-// PROVEN: 12b6dcc8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00931170/0x1406991B0
 int32_t CGGuildInfo::GetMemberProfessionRank(GuildMemberInfo* member, int32_t skillLineID) {
     if (!member) {
@@ -285,7 +280,6 @@ void CGGuildInfo::SetSortType(GUILD_SORT_TYPE type) {
     }
 }
 
-// PROVEN: fd4f309a IDENTICAL/DIFFERENT
 // OFFSET: 0x00931250/0x1406992B0
 static int32_t QSortWeeklyXP(const void* a, const void* b) {
     int64_t xpA = (*static_cast<GuildMemberInfo* const*>(a))->m_weeklyXP;
@@ -302,7 +296,6 @@ static int32_t QSortWeeklyXP(const void* a, const void* b) {
     return -1;
 }
 
-// PROVEN: 2a441d5a IDENTICAL/DIFFERENT
 // OFFSET: 0x00931290/0x1406992E0
 static int32_t QSortTotalXP(const void* a, const void* b) {
     int64_t xpA = (*static_cast<GuildMemberInfo* const*>(a))->m_totalXP;
@@ -331,7 +324,6 @@ static int32_t QSortAchievementPoints(const void* a, const void* b) {
     return 2 * (memberA->m_achievementPoints < memberB->m_achievementPoints) - 1;
 }
 
-// PROVEN: 1460262f IDENTICAL/IDENTICAL
 // OFFSET: 0x00931300/0x140699340
 void CGGuildInfo::QueryPermissions() {
     GlobalGuildPermissionsQuery query;
@@ -341,7 +333,6 @@ void CGGuildInfo::QueryPermissions() {
     ClientServices::Send(&moneyQuery);
 }
 
-// PROVEN: 316cfdb9 IDENTICAL/NONE
 // OFFSET: 0x00931350
 int32_t CGGuildInfo::GetRankIndexFromRankOrder(int32_t rankOrder) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numUsedRanks; i++) {
@@ -353,7 +344,6 @@ int32_t CGGuildInfo::GetRankIndexFromRankOrder(int32_t rankOrder) {
     return -1;
 }
 
-// PROVEN: 6bc6cbb9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00931380/0x140699390
 int32_t CGGuildInfo::GetRankOrderFromRankID(int32_t rankID) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numUsedRanks; i++) {
@@ -365,7 +355,6 @@ int32_t CGGuildInfo::GetRankOrderFromRankID(int32_t rankID) {
     return -1;
 }
 
-// PROVEN: 16fc5e62 IDENTICAL/UNPROVEN
 // OFFSET: 0x009313D0/0x1406993E0
 int32_t CGGuildInfo::GetRankIDFromRankOrder(int32_t rankOrder) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numUsedRanks; i++) {
@@ -377,7 +366,6 @@ int32_t CGGuildInfo::GetRankIDFromRankOrder(int32_t rankOrder) {
     return -1;
 }
 
-// PROVEN: 1f2e4280 IDENTICAL/NONE
 // OFFSET: 0x00931410
 GuildRankInfo* CGGuildInfo::GetRankInfoFromRankID(int32_t rankID) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numUsedRanks; i++) {
@@ -389,7 +377,6 @@ GuildRankInfo* CGGuildInfo::GetRankInfoFromRankID(int32_t rankID) {
     return NULL;
 }
 
-// PROVEN: 63702c1a IDENTICAL/UNPROVEN
 // OFFSET: 0x00931460/0x140699420
 uint32_t CGGuildInfo::GetPermissionsByRankOrder(int32_t rankOrder) {
     if (rankOrder < 0 || rankOrder >= static_cast<int32_t>(CGGuildInfo::m_numUsedRanks)) {
@@ -405,7 +392,6 @@ uint32_t CGGuildInfo::GetPermissionsByRankOrder(int32_t rankOrder) {
     return CGGuildInfo::m_rankInfo[index].m_rights;
 }
 
-// PROVEN: 0a04c28a IDENTICAL/DIFFERENT
 // OFFSET: 0x009314A0/0x140699470
 uint32_t CGGuildInfo::GetPermissionsByRankID(int32_t rankID) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numUsedRanks; i++) {
@@ -417,7 +403,6 @@ uint32_t CGGuildInfo::GetPermissionsByRankID(int32_t rankID) {
     return 0;
 }
 
-// PROVEN: f1b8bc49 IDENTICAL/DIFFERENT
 // OFFSET: 0x009314E0/0x1406994C0
 int32_t CGGuildInfo::GetWithdrawGoldLimitForSelectedRank() {
     int32_t rankOrder = CGGuildInfo::m_selectedRankOrder;
@@ -443,7 +428,6 @@ int32_t CGGuildInfo::GetWithdrawGoldLimitForSelectedRank() {
     return CGGuildInfo::m_rankInfo[index].m_withdrawGoldLimit;
 }
 
-// PROVEN: aa5fa092 IDENTICAL/UNPROVEN
 // OFFSET: 0x00931530/0x140699520
 int32_t CGGuildInfo::GetWithdrawGoldLimitByRankID(uint32_t rankID) {
     int32_t index = -1;
@@ -485,7 +469,6 @@ void CGGuildInfo::SetWithdrawGoldLimitForSelectedRank(uint32_t amount) {
     }
 }
 
-// PROVEN: 501e4870 IDENTICAL/DIFFERENT
 // OFFSET: 0x009315F0/0x1406995E0
 void CGGuildInfo::SetTabWithdrawItemLimitForSelectedRank(uint32_t tab, int32_t amount) {
     int32_t rankOrder = CGGuildInfo::m_selectedRankOrder;
@@ -506,7 +489,6 @@ void CGGuildInfo::SetTabWithdrawItemLimitForSelectedRank(uint32_t tab, int32_t a
     }
 }
 
-// PROVEN: 56e296ab IDENTICAL/DIFFERENT
 // OFFSET: 0x00931660/0x140699660
 uint32_t CGGuildInfo::GetTabFlagsForSelectedRank(uint32_t tab) {
     int32_t rankOrder = CGGuildInfo::m_selectedRankOrder;
@@ -536,7 +518,6 @@ uint32_t CGGuildInfo::GetTabFlagsForSelectedRank(uint32_t tab) {
     return CGGuildInfo::m_rankInfo[index].m_tabFlags[tab];
 }
 
-// PROVEN: 4ec921a7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009316C0/0x1406996D0
 uint32_t CGGuildInfo::GetGuildBankTabPermissionsByRankID(uint32_t tab, uint32_t rankID) {
     int32_t index = -1;
@@ -555,7 +536,6 @@ uint32_t CGGuildInfo::GetGuildBankTabPermissionsByRankID(uint32_t tab, uint32_t 
     return CGGuildInfo::m_rankInfo[index].m_tabFlags[tab];
 }
 
-// PROVEN: 9503acd9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00931710/0x140699720
 int32_t CGGuildInfo::SetTabFlagsForSelectedRank(int32_t tab, uint32_t flags) {
     int32_t rankOrder = CGGuildInfo::m_selectedRankOrder;
@@ -578,7 +558,6 @@ int32_t CGGuildInfo::SetTabFlagsForSelectedRank(int32_t tab, uint32_t flags) {
     return 0;
 }
 
-// PROVEN: 7b97a8a4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00931770/0x140699790
 int32_t CGGuildInfo::GetTabWithdrawItemLimitForSelectedRank(uint32_t tab) {
     int32_t rankOrder = CGGuildInfo::m_selectedRankOrder;
@@ -608,7 +587,6 @@ int32_t CGGuildInfo::GetTabWithdrawItemLimitForSelectedRank(uint32_t tab) {
     return CGGuildInfo::m_rankInfo[index].m_tabWithdrawItemLimit[tab];
 }
 
-// PROVEN: c2da9110 IDENTICAL/DIFFERENT
 // OFFSET: 0x009317D0/0x140699800
 int32_t CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(uint32_t tab, uint32_t rankID) {
     int32_t index = -1;
@@ -631,7 +609,6 @@ int32_t CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(uint32_t tab, uin
     return CGGuildInfo::m_rankInfo[index].m_tabWithdrawItemLimit[tab];
 }
 
-// PROVEN: b056c625 IDENTICAL/IDENTICAL
 // OFFSET: 0x00931820/0x140699850
 void CGGuildInfo::UpdateRoster(int32_t force) {
     if (force) {
@@ -643,7 +620,6 @@ void CGGuildInfo::UpdateRoster(int32_t force) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_ROSTER_UPDATE, NULL);
 }
 
-// PROVEN: 2199a9e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00931860/0x140699880
 void CGGuildInfo::GuildRewardsItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (CGGuildInfo::m_guildRewardStatCBCount > 0) {
@@ -655,7 +631,6 @@ void CGGuildInfo::GuildRewardsItemStatsCallback(int32_t id, const WOWGUID& guid,
     }
 }
 
-// PROVEN: bd991488 IDENTICAL/DIFFERENT
 // OFFSET: 0x00931890/0x1406998B0
 static int32_t QSortGuildNews(const void* a, const void* b) {
     const GuildNewsEvent* newsA = static_cast<const GuildNewsEvent*>(a);
@@ -701,7 +676,6 @@ static int32_t QSortGuildNews(const void* a, const void* b) {
     return result;
 }
 
-// PROVEN: ed12da46 IDENTICAL/DIFFERENT
 // OFFSET: 0x00931980/0x1406999A0
 static int32_t QSortGuildNewsByDate(const void* a, const void* b) {
     const GuildNewsEvent* newsA = static_cast<const GuildNewsEvent*>(a);
@@ -732,33 +706,28 @@ static int32_t QSortGuildNewsByDate(const void* a, const void* b) {
     return result;
 }
 
-// PROVEN: cc509590 IDENTICAL/IDENTICAL
 // OFFSET: 0x009319F0/0x140699A40
 void CGGuildInfo::GuildNewsItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_NEWS_UPDATE, NULL);
 }
 
-// PROVEN: 14ed0abe IDENTICAL/IDENTICAL
 // OFFSET: 0x009319F0/0x140699A40
 void CGGuildInfo::GuildNewsNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_NEWS_UPDATE, NULL);
 }
 
-// PROVEN: 03ec115e IDENTICAL/NONE
 // OFFSET: 0x00931A00
 bool CGGuildInfo::ClientGuildMoveStartingHandler(ClientGuildMoveStarting* msg) {
     CGChat::AddChatMessage(FrameScript_GetText("GUILD_MOVE_STARTING", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL);
     return true;
 }
 
-// PROVEN: b973e57b IDENTICAL/NONE
 // OFFSET: 0x00931A30
 bool CGGuildInfo::ClientGuildMoveCompleteHandler(ClientGuildMoveComplete* msg) {
     CGChat::AddChatMessage(FrameScript_GetText("GUILD_MOVE_COMPLETE", -1, GENDER_NOT_APPLICABLE), CHAT_MSG_SYSTEM, NULL);
     return true;
 }
 
-// PROVEN: 8b8853b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00931A60/0x140699D80
 int32_t CGGuildInfo::GetRewardMissingAchievement(const JamGuildRewardItem* item) {
     if (item && item->m_achievementRequired && !CGAchievementInfo::GetAchievement(item->m_achievementRequired)) {
@@ -768,13 +737,11 @@ int32_t CGGuildInfo::GetRewardMissingAchievement(const JamGuildRewardItem* item)
     return 0;
 }
 
-// PROVEN: e2c06ed3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00931A90/0x140699DB0
 int32_t CGGuildInfo::GetGuildReputationWeeklyCap() {
     return CGGuildInfo::m_guildReputationWeeklyCap;
 }
 
-// PROVEN: efcebccc IDENTICAL/IDENTICAL
 // OFFSET: 0x009311A0/0x1406991F0
 bool CGGuildInfo::ClientGuildMemberDailyResetHandler(ClientGuildMemberDailyReset* msg) {
     CGGuildBankInfo::QueryGuildBankTab(CGGuildBankInfo::m_currentTab);
@@ -784,7 +751,6 @@ bool CGGuildInfo::ClientGuildMemberDailyResetHandler(ClientGuildMemberDailyReset
     return true;
 }
 
-// PROVEN: 5d958491 IDENTICAL/DIFFERENT
 // OFFSET: 0x009326E0/0x14069ACE0
 void CGGuildInfo::EventLogNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!CGGuildInfo::m_pendingEventLogNames || !--CGGuildInfo::m_pendingEventLogNames) {
@@ -1117,7 +1083,6 @@ const char* CGGuildInfo::GetGuildReputationTitleString(const uint64_t& guid) {
     return FrameScript_GetText("GUILD_FACTION_TITLE_FRIENDLY", -1, static_cast<FRAMESCRIPT_GENDER>(gender));
 }
 
-// PROVEN: fe18de79 IDENTICAL/NONE
 // OFFSET: 0x00932ED0
 int32_t CGGuildInfo::GetSelectedMemberIndex() {
     if (!CGGuildInfo::m_selectedMember) {
@@ -1133,7 +1098,6 @@ int32_t CGGuildInfo::GetSelectedMemberIndex() {
     return -1;
 }
 
-// PROVEN: 90d73578 IDENTICAL/NONE
 // OFFSET: 0x00932F20
 void CGGuildInfo::SetMOTD(const char* motd) {
     SStrCopy(CGGuildInfo::m_motd, motd, sizeof(CGGuildInfo::m_motd));
@@ -1206,7 +1170,6 @@ static int32_t QSortTradeSkillMembers(const void* a, const void* b) {
     return 0;
 }
 
-// PROVEN: 95b45d15 IDENTICAL/UNPROVEN
 // OFFSET: 0x009330A0/0x14069B910
 void CGGuildInfo::ComputeContributionRanks() {
     CGGuildInfo::m_largestWeeklyXPContribution = 0;
@@ -1356,7 +1319,6 @@ int32_t CGGuildInfo::GetNumMembersInRank(int32_t rankOrder) {
     return count;
 }
 
-// PROVEN: 545c495b IDENTICAL/UNPROVEN
 // OFFSET: 0x009335B0/0x14069BF20
 const char* CGGuildInfo::GetRankNameFromRankID(int32_t rankID) {
     int32_t index = -1;
@@ -1375,7 +1337,6 @@ const char* CGGuildInfo::GetRankNameFromRankID(int32_t rankID) {
     return CGGuildInfo::m_rankInfo[index].m_name;
 }
 
-// PROVEN: f85641a9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00933600/0x14069BF70
 void CGGuildInfo::InvalidatePlayer(uint64_t guid) {
     int32_t now = FrameTime::GetCurTimeMs();
@@ -1390,7 +1351,6 @@ void CGGuildInfo::InvalidatePlayer(uint64_t guid) {
     }
 }
 
-// PROVEN: 4e1899bb IDENTICAL/UNPROVEN
 // OFFSET: 0x00933680/0x140699A50
 bool CGGuildInfo::ClientGuildChallengeUpdateHandler(ClientGuildChallengeUpdate* msg) {
     for (uint32_t i = 0; i < 4; i++) {
@@ -1456,14 +1416,12 @@ bool CGGuildInfo::ClientGuildChallengeCompletedHandler(ClientGuildChallengeCompl
     return true;
 }
 
-// PROVEN: b1d990b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x009338A0/0x140699D10
 bool CGGuildInfo::ClientGuildChangeNameResultHandler(ClientGuildChangeNameResult* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_REQUIRED_GUILD_RENAME_RESULT, "%b", msg->m_success);
     return true;
 }
 
-// PROVEN: dc24a7ce IDENTICAL/IDENTICAL
 // OFFSET: 0x009338D0/0x140699D40
 bool CGGuildInfo::ClientGuildFlaggedForRenameHandler(ClientGuildFlaggedForRename* msg) {
     if (msg->m_flagSet) {
@@ -1476,7 +1434,6 @@ bool CGGuildInfo::ClientGuildFlaggedForRenameHandler(ClientGuildFlaggedForRename
     return true;
 }
 
-// PROVEN: fcd787ad IDENTICAL/NONE
 // OFFSET: 0x00933910
 GuildNewsEvent* CGGuildInfo::GetGuildNewsEvent(int32_t index) {
     if (index < 0 || index >= CGGuildInfo::m_numGuildNews) {
@@ -1486,7 +1443,6 @@ GuildNewsEvent* CGGuildInfo::GetGuildNewsEvent(int32_t index) {
     return &CGGuildInfo::m_guildNews[index];
 }
 
-// PROVEN: 538f911d IDENTICAL/UNPROVEN
 // OFFSET: 0x00933940/0x14069C000
 void CGGuildInfo::SortGuildNewsByDate() {
     qsort(CGGuildInfo::m_guildNews.m_data, CGGuildInfo::m_guildNews.Count(), sizeof(GuildNewsEvent), QSortGuildNewsByDate);
@@ -1499,7 +1455,6 @@ void CGGuildInfo::SortGuildNewsByDate() {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_NEWS_UPDATE, NULL);
 }
 
-// PROVEN: 8b5388ef IDENTICAL/IDENTICAL
 // OFFSET: 0x009339B0/0x14069C070
 const char* CGGuildInfo::GetMemberName(const uint64_t& guid) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numMembers; i++) {
@@ -1513,7 +1468,6 @@ const char* CGGuildInfo::GetMemberName(const uint64_t& guid) {
     return FrameScript_GetText("UNKNOWN", -1, GENDER_NOT_APPLICABLE);
 }
 
-// PROVEN: e553c288 IDENTICAL/IDENTICAL
 // OFFSET: 0x00933A10/0x14069C0C0
 bool CGGuildInfo::GetMemberGUIDFromName(const char* name, uint64_t& guid) {
     if (!name) {
@@ -1532,7 +1486,6 @@ bool CGGuildInfo::GetMemberGUIDFromName(const char* name, uint64_t& guid) {
     return false;
 }
 
-// PROVEN: 4ce72d57 IDENTICAL/IDENTICAL
 // OFFSET: 0x00933A90/0x14069C170
 void CGGuildInfo::SetMemberMobile(uint64_t guid, bool mobile) {
     for (uint32_t i = 0; i < CGGuildInfo::m_numMembers; i++) {
@@ -1546,7 +1499,6 @@ void CGGuildInfo::SetMemberMobile(uint64_t guid, bool mobile) {
     }
 }
 
-// PROVEN: a3bef9e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00933AF0/0x14069C1C0
 int32_t CGGuildInfo::GetMemberReputationToCap(const uint64_t& guid) {
     int32_t index = CGGuildInfo::GetMemberIndex(guid);
@@ -1559,7 +1511,6 @@ int32_t CGGuildInfo::GetMemberReputationToCap(const uint64_t& guid) {
     return 0;
 }
 
-// PROVEN: 2ff85acc IDENTICAL/IDENTICAL
 // OFFSET: 0x00934F20/0x14069A8A0
 bool CGGuildInfo::ClientGuildPartyStateHandler(ClientGuildPartyState* msg) {
     CGGuildInfo::m_inGuildParty = msg->m_inGuildParty;
@@ -1570,7 +1521,6 @@ bool CGGuildInfo::ClientGuildPartyStateHandler(ClientGuildPartyState* msg) {
     return true;
 }
 
-// PROVEN: 200eb0f1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00935060/0x14069D9F0
 static int32_t QSortRecipeMembers(const void* a, const void* b) {
     uint64_t guidA = *static_cast<const uint64_t*>(a);
@@ -1592,7 +1542,6 @@ static int32_t QSortRecipeMembers(const void* a, const void* b) {
     return guidA < guidB ? -1 : 1;
 }
 
-// PROVEN: ad83d57c IDENTICAL/DIFFERENT
 // OFFSET: 0x00935130/0x14069DB30
 bool CGGuildInfo::ClientGuildPermissionsQueryResultsHandler(ClientGuildPermissionsQueryResults* msg) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -1686,7 +1635,6 @@ void CGGuildInfo::QueryRanks() {
     ClientServices::Send(&query);
 }
 
-// PROVEN: 1e3951ce IDENTICAL/DIFFERENT
 // OFFSET: 0x00935510/0x14069E090
 void CGGuildInfo::UpdateGuildLevel() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1696,7 +1644,6 @@ void CGGuildInfo::UpdateGuildLevel() {
     }
 }
 
-// PROVEN: b1fcdeac IDENTICAL/DIFFERENT
 // OFFSET: 0x00935540/0x14069E0D0
 bool CGGuildInfo::CanEditGuildEvent() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1708,7 +1655,6 @@ bool CGGuildInfo::CanEditGuildEvent() {
     return (CGGuildInfo::GetPermissionsByRankID(player->m_player->m_playerGuildrank) >> 20) & 1;
 }
 
-// PROVEN: fe637d28 IDENTICAL/DIFFERENT
 // OFFSET: 0x00935590/0x14069E180
 bool CGGuildInfo::CanRemoveGuildEvent() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1964,7 +1910,6 @@ bool CGGuildInfo::GetTradeSkillInfo(int32_t index, uint64_t& guid, int32_t& skil
     return false;
 }
 
-// PROVEN: 5a71d151 IDENTICAL/IDENTICAL
 // OFFSET: 0x00937A90/0x1406A0F90
 void CGGuildInfo::SortTradeSkillMembers(GUILD_SORT_TYPE type) {
     if (type < GUILD_SORT_NAME || (type > GUILD_SORT_ZONE && type != GUILD_SORT_SKILL)) {
@@ -1988,7 +1933,6 @@ void CGGuildInfo::SortTradeSkillMembers(GUILD_SORT_TYPE type) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_TRADESKILL_UPDATE, NULL);
 }
 
-// PROVEN: 81564120 IDENTICAL/DIFFERENT
 // OFFSET: 0x00937B20/0x1406A1030
 void CGGuildInfo::QueryRosterAndRanks() {
     int32_t now = FrameTime::GetCurTimeMs();
@@ -2009,7 +1953,6 @@ void CGGuildInfo::QueryRosterAndRanks() {
     CGGuildInfo::m_nextAllowedQuery = now + 10000;
 }
 
-// PROVEN: fc78be61 IDENTICAL/IDENTICAL
 // OFFSET: 0x00937BA0/0x1406A10C0
 bool CGGuildInfo::ClientGuildReputationReactionChangedHandler(ClientGuildReputationReactionChanged* msg) {
     CGGuildInfo::m_nextAllowedQuery = 0;
@@ -2017,7 +1960,6 @@ bool CGGuildInfo::ClientGuildReputationReactionChangedHandler(ClientGuildReputat
     return true;
 }
 
-// PROVEN: 1aab68a8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00937BC0/0x1406A10E0
 bool CGGuildInfo::ClientGuildResetHandler(ClientGuildReset* msg) {
     CGGuildInfo::m_guildLevel = 1;
@@ -2035,7 +1977,6 @@ bool CGGuildInfo::ClientGuildResetHandler(ClientGuildReset* msg) {
     return true;
 }
 
-// PROVEN: 90696506 IDENTICAL/IDENTICAL
 // OFFSET: 0x00937C30/0x1406A11B0
 void CGGuildInfo::NameChangedGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -2060,7 +2001,6 @@ bool CGGuildInfo::ClientGuildNameChangedHandler(ClientGuildNameChanged* msg) {
     return true;
 }
 
-// PROVEN: 30ec61ed IDENTICAL/DIFFERENT
 // OFFSET: 0x00937D00/0x1406A1280
 uint32_t CGGuildInfo::GetNumGuildRewards() {
     uint32_t count = 0;
@@ -2087,7 +2027,6 @@ uint32_t CGGuildInfo::GetNumGuildRewards() {
     return count;
 }
 
-// PROVEN: aedc1f10 IDENTICAL/DIFFERENT
 // OFFSET: 0x00937DC0/0x1406A1380
 JamGuildRewardItem* CGGuildInfo::GetGuildRewardItem(uint32_t index) {
     if (index >= CGGuildInfo::m_guildRewardItemList.Count()) {
@@ -2195,7 +2134,6 @@ int32_t CGGuildInfo::GetRecipeBitFromSpell(int32_t skillLineID, int32_t spellID)
     return 0;
 }
 
-// PROVEN: 13fa98e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00938620/0x1406A2030
 void CGGuildInfo::ClearProfessionMembers() {
     for (GuildProfessionHeader* header = CGGuildInfo::m_professionList.Head(); !CGGuildInfo::m_professionList.IsEnd(header); ) {
@@ -2208,7 +2146,6 @@ void CGGuildInfo::ClearProfessionMembers() {
     }
 }
 
-// PROVEN: 2b0ef0e1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00938680/0x1406A20B0
 void CGGuildInfo::UpdateProfessions() {
     CGGuildInfo::ClearProfessionMembers();
@@ -2293,7 +2230,6 @@ void CGGuildInfo::EnterWorld() {
     CGGuildInfo::m_inGuildParty = false;
 }
 
-// PROVEN: 795e8803 IDENTICAL/IDENTICAL
 // OFFSET: 0x009390C0/0x1406A2EC0
 void CGGuildInfo::SetProfessionHeaderCollapsed(int32_t skillLineID, bool collapsed) {
     bool found = false;
@@ -2335,7 +2271,6 @@ void CGGuildInfo::SetProfessionCategoryFilter(int32_t skillLineID) {
     }
 }
 
-// PROVEN: 6836855e IDENTICAL/IDENTICAL
 // OFFSET: 0x00939160/0x1406A3030
 void CGGuildInfo::SetProfessionNameFilter(const char* filter) {
     if (filter) {
@@ -2387,7 +2322,6 @@ void CGGuildInfo::InitializeProfessionsHeaderList() {
     }
 }
 
-// PROVEN: 878c5035 IDENTICAL/IDENTICAL
 // OFFSET: 0x00939430/0x1406A3450
 void CGGuildInfo::SetShowOffline(int32_t show) {
     if (show == CGGuildInfo::m_showOffline) {
@@ -2495,7 +2429,6 @@ bool CGGuildInfo::ClientGuildRosterHandler(ClientGuildRoster* msg) {
     return true;
 }
 
-// PROVEN: 67d3f1e8 IDENTICAL/NONE
 // OFFSET: 0x00939CD0
 bool CGGuildInfo::ClientGuildRosterUpdateHandler(ClientGuildRosterUpdate* msg) {
     if (!msg || !ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -2644,7 +2577,6 @@ void CGGuildInfo::ShutdownGame() {
     CGGuildInfo::m_guildNews.Clear();
 }
 
-// PROVEN: 80ca12c9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0093A590/0x1406A4DA0
 bool CGGuildInfo::ClientGuildRewardListHandler(ClientGuildRewardList* msg) {
     if (msg->m_version != CGGuildInfo::m_guildRewardItemListVersion) {
@@ -2667,7 +2599,6 @@ bool CGGuildInfo::ClientGuildRewardListHandler(ClientGuildRewardList* msg) {
     return true;
 }
 
-// PROVEN: a7dac5e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093A660/0x1406A4F00
 void CGGuildInfo::SetGuildNewsFilter(int32_t filter) {
     CGGuildInfo::m_guildNewsFilter = filter;

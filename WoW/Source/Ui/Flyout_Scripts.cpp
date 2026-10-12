@@ -104,7 +104,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetFlyoutSlotInfo", &Script_GetFlyoutSlotInfo },
 };
 
-// PROVEN: 799e8602 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A3D00/0x140729390
 void CFlyout::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -112,7 +111,6 @@ void CFlyout::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 7a9a4f9f IDENTICAL/UNPROVEN
 // OFFSET: 0x009A3D30/0x1407293E0
 void CFlyout::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

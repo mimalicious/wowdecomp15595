@@ -12,7 +12,6 @@ CClientLiquidEnvironment* CClientLiquidEnvironment::s_shared;
 // STATIC: 0x00E890C4/0x140D74DA0
 static int32_t s_localLightInitialized;
 
-// PROVEN: f99279b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C740/0x140454CB0
 void CClientLiquidEnvironment::SetInteriorFog(int32_t interiorFog) {
     this->m_interiorFog = interiorFog;
@@ -22,7 +21,6 @@ void CClientLiquidEnvironment::SetInteriorFog(int32_t interiorFog) {
 Liquid::IEnvironment::~IEnvironment() {
 }
 
-// PROVEN: 2d53bd9c IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C780/0x140454CC0
 void CClientLiquidEnvironment::Destroy() {
     if (CClientLiquidEnvironment::s_shared) {
@@ -33,7 +31,6 @@ void CClientLiquidEnvironment::Destroy() {
     CClientLiquidEnvironment::s_allocator.Clear(typeid(CClientLiquidEnvironment).raw_name(), SLOG_OBJECT, 1);
 }
 
-// PROVEN: 65a26e86 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C7D0/0x140454D30
 void CClientLiquidEnvironment::Release() {
     if (this != CClientLiquidEnvironment::s_shared) {

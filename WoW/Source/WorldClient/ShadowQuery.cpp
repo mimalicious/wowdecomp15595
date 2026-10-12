@@ -34,7 +34,6 @@ CVar* CShadowQuery::s_shadowScissor;
 // STATIC: 0x00E89018/0x140D74C50
 CVar* CShadowQuery::s_shadowInstancing;
 
-// PROVEN: d847b370 IDENTICAL/IDENTICAL
 // OFFSET: 0x00768B10/0x14044FE40
 void CShadowQuery::Destroy() {
     CShadowCache::Destroy();
@@ -56,7 +55,6 @@ void CShadowQuery::GetSize(CShadowCacheQueryData& data, int32_t band, float& min
     }
 }
 
-// PROVEN: ae9db892 IDENTICAL/NONE
 // OFFSET: 0x00768BA0
 void CShadowQuery::AllocBuffers() {
     for (uint32_t i = 0; i < 3; i++) {
@@ -211,7 +209,6 @@ int32_t CShadowQuery::Query(CShadowCacheQueryData& data, uint32_t frame) {
     return 1;
 }
 
-// PROVEN: 2b7c86b7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00769960/0x140451030
 void CShadowQuery::MatrixCallback(C3Vector& center, float radius, C44Matrix& matrix, C3Vector& direction, int32_t band) {
     if (CShadowQuery::s_activeShadowQuery) {
@@ -219,7 +216,6 @@ void CShadowQuery::MatrixCallback(C3Vector& center, float radius, C44Matrix& mat
     }
 }
 
-// PROVEN: e863ffd6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00769990/0x140451060
 void CShadowQuery::FrustumCallback(CFrustum& frustum, C44Matrix& matrix, const C3Vector& direction, CShadowCacheQueryData& data, int32_t band) {
     if (CShadowQuery::s_activeShadowQuery) {
@@ -227,7 +223,6 @@ void CShadowQuery::FrustumCallback(CFrustum& frustum, C44Matrix& matrix, const C
     }
 }
 
-// PROVEN: 3f0b4aaa IDENTICAL/UNPROVEN
 // OFFSET: 0x007699C0/0x1404510A0
 int32_t CShadowQuery::QueryCallback(CShadowCacheQueryData& data, uint32_t frame) {
     if (CShadowQuery::s_activeShadowQuery) {
@@ -304,7 +299,6 @@ void CShadowQuery::Clear(CGxFrameBuffer* frameBuffer, const float* rect) {
     g_theGxDevicePtr->FrameBufferSet(oldFrameBuffer);
 }
 
-// PROVEN: 2a220642 IDENTICAL/DIFFERENT
 // OFFSET: 0x00769F50/0x1404517D0
 CShadowQuery::CShadowQuery() {
     void* mem = SMemAlloc(sizeof(CWorldOcclusion), __FILE__, __LINE__, 0);
@@ -314,7 +308,6 @@ CShadowQuery::CShadowQuery() {
     this->m_entityCutoff = 0.0f;
 }
 
-// PROVEN: 6d47b933 IDENTICAL/IDENTICAL
 // OFFSET: 0x00769FC0/0x140451860
 CShadowQuery::~CShadowQuery() {
     CWorldOcclusion* occlusion = this->m_occlusion;
@@ -426,7 +419,6 @@ int32_t CShadowQuery::Render(CShadowCacheQueryData& data, int32_t band, CGxFrame
     return 1;
 }
 
-// PROVEN: dadba1ff IDENTICAL/UNPROVEN
 // OFFSET: 0x0076A9B0/0x1404526F0
 int32_t CShadowQuery::RenderCallback(CShadowCacheQueryData& data, int32_t band, CGxFrameBuffer* frameBuffer, C3Vector& direction) {
     if (CShadowQuery::s_activeShadowQuery) {

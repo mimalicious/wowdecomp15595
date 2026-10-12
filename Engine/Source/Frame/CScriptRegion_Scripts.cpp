@@ -18,7 +18,6 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: 5e353e6c IDENTICAL/IDENTICAL
 // OFFSET: 0x0052EF10/0x14017FDD0
 static int32_t Script_IsProtected(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
@@ -38,7 +37,6 @@ static int32_t Script_IsProtected(lua_State* L) {
     return 2;
 }
 
-// PROVEN: abb85e3b IDENTICAL/IDENTICAL
 // OFFSET: 0x0052EFA0/0x14017FE70
 static int32_t Script_CanChangeProtectedState(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
@@ -595,7 +593,6 @@ static int32_t Script_ClearAllPoints(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 03ca97d5 DIFFERENT/IDENTICAL
 // OFFSET: 0x005304D0/0x1401817D0
 static int32_t Script_StopAnimating(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
@@ -603,7 +600,6 @@ static int32_t Script_StopAnimating(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 78631107 IDENTICAL/IDENTICAL
 // OFFSET: 0x00530510/0x140181810
 static int32_t Script_IsDragging(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
@@ -611,7 +607,6 @@ static int32_t Script_IsDragging(lua_State* L) {
     return 1;
 }
 
-// PROVEN: bbfc40ce IDENTICAL/IDENTICAL
 // OFFSET: 0x00530560/0x140181860
 static int32_t Script_IsMouseOver(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
@@ -737,7 +732,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "IsMouseOver", &Script_IsMouseOver },
 };
 
-// PROVEN: 8196f779 IDENTICAL/UNPROVEN
 // OFFSET: 0x0052EE60/0x14017FDA0
 void CScriptRegion::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);

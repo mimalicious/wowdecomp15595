@@ -28,7 +28,6 @@ Blizzard::Streaming::ManifestInfo* Blizzard::Streaming::ManifestInfo::s_instance
 
 static Blizzard::Streaming::Manifests::ServerItem s_serverItem;
 
-// PROVEN: fab8fff7 IDENTICAL/DIFFERENT
 // OFFSET: 0x006705F0/0x140313F10
 bool Blizzard::Streaming::Manifests::ManifestItem::HandleTag(const char* tag, const char* value) {
     return false;
@@ -211,7 +210,6 @@ Blizzard::Streaming::Manifests::ParameterItem::~ParameterItem() {
 Blizzard::Streaming::Manifests::ParameterItem::ParameterItem() {
 }
 
-// PROVEN: f733ec05 IDENTICAL/NONE
 // OFFSET: 0x007C6030/0x1404C1080
 int32_t Blizzard::Streaming::Manifests::ServerItem::GetUsage(Blizzard::Time::Timestamp time) {
     int32_t usage = 0;
@@ -399,7 +397,6 @@ bool Blizzard::Streaming::FileManifest::SplitServerItem(char* line, std::string&
     return true;
 }
 
-// PROVEN: f41f98f2 IDENTICAL/NONE
 // OFFSET: 0x007BB4B0
 int32_t Blizzard::Streaming::Manifests::FileItem::GetContentId() {
     return atoi(this->m_fileVersion.c_str());
@@ -477,7 +474,6 @@ void Blizzard::Streaming::Manifests::ServerItem::InsertUsageSlot(UsageSlot& slot
     }
 }
 
-// PROVEN: d3f26c76 IDENTICAL/NONE
 // OFFSET: 0x007D9AF0
 void Blizzard::Streaming::Manifests::ServerItem::InsertTimeslot(TimeslotItem* timeslot) {
     UsageSlot slot;
@@ -814,7 +810,6 @@ Blizzard::Streaming::ManifestInfo::ManifestInfo() {
 Blizzard::Streaming::ManifestRandomNumberGenerator::~ManifestRandomNumberGenerator() {
 }
 
-// PROVEN: 35575275 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AB950/0x1404A1A10
 int32_t Blizzard::Streaming::ManifestRandomNumberGenerator::RandomGenerator(int32_t range) {
     return rand() % range;
@@ -1088,13 +1083,11 @@ std::vector<std::string> Blizzard::Streaming::ManifestInfo::GetDirectoryList(con
     return files;
 }
 
-// PROVEN: d8064073 IDENTICAL/NONE
 // OFFSET: 0x007EDAC0
 std::vector<std::string> Blizzard::Streaming::GetFileList(const char* path) {
     return ManifestInfo::Get()->GetFileList(path);
 }
 
-// PROVEN: e5922d8c IDENTICAL/NONE
 // OFFSET: 0x007EDAF0
 std::vector<std::string> Blizzard::Streaming::GetDirectoryList(const char* path) {
     return ManifestInfo::Get()->GetDirectoryList(path);
@@ -1690,19 +1683,16 @@ std::string Blizzard::Streaming::ManifestInfo::GetAbsolutePath(const std::string
     return std::string(normalized);
 }
 
-// PROVEN: 339f6610 IDENTICAL/DIFFERENT
 // OFFSET: 0x007C3BC0/0x140177130
 int32_t System_Streaming::HttpCallback::GetTimeout() {
     return this->m_timeout;
 }
 
-// PROVEN: d6978e4c IDENTICAL/NONE
 // OFFSET: 0x007C3BD0
 void System_Streaming::HttpCallback::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
 }
 
-// PROVEN: 05af256c UNPROVEN/IDENTICAL
 // OFFSET: 0x007C8120/0x1404C34E0
 bool System_Streaming::HttpCallback::ReceivedData(const void* data, int32_t size) {
     if (size > 0) {
@@ -1713,7 +1703,6 @@ bool System_Streaming::HttpCallback::ReceivedData(const void* data, int32_t size
     return true;
 }
 
-// PROVEN: ebd8079b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool System_Streaming::HttpCallback::ShouldBlock() {
     return true;

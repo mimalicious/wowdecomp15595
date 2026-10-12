@@ -64,7 +64,6 @@ struct LightQELess {
     }
 };
 
-// PROVEN: a610679e IDENTICAL/UNPROVEN
 // OFFSET: 0x0064AB90/0x1402E83E0
 const LightParamsRec* DayNight::GetLightParams(const LightRec* light, int32_t index) {
     return g_lightParamsDB.GetRecord(light->m_lightParamsID[index]);
@@ -115,7 +114,6 @@ CImVector* DayNight::InterpColor(CImVector* out, const CImVector* a, const CImVe
     return out;
 }
 
-// PROVEN: 83e7de08 IDENTICAL/IDENTICAL
 // OFFSET: 0x0064AFC0/0x1402EAC90
 CImVector* DayNight::DarkenColor(CImVector* out, const CImVector* color, float scale) {
     C3Vector rgb(color->r * 0.0039215689f, color->g * 0.0039215689f, color->b * 0.0039215689f);

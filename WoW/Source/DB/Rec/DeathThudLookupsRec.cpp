@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[5] = { 0, 0, 0, 0, 0 };
 // STATIC: 0x00C25D70/0x140A1BAF8
 const DBCMeta DeathThudLookupsRec::s_meta = { "DBFilesClient\\DeathThudLookups.dbc", 5, 20, DeathThudLookupsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: d0a3cad0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void DeathThudLookupsRec::FixupStrings(void* record, const char* strings) {
 }

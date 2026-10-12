@@ -50,7 +50,6 @@ OsTimeManager::OsTimeManager() {
     this->m_lastTime = 0;
 }
 
-// PROVEN: fab6fdc8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00879290/0x1405B2210
 OsTimeManager::TimingMethod OsTimeManager::Calibrate() {
     if (!QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&this->m_performanceFrequency))) {
@@ -114,19 +113,16 @@ OsTimeManager::TimingMethod OsTimeManager::Calibrate() {
     return this->m_timingTestError ? SystemMethod1 : SystemMethod2;
 }
 
-// PROVEN: 369eb92f IDENTICAL/UNPROVEN
 // OFFSET: 0x00879420/0x1405B23D0
 uint32_t OsTimeGetTestError() {
     return s_OsTimeMgr.m_timingTestError;
 }
 
-// PROVEN: 53bd9f74 IDENTICAL/UNPROVEN
 // OFFSET: 0x00879430/0x1405B23E0
 OsTimeManager::TimingMethod OsTimeGetTimingMethod() {
     return s_OsTimeMgr.m_timingMethod;
 }
 
-// PROVEN: 6a504ed0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00879440/0x1405B23F0
 const char* GetTimingMethodName(OsTimeManager::TimingMethod method) {
     switch (method) {
@@ -163,7 +159,6 @@ uint32_t OsTimeManager::SnapshotPrecise() {
     return current;
 }
 
-// PROVEN: 93d71ede IDENTICAL/UNPROVEN
 // OFFSET: 0x00879530/0x1405B2430
 uint32_t OsGetAsyncTimeMsPrecise() {
     return s_OsTimeMgr.SnapshotPrecise();
@@ -207,19 +202,16 @@ void OsTimeManager::ScaleTime(float scale) {
     this->m_lock.Leave();
 }
 
-// PROVEN: 7ee1a284 IDENTICAL/DIFFERENT
 // OFFSET: 0x00879740/0x1405B2500
 uint32_t OsGetAsyncTimeMs() {
     return s_OsTimeMgr.Snapshot();
 }
 
-// PROVEN: 83b6cd6f IDENTICAL/UNPROVEN
 // OFFSET: 0x00879750/0x1405B2570
 uint64_t OsGetAsyncTimeClocks() {
     return OsTimeReadClocks(s_OsTimeMgr.m_timingMethod);
 }
 
-// PROVEN: 2b3e040f IDENTICAL/NONE
 // OFFSET: 0x00879790
 void OsTimeScaleTime(float scale) {
     s_OsTimeMgr.ScaleTime(scale);
@@ -230,7 +222,6 @@ double OsTimeGetCurrentScale() {
     return static_cast<double>(OsTimeClocksPerSecond(s_OsTimeMgr.m_timingMethod, s_OsTimeMgr.m_performanceFrequency)) * s_OsTimeMgr.m_scaleToMs * 0.001;
 }
 
-// PROVEN: edd0240f IDENTICAL/DIFFERENT
 // OFFSET: 0x00879810/0x1405B26B0
 void OsTimeManagerCreate(OsTimeManager::TimingMethod method) {
     s_OsTimeMgr.m_timingMethod = OsTimeManager::NotSet;

@@ -154,7 +154,6 @@ static void NotifyLauncher() {
     }
 }
 
-// PROVEN: 0adbddc5 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A2D80/0x140499910
 void BGLoading::UpdateLauncherNotification() {
     NotifyLauncher();

@@ -83,7 +83,6 @@ uint32_t s_objTotalSize[NUM_CLIENT_OBJECT_TYPES] = {
     sizeof(CGAreaTrigger_C) + sizeof(CGObjectData) + sizeof(CGAreaTriggerData) + CGAreaTrigger::TotalFields() * sizeof(uint32_t),
 };
 
-// PROVEN: 9b9c58b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0048F190/0x1400B37F0
 static CMirrorHandler* AssignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list, uint32_t fieldByteOffset, uint32_t mirrorByteOffset, uint32_t fieldByteSize, MIRRORHANDLERFUNC function, void* param, HANDLER_PRIORITY priority, int32_t alwaysFire) {
     CMirrorHandler* handler = list->NewNode(2, 0, 0);
@@ -181,7 +180,6 @@ static void UnassignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMirrorHandle
     }
 }
 
-// PROVEN: f5d66880 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D120/0x1400B0F80
 void ClntObjMgrPush(ClntObjMgr* mgr) {
     if (s_savedObjMgr) {
@@ -196,7 +194,6 @@ void ClntObjMgrPush(ClntObjMgr* mgr) {
     }
 }
 
-// PROVEN: dc993463 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D160/0x1400B0FC0
 void ClntObjMgrPop() {
     if (s_savedObjMgr) {
@@ -205,14 +202,12 @@ void ClntObjMgrPop() {
     }
 }
 
-// PROVEN: 675b198a IDENTICAL/UNPROVEN
 // OFFSET: 0x0048D1B0/0x1400B1020
 int32_t ClntObjMgrIsValid(int32_t a1) {
     ObjectMgr* mgr = s_curMgr;
     return mgr && SMemIsValidPointer(mgr, sizeof(ObjectMgr), a1);
 }
 
-// PROVEN: cee0ed44 DIFFERENT/IDENTICAL
 // OFFSET: 0x0048D1F0/0x1400B1070
 WOWGUID ClntObjMgrGetActivePlayer() {
     ObjectMgr* mgr = s_curMgr;
@@ -278,7 +273,6 @@ CGCorpse_C* ClntObjMgrFindCorpseByOwner(const WOWGUID& owner) {
     return NULL;
 }
 
-// PROVEN: 4ea93bf0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D190/0x1400B1000
 ObjectMgr* ClntObjMgrGetCurrent() {
     return s_curMgr;
@@ -295,7 +289,6 @@ uint32_t ClntObjMgrGetMapID() {
     return mgr->m_mapId;
 }
 
-// PROVEN: f6be13da IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D270/0x1400B1100
 CMovementGlobals* ClntObjMgrGetMovementGlobals() {
     ObjectMgr* mgr = s_curMgr;
@@ -307,7 +300,6 @@ CMovementGlobals* ClntObjMgrGetMovementGlobals() {
     return mgr->m_movementGlobal;
 }
 
-// PROVEN: c765748d IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D220/0x1400B10A0
 uint32_t ClntObjMgrGetPlayerType() {
     return s_curMgr->m_type;
@@ -329,7 +321,6 @@ void ClntObjMgrLinkInNewObject(CGObject_C* object) {
     s_curMgr->m_objects.Insert(object, static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 }
 
-// PROVEN: c34eb43f IDENTICAL/DIFFERENT
 // OFFSET: 0x0048E570/0x1400B26B0
 void ClntObjMgrLockObject(WOWGUID guid) {
     CGObject_C* object = s_curMgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -339,7 +330,6 @@ void ClntObjMgrLockObject(WOWGUID guid) {
     }
 }
 
-// PROVEN: e8b58fac IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D2A0/0x1400B1130
 void ClntObjMgrSetMovementGlobals(CMovementGlobals* globals) {
     ObjectMgr* mgr = s_curMgr;
@@ -696,7 +686,6 @@ static void DestroyRemovedObject(CGObject_C* object) {
     }
 }
 
-// PROVEN: 5e07f643 IDENTICAL/NONE
 // OFFSET: 0x0048D8E0
 static void SkipSetOfObjects(CDataStore* msg) {
     uint32_t count;
@@ -947,7 +936,6 @@ static int32_t CCommand_ObjUsage(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: 7dd71eb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048E240/0x1400B22B0
 void ClntObjMgrInitializeShared() {
     if (!s_heapsAllocated) {
@@ -1209,7 +1197,6 @@ static int32_t ExpireLazyObjects(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: e95f4ae4 IDENTICAL/DIFFERENT
 // OFFSET: 0x004900F0/0x1400B4920
 void ClntObjMgrDestroyLazyCleanupObjects() {
     CGObject_C* object;
@@ -1350,7 +1337,6 @@ static int32_t PostInitObject(CGPlayer_C** activePlayer, CDataStore* msg, uint32
     return result;
 }
 
-// PROVEN: f65c3b11 IDENTICAL/IDENTICAL
 // OFFSET: 0x004902F0/0x1400B4C80
 void ClntObjMgrDestroyStd() {
     if (!s_curMgr) {
@@ -1718,7 +1704,6 @@ void ClntObjMgrInitializeStd(uint32_t mapId) {
     s_curMgr->m_mapId = mapId;
 }
 
-// PROVEN: 52e7a492 IDENTICAL/DIFFERENT
 // OFFSET: 0x00490F20/0x1400B5E90
 void ClntObjMgrUnlockObject(WOWGUID guid, const char* fileName, int32_t lineNumber) {
     CGObject_C* object = s_curMgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -1744,7 +1729,6 @@ void ClntObjMgrUnlockObject(WOWGUID guid, const char* fileName, int32_t lineNumb
     }
 }
 
-// PROVEN: 88f08ff1 IDENTICAL/DIFFERENT
 // OFFSET: [0x0048E430/0x1400B24C0]
 CMirrorHandler::~CMirrorHandler() {
 }

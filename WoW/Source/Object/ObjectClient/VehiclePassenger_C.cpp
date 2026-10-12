@@ -54,32 +54,27 @@ TSGrowableArray<VehiclePassengerRescueTransition>* CVehiclePassenger_C::s_rescue
 // STATIC: 0x00B9E728
 static const uint32_t s_seatAttachments[26] = { 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 0, 47, 48, 6, 5 };
 
-// PROVEN: 90e98e41 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED150/0x14026EAC0
 void CVehiclePassenger_C::StartAddingPendingRescueTransitions() {
     CVehiclePassenger_C::s_addingPendingRescueTransitions = 1;
 }
 
-// PROVEN: 230a7ed2 IDENTICAL/UNPROVEN
 // OFFSET: 0x005ED160/0x14026EAD0
 void CVehiclePassenger_C::OnCancelControlEnd() {
     CGUnit_C::StopMissileTrajectoryTargeting();
     CGUnit_C::HideVehicleUISliders();
 }
 
-// PROVEN: dfac6bd9 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED170/0x14026EAF0
 void CVehiclePassenger_C::ClearFlag8() {
     this->m_flags &= ~0x8;
 }
 
-// PROVEN: 07d224a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED180/0x14026EB00
 void CVehiclePassenger_C::OnVehicleRideLoopAnimEnd(CGUnit_C* unit, int32_t& done, TSGrowableArray<CVehiclePassenger_C*>& passengers) {
     done = 1;
 }
 
-// PROVEN: a8db524b IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED190/0x14026EB10
 void CVehiclePassenger_C::UpdateSmoothFacing() {
     this->m_targetFacing = this->m_unit->GetFacing();
@@ -95,7 +90,6 @@ void CVehiclePassenger_C::UpdateSmoothFacing() {
     this->m_smoothFacing = (1.0f - this->m_facingBlend) * this->m_startFacing + this->m_targetFacing * this->m_facingBlend;
 }
 
-// PROVEN: 567f5348 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED270/0x14026EBD0
 void CVehiclePassenger_C::PostRenderUpdateAll() {
     for (CVehiclePassenger_C* passenger = s_headPassenger; passenger; passenger = passenger->m_next) {
@@ -103,14 +97,12 @@ void CVehiclePassenger_C::PostRenderUpdateAll() {
     }
 }
 
-// PROVEN: f9ea1be9 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED290/0x14026EC00
 void CVehiclePassenger_C::LockWorldFacingNextFrame(float facing) {
     this->m_flags |= 0x1000;
     this->m_lockedWorldFacing = facing;
 }
 
-// PROVEN: 87119b9f IDENTICAL/DIFFERENT
 // OFFSET: 0x005ED2B0/0x14026EC10
 int32_t CVehiclePassenger_C::GetLowerAnim(const VehicleSeatRec* seat) const {
     if (!seat) {
@@ -176,7 +168,6 @@ int32_t CVehiclePassenger_C::GetLowerAnim(const VehicleSeatRec* seat) const {
     }
 }
 
-// PROVEN: 6452bf57 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED360/0x14026ECD0
 void CVehiclePassenger_C::StopAnimKit(int32_t resetUserFlags, int32_t playStopKit) {
     if (this->m_animKit) {
@@ -204,7 +195,6 @@ void CVehiclePassenger_C::StopAnimKit(int32_t resetUserFlags, int32_t playStopKi
     }
 }
 
-// PROVEN: adf4f7c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED400/0x14026EDA0
 void CVehiclePassenger_C::FreeAnimKit() {
     if (this->m_animKit) {
@@ -220,13 +210,11 @@ void CVehiclePassenger_C::FreeAnimKit() {
     }
 }
 
-// PROVEN: 74314af0 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED460/0x14026EE30
 uint32_t CVehiclePassenger_C::IsMirroringVehicleAnims() const {
     return this->m_flags & 0x8800;
 }
 
-// PROVEN: 634925c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED470/0x14026EE40
 uint32_t CVehiclePassenger_C::MirrorsVehicleAnimTier() const {
     return this->m_flags & 0x8000;
@@ -315,7 +303,6 @@ void CVehiclePassenger_C::StopMovement() {
     this->m_stopMovementTime = time;
 }
 
-// PROVEN: f02eb09d DIFFERENT/IDENTICAL
 // OFFSET: 0x005ED8F0/0x14026F300
 CGUnit_C* CVehiclePassenger_C::GetVehicleUnit() const {
     WOWGUID transition = this->m_transitionVehicleGuid;
@@ -331,7 +318,6 @@ CGUnit_C* CVehiclePassenger_C::GetVehicleUnit() const {
     return static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_vehicleGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 }
 
-// PROVEN: a6d42859 IDENTICAL/IDENTICAL
 // OFFSET: 0x005ED940/0x14026F350
 CGUnit_C* CVehiclePassenger_C::GetStoredRootVehicleUnit() const {
     if (this->m_state) {
@@ -420,7 +406,6 @@ int32_t CVehiclePassenger_C::IsWaitingForVehicleTransitionAnimGrabEvent(uint32_t
     return 0;
 }
 
-// PROVEN: 22df6080 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EDB90/0x14026F590
 int32_t CVehiclePassenger_C::IsWaitingForVehicleTransitionAnimThrowEvent(uint32_t eventId) const {
     uint32_t flags = this->m_flags;
@@ -455,7 +440,6 @@ void CVehiclePassenger_C::ComputeSeatOffset(const VehicleSeatRec* seat, CM2Model
     }
 }
 
-// PROVEN: 605086db IDENTICAL/IDENTICAL
 // OFFSET: 0x005EDCC0/0x14026F6C0
 float CVehiclePassenger_C::GetLockedWorldFacing() const {
     return (this->m_flags & 0x1000) ? this->m_lockedWorldFacing : this->m_unit->GetFacing();
@@ -571,7 +555,6 @@ void CVehiclePassenger_C::PlayRideAnimKit(const VehicleSeatRec* seatRec, int32_t
     }
 }
 
-// PROVEN: 8649c098 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EDFD0/0x14026FAD0
 void CVehiclePassenger_C::UpdateAnimKitAfterObjectModelChange() {
     if (this->m_animKit) {
@@ -587,7 +570,6 @@ void CVehiclePassenger_C::UpdateAnimKitAfterObjectModelChange() {
     }
 }
 
-// PROVEN: 984e1c66 IDENTICAL/NONE
 // OFFSET: 0x005EE020
 void CVehiclePassenger_C::StopMirroringVehicleAnims(int32_t unblockExpressions) {
     this->m_flags &= ~0x8800;
@@ -609,13 +591,11 @@ void CVehiclePassenger_C::StopMirroringVehicleAnims(int32_t unblockExpressions) 
     }
 }
 
-// PROVEN: 12e71ed8 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EE0A0/0x14026FB30
 int32_t CVehiclePassenger_C::IsCurrentlyMirroringVehicleAnims() const {
     return (this->m_flags & 0x8800) && this->m_unit->m_unit->m_unitFieldHealth > 0;
 }
 
-// PROVEN: 85cca2c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EE0D0/0x14026FB60
 void CVehiclePassenger_C::UpdateVehicleAnimMirroring() {
     if (this->m_unit->m_unit->m_unitFieldHealth <= 0) {
@@ -673,7 +653,6 @@ static void SignalVehicleTransitionEvent(WOWGUID guid, WOWGUID vehicleGuid, cons
     Script_SendUnitSignal(guid, event, "%b%s%s%b%d%s", controlSeat, skin, sound, hasVehicleUI, indicator, GUIDToString(vehicleGuid, vehicleGuidText));
 }
 
-// PROVEN: b329998e DIFFERENT/IDENTICAL
 // OFFSET: 0x005EE280/0x14026FD70
 void CVehiclePassenger_C::InitTrainCarPosition() {
     if (this->m_flags & 0x4000) {
@@ -716,7 +695,6 @@ float CVehiclePassenger_C::ComputeTrainCarRawFacing(const C3Vector& position, fl
     return angle - facing;
 }
 
-// PROVEN: 2f83e954 DIFFERENT/IDENTICAL
 // OFFSET: 0x005EE570/0x140270050
 CVehicle_C* CVehiclePassenger_C::GetVehicle() const {
     WOWGUID transition = this->m_transitionVehicleGuid;
@@ -946,7 +924,6 @@ void CVehiclePassenger_C::PlayTransitionAnimKit(const VehicleSeatRec* seatRec, i
     }
 }
 
-// PROVEN: db1c7838 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EF160/0x140270F80
 void CVehiclePassenger_C::StartMirroringVehicleAnims(int32_t mirrorAnimTier) {
     if (this->m_transitionSeat >= 8) {
@@ -1296,7 +1273,6 @@ C3Vector CVehiclePassenger_C::GetEndPosition() {
     return this->m_unit->GetPosition();
 }
 
-// PROVEN: 8686dbff IDENTICAL/IDENTICAL
 // OFFSET: 0x005EFCF0/0x140271D80
 void CVehiclePassenger_C::ComputeEndPos(CGUnit_C* vehicle, const VehicleSeatRec* seat, C3Vector& position, C3Vector* up) {
     CM2Model* model = vehicle ? vehicle->GetObjectModel() : NULL;
@@ -1413,7 +1389,6 @@ void CVehiclePassenger_C::SendTransitionUIEvents(WOWGUID guid, WOWGUID vehicleGu
     CVehiclePassenger_C::SignalTransitionUIEvents(guid, vehicleGuid, vehicleRec, seatRec, events);
 }
 
-// PROVEN: 02fee933 IDENTICAL/NONE
 // OFFSET: 0x005EFF50
 CVehiclePassenger_C::CVehiclePassenger_C() {
 }
@@ -2044,7 +2019,6 @@ CVehiclePassenger_C* CVehiclePassenger_C::Alloc(CGUnit_C* unit) {
     return passenger;
 }
 
-// PROVEN: 7d23fe69 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F1980/0x140274130
 void CVehiclePassenger_C::Free() {
     if (this == s_headPassenger) {
@@ -2069,7 +2043,6 @@ void CVehiclePassenger_C::Free() {
     s_passengerPool->Delete(this);
 }
 
-// PROVEN: 81e14b44 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F19F0/0x140274210
 void CVehiclePassenger_C::Uninit() {
     if (this->m_flags & 0x8800) {
@@ -2190,7 +2163,6 @@ void CVehiclePassenger_C::ExecutePendingRescueTransitions() {
     CVehiclePassenger_C::s_addingPendingRescueTransitions = 0;
 }
 
-// PROVEN: 94e6439f IDENTICAL/IDENTICAL
 // OFFSET: 0x005F1D80/0x140274670
 int32_t CVehiclePassenger_C::CheckForVehicleTransitionAnimTimeout() {
     if (!(this->m_flags & 0x200) || static_cast<int32_t>(FrameTime::GetCurTimeMs() - this->m_transitionAnimTimeout) < 0) {
@@ -2300,13 +2272,11 @@ C3Vector CVehiclePassenger_C::ComputeInterpolatedUnitPosition() const {
     }
 }
 
-// PROVEN: a73a1a69 IDENTICAL/NONE
 // OFFSET: 0x005ACC20
 int32_t CVehiclePassenger_C::IsInTransitionMotion() const {
     return this->m_state == 2 || this->m_state == 5;
 }
 
-// PROVEN: 53d64a55 IDENTICAL/NONE
 // OFFSET: 0x005EB710
 int32_t CVehiclePassenger_C::IsEntering() const {
     return this->m_state == 1 || this->m_state == 2;

@@ -61,7 +61,6 @@ DBCache<ArenaTeamCache, int32_t, HASHKEY_INT> g_arenaTeamCache('WATM', "arenatea
 // STATIC: 0x00D985B8/0x140C78770
 DBCache<DanceCache, int32_t, HASHKEY_INT> g_danceCache('WDAN', "dancecache.wdb", CMSG_DANCE_QUERY, 0, false, false, 0);
 
-// PROVEN: 4692bd69 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496AD0/0x1400BCCD0
 static void LoadDBCaches() {
     g_creatureDBCache.Load();
@@ -79,7 +78,6 @@ static void LoadDBCaches() {
     g_danceCache.Load();
 }
 
-// PROVEN: 0291c05a IDENTICAL/NONE
 // OFFSET: 0x00496BE0
 static int32_t ReceiveCreature(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_creatureDBCache.AddItems(msg, true);
@@ -87,7 +85,6 @@ static int32_t ReceiveCreature(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// PROVEN: db2fec9d IDENTICAL/NONE
 // OFFSET: 0x00496C00
 static int32_t ReceiveGameObject(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_gameObjectDBCache.AddItems(msg, true);
@@ -95,7 +92,6 @@ static int32_t ReceiveGameObject(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// PROVEN: 617489d8 IDENTICAL/NONE
 // OFFSET: 0x00496C20
 static int32_t ReceiveNPCText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_npcTextDBCache.AddItems(msg, true);
@@ -103,7 +99,6 @@ static int32_t ReceiveNPCText(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// PROVEN: 540a5cd1 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496C40/0x1400BCE80
 static int32_t ReceiveQuest(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     QuestCache quest;
@@ -118,7 +113,6 @@ static int32_t ReceiveQuest(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// PROVEN: 1ed77bb5 IDENTICAL/NONE
 // OFFSET: 0x00496CB0
 static int32_t ReceivePageText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_pageTextCache.AddItems(msg, true);
@@ -155,7 +149,6 @@ static int32_t ReceivePetName(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// PROVEN: 957a6368 IDENTICAL/NONE
 // OFFSET: 0x00496DB0
 static int32_t ReceivePetition(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGPetition petition;
@@ -185,7 +178,6 @@ static int32_t ReceiveInvalidatePlayer(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// PROVEN: f18bf7e7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496EA0/0x1400BD1C0
 static int32_t ReceiveArenaTeam(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     ArenaTeamCache arenaTeam;
@@ -200,7 +192,6 @@ static int32_t ReceiveArenaTeam(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// PROVEN: e6647d46 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496EF0/0x1400BD220
 static int32_t ReceiveInvalidateDance(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t danceID;
@@ -296,7 +287,6 @@ static int32_t ReceiveName(void* param, NETMESSAGE msgId, uint32_t time, CDataSt
     return 1;
 }
 
-// PROVEN: 070f9851 IDENTICAL/UNPROVEN
 // OFFSET: 0x00497330/0x1400BD760
 static int32_t ReceiveGuildInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     GuildStats_C guild;
@@ -311,7 +301,6 @@ static int32_t ReceiveGuildInfo(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// PROVEN: 549972d8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00497390/0x1400BD7C0
 static int32_t ReceiveItemText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     ItemTextCache_C itemText;
@@ -343,7 +332,6 @@ static int32_t ReceiveDance(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// PROVEN: 2b008480 IDENTICAL/IDENTICAL
 // OFFSET: 0x00496F20/0x1400BD250
 void DBCache_Initialize() {
     LoadDBCaches();
@@ -366,7 +354,6 @@ void DBCache_Destroy() {
     g_danceCache.Destroy();
 }
 
-// PROVEN: 74426758 IDENTICAL/IDENTICAL
 // OFFSET: 0x004975F0/0x1400BDA50
 void DBCache_ClearHandlers() {
     ClientServices::ClearMessageHandler(SMSG_QUERY_CREATURE_RESPONSE);
@@ -586,7 +573,6 @@ void DBCache<NameCache, uint64_t, CHashKeyGUID>::AddItem(NameCache* item, uint64
     }
 }
 
-// PROVEN: 02a59559 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496B60/0x1400BCD80
 void DBCache_Idle() {
     g_creatureDBCache.Idle();
@@ -603,13 +589,11 @@ void DBCache_Idle() {
     g_arenaTeamCache.Idle();
 }
 
-// PROVEN: 97ee34c3 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496F30/0x1400BD260
 void ClientDBIdle() {
     DBCache_Idle();
 }
 
-// PROVEN: 92934152 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496FD0/0x1400BD320
 void DBCache_ClearPending() {
     g_creatureDBCache.ClearPending();

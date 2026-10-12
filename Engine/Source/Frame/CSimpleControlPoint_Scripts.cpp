@@ -67,7 +67,6 @@ static int32_t Script_SetParent(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 0c472b2b IDENTICAL/DIFFERENT
 // OFFSET: 0x0053D0E0/0x140191440
 static int32_t Script_SetOffset(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
@@ -102,7 +101,6 @@ static int32_t Script_GetOffset(lua_State* L) {
     return 2;
 }
 
-// PROVEN: a8cd941d DIFFERENT/IDENTICAL
 // OFFSET: 0x0053D260/0x140191620
 static int32_t Script_SetOrder(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
@@ -117,7 +115,6 @@ static int32_t Script_SetOrder(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c904816c IDENTICAL/DIFFERENT
 // OFFSET: 0x0053D2E0/0x1401916D0
 static int32_t Script_GetOrder(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
@@ -125,14 +122,12 @@ static int32_t Script_GetOrder(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 23dc1b50 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053D320/0x140191720
 void CSimpleControlPoint::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleControlPoint::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleControlPoint::RegisterScriptMethods);
 }
 
-// PROVEN: 566f0345 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053B9E0/0x14018F7E0
 void CSimpleControlPoint::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -149,7 +144,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetOrder", &Script_GetOrder },
 };
 
-// PROVEN: 0bc37aac IDENTICAL/UNPROVEN
 // OFFSET: 0x0053B9C0/0x14018F7B0
 void CSimpleControlPoint::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);

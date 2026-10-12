@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[1] = { 3 };
 // STATIC: 0x00C25024/0x140A1AA80
 const DBCMeta gtBarberShopCostBaseRec::s_meta = { "DBFilesClient\\gtBarberShopCostBase.dbc", 1, 8, gtBarberShopCostBaseRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: a2266275 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void gtBarberShopCostBaseRec::FixupStrings(void* record, const char* strings) {
 }

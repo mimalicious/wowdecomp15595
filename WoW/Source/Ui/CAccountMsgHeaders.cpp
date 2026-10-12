@@ -10,20 +10,17 @@
 // STATIC: 0x00F76AB8/0x140E6CB80
 CAccountMsgHeaders g_accountMsgHeaders;
 
-// PROVEN: 8cf57339 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool AccountMsgReadCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     return false;
 }
 
-// PROVEN: 73c0db07 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FA090/0x140797550
 void CAccountMsgHeaders::_SendFailureEvent() {
     this->m_iterator.m_node = NULL;
     this->m_count = 0;
 }
 
-// PROVEN: 44c5b11c IDENTICAL/NONE
 // OFFSET: 0x009FA0A0
 const char* CAccountMsgHeaders::GetHeaderSubject(int32_t index) {
     if (this->m_state == 1 || index < 0 || index >= this->m_count) {
@@ -36,7 +33,6 @@ const char* CAccountMsgHeaders::GetHeaderSubject(int32_t index) {
     return this->_GetBodyString(subject.m_node);
 }
 
-// PROVEN: fc4ef4a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FA100/0x140798B10
 int32_t CAccountMsgHeaders::GetHeaderPriority(int32_t index) {
     if (this->m_state == 1 || index < 0 || index >= this->m_count) {
@@ -47,7 +43,6 @@ int32_t CAccountMsgHeaders::GetHeaderPriority(int32_t index) {
     return this->_GetInt(this->m_iterator.m_node, "priority");
 }
 
-// PROVEN: d33ab526 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FA140/0x140797560
 int32_t CAccountMsgHeaders::GetMessageId(int32_t index) {
     if (this->m_state == 1) {
@@ -67,7 +62,6 @@ int32_t CAccountMsgHeaders::GetMessageId(int32_t index) {
     return this->_GetInt(this->m_iterator.m_node, "id");
 }
 
-// PROVEN: ab5c866f IDENTICAL/DIFFERENT
 // OFFSET: 0x009FA410/0x140797910
 int32_t CAccountMsgHeaders::GetNumUnreadUrgentMsgs() {
     int32_t count = 0;
@@ -100,7 +94,6 @@ int32_t CAccountMsgHeaders::GetIndexHighestPriorityUnreadMsg() {
     return index;
 }
 
-// PROVEN: 18d4b3e8 IDENTICAL/NONE
 // OFFSET: 0x009FA500
 int32_t CAccountMsgHeaders::GetIndexNextUnreadMsg(int32_t index) {
     if (this->m_state == 1) {

@@ -29,7 +29,6 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 238200f6 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AC7E00/0x140891740
 OutputSoftware::OutputSoftware()
 {
@@ -128,7 +127,6 @@ FMOD_RESULT OutputSoftware::init(int maxchannels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 241d07d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC7DA0/0x1408916C0
 FMOD_RESULT OutputSoftware::release()
 {

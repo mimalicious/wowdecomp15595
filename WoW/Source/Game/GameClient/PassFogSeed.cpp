@@ -9,7 +9,6 @@
 // STATIC: 0x00D27BC0/0x140BE63C0
 int32_t PassFogSeed::s_deviceReset = 1;
 
-// PROVEN: ccf39bf9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0B740/0x1408CF660
 void __fastcall PassFogSeed::DeviceRestoredCallback() {
     PassFogSeed::s_deviceReset = 1;
@@ -35,7 +34,6 @@ PassFogSeed::~PassFogSeed() {
     g_theGxDevicePtr->RemoveDeviceRestoredCallback(PassFogSeed::DeviceRestoredCallback);
 }
 
-// PROVEN: 4f1f4334 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool PassFogSeed::Valid() {
     return true;

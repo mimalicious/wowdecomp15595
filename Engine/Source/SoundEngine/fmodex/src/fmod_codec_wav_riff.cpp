@@ -25,7 +25,6 @@ namespace FMOD
     [SEE_ALSO]
 ]
 */
-// PROVEN: 5a52dbb1 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AE1080/0x1408ABE20
 FMOD_RESULT CodecWav::parseChunk(unsigned int chunksize)
 {

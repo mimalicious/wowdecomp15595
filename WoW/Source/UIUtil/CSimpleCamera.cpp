@@ -8,25 +8,21 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include <cmath>
 
-// PROVEN: cd7c7771 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043BA30/0x140046460
 float CSimpleCamera::FOV() const {
     return this->m_fov;
 }
 
-// PROVEN: 49e00a28 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043BA40/0x140046470
 C3Vector CSimpleCamera::Forward() const {
     return C3Vector(this->m_facing.a0, this->m_facing.a1, this->m_facing.a2);
 }
 
-// PROVEN: 8529d28e IDENTICAL/IDENTICAL
 // OFFSET: 0x0043BA60/0x140046490
 C3Vector CSimpleCamera::Right() const {
     return C3Vector(this->m_facing.b0, this->m_facing.b1, this->m_facing.b2);
 }
 
-// PROVEN: 15ef82d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043BA80/0x1400464B0
 C3Vector CSimpleCamera::Up() const {
     return C3Vector(this->m_facing.c0, this->m_facing.c1, this->m_facing.c2);
@@ -55,7 +51,6 @@ CSimpleCamera::~CSimpleCamera() {
     }
 }
 
-// PROVEN: 1ffddff3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00445E60/0x140051EB0
 CM2Scene* CSimpleCamera::GetScene() {
     if (!this->m_scene) {
@@ -65,7 +60,6 @@ CM2Scene* CSimpleCamera::GetScene() {
     return this->m_scene;
 }
 
-// PROVEN: c48d9a8a IDENTICAL/IDENTICAL
 // OFFSET: 0x00445E30/0x14004CDA0
 void CSimpleCamera::SetFacing(float yaw, float pitch, float roll) {
     this->m_facing.FromEulerAnglesZYX(yaw, pitch, roll);

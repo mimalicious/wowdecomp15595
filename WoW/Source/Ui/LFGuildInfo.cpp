@@ -40,21 +40,18 @@ TSGrowableArray<LFGuildRecruitData> CGLFGuildInfo::s_recruits;
 // STATIC: 0x00F76844/0x140E6C8CC
 TSGrowableArray<LFGuildApplicationData> CGLFGuildInfo::s_applications;
 
-// PROVEN: 85b3fec8 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EB9B0/0x1407849C0
 bool CGLFGuildInfo::ClientLFGuildRecruitListChangedHandler(ClientLfGuildApplicantListUpdated* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LF_GUILD_RECRUIT_LIST_CHANGED, NULL);
     return true;
 }
 
-// PROVEN: ac7bff11 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EB9D0/0x1407849E0
 bool CGLFGuildInfo::ClientLFGuildMembershipListChangedHandler(ClientLfGuildApplicationsListChanged* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LF_GUILD_MEMBERSHIP_LIST_CHANGED, NULL);
     return true;
 }
 
-// PROVEN: 41bbb9be IDENTICAL/IDENTICAL
 // OFFSET: 0x009EBC10/0x140784C60
 void CGLFGuildInfo::ShutdownGame() {
     ClientLfGuildPostUpdated::s_handler = NULL;
@@ -83,7 +80,6 @@ bool CGLFGuildInfo::ClientLFGuildPostHandler(ClientLfGuildPostUpdated* msg) {
     return true;
 }
 
-// PROVEN: ba13be1b IDENTICAL/IDENTICAL
 // OFFSET: 0x009EBD20/0x140784D70
 bool CGLFGuildInfo::ClientLFGuildCommandResultHandler(ClientLfGuildCommandResult* msg) {
     if (!msg->m_result) {
@@ -93,7 +89,6 @@ bool CGLFGuildInfo::ClientLFGuildCommandResultHandler(ClientLfGuildCommandResult
     return true;
 }
 
-// PROVEN: 6de3a50e IDENTICAL/DIFFERENT
 // OFFSET: 0x009EBD40/0x140784D90
 void CGLFGuildInfo::SendPost() {
     GlobalLFGuildSetGuildPost msg;
@@ -106,7 +101,6 @@ void CGLFGuildInfo::SendPost() {
     ClientServices::Send(&msg);
 }
 
-// PROVEN: ea20f7b6 IDENTICAL/NONE
 // OFFSET: 0x009EBDD0
 void CGLFGuildInfo::GetLookingForGuildSettings(uint32_t& interests, uint32_t& availability, uint32_t& classRoles) {
     CVar* var = CVar::Lookup("lfGuildSettings");

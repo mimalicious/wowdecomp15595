@@ -94,7 +94,6 @@ int32_t GetDamageClassFromBonusStat(int32_t stat) {
     }
 }
 
-// PROVEN: 48e01a52 IDENTICAL/DIFFERENT
 // OFFSET: 0x00999650/0x14071B1B0
 int32_t GetRandomPropertyPointsEx(int32_t itemLevel, int32_t quality, int32_t inventoryType) {
     uint32_t slot = GetRandomItemSlot(inventoryType);

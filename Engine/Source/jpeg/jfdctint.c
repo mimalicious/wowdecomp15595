@@ -136,7 +136,6 @@
  * Perform the forward DCT on one block of samples.
  */
 
-// PROVEN: 4c82f956 IDENTICAL/NONE
 // OFFSET: 0x00B65640/0x14092FE70
 void jpeg_fdct_islow(DCTELEM * data) {
   INT32 tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;

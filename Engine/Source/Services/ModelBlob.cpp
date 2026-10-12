@@ -53,7 +53,6 @@ CModelBlob::~CModelBlob() {
     s_modelBlobHT.Clear();
 }
 
-// PROVEN: 3ae90123 IDENTICAL/DIFFERENT
 // OFFSET: 0x00548650/0x1401A09B0
 void ModelBlobDestroy() {
     if (s_modelBlob) {
@@ -79,7 +78,6 @@ int32_t CModelBlob::Query(const char* modelName, C3Vector& min, C3Vector& max) {
     return 1;
 }
 
-// PROVEN: 5498a7ac IDENTICAL/IDENTICAL
 // OFFSET: 0x005483B0/0x1401A0640
 int32_t ModelBlobQuery(const char* modelName, C3Vector& min, C3Vector& max) {
     if (!s_modelBlob) {

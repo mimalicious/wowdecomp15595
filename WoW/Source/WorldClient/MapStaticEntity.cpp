@@ -49,7 +49,6 @@ CMapStaticEntity::~CMapStaticEntity() {
     }
 }
 
-// PROVEN: 60d6bccf IDENTICAL/UNPROVEN
 // OFFSET: 0x00762800/0x140447860
 void CMapStaticEntity::SetSequenceSpeed(float speed) {
     if (this->m_model) {
@@ -57,7 +56,6 @@ void CMapStaticEntity::SetSequenceSpeed(float speed) {
     }
 }
 
-// PROVEN: ccf96f9c IDENTICAL/IDENTICAL
 // OFFSET: 0x00762820/0x1407D7E80
 void CMapStaticEntity::AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
 }
@@ -79,7 +77,6 @@ void CMapStaticEntity::SelectUnderwater(CM2Lighting* lighting) {
     }
 }
 
-// PROVEN: b08270ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00762830/0x140447880
 void CMapStaticEntity::ModelEventCallback(CM2Model* model, uint32_t a2, uint32_t a3, uint32_t a4, const C3Vector& a5, uint32_t a6, uint64_t param) {
     CMapStaticEntity* entity = reinterpret_cast<CMapStaticEntity*>(static_cast<uintptr_t>(param));

@@ -9,7 +9,6 @@
 namespace FMOD
 {
 
-// PROVEN: ae74c4ee IDENTICAL/NONE
 // OFFSET: 0x00ACEBD0
 DSPNet::DSPNet()
 {
@@ -27,7 +26,6 @@ DSPNet::DSPNet()
 }
 
 
-// PROVEN: 01114152 IDENTICAL/NONE
 // OFFSET: 0x00ACED20
 FMOD_RESULT DSPNet::init()
 {
@@ -73,7 +71,6 @@ FMOD_RESULT DSPNet::init()
 }
 
 
-// PROVEN: 5e8b50e5 IDENTICAL/NONE
 // OFFSET: 0x00ACEC90
 FMOD_RESULT DSPNet::release()
 {

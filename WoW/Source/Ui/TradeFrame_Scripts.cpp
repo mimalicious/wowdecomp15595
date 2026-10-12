@@ -21,21 +21,18 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 
-// PROVEN: a0cc92d6 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A7D0/0x1406E10B0
 static int32_t Script_GetPlayerTradeMoney(lua_State* L) {
     lua_pushnumber(L, CGTradeInfo::m_tradingPlayer ? static_cast<double>(CGTradeInfo::m_playerTrade.m_money) : 0.0);
     return 1;
 }
 
-// PROVEN: 666e1b94 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A840/0x1406E1100
 static int32_t Script_GetTargetTradeMoney(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGTradeInfo::m_targetTrade.m_money));
     return 1;
 }
 
-// PROVEN: d13df6cc IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A8A0/0x1406E1130
 static int32_t Script_PickupTradeMoney(lua_State* L) {
     uint64_t money;
@@ -58,7 +55,6 @@ static int32_t Script_PickupTradeMoney(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 91dff602 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A920/0x1406E11B0
 static int32_t Script_GetPlayerTradeCurrency(lua_State* L) {
     int32_t type = 0;
@@ -74,7 +70,6 @@ static int32_t Script_GetPlayerTradeCurrency(lua_State* L) {
     return 2;
 }
 
-// PROVEN: cbec4e46 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A980/0x1406E1210
 static int32_t Script_GetTargetTradeCurrency(lua_State* L) {
     int32_t quantity = CGTradeInfo::m_targetTrade.m_currencyQuantity;
@@ -109,7 +104,6 @@ static int32_t Script_GetTradePlayerItemLink(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 1c2c8da3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096ABD0/0x1406E14C0
 static int32_t Script_AcceptTrade(lua_State* L) {
     if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted != 1) {
@@ -121,7 +115,6 @@ static int32_t Script_AcceptTrade(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6b0f70a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096AC20/0x1406E1540
 static int32_t Script_CancelTradeAccept(lua_State* L) {
     if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted) {
@@ -133,7 +126,6 @@ static int32_t Script_CancelTradeAccept(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ce385c33 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096B1F0/0x1406E1C50
 static int32_t Script_ClickTargetTradeButton(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -153,7 +145,6 @@ static int32_t Script_ClickTargetTradeButton(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3e3c8e27 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096B270/0x1406E1CD0
 static int32_t Script_AddTradeMoney(lua_State* L) {
     if (CGGameUI::m_cursorMoney && CGTradeInfo::AddMoney(CGGameUI::m_cursorMoney)) {
@@ -189,7 +180,6 @@ static int32_t Script_SetTradeMoney(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b003707d IDENTICAL/DIFFERENT
 // OFFSET: 0x0096B340/0x1406E1DC0
 static int32_t Script_SetTradeCurrency(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -477,7 +467,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTargetTradeCurrency", &Script_GetTargetTradeCurrency },
 };
 
-// PROVEN: 21ea7c44 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A9C0/0x1406E1260
 void TradeInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -485,7 +474,6 @@ void TradeInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: da9efac9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A9F0/0x1406E12B0
 void TradeInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

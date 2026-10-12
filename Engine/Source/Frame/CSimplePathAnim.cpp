@@ -23,37 +23,31 @@ int32_t CSimplePathAnim::s_objectType;
 // STATIC: 0x00CA3834/0x140B40AB8
 const char* CSimplePathAnim::s_objectTypeName = "Path";
 
-// PROVEN: 223a23c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x005294D0/0x140178ED0
 bool CSimplePathAnim::IsA(int32_t type) {
     return type == CSimplePathAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 08ccd230 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529500/0x140178EF0
 bool CSimplePathAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimplePathAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: 590ea702 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529560/0x140178F50
 const char* CSimplePathAnim::GetObjectTypeName() {
     return CSimplePathAnim::s_objectTypeName;
 }
 
-// PROVEN: 7496bc25 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529570/0x140178F60
 int32_t CSimplePathAnim::GetScriptMetaTable() {
     return CSimplePathAnim::s_metatable;
 }
 
-// PROVEN: f9eb47ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00527AE0/0x140176E60
 CSimpleControlPoint* CSimplePathAnim::GetControlPoint(uint32_t index) {
     return index < this->m_sortedPoints.Count() ? this->m_sortedPoints[index] : NULL;
 }
 
-// PROVEN: c7c36dcd IDENTICAL/IDENTICAL
 // OFFSET: 0x00527B10/0x140176E80
 int32_t CSimplePathAnim::GetMaxControlPointOrder() {
     if (!this->m_sortedPoints.Count()) {
@@ -63,7 +57,6 @@ int32_t CSimplePathAnim::GetMaxControlPointOrder() {
     return this->m_sortedPoints[this->m_sortedPoints.Count() - 1]->m_order;
 }
 
-// PROVEN: f1b8f7b7 IDENTICAL/NONE
 // OFFSET: 0x00527B30
 int32_t CSimplePathAnim::FindControlPoint(int32_t order) {
     if (order == -1) {
@@ -91,7 +84,6 @@ int32_t CSimplePathAnim::FindControlPoint(int32_t order) {
     return -1;
 }
 
-// PROVEN: 6441d522 DIFFERENT/IDENTICAL
 // OFFSET: 0x00528010/0x140177450
 void CSimplePathAnim::UpdateControlPointPositions() {
     uint32_t count = this->m_sortedPoints.Count();
@@ -245,7 +237,6 @@ void CSimplePathAnim::Apply(float progress) {
     }
 }
 
-// PROVEN: 465e4993 DIFFERENT/IDENTICAL
 // OFFSET: 0x00528C30/0x140178380
 int32_t CSimplePathAnim::RegisterSplineControlPoint(CSimpleControlPoint* point) {
     int32_t count = this->m_sortedPoints.Count();
@@ -293,7 +284,6 @@ CSimplePathAnim::~CSimplePathAnim() {
     this->m_controlPoints.Clear();
 }
 
-// PROVEN: 5ab08920 DIFFERENT/IDENTICAL
 // OFFSET: 0x0052A700/0x14017A7A0
 CSimplePathAnim::CSimplePathAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
     this->m_curve = ANIM_CURVE_NONE;
@@ -435,7 +425,6 @@ void CSimplePathAnim::NotifyControlPointAdded(CSimpleControlPoint* point) {
     }
 }
 
-// PROVEN: 91598126 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529C90/0x1401799D0
 void CSimplePathAnim::NotifyControlPointRemoved(CSimpleControlPoint* point) {
     if (point && this->FindControlPoint(point->m_order) >= 0) {

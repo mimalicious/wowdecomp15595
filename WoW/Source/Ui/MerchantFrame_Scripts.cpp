@@ -35,20 +35,17 @@
 // STATIC: 0x00D131B8/0x140BCB1A0
 static uint32_t s_costCurrencyFlags[5] = { 0x2, 0x4, 0x8, 0x10, 0x20 };
 
-// PROVEN: 61be6397 IDENTICAL/IDENTICAL
 // OFFSET: 0x00967C60/0x1406DE1B0
 static void MerchantUpdateCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     FrameScript_SignalEvent(SCRIPT_EVENT_MERCHANT_UPDATE, NULL);
 }
 
-// PROVEN: 72206ab6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00967D80/0x1406DE2B0
 static int32_t Script_GetMerchantNumItems(lua_State* L) {
     lua_pushnumber(L, CGMerchantInfo::m_numMerchantItems);
     return 1;
 }
 
-// PROVEN: 5551c8c7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00967DB0/0x1406DE2D0
 static int32_t Script_HideRepairCursor(lua_State* L) {
     if (CursorGetResetMode() == 17) {
@@ -59,7 +56,6 @@ static int32_t Script_HideRepairCursor(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b8396488 IDENTICAL/IDENTICAL
 // OFFSET: 0x00967DD0/0x1406DE300
 static int32_t Script_InRepairMode(lua_State* L) {
     if (CursorGetResetMode() == 17) {
@@ -71,7 +67,6 @@ static int32_t Script_InRepairMode(lua_State* L) {
     return 1;
 }
 
-// PROVEN: dc8e2b3c IDENTICAL/IDENTICAL
 // OFFSET: 0x00967E10/0x1406DE340
 static int32_t Script_GetNumBuybackItems(lua_State* L) {
     if (!CGMerchantInfo::m_merchant) {
@@ -83,7 +78,6 @@ static int32_t Script_GetNumBuybackItems(lua_State* L) {
     return 1;
 }
 
-// PROVEN: af5e913f IDENTICAL/IDENTICAL
 // OFFSET: 0x00967FB0/0x1406DE520
 static int32_t Script_CloseMerchant(lua_State* L) {
     CGMerchantInfo::CloseMerchant();
@@ -141,7 +135,6 @@ static int32_t Script_GetBuybackItemLink(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 6c463458 IDENTICAL/DIFFERENT
 // OFFSET: 0x009684A0/0x1406DE950
 static int32_t Script_PickupMerchantItem(lua_State* L) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
@@ -539,7 +532,6 @@ static int32_t Script_GetMerchantItemInfo(lua_State* L) {
     return 7;
 }
 
-// PROVEN: 6dd2a3af IDENTICAL/DIFFERENT
 // OFFSET: 0x009693E0/0x1406DFB40
 static int32_t Script_GetMerchantItemCostInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -942,7 +934,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumBuybackItems", &Script_GetNumBuybackItems },
 };
 
-// PROVEN: 04d78b28 IDENTICAL/UNPROVEN
 // OFFSET: 0x00967E70/0x1406DE380
 void MerchantRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -950,7 +941,6 @@ void MerchantRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 86084fe5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00967EA0/0x1406DE3D0
 void MerchantUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

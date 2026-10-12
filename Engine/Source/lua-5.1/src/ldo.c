@@ -51,7 +51,6 @@ struct lua_longjmp {
 };
 
 
-// PROVEN: 7b91f0d2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420040/0x140024550
 void luaD_seterrorobj (lua_State *L, int errcode, StkId oldtop) {
   switch (errcode) {
@@ -83,7 +82,6 @@ static void restore_stack_limit (lua_State *L) {
 }
 
 
-// PROVEN: d0fddd4b IDENTICAL/DIFFERENT
 // OFFSET: 0x00420870/0x140025020
 static void resetstack (lua_State *L, int status) {
   L->ci = L->base_ci;
@@ -116,7 +114,6 @@ void luaD_throw (lua_State *L, int errcode) {
 }
 
 
-// PROVEN: 3f105da9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00420110/0x140024660
 int luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
   struct lua_longjmp lj;
@@ -161,7 +158,6 @@ void luaD_reallocstack (lua_State *L, int newsize) {
 }
 
 
-// PROVEN: e7e67df7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420270/0x1400248F0
 void luaD_reallocCI (lua_State *L, int newsize) {
   CallInfo *oldci = L->base_ci;
@@ -172,7 +168,6 @@ void luaD_reallocCI (lua_State *L, int newsize) {
 }
 
 
-// PROVEN: 193c4033 IDENTICAL/UNPROVEN
 // OFFSET: 0x004202F0/0x140024990
 void luaD_growstack (lua_State *L, int n) {
   if (n <= L->stacksize)  /* double size is enough? */
@@ -182,7 +177,6 @@ void luaD_growstack (lua_State *L, int n) {
 }
 
 
-// PROVEN: 94c1f956 IDENTICAL/NONE
 // OFFSET: 0x00420940
 static CallInfo *growCI (lua_State *L) {
   if (L->size_ci > LUAI_MAXCALLS)  /* overflow while handling overflow? */
@@ -196,7 +190,6 @@ static CallInfo *growCI (lua_State *L) {
 }
 
 
-// PROVEN: a5753631 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420320/0x1400249B0
 void luaD_callhook (lua_State *L, int event, int line) {
   lua_Hook hook = L->hook;
@@ -226,7 +219,6 @@ void luaD_callhook (lua_State *L, int event, int line) {
 }
 
 
-// PROVEN: 4c68354e IDENTICAL/IDENTICAL
 // OFFSET: 0x00420400/0x140024AD0
 static StkId adjust_varargs (lua_State *L, Proto *p, int actual) {
   int i;
@@ -431,7 +423,6 @@ int luaD_precall_profile (lua_State *L, StkId func, int nresults, __int64 start,
 }
 
 
-// PROVEN: ac07dd9f IDENTICAL/NONE
 // OFFSET: 0x004205C0/0x140024CF0
 static StkId callrethooks (lua_State *L, StkId firstResult) {
   ptrdiff_t fr = savestack(L, firstResult);  /* next call may change stack */
@@ -444,7 +435,6 @@ static StkId callrethooks (lua_State *L, StkId firstResult) {
 }
 
 
-// PROVEN: 20942839 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420620/0x140024D70
 int luaD_poscall (lua_State *L, StkId firstResult) {
   StkId res;
@@ -473,7 +463,6 @@ int luaD_poscall (lua_State *L, StkId firstResult) {
 ** When returns, all the results are on the stack, starting at the original
 ** function position.
 */ 
-// PROVEN: 25c7c3a8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420D70/0x140025740
 void luaD_call (lua_State *L, StkId func, int nResults) {
   if (++L->nCcalls >= LUAI_MAXCCALLS) {
@@ -494,7 +483,6 @@ void luaD_call (lua_State *L, StkId func, int nResults) {
 }
 
 
-// PROVEN: bff281a4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420E30/0x140025820
 static void resume (lua_State *L, void *ud) {
   StkId firstArg = cast(StkId, ud);
@@ -529,7 +517,6 @@ static void resume (lua_State *L, void *ud) {
 }
 
 
-// PROVEN: f1b8a6d6 IDENTICAL/UNPROVEN
 // OFFSET: 0x004206F0/0x140024E50
 static int resume_error (lua_State *L, const char *msg) {
   L->top = L->ci->base;
@@ -540,7 +527,6 @@ static int resume_error (lua_State *L, const char *msg) {
 }
 
 
-// PROVEN: b541d1e8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420F10/0x140025920
 LUA_API int lua_resume (lua_State *L, int nargs) {
   int status;
@@ -568,7 +554,6 @@ LUA_API int lua_resume (lua_State *L, int nargs) {
 }
 
 
-// PROVEN: e085d4f8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00420760/0x140024EE0
 LUA_API int lua_yield (lua_State *L, int nresults) {
   luai_userstateyield(L, nresults);
@@ -627,7 +612,6 @@ struct SParser {  /* data to `f_parser' */
   const char *name;
 };
 
-// PROVEN: eac35bcf IDENTICAL/UNPROVEN
 // OFFSET: 0x004207A0/0x140024F30
 static void f_parser (lua_State *L, void *ud) {
   int i;
@@ -645,7 +629,6 @@ static void f_parser (lua_State *L, void *ud) {
 }
 
 
-// PROVEN: d97fbd03 IDENTICAL/UNPROVEN
 // OFFSET: 0x004210E0/0x140025B50
 int luaD_protectedparser (lua_State *L, ZIO *z, const char *name) {
   struct SParser p;

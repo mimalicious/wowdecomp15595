@@ -3,7 +3,6 @@
 #include <windows.h>
 #include "Engine/Source/Os/Error.h"
 
-// PROVEN: 824e8fd8 IDENTICAL/DIFFERENT
 // OFFSET: 0x0087BC70/0x1405B3240
 char* OsGetLastErrorStr() {
     char* buffer;
@@ -12,7 +11,6 @@ char* OsGetLastErrorStr() {
     return buffer;
 }
 
-// PROVEN: 8e8e682a IDENTICAL/IDENTICAL
 // OFFSET: 0x0087BCB0/0x1405B3290
 void OsFreeLastErrorStr(char* str) {
     LocalFree(str);

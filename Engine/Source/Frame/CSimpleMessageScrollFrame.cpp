@@ -57,7 +57,6 @@ CSimpleMessageScrollFrameLine::~CSimpleMessageScrollFrameLine() {
     }
 }
 
-// PROVEN: 6eca27b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051CF20/0x140169750
 FrameScript_Object::ScriptIx* CSimpleMessageScrollFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleHyperlinkedFrame::GetScriptByName(name, data);
@@ -79,7 +78,6 @@ void CSimpleMessageScrollFrame::GetScriptTime(lua_State* L, double* time, uint32
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: fc199e7a IDENTICAL/IDENTICAL
 // OFFSET: 0x0051CFC0/0x140169820
 int32_t CSimpleMessageScrollFrame::GetCurrentScroll() {
     if (!this->m_numMessages || this->m_currentLine == -1) {
@@ -104,7 +102,6 @@ void CSimpleFontStringRecord::operator delete(void* ptr) {
 CSimpleFontStringRecord::~CSimpleFontStringRecord() {
 }
 
-// PROVEN: e0929a7b IDENTICAL/IDENTICAL
 // OFFSET: 0x0051D290/0x140169B70
 void CSimpleMessageScrollFrame::SetTimeVisible(float seconds) {
     for (int32_t i = 0; i < this->m_numDisplayed; i++) {
@@ -118,7 +115,6 @@ void CSimpleMessageScrollFrame::SetTimeVisible(float seconds) {
     this->m_timeVisible = seconds;
 }
 
-// PROVEN: 93525626 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051D2E0/0x140169BB0
 void CSimpleMessageScrollFrame::SetFadeDuration(float duration) {
     for (int32_t i = 0; i < this->m_numDisplayed; i++) {
@@ -233,7 +229,6 @@ CSimpleMessageScrollFrameLine* CSimpleMessageScrollFrame::GetMessageInfoByAccess
     return &this->m_lines[lineIndex];
 }
 
-// PROVEN: 3a80e1f2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0051D850/0x14016A290
 CSimpleMessageScrollFrameDisplayNode::CSimpleMessageScrollFrameDisplayNode() {
     this->m_line = NULL;
@@ -260,7 +255,6 @@ CSimpleMessageScrollFrameDisplayNode::~CSimpleMessageScrollFrameDisplayNode() {
     }
 }
 
-// PROVEN: d89a4160 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051DD50/0x14016A960
 void CSimpleMessageScrollFrame::SetMaxLines(int32_t maxLines) {
     this->m_lines.Clear();
@@ -275,7 +269,6 @@ void CSimpleMessageScrollFrame::SetMaxLines(int32_t maxLines) {
     this->m_currentScroll = 0;
 }
 
-// PROVEN: a526c1a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051DDD0/0x14016AA30
 void CSimpleMessageScrollFrame::Clear() {
     this->m_displayNodes.Clear();
@@ -322,25 +315,21 @@ CSimpleMessageScrollFrame::~CSimpleMessageScrollFrame() {
     }
 }
 
-// PROVEN: cdf93c03 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051DC20/0x14016A7C0
 const char* CSimpleMessageScrollFrame::GetObjectTypeName() {
     return CSimpleMessageScrollFrame::s_objectTypeName;
 }
 
-// PROVEN: cef11aed IDENTICAL/IDENTICAL
 // OFFSET: 0x0051DC30/0x14016A7D0
 int32_t CSimpleMessageScrollFrame::GetScriptMetaTable() {
     return CSimpleMessageScrollFrame::s_metatable;
 }
 
-// PROVEN: 0071eba8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051DC50/0x14016A7F0
 bool CSimpleMessageScrollFrame::IsA(int32_t type) {
     return type == CSimpleMessageScrollFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 94984024 IDENTICAL/NONE
 // OFFSET: 0x0051DC90/0x14016A820
 bool CSimpleMessageScrollFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageScrollFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -547,7 +536,6 @@ CSimpleMessageScrollFrame::CSimpleMessageScrollFrame(CSimpleFrame* parent, int32
     this->m_insertMode = 1;
 }
 
-// PROVEN: 2ca01559 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E1E0/0x14016B000
 void CSimpleMessageScrollFrame::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
@@ -626,7 +614,6 @@ void CSimpleMessageScrollFrame::UpdateColorByID(int32_t typeID, const CImVector&
     this->ScrollMessages(this->m_currentScroll);
 }
 
-// PROVEN: 29507efb IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E490/0x14016B390
 void CSimpleMessageScrollFrame::OnScreenSizeChanged() {
     CSimpleFrame::OnScreenSizeChanged();
@@ -658,14 +645,12 @@ void CSimpleMessageScrollFrame::UpdateRect() {
     }
 }
 
-// PROVEN: 49586a00 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E600/0x14016B540
 void CSimpleMessageScrollFrame::OnLayerShow() {
     CSimpleFrame::OnLayerShow();
     this->ScrollMessages(this->m_currentScroll);
 }
 
-// PROVEN: 05db2248 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E620/0x14016B570
 int32_t CSimpleMessageScrollFrame::ScrollUp() {
     if (this->m_currentLine == -1) {
@@ -687,7 +672,6 @@ int32_t CSimpleMessageScrollFrame::ScrollUp() {
     return 1;
 }
 
-// PROVEN: 0575a781 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E660/0x14016B5C0
 int32_t CSimpleMessageScrollFrame::ScrollDown() {
     if (this->m_currentLine == -1) {
@@ -709,7 +693,6 @@ int32_t CSimpleMessageScrollFrame::ScrollDown() {
     return 1;
 }
 
-// PROVEN: ca133aa8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E6A0/0x14016B610
 void CSimpleMessageScrollFrame::ScrollToTop() {
     if (this->m_currentLine == -1) {
@@ -729,7 +712,6 @@ void CSimpleMessageScrollFrame::ScrollToTop() {
     this->ScrollMessages(scroll);
 }
 
-// PROVEN: a750d269 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E6D0/0x14016B650
 void CSimpleMessageScrollFrame::ScrollToBottom() {
     if (this->m_currentLine == -1) {
@@ -768,7 +750,6 @@ void CSimpleMessageScrollFrame::SetScrollOffset(int32_t offset) {
     }
 }
 
-// PROVEN: 3adc2a40 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E750/0x14016B6E0
 void CSimpleMessageScrollFrame::SetInsertMode(int32_t mode) {
     this->m_insertMode = mode;
@@ -842,7 +823,6 @@ void CSimpleMessageScrollFrame::AddMessage(const char* text, const CImVector& co
     }
 }
 
-// PROVEN: f8cb949f IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E8B0/0x14016B880
 void CSimpleMessageScrollFrame::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);

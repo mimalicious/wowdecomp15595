@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C25138/0x140A1ABE8
 const DBCMeta GMSurveyQuestionsRec::s_meta = { "DBFilesClient\\GMSurveyQuestions.dbc", 2, 8, GMSurveyQuestionsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 40700b7a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void GMSurveyQuestionsRec::FixupStrings(void* record, const char* strings) {
     GMSurveyQuestionsRec* rec = static_cast<GMSurveyQuestionsRec*>(record);

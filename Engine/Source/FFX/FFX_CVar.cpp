@@ -11,7 +11,6 @@ CVar* FFX::s_cvarFFXRectangle;
 // STATIC: 0x00EC6FF0/0x140DB9410
 CVar* FFX::s_cvarFFX;
 
-// PROVEN: 2d04aead IDENTICAL/IDENTICAL
 // OFFSET: 0x0089CCF0/0x1405DCFB0
 bool FFX::CVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enabled = atoi(value);
@@ -26,7 +25,6 @@ bool FFX::CVarCallback(CVar* var, const char* oldValue, const char* value, void*
     return true;
 }
 
-// PROVEN: 41eb1417 DIFFERENT/IDENTICAL
 // OFFSET: 0x0089D110/0x1405DD4B0
 void FFX::InitCVars() {
     FFX::s_defaultEnabled = true;

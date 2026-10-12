@@ -3,7 +3,6 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 
-// PROVEN: 004b53c3 IDENTICAL/NONE
 // OFFSET: 0x0097FA10
 void LFGLIST::Reindex() {
     for (uint32_t i = 0; i < this->m_playerList.Count(); i++) {
@@ -67,7 +66,6 @@ void LFGLIST::RemoveParty(LFGListParty* party) {
     party->m_index = -1;
 }
 
-// PROVEN: 1b9fdba5 IDENTICAL/NONE
 // OFFSET: 0x009872E0
 void LFGLIST::DeleteParty(LFGListParty* party) {
     for (int32_t i = party->m_members.Count() - 1; i >= 0; i--) {

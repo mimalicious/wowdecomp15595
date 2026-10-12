@@ -18,7 +18,6 @@ static const int32_t s_fieldTypes[21] = { 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
 // STATIC: 0x00C237AC/0x140A18AE8
 const DBCMeta LfgDungeonsRec::s_meta = { "DBFilesClient\\LfgDungeons.dbc", 21, 84, LfgDungeonsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: cc2f18a1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EAD0/0x1407D81D0
 void LfgDungeonsRec::FixupStrings(void* record, const char* strings) {
     LfgDungeonsRec* rec = static_cast<LfgDungeonsRec*>(record);
@@ -27,13 +26,11 @@ void LfgDungeonsRec::FixupStrings(void* record, const char* strings) {
     DBCFixupString(rec->m_description, strings);
 }
 
-// PROVEN: 3d514661 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B02530/0x1408C4520
 int32_t LfgDungeonsRec::GetGroupSize() const {
     return this->m_countTank + this->m_countHealer + this->m_countDamage;
 }
 
-// PROVEN: e60cfcc6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B02540/0x1408C4530
 bool LfgDungeonsRec::IsHeroic() const {
     MapRec* map = g_mapDB.GetRecord(this->m_mapID);
@@ -53,14 +50,12 @@ bool LfgDungeonsRec::IsHeroic() const {
     return false;
 }
 
-// PROVEN: b526d562 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B02590/0x1408C4580
 bool LfgDungeonsRec::IsRaid() const {
     MapRec* map = g_mapDB.GetRecord(this->m_mapID);
     return map && map->m_instanceType == 2;
 }
 
-// PROVEN: a3466d9a IDENTICAL/NONE
 // OFFSET: 0x00B025D0
 bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID) const {
     if (this->m_randomID == randomID) {
@@ -78,7 +73,6 @@ bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID) const {
     return false;
 }
 
-// PROVEN: 69dd3532 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B026F0/0x1408C4690
 bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID, int32_t expansionLevel) const {
     if (!randomID) {
@@ -94,7 +88,6 @@ bool LfgDungeonsRec::IsInRandomGroup(int32_t randomID, int32_t expansionLevel) c
     return this->IsInRandomGroup(randomID);
 }
 
-// PROVEN: 19ad7c06 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B02640/0x1408C45C0
 int32_t LfgDungeonsRec::GetTopGroupID() const {
     int32_t groupID = this->m_groupID;

@@ -95,7 +95,6 @@ void* BSN::Adapter::Array::SetLength(void* data, uint32_t length) {
     return elements;
 }
 
-// PROVEN: 2e535873 IDENTICAL/IDENTICAL
 // OFFSET: [0x00A39FF0/0x14090ED00<32>]
 template <uint32_t N>
 uint32_t BSN::Adapter::FixedBlob::GetLength(const void* data) {

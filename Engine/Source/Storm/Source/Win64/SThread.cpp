@@ -36,7 +36,6 @@ namespace S_Thread {
     CInitCritSect s_threadCrit;
 }
 
-// PROVEN: f0a6838f IDENTICAL/IDENTICAL
 // OFFSET: 0x004B7600/0x1400EF690
 uint32_t STORMAPI SGetCurrentThreadId() {
     return GetCurrentThreadId();
@@ -47,19 +46,16 @@ uint32_t STORMAPI SGetCurrentProcessId() {
     return GetCurrentProcessId();
 }
 
-// PROVEN: c23c7efc IDENTICAL/IDENTICAL
 // OFFSET: 0x004B7620/0x1400EF6B0
 int32_t STORMAPI SGetCurrentThreadPriority() {
     return GetThreadPriority(GetCurrentThread());
 }
 
-// PROVEN: df7db9ec IDENTICAL/IDENTICAL
 // OFFSET: 0x004B7630/0x1400EF6D0
 int32_t STORMAPI SSetCurrentThreadPriority(int32_t priority) {
     return SetThreadPriority(GetCurrentThread(), priority);
 }
 
-// PROVEN: 9009f299 IDENTICAL/NONE
 // OFFSET: 0x004B7650/0x1400EF6F0
 int32_t STORMAPI SSetCurrentProcessAffinityMask(size_t mask) {
     return SetProcessAffinityMask(GetCurrentProcess(), mask);
@@ -105,7 +101,6 @@ void CInitCritSect::Leave() {
     this->m_critsect->Leave();
 }
 
-// PROVEN: dab0089d IDENTICAL/IDENTICAL
 // OFFSET: 0x004B7740/0x1400EF750
 static uint32_t STORMAPI ProcessCompletionCallbackThread(void* vdata) {
     PROCESSCOMPLETION* completion = static_cast<PROCESSCOMPLETION*>(vdata);
@@ -230,7 +225,6 @@ int32_t STORMAPI SGetThreadName(uint32_t threadId, char* buffer, int32_t bufferc
     return found;
 }
 
-// PROVEN: b3edfb36 DIFFERENT/IDENTICAL
 // OFFSET: 0x004B7B00/0x1400EFDA0
 HANDLE STORMAPI SCreateThread(uint32_t (STORMAPI* lpStartAddress)(void*), void* lpParameter, uint32_t* lpThreadId, void* linuxData, char* threadName, uint32_t stackSize) {
     return SCreateThread(stackSize, lpStartAddress, lpParameter, 0, lpThreadId, threadName);

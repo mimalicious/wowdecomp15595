@@ -120,85 +120,71 @@ void Liquid::GetAboveWaterFog(float& start, float& end, float& density, CImVecto
     color = s_aboveWaterFogColor;
 }
 
-// PROVEN: c9f9370b IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE20/0x1403EF290
 uint32_t Liquid::GetWaterDetail() {
     return s_waterDetail;
 }
 
-// PROVEN: 1b32f54a IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE30/0x1403EF2A0
 uint32_t Liquid::GetRippleDetail() {
     return s_rippleDetail;
 }
 
-// PROVEN: af6e86d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE40/0x1403EF2B0
 uint32_t Liquid::GetReflectionMode() {
     return s_reflectionMode;
 }
 
-// PROVEN: 3dd13e28 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE50/0x1403EF2C0
 uint32_t Liquid::GetReflectionDownscale() {
     return s_reflectionDownscale;
 }
 
-// PROVEN: cfbb7e77 IDENTICAL/DIFFERENT
 // OFFSET: 0x0071AE60/0x1403EF2D0
 int32_t Liquid::WaterDetailNeedsDepthCache(uint32_t detail) {
     return detail >= 2;
 }
 
-// PROVEN: 191c7132 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE70/0x1403EF2E0
 int32_t Liquid::CameraSubmerged() {
     return s_cameraSubmerged;
 }
 
-// PROVEN: b651f811 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE80/0x1403EF2F0
 void Liquid::SetCameraSubmerged(int32_t submerged) {
     s_cameraSubmerged = submerged;
 }
 
-// PROVEN: abc6bfc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE90/0x1403EF300
 int32_t Liquid::NeedBackBuffer() {
     return s_needBackBuffer;
 }
 
-// PROVEN: 5f61cc36 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEA0/0x1403EF310
 void Liquid::SetNeedBackBuffer(int32_t need) {
     s_needBackBuffer = need;
 }
 
-// PROVEN: ea9b8ac0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEB0/0x1403EF320
 int32_t Liquid::NeedDynDisplMap() {
     return s_needDynDisplMap;
 }
 
-// PROVEN: ed575564 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEC0/0x1403EF330
 void Liquid::SetNeedDynDisplMap(int32_t need) {
     s_needDynDisplMap = need;
 }
 
-// PROVEN: d45ce39a IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AED0/0x1403EF340
 int32_t Liquid::GetShadersEnabled() {
     return s_shadersEnabled;
 }
 
-// PROVEN: 1383d3e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEE0/0x1403EF350
 int32_t Liquid::UseCameraRelativeCoords() {
     return s_cameraRelativeCoords;
 }
 
-// PROVEN: f46b1b37 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEF0/0x1403EF360
 float Liquid::WorldCoordScale() {
     return s_worldCoordScale;
@@ -234,7 +220,6 @@ int32_t Liquid::IsTransparent(uint32_t liquidType) {
     return Liquid::CSettingsBank::GetSettings(liquidType)->m_transparent;
 }
 
-// PROVEN: b9bf9c00 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AFB0/0x1403EF440
 void Liquid::PurgeMaterialBank() {
     Liquid::CMaterialBank::Purge();
@@ -298,7 +283,6 @@ int32_t Liquid::SetWaterDetail(uint32_t detail) {
     return 1;
 }
 
-// PROVEN: a2627f67 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071B0C0/0x1403EF630
 uint32_t Liquid::ValidateRippleDetail(uint32_t detail) {
     if (!detail) {
@@ -328,7 +312,6 @@ int32_t Liquid::SetRippleDetail(uint32_t detail) {
     return 1;
 }
 
-// PROVEN: c74a57a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0071B150/0x1403EF6C0
 uint32_t Liquid::ValidateReflectionMode(uint32_t mode) {
     if (!mode) {
@@ -354,7 +337,6 @@ int32_t Liquid::SetReflectionMode(uint32_t mode) {
     return 1;
 }
 
-// PROVEN: a3b4a00d IDENTICAL/DIFFERENT
 // OFFSET: 0x0071B1D0/0x1403EF730
 uint32_t Liquid::ValidateReflectionDownscale(uint32_t downscale) {
     if (!downscale) {
@@ -477,30 +459,25 @@ void Liquid::DestroySurfaceGen() {
     s_surfaceGen = NULL;
 }
 
-// PROVEN: 86e54946 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void Liquid::UpdateSurfaceGen(uint32_t time) {
 }
 
 
-// PROVEN: 9a41ca3e IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void Liquid::CInstance::Initialize() {
 }
 
-// PROVEN: 90ee0c9d IDENTICAL/IDENTICAL
 // OFFSET: 0x0071BDF0/0x1403F0B40
 void Liquid::CInstance::AddRef() {
     this->m_refCount++;
 }
 
-// PROVEN: 259e5a12 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071BE00/0x1403F0B50
 void Liquid::CInstance::Purge() {
     this->m_geomFactory->Purge();
 }
 
-// PROVEN: 6b2578b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071BE10/0x1403F0B60
 void Liquid::CInstance::Destroy() {
     Liquid::s_instanceAllocator.Clear(typeid(Liquid::CInstance).raw_name(), SLOG_OBJECT, 1);
@@ -536,7 +513,6 @@ void Liquid::CInstance::Release() {
     }
 }
 
-// PROVEN: 02c0d807 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071D8D0/0x1403F2F30
 void WaterSurfaceGen::Release() {
     if (this->unk_0028) {
@@ -566,7 +542,6 @@ void WaterSurfaceGen::Release() {
     this->m_texture = NULL;
 }
 
-// PROVEN: a59e00a4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0071D9A0/0x1403F3030
 WaterSurfaceGen::~WaterSurfaceGen() {
     this->Release();

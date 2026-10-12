@@ -261,7 +261,6 @@ void System_Hardware::CalcFingerprint(uint8_t* fingerprint) {
     memcpy(fingerprint, digest.m_data, 16);
 }
 
-// PROVEN: b30a7375 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FEAC0/0x140511E40
 bool Blizzard::Hardware::GetFingerprint(Fingerprint* fingerprint) {
     System_Hardware::CalcFingerprint(fingerprint->m_data);

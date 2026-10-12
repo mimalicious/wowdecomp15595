@@ -28,7 +28,6 @@ int32_t CGUnit::IsFlyingOrHovering() const {
     return (movement->m_flags & MOVEMENTFLAG_HOVER) != 0;
 }
 
-// PROVEN: 9693d950 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27820/0x1407CEF80
 uint32_t CGUnit::MirrorIndexFromFieldIndex(uint32_t fieldIndex) {
     for (uint32_t i = 0; i < sizeof(s_mirrorFieldIndices) / sizeof(s_mirrorFieldIndices[0]); i++) {
@@ -139,7 +138,6 @@ int32_t CGUnit::CanPlayEmote(uint32_t emoteFlags, int32_t targeted, int32_t* sta
     return 1;
 }
 
-// PROVEN: 0497d0ca IDENTICAL/DIFFERENT
 // OFFSET: 0x00A278A0/0x1407CF000
 void CGUnit::GetResistanceAndBuffs(int32_t school, int32_t* baseValue, int32_t* total, int32_t* effective, int32_t* positive, int32_t* negative) const {
     int32_t resistance = this->m_unit->m_unitFieldResistances[school];
@@ -155,7 +153,6 @@ void CGUnit::GetResistanceAndBuffs(int32_t school, int32_t* baseValue, int32_t* 
     }
 }
 
-// PROVEN: 92d0d591 IDENTICAL/NONE
 // OFFSET: 0x0044E350
 const WOWGUID* CGUnit::GetCharmerOrCreatorGuid() const {
     CGUnitData* unit = this->m_unit;
@@ -178,13 +175,11 @@ float CGUnit::GetMeleeRange(const CGUnit* target) const {
     return range;
 }
 
-// PROVEN: ac7dd20c IDENTICAL/NONE
 // OFFSET: 0x0044E370
 int32_t CGUnit::GetEffectiveStat(int32_t stat) const {
     return this->m_unit->m_unitFieldStat[stat] < 0 ? 0 : this->m_unit->m_unitFieldStat[stat];
 }
 
-// PROVEN: 450a766e IDENTICAL/NONE
 // OFFSET: 0x00554C90
 int32_t CGUnit::HasAuraState(int32_t state) const {
     return (this->m_unit->m_unitFieldAurastate & (1 << (state - 1))) != 0;
@@ -207,7 +202,6 @@ int32_t CGUnit::IsOnSpline() const {
     return spline && !(spline->m_flags & 0x80);
 }
 
-// PROVEN: d0407b4d DIFFERENT/IDENTICAL
 // OFFSET: 0x0043B840/0x140046180
 int32_t CGUnit::IsOnFallingSpline() const {
     CMoveSpline* spline = this->m_movement->m_spline;
@@ -230,13 +224,11 @@ uint32_t CGUnit::DescriptorToMirrorOffset(uint32_t offset, uint32_t a2, uint32_t
     return (offset & 3) + 4 * (objectFields + MirrorIndexFromFieldIndex((offset - base) >> 2));
 }
 
-// PROVEN: 15c7b8ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27810/0x1407CEF60
 int32_t CGUnit::TotalFields() {
     return CGObject::TotalFieldsSaved() + 120;
 }
 
-// PROVEN: 4fb188ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00447B30/0x14026EC00
 float CGUnit::GetFacing(float facing) const {
     return this->m_movement->GetFacing(facing);
@@ -247,13 +239,11 @@ bool CGUnit::IsPossessedBy(const WOWGUID& guid) const {
     return (this->m_unit->m_unitFieldFlags & 0x1000000) && guid == this->m_unit->m_unitFieldCharmedby;
 }
 
-// PROVEN: 0ce1f4fb IDENTICAL/NONE
 // OFFSET: 0x005AC900
 bool CGUnit::HasCreator() const {
     return this->m_unit->m_unitFieldCreatedby.m_guid != 0;
 }
 
-// PROVEN: 57e9bf7a IDENTICAL/NONE
 // OFFSET: 0x005AC8E0
 bool CGUnit::HasSummoner() const {
     return this->m_unit->m_unitFieldSummonedby.m_guid != 0;
@@ -270,7 +260,6 @@ bool CGUnit::IsCharmed() const {
     return this->m_unit->m_unitFieldCharmedby != WOWGUID();
 }
 
-// PROVEN: d055791b IDENTICAL/IDENTICAL
 // OFFSET: 0x008A4690/0x1405E70F0
 int32_t CGUnit::GetSpellCostModifier(int32_t schoolMask) const {
     int32_t result = 0;
@@ -286,7 +275,6 @@ int32_t CGUnit::GetSpellCostModifier(int32_t schoolMask) const {
     return result;
 }
 
-// PROVEN: ab50373b IDENTICAL/NONE
 // OFFSET: 0x008A46E0
 float CGUnit::GetSpellCostMultiplier(int32_t schoolMask) const {
     float result = 0.0f;
@@ -348,7 +336,6 @@ void CGUnit::CalcMissileTravel(const C3Vector& target, float speed, bool speedAs
     }
 }
 
-// PROVEN: 38d76aa9 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A27900/0x1407CF070
 float CGUnit::GetMaxSplineSpeed(uint32_t splineFlags) const {
     if (splineFlags & 0x2000A40) {

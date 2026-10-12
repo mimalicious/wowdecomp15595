@@ -64,7 +64,6 @@ bool ComSat::Vector<T>::Find(const T& value, uint32_t& index) const {
     return true;
 }
 
-// PROVEN: 93632a2b IDENTICAL/DIFFERENT
 // OFFSET: [0x00A33C40<unsigned __int64>, 0x00A38990/0x1407DE1E0<ComSat::Network::Endpoint*>, 0x00A395F0/0x1407E5950<ComSat::Network::Session::LocalTalker>]
 template <class T>
 bool ComSat::Vector<T>::Reserve(uint32_t size) {

@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 // STATIC: 0x00C1C680
 const DB2Meta ItemRec::s_meta = { "DBFilesClient\\Item.db2", "Item.adb", 8, 32, ItemRec::FixupRecord, 0, true, false, s_fieldOffsets, s_fieldSizes, s_fieldTypes, 0x50238EC2, 0x919BE54E, 0 };
 
-// PROVEN: 27fe000d IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ItemRec::FixupRecord(void* record) {
 }

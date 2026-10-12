@@ -30,7 +30,6 @@ void CSimpleCheckbox::operator delete(void* ptr) {
     CSimpleCheckbox::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: cb376cfc UNPROVEN/IDENTICAL
 // OFFSET: 0x00515C10/0x1401602A0
 CSimpleCheckbox::CSimpleCheckbox(CSimpleFrame* parent) : CSimpleButton(parent) {
     this->m_checked = 0;
@@ -38,19 +37,16 @@ CSimpleCheckbox::CSimpleCheckbox(CSimpleFrame* parent) : CSimpleButton(parent) {
     this->m_disabledCheckedTexture = NULL;
 }
 
-// PROVEN: 8dbd22bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00515C50/0x1401602F0
 const char* CSimpleCheckbox::GetObjectTypeName() {
     return CSimpleCheckbox::s_objectTypeName;
 }
 
-// PROVEN: 29fd7aea IDENTICAL/IDENTICAL
 // OFFSET: 0x00515C60/0x140160300
 int32_t CSimpleCheckbox::GetScriptMetaTable() {
     return CSimpleCheckbox::s_metatable;
 }
 
-// PROVEN: 259c2cc6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00515C70/0x14015EC70
 void CSimpleCheckbox::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_checkedTexture) {
@@ -78,7 +74,6 @@ bool CSimpleCheckbox::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleCheckbox::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleButton::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// PROVEN: 705be243 DIFFERENT/IDENTICAL
 // OFFSET: 0x00515D80/0x140160430
 void CSimpleCheckbox::SetChecked(int32_t checked, int32_t force) {
     if (!force && checked == this->m_checked) {
@@ -114,14 +109,12 @@ void CSimpleCheckbox::SetChecked(int32_t checked, int32_t force) {
     texture->Show();
 }
 
-// PROVEN: 5929d662 IDENTICAL/IDENTICAL
 // OFFSET: 0x00515E30/0x1401604F0
 void CSimpleCheckbox::OnClick(const char* btn, int32_t down) {
     this->SetChecked(this->m_checked == 0, 0);
     CSimpleButton::OnClick(btn, down);
 }
 
-// PROVEN: cb2e9252 IDENTICAL/IDENTICAL
 // OFFSET: 0x00515E60/0x140160540
 void CSimpleCheckbox::SetCheckedTexture(CSimpleTexture* texture) {
     if (texture == this->m_checkedTexture) {
@@ -140,7 +133,6 @@ void CSimpleCheckbox::SetCheckedTexture(CSimpleTexture* texture) {
     this->SetChecked(this->m_checked, 1);
 }
 
-// PROVEN: 3b782e0a IDENTICAL/IDENTICAL
 // OFFSET: 0x00515EB0/0x1401605B0
 void CSimpleCheckbox::SetDisabledCheckedTexture(CSimpleTexture* texture) {
     if (texture == this->m_disabledCheckedTexture) {
@@ -159,7 +151,6 @@ void CSimpleCheckbox::SetDisabledCheckedTexture(CSimpleTexture* texture) {
     this->SetChecked(this->m_checked, 1);
 }
 
-// PROVEN: c2d68c71 IDENTICAL/DIFFERENT
 // OFFSET: 0x00515F00/0x140160620
 void CSimpleCheckbox::Enable(int32_t enabled) {
     CSimpleButton::Enable(enabled);

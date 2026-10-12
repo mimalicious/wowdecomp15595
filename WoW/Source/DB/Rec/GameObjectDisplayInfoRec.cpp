@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[8] = { 0, 2, 0, 3, 3, 0, 3, 3 };
 // STATIC: 0x00C25474/0x140A1AFF0
 const DBCMeta GameObjectDisplayInfoRec::s_meta = { "DBFilesClient\\GameObjectDisplayInfo.dbc", 8, 84, GameObjectDisplayInfoRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 706d2a61 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void GameObjectDisplayInfoRec::FixupStrings(void* record, const char* strings) {
     GameObjectDisplayInfoRec* rec = static_cast<GameObjectDisplayInfoRec*>(record);

@@ -1,7 +1,6 @@
 #include "QuestLogLeaderBoardParams.h"
 #include "WoW/Source/Ui/QuestLog.h"
 
-// PROVEN: 476dae72 IDENTICAL/IDENTICAL
 // OFFSET: 0x00961A20/0x1406D5760
 QuestLogLeaderBoardParams::QuestLogLeaderBoardParams() {
     this->m_index = -1;

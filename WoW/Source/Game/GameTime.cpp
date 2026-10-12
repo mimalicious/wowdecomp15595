@@ -218,7 +218,6 @@ void CGameTime::GameTimeSync(const WowTime& time, bool force) {
     DebugLog(0x10, "GameTimeSync: delta=%d, differential=%d, HoursAndMinutes=%d", 0, this->m_elapsedMinutes, this->GetHourAndMinutes());
 }
 
-// PROVEN: f767a3b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A31C20/0x1407DBB30
 void __stdcall CGameTime::GameTimeUnregisterCallback(TIMESTAMPCALLBACK* callback) {
     callback->m_link.Unlink();

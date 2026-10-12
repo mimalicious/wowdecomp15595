@@ -149,14 +149,12 @@ CVar* g_disableServerNagleVar;
 // STATIC: 0x00D36218/0x140BEF7F0
 CVar* g_useIPv6Var;
 
-// PROVEN: ef572c18 IDENTICAL/UNPROVEN
 // OFFSET: 0x00401400/0x1400011F0
 static bool MouseSpeedCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     OsInputSetMouseSpeed(SStrToFloat(value));
     return true;
 }
 
-// PROVEN: fccc02c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401420/0x140001210
 static bool ErrorDisplayCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -174,7 +172,6 @@ static bool ErrorDisplayCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// PROVEN: 98de87a0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401470/0x140001260
 static bool ErrorDisplayShowCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t show = SStrToInt(value);
@@ -350,7 +347,6 @@ static int32_t ErrorDisplaySetFilter(const char* filter) {
     return 1;
 }
 
-// PROVEN: 14ea5daa IDENTICAL/IDENTICAL
 // OFFSET: 0x00403C90/0x140003660
 static bool ErrorDisplayFilterCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!ErrorDisplaySetFilter(value)) {
@@ -362,7 +358,6 @@ static bool ErrorDisplayFilterCallback(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// PROVEN: a12f8ea6 DIFFERENT/IDENTICAL
 // OFFSET: 0x004015F0/0x140003690
 static bool GammaCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     float gamma = SStrToFloat(value);
@@ -399,14 +394,12 @@ static bool DesktopGammaCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// PROVEN: b5b77202 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401750/0x1400014A0
 static bool ScreenshotFormatCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotFormat(value);
     return true;
 }
 
-// PROVEN: 4504b5d0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00401770/0x1400014C0
 static bool ScreenshotQualityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotQuality(SStrToInt(value));
@@ -468,7 +461,6 @@ static bool M2FasterChanged(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
-// PROVEN: 4e7612ee DIFFERENT/IDENTICAL
 // OFFSET: 0x004019A0/0x1400041F0
 static bool M2DebugFasterChanged(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t faster = s_M2FasterVar ? s_M2FasterVar->m_intValue : 0;
@@ -521,7 +513,6 @@ bool ProcessAffinityMaskCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// PROVEN: 40ddeda4 IDENTICAL/UNPROVEN
 // OFFSET: 0x004016D0/0x140001420
 bool SimdCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t requested = SStrToInt(value);
@@ -557,7 +548,6 @@ bool SimdCallback(CVar* var, const char* oldValue, const char* value, void* arg)
     return true;
 }
 
-// PROVEN: b4b329b6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401AB0/0x140001620
 bool TextureCacheSizeCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t size = SStrToInt(value) << 20;
@@ -625,7 +615,6 @@ static bool ForceAdditiveParticleSortCallback(CVar* var, const char* oldValue, c
     return true;
 }
 
-// PROVEN: 9d414f3b DIFFERENT/IDENTICAL
 // OFFSET: 0x00401D90/0x140001920
 static bool AsyncFileReadThreadSleepCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     return static_cast<uint32_t>(SStrToInt(value)) <= 100;

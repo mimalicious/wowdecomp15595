@@ -14,7 +14,6 @@
 // STATIC: 0x00DC71B0/0x140B3DE70
 static TSHashTable<DECLINEDWORD, HASHKEY_CONSTSTRI> s_declinedWords;
 
-// PROVEN: ab5f9133 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E5730/0x140127190
 void DeclinedWordsDestroy() {
     s_declinedWords.Clear();

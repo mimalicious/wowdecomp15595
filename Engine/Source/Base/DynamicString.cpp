@@ -3,7 +3,6 @@
 #include "Engine/Source/Base/DynamicString.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: 4574a22c IDENTICAL/IDENTICAL
 // OFFSET: 0x00872DC0/0x1405A9400
 CDynamicString::CDynamicString() {
     this->m_length = 0;
@@ -11,7 +10,6 @@ CDynamicString::CDynamicString() {
     this->m_buffer = NULL;
 }
 
-// PROVEN: d9b49376 IDENTICAL/DIFFERENT
 // OFFSET: 0x00872DD0/0x1405A9410
 CDynamicString::~CDynamicString() {
     if (this->m_buffer) {
@@ -19,7 +17,6 @@ CDynamicString::~CDynamicString() {
     }
 }
 
-// PROVEN: cfd0d636 IDENTICAL/DIFFERENT
 // OFFSET: 0x00872DF0/0x1405A9440
 void CDynamicString::Free() {
     this->m_length = 0;
@@ -32,7 +29,6 @@ void CDynamicString::Free() {
     this->m_buffer = NULL;
 }
 
-// PROVEN: 35df8dcd IDENTICAL/DIFFERENT
 // OFFSET: 0x00872E20/0x1405A9480
 CDynamicString& CDynamicString::operator=(const char* str) {
     if (!str) {
@@ -87,7 +83,6 @@ void CDynamicString::SetCapacity(int32_t capacity) {
     }
 }
 
-// PROVEN: 28a96b18 IDENTICAL/DIFFERENT
 // OFFSET: 0x00872F70/0x1405A9630
 void CDynamicString::Grow() {
     this->m_capacity = (3 * this->m_length >> 1) + 16;

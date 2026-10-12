@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[4] = { 0, 0, 0, 0 };
 // STATIC: 0x00C23828/0x140A18B80
 const DBCMeta LfgDungeonsGroupingMapRec::s_meta = { "DBFilesClient\\LfgDungeonsGroupingMap.dbc", 4, 16, LfgDungeonsGroupingMapRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 42e1ee6d IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void LfgDungeonsGroupingMapRec::FixupStrings(void* record, const char* strings) {
 }

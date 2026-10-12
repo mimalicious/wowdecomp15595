@@ -44,7 +44,6 @@ void* SIMD::AllocA16(uint32_t size) {
     return ptr;
 }
 
-// PROVEN: d4a8495e IDENTICAL/IDENTICAL
 // OFFSET: 0x00491040/0x1400B5FC0
 void SIMD::FreeA16(void* ptr) {
     if (ptr) {
@@ -53,17 +52,14 @@ void SIMD::FreeA16(void* ptr) {
     }
 }
 
-// PROVEN: 3e8552cc IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SIMD::Init_SSE3(SIMD::FunctionTable* table) {
 }
 
-// PROVEN: 0b701b9a IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SIMD::Init_SSSE3(SIMD::FunctionTable* table) {
 }
 
-// PROVEN: 1b111dc8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SIMD::Init_AVX(SIMD::FunctionTable* table) {
 }

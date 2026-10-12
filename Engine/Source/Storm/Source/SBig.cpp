@@ -42,7 +42,6 @@ inline uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }
 
-// PROVEN: 093d80b3 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BBDF0/0x1400F5300
 uint32_t BigBuffer::operator[](uint32_t index) const {
     return this->IsUsed(index) ? this->m_data[index + this->m_offset] : 0;
@@ -61,7 +60,6 @@ static int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     return result;
 }
 
-// PROVEN: bc98e27a IDENTICAL/DIFFERENT
 // OFFSET: 0x004BBEC0/0x1400F53E0
 static uint32_t HighBitPos(const BigBuffer& a) {
     uint32_t index = a.Count();
@@ -85,18 +83,15 @@ static uint32_t HighBitPos(const BigBuffer& a) {
     return 0;
 }
 
-// PROVEN: e3f3c02e IDENTICAL/IDENTICAL
 // OFFSET: 0x004BBF40/0x1400F5470
 int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
     return Compare(a->Primary(), b->Primary());
 }
 
-// PROVEN: 11441f7a IDENTICAL/NONE
 // OFFSET: 0x004BBF60
 BigStack::~BigStack() {
 }
 
-// PROVEN: 3b903b75 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BCC60/0x1400F6480
 BigData::~BigData() {
 }
@@ -118,7 +113,6 @@ void BigBuffer::Trim() const {
     }
 }
 
-// PROVEN: 7ca23af1 IDENTICAL/DIFFERENT
 // OFFSET: 0x004BC200/0x1400F6590
 BigStack::BigStack() {
     this->m_used = 0;
@@ -272,7 +266,6 @@ inline void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& a) {
     ToBinaryAppend(output, a);
 }
 
-// PROVEN: 31331fd5 DIFFERENT/IDENTICAL
 // OFFSET: 0x004BCBE0/0x1400F63F0
 void STORMAPI SBigAdd(BigData* a, const BigData* b, const BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
@@ -298,19 +291,16 @@ void STORMAPI SBigBitLen(BigData* a, uint32_t* bits) {
     *bits = 32 * index + bit + 1;
 }
 
-// PROVEN: 01318c10 DIFFERENT/IDENTICAL
 // OFFSET: 0x004BCCB0/0x1400F6540
 void STORMAPI SBigFromBinary(BigData* num, const void* data, uint32_t bytes) {
     FromBinary(num->Primary(), data, bytes);
 }
 
-// PROVEN: eb044316 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BCCD0/0x1400F6550
 void STORMAPI SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
 }
 
-// PROVEN: 9bc4ee93 DIFFERENT/IDENTICAL
 // OFFSET: 0x004BCCF0/0x1400F6600
 void STORMAPI SBigSub(BigData* a, const BigData* b, const BigData* c) {
     Sub(a->Primary(), b->Primary(), c->Primary());
@@ -376,7 +366,6 @@ static void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer&
     stack.Free(allocCount);
 }
 
-// PROVEN: 9997af6f IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD120/0x1400F6AF0
 void STORMAPI SBigMod(BigData* a, const BigData* b, const BigData* c) {
     uint32_t allocCount = 0;
@@ -385,7 +374,6 @@ void STORMAPI SBigMod(BigData* a, const BigData* b, const BigData* c) {
     a->Stack().Free(allocCount);
 }
 
-// PROVEN: dd3e4ef2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD160/0x1400F6B40
 void STORMAPI SBigNew(BigData** num) {
     *num = new (SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0)) BigData;
@@ -455,13 +443,11 @@ static void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
     stack.UnmakeDistinct(a, aa);
 }
 
-// PROVEN: 514e2a4f IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD8D0/0x1400F7310
 void STORMAPI SBigDel(BigData* num) {
     delete num;
 }
 
-// PROVEN: daae2b31 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD900/0x1400F7340
 void STORMAPI SBigMul(BigData* a, const BigData* b, const BigData* c) {
     Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
@@ -476,7 +462,6 @@ inline void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const B
     stack.Free(allocCount);
 }
 
-// PROVEN: f09e324a DIFFERENT/IDENTICAL
 // OFFSET: 0x004BD920/0x1400F7350
 static void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
     c.Trim();
@@ -530,7 +515,6 @@ static void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const B
     stack.Free(allocCount);
 }
 
-// PROVEN: dca765ab IDENTICAL/IDENTICAL
 // OFFSET: 0x004BDB70/0x1400F7660
 void STORMAPI SBigPowMod(BigData* a, const BigData* b, const BigData* c, const BigData* d) {
     PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());

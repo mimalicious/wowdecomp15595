@@ -10,13 +10,11 @@ uint32_t Liquid::CMaterialBank::s_refCount;
 // STATIC: 0x00E4EBBC/0x140D37FB0
 TSGrowableArray<Liquid::IMaterial*> Liquid::CMaterialBank::s_materials;
 
-// PROVEN: ee1935e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071C4D0/0x1403F0CD0
 void Liquid::CMaterialBank::Create() {
     Liquid::CMaterialBank::s_refCount++;
 }
 
-// PROVEN: f23c630d IDENTICAL/UNPROVEN
 // OFFSET: 0x0071C580/0x1403F1540
 void Liquid::CMaterialBank::ResetMaterials() {
     for (uint32_t i = 0; i < Liquid::CMaterialBank::s_materials.Count(); i++) {
@@ -26,7 +24,6 @@ void Liquid::CMaterialBank::ResetMaterials() {
     }
 }
 
-// PROVEN: 4111e45c IDENTICAL/DIFFERENT
 // OFFSET: 0x0071C630/0x1403F1660
 void Liquid::CMaterialBank::Purge() {
     for (uint32_t i = 0; i < Liquid::CMaterialBank::s_materials.Count(); i++) {
@@ -115,7 +112,6 @@ Liquid::IMaterial* Liquid::CMaterialBank::GetMaterial(uint32_t liquidType) {
     return material;
 }
 
-// PROVEN: 84920d4e IDENTICAL/NONE
 // OFFSET: 0x0071C810/0x1403F18E0
 void Liquid::CMaterialBank::Destroy() {
     if (!--Liquid::CMaterialBank::s_refCount) {

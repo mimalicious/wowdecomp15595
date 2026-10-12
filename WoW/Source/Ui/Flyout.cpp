@@ -40,7 +40,6 @@ void CFlyout::DelKnownSpellInternal(int32_t spellId) {
     }
 }
 
-// PROVEN: 808d273e IDENTICAL/DIFFERENT
 // OFFSET: 0x009A3F10/0x140729690
 void CFlyout::AddKnownSpellInternal(int32_t spellId) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -80,7 +79,6 @@ void CFlyout::ShutdownGame() {
     s_flyouts.Clear();
 }
 
-// PROVEN: fef5ae74 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A40A0/0x140729A00
 CFlyout::~CFlyout() {
     this->m_slots.Clear();
@@ -175,7 +173,6 @@ void CFlyout::DelKnownSpell(int32_t spellId) {
     }
 }
 
-// PROVEN: 9cd2790d IDENTICAL/DIFFERENT
 // OFFSET: 0x009A42C0/0x140729DB0
 void CFlyout::ClearKnownSpells() {
     for (CFlyout* flyout = s_flyouts.Head(); flyout; flyout = s_flyouts.Next(flyout)) {

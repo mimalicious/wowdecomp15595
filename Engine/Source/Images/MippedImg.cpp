@@ -51,7 +51,6 @@ uint32_t CalcLevelSize(uint32_t level, uint32_t width, uint32_t height, uint32_t
     return (levelHeight * levelWidth * GetBitDepth(format)) >> 3;
 }
 
-// PROVEN: 3f5f40b7 IDENTICAL/NONE
 // OFFSET: 0x006393A0
 uint32_t CalcLevelOffset(uint32_t level, uint32_t width, uint32_t height, uint32_t format) {
     uint32_t offset = 0;
@@ -80,7 +79,6 @@ uint32_t CalcLevelCount(uint32_t width, uint32_t height) {
     return levels;
 }
 
-// PROVEN: ee9100fb IDENTICAL/DIFFERENT
 // OFFSET: 0x00639440/0x1402D0D30
 MipBits* MippedImgAllocA(uint32_t format, uint32_t width, uint32_t height, const char* fileName, int32_t lineNumber) {
     uint32_t levelCount = CalcLevelCount(width, height);
@@ -96,14 +94,12 @@ MipBits* MippedImgAllocA(uint32_t format, uint32_t width, uint32_t height, const
     return images;
 }
 
-// PROVEN: 57394fb9 IDENTICAL/DIFFERENT
 // OFFSET: 0x006394C0/0x1402D0E60
 uint32_t MippedImgCalcSize(uint32_t format, uint32_t width, uint32_t height) {
     uint32_t levelCount = CalcLevelCount(width, height);
     return CalcLevelOffset(levelCount, width, height, format) + levelCount * sizeof(MipBits);
 }
 
-// PROVEN: fcdb5fa1 IDENTICAL/DIFFERENT
 // OFFSET: 0x006394F0/0x1402D0F20
 void MippedImgSet(uint32_t format, uint32_t width, uint32_t height, MipBits* images) {
     uint32_t levelCount = CalcLevelCount(width, height);

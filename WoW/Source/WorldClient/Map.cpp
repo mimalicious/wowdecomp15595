@@ -223,7 +223,6 @@ int32_t CMap::LinkObjectToExterior(CMapBaseObj* object, const CAaBox& box, const
     return result;
 }
 
-// PROVEN: 30adeb3c IDENTICAL/IDENTICAL
 // OFFSET: 0x007614F0/0x140446070
 static int CompareAreaDist(const void* a, const void* b) {
     float distA = static_cast<const CMapAreaSortEntry*>(a)->m_distSq;
@@ -236,7 +235,6 @@ static int CompareAreaDist(const void* a, const void* b) {
     return distA < distB;
 }
 
-// PROVEN: 65c28b31 IDENTICAL/IDENTICAL
 // OFFSET: 0x00735A80/0x140411F80
 uint32_t CMap::GetTerrainVSPerm(int32_t displacement, int32_t lighting, uint32_t layers, uint32_t format, uint32_t material, int32_t shadow, uint32_t clip) {
     uint32_t base = layers + 4 * lighting - 1;
@@ -311,13 +309,11 @@ void CMap::Destroy() {
     CMap::MapMemDestroy();
 }
 
-// PROVEN: 792fbef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00735CB0/0x1404121B0
 uint32_t CMap::GetTerrainPSPerm(uint32_t materialType, uint32_t layers, uint32_t shadowMode) {
     return materialType + 6 * (layers + 4 * (CShaderEffect::s_usePcfFiltering + 2 * shadowMode) - 1);
 }
 
-// PROVEN: c6c12bb0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CMap::ProcessDetailDoodadUpdateList() {
 }
@@ -537,7 +533,6 @@ void CMap::UpdateAreaDistances() {
     }
 }
 
-// PROVEN: 95614bd4 IDENTICAL/DIFFERENT
 // OFFSET: 0x007619F0/0x1404466C0
 int32_t CMap::PreloadAreasExist(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
@@ -834,7 +829,6 @@ void CMap::ProcessDoodadDefUpdateList() {
     }
 }
 
-// PROVEN: 8e810a58 IDENTICAL/IDENTICAL
 // OFFSET: 0x00762580/0x140447580
 void CMap::PreUpdateMap() {
     this->PreUpdateAreas();
@@ -907,7 +901,6 @@ void CMap::UpdateMap() {
     }
 }
 
-// PROVEN: 1a5e16f0 IDENTICAL/DIFFERENT
 // OFFSET: 0x007626E0/0x140447720
 void CMap::PreloadUpdateMap(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
@@ -943,7 +936,6 @@ void CMap::WaterReset() {
     }
 }
 
-// PROVEN: 10d8fcec IDENTICAL/UNPROVEN
 // OFFSET: 0x0077F820/0x14046C8A0
 void CMap::TestQueryReset() {
     CMap::s_testQueryVertices.SetCount(0);

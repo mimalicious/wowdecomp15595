@@ -33,7 +33,6 @@ static char s_peerId[21];
 // STATIC: 0x00EBB0D0/0x140DABE18
 static char s_key[9];
 
-// PROVEN: e4cc653f IDENTICAL/NONE
 // OFFSET: 0x007A4D90
 void Tracker::TrackerHttpDataDownloadCallBack::Completed(Blizzard::URL::DownloadCallback::Status status) {
     Blizzard::Lock::EventSet(this->m_event);
@@ -63,7 +62,6 @@ char* Tracker::GetPeerID() {
     return s_peerId;
 }
 
-// PROVEN: 99e03d51 IDENTICAL/UNPROVEN
 // OFFSET: 0x007FCDD0/0x14050F9B0
 char* Tracker::GetKey() {
     if (!s_key[0]) {
@@ -77,7 +75,6 @@ char* Tracker::GetKey() {
     return s_key;
 }
 
-// PROVEN: 8c7278d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FB3C0/0x14050DBF0
 const char* Tracker::GetTrackerAddress(const char* locale) {
     if (!Blizzard::String::Equal(locale, "enUS") || !Blizzard::String::Equal(locale, "esMX")) {
@@ -91,7 +88,6 @@ const char* Tracker::GetTrackerAddress(const char* locale) {
     return NULL;
 }
 
-// PROVEN: fbb71344 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FB450/0x14050DC90
 void Tracker::SetLocale(const char* locale) {
     s_localeTrackerAddress = GetTrackerAddress(locale);
@@ -126,25 +122,21 @@ Tracker::TrackerHttpDataDownloadCallBack::TrackerHttpDataDownloadCallBack() {
     Blizzard::Lock::EventCreate(this->m_event);
 }
 
-// PROVEN: 1e8a1346 IDENTICAL/NONE
 // OFFSET: 0x007FD0B0
 int32_t Tracker::TrackerHttpDataDownloadCallBack::GetTimeout() {
     return this->m_timeout;
 }
 
-// PROVEN: a007f919 IDENTICAL/NONE
 // OFFSET: 0x007FD0C0
 void Tracker::TrackerHttpDataDownloadCallBack::WaitForCompletion() {
     Blizzard::Lock::EventWaitForever(this->m_event);
 }
 
-// PROVEN: bd2f932c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool Tracker::TrackerHttpDataDownloadCallBack::ShouldBlock() {
     return true;
 }
 
-// PROVEN: 6d8dcf79 IDENTICAL/NONE
 // OFFSET: 0x007FD0D0
 void Tracker::TrackerHttpDataDownloadCallBack::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;

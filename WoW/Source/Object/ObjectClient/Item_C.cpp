@@ -88,7 +88,6 @@ static int32_t ReforgeStatIsInvalid(int32_t stat, int32_t amount, const ItemRefo
     return 0;
 }
 
-// PROVEN: d26ab580 IDENTICAL/NONE
 // OFFSET: 0x005A50D0
 void INVENTORYART::SetTexture(const char* texture) {
     if (this->m_texture) {
@@ -101,7 +100,6 @@ void INVENTORYART::SetTexture(const char* texture) {
     }
 }
 
-// PROVEN: 44603175 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A5120/0x140215F50
 void CGItem_C::UpdateEnchantmentTime(int32_t slot, int32_t seconds) {
     if (seconds > 0) {
@@ -111,7 +109,6 @@ void CGItem_C::UpdateEnchantmentTime(int32_t slot, int32_t seconds) {
     }
 }
 
-// PROVEN: d2628d40 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A5160/0x140215FB0
 uint32_t CGItem_C::GetEnchantmentTimeLeft(int32_t slot) const {
     if (this->m_enchantmentExpiration[slot]) {
@@ -126,7 +123,6 @@ uint32_t CGItem_C::GetEnchantmentTimeLeft(int32_t slot) const {
     return 0;
 }
 
-// PROVEN: 48e5a67c IDENTICAL/DIFFERENT
 // OFFSET: 0x005A51A0/0x140216000
 void CGItem_C::SetItemPurchaseData(ItemPurchaseData* data) {
     if (this->m_itemPurchaseData) {
@@ -278,7 +274,6 @@ void EvalutateReforgeOfRandomProp(int32_t randomPropertiesId, int32_t propertySe
     }
 }
 
-// PROVEN: 2d2210e1 IDENTICAL/UNPROVEN
 // OFFSET: 0x005A5640/0x140216590
 uint32_t CGItem_C::GetSpellItemEnchantmentId() const {
     for (uint32_t i = 0; i < 15; i++) {
@@ -308,7 +303,6 @@ uint32_t CGItem_C::GetSpellItemEnchantmentId() const {
     return 0;
 }
 
-// PROVEN: b2e865c1 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A5600/0x140216540
 void CGItem_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
@@ -316,7 +310,6 @@ void CGItem_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_itemMirror = saved + CGObject::TotalFieldsSaved();
 }
 
-// PROVEN: 13dec0b2 IDENTICAL/UNPROVEN
 // OFFSET: 0x005A56E0/0x140216630
 int32_t CGItem_C::IsMetal(int32_t materialId) {
     MaterialRec* rec = g_materialDB.GetRecord(materialId);
@@ -328,7 +321,6 @@ int32_t CGItem_C::IsMetal(int32_t materialId) {
     return 0;
 }
 
-// PROVEN: 912fd376 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5720/0x140216670
 void CGItem_C::Lock() {
     if (!(this->m_itemFlags & 1)) {
@@ -338,7 +330,6 @@ void CGItem_C::Lock() {
     }
 }
 
-// PROVEN: 848d4f78 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5760/0x1402166B0
 void CGItem_C::Unlock() {
     if (this->m_itemFlags & 1) {
@@ -348,13 +339,11 @@ void CGItem_C::Unlock() {
     }
 }
 
-// PROVEN: 5188b532 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A57A0/0x1402166F0
 void CGItem_C::SetTranslated() {
     this->m_item->m_itemFieldFlags |= 0x2;
 }
 
-// PROVEN: 3b0ce03a IDENTICAL/DIFFERENT
 // OFFSET: 0x005A57B0/0x140216700
 void CGItem_C::UpdateExpirationTime(int32_t seconds) {
     if (seconds > 0) {
@@ -375,7 +364,6 @@ uint32_t CGItem_C::GetExpirationTimeLeft() const {
     return left > 0 ? left : 0;
 }
 
-// PROVEN: bfc33732 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5820/0x140216790
 int32_t CGItem_C::GetSelectionHighlightColor(CImVector* color) const {
     CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
@@ -496,7 +484,6 @@ static int32_t OnUpdateSpellCharges(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// PROVEN: 9974dd8f IDENTICAL/DIFFERENT
 // OFFSET: 0x005A5B60/0x140216BB0
 static void ItemIDChangedCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -575,7 +562,6 @@ static int32_t OnUpdateDurability(WOWGUID guid, uint32_t fieldOffset, uint32_t f
     return 1;
 }
 
-// PROVEN: 07c61422 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5DD0/0x140216EC0
 int32_t CGItem_C::HasOnUseEnchant() const {
     return this->GetSpellItemEnchantmentId() != 0;
@@ -659,7 +645,6 @@ int32_t CGItem_C::GetPrismaticSocketCount() {
     return 0;
 }
 
-// PROVEN: 2a0d44cd IDENTICAL/DIFFERENT
 // OFFSET: 0x005A5FC0/0x1402170E0
 void CGItem_C::UpdateSockets(uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5) {
     uint16_t changed = 0;
@@ -688,7 +673,6 @@ void CGItem_C::UpdateSockets(uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
     FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_SUCCESS, NULL);
 }
 
-// PROVEN: 307246b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5AC0/0x140216B40
 bool CGItem_C::IsTemporarilyBoundForTrade() {
     return this->HasSoulboundEnchant();
@@ -774,7 +758,6 @@ static int32_t OnUpdateEnchantments(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// PROVEN: 195b6a47 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A62D0/0x1402174C0
 bool CGItem_C::IsBoundForTrade() {
     return this->IsPermanentlyBoundForTrade() || this->HasSoulboundEnchant();
@@ -1071,7 +1054,6 @@ void CGItem_C::GetCooldowns(int32_t itemId, uint32_t& cooldown, uint32_t& catego
     }
 }
 
-// PROVEN: 0427fed4 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A70A0/0x1402187E0
 void CGItem_C::Initialize() {
     ItemSparseInitialize();
@@ -1083,7 +1065,6 @@ void CGItem_C::Initialize() {
     ClntObjMgrSetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldDurability), sizeof(uint32_t), OnUpdateDurability, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
-// PROVEN: 17fcf124 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A7140/0x1402188D0
 void CGItem_C::Shutdown() {
     ClntObjMgrUnsetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldStackCount), OnUpdateStackCount, NULL);
@@ -1119,7 +1100,6 @@ int32_t CGItem_C::GetNumSockets() {
     return sockets + this->GetPrismaticSocketCount();
 }
 
-// PROVEN: ea401f74 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A7230/0x140218AC0
 int32_t CGItem_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const {
     WOWGUID guid = this->m_obj->m_guid;
@@ -1251,7 +1231,6 @@ int32_t CGItem_C::CanGoInSlot(int32_t itemId, uint32_t slot, int32_t bypass) {
     return 0;
 }
 
-// PROVEN: 5d4c3cbc DIFFERENT/IDENTICAL
 // OFFSET: 0x005A7650/0x140218FF0
 int32_t CGItem_C::CanGoInSlot(uint32_t slot, int32_t bypass) {
     return CGItem_C::CanGoInSlot(this->m_obj->m_entryID, slot, bypass);
@@ -1635,13 +1614,11 @@ CGItem_C::CGItem_C(uint32_t time, const CClientObjCreate& create) : CGObject_C(t
     this->m_itemPurchaseData = NULL;
 }
 
-// PROVEN: ad527087 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A89E0/0x14021AA10
 int32_t CGItem_C::CanBeUsed() {
     return this->GetEnchantmentSpell(0) != 0;
 }
 
-// PROVEN: 91a25189 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A89F0/0x14021AA30
 int32_t CGItem_C::GetUsableSpellCharges() const {
     uint32_t id = this->GetSpellItemEnchantmentId();
@@ -1661,7 +1638,6 @@ int32_t CGItem_C::GetUsableSpellCharges() const {
     return CGItem_C::NumBaseCharges(this->m_obj->m_entryID);
 }
 
-// PROVEN: 606aaebb IDENTICAL/UNPROVEN
 // OFFSET: 0x005A8A50/0x14021AB20
 void CGItem_C::GetSpellCooldownInfo(uint32_t& cooldown, uint32_t& categoryCooldown, uint32_t& category) {
     cooldown = 0;
@@ -2278,14 +2254,12 @@ void CGItem_C::RequestItemCacheInfo() {
     }
 }
 
-// PROVEN: c603595b IDENTICAL/UNPROVEN
 // OFFSET: 0x005AA060/0x14021C5C0
 void CGItem_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->CGObject_C::PostInit(time, create, reenable);
     this->RequestItemCacheInfo();
 }
 
-// PROVEN: 7f005425 IDENTICAL/UNPROVEN
 // OFFSET: 0x005AA090/0x14021C5E0
 void CGItem_C::PostReenable(const CClientObjCreate& create) {
     this->CGObject_C::PostReenable(create);
@@ -2342,7 +2316,6 @@ CGItem_C::~CGItem_C() {
     }
 }
 
-// PROVEN: 9aeca405 IDENTICAL/NONE
 // OFFSET: 0x0044BC80
 static int32_t FindItemCallback(const CGItem_C* item, void* param) {
     return item == param;

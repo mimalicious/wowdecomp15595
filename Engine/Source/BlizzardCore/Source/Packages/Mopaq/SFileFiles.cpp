@@ -13,7 +13,6 @@
 // STATIC: 0x00BCD74C
 static const uint32_t s_repairDelays[5] = { 100, 200, 500, 1000, 1000 };
 
-// PROVEN: b36c41a9 IDENTICAL/NONE
 // OFFSET: 0x007AB030
 void Blizzard::Mopaq::HSFILERecord::SetLogicalArchive(System_SFile::ARCHIVEREC* archive) {
     if (this->m_handle) {
@@ -84,7 +83,6 @@ int32_t Blizzard::Mopaq::SFileOpenFileEx(System_SFile::ARCHIVEREC* handle, const
     return 0;
 }
 
-// PROVEN: 6acd2a32 IDENTICAL/UNPROVEN
 // OFFSET: 0x007F7880/0x140506970
 int32_t Blizzard::Mopaq::SFileOpenFileEx(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags, HSFILERecord** result) {
     Blizzard::Util::Digest<16> md5 = System_SFile::s_emptyMd5;
@@ -170,7 +168,6 @@ bool Blizzard::Mopaq::SFileReadFile(HSFILERecord* file, void* buffer, uint32_t c
     return false;
 }
 
-// PROVEN: b0f44088 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BA190/0x1404B1920
 bool Blizzard::Mopaq::SFileWriteFile(HSFILERecord* file, const void* data, uint32_t size) {
     int64_t position = file->m_handle ? file->m_handle->m_position : -1;
@@ -211,7 +208,6 @@ int64_t Blizzard::Mopaq::SFileSetFilePointer(HSFILERecord* file, int32_t distanc
     return position;
 }
 
-// PROVEN: 9404b712 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BA180/0x1404B1910
 int64_t Blizzard::Mopaq::SFileGetFileSize(HSFILERecord* file, uint32_t* sizeHigh) {
     return file->GetFileSize();
@@ -240,7 +236,6 @@ bool Blizzard::Mopaq::SFileIsFileCompressed(HSFILERecord* file) {
     return file->m_handle && (file->m_handle->m_blockEntry.m_flags & 0x200) == 0x200;
 }
 
-// PROVEN: 81522587 IDENTICAL/DIFFERENT
 // OFFSET: 0x007B1C20/0x1404A6CE0
 bool Blizzard::Mopaq::SFileGetFileName(HSFILERecord* file, char* name, uint32_t size) {
     Blizzard::String::Copy(name, file->m_handle ? file->m_handle->m_name : "", size);
@@ -261,14 +256,12 @@ bool Blizzard::Mopaq::SFileGetLogicalArchive(HSFILERecord* file, System_SFile::A
     return *archive != NULL;
 }
 
-// PROVEN: edf89f07 IDENTICAL/UNPROVEN
 // OFFSET: 0x007B1BE0/0x1404A6C90
 bool Blizzard::Mopaq::SFileGetFileMD5(HSFILERecord* file, Blizzard::Util::Digest<16>* md5) {
     *md5 = file->m_handle ? file->m_handle->m_blockEntry.m_md5 : System_SFile::s_emptyMd5;
     return *md5 != System_SFile::s_emptyMd5;
 }
 
-// PROVEN: f5b74e59 IDENTICAL/DIFFERENT
 // OFFSET: 0x007B2910/0x1404C87A0
 bool Blizzard::Mopaq::SFileGetDeltaDigests(HSFILERecord* file, Blizzard::Util::Digest<16>& source, Blizzard::Util::Digest<16>& target) {
     if (!file || !file->m_handle || !file->m_handle->m_delta) {

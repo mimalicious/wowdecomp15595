@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[5] = { 0, 0, 0, 0, 0 };
 // STATIC: 0x00C1F55C/0x140A13AD8
 const DBCMeta WeaponImpactSoundsRec::s_meta = { "DBFilesClient\\WeaponImpactSounds.dbc", 5, 92, WeaponImpactSoundsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 67adb663 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void WeaponImpactSoundsRec::FixupStrings(void* record, const char* strings) {
 }

@@ -7,7 +7,6 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// PROVEN: c44cf23e IDENTICAL/IDENTICAL
 // OFFSET: 0x007B41D0/0x1404A9CE0
 void System_Streaming::HttpCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     this->m_status = status;
@@ -29,7 +28,6 @@ System_Streaming::HttpCallback::~HttpCallback() {
     CloseHandle(this->m_event);
 }
 
-// PROVEN: f39d5e44 IDENTICAL/IDENTICAL
 // OFFSET: 0x007C3BE0/0x1404BE300
 void System_Streaming::HttpCallback::WaitForCompletion() {
     WaitForSingleObject(this->m_event, INFINITE);

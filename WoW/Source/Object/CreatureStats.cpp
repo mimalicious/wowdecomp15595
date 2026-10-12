@@ -2,7 +2,6 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: 6c18e375 IDENTICAL/NONE
 // OFFSET: 0x00464860
 const char* CreatureStats::GetName(int32_t index) const {
     const char* name = this->m_name[index];
@@ -14,7 +13,6 @@ const char* CreatureStats::GetName(int32_t index) const {
     return name;
 }
 
-// PROVEN: f4a4c3dd IDENTICAL/NONE
 // OFFSET: 0x005ACC80
 const char* CreatureStats::GetNameAlt(int32_t index) const {
     const char* name = this->m_nameAlt[index];
@@ -26,7 +24,6 @@ const char* CreatureStats::GetNameAlt(int32_t index) const {
     return name;
 }
 
-// PROVEN: 32694511 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A287E0/0x1407D0310
 void CreatureStats::Pack(CDataStore* msg) const {
     for (uint32_t i = 0; i < 4; i++) {
@@ -71,7 +68,6 @@ void CreatureStats::Pack(CDataStore* msg) const {
     msg->Put(this->m_expansion);
 }
 
-// PROVEN: 03835d8d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A28950/0x1407D04C0
 void CreatureStats::Unpack(CDataStore* msg) {
     char buffer[1024];

@@ -42,13 +42,11 @@ static CATEGORYINFO s_categories[NUM_CATEGORIES] = {
     { CATEGORY_GM, "gm" },
 };
 
-// PROVEN: 1fbbef9c IDENTICAL/NONE
 // INLINED
 CONSOLECOMMAND::CONSOLECOMMAND() {
     this->m_helpText = NULL;
 }
 
-// PROVEN: 1fbbef9c IDENTICAL/DIFFERENT
 // OFFSET: 0x00610960/0x14029AEB0
 static int32_t ConsoleCommand_Ver(const char* command, const char* arguments) {
     ConsoleWrite("WoW [Release x86] Build 15595 (Apr 10 2012)", DEFAULT_COLOR);
@@ -56,7 +54,6 @@ static int32_t ConsoleCommand_Ver(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: b68528ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00610980/0x14029AED0
 static int32_t ConsoleCommand_Quit(const char* command, const char* arguments) {
     ConsolePostClose();
@@ -64,7 +61,6 @@ static int32_t ConsoleCommand_Quit(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: 9ca48304 IDENTICAL/IDENTICAL
 // OFFSET: 0x00653970/0x1402F3F40
 static int32_t CompareCompletions(const void* elem1, const void* elem2) {
     const char* const* str1 = static_cast<const char* const*>(elem1);
@@ -157,13 +153,11 @@ static int32_t ConsoleCommand_Help(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: 7dae32a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00653950/0x1402F3F20
 const char* ConsoleCommandHistory(uint32_t index) {
     return g_commandHistory[(g_commandHistoryIndex - index - 1) & 31];
 }
 
-// PROVEN: ab7b4dc7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39FF0/0x14090ED00
 uint32_t ConsoleCommandHistoryDepth() {
     return sizeof(g_commandHistory) / sizeof(g_commandHistory[0]);
@@ -339,13 +333,11 @@ void ConsoleCommandPrintAllMatching(const char* partial, bool substring) {
     }
 }
 
-// PROVEN: 5b479189 IDENTICAL/IDENTICAL
 // OFFSET: 0x00654450/0x1402F4CC0
 void ConsoleCommandWriteHelp(const char* command) {
     ConsoleCommand_Help("help", command);
 }
 
-// PROVEN: 179b5e50 IDENTICAL/DIFFERENT
 // OFFSET: 0x006545E0/0x1402F4EA0
 void ConsoleCommandDestroy() {
     g_consoleCommandHash.Clear();
@@ -366,7 +358,6 @@ int32_t ConsoleCommandRegister(const char* command, COMMANDHANDLER handler, CATE
     return 1;
 }
 
-// PROVEN: 75a3a4f5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00654D60/0x1402F5A10
 void ConsoleCommandInitialize() {
     ConsoleCommandRegister("help", ConsoleCommand_Help, CATEGORY_CONSOLE, "Provides help information about a command.", NULL);
@@ -379,20 +370,17 @@ void ConsoleInitializeClientCommand() {
     ConsoleInitializeDebugCommand();
 }
 
-// PROVEN: 6f2be152 DIFFERENT/IDENTICAL
 // OFFSET: 0x00610950/0x14029AEA0
 void ConsoleDestroyClientCommand() {
     ConsoleCommandDestroy();
 }
 
-// PROVEN: 091d27c9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00610990/0x14029AEF0
 void ConsoleInitializeCommonCommand() {
     ConsoleCommandRegister("quit", ConsoleCommand_Quit, CATEGORY_DEFAULT, NULL, NULL);
     ConsoleCommandRegister("ver", ConsoleCommand_Ver, CATEGORY_DEFAULT, NULL, NULL);
 }
 
-// PROVEN: e79a0b38 IDENTICAL/IDENTICAL
 // OFFSET: [0x00401000/0x1407D7E80]
 void ConsoleInitializeDebugCommand() {
 }
@@ -435,7 +423,6 @@ int32_t AddLineToExecFile(const char* line) {
     return 0;
 }
 
-// PROVEN: 36217e95 IDENTICAL/DIFFERENT
 // OFFSET: 0x00656F70/0x1402F8AE0
 void AddToHistory(const char* command) {
     SStrCopy(g_commandHistory[g_commandHistoryIndex], command, sizeof(g_commandHistory[0]));

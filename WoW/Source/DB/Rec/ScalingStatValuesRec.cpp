@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[23] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 // STATIC: 0x00C228AC/0x140A177F0
 const DBCMeta ScalingStatValuesRec::s_meta = { "DBFilesClient\\ScalingStatValues.dbc", 23, 188, ScalingStatValuesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 18d315ec IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ScalingStatValuesRec::FixupStrings(void* record, const char* strings) {
 }

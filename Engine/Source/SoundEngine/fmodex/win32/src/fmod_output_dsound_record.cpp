@@ -37,7 +37,6 @@ static const FMOD_GUID _KSDATAFORMAT_SUBTYPE_IEEE_FLOAT     = { 0x00000003, 0x00
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ec322d49 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B019E0/0x1408C3D30
 BOOL CALLBACK FMOD_Output_DSound_RecordEnumProc(LPGUID lpGUID, LPCSTR lpszDesc, LPCSTR lpszDrvName, LPVOID lpContext)
 {
@@ -88,7 +87,6 @@ BOOL CALLBACK FMOD_Output_DSound_RecordEnumProc(LPGUID lpGUID, LPCSTR lpszDesc, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 16224d98 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B01AC0/0x1408C3E20
 FMOD_RESULT OutputDSound::recordEnumerate()
 {
@@ -136,7 +134,6 @@ FMOD_RESULT OutputDSound::recordEnumerate()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0a512762 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B01B40/0x1408C3ED0
 FMOD_RESULT OutputDSound::recordGetNumDrivers(int *numdrivers)
 {
@@ -176,7 +173,6 @@ FMOD_RESULT OutputDSound::recordGetNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c5bbf187 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B01B70/0x1408C3F20
 FMOD_RESULT OutputDSound::recordGetDriverInfo(int id, char *name, int namelen)
 {
@@ -318,7 +314,6 @@ FMOD_RESULT OutputDSound::recordStart(int id, Sound *sound, bool loop)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b24ace48 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B01DA0/0x1408C4210
 FMOD_RESULT OutputDSound::recordStop()
 {
@@ -356,7 +351,6 @@ FMOD_RESULT OutputDSound::recordStop()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9d48e5b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B01DF0/0x1408C4270
 FMOD_RESULT OutputDSound::recordGetPosition(unsigned int *pcm)
 {
@@ -425,7 +419,6 @@ FMOD_RESULT OutputDSound::recordGetPosition(unsigned int *pcm)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d5856928 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B01E90/0x1408C4340
 FMOD_RESULT OutputDSound::recordLock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
@@ -452,7 +445,6 @@ FMOD_RESULT OutputDSound::recordLock(unsigned int offset, unsigned int length, v
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b77f6b4d IDENTICAL/IDENTICAL
 // OFFSET: 0x00B01ED0/0x1408C3ED0
 FMOD_RESULT OutputDSound::recordUnlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {

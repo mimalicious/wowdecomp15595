@@ -68,13 +68,11 @@ CGxTex* ProjectTex2dGetAddFadeTex() {
     return TextureGetGxTex(s_shadowAddTexture);
 }
 
-// PROVEN: 6672d821 IDENTICAL/IDENTICAL
 // OFFSET: 0x00740620/0x14041E910
 CTexture* ProjectTex2dGetModFadeTex() {
     return s_shadowModTexture;
 }
 
-// PROVEN: 1c09cdb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x007407B0/0x14041EA50
 void ProjectTexDestroy() {
     if (s_shadowModTexture) {
@@ -252,7 +250,6 @@ static void ProjectTexBuildVertexBufferVariant(const World::TriData::Batch* triB
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PC);
 }
 
-// PROVEN: ef145068 IDENTICAL/IDENTICAL
 // OFFSET: 0x00741190/0x14041F670
 static void ProjectTexRenderIndices(const World::TriData::Batch* triBatch) {
     CGxBuf* buf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), triBatch->m_indexCount);
@@ -417,7 +414,6 @@ static void ProjectTexClipPolygon(uint32_t& outCount, C3Vector* out, const CAaBo
     }
 }
 
-// PROVEN: 6fa1c1d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00743650/0x140420450
 void ProjectTexInitialize() {
     s_vsProjTex2DModel2 = NULL;

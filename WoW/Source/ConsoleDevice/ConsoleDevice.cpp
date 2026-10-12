@@ -82,7 +82,6 @@ CGxFormat s_fallbackFormat(false, s_size640x480, CGxFormat::Fmt_Rgb565, CGxForma
 // STATIC: 0x00E28B90/0x140D10820
 CGxFormat s_lastGoodFormat;
 
-// PROVEN: 5d9f084a IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E270/0x140298000
 void ConsoleAccessSetEnabled(int32_t enable) {
     s_consoleAccessEnabled = enable;
@@ -93,7 +92,6 @@ int32_t IsConsoleEnabled() {
     return s_consoleAccessEnabled;
 }
 
-// PROVEN: c8c72c08 IDENTICAL/IDENTICAL
 // OFFSET: 0x00635470/0x1402CB8A0
 void ConsoleGxOverride(const char* list) {
     while (*list) {
@@ -116,19 +114,16 @@ void ConsoleGxOverride(const char* list) {
     }
 }
 
-// PROVEN: 19e29f9f IDENTICAL/DIFFERENT
 // OFFSET: 0x00635930/0x1402CBE80
 Hardware* ConsoleGetHardware() {
     return s_hardwareDetected ? &s_hardware : NULL;
 }
 
-// PROVEN: b3fc94d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00635950/0x1402CBEA0
 int32_t ConsoleDeviceHardwareChanged() {
     return s_hwDetect || s_hwChanged;
 }
 
-// PROVEN: 2dffb110 IDENTICAL/IDENTICAL
 // OFFSET: 0x00635970/0x1402CBEC0
 DefaultSettings* ConsoleDeviceGetDefaultSettings() {
     return &s_defaults;
@@ -156,7 +151,6 @@ static int32_t CheckDeviceCaps() {
     return 0;
 }
 
-// PROVEN: 76bedbac IDENTICAL/IDENTICAL
 // OFFSET: 0x00635A10/0x1402CBF80
 void DisplayChangeCallback(uint32_t monitor) {
     if (!s_gxRestarting) {
@@ -164,7 +158,6 @@ void DisplayChangeCallback(uint32_t monitor) {
     }
 }
 
-// PROVEN: 0b2649ab IDENTICAL/IDENTICAL
 // OFFSET: 0x00635A30/0x1402CBFA0
 void ConsoleDeviceDestroy() {
     g_theGxDevicePtr->RemoveDisplayChangeCallback(DisplayChangeCallback);

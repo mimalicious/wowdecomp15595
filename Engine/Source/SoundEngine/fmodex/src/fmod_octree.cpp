@@ -209,7 +209,6 @@ Octree::~Octree()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cef61f68 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD42C0/0x14089ED50
 void Octree::insertItem(OctreeNode* item)
 {
@@ -266,7 +265,6 @@ void Octree::insertItem(OctreeNode* item)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9a5c00b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD4410/0x14089EE90
 void Octree::deleteItem(OctreeNode* item)
 {
@@ -424,7 +422,6 @@ void Octree::deleteItem(OctreeNode* item)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6f079d7c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD45A0/0x14089F060
 void Octree::updateItem(OctreeNode* item)
 {
@@ -467,7 +464,6 @@ void Octree::updateItem(OctreeNode* item)
     insertItem(item);
 }
 
-// PROVEN: 47deab8a IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD32A0/0x14089DF70
 void Octree::getAABB(FMOD_AABB* aabb)
 {
@@ -489,7 +485,6 @@ void Octree::getAABB(FMOD_AABB* aabb)
     }
 }
 
-// PROVEN: dfa9bf7f IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD3E30/0x14089E960
 void Octree::addInternalNode(OctreeNode* item)
 {
@@ -787,7 +782,6 @@ void Octree::setMaxSize(float maxSize)
     mScale = 1.0f / maxSize;
 }
 
-// PROVEN: 6d5d2cab UNPROVEN/IDENTICAL
 // OFFSET: 0x00AD3E70/0x14089E9A0
 bool Octree::testLine(bool (*octreeLineTestCallback)(OctreeNode* item, void* data), void* data, const FMOD_VECTOR& a, const FMOD_VECTOR& b)
 {
@@ -1200,7 +1194,6 @@ public:
 TestClass testClass;*/
 #endif
 
-// PROVEN: 0a083096 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AD3EF0/0x14089EA20
 void Octree::insertInternal(OctreeNode* node, OctreeNode* item)
 {
@@ -1444,7 +1437,6 @@ OctreeNode* Octree::getFreeNode()
     return node;
 }
 
-// PROVEN: d80f1c2b IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD33A0/0x14089DFF0
 void Octree::adjustAABBs(OctreeNode* node)
 {
@@ -1516,7 +1508,6 @@ void Octree::removeListItem(OctreeNode* node)
     node->flags &= ~OCTREE_FLAG_EXTRA_NODE;
 }
 
-// PROVEN: 63addc32 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD3660/0x14089E270
 void Octree::addListItem(OctreeNode* list, OctreeNode* node)
 {

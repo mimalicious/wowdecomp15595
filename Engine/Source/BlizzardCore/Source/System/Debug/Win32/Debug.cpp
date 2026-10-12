@@ -23,7 +23,6 @@ static HMODULE s_dbgHelp;
 // STATIC: 0x00EBA66C
 static bool s_dbgHelpInitialized;
 
-// PROVEN: 92cb3936 DIFFERENT/IDENTICAL
 // OFFSET: 0x007AC370/0x1404A2140
 void Blizzard::Debug::Breakpoint() {
     __try {

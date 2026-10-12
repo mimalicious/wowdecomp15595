@@ -117,45 +117,38 @@ bool DDMaterialSort::operator()(const DDMaterial* a, const DDMaterial* b) const 
     return a->m_texture < b->m_texture;
 }
 
-// PROVEN: b0462dbf IDENTICAL/IDENTICAL
 // OFFSET: 0x00736270/0x140412920
 void CDetailDoodad::DestroyPools() {
     CDetailDoodad::s_bPoolsDirty = 1;
 }
 
-// PROVEN: 84646dc8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00736270/0x140412920
 void CDetailDoodad::DirtyPools() {
     CDetailDoodad::s_bPoolsDirty = 1;
 }
 
-// PROVEN: f70001f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00736280/0x140412930
 int32_t CDetailDoodad::IsInstanced() {
     return CDetailDoodad::s_bUseInstancing;
 }
 
-// PROVEN: 036398a5 IDENTICAL/NONE
 // OFFSET: 0x00736290/0x140412940
 void CDetailDoodad::ResetVisibility() {
     CDetailDoodad::s_currentFrame++;
 }
 
-// PROVEN: 788d40d7 IDENTICAL/NONE
 // OFFSET: 0x007362A0/0x140412950
 void CDetailDoodad::GetMinMaxDist(float& minDist, float& maxDist) {
     minDist = 0.0f;
     maxDist = CDetailDoodad::s_bUseInstancing ? 500.0f : 140.0f;
 }
 
-// PROVEN: ba3241da IDENTICAL/IDENTICAL
 // OFFSET: 0x007362E0/0x140412970
 void CDetailDoodad::GetMinMaxDensity(uint32_t& minDensity, uint32_t& maxDensity) {
     minDensity = 16;
     maxDensity = CDetailDoodad::s_bUseInstancing ? 256 : 64;
 }
 
-// PROVEN: a317a4ce IDENTICAL/IDENTICAL
 // OFFSET: 0x00736710/0x140412C60
 void CDetailDoodad::LinkToAsyncHead(uint32_t id) {
     CDetailDoodadData* data = CDetailDoodad::s_doodadList[id];
@@ -205,7 +198,6 @@ void CDetailDoodad::FreeGxBuf(CGxBuf*& buf) {
     buf = NULL;
 }
 
-// PROVEN: 819f87f0 DIFFERENT/IDENTICAL
 // OFFSET: 0x007368E0/0x140412EE0
 void CDetailDoodad::AllocGxBufMat(DDMaterial* mat) {
     CGxPool* vertexPool = g_theGxDevicePtr->PoolCreate(GxPoolTarget_Vertex, static_cast<EGxPoolUsage>(0), CDetailDoodad::s_vtxSize * mat->m_nVertices, static_cast<EGxPoolHintBits>(0), "DetailDoodad_matVtx");
@@ -239,7 +231,6 @@ void CDetailDoodad::FreeGxBufMat(DDMaterial* mat) {
     }
 }
 
-// PROVEN: 3fa6d4de IDENTICAL/IDENTICAL
 // OFFSET: 0x00736A10/0x140413080
 void CDetailDoodad::SetInstanced(int32_t instanced) {
     CDetailDoodad::s_bUseInstancing = g_theGxDevicePtr->m_caps.unk_0304 && instanced ? 1 : 0;
@@ -558,7 +549,6 @@ void CDetailDoodad::InitializeRenderState(CWorldView* view) {
     CWorldScene::s_lighting.SetupGxFog();
 }
 
-// PROVEN: 8d2bd5d2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00738390/0x140415130
 void CDetailDoodadData::CheckGeometry() {
     CM2Model* model = this->m_model;
@@ -784,13 +774,11 @@ void CDetailDoodadInst::FlagVisible(float dist) {
     }
 }
 
-// PROVEN: 43a4b1fd IDENTICAL/IDENTICAL
 // OFFSET: 0x00739470/0x140415F90
 void CDetailDoodadData::ModelLoadedCallback(CM2Model* model, void* arg) {
     static_cast<CDetailDoodadData*>(arg)->CheckGeometry();
 }
 
-// PROVEN: 21a49f47 IDENTICAL/DIFFERENT
 // OFFSET: 0x00739480/0x140415FA0
 CDetailDoodadInstBatch::~CDetailDoodadInstBatch() {
     this->Free();
@@ -1114,24 +1102,20 @@ void CDetailDoodad::Render(CWorldView* view) {
     }
 }
 
-// PROVEN: 1288bc21 IDENTICAL/NONE
 // OFFSET: 0x0073A630/0x1404178A0
 DDMaterial::~DDMaterial() {
 }
 
-// PROVEN: 28c9eef6 IDENTICAL/DIFFERENT
 // OFFSET: 0x0073A940/0x140417E00
 CDetailDoodadInst* CDetailDoodad::AllocInst() {
     return CDetailDoodad::s_instHeap->New("", 0);
 }
 
-// PROVEN: 8e4fc5e0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0073A960/0x140417E10
 CDetailDoodadInst::~CDetailDoodadInst() {
     this->Free();
 }
 
-// PROVEN: 82ad97c7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0073ACE0/0x140418290
 void CDetailDoodad::FreeInst(CDetailDoodadInst* inst) {
     CDetailDoodad::s_instHeap->Delete(inst, "", 0);

@@ -18,7 +18,6 @@
 #include "lzio.h"
 
 
-// PROVEN: 04c56e10 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B690/0x1400327C0
 int luaZ_fill (ZIO *z) {
   size_t size;
@@ -47,7 +46,6 @@ int luaZ_lookahead (ZIO *z) {
 }
 
 
-// PROVEN: 3f2ae27a IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B6D0/0x140032810
 void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader, void *data) {
   z->L = L;
@@ -75,7 +73,6 @@ size_t luaZ_read (ZIO *z, void *b, size_t n) {
 }
 
 /* ------------------------------------------------------------------------ */
-// PROVEN: 659e061c IDENTICAL/UNPROVEN
 // OFFSET: 0x0042B700/0x140032830
 char *luaZ_openspace (lua_State *L, Mbuffer *buff, size_t n) {
   if (n > buff->buffsize) {

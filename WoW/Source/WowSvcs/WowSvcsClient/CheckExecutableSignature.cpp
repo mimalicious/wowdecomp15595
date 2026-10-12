@@ -107,7 +107,6 @@ bool ScanFileForHack(const char* fileName, uint8_t* hackFound, uint8_t* shouldBl
     return success;
 }
 
-// PROVEN: 4d3d2a66 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B0A1E0/0x1408CDC70
 bool GetDllVersionString(const char* fileName, char* buffer, uint32_t size) {
     if (size < 24) {

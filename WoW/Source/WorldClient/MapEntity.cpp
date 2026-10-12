@@ -662,7 +662,6 @@ void CMapEntity::UpdateLiquid() {
     this->UpdateTerrainLiquid();
 }
 
-// PROVEN: 025ffb67 IDENTICAL/DIFFERENT
 // OFFSET: 0x00734CE0/0x140410FC0
 void CMapEntity::UpdateMapObjLiquid() {
     CMapObjDef* mapObjDef;
@@ -760,7 +759,6 @@ void CMapEntity::EnablePortals(int32_t enable) {
     this->UpdatePortals();
 }
 
-// PROVEN: 11642ad7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00735560/0x140411900
 void CMapEntity::Update() {
     if (this->m_model) {

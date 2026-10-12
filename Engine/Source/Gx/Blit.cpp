@@ -27,13 +27,11 @@ CArgb4444::CArgb4444(const CRgb565& color) {
     this->m_value = 0xF000 | (((color.m_value >> 11) & 0x1E) << 7) | (((color.m_value >> 5) & 0x3C) << 2) | ((color.m_value >> 1) & 0xF);
 }
 
-// PROVEN: 8d541cca IDENTICAL/IDENTICAL
 // OFFSET: 0x00639700/0x1402D0FF0
 uint8_t Dxt3A4(uint32_t alpha) {
     return alpha;
 }
 
-// PROVEN: e5be4fb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x006395A0/0x1402D1000
 uint8_t Dxt3A8(uint32_t alpha) {
     return alpha << 4;
@@ -61,13 +59,11 @@ void Dxt5AlphaTable(uint8_t* alphas) {
     }
 }
 
-// PROVEN: 16b0dfb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x006396F0/0x1402D1180
 uint8_t Dxt5A4(uint32_t alpha) {
     return alpha >> 4;
 }
 
-// PROVEN: a20b8f97 IDENTICAL/IDENTICAL
 // OFFSET: 0x00639700/0x1402D0FF0
 uint8_t Dxt5A8(uint32_t alpha) {
     return alpha;
@@ -465,7 +461,6 @@ void DxtMakeTableAlpha<CImVector>(const DxtColorBlock* block, CImVector* colors)
     }
 }
 
-// PROVEN: 49ac6888 IDENTICAL/UNPROVEN
 // OFFSET: 0x0063A7C0/0x1402D2680
 static void Blit_generic32_generic32(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     CopyGeneric32(size, in, inStride, out, outStride);
@@ -491,19 +486,16 @@ static void Blit_Argb8888_Argb8888_A8(const C2iVector& size, const void* in, uin
     }
 }
 
-// PROVEN: 50cd6658 IDENTICAL/UNPROVEN
 // OFFSET: 0x0063A850/0x1402D27D0
 static void Blit_generic16_generic16(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     CopyGeneric16(size, in, inStride, out, outStride);
 }
 
-// PROVEN: fe8795ba IDENTICAL/UNPROVEN
 // OFFSET: 0x0063A860/0x1402D27F0
 static void Blit_generic64_generic64(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     CopyGeneric64(size, in, inStride, out, outStride);
 }
 
-// PROVEN: ab72ccc9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0063A870/0x1402D2810
 static void Blit_generic128_generic128(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     CopyGeneric128(size, in, inStride, out, outStride);
@@ -817,7 +809,6 @@ static void Blit_Dxt5_Argb8888(const C2iVector& size, const void* in, uint32_t i
     }
 }
 
-// PROVEN: 4abe397a IDENTICAL/UNPROVEN
 // OFFSET: 0x0063C170/0x1402D4C90
 static void InitBlit() {
     s_blits[BlitFormat_Argb8888][BlitFormat_Abgr8888][BlitAlpha_0] = Blit_Argb8888_Abgr8888;
@@ -849,7 +840,6 @@ static void InitBlit() {
     s_blits[BlitFormat_D24X8][BlitFormat_D24X8][BlitAlpha_0] = Blit_generic32_generic32;
 }
 
-// PROVEN: 3904757b IDENTICAL/DIFFERENT
 // OFFSET: 0x0063C270/0x1402D18D0
 int32_t Blit(const C2iVector& size, BlitAlpha alpha, const void* in, uint32_t inStride, BlitFormat inFormat, void* out, uint32_t outStride, BlitFormat outFormat) {
     // STATIC: 0x00E29FBC

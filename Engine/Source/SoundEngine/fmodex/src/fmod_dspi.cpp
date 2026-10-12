@@ -187,7 +187,6 @@ FMOD_RESULT DSPI::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 135893ea IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8E460/0x14084D5A0
 FMOD_RESULT DSPI::getInput(int index, DSPConnectionI **input, DSPI **inputdsp)
 {
@@ -249,7 +248,6 @@ FMOD_RESULT DSPI::getInput(int index, DSPConnectionI **input, DSPI **inputdsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 46b04f32 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E8B0/0x14084DB50
 FMOD_RESULT DSPI::getInput(int index, DSPI **inputdsp)
 {
@@ -272,7 +270,6 @@ FMOD_RESULT DSPI::getInput(int index, DSPI **inputdsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d3cb8b20 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8E500/0x14084D670
 FMOD_RESULT DSPI::getOutput(int index, DSPConnectionI **output, DSPI **outputdsp)
 {
@@ -334,7 +331,6 @@ FMOD_RESULT DSPI::getOutput(int index, DSPConnectionI **output, DSPI **outputdsp
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b5528dd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E8D0/0x14084DB60
 FMOD_RESULT DSPI::getOutput(int index, DSPI **outputdsp)
 {
@@ -357,7 +353,6 @@ FMOD_RESULT DSPI::getOutput(int index, DSPI **outputdsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: df06fa6b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8C590/0x14084B220
 FMOD_RESULT DSPI::execute(float *inbuffer, float **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
@@ -380,7 +375,6 @@ FMOD_RESULT DSPI::execute(float *inbuffer, float **outbuffer, unsigned int *leng
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a9479bd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8C5A0/0x14084B230
 FMOD_RESULT DSPI::execute(void *inbuffer, void **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
@@ -403,7 +397,6 @@ FMOD_RESULT DSPI::execute(void *inbuffer, void **outbuffer, unsigned int *length
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e6d7c4fd DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8C5B0/0x14084B260
 FMOD_RESULT DSPI::resetVisited()
 {
@@ -451,7 +444,6 @@ FMOD_RESULT DSPI::resetVisited()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c0f66c06 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8E3B0/0x14084D4E0
 FMOD_RESULT DSPI::setFinished(bool finished, bool force)
 {
@@ -514,7 +506,6 @@ FMOD_RESULT DSPI::setFinished(bool finished, bool force)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4169401d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A88F10/0x1408475B0
 FMOD_RESULT DSPI::validate(DSP *dsp, DSPI **dspi)
 {
@@ -1381,7 +1372,6 @@ FMOD_RESULT DSPI::calculateSpeakerLevels(float frontleft, float frontright, floa
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 24be2c53 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8EA00/0x14084DDB0
 DSPI::DSPI()
 {
@@ -1417,7 +1407,6 @@ DSPI::DSPI()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3b20fd9d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8EAB0/0x14084DE70
 FMOD_RESULT DSPI::release(bool freethis)
 {
@@ -1575,7 +1564,6 @@ FMOD_RESULT DSPI::updateTreeLevel(int level)
 ]
 */
 
-// PROVEN: c10625c3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8EB70/0x14084DF70
 FMOD_RESULT DSPI::addInputInternal(DSPI *target, bool checkcircular, DSPConnectionI *connection, DSPConnectionI **connection_out)
 {
@@ -1965,7 +1953,6 @@ FMOD_RESULT DSPI::disconnectFromInternal(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 220772f4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8DD90/0x14084CE30
 FMOD_RESULT DSPI::disconnectFromQueued(DSPI *target)
 {
@@ -2007,7 +1994,6 @@ FMOD_RESULT DSPI::disconnectFromQueued(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cb893410 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E890/0x14084DB30
 FMOD_RESULT DSPI::disconnectFrom(DSPI *target)
 {
@@ -2111,7 +2097,6 @@ FMOD_RESULT DSPI::disconnectAllInternal(bool inputs, bool outputs)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a570ba82 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8DE30/0x14084CEF0
 FMOD_RESULT DSPI::disconnectAllQueued(bool inputs, bool outputs)
 {
@@ -2170,7 +2155,6 @@ FMOD_RESULT DSPI::disconnectAllQueued(bool inputs, bool outputs)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fd0a86f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E8A0/0x14084DB40
 FMOD_RESULT DSPI::disconnectAll(bool inputs, bool outputs)
 {
@@ -2268,7 +2252,6 @@ FMOD_RESULT DSPI::remove()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4dce2612 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8DEF0/0x14084CFE0
 FMOD_RESULT DSPI::getNumInputs(int *numinputs)
 {
@@ -2303,7 +2286,6 @@ FMOD_RESULT DSPI::getNumInputs(int *numinputs)
 ]
 */
 
-// PROVEN: 32ad2fef IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8DF40/0x14084D050
 FMOD_RESULT DSPI::getNumOutputs(int *numoutputs)
 {
@@ -2337,7 +2319,6 @@ FMOD_RESULT DSPI::getNumOutputs(int *numoutputs)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5cc7fa74 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8DF90/0x14084D0C0
 FMOD_RESULT DSPI::reset()
 {
@@ -2375,7 +2356,6 @@ FMOD_RESULT DSPI::reset()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ba99b98e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8DFB0/0x14084D0E0
 FMOD_RESULT DSPI::setParameter(int index, float value)
 {
@@ -2442,7 +2422,6 @@ FMOD_RESULT DSPI::setParameter(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cc882339 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E030/0x14084D140
 FMOD_RESULT DSPI::getParameter(int index, float *value, char *valuestr, int valuestrlen)
 {
@@ -2532,7 +2511,6 @@ FMOD_RESULT DSPI::getNumParameters(int *numparams)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 28e9a422 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E0F0/0x14084D210
 FMOD_RESULT DSPI::getParameterInfo(int index, char *name, char *label, char *description, int descriptionlen, float *min, float *max)
 {
@@ -2592,7 +2570,6 @@ FMOD_RESULT DSPI::getParameterInfo(int index, char *name, char *label, char *des
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ad652b46 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E1D0/0x14084D320
 FMOD_RESULT DSPI::showConfigDialog(void *hwnd, bool show)
 {
@@ -2635,7 +2612,6 @@ FMOD_RESULT DSPI::showConfigDialog(void *hwnd, bool show)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8577578d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E200/0x14084D350
 FMOD_RESULT DSPI::getInfo(char *name, unsigned int *version, int *channels, int *configwidth, int *configheight)
 {
@@ -2692,7 +2668,6 @@ FMOD_RESULT DSPI::getInfo(char *name, unsigned int *version, int *channels, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9f3ac066 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E260/0x14084D3E0
 FMOD_RESULT DSPI::getType(FMOD_DSP_TYPE *type)
 {
@@ -2719,7 +2694,6 @@ FMOD_RESULT DSPI::getType(FMOD_DSP_TYPE *type)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 668a00f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E280/0x14084D3F0
 FMOD_RESULT DSPI::setDefaults(float frequency, float volume, float pan, int priority)
 {
@@ -2783,7 +2757,6 @@ FMOD_RESULT DSPI::setDefaults(float frequency, float volume, float pan, int prio
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 78e7f98d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E310/0x14084D470
 FMOD_RESULT DSPI::getDefaults(float *frequency, float *volume, float *pan, int *priority)
 {
@@ -2833,7 +2806,6 @@ FMOD_RESULT DSPI::getDefaults(float *frequency, float *volume, float *pan, int *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5a82c98d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E360/0x14084D4B0
 FMOD_RESULT DSPI::setUserData(void *userdata)
 {
@@ -2859,7 +2831,6 @@ FMOD_RESULT DSPI::setUserData(void *userdata)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6741ae2b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E380/0x14084D4C0
 FMOD_RESULT DSPI::getUserData(void **userdata)
 {
@@ -2890,7 +2861,6 @@ FMOD_RESULT DSPI::getUserData(void **userdata)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c9170155 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E430/0x14084D570
 FMOD_RESULT DSPI::setTargetFrequency(int frequency)
 {
@@ -2916,7 +2886,6 @@ FMOD_RESULT DSPI::setTargetFrequency(int frequency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 167828f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E440/0x14084D580
 FMOD_RESULT DSPI::getTargetFrequency(int *frequency)
 {

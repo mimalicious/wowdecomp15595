@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[6] = { 0, 0, 0, 0, 0, 0 };
 // STATIC: 0x00C25368/0x140A1AEA8
 const DBCMeta GemPropertiesRec::s_meta = { "DBFilesClient\\GemProperties.dbc", 6, 24, GemPropertiesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: eb3c871c IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void GemPropertiesRec::FixupStrings(void* record, const char* strings) {
 }

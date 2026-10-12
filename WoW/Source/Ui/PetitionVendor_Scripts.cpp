@@ -86,7 +86,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CreateArenaTeam", &Script_CreateArenaTeam },
 };
 
-// PROVEN: 874048c2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A09D60/0x1407AACF0
 void PetitionVendorRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -94,7 +93,6 @@ void PetitionVendorRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: e03296e7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A09D80/0x1407AAD10
 void PetitionVendorUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

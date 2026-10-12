@@ -1,7 +1,6 @@
 #include "WoW/Source/Battlenet/Tumor/Tendril.h"
 #include "WoW/Source/Battlenet/Tumor/TumorManager.h"
 
-// PROVEN: 71c346c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void Battlenet::Service::Interface::RecvEvent(const Event::Header& header, const BSN::EncodedObject* data) {
 }
@@ -13,7 +12,6 @@ Battlenet::Service::Interface::~Interface() {
     }
 }
 
-// PROVEN: eb74f12e IDENTICAL/IDENTICAL
 // OFFSET: 0x006622C0/0x140307FF0
 void Battlenet::Service::Interface::Register() {
     if (this->m_eventId.m_value) {
@@ -24,7 +22,6 @@ void Battlenet::Service::Interface::Register() {
     }
 }
 
-// PROVEN: 2a0132f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00662310/0x140308270
 void Battlenet::Service::Interface::SendEvent(const uint8_t& eventType, const BSN::FourCC& eventId, const BSN::EncodedObject* data) {
     if (this->m_eventAdapter) {
@@ -50,7 +47,6 @@ Battlenet::Tendril::Tendril(BSN::FourCC eventId, TumorManager& manager) : Servic
 Battlenet::Tendril::~Tendril() {
 }
 
-// PROVEN: 84c27b8e IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void Battlenet::Tendril::DoSubscriptions() {
 }

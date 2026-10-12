@@ -66,7 +66,6 @@ void CAnimationData::ResetPositionData() {
     }
 }
 
-// PROVEN: ddb8da15 IDENTICAL/NONE
 // OFFSET: 0x005072C0
 void CAnimationData::StorePosition(const C3Vector* position) {
     this->m_hasPosition = 1;
@@ -168,25 +167,21 @@ bool Anchor::GetAnchor(FRAMEPOINT& point, FRAMEPOINT& relativePoint, float& offs
     return static_cast<Dimension*>(offset)->Load(offsetX, offsetY, status);
 }
 
-// PROVEN: 8abab33f IDENTICAL/IDENTICAL
 // OFFSET: 0x00507260/0x14014E7C0
 uint32_t CLayoutFrame::IsResizePending() {
     return this->m_layoutFlags & 4;
 }
 
-// PROVEN: ad50406e IDENTICAL/IDENTICAL
 // OFFSET: 0x00507270/0x14014E7D0
 float CLayoutFrame::GetHeight() {
     return this->m_height;
 }
 
-// PROVEN: 78ad4b4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00507280/0x14014E7E0
 float CLayoutFrame::GetWidth() {
     return this->m_width;
 }
 
-// PROVEN: bc6d0e03 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507290/0x14014E7F0
 void CLayoutFrame::GetClampRectInsets(float& left, float& right, float& top, float& bottom) {
     bottom = 0.0f;
@@ -195,7 +190,6 @@ void CLayoutFrame::GetClampRectInsets(float& left, float& right, float& top, flo
     left = 0.0f;
 }
 
-// PROVEN: fec1b118 IDENTICAL/NONE
 // OFFSET: 0x00507320
 CFramePoint* CLayoutFrame::GetFramePoint(FRAMEPOINT point) {
     CFramePoint* framePoint = this->m_framePoints[point];
@@ -357,7 +351,6 @@ float CLayoutFrame::Bottom() {
     return y;
 }
 
-// PROVEN: 89aecdeb IDENTICAL/IDENTICAL
 // OFFSET: 0x005079A0/0x14014F7E0
 void CLayoutFrame::ProtectFramepoints(uint32_t flag) {
     for (int32_t i = 0; i < FRAMEPOINT_NUMPOINTS; i++) {
@@ -396,7 +389,6 @@ int32_t CLayoutFrame::IsResizeDependency(CLayoutFrame* frame) {
     return 0;
 }
 
-// PROVEN: e2c20946 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507AF0/0x14014F020
 int32_t CLayoutFrame::GetRect(CRect* rect) {
     if (!(this->m_layoutFlags & 0x1)) {
@@ -408,7 +400,6 @@ int32_t CLayoutFrame::GetRect(CRect* rect) {
     return 1;
 }
 
-// PROVEN: 19a59180 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507B30/0x14014F060
 int32_t CLayoutFrame::PtInFrameRect(const C2Vector& point) {
     return (this->m_layoutFlags & 0x1) && this->m_rect.IsPointInside(point);
@@ -545,7 +536,6 @@ int32_t CLayoutFrame::OnFrameResize() {
     return this->m_layoutFlags & 1;
 }
 
-// PROVEN: 528c53c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00508100/0x14014F760
 void CLayoutFrame::SetProtected() {
     this->m_layoutFlags &= ~0x600u;
@@ -554,7 +544,6 @@ void CLayoutFrame::SetProtected() {
     this->ProtectFramepoints(0x200);
 }
 
-// PROVEN: 83d7fb2f IDENTICAL/IDENTICAL
 // OFFSET: 0x00508140/0x14014F7E0
 void CLayoutFrame::SetProtectFlag(uint32_t flag) {
     if (this->m_layoutFlags & 0x900) {
@@ -653,13 +642,11 @@ CLayoutFrame::CLayoutFrame() {
     this->m_guard = 0;
 }
 
-// PROVEN: 7b077510 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CLayoutFrame::AreChildrenProtected(int32_t& deferred) {
     return 0;
 }
 
-// PROVEN: 01536278 IDENTICAL/IDENTICAL
 // OFFSET: 0x00508620/0x14014FD70
 void CLayoutFrame::OnProtectedAttach(CLayoutFrame* frame) {
     if (this->m_layoutFlags & 0x400) {
@@ -671,7 +658,6 @@ void CLayoutFrame::OnProtectedAttach(CLayoutFrame* frame) {
     }
 }
 
-// PROVEN: 4cdd0eda IDENTICAL/IDENTICAL
 // OFFSET: 0x00508660/0x14014FDC0
 void CLayoutFrame::OnProtectedDetach(CLayoutFrame* frame) {
     if (this->m_layoutFlags & 0x700) {
@@ -679,7 +665,6 @@ void CLayoutFrame::OnProtectedDetach(CLayoutFrame* frame) {
     }
 }
 
-// PROVEN: 067d629b IDENTICAL/NONE
 // OFFSET: 0x00508190
 int32_t CLayoutFrame::AreDependentsProtected(int32_t& deferred) {
     for (CLayoutFrame::FRAMENODE* node = this->m_resizeList.Head(), * nextNode; !this->m_resizeList.IsEnd(node); node = nextNode) {
@@ -694,7 +679,6 @@ int32_t CLayoutFrame::AreDependentsProtected(int32_t& deferred) {
     return 0;
 }
 
-// PROVEN: 90001b19 IDENTICAL/IDENTICAL
 // OFFSET: 0x005081F0/0x14014F880
 uint32_t CLayoutFrame::IsProtected() {
     if (this->m_layoutFlags & 0x400) {
@@ -815,7 +799,6 @@ bool CLayoutFrame::SetLayoutScale(float scale, bool force) {
     return false;
 }
 
-// PROVEN: 0e34334e IDENTICAL/IDENTICAL
 // OFFSET: 0x005087A0/0x14014FF80
 bool CLayoutFrame::SetLayoutDepth(float depth, bool force) {
     if (!force && fabs(depth - this->m_layoutDepth) < 0.00000023841858f) {
@@ -833,7 +816,6 @@ bool CLayoutFrame::SetLayoutDepth(float depth, bool force) {
     return true;
 }
 
-// PROVEN: 2b3f4d39 IDENTICAL/IDENTICAL
 // OFFSET: 0x00508800/0x140150060
 void CLayoutFrame::SetWidth(float width) {
     this->m_layoutFlags &= ~0x8u;
@@ -841,7 +823,6 @@ void CLayoutFrame::SetWidth(float width) {
     this->Resize(0);
 }
 
-// PROVEN: 1fdf5f53 IDENTICAL/IDENTICAL
 // OFFSET: 0x00508830/0x140150100
 void CLayoutFrame::SetHeight(float height) {
     this->m_layoutFlags &= ~0x8u;
@@ -849,7 +830,6 @@ void CLayoutFrame::SetHeight(float height) {
     this->Resize(0);
 }
 
-// PROVEN: a86bd427 DIFFERENT/IDENTICAL
 // OFFSET: 0x00508860/0x1401501A0
 void CLayoutFrame::SetSize(float width, float height) {
     this->m_layoutFlags &= ~0x8u;
@@ -877,7 +857,6 @@ void CLayoutFrame::GetSize(float& width, float& height, int32_t ignoreRect) {
     }
 }
 
-// PROVEN: d51564a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x005089A0/0x1401503F0
 void CLayoutFrame::SetClampedToScreen(int32_t clamped) {
     if (clamped) {
@@ -1474,33 +1453,27 @@ CLayoutFrame* CLayoutFrame::GetLayoutFrameByName(const char* name) {
     return NULL;
 }
 
-// PROVEN: a9b2f1df IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CLayoutFrame::IsObjectLoaded() {
     return 1;
 }
 
-// PROVEN: cba41c6f IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CLayoutFrame::LoadObject() {
 }
 
-// PROVEN: 4b3e9b26 IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CLayoutFrame::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
 }
 
-// PROVEN: 520a98c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CLayoutFrame::HideThis() {
 }
 
-// PROVEN: 3f7df67e IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CLayoutFrame::ShowThis(bool loadPending) {
 }
 
-// PROVEN: d00752c8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00508C70/0x1401507C0
 void CLayoutFrame::AnimData_Init() {
     this->Resize(1);
@@ -1519,7 +1492,6 @@ void CLayoutFrame::AnimData_ResetPositionData() {
     this->Resize(1);
 }
 
-// PROVEN: 51a9da86 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A40/0x14014EF00
 void CLayoutFrame::AnimData_ResetAlphaData() {
     if (this->m_animData) {
@@ -1527,7 +1499,6 @@ void CLayoutFrame::AnimData_ResetAlphaData() {
     }
 }
 
-// PROVEN: e0115494 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A50/0x14014EF20
 bool CLayoutFrame::AnimData_HasActivePosition() {
     if (this->m_animData) {
@@ -1537,7 +1508,6 @@ bool CLayoutFrame::AnimData_HasActivePosition() {
     return false;
 }
 
-// PROVEN: 0bbb489e IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A70/0x14014EF40
 bool CLayoutFrame::AnimData_HasActiveAlpha() {
     if (this->m_animData) {
@@ -1547,7 +1517,6 @@ bool CLayoutFrame::AnimData_HasActiveAlpha() {
     return false;
 }
 
-// PROVEN: 5d34ab29 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A90/0x14014EF60
 void CLayoutFrame::AnimData_StorePosition(const C3Vector* position) {
     if (this->m_animData) {
@@ -1555,13 +1524,11 @@ void CLayoutFrame::AnimData_StorePosition(const C3Vector* position) {
     }
 }
 
-// PROVEN: 27f3b041 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507AB0/0x14014EFD0
 C3Vector* CLayoutFrame::AnimData_GetPositionPtr() {
     return this->m_animData->m_position;
 }
 
-// PROVEN: d0a44095 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507AC0/0x14014EFE0
 void CLayoutFrame::AnimData_StoreAlpha(uint8_t alpha) {
     CAnimationData* data = this->m_animData;
@@ -1572,7 +1539,6 @@ void CLayoutFrame::AnimData_StoreAlpha(uint8_t alpha) {
     }
 }
 
-// PROVEN: 959e0ddf IDENTICAL/IDENTICAL
 // OFFSET: 0x00507AE0/0x14014F000
 uint8_t CLayoutFrame::AnimData_GetAlpha() {
     if (this->m_animData) {

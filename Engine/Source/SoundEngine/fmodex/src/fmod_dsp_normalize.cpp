@@ -122,7 +122,6 @@ FMOD_DSP_DESCRIPTION_EX *DSPNormalize::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d082e6b4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9A270/0x14085AAE0
 FMOD_RESULT DSPNormalize::createInternal()
 {
@@ -217,7 +216,6 @@ FMOD_RESULT DSPNormalize::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 083297d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9A2F0/0x14085AB70
 FMOD_RESULT DSPNormalize::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {   
@@ -279,7 +277,6 @@ FMOD_RESULT DSPNormalize::readInternal(float *inbuffer, float *outbuffer, unsign
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2fdbab2c IDENTICAL/NONE
 // OFFSET: 0x00A9A540
 FMOD_RESULT DSPNormalize::setParameterInternal(int index, float value)
 {
@@ -330,7 +327,6 @@ FMOD_RESULT DSPNormalize::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6a15c336 IDENTICAL/NONE
 // OFFSET: 0x00A9A5E0
 FMOD_RESULT DSPNormalize::getParameterInternal(int index, float *value, char *valuestr)
 {
@@ -403,7 +399,6 @@ FMOD_RESULT DSPNormalize::getParameterInternal(int index, float *value, char *va
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 47721cb5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9A670/0x14085AE50
 FMOD_RESULT F_CALLBACK DSPNormalize::createCallback(FMOD_DSP_STATE *dsp)
 {
@@ -453,7 +448,6 @@ FMOD_RESULT F_CALLBACK DSPNormalize::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2e95ad87 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9A6A0/0x14085AE80
 FMOD_RESULT F_CALLBACK DSPNormalize::resetCallback(FMOD_DSP_STATE *dsp)
 {
@@ -480,7 +474,6 @@ FMOD_RESULT F_CALLBACK DSPNormalize::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 34d80a2b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9A6D0/0x14085AE80
 FMOD_RESULT F_CALLBACK DSPNormalize::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
@@ -507,7 +500,6 @@ FMOD_RESULT F_CALLBACK DSPNormalize::readCallback(FMOD_DSP_STATE *dsp, float *in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 71a2609d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9A700/0x14085AEB0
 FMOD_RESULT F_CALLBACK DSPNormalize::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
@@ -533,7 +525,6 @@ FMOD_RESULT F_CALLBACK DSPNormalize::setParameterCallback(FMOD_DSP_STATE *dsp, i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 61639ac2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9A740/0x14085AED0
 FMOD_RESULT F_CALLBACK DSPNormalize::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

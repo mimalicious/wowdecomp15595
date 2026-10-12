@@ -22,7 +22,6 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: e2edb1ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00401730/0x140001480
 int32_t CCommand_ReloadUI(const char* command, const char* arguments) {
     CGlueMgr::m_reload = 1;
@@ -30,13 +29,11 @@ int32_t CCommand_ReloadUI(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: c48a482f IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CCommand_Perf(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: e51f46e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00402660/0x140005500
 int32_t CCommand_TimingInfo(const char* command, const char* arguments) {
     int32_t desired = CVar::LookupRegistered("timingMethod")->m_intValue;
@@ -50,7 +47,6 @@ int32_t CCommand_TimingInfo(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: 76c6b35a IDENTICAL/IDENTICAL
 // OFFSET: 0x00408550/0x14000A880
 int32_t CCommand_TogglePlayer(const char* command, const char* arguments) {
     if (CGWorldFrame::s_currentWorldFrame) {
@@ -60,7 +56,6 @@ int32_t CCommand_TogglePlayer(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: ef925efd IDENTICAL/NONE
 // OFFSET: 0x0041EE40
 CDataStore& operator<<(CDataStore& msg, const C3Vector& vec) {
     msg.Put(vec.x);
@@ -132,13 +127,11 @@ static int32_t TeleportCheat(const char* arguments, int32_t charm) {
     return 1;
 }
 
-// PROVEN: d75dfcb6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00408950/0x14000AD90
 int32_t CCommand_Teleport(const char* command, const char* arguments) {
     return TeleportCheat(arguments, 0);
 }
 
-// PROVEN: e945aa92 IDENTICAL/IDENTICAL
 // OFFSET: 0x00408970/0x14000ADA0
 int32_t CCommand_CharmTeleport(const char* command, const char* arguments) {
     return TeleportCheat(arguments, 1);

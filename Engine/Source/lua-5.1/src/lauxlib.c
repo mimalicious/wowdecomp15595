@@ -71,7 +71,6 @@ static void tag_error (lua_State *L, int narg, int tag) {
 }
 
 
-// PROVEN: 8dffded7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29310/0x1407D0FA0
 LUALIB_API void luaL_where (lua_State *L, int level) {
   lua_Debug ar;
@@ -100,7 +99,6 @@ LUALIB_API int luaL_error (lua_State *L, const char *fmt, ...) {
 /* }====================================================== */
 
 
-// PROVEN: db0bfe86 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29E40/0x1407D1E50
 LUALIB_API int luaL_checkoption (lua_State *L, int narg, const char *def,
                                  const char *const lst[]) {
@@ -143,7 +141,6 @@ LUALIB_API void *luaL_checkudata (lua_State *L, int ud, const char *tname) {
 }
 
 
-// PROVEN: b70f79c6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A293C0/0x1407D10C0
 LUALIB_API void luaL_checkstack (lua_State *L, int space, const char *mes) {
   if (!lua_checkstack(L, space))
@@ -151,7 +148,6 @@ LUALIB_API void luaL_checkstack (lua_State *L, int space, const char *mes) {
 }
 
 
-// PROVEN: 3b78e757 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29A80/0x1407D19C0
 LUALIB_API void luaL_checktype (lua_State *L, int narg, int t) {
   if (lua_type(L, narg) != t)
@@ -159,7 +155,6 @@ LUALIB_API void luaL_checktype (lua_State *L, int narg, int t) {
 }
 
 
-// PROVEN: b01c496a IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29AE0/0x1407D1A00
 LUALIB_API void luaL_checkany (lua_State *L, int narg) {
   if (lua_type(L, narg) == LUA_TNONE)
@@ -167,7 +162,6 @@ LUALIB_API void luaL_checkany (lua_State *L, int narg) {
 }
 
 
-// PROVEN: f7e35897 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29B10/0x1407D1A40
 LUALIB_API const char *luaL_checklstring (lua_State *L, int narg, size_t *len) {
   const char *s = lua_tolstring(L, narg, len);
@@ -176,7 +170,6 @@ LUALIB_API const char *luaL_checklstring (lua_State *L, int narg, size_t *len) {
 }
 
 
-// PROVEN: 39350ab9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29B70/0x1407D1AD0
 LUALIB_API const char *luaL_optlstring (lua_State *L, int narg,
                                         const char *def, size_t *len) {
@@ -189,7 +182,6 @@ LUALIB_API const char *luaL_optlstring (lua_State *L, int narg,
 }
 
 
-// PROVEN: 72f8cb5a IDENTICAL/NONE
 // OFFSET: 0x00A29BD0/0x1407D1B50
 LUALIB_API lua_Number luaL_checknumber (lua_State *L, int narg) {
   lua_Number d = lua_tonumber(L, narg);
@@ -199,14 +191,12 @@ LUALIB_API lua_Number luaL_checknumber (lua_State *L, int narg) {
 }
 
 
-// PROVEN: 74b52fc2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29C50/0x1407D1BB0
 LUALIB_API lua_Number luaL_optnumber (lua_State *L, int narg, lua_Number def) {
   return luaL_opt(L, luaL_checknumber, narg, def);
 }
 
 
-// PROVEN: 1b6ea427 IDENTICAL/NONE
 // OFFSET: 0x00A29C80/0x1407D1C20
 LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, int narg) {
   lua_Integer d = lua_tointeger(L, narg);
@@ -216,7 +206,6 @@ LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, int narg) {
 }
 
 
-// PROVEN: 592913b7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A29CF0/0x1407D1C70
 LUALIB_API lua_Integer luaL_optinteger (lua_State *L, int narg,
                                                       lua_Integer def) {
@@ -224,7 +213,6 @@ LUALIB_API lua_Integer luaL_optinteger (lua_State *L, int narg,
 }
 
 
-// PROVEN: 53fb96c0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A293F0/0x1407D1100
 LUALIB_API int luaL_getmetafield (lua_State *L, int obj, const char *event) {
   if (!lua_getmetatable(L, obj))  /* no metatable? */
@@ -242,7 +230,6 @@ LUALIB_API int luaL_getmetafield (lua_State *L, int obj, const char *event) {
 }
 
 
-// PROVEN: eb3712d8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29450/0x1407D1180
 LUALIB_API int luaL_callmeta (lua_State *L, int obj, const char *event) {
   obj = abs_index(L, obj);
@@ -268,7 +255,6 @@ static int libsize (const luaL_Reg *l) {
 }
 
 
-// PROVEN: 9feb828e IDENTICAL/DIFFERENT
 // OFFSET: 0x00A29D20/0x1407D1CD0
 LUALIB_API void luaL_openlib (lua_State *L, const char *libname,
                               const luaL_Reg *l, int nup) {
@@ -385,7 +371,6 @@ LUALIB_API const char *luaL_gsub (lua_State *L, const char *s, const char *p,
 }
 
 
-// PROVEN: a0f60605 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A294B0/0x1407D1200
 LUALIB_API const char *luaL_findtable (lua_State *L, int idx,
                                        const char *fname, int szhint) {
@@ -440,7 +425,6 @@ static int emptybuffer (luaL_Buffer *B) {
 }
 
 
-// PROVEN: 88f7a5db IDENTICAL/UNPROVEN
 // OFFSET: 0x00A295A0/0x1407D1330
 static void adjuststack (luaL_Buffer *B) {
   if (B->lvl > 1) {
@@ -461,7 +445,6 @@ static void adjuststack (luaL_Buffer *B) {
 }
 
 
-// PROVEN: 6b68df41 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29620/0x1407D13E0
 LUALIB_API char *luaL_prepbuffer (luaL_Buffer *B) {
   if (emptybuffer(B))
@@ -470,7 +453,6 @@ LUALIB_API char *luaL_prepbuffer (luaL_Buffer *B) {
 }
 
 
-// PROVEN: ee895878 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29660/0x1407D1440
 LUALIB_API void luaL_addlstring (luaL_Buffer *B, const char *s, size_t l) {
   while (l--)
@@ -483,7 +465,6 @@ LUALIB_API void luaL_addstring (luaL_Buffer *B, const char *s) {
 }
 
 
-// PROVEN: 93341df2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A296C0/0x1407D14E0
 LUALIB_API void luaL_pushresult (luaL_Buffer *B) {
   emptybuffer(B);
@@ -492,7 +473,6 @@ LUALIB_API void luaL_pushresult (luaL_Buffer *B) {
 }
 
 
-// PROVEN: 0d8747ba IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29710/0x1407D1530
 LUALIB_API void luaL_addvalue (luaL_Buffer *B) {
   lua_State *L = B->L;
@@ -512,7 +492,6 @@ LUALIB_API void luaL_addvalue (luaL_Buffer *B) {
 }
 
 
-// PROVEN: 6d21ba44 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A297A0/0x1407D15F0
 LUALIB_API void luaL_buffinit (lua_State *L, luaL_Buffer *B) {
   B->L = L;
@@ -523,7 +502,6 @@ LUALIB_API void luaL_buffinit (lua_State *L, luaL_Buffer *B) {
 /* }====================================================== */
 
 
-// PROVEN: 5adef8c0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A297C0/0x1407D1610
 LUALIB_API int luaL_ref (lua_State *L, int t) {
   int ref;
@@ -556,7 +534,6 @@ LUALIB_API int luaL_ref (lua_State *L, int t) {
 }
 
 
-// PROVEN: 2ca6f4d7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A298A0/0x1407D1720
 LUALIB_API void luaL_unref (lua_State *L, int t, int ref) {
   if (ref >= 0) {
@@ -659,7 +636,6 @@ typedef struct LoadS {
 } LoadS;
 
 
-// PROVEN: 6848fa7b IDENTICAL/NONE
 // OFFSET: 0x00A29930/0x1407D17E0
 static const char *getS (lua_State *L, void *ud, size_t *size) {
   LoadS *ls = (LoadS *)ud;
@@ -671,7 +647,6 @@ static const char *getS (lua_State *L, void *ud, size_t *size) {
 }
 
 
-// PROVEN: 3b4ef5e5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A29960/0x1407D1800
 LUALIB_API int luaL_loadbuffer (lua_State *L, const char *buff, size_t size,
                                 const char *name) {

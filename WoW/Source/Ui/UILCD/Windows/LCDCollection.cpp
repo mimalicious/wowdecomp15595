@@ -1,7 +1,6 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDCollection.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 
-// PROVEN: 33719c71 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B40820/0x14090E700
 CLCDCollection::CLCDCollection() {
 }
@@ -16,7 +15,6 @@ CLCDCollection::~CLCDCollection() {
     this->m_Objects.Clear();
 }
 
-// PROVEN: 5a6d4992 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B40850/0x14090E740
 bool CLCDCollection::AddObject(CLCDBase* object) {
     CLCDBASE_NODE* node = this->m_Objects.NewNode(2, 0, 0);

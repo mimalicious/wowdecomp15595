@@ -369,7 +369,6 @@ CWorldSceneLight::CWorldSceneLight() {
     this->m_free = 1;
 }
 
-// PROVEN: b9e544c9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00726BD0/0x1403FE0A0
 void CWorldScene::FreeSceneLights() {
     CWorldScene::s_sceneLights[0].m_free = 1;
@@ -385,7 +384,6 @@ void CWorldScene::ClearBarriers() {
     CWorldScene::s_barrier.m_mapObjDefGroups.m_count = 0;
 }
 
-// PROVEN: 4711e3d7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00726F00/0x1403FE3C0
 CM2Model* CWorldScene::LoadModel(const char* name, const C44Matrix& mat, void (*eventCallback)(CM2Model*, uint32_t, uint32_t, uint32_t, const C3Vector&, uint32_t, uint64_t), uint64_t eventParam, void (*lightingCallback)(CM2Model*, CM2Lighting*, void*), void* lightingParam, int32_t a7, int32_t a8, int32_t a9, int32_t a10) {
     uint32_t flags = 0;
@@ -433,13 +431,11 @@ void CWorldScene::GetFrustumCornersInWorldSpace(const C44Matrix& view, const C44
     }
 }
 
-// PROVEN: e652f252 IDENTICAL/IDENTICAL
 // OFFSET: 0x00727130/0x1403FE700
 void CWorldScene::GetFrustumCorners(C3Vector* corners) {
     memcpy(corners, CWorldScene::s_defaultWorldView->m_frustumCorners, sizeof(CWorldScene::s_defaultWorldView->m_frustumCorners));
 }
 
-// PROVEN: 8835a74c IDENTICAL/IDENTICAL
 // OFFSET: 0x00727150/0x1403FE720
 void CWorldScene::UpdateViewer() {
     CWorldScene::s_defaultWorldView->m_flags &= ~0x400000u;
@@ -584,7 +580,6 @@ void CWorldScene::SetupSceneLighting() {
     }
 }
 
-// PROVEN: 7f57448b IDENTICAL/NONE
 // OFFSET: 0x007275D0
 void CWorldScene::RenderWeather() {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
@@ -594,13 +589,11 @@ void CWorldScene::RenderWeather() {
     }
 }
 
-// PROVEN: fff60dd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007275F0/0x1403FEC80
 void CWorldScene::RenderBarriers(CWorldView* view) {
     CWorldScene::s_barrier.Render(view->m_camPos, FrameTime::GetTickTimeSec());
 }
 
-// PROVEN: fa57fa6c IDENTICAL/DIFFERENT
 // OFFSET: 0x00727620/0x1403FECB0
 void CWorldScene::RenderLowDetailAreas(CWorldView* view) {
     if (view->m_lowDetailAreas.Count() <= 0) {
@@ -878,7 +871,6 @@ void CWorldScene::ClearObjectFadeoutList() {
     }
 }
 
-// PROVEN: 6a1869f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x007288F0/0x140400BC0
 void __fastcall CWorldScene::TextureRecreationCallback() {
     CWorldScene::ClearObjectFadeoutList();
@@ -1508,7 +1500,6 @@ void CWorldScene::RenderMapObjOpaque(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: be9df0ad IDENTICAL/DIFFERENT
 // OFFSET: 0x0072AC80/0x140403C30
 void CWorldScene::RenderMapObjAlpha(CWorldView* view) {
     g_theGxDevicePtr->RsPush();
@@ -1905,7 +1896,6 @@ void CWorldScene::RenderAlphaWaterFog(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: 1affac43 IDENTICAL/IDENTICAL
 // OFFSET: 0x0072C740/0x140405890
 void CWorldScene::RenderPortalLists(CWorldView* view) {
     if (view->m_exteriorPortalViews.Count()) {
@@ -1922,7 +1912,6 @@ void CWorldScene::RenderPortalLists(CWorldView* view) {
     }
 }
 
-// PROVEN: 257d2cf7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079C480/0x140490E40
 static void InitClipVolumeBounds() {
     if (s_clipVolumeBoundsValid) {

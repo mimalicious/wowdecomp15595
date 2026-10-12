@@ -4,7 +4,6 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: c9761d84 DIFFERENT/IDENTICAL
 // OFFSET: 0x0052EE80/0x140184F10
 CScriptObject* FrameScript_GetObjectThis(lua_State* L, int32_t type) {
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -29,7 +28,6 @@ CScriptObject* FrameScript_GetObjectThis(lua_State* L, int32_t type) {
     return object;
 }
 
-// PROVEN: 6cb01ba8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E5D0/0x140192D70
 static int32_t Script_GetObjectType(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
@@ -38,7 +36,6 @@ static int32_t Script_GetObjectType(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 338bf564 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053E620/0x140192DC0
 static int32_t Script_IsObjectType(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
@@ -58,7 +55,6 @@ static int32_t Script_IsObjectType(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5a9b9a7d IDENTICAL/IDENTICAL
 // OFFSET: 0x0053E6D0/0x140192EA0
 static int32_t Script_GetName(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
@@ -73,7 +69,6 @@ static int32_t Script_GetName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 924320fd DIFFERENT/IDENTICAL
 // OFFSET: 0x0053E730/0x140192F10
 static int32_t Script_GetParent(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
@@ -100,7 +95,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetParent", &Script_GetParent },
 };
 
-// PROVEN: a252f575 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053E5B0/0x140192D50
 void CScriptObject::RegisterScriptMethods(lua_State* L) {
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

@@ -131,7 +131,6 @@ static void marktmu (global_State *g) {
 
 
 /* move `dead' udata that need finalization to list `tmudata' */
-// PROVEN: b9c05e24 IDENTICAL/UNPROVEN
 // OFFSET: 0x004293D0/0x14002FA20
 size_t luaC_separateudata (lua_State *L, int all) {
   global_State *g = G(L);
@@ -209,7 +208,6 @@ static int traversetable (global_State *g, Table *h) {
 ** All marks are conditional because a GC may happen while the
 ** prototype is still being created
 */
-// PROVEN: 374082bf IDENTICAL/UNPROVEN
 // OFFSET: 0x00429630/0x14002FCE0
 static void traverseproto (global_State *g, Proto *f) {
   int i;
@@ -232,7 +230,6 @@ static void traverseproto (global_State *g, Proto *f) {
 
 
 
-// PROVEN: 2d718d5c IDENTICAL/UNPROVEN
 // OFFSET: 0x00429700/0x14002FDE0
 static void traverseclosure (global_State *g, Closure *cl) {
   markobject(g, cl->c.env);
@@ -266,7 +263,6 @@ static void checkstacksizes (lua_State *L, StkId max) {
 }
 
 
-// PROVEN: eb6241cd IDENTICAL/UNPROVEN
 // OFFSET: 0x004297B0/0x14002FF40
 static void traversestack (global_State *g, lua_State *l) {
   StkId o, lim;
@@ -364,7 +360,6 @@ static int iscleared (const TValue *o, int iskey) {
 /*
 ** clear collected entries from weaktables
 */
-// PROVEN: f98de41c DIFFERENT/IDENTICAL
 // OFFSET: 0x004299A0/0x140030140
 static void cleartable (GCObject *l) {
   while (l) {
@@ -393,7 +388,6 @@ static void cleartable (GCObject *l) {
 }
 
 
-// PROVEN: 2ae2ad9a IDENTICAL/NONE
 // OFFSET: 0x00429AB0/0x1400302A0
 static void freeobj (lua_State *L, GCObject *o) {
   switch (o->gch.tt) {
@@ -552,7 +546,6 @@ static void checkSizes (lua_State *L) {
 }
 
 
-// PROVEN: c90ff32d IDENTICAL/UNPROVEN
 // OFFSET: 0x00429E20/0x140030720
 static void GCTM (lua_State *L) {
   global_State *g = G(L);
@@ -586,7 +579,6 @@ static void GCTM (lua_State *L) {
 /*
 ** Call all GC tag methods
 */
-// PROVEN: 87845091 IDENTICAL/UNPROVEN
 // OFFSET: 0x00429F30/0x140030880
 void luaC_callGCTM (lua_State *L) {
   while (G(L)->tmudata)
@@ -614,7 +606,6 @@ void luaC_freeall (lua_State *L) {
   }
 }
 
-// PROVEN: 231ee3dc IDENTICAL/DIFFERENT
 // OFFSET: 0x0042A000/0x140030AF0
 void luaC_sizeall (lua_State *L) {
   global_State *g = G(L);
@@ -665,7 +656,6 @@ double luaC_gettime (lua_State *L, const char *tag) {
 }
 
 
-// PROVEN: caef1f5c IDENTICAL/NONE
 // OFFSET: 0x0042A130
 void luaC_timereset (lua_State *L) {
   global_State *g = G(L);
@@ -711,7 +701,6 @@ static void markroot (lua_State *L) {
 }
 
 
-// PROVEN: 5292ba16 IDENTICAL/NONE
 // OFFSET: 0x0042A230
 static void remarkupvals (global_State *g) {
   UpVal *uv;
@@ -810,7 +799,6 @@ static l_mem singlestep (lua_State *L) {
 }
 
 
-// PROVEN: 4ea1a623 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042A470/0x140031240
 void luaC_step (lua_State *L) {
   global_State *g = G(L);
@@ -838,7 +826,6 @@ void luaC_step (lua_State *L) {
 }
 
 
-// PROVEN: aaf40889 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042A500/0x140031330
 void luaC_fullgc (lua_State *L) {
   global_State *g = G(L);
@@ -866,7 +853,6 @@ void luaC_fullgc (lua_State *L) {
 }
 
 
-// PROVEN: fb5934a7 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042A570/0x1400313E0
 void luaC_barrierf (lua_State *L, GCObject *o, GCObject *v) {
   global_State *g = G(L);
@@ -881,7 +867,6 @@ void luaC_barrierf (lua_State *L, GCObject *o, GCObject *v) {
 }
 
 
-// PROVEN: 62118aed IDENTICAL/IDENTICAL
 // OFFSET: 0x0042A5B0/0x140031410
 void luaC_barrierback (lua_State *L, Table *t) {
   global_State *g = G(L);
@@ -894,7 +879,6 @@ void luaC_barrierback (lua_State *L, Table *t) {
 }
 
 
-// PROVEN: d36b8490 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042A5D0/0x140031430
 void luaC_link (lua_State *L, GCObject *o, lu_byte tt) {
   global_State *g = G(L);
@@ -906,7 +890,6 @@ void luaC_link (lua_State *L, GCObject *o, lu_byte tt) {
 }
 
 
-// PROVEN: a0cf3a37 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042A620/0x140031470
 void luaC_linkupval (lua_State *L, UpVal *uv) {
   global_State *g = G(L);

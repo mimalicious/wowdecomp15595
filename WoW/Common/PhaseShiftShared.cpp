@@ -117,7 +117,6 @@ void CPhaseShift::SetPhasesFromDataStore(CDataStore* msg) {
     }
 }
 
-// PROVEN: 64fff272 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A32570/0x1407DC830
 CPhaseShift::CPhaseShift() {
     this->m_flags = 0;

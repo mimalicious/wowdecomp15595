@@ -55,7 +55,6 @@ void CGCooldown::operator delete(void* ptr) {
     CGCooldown::s_cooldownHeap.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 6d0436f9 UNPROVEN/IDENTICAL
 // OFFSET: 0x008C6390/0x1406363B0
 CSimpleFrame* CGCooldown::Create(CSimpleFrame* parent) {
     void* data = CGCooldown::s_cooldownHeap.GetData(0, typeid(CGCooldown).raw_name(), SLOG_OBJECT);
@@ -76,13 +75,11 @@ CGCooldown::~CGCooldown() {
     this->m_edgeTexture = NULL;
 }
 
-// PROVEN: 52591e8f IDENTICAL/IDENTICAL
 // OFFSET: 0x009FDBB0/0x14079BEB0
 const char* CGCooldown::GetObjectTypeName() {
     return CGCooldown::s_objectTypeName;
 }
 
-// PROVEN: 10bfa9d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FDBC0/0x14079BEC0
 int32_t CGCooldown::GetScriptMetaTable() {
     return CGCooldown::s_metatable;
@@ -341,7 +338,6 @@ void CGCooldown::AnimateOctants67(uint32_t octant, float t) {
     }
 }
 
-// PROVEN: 12a54dcd IDENTICAL/DIFFERENT
 // OFFSET: 0x009FDBD0/0x14079BED0
 void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
@@ -361,7 +357,6 @@ void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: f1a34cc6 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FE830/0x14079CCC0
 void CGCooldown::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
@@ -598,14 +593,12 @@ void CGCooldown::UpdateColors() {
     }
 }
 
-// PROVEN: edd0e86d IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF570/0x14079DB90
 void CGCooldown::UpdateAlpha() {
     CSimpleFrame::UpdateAlpha();
     this->UpdateColors();
 }
 
-// PROVEN: 7366d7b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF580/0x14079DBB0
 void CGCooldown::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);
@@ -638,7 +631,6 @@ void CGCooldown::OnLayerUpdate(float elapsedSec) {
     this->AnimateVerts();
 }
 
-// PROVEN: 0dec553e DIFFERENT/IDENTICAL
 // OFFSET: 0x009FF790/0x14079DE20
 CGCooldown::CGCooldown(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_starTexture = NULL;

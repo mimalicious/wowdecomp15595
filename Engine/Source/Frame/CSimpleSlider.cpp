@@ -40,7 +40,6 @@ void CSimpleSlider::operator delete(void* ptr) {
     }
 }
 
-// PROVEN: 5c7338db IDENTICAL/IDENTICAL
 // OFFSET: 0x00521140/0x14016EB80
 void CSimpleSlider::RunOnMinMaxChangedScript() {
     if (this->HasScript(this->m_onMinMaxChanged)) {
@@ -67,7 +66,6 @@ float CSimpleSlider::SnapValueToStep(float value) {
     return static_cast<float>(static_cast<int32_t>((offset - half) / this->m_valueStep)) * this->m_valueStep + this->m_baseValue;
 }
 
-// PROVEN: 90afd404 IDENTICAL/IDENTICAL
 // OFFSET: 0x00520EF0/0x14016E8B0
 FrameScript_Object::ScriptIx* CSimpleSlider::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -89,7 +87,6 @@ FrameScript_Object::ScriptIx* CSimpleSlider::GetScriptByName(const char* name, F
     return NULL;
 }
 
-// PROVEN: df07a5a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00520FA0/0x14016E950
 void CSimpleSlider::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onValueChanged, time, count);
@@ -97,7 +94,6 @@ void CSimpleSlider::GetScriptTime(lua_State* L, double* time, uint32_t* count, i
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: cb8f6130 IDENTICAL/IDENTICAL
 // OFFSET: 0x00520FF0/0x14016E9D0
 void CSimpleSlider::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_thumbTexture) {
@@ -107,7 +103,6 @@ void CSimpleSlider::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
-// PROVEN: d115fedc DIFFERENT/IDENTICAL
 // OFFSET: 0x00521020/0x14016E9F0
 void CSimpleSlider::SetThumbTexture(CSimpleTexture* texture, uint32_t drawLayer) {
     if (texture == this->m_thumbTexture) {
@@ -127,7 +122,6 @@ void CSimpleSlider::SetThumbTexture(CSimpleTexture* texture, uint32_t drawLayer)
     this->m_thumbTexture = texture;
 }
 
-// PROVEN: b7fcc312 DIFFERENT/IDENTICAL
 // OFFSET: 0x00521070/0x14016EA70
 void CSimpleSlider::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
@@ -139,21 +133,18 @@ void CSimpleSlider::SetOrientation(ORIENTATION orientation) {
     this->m_changed = 1;
 }
 
-// PROVEN: 041c5feb IDENTICAL/IDENTICAL
 // OFFSET: 0x005210A0/0x14016EAB0
 void CSimpleSlider::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);
     this->m_changed = 1;
 }
 
-// PROVEN: 2bb853f5 IDENTICAL/NONE
 // OFFSET: 0x005210C0
 void CSimpleSlider::OnLayerHide() {
     this->m_buttonDown = 0;
     CSimpleFrame::OnLayerHide();
 }
 
-// PROVEN: f8bb1aa7 IDENTICAL/NONE
 // OFFSET: 0x005210D0
 int32_t CSimpleSlider::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     this->m_buttonDown = 0;
@@ -175,25 +166,21 @@ CSimpleSlider::CSimpleSlider(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->EnableEvent(SIMPLE_EVENT_MOUSE, -1);
 }
 
-// PROVEN: dd6f8f1c IDENTICAL/NONE
 // OFFSET: 0x00521230
 const char* CSimpleSlider::GetObjectTypeName() {
     return CSimpleSlider::s_objectTypeName;
 }
 
-// PROVEN: 3c9e9cd3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00521240/0x14016ECA0
 int32_t CSimpleSlider::GetScriptMetaTable() {
     return CSimpleSlider::s_metatable;
 }
 
-// PROVEN: c2c7203d IDENTICAL/IDENTICAL
 // OFFSET: 0x00521260/0x14016ECC0
 bool CSimpleSlider::IsA(int32_t type) {
     return type == CSimpleSlider::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: ef82c992 IDENTICAL/DIFFERENT
 // OFFSET: 0x005212A0/0x14016ECB0
 bool CSimpleSlider::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleSlider::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -230,7 +217,6 @@ int32_t CSimpleSlider::SetThumbTexture(const char* fileName) {
     return 0;
 }
 
-// PROVEN: f1a772fa IDENTICAL/IDENTICAL
 // OFFSET: 0x005210E0/0x14016EAF0
 void CSimpleSlider::RunOnValueChangedScript(bool userInput) {
     if (this->HasScript(this->m_onValueChanged)) {
@@ -326,7 +312,6 @@ int32_t CSimpleSlider::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return CSimpleFrame::OnLayerTrackUpdate(evt);
 }
 
-// PROVEN: 2b314e5b IDENTICAL/IDENTICAL
 // OFFSET: 0x00521710/0x14016F280
 int32_t CSimpleSlider::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) {
     if (!(this->m_frameFlags & 0x400)) {
@@ -337,7 +322,6 @@ int32_t CSimpleSlider::OnLayerMouseDown(const CMouseEvent& evt, const char* btn)
     return CSimpleFrame::OnLayerMouseDown(evt, btn);
 }
 
-// PROVEN: 15300170 IDENTICAL/IDENTICAL
 // OFFSET: 0x005217B0/0x14016F350
 void CSimpleSlider::SetMinMaxValues(float min, float max) {
     float range = max - min;

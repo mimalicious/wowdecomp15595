@@ -117,7 +117,6 @@ System_Mopaq::MD5VerifyData::IoOperationType System_Mopaq::MD5VerifyData::Prepar
     return IO_MULTIPLE_BLOCKS;
 }
 
-// PROVEN: 08c4682a IDENTICAL/NONE
 // OFFSET: 0x007AB5F0
 bool System_Mopaq::MD5VerifyData::ReadAligned(int64_t offset) {
     int32_t count = this->m_size;
@@ -695,7 +694,6 @@ bool System_Mopaq::MD5VerifyData::MD5AndWrite(int64_t offset, int64_t size, Bliz
     return ok;
 }
 
-// PROVEN: 2a8f4f4c IDENTICAL/DIFFERENT
 // OFFSET: 0x007BFBC0/0x1404B8EF0
 bool System_Mopaq::md5verify_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     const System_SFile::BLOCKENTRY* entry = parms->m_blockEntry;

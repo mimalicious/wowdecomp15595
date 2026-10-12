@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[12] = { 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0 };
 // STATIC: 0x00C20638/0x140A14EB8
 const DBCMeta SpellVisualKitModelAttachRec::s_meta = { "DBFilesClient\\SpellVisualKitModelAttach.dbc", 12, 56, SpellVisualKitModelAttachRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 0f032cef IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SpellVisualKitModelAttachRec::FixupStrings(void* record, const char* strings) {
 }

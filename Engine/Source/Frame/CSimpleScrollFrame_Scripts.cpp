@@ -163,7 +163,6 @@ static int32_t Script_GetVerticalScrollRange(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a68dcdf6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00539BB0/0x14018D250
 static int32_t Script_UpdateScrollChildRect(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
@@ -172,7 +171,6 @@ static int32_t Script_UpdateScrollChildRect(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 84fc49e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005395F0/0x14018CB30
 void CSimpleScrollFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -180,7 +178,6 @@ void CSimpleScrollFrame::DestroyScriptMetaTable() {
     CSimpleScrollFrame::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 3b4eed99 IDENTICAL/IDENTICAL
 // OFFSET: 0x00539BF0/0x14018D290
 void CSimpleScrollFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -200,7 +197,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "UpdateScrollChildRect", &Script_UpdateScrollChildRect },
 };
 
-// PROVEN: 23c95563 IDENTICAL/UNPROVEN
 // OFFSET: 0x005395D0/0x14018CB00
 void CSimpleScrollFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

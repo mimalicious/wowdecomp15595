@@ -1347,19 +1347,16 @@ int32_t g_clientDBWorldTablesLoaded;
 // STATIC: 0x00EBB99C/0x140DAC73C
 int32_t g_clientDBGlueTablesLoaded;
 
-// PROVEN: 7350848c IDENTICAL/IDENTICAL
 // OFFSET: 0x00494A60/0x1400BA230
 int32_t GetPhysicalDamageClassID() {
     return s_physicalDamageClassID;
 }
 
-// PROVEN: c401089c IDENTICAL/IDENTICAL
 // OFFSET: 0x00494A70/0x1400BA240
 uint32_t GetPhysicalDamageClassMask() {
     return 1 << s_physicalDamageClassID;
 }
 
-// PROVEN: f05eb75b IDENTICAL/IDENTICAL
 // OFFSET: 0x00494A80/0x1400BA250
 int32_t ClientDBGetUnarmedWeapon() {
     return s_unarmedWeapon->m_subClassID;
@@ -1378,13 +1375,11 @@ static void LocateWeaponSubclass() {
     }
 }
 
-// PROVEN: b2c69c1e IDENTICAL/IDENTICAL
 // OFFSET: 0x00495060/0x1400BA9F0
 int32_t ClientDBGetNumWeaponSubClasses() {
     return s_weaponSubclasses.Count();
 }
 
-// PROVEN: 056beead IDENTICAL/DIFFERENT
 // OFFSET: 0x00495350/0x1400BAD60
 int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
@@ -1491,7 +1486,6 @@ static void ClientDBLoadTables() {
     }
 }
 
-// PROVEN: 3474e97d IDENTICAL/IDENTICAL
 // OFFSET: 0x00494D60/0x1400BA540
 void ClientDBInitializeGlue() {
     for (ClientDBTable* table = s_clientDBGlueTables; table->m_db; table++) {
@@ -1499,7 +1493,6 @@ void ClientDBInitializeGlue() {
     }
 }
 
-// PROVEN: 6369db2d IDENTICAL/UNPROVEN
 // OFFSET: 0x00495070/0x1400BAA00
 void ClientDBUnloadTables() {
     char path[260];
@@ -1754,7 +1747,6 @@ void ClientDBInitialize() {
     ClientDBReply::s_handler = JamHandlerEncode(WowClientDB2_Base::DBReplyMultiplex, g_jamHandlerKey_CFCEF8);
 }
 
-// PROVEN: debaabd8 DIFFERENT/IDENTICAL
 // OFFSET: 0x0048A5D0/0x1400ACCF0
 int32_t LocaleIdToIndex(uint32_t locale) {
     switch (locale) {
@@ -1791,7 +1783,6 @@ int32_t LocaleIdToIndex(uint32_t locale) {
     }
 }
 
-// PROVEN: 7375dc07 IDENTICAL/DIFFERENT
 // OFFSET: 0x0048A6C0/0x1400ACDF0
 int32_t LocaleIndexToDB2Locale(int32_t index) {
     switch (index) {
@@ -1939,7 +1930,6 @@ int32_t GetCurrentLocaleIndex() {
     }
 }
 
-// PROVEN: e1c11b64 NONE/IDENTICAL
 // OFFSET: 0x00000000/0x1400AD130
 int32_t GetCurrentDB2Locale() {
     return LocaleIndexToDB2Locale(GetCurrentLocaleIndex());
@@ -1956,7 +1946,6 @@ int32_t LocaleNameToIndex(const char* locale) {
     return index;
 }
 
-// PROVEN: 20c6d65c IDENTICAL/DIFFERENT
 // OFFSET: 0x00495030/0x1400BA9A0
 const char* ClientDBStringLookup(uint32_t lookup) {
     StringLookupsRec* rec = g_stringLookupsDB.GetRecord(lookup);
@@ -1992,7 +1981,6 @@ MapDifficultyRec* GetMapDifficultyRec(int32_t mapId, uint32_t difficulty, int32_
     return NULL;
 }
 
-// PROVEN: 97860801 IDENTICAL/DIFFERENT
 // OFFSET: 0x00495380/0x1400BADE0
 int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyRec(map->m_id, difficulty, NULL);
@@ -2030,7 +2018,6 @@ int32_t DungeonEncounterFindFirst(int32_t mapId) {
     return -1;
 }
 
-// PROVEN: 6b313c5f IDENTICAL/NONE
 // OFFSET: 0x00494CA0
 void DBClient_CancelAllCallbacks() {
     for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
@@ -2059,7 +2046,6 @@ void DBClient_ClearDB2Caches() {
     }
 }
 
-// PROVEN: 2ce81b03 IDENTICAL/IDENTICAL
 // OFFSET: 0x00494D90/0x1400BA580
 void DBClient_Idle() {
     for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {

@@ -85,21 +85,18 @@ SCritSect g_queueLock;
 // STATIC: 0x00DD3D80/0x140CBA5E0
 static TSGrowableArray<CStreamingObj> s_streamingObjects;
 
-// PROVEN: e75ee842 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EA10/0x1401994D0
 void AsyncFileReadProgressCallback(void (*callback)(float, void*), void* param) {
     s_asyncProgressCallback = callback;
     s_asyncProgressCallbackParams = param;
 }
 
-// PROVEN: 416eeef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EA30/0x1401994E0
 void AsyncFileReadIngameProgressCallback(void (*startCallback)(), void (*progressCallback)(float, int32_t)) {
     s_ingameStartCallback = startCallback;
     s_ingameProgressCallback = progressCallback;
 }
 
-// PROVEN: 619f3399 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053EA50/0x1401994F0
 void AsyncFileGetNetQueueStatus(AsyncFileNetQueueStatus* status) {
     status->m_active = false;
@@ -120,7 +117,6 @@ void AsyncFileGetNetQueueStatus(AsyncFileNetQueueStatus* status) {
     g_queueLock.Leave();
 }
 
-// PROVEN: 84343944 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EAD0/0x140199570
 void AsyncFileReadEnterQueueLock() {
     if (!s_queueLockCount) {
@@ -130,7 +126,6 @@ void AsyncFileReadEnterQueueLock() {
     s_queueLockCount++;
 }
 
-// PROVEN: fb0d39ff IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EAF0/0x1401995B0
 void AsyncFileReadLeaveQueueLock() {
     if (!--s_queueLockCount) {
@@ -138,7 +133,6 @@ void AsyncFileReadLeaveQueueLock() {
     }
 }
 
-// PROVEN: bf657c8a IDENTICAL/UNPROVEN
 // OFFSET: 0x0053EB10/0x1401995D0
 float AsyncFileReadGetStreamingBandwidth() {
     if (s_asyncQueues[1]) {
@@ -148,7 +142,6 @@ float AsyncFileReadGetStreamingBandwidth() {
     return 0.0f;
 }
 
-// PROVEN: c850dd30 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB20/0x1401995F0
 static int CompareStreamingObjects(const void* a, const void* b) {
     int32_t priority1 = static_cast<const CStreamingObj*>(a)->m_priority;
@@ -161,25 +154,21 @@ static int CompareStreamingObjects(const void* a, const void* b) {
     return priority1 > priority2;
 }
 
-// PROVEN: d421f6a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB50/0x140199610
 int32_t AsyncFileReadHasStreamingErrorOccurred() {
     return s_streamingError;
 }
 
-// PROVEN: e8da7b18 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB60/0x140199620
 void AsyncFileReadSetStreamingError() {
     s_streamingError = 1;
 }
 
-// PROVEN: 2fac8f36 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB70/0x140199630
 void AsyncFileReadResetStreamingError() {
     s_streamingError = 0;
 }
 
-// PROVEN: da6d66e9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053ED70/0x140199920
 int32_t AsyncFileReadGetStreamingQueue() {
     int32_t queue = 3;
@@ -211,7 +200,6 @@ int32_t AsyncFileReadGetStreamingQueue() {
     return queue;
 }
 
-// PROVEN: 337a9368 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053EDF0/0x1401999A0
 int32_t AsyncFileReadIsStreaming() {
     g_queueLock.Enter();
@@ -227,7 +215,6 @@ int32_t AsyncFileReadIsStreaming() {
     return streaming;
 }
 
-// PROVEN: 0e5f5e4c IDENTICAL/UNPROVEN
 // OFFSET: 0x0053EE30/0x1401999F0
 int32_t AsyncFileReadIsDiskReading() {
     g_queueLock.Enter();
@@ -243,7 +230,6 @@ int32_t AsyncFileReadIsDiskReading() {
     return reading;
 }
 
-// PROVEN: 0ab3a170 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053EE70/0x140199A40
 int32_t AsyncFileReadComputePriority(int32_t category, int32_t type, int32_t visible, float distanceSq) {
     float distance = sqrt(distanceSq);
@@ -305,7 +291,6 @@ static void AsyncFileReadUnlinkObject(CAsyncObject* object) {
     object->m_link.Unlink();
 }
 
-// PROVEN: 92c3fa09 IDENTICAL/NONE
 // OFFSET: 0x0053EFF0
 void AsyncFileReadUnloadPostList() {
     CAsyncObject* object;
@@ -319,7 +304,6 @@ void AsyncFileReadUnloadPostList() {
     }
 }
 
-// PROVEN: f4aec518 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053F060/0x140199BA0
 int32_t AsyncFileReadPollHandler(const void* data, void* param) {
     uint32_t start = OsGetAsyncTimeMs();
@@ -586,7 +570,6 @@ void AsyncFileReadWait(CAsyncObject* object) {
     s_waiting--;
 }
 
-// PROVEN: fa22b59b IDENTICAL/NONE
 // OFFSET: 0x0053F900
 int32_t AsyncFileReadIsReading() {
     g_queueLock.Enter();
@@ -814,7 +797,6 @@ CAsyncObject* AsyncFileReadAllocObject() {
     return object;
 }
 
-// PROVEN: c408728d IDENTICAL/DIFFERENT
 // OFFSET: 0x0053FFA0/0x14019A3B0
 void AsyncFileReadDestroyObject(CAsyncObject* object) {
     g_queueLock.Enter();
@@ -822,7 +804,6 @@ void AsyncFileReadDestroyObject(CAsyncObject* object) {
     g_queueLock.Leave();
 }
 
-// PROVEN: c5f4f3a2 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053FFA0/0x14019A3B0
 void DefaultAsyncObjectCleanupCallback(CAsyncObject* object) {
     g_queueLock.Enter();
@@ -830,7 +811,6 @@ void DefaultAsyncObjectCleanupCallback(CAsyncObject* object) {
     g_queueLock.Leave();
 }
 
-// PROVEN: ec1efc1b IDENTICAL/DIFFERENT
 // OFFSET: 0x0053FFD0/0x14019B180
 int32_t AsyncFileReadCancel(CAsyncObject* object, void (*callback)(CAsyncObject* object)) {
     int32_t result = 0;
@@ -936,7 +916,6 @@ void AsyncFileReadCreateObject(SFileImpl* file, uint8_t priority, int32_t urgent
     }
 }
 
-// PROVEN: 588facfd IDENTICAL/IDENTICAL
 // OFFSET: 0x005401F0/0x14019B4C0
 int32_t AsyncFileReadCreateObject(const char* name, uint8_t priority, int32_t urgent, int32_t noHash, CAsyncObject** result, void* buffer, void* userArg, void (*postload)(CAsyncObject*), void (*failed)(CAsyncObject*), uint16_t userFlags, uint32_t offset, uint32_t size) {
     if (noHash) {
@@ -964,12 +943,10 @@ int32_t AsyncFileReadCreateObject(const char* name, uint8_t priority, int32_t ur
     return 1;
 }
 
-// PROVEN: d372c124 IDENTICAL/DIFFERENT
 // OFFSET: 0x00540370/0x14019B5C0
 CAsyncQueue::~CAsyncQueue() {
 }
 
-// PROVEN: 16c5e7ea IDENTICAL/NONE
 // OFFSET: 0x00540400
 CAsyncQueue::CAsyncQueue() {
     for (int32_t i = 0; i < 8; i++) {
@@ -980,7 +957,6 @@ CAsyncQueue::CAsyncQueue() {
     this->m_bandwidth = 0.0f;
 }
 
-// PROVEN: 50247a0b IDENTICAL/DIFFERENT
 // OFFSET: 0x00540460/0x14019B670
 CAsyncQueue* AsyncFileReadCreateQueue() {
     return s_asyncQueueList.NewNode(2, 0, 0);

@@ -92,7 +92,6 @@ int32_t IsMessageAllowedWhileOnSpline(uint32_t msgId) {
     return (s_allowedWhileOnSplineMessages[index >> 4] >> ((index >> 1) & 7)) & 1;
 }
 
-// PROVEN: 58b319dc DIFFERENT/IDENTICAL
 // OFFSET: 0x00571B80/0x1401D2DD0
 int32_t CMovement_C::ShouldHover() const {
     if (!(this->m_flags & MOVEMENTFLAG_HOVER)) {
@@ -184,7 +183,6 @@ void CMovement_C::OnJumpSpline(float verticalAcceleration, uint32_t effectStartT
     }
 }
 
-// PROVEN: faefadf4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00571FB0/0x1401D31F0
 void CMovement_C::Hover(int32_t enable, int32_t tryFall) {
     if (tryFall && !enable) {
@@ -238,7 +236,6 @@ void CMovement_C::ClampFacingToRange(float& facing, float min, float max) {
     facing = CMath::normalizeangle0to2pi_(clamped);
 }
 
-// PROVEN: b3bd85e0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00572170/0x1401D3360
 void CMovement_C::SkipTime(uint32_t time) {
     if (this->m_unit->m_obj->m_guid != CGUnit_C::s_activeMover || !(this->m_flags & 0x6008FF)) {
@@ -439,7 +436,6 @@ int32_t CMovement_C::UpdateTransportStatus(const CMovementStatus& status) {
     return this->UpdateTransportStatus(transport, seat, vehicleId);
 }
 
-// PROVEN: 5374e00c IDENTICAL/DIFFERENT
 // OFFSET: 0x00573470/0x1401D4810
 void CMovement_C::SendMoveMessage(uint32_t time, JamClientMessage* msg) {
     ClientServices::Send(msg);
@@ -474,7 +470,6 @@ void CMovement_C::OnHover(int32_t enable) {
     CMovementShared::Hover(enable);
 }
 
-// PROVEN: 111b6f57 IDENTICAL/DIFFERENT
 // OFFSET: 0x00574070/0x1401D55B0
 int32_t CMovement_C::SendTeleportAck(int32_t send, uint32_t time, uint32_t oldFlags, uint32_t ackIndex) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 1, 0, 0);
@@ -491,7 +486,6 @@ int32_t CMovement_C::SendTeleportAck(int32_t send, uint32_t time, uint32_t oldFl
     return 1;
 }
 
-// PROVEN: 605ecabf IDENTICAL/NONE
 // OFFSET: 0x005740F0
 int32_t CMovement_C::SendSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, NETMESSAGE msgId, JamMoveSpeedAck* data, JamClientMessage* msg, float speed, uint32_t ackIndex) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 1, 0);
@@ -527,7 +521,6 @@ int32_t CMovement_C::SendSetCollisionHeightAck(uint32_t time, const CPlayerMoveE
     return 1;
 }
 
-// PROVEN: a70c51f3 IDENTICAL/NONE
 // OFFSET: 0x00574230
 int32_t CMovement_C::SendSetVehicleRecIdAck(uint32_t time, const CPlayerMoveEvent* event, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -545,7 +538,6 @@ int32_t CMovement_C::SendSetVehicleRecIdAck(uint32_t time, const CPlayerMoveEven
     return 1;
 }
 
-// PROVEN: e1b8427f IDENTICAL/NONE
 // OFFSET: 0x005742D0
 int32_t CMovement_C::SendChangeSeatsOnControlledVehicle(uint32_t time, const CPlayerMoveEvent* event, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -613,63 +605,54 @@ int32_t CMovement_C::SendGravityDisableAck(int32_t send, uint32_t time, uint32_t
     return 1;
 }
 
-// PROVEN: 37892f21 IDENTICAL/NONE
 // OFFSET: 0x00574590
 int32_t CMovement_C::SendRunSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveRunSpeedChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_RUN_SPEED_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: 45f1f43f IDENTICAL/NONE
 // OFFSET: 0x005745F0
 int32_t CMovement_C::SendRunBackSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveRunBackSpeedChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: 06e3ee21 IDENTICAL/NONE
 // OFFSET: 0x00574650
 int32_t CMovement_C::SendWalkSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveWalkSpeedChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_WALK_SPEED_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: ec1b691c IDENTICAL/NONE
 // OFFSET: 0x005746B0
 int32_t CMovement_C::SendSwimSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveSwimSpeedChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_SWIM_SPEED_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: 34fc4f8c IDENTICAL/NONE
 // OFFSET: 0x00574710
 int32_t CMovement_C::SendSwimBackSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveSwimBackSpeedChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: 2e485586 IDENTICAL/NONE
 // OFFSET: 0x00574770
 int32_t CMovement_C::SendFlightSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveFlightSpeedChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_FLIGHT_SPEED_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: d6286d5e IDENTICAL/NONE
 // OFFSET: 0x005747D0
 int32_t CMovement_C::SendFlightBackSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveFlightBackSpeedChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_FLIGHT_BACK_SPEED_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: 605031cb IDENTICAL/NONE
 // OFFSET: 0x00574830
 int32_t CMovement_C::SendTurnRateChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMoveTurnRateChangeAck msg;
     return this->SendSpeedChangeAck(send, time, oldFlags, CMSG_FORCE_TURN_RATE_CHANGE_ACK, &msg.m_data, &msg, speed, ackIndex);
 }
 
-// PROVEN: e7df920c IDENTICAL/NONE
 // OFFSET: 0x00574890
 int32_t CMovement_C::SendPitchRateChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, float speed, uint32_t ackIndex) {
     PlayerMovePitchRateChangeAck msg;
@@ -796,189 +779,162 @@ int32_t CMovement_C::SendSetCanTransitionBetweenSwimAndFlyAck(int32_t send, uint
     return 1;
 }
 
-// PROVEN: b33006d1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00574DF0/0x1401D7640
 int32_t CMovement_C::SendHeartbeat(uint32_t time) {
     PlayerMoveHeartbeat msg;
     return this->SendMoveStatus(time, MSG_MOVE_HEARTBEAT, &msg.m_status, &msg);
 }
 
-// PROVEN: 3fb28a84 IDENTICAL/DIFFERENT
 // OFFSET: 0x00574E40/0x1401D7790
 int32_t CMovement_C::SendChangeTransport(uint32_t time) {
     PlayerMoveChangeTransport msg;
     return this->SendMoveStatus(time, CMSG_MOVE_CHANGE_TRANSPORT, &msg.m_status, &msg);
 }
 
-// PROVEN: d1a2118c IDENTICAL/DIFFERENT
 // OFFSET: 0x00574E90/0x1401D78E0
 int32_t CMovement_C::SendSetPitch(uint32_t time) {
     PlayerMoveSetPitch msg;
     return this->SendMoveStatus(time, MSG_MOVE_SET_PITCH, &msg.m_status, &msg);
 }
 
-// PROVEN: e177083e IDENTICAL/DIFFERENT
 // OFFSET: 0x00574EE0/0x1401D7A30
 int32_t CMovement_C::SendStartForward(uint32_t time) {
     PlayerMoveStartForward msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_FORWARD, &msg.m_status, &msg);
 }
 
-// PROVEN: 8b9b5812 IDENTICAL/DIFFERENT
 // OFFSET: 0x00574F30/0x1401D7B80
 int32_t CMovement_C::SendStartBackward(uint32_t time) {
     PlayerMoveStartBackward msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_BACKWARD, &msg.m_status, &msg);
 }
 
-// PROVEN: 14ed662f IDENTICAL/DIFFERENT
 // OFFSET: 0x00574F80/0x1401D8F30
 int32_t CMovement_C::SendStop(uint32_t time) {
     PlayerMoveStop msg;
     return this->SendMoveStatus(time, MSG_MOVE_STOP, &msg.m_status, &msg);
 }
 
-// PROVEN: 5ac83d1a IDENTICAL/DIFFERENT
 // OFFSET: 0x00574FD0/0x1401D7E20
 int32_t CMovement_C::SendStartStrafeLeft(uint32_t time) {
     PlayerMoveStartStrafeLeft msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_STRAFE_LEFT, &msg.m_status, &msg);
 }
 
-// PROVEN: 7b0818a2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00575020/0x1401D7F70
 int32_t CMovement_C::SendStartStrafeRight(uint32_t time) {
     PlayerMoveStartStrafeRight msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_STRAFE_RIGHT, &msg.m_status, &msg);
 }
 
-// PROVEN: 9a93f708 IDENTICAL/DIFFERENT
 // OFFSET: 0x00575070/0x1401D80C0
 int32_t CMovement_C::SendStopStrafe(uint32_t time) {
     PlayerMoveStopStrafe msg;
     return this->SendMoveStatus(time, MSG_MOVE_STOP_STRAFE, &msg.m_status, &msg);
 }
 
-// PROVEN: e264dfa1 IDENTICAL/NONE
 // OFFSET: 0x005750C0
 int32_t CMovement_C::SendStartAscend(uint32_t time) {
     PlayerMoveStartAscend msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_ASCEND, &msg.m_status, &msg);
 }
 
-// PROVEN: b51a21d3 IDENTICAL/NONE
 // OFFSET: 0x00575110
 int32_t CMovement_C::SendStartDescend(uint32_t time) {
     PlayerMoveStartDescend msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_DESCEND, &msg.m_status, &msg);
 }
 
-// PROVEN: 548b9776 IDENTICAL/NONE
 // OFFSET: 0x00575160
 int32_t CMovement_C::SendStopAscend(uint32_t time) {
     PlayerMoveStopAscend msg;
     return this->SendMoveStatus(time, MSG_MOVE_STOP_ASCEND, &msg.m_status, &msg);
 }
 
-// PROVEN: 2be749a1 IDENTICAL/DIFFERENT
 // OFFSET: 0x005751B0/0x1401D8600
 int32_t CMovement_C::SendJump(uint32_t time) {
     PlayerMoveJump msg;
     return this->SendMoveStatus(time, MSG_MOVE_JUMP, &msg.m_status, &msg);
 }
 
-// PROVEN: 84904f17 IDENTICAL/DIFFERENT
 // OFFSET: 0x00575200/0x1401D8750
 int32_t CMovement_C::SendStartTurnLeft(uint32_t time) {
     PlayerMoveStartTurnLeft msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_TURN_LEFT, &msg.m_status, &msg);
 }
 
-// PROVEN: 9c1766ac IDENTICAL/DIFFERENT
 // OFFSET: 0x00575250/0x1401D88A0
 int32_t CMovement_C::SendStartTurnRight(uint32_t time) {
     PlayerMoveStartTurnRight msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_TURN_RIGHT, &msg.m_status, &msg);
 }
 
-// PROVEN: 8669a2d2 IDENTICAL/DIFFERENT
 // OFFSET: 0x005752A0/0x1401D89F0
 int32_t CMovement_C::SendStopTurn(uint32_t time) {
     PlayerMoveStopTurn msg;
     return this->SendMoveStatus(time, MSG_MOVE_STOP_TURN, &msg.m_status, &msg);
 }
 
-// PROVEN: f2f34010 IDENTICAL/NONE
 // OFFSET: 0x005752F0
 int32_t CMovement_C::SendSetRunMode(uint32_t time) {
     PlayerMoveSetRunMode msg;
     return this->SendMoveStatus(time, MSG_MOVE_SET_RUN_MODE, &msg.m_status, &msg);
 }
 
-// PROVEN: b4d4795c IDENTICAL/NONE
 // OFFSET: 0x00575340
 int32_t CMovement_C::SendSetWalkMode(uint32_t time) {
     PlayerMoveSetWalkMode msg;
     return this->SendMoveStatus(time, MSG_MOVE_SET_WALK_MODE, &msg.m_status, &msg);
 }
 
-// PROVEN: 6fc4d987 IDENTICAL/DIFFERENT
 // OFFSET: 0x00575390/0x1401D8DE0
 int32_t CMovement_C::SendSetFacing(uint32_t time) {
     PlayerMoveSetFacing msg;
     return this->SendMoveStatus(time, MSG_MOVE_SET_FACING, &msg.m_status, &msg);
 }
 
-// PROVEN: f8fbb2ff IDENTICAL/DIFFERENT
 // OFFSET: 0x005753E0/0x1401D8F30
 int32_t CMovement_C::SendStartSwim(uint32_t time) {
     PlayerMoveStartSwim msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_SWIM, &msg.m_status, &msg);
 }
 
-// PROVEN: 5cc2625b IDENTICAL/DIFFERENT
 // OFFSET: 0x00575430/0x1401D7CD0
 int32_t CMovement_C::SendStopSwim(uint32_t time) {
     PlayerMoveStopSwim msg;
     return this->SendMoveStatus(time, MSG_MOVE_STOP_SWIM, &msg.m_status, &msg);
 }
 
-// PROVEN: 3ecee99d IDENTICAL/DIFFERENT
 // OFFSET: 0x00575480/0x1401D91D0
 int32_t CMovement_C::SendStartPitchUp(uint32_t time) {
     PlayerMoveStartPitchUp msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_PITCH_UP, &msg.m_status, &msg);
 }
 
-// PROVEN: b35c22e7 IDENTICAL/DIFFERENT
 // OFFSET: 0x005754D0/0x1401D9320
 int32_t CMovement_C::SendStartPitchDown(uint32_t time) {
     PlayerMoveStartPitchDown msg;
     return this->SendMoveStatus(time, MSG_MOVE_START_PITCH_DOWN, &msg.m_status, &msg);
 }
 
-// PROVEN: d3e0e700 IDENTICAL/DIFFERENT
 // OFFSET: 0x00575520/0x1401D9470
 int32_t CMovement_C::SendStopPitch(uint32_t time) {
     PlayerMoveStopPitch msg;
     return this->SendMoveStatus(time, MSG_MOVE_STOP_PITCH, &msg.m_status, &msg);
 }
 
-// PROVEN: 3895b054 IDENTICAL/NONE
 // OFFSET: 0x00575570
 int32_t CMovement_C::SendToggleCollisionCheat(uint32_t time) {
     PlayerMoveToggleCollisionCheat msg;
     return this->SendMoveStatus(time, MSG_MOVE_TOGGLE_COLLISION_CHEAT, &msg.m_status, &msg);
 }
 
-// PROVEN: 506134ed IDENTICAL/DIFFERENT
 // OFFSET: 0x005755C0/0x1401D9710
 int32_t CMovement_C::SendSetFly(uint32_t time) {
     PlayerMoveSetFly msg;
     return this->SendMoveStatus(time, CMSG_MOVE_SET_FLY, &msg.m_status, &msg);
 }
 
-// PROVEN: eab1ef48 IDENTICAL/NONE
 // OFFSET: 0x00575610
 int32_t CMovement_C::SendDismissControlledVehicle(uint32_t time) {
     PlayerDismissControlledVehicle msg;
@@ -1014,7 +970,6 @@ void CMovement_C::UpdateMoversList() {
     }
 }
 
-// PROVEN: 41dabe29 IDENTICAL/IDENTICAL
 // OFFSET: 0x00576950/0x1401DAFF0
 void CMovement_C::OnSetFacing(float facing, int32_t flush) {
     this->SetFacing(facing);
@@ -1025,7 +980,6 @@ void CMovement_C::OnSetFacing(float facing, int32_t flush) {
     }
 }
 
-// PROVEN: 3d0a9a9f IDENTICAL/UNPROVEN
 // OFFSET: 0x00576990/0x1401DB040
 void CMovement_C::OnRoot() {
     this->TryRoot();
@@ -1073,14 +1027,12 @@ void CMovement_C::GravityStateChanged() {
     }
 }
 
-// PROVEN: 03481026 IDENTICAL/IDENTICAL
 // OFFSET: 0x00576AF0/0x1401DB1E0
 void CMovement_C::OnUnsetActiveMover() {
     this->FlushMoveQueue(0, 0);
     this->m_flags &= ~MOVEMENTFLAG_STATUS_APPLIED;
 }
 
-// PROVEN: 4a971f39 IDENTICAL/UNPROVEN
 // OFFSET: 0x00576B30/0x1401DB2A0
 int32_t CMovement_C::ProcessHeartbeat(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1092,7 +1044,6 @@ int32_t CMovement_C::ProcessHeartbeat(int32_t send, uint32_t time, uint32_t oldF
     return 0;
 }
 
-// PROVEN: a7a08da2 IDENTICAL/NONE
 // OFFSET: 0x00576B70/0x1401DB310
 int32_t CMovement_C::ProcessStartForward(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1104,7 +1055,6 @@ int32_t CMovement_C::ProcessStartForward(int32_t send, uint32_t time, uint32_t o
     return 0;
 }
 
-// PROVEN: b185c324 IDENTICAL/NONE
 // OFFSET: 0x00576BB0/0x1401DB380
 int32_t CMovement_C::ProcessStartBackward(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1116,7 +1066,6 @@ int32_t CMovement_C::ProcessStartBackward(int32_t send, uint32_t time, uint32_t 
     return 0;
 }
 
-// PROVEN: c205d6dc IDENTICAL/NONE
 // OFFSET: 0x00576BF0
 int32_t CMovement_C::ProcessStop(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1128,7 +1077,6 @@ int32_t CMovement_C::ProcessStop(int32_t send, uint32_t time, uint32_t oldFlags)
     return 0;
 }
 
-// PROVEN: f32a1d60 IDENTICAL/NONE
 // OFFSET: 0x00576C30/0x1401DB460
 int32_t CMovement_C::ProcessStartStrafeLeft(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1140,7 +1088,6 @@ int32_t CMovement_C::ProcessStartStrafeLeft(int32_t send, uint32_t time, uint32_
     return 0;
 }
 
-// PROVEN: 7c6132eb IDENTICAL/NONE
 // OFFSET: 0x00576C70/0x1401DB4D0
 int32_t CMovement_C::ProcessStartStrafeRight(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1152,7 +1099,6 @@ int32_t CMovement_C::ProcessStartStrafeRight(int32_t send, uint32_t time, uint32
     return 0;
 }
 
-// PROVEN: cbbd7c5f IDENTICAL/NONE
 // OFFSET: 0x00576CB0/0x1401DB540
 int32_t CMovement_C::ProcessStopStrafe(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1164,7 +1110,6 @@ int32_t CMovement_C::ProcessStopStrafe(int32_t send, uint32_t time, uint32_t old
     return 0;
 }
 
-// PROVEN: f1eb9a83 IDENTICAL/NONE
 // OFFSET: 0x00576CF0
 int32_t CMovement_C::ProcessStartAscend(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1176,7 +1121,6 @@ int32_t CMovement_C::ProcessStartAscend(int32_t send, uint32_t time, uint32_t ol
     return 0;
 }
 
-// PROVEN: 05f1bc3d IDENTICAL/NONE
 // OFFSET: 0x00576D30
 int32_t CMovement_C::ProcessStartDescend(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1188,7 +1132,6 @@ int32_t CMovement_C::ProcessStartDescend(int32_t send, uint32_t time, uint32_t o
     return 0;
 }
 
-// PROVEN: 0c5585a4 IDENTICAL/NONE
 // OFFSET: 0x00576D70
 int32_t CMovement_C::ProcessStopAscend(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1200,7 +1143,6 @@ int32_t CMovement_C::ProcessStopAscend(int32_t send, uint32_t time, uint32_t old
     return 0;
 }
 
-// PROVEN: 6fec32c3 IDENTICAL/NONE
 // OFFSET: 0x00576DB0/0x1401DB700
 int32_t CMovement_C::ProcessJump(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1212,7 +1154,6 @@ int32_t CMovement_C::ProcessJump(int32_t send, uint32_t time, uint32_t oldFlags)
     return 0;
 }
 
-// PROVEN: 4680c389 IDENTICAL/UNPROVEN
 // OFFSET: 0x00576DF0/0x1401DB770
 int32_t CMovement_C::ProcessStartTurnLeft(int32_t send, uint32_t time, uint32_t oldFlags) {
     int32_t sent = 0;
@@ -1229,7 +1170,6 @@ int32_t CMovement_C::ProcessStartTurnLeft(int32_t send, uint32_t time, uint32_t 
     return sent;
 }
 
-// PROVEN: 54db6ee5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00576E50/0x1401DB800
 int32_t CMovement_C::ProcessStartTurnRight(int32_t send, uint32_t time, uint32_t oldFlags) {
     int32_t sent = 0;
@@ -1246,7 +1186,6 @@ int32_t CMovement_C::ProcessStartTurnRight(int32_t send, uint32_t time, uint32_t
     return sent;
 }
 
-// PROVEN: 7d6a2200 IDENTICAL/UNPROVEN
 // OFFSET: 0x00576EB0/0x1401DB890
 int32_t CMovement_C::ProcessStopTurn(int32_t send, uint32_t time, uint32_t oldFlags) {
     int32_t sent = 0;
@@ -1263,7 +1202,6 @@ int32_t CMovement_C::ProcessStopTurn(int32_t send, uint32_t time, uint32_t oldFl
     return sent;
 }
 
-// PROVEN: 9efaa6e0 IDENTICAL/NONE
 // OFFSET: 0x00576F10
 int32_t CMovement_C::ProcessSetRunMode(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1275,7 +1213,6 @@ int32_t CMovement_C::ProcessSetRunMode(int32_t send, uint32_t time, uint32_t old
     return 0;
 }
 
-// PROVEN: fed7ec6d IDENTICAL/NONE
 // OFFSET: 0x00576F50
 int32_t CMovement_C::ProcessSetWalkMode(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1287,7 +1224,6 @@ int32_t CMovement_C::ProcessSetWalkMode(int32_t send, uint32_t time, uint32_t ol
     return 0;
 }
 
-// PROVEN: 1c23f3ff IDENTICAL/NONE
 // OFFSET: 0x00576F90/0x1401DBA00
 int32_t CMovement_C::ProcessSetFacing(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1299,7 +1235,6 @@ int32_t CMovement_C::ProcessSetFacing(int32_t send, uint32_t time, uint32_t oldF
     return 0;
 }
 
-// PROVEN: 20791775 IDENTICAL/NONE
 // OFFSET: 0x00576FD0
 int32_t CMovement_C::ProcessStartSwim(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1311,7 +1246,6 @@ int32_t CMovement_C::ProcessStartSwim(int32_t send, uint32_t time, uint32_t oldF
     return 0;
 }
 
-// PROVEN: 90c86f24 IDENTICAL/NONE
 // OFFSET: 0x00577010/0x1401DB3F0
 int32_t CMovement_C::ProcessStopSwim(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1323,7 +1257,6 @@ int32_t CMovement_C::ProcessStopSwim(int32_t send, uint32_t time, uint32_t oldFl
     return 0;
 }
 
-// PROVEN: e09a0945 IDENTICAL/UNPROVEN
 // OFFSET: 0x00577050/0x1401DBB50
 int32_t CMovement_C::ProcessStartPitchUp(int32_t send, uint32_t time, uint32_t oldFlags) {
     int32_t sent = 0;
@@ -1340,7 +1273,6 @@ int32_t CMovement_C::ProcessStartPitchUp(int32_t send, uint32_t time, uint32_t o
     return sent;
 }
 
-// PROVEN: 3682cd7a IDENTICAL/UNPROVEN
 // OFFSET: 0x005770B0/0x1401DBBE0
 int32_t CMovement_C::ProcessStartPitchDown(int32_t send, uint32_t time, uint32_t oldFlags) {
     int32_t sent = 0;
@@ -1357,7 +1289,6 @@ int32_t CMovement_C::ProcessStartPitchDown(int32_t send, uint32_t time, uint32_t
     return sent;
 }
 
-// PROVEN: 90e805ec IDENTICAL/UNPROVEN
 // OFFSET: 0x00577110/0x1401DBC70
 int32_t CMovement_C::ProcessStopPitch(int32_t send, uint32_t time, uint32_t oldFlags) {
     int32_t sent = 0;
@@ -1374,7 +1305,6 @@ int32_t CMovement_C::ProcessStopPitch(int32_t send, uint32_t time, uint32_t oldF
     return sent;
 }
 
-// PROVEN: 44c4675b IDENTICAL/NONE
 // OFFSET: 0x00577170
 int32_t CMovement_C::ProcessToggleCollisionCheat(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1386,7 +1316,6 @@ int32_t CMovement_C::ProcessToggleCollisionCheat(int32_t send, uint32_t time, ui
     return 0;
 }
 
-// PROVEN: c9f56b7b IDENTICAL/UNPROVEN
 // OFFSET: 0x005771B0/0x1401DBD70
 int32_t CMovement_C::ProcessSetFly(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1398,7 +1327,6 @@ int32_t CMovement_C::ProcessSetFly(int32_t send, uint32_t time, uint32_t oldFlag
     return 0;
 }
 
-// PROVEN: 28a60bc0 IDENTICAL/NONE
 // OFFSET: 0x005771F0
 int32_t CMovement_C::ProcessDismissControlledVehicle(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1438,7 +1366,6 @@ void CPlayerMoveQueue::Enqueue(CPlayerMoveEvent* event) {
     this->LinkToTail(event);
 }
 
-// PROVEN: c9583f18 IDENTICAL/IDENTICAL
 // OFFSET: 0x00577560/0x1401DC0F0
 void CMovement_C::OnUnitDisable() {
     this->FlushMoveQueue(1, 1);
@@ -1540,7 +1467,6 @@ void CMovement_C::AddPlayerValueEvent(uint32_t eventTime, MoveEventId eventId, b
     }
 }
 
-// PROVEN: d300dcd9 IDENTICAL/NONE
 // OFFSET: 0x00578AA0
 void CMovement_C::OnEnableCollisionLocal(uint32_t eventTime, uint32_t ackCounter, int32_t enable) {
     this->AddPlayerMoveEvent(eventTime, enable ? MOVEEVENT_ENABLE_COLLISION : MOVEEVENT_DISABLE_COLLISION, true, ackCounter, 0.0f, 0.0f, 0);
@@ -1598,7 +1524,6 @@ int32_t CMovement_C::SendMoveFlagsChange(uint32_t time, uint32_t oldFlags, int32
     return this->SendStopSwim(time);
 }
 
-// PROVEN: 7d0affaa IDENTICAL/DIFFERENT
 // OFFSET: 0x005793C0/0x1401DE8F0
 void CMovement_C::OnSetVehicleRecIdLocal(uint32_t eventTime, uint32_t ackCounter, uint32_t vehicleRecId) {
     this->AddPlayerValueEvent(eventTime, MOVEEVENT_SET_VEHICLE_REC_ID, true, ackCounter, vehicleRecId);
@@ -1667,7 +1592,6 @@ void CPlayerMoveQueue::UnlinkEventById(MoveEventId eventId) {
     }
 }
 
-// PROVEN: fb9c34ce IDENTICAL/NONE
 // OFFSET: 0x00601860
 ClipPolygon::ClipPolygon(const ClipPolygon& source) {
     this->m_count = source.m_count;
@@ -1720,7 +1644,6 @@ int32_t CMovement_C::AddTimeSkewSample(uint32_t localTime, uint32_t serverTime) 
     return skew;
 }
 
-// PROVEN: 038ee22a IDENTICAL/NONE
 // OFFSET: 0x006032F0
 void CMovement_C::BuildCollisionBox(const C3Vector& position, CAaBox& box) const {
     box.b = position;
@@ -2075,7 +1998,6 @@ int32_t CMovement_C::Interpolate(uint32_t now, uint32_t elapsed, C3Vector* posit
     return this->m_flags2 & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT;
 }
 
-// PROVEN: af274ac5 IDENTICAL/IDENTICAL
 // OFFSET: [0x0043B770/0x140046140]
 int32_t CMovement_C::IsJumping() const {
     return (this->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_fallVelocity;
@@ -2086,25 +2008,21 @@ int32_t CMovement_C::IsValidPosition() const {
     return World::IsValidPosition(this->m_position, 2.0f) != 0;
 }
 
-// PROVEN: c8165cd8 IDENTICAL/NONE
 // OFFSET: 0x00571760
 void CMovement_C::OnSetRunMode(int32_t run) {
     this->SetRunMode(run);
 }
 
-// PROVEN: e64ca8e8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00571970/0x1401D2BE0
 void CMovement_C::OnSkipTime(uint32_t time) {
     this->m_gameTime += time;
 }
 
-// PROVEN: 8bec5149 IDENTICAL/NONE
 // OFFSET: 0x00571930
 void CMovement_C::OnWaterWalk(int32_t enable) {
     this->WalkOnWater(enable);
 }
 
-// PROVEN: b66a5e15 IDENTICAL/NONE
 // OFFSET: 0x006017B0
 void CMovement_C::RestoreMoveState(const MoveState& state) {
     this->m_anchorPos = state.m_anchorPos;
@@ -2118,7 +2036,6 @@ void CMovement_C::RestoreMoveState(const MoveState& state) {
     this->m_currentSpeed = state.m_currentSpeed;
 }
 
-// PROVEN: e8aa4f44 IDENTICAL/NONE
 // OFFSET: 0x00601750
 void CMovement_C::SaveMoveState(MoveState& state) const {
     state.m_anchorPos = this->m_anchorPos;
@@ -2219,7 +2136,6 @@ void CMovement_C::AddPlayerMoveEvent(uint32_t eventTime, MoveEventId eventId, bo
     }
 }
 
-// PROVEN: 3bc8cf2d IDENTICAL/DIFFERENT
 // OFFSET: 0x00579130/0x1401DE560
 void CMovement_C::OnAscendDescendStartLocal(uint32_t eventTime, int32_t ascend) {
     this->AddPlayerMoveEvent(eventTime, ascend ? MOVEEVENT_START_ASCEND : MOVEEVENT_START_DESCEND, true, 0, 0.0f, 0.0f, 0);
@@ -2230,19 +2146,16 @@ void CMovement_C::OnAscendDescendStopLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_STOP_ASCEND, true, 0, 0.0f, 0.0f, 0);
 }
 
-// PROVEN: cb413e0d IDENTICAL/NONE
 // OFFSET: 0x005790A0
 void CMovement_C::OnCanFlyLocal(uint32_t eventTime, uint32_t ackCounter, int32_t canFly) {
     this->AddPlayerMoveEvent(eventTime, canFly ? MOVEEVENT_SET_CAN_FLY : MOVEEVENT_UNSET_CAN_FLY, true, ackCounter, 0.0f, 0.0f, 0);
 }
 
-// PROVEN: 1e94837b IDENTICAL/NONE
 // OFFSET: 0x005790D0
 void CMovement_C::OnCanTransitionBetweenSwimAndFlyLocal(uint32_t eventTime, uint32_t ackCounter, int32_t canTransition) {
     this->AddPlayerMoveEvent(eventTime, canTransition ? MOVEEVENT_SET_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY : MOVEEVENT_UNSET_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY, true, ackCounter, 0.0f, 0.0f, 0);
 }
 
-// PROVEN: b0a77838 IDENTICAL/DIFFERENT
 // OFFSET: 0x00578AD0/0x1401DDAA0
 void CMovement_C::OnDisableGravityLocal(uint32_t eventTime, uint32_t ackCounter, int32_t disable) {
     this->AddPlayerMoveEvent(eventTime, disable ? MOVEEVENT_GRAVITY_DISABLE : MOVEEVENT_GRAVITY_ENABLE, true, ackCounter, 0.0f, 0.0f, 0);
@@ -2328,7 +2241,6 @@ void CMovement_C::OnFallLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_START_FALLING, true, 0, 0.0f, 0.0f, 0);
 }
 
-// PROVEN: c3b23ce8 IDENTICAL/NONE
 // OFFSET: 0x00579010
 void CMovement_C::OnFeatherFallLocal(uint32_t eventTime, uint32_t ackCounter, int32_t featherFall) {
     this->AddPlayerMoveEvent(eventTime, featherFall ? MOVEEVENT_FEATHER_FALL : MOVEEVENT_NORMAL_FALL, true, ackCounter, 0.0f, 0.0f, 0);
@@ -2374,7 +2286,6 @@ void CMovement_C::OnFlightBackSpeedChangeLocal(uint32_t eventTime, uint32_t ackC
     }
 }
 
-// PROVEN: 36fa615f IDENTICAL/DIFFERENT
 // OFFSET: 0x00579100/0x1401DE4F0
 void CMovement_C::OnFlightLocal(uint32_t eventTime, int32_t flying) {
     this->AddPlayerMoveEvent(eventTime, flying ? MOVEEVENT_SET_FLYING : MOVEEVENT_UNSET_FLYING, true, 0, 0.0f, 0.0f, 0);
@@ -2420,7 +2331,6 @@ void CMovement_C::OnFlightSpeedChangeLocal(uint32_t eventTime, uint32_t ackCount
     }
 }
 
-// PROVEN: 36ac7bba IDENTICAL/NONE
 // OFFSET: 0x00579040
 void CMovement_C::OnHoverLocal(uint32_t eventTime, uint32_t ackCounter, int32_t hover) {
     this->AddPlayerMoveEvent(eventTime, hover ? MOVEEVENT_SET_HOVER : MOVEEVENT_UNSET_HOVER, true, ackCounter, 0.0f, 0.0f, 0);
@@ -2455,7 +2365,6 @@ void CMovement_C::OnLaunchLocal(uint32_t eventTime, uint32_t ackCounter, const C
     }
 }
 
-// PROVEN: 5b543c57 IDENTICAL/DIFFERENT
 // OFFSET: 0x00577870/0x1401DC2C0
 void CMovement_C::OnMoveStartLocal(uint32_t eventTime, int32_t forward) {
     this->AddPlayerMoveEvent(eventTime, (MoveEventId)(forward == 0), true, 0, 0.0f, 0.0f, 0);
@@ -2528,7 +2437,6 @@ void CMovement_C::OnPitchToAngleLocal(uint32_t eventTime, float pitch) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_PITCH_TO_ANGLE, true, 0, 0.0f, pitch, 0);
 }
 
-// PROVEN: e65777f0 IDENTICAL/NONE
 // OFFSET: 0x00579070
 void CMovement_C::OnRootLocal(uint32_t eventTime, uint32_t ackCounter, int32_t root) {
     this->AddPlayerMoveEvent(eventTime, root ? MOVEEVENT_ROOT : MOVEEVENT_UNROOT, true, ackCounter, 0.0f, 0.0f, 0);
@@ -2635,7 +2543,6 @@ void CMovement_C::OnSetCollisionHeight(uint32_t eventTime, float value) {
     }
 }
 
-// PROVEN: 7562773e IDENTICAL/DIFFERENT
 // OFFSET: 0x00578B00/0x1401DDB30
 void CMovement_C::OnSetCollisionHeightLocal(uint32_t eventTime, uint32_t ackCounter, float value, uint8_t reason) {
     this->AddPlayerCollisionHeightEvent(eventTime, MOVEEVENT_SET_COLLISION_HEIGHT, true, ackCounter, value, reason);
@@ -2657,13 +2564,11 @@ void CMovement_C::OnSetPitchLocal(uint32_t eventTime, float pitch) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_SET_PITCH, true, 0, 0.0f, pitch, 0);
 }
 
-// PROVEN: 3d34bca7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00577BF0/0x1401DC720
 void CMovement_C::OnSetRunModeLocal(uint32_t eventTime, int32_t run) {
     this->AddPlayerMoveEvent(eventTime, run ? MOVEEVENT_SET_RUN_MODE : MOVEEVENT_SET_WALK_MODE, true, 0, 0.0f, 0.0f, 0);
 }
 
-// PROVEN: aab1e7fd IDENTICAL/NONE
 // OFFSET: 0x005778A0
 void CMovement_C::OnStrafeStartLocal(uint32_t eventTime, int32_t left) {
     this->AddPlayerMoveEvent(eventTime, left ? MOVEEVENT_START_STRAFE_LEFT : MOVEEVENT_START_STRAFE_RIGHT, true, 0, 0.0f, 0.0f, 0);
@@ -2850,7 +2755,6 @@ void CMovement_C::OnWalkSpeedChangeLocal(uint32_t eventTime, uint32_t ackCounter
     }
 }
 
-// PROVEN: 19d8d773 IDENTICAL/NONE
 // OFFSET: 0x00578FE0
 void CMovement_C::OnWaterWalkLocal(uint32_t eventTime, uint32_t ackCounter, int32_t waterWalk) {
     this->AddPlayerMoveEvent(eventTime, waterWalk ? MOVEEVENT_WATER_WALK : MOVEEVENT_LAND_WALK, true, ackCounter, 0.0f, 0.0f, 0);
@@ -2973,68 +2877,57 @@ void CMovement_C::BuildCollisionVolume(const C3Vector& position, float height, C
     faces[31] = 1;
 }
 
-// PROVEN: 2bcb8c3b IDENTICAL/NONE
 // OFFSET: 0x005718C0
 int32_t CMovement_C::OnFlightBackSpeedChange(float value) {
     return this->ChangeFlightBackSpeed(value);
 }
 
-// PROVEN: 6a545a13 IDENTICAL/NONE
 // OFFSET: 0x005718A0
 int32_t CMovement_C::OnFlightSpeedChange(float value) {
     return this->ChangeFlightSpeed(value);
 }
 
-// PROVEN: ca381779 IDENTICAL/NONE
 // OFFSET: 0x00571900
 int32_t CMovement_C::OnPitchRateChange(float value) {
     return this->ChangePitchRate(value);
 }
 
-// PROVEN: 14e034d3 IDENTICAL/NONE
 // OFFSET: 0x00571820
 int32_t CMovement_C::OnRunBackSpeedChange(float value) {
     return this->ChangeRunBackSpeed(value);
 }
 
-// PROVEN: 7c59ab07 IDENTICAL/NONE
 // OFFSET: 0x00571800
 int32_t CMovement_C::OnRunSpeedChange(float value) {
     return this->ChangeRunSpeed(value);
 }
 
-// PROVEN: b0aaf95c IDENTICAL/NONE
 // OFFSET: 0x00571880
 int32_t CMovement_C::OnSwimBackSpeedChange(float value) {
     return this->ChangeSwimBackSpeed(value);
 }
 
-// PROVEN: e4099d08 IDENTICAL/NONE
 // OFFSET: 0x00571860
 int32_t CMovement_C::OnSwimSpeedChange(float value) {
     return this->ChangeSwimSpeed(value);
 }
 
-// PROVEN: ea53103b IDENTICAL/NONE
 // OFFSET: 0x005718E0
 int32_t CMovement_C::OnTurnRateChange(float value) {
     return this->ChangeTurnRate(value);
 }
 
-// PROVEN: 6f0cdebf IDENTICAL/NONE
 // OFFSET: 0x00571840
 int32_t CMovement_C::OnWalkSpeedChange(float value) {
     return this->ChangeWalkSpeed(value);
 }
 
-// PROVEN: 7506c665 IDENTICAL/NONE
 // OFFSET: 0x00571940
 void CMovement_C::OnFeatherFall(int32_t enable) {
     this->FeatherFall(enable);
     this->PostFeatherFall();
 }
 
-// PROVEN: fc8c52ef IDENTICAL/IDENTICAL
 // OFFSET: 0x005793A0/0x1401DE8C0
 void CMovement_C::OnChangeSeatsOnControlledVehicleLocal(uint32_t eventTime, WOWGUID transport, uint8_t seat) {
     this->AddPlayerChangeSeatsEvent(eventTime, MOVEEVENT_CHANGE_SEAT, true, transport, seat);
@@ -3082,7 +2975,6 @@ void CMovement_C::SnapToSpline(const C3Vector& position, int32_t force) {
     this->ValidateWorldPosition(CPassenger::GetPosition(this->m_position));
 }
 
-// PROVEN: bec49cf6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CMovement_C::ValidateWorldPosition(const C3Vector& position) const {
 }
@@ -3300,7 +3192,6 @@ void CMovement_C::Launch(const C2Vector& direction, float speed, float verticalS
     }
 }
 
-// PROVEN: 571b368c IDENTICAL/IDENTICAL
 // OFFSET: 0x00577C20/0x1401DC790
 void CMovement_C::SplineToggleEnableFlying(int32_t enable) {
     if (enable) {
@@ -3312,7 +3203,6 @@ void CMovement_C::SplineToggleEnableFlying(int32_t enable) {
     }
 }
 
-// PROVEN: acb1321a IDENTICAL/DIFFERENT
 // OFFSET: 0x005721D0/0x1401D33C0
 void CMovement_C::UpdateHeartbeatTimerA(uint32_t time) {
     if (this->m_unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
@@ -3435,7 +3325,6 @@ static void Swap(C4Plane& a, C4Plane& b) {
     b = temp;
 }
 
-// PROVEN: 6353d79e IDENTICAL/NONE
 // OFFSET: 0x006018E0
 static int32_t IsSurfaceTooSteep(uint32_t facet) {
     return s_moveFacets.facets.m_data[facet].plane.n.z <= 0.64278764f;
@@ -3741,7 +3630,6 @@ static int32_t PolygonAtPoint(const ClipPolygon& polygon, const C3Vector& point)
     return 1;
 }
 
-// PROVEN: 67eafa92 IDENTICAL/DIFFERENT
 // OFFSET: 0x00602BC0/0x140289C60
 static int32_t ClipCollisionBox(const CAaBox& box) {
     ClipPolygon polygon;
@@ -4017,7 +3905,6 @@ static void IntersectPlanes(const C4Plane& plane0, const C4Plane& plane1, const 
     point.z = d1 * inverse.c1 + d2 * inverse.c2 + d0 * inverse.c0;
 }
 
-// PROVEN: 3faa2d96 IDENTICAL/NONE
 // OFFSET: 0x00604CC0
 static int32_t CheckFallingConditions(const C4Plane* planes, uint32_t count) {
     for (uint32_t i = 0; i < count; i++) {
@@ -4145,7 +4032,6 @@ C2Vector CMovement_C::CalcFallObstaclePush(const C3Vector& direction, float dist
     return C2Vector(push.x * (scale + 0.001f), push.y * (scale + 0.001f));
 }
 
-// PROVEN: 75ae52ac IDENTICAL/NONE
 // OFFSET: 0x00571960
 int32_t CMovement_C::SendFallReset(uint32_t time) {
     return this->m_unit->OnCollideFallReset(time);
@@ -6947,7 +6833,6 @@ void CMovement_C::SuspendMovement() {
     this->m_flags |= 0x40000000;
 }
 
-// PROVEN: a3e4bf89 IDENTICAL/IDENTICAL
 // OFFSET: 0x00576360/0x1401DA970
 void CMovement_C::FlushMoveQueue(int32_t removeSpline, int32_t controlLost) {
     if (s_flushingQueue) {
@@ -6999,7 +6884,6 @@ int32_t CMovement_C::UpdateStatus(uint32_t time, const CMovementStatus& status, 
     return 1;
 }
 
-// PROVEN: b97b36dd IDENTICAL/IDENTICAL
 // OFFSET: 0x00578140/0x1401DCDB0
 int32_t CMovement_C::OnRunSpeedChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_RUN_SPEED, value)) {
@@ -7009,7 +6893,6 @@ int32_t CMovement_C::OnRunSpeedChange(uint32_t time, const CMovementStatus& stat
     return this->ChangeRunSpeed(value);
 }
 
-// PROVEN: db5b05f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00578240/0x1401DCEF0
 int32_t CMovement_C::OnRunBackSpeedChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_RUN_BACK_SPEED, value)) {
@@ -7019,7 +6902,6 @@ int32_t CMovement_C::OnRunBackSpeedChange(uint32_t time, const CMovementStatus& 
     return this->ChangeRunBackSpeed(value);
 }
 
-// PROVEN: 1225bdb8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00578340/0x1401DD030
 int32_t CMovement_C::OnWalkSpeedChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_WALK_SPEED, value)) {
@@ -7029,7 +6911,6 @@ int32_t CMovement_C::OnWalkSpeedChange(uint32_t time, const CMovementStatus& sta
     return this->ChangeWalkSpeed(value);
 }
 
-// PROVEN: 55475a3a IDENTICAL/IDENTICAL
 // OFFSET: 0x00578440/0x1401DD170
 int32_t CMovement_C::OnSwimSpeedChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_SWIM_SPEED, value)) {
@@ -7039,7 +6920,6 @@ int32_t CMovement_C::OnSwimSpeedChange(uint32_t time, const CMovementStatus& sta
     return this->ChangeSwimSpeed(value);
 }
 
-// PROVEN: d700518d IDENTICAL/IDENTICAL
 // OFFSET: 0x00578540/0x1401DD2B0
 int32_t CMovement_C::OnSwimBackSpeedChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_SWIM_BACK_SPEED, value)) {
@@ -7049,7 +6929,6 @@ int32_t CMovement_C::OnSwimBackSpeedChange(uint32_t time, const CMovementStatus&
     return this->ChangeSwimBackSpeed(value);
 }
 
-// PROVEN: 51a3ef41 IDENTICAL/IDENTICAL
 // OFFSET: 0x00578640/0x1401DD3F0
 int32_t CMovement_C::OnFlightSpeedChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_FLIGHT_SPEED, value)) {
@@ -7059,7 +6938,6 @@ int32_t CMovement_C::OnFlightSpeedChange(uint32_t time, const CMovementStatus& s
     return this->ChangeFlightSpeed(value);
 }
 
-// PROVEN: 84552fbe IDENTICAL/IDENTICAL
 // OFFSET: 0x00578740/0x1401DD530
 int32_t CMovement_C::OnFlightBackSpeedChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_FLIGHT_BACK_SPEED, value)) {
@@ -7069,7 +6947,6 @@ int32_t CMovement_C::OnFlightBackSpeedChange(uint32_t time, const CMovementStatu
     return this->ChangeFlightBackSpeed(value);
 }
 
-// PROVEN: 1bf71860 IDENTICAL/IDENTICAL
 // OFFSET: 0x00578840/0x1401DD670
 int32_t CMovement_C::OnTurnRateChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_TURN_RATE, value)) {
@@ -7079,7 +6956,6 @@ int32_t CMovement_C::OnTurnRateChange(uint32_t time, const CMovementStatus& stat
     return this->ChangeTurnRate(value);
 }
 
-// PROVEN: 4a94c3e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00578940/0x1401DD7B0
 int32_t CMovement_C::OnPitchRateChange(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_PITCH_RATE, value)) {
@@ -7089,7 +6965,6 @@ int32_t CMovement_C::OnPitchRateChange(uint32_t time, const CMovementStatus& sta
     return this->ChangePitchRate(value);
 }
 
-// PROVEN: 7137d323 IDENTICAL/DIFFERENT
 // OFFSET: 0x00578B90/0x1401DDC30
 int32_t CMovement_C::OnSetCollisionHeight(uint32_t time, const CMovementStatus& status, float value) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_SET_COLLISION_HEIGHT, value)) {
@@ -7100,7 +6975,6 @@ int32_t CMovement_C::OnSetCollisionHeight(uint32_t time, const CMovementStatus& 
     return 1;
 }
 
-// PROVEN: d986e3fc IDENTICAL/IDENTICAL
 // OFFSET: 0x005793E0/0x1401DE980
 int32_t CMovement_C::OnHeartBeat(uint32_t time, const CMovementStatus& status) {
     if (!this->UpdateStatus(time, status, MOVEEVENT_HEARTBEAT, 0.0f)) {
@@ -7143,7 +7017,6 @@ void CMovement_C::OnSplineStopSwim() {
     }
 }
 
-// PROVEN: 02accae2 IDENTICAL/NONE
 // OFFSET: 0x00576AC0/0x1401DB1B0
 int32_t CMovement_C::OnSplineEnableGravity(int32_t enable) {
     if (!this->EnableGravity(enable)) {
@@ -7154,7 +7027,6 @@ int32_t CMovement_C::OnSplineEnableGravity(int32_t enable) {
     return 1;
 }
 
-// PROVEN: 6162b1ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00578F40/0x1401DE140
 void CMovement_C::OnSplineStartSwim() {
     this->StartSwim();
@@ -7238,7 +7110,6 @@ int32_t CMovement_C::OnSpline(const MoveSplineParams& params) {
     return 1;
 }
 
-// PROVEN: 4b896b37 IDENTICAL/DIFFERENT
 // OFFSET: 0x00575A20/0x1401D9F00
 void CMovement_C::ForceSetTransport(WOWGUID transport, uint8_t seat, int32_t force) {
     if (this->ForceSetTransportInt(transport, seat, force, 0) && this->m_unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
@@ -7246,7 +7117,6 @@ void CMovement_C::ForceSetTransport(WOWGUID transport, uint8_t seat, int32_t for
     }
 }
 
-// PROVEN: 45fef169 IDENTICAL/DIFFERENT
 // OFFSET: 0x00577D20/0x1401DC8B0
 void CMovement_C::OnSplineSnap(uint32_t splineId, const C3Vector& destination, uint32_t splineFlags, int32_t flush) {
     this->AddSpline(destination);
@@ -7421,7 +7291,6 @@ void CMovement_C::OnSetRawFacingLocal(uint32_t eventTime, float facing) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_SET_FACING, true, 0, facing, 0.0f, 0);
 }
 
-// PROVEN: 79be6b0b IDENTICAL/IDENTICAL
 // OFFSET: 0x0057AE80/0x1401E0860
 void CMovement_C::Disable() {
     this->Suspend();
@@ -7510,14 +7379,12 @@ void CMovement_C::PassengerMove(uint32_t time, uint32_t elapsed, float distance,
     globals->m_transportTime = savedTime;
 }
 
-// PROVEN: 35dca905 IDENTICAL/NONE
 // OFFSET: 0x005B6480
 int32_t CMovement_C::IsOnSwimSpline() const {
     CMoveSpline* spline = this->m_spline;
     return spline && !(spline->m_flags & 0x80) && (spline->m_flags & 0x200000);
 }
 
-// PROVEN: 38102f7e IDENTICAL/DIFFERENT
 // OFFSET: 0x005ACB80/0x14021F0B0
 int32_t CMovement_C::SendNotActiveMover(uint32_t time) {
     PlayerMoveNotActiveMover msg;

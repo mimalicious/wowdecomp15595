@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[12] = { 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0 };
 // STATIC: 0x00C1F2B0/0x140A137B0
 const DBCMeta WorldMapOverlayRec::s_meta = { "DBFilesClient\\WorldMapOverlay.dbc", 12, 60, WorldMapOverlayRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: ef96aec1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E920/0x1407D7F90
 void WorldMapOverlayRec::FixupStrings(void* record, const char* strings) {
     WorldMapOverlayRec* rec = static_cast<WorldMapOverlayRec*>(record);

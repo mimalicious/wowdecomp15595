@@ -3,7 +3,6 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/CGxTexFlags.h"
 
-// PROVEN: 6391e0f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00840230/0x14056C080
 CGxTexFlags::CGxTexFlags() {
     *reinterpret_cast<uint32_t*>(this) = 0x1001;
@@ -23,13 +22,11 @@ CGxTexFlags::CGxTexFlags(EGxTexFilter filter, uint32_t wrapU, uint32_t wrapV, ui
     this->m_bit15 = bit15;
 }
 
-// PROVEN: d5f3f0a2 IDENTICAL/NONE
 // OFFSET: 0x00842B30
 bool CGxTexFlags::operator!=(const CGxTexFlags& flags) const {
     return memcmp(this, &flags, sizeof(CGxTexFlags)) != 0;
 }
 
-// PROVEN: f58a0011 IDENTICAL/NONE
 // OFFSET: 0x00541160
 bool CGxTexFlags::operator==(const CGxTexFlags& flags) const {
     return memcmp(this, &flags, sizeof(CGxTexFlags)) == 0;

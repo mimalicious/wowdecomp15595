@@ -28,7 +28,6 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d88b725c UNPROVEN/IDENTICAL
 // OFFSET: 0x00AFC310/0x1408BE490
 ChannelRealManual3D::ChannelRealManual3D()
 {

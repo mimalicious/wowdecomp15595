@@ -15,7 +15,6 @@
 #include "WoW/Source/WorldClient/WorldOcclusion.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// PROVEN: 363e3331 IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D5F0/0x1404923F0
 void CWorldQuery::FreeMapObjGroupList() {
     if (this->m_mapObjGroups) {
@@ -27,7 +26,6 @@ void CWorldQuery::FreeMapObjGroupList() {
     this->m_mapObjGroupMax = 0;
 }
 
-// PROVEN: 2938453e IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D620/0x140492440
 void CWorldQuery::FreeModelList() {
     if (this->m_models) {
@@ -39,7 +37,6 @@ void CWorldQuery::FreeModelList() {
     this->m_modelMax = 0;
 }
 
-// PROVEN: 200c511b IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D650/0x140492490
 void CWorldQuery::AllocMapObjGroupList(uint32_t count) {
     if (!this->m_mapObjGroups) {
@@ -51,7 +48,6 @@ void CWorldQuery::AllocMapObjGroupList(uint32_t count) {
     this->m_mapObjGroupCount = 0;
 }
 
-// PROVEN: dbe44580 DIFFERENT/IDENTICAL
 // OFFSET: 0x0079D690/0x1404924F0
 CWorldQuery::CWorldQuery() {
     this->m_untexturedBatches.m_batches = NULL;
@@ -70,7 +66,6 @@ CWorldQuery::CWorldQuery() {
     this->m_modelMax = 0;
 }
 
-// PROVEN: 1e44c09a IDENTICAL/IDENTICAL
 // OFFSET: 0x0079D6D0/0x140492530
 void CWorldQuery::FreeModelBatchList() {
     if (this->m_untexturedBatches.m_batches) {
@@ -109,7 +104,6 @@ void CWorldQuery::AllocModelBatchList(uint32_t count) {
     this->m_texturedBatches.m_optimizedCount = 0;
 }
 
-// PROVEN: d0a0bdcb IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D7B0/0x140492640
 CWorldQuery::~CWorldQuery() {
     this->FreeMapObjGroupList();
@@ -117,7 +111,6 @@ CWorldQuery::~CWorldQuery() {
     this->FreeModelBatchList();
 }
 
-// PROVEN: af3d08c1 IDENTICAL/NONE
 // OFFSET: 0x0079D830
 void CWorldQuery::AddMapObjGroup(CMapObjGroup* group, const C44Matrix* matrix) {
     if (this->m_mapObjGroupCount < this->m_mapObjGroupMax) {
@@ -127,7 +120,6 @@ void CWorldQuery::AddMapObjGroup(CMapObjGroup* group, const C44Matrix* matrix) {
     }
 }
 
-// PROVEN: 60c21c27 IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D860/0x1404926B0
 int32_t CWorldView::IsBeyondFadeInner(const C3Vector& pos, uint32_t sizeCategory) {
     float dx = pos.x - this->m_camPos.x;

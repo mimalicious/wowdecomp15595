@@ -7,7 +7,6 @@
 // STATIC: 0x00D3AFD0/0x140BF6350
 char s_visitableURLs[4][1024];
 
-// PROVEN: 4d61f1b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004814D0/0x1400A0050
 const char* GetVisitableURL(int32_t index) {
     return s_visitableURLs[index];
@@ -24,7 +23,6 @@ void FormatVisitableURL(int32_t index, char* buffer, uint32_t size) {
     SStrPrintf(buffer, size, s_visitableURLs[2], login ? login->GetAccountName() : ClientServices::GetAccountName());
 }
 
-// PROVEN: 698208a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00481880/0x1400A04F0
 void SetVisitableURL(int32_t index, const char* url) {
     SStrCopy(s_visitableURLs[index], url, sizeof(s_visitableURLs[index]));

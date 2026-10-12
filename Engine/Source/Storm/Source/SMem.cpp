@@ -12,7 +12,6 @@ static int32_t s_exitonfailure = 1;
 // STATIC: 0x00C9F7B4/0x140B3B90C
 static int32_t s_heaptracking = 1;
 
-// PROVEN: fa84e396 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B2A10/0x1400E95F0
 void STORMAPI SMemSetDebugFlags(uint32_t flags, uint8_t changeMask) {
     if (changeMask & SMEM_DEBUG_NOEXITONFAILURE) {
@@ -36,7 +35,6 @@ static void FatalError(size_t bytes, const char* filename, int32_t linenumber) {
     }
 }
 
-// PROVEN: 68317da4 IDENTICAL/NONE
 // OFFSET: 0x004B2AC0/0x1400E96C0
 void* STORMAPI SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
     size_t size = (bytes + 7) & ~static_cast<size_t>(7);
@@ -52,7 +50,6 @@ void* STORMAPI SMemAlloc(size_t bytes, const char* filename, int32_t linenumber,
     return ptr;
 }
 
-// PROVEN: 1034874b IDENTICAL/IDENTICAL
 // OFFSET: 0x004B2C20/0x1400E98A0
 int32_t STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags) {
     if (ptr) {
@@ -63,7 +60,6 @@ int32_t STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, u
     return 1;
 }
 
-// PROVEN: d0f8bf51 IDENTICAL/NONE
 // OFFSET: 0x004B2C50
 int32_t STORMAPI SMemIsValidPointer(void* ptr, size_t bytes, uint32_t flags) {
     return 1;
@@ -114,7 +110,6 @@ void* operator new(size_t bytes) {
     return SMemAlloc(bytes, "new", SLOG_FUNCTION, 0);
 }
 
-// PROVEN: af8bc094 IDENTICAL/IDENTICAL
 // OFFSET: 0x00872C50/0x140001030
 void operator delete(void* ptr) {
     if (ptr) {
@@ -127,7 +122,6 @@ void* operator new[](size_t bytes) {
     return SMemAlloc(bytes, "new[]", SLOG_FUNCTION, 0);
 }
 
-// PROVEN: 79597c6a IDENTICAL/IDENTICAL
 // OFFSET: 0x00401030/0x140001080
 void operator delete[](void* ptr) {
     if (ptr) {

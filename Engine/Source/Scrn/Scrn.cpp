@@ -12,7 +12,6 @@ void ScrnDestroy() {
     IStockDestroy();
 }
 
-// PROVEN: d1a7e02d IDENTICAL/IDENTICAL
 // OFFSET: 0x007FFDB0/0x140513BC0
 void ScrnInitialize(int32_t param) {
     ILayerInitialize();

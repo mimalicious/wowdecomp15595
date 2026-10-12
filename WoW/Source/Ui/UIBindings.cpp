@@ -374,7 +374,6 @@ int32_t CGUIBindings::AddMetaPrefix(uint32_t modifiers, char*& binding, int32_t&
     return maxLength >= 0;
 }
 
-// PROVEN: eb78bfd8 DIFFERENT/IDENTICAL
 // OFFSET: 0x00920E50/0x1406835C0
 void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     while (*binding) {
@@ -415,7 +414,6 @@ void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     }
 }
 
-// PROVEN: 28d3adfe IDENTICAL/DIFFERENT
 // OFFSET: 0x00925DA0/0x14068AF10
 void CGUIBindings::Initialize() {
     CGUIBindings::s_bindings = new (SMemAlloc(sizeof(CGUIBindings), __FILE__, __LINE__, 0)) CGUIBindings();
@@ -425,7 +423,6 @@ void CGUIBindings::Initialize() {
     } while (!s_initRound);
 }
 
-// PROVEN: c2c33900 IDENTICAL/DIFFERENT
 // OFFSET: 0x009218D0/0x140684890
 char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_t maxLength) {
     uint32_t modifiers = evt.m_data.m_metaKeyState;
@@ -455,7 +452,6 @@ char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_
     return result;
 }
 
-// PROVEN: 74fae6b2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00927C00/0x14068D6D0
 void CGUIBindings::LoadBindings() {
     void* data;
@@ -483,7 +479,6 @@ void CGUIBindings::LoadBindings() {
     LoadAccountData(3, CGUIBindings::LoadBindingsCallback, reinterpret_cast<void*>(static_cast<uintptr_t>((s_initRound << 16) | BINDING_SET_CHARACTER)));
 }
 
-// PROVEN: 874dbb4c IDENTICAL/UNPROVEN
 // OFFSET: 0x00927A00/0x14068D410
 void CGUIBindings::LoadBindings(BINDING_SET set, const char* data) {
     CGUIBindings* bindings = CGUIBindings::s_bindings;
@@ -628,7 +623,6 @@ void CGUIBindings::SaveBindings() {
     }
 }
 
-// PROVEN: 0d8d2942 IDENTICAL/IDENTICAL
 // OFFSET: 0x00921F20/0x1406851E0
 void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     BINDING_SET set = static_cast<BINDING_SET>(reinterpret_cast<uintptr_t>(param));
@@ -638,7 +632,6 @@ void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* p
     }
 }
 
-// PROVEN: d93323d1 IDENTICAL/NONE
 // OFFSET: 0x00925F70
 void CGUIBindings::Shutdown() {
     if (CGUIBindings::s_bindings) {
@@ -650,7 +643,6 @@ void CGUIBindings::Shutdown() {
     s_initRound++;
 }
 
-// PROVEN: 76723f38 IDENTICAL/IDENTICAL
 // OFFSET: 0x00920D20/0x140683440
 void CGUIBindings::StripModifiers(uint32_t& modifiers, const char* binding) {
     while (*binding) {
@@ -902,7 +894,6 @@ void CGUIBindings::CopyBindings(BINDING_SET source, BINDING_SET dest) {
     }
 }
 
-// PROVEN: c3bf2d78 DIFFERENT/IDENTICAL
 // OFFSET: 0x00921BF0/0x140684C80
 void CGUIBindings::EnableBindingMode(BINDING_MODE mode, int32_t enable) {
     if (!mode) {
@@ -1399,7 +1390,6 @@ int32_t CGUIBindings::IsModifiedClick(const char* action) {
     return result;
 }
 
-// PROVEN: c6a2bba2 DIFFERENT/IDENTICAL
 // OFFSET: 0x00927F60/0x14068DB10
 int32_t CGUIBindings::Load(const char* file, MD5_CTX* md5, CStatus* status) {
     if (!status) {
@@ -1665,7 +1655,6 @@ int32_t MouseButtonToIndex(uint32_t button) {
     }
 }
 
-// PROVEN: a47df421 DIFFERENT/IDENTICAL
 // OFFSET: 0x004DB960/0x1406842E0
 MOUSEBUTTON StringToMouseButton(const char* string) {
     if (!string || !*string) {

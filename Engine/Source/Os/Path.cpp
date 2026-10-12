@@ -3,7 +3,6 @@
 #include "Engine/Source/Os/Path.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: f3eaac43 IDENTICAL/DIFFERENT
 // OFFSET: 0x00876000/0x1405ACF80
 uint32_t OsPathGetRootChars(const char* path) {
     uint32_t length = static_cast<uint32_t>(strlen(path));
@@ -122,7 +121,6 @@ void OsPathReplaceExtension(char* dest, uint32_t size, const char* path, const c
     }
 }
 
-// PROVEN: de1f7629 IDENTICAL/IDENTICAL
 // OFFSET: 0x00876270/0x1405AD200
 void OsBuildFontFilePath(const char* fontName, char* path, uint32_t size) {
     SStrPrintf(path, size, "%s\\%s", "Fonts", fontName);
@@ -149,7 +147,6 @@ void OsPathStripFilename(char* path) {
     }
 }
 
-// PROVEN: 2f78923d DIFFERENT/IDENTICAL
 // OFFSET: 0x00876390/0x1405AD370
 void OsGetExePath(char* path, uint32_t size) {
     GetModuleFileNameUTF8(NULL, path, size);

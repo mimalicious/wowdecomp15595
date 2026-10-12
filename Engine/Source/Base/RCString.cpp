@@ -7,7 +7,6 @@
 // STATIC: 0x00EC6B14/0x140DB8E18
 CStringManager* CStringManager::s_stringManager;
 
-// PROVEN: bca1a0cc IDENTICAL/IDENTICAL
 // OFFSET: 0x00872000/0x1405A8300
 void RCString::Copy(const RCString& source) {
     this->m_str = source.m_str;
@@ -18,7 +17,6 @@ CStringMemory::CStringMemory() {
     this->AllocateBlock(0);
 }
 
-// PROVEN: 04fc1c81 IDENTICAL/DIFFERENT
 // OFFSET: 0x00872010/0x1405A8310
 CStringMemory::~CStringMemory() {
     for (uint32_t i = 0; i < this->Count(); i++) {
@@ -39,7 +37,6 @@ void CStringMemory::AllocateBlock(uint32_t size) {
     this->unk_0014 = this->unk_0010 + size;
 }
 
-// PROVEN: a0e51e37 IDENTICAL/DIFFERENT
 // OFFSET: 0x00872100/0x1405A8410
 char* CStringMemory::New(const char* str) {
     uint32_t bytes = (SStrLen(str) + sizeof(char*) + 4) & ~3;
@@ -72,19 +69,16 @@ const char* CStringManager::Add(const char* str) {
     return entry + sizeof(char*);
 }
 
-// PROVEN: bb1b8802 IDENTICAL/NONE
 // OFFSET: 0x008721F0
 CStringManager::CStringManager() {
     memset(this->unk_0000, 0, sizeof(this->unk_0000));
 }
 
-// PROVEN: 2e1f7de4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871FF0/0x1405A82F0
 int32_t CStringManager::IsDestroyed() {
     return CStringManager::s_stringManager == NULL;
 }
 
-// PROVEN: 7d164df9 DIFFERENT/IDENTICAL
 // OFFSET: 0x00872230/0x1405A8650
 void CStringManager::DestroyManager() {
     delete CStringManager::s_stringManager;

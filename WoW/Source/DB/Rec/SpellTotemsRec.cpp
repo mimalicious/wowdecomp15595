@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[3] = { 0, 0, 0 };
 // STATIC: 0x00C208E0/0x140A151E0
 const DBCMeta SpellTotemsRec::s_meta = { "DBFilesClient\\SpellTotems.dbc", 3, 20, SpellTotemsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: c4949a0c IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SpellTotemsRec::FixupStrings(void* record, const char* strings) {
 }

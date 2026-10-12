@@ -99,7 +99,6 @@ int32_t GetSkinningDifficulty(int32_t level) {
     return 5 * level + 35;
 }
 
-// PROVEN: 2e9a209c IDENTICAL/NONE
 // OFFSET: 0x00663800
 bool SpellIsAuraEffect(int32_t effect) {
     switch (effect) {
@@ -119,7 +118,6 @@ bool SpellIsAuraEffect(int32_t effect) {
     }
 }
 
-// PROVEN: 9ab9db94 IDENTICAL/DIFFERENT
 // OFFSET: 0x006638E0/0x140309A50
 bool SpellIsApplyAuraEffect(int32_t effect) {
     switch (effect) {
@@ -138,7 +136,6 @@ bool SpellIsApplyAuraEffect(int32_t effect) {
     }
 }
 
-// PROVEN: a255de8c IDENTICAL/DIFFERENT
 // OFFSET: 0x006639C0/0x140309B40
 bool SpellIsAreaAuraEffect(int32_t effect) {
     switch (effect) {
@@ -157,7 +154,6 @@ bool SpellIsAreaAuraEffect(int32_t effect) {
     }
 }
 
-// PROVEN: fce50cac IDENTICAL/NONE
 // OFFSET: 0x00663A90
 bool SpellIsDamageEffect(int32_t effect, int32_t aura) {
     switch (effect) {

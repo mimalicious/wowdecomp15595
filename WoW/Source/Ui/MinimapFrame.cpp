@@ -392,13 +392,11 @@ C2Vector CGMinimapFrame::WorldPosToMinimapFrameCoords(C3Vector center, float rad
     return coords;
 }
 
-// PROVEN: 54a2a52c IDENTICAL/IDENTICAL
 // OFFSET: [0x00619630/0x1402A6B50]
 int32_t MinimapGetZoomLevels() {
     return 6;
 }
 
-// PROVEN: 5d7476c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C6410/0x140636450
 CSimpleFrame* CGMinimapFrame::Create(CSimpleFrame* parent) {
     void* data = CGMinimapFrame::s_minimapHeap.GetData(0, typeid(CGMinimapFrame).raw_name(), SLOG_OBJECT);
@@ -432,7 +430,6 @@ static void ComputeIconTexCoords() {
     }
 }
 
-// PROVEN: ad111de9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CE580/0x14075F2E0
 bool CGMinimapFrame::UpdateScale(bool force) {
     if (CSimpleFrame::UpdateScale(force)) {
@@ -486,7 +483,6 @@ void MINIMAPTILE::BuildQuad(const CRect& rect, uint32_t index, const C2Vector* c
     this->m_vertices[3].z = 0.0f;
 }
 
-// PROVEN: 087c7af9 IDENTICAL/NONE
 // OFFSET: 0x009CE8A0
 static void GetSquareDirection(float angle, float* sine, float* cosine) {
     CMath::fsincos_(angle, sine, cosine);
@@ -546,7 +542,6 @@ float CGMinimapFrame::GetBlobRingScale() {
     return tiles / MinimapGetOutdoorZoomTiles(MinimapGetZoomLevels() - 1) * this->m_questBlobRingSize;
 }
 
-// PROVEN: 035d954f IDENTICAL/NONE
 // OFFSET: 0x009CEA90
 void CGMinimapFrame::RenderInsideSortQuads(MINIMAPTILE** head) {
     for (uint32_t i = 0; i < 256; i++) {
@@ -571,7 +566,6 @@ void CGMinimapFrame::RenderInsideSortQuads(MINIMAPTILE** head) {
     }
 }
 
-// PROVEN: f58e4e6c IDENTICAL/IDENTICAL
 // OFFSET: 0x009CEB00/0x14075F680
 void CGMinimapFrame::ShutdownGame() {
     if (s_maskTexture) {
@@ -658,7 +652,6 @@ void CGMinimapFrame::ShutdownGame() {
     s_positionArrowsTexture = NULL;
 }
 
-// PROVEN: 723f0deb IDENTICAL/IDENTICAL
 // OFFSET: 0x009CEC90/0x14075F840
 void CGMinimapFrame::UpdateTrackingSpell() {
     Script_SendUniqueSignal(SCRIPT_EVENT_MINIMAP_UPDATE_TRACKING);
@@ -675,7 +668,6 @@ static bool IsTrackingType(int32_t type) {
     return false;
 }
 
-// PROVEN: ceb5f818 IDENTICAL/NONE
 // OFFSET: 0x009CECE0
 bool CGMinimapFrame::IsTrackingObjectType(char type) {
     for (uint32_t i = 0; i < 19; i++) {
@@ -687,7 +679,6 @@ bool CGMinimapFrame::IsTrackingObjectType(char type) {
     return false;
 }
 
-// PROVEN: 0d560ea2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009CED30/0x14075F890
 bool CGMinimapFrame::IsTrackingNPC(uint32_t npcFlags) {
     for (uint32_t i = 0; i < 19; i++) {
@@ -1058,7 +1049,6 @@ int32_t CGMinimapFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return 1;
 }
 
-// PROVEN: 0371142e IDENTICAL/IDENTICAL
 // OFFSET: 0x009D05D0/0x140761540
 void CGMinimapFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     CGGameUI::m_gameTooltip->Hide();
@@ -1074,7 +1064,6 @@ void CGMinimapFrame::SetCompassRotation(float rotation) {
     }
 }
 
-// PROVEN: e8ecd22b IDENTICAL/UNPROVEN
 // OFFSET: 0x009D0640/0x1407615C0
 void CGMinimapFrame::UpdateQuads(const C2Vector& center, float scale) {
     for (uint32_t i = 0; i < 256; i++) {
@@ -1252,7 +1241,6 @@ void CGMinimapFrame::RenderSuperTrackedQuestArrow(const C44Matrix& rotation, con
     s_superTrackedArrowShown = 1;
 }
 
-// PROVEN: 811cc205 IDENTICAL/IDENTICAL
 // OFFSET: 0x009D1110/0x1407623F0
 static int32_t UpdateObjectInteractIcon(WOWGUID guid, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1275,7 +1263,6 @@ bool CGMinimapFrame::IsTrackingDynamicPOI() {
     return IsTrackingType(4);
 }
 
-// PROVEN: e1851be9 IDENTICAL/DIFFERENT
 // OFFSET: 0x009D1A70/0x140762E50
 void MINIMAPTILE::Render(uint32_t index, const CImVector* color) {
     if (!(this->m_flags & 1) || !this->m_texture) {
@@ -1346,7 +1333,6 @@ void CGMinimapFrame::RenderInsideQuad(MINIMAPTILE* tile, const CImVector* color)
     GxPrimUnlockVertexPtrs();
 }
 
-// PROVEN: a69b80c4 IDENTICAL/DIFFERENT
 // OFFSET: 0x009D1E00/0x140763290
 int32_t CGMinimapFrame::CountAvailableTrackingTypes() {
     int32_t count = 0;
@@ -1402,7 +1388,6 @@ void CGMinimapFrame::SetTracking(uint32_t index, bool enable) {
     Script_SendUniqueSignal(SCRIPT_EVENT_MINIMAP_UPDATE_TRACKING);
 }
 
-// PROVEN: 73aeb14a IDENTICAL/DIFFERENT
 // OFFSET: 0x009D1F60/0x140763410
 bool CGMinimapFrame::SetTrackingMask(int32_t mask) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1422,7 +1407,6 @@ bool CGMinimapFrame::SetTrackingMask(int32_t mask) {
     return false;
 }
 
-// PROVEN: db7ecc84 IDENTICAL/DIFFERENT
 // OFFSET: 0x009D1FE0/0x1407634A0
 int32_t CGMinimapFrame::GetTrackingTypeByIndex(int32_t index) {
     int32_t available = 0;
@@ -1458,7 +1442,6 @@ void CGMinimapFrame::RefreshShapeshiftTrackingSpells() {
     }
 }
 
-// PROVEN: 2665240e IDENTICAL/UNPROVEN
 // OFFSET: 0x009D2110/0x1407624B0
 void CGMinimapFrame::SaveShapeshiftTracking() {
     CVarIntListWrapper list;
@@ -1531,7 +1514,6 @@ void CGMinimapFrame::SetPingPosition(const WOWGUID& guid, const C2Vector& positi
     s_pingLastTime = FrameTime::GetCurTimeMs();
 }
 
-// PROVEN: 3b88151a IDENTICAL/IDENTICAL
 // OFFSET: 0x009D3040/0x140764810
 MINIMAPBLOB::~MINIMAPBLOB() {
     this->m_points.Clear();
@@ -1815,25 +1797,21 @@ CGMinimapFrame::CGMinimapFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_archBlobRingScalar = s_defaultBlobRingScalar;
 }
 
-// PROVEN: bb45bf06 IDENTICAL/NONE
 // OFFSET: 0x009D3C70
 const char* CGMinimapFrame::GetObjectTypeName() {
     return CGMinimapFrame::s_objectTypeName;
 }
 
-// PROVEN: 59736c8c IDENTICAL/IDENTICAL
 // OFFSET: 0x009D3C80/0x140765610
 int32_t CGMinimapFrame::GetScriptMetaTable() {
     return CGMinimapFrame::s_metatable;
 }
 
-// PROVEN: 54fb7e74 IDENTICAL/IDENTICAL
 // OFFSET: 0x009D3CA0/0x140765630
 bool CGMinimapFrame::IsA(int32_t type) {
     return type == CGMinimapFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 9babc963 IDENTICAL/NONE
 // OFFSET: 0x009D3CE0
 bool CGMinimapFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGMinimapFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -3246,7 +3224,6 @@ void CGMinimapFrame::EnterWorld() {
     ClntObjMgrEnumVisibleObjects(UpdateObjectInteractIcon, NULL);
 }
 
-// PROVEN: bc733090 IDENTICAL/DIFFERENT
 // OFFSET: 0x009D91A0/0x14076D840
 void CGMinimapFrame::AddShapeshiftTrackingSpell(int32_t spellId) {
     for (uint32_t i = 0; i < CGMinimapFrame::s_shapeshiftTrackingSpells.Count(); i++) {
@@ -3268,7 +3245,6 @@ void CGMinimapFrame::RemoveShapeshiftTrackingSpell(int32_t spellId) {
     }
 }
 
-// PROVEN: a877304c IDENTICAL/UNPROVEN
 // OFFSET: 0x009D9270/0x14076DA30
 void CGMinimapFrame::LoadShapeshiftTracking() {
     CVarIntListWrapper list;
@@ -3511,7 +3487,6 @@ void CGMinimapFrame::RenderBlobRing(const C44Matrix& rotation, MINIMAPBLOB* blob
     }
 }
 
-// PROVEN: a261ea35 IDENTICAL/DIFFERENT
 // OFFSET: 0x009DA300/0x14076F100
 void CGMinimapFrame::LoadTrackingState() {
     CGMinimapFrame::LoadShapeshiftTracking();
@@ -3526,7 +3501,6 @@ void CGMinimapFrame::LoadTrackingState() {
     MinimapLoadZoom();
 }
 
-// PROVEN: c7d411e4 IDENTICAL/UNPROVEN
 // OFFSET: 0x009DA340/0x14076F150
 void CGMinimapFrame::RenderQuestBlob(const C44Matrix& rotation, uint32_t blobIndex) {
     BLOB* blob = CGQuestLog::GetQuestPOIBlob(CGQuestLog::m_superTrackedQuest, blobIndex);
@@ -3559,7 +3533,6 @@ void CGMinimapFrame::RenderQuestBlob(const C44Matrix& rotation, uint32_t blobInd
     }
 }
 
-// PROVEN: f9ee5da6 IDENTICAL/UNPROVEN
 // OFFSET: 0x009DA450/0x14076F2A0
 void CGMinimapFrame::RenderArchBlob(const C44Matrix& rotation, uint32_t siteIndex) {
     BLOB* blob = reinterpret_cast<BLOB*>(CGResearchFrame::GetResearchSiteBlobs(siteIndex));
@@ -3722,7 +3695,6 @@ int32_t CGMinimapFrame::SetArchBlobRingTexture(const char* fileName) {
     return 1;
 }
 
-// PROVEN: 617321dd IDENTICAL/DIFFERENT
 // OFFSET: 0x009DAC40/0x14076FD00
 void CGMinimapFrame::PostLoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::PostLoadXML(node, status);
@@ -4348,7 +4320,6 @@ void CGMinimapFrame::Render() {
     s_rotateMinimap = g_rotateMinimapCVar->m_intValue;
 }
 
-// PROVEN: d9f90a6e IDENTICAL/IDENTICAL
 // OFFSET: 0x009DDED0/0x140773F50
 void CGMinimapFrame::RenderCallback(void* param) {
     if (param) {
@@ -4356,7 +4327,6 @@ void CGMinimapFrame::RenderCallback(void* param) {
     }
 }
 
-// PROVEN: da772788 IDENTICAL/IDENTICAL
 // OFFSET: 0x009DDEF0/0x140773F70
 void CGMinimapFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);

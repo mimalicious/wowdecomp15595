@@ -35,21 +35,18 @@
 // STATIC: 0x00C01DB0/0x1409F9FA0
 static const char s_difficultyNames[4][32] = { "optimal", "medium", "easy", "trivial" };
 
-// PROVEN: e4622432 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D3C0/0x14070B860
 static int32_t Script_GetNumTradeSkills(lua_State* L) {
     lua_pushnumber(L, CGTradeSkillInfo::m_filteredSkills);
     return 1;
 }
 
-// PROVEN: 0c7b394f IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D3F0/0x14070B880
 static int32_t Script_GetTradeSkillItemNameFilter(lua_State* L) {
     lua_pushstring(L, CGTradeSkillInfo::m_itemNameFilter);
     return 1;
 }
 
-// PROVEN: b4c2c069 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D410/0x14070B8A0
 static int32_t Script_GetTradeSkillItemLevelFilter(lua_State* L) {
     int32_t maxLevel = CGTradeSkillInfo::m_itemMaxLevelFilter;
@@ -58,7 +55,6 @@ static int32_t Script_GetTradeSkillItemLevelFilter(lua_State* L) {
     return 2;
 }
 
-// PROVEN: e28d938a IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D450/0x14070B8F0
 static int32_t Script_GetTradeSkillSubClassFilter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -95,7 +91,6 @@ static int32_t Script_GetTradeSkillSubClassFilter(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a9940870 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098D510/0x14070B9C0
 static int32_t Script_GetTradeskillRepeatCount(lua_State* L) {
     uint32_t count;
@@ -116,7 +111,6 @@ static int32_t Script_GetTradeskillRepeatCount(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c8f95ea9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D580/0x14070BA30
 static int32_t Script_StopTradeSkillRepeat(lua_State* L) {
     if (CGTradeSkillInfo::m_recastSpellID || CGTradeSkillInfo::m_pendingRecastSpellID) {
@@ -156,7 +150,6 @@ static int32_t Script_IsTradeSkillLinked(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 143fad9d IDENTICAL/IDENTICAL
 // OFFSET: 0x0098D690/0x14070BB50
 static int32_t Script_IsTradeSkillGuild(lua_State* L) {
     if (CGTradeSkillInfo::m_guildSkill) {
@@ -168,7 +161,6 @@ static int32_t Script_IsTradeSkillGuild(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5cfb81f5 IDENTICAL/NONE
 // OFFSET: 0x0098DE50
 static int32_t Script_CloseTradeSkill(lua_State* L) {
     CGTradeSkillInfo::Close();
@@ -270,7 +262,6 @@ static int32_t Script_GetTradeSkillInfo(lua_State* L) {
     return 6;
 }
 
-// PROVEN: 3534c9ca IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E0E0/0x14070C860
 static int32_t Script_SelectTradeSkill(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -287,7 +278,6 @@ static int32_t Script_SelectTradeSkill(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b987c204 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E150/0x14070C8E0
 static int32_t Script_GetTradeSkillSelectionIndex(lua_State* L) {
     uint32_t i;
@@ -350,7 +340,6 @@ static int32_t Script_GetTradeSkillCooldown(lua_State* L) {
     return 2;
 }
 
-// PROVEN: ad3e360d IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E310/0x14070CB10
 static int32_t Script_GetTradeSkillNumMade(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -385,7 +374,6 @@ static int32_t Script_GetTradeSkillNumMade(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 5ee5d57d IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E400/0x14070CC30
 static int32_t Script_GetTradeSkillRecipeLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -420,7 +408,6 @@ static int32_t Script_GetTradeSkillRecipeLink(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1795e244 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E530/0x14070CDF0
 static int32_t Script_GetTradeSkillNumReagents(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -446,7 +433,6 @@ static int32_t Script_GetTradeSkillNumReagents(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 3995aa09 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E640/0x14070CEE0
 static int32_t Script_GetTradeSkillDescription(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -469,7 +455,6 @@ static int32_t Script_GetTradeSkillDescription(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 62a0f534 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E720/0x14070D000
 static int32_t Script_GetTradeSkillSubClasses(lua_State* L) {
     uint32_t count = CGTradeSkillInfo::m_numSubClasses;
@@ -557,7 +542,6 @@ static int32_t Script_DoTradeSkill(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c4d9b014 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098E990/0x14070D310
 static int32_t Script_GetTradeSkillSubClassFilteredSlots(lua_State* L) {
     int32_t count = 0;
@@ -579,7 +563,6 @@ static int32_t Script_GetTradeSkillSubClassFilteredSlots(lua_State* L) {
     return count;
 }
 
-// PROVEN: 55e36a30 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098EA20/0x14070D3C0
 static int32_t Script_GetTradeSkillTexture(lua_State* L) {
     SkillLineRec* skillLine = g_skillLineDB.GetRecord(CGTradeSkillInfo::m_skillLineID);
@@ -594,7 +577,6 @@ static int32_t Script_GetTradeSkillTexture(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ccc9b98d IDENTICAL/DIFFERENT
 // OFFSET: 0x0098EE10/0x14070D820
 static int32_t Script_GetTradeSkillLine(lua_State* L) {
     SkillLineRec* skillLine = g_skillLineDB.GetRecord(CGTradeSkillInfo::m_skillLineID);
@@ -625,7 +607,6 @@ static int32_t Script_GetTradeSkillLine(lua_State* L) {
     return 4;
 }
 
-// PROVEN: fc435f9d IDENTICAL/UNPROVEN
 // OFFSET: 0x0098EF40/0x14070D970
 static int32_t Script_GetTradeSkillInvSlots(lua_State* L) {
     int32_t count = 0;
@@ -650,7 +631,6 @@ static int32_t Script_GetTradeSkillInvSlots(lua_State* L) {
     return count;
 }
 
-// PROVEN: 3ca910e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098EFC0/0x14070DA20
 static int32_t Script_GetTradeSkillInvSlotFilter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -705,7 +685,6 @@ static int32_t Script_GetTradeSkillInvSlotFilter(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 1acd808e IDENTICAL/IDENTICAL
 // OFFSET: 0x0098F0E0/0x14070DB60
 static int32_t Script_GetTradeSkillListLink(lua_State* L) {
     char link[256];
@@ -719,7 +698,6 @@ static int32_t Script_GetTradeSkillListLink(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 7f1c8c2e IDENTICAL/DIFFERENT
 // OFFSET: 0x0098F300/0x14070DE30
 static int32_t Script_GetTradeSkillIcon(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -760,7 +738,6 @@ static int32_t Script_GetTradeSkillIcon(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 2fd04249 IDENTICAL/DIFFERENT
 // OFFSET: 0x0098F490/0x14070E020
 static int32_t Script_GetTradeSkillItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -842,14 +819,12 @@ static int32_t Script_GetTradeSkillReagentItemLink(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 3988d40e IDENTICAL/IDENTICAL
 // OFFSET: 0x00990720/0x14070F850
 static int32_t Script_SetTradeSkillItemNameFilter(lua_State* L) {
     CGTradeSkillInfo::SetItemNameFilter(lua_tolstring(L, 1, NULL));
     return 0;
 }
 
-// PROVEN: 64eedb37 IDENTICAL/DIFFERENT
 // OFFSET: 0x00990740/0x14070F870
 static int32_t Script_SetTradeSkillItemLevelFilter(lua_State* L) {
     if (lua_isnumber(L, 1) && lua_isnumber(L, 2)) {
@@ -861,7 +836,6 @@ static int32_t Script_SetTradeSkillItemLevelFilter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 556ea418 IDENTICAL/DIFFERENT
 // OFFSET: 0x009907A0/0x14070F910
 static int32_t Script_SetTradeSkillSubClassFilter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -974,7 +948,6 @@ static int32_t Script_SetTradeSkillInvSlotFilter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 7e8f6066 IDENTICAL/IDENTICAL
 // OFFSET: 0x00990A90/0x14070FC20
 static int32_t Script_TradeSkillOnlyShowMakeable(lua_State* L) {
     int32_t value = StringToBOOL(L, 1, 1);
@@ -988,7 +961,6 @@ static int32_t Script_TradeSkillOnlyShowMakeable(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 62c3cf8f IDENTICAL/IDENTICAL
 // OFFSET: 0x00990AD0/0x14070FC60
 static int32_t Script_TradeSkillOnlyShowSkillUps(lua_State* L) {
     int32_t value = StringToBOOL(L, 1, 1);
@@ -1002,7 +974,6 @@ static int32_t Script_TradeSkillOnlyShowSkillUps(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2978213c IDENTICAL/IDENTICAL
 // OFFSET: 0x00990B10/0x14070FCA0
 static int32_t Script_CollapseTradeSkillSubClass(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1030,7 +1001,6 @@ static int32_t Script_CollapseTradeSkillSubClass(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 56caab09 IDENTICAL/IDENTICAL
 // OFFSET: 0x00990BB0/0x14070FD40
 static int32_t Script_ExpandTradeSkillSubClass(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1058,7 +1028,6 @@ static int32_t Script_ExpandTradeSkillSubClass(lua_State* L) {
     return 0;
 }
 
-// PROVEN: bc5925d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00991940/0x140710D40
 static void TradeSkillItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -1255,7 +1224,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTradeSkillTexture", &Script_GetTradeSkillTexture },
 };
 
-// PROVEN: af9a7239 IDENTICAL/UNPROVEN
 // OFFSET: 0x0098D6D0/0x14070BB90
 void TradeSkillRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1263,7 +1231,6 @@ void TradeSkillRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 6aa63387 IDENTICAL/UNPROVEN
 // OFFSET: 0x0098D700/0x14070BBE0
 void TradeSkillUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

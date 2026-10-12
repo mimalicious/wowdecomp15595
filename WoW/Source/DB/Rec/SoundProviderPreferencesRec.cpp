@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[24] = { 0, 2, 0, 0, 3, 3, 3, 0, 0, 3, 0, 3, 0,
 // STATIC: 0x00C1DDE8/0x140A11E60
 const DBCMeta SoundProviderPreferencesRec::s_meta = { "DBFilesClient\\SoundProviderPreferences.dbc", 24, 96, SoundProviderPreferencesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 6434dfa6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void SoundProviderPreferencesRec::FixupStrings(void* record, const char* strings) {
     SoundProviderPreferencesRec* rec = static_cast<SoundProviderPreferencesRec*>(record);

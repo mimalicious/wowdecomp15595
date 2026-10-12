@@ -20,7 +20,6 @@ void BSN::EncodeContext::ResolveType() {
 BSN::PrimitiveEncoder::~PrimitiveEncoder() {
 }
 
-// PROVEN: 4d58ca3e IDENTICAL/DIFFERENT
 // OFFSET: 0x00664290/0x14030A4B0
 uint32_t BSN::BSNPrimitiveEncoder::GetContextSize() const {
     return sizeof(EncodeContext);
@@ -40,12 +39,10 @@ BSN::EncodeContext* BSN::BSNPrimitiveEncoder::ConstructContext(void* memory) con
     return context;
 }
 
-// PROVEN: 2b1d3d87 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void BSN::BSNPrimitiveEncoder::DestroyContext(EncodeContext* context) const {
 }
 
-// PROVEN: 8df54369 IDENTICAL/DIFFERENT
 // OFFSET: 0x006642A0/0x14030A4C0
 uint64_t BSN::BSNPrimitiveEncoder::GetUInt(const EncodeContext* context) const {
     uint64_t value;
@@ -65,7 +62,6 @@ uint64_t BSN::BSNPrimitiveEncoder::GetUInt(const EncodeContext* context) const {
     return 0;
 }
 
-// PROVEN: 52939718 IDENTICAL/IDENTICAL
 // OFFSET: 0x00664340/0x14030A540
 int64_t BSN::BSNPrimitiveEncoder::GetInt(const EncodeContext* context) const {
     return this->GetUInt(context);
@@ -83,7 +79,6 @@ bool BSN::BSNPrimitiveEncoder::GetBool(const EncodeContext* context) const {
     return value != 0;
 }
 
-// PROVEN: c50f5bd8 IDENTICAL/DIFFERENT
 // OFFSET: 0x006643B0/0x14030A5B0
 double BSN::BSNPrimitiveEncoder::GetReal(const EncodeContext* context) const {
     if (context->m_header == BSN::META_REAL32) {
@@ -373,7 +368,6 @@ bool BSN::BSNPrimitiveEncoder::SetUInt(EncodeContext* context, uint64_t value) c
     return false;
 }
 
-// PROVEN: a5b2c04d IDENTICAL/IDENTICAL
 // OFFSET: 0x006644D0/0x14030A6E0
 bool BSN::BSNPrimitiveEncoder::SetInt(EncodeContext* context, int64_t value) const {
     return this->SetUInt(context, value);
@@ -390,7 +384,6 @@ bool BSN::BSNPrimitiveEncoder::SetBool(EncodeContext* context, bool value) const
     return true;
 }
 
-// PROVEN: d5bda1d1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00664540/0x14030A750
 bool BSN::BSNPrimitiveEncoder::SetReal(EncodeContext* context, double value) const {
     if (context->m_header == BSN::META_REAL32) {
@@ -580,7 +573,6 @@ bool BSN::BSNPrimitiveEncoder::WalkAndGet(const PrimitiveEncoder* encoder, const
 BSN::BSNPrimitiveWalker::~BSNPrimitiveWalker() {
 }
 
-// PROVEN: 2bc4e6b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00665D40/0x14030C300
 int32_t BSN::BSNPrimitiveWalker::Copy(const Context& context) {
     return BSN::BSNPrimitiveWalker::Walk(*this, context);
@@ -647,7 +639,6 @@ int32_t BSN::BSNPrimitiveWalker::Blob(const Protocol::Meta::Blob& meta, const Co
     return !context.m_sourceEncoder->GetBlob(context.m_sourceContext, buffer, size) || !context.m_targetEncoder->SetBlob(context.m_targetContext, buffer, size);
 }
 
-// PROVEN: c1ecc9ac IDENTICAL/IDENTICAL
 // OFFSET: 0x00665FB0/0x14030C700
 int32_t BSN::BSNPrimitiveWalker::Bool(const Protocol::Meta::Bool& meta, const Context& context) {
     return !context.m_targetEncoder->SetBool(context.m_targetContext, context.m_sourceEncoder->GetBool(context.m_sourceContext));
@@ -707,19 +698,16 @@ int32_t BSN::BSNPrimitiveWalker::Choice(const Protocol::Meta::Choice& meta, cons
     return result;
 }
 
-// PROVEN: b6f2f887 IDENTICAL/IDENTICAL
 // OFFSET: 0x006661D0/0x14030C9D0
 int32_t BSN::BSNPrimitiveWalker::FourCC(const Protocol::Meta::FourCC& meta, const Context& context) {
     return !context.m_targetEncoder->SetFourCC(context.m_targetContext, context.m_sourceEncoder->GetFourCC(context.m_sourceContext));
 }
 
-// PROVEN: b9a67b52 IDENTICAL/IDENTICAL
 // OFFSET: 0x00666210/0x14030C980
 int32_t BSN::BSNPrimitiveWalker::Int(const Protocol::Meta::Int& meta, const Context& context) {
     return !context.m_targetEncoder->SetInt(context.m_targetContext, context.m_sourceEncoder->GetInt(context.m_sourceContext));
 }
 
-// PROVEN: 6308854e IDENTICAL/IDENTICAL
 // OFFSET: 0x00666210/0x14030C980
 int32_t BSN::BSNPrimitiveWalker::Enum(const Protocol::Meta::Enum& meta, const Context& context) {
     return !context.m_targetEncoder->SetInt(context.m_targetContext, context.m_sourceEncoder->GetInt(context.m_sourceContext));
@@ -759,13 +747,11 @@ int32_t BSN::BSNPrimitiveWalker::Optional(const Protocol::Meta::Optional& meta, 
     return result;
 }
 
-// PROVEN: e49b5943 IDENTICAL/IDENTICAL
 // OFFSET: 0x00666390/0x14030CBC0
 int32_t BSN::BSNPrimitiveWalker::Real32(const Protocol::Meta::Real32& meta, const Context& context) {
     return !context.m_targetEncoder->SetReal(context.m_targetContext, context.m_sourceEncoder->GetReal(context.m_sourceContext));
 }
 
-// PROVEN: 871113e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00666390/0x14030CBC0
 int32_t BSN::BSNPrimitiveWalker::Real64(const Protocol::Meta::Real64& meta, const Context& context) {
     return !context.m_targetEncoder->SetReal(context.m_targetContext, context.m_sourceEncoder->GetReal(context.m_sourceContext));
@@ -845,7 +831,6 @@ int32_t BSN::BSNPrimitiveWalker::User(const Protocol::Meta::User& meta, const Co
     return BSN::BSNPrimitiveWalker::Walk(*this, user);
 }
 
-// PROVEN: 82717b44 IDENTICAL/DIFFERENT
 // OFFSET: 0x00666630/0x14030CE70
 int32_t BSN::BSNPrimitiveWalker::Walk(BSNPrimitiveWalker& walker, const Context& context) {
     switch (BSN::Protocol::Meta::PeekHeaderEnum(context.m_protocol, context.m_typeId)) {
@@ -903,7 +888,6 @@ bool BSN::EncodedObject::WalkAndSet(EncodedObject* target) const {
     return encoder->WalkAndSet(target->GetEncoder(), target->GetContext(), this->GetContext());
 }
 
-// PROVEN: 998c1941 IDENTICAL/IDENTICAL
 // OFFSET: 0x00627270/0x1402B9280
 void BSN::EncodedObject::IncRef() const {
     const_cast<EncodedObject*>(this)->m_refCount++;

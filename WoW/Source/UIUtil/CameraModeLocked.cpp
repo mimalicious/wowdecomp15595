@@ -11,7 +11,6 @@
 // STATIC: 0x00D3A7D8/0x140BF5AE8
 static CDataAllocator s_lockedInstances(sizeof(CCameraModeInstanceLocked), 8);
 
-// PROVEN: f351b294 UNPROVEN/IDENTICAL
 // OFFSET: 0x00463640/0x140076CD0
 CCameraModeLocked::CCameraModeLocked(const CameraModeRec* rec) : CCameraMode(rec) {
 }
@@ -29,7 +28,6 @@ CCameraModeInstance* CCameraModeLocked::AllocInstance(const CCameraModeInstance&
     return result;
 }
 
-// PROVEN: 470ffd38 IDENTICAL/IDENTICAL
 // OFFSET: 0x004636C0/0x140076D80
 void CCameraModeLocked::FreeInstance(CCameraModeInstance* instance) const {
     if (instance) {
@@ -210,13 +208,11 @@ void CCameraModeLocked::UpdateInstance(CCameraModeInstance* instance, float elap
     }
 }
 
-// PROVEN: caeae147 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CAB0/0x1408476E0
 int32_t CCameraModeLocked::GetType() const {
     return CAMERA_MODE_LOCKED;
 }
 
-// PROVEN: 109f08e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CCameraModeLocked::DestroyInstance(CCameraModeInstance* instance) const {
 }

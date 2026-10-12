@@ -132,7 +132,6 @@ const char* CShadowCache::GetShadowModeDesc(uint32_t mode) {
     return CShadowCache::s_shadowModeDescs[mode];
 }
 
-// PROVEN: 1f17a06c IDENTICAL/IDENTICAL
 // OFFSET: 0x004352C0/0x14003EA00
 uint32_t CShadowCache::ValidateTextureSize(uint32_t size) {
     if (size == 1024 || size == 2048) {
@@ -142,13 +141,11 @@ uint32_t CShadowCache::ValidateTextureSize(uint32_t size) {
     return 2;
 }
 
-// PROVEN: 534e6e2d IDENTICAL/IDENTICAL
 // OFFSET: 0x004352E0/0x14003EA20
 EShadowMode CShadowCache::GetShadowMode() {
     return CShadowCache::s_shadowMode;
 }
 
-// PROVEN: 4a7ae856 DIFFERENT/IDENTICAL
 // OFFSET: 0x004352F0/0x14003EA30
 int32_t CShadowCache::SetTextureSize(uint32_t size) {
     if (CShadowCache::ValidateTextureSize(size)) {
@@ -161,44 +158,37 @@ int32_t CShadowCache::SetTextureSize(uint32_t size) {
     return 1;
 }
 
-// PROVEN: ddab60bb IDENTICAL/IDENTICAL
 // OFFSET: 0x00435320/0x14003EA60
 void CShadowCache::SetMatrixCallback(ShadowMatrixCallback callback) {
     CShadowCache::s_matrixCallback = callback;
 }
 
-// PROVEN: e756de25 IDENTICAL/IDENTICAL
 // OFFSET: 0x00435330/0x14003EA70
 void CShadowCache::SetFrustumCallback(ShadowFrustumCallback callback) {
     CShadowCache::s_frustumCallback = callback;
 }
 
-// PROVEN: 8e88f2c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00435340/0x14003EA80
 void CShadowCache::SetQueryCallback(ShadowQueryCallback callback) {
     CShadowCache::s_queryCallback = callback;
 }
 
-// PROVEN: f1b0ee5f IDENTICAL/IDENTICAL
 // OFFSET: 0x00435350/0x14003EA90
 void CShadowCache::SetRenderCallback(ShadowRenderCallback callback) {
     CShadowCache::s_renderCallback = callback;
 }
 
-// PROVEN: 4ad01d7c IDENTICAL/IDENTICAL
 // OFFSET: 0x00435360/0x14003EAA0
 void __fastcall CShadowCache::NotifyTexturesRecreate() {
     CShadowCache::s_recreateTextures = 1;
 }
 
-// PROVEN: 1aebd967 IDENTICAL/IDENTICAL
 // OFFSET: 0x004353E0/0x14003EB70
 void CShadowCache::SetDebugParams(float aspect, int32_t level) {
     CShadowCache::s_debugAspect = aspect;
     CShadowCache::s_debugLevel = level;
 }
 
-// PROVEN: cf2b43f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00435400/0x14003EB80
 void CShadowCache::SetShadowScale(float scale) {
     CShadowCache::s_shadowScale = scale;
@@ -250,7 +240,6 @@ int32_t CShadowCache::SetShadowMode(EShadowMode mode) {
     return 1;
 }
 
-// PROVEN: de879430 IDENTICAL/IDENTICAL
 // OFFSET: 0x00435470/0x14003EB90
 static CGxFrameBuffer* CreateFrameBuffer(CGxTex* depth, CGxTex* color) {
     CGxFrameBuffer* frameBuffer = g_theGxDevicePtr->FrameBufferCreate();
@@ -369,7 +358,6 @@ void CShadowCache::InitPcfOffsets() {
     CShadowCache::s_pcfOffsets[7].w = 0.0f;
 }
 
-// PROVEN: 29f5640c IDENTICAL/UNPROVEN
 // OFFSET: 0x00435B60/0x14003F350
 void CShadowCache::SetShadowMapGenericGlobal() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
@@ -389,7 +377,6 @@ void CShadowCache::SetShadowMapGenericGlobal() {
     }
 }
 
-// PROVEN: 3d779f43 IDENTICAL/UNPROVEN
 // OFFSET: 0x00435C60/0x14003F4A0
 void CShadowCache::SetShadowMapGenericInterior(int32_t interior) {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
@@ -411,7 +398,6 @@ void CShadowCache::SetShadowMapGenericInterior(int32_t interior) {
     g_theGxDevicePtr->RsSet(GxRs_Texture4, texture);
 }
 
-// PROVEN: 463fda19 IDENTICAL/UNPROVEN
 // OFFSET: 0x00435CF0/0x14003F560
 void CShadowCache::SetShadowMapTerrain() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
@@ -431,7 +417,6 @@ void CShadowCache::SetShadowMapTerrain() {
     }
 }
 
-// PROVEN: 5bcef6c4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00435E00/0x14003F6B0
 void CShadowCache::SetShadowMapDetailDoodad() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
@@ -1125,7 +1110,6 @@ int32_t CShadowCache::Init() {
     return 1;
 }
 
-// PROVEN: c464dcd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00438610/0x1400425F0
 void CShadowCache::CreateResources() {
     if (!CShadowCache::s_recreateTextures) {

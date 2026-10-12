@@ -70,7 +70,6 @@ CTexture* CMap::GetDynamicTexture(uint32_t textureId) {
     return entry->m_texture;
 }
 
-// PROVEN: c1e3118d IDENTICAL/IDENTICAL
 // OFFSET: 0x00784990/0x140473590
 int32_t CMap::SafeOpen(const char* fileName, SFileImpl** file, int32_t fatal) {
     if (SFileOpenFile(fileName, file)) {

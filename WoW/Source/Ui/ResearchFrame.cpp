@@ -61,7 +61,6 @@ TSCGrowableArray<const ResearchBranchRec*, 32> CGResearchFrame::m_branches;
 // STATIC: 0x00F76A54/0x140BD1A80
 TSHashTable<CGResearchFrame::BLOBPOIHASH, HASHKEY_NONE> CGResearchFrame::m_blobHash;
 
-// PROVEN: 9723d6cf IDENTICAL/DIFFERENT
 // OFFSET: 0x009F4810/0x140790170
 void CGResearchFrame::SelectProject(int32_t projectID) {
     const ResearchProjectRec* project = g_researchProjectDB.GetRecord(projectID);
@@ -99,7 +98,6 @@ static int32_t FindFirstQuestPOIPoint(int32_t blobID) {
     return low;
 }
 
-// PROVEN: 3322bf57 IDENTICAL/NONE
 // OFFSET: 0x009F4BC0
 const ResearchBranchRec* CGResearchFrame::GetBranch(int32_t index) {
     if (index < 0 || index >= static_cast<int32_t>(CGResearchFrame::m_branches.Count())) {
@@ -109,7 +107,6 @@ const ResearchBranchRec* CGResearchFrame::GetBranch(int32_t index) {
     return CGResearchFrame::m_branches[index];
 }
 
-// PROVEN: 5b2224b9 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F4C00/0x140790610
 bool CGResearchFrame::ApplyItemToProject() {
     if (!CGResearchFrame::m_projectRec) {
@@ -334,7 +331,6 @@ int32_t CGResearchFrame::GetArchaeologyBlobID(uint32_t index) {
     return 0;
 }
 
-// PROVEN: 5954f291 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F5600/0x140791390
 CGResearchFrame::BLOBPOIDATA* CGResearchFrame::GetPOIData(int32_t blobID) {
     HASHKEY_NONE key;
@@ -444,7 +440,6 @@ CGResearchFrame::BLOBPOI* CGResearchFrame::GetResearchSiteBlobs(uint32_t siteInd
     return NULL;
 }
 
-// PROVEN: 343ae27c IDENTICAL/IDENTICAL
 // OFFSET: 0x009F6140/0x140792300
 int32_t CGResearchFrame::OnResearchSiteChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGResearchFrame::UpdateArchaeologyDigSites();
@@ -637,7 +632,6 @@ void CGResearchFrame::ShutdownGame() {
     CGResearchFrame::DestroyArchaeologyBlobs();
 }
 
-// PROVEN: e40ff9bf IDENTICAL/IDENTICAL
 // OFFSET: 0x009F7640/0x140794160
 bool CGResearchFrame::CanCastSpell(int32_t spellId, int32_t& reason) {
     int32_t currency;
@@ -738,7 +732,6 @@ bool CGResearchFrame::OnResearchComplete(ClientResearchComplete* msg) {
     return true;
 }
 
-// PROVEN: 8df86046 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F7B20/0x1407947A0
 void CGResearchFrame::CreateArchaeologyBlobs() {
     for (int32_t i = 0; i < g_researchSiteDB.m_numRecords; i++) {
@@ -880,7 +873,6 @@ void CGResearchFrame::EnterWorld() {
     }
 }
 
-// PROVEN: 6c423b7d DIFFERENT/IDENTICAL
 // OFFSET: 0x009F8060/0x140794FA0
 void CGResearchFrame::LeaveWorld() {
     CGResearchFrame::m_skillLine = 0;

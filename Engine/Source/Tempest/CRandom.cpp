@@ -60,7 +60,6 @@ CRndSeed::CRndSeed(uint32_t seed) {
     this->SetSeed(seed);
 }
 
-// PROVEN: 86facd05 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C6680/0x140101960
 void CRndSeed::SetSeed(uint32_t seed) {
     uint32_t a = (seed % 59) << 10;
@@ -71,7 +70,6 @@ void CRndSeed::SetSeed(uint32_t seed) {
     this->rndacc = seed;
 }
 
-// PROVEN: a17b9c7b IDENTICAL/DIFFERENT
 // OFFSET: 0x004C67C0/0x1403FA3F0
 float CRandom::ufloat_(CRndSeed& seed) {
     uint32_t bits = (CRandom::uint32_(seed) & 0x7FFFFF) | 0x3F800000;
@@ -79,7 +77,6 @@ float CRandom::ufloat_(CRndSeed& seed) {
     return *reinterpret_cast<float*>(&bits) - 1.0f;
 }
 
-// PROVEN: e81ddf4b IDENTICAL/DIFFERENT
 // OFFSET: 0x004C67F0/0x1401019E0
 float CRandom::sfloat_(CRndSeed& seed) {
     uint32_t value = CRandom::uint32_(seed);
@@ -97,13 +94,11 @@ float CRandom::sfloat_(CRndSeed& seed) {
     return result;
 }
 
-// PROVEN: ed1c4d8f IDENTICAL/NONE
 // OFFSET: 0x004C6850
 uint32_t CRandom::dice_(uint32_t sides, CRndSeed& seed) {
     return static_cast<uint32_t>((static_cast<uint64_t>(sides) * CRandom::uint32_(seed)) >> 32);
 }
 
-// PROVEN: 345ed239 DIFFERENT/IDENTICAL
 // OFFSET: 0x004C6870/0x140101AC0
 C3Vector CRandom::C3Vector_(CRndSeed& seed) {
     float c;

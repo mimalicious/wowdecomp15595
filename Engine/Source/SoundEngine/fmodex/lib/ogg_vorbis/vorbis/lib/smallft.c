@@ -1246,7 +1246,6 @@ void drft_init(drft_lookup *l,int n){
   fdrffti(n, l->trigcache, l->splitcache);
 }
 
-// PROVEN: 304404a6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B47860/0x140916DC0
 void drft_clear(drft_lookup *l){
   if(l){

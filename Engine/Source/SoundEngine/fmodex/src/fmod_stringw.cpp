@@ -2,7 +2,6 @@
 #include "fmod_stringw.h"
 #include "fmod_memory.h"
 
-// PROVEN: 6da39ce6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACA050/0x1408940A0
 int FMOD_strlenW(const short * s)
 {
@@ -22,7 +21,6 @@ short * FMOD_strcpyW(short * dest,const short *src)
     return tmp;
 }
 
-// PROVEN: b8b40149 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACA070/0x1408940D0
 short * FMOD_strncpyW(short * dest, const short *src, int count)
 {

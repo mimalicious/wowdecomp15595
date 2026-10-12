@@ -11,7 +11,6 @@ CCameraTransition::CCameraTransition() {
     this->unk_0018 = 0;
 }
 
-// PROVEN: 86bf73ca IDENTICAL/DIFFERENT
 // OFFSET: 0x00463FF0/0x1400779A0
 int32_t CCameraTransition::IsComplete(float time) const {
     return time >= this->m_delay + this->m_duration;

@@ -1,7 +1,6 @@
 #include <cstdint>
 #include "Engine/Source/Gx/CGxFormat.h"
 
-// PROVEN: 8c3315a4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00840780/0x14056C4E0
 CGxFormat::CGxFormat() {
     this->m_hwTnL = true;

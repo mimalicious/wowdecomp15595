@@ -30,7 +30,6 @@ static const uint32_t s_reattachLinks[13] = { 0, 1, 2, 26, 27, 28, 30, 31, 32, 3
 // STATIC: 0x00DD8670/0x140CBEE08
 TSObjectAllocPool<CUnitDisplayTransition_C>* CUnitDisplayTransition_C::s_pool;
 
-// PROVEN: 5a7acaa7 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDB90/0x1402860B0
 void CUnitDisplayTransition_C::HandleComponentRenderPrep() {
     if (this->m_state == 1 && this->m_component && this->m_component->RenderPrep(0)) {
@@ -38,7 +37,6 @@ void CUnitDisplayTransition_C::HandleComponentRenderPrep() {
     }
 }
 
-// PROVEN: e638c01f IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDBC0/0x1402860E0
 void CUnitDisplayTransition_C::HandleAnimSwapEvent() {
     if (this->m_state == 4) {
@@ -46,7 +44,6 @@ void CUnitDisplayTransition_C::HandleAnimSwapEvent() {
     }
 }
 
-// PROVEN: d1ce6fa0 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDBD0/0x1402860F0
 int32_t CUnitDisplayTransition_C::GetTargetDisplayID() const {
     if (this->m_state <= 4 && this->m_displayInfo) {
@@ -96,7 +93,6 @@ void CUnitDisplayTransition_C::MirrorTransformToSwapModel() {
     this->m_model->SetWorldTransform(matrix);
 }
 
-// PROVEN: caebb260 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDD40/0x140286440
 void CUnitDisplayTransition_C::MirrorTransformToSwapWorldObject(const C44Matrix& matrix, const CAaBox& box, const CAaSphere& sphere, const C3Vector& position, int32_t a6, int32_t keyBone) {
     if (this->m_worldObject && (this->m_state == 4 || this->m_state == 5)) {
@@ -104,7 +100,6 @@ void CUnitDisplayTransition_C::MirrorTransformToSwapWorldObject(const C44Matrix&
     }
 }
 
-// PROVEN: 3d4acc00 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDD80/0x140286490
 void CUnitDisplayTransition_C::ApplyGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
     if (!this->m_component) {
@@ -121,7 +116,6 @@ void CUnitDisplayTransition_C::ApplyGuildColor(uint32_t flags, int32_t emblem, i
     CGObject_C::ReplaceGuildTextures(this->m_component->m_data.m_model, backgroundColor, borderColorValue, emblemColorValue, fileName);
 }
 
-// PROVEN: 010a773c IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDE10/0x140286590
 void CUnitDisplayTransition_C::ApplyShirtGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
     if (!this->m_component) {
@@ -138,7 +132,6 @@ void CUnitDisplayTransition_C::ApplyShirtGuildColor(uint32_t flags, int32_t embl
     CGObject_C::ReplaceGuildTextures(this->m_component->m_data.m_model, backgroundColor, borderColorValue, emblemColorValue, fileName);
 }
 
-// PROVEN: c1689d8a IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDEA0/0x140286690
 void CUnitDisplayTransition_C::ReleaseAnimKits() {
     if (this->m_swapAnimKit) {
@@ -175,7 +168,6 @@ bool CUnitDisplayTransition_C::IsReadyToBegin() const {
     return unitModel && unitModel->IsLoaded() && this->m_unit->m_worldObject && this->m_unit->m_displayInfo;
 }
 
-// PROVEN: b6323d67 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FDF60/0x140286790
 void CUnitDisplayTransition_C::HandleComponentPrep() {
     if (this->m_state == 1 && this->m_component) {
@@ -618,7 +610,6 @@ void CUnitDisplayTransition_C::PerformSwap() {
     }
 }
 
-// PROVEN: 6f088cf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FEBA0/0x140287670
 void CUnitDisplayTransition_C::AnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CUnitDisplayTransition_C* transition = reinterpret_cast<CUnitDisplayTransition_C*>(param);
@@ -694,7 +685,6 @@ void CUnitDisplayTransition_C::BeginAnimation() {
     this->m_unit->OnDisplayTransitionBeginAnimation();
 }
 
-// PROVEN: 8289983d IDENTICAL/DIFFERENT
 // OFFSET: 0x005FED30/0x140287860
 void CUnitDisplayTransition_C::Destroy() {
     if (this->m_swapAnimKit) {
@@ -787,7 +777,6 @@ void CUnitDisplayTransition_C::BeginTransition() {
     this->BeginAnimation();
 }
 
-// PROVEN: fb9fdac9 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FEF20/0x140287AE0
 void CUnitDisplayTransition_C::UninitSystem() {
     if (CUnitDisplayTransition_C::s_pool) {

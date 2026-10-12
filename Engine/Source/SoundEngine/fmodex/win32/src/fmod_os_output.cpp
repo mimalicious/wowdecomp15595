@@ -27,7 +27,6 @@
 	[SEE_ALSO]
 ]
 */
-// PROVEN: dcaced78 IDENTICAL/NONE
 // OFFSET: 0x00AC2380/0x14088A8F0
 FMOD_RESULT FMOD_OS_Output_Register(FMOD::PluginFactory *pluginfactory)
 {
@@ -78,7 +77,6 @@ FMOD_RESULT FMOD_OS_Output_Register(FMOD::PluginFactory *pluginfactory)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 83d7e254 IDENTICAL/NONE
 // OFFSET: 0x00AC23F0
 FMOD_RESULT FMOD_OS_Output_GetDefault(FMOD_OUTPUTTYPE *outputtype)
 {

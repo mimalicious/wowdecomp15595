@@ -30,7 +30,6 @@ static uint32_t FloatSign(float value) {
     return *reinterpret_cast<uint32_t*>(&value) >> 31;
 }
 
-// PROVEN: c063c8fe IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EDD0/0x14048C530
 void CChunkLiquid::Purge() {
     if (this->m_instance) {
@@ -39,13 +38,11 @@ void CChunkLiquid::Purge() {
     }
 }
 
-// PROVEN: 6e4ed08f IDENTICAL/DIFFERENT
 // OFFSET: 0x0076CDE0/0x140909D40
 float CChunkLiquid::GetVertexHeight(uint32_t index) const {
     return Liquid::GetChunkHeight(this->m_liquidObject, this->m_vertexData, this->m_vertexCount, index);
 }
 
-// PROVEN: 6d9f518c IDENTICAL/IDENTICAL
 // OFFSET: 0x00798930/0x14048C560
 void CChunkLiquid::UpdateResourcePurging() {
     if (this->m_instance) {
@@ -53,7 +50,6 @@ void CChunkLiquid::UpdateResourcePurging() {
     }
 }
 
-// PROVEN: 834227f6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00798940/0x14048C580
 bool CChunkLiquid::HasData() const {
     if (this->m_tileData) {
@@ -63,7 +59,6 @@ bool CChunkLiquid::HasData() const {
     return Liquid::HasData(static_cast<const SMLiquidChunkDesc*>(this->m_owner->m_liquidChunk), static_cast<const SMLiquidInstance*>(this->m_liquidHeader));
 }
 
-// PROVEN: b8e632aa IDENTICAL/IDENTICAL
 // OFFSET: 0x00798960/0x14048C5B0
 void CChunkLiquid::CreateVertXY() {
     if (CChunkLiquid::s_vertXYInitialized) {
@@ -87,7 +82,6 @@ void CChunkLiquid::CreateVertXY() {
     CChunkLiquid::s_vertXYInitialized = 1;
 }
 
-// PROVEN: 044bef56 IDENTICAL/DIFFERENT
 // OFFSET: 0x007989C0/0x14048C630
 void CChunkLiquid::CreateVertZ() {
     memset(this->m_heights, 0, sizeof(this->m_heights));
@@ -327,7 +321,6 @@ CChunkLiquid::CChunkLiquid() {
     this->unk_0024 = -1.0f;
 }
 
-// PROVEN: 56cfba74 IDENTICAL/NONE
 // OFFSET: 0x007994F0
 CChunkLiquid::~CChunkLiquid() {
 }
@@ -404,7 +397,6 @@ void CChunkLiquid::Batch() {
     instance->Release();
 }
 
-// PROVEN: 0b03f0c6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00799BC0/0x14048DDA0
 void CChunkLiquid::RenderPrep() {
     if (!this->m_instance) {

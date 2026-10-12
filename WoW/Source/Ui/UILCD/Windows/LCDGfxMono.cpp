@@ -11,7 +11,6 @@ CLCDGfxMono::CLCDGfxMono() {
 CLCDGfxMono::~CLCDGfxMono() {
 }
 
-// PROVEN: e61933a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40C60/0x14090EBC0
 HRESULT CLCDGfxMono::Initialize() {
     this->Shutdown();
@@ -30,14 +29,12 @@ HRESULT CLCDGfxMono::Initialize() {
     return FAILED(hr) ? hr : S_OK;
 }
 
-// PROVEN: 12559dfa IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40CD0/0x14090EC50
 void CLCDGfxMono::ClearScreen() {
     memset(this->m_pBitmapBits, 0, this->m_nWidth * this->m_nHeight);
     CLCDGfxBase::ClearScreen();
 }
 
-// PROVEN: 20d2502b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40CA0/0x14090EC10
 lgLcdBitmapHeader* CLCDGfxMono::GetLCDScreen() {
     this->m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
@@ -45,7 +42,6 @@ lgLcdBitmapHeader* CLCDGfxMono::GetLCDScreen() {
     return this->m_pLCDScreen;
 }
 
-// PROVEN: 314490ba IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 uint32_t CLCDGfxMono::GetFamily() {
     return LGLCD_DEVICE_FAMILY_BW_160x43_GAMING;

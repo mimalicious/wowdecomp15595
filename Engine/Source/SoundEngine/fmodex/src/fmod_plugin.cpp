@@ -23,7 +23,6 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: df9cf900 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD03B0/0x14089AF30
 FMOD_RESULT Plugin::release()
 {

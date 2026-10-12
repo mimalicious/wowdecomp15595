@@ -66,7 +66,6 @@ inline void ToolhelpFunction::Load(const char* name) {
     }
 }
 
-// PROVEN: ce8ceef8 IDENTICAL/NONE
 // OFFSET: 0x007BD060
 bool ToolhelpFunction::CallProcessW(HANDLE snapshot, uint32_t* pid, char* name, uint32_t namesize) {
     PROCESSENTRY32W entry;
@@ -81,7 +80,6 @@ bool ToolhelpFunction::CallProcessW(HANDLE snapshot, uint32_t* pid, char* name, 
     return true;
 }
 
-// PROVEN: 38bccc48 IDENTICAL/DIFFERENT
 // OFFSET: 0x007BD0C0/0x1404B5C40
 bool ToolhelpFunction::CallModuleW(HANDLE snapshot, char* path, uint32_t pathsize) {
     MODULEENTRY32W entry;
@@ -192,7 +190,6 @@ static void CALLBACK TimerFunc(HWND hwnd, UINT message, UINT_PTR id, DWORD time)
     }
 }
 
-// PROVEN: e409a6f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BCFF0/0x1404B56E0
 bool Blizzard::Process::GetProcessPath(char* buffer, int32_t buffersize) {
     if (!buffer || buffersize <= 0) {

@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[48] = { 0, 3, 3, 3, 3, 0, 0, 2, 0, 0, 3, 0, 0,
 // STATIC: 0x00C21CD0/0x140A16970
 const DBCMeta SpellChainEffectsRec::s_meta = { "DBFilesClient\\SpellChainEffects.dbc", 48, 180, SpellChainEffectsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: f00c713f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EA00/0x1407D7FB0
 void SpellChainEffectsRec::FixupStrings(void* record, const char* strings) {
     SpellChainEffectsRec* rec = static_cast<SpellChainEffectsRec*>(record);

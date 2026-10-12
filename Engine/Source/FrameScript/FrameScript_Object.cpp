@@ -11,7 +11,6 @@
 // STATIC: 0x00EBEF00/0x140DB0F78
 int32_t FrameScript_Object::s_objectTypes;
 
-// PROVEN: 79bbec07 IDENTICAL/NONE
 // OFFSET: 0x00464DE0
 const char* FrameScript_Object::GetDisplayName() {
     const char* name = this->GetName();
@@ -19,7 +18,6 @@ const char* FrameScript_Object::GetDisplayName() {
     return name ? name : "<unnamed>";
 }
 
-// PROVEN: fa4179ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00464E00/0x1400784C0
 int32_t FrameScript_Object::GetLuaObjectRef() {
     if (!this->m_luaRegistered) {
@@ -29,7 +27,6 @@ int32_t FrameScript_Object::GetLuaObjectRef() {
     return this->m_luaObjectRef;
 }
 
-// PROVEN: fca8cbd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00839A90/0x140563ED0
 int32_t FrameScript_Object::CreateScriptMetaTable(lua_State* L, void (*registerFunc)(lua_State*)) {
     lua_newtable(L);
@@ -41,7 +38,6 @@ int32_t FrameScript_Object::CreateScriptMetaTable(lua_State* L, void (*registerF
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
-// PROVEN: 11be704c IDENTICAL/IDENTICAL
 // OFFSET: 0x00839AE0/0x140563F30
 void FrameScript_Object::FillScriptMethodTable(lua_State* L, FrameScript_Method* methods, int32_t count) {
     for (int32_t i = 0; i < count; i++) {
@@ -51,14 +47,12 @@ void FrameScript_Object::FillScriptMethodTable(lua_State* L, FrameScript_Method*
     }
 }
 
-// PROVEN: c258d779 UNPROVEN/IDENTICAL
 // OFFSET: 0x00839A60/0x140563EA0
 FrameScript_Object::FrameScript_Object() : m_scripts(NULL), m_scriptCapacity(0), m_scriptCount(0) {
     this->m_luaRegistered = 0;
     this->m_luaObjectRef = LUA_NOREF;
 }
 
-// PROVEN: 9e5edcf2 IDENTICAL/DIFFERENT
 // OFFSET: 0x0083C9F0/0x140567600
 int32_t FrameScript_Object::SetScriptFunction(FrameScript_Object::ScriptIx& script, int32_t function, const char* taint) {
     int32_t previous = 0;
@@ -106,7 +100,6 @@ FrameScript_Object::~FrameScript_Object() {
     }
 }
 
-// PROVEN: ddfe8be9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CCB0/0x140567970
 void FrameScript_Object::RegisterScriptObject(const char* name) {
     lua_State* L = s_context;
@@ -156,7 +149,6 @@ void FrameScript_Object::RegisterScriptObject(const char* name) {
     }
 }
 
-// PROVEN: 41081439 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CDF0/0x140567B00
 void FrameScript_Object::UnregisterScriptObject(const char* name) {
     lua_State* L = s_context;
@@ -177,7 +169,6 @@ void FrameScript_Object::UnregisterScriptObject(const char* name) {
     }
 }
 
-// PROVEN: 9ea68b8e IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CE90/0x140567BD0
 FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     char lower[128];
@@ -192,7 +183,6 @@ FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByName(const char* na
     return NULL;
 }
 
-// PROVEN: 818d87f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CF30/0x140567C80
 FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByNameCamelCase(const char* name, FrameScript_Object::ScriptData& data) {
     char lower[128];
@@ -202,7 +192,6 @@ FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByNameCamelCase(const
     return this->GetScriptByName(lower, data);
 }
 
-// PROVEN: 5df4fffa IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CF90/0x140567D00
 void FrameScript_Object::GetScriptTime(lua_State* L, const FrameScript_Object::ScriptIx& script, double* time, uint32_t* calls) {
     if (!this->HasScript(script)) {
@@ -415,7 +404,6 @@ void FrameScript_Object::LoadFunction(lua_State* L, Function* function, CStatus*
     }
 }
 
-// PROVEN: 0204d7c7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0083DFD0/0x140569300
 void FrameScript_Object::RunScript(const FrameScript_Object::ScriptIx& script, int32_t argCount, const char* taint) {
     int32_t function;

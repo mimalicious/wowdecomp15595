@@ -23,7 +23,6 @@ void CAaBsp::Set(CAaBspNode* nodes, uint32_t nNodes, uint16_t* nodeFaceIndices, 
     this->m_aaBox = aaBox;
 }
 
-// PROVEN: d8d5859f IDENTICAL/NONE
 // OFFSET: 0x007305B0
 void CAaBspDigestCache::RemoveEntry(const CAaBspNode* node) {
     uint32_t bucket = ((reinterpret_cast<uintptr_t>(node) >> 5) ^ node->m_nFaces) & 0x7F;
@@ -94,7 +93,6 @@ void CAaBspDigestCache::GenerateDigest(CAaBspNodeDigest* digest, const CAaBsp& b
     }
 }
 
-// PROVEN: 34acda52 IDENTICAL/IDENTICAL
 // OFFSET: 0x00730810/0x14040B2F0
 CAaBsp::CAaBsp() {
     this->unk_0064 = 0;
@@ -119,7 +117,6 @@ CAaBsp::CAaBsp() {
     this->m_avgNodeFaces = 0;
 }
 
-// PROVEN: ac2d1d78 IDENTICAL/DIFFERENT
 // OFFSET: 0x00730880/0x14040B360
 void CAaBsp::Free() {
     if (g_BspDigestCache) {
@@ -145,14 +142,12 @@ void CAaBsp::Free() {
     }
 }
 
-// PROVEN: 5b75deb5 DIFFERENT/IDENTICAL
 // OFFSET: 0x00730910/0x14040B4B0
 CAaBspDigestCache::CAaBspDigestCache() {
     memset(this->m_nodes, 0, sizeof(this->m_nodes));
     memset(this->m_digests, 0, sizeof(this->m_digests));
 }
 
-// PROVEN: bde94ab6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00730580/0x14040B060
 void CAaBspDigestCache::Reset() {
     memset(this->m_nodes, 0, sizeof(this->m_nodes));
@@ -196,13 +191,11 @@ CAaBspNodeDigest* CAaBspDigestCache::GetDigest(const CAaBsp& bsp, const CAaBspNo
     return digest->m_status ? NULL : digest;
 }
 
-// PROVEN: 80546f6b IDENTICAL/IDENTICAL
 // OFFSET: 0x00730A10/0x14040B640
 CAaBsp::~CAaBsp() {
     this->Free();
 }
 
-// PROVEN: c3c8769d IDENTICAL/IDENTICAL
 // OFFSET: 0x00730A20/0x14040B650
 void CAaBsp::Clear() {
     this->Free();

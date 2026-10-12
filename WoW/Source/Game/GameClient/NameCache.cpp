@@ -2,7 +2,6 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: a49c9257 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EB7B0/0x14012E890
 void NameCache::Pack(CDataStore* msg) {
     msg->Put(this->m_guid.m_guid);
@@ -46,7 +45,6 @@ NameCache& NameCache::Copy(const NameCache& other) {
     return *this;
 }
 
-// PROVEN: 78bbcc7e IDENTICAL/DIFFERENT
 // OFFSET: 0x004EB850/0x14012E950
 void NameCache::Unpack(CDataStore* msg) {
     uint8_t hasDeclinedNames;

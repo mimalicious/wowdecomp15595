@@ -26,7 +26,6 @@
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 
-// PROVEN: 39816965 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EEB00/0x1407881E0
 static int32_t Script_GetNumGlyphSockets(lua_State* L) {
     lua_pushnumber(L, 9.0);
@@ -53,7 +52,6 @@ static int32_t Script_SetGlyphFilter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 51ed2b49 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EEC10/0x1407882E0
 static int32_t Script_ToggleGlyphFilter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -73,7 +71,6 @@ static int32_t Script_ToggleGlyphFilter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9ffa23be IDENTICAL/IDENTICAL
 // OFFSET: 0x009EEC70/0x140788350
 static int32_t Script_IsGlyphFlagSet(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -159,14 +156,12 @@ static int32_t Script_GetGlyphInfo(lua_State* L) {
     return 6;
 }
 
-// PROVEN: c1f16bcc IDENTICAL/IDENTICAL
 // OFFSET: 0x009EF490/0x140788E50
 static int32_t Script_SetGlyphNameFilter(lua_State* L) {
     CGGlyphInfo::SetNameFilter(lua_tostring(L, 1));
     return 0;
 }
 
-// PROVEN: 589b1330 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EF4B0/0x140788E70
 static int32_t Script_GetSelectedGlyphSpellIndex(lua_State* L) {
     int32_t i;
@@ -400,7 +395,6 @@ static int32_t Script_GetGlyphLink(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 750b8238 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EFF60/0x140789B50
 static int32_t Script_GetNumGlyphs(lua_State* L) {
     if (CGGlyphInfo::s_numFiltered == -1) {
@@ -411,7 +405,6 @@ static int32_t Script_GetNumGlyphs(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 9164c7c7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EFF90/0x140789B90
 static int32_t Script_CastGlyph(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -496,7 +489,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CastGlyphByID", &Script_CastGlyphByID },
 };
 
-// PROVEN: 8b941a92 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EECD0/0x1407883C0
 void GlyphInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -504,7 +496,6 @@ void GlyphInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 9856c38b IDENTICAL/UNPROVEN
 // OFFSET: 0x009EED00/0x140788410
 void GlyphInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -77,7 +77,6 @@ bool CMovementStatus::IsValid() const {
         && (!this->m_hasTransport || this->m_transport.IsValid());
 }
 
-// PROVEN: 86733746 IDENTICAL/IDENTICAL
 // OFFSET: 0x00697900/0x140342EF0
 void CMovementStatus::WriteEmbedded(CDataStore* msg) const {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_guid);
@@ -246,7 +245,6 @@ void CMovementStatus::WriteEmbedded(CDataStore* msg) const {
     }
 }
 
-// PROVEN: 61603cc6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00698280/0x1403439D0
 CMovementStatus::CMovementStatus() {
     this->m_position.x = 0.0f;
@@ -272,7 +270,6 @@ CMovementStatus::CMovementStatus() {
     this->m_heightChangeFailed = false;
 }
 
-// PROVEN: 3c392ee9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 CMovementStatus::~CMovementStatus() {
 }

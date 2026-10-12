@@ -37,7 +37,6 @@ static const BlitFormat s_blitFormats[NUM_PIXEL_FORMATS] = {
     BlitFormat_Unknown,
 };
 
-// PROVEN: e67a8bf3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0063C2D0/0x1402D4E70
 int32_t StaticImage::SetToBLPData(uint8_t* data, uint32_t size) {
     const BLPHeader* header = reinterpret_cast<const BLPHeader*>(data);

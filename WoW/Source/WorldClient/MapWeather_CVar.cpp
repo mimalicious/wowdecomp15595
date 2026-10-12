@@ -43,7 +43,6 @@ bool Weather::DensityCallback(CVar* var, const char* oldValue, const char* value
     return true;
 }
 
-// PROVEN: 83a092a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00748EF0/0x140428250
 void Weather::InitializeCVars() {
     CVar::Register("weatherDensity", NULL, 0, "2", Weather::DensityCallback, CATEGORY_DEFAULT, false, NULL, false);

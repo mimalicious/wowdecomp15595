@@ -73,7 +73,6 @@ TSGrowableArray<GuildBankItem> CGGuildBankInfo::m_tabSlots[8];
 // STATIC: 0x00D15C68/0x140BCF840
 uint32_t CGGuildBankInfo::m_logTab = 255;
 
-// PROVEN: 53247f81 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C02D0/0x14074CBE0
 void CGGuildBankInfo::SetGuildBanker(const WOWGUID& banker) {
     if (!banker) {
@@ -90,20 +89,17 @@ void CGGuildBankInfo::SetGuildBanker(const WOWGUID& banker) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_OPENED, NULL);
 }
 
-// PROVEN: 475bf0bb IDENTICAL/IDENTICAL
 // OFFSET: 0x009C0350/0x14074CC50
 void CGGuildBankInfo::GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t& tab, uint32_t& slot) {
     tab = virtualSlot / 98;
     slot = virtualSlot % 98;
 }
 
-// PROVEN: c71503c1 IDENTICAL/NONE
 // OFFSET: 0x009C0380
 void CGGuildBankInfo::SetTextUpdate(uint32_t tab, int32_t update) {
     CGGuildBankInfo::m_textDirty[tab] = update;
 }
 
-// PROVEN: 33bfb5e2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C0940/0x14074D250
 void CGGuildBankInfo::GuildBankItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!CGGuildBankInfo::m_pendingItemCallbacks || !--CGGuildBankInfo::m_pendingItemCallbacks) {
@@ -111,7 +107,6 @@ void CGGuildBankInfo::GuildBankItemStatsCallback(int32_t id, const WOWGUID& guid
     }
 }
 
-// PROVEN: 3aa43c58 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C0970/0x14074D280
 void CGGuildBankInfo::GuildBankLogCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!CGGuildBankInfo::m_pendingLogCallbacks || !--CGGuildBankInfo::m_pendingLogCallbacks) {
@@ -119,7 +114,6 @@ void CGGuildBankInfo::GuildBankLogCallback(int32_t id, const WOWGUID& guid, void
     }
 }
 
-// PROVEN: c115d3ca IDENTICAL/IDENTICAL
 // OFFSET: 0x009C09A0/0x14074D2B0
 bool CGGuildBankInfo::ClientGuildBankMoneyWithdrawnHandler(ClientGuildBankMoneyWithdrawn* msg) {
     CGGuildBankInfo::m_remainingWithdrawMoney = msg->m_remainingWithdrawMoney;
@@ -127,7 +121,6 @@ bool CGGuildBankInfo::ClientGuildBankMoneyWithdrawnHandler(ClientGuildBankMoneyW
     return true;
 }
 
-// PROVEN: 90b0ea75 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C09D0/0x14074D2E0
 bool CGGuildBankInfo::ClientGuildBankTextQueryResultHandler(ClientGuildBankTextQueryResult* msg) {
     ScrubString(msg->m_text, CGGuildBankInfo::m_tabInfo[msg->m_tab].m_text, 2048, sizeof(CGGuildBankInfo::m_tabInfo[msg->m_tab].m_text), 0);
@@ -168,7 +161,6 @@ void CGGuildBankInfo::BuyGuildBankTab() {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 43546643 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C0B60/0x14074D4C0
 void CGGuildBankInfo::UpdateTabInfo(uint32_t tab, char* name, char* icon) {
     ScrubString(name, CGGuildBankInfo::m_tabInfo[tab].m_name, 16, sizeof(CGGuildBankInfo::m_tabInfo[tab].m_name), 1);
@@ -276,7 +268,6 @@ void CGGuildBankInfo::QueryGuildBankTab(uint32_t tab) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 635cc759 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C0E80/0x14074D850
 void CGGuildBankInfo::QueryGuildBankText(uint32_t tab) {
     if (!CGGuildBankInfo::m_banker || !CGGuildBankInfo::m_textDirty[tab]) {
@@ -343,7 +334,6 @@ void CGGuildBankInfo::WithdrawMoney(int64_t amount) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 59f0b9ac IDENTICAL/IDENTICAL
 // OFFSET: 0x009C11A0/0x14074DBE0
 void CGGuildBankInfo::SetGuildBankText(uint32_t tab, const char* text) {
     if (!CGGuildBankInfo::m_banker || static_cast<int32_t>(tab) >= CGGuildBankInfo::m_numTabs) {
@@ -356,7 +346,6 @@ void CGGuildBankInfo::SetGuildBankText(uint32_t tab, const char* text) {
     ClientServices::Send(&request);
 }
 
-// PROVEN: 3f4cf561 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C1F80/0x14074EBE0
 void CGGuildBankInfo::ClearContents() {
     for (uint32_t i = 0; i < 8; i++) {
@@ -369,7 +358,6 @@ void CGGuildBankInfo::ClearContents() {
     CGGuildBankInfo::m_currentTab = 0;
 }
 
-// PROVEN: a5bb2f62 IDENTICAL/UNPROVEN
 // OFFSET: 0x009C2000/0x14074EC90
 void CGGuildBankInfo::ShutdownGame() {
     ClientGuildBankQueryResults::s_handler = NULL;
@@ -657,7 +645,6 @@ void CGGuildBankInfo::SwapBankItems(uint32_t tab, uint32_t slot, uint32_t itemID
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
 }
 
-// PROVEN: d331753f IDENTICAL/IDENTICAL
 // OFFSET: 0x009C29E0/0x14074F8D0
 void CGGuildBankInfo::AutoStoreItem(uint64_t item, uint64_t container, uint32_t containerSlot) {
     if (CGGuildBankInfo::m_banker) {

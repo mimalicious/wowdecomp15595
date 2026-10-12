@@ -76,7 +76,6 @@ static IDirectInput8A* s_directInput;
 
 static TSGrowableArray<W32Joystick> s_joysticks;
 
-// PROVEN: 99e4808e IDENTICAL/IDENTICAL
 // OFFSET: 0x0087A0F0/0x1405B07C0
 static void ResetState(W32Joystick* joystick, DIJOYSTATE* state) {
     LONG* axes = &state->lX;
@@ -187,7 +186,6 @@ static BOOL CALLBACK EnumDevicesCallback(LPCDIDEVICEINSTANCEA instance, LPVOID r
     return DIENUM_CONTINUE;
 }
 
-// PROVEN: e6057b39 UNPROVEN/IDENTICAL
 // OFFSET: 0x0087A740/0x1405B0ED0
 uint32_t OsJoystickCount() {
     if (!s_joysticks.Count()) {
@@ -667,7 +665,6 @@ static void PollJoystick(uint32_t index, int32_t active) {
     }
 }
 
-// PROVEN: 8eada754 IDENTICAL/IDENTICAL
 // OFFSET: 0x0087B490/0x1405B21D0
 void OsPollJoysticks(int32_t active) {
     for (uint32_t i = 0; i < s_joysticks.Count(); i++) {

@@ -288,7 +288,6 @@ void CWorldMap::LinkStaticEntityMultiple2ToMapObjDefInterior(CMapStaticEntity* e
     }
 }
 
-// PROVEN: 98eeba89 IDENTICAL/IDENTICAL
 // OFFSET: 0x00785F10/0x140474D60
 int32_t CWorldMap::LinkMapObjDef(CMapObjDef* mapObjDef) {
     return this->LinkObjectToMapExterior(mapObjDef, mapObjDef->m_bbox, 1, 0);

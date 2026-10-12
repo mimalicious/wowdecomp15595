@@ -7,7 +7,6 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/NameGenRec.h"
 
-// PROVEN: 72c667ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00B119D0/0x1408D7390
 static int32_t QSortDictionary(const void* l, const void* r) {
     DictionaryRecord left = *static_cast<const DictionaryRecord*>(l);
@@ -133,12 +132,10 @@ void CNameGen::CreateDictionary() {
     qsort(this->m_dictionary.m_data, this->m_dictionaryCount, sizeof(DictionaryRecord), QSortDictionary);
 }
 
-// PROVEN: 2ca1116f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B11E60/0x1408D7900
 CNameGen::CNameGen(CRndSeed& seed) : m_seed(&seed) {
 }
 
-// PROVEN: a373df32 IDENTICAL/NONE
 // OFFSET: 0x0080E580
 void CNameGen::Destroy() {
     this->m_names.Clear();

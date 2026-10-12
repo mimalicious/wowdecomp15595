@@ -5,12 +5,10 @@
 BSN::Encoder::~Encoder() {
 }
 
-// PROVEN: 9e566c27 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void BSN::Encoder::Flush() {
 }
 
-// PROVEN: 14609084 IDENTICAL/DIFFERENT
 // OFFSET: 0x00665080/0x14030BB20
 void BSN::Encoder::SetData(void* data, uint32_t bytes) {
     this->m_data = static_cast<uint8_t*>(data);
@@ -18,7 +16,6 @@ void BSN::Encoder::SetData(void* data, uint32_t bytes) {
     this->m_position = 0;
 }
 
-// PROVEN: 717400e6 IDENTICAL/NONE
 // OFFSET: 0x00663CA0/0x140309E40
 bool BSN::IsValidAscii(uint32_t length, const char* data) {
     for (uint32_t i = 0; i < length; i++) {
@@ -186,7 +183,6 @@ int32_t BSN::Encoder::PutAsciiData(uint32_t bytes, const char* data) {
     return this->PutData(8 * bytes, reinterpret_cast<const uint8_t*>(data));
 }
 
-// PROVEN: 69ee53e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00665650/0x14030BAD0
 int32_t BSN::Encoder::PutAlignedData(uint32_t bytes, const uint8_t* data) {
     int32_t result = this->Align();
@@ -202,13 +198,11 @@ int32_t BSN::Encoder::PutAlignedData(uint32_t bytes, const uint8_t* data) {
 BSN::Decoder::~Decoder() {
 }
 
-// PROVEN: 2bf34764 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 int32_t BSN::Decoder::Fill() {
     return BSN::CODEC_VALID;
 }
 
-// PROVEN: 24eb3afb IDENTICAL/DIFFERENT
 // OFFSET: 0x00665080/0x14030BB20
 void BSN::Decoder::SetData(const void* data, uint32_t bytes) {
     this->m_data = static_cast<const uint8_t*>(data);
@@ -359,7 +353,6 @@ int32_t BSN::Decoder::GetData(uint32_t bits, uint8_t* data) {
     return BSN::CODEC_VALID;
 }
 
-// PROVEN: 02017c3f IDENTICAL/DIFFERENT
 // OFFSET: 0x006658D0/0x14030BE10
 int32_t BSN::Decoder::GetAlignedData(uint32_t bytes, uint8_t* data) {
     this->m_position = (this->m_position + 7) & ~7u;

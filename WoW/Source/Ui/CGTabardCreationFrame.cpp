@@ -12,13 +12,11 @@
 // STATIC: 0x00F71070/0x140E66F30
 WOWGUID CGTabardCreationFrame::m_vendor;
 
-// PROVEN: b2cf592f IDENTICAL/DIFFERENT
 // OFFSET: 0x009DFF70/0x140776AD0
 void CGTabardCreationFrame::EnterWorld() {
     CGTabardCreationFrame::m_vendor = WOWGUID();
 }
 
-// PROVEN: e8b56d7c IDENTICAL/DIFFERENT
 // OFFSET: 0x009E0010/0x140776BA0
 void CGTabardCreationFrame::Open(const WOWGUID& vendor) {
     CGTabardCreationFrame::m_vendor = vendor;
@@ -33,7 +31,6 @@ void CGTabardCreationFrame::Open(const WOWGUID& vendor) {
     FrameScript_SignalEvent(SCRIPT_EVENT_OPEN_TABARD_FRAME, NULL);
 }
 
-// PROVEN: e408affc IDENTICAL/DIFFERENT
 // OFFSET: 0x009E0070/0x140776C70
 void CGTabardCreationFrame::Close() {
     if (!CGTabardCreationFrame::m_vendor) {
@@ -51,7 +48,6 @@ void CGTabardCreationFrame::Close() {
     FrameScript_SignalEvent(SCRIPT_EVENT_CLOSE_TABARD_FRAME, NULL);
 }
 
-// PROVEN: 9a740a6b IDENTICAL/DIFFERENT
 // OFFSET: 0x009E00F0/0x140776C70
 void CGTabardCreationFrame::LeaveWorld() {
     CGTabardCreationFrame::Close();
@@ -78,7 +74,6 @@ bool GuildGetGuildTabard(WOWGUID requester, WOWGUID guild, void (*callback)(cons
     return true;
 }
 
-// PROVEN: 13228d94 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0F260/0x1408D45D0
 uint32_t GuildGetTabardCost() {
     return 100000;

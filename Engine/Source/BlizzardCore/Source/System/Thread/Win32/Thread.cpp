@@ -42,7 +42,6 @@ System_Thread::ExternalTLSRecord System_Thread::s_externalTLS[32];
 // STATIC: 0x00EBA640/0x140DAB108
 int32_t System_Thread::s_externalTLSCount;
 
-// PROVEN: bb135620 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AD6E0/0x1404A3370
 bool Blizzard::Thread::Sleep(uint32_t milliseconds) {
     ::Sleep(milliseconds);
@@ -54,7 +53,6 @@ bool Blizzard::Thread::IsRunning(ThreadRecord* thread) {
     return thread && thread->m_state >= 0;
 }
 
-// PROVEN: 7a87b31c IDENTICAL/DIFFERENT
 // OFFSET: 0x007AE0B0/0x1404A3D80
 bool System_Thread::SetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int32_t level) {
     switch (level) {
@@ -77,7 +75,6 @@ bool System_Thread::SetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int
     }
 }
 
-// PROVEN: 19237535 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AE180/0x1404A3E70
 bool System_Thread::GetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int32_t* level) {
     switch (GetThreadPriority(thread->m_handle)) {
@@ -158,7 +155,6 @@ void System_Thread::RunExternalTLSDestructors(uint32_t threadId) {
     Blizzard::Lock::MutexLeave(s_mutex);
 }
 
-// PROVEN: e9d56a2f IDENTICAL/NONE
 // OFFSET: 0x007B6160/0x1404AC200
 void NTAPI System_Thread::TLSCallback(PVOID module, DWORD reason, PVOID reserved) {
     if (s_initialized && (reason == DLL_THREAD_DETACH || reason == DLL_PROCESS_DETACH)) {

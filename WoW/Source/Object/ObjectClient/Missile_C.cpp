@@ -86,7 +86,6 @@ static float SmoothStep(float t) {
     return 1.0f;
 }
 
-// PROVEN: cca048cf IDENTICAL/IDENTICAL
 // OFFSET: 0x009FCE20/0x14090EBB0
 static int32_t MissileObjectUpdateCallback(void* param, uintptr_t object, uint64_t param64, uintptr_t param32) {
     return 1;
@@ -117,7 +116,6 @@ void CMissile::ApplyMotionScriptFunctionRotationAndScale(const SimpleScriptIO& i
     }
 }
 
-// PROVEN: 083c0994 IDENTICAL/IDENTICAL
 // OFFSET: 0x00585160/0x1401ED450
 void CMissile::SetRemoteCollisionPos(const C3Vector& position) {
     this->m_flags |= 0x400000;
@@ -152,7 +150,6 @@ void ChaserState::ChaserImplementation(const C3Vector& target, float stiffness, 
     NTempest::SmoothDamp(this->m_position, this->m_velocity, target, stiffness, elapsed, 1.0f / (x * x * x * 0.235f + x * x * 0.47999999f + x + 1.0f));
 }
 
-// PROVEN: 815252a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005854A0/0x1401EE990
 void CMissile::Link(CMissile** link) {
     if (this->m_prevLink) {
@@ -246,7 +243,6 @@ void CMissile::ApplyTargetTransportOffset(CGObject_C* target, C3Vector* position
     this->m_lastTransportPos = transportPos;
 }
 
-// PROVEN: 0c5e8127 IDENTICAL/NONE
 // OFFSET: 0x00585850
 int32_t CMissile::IsHit() const {
     if (!(this->m_flags & 0x200) || (this->m_flags & 0x400)) {
@@ -256,7 +252,6 @@ int32_t CMissile::IsHit() const {
     return this->m_currentTarget < this->m_targetHitResults.m_count && !this->m_targetHitResults.m_data[this->m_currentTarget];
 }
 
-// PROVEN: 1b3bb3d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00585890/0x1401EDA00
 void CMissile::SetHitResult(uint32_t result) {
     if (!(this->m_flags & 0x200) || (this->m_flags & 0x400) || this->m_currentTarget >= this->m_targetHitResults.m_count) {
@@ -321,7 +316,6 @@ C3Vector* MissileFindGroundPosition(C3Vector* result, const C3Vector& position, 
     return result;
 }
 
-// PROVEN: 2362d293 IDENTICAL/DIFFERENT
 // OFFSET: 0x00585C00/0x1401EDD80
 void CMissile::InstallMotionScriptFunction(int32_t motionId) {
     this->m_motionScriptFunction = CSimpleScriptManager::s_instance->FindFunction(motionId);
@@ -381,7 +375,6 @@ void CMissile::AdjustTrajectoryDuration(uint32_t duration) {
     }
 }
 
-// PROVEN: e2921f85 IDENTICAL/UNPROVEN
 // OFFSET: 0x00585D80/0x1401EDF20
 void CMissile::AdjustAllMissileTrajectoryDurations(uint8_t castID, uint32_t duration) {
     for (CMissile* missile = CMissile::s_inFlightMissileList; missile; missile = missile->m_next) {
@@ -404,7 +397,6 @@ void CMissile::StartFizzling(WOWGUID caster, uint8_t castID, uint32_t spellID) {
     }
 }
 
-// PROVEN: 341803e8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00585E30/0x1401EE000
 void CMissile::OnRemoteMissileTrajectoryCollision(const MissileCollisionData& data) {
     for (CMissile* missile = CMissile::s_inFlightMissileList; missile; missile = missile->m_next) {
@@ -550,7 +542,6 @@ void CMissile::ClearTargetingEffects() {
     this->m_targetingUnit = WOWGUID();
 }
 
-// PROVEN: 7599236b IDENTICAL/NONE
 // OFFSET: 0x00586660
 void CMissile::SetReadyToFire(CMissile** list) {
     this->Link(list);
@@ -1071,7 +1062,6 @@ CMissile::CMissile() {
     this->m_targetPoints.SetCount(0);
 }
 
-// PROVEN: 1b83c304 DIFFERENT/IDENTICAL
 // OFFSET: 0x00588160/0x1401F0890
 CMissile::~CMissile() {
     this->ClearTargetingEffects();
@@ -1582,13 +1572,11 @@ void CMissile::CalcPosition(int32_t advance) {
     }
 }
 
-// PROVEN: c7d0addc IDENTICAL/DIFFERENT
 // OFFSET: 0x00589910/0x1401F2500
 CMissile* CMissile::NewMissile() {
     return CMissile::s_pool->New("", 0);
 }
 
-// PROVEN: 5c4390d1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00589930/0x1401F2510
 CMissile* CMissile::CopyMissile(const CMissile* source) {
     CMissile* missile = CMissile::s_pool->New("", 0);
@@ -1975,7 +1963,6 @@ void CMissile::Reflect() {
     }
 }
 
-// PROVEN: ab4fab00 IDENTICAL/DIFFERENT
 // OFFSET: 0x0058A840/0x1401F37D0
 void CMissile::DeleteSelf() {
     if (this->m_missileCollision) {
@@ -2215,7 +2202,6 @@ void CMissile::ReachedTarget(CGUnit_C* target, const C3Vector* direction) {
     }
 }
 
-// PROVEN: 29187e7b IDENTICAL/DIFFERENT
 // OFFSET: 0x0058B260/0x1401F4760
 void CMissile::RemoveMissiles() {
     while (CMissile::s_inFlightMissileList) {
@@ -2286,7 +2272,6 @@ void CMissile::UpdateAttachments(WOWGUID guid) {
     }
 }
 
-// PROVEN: 53adc96b IDENTICAL/DIFFERENT
 // OFFSET: 0x0058B570/0x1401F4B20
 void CMissile::ClearInFlightMissiles(int32_t reflect, WOWGUID caster, int32_t spellID) {
     for (CMissile* missile = CMissile::s_inFlightMissileList; missile; ) {
@@ -2304,7 +2289,6 @@ void CMissile::ClearInFlightMissiles(int32_t reflect, WOWGUID caster, int32_t sp
     }
 }
 
-// PROVEN: d45801f8 IDENTICAL/DIFFERENT
 // OFFSET: 0x0058B610/0x1401F4BF0
 void CMissile::ClearInFlightMissilesWithTarget(WOWGUID target) {
     for (CMissile* missile = CMissile::s_inFlightMissileList; missile; ) {
@@ -2335,7 +2319,6 @@ void CMissile::HandleMissileTrajectoryCollision(const C3Vector* direction) {
     this->ReachedTarget(NULL, direction);
 }
 
-// PROVEN: 18217234 IDENTICAL/IDENTICAL
 // OFFSET: 0x0058B7B0/0x1401F4DC0
 void CMissile::ScriptManagerCallback(uint32_t event) {
     if (event == 1) {
@@ -2343,7 +2326,6 @@ void CMissile::ScriptManagerCallback(uint32_t event) {
     }
 }
 
-// PROVEN: 3b06870f IDENTICAL/UNPROVEN
 // OFFSET: 0x0058B7D0/0x1401F4DE0
 void CMissile::UpdateStaticLists() {
     for (CMissile* missile = CMissile::s_inFlightMissileList; missile; ) {
@@ -2378,7 +2360,6 @@ void CMissile::Initialize() {
     ClientMissileCancel::s_handler = JamHandlerEncode(OnMissileCancel, g_jamHandlerKey_CFE694);
 }
 
-// PROVEN: 4bc5af7a IDENTICAL/DIFFERENT
 // OFFSET: 0x0058B8E0/0x1401F4F20
 void CMissile::Destroy() {
     CSimpleScriptManager::UnregisterCallback(CMissile::ScriptManagerCallback);

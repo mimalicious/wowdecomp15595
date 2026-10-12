@@ -15,7 +15,6 @@ struct HMAC {
     void Process(const void* data, uint32_t length);
 };
 
-// PROVEN: c6bdeb7c IDENTICAL/IDENTICAL
 // OFFSET: 0x004878E0/0x1400A8D40
 template <class T>
 void HMAC<T>::Init(const uint8_t* key, uint32_t length) {

@@ -283,7 +283,6 @@ void CRealmList::Initialize() {
     }
 }
 
-// PROVEN: ab13bd12 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080BC40/0x140522160
 void CRealmList::Shutdown() {
     for (uint32_t i = 0; i < CRealmList::m_categories.Count(); i++) {

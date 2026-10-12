@@ -13,14 +13,12 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: d9d3fd74 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080A960/0x140520C80
 static int32_t Script_RequestRealmList(lua_State* L) {
     CGlueMgr::GetRealmList(StringToBOOL(L, 1, 0));
     return 0;
 }
 
-// PROVEN: ee014148 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080A980/0x140520CA0
 static int32_t Script_RealmListUpdateRate(lua_State* L) {
     if (ClientServices::LoginConnection() && ClientServices::LoginConnection()->GetLoginServerType() == 1) {
@@ -32,14 +30,12 @@ static int32_t Script_RealmListUpdateRate(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d33a4253 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080A9E0/0x140520D00
 static int32_t Script_CancelRealmListQuery(lua_State* L) {
     CGlueMgr::CancelRealmListQuery();
     return 0;
 }
 
-// PROVEN: 5753a85b IDENTICAL/IDENTICAL
 // OFFSET: 0x0080A9F0/0x140520D10
 static int32_t Script_RealmListDialogCancelled(lua_State* L) {
     CGlueMgr::RealmListDialogCancelled();
@@ -349,7 +345,6 @@ static int32_t Script_IsInvalidLocale(lua_State* L) {
     return 1;
 }
 
-// PROVEN: fb9ae15c IDENTICAL/DIFFERENT
 // OFFSET: 0x0080B970/0x140521E20
 static int32_t Script_SetPreferredInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -365,7 +360,6 @@ static int32_t Script_SetPreferredInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 0d677a2a IDENTICAL/IDENTICAL
 // OFFSET: 0x0080B9F0/0x140521EB0
 static int32_t Script_SortRealms(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -391,7 +385,6 @@ static int32_t Script_SortRealms(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dd35d129 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080BAB0/0x140521F70
 static int32_t Script_GetSelectedCategory(lua_State* L) {
     int32_t visible = -1;
@@ -432,7 +425,6 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "IsInvalidLocale", &Script_IsInvalidLocale },
 };
 
-// PROVEN: 745fcfb5 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080AA00/0x140520D20
 void RealmListRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -440,7 +432,6 @@ void RealmListRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 9616674b IDENTICAL/UNPROVEN
 // OFFSET: 0x0080AA30/0x140520D70
 void RealmListUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

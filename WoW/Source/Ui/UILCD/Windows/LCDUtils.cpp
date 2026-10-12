@@ -6,7 +6,6 @@
 // STATIC: 0x0100A690/0x140BE69F0
 TSHashTable<BITMAPBYICON, HASHKEY_NONE> CLCDUtils::m_bitmapCache;
 
-// PROVEN: 26ce59dd IDENTICAL/DIFFERENT
 // OFFSET: 0x00B327F0/0x1408FCA30
 void CLCDUtils::Shutdown() {
     CLCDUtils::m_bitmapCache.Clear();

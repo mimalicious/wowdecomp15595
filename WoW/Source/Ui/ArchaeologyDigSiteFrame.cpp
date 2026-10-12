@@ -38,19 +38,16 @@ CSimpleFrame* CGArchaeologyDigSiteFrame::Create(CSimpleFrame* parent) {
 CGArchaeologyDigSiteFrame::CGArchaeologyDigSiteFrame(CSimpleFrame* parent) : CGBlobFrame(parent) {
 }
 
-// PROVEN: 9514d2f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02AD0/0x1407A1B90
 const char* CGArchaeologyDigSiteFrame::GetObjectTypeName() {
     return CGArchaeologyDigSiteFrame::s_objectTypeName;
 }
 
-// PROVEN: 0eb0dca8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02AE0/0x1407A1BA0
 int32_t CGArchaeologyDigSiteFrame::GetScriptMetaTable() {
     return CGArchaeologyDigSiteFrame::s_metatable;
 }
 
-// PROVEN: 34ab39dc IDENTICAL/UNPROVEN
 // OFFSET: 0x00A02AF0/0x1407A1BB0
 void CGArchaeologyDigSiteFrame::DrawBlob(int32_t id, bool show) {
     if (show) {
@@ -64,13 +61,11 @@ void CGArchaeologyDigSiteFrame::DrawBlob(int32_t id, bool show) {
     }
 }
 
-// PROVEN: f6dde4a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02B30/0x1407A1BF0
 void CGArchaeologyDigSiteFrame::RegisterScriptMethods(lua_State* L) {
     CGBlobFrame::RegisterScriptMethods(L);
 }
 
-// PROVEN: ea4f296f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02B40/0x1407A1C00
 void CGArchaeologyDigSiteFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -78,7 +73,6 @@ void CGArchaeologyDigSiteFrame::DestroyScriptMetaTable() {
     CGArchaeologyDigSiteFrame::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 3fa314cc NONE/IDENTICAL
 // OFFSET: 0x00A02B80/0x1407A1C40
 bool CGArchaeologyDigSiteFrame::IsA(int32_t type) {
     return type == CGArchaeologyDigSiteFrame::s_objectType || type == CGBlobFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
@@ -93,7 +87,6 @@ bool CGArchaeologyDigSiteFrame::IsA(const char* typeName) {
 CGArchaeologyDigSiteFrame::~CGArchaeologyDigSiteFrame() {
 }
 
-// PROVEN: 6315dccb IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02C50/0x1407A1D20
 void CGArchaeologyDigSiteFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();

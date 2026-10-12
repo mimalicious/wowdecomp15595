@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[2] = { 0, 0 };
 // STATIC: 0x00C26914/0x140A1C918
 const DBCMeta BankBagSlotPricesRec::s_meta = { "DBFilesClient\\BankBagSlotPrices.dbc", 2, 8, BankBagSlotPricesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: de6b52f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void BankBagSlotPricesRec::FixupStrings(void* record, const char* strings) {
 }

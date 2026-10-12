@@ -20,25 +20,21 @@
 
 extern "C"
 {
-// PROVEN: 3d97d89a IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB95F0/0x140880420
 void * FMOD_FLAC_Malloc(int size)
 {
     return FMOD_Memory_Alloc(size);
 }
-// PROVEN: 5a6bf5b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9620/0x140880460
 void * FMOD_FLAC_Calloc(int count, int size)
 {
     return FMOD_Memory_Calloc(count * size);
 }
-// PROVEN: 8f799693 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9650/0x1408804A0
 void * FMOD_FLAC_ReAlloc(void *ptr, int size)
 {
     return FMOD_Memory_ReAlloc(ptr, size);
 }
-// PROVEN: b90af897 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9680/0x1408804E0
 void   FMOD_FLAC_Free(void *ptr)
 {
@@ -91,7 +87,6 @@ extern "C" {
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2dd56e73 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB96A0/0x140880700
 static FLAC__StreamDecoderReadStatus FMOD_FLAC_ReadCallback(const FLAC__StreamDecoder *decoder, FLAC__byte buffer[], size_t *bytes, void *client_data)
 {
@@ -113,7 +108,6 @@ static FLAC__StreamDecoderReadStatus FMOD_FLAC_ReadCallback(const FLAC__StreamDe
 }
 
 
-// PROVEN: 9f8ec051 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB96E0/0x140880570
 static FLAC__StreamDecoderWriteStatus FMOD_FLAC_WriteCallback(const FLAC__StreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 * const buffer[], void *client_data)
 {
@@ -164,7 +158,6 @@ static FLAC__StreamDecoderWriteStatus FMOD_FLAC_WriteCallback(const FLAC__Stream
 }
 
 
-// PROVEN: 6a3f0e83 IDENTICAL/NONE
 // OFFSET: 0x00AB97B0/0x140880520
 static FLAC__StreamDecoderSeekStatus FMOD_FLAC_SeekCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 absolute_byte_offset, void *client_data)
 {
@@ -183,7 +176,6 @@ static FLAC__StreamDecoderSeekStatus FMOD_FLAC_SeekCallback(const FLAC__StreamDe
 }
 
 
-// PROVEN: 3798adbb IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB97D0/0x140880740
 static FLAC__StreamDecoderTellStatus FMOD_FLAC_TellCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
 {
@@ -204,7 +196,6 @@ static FLAC__StreamDecoderTellStatus FMOD_FLAC_TellCallback(const FLAC__StreamDe
 }
 
 
-// PROVEN: 1a6e5ec5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9810/0x140880690
 static FLAC__StreamDecoderLengthStatus FMOD_FLAC_LengthCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
 {
@@ -225,7 +216,6 @@ static FLAC__StreamDecoderLengthStatus FMOD_FLAC_LengthCallback(const FLAC__Stre
 }
 
 
-// PROVEN: e364b4ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9850/0x140880740
 static FLAC__bool FMOD_FLAC_EofCallback(const FLAC__StreamDecoder *decoder, void *client_data)
 {
@@ -656,7 +646,6 @@ FMOD_RESULT CodecFLAC::setPositionInternal(int subsound, unsigned int position, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1ca27e4a IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9E90/0x140880E70
 FMOD_RESULT F_CALLBACK CodecFLAC::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -682,7 +671,6 @@ FMOD_RESULT F_CALLBACK CodecFLAC::openCallback(FMOD_CODEC_STATE *codec, FMOD_MOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 567562b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9AD0/0x140880A30
 FMOD_RESULT F_CALLBACK CodecFLAC::closeCallback(FMOD_CODEC_STATE *codec)
 {
@@ -708,7 +696,6 @@ FMOD_RESULT F_CALLBACK CodecFLAC::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a46fc43c IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9B00/0x140880A50
 FMOD_RESULT F_CALLBACK CodecFLAC::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {

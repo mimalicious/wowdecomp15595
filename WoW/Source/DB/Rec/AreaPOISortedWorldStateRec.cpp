@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[3] = { 0, 0, 0 };
 // STATIC: 0x00C26BC0/0x140A1CC68
 const DBCMeta AreaPOISortedWorldStateRec::s_meta = { "DBFilesClient\\AreaPOISortedWorldState.dbc", 3, 12, AreaPOISortedWorldStateRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: a0d3284a IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void AreaPOISortedWorldStateRec::FixupStrings(void* record, const char* strings) {
 }

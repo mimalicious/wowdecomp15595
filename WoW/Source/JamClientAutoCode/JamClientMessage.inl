@@ -135,7 +135,6 @@ inline void JamBitWriter::WriteBits(uint32_t value) {
     this->WriteBits<count>(value, JamBitCount<(count > 8)>());
 }
 
-// PROVEN: e73e4dd7 IDENTICAL/NONE
 // OFFSET: [0x0066A6C0<1>, 0x0066AA30/0x140313820<2>, 0x0066AAD0/0x1403138E0<3>, 0x0066AB70/0x1403139A0<4>, 0x0066AC00/0x140313A60<5>, 0x0066AC90/0x140313B20<6>, 0x0066AD20/0x140313BE0<7>]
 template <uint32_t count>
 void JamBitWriter::WriteBits(uint32_t value, JamBitCount<false>) {
@@ -156,7 +155,6 @@ void JamBitWriter::WriteBits(uint32_t value, JamBitCount<false>) {
     }
 }
 
-// PROVEN: a3ac65bc IDENTICAL/NONE
 // OFFSET: 0x0066A6C0
 template <>
 inline void JamBitWriter::WriteBits<1>(uint32_t value, JamBitCount<false>) {

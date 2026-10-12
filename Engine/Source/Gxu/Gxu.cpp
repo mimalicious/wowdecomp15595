@@ -139,7 +139,6 @@ void GxuXformCreateOrthoDepth(float minX, float maxX, float minY, float maxY, fl
     }
 }
 
-// PROVEN: 62dabeaa DIFFERENT/IDENTICAL
 // OFFSET: 0x00615F40/0x1402A1FF0
 void GxuAdjustProjForHalfPixel(C44Matrix& proj) {
     if (!g_theGxDevicePtr->m_caps.m_pixelCenterOnEdge) {
@@ -293,7 +292,6 @@ int32_t GxuXformCalc3dScreenCoords(const C44Matrix& toScreen, uint32_t count, co
     return 1;
 }
 
-// PROVEN: 0b73b925 IDENTICAL/IDENTICAL
 // OFFSET: 0x006166C0/0x1402A3210
 void GxuUpdateSingleColorTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     // STATIC: 0x00DD9D78/0x140CC0650

@@ -25,7 +25,6 @@
  * responsibility.
  */
 
-// PROVEN: c28456d5 IDENTICAL/NONE
 // OFFSET: 0x00B5F1E0/0x1409284D0
 void jpeg_abort(j_common_ptr cinfo) {
   int pool;
@@ -65,7 +64,6 @@ void jpeg_abort(j_common_ptr cinfo) {
  * responsibility.
  */
 
-// PROVEN: 2d3725da IDENTICAL/NONE
 // OFFSET: 0x00B5F220/0x140928520
 void jpeg_destroy(j_common_ptr cinfo) {
   /* We need only tell the memory manager to release everything. */
@@ -82,7 +80,6 @@ void jpeg_destroy(j_common_ptr cinfo) {
  * (Would jutils.c be a more reasonable place to put these?)
  */
 
-// PROVEN: d352b17c IDENTICAL/NONE
 // OFFSET: 0x00B5F250/0x140928560
 JQUANT_TBL * jpeg_alloc_quant_table(j_common_ptr cinfo) {
   JQUANT_TBL *tbl;
@@ -94,7 +91,6 @@ JQUANT_TBL * jpeg_alloc_quant_table(j_common_ptr cinfo) {
 }
 
 
-// PROVEN: f1166e9e IDENTICAL/NONE
 // OFFSET: 0x00B5F280/0x140928580
 JHUFF_TBL * jpeg_alloc_huff_table(j_common_ptr cinfo) {
   JHUFF_TBL *tbl;

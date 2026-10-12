@@ -46,13 +46,11 @@ CPhaseMapTracker::CPhaseMapTracker() {
     this->m_lastAreaTrigger = -1;
 }
 
-// PROVEN: f5d58798 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E3F70/0x140125320
 void PhaseShift_C_ShutdownGame() {
     ClientPhaseShiftChange::s_handler = NULL;
 }
 
-// PROVEN: 2565ab92 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E3F80/0x140125330
 void PhaseShift_C_EnterWorld(int32_t reload) {
     if (!reload) {
@@ -60,7 +58,6 @@ void PhaseShift_C_EnterWorld(int32_t reload) {
     }
 }
 
-// PROVEN: 08c0de35 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E3FA0/0x140125350
 CPhaseShift* PhaseShift_C_GetPhase() {
     return &s_phaseShift;
@@ -105,7 +102,6 @@ void CPhaseMapTracker::SetMap(int32_t mapID) {
     }
 }
 
-// PROVEN: 77ed9063 IDENTICAL/NONE
 // OFFSET: 0x004E42C0
 void CPhaseMapTracker::RemoveUnusedMaps() {
     for (uint32_t i = 0; i < CPhaseMapTracker::s_loadedMaps.Count(); i++) {
@@ -122,7 +118,6 @@ void CPhaseMapTracker::RemoveUnusedMaps() {
     }
 }
 
-// PROVEN: 8fd6b9f7 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4320/0x140125620
 void CPhaseMapTracker::LeaveWorld() {
     for (uint32_t i = 0; i < CPhaseMapTracker::s_loadedMaps.Count(); i++) {
@@ -139,13 +134,11 @@ void CPhaseMapTracker::LeaveWorld() {
     }
 }
 
-// PROVEN: 0975e468 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4380/0x1401256A0
 int32_t PhaseShift_C_GetNumPhaseMaps() {
     return CPhaseMapTracker::s_loadedMaps.Count();
 }
 
-// PROVEN: 19f4f87d IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4390/0x1401256B0
 int32_t PhaseShift_C_GetNumActivePhaseMaps() {
     int32_t count = 0;
@@ -159,7 +152,6 @@ int32_t PhaseShift_C_GetNumActivePhaseMaps() {
     return count;
 }
 
-// PROVEN: 7987744b IDENTICAL/UNPROVEN
 // OFFSET: 0x004E43C0/0x1401256E0
 int32_t PhaseShift_C_IsPhasedWorldMapActive(int32_t worldMapAreaID) {
     for (uint32_t i = 0; i < s_phasedWorldMaps.Count(); i++) {
@@ -219,7 +211,6 @@ int32_t CPhaseShift::CalcNormalPhase() const {
     return 0;
 }
 
-// PROVEN: d5cf31d2 IDENTICAL/NONE
 // OFFSET: 0x004E4640
 int32_t CPhaseShift::HasSharedPhase(const CPhaseShift* other) const {
     return PhaseShift_CompareSortedPhaseArray(this->m_flags, this->m_phases.Ptr(), this->m_phases.Count(), other->m_flags, other->m_phases.Ptr(), other->m_phases.Count());
@@ -258,7 +249,6 @@ void PhaseShiftShared_InitPhaseXPhaseGroupIndex() {
     }
 }
 
-// PROVEN: 920e41ea IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4850/0x140125D40
 int32_t PhaseShift_C_HasSharedPhase(const CPhaseShift* phaseShift) {
     return s_phaseShift.HasSharedPhase(phaseShift);
@@ -312,7 +302,6 @@ CPhaseMapTracker* CPhaseMapTracker::LoadMap(int32_t mapID, int32_t active) {
     return tracker;
 }
 
-// PROVEN: ad6641b3 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E49F0/0x140125F40
 void CPhaseMapTracker::UpdateMaps(uint32_t activeCount, const uint16_t* activeMaps, uint32_t inactiveCount, const uint16_t* inactiveMaps) {
     for (uint32_t i = 0; i < activeCount; i++) {
@@ -432,7 +421,6 @@ void CPhaseShift::SetPhasesFromDB(uint32_t flags, uint32_t phaseID, uint32_t pha
     }
 }
 
-// PROVEN: 2dc02795 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4DF0/0x1401265E0
 void PhaseShift_C_LeaveWorld(int32_t reload) {
     if (reload) {
@@ -445,7 +433,6 @@ void PhaseShift_C_LeaveWorld(int32_t reload) {
     s_phaseShift.m_flags = 8;
 }
 
-// PROVEN: 0c9935da IDENTICAL/NONE
 // OFFSET: 0x004E53B0
 static void InitAreaTriggerPhases() {
     s_areaTriggerPhases.SetCount(g_areaTriggerDB.m_maxID + 1);
@@ -468,7 +455,6 @@ void PhaseShift_C_InitDB() {
     }
 }
 
-// PROVEN: 9c415678 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E54A0/0x140126F30
 void PhaseShift_C_CleanupDB() {
     s_phaseGroupLookup.Clear();

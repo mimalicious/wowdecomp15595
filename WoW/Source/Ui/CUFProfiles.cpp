@@ -36,7 +36,6 @@ TSHashTable<CGCUFProfiles::PROFILENODE, HASHKEY_CONSTUTF8I> CGCUFProfiles::s_pro
 // STATIC: 0x00F60F00/0x140E55FF0
 TSHashTable<CGCUFProfiles::OPTIONENTRY, HASHKEY_CONSTSTR> CGCUFProfiles::s_options[4];
 
-// PROVEN: 409a9fdb IDENTICAL/NONE
 // OFFSET: 0x009C7360
 void CUFProfileInfo::CopySettings(const CUFProfileInfo* source) {
     this->m_options = source->m_options;
@@ -45,7 +44,6 @@ void CUFProfileInfo::CopySettings(const CUFProfileInfo* source) {
     this->m_autoActivate = source->m_autoActivate;
 }
 
-// PROVEN: 1e5740c6 IDENTICAL/NONE
 // OFFSET: 0x009C73C0
 void CUFProfileInfo::SetDefaults() {
     this->m_options.m_frameHeight = 36;
@@ -70,13 +68,11 @@ void CUFProfileInfo::SetDefaults() {
     memset(&this->m_autoActivate, 0, sizeof(this->m_autoActivate));
 }
 
-// PROVEN: bde81a30 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7DA0/0x140756590
 static void GetOptionFrameHeight(CUFProfileInfo* profile, lua_State* L) {
     lua_pushnumber(L, profile->m_options.m_frameHeight);
 }
 
-// PROVEN: aafaa4e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7DD0/0x1407565B0
 static void SetOptionFrameHeight(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     if (lua_isnumber(L, index)) {
@@ -84,13 +80,11 @@ static void SetOptionFrameHeight(CUFProfileInfo* profile, lua_State* L, int32_t 
     }
 }
 
-// PROVEN: 28523cab IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7E30/0x140756600
 static void GetOptionFrameWidth(CUFProfileInfo* profile, lua_State* L) {
     lua_pushnumber(L, profile->m_options.m_frameWidth);
 }
 
-// PROVEN: 18c66d92 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7E60/0x140756620
 static void SetOptionFrameWidth(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     if (lua_isnumber(L, index)) {
@@ -98,7 +92,6 @@ static void SetOptionFrameWidth(CUFProfileInfo* profile, lua_State* L, int32_t i
     }
 }
 
-// PROVEN: c3f124bc IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7EC0/0x140756670
 static void GetOptionSortBy(CUFProfileInfo* profile, lua_State* L) {
     switch (profile->m_options.m_sortBy) {
@@ -114,7 +107,6 @@ static void GetOptionSortBy(CUFProfileInfo* profile, lua_State* L) {
     }
 }
 
-// PROVEN: 9bcad95d IDENTICAL/DIFFERENT
 // OFFSET: 0x009C7F20/0x1407566D0
 static void SetOptionSortBy(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     if (lua_isstring(L, index)) {
@@ -140,7 +132,6 @@ static void SetOptionSortBy(CUFProfileInfo* profile, lua_State* L, int32_t index
     return;
 }
 
-// PROVEN: ed4817e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7FF0/0x1407567D0
 static void GetOptionHealthText(CUFProfileInfo* profile, lua_State* L) {
     switch (profile->m_options.m_healthText) {
@@ -159,7 +150,6 @@ static void GetOptionHealthText(CUFProfileInfo* profile, lua_State* L) {
     }
 }
 
-// PROVEN: 0c8056f7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C8070/0x140756850
 static void SetOptionHealthText(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     if (lua_isstring(L, index)) {
@@ -190,295 +180,246 @@ static void SetOptionHealthText(CUFProfileInfo* profile, lua_State* L, int32_t i
     return;
 }
 
-// PROVEN: ec162bca IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7430/0x140755C90
 static void GetOptionKeepGroupsTogether(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_keepGroupsTogether);
 }
 
-// PROVEN: ac8351c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7450/0x140755CB0
 static void SetOptionKeepGroupsTogether(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_keepGroupsTogether = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 8325af76 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7490/0x140755CF0
 static void GetOptionDisplayPets(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayPets);
 }
 
-// PROVEN: df2b0b84 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C74C0/0x140755D10
 static void SetOptionDisplayPets(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayPets = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 5935cdd9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7500/0x140755D50
 static void GetOptionDisplayMainTankAndAssist(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayMainTankAndAssist);
 }
 
-// PROVEN: 6fcc5590 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7530/0x140755D70
 static void SetOptionDisplayMainTankAndAssist(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayMainTankAndAssist = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: b9deaf9e IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7570/0x140755DB0
 static void GetOptionDisplayHealPrediction(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayHealPrediction);
 }
 
-// PROVEN: 41acd9fe IDENTICAL/IDENTICAL
 // OFFSET: 0x009C75A0/0x140755DD0
 static void SetOptionDisplayHealPrediction(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayHealPrediction = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: eab02afe IDENTICAL/IDENTICAL
 // OFFSET: 0x009C75E0/0x140755E10
 static void GetOptionDisplayAggroHighlight(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayAggroHighlight);
 }
 
-// PROVEN: 5eac86d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7610/0x140755E30
 static void SetOptionDisplayAggroHighlight(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayAggroHighlight = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 0f8adb97 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7650/0x140755E70
 static void GetOptionDisplayOnlyDispellableDebuffs(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayOnlyDispellableDebuffs);
 }
 
-// PROVEN: fc03569e IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7680/0x140755E90
 static void SetOptionDisplayOnlyDispellableDebuffs(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayOnlyDispellableDebuffs = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 8df370bc IDENTICAL/IDENTICAL
 // OFFSET: 0x009C76C0/0x140755ED0
 static void GetOptionDisplayPowerBar(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayPowerBar);
 }
 
-// PROVEN: 007a8635 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C76F0/0x140755EF0
 static void SetOptionDisplayPowerBar(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayPowerBar = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 017dee1e IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7730/0x140755F30
 static void GetOptionDisplayBorder(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayBorder);
 }
 
-// PROVEN: f132b5a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7750/0x140755F50
 static void SetOptionDisplayBorder(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayBorder = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 76b6d65f IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7790/0x140755F90
 static void GetOptionUseClassColors(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_useClassColors);
 }
 
-// PROVEN: 098c3f27 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C77B0/0x140755FB0
 static void SetOptionUseClassColors(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_useClassColors = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 570cfc95 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C77F0/0x140755FF0
 static void GetOptionDisplayNonBossDebuffs(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_displayNonBossDebuffs);
 }
 
-// PROVEN: 5168ccce IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7820/0x140756010
 static void SetOptionDisplayNonBossDebuffs(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_displayNonBossDebuffs = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: a8adf523 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7860/0x140756050
 static void GetOptionHorizontalGroups(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_options.m_horizontalGroups);
 }
 
-// PROVEN: 1dfbf263 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7890/0x140756070
 static void SetOptionHorizontalGroups(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_options.m_horizontalGroups = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: ab53d0bf IDENTICAL/IDENTICAL
 // OFFSET: 0x009C78D0/0x1407560B0
 static void GetOptionLocked(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_state.m_locked);
 }
 
-// PROVEN: 8ec40215 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C78F0/0x1407560D0
 static void SetOptionLocked(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_state.m_locked = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 36fa39db IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7930/0x140756110
 static void GetOptionShown(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_state.m_shown);
 }
 
-// PROVEN: 4162e5e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7960/0x140756130
 static void SetOptionShown(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_state.m_shown = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 783bedda IDENTICAL/IDENTICAL
 // OFFSET: 0x009C79A0/0x140756170
 static void GetOptionAutoActivate2Players(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_2Players);
 }
 
-// PROVEN: 75ee9e9d IDENTICAL/IDENTICAL
 // OFFSET: 0x009C79C0/0x140756190
 static void SetOptionAutoActivate2Players(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_2Players = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 735ea729 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C79F0/0x1407561D0
 static void GetOptionAutoActivate3Players(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_3Players);
 }
 
-// PROVEN: 52da1853 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7A20/0x1407561F0
 static void SetOptionAutoActivate3Players(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_3Players = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 979a927b IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7A50/0x140756230
 static void GetOptionAutoActivate5Players(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_5Players);
 }
 
-// PROVEN: 48d6703b IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7A80/0x140756250
 static void SetOptionAutoActivate5Players(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_5Players = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: ab520d60 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7AB0/0x140756290
 static void GetOptionAutoActivate10Players(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_10Players);
 }
 
-// PROVEN: 04b5bc5b IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7AE0/0x1407562B0
 static void SetOptionAutoActivate10Players(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_10Players = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 59b1f4ae IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7B20/0x1407562F0
 static void GetOptionAutoActivate15Players(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_15Players);
 }
 
-// PROVEN: 31ec9928 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7B50/0x140756310
 static void SetOptionAutoActivate15Players(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_15Players = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 1837ef1c IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7B80/0x140756350
 static void GetOptionAutoActivate25Players(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_25Players);
 }
 
-// PROVEN: 672a6253 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7BB0/0x140756370
 static void SetOptionAutoActivate25Players(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_25Players = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 9c1f8461 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7BE0/0x1407563B0
 static void GetOptionAutoActivate40Players(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_40Players);
 }
 
-// PROVEN: 4584e82d IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7C10/0x1407563D0
 static void SetOptionAutoActivate40Players(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_40Players = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 298cb2aa IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7C40/0x140756410
 static void GetOptionAutoActivateSpec1(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_spec1);
 }
 
-// PROVEN: 090348d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7C60/0x140756430
 static void SetOptionAutoActivateSpec1(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_spec1 = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 92515ab9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7C90/0x140756470
 static void GetOptionAutoActivateSpec2(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_spec2);
 }
 
-// PROVEN: 7ca3d2bb IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7CB0/0x140756490
 static void SetOptionAutoActivateSpec2(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_spec2 = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 4acbdab7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7CE0/0x1407564D0
 static void GetOptionAutoActivatePvP(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_pvp);
 }
 
-// PROVEN: 7b6277ca IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7D10/0x1407564F0
 static void SetOptionAutoActivatePvP(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_pvp = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 780b49f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7D40/0x140756530
 static void GetOptionAutoActivatePvE(CUFProfileInfo* profile, lua_State* L) {
     lua_pushboolean(L, profile->m_autoActivate.m_pve);
 }
 
-// PROVEN: 69869e93 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7D70/0x140756550
 static void SetOptionAutoActivatePvE(CUFProfileInfo* profile, lua_State* L, int32_t index) {
     profile->m_autoActivate.m_pve = lua_toboolean(L, index) != 0;
 }
 
-// PROVEN: 24a6857a IDENTICAL/IDENTICAL
 // OFFSET: 0x009C8170/0x140756980
 void CGCUFProfiles::EnterWorld(bool reload) {
     if (reload) {
@@ -542,7 +483,6 @@ void CGCUFProfiles::SaveProfiles() {
     }
 }
 
-// PROVEN: 2a85d4a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C8530/0x140756EA0
 void CUFProfileInfo::FromJam(const JamCliCUFProfile& jam) {
     SStrCopy(this->m_name, jam.m_name, sizeof(this->m_name));
@@ -661,7 +601,6 @@ JamCliCUFProfile* CUFProfileInfo::ToJam(JamCliCUFProfile* jam) {
     return jam;
 }
 
-// PROVEN: e6e040a0 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C8DC0/0x140757920
 CUFProfileInfo* CGCUFProfiles::GetProfile(const char* name) {
     PROFILENODE* node = CGCUFProfiles::s_profileHash.Ptr(name);
@@ -746,7 +685,6 @@ void CGCUFProfiles::SaveProfileCopy(CUFProfileInfo* profile) {
     }
 }
 
-// PROVEN: 7210c3e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C9A40/0x140758BC0
 void CGCUFProfiles::RestoreProfileCopy() {
     CUFProfileInfo* profile = CGCUFProfiles::GetProfile(CGCUFProfiles::s_savedName);

@@ -35,14 +35,12 @@ static const char* s_gossipTypes[22] = {
     NULL,
 };
 
-// PROVEN: cac29db9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E1350/0x140778040
 static int32_t Script_GetNumGossipOptions(lua_State* L) {
     lua_pushnumber(L, CGGossipInfo::m_gossipOptionsCount);
     return 1;
 }
 
-// PROVEN: ec0062f9 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E1790/0x1407786E0
 static int32_t Script_ForceGossip(lua_State* L) {
     bool force = false;
@@ -56,7 +54,6 @@ static int32_t Script_ForceGossip(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 3c48d8d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E1330/0x140778020
 static int32_t Script_GetGossipText(lua_State* L) {
     lua_pushstring(L, CGGossipInfo::m_gossipText);
@@ -79,21 +76,18 @@ static int32_t Script_GetGossipOptions(lua_State* L) {
     return 2 * count;
 }
 
-// PROVEN: 43a96aaf IDENTICAL/DIFFERENT
 // OFFSET: 0x009E1390/0x140778070
 static int32_t Script_GetNumGossipAvailableQuests(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(CGGossipInfo::GetNumAvailableQuests()));
     return 1;
 }
 
-// PROVEN: e1e5b616 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E13D0/0x1407780D0
 static int32_t Script_GetNumGossipActiveQuests(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(CGGossipInfo::GetNumActiveQuests()));
     return 1;
 }
 
-// PROVEN: 56781f76 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E1660/0x1407784D0
 static int32_t Script_CloseGossip(lua_State* L) {
     if (CGGossipInfo::m_gossip) {
@@ -193,7 +187,6 @@ static int32_t Script_SelectGossipOption(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 22a12547 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E2020/0x140779190
 static int32_t Script_SelectGossipAvailableQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -205,7 +198,6 @@ static int32_t Script_SelectGossipAvailableQuest(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4fb86e2d IDENTICAL/DIFFERENT
 // OFFSET: 0x009E2090/0x1407791E0
 static int32_t Script_SelectGossipActiveQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -233,7 +225,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ForceGossip", &Script_ForceGossip },
 };
 
-// PROVEN: ce311808 IDENTICAL/UNPROVEN
 // OFFSET: 0x009E1690/0x140778530
 void GossipInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -241,7 +232,6 @@ void GossipInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: a367cf61 IDENTICAL/UNPROVEN
 // OFFSET: 0x009E16C0/0x140778580
 void GossipInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

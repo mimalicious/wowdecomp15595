@@ -186,7 +186,6 @@ static void ReserveTexBuffer() {
     s_texBuffer.m_count = 2048;
 }
 
-// PROVEN: bae7edbf DIFFERENT/IDENTICAL
 // OFFSET: 0x007172F0/0x1403EA8A0
 static void NoiseVolTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
@@ -195,7 +194,6 @@ static void NoiseVolTexCallback(EGxTexCommand command, uint32_t width, uint32_t 
     }
 }
 
-// PROVEN: 4081f755 IDENTICAL/NONE
 // OFFSET: 0x00717320
 static CTexture* CreateBlurBuffer(const char* name) {
     CGxTexFlags flags;
@@ -203,7 +201,6 @@ static CTexture* CreateBlurBuffer(const char* name) {
     return TextureCreate(512, 512, GxTex_Argb8888, GxTex_Argb8888, flags, NULL, GxTexNullUserFunc, name, 0);
 }
 
-// PROVEN: 6981411d IDENTICAL/UNPROVEN
 // OFFSET: 0x00717360/0x1403EA8D0
 int32_t Liquid::HasDynamicDisplMap() {
     if ((Liquid::s_displMapCount > 1 && (!Liquid::s_displMaps[2] || !Liquid::s_displMaps[3])) || !Liquid::s_displMaps[0] || !Liquid::s_displMaps[1]) {
@@ -213,19 +210,16 @@ int32_t Liquid::HasDynamicDisplMap() {
     return 1;
 }
 
-// PROVEN: ebead9d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x007173A0/0x1403EA910
 uint32_t Liquid::GetDynamicDisplMapCnt() {
     return Liquid::s_displMapCount;
 }
 
-// PROVEN: 66674763 IDENTICAL/UNPROVEN
 // OFFSET: 0x007173B0/0x1403EA920
 CGxTex* Liquid::GetDynamicDisplMap(uint32_t index) {
     return TextureGetGxTex(Liquid::s_displMaps[s_displMapCurrent[index]]);
 }
 
-// PROVEN: aaf7a655 IDENTICAL/IDENTICAL
 // OFFSET: 0x007173D0/0x1403EA940
 float Liquid::GetDynamicDisplMapInterpolation(uint32_t index) {
     return s_displMapInterpolation[index];
@@ -237,7 +231,6 @@ void __fastcall Liquid::OnTexturesDirty() {
     Liquid::SignalConfigChanged(1);
 }
 
-// PROVEN: f416ead6 IDENTICAL/UNPROVEN
 // OFFSET: 0x007173F0/0x1403EA960
 void Liquid::CacheProceduralTextures() {
     CGxTexFlags flags;
@@ -256,7 +249,6 @@ void Liquid::CacheProceduralTextures() {
     }
 }
 
-// PROVEN: d2bb80af IDENTICAL/UNPROVEN
 // OFFSET: 0x00717470/0x1403EA9F0
 void Liquid::UnCacheProceduralTextures() {
     if (s_riverDepthTex) {
@@ -282,7 +274,6 @@ void Liquid::UnCacheProceduralTextures() {
     }
 }
 
-// PROVEN: 970ca42d IDENTICAL/IDENTICAL
 // OFFSET: 0x00717520/0x1403EAAA0
 void Liquid::GrabBackBuffer() {
     if (!Liquid::NeedBackBuffer() || !s_backBuffer) {
@@ -296,61 +287,51 @@ void Liquid::GrabBackBuffer() {
     }
 }
 
-// PROVEN: a5e4295c IDENTICAL/IDENTICAL
 // OFFSET: 0x00717560/0x1403EAAE0
 CTexture* Liquid::GetBackBuffer() {
     return s_backBuffer;
 }
 
-// PROVEN: ad67666a IDENTICAL/UNPROVEN
 // OFFSET: 0x00717570/0x1403EAAF0
 CTexture* Liquid::GetBlurredBackBuffer() {
     return s_blurredBackBuffer;
 }
 
-// PROVEN: 6545f23d IDENTICAL/IDENTICAL
 // OFFSET: 0x00717580/0x1403EAB00
 CGxFrameBuffer* Liquid::GetBlurredBackBufferFB() {
     return s_blurredBackBufferFB;
 }
 
-// PROVEN: 50c22a2c IDENTICAL/IDENTICAL
 // OFFSET: 0x00717590/0x1403EAB10
 CTexture* Liquid::GetRealReflectionBuffer() {
     return s_realReflectionBuffer;
 }
 
-// PROVEN: d308aadb IDENTICAL/UNPROVEN
 // OFFSET: 0x007175A0/0x1403EAAF0
 CTexture* Liquid::GetBlurredReflectionBuffer() {
     return s_blurredReflectionBuffer;
 }
 
-// PROVEN: e2cf3e9f IDENTICAL/IDENTICAL
 // OFFSET: 0x007175B0/0x1403EAB30
 CGxFrameBuffer* Liquid::GetBlurredReflectionBufferFB() {
     return s_blurredReflectionFB;
 }
 
-// PROVEN: 47212a35 IDENTICAL/IDENTICAL
 // OFFSET: 0x007175C0/0x1403EAB40
 CTexture* Liquid::GetFakeReflectionBuffer() {
     return s_fakeReflectionBuffer;
 }
 
-// PROVEN: 91d99b69 IDENTICAL/IDENTICAL
 // OFFSET: 0x007175D0/0x1403EAB50
 CGxFrameBuffer* Liquid::GetRealReflectionFB() {
     return s_realReflectionFB;
 }
 
-// PROVEN: 0d567191 IDENTICAL/IDENTICAL
 // OFFSET: 0x007175E0/0x1403EAB60
 CGxFrameBuffer* Liquid::GetFakeReflectionFB() {
     return s_fakeReflectionFB;
 }
 
-// PROVEN: 233ca5a9 IDENTICAL/UNPROVEN
 // OFFSET: 0x007175F0/0x1403EAB70
 void Liquid::GetDisplMapInfoRaw(uint32_t index, C3Vector& pos, C2Vector& size) {
     pos = s_displMapRawPos[index];
@@ -450,7 +431,6 @@ void Liquid::SetDisplMapInfo(const C3Vector& pos, const C2Vector& size) {
     }
 }
 
-// PROVEN: c6bac292 IDENTICAL/IDENTICAL
 // OFFSET: 0x00717BD0/0x1403EB2A0
 void Liquid::ClearPerturbatorCache() {
     s_perturbationAllocator.Clear(typeid(Liquid::DisplMapPerturbation).raw_name(), SLOG_OBJECT, 1);

@@ -17,7 +17,6 @@
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: bae16471 IDENTICAL/DIFFERENT
 // OFFSET: 0x007C0790/0x1404BA220
 char* System_Log::DefaultPreamble() {
     Blizzard::Time::TimeRec rec;
@@ -39,7 +38,6 @@ char* System_Log::DefaultPreamble() {
     return preamble;
 }
 
-// PROVEN: e76629e0 IDENTICAL/DIFFERENT
 // OFFSET: 0x007C4200/0x1404BEB10
 char* System_Log::DefaultDayHeader() {
     Blizzard::Time::TimeRec rec;

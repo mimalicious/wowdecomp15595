@@ -61,7 +61,6 @@ static int32_t Script_DrawBlob(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 5491da44 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A004F0/0x14079EB10
 static int32_t Script_DrawNone(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
@@ -69,7 +68,6 @@ static int32_t Script_DrawNone(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ff0d580e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A00530/0x14079EB50
 static int32_t Script_EnableSmoothing(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
@@ -77,7 +75,6 @@ static int32_t Script_EnableSmoothing(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1fad60b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A00580/0x14079EBB0
 static int32_t Script_EnableMerging(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
@@ -117,7 +114,6 @@ static int32_t Script_SetNumSplinePoints(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 5f1ac9d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A016B0/0x1407A0180
 static int32_t Script_SetFillTexture(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
@@ -125,7 +121,6 @@ static int32_t Script_SetFillTexture(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 07fe3ebf IDENTICAL/IDENTICAL
 // OFFSET: 0x00A01700/0x1407A01E0
 static int32_t Script_SetBorderTexture(lua_State* L) {
     CGBlobFrame* frame = static_cast<CGBlobFrame*>(FrameScript_GetObjectThis(L, CGBlobFrame::GetObjectType()));
@@ -148,14 +143,12 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetNumSplinePoints", &Script_SetNumSplinePoints },
 };
 
-// PROVEN: c12ea3c2 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FFCD0/0x14079E540
 void CGBlobFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }
 
-// PROVEN: 77ced8e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FFCF0/0x14079E570
 void CGBlobFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -163,7 +156,6 @@ void CGBlobFrame::DestroyScriptMetaTable() {
     CGBlobFrame::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 1fecb2be IDENTICAL/IDENTICAL
 // OFFSET: 0x00A006C0/0x14079ED30
 void CGBlobFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();

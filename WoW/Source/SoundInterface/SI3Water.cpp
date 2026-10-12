@@ -36,7 +36,6 @@ static void _StopAllWaterSounds() {
     }
 }
 
-// PROVEN: 84a369b2 IDENTICAL/DIFFERENT
 // OFFSET: 0x006348D0/0x1402CAB30
 static int32_t _OkToQueryLiquidSounds() {
     // STATIC: 0x00E288B4

@@ -30,7 +30,6 @@ Blizzard::Repair::REPAIRFAILCALLBACK Blizzard::Repair::s_repairFailCallback;
 // STATIC: 0x00EBA220
 Blizzard::Repair::REPAIRSUCCESSCALLBACK Blizzard::Repair::s_repairSuccessCallback;
 
-// PROVEN: d938d4b2 IDENTICAL/NONE
 // OFFSET: 0x007AAF30
 void Blizzard::Repair::SetRepairReportCallbacks(REPAIRCORRUPTIONCALLBACK corruption, REPAIRFAILCALLBACK fail, REPAIRSUCCESSCALLBACK success) {
     s_repairCorruptionCallback = corruption;
@@ -38,7 +37,6 @@ void Blizzard::Repair::SetRepairReportCallbacks(REPAIRCORRUPTIONCALLBACK corrupt
     s_repairSuccessCallback = success;
 }
 
-// PROVEN: 0394c043 IDENTICAL/NONE
 // OFFSET: 0x007AAF50
 void Blizzard::Repair::ReportRepairCorruption(const char* name, int64_t offset, uint32_t size) {
     if (s_repairCorruptionCallback) {
@@ -46,7 +44,6 @@ void Blizzard::Repair::ReportRepairCorruption(const char* name, int64_t offset, 
     }
 }
 
-// PROVEN: 39796aa4 IDENTICAL/NONE
 // OFFSET: 0x007EE310
 void Blizzard::Repair::LogRepair(const char* format, ...) {
     va_list args;
@@ -54,7 +51,6 @@ void Blizzard::Repair::LogRepair(const char* format, ...) {
     Blizzard::Log::VPrintf(0, "Logs/repair-on-demand.log", format, args);
 }
 
-// PROVEN: fcecb849 IDENTICAL/NONE
 // OFFSET: 0x007AAF80
 void Blizzard::Repair::ReportRepairSuccess(const char* name, int64_t offset, uint32_t size) {
     if (s_repairSuccessCallback) {
@@ -62,7 +58,6 @@ void Blizzard::Repair::ReportRepairSuccess(const char* name, int64_t offset, uin
     }
 }
 
-// PROVEN: 312a9ccb IDENTICAL/NONE
 // OFFSET: 0x007AAFB0
 void Blizzard::Repair::ReportRepairFail(const char* name, int64_t offset, uint32_t size, const char* error) {
     if (s_repairFailCallback) {

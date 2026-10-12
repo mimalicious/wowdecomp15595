@@ -52,7 +52,6 @@ bool CGVoidTransfer::RemoveWithdrawItem(uint32_t slot) {
     return true;
 }
 
-// PROVEN: 98c20cf4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F9CE0/0x14027EB90
 bool CGVoidTransfer::IsWithdrawItem(WOWGUID guid) {
     for (uint32_t i = 0; i < 9; i++) {
@@ -64,7 +63,6 @@ bool CGVoidTransfer::IsWithdrawItem(WOWGUID guid) {
     return false;
 }
 
-// PROVEN: dc480ac5 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F9D20/0x14027EBB0
 uint64_t CGVoidTransfer::GetDepositCost() {
     uint64_t cost = 0;
@@ -169,7 +167,6 @@ bool CGVoidTransfer::RemoveDepositItem(uint32_t slot) {
     return true;
 }
 
-// PROVEN: 2ef98e52 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F9F80/0x14027EDD0
 void CGVoidTransfer::Destroy() {
     if (CGVoidTransfer::s_instance) {
@@ -179,7 +176,6 @@ void CGVoidTransfer::Destroy() {
     CGVoidTransfer::s_instance = NULL;
 }
 
-// PROVEN: c2131024 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F9FB0/0x14027EE10
 CGVoidTransfer::CGVoidTransfer() {
     memset(this->m_deposits, 0, sizeof(this->m_deposits));
@@ -187,7 +183,6 @@ CGVoidTransfer::CGVoidTransfer() {
     this->m_storage = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->GetVoidStorage();
 }
 
-// PROVEN: bd896fb4 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FA080/0x14027EF70
 CGVoidTransfer* CGVoidTransfer::Get(bool create) {
     if (!CGVoidTransfer::s_instance && create) {
@@ -198,7 +193,6 @@ CGVoidTransfer* CGVoidTransfer::Get(bool create) {
     return CGVoidTransfer::s_instance;
 }
 
-// PROVEN: d6bb4176 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FA0C0/0x14027EFD0
 bool CGVoidTransfer::SendTransfer(WOWGUID npc) {
     if (this->m_storage->m_state != 2) {

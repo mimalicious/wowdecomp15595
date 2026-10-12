@@ -521,7 +521,6 @@ Snow::~Snow() {
     }
 }
 
-// PROVEN: 979541c2 IDENTICAL/UNPROVEN
 // OFFSET: 0x007523D0/0x1404333A0
 void Snow::Render() {
     this->UpdatePackets();

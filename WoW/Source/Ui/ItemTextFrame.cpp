@@ -41,7 +41,6 @@ void CGItemText::InitializeGame() {
     CGItemText::m_text[0] = '\0';
 }
 
-// PROVEN: c523cc46 IDENTICAL/UNPROVEN
 // OFFSET: 0x009DE070/0x140774180
 void CGItemText::ShutdownGame() {
     CGItemText::m_pages.Clear();
@@ -201,7 +200,6 @@ void CGItemText::SetItem(const WOWGUID& guid, int32_t a2) {
     }
 }
 
-// PROVEN: f546315a IDENTICAL/IDENTICAL
 // OFFSET: 0x009DE800/0x140773FC0
 void CGItemText::ItemTextCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success && CGItemText::m_itemGUID == guid) {

@@ -3,7 +3,6 @@
 #include "WoW/Source/WowServices/BigInteger.h"
 #include "WoW/Source/WowServices/SRP6_Random.h"
 
-// PROVEN: a1fa36fd IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3A4A0/0x140907020
 int32_t SRP6_Client::BeginAuthentication(const char* accountName, const char* password) {
     if (!accountName || !password) {
@@ -137,7 +136,6 @@ int32_t SRP6_Client::CalculateProof(const uint8_t* largeSafePrime, uint32_t larg
     return result;
 }
 
-// PROVEN: 085f97f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3AA50/0x140907730
 int32_t SRP6_Client::VerifyServerProof(const uint8_t* serverProof, uint32_t serverProofLength) {
     if (serverProofLength != 20) {

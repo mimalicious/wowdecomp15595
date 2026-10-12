@@ -14,7 +14,6 @@ CVar* CCharacterComponent::g_componentThreadVar;
 // STATIC: 0x0100AA94/0x140EE2690
 CVar* CCharacterComponent::g_componentCompressVar;
 
-// PROVEN: 0c306dc8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool ComponentVarHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     return true;
@@ -48,7 +47,6 @@ static bool ComponentTextureLevelCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
-// PROVEN: 13a1ea1f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3C180/0x140909030
 void CCharacterComponent::InitCVars() {
     CCharacterComponent::g_componentTextureLevelVar = CVar::Register("componentTextureLevel", "Number of mip levels used for character component textures", 1, "8", ComponentTextureLevelCallback, CATEGORY_GRAPHICS, false, NULL, false);

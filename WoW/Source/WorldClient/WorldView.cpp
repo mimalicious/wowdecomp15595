@@ -109,7 +109,6 @@ void CWorldView::ScaleFadeDist(float scale) {
     }
 }
 
-// PROVEN: fde85f68 IDENTICAL/DIFFERENT
 // OFFSET: 0x00753510/0x140434640
 uint32_t CWorldView::CalcMinSizeCatFromDistSqr(float distSqr) {
     if (distSqr < 0.0f) {
@@ -135,7 +134,6 @@ uint32_t CWorldView::CalcMinSizeCatFromDistSqr(float distSqr) {
     return 4;
 }
 
-// PROVEN: 9faeb6ca IDENTICAL/UNPROVEN
 // OFFSET: 0x00753580/0x140434690
 void CWorldView::Gather() {
     CWorldMap::Gather(this);
@@ -147,7 +145,6 @@ void CWorldView::CalcProjection(C44Matrix& projection) {
     GxuXformCreateProjection_Exact(this->m_fov * 0.60000002f, this->m_aspect, nearClip, World::GetHorizonFarClip(), projection);
 }
 
-// PROVEN: aeb50149 IDENTICAL/IDENTICAL
 // OFFSET: 0x007535F0/0x140434710
 void CWorldView::FrustumPop() {
     this->m_frustumIndex--;
@@ -287,7 +284,6 @@ int32_t CWorldView::OcclusionQueryBox(const CAaBox& box, uint32_t flags) {
     return occluded;
 }
 
-// PROVEN: d3a1999d IDENTICAL/IDENTICAL
 // OFFSET: 0x00753EC0/0x140434FB0
 void CWorldView::EnableSortTable(int32_t enable) {
     if (enable) {
@@ -303,7 +299,6 @@ void CWorldView::EnableSortTable(int32_t enable) {
     }
 }
 
-// PROVEN: 92936758 IDENTICAL/DIFFERENT
 // OFFSET: 0x00753F30/0x140435040
 void CWorldView::EnableShadow(int32_t enable) {
     if (enable) {
@@ -320,14 +315,12 @@ void CWorldView::EnableShadow(int32_t enable) {
     }
 }
 
-// PROVEN: 7c4b7b97 IDENTICAL/DIFFERENT
 // OFFSET: 0x00753FB0/0x1404350E0
 void CWorldView::UpdateViewMat() {
     this->m_viewMat = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
     this->m_viewMat.Translate(C3Vector(-this->m_camPos.x, -this->m_camPos.y, -this->m_camPos.z));
 }
 
-// PROVEN: 2f3e58ee IDENTICAL/UNPROVEN
 // OFFSET: 0x00754030/0x140435160
 void CWorldView::UpdateViewerUnderwater() {
     this->m_underwater = 0;
@@ -410,7 +403,6 @@ void CWorldView::RenderM2SkyboxPass(CM2Scene* scene) {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// PROVEN: 95f01391 DIFFERENT/IDENTICAL
 // OFFSET: 0x00754380/0x140435620
 void CWorldView::RenderSceneClear() {
     if (!g_theGxDevicePtr->MasterEnable(GxMasterEnable_PolygonFill)) {
@@ -435,7 +427,6 @@ void CWorldView::RenderSceneClear() {
     GxSceneClear(0x1F, DayNight::GetFogInfo()->m_color);
 }
 
-// PROVEN: 1ec1277b IDENTICAL/IDENTICAL
 // OFFSET: 0x00754410/0x1404356C0
 void CWorldView::FrustumPush() {
     this->m_frustumIndex++;
@@ -1099,7 +1090,6 @@ int32_t CWorldView::TransformAndClipVerts(int32_t ignoreOcclusion, const C3Vecto
     return 0;
 }
 
-// PROVEN: cfc2bd66 IDENTICAL/NONE
 // OFFSET: 0x00757130
 void CWorldView::ClearLists() {
     for (uint32_t i = 0; i < 6; i++) {
@@ -1164,7 +1154,6 @@ void CWorldView::UpdateNonVisEntitys() {
     }
 }
 
-// PROVEN: 68e191b5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00757300/0x140438C30
 void CWorldView::AddMapChunkToRenderList(CMapChunk* chunk) {
     CMapRenderChunk* renderChunk = chunk->m_renderChunk;
@@ -1612,7 +1601,6 @@ void CWorldView::ClipPortalExt(CMapObj* mapObj, const SMOPortalInfo* portal, SPo
     }
 }
 
-// PROVEN: 080d5354 IDENTICAL/IDENTICAL
 // OFFSET: 0x00758870/0x14043AD20
 void CWorldView::EnableOcclusion(int32_t enable) {
     if (enable) {
@@ -1834,7 +1822,6 @@ void CWorldView::AddOccluder(const C3Vector& start, const C3Vector& end) {
     this->m_sortTable->m_entries.m_data[endEntry].m_occluders.LinkToTail(occluder);
 }
 
-// PROVEN: 5492e786 IDENTICAL/NONE
 // OFFSET: 0x00759420
 void CWorldView::AddExteriorPortal(CPortalView& portalView) {
     this->m_exteriorPortalViews.Add(1, &portalView);
@@ -1957,7 +1944,6 @@ void CWorldView::AddMapEntity(CMapEntity* entity) {
     }
 }
 
-// PROVEN: 321d33ef IDENTICAL/DIFFERENT
 // OFFSET: 0x007598D0/0x14043C2A0
 void CWorldView::AddLowDetailMapArea(CMapAreaLow* area) {
     C3Vector point;
@@ -1977,7 +1963,6 @@ void CWorldView::AddLowDetailMapArea(CMapAreaLow* area) {
     this->m_sortTable->m_entries.m_data[entry].m_lowDetailAreas.Add(1, &value);
 }
 
-// PROVEN: 33d044cb IDENTICAL/DIFFERENT
 // OFFSET: 0x007599B0/0x14043C380
 void CWorldView::AddLowDetailMapObjDef(CMapObjDef* mapObjDef) {
     C3Vector point;
@@ -1997,7 +1982,6 @@ void CWorldView::AddLowDetailMapObjDef(CMapObjDef* mapObjDef) {
     this->m_sortTable->m_entries.m_data[entry].m_lowDetailMapObjDefs.Add(1, &value);
 }
 
-// PROVEN: ddb6837c IDENTICAL/DIFFERENT
 // OFFSET: 0x00759A90/0x14043C470
 void CWorldView::AddLowDetailMapAreaOcean(CMapAreaLow* area) {
     C3Vector point;

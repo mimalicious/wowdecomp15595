@@ -94,7 +94,6 @@ void CWorldMap::ClearAllFootprints() {
     }
 }
 
-// PROVEN: 0d451cf6 IDENTICAL/UNPROVEN
 // OFFSET: 0x0075D7C0/0x140441130
 void CWorldMap::FootprintDestroy() {
     if (s_footprintVS) {

@@ -133,7 +133,6 @@ bool System_File::WriteP(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     return write_func(parms->m_stream, parms->m_buffer, &overlapped, &parms->m_amount);
 }
 
-// PROVEN: 336cd3c4 IDENTICAL/DIFFERENT
 // OFFSET: 0x007BC640/0x1404B46A0
 bool System_File::Close(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     Blizzard::File::StreamRecord* stream = parms->m_stream;
@@ -186,7 +185,6 @@ bool System_File::Stacked::GetRootChars(System_File::Stacked::FileParms* parms) 
     return true;
 }
 
-// PROVEN: f099edff IDENTICAL/IDENTICAL
 // OFFSET: 0x007BFF70/0x1404B93D0
 bool System_File::GetRootChars(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::GetRootChars(parms);
@@ -275,7 +273,6 @@ bool System_File::Stacked::Exists(System_File::Stacked::FileParms* parms) {
     return true;
 }
 
-// PROVEN: 09004686 DIFFERENT/IDENTICAL
 // OFFSET: 0x007C4020/0x1404BE8A0
 bool System_File::Exists(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::Exists(parms);
@@ -302,7 +299,6 @@ bool System_File::Stacked::MakeAbsolutePath(System_File::Stacked::FileParms* par
     return true;
 }
 
-// PROVEN: c7792b6e IDENTICAL/IDENTICAL
 // OFFSET: 0x007C4040/0x1404BE8B0
 bool System_File::MakeAbsolutePath(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::MakeAbsolutePath(parms);
@@ -321,7 +317,6 @@ bool System_File::Stacked::Move(System_File::Stacked::FileParms* parms) {
     return MoveFileW(reinterpret_cast<LPCWSTR>(oldName.m_data), reinterpret_cast<LPCWSTR>(newName.m_data)) != 0;
 }
 
-// PROVEN: b1c28d38 IDENTICAL/IDENTICAL
 // OFFSET: 0x007C4060/0x1404BE8C0
 bool System_File::Move(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::Move(parms);
@@ -346,7 +341,6 @@ bool System_File::Stacked::SupportsSparse(System_File::Stacked::FileParms* parms
     return result != 0;
 }
 
-// PROVEN: 711edcb5 IDENTICAL/IDENTICAL
 // OFFSET: 0x007C4000/0x1404BE890
 bool System_File::SupportsSparse(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::SupportsSparse(parms);
@@ -362,7 +356,6 @@ bool System_File::Stacked::Delete(System_File::Stacked::FileParms* parms) {
     return DeleteFileW(reinterpret_cast<LPCWSTR>(name.m_data)) != 0;
 }
 
-// PROVEN: f226fdf0 IDENTICAL/DIFFERENT
 // OFFSET: 0x007C4080/0x1404BE8D0
 bool System_File::Delete(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::Delete(parms);
@@ -389,7 +382,6 @@ bool System_File::Stacked::SetSparse(System_File::Stacked::FileParms* parms) {
     return result != 0;
 }
 
-// PROVEN: 29aa2632 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B4B50/0x1404AA6A0
 bool System_File::SetSparse(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::SetSparse(parms);
@@ -411,7 +403,6 @@ bool System_File::Stacked::ZeroRange(System_File::Stacked::FileParms* parms) {
     return DeviceIoControl(parms->m_stream->m_fileHandle, FSCTL_SET_ZERO_DATA, &zero, sizeof(zero), NULL, 0, &bytesReturned, NULL) != 0;
 }
 
-// PROVEN: 70bce816 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B4B70/0x1404AA6B0
 bool System_File::ZeroRange(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::ZeroRange(parms);
@@ -522,7 +513,6 @@ bool System_File::Create(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     return false;
 }
 
-// PROVEN: 9ad2d1a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x007BC670/0x1404B46E0
 bool System_File::Stacked::GetWorkingDirectory(System_File::Stacked::FileParms* parms) {
     wchar_t buffer[1024];
@@ -592,7 +582,6 @@ bool System_File::Stacked::ProcessDirFast(System_File::Stacked::FileParms* parms
     return true;
 }
 
-// PROVEN: e4d61db0 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9A80/0x1404F53D0
 bool System_File::ProcessDirFast(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::ProcessDirFast(parms);
@@ -672,7 +661,6 @@ bool System_File::Stacked::GetFileInfo(System_File::Stacked::FileParms* parms) {
     return false;
 }
 
-// PROVEN: 5ba0aeed IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9AE0/0x1404F5420
 bool System_File::GetFileInfo(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::GetFileInfo(parms);
@@ -727,7 +715,6 @@ bool System_File::Stacked::GetFreeSpace(System_File::Stacked::FileParms* parms) 
     return false;
 }
 
-// PROVEN: 47fc02f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9B00/0x1404F5430
 bool System_File::GetFreeSpace(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::GetFreeSpace(parms);
@@ -749,7 +736,6 @@ bool System_File::Stacked::GetPos(System_File::Stacked::FileParms* parms) {
     return true;
 }
 
-// PROVEN: 256f0de7 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9B20/0x1404F5440
 bool System_File::GetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::GetPos(parms);
@@ -768,7 +754,6 @@ bool System_File::Stacked::IsAbsolutePath(System_File::Stacked::FileParms* parms
     return false;
 }
 
-// PROVEN: ced7a509 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9B40/0x1404F5450
 bool System_File::IsAbsolutePath(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::IsAbsolutePath(parms);
@@ -792,7 +777,6 @@ bool System_File::Stacked::IsReadOnly(System_File::Stacked::FileParms* parms) {
     return false;
 }
 
-// PROVEN: ffed721d IDENTICAL/DIFFERENT
 // OFFSET: 0x007E9B60/0x1404F5460
 bool System_File::IsReadOnly(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::IsReadOnly(parms);
@@ -917,7 +901,6 @@ bool System_File::Stacked::CreateDirectory(System_File::Stacked::FileParms* parm
     return result;
 }
 
-// PROVEN: c09a0209 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9B80/0x1404F5470
 bool System_File::CreateDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::CreateDirectory(parms);
@@ -1038,13 +1021,11 @@ bool System_File::Stacked::Open(System_File::Stacked::FileParms* parms) {
     return true;
 }
 
-// PROVEN: 3a7091b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9DE0/0x1404F5870
 bool System_File::Open(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::Open(parms);
 }
 
-// PROVEN: 2b74ce0b IDENTICAL/DIFFERENT
 // OFFSET: 0x007E9E00/0x1404F5880
 bool System_File::Read(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return read_overlapped(parms->m_stream, parms->m_buffer, NULL, &parms->m_amount);
@@ -1071,7 +1052,6 @@ bool System_File::Stacked::RemoveDirectory(System_File::Stacked::FileParms* parm
     return RemoveDirectoryW(reinterpret_cast<LPCWSTR>(name.m_data)) != 0;
 }
 
-// PROVEN: c4253d44 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9E20/0x1404F58A0
 bool System_File::RemoveDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::RemoveDirectory(parms);
@@ -1108,7 +1088,6 @@ bool System_File::Stacked::SetCacheMode(System_File::Stacked::FileParms* parms) 
     return true;
 }
 
-// PROVEN: 0c2c0359 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9E40/0x1404F58B0
 bool System_File::SetCacheMode(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::SetCacheMode(parms);
@@ -1144,7 +1123,6 @@ bool System_File::Stacked::SetEOF(System_File::Stacked::FileParms* parms) {
     return result != 0;
 }
 
-// PROVEN: 1fe0fe85 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9E60/0x1404F58C0
 bool System_File::SetEOF(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::SetEOF(parms);
@@ -1193,7 +1171,6 @@ bool System_File::Stacked::SetAttributes(System_File::Stacked::FileParms* parms)
     return parms->m_has.m_all == 0;
 }
 
-// PROVEN: f4a53b78 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9E80/0x1404F58D0
 bool System_File::SetAttributes(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::SetAttributes(parms);
@@ -1232,13 +1209,11 @@ bool System_File::Stacked::SetPos(System_File::Stacked::FileParms* parms) {
     return true;
 }
 
-// PROVEN: caf2fc39 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E9EA0/0x1404F58E0
 bool System_File::SetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return System_File::Stacked::SetPos(parms);
 }
 
-// PROVEN: 7d1f9700 IDENTICAL/DIFFERENT
 // OFFSET: 0x007E9EC0/0x1404F58F0
 bool System_File::Write(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return write_overlapped(parms->m_stream, parms->m_buffer, NULL, &parms->m_amount);

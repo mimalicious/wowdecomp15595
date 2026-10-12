@@ -44,7 +44,6 @@
 // STATIC: 0x00BF646C/0x1409ED680
 static const int32_t s_specializationSpells[5] = { 20219, 20222, 28677, 28675, 28672 };
 
-// PROVEN: c5e048ee IDENTICAL/NONE
 // OFFSET: 0x0090E2E0
 static bool GetCompanionTypeFromLua(lua_State* L, int32_t* type) {
     const char* token = lua_tolstring(L, 1, NULL);
@@ -104,7 +103,6 @@ static bool GetSlotFromLua(lua_State* L, int32_t* slot, int32_t* petSpell, int32
     return false;
 }
 
-// PROVEN: c63910da DIFFERENT/IDENTICAL
 // OFFSET: 0x0090E330/0x1406695B0
 static int32_t Script_UnlearnSpecialization(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -242,7 +240,6 @@ static int32_t Script_SetSpellbookPetAction(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 64edecff IDENTICAL/UNPROVEN
 // OFFSET: 0x0090F570/0x14066AB50
 static int32_t Script_GetNumShapeshiftForms(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(s_shapeshiftSpells.m_count));
@@ -265,7 +262,6 @@ static int32_t Script_CastShapeshiftForm(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c69fd268 IDENTICAL/UNPROVEN
 // OFFSET: 0x0090F640/0x14066AC00
 static int32_t Script_GetShapeshiftFormCooldown(lua_State* L) {
     if (lua_tonumber(L, 1) == 0.0) {
@@ -292,7 +288,6 @@ static int32_t Script_GetShapeshiftFormCooldown(lua_State* L) {
     return 3;
 }
 
-// PROVEN: b7942c9c IDENTICAL/UNPROVEN
 // OFFSET: 0x0090F760/0x14066AD20
 static int32_t Script_GetNumCompanions(lua_State* L) {
     int32_t type;
@@ -357,7 +352,6 @@ static int32_t Script_GetCallPetSpellInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 7489661f IDENTICAL/DIFFERENT
 // OFFSET: 0x00910C20/0x14066C8B0
 static int32_t Script_HasPetSpells(lua_State* L) {
     if (s_petSpellBookItems.m_count) {
@@ -378,14 +372,12 @@ static int32_t Script_HasPetSpells(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 07fe615a IDENTICAL/IDENTICAL
 // OFFSET: 0x00910D00/0x14066C9A0
 static int32_t Script_GetShapeshiftForm(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGSpellBook::GetShapeshiftForm(StringToBOOL(L, 1, 0))));
     return 1;
 }
 
-// PROVEN: 2b535ba0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00910D50/0x14066C9E0
 static int32_t Script_GetShapeshiftFormID(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -400,7 +392,6 @@ static int32_t Script_GetShapeshiftFormID(lua_State* L) {
     return 1;
 }
 
-// PROVEN: fcc08d66 IDENTICAL/DIFFERENT
 // OFFSET: 0x00910DC0/0x14066CA50
 static int32_t Script_CancelShapeshiftForm(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -665,7 +656,6 @@ static int32_t Script_CallCompanion(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 663c2979 IDENTICAL/DIFFERENT
 // OFFSET: 0x00911630/0x14066D550
 static int32_t Script_DismissCompanion(lua_State* L) {
     int32_t type;
@@ -713,7 +703,6 @@ static int32_t Script_IsSpellKnown(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 93973c5b IDENTICAL/DIFFERENT
 // OFFSET: 0x00911780/0x14066D700
 static int32_t Script_SummonRandomCritter(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -939,7 +928,6 @@ static int32_t Script_GetCurrentLevelFeatures(lua_State* L) {
     return count;
 }
 
-// PROVEN: add8d11b IDENTICAL/DIFFERENT
 // OFFSET: 0x00912F90/0x14066F690
 static int32_t Script_PickupSpell(lua_State* L) {
     if (!lua_isnumber(L, 1) || lua_gettop(L) != 1) {
@@ -956,7 +944,6 @@ static int32_t Script_PickupSpell(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dc61a003 DIFFERENT/IDENTICAL
 // OFFSET: 0x00913010/0x14066F710
 static int32_t Script_PickupCompanion(lua_State* L) {
     int32_t type;
@@ -1089,7 +1076,6 @@ static int32_t Script_CastSpellByName(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d1b2278f IDENTICAL/IDENTICAL
 // OFFSET: 0x00913DD0/0x1406709F0
 static int32_t Script_SetBarSlotFromIntro(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1993,7 +1979,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetSpellBaseCooldown", &Script_GetSpellBaseCooldown },
 };
 
-// PROVEN: 1e42860d IDENTICAL/UNPROVEN
 // OFFSET: 0x0090E3B0/0x140669620
 void SpellBookRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -2001,7 +1986,6 @@ void SpellBookRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: a0d82c3e IDENTICAL/UNPROVEN
 // OFFSET: 0x0090E3E0/0x140669670
 void SpellBookUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

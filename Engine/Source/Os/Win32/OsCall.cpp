@@ -56,7 +56,6 @@ void OsCallResetContext(void* context) {
     }
 }
 
-// PROVEN: a6d6ea95 IDENTICAL/NONE
 // OFFSET: 0x00B42060
 OsCallContext::~OsCallContext() {
 }

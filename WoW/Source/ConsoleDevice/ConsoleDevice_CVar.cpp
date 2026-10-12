@@ -94,14 +94,12 @@ CVar* s_cvGxWindow;
 // STATIC: 0x00E2899C
 CVar* s_cvWindowResizeLock;
 
-// PROVEN: ccfcc595 NONE/IDENTICAL
 // OFFSET: 0x006352D0/0x1402CB6D0
 static bool CVGxRestartPendingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
     return true;
 }
 
-// PROVEN: 83558cf9 IDENTICAL/IDENTICAL
 // OFFSET: 0x006352F0/0x1402CB6F0
 static bool CVClientRestartPendingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleWrite("set pending client restart", DEFAULT_COLOR);
@@ -145,14 +143,12 @@ static bool CVGxApiCallback(CVar* var, const char* oldValue, const char* value, 
     return false;
 }
 
-// PROVEN: f02c386d IDENTICAL/IDENTICAL
 // OFFSET: 0x00635530/0x1402CB9A0
 static bool CVGxOverrideCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleGxOverride(value);
     return true;
 }
 
-// PROVEN: 42f8b7aa IDENTICAL/IDENTICAL
 // OFFSET: 0x00635550/0x1402CB9C0
 static bool CVWindowResizeLockCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     OsInputSetWindowResizeLock(SStrToInt(value));
@@ -216,14 +212,12 @@ static bool CVGxStereoSeparationCallback(CVar* var, const char* oldValue, const 
     return true;
 }
 
-// PROVEN: f7f00bf0 IDENTICAL/IDENTICAL
 // OFFSET: 0x006358D0/0x1402CBDD0
 void RegisterStereoCVars() {
     s_cvGxStereoConvergence = CVar::Register("gxStereoConvergence", "Set stereoscopic rendering convergence depth", 1, "1", CVGxStereoConvergenceCallback, CATEGORY_GRAPHICS, false, NULL, false);
     s_cvGxStereoSeparation = CVar::Register("gxStereoSeparation", "Set stereoscopic rendering separation percentage", 1, "25", CVGxStereoSeparationCallback, CATEGORY_GRAPHICS, false, NULL, false);
 }
 
-// PROVEN: 59edf2bd IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 static bool CVVideoOptionsVersionCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     return true;

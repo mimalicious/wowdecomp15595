@@ -47,7 +47,6 @@ void Blizzard::Thread::LocalObject<T>::Delete(void* ptr) {
     delete static_cast<T*>(ptr);
 }
 
-// PROVEN: 6c772f2a IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5DB0/0x14049ABE0<System_SFile2::SFileFatalInfo>
 template <class T>
 void* Blizzard::Thread::LocalObject<T>::New(void* param) {

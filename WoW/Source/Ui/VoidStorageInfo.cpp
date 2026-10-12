@@ -14,13 +14,11 @@
 // STATIC: 0x00F76858/0x140E6C8E0
 WOWGUID CGVoidStorageInfo::m_npc;
 
-// PROVEN: 308d3cc3 IDENTICAL/DIFFERENT
 // OFFSET: 0x009ED390/0x1407866E0
 void CGVoidStorageInfo::EnterWorld() {
     CGVoidStorageInfo::m_npc = WOWGUID();
 }
 
-// PROVEN: 61c99e80 IDENTICAL/UNPROVEN
 // OFFSET: 0x009ED3A0/0x1407866F0
 void CGVoidStorageInfo::ShutdownGame() {
     CGVoidTransfer::Destroy();
@@ -167,13 +165,11 @@ void CGVoidStorageInfo::DepositItem(CGItem_C* item, uint32_t slot, bool playSoun
     }
 }
 
-// PROVEN: b7bdf7e7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EDF20/0x140787410
 void CGVoidStorageInfo::LeaveWorld() {
     CGVoidStorageInfo::SetNPC(WOWGUID());
 }
 
-// PROVEN: 53e8ee2e IDENTICAL/IDENTICAL
 // OFFSET: 0x009EDF40/0x140787430
 void CGVoidStorageInfo::AutoDepositItem(CGItem_C* item) {
     if (item && !(item->m_itemFlags & 1)) {

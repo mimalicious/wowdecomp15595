@@ -81,7 +81,6 @@ int32_t CACHEENTRY::LoadTexture() {
     return 1;
 }
 
-// PROVEN: 0a85dc2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00703DA0/0x1403D08A0
 void* TextureCacheCopyTexture(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
@@ -158,7 +157,6 @@ int32_t TextureCacheGetInfo(void* handle, TCTEXTUREINFO& info, int32_t wait) {
     return 1;
 }
 
-// PROVEN: 76cf2643 IDENTICAL/IDENTICAL
 // OFFSET: 0x00703F10/0x1403D0A00
 void TextureCacheIncreasePriority(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
@@ -170,13 +168,11 @@ void TextureCacheIncreasePriority(void* handle) {
     }
 }
 
-// PROVEN: 2587d302 IDENTICAL/IDENTICAL
 // OFFSET: 0x00703F60/0x1403D0A50
 void TextureCacheResetLoadCount() {
     s_loadCount = 0;
 }
 
-// PROVEN: 7d5e49e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00703F70/0x1403D0A60
 void TextureCacheComputeLoadProgress(void* handle, int64_t& local, int64_t& total) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
@@ -248,7 +244,6 @@ void TextureCacheDestroyTexture(void* handle) {
     }
 }
 
-// PROVEN: eae448c4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00704480/0x1403D0F10
 static CACHEENTRY* TextureCacheAllocEntry() {
     if (!s_entryPool) {

@@ -62,7 +62,6 @@ typedef struct {
 
 } vorbis_look_residue0;
 
-// PROVEN: 7f81e988 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B48050/0x1409177A0
 void FMOD_res0_free_info(vorbis_info_residue *i){
   vorbis_info_residue0 *info=(vorbis_info_residue0 *)i;
@@ -201,7 +200,6 @@ void FMOD_res0_pack(vorbis_info_residue *vr,oggpack_buffer *opb){
 #endif
 
 /* vorbis_info is for range checking */
-// PROVEN: 1c8ddd15 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B48140/0x1409178F0
 vorbis_info_residue *FMOD_res0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   int j,acc=0;
@@ -766,7 +764,6 @@ int FMOD_res0_forward(vorbis_block *vb,vorbis_look_residue *vl,
 }
 #endif
 
-// PROVEN: 598c3e53 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B486E0/0x140918050
 int FMOD_res0_inverse(vorbis_block *vb,vorbis_look_residue *vl,
                  float **in,int *nonzero,int ch){
@@ -823,7 +820,6 @@ ogg_int32_t **FMOD_res1_class(vorbis_block *vb,vorbis_look_residue *vl,
     return(0);
 }
 
-// PROVEN: 90a3a70b IDENTICAL/UNPROVEN
 // OFFSET: 0x00B48740/0x1409180D0
 int FMOD_res1_inverse(vorbis_block *vb,vorbis_look_residue *vl,
                  float **in,int *nonzero,int ch){

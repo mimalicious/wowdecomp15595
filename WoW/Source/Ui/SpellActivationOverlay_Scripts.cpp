@@ -6,7 +6,6 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// PROVEN: 4dce357e IDENTICAL/DIFFERENT
 // OFFSET: 0x009F2460/0x14078CBC0
 static int32_t Script_IsSpellOverlayed(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -24,7 +23,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "IsSpellOverlayed", &Script_IsSpellOverlayed },
 };
 
-// PROVEN: b6dbbfb5 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F2090/0x14078C650
 void SpellActivationOverlayRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -32,7 +30,6 @@ void SpellActivationOverlayRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 758f01ca IDENTICAL/UNPROVEN
 // OFFSET: 0x009F20B0/0x14078C670
 void SpellActivationOverlayUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

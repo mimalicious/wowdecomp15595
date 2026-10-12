@@ -20,7 +20,6 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// PROVEN: c743b4d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C3D10/0x1407510D0
 static int32_t Script_StopMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(3)) {
@@ -31,14 +30,12 @@ static int32_t Script_StopMacro(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6d7a6ea5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C3DE0/0x1407511A0
 static int32_t Script_GetRunningMacroButton(lua_State* L) {
     lua_pushstring(L, CGUIMacros::m_macroRunning);
     return 1;
 }
 
-// PROVEN: f2ca4c2d IDENTICAL/UNPROVEN
 // OFFSET: 0x009C3D30/0x140751100
 static int32_t Script_GetNumMacros(lua_State* L) {
     lua_pushnumber(L, CGUIMacros::m_numMacros[0]);
@@ -46,7 +43,6 @@ static int32_t Script_GetNumMacros(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 8930a63a IDENTICAL/DIFFERENT
 // OFFSET: 0x009C3D90/0x140751140
 static int32_t Script_GetRunningMacro(lua_State* L) {
     uint32_t id;
@@ -118,7 +114,6 @@ static int32_t Script_SetMacroSpell(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 26c52307 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C59B0/0x1407537E0
 static int32_t Script_GetMacroSpell(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
@@ -142,7 +137,6 @@ static int32_t Script_GetMacroSpell(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c15933ad IDENTICAL/DIFFERENT
 // OFFSET: 0x009C3C60/0x140751000
 static int32_t Script_SecureCmdOptionParse(lua_State* L) {
     const char* options = lua_tolstring(L, 1, NULL);
@@ -185,7 +179,6 @@ static int32_t Script_RunMacroText(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6cc103b7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C5A40/0x140753930
 static int32_t Script_GetMacroIcons(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
@@ -214,7 +207,6 @@ static int32_t Script_GetMacroIcons(lua_State* L) {
     return 1;
 }
 
-// PROVEN: b1362eec IDENTICAL/DIFFERENT
 // OFFSET: 0x009C5B20/0x140753A50
 static int32_t Script_GetMacroItemIcons(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
@@ -243,7 +235,6 @@ static int32_t Script_GetMacroItemIcons(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a1b3adae IDENTICAL/DIFFERENT
 // OFFSET: 0x009C5C30/0x140753BB0
 static int32_t Script_GetMacroIndexByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -255,7 +246,6 @@ static int32_t Script_GetMacroIndexByName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 2e8c5db1 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C5600/0x1407532C0
 static int32_t Script_RunMacro(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
@@ -267,7 +257,6 @@ static int32_t Script_RunMacro(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3bbf3e1d IDENTICAL/DIFFERENT
 // OFFSET: 0x009C6460/0x140754750
 static int32_t Script_GetMacroInfo(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
@@ -290,7 +279,6 @@ static int32_t Script_GetMacroInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e5688ad3 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C56E0/0x140753490
 static int32_t Script_GetMacroBody(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
@@ -303,7 +291,6 @@ static int32_t Script_GetMacroBody(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e91d8d2d IDENTICAL/IDENTICAL
 // OFFSET: 0x009C5710/0x140753510
 static int32_t Script_DeleteMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(12)) {
@@ -433,7 +420,6 @@ static int32_t Script_GetMacroItem(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 943130eb IDENTICAL/IDENTICAL
 // OFFSET: 0x009C5C00/0x140753B70
 static int32_t Script_PickupMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(14)) {
@@ -447,7 +433,6 @@ static int32_t Script_PickupMacro(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1259d80d IDENTICAL/DIFFERENT
 // OFFSET: 0x009C7220/0x140755B00
 static int32_t Script_CreateMacro(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -512,7 +497,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetRunningMacroButton", &Script_GetRunningMacroButton },
 };
 
-// PROVEN: 37786836 IDENTICAL/UNPROVEN
 // OFFSET: 0x009C3E00/0x1407511C0
 void UIMacrosRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -520,7 +504,6 @@ void UIMacrosRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: a17d2c2a IDENTICAL/UNPROVEN
 // OFFSET: 0x009C3E30/0x140751210
 void UIMacrosUnegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -119,7 +119,6 @@ void CWorldMap::GatherLowDetail(CWorldView* view) {
     }
 }
 
-// PROVEN: e6282609 IDENTICAL/UNPROVEN
 // OFFSET: 0x0079A9F0/0x14048F050
 void CWorldMap::Gather(CWorldView* view) {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];

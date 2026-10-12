@@ -33,12 +33,10 @@ static TSGrowableArray<TSGrowableArray<TSGrowableArray<int32_t> > > s_disenchant
 // STATIC: 0x00D9A9F0/0x140C7C610
 static TSGrowableArray<TSGrowableArray<int32_t> > s_itemSubClassIds;
 
-// PROVEN: 96001d76 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ItemRecSparse::FixupRecord(void* record) {
 }
 
-// PROVEN: 444aafe2 IDENTICAL/NONE
 // OFFSET: 0x004B1990
 static bool FindItemCurrencyCost(const uint8_t* record, WowClientDB2_Base* db, void* param) {
     struct Search {
@@ -56,7 +54,6 @@ static bool FindItemCurrencyCost(const uint8_t* record, WowClientDB2_Base* db, v
     return false;
 }
 
-// PROVEN: 622ff350 IDENTICAL/DIFFERENT
 // OFFSET: 0x004B19B0/0x1400E8090
 const char* ItemRecSparse::GetName(int32_t index) const {
     switch (index) {
@@ -95,7 +92,6 @@ const char* ItemRecSparse::GetName(int32_t index) const {
     return this->m_name;
 }
 
-// PROVEN: 86cfe1c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2E7F0/0x1407D78E0
 ItemRec* ItemRecSparse::GetNonSparse() const {
     WOWGUID none = WOWGUID();
@@ -438,7 +434,6 @@ void ItemRecSparse::Initialize() {
     }
 }
 
-// PROVEN: 741133f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B2850/0x1400E9340
 void ItemSparseInitialize() {
     ItemRecSparse::Initialize();

@@ -14,14 +14,12 @@ void CGMinigameInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_MINIGAME_STATE, Packet_SMSG_MINIGAME_STATE, NULL);
 }
 
-// PROVEN: 7fe393ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0A160/0x1407AB1D0
 void CGMinigameInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_MINIGAME_SETUP);
     ClientServices::ClearMessageHandler(SMSG_MINIGAME_STATE);
 }
 
-// PROVEN: a1320bbb IDENTICAL/IDENTICAL
 // OFFSET: 0x00A09FA0/0x1407AAFC0
 int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (CGMinigameInfo::m_minigame) {
@@ -32,7 +30,6 @@ int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// PROVEN: e43bd314 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0A130/0x1407AB190
 void CGMinigameInfo::LeaveWorld() {
     if (CGMinigameInfo::m_minigame) {
@@ -41,7 +38,6 @@ void CGMinigameInfo::LeaveWorld() {
     }
 }
 
-// PROVEN: ecef8b89 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0A190/0x1407AB200
 int32_t Packet_SMSG_MINIGAME_SETUP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t guid;

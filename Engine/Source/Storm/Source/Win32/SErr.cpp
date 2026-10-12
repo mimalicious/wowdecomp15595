@@ -134,7 +134,6 @@ T* TSListWinHeap<T, TGetLink>::NewNode(uint32_t location, size_t extrabytes, uin
     return node;
 }
 
-// PROVEN: c918f1be DIFFERENT/IDENTICAL
 // OFFSET: 0x007AC370/0x1404A2140
 static void Breakpoint() {
     __try {
@@ -192,7 +191,6 @@ inline void InternalLeaveCriticalSection(CRITICAL_SECTION* critsect) {
     LeaveCriticalSection(critsect);
 }
 
-// PROVEN: c0042fd3 IDENTICAL/UNPROVEN
 // OFFSET: 0x004B3FC0/0x1400EB0E0
 void SErrInitialize() {
     g_opt.serrleaksilentwarning = 1;
@@ -355,7 +353,6 @@ static HANDLE CreateErrorLog(const char* suffix, const char* message, const SYST
     return logfile;
 }
 
-// PROVEN: 1f2a6b53 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B4080/0x1400EB1F0
 static void LogProcessCallback(const char* name, uint32_t pid, void* param) {
     if (!name || !param) {
@@ -367,7 +364,6 @@ static void LogProcessCallback(const char* name, uint32_t pid, void* param) {
     WriteMessageToLog(static_cast<HANDLE>(param), line);
 }
 
-// PROVEN: 74fb9a1f IDENTICAL/NONE
 // OFFSET: 0x004B40D0
 static void LogRunningProcesses(HANDLE logfile, const char* appname) {
     WriteMessageToLog(logfile, "List of running WoW processes:");
@@ -377,7 +373,6 @@ static void LogRunningProcesses(HANDLE logfile, const char* appname) {
     }
 }
 
-// PROVEN: ee876cc7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B4110/0x1400EB240
 static void TerminateApplication(uint32_t exitcode) {
     DWORD processexitcode;
@@ -557,13 +552,11 @@ static void GetExceptionNameWin32(uint32_t exceptioncode, char* buffer, uint32_t
     }
 }
 
-// PROVEN: cee0d698 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B4260/0x1400EB3D0
 uint32_t STORMAPI SErrGetLastError() {
     return s_lasterror;
 }
 
-// PROVEN: ceac784c IDENTICAL/IDENTICAL
 // OFFSET: 0x004B4270/0x1400EB3E0
 int32_t STORMAPI SErrIsDisplayingError() {
     return s_displaying;
@@ -578,13 +571,11 @@ void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
     InternalLeaveCriticalSection(&s_critsect);
 }
 
-// PROVEN: cbe74499 IDENTICAL/NONE
 // OFFSET: 0x004B42F0
 int32_t SErrGetAppPhase() {
     return s_appPhase;
 }
 
-// PROVEN: 910ad9c3 IDENTICAL/DIFFERENT
 // OFFSET: 0x004B4300/0x140001020
 void STORMAPI SErrSetLastError(uint32_t errorcode) {
     s_lasterror = errorcode;
@@ -682,7 +673,6 @@ static HINSTANCE GetMessageSource(uint32_t errorcode) {
     return module;
 }
 
-// PROVEN: 8698af7c IDENTICAL/IDENTICAL
 // OFFSET: 0x004B4220/0x1400EB360
 static DWORD FormatErrorMessage(uint32_t errorcode, char* buffer, uint32_t bufferchars, ...) {
     HINSTANCE module = GetMessageSource(errorcode);
@@ -694,7 +684,6 @@ static DWORD FormatErrorMessage(uint32_t errorcode, char* buffer, uint32_t buffe
     return FormatMessageA(module ? FORMAT_MESSAGE_FROM_HMODULE : FORMAT_MESSAGE_FROM_SYSTEM, module, errorcode, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), buffer, bufferchars, &args);
 }
 
-// PROVEN: e1ca14b6 DIFFERENT/IDENTICAL
 // OFFSET: 0x004B4A20/0x1400EBD50
 int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t bufferchars) {
     if (!buffer || !bufferchars) {
@@ -705,7 +694,6 @@ int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t buff
     return FormatErrorMessage(errorcode, buffer, bufferchars, errorcode & 0xFFFF, errorcode);
 }
 
-// PROVEN: a1910bff DIFFERENT/IDENTICAL
 // OFFSET: 0x004B4A70/0x1400EBD90
 int32_t STORMAPI SErrGetErrorStrW(uint32_t errorcode, wchar_t* buffer, uint32_t bufferchars, uint32_t languageid) {
     if (!buffer || !bufferchars) {
@@ -1087,7 +1075,6 @@ int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t li
     return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode, 2, 0x11111111);
 }
 
-// PROVEN: 2ce35e4f UNPROVEN/IDENTICAL
 // OFFSET: 0x004B5DD0/0x1400ED4F0
 void STORMAPI SErrCatchUnhandledExceptions() {
     SetUnhandledExceptionFilter(ExceptionFilterWin32);

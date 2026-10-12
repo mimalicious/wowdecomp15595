@@ -384,7 +384,6 @@ uint32_t CBitOutput::GetTotalBytes() {
     return static_cast<uint32_t>(this->m_currdest - this->m_basedest);
 }
 
-// PROVEN: 1c521f65 IDENTICAL/NONE
 // OFFSET: 0x004B9630
 void CBitOutput::OutputBits(uint32_t value, uint32_t count) {
     this->m_rack |= value << this->m_rackbits;
@@ -401,7 +400,6 @@ void CBitOutput::OutputBits(uint32_t value, uint32_t count) {
     }
 }
 
-// PROVEN: 310e6f34 IDENTICAL/NONE
 // OFFSET: 0x004B9680
 void CBitOutput::Pad() {
     while (this->m_rackbits) {
@@ -711,7 +709,6 @@ uint32_t ImaAdpcmDecompress(int16_t* dest, uint32_t destsize, const uint8_t* sou
 
 }
 
-// PROVEN: 02937410 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B96C0/0x1400F1F80
 void CHuffmanEncoder::EncodeSymbol(CBitOutput* output, int32_t symbol) {
     HUFFNODE* node = this->m_symbol[symbol];
@@ -747,7 +744,6 @@ static voidpf ZlibAlloc(voidpf opaque, uInt items, uInt size) {
     return result;
 }
 
-// PROVEN: 9498b4a3 IDENTICAL/NONE
 // OFFSET: 0x004B9BC0/0x1400F2390
 static void ZlibFree(voidpf opaque, voidpf address) {
     ZLIBBUFFER* buffer = static_cast<ZLIBBUFFER*>(opaque);
@@ -848,7 +844,6 @@ int32_t STORMAPI zlib_uncompress(uint8_t* dest, uint32_t* destLen, const uint8_t
     return inflateEnd(&stream);
 }
 
-// PROVEN: e8068f5c IDENTICAL/IDENTICAL
 // OFFSET: 0x004B9E00/0x1400F2630
 int32_t ZlibDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     uint32_t size = *destsize;
@@ -1052,7 +1047,6 @@ void Bzip2Compress(void* dest, uint32_t* destsize, const void* source, uint32_t 
     *hint = 0;
 }
 
-// PROVEN: 80e13332 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AAAA0/0x1404A0E10
 int32_t Bzip2Decompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     return BZ2_bzBuffToBuffDecompress(static_cast<char*>(dest), destsize, static_cast<char*>(const_cast<void*>(source)), sourcesize, 0, 0) == BZ_OK;
@@ -1084,7 +1078,6 @@ int32_t ImaAdpcmStereoDecompress(void* dest, uint32_t* destsize, const void* sou
     return 1;
 }
 
-// PROVEN: 3bf79e6a IDENTICAL/IDENTICAL
 // OFFSET: 0x004BA310/0x1400F3050
 int32_t STORMAPI SCompDestroy() {
     if (s_DecompressBuffer) {
@@ -1300,7 +1293,6 @@ void CHuffman::AddSymbol(int32_t symbol) {
     this->IncrementWeight(newnode);
 }
 
-// PROVEN: c033b55f IDENTICAL/DIFFERENT
 // OFFSET: 0x004BABB0/0x1400F3A40
 CHuffman::~CHuffman() {
 }
@@ -1381,7 +1373,6 @@ uint32_t CHuffmanEncoder::Compress(CBitOutput* output, const void* source, uint3
     return output->GetTotalBytes();
 }
 
-// PROVEN: 174ee4de IDENTICAL/NONE
 // OFFSET: 0x004BAAD0
 CHuffman::CHuffman() {
     this->m_changesequence = 1;
@@ -1395,7 +1386,6 @@ CHuffmanDecoder::CHuffmanDecoder() {
     }
 }
 
-// PROVEN: 3a074d68 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BAF40/0x1400F4050
 int32_t HuffmanDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     CBitInput input(source);

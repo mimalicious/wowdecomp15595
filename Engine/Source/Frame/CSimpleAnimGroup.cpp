@@ -54,7 +54,6 @@ void CSimpleAnimGroup::LoadXML_Anim(linkObject* node, CStatus* status, CSimpleAn
     anim->LoadXML(node, status);
 }
 
-// PROVEN: 817da576 IDENTICAL/UNPROVEN
 // OFFSET: 0x00526CE0/0x140176450
 void CSimpleAnimGroup::LoadXML_Scripts(linkObject* node, CStatus* status) {
     lua_State* L = FrameScript_GetContext();
@@ -66,7 +65,6 @@ void CSimpleAnimGroup::LoadXML_Scripts(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 09689528 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527110/0x1401764C0
 FrameScript_Object::ScriptIx* CSimpleAnimGroup::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = this->FrameScript_Object::GetScriptByName(name, data);
@@ -137,7 +135,6 @@ void CSimpleAnimGroup::SetInitialOffset(const C2Vector& offset) {
     }
 }
 
-// PROVEN: 6d02956a IDENTICAL/IDENTICAL
 // OFFSET: 0x00527550/0x140176880
 void CSimpleAnimGroup::RunOnFinishedScript(bool requested) {
     if (this->HasScript(this->m_onFinished)) {
@@ -147,7 +144,6 @@ void CSimpleAnimGroup::RunOnFinishedScript(bool requested) {
     }
 }
 
-// PROVEN: 89b388cb IDENTICAL/IDENTICAL
 // OFFSET: 0x005275A0/0x1401768F0
 void CSimpleAnimGroup::RunOnUpdateScript(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
@@ -164,7 +160,6 @@ void CSimpleAnimGroup::Finish() {
     }
 }
 
-// PROVEN: 08b73b99 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527C10/0x140176F50
 void CSimpleAnimGroup::RunOnLoopScript(SimpleAnimLoopState state) {
     if (this->HasScript(this->m_onLoop)) {
@@ -174,7 +169,6 @@ void CSimpleAnimGroup::RunOnLoopScript(SimpleAnimLoopState state) {
     }
 }
 
-// PROVEN: 53e98988 IDENTICAL/IDENTICAL
 // OFFSET: 0x005280A0/0x1401774D0
 int32_t CSimpleAnimGroup::GetMaxAnimOrder() {
     if (!this->m_animLists.Count()) {
@@ -184,7 +178,6 @@ int32_t CSimpleAnimGroup::GetMaxAnimOrder() {
     return this->m_animLists[this->m_animLists.Count() - 1]->Head()->m_anim->m_order;
 }
 
-// PROVEN: 7e328cfa IDENTICAL/DIFFERENT
 // OFFSET: 0x005280D0/0x140177510
 TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* CSimpleAnimGroup::FindAnimList(int32_t order) {
     if (order == -1) {
@@ -225,13 +218,11 @@ bool CSimpleAnimGroup::HasAnimOfType(int32_t type) {
     return false;
 }
 
-// PROVEN: 2b9aabf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528FD0/0x1401787A0
 bool CSimpleAnimGroup::HasAlphaAnim() {
     return this->HasAnimOfType(CSimpleAlphaAnim::GetObjectType());
 }
 
-// PROVEN: b176fe2b IDENTICAL/IDENTICAL
 // OFFSET: 0x00528FF0/0x1401787D0
 bool CSimpleAnimGroup::HasPositionAnim() {
     for (CSimpleAnim* anim = this->m_animations.Head(); !this->m_animations.IsEnd(anim); anim = this->m_animations.RawNext(anim)) {
@@ -324,31 +315,26 @@ CSimpleAnimGroup::CSimpleAnimGroup(CScriptRegion* owner) {
     this->m_animLists.Clear();
 }
 
-// PROVEN: c12d3820 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529DA0/0x140512ED0
 CScriptObject* CSimpleAnimGroup::GetScriptObjectParent() {
     return this->m_region;
 }
 
-// PROVEN: 2b6c35aa IDENTICAL/IDENTICAL
 // OFFSET: 0x00529DC0/0x140179BD0
 bool CSimpleAnimGroup::IsA(int32_t type) {
     return type == CSimpleAnimGroup::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: a69e8bb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529DF0/0x140179BF0
 bool CSimpleAnimGroup::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleAnimGroup::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: c1eee520 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529E30/0x140179C30
 const char* CSimpleAnimGroup::GetObjectTypeName() {
     return CSimpleAnimGroup::s_objectTypeName;
 }
 
-// PROVEN: fe24b43d IDENTICAL/IDENTICAL
 // OFFSET: 0x00529DB0/0x140179BC0
 int32_t CSimpleAnimGroup::GetScriptMetaTable() {
     return CSimpleAnimGroup::s_metatable;
@@ -574,7 +560,6 @@ void CSimpleAnimGroup::ComputeDuration() {
     }
 }
 
-// PROVEN: 08727f4f IDENTICAL/UNPROVEN
 // OFFSET: 0x0052A400/0x14017A440
 void CSimpleAnimGroup::NotifyAnimAdded(CSimpleAnim* anim) {
     if (!anim) {
@@ -811,7 +796,6 @@ bool CSimpleAnimGroup::RemoveAnimListNode(TSList<SIMPLEANIMNODE, TSGetLink<SIMPL
     return false;
 }
 
-// PROVEN: a359ac3b IDENTICAL/IDENTICAL
 // OFFSET: 0x0052B6F0/0x14017BE10
 void CSimpleAnimGroup::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_flags &= ~1;

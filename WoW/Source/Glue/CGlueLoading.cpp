@@ -32,7 +32,6 @@ uint32_t CGlueLoading::m_loadCompleteDelayFrames;
 // STATIC: 0x00EBC4C0/0x140DAD4A0
 uint64_t CGlueLoading::m_loadCompleteData;
 
-// PROVEN: b0a143f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00811460/0x140528D20
 void CGlueLoading::CancelLoadCallback() {
     CGlueLoading::m_loadState = 4;
@@ -257,14 +256,12 @@ void CGlueLoading::StartLoad(CCharacterComponent** components, uint32_t count, i
     CGlueLoading::m_loadCompleteDelayFrames = delayFrames;
 }
 
-// PROVEN: 40ba194a IDENTICAL/IDENTICAL
 // OFFSET: 0x008119A0/0x140529360
 int32_t CGlueLoading::Idle(CCharacterComponent* component) {
     CCharacterComponent* components = component;
     return CGlueLoading::Idle(&components, 1);
 }
 
-// PROVEN: 023ec89f IDENTICAL/IDENTICAL
 // OFFSET: 0x008119C0/0x140529380
 void CGlueLoading::StartLoad(CCharacterComponent* component, int32_t keepProgress, void (*callback)(uint64_t data), uint64_t data, uint32_t delayFrames) {
     CCharacterComponent* components = component;

@@ -19,7 +19,6 @@
 #include "WoW/Source/Ui/WorldMap.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: 356c83ef IDENTICAL/DIFFERENT
 // OFFSET: 0x009F45B0/0x140790270
 static int32_t Script_GetArchaeologyInfo(lua_State* L) {
     if (CGResearchFrame::m_fieldRec) {
@@ -31,7 +30,6 @@ static int32_t Script_GetArchaeologyInfo(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 69b9ac64 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F45F0/0x14078FEB0
 static int32_t Script_ItemAddedToArtifact(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -44,7 +42,6 @@ static int32_t Script_ItemAddedToArtifact(lua_State* L) {
     return 1;
 }
 
-// PROVEN: efd0c9bb IDENTICAL/IDENTICAL
 // OFFSET: 0x009F4650/0x14078FF10
 static int32_t Script_RemoveItemFromArtifact(lua_State* L) {
     if (CGResearchFrame::m_itemCount > 0) {
@@ -55,7 +52,6 @@ static int32_t Script_RemoveItemFromArtifact(lua_State* L) {
     return 1;
 }
 
-// PROVEN: e75cd075 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F4680/0x14078FF40
 static int32_t Script_IsArtifactCompletionHistoryAvailable(lua_State* L) {
     if (CGResearchFrame::m_historyLoaded) {
@@ -67,7 +63,6 @@ static int32_t Script_IsArtifactCompletionHistoryAvailable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 08444dd9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F46C0/0x14078FF80
 static int32_t Script_RequestArtifactCompletionHistory(lua_State* L) {
     if (!CGResearchFrame::m_historyRequested) {
@@ -78,7 +73,6 @@ static int32_t Script_RequestArtifactCompletionHistory(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 44606076 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F4700/0x14078FFC0
 static int32_t Script_CloseResearch(lua_State* L) {
     CGResearchFrame::m_skillLine = 0;
@@ -87,7 +81,6 @@ static int32_t Script_CloseResearch(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2fbff7ee IDENTICAL/DIFFERENT
 // OFFSET: 0x009F48E0/0x1407902D0
 static int32_t PushArtifactInfo(const ResearchProjectRec* project, lua_State* L) {
     if (project) {
@@ -120,7 +113,6 @@ static int32_t PushArtifactInfo(const ResearchProjectRec* project, lua_State* L)
     return 0;
 }
 
-// PROVEN: 27b388ae IDENTICAL/DIFFERENT
 // OFFSET: 0x009F49C0/0x140790460
 static int32_t Script_GetSelectedArtifactInfo(lua_State* L) {
     return PushArtifactInfo(CGResearchFrame::m_projectRec, L);
@@ -163,7 +155,6 @@ static int32_t Script_GetArchaeologyRaceInfo(lua_State* L) {
     return 5;
 }
 
-// PROVEN: 033f2571 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F50A0/0x140790C10
 static int32_t Script_SocketItemToArtifact(lua_State* L) {
     lua_pushboolean(L, CGResearchFrame::ApplyItemToProject());
@@ -171,7 +162,6 @@ static int32_t Script_SocketItemToArtifact(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 314f246b IDENTICAL/DIFFERENT
 // OFFSET: 0x009F50C0/0x140790C40
 static int32_t Script_GetActiveArtifactByRace(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -219,7 +209,6 @@ static int32_t Script_GetNumArtifactsByRace(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 18d9991b IDENTICAL/DIFFERENT
 // OFFSET: 0x009F5A80/0x140791A50
 static int32_t Script_GetArtifactInfoByRace(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -337,7 +326,6 @@ static int32_t Script_ArchaeologyGetIconInfo(lua_State* L) {
     return 3;
 }
 
-// PROVEN: 435bf4fe IDENTICAL/IDENTICAL
 // OFFSET: 0x009F6950/0x140792DB0
 static int32_t Script_CanItemBeSocketedToArtifact(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -354,7 +342,6 @@ static int32_t Script_CanItemBeSocketedToArtifact(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 67b38805 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F69C0/0x140792E20
 static int32_t Script_GetArtifactProgress(lua_State* L) {
     int32_t currency;
@@ -368,7 +355,6 @@ static int32_t Script_GetArtifactProgress(lua_State* L) {
     return 3;
 }
 
-// PROVEN: 062f2f32 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F6A20/0x140792E90
 static int32_t Script_CanSolveArtifact(lua_State* L) {
     int32_t currency;
@@ -385,7 +371,6 @@ static int32_t Script_CanSolveArtifact(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c8b9f975 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F6A80/0x140792EF0
 static int32_t Script_SolveArtifact(lua_State* L) {
     CGResearchFrame::Solve();
@@ -418,7 +403,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ArchaeologyGetIconInfo", &Script_ArchaeologyGetIconInfo },
 };
 
-// PROVEN: 3a50fd58 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F4720/0x14078FFF0
 void ResearchRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -426,7 +410,6 @@ void ResearchRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 74b68029 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F4750/0x140790040
 void ResearchUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

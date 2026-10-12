@@ -46,7 +46,6 @@ struct RestorePointCopier {
     bool Copy(int64_t source, int64_t target, uint32_t size);
 };
 
-// PROVEN: d73640fc IDENTICAL/NONE
 // OFFSET: 0x007B8800
 bool RestorePointFile::Read(void* buffer, int64_t offset, uint32_t size) {
     int32_t count = size;
@@ -61,7 +60,6 @@ bool RestorePointFile::Read(void* buffer, int64_t offset, uint32_t size) {
     return result && count == static_cast<int32_t>(size);
 }
 
-// PROVEN: 12214884 IDENTICAL/NONE
 // OFFSET: 0x007B87A0
 bool RestorePointFile::Write(const void* buffer, int64_t offset, uint32_t size) {
     if (this->m_archive) {
@@ -77,7 +75,6 @@ bool RestorePointFile::Write(const void* buffer, int64_t offset, uint32_t size) 
 RestorePointFile::RestorePointFile(Blizzard::Mopaq::HSFILERecord* archive, Blizzard::File::StreamRecord* file) : m_archive(archive), m_file(file) {
 }
 
-// PROVEN: 8679e209 IDENTICAL/NONE
 // OFFSET: 0x007B88F0
 RestorePointBuffer::RestorePointBuffer(Blizzard::File::StreamRecord* file) : RestorePointFile(NULL, file) {
 }
@@ -116,7 +113,6 @@ bool RestorePointBuffer::VerifyMD5(uint32_t size, const Blizzard::Util::Digest<1
 RestorePointCopier::RestorePointCopier(Blizzard::Mopaq::HSFILERecord* source, Blizzard::File::StreamRecord* target) : m_source(source, NULL), m_target(NULL, target) {
 }
 
-// PROVEN: 79ac0270 IDENTICAL/NONE
 // OFFSET: 0x007B8860
 RestorePointCopier::RestorePointCopier(Blizzard::File::StreamRecord* source, Blizzard::Mopaq::HSFILERecord* target) : m_source(NULL, source), m_target(target, NULL) {
 }

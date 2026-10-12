@@ -144,7 +144,6 @@ static int tagcompare(const char *s1, const char *s2, int n){
 //  return count;
 //}
 
-// PROVEN: 1e6a2051 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B43160/0x140911BF0
 void FMOD_vorbis_comment_clear(vorbis_comment *vc){
   if(vc){
@@ -167,7 +166,6 @@ int FMOD_vorbis_info_blocksize(vorbis_info *vi,int zo){
 }
 
 /* used by synthesis, which has a full, alloced vi */
-// PROVEN: a9dfab0e DIFFERENT/IDENTICAL
 // OFFSET: 0x00B43220/0x140911CE0
 int FMOD_vorbis_info_init(vorbis_info *vi){
   FMOD_memset(vi,0,sizeof(*vi));
@@ -399,7 +397,6 @@ int FMOD_vorbis_synthesis_idheader(ogg_packet *op){
    with bitstream comments and a third packet that holds the
    codebook. */
 
-// PROVEN: 47b4c6e3 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B43970/0x140912640
 int FMOD_vorbis_synthesis_headerin(vorbis_info *vi,vorbis_comment *vc,ogg_packet *op){
   oggpack_buffer opb;

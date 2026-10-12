@@ -87,7 +87,6 @@ bool Blizzard::Streaming::ScanDirectoryForManifest(const Blizzard::File::Process
     return true;
 }
 
-// PROVEN: 14c027df IDENTICAL/IDENTICAL
 // OFFSET: 0x007ABF30/0x1404A1E00
 bool Blizzard::Streaming::IsStreamingMode() {
     return Blizzard::Streaming::s_streamingReady;
@@ -110,7 +109,6 @@ void Blizzard::Streaming::DownloadProgress::ResetTime() {
     this->m_lastTime = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
 }
 
-// PROVEN: 9c1c3fbf IDENTICAL/NONE
 // OFFSET: 0x007ABF50
 void Blizzard::Streaming::DownloadProgress::Sample(uint32_t time) {
     if (++this->m_index >= 51) {
@@ -205,7 +203,6 @@ Blizzard::Streaming::ScopedWorkingDirectory::ScopedWorkingDirectory() {
     this->m_changed = false;
 }
 
-// PROVEN: 1cead704 IDENTICAL/DIFFERENT
 // OFFSET: 0x007E99C0/0x1404F52D0
 Blizzard::Streaming::ScopedWorkingDirectory::~ScopedWorkingDirectory() {
     if (this->m_saved && this->m_changed && !Blizzard::File::SetWorkingDirectory(this->m_path)) {
@@ -263,7 +260,6 @@ Blizzard::Streaming::RequestProcessor::RequestProcessor() {
     Blizzard::Lock::MutexCreate(this->m_mutex);
 }
 
-// PROVEN: ac69aa15 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E1680/0x1404E79E0
 uint32_t Blizzard::Streaming::RequestProcessor::ThreadProc(void* param) {
     RequestProcessor* processor = static_cast<RequestProcessor*>(param);
@@ -438,13 +434,11 @@ void Blizzard::Streaming::DefaultRequestHandler::Stop() {
     this->m_processor->Shutdown();
 }
 
-// PROVEN: 34134552 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AC2C0/0x1404A2110
 void Blizzard::Streaming::DefaultRequestHandler::Pause() {
     this->m_processor->m_paused = true;
 }
 
-// PROVEN: 7da30b81 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AC2D0/0x1404A2120
 void Blizzard::Streaming::DefaultRequestHandler::Resume() {
     this->m_processor->m_paused = false;

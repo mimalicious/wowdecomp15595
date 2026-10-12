@@ -16,14 +16,12 @@ HidManager* HidManager::Create() {
     return new (SMemAlloc(sizeof(HidManagerImpl), __FILE__, __LINE__, 0)) HidManagerImpl();
 }
 
-// PROVEN: 3d886e5d IDENTICAL/NONE
 // OFFSET: 0x0087FBB0
 HidDevice::HidDevice() : m_thread(NULL), m_threadId(0), m_threadProc(NULL), m_file(NULL), m_preparsedData(NULL), m_readBufferSize(0), m_readEvent(NULL), m_writeEvent(NULL), m_readPending(0), m_manager(NULL), m_readSignal(NULL), m_stopEvent(NULL), m_stale(0), m_devInst(0) {
     this->m_productString[0] = '\0';
     this->m_serialNumber[0] = '\0';
 }
 
-// PROVEN: 4591ecf5 IDENTICAL/NONE
 // OFFSET: 0x0087FB40
 HidDevice::HidDevice(DWORD devInst) : m_thread(NULL), m_threadId(0), m_threadProc(NULL), m_file(NULL), m_preparsedData(NULL), m_readSignal(NULL), m_stopEvent(NULL), m_devInst(devInst) {
 }
@@ -37,7 +35,6 @@ HidDevice::HidDevice(const HidDevice& device) : m_thread(NULL), m_threadId(0), m
     strcpy_s(this->m_serialNumber, sizeof(this->m_serialNumber), device.m_serialNumber);
 }
 
-// PROVEN: d2124a41 IDENTICAL/NONE
 // OFFSET: 0x0087FC40/0x1405B8E90
 HidDevice::~HidDevice() {
     if (this->m_stopEvent) {
@@ -73,7 +70,6 @@ bool HidDevice::operator<(const HidDevice& device) const {
     return this->m_devInst < device.m_devInst;
 }
 
-// PROVEN: a3385dd5 IDENTICAL/NONE
 // OFFSET: 0x0087F0A0/0x1405B81F0
 void HidDevice::ReleaseHandles() {
     if (this->m_preparsedData) {
@@ -168,7 +164,6 @@ bool HidDevice::Write(const void* data, uint32_t size) {
     return WriteFile(this->m_file, data, size, &written, NULL) != 0;
 }
 
-// PROVEN: b7a57795 IDENTICAL/NONE
 // OFFSET: 0x0087F310/0x1405B8450
 VOID CALLBACK HidDevice::ReadCompletion(DWORD error, DWORD bytes, LPOVERLAPPED overlapped) {
     HidDevice* device = static_cast<HidDevice*>(overlapped->hEvent);
@@ -182,7 +177,6 @@ VOID CALLBACK HidDevice::ReadCompletion(DWORD error, DWORD bytes, LPOVERLAPPED o
     device->m_readEvent = NULL;
 }
 
-// PROVEN: ce238fc6 IDENTICAL/NONE
 // OFFSET: 0x0087F360/0x1405B84B0
 VOID CALLBACK HidDevice::WriteCompletion(DWORD error, DWORD bytes, LPOVERLAPPED overlapped) {
     HidDevice* device = static_cast<HidDevice*>(overlapped->hEvent);
@@ -288,7 +282,6 @@ void HidDevice::ReadLoop() {
     }
 }
 
-// PROVEN: f642f8d3 IDENTICAL/NONE
 // OFFSET: 0x0087FAC0/0x1405B8D00
 DWORD WINAPI HidDevice::ThreadProc(void* param) {
     HidDevice* device = static_cast<HidDevice*>(param);
@@ -303,7 +296,6 @@ DWORD WINAPI HidDevice::ThreadProc(void* param) {
     return 0;
 }
 
-// PROVEN: b07aeee7 IDENTICAL/NONE
 // OFFSET: 0x0087FAF0/0x1405B8D40
 bool HidDevice::WriteWait(const void* data, uint32_t size) {
     HANDLE event = CreateEventA(NULL, FALSE, FALSE, NULL);
@@ -493,19 +485,16 @@ bool HidManagerImpl::EnumerateDevices() {
     return found;
 }
 
-// PROVEN: a2bfccac IDENTICAL/NONE
 // OFFSET: 0x0087F0F0
 void HidManagerImpl::SetWindow(void* window) {
     this->m_window = static_cast<HWND>(window);
 }
 
-// PROVEN: c3bd8b23 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B0A80/0x1404C1350
 uint32_t HidManagerImpl::GetDeviceCount() {
     return static_cast<uint32_t>(this->m_devices.size());
 }
 
-// PROVEN: 3fb6ecb7 IDENTICAL/NONE
 // OFFSET: 0x0087FF30
 bool HidManagerImpl::WriteWait(const void* data, uint32_t size) {
     if (!this->m_outputDevInst) {
@@ -515,7 +504,6 @@ bool HidManagerImpl::WriteWait(const void* data, uint32_t size) {
     return this->GetDevice(this->m_outputDevInst).WriteWait(data, size);
 }
 
-// PROVEN: d850df83 IDENTICAL/NONE
 // OFFSET: 0x0087FF60
 bool HidManagerImpl::Write(const void* data, uint32_t size) {
     if (!this->m_outputDevInst) {

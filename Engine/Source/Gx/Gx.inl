@@ -17,7 +17,6 @@ inline void GxXformPush(EGxXform xf, const C44Matrix& matrix) {
     g_theGxDevicePtr->XformPushAndSet(xf, matrix);
 }
 
-// PROVEN: 1d547952 IDENTICAL/DIFFERENT
 // OFFSET: 0x0040B030/0x14000DA10
 inline void GxRsSet(EGxRenderState which, int32_t value) {
     if (!g_theGxDevicePtr->m_context) {

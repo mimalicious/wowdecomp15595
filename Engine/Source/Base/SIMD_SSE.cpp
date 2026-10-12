@@ -304,7 +304,6 @@ static void FFT2D_SSE(float* data, void* re, void* im, int32_t n, int32_t log2n)
     }
 }
 
-// PROVEN: de111e50 IDENTICAL/IDENTICAL
 // OFFSET: 0x004928E0/0x1400B7930
 void SIMD::Init_SSE(SIMD::FunctionTable* table) {
     table->ProjectBoxTop = ProjectBoxTop_SSE;

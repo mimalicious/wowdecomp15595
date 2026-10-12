@@ -3,14 +3,12 @@
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
 
-// PROVEN: 8cb6aa2c IDENTICAL/IDENTICAL
 // OFFSET: 0x009DFF80/0x140776AE0
 static int32_t Script_GetTabardCreationCost(lua_State* L) {
     lua_pushnumber(L, GuildGetTabardCost());
     return 1;
 }
 
-// PROVEN: f453b6ad IDENTICAL/NONE
 // OFFSET: 0x009E00E0
 static int32_t Script_CloseTabardCreation(lua_State* L) {
     CGTabardCreationFrame::Close();
@@ -23,7 +21,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTabardCreationCost", &Script_GetTabardCreationCost },
 };
 
-// PROVEN: dad72d6f IDENTICAL/UNPROVEN
 // OFFSET: 0x009DFFC0/0x140776B10
 void TabardCreationRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -31,7 +28,6 @@ void TabardCreationRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: f34a593d IDENTICAL/UNPROVEN
 // OFFSET: 0x009DFFF0/0x140776B60
 void TabardCreationUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

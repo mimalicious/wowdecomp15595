@@ -36,7 +36,6 @@ static int32_t Script_GetTooltipIndex(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d85cd4f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02A40/0x1407A1AE0
 static int32_t Script_GetNumTooltips(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
@@ -51,14 +50,12 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetNumTooltips", &Script_GetNumTooltips },
 };
 
-// PROVEN: 27f49d90 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A022F0/0x1407A1220
 void CGQuestPOIFrame::RegisterScriptMethods(lua_State* L) {
     CGBlobFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }
 
-// PROVEN: 4a834d12 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02310/0x1407A1250
 void CGQuestPOIFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -66,7 +63,6 @@ void CGQuestPOIFrame::DestroyScriptMetaTable() {
     CGQuestPOIFrame::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: a802a15f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02A80/0x1407A1B30
 void CGQuestPOIFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();

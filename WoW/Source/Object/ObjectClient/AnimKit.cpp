@@ -211,7 +211,6 @@ int32_t CAnimKitInst::IsStoppedOrPendingDestroy() const {
     return (this->m_flags & (KIT_INST_FLAG_STOPPED | KIT_INST_FLAG_PENDING_DESTROY)) != 0;
 }
 
-// PROVEN: 7bf82856 IDENTICAL/IDENTICAL
 // OFFSET: 0x0058BDB0/0x1401F5560
 uint32_t CAnimKitInst::GetID() const {
     return this->m_def->rec->m_id;
@@ -234,13 +233,11 @@ static void InitBoneSetAncestors(uint32_t boneSetID, uint32_t ancestors) {
     }
 }
 
-// PROVEN: 5898d496 IDENTICAL/IDENTICAL
 // OFFSET: 0x0058BE20/0x1401F55F0
 int32_t CAnimKitManager::IsFrozen() const {
     return this->m_flags & ANIM_KIT_MANAGER_FLAG_FREEZE_MASK;
 }
 
-// PROVEN: 68ee8c57 IDENTICAL/IDENTICAL
 // OFFSET: 0x0058BE30/0x1401F5600
 void CAnimKitManager::SetExpressionCallback(AnimKitExpressionCallback callback, uint64_t param) {
     this->m_expressionCallback = callback;
@@ -359,7 +356,6 @@ void CAnimKitManager::SetBoneDataIDBlocked(int32_t boneDataID, int32_t blocked, 
     }
 }
 
-// PROVEN: f1fb1519 IDENTICAL/NONE
 // OFFSET: 0x0058C580
 uint32_t CAnimKitManager::GetCurTime() {
     if (this->m_flags & ANIM_KIT_MANAGER_FLAG_FROZEN) {
@@ -602,7 +598,6 @@ float CAnimKitInst::GetSegmentProgress(uint32_t index) {
     return 0.0f;
 }
 
-// PROVEN: 5fc38606 IDENTICAL/IDENTICAL
 // OFFSET: 0x0058D020/0x1401F6CD0
 uint32_t CAnimKitInst::GetSegmentCount() const {
     return this->m_def->segmentRec.Count();
@@ -813,7 +808,6 @@ void CAnimKitManager::UpdateHandItemAnim(uint32_t type, CM2Model* model, void* c
     }
 }
 
-// PROVEN: aeacbb31 IDENTICAL/NONE
 // OFFSET: 0x0058D4E0
 AnimKitSegmentBoneSetInst* CAnimKitManager::GetSegmentBoneSetInstStackTop(AnimKitBoneSetInstStack& stack) {
     for (int32_t i = stack.stack.Count(); i > 0;) {
@@ -928,7 +922,6 @@ int32_t CAnimKitManager::HandleKitReactionToSegmentEnd(CAnimKitInst* kitInst, ui
     return 1;
 }
 
-// PROVEN: adebe81e IDENTICAL/DIFFERENT
 // OFFSET: 0x0058D7D0/0x1401F77B0
 void CAnimKitManager::ClearExpressions() {
     uint32_t count = this->m_boneSetInsts.Count();
@@ -948,7 +941,6 @@ void CAnimKitManager::ClearExpressions() {
     }
 }
 
-// PROVEN: 45247bee IDENTICAL/UNPROVEN
 // OFFSET: 0x0058D840/0x1401F7820
 void CAnimKitManager::DefaultAnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t primary) {
     CAnimKitManager* manager = reinterpret_cast<CAnimKitManager*>(static_cast<uintptr_t>(param));
@@ -1137,7 +1129,6 @@ int32_t CAnimKitManager::OnStopSegmentInst(AnimKitSegmentInst* segmentInst, int3
     return result;
 }
 
-// PROVEN: 7c8ad2a0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0058DFB0/0x1401F81D0
 void CAnimKitManager::UninitSegmentBoneSetInst(AnimKitSegmentBoneSetInst* segmentBoneSetInst) {
     AnimKitBoneSetInst& boneSetInst = this->m_boneSetInsts[segmentBoneSetInst->animKitBoneSetID];
@@ -1285,7 +1276,6 @@ AnimKitSegmentBoneSetInst* CAnimKitManager::InitSegmentBoneSetInst(AnimKitSegmen
     return segmentBoneSetInst;
 }
 
-// PROVEN: c7d2f2f4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0058EB50/0x1401F9440
 void CAnimKitInst::SetStopCallback(AnimKitStopCallback callback, uint64_t param) {
     if (this->m_flags & KIT_INST_FLAG_PENDING_DESTROY) {
@@ -1309,7 +1299,6 @@ void CAnimKitInst::SetStopCallback(AnimKitStopCallback callback, uint64_t param)
     }
 }
 
-// PROVEN: 7a84dd9f DIFFERENT/IDENTICAL
 // OFFSET: 0x0058EBC0/0x1401F94F0
 void CAnimKitManager::SetGlueMode(int32_t enable) {
     uint16_t flags = this->m_flags;
@@ -1326,7 +1315,6 @@ void CAnimKitManager::SetGlueMode(int32_t enable) {
     }
 }
 
-// PROVEN: d18cbb0a DIFFERENT/IDENTICAL
 // OFFSET: 0x0058EC10/0x1401F9550
 void CAnimKitManager::SetGameObjectMode(int32_t enable) {
     uint16_t flags = this->m_flags;
@@ -1621,7 +1609,6 @@ void CAnimKitManager::UpdateLayeredFlag(int32_t schedule) {
     }
 }
 
-// PROVEN: c5c00cc5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0058F490/0x1401FA050
 AnimKitSegmentInst::~AnimKitSegmentInst() {
 }
@@ -1698,14 +1685,12 @@ void CAnimKitManager::InitSystem() {
     CAnimKitManager::s_initialized = 1;
 }
 
-// PROVEN: e3dc81f1 IDENTICAL/UNPROVEN
 // OFFSET: 0x0058FBB0/0x1401FA840
 CAnimKitManager::CAnimKitManager() {
     this->m_flags &= ~ANIM_KIT_MANAGER_FLAG_INITIALIZED;
     this->Init();
 }
 
-// PROVEN: 5c033d1b IDENTICAL/IDENTICAL
 // OFFSET: 0x0058FC20/0x1401FA8D0
 uint32_t CAnimKitManager::FilterAnim(uint32_t anim, int32_t allowFallback) {
     if (anim == 0xFFFFFFFF) {
@@ -1779,7 +1764,6 @@ uint32_t CAnimKitManager::GetSegmentInstExpressingAnim(AnimKitSegmentInst* segme
     return 0xFFFFFFFF;
 }
 
-// PROVEN: a60bb504 IDENTICAL/IDENTICAL
 // OFFSET: 0x0058FDF0/0x1401FAAD0
 void CAnimKitManager::SetExpressionsBlocked(int32_t blocked, int32_t reset) {
     if ((blocked == 0) == ((this->m_flags & ANIM_KIT_MANAGER_FLAG_EXPRESSIONS_BLOCKED) == 0)) {
@@ -1924,7 +1908,6 @@ void CAnimKitManager::MirrorToModel(CM2Model* model, CAnimKitManager* filter) {
     }
 }
 
-// PROVEN: fd534f07 IDENTICAL/IDENTICAL
 // OFFSET: 0x005901D0/0x1401FB110
 void CAnimKitManager::MirrorFrom(CAnimKitManager* source, int32_t filter) {
     source->MirrorToModel(this->m_model, filter ? this : NULL);
@@ -1951,12 +1934,10 @@ void CAnimKitManager::UninitKitInst(CAnimKitInst* kitInst) {
     this->UpdateNextSegmentEventTime();
 }
 
-// PROVEN: 75eb1bfb IDENTICAL/IDENTICAL
 // OFFSET: 0x005903B0/0x1401FB410
 AnimKitDesiredBoneSetInst::~AnimKitDesiredBoneSetInst() {
 }
 
-// PROVEN: cc7a61f9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00590520/0x1401FB630
 CAnimKitInst::~CAnimKitInst() {
 }
@@ -1989,7 +1970,6 @@ uint32_t CAnimKitManager::GetExpressingAnim(uint32_t boneDataID, int32_t primary
     return this->GetSegmentInstExpressingAnim(expressing->segmentInst, boneDataID, requested);
 }
 
-// PROVEN: 693a1bd0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00590660/0x1401FB830
 uint32_t CAnimKitManager::GetExpressingHandItemAnim(uint32_t& boneDataID, int32_t primary, int32_t requested) {
     boneDataID = 0xFFFFFFFF;
@@ -2077,7 +2057,6 @@ void CAnimKitManager::SuppressSegmentBoneSetInstStacksByDescendant(uint32_t bone
     }
 }
 
-// PROVEN: 925c040a IDENTICAL/DIFFERENT
 // OFFSET: 0x005910C0/0x1401FCA50
 CAnimKitManager::~CAnimKitManager() {
     this->Uninit();
@@ -2307,7 +2286,6 @@ void CAnimKitManager::UninitSystem() {
     CAnimKitManager::s_initialized = 0;
 }
 
-// PROVEN: dc9a77c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00591FA0/0x1401FDFF0
 void CAnimKitManager::Free(CAnimKitManager* manager) {
     s_managerAllocator.Delete(manager);
@@ -2443,19 +2421,16 @@ int32_t CAnimKitInst::Stop(int32_t playStopKit, CAnimKitInst** stopKitInst) {
     return 1;
 }
 
-// PROVEN: 5605b91d IDENTICAL/IDENTICAL
 // OFFSET: 0x005923B0/0x1401FE5F0
 CAnimKitInst* CAnimKitManager::PlayAndForget(uint32_t animKitID, uint32_t anim, AnimKitExtraPlayParams* params) {
     return this->InitKitInst(animKitID, 0, anim, params, NULL);
 }
 
-// PROVEN: d8d7e3ae IDENTICAL/IDENTICAL
 // OFFSET: 0x005923D0/0x1401FE620
 CAnimKitInst* CAnimKitManager::PlayAndMaintain(uint32_t animKitID, uint32_t anim, AnimKitExtraPlayParams* params) {
     return this->InitKitInst(animKitID, 1, anim, params, NULL);
 }
 
-// PROVEN: eda72ef6 DIFFERENT/IDENTICAL
 // OFFSET: 0x005923F0/0x1401FE750
 int32_t CAnimKitManager::SetSegmentInstState(AnimKitSegmentInst* segmentInst, uint32_t state, int32_t allowStop) {
     uint32_t oldState = segmentInst->instFlags & SEGMENT_INST_FLAG_STATE_MASK;
@@ -3066,7 +3041,6 @@ int32_t CAnimKitManager::ReinitSegmentInstAnimAndEvents(AnimKitSegmentInst* segm
     return this->UpdateSegmentInstEndEvent(segmentInst, speed, 1) != 0;
 }
 
-// PROVEN: fc5a4c3a IDENTICAL/UNPROVEN
 // OFFSET: 0x00594000/0x140200D40
 void CAnimKitManager::DefaultAnimStartHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary) {
     CAnimKitManager* manager = reinterpret_cast<CAnimKitManager*>(static_cast<uintptr_t>(param));
@@ -3272,7 +3246,6 @@ int32_t CAnimKitInst::SetUserFlags(uint32_t segmentIndex, uint8_t userFlags) {
     return 1;
 }
 
-// PROVEN: 922d145b IDENTICAL/NONE
 // OFFSET: 0x00594530/0x1402014A0
 void CAnimKitInst::OnModelLoaded() {
     if ((this->m_flags & KIT_INST_FLAG_PENDING_DESTROY) || !(this->m_flags & KIT_INST_FLAG_DEFERRED)) {
@@ -3562,7 +3535,6 @@ void CAnimKitManager::ReinitAllSegmentInstAnimsAndEvents() {
     this->ScheduleUpdate(ANIM_KIT_MANAGER_FLAG_EXPRESS);
 }
 
-// PROVEN: 54c44427 DIFFERENT/IDENTICAL
 // OFFSET: 0x00594DD0/0x140202050
 void CAnimKitManager::SetTier(uint16_t tier) {
     if (tier == this->m_tier) {
@@ -3778,7 +3750,6 @@ uint32_t CAnimKitManager::Update() {
     return this->m_flags & ANIM_KIT_MANAGER_FLAG_UPDATE_MASK;
 }
 
-// PROVEN: 1a0d882c IDENTICAL/DIFFERENT
 // OFFSET: 0x005955C0/0x140202A40
 void CAnimKitManager::UpdateAll(int32_t tolerance) {
     if (!CAnimKitManager::s_initialized) {

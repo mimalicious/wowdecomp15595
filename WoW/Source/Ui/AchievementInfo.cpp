@@ -88,7 +88,6 @@ int32_t Packet_SMSG_QUERY_QUESTS_COMPLETED_RESPONSE(void* param, NETMESSAGE msgI
     return 1;
 }
 
-// PROVEN: 1688caf9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00947810/0x1406B4DD0
 static void GuildAchievementMemberNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -312,7 +311,6 @@ void CGAchievementInfo::ClearGuildInfo() {
     FrameScript_SignalEvent(SCRIPT_EVENT_CRITERIA_UPDATE, NULL);
 }
 
-// PROVEN: 5a724e35 IDENTICAL/UNPROVEN
 // OFFSET: 0x0094BE20/0x1406BA730
 void CGAchievementInfo::ResetGuildInfo() {
     CGAchievementInfo::ClearGuildInfo();
@@ -440,7 +438,6 @@ void CGAchievementInfo::InitializeGame() {
     }
 }
 
-// PROVEN: 4130b757 IDENTICAL/DIFFERENT
 // OFFSET: 0x00947B10/0x1406B5160
 bool CGAchievementInfo::IsCriteriaStat(int32_t criteriaId) {
     Achievement_CriteriaRec* criteria = g_achievement_CriteriaDB.GetRecord(criteriaId);
@@ -614,13 +611,11 @@ static void SendGuildAchievementTracking() {
     ClientServices::Send(&msg);
 }
 
-// PROVEN: fc1e93de IDENTICAL/NONE
 // OFFSET: 0x0094D610/0x1406BCAB0
 void CGAchievementInfo::PostInitActivePlayer() {
     SendGuildAchievementTracking();
 }
 
-// PROVEN: b4b9bcff IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGAchievementInfo::EnterWorld() {
 }
@@ -702,7 +697,6 @@ int32_t Packet_SMSG_CRITERIA_DELETED(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// PROVEN: ab7a19ea DIFFERENT/IDENTICAL
 // OFFSET: 0x0094D8D0/0x1406BCE80
 void CGAchievementInfo::LoadTrackedAchievements() {
     CVarIntListWrapper list;
@@ -809,7 +803,6 @@ void CGAchievementInfo::ShutdownGame() {
     }
 }
 
-// PROVEN: 8b5a690b IDENTICAL/IDENTICAL
 // OFFSET: 0x009493A0/0x1406B6E50
 void CGAchievementInfo::SaveTrackedAchievements() {
     CVarIntListWrapper list;
@@ -1055,7 +1048,6 @@ int32_t Packet_SMSG_CRITERIA_UPDATE(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: 3a54c40e IDENTICAL/UNPROVEN
 // OFFSET: 0x009479F0/0x1406B5030
 void CGAchievementInfo::SetFocusedAchievement(int32_t id) {
     if (id == s_focusedAchievement) {
@@ -1072,7 +1064,6 @@ void CGAchievementInfo::SetFocusedAchievement(int32_t id) {
     }
 }
 
-// PROVEN: 865f0ac9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00947A60/0x1406B50A0
 bool CGAchievementInfo::IsRealAchievement(int32_t id, bool guild) {
     AchievementRec* achievement = g_achievementDB.GetRecord(id);
@@ -1335,7 +1326,6 @@ void CGAchievementInfo::ReleaseInspect() {
     }
 }
 
-// PROVEN: 011d99d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGAchievementInfo::LeaveWorld() {
 }

@@ -6,7 +6,6 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "WoW/Source/Ui/CAccountMsgBody.h"
 
-// PROVEN: b9d90b3b IDENTICAL/UNPROVEN
 // OFFSET: 0x009FA1D0/0x140797610
 static int32_t Script_AccountMsg_GetNumTotalMsgs(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
@@ -18,7 +17,6 @@ static int32_t Script_AccountMsg_GetNumTotalMsgs(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 294be715 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FA210/0x140797650
 static int32_t Script_AccountMsg_GetHeaderSubject(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
@@ -42,7 +40,6 @@ static int32_t Script_AccountMsg_GetHeaderSubject(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 8126112d IDENTICAL/DIFFERENT
 // OFFSET: 0x009FA2B0/0x140797740
 static int32_t Script_AccountMsg_GetHeaderPriority(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
@@ -66,7 +63,6 @@ static int32_t Script_AccountMsg_GetHeaderPriority(lua_State* L) {
     return 1;
 }
 
-// PROVEN: b2facd86 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FAA80/0x140798120
 static int32_t Script_AccountMsg_LoadBody(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
@@ -94,7 +90,6 @@ static int32_t Script_AccountMsg_LoadBody(lua_State* L) {
     return 0;
 }
 
-// PROVEN: a3683442 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FA360/0x140797810
 static int32_t Script_AccountMsg_GetBody(lua_State* L) {
     if (g_accountMsgBody.m_state != 2) {
@@ -110,7 +105,6 @@ static int32_t Script_AccountMsg_GetBody(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ff18d8d2 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FA840/0x140797E90
 static int32_t Script_AccountMsg_GetNumUnreadMsgs(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
@@ -130,7 +124,6 @@ static int32_t Script_AccountMsg_GetNumUnreadMsgs(lua_State* L) {
     return 1;
 }
 
-// PROVEN: e1d6379d IDENTICAL/UNPROVEN
 // OFFSET: 0x009FA8B0/0x140797F00
 static int32_t Script_AccountMsg_GetNumUnreadUrgentMsgs(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
@@ -201,7 +194,6 @@ static int32_t Script_AccountMsg_SetMsgRead(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d5f27551 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FADA0/0x140798500
 static int32_t Script_AccountMsg_LoadHeaders(lua_State* L) {
     if (!g_accountMsgHeaders.LoadHeaders()) {
@@ -227,7 +219,6 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "AccountMsg_SetMsgRead", &Script_AccountMsg_SetMsgRead },
 };
 
-// PROVEN: 5727a01f IDENTICAL/UNPROVEN
 // OFFSET: 0x009FA3C0/0x140797880
 void AccountMsg_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -235,7 +226,6 @@ void AccountMsg_RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: e6f1932c IDENTICAL/UNPROVEN
 // OFFSET: 0x009FA3F0/0x1407978D0
 void AccountMsg_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

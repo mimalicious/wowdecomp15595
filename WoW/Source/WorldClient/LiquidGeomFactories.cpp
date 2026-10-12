@@ -131,19 +131,16 @@ static uint16_t* BuildAreaIndices(uint16_t* indices) {
 Liquid::IGeomFactory::~IGeomFactory() {
 }
 
-// PROVEN: 1306526c IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA00/0x140455010
 void CMeshGeomFactory::SetTexCoord1ValueX(float value) {
     this->m_texCoord1ValueX = value;
 }
 
-// PROVEN: bf723edc IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CMeshGeomFactory::GetHeight() {
     return 0.0f;
 }
 
-// PROVEN: b08f3ba8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA30/0x140455020
 void CMeshGeomFactory::Purge() {
     if (this->m_mapObjGroup) {
@@ -151,7 +148,6 @@ void CMeshGeomFactory::Purge() {
     }
 }
 
-// PROVEN: 2ce6c080 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CB40/0x140455140
 void CChunkGeomFactory::Purge() {
     if (this->m_buf) {
@@ -160,7 +156,6 @@ void CChunkGeomFactory::Purge() {
     }
 }
 
-// PROVEN: 6d5fc22b IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CBD0/0x1404551F0
 void CAreaGeomFactory::Purge() {
     if (this->m_buf) {
@@ -169,7 +164,6 @@ void CAreaGeomFactory::Purge() {
     }
 }
 
-// PROVEN: 60282c52 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CE00/0x140455420
 void CMeshGeomFactory::Destroy() {
     CMeshGeomFactory::s_allocator.Clear(typeid(CMeshGeomFactory).raw_name(), SLOG_OBJECT, 1);
@@ -184,7 +178,6 @@ void CMeshGeomFactory::SetDiffuseColor(const CImVector& color) {
     }
 }
 
-// PROVEN: 72d7a811 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CE70/0x140455490
 void CMeshGeomFactory::Release() {
     if (--this->m_refCount == 0) {
@@ -235,7 +228,6 @@ static void BuildMapObjLiquidIndices(CMapObjGroup* group, uint16_t*& indices) {
     }
 }
 
-// PROVEN: 462e946d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CFC0/0x140455610
 static void* PolyClipVtxLerpTexCoords(const void* a, const void* b, float t) {
     const uint16_t* from = static_cast<const uint16_t*>(a);
@@ -246,7 +238,6 @@ static void* PolyClipVtxLerpTexCoords(const void* a, const void* b, float t) {
     return vert;
 }
 
-// PROVEN: bbad3458 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D030/0x140455690
 static void* PolyClipVtxLerpDepth(const void* a, const void* b, float t) {
     const uint8_t* from = static_cast<const uint8_t*>(a);
@@ -422,13 +413,11 @@ void FillMapObjVertex(CMapObjGroup* group, const C3Vector& pos, const float* dep
     out += FORMAT == 7 ? 11 : FORMAT == 10 ? 8 : FORMAT == 9 ? 6 : 5;
 }
 
-// PROVEN: 336e8ac0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D420/0x140455C60
 void CChunkGeomFactory::Destroy() {
     CChunkGeomFactory::s_allocator.Clear(typeid(CChunkGeomFactory).raw_name(), SLOG_OBJECT, 1);
 }
 
-// PROVEN: 7c1fd7e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D440/0x140455C90
 void CChunkGeomFactory::Release() {
     if (--this->m_refCount == 0) {
@@ -436,7 +425,6 @@ void CChunkGeomFactory::Release() {
     }
 }
 
-// PROVEN: 80a9b65f IDENTICAL/DIFFERENT
 // OFFSET: 0x0076D470/0x140455CD0
 bool CChunkGeomFactory::SetTransform(const C44Matrix& transform) {
     if (this->m_transform == transform) {
@@ -448,7 +436,6 @@ bool CChunkGeomFactory::SetTransform(const C44Matrix& transform) {
     return true;
 }
 
-// PROVEN: 5fcee884 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D4B0/0x140455D70
 float CChunkGeomFactory::GetHeight() {
     if (this->m_liquids.Count()) {
@@ -509,7 +496,6 @@ static void BuildChunkIndices(const CChunkLiquid* liquid, uint16_t* indices, uin
     batch.m_count = static_cast<uint16_t>(batch.m_count + (out - indices));
 }
 
-// PROVEN: 70ae072d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D660/0x140455F70
 void CAreaGeomFactory::Release() {
     if (--this->m_refCount == 0) {
@@ -517,7 +503,6 @@ void CAreaGeomFactory::Release() {
     }
 }
 
-// PROVEN: e609827c IDENTICAL/DIFFERENT
 // OFFSET: 0x0076D690/0x140455FB0
 bool CAreaGeomFactory::SetTransform(const C44Matrix& transform) {
     if (this->m_transform == transform) {
@@ -1407,31 +1392,26 @@ void CChunkGeomFactory::GetBuffers(EGxVertexBufferFormat format, CGxBuf*& vertex
     this->m_format = format;
 }
 
-// PROVEN: 56b853f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CAreaGeomFactory::GetHeight() {
     return 0.0f;
 }
 
-// PROVEN: 442796bc IDENTICAL/IDENTICAL
 // OFFSET: 0x007AAB20/0x140317F90
 bool CMeshGeomFactory::SetTransform(const C44Matrix& transform) {
     return false;
 }
 
-// PROVEN: 82f48af9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 bool CMeshGeomFactory::GetWorldSpace() {
     return false;
 }
 
-// PROVEN: e7240de9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool CChunkGeomFactory::GetWorldSpace() {
     return true;
 }
 
-// PROVEN: 2569a902 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool CAreaGeomFactory::GetWorldSpace() {
     return true;

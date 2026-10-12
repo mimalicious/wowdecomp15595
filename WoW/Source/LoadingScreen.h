@@ -159,7 +159,6 @@ bool CLoadingScreenShipInfo<T>::GetLeg(uint32_t path, uint32_t leg, int32_t* sta
     return true;
 }
 
-// PROVEN: 665fba7c DIFFERENT/IDENTICAL
 // OFFSET: [0x0040AED0/0x14000D7F0<TaxiPathNodeRec>]
 template <class T>
 int32_t CLoadingScreenShipInfo<T>::FindLeg(WowClientDB<T>* nodeDB, uint32_t path, int32_t continentID) {

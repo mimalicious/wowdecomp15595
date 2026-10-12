@@ -44,7 +44,6 @@ SThread CGlueMgr::m_scandllThread;
 // STATIC: 0x00BD1334/0x1409C5A20
 static ScanDLLThreadParams s_scanThreadParams = { ".\\Scan.dll", &CGlueMgr::m_scandllStatus, &CGlueMgr::m_scandllResult, CGlueMgr::m_scandllHackName, sizeof(((CGlueMgr*)0)->m_scandllHackName), &CGlueMgr::m_scandllOkayToLogIn, &CGlueMgr::m_scandllShouldBlockPlaying };
 
-// PROVEN: 3b7755bd IDENTICAL/IDENTICAL
 // OFFSET: 0x0080F810/0x140526AB0
 void CGlueMgr::ScanDLLContinueAnyway() {
     if (CGlueMgr::m_scandllShouldBlockPlaying) {
@@ -63,7 +62,6 @@ bool CGlueMgr::IsScanDLLFinished() {
     return CGlueMgr::m_scandllOkayToLogIn;
 }
 
-// PROVEN: 03dda93c IDENTICAL/DIFFERENT
 // OFFSET: 0x0080F880/0x140526B40
 static uint32_t STORMAPI ScanThreadProc(void* param) {
     ScanDLLThreadParams* params = static_cast<ScanDLLThreadParams*>(param);

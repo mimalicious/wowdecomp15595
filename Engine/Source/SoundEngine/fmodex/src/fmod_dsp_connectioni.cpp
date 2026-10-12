@@ -45,7 +45,6 @@ extern "C"
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b19aa2d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD03D0/0x14089AF70
 FMOD_RESULT DSPConnectionI::init(DSP_LEVEL_TYPE * &levelmemory, int maxoutputlevels, int maxinputlevels)
 {  
@@ -184,7 +183,6 @@ FMOD_RESULT DSPConnectionI::getOutput(DSPI **output)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5570d6e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD0450/0x14089B010
 FMOD_RESULT DSPConnectionI::reset()
 {
@@ -225,7 +223,6 @@ FMOD_RESULT DSPConnectionI::reset()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ad644c9b IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD04F0/0x14089B0A0
 FMOD_RESULT DSPConnectionI::setUnity()
 {
@@ -1380,7 +1377,6 @@ FMOD_RESULT DSPConnectionI::mixAndRamp(float * FMOD_RESTRICT outbuffer, float * 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d44f9259 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD06C0/0x14089B2D0
 FMOD_RESULT DSPConnectionI::rampTo()
 {
@@ -1457,7 +1453,6 @@ FMOD_RESULT DSPConnectionI::rampTo()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6c537c29 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD08B0/0x14089B4D0
 FMOD_RESULT DSPConnectionI::checkUnity(int outchannels, int inchannels)
 {
@@ -1896,7 +1891,6 @@ FMOD_RESULT DSPConnectionI::setPan(float pan, int outchannels, int inchannels, F
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c1545346 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD0F80/0x14089BB90
 FMOD_RESULT DSPConnectionI::setLevels(float *levels, int numinputlevels)
 {
@@ -1981,7 +1975,6 @@ FMOD_RESULT DSPConnectionI::setLevels(float *levels, int numinputlevels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 28c176d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD10D0/0x14089BD30
 FMOD_RESULT DSPConnectionI::getLevels(float *levels, int numinputlevels)
 {
@@ -2029,7 +2022,6 @@ FMOD_RESULT DSPConnectionI::getLevels(float *levels, int numinputlevels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 806c74ff IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD0F30/0x14089BB50
 FMOD_RESULT DSPConnectionI::setMix(float volume)
 {
@@ -2209,7 +2201,6 @@ FMOD_RESULT DSPConnectionI::getLevels(FMOD_SPEAKER speaker, float *levels, int n
 ]
 */
 #ifdef FMOD_SUPPORT_SOFTWARE
-// PROVEN: 01527c06 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD1160/0x14089BDE0
 FMOD_RESULT DSPConnectionI::copy(DSPConnectionI *source)
 {

@@ -65,7 +65,6 @@ static const uint32_t s_particleFrames[5][8] = {
     { 17, 18, 19, 20, 21, 22, 23, 24 },
 };
 
-// PROVEN: 1c2a908c IDENTICAL/IDENTICAL
 // OFFSET: 0x0077CC80/0x1404696C0
 Particulate::~Particulate() {
     if (this->m_texture) {
@@ -73,7 +72,6 @@ Particulate::~Particulate() {
     }
 }
 
-// PROVEN: d0dbafd4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0077CCA0/0x1404696E0
 void Particulate::SetScale(float scale) {
     this->m_scale = scale;

@@ -84,7 +84,6 @@ void CurrencyBreakdown(uint64_t amount, uint64_t* parts) {
     parts[0] = amount;
 }
 
-// PROVEN: 32af9dfe IDENTICAL/UNPROVEN
 // OFFSET: 0x004E3A00/0x140124BF0
 void LootInitialize() {
     s_currencyMultiplier[0] = 1;
@@ -93,7 +92,6 @@ void LootInitialize() {
     s_lootInitialized = 1;
 }
 
-// PROVEN: 99b26c7d IDENTICAL/IDENTICAL
 // OFFSET: 0x004E3A30/0x140124C20
 void LootDestroy() {
     s_lootInitialized = 0;
@@ -206,7 +204,6 @@ void GetCurrencyShortText(int64_t amount, char* buffer, uint32_t size, const cha
     }
 }
 
-// PROVEN: b31abe26 IDENTICAL/IDENTICAL
 // OFFSET: 0x00959950/0x1406CBF70
 void MasterLootCandidateCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -214,13 +211,11 @@ void MasterLootCandidateCallback(int32_t id, const WOWGUID& guid, void* param, b
     }
 }
 
-// PROVEN: 09095f6f IDENTICAL/IDENTICAL
 // OFFSET: 0x00959970/0x1406CBF90
 void CGLootInfo::LeaveWorld() {
     CGGameUI::CloseLoot(true, false, false);
 }
 
-// PROVEN: e333a2bb IDENTICAL/NONE
 // OFFSET: 0x00959980
 int32_t CGLootWindow::GetNumLootItems() {
     if (!CGLootInfo::m_lootObj) {
@@ -242,7 +237,6 @@ int32_t CGLootWindow::GetNumLootItems() {
     return count;
 }
 
-// PROVEN: aad4653f IDENTICAL/UNPROVEN
 // OFFSET: 0x00959A20/0x1406CBFA0
 int32_t CGLootInfo::GetLootItem(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -264,7 +258,6 @@ int32_t CGLootInfo::GetLootItem(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_itemID;
 }
 
-// PROVEN: 14785721 IDENTICAL/UNPROVEN
 // OFFSET: 0x00959A60/0x1406CBFE0
 int32_t CGLootInfo::GetLootCurrency(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -286,7 +279,6 @@ int32_t CGLootInfo::GetLootCurrency(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_currencyID;
 }
 
-// PROVEN: 5f023e10 IDENTICAL/UNPROVEN
 // OFFSET: 0x00959AA0/0x1406CC020
 int32_t CGLootInfo::GetLootQuantity(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -308,7 +300,6 @@ int32_t CGLootInfo::GetLootQuantity(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_quantity;
 }
 
-// PROVEN: e1f13ae5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00959AE0/0x1406CC060
 int32_t CGLootInfo::GetLootSeed(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -330,7 +321,6 @@ int32_t CGLootInfo::GetLootSeed(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_randomSuffix;
 }
 
-// PROVEN: d019963f IDENTICAL/UNPROVEN
 // OFFSET: 0x00959B20/0x1406CC0A0
 int32_t CGLootInfo::GetLootRandomPropertiesID(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -352,13 +342,11 @@ int32_t CGLootInfo::GetLootRandomPropertiesID(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_randomPropertiesID;
 }
 
-// PROVEN: 732c2549 IDENTICAL/IDENTICAL
 // OFFSET: 0x00959B60/0x1406CC0E0
 uint32_t CGLootInfo::GetLootType() {
     return CGLootInfo::m_lootType;
 }
 
-// PROVEN: 2dbd171c IDENTICAL/IDENTICAL
 // OFFSET: 0x0095A190/0x1406CC770
 void CGLootInfo::ShutdownGame() {
     ClientCurrencyLootRemoved::s_handler = NULL;
@@ -404,7 +392,6 @@ bool CGLootInfo::OnCurrencyLootRestored(ClientCurrencyLootRestored* msg) {
     return true;
 }
 
-// PROVEN: 889881d5 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A260/0x1406CC850
 const char* CGLootInfo::GetLootSlotTexture(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -480,7 +467,6 @@ void CGLootInfo::GetLootSlotText(char* buffer, uint32_t size, uint32_t slot) {
     }
 }
 
-// PROVEN: ae6488db IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A430/0x1406CCAE0
 int32_t CGLootInfo::HasLoot() {
     if (!ClntObjMgrObjectPtr(CGLootInfo::m_lootObj, TYPEMASK_OBJECT, __FILE__, __LINE__)) {
@@ -500,7 +486,6 @@ int32_t CGLootInfo::HasLoot() {
     return 0;
 }
 
-// PROVEN: 4205bdc2 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A490/0x1406CCB50
 static void MissingLootItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     for (uint32_t i = 0; i < CGLootInfo::m_missingItems.m_count; i++) {
@@ -516,7 +501,6 @@ static void MissingLootItemCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
-// PROVEN: daa597d4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A500/0x1406CCBC0
 bool CGLootInfo::IsPlayerIneligible(int32_t itemId) {
     for (uint32_t i = 0; i < CGLootInfo::m_missingItems.m_count; i++) {
@@ -559,7 +543,6 @@ bool CGLootInfo::OnCurrencyLootRemoved(ClientCurrencyLootRemoved* msg) {
     return true;
 }
 
-// PROVEN: 6beab623 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095A6A0/0x1406CCDB0
 void CGLootInfo::ClearRollPending(WOWGUID guid, uint32_t slot) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || CGLootInfo::m_lootObj != guid) {
@@ -574,7 +557,6 @@ void CGLootInfo::ClearRollPending(WOWGUID guid, uint32_t slot) {
     }
 }
 
-// PROVEN: f72cc58e IDENTICAL/IDENTICAL
 // OFFSET: 0x0095A710/0x1406CCE40
 void CGLootInfo::CoinsCleared() {
     if (CGLootInfo::m_coins > 0) {
@@ -691,7 +673,6 @@ void CGLootInfo::DoAutoLoot(int32_t keepOpen) {
     CGGameUI::CloseLoot(true, false, false);
 }
 
-// PROVEN: f93d558c IDENTICAL/UNPROVEN
 // OFFSET: 0x0095AA80/0x1406CD320
 int32_t CGLootWindow::GetLootItemRarity(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -864,7 +845,6 @@ void CGLootInfo::ConfirmLootSlot(uint32_t slot) {
     s_bindConfirmSlot = -1;
 }
 
-// PROVEN: 91992987 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095AE60/0x1406CD7D0
 void CGLootInfo::LootButtonItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {

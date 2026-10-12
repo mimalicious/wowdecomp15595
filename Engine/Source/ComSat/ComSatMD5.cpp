@@ -10,7 +10,6 @@
 
 static const uint8_t s_padding[64] = { 0x80 };
 
-// PROVEN: acbd927e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3D2A0/0x14090A290
 void ComSat::MD5::ProcessBlock(const uint8_t* block) {
     uint32_t a = this->m_state[0];
@@ -102,7 +101,6 @@ void ComSat::MD5::ProcessBlock(const uint8_t* block) {
     this->m_state[3] += d;
 }
 
-// PROVEN: 7983d879 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3D9D0/0x14090AB30
 void ComSat::MD5::Prepare() {
     this->m_count[1] = 0;
@@ -149,7 +147,6 @@ void ComSat::MD5::Process(const void* data, uint32_t size) {
     }
 }
 
-// PROVEN: f93071d2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B3DAE0/0x14090AC60
 void ComSat::MD5::Finish(uint8_t (&digest)[16]) {
     uint8_t length[8];

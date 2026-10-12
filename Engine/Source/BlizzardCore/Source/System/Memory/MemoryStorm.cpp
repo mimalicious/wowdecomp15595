@@ -6,13 +6,11 @@
 
 static System_Memory::UsingMemory s_usingMemory;
 
-// PROVEN: 96e55dd0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B392B0/0x140850630
 static void* DefaultAllocHook(size_t bytes) {
     return malloc(bytes);
 }
 
-// PROVEN: a77d3da9 IDENTICAL/NONE
 // OFFSET: 0x00A30330
 static void DefaultFreeHook(void* ptr, size_t bytes) {
     free(ptr);
@@ -62,7 +60,6 @@ void* Blizzard::Memory::Allocate(uint32_t bytes, uint32_t flags, const char* fil
     return SMemAlloc(bytes, fileName, lineNumber, ToStormFlags(flags));
 }
 
-// PROVEN: a77536bd IDENTICAL/DIFFERENT
 // OFFSET: 0x007B5870/0x1404AB820
 void Blizzard::Memory::Free(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
@@ -73,7 +70,6 @@ void Blizzard::Memory::Free(void* ptr, uint32_t flags, const char* fileName, int
     SMemFree(ptr, fileName, lineNumber, ToStormFlags(flags));
 }
 
-// PROVEN: 343a02cf IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void System_Memory::ShutdownProc() {
 }

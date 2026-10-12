@@ -26,7 +26,6 @@ static WNDREC* FindWindow(HWND window) {
     return NULL;
 }
 
-// PROVEN: bf8275f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C0F20/0x1400FB7B0
 HWND STORMAPI SMsgGetDefaultWindow() {
     return s_defaultwindow;
@@ -54,7 +53,6 @@ static void DeleteWindow(HWND window) {
     }
 }
 
-// PROVEN: 25c0a963 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C1050/0x1400FB8E0
 int32_t STORMAPI SMsgDestroy() {
     WNDREC* rec;
@@ -66,7 +64,6 @@ int32_t STORMAPI SMsgDestroy() {
     return 1;
 }
 
-// PROVEN: 0c5f8d8e IDENTICAL/IDENTICAL
 // OFFSET: 0x004C1070/0x1400FB910
 void SDebugPrintf(const char* format, ...) {
     char buffer[4096];

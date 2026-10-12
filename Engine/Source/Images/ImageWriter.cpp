@@ -671,13 +671,11 @@ static void* s_scratch;
 // STATIC: 0x0100AA60/0x140EE2658
 static uint32_t s_scratchSize;
 
-// PROVEN: aa091d19 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B39260/0x140905450
 void ImageWriterSetFlags(int32_t flags) {
     s_flags = flags;
 }
 
-// PROVEN: b2ebac43 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B39270/0x140905480
 void IWFree(void* ptr) {
     if (s_free) {
@@ -685,7 +683,6 @@ void IWFree(void* ptr) {
     }
 }
 
-// PROVEN: ffb1a5e9 IDENTICAL/NONE
 // OFFSET: 0x00B39290/0x140905460
 void* IWAlloc(size_t bytes) {
     if (s_alloc) {
@@ -695,33 +692,28 @@ void* IWAlloc(size_t bytes) {
     return NULL;
 }
 
-// PROVEN: 877594e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B392B0/0x1407DA240
 void* IWDefaultAlloc(size_t bytes) {
     return malloc(bytes);
 }
 
-// PROVEN: b2e89822 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A90D40/0x1407DA240
 void IWDefaultFree(void* ptr) {
     free(ptr);
 }
 
-// PROVEN: 98ec8b95 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B392C0/0x1409054D0
 void IWSetAllocator(void* (*allocFunc)(size_t bytes)) {
     s_alloc = allocFunc;
     jpeg_set_malloc(IWAlloc);
 }
 
-// PROVEN: e7fc52e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B392E0/0x1409054F0
 void IWSetDeallocator(void (*freeFunc)(void* ptr)) {
     s_free = freeFunc;
     jpeg_set_free(IWFree);
 }
 
-// PROVEN: 4cf7a6f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3A300/0x140906E50
 int32_t IWBitMatrix::ResetScratch() {
     s_scratch = NULL;
@@ -739,7 +731,6 @@ void IWBitMatrix::FreeScratch() {
     s_scratchSize = 0;
 }
 
-// PROVEN: 60d1bb10 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3A350/0x140906EB0
 IWBitMatrix::IWBitMatrix() {
     this->m_columns = 0;
@@ -798,7 +789,6 @@ int32_t IWBitMatrix::Initialize(uint32_t size, const char* name, const uint8_t* 
     return 1;
 }
 
-// PROVEN: 58aa18cf IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3A440/0x140906FA0
 IWEncoder::IWEncoder() {
     this->m_data = NULL;
@@ -862,7 +852,6 @@ void IWLdpcEncoder::Reset() {
     IWEncoder::Reset();
 }
 
-// PROVEN: fe345264 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B38B90/0x140904C20
 uint32_t IWLdpcEncoder::GetEncodedSize(uint32_t size) {
     uint32_t copies = this->m_repeat + 1;
@@ -1092,7 +1081,6 @@ int32_t SelectWeights() {
     return 1;
 }
 
-// PROVEN: 7bf55035 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B39820/0x140905F30
 int32_t SetBlockSize(uint32_t width, uint32_t height, float step) {
     s_step = step;
@@ -1626,7 +1614,6 @@ int32_t ImageWriterShutdown() {
     return 1;
 }
 
-// PROVEN: f8d0513b DIFFERENT/IDENTICAL
 // OFFSET: 0x00B38560/0x140904550
 int32_t ImageWriterWriteJpeg(const char* fileName, const void* pixels, uint32_t width, uint32_t height, uint32_t bytesPerPixel, uint32_t quality) {
     if (!s_initialized || !fileName || !pixels) {

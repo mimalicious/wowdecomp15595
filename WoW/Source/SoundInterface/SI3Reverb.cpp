@@ -68,7 +68,6 @@ int32_t SI3::GetZoneReverb() {
     return SI3::sm_aZoneSoundInfo[type].m_reverb;
 }
 
-// PROVEN: f6c49d19 IDENTICAL/IDENTICAL
 // OFFSET: 0x006347F0/0x1402CAA40
 void SI3::EnableReverb(int32_t enable) {
     SI3::sm_bReverbEnabled = enable;
@@ -92,7 +91,6 @@ void SI3::UpdateReverb() {
     SE3::SetReverb(&properties);
 }
 
-// PROVEN: 30f52b84 IDENTICAL/DIFFERENT
 // OFFSET: 0x00634880/0x1402CAA50
 void SI3::ReverbUnderwaterChanged() {
     SI3::UpdateReverb();

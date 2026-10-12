@@ -47,7 +47,6 @@ EQUIPMENT_SET::EQUIPMENT_SET() {
     this->m_unsaved = 0;
 }
 
-// PROVEN: b695294d IDENTICAL/IDENTICAL
 // OFFSET: 0x009A1280/0x140725A20
 void CGEquipmentManager::EnterWorld() {
     CGEquipmentManager::m_swapPending = 0;
@@ -70,7 +69,6 @@ int32_t CGEquipmentManager::CanUseEquipmentSets(bool updateActionBar) {
     return canUse;
 }
 
-// PROVEN: 243b4596 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A12D0/0x140725B20
 void CGEquipmentManager::ClearIgnoredSlots() {
     for (uint32_t i = 0; i < 19; i++) {
@@ -557,7 +555,6 @@ bool CGEquipmentManager::CanCreateSet() {
     return count < 10;
 }
 
-// PROVEN: cb5e7dd9 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A2E80/0x140727C90
 int32_t CGEquipmentManager::OnEquipmentSetResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGEquipmentManager::m_swapPending = 0;
@@ -582,7 +579,6 @@ int32_t CGEquipmentManager::OnEquipmentSetResult(void* param, NETMESSAGE msgId, 
     return 1;
 }
 
-// PROVEN: 62cfdeb7 IDENTICAL/NONE
 // OFFSET: 0x009A2F50
 void CGEquipmentManager::SaveSetByName(const char* name, const char* icon) {
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByName(name);

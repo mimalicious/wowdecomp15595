@@ -22,7 +22,6 @@ void C4Plane::From3Pos(const C3Vector& p0, const C3Vector& p1, const C3Vector& p
     this->d = -(this->n.z * p0.z + this->n.x * p0.x + this->n.y * p0.y);
 }
 
-// PROVEN: 453ab2b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00828420/0x140546270
 bool operator!=(const C4Plane& l, const C4Plane& r) {
     return l.n.x != r.n.x || l.n.y != r.n.y || l.n.z != r.n.z || l.d != r.d;
@@ -44,7 +43,6 @@ void C4Plane::Transform(const C44Matrix& matrix) {
     this->d = -(this->n.z * viewPoint.z + this->n.y * viewPoint.y + this->n.x * viewPoint.x);
 }
 
-// PROVEN: fb0cb9e7 IDENTICAL/NONE
 // OFFSET: 0x004CC1D0
 float C4Plane::Distance(const C3Vector& point) const {
     return point.z * this->n.z + point.y * this->n.y + point.x * this->n.x + this->d;

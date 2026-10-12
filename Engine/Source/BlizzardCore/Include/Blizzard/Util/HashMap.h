@@ -184,7 +184,6 @@ bool Blizzard::Util::HashMap<K, V>::Remove(const K& key, V* value) {
     return true;
 }
 
-// PROVEN: d7428832 IDENTICAL/NONE
 // OFFSET: 0x007C59C0/0x1404C0B00<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
 bool Blizzard::Util::HashMap<K, V>::Shrink() {

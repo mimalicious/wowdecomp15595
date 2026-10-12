@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[4] = { 0, 2, 0, 2 };
 // STATIC: 0x00C27BC8/0x140A1E1B0
 const DBCMeta TerrainMaterialRec::s_meta = { "DBFilesClient\\TerrainMaterial.dbc", 4, 16, TerrainMaterialRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: fca73b4b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B710/0x1407E8520
 void TerrainMaterialRec::FixupStrings(void* record, const char* strings) {
     TerrainMaterialRec* rec = static_cast<TerrainMaterialRec*>(record);

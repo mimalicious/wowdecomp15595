@@ -7,7 +7,6 @@
 #include "WoW/Source/DB/Rec/SpellItemEnchantmentRec.h"
 
 // STATIC
-// PROVEN: 9c793a34 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 static void VisibleItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
@@ -86,7 +85,6 @@ uint32_t VisibleItem_C::GetSoundOverrideSubclassID() {
     return rec ? rec->m_soundOverrideSubclassID : 0;
 }
 
-// PROVEN: 32a46960 IDENTICAL/UNPROVEN
 // OFFSET: 0x005FF600/0x1402884D0
 int32_t VisibleItem_C::GetItemEnchantmentVisualID() {
     ItemDisplayInfoRec displayRec;

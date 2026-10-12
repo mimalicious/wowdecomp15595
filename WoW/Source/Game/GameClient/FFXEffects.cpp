@@ -277,7 +277,6 @@ PassNetherCombine::PassNetherCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex
     this->m_fade = 0.0f;
 }
 
-// PROVEN: e3d66bff IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C2B0/0x1408D02F0
 void EffectDeath::SetParameters(int32_t count, const int32_t* params) {
     if (g_theGxDevicePtr->m_caps.m_shaderModel >= 2) {
@@ -285,7 +284,6 @@ void EffectDeath::SetParameters(int32_t count, const int32_t* params) {
     }
 }
 
-// PROVEN: f38723fb IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C2E0/0x1408D0320
 void EffectNetherWorld::End() {
     if (this->m_passes.Count() >= 2) {
@@ -365,7 +363,6 @@ float EffectUnconscious::GetFadeAmount() {
     return static_cast<PassGlowFade*>(this->m_passes[2])->GetFadeAmount();
 }
 
-// PROVEN: 63c90148 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C5B0/0x1408D06A0
 void EffectUnconscious::SetGlowBlur(uint8_t glow, uint8_t blur) {
     static_cast<PassGlowFade*>(this->m_passes[2])->m_color = CImVector(blur, blur, blur, glow);
@@ -632,7 +629,6 @@ void PassDeathNVRC::Execute() {
     FFX::SetupReset();
 }
 
-// PROVEN: b3eebdea IDENTICAL/DIFFERENT
 // OFFSET: 0x00B0D7C0/0x1408D1D70
 bool PassNetherBlur::Valid() {
     return this->m_vertexShader && this->m_vertexShader->m_permutes[0].Valid() && this->m_pixelShader && this->m_pixelShader->m_permutes[this->m_permute].Valid();
@@ -1005,7 +1001,6 @@ EffectUnconscious::~EffectUnconscious() {
     }
 }
 
-// PROVEN: cbda88b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0B750/0x1408CF670
 void PassColorShift::SetParameters(int32_t count, const float* params) {
     if (count != 9) {
@@ -1037,7 +1032,6 @@ PassColorShift::PassColorShift(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXColorShift");
 }
 
-// PROVEN: 00a46f95 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C610/0x1408D0710
 void EffectColorShift::SetParameters(int32_t count, const int32_t* params) {
     if (count == 9) {

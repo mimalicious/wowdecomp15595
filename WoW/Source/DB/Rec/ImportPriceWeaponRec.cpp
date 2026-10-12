@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[2] = { 0, 3 };
 // STATIC: 0x00C24860/0x140A1A050
 const DBCMeta ImportPriceWeaponRec::s_meta = { "DBFilesClient\\ImportPriceWeapon.dbc", 2, 8, ImportPriceWeaponRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: f5c4c2e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ImportPriceWeaponRec::FixupStrings(void* record, const char* strings) {
 }

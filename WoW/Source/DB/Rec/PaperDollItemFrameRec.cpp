@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[3] = { 2, 2, 0 };
 // STATIC: 0x00C2309C/0x140A18208
 const DBCMeta PaperDollItemFrameRec::s_meta = { "DBFilesClient\\PaperDollItemFrame.dbc", 3, 16, PaperDollItemFrameRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: a639cb66 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E9B0/0x1407D8110
 void PaperDollItemFrameRec::FixupStrings(void* record, const char* strings) {
     PaperDollItemFrameRec* rec = static_cast<PaperDollItemFrameRec*>(record);

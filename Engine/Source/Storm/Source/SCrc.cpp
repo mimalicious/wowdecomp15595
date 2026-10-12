@@ -105,7 +105,6 @@ static const uint64_t s_crc64Table[256] = {
     0xA707DB9ACF80C06DULL, 0x14299724CC279F02ULL, 0x5383EDCD67C06036ULL, 0xE0ADA17364673F59ULL,
 };
 
-// PROVEN: 78a607b4 DIFFERENT/IDENTICAL
 // OFFSET: 0x004B9510/0x1400F1E50
 uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
     uint32_t result = 0;
@@ -138,7 +137,6 @@ uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t
     return result;
 }
 
-// PROVEN: ef255d8c IDENTICAL/IDENTICAL
 // OFFSET: 0x004B9570/0x1400F1EE0
 uint32_t STORMAPI SCrcCompute(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
     return SCrcBuffer(buffer, length, crc, flags);
@@ -176,7 +174,6 @@ uint64_t SCrc64Buffer(const void* buffer, uint32_t length, uint64_t* crc, uint32
     return result;
 }
 
-// PROVEN: 2f88ad46 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B9610/0x1400F1F70
 uint64_t STORMAPI SCrc64Compute(const void* buffer, uint32_t length, uint64_t* crc, uint32_t flags) {
     return SCrc64Buffer(buffer, length, crc, flags);

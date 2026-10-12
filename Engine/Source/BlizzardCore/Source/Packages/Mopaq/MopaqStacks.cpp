@@ -237,7 +237,6 @@ bool System_Mopaq::CallNext(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms
     return (*reinterpret_cast<Blizzard::Mopaq::Mpqfunc*>(reinterpret_cast<uint8_t*>(next) + parms->m_verb))(next, parms);
 }
 
-// PROVEN: 7cfb7190 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 bool System_Mopaq::null_func(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return false;
@@ -276,7 +275,6 @@ bool System_Mopaq::Push(Blizzard::Mopaq::Mpqsystem& system, Blizzard::Mopaq::Mpq
     return HoistAll(&system);
 }
 
-// PROVEN: a50344ad DIFFERENT/IDENTICAL
 // OFFSET: 0x007BA290/0x1404B1A90
 void System_Mopaq::InitStack(Blizzard::Mopaq::Mpqsystem& system, int32_t flags) {
     if (flags & 0x2) {
@@ -400,13 +398,11 @@ bool System_Mopaq::base_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return true;
 }
 
-// PROVEN: de0749db IDENTICAL/DIFFERENT
 // OFFSET: 0x007B24E0/0x1404A7640
 bool System_Mopaq::base_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::Read(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
 }
 
-// PROVEN: a34b2e2f IDENTICAL/NONE
 // OFFSET: 0x007B24B0
 bool System_Mopaq::base_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::Write(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
@@ -425,7 +421,6 @@ bool System_Mopaq::base_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return System_File::Stacked::s_manager->m_verbs.m_flush(System_File::Stacked::s_manager, &fileParms);
 }
 
-// PROVEN: 18e51b58 IDENTICAL/DIFFERENT
 // OFFSET: 0x007B2560/0x1404A7710
 bool System_Mopaq::base_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = Blizzard::File::GetFileInfo(parms->m_handle->m_file)->m_size;
@@ -591,20 +586,17 @@ bool System_Mopaq::memory_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return true;
 }
 
-// PROVEN: bf8dc270 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 bool System_Mopaq::memory_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return true;
 }
 
-// PROVEN: 0526e835 IDENTICAL/DIFFERENT
 // OFFSET: 0x007B2B70/0x1404A8030
 bool System_Mopaq::memory_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_memory->m_array->m_count;
     return true;
 }
 
-// PROVEN: c8180205 IDENTICAL/DIFFERENT
 // OFFSET: 0x007BA760/0x1404B1F20
 bool System_Mopaq::memory_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     if (parms->m_offset > 0xFFFFFFFFLL) {
@@ -819,7 +811,6 @@ bool System_Mopaq::align_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// PROVEN: 7e82188f IDENTICAL/DIFFERENT
 // OFFSET: 0x007AB500/0x1404A1550
 bool System_Mopaq::align_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_align->m_size;
@@ -893,26 +884,22 @@ bool System_Mopaq::ChecksumData::Update(Blizzard::Mopaq::MpqHandleRecord* handle
     return true;
 }
 
-// PROVEN: a093ba78 DIFFERENT/IDENTICAL
 // OFFSET: 0x007AB450/0x1404A1490
 void System_Mopaq::ChecksumData::ChecksumCrc(ChecksumData* data, const void* buffer, int32_t size) {
     data->m_crc = crc32(data->m_crc, static_cast<const Bytef*>(buffer), size);
 }
 
-// PROVEN: c790c2d3 IDENTICAL/NONE
 // OFFSET: 0x007B29D0
 void System_Mopaq::ChecksumData::ChecksumMd5(ChecksumData* data, const void* buffer, int32_t size) {
     data->m_md5.Process(buffer, size);
 }
 
-// PROVEN: a3718586 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B29F0/0x1404A7E70
 void System_Mopaq::ChecksumData::ChecksumCrcAndMd5(ChecksumData* data, const void* buffer, int32_t size) {
     data->m_crc = crc32(data->m_crc, static_cast<const Bytef*>(buffer), size);
     data->m_md5.Process(buffer, size);
 }
 
-// PROVEN: ba9a6b77 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BA4B0/0x1404B1CF0
 bool System_Mopaq::ChecksumData::FinishCrc(ChecksumData* data, Blizzard::Mopaq::MpqHandleRecord* handle) {
     handle->m_blockEntry.m_crc = data->m_crc;
@@ -937,7 +924,6 @@ bool System_Mopaq::ChecksumData::FinishMd5(ChecksumData* data, Blizzard::Mopaq::
     return true;
 }
 
-// PROVEN: 2e2353a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x007BA4E0/0x1404B1D20
 bool System_Mopaq::ChecksumData::FinishCrcAndMd5(ChecksumData* data, Blizzard::Mopaq::MpqHandleRecord* handle) {
     Blizzard::Util::Digest<16> md5;
@@ -1143,7 +1129,6 @@ void System_Mopaq::VerifyData::ChecksumTable::SetChecksum(uint32_t index, uint32
     this->m_entries[entry].m_checksums[index & 0x1F] = checksum;
 }
 
-// PROVEN: df145a72 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B3090/0x1404A8720
 void System_Mopaq::VerifyData::ChecksumTable::ClearChecksum(uint32_t index) {
     this->m_entries[index >> 5].m_valid &= ~(0x80000000 >> (index & 0x1F));
@@ -1267,7 +1252,6 @@ bool System_Mopaq::verify_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return CallNext(system, parms);
 }
 
-// PROVEN: 2b711040 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AB5D0/0x1404A1620
 bool System_Mopaq::verify_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_verify->m_size;

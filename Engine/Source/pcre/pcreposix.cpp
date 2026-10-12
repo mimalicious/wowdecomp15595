@@ -127,7 +127,6 @@ void regfree(regex_t* preg) {
     }
 }
 
-// PROVEN: 2eaa596b IDENTICAL/IDENTICAL
 // OFFSET: 0x0063D790/0x1402D6630
 int32_t regcomp(regex_t* preg, const char* pattern, int32_t cflags) {
     const char* errorptr;

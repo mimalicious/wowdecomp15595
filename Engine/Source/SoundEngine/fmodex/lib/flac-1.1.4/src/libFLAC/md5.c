@@ -166,7 +166,6 @@ byteSwap(FLAC__uint32 *buf, unsigned words)
  */
 // INLINED
 void
-// PROVEN: c2a340c3 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B5BF80/0x140925420
 FLAC__MD5Init(struct FLAC__MD5Context *ctx)
 {
@@ -192,7 +191,6 @@ FLAC__MD5Init(struct FLAC__MD5Context *ctx)
  */
 // INLINED
 void
-// PROVEN: f00c0626 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B5BFC0/0x140925460
 FLAC__MD5Update(struct FLAC__MD5Context *ctx, md5byte const *buf, unsigned len)
 {
@@ -234,7 +232,6 @@ FLAC__MD5Update(struct FLAC__MD5Context *ctx, md5byte const *buf, unsigned len)
  */
 // INLINED
 FLAC__bool
-// PROVEN: 468b8184 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B5C090/0x140925620
 FLAC__MD5Accumulate(struct FLAC__MD5Context *ctx, const FLAC__int32 * const signal[], unsigned channels, unsigned samples, unsigned bytes_per_sample)
 {
@@ -290,7 +287,6 @@ FLAC__MD5Accumulate(struct FLAC__MD5Context *ctx, const FLAC__int32 * const sign
  */
 // INLINED
 void
-// PROVEN: 7ac6562b IDENTICAL/UNPROVEN
 // OFFSET: 0x00B5C1C0/0x1409257B0
 FLAC__MD5Final(md5byte digest[16], struct FLAC__MD5Context *ctx)
 {

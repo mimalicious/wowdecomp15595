@@ -20,7 +20,6 @@ void CStatus::Clear() {
     this->m_highestSeverity = STATUS_INFO;
 }
 
-// PROVEN: b83ebdf0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00872470/0x1405A8870
 CStatus& GetGlobalStatusObj() {
     return s_errorList;
@@ -35,7 +34,6 @@ void CStatus::Add(const CStatus& source) {
     }
 }
 
-// PROVEN: 564bdf23 IDENTICAL/IDENTICAL
 // OFFSET: 0x008724D0/0x1405A88E0
 int32_t CStatus::IsEmpty() {
     return this->m_statusList.Head() == NULL;
@@ -91,7 +89,6 @@ uint32_t CStatus::GetErrorStrLen(STATUS_TYPE minSeverity, const char* separator)
     return length;
 }
 
-// PROVEN: 21318ce1 IDENTICAL/DIFFERENT
 // OFFSET: 0x008726B0/0x1405A8AF0
 char* CStatus::GetErrorStrAlloc(STATUS_TYPE minSeverity, const char* separator) {
     size_t bufchars = this->GetErrorStrLen(minSeverity, separator) + 1;

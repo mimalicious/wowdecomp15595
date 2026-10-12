@@ -77,7 +77,6 @@ static uint16_t s_initCounter;
 // STATIC: 0x00F60DE4/0x140E55EFC
 static uint32_t s_pendingLoads;
 
-// PROVEN: bd50a44a IDENTICAL/IDENTICAL
 // OFFSET: 0x009C3C30/0x140750FD0
 int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
     for (uint32_t i = 0; i < static_cast<int32_t>(sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])); i++) {
@@ -89,7 +88,6 @@ int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
     return -1;
 }
 
-// PROVEN: 8726b5e8 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C50C0/0x140752B20
 void MACRONODE::IncrementActionBarCount() {
     if (this->m_dynamic && !this->m_actionBarCount) {
@@ -117,7 +115,6 @@ void CGUIMacros::UpdateMacroSpells() {
     }
 }
 
-// PROVEN: 6cd621a8 IDENTICAL/NONE
 // OFFSET: 0x009C53F0
 int32_t CGUIMacros::GetSortedIndexByName(const char* name) {
     MACRONODE* macro = CGUIMacros::FindMacro(name);
@@ -231,19 +228,16 @@ MACRONODE* CGUIMacros::FindMacro(const char* name) {
     return NULL;
 }
 
-// PROVEN: 73046a93 IDENTICAL/NONE
 // OFFSET: 0x008A4660
 bool CGUIMacros::IsActionAllowed(uint32_t action) {
     return !CGUIMacros::m_macroButton || ((1 << action) & CGUIMacros::m_state);
 }
 
-// PROVEN: e69afe2f IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4A40/0x140752360
 void CGUIMacros::RemoveDynamicMacro(MACRONODE* macro) {
     s_dynamicMacros.UnlinkNode(macro);
 }
 
-// PROVEN: 28ccda0c IDENTICAL/UNPROVEN
 // OFFSET: 0x009C5120/0x140752B90
 void CGUIMacros::Initialize() {
     do {
@@ -254,7 +248,6 @@ void CGUIMacros::Initialize() {
     CGUIMacros::LoadIcons();
 }
 
-// PROVEN: 8b1765db IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7050/0x140755840
 void CGUIMacros::LoadMacros() {
     s_pendingLoads = 0x30000;
@@ -262,7 +255,6 @@ void CGUIMacros::LoadMacros() {
     LoadAccountData(5, CGUIMacros::LoadMacrosCallback, reinterpret_cast<void*>(static_cast<uintptr_t>(s_initCounter | 0x20000)));
 }
 
-// PROVEN: b09ec62c DIFFERENT/IDENTICAL
 // OFFSET: 0x009C3BF0/0x140750FA0
 static int32_t QSortIcons(const void* a, const void* b) {
     return _stricmp(*static_cast<char* const*>(a), *static_cast<char* const*>(b));
@@ -273,7 +265,6 @@ static int32_t QSortMacrosByName(const void* a, const void* b) {
     return _stricmp((*static_cast<MACRONODE* const*>(a))->m_name, (*static_cast<MACRONODE* const*>(b))->m_name);
 }
 
-// PROVEN: b9a90486 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4390/0x1407519C0
 static void AddMacroIcon(const char* fileName) {
     char* ext = SStrChrR(const_cast<char*>(fileName), '.');
@@ -289,7 +280,6 @@ static void AddMacroIcon(const char* fileName) {
     }
 }
 
-// PROVEN: 2093e2c2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4400/0x140751A50
 static void AddMacroItemIcon(const char* fileName) {
     char* ext = SStrChrR(const_cast<char*>(fileName), '.');
@@ -305,7 +295,6 @@ static void AddMacroItemIcon(const char* fileName) {
     }
 }
 
-// PROVEN: 7c7fc799 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4470/0x140751AE0
 static int32_t IconListArchiveCallback(const char* fileName, void* param) {
     if (!SFile::FileExists(fileName)) {
@@ -362,7 +351,6 @@ static int32_t IconListDirectoryCallback(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// PROVEN: 6ee8c901 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C4680/0x140751E20
 static int32_t IconListCustomCallback(OS_FILE_DATA& data, void* param) {
     if (!(data.flags & OS_FILE_ATTRIBUTE_DIRECTORY)) {
@@ -441,12 +429,10 @@ struct MacroSlashCommand {
     int32_t m_type;
 };
 
-// PROVEN: 899df668 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4AF0/0x140752420
 MACRONODE::~MACRONODE() {
 }
 
-// PROVEN: 864a54f1 IDENTICAL/NONE
 // OFFSET: 0x009C4B60
 MACRONODE::MACRONODE() {
     this->m_name[0] = '\0';
@@ -583,7 +569,6 @@ int32_t MACRONODE::Parse() {
     return this->FindSpellID();
 }
 
-// PROVEN: e30de2bf IDENTICAL/DIFFERENT
 // OFFSET: 0x009C5340/0x140752EE0
 void CGUIMacros::CountActionBarSlots(MACRONODE* macro) {
     macro->m_actionBarCount = 0;
@@ -627,7 +612,6 @@ void CGUIMacros::SortMacros() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_MACROS, NULL);
 }
 
-// PROVEN: 335e1d24 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C54F0/0x1407531A0
 int32_t CGUIMacros::SetMacroBody(MACRONODE* macro, const char* body) {
     SStrCopy(macro->m_body, body, sizeof(macro->m_body));
@@ -831,7 +815,6 @@ void CGUIMacros::LoadMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
     }
 }
 
-// PROVEN: 5a8d7eb4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C3F00/0x140751350
 void CGUIMacros::RunMacro(MACRONODE* macro, const char* button) {
     MACRONODE* savedMacro = CGUIMacros::m_macroButton;
@@ -1061,7 +1044,6 @@ void CGUIMacros::SaveMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
     }
 }
 
-// PROVEN: d712a366 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C5300/0x140752E90
 void CGUIMacros::SaveMacros() {
     if (!CGUIMacros::m_saveMacros) {
@@ -1073,7 +1055,6 @@ void CGUIMacros::SaveMacros() {
     SaveAccountData(5, CGUIMacros::SaveMacrosCallback, reinterpret_cast<void*>(1));
 }
 
-// PROVEN: 4b2c37c7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C70A0/0x140755890
 uint32_t CGUIMacros::CreateMacro(const char* name, const char* icon, const char* body, int32_t perCharacter, int32_t isLocal) {
     if (!name || !*name) {

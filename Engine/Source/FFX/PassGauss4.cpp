@@ -4,7 +4,6 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Services/Texture.h"
 
-// PROVEN: 74370fd6 UNPROVEN/IDENTICAL
 // OFFSET: 0x0089F790/0x1405E07E0
 PassGauss4::PassGauss4(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_permute = 0;

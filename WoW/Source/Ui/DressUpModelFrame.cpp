@@ -66,25 +66,21 @@ CSimpleFrame* CGDressUpModelFrame::Create(CSimpleFrame* parent) {
     return data ? new (data) CGDressUpModelFrame(parent) : NULL;
 }
 
-// PROVEN: c6272ad9 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A04840/0x1407A3E70
 CGDressUpModelFrame::CGDressUpModelFrame(CSimpleFrame* parent) : CGCharacterModelBase(parent) {
     this->m_dressUpComponent = NULL;
 }
 
-// PROVEN: 67d442a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04870/0x1407A3EB0
 const char* CGDressUpModelFrame::GetObjectTypeName() {
     return CGDressUpModelFrame::s_objectTypeName;
 }
 
-// PROVEN: 5a0a4bc2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04880/0x1407A3EC0
 int32_t CGDressUpModelFrame::GetScriptMetaTable() {
     return CGDressUpModelFrame::s_metatable;
 }
 
-// PROVEN: 46d3b9b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04890/0x1407A3ED0
 void CGDressUpModelFrame::Undress() {
     if (!this->m_model) {
@@ -194,7 +190,6 @@ CGDressUpModelFrame::~CGDressUpModelFrame() {
     }
 }
 
-// PROVEN: 7a727e07 NONE/IDENTICAL
 // OFFSET: 0x00A04BA0/0x1407A4240
 bool CGDressUpModelFrame::IsA(int32_t type) {
     return type == CGDressUpModelFrame::s_objectType || type == CGCharacterModelBase::s_objectType || type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
@@ -205,7 +200,6 @@ bool CGDressUpModelFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGDressUpModelFrame::s_objectTypeName, STORM_MAX_STR) || CGCharacterModelBase::IsA(typeName);
 }
 
-// PROVEN: 0eade77d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A04C90/0x1407A4360
 CM2Model* CGDressUpModelFrame::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
     if (!unit) {
@@ -233,7 +227,6 @@ CM2Model* CGDressUpModelFrame::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
     return this->GetScene()->CreateModel(modelName, 0, 3);
 }
 
-// PROVEN: c1967315 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04E40/0x1407A4590
 void CGDressUpModelFrame::SetUpModel(CGUnit_C* unit) {
     CGCharacterModelBase::SetUpModel(unit);
@@ -263,7 +256,6 @@ void CGDressUpModelFrame::UpdateModel() {
     }
 }
 
-// PROVEN: 8a8dd292 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A04EF0/0x1407A4650
 void CGDressUpModelFrame::TryOn(int32_t itemId, const int32_t* enchants, int32_t hand) {
     int32_t visual = 0;
@@ -293,7 +285,6 @@ void CGDressUpModelFrame::TryOn(int32_t itemId, const int32_t* enchants, int32_t
     this->TryOnWithVisual(itemId, visual, hand);
 }
 
-// PROVEN: 8c1ea975 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04FF0/0x1407A4790
 static void DressUpItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {

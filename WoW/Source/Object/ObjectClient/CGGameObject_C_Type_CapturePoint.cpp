@@ -16,7 +16,6 @@ bool CGGameObject_C_Type_CapturePoint::CanHighlight() const {
     return highlight != 0;
 }
 
-// PROVEN: a6e33d75 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_CapturePoint::CanUse() const {
     return false;
@@ -46,7 +45,6 @@ void CGGameObject_C_Type_CapturePoint::Reenable() {
     g_capturePointUIManager.AddCapturePoint(this->m_owner, a2, a3);
 }
 
-// PROVEN: fbdc91fd IDENTICAL/UNPROVEN
 // OFFSET: 0x0059AE30/0x140209570
 void CGGameObject_C_Type_CapturePoint::Disable() {
     g_capturePointUIManager.RemoveCapturePoint(this->m_owner);

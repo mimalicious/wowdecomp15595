@@ -48,7 +48,6 @@ TSGrowableArray<TrainerServiceInfo*> CGClassTrainer::m_services;
 // STATIC: 0x00D15A28/0x140BCF3E0
 int32_t CGClassTrainer::m_stepIndex = -1;
 
-// PROVEN: 9ae5338c IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9030/0x140743E70
 void TrainerItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -56,7 +55,6 @@ void TrainerItemCallback(int32_t id, const WOWGUID& guid, void* param, bool succ
     }
 }
 
-// PROVEN: 842b99d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9050/0x140743E90
 void CGClassTrainer::EnterWorld() {
     CGClassTrainer::m_trainer = WOWGUID();
@@ -66,7 +64,6 @@ void CGClassTrainer::EnterWorld() {
     CGClassTrainer::m_greetingText[0] = '\0';
 }
 
-// PROVEN: 89f21bcf DIFFERENT/IDENTICAL
 // OFFSET: 0x009B9120/0x140743F50
 int32_t GetServiceTypeFromString(const char* type) {
     if (!type) {
@@ -84,7 +81,6 @@ int32_t GetServiceTypeFromString(const char* type) {
     return _stricmp(type, "used") != 0 ? 6 : 0;
 }
 
-// PROVEN: 348baeb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9290/0x140744170
 void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t trainerID, int32_t type) {
     CGClassTrainer::m_trainerID = trainerID;
@@ -110,7 +106,6 @@ void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t trainerID, int32
     CGGossipInfo::ClearGossip();
 }
 
-// PROVEN: 42a706b4 IDENTICAL/NONE
 // OFFSET: 0x009B9330
 int32_t CGClassTrainer::GetSelectionIndex() {
     if (!CGClassTrainer::m_currentSelection) {
@@ -212,7 +207,6 @@ static int32_t QSortServices_Tradeskill(const void* a, const void* b) {
     return SStrSortUTF8I(spellA->m_name, spellB->m_name, STORM_MAX_STR);
 }
 
-// PROVEN: 78afcc73 IDENTICAL/UNPROVEN
 // OFFSET: 0x009B9560/0x140744560
 TrainerServiceInfo* CGClassTrainer::GetService(uint32_t index) {
     if (index >= CGClassTrainer::m_numServices) {
@@ -222,7 +216,6 @@ TrainerServiceInfo* CGClassTrainer::GetService(uint32_t index) {
     return CGClassTrainer::m_services.m_data[index];
 }
 
-// PROVEN: b695dbba IDENTICAL/DIFFERENT
 // OFFSET: 0x009B9880/0x1407448B0
 void CGClassTrainer::LeaveWorld() {
     CGClassTrainer::SetTrainer(WOWGUID(), 0, 0);
@@ -348,7 +341,6 @@ void CGClassTrainer::BuyService(uint32_t index) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 2f1cb4bc IDENTICAL/NONE
 // OFFSET: 0x009B9B60
 void CGClassTrainer::BuyAllServices() {
     for (uint32_t i = 0; i < CGClassTrainer::m_filteredServices; i++) {
@@ -356,7 +348,6 @@ void CGClassTrainer::BuyAllServices() {
     }
 }
 
-// PROVEN: eab3fdf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9B90/0x140744C70
 void CGClassTrainer::SetServiceTypeFilter(int32_t filter) {
     g_serviceTypeFilterCVar->Set(filter, true, false, false, true);
@@ -364,7 +355,6 @@ void CGClassTrainer::SetServiceTypeFilter(int32_t filter) {
     FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
 }
 
-// PROVEN: 832f3d9f IDENTICAL/UNPROVEN
 // OFFSET: 0x009BA450/0x1407457A0
 void CGClassTrainer::ShutdownGame() {
     for (uint32_t i = 0; i < CGClassTrainer::m_services.m_count; i++) {

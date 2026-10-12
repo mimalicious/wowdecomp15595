@@ -44,7 +44,6 @@ typedef struct lsfit_acc{
 
 /***********************************************/
 
-// PROVEN: 174441ba DIFFERENT/IDENTICAL
 // OFFSET: 0x00B48940/0x140918380
 static void FMOD_floor1_free_info(vorbis_info_floor *i){
   vorbis_info_floor1 *info=(vorbis_info_floor1 *)i;
@@ -54,7 +53,6 @@ static void FMOD_floor1_free_info(vorbis_info_floor *i){
   }
 }
 
-// PROVEN: 9f5eac64 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B48970/0x1409183C0
 static void FMOD_floor1_free_look(vorbis_look_floor *i){
   vorbis_look_floor1 *look=(vorbis_look_floor1 *)i;

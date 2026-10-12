@@ -44,7 +44,6 @@ void CSimpleHTML::operator delete(void* ptr) {
     }
 }
 
-// PROVEN: 65fa2917 IDENTICAL/IDENTICAL
 // OFFSET: 0x00521A20/0x14016F590
 void CSimpleHTML::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
@@ -52,7 +51,6 @@ void CSimpleHTML::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     }
 }
 
-// PROVEN: 0716f04d IDENTICAL/DIFFERENT
 // OFFSET: 0x00521A40/0x14016F5A0
 void CSimpleHTML::SetHyperlinkFormat(const char* format) {
     if (this->m_hyperlinkFormat) {
@@ -62,7 +60,6 @@ void CSimpleHTML::SetHyperlinkFormat(const char* format) {
     this->m_hyperlinkFormat = SStrDupA(format, __FILE__, __LINE__);
 }
 
-// PROVEN: 844d1e5b IDENTICAL/DIFFERENT
 // OFFSET: 0x00521A90/0x14016F600
 void CSimpleHTML::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);
@@ -85,25 +82,21 @@ CSimpleHTML::CSimpleHTML(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(parent)
     this->m_hyperlinksEnabled = true;
 }
 
-// PROVEN: 7590d339 IDENTICAL/NONE
 // OFFSET: 0x00521C40
 const char* CSimpleHTML::GetObjectTypeName() {
     return CSimpleHTML::s_objectTypeName;
 }
 
-// PROVEN: 2a773a72 IDENTICAL/IDENTICAL
 // OFFSET: 0x00521C50/0x14016F850
 int32_t CSimpleHTML::GetScriptMetaTable() {
     return CSimpleHTML::s_metatable;
 }
 
-// PROVEN: 6673e8d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00521C70/0x14016F870
 bool CSimpleHTML::IsA(int32_t type) {
     return type == CSimpleHTML::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 73949285 IDENTICAL/NONE
 // OFFSET: 0x00521CB0
 bool CSimpleHTML::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleHTML::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -378,7 +371,6 @@ void CSimpleHTML::RefreshHyperlinks() {
     }
 }
 
-// PROVEN: a9a44334 IDENTICAL/IDENTICAL
 // OFFSET: 0x005219E0/0x14016F560
 void CSimpleHTML::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);

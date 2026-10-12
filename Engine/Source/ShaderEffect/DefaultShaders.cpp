@@ -27,7 +27,6 @@ static C4Vector s_fogParams;
 // STATIC: 0x00D3818C/0x140BF1CB8
 static C4Vector s_fogColor;
 
-// PROVEN: cdcf0ac9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00430960/0x140038CD0
 void DefaultShaders::GetFogColor(CImVector& color) {
     color.r = static_cast<uint8_t>(s_fogColor.x * 255.0f);
@@ -36,7 +35,6 @@ void DefaultShaders::GetFogColor(CImVector& color) {
     color.a = 0xFF;
 }
 
-// PROVEN: 9c8d6516 DIFFERENT/IDENTICAL
 // OFFSET: 0x00430B10/0x140038E20
 void DefaultShaders::Initialize() {
     if (s_initCount++) {
@@ -55,7 +53,6 @@ void DefaultShaders::Initialize() {
     }
 }
 
-// PROVEN: 3bf9c181 IDENTICAL/DIFFERENT
 // OFFSET: 0x00430B80/0x140038EE0
 void DefaultShaders::Destroy() {
     if (--s_initCount) {
@@ -312,7 +309,6 @@ void DefaultShaders::SetFogParams(float start, float end, float density, const C
     GxRsSet(GxRs_FogColor, *reinterpret_cast<const int32_t*>(&color));
 }
 
-// PROVEN: 948de202 IDENTICAL/DIFFERENT
 // OFFSET: 0x00431840/0x14003A0E0
 void DefaultShaders::SetFogEnabled(int32_t enabled) {
     s_fogColor.w = enabled && g_theGxDevicePtr->MasterEnable(GxMasterEnable_Fog) ? 1.0f : 0.0f;
@@ -322,7 +318,6 @@ void DefaultShaders::SetFogEnabled(int32_t enabled) {
     }
 }
 
-// PROVEN: 86da6118 IDENTICAL/NONE
 // OFFSET: 0x004318B0
 static uint32_t CountTextures(uint32_t textureCount) {
     if (textureCount != 0xFFFFFFFF) {

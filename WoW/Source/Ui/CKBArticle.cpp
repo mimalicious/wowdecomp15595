@@ -12,12 +12,10 @@ CKBArticle g_KnowledgeBaseArticle;
 CKBArticle::CKBArticle() {
 }
 
-// PROVEN: 431409c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CKBArticle::_ComputeCachedData() {
 }
 
-// PROVEN: 52ec8010 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB9B0/0x140799050
 int32_t CKBArticle::BeginLoading(int32_t articleId, int32_t searchType) {
     if (this->m_state == 1 || this->m_inQueue) {
@@ -50,7 +48,6 @@ int32_t CKBArticle::BeginLoading(int32_t articleId, int32_t searchType) {
     return 1;
 }
 
-// PROVEN: b2eedf76 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC940/0x14079A550
 void CKBArticle::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
@@ -58,7 +55,6 @@ void CKBArticle::_SendSuccessEvent() {
     }
 }
 
-// PROVEN: fef7932a IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC960/0x14079A570
 void CKBArticle::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {

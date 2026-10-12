@@ -30,7 +30,6 @@ uint32_t CGRuneInfo::m_numRunes;
 uint32_t CGRuneInfo::m_predictedRunes;
 
 
-// PROVEN: 4305e805 IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C370/0x1406A7A00
 void CGRuneInfo::InitializeGame() {
     for (uint32_t i = 0; i < 6; i++) {
@@ -57,7 +56,6 @@ void CGRuneInfo::InitializeGame() {
     CGRuneInfo::m_baseRunes[5] = 2;
 }
 
-// PROVEN: 16988e2e IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C4C0/0x1406A7B60
 void CGRuneInfo::EnterWorld() {
     for (uint32_t i = 0; i < 6; i++) {
@@ -86,7 +84,6 @@ void CGRuneInfo::EnterWorld() {
     }
 }
 
-// PROVEN: 65522d23 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093C430/0x1406A7AE0
 bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
     if (!(static_cast<uint32_t>(index) > 5)) {
@@ -100,7 +97,6 @@ bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
     return false;
 }
 
-// PROVEN: 4cf7ce2d IDENTICAL/IDENTICAL
 // OFFSET: 0x0093C460/0x1406A7B10
 int32_t CGRuneInfo::GetRuneTypeByIndex(int32_t index, bool base) {
     if (base) {
@@ -110,7 +106,6 @@ int32_t CGRuneInfo::GetRuneTypeByIndex(int32_t index, bool base) {
     return CGRuneInfo::m_runes[index];
 }
 
-// PROVEN: c2bc9c5f IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C640/0x1406A7D40
 uint32_t CGRuneInfo::GetRuneRechargeTime(int32_t index) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -334,18 +329,15 @@ bool CGRuneInfo::ComputeRuneSpellCooldown(const SpellRec* spell, uint32_t* coold
     return true;
 }
 
-// PROVEN: 31a366a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGRuneInfo::ShutdownGame() {
 }
 
-// PROVEN: 656c969a IDENTICAL/UNPROVEN
 // OFFSET: 0x0093C410/0x1406A7AD0
 void CGRuneInfo::SetRuneLastUsedTime(int32_t index, uint32_t time) {
     CGRuneInfo::m_runeLastUsed[index] = time;
 }
 
-// PROVEN: 3e1d1939 IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C560/0x1406A7C30
 uint32_t CGRuneInfo::GetRuneLastUsedTime(int32_t index) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
@@ -435,7 +427,6 @@ void CGRuneInfo::SetPredictedRunes(uint8_t available, uint8_t used, const uint8_
     CGSpellBook::UpdateUsable();
 }
 
-// PROVEN: 0b9a8596 IDENTICAL/UNPROVEN
 // OFFSET: 0x0093C920/0x1406A8170
 void CGRuneInfo::ResyncRunes(CDataStore* msg) {
     msg->Get(CGRuneInfo::m_numRunes);
@@ -459,7 +450,6 @@ void CGRuneInfo::ResyncRunes(CDataStore* msg) {
     }
 }
 
-// PROVEN: d6eced7d IDENTICAL/DIFFERENT
 // OFFSET: 0x0093CA00/0x1406A82B0
 void CGRuneInfo::AddRunePower(CDataStore* msg) {
     uint32_t runes;
@@ -486,7 +476,6 @@ void CGRuneInfo::AddRunePower(CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_UPDATE_COOLDOWN, NULL);
 }
 
-// PROVEN: 59e48eda IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGRuneInfo::LeaveWorld() {
 }

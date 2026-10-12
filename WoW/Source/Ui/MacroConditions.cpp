@@ -14,7 +14,6 @@ TSHashTable<MacroConditions, HASHKEY_STR> s_macroConditions;
 // STATIC: 0x00D17AB8
 static const char* s_conditionNames[34] = { "", "combat", "exists", "help", "harm", "party", "raid", "dead", "flyable", "indoors", "outdoors", "swimming", "flying", "mounted", "stealth", "group", "stance", "form", "pet", "modifier", "mod", "button", "btn", "actionbar", "bar", "bonusbar", "equipped", "worn", "channeling", "spec", "vehicleui", "unithasvehicleui", "cursor", "resting" };
 
-// PROVEN: 725171f7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 static int32_t EvaluateNone(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     return 1;

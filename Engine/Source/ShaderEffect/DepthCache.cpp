@@ -38,7 +38,6 @@ static CGxShader* s_depthRangeVS;
 // STATIC: 0x00F803CC/0x140E78248
 static CGxShader* s_depthRangePS;
 
-// PROVEN: b803bde2 NONE/IDENTICAL
 // OFFSET: 0x00A2F800/0x1407D94E0
 void __fastcall DepthCache::Reset() {
     if (s_depthResolveTex) {
@@ -55,25 +54,21 @@ void __fastcall DepthCache::Reset() {
     s_needsCreate = 1;
 }
 
-// PROVEN: 3239f9e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2F850/0x1407D9540
 bool DepthCache::IsValid() {
     return s_depthMode != DM_Unknown;
 }
 
-// PROVEN: 72adf84f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2F860/0x1407D9550
 CTexture* DepthCache::GetDepthTex() {
     return s_depthTex;
 }
 
-// PROVEN: 3fd63246 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2F870/0x1407D9560
 CTexture* DepthCache::GetDepthSR() {
     return s_depthResolveTex ? s_depthResolveTex : s_depthTex;
 }
 
-// PROVEN: 49770cf6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2F880/0x1407D9580
 DepthCache::EDepthMode DepthCache::GetDepthMode() {
     return s_depthMode;
@@ -149,7 +144,6 @@ int32_t DepthCache::IsSupported(EDepthMode* mode, EGxTexFormat* format, EGxTexFo
     return depthMode != DM_Unknown;
 }
 
-// PROVEN: 743ea377 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2F9D0/0x1407D9700
 static void DestroyTextures() {
     g_theGxDevicePtr->RemoveDeviceRestoredCallback(DepthCache::Reset);
@@ -168,7 +162,6 @@ static void DestroyTextures() {
     s_depthMode = DepthCache::DM_Unknown;
 }
 
-// PROVEN: dbb86b33 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2FA40/0x1407D9780
 void DepthCache::Release() {
     if (!--s_refCount) {
@@ -176,7 +169,6 @@ void DepthCache::Release() {
     }
 }
 
-// PROVEN: 7a3dc296 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2FA50/0x1407D97A0
 void DepthCache::Resolve() {
     CGxTex* depth = TextureGetGxTex(s_depthTex);
@@ -233,7 +225,6 @@ static void CreateTextures() {
     }
 }
 
-// PROVEN: c9632355 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2FCA0/0x1407D9A60
 void DepthCache::AddRef() {
     if (s_refCount++) {
@@ -245,7 +236,6 @@ void DepthCache::AddRef() {
     g_theGxDevicePtr->AddTextureRecreationCallback(DepthCache::Reset);
 }
 
-// PROVEN: ac54ae27 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2FCE0/0x1407D9AB0
 void DepthCache::Validate() {
     if (s_needsCreate && s_refCount) {
@@ -253,13 +243,11 @@ void DepthCache::Validate() {
     }
 }
 
-// PROVEN: d51abe8b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2F890/0x1407D9590
 int32_t DepthCache::DepthRangeDumpEnabled() {
     return s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;
 }
 
-// PROVEN: edd5eac5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2FD00/0x1407D9AD0
 void DepthCache::SetDepthRangeDump(float rangeMin, float rangeMax) {
     int32_t enabled = s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;

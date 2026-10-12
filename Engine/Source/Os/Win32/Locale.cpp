@@ -735,7 +735,6 @@ static int32_t WINAPI DownlevelGetUserDefaultLocaleName(LPWSTR localeName, int32
     return size;
 }
 
-// PROVEN: 5f329366 IDENTICAL/IDENTICAL
 // OFFSET: 0x008790C0/0x1405B0570
 uint32_t OsGetLangIdFromLocale(uint32_t locale) {
     switch (locale) {
@@ -766,7 +765,6 @@ uint32_t OsGetLangIdFromLocale(uint32_t locale) {
     }
 }
 
-// PROVEN: 9dfaa8f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00879170/0x1405B0620
 uint32_t OsGetUserDefaultLangID() {
     return GetUserDefaultLangID();

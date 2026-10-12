@@ -92,7 +92,6 @@ FMOD_CODEC_DESCRIPTION_EX *CodecPlaylist::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5549094a IDENTICAL/DIFFERENT
 // OFFSET: 0x00AA41A0/0x1408658B0
 FMOD_RESULT CodecPlaylist::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -554,7 +553,6 @@ FMOD_RESULT CodecPlaylist::readB4S()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2c6fc877 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AA35F0/0x140864720
 FMOD_RESULT CodecPlaylist::getNextXMLTag(char *tagname, int *tagnamesize, char *tagdata, int *tagdatasize)
 {
@@ -860,7 +858,6 @@ FMOD_RESULT CodecPlaylist::readM3U()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b0eae496 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA3F00/0x140865470
 FMOD_RESULT CodecPlaylist::readPLS()
 {
@@ -973,7 +970,6 @@ FMOD_RESULT CodecPlaylist::readPLS()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ebd1bf4b IDENTICAL/DIFFERENT
 // OFFSET: 0x00AA39A0/0x140864D80
 FMOD_RESULT CodecPlaylist::getPLSToken(char *buffer, int length, int *tokensize)
 {
@@ -1112,7 +1108,6 @@ FMOD_RESULT CodecPlaylist::getPLSToken(char *buffer, int length, int *tokensize)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6e4d7ccc IDENTICAL/DIFFERENT
 // OFFSET: 0x00AA4120/0x140865720
 FMOD_RESULT CodecPlaylist::readSimple()
 {
@@ -1163,7 +1158,6 @@ FMOD_RESULT CodecPlaylist::readSimple()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0487a410 IDENTICAL/NONE
 // OFFSET: 0x00AA3B50
 FMOD_RESULT CodecPlaylist::readLine(char *buffer, int length, int *linelength)
 {
@@ -1219,7 +1213,6 @@ FMOD_RESULT CodecPlaylist::readLine(char *buffer, int length, int *linelength)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4516d9b1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AA3BE0/0x140864FC0
 FMOD_RESULT CodecPlaylist::skipSimpleComments()
 {
@@ -1339,7 +1332,6 @@ FMOD_RESULT CodecPlaylist::getQuoteData(const char *tag, char *buffer, int *data
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b7aaa105 IDENTICAL/NONE
 // OFFSET: 0x00AA3580
 FMOD_RESULT CodecPlaylist::skipWhiteSpace(int *numwhitespaces)
 {
@@ -1462,7 +1454,6 @@ FMOD_RESULT CodecPlaylist::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 832f56c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA4390/0x140865B20
 FMOD_RESULT F_CALLBACK CodecPlaylist::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {

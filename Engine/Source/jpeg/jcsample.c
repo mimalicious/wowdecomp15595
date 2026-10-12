@@ -106,7 +106,6 @@ static void expand_right_edge(JSAMPARRAY image_data, int num_rows, JDIMENSION in
  * In this version we simply downsample each component independently.
  */
 
-// PROVEN: afdfed7f IDENTICAL/NONE
 // OFFSET: 0x00B63AB0/0x14092DCA0
 static void sep_downsample(j_compress_ptr cinfo, JSAMPIMAGE input_buf, JDIMENSION in_row_index, JSAMPIMAGE output_buf, JDIMENSION out_row_group_index) {
   my_downsample_ptr downsample = (my_downsample_ptr) cinfo->downsample;
@@ -442,7 +441,6 @@ static void fullsize_smooth_downsample(j_compress_ptr cinfo, jpeg_component_info
  * Note that we must select a routine for each component.
  */
 
-// PROVEN: 3864431b IDENTICAL/NONE
 // OFFSET: 0x00B64210/0x14092E510
 void jinit_downsampler(j_compress_ptr cinfo) {
   my_downsample_ptr downsample;

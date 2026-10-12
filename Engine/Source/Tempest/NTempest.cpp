@@ -60,7 +60,6 @@ float NTempest::Distance(const CAaBox& box, const C3Vector& point) {
     return sqrt(dy * dy + (x - point.x) * (x - point.x) + (z - point.z) * (z - point.z));
 }
 
-// PROVEN: d5bbbd79 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B08BA0/0x1408CC200
 bool NTempest::Intersect2dSegments(const C2Vector& a0, const C2Vector& a1, const C2Vector& b0, const C2Vector& b1) {
     float ax = a1.x - a0.x;
@@ -90,7 +89,6 @@ bool NTempest::Intersect2dSegments(const C2Vector& a0, const C2Vector& a1, const
     return false;
 }
 
-// PROVEN: 6c3cfbdc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B08C70/0x1408CC2F0
 bool NTempest::HitBoundingBox(const float* origin, const float* dir, const float* minB, const float* maxB, float* t, float* coord) {
     bool inside = true;
@@ -243,7 +241,6 @@ bool NTempest::Intersect2dBoxSphere(const float* minB, const float* maxB, const 
     return false;
 }
 
-// PROVEN: 32b05710 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B09130/0x1408CC7C0
 bool NTempest::Intersect(const C3Ray& ray, const CAaBox& box, float* t, C3Vector* hit) {
     float tStorage;
@@ -260,7 +257,6 @@ bool NTempest::Intersect(const C3Ray& ray, const CAaBox& box, float* t, C3Vector
     return HitBoundingBox(&ray.origin.x, &ray.dir.x, &box.b.x, &box.t.x, t, &hit->x);
 }
 
-// PROVEN: 0aaa4951 IDENTICAL/NONE
 // OFFSET: 0x00B09180/0x1408CC820
 bool NTempest::Intersect2d(const CAaBox& box, const CAaSphere& sphere, SolidIntersect mode) {
     return Intersect2dBoxSphere(&box.b.x, &box.t.x, &sphere.c.x, sphere.r, mode);
@@ -597,7 +593,6 @@ float NTempest::DistanceFromPolygonEdge(const C3Vector& point, const C3Vector* v
     return sqrt(best);
 }
 
-// PROVEN: d2d31980 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B08460/0x1408CB950
 float NTempest::DistanceFromPolygon(const C3Vector& point, const C3Vector* verts, uint32_t count, const C4Plane& plane) {
     C3Vector hit = point;

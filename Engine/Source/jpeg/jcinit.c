@@ -26,7 +26,6 @@
  * which modules will be used and give them appropriate initialization calls.
  */
 
-// PROVEN: 3e0b28e5 IDENTICAL/NONE
 // OFFSET: 0x00B60100/0x140929600
 void jinit_compress_master(j_compress_ptr cinfo) {
   /* Initialize master control (includes parameter checking/processing) */

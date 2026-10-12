@@ -128,7 +128,6 @@ void CSimpleTop::ClearLoadingObjectsQueue() {
     }
 }
 
-// PROVEN: 012f31c4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00500DC0/0x140146510
 void CSimpleTop::UpdateLoadingQueue(CSimpleFrame* frame, bool add) {
     if (frame->m_loadLink.IsLinked()) {
@@ -140,7 +139,6 @@ void CSimpleTop::UpdateLoadingQueue(CSimpleFrame* frame, bool add) {
     }
 }
 
-// PROVEN: 0e6a22e0 IDENTICAL/NONE
 // OFFSET: 0x00464880
 void CSimpleTop::GetCursorPosition(C2Vector& position) {
     NDCToDDC(this->m_mousePosition.m_x, this->m_mousePosition.m_y, &position.x, &position.y);
@@ -156,7 +154,6 @@ void CSimpleTop::StopMoveOrResizeFrame() {
     this->m_moveResizeFrame = NULL;
 }
 
-// PROVEN: f0370228 IDENTICAL/IDENTICAL
 // OFFSET: 0x004FEE00/0x140143C10
 void CSimpleTop::SetColorblindShader() {
     if (CSimpleTop::s_colorblindMode) {
@@ -199,7 +196,6 @@ static int32_t ConsoleCommand_ColorblindShader(const char* command, const char* 
     return 1;
 }
 
-// PROVEN: 12f2bf1c IDENTICAL/IDENTICAL
 // OFFSET: 0x004FF140/0x140143F10
 void CSimpleTop::NotifyFrameLayerChanged(CSimpleFrame* frame, uint32_t drawLayer) {
     CFrameStrata* strata = this->m_strata[frame->m_strata];
@@ -207,7 +203,6 @@ void CSimpleTop::NotifyFrameLayerChanged(CSimpleFrame* frame, uint32_t drawLayer
     strata->m_batchDirty = 1;
 }
 
-// PROVEN: 8d69f736 IDENTICAL/DIFFERENT
 // OFFSET: 0x004FF180/0x140148BF0
 void CSimpleTop::NotifyFrameDelayedLoad(CSimpleFrame* frame) {
     CFrameStrata* strata = this->m_strata[frame->m_strata];
@@ -215,7 +210,6 @@ void CSimpleTop::NotifyFrameDelayedLoad(CSimpleFrame* frame) {
     strata->m_batchDirty = 1;
 }
 
-// PROVEN: e2bcc5ff DIFFERENT/IDENTICAL
 // OFFSET: 0x004FF1C0/0x140143F80
 void CSimpleTop::SetCursor(MipBits* image) {
     if (image) {
@@ -817,7 +811,6 @@ int32_t CFrameStrata::BuildBatches(int32_t noMouseCapture) {
     return this->m_batchDirty;
 }
 
-// PROVEN: 4339851a IDENTICAL/IDENTICAL
 // OFFSET: 0x00500580/0x1401458C0
 void CFrameStrata::RenderBatches() {
     for (uint32_t level = 0; level < this->m_topLevel; level++) {
@@ -830,7 +823,6 @@ void CFrameStrata::RenderBatches() {
     }
 }
 
-// PROVEN: 729b80b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x005005E0/0x140145960
 void CSimpleTop::RegisterFrame(CSimpleFrame* frame) {
     this->m_frames.LinkToTail(frame);
@@ -854,7 +846,6 @@ void CSimpleTop::UnregisterFrame(CSimpleFrame* frame) {
     this->m_frames.UnlinkNode(frame);
 }
 
-// PROVEN: 3886a448 IDENTICAL/NONE
 // OFFSET: 0x00500660
 void CSimpleTop::RegisterForCleanup(CSimpleFrame* frame) {
     this->m_destroyed.LinkToTail(frame);
@@ -1001,7 +992,6 @@ void CSimpleTop::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// PROVEN: 94e1550c DIFFERENT/IDENTICAL
 // OFFSET: 0x00500A30/0x140145FF0
 void CSimpleTop::OnLayerRender() {
     C2Vector offset;
@@ -1085,7 +1075,6 @@ int32_t CSimpleTop::OnDisplaySizeChanged(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 8b249c1e IDENTICAL/DIFFERENT
 // OFFSET: 0x00500F20/0x1401466C0
 void CSimpleTop::NotifyFrameMovedOrResized(CSimpleFrame* frame) {
     this->m_strata[frame->m_strata]->m_levelsDirty = 1;
@@ -1097,7 +1086,6 @@ void CSimpleTop::NotifyFrameMovedOrResized(CSimpleFrame* frame) {
     this->m_checkFocus = 1;
 }
 
-// PROVEN: ef5e7907 IDENTICAL/IDENTICAL
 // OFFSET: 0x00500F70/0x140146720
 void CSimpleTop::RegisterForEvent(CSimpleFrame* frame, CSimpleEventType event, int32_t a4, int32_t priority) {
     CSimpleSortedArray<FRAMEPRIORITY*>& queue = this->m_eventqueue[event][frame->m_strata];
@@ -1159,7 +1147,6 @@ void CSimpleTop::UnregisterForEvent(CSimpleFrame* frame, CSimpleEventType event,
     }
 }
 
-// PROVEN: 01adf7ec IDENTICAL/DIFFERENT
 // OFFSET: 0x005010F0/0x1401469C0
 void CSimpleTop::EnableEvents() {
     EventRegisterEx(EVENT_ID_CHAR, &CSimpleTop::OnChar, this, 1.0f);
@@ -1176,7 +1163,6 @@ void CSimpleTop::EnableEvents() {
     EventRegisterEx(EVENT_ID_FOCUS, &CSimpleTop::OnFocusChanged, this, 1.0f);
 }
 
-// PROVEN: e3e3d1c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00501200/0x140146B20
 void CSimpleTop::DisableEvents() {
     EventUnregisterEx(EVENT_ID_CHAR, &CSimpleTop::OnChar, this, 0xFFFFFFFF);
@@ -1289,7 +1275,6 @@ CSimpleTop::CSimpleTop() {
     CSimpleTexture::Init();
 }
 
-// PROVEN: c2171ee9 IDENTICAL/IDENTICAL
 // OFFSET: 0x005015C0/0x140147030
 void CSimpleTop::ShowFrame(CSimpleFrame* frame, int32_t a3) {
     this->m_strata[frame->m_strata]->AddFrame(frame);
@@ -1343,13 +1328,11 @@ CSimpleTop::~CSimpleTop() {
     CSimpleTop::s_instance = NULL;
 }
 
-// PROVEN: b2ac43a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CSimpleTop::LowerFrame(CSimpleFrame* frame) {
     return 0;
 }
 
-// PROVEN: 0cc3f3ae IDENTICAL/IDENTICAL
 // OFFSET: 0x00847950/0x1407D7E80
 void CSimpleTop::ValidateDeletedFrame(CSimpleFrame* frame) {
 }

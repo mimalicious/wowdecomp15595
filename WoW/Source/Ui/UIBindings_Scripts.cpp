@@ -14,7 +14,6 @@
 // STATIC: 0x00F33EEC/0x140E26EBC
 static int32_t s_setBindingClickDepth;
 
-// PROVEN: 26a33c50 IDENTICAL/DIFFERENT
 // OFFSET: 0x00922A50/0x140686260
 static int32_t Script_GetBindingKey(lua_State* L) {
     if (lua_isstring(L, 1)) {
@@ -44,28 +43,24 @@ static int32_t Script_GetBindingKey(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4d74a8db IDENTICAL/IDENTICAL
 // OFFSET: 0x009213D0/0x140683BC0
 static int32_t Script_GetNumBindings(lua_State* L) {
     lua_pushnumber(L, CGUIBindings::s_bindings->m_numCommands);
     return 1;
 }
 
-// PROVEN: a882d465 IDENTICAL/IDENTICAL
 // OFFSET: 0x00921400/0x140683BF0
 static int32_t Script_GetCurrentBindingSet(lua_State* L) {
     lua_pushnumber(L, CGUIBindings::s_bindings->m_saveSet);
     return 1;
 }
 
-// PROVEN: cc5694e1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00921430/0x140683C20
 static int32_t Script_GetNumModifiedClickActions(lua_State* L) {
     lua_pushnumber(L, CGUIBindings::s_bindings->m_numModifiedClicks);
     return 1;
 }
 
-// PROVEN: 7edc48f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009278A0/0x14068D280
 static int32_t Script_LoadBindings(lua_State* L) {
     int32_t set = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -79,7 +74,6 @@ static int32_t Script_LoadBindings(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1a86a601 IDENTICAL/DIFFERENT
 // OFFSET: 0x00922D40/0x1406866E0
 static int32_t Script_GetModifiedClickAction(lua_State* L) {
     if (lua_isnumber(L, 1)) {
@@ -103,7 +97,6 @@ static int32_t Script_IsModifiedClick(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 088accb5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009278F0/0x14068D2D0
 static int32_t Script_SaveBindings(lua_State* L) {
     int32_t set = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -144,7 +137,6 @@ static int32_t Script_SetModifiedClick(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1410cb72 IDENTICAL/DIFFERENT
 // OFFSET: 0x00922E30/0x140686870
 static int32_t Script_GetModifiedClick(lua_State* L) {
     if (lua_isstring(L, 1)) {
@@ -196,7 +188,6 @@ static int32_t Script_GetBindingAction(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 88ea25da IDENTICAL/DIFFERENT
 // OFFSET: 0x00923AE0/0x140687A60
 static int32_t Script_ClearOverrideBindings(lua_State* L) {
     CScriptObject* owner = NULL;
@@ -298,7 +289,6 @@ static int32_t Script_SetBinding(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 04d72169 IDENTICAL/DIFFERENT
 // OFFSET: 0x00922970/0x140686120
 static int32_t Script_GetBinding(lua_State* L) {
     if (lua_isnumber(L, 1)) {
@@ -331,7 +321,6 @@ static int32_t Script_GetBinding(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6339e57a IDENTICAL/DIFFERENT
 // OFFSET: 0x009272C0/0x14068CAF0
 static int32_t Script_SetOverrideBinding(lua_State* L) {
     CScriptObject* owner = NULL;
@@ -359,7 +348,6 @@ static int32_t Script_SetOverrideBinding(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ff698ba7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00926DB0/0x14068C550
 static int32_t Script_SetBindingSpell(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -395,7 +383,6 @@ static int32_t Script_SetBindingSpell(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 11cdf391 IDENTICAL/DIFFERENT
 // OFFSET: 0x00926EE0/0x14068C6A0
 static int32_t Script_SetBindingItem(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -431,7 +418,6 @@ static int32_t Script_SetBindingItem(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 545669fc IDENTICAL/DIFFERENT
 // OFFSET: 0x00927010/0x14068C7F0
 static int32_t Script_SetBindingMacro(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -467,7 +453,6 @@ static int32_t Script_SetBindingMacro(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d2e9620f IDENTICAL/DIFFERENT
 // OFFSET: 0x00927140/0x14068C940
 static int32_t Script_SetBindingClick(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -513,7 +498,6 @@ static int32_t Script_SetBindingClick(lua_State* L) {
     return 1;
 }
 
-// PROVEN: eec0225a IDENTICAL/DIFFERENT
 // OFFSET: 0x009273B0/0x14068CC40
 static int32_t Script_SetOverrideBindingSpell(lua_State* L) {
     CScriptObject* owner = NULL;
@@ -539,7 +523,6 @@ static int32_t Script_SetOverrideBindingSpell(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dfcde78f IDENTICAL/DIFFERENT
 // OFFSET: 0x009274E0/0x14068CDC0
 static int32_t Script_SetOverrideBindingItem(lua_State* L) {
     CScriptObject* owner = NULL;
@@ -565,7 +548,6 @@ static int32_t Script_SetOverrideBindingItem(lua_State* L) {
     return 0;
 }
 
-// PROVEN: a86ec422 IDENTICAL/DIFFERENT
 // OFFSET: 0x00927610/0x14068CF40
 static int32_t Script_SetOverrideBindingMacro(lua_State* L) {
     CScriptObject* owner = NULL;
@@ -591,7 +573,6 @@ static int32_t Script_SetOverrideBindingMacro(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 372fccdb IDENTICAL/DIFFERENT
 // OFFSET: 0x00927740/0x14068D0C0
 static int32_t Script_SetOverrideBindingClick(lua_State* L) {
     CScriptObject* owner = NULL;
@@ -676,7 +657,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetClickFrame", &Script_GetClickFrame },
 };
 
-// PROVEN: 4be9aead IDENTICAL/UNPROVEN
 // OFFSET: 0x00921460/0x140683C50
 void UIBindingsRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -684,7 +664,6 @@ void UIBindingsRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: e5537092 IDENTICAL/UNPROVEN
 // OFFSET: 0x00921490/0x140683CA0
 void UIBindingsUnegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

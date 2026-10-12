@@ -39,7 +39,6 @@ typedef my_destination_mgr * my_dest_ptr;
  * before any data is actually written.
  */
 
-// PROVEN: b18321cb IDENTICAL/NONE
 // OFFSET: 0x00B5D880/0x140926310
 static void init_destination(j_compress_ptr cinfo) {
   my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
@@ -124,7 +123,6 @@ static void term_destination(j_compress_ptr cinfo) {
  * for closing it after finishing compression.
  */
 
-// PROVEN: 5e1b5784 IDENTICAL/NONE
 // OFFSET: 0x00B5D990/0x140926430
 void jpeg_stdio_dest(j_compress_ptr cinfo, FILE * outfile) {
   my_dest_ptr dest;

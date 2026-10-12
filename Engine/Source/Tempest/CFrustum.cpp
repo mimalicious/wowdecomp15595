@@ -4,13 +4,11 @@
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CFrustum.h"
 
-// PROVEN: 8a404508 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CBEA0/0x140107C10
 void CFrustum::Extents(CAaBox& box) {
     box = CAaBox::Bounding(this->corners, 8);
 }
 
-// PROVEN: 5ce1ca7e IDENTICAL/DIFFERENT
 // OFFSET: 0x004CBEF0/0x140107C60
 uint32_t CFrustum::Cull(const CAaBox& box) const {
     const C3Vector* extremes[2] = { &box.t, &box.b };
@@ -122,7 +120,6 @@ uint32_t CFrustum::Cull(const CAaSphere& sphere) {
     return 3;
 }
 
-// PROVEN: 9f10b196 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CC580/0x1401082C0
 void CFrustum::Cull(const C3Vector& point, uint8_t& outside) const {
     outside = 0;
@@ -158,12 +155,10 @@ void CFrustum::Transform(const C44Matrix& m) {
     this->CalcPlanesFromCorners();
 }
 
-// PROVEN: 4b4e948b IDENTICAL/IDENTICAL
 // OFFSET: 0x00437100/0x140040D00
 CFrustum::CFrustum() {
 }
 
-// PROVEN: a067d361 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CCD90/0x140108B00
 CFrustum::CFrustum(const C3Vector* corners) {
     for (uint32_t i = 0; i < 8; i++) {
@@ -173,7 +168,6 @@ CFrustum::CFrustum(const C3Vector* corners) {
     this->CalcPlanesFromCorners();
 }
 
-// PROVEN: c6825fce IDENTICAL/IDENTICAL
 // OFFSET: 0x004CD010/0x140108D80
 void CFrustum::CalcPlanesFromCorners(const C3Vector* corners) {
     for (uint32_t i = 0; i < 8; i++) {
@@ -183,7 +177,6 @@ void CFrustum::CalcPlanesFromCorners(const C3Vector* corners) {
     this->CalcPlanesFromCorners();
 }
 
-// PROVEN: 299ec294 IDENTICAL/IDENTICAL
 // OFFSET: 0x00435110/0x14003E850
 CFrustum& CFrustum::operator=(const CFrustum& source) {
     if (this != &source) {
@@ -199,7 +192,6 @@ CFrustum& CFrustum::operator=(const CFrustum& source) {
     return *this;
 }
 
-// PROVEN: 2693512a IDENTICAL/IDENTICAL
 // OFFSET: 0x004354F0/0x14003EC40
 void CFrustum::InvertPlanes() {
     for (uint32_t i = 0; i < 6; i++) {
@@ -208,7 +200,6 @@ void CFrustum::InvertPlanes() {
     }
 }
 
-// PROVEN: 647b9f24 IDENTICAL/IDENTICAL
 // OFFSET: 0x00768BE0/0x14044FEA0
 void CFrustum::SwapCorners() {
     C3Vector corner = this->corners[0];

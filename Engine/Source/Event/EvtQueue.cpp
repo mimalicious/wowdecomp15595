@@ -12,13 +12,11 @@ static TExtraInstanceRecycler<EvtMessage> s_messageRecycler(64, 64, 256);
 void IEvtQueueInitialize() {
 }
 
-// PROVEN: 8f79861b IDENTICAL/IDENTICAL
 // OFFSET: 0x008A3690/0x1405E5B70
 void IEvtQueueDestroy() {
     s_messageRecycler.Clear();
 }
 
-// PROVEN: a8dcebd2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A36A0/0x1405E5B80
 int32_t IEvtQueueCheckSyncMouseState(EvtContext* context, MOUSEBUTTON button) {
     if (!context) {
@@ -74,7 +72,6 @@ void IEvtQueuePost(EvtContext* context, EVENTID id, const void* data, uint32_t b
     context->m_critsect.Leave();
 }
 
-// PROVEN: e9f529d1 IDENTICAL/DIFFERENT
 // OFFSET: 0x008A3BB0/0x1405E60E0
 static void UpdateSyncKeyState(EvtContext* context, KEY key, EVENTID& id) {
     int32_t found = 0;

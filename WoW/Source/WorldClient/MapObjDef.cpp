@@ -15,7 +15,6 @@
 #include "WoW/Source/WorldClient/MapObjRender.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// PROVEN: c6695cb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EDD0/0x14048C530
 void CMapObjDefGroup::WaterDestroy() {
     if (this->m_liquidInstance) {
@@ -24,7 +23,6 @@ void CMapObjDefGroup::WaterDestroy() {
     }
 }
 
-// PROVEN: 01f72353 IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EDF0/0x140442DF0
 void CMapObjDefGroup::UpdateBounds(const C44Matrix& matrix) {
     this->m_mapObjDef->m_mapObj->GetGroupBounds(this->m_portalBox, this->m_groupNum);
@@ -32,19 +30,16 @@ void CMapObjDefGroup::UpdateBounds(const C44Matrix& matrix) {
     this->m_portalBox = this->m_bbox;
 }
 
-// PROVEN: 1ac3adee IDENTICAL/NONE
 // OFFSET: 0x00756DF0
 CMapObjDefGroup* CMapObjDef::GetDefGroup(uint32_t index) {
     return this->m_defGroups[index];
 }
 
-// PROVEN: e9e8d538 IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EE50/0x140442E60
 bool CMapObjDef::TestAABox(const C3Vector& start, const C3Vector& end) {
     return CWorldMath::VectorIntersectAABox2(this->m_bbox, start, end);
 }
 
-// PROVEN: a922f468 IDENTICAL/NONE
 // OFFSET: 0x0075EF10/0x140442F60
 void CMapObjDefGroup::ExtendBounds(const CAaBox& box) {
     this->m_bbox |= box;

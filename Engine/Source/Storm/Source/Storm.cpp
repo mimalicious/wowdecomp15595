@@ -11,7 +11,6 @@ static int32_t s_exitcode;
 // STATIC: 0x00D9D540/0x140C7F664
 static int32_t s_exitcount;
 
-// PROVEN: 7422ad48 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B8950/0x1400F1000
 static void StormAtExit() {
     if (s_exitcount++ == 0) {
@@ -41,13 +40,11 @@ void STORMAPI StormDestroy() {
     atexit(StormAtExit);
 }
 
-// PROVEN: 6ac4be0e IDENTICAL/IDENTICAL
 // OFFSET: 0x004B89E0/0x1400F10B0
 HINSTANCE STORMAPI StormGetInstance() {
     return GetModuleHandleA(NULL);
 }
 
-// PROVEN: 1a673566 DIFFERENT/IDENTICAL
 // OFFSET: 0x004B89F0/0x1400F10C0
 void StormExitProcess(int32_t code) {
     s_exitcode = code;

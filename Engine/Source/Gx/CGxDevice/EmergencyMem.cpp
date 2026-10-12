@@ -1,12 +1,10 @@
 #include "Engine/Source/Gx/CGxDevice/EmergencyMem.h"
 
-// PROVEN: 7522c4ca IDENTICAL/IDENTICAL
 // OFFSET: 0x008417E0/0x14056DB60
 void EmergencyMem::Unlock() {
     this->m_lock = false;
 }
 
-// PROVEN: 6088ff3b IDENTICAL/IDENTICAL
 // OFFSET: 0x00844FB0/0x140571E40
 void* EmergencyMem::Lock(uint32_t size) {
     if (this->m_data.Count() < size) {

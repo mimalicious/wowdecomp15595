@@ -5,7 +5,6 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: b5edd810 IDENTICAL/IDENTICAL
 // OFFSET: 0x009B8380/0x140742B30
 static int32_t Script_PlayDance(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -27,7 +26,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "PlayDance", &Script_PlayDance },
 };
 
-// PROVEN: 574e2ad8 IDENTICAL/UNPROVEN
 // OFFSET: 0x009B7CF0/0x140742260
 void CGDanceStudio::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -35,7 +33,6 @@ void CGDanceStudio::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: fd7a5340 IDENTICAL/UNPROVEN
 // OFFSET: 0x009B7D10/0x140742280
 void CGDanceStudio::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -71,7 +71,6 @@ const CGameObjectDef::TypeInfo CGameObjectDef::s_typeInfo[36] = {
     { "trapdoor", 3, s_props35, NULL },
 };
 
-// PROVEN: d1af7773 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E6B10/0x140267470
 const char* CGameObjectDef::NameFromTypeId(int32_t typeId) {
     if (static_cast<uint32_t>(typeId) <= 35) {

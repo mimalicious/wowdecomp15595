@@ -10,7 +10,6 @@ static TSHashTable<FileNotification::DeferredFile, HASHKEY_NONE> s_deferredFiles
 // STATIC: 0x00DD435C/0x140B43330
 static TSHashTable<FileNotification::Manifest, HASHKEY_NONE> s_manifests;
 
-// PROVEN: 8c3ce577 IDENTICAL/DIFFERENT
 // OFFSET: 0x00547160/0x14019EC60
 void FileNotification::RegisterSingleFile(const char* extension, Callback callback) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);
@@ -19,7 +18,6 @@ void FileNotification::RegisterSingleFile(const char* extension, Callback callba
     info->m_callback = callback;
 }
 
-// PROVEN: 09eb9654 IDENTICAL/DIFFERENT
 // OFFSET: 0x00547240/0x14019ED70
 void FileNotification::RegisterManifestFile(const char* extension, Callback callback) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);
@@ -56,7 +54,6 @@ static void AddDeferredFile(const char* fileName) {
     SStrCopy(file->m_filename, fileName, sizeof(file->m_filename));
 }
 
-// PROVEN: 7959bd87 IDENTICAL/DIFFERENT
 // OFFSET: 0x00548200/0x1401A0390
 void FileNotification::RegisterDeferredFile(const char* extension) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);

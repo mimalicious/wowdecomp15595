@@ -11,7 +11,6 @@ const uint32_t CGContainer::s_mirrorFields[72] = {
     0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49
 };
 
-// PROVEN: d303f53a IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D20/0x1407CF4E0
 uint32_t CGContainer::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int32_t local) {
     for (uint32_t i = 0; i < sizeof(CGContainer::s_mirrorFields) / sizeof(CGContainer::s_mirrorFields[0]); i++) {
@@ -30,7 +29,6 @@ uint32_t CGContainer::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, i
     return (offset & 3) + 4 * (total + CGContainer::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
-// PROVEN: 567bbe06 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D10/0x1407CF4C0
 int32_t CGContainer::TotalFieldsSaved() {
     return CGItem::TotalFieldsSaved() + sizeof(CGContainer::s_mirrorFields) / sizeof(CGContainer::s_mirrorFields[0]);

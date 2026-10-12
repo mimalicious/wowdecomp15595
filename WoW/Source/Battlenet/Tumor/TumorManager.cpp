@@ -26,13 +26,11 @@ BSN::FourCC Battlenet::Event::FROM_UI("FmUI");
 // STATIC: 0x01008DFC/0x140EE07F8
 BSN::FourCC Battlenet::Event::DATAGRAM_CONNECTION_INIT("DCDI");
 
-// PROVEN: 40b7f33f IDENTICAL/NONE
 // OFFSET: 0x00660670
 void Battlenet::TumorManagerRegisterFunction(void* param, const char* name, GeneralFunction::Function func, void* funcParam) {
     static_cast<TumorManager*>(param)->RegisterFunction(name, func, funcParam);
 }
 
-// PROVEN: 49cf5298 IDENTICAL/IDENTICAL
 // OFFSET: 0x00660690/0x140305D50
 Battlenet::Tumor* Battlenet::TumorManager::GetTumor() {
     return &this->m_tumor;
@@ -53,7 +51,6 @@ void Battlenet::TumorManager::AddTendril(Tendril* tendril) {
     tendril->DoSubscriptions();
 }
 
-// PROVEN: 4f843ee0 IDENTICAL/NONE
 // OFFSET: 0x006606F0
 void Battlenet::TumorManager::DestroyTendrils() {
     for (int32_t i = 0; i < 20; i++) {
@@ -64,13 +61,11 @@ void Battlenet::TumorManager::DestroyTendrils() {
     }
 }
 
-// PROVEN: 81c2e84d IDENTICAL/IDENTICAL
 // OFFSET: 0x00660720/0x140305D60
 void Battlenet::TumorManager::SendEvent(uint8_t eventType, const uint32_t& adapter, const BSN::EncodedObject* data) {
     this->m_eventAdapter->SendEvent(eventType, adapter, data);
 }
 
-// PROVEN: 269144f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00660740/0x140305D70
 void Battlenet::TumorManager::SendEvent(uint8_t eventType, const BSN::FourCC& eventId, const BSN::EncodedObject* data) {
     this->m_eventAdapter->SendEvent(eventType, eventId, data);
@@ -105,7 +100,6 @@ Battlenet::TumorManager::TumorManager(Application& application) : m_tumor(applic
     memset(this->m_tendrils, 0, sizeof(this->m_tendrils));
 }
 
-// PROVEN: 17a2f63a DIFFERENT/IDENTICAL
 // OFFSET: 0x00660B50/0x1403061B0
 Battlenet::TumorManager::~TumorManager() {
 }
@@ -171,7 +165,6 @@ GeneralFunction::Arg Battlenet::TumorManagerImplementation::CallFunction(const c
     return func(param, argc, args);
 }
 
-// PROVEN: a57ef115 DIFFERENT/IDENTICAL
 // OFFSET: 0x00661370/0x140306CB0
 Battlenet::TumorManagerImplementation::~TumorManagerImplementation() {
     this->DestroyTendrils();

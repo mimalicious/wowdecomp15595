@@ -5,7 +5,6 @@
 #include "WoW/Source/DB/Rec/GameObjectDisplayInfoRec.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// PROVEN: 7e0bad05 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C1200/0x14060B5F0
 void SpellWorldObject::Release() {
     if (this->m_entity) {
@@ -19,7 +18,6 @@ void SpellWorldObject::Release() {
     }
 }
 
-// PROVEN: 5eaa0cd2 IDENTICAL/DIFFERENT
 // OFFSET: 0x008C1230/0x14060B5D0
 SpellWorldObject::SpellWorldObject() {
     this->m_position.x = 0.0f;
@@ -44,7 +42,6 @@ int32_t SpellWorldObject::Update(uintptr_t object, uint64_t param64, uintptr_t p
     return 1;
 }
 
-// PROVEN: f66cc1c3 IDENTICAL/NONE
 // OFFSET: 0x008C1330/0x14060B7D0
 int32_t SpellWorldObject::UpdateCallback(void* param, uintptr_t object, uint64_t param64, uintptr_t param32) {
     return static_cast<SpellWorldObject*>(param)->Update(object, param64, param32);

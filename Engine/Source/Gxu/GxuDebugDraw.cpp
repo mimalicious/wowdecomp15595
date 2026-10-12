@@ -48,19 +48,16 @@ static GxuDebugObjectBlock<GxuDebugTextureObject>* s_textureObjectBlocks;
 // STATIC: 0x00DD9E8C/0x140CC0778
 static bool s_textureDrawerInitialized;
 
-// PROVEN: 1a9e7609 IDENTICAL/IDENTICAL
 // OFFSET: 0x006120D0/0x14029D070
 float GxuGetLODDistModifier() {
     return s_lodDistModifier;
 }
 
-// PROVEN: 21cdd17a IDENTICAL/IDENTICAL
 // OFFSET: 0x006120E0/0x14029D080
 int32_t GxuGetLODMode() {
     return s_lodMode;
 }
 
-// PROVEN: 42691cb4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006120F0/0x14029D090
 void GxuDebugText::Draw(const C3Vector& viewPos) {
     GxuFontRenderBatch(this->m_batch);
@@ -77,13 +74,11 @@ void GxuDebugTextObject::Release() {
     s_textObjectFreeList = this;
 }
 
-// PROVEN: d8afad71 IDENTICAL/DIFFERENT
 // OFFSET: 0x00612150/0x14029D100
 bool GxuDebugTextObject::IsAlive() {
     return this->m_time >= 0.0f;
 }
 
-// PROVEN: 0410f556 DIFFERENT/IDENTICAL
 // OFFSET: 0x00612170/0x14029D120
 void GxuDebugTextObject::Update(float elapsed) {
     this->m_time = this->m_time - elapsed;
@@ -102,7 +97,6 @@ void GxuDebugTextObject::Render() {
 GxuDebugText::~GxuDebugText() {
 }
 
-// PROVEN: 90751935 UNPROVEN/IDENTICAL
 // OFFSET: 0x00612250/0x14029D250
 GxuDebugText::GxuDebugText(float x, float y, const char* text, const CImVector& color) {
     this->m_x = x;
@@ -124,7 +118,6 @@ GxuDebugText::GxuDebugText(float x, float y, const char* text, const CImVector& 
 GxuDebugTextObject::~GxuDebugTextObject() {
 }
 
-// PROVEN: 83ebc418 IDENTICAL/IDENTICAL
 // OFFSET: 0x00612540/0x14029D590
 void GxuShutdownDebugTextDrawer() {
     if (!s_textDrawerInitialized) {
@@ -143,7 +136,6 @@ void GxuShutdownDebugTextDrawer() {
     s_textDrawerInitialized = false;
 }
 
-// PROVEN: db304a6d IDENTICAL/DIFFERENT
 // OFFSET: 0x006125E0/0x14029D6E0
 void GxuShutdownDebugText3DDrawer() {
     if (!s_text3DDrawerInitialized) {
@@ -209,7 +201,6 @@ GxuDebugTextObject::GxuDebugTextObject() : m_next(NULL), m_time(0.0f) {
 GxuDebugTextObject::GxuDebugTextObject(float x, float y, const char* text, const CImVector& color, float time) : m_next(NULL), m_text(x, y, text, color), m_time(time) {
 }
 
-// PROVEN: 74466b26 IDENTICAL/DIFFERENT
 // OFFSET: 0x00616E80/0x1402A3D60
 void GxuShutdownDebugTextureDrawer() {
     if (!s_textureDrawerInitialized) {

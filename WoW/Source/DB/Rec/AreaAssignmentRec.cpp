@@ -12,7 +12,6 @@ static const int32_t s_fieldTypes[4] = { 0, 0, 0, 0 };
 // STATIC: 0x00C26B50/0x140A1CBD0
 const DBCMeta AreaAssignmentRec::s_meta = { "DBFilesClient\\AreaAssignment.dbc", 4, 20, AreaAssignmentRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 15a4a205 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void AreaAssignmentRec::FixupStrings(void* record, const char* strings) {
 }

@@ -118,14 +118,12 @@ static float WrapAngle0To2Pi(float angle) {
     return angle;
 }
 
-// PROVEN: 5434a158 DIFFERENT/IDENTICAL
 // OFFSET: 0x0043D0A0/0x140048100
 float CGCamera::FOV() const {
     float fov = this->m_targetFov + this->m_fov;
     return 0.0f > fov ? 0.0f : (3.1241393f <= fov ? 3.1241393f : fov);
 }
 
-// PROVEN: b4cc1112 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043D3A0/0x140048430
 void CGCamera::UpdateFromModelCamera() {
     C3Vector position;
@@ -367,7 +365,6 @@ CGCamera::~CGCamera() {
     ConsoleCommandUnregister("pitchLimit");
 }
 
-// PROVEN: 53db0d52 IDENTICAL/IDENTICAL
 // OFFSET: 0x00441970/0x14004CDF0
 void CGCamera::BarberShopSetView(float distance, float facing, float pitch) {
     this->m_views[7][0] = distance;
@@ -716,7 +713,6 @@ int32_t CGCamera::FinishLoadingTarget(CGObject_C* target) {
     return 1;
 }
 
-// PROVEN: f117da69 IDENTICAL/NONE
 // OFFSET: 0x0043E540
 float CGCamera::GetChaseFacing(CGUnit_C* unit) const {
     if (this->m_vehicleCamera) {
@@ -726,7 +722,6 @@ float CGCamera::GetChaseFacing(CGUnit_C* unit) const {
     return unit->m_smoothTarget.m_value;
 }
 
-// PROVEN: dec633bd IDENTICAL/NONE
 // OFFSET: 0x004410A0
 C3Vector CGCamera::GetSafeWorldPos(CGObject_C* target) const {
     CVehicleCamera_C* vehicleCamera = this->m_vehicleCamera;
@@ -762,7 +757,6 @@ void CGCamera::IncIgnoreFacing() {
     this->UpdateYaw(facing);
 }
 
-// PROVEN: c182d5e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043D520/0x140048680
 void CGCamera::InitializeView() {
     for (uint32_t i = 0; i < 8; i++) {
@@ -1220,7 +1214,6 @@ float CGCamera::SmoothTargetFacing(float facing, int32_t moved) {
     return WrapAngle0To2Pi(step + this->m_targetFacing);
 }
 
-// PROVEN: e58284da IDENTICAL/NONE
 // OFFSET: 0x0043B610
 int32_t CGCamera::StartSmoothFlyingMountHeight(float height, float rate, uint32_t startTime) {
     if (fabsf(this->m_flyingMountHeight - height) < 0.001f) {
@@ -1236,7 +1229,6 @@ int32_t CGCamera::StartSmoothFlyingMountHeight(float height, float rate, uint32_
     return 1;
 }
 
-// PROVEN: 2d3da183 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043EB70/0x140049F50
 int32_t CGCamera::StartSmoothFoV(float offset, float rate, uint32_t startTime) {
     this->m_targetFov = UnwrapAngleToward(offset, this->m_targetFov, -3.1415927f, 3.1415927f);
@@ -1254,7 +1246,6 @@ int32_t CGCamera::StartSmoothFoV(float offset, float rate, uint32_t startTime) {
     return 1;
 }
 
-// PROVEN: 00e7bd04 IDENTICAL/NONE
 // OFFSET: 0x0043B290
 int32_t CGCamera::StartSmoothGroundTilt(float offset, float rate, uint32_t startTime) {
     this->m_groundTilt = UnwrapAngleToward(offset, this->m_groundTilt, -3.1415927f, 3.1415927f);
@@ -1443,7 +1434,6 @@ void CGCamera::UpdateYaw(float delta) {
     this->m_yaw = UnwrapAngleToward(this->m_smoothYaw.m_target, CMath::normalizeangle0to2pi_(this->m_yaw + delta), -3.1415927f, 3.1415927f);
 }
 
-// PROVEN: 8a746399 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043AA00/0x140045910
 int32_t CGCamera::CCommand_PitchLimit(const char* command, const char* arguments) {
     MAX_PITCH_ANGLE = SStrToFloat(arguments) * 0.017453292f;
@@ -1451,19 +1441,16 @@ int32_t CGCamera::CCommand_PitchLimit(const char* command, const char* arguments
     return 1;
 }
 
-// PROVEN: 92fb7655 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043B680/0x140046130
 uint32_t CGCamera::GetCollisionQueryFlags() {
     return 0x900171;
 }
 
-// PROVEN: 71800b93 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043ACA0/0x140045B20
 float CGCamera::GetDefaultZoomMaxDistance() {
     return 50.0f;
 }
 
-// PROVEN: 5b6700ad IDENTICAL/DIFFERENT
 // OFFSET: 0x0043DAE0/0x140048BC0
 void CGCamera::BeginBobbingSmooth() {
     this->m_state &= ~0x200;
@@ -1472,7 +1459,6 @@ void CGCamera::BeginBobbingSmooth() {
     this->m_bobTime = FrameTime::GetCurTimeMs();
 }
 
-// PROVEN: b5fe670d IDENTICAL/IDENTICAL
 // OFFSET: 0x0043DF70/0x140049140
 void CGCamera::CameraTeleported(float oldFacing) {
     if (!(this->m_state & 0x1)) {
@@ -1513,7 +1499,6 @@ uint32_t CGCamera::CanSmoothTargetFacing(CGObject_C* target) {
     return this->m_state & 0x30000;
 }
 
-// PROVEN: f82ecc8a IDENTICAL/NONE
 // OFFSET: 0x0043BAA0
 void CGCamera::CancelSmoothPitch() {
     this->m_state &= ~0x2000000;
@@ -1522,7 +1507,6 @@ void CGCamera::CancelSmoothPitch() {
     this->m_smoothPitch.m_rate = 0.0f;
 }
 
-// PROVEN: 12ed6e6c IDENTICAL/NONE
 // OFFSET: 0x0043BAD0
 void CGCamera::CancelSmoothTargetOffset() {
     this->m_state &= ~0x8000000;
@@ -1531,7 +1515,6 @@ void CGCamera::CancelSmoothTargetOffset() {
     this->m_smoothTargetOffset.m_rate = 0.0f;
 }
 
-// PROVEN: 25b38e0b IDENTICAL/NONE
 // OFFSET: 0x0043BB00
 void CGCamera::CancelSmoothYaw() {
     this->m_state &= ~0x1000000;
@@ -1559,7 +1542,6 @@ void CGCamera::ClampPitchAndNormalize() {
     this->m_yawOffset = CMath::normalizeangle0to2pi_(this->m_yawOffset);
 }
 
-// PROVEN: e5422fad IDENTICAL/IDENTICAL
 // OFFSET: 0x0043A9A0/0x1400458A0
 void CGCamera::ClearModelCamera() {
     if (!this->m_model) {
@@ -1577,19 +1559,16 @@ void CGCamera::ClearModelCamera() {
     this->m_model = NULL;
 }
 
-// PROVEN: abefe3e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043B1A0/0x140045E60
 void CGCamera::ClearVehicleExitZoomDistance() {
     this->m_flags &= ~0x20;
 }
 
-// PROVEN: c8effb53 IDENTICAL/NONE
 // OFFSET: 0x0043AB70
 void CGCamera::CreateViewFromCamera(uint32_t view) {
     this->SaveViewToCVars(view, this->m_smoothDistance.m_target, this->m_smoothPitch.m_target, this->m_smoothYaw.m_target);
 }
 
-// PROVEN: 31290e6c IDENTICAL/IDENTICAL
 // OFFSET: 0x00442B10/0x14004DFE0
 void CGCamera::DisableFreeLook(int32_t keepSmoothing) {
     this->SetModeNormal();
@@ -1646,13 +1625,11 @@ C3Vector CGCamera::GetCameraPosition(const C3Vector& target, float distance, con
     return position;
 }
 
-// PROVEN: 249cfbe9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043A950/0x140045820
 int32_t CGCamera::HasModelCamera() {
     return this->m_modelCamera != NULL;
 }
 
-// PROVEN: 4ba48985 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043D9C0/0x140048AA0
 int32_t CGCamera::HasTargetOffset() {
     if (fabsf(this->m_bobOffset.z + this->m_bobOffset.y + this->m_bobOffset.x) < 0.001f) {
@@ -1698,13 +1675,11 @@ int32_t CGCamera::IsCustomViewSmoothingActive() {
     return !(this->m_state & 0x20) && (s_cvCameraCustomViewSmoothing->m_intValue || this->IsViewDefault(this->m_viewIndex)) && !(this->m_state & 0x8000);
 }
 
-// PROVEN: 0cd96380 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043A9E0/0x1400458F0
 int32_t CGCamera::IsFirstPersonView() {
     return this->m_distance < 1.8315002f;
 }
 
-// PROVEN: a8740b07 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043AC20/0x140045A50
 int32_t CGCamera::IsViewDefault(uint32_t view) {
     for (uint32_t i = 0; i < 3; i++) {
@@ -1734,14 +1709,12 @@ void CGCamera::LoadCameraSettings() {
     this->m_smoothPitch.m_target = pitch;
 }
 
-// PROVEN: 294a3fba IDENTICAL/IDENTICAL
 // OFFSET: 0x00443090/0x14004E650
 void CGCamera::OnVehicleCameraDestroyed() {
     this->m_vehicleCamera = NULL;
     this->PickVehicleCamera();
 }
 
-// PROVEN: 7ec8b696 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043A960/0x140045830
 void CGCamera::ResetModelCamera() {
     this->m_someTime = FrameTime::GetCurTimeMs();
@@ -1758,7 +1731,6 @@ void CGCamera::RotateOffsetByRoll(C3Vector& offset) {
     }
 }
 
-// PROVEN: dd7e6375 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043CE30/0x140047FB0
 void CGCamera::SaveCameraSettings() {
     char buffer[32];
@@ -1844,7 +1816,6 @@ int32_t CGCamera::SetDesiredTargetOffset(float offset, float delay, float scale,
     return this->StartSmoothTargetOffset(offset, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// PROVEN: bc241a1a IDENTICAL/IDENTICAL
 // OFFSET: 0x0043B120/0x140045E00
 void CGCamera::SetDesiredVehiclePitchOffset(float offset, uint32_t startTime, uint32_t endTime) {
     this->m_vehiclePitchStartTime = startTime;
@@ -1858,7 +1829,6 @@ void CGCamera::SetDesiredVehiclePitchOffset(float offset, uint32_t startTime, ui
     }
 }
 
-// PROVEN: 0837dc8b IDENTICAL/IDENTICAL
 // OFFSET: 0x0043B0D0/0x140045DC0
 void CGCamera::SetDesiredVehicleYawOffset(float offset, uint32_t startTime, uint32_t endTime) {
     this->m_vehicleYawStartTime = startTime;
@@ -1892,14 +1862,12 @@ int32_t CGCamera::SetDesiredYawAngle(float yaw, float delay, float scale, uint32
     return this->StartSmoothYaw(yaw, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// PROVEN: 56544018 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043B180/0x140045E50
 void CGCamera::SetVehicleExitZoomDistance(float distance) {
     this->m_flags |= 0x20;
     this->m_vehicleExitZoomDistance = distance;
 }
 
-// PROVEN: 7a00c203 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043E370/0x1400495C0
 void CGCamera::SetVehicleSeatZoomMaxDistance(float distance) {
     this->m_flags |= 0x10;
@@ -1929,7 +1897,6 @@ void CGCamera::SetVehicleSeatZoomMaxDistanceToDefault() {
     }
 }
 
-// PROVEN: 18d25176 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043E320/0x140049500
 void CGCamera::SetVehicleSeatZoomMinDistance(float distance) {
     this->m_flags |= 0x8;
@@ -1940,7 +1907,6 @@ void CGCamera::SetVehicleSeatZoomMinDistance(float distance) {
     }
 }
 
-// PROVEN: e82bf914 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043E3C0/0x140049680
 void CGCamera::SetVehicleSeatZoomMinDistanceToDefault() {
     this->m_flags &= ~0x8;
@@ -1959,7 +1925,6 @@ void CGCamera::SetVehicleSeatZoomMinDistanceToDefault() {
     }
 }
 
-// PROVEN: c4602811 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043B170/0x140045E40
 void CGCamera::SetVehicleTrackingStyle(uint32_t style) {
     this->m_vehicleTrackingStyle = style;
@@ -2043,7 +2008,6 @@ void CGCamera::StartMotion(uint32_t motion, uint32_t time, uint32_t duration, fl
     this->m_motionEndTime[motion] = duration ? duration + time : 0;
 }
 
-// PROVEN: 64df17bf IDENTICAL/NONE
 // OFFSET: 0x0043B220
 int32_t CGCamera::StartSmoothDistance(float distance, float rate, uint32_t startTime) {
     if (fabsf(this->m_distance - distance) < 0.001f) {
@@ -2059,7 +2023,6 @@ int32_t CGCamera::StartSmoothDistance(float distance, float rate, uint32_t start
     return 1;
 }
 
-// PROVEN: fa76e623 IDENTICAL/NONE
 // OFFSET: 0x0043B370
 int32_t CGCamera::StartSmoothPitch(float pitch, float rate, uint32_t startTime) {
     this->m_pitch = UnwrapAngleToward(pitch, this->m_pitch, -3.1415927f, 3.1415927f);
@@ -2077,7 +2040,6 @@ int32_t CGCamera::StartSmoothPitch(float pitch, float rate, uint32_t startTime) 
     return 1;
 }
 
-// PROVEN: 45ffb446 IDENTICAL/NONE
 // OFFSET: 0x0043B450
 int32_t CGCamera::StartSmoothTargetOffset(float offset, float rate, uint32_t startTime) {
     this->m_targetOffset = UnwrapAngleToward(offset, this->m_targetOffset, -3.1415927f, 3.1415927f);
@@ -2095,7 +2057,6 @@ int32_t CGCamera::StartSmoothTargetOffset(float offset, float rate, uint32_t sta
     return 1;
 }
 
-// PROVEN: 4c41412e IDENTICAL/NONE
 // OFFSET: 0x0043B530
 int32_t CGCamera::StartSmoothYaw(float yaw, float rate, uint32_t startTime) {
     this->m_yaw = UnwrapAngleToward(yaw, this->m_yaw, -3.1415927f, 3.1415927f);
@@ -2113,7 +2074,6 @@ int32_t CGCamera::StartSmoothYaw(float yaw, float rate, uint32_t startTime) {
     return 1;
 }
 
-// PROVEN: a32e025a IDENTICAL/IDENTICAL
 // OFFSET: 0x0043AFB0/0x140045CE0
 void CGCamera::UpdateAutoInteractState(int32_t enabled) {
     if (enabled) {
@@ -2123,7 +2083,6 @@ void CGCamera::UpdateAutoInteractState(int32_t enabled) {
     }
 }
 
-// PROVEN: 1275f5a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043DB40/0x140048C50
 void CGCamera::UpdateBobbingState(int32_t moving) {
     if (!(this->m_state & 0x200) && moving) {
@@ -2168,7 +2127,6 @@ void CGCamera::UpdateMountHeightOrOffset(CGUnit_C* unit) {
     }
 }
 
-// PROVEN: bdff7d6a IDENTICAL/IDENTICAL
 // OFFSET: 0x0043E4D0/0x140049870
 void CGCamera::UpdateVehicleTarget(uint32_t time) {
     if (!this->m_vehicleCamera) {
@@ -2573,7 +2531,6 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
     this->m_wasFlying = flying;
 }
 
-// PROVEN: eb8d33f8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00445C60/0x140051B60
 int32_t CGCamera::UpdateCallback(const void* data, void* param) {
     CGCamera* camera = static_cast<CGCamera*>(param);
@@ -3487,7 +3444,6 @@ void CGCamera::RunBobs(C3Vector& offset) {
     offset.z = std::sin((frequency + frequency) * time * 6.2831855f) * vertical;
 }
 
-// PROVEN: 85e968a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00440E90/0x14004C350
 void CGCamera::UpdateUncontrolledState(int32_t uncontrolled) {
     if (uncontrolled) {
@@ -3949,7 +3905,6 @@ void CGCamera::SetPositionAndTargetWithRoll(const C3Vector& position, const C3Ve
     this->SetFacing(forward, up);
 }
 
-// PROVEN: eebf5c38 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043F5E0/0x14004A800
 int32_t CGCamera::FinishLoadingModel() {
     this->m_state |= 0x4;
@@ -3973,7 +3928,6 @@ int32_t CGCamera::FinishLoadingModel() {
     return 1;
 }
 
-// PROVEN: 158eecbe IDENTICAL/DIFFERENT
 // OFFSET: 0x0043FFA0/0x14004B260
 void CGCamera::CalcModelCamera(uint32_t time) {
     if (!(this->m_state & 0x4) && !(this->m_model->IsLoaded() && this->FinishLoadingModel())) {
@@ -3988,7 +3942,6 @@ void CGCamera::CalcModelCamera(uint32_t time) {
     this->UpdateFromModelCamera();
 }
 
-// PROVEN: d226a341 IDENTICAL/IDENTICAL
 // OFFSET: 0x00441910/0x14004CDA0
 void CGCamera::CommentatorSetViewAndPosition(const C3Vector& position, float facing, float pitch) {
     this->m_views[6][0] = 0.0f;
@@ -3999,7 +3952,6 @@ void CGCamera::CommentatorSetViewAndPosition(const C3Vector& position, float fac
     this->SetView(6, 2, 0);
 }
 
-// PROVEN: 0207e58d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGCamera::GetDefaultZoomMinDistance() {
     return 0.0f;
@@ -4010,7 +3962,6 @@ float CameraEaseInOut(float t) {
     return 0.5f - CMath::cos_(t * 3.1415927f) * 0.5f;
 }
 
-// PROVEN: 98f91ed2 IDENTICAL/NONE
 // OFFSET: 0x0043E0C0/0x1400492C0
 void CGCamera::UpdateVehicleYawOffset(uint32_t time) {
     float t = static_cast<float>(time - this->m_vehicleYawStartTime) / static_cast<float>(this->m_vehicleYawEndTime - this->m_vehicleYawStartTime);
@@ -4023,7 +3974,6 @@ void CGCamera::UpdateVehicleYawOffset(uint32_t time) {
     }
 }
 
-// PROVEN: c6ac440a IDENTICAL/DIFFERENT
 // OFFSET: 0x0043E280/0x140049470
 void CGCamera::UpdateVehiclePitchOffset(uint32_t time) {
     float t = static_cast<float>(time - this->m_vehiclePitchStartTime) / static_cast<float>(this->m_vehiclePitchEndTime - this->m_vehiclePitchStartTime);

@@ -559,7 +559,6 @@ static void LoadInstallLocation() {
     delete[] data;
 }
 
-// PROVEN: b29a25b4 DIFFERENT/IDENTICAL
 // OFFSET: 0x00402E10/0x140005FF0
 void StartupReport() {
     if (SFile::IsTrial()) {
@@ -610,7 +609,6 @@ const char* GetInstallLocationRegKeyName() {
     return s_installLocationRegKeyName;
 }
 
-// PROVEN: 4dd2a2b9 IDENTICAL/NONE
 // OFFSET: 0x00405450
 void UpdateInstallLocation() {
     const char* key = GetInstallLocationRegKeyName();
@@ -1455,7 +1453,6 @@ static int32_t AcceptArchive(const char* path, void* param, uint8_t flags) {
     return 1;
 }
 
-// PROVEN: 1a3d80fd IDENTICAL/DIFFERENT
 // OFFSET: 0x00404C00/0x140005320
 static void ListArchives(const char* prefix, int32_t index, int32_t (*callback)(const char* fileName, void* param), void* param) {
     ARCHIVELISTPARAMS params;
@@ -1473,7 +1470,6 @@ static void ListArchives(const char* prefix, int32_t index, int32_t (*callback)(
     }
 }
 
-// PROVEN: d9dfb831 IDENTICAL/DIFFERENT
 // OFFSET: 0x00404C90/0x1400053C0
 void ListInterfaceArchive(const char* prefix, int32_t (*callback)(const char* fileName, void* param), void* param) {
     ListArchives(prefix, 3, callback, param);
@@ -1677,7 +1673,6 @@ static bool OpenArchives() {
     return LoadMopaqFileSigningData(s_localeCode) && (CmdLineGetBool(static_cast<CMDOPT>(CMD_LAUNCH)) || s_locale != 4 || s_allArchivesComplete || !SCreateProcess("Launcher.exe", NULL, 0, NULL, NULL, NULL));
 }
 
-// PROVEN: ad485657 IDENTICAL/NONE
 // OFFSET: 0x004011A0/0x140007B40
 CommandManager::~CommandManager() {
     for (uint32_t i = 0; i < this->m_count; i++) {
@@ -1740,7 +1735,6 @@ static void ClientProcessNotification(const char* text) {
     }
 }
 
-// PROVEN: 0e530234 IDENTICAL/UNPROVEN
 // OFFSET: 0x004012A0/0x1400011A0
 int32_t Packet_SMSG_NOTIFICATION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char text[4096];
@@ -1749,14 +1743,12 @@ int32_t Packet_SMSG_NOTIFICATION(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// PROVEN: 5a5a86fd IDENTICAL/NONE
 // OFFSET: 0x004012E0
 static bool OnNotification(ClientNotification* msg) {
     ClientProcessNotification(msg->m_text);
     return true;
 }
 
-// PROVEN: 560b5595 IDENTICAL/NONE
 // OFFSET: 0x004013F0
 static bool OnNewWorldAbort(ClientNewWorldAbort* msg) {
     MovementResumeActiveMover();
@@ -1902,7 +1894,6 @@ int32_t DestroyEngineCallback(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 471d7f29 IDENTICAL/NONE
 // OFFSET: 0x004020A0
 void SetPaths() {
     SFile::DisableSFileCheckDisk();
@@ -1922,7 +1913,6 @@ void SetPaths() {
     SFile::SetDataPath(s_dataDirectory);
 }
 
-// PROVEN: 3f30f0d3 DIFFERENT/IDENTICAL
 // OFFSET: 0x004026C0/0x1400020D0
 int ForEveryRunOnceWTF::FileNameCompare(const void* a, const void* b) {
     return SStrSortUTF8I(*static_cast<char* const*>(a), *static_cast<char* const*>(b), STORM_MAX_STR);
@@ -1936,7 +1926,6 @@ static int32_t ClientIdle(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: a4a34a4c IDENTICAL/UNPROVEN
 // OFFSET: 0x004029D0/0x140005840
 static bool OnMessageBox(ClientMessageBox* msg) {
     char text[512];
@@ -1945,7 +1934,6 @@ static bool OnMessageBox(ClientMessageBox* msg) {
     return true;
 }
 
-// PROVEN: 84e8ec84 IDENTICAL/UNPROVEN
 // OFFSET: 0x00402A20/0x140005890
 static bool OnSuspendToken(ClientSuspendToken* msg) {
     UserRouterClientSuspendTokenResponse response;
@@ -1994,7 +1982,6 @@ static bool OnTransferPending(ClientTransferPending* msg) {
     return true;
 }
 
-// PROVEN: 0d106570 IDENTICAL/UNPROVEN
 // OFFSET: 0x00403660/0x140002EA0
 int32_t ClientLoadNewWorld(int32_t mapID, C3Vector* position, float facing) {
     if (!g_mapDB.GetRecord(mapID)) {
@@ -2040,7 +2027,6 @@ int32_t ClientLoadNewWorld(int32_t mapID, C3Vector* position, float facing) {
     return 1;
 }
 
-// PROVEN: b8b72aa7 IDENTICAL/UNPROVEN
 // OFFSET: 0x004037B0/0x140003020
 static bool OnNewWorld(ClientNewWorld* msg) {
     if (!ClientLoadNewWorld(msg->m_mapID, &msg->m_position, msg->m_facing)) {
@@ -2075,7 +2061,6 @@ static int32_t Packet_SMSG_LOGIN_VERIFY_WORLD(void* param, NETMESSAGE msgId, uin
     return ClientLoadNewWorld(mapID, &position, facing);
 }
 
-// PROVEN: 56980067 IDENTICAL/IDENTICAL
 // OFFSET: 0x004029B0/0x140002250
 void ClientPostClose(int32_t reason) {
     s_closeErrorStringId = reason;
@@ -2236,7 +2221,6 @@ void ForEveryRunOnceWTF::Execute(int32_t (*callback)(const char*)) {
     }
 }
 
-// PROVEN: 0d923ce9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00407BA0/0x140009B50
 static void AbortInitializeGlobal() {
     CloseAllArchives();
@@ -2738,7 +2722,6 @@ void BeginCloseGame() {
     g_startup_StringsDB.Unload(&Startup_StringsRec::s_meta);
 }
 
-// PROVEN: b2ab0435 IDENTICAL/DIFFERENT
 // OFFSET: 0x00408340/0x14000A610
 int32_t CommonMain() {
     OsGuiSetGxDevWindowFcn(GxDevWindow);
@@ -2780,7 +2763,6 @@ int32_t CommonMain() {
     return 0;
 }
 
-// PROVEN: 74dcf5f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00408580/0x14000A8C0
 void GameClientCommands::Uninstall() {
     ConsoleCommandUnregister("port");
@@ -2792,7 +2774,6 @@ void GameClientCommands::Uninstall() {
     ConsoleCommandUnregister("togglecloak");
 }
 
-// PROVEN: c58cca59 IDENTICAL/IDENTICAL
 // OFFSET: 0x00408FF0/0x14000B610
 void GameClientCommands::Install() {
     ConsoleCommandRegister("port", CCommand_Teleport, CATEGORY_DEBUG, NULL, NULL);
@@ -2903,7 +2884,6 @@ int32_t Packet_SMSG_TRANSFER_ABORTED(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// PROVEN: e3ac4108 IDENTICAL/IDENTICAL
 // OFFSET: 0x00402D20/0x140002260
 int32_t STORMAPI SendErrorLog(uint32_t errorcode, const char* description, const char* filename, int32_t linenumber, const char* errorstring) {
     char path[260];
@@ -3095,7 +3075,6 @@ int32_t Packet_SMSG_PLAYED_TIME(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// PROVEN: 4f7b114a IDENTICAL/IDENTICAL
 // OFFSET: 0x004029A0/0x140002240
 void ClientKillTimer(uint32_t id, EVENTHANDLERFUNC handler, const char* name) {
     EventKillTimer(id, handler, name);
@@ -3120,13 +3099,11 @@ void SendBotDetected2(uint32_t msgId, uint32_t code) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: f5437e2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00402960/0x140002220
 uint32_t ClientSetTimer(uint32_t delay, EVENTHANDLERFUNC handler, void* param) {
     return EventSetTimer(delay, handler, param);
 }
 
-// PROVEN: aace4b15 IDENTICAL/IDENTICAL
 // OFFSET: 0x00402970/0x140002230
 uint32_t ClientSetTimer(uint32_t delay, EVENTHANDLERGUIDFUNC handler, uint64_t guid, void* param) {
     return EventSetTimer(delay, handler, guid, param);

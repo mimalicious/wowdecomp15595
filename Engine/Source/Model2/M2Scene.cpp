@@ -42,7 +42,6 @@ static float s_lightGridScale = 0.05f;
 
 static uint32_t s_doodadHash[1571];
 
-// PROVEN: a9db6533 IDENTICAL/IDENTICAL
 // OFFSET: 0x00827570/0x1405454E0
 void CM2Scene::SetTime(uint32_t time) {
     this->m_time = time;
@@ -50,7 +49,6 @@ void CM2Scene::SetTime(uint32_t time) {
     this->m_cache->GarbageCollect(0);
 }
 
-// PROVEN: 6d1d632b IDENTICAL/IDENTICAL
 // OFFSET: 0x00827550/0x1405454D0
 void CM2Scene::ReloadModel(CM2Model* model, CM2Shared* shared) {
     model->Reload(this, shared);
@@ -128,13 +126,11 @@ uint32_t ParticleFlagsToM2Flags(uint32_t flags) {
     return result;
 }
 
-// PROVEN: 5955f780 IDENTICAL/IDENTICAL
 // OFFSET: 0x00827630/0x140545580
 void CM2Scene::EndDraw() {
     this->m_drawing = 0;
 }
 
-// PROVEN: 118a4d83 IDENTICAL/IDENTICAL
 // OFFSET: 0x00827640/0x140545590
 void CM2Scene::PurgeModelCache() {
     if (this->m_cache) {
@@ -142,13 +138,11 @@ void CM2Scene::PurgeModelCache() {
     }
 }
 
-// PROVEN: 3d78f649 IDENTICAL/IDENTICAL
 // OFFSET: 0x00827650/0x1405455B0
 void CM2Scene::BeginHitTest() {
     this->m_flags |= 2;
 }
 
-// PROVEN: 75b851aa IDENTICAL/IDENTICAL
 // OFFSET: 0x00827660/0x1405455C0
 void CM2Scene::ClearHitTestList() {
     for (CM2Model* model = this->m_hitTestList; model; model = model->m_hitTestNext) {
@@ -215,7 +209,6 @@ int32_t CM2Scene::SortHitNear(uint32_t a, uint32_t b, const void* param) {
     return b < a;
 }
 
-// PROVEN: 6a5aa96f IDENTICAL/IDENTICAL
 // OFFSET: 0x00827B50/0x140545C20
 void CM2Scene::SetProjectTextureCallback(void (*callback)(const CAaBox&, const CImVector&, int32_t, void*, int32_t), void* param) {
     this->m_projectTextureCallback = callback;
@@ -243,7 +236,6 @@ static uint32_t __stdcall HashDoodadElement(const M2Element* element) {
 }
 
 
-// PROVEN: 055bdfe9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00828470/0x1405462A0
 static void AnimateThread(void* param) {
     CM2Scene* scene = static_cast<CM2Scene*>(param);
@@ -695,7 +687,6 @@ void* CM2Scene::EndHitTestCollisionWorld(const C3Vector& start, const C3Vector& 
     return owner;
 }
 
-// PROVEN: a8182422 IDENTICAL/IDENTICAL
 // OFFSET: 0x008279C0/0x1405459F0
 void CM2Scene::SelectLights(CM2Lighting* lighting) {
     for (CM2Light* light = this->m_lightList; light; light = light->m_lightNext) {
@@ -739,7 +730,6 @@ void CM2Scene::SelectLights(CM2Lighting* lighting) {
     }
 }
 
-// PROVEN: 39cefc36 IDENTICAL/IDENTICAL
 // OFFSET: 0x00827B70/0x140545C30
 void CM2Scene::SetProjectPositionCallback(int32_t (*callback)(const C3Vector&, float&, void*), void* param) {
     this->m_projectPositionCallback = callback;
@@ -877,7 +867,6 @@ int32_t CM2Scene::SortDoodadKey(uint32_t a, uint32_t b, const void* param) {
     return keyB < keyA;
 }
 
-// PROVEN: dc83df4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00828080/0x140545FB0
 int32_t CM2Scene::SortSortKey(uint32_t a, uint32_t b, const void* param) {
     const M2Element* elements = static_cast<const M2Element*>(param);
@@ -1374,7 +1363,6 @@ void CM2Scene::ComputeElementShaders(M2Element* element) {
     element->m_typeKey ^= (element->m_typeKey ^ hash) & 0x3FFFFFF;
 }
 
-// PROVEN: 0c827297 IDENTICAL/NONE
 // OFFSET: 0x00827450
 void M2PreloadRecord::Set(CM2Scene* scene, const char* fileName, const uint64_t& key, TSGrowableArray<CAsyncObject*>* waitList) {
     this->m_scene = scene;
@@ -1411,7 +1399,6 @@ M2PreloadMap::M2PreloadMap() {
     this->m_maxLoadFactor = 1.0f;
 }
 
-// PROVEN: 69d486a2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00829100/0x140547390
 M2PreloadMap::~M2PreloadMap() {
     for (uint32_t i = 0; i < this->m_bucketCount; i++) {
