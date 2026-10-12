@@ -359,7 +359,7 @@ void CGDynamicObject_C::ModelLoaded(CM2Model* model) {
     }
 }
 
-// OFFSET: 0x00597490
+// OFFSET: 0x00597490/0x140205260
 static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CGDynamicObject_C* object = static_cast<CGDynamicObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_DYNAMICOBJECT, __FILE__, __LINE__));
 
@@ -368,7 +368,7 @@ static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId
     }
 }
 
-// OFFSET: 0x005974D0/0x140206110
+// OFFSET: 0x005974D0/0x1402052C0
 void CGDynamicObject_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->m_passenger.PostInit(create.m_stationaryPosition);
 

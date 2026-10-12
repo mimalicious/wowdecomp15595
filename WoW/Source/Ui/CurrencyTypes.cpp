@@ -20,7 +20,7 @@
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00D14EE8
+// STATIC: 0x00D14EE8/0x140BCDFE0
 static int32_t s_lastGainedCurrency = -1;
 
 // STATIC: 0x00D14F40/0x140BCE090
@@ -29,10 +29,10 @@ TSList<PlayerCurrency, TSGetLink<PlayerCurrency> > CGCurrencyTypes::s_currencies
 // STATIC: 0x00F4B848
 static char s_currencyIcon[260];
 
-// STATIC: 0x00F4B94C
+// STATIC: 0x00F4B94C/0x140E3FD74
 static int32_t s_gainedAmount;
 
-// STATIC: 0x00F4B950
+// STATIC: 0x00F4B950/0x140E3FD78
 static uint32_t s_dumpTimer;
 
 // STATIC: 0x00F4B954/0x140E3FD7C

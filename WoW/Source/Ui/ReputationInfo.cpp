@@ -94,7 +94,7 @@ static int32_t GetReactionFromStanding(int32_t standing) {
     return standing >= -6000;
 }
 
-// OFFSET: 0x009A5A50/0x14072BD90
+// OFFSET: 0x009A5A50/0x14072BE20
 static bool IsHeaderDescendant(int32_t headerIndex, int32_t ancestor) {
     if (ancestor == -1) {
         return false;

@@ -32,7 +32,7 @@ static uint16_t s_streamIndexCount = 768;
 // STATIC: 0x00D03D78/0x140BB3F20
 static float s_animSpeeds[8] = { 64.0f, 48.0f, 32.0f, 16.0f, 8.0f, 4.0f, 2.0f, 1.0f };
 
-// STATIC: 0x00E88DA8
+// STATIC: 0x00E88DA8/0x140D749D0
 C4Vector CMapRenderChunk::s_vertexShaderConsts[38];
 
 static void SetSpecularMask(CMapRenderChunkBatch* batch) {

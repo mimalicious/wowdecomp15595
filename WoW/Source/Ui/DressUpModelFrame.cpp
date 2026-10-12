@@ -42,7 +42,7 @@ int32_t CGDressUpModelFrame::s_objectType;
 
 CDataAllocator CGDressUpModelFrame::s_dressUpModelHeap(sizeof(CGDressUpModelFrame), 5);
 
-// STATIC: 0x00F76C8C
+// STATIC: 0x00F76C8C/0x140E6CDE8
 static int32_t s_mainHandItemId;
 
 // STATIC: 0x00F76C90/0x140E6CDEC

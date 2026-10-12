@@ -267,7 +267,7 @@ bool ComSat::Sound::Manager::SessionGetTalkerByIndex(uint64_t session, int32_t i
     return true;
 }
 
-// OFFSET: 0x00A357E0
+// OFFSET: 0x00A357E0/0x1407E0060
 void ComSat::Sound::Manager::RecenterJitterBufferForRemoteTalker(uint64_t talker, int32_t offset) {
     RemoteTalker* remote;
     if (!this->m_remoteTalkers.Get(ComSat::MapKey<uint64_t>(talker), remote)) {

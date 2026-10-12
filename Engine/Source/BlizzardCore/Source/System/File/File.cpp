@@ -136,7 +136,7 @@ Blizzard::File::Filesystem System_File::Stacked::s_basestack = {
 
 const Blizzard::File::FileInfo System_File::s_noinfo = { NULL, 0, -1 };
 
-// STATIC: 0x00EBA6A4
+// STATIC: 0x00EBA6A4/0x140DAB1D8
 Blizzard::Thread::LocalObject<System_File::FileError> System_File::s_error;
 
 int64_t System_File::Stacked::s_throttleRate = 56888;

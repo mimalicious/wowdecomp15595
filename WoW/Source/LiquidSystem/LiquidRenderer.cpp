@@ -27,7 +27,7 @@ static Liquid::CRenderer* s_renderer;
 // STATIC: 0x0100AAAC/0x140EE26C0
 static float s_closestReflectionDist;
 
-// STATIC: 0x0100AAB0
+// STATIC: 0x0100AAB0/0x140EE26C8
 static C3Vector s_camPos;
 
 // INLINED

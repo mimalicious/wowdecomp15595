@@ -169,13 +169,13 @@ static CDataAllocator s_perturbationMeshAllocator(sizeof(Liquid::DisplMapPerturb
 // STATIC: 0x00E4EA48/0x140D37DC0
 TSGrowableArray<Liquid::DisplMapPerturbation*> Liquid::s_eventPerturbations[2];
 
-// STATIC: 0x00E4EA68
+// STATIC: 0x00E4EA68/0x140D37DF0
 TSGrowableArray<Liquid::DisplMapPerturbation*> Liquid::s_perturbations[2];
 
 // STATIC: 0x00E4EA88/0x140D37E20
 TSGrowableArray<Liquid::DisplMapPerturbationMesh*> Liquid::s_eventPerturbationMeshes[2];
 
-// STATIC: 0x00E4EAA8
+// STATIC: 0x00E4EAA8/0x140D37E50
 TSGrowableArray<Liquid::DisplMapPerturbationMesh*> Liquid::s_perturbationMeshes[2];
 
 static void ReserveTexBuffer() {

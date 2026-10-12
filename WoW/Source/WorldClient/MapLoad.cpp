@@ -19,7 +19,7 @@
 // STATIC: 0x00E74368/0x140BB07A0
 TSHashTable<CMapDynamicTexture, HASHKEY_DWORD> CMap::s_dynamicTextures;
 
-// OFFSET: 0x00773270/0x14045D800
+// OFFSET: 0x00773270/0x14045CEB0
 void CMap::UpdateDynamicTextures() {
     for (CMapDynamicTexture* entry = CMap::s_dynamicTextures.Head(), * next; entry; entry = next) {
         next = CMap::s_dynamicTextures.Next(entry);

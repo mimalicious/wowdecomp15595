@@ -49,7 +49,7 @@ uint32_t CGlueMgr::m_patchStartTime;
 // STATIC: 0x00EBC47C/0x140DAD448
 FileDownload* CGlueMgr::m_patchDownload;
 
-// STATIC: 0x00EBC480
+// STATIC: 0x00EBC480/0x140DAD450
 bool CGlueMgr::m_deleteLocalPatch;
 
 // OFFSET: 0x00810680/0x140527C70

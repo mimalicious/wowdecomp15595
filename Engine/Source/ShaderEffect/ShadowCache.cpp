@@ -45,7 +45,7 @@ uint32_t CShadowCache::s_shadowSize;
 // STATIC: 0x00D38344/0x140BF1E64
 EShadowMode CShadowCache::s_shadowMode;
 
-// STATIC: 0x00D38348
+// STATIC: 0x00D38348/0x140BF1E68
 CGxFrameBuffer* CShadowCache::s_bandFrameBuffers[3][2];
 
 // STATIC: 0x00D38360/0x140BF1E98

@@ -740,7 +740,7 @@ Blizzard::Streaming::Manifests::ManifestItem* Blizzard::Streaming::ManifestInfo:
     return NULL;
 }
 
-// OFFSET: 0x007E94B0
+// OFFSET: 0x007E94B0/0x1404F4B80
 std::string Blizzard::Streaming::ManifestInfo::GetRandomServerLocation(const std::vector<std::string>& validServers) {
     std::string names[5];
     int32_t weights[5];
@@ -887,7 +887,7 @@ void Blizzard::Streaming::ManifestInfo::SetServerItem(std::string name, const Ma
     Get()->m_servers[name] = item;
 }
 
-// OFFSET: 0x007C7CF0
+// OFFSET: 0x007C7CF0/0x1404C2F80
 Blizzard::Streaming::Manifests::FileItem* Blizzard::Streaming::ManifestInfo::GetFileItem(const std::string& name) {
     std::map<std::string, Manifests::FileItem>::iterator it = this->m_files.find(name);
 

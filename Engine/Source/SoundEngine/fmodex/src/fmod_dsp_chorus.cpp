@@ -587,7 +587,7 @@ FMOD_RESULT F_CALLBACK DSPChorus::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A97140/0x1408572D0
+// OFFSET: 0x00A97140/0x1408572F0
 FMOD_RESULT F_CALLBACK DSPChorus::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPChorus *chorus = (DSPChorus *)dsp;

@@ -70,7 +70,7 @@ uint8_t CGCalendar::m_initialize;
 // STATIC: 0x00F4CD81/0x140E41391
 uint8_t CGCalendar::m_openedCalendar;
 
-// STATIC: 0x00F4CD82
+// STATIC: 0x00F4CD82/0x140E41392
 uint8_t CGCalendar::m_calendarReceived;
 
 // STATIC: 0x00F4CD78/0x140E41380

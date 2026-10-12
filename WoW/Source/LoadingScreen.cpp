@@ -137,7 +137,7 @@ static CTexture* s_simpleBackgroundTexture;
 // STATIC: 0x00D36594/0x140BEFA9C
 static float s_progress;
 
-// STATIC: 0x00D3659C
+// STATIC: 0x00D3659C/0x140BEFB14
 static float s_worldProgress;
 
 // STATIC: 0x00D365A0/0x140BEFB18

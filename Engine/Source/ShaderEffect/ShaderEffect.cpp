@@ -472,7 +472,7 @@ void CShaderEffect::SetTexMtx_SphereMap(uint32_t stage) {
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 6);
 }
 
-// OFFSET: 0x00433AA0
+// OFFSET: 0x00433AA0/0x14003BF00
 void CShaderEffect::SetTexMtx(const C2Vector& scale, const C2Vector& offset, uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         float constants[8] = { scale.x, 0.0f, 0.0f, offset.x, 0.0f, scale.y, 0.0f, offset.y };

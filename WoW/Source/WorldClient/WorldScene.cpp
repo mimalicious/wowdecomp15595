@@ -47,7 +47,7 @@ struct CClipVolume {
 // STATIC: 0x00E70C48/0x140D5A768
 CWorldView* CWorldScene::s_defaultWorldView;
 
-// STATIC: 0x00E70C44
+// STATIC: 0x00E70C44/0x140D5A760
 CWorldView* CWorldScene::s_defaultReflectionView;
 
 // STATIC: 0x00E70C40/0x140D5A758

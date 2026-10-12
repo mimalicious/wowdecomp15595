@@ -51,7 +51,7 @@ char CGQuestInfo::m_portraitGiverText[1024];
 // STATIC: 0x00F37930/0x140E2A3D8
 int32_t CGQuestInfo::m_rewardFactionAmounts[10];
 
-// STATIC: 0x00F37958
+// STATIC: 0x00F37958/0x140E2A4D8
 int32_t CGQuestInfo::m_rewardFactionList[10];
 
 // STATIC: 0x00F37980/0x140E2AF00

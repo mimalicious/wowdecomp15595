@@ -19,7 +19,7 @@ static CTexture* s_fadeTexture;
 
 static void* s_fadeParam;
 
-// STATIC: 0x00F771B4
+// STATIC: 0x00F771B4/0x140E6D3C0
 static void (*s_fadeCallback)(void* param);
 
 static uint8_t s_fadeFinished;
@@ -35,7 +35,7 @@ static HLAYER s_fadeLayer;
 // STATIC: 0x00F771CC/0x140E6D3E0
 static uint8_t s_fadeActive;
 
-// STATIC: 0x00F771CD
+// STATIC: 0x00F771CD/0x140E6D3E1
 static uint8_t s_fadeStarted;
 
 // OFFSET: 0x00842700/0x1407FDD80

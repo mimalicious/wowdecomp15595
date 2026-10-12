@@ -22,7 +22,7 @@ static void ReserveBlockOffset(System_Mopaq::IOHandler* handler) {
     handler->StoreBlockEntry();
 }
 
-// OFFSET: 0x007BAFA0
+// OFFSET: 0x007BAFA0/0x1404B2820
 void System_Mopaq::IOHandler::StoreBlockEntry() {
     Blizzard::Mopaq::MpqHandleRecord* handle = this->m_handle;
 
@@ -37,7 +37,7 @@ System_Mopaq::MopaqReadWriteHandler::MopaqReadWriteHandler(Blizzard::Mopaq::MpqH
     this->m_sizeBeforeDelta = 0;
 }
 
-// OFFSET: 0x007BFC10
+// OFFSET: 0x007BFC10/0x1404B8F80
 void System_Mopaq::MopaqReadWriteHandler::UpdateBlockEntry() {
     Blizzard::Mopaq::MpqHandleRecord* handle = this->m_handle;
     handle->m_blockEntry.m_compressedSize = handle->m_blockEntry.m_fileSize;

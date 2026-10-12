@@ -907,7 +907,7 @@ int32_t CGUnit_C::CanChangeCollisionHeight(float height) {
     return this->m_movementData.CollisionBoxDoesntFit(box) == 0;
 }
 
-// OFFSET: 0x005B1F40/0x140234400
+// OFFSET: 0x005B1F40/0x1402252D0
 void CGUnit_C::UpdateAmmoModel(int32_t effectId) {
     if (this->m_ammoDisplayId == static_cast<uint32_t>(effectId) && this->m_ammoModel) {
         return;
@@ -1463,7 +1463,7 @@ void CGUnit_C::RenderAttackIndicators() {
     }
 }
 
-// OFFSET: 0x005B68F0
+// OFFSET: 0x005B68F0/0x140229FA0
 int32_t NPCFlagsHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -2931,7 +2931,7 @@ int32_t UnitDisplayPowerUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     return 1;
 }
 
-// OFFSET: 0x005BD160
+// OFFSET: 0x005BD160/0x140232120
 int32_t UnitFactionUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -4630,7 +4630,7 @@ int32_t PetNumberChangeHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fiel
     return 1;
 }
 
-// OFFSET: 0x005CB110
+// OFFSET: 0x005CB110/0x140243170
 int32_t UnitScaleUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -4670,7 +4670,7 @@ int32_t SheatheStateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSi
     return 1;
 }
 
-// OFFSET: 0x005D32D0
+// OFFSET: 0x005D32D0/0x14024D310
 int32_t UnitFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -4681,7 +4681,7 @@ int32_t UnitFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t field
     return 1;
 }
 
-// OFFSET: 0x005D3310
+// OFFSET: 0x005D3310/0x14024D350
 int32_t UnitFlag2UpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -4692,7 +4692,7 @@ int32_t UnitFlag2UpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fiel
     return 1;
 }
 
-// OFFSET: 0x005B68B0
+// OFFSET: 0x005B68B0/0x140229F60
 int32_t UnitVisFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -5221,7 +5221,7 @@ int32_t MountDisplayIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// OFFSET: 0x005CF5D0
+// OFFSET: 0x005CF5D0/0x140248740
 int32_t DynamicFlagsChangeHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -21342,7 +21342,7 @@ float CreatureSoundDataGetFidgetDelayMax(const CreatureSoundDataRec* rec) {
     return 0.0f;
 }
 
-// OFFSET: 0x005B3B10
+// OFFSET: 0x005B3B10/0x140227060
 bool CGUnit_C::IsPlayingWeaponAnim() const {
     uint32_t anim = this->GetCurrentTorsoAnimId();
     return AnimationDataHasFlags(anim, 0x1000000) || (AnimationDataHasFlags(anim, 0x200000) && !this->GetVirtualItem(0, false));

@@ -29,7 +29,7 @@ bool Blizzard::Streaming::s_streamingReady;
 
 bool Blizzard::Streaming::s_isStreamingTrial;
 
-// STATIC: 0x00EBA240
+// STATIC: 0x00EBA240/0x140DAACE8
 Blizzard::Streaming::RequestHandler* Blizzard::Streaming::s_requestHandler;
 
 // STATIC: 0x00EBA818/0x140DAB490

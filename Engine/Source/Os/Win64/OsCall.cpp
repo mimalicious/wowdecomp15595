@@ -124,7 +124,7 @@ void* OsCallInitializeContext(const char* name) {
     return context;
 }
 
-// OFFSET: 0x00B42340
+// OFFSET: 0x00B42340/0x140910A80
 void OsCallDestroyContext(void* context) {
     if (!context) {
         return;

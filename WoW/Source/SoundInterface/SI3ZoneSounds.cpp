@@ -70,10 +70,10 @@ int32_t SI3::sm_bPlayerIsIndoors;
 // STATIC: 0x00E283A8/0x140D0FF30
 uint32_t SI3::sm_uNextZoneMusicPlayTime;
 
-// STATIC: 0x00E283AC
+// STATIC: 0x00E283AC/0x140D0FF34
 uint32_t SI3::sm_nSilenceIntervalMin;
 
-// STATIC: 0x00E283B0
+// STATIC: 0x00E283B0/0x140D0FF38
 uint32_t SI3::sm_nSilenceIntervalMax;
 
 // STATIC: 0x00E283EC/0x140D0FF78
@@ -394,7 +394,7 @@ int32_t SI3::GetDesiredAmbienceKitID(int32_t* type) {
     return SI3::sm_aZoneSoundInfo[current].m_ambienceKitID[SI3::sm_eDayOrNight];
 }
 
-// OFFSET: 0x0062D580
+// OFFSET: 0x0062D580/0x1402C0FE0
 void SI3::IntroMusicFinished(SE3SoundKitObject* sko) {
     uint32_t soundKitID = SI3::sm_ZoneMusic.m_soundKitID;
     uint32_t now = OsGetAsyncTimeMs();

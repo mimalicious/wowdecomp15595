@@ -156,7 +156,7 @@ static TSHashTable<SPELLSBYNAME, HASHKEY_UTF8I> s_spellsByName;
 // STATIC: 0x00F33D78/0x140E26D88
 TSGrowableArray<int32_t> CGSpellBook::m_unlearnedSpells;
 
-// STATIC: 0x00F33D88
+// STATIC: 0x00F33D88/0x140E26DA0
 TSGrowableArray<int32_t> CGSpellBook::m_totemSpells[4];
 
 // STATIC: 0x00F33E38/0x140E26E00

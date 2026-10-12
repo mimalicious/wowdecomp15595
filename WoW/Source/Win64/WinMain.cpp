@@ -21,10 +21,10 @@ static float s_archiveProgressStages[3][2];
 // STATIC: 0x00D36534/0x140BEFA60
 static uint32_t s_archiveProgressStage;
 
-// STATIC: 0x00D36538
+// STATIC: 0x00D36538/0x140BEFA68
 static HWND s_archiveProgressDialog;
 
-// STATIC: 0x00D3653C
+// STATIC: 0x00D3653C/0x140BEFA70
 static HWND s_archiveProgressBar;
 
 // STATIC: 0x00D36540/0x140BEFA78

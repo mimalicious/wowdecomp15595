@@ -709,7 +709,7 @@ void CGxDeviceD3d11::ScenePresent(void* window) {
     }
 }
 
-// OFFSET: 0x00870400
+// OFFSET: 0x00870400/0x1405A5F90
 void CGxDeviceD3d11::SceneClearToViewport(uint32_t mask, CImVector color) {
     CGxDevice::SceneClearToViewport(mask, color);
 

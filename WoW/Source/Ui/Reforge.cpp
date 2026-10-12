@@ -126,7 +126,7 @@ int32_t CGReforge::FindOption(int32_t reforgeId) {
     return -1;
 }
 
-// OFFSET: 0x0098CBA0/0x1406E12F0
+// OFFSET: 0x0098CBA0/0x14070AEF0
 void CGReforge::ShutdownGame() {
     CGReforge::m_forgeMaster = WOWGUID();
     CGReforge::m_reforgeItem = WOWGUID();

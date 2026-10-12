@@ -489,7 +489,7 @@ void CM2Model::SetEventCallback(void* callback, uint64_t param) {
     }
 }
 
-// OFFSET: 0x008148D0
+// OFFSET: 0x008148D0/0x14052C8D0
 void CM2Model::SetLightEnabled(uint32_t index, uint32_t enabled) {
     if (this->m_fFlags & 1) {
         this->m_lights[index].m_enabled = enabled;
@@ -4242,7 +4242,7 @@ void M2AnimateSplineTrack<M2SplineKey<float>, float>(CM2Model* model, M2ModelBon
     }
 }
 
-// OFFSET: 0x0081D710
+// OFFSET: 0x0081D710/0x140537D20
 template <>
 void M2AnimateTrack<uint16_t, uint16_t>(CM2Model* model, M2ModelBone* bone, const M2Track<uint16_t>& track, M2ModelTrack<uint16_t>& modelTrack, const uint16_t& defaultValue) {
     uint32_t animIndex = bone->m_sequence.m_animIndex;

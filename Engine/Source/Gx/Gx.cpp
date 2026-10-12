@@ -27,7 +27,7 @@ const char* g_gxApiNames[GxApis_Last] = { "OpenGL", "D3D9", "D3D11", "GLL" };
 // STATIC: 0x00D0853C/0x140BB9A50
 const char* g_gxShaderTargetNames[GxShTargets_Last] = { "Vertex", "Hull", "Domain", "Geometry", "Pixel", "Compute" };
 
-// STATIC: 0x00D08554
+// STATIC: 0x00D08554/0x140BB9A80
 const char* g_gxShaderModelNames[8] = { "ff", "nvrc", "ff_ps", "1_1", "2_0", "3_0", "4_0", "5_0" };
 
 // STATIC: 0x00D08860/0x140BB996C

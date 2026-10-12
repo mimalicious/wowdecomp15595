@@ -126,7 +126,7 @@ void System_SComp::ZlibFree(voidpf opaque, voidpf address) {
     }
 }
 
-// OFFSET: 0x007B8C00
+// OFFSET: 0x007B8C00/0x1404AF8D0
 bool __stdcall System_SComp::DecompressBlock(void* dst, uint32_t* dstSize, const void* src, uint32_t srcSize, Decompressor* decompressors) {
     uint32_t capacity = *dstSize;
 

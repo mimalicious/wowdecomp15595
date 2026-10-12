@@ -66,13 +66,13 @@ const char* SFile::GetStreamingStatusText() {
     return s_streamingStatus.m_text;
 }
 
-// OFFSET: [0x007A95C0, 0x007A97F0]
+// OFFSET: [0x007A95C0/0x14049F350, 0x007A97F0]
 System_SFile2::BufferCallback::~BufferCallback() {
     Blizzard::Memory::Free(this->m_postData, 0, ".\\Streaming-Core.cpp", 90);
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
-// OFFSET: 0x007A9630
+// OFFSET: 0x007A9630/0x14049F3B0
 void System_SFile2::BufferCallback::WaitForCompletion() {
     Blizzard::Lock::EventWaitForever(this->m_event);
 }

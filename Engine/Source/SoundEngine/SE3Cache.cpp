@@ -47,10 +47,10 @@ void (*SE3::sm_fpCacheEventCallback)(SE3CACHEEVENT, uint32_t);
 // STATIC: 0x00E4E860/0x140D37B20
 FMOD_RESULT (*SE3::sm_fpWaveDataDoneLoadingCallback)(FMOD_SOUND*, FMOD_RESULT);
 
-// STATIC: 0x00E4E864
+// STATIC: 0x00E4E864/0x140D37B28
 SCritSect SE3::sm_SoundCache_Loading_CritSec;
 
-// STATIC: 0x00E4E88C
+// STATIC: 0x00E4E88C/0x140D37B50
 SCritSect SE3::sm_StreamedSound_Loading_CritSec;
 
 // STATIC: 0x00E4E8B4/0x140D37B78

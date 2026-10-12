@@ -584,7 +584,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A9B3A0/0x14085BC60
+// OFFSET: 0x00A9B3A0/0x14085BC80
 FMOD_RESULT F_CALLBACK DSPFlange::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPFlange *flange = (DSPFlange *)dsp;

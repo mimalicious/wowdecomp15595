@@ -27,7 +27,7 @@ static SystemI gSystemHeadMem;
 static MemPool gSystemPoolMem;
 #endif
 
-// STATIC: 0x00D1FDF0
+// STATIC: 0x00D1FDF0/0x140BDD290
 Global *gGlobal = &gGlobalMem;
 
 /*

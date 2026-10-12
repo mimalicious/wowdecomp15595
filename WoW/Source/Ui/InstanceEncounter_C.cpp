@@ -24,7 +24,7 @@ TSList<ENCOUNTER_OBJECTIVE> CGInstanceEncounter_C::m_objectives;
 // STATIC: 0x00F43B50
 static uint8_t s_maxResurrections;
 
-// STATIC: 0x00F43B51
+// STATIC: 0x00F43B51/0x140E370B1
 static uint8_t s_resurrectionsUsed;
 
 // INLINED

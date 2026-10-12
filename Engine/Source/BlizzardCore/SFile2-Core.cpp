@@ -60,10 +60,10 @@ char System_SFile2::s_hashedBasePath[260];
 // STATIC: 0x00EB4094/0x140D9FF30
 bool System_SFile2::s_fileHashBuilt;
 
-// STATIC: 0x00EB409C
+// STATIC: 0x00EB409C/0x140D9FF40
 Blizzard::Lock::RMutex System_SFile2::s_fileHashLock;
 
-// STATIC: 0x00EB40B8
+// STATIC: 0x00EB40B8/0x140D9FF70
 System_SFile2::FileHash System_SFile2::s_fileHash;
 
 // STATIC: 0x00EB4100/0x140DA0000
@@ -979,7 +979,7 @@ bool System_SFile2::FileHashCompare::operator()(const std::string& key1, const s
     return false;
 }
 
-// OFFSET: 0x007A5DD0
+// OFFSET: 0x007A5DD0/0x14049AC20
 SFileImpl::SFileImpl(int32_t type) {
     this->m_lock = new (this->m_lockData) SFileLock();
     this->m_lock->unk_0018 = 0;
@@ -1575,17 +1575,17 @@ System_SFile2::ReportCallback::ReportCallback() {
     Blizzard::Lock::EventCreate(this->m_event);
 }
 
-// OFFSET: [0x007A6770, 0x007A6BE0]
+// OFFSET: [0x007A6770/0x14049B690, 0x007A6BE0]
 System_SFile2::ReportCallback::~ReportCallback() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
-// OFFSET: 0x007FD0B0
+// OFFSET: 0x007FD0B0/0x14050FC70
 int32_t System_SFile2::ReportCallback::GetTimeout() {
     return this->m_timeout;
 }
 
-// OFFSET: 0x007A6760
+// OFFSET: 0x007A6760/0x14049B680
 bool System_SFile2::ReportCallback::ShouldBlock() {
     return this->m_shouldBlock;
 }
@@ -1596,7 +1596,7 @@ bool System_SFile2::ReportCallback::ReceivedData(const void* data, int32_t size)
     return true;
 }
 
-// OFFSET: 0x007A4D90
+// OFFSET: 0x007A4D90/0x140499990
 void System_SFile2::ReportCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     Blizzard::Lock::EventSet(this->m_event);
 }

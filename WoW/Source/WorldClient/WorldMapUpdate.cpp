@@ -266,7 +266,7 @@ void CWorldMap::UpdateEntitys() {
     this->unk_010C = 0;
 }
 
-// OFFSET: 0x00774FF0
+// OFFSET: 0x00774FF0/0x14045F190
 void CWorldMap::UpdateBarriers() {
     int32_t barrierMode = CWorldScene::s_barrier.m_enabled;
 

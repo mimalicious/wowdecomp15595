@@ -365,7 +365,7 @@ T* DBCache<T, TKey, THashKey>::GetRecordInternal(TKey key, const WOWGUID& guid, 
     return NULL;
 }
 
-// OFFSET: [0x004A3C10<CreatureStats_C, int, HASHKEY_INT>, 0x004A3C90/0x1400D25A0<GameObjectStats_C, int, HASHKEY_INT>, 0x004A3E30/0x1400D2870<PetNameCache, int, HASHKEY_INT>, 0x004A3D10/0x1400D2690<NameCache, unsigned __int64, CHashKeyGUID>]
+// OFFSET: [0x004A3C10/0x1400D24B0<CreatureStats_C, int, HASHKEY_INT>, 0x004A3C90/0x1400D25A0<GameObjectStats_C, int, HASHKEY_INT>, 0x004A3E30/0x1400D2870<PetNameCache, int, HASHKEY_INT>, 0x004A3D10/0x1400D2690<NameCache, unsigned __int64, CHashKeyGUID>]
 template <class T, class TKey, class THashKey>
 void DBCache<T, TKey, THashKey>::CancelCallback(TKey key, void (*callback)(int32_t id, const WOWGUID& guid, void* param, bool success), void* param) {
     DBCACHEHASH* hash = this->m_entries.Ptr(DBCacheHashKey(key), key);

@@ -102,7 +102,7 @@ int32_t glARBMultisample;
 // STATIC: 0x00EC67E0/0x140DB8974
 int32_t glARBTextureCubeMap;
 
-// STATIC: 0x00EC67E8
+// STATIC: 0x00EC67E8/0x140DB897C
 int32_t glARBTextureRectangle;
 
 // STATIC: 0x00EC67EC/0x140DB8980

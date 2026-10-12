@@ -99,7 +99,7 @@ int32_t CSimpleTexture::s_maskCount;
 // STATIC: 0x00DD38FD
 bool CSimpleTexture::s_defaultNonBlocking;
 
-// STATIC: 0x00DD38FE
+// STATIC: 0x00DD38FE/0x140CB95AA
 bool CSimpleTexture::s_unloadHiddenTextures;
 
 // STATIC: 0x00CA3A04/0x140B40DC4
@@ -812,7 +812,7 @@ void CSimpleFontString::RemoveShadow() {
     }
 }
 
-// OFFSET: 0x004F7FF0/0x14029E930
+// OFFSET: 0x004F7FF0/0x14013B860
 float CSimpleFontString::GetFontHeight(bool recalculate) {
     float fontHeight = this->m_fontHeight;
 
@@ -1024,7 +1024,7 @@ CSimpleFontString::CSimpleFontString(CSimpleFrame* frame, uint32_t drawLayer, bo
     s_fontStringCount++;
 }
 
-// OFFSET: [0x004FC450/0x1401406B0, 0x004FC700/0x140140AC0, 0x0051D760, 0x004FBDB0/0x14013FFC0, 0x004FBDC0/0x14013FFD0, 0x0051D260, 0x0051D270, 0x0051D280]
+// OFFSET: [0x004FC450/0x1401406B0, 0x004FC700/0x140140AC0, 0x0051D760/0x14016A180, 0x004FBDB0/0x14013FFC0, 0x004FBDC0/0x14013FFD0, 0x0051D260/0x140169B50, 0x0051D270/0x140169B60, 0x0051D280/0x140169B40]
 CSimpleFontString::~CSimpleFontString() {
     this->FreeEmbeddedTextures();
 
@@ -1786,7 +1786,7 @@ void CSimpleFontString::SetShadowColor(const CImVector& color) {
     }
 }
 
-// OFFSET: 0x004FE640
+// OFFSET: 0x004FE640/0x140143250
 void CSimpleFontString::SetJustifyH(uint8_t justify) {
     this->m_settableStyleFlags &= ~0x7u;
     uint32_t styleFlags = (this->m_styleFlags & ~0x7u) | (justify & 0x7);

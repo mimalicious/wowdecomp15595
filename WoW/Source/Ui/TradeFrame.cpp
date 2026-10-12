@@ -200,7 +200,7 @@ void CGTradeInfo::UpdatePlayerItem(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x0096A510
+// OFFSET: 0x0096A510/0x1406E0F10
 void CGTradeInfo::UnlockTradeItems() {
     for (uint32_t i = 0; i < 7; i++) {
         if (i <= 6 && CGTradeInfo::m_playerTrade.m_items[i].m_item) {
@@ -683,7 +683,7 @@ void CGTradeInfo::LeaveWorld() {
     CGTradeInfo::CancelTrade();
 }
 
-// OFFSET: 0x0096B910
+// OFFSET: 0x0096B910/0x1406E2460
 void CGTradeInfo::HandleTradeMessage(int32_t status, int32_t bagResult, int32_t target, int32_t itemId) {
     switch (status) {
         case 3:

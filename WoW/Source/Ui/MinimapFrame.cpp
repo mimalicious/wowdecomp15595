@@ -79,7 +79,7 @@ const char* CGMinimapFrame::s_objectTypeName = "Minimap";
 // STATIC: 0x00D1637C/0x140BD03F8
 int32_t CGMinimapFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00F611A4
+// STATIC: 0x00F611A4/0x140E562F0
 float CGMinimapFrame::s_blipSize4;
 
 // STATIC: 0x00F611A8
@@ -224,7 +224,7 @@ static TSGrowableArray<uint16_t> s_blipIndices;
 // STATIC: 0x00F6DD58/0x140E63AE0
 static TSGrowableArray<OBJINFO> s_objInfo[41];
 
-// STATIC: 0x00F6B688
+// STATIC: 0x00F6B688/0x140E613F0
 static C2Vector s_poiArrowPositions[3];
 
 // STATIC: 0x00F6B6A0/0x140E61408
@@ -299,7 +299,7 @@ static float s_heightArrowThreshold = 10.0f;
 // STATIC: 0x00D162F0
 static int32_t s_objectBlipOrder[29] = { 21, 24, 26, 23, 18, 32, 16, 17, 22, 27, 20, 25, 19, 2, 3, 4, 5, 6, 7, 8, 14, 15, 11, 12, 28, 29, 9, 10, 13 };
 
-// STATIC: 0x00F61090
+// STATIC: 0x00F61090/0x140E56180
 static MARKEDBLIP s_markedBlips[2];
 
 // STATIC: 0x00F610A0/0x140E56190

@@ -295,7 +295,7 @@ float MinimapGetIndoorZoomRadius(int32_t zoom) {
     return 0.0f;
 }
 
-// OFFSET: 0x004E8880
+// OFFSET: 0x004E8880/0x14012AE10
 static void SetupMapObjMatrices(uintptr_t entity) {
     World::QueryMapObjMatrix(entity, &s_mapObjMatrix, &s_mapObjInvMatrix);
     float a0 = s_mapObjMatrix.a0;
@@ -969,7 +969,7 @@ static int32_t MinimapUpdatePosition(int32_t mapId, const C3Vector* position, C2
     return 1;
 }
 
-// OFFSET: 0x004EA250
+// OFFSET: 0x004EA250/0x14012D010
 int32_t MinimapUpdate(uintptr_t entity, int32_t mapId, const C3Vector* position, C2Vector* center, float* scale, MINIMAPTILE* tiles, MINIMAPINDOOR* indoor, int32_t force) {
     bool changed = (s_minimapUpdateFlags & 3) != 0;
     bool result = changed;

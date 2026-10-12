@@ -632,7 +632,7 @@ void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* p
     }
 }
 
-// OFFSET: 0x00925F70
+// OFFSET: 0x00925F70/0x14068B1B0
 void CGUIBindings::Shutdown() {
     if (CGUIBindings::s_bindings) {
         delete CGUIBindings::s_bindings;

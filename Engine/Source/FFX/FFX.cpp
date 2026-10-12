@@ -39,7 +39,7 @@ float FFX::s_oldMinX;
 // STATIC: 0x00EC700C/0x140DB9430
 const uint16_t* FFX::s_idx;
 
-// STATIC: 0x00EC7010
+// STATIC: 0x00EC7010/0x140DB9438
 const C2Vector* FFX::s_tex;
 
 // STATIC: 0x00EC7014/0x140DB9440
@@ -90,7 +90,7 @@ FFX::Tex FFX::s_waveTex;
 // STATIC: 0x00EC707C/0x140DB94E8
 FFX::Tex FFX::s_screen;
 
-// STATIC: 0x00EC70A0
+// STATIC: 0x00EC70A0/0x140DB9510
 C4Vector FFX::psProcWaterConsts[15];
 
 // STATIC: 0x00EC7190/0x140DB9600

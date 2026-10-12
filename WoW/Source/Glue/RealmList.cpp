@@ -299,7 +299,7 @@ void CRealmList::Shutdown() {
     CRealmList::m_categories.Clear();
 }
 
-// OFFSET: 0x0080BD00
+// OFFSET: 0x0080BD00/0x140522280
 void CRealmList::UpdateList() {
     for (uint32_t i = 0; i < CRealmList::m_categories.Count(); i++) {
         CRealmList::m_categories[i]->m_numRealms = 0;

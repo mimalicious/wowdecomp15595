@@ -363,7 +363,7 @@ void CDetailDoodad::SetPixelShader(uint32_t shadowMode) {
     GxRsSet(GxRs_PixelShader, CDetailDoodad::s_pixelShader, shadowMode + 4 * ((World::GetEnables() >> 16) & 0x1));
 }
 
-// OFFSET: 0x007373E0
+// OFFSET: 0x007373E0/0x140413990
 void CDetailDoodad::InitializeShaderConstants(CWorldView* view) {
     SShaderConstants& constants = CDetailDoodad::s_shaderConstants;
     memset(&constants, 0, sizeof(constants));

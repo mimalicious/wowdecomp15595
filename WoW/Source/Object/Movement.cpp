@@ -51,7 +51,7 @@ static World::FacetData s_moveFacets;
 // STATIC: 0x00CA809C/0x140B47EA0
 static World::FacetData s_liquidFacets;
 
-// STATIC: 0x00DD8678
+// STATIC: 0x00DD8678/0x140CBEE10
 static CAaBox s_queryBox;
 
 // STATIC: 0x00DD5258/0x140CBB4E0
@@ -4376,7 +4376,7 @@ int32_t CMovement_C::RequestMoveFacets(const CAaBox& box, const C44Matrix& trans
     return 1;
 }
 
-// OFFSET: 0x006063F0
+// OFFSET: 0x006063F0/0x14028DC80
 int32_t CMovement_C::GetMoveFacets(float distance, uint32_t elapsed, C3Vector direction) {
     C44Matrix transform;
     C3Vector position = this->m_position;
@@ -7287,7 +7287,7 @@ void CMovement_C::Disable() {
     this->m_moveQueue.FreeAll();
 }
 
-// OFFSET: 0x00607C10
+// OFFSET: 0x00607C10/0x14028FEC0
 void CMovement_C::PassengerMove(uint32_t time, uint32_t elapsed, float distance, const C3Vector& direction, const C44Matrix& transportMatrix) {
     C3Vector position = this->m_position * transportMatrix;
     World::IsValidPosition(position, 0.0f);

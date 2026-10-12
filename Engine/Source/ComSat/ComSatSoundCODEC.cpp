@@ -13,10 +13,10 @@ const int32_t ComSat::Sound::CODECIPMR6000::s_maxFramesPerPacket = 20;
 // STATIC: 0x00C27688/0x140A1DA68
 const int32_t ComSat::Sound::CODECIPMR6000::s_sampleRate = 8000;
 
-// STATIC: 0x00C2768C
+// STATIC: 0x00C2768C/0x140A1DA6C
 const int32_t ComSat::Sound::CODECIPMR6000::s_bitsPerSample = 16;
 
-// STATIC: 0x00C27690
+// STATIC: 0x00C27690/0x140A1DA70
 const int32_t ComSat::Sound::CODECIPMR6000::s_samplesPerFrame = 800;
 
 // STATIC: 0x00C27694/0x140A1DA78

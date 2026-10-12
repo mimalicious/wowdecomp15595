@@ -15,7 +15,7 @@ static float s_viewportFarClip = 0.94f;
 // STATIC: 0x00F803F0/0x140E78280
 static int32_t s_submerged;
 
-// STATIC: 0x00F803F4
+// STATIC: 0x00F803F4/0x140E78288
 static CAaRect s_viewExtents;
 
 struct ViewSettingsFog {

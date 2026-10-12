@@ -180,7 +180,7 @@ void System_SFile::ListFile::Parse(char* data, int64_t size) {
     }
 }
 
-// OFFSET: 0x007D3A50
+// OFFSET: 0x007D3A50/0x1404D37E0
 bool System_SFile::ListFile::Set(const char* data, int64_t size) {
     this->m_names.clear();
 
@@ -227,7 +227,7 @@ const char* System_SFile::ListFile::Add(const char* name) {
     return copy;
 }
 
-// OFFSET: 0x007F4A80
+// OFFSET: 0x007F4A80/0x1405026C0
 bool System_SFile::ListFile::Load(ARCHIVEREC* archive) {
     Blizzard::Mopaq::HSFILERecord* file = NULL;
     bool result = false;
@@ -269,7 +269,7 @@ System_SFile::ListFileParser::ListFileParser(ListFile* listfile) {
     }
 }
 
-// OFFSET: 0x007D01F0
+// OFFSET: 0x007D01F0/0x1404CE020
 bool System_SFile::ListFileParser::Next() {
     if (this->m_current == this->m_listfile->m_names.end()) {
         if (this->m_specials.empty()) {

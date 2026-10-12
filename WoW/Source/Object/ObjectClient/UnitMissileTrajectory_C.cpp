@@ -219,7 +219,7 @@ void CMissileCollision::MaybeAddUnitToSystem(CGUnit_C* unit) {
     }
 }
 
-// OFFSET: 0x0057CD00/0x1403FDAC0
+// OFFSET: 0x0057CD00/0x1401E2E90
 void CGUnit_C::StopMissileTrajectoryTargeting() {
     if (s_trajectoryTexture0) {
         TextureRelease(s_trajectoryTexture0);

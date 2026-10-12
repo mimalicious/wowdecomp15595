@@ -233,7 +233,7 @@ void CBarrier::AddBarrierConvexPoly(C3Vector* verts, uint32_t count, float radiu
     }
 }
 
-// OFFSET: 0x007783F0
+// OFFSET: 0x007783F0/0x140463B40
 void CBarrier::AddAxisAlignedWall(const C2Vector& a1, const C2Vector& a2, float a3) {
     if (!this->m_enabled) {
         return;

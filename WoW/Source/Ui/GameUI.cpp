@@ -6118,7 +6118,7 @@ void CGGameUI::UnlockVirtualItem(int32_t id, uint32_t virtualSlot, int32_t a3) {
     }
 }
 
-// OFFSET: 0x008C5330
+// OFFSET: 0x008C5330/0x140634FC0
 int32_t CGGameUI::GetVirtualItemCount(int32_t id, uint32_t virtualSlot, int32_t a3) {
     if (!id) {
         return 0;

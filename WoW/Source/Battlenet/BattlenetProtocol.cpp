@@ -1,7 +1,7 @@
 #include "WoW/Source/Battlenet/BattlenetProtocol.h"
 #include <cstring>
 
-// STATIC: 0x00C83010
+// STATIC: 0x00C83010/0x140A87C18
 const uint32_t Protocol::TypeIdOf<Battlenet::Toon::FullName>::s_typeId = 412;
 
 // STATIC: 0x00C83014

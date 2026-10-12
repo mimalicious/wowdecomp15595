@@ -108,10 +108,10 @@
 #include "WoW/Source/Ui/BlobFrame.h"
 #include "WoW/Source/Ui/ArchaeologyDigSiteFrame.h"
 
-// STATIC: 0x00BEF4EC
+// STATIC: 0x00BEF4EC/0x1409D87A8
 static const uint32_t s_skinCursorModes[2] = { 21, 20 };
 
-// STATIC: 0x00BEF4F4
+// STATIC: 0x00BEF4F4/0x1409D87B0
 static const uint32_t s_skinCursorModesUnable[2] = { 47, 46 };
 
 // STATIC: 0x00D10130

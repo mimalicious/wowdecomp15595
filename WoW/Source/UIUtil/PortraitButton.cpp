@@ -108,7 +108,7 @@ static void PortraitCacheTouch(PortraitBase** head, PortraitBase* entry) {
     *head = entry;
 }
 
-// OFFSET: 0x00481EB0
+// OFFSET: 0x00481EB0/0x1400A0BA0
 static int32_t IsPortraitDrawable(CGUnit_C* unit) {
     if (unit->m_clientFlags & 0x400000) {
         return 0;

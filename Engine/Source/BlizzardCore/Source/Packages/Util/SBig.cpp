@@ -340,7 +340,7 @@ inline void SetOne(Blizzard::BigBuffer& a) {
     a[0] = 1;
 }
 
-// OFFSET: 0x007D7F50
+// OFFSET: 0x007D7F50/0x1404D9D00
 static void FromBinary(Blizzard::BigBuffer& a, const void* data, uint32_t bytes) {
     a.Clear();
 
@@ -626,7 +626,7 @@ void Blizzard::SSignatureVerifyStream_ProvideData(SSignatureData* token, const u
     }
 }
 
-// OFFSET: 0x007DEC80
+// OFFSET: 0x007DEC80/0x1404E38E0
 bool Blizzard::SSignatureVerifyStream_Finish(SSignatureData* token, const uint8_t* modulus, const uint8_t* pubExponent) {
     bool result = false;
 

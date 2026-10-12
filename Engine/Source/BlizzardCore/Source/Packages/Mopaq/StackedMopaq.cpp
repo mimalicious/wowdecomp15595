@@ -208,7 +208,7 @@ static uint32_t GetHandlerSize(System_SFile::ARCHIVEREC* archive, const System_S
     return sizeof(System_Mopaq::SectorReadHandler);
 }
 
-// OFFSET: 0x007EEF50
+// OFFSET: 0x007EEF50/0x1404FAFE0
 static Blizzard::Mopaq::MpqHandleRecord* GetPrealloc(const char* name, System_SFile::ARCHIVEREC* archive, const System_SFile::BLOCKENTRY* entry, uint32_t flags) {
     uint32_t nameLength = name ? strlen(name) : 0;
     uint32_t errorHandlerSize = ((flags >> 11) & 1) ? sizeof(Blizzard::Mopaq::MpqStandaloneRepairErrorHandler) : sizeof(Blizzard::Mopaq::MpqErrorHandler);
@@ -478,7 +478,7 @@ static bool OpenMD5VerificationHandle(const System_SFile::BLOCKENTRY* entry, int
     return opened;
 }
 
-// OFFSET: 0x007EED00
+// OFFSET: 0x007EED00/0x1404FADD0
 bool PrepareHandleForMD5Verification(Blizzard::Mopaq::MpqHandleRecord* handle, int32_t chunkSize, uint32_t flags) {
     Blizzard::Mopaq::MpqHandleRecord* verifyHandle = NULL;
 
@@ -542,7 +542,7 @@ static Blizzard::Mopaq::HSFILERecord* WrapHandle(Blizzard::Mopaq::MpqHandleRecor
     return record;
 }
 
-// OFFSET: 0x007F7530
+// OFFSET: 0x007F7530/0x140506510
 void System_Mopaq::OpenArchiveFile(const char* name, System_SFile::ARCHIVEREC* logicalArchive, System_SFile::ARCHIVEREC* archive, const System_SFile::BLOCKENTRY& entry, uint32_t index, uint32_t flags, Blizzard::Mopaq::HSFILERecord** result) {
     MpqParams parms;
     memset(&parms, 0, sizeof(parms));
@@ -613,7 +613,7 @@ void System_Mopaq::OpenArchiveFile(const char* name, System_SFile::ARCHIVEREC* l
     }
 }
 
-// OFFSET: 0x007F31A0
+// OFFSET: 0x007F31A0/0x140500490
 void System_Mopaq::CreateArchiveFile(const char* name, System_SFile::ARCHIVEREC* archive, uint32_t flags, const System_SFile::BLOCKENTRY& entry, uint32_t index, Blizzard::Mopaq::HSFILERecord** result) {
     MpqParams parms;
     memset(&parms, 0, sizeof(parms));

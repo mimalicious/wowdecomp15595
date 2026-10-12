@@ -101,7 +101,7 @@ FMOD_RESULT ReverbI::validate(Reverb *reverb, ReverbI **reverbi)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A908D0
+// OFFSET: 0x00A908D0/0x1408500E0
 FMOD_RESULT ReverbI::init(SystemI* system, bool is_3d, FMOD_REVERB_MODE mode)
 {
     FMOD_REVERB_PROPERTIES prop = FMOD_PRESET_OFF;             // then initialise them to 'off'

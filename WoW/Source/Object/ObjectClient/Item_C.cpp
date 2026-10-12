@@ -2304,7 +2304,7 @@ void CGItem_C::Disable() {
     }
 }
 
-// OFFSET: 0x005AA210/0x1400B2B70
+// OFFSET: 0x005AA210/0x14021C740
 CGItem_C::~CGItem_C() {
     if (!(this->m_itemFlags & 0x2)) {
         g_itemSparseDB.CancelCallback(this->m_obj->m_entryID, LoadItemCacheCallback, this);

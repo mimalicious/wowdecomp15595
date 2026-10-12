@@ -48,7 +48,7 @@ static TSList<BFSNODE> s_searchQueue;
 // STATIC: 0x00C99E00/0x140CAD488
 static TSList<BFSNODE> s_freeNodes;
 
-// STATIC: 0x00D3A774
+// STATIC: 0x00D3A774/0x140BF5500
 static TSGrowableArray<CRect> s_grids[3];
 
 // INLINED

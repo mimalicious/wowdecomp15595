@@ -365,7 +365,7 @@ uint32_t CAnimKitManager::GetCurTime() {
     return this->m_model->m_scene->m_time;
 }
 
-// OFFSET: 0x0058C5A0
+// OFFSET: 0x0058C5A0/0x1401F5F80
 void CAnimKitManager::PostInitSegmentInst(AnimKitSegmentInst* segmentInst, TSStackArray<AnimKitSegmentInst*>& play, TSStackArray<AnimKitSegmentInst*>& stop) {
     const AnimKitSegmentRec* rec = segmentInst->rec;
     uint32_t time = this->m_model->m_scene->m_time;

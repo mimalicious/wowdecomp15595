@@ -117,7 +117,7 @@ bool System_File::Stacked::stream_flush(Blizzard::File::Filesystem* fs, FileParm
     return true;
 }
 
-// OFFSET: 0x007D96A0
+// OFFSET: 0x007D96A0/0x1404DBBD0
 FileStack_Streaming::~FileStack_Streaming() {
     Blizzard::Storage::Release(this->m_unit);
 }
@@ -168,7 +168,7 @@ System_File::Stacked::LockAndMap* System_File::Stacked::LockAndMap::Get() {
     return s_instance;
 }
 
-// OFFSET: 0x007E1180
+// OFFSET: 0x007E1180/0x1404E7310
 Blizzard::File::StreamRecord* System_File::Stacked::LockAndMap::GetRecord(const std::string& key, const char* path) {
     Blizzard::Lock::Mutex& lock = Get()->m_mutex.m_mutex;
     Blizzard::Lock::MutexEnter(lock);

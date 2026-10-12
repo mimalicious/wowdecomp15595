@@ -46,7 +46,7 @@ int32_t CGPartyInfo::m_readyCheckReady[4];
 // STATIC: 0x00F33338/0x140E26290
 int32_t CGPartyInfo::m_readyCheckPending[4];
 
-// STATIC: 0x00F33348
+// STATIC: 0x00F33348/0x140E262A0
 uint8_t CGPartyInfo::m_memberAssignments[4];
 
 // STATIC: 0x00F33350/0x140E262A8

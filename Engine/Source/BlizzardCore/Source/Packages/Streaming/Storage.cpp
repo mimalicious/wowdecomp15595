@@ -41,7 +41,7 @@ bool Blizzard::Storage::IsInitialized() {
     return ready;
 }
 
-// OFFSET: 0x007EB330
+// OFFSET: 0x007EB330/0x1404EC530
 bool Blizzard::Storage::Initialize() {
     while (InterlockedCompareExchange(&s_initLock, 1, 0)) {
         Blizzard::Process::Sleep(1);
@@ -112,7 +112,7 @@ void Blizzard::Storage::Shutdown() {
     InterlockedCompareExchange(&s_initLock, 0, 1);
 }
 
-// OFFSET: 0x007DF310
+// OFFSET: 0x007DF310/0x1404E40F0
 Blizzard::Storage::StorageUnit* Blizzard::Storage::Acquire(const std::string& name, bool existingOnly) {
     if (!IsInitialized()) {
         return NULL;
@@ -171,7 +171,7 @@ bool Blizzard::Storage::Exists(const std::string& name) {
     return s_StorageMap->find(name) != s_StorageMap->end();
 }
 
-// OFFSET: 0x007DF140
+// OFFSET: 0x007DF140/0x1404E3ED0
 uint32_t Blizzard::Storage::StorageThread(void* param) {
     std::map<std::string, StorageUnit*>* map = s_StorageMap;
 

@@ -46,7 +46,7 @@ void Blizzard::Storage::StorageUnit::SetCacheSource() {
     this->m_cache = new CacheSource();
 }
 
-// OFFSET: 0x007C7F60
+// OFFSET: 0x007C7F60/0x1404C32E0
 void Blizzard::Storage::StorageUnit::SetHttpSource(const std::string& path, int64_t size) {
     delete this->m_http;
     this->m_http = new HttpSource(path, size);
@@ -362,7 +362,7 @@ bool Blizzard::Storage::StorageUnit::QueueWrite(Request* request, BufferHandle h
     return result;
 }
 
-// OFFSET: 0x007DC0A0
+// OFFSET: 0x007DC0A0/0x1404DF490
 bool Blizzard::Storage::StorageUnit::FlushCacheEntries(int64_t maxBytes) {
     Blizzard::Lock::ScopedMutex lock(s_storageMutex);
     int64_t written = 0;
@@ -397,12 +397,12 @@ bool Blizzard::Storage::StorageUnit::FlushCacheEntries(int64_t maxBytes) {
     return this->m_cacheEntries->size() == 0;
 }
 
-// OFFSET: 0x007D9560
+// OFFSET: 0x007D9560/0x1404DB9D0
 Blizzard::Storage::StorageUnitRef::~StorageUnitRef() {
     Release(this->m_unit);
 }
 
-// OFFSET: 0x007C7ED0
+// OFFSET: 0x007C7ED0/0x1404C3230
 Blizzard::Storage::HttpSource::HttpSource(std::string path, int64_t size) : BackingStore(0) {
     this->m_path = path;
     this->m_size = size;

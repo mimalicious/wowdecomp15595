@@ -444,7 +444,7 @@ bool NTempest::Intersect(const C3Ray& ray, const C3Vector* verts, const uint32_t
     return true;
 }
 
-// OFFSET: 0x00B08080
+// OFFSET: 0x00B08080/0x1408CB030
 float NTempest::DistanceSquared(const C3Segment& segment, const C3Vector& point, float* t) {
     float dx = point.x - segment.b.x;
     float dy = point.y - segment.b.y;

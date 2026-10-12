@@ -13,7 +13,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Client.h"
 
-// STATIC: 0x00D084EC
+// STATIC: 0x00D084EC/0x140BB99B0
 const char* s_colorBitsNames[8] = { "16", "24", "24", "30", "0", "0", "0", "0" };
 
 // STATIC: 0x00D0850C/0x140BB99F0

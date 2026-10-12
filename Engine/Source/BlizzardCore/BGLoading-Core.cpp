@@ -192,7 +192,7 @@ void BGLoading::BGLoadManager::AppendNewBGFiles() {
     }
 }
 
-// OFFSET: 0x007A1830
+// OFFSET: 0x007A1830/0x140497FF0
 void BGLoading::BGLoadManager::AppendNewArchives() {
     Blizzard::Lock::ScopedMutex lock(this->m_mutex);
 

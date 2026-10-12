@@ -19,7 +19,7 @@ char BackgroundCache::CacheManager::s_locale[5];
 // STATIC: 0x00EB3C5C/0x140DAB9A0
 BackgroundCache::CacheManager* BackgroundCache::s_cacheManager;
 
-// STATIC: 0x00EB3C58
+// STATIC: 0x00EB3C58/0x140DAB998
 OggToWavConversion::DECOMPRESSOGGCALLBACK OggToWavConversion::s_DecompressOggCallback;
 
 // STATIC: 0x00EB3D7C/0x140D9FF28
@@ -488,7 +488,7 @@ int32_t PatchOnDemand::Cache::LoadArchives(const char* path, const char* locale)
     return s_archiveList.LoadArchives(path, locale);
 }
 
-// OFFSET: 0x007A3CD0
+// OFFSET: 0x007A3CD0/0x14050CF20
 PatchOnDemand::PoDWriteJob::PoDWriteJob(const void* data, int64_t size, System_SFile::ARCHIVEREC* archive, const char* name, const Blizzard::Util::Digest<16>& md5) : BackgroundCache::CacheJob(0) {
     this->m_size = static_cast<uint32_t>(size);
     this->m_data = this->m_size ? new uint8_t[this->m_size] : NULL;
@@ -697,7 +697,7 @@ void BackgroundCache::ShutdownManager() {
     s_cacheManager = NULL;
 }
 
-// OFFSET: 0x007A4990
+// OFFSET: 0x007A4990/0x14050D7A0
 void BackgroundCache::CacheManager::QueuePatchWrite(const void* data, uint64_t size, Blizzard::Mopaq::HSFILERecord* file, const char* name, const Blizzard::Util::Digest<16>& md5) {
     Blizzard::Lock::MutexEnter(this->m_mutex);
 

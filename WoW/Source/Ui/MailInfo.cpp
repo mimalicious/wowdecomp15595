@@ -80,7 +80,7 @@ uint32_t CGMailInfo::m_numStationeries;
 // STATIC: 0x00F49020/0x140E3D108
 uint32_t CGMailInfo::m_pendingStationeryCallbacks;
 
-// STATIC: 0x00F49034
+// STATIC: 0x00F49034/0x140E3D11C
 int32_t CGMailInfo::m_doPendingQuery;
 
 // STATIC: 0x00F49038/0x140E3D120
@@ -884,7 +884,7 @@ void CGMailInfo::RemoveMoney(uint32_t messageID) {
     FrameScript_SignalEvent(SCRIPT_EVENT_MAIL_INBOX_UPDATE, NULL);
 }
 
-// OFFSET: 0x0096E230
+// OFFSET: 0x0096E230/0x1406E5360
 void CGMailInfo::RemoveItem(uint32_t messageID, uint32_t itemGuid, uint32_t itemCount) {
     uint32_t i = 0;
 

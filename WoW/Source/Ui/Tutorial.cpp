@@ -12,7 +12,7 @@
 // STATIC: 0x00D10978
 static const uint32_t s_forcedTutorials[] = { 56, 33, 3, 4, 10, 54, 65 };
 
-// STATIC: 0x00D10994
+// STATIC: 0x00D10994/0x140BC6890
 static const uint32_t s_repeatableTutorials[] = { 56, 65 };
 
 // STATIC: 0x00F33758/0x140E26700

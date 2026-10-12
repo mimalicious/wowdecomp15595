@@ -141,7 +141,7 @@ void CWorldMap::PreloadChunk(CMap* map, const CAaBox& box) {
     }
 }
 
-// OFFSET: 0x00773A40
+// OFFSET: 0x00773A40/0x14045D800
 void CWorldMap::PreloadMapObjDefGroups(CMapObj* mapObj, CMapObjDef* mapObjDef, const CAaBox& box) {
     for (CMapObjDefGroup* defGroup = mapObjDef->m_defGroupList.Head(), * next; defGroup; defGroup = next) {
         next = mapObjDef->m_defGroupList.Next(defGroup);

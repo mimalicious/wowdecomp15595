@@ -240,7 +240,7 @@ void Blizzard::Streaming::Transport::TransportHttpCallback::SetCookie(const char
     this->m_cookieValue.assign(value, strlen(value));
 }
 
-// OFFSET: 0x007C7B20
+// OFFSET: 0x007C7B20/0x1404C2DE0
 Blizzard::Streaming::Transport::TransportHttpCallback::TransportHttpCallback(int32_t size, std::string& data) : m_data(&data) {
     this->m_cookieName.erase(this->m_cookieName.begin(), this->m_cookieName.end());
     this->m_cookieValue.erase(this->m_cookieValue.begin(), this->m_cookieValue.end());

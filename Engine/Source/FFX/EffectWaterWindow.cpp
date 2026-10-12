@@ -2,7 +2,7 @@
 #include "Engine/Source/FFX/PassWaterWindow.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: 0x0089D9C0
+// OFFSET: 0x0089D9C0/0x1405DE180
 EffectWaterWindow::EffectWaterWindow(uint32_t type) {
     FFX::Tex* inputs[] = { &FFX::s_full[0] };
     FFX::Pass* pass = new (__FILE__, __LINE__) PassWaterWindow(type, 0, inputs, 1, &FFX::s_screen, GxBlend_Opaque);
@@ -16,7 +16,7 @@ EffectWaterWindow::~EffectWaterWindow() {
     }
 }
 
-// OFFSET: 0x0089DA30
+// OFFSET: 0x0089DA30/0x1405DE2D0
 EffectSubmarineWindow::EffectSubmarineWindow(uint32_t type) {
     FFX::Tex* inputs[] = { &FFX::s_full[0] };
     FFX::Pass* pass = new (__FILE__, __LINE__) PassWaterWindow(type, 1, inputs, 1, &FFX::s_screen, GxBlend_Opaque);

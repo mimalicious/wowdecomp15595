@@ -8,7 +8,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Net/Net.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
-// STATIC: 0x00EB57D4
+// STATIC: 0x00EB57D4/0x140DA1C74
 int32_t System_Net::s_lastError;
 
 // OFFSET: 0x007AD900/0x1404A3590

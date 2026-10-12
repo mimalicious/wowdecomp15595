@@ -930,7 +930,7 @@ int32_t LogMiniDump(void* logfile, EXCEPTION_POINTERS* exceptionpointers, uint32
     return result;
 }
 
-// OFFSET: 0x004C0000
+// OFFSET: 0x004C0000/0x1400FA580
 int32_t LogMiniDumpIsAvailable() {
     if (!sgDbgHelpDll.Load()) {
         return 0;

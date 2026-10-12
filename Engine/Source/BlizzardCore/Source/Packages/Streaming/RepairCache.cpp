@@ -21,16 +21,16 @@ static void (*s_reportCallback)(void* context, uint32_t count, uint32_t repaired
 
 Blizzard::Repair::RepairCache Blizzard::Repair::s_repairCache;
 
-// STATIC: 0x00EBA218
+// STATIC: 0x00EBA218/0x140DAACA0
 Blizzard::Repair::REPAIRCORRUPTIONCALLBACK Blizzard::Repair::s_repairCorruptionCallback;
 
-// STATIC: 0x00EBA21C
+// STATIC: 0x00EBA21C/0x140DAACA8
 Blizzard::Repair::REPAIRFAILCALLBACK Blizzard::Repair::s_repairFailCallback;
 
-// STATIC: 0x00EBA220
+// STATIC: 0x00EBA220/0x140DAACB0
 Blizzard::Repair::REPAIRSUCCESSCALLBACK Blizzard::Repair::s_repairSuccessCallback;
 
-// OFFSET: 0x007AAF30
+// OFFSET: 0x007AAF30/0x14049AA50
 void Blizzard::Repair::SetRepairReportCallbacks(REPAIRCORRUPTIONCALLBACK corruption, REPAIRFAILCALLBACK fail, REPAIRSUCCESSCALLBACK success) {
     s_repairCorruptionCallback = corruption;
     s_repairFailCallback = fail;

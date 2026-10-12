@@ -1123,7 +1123,7 @@ void CGInputControl::TurnPlayer(uint32_t time, CGUnit_C* unit) {
     }
 }
 
-// OFFSET: 0x00449560/0x140055FE0
+// OFFSET: 0x00449560/0x140056200
 void CGInputControl::PitchPlayer(uint32_t time, CGUnit_C* unit) {
     uint32_t flags = this->m_flags;
 

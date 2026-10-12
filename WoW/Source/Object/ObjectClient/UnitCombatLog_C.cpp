@@ -182,7 +182,7 @@ CombatLogEntry* s_currentEntry;
 // STATIC: 0x00DD82F4/0x140CBEA70
 CombatLogEntry* s_pendingEntries;
 
-// STATIC: 0x00DD8560
+// STATIC: 0x00DD8560/0x140CBECF0
 static char s_unknownObjectName[256];
 
 // STATIC: 0x00CF0CA4/0x140B91550

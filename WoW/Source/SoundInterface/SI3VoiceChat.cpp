@@ -11,7 +11,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: 0x00CC8E68
+// STATIC: 0x00CC8E68/0x140B69238
 static SI3LoopbackCapture s_loopbackCapture;
 
 // STATIC: 0x00E28730/0x140D102C0

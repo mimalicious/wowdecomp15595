@@ -68,12 +68,12 @@ static int32_t GetCompositionString(DWORD index, char* buffer, uint32_t bufferSi
     return 1;
 }
 
-// OFFSET: 0x0087B610
+// OFFSET: 0x0087B610/0x1405B3440
 int32_t OsIMEGetCompositionString(char* buffer, uint32_t bufferSize) {
     return GetCompositionString(GCS_COMPSTR, buffer, bufferSize);
 }
 
-// OFFSET: 0x0087B630
+// OFFSET: 0x0087B630/0x1405B3450
 int32_t OsIMEGetCompositionResult(char* buffer, uint32_t bufferSize) {
     return GetCompositionString(GCS_RESULTSTR, buffer, bufferSize);
 }

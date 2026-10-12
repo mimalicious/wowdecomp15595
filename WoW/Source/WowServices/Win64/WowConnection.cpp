@@ -335,7 +335,7 @@ int32_t WowConnection::SendRaw(uint8_t* data, int32_t size) {
     return result;
 }
 
-// OFFSET: 0x0054E7B0
+// OFFSET: 0x0054E7B0/0x1401A8C30
 void WowConnection::DoMessageReads() {
     if (!this->m_readBuffer) {
         this->m_readBuffer = static_cast<uint8_t*>(SMemAlloc(1024, __FILE__, __LINE__, 0));

@@ -3,10 +3,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/UIUtil/Camera.h"
 
-// STATIC: 0x00D38770
+// STATIC: 0x00D38770/0x140BF2300
 CameraCVarRef* CameraCVarRef::s_head;
 
-// STATIC: 0x00D3876C
+// STATIC: 0x00D3876C/0x140BF22FC
 uint32_t CameraCVarRef::s_count;
 
 // STATIC: 0x00D39180/0x140BF3720

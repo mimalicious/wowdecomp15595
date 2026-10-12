@@ -2124,7 +2124,7 @@ int32_t CGChat::OnChannelMemberCount(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: 0x008E5D90
+// OFFSET: 0x008E5D90/0x1406140E0
 void CGChat::InviteNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID requester = WOWGUID();
     NameCache* record = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false);

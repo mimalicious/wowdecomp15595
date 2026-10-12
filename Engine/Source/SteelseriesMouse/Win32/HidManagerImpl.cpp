@@ -490,7 +490,7 @@ void HidManagerImpl::SetWindow(void* window) {
     this->m_window = static_cast<HWND>(window);
 }
 
-// OFFSET: 0x007FD0B0
+// OFFSET: 0x007FD0B0/0x14050FC70
 uint32_t HidManagerImpl::GetDeviceCount() {
     return static_cast<uint32_t>(this->m_devices.size());
 }

@@ -28,7 +28,7 @@ int32_t CGLFGuildInfo::s_recruitsLastUpdate;
 // STATIC: 0x00F7640C/0x140E6C470
 int32_t CGLFGuildInfo::s_numApplicationsRemaining;
 
-// STATIC: 0x00F76410
+// STATIC: 0x00F76410/0x140E6C480
 JamLFGuildSettings CGLFGuildInfo::s_settings;
 
 // STATIC: 0x00F76824/0x140E6C898

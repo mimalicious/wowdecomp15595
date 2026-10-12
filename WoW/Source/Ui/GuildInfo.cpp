@@ -2687,7 +2687,7 @@ bool CGGuildInfo::ClientGuildNewsDeletedHandler(ClientGuildNewsDeleted* msg) {
     return true;
 }
 
-// OFFSET: 0x0093BDA0
+// OFFSET: 0x0093BDA0/0x1406A7190
 void CGGuildInfo::SetGuildKnownRecipes(int32_t skillLineID, uint8_t* data, int32_t size) {
     if (!data || size <= 0) {
         return;

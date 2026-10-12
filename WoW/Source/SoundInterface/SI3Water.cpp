@@ -20,10 +20,10 @@
 // STATIC: 0x00E28888/0x140D10480
 static int32_t* s_liquidTypeWaterSounds;
 
-// STATIC: 0x00E2888C
+// STATIC: 0x00E2888C/0x140D10488
 static SI3WaterSound* s_waterSounds;
 
-// STATIC: 0x00E28890
+// STATIC: 0x00E28890/0x140D10490
 static int32_t s_numWaterSounds;
 
 // STATIC: 0x00E28894

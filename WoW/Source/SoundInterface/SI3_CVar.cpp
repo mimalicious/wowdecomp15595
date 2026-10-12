@@ -11,10 +11,10 @@
 // STATIC: 0x00E28758/0x140D10308
 CVar* SI3::sm_pCVar_VoiceChat_EnableVoiceChat;
 
-// STATIC: 0x00E2875C
+// STATIC: 0x00E2875C/0x140D10310
 CVar* SI3::sm_pCVar_Sound_OutputQuality;
 
-// STATIC: 0x00E28760
+// STATIC: 0x00E28760/0x140D10318
 CVar* SI3::sm_pCVar_Sound_NumChannels;
 
 // STATIC: 0x00E28764/0x140D10320
@@ -80,13 +80,13 @@ CVar* SI3::sm_pCVar_Sound_SFXVolume;
 // STATIC: 0x00E287B4/0x140D103C0
 CVar* SI3::sm_pCVar_Sound_MusicVolume;
 
-// STATIC: 0x00E287B8
+// STATIC: 0x00E287B8/0x140D103C8
 CVar* SI3::sm_pCVar_Sound_AmbienceVolume;
 
 // STATIC: 0x00E287BC/0x140D103D0
 CVar* SI3::sm_pCVar_Sound_ListenerAtCharacter;
 
-// STATIC: 0x00E287C0
+// STATIC: 0x00E287C0/0x140D103D8
 CVar* SI3::sm_pCVar_Sound_EnableEmoteSounds;
 
 // STATIC: 0x00E287C4/0x140D103E0

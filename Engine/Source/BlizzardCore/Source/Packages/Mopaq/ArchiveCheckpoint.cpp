@@ -167,7 +167,7 @@ static int64_t GetTailOffset(System_SFile::ARCHIVEREC* archive) {
     return signature >= offset ? offset : signature;
 }
 
-// OFFSET: 0x007CBA90
+// OFFSET: 0x007CBA90/0x1404C7820
 bool ArchiveCheckpoint::ApplyRestorePoint(Blizzard::Mopaq::HSFILERecord* file) {
     bool result = false;
     std::string path(file->m_handle ? file->m_handle->m_name : "");
@@ -214,7 +214,7 @@ bool ArchiveCheckpoint::ApplyRestorePoint(Blizzard::Mopaq::HSFILERecord* file) {
     return result;
 }
 
-// OFFSET: 0x007CBD60
+// OFFSET: 0x007CBD60/0x1404C7D20
 bool ArchiveCheckpoint::CreateRestorePoint(const System_SFile::ARCHIVEREC* archive) {
     Blizzard::Mopaq::HSFILERecord* file = archive->m_file;
 
@@ -280,7 +280,7 @@ bool ArchiveCheckpoint::CreateRestorePoint(const System_SFile::ARCHIVEREC* archi
     return result;
 }
 
-// OFFSET: 0x007CC050
+// OFFSET: 0x007CC050/0x1404C83E0
 void ArchiveCheckpoint::DeleteRestorePoint(const char* path) {
     std::string backup(path);
     backup.append(s_extension, strlen(s_extension));

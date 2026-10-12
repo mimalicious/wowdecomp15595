@@ -26081,7 +26081,7 @@ bool ClientLfgJoinResult::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006F7560
+// OFFSET: 0x006F7560/0x1403BEEF0
 bool ClientLfgJoinResult::Read(CDataStore* msg, bool full) {
     {
         uint32_t value = 0;

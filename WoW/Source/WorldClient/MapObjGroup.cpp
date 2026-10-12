@@ -33,13 +33,13 @@ static float s_liquidSoundTileScale = 0.24f;
 // STATIC: 0x00BC9148/0x1409B7440
 static const float s_liquidSoundRings[26] = { 0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 12.0f, 14.0f, 16.0f, 18.0f, 20.0f, 24.0f, 28.0f, 32.0f, 36.0f, 40.0f, 44.0f, 48.0f, 52.0f, 56.0f, 60.0f };
 
-// STATIC: 0x00E4FE38
+// STATIC: 0x00E4FE38/0x140D39500
 uint32_t World::TriData::s_statusFlags;
 
 // STATIC: 0x00E4FE3C/0x140D39504
 uint32_t World::TriData::s_nBatches;
 
-// STATIC: 0x00E4FE40
+// STATIC: 0x00E4FE40/0x140D39508
 uint32_t World::TriData::s_faceIndexCursor;
 
 // STATIC: 0x00E4FE44/0x140D3950C
@@ -66,10 +66,10 @@ uint16_t BspQuery::s_testFaces[0x2000];
 // STATIC: 0x00EAF230/0x140D9AF80
 uint16_t BspQuery::s_hitFaces[0x2000];
 
-// STATIC: 0x00EB3234
+// STATIC: 0x00EB3234/0x140D9EF84
 uint32_t BspQuery::s_testFaceSub;
 
-// STATIC: 0x00EB3230
+// STATIC: 0x00EB3230/0x140D9EF80
 uint32_t BspQuery::s_hitFaceSub;
 
 // STATIC: 0x00D03F38/0x140BB4130
@@ -895,7 +895,7 @@ static bool QueryCull(const CAaBox& box, const C3Vector& v0, const C3Vector& v1,
     return false;
 }
 
-// OFFSET: [0x00791410<CAaBox>, 0x0078E410<CFrustum>]
+// OFFSET: [0x00791410/0x1404823D0<CAaBox>, 0x0078E410<CFrustum>]
 template <class T>
 void BspQuery_Volume<T>::operator()(uint16_t face) {
     if (this->m_faces[face].m_flags & static_cast<uint8_t>(this->m_faceIgnoreFlags)) {

@@ -37,7 +37,7 @@ uint32_t CGMerchantInfo::m_numBuybackItems;
 // STATIC: 0x00F48170/0x140E3C240
 uint32_t CGMerchantInfo::m_pendingItemStats;
 
-// OFFSET: 0x00464680/0x140634FC0
+// OFFSET: 0x00464680/0x140078050
 VendorItem* CGMerchantInfo::GetItem(int32_t index) {
     if (index >= 0 && index < CGMerchantInfo::m_numMerchantItems && CGMerchantInfo::m_merchant) {
         return &CGMerchantInfo::m_items[index];

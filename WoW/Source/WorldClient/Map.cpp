@@ -34,10 +34,10 @@ TSExplicitList<CMapAreaLow, offsetof(CMapAreaLow, m_renderLink)> CMap::s_mapArea
 // STATIC: 0x00D00DA4/0x140BB0728
 TSExplicitList<CMapRenderChunk, offsetof(CMapRenderChunk, m_link)> CMap::s_mapRenderChunkUpdateList;
 
-// STATIC: 0x00D00DB0
+// STATIC: 0x00D00DB0/0x140BB0740
 TSExplicitList<CChunkLiquid, offsetof(CChunkLiquid, m_updateLink)> CMap::s_mapChunkLiquidUpdateList;
 
-// STATIC: 0x00D00DC8
+// STATIC: 0x00D00DC8/0x140BB0770
 TSExplicitList<CMapDoodadDef, offsetof(CMapDoodadDef, m_updateLink)> CMap::s_doodadDefLoadingList;
 
 // STATIC: 0x00D00DD4/0x140BB0788

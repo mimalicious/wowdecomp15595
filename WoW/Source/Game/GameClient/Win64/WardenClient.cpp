@@ -8,7 +8,7 @@
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00DC0C7C
+// STATIC: 0x00DC0C7C/0x140CA68A0
 static uint32_t s_lastProcessTime;
 
 static SCritSect s_wardenCritSect;

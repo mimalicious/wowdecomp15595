@@ -69,7 +69,7 @@ DayNight::DNStars DayNight::g_stars;
 // STATIC: 0x00E423DC/0x140D2B0E8
 CImVector DayNight::g_SaveFogColor;
 
-// STATIC: 0x00E423E0
+// STATIC: 0x00E423E0/0x140D2B0F0
 DayNight::DNInfo DayNight::g_dnInfo;
 
 // STATIC: 0x00E4279C/0x140D2B0EC

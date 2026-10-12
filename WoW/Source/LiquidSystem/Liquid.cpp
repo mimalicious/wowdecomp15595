@@ -46,10 +46,10 @@ static int32_t s_needDynDisplMap;
 // STATIC: 0x00E4EB00/0x140D37EB8
 static float s_underWaterFogStart;
 
-// STATIC: 0x00E4EB04
+// STATIC: 0x00E4EB04/0x140D37EBC
 static float s_underWaterFogEnd;
 
-// STATIC: 0x00E4EB08
+// STATIC: 0x00E4EB08/0x140D37EC0
 static float s_underWaterFogDensity;
 
 // STATIC: 0x00E4EB18/0x140D37ED4
@@ -58,10 +58,10 @@ static CImVector s_underWaterFogColor;
 // STATIC: 0x00E4EB0C/0x140D37EC8
 static float s_aboveWaterFogStart;
 
-// STATIC: 0x00E4EB10
+// STATIC: 0x00E4EB10/0x140D37ECC
 static float s_aboveWaterFogEnd;
 
-// STATIC: 0x00E4EB14
+// STATIC: 0x00E4EB14/0x140D37ED0
 static float s_aboveWaterFogDensity;
 
 // STATIC: 0x00E4EB1C/0x140D37ED8

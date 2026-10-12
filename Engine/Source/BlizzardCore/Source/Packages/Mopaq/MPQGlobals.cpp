@@ -85,14 +85,14 @@ System_MPQGlobals::WorkerPool::WorkerPool() {
     this->m_maxWorkers = System_Hardware::s_processorFeatures.m_coreCount;
 }
 
-// OFFSET: 0x007E4050
+// OFFSET: 0x007E4050/0x1404EBFA0
 System_MPQGlobals::WorkerPool::~WorkerPool() {
     for (std::vector<Worker*>::iterator it = this->m_workers.begin(); it != this->m_workers.end(); ++it) {
         delete *it;
     }
 }
 
-// OFFSET: 0x007E0E30
+// OFFSET: 0x007E0E30/0x1404E6EA0
 System_MPQGlobals::Worker::~Worker() {
     this->m_proc = NULL;
     Blizzard::Lock::EventSet(this->m_start.m_event);

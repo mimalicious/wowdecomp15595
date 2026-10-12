@@ -33,7 +33,7 @@ static char s_peerId[21];
 // STATIC: 0x00EBB0D0/0x140DABE18
 static char s_key[9];
 
-// OFFSET: 0x007A4D90
+// OFFSET: 0x007A4D90/0x140499990
 void Tracker::TrackerHttpDataDownloadCallBack::Completed(Blizzard::URL::DownloadCallback::Status status) {
     Blizzard::Lock::EventSet(this->m_event);
 }
@@ -122,7 +122,7 @@ Tracker::TrackerHttpDataDownloadCallBack::TrackerHttpDataDownloadCallBack() {
     Blizzard::Lock::EventCreate(this->m_event);
 }
 
-// OFFSET: 0x007FD0B0
+// OFFSET: 0x007FD0B0/0x14050FC70
 int32_t Tracker::TrackerHttpDataDownloadCallBack::GetTimeout() {
     return this->m_timeout;
 }
@@ -137,12 +137,12 @@ bool Tracker::TrackerHttpDataDownloadCallBack::ShouldBlock() {
     return true;
 }
 
-// OFFSET: 0x007FD0D0
+// OFFSET: 0x007FD0D0/0x14090EB10
 void Tracker::TrackerHttpDataDownloadCallBack::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
 }
 
-// OFFSET: [0x007FD0E0, 0x007FD150]
+// OFFSET: [0x007FD0E0/0x14050FC90, 0x007FD150]
 Tracker::TrackerHttpDataDownloadCallBack::~TrackerHttpDataDownloadCallBack() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }

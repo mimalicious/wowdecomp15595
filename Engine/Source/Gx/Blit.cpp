@@ -840,7 +840,7 @@ static void InitBlit() {
     s_blits[BlitFormat_D24X8][BlitFormat_D24X8][BlitAlpha_0] = Blit_generic32_generic32;
 }
 
-// OFFSET: 0x0063C270/0x1402D18D0
+// OFFSET: 0x0063C270/0x1402D4DE0
 int32_t Blit(const C2iVector& size, BlitAlpha alpha, const void* in, uint32_t inStride, BlitFormat inFormat, void* out, uint32_t outStride, BlitFormat outFormat) {
     // STATIC: 0x00E29FBC
     static int32_t initBlit;

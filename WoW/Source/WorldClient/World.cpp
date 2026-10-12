@@ -125,7 +125,7 @@ CImVector World::shadowModColor[64];
 // STATIC: 0x00E74060/0x140D5DD90
 CTexture* World::shadowModTexture;
 
-// STATIC: 0x00E74170
+// STATIC: 0x00E74170/0x140D5DEA0
 uint32_t World::detailDoodadAlphaRef;
 
 // STATIC: 0x00D00C80/0x140D5DEA8
@@ -176,7 +176,7 @@ int32_t World::lodMin = 2;
 // STATIC: 0x00E741C0/0x140D5DEF0
 C3Vector World::gbPosition;
 
-// STATIC: 0x00E741CC
+// STATIC: 0x00E741CC/0x140D5DF00
 C3Vector World::gbPositionOld;
 
 // STATIC: 0x00E74188/0x140D5DEB8
@@ -191,10 +191,10 @@ int32_t World::gbAreaIndex[2];
 // STATIC: 0x00E74220/0x140D5DF60
 CiRect World::chunkRect;
 
-// STATIC: 0x00E74230
+// STATIC: 0x00E74230/0x140D5DF70
 CiRect World::gbChunkRect;
 
-// STATIC: 0x00E74268
+// STATIC: 0x00E74268/0x140D5DFA8
 CiRect World::gbChunkRectOld;
 
 // STATIC: 0x00E74248/0x140D5DF88
@@ -355,7 +355,7 @@ int32_t World::QueryMapObjIDs(uintptr_t object, uint32_t& wmoId, uint32_t& nameS
     return reinterpret_cast<CMapEntity*>(object)->QueryMapObjIDs(wmoId, nameSet, groupId);
 }
 
-// OFFSET: 0x00721E60
+// OFFSET: 0x00721E60/0x1403F83B0
 int32_t World::QueryMapObjMatrix(uintptr_t object, C44Matrix* matrix, C44Matrix* invMatrix) {
     if (!object) {
         return 0;

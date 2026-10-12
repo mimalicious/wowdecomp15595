@@ -198,7 +198,7 @@ void CMap::FreeChunkLiquid(CChunkLiquid* liquid) {
     CMap::s_chunkLiquidHeap->Delete(liquid, "", 0);
 }
 
-// OFFSET: 0x00776660
+// OFFSET: 0x00776660/0x140460C20
 CMapChunkInfo* CMap::AllocChunkInfo() {
     return CMap::s_chunkInfoHeap->New("", 0);
 }

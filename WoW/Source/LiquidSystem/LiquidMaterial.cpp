@@ -680,7 +680,7 @@ void Liquid::SetShaderLighting(C4Vector* vsConstants, C4Vector* psConstants, con
     psConstants[0] = C4Vector(lighting.m_fogColor.x, lighting.m_fogColor.y, lighting.m_fogColor.z, 1.0f);
 }
 
-// OFFSET: 0x0071BCE0/0x1403EFC90
+// OFFSET: 0x0071BCE0/0x1403F0A30
 void Liquid::SetScreenConstants(C4Vector* constants) {
     CRect rect;
     rect.minY = 0.0f;

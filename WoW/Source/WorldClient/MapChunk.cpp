@@ -1815,7 +1815,7 @@ bool CMapChunk::Intersect(int32_t subX, int32_t subY, C3Ray& ray, C4Plane& plane
     return hit;
 }
 
-// OFFSET: 0x0078A4D0
+// OFFSET: 0x0078A4D0/0x14047A700
 void CMapChunk::Intersect(const CiRect& rect, CAaBox& box, World::FacetData& facets) {
     uint32_t start = rect.minY + rect.minX + 16 * rect.minY;
     const float* heights = &this->m_vertices[start];

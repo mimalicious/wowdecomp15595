@@ -16,7 +16,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 
 namespace Event {
-    // STATIC: 0x00D0AC94
+    // STATIC: 0x00D0AC94/0x140BBCE38
     volatile long s_threadListContention = -1;
 
     TSList<EvtThread, TSGetLink<EvtThread> > s_threadList;
@@ -27,12 +27,12 @@ namespace Event {
     // STATIC: 0x00EC74C0
     uint32_t s_mainThread;
 
-    // STATIC: 0x00EC74C4
+    // STATIC: 0x00EC74C4/0x140DB9A60
     int32_t s_originalThreadPriority;
 
     volatile long s_interactiveCount;
 
-    // STATIC: 0x00EC74CC
+    // STATIC: 0x00EC74CC/0x140DB9A68
     uint32_t s_threadSlotCount;
 
     // STATIC: 0x00EC74D0
@@ -44,10 +44,10 @@ namespace Event {
     // STATIC: 0x00EC74D8
     int32_t s_netServer;
 
-    // STATIC: 0x00EC74E0
+    // STATIC: 0x00EC74E0/0x140DB9A88
     SCritSect s_threadListCritsect;
 
-    // STATIC: 0x00EC7508
+    // STATIC: 0x00EC7508/0x140DB9AB0
     TSGrowableArray<SThread*> s_schedulerThreads;
 
     // STATIC: 0x00EC7518

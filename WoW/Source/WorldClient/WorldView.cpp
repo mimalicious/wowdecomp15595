@@ -68,7 +68,7 @@ float CWorldView::s_fadeInnerSqr[5];
 // STATIC: 0x00D01934
 static float s_fadeOuter[5];
 
-// STATIC: 0x00D01948
+// STATIC: 0x00D01948/0x140BB14D0
 static float s_fadeOuterSqr[5];
 
 // STATIC: 0x00D01964/0x140BB14E4
@@ -1536,7 +1536,7 @@ void CWorldView::GatherMapObjDefGroupLiquids(CMapObjDef* mapObjDef, CMapObjDefGr
     }
 }
 
-// OFFSET: 0x007580D0
+// OFFSET: 0x007580D0/0x140439F00
 void CWorldView::SetupMapObjDefCull(CMapObjDef* mapObjDef) {
     this->m_cullMapObjDef = mapObjDef;
 

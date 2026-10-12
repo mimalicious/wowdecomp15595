@@ -31,13 +31,13 @@ uint32_t CGTalentInfo::m_numTalentGroups;
 // STATIC: 0x00F4B5F0/0x140E3F9E0
 int32_t CGTalentInfo::m_petTalentTab;
 
-// STATIC: 0x00F4B608
+// STATIC: 0x00F4B608/0x140E3F9F8
 TSFixedArray<TalentTabInfo*> CGTalentInfo::m_tabs;
 
 // STATIC: 0x00F4B614/0x140E3FB34
 TSFixedArray<TalentTabInfo*> CGTalentInfo::m_petTabs;
 
-// STATIC: 0x00F4B620
+// STATIC: 0x00F4B620/0x140E3FA10
 CGTalentGroup_C CGTalentInfo::m_talentGroups[2];
 
 // STATIC: 0x00F4B6F8

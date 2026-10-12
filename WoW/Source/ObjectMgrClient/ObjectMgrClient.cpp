@@ -42,7 +42,7 @@ static __declspec(thread) ObjectMgr* s_curMgr;
 // STATIC: 0x00D73658/0x140C2EB80
 static ObjectMgr* s_savedObjMgr;
 
-// STATIC: 0x00D73660
+// STATIC: 0x00D73660/0x140C2EB90
 static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> > s_typeMirrorHandlers[NUM_CLIENT_OBJECT_TYPES][(sizeof(CGObjectData) + sizeof(CGUnitData) + sizeof(CGPlayerLocalData)) / sizeof(uint32_t)];
 
 // STATIC: 0x00D73634/0x140C2EB5C
@@ -764,7 +764,7 @@ static uint32_t ObjDescriptorToMirrorOffset(OBJECT_TYPE_ID typeId, int32_t local
     return (offset & 3) + 4 * CGObject::GetSavedIndexFromDataIndex(offset >> 2);
 }
 
-// OFFSET: 0x0048DCE0
+// OFFSET: 0x0048DCE0/0x1400B1D20
 static void SetupObjectStorage(CGObject_C* object, OBJECT_TYPE_ID typeId, WOWGUID guid) {
     uint8_t* base = reinterpret_cast<uint8_t*>(object);
 

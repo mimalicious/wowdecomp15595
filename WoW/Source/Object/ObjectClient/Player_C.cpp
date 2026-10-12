@@ -1216,7 +1216,7 @@ int32_t CGPlayer_C::CheckBinderDistance() {
     return dy * dy + dx * dx + dz * dz <= range * range;
 }
 
-// OFFSET: 0x00557810
+// OFFSET: 0x00557810/0x1401B46E0
 void __stdcall CGPlayer_C::TalkToBanker(const WOWGUID& guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_BANKER_ACTIVATE));
@@ -1738,7 +1738,7 @@ void __stdcall CGPlayer_C::RemoveTempEnchantment(int32_t slot) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x0055D780/0x1407D1010
+// OFFSET: 0x0055D780/0x1401BABA0
 void __stdcall CGPlayer_C::SetPartyAssignment(uint8_t assignment, WOWGUID guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(MSG_PARTY_ASSIGNMENT));
@@ -6581,7 +6581,7 @@ static int32_t ReportQuestKillCredit(const uint32_t* credit, int32_t questId) {
     return 1;
 }
 
-// OFFSET: 0x005558F0
+// OFFSET: 0x005558F0/0x1401B21D0
 static void QuestKillCreditCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     uint32_t* credit = static_cast<uint32_t*>(param);
 
@@ -7484,7 +7484,7 @@ int32_t GetModalNextSpell() {
     return CGSpellBook::m_autoRangedSpell;
 }
 
-// OFFSET: 0x005638C0/0x140229A50
+// OFFSET: 0x005638C0/0x1401C1670
 int32_t CGPlayer_C::IsXRayVisionActive() {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -8740,7 +8740,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverChooseReward(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: 0x005653D0
+// OFFSET: 0x005653D0/0x1401C34B0
 static void QuestAcceptCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -8767,7 +8767,7 @@ static void QuestAcceptCallback(int32_t id, const WOWGUID& guid, void* param, bo
     FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_ACCEPTED, "%d", CGQuestLog::GetQuestIndex(quest->m_id));
 }
 
-// OFFSET: 0x005654D0
+// OFFSET: 0x005654D0/0x1401C35C0
 int32_t OnUpdateQuest(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -10030,7 +10030,7 @@ void CGPlayer_C::ClearLootingObject() {
     this->UpdateLootAnimKit(0);
 }
 
-// OFFSET: 0x0055B920
+// OFFSET: 0x0055B920/0x1401B88B0
 int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint8_t lootType;

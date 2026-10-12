@@ -63,7 +63,7 @@ CGxPool* CParticleEmitter2::s_indexPool;
 // STATIC: 0x01008B4C
 float CParticleEmitter2::s_viewDist;
 
-// STATIC: 0x01008B50
+// STATIC: 0x01008B50/0x140EE0510
 float CParticleEmitter2::s_rndTable[128];
 
 // STATIC: 0x01008D50
@@ -156,7 +156,7 @@ static C2Vector __stdcall PartTrackSample(const M2PartTrack<C2Vector>& track, fl
     return result;
 }
 
-// OFFSET: 0x00B19B80
+// OFFSET: 0x00B19B80/0x1408E0420
 static float __stdcall PartTrackSample(const M2PartTrack<fixed16>& track, float t) {
     if (track.m_values.m_count == 1) {
         return track.m_values[0].m_value * 0.000030518509f;
@@ -169,7 +169,7 @@ static float __stdcall PartTrackSample(const M2PartTrack<fixed16>& track, float 
     return blend * (0.000030518509f * track.m_values[key1].m_value - track.m_values[key0].m_value * 0.000030518509f) + track.m_values[key0].m_value * 0.000030518509f;
 }
 
-// OFFSET: 0x00B19C00
+// OFFSET: 0x00B19C00/0x1408E04D0
 static int32_t __stdcall PartTrackSample(const M2PartTrack<uint16_t>& track, float t) {
     if (track.m_values.m_count == 1) {
         return track.m_values[0];
@@ -627,7 +627,7 @@ int32_t CParticleEmitter2::MoveParticle(CParticle2& particle, float deltaTime) {
     return 1;
 }
 
-// OFFSET: 0x00B14D50
+// OFFSET: 0x00B14D50/0x1408DABE0
 void CParticleEmitter2::InterpolateAllTracksSimple(const CParticle2& particle, TrackValues* values) {
     int32_t life = static_cast<int32_t>(static_cast<int64_t>(this->m_params.m_life * 65536.0f));
     int32_t age = static_cast<int32_t>(static_cast<int64_t>(particle.m_age * 65536.0f));
@@ -722,7 +722,7 @@ void CParticleEmitter2::InterpolateAllTracks(const CParticle2& particle, TrackVa
     }
 }
 
-// OFFSET: 0x00B14F20
+// OFFSET: 0x00B14F20/0x1408DAD70
 void CParticleEmitter2::RandomizeSpin(const CParticle2& particle, float* spin, float* spinRate) {
     if (0.0f == this->m_params.m_initialSpinVariation && 0.0f == this->m_params.m_spinVariation) {
         *spin = this->m_params.m_initialSpin;
@@ -838,7 +838,7 @@ void CParticleEmitter2::RenderParticleVertices(CGxBuf* buf, uint32_t vertexCount
     g_theGxDevicePtr->Draw(batch);
 }
 
-// OFFSET: 0x00B1A480
+// OFFSET: 0x00B1A480/0x1408E0DD0
 int32_t CParticleEmitter2::RenderParticle(CParticle2_Model& particle, const C44Matrix* frameOfReference) {
     uint32_t twinkle = 0;
 
@@ -1476,7 +1476,7 @@ int32_t CParticleEmitter2::MoveParticle(CParticle2_Model& particle, float deltaT
     return this->MoveParticle(static_cast<CParticle2&>(particle), deltaTime);
 }
 
-// OFFSET: [0x00B15AE0, 0x00B16940, 0x00B177A0, 0x00B18510, 0x00B1B810, 0x00B1C670, 0x00B1D4D0, 0x00B1E240, 0x00B20720, 0x00B21620, 0x00B22520, 0x00B23330]
+// OFFSET: [0x00B15AE0/0x1408DBCF0, 0x00B16940/0x1408DCBF0, 0x00B177A0/0x1408DDAF0, 0x00B18510/0x1408DE960, 0x00B1B810/0x1408E29E0, 0x00B1C670/0x1408E38E0, 0x00B1D4D0/0x1408E47E0, 0x00B1E240/0x1408E5650, 0x00B20720/0x1408E8290, 0x00B21620/0x1408E9220, 0x00B22520/0x1408EA1B0, 0x00B23330/0x1408EB040]
 template <class V, class P, bool simple>
 void CParticleEmitter2::BuildVertices(V* vertices, uint32_t count) {
     this->m_renderedParticles = 0;
@@ -2111,7 +2111,7 @@ void CParticleEmitter2::SyncAllocation(uint32_t count) {
     }
 }
 
-// OFFSET: [0x00B1FF80, 0x00B20010]
+// OFFSET: [0x00B1FF80/0x1408E76E0, 0x00B20010/0x1408E7810]
 template <class P>
 void CParticleEmitter2::SortParticles() {
     for (uint32_t i = 0; i < this->m_liveList.Count(); i++) {
@@ -2123,7 +2123,7 @@ void CParticleEmitter2::SortParticles() {
     }
 }
 
-// OFFSET: [0x00B24B50, 0x00B24D70]
+// OFFSET: [0x00B24B50/0x1408ECA20, 0x00B24D70/0x1408ECC60]
 template <class V>
 void CParticleEmitter2::BuildParticleVertices(V* vertices, uint32_t count, const C44Matrix& transform) {
     if (this->m_flags & 0x20) {

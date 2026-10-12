@@ -25,7 +25,7 @@
 #include "WoW/Source/Object/ObjectClient/AuraData.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: 0x00D39228
+// STATIC: 0x00D39228/0x140BF37E0
 const char* g_scriptEvents[NUM_SCRIPT_EVENTS];
 
 // STATIC: 0x00D39F38/0x140BF5204

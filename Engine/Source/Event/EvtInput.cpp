@@ -11,16 +11,16 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 
 namespace Input {
-    // STATIC: 0x00EC7520
+    // STATIC: 0x00EC7520/0x140DB9AD8
     MOUSEMODE s_mouseMode;
 
     // STATIC: 0x00EC7524
     uint32_t s_mouseHoldButton;
 
-    // STATIC: 0x00EC7528
+    // STATIC: 0x00EC7528/0x140DB9AE0
     uint32_t s_metaKeyState;
 
-    // STATIC: 0x00EC752C
+    // STATIC: 0x00EC752C/0x140DB9AE4
     uint32_t s_buttonState;
 
     // STATIC: 0x00EC7538

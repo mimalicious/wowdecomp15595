@@ -16,7 +16,7 @@ Battlenet::CreepTendril::CreepTeardownFunc Battlenet::CreepTendril::s_creepTeard
 // STATIC: 0x00E4D400/0x140D361F8
 Battlenet::CreepTendril::CreepCreateFunc Battlenet::CreepTendril::s_creepCreate;
 
-// STATIC: 0x00E4D404
+// STATIC: 0x00E4D404/0x140D36200
 Battlenet::CreepTendril::CreepDestroyFunc Battlenet::CreepTendril::s_creepDestroy;
 
 // STATIC: 0x00E4D408/0x140D36208

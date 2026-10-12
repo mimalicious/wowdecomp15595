@@ -143,7 +143,7 @@ uint64_t CGAuctionHouse::m_lastBidAmount;
 // STATIC: 0x00F49370/0x140E3D480
 AuctionSortCriteria CGAuctionHouse::m_bidSortCriteria[12];
 
-// STATIC: 0x00F49400
+// STATIC: 0x00F49400/0x140E3D510
 AuctionSortCriteria CGAuctionHouse::m_ownedSortCriteria[12];
 
 // STATIC: 0x00F49490/0x140E3D5A0

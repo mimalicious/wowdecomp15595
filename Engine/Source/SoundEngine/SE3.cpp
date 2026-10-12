@@ -110,7 +110,7 @@ static uint32_t s_listenerChunkX;
 // STATIC: 0x00E4DF74/0x140D37278
 static uint32_t s_listenerChunkY;
 
-// STATIC: 0x00E4DF78
+// STATIC: 0x00E4DF78/0x140D37280
 static void (*_fpEmitterManagerPosToSoundChunkCoordsCallback)(const C3Vector&, uint32_t*, uint32_t*);
 
 // STATIC: 0x00E4DF7C/0x140D37288
