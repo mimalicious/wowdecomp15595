@@ -83,7 +83,7 @@ void *FMOD_OS_Memory_Alloc(int size, FMOD_MEMORY_TYPE type)
 
 	[SEE_ALSO]
 */
-// INLINED
+// OFFSET: 0x00A90D30
 void *FMOD_OS_Memory_Realloc(void *ptr, int size, FMOD_MEMORY_TYPE type)
 {
     return realloc(ptr, size);

@@ -71,7 +71,7 @@ void FMOD_res0_free_info(vorbis_info_residue *i){
   }
 }
 
-// INLINED
+// OFFSET: 0x00B48080
 void FMOD_res0_free_look(vorbis_look_residue *i){
   int j;
   if(i){
@@ -200,7 +200,7 @@ void FMOD_res0_pack(vorbis_info_residue *vr,oggpack_buffer *opb){
 #endif
 
 /* vorbis_info is for range checking */
-// INLINED
+// OFFSET: 0x00B48140
 vorbis_info_residue *FMOD_res0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   int j,acc=0;
   vorbis_info_residue0 *info=_ogg_calloc(1,sizeof(*info));

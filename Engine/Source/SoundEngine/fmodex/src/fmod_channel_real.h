@@ -102,7 +102,7 @@ namespace FMOD
         virtual FMOD_RESULT  set2DFreqVolumePanFor3D();
         virtual bool         isStream             () { return false; }
         virtual FMOD_RESULT  moveChannelGroup     (ChannelGroupI *oldchannelgroup, ChannelGroupI *newchannelgroup);
-        // INLINED
+        // OFFSET: 0x00AEACD0
         virtual ~ChannelReal() { }
         virtual FMOD_RESULT  close                ();
         virtual FMOD_RESULT  alloc                ();

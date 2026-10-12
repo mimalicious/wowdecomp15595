@@ -2098,7 +2098,7 @@ static float *vwin[8] = {
 /*
     Added by brett.
 */
-// INLINED
+// OFFSET: 0x00B43A80
 void _FMOD_vorbis_window_init()
 {
     int i;

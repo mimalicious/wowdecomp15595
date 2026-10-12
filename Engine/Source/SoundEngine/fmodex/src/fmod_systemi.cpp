@@ -6174,7 +6174,7 @@ FMOD_RESULT SystemI::set3DRolloffCallback(FMOD_3D_ROLLOFFCALLBACK callback)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A82010
 FMOD_RESULT SystemI::set3DSpeakerPosition(FMOD_SPEAKER speaker, float x, float y, bool active)
 {
     if (speaker < 0 || speaker >= FMOD_SPEAKER_MAX)

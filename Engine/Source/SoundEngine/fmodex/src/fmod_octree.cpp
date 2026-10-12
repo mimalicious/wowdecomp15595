@@ -1585,7 +1585,7 @@ void Octree::addListItem(OctreeNode* list, OctreeNode* node)
     ASSERT(node->nextItem != node);
 }
 
-// INLINED
+// OFFSET: 0x00AD3710
 void Octree::testLine(OctreeNode* node, FMOD_VECTOR a, FMOD_VECTOR b, RecursionData* recursionData)
 {
     float t;

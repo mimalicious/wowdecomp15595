@@ -1116,7 +1116,7 @@ FMOD_RESULT OutputWASAPI::recordGetDriverCaps(int id, FMOD_CAPS *caps, int *minf
 }
 
 
-// INLINED
+// OFFSET: 0x00AE7560
 FMOD_RESULT OutputWASAPI::recordStart(int id, Sound *sound, bool loop)
 {
     FMOD_RESULT             result;

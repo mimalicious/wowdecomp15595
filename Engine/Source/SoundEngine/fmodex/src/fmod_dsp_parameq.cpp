@@ -763,7 +763,7 @@ FMOD_RESULT F_CALLBACK DSPParamEq::readCallback(FMOD_DSP_STATE *dsp, float *inbu
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A99F70
 FMOD_RESULT F_CALLBACK DSPParamEq::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPParamEq *parameq = (DSPParamEq *)dsp;

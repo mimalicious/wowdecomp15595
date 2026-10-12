@@ -127,7 +127,7 @@ static int icomp(const void *a,const void *b){
   return(**(int **)a-**(int **)b);
 }
 
-// INLINED
+// OFFSET: 0x00B489A0
 static vorbis_info_floor *FMOD_floor1_unpack (vorbis_info *vi,oggpack_buffer *opb){
   codec_setup_info     *ci=vi->codec_setup;
   int j,k,count=0,maxclass=-1,rangebits;

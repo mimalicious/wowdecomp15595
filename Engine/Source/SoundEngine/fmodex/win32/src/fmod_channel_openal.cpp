@@ -1892,6 +1892,7 @@ FMOD_RESULT ChannelOpenAL::set3DOcclusion(float directOcclusion, float reverbOcc
 }
 
 
+// OFFSET: 0x00AF6CB0
 /*
 [
 	[DESCRIPTION]
@@ -1919,6 +1920,7 @@ FMOD_RESULT ChannelOpenAL::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTI
 }
 
 
+// OFFSET: 0x00AF6CB0
 /*
 [
 	[DESCRIPTION]
