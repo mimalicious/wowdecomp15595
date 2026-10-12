@@ -420,7 +420,7 @@ bool HidDevice::EnumerateInterface(HDEVINFO deviceInfoSet, PSP_DEVINFO_DATA devi
 HidManagerImpl::HidManagerImpl() : unk_0010(0), unk_0014(0), m_window(NULL), m_inputDevInst(0), m_outputDevInst(0) {
 }
 
-// INLINED
+// OFFSET: [0x00881130, 0x00881220]
 HidManagerImpl::~HidManagerImpl() {
     this->m_devices.clear();
 }
