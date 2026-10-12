@@ -416,7 +416,7 @@ SMutex::SMutex() {
     this->Create(0, NULL);
 }
 
-// INLINED
+// OFFSET: [0x004BB780, 0x004BB8B0]
 template <class T>
 void TDebugLock<T>::LockEntries() {
     if (s_critsect.Enter()) {
@@ -430,7 +430,7 @@ void TDebugLock<T>::LockEntries() {
     }
 }
 
-// INLINED
+// OFFSET: [0x004BB7D0, 0x004BB900]
 template <class T>
 void TDebugLock<T>::DumpEntries(CDebugLock* lock) {
     CDebugLockEntry* entry = NULL;

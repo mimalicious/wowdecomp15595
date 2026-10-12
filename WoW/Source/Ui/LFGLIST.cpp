@@ -27,7 +27,7 @@ void LFGLIST::AddPlayer(LFGListPlayer* player) {
     }
 }
 
-// INLINED
+// OFFSET: 0x00984310
 void LFGLIST::RemovePlayer(LFGListPlayer* player) {
     int32_t index = player->m_index;
 
@@ -48,7 +48,7 @@ void LFGLIST::RemovePlayer(LFGListPlayer* player) {
     }
 }
 
-// INLINED
+// OFFSET: 0x009843C0
 void LFGLIST::RemoveParty(LFGListParty* party) {
     int32_t index = party->m_index;
 

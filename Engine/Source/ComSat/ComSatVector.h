@@ -81,7 +81,7 @@ bool ComSat::Vector<T>::Reserve(uint32_t size) {
     return true;
 }
 
-// INLINED
+// OFFSET: [0x00A34430<unsigned __int64>, 0x00A34470<ComSat::Session*>]
 template <class T>
 T* ComSat::Vector<T>::PushBack(const T& value) {
     if (this->m_used == this->m_capacity) {
@@ -92,7 +92,7 @@ T* ComSat::Vector<T>::PushBack(const T& value) {
     return element;
 }
 
-// INLINED
+// OFFSET: [0x00A34060<unsigned __int64>, 0x00A39880<ComSat::Network::Session::LocalTalker>, 0x00A398D0<ComSat::Network::Endpoint*>]
 template <class T>
 bool ComSat::Vector<T>::Remove(const T& value) {
     uint32_t index;

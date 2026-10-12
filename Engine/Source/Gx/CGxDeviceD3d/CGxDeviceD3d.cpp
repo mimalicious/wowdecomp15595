@@ -3521,7 +3521,7 @@ LPDIRECT3DSURFACE9 CGxDeviceD3d::ITexGetSurface(CGxTex* texId, uint32_t level, u
     return surface;
 }
 
-// INLINED
+// OFFSET: 0x0084D660
 CGxDeviceD3d::~CGxDeviceD3d() {
 }
 

@@ -133,7 +133,7 @@ bool ComSat::Sound::CODECIPMR6000::LocalPlayer::DecompressEncodedData(int32_t ch
     return result == 0;
 }
 
-// INLINED
+// OFFSET: 0x00A3B6F0
 ComSat::Sound::CODEC::~CODEC() {
 }
 

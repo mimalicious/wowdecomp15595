@@ -400,7 +400,7 @@ void Grunt::ClientLink::Call() {
     this->m_lock.Leave();
 }
 
-// INLINED
+// OFFSET: 0x00B06A90
 Grunt::ClientLink::~ClientLink() {
     this->m_timer.Shutdown();
     this->Shutdown();

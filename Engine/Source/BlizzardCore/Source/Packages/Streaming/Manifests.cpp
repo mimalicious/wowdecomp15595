@@ -410,7 +410,7 @@ std::string Blizzard::Streaming::Manifests::FileItem::GetRemotePath() {
     return this->m_path + this->m_fileName;
 }
 
-// OFFSET: [0x007D5A30/0x1404D66A0]
+// OFFSET: [0x007D5A30/0x1404D66A0, 0x007D0760]
 Blizzard::Streaming::Manifests::ServerItem::~ServerItem() {
 }
 

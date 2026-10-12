@@ -602,7 +602,7 @@ void OsNet::SLTCPCONN::Selected(TCPNET* net, SELECTSET selectSet) {
     }
 }
 
-// INLINED
+// OFFSET: 0x0087D5B0
 OsNet::NETCONN::~NETCONN() {
 }
 

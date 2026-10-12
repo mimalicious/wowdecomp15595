@@ -173,7 +173,7 @@ BSN::AsciiString<N>::AsciiString(const char* source) {
     this->m_length = BSN::AsciiStringCopy(this->m_data, source, N);
 }
 
-// INLINED
+// OFFSET: [0x00627B10<255>]
 template <uint32_t N>
 BSN::AsciiString<N>& BSN::AsciiString<N>::operator=(const char* source) {
     this->m_length = BSN::AsciiStringCopy(this->m_data, source, N);
@@ -210,7 +210,7 @@ BSN::String<N>& BSN::String<N>::operator+=(const char* source) {
     return *this;
 }
 
-// INLINED
+// OFFSET: [0x006289D0<Battlenet::Authentication::ModuleParam, 4>]
 template <class T, uint32_t N>
 BSN::Array<T, N>::Array() {
     this->m_count = 0;
@@ -339,7 +339,7 @@ const T& BSN::Choice::Get() const {
     return *reinterpret_cast<const T*>(this + 1);
 }
 
-// OFFSET: [0x006287F0<1, Battlenet::Event::Creep::Invoke::Authentication::Logon>, 0x00628810<0, Battlenet::Event::Creep::Invoke::DarkPortal::Select>, 0x00628830<6, Battlenet::Event::Creep::Invoke::WoW>]
+// OFFSET: [0x006287F0<1, Battlenet::Event::Creep::Invoke::Authentication::Logon>, 0x00628810<0, Battlenet::Event::Creep::Invoke::DarkPortal::Select>, 0x00628830<6, Battlenet::Event::Creep::Invoke::WoW>, 0x00628C10<0, Battlenet::Authentication::Request>, 0x006296F0<2, Battlenet::Authentication::ModuleMessage>]
 template <int32_t TAG, class T>
 T* BSN::Choice::Set() {
     this->m_tag = TAG;

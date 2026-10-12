@@ -496,7 +496,7 @@ PetNameCache* DBCache<PetNameCache, int32_t, HASHKEY_INT>::GetRecordByName(const
     return entry ? entry->m_record : NULL;
 }
 
-// INLINED
+// OFFSET: 0x004A0390
 template <>
 void DBCache<NameCache, uint64_t, CHashKeyGUID>::RemoveReverseEntry(const char* name) {
     REVERSEENTRY* entry = this->FindReverseEntry(name);

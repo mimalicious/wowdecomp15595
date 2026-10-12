@@ -1896,7 +1896,7 @@ void CGxDevice::IDeleteBackBufferFB(int32_t deleteTextures) {
     }
 }
 
-// INLINED
+// OFFSET: 0x00848820
 CGxDevice::~CGxDevice() {
     this->IDeleteBackBufferFB(1);
     this->m_frameBuffer = NULL;
