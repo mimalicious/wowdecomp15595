@@ -12,7 +12,7 @@ void GxuSceneObject::Update(float elapsed) {
 }
 
 // OFFSET: 0x009FCE20/0x14090EBB0
-bool GxuSceneObject::IsAlive() {
+int32_t GxuSceneObject::IsAlive() {
     return true;
 }
 

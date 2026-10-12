@@ -19281,19 +19281,32 @@ bool ClientInspectRatedBgStats::Handle() {
 
 // OFFSET: 0x006AD080/0x1403590A0
 ClientLfgSlotInvalid::ClientLfgSlotInvalid(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
-    uint32_t value = 0;
-    msg->Get(value);
-    this->unk_0010.m_firstCompleted = value;
-    value = 0;
-    msg->Get(value);
-    this->unk_0010.m_completionCount = value;
-    value = 0;
-    msg->Get(value);
-    this->unk_0010.m_projectID = value;
+    this->Unpack(msg, true);
 }
 
 // OFFSET: 0x006A15D0/0x1403596C0
 ClientLfgSlotInvalid::~ClientLfgSlotInvalid() {
+}
+
+// OFFSET: 0x006A79A0/0x14034E350
+void ClientLfgSlotInvalid::Unpack(CDataStore* msg, bool full) {
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010.m_firstCompleted = value;
+    }
+
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010.m_completionCount = value;
+    }
+
+    {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->unk_0010.m_projectID = value;
+    }
 }
 
 // OFFSET: 0x006B53F0/0x1403994E0

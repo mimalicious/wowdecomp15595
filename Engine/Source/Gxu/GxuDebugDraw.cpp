@@ -75,7 +75,7 @@ void GxuDebugTextObject::Release() {
 }
 
 // OFFSET: 0x00612150/0x14029D100
-bool GxuDebugTextObject::IsAlive() {
+int32_t GxuDebugTextObject::IsAlive() {
     return this->m_time >= 0.0f;
 }
 

@@ -121,7 +121,6 @@ class ScopedWorkingDirectory {
 extern Blizzard::Time::Timestamp s_elapsedSinceStart;
 extern bool s_isStreamingTrial;
 extern bool s_streamingReady;
-extern bool s_streamingWrite;
 extern bool s_throttleProgress;
 extern RequestHandler* s_requestHandler;
 extern DownloadProgress s_progress;

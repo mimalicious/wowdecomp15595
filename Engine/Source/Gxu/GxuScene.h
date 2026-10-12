@@ -8,7 +8,7 @@ class GxuSceneObject {
     public:
     virtual ~GxuSceneObject();
     virtual void Release() = 0;
-    virtual bool IsAlive();
+    virtual int32_t IsAlive();
     virtual void Update(float elapsed);
     virtual void Render();
 

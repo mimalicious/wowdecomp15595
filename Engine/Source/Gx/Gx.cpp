@@ -1048,12 +1048,6 @@ void GxFormatColor(CImVector& color) {
 }
 
 // OFFSET: 0x004370B0/0x140040C90
-void GxRenderTargetSet(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
-    GxRsSet(GxRs_ScissorTest, 0);
-    g_theGxDevicePtr->DeviceSetRenderTarget(buffer, texture, plane);
-}
-
-// OFFSET: 0x004370B0/0x140040C90
 void GxFrameBufferSet(CGxFrameBuffer* frameBuffer) {
     GxRsSet(GxRs_ScissorTest, 0);
     g_theGxDevicePtr->FrameBufferSet(frameBuffer);

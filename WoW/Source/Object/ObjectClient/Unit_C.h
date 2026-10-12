@@ -1215,7 +1215,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SortAuras();
     void ReleaseAurasBySpell(int32_t spellId, WOWGUID caster);
     void ReleaseProcEffectsBySpell(int32_t spellId, WOWGUID caster);
-    void RetargetAuraEffects(int32_t spellId, const WOWGUID& oldCaster, const WOWGUID& newCaster);
     void AddHealPrediction(int32_t spellId, int32_t a3, const WOWGUID& caster, int32_t amount, bool periodic, bool channeled);
     void RemoveHealPrediction(int32_t spellId, const WOWGUID& caster, bool periodic, bool channeled);
     void SubtractChanneledHealPrediction(int32_t spellId, const WOWGUID& caster, int32_t amount);

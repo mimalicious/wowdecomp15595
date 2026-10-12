@@ -3,7 +3,7 @@
 #include <cstdio>
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
-// OFFSET: [0x008435D0/0x14056FB20]
+// INLINED
 float Screen::GetAspectRatio() {
     CVar* widescreen = CVar::Lookup("widescreen");
     CVar* resolution = CVar::Lookup("gxResolution");

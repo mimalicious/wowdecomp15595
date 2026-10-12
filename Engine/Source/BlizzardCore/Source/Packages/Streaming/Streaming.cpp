@@ -27,9 +27,6 @@ bool Blizzard::Streaming::s_throttleProgress = true;
 // STATIC: 0x00EBA233/0x140DAACD3
 bool Blizzard::Streaming::s_streamingReady;
 
-// STATIC: 0x00EBA230
-bool Blizzard::Streaming::s_streamingWrite;
-
 bool Blizzard::Streaming::s_isStreamingTrial;
 
 // STATIC: 0x00EBA240

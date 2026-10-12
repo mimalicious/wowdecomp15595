@@ -386,7 +386,7 @@ bool Battlenet::Tumor::Adapter::SendDatagram(uint32_t connection, const void* da
 }
 
 // OFFSET: 0x00661960/0x1403073A0
-uint64_t Battlenet::Tumor::Adapter::GetCurrentTime() const {
+uint32_t Battlenet::Tumor::Adapter::GetCurrentTime() const {
     return this->m_tumor->m_application->GetCurrentTime();
 }
 
@@ -406,8 +406,8 @@ Battlenet::ApplicationFile* Battlenet::Tumor::Adapter::OpenApplicationFile(const
 }
 
 // OFFSET: 0x006619E0/0x140307420
-void Battlenet::Tumor::Adapter::CloseApplicationFile(ApplicationFile* file) {
-    this->m_tumor->m_application->CloseApplicationFile(file);
+bool Battlenet::Tumor::Adapter::CloseApplicationFile(ApplicationFile* file) {
+    return this->m_tumor->m_application->CloseApplicationFile(file);
 }
 
 // OFFSET: 0x006618C0

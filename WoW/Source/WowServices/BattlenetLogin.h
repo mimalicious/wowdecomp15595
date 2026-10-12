@@ -188,11 +188,11 @@ class BattlenetApplication : public Battlenet::Application, public WowConnection
     uint32_t OpenDatagram(int32_t port, const uint32_t& tendrilId) override;
     void CloseDatagram(uint32_t connection) override;
     bool SendDatagram(uint32_t connection, const void* data, uint32_t size, const Battlenet::IP4::AddressPort& address) override;
-    uint64_t GetCurrentTime() const override;
+    uint32_t GetCurrentTime() const override;
     uint64_t GetCurrentTick() const override;
     void LogLevel(const char* message, int32_t level) override;
     Battlenet::ApplicationFile* OpenApplicationFile(const char* name) override;
-    void CloseApplicationFile(Battlenet::ApplicationFile* file) override;
+    bool CloseApplicationFile(Battlenet::ApplicationFile* file) override;
     void WCMessageReady(WowConnection* connection, uint32_t timeStamp, CDataStore* msg) override;
     void WCConnected(WowConnection* connection, WowConnection* inbound, uint32_t timeStamp, const NETCONNADDR* addr) override;
     void WCCantConnect(WowConnection* connection, uint32_t timeStamp, const NETCONNADDR* addr) override;

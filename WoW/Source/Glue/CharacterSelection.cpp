@@ -34,6 +34,7 @@
 #include "WoW/Source/Glue/CSimpleModelFFX.h"
 #include "WoW/Source/Glue/CharacterCreation.h"
 #include "WoW/Source/Glue/ComponentData.h"
+#include "WoW/Source/Glue/RealmList.h"
 #include "WoW/Source/LoadingScreen.h"
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
@@ -64,9 +65,6 @@ static float s_characterGlow = 0.4f;
 
 // STATIC: 0x00D079FC
 static float s_ghostGlow = 0.15f;
-
-// STATIC: 0x00D07A04
-static int32_t s_unk_D07A04 = -1;
 
 // STATIC: 0x00EBC078/0x140DACF00
 CSimpleModelFFX* CCharacterSelection::m_modelFrame;
@@ -1010,7 +1008,7 @@ void CCharacterSelection::UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>
         FrameScript_SignalEvent(GLUE_EVENT_UPDATE_SELECTED_CHARACTER, "%d", 0);
         DetachCharacterModels();
     } else {
-        s_unk_D07A04 = 0;
+        CRealmList::m_preferredCategory = 0;
         int32_t index = g_lastCharacterIndexVar->m_intValue;
 
         if (index >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count() - 1)) {

@@ -224,7 +224,6 @@ class CGGameUI {
     static WOWGUID m_directionalTarget;
     static WOWGUID m_pendingLevelGranter;
     static uint32_t m_raidDifficulty;
-    static const char* m_realZoneText;
     static const char* m_zoneText;
     static WOWGUID m_summonConfirmGUID;
     static uint32_t m_summonConfirmArea;
@@ -292,7 +291,6 @@ class CGGameUI {
     static void CloseInteraction();
     static AreaTableRec* GetCurrentSubzoneRec();
     static void UpdateMountFlags();
-    static int32_t s_loadingScreen;
     static bool IsInArea(int32_t areaID);
     static void SetAreaSpiritHealer(WOWGUID guid, bool cancel = true);
     static void UpdateAreaSpiritHealerTime(WOWGUID guid, int32_t time);
@@ -659,7 +657,6 @@ void BroadcastUIError(int32_t error, const char* name);
 void DBClient_ClearDB2Caches();
 void DBClient_Idle();
 bool Script_GetMoney(lua_State* L, int32_t index, uint64_t* money);
-uint32_t MouseButtonNumberToMask(int32_t button);
 bool SessionTime_IsAlternate();
 int32_t SessionTime_GetElapsed();
 void SessionTime_ResetElapsed();

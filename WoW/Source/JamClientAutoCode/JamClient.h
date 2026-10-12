@@ -2689,6 +2689,7 @@ class ClientLfgSlotInvalid : public JamClientMessage {
     bool Handle();
     bool Get(CDataStore* msg, bool full) override;
     bool Read(CDataStore* msg, bool full);
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildAchievementData : public JamClientMessage {

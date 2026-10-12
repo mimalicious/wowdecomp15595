@@ -151,7 +151,7 @@ bool CSimpleControlPoint::ChangeParent(CSimplePathAnim* parent) {
     return true;
 }
 
-// OFFSET: 0x005282E0/0x14090C360
+// OFFSET: 0x007C3BC0
 CScriptObject* CSimpleControlPoint::GetScriptObjectParent() {
     return this->m_parent;
 }

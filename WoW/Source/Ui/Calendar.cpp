@@ -2973,7 +2973,7 @@ void CGCalendar::SetInviteFlag(uint64_t eventID, uint32_t flag, bool set) {
     }
 }
 
-// OFFSET: 0x009A4170/0x1407395D0
+// INLINED
 DYNAMICHOLIDAYHASH* CalendarGetHolidayInfo(int32_t holidayId) {
     return s_dynamicHolidays.Ptr(holidayId, HASHKEY_NONE());
 }

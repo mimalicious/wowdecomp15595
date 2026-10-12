@@ -179,7 +179,7 @@ class GxuDebugShapeObject : public GxuSceneObject {
 
     virtual ~GxuDebugShapeObject();
     virtual void Release();
-    virtual bool IsAlive();
+    virtual int32_t IsAlive();
     virtual void Update(float elapsed);
     virtual void Render();
 

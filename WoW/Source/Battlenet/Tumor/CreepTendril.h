@@ -19,12 +19,12 @@ class Host {
     virtual uint32_t OpenDatagram(int32_t port) = 0;
     virtual void CloseDatagram(uint32_t connection) = 0;
     virtual bool SendDatagram(uint32_t connection, const void* data, uint32_t size, const void* address, uint32_t addressSize) = 0;
-    virtual uint64_t GetCurrentTime() const = 0;
+    virtual uint32_t GetCurrentTime() const = 0;
     virtual uint64_t GetCurrentTick() const = 0;
     virtual void LogLevel(const char* message, int32_t level) = 0;
     virtual void Log(const char* message);
     virtual ApplicationFile* OpenApplicationFile(const char* name) = 0;
-    virtual void CloseApplicationFile(ApplicationFile* file) = 0;
+    virtual bool CloseApplicationFile(ApplicationFile* file) = 0;
     virtual void SendEvent(const BSN::EncodedObject* header, const BSN::EncodedObject* data) = 0;
 };
 
@@ -85,11 +85,11 @@ class Instance : public Tendril, public Host {
     uint32_t OpenDatagram(int32_t port) override;
     void CloseDatagram(uint32_t connection) override;
     bool SendDatagram(uint32_t connection, const void* data, uint32_t size, const void* address, uint32_t addressSize) override;
-    uint64_t GetCurrentTime() const override;
+    uint32_t GetCurrentTime() const override;
     uint64_t GetCurrentTick() const override;
     void LogLevel(const char* message, int32_t level) override;
     ApplicationFile* OpenApplicationFile(const char* name) override;
-    void CloseApplicationFile(ApplicationFile* file) override;
+    bool CloseApplicationFile(ApplicationFile* file) override;
     void SendEvent(const BSN::EncodedObject* header, const BSN::EncodedObject* data) override;
 
     Instance(const Authentication::Settings& settings, TumorManager& manager);

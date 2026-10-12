@@ -240,19 +240,6 @@ int32_t CShadowCache::SetShadowMode(EShadowMode mode) {
     return 1;
 }
 
-// OFFSET: 0x00435470/0x14003EB90
-static CGxFrameBuffer* CreateFrameBuffer(CGxTex* depth, CGxTex* color) {
-    CGxFrameBuffer* frameBuffer = g_theGxDevicePtr->FrameBufferCreate();
-    g_theGxDevicePtr->FrameBufferAttach(frameBuffer, GxBuffers_Depth, depth, 0);
-    g_theGxDevicePtr->FrameBufferAttach(frameBuffer, GxBuffers_Color, color, 0);
-
-    if (!g_theGxDevicePtr->FrameBufferFinalize(frameBuffer)) {
-        g_theGxDevicePtr->FrameBufferDelete(frameBuffer);
-    }
-
-    return frameBuffer;
-}
-
 // OFFSET: 0x004357B0/0x14003EF00
 void CShadowCache::Destroy() {
     if (CShadowCache::s_shadowMapVertexShader) {
@@ -1040,19 +1027,19 @@ void CShadowCache::Create() {
         if (CShaderEffect::s_usePcfFiltering) {
             CShadowCache::s_extDynShadow.m_textures[0] = TextureCreate(GxTex_2d, size, size, 0, colorFormat, colorFormat, colorFlags, NULL, GxTexNullUserFunc, "ShadowCacheShadowColor", 0);
             CShadowCache::s_extDynShadow.m_textures[1] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheExteriorDynamicShadow", 0);
-            CShadowCache::s_extDynFrameBuffer = CreateFrameBuffer(TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[1]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+            CShadowCache::s_extDynFrameBuffer = GxFrameBufferCreate(TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[1]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
         } else {
             CShadowCache::s_extDynShadow.m_textures[0] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheExteriorDynamicShadow", 0);
             CShadowCache::s_extDynShadow.m_textures[1] = NULL;
-            CShadowCache::s_extDynFrameBuffer = CreateFrameBuffer(depthTarget, TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+            CShadowCache::s_extDynFrameBuffer = GxFrameBufferCreate(depthTarget, TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
         }
 
         CShadowCache::s_intDynShadow = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheInteriorDynamicShadow", 0);
 
         if (CShaderEffect::s_usePcfFiltering) {
-            CShadowCache::s_intDynFrameBuffer = CreateFrameBuffer(TextureGetGxTex(CShadowCache::s_intDynShadow), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+            CShadowCache::s_intDynFrameBuffer = GxFrameBufferCreate(TextureGetGxTex(CShadowCache::s_intDynShadow), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
         } else {
-            CShadowCache::s_intDynFrameBuffer = CreateFrameBuffer(depthTarget, TextureGetGxTex(CShadowCache::s_intDynShadow));
+            CShadowCache::s_intDynFrameBuffer = GxFrameBufferCreate(depthTarget, TextureGetGxTex(CShadowCache::s_intDynShadow));
         }
 
         CShadowCache::s_extDynShadow.m_radius = 20.0f;
@@ -1063,18 +1050,18 @@ void CShadowCache::Create() {
                 band.m_textures[0] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheShadowBand0", 0);
 
                 if (CShaderEffect::s_usePcfFiltering) {
-                    CShadowCache::s_bandFrameBuffers[i][0] = CreateFrameBuffer(TextureGetGxTex(band.m_textures[0]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+                    CShadowCache::s_bandFrameBuffers[i][0] = GxFrameBufferCreate(TextureGetGxTex(band.m_textures[0]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
                 } else {
-                    CShadowCache::s_bandFrameBuffers[i][0] = CreateFrameBuffer(depthTarget, TextureGetGxTex(band.m_textures[0]));
+                    CShadowCache::s_bandFrameBuffers[i][0] = GxFrameBufferCreate(depthTarget, TextureGetGxTex(band.m_textures[0]));
                 }
 
                 if (CShadowCache::s_shadowMode < SHADOW_HIGH) {
                     band.m_textures[1] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheShadowBand1", 0);
 
                     if (CShaderEffect::s_usePcfFiltering) {
-                        CShadowCache::s_bandFrameBuffers[i][1] = CreateFrameBuffer(TextureGetGxTex(band.m_textures[1]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+                        CShadowCache::s_bandFrameBuffers[i][1] = GxFrameBufferCreate(TextureGetGxTex(band.m_textures[1]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
                     } else {
-                        CShadowCache::s_bandFrameBuffers[i][1] = CreateFrameBuffer(depthTarget, TextureGetGxTex(band.m_textures[1]));
+                        CShadowCache::s_bandFrameBuffers[i][1] = GxFrameBufferCreate(depthTarget, TextureGetGxTex(band.m_textures[1]));
                     }
                 }
 

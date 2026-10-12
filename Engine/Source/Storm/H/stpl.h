@@ -631,7 +631,7 @@ T* TSLinkedNode<T>::RawNext() {
     return this->m_link.RawNext();
 }
 
-// OFFSET: 0x00601810
+// OFFSET: [0x00601810<C4Plane>]
 template <class T>
 void TSSwap(T& a, T& b) {
     T temp = a;

@@ -287,7 +287,7 @@ void CScriptRegion::PreOnAnimUpdate() {
 void CScriptRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
 }
 
-// OFFSET: 0x00841AE0/0x140211B90
+// OFFSET: 0x00627990
 void CScriptRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
 }
 

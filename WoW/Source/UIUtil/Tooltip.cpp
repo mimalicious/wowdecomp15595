@@ -146,9 +146,6 @@ int32_t CGTooltip::s_objectType;
 // STATIC: 0x00D3AC44/0x140BF5F70
 CDataAllocator CGTooltip::s_tooltipHeap(sizeof(CGTooltip), 5);
 
-// STATIC: 0x00F4A330/0x140E3E468
-WOWGUID CGTooltip::m_vehicleStatUnit;
-
 // STATIC: 0x00C99F1C/0x140B32718
 static const char* s_tooltipTextColorString = "ffffffff";
 

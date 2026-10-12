@@ -315,7 +315,19 @@ static int32_t Script_GetZoneText(lua_State* L) {
 
 // OFFSET: 0x008C7030/0x140636F70
 static int32_t Script_GetRealZoneText(lua_State* L) {
-    lua_pushstring(L, CGGameUI::m_realZoneText ? CGGameUI::m_realZoneText : "");
+    const char* text = "";
+
+    if (lua_isnumber(L, 1)) {
+        MapRec* map = g_mapDB.GetRecord(static_cast<int32_t>(lua_tonumber(L, 1)));
+
+        if (map) {
+            text = map->m_mapName;
+        }
+    } else {
+        text = CGGameUI::m_zoneText;
+    }
+
+    lua_pushstring(L, text);
     return 1;
 }
 

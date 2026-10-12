@@ -421,7 +421,7 @@ ClientConnection::ClientConnection(RealmResponse* realmResponse) : RealmConnecti
     this->m_statusResult = 1;
 }
 
-// OFFSET: [0x00625D00/0x1402B77C0, 0x004CF280/0x1402B79C0]
+// INLINED
 ClientConnection::~ClientConnection() {
 }
 

@@ -26,11 +26,11 @@ class Tumor : public SystemClient {
         uint32_t OpenDatagram(int32_t port, const uint32_t& tendrilId) override;
         void CloseDatagram(uint32_t connection) override;
         bool SendDatagram(uint32_t connection, const void* data, uint32_t size, const IP4::AddressPort& address) override;
-        uint64_t GetCurrentTime() const override;
+        uint32_t GetCurrentTime() const override;
         uint64_t GetCurrentTick() const override;
         void LogLevel(const char* message, int32_t level) override;
         ApplicationFile* OpenApplicationFile(const char* name) override;
-        void CloseApplicationFile(ApplicationFile* file) override;
+        bool CloseApplicationFile(ApplicationFile* file) override;
         ~Adapter();
         virtual void Destroy();
         void Resolved(uint32_t request, const Client::DNSInfo& info) override;

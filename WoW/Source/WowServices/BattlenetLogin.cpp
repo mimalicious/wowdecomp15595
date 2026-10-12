@@ -545,7 +545,7 @@ bool BattlenetApplication::SendDatagram(uint32_t connection, const void* data, u
 }
 
 // OFFSET: 0x00842700/0x1407FDD80
-uint64_t BattlenetApplication::GetCurrentTime() const {
+uint32_t BattlenetApplication::GetCurrentTime() const {
     return 0;
 }
 
@@ -559,7 +559,8 @@ Battlenet::ApplicationFile* BattlenetApplication::OpenApplicationFile(const char
 }
 
 // OFFSET: 0x007AAB20/0x140317F90
-void BattlenetApplication::CloseApplicationFile(Battlenet::ApplicationFile* file) {
+bool BattlenetApplication::CloseApplicationFile(Battlenet::ApplicationFile* file) {
+    return false;
 }
 
 // OFFSET: 0x00627990/0x140693B10

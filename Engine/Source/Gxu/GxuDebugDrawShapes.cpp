@@ -288,7 +288,7 @@ void GxuDebugShapeObject::Release() {
 }
 
 // OFFSET: 0x006196C0/0x1402A6BE0
-bool GxuDebugShapeObject::IsAlive() {
+int32_t GxuDebugShapeObject::IsAlive() {
     return this->m_time >= 0.0f;
 }
 

@@ -260,7 +260,7 @@ bool Battlenet::CreepTendril::Instance::SendDatagram(uint32_t connection, const 
 }
 
 // OFFSET: 0x006625B0/0x140308370
-uint64_t Battlenet::CreepTendril::Instance::GetCurrentTime() const {
+uint32_t Battlenet::CreepTendril::Instance::GetCurrentTime() const {
     return this->m_adapter->GetCurrentTime();
 }
 
@@ -280,8 +280,8 @@ Battlenet::ApplicationFile* Battlenet::CreepTendril::Instance::OpenApplicationFi
 }
 
 // OFFSET: 0x006625F0/0x1403083B0
-void Battlenet::CreepTendril::Instance::CloseApplicationFile(ApplicationFile* file) {
-    this->m_adapter->CloseApplicationFile(file);
+bool Battlenet::CreepTendril::Instance::CloseApplicationFile(ApplicationFile* file) {
+    return this->m_adapter->CloseApplicationFile(file);
 }
 
 // OFFSET: 0x006631C0/0x140309220

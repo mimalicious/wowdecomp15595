@@ -402,13 +402,6 @@ bool CGUnit_C::IsPowerRegenInterrupted() const {
     return (this->m_unit->m_unitFieldFlags & 0x80000) || (this->m_auraEffectMask[11] & 0x40);
 }
 
-// OFFSET: 0x005AA8A0
-void CGUnit_C::RetargetAuraEffects(int32_t spellId, const WOWGUID& oldCaster, const WOWGUID& newCaster) {
-    CGObject_C::RetargetEffects(this->m_effectList, spellId, oldCaster.m_guid, newCaster.m_guid);
-    CGObject_C::RetargetEffects(this->m_procEffects, spellId, oldCaster.m_guid, newCaster.m_guid);
-    CGObject_C::RetargetEffects(this->m_auraEffects, spellId, oldCaster.m_guid, newCaster.m_guid);
-}
-
 // OFFSET: 0x005AB6A0/0x14021DAF0
 uint32_t CGUnit_C::GetAnimTierTransitionTime(uint8_t animTier, uint32_t duration, uint32_t animTime) {
     if ((this->m_animTier != 3 || (animTier && animTier != 2)) && (this->m_animTier != 2 || animTier)) {
@@ -2279,7 +2272,7 @@ void CGUnit_C::OnAuraAddedSpecial(const SpellRec* spell, AuraData* aura, int32_t
                 updateSpells = true;
             }
         } else if (effect->m_effectAura == 358) {
-            if (a4 || CGGameUI::s_loadingScreen) {
+            if (a4 || CGGameUI::m_inMovie) {
                 this->ExpediteDisplayTransition(1);
                 this->m_currentClientRaceFlags = 1;
                 this->UpdateDisplayInfo(0);
@@ -4108,7 +4101,7 @@ void CGUnit_C::OnAuraUpdate(CDataStore* msg, bool updateAll) {
             }
 
             if (oldAuras[i].m_creator != aura.m_creator) {
-                this->RetargetAuraEffects(aura.m_spellId, oldAuras[i].m_creator, aura.m_creator);
+                this->RetargetEffects(aura.m_spellId, oldAuras[i].m_creator.m_guid, aura.m_creator.m_guid);
             }
 
             if (oldAuras[i].m_stackCount == aura.m_stackCount) {

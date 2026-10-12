@@ -48,9 +48,6 @@ static const uint8_t s_volumeEdges[32] = { 0, 1, 0, 2, 0, 3, 0, 4, 1, 2, 2, 3, 3
 // STATIC: 0x00CA8068/0x140B47E50
 static World::FacetData s_moveFacets;
 
-// STATIC: 0x00DD6174/0x140CBB4D8
-static CVar* s_cvSplineOpt;
-
 // STATIC: 0x00CA809C/0x140B47EA0
 static World::FacetData s_liquidFacets;
 
@@ -1541,7 +1538,7 @@ void MovementInitialize(const char* logFile) {
     globals->m_idleTime = now;
     globals->m_lastUpdateTime = now;
 
-    s_cvSplineOpt = CVar::Register("SplineOpt", "toggles use of spline coll optimization", 0x1, "1", NULL, 0, false, NULL, false);
+    CVar::Register("SplineOpt", "toggles use of spline coll optimization", 0x1, "1", NULL, 0, false, NULL, false);
 }
 
 // OFFSET: 0x0057B300/0x1401E0E50
@@ -2000,7 +1997,7 @@ int32_t CMovement_C::Interpolate(uint32_t now, uint32_t elapsed, C3Vector* posit
 
 // OFFSET: [0x0043B770/0x140046140]
 int32_t CMovement_C::IsJumping() const {
-    return (this->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_fallVelocity;
+    return (this->m_flags & MOVEMENTFLAG_FALLING) && this->m_fallVelocity != 0.0f;
 }
 
 // INLINED
@@ -2186,7 +2183,7 @@ void CMovement_C::SetUpdateInfo(uint32_t time, const CClientMoveUpdate* update, 
         this->RemoveFromMoversList(0);
         this->m_spline->InitFromClientSpline(update->m_spline);
 
-        if (!s_cvSplineOpt->m_intValue) {
+        if (!CGUnit_C::s_cvPathSmoothing->m_intValue) {
             this->m_spline->m_flags &= ~SPLINEFLAG_SMOOTH;
         }
 
@@ -3318,13 +3315,6 @@ void CMovement_C::OnPitchStartLocal(uint32_t eventTime, int32_t up) {
     CGInputControl::GetActive()->OnPitchToAngleStop();
 }
 
-// OFFSET: 0x00601810
-static void Swap(C4Plane& a, C4Plane& b) {
-    C4Plane temp = a;
-    a = b;
-    b = temp;
-}
-
 // OFFSET: 0x006018E0
 static int32_t IsSurfaceTooSteep(uint32_t facet) {
     return s_moveFacets.facets.m_data[facet].plane.n.z <= 0.64278764f;
@@ -3817,7 +3807,7 @@ static void __stdcall DistanceToMovePyramid(World::FacetData* facets, const C3Ve
             *hitDistance = d;
 
             if (*hitCount > 1) {
-                Swap(hitPlanes[*hitCount - 1], hitPlanes[0]);
+                TSSwap(hitPlanes[*hitCount - 1], hitPlanes[0]);
             }
         }
     }
@@ -4341,7 +4331,7 @@ int32_t CMovement_C::DistanceToMove(World::FacetData* facets, const C3Vector& di
             hitDistance = d;
 
             if (*planeCount > 1) {
-                Swap(planes[*planeCount - 1], planes[0]);
+                TSSwap(planes[*planeCount - 1], planes[0]);
             }
         }
     }

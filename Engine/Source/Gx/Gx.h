@@ -73,7 +73,6 @@ void GxBufUnlock(CGxBuf* buf, uint32_t size);
 void GxBufDestroy(CGxBuf* buf);
 int32_t GxBufIsReady(CGxBuf* buf);
 void GxPoolDestroy(CGxPool* pool);
-void GxRenderTargetSet(EGxBuffer buffer, CGxTex* texture, uint32_t plane);
 void GxFrameBufferSet(CGxFrameBuffer* frameBuffer);
 int32_t GxFrameBufferFinalize(CGxFrameBuffer* frameBuffer);
 int32_t GxFrameBufferAttach(CGxFrameBuffer* frameBuffer, EGxBuffer buffer, CGxTex* texture, uint32_t plane);

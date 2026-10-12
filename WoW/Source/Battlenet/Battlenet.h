@@ -50,12 +50,12 @@ class SystemServer {
     virtual uint32_t OpenDatagram(int32_t port, const uint32_t& tendrilId) = 0;
     virtual void CloseDatagram(uint32_t connection) = 0;
     virtual bool SendDatagram(uint32_t connection, const void* data, uint32_t size, const IP4::AddressPort& address) = 0;
-    virtual uint64_t GetCurrentTime() const = 0;
+    virtual uint32_t GetCurrentTime() const = 0;
     virtual uint64_t GetCurrentTick() const = 0;
     virtual void LogLevel(const char* message, int32_t level) = 0;
     virtual void Log(const char* message);
     virtual ApplicationFile* OpenApplicationFile(const char* name) = 0;
-    virtual void CloseApplicationFile(ApplicationFile* file) = 0;
+    virtual bool CloseApplicationFile(ApplicationFile* file) = 0;
     virtual ~SystemServer();
 };
 

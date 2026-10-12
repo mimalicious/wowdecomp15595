@@ -4,6 +4,8 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Client.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
 static int32_t s_maxViolenceLevel[9] = { 2, 1, 2, 2, 1, 2, 2, 2, 2 };
 
@@ -30,6 +32,9 @@ bool ViolenceLevelChanged(CVar* var, const char* oldValue, const char* value, vo
         TextureSetTextureSubstitutions(s_bloodSpurtTexture, s_bloodSpurtTextures[level]);
     }
 
+    UserClientOpcode7816 msg;
+    msg.unk_0010 = static_cast<uint8_t>(s_violenceLevel);
+    ClientServices::Send(&msg);
     return true;
 }
 

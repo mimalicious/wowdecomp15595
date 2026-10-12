@@ -1764,7 +1764,7 @@ void Spell_C_ModifyCategoryRecovery(int32_t& recovery, int32_t category, int32_t
 // OFFSET: 0x008A6D00/0x1405E9A60
 CGUnit_C* Spell_C_GetStatTargetUnit(int32_t pet, int32_t vehicle) {
     if (vehicle) {
-        return static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGTooltip::m_vehicleStatUnit, TYPEMASK_UNIT, __FILE__, __LINE__));
+        return static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGCharacterInfo::m_inspectTarget, TYPEMASK_UNIT, __FILE__, __LINE__));
     }
 
     if (pet) {

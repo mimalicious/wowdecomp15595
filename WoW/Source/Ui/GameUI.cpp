@@ -1422,8 +1422,6 @@ WOWGUID CGGameUI::m_pendingLevelGranter;
 // STATIC: 0x00ED7548/0x140E25BAC
 uint32_t CGGameUI::m_raidDifficulty;
 
-const char* CGGameUI::m_realZoneText;
-
 // STATIC: 0x00ED741C/0x140E25A70
 const char* CGGameUI::m_zoneText;
 
@@ -1479,9 +1477,6 @@ struct NearestUnitData {
 static TSGrowableArray<NearestUnitData> s_nearestUnits;
 
 static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY", "INTERRUPT", "BLOCK", "EVADE", "IMMUNE", "DEFLECT" };
-
-// STATIC: 0x00ED74AC
-int32_t CGGameUI::s_loadingScreen;
 
 // OFFSET: 0x008C40D0/0x140633BD0
 void CGGameUI::OpenGuildInvite(const char* inviter, const char* guild, int32_t guildLevel, const char* oldGuild) {
@@ -2148,29 +2143,6 @@ void CGGameUI::UpdateSessionTimeAlert() {
         SessionTime_ResetElapsed();
         FrameScript_SignalEvent(SCRIPT_EVENT_SESSION_TIME_ALERT, "%d", CGGameUI::s_sessionAlertTime);
     }
-}
-
-// OFFSET: 0x008C60E0/0x1407AEEA0
-uint32_t MouseButtonNumberToMask(int32_t button) {
-    switch (button) {
-        case 1:
-            return 0x1;
-
-        case 2:
-            return 0x4;
-
-        case 3:
-            return 0x2;
-
-        default:
-            break;
-    }
-
-    if (button >= 4 && button <= 31) {
-        return 1u << (button - 1);
-    }
-
-    return 0;
 }
 
 // OFFSET: 0x008CAB60/0x140634AB0
