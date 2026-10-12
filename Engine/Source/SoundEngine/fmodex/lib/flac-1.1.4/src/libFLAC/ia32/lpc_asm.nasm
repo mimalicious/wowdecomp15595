@@ -71,7 +71,6 @@ cglobal FLAC__lpc_restore_signal_asm_ia32_mmx
 ;
 	ALIGN 16
 ; VERIFY: a65187ea auto
-; OFFSET: 0x00957FD0
 cident FLAC__lpc_compute_autocorrelation_asm_ia32
 	;[esp + 28] == autoc[]
 	;[esp + 24] == lag
@@ -439,7 +438,6 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32
 
 	ALIGN 16
 ; VERIFY: ad14de73 auto
-; OFFSET: 0x00958330
 cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_4
 	;[esp + 16] == autoc[]
 	;[esp + 12] == lag
@@ -488,7 +486,6 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_4
 
 	ALIGN 16
 ; VERIFY: 880c7b72 auto
-; OFFSET: 0x00958390
 cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_8
 	;[esp + 16] == autoc[]
 	;[esp + 12] == lag
@@ -549,7 +546,6 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_8
 
 	ALIGN 16
 ; VERIFY: 97f3ed24 auto
-; OFFSET: 0x00958410
 cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_12
 	;[esp + 16] == autoc[]
 	;[esp + 12] == lag
@@ -625,7 +621,6 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_12
 
 	align 16
 ; VERIFY: 7bba849c auto
-; OFFSET: 0x009584B0
 cident FLAC__lpc_compute_autocorrelation_asm_ia32_3dnow
 	;[ebp + 32] autoc
 	;[ebp + 28] lag
@@ -757,7 +752,6 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32_3dnow
 ;
 	ALIGN	16
 ; VERIFY: 63b347ba auto
-; OFFSET: 0x009585C0
 cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32
 	;[esp + 40]	residual[]
 	;[esp + 36]	lp_quantization
@@ -973,7 +967,6 @@ cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32
 ; for side-channel coded 16bps channels since the effective bps is 17.
 	ALIGN	16
 ; VERIFY: 4657ccf2 auto
-; OFFSET: 0x009587B0
 cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32_mmx
 	;[esp + 40]	residual[]
 	;[esp + 36]	lp_quantization
@@ -1166,7 +1159,7 @@ cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32_mmx
 ; }
 	ALIGN	16
 ; VERIFY: 1a520565 auto
-; OFFSET: 0x00958960
+; OFFSET: 0x00B5CDF0
 cident FLAC__lpc_restore_signal_asm_ia32
 	;[esp + 40]	data[]
 	;[esp + 36]	lp_quantization
@@ -1382,7 +1375,7 @@ cident FLAC__lpc_restore_signal_asm_ia32
 ; channel n, data[n][-1] through data[n][-3] should be accessible and zero.
 	ALIGN	16
 ; VERIFY: 1c1a4467 auto
-; OFFSET: 0x00958B50
+; OFFSET: 0x00B5CFE0
 cident FLAC__lpc_restore_signal_asm_ia32_mmx
 	;[esp + 40]	data[]
 	;[esp + 36]	lp_quantization

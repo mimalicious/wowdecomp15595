@@ -19,7 +19,7 @@ distortion_fabsmask dd 7FFFFFFFh, 7FFFFFFFh, 7FFFFFFFh, 7FFFFFFFh
 ; void FMOD_DSP_Distortion_SIMD(float * inbuffer, float * outbuffer, unsigned int length, int inchannels, int outchannels, float k);
 ; =================================================================================================================================
 ; VERIFY: cfd29e0d auto
-; OFFSET: 0x00929700
+; OFFSET: 0x00AD7920
 proc FMOD_DSP_Distortion_SIMD
 
 		%$inbuffer		arg 

@@ -1336,7 +1336,7 @@ FMOD_RESULT OutputWASAPI::recordGetPosition(unsigned int *pcm)
 }
 
 
-// INLINED
+// OFFSET: 0x00AE7AC0
 FMOD_RESULT OutputWASAPI::recordLock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
 	unsigned int lenbytes = mRecordBufferLength * mRecordBlockAlign;

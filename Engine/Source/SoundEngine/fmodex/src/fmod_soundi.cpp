@@ -2804,6 +2804,7 @@ FMOD_RESULT SoundI::setPositionInternal(unsigned int pcm)
 }
 
 
+// OFFSET: 0x00A89C60
 /*
 [
 	[DESCRIPTION]

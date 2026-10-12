@@ -54,6 +54,7 @@ namespace FMOD
         {
             return( E_NOTIMPL );
         }
+        // OFFSET: 0x00AA4720
         HRESULT STDMETHODCALLTYPE Commit( DWORD grfCommitFlags )
         {
             return( E_NOTIMPL );

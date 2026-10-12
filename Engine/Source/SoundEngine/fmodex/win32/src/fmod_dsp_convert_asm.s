@@ -26,7 +26,7 @@ section .text
 ; void FMOD_DSP_Convert_FloatToPCM16(short *outbuffer, float *inbuffer, unsigned int length, int destchannelstep, int srcchannelstep, float volume);
 ; =================================================================================================================================
 ; VERIFY: 87e240f3 auto
-; OFFSET: 0x00951810
+; OFFSET: 0x00B01F20
 proc FMOD_DSP_Convert_FloatToPCM16
 
 		%$outbuffer       arg 

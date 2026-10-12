@@ -17,7 +17,7 @@
 ;  void FMOD_DSP_Connection_MixMonoToStereo_SIMD  (float *inbuffer, float *outbuffer, unsigned int length, float lvolume, float rvolume);
 ; =================================================================================================================================
 ; VERIFY: 76e75238 auto
-; OFFSET: 0x00944B60
+; OFFSET: 0x00AF4DE0
 proc FMOD_DSP_Connection_MixMonoToStereo_SIMD
 
 		%$inbuffer		arg 
@@ -128,7 +128,7 @@ endproc
 ;  void FMOD_DSP_Connection_MixStereoToStereo_SIMD(float *inbuffer, float *outbuffer, unsigned int length, float lvolume, float rvolume);
 ; =================================================================================================================================
 ; VERIFY: e7af180e auto
-; OFFSET: 0x00944C1C
+; OFFSET: 0x00AF4E9C
 proc FMOD_DSP_Connection_MixStereoToStereo_SIMD
 
 		%$inbuffer		arg 
@@ -238,7 +238,7 @@ endproc
 ;  void FMOD_DSP_Connection_MixMonoTo5_1_SIMD(float *inbuffer, float *outbuffer, unsigned int length, float *volume0to3, float *volume4to1, float *volume2to5);
 ; =================================================================================================================================
 ; VERIFY: 186c834c auto
-; OFFSET: 0x00944CD4
+; OFFSET: 0x00AF4F54
 proc FMOD_DSP_Connection_MixMonoTo5_1_SIMD
 
 		%$inbuffer		arg 
@@ -368,7 +368,7 @@ endproc
 ;  void FMOD_DSP_Connection_Mix5_1To5_1_SIMD(float *inbuffer, float *outbuffer, unsigned int length, float *volume0to3, float *volume4to1, float *volume2to5);
 ; =================================================================================================================================
 ; VERIFY: 33f6b5a1 auto
-; OFFSET: 0x00944DDA
+; OFFSET: 0x00AF505A
 proc FMOD_DSP_Connection_Mix5_1To5_1_SIMD
 
 		%$inbuffer		arg 
@@ -490,7 +490,7 @@ endproc
 ;  void FMOD_DSP_Connection_MixMonoTo7_1_SIMD(float *inbuffer, float *outbuffer, unsigned int length, float *volume0to3, float *volume4to7);
 ; =================================================================================================================================
 ; VERIFY: 3df2e75a auto
-; OFFSET: 0x00944EBD
+; OFFSET: 0x00AF513D
 proc FMOD_DSP_Connection_MixMonoTo7_1_SIMD
 
 		%$inbuffer		arg 
@@ -620,7 +620,7 @@ endproc
 ;  void FMOD_DSP_Connection_Mix7_1To7_1_SIMD(float *inbuffer, float *outbuffer, unsigned int length, float *volume0to3, float *volume4to7);
 ; =================================================================================================================================
 ; VERIFY: 3ef53c49 auto
-; OFFSET: 0x00944FC6
+; OFFSET: 0x00AF5246
 proc FMOD_DSP_Connection_Mix7_1To7_1_SIMD
 
 		%$inbuffer		arg 

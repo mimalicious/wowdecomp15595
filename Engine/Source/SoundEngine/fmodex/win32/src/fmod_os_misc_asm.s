@@ -16,7 +16,7 @@
 ; int FMOD_OS_SupportsSSE
 ; =================================================================================================================================
 ; VERIFY: 90259e2c auto
-; OFFSET: 0x009296C0
+; OFFSET: 0x00AD78E0
 proc FMOD_OS_SupportsSSE
 
 		push	ebx

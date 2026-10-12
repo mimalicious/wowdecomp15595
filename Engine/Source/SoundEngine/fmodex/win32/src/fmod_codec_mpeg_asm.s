@@ -9,7 +9,7 @@ scale32767 dd 32767.0
 section .text
 
 ; VERIFY: f3ea0b91 auto
-; OFFSET: 0x0094B920
+; OFFSET: 0x00AFBF00
 proc FMOD_Mpeg_Synth_FPU
 
 		%$b0            arg
@@ -234,7 +234,7 @@ synthfpustore3:
 endproc
 
 ; VERIFY: 75aff083 auto
-; OFFSET: 0x0094BB60
+; OFFSET: 0x00AFC140
 proc FMOD_Mpeg_Synth_FPU_Float
 
 		%$b0            arg

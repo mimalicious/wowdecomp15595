@@ -2485,6 +2485,7 @@ FMOD_RESULT DSPI::getParameter(int index, float *value, char *valuestr, int valu
 }
 
 
+// OFFSET: 0x00A8E0C0
 /*
 [
 	[DESCRIPTION]

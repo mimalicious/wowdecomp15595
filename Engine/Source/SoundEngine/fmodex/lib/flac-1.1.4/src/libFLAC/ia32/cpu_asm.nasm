@@ -41,7 +41,7 @@ cglobal FLAC__cpu_info_sse_test_asm_ia32
 ; **********************************************************************
 ;
 
-; OFFSET: 0x00958DC0
+; OFFSET: 0x00B5D2D0
 have_cpuid:
 	pushfd
 	pop	eax
@@ -61,7 +61,7 @@ have_cpuid:
 	ret
 
 ; VERIFY: ea9ce8d2 auto
-; OFFSET: 0x00958DDE
+; OFFSET: 0x00B5D2EE
 cident FLAC__cpu_info_asm_ia32
 	push	ebx
 	call	have_cpuid
@@ -78,7 +78,7 @@ cident FLAC__cpu_info_asm_ia32
 	ret
 
 ; VERIFY: ccc8fd74 auto
-; OFFSET: 0x00958DFA
+; OFFSET: 0x00B5D30A
 cident FLAC__cpu_info_extended_amd_asm_ia32
 	push	ebx
 	call	have_cpuid
@@ -99,7 +99,6 @@ cident FLAC__cpu_info_extended_amd_asm_ia32
 	ret
 
 ; VERIFY: 9e26a845 auto
-; OFFSET: 0x00958E24
 cident FLAC__cpu_info_sse_test_asm_ia32
 	xorps	xmm0, xmm0
 	pop	ebx

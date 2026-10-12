@@ -1795,6 +1795,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::recordLockCallback(FMOD_OUTPUT_STATE *output,
 }
 
 
+// OFFSET: 0x00AE56B0
 /*
 [
 	[DESCRIPTION]
