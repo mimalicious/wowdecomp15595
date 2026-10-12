@@ -1700,13 +1700,19 @@ static int32_t Script_UnitCreatureFamily(lua_State* L) {
 
 // OFFSET: 0x00456D20/0x140066610
 static int32_t Script_IsFlying(lua_State* L) {
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    CGUnit_C* unit;
+
+    if (lua_isstring(L, 1)) {
+        unit = Script_GetUnitFromName(lua_tolstring(L, 1, NULL));
+    } else {
+        unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    }
 
     if (unit && unit->m_vehiclePassenger && unit->m_vehiclePassenger->m_state == 3) {
         unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(unit->GetTransportGUID()), TYPEMASK_UNIT, __FILE__, __LINE__));
     }
 
-    if (unit && (unit->m_movement->m_flags & 0x2000000)) {
+    if (unit && (unit->m_movement->m_flags & MOVEMENTFLAG_FLYING)) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);

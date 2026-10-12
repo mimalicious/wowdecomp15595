@@ -4638,6 +4638,7 @@ uint32_t CMovement_C::Swim(uint32_t time, uint32_t elapsed, float distance, C3Ve
     int32_t moved = 0;
     uint32_t planeCount;
     float moveDist;
+    this->m_flags2 &= ~MOVEMENTFLAG2_UNK_0800;
 
     if (!this->DistanceToMove(&s_moveFacets, direction, distance, &facetIndex, planes, &planeCount, &moveDist, NULL)) {
         return elapsed;
@@ -4648,8 +4649,12 @@ uint32_t CMovement_C::Swim(uint32_t time, uint32_t elapsed, float distance, C3Ve
 
         if (facetIndex < s_moveFacets.facets.m_count) {
             hitSolid = 1;
+
+            if (this->IsSlopeFallable(facetIndex, C3Vector(direction.x * moveDist, direction.y * moveDist, direction.z * moveDist))) {
+                this->m_flags2 |= MOVEMENTFLAG2_UNK_0800;
+            }
         } else {
-            if (!hitSolid && !this->IsGravityDisabled()) {
+            if ((!hitSolid && !this->IsGravityDisabled()) || (this->m_flags & MOVEMENTFLAG_FLYING)) {
                 if (!this->DistanceToMove(&s_liquidFacets, direction, remaining, &facetIndex, planes, &planeCount, &moveDist, NULL)) {
                     return elapsed;
                 }
@@ -4985,6 +4990,8 @@ finish:
 
 // OFFSET: 0x00609260/0x140291B60
 uint32_t CMovement_C::Fall(uint32_t time, uint32_t elapsed, float distance, const C2Vector& direction) {
+    this->m_flags2 &= ~MOVEMENTFLAG2_UNK_0800;
+
     if ((this->m_transportGuid && this->m_link.IsLinked() && this->SetTransport(WOWGUID())) || !elapsed) {
         return 0;
     }
@@ -5165,6 +5172,7 @@ uint32_t CMovement_C::TraceSurface(uint32_t time, uint32_t elapsed, float distan
         return this->StartFalling(0.0f) ? 0 : elapsed;
     }
 
+    this->m_flags2 |= MOVEMENTFLAG2_UNK_0800;
     C4Plane planes[7];
 
     float total = static_cast<float>(elapsed);

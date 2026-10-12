@@ -223,12 +223,6 @@ int32_t CGUnit_C::s_initialized;
 // STATIC: 0x00DD6210/0x140CBC980
 WOWGUID CGUnit_C::s_activeMover;
 
-// STATIC: 0x00DD6218/0x140CBC988
-static uint32_t s_swimStartTime;
-
-// STATIC: 0x00DD621C/0x140CBC98C
-static uint32_t s_swimStopTime;
-
 // STATIC: 0x00CA627C/0x140B451F4
 static uint32_t s_swimTransitionDelay = 2000;
 
@@ -1697,7 +1691,7 @@ void CGUnit_C::UpdateAlphaEffectAlpha() {
 void CGUnit_C::OnSwimStartLocal(uint32_t time) {
     this->m_movementData.OnSwimStartLocal(time);
     CGTutorial::TriggerTutorial(27);
-    s_swimStartTime = time;
+    CGUnit_C::s_flightStatusTime = time;
 }
 
 // OFFSET: 0x005B8710/0x14022C4C0
@@ -1709,10 +1703,10 @@ void CGUnit_C::UpdateSwimmingStatusFlightStyle(uint32_t time, float depth, float
     uint32_t delay = (this->m_unit->m_unitFieldFlags & 0x8) ? s_swimTransitionDelayFlag : s_swimTransitionDelay;
 
     if (this->m_movement->m_flags & MOVEMENTFLAG_SWIMMING) {
-        if (exitDepth > depth || ((this->m_movementData.m_flags2 & 0x800) && time - s_swimStartTime > delay)) {
+        if (exitDepth > depth || ((this->m_movementData.m_flags2 & 0x800) && time - CGUnit_C::s_flightStatusTime > delay)) {
             this->m_movementData.OnSwimStopLocal(time);
         }
-    } else if (time - s_swimStopTime > delay && depth > swimDepth && !this->m_movementData.IsJumpingUp() && !(this->m_movementData.m_flags2 & 0x800)) {
+    } else if (time - CGUnit_C::s_flightEndTime > delay && depth > swimDepth && !this->m_movementData.IsJumpingUp() && !(this->m_movementData.m_flags2 & 0x800)) {
         if ((this->m_movementData.m_flags & (MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)) || this->m_movementData.HasFallVelocity()) {
             this->OnSwimStartLocal(time);
         }
@@ -2035,7 +2029,7 @@ void CGUnit_C::OnSwimStart(uint32_t time, int32_t spline) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
         this->m_movementData.OnSwimStartLocal(time);
         CGTutorial::TriggerTutorial(27);
-        s_swimStartTime = time;
+        CGUnit_C::s_flightStatusTime = time;
     } else if (spline || (this->m_movement->m_spline && !(this->m_movement->m_spline->m_flags & 0x80))) {
         this->m_movementData.OnSplineStartSwim();
         this->UpdateMovementAnimKit(0);
@@ -2048,7 +2042,7 @@ void CGUnit_C::OnSwimStart(uint32_t time, int32_t spline) {
 void CGUnit_C::OnSwimStop(uint32_t time, int32_t spline) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
         this->m_movementData.OnSwimStopLocal(time);
-        s_swimStopTime = time;
+        CGUnit_C::s_flightEndTime = time;
     } else if (spline || (this->m_movement->m_spline && !(this->m_movement->m_spline->m_flags & 0x80))) {
         this->m_movementData.OnSplineStopSwim();
         this->UpdateMovementAnimKit(0);
@@ -18372,7 +18366,7 @@ void CGUnit_C::RequestTalkEmote(int32_t index) {
         return;
     }
 
-    if (this->m_movement->m_flags & 0x200000) {
+    if (this->m_movement->m_flags & MOVEMENTFLAG_SWIMMING) {
         return;
     }
 
@@ -21336,13 +21330,13 @@ void CGUnit_C::UpdateFlightStatus(uint32_t time) {
     uint32_t delay = (this->m_unit->m_unitFieldFlags & 0x8) ? s_flightTransitionDelayFlag : s_flightTransitionDelay;
 
     if (this->m_movementData.m_flags & MOVEMENTFLAG_FLYING) {
-        if (time - s_swimStartTime > delay && (this->m_movementData.m_flags2 & 0x800) && (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !static_cast<CGPlayer_C*>(this)->IsCommentatorUberOrInArena())) {
+        if (time - CGUnit_C::s_flightStatusTime > delay && (this->m_movementData.m_flags2 & 0x800) && (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !static_cast<CGPlayer_C*>(this)->IsCommentatorUberOrInArena())) {
             this->m_movementData.OnFlightLocal(time, 0);
-            s_swimStopTime = time;
+            CGUnit_C::s_flightEndTime = time;
         }
-    } else if (time - s_swimStopTime > delay && !this->m_movementData.IsJumpingUp() && !(this->m_movementData.m_flags2 & 0x800) && ((this->m_movementData.m_flags & (MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)) || this->m_movementData.HasFallVelocity())) {
+    } else if (time - CGUnit_C::s_flightEndTime > delay && !this->m_movementData.IsJumpingUp() && !(this->m_movementData.m_flags2 & 0x800) && ((this->m_movementData.m_flags & (MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)) || this->m_movementData.HasFallVelocity())) {
         this->m_movementData.OnFlightLocal(time, 1);
-        s_swimStartTime = time;
+        CGUnit_C::s_flightStatusTime = time;
     }
 }
 
@@ -22318,9 +22312,9 @@ void CGUnit_C::ComputeSmoothedSwimMatrix(C44Matrix* matrix, float elapsed, int32
     if (moveFlags & 0x3) {
         uint32_t flags = this->m_movementData.m_flags;
 
-        if (flags & 0x400000) {
+        if (flags & MOVEMENTFLAG_ASCENDING) {
             pitch = 0.78539819f;
-        } else if (flags & 0x800000) {
+        } else if (flags & MOVEMENTFLAG_DESCENDING) {
             pitch = -0.78539819f;
         } else {
             pitch = this->m_movementData.m_pitch;
@@ -22338,7 +22332,7 @@ void CGUnit_C::ComputeSmoothedSwimMatrix(C44Matrix* matrix, float elapsed, int32
         basePitch = pitch;
     }
 
-    if ((moveFlags & 0x2) && (this->m_movementData.m_flags & 0xC00000)) {
+    if ((moveFlags & 0x2) && (this->m_movementData.m_flags & (MOVEMENTFLAG_ASCENDING | MOVEMENTFLAG_DESCENDING))) {
         targetPitch = basePitch * -1.0f;
     }
 
@@ -22879,7 +22873,7 @@ bool CGPlayer_C::ClickToMove(int32_t type, const WOWGUID* guid, const C3Vector* 
     CGUnit_C::s_trackingDirection = facing;
     CGUnit_C::s_trackingGUID = *guid;
     CGUnit_C::s_trackingPosition = *position;
-    s_trackingTurnRate = (this->m_movement->m_flags2 & 0x8) ? this->m_movement->m_turnRate : 3.1415927f;
+    s_trackingTurnRate = (this->m_movement->m_flags2 & MOVEMENTFLAG2_FULL_SPEED_TURNING) ? this->m_movement->m_turnRate : 3.1415927f;
     CGUnit_C::s_unk_CA11D4 = 0;
     s_trackingInteractDistance = sqrt(s_trackingInteractDistanceSq);
     CGUnit_C::s_unk_CA11D0 = 0.0f;
@@ -23156,7 +23150,7 @@ void CGUnit_C::SetTrackingDirection(const C3Vector& direction) {
     dir.y *= scale;
     dir.z *= scale;
 
-    bool flying = (this->m_movement->m_flags & 0x2200000) != 0;
+    bool flying = (this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) != 0;
     float up = fabs((dir.x + dir.y) * 0.0f + dir.z);
 
     if (flying) {
@@ -23249,7 +23243,7 @@ bool CGUnit_C::HandleTrackingFacing(float facing, float maxTurn, uint32_t time) 
 
     CMovementShared* movement = this->m_movement;
 
-    if (movement->m_flags2 & 0x8) {
+    if (movement->m_flags2 & MOVEMENTFLAG2_FULL_SPEED_TURNING) {
         s_trackingTurnRate = movement->m_turnRate;
     } else if (3.1415927f == s_trackingTurnRate) {
         s_trackingTurnRate = (delta <= 2.0943952f || delta >= 4.1887903f ? 800.0f : 1200.0f) * 0.017453292f;

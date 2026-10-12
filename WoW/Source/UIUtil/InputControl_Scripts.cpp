@@ -34,7 +34,7 @@ static int32_t Script_JumpOrAscendStart(lua_State* L) {
 
     input->ToggleControlBit(0x2000, 1, CSimpleTop::s_eventTime, 0);
 
-    if (mover->m_movement->m_flags & 0x2200000) {
+    if (mover->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) {
         return 0;
     }
 
@@ -56,9 +56,15 @@ static int32_t Script_JumpOrAscendStart(lua_State* L) {
 
     if (mover->GetCanFly()) {
         mover->OnFlightLocal(time, 1);
-    } else {
-        mover->TryJumpOrAscend(time);
+        return 0;
     }
+
+    if (!(mover->m_movement->m_flags & MOVEMENTFLAG_SWIMMING) && (mover->m_clientFlags & 0x80000000) && (mover->m_clientFlags & 0x200000)) {
+        mover->OnSwimStartLocal(time);
+        return 0;
+    }
+
+    mover->TryJumpOrAscend(time);
 
     return 0;
 }

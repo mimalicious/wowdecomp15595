@@ -221,7 +221,7 @@ int32_t CGUnit::IsJumping() const {
 
 // OFFSET: 0x00448D50/0x140055870
 int32_t CGUnit::CanMove() const {
-    return this->m_unit->m_unitFieldHealth > 0 && !(this->m_movement->m_flags & 0x100A00) && this->m_unit->m_unitFieldBytes1[0] != 7;
+    return this->m_unit->m_unitFieldHealth > 0 && !(this->m_movement->m_flags & (MOVEMENTFLAG_ROOT | MOVEMENTFLAG_PENDING_ROOT | MOVEMENTFLAG_UNK_40000000)) && this->m_unit->m_unitFieldBytes1[0] != 7;
 }
 
 // OFFSET: 0x0048D960/0x1400B17A0

@@ -1070,7 +1070,7 @@ int32_t CGPlayer_C::CanLoot(const CGObject_C* object) {
         return 0;
     }
 
-    return !this->IsDeadOrGhost() && !(this->m_movement->m_flags & 0x1000) && !(this->m_unit->m_unitFieldFlags & 0x40000) && this->IsLocalClientControlled();
+    return !this->IsDeadOrGhost() && !(this->m_movement->m_flags & MOVEMENTFLAG_FALLING) && !(this->m_unit->m_unitFieldFlags & 0x40000) && this->IsLocalClientControlled();
 }
 
 // PROVEN: 84de2510 IDENTICAL/DIFFERENT
@@ -2968,7 +2968,7 @@ void CGPlayer_C::UpdateActiveMoverDisplay(uint32_t time) {
         this->OnSetRawFacingLocal(time, CMath::normalizeangle0to2pi_(this->GetRawFacing() + offset));
     }
 
-    if ((this->m_movement->m_flags & 0x2200000) || (this->m_movement->m_flags2 & 0x20)) {
+    if ((this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (this->m_movement->m_flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING)) {
         if (CGInputControl::GetActive()->CameraCanTurnPlayer() || !(this->m_movementData.m_flags & 0xC0)) {
             this->OnSetPitchLocal(time, ClampPitch(this->GetPitch() + offset * 4.0f));
         }
@@ -3552,7 +3552,7 @@ int32_t Packet_SMSG_EMOTE(void* param, NETMESSAGE msgId, uint32_t time, CDataSto
     msg->Get(guid.m_guid);
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-    if (unit && unit->m_unit->m_unitFieldBytes1[0] != 3 && !(unit->m_movement->m_flags & 0x200000)) {
+    if (unit && unit->m_unit->m_unitFieldBytes1[0] != 3 && !(unit->m_movement->m_flags & MOVEMENTFLAG_SWIMMING)) {
         unit->PlayEmoteAnimation(emote, 0, 0);
     }
 
@@ -10317,7 +10317,7 @@ int32_t CGPlayer_C::OnLootReleaseResponse(CDataStore* msg) {
 
 // OFFSET: 0x0055FFF0/0x1401BDB10
 void CGPlayer_C::LootCorpse(CGCorpse_C* corpse, bool autoInteract) {
-    if (!this->CanLoot(corpse) || !corpse->CanBeLooted() || (this->m_movement->m_flags & 0xC010FF)) {
+    if (!this->CanLoot(corpse) || !corpse->CanBeLooted() || (this->m_movement->m_flags & 0x6008FF)) {
         return;
     }
 
@@ -10370,7 +10370,7 @@ void CGPlayer_C::LootUnit(CGUnit_C* unit, bool autoInteract) {
         }
     }
 
-    if (this->m_movement->m_flags & 0xC010FF) {
+    if (this->m_movement->m_flags & 0x6008FF) {
         return;
     }
 

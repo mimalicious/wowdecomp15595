@@ -318,9 +318,7 @@ int32_t __stdcall CGInputControl::CanControl(CGUnit_C* unit) {
         return 0;
     }
 
-    CMoveSpline* spline = unit->m_movement->m_spline;
-
-    if (spline && !(spline->m_flags & 0x400)) {
+    if (unit->m_movement->IsOnSpline()) {
         return 0;
     }
 
@@ -342,13 +340,11 @@ int32_t CGInputControl::CameraCanTurnPlayer() const {
             return 0;
         }
 
-        CMoveSpline* spline = mover->m_movement->m_spline;
-
-        if (spline && !(spline->m_flags & 0x400)) {
+        if (mover->m_movement->IsOnSpline()) {
             return 0;
         }
 
-        if ((mover->m_unit->m_unitFieldFlags & 0x40000) || mover->IsVehicleTransitionPreventingAction() || mover->GetClientStandState()) {
+        if ((mover->m_unit->m_unitFieldFlags & 0x40000) || mover->IsVehicleTransitionPreventingAction() || mover->GetClientStandState() || (mover->m_unit->m_unitFieldFlags2 & 0x8000)) {
             return 0;
         }
 
@@ -451,12 +447,12 @@ void CGInputControl::SetMouselookOverrideBinding(const char* key, const char* bi
 
 // OFFSET: 0x004483E0/0x140054D60
 int32_t __stdcall CGInputControl::CanTurn(CGUnit_C* unit) {
-    return CGInputControl::CanControl(unit) && !(unit->m_unit->m_unitFieldFlags & 0x40000) && !unit->IsVehiclePreventingTurning();
+    return CGInputControl::CanControl(unit) && !(unit->m_unit->m_unitFieldFlags & 0x40000) && !(unit->m_unit->m_unitFieldFlags2 & 0x8000) && !unit->IsVehiclePreventingTurning();
 }
 
 // OFFSET: 0x00448430/0x140054DB0
 int32_t CGInputControl::CanSyncFreeLookFacing(CGUnit_C* unit) const {
-    return CGInputControl::CanControl(unit) && !(unit->m_unit->m_unitFieldFlags & 0x40000) && !unit->IsVehiclePreventingTurning() && (this->m_flags & 0x2000001) && !unit->GetClientStandState();
+    return CGInputControl::CanControl(unit) && !(unit->m_unit->m_unitFieldFlags & 0x40000) && !(unit->m_unit->m_unitFieldFlags2 & 0x8000) && !unit->IsVehiclePreventingTurning() && (this->m_flags & 0x2000001) && !unit->GetClientStandState();
 }
 
 // OFFSET: 0x00448AA0/0x140055590
@@ -477,9 +473,7 @@ int32_t CGInputControl::CameraCanPitchPlayer() {
         return 0;
     }
 
-    CMoveSpline* spline = mover->m_movement->m_spline;
-
-    if (spline && !(spline->m_flags & 0x400)) {
+    if (mover->m_movement->IsOnSpline()) {
         return 0;
     }
 
@@ -489,7 +483,7 @@ int32_t CGInputControl::CameraCanPitchPlayer() {
 
     CMovement_C* movement = mover->m_movement;
 
-    if ((movement->m_flags2 & 0x20) && !(movement->m_flags & 0x2200000)) {
+    if ((movement->m_flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING) && !(movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING))) {
         VehicleRec* rec = mover->GetVehicleRec();
 
         if (!rec || !(rec->m_flags & 0x40000)) {
@@ -511,6 +505,7 @@ void CGInputControl::EnterWorld() {
     this->m_time = time;
     this->m_joystickLookX = 0.0f;
     this->m_joystickLookY = 0.0f;
+    this->m_facingOverrideActive = 0;
 }
 
 // OFFSET: 0x00449060/0x140055C70
@@ -519,7 +514,7 @@ int32_t __stdcall CGInputControl::CanMove(CGUnit_C* unit) {
         return 0;
     }
 
-    return unit->m_unit->m_unitFieldHealth > 0 && !(unit->m_movement->m_flags & 0x100A00) && unit->m_unit->m_unitFieldBytes1[0] != 7 && !unit->HasVehicleTransport();
+    return unit->m_unit->m_unitFieldHealth > 0 && !(unit->m_movement->m_flags & (MOVEMENTFLAG_ROOT | MOVEMENTFLAG_PENDING_ROOT | MOVEMENTFLAG_UNK_40000000)) && unit->m_unit->m_unitFieldBytes1[0] != 7 && !unit->HasVehicleTransport();
 }
 
 // OFFSET: 0x00928E90/0x14068EC50
@@ -666,7 +661,7 @@ void CGInputControl::CameraTurnPlayer(uint32_t time, float facing) {
         mover->ConvertVehicleCameraRelativeFacingToTransportRelativeFacing(facing);
     }
 
-    if (mover->m_movement->m_flags2 & 0x8) {
+    if (mover->m_movement->m_flags2 & MOVEMENTFLAG2_FULL_SPEED_TURNING) {
         if (!this->m_facingOverrideActive || this->m_facingOverride != facing) {
             mover->OnTurnToAngleLocal(time, facing);
             this->m_facingOverride = facing;
@@ -713,7 +708,7 @@ void CGInputControl::SetPlayerPitch(CGUnit_C* unit, uint32_t time, float pitch) 
         }
     }
 
-    if (unit->m_movement->m_flags2 & 0x10) {
+    if (unit->m_movement->m_flags2 & MOVEMENTFLAG2_FULL_SPEED_PITCHING) {
         if (!this->m_vehicleAimValid || this->m_vehicleAim != pitch) {
             unit->OnPitchToAngleLocal(time, pitch);
             this->m_vehicleAim = pitch;
@@ -933,6 +928,7 @@ void CGInputControl::Reset() {
     this->m_time = time;
     this->m_joystickLookX = 0.0f;
     this->m_joystickLookY = 0.0f;
+    this->m_facingOverrideActive = 0;
 }
 
 // OFFSET: 0x004490B0/0x140055CD0
@@ -940,7 +936,7 @@ void CGInputControl::AscendDescendPlayer(uint32_t time, CGUnit_C* unit) {
     CMovement_C* movement = unit->m_movement;
     uint32_t moveFlags = movement->m_flags;
 
-    if (!(moveFlags & 0x2200000)) {
+    if (!(moveFlags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING))) {
         this->m_flags &= ~0x100000u;
         return;
     }
@@ -952,7 +948,7 @@ void CGInputControl::AscendDescendPlayer(uint32_t time, CGUnit_C* unit) {
         direction--;
     }
 
-    if (movement->m_flags2 & 0x10) {
+    if (movement->m_flags2 & MOVEMENTFLAG2_FULL_SPEED_PITCHING) {
         if (direction > 0) {
             if (!(flags & 0x100000) || (moveFlags & 0x80)) {
                 unit->OnPitchStartLocal(time, 1);
@@ -986,12 +982,12 @@ void CGInputControl::AscendDescendPlayer(uint32_t time, CGUnit_C* unit) {
     }
 
     if (direction > 0) {
-        if (!(this->m_flags & 0x100000) || (unit->m_movement->m_flags & 0x800000)) {
+        if (!(this->m_flags & 0x100000) || (unit->m_movement->m_flags & MOVEMENTFLAG_DESCENDING)) {
             unit->OnAscendDescendStartLocal(time, 1);
             this->m_flags |= 0x100000;
         }
     } else {
-        if (!(this->m_flags & 0x100000) || (unit->m_movement->m_flags & 0x400000)) {
+        if (!(this->m_flags & 0x100000) || (unit->m_movement->m_flags & MOVEMENTFLAG_ASCENDING)) {
             unit->OnAscendDescendStartLocal(time, 0);
             this->m_flags |= 0x100000;
         }
@@ -1235,7 +1231,7 @@ void CGInputControl::UpdatePlayer(uint32_t time, int32_t a2) {
     if (canTurn) {
         this->TurnPlayer(time, mover);
 
-        if ((mover->m_movement->m_flags & 0x2200000) || (mover->m_movement->m_flags2 & 0x20)) {
+        if ((mover->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (mover->m_movement->m_flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING)) {
             this->PitchPlayer(time, mover);
         }
     } else {
@@ -1248,7 +1244,7 @@ void CGInputControl::UpdatePlayer(uint32_t time, int32_t a2) {
         }
 
         if (this->m_flags & 0x80000) {
-            if (!mover->m_movement->IsOnSpline() && (mover->m_movement->m_flags & 0x2200000)) {
+            if (!mover->m_movement->IsOnSpline() && (mover->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING))) {
                 mover->OnPitchStopLocal(time);
             }
 
@@ -1306,7 +1302,7 @@ void DescendStart() {
 // OFFSET: 0x0044ADD0
 void CGInputControl::OnFocusChange(const CFocusEvent& event) {
     if (!event.m_data.m_focus) {
-        this->m_flags &= 0xFFFFF00F;
+        this->m_flags &= 0xFFFF900F;
         this->UpdatePlayer(OsGetAsyncTimeMs(), 1);
     }
 
