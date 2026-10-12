@@ -79,7 +79,7 @@ void LFGLIST::DeleteParty(LFGListParty* party) {
     delete party;
 }
 
-// INLINED
+// OFFSET: 0x00987520
 void LFGLIST::Clear() {
     LFGListPlayer* player = this->m_players.m_fulllist.Head();
 

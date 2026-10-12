@@ -431,7 +431,7 @@ void CGCalendarEvent::SelectInvite(uint32_t index) {
     }
 }
 
-// INLINED
+// OFFSET: 0x00A0BB50
 static void InviteNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CGCalendarEvent* event = static_cast<CGCalendarEvent*>(param);
 

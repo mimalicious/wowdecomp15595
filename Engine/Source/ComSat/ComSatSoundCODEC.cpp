@@ -47,7 +47,7 @@ ComSat::Sound::CODECIPMR6000::LocalPlayer::LocalPlayer(ComSat::Allocator& alloca
     SPIRIT_IP_MR_V3_1_Init(this->m_encoder, this->m_tables);
 }
 
-// OFFSET: 0x00A3A0E0
+// OFFSET: [0x00A3A0E0, 0x00A3A3C0]
 ComSat::Sound::CODECIPMR6000::LocalPlayer::~LocalPlayer() {
     if (this->m_decoders) {
         for (int32_t i = 0; i < this->m_channelCount; i++) {
@@ -133,7 +133,7 @@ bool ComSat::Sound::CODECIPMR6000::LocalPlayer::DecompressEncodedData(int32_t ch
     return result == 0;
 }
 
-// OFFSET: 0x00A3B6F0
+// OFFSET: [0x00A3B6F0, 0x00A3A350]
 ComSat::Sound::CODEC::~CODEC() {
 }
 

@@ -200,7 +200,7 @@ BSN::BSNEncodedObject<T, P>::BSNEncodedObject(const EncodedObject* source) {
     }
 }
 
-// INLINED
+// OFFSET: [0x006287B0<Battlenet::Event::Update::Invoke, Protocol>, 0x00628B70<Battlenet::Event::Larva::Invoke, Protocol>, 0x00663000<Battlenet::Event::Header, Protocol>, 0x00903F30<Battlenet::Presence::FieldVal, Protocol>, 0x00904000<Battlenet::Presence::BlockList, Protocol>, 0x009040B0<Battlenet::Friends::FriendList, Protocol>, 0x00904170<Battlenet::Presence::FieldUpdate, Protocol>, 0x009042D0<Battlenet::Chat::MemberList, Protocol>, 0x00904360<Battlenet::Friends::FriendsOfFriendList, Protocol>]
 template <class T, class P>
 BSN::BSNEncodedObject<T, P>::~BSNEncodedObject() {
 }
@@ -245,7 +245,7 @@ BSN::BSNEncodedObjectPtr<T, P, ON_STACK>::BSNEncodedObjectPtr(const T* data) {
     this->m_context.ResolveType();
 }
 
-// INLINED
+// OFFSET: 0x00662A30
 template <class T, class P, int32_t ON_STACK>
 BSN::BSNEncodedObjectPtr<T, P, ON_STACK>::~BSNEncodedObjectPtr() {
 }

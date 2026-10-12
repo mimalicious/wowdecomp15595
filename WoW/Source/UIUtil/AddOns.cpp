@@ -619,7 +619,7 @@ bool IsAddOnLoaded(const char* name) {
     return false;
 }
 
-// INLINED
+// OFFSET: 0x0045F570
 void ClearAddOnEnableState(const char* character) {
     ADDONSTATELIST* list = s_addOnStates.Head();
 

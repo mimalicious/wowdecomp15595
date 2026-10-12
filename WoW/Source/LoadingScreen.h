@@ -83,7 +83,7 @@ CLoadingScreenShipInfo<T>::LOADINGSCREENTAXIPATHINFO::LOADINGSCREENTAXIPATHINFO(
     this->m_endNodeID = 0;
 }
 
-// INLINED
+// OFFSET: 0x0040DC00
 template <class T>
 void CLoadingScreenShipInfo<T>::Initialize(WowClientDB<T>* nodeDB, uint32_t pathCount) {
     this->m_paths.SetCount(pathCount);

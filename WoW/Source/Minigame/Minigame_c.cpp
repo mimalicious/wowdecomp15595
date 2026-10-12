@@ -25,7 +25,7 @@ CMinigameTicTacToe_C::CMinigameTicTacToe_C(uint64_t guid) : CMinigame_C(MINIGAME
     memset(this->m_board, 0, sizeof(this->m_board));
 }
 
-// INLINED
+// OFFSET: 0x00B38020
 CMinigame_C* CMinigame_C::CreateMinigame(MINIGAME_TYPE type, uint64_t guid) {
     if (type != MINIGAME_TICTACTOE) {
         return NULL;

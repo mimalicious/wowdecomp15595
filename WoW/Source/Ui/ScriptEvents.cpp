@@ -53,7 +53,7 @@ void ScriptEventsInitialize() {
 #undef SCRIPT_EVENT_NAME
 }
 
-// INLINED
+// OFFSET: 0x0044BC50
 static const WOWGUID* GetCurrentQuestGiverGUID() {
     if (CGQuestInfo::m_npcInform != WOWGUID()) {
         return &CGQuestInfo::m_npcInform;

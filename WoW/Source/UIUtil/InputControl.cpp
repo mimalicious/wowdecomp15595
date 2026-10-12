@@ -146,7 +146,7 @@ void CGInputControl::Destroy() {
     CGInputControl::s_inputControl = NULL;
 }
 
-// INLINED
+// OFFSET: 0x0044B960
 void InputControlDestroy() {
     CGInputControl::Destroy();
 }

@@ -525,7 +525,7 @@ CDataStore& CDataStore::GetInt8(uint32_t& val) {
     return *this;
 }
 
-// INLINED
+// OFFSET: 0x00550D80
 uint8_t CDataStore::GetByte() {
     uint8_t val = 0;
     this->Get(val);

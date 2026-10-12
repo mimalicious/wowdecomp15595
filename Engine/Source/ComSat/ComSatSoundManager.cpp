@@ -962,7 +962,7 @@ void ComSat::Sound::Manager::EncodeAvailableVoiceData() {
     }
 }
 
-// OFFSET: 0x00A37F70
+// OFFSET: [0x00A37F70, 0x00A38520]
 ComSat::Sound::Manager::~Manager() {
     uint32_t iterator = 0;
     ComSat::MapKey<uint8_t> playerKey;

@@ -170,7 +170,7 @@ static void SetInputString(const char* text) {
     }
 }
 
-// INLINED
+// OFFSET: 0x0060DDF0
 static void ReserveInputSpace(CONSOLELINE* line, uint32_t chars) {
     if (line->m_chars + chars < line->m_charsalloc) {
         return;
