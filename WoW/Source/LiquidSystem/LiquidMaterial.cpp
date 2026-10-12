@@ -864,7 +864,7 @@ void Liquid::CMaterialMercury::RenderFixedFunction(uint32_t pass, const C3Vector
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(7), NULL, 0, 1);
 }
 
-// OFFSET: 0x0071EF00
+// OFFSET: 0x0071EF00/0x1403F44A0
 void Liquid::CMaterialMercury::RenderProcedural(uint32_t pass, const C3Vector& camPos, CInstance* instance) {
     SetInstanceTransform(camPos, instance, s_vsConsts, s_psConsts);
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(7), s_vertexShader, 4 * Liquid::GetDynamicDisplMapCnt(), 1);
@@ -1353,7 +1353,7 @@ void Liquid::CMaterialWater::SetPixelShaderBelow(uint32_t reflection) {
     g_theGxDevicePtr->RsSet(GxRs_PixelShader, &s_pixelShaderBelow->m_permutes[permute]);
 }
 
-// OFFSET: 0x00721050
+// OFFSET: 0x00721050/0x1403F7090
 void Liquid::CMaterialWater::RenderShader(uint32_t pass, const C3Vector& camPos, CInstance* instance) {
     SetInstanceTransform(camPos, instance, s_vsConsts, s_psConsts);
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(7), s_vertexShader, 0, 1);

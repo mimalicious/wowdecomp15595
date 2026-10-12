@@ -2652,7 +2652,7 @@ void CMapObjGroup::GetHitTestDebugTextures(World::HitTestDebugItem* item) {
     }
 }
 
-// OFFSET: 0x00793C40
+// OFFSET: 0x00793C40/0x140485EA0
 CMapObjGroup::~CMapObjGroup() {
     this->Clear(1);
 }

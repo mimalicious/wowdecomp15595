@@ -577,7 +577,7 @@ static int32_t OnUpdatePlayerSkinID(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// OFFSET: 0x005657D0
+// OFFSET: 0x005657D0/0x1401C3940
 static int32_t OnUpdatePlayerHairStyle(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -608,7 +608,7 @@ static int32_t OnUpdatePlayerHairStyle(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
-// OFFSET: 0x005658C0
+// OFFSET: 0x005658C0/0x1401C3A50
 static int32_t OnUpdatePlayerFacialStyle(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -6546,7 +6546,7 @@ void CGPlayer_C::TriggerMovie(uint32_t movie) {
     }
 }
 
-// OFFSET: 0x005557A0
+// OFFSET: 0x005557A0/0x1401B2060
 static int32_t ReportQuestKillCredit(const uint32_t* credit, int32_t questId) {
     QuestCache* quest = g_questDBCache.GetRecord(questId, WOWGUID(), NULL, NULL, false);
 
@@ -6625,7 +6625,7 @@ static int32_t ReportQuestItemLoot(CGPlayer_C* player, QuestCache* quest, int32_
     return 1;
 }
 
-// OFFSET: 0x0056AF70
+// OFFSET: 0x0056AF70/0x1401CA6E0
 static void QuestItemLootCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     int32_t* loot = static_cast<int32_t*>(param);
 
@@ -9552,7 +9552,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverRequestItems(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: 0x00553120
+// OFFSET: 0x00553120/0x1401AE040
 int32_t __stdcall CGPlayer_C::OnQuestGiverInvalidQuest(CDataStore* msg) {
     uint32_t reason;
     msg->Get(reason);
@@ -11818,7 +11818,7 @@ int32_t OnUpdatePlayerTrackingMask(WOWGUID guid, uint32_t offset, uint32_t count
     return 1;
 }
 
-// OFFSET: 0x00553640
+// OFFSET: 0x00553640/0x1401AE560
 int32_t __stdcall CGPlayer_C::OnBuyFailed(CDataStore* msg) {
     WOWGUID vendor;
     uint32_t itemId;
@@ -11902,7 +11902,7 @@ void CGPlayer_C::ReceiveResurrectRequest(const char* name) {
     }
 }
 
-// OFFSET: 0x00556A20
+// OFFSET: 0x00556A20/0x1401B37D0
 int32_t __stdcall CGPlayer_C::OnSellResponse(CDataStore* msg) {
     WOWGUID vendor;
     WOWGUID item;

@@ -355,7 +355,7 @@ CSimpleFrame* FrameXML_CreateFrame(linkObject* node, CSimpleFrame* parent, CStat
     return frame;
 }
 
-// OFFSET: 0x004EDD80
+// OFFSET: 0x004EDD80/0x140131C30
 bool FrameXML_StoreHashNode(linkObject* node, const char* name, const char* taint, CStatus* status) {
     HashedNode* hashed = s_virtualNodes.Ptr(name);
 

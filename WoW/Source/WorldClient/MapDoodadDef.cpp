@@ -111,7 +111,7 @@ int32_t CMapDoodadDef::SelectUnderwater(CMapObjDefGroup* group) {
     return 1;
 }
 
-// OFFSET: 0x00787000
+// OFFSET: 0x00787000/0x1404763C0
 void CMapDoodadDef::UpdateMatrixOnly(const C44Matrix& matrix) {
     this->m_position = this->m_pos * matrix;
     C44Matrix transform;

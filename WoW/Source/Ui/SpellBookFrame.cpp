@@ -869,7 +869,7 @@ uint32_t CGSpellBook::GetSpellSkillInfoIndex(int32_t spellId) {
     return CGSpellBook::GetSkillInfoIndex(CGSpellBook::GetRealSpellBookSkillLine(spellId, NULL));
 }
 
-// OFFSET: 0x0090FE80
+// OFFSET: 0x0090FE80/0x14066B680
 void CGSpellBook::CompanionCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     const SpellRec* spell = NULL;
 

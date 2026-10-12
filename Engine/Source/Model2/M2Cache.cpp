@@ -553,7 +553,7 @@ CM2Cache::~CM2Cache() {
     }
 }
 
-// OFFSET: 0x00812A40
+// OFFSET: 0x00812A40/0x14094A420
 CM2Cache::CM2Cache() : m_threadStart(0, 0), m_threadDone(0, 0) {
     this->m_freeList = NULL;
     this->m_freeListTail = &this->m_freeList;

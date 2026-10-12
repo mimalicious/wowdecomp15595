@@ -88,7 +88,7 @@ int32_t CFramePoint::GetRelativeRect(CRect& rect) {
     return result;
 }
 
-// OFFSET: 0x0052EC40
+// OFFSET: 0x0052EC40/0x14017FC60
 float CFramePoint::X(float scale) {
     CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 

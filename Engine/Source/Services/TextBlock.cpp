@@ -254,7 +254,7 @@ float TextBlockGetWrappedTextHeight(HTEXTFONT font, const char* text, float font
     return NDCToDDCHeight(height);
 }
 
-// OFFSET: 0x00549640
+// OFFSET: 0x00549640/0x1401A2120
 uint32_t TextBlockGetMaxCharsWithinWidth(HTEXTFONT font, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -277,7 +277,7 @@ uint32_t TextBlockGetMaxCharsWithinWidthAndHeight(HTEXTFONT font, const char* te
     return GxuFontGetMaxCharsWithinWidthAndHeight(reinterpret_cast<FONTHASHOBJ*>(font)->m_font, text, DDCToNDCHeight(fontHeight), DDCToNDCWidth(blockWidth), DDCToNDCHeight(blockHeight), numBytes, DDCToNDCWidth(shadowWidth), scale, DDCToNDCHeight(spacing), ConvertStringFlags(flags));
 }
 
-// OFFSET: 0x00549790
+// OFFSET: 0x00549790/0x1401A23B0
 uint32_t TextBlockGetMaxCharsWithinWidthFromEnd(HTEXTFONT font, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

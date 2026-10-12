@@ -48,7 +48,7 @@ int32_t Packet_SMSG_OFFER_PETITION_ERROR(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// OFFSET: 0x009E0160
+// OFFSET: 0x009E0160/0x140776F30
 void CGPetitionInfo::SetPetitionStats(int32_t id) {
     if (CGPetitionInfo::m_petitionId != id) {
         return;

@@ -432,7 +432,7 @@ Blizzard::Streaming::Manifests::ServerItem::ServerItem() {
     this->m_active = true;
 }
 
-// OFFSET: 0x007D98D0
+// OFFSET: 0x007D98D0/0x1404DBDF0
 void Blizzard::Streaming::Manifests::ServerItem::InsertUsageSlot(UsageSlot& slot, Blizzard::Time::Timestamp end) {
     UsageSlot* endSlot = NULL;
     std::vector<UsageSlot>::iterator it = this->m_usageSlots.begin();
@@ -474,7 +474,7 @@ void Blizzard::Streaming::Manifests::ServerItem::InsertUsageSlot(UsageSlot& slot
     }
 }
 
-// OFFSET: 0x007D9AF0
+// OFFSET: 0x007D9AF0/0x1404DC090
 void Blizzard::Streaming::Manifests::ServerItem::InsertTimeslot(TimeslotItem* timeslot) {
     UsageSlot slot;
 
@@ -496,7 +496,7 @@ void Blizzard::Streaming::Manifests::ServerItem::InsertTimeslot(TimeslotItem* ti
     }
 }
 
-// OFFSET: 0x007D9BB0
+// OFFSET: 0x007D9BB0/0x1404DC1C0
 bool Blizzard::Streaming::ManifestInfo::FinalizeManifestItems() {
     bool result = true;
 

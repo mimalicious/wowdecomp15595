@@ -1199,7 +1199,7 @@ void Battlenet::S2Map::InfoBase::SetDefault_labels(BSN::Array<BSN::FourCC, 16>& 
     value.m_count = 0;
 }
 
-// OFFSET: 0x00B2CBE0
+// OFFSET: 0x00B2CBE0/0x1408F52E0
 void Battlenet::S2Map::Info::SetDefault_InfoBase(Battlenet::S2Map::InfoBase& value) {
     Battlenet::S2Map::InfoBase::SetDefault_handle(value.m_handle);
     Battlenet::S2Map::InfoBase::SetDefault_headerCacheHandle(value.m_headerCacheHandle);

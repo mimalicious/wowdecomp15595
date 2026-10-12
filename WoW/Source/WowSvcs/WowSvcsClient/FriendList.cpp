@@ -1084,7 +1084,7 @@ void FriendList::SortMuteList() {
     FrameScript_SignalEvent(SCRIPT_EVENT_MUTELIST_UPDATE, NULL);
 }
 
-// OFFSET: 0x004D2CB0
+// OFFSET: 0x004D2CB0/0x14010FD70
 void FriendList::FriendRemoved(WOWGUID guid) {
     for (uint32_t i = 0; i < 100; i++) {
         FriendInfo* info = &this->m_friends[i];

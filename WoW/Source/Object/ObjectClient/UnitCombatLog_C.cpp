@@ -2235,7 +2235,7 @@ void UnitCombatLog(const WOWGUID& guid, int32_t type, int32_t damage, int32_t ab
     }
 }
 
-// OFFSET: 0x005F78B0
+// OFFSET: 0x005F78B0/0x14027BAB0
 void UnitCombatLog(const ATTACKROUNDINFO& info) {
     CGUnit_C* attacker;
 
@@ -2655,7 +2655,7 @@ void UnitCombatLogSummon(const WOWGUID& casterGuid, const WOWGUID& targetGuid, c
     QueueCombatLogEntry(GetCombatLogEntry(casterGuid, targetGuid, event, spell), 0);
 }
 
-// OFFSET: 0x005F8740
+// OFFSET: 0x005F8740/0x14027CDA0
 void UnitCombatLogResurrect(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell) {
     if (spell && !(spell->m_attributes & 0x180) && *spell->m_name) {
         QueueCombatLogEntry(GetCombatLogEntry(casterGuid, targetGuid, 46, spell), 0);
@@ -2711,7 +2711,7 @@ void UnitCombatLogDurabilityDamage(const WOWGUID& casterGuid, const WOWGUID& tar
     QueueCombatLogEntry(entry, 0);
 }
 
-// OFFSET: 0x005F88F0
+// OFFSET: 0x005F88F0/0x14027D050
 void UnitCombatLogDurabilityDamageAll(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell) {
     if (spell && !(spell->m_attributes & 0x180) && *spell->m_name) {
         QueueCombatLogEntry(GetCombatLogEntry(casterGuid, targetGuid, 20, spell), 0);
@@ -3064,7 +3064,7 @@ int32_t CombatLog::HandleSpellLogMiss(CDataStore* msg, int32_t timeOffset) {
     return 1;
 }
 
-// OFFSET: 0x00558C30
+// OFFSET: 0x00558C30/0x1401B6010
 int32_t CombatLog::HandleSpellLogExecute(CDataStore* msg, int32_t timeOffset) {
     SmartGUID caster;
     *msg >> caster;
@@ -3323,7 +3323,7 @@ int32_t CombatLog::HandleSpellHealLog(CDataStore* msg, int32_t timeOffset) {
     return 1;
 }
 
-// OFFSET: 0x00559810
+// OFFSET: 0x00559810/0x1401B6F00
 int32_t CombatLog::HandleSpellLogEnergizeLog(CDataStore* msg, int32_t timeOffset) {
     SmartGUID target;
     *msg >> target;

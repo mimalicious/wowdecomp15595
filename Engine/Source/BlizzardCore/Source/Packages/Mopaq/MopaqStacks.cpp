@@ -938,7 +938,7 @@ bool System_Mopaq::ChecksumData::FinishCrcAndMd5(ChecksumData* data, Blizzard::M
     return true;
 }
 
-// OFFSET: 0x007F3E40
+// OFFSET: 0x007F3E40/0x140501410
 static void AppendHandleSource(Blizzard::Mopaq::MpqHandleRecord* handle, char* buffer, uint32_t size) {
     if (handle->m_logicalArchive) {
         char name[260];

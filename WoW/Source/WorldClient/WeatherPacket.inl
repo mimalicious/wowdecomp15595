@@ -12,7 +12,7 @@ Packet<T, N, V>::Packet() {
     this->m_buf = g_theGxDevicePtr->BufCreate(this->m_pool, sizeof(typename T::Vertex), N * V, 0);
 }
 
-// OFFSET: [0x0074B470<Rain::Drop, 1024, 3>, 0x0074B510<Rain::Patter, 1024, 3>, 0x0074B5B0<Snow::Flake, 6144, 1>, 0x0074B5B0<Sand::Grain, 6144, 1>]
+// OFFSET: [0x0074B470/0x14042AE20<Rain::Drop, 1024, 3>, 0x0074B510/0x14042AED0<Rain::Patter, 1024, 3>, 0x0074B5B0/0x14042B050<Snow::Flake, 6144, 1>, 0x0074B5B0/0x14042B050<Sand::Grain, 6144, 1>]
 template <class T, uint32_t N, uint32_t V>
 Packet<T, N, V>::~Packet() {
     GxBufDestroy(this->m_buf);
@@ -30,7 +30,7 @@ PacketList<P>::PacketList() {
     this->m_current = NULL;
 }
 
-// OFFSET: [0x007517E0<Packet<Rain::Drop, 1024, 3>>, 0x00751A20<Packet<Rain::Patter, 1024, 3>>, 0x00751B60<Packet<Snow::Flake, 6144, 1>>, 0x00751CA0<Packet<Sand::Grain, 6144, 1>>]
+// OFFSET: [0x007517E0/0x1404321F0<Packet<Rain::Drop, 1024, 3>>, 0x00751A20/0x1404325A0<Packet<Rain::Patter, 1024, 3>>, 0x00751B60/0x140432810<Packet<Snow::Flake, 6144, 1>>, 0x00751CA0/0x140432A80<Packet<Sand::Grain, 6144, 1>>]
 template <class P>
 PacketList<P>::~PacketList() {
     for (P* packet = this->m_active.Head(), * next; packet; packet = next) {

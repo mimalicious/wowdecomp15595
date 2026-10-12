@@ -82,7 +82,7 @@ bool Blizzard::Util::HashMap<K, V>::Get(const K& key, V* value) {
     return true;
 }
 
-// OFFSET: 0x007BDE50<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
+// OFFSET: 0x007BDE50/0x1404B6780<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
 uint32_t Blizzard::Util::HashMap<K, V>::CopyEntries(const Entry* entries, uint32_t count) {
     uint32_t copied = 0;
@@ -116,7 +116,7 @@ V* Blizzard::Util::HashMap<K, V>::Insert(const K& key) {
     return &this->m_entries[index].m_value;
 }
 
-// OFFSET: 0x007C1090<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
+// OFFSET: 0x007C1090/0x1404BB200<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
 void Blizzard::Util::HashMap<K, V>::Resize(uint32_t capacity) {
     Entry* old = this->m_entries;

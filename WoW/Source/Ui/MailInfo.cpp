@@ -853,7 +853,7 @@ int32_t CanDeleteEmptyMail(MailboxMessageInfo* message) {
     return (message->m_messageType == 2 || autoDelete || (!SStrLen(message->m_body) && !message->m_mailTemplateID)) && !message->m_deletePending && !message->m_money && !GetNumAttachments(message);
 }
 
-// OFFSET: 0x0096E110
+// OFFSET: 0x0096E110/0x1406E51F0
 void CGMailInfo::RemoveMoney(uint32_t messageID) {
     uint32_t i = 0;
 
@@ -1481,7 +1481,7 @@ int32_t Packet_MSG_QUERY_NEXT_MAIL_TIME(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: 0x009704A0
+// OFFSET: 0x009704A0/0x1406E7B90
 void CGMailInfo::ShutdownGame() {
     uint32_t count = CGMailInfo::m_stationeries.m_count;
 

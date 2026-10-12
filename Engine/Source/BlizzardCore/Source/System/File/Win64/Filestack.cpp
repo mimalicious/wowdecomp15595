@@ -1219,7 +1219,7 @@ bool System_File::Write(Blizzard::File::Filesystem* fs, System_File::Stacked::Fi
     return write_overlapped(parms->m_stream, parms->m_buffer, NULL, &parms->m_amount);
 }
 
-// OFFSET: 0x007E6110
+// OFFSET: 0x007E6110/0x1404EFAF0
 bool System_File::read_locked(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     Blizzard::Lock::ScopedMutex lock(*s_ioLock);
 
@@ -1232,7 +1232,7 @@ bool System_File::read_locked(Blizzard::File::StreamRecord* file, void* buffer, 
     return read_overlapped(file, buffer, NULL, count);
 }
 
-// OFFSET: 0x007E6200
+// OFFSET: 0x007E6200/0x1404EFBE0
 bool System_File::write_locked(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     Blizzard::Lock::ScopedMutex lock(*s_ioLock);
 

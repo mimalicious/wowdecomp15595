@@ -180,7 +180,7 @@ bool Blizzard::Net::CloseSocket(Socket* s, bool linger) {
     return true;
 }
 
-// OFFSET: 0x007BD190
+// OFFSET: 0x007BD190/0x1404B57F0
 bool Blizzard::Net::Connect(Socket s, const sockaddr* address) {
     if (!connect(s, address, sizeof(sockaddr_in))) {
         return true;

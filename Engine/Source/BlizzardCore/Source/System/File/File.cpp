@@ -745,7 +745,7 @@ bool Blizzard::File::SetSparse(StreamRecord* file, bool zeroFill) {
     return false;
 }
 
-// OFFSET: 0x007ACCE0
+// OFFSET: 0x007ACCE0/0x1404BE070
 bool Blizzard::File::SetModificationTime(StreamRecord* file, Blizzard::Time::Timestamp time) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -1070,7 +1070,7 @@ void System_File::Stacked::HoistAll() {
     HOIST(m_shutdown);
 }
 
-// OFFSET: 0x007B5210
+// OFFSET: 0x007B5210/0x1404AB050
 void System_File::Stacked::Push(const Blizzard::File::Filesystem* fs) {
     Blizzard::File::Filesystem* stack = static_cast<Blizzard::File::Filesystem*>(SMemAlloc(sizeof(Blizzard::File::Filesystem), __FILE__, __LINE__, 0));
     Blizzard::String::MemCopy(stack, fs, sizeof(Blizzard::File::Filesystem));

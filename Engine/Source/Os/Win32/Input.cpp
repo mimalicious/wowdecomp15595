@@ -759,7 +759,7 @@ static int32_t ConvertButton(uint32_t message, uintptr_t wparam, MOUSEBUTTON* bu
     return 0;
 }
 
-// OFFSET: 0x00873A70
+// OFFSET: 0x00873A70/0x1405AA3E0
 static void RestoreMouse() {
     POINT point;
     point.x = s_mousePos.x;

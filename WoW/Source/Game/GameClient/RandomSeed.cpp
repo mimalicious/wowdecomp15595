@@ -62,7 +62,7 @@ static void SeedRandomValues(_RandomSeed* seed, int32_t value) {
     seed->m_count = 256;
 }
 
-// OFFSET: 0x00B13000
+// OFFSET: 0x00B13000/0x1408D8C70
 void InitializeRandomSeed(_RandomSeed* seed, uint32_t value) {
     if (value) {
         srand(value);

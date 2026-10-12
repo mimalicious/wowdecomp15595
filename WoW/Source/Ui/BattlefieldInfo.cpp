@@ -1397,7 +1397,7 @@ bool OnBattlefieldMgrQueueRequestResponse(ClientBattlefieldMgrQueueRequestRespon
     return true;
 }
 
-// OFFSET: 0x00940AB0
+// OFFSET: 0x00940AB0/0x1406ACE20
 void CGBattlefieldInfo::BattlefieldMgrQueueRequest(uint16_t battleID) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return;
@@ -1463,7 +1463,7 @@ void CGBattlefieldInfo::BattlefieldMgrQueueInviteResponse(uint16_t battleID, int
     ClientServices::Send(&msg);
 }
 
-// OFFSET: 0x00940CC0
+// OFFSET: 0x00940CC0/0x1406AD0C0
 void CGBattlefieldInfo::BattlefieldMgrExitRequest(uint16_t battleID) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return;

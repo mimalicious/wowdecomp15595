@@ -1141,7 +1141,7 @@ int32_t CGxDeviceD3d11::DeviceCreate(void* window, const CGxFormat& format) {
     return 0;
 }
 
-// OFFSET: 0x00853B80
+// OFFSET: 0x00853B80/0x1405837F0
 int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     switch (wm) {
         case GxWM_Size:

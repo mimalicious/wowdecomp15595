@@ -3860,7 +3860,7 @@ void CGUnit_C::OnAuraAdded(uint32_t index, AuraData* aura) {
     this->OnAuraAddedSpecial(spell, aura, 0);
 }
 
-// OFFSET: 0x005C92D0
+// OFFSET: 0x005C92D0/0x140240CC0
 void CGUnit_C::UpdateAuraHealPrediction(uint32_t index, AuraData* aura) {
     const SpellRec* spell = g_spellDB.GetRecord(aura->m_spellId);
 
@@ -23971,7 +23971,7 @@ void CGUnit_C::UpdateEffectVirtualItemFlag() {
     }
 }
 
-// OFFSET: 0x005CCD70
+// OFFSET: 0x005CCD70/0x1402454F0
 void CGUnit_C::ReleaseMissiles() {
     C3Vector position;
     position = this->GetMissileFirePosition();

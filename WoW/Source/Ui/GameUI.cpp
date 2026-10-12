@@ -5084,7 +5084,7 @@ void CGGameUI::SetLastEnchantItem(WOWGUID guid) {
     CGGameUI::m_lastEnchantItem = guid;
 }
 
-// OFFSET: 0x008C5930
+// OFFSET: 0x008C5930/0x140635710
 void CGGameUI::SetLastItemSpellTarget(WOWGUID guid) {
     CGGameUI::m_lastItemSpellTarget = guid;
 }

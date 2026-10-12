@@ -2260,7 +2260,7 @@ void SE3::DoneLoadingMessageQueuePut(SE3DoneLoadingMessage* message) {
     SE3::sm_DoneLoading_MessageQueue_CritSect.Leave();
 }
 
-// OFFSET: 0x0070C470
+// OFFSET: 0x0070C470/0x1403DAB00
 SE3COMBINABLESOUNDLIST::SE3COMBINABLESOUNDLIST() {
 }
 

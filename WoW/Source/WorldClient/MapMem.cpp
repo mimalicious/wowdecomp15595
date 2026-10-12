@@ -114,7 +114,7 @@ void CMap::FreeAreaLow(CMapAreaLow* areaLow) {
     CMap::s_areaLowHeap->Delete(areaLow, "", 0);
 }
 
-// OFFSET: 0x007761B0
+// OFFSET: 0x007761B0/0x1404607D0
 CMapChunk* CMap::AllocChunk() {
     return CMap::s_chunkHeap->New("", 0);
 }
@@ -147,7 +147,7 @@ void CMap::FreeChunkBuf(CMapChunkBuf* chunkBuf) {
     CMap::s_chunkBufHeap->Delete(chunkBuf, "", 0);
 }
 
-// OFFSET: 0x00776390
+// OFFSET: 0x00776390/0x1404609E0
 CMapDoodadDef* CMap::AllocDoodadDef() {
     return CMap::s_doodadDefHeap->New("", 0);
 }
@@ -178,7 +178,7 @@ void CMap::FreeMapObjDefGroup(CMapObjDefGroup* mapObjDefGroup) {
     CMap::s_mapObjDefGroupHeap->Delete(mapObjDefGroup, "", 0);
 }
 
-// OFFSET: 0x00776510
+// OFFSET: 0x00776510/0x140460B60
 CMapObjDef* CMap::AllocMapObjDef() {
     return CMap::s_mapObjDefHeap->New("", 0);
 }

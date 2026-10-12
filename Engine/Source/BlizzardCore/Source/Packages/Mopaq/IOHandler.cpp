@@ -354,7 +354,7 @@ bool System_Mopaq::MopaqReadHandler::PerformRead(void* buffer, int64_t offset, i
     return this->m_base.Read(buffer, offset + this->m_baseOffset, count, NULL);
 }
 
-// OFFSET: 0x007BA1E0
+// OFFSET: 0x007BA1E0/0x1404B1990
 System_Mopaq::SectorReadHandler::SectorCache::SectorCache(uint32_t size) {
     this->m_data = NULL;
     this->m_sector = -1;

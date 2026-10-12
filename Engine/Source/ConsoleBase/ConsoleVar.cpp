@@ -765,7 +765,7 @@ CVar* CVar::LookupRegistered(const char* name) {
     return var;
 }
 
-// OFFSET: 0x00656330
+// OFFSET: 0x00656330/0x1402F7850
 void CVar::DeleteCharacterCVars() {
     CVar* var = s_registeredCVars.m_fulllist.Head();
 

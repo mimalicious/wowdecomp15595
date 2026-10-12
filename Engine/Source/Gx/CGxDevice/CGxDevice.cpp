@@ -1070,7 +1070,7 @@ void CGxDevice::ClampRectLeft(CiRect& windowRect) {
     }
 }
 
-// OFFSET: 0x00842FC0
+// OFFSET: 0x00842FC0/0x14056F490
 void CGxDevice::ClampRectRight(CiRect& windowRect) {
     if (windowRect.maxX - windowRect.minX - s_clientAdjust.x < kWinMinSize.x) {
         windowRect.maxX = kWinMinSize.x + s_clientAdjust.x + windowRect.minX;

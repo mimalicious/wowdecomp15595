@@ -3209,7 +3209,7 @@ void CGCalendar::ProcessInviteModeratorStatusAlert(CDataStore* msg, uint8_t* cle
     }
 }
 
-// OFFSET: 0x009B3EA0
+// OFFSET: 0x009B3EA0/0x14073CF60
 void CGCalendar::GuildChanged() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

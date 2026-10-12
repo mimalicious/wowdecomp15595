@@ -165,7 +165,7 @@ void CShaderEffect::SetGlobalLighting(CM2Light* light) {
     }
 }
 
-// OFFSET: 0x004320D0
+// OFFSET: 0x004320D0/0x14003A890
 void CShaderEffect::ComputeLocalLights(LocalLights* localLights, uint32_t lightCount, CM2Light** lights, const C3Vector* origin) {
     uint32_t i = 0;
 

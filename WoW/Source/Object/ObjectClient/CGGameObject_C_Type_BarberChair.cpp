@@ -13,7 +13,7 @@ uint32_t CGGameObject_C_Type_BarberChair::GetNumSlots() const {
     return 1;
 }
 
-// OFFSET: 0x005A2440
+// OFFSET: 0x005A2440/0x140212670
 bool CGGameObject_C_Type_BarberChair::CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const {
     if (!CGGameObject_C_Type_Chair::CanUseNow(error, distance, errorText)) {
         return false;

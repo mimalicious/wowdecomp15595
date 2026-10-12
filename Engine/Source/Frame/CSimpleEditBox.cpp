@@ -1929,7 +1929,7 @@ void CSimpleEditBox::CreateCandidatesFrame() {
     this->m_candidateHighlight->SetTexture(highlightColor);
 }
 
-// OFFSET: 0x005197F0
+// OFFSET: 0x005197F0/0x140165060
 int32_t CSimpleEditBox::OnLayerKeyDownRepeat(const CKeyEvent& evt) {
     if (!this->m_visible) {
         return 0;
@@ -2290,7 +2290,7 @@ int32_t CSimpleEditBox::PopulateCandidates(uint32_t listMask) {
     return 1;
 }
 
-// OFFSET: 0x0051A1A0
+// OFFSET: 0x0051A1A0/0x140165E80
 int32_t CSimpleEditBox::OnLayerIme(const CImeEvent& evt) {
     if (!this->m_visible) {
         return 0;
@@ -2757,7 +2757,7 @@ void CSimpleEditBox::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: 0x0051B630
+// OFFSET: 0x0051B630/0x1401677A0
 int32_t CSimpleEditBox::OnLayerKeyDown(const CKeyEvent& evt) {
     if (!this->m_visible) {
         return 0;

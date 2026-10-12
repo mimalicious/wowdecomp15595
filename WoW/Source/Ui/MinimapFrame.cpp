@@ -695,7 +695,7 @@ static uint32_t ColorToLuminance(CImVector color) {
     return (77 * color.r + 151 * color.g + 28 * color.b) >> 8;
 }
 
-// OFFSET: 0x009CF160
+// OFFSET: 0x009CF160/0x14075FDB0
 static bool IsCreatureInBlipList(int32_t list, int32_t entry) {
     for (uint32_t i = 0; i < s_objInfo[list].m_count; i++) {
         uint32_t high = static_cast<uint32_t>(s_objInfo[list].m_data[i].m_guid.m_guid >> 32);

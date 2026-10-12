@@ -248,7 +248,7 @@ void CGEquipmentManager::SaveSet(EQUIPMENT_SET* set, const char* name, const cha
     FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SETS_CHANGED, NULL);
 }
 
-// OFFSET: 0x009A1BB0
+// OFFSET: 0x009A1BB0/0x1407265B0
 int32_t CGEquipmentManager::SetUsesLockedSlots(const EQUIPMENT_SET* set) {
     if (!set) {
         return 0;

@@ -2526,7 +2526,7 @@ void PlayerMoveKnockBackAck::Put(CDataStore* msg) {
 PlayerMoveNotActiveMover::PlayerMoveNotActiveMover() {
 }
 
-// OFFSET: [0x006747E0]
+// OFFSET: [0x006747E0/0x140318600]
 PlayerMoveNotActiveMover::~PlayerMoveNotActiveMover() {
 }
 

@@ -519,7 +519,7 @@ int32_t CGChat::IsRecordedType(int32_t type) {
     }
 }
 
-// OFFSET: 0x008E5ED0
+// OFFSET: 0x008E5ED0/0x140614230
 int32_t CGChat::IsInWhisperSourceHistory(const char* name) {
     for (uint32_t i = 0; i < sizeof(((CGChat*)0)->m_whisperSrcHistory) / sizeof(CGChat::m_whisperSrcHistory[0]); i++) {
         WOWGUID guid = CGChat::m_whisperSrcHistory[i];

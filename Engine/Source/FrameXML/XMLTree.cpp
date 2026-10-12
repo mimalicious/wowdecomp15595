@@ -16,12 +16,12 @@ static XMLNode* s_freeNodes;
 // STATIC: 0x00DC77B0/0x140CAD490
 CDataAllocator XMLNode::s_allocator(sizeof(XMLNode), 1170);
 
-// OFFSET: 0x004EBAB0
+// OFFSET: 0x004EBAB0/0x14012EC80
 static void* XMLTree_MemAlloc(size_t size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x004EBAD0
+// OFFSET: 0x004EBAD0/0x14012ECA0
 static void* XMLTree_MemReAlloc(void* ptr, size_t size) {
     return SMemReAlloc(ptr, size, __FILE__, __LINE__, 0);
 }

@@ -2018,7 +2018,7 @@ int32_t DungeonEncounterFindFirst(int32_t mapId) {
     return -1;
 }
 
-// OFFSET: 0x00494CA0
+// OFFSET: 0x00494CA0/0x1400BA8C0
 void DBClient_CancelAllCallbacks() {
     for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
         (*table)->CancelAllCallbacks();

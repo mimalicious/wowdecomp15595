@@ -48,7 +48,7 @@ System_MPQGlobals::MopaqGlobals* System_MPQGlobals::GetMopaqGlobals() {
     return &s_globals.Get()->m_mopaq;
 }
 
-// OFFSET: 0x007EE2B0
+// OFFSET: 0x007EE2B0/0x1404FAD40
 Blizzard::Lock::RMutex* System_MPQGlobals::GetMopaqGlobalsLock() {
     return &s_globals.Get()->m_mopaqLock;
 }

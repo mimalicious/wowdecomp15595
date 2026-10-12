@@ -381,7 +381,7 @@ void Blizzard::Streaming::RequestProcessor::Shutdown() {
     this->m_queue.clear();
 }
 
-// OFFSET: [0x007E37E0, 0x007E4810/0x1404EC9B0]
+// OFFSET: [0x007E37E0/0x1404EA5A0, 0x007E4810/0x1404EC9B0]
 Blizzard::Streaming::DefaultRequestHandler::~DefaultRequestHandler() {
     this->Stop();
     delete this->m_processor;

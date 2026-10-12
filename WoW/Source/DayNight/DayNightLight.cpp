@@ -175,7 +175,7 @@ float DayNight::InterpTable(const C2Vector* table, uint32_t count, float t) {
     return base + (table[next].y - base) * (offset / range);
 }
 
-// OFFSET: 0x0064B180
+// OFFSET: 0x0064B180/0x1402EAA30
 static int32_t FindBand(int32_t time, int32_t* index, int32_t count, const int32_t* times, float* t, int32_t* next) {
     *next = 0;
     *t = 0.0f;

@@ -16179,7 +16179,7 @@ void LFGuildBrowseData::operator=(const LFGuildBrowseData& source) {
     this->m_borderColor = source.m_borderColor;
 }
 
-// OFFSET: 0x006AA920
+// OFFSET: 0x006AA920/0x14035A0C0
 void LFGuildRecruitData::operator=(const LFGuildRecruitData& source) {
     this->m_classID = source.m_classID;
     this->m_timeLeft = source.m_timeLeft;
@@ -16194,7 +16194,7 @@ void LFGuildRecruitData::operator=(const LFGuildRecruitData& source) {
     this->m_availability = source.m_availability;
 }
 
-// OFFSET: 0x006B5650
+// OFFSET: 0x006B5650/0x1403679D0
 void LFGuildApplicationData::operator=(const LFGuildApplicationData& source) {
     this->m_availability = source.m_availability;
     this->m_timeLeft = source.m_timeLeft;
@@ -16427,7 +16427,7 @@ void JamLfgSearchResultParty::operator=(const JamLfgSearchResultParty& source) {
     this->unk_011C[2] = source.unk_011C[2];
 }
 
-// OFFSET: 0x006B8C40
+// OFFSET: 0x006B8C40/0x14036BFF0
 void ClientGuildRosterMemberData::operator=(const ClientGuildRosterMemberData& source) {
     this->m_guildRepToCap = source.m_guildRepToCap;
     this->m_guildReputation = source.m_guildReputation;

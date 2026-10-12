@@ -272,7 +272,7 @@ void CGUIBindingsStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     DebugLog(buffer);
 }
 
-// OFFSET: 0x009246A0
+// OFFSET: 0x009246A0/0x140688C30
 OVERRIDEKEYBINDING::~OVERRIDEKEYBINDING() {
     for (int32_t i = 0; i < 2; i++) {
         this->m_lists[i].Clear();
@@ -694,7 +694,7 @@ CGUIBindings::CGUIBindings() {
     this->m_bindingModeToggles = 0;
 }
 
-// OFFSET: 0x00925960
+// OFFSET: 0x00925960/0x14068AAE0
 CGUIBindings::~CGUIBindings() {
     this->m_commands.Clear();
 

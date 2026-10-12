@@ -487,7 +487,7 @@ void* CDataStore::Alloc(uint32_t bytes, const char* fileName, int32_t lineNumber
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x004C5DF0
+// OFFSET: 0x004C5DF0/0x140100FA0
 void* CDataStore::ReAlloc(void* ptr, uint32_t bytes, const char* fileName, int32_t lineNumber) {
     if (fileName) {
         return SMemReAlloc(ptr, bytes, fileName, lineNumber, 0);

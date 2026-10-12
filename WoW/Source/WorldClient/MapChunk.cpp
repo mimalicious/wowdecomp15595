@@ -318,7 +318,7 @@ void CMapChunk::CreateMaterial() {
     }
 }
 
-// OFFSET: 0x0073B660
+// OFFSET: 0x0073B660/0x140418D50
 void CMapChunk::CreatePointers(uint8_t* data, int32_t isNew, int32_t root) {
     int32_t size = reinterpret_cast<uint32_t*>(data)[1];
     uint32_t* chunkData = reinterpret_cast<uint32_t*>(&data[8]);
@@ -629,7 +629,7 @@ void CMapChunk::Create(int32_t isNew) {
     this->m_flags |= 0x40;
 }
 
-// OFFSET: 0x00740400
+// OFFSET: 0x00740400/0x14041E6C0
 CMapChunk::CMapChunk() {
     this->m_indexX = 0;
     this->m_indexY = 0;
@@ -1587,7 +1587,7 @@ bool CMap::QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidTyp
     return true;
 }
 
-// OFFSET: 0x00789750
+// OFFSET: 0x00789750/0x140479590
 void CMap::GetTrisSubchunk(CMapChunk* chunk, const CiRect& rect, const CAaBox& box, World::TriData& tris) {
     uint32_t start = rect.minY + rect.minX + 16 * rect.minY;
     const float* heights = &chunk->m_vertices[start];
@@ -1663,7 +1663,7 @@ void CMap::GetTrisSubchunk(CMapChunk* chunk, const CiRect& rect, const CAaBox& b
     }
 }
 
-// OFFSET: 0x00789F00
+// OFFSET: 0x00789F00/0x140479EE0
 void CMap::GetTrisChunk(CMapChunk* chunk, const CAaBox& box, const CiRect& rect, World::TriData& tris, uint32_t flags) {
     float nx = -chunk->m_position.x;
     float ny = -chunk->m_position.y;

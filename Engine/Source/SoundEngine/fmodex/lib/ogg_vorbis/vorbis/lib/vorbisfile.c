@@ -153,7 +153,7 @@ static ogg_int64_t _get_next_page(OggVorbis_File *vf,ogg_page *og,
    backward search linkage.  no 'readp' as it will certainly have to
    read. */
 /* returns offset or OV_EREAD, OV_FAULT */
-// OFFSET: 0x00B35AE0
+// OFFSET: 0x00B35AE0/0x140900EE0
 static ogg_int64_t _get_prev_page(OggVorbis_File *vf,ogg_page *og){
   ogg_int64_t begin=vf->offset;
   ogg_int64_t end=begin;

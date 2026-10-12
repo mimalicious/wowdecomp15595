@@ -2710,7 +2710,7 @@ void CWorldView::CullMapObjDefGroupFromInterior(CMapObjDefGroup* group, const CA
     this->m_frustumIndex--;
 }
 
-// OFFSET: 0x0075C850
+// OFFSET: 0x0075C850/0x14043FD80
 void CWorldView::CullMoveableMapObjDefGroups(const CAaRect& rect) {
     this->FrustumPush();
     this->FrustumSet(rect);

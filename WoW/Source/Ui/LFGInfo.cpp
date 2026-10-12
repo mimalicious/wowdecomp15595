@@ -383,7 +383,7 @@ void CGLookingForGroup::ClearDungeonList() {
     CGLookingForGroup::m_localInfo.m_numDungeons = 0;
 }
 
-// OFFSET: 0x00987D80
+// OFFSET: 0x00987D80/0x140704C20
 void LFGLockInfo::ClearDungeons() {
     for (LFGDungeonEntry* dungeon = this->m_dungeons.Head(); !this->m_dungeons.IsEnd(dungeon); ) {
         LFGDungeonEntry* next = dungeon->RawNext();
@@ -1400,7 +1400,7 @@ LFGLockInfo* LFGPartyLockInfo::FindMember(WOWGUID guid) {
     return NULL;
 }
 
-// OFFSET: 0x00989C80
+// OFFSET: 0x00989C80/0x140706C80
 LFGLockInfo* LFGPartyLockInfo::AddMember(WOWGUID guid) {
     LFGLockInfo* member = this->FindMember(guid);
 

@@ -483,7 +483,7 @@ void CGQuestLog::UpdateWatchTimers() {
     }
 }
 
-// OFFSET: 0x0095D9B0
+// OFFSET: 0x0095D9B0/0x1406D1930
 void CGQuestLog::SetServerTime(int32_t serverTime, int32_t resetTime) {
     int32_t now = _time32(NULL);
     CGQuestLog::m_timeOffset = now - serverTime;
@@ -1224,7 +1224,7 @@ void CGQuestLog::UpdateQuestItem(int32_t itemId) {
     }
 }
 
-// OFFSET: 0x0095F550
+// OFFSET: 0x0095F550/0x1406D2A60
 void CGQuestLog::UpdateQuestSpell(int32_t spellId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numQuest; i++) {
         WOWGUID none = WOWGUID::Make(0);
@@ -1242,7 +1242,7 @@ void CGQuestLog::UpdateQuestSpell(int32_t spellId) {
     }
 }
 
-// OFFSET: 0x0095F5F0
+// OFFSET: 0x0095F5F0/0x1406D2B20
 void CGQuestLog::UpdateQuestCurrency(int32_t currencyId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numQuest; i++) {
         WOWGUID none = WOWGUID::Make(0);
@@ -2542,7 +2542,7 @@ int32_t CGQuestLog::SetQuestExpiredByID(int32_t questId) {
     return 0;
 }
 
-// OFFSET: 0x00963770
+// OFFSET: 0x00963770/0x1406D8430
 int32_t CGQuestLog::GetQuestNumCompletionNPC(int32_t questId) {
     WOWGUID none = WOWGUID::Make(0);
     CGQuestLog::QUESTCOMPLETIONNPC* npcs;
@@ -2554,7 +2554,7 @@ int32_t CGQuestLog::GetQuestNumCompletionNPC(int32_t questId) {
     return 0;
 }
 
-// OFFSET: 0x009637D0
+// OFFSET: 0x009637D0/0x1406D84D0
 int32_t CGQuestLog::GetQuestCompletionNPC(int32_t questId, int32_t index) {
     WOWGUID none = WOWGUID::Make(0);
     CGQuestLog::QUESTCOMPLETIONNPC* npcs;

@@ -119,12 +119,12 @@ static void InitializePropContext() {
     }
 }
 
-// OFFSET: 0x00487860
+// OFFSET: 0x00487860/0x1400A8CB0
 static voidpf ZAlloc(voidpf opaque, uInt items, uInt size) {
     return SMemAlloc(items * size, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x00487880
+// OFFSET: 0x00487880/0x1400A8CD0
 static void ZFree(voidpf opaque, voidpf address) {
     SMemFree(address, __FILE__, __LINE__, 0);
 }
@@ -754,7 +754,7 @@ void NetClient::HandleIdle() {
     }
 }
 
-// OFFSET: 0x00488330
+// OFFSET: 0x00488330/0x1400A9790
 void NetClient::SendDisconnectReason(WowConnection* connection, DISCONNECT_REASON reason) {
     UserRouterClientLogDisconnect msg(reason);
     NetClient::SendOnConnection(&msg, connection);
@@ -1469,7 +1469,7 @@ void NetClient::ConnectInternal(const SockAddr& address, uint16_t port) {
     this->m_critSect.Leave();
 }
 
-// OFFSET: 0x00489BC0
+// OFFSET: 0x00489BC0/0x1400ABEA0
 void NetClient::SendQueuedMessages(NetClient::CONNECTIONS connection) {
     TSList<NetClient::HELDMESSAGE>& list = this->m_heldMessages[connection & 1];
 
@@ -1478,7 +1478,7 @@ void NetClient::SendQueuedMessages(NetClient::CONNECTIONS connection) {
     }
 }
 
-// OFFSET: 0x00489D90
+// OFFSET: 0x00489D90/0x1400AC1D0
 bool NetClient::ClientConnectionResumeCommsHandler(ClientConnectionResumeComms* msg) {
     NetClient* client = msg->m_netClient;
     WowConnection* connection = msg->m_connection;

@@ -990,7 +990,7 @@ void CParticleEmitter2::SetTwinkleScale(const CRange& scale) {
     this->m_twinkleScaleSpan = scale.m_h - scale.m_l;
 }
 
-// OFFSET: 0x00B153A0
+// OFFSET: 0x00B153A0/0x1408DB1F0
 void CParticleEmitter2::UpdateXform(const C44Matrix& transform, const C3Vector& viewPos, const C44Matrix* frameOfReference) {
     this->m_viewPos = viewPos;
 
@@ -2243,7 +2243,7 @@ void CParticleEmitter2::RenderParticles(const C44Matrix* frameOfReference, void*
     }
 }
 
-// OFFSET: 0x00B20170
+// OFFSET: 0x00B20170/0x1408E7A50
 void CParticleEmitter2::PlaceParticleModels(const C44Matrix* frameOfReference) {
     if (!this->m_model) {
         return;

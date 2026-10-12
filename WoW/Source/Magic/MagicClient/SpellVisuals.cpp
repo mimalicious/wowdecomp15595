@@ -681,7 +681,7 @@ void SpellVisualsComputeMountTransitionJumpVec(const MountTransitionObject* tran
     jump->z = jump->z * height;
 }
 
-// OFFSET: 0x008BDAA0
+// OFFSET: 0x008BDAA0/0x140606C50
 uint32_t SpellVisualsGetModelAttachRecCount(uint32_t kitId) {
     if (kitId < s_modelAttachLookup->m_count && s_modelAttachLookup->m_data[kitId]) {
         return s_modelAttachLookup->m_data[kitId]->m_count;

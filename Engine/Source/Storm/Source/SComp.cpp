@@ -724,7 +724,7 @@ void CHuffmanEncoder::EncodeSymbol(CBitOutput* output, int32_t symbol) {
     output->OutputBits(value, count);
 }
 
-// OFFSET: 0x004B9B70
+// OFFSET: 0x004B9B70/0x1400F2330
 static voidpf ZlibAlloc(voidpf opaque, uInt items, uInt size) {
     ZLIBBUFFER* buffer = static_cast<ZLIBBUFFER*>(opaque);
     uint32_t bytes = items * size;

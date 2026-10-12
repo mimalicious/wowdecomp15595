@@ -181,7 +181,7 @@ uint32_t GxuFontGetMaxCharsWithinWidth(CGxFont* face, const char* text, float fo
     return InternalGetMaxCharsWithinWidth(face, text, fontHeight, maxWidth, numBytes, extent, flags, shadowWidth, scale, NULL, NULL);
 }
 
-// OFFSET: 0x006132C0
+// OFFSET: 0x006132C0/0x14029E7D0
 uint32_t GxuFontGetMaxCharsWithinWidthFromEnd(CGxFont* face, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!text || !*text || !numBytes || maxWidth == 0.0f) {
         return 0;

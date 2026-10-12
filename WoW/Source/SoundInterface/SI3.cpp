@@ -310,7 +310,7 @@ void SI3::ShutDown(int32_t restart) {
     SE3::Log_ShutDown();
 }
 
-// OFFSET: 0x0062FC30
+// OFFSET: 0x0062FC30/0x1402C4570
 static void _UpdateGameSoundOutputDevice() {
     char name[256];
 
@@ -349,7 +349,7 @@ static void _UpdateGameSoundOutputDevice() {
     }
 }
 
-// OFFSET: 0x0062FD90
+// OFFSET: 0x0062FD90/0x1402C46D0
 static int32_t _HandleSoundDeviceChange(const void* data, void* param) {
     SI3::VoiceChat_StopPlayingLoopbackSound();
     EventUnregister(EVENT_ID_POLL, _HandleSoundDeviceChange);

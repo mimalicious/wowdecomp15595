@@ -358,7 +358,7 @@ IOUnit* IOFileUnit::Create(const IOFileParam& param, IOUnit* next) {
     return IOWin32FileUnit::Open(&param);
 }
 
-// OFFSET: [0x00B67F90, 0x00B68040/0x1409323B0]
+// OFFSET: [0x00B67F90/0x140932260, 0x00B68040/0x1409323B0]
 IOUnbufferedFileUnit::~IOUnbufferedFileUnit() {
     VirtualFree(this->m_buffer, 0, MEM_RELEASE);
 

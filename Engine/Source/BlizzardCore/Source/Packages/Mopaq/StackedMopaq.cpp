@@ -436,7 +436,7 @@ bool System_Mopaq::mopaq_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPara
     return true;
 }
 
-// OFFSET: 0x007CC4E0
+// OFFSET: 0x007CC4E0/0x1404C8990
 static bool OpenMD5VerificationHandle(const System_SFile::BLOCKENTRY* entry, int32_t chunkSize, uint32_t flags, Blizzard::Mopaq::MpqHandleRecord** result) {
     Blizzard::Mopaq::MpqHandleRecord* handle = static_cast<Blizzard::Mopaq::MpqHandleRecord*>(SMemAlloc(sizeof(Blizzard::Mopaq::MpqHandleRecord), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 

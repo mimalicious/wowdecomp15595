@@ -38,7 +38,7 @@ void* Blizzard::Memory::Allocate(uint32_t bytes) {
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x007B5830
+// OFFSET: 0x007B5830/0x1404AB7D0
 void* Blizzard::Memory::Allocate(uint32_t bytes, uint32_t flags) {
     return SMemAlloc(bytes, __FILE__, __LINE__, ToStormFlags(flags));
 }

@@ -136,7 +136,7 @@ CGInputControl::~CGInputControl() {
     this->m_wowMouse = NULL;
 }
 
-// OFFSET: 0x0044B900
+// OFFSET: 0x0044B900/0x140058F90
 void CGInputControl::Destroy() {
     if (CGInputControl::s_inputControl) {
         delete CGInputControl::s_inputControl;
@@ -1282,7 +1282,7 @@ void DescendStart() {
     CheckToCancelCurrentChannelSpell();
 }
 
-// OFFSET: 0x0044ADD0
+// OFFSET: 0x0044ADD0/0x140057FD0
 void CGInputControl::OnFocusChange(const CFocusEvent& event) {
     if (!event.m_data.m_focus) {
         this->m_flags &= 0xFFFF900F;

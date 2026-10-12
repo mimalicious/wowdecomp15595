@@ -854,7 +854,7 @@ static void SetupTextureHandles(const int32_t* tile, int32_t reset, MINIMAPTILE*
     }
 }
 
-// OFFSET: 0x004E9E80
+// OFFSET: 0x004E9E80/0x14012CB40
 static void SetupQuad(MINIMAPTILE* tiles, const World::MinimapQuad* quad, int32_t currentGroup, float height, const char* mapObjName) {
     uint32_t index = 0;
 

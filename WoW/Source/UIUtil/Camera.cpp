@@ -1472,7 +1472,7 @@ void CGCamera::CameraTeleported(float oldFacing) {
     }
 }
 
-// OFFSET: 0x0043D950
+// OFFSET: 0x0043D950/0x140048A40
 uint32_t CGCamera::CanSmoothTargetFacing(CGObject_C* target) {
     if (!target || !(target->m_obj->m_type & TYPEMASK_UNIT) || !s_cvCameraPivot->m_intValue) {
         return 0;
@@ -1973,7 +1973,7 @@ int32_t CGCamera::ShouldSmoothPitch(float minPitch, float maxPitch) {
     return target && !(this->m_state & 0x1) && s_cvCameraSmoothPitch->m_intValue && !(static_cast<CGUnit_C*>(target)->m_movement->m_flags & (MOVEMENTFLAG_FLYING | MOVEMENTFLAG_SWIMMING)) && (minPitch > this->m_pitch || maxPitch < this->m_pitch);
 }
 
-// OFFSET: 0x0043EA60
+// OFFSET: 0x0043EA60/0x140049DF0
 int32_t CGCamera::SmoothSetDistance(float distance, float delay, float scale, uint32_t time) {
     if ((this->m_state & 0x4000000) && fabsf(this->m_smoothDistance.m_target - distance) < 0.001f && fabsf(this->m_smoothDistance.m_param4 - delay) < 0.001f && fabsf(this->m_smoothDistance.m_param3 - scale) < 0.001f) {
         return 1;

@@ -2482,7 +2482,7 @@ static const char* JamRealmAddress_GetMemberName(void* data, const void* meta, u
     return NULL;
 }
 
-// OFFSET: 0x00B070F0
+// OFFSET: 0x00B070F0/0x1408CA260
 static JamValue* JamRealmAddress_FindMember(JamValue* out, void* data, const void* meta, const char* name) {
     for (uint32_t i = 0; i < 3; i++) {
         if (!strcmp(name, JamRealmAddress_GetMemberName(data, meta, i))) {
@@ -2595,7 +2595,7 @@ static bool JamComplaintType_SetString(void* data, const void* meta, const char*
     return false;
 }
 
-// OFFSET: 0x0066B520
+// OFFSET: 0x0066B520/0x140311D20
 static bool JamComplaintType_GetString(const void* data, const void* meta, char* buffer, uint32_t size) {
     switch (*static_cast<const uint32_t*>(data)) {
         case 0:

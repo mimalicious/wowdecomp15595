@@ -167,7 +167,7 @@ uint32_t Battlenet::Map<V>::Reinsert(const Entry* entries, uint32_t count) {
     return inserted;
 }
 
-// OFFSET: 0x00661220
+// OFFSET: 0x00661220/0x140306980
 template <class V>
 bool Battlenet::Map<V>::Remove(const MapKey& key, V& value) {
     uint32_t index;
@@ -200,7 +200,7 @@ bool Battlenet::Map<V>::Remove(const MapKey& key, V& value) {
     return true;
 }
 
-// OFFSET: 0x00660E50
+// OFFSET: 0x00660E50/0x140306400
 template <class V>
 void Battlenet::Map<V>::Resize(uint32_t capacity) {
     uint32_t oldCapacity = this->m_capacity;

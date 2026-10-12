@@ -650,7 +650,7 @@ int32_t CGTooltip::GetScalingStatItemBudget(const ItemRecSparse* item, const Sca
     }
 }
 
-// OFFSET: 0x00465000
+// OFFSET: 0x00465000/0x140078600
 int32_t CGTooltip::GetScalingStatArmor(const ItemRecSparse* item, const ScalingStatValuesRec* values) {
     if (!item) {
         return 0;
@@ -1823,7 +1823,7 @@ char* CGItemStatsSummary::GetStatIntGlobalString(uint32_t stat, char* buffer, ui
     return buffer;
 }
 
-// OFFSET: 0x004650D0
+// OFFSET: 0x004650D0/0x140078750
 bool CGTooltip::GetScalingStatWeaponDPS(const ItemRecSparse* item, const ScalingStatValuesRec* values, float* minDamage, float* maxDamage) {
     if (!item) {
         return false;
@@ -2371,7 +2371,7 @@ void CGItemStatsSummary::FillOutScalingItem(const ItemRecSparse* item, int32_t l
     }
 }
 
-// OFFSET: 0x0046A840
+// OFFSET: 0x0046A840/0x14007EDF0
 void CGItemStatsSummary::AddEnchantment(const SpellItemEnchantmentRec* enchant) {
     for (uint32_t i = 0; i < 3; i++) {
         this->AddEnchantEffect(enchant->m_effect[i], enchant->m_effectArg[i], (enchant->m_effectPointsMin[i] + enchant->m_effectPointsMax[i]) / 2);

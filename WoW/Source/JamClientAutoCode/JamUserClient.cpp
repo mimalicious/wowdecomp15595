@@ -3468,12 +3468,12 @@ void UserClientBFMgrQueueInviteResponse::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0066E880
+// OFFSET: 0x0066E880/0x140315A90
 UserClientBFMgrQueueExitRequest::UserClientBFMgrQueueExitRequest(uint64_t queueID) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = queueID;
 }
 
-// OFFSET: 0x0066B980
+// OFFSET: 0x0066B980/0x140312180
 UserClientBFMgrQueueExitRequest::~UserClientBFMgrQueueExitRequest() {
 }
 
@@ -3594,12 +3594,12 @@ void UserClientRequestBattlefieldPositions::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3902));
 }
 
-// OFFSET: 0x00674960
+// OFFSET: 0x00674960/0x1403186A0
 UserClientBFMgrQueueRequest::UserClientBFMgrQueueRequest(uint64_t queueID) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = queueID;
 }
 
-// OFFSET: 0x00670E80
+// OFFSET: 0x00670E80/0x1403191F0
 UserClientBFMgrQueueRequest::~UserClientBFMgrQueueRequest() {
 }
 

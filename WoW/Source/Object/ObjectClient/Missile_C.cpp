@@ -287,7 +287,7 @@ uint32_t CMissile::GetMissReason() const {
     return this->m_targetMissReasons.m_data[this->m_currentTarget];
 }
 
-// OFFSET: 0x00585950
+// OFFSET: 0x00585950/0x1401EDAB0
 C3Vector* MissileFindGroundPosition(C3Vector* result, const C3Vector& position, C3Vector& normal) {
     normal = C3Vector(0.0f, 0.0f, 1.0f);
     C4Plane plane;

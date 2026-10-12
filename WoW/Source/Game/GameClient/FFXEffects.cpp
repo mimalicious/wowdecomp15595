@@ -868,7 +868,7 @@ EffectNetherWorld::EffectNetherWorld() {
     }
 }
 
-// OFFSET: [0x00B0EAB0, 0x00B0F0E0/0x1408D43B0]
+// OFFSET: [0x00B0EAB0/0x1408D3870, 0x00B0F0E0/0x1408D43B0]
 EffectNetherWorld::~EffectNetherWorld() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {

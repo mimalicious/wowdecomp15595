@@ -926,7 +926,7 @@ void CGxDeviceD3d11::PrimVertexPtrs(CGxBuf** bufs, const EGxVertexBufferFormat* 
     CGxDevice::PrimVertexPtrs(bufs, formats, format);
 }
 
-// OFFSET: 0x00870F40
+// OFFSET: 0x00870F40/0x1405A6CE0
 void CGxDeviceD3d11::DrawNonIndexed(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -945,7 +945,7 @@ void CGxDeviceD3d11::DrawNonIndexed(const CGxBatch& batch) {
     this->m_d3dContext->Draw(batch.m_count, this->m_primVertexBufs[0]->m_index + batch.m_start);
 }
 
-// OFFSET: 0x00870FE0
+// OFFSET: 0x00870FE0/0x1405A6DA0
 void CGxDeviceD3d11::Draw(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -965,7 +965,7 @@ void CGxDeviceD3d11::Draw(const CGxBatch& batch) {
     this->m_d3dContext->DrawIndexed(batch.m_count, batch.m_start + this->m_primIndexBuf->m_index, this->m_primVertexBufs[0]->m_index);
 }
 
-// OFFSET: 0x00871090
+// OFFSET: 0x00871090/0x1405A6E70
 void CGxDeviceD3d11::DrawInstancedNonIndexed(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -984,7 +984,7 @@ void CGxDeviceD3d11::DrawInstancedNonIndexed(const CGxBatch& batch) {
     this->m_d3dContext->DrawInstanced(batch.m_count, this->m_instanceCount, this->m_primVertexBufs[0]->m_index, this->m_primVertexBufs[1] ? this->m_primVertexBufs[1]->m_index : 0);
 }
 
-// OFFSET: 0x00871150
+// OFFSET: 0x00871150/0x1405A6F50
 void CGxDeviceD3d11::DrawInstanced(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;

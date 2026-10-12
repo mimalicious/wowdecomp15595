@@ -944,7 +944,7 @@ int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
     return 1;
 }
 
-// OFFSET: 0x00437F10
+// OFFSET: 0x00437F10/0x140041CC0
 void CShadowCache::PreUpdate(const C3Vector& sunDir) {
     CShadowCache::s_sunDir = sunDir;
 

@@ -139,7 +139,7 @@ void CGxString::AddHyperlinkParseInfo(GXUFONTHYPERLINKINFO info) {
     this->m_hyperlinkInfo.Add(1, &info);
 }
 
-// OFFSET: 0x0061E820
+// OFFSET: 0x0061E820/0x1402AD290
 void CGxString::AddEmbeddedTextureParseInfo(GXUEMBEDDEDTEXTUREINFO info) {
     float heightPixels = g_heightPixels;
     info.m_lineHeight = info.m_lineHeight / heightPixels;
@@ -692,7 +692,7 @@ CGxString::CGxString() {
     }
 }
 
-// OFFSET: 0x0061F8B0
+// OFFSET: 0x0061F8B0/0x1402AE800
 CGxString::~CGxString() {
     for (uint32_t i = 0; i < 8; i++) {
         if (this->m_textLines[i]) {

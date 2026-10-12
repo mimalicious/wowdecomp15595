@@ -248,7 +248,7 @@ void CGInstanceEncounter_C::LeaveWorld() {
     CGInstanceEncounter_C::m_timers.Clear();
 }
 
-// OFFSET: 0x0094FBE0
+// OFFSET: 0x0094FBE0/0x1406BFF20
 void CGInstanceEncounter_C::ClearExpiredTimers() {
     if (!CGInstanceEncounter_C::m_timers.Head()) {
         return;
@@ -276,7 +276,7 @@ void CGInstanceEncounter_C::DisableObjective(int32_t id) {
     }
 }
 
-// OFFSET: 0x0094FC70
+// OFFSET: 0x0094FC70/0x1406BFFF0
 void CGInstanceEncounter_C::AddTimer(uint32_t duration) {
     CGInstanceEncounter_C::ClearExpiredTimers();
     ENCOUNTER_TIMER* timer = CGInstanceEncounter_C::m_timers.NewNode(2, 0, 0);

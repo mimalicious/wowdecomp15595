@@ -919,7 +919,7 @@ void LoadingScreenWorldCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: 0x0040D9E0
+// OFFSET: 0x0040D9E0/0x140011110
 void LoadingScreenXMLCallback(float progress, void* param) {
     if (progress <= s_xmlProgress) {
         return;

@@ -626,7 +626,7 @@ uint8_t OsNet::TSSlottedListEx<T, LINKOFFSET, SLOTS>::LinkNode(T* ptr) {
     return slot;
 }
 
-// OFFSET: 0x0087D700
+// OFFSET: 0x0087D700/0x1405B5F50
 template <class T, int LINKOFFSET, int SLOTS>
 void OsNet::TSSlottedListEx<T, LINKOFFSET, SLOTS>::UnlinkNode(T* ptr, uint8_t slot) {
     this->m_locks[slot].Enter();

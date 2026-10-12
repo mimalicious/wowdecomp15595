@@ -157,7 +157,7 @@ static int64_t GetSpecialFileOffset(const char* name, System_SFile::ARCHIVEREC* 
     return archive->GetBlockEntry(blockIndex).m_offset;
 }
 
-// OFFSET: 0x007B9A00
+// OFFSET: 0x007B9A00/0x1404B0BA0
 static int64_t GetTailOffset(System_SFile::ARCHIVEREC* archive) {
     int64_t attributes = GetSpecialFileOffset("(attributes)", archive);
     int64_t listfile = GetSpecialFileOffset("(listfile)", archive);

@@ -120,7 +120,7 @@ System_SFile2::BufferCallback::BufferCallback() {
     Blizzard::Lock::EventCreate(this->m_event);
 }
 
-// OFFSET: 0x007A9820
+// OFFSET: 0x007A9820/0x14049F5A0
 bool SFile::DownloadURLToBuffer(const char* url, const char* postData, uint32_t timeout, char* buffer, uint32_t size, const char** status) {
     System_SFile2::BufferCallback callback;
 

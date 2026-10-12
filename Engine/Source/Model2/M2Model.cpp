@@ -1397,7 +1397,7 @@ CAaBox CM2Model::GetCurrentBoundingBox() {
     return box;
 }
 
-// OFFSET: 0x00816E80
+// OFFSET: 0x00816E80/0x14052F7B0
 CAaBox CM2Model::GetSplitBodyBoundingBox(uint32_t boneId) {
     if (!(this->m_fFlags & 1) || !(this->m_fFlags & 0x4000)) {
         CAaBox result;

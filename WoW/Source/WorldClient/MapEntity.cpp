@@ -210,7 +210,7 @@ CMapEntity::CMapEntity() {
     this->unk_00E0 = 1.0f;
 }
 
-// OFFSET: [0x00733950, 0x007346E0/0x1404105C0]
+// OFFSET: [0x00733950/0x14040F1C0, 0x007346E0/0x1404105C0]
 CMapEntity::~CMapEntity() {
     if (reinterpret_cast<CMapEntity*>(CWorldScene::camTargEntity) == this) {
         CWorldScene::camTargEntity = 0;

@@ -80,7 +80,7 @@ bool Blizzard::Util::ThreadSafeQueue<T>::Pop(T& value) {
     return result;
 }
 
-// OFFSET: [0x007C77D0<Blizzard::Jobs::Job*>, 0x007CF790<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
+// OFFSET: [0x007C77D0/0x1404C2A50<Blizzard::Jobs::Job*>, 0x007CF790<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
 template <class T>
 bool Blizzard::Util::ThreadSafeQueue<T>::PopFront(T& value) {
     if (!this->m_queue.size()) {

@@ -117,7 +117,7 @@ bool CanItemBeTransmogrified(const ItemRecInterface* item, int32_t* reason) {
     return true;
 }
 
-// OFFSET: 0x00B122B0
+// OFFSET: 0x00B122B0/0x1408D7D10
 bool SpellHasRestrictedStat(const SpellRec* spell) {
     uint32_t count;
     const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);

@@ -3750,7 +3750,7 @@ static int32_t ClipMovementPyramid(World::FacetData* facets, const C3Vector& dir
     return found;
 }
 
-// OFFSET: 0x00603380
+// OFFSET: 0x00603380/0x14028A4F0
 static void TransformFacets(const C44Matrix& matrix, World::FacetData& facets) {
     for (uint32_t i = 0; i < facets.facets.m_count; i++) {
         CFacet& facet = facets.facets.m_data[i];
@@ -7159,7 +7159,7 @@ void CMovement_C::Extrapolate(uint32_t time, uint32_t elapsed) {
     }
 }
 
-// OFFSET: 0x00577C50
+// OFFSET: 0x00577C50/0x1401DC7C0
 void CMovement_C::AddPlayerTeleportEvent(uint32_t eventTime, uint32_t ackCounter, WOWGUID transport, const C3Vector& position, float facing, uint8_t seat, bool exitVoluntary, bool awaitTransition) {
     if (this->m_flags & MOVEMENTFLAG_UNK_40000000) {
         return;

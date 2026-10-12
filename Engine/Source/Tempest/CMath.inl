@@ -1,4 +1,4 @@
-// OFFSET: 0x0043D420
+// OFFSET: 0x0043D420/0x1400485A0
 inline float CMath::cos_(float x) {
     float frac;
     int32_t whole;

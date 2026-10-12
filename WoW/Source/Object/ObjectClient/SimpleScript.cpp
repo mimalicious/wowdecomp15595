@@ -169,7 +169,7 @@ int32_t CSimpleScriptManager::CallFunction(uint32_t handle, const SimpleScriptIO
     return 1;
 }
 
-// OFFSET: 0x0060B450
+// OFFSET: 0x0060B450/0x140295500
 void CSimpleScriptManager::CopyGlobal(const char* name) {
     lua_State* L = FrameScript_GetContext();
     lua_rawgeti(L, LUA_REGISTRYINDEX, this->m_envRef);

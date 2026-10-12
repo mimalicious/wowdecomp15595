@@ -448,7 +448,7 @@ static uint32_t GetM2FasterModifierMask(int32_t faster, int32_t debug) {
     }
 }
 
-// OFFSET: 0x00401950
+// OFFSET: 0x00401950/0x1400041B0
 static bool M2FasterChanged(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t faster = SStrToInt(value);
 

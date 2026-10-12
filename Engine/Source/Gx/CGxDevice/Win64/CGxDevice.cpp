@@ -585,7 +585,7 @@ void CGxDevice::AdapterLogCrashInfo(char* buffer, uint32_t size) {
     delete[] info;
 }
 
-// OFFSET: 0x0084A180
+// OFFSET: 0x0084A180/0x140577EB0
 LRESULT CALLBACK WindowProcGx(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
     CGxDevice* device = reinterpret_cast<CGxDevice*>(GetWindowLongPtrA(hwnd, GWLP_USERDATA));
 

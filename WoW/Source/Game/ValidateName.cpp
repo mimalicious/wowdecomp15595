@@ -649,12 +649,12 @@ int32_t ValidateGuildBankTabName(uint32_t language, const char* name) {
     return result;
 }
 
-// OFFSET: 0x004E65E0
+// OFFSET: 0x004E65E0/0x140128580
 static void* RegexAlloc(size_t bytes) {
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x004E6600
+// OFFSET: 0x004E6600/0x1401285A0
 static void RegexFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }

@@ -74,7 +74,7 @@ CGUnit_C* QuestTextParser::Spell_C_GetStatTargetUnit(int32_t parsePet, int32_t p
     return ::Spell_C_GetStatTargetUnit(parsePet, parseUnit);
 }
 
-// OFFSET: 0x00A0A970
+// OFFSET: 0x00A0A970/0x1407ABAC0
 bool QuestTextParser::ToolTip_DurationIsInt(float time, float fraction) {
     return CGTooltip::DurationIsInt(time, fraction);
 }
@@ -94,7 +94,7 @@ uint32_t QuestTextParser::FrameScript_GetPluralIndex(int32_t count) {
     return ::FrameScript_GetPluralIndex(count);
 }
 
-// OFFSET: 0x00A0AA00
+// OFFSET: 0x00A0AA00/0x1407ABB30
 const char* QuestTextParser::FrameScript_GetText(const char* token, int32_t count, FRAMESCRIPT_GENDER gender) {
     return ::FrameScript_GetText(token, count, gender);
 }
@@ -170,12 +170,12 @@ int32_t QuestTextParser::Spell_C_GetUnitMountSpeed(int32_t mountCapabilityId, in
     return 0;
 }
 
-// OFFSET: 0x00A0AB70
+// OFFSET: 0x00A0AB70/0x1407ABD00
 bool QuestTextParser::FrameScript_GetText(const char* token, char* buffer, uint32_t size, int32_t count, FRAMESCRIPT_GENDER gender) {
     return ::FrameScript_GetText(token, buffer, size, count, gender);
 }
 
-// OFFSET: 0x00A0AB90
+// OFFSET: 0x00A0AB90/0x1407ABD70
 AreaTableRec* QuestTextParser::GetAreaTableRecord(int32_t id) {
     return g_areaTableDB.GetRecord(id);
 }

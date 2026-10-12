@@ -131,7 +131,7 @@ uint8_t* BSDiff::DecodeRLE(const uint8_t* data, uint32_t* size, uint32_t skip) {
     return result;
 }
 
-// OFFSET: 0x007B8520
+// OFFSET: 0x007B8520/0x1404AEEA0
 bool Blizzard::Patch::ApplyRLEBSDiffPatch(const uint8_t* patch, uint32_t patchSize, uint8_t* dest, uint32_t destSize, const uint8_t* source, uint32_t sourceSize) {
     uint8_t* decoded = BSDiff::DecodeRLE(patch, &patchSize, 0);
     bool result = ApplyBSDiffPatch(decoded, patchSize, dest, destSize, source, sourceSize);

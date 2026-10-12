@@ -31,7 +31,7 @@ WowClientDB2<T>::DBCACHE::DBCACHE() {
     this->m_hasData = false;
 }
 
-// OFFSET: [0x00499C50<ItemRec>]
+// OFFSET: [0x00499C50/0x1400C46D0<ItemRec>]
 template <class T>
 WowClientDB2<T>::DBCACHE::~DBCACHE() {
     if (this->m_record) {
@@ -163,7 +163,7 @@ void WowClientDB2<T>::DBReadFailCallback(CAsyncObject* object) {
     AsyncFileReadDestroyObject(object);
 }
 
-// OFFSET: [0x00582360<ItemRec>]
+// OFFSET: [0x00582360/0x14006B1F0<ItemRec>]
 template <class T>
 void WowClientDB2<T>::DBReadCallback(CAsyncObject* object) {
     DBREADINFO* info = static_cast<DBREADINFO*>(object->m_userArg);
@@ -182,7 +182,7 @@ void WowClientDB2<T>::DBReadCallback(CAsyncObject* object) {
     AsyncFileReadDestroyObject(object);
 }
 
-// OFFSET: [0x00459510<ItemRec>]
+// OFFSET: [0x00459510/0x14007EB60<ItemRec>]
 template <class T>
 void WowClientDB2<T>::DBReadStringsCallback(CAsyncObject* object) {
     DBREADINFO* info = static_cast<DBREADINFO*>(object->m_userArg);

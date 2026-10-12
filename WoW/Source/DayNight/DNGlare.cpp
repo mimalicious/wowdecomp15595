@@ -127,7 +127,7 @@ float DayNight::DNGlare::GetLiquidDepthFade() {
     return 1.0f - fade;
 }
 
-// OFFSET: 0x0064F930
+// OFFSET: 0x0064F930/0x1402EEDA0
 float DayNight::DNMoonGlare::GetCloudDensityFade() {
     float density = DayNight::g_clouds.GetDensity(this->m_position, 1.0f);
     return 1.0f - fabs(density - 0.5f + density - 0.5f);

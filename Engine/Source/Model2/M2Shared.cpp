@@ -136,7 +136,7 @@ SFileImpl* CM2Shared::OpenSkinFile(uint32_t profile) {
     return NULL;
 }
 
-// OFFSET: [0x008318A0/0x140552FB0<char>, 0x008318F0/0x140552EA0<M2Loop>, 0x008318F0/0x140552EA0<M2Material>, 0x008318F0/0x140552EA0<ubyte4>, 0x008318F0/0x140552EA0<unsigned int>, 0x008318F0/0x140552EA0<float>, 0x00831940/0x140553060<M2Sequence>, 0x00831990/0x1405530C0<unsigned short>, 0x00831990/0x1405530C0<fixed16>, 0x008317B0/0x140552EF0<M2Vertex>, 0x008317B0/0x140552EF0<M2SkinSection>, 0x00831800/0x140552F50<M2Batch>, 0x00831850/0x140553000<C3Vector>, 0x00831850/0x140553000<M2ShadowBatch>, 0x00831850/0x140553000<M2SplineKey<float> >, 0x008319E0<C2Vector>, 0x008319E0<M2CompQuat>]
+// OFFSET: [0x008318A0/0x140552FB0<char>, 0x008318F0/0x140552EA0<M2Loop>, 0x008318F0/0x140552EA0<M2Material>, 0x008318F0/0x140552EA0<ubyte4>, 0x008318F0/0x140552EA0<unsigned int>, 0x008318F0/0x140552EA0<float>, 0x00831940/0x140553060<M2Sequence>, 0x00831990/0x1405530C0<unsigned short>, 0x00831990/0x1405530C0<fixed16>, 0x008317B0/0x140552EF0<M2Vertex>, 0x008317B0/0x140552EF0<M2SkinSection>, 0x00831800/0x140552F50<M2Batch>, 0x00831850/0x140553000<C3Vector>, 0x00831850/0x140553000<M2ShadowBatch>, 0x00831850/0x140553000<M2SplineKey<float> >, 0x008319E0/0x140553110<C2Vector>, 0x008319E0/0x140553110<M2CompQuat>]
 template <class T>
 int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Array<T>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -150,7 +150,7 @@ int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Array<T>& arr
     return 1;
 }
 
-// OFFSET: [0x008328C0<unsigned int>, 0x008328C0<float>, 0x00832460<unsigned short>, 0x00832460<fixed16>, 0x00832950<M2CompQuat>, 0x008329E0<C4Quaternion>, 0x00832A70<unsigned char>, 0x00832B00<M2SplineKey<C3Vector> >, 0x00832B90<C3Vector>, 0x00832B90<M2SplineKey<float> >]
+// OFFSET: [0x008328C0/0x140554ED0<unsigned int>, 0x008328C0/0x140554ED0<float>, 0x00832460/0x140554D70<unsigned short>, 0x00832460/0x140554D70<fixed16>, 0x00832950<M2CompQuat>, 0x008329E0<C4Quaternion>, 0x00832A70/0x140554E20<unsigned char>, 0x00832B00<M2SplineKey<C3Vector> >, 0x00832B90<C3Vector>, 0x00832B90<M2SplineKey<float> >]
 template <class T>
 int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Array<T> >& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -668,7 +668,7 @@ int32_t M2Init<M2Color>(uint8_t* base, uint32_t size, const M2Data& data, M2Arra
     return 1;
 }
 
-// OFFSET: 0x008339A0
+// OFFSET: 0x008339A0/0x1405571F0
 template <>
 int32_t M2Init<M2TextureWeight>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2TextureWeight>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -768,7 +768,7 @@ int32_t M2Init<M2TextureTransform>(uint8_t* base, uint32_t size, const M2Data& d
     return 1;
 }
 
-// OFFSET: 0x00834280
+// OFFSET: 0x00834280/0x140558830
 template <>
 int32_t M2Init<M2Attachment>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Attachment>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {

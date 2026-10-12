@@ -91,7 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return 1;
 }
 
-// OFFSET: 0x00409090
+// OFFSET: 0x00409090/0x14000B700
 static INT_PTR CALLBACK ArchiveProgressDialogProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
     if (message == WM_INITDIALOG) {
         int32_t height = GetSystemMetrics(SM_CYSMICON);

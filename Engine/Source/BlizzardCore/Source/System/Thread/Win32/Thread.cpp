@@ -168,7 +168,7 @@ void NTAPI System_Thread::TLSCallback(PVOID module, DWORD reason, PVOID reserved
 // STATIC: 0x00B870B0
 __declspec(allocate(".CRT$XLB")) PIMAGE_TLS_CALLBACK s_tlsCallback = System_Thread::TLSCallback;
 
-// OFFSET: 0x007DA3A0
+// OFFSET: 0x007DA3A0/0x1404DCB10
 void System_Thread::AddToRegistry(Blizzard::Thread::ThreadRecord* thread) {
     Blizzard::Lock::ScopedMutex lock(s_registryMutex);
 
@@ -199,7 +199,7 @@ Blizzard::Thread::ThreadRecord* System_Thread::NewThread(uint32_t (*function)(vo
     return thread;
 }
 
-// OFFSET: 0x007DCDA0
+// OFFSET: 0x007DCDA0/0x1404E0B70
 void System_Thread::RemoveFromRegistry(Blizzard::Thread::ThreadRecord* thread) {
     Blizzard::Lock::ScopedMutex lock(s_registryMutex);
 

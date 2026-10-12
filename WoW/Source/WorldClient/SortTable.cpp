@@ -39,7 +39,7 @@ void CSortTable::Clear(TSExplicitList<CMapEntity, offsetof(CMapEntity, m_viewLin
     this->m_doodadDefs.m_count = 0;
 }
 
-// OFFSET: 0x00799F60
+// OFFSET: 0x00799F60/0x14048E250
 CSortEntry::~CSortEntry() {
 }
 

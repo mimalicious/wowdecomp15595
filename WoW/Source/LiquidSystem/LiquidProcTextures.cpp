@@ -445,7 +445,7 @@ C2iVector Liquid::GetDisplMapTexSize(uint32_t index) {
     return size;
 }
 
-// OFFSET: 0x00717CF0
+// OFFSET: 0x00717CF0/0x1403EB5A0
 static void WmoWaterTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     ReserveTexBuffer();
 

@@ -337,7 +337,7 @@ bool HidDevice::StartReadThread(HidManagerImpl* manager) {
     return true;
 }
 
-// OFFSET: 0x008801F0
+// OFFSET: 0x008801F0/0x1405B9640
 bool HidDevice::GetDeviceProperty(HDEVINFO deviceInfoSet, PSP_DEVINFO_DATA deviceInfoData, DWORD property, std::string& value) {
     DWORD required = 0;
     DWORD type;

@@ -892,7 +892,7 @@ void World::Render(const C3Vector& pos, float elapsedSec) {
     }
 }
 
-// OFFSET: 0x00722810
+// OFFSET: 0x00722810/0x1403F8DD0
 void World::SetActivePlayerPos(const C3Vector& pos) {
     CWorldScene::s_playerPos = pos;
     CWorldScene::s_barrier.m_playerPos = pos;
@@ -1373,7 +1373,7 @@ void World::ObjectSetHidden(uintptr_t object, int32_t enable) {
     }
 }
 
-// OFFSET: 0x00723690
+// OFFSET: 0x00723690/0x1403F9FC0
 void World::SetCameraTarget(uintptr_t entity, uint64_t guid, const C44Matrix& matrix) {
     CWorldScene::camTargEntity = entity;
 
@@ -1524,7 +1524,7 @@ const C3Vector& World::GetCamPos() {
     return CWorldScene::s_defaultWorldView->m_camPos;
 }
 
-// OFFSET: 0x00723AC0
+// OFFSET: 0x00723AC0/0x1403FA470
 const C3Vector& World::GetCamTarget() {
     return CWorldScene::s_defaultWorldView->m_camTarget;
 }
@@ -2642,7 +2642,7 @@ int32_t World::NDCClip(C3Vector* verts, uint32_t count, C3Vector**& outVerts, ui
     return 1;
 }
 
-// OFFSET: 0x00727A20
+// OFFSET: 0x00727A20/0x1403FF5E0
 int32_t World::NDCXform(const CFrustum& frustum, C44Matrix& matrix, bool translate) {
     const C3Vector* corners = frustum.corners;
     matrix.a0 = corners[3].x - corners[0].x;

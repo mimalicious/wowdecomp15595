@@ -129,7 +129,7 @@ void CGCorpse_C::ShowLootEffect() {
     }
 }
 
-// OFFSET: 0x00597C20
+// OFFSET: 0x00597C20/0x140205B90
 static void GuildTabardCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     CorpseGuildRequest* request = static_cast<CorpseGuildRequest*>(param);
     CGCorpse_C* corpse = static_cast<CGCorpse_C*>(ClntObjMgrObjectPtr(request->m_guid, TYPEMASK_CORPSE, __FILE__, __LINE__));
@@ -141,7 +141,7 @@ static void GuildTabardCallback(const uint64_t& key, const WOWGUID& guid, void* 
     delete request;
 }
 
-// OFFSET: 0x00597C70
+// OFFSET: 0x00597C70/0x140205BE0
 static void ShirtGuildTabardCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     CorpseGuildRequest* request = static_cast<CorpseGuildRequest*>(param);
     CGCorpse_C* corpse = static_cast<CGCorpse_C*>(ClntObjMgrObjectPtr(request->m_guid, TYPEMASK_CORPSE, __FILE__, __LINE__));

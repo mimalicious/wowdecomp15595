@@ -1338,7 +1338,7 @@ uint32_t CMovementShared::PlotUnitMovement(uint32_t time, C3Vector* move) {
     return this->PlotUnitMovement(time, move, &this->m_facing, &this->m_pitch);
 }
 
-// OFFSET: 0x00A201F0
+// OFFSET: 0x00A201F0/0x1407C6230
 float CMovementShared::RelDistanceFallen(uint32_t time) const {
     return this->RelDistanceFallen(time, this->m_position.z);
 }

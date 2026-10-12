@@ -5,7 +5,7 @@
 #include "WoW/Source/WorldClient/MapObjDef.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// OFFSET: 0x0079F340
+// OFFSET: 0x0079F340/0x1404947C0
 void CMap::GatherMapObjDefs(CWorldView* view, CMapArea* area) {
     for (CMapBaseObjLink* link = area->m_linkList.Head(); link; link = area->m_linkList.Next(link)) {
         CMapObjDef* mapObjDef = static_cast<CMapObjDef*>(link->m_owner);
@@ -73,7 +73,7 @@ void CMap::GatherInfiniteOcean(CWorldView* view, int32_t x, int32_t y) {
     }
 }
 
-// OFFSET: 0x0079F4A0
+// OFFSET: 0x0079F4A0/0x140494A40
 void CMap::Gather(CWorldView* view, const CiRect& rect) {
     int32_t areaY = (rect.minY >> 4) & 0x3F;
     int32_t areaX = (rect.minX >> 4) & 0x3F;

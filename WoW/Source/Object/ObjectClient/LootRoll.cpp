@@ -294,7 +294,7 @@ static void RolledStatsAndName(const NameCache* name, const ItemRecSparse* rec, 
     delete roll;
 }
 
-// OFFSET: 0x0057BF50
+// OFFSET: 0x0057BF50/0x1401E1D00
 void LootRollShutdown() {
     s_pendingLootRolls.Clear();
     s_numShownLootRolls = 0;

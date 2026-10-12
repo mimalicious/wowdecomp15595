@@ -116,7 +116,7 @@ bool System_Mopaq::DeltaData::AdjustHandleBlockEntry() {
     return true;
 }
 
-// OFFSET: 0x007E7880
+// OFFSET: 0x007E7880/0x1404F1A20
 bool System_Mopaq::InitializeDeltaData(Blizzard::Mopaq::MpqHandleRecord* handle, const MpqDeltaMetadata* metadata) {
     void* memory = Blizzard::Memory::Allocate(sizeof(DeltaData));
     handle->m_delta = static_cast<DeltaData*>(memory);
