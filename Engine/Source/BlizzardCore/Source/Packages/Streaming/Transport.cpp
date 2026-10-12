@@ -65,7 +65,7 @@ int32_t Blizzard::Streaming::Transport::AdjustRange(int64_t* start, int64_t* end
     return static_cast<int32_t>(skip + original - *start);
 }
 
-// OFFSET: 0x007B37B0
+// OFFSET: 0x007B37B0/0x1404A9030
 void Blizzard::Streaming::Transport::TransportHttpCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     this->m_status = status;
 
@@ -170,7 +170,7 @@ bool Blizzard::Streaming::Transport::ReadFile(const Manifests::TransportInfo& in
     return false;
 }
 
-// OFFSET: [0x007C3610, 0x007C6000]
+// OFFSET: [0x007C3610, 0x007C6000/0x1404C1050]
 Blizzard::Streaming::Transport::TransportHttpCallback::~TransportHttpCallback() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
@@ -188,12 +188,12 @@ bool Blizzard::Streaming::Transport::TransportHttpCallback::Stop() {
     return this->m_stop;
 }
 
-// OFFSET: 0x007C36C0
+// OFFSET: 0x007C36C0/0x1404BDD40
 void Blizzard::Streaming::Transport::TransportHttpCallback::WaitForCompletion() {
     Blizzard::Lock::EventWaitForever(this->m_event);
 }
 
-// OFFSET: 0x007C36D0
+// OFFSET: 0x007C36D0/0x1404BDD60
 Blizzard::URL::DownloadCallback::Cookie Blizzard::Streaming::Transport::TransportHttpCallback::GetCookie() {
     Cookie cookie;
     cookie.m_name = this->m_cookieName.c_str();
@@ -229,7 +229,7 @@ Blizzard::Streaming::Transport::Config* Blizzard::Streaming::Transport::GetConfi
     return &s_config;
 }
 
-// OFFSET: 0x007C7AC0
+// OFFSET: 0x007C7AC0/0x1404C2D60
 bool Blizzard::Streaming::Transport::TransportHttpCallback::ShouldBlock() {
     return GetConfig()->m_shouldBlock;
 }

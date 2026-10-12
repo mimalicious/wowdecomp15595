@@ -133,7 +133,7 @@ Blizzard::Jobs::WorkerPool::Impl::Impl() {
     this->m_shutdown = false;
 }
 
-// OFFSET: [0x007E3F90/0x1404EBE60, 0x007E62F0]
+// OFFSET: [0x007E3F90/0x1404EBE60, 0x007E62F0/0x1404EFCD0]
 Blizzard::Jobs::WorkerPool::~WorkerPool() {
     if (this->m_pImpl->m_pool) {
         delete this->m_pImpl->m_pool;
@@ -159,7 +159,7 @@ Blizzard::Jobs::WorkerPool::WorkerPool(int32_t threads) {
     this->m_pImpl->m_pool = new Blizzard::Thread::ThreadPoolRecord(threads, threads, 0, affinity);
 }
 
-// OFFSET: 0x007EA900
+// OFFSET: 0x007EA900/0x1404EBF10
 bool Blizzard::Jobs::WorkerPool::RunOnThread(uint32_t (*function)(void*), void* param) {
     Blizzard::Thread::ThreadRecord* thread;
     bool result = Blizzard::Thread::CreateFromPool(this->m_pImpl->m_pool, function, param, &thread, 0, 0);

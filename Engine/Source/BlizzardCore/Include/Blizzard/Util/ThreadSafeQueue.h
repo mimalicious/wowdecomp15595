@@ -33,13 +33,13 @@ Blizzard::Util::ThreadSafeQueue<T>::ThreadSafeQueue() {
     Blizzard::Lock::MutexCreate(this->m_mutex);
 }
 
-// OFFSET: [0x007CF880<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>, 0x007CF920<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>, 0x007C7780<Blizzard::Jobs::Job*>]
+// OFFSET: [0x007CF880<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>, 0x007CF920<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>, 0x007C7780/0x1404C2900<Blizzard::Jobs::Job*>]
 template <class T>
 Blizzard::Util::ThreadSafeQueue<T>::~ThreadSafeQueue() {
     Blizzard::Lock::MutexDestroy(this->m_mutex);
 }
 
-// OFFSET: [0x007DB550<Blizzard::Jobs::Job*>, 0x007DB580<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
+// OFFSET: [0x007DB550/0x1404DE670<Blizzard::Jobs::Job*>, 0x007DB580/0x1404DE6C0<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
 template <class T>
 void Blizzard::Util::ThreadSafeQueue<T>::Push(const T& value) {
     Blizzard::Lock::MutexEnter(this->m_mutex);
@@ -56,7 +56,7 @@ T& Blizzard::Util::ThreadSafeQueue<T>::Front() {
     return value;
 }
 
-// OFFSET: [0x007C75F0<Blizzard::Jobs::Job*>, 0x007CF810<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
+// OFFSET: [0x007C75F0/0x1404C2810<Blizzard::Jobs::Job*>, 0x007CF810/0x1404CCB80<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
 template <class T>
 bool Blizzard::Util::ThreadSafeQueue<T>::Pop() {
     Blizzard::Lock::MutexEnter(this->m_mutex);
@@ -71,7 +71,7 @@ bool Blizzard::Util::ThreadSafeQueue<T>::Pop() {
     return false;
 }
 
-// OFFSET: [0x007CA8E0<Blizzard::Jobs::Job*>, 0x007CF850<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
+// OFFSET: [0x007CA8E0/0x1404C5A60<Blizzard::Jobs::Job*>, 0x007CF850/0x1404CCBD0<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
 template <class T>
 bool Blizzard::Util::ThreadSafeQueue<T>::Pop(T& value) {
     Blizzard::Lock::MutexEnter(this->m_mutex);

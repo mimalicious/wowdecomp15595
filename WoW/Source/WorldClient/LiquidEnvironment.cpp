@@ -17,7 +17,7 @@ void CClientLiquidEnvironment::SetInteriorFog(int32_t interiorFog) {
     this->m_interiorFog = interiorFog;
 }
 
-// OFFSET: 0x0076C750
+// OFFSET: 0x0076C750/0x140454F30
 Liquid::IEnvironment::~IEnvironment() {
 }
 

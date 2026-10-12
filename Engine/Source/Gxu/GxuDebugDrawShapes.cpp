@@ -152,7 +152,7 @@ uint32_t GxuDirectionalDiamondShapeFactory::GetNumIndices() {
     return 24;
 }
 
-// OFFSET: 0x00619410
+// OFFSET: 0x00619410/0x140893650
 uint32_t GxuConeShapeFactory::GetNumVertices() {
     return 14;
 }
@@ -306,12 +306,12 @@ void GxuDebugShapeObject::Render() {
     GxuAddToDrawList(static_cast<EGxuDrawListCategory>(this->m_drawer.m_color.a != 0xFF), &this->m_drawer);
 }
 
-// OFFSET: [0x00619740]
+// OFFSET: [0x00619740/0x1402A6C50]
 uint32_t GxuNullShapeFactory::CreateVertexBuffer() {
     return 0xFFFF;
 }
 
-// OFFSET: [0x00619740]
+// OFFSET: [0x00619740/0x1402A6C50]
 uint32_t GxuNullShapeFactory::CreateIndexBuffer() {
     return 0xFFFF;
 }
@@ -733,7 +733,7 @@ void GxuDebugShapeRenderStateBlockNoDepth::End() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0061A930
+// OFFSET: 0x0061A930/0x1402A8330
 GxuDebugShapeDrawer::~GxuDebugShapeDrawer() {
 }
 
@@ -770,7 +770,7 @@ float GxuDebugShapeDrawer::GetDepth(const C3Vector& viewPos) {
 GxuDebugShapeObject::GxuDebugShapeObject() : m_next(NULL), m_time(0.0f) {
 }
 
-// OFFSET: 0x0061ACD0
+// OFFSET: 0x0061ACD0/0x1402A86E0
 GxuDebugShapeObject::~GxuDebugShapeObject() {
 }
 

@@ -69,7 +69,7 @@ static char s_displayText[0x2000];
 // STATIC: 0x00CA2BE0
 const char* CSimpleTexture::s_objectTypeName = "Texture";
 
-// STATIC: 0x00CA2BE4/0x000B3F8E8
+// STATIC: 0x00CA2BE4/0x140B3F8E8
 const char* CSimpleTexture::s_imageModePixelShaderNames[2] = { "UI", "Desaturate" };
 
 // STATIC: 0x00CA2BEC/0x140B3F8F8

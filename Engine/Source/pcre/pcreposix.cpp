@@ -5,7 +5,7 @@
 
 static const int32_t POSIX_MALLOC_THRESHOLD = 10;
 
-// STATIC: 0x00BBA720/0x0009A2540
+// STATIC: 0x00BBA720/0x1409A2540
 static const char* const estring[] = {
     "\\ at end of pattern",
     "\\c at end of pattern",
@@ -56,7 +56,7 @@ static const char* const estring[] = {
     "unknown property name after \\P or \\p"
 };
 
-// STATIC: 0x00BBA7E0/0x0009A26C0
+// STATIC: 0x00BBA7E0/0x1409A26C0
 static const int32_t eint[] = {
     REG_EESCAPE,
     REG_EESCAPE,

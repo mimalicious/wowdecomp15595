@@ -176,7 +176,7 @@ bool AsioDriverList::close()
 }
 
 
-// OFFSET: 0x007B0A90
+// OFFSET: 0x007B0A90/0x1408F5670
 LONG AsioDriverList::asioGetNumDev (VOID)
 {
 	return (LONG)numdrv;

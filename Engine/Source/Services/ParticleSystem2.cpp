@@ -2657,7 +2657,7 @@ CParticleEmitter2* CSphereParticleEmitter::Clone(int32_t copyParticles) {
     return mem ? new (mem) CSphereParticleEmitter(*this, copyParticles) : NULL;
 }
 
-// OFFSET: 0x00B27470
+// OFFSET: 0x00B27470/0x1408EF8D0
 CPlaneParticleEmitter::~CPlaneParticleEmitter() {
 }
 
@@ -2725,7 +2725,7 @@ void CPlaneParticleEmitter::CreateParticle(CParticle2& particle, float time, con
     }
 }
 
-// OFFSET: 0x00B27A20
+// OFFSET: 0x00B27A20/0x1408EFF40
 CSphereParticleEmitter::~CSphereParticleEmitter() {
 }
 

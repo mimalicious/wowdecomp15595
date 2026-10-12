@@ -98,7 +98,7 @@ int32_t CGAuctionHouse::m_selectedOwnedItem = -1;
 // STATIC: 0x00D134CC/0x140BCB77C
 int32_t CGAuctionHouse::m_selectedBidItem = -1;
 
-// STATIC: 0x00F49520/0x000E3D630
+// STATIC: 0x00F49520/0x140E3D630
 uint32_t CGAuctionHouse::m_lastQueryTime[3];
 
 // STATIC: 0x00F4952C/0x140E3D640

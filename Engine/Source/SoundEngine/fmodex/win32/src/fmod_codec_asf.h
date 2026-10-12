@@ -41,22 +41,22 @@ namespace FMOD
         {
             return( E_NOTIMPL );
         }
-        // OFFSET: 0x00AA4710
+        // OFFSET: 0x00AA4710/0x140865F60
         HRESULT STDMETHODCALLTYPE SetSize( ULARGE_INTEGER libNewSize )
         {
             return( E_NOTIMPL );
         }
-        // OFFSET: 0x00AA4740
+        // OFFSET: 0x00AA4740/0x140865F60
         HRESULT STDMETHODCALLTYPE CopyTo( IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER *pcbRead, ULARGE_INTEGER *pcbWritten )
         {
             return( E_NOTIMPL );
         }
-        // OFFSET: 0x00AA4720
+        // OFFSET: 0x00AA4720/0x140865F60
         HRESULT STDMETHODCALLTYPE Commit( DWORD grfCommitFlags )
         {
             return( E_NOTIMPL );
         }
-        // OFFSET: 0x00AA4730
+        // OFFSET: 0x00AA4730/0x140865F60
         HRESULT STDMETHODCALLTYPE Revert()
         {
             return( E_NOTIMPL );

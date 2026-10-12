@@ -14,7 +14,7 @@ static int32_t s_jitterBufferSize = (ComSat::Sound::CODECIPMR6000::s_sampleRate 
 
 static int32_t s_frameTimeWindow = (ComSat::Sound::CODECIPMR6000::s_sampleRate * ComSat::Sound::CODECIPMR6000::s_bitsPerSample / 8 * 2) / ComSat::Sound::CODECIPMR6000::s_bytesPerFrame;
 
-// OFFSET: 0x00A32F00
+// OFFSET: 0x00A32F00/0x1407DD3D0
 ComSat::Sound::Manager::Callback::~Callback() {
 }
 
@@ -497,7 +497,7 @@ bool ComSat::Sound::Manager::SetSessionMuted(uint8_t player, uint64_t session, C
     return localPlayer->m_mutedSessions.Remove(session);
 }
 
-// OFFSET: 0x00A36130
+// OFFSET: 0x00A36130/0x1407E10F0
 void ComSat::Sound::Manager::DeviceError(uint8_t player) {
     LocalPlayer* localPlayer;
     if (this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer) && !localPlayer->m_deviceError) {
@@ -948,7 +948,7 @@ void ComSat::Sound::Manager::EncodeAvailableVoiceData() {
     }
 }
 
-// OFFSET: [0x00A37F70, 0x00A38520]
+// OFFSET: [0x00A37F70, 0x00A38520/0x1407E4570]
 ComSat::Sound::Manager::~Manager() {
     uint32_t iterator = 0;
     ComSat::MapKey<uint8_t> playerKey;

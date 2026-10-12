@@ -2566,11 +2566,11 @@ DeltaCompletionCallback::DeltaCompletionCallback(const ArchiveStreamInfo& info, 
     this->m_name = name;
 }
 
-// OFFSET: 0x007C81D0
+// OFFSET: 0x007C81D0/0x1404C35A0
 DeltaCompletionCallback::~DeltaCompletionCallback() {
 }
 
-// OFFSET: 0x007FA550
+// OFFSET: 0x007FA550/0x14050A4A0
 void DeltaCompletionCallback::Complete() {
     if (this->m_success && NextDeltaBase(&this->m_info, this->m_name.c_str()) == 1) {
         DeltaCompletionCallback* callback = new DeltaCompletionCallback(this->m_info, this->m_name);

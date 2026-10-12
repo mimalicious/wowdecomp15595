@@ -812,7 +812,7 @@ FMOD_RESULT SoundI::lock(unsigned int offset, unsigned int length, void **ptr1, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A89020
+// OFFSET: 0x00A89020/0x1408476E0
 FMOD_RESULT SoundI::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     return FMOD_ERR_BADCOMMAND;

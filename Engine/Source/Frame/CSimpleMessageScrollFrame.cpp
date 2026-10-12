@@ -248,7 +248,7 @@ CSimpleMessageScrollFrameDisplayNode::CSimpleMessageScrollFrameDisplayNode() {
     }
 }
 
-// OFFSET: 0x0051D660
+// OFFSET: 0x0051D660/0x14016A000
 CSimpleMessageScrollFrameDisplayNode::~CSimpleMessageScrollFrameDisplayNode() {
     if (--this->m_string->m_refcnt == 0) {
         this->m_string->DeleteSelf();

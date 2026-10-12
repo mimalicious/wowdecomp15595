@@ -10,7 +10,7 @@
 // STATIC: 0x00D17398/0x140BD20B0
 CKBQuery g_KnowledgeBaseQuery;
 
-// STATIC: 0x00D17258/0x1409B8D10
+// STATIC: 0x00D17258
 static char s_hexDigits[] = "0123456789ABCDEF";
 
 // INLINED

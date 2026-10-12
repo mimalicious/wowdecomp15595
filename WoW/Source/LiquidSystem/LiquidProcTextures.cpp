@@ -34,7 +34,7 @@ uint8_t Liquid::s_riverDepthTexValid;
 // STATIC: 0x00E4E90A/0x140D37BD2
 uint8_t Liquid::s_oceanDepthTexValid;
 
-// STATIC: 0x00E4E90C/0x000D37BD8
+// STATIC: 0x00E4E90C/0x140D37BD8
 static uint32_t s_displMapCurrent[2];
 
 // STATIC: 0x00E4E914/0x140D37BE0
@@ -106,7 +106,7 @@ uint32_t Liquid::s_displMapCount;
 // STATIC: 0x00E4E97C/0x140D37C88
 CTexture* Liquid::s_displMaps[4];
 
-// STATIC: 0x00E4E98C/0x000D37CA0
+// STATIC: 0x00E4E98C/0x140D37CA0
 CGxFrameBuffer* Liquid::s_displMapFBs[4];
 
 // STATIC: 0x00E4E99C/0x140D37CC8
@@ -154,7 +154,7 @@ static C3Vector s_displMapPos[2];
 // STATIC: 0x00E4E9E4/0x140D37D40
 static C3Vector s_displMapRawPos[2];
 
-// STATIC: 0x00E4E9FC/0x000D37D58
+// STATIC: 0x00E4E9FC/0x140D37D58
 static C2Vector s_displMapSize[2];
 
 // STATIC: 0x00E4EA0C/0x140D37D68

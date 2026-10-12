@@ -42,7 +42,7 @@ int32_t CMapStaticEntity::GetMapObjAndGroup(CMapObjDef*& mapObjDef, CMapObj*& ma
     return 0;
 }
 
-// OFFSET: [0x00762DE0/0x140447FD0, 0x00762F40]
+// OFFSET: [0x00762DE0/0x140447FD0, 0x00762F40/0x140448160]
 CMapStaticEntity::~CMapStaticEntity() {
     if (this->m_soundEmitter) {
         SE3::EmitterMangerSendMessage_DestroyEmitter(this->m_soundEmitter);
@@ -60,7 +60,7 @@ void CMapStaticEntity::SetSequenceSpeed(float speed) {
 void CMapStaticEntity::AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
 }
 
-// OFFSET: 0x007629B0
+// OFFSET: 0x007629B0/0x140447AB0
 void CMapStaticEntity::SelectUnderwater(CM2Lighting* lighting) {
     uint32_t flags = this->m_entityFlags;
 
@@ -178,7 +178,7 @@ void CMapStaticEntity::AdjustLighting(const CImVector& color, CImVector& direct,
     }
 }
 
-// OFFSET: 0x00762D50
+// OFFSET: 0x00762D50/0x140447F30
 void CMapStaticEntity::QueryExteriorLighting() {
     this->m_exteriorVertexLight = CImVector(0);
 

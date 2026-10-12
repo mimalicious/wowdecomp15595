@@ -45,7 +45,7 @@
 // STATIC: 0x00D101E4
 static const char* s_channelCategories[3] = { "CHANNEL_CATEGORY_GROUP", "CHANNEL_CATEGORY_WORLD", "CHANNEL_CATEGORY_CUSTOM" };
 
-// STATIC: 0x00D101DC/0x000BBD758
+// STATIC: 0x00D101DC/0x140BBD758
 static const char* s_chatLogNames[2] = { "Logs\\WoWChatLog.txt", "Logs\\WoWCombatLog.txt" };
 
 // OFFSET: 0x008E6450/0x140614780

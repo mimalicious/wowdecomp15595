@@ -22,7 +22,7 @@ Battlenet::CreepTendril::CreepDestroyFunc Battlenet::CreepTendril::s_creepDestro
 // STATIC: 0x00E4D408/0x140D36208
 Battlenet::Library* Battlenet::CreepTendril::s_creepModule;
 
-// OFFSET: 0x00662290
+// OFFSET: 0x00662290/0x140307FB0
 Battlenet::CreepTendril::Host::~Host() {
 }
 

@@ -84,31 +84,31 @@ uint32_t CGBattlefieldInfo::m_minLevel;
 // STATIC: 0x00F3670C
 uint32_t CGBattlefieldInfo::m_maxLevel;
 
-// STATIC: 0x00F36710
+// STATIC: 0x00F36710/0x140E29BE0
 uint8_t CGBattlefieldInfo::m_hasHolidayWinToday;
 
-// STATIC: 0x00F36711
+// STATIC: 0x00F36711/0x140E29BE1
 uint8_t CGBattlefieldInfo::m_hasRandomWinToday;
 
 // STATIC: 0x00F36712/0x140E29BE2
 uint8_t CGBattlefieldInfo::m_arenaFaction;
 
-// STATIC: 0x00F36714
+// STATIC: 0x00F36714/0x140E29BE4
 int32_t CGBattlefieldInfo::m_holidayLossHonor;
 
-// STATIC: 0x00F36718
+// STATIC: 0x00F36718/0x140E29BE8
 int32_t CGBattlefieldInfo::m_holidayWinHonor;
 
-// STATIC: 0x00F3671C
+// STATIC: 0x00F3671C/0x140E29BEC
 int32_t CGBattlefieldInfo::m_holidayWinArena;
 
-// STATIC: 0x00F36720
+// STATIC: 0x00F36720/0x140E29BF0
 int32_t CGBattlefieldInfo::m_randomLossHonor;
 
-// STATIC: 0x00F36724
+// STATIC: 0x00F36724/0x140E29BF4
 int32_t CGBattlefieldInfo::m_randomWinHonor;
 
-// STATIC: 0x00F36728
+// STATIC: 0x00F36728/0x140E29BF8
 int32_t CGBattlefieldInfo::m_randomWinArena;
 
 // STATIC: 0x00F3672C/0x140E29BFC

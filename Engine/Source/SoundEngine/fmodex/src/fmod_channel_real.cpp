@@ -1129,7 +1129,7 @@ FMOD_RESULT ChannelReal::isVirtual(bool *isvirtual)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AF3E90
+// OFFSET: 0x00AF3E90/0x1408BD2D0
 FMOD_RESULT ChannelReal::getSpectrum(float *spectrumarray, int numentries, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype)
 {
     return FMOD_ERR_NEEDSSOFTWARE;
@@ -1151,7 +1151,7 @@ FMOD_RESULT ChannelReal::getSpectrum(float *spectrumarray, int numentries, int c
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AF3EA0
+// OFFSET: 0x00AF3EA0/0x1408BD2D0
 FMOD_RESULT ChannelReal::getWaveData(float *wavearray, int numvalues, int channeloffset)
 {
     return FMOD_ERR_NEEDSSOFTWARE;

@@ -10,7 +10,7 @@
 ComSat::Sound::IOCallback::~IOCallback() {
 }
 
-// OFFSET: 0x00A3A9F0
+// OFFSET: 0x00A3A9F0/0x1407E73D0
 ComSat::Sound::IO::~IO() {
 }
 

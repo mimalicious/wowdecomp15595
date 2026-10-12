@@ -89,7 +89,7 @@ bool System_SFile2::BufferCallback::ReceivedData(const void* data, int32_t size)
     return true;
 }
 
-// OFFSET: 0x007A9690
+// OFFSET: 0x007A9690/0x14049F430
 void System_SFile2::BufferCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     this->m_status = status;
     Blizzard::Lock::EventSet(this->m_event);
@@ -105,7 +105,7 @@ bool System_SFile2::BufferCallback::ShouldBlock() {
     return true;
 }
 
-// OFFSET: 0x007B0A90
+// OFFSET: 0x007B0A90/0x1408F5670
 const char* System_SFile2::BufferCallback::GetPostData() {
     return this->m_postData;
 }

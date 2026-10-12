@@ -53,7 +53,7 @@ void CSimpleScaleAnim::GetScale(C2Vector& scale) {
     scale.y = 1.0f - this->m_scaleChange.y;
 }
 
-// OFFSET: 0x00527A20
+// OFFSET: 0x00527A20/0x140176DC0
 void CSimpleScaleAnim::Apply(float progress) {
     CScriptRegion* region = this->GetRegionParent();
 
@@ -65,7 +65,7 @@ void CSimpleScaleAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: 0x00529380
+// OFFSET: 0x00529380/0x140178D00
 CSimpleScaleAnim::~CSimpleScaleAnim() {
 }
 

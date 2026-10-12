@@ -51,7 +51,7 @@ Blizzard::Mopaq::Enumerator::Enumerator(System_SFile::ARCHIVEREC* handle, const 
     this->m_path.assign(buffer, strlen(buffer));
 }
 
-// OFFSET: [0x007F1630, 0x007F29B0]
+// OFFSET: [0x007F1630, 0x007F29B0/0x1404FFBD0]
 Blizzard::Mopaq::Enumerator::~Enumerator() {
     if (this->m_archive) {
         this->m_archive->RemoveInternalArchiveRef();
@@ -72,11 +72,11 @@ bool Blizzard::Mopaq::OnDiskEnumerator::DoGlobCallback(const Blizzard::File::Pro
 Blizzard::Mopaq::OnDiskEnumerator::OnDiskEnumerator(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags) : Enumerator(handle, path, flags) {
 }
 
-// OFFSET: 0x007F29E0
+// OFFSET: 0x007F29E0/0x1404FFC00
 Blizzard::Mopaq::OnDiskEnumerator::~OnDiskEnumerator() {
 }
 
-// OFFSET: 0x007D38C0
+// OFFSET: 0x007D38C0/0x1404D35A0
 bool Blizzard::Mopaq::OnDiskEnumerator::Initialize() {
     if (Blizzard::File::Exists(System_File::Stacked::s_manager, this->m_path.c_str()) != 2) {
         return false;
@@ -100,7 +100,7 @@ bool Blizzard::Mopaq::OnDiskEnumerator::GlobDirectory(const std::string& path, b
     return result;
 }
 
-// OFFSET: 0x007E2550
+// OFFSET: 0x007E2550/0x1404E8EA0
 int32_t Blizzard::Mopaq::OnDiskEnumerator::Enumerate(char* name, uint32_t size) {
     while (true) {
         while (!this->m_files.empty()) {
@@ -177,7 +177,7 @@ Blizzard::Mopaq::MPQEnumerator::MPQEnumerator(System_SFile::ARCHIVEREC* handle, 
     this->m_directories.insert(base);
 }
 
-// OFFSET: [0x007F1850, 0x007F2A40]
+// OFFSET: [0x007F1850, 0x007F2A40/0x1404FFC70]
 Blizzard::Mopaq::MPQEnumerator::~MPQEnumerator() {
     System_SFile::ARCHIVEREC* archive = this->m_archive;
     Blizzard::Lock::MutexEnter(archive->m_mutex.m_mutex);
@@ -231,7 +231,7 @@ std::string Blizzard::Mopaq::MPQEnumerator::SynthesizeDirectories(const char* pa
     return previous;
 }
 
-// OFFSET: 0x007FAA00
+// OFFSET: 0x007FAA00/0x14050AA60
 int32_t Blizzard::Mopaq::MPQEnumerator::Enumerate(char* name, uint32_t size) {
     std::vector<System_SFile::ListFileEntry>& listfile = this->m_archive->m_listfileEntries;
 
@@ -308,7 +308,7 @@ bool Blizzard::Mopaq::MPQEnumeratorBlockOrder::BlockToList::operator<(const Bloc
 Blizzard::Mopaq::MPQEnumeratorBlockOrder::MPQEnumeratorBlockOrder(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags) : MPQEnumerator(handle, path, flags) {
 }
 
-// OFFSET: [0x007F1920, 0x007F1970]
+// OFFSET: [0x007F1920, 0x007F1970/0x1404FE750]
 Blizzard::Mopaq::MPQEnumeratorBlockOrder::~MPQEnumeratorBlockOrder() {
 }
 

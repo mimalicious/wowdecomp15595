@@ -99,7 +99,7 @@ uint32_t Blizzard::Patch::LegacyPatch::GetTargetSize() {
     return this->m_targetSize;
 }
 
-// OFFSET: 0x007B0A90
+// OFFSET: 0x007B0A90/0x1408F5670
 uint32_t Blizzard::Patch::LegacyPatch::GetType() {
     return this->m_type;
 }

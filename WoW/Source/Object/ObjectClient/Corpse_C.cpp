@@ -105,7 +105,7 @@ void CGCorpse_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     }
 }
 
-// OFFSET: 0x00597B80
+// OFFSET: 0x00597B80/0x140205AB0
 int32_t CGCorpse_C::ShouldFadeout() {
     return !this->m_component || (TextureIsReadyNow(this->m_component->m_baseTexture) && this->m_component->RenderPrep(0));
 }
@@ -522,7 +522,7 @@ void CGCorpse_C::Initialize() {
     ClntObjMgrSetTypeMirrorHandler(ID_CORPSE, offsetof(CGCorpseData, m_corpseFieldDynamicFlags), sizeof(uint32_t), CorpseDynamicFlagUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
-// OFFSET: 0x00598880
+// OFFSET: 0x00598880/0x140206A60
 void CGCorpse_C::OnInteract() {
     this->OnRightClick();
 }

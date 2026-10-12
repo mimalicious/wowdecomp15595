@@ -133,7 +133,7 @@ bool ComSat::Sound::CODECIPMR6000::LocalPlayer::DecompressEncodedData(int32_t ch
     return result == 0;
 }
 
-// OFFSET: [0x00A3B6F0, 0x00A3A350]
+// OFFSET: [0x00A3B6F0, 0x00A3A350/0x1407E6760]
 ComSat::Sound::CODEC::~CODEC() {
 }
 
@@ -285,7 +285,7 @@ bool ComSat::Sound::CODECIPMR6000::RemoveLocalPlayer(uint8_t player) {
     return true;
 }
 
-// OFFSET: 0x00A3A990
+// OFFSET: 0x00A3A990/0x1407E7380
 ComSat::Sound::CODECIPMR6000::~CODECIPMR6000() {
     this->Shutdown();
 }

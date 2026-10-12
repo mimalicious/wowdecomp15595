@@ -1417,7 +1417,7 @@ void ClientDBReply::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006C05F0
+// OFFSET: 0x006C05F0/0x1403758C0
 bool ClientDBReply::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
@@ -1813,7 +1813,7 @@ void ClientMapObjEvents::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006C50E0
+// OFFSET: 0x006C50E0/0x14037AE10
 bool ClientMapObjEvents::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
@@ -2042,7 +2042,7 @@ bool ClientTransferPending::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x006C7920
+// OFFSET: 0x006C7920/0x14037E7A0
 bool ClientMessageBox::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
@@ -19805,7 +19805,7 @@ ClientWardenData::ClientWardenData(NetClient* netClient, WowConnection* connecti
 ClientWardenData::~ClientWardenData() {
 }
 
-// OFFSET: 0x006C7920
+// OFFSET: 0x006C7920/0x14037E7A0
 bool ClientWardenData::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
@@ -26076,7 +26076,7 @@ void ClientLfgJoinResult::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006F82C0
+// OFFSET: 0x006F82C0/0x1403C11D0
 bool ClientLfgJoinResult::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }

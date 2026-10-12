@@ -293,7 +293,7 @@ XMLNode* XMLTree_GetRoot(XMLTree* tree) {
     return tree->m_root;
 }
 
-// OFFSET: 0x006621E0
+// OFFSET: 0x006621E0/0x140307EE0
 XMLNodeData::~XMLNodeData() {
 }
 

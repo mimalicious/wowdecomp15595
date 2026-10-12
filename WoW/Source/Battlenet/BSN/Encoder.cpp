@@ -1,7 +1,7 @@
 #include "WoW/Source/Battlenet/BSN/Encoder.h"
 #include <cstring>
 
-// OFFSET: 0x006621E0
+// OFFSET: 0x006621E0/0x140307EE0
 BSN::Encoder::~Encoder() {
 }
 

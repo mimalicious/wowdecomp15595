@@ -337,7 +337,7 @@ bool Blizzard::Storage::LockFile::IsStale(uint32_t seconds) {
     return seconds < now - modified;
 }
 
-// OFFSET: 0x007AB9B0
+// OFFSET: 0x007AB9B0/0x1404A1A70
 Blizzard::Storage::BackingStore::~BackingStore() {
 }
 
@@ -528,7 +528,7 @@ bool Blizzard::Storage::PartialFile::Flush() {
     return result;
 }
 
-// OFFSET: 0x007B3E40
+// OFFSET: 0x007B3E40/0x1404A9670
 bool Blizzard::Storage::PartialFile::Close() {
     if (this->m_open) {
         Blizzard::Util::MD5 md5;

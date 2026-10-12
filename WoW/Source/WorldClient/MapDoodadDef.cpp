@@ -267,7 +267,7 @@ void CMapDoodadDef::LinkToChunk(CMapBaseObj* owner) {
     }
 }
 
-// OFFSET: [0x007879B0/0x140477070, 0x00787DC0]
+// OFFSET: [0x007879B0/0x140477070, 0x00787DC0/0x140477550]
 CMapDoodadDef::~CMapDoodadDef() {
     if (this->m_model) {
         this->m_model->SetSequenceCallback(NULL, 0);
@@ -281,7 +281,7 @@ CMapDoodadDef::~CMapDoodadDef() {
     this->m_updateLink.Unlink();
 }
 
-// OFFSET: 0x00787A40
+// OFFSET: 0x00787A40/0x140477150
 void CMapDoodadDef::QueryInteriorLighting(const CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
     CImVector color(0);
     bool exterior;
@@ -406,7 +406,7 @@ int32_t CMapDoodadDef::SelectUnderwater() {
     return 1;
 }
 
-// OFFSET: 0x00787FB0
+// OFFSET: 0x00787FB0/0x140477850
 void CMapDoodadDef::SelectUnderwater(CM2Lighting* lighting) {
     uint32_t flags = this->m_entityFlags;
 

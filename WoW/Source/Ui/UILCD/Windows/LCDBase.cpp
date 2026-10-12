@@ -18,7 +18,7 @@ CLCDBase::CLCDBase() {
     this->m_crForegroundColor = RGB(255, 255, 255);
 }
 
-// OFFSET: [0x00B40A70/0x14090EA10, 0x00B40C10]
+// OFFSET: [0x00B40A70/0x14090EA10, 0x00B40C10/0x14090EB40]
 CLCDBase::~CLCDBase() {
 }
 

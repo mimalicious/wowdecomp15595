@@ -20,7 +20,7 @@ const uint32_t CGxDevice::s_texFormatBitDepth[GxTexFormats_Last] = { 0, 32, 32, 
 
 const uint32_t CGxDevice::s_texFormatBlockSize[GxTexFormats_Last] = { 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
-// STATIC: 0x00BD40B8/0x0009C8CE0
+// STATIC: 0x00BD40B8/0x1409C8CE0
 const uint32_t CGxDevice::s_texFormatIsDepth[GxTexFormats_Last] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1 };
 
 const float CGxDevice::s_polygonOffsetValues[3] = { 0.0f, 3.05180438e-05f, 3.81469727e-06f };
@@ -1831,7 +1831,7 @@ void CGxDevice::IDeleteBackBufferFB(int32_t deleteTextures) {
     }
 }
 
-// OFFSET: [0x00848820/0x140576270, 0x008489C0]
+// OFFSET: [0x00848820/0x140576270, 0x008489C0/0x1405764A0]
 CGxDevice::~CGxDevice() {
     this->IDeleteBackBufferFB(1);
     this->m_frameBuffer = NULL;

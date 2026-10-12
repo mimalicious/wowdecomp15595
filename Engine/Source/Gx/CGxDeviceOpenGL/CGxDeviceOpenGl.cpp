@@ -23,7 +23,7 @@ static const CGxDeviceOpenGl::EDeviceState s_bufferState[GxPoolTargets_Last] = {
 
 static const GLenum s_glBufferUsage[3] = { GL_STATIC_DRAW_ARB, GL_DYNAMIC_DRAW_ARB, GL_STREAM_DRAW_ARB };
 
-// STATIC: 0x00BD4DC8/0x0009C9D70
+// STATIC: 0x00BD4DC8/0x1409C9D70
 const GLenum s_glTexTarget[4] = { GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_2D };
 
 static const GLenum s_glQueryTarget[1] = { GL_SAMPLES_PASSED_ARB };
@@ -42,7 +42,7 @@ static bool s_dummyContextCreated;
 // STATIC: 0x00EC66BC/0x140DB8824
 static int32_t s_deviceChanging;
 
-// STATIC: 0x00D09694/0x000BBB500
+// STATIC: 0x00D09694/0x140BBB500
 GLint s_glWrapMode[3] = { GL_CLAMP_TO_EDGE, GL_REPEAT, GL_MIRRORED_REPEAT_ARB };
 
 static int32_t s_firstAttach = 1;

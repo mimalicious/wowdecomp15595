@@ -30,7 +30,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F36DF0/0x000E2A3B8
+// STATIC: 0x00F36DF0/0x140E2A3B8
 QuestRequest CGQuestInfo::m_questRequest;
 
 // STATIC: 0x00F36E58/0x140E2A400

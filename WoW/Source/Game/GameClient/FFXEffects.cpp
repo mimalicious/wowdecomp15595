@@ -203,7 +203,7 @@ PassDeath::PassDeath(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBle
     this->m_permute = FFX::s_useRECT != 0;
 }
 
-// OFFSET: [0x00B0BF50/0x1408CFFD0, 0x00B0D1D0]
+// OFFSET: [0x00B0BF50/0x1408CFFD0, 0x00B0D1D0/0x1408D1590]
 PassDeath::~PassDeath() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -868,7 +868,7 @@ EffectNetherWorld::EffectNetherWorld() {
     }
 }
 
-// OFFSET: [0x00B0EAB0, 0x00B0F0E0]
+// OFFSET: [0x00B0EAB0, 0x00B0F0E0/0x1408D43B0]
 EffectNetherWorld::~EffectNetherWorld() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {

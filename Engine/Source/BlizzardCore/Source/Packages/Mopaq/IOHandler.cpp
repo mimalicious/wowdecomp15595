@@ -179,7 +179,7 @@ Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::~MpqRepairOnDemandErrorHandler()
 Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::MpqStandaloneRepairErrorHandler() {
 }
 
-// OFFSET: 0x007D4560
+// OFFSET: 0x007D4560/0x1404D4C80
 Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::~MpqStandaloneRepairErrorHandler() {
 }
 
@@ -249,7 +249,7 @@ System_Mopaq::IOHandler::IOHandler(Blizzard::Mopaq::MpqHandleRecord*& handle, Bl
     this->m_handle->m_writeFunc = IOHandler::WriteData;
 }
 
-// OFFSET: 0x007CC9C0
+// OFFSET: 0x007CC9C0/0x1404C8F70
 System_Mopaq::IOHandler::~IOHandler() {
     if (this->m_base.m_handle && !this->m_base.m_handle->Release()) {
         this->m_base.m_handle = NULL;
@@ -282,7 +282,7 @@ bool System_Mopaq::IOHandler::InitializeAndRead(void* buffer, int64_t offset, in
     return this->ReadData(buffer, offset, count);
 }
 
-// OFFSET: 0x007B3720
+// OFFSET: 0x007B3720/0x1404A8FD0
 bool System_Mopaq::IOHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     return this->m_base.Write(buffer, offset + this->m_baseOffset, count);
 }
@@ -292,7 +292,7 @@ bool System_Mopaq::IOHandler::Flush() {
     return true;
 }
 
-// OFFSET: 0x007B3750
+// OFFSET: 0x007B3750/0x1404A8FE0
 int32_t System_Mopaq::IOHandler::TrimRead(int32_t count, System_SFile::BLOCKENTRY& entry, int64_t offset) {
     int64_t available = static_cast<int64_t>(entry.m_fileSize) - offset;
     int32_t amount = static_cast<int32_t>(available >= count ? count : available);
@@ -341,7 +341,7 @@ bool System_Mopaq::MopaqReadHandler::WriteData(const uint8_t* buffer, int64_t of
     return false;
 }
 
-// OFFSET: 0x007B3340
+// OFFSET: 0x007B3340/0x1404A8BE0
 int32_t System_Mopaq::MopaqReadHandler::TrimRead(int32_t count, System_SFile::BLOCKENTRY& entry, int64_t offset) {
     int64_t available = static_cast<int64_t>(entry.m_compressedSize) - offset;
     int32_t amount = static_cast<int32_t>(available >= count ? count : available);
@@ -407,7 +407,7 @@ System_Mopaq::SectorReadHandler::SectorReadHandler(Blizzard::Mopaq::MpqHandleRec
     }
 }
 
-// OFFSET: [0x007CC950/0x1404C8EE0, 0x007D0700]
+// OFFSET: [0x007CC950/0x1404C8EE0, 0x007D0700/0x1404CE730]
 System_Mopaq::SectorReadHandler::~SectorReadHandler() {
     delete[] this->m_checksums;
 

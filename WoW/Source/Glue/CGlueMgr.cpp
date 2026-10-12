@@ -325,7 +325,7 @@ static CDataAllocator s_emoteKitFinishedAllocator(sizeof(CharacterEmoteKitFinish
 // STATIC: 0x00EBBFA0/0x140DACD70
 static CDataAllocator s_emoteSpellStartAllocator(sizeof(CharacterEmoteSpellStartData), 4);
 
-// STATIC: 0x01014010/0x000000010
+// STATIC: 0x01014010/0x140F81010
 static __declspec(thread) WOWGUID s_activeCharacterGuid;
 
 // OFFSET: 0x007FFF10/0x140513D50

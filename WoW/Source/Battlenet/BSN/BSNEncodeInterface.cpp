@@ -872,7 +872,7 @@ int32_t BSN::BSNPrimitiveWalker::Walk(BSNPrimitiveWalker& walker, const Context&
     }
 }
 
-// OFFSET: 0x00627290
+// OFFSET: 0x00627290/0x1402B92B0
 BSN::EncodedObject::~EncodedObject() {
 }
 

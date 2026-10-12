@@ -196,7 +196,7 @@ uint32_t CGGameObject_C_Type_Transport::GetSequenceTimeFromRealTime(uint32_t tim
     return this->GetSequenceTimeFromRealTime(this->m_owner->m_gameObject->m_state, time);
 }
 
-// OFFSET: 0x005A0C80
+// OFFSET: 0x005A0C80/0x1402108A0
 void CGGameObject_C_Type_Transport::Reenable() {
     CGGameObject_C_Type_TransportBase::Reenable();
     this->InitializeMovement();
@@ -471,7 +471,7 @@ void CGGameObject_C_Type_Transport::UpdateMovement(uint32_t time, uint32_t elaps
     }
 }
 
-// OFFSET: 0x0059C5F0
+// OFFSET: 0x0059C5F0/0x14020AFF0
 void CGGameObject_C_Type_Transport::UpdateState(int32_t oldState, int32_t newState) {
     if (!this->m_stopFrameCount || !this->m_frameCount || this->m_transportState == newState) {
         return;

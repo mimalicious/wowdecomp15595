@@ -57,7 +57,7 @@ void CLCDText::SetFont(LOGFONTA& font) {
     this->m_bRecalcExtent = 1;
 }
 
-// OFFSET: 0x00B40F10
+// OFFSET: 0x00B40F10/0x14090EF30
 HFONT CLCDText::GetFont() {
     return this->m_hFont;
 }
@@ -178,12 +178,12 @@ void CLCDText::SetWordWrap(int32_t enable) {
     }
 }
 
-// OFFSET: 0x00B410F0
+// OFFSET: 0x00B410F0/0x14090F110
 SIZE& CLCDText::GetVExtent() {
     return this->m_sizeVExtent;
 }
 
-// OFFSET: 0x00B41100
+// OFFSET: 0x00B41100/0x14090F120
 SIZE& CLCDText::GetHExtent() {
     return this->m_sizeHExtent;
 }

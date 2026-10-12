@@ -4,7 +4,7 @@
 ComSat::Network::Session::Callback::~Callback() {
 }
 
-// OFFSET: 0x007A95B0
+// OFFSET: 0x007A95B0/0x14049F340
 void ComSat::Session::SetNetworkSession(ComSat::Network::Session* session) {
     this->m_networkSession = session;
 }
@@ -51,6 +51,6 @@ ComSat::Session::Session(ComSat::SessionCallback& callback, uint64_t id, ComSat:
     this->m_allocator = &allocator;
 }
 
-// OFFSET: 0x00A39400
+// OFFSET: 0x00A39400/0x1407E57C0
 ComSat::Session::~Session() {
 }

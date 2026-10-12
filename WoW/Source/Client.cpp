@@ -332,7 +332,7 @@ static uint32_t s_unk_B2FA10;
 // STATIC: 0x00D36354/0x140BEF888
 static char* s_mfilDownloadErrors;
 
-// STATIC: 0x00D732EC/0x000C2E638
+// STATIC: 0x00D732EC/0x140C2E638
 bool g_hasIsoLocale[15];
 
 // STATIC: 0x00D732FC/0x140DABA80

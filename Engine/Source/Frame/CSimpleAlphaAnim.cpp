@@ -56,7 +56,7 @@ void CSimpleAlphaAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: 0x00529730
+// OFFSET: 0x00529730/0x1401791E0
 CSimpleAlphaAnim::~CSimpleAlphaAnim() {
 }
 

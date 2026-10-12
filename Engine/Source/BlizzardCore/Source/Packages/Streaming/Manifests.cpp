@@ -202,7 +202,7 @@ bool Blizzard::Streaming::Manifests::TimeslotItem::HandleTag(const char* tag, co
 Blizzard::Streaming::Manifests::ManifestItem::~ManifestItem() {
 }
 
-// OFFSET: [0x007C37E0]
+// OFFSET: [0x007C37E0/0x1404BDE20]
 Blizzard::Streaming::Manifests::ParameterItem::~ParameterItem() {
 }
 
@@ -806,7 +806,7 @@ Blizzard::Streaming::ManifestInfo::ManifestInfo() {
     this->m_randomGenerator = new ManifestRandomNumberGenerator();
 }
 
-// OFFSET: 0x007AB970
+// OFFSET: 0x007AB970/0x1404A1A30
 Blizzard::Streaming::ManifestRandomNumberGenerator::~ManifestRandomNumberGenerator() {
 }
 
@@ -1688,7 +1688,7 @@ int32_t System_Streaming::HttpCallback::GetTimeout() {
     return this->m_timeout;
 }
 
-// OFFSET: 0x007C3BD0
+// OFFSET: 0x007C3BD0/0x1404BE2F0
 void System_Streaming::HttpCallback::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
 }

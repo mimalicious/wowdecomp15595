@@ -210,7 +210,7 @@ CMapEntity::CMapEntity() {
     this->unk_00E0 = 1.0f;
 }
 
-// OFFSET: [0x00733950, 0x007346E0]
+// OFFSET: [0x00733950, 0x007346E0/0x1404105C0]
 CMapEntity::~CMapEntity() {
     if (reinterpret_cast<CMapEntity*>(CWorldScene::camTargEntity) == this) {
         CWorldScene::camTargEntity = 0;
@@ -289,7 +289,7 @@ void CMapEntity::SelectLights(CM2Lighting* lighting) {
     lighting->SetFog(fogColor, fog->m_start, fog->m_end, fog->m_density);
 }
 
-// OFFSET: 0x00733DA0
+// OFFSET: 0x00733DA0/0x14040F770
 void CMapEntity::AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
     CImVector color;
     *reinterpret_cast<uint32_t*>(&color) = 0;

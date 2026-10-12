@@ -124,10 +124,10 @@ static int DrawListSorterVtxStream(const void* a, const void* b) {
     return streamB < streamA;
 }
 
-// STATIC: 0x00CA8544/0x000B48570
+// STATIC: 0x00CA8544/0x140B48570
 static void (*s_drawListPreprocess[GxuSorts_Last])(GxDrawListEntry*, const C3Vector&) = { DrawListPreprocessB2F, DrawListPreprocessVtxStream };
 
-// STATIC: 0x00CA854C/0x000B48580
+// STATIC: 0x00CA854C/0x140B48580
 static int (*s_drawListSorters[GxuSorts_Last])(const void*, const void*) = { DrawListSorterB2F, DrawListSorterVtxStream };
 
 // OFFSET: 0x009FCE20/0x14090FD50

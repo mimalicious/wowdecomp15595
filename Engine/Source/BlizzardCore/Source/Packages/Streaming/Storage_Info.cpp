@@ -408,7 +408,7 @@ Blizzard::Storage::HttpSource::HttpSource(std::string path, int64_t size) : Back
     this->m_size = size;
 }
 
-// OFFSET: 0x007C61C0
+// OFFSET: 0x007C61C0/0x1404C1230
 Blizzard::Storage::HttpSource::~HttpSource() {
 }
 

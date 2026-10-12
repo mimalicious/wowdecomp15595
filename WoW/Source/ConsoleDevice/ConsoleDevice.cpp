@@ -30,7 +30,7 @@ static int32_t s_consoleAccessEnabled;
 // STATIC: 0x00E288C4/0x140D104D8
 int32_t s_shaderModel;
 
-// STATIC: 0x00E288F4/0x000D10538
+// STATIC: 0x00E288F4/0x140D10538
 static int32_t s_consoleGxOverrideSet[GxOverrides_Last];
 
 // STATIC: 0x00E28918/0x140D104DC
@@ -39,7 +39,7 @@ DefaultSettings s_defaults;
 // STATIC: 0x00E2892C/0x140D10580
 Hardware s_hardware;
 
-// STATIC: 0x00E28964/0x000D105C8
+// STATIC: 0x00E28964/0x140D105C8
 static uint32_t s_consoleGxOverrideVal[GxOverrides_Last];
 
 // STATIC: 0x00E28990/0x140D1055C

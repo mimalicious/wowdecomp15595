@@ -28,7 +28,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AFFF30
+// OFFSET: 0x00AFFF30/0x1408C1D90
 FMOD_RESULT ChannelDSoundEAX4::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     HRESULT             hr;

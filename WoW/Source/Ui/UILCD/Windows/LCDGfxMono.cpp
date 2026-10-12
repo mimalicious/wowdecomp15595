@@ -7,7 +7,7 @@ CLCDGfxMono::CLCDGfxMono() {
     this->m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
 }
 
-// OFFSET: 0x00B40D00
+// OFFSET: 0x00B40D00/0x14090EC80
 CLCDGfxMono::~CLCDGfxMono() {
 }
 

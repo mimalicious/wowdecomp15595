@@ -11,10 +11,10 @@
 #include "WoW/Source/Ui/SpellBookFrame.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
-// STATIC: 0x00F35FFC/0x000E29388
+// STATIC: 0x00F35FFC/0x140E29388
 int32_t CGRuneInfo::m_runes[6];
 
-// STATIC: 0x00F36014/0x000E293A0
+// STATIC: 0x00F36014/0x140E293A0
 int32_t CGRuneInfo::m_baseRunes[6];
 
 // STATIC: 0x00F3602C/0x140E293B8

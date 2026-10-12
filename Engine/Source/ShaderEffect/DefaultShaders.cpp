@@ -10,13 +10,13 @@
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00C98A80/0x000B300C0
+// STATIC: 0x00C98A80/0x140B300C0
 static const char* s_shaderNames[GxVertexBufferFormats_Last] = { "Default_P", "Default_PN", "Default_PNC", "Default_PNT", "Default_PNCT", NULL, NULL, "Default_PNCT2", "Default_PC", "Default_PCT", NULL, NULL, NULL, "Default_PT", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-// STATIC: 0x00D380C8/0x000BF1B40
+// STATIC: 0x00D380C8/0x140BF1B40
 static CGxShader* s_pixelShaders[GxVertexBufferFormats_Last];
 
-// STATIC: 0x00D38120/0x000BF1BF0
+// STATIC: 0x00D38120/0x140BF1BF0
 static CGxShader* s_vertexShaders[GxVertexBufferFormats_Last];
 
 // STATIC: 0x00D38178/0x140BF1CA0

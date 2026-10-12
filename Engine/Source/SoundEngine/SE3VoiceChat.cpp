@@ -324,7 +324,7 @@ void SE3::ActivatePrimaryCaptureCallback() {
 void SE3StreamCallbacks::Delete() {
 }
 
-// OFFSET: 0x00712970
+// OFFSET: 0x00712970/0x1403E46D0
 void SE3StreamCallbacks::DiscardSamples(uint32_t position, uint32_t count) {
     float buffer[1024];
 

@@ -4,7 +4,7 @@
 #include <cstring>
 #include <new>
 
-// OFFSET: 0x00A32ED0
+// OFFSET: 0x00A32ED0/0x1407DD3A0
 ComSat::Interface::~Interface() {
 }
 

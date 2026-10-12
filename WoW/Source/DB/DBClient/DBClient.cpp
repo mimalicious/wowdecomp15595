@@ -15,7 +15,7 @@
 #include "Engine/Source/Services/AsyncFile.h"
 #include <ctime>
 
-// STATIC: 0x00C9A990/0x000B33940
+// STATIC: 0x00C9A990/0x140B33940
 const char* g_localeNames[15] = { "deDE", "enGB", "enUS", "esES", "frFR", "koKR", "zhCN", "zhTW", "enCN", "enTW", "esMX", "ruRU", "enUS", "ptBR", "ptPT" };
 
 // STATIC: 0x00C9AD60/0x140B33F70

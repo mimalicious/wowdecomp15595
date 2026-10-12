@@ -36,7 +36,7 @@
 #include "WoW/Source/WowServices/RealmConnection.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x01014008/0x000000008
+// STATIC: 0x01014008/0x140F81008
 static __declspec(thread) ObjectMgr* s_curMgr;
 
 // STATIC: 0x00D73658/0x140C2EB80
@@ -45,7 +45,7 @@ static ObjectMgr* s_savedObjMgr;
 // STATIC: 0x00D73660
 static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> > s_typeMirrorHandlers[NUM_CLIENT_OBJECT_TYPES][(sizeof(CGObjectData) + sizeof(CGUnitData) + sizeof(CGPlayerLocalData)) / sizeof(uint32_t)];
 
-// STATIC: 0x00D73634/0x000C2EB5C
+// STATIC: 0x00D73634/0x140C2EB5C
 static uint32_t s_objHeapIds[NUM_CLIENT_OBJECT_TYPES];
 
 // STATIC: 0x00D7365C/0x140C2EB88
@@ -54,7 +54,7 @@ static bool s_heapsAllocated;
 // STATIC: 0x00C9AC14/0x140B33D68
 static const char* s_objNames[NUM_CLIENT_OBJECT_TYPES] = { "CGObject_C", "CGItem_C", "CGContainer_C", "CGUnit_C", "CGPlayer_C", "CGGameObject_C", "CGDynamicObject_C", "CGCorpse_C", "CGAreaTrigger_C" };
 
-// STATIC: 0x00C9AC38/0x000B33DAC
+// STATIC: 0x00C9AC38/0x140B33DAC
 static const uint32_t s_objHeapSize[NUM_CLIENT_OBJECT_TYPES] = { 0, 512, 32, 64, 64, 64, 32, 32, 32 };
 
 // STATIC: 0x00C9AC5C
@@ -70,7 +70,7 @@ static const uint32_t s_objDwordCount[NUM_CLIENT_OBJECT_TYPES] = {
     (sizeof(CGObjectData) + sizeof(CGAreaTriggerData)) / sizeof(uint32_t),
 };
 
-// STATIC: 0x00D97E40/0x000C77B54
+// STATIC: 0x00D97E40/0x140C77B54
 uint32_t s_objTotalSize[NUM_CLIENT_OBJECT_TYPES] = {
     sizeof(CGObject_C) + sizeof(CGObjectData) + CGObject::TotalFieldsSaved() * sizeof(uint32_t),
     sizeof(CGItem_C) + sizeof(CGObjectData) + sizeof(CGItemData) + CGItem::TotalFieldsSaved() * sizeof(uint32_t),

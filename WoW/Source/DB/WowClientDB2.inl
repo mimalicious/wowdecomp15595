@@ -58,7 +58,7 @@ WowClientDB2<T>::~WowClientDB2() {
     this->m_cache.Clear();
 }
 
-// OFFSET: [0x00498A30<ItemRec>, 0x00498DA0<ItemRecSparse>, 0x00499110<ItemCurrencyCostRec>, 0x00499480<ItemExtendedCostRec>, 0x004997F0<KeyChainRec>]
+// OFFSET: [0x00498A30/0x1400C2D80<ItemRec>, 0x00498DA0/0x1400C3250<ItemRecSparse>, 0x00499110/0x1400C3720<ItemCurrencyCostRec>, 0x00499480/0x1400C3BF0<ItemExtendedCostRec>, 0x004997F0/0x1400C40C0<KeyChainRec>]
 template <class T>
 void* WowClientDB2<T>::AppendDBRequest(int32_t id, WOWGUID guid, bool related) {
     DBCACHE* cache = this->m_requests.Head();
@@ -88,7 +88,7 @@ void* WowClientDB2<T>::AppendDBRequest(int32_t id, WOWGUID guid, bool related) {
     return cache;
 }
 
-// OFFSET: [0x00499DF0<ItemRec>]
+// OFFSET: [0x00499DF0/0x1400C4920<ItemRec>]
 template <class T>
 void WowClientDB2<T>::CancelAllCallbacks() {
     DBCACHE* cache = this->m_cache.Head();
@@ -192,7 +192,7 @@ void WowClientDB2<T>::DBReadStringsCallback(CAsyncObject* object) {
     AsyncFileReadDestroyObject(object);
 }
 
-// OFFSET: [0x00498C10<ItemRec>, 0x00498F80<ItemRecSparse>, 0x004992F0<ItemCurrencyCostRec>, 0x00499660<ItemExtendedCostRec>, 0x004999D0<KeyChainRec>]
+// OFFSET: [0x00498C10/0x1400C3040<ItemRec>, 0x00498F80/0x1400C3510<ItemRecSparse>, 0x004992F0/0x1400C39E0<ItemCurrencyCostRec>, 0x00499660/0x1400C3EB0<ItemExtendedCostRec>, 0x004999D0/0x1400C4380<KeyChainRec>]
 template <class T>
 bool WowClientDB2<T>::DBReplyHandler(ClientDBReply* reply) {
     int32_t id = reply->m_recordID;
@@ -232,7 +232,7 @@ found:
     return true;
 }
 
-// OFFSET: [0x004986C0<ItemRec>]
+// OFFSET: [0x004986C0/0x1400C28C0<ItemRec>]
 template <class T>
 const uint8_t* WowClientDB2<T>::ExportCachedRecord(int32_t id) {
     DBCACHE* cache = this->m_cachedRecordList.Head();

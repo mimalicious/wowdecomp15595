@@ -63,7 +63,7 @@ void CSimpleTranslationAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: 0x00529320
+// OFFSET: 0x00529320/0x140178C60
 CSimpleTranslationAnim::~CSimpleTranslationAnim() {
 }
 

@@ -181,7 +181,7 @@ bool CSimpleSlider::IsA(int32_t type) {
     return type == CSimpleSlider::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: 0x005212A0/0x14016ECB0
+// OFFSET: 0x005212A0
 bool CSimpleSlider::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleSlider::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
