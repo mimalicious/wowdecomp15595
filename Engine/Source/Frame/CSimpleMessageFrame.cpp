@@ -333,7 +333,7 @@ void CSimpleMessageFrame::OnLayerUpdate(float elapsedSec) {
     uint32_t count = this->m_pendingMessages.Count();
 
     if (count) {
-        CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
         if (this->GetRect(&rect)) {
             for (uint32_t i = 0; i < count; i++) {

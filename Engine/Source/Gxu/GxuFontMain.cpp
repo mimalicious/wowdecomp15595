@@ -1064,13 +1064,13 @@ void GxuFontDestroyString(CGxString*& string) {
 
 // OFFSET: 0x006146A0/0x1402A0010
 void GxuFontWindowSizeChanged() {
-    static CRect s_currentRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    static CRect s_currentRect(0.0f, 0.0f, 0.0f, 0.0f);
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     if (rect.maxX - rect.minX == 0.0f || rect.maxY - rect.minY == 0.0f) {
-        CRect defaultRect = { 0.0f, 0.0f, 480.0f, 640.0f };
+        CRect defaultRect(0.0f, 0.0f, 480.0f, 640.0f);
         rect = defaultRect;
     }
 

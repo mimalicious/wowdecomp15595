@@ -264,7 +264,7 @@ void CGxString::InitializeTextLine(const char* text, uint32_t numBytes, CImVecto
         parseInfo.m_hyperlink.m_right = pos.x;
     }
 
-    static CRect pixelAdjustments = { 1.0f / 512.0f, 1.0f / 512.0f, -1.0f / 512.0f, -1.0f / 512.0f };
+    static CRect pixelAdjustments(1.0f / 512.0f, 1.0f / 512.0f, -1.0f / 512.0f, -1.0f / 512.0f);
 
     float step = 0.0f;
     float x = 0.0f;

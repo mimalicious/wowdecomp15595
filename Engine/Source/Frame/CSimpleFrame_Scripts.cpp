@@ -211,7 +211,7 @@ static int32_t Script_CreateFontString(lua_State* L) {
 // OFFSET: 0x0050B180/0x140153630
 static int32_t Script_GetBoundsRect(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
-    CRect rect = { 3.402823466e38f, 3.402823466e38f, 0.0f, 0.0f };
+    CRect rect(3.402823466e38f, 3.402823466e38f, 0.0f, 0.0f);
 
     if (!frame->GetBoundsRect(rect)) {
         return 0;
@@ -1649,7 +1649,7 @@ static int32_t Script_SetBackdrop(lua_State* L) {
 
     frame->SetBackdrop(backdrop);
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (frame->GetRect(&rect)) {
         backdrop->Generate(&rect);

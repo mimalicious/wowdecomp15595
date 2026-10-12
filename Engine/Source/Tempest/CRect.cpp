@@ -1,6 +1,14 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "Engine/Source/Tempest/CRect.h"
 
+// OFFSET: 0x00B14340
+CRect::CRect(const C2Vector& v) {
+    this->minY = v.y;
+    this->minX = v.x;
+    this->maxY = v.y;
+    this->maxX = v.x;
+}
+
 // INLINED
 bool CRect::ContainsPoint(const C2Vector& point) const {
     return this->minX < point.x && this->maxX > point.x && this->minY < point.y && this->maxY > point.y;

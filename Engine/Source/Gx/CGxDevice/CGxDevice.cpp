@@ -2558,7 +2558,7 @@ float CGxDevice::CapsAspectRatio(int32_t window) {
         return CGxDevice::kWinAspect;
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     this->CapsWindowSize(rect);
     return (rect.maxX - rect.minX) / (rect.maxY - rect.minY);
 }

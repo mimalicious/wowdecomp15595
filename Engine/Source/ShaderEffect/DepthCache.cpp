@@ -191,7 +191,7 @@ void DepthCache::Resolve() {
 
 // OFFSET: 0x00A2FAA0/0x1407D9810
 static void CreateTextures() {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     GxLog("Preparing to create sample-able depth buffer texture:");
@@ -306,7 +306,7 @@ void DepthCache::DrawDepthRangeDump() {
     range.z = 0.0f;
     range.w = 0.0f;
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
     C4Vector homToScreen = ViewSettings::CalculateHomToScreen(0.5f / rect.maxX, 0.5f / rect.maxY);
 

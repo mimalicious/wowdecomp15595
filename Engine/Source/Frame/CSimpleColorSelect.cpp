@@ -327,7 +327,7 @@ int32_t CSimpleColorSelect::OnLayerTrackUpdate(const CMouseEvent& evt) {
     if (this->m_wheelTracking || this->m_valueTracking) {
         if (this->m_wheelTracking) {
             C2Vector point = evt.m_data.m_mousePosition;
-            CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+            CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
             this->m_wheelTexture->GetRect(&rect);
 
             float x = (point.x - (rect.maxX + rect.minX) * 0.5f) / ((rect.maxX - rect.minX) * 0.5f);
@@ -345,7 +345,7 @@ int32_t CSimpleColorSelect::OnLayerTrackUpdate(const CMouseEvent& evt) {
 
         if (this->m_valueTracking) {
             float y = evt.m_data.m_mousePosition.y;
-            CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+            CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
             this->m_valueTexture->GetRect(&rect);
 
             float value = (y - rect.minY) / (rect.maxY - rect.minY);

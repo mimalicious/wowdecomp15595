@@ -1216,7 +1216,7 @@ CGNamePlateFrame::CGNamePlateFrame(CSimpleFrame* parent) : CSimpleFrame(parent),
     }
 
     if (!this->m_scripted) {
-        CRect texCoords = { 0.0f, 0.0f, 0.0f, 0.0f };
+        CRect texCoords(0.0f, 0.0f, 0.0f, 0.0f);
 
         void* flashData = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
         this->m_targetingFrameFlash = flashData ? new (flashData) CSimpleTexture(this, 0, 0, true) : NULL;

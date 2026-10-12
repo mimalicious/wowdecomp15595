@@ -356,7 +356,7 @@ void Liquid::GetDisplMapInfoRaw(uint32_t index, C3Vector& pos, C2Vector& size) {
 
 // OFFSET: 0x00717770/0x1403EAD90
 static CTexture* CreateBackBuffer() {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     CGxTexFlags flags;
@@ -366,7 +366,7 @@ static CTexture* CreateBackBuffer() {
 
 // OFFSET: 0x00717820/0x1403EAE40
 static CTexture* CreateReflectionBuffer(const char* name) {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     CGxTexFlags flags;
@@ -379,7 +379,7 @@ static CTexture* CreateReflectionBuffer(const char* name) {
 
 // OFFSET: 0x007178E0/0x1403EAF10
 static CTexture* CreateDepthReflectionBuffer(const char* name) {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     CGxTexFlags flags;
@@ -1500,7 +1500,7 @@ void Liquid::CreateDynamicDisplacementMap() {
         s_displMapPeriod[1] = 50;
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     CGxTexFlags flags;

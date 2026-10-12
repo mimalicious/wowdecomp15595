@@ -8190,8 +8190,8 @@ int32_t CM2Model::InitializeLoaded() {
             emitter->m_params.m_colorTrack = &particleData->m_colorTrack;
             emitter->m_params.m_scaleTrack = &particleData->m_scaleTrack;
             emitter->m_params.m_alphaTrack = &particleData->m_alphaTrack;
-            emitter->m_params.m_scaleVariationX = particleData->m_scaleVariation.x;
-            emitter->m_params.m_scaleVariationY = particleData->m_scaleVariation.y;
+            emitter->m_params.m_scaleVariation.x = particleData->m_scaleVariation.x;
+            emitter->m_params.m_scaleVariation.y = particleData->m_scaleVariation.y;
             emitter->m_params.m_headCellTrack = &particleData->m_headCellTrack;
             emitter->m_params.m_tailCellTrack = &particleData->m_tailCellTrack;
 

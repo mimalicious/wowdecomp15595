@@ -207,7 +207,7 @@ void CSimpleScrollFrame::UpdateScrollChildRect(float width, float height) {
     }
 
     C2Vector range = this->m_scrollRange;
-    CRect rect = { FLT_MAX, FLT_MAX, 0.0f, 0.0f };
+    CRect rect(FLT_MAX, FLT_MAX, 0.0f, 0.0f);
     this->m_scrollChild->GetBoundsRect(rect);
 
     float rangeX = rect.maxX - rect.minX - width;
@@ -233,7 +233,7 @@ void CSimpleScrollFrame::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
     if (this->m_scrollChildUpdate) {
-        CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
         if (this->GetRect(&rect)) {
             this->UpdateScrollChildRect(rect.maxX - rect.minX, rect.maxY - rect.minY);
@@ -246,7 +246,7 @@ void CSimpleScrollFrame::OnLayerUpdate(float elapsedSec) {
 // OFFSET: 0x00520710
 void CSimpleScrollFrame::RenderScrollChild(void* param) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(param);
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (!scrollFrame->GetHitRect(rect) || !scrollFrame->m_scrollChild || !scrollFrame->m_scrollChild->m_visible) {
         return;
@@ -382,7 +382,7 @@ void CSimpleScrollFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
 
 // OFFSET: 0x00520C50
 bool CSimpleScrollFrame::GetBoundsRect(CRect& rect) {
-    CRect frameRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect frameRect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (this->IsResizePending()) {
         this->Resize(1);

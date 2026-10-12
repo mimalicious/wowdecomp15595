@@ -2588,7 +2588,7 @@ int32_t CGWorldFrame::SetupDefaultAction() {
 
 // OFFSET: 0x008E4950/0x140612720
 void CGWorldFrame::OnWorldRender() {
-    CRect window = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect window(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(window);
 
     if (window.maxX - window.minX == 0.0f || window.maxY - window.minY == 0.0f) {
@@ -2606,7 +2606,7 @@ void CGWorldFrame::OnWorldRender() {
     CGWorldFrame::UpdateScreenEffectParams();
     FFX::Start();
 
-    CRect fullViewport = { 0.0f, 0.0f, 1.0f, 1.0f };
+    CRect fullViewport(0.0f, 0.0f, 1.0f, 1.0f);
 
     if (this->m_viewportNDC != fullViewport) {
         CImVector black(0x00, 0x00, 0x00, 0xFF);

@@ -104,8 +104,7 @@ class CParticleEmitter2 {
         /* 0040 */ const M2PartTrack<C3Vector>* m_colorTrack;
         /* 0044 */ const M2PartTrack<fixed16>* m_alphaTrack;
         /* 0048 */ const M2PartTrack<C2Vector>* m_scaleTrack;
-        /* 004C */ float m_scaleVariationX;
-        /* 0050 */ float m_scaleVariationY;
+        /* 004C */ C2Vector m_scaleVariation;
         /* 0054 */ const M2PartTrack<uint16_t>* m_headCellTrack;
         /* 0058 */ const M2PartTrack<uint16_t>* m_tailCellTrack;
         /* 005C */ C3Vector m_replacementColors [3];

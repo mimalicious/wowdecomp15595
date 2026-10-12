@@ -116,7 +116,7 @@ bool CScriptRegion::IsMouseOver(float top, float bottom, float left, float right
         this->Resize(1);
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (!this->GetRect(&rect)) {
         return false;

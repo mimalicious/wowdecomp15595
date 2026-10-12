@@ -2656,7 +2656,7 @@ void CGlueMgr::Resume() {
     CGlueMgr::m_elapsedMs = 0;
     CGlueMgr::m_timeMs = 0;
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSizeInScreenCoords(rect);
     CGlueMgr::m_screenWidth = static_cast<int32_t>(rect.maxX - rect.minX);
     CGlueMgr::m_screenHeight = static_cast<int32_t>(rect.maxY - rect.minY);
@@ -3241,7 +3241,7 @@ void CGlueMgr::Initialize() {
         CGlueMgr::m_rereadContest = 1;
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     CSizeEvent event;

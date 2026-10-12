@@ -2734,7 +2734,7 @@ int32_t CSimpleTexture::SetTexture(const char* fileName, int32_t wrapU, int32_t 
                     uint32_t maskStride = 4 * maskWidth;
                     uint32_t maskHeight = mask.m_height;
 
-                    CRect texRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+                    CRect texRect(0.0f, 0.0f, 0.0f, 0.0f);
                     this->GetTexCoord(texRect);
 
                     int32_t left = static_cast<int32_t>(static_cast<float>(width) * texRect.minX + 0.5f);
@@ -2886,7 +2886,7 @@ void CSimpleEmbeddedTexture::InitEmbeddedTexture(CSimpleFontString* string, cons
             if (info->m_hasTexCoords) {
                 this->m_texture->SetTexCoord(info->m_texCoords);
             } else {
-                CRect texRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+                CRect texRect(0.0f, 0.0f, 1.0f, 1.0f);
                 this->m_texture->SetTexCoord(texRect);
             }
 

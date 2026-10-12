@@ -13,6 +13,9 @@ class CRect {
     /* 0008 */ float maxY;
     /* 000C */ float maxX;
 
+    CRect();
+    CRect(float minY, float minX, float maxY, float maxX);
+    explicit CRect(const C2Vector& v);
     bool ContainsPoint(const C2Vector& point) const;
     bool IsPointInside(const C2Vector& point) const;
     CRect operator&=(const CRect& r);
@@ -23,5 +26,7 @@ CRect operator&(const CRect& l, const CRect& r);
 CRect operator+(const CRect& l, const CRect& r);
 CRect operator/(const CRect& l, const CRect& r);
 CRect operator|(const CRect& l, const CRect& r);
+
+#include "Engine/Source/Tempest/CRect.inl"
 
 #endif

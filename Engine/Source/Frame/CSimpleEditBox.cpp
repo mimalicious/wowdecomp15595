@@ -1914,7 +1914,7 @@ void CSimpleEditBox::OnFrameSizeChanged(float width, float height) {
 // OFFSET: 0x005172B0/0x140161920
 void CSimpleEditBox::AnchorCandidatesFrame() {
     CLayoutFrame* relative = this->m_clauseHighlight ? static_cast<CLayoutFrame*>(this->m_clauseHighlight) : static_cast<CLayoutFrame*>(this->m_highlightTextures[0]);
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     FRAMEPOINT point;
     FRAMEPOINT relativePoint;
 

@@ -400,7 +400,7 @@ void CSimpleModel::RenderModel(void* arg) {
         return;
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (!simpleModel->GetRect(&rect)) {
         return;

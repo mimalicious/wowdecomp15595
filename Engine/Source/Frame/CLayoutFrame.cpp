@@ -521,7 +521,7 @@ int32_t CLayoutFrame::CalculateRect(CRect* rect) {
 
 // OFFSET: 0x00507FB0/0x14014F600
 int32_t CLayoutFrame::OnFrameResize() {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (!this->CalculateRect(&rect)) {
         this->m_layoutFlags |= 0x8;

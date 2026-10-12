@@ -914,7 +914,7 @@ static void WaveTexCallback(EGxTexCommand command, uint32_t width, uint32_t heig
 
 // OFFSET: 0x0089CA80/0x1405DCC50
 void FFX::AllocTex() {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     int32_t width = static_cast<int32_t>(rect.maxX - rect.minX);
@@ -997,7 +997,7 @@ void FFX::Start() {
         }
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSize(rect);
 
     if (static_cast<int32_t>(rect.maxX - rect.minX) != FFX::s_screen.m_size.x || static_cast<int32_t>(rect.maxY - rect.minY) != FFX::s_screen.m_size.y) {

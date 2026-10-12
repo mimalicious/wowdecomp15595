@@ -436,7 +436,7 @@ static int32_t Script_SetTexCoord(lua_State* L) {
     int32_t count = lua_gettop(L) - 1;
 
     if (count == 4) {
-        CRect texRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        CRect texRect(0.0f, 0.0f, 0.0f, 0.0f);
         texRect.minX = lua_tonumber(L, 2);
         texRect.maxX = lua_tonumber(L, 3);
         texRect.minY = lua_tonumber(L, 4);

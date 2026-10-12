@@ -145,7 +145,7 @@ void GxuAdjustProjForHalfPixel(C44Matrix& proj) {
         return;
     }
 
-    CRect window = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect window(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSizeInScreenCoords(window);
 
     CGxDevice* device = g_theGxDevicePtr;
@@ -265,7 +265,7 @@ void GxuXformCalcFrustumCorners(const C44Matrix& view, const C44Matrix& proj, C3
 
 // OFFSET: 0x00616550
 int32_t GxuXformCalc3dScreenCoords(const C44Matrix& toScreen, uint32_t count, const C3Vector* points, C3Vector* screen) {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     g_theGxDevicePtr->CapsWindowSize(rect);
     float minZ = g_theGxDevicePtr->m_viewport.m_z.m_l;

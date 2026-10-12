@@ -90,7 +90,7 @@ int32_t CFramePoint::GetRelativeRect(CRect& rect) {
 
 // OFFSET: 0x0052EC40
 float CFramePoint::X(float scale) {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (!this->GetRelativeRect(rect)) {
         return CFramePoint::UNDEFINED;
@@ -119,7 +119,7 @@ float CFramePoint::X(float scale) {
 
 // OFFSET: 0x0052ED30
 float CFramePoint::Y(float scale) {
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (!this->GetRelativeRect(rect)) {
         return CFramePoint::UNDEFINED;

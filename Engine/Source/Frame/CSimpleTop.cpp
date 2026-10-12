@@ -246,7 +246,7 @@ float CSimpleTop::RoundToPixelWidth(float ddcWidth) {
         return ddcWidth;
     }
 
-    CRect windowRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect windowRect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSizeInScreenCoords(windowRect);
 
     float windowWidth = windowRect.maxX - windowRect.minX;
@@ -266,7 +266,7 @@ float CSimpleTop::RoundToPixelHeight(float ddcHeight) {
         return ddcHeight;
     }
 
-    CRect windowRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect windowRect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSizeInScreenCoords(windowRect);
 
     float windowHeight = windowRect.maxY - windowRect.minY;
@@ -354,7 +354,7 @@ int32_t CSimpleTop::StartMoveOrResizeFrame(CSimpleFrame* frame, MOVERESIZE_REASO
             frame->Resize(1);
         }
 
-        CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
         if (!frame->GetRect(&rect)) {
             return 0;
@@ -751,8 +751,8 @@ CSimpleFrame* CFrameStrata::GetHitFrame(const C2Vector& pt) {
 
 // OFFSET: 0x00500330/0x140145640
 int32_t CFrameStrata::FrameOccluded(CSimpleFrame* frame) {
-    CRect frameRect = { 0.0f, 0.0f, 0.0f, 0.0f };
-    CRect otherRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect frameRect(0.0f, 0.0f, 0.0f, 0.0f);
+    CRect otherRect(0.0f, 0.0f, 0.0f, 0.0f);
 
     for (uint32_t level = frame->m_level; level < this->m_topLevel; level++) {
         CFrameStrataNode* node = this->m_levels[level];

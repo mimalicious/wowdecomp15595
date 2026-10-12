@@ -312,7 +312,7 @@ void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
                 texCoords[3].y = 1.0f;
                 this->m_barTexture->SetTexCoord(texCoords);
             } else {
-                CRect texRect = { 1.0f - value, 0.0f, 1.0f, 1.0f };
+                CRect texRect(1.0f - value, 0.0f, 1.0f, 1.0f);
                 this->m_barTexture->SetTexCoord(texRect);
             }
         }
@@ -336,7 +336,7 @@ void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
                 texCoords[3].y = 1.0f - value;
                 this->m_barTexture->SetTexCoord(texCoords);
             } else {
-                CRect texRect = { 0.0f, 0.0f, 1.0f, value };
+                CRect texRect(0.0f, 0.0f, 1.0f, value);
                 this->m_barTexture->SetTexCoord(texRect);
             }
         }
@@ -369,7 +369,7 @@ void CSimpleStatusBar::SetRotatesTexture(int32_t rotates) {
         texCoords[3].y = 1.0f;
         this->m_barTexture->SetTexCoord(texCoords);
     } else {
-        CRect texRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+        CRect texRect(0.0f, 0.0f, 1.0f, 1.0f);
         this->m_barTexture->SetTexCoord(texRect);
     }
 

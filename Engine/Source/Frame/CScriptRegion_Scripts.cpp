@@ -123,7 +123,7 @@ static int32_t Script_GetRect(lua_State* L) {
         region->Resize(1);
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (!region->GetRect(&rect)) {
         return 0;
@@ -148,7 +148,7 @@ static int32_t Script_GetCenter(lua_State* L) {
         region->Resize(1);
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (region->GetRect(&rect)) {
         float width = rect.maxX - rect.minX;
@@ -171,7 +171,7 @@ static int32_t Script_GetLeft(lua_State* L) {
         region->Resize(1);
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (region->GetRect(&rect)) {
         lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f / region->m_layoutScale * rect.minX));
@@ -190,7 +190,7 @@ static int32_t Script_GetRight(lua_State* L) {
         region->Resize(1);
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (region->GetRect(&rect)) {
         lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f / region->m_layoutScale * rect.maxX));
@@ -209,7 +209,7 @@ static int32_t Script_GetTop(lua_State* L) {
         region->Resize(1);
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (region->GetRect(&rect)) {
         lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f / region->m_layoutScale * rect.maxY));
@@ -228,7 +228,7 @@ static int32_t Script_GetBottom(lua_State* L) {
         region->Resize(1);
     }
 
-    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (region->GetRect(&rect)) {
         lua_pushnumber(L, DDCToNDCWidth(CoordinateGetAspectCompensation() * 1024.0f / region->m_layoutScale * rect.minY));
@@ -249,7 +249,7 @@ static int32_t Script_GetWidth(lua_State* L) {
             region->Resize(1);
         }
 
-        CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
         if (region->GetRect(&rect)) {
             width = (rect.maxX - rect.minX) / region->m_layoutScale;
@@ -293,7 +293,7 @@ static int32_t Script_GetHeight(lua_State* L) {
             region->Resize(1);
         }
 
-        CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 
         if (region->GetRect(&rect)) {
             height = (rect.maxY - rect.minY) / region->m_layoutScale;

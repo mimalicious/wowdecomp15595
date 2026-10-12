@@ -197,10 +197,10 @@ const TrackingTypeInfo CGMinimapFrame::s_trackingTypes[19] = {
 
 // STATIC: 0x00F61218
 static MINIMAPQUAD s_quads[4] = {
-    { { 0.0f, 0.0f, 0.5f, 0.5f }, C2Vector(0.0f, 0.0f) },
-    { { 0.5f, 0.0f, 1.0f, 0.5f }, C2Vector(1.0f, 0.0f) },
-    { { 0.5f, 0.5f, 1.0f, 1.0f }, C2Vector(1.0f, 1.0f) },
-    { { 0.0f, 0.5f, 0.5f, 1.0f }, C2Vector(0.0f, 1.0f) },
+    { CRect(0.0f, 0.0f, 0.5f, 0.5f), C2Vector(0.0f, 0.0f) },
+    { CRect(0.5f, 0.0f, 1.0f, 0.5f), C2Vector(1.0f, 0.0f) },
+    { CRect(0.5f, 0.5f, 1.0f, 1.0f), C2Vector(1.0f, 1.0f) },
+    { CRect(0.0f, 0.5f, 0.5f, 1.0f), C2Vector(0.0f, 1.0f) },
 };
 
 // STATIC: 0x00F61278

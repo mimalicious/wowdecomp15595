@@ -709,8 +709,8 @@ void CParticleEmitter2::InterpolateAllTracks(const CParticle2& particle, TrackVa
 
     if (this->m_flags & 0x800000) {
         float variationY = CRandom::sfloat_(seed);
-        float scaleX = CRandom::sfloat_(seed) * this->m_params.m_scaleVariationX + 1.0f;
-        float scaleY = this->m_params.m_scaleVariationY * variationY + 1.0f;
+        float scaleX = CRandom::sfloat_(seed) * this->m_params.m_scaleVariation.x + 1.0f;
+        float scaleY = this->m_params.m_scaleVariation.y * variationY + 1.0f;
 
         if (scaleY <= 0.000099999997f) {
             scaleY = 0.000099999997f;
@@ -724,7 +724,7 @@ void CParticleEmitter2::InterpolateAllTracks(const CParticle2& particle, TrackVa
 
         values->m_scale.y = scaleY * values->m_scale.y;
     } else {
-        float scaleXY = CRandom::sfloat_(seed) * this->m_params.m_scaleVariationX + 1.0f;
+        float scaleXY = CRandom::sfloat_(seed) * this->m_params.m_scaleVariation.x + 1.0f;
 
         if (scaleXY < 0.000099999997f) {
             scaleXY = 0.000099999997f;
@@ -1685,7 +1685,9 @@ void CParticleEmitter2::DetermineIfSimple() {
         return;
     }
 
-    if (this->m_params.m_scaleVariationX != 0.0f || this->m_params.m_scaleVariationY != 0.0f) {
+    CRect none(0.0f, 0.0f, 0.0f, 0.0f);
+
+    if (CRect(this->m_params.m_scaleVariation) != none) {
         return;
     }
 
@@ -1984,8 +1986,8 @@ CParticleEmitter2::Params::Params() {
     this->m_colorTrack = NULL;
     this->m_alphaTrack = NULL;
     this->m_scaleTrack = NULL;
-    this->m_scaleVariationX = 0.0f;
-    this->m_scaleVariationY = 0.0f;
+    this->m_scaleVariation.x = 0.0f;
+    this->m_scaleVariation.y = 0.0f;
     this->m_headCellTrack = NULL;
     this->m_tailCellTrack = NULL;
     this->m_simpleMidTime = 0.0f;

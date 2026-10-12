@@ -2308,7 +2308,7 @@ void CGGameUI::Initialize() {
 
     CGGameUI::m_areaMountFlags = area ? area->m_mountFlags : -1;
 
-    CRect windowRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect windowRect(0.0f, 0.0f, 0.0f, 0.0f);
     g_theGxDevicePtr->CapsWindowSizeInScreenCoords(windowRect);
     CGGameUI::m_screenWidth = 0;
     CGGameUI::m_screenHeight = 0;

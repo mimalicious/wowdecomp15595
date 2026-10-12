@@ -1599,7 +1599,7 @@ int32_t CSimpleFrame::AreChildrenProtected(int32_t& deferred) {
 
 // OFFSET: 0x00504220
 bool CSimpleFrame::GetBoundsRect(CRect& rect) {
-    CRect frameRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    CRect frameRect(0.0f, 0.0f, 0.0f, 0.0f);
 
     if (this->IsResizePending()) {
         this->Resize(1);
