@@ -1,5 +1,10 @@
-// INLINED
+// OFFSET: 0x00627E10
 inline Battlenet::Allocator::~Allocator() {
+}
+
+// OFFSET: 0x006271B0
+inline void* Battlenet::Allocator::Alloc(uint32_t size, const char* name) {
+    return this->Alloc(size);
 }
 
 // INLINED

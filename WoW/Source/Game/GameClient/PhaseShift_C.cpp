@@ -481,19 +481,16 @@ static void SetPhasedWorldMaps(uint32_t count, const uint16_t* maps) {
     }
 
     uint16_t* result = static_cast<uint16_t*>(alloca(sizeof(uint16_t) * count));
-    uint16_t* incoming = static_cast<uint16_t*>(alloca(sizeof(uint16_t) * count));
-
-    for (uint32_t i = 0; i < count; i++) {
-        incoming[i] = maps[i];
-    }
+    TSStackArray<uint16_t> incoming(static_cast<uint16_t*>(alloca(sizeof(uint16_t) * count)), count, 1);
+    incoming.Set(count, maps);
 
     for (uint32_t i = 0; i < s_phasedWorldMaps.m_count; i++) {
         uint16_t map = s_phasedWorldMaps.m_data[i];
 
         for (uint32_t j = 0; j < count; j++) {
-            if (map == incoming[j]) {
+            if (map == incoming.m_data[j]) {
                 result[merged++] = map;
-                incoming[j] = 0;
+                incoming.m_data[j] = 0;
                 break;
             }
         }
@@ -502,7 +499,7 @@ static void SetPhasedWorldMaps(uint32_t count, const uint16_t* maps) {
     uint32_t kept = merged;
 
     for (uint32_t i = 0; i < count; i++) {
-        uint16_t map = incoming[i];
+        uint16_t map = incoming.m_data[i];
 
         if (!map) {
             continue;

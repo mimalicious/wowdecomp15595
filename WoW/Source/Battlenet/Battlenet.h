@@ -14,7 +14,7 @@ namespace Battlenet {
 class Allocator {
     public:
     virtual ~Allocator();
-    virtual void* Alloc(uint32_t size, const char* name) = 0;
+    virtual void* Alloc(uint32_t size, const char* name);
     virtual void* Alloc(uint32_t size) = 0;
     virtual void Free(void* memory) = 0;
 

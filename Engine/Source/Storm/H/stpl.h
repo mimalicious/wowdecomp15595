@@ -129,6 +129,8 @@ class TSStackArray {
     /* 0004 */ T* m_data;
 
     TSStackArray(T* data, uint32_t count, int32_t construct);
+    void Set(uint32_t count, const T* data);
+    void Set(uint32_t count, uint32_t stride, const T* data);
     void SetCount(uint32_t count);
 };
 
@@ -1761,6 +1763,60 @@ void TSStackArray<T>::SetCount(uint32_t count) {
 
     for (uint32_t i = this->m_count; i < count; i++) {
         new (&this->m_data[i]) T();
+    }
+
+    this->m_count = count;
+}
+
+// OFFSET: [0x004E3FB0<uint16_t>]
+template <class T>
+void TSStackArray<T>::Set(uint32_t count, const T* data) {
+    if (count == this->m_count) {
+        for (uint32_t i = 0; i < count; i++) {
+            this->m_data[i] = data[i];
+        }
+    } else if (count <= this->m_count) {
+        for (uint32_t i = 0; i < count; i++) {
+            this->m_data[i] = data[i];
+        }
+    } else {
+        for (uint32_t i = 0; i < this->m_count; i++) {
+            this->m_data[i] = data[i];
+        }
+
+        for (uint32_t i = this->m_count; i < count; i++) {
+            new (&this->m_data[i]) T(data[i]);
+        }
+    }
+
+    this->m_count = count;
+}
+
+// OFFSET: [0x00814F50<uint32_t>]
+template <class T>
+void TSStackArray<T>::Set(uint32_t count, uint32_t stride, const T* data) {
+    const T* source = data;
+
+    if (count == this->m_count) {
+        for (uint32_t i = 0; i < count; i++) {
+            this->m_data[i] = *source;
+            source = reinterpret_cast<const T*>(reinterpret_cast<const char*>(source) + stride);
+        }
+    } else if (count <= this->m_count) {
+        for (uint32_t i = 0; i < count; i++) {
+            this->m_data[i] = *source;
+            source = reinterpret_cast<const T*>(reinterpret_cast<const char*>(source) + stride);
+        }
+    } else {
+        for (uint32_t i = 0; i < this->m_count; i++) {
+            this->m_data[i] = *source;
+            source = reinterpret_cast<const T*>(reinterpret_cast<const char*>(source) + stride);
+        }
+
+        for (uint32_t i = this->m_count; i < count; i++) {
+            new (&this->m_data[i]) T(*source);
+            source = reinterpret_cast<const T*>(reinterpret_cast<const char*>(source) + stride);
+        }
     }
 
     this->m_count = count;
