@@ -9058,7 +9058,7 @@ static bool ClientMoveSetCanFlyHandler(ClientMoveSetCanFly* msg) {
     return true;
 }
 
-// OFFSET: 0x005AF880
+// OFFSET: 0x005AF880/0x140222900
 static bool ClientMoveUnsetCanFlyHandler(ClientMoveUnsetCanFly* msg) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -23781,7 +23781,7 @@ int32_t Packet_SMSG_MIRRORIMAGE_DATA(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: 0x005D34F0
+// OFFSET: 0x005D34F0/0x14024D570
 bool ClientPlaySpellVisualHandler(ClientPlaySpellVisual* msg) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 

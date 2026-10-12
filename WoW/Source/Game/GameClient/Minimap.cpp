@@ -84,7 +84,7 @@ static float s_mapObjRotation = 90.0f;
 // STATIC: 0x00CA2800
 static C2Vector s_tileSize(1066.6666f, 1066.6666f);
 
-// STATIC: 0x00DC7398
+// STATIC: 0x00DC7398/0x140CAD050
 static float s_closestPOIFacing[3];
 
 // STATIC: 0x00DC73A4

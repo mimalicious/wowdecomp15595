@@ -26881,7 +26881,7 @@ ClientLfgSearchResult::ClientLfgSearchResult(NetClient* netClient, WowConnection
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006E0290
+// OFFSET: 0x006E0290/0x14039C4A0
 ClientLfgSearchResult::~ClientLfgSearchResult() {
 }
 

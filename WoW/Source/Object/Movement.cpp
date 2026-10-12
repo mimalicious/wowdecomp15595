@@ -2919,7 +2919,7 @@ int32_t CMovement_C::OnWalkSpeedChange(float value) {
     return this->ChangeWalkSpeed(value);
 }
 
-// OFFSET: 0x00571940
+// OFFSET: 0x00571940/0x1401D2BB0
 void CMovement_C::OnFeatherFall(int32_t enable) {
     this->FeatherFall(enable);
     this->PostFeatherFall();

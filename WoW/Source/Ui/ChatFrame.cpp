@@ -368,7 +368,7 @@ DisplayChannel CGChat::s_displayChannels[20];
 // STATIC: 0x00ED7D90/0x140DC9840
 ChatColorInfo s_chatColors[CHAT_MSG_MAX];
 
-// STATIC: 0x00ED90E0
+// STATIC: 0x00ED90E0/0x140DCABA0
 static char s_inviteChannelName[128];
 
 // STATIC: 0x00F326F4/0x140E241B4

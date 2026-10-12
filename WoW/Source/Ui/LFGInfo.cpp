@@ -605,7 +605,7 @@ void LFGInfo::AddDungeon(uint32_t slot) {
     this->m_numDungeons++;
 }
 
-// OFFSET: 0x00987400
+// OFFSET: 0x00987400/0x140702F20
 LFGInfo& LFGInfo::CopyFrom(const LFGInfo& other) {
     this->m_ticket = other.m_ticket;
     this->m_joined = other.m_joined;

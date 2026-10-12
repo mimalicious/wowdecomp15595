@@ -39,7 +39,7 @@ void QuestTextParser::Spell_C_GetMinMaxPoints(const SpellRec* spell, int32_t eff
     ::Spell_C_GetMinMaxPoints(spell, effectIndex, minPoints, maxPoints, spellLevel, parsePet, parseUnit, noModifiers, 0);
 }
 
-// OFFSET: 0x00A0A900
+// OFFSET: 0x00A0A900/0x1407ABA40
 int32_t QuestTextParser::Spell_C_GetDuration(const SpellRec* spell, int32_t parsePet, int32_t parseUnit, int32_t noModifiers, int32_t applyHaste) {
     return ::Spell_C_GetDuration(spell, parsePet, parseUnit, noModifiers, applyHaste);
 }
@@ -190,7 +190,7 @@ SpellDescriptionVariablesRec* QuestTextParser::GetSpellDescriptionVariablesRecor
     return g_spellDescriptionVariablesDB.GetRecord(id);
 }
 
-// OFFSET: 0x00A0AC20
+// OFFSET: 0x00A0AC20/0x1407ABE00
 SpellLevelsRec* QuestTextParser::GetSpellLevelsRecord(int32_t id) {
     return g_spellLevelsDB.GetRecord(id);
 }

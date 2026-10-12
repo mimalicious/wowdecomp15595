@@ -976,7 +976,7 @@ bool NetClient::ClientConnectionAuthChallengeHandler(ClientConnectionAuthChallen
     return true;
 }
 
-// OFFSET: 0x00488BD0
+// OFFSET: 0x00488BD0/0x1400AAFD0
 void NetClient::KillConnection(WowConnection* connection) {
     this->m_killLock.Enter();
     this->m_killedConnections.New(connection);

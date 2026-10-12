@@ -395,7 +395,7 @@ WowConnection::SENDNODE* WowConnection::CopySendNode(const WowConnection::SENDNO
     return node;
 }
 
-// OFFSET: 0x0054EDC0
+// OFFSET: 0x0054EDC0/0x1401A9380
 void WowConnection::IDBITS::SetCount(uint32_t count) {
     this->m_count = count;
     this->m_bits.SetCount(count ? ((count - 1) >> 5) + 1 : 0);

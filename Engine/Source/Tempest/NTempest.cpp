@@ -155,7 +155,7 @@ bool NTempest::HitBoundingBox(const float* origin, const float* dir, const float
     return true;
 }
 
-// OFFSET: 0x00B08E30
+// OFFSET: 0x00B08E30/0x1408CC4D0
 bool NTempest::Intersect2dBoxSphere(const float* minB, const float* maxB, const float* center, float radius, SolidIntersect mode) {
     float r2 = radius * radius;
     float dmin;

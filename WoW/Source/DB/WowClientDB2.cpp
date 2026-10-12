@@ -220,7 +220,7 @@ uint32_t WowClientDB2_Base::GetStringsSize(const uint8_t* record) {
     return size;
 }
 
-// OFFSET: 0x0048C010
+// OFFSET: 0x0048C010/0x1400AF810
 bool WowClientDB2_Base::HotfixNotifyHandler(int32_t id, uint32_t timestamp) {
     HOTFIX* hotfix = this->m_hotfixes.Head();
 

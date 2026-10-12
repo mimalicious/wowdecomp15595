@@ -2164,7 +2164,7 @@ void CGObject_C::UpdateFadeoutList() {
     }
 }
 
-// OFFSET: 0x005E04E0
+// OFFSET: 0x005E04E0/0x14025DC60
 void CGObject_C::PostShutdown() {
     if (CGObject_C::s_fadeoutHeap) {
         delete CGObject_C::s_fadeoutHeap;

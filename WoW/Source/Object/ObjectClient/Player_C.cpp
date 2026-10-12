@@ -5633,7 +5633,7 @@ int32_t Packet_SMSG_CAMERA_SHAKE(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: 0x0055EA60
+// OFFSET: 0x0055EA60/0x1401BC1E0
 static bool OnClientItemExpirePurchaseRefund(ClientItemExpirePurchaseRefund* msg) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::OnItemExpirePurchaseRefund(*reinterpret_cast<WOWGUID*>(msg->m_itemGUID));
@@ -5761,7 +5761,7 @@ static bool OnGuildMemberRecipes(ClientGuildMemberRecipes* msg) {
     return true;
 }
 
-// OFFSET: 0x00561220
+// OFFSET: 0x00561220/0x1401BF090
 static bool OnGuildKnownRecipes(ClientGuildKnownRecipes* msg) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         for (uint32_t i = 0; i < msg->m_recipes.Count(); i++) {

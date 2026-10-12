@@ -57,7 +57,7 @@ char CGBattlefieldInfo::m_teamNames[2][96];
 // STATIC: 0x00F36370/0x140E29700
 WOWGUID CGBattlefieldInfo::m_flagCarriers[2];
 
-// STATIC: 0x00F36380
+// STATIC: 0x00F36380/0x140E29710
 WOWGUID CGBattlefieldInfo::m_playerPositionGuids[40];
 
 // STATIC: 0x00F364C0
@@ -1653,7 +1653,7 @@ void CGBattlefieldInfo::RequestPlayerPositions() {
     }
 }
 
-// OFFSET: 0x00942B80
+// OFFSET: 0x00942B80/0x1406AF4B0
 bool OnBattlefieldList(ClientBattlefieldList* msg) {
     int32_t bgTypeID = msg->unk_0018;
     CGBattlefieldInfo::m_bgTypeID = bgTypeID;

@@ -14,7 +14,7 @@ void Blizzard::Lock::EventDestroy(Event& event) {
     CloseHandle(event);
 }
 
-// OFFSET: 0x007AD4B0
+// OFFSET: 0x007AD4B0/0x1404A31A0
 void Blizzard::Lock::EventSet(Event& event) {
     SetEvent(event);
 }

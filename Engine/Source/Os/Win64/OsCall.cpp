@@ -56,7 +56,7 @@ void OsCallResetContext(void* context) {
     }
 }
 
-// OFFSET: 0x00B42060
+// OFFSET: 0x00B42060/0x1409104E0
 OsCallContext::~OsCallContext() {
 }
 

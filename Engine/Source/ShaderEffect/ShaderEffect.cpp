@@ -494,7 +494,7 @@ void CShaderEffect::SetTexMtx(const C2Vector& scale, const C2Vector& offset, uin
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 0);
 }
 
-// OFFSET: 0x00433C70
+// OFFSET: 0x00433C70/0x14003BDE0
 void CShaderEffect::SetTexMtx(const C44Matrix& matrix, uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         float constants[8] = { matrix.a0, matrix.b0, matrix.c0, matrix.d0, matrix.a1, matrix.b1, matrix.c1, matrix.d1 };

@@ -1102,7 +1102,7 @@ static int32_t CallMirrorHandlers(CDataStore* msg, bool postInit, WOWGUID guid) 
     return 1;
 }
 
-// OFFSET: 0x0048E8D0
+// OFFSET: 0x0048E8D0/0x1400B2C90
 static void FreeMirrorHandlers(TSList<void>* lists) {
     TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list = reinterpret_cast<TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >*>(lists);
 

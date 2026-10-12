@@ -58,7 +58,7 @@ struct MissileUnitRank {
 // STATIC: 0x00DD53B0/0x140CBB640
 static MissileUnitRank s_unitRanks[128];
 
-// STATIC: 0x00DD57B0
+// STATIC: 0x00DD57B0/0x140CBBE40
 uintptr_t CGUnit_C::s_trajectoryWorldObjects[2];
 
 // STATIC: 0x00DD57B8/0x140CBBE50

@@ -2530,7 +2530,7 @@ PlayerMoveNotActiveMover::PlayerMoveNotActiveMover() {
 PlayerMoveNotActiveMover::~PlayerMoveNotActiveMover() {
 }
 
-// OFFSET: 0x006815E0
+// OFFSET: 0x006815E0/0x14032B160
 void PlayerMoveNotActiveMover::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_status.m_guid);
     const uint8_t* transportGuid = reinterpret_cast<const uint8_t*>(&this->m_status.m_transport.m_guid);

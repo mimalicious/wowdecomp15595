@@ -842,7 +842,7 @@ static void InitBlit() {
 
 // OFFSET: 0x0063C270/0x1402D4DE0
 int32_t Blit(const C2iVector& size, BlitAlpha alpha, const void* in, uint32_t inStride, BlitFormat inFormat, void* out, uint32_t outStride, BlitFormat outFormat) {
-    // STATIC: 0x00E29FBC
+    // STATIC: 0x00E29FBC/0x140D12C94
     static int32_t initBlit;
 
     if (!initBlit) {

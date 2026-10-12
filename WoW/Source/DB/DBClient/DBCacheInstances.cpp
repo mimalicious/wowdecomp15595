@@ -318,7 +318,7 @@ static int32_t ReceiveItemText(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: 0x00497400
+// OFFSET: 0x00497400/0x1400BD830
 static int32_t ReceiveDance(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     DanceCache dance;
     dance.Unpack(msg);

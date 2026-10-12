@@ -1319,7 +1319,7 @@ void CMap::QueryLightingColorChunk(const CMapChunk* chunk, const C3Vector& pos, 
     color.a = 0;
 }
 
-// OFFSET: 0x00788E50
+// OFFSET: 0x00788E50/0x140478990
 bool CMap::QueryLightingColorTerrain(CMapChunk* chunk, const C3Vector& pos, CImVector& color) {
     int32_t cellY = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.23999999f) & 7;
     int32_t cellX = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.23999999f) & 7;
@@ -2203,7 +2203,7 @@ void CMap::CreateImpassableFacets(CMapChunk* chunk, const CAaBox& box, World::Fa
     }
 }
 
-// OFFSET: 0x0078C210
+// OFFSET: 0x0078C210/0x14047CA00
 bool CMap::CreateFlightBoundsFacets(int32_t x, int32_t y, const CAaBox& box, World::FacetData& facets, uint32_t flags) {
     CMapAreaTableEntry* entry = this->m_areaTable.Get(x, y);
 

@@ -51,7 +51,7 @@ const BSN::FourCC Battlenet::Conference::PublicName::s_default_locale = BSN::Fou
 // STATIC: 0x01009D74
 const BSN::FourCC Battlenet::Conference::PublicPartialName::s_default_locale = BSN::FourCC();
 
-// STATIC: 0x01009E88
+// STATIC: 0x01009E88/0x140EE19AC
 const BSN::FourCC Battlenet::Toon::FullName::s_default_programId = BSN::FourCC();
 
 // STATIC: 0x01009E8C
@@ -60,7 +60,7 @@ const BSN::FixedBlob<40> Battlenet::Toon::UnlockDefinitionFile::s_default_unlock
 // STATIC: 0x01009EB4/0x140EE19A8
 const BSN::FourCC Battlenet::Toon::Handle::s_default_programId = BSN::FourCC();
 
-// STATIC: 0x01009EB8
+// STATIC: 0x01009EB8/0x140EE19B0
 const BSN::String<25> Battlenet::Toon::FullName::s_default_name("   ");
 
 // STATIC: 0x01009F28
@@ -69,10 +69,10 @@ const BSN::String<31> Battlenet::Result::Definition::s_default_name("");
 // STATIC: 0x01009FB0
 const BSN::FourCC Battlenet::S2Map::Link::s_default_speed("   2");
 
-// STATIC: 0x01009FB4
+// STATIC: 0x01009FB4/0x140EE1E20
 const BSN::FixedBlob<40> Battlenet::S2Map::InfoBase::s_default_headerCacheHandle = BSN::FixedBlob<40>();
 
-// STATIC: 0x01009FE0
+// STATIC: 0x01009FE0/0x140EE1C20
 const BSN::String<80> Battlenet::S2Map::InfoBase::s_default_name("");
 
 // STATIC: 0x0100A130
@@ -1158,7 +1158,7 @@ void Battlenet::S2Map::InfoBase::SetDefault_labelDeprecated(BSN::Optional<BSN::F
     value.m_exists = false;
 }
 
-// OFFSET: 0x00B2C940
+// OFFSET: 0x00B2C940/0x1408F4FF0
 void Battlenet::S2Map::InfoBase::SetDefault_authorToonName(Battlenet::Toon::FullName& value) {
     Battlenet::Toon::FullName::SetDefault_region(value.m_region);
     Battlenet::Toon::FullName::SetDefault_programId(value.m_programId);
@@ -1241,7 +1241,7 @@ void Battlenet::Event::OfflineDataStore::TagIdx::SetDefault_idx(uint32_t& value)
     value = 0;
 }
 
-// OFFSET: 0x00B2C940
+// OFFSET: 0x00B2C940/0x1408F4FF0
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_toon(Battlenet::Toon::FullName& value) {
     Battlenet::Toon::FullName::SetDefault_region(value.m_region);
     Battlenet::Toon::FullName::SetDefault_programId(value.m_programId);

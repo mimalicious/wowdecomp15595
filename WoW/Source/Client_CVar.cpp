@@ -48,7 +48,7 @@ static CVar* s_M2UseClipPlanesVar;
 // STATIC: 0x00D36208/0x140BEF688
 static CVar* s_M2UseZFillVar;
 
-// STATIC: 0x00D3620C
+// STATIC: 0x00D3620C/0x140BEF690
 static CVar* s_M2FasterDebugVar;
 
 // STATIC: 0x00D361CC/0x140BEF698

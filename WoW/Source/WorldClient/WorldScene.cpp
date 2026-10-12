@@ -92,7 +92,7 @@ CBarrier CWorldScene::s_barrier;
 // STATIC: 0x00E70C64
 TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)> CWorldScene::s_renderCallbackList[3];
 
-// STATIC: 0x00D00B28
+// STATIC: 0x00D00B28/0x140BB03F0
 TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> CWorldScene::s_fadeoutList;
 
 // STATIC: 0x00D00B34/0x140BB0408

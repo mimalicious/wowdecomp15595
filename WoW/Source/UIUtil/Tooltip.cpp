@@ -702,7 +702,7 @@ int32_t CGTooltip::GetScalingStatArmor(const ItemRecSparse* item, const ScalingS
     }
 }
 
-// OFFSET: 0x00465220
+// OFFSET: 0x00465220/0x1400788E0
 bool CGTooltip::DurationIsInt(float time, float fraction) {
     float value;
 

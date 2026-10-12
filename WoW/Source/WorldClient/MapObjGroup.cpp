@@ -194,7 +194,7 @@ SpanRasterizer::SpanRasterizer(const C2iVector& size, SpanRange* ranges) {
     }
 }
 
-// OFFSET: 0x0077CF50
+// OFFSET: 0x0077CF50/0x1404698A0
 void SpanRasterizer::AddSpan(int32_t x0, int32_t x1, int32_t y) {
     if (y < 0 || y >= this->m_height || x1 < 0 || x0 >= this->m_width) {
         return;

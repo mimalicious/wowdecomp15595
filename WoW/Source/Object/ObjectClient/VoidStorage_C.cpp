@@ -264,7 +264,7 @@ void CGVoidStorage_C::SetContents(const TSGrowableArray<JamVoidItem>& items) {
     FrameScript_SignalEvent(SCRIPT_EVENT_VOID_STORAGE_UPDATE, NULL);
 }
 
-// OFFSET: 0x005965F0
+// OFFSET: 0x005965F0/0x140204150
 void CGVoidStorage_C::OnTransferChanges(const TSGrowableArray<uint64_t>& removed, const TSGrowableArray<JamVoidItem>& added) {
     for (uint32_t i = 0; i < removed.m_count; i++) {
         this->RemoveItem(WOWGUID::Make(removed.m_data[i]));
