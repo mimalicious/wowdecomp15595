@@ -225,7 +225,7 @@ static int _lookup_serialno(ogg_page *og, ogg_int32_t *serialno_list, int n){
 
 /* start parsing pages at current offset, remembering all serial
    numbers.  Stop logging at first non-bos page */
-// INLINED
+// OFFSET: 0x00B35C40
 static int _get_serialnos(OggVorbis_File *vf, ogg_int32_t **s, int *n){
   ogg_page og;
 
@@ -257,7 +257,7 @@ static int _get_serialnos(OggVorbis_File *vf, ogg_int32_t **s, int *n){
    (has to begin by knowing the offset of the lb's initial page).
    Recurses for each link so it can alloc the link storage after
    finding them all, then unroll and fill the cache at the same time */
-// INLINED
+// OFFSET: 0x00B35D80
 static int _bisect_forward_serialno(OggVorbis_File *vf,
                                     ogg_int64_t begin,
                                     ogg_int64_t searched,
@@ -441,7 +441,7 @@ static int _fetch_headers(OggVorbis_File *vf,vorbis_info *vi,vorbis_comment *vc,
    able to open and use damaged bitstreams as well as we can.  Just
    watch out for missing information for links in the OggVorbis_File
    struct */
-// INLINED
+// OFFSET: 0x00B36260
 static int _prefetch_all_headers(OggVorbis_File *vf, ogg_int64_t dataoffset){
   ogg_page og;
   int i;
@@ -598,7 +598,7 @@ static int _make_decode_ready(OggVorbis_File *vf){
   return 0;
 }
 
-// INLINED
+// OFFSET: 0x00B37D00
 static int _open_seekable2(OggVorbis_File *vf){
   ogg_int64_t dataoffset=vf->offset,end;
   ogg_int32_t *serialno_list=NULL;

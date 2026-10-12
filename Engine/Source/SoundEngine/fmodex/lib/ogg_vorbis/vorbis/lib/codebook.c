@@ -147,7 +147,7 @@ int vorbis_staticbook_pack(const static_codebook *c,oggpack_buffer *opb){
 
 /* unpacks a codebook from the packet buffer into the codebook struct,
    readies the codebook auxiliary structures for decode *************/
-// INLINED
+// OFFSET: 0x00B45EF0
 int FMOD_vorbis_staticbook_unpack(oggpack_buffer *opb,static_codebook *s){
   ogg_int32_t i,j;
   FMOD_memset(s,0,sizeof(*s));

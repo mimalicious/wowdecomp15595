@@ -170,7 +170,7 @@ namespace FMOD
             mNodeData            = 0;
         }
 
-        // INLINED
+        // OFFSET: 0x00A7BEC0
         void addAt(SortedLinkedListNode *head, unsigned int priority)
         {
             SortedLinkedListNode *current = SAFE_CAST(SortedLinkedListNode, head->mNodeNext);

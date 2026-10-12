@@ -123,7 +123,7 @@ FMOD_RESULT SoundGroupI::release()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A881C0
 FMOD_RESULT SoundGroupI::releaseInternal()
 {  
     if (mName)

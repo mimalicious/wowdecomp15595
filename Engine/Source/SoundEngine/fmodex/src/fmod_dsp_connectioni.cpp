@@ -269,7 +269,7 @@ FMOD_RESULT DSPConnectionI::setUnity()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AD1250
 FMOD_RESULT DSPConnectionI::mix(float * FMOD_RESTRICT outbuffer, float * FMOD_RESTRICT inbuffer, int outchannels, int inchannels, unsigned int length)
 {
     unsigned int count;

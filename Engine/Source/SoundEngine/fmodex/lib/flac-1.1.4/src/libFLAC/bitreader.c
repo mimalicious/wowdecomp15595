@@ -162,7 +162,7 @@ static _inline FLAC__uint32 local_swap32_(FLAC__uint32 x)
 }
 #endif
 
-// INLINED
+// OFFSET: 0x00B5A930
 static FLaC__INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
 {
 	register unsigned crc = br->read_crc16;

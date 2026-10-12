@@ -14,7 +14,7 @@ namespace FMOD
     {   
       public:
         
-        // INLINED
+        // OFFSET: 0x00AD7FF0
         ChannelOpenALEAX4() {};
 
         FMOD_RESULT	 setupChannel         ();

@@ -72,7 +72,7 @@ ChannelOpenAL::ChannelOpenAL()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF7CA0
 FMOD_RESULT ChannelOpenAL::init(int index, SystemI *system, Output *output, DSPI *dspmixtarget)
 {
     FMOD_RESULT              result;
@@ -183,7 +183,7 @@ FMOD_RESULT ChannelOpenAL::init(int index, SystemI *system, Output *output, DSPI
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF5440
 FMOD_RESULT ChannelOpenAL::close()
 {
     FMOD_RESULT result;
@@ -381,7 +381,7 @@ FMOD_RESULT ChannelOpenAL::setupDSPCodec(DSPI *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF5720
 FMOD_RESULT ChannelOpenAL::alloc()
 {
     FMOD_RESULT result;
@@ -636,7 +636,7 @@ FMOD_RESULT ChannelOpenAL::alloc()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF7430
 FMOD_RESULT ChannelOpenAL::alloc(DSPI *dsp)
 {
     FMOD_RESULT result;
@@ -988,7 +988,7 @@ FMOD_RESULT ChannelOpenAL::start()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF5F70
 FMOD_RESULT ChannelOpenAL::stop(bool ignoreenddelay, bool resetstate, bool force)
 {
     FMOD_RESULT result;
@@ -1100,7 +1100,7 @@ FMOD_RESULT ChannelOpenAL::stop(bool ignoreenddelay, bool resetstate, bool force
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6170
 FMOD_RESULT ChannelOpenAL::setPaused(bool paused)
 {
     FMOD_RESULT   result         = FMOD_OK;
@@ -1231,7 +1231,7 @@ FMOD_RESULT ChannelOpenAL::setSpeakerLevels(int speaker, float *levels, int numl
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6330
 FMOD_RESULT ChannelOpenAL::setFrequency(float frequency)
 {
     float basefrequency = mSound->mDefaultFrequency;
@@ -1273,7 +1273,7 @@ FMOD_RESULT ChannelOpenAL::setFrequency(float frequency)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF63B0
 FMOD_RESULT ChannelOpenAL::setPan(float pan, float fbpan)
 {
     int count;
@@ -1518,7 +1518,7 @@ FMOD_RESULT ChannelOpenAL::getPosition(unsigned int *position, FMOD_TIMEUNIT pos
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6440
 FMOD_RESULT ChannelOpenAL::setLoopPoints(unsigned int loopstart, unsigned int looplength)
 {
     FMOD_RESULT result;
@@ -1558,7 +1558,7 @@ FMOD_RESULT ChannelOpenAL::setLoopPoints(unsigned int loopstart, unsigned int lo
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6490
 FMOD_RESULT ChannelOpenAL::setLoopCount(int loopcount)
 {
     FMOD_RESULT result;
@@ -1597,7 +1597,7 @@ FMOD_RESULT ChannelOpenAL::setLoopCount(int loopcount)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF64C0
 FMOD_RESULT ChannelOpenAL::setMode(FMOD_MODE mode)
 {
     FMOD_RESULT result;
@@ -1637,7 +1637,7 @@ FMOD_RESULT ChannelOpenAL::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF64F0
 FMOD_RESULT ChannelOpenAL::set3DAttributes()
 {
     FMOD_RESULT   result;
@@ -1809,7 +1809,7 @@ FMOD_RESULT ChannelOpenAL::set3DAttributes()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6B20
 FMOD_RESULT ChannelOpenAL::set3DMinMaxDistance()
 {
     int count;
@@ -1850,7 +1850,7 @@ FMOD_RESULT ChannelOpenAL::set3DMinMaxDistance()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF6BC0
 FMOD_RESULT ChannelOpenAL::set3DOcclusion(float directOcclusion, float reverbOcclusion)
 {
     if (mOutputOAL->mReverbVersion != REVERB_VERSION_NONE)

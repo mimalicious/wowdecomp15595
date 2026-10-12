@@ -49,7 +49,7 @@
 /* build lookups for trig functions; also pre-figure scaling and
    some window function algebra. */
 
-// INLINED
+// OFFSET: 0x00B46790
 int FMOD_mdct_init(mdct_lookup *lookup,int n){
   int   *bitrev=_ogg_malloc(sizeof(*bitrev)*(n/4));
   DATA_TYPE *T=_ogg_malloc(sizeof(*T)*(n+n/4));

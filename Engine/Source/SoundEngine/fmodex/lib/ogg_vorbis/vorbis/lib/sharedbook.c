@@ -315,7 +315,7 @@ static int sort32a(const void *a,const void *b){
 }
 
 /* decode codebook arrangement is more heavily optimized than encode */
-// INLINED
+// OFFSET: 0x00B459C0
 int FMOD_vorbis_book_init_decode(codebook *c,const static_codebook *s){
   int i,j,n=0,tabn;
   int *sortindex;

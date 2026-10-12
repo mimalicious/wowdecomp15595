@@ -45,7 +45,7 @@ namespace FMOD
         FMOD_RESULT reallyRead(void *buffer, unsigned int size, unsigned int *read);
         FMOD_RESULT reallySeek(unsigned int pos);
 
-        // INLINED
+        // OFFSET: 0x00A802A0
         FMOD_RESULT setUserCallbacks(FMOD_FILE_OPENCALLBACK open, FMOD_FILE_CLOSECALLBACK close, FMOD_FILE_READCALLBACK read, FMOD_FILE_SEEKCALLBACK seek)
         {
             if (!open || !close || !read || !seek)

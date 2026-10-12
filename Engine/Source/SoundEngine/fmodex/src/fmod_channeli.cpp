@@ -910,7 +910,7 @@ ChannelI::ChannelI()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7E6B0
 ChannelI::ChannelI(int index, SystemI *system)
 {
     init();
@@ -1040,7 +1040,7 @@ FMOD_RESULT ChannelI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7F300
 FMOD_RESULT ChannelI::play(SoundI *sound, bool paused, bool reset, bool startmuted)
 {
     FMOD_RESULT result;
@@ -1368,7 +1368,7 @@ FMOD_RESULT ChannelI::alloc(SoundI *sound, bool reset)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A7CAB0
 FMOD_RESULT ChannelI::alloc(DSPI *dsp, bool reset)
 {
     int count;

@@ -76,7 +76,7 @@ ChannelSoftware::ChannelSoftware()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE3A30
 FMOD_RESULT ChannelSoftware::init(int index, SystemI *system, Output *output, DSPI *dspmixtarget)
 {
     FMOD_RESULT             result;
@@ -169,7 +169,7 @@ FMOD_RESULT ChannelSoftware::init(int index, SystemI *system, Output *output, DS
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE14E0
 FMOD_RESULT ChannelSoftware::close()
 {
     FMOD_RESULT result;
@@ -365,7 +365,7 @@ FMOD_RESULT ChannelSoftware::setupDSPCodec(DSPI *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2C70
 FMOD_RESULT ChannelSoftware::alloc()
 {
     FMOD_RESULT result;
@@ -632,7 +632,7 @@ FMOD_RESULT ChannelSoftware::alloc()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE3040
 FMOD_RESULT ChannelSoftware::alloc(DSPI *dsp)
 {
     FMOD_RESULT result;
@@ -763,7 +763,7 @@ FMOD_RESULT ChannelSoftware::alloc(DSPI *dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE17A0
 FMOD_RESULT ChannelSoftware::start()
 {
     if (!(mFlags & CHANNELREAL_FLAG_PAUSED))
@@ -813,7 +813,7 @@ FMOD_RESULT ChannelSoftware::start()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE1810
 FMOD_RESULT ChannelSoftware::stop(bool ignoreenddelay, bool resetstate, bool force)
 {
     FMOD_RESULT result;
@@ -931,7 +931,7 @@ FMOD_RESULT ChannelSoftware::stop(bool ignoreenddelay, bool resetstate)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE19B0
 FMOD_RESULT ChannelSoftware::setPaused(bool paused)
 {
     mDSPHead->setActive(!paused);
@@ -1499,7 +1499,7 @@ FMOD_RESULT ChannelSoftware::setVolume(float volume)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE1F90
 FMOD_RESULT ChannelSoftware::setFrequency(float frequency)
 {
     if (mDSPResampler || mDSPCodec)
@@ -1644,7 +1644,7 @@ FMOD_RESULT ChannelSoftware::setPan(float lrpan, float fbpan)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2210
 FMOD_RESULT ChannelSoftware::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright)
 {
     FMOD_RESULT         result;
@@ -1717,7 +1717,7 @@ FMOD_RESULT ChannelSoftware::setSpeakerMix(float frontleft, float frontright, fl
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2360
 FMOD_RESULT ChannelSoftware::setSpeakerLevels(int speaker, float *levels, int numlevels)
 {
     FMOD_RESULT     result;
@@ -1959,7 +1959,7 @@ FMOD_RESULT ChannelSoftware::getPosition(unsigned int *position, FMOD_TIMEUNIT p
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2480
 FMOD_RESULT ChannelSoftware::setLoopPoints(unsigned int loopstart, unsigned int looplength)
 {
     FMOD_RESULT result;
@@ -1996,7 +1996,7 @@ FMOD_RESULT ChannelSoftware::setLoopPoints(unsigned int loopstart, unsigned int 
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE24D0
 FMOD_RESULT ChannelSoftware::setLoopCount(int loopcount)
 {
     FMOD_RESULT result;
@@ -2033,7 +2033,7 @@ FMOD_RESULT ChannelSoftware::setLoopCount(int loopcount)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2500
 FMOD_RESULT ChannelSoftware::setMode(FMOD_MODE mode)
 {
     FMOD_RESULT result;
@@ -2069,7 +2069,7 @@ FMOD_RESULT ChannelSoftware::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2530
 FMOD_RESULT ChannelSoftware::isPlaying(bool *isplaying, bool includethreadlatency)
 {
     if (!isplaying)
@@ -2487,7 +2487,7 @@ FMOD_RESULT ChannelSoftware::addToReverbs(DSPI *dsptarget)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AE2B30
 FMOD_RESULT ChannelSoftware::moveChannelGroup(ChannelGroupI *oldchannelgroup, ChannelGroupI *newchannelgroup)
 {
     FMOD_RESULT result;

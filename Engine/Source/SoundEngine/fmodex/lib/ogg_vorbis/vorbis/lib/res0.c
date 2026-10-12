@@ -62,7 +62,7 @@ typedef struct {
 
 } vorbis_look_residue0;
 
-// INLINED
+// OFFSET: 0x00B48050
 void FMOD_res0_free_info(vorbis_info_residue *i){
   vorbis_info_residue0 *info=(vorbis_info_residue0 *)i;
   if(info){
@@ -238,7 +238,7 @@ vorbis_info_residue *FMOD_res0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   return(NULL);
 }
 
-// INLINED
+// OFFSET: 0x00B482A0
 vorbis_look_residue *FMOD_res0_look(vorbis_dsp_state *vd,
                                vorbis_info_residue *vr){
   vorbis_info_residue0 *info=(vorbis_info_residue0 *)vr;

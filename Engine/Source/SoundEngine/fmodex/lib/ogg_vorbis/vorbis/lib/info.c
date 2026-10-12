@@ -166,7 +166,7 @@ int FMOD_vorbis_info_blocksize(vorbis_info *vi,int zo){
 }
 
 /* used by synthesis, which has a full, alloced vi */
-// INLINED
+// OFFSET: 0x00B43220
 int FMOD_vorbis_info_init(vorbis_info *vi){
   FMOD_memset(vi,0,sizeof(*vi));
   vi->codec_setup=_ogg_calloc(1,sizeof(codec_setup_info));

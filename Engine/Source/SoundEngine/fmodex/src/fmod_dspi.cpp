@@ -2194,7 +2194,7 @@ FMOD_RESULT DSPI::disconnectAll(bool inputs, bool outputs)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A8F020
 FMOD_RESULT DSPI::remove()
 {
     FMOD_RESULT result;

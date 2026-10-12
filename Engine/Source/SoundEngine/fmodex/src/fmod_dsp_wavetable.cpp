@@ -31,7 +31,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC3690
 FMOD_RESULT DSPWaveTable::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 {
     FMOD_RESULT result;
@@ -469,7 +469,7 @@ FMOD_RESULT DSPWaveTable::getFrequency(float *frequency)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC3B70
 FMOD_RESULT F_CALLBACK DSPWaveTable::setPositionCallback(FMOD_DSP_STATE *dsp, unsigned int position)
 {
     DSPWaveTable *wavetable = (DSPWaveTable *)dsp;

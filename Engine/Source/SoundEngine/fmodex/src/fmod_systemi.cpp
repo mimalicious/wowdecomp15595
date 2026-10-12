@@ -986,7 +986,7 @@ FMOD_RESULT SystemI::updateSoundGroups(int delta)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A82D30
 FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, SoundI *sound, ChannelI **channel)
 {
     ChannelI       *chan = 0;
@@ -1217,7 +1217,7 @@ FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, SoundI *sound, ChannelI *
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A80F10
 FMOD_RESULT SystemI::findChannel(FMOD_CHANNELINDEX id, DSPI *dsp, ChannelI **channel)
 {
     ChannelI       *chan = 0;
@@ -3222,7 +3222,7 @@ FMOD_RESULT SystemI::allocDSPCodec(FMOD_SOUND_FORMAT format, DSPCodec **dsp)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A86580
 SystemI::SystemI()
 {
     mInitialized                = false;
@@ -3794,7 +3794,7 @@ FMOD_RESULT SystemI::getDriverCaps(int id, FMOD_CAPS *caps, int *minfrequency, i
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A81A40
 FMOD_RESULT SystemI::setDriver(int driver)
 {
     FMOD_RESULT        result       = FMOD_OK;
@@ -4378,7 +4378,7 @@ FMOD_RESULT SystemI::getAdvancedSettings(FMOD_ADVANCEDSETTINGS *settings)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A83580
 FMOD_RESULT SystemI::setSpeakerMode(FMOD_SPEAKERMODE speakermode)
 {
 	if (mInitialized)
@@ -7204,7 +7204,7 @@ FMOD_RESULT SystemI::createDSP(FMOD_DSP_DESCRIPTION *description, DSPI **dsp)
 	[SEE_ALSO]
 ]
 */                                    
-// INLINED
+// OFFSET: 0x00A83910
 FMOD_RESULT SystemI::createDSP(FMOD_DSP_DESCRIPTION_EX *description, DSPI **dsp, bool allocate)
 {
     FMOD_RESULT             result;
@@ -7491,7 +7491,7 @@ FMOD_RESULT SystemI::createChannelGroup(const char *name, ChannelGroupI **channe
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A82200
 FMOD_RESULT SystemI::createSoundGroup(const char *name, SoundGroupI **soundgroup)
 {
     SoundGroupI *newsoundgroup;
@@ -7544,7 +7544,7 @@ FMOD_RESULT SystemI::createSoundGroup(const char *name, SoundGroupI **soundgroup
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A83CE0
 FMOD_RESULT SystemI::playSound(FMOD_CHANNELINDEX channelid, SoundI *sound, bool paused, ChannelI **channel)
 {
     FMOD_RESULT  result;
@@ -8511,7 +8511,7 @@ FMOD_RESULT SystemI::getRecordNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A83EC0
 FMOD_RESULT SystemI::setRecordDriver(int driver)
 {
 #ifdef FMOD_SUPPORT_RECORDING
@@ -8814,7 +8814,7 @@ FMOD_RESULT SystemI::recordStart(SoundI *sound, bool loop)
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00A827E0
 FMOD_RESULT SystemI::recordStop()
 {
 #ifdef FMOD_SUPPORT_RECORDING

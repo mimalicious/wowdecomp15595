@@ -65,7 +65,7 @@ OutputSoftware::OutputSoftware()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AC7CB0
 FMOD_RESULT OutputSoftware::init(int maxchannels)
 {
     FMOD_RESULT     result;

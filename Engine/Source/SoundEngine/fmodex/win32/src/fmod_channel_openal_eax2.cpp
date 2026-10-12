@@ -29,7 +29,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AFB4E0
 FMOD_RESULT ChannelOpenALEAX2::setupChannel()
 {
     EAXBUFFERPROPERTIES  eaxBufferProperties;
@@ -93,7 +93,7 @@ FMOD_RESULT ChannelOpenALEAX2::setupChannel()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AFB5E0
 FMOD_RESULT ChannelOpenALEAX2::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     EAXBUFFERPROPERTIES  eaxBufferProperties;
@@ -162,7 +162,7 @@ FMOD_RESULT ChannelOpenALEAX2::setReverbProperties(const FMOD_REVERB_CHANNELPROP
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AFB710
 FMOD_RESULT ChannelOpenALEAX2::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     EAXBUFFERPROPERTIES  eaxBufferProperties;

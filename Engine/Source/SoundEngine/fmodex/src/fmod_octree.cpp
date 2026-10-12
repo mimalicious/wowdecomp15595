@@ -787,7 +787,7 @@ void Octree::setMaxSize(float maxSize)
     mScale = 1.0f / maxSize;
 }
 
-// INLINED
+// OFFSET: 0x00AD3E70
 bool Octree::testLine(bool (*octreeLineTestCallback)(OctreeNode* item, void* data), void* data, const FMOD_VECTOR& a, const FMOD_VECTOR& b)
 {
     ASSERT(octreeLineTestCallback);    

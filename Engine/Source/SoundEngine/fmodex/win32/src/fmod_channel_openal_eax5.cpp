@@ -29,7 +29,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF8A50
 FMOD_RESULT ChannelOpenALEAX5::setupChannel()
 {
     EAXSPEAKERLEVELPROPERTIES  eaxSourceSpeakerLevels[8];
@@ -151,7 +151,7 @@ FMOD_RESULT ChannelOpenALEAX5::setupChannel()
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF8CE0
 FMOD_RESULT ChannelOpenALEAX5::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright)
 {
     EAXSPEAKERLEVELPROPERTIES  eaxSourceSpeakerLevels[8];
@@ -247,7 +247,7 @@ FMOD_RESULT ChannelOpenALEAX5::setSpeakerMix(float frontleft, float frontright, 
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF8FE0
 FMOD_RESULT  ChannelOpenALEAX5::setSpeakerLevels(int speaker, float *levels, int numlevels)
 {
 	long                       FMOD_SPEAKER_TO_EAXSPEAKER[11] = { EAXSPEAKER_FRONT_LEFT, EAXSPEAKER_FRONT_RIGHT, EAXSPEAKER_FRONT_CENTER, EAXSPEAKER_LOW_FREQUENCY, EAXSPEAKER_REAR_LEFT, EAXSPEAKER_REAR_RIGHT, EAXSPEAKER_SIDE_LEFT, EAXSPEAKER_SIDE_RIGHT, EAXSPEAKER_FRONT_LEFT, EAXSPEAKER_FRONT_LEFT, EAXSPEAKER_REAR_CENTER };
@@ -326,7 +326,7 @@ FMOD_RESULT  ChannelOpenALEAX5::setSpeakerLevels(int speaker, float *levels, int
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF91C0
 FMOD_RESULT ChannelOpenALEAX5::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     EAXSOURCEPROPERTIES eaxSourceProperties;
@@ -509,7 +509,7 @@ FMOD_RESULT ChannelOpenALEAX5::setReverbProperties(const FMOD_REVERB_CHANNELPROP
 	[SEE_ALSO]
 ]
 */
-// INLINED
+// OFFSET: 0x00AF9600
 FMOD_RESULT ChannelOpenALEAX5::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     EAXSOURCEPROPERTIES  eaxSourceProperties;
