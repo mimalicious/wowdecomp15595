@@ -448,4 +448,6 @@ namespace Liquid {
     float WorldCoordScale();
 }
 
+#include "WoW/Source/LiquidSystem/Liquid.inl"
+
 #endif

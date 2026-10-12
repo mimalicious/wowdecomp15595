@@ -1,0 +1,8 @@
+#ifndef WOW_SOURCE_JAMCLIENTAUTOCODE_JAMGLOBAL_INL
+#define WOW_SOURCE_JAMCLIENTAUTOCODE_JAMGLOBAL_INL
+
+// INLINED
+inline JamGuildMemberSetNoteData::~JamGuildMemberSetNoteData() {
+}
+
+#endif

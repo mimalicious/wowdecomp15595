@@ -35,7 +35,7 @@ bool Blizzard::Streaming::s_isStreamingTrial;
 // STATIC: 0x00EBA240
 Blizzard::Streaming::RequestHandler* Blizzard::Streaming::s_requestHandler;
 
-// STATIC: 0x00EBA818
+// STATIC: 0x00EBA818/0x140DAB490
 Blizzard::Streaming::DownloadProgress Blizzard::Streaming::s_progress;
 
 Blizzard::Time::Timestamp Blizzard::Streaming::s_elapsedSinceStart;
@@ -205,7 +205,7 @@ Blizzard::Streaming::ScopedWorkingDirectory::ScopedWorkingDirectory() {
     this->m_changed = false;
 }
 
-// PROVEN: 1cead704 IDENTICAL/NONE
+// PROVEN: 1cead704 IDENTICAL/DIFFERENT
 // OFFSET: 0x007E99C0/0x1404F52D0
 Blizzard::Streaming::ScopedWorkingDirectory::~ScopedWorkingDirectory() {
     if (this->m_saved && this->m_changed && !Blizzard::File::SetWorkingDirectory(this->m_path)) {
@@ -263,13 +263,7 @@ Blizzard::Streaming::RequestProcessor::RequestProcessor() {
     Blizzard::Lock::MutexCreate(this->m_mutex);
 }
 
-// INLINED
-Blizzard::Streaming::RequestProcessor::~RequestProcessor() {
-    Blizzard::Lock::MutexDestroy(this->m_mutex);
-    Blizzard::Lock::EventDestroy(this->m_event);
-}
-
-// PROVEN: ac69aa15 IDENTICAL/NONE
+// PROVEN: ac69aa15 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E1680/0x1404E79E0
 uint32_t Blizzard::Streaming::RequestProcessor::ThreadProc(void* param) {
     RequestProcessor* processor = static_cast<RequestProcessor*>(param);
@@ -323,14 +317,14 @@ bool Blizzard::Streaming::RequestProcessor::HasWork() {
     return !empty;
 }
 
-// OFFSET: 0x007BFEA0
+// OFFSET: 0x007BFEA0/0x1404B92A0
 void Blizzard::Streaming::RequestProcessor::PopFront() {
     Blizzard::Lock::MutexEnter(this->m_mutex);
     this->m_queue.pop_front();
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: 0x007DC630
+// OFFSET: 0x007DC630/0x1404DFAD0
 bool Blizzard::Streaming::RequestProcessor::ProcessNext() {
     Blizzard::Lock::MutexEnter(this->m_mutex);
     Blizzard::Storage::Request* request = this->m_queue.front();
@@ -394,12 +388,6 @@ void Blizzard::Streaming::RequestProcessor::Shutdown() {
     this->m_queue.clear();
 }
 
-// INLINED
-Blizzard::Streaming::DefaultRequestHandler::DefaultRequestHandler() {
-    this->m_processor = NULL;
-    Blizzard::Lock::MutexCreate(this->m_mutex);
-}
-
 // OFFSET: [0x007E37E0, 0x007E4810/0x1404EC9B0]
 Blizzard::Streaming::DefaultRequestHandler::~DefaultRequestHandler() {
     this->Stop();
@@ -450,19 +438,19 @@ void Blizzard::Streaming::DefaultRequestHandler::Stop() {
     this->m_processor->Shutdown();
 }
 
-// PROVEN: 34134552 IDENTICAL/NONE
+// PROVEN: 34134552 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AC2C0/0x1404A2110
 void Blizzard::Streaming::DefaultRequestHandler::Pause() {
     this->m_processor->m_paused = true;
 }
 
-// PROVEN: 7da30b81 IDENTICAL/NONE
+// PROVEN: 7da30b81 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AC2D0/0x1404A2120
 void Blizzard::Streaming::DefaultRequestHandler::Resume() {
     this->m_processor->m_paused = false;
 }
 
-// OFFSET: 0x007EDC60
+// OFFSET: 0x007EDC60/0x1404F5260
 void Blizzard::Streaming::SetDefaultRequestHandler() {
     // STATIC: 0x00EBAC50
     static DefaultRequestHandler s_defaultHandler;
@@ -533,7 +521,7 @@ bool Blizzard::Streaming::IsStreamedFile(const char* path) {
     return Blizzard::Storage::Exists(key);
 }
 
-// OFFSET: 0x007EDDD0
+// OFFSET: 0x007EDDD0/0x1404FA4D0
 bool Blizzard::Streaming::IsInManifest(const char* path) {
     if (!s_streamingReady || !path) {
         return false;
@@ -544,7 +532,7 @@ bool Blizzard::Streaming::IsInManifest(const char* path) {
     return ManifestInfo::Get()->GetFileItem(key) != NULL;
 }
 
-// OFFSET: 0x007EDCC0
+// OFFSET: 0x007EDCC0/0x1404FA240
 bool Blizzard::Streaming::GetStreamedFileSize(const char* path, int64_t* size) {
     if (size) {
         *size = 0;
@@ -587,7 +575,7 @@ int64_t Blizzard::Streaming::GetIsLocalAmount(const char* path, int64_t offset, 
     return local;
 }
 
-// OFFSET: 0x007E3570
+// OFFSET: 0x007E3570/0x1404EA110
 void Blizzard::Streaming::GetLocalAmount(const char* path, int64_t* local, int64_t* total) {
     *local = 0;
     *total = 0;
@@ -622,7 +610,7 @@ int32_t Blizzard::Streaming::IsLocal(Blizzard::File::StreamRecord* file, int64_t
     return 1;
 }
 
-// OFFSET: 0x007DA140
+// OFFSET: 0x007DA140/0x1404DC8E0
 int64_t Blizzard::Streaming::GetIsLocalAmount(Blizzard::File::StreamRecord* file) {
     Blizzard::Storage::StorageUnit* unit = AcquireStorageUnit(file);
 
@@ -636,7 +624,7 @@ int64_t Blizzard::Streaming::GetIsLocalAmount(Blizzard::File::StreamRecord* file
     return local;
 }
 
-// OFFSET: 0x007DA210
+// OFFSET: 0x007DA210/0x1404DC990
 bool Blizzard::Streaming::MakeRemote(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size) {
     Blizzard::Storage::StorageUnit* unit = AcquireStorageUnit(file);
 

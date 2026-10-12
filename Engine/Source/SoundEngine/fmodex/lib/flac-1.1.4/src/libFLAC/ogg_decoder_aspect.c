@@ -107,7 +107,7 @@ void FLAC__ogg_decoder_aspect_reset(FLAC__OggDecoderAspect *aspect)
 		aspect->need_serial_number = true;
 }
 
-// OFFSET: 0x00B5A5F0
+// OFFSET: 0x00B5A5F0/0x1409236D0
 FLAC__OggDecoderAspectReadStatus FLAC__ogg_decoder_aspect_read_callback_wrapper(FLAC__OggDecoderAspect *aspect, FLAC__byte buffer[], size_t *bytes, FLAC__OggDecoderAspectReadCallbackProxy read_callback, const FLAC__StreamDecoder *decoder, void *client_data)
 {
 	static const size_t OGG_BYTES_CHUNK = 8192;

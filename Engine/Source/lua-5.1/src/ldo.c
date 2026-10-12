@@ -356,7 +356,7 @@ int luaD_precall (lua_State *L, StkId func, int nresults) {
 }
 
 
-// OFFSET: 0x00420B60
+// OFFSET: 0x00420B60/0x140025420
 int luaD_precall_profile (lua_State *L, StkId func, int nresults, __int64 start, __int64 *stop) {
   LClosure *cl;
   ptrdiff_t funcr;

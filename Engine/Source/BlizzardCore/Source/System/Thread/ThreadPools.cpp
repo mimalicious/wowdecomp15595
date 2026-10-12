@@ -7,7 +7,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
-// STATIC: 0x00EBA644
+// STATIC: 0x00EBA644/0x140DAB110
 Blizzard::Thread::ThreadPoolRecord* System_Thread::s_defaultPool;
 
 // OFFSET: 0x007C4E20

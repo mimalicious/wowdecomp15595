@@ -142,4 +142,6 @@ void Blizzard::Util::Array<T>::SetCount(uint32_t count) {
     this->m_count = count;
 }
 
+#include "Engine/Source/BlizzardCore/Source/Packages/Util/SBig.inl"
+
 #endif

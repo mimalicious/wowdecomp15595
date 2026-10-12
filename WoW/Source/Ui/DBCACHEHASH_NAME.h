@@ -15,7 +15,6 @@ struct DBCACHETRAILER_GUID {
     /* 001A */ uint8_t m_invalidatePending;
     /* 001B */ uint8_t unk_001B;
     /* 001C */ TSLink<void> m_pendingLink;
-    /* 0024 */ uint32_t m_pad24;
 };
 
 #endif

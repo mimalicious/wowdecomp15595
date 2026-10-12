@@ -9,7 +9,7 @@
 
 static CommandLineUTF8 s_commandLineUTF8;
 
-// OFFSET: 0x00875FA0
+// OFFSET: 0x00875FA0/0x1405ACEE0
 uint32_t GetModuleFileNameUTF8(void* module, char* path, uint32_t size) {
     uint32_t wideSize = size * 3 * sizeof(uint16_t);
     uint16_t* wide = static_cast<uint16_t*>(_alloca(wideSize));

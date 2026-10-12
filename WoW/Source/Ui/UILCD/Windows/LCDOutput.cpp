@@ -23,6 +23,7 @@ CLCDOutput::~CLCDOutput() {
     this->Close();
 }
 
+// PROVEN: 5fc89d34 UNPROVEN/IDENTICAL
 // OFFSET: [0x00B3EAC0/0x14090C260]
 void CLCDOutput::Close() {
     if (this->m_hDevice != LGLCD_INVALID_DEVICE) {
@@ -32,29 +33,31 @@ void CLCDOutput::Close() {
     }
 }
 
+// PROVEN: 541c071a UNPROVEN/IDENTICAL
 // OFFSET: [0x00B3EAC0/0x14090C260]
 void CLCDOutput::Shutdown() {
     this->Close();
 }
 
-// PROVEN: afa37274 IDENTICAL/NONE
+// PROVEN: afa37274 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EAB0/0x14090C250
 void CLCDOutput::SetGfx(CLCDGfxBase* gfx) {
     this->m_pGfx = gfx;
 }
 
-// PROVEN: 18bc7044 IDENTICAL/NONE
+// PROVEN: 18bc7044 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EAF0/0x14090C290
 void CLCDOutput::SetGlobalPage(CLCDPage* page) {
     this->m_pGlobalPage = page;
 }
 
-// PROVEN: 8a0be9c0 IDENTICAL/NONE
+// PROVEN: 8a0be9c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EB00/0x14090C2A0
 int32_t CLCDOutput::IsOpened() {
     return this->m_hDevice != LGLCD_INVALID_DEVICE;
 }
 
+// PROVEN: 8b0204bf UNPROVEN/IDENTICAL
 // OFFSET: 0x00B3EB10/0x14090C2B0
 HRESULT CLCDOutput::HandleErrorFromAPI(DWORD result) {
     switch (result) {
@@ -81,13 +84,13 @@ HRESULT CLCDOutput::HandleErrorFromAPI(DWORD result) {
     return static_cast<HRESULT>(result | 0x80000000);
 }
 
-// PROVEN: 91010f88 IDENTICAL/NONE
+// PROVEN: 91010f88 IDENTICAL/IDENTICAL
 // OFFSET: 0x005EB640/0x14026CD90
 int32_t CLCDOutput::DoesBitmapNeedUpdate(lgLcdBitmapHeader* bitmap) {
     return 1;
 }
 
-// PROVEN: 0b53931f IDENTICAL/NONE
+// PROVEN: 0b53931f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EB80/0x14090C320
 void CLCDOutput::OnLCDButtonDown(int32_t button) {
     if (this->m_pActivePage) {
@@ -95,7 +98,7 @@ void CLCDOutput::OnLCDButtonDown(int32_t button) {
     }
 }
 
-// PROVEN: 713f8e8c IDENTICAL/NONE
+// PROVEN: 713f8e8c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EBA0/0x14090C340
 void CLCDOutput::OnLCDButtonUp(int32_t button) {
     if (this->m_pActivePage) {
@@ -103,23 +106,25 @@ void CLCDOutput::OnLCDButtonUp(int32_t button) {
     }
 }
 
+// PROVEN: d380f4dc IDENTICAL/IDENTICAL
 // OFFSET: [0x005282E0/0x14090C360]
 int32_t CLCDOutput::GetDeviceId() {
     return this->m_hDevice;
 }
 
-// PROVEN: 9a34be3a IDENTICAL/NONE
+// PROVEN: 9a34be3a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EBC0/0x14090C370
 void CLCDOutput::ResetDeviceType() {
     this->m_OpenByTypeContext.deviceType = 0;
 }
 
-// PROVEN: b0477467 IDENTICAL/NONE
+// PROVEN: b0477467 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B3EBD0/0x14090C440
 int32_t CLCDOutput::HasDeviceType() {
     return this->m_OpenByTypeContext.deviceType != 0;
 }
 
+// PROVEN: 242f8d4e DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3EBE0/0x14090C390
 int32_t CLCDOutput::OpenByType(lgLcdOpenByTypeContext& context) {
     if (this->m_hDevice != LGLCD_INVALID_DEVICE) {
@@ -153,6 +158,7 @@ int32_t CLCDOutput::ReOpenDeviceType() {
     return 0;
 }
 
+// PROVEN: b12a6488 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3ECA0/0x14090C460
 void CLCDOutput::ShowPage(CLCDPage* page, int32_t activate) {
     if (activate) {
@@ -169,6 +175,7 @@ void CLCDOutput::ShowPage(CLCDPage* page, int32_t activate) {
     }
 }
 
+// PROVEN: 1436d3cc UNPROVEN/IDENTICAL
 // OFFSET: 0x00B3ED00/0x14090C4E0
 int32_t CLCDOutput::Draw() {
     uint32_t priority = this->m_nPriority;
@@ -195,7 +202,7 @@ int32_t CLCDOutput::Draw() {
     return this->m_hDevice != LGLCD_INVALID_DEVICE;
 }
 
-// PROVEN: 6a0d9e2e IDENTICAL/NONE
+// PROVEN: 6a0d9e2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EDB0/0x14090C5D0
 void CLCDOutput::OnSoftButtonEvent(uint32_t buttons) {
     if (this->m_pGfx->GetFamily() == LGLCD_DEVICE_FAMILY_QVGA_BASIC) {

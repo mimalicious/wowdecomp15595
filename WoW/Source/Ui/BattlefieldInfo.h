@@ -249,4 +249,6 @@ int32_t Script_RequestBattlegroundInstanceInfo(lua_State* L);
 void BattlefieldInfoRegisterScriptFunctions();
 void BattlefieldInfoUnregisterScriptFunctions();
 
+#include "WoW/Source/Ui/BattlefieldInfo.inl"
+
 #endif

@@ -138,7 +138,7 @@ static int32_t Script_strjoin(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 0bd04a00 IDENTICAL/UNPROVEN
+// PROVEN: 0bd04a00 IDENTICAL/IDENTICAL
 // OFFSET: 0x00839DF0/0x1405642F0
 static int32_t Script_strconcat(lua_State* L) {
     lua_concat(L, lua_gettop(L));
@@ -336,7 +336,7 @@ static int32_t Script_debugprofilestart(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 66c47298 IDENTICAL/UNPROVEN
+// PROVEN: 66c47298 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083A3C0/0x1405649E0
 static int32_t Script_debugprofilestop(lua_State* L) {
     lua_pushnumber(L, (static_cast<int64_t>(OsGetAsyncTimeClocks()) - s_debugProfileStart) * s_scriptTimeDivisor);
@@ -360,7 +360,7 @@ static int32_t Script_seterrorhandler(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3ca731b5 IDENTICAL/UNPROVEN
+// PROVEN: 3ca731b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083A470/0x140564A90
 static int32_t Script_geterrorhandler(lua_State* L) {
     lua_rawgeti(L, LUA_REGISTRYINDEX, s_errorHandlerFunc);
@@ -489,7 +489,7 @@ static int32_t Script_time(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 65976162 IDENTICAL/UNPROVEN
+// PROVEN: 65976162 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083A900/0x140564FF0
 static int32_t Script_difftime(lua_State* L) {
     lua_pushnumber(L, difftime(static_cast<time_t>(luaL_checknumber(L, 1)), static_cast<time_t>(luaL_optnumber(L, 2, 0))));
@@ -617,7 +617,7 @@ static int32_t Script_strlenutf8(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c892ff89 IDENTICAL/UNPROVEN
+// PROVEN: c892ff89 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083D010/0x140567D90
 static int32_t Script_debuglocals(lua_State* L) {
     if (!s_inErrorHandler) {
@@ -699,7 +699,7 @@ static int32_t Script_debugtimestamp(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 533ad160 IDENTICAL/NONE
+// PROVEN: 533ad160 IDENTICAL/IDENTICAL
 // OFFSET: 0x00839920/0x140563D40
 int32_t Script_GetCurrentEventID(lua_State* L) {
     lua_pushnumber(L, s_currentEventId);
@@ -732,7 +732,7 @@ int32_t Script_GetEventTime(lua_State* L) {
     return 4;
 }
 
-// STATIC: 0x00BD24A0
+// STATIC: 0x00BD24A0/0x1409C6E80
 const luaL_Reg s_extraFuncs[] = {
     { "strtrim", Script_strtrim },
     { "strsplit", Script_strsplit },

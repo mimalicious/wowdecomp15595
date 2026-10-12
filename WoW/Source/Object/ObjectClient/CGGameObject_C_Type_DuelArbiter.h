@@ -13,4 +13,6 @@ class CGGameObject_C_Type_DuelArbiter : public CGGameObject_C_TypeAnimated {
     CGGameObject_C_Type_DuelArbiter(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
+#include "WoW/Source/Object/ObjectClient/CGGameObject_C_Type_DuelArbiter.inl"
+
 #endif

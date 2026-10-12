@@ -128,7 +128,6 @@ struct LFGProposal {
     /* 001C */ uint32_t unk_001C;
     /* 0020 */ uint32_t m_id;
     /* 0024 */ uint8_t m_state;
-    /* 0025 */ uint8_t unk_0005[3];
     /* 0028 */ uint32_t unk_0008;
     /* 002C */ uint32_t m_completedMask;
     /* 0030 */ uint32_t unk_0010;

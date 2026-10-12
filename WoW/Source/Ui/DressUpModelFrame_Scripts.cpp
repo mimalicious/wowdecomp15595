@@ -14,7 +14,7 @@
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// PROVEN: 2fa1cfe7 IDENTICAL/NONE
+// PROVEN: 2fa1cfe7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04B60/0x1407A4200
 void CGDressUpModelFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -22,6 +22,7 @@ void CGDressUpModelFrame::DestroyScriptMetaTable() {
     CGDressUpModelFrame::s_metatable = LUA_NOREF;
 }
 
+// PROVEN: f459a9d6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A04D20/0x1407A4440
 static int32_t Script_Undress(lua_State* L) {
     CGDressUpModelFrame* frame = static_cast<CGDressUpModelFrame*>(FrameScript_GetObjectThis(L, CGDressUpModelFrame::GetObjectType()));
@@ -63,14 +64,14 @@ static int32_t Script_UndressSlot(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 35eeee73 IDENTICAL/NONE
+// PROVEN: 35eeee73 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04E20/0x1407A4560
 void CGDressUpModelFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGDressUpModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGDressUpModelFrame::RegisterScriptMethods);
 }
 
-// PROVEN: 628507f9 IDENTICAL/NONE
+// PROVEN: 628507f9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A05880/0x1407A5260
 static int32_t Script_TryOn(lua_State* L) {
     CGDressUpModelFrame* frame = static_cast<CGDressUpModelFrame*>(FrameScript_GetObjectThis(L, CGDressUpModelFrame::GetObjectType()));
@@ -133,7 +134,7 @@ static int32_t Script_TryOn(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D176E8
+// STATIC: 0x00D176E8/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "Undress", &Script_Undress },
     { "Dress", &Script_Dress },
@@ -141,7 +142,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "UndressSlot", &Script_UndressSlot },
 };
 
-// PROVEN: db121a66 IDENTICAL/NONE
+// PROVEN: db121a66 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A04B40/0x1407A41D0
 void CGDressUpModelFrame::RegisterScriptMethods(lua_State* L) {
     CGCharacterModelBase::RegisterScriptMethods(L);

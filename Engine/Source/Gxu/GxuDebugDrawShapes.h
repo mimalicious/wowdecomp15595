@@ -164,7 +164,7 @@ class GxuDebugShapeDrawer : public GxuDrawListItem {
     virtual ~GxuDebugShapeDrawer();
     virtual float GetDepth(const C3Vector& viewPos);
     virtual GxuDrawListState* GetState();
-    virtual uint32_t GetVtxStream();
+    virtual uintptr_t GetVtxStream();
     virtual void Draw(const C3Vector& viewPos);
 
     GxuDebugShapeDrawer();

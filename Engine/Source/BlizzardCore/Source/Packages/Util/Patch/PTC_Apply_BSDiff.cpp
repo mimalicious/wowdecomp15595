@@ -99,7 +99,7 @@ bool Blizzard::Patch::ApplyBSDiffPatch(const uint8_t* patch, uint32_t patchSize,
     return extra >= diffEnd + extraSize;
 }
 
-// OFFSET: 0x007B0860
+// OFFSET: 0x007B0860/0x1404A56D0
 uint8_t* BSDiff::DecodeRLE(const uint8_t* data, uint32_t* size, uint32_t skip) {
     uint32_t outSize = *reinterpret_cast<const uint32_t*>(data) - skip;
     uint8_t* result = static_cast<uint8_t*>(SMemAlloc(outSize, __FILE__, __LINE__, 0));
@@ -140,7 +140,7 @@ bool Blizzard::Patch::ApplyRLEBSDiffPatch(const uint8_t* patch, uint32_t patchSi
     return result;
 }
 
-// OFFSET: 0x007B8570
+// OFFSET: 0x007B8570/0x1404AEF20
 bool BSDiff::PTCApply_BSDiff(const uint8_t* patch, uint32_t patchSize, uint8_t* dest, uint32_t destSize, const uint8_t* source, uint32_t sourceSize) {
     if (patchSize < 32) {
         return false;

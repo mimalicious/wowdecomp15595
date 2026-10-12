@@ -13,11 +13,11 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA3A00
+// STATIC: 0x00CA3A00/0x140B40DC0
 int32_t CSimpleTexture::s_metatable = LUA_NOREF;
 
-// PROVEN: 7218d2b2 IDENTICAL/NONE
-// OFFSET: 0x0052C070
+// PROVEN: 7218d2b2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0052C070/0x14017C7F0
 static int32_t Script_GetObjectType(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -25,7 +25,8 @@ static int32_t Script_GetObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0052C0C0
+// PROVEN: 8eacf951 DIFFERENT/IDENTICAL
+// OFFSET: 0x0052C0C0/0x14017C840
 static int32_t Script_IsObjectType(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -44,7 +45,7 @@ static int32_t Script_IsObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0052C170
+// OFFSET: 0x0052C170/0x14017C920
 static int32_t Script_GetDrawLayer(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -80,6 +81,7 @@ static int32_t Script_SetDrawLayer(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0ce9a6b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0052C2E0/0x14017CAE0
 static int32_t Script_GetBlendMode(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -120,6 +122,7 @@ static int32_t Script_GetVertexColor(lua_State* L) {
     return 4;
 }
 
+// PROVEN: d60ddb4e DIFFERENT/IDENTICAL
 // OFFSET: 0x0052C4B0/0x14017CD00
 static int32_t Script_SetVertexColor(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -198,7 +201,7 @@ static int32_t Script_SetAlpha(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 24314fdc IDENTICAL/NONE
+// PROVEN: 24314fdc IDENTICAL/IDENTICAL
 // OFFSET: 0x0052C7B0/0x14017D070
 static int32_t Script_GetAlpha(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -210,6 +213,7 @@ static int32_t Script_GetAlpha(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 151ed760 DIFFERENT/IDENTICAL
 // OFFSET: 0x0052C820/0x14017D0E0
 static int32_t Script_Show(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -220,7 +224,8 @@ static int32_t Script_Show(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0052C870
+// PROVEN: c1ab0c42 DIFFERENT/IDENTICAL
+// OFFSET: 0x0052C870/0x14017D130
 static int32_t Script_Hide(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -230,7 +235,7 @@ static int32_t Script_Hide(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0052C8B0
+// OFFSET: 0x0052C8B0/0x14017D180
 static int32_t Script_IsVisible(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -256,7 +261,7 @@ static int32_t Script_IsShown(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 7e922500 IDENTICAL/UNPROVEN
+// PROVEN: 7e922500 IDENTICAL/IDENTICAL
 // OFFSET: 0x0052C970/0x14017D260
 static int32_t Script_GetTexture(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -271,6 +276,7 @@ static int32_t Script_GetTexture(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 299a9ae3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0052C9F0/0x14017D2E0
 static int32_t Script_SetTexture(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -342,7 +348,7 @@ static int32_t Script_SetRotation(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b0c2a33d IDENTICAL/UNPROVEN
+// PROVEN: b0c2a33d IDENTICAL/IDENTICAL
 // OFFSET: 0x0052CCE0/0x14017D6B0
 static int32_t Script_SetDesaturated(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -351,7 +357,7 @@ static int32_t Script_SetDesaturated(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d4133178 IDENTICAL/UNPROVEN
+// PROVEN: d4133178 IDENTICAL/IDENTICAL
 // OFFSET: 0x0052CD40/0x14017D730
 static int32_t Script_IsDesaturated(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -374,7 +380,7 @@ static int32_t Script_SetNonBlocking(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 36b43e75 IDENTICAL/NONE
+// PROVEN: 36b43e75 IDENTICAL/IDENTICAL
 // OFFSET: 0x0052CE10/0x14017D820
 static int32_t Script_GetNonBlocking(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
@@ -480,22 +486,22 @@ static int32_t Script_SetTexCoord(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 95d0b485 IDENTICAL/NONE
-// OFFSET: 0x0052CFF0
+// PROVEN: 95d0b485 IDENTICAL/IDENTICAL
+// OFFSET: 0x0052CFF0/0x14017DA40
 void CSimpleTexture::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleTexture::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleTexture::RegisterScriptMethods);
 }
 
-// PROVEN: 86973cd2 IDENTICAL/NONE
-// OFFSET: 0x0052BE30
+// PROVEN: 86973cd2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0052BE30/0x14017C740
 void CSimpleTexture::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleTexture::s_metatable);
     CSimpleTexture::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00CA3918
+// STATIC: 0x00CA3918/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "IsObjectType", &Script_IsObjectType },
     { "GetObjectType", &Script_GetObjectType },

@@ -68,4 +68,6 @@ void GxuShutdownDebugText3DDrawer();
 void GxuShutdownDebugTextureDrawer();
 void GxuShutdownDebugTextDrawer();
 
+#include "Engine/Source/Gxu/GxuDebugDraw.inl"
+
 #endif

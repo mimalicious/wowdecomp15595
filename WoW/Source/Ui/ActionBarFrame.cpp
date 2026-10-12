@@ -38,31 +38,31 @@
 
 extern CVar* s_cvAutoFilledMultiCastSlots;
 
-// STATIC: 0x00F43BC8
+// STATIC: 0x00F43BC8/0x140E37140
 int32_t CGActionBar::m_slotNoMana[144];
 
-// STATIC: 0x00F43E08
+// STATIC: 0x00F43E08/0x140E37380
 int32_t CGActionBar::m_slotUsable[144];
 
-// STATIC: 0x00F44048
+// STATIC: 0x00F44048/0x140E375C0
 int32_t CGActionBar::m_slotUseCount[144];
 
-// STATIC: 0x00F44288
+// STATIC: 0x00F44288/0x140E37800
 uint32_t CGActionBar::m_slotActions[144];
 
-// STATIC: 0x00F444C8
+// STATIC: 0x00F444C8/0x140E37A40
 uint32_t CGActionBar::m_currentPage;
 
-// STATIC: 0x00F444CC
+// STATIC: 0x00F444CC/0x140E37A44
 uint32_t CGActionBar::m_bonusBarOffset;
 
-// STATIC: 0x00F444D0
+// STATIC: 0x00F444D0/0x140E37A48
 uint32_t CGActionBar::m_tempPageActiveFlags;
 
-// STATIC: 0x00F444D8
+// STATIC: 0x00F444D8/0x140E37A50
 TSCGrowableArray<UIButtons, 144> CGActionBar::m_uiButtons;
 
-// STATIC: 0x00F33DC8
+// STATIC: 0x00F33DC8/0x140BC7700
 TSHashTable<OVERRIDE_SPELL_NODE, HASHKEY_NONE> CGActionBar::m_overrideSpells;
 
 // PROVEN: 2e75b45b IDENTICAL/NONE
@@ -72,38 +72,42 @@ int32_t CGActionBar::IsSpell(uint32_t slot) {
     return action && !(action & 0xF0000000);
 }
 
-// PROVEN: 9bcd55b7 IDENTICAL/NONE
+// PROVEN: 9bcd55b7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00464500/0x140077ED0
 int32_t CGActionBar::IsItem(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x80000000;
 }
 
-// PROVEN: 19d316e3 IDENTICAL/NONE
+// PROVEN: 19d316e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00464530/0x140077F00
 int32_t CGActionBar::IsMacro(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x40000000;
 }
 
+// PROVEN: 26c6c6eb IDENTICAL/DIFFERENT
 // OFFSET: 0x00464560/0x140077F30
 int32_t CGActionBar::IsPetAction(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x10000000;
 }
 
+// PROVEN: 32f64cf6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00464590/0x140077F60
 int32_t CGActionBar::IsFlyout(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x30000000;
 }
 
-// OFFSET: 0x004645C0
+// PROVEN: 234ac653 IDENTICAL/DIFFERENT
+// OFFSET: 0x004645C0/0x140077F90
 int32_t CGActionBar::IsEquipmentSet(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x20000000;
 }
 
+// PROVEN: b9261675 IDENTICAL/DIFFERENT
 // OFFSET: 0x004645F0/0x140077FC0
 uint32_t CGActionBar::GetMacroID(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
@@ -115,7 +119,8 @@ uint32_t CGActionBar::GetMacroID(uint32_t slot) {
     return 0;
 }
 
-// OFFSET: 0x00464620
+// PROVEN: 085ebd9a IDENTICAL/DIFFERENT
+// OFFSET: 0x00464620/0x140077FF0
 uint32_t CGActionBar::GetSlotSpellAction(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
 
@@ -126,7 +131,8 @@ uint32_t CGActionBar::GetSlotSpellAction(uint32_t slot) {
     return 0;
 }
 
-// OFFSET: 0x00464650
+// PROVEN: 347e39df IDENTICAL/DIFFERENT
+// OFFSET: 0x00464650/0x140078020
 int32_t CGActionBar::GetEquipmentSetID(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
 
@@ -137,7 +143,7 @@ int32_t CGActionBar::GetEquipmentSetID(uint32_t slot) {
     return -1;
 }
 
-// PROVEN: 85398456 IDENTICAL/NONE
+// PROVEN: 85398456 IDENTICAL/IDENTICAL
 // OFFSET: 0x00464710/0x1400780A0
 PetAction* GetPetAction(uint32_t index) {
     if (CGPetInfo::GetPet(0) && index < sizeof(((CGPetInfo*)0)->m_actions) / sizeof(CGPetInfo::m_actions[0])) {
@@ -147,7 +153,7 @@ PetAction* GetPetAction(uint32_t index) {
     return NULL;
 }
 
-// PROVEN: 7e12b449 IDENTICAL/NONE
+// PROVEN: 7e12b449 IDENTICAL/IDENTICAL
 // OFFSET: 0x0094FEB0/0x1405E8860
 uint32_t CGPetInfo::GetPetMode() {
     if (CGPetInfo::m_petMode & 0x8000000) {
@@ -157,6 +163,7 @@ uint32_t CGPetInfo::GetPetMode() {
     return static_cast<uint8_t>(CGPetInfo::m_petMode);
 }
 
+// PROVEN: 6b7f8e30 IDENTICAL/UNPROVEN
 // OFFSET: 0x009541B0/0x1406C5060
 void CGActionBar::InitializeGame() {
     memset(CGActionBar::m_slotActions, 0, sizeof(CGActionBar::m_slotActions));
@@ -168,21 +175,25 @@ void CGActionBar::InitializeGame() {
     CGActionBar::m_tempPageActiveFlags = 0;
 }
 
+// PROVEN: cc41c0b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00954220/0x140750FD0
 int32_t CGActionBar::HasMacro(uint32_t slot) {
     return CGUIMacros::GetMacroIndexByID(CGActionBar::m_slotActions[slot] & 0xB1FFFFFF) != -1;
 }
 
+// PROVEN: 31752486 IDENTICAL/IDENTICAL
 // OFFSET: 0x00954250/0x1406C5110
 void CGActionBar::ShowGrid() {
     FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_SHOWGRID, NULL);
 }
 
+// PROVEN: ec5154cc IDENTICAL/NONE
 // OFFSET: 0x00954260
 void CGActionBar::HideGrid() {
     FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_HIDEGRID, NULL);
 }
 
+// PROVEN: c7b4eacf IDENTICAL/DIFFERENT
 // OFFSET: 0x00954270/0x1406C5130
 int32_t CGActionBar::GetMacroItem(uint32_t slot) {
     MACRONODE* macro = CGUIMacros::GetMacroByID(CGActionBar::GetMacroID(slot));
@@ -194,6 +205,7 @@ int32_t CGActionBar::GetMacroItem(uint32_t slot) {
     return 0;
 }
 
+// PROVEN: 61844347 IDENTICAL/DIFFERENT
 // OFFSET: 0x009542C0/0x1406C5180
 uint32_t CGActionBar::GetFlyout(uint32_t slot) {
     uint32_t action;
@@ -205,6 +217,7 @@ uint32_t CGActionBar::GetFlyout(uint32_t slot) {
     return 0;
 }
 
+// PROVEN: 2b717855 DIFFERENT/IDENTICAL
 // OFFSET: 0x00954300/0x1406C51C0
 static int32_t GetMultiCastTotemCategory(int32_t slot) {
     if (slot < 132 || static_cast<uint32_t>(slot) >= 144) {
@@ -229,6 +242,7 @@ static int32_t GetMultiCastTotemCategory(int32_t slot) {
     }
 }
 
+// PROVEN: cce6887c DIFFERENT/IDENTICAL
 // OFFSET: 0x00954370/0x1406C5210
 uint32_t CGActionBar::GetMultiCastSlotMaskForTotemCategory(int32_t category) {
     switch (category) {
@@ -252,7 +266,7 @@ uint32_t CGActionBar::GetMultiCastSlotMaskForTotemCategory(int32_t category) {
     }
 }
 
-// PROVEN: 299cac77 IDENTICAL/NONE
+// PROVEN: 299cac77 IDENTICAL/IDENTICAL
 // OFFSET: 0x009543E0/0x1406C5250
 void CGActionBar::SetTemporaryActionBarFlags(uint32_t flags, int32_t enable) {
     if (enable) {
@@ -277,6 +291,7 @@ static int32_t FormHasActionBar(const SpellShapeshiftFormRec* form) {
     return 0;
 }
 
+// PROVEN: 2f5f8332 IDENTICAL/DIFFERENT
 // OFFSET: 0x00954440/0x1406C5270
 static int32_t GetFormPresetSpell(uint32_t index, const void* data) {
     if (data && index < 8) {
@@ -286,6 +301,7 @@ static int32_t GetFormPresetSpell(uint32_t index, const void* data) {
     return 0;
 }
 
+// PROVEN: 1347af38 IDENTICAL/DIFFERENT
 // OFFSET: 0x00954470/0x1406C5290
 static int32_t GetOverrideSpell(uint32_t index, const void* data) {
     if (data && index < 10) {
@@ -295,6 +311,7 @@ static int32_t GetOverrideSpell(uint32_t index, const void* data) {
     return 0;
 }
 
+// PROVEN: 319e4fa2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00954920/0x1406C5780
 int32_t CGActionBar::GetItem(uint32_t slot) {
     if (static_cast<int32_t>(slot) < 0 || slot >= 144) {
@@ -316,6 +333,7 @@ int32_t CGActionBar::GetItem(uint32_t slot) {
     return 0;
 }
 
+// PROVEN: edd005ae IDENTICAL/DIFFERENT
 // OFFSET: 0x00954990/0x1406C5830
 int32_t CGActionBar::GetPetActionSpell(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
@@ -479,6 +497,7 @@ const char* CGActionBar::GetRangedTexture() {
     return s_texture;
 }
 
+// PROVEN: 70ecc8d5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00955090/0x1406C61B0
 CGItem_C* CGActionBar::FindUseEnchantItemPtr(int32_t itemId) {
     if (CGItem_C::GetUseSpell(itemId)) {
@@ -500,6 +519,7 @@ CGItem_C* CGActionBar::FindUseEnchantItemPtr(int32_t itemId) {
     return item;
 }
 
+// PROVEN: 3367638a IDENTICAL/IDENTICAL
 // OFFSET: 0x009552C0/0x1406C64A0
 int32_t CGActionBar::GetItemSpell(uint32_t slot) {
     int32_t itemId = CGActionBar::GetItem(slot);
@@ -518,6 +538,7 @@ int32_t CGActionBar::GetItemSpell(uint32_t slot) {
     return 0;
 }
 
+// PROVEN: c2e2b81b IDENTICAL/DIFFERENT
 // OFFSET: 0x00955300/0x1406C64E0
 int32_t CGActionBar::GetMacroSpell(uint32_t slot, int32_t& petSpell) {
     MACRONODE* macro = CGUIMacros::GetMacroByID(CGActionBar::GetMacroID(slot));
@@ -649,6 +670,7 @@ int32_t CGActionBar::HasSpellAction(int32_t spellId) {
     return 0;
 }
 
+// PROVEN: e28e2801 IDENTICAL/UNPROVEN
 // OFFSET: 0x00955C80/0x1406C7110
 void CGActionBar::LeaveWorld(bool reload) {
     if (!reload) {
@@ -662,7 +684,8 @@ void CGActionBar::LeaveWorld(bool reload) {
     }
 }
 
-// OFFSET: 0x00955CB0
+// PROVEN: 2d26a11e IDENTICAL/UNPROVEN
+// OFFSET: 0x00955CB0/0x1406C7140
 void CGActionBar::ShutdownGame() {
     if (CGActionBar::m_uiButtons.m_count == 0xFFFFFFFF) {
         CGActionBar::m_uiButtons.Dynamic().m_count = 0;
@@ -671,7 +694,7 @@ void CGActionBar::ShutdownGame() {
     }
 }
 
-// OFFSET: 0x00955CD0
+// OFFSET: 0x00955CD0/0x1406C7160
 int32_t CGActionBar::IsAutoRepeatAction(uint32_t slot) {
     if (slot > 143) {
         return 0;
@@ -714,7 +737,7 @@ int32_t CGActionBar::HasValidTarget(uint32_t slot, WOWGUID target, int32_t& inRa
     return 1;
 }
 
-// OFFSET: 0x00955F90
+// OFFSET: 0x00955F90/0x1406C74F0
 int32_t CGActionBar::ActionHasRange(uint32_t slot) {
     if (slot > 143) {
         return 0;
@@ -739,7 +762,7 @@ int32_t CGActionBar::ActionHasRange(uint32_t slot) {
     return !fequal(minRange, 0.0f) || !fequal(maxRange, 0.0f);
 }
 
-// OFFSET: 0x00956130
+// OFFSET: 0x00956130/0x1406C7700
 int32_t CGActionBar::IsAttackAction(uint32_t slot) {
     if (slot > 143) {
         return 0;
@@ -750,7 +773,7 @@ int32_t CGActionBar::IsAttackAction(uint32_t slot) {
     return effect && effect->m_effect == 78;
 }
 
-// OFFSET: 0x00956200
+// OFFSET: 0x00956200/0x1406C7810
 int32_t CGActionBar::IsRangedAttackAction(uint32_t slot) {
     if (slot > 143) {
         return 0;
@@ -1012,7 +1035,7 @@ int32_t CGActionBar::UpdateUsableAction(uint32_t slot, int32_t& noMana) {
     return 0;
 }
 
-// OFFSET: 0x00956E50
+// OFFSET: 0x00956E50/0x1406C8730
 int32_t CGActionBar::IsConsumableAction(uint32_t slot) {
     if (slot > 143) {
         return 0;
@@ -1057,7 +1080,7 @@ int32_t CGActionBar::IsConsumableAction(uint32_t slot) {
     return 0;
 }
 
-// OFFSET: 0x00956F70
+// OFFSET: 0x00956F70/0x1406C8980
 int32_t IsStackableAucItem(uint32_t slot) {
     if (slot > 143) {
         return 0;
@@ -1067,7 +1090,7 @@ int32_t IsStackableAucItem(uint32_t slot) {
     return rec && rec->m_stackable > 1;
 }
 
-// OFFSET: 0x00956FE0
+// OFFSET: 0x00956FE0/0x1406C89E0
 int32_t CGActionBar::IsEquippedAction(uint32_t slot) {
     if (slot > 143) {
         return 0;
@@ -1117,6 +1140,7 @@ void CGActionBar::SlotChanged(uint32_t slot, int32_t sendToServer, int32_t silen
     }
 }
 
+// PROVEN: 95e63077 IDENTICAL/UNPROVEN
 // OFFSET: 0x009571C0/0x1406C8C40
 void CGActionBar::UpdateUsable() {
     int32_t changed = 0;
@@ -1137,7 +1161,7 @@ void CGActionBar::UpdateUsable() {
     }
 }
 
-// OFFSET: 0x00957230
+// OFFSET: 0x00957230/0x1406C8CD0
 void CGActionBar::UpdateAttackAction() {
     for (uint32_t i = 0; i < 144; i++) {
         if (CGActionBar::IsAttackAction(i)) {
@@ -1149,7 +1173,7 @@ void CGActionBar::UpdateAttackAction() {
     }
 }
 
-// OFFSET: 0x00957290
+// OFFSET: 0x00957290/0x1406C8D50
 void CGActionBar::UpdateRangedAttackAction() {
     for (uint32_t i = 0; i < 144; i++) {
         if (CGActionBar::IsRangedAttackAction(i)) {
@@ -1161,7 +1185,7 @@ void CGActionBar::UpdateRangedAttackAction() {
     }
 }
 
-// OFFSET: 0x009572F0
+// OFFSET: 0x009572F0/0x1406C8DD0
 void CGActionBar::UpdateEquipmentSet(uint32_t id) {
     if (id > 9) {
         return;
@@ -1203,7 +1227,7 @@ void CGActionBar::RemoveAction(uint32_t slot, int32_t silent) {
     CGActionBar::SlotChanged(slot, silent == 0, 0);
 }
 
-// OFFSET: 0x00957420
+// OFFSET: 0x00957420/0x1406C8F50
 void CGActionBar::UpdateSpell(int32_t spellId) {
     if (!spellId) {
         return;
@@ -1227,7 +1251,7 @@ void CGActionBar::UpdateSpell(int32_t spellId) {
     }
 }
 
-// OFFSET: 0x00957580
+// OFFSET: 0x00957580/0x1406C9160
 void CGActionBar::UpdateCritter(int32_t critter) {
     if (!critter) {
         return;
@@ -1330,7 +1354,7 @@ const char* CGActionBar::GetTexture(uint32_t slot) {
         return NULL;
     }
 
-    // STATIC: 0x00F44EB4
+    // STATIC: 0x00F44EB4/0x140E38B08
     static const char* s_path = ClientDBStringLookup(3);
 
     // STATIC: 0x00F44DB0
@@ -1661,6 +1685,7 @@ void CGActionBar::UpdateMacro(uint32_t macroId) {
     }
 }
 
+// PROVEN: c80708cd IDENTICAL/IDENTICAL
 // OFFSET: 0x00958820/0x1406CA900
 void CGActionBar::RemoveMacro(uint32_t macroId, int32_t silent) {
     if (!macroId) {
@@ -1704,7 +1729,7 @@ void CGActionBar::RemoveEquipmentSet(uint32_t id) {
     }
 }
 
-// PROVEN: e2c92266 IDENTICAL/NONE
+// PROVEN: e2c92266 IDENTICAL/IDENTICAL
 // OFFSET: 0x00958950/0x1406CAA70
 void ItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -1924,7 +1949,7 @@ void CGActionBar::PutActionInSlot(uint32_t slot, int32_t a2) {
     CGActionBar::SetAction(slot, itemId | 0x80000000, 1, 0);
 }
 
-// PROVEN: 7fc56e8b IDENTICAL/NONE
+// PROVEN: 7fc56e8b IDENTICAL/IDENTICAL
 // OFFSET: 0x00959050/0x1406CB3C0
 void CGActionBar::UpdateTemporaryActionBar(int32_t (*getSpell)(uint32_t index, const void* data), const void* data) {
     if (!getSpell) {
@@ -2137,6 +2162,7 @@ void CGActionBar::UseAction(uint32_t slot, const WOWGUID& target, const char* bu
     }
 }
 
+// PROVEN: 05f5de0e IDENTICAL/DIFFERENT
 // OFFSET: 0x009597B0/0x1406CBDB0
 void CGActionBar::PickupAction(uint32_t slot) {
     if (static_cast<int32_t>(slot) < 0 || slot >= 144 || !CGGameUI::CanPerformAction(14) || (static_cast<int32_t>(slot) >= 120 && slot < 132)) {
@@ -2154,7 +2180,7 @@ void CGActionBar::PickupAction(uint32_t slot) {
     }
 }
 
-// PROVEN: 245edc1b IDENTICAL/NONE
+// PROVEN: 245edc1b IDENTICAL/IDENTICAL
 // OFFSET: 0x00959930/0x1406CBF50
 void CGActionBar::EnterWorld() {
     CGActionBar::UpdateUsable();

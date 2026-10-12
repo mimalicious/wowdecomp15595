@@ -196,7 +196,7 @@ void luaK_patchlist (FuncState *fs, int list, int target) {
 
 
 // PROVEN: 2c1b5170 IDENTICAL/NONE
-// OFFSET: 0x0042EFA0
+// OFFSET: 0x0042EFA0/0x140036AD0
 void luaK_patchtohere (FuncState *fs, int list) {
   luaK_getlabel(fs);
   luaK_concat(fs, &fs->jpc, list);
@@ -382,7 +382,7 @@ static int code_label (FuncState *fs, int A, int b, int jump) {
 }
 
 
-// OFFSET: 0x0042F0D0
+// OFFSET: 0x0042F0D0/0x140036C10
 static void discharge2reg (FuncState *fs, expdesc *e, int reg) {
   luaK_dischargevars(fs, e);
   switch (e->k) {
@@ -422,7 +422,7 @@ static void discharge2reg (FuncState *fs, expdesc *e, int reg) {
 }
 
 
-// OFFSET: 0x0042F1E0
+// OFFSET: 0x0042F1E0/0x140036D60
 static void discharge2anyreg (FuncState *fs, expdesc *e) {
   if (e->k != VNONRELOC) {
     luaK_reserveregs(fs, 1);
@@ -480,8 +480,8 @@ int luaK_exp2anyreg (FuncState *fs, expdesc *e) {
 }
 
 
-// PROVEN: f5a4e274 IDENTICAL/NONE
-// OFFSET: 0x0042F440
+// PROVEN: f5a4e274 IDENTICAL/DIFFERENT
+// OFFSET: 0x0042F440/0x140037080
 void luaK_exp2val (FuncState *fs, expdesc *e) {
   if (hasjumps(e))
     luaK_exp2anyreg(fs, e);
@@ -650,7 +650,7 @@ static void luaK_goiffalse (FuncState *fs, expdesc *e) {
 
 
 // PROVEN: 3118cb9b IDENTICAL/NONE
-// OFFSET: 0x0042F8D0
+// OFFSET: 0x0042F8D0/0x1400377B0
 static void codenot (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   switch (e->k) {

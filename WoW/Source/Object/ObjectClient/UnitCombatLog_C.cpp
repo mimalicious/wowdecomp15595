@@ -40,7 +40,7 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00CA7818
+// STATIC: 0x00CA7818/0x140B47300
 static const char* s_combatLogEventNames[50] = {
     "ENVIRONMENTAL_DAMAGE",
     "SWING_DAMAGE",
@@ -94,7 +94,7 @@ static const char* s_combatLogEventNames[50] = {
     "UNIT_DISSIPATES"
 };
 
-// STATIC: 0x00CA78E0
+// STATIC: 0x00CA78E0/0x140B47490
 static const char* s_combatTextTypes[48] = {
     "INTERRUPT",
     "DAMAGE_CRIT",
@@ -146,49 +146,49 @@ static const char* s_combatTextTypes[48] = {
     "ARENA_POINTS_GAINED"
 };
 
-// STATIC: 0x00CA79F8
+// STATIC: 0x00CA79F8/0x140B476C0
 static const uint32_t s_mechanicTextColor = 0xFFFFDE00;
 
-// STATIC: 0x00CA7A04
+// STATIC: 0x00CA7A04/0x140B476D0
 static TSList<InvalidatedName, TSGetLink<InvalidatedName> > s_invalidatedNames;
 
-// STATIC: 0x00CA7A10
+// STATIC: 0x00CA7A10/0x140B476E8
 static TSList<PendingCombatLogData, TSGetLink<PendingCombatLogData> > s_pendingData;
 
-// STATIC: 0x00CA7A1C
+// STATIC: 0x00CA7A1C/0x140B47700
 static TSList<PendingCombatLogData, TSGetLink<PendingCombatLogData> > s_freePendingData;
 
-// STATIC: 0x00CA7A28
+// STATIC: 0x00CA7A28/0x140B47718
 TSList<CombatLogFilter, TSGetLink<CombatLogFilter> > s_filters;
 
-// STATIC: 0x00CA7A34
+// STATIC: 0x00CA7A34/0x140B47730
 TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_entries;
 
-// STATIC: 0x00CA7A40
+// STATIC: 0x00CA7A40/0x140B47748
 static TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_freeEntries;
 
-// STATIC: 0x00DD82E0
+// STATIC: 0x00DD82E0/0x140CBEA50
 WOWGUID s_combatTextActiveUnit;
 
-// STATIC: 0x00DD82E8
+// STATIC: 0x00DD82E8/0x140CBEA58
 static uint32_t s_startTimeMs;
 
 // STATIC: 0x00DD82EC
 static uint32_t s_startTime;
 
-// STATIC: 0x00DD82F0
+// STATIC: 0x00DD82F0/0x140CBEA68
 CombatLogEntry* s_currentEntry;
 
-// STATIC: 0x00DD82F4
+// STATIC: 0x00DD82F4/0x140CBEA70
 CombatLogEntry* s_pendingEntries;
 
 // STATIC: 0x00DD8560
 static char s_unknownObjectName[256];
 
-// STATIC: 0x00CF0CA4
+// STATIC: 0x00CF0CA4/0x140B91550
 const char* g_spellMissStrings[12] = { "NONE", "MISS", "RESIST", "DODGE", "PARRY", "BLOCK", "EVADE", "IMMUNE", "IMMUNE", "DEFLECT", "ABSORB", "REFLECT" };
 
-// STATIC: 0x00C9CBD4
+// STATIC: 0x00C9CBD4/0x140B36B38
 static const char* s_environmentalDamageTypes[6] = { "FATIGUE", "DROWNING", "FALLING", "LAVA", "SLIME", "FIRE" };
 
 // INLINED
@@ -215,7 +215,7 @@ inline InvalidatedName::~InvalidatedName() {
     SMemFree(this->m_name, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x005F34F0
+// OFFSET: 0x005F34F0/0x140279050
 uint32_t GetCombatLogObjectRaidFlags(const WOWGUID& guid) {
     if (!guid) {
         return 0x80000000;
@@ -295,6 +295,7 @@ bool CombatLogFlagsMatch(uint32_t flags, uint32_t mask, uint32_t raidFlags, uint
     return false;
 }
 
+// PROVEN: f32a3c90 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F3660/0x1402765A0
 void CombatLogEntry::SetFailReason(const char* reason) {
     this->m_infoFlags |= 0x2;
@@ -309,7 +310,7 @@ void CombatLogEntry::SetAuraValues(const int32_t* values) {
     this->m_info.m_values[5] = values[2];
 }
 
-// OFFSET: 0x005F36C0
+// OFFSET: 0x005F36C0/0x1402765E0
 void __stdcall CheckToSanitizeUnitLowGuid(WOWGUID* guid) {
     uint32_t high = guid->m_guid >> 32;
 
@@ -433,54 +434,63 @@ static void PackBool(uint32_t& remaining, char*& cursor, int32_t value) {
     }
 }
 
+// PROVEN: a7ca3f59 IDENTICAL/NONE
 // OFFSET: 0x005F38C0
 bool IsCombatTextActiveUnit(WOWGUID guid) {
     return s_combatTextActiveUnit == guid;
 }
 
+// PROVEN: 582f5d14 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F38F0/0x140276660
 void SendToCombatText(int32_t type, const char* text, int32_t amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d", s_combatTextTypes[type], text, amount);
 }
 
+// PROVEN: a0b80af3 IDENTICAL/NONE
 // OFFSET: 0x005F3920
 void SendToCombatText(int32_t type, const char* text, int32_t amount, int32_t overflow) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d%d", s_combatTextTypes[type], text, amount, overflow);
 }
 
+// PROVEN: 995ba76b IDENTICAL/NONE
 // OFFSET: 0x005F3950
 void SendToCombatText(int32_t type, int32_t amount, int32_t overflow) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%d%d", s_combatTextTypes[type], amount, overflow);
 }
 
+// PROVEN: c5148706 IDENTICAL/NONE
 // OFFSET: 0x005F3980
 void SendToCombatText(int32_t type, int32_t amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%d", s_combatTextTypes[type], amount);
 }
 
+// PROVEN: 0e1c57f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F39B0/0x1402766A0
 void SendToCombatText(int32_t type, float amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%f", s_combatTextTypes[type], amount);
 }
 
+// PROVEN: b7196b79 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F39E0/0x1402766D0
 void SendToCombatText(int32_t type, const char* text) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s", s_combatTextTypes[type], text);
 }
 
+// PROVEN: 928958aa IDENTICAL/NONE
 // OFFSET: 0x005F3A10
 void SendToCombatText(int32_t type) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s", s_combatTextTypes[type]);
 }
 
-// OFFSET: 0x005F3BC0
+// PROVEN: 26502f04 IDENTICAL/DIFFERENT
+// OFFSET: 0x005F3BC0/0x1402785A0
 void UnitCombatLogProcGo(const WOWGUID& casterGuid, const SpellRec* spell) {
     if (s_combatTextActiveUnit == casterGuid && (spell->m_attributesExF & 0x40)) {
         FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s", s_combatTextTypes[30], static_cast<const char*>(spell->m_name));
     }
 }
 
-// OFFSET: 0x005F3DD0
+// OFFSET: 0x005F3DD0/0x140276AE0
 void CombatLogEntry::Clear() {
     this->m_event = -1;
     this->m_pendingMask = 0;
@@ -1116,7 +1126,8 @@ bool SpellHasLearnSpellEffect(const SpellRec* spell) {
     return false;
 }
 
-// OFFSET: 0x005F4FB0
+// PROVEN: aaebc19f DIFFERENT/IDENTICAL
+// OFFSET: 0x005F4FB0/0x140278490
 bool SpellHasOpenLockEffect(const SpellRec* spell) {
     uint32_t count;
     const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
@@ -1479,7 +1490,7 @@ bool CombatLogEntry::MatchesFilter() {
     return false;
 }
 
-// OFFSET: 0x005F59D0
+// OFFSET: 0x005F59D0/0x140279170
 void SendCombatLogEvents() {
     char buffer[4099];
     bool logging = CGChat::IsChatLogging(1) != 0;
@@ -1527,6 +1538,7 @@ void SendCombatLogEvents() {
     lua_settop(L, -2);
 }
 
+// PROVEN: 2e2f2179 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F5E60/0x140279680
 PendingCombatLogData* GetPendingCombatLogData(CombatLogEntry* entry, const WOWGUID& guid, uint32_t mask) {
     PendingCombatLogData* data = s_freePendingData.Head();
@@ -1699,7 +1711,7 @@ void CombatLogEntry::PendingCombatLogResolved(int32_t id, const WOWGUID& guid, v
     s_freePendingData.LinkToTail(data);
 }
 
-// OFFSET: 0x005F67F0
+// OFFSET: 0x005F67F0/0x14027A2D0
 const char* CombatLogEntry::GetObjectName(const WOWGUID& guid, uint32_t mask, const char** realm) {
     PendingCombatLogData* data = GetPendingCombatLogData(this, guid, mask);
     uint32_t high = guid.m_guid >> 32;
@@ -1789,7 +1801,8 @@ void CombatLogEntry::CancelPendingCallbacks() {
     }
 }
 
-// OFFSET: 0x005F6AA0
+// PROVEN: 6fd5fcb3 IDENTICAL/NONE
+// OFFSET: 0x005F6AA0/0x14027A610
 void CombatLogEntry::SetSource(const WOWGUID& guid) {
     this->m_sourceGuid = guid;
     this->m_sourceName = this->GetObjectName(guid, 1, &this->m_sourceRealm);
@@ -1892,7 +1905,7 @@ void QueueCombatLogEntry(CombatLogEntry* entry, uint32_t timeOffset) {
     }
 }
 
-// OFFSET: 0x005F6D40
+// OFFSET: 0x005F6D40/0x14027AB00
 static void SendMissEvent(const SpellRec* spell, const WOWGUID& source, const WOWGUID& dest, int32_t event, int32_t missType, int32_t amount, int32_t timeOffset, bool offHand) {
     CombatLogEntry* entry = GetCombatLogEntry(source, dest, event, spell);
     entry->SetMissInfo(missType, amount, offHand);
@@ -1947,7 +1960,7 @@ static void SendMissEvent(const SpellRec* spell, const WOWGUID& source, const WO
     QueueCombatLogEntry(entry, timeOffset);
 }
 
-// OFFSET: 0x005F6E60
+// OFFSET: 0x005F6E60/0x14027AD90
 static void SendDamageEvent(const WOWGUID& dest, int32_t event, const WOWGUID& source, const SpellRec* spell, int32_t damage, int32_t overkill, int32_t school, int32_t resisted, int32_t blocked, int32_t absorbed, bool critical, bool glancing, bool crushing, int32_t timeOffset, bool offHand) {
     CGUnit_C* unit;
 
@@ -2038,7 +2051,7 @@ static void SendHealEvent(const SpellRec* spell, const WOWGUID& source, int32_t 
     }
 }
 
-// OFFSET: 0x005F71D0
+// OFFSET: 0x005F71D0/0x14027B230
 static void SendEnergizeEvent(const WOWGUID& dest, int32_t powerType, int32_t event, const WOWGUID& source, const SpellRec* spell, int32_t amount, int32_t timeOffset) {
     int32_t alternatePower = -1;
     int32_t displayAmount = amount / static_cast<int32_t>(Spell_C_GetPowerDisplayMod(powerType));
@@ -2063,7 +2076,7 @@ static void SendEnergizeEvent(const WOWGUID& dest, int32_t powerType, int32_t ev
     }
 }
 
-// OFFSET: 0x005F72A0
+// OFFSET: 0x005F72A0/0x14027B340
 static void AddPowerDrainEntry(const WOWGUID& dest, int32_t event, const WOWGUID& source, const SpellRec* spell, int32_t amount, int32_t powerType, int32_t extraAmount, int32_t timeOffset) {
     uint32_t mod = Spell_C_GetPowerDisplayMod(powerType);
     int32_t displayAmount = amount / static_cast<int32_t>(mod);
@@ -2095,7 +2108,7 @@ static void AddPowerDrainEntry(const WOWGUID& dest, int32_t event, const WOWGUID
     }
 }
 
-// OFFSET: 0x005F73D0
+// OFFSET: 0x005F73D0/0x14027B4B0
 static int32_t Packet_SMSG_PARTY_KILL_LOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t value = 0;
     msg->Get(value);
@@ -2108,7 +2121,7 @@ static int32_t Packet_SMSG_PARTY_KILL_LOG(void* param, NETMESSAGE msgId, uint32_
     return 1;
 }
 
-// OFFSET: 0x005F7440
+// OFFSET: 0x005F7440/0x14027B530
 static int32_t Packet_SMSG_PROC_RESIST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t value = 0;
     msg->Get(value);
@@ -2172,7 +2185,7 @@ static int32_t Packet_SMSG_DISPEL_FAILED(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// OFFSET: 0x005F7680
+// OFFSET: 0x005F7680/0x14027B800
 static int32_t Packet_SMSG_ENCHANTMENT_LOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID target;
     SmartGUID caster;
@@ -2417,7 +2430,7 @@ void UnitCombatLog(const ATTACKROUNDINFO& info) {
     QueueCombatLogEntry(entry, 0);
 }
 
-// OFFSET: 0x005F7F10
+// OFFSET: 0x005F7F10/0x14027C2C0
 void UnitCombatLogCastStart(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(caster, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -2443,7 +2456,7 @@ void UnitCombatLogCastStart(const WOWGUID& caster, const WOWGUID& target, const 
     }
 }
 
-// OFFSET: 0x005F7FF0
+// OFFSET: 0x005F7FF0/0x14027C3B0
 void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(caster, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -2484,7 +2497,7 @@ void UnitCombatLogSpellFail(const WOWGUID& caster, const SpellRec* spell, const 
     QueueCombatLogEntry(entry, 0);
 }
 
-// OFFSET: 0x005F8170
+// OFFSET: 0x005F8170/0x14027C580
 void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, uint32_t missType, bool damageShield, bool periodic, int32_t timeOffset) {
     if (!missType || !spell || (spell->m_attributes & 0x180) || !*spell->m_name) {
         return;
@@ -2510,7 +2523,7 @@ void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGu
     SendMissEvent(spell, casterGuid, targetGuid, event, missType, 0, timeOffset, false);
 }
 
-// OFFSET: 0x005F8260
+// OFFSET: 0x005F8260/0x14027C6C0
 void UnitCombatLogSpellDamage(const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t damage, int32_t overkill, int32_t school, int32_t absorbed, int32_t resisted, int32_t blocked, int32_t hitInfo, bool periodic, int32_t timeOffset) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name) {
         return;
@@ -2570,7 +2583,7 @@ void UnitCombatLogSpellDamage(const WOWGUID& source, const WOWGUID& dest, const 
     QueueCombatLogEntry(entry, 0);
 }
 
-// OFFSET: 0x005F8460/0x14027C410
+// OFFSET: 0x005F8460
 void UnitCombatLogHeal(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t amount, int32_t overheal, int32_t absorbed, bool crit, bool periodic, int32_t timeOffset) {
     if (!amount && !overheal && !absorbed) {
         return;
@@ -2588,7 +2601,7 @@ void UnitCombatLogHeal(const WOWGUID& casterGuid, const WOWGUID& targetGuid, con
     }
 }
 
-// OFFSET: 0x005F8520
+// OFFSET: 0x005F8520/0x14027CAA0
 void UnitCombatLogEnergize(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t powerType, int32_t amount, bool periodic, int32_t timeOffset) {
     if (!amount) {
         return;
@@ -2605,7 +2618,7 @@ void UnitCombatLogEnergize(const WOWGUID& casterGuid, const WOWGUID& targetGuid,
     }
 }
 
-// OFFSET: 0x005F85A0
+// OFFSET: 0x005F85A0/0x14027CB70
 void UnitCombatLogPowerDrain(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t powerType, int32_t amount, float multiplier, bool periodic, int32_t timeOffset, bool leech) {
     if (!amount) {
         return;
@@ -2637,7 +2650,7 @@ void UnitCombatLogPowerDrain(const WOWGUID& casterGuid, const WOWGUID& targetGui
     AddPowerDrainEntry(targetGuid, periodic ? 37 : 12, casterGuid, spell, amount, powerType, extra, timeOffset);
 }
 
-// OFFSET: 0x005F8660
+// OFFSET: 0x005F8660/0x14027CC80
 void UnitCombatLogInstakill(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell) {
     if (spell && !(spell->m_attributes & 0x180) && *spell->m_name) {
         QueueCombatLogEntry(GetCombatLogEntry(casterGuid, targetGuid, 14, spell), 0);
@@ -2718,7 +2731,7 @@ void UnitCombatLogDurabilityDamageAll(const WOWGUID& casterGuid, const WOWGUID& 
     }
 }
 
-// OFFSET: 0x005F8930
+// OFFSET: 0x005F8930/0x14027D0A0
 void UnitCombatLogAuraAddedOrRemoved(CGUnit_C* unit, AuraData* aura, const SpellRec* spell, bool added) {
     CGUnit_C* caster = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(aura->m_creator, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -2834,7 +2847,7 @@ void UnitCombatLogAuraBroken(const WOWGUID& casterGuid, const WOWGUID& targetGui
     }
 }
 
-// OFFSET: 0x005F8D80
+// OFFSET: 0x005F8D80/0x14027D660
 void UnitCombatLogAuraRefreshed(CGUnit_C* unit, AuraData* aura, const SpellRec* spell) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name || ((spell->m_attributes & 0x40) && !(spell->m_attributesExI & 0x20000000)) || (spell->m_attributesExF & 0x400) || (spell->m_attributesExI & 0x8)) {
         return;
@@ -2860,7 +2873,7 @@ void UnitCombatLogAuraRefreshed(CGUnit_C* unit, AuraData* aura, const SpellRec* 
     UnitCombatLogSpellMechanic(guid, aura, spell, aura->m_flags);
 }
 
-// OFFSET: 0x005F8ED0
+// OFFSET: 0x005F8ED0/0x14027D800
 void UnitCombatLogDamageShield(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t damage, int32_t overkill, int32_t school, int32_t absorbed) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name) {
         return;
@@ -2895,7 +2908,7 @@ void UnitCombatLogDamageShield(const WOWGUID& casterGuid, const WOWGUID& targetG
     }
 }
 
-// OFFSET: 0x005F8FA0
+// OFFSET: 0x005F8FA0/0x14027D940
 void UnitCombatLogSplitDamage(const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t damage, int32_t overkill, int32_t school, int32_t absorbed, int32_t resisted, int32_t blocked, int32_t hitInfo, int32_t timeOffset) {
     if (!spell || (spell->m_attributes & 0x180) || !*spell->m_name) {
         return;
@@ -3024,7 +3037,7 @@ void UnitCombatLogBuildingHeal(const WOWGUID& caster, const WOWGUID& owner, cons
     }
 }
 
-// OFFSET: 0x00558AA0
+// OFFSET: 0x00558AA0/0x1401B5E00
 int32_t CombatLog::HandleSpellLogMiss(CDataStore* msg, int32_t timeOffset) {
     uint32_t spellId = 0;
     msg->Get(spellId);
@@ -3186,7 +3199,7 @@ int32_t CombatLog::HandleSpellLogExecute(CDataStore* msg, int32_t timeOffset) {
     return 1;
 }
 
-// OFFSET: 0x00559290
+// OFFSET: 0x00559290/0x1401B67C0
 int32_t CombatLog::HandleSpellNonMeleeDamageLog(CDataStore* msg, int32_t timeOffset) {
     SmartGUID target;
     *msg >> target;
@@ -3284,7 +3297,7 @@ int32_t CombatLog::HandleSpellNonMeleeDamageLog(CDataStore* msg, int32_t timeOff
     return 1;
 }
 
-// OFFSET: 0x00559670
+// OFFSET: 0x00559670/0x1401B6CF0
 int32_t CombatLog::HandleSpellHealLog(CDataStore* msg, int32_t timeOffset) {
     SmartGUID target;
     *msg >> target;
@@ -3523,12 +3536,13 @@ int32_t CombatLog::HandlePeriodicAuraLog(CDataStore* msg, int32_t timeOffset) {
     return 1;
 }
 
+// PROVEN: 986a7bfb IDENTICAL/NONE
 // OFFSET: 0x005F98C0
 static int32_t Packet_SMSG_SPELL_PERIODIC_AURA_LOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     return CombatLog::HandlePeriodicAuraLog(msg, 0);
 }
 
-// OFFSET: 0x005F98E0
+// OFFSET: 0x005F98E0/0x14027E5D0
 static int32_t Packet_SMSG_DESTRUCTIBLE_BUILDING_DAMAGE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID building;
     SmartGUID caster;
@@ -3551,7 +3565,7 @@ static int32_t Packet_SMSG_DESTRUCTIBLE_BUILDING_DAMAGE(void* param, NETMESSAGE 
     return 1;
 }
 
-// OFFSET: 0x005F9A80
+// OFFSET: 0x005F9A80/0x14027E910
 void UnitCombatLogReset() {
     s_entries.Clear();
     s_freeEntries.Clear();
@@ -3578,7 +3592,8 @@ void UnitCombatLogInitialize() {
     ClientServices::SetMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, Packet_SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, NULL);
 }
 
-// OFFSET: 0x005F9BA0
+// PROVEN: 678b4a9d IDENTICAL/UNPROVEN
+// OFFSET: 0x005F9BA0/0x14027EA60
 void UnitCombatLogShutdown() {
     UnitCombatLogReset();
     ClientServices::ClearMessageHandler(SMSG_SPELL_PERIODIC_AURA_LOG);
@@ -3589,6 +3604,7 @@ void UnitCombatLogShutdown() {
     ClientServices::ClearMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE);
 }
 
+// PROVEN: 7e5f10bf IDENTICAL/IDENTICAL
 // OFFSET: 0x005FF760/0x140283870
 bool ShouldShowFeedback(const ATTACKROUNDINFO& info) {
     return !info.m_meleeSpellId || info.m_victimState == 1;

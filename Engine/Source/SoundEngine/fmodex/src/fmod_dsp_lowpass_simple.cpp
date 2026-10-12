@@ -125,8 +125,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPLowPassSimple::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ddceee32 IDENTICAL/NONE
-// OFFSET: 0x00A9DF40
+// PROVEN: ddceee32 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A9DF40/0x14085E850
 FMOD_RESULT DSPLowPassSimple::createInternal()
 {
     int count;
@@ -204,7 +204,7 @@ FMOD_RESULT DSPLowPassSimple::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4b883534 IDENTICAL/NONE
+// PROVEN: 4b883534 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9D6F0/0x14085E020
 FMOD_RESULT DSPLowPassSimple::updateCoefficients(float cutoffhz)
 {
@@ -264,7 +264,7 @@ FMOD_RESULT DSPLowPassSimple::updateCoefficients(float cutoffhz)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A9D7C0
+// OFFSET: 0x00A9D7C0/0x14085E0E0
 FMOD_RESULT DSPLowPassSimple::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     static float dc = (float)1E-20;
@@ -598,7 +598,7 @@ FMOD_RESULT F_CALLBACK DSPLowPassSimple::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fbf0740c IDENTICAL/NONE
+// PROVEN: fbf0740c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9DE50/0x14085E900
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::resetCallback(FMOD_DSP_STATE *dsp)
 {
@@ -625,7 +625,7 @@ FMOD_RESULT F_CALLBACK DSPLowPassSimple::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A9DE90
+// OFFSET: 0x00A9DE90/0x14085E7B0
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPLowPassSimple *lowpass_simple = (DSPLowPassSimple *)dsp;

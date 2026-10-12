@@ -4,14 +4,14 @@
 
 bool g_clientDbPerformCompress;
 
-// STATIC: 0x00C9AA10
+// STATIC: 0x00C9AA10/0x140B33A00
 ClientDBTable g_staticDBTables[] = {
     { &g_soundEntriesAdvancedDB, &SoundEntriesAdvancedRec::s_meta },
     { &g_soundEntriesDB, &SoundEntriesRec::s_meta },
     { NULL, NULL },
 };
 
-// STATIC: 0x00C9AA28
+// STATIC: 0x00C9AA28/0x140B33A30
 ClientDBTable g_staticDBGlueTables[] = {
     { &g_animationDataDB, &AnimationDataRec::s_meta },
     { &g_areaTableDB, &AreaTableRec::s_meta },
@@ -21,7 +21,7 @@ ClientDBTable g_staticDBGlueTables[] = {
     { NULL, NULL },
 };
 
-// STATIC: 0x00C9AA58
+// STATIC: 0x00C9AA58/0x140B33A90
 ClientDBTable g_staticDBWorldTables[] = {
     { &g_footprintTexturesDB, &FootprintTexturesRec::s_meta },
     { &g_groundEffectDoodadDB, &GroundEffectDoodadRec::s_meta },
@@ -44,7 +44,7 @@ ClientDBTable g_staticDBWorldTables[] = {
     { NULL, NULL },
 };
 
-// OFFSET: 0x0048AAD0
+// OFFSET: 0x0048AAD0/0x1400ADB00
 void StaticDBUnloadAll() {
     for (ClientDBTable* table = g_staticDBTables; table->m_db; table++) {
         table->m_db->Unload(table->m_meta);
@@ -66,7 +66,7 @@ WowClientDB_Common::WowClientDB_Common() {
     this->m_minID = 0;
 }
 
-// PROVEN: 854c3dfe IDENTICAL/NONE
+// PROVEN: 854c3dfe IDENTICAL/DIFFERENT
 // OFFSET: 0x0048AB40/0x1400ADBA0
 void WowClientDB_Common::Load(const DBCMeta* meta) {
     char error[256];
@@ -104,7 +104,7 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
     this->LoadRecords(meta, data, header[1], rows, header[4], reinterpret_cast<const char*>(&rows[header[1] * meta->m_rowSize]));
 }
 
-// PROVEN: 1e707c58 IDENTICAL/NONE
+// PROVEN: 1e707c58 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048AC70/0x1400ADD20
 void WowClientDB_Common::Unload(const DBCMeta* meta) {
     this->Free();
@@ -113,7 +113,7 @@ void WowClientDB_Common::Unload(const DBCMeta* meta) {
     this->m_minID = 0xFFFFFFF;
 }
 
-// PROVEN: b563673a IDENTICAL/NONE
+// PROVEN: b563673a IDENTICAL/IDENTICAL
 // OFFSET: 0x0048ACA0/0x1400ADD50
 WowClientDB_Base::WowClientDB_Base() {
     this->m_data = NULL;
@@ -121,7 +121,7 @@ WowClientDB_Base::WowClientDB_Base() {
     this->m_recordsById = NULL;
 }
 
-// PROVEN: 8dd94dbb IDENTICAL/NONE
+// PROVEN: 8dd94dbb IDENTICAL/DIFFERENT
 // OFFSET: 0x0048ACD0/0x1400ADD80
 void WowClientDB_Base::Free() {
     SMemFree(this->m_data, __FILE__, __LINE__, 0);
@@ -163,7 +163,7 @@ void WowClientDB_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint32_t 
     }
 }
 
-// PROVEN: 0d82be0b IDENTICAL/NONE
+// PROVEN: 0d82be0b IDENTICAL/IDENTICAL
 // OFFSET: 0x0048AE00/0x1400ADEF0
 WowClientDB_RLE_Base::WowClientDB_RLE_Base() {
     this->m_data = NULL;
@@ -172,7 +172,7 @@ WowClientDB_RLE_Base::WowClientDB_RLE_Base() {
     this->m_recordsById = NULL;
 }
 
-// PROVEN: 8ce3b1ac IDENTICAL/NONE
+// PROVEN: 8ce3b1ac IDENTICAL/IDENTICAL
 // OFFSET: 0x0048AE30/0x1400ADF20
 void WowClientDB_RLE_Base::Free() {
     if (this->m_data) {
@@ -312,7 +312,7 @@ void WowClientDB_RLE_Base::CopyRecord(void* rec, const uint8_t* row, uint8_t* bu
     }
 }
 
-// PROVEN: 070f929c IDENTICAL/NONE
+// PROVEN: 070f929c IDENTICAL/DIFFERENT
 // OFFSET: 0x0048AEB0/0x1400ADFD0
 uint8_t* DecompressRow(const uint8_t* src, uint32_t size, uint8_t* dst) {
     uint8_t* end = &dst[size];

@@ -15,7 +15,7 @@
 
 static const uint32_t s_texelSize[GxTexFormats_Last] = { 0, 4, 4, 2, 2, 2, 2, 2, 4, 4, 2, 4, 8, 4, 4, 16, 4, 4, 2, 4, 4, 4, 4, 4 };
 
-// STATIC: 0x00D08870
+// STATIC: 0x00D08870/0x140BB9F60
 static BlitFormat s_blitFormats[GxTexFormats_Last] = {
     BlitFormat_Unknown, BlitFormat_Abgr8888, BlitFormat_Argb8888, BlitFormat_Argb4444, BlitFormat_Argb1555, BlitFormat_Rgb565, BlitFormat_Uv88, BlitFormat_Dxt1,
     BlitFormat_Dxt3, BlitFormat_Dxt5, BlitFormat_Unknown, BlitFormat_Gr1616F, BlitFormat_Abgr16161616F, BlitFormat_Unknown, BlitFormat_R32F, BlitFormat_Abgr32323232F,
@@ -24,13 +24,13 @@ static BlitFormat s_blitFormats[GxTexFormats_Last] = {
 
 const char* g_gxApiNames[GxApis_Last] = { "OpenGL", "D3D9", "D3D11", "GLL" };
 
-// STATIC: 0x00D0853C
+// STATIC: 0x00D0853C/0x140BB9A50
 const char* g_gxShaderTargetNames[GxShTargets_Last] = { "Vertex", "Hull", "Domain", "Geometry", "Pixel", "Compute" };
 
 // STATIC: 0x00D08554
 const char* g_gxShaderModelNames[8] = { "ff", "nvrc", "ff_ps", "1_1", "2_0", "3_0", "4_0", "5_0" };
 
-// STATIC: 0x00D08860
+// STATIC: 0x00D08860/0x140BB996C
 static EGxApi s_requestedApi = GxApis_Last;
 
 // STATIC: 0x00EC6680/0x140DB87C8
@@ -45,24 +45,25 @@ static uint32_t s_apiSupported;
 // STATIC: 0x00EC6688/0x140DB87D0
 static uint32_t s_apiSelectable;
 
-// STATIC: 0x00EBF470
+// STATIC: 0x00EBF470/0x140DB14E0
 static EGxPrim s_lockPrimType;
 
 // STATIC: 0x00EC6684/0x140DB87CC
 static uint32_t s_maxFPS;
 
-// STATIC: 0x00EBF474
+// STATIC: 0x00EBF474/0x140DB14E4
 static uint32_t s_lockIndexCount;
 
-// STATIC: 0x00EBF478
+// STATIC: 0x00EBF478/0x140DB14E8
 static uint32_t s_lockVertexCount;
 
-// STATIC: 0x00DD8B10
+// STATIC: 0x00DD8B10/0x140CBF340
 static bool s_drawListBusy;
 
-// STATIC: 0x00DD8B14
+// STATIC: 0x00DD8B14/0x140CBF350
 static TSGrowableArray<GxDrawListEntry> s_drawLists[GxuCats_Last];
 
+// PROVEN: ff8e98be UNPROVEN/IDENTICAL
 // OFFSET: [0x006128A0/0x14029DB40]
 GxuDrawListState::~GxuDrawListState() {
 }
@@ -71,8 +72,8 @@ GxuDrawListState::~GxuDrawListState() {
 GxuDrawListItem::~GxuDrawListItem() {
 }
 
-// PROVEN: ebf9e54d IDENTICAL/NONE
-// OFFSET: 0x006128C0
+// PROVEN: ebf9e54d IDENTICAL/IDENTICAL
+// OFFSET: 0x006128C0/0x140586E10
 float GxuDrawListItem::GetDepth(const C3Vector& viewPos) {
     return 0.0f;
 }
@@ -83,9 +84,9 @@ GxuDrawListState* GxuDrawListItem::GetState() {
     return NULL;
 }
 
-// PROVEN: f1cd06b0 IDENTICAL/IDENTICAL
+// PROVEN: c6be7be4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
-uint32_t GxuDrawListItem::GetVtxStream() {
+uintptr_t GxuDrawListItem::GetVtxStream() {
     return 0;
 }
 
@@ -112,17 +113,17 @@ static int DrawListSorterB2F(const void* a, const void* b) {
     return depthB > depthA;
 }
 
-// PROVEN: fa45fcf0 IDENTICAL/DIFFERENT
+// PROVEN: fa45fcf0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00612930/0x14029DBB0
 static void DrawListPreprocessVtxStream(GxDrawListEntry* entry, const C3Vector& viewPos) {
     entry->m_vtxStream = entry->m_item->GetVtxStream();
 }
 
-// PROVEN: 7349a485 IDENTICAL/DIFFERENT
+// PROVEN: c4a52878 IDENTICAL/DIFFERENT
 // OFFSET: 0x00612950/0x14029DBD0
 static int DrawListSorterVtxStream(const void* a, const void* b) {
-    uint32_t streamA = static_cast<const GxDrawListEntry*>(a)->m_vtxStream;
-    uint32_t streamB = static_cast<const GxDrawListEntry*>(b)->m_vtxStream;
+    uintptr_t streamA = static_cast<const GxDrawListEntry*>(a)->m_vtxStream;
+    uintptr_t streamB = static_cast<const GxDrawListEntry*>(b)->m_vtxStream;
 
     if (streamB > streamA) {
         return -1;
@@ -131,10 +132,10 @@ static int DrawListSorterVtxStream(const void* a, const void* b) {
     return streamB < streamA;
 }
 
-// STATIC: 0x00CA8544
+// STATIC: 0x00CA8544/0x000B48570
 static void (*s_drawListPreprocess[GxuSorts_Last])(GxDrawListEntry*, const C3Vector&) = { DrawListPreprocessB2F, DrawListPreprocessVtxStream };
 
-// STATIC: 0x00CA854C
+// STATIC: 0x00CA854C/0x000B48580
 static int (*s_drawListSorters[GxuSorts_Last])(const void*, const void*) = { DrawListSorterB2F, DrawListSorterVtxStream };
 
 // PROVEN: d10f29a8 IDENTICAL/DIFFERENT
@@ -161,37 +162,37 @@ uint32_t GxVertexSize(EGxVertexBufferFormat format) {
     return Buffer::s_vertexBufDesc[format].size;
 }
 
-// PROVEN: 4d016c89 IDENTICAL/NONE
+// PROVEN: 4d016c89 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FF80/0x14056BD70
 int32_t GxAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo) {
     return CGxDevice::AdapterID(vendorID, deviceID, driverVersionHi, driverVersionLo);
 }
 
-// PROVEN: c9f555f7 IDENTICAL/NONE
+// PROVEN: c9f555f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FF90/0x14056BD80
 int32_t GxAdapterInfer(uint16_t& deviceID) {
     return CGxDevice::AdapterInfer(deviceID);
 }
 
-// PROVEN: 433cf364 IDENTICAL/NONE
+// PROVEN: 433cf364 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FFA0/0x14056BD90
 int32_t GxAdapterD3dAvailable() {
     return CGxDevice::AdapterD3dAvailable();
 }
 
-// PROVEN: bd0e1850 IDENTICAL/NONE
+// PROVEN: bd0e1850 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FFB0/0x14056BDA0
 int32_t GxAdapterHasDriver() {
     return CGxDevice::AdapterHasDriver();
 }
 
-// PROVEN: ca432153 IDENTICAL/NONE
+// PROVEN: ca432153 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FFE0/0x14056BDD0
 int32_t GxAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes) {
     return CGxDevice::AdapterMonitorModes(monitor, modes);
 }
 
-// PROVEN: 552dc9b1 IDENTICAL/UNPROVEN
+// PROVEN: 552dc9b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FFF0/0x14056BDE0
 int32_t GxAdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode) {
     return CGxDevice::AdapterDesktopMode(monitor, mode);
@@ -203,13 +204,13 @@ EGxApi GxGetRequestedApi() {
     return s_requestedApi;
 }
 
-// PROVEN: a03b6d50 IDENTICAL/NONE
+// PROVEN: a03b6d50 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FF70/0x14056BD60
 void GxSetRequestedApi(EGxApi api) {
     s_requestedApi = api;
 }
 
-// PROVEN: ee09dcee IDENTICAL/UNPROVEN
+// PROVEN: ee09dcee IDENTICAL/IDENTICAL
 // OFFSET: 0x0083FFC0/0x14056BDB0
 uint32_t GxAdapterMonitorCount() {
     return CGxDevice::AdapterMonitorCount();
@@ -221,14 +222,14 @@ int32_t GxAdapterMonitorName(uint32_t monitor, char* name, uint32_t size) {
     return CGxDevice::AdapterMonitorName(monitor, name, size);
 }
 
-// PROVEN: fb768403 IDENTICAL/NONE
-// OFFSET: 0x00840000
+// PROVEN: fb768403 IDENTICAL/UNPROVEN
+// OFFSET: 0x00840000/0x14056BDF0
 int32_t GxAdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     return CGxDevice::AdapterFormats(formats);
 }
 
-// PROVEN: 873aa4cf IDENTICAL/NONE
-// OFFSET: 0x00840050
+// PROVEN: 873aa4cf IDENTICAL/UNPROVEN
+// OFFSET: 0x00840050/0x14056BE40
 void GxStartUp() {
     CGxDevice::s_cursorVisible = 1;
     CGxDevice::s_cursorHotspotX = 0;
@@ -267,13 +268,13 @@ void* GxDevWindow() {
     return g_theGxDevicePtr->DeviceWindow();
 }
 
-// PROVEN: 1e2e22aa IDENTICAL/NONE
-// OFFSET: 0x008401C0
+// PROVEN: 1e2e22aa IDENTICAL/IDENTICAL
+// OFFSET: 0x008401C0/0x14056BFF0
 void GxPrimUnlockIndexPtr() {
     s_lockIndexCount = 0;
 }
 
-// PROVEN: 1034c42e IDENTICAL/NONE
+// PROVEN: 1034c42e IDENTICAL/IDENTICAL
 // OFFSET: 0x00840210/0x14056C050
 void GxSceneClearToViewport(uint32_t mask, CImVector color) {
     g_theGxDevicePtr->SceneClearToViewport(mask, color);
@@ -291,7 +292,7 @@ void GxTexSetFilterMode(EGxTexFilter filter, uint32_t maxAnisotropy) {
     g_theGxDevicePtr->TexSetFilterMode(filter, maxAnisotropy);
 }
 
-// PROVEN: 63aa73e2 IDENTICAL/NONE
+// PROVEN: 63aa73e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008403F0/0x14056C250
 int32_t GxTexResolve(CGxTex* dest, CGxTex* source) {
     return g_theGxDevicePtr->TexResolve(dest, source);
@@ -405,7 +406,7 @@ void GxXform(EGxXform xf, C44Matrix& matrix) {
     matrix = stack.m_mtx[stack.m_level];
 }
 
-// OFFSET: 0x00409FF0
+// OFFSET: 0x00409FF0/0x14000C650
 void GxXformProjNative(C44Matrix& matrix) {
     CGxDevice* device = g_theGxDevicePtr;
     matrix = device->m_projNative;
@@ -489,6 +490,7 @@ void GxDrawNonIndexed(const CGxBatch& batch) {
     g_theGxDevicePtr->DrawNonIndexed(batch);
 }
 
+// PROVEN: 38efe885 IDENTICAL/NONE
 // OFFSET: 0x004E0640
 void GxDraw(const CGxBatch& batch) {
     g_theGxDevicePtr->Draw(batch);
@@ -512,6 +514,7 @@ int32_t GxFrameBufferFinalize(CGxFrameBuffer* frameBuffer) {
     return g_theGxDevicePtr->FrameBufferFinalize(frameBuffer);
 }
 
+// PROVEN: aa0e1eac IDENTICAL/NONE
 // OFFSET: 0x00481D40
 int32_t GxFrameBufferAttach(CGxFrameBuffer* frameBuffer, EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     return g_theGxDevicePtr->FrameBufferAttach(frameBuffer, buffer, texture, plane);
@@ -549,14 +552,6 @@ void GxXformTranslate(EGxXform xf, const C3Vector& move) {
     stack.m_mtx[stack.m_level].Translate(move);
 }
 
-// INLINED
-void GxXformScale(EGxXform xf, const C3Vector& scale) {
-    CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[xf];
-    stack.m_dirty = 1;
-    stack.m_flags[stack.m_level] &= ~CGxMatrixStack::F_Identity;
-    stack.m_mtx[stack.m_level].Scale(scale);
-}
-
 // OFFSET: 0x00409F20
 int32_t GxHasContext() {
     return g_theGxDevicePtr ? g_theGxDevicePtr->CapsHasContext(-1) : 0;
@@ -567,6 +562,7 @@ int32_t GxIsWindowVisible() {
     return g_theGxDevicePtr ? g_theGxDevicePtr->CapsIsWindowVisible(-1) : 0;
 }
 
+// PROVEN: 5b57a5b8 IDENTICAL/NONE
 // OFFSET: 0x00430AF0
 int32_t GxMasterEnable(EGxMasterEnables state) {
     return g_theGxDevicePtr->MasterEnable(state);
@@ -614,14 +610,14 @@ void GxQueryCreate(CGxQuery*& query, EGxQueryType type) {
     g_theGxDevicePtr->QueryCreate(query, type);
 }
 
-// PROVEN: 07b2b081 IDENTICAL/NONE
+// PROVEN: 07b2b081 IDENTICAL/IDENTICAL
 // OFFSET: 0x008404D0/0x14056C310
 void GxQueryDestroy(CGxQuery*& query) {
     g_theGxDevicePtr->QueryDestroy(query);
 }
 
-// PROVEN: 6875628b IDENTICAL/NONE
-// OFFSET: 0x0084AEE0
+// PROVEN: 6875628b IDENTICAL/IDENTICAL
+// OFFSET: 0x0084AEE0/0x140579580
 void GxSetMaxFPS(uint32_t maxFPS) {
     s_maxFPS = maxFPS;
 }
@@ -632,8 +628,8 @@ uint32_t GxGetMaxFPS() {
     return s_maxFPS;
 }
 
-// PROVEN: 849b2a79 IDENTICAL/NONE
-// OFFSET: 0x0084AF00
+// PROVEN: 849b2a79 IDENTICAL/IDENTICAL
+// OFFSET: 0x0084AF00/0x1405795A0
 void GxSetMaxFPSBk(uint32_t maxFPSBk) {
     s_maxFPSBk = maxFPSBk;
 }
@@ -644,8 +640,8 @@ uint32_t GxGetMaxFPSBk() {
     return s_maxFPSBk;
 }
 
-// PROVEN: 194b7604 IDENTICAL/NONE
-// OFFSET: 0x0084AF20
+// PROVEN: 194b7604 IDENTICAL/IDENTICAL
+// OFFSET: 0x0084AF20/0x1405795C0
 void GxSetDepthResolveHandleCaching(int32_t enable) {
     s_depthResolveHandleCaching = enable;
 }
@@ -688,7 +684,7 @@ void GxBufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset) {
     buf->unk_001C = 1;
 }
 
-// PROVEN: 46e6b5a1 IDENTICAL/NONE
+// PROVEN: 46e6b5a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x008408C0/0x14056C620
 void GxDrawLockedElements() {
     if (!s_lockVertexCount) {
@@ -726,15 +722,10 @@ void GxXformViewProj(C44Matrix& matrix) {
     matrix = view * proj;
 }
 
-// PROVEN: 67242db9 IDENTICAL/NONE
+// PROVEN: 67242db9 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DFB80/0x14011FC10
 CGxBuf* GxBufStream(EGxPoolTarget target, uint32_t itemSize, uint32_t itemCount) {
     return g_theGxDevicePtr->BufStream(target, itemSize, itemCount);
-}
-
-// INLINED
-void GxXformPush(EGxXform xf, const C44Matrix& matrix) {
-    g_theGxDevicePtr->XformPushAndSet(xf, matrix);
 }
 
 // PROVEN: 6ed57f00 IDENTICAL/DIFFERENT
@@ -743,7 +734,7 @@ void GxTexSetCannotUpdate(CGxTex* texId) {
     g_theGxDevicePtr->TexSetCannotUpdate(texId);
 }
 
-// PROVEN: a2bdc28c IDENTICAL/NONE
+// PROVEN: a2bdc28c IDENTICAL/IDENTICAL
 // OFFSET: 0x00840280/0x14056C0C0
 void GxTexSetUserData(CGxTex* texId, GxTexUserFunc userFunc, void* userArg) {
     g_theGxDevicePtr->TexSetUserData(texId, userFunc, userArg);
@@ -755,7 +746,7 @@ void GxTexParameters(const CGxTex* texId, CGxTexParms& parms) {
     g_theGxDevicePtr->TexParameters(texId, parms);
 }
 
-// PROVEN: 8f86faee IDENTICAL/DIFFERENT
+// PROVEN: 8f86faee IDENTICAL/IDENTICAL
 // OFFSET: 0x00840320/0x14056C0C0
 void GxTexSetDataFormat(CGxTex* texId, EGxTexFormat dataFormat) {
     g_theGxDevicePtr->TexSetDataFormat(texId, dataFormat);
@@ -841,6 +832,7 @@ int32_t GxTexCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32
     return g_theGxDevicePtr->TexCreate(target, width, height, depth, format, dataFormat, flags, userArg, userFunc, name, texId);
 }
 
+// PROVEN: d297d0c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00840E30/0x14056CDF0
 int32_t GxTexCreate(const CGxTexParms& parms, CGxTex*& texId) {
     return GxTexCreate(parms.m_target, parms.m_width, parms.m_height, parms.m_depth, parms.m_format, parms.m_dataFormat, parms.m_flags, parms.m_userArg, parms.m_userFunc, "", texId);
@@ -990,22 +982,7 @@ int32_t GxShaderValid(CGxShader* shader, uint32_t permute) {
     return shader ? shader->m_permutes[permute].Valid() : 0;
 }
 
-// PROVEN: 2f443e3a IDENTICAL/DIFFERENT
-// OFFSET: 0x0040B030/0x14000DA10
-void GxRsSet(EGxRenderState which, int32_t value) {
-    if (!g_theGxDevicePtr->m_context) {
-        return;
-    }
-
-    CGxAppRenderState& state = g_theGxDevicePtr->m_appRenderStates[which];
-
-    if (state.m_value.m_data.p != reinterpret_cast<void*>(static_cast<intptr_t>(value))) {
-        g_theGxDevicePtr->IRsDirty(which);
-        state.m_value.m_data.p = reinterpret_cast<void*>(static_cast<intptr_t>(value));
-    }
-}
-
-// OFFSET: 0x00430BE0
+// OFFSET: 0x00430BE0/0x140038F90
 void GxRsSet(EGxRenderState which, CImVector value) {
     if (!g_theGxDevicePtr->m_context) {
         return;
@@ -1035,7 +1012,7 @@ void GxUpdateAlphaRef(EGxRenderState which) {
     }
 }
 
-// OFFSET: 0x00430C20
+// OFFSET: 0x00430C20/0x140038FE0
 void GxRsSet(EGxRenderState which, float value) {
     if (!g_theGxDevicePtr->m_context) {
         return;
@@ -1049,20 +1026,20 @@ void GxRsSet(EGxRenderState which, float value) {
     }
 }
 
-// PROVEN: 3f48e3a1 IDENTICAL/UNPROVEN
+// PROVEN: 3f48e3a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x008402A0/0x14056C0E0
 void GxTexSetFlags(CGxTex* texId, CGxTexFlags flags) {
     g_theGxDevicePtr->TexSetFlags(texId, flags);
 }
 
-// PROVEN: 26292652 IDENTICAL/UNPROVEN
+// PROVEN: 26292652 IDENTICAL/IDENTICAL
 // OFFSET: 0x008402C0/0x14056C100
 void GxTexSetWrap(CGxTex* texId, EGxTexWrapMode wrapU, EGxTexWrapMode wrapV) {
     g_theGxDevicePtr->TexSetWrap(texId, wrapU, wrapV);
 }
 
-// PROVEN: 89f4259f IDENTICAL/NONE
-// OFFSET: 0x00840670
+// PROVEN: 89f4259f IDENTICAL/IDENTICAL
+// OFFSET: 0x00840670/0x14056C490
 void GxLogOpen() {
     CGxDevice::LogOpen();
 }
@@ -1080,13 +1057,13 @@ void GxShutDown() {
     CGxDevice::s_poolList.Clear();
 }
 
-// PROVEN: c00a984f IDENTICAL/NONE
+// PROVEN: c00a984f IDENTICAL/IDENTICAL
 // OFFSET: 0x00840680/0x14056C4A0
 void GxLogClose() {
     CGxDevice::LogClose();
 }
 
-// PROVEN: ba2cc9bf IDENTICAL/UNPROVEN
+// PROVEN: ba2cc9bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00840690/0x14056C4B0
 void GxLog(const char* format, ...) {
     va_list args;
@@ -1206,31 +1183,31 @@ void GxReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pixels) {
     g_theGxDevicePtr->DeviceReadPixels(rect, pixels);
 }
 
-// PROVEN: d7f158e1 IDENTICAL/NONE
+// PROVEN: d7f158e1 IDENTICAL/IDENTICAL
 // OFFSET: 0x008403C0/0x14056C210
 int32_t GxTexStretch(CGxTex* source, CGxTex* dest, const CiRect* destRect, const CiRect* sourceRect, uint32_t level, uint32_t face) {
     return g_theGxDevicePtr->TexStretch(source, dest, destRect, sourceRect, level, face);
 }
 
-// PROVEN: 14e624c4 IDENTICAL/NONE
+// PROVEN: 14e624c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x008404F0/0x14056C330
 int32_t GxQueryBegin(CGxQuery* query) {
     return g_theGxDevicePtr->QueryBegin(query);
 }
 
-// PROVEN: f82379f0 IDENTICAL/NONE
+// PROVEN: f82379f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00840510/0x14056C350
 int32_t GxQueryEnd(CGxQuery* query) {
     return g_theGxDevicePtr->QueryEnd(query);
 }
 
-// PROVEN: 66f16c38 IDENTICAL/NONE
+// PROVEN: 66f16c38 IDENTICAL/IDENTICAL
 // OFFSET: 0x00840530/0x14056C370
 int32_t GxQueryGetParam(CGxQuery* query, EGxQueryParam param, uint32_t* data) {
     return g_theGxDevicePtr->QueryGetParam(query, param, data);
 }
 
-// PROVEN: 8b269a24 IDENTICAL/NONE
+// PROVEN: 8b269a24 IDENTICAL/IDENTICAL
 // OFFSET: 0x00840560/0x14056C390
 int32_t GxQueryGetData(CGxQuery* query, uint32_t* data) {
     return g_theGxDevicePtr->QueryGetData(query, data);
@@ -1267,8 +1244,8 @@ void GxuSortDrawList(EGxuDrawListCategory category, EGxuDrawListSorting sorting,
     qsort(s_drawLists[category].Ptr(), s_drawLists[category].Count(), sizeof(GxDrawListEntry), s_drawListSorters[sorting]);
 }
 
-// PROVEN: e52cfee1 IDENTICAL/NONE
-// OFFSET: 0x00612F80
+// PROVEN: e52cfee1 IDENTICAL/DIFFERENT
+// OFFSET: 0x00612F80/0x14029E490
 void GxuClearDrawList(EGxuDrawListCategory category) {
     s_drawListBusy = true;
 
@@ -1280,14 +1257,14 @@ void GxuClearDrawList(EGxuDrawListCategory category) {
     s_drawListBusy = false;
 }
 
-// OFFSET: 0x00613000
+// OFFSET: 0x00613000/0x14029E530
 void GxuAddToDrawList(EGxuDrawListCategory category, GxuDrawListItem* item) {
     GxDrawListEntry entry;
     entry.m_item = item;
     s_drawLists[category].New(entry);
 }
 
-// PROVEN: 67a59497 IDENTICAL/DIFFERENT
+// PROVEN: 67a59497 IDENTICAL/UNPROVEN
 // OFFSET: 0x00613040/0x14029E570
 void GxuFlushDrawList(EGxuDrawListCategory category, const C3Vector& viewPos) {
     GxuDrawListState* current = NULL;

@@ -16,13 +16,13 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRandom.h"
 
-// STATIC: 0x01008D6C
+// STATIC: 0x01008D6C/0x140EE0740
 static CGxPool* s_pool;
 
-// STATIC: 0x01008D70
+// STATIC: 0x01008D70/0x140EE0748
 static CGxBuf* s_buf;
 
-// STATIC: 0x01008D74
+// STATIC: 0x01008D74/0x140EE0770
 static C3Vector s_beamAxisX;
 
 // STATIC: 0x01008D80
@@ -40,15 +40,16 @@ static C3Vector s_jointAxisY;
 // STATIC: 0x01008DB0
 static C3Vector s_jointAxisZ;
 
-// STATIC: 0x01008DBC
+// STATIC: 0x01008DBC/0x140EE07B0
 static C3Vector s_waveOffset;
 
 // STATIC: 0x01008DC8
 static C3Vector s_arcOffset;
 
-// STATIC: 0x01008DD4
+// STATIC: 0x01008DD4/0x140EE07D0
 static CRndSeed s_rndSeed(0);
 
+// PROVEN: ee4dd447 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B28860/0x1408F1030
 void CLightning::SetTexture(CTexture* texture) {
     if (texture) {
@@ -62,7 +63,7 @@ void CLightning::SetTexture(CTexture* texture) {
     this->m_texture = texture;
 }
 
-// PROVEN: 696f84d8 IDENTICAL/NONE
+// PROVEN: 696f84d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B28890/0x1408F1080
 uint32_t CLightning::DecodeChainEffectsID(uint32_t id) {
     uint32_t bits = id & 0xFEFEFEFE;
@@ -103,7 +104,7 @@ void CLightning::Reset() {
     this->m_texRandom = CRandom::ufloat_(s_rndSeed);
 }
 
-// OFFSET: 0x00B28D20
+// OFFSET: 0x00B28D20/0x1408F15B0
 void LightningDestroyBuffers() {
     if (s_buf) {
         GxBufDestroy(s_buf);
@@ -202,7 +203,7 @@ void CLightning::PrecomputeBeamValues() {
     }
 }
 
-// OFFSET: 0x00B29360
+// OFFSET: 0x00B29360/0x1408F1E20
 void CLightning::ApplyPulsingToVertexData() {
     float dx = this->m_dstPos.x - this->m_srcPos.x;
     uint32_t count = this->m_joints.Count();
@@ -250,12 +251,13 @@ void CLightning::ApplyPulsingToVertexData() {
     }
 }
 
-// PROVEN: f8be89da IDENTICAL/NONE
+// PROVEN: f8be89da IDENTICAL/IDENTICAL
 // OFFSET: 0x00B294D0/0x1408F1F80
 void CLightning::SetSrcPos(const C3Vector& pos) {
     this->m_srcPos = pos;
 }
 
+// PROVEN: 768de543 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B294F0/0x1408F1FA0
 void CLightning::SetDstPos(const C3Vector& pos) {
     this->m_dstPos = pos;
@@ -331,7 +333,8 @@ CLightning::CLightning() {
     this->m_texRandom = 0.0f;
 }
 
-// OFFSET: 0x00B296B0
+// PROVEN: a2feba78 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B296B0/0x1408F2120
 CLightning::~CLightning() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);
@@ -457,7 +460,7 @@ void CLightning::BuildPointsUsingHierarchy() {
     }
 }
 
-// OFFSET: 0x00B2A440
+// OFFSET: 0x00B2A440/0x1408F2830
 void CLightning::ApplyWaveToPosition(C3Vector& position, float t, float length) {
     const SpellChainEffectsRec* chainEffects = this->m_chainEffects;
     float angle = chainEffects->m_waveFreq * t * length + this->m_wavePhase;
@@ -483,7 +486,7 @@ void CLightning::ApplyWaveToPosition(C3Vector& position, float t, float length) 
     position.z = position.z + offset.z;
 }
 
-// OFFSET: 0x00B2A650
+// OFFSET: 0x00B2A650/0x1408F2990
 void CLightning::Render(uint32_t index, const C3Vector& cameraPos, int32_t (*cull)(const CAaBox& box)) {
     this->m_flags &= ~0x30;
 
@@ -952,6 +955,7 @@ void CLightning::Render(uint32_t index, const C3Vector& cameraPos, int32_t (*cul
     g_theGxDevicePtr->DrawNonIndexed(this->m_batch);
 }
 
+// PROVEN: 2c06515c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2BC20/0x1408F40F0
 CLightningManager::CLightningManager() : m_vertexShader(NULL), m_pixelShader(NULL) {
     if (CShaderEffect::s_enableShaders) {
@@ -960,7 +964,7 @@ CLightningManager::CLightningManager() : m_vertexShader(NULL), m_pixelShader(NUL
     }
 }
 
-// OFFSET: 0x00B2BC80
+// OFFSET: 0x00B2BC80/0x1408F4170
 CLightningManager::~CLightningManager() {
     if (this->m_vertexShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_vertexShader);
@@ -1162,6 +1166,7 @@ void CLightning::Update(float elapsed) {
     }
 }
 
+// PROVEN: 63167cad DIFFERENT/IDENTICAL
 // OFFSET: 0x00B2C400/0x1408F4980
 void CLightningManager::Update(float elapsed) {
     for (uint32_t i = this->m_bolts.Count(); i;) {
@@ -1173,7 +1178,7 @@ void CLightningManager::Update(float elapsed) {
     }
 }
 
-// OFFSET: 0x00B2C440
+// OFFSET: 0x00B2C440/0x1408F49F0
 void CLightningManager::Render(const C3Vector& cameraPos, int32_t (*cull)(const CAaBox& box)) {
     g_theGxDevicePtr->XformPush(GxXform_World);
     g_theGxDevicePtr->XformPush(GxXform_Tex0);

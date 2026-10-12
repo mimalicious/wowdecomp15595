@@ -64,13 +64,13 @@ struct LightQELess {
     }
 };
 
-// PROVEN: a610679e IDENTICAL/NONE
+// PROVEN: a610679e IDENTICAL/UNPROVEN
 // OFFSET: 0x0064AB90/0x1402E83E0
 const LightParamsRec* DayNight::GetLightParams(const LightRec* light, int32_t index) {
     return g_lightParamsDB.GetRecord(light->m_lightParamsID[index]);
 }
 
-// OFFSET: 0x0064AC60
+// OFFSET: 0x0064AC60/0x1402E8500
 void DayNight::LightLoad(TSGrowableArray<const LightRec*>& lights, int32_t mapId) {
     uint32_t count = 1;
 
@@ -115,6 +115,7 @@ CImVector* DayNight::InterpColor(CImVector* out, const CImVector* a, const CImVe
     return out;
 }
 
+// PROVEN: 83e7de08 IDENTICAL/IDENTICAL
 // OFFSET: 0x0064AFC0/0x1402EAC90
 CImVector* DayNight::DarkenColor(CImVector* out, const CImVector* color, float scale) {
     C3Vector rgb(color->r * 0.0039215689f, color->g * 0.0039215689f, color->b * 0.0039215689f);
@@ -213,7 +214,7 @@ static int32_t FindBand(int32_t time, int32_t* index, int32_t count, const int32
     }
 }
 
-// OFFSET: 0x0064B210
+// OFFSET: 0x0064B210/0x1402EAE50
 CImVector* DayNight::CalcIndividualColorFromDBRec(CImVector* out, const LightIntBandRec* band, int32_t time) {
     if (!band->m_num) {
         *reinterpret_cast<uint32_t*>(out) = 0xFF000000;
@@ -363,7 +364,7 @@ static float CalcFloatBand(const LightFloatBandRec* band, int32_t time, float sc
     return (band->m_data[next] * scale - a) * t + a;
 }
 
-// OFFSET: 0x0064BCD0
+// OFFSET: 0x0064BCD0/0x1402EB060
 void DayNight::CalcColors(int32_t time, CurrentLight& light, const LightParamsRec* params) {
     static const int32_t s_bandSlots[18] = { 1, 0, 3, 4, 5, 6, 7, 8, 2, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
 
@@ -455,7 +456,7 @@ void DayNight::BlendAreaLight(CurrentLight& out, float weight, const LightRec* r
     DayNight::BlendOutputs(out, light, falloff);
 }
 
-// OFFSET: 0x0064CC00
+// OFFSET: 0x0064CC00/0x1402ED6D0
 void DayNight::DoAreaLights(uint32_t time, CurrentLight& light, int32_t index, int32_t stormIndex) {
     std::vector<LightQE> queue;
     std::make_heap(queue.begin(), queue.end(), LightQELess());
@@ -548,7 +549,7 @@ void DayNight::DoAreaLights(uint32_t time, CurrentLight& light, int32_t index, i
     }
 }
 
-// OFFSET: 0x0064D0B0
+// OFFSET: 0x0064D0B0/0x1402EDC20
 void DayNight::GetLight(uint32_t time, const C3Vector& pos, float dayFraction, CurrentLight& light, int32_t index, int32_t stormIndex) {
     if (DayNight::g_areaLights.m_count) {
         C3Vector camPos = DayNight::g_dnInfo.m_camPos;

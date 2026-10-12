@@ -41,4 +41,6 @@ class CStringManager {
     const char* Add(const char* str);
 };
 
+#include "Engine/Source/Base/RCString.inl"
+
 #endif

@@ -149,7 +149,7 @@ FMOD_RESULT Channel::setFrequency(float frequency)
 }
 
 
-// OFFSET: 0x00A7A990
+// OFFSET: 0x00A7A990/0x140835AC0
 FMOD_RESULT Channel::getFrequency(float *frequency)
 {
     FMOD_RESULT result;
@@ -669,7 +669,7 @@ FMOD_RESULT Channel::set3DMinMaxDistance(float mindistance, float maxdistance)
 }
 
 
-// OFFSET: 0x00A7AC00
+// OFFSET: 0x00A7AC00/0x140835DE0
 FMOD_RESULT Channel::get3DMinMaxDistance(float *mindistance, float *maxdistance)
 {
     FMOD_RESULT result;
@@ -695,7 +695,7 @@ FMOD_RESULT Channel::get3DMinMaxDistance(float *mindistance, float *maxdistance)
 }
 
 
-// OFFSET: 0x00A7AC50
+// OFFSET: 0x00A7AC50/0x140835E40
 FMOD_RESULT Channel::set3DConeSettings(float insideconeangle, float outsideconeangle, float outsidevolume)
 {
     FMOD_RESULT result;
@@ -742,7 +742,7 @@ FMOD_RESULT Channel::get3DConeSettings(float *insideconeangle, float *outsidecon
 }
 
 
-// OFFSET: 0x00A7AC90
+// OFFSET: 0x00A7AC90/0x140835EA0
 FMOD_RESULT Channel::set3DConeOrientation(FMOD_VECTOR *orientation)
 {
     FMOD_RESULT result;
@@ -903,7 +903,7 @@ FMOD_RESULT Channel::get3DSpread(float *angle)
 }
 
 
-// OFFSET: 0x00A7ACC0
+// OFFSET: 0x00A7ACC0/0x140835ED0
 FMOD_RESULT Channel::set3DPanLevel(float level)
 {
     FMOD_RESULT result;

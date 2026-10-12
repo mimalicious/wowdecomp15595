@@ -83,6 +83,7 @@ static int getn (lua_State *L) {
 }
 
 
+// PROVEN: 215ae439 IDENTICAL/NONE
 // OFFSET: 0x00A2ABE0/0x1407D2EC0
 static int setn (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);

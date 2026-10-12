@@ -86,7 +86,6 @@ class CGxDeviceD3d11 : public CGxDevice {
     /* 27EC */ int32_t m_ownhwnd;
     /* 27F0 */ HWND m_hwnd;
     /* 27F4 */ ATOM m_hwndClass;
-    /* 27F6 */ uint16_t unk_27BA;
     /* 27F8 */ uint32_t m_featureLevel;
     /* 27FC */ ID3D11Device* m_d3dDevice;
     /* 2800 */ IDXGIDevice1* m_dxgiDevice;

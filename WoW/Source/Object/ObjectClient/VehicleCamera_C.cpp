@@ -14,13 +14,13 @@
 #include "WoW/Source/WorldClient/World.h"
 #include <cmath>
 
-// STATIC: 0x00DD82AC
+// STATIC: 0x00DD82AC/0x140CBE9E8
 TSObjectAllocPool<CVehicleCamera_C>* CVehicleCamera_C::s_cameraPool;
 
-// STATIC: 0x00DD82B0
+// STATIC: 0x00DD82B0/0x140CBE9F0
 uint32_t CVehicleCamera_C::s_cameraCount;
 
-// PROVEN: 938b63ad IDENTICAL/NONE
+// PROVEN: 938b63ad IDENTICAL/IDENTICAL
 // OFFSET: 0x005E71C0/0x140267CC0
 int32_t CVehicleCamera_C::ConvertFromRawToWorld(float& facing, CGObject_C* relativeTo) {
     if (!relativeTo) {
@@ -45,7 +45,8 @@ void CVehicleCamera_C::InitSystem() {
     }
 }
 
-// OFFSET: 0x005E9680
+// PROVEN: 700092fa IDENTICAL/DIFFERENT
+// OFFSET: 0x005E9680/0x14026A520
 void CVehicleCamera_C::UninitSystem() {
     if (s_cameraPool) {
         delete s_cameraPool;
@@ -122,7 +123,7 @@ int32_t CVehicleCamera_C::ConvertFromRawOrOffsetToWorld(C3Vector& position, CGOb
     return 1;
 }
 
-// OFFSET: 0x005E7E20
+// OFFSET: 0x005E7E20/0x140268A70
 int32_t CVehicleCamera_C::ConvertFromWorldToRawOrOffset(C3Vector& position, CGObject_C* relativeTo) {
     if (!relativeTo) {
         return 0;
@@ -158,7 +159,7 @@ int32_t CVehicleCamera_C::ConvertSmoothFacingFromRawToWorld(float& facing, CGObj
     return 1;
 }
 
-// PROVEN: bf184b41 IDENTICAL/NONE
+// PROVEN: bf184b41 IDENTICAL/DIFFERENT
 // OFFSET: 0x005E9640/0x14026A4E0
 void CVehicleCamera_C::Destroy() {
     s_cameraCount--;
@@ -169,7 +170,7 @@ void CVehicleCamera_C::Destroy() {
 CVehicleCamera_C::CVehicleCamera_C() {
 }
 
-// OFFSET: 0x005E7980
+// OFFSET: 0x005E7980/0x1402685D0
 int32_t CVehicleCamera_C::IsHierarchyChasingFacing() const {
     const CVehicleCamera_C* camera = this;
 
@@ -221,7 +222,7 @@ int32_t CVehicleCamera_C::IsTransitioningFacing() const {
     return state == 1 || state == 2 || state == 3;
 }
 
-// OFFSET: 0x005E7A30
+// OFFSET: 0x005E7A30/0x140268690
 int32_t CVehicleCamera_C::UpdateTransitionFlags() {
     uint32_t state = this->m_state;
     int32_t transitioning;
@@ -256,7 +257,7 @@ int32_t CVehicleCamera_C::UpdateTransitionFlags() {
     return result;
 }
 
-// OFFSET: 0x005E7AA0
+// OFFSET: 0x005E7AA0/0x140268700
 float CVehicleCamera_C::GetTransitionProgress(uint32_t time) const {
     uint32_t state = this->m_state;
 
@@ -299,7 +300,7 @@ float CVehicleCamera_C::GetTransitionProgress(uint32_t time) const {
     return progress;
 }
 
-// OFFSET: 0x005E7FC0
+// OFFSET: 0x005E7FC0/0x140268C50
 int32_t CVehicleCamera_C::ConvertSmoothFacingFromWorldToRaw(float& facing, CGObject_C* relativeTo) {
     if (!relativeTo) {
         return 0;
@@ -356,7 +357,7 @@ int32_t CVehicleCamera_C::AttachToHierarchy() {
     return 1;
 }
 
-// OFFSET: 0x005E7C20
+// OFFSET: 0x005E7C20/0x140268860
 void CVehicleCamera_C::DetachFromHierarchy() {
     CGCamera* activeCamera = CGWorldFrame::GetActiveCamera();
 
@@ -384,7 +385,7 @@ void CVehicleCamera_C::DetachFromHierarchy() {
     }
 }
 
-// OFFSET: 0x005E71F0
+// OFFSET: 0x005E71F0/0x140267D00
 C3Vector CVehicleCamera_C::ComputeEndWorldPosition(CGUnit_C* target) {
     CGUnit_C* unit = target;
     int32_t transitioning;
@@ -541,7 +542,7 @@ void CVehicleCamera_C::ComputeSafeCurWorldPos() {
     this->m_safeCurWorldPos.z = this->m_safeCurWorldPos.z - camera->m_height;
 }
 
-// OFFSET: 0x005E8940
+// OFFSET: 0x005E8940/0x1402696B0
 void CVehicleCamera_C::UpdatePosition(CGUnit_C* target, uint32_t time, float progress) {
     this->m_flags &= ~0x40;
     C3Vector end = this->ComputeEndWorldPosition(target);
@@ -634,7 +635,7 @@ void CVehicleCamera_C::UpdatePosition(CGUnit_C* target, uint32_t time, float pro
     }
 }
 
-// OFFSET: 0x005E8E70
+// OFFSET: 0x005E8E70/0x140269C40
 void CVehicleCamera_C::UpdateFacing(CGUnit_C* target, uint32_t time, float progress, CGObject_C* relativeTo) {
     float targetFacing;
     WOWGUID relative;
@@ -846,7 +847,7 @@ void CVehicleCamera_C::SetTarget(WOWGUID target, WOWGUID next) {
     this->m_flags &= ~0x80;
 }
 
-// OFFSET: 0x005E8340
+// OFFSET: 0x005E8340/0x140269010
 void CVehicleCamera_C::MaybeChangeTarget(const CGUnit_C* vehicle, WOWGUID transport, const VehicleSeatRec* seat, int32_t exiting, WOWGUID& relativeTo) {
     if (!exiting && vehicle && seat && (seat->m_flags & 0x800)) {
         WOWGUID target = vehicle->m_obj->m_guid;
@@ -1021,7 +1022,7 @@ void CVehicleCamera_C::BeginTransition(uint32_t time) {
     }
 }
 
-// PROVEN: 07a6c06a IDENTICAL/NONE
+// PROVEN: 07a6c06a IDENTICAL/IDENTICAL
 // OFFSET: 0x005E8900/0x140269670
 void CVehicleCamera_C::OnPassengerTransitionMotionBegin(uint32_t time, uint32_t duration) {
     if (this->m_flags & 0x1) {
@@ -1037,7 +1038,7 @@ void CVehicleCamera_C::OnPassengerTransitionMotionBegin(uint32_t time, uint32_t 
     }
 }
 
-// OFFSET: 0x005E9420
+// OFFSET: 0x005E9420/0x14026A260
 void CVehicleCamera_C::Update(uint32_t time) {
     if (!this->m_state || time == this->m_lastUpdateTime) {
         return;

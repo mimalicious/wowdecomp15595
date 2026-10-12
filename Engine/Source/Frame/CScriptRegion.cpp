@@ -15,10 +15,10 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00DD397C
+// STATIC: 0x00DD397C/0x140CB9670
 int32_t CScriptRegion::s_objectType;
 
-// STATIC: 0x00CA3264
+// STATIC: 0x00CA3264/0x140B40378
 const char* CScriptRegion::s_objectTypeName = "Region";
 
 // PROVEN: e23865aa IDENTICAL/DIFFERENT
@@ -33,18 +33,19 @@ bool CScriptRegion::IsA(int32_t type) {
     return type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: b3363a79 IDENTICAL/DIFFERENT
-// OFFSET: 0x00469490/0x1401531B0
+// PROVEN: b3363a79 IDENTICAL/NONE
+// OFFSET: 0x00469490/0x14007D6A0
 bool CScriptRegion::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: ba11daed IDENTICAL/NONE
-// OFFSET: 0x005025F0
+// PROVEN: ba11daed IDENTICAL/IDENTICAL
+// OFFSET: 0x005025F0/0x140148050
 const char* CScriptRegion::GetObjectTypeName() {
     return CScriptRegion::s_objectTypeName;
 }
 
+// PROVEN: 9ae23da3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050FB60/0x140158EF0
 CScriptRegion::CScriptRegion() {
     this->m_parent = NULL;
@@ -58,8 +59,8 @@ bool CScriptRegion::IsDragging() {
     return this->m_parent ? this->m_parent->IsDragging() : false;
 }
 
-// PROVEN: 95f2f5a3 IDENTICAL/NONE
-// OFFSET: 0x005025E0
+// PROVEN: 95f2f5a3 IDENTICAL/IDENTICAL
+// OFFSET: 0x005025E0/0x140148040
 void CScriptRegion::SetParent(CSimpleFrame* parent) {
     this->m_parent = parent;
 }
@@ -177,6 +178,7 @@ int32_t CScriptRegion::HasActiveAnimGroup() {
     return 0;
 }
 
+// PROVEN: 98a90272 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050FFA0/0x140159480
 int32_t CScriptRegion::HasActiveAlphaAnim() {
     for (CScriptRegion* region = this; region; region = region->m_parent) {
@@ -192,6 +194,7 @@ int32_t CScriptRegion::HasActiveAlphaAnim() {
     return 0;
 }
 
+// PROVEN: 90283ad6 DIFFERENT/IDENTICAL
 // OFFSET: 0x00510010/0x140159510
 int32_t CScriptRegion::HasActivePositionAnim() {
     for (CScriptRegion* region = this; region; region = region->m_parent) {
@@ -218,7 +221,7 @@ void CScriptRegion::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: 0x005100F0
+// OFFSET: 0x005100F0/0x140159630
 void CScriptRegion::StopAnimating() {
     if (!this->m_playingAnimGroups) {
         return;
@@ -229,6 +232,7 @@ void CScriptRegion::StopAnimating() {
     }
 }
 
+// PROVEN: ea7cc7c3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00510140/0x1401596A0
 void CScriptRegion::NotifyAnimEnd(CSimpleAnimGroup* group) {
     if (!group || !this->m_playingAnimGroups) {
@@ -241,7 +245,8 @@ void CScriptRegion::NotifyAnimEnd(CSimpleAnimGroup* group) {
     this->AnimDeactivated(group, alpha, position);
 }
 
-// OFFSET: 0x005101C0
+// PROVEN: 13a1f00e IDENTICAL/DIFFERENT
+// OFFSET: 0x005101C0/0x1401597A0
 void CScriptRegion::NotifyAnimBegin(CSimpleAnimGroup* group) {
     if (!group) {
         return;
@@ -261,6 +266,7 @@ void CScriptRegion::NotifyAnimBegin(CSimpleAnimGroup* group) {
     this->m_playingAnimGroups->LinkToTail(group);
 }
 
+// PROVEN: a0bd42a1 IDENTICAL/UNPROVEN
 // OFFSET: 0x005102F0/0x1401598B0
 void CScriptRegion::RegisterAnimGroup(CSimpleAnimGroup* group) {
     if (!group) {
@@ -276,7 +282,7 @@ void CScriptRegion::RegisterAnimGroup(CSimpleAnimGroup* group) {
     }
 }
 
-// OFFSET: [0x00510360, 0x005103C0/0x140159A80, 0x0050FBC0/0x140158F70]
+// OFFSET: [0x00510360/0x140159940, 0x005103C0/0x140159A80, 0x0050FBC0/0x140158F70]
 CScriptRegion::~CScriptRegion() {
     if (this->m_animGroups) {
         this->m_animGroups->Clear();
@@ -298,7 +304,7 @@ void CScriptRegion::PreOnAnimUpdate() {
 void CScriptRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
 }
 
-// PROVEN: d026b161 IDENTICAL/DIFFERENT
+// PROVEN: d026b161 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void CScriptRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
 }

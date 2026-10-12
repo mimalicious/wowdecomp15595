@@ -11,8 +11,8 @@ class RunningAverageCalculator {
     public:
     /* 0008 */ Allocator* m_allocator;
     /* 000C */ double* m_values;
-    /* 0010 */ uint32_t m_count;
-    /* 0014 */ uint32_t m_index;
+    /* 0010 */ size_t m_count;
+    /* 0014 */ size_t m_index;
     /* 0018 */ double m_sum;
 
     virtual ~RunningAverageCalculator();

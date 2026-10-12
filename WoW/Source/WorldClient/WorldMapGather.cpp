@@ -5,7 +5,7 @@
 #include "WoW/Source/WorldClient/MapObjDef.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// OFFSET: 0x0079A640
+// OFFSET: 0x0079A640/0x14048EBB0
 void CWorldMap::GetChunkRect(const CAaBox& box, CiRect& rect) {
     float maxY = -(box.t.y - 17066.666f);
     float maxX = -(box.t.x - 17066.666f);
@@ -34,7 +34,7 @@ void CWorldMap::GetChunkRect(const CAaBox& box, CiRect& rect) {
     rect.maxY = static_cast<int32_t>(minX * 0.23999999f) >> 3;
 }
 
-// OFFSET: 0x0079A700
+// OFFSET: 0x0079A700/0x14048EC70
 void CWorldMap::GatherMapObjDefs(CWorldView* view) {
     for (CMapObjDef* mapObjDef = this->m_mapObjDefList.Head(); mapObjDef; mapObjDef = this->m_mapObjDefList.Next(mapObjDef)) {
         if (!(mapObjDef->m_flags & 0x10) && (mapObjDef->m_flags & 0x40) && (mapObjDef->m_mapObj->m_flags & 0x40)) {
@@ -43,7 +43,7 @@ void CWorldMap::GatherMapObjDefs(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x0079A760
+// OFFSET: 0x0079A760/0x14048ECE0
 void CWorldMap::GatherEntitys(CWorldView* view) {
     for (CMapEntity* entity = this->m_entityList.Head(); entity; entity = this->m_entityList.Next(entity)) {
         if (!(entity->m_flags & 0x10010)) {
@@ -52,7 +52,7 @@ void CWorldMap::GatherEntitys(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x0079A7B0
+// OFFSET: 0x0079A7B0/0x14048ED50
 void CWorldMap::GatherAreas(CWorldView* view) {
     CiRect rect(0, 0, 0, 0);
     CWorldMap::GetChunkRect(view->m_frustumBounds, rect);
@@ -91,7 +91,7 @@ void CWorldMap::GatherAreas(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x0079A900
+// OFFSET: 0x0079A900/0x14048EF10
 void CWorldMap::GatherLowDetail(CWorldView* view) {
     CiRect rect(0, 0, 0, 0);
     CWorldMap::GetLowDetailAreaRect(view->m_camPos, rect);
@@ -119,8 +119,8 @@ void CWorldMap::GatherLowDetail(CWorldView* view) {
     }
 }
 
-// PROVEN: e6282609 IDENTICAL/NONE
-// OFFSET: 0x0079A9F0
+// PROVEN: e6282609 IDENTICAL/UNPROVEN
+// OFFSET: 0x0079A9F0/0x14048F050
 void CWorldMap::Gather(CWorldView* view) {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
 

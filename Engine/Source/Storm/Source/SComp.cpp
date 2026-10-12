@@ -299,7 +299,7 @@ static const uint32_t s_ima_steptable[89] = {
     15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767,
 };
 
-// STATIC: 0x00D9D584
+// STATIC: 0x00D9D584/0x140C7F6B0
 static void* s_DecompressBuffer;
 
 static CCritSect s_decompCrit;
@@ -1084,7 +1084,7 @@ int32_t ImaAdpcmStereoDecompress(void* dest, uint32_t* destsize, const void* sou
     return 1;
 }
 
-// PROVEN: 3bf79e6a IDENTICAL/NONE
+// PROVEN: 3bf79e6a IDENTICAL/IDENTICAL
 // OFFSET: 0x004BA310/0x1400F3050
 int32_t STORMAPI SCompDestroy() {
     if (s_DecompressBuffer) {
@@ -1300,7 +1300,8 @@ void CHuffman::AddSymbol(int32_t symbol) {
     this->IncrementWeight(newnode);
 }
 
-// OFFSET: 0x004BABB0
+// PROVEN: c033b55f IDENTICAL/DIFFERENT
+// OFFSET: 0x004BABB0/0x1400F3A40
 CHuffman::~CHuffman() {
 }
 
@@ -1394,8 +1395,8 @@ CHuffmanDecoder::CHuffmanDecoder() {
     }
 }
 
-// PROVEN: 3a074d68 IDENTICAL/NONE
-// OFFSET: 0x004BAF40
+// PROVEN: 3a074d68 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BAF40/0x1400F4050
 int32_t HuffmanDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     CBitInput input(source);
     CHuffmanDecoder decoder;
@@ -1404,7 +1405,7 @@ int32_t HuffmanDecompress(void* dest, uint32_t* destsize, const void* source, ui
     return 1;
 }
 
-// OFFSET: 0x004BAED0
+// OFFSET: 0x004BAED0/0x1400F3F60
 void HuffmanCompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t* hint, uint32_t optimization) {
     CBitOutput output(dest, *destsize);
     CHuffmanEncoder encoder;

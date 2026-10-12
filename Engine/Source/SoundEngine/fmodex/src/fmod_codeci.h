@@ -112,7 +112,7 @@ namespace FMOD
         // OFFSET: 0x00A9FFB0/0x1408606E0
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultMetaData     (FMOD_CODEC_STATE *codec, FMOD_TAGTYPE type, char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype, int unique) { return ((Codec *)codec)->metaData(type, name, data, datalen, datatype, unique == 1 ? true : false); }
 #endif
-        // PROVEN: 5f367937 IDENTICAL/UNPROVEN
+        // PROVEN: 5f367937 IDENTICAL/IDENTICAL
         // OFFSET: 0x00A93000/0x140852C70
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultGetWaveFormat(FMOD_CODEC_STATE *codec, int index, FMOD_CODEC_WAVEFORMAT *waveformat_out)
         {

@@ -5,10 +5,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/SLock.h"
 
-// STATIC: 0x00D73258
+// STATIC: 0x00D73258/0x140C2E590
 static OBJALLOCGLOBALS s_globals;
 
-// STATIC: 0x00D73268
+// STATIC: 0x00D73268/0x140C2E5A8
 static SCritSect s_globalsLock;
 
 // INLINED
@@ -57,7 +57,7 @@ CObjectHeapList::CObjectHeapList() {
     this->m_freeEmptyHeaps = 1;
 }
 
-// OFFSET: 0x00486710
+// OFFSET: 0x00486710/0x1400A76C0
 bool CObjectHeap::Allocate(uint32_t objSize, uint32_t count) {
     this->m_obj = SMemAlloc(count * (objSize + sizeof(uint32_t)), __FILE__, __LINE__, 0x2000000);
 
@@ -214,6 +214,7 @@ void* ObjectPtr(uint32_t heapId, uint32_t memHandle) {
     return ptr;
 }
 
+// PROVEN: 1840dc8c DIFFERENT/IDENTICAL
 // OFFSET: 0x00486AC0/0x1400A7A90
 void CObjectHeapList::Delete(uint32_t index) {
     uint32_t heapIndex = index / this->m_objsPerBlock;
@@ -262,7 +263,7 @@ static void HeapUse() {
     s_globalsLock.Leave();
 }
 
-// PROVEN: 06f4e206 IDENTICAL/NONE
+// PROVEN: 06f4e206 IDENTICAL/UNPROVEN
 // OFFSET: 0x00486D40/0x1400A7D90
 void ObjectFree(uint32_t heapId, uint32_t memHandle, void* object, const char* file, int32_t line) {
     s_globalsLock.Enter();
@@ -270,7 +271,7 @@ void ObjectFree(uint32_t heapId, uint32_t memHandle, void* object, const char* f
     s_globalsLock.Leave();
 }
 
-// OFFSET: 0x00486DE0
+// OFFSET: 0x00486DE0/0x1400A7E80
 int32_t CObjectHeapList::New(uint32_t* index, void** ptr, bool zero) {
     CObjectHeap* heap = NULL;
     uint32_t count = this->m_heaps.Count();
@@ -310,7 +311,7 @@ int32_t CObjectHeapList::New(uint32_t* index, void** ptr, bool zero) {
     return 1;
 }
 
-// OFFSET: 0x00486F00
+// OFFSET: 0x00486F00/0x1400A7FE0
 int32_t ObjectAlloc(uint32_t heapId, uint32_t* memHandle, void** objectPtr, bool zero, const char* file, int32_t line) {
     if (memHandle) {
         *memHandle = 0;
@@ -342,7 +343,7 @@ int32_t ObjectAlloc(uint32_t heapId, uint32_t* memHandle, void** objectPtr, bool
     return 0;
 }
 
-// PROVEN: bae5ef52 IDENTICAL/NONE
+// PROVEN: bae5ef52 IDENTICAL/UNPROVEN
 // OFFSET: 0x00487110/0x1400A8420
 void ObjectAllocDestroy() {
     HeapUse();

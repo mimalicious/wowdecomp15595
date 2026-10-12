@@ -10,7 +10,7 @@
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Client.h"
 
-// STATIC: 0x00E2882C
+// STATIC: 0x00E2882C/0x140B69370
 static TSHashTable<DSP_CHAIN_HEAD_LOOKUP, HASHKEY_STRI> s_dspChains;
 
 // OFFSET: 0x00632760
@@ -176,7 +176,7 @@ void SI3::DSP_CreateDsp(const char* name, int32_t type, const float* params) {
     }
 }
 
-// OFFSET: 0x00632F10
+// OFFSET: 0x00632F10/0x1402C86A0
 void SI3::DSP_ShutDown() {
     for (DSP_CHAIN_HEAD_LOOKUP* head = s_dspChains.m_fulllist.Head(); head; head = s_dspChains.m_fulllist.Next(head)) {
         SI3DspNode* next;

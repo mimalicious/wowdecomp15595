@@ -5,34 +5,34 @@
 #include "WoW/Common/ComponentCore/CharacterComponent.h"
 #include "WoW/Source/LoadingScreen.h"
 
-// STATIC: 0x00EBC4A0
+// STATIC: 0x00EBC4A0/0x140DAD480
 uint32_t CGlueLoading::m_loadStartTime;
 
-// STATIC: 0x00EBC4A4
+// STATIC: 0x00EBC4A4/0x140DAD484
 uint32_t CGlueLoading::m_loadLastTime;
 
-// STATIC: 0x00EBC4A8
+// STATIC: 0x00EBC4A8/0x140DAD488
 uint32_t CGlueLoading::m_loadCompleteTime;
 
-// STATIC: 0x00EBC4AC
+// STATIC: 0x00EBC4AC/0x140DAD48C
 float CGlueLoading::m_startProgress;
 
-// STATIC: 0x00EBC4B0
+// STATIC: 0x00EBC4B0/0x140DAD490
 float CGlueLoading::m_loadProgress;
 
-// STATIC: 0x00EBC4B4
+// STATIC: 0x00EBC4B4/0x140DAD494
 int32_t CGlueLoading::m_loadState;
 
-// STATIC: 0x00EBC4B8
+// STATIC: 0x00EBC4B8/0x140DAD498
 void (*CGlueLoading::m_loadCompleteCallback)(uint64_t data);
 
-// STATIC: 0x00EBC4BC
+// STATIC: 0x00EBC4BC/0x140DAD4A8
 uint32_t CGlueLoading::m_loadCompleteDelayFrames;
 
-// STATIC: 0x00EBC4C0
+// STATIC: 0x00EBC4C0/0x140DAD4A0
 uint64_t CGlueLoading::m_loadCompleteData;
 
-// PROVEN: b0a143f2 IDENTICAL/NONE
+// PROVEN: b0a143f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00811460/0x140528D20
 void CGlueLoading::CancelLoadCallback() {
     CGlueLoading::m_loadState = 4;
@@ -257,14 +257,14 @@ void CGlueLoading::StartLoad(CCharacterComponent** components, uint32_t count, i
     CGlueLoading::m_loadCompleteDelayFrames = delayFrames;
 }
 
-// PROVEN: 40ba194a IDENTICAL/NONE
+// PROVEN: 40ba194a IDENTICAL/IDENTICAL
 // OFFSET: 0x008119A0/0x140529360
 int32_t CGlueLoading::Idle(CCharacterComponent* component) {
     CCharacterComponent* components = component;
     return CGlueLoading::Idle(&components, 1);
 }
 
-// PROVEN: 023ec89f IDENTICAL/NONE
+// PROVEN: 023ec89f IDENTICAL/IDENTICAL
 // OFFSET: 0x008119C0/0x140529380
 void CGlueLoading::StartLoad(CCharacterComponent* component, int32_t keepProgress, void (*callback)(uint64_t data), uint64_t data, uint32_t delayFrames) {
     CCharacterComponent* components = component;

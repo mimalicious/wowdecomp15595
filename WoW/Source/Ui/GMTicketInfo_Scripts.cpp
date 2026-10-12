@@ -15,7 +15,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/GMSurveyInfo.h"
 
-// STATIC: 0x00D169B8
+// STATIC: 0x00D169B8/0x140BD0F08
 static StaticConstant s_staticConstants[7] = {
     { "STATIC_CONSTANTS", 0 },
     { "Loot", 1 },
@@ -26,6 +26,7 @@ static StaticConstant s_staticConstants[7] = {
     { "Spell", 6 },
 };
 
+// PROVEN: 2d1034ef IDENTICAL/IDENTICAL
 // OFFSET: 0x009E58E0/0x14077DCC0
 static int32_t Script_RegisterStaticConstants(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -51,6 +52,7 @@ static int32_t Script_GetGMStatus(lua_State* L) {
     return 0;
 }
 
+// PROVEN: b11e255a IDENTICAL/IDENTICAL
 // OFFSET: 0x009E67B0/0x14077EEA0
 static int32_t Script_GetGMTicket(lua_State* L) {
     SendGetTicketOpcode();
@@ -77,7 +79,7 @@ static int32_t Script_GMSurveyAnswerSubmit(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 7919c813 IDENTICAL/NONE
+// PROVEN: 7919c813 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5A40/0x14077DE50
 static int32_t Script_GMSurveyCommentSubmit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -89,6 +91,7 @@ static int32_t Script_GMSurveyCommentSubmit(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 2d589951 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5E20/0x14077E370
 static int32_t Script_GMSurveyQuestion(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -108,6 +111,7 @@ static int32_t Script_GMSurveyQuestion(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 9a711601 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5EA0/0x14077E3F0
 static int32_t Script_GMSurveyAnswer(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
@@ -128,6 +132,7 @@ static int32_t Script_GMSurveyAnswer(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 47dc5c51 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5F40/0x14077E4A0
 static int32_t Script_GMSurveyNumAnswers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -146,7 +151,7 @@ static int32_t Script_GMSurveyNumAnswers(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 97492f0b IDENTICAL/NONE
+// PROVEN: 97492f0b IDENTICAL/IDENTICAL
 // OFFSET: 0x009E6760/0x14077EE50
 static int32_t Script_GMReportLag(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -158,6 +163,7 @@ static int32_t Script_GMReportLag(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 2619d16a IDENTICAL/IDENTICAL
 // OFFSET: 0x009E67C0/0x14077EEB0
 static int32_t Script_NewGMTicket(lua_State* L) {
     if (!lua_isstring(L, 1) || lua_type(L, 2) != LUA_TBOOLEAN) {
@@ -174,7 +180,7 @@ static int32_t Script_NewGMTicket(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d831d114 IDENTICAL/NONE
+// PROVEN: d831d114 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E6830/0x14077EF40
 static int32_t Script_UpdateGMTicket(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -189,12 +195,14 @@ static int32_t Script_UpdateGMTicket(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0809f349 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E6880/0x14077EFA0
 static int32_t Script_DeleteGMTicket(lua_State* L) {
     SendGMTicketDeleteTicket();
     return 0;
 }
 
+// PROVEN: a27bbebc IDENTICAL/IDENTICAL
 // OFFSET: 0x009E6890/0x14077EFB0
 static int32_t Script_GMResponseNeedMoreHelp(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -210,12 +218,14 @@ static int32_t Script_GMResponseNeedMoreHelp(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 12f023bd IDENTICAL/IDENTICAL
 // OFFSET: 0x009E68F0/0x14077F020
 static int32_t Script_GMResponseResolve(lua_State* L) {
     SendGMResponseResolve();
     return 0;
 }
 
+// PROVEN: f8838e59 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E6970/0x14077F0B0
 static int32_t Script_GMSurveySubmit(lua_State* L) {
     CGGMSurveyInfo::Submit();
@@ -280,25 +290,28 @@ static int32_t Script_GMSubmitBug(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3ab42969 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5A90/0x14077DEA0
 static int32_t Script_GMQuickTicketSystemEnabled(lua_State* L) {
     lua_pushboolean(L, CGGMTicketInfo::s_quickTicketSystemStatus);
     return 1;
 }
 
+// PROVEN: f7d151b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5AB0/0x14077DEC0
 static int32_t Script_GMItemRestorationButtonEnabled(lua_State* L) {
     lua_pushboolean(L, CGGMTicketInfo::s_itemRestorationButtonStatus);
     return 1;
 }
 
+// PROVEN: 0f1e4009 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5AD0/0x14077DEE0
 static int32_t Script_GMQuickTicketSystemThrottled(lua_State* L) {
     lua_pushboolean(L, !CGGMTicketInfo::s_quickTicketThrottle.Check());
     return 1;
 }
 
-// STATIC: 0x00D169F8
+// STATIC: 0x00D169F8/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGMTicket", &Script_GetGMTicket },
     { "NewGMTicket", &Script_NewGMTicket },
@@ -322,6 +335,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GMQuickTicketSystemThrottled", &Script_GMQuickTicketSystemThrottled },
 };
 
+// PROVEN: 496d084d IDENTICAL/UNPROVEN
 // OFFSET: 0x009E5B00/0x14077DF10
 void GMTicketInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -329,6 +343,7 @@ void GMTicketInfoRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: e3c43cfd IDENTICAL/UNPROVEN
 // OFFSET: 0x009E5B30/0x14077DF60
 void GMTicketInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

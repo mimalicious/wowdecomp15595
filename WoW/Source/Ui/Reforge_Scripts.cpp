@@ -367,14 +367,15 @@ static int32_t Script_SetReforgeFromCursorItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0098D0E0
+// PROVEN: 50d6c0e9 IDENTICAL/DIFFERENT
+// OFFSET: 0x0098D0E0/0x14070B510
 static int32_t Script_CloseReforge(lua_State* L) {
     CGReforge::SetForgeMaster(WOWGUID());
 
     return 0;
 }
 
-// STATIC: 0x00D144E0
+// STATIC: 0x00D144E0/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SetReforgeFromCursorItem", &Script_SetReforgeFromCursorItem },
     { "GetNumReforgeOptions", &Script_GetNumReforgeOptions },
@@ -387,6 +388,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetReforgeItemStats", &Script_GetReforgeItemStats },
 };
 
+// PROVEN: 5336f8a4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0098B550/0x140709380
 void ReforgeRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -394,6 +396,7 @@ void ReforgeRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 03f3b947 IDENTICAL/UNPROVEN
 // OFFSET: 0x0098B580/0x1407093D0
 void ReforgeUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

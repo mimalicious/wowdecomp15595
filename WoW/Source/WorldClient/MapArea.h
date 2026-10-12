@@ -129,8 +129,8 @@ class CMapAreaMed {
 
 class CMapAreaLow : public CMapBaseObj {
     public:
-    /* 0010 */ uint32_t unk_0010;
-    /* 0014 */ uint32_t unk_0014;
+    /* 0010 */ void* unk_0010;
+    /* 0014 */ void* unk_0014;
     /* 0018 */ CAaBox m_bbox;
     /* 0030 */ C3Vector m_center;
     /* 003C */ float m_radius;

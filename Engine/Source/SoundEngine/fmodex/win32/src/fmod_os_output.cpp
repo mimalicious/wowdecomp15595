@@ -28,7 +28,7 @@
 ]
 */
 // PROVEN: dcaced78 IDENTICAL/NONE
-// OFFSET: 0x00AC2380
+// OFFSET: 0x00AC2380/0x14088A8F0
 FMOD_RESULT FMOD_OS_Output_Register(FMOD::PluginFactory *pluginfactory)
 {
 #ifdef FMOD_USE_PLUGINS

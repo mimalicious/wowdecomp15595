@@ -111,6 +111,7 @@ FMOD_RESULT Thread::threadFunc()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 2b8c67a9 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A913B0/0x140850C90
 Thread::Thread()
 {

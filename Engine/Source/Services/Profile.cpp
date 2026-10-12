@@ -68,7 +68,7 @@ ProfileInternal::STRINGBLOCK* ProfileInternal::STRINGBLOCK::AllocBlock(uint32_t 
     return block;
 }
 
-// OFFSET: 0x00545050
+// OFFSET: 0x00545050/0x14019BB90
 char* ProfileInternal::STRINGBLOCK::AllocString(TSList<STRINGBLOCK, TSGetLink<STRINGBLOCK> >& list, const char* str, int32_t reuse) {
     if (!str) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -128,12 +128,12 @@ ProfileInternal::PROFILE::~PROFILE() {
     this->m_strings.Clear();
 }
 
-// OFFSET: 0x00546250
+// OFFSET: 0x00546250/0x14019D6E0
 void* ProfileCreate() {
     return new (SMemAlloc(sizeof(ProfileInternal::PROFILE), __FILE__, __LINE__, 0)) ProfileInternal::PROFILE;
 }
 
-// OFFSET: 0x00545120
+// OFFSET: 0x00545120/0x14019BCF0
 int32_t ProfileGetValue(void* profile, const char* section, const char* key, int32_t* value, uint32_t index) {
     if (!section || !key || !value) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -165,52 +165,7 @@ int32_t ProfileGetValue(void* profile, const char* section, const char* key, int
     return 1;
 }
 
-// INLINED
-int32_t ProfileGetValue(void* profile, const char* section, const char* key, char* buffer, uint32_t bufferSize, uint32_t index) {
-    if (!section) {
-        DebugValidate("section");
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
-    if (!key) {
-        DebugValidate("key");
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
-    if (!buffer) {
-        DebugValidate("value");
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
-    *buffer = '\0';
-
-    ProfileInternal::SECTION* sect = static_cast<ProfileInternal::PROFILE*>(profile)->m_sections.Ptr(section);
-
-    if (!sect) {
-        return 0;
-    }
-
-    ProfileInternal::KEYVALUE* keyValue = sect->m_keys.Ptr(key);
-
-    if (!keyValue || index >= keyValue->m_values.Count()) {
-        return 0;
-    }
-
-    char* str = keyValue->m_values[index];
-
-    if (!str) {
-        return 0;
-    }
-
-    SStrCopy(buffer, str, bufferSize);
-
-    return 1;
-}
-
-// OFFSET: 0x00546420
+// OFFSET: 0x00546420/0x14019D9E0
 char* ProfileInternal::AddValue(PROFILE* profile, const char* section, const char* key, const char* value, int32_t replace, int32_t reuse) {
     SECTION* sect = profile->m_sections.Ptr(section);
 
@@ -240,7 +195,7 @@ char* ProfileInternal::AddValue(PROFILE* profile, const char* section, const cha
     return *slot;
 }
 
-// OFFSET: 0x00546560
+// OFFSET: 0x00546560/0x14019DBD0
 void ProfileInternal::TokenizeStringValues(PROFILE* profile, const char* section, const char* key, char* values) {
     if (!section || !key || !values || !*values) {
         return;
@@ -285,7 +240,7 @@ void ProfileInternal::TokenizeStringValues(PROFILE* profile, const char* section
     } while (*ptr);
 }
 
-// OFFSET: 0x005465E0
+// OFFSET: 0x005465E0/0x14019DCB0
 int32_t ProfileInternal::IReadBuffer(PROFILE* profile, const void* data, uint32_t size) {
     STRINGBLOCK* block = STRINGBLOCK::AllocBlock(size + 1);
     char* text = block->Data();

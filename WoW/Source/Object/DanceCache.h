@@ -33,4 +33,6 @@ class DanceCache {
     void Unpack(CDataStore* msg);
 };
 
+#include "WoW/Source/Object/DanceCache.inl"
+
 #endif

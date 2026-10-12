@@ -28,7 +28,6 @@ struct MD5VerifyData {
     /* 0038 */ bool m_unalignedStart;
     /* 0039 */ bool m_unalignedEnd;
     /* 003A */ bool m_lastBlock;
-    /* 003B */ uint8_t unk_003B;
     /* 003C */ Blizzard::Mopaq::MpqHandleRecord* m_handle;
     /* 0040 */ bool m_writing;
     /* 0041 */ uint8_t unk_0041[7];

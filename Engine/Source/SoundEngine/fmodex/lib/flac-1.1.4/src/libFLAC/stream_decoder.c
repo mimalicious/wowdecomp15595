@@ -273,6 +273,7 @@ FLAC_API const char * const FLAC__StreamDecoderErrorStatusString[] = {
  * Class constructor/destructor
  *
  ***********************************************************************/
+// PROVEN: 595da07f UNPROVEN/IDENTICAL
 // OFFSET: 0x00B57630/0x140920210
 FLAC_API FLAC__StreamDecoder *FLAC__stream_decoder_new(void)
 {
@@ -983,6 +984,7 @@ FLAC_API FLAC__bool FLAC__stream_decoder_flush(FLAC__StreamDecoder *decoder)
 	return true;
 }
 
+// PROVEN: b2264050 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B56520/0x14091EFE0
 FLAC_API FLAC__bool FLAC__stream_decoder_reset(FLAC__StreamDecoder *decoder)
 {
@@ -1371,6 +1373,7 @@ FLAC__bool has_id_filtered_(FLAC__StreamDecoder *decoder, FLAC__byte *id)
 	return false;
 }
 
+// PROVEN: ef53fc1b UNPROVEN/IDENTICAL
 // OFFSET: 0x00B57A20/0x1409206B0
 FLAC__bool find_metadata_(FLAC__StreamDecoder *decoder)
 {
@@ -1433,7 +1436,7 @@ FLAC__bool find_metadata_(FLAC__StreamDecoder *decoder)
 	return true;
 }
 
-// OFFSET: 0x00B57B70
+// OFFSET: 0x00B57B70/0x140920860
 FLAC__bool read_metadata_(FLAC__StreamDecoder *decoder)
 {
 	FLAC__bool is_last;
@@ -1599,6 +1602,7 @@ FLAC__bool read_metadata_(FLAC__StreamDecoder *decoder)
 	return true;
 }
 
+// PROVEN: e5614a01 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B568A0/0x14091F320
 FLAC__bool read_metadata_streaminfo_(FLAC__StreamDecoder *decoder, FLAC__bool is_last, unsigned length)
 {
@@ -1671,6 +1675,7 @@ FLAC__bool read_metadata_streaminfo_(FLAC__StreamDecoder *decoder, FLAC__bool is
 	return true;
 }
 
+// PROVEN: 6eb4a0b4 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B56A90/0x14091F550
 FLAC__bool read_metadata_seektable_(FLAC__StreamDecoder *decoder, FLAC__bool is_last, unsigned length)
 {
@@ -1772,7 +1777,7 @@ FLAC__bool read_metadata_vorbiscomment_(FLAC__StreamDecoder *decoder, FLAC__Stre
 	return true;
 }
 
-// OFFSET: 0x00B56DB0
+// OFFSET: 0x00B56DB0/0x14091F8A0
 FLAC__bool read_metadata_cuesheet_(FLAC__StreamDecoder *decoder, FLAC__StreamMetadata_CueSheet *obj)
 {
 	FLAC__uint32 i, j, x;
@@ -1856,6 +1861,7 @@ FLAC__bool read_metadata_cuesheet_(FLAC__StreamDecoder *decoder, FLAC__StreamMet
 	return true;
 }
 
+// PROVEN: cacf76cd UNPROVEN/IDENTICAL
 // OFFSET: 0x00B570D0/0x14091FBE0
 FLAC__bool read_metadata_picture_(FLAC__StreamDecoder *decoder, FLAC__StreamMetadata_Picture *obj)
 {
@@ -2003,7 +2009,7 @@ FLAC__bool frame_sync_(FLAC__StreamDecoder *decoder)
 	return true;
 }
 
-// OFFSET: 0x00B597D0
+// OFFSET: 0x00B597D0/0x140922900
 FLAC__bool read_frame_(FLAC__StreamDecoder *decoder, FLAC__bool *got_a_frame, FLAC__bool do_full_decode)
 {
 	unsigned channel;
@@ -2538,6 +2544,7 @@ FLAC__bool read_subframe_constant_(FLAC__StreamDecoder *decoder, unsigned channe
 	return true;
 }
 
+// PROVEN: 2b54257c UNPROVEN/IDENTICAL
 // OFFSET: 0x00B58D40/0x140921CB0
 FLAC__bool read_subframe_fixed_(FLAC__StreamDecoder *decoder, unsigned channel, unsigned bps, const unsigned order, FLAC__bool do_full_decode)
 {
@@ -2594,6 +2601,7 @@ FLAC__bool read_subframe_fixed_(FLAC__StreamDecoder *decoder, unsigned channel, 
 	return true;
 }
 
+// PROVEN: a40e8831 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B58F10/0x140921EC0
 FLAC__bool read_subframe_lpc_(FLAC__StreamDecoder *decoder, unsigned channel, unsigned bps, const unsigned order, FLAC__bool do_full_decode)
 {
@@ -2706,6 +2714,7 @@ FLAC__bool read_subframe_verbatim_(FLAC__StreamDecoder *decoder, unsigned channe
 	return true;
 }
 
+// PROVEN: 0c618b83 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B58990/0x140921890
 FLAC__bool read_residual_partitioned_rice_(FLAC__StreamDecoder *decoder, unsigned predictor_order, unsigned partition_order, FLAC__EntropyCodingMethod_PartitionedRiceContents *partitioned_rice_contents, FLAC__int32 *residual)
 {
@@ -2967,7 +2976,7 @@ void send_error_to_client_(const FLAC__StreamDecoder *decoder, FLAC__StreamDecod
 		decoder->private_->unparseable_frame_count++;
 }
 
-// OFFSET: 0x00B59B90
+// OFFSET: 0x00B59B90/0x140922DB0
 FLAC__bool seek_to_absolute_sample_(FLAC__StreamDecoder *decoder, FLAC__uint64 stream_length, FLAC__uint64 target_sample)
 {
 	FLAC__uint64 first_frame_offset = decoder->private_->first_frame_offset, lower_bound, upper_bound, lower_bound_sample, upper_bound_sample, this_frame_sample;

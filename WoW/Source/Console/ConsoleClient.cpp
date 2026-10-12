@@ -27,25 +27,25 @@
 #include "Engine/Source/BlizzardCore/BackgroundCache.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
-// STATIC: 0x00CA8260
+// STATIC: 0x00CA8260/0x140B480AC
 static RECTF s_rect = { 0.0f, 1.0f, 1.0f, 1.0f };
 
-// STATIC: 0x00CA8270
+// STATIC: 0x00CA8270/0x140B480B8
 static KEY s_consoleHotKey = KEY_TILDE;
 
-// STATIC: 0x00CA8274
+// STATIC: 0x00CA8274/0x140B480BC
 static int32_t s_historyIndex = -1;
 
-// STATIC: 0x00CA8278
+// STATIC: 0x00CA8278/0x140B480C0
 float s_fontHeight = 0.02f;
 
-// STATIC: 0x00CA827C
+// STATIC: 0x00CA827C/0x140B480C4
 float s_consoleLines = 10.0f;
 
-// STATIC: 0x00CA8280
+// STATIC: 0x00CA8280/0x140B480C8
 static RECTF s_hRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 
-// STATIC: 0x00CA8290
+// STATIC: 0x00CA8290/0x140B480D8
 uint32_t s_baseTextFlags = 8;
 
 static const char* s_consoleCommandNames[] = { "fontcolor", "bgcolor", "highlightcolor", "fontsize", "font", "consolelines", "clear", "proportionaltext", "spacing", "settings", "default", "closeconsole", "repeat", "AppendLogToFile" };
@@ -54,66 +54,66 @@ static const char* s_consoleCommandHelp[] = { "[ColorClassName] [Red 0-255] [Gre
 
 static const COMMANDHANDLER s_consoleCommandHandlers[] = { ConsoleCommand_FontColor, ConsoleCommand_BackGroundColor, ConsoleCommand_HighLightColor, ConsoleCommand_FontSize, ConsoleCommand_Font, ConsoleCommand_BufferSize, ConsoleCommand_ClearConsole, ConsoleCommand_Proportional, ConsoleCommand_CharSpacing, ConsoleCommand_CurrentSettings, ConsoleCommand_DefaultSettings, ConsoleCommand_CloseConsole, ConsoleCommand_RepeatHandler, ConsoleCommand_AppendLogToFile };
 
-// STATIC: 0x00CA8374
+// STATIC: 0x00CA8374/0x140B48230
 TSList<CONSOLELINE, TSGetLink<CONSOLELINE> > s_linelist;
 
-// STATIC: 0x00CA8380
+// STATIC: 0x00CA8380/0x140B48248
 uint32_t s_colorArray[NUM_COLORTYPES] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFF808080, 0xFFFF0000, 0xFFFFFF00, 0xFFFFFFFF, 0xFFFFFFFF, 0x80FFFFFF, 0xC0000000 };
 
 static float s_caretpixheight;
 
-// STATIC: 0x00DD8724
+// STATIC: 0x00DD8724/0x140CBEF24
 static int32_t s_caret;
 
-// STATIC: 0x00DD8728
+// STATIC: 0x00DD8728/0x140CBEF30
 static char s_copyText[128];
 
 static float s_caretpixwidth;
 
-// STATIC: 0x00DD87AC
+// STATIC: 0x00DD87AC/0x140CBEFB0
 static CGxString* s_inputString;
 
 static CONSOLELINE* s_currlineptr;
 
-// STATIC: 0x00DD87B4
+// STATIC: 0x00DD87B4/0x140CBF000
 static HLAYER s_layerBackground;
 
 char s_repeatBuffer[64];
 
-// STATIC: 0x00DD8800
+// STATIC: 0x00DD8800/0x140CBF010
 char s_fontName[260];
 
 uint32_t s_repeatCount;
 
-// STATIC: 0x00DD8904
+// STATIC: 0x00DD8904/0x140CBF118
 static HLAYER s_layerText;
 
-// STATIC: 0x00DD8908
+// STATIC: 0x00DD8908/0x140CBF120
 static CGxStringBatch* s_batch;
 
 static char s_partial[256];
 
-// STATIC: 0x00DD890C
+// STATIC: 0x00DD890C/0x140CBF00C
 int32_t s_active;
 
-// STATIC: 0x00DD8A18
+// STATIC: 0x00DD8A18/0x140CBF238
 uint32_t s_NumLines;
 
-// STATIC: 0x00DD8A1C
+// STATIC: 0x00DD8A1C/0x140CBF23C
 static int32_t s_completionMode;
 
 static const char* s_completedCmd;
 
-// STATIC: 0x00DD87F8
+// STATIC: 0x00DD87F8/0x140CBEF2C
 static int32_t s_completionIndex;
 
-// STATIC: 0x00DD8A28
+// STATIC: 0x00DD8A28/0x140CBF250
 HTEXTFONT s_textFont;
 
-// STATIC: 0x00DD8A2C
+// STATIC: 0x00DD8A2C/0x140CBF258
 static int32_t s_consoleResizeState;
 
-// STATIC: 0x00DD8A30
+// STATIC: 0x00DD8A30/0x140CBF25C
 static int32_t s_highlightState;
 
 static float s_highlightHStart;
@@ -125,19 +125,19 @@ static uint32_t s_highlightLeftCharIndex;
 // STATIC: 0x00DD8A40
 static uint32_t s_highlightRightCharIndex;
 
-// STATIC: 0x00DD8A44
+// STATIC: 0x00DD8A44/0x140CBF270
 float s_charSpacing;
 
-// STATIC: 0x00DD8A48
+// STATIC: 0x00DD8A48/0x140CBF278
 static const char* s_consoleMessage;
 
-// STATIC: 0x00DD8A54
+// STATIC: 0x00DD8A54/0x140CBF28C
 float s_consoleHeight;
 
-// STATIC: 0x00DD8A58
+// STATIC: 0x00DD8A58/0x140C8B960
 static SCritSect s_critsect;
 
-// STATIC: 0x00DD8A98
+// STATIC: 0x00DD8A98/0x140CBF2D0
 static CVar* s_bgLoadThrottleVar;
 
 // OFFSET: 0x0060DB40/0x140297770
@@ -156,6 +156,7 @@ void GenerateNodeString(CONSOLELINE* node) {
     GxuFontCreateString(font, reinterpret_cast<const char*>(node->m_buffer), s_fontHeight, position, 1.0f, s_fontHeight, 0.0f, node->m_fontPointer, GxVJ_Middle, GxHJ_Left, s_baseTextFlags, *reinterpret_cast<const CImVector*>(&s_colorArray[node->m_colorType]), s_charSpacing, 1.0f, 1.0f, 0.0f);
 }
 
+// PROVEN: dbddc250 IDENTICAL/UNPROVEN
 // OFFSET: 0x0060DC10/0x1402978A0
 static void SetInputString(const char* text) {
     if (s_inputString) {
@@ -186,7 +187,7 @@ static void ReserveInputSpace(CONSOLELINE* line, uint32_t chars) {
     line->m_buffer = buffer;
 }
 
-// PROVEN: 68b147ca IDENTICAL/UNPROVEN
+// PROVEN: 68b147ca IDENTICAL/IDENTICAL
 // OFFSET: 0x0060DE70/0x1405B4D60
 static void ResetHighlight() {
     s_highlightState = 0;
@@ -235,6 +236,7 @@ static int32_t OnMouseUp(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: 97906e39 UNPROVEN/IDENTICAL
 // OFFSET: 0x0060DFF0/0x140297D20
 static int32_t OnMouseMove(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouse = static_cast<const EVENT_DATA_MOUSE*>(data);
@@ -262,6 +264,7 @@ static int32_t OnMouseMove(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: 2f485051 DIFFERENT/IDENTICAL
 // OFFSET: 0x0060E080/0x140297DB0
 static void MakeCommandCurrent(CONSOLELINE* line, const char* command) {
     line->m_inputpos = line->m_inputstart;
@@ -304,6 +307,7 @@ static void Delete(CONSOLELINE* line) {
     SetInputString(reinterpret_cast<const char*>(line->m_buffer));
 }
 
+// PROVEN: d488b31d DIFFERENT/IDENTICAL
 // OFFSET: 0x0060E170/0x140297ED0
 static void Up(CONSOLELINE* line) {
     if (s_historyIndex == ConsoleCommandHistoryDepth() - 1) {
@@ -320,6 +324,7 @@ static void Up(CONSOLELINE* line) {
     }
 }
 
+// PROVEN: 5131e634 DIFFERENT/IDENTICAL
 // OFFSET: 0x0060E1C0/0x140297F30
 static void Down(CONSOLELINE* line) {
     if (s_historyIndex == -1) {
@@ -353,19 +358,19 @@ static int32_t OnKeyUp(const void* data, void* param) {
     return !s_active;
 }
 
-// PROVEN: be85f722 IDENTICAL/NONE
+// PROVEN: be85f722 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E220/0x140297FA0
 const char* GetConsoleMessage() {
     return s_consoleMessage;
 }
 
-// PROVEN: ae794803 IDENTICAL/NONE
+// PROVEN: ae794803 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E230/0x140297FB0
 void SetConsoleMessage(const char* message) {
     s_consoleMessage = message;
 }
 
-// PROVEN: adb5bf75 IDENTICAL/NONE
+// PROVEN: adb5bf75 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E380/0x140298150
 static int32_t EventCloseCallback(void* param) {
     EventPostCloseEx(EventGetCurrentContext());
@@ -373,6 +378,7 @@ static int32_t EventCloseCallback(void* param) {
     return 0;
 }
 
+// PROVEN: e08f35a5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0060E3A0/0x1402982F0
 CONSOLELINE::~CONSOLELINE() {
     if (this->m_buffer) {
@@ -466,6 +472,7 @@ static void DrawCaret(const C3Vector& caretpos) {
     g_theGxDevicePtr->RsPop();
 }
 
+// PROVEN: 98d993c8 DIFFERENT/IDENTICAL
 // OFFSET: 0x0060F0D0/0x1402991E0
 static void PaintBackground(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     if (s_rect.bottom < 1.0f) {
@@ -564,7 +571,7 @@ static void PaintText(void* param, const RECTF* rect, const RECTF* visible, floa
     GxuFontRenderBatch(s_batch);
 }
 
-// OFFSET: 0x0060E410
+// OFFSET: 0x0060E410/0x140298370
 static CONSOLELINE* GetLineAtMousePosition(float y) {
     int32_t lineIndex = static_cast<int32_t>((s_consoleHeight - (1.0f - y)) / s_fontHeight);
 
@@ -704,7 +711,7 @@ static int32_t OnMouseDown(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: 0x0060FCE0
+// OFFSET: 0x0060FCE0/0x14029A080
 static int32_t OnKeyDownRepeat(const void* data, void* param) {
     const EVENT_DATA_KEY* key = static_cast<const EVENT_DATA_KEY*>(data);
 
@@ -935,7 +942,7 @@ done:
     }
 }
 
-// OFFSET: 0x0060DCD0
+// OFFSET: 0x0060DCD0/0x1402979D0
 static int32_t OnIdle(const void* data, void* param) {
     float finalPos = s_active ? 1.0f - s_consoleHeight : 1.0f;
 
@@ -1208,6 +1215,7 @@ static void RegisterHandlers() {
     EventRegisterEx(EVENT_ID_MOUSEMOVE, OnMouseMove, NULL, 7.0f);
 }
 
+// PROVEN: c4a11f15 IDENTICAL/IDENTICAL
 // OFFSET: 0x006100A0/0x14029A400
 static void UnregisterHandlers() {
     EventUnregister(EVENT_ID_CHAR, OnChar);
@@ -1270,23 +1278,25 @@ void ConsoleScreenDestroy() {
     s_inputString = NULL;
 }
 
-// PROVEN: 7dbc3ed8 IDENTICAL/NONE
+// PROVEN: 7dbc3ed8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E240/0x140297FC0
 void SetConsoleKey(KEY key) {
     s_consoleHotKey = key;
 }
 
-// PROVEN: 8d2eeaa6 IDENTICAL/NONE
+// PROVEN: 8d2eeaa6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E250/0x140297FD0
 void ConsolePostClose() {
     EventPostCloseEx(EventGetCurrentContext());
 }
 
+// PROVEN: 0a15ffc7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E260/0x140297FF0
 int32_t ConsoleGetActive() {
     return s_active;
 }
 
+// PROVEN: 101da83a IDENTICAL/IDENTICAL
 // OFFSET: 0x006108E0/0x14029ADF0
 static bool BGLoadThrottleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     BGLoading::SetBandwidthThrottlePercentage(SStrToInt(value));
@@ -1298,7 +1308,8 @@ void BGLoadingThrottleCVarInitialize() {
     s_bgLoadThrottleVar = CVar::Register("BGLoadThrottle", "Set the maximum percentage of available bandwidth for background streaming (0-100)", 0, "33", BGLoadThrottleCallback, CATEGORY_NET, false, NULL, false);
 }
 
-// OFFSET: 0x00610930
+// PROVEN: 6b966aca IDENTICAL/UNPROVEN
+// OFFSET: 0x00610930/0x14029AE70
 void PatchOnDemandInitialize() {
     PatchOnDemand::Cache::Init(50000000);
 }

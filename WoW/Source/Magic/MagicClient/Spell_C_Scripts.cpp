@@ -22,9 +22,10 @@
 #include <cstdlib>
 #include <cstring>
 
-// STATIC: 0x00D0ADC8
+// STATIC: 0x00D0ADC8/0x140BBCFE0
 static const char* s_visibilityTypes[] = { "RAID_INCOMBAT", "RAID_OUTOFCOMBAT", "ENEMY_TARGET" };
 
+// PROVEN: 5b65a627 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A5A60/0x1405E8660
 static int32_t Script_SpellIsTargeting(lua_State* L) {
     if (s_targetingSpell) {
@@ -36,7 +37,7 @@ static int32_t Script_SpellIsTargeting(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 0c6e96e2 IDENTICAL/NONE
+// PROVEN: 0c6e96e2 IDENTICAL/UNPROVEN
 // OFFSET: 0x008A5AA0/0x1405E86A0
 static int32_t Script_SpellCanTargetItem(lua_State* L) {
     if (s_targetingSpell && (s_needTargets & 0x4010)) {
@@ -48,6 +49,7 @@ static int32_t Script_SpellCanTargetItem(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1fe82d60 IDENTICAL/UNPROVEN
 // OFFSET: 0x008A5AF0/0x1405E86E0
 static int32_t Script_SpellCanTargetGlyph(lua_State* L) {
     if (s_targetingSpell && (static_cast<uint8_t>(s_needTargets >> 17) & 1)) {
@@ -59,7 +61,8 @@ static int32_t Script_SpellCanTargetGlyph(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008AB020
+// PROVEN: dbe37b16 IDENTICAL/DIFFERENT
+// OFFSET: 0x008AB020/0x1405EECD0
 static int32_t Script_CannotBeResurrected(lua_State* L) {
     if (Spell_C_CannotBeResurrected()) {
         lua_pushnumber(L, 1.0);
@@ -153,6 +156,7 @@ static int32_t Script_SpellCanTargetUnit(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3676cf26 DIFFERENT/IDENTICAL
 // OFFSET: 0x008B47E0/0x1405FBAC0
 static int32_t Script_SpellStopTargeting(lua_State* L) {
     if (!CGGameUI::CanPerformAction(2)) {
@@ -316,6 +320,7 @@ static int32_t Script_CancelUnitBuff(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 4eb51164 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A5B40/0x1405E8730
 static int32_t Script_SpellCancelQueuedSpell(lua_State* L) {
     UserClientCancelQueuedSpell msg;
@@ -323,6 +328,7 @@ static int32_t Script_SpellCancelQueuedSpell(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 874f5847 IDENTICAL/UNPROVEN
 // OFFSET: 0x008A8770/0x1405EBA60
 static int32_t Script_SpellIsSelfBuff(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -396,7 +402,7 @@ static int32_t Script_SpellGetVisibilityInfo(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00D0AE00
+// STATIC: 0x00D0AE00/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SpellIsTargeting", &Script_SpellIsTargeting },
     { "SpellCanTargetItem", &Script_SpellCanTargetItem },
@@ -414,6 +420,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SpellIsSelfBuff", &Script_SpellIsSelfBuff },
 };
 
+// PROVEN: db7bed79 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A5B70/0x1405E8760
 void SpellRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -421,6 +428,7 @@ void SpellRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 56a174da IDENTICAL/IDENTICAL
 // OFFSET: 0x008A5BA0/0x1405E87B0
 void SpellUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -105,7 +105,7 @@ int32_t COsTreeView::IsCharacterAllowed(char c) {
     return 1;
 }
 
-// PROVEN: 3678f5f0 IDENTICAL/NONE
+// PROVEN: 3678f5f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x008764E0/0x1405AD500
 void OsGuiSetWindowTitle(void* window, const char* title) {
     uint32_t length = SUniConvertUTF8to16Len(title, 0x7FFFFFFF, NULL);
@@ -142,7 +142,7 @@ void* OsGuiGetWindow(int32_t type) {
     }
 }
 
-// PROVEN: 274c8bd1 IDENTICAL/NONE
+// PROVEN: 274c8bd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00876570/0x1405AD5E0
 int32_t OsGuiMessageBoxW(void* parentWindow, int32_t style, const uint16_t* message, const uint16_t* title) {
     if (!title) {
@@ -200,7 +200,7 @@ int32_t OsGuiMessageBoxW(void* parentWindow, int32_t style, const uint16_t* mess
     return result;
 }
 
-// PROVEN: b0d34565 IDENTICAL/NONE
+// PROVEN: b0d34565 IDENTICAL/IDENTICAL
 // OFFSET: 0x008767A0/0x1405AD890
 int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, const char* title) {
     uint32_t messageLength = SUniConvertUTF8to16Len(message, 0x7FFFFFFF, NULL);

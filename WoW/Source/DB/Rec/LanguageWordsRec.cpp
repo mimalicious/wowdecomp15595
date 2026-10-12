@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[3] = { 0, 0, 2 };
 // STATIC: 0x00C23A08/0x140A18DE0
 const DBCMeta LanguageWordsRec::s_meta = { "DBFilesClient\\LanguageWords.dbc", 3, 12, LanguageWordsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: eebb772d IDENTICAL/NONE
+// PROVEN: eebb772d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ECA0/0x1407D8230
 void LanguageWordsRec::FixupStrings(void* record, const char* strings) {
     LanguageWordsRec* rec = static_cast<LanguageWordsRec*>(record);

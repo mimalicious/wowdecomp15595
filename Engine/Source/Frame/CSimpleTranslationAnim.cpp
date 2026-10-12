@@ -12,16 +12,16 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: 0x00CA4714
+// STATIC: 0x00CA4714/0x140B427B4
 int32_t CSimpleTranslationAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CC8/0x140CB9A68
 int32_t CSimpleTranslationAnim::s_objectType;
 
-// STATIC: 0x00CA3824
+// STATIC: 0x00CA3824/0x140B40A98
 const char* CSimpleTranslationAnim::s_objectTypeName = "Translation";
 
-// PROVEN: 16876655 DIFFERENT/IDENTICAL
+// PROVEN: 16876655 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528430/0x140177980
 bool CSimpleTranslationAnim::IsA(int32_t type) {
     return type == CSimpleTranslationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
@@ -55,7 +55,7 @@ void CSimpleTranslationAnim::SetOffset(const C2Vector& offset) {
     }
 }
 
-// OFFSET: 0x00527940
+// OFFSET: 0x00527940/0x140176CE0
 void CSimpleTranslationAnim::Apply(float progress) {
     CScriptRegion* region = this->GetRegionParent();
 
@@ -71,6 +71,7 @@ void CSimpleTranslationAnim::Apply(float progress) {
 CSimpleTranslationAnim::~CSimpleTranslationAnim() {
 }
 
+// PROVEN: cbd07d08 DIFFERENT/IDENTICAL
 // OFFSET: 0x0052A630/0x14017A6E0
 CSimpleTranslationAnim::CSimpleTranslationAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
 }

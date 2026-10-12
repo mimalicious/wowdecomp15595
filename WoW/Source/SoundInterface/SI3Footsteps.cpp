@@ -11,15 +11,16 @@
 // STATIC: 0x00E28858
 static HASHKEY_NONE s_footstepKey;
 
-// STATIC: 0x00E2885C
+// STATIC: 0x00E2885C/0x140B69430
 static TSHashTable<FOOTSTEPSNDCACHE, HASHKEY_NONE> s_footstepSounds;
 
-// OFFSET: 0x00633C50
+// PROVEN: f504e212 IDENTICAL/DIFFERENT
+// OFFSET: 0x00633C50/0x1402C9A10
 void SI3::ShutDownFootstepSounds() {
     s_footstepSounds.Clear();
 }
 
-// OFFSET: 0x006338C0
+// OFFSET: 0x006338C0/0x1402C9570
 static uint32_t GetFootstepSound(uint32_t terrainType, int32_t footstepId, int32_t splash) {
     TerrainTypeRec* terrain = g_terrainTypeDB.GetRecord(terrainType);
 
@@ -78,12 +79,6 @@ void SI3::PlayFootstepSound(int32_t footstepId, const C3Vector* position, uint32
         properties.m_priority = 128;
         SE3::PlaySoundKit(soundKitId, position, &properties, NULL, __FILE__, __LINE__, "Footstep Sound");
     }
-}
-
-// INLINED
-FOOTSTEPSNDCACHE::FOOTSTEPSNDCACHE() {
-    this->m_sounds.Clear();
-    this->m_splashSounds.Clear();
 }
 
 // OFFSET: 0x00634400/0x1402CA4D0

@@ -73,7 +73,7 @@ static const char* s_modelDomainShaders[4] = {
     "T1_T2_T3_T4",
 };
 
-// STATIC: 0x00D080A0
+// STATIC: 0x00D080A0/0x140BB9460
 static M2ShaderEffect s_shaderEffects[29] = {
     { 12, 3, 1, 1, static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(3) },
     { 13, 3, 1, 1, static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(3) },
@@ -106,10 +106,10 @@ static M2ShaderEffect s_shaderEffects[29] = {
     { 32, 15, 2, 1, static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(0) },
 };
 
-// STATIC: 0x00D08358
+// STATIC: 0x00D08358/0x140BB9718
 static EGxTexOp s_alphaOps[8] = { static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(2), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(3), static_cast<EGxTexOp>(3) };
 
-// STATIC: 0x00D08378
+// STATIC: 0x00D08378/0x140BB9738
 static EGxTexOp s_colorOps[8] = { static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(4), static_cast<EGxTexOp>(2), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(5), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(2) };
 
 // OFFSET: 0x00839600/0x140563A60

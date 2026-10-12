@@ -2171,6 +2171,7 @@ FMOD_RESULT ChannelI::getPaused(bool *paused)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: c52a787c DIFFERENT/IDENTICAL
 // OFFSET: 0x00A7CE00/0x1408383D0
 FMOD_RESULT ChannelI::setVolume(float volume, bool forceupdatepos)
 {

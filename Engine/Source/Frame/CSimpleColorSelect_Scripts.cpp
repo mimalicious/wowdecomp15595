@@ -10,15 +10,15 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: d0130ecb IDENTICAL/NONE
-// OFFSET: 0x0053B610
+// PROVEN: d0130ecb IDENTICAL/IDENTICAL
+// OFFSET: 0x0053B610/0x14018F3E0
 void CSimpleColorSelect::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleColorSelect::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleColorSelect::RegisterScriptMethods);
 }
 
-// PROVEN: b29a7a01 IDENTICAL/NONE
-// OFFSET: 0x0053ACB0
+// PROVEN: b29a7a01 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053ACB0/0x14018E7A0
 void CSimpleColorSelect::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleColorSelect::s_metatable);
@@ -261,6 +261,7 @@ static int32_t Script_SetColorHSV(lua_State* L) {
     return 0;
 }
 
+// PROVEN: fbf023ac DIFFERENT/IDENTICAL
 // OFFSET: 0x0053B440/0x14018F1F0
 static int32_t Script_GetColorHSV(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
@@ -272,6 +273,7 @@ static int32_t Script_GetColorHSV(lua_State* L) {
     return 3;
 }
 
+// PROVEN: f129c0bc DIFFERENT/IDENTICAL
 // OFFSET: 0x0053B4C0/0x14018F280
 static int32_t Script_SetColorRGB(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
@@ -283,6 +285,7 @@ static int32_t Script_SetColorRGB(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e5a62b5f DIFFERENT/IDENTICAL
 // OFFSET: 0x0053B540/0x14018F300
 static int32_t Script_GetColorRGB(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
@@ -297,7 +300,7 @@ static int32_t Script_GetColorRGB(lua_State* L) {
     return 3;
 }
 
-// STATIC: 0x00CA4598
+// STATIC: 0x00CA4598/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetColorWheelTexture", &Script_GetColorWheelTexture },
     { "SetColorWheelTexture", &Script_SetColorWheelTexture },

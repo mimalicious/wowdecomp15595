@@ -228,7 +228,7 @@ Blizzard::Streaming::AddLatency::~AddLatency() {
     } while (accumulatorNs > 1000000);
 }
 
-// OFFSET: 0x007C7A60
+// OFFSET: 0x007C7A60/0x1404C2CE0
 Blizzard::Streaming::Transport::Config* Blizzard::Streaming::Transport::GetConfig() {
     static Config s_config = { 10000, true };
     return &s_config;

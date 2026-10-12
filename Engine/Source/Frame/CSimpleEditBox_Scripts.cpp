@@ -10,8 +10,8 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: 73cdbc27 IDENTICAL/NONE
-// OFFSET: 0x00534A70
+// PROVEN: 73cdbc27 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534A70/0x1401873E0
 static int32_t Script_SetFontObject(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -19,8 +19,8 @@ static int32_t Script_SetFontObject(lua_State* L) {
     return CSimpleFont_SetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 5357d1a5 IDENTICAL/NONE
-// OFFSET: 0x00534AD0
+// PROVEN: 5357d1a5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534AD0/0x140187450
 static int32_t Script_GetFontObject(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -28,8 +28,8 @@ static int32_t Script_GetFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 3b5717c2 IDENTICAL/NONE
-// OFFSET: 0x00534B30
+// PROVEN: 3b5717c2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534B30/0x1401874C0
 static int32_t Script_SetFont(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -37,8 +37,8 @@ static int32_t Script_SetFont(lua_State* L) {
     return CSimpleFont_SetFont(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: b0ac9406 IDENTICAL/NONE
-// OFFSET: 0x00534B90
+// PROVEN: b0ac9406 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534B90/0x140187530
 static int32_t Script_GetFont(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -46,8 +46,8 @@ static int32_t Script_GetFont(lua_State* L) {
     return CSimpleFont_GetFont(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 6bb7848e IDENTICAL/NONE
-// OFFSET: 0x00534BF0
+// PROVEN: 6bb7848e IDENTICAL/IDENTICAL
+// OFFSET: 0x00534BF0/0x1401875A0
 static int32_t Script_SetTextColor(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -55,8 +55,8 @@ static int32_t Script_SetTextColor(lua_State* L) {
     return CSimpleFont_SetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 56fb6b16 IDENTICAL/NONE
-// OFFSET: 0x00534C50
+// PROVEN: 56fb6b16 IDENTICAL/UNPROVEN
+// OFFSET: 0x00534C50/0x140187610
 static int32_t Script_GetTextColor(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -64,8 +64,8 @@ static int32_t Script_GetTextColor(lua_State* L) {
     return CSimpleFont_GetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 2d5fb5b2 IDENTICAL/NONE
-// OFFSET: 0x00534CB0
+// PROVEN: 2d5fb5b2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534CB0/0x140187680
 static int32_t Script_SetShadowColor(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -73,8 +73,8 @@ static int32_t Script_SetShadowColor(lua_State* L) {
     return CSimpleFont_SetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: d3e18ee2 IDENTICAL/NONE
-// OFFSET: 0x00534D10
+// PROVEN: d3e18ee2 IDENTICAL/UNPROVEN
+// OFFSET: 0x00534D10/0x1401876F0
 static int32_t Script_GetShadowColor(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -82,8 +82,8 @@ static int32_t Script_GetShadowColor(lua_State* L) {
     return CSimpleFont_GetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: f162d3d5 IDENTICAL/NONE
-// OFFSET: 0x00534D70
+// PROVEN: f162d3d5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534D70/0x140187760
 static int32_t Script_SetShadowOffset(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -91,8 +91,8 @@ static int32_t Script_SetShadowOffset(lua_State* L) {
     return CSimpleFont_SetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 10d66414 IDENTICAL/NONE
-// OFFSET: 0x00534DD0
+// PROVEN: 10d66414 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534DD0/0x1401877D0
 static int32_t Script_GetShadowOffset(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -100,8 +100,8 @@ static int32_t Script_GetShadowOffset(lua_State* L) {
     return CSimpleFont_GetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 770f37c3 IDENTICAL/NONE
-// OFFSET: 0x00534E30
+// PROVEN: 770f37c3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534E30/0x140187840
 static int32_t Script_SetSpacing(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -109,8 +109,8 @@ static int32_t Script_SetSpacing(lua_State* L) {
     return CSimpleFont_SetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: fe920e9c IDENTICAL/NONE
-// OFFSET: 0x00534E90
+// PROVEN: fe920e9c IDENTICAL/IDENTICAL
+// OFFSET: 0x00534E90/0x1401878B0
 static int32_t Script_GetSpacing(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -118,8 +118,8 @@ static int32_t Script_GetSpacing(lua_State* L) {
     return CSimpleFont_GetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: a0422384 IDENTICAL/NONE
-// OFFSET: 0x00534EF0
+// PROVEN: a0422384 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534EF0/0x140187920
 static int32_t Script_SetJustifyH(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -127,8 +127,8 @@ static int32_t Script_SetJustifyH(lua_State* L) {
     return CSimpleFont_SetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 24ed1a75 IDENTICAL/NONE
-// OFFSET: 0x00534F50
+// PROVEN: 24ed1a75 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534F50/0x140187990
 static int32_t Script_GetJustifyH(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -136,8 +136,8 @@ static int32_t Script_GetJustifyH(lua_State* L) {
     return CSimpleFont_GetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 02743067 IDENTICAL/NONE
-// OFFSET: 0x00534FB0
+// PROVEN: 02743067 IDENTICAL/IDENTICAL
+// OFFSET: 0x00534FB0/0x140187A00
 static int32_t Script_SetJustifyV(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -145,8 +145,8 @@ static int32_t Script_SetJustifyV(lua_State* L) {
     return CSimpleFont_SetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: c06d5b3b IDENTICAL/NONE
-// OFFSET: 0x00535010
+// PROVEN: c06d5b3b IDENTICAL/IDENTICAL
+// OFFSET: 0x00535010/0x140187A70
 static int32_t Script_GetJustifyV(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -154,8 +154,8 @@ static int32_t Script_GetJustifyV(lua_State* L) {
     return CSimpleFont_GetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: a9782cb7 IDENTICAL/NONE
-// OFFSET: 0x00535070
+// PROVEN: a9782cb7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00535070/0x140187AE0
 static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleFont* font = editBox->m_font;
@@ -163,7 +163,7 @@ static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_SetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 420a1f7b IDENTICAL/NONE
+// PROVEN: 420a1f7b IDENTICAL/IDENTICAL
 // OFFSET: 0x005350D0/0x140187B50
 static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -172,7 +172,7 @@ static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_GetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// PROVEN: 63c583bd IDENTICAL/NONE
+// PROVEN: 63c583bd IDENTICAL/IDENTICAL
 // OFFSET: 0x00535130/0x140187BC0
 static int32_t Script_SetAutoFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -180,7 +180,7 @@ static int32_t Script_SetAutoFocus(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ea8b8cdc IDENTICAL/NONE
+// PROVEN: ea8b8cdc IDENTICAL/IDENTICAL
 // OFFSET: 0x00535180/0x140187C20
 static int32_t Script_IsAutoFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -193,7 +193,7 @@ static int32_t Script_IsAutoFocus(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 4ad1719c IDENTICAL/NONE
+// PROVEN: 4ad1719c IDENTICAL/IDENTICAL
 // OFFSET: 0x005351E0/0x140187C80
 static int32_t Script_SetCountInvisibleLetters(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -201,7 +201,7 @@ static int32_t Script_SetCountInvisibleLetters(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 569d7907 IDENTICAL/DIFFERENT
+// PROVEN: 569d7907 IDENTICAL/IDENTICAL
 // OFFSET: 0x00535230/0x140187CE0
 static int32_t Script_IsCountInvisibleLetters(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -214,7 +214,7 @@ static int32_t Script_IsCountInvisibleLetters(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 61ed0e22 IDENTICAL/NONE
+// PROVEN: 61ed0e22 IDENTICAL/IDENTICAL
 // OFFSET: 0x00535290/0x140187D40
 static int32_t Script_SetMultiLine(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -222,7 +222,7 @@ static int32_t Script_SetMultiLine(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d0512e61 IDENTICAL/NONE
+// PROVEN: d0512e61 IDENTICAL/IDENTICAL
 // OFFSET: 0x005352E0/0x140187DA0
 static int32_t Script_IsMultiLine(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -235,7 +235,7 @@ static int32_t Script_IsMultiLine(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c5794bbe IDENTICAL/NONE
+// PROVEN: c5794bbe IDENTICAL/IDENTICAL
 // OFFSET: 0x00535340/0x140187E00
 static int32_t Script_SetNumeric(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -243,7 +243,7 @@ static int32_t Script_SetNumeric(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 30998db5 IDENTICAL/DIFFERENT
+// PROVEN: 30998db5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00535390/0x140187E60
 static int32_t Script_IsNumeric(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -256,7 +256,7 @@ static int32_t Script_IsNumeric(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 673b0815 IDENTICAL/NONE
+// PROVEN: 673b0815 IDENTICAL/IDENTICAL
 // OFFSET: 0x005353F0/0x140187EC0
 static int32_t Script_SetPassword(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -264,7 +264,7 @@ static int32_t Script_SetPassword(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 41efc86e IDENTICAL/NONE
+// PROVEN: 41efc86e IDENTICAL/IDENTICAL
 // OFFSET: 0x00535440/0x140187F20
 static int32_t Script_IsPassword(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -277,6 +277,7 @@ static int32_t Script_IsPassword(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 4ba60582 DIFFERENT/IDENTICAL
 // OFFSET: 0x005354A0/0x140187F80
 static int32_t Script_SetBlinkSpeed(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -290,6 +291,7 @@ static int32_t Script_SetBlinkSpeed(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 5774ae0a DIFFERENT/IDENTICAL
 // OFFSET: 0x00535520/0x140188020
 static int32_t Script_GetBlinkSpeed(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -323,7 +325,7 @@ static int32_t Script_SetText(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e95ad680 IDENTICAL/DIFFERENT
+// PROVEN: e95ad680 IDENTICAL/IDENTICAL
 // OFFSET: 0x00535650/0x1401881A0
 static int32_t Script_GetText(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -349,7 +351,7 @@ static int32_t Script_SetNumber(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4907bacd IDENTICAL/DIFFERENT
+// PROVEN: 4907bacd IDENTICAL/IDENTICAL
 // OFFSET: 0x00535740/0x1401882D0
 static int32_t Script_GetNumber(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -361,7 +363,7 @@ static int32_t Script_GetNumber(lua_State* L) {
     return 1;
 }
 
-// PROVEN: fb6fbcf4 IDENTICAL/UNPROVEN
+// PROVEN: fb6fbcf4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005357B0/0x140188350
 static int32_t Script_HighlightText(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -395,6 +397,7 @@ static int32_t Script_AddHistoryLine(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e1a6ac66 DIFFERENT/IDENTICAL
 // OFFSET: 0x005358C0/0x1401884B0
 static int32_t Script_ClearHistory(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -454,7 +457,7 @@ static int32_t Script_ClearFocus(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 82d36728 IDENTICAL/UNPROVEN
+// PROVEN: 82d36728 IDENTICAL/IDENTICAL
 // OFFSET: 0x00535BB0/0x140188860
 static int32_t Script_HasFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -476,6 +479,7 @@ static int32_t Script_SetMaxBytes(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 07a41a25 DIFFERENT/IDENTICAL
 // OFFSET: 0x00535C90/0x140188970
 static int32_t Script_GetMaxBytes(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -483,6 +487,7 @@ static int32_t Script_GetMaxBytes(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 2ba4959b DIFFERENT/IDENTICAL
 // OFFSET: 0x00535CE0/0x1401889C0
 static int32_t Script_SetMaxLetters(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -496,6 +501,7 @@ static int32_t Script_SetMaxLetters(lua_State* L) {
     return 0;
 }
 
+// PROVEN: f084c7f7 DIFFERENT/IDENTICAL
 // OFFSET: 0x00535D60/0x140188A60
 static int32_t Script_GetMaxLetters(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -503,7 +509,7 @@ static int32_t Script_GetMaxLetters(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 73012f4b IDENTICAL/DIFFERENT
+// PROVEN: 73012f4b IDENTICAL/IDENTICAL
 // OFFSET: 0x00535DB0/0x140188AB0
 static int32_t Script_GetNumLetters(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -512,6 +518,7 @@ static int32_t Script_GetNumLetters(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f67ee645 DIFFERENT/IDENTICAL
 // OFFSET: 0x00535E30/0x140188B20
 static int32_t Script_GetHistoryLines(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -519,6 +526,7 @@ static int32_t Script_GetHistoryLines(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 62f393d8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00535E80/0x140188B70
 static int32_t Script_SetHistoryLines(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -534,7 +542,7 @@ static int32_t Script_SetHistoryLines(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1b6435be IDENTICAL/UNPROVEN
+// PROVEN: 1b6435be IDENTICAL/IDENTICAL
 // OFFSET: 0x00535F10/0x140188C20
 static int32_t Script_GetInputLanguage(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -542,6 +550,7 @@ static int32_t Script_GetInputLanguage(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 03238e91 DIFFERENT/IDENTICAL
 // OFFSET: 0x00535F60/0x140188C70
 static int32_t Script_ToggleInputLanguage(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -549,7 +558,7 @@ static int32_t Script_ToggleInputLanguage(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 5845568a IDENTICAL/NONE
+// PROVEN: 5845568a IDENTICAL/IDENTICAL
 // OFFSET: 0x00535FA0/0x140188CB0
 static int32_t Script_SetAltArrowKeyMode(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -557,7 +566,7 @@ static int32_t Script_SetAltArrowKeyMode(lua_State* L) {
     return 0;
 }
 
-// PROVEN: fcc84e5d IDENTICAL/NONE
+// PROVEN: fcc84e5d IDENTICAL/IDENTICAL
 // OFFSET: 0x00536000/0x140188D10
 static int32_t Script_GetAltArrowKeyMode(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -570,7 +579,7 @@ static int32_t Script_GetAltArrowKeyMode(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 13bd053d IDENTICAL/NONE
+// PROVEN: 13bd053d IDENTICAL/IDENTICAL
 // OFFSET: 0x00536060/0x140188D70
 static int32_t Script_IsInIMECompositionMode(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -596,6 +605,7 @@ static int32_t Script_SetCursorPosition(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e5e0b795 DIFFERENT/IDENTICAL
 // OFFSET: 0x00536140/0x140188E70
 static int32_t Script_GetCursorPosition(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -610,21 +620,22 @@ static int32_t Script_GetUTF8CursorPosition(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 9124c7ba IDENTICAL/NONE
-// OFFSET: 0x00534A40
+// PROVEN: 9124c7ba IDENTICAL/IDENTICAL
+// OFFSET: 0x00534A40/0x1401873B0
 void CSimpleEditBox::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleEditBox::s_metatable);
     CSimpleEditBox::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: cf7fea2b IDENTICAL/NONE
-// OFFSET: 0x005362C0
+// PROVEN: cf7fea2b IDENTICAL/IDENTICAL
+// OFFSET: 0x005362C0/0x140188FF0
 void CSimpleEditBox::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleEditBox::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleEditBox::RegisterScriptMethods);
 }
 
+// PROVEN: eeaca56c DIFFERENT/IDENTICAL
 // OFFSET: 0x005361F0/0x140188F20
 static int32_t Script_Enable(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
@@ -632,22 +643,23 @@ static int32_t Script_Enable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00536230
+// PROVEN: 2f636836 DIFFERENT/IDENTICAL
+// OFFSET: 0x00536230/0x140188F60
 static int32_t Script_Disable(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->Enable(0);
     return 0;
 }
 
-// PROVEN: b0b2de98 IDENTICAL/NONE
-// OFFSET: 0x00536270
+// PROVEN: b0b2de98 IDENTICAL/IDENTICAL
+// OFFSET: 0x00536270/0x140188FA0
 static int32_t Script_IsEnabled(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     lua_pushboolean(L, ~(editBox->m_frameFlags >> 10) & 1);
     return 1;
 }
 
-// STATIC: 0x00CA3F08
+// STATIC: 0x00CA3F08/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetFontObject", &Script_SetFontObject },
     { "GetFontObject", &Script_GetFontObject },
@@ -712,8 +724,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "IsEnabled", &Script_IsEnabled },
 };
 
-// PROVEN: 61c4a8dd IDENTICAL/NONE
-// OFFSET: 0x00534A20
+// PROVEN: 61c4a8dd IDENTICAL/UNPROVEN
+// OFFSET: 0x00534A20/0x140187380
 void CSimpleEditBox::RegisterScriptMethods(lua_State* L) {
     CSimpleHyperlinkedFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

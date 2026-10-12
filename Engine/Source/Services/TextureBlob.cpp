@@ -6,10 +6,10 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00CA4F84
+// STATIC: 0x00CA4F84/0x140B435F0
 static TSExplicitList<CTextureBlob, offsetof(CTextureBlob, m_link)> s_textureBlobList;
 
-// STATIC: 0x00DD4478
+// STATIC: 0x00DD4478/0x140B43610
 static TSHashTableReuse<CTextureBlobTexture, HASHKEY_TEXTUREBLOBFILE> s_textureBlobTextureHash;
 
 // INLINED
@@ -71,6 +71,7 @@ const uint8_t* CTextureBlobTexture::GetLevel(uint32_t level) {
     return data;
 }
 
+// PROVEN: dcfdf1df IDENTICAL/DIFFERENT
 // OFFSET: 0x0054B2D0/0x1401A4700
 CTextureBlob::~CTextureBlob() {
     this->m_filename[0] = '\0';
@@ -86,8 +87,8 @@ CTextureBlob::~CTextureBlob() {
     this->m_levelData = NULL;
 }
 
-// PROVEN: 3a3484cd IDENTICAL/NONE
-// OFFSET: 0x0054B360
+// PROVEN: 3a3484cd IDENTICAL/UNPROVEN
+// OFFSET: 0x0054B360/0x1401A47C0
 CTextureBlob* CTextureBlob::FindBlob(const char* fileName) {
     for (CTextureBlob* blob = s_textureBlobList.Head(), * next; !s_textureBlobList.IsEnd(blob); blob = next) {
         next = s_textureBlobList.RawNext(blob);
@@ -100,7 +101,7 @@ CTextureBlob* CTextureBlob::FindBlob(const char* fileName) {
     return NULL;
 }
 
-// OFFSET: 0x0054B540
+// OFFSET: 0x0054B540/0x1401A48E0
 CTextureBlobTexture* CTextureBlob::GetTexture(const char* fileName) {
     if (!s_textureBlobList.Head()) {
         return NULL;
@@ -186,7 +187,7 @@ void UpdateBlobTexture(EGxTexCommand command, uint32_t width, uint32_t height, u
     }
 }
 
-// PROVEN: 2b28394c IDENTICAL/DIFFERENT
+// PROVEN: 2b28394c IDENTICAL/UNPROVEN
 // OFFSET: 0x0054B8A0/0x1401A4EC0
 void CTextureBlob::UnloadAll() {
     for (CTextureBlob* blob = s_textureBlobList.Head(); !s_textureBlobList.IsEnd(blob); ) {
@@ -247,6 +248,7 @@ int32_t CTextureBlob::CreateTexture(CTexture* texture, CTextureBlobTexture* blob
     return 1;
 }
 
+// PROVEN: 9fcb3535 IDENTICAL/DIFFERENT
 // OFFSET: 0x0054C2F0/0x1401A5D20
 void CTextureBlob::HashTexture(SBlobTexture* texture) {
     const char* name = this->m_names + texture->m_nameOffset;
@@ -291,6 +293,7 @@ int32_t CTextureBlob::Parse(CTextureBlob* blob, uint32_t size) {
     return 1;
 }
 
+// PROVEN: e33cbf99 IDENTICAL/DIFFERENT
 // OFFSET: 0x0054C4E0/0x1401A60F0
 int32_t CTextureBlob::Load(const char* fileName) {
     if (CTextureBlob::FindBlob(fileName)) {
@@ -314,6 +317,7 @@ int32_t CTextureBlob::Load(const char* fileName) {
     return CTextureBlob::Parse(blob, size);
 }
 
+// PROVEN: 055f9429 IDENTICAL/DIFFERENT
 // OFFSET: 0x0054C5A0/0x1401A62A0
 int32_t CTextureBlob::Load(const char* fileName, void* data, uint32_t size) {
     if (CTextureBlob::FindBlob(fileName)) {
@@ -327,7 +331,7 @@ int32_t CTextureBlob::Load(const char* fileName, void* data, uint32_t size) {
     return CTextureBlob::Parse(blob, size);
 }
 
-// PROVEN: 0c5b2ace IDENTICAL/DIFFERENT
+// PROVEN: 0c5b2ace IDENTICAL/UNPROVEN
 // OFFSET: 0x0054C450/0x1401A6020
 void CTextureBlob::RebuildHashTable() {
     for (CTextureBlob* blob = s_textureBlobList.Head(), * next; !s_textureBlobList.IsEnd(blob); blob = next) {

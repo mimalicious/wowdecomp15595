@@ -13,13 +13,13 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA4798
+// STATIC: 0x00CA4798/0x140B428D0
 int32_t CSimpleControlPoint::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CBC
+// STATIC: 0x00DD3CBC/0x140CB9A5C
 int32_t CSimpleControlPoint::s_objectType;
 
-// STATIC: 0x00CA3830
+// STATIC: 0x00CA3830/0x140B40AB0
 const char* CSimpleControlPoint::s_objectTypeName = "ControlPoint";
 
 // PROVEN: 1e3c45e4 IDENTICAL/IDENTICAL
@@ -137,6 +137,7 @@ CSimpleControlPoint::CSimpleControlPoint(CSimplePathAnim* parent) {
     }
 }
 
+// PROVEN: c93761cf IDENTICAL/UNPROVEN
 // OFFSET: 0x00529F30/0x140179D70
 bool CSimpleControlPoint::ChangeParent(CSimplePathAnim* parent) {
     if (!parent || this->m_parent == parent) {
@@ -155,7 +156,7 @@ bool CSimpleControlPoint::ChangeParent(CSimplePathAnim* parent) {
     return true;
 }
 
-// PROVEN: 2a850839 IDENTICAL/DIFFERENT
+// PROVEN: 2a850839 IDENTICAL/IDENTICAL
 // OFFSET: 0x005282E0/0x14090C360
 CScriptObject* CSimpleControlPoint::GetScriptObjectParent() {
     return this->m_parent;

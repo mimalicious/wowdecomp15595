@@ -11,12 +11,14 @@
 
 extern TSList<CombatLogFilter, TSGetLink<CombatLogFilter> > s_filters;
 
+// PROVEN: 88f058e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F6240/0x140279B80
 static int32_t Script_CombatLogResetFilter(lua_State* L) {
     s_filters.Clear();
     return 0;
 }
 
+// PROVEN: 1c97a239 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F5000/0x140278560
 static int32_t Script_CombatLogGetRetentionTime(lua_State* L) {
     lua_pushinteger(L, g_combatLogRetentionTimeCVar->m_intValue);
@@ -38,6 +40,7 @@ static int32_t Script_CombatLogClearEntries(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 04d95376 IDENTICAL/DIFFERENT
 // OFFSET: 0x005F3A70/0x140276730
 static int32_t Script_CombatLogSetRetentionTime(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -143,7 +146,7 @@ static int32_t Script_CombatLogGetNumEntries(lua_State* L) {
     return 1;
 }
 
-// PROVEN: b7848753 IDENTICAL/NONE
+// PROVEN: b7848753 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F3A40/0x140276700
 static int32_t Script_CombatTextSetActiveUnit(lua_State* L) {
     s_combatTextActiveUnit = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
@@ -247,7 +250,7 @@ static int32_t Script_CombatLogAdvanceEntry(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00CA79A0
+// STATIC: 0x00CA79A0/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CombatLogResetFilter", &Script_CombatLogResetFilter },
     { "CombatLogAddFilter", &Script_CombatLogAddFilter },
@@ -262,7 +265,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CombatTextSetActiveUnit", &Script_CombatTextSetActiveUnit },
 };
 
-// PROVEN: c1d9265c IDENTICAL/NONE
+// PROVEN: c1d9265c IDENTICAL/IDENTICAL
 // OFFSET: 0x005F3B70/0x140276820
 void UnitCombatLogRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -270,7 +273,7 @@ void UnitCombatLogRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 12b18f47 IDENTICAL/NONE
+// PROVEN: 12b18f47 IDENTICAL/IDENTICAL
 // OFFSET: 0x005F3BA0/0x140276870
 void UnitCombatLogUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

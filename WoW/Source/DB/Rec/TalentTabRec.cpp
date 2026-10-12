@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[10] = { 0, 2, 0, 0, 0, 0, 2, 2, 0, 0 };
 // STATIC: 0x00C20354/0x140A14B50
 const DBCMeta TalentTabRec::s_meta = { "DBFilesClient\\TalentTab.dbc", 10, 44, TalentTabRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 10a1d5fb IDENTICAL/NONE
+// PROVEN: 10a1d5fb IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E970/0x1407D7DC0
 void TalentTabRec::FixupStrings(void* record, const char* strings) {
     TalentTabRec* rec = static_cast<TalentTabRec*>(record);

@@ -8,7 +8,7 @@
 // STATIC: 0x00EBA238
 std::map<std::string, Blizzard::Storage::StorageUnit*>* Blizzard::Storage::s_StorageMap;
 
-// STATIC: 0x00EB4A20
+// STATIC: 0x00EB4A20/0x140DA0940
 Blizzard::Lock::Mutex Blizzard::Storage::s_storageMutex;
 
 // STATIC: 0x00EB4A38

@@ -43,6 +43,7 @@ uint32_t STORMAPI SGetCurrentThreadId() {
     return GetCurrentThreadId();
 }
 
+// PROVEN: 21eed2d3 IDENTICAL/NONE
 // OFFSET: 0x004B7610/0x1400EF6A0
 uint32_t STORMAPI SGetCurrentProcessId() {
     return GetCurrentProcessId();
@@ -106,6 +107,7 @@ void CInitCritSect::Leave() {
     this->m_critsect->Leave();
 }
 
+// PROVEN: dab0089d IDENTICAL/IDENTICAL
 // OFFSET: 0x004B7740/0x1400EF750
 static uint32_t STORMAPI ProcessCompletionCallbackThread(void* vdata) {
     PROCESSCOMPLETION* completion = static_cast<PROCESSCOMPLETION*>(vdata);

@@ -18,6 +18,7 @@ CGVoidStorage_C::CGVoidStorage_C() {
     this->m_items = NULL;
 }
 
+// PROVEN: 2795fbcd IDENTICAL/DIFFERENT
 // OFFSET: 0x00595BB0/0x140203210
 CGVoidStorage_C::~CGVoidStorage_C() {
     if (this->m_items) {
@@ -52,6 +53,7 @@ VoidItem_C* CGVoidStorage_C::GetItem(WOWGUID guid) {
     return NULL;
 }
 
+// PROVEN: c4706133 IDENTICAL/IDENTICAL
 // OFFSET: 0x00595630/0x140202B40
 void CGVoidStorage_C::Query() {
     if (this->m_state) {
@@ -102,7 +104,7 @@ void CGVoidStorage_C::OnTransferResult(uint32_t result) {
     FrameScript_SignalEvent(SCRIPT_EVENT_VOID_TRANSFER_DONE, NULL);
 }
 
-// OFFSET: 0x005957B0
+// OFFSET: 0x005957B0/0x140202CF0
 static bool OnVoidStorageFailed(ClientVoidStorageFailed* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -116,7 +118,7 @@ static bool OnVoidStorageFailed(ClientVoidStorageFailed* msg) {
     return true;
 }
 
-// OFFSET: 0x00595810
+// OFFSET: 0x00595810/0x140202D60
 static bool OnVoidTransferResult(ClientVoidTransferResult* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -127,7 +129,8 @@ static bool OnVoidTransferResult(ClientVoidTransferResult* msg) {
     return true;
 }
 
-// OFFSET: 0x00595750
+// PROVEN: 4d78b5a8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00595750/0x140202C90
 void VoidStorage_C_Shutdown() {
     ClientVoidStorageContents::s_handler = NULL;
     ClientVoidStorageFailed::s_handler = NULL;
@@ -137,6 +140,7 @@ void VoidStorage_C_Shutdown() {
     CGVoidTransfer::Destroy();
 }
 
+// PROVEN: 77024fcf IDENTICAL/IDENTICAL
 // OFFSET: 0x00595770/0x140202CC0
 bool CGVoidStorage_C::IsNewItem(WOWGUID guid) {
     for (uint32_t i = 0; i < this->m_newItems.m_count; i++) {
@@ -164,6 +168,7 @@ bool CGVoidStorage_C::SwapItem(WOWGUID guid, uint32_t slot) {
     return true;
 }
 
+// PROVEN: abf3f12b IDENTICAL/IDENTICAL
 // OFFSET: 0x00595A00/0x140202FF0
 void CGVoidStorage_C::ClearNewItems() {
     this->m_newItems.Clear();
@@ -280,7 +285,7 @@ void CGVoidStorage_C::OnTransferChanges(const TSGrowableArray<uint64_t>& removed
     }
 }
 
-// OFFSET: 0x00596840
+// OFFSET: 0x00596840/0x140204280
 static bool OnVoidStorageContents(ClientVoidStorageContents* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -304,9 +309,9 @@ static bool OnVoidStorageTransferChanges(ClientVoidStorageTransferChanges* msg) 
 
 // OFFSET: 0x005968C0/0x140204320
 void VoidStorage_C_Initialize() {
-    ClientVoidStorageContents::s_handler = OnVoidStorageContents;
-    ClientVoidStorageFailed::s_handler = OnVoidStorageFailed;
-    ClientVoidStorageTransferChanges::s_handler = OnVoidStorageTransferChanges;
-    ClientVoidTransferResult::s_handler = OnVoidTransferResult;
-    ClientVoidItemSwapResponse::s_handler = OnVoidItemSwapResponse;
+    ClientVoidStorageContents::s_handler = JamHandlerEncode(OnVoidStorageContents, g_jamHandlerKey_CFF6D4);
+    ClientVoidStorageFailed::s_handler = JamHandlerEncode(OnVoidStorageFailed, g_jamHandlerKey_CFF164);
+    ClientVoidStorageTransferChanges::s_handler = JamHandlerEncode(OnVoidStorageTransferChanges, g_jamHandlerKey_CFD540);
+    ClientVoidTransferResult::s_handler = JamHandlerEncode(OnVoidTransferResult, g_jamHandlerKey_CFE088);
+    ClientVoidItemSwapResponse::s_handler = JamHandlerEncode(OnVoidItemSwapResponse, g_jamHandlerKey_CFE448);
 }

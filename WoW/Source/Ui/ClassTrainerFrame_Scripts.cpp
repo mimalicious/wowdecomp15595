@@ -25,14 +25,14 @@
 #include "WoW/Source/Ui/QuestTextParser.h"
 #include "WoW/Source/Ui/Types.h"
 
-// PROVEN: 5332716c IDENTICAL/NONE
+// PROVEN: 5332716c IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9080/0x140743EC0
 static int32_t Script_GetNumTrainerServices(lua_State* L) {
     lua_pushnumber(L, CGClassTrainer::m_filteredServices);
     return 1;
 }
 
-// PROVEN: 2f9014ab IDENTICAL/NONE
+// PROVEN: 2f9014ab IDENTICAL/IDENTICAL
 // OFFSET: 0x009B90C0/0x140743EF0
 static int32_t Script_IsTradeskillTrainer(lua_State* L) {
     if (CGClassTrainer::m_trainerType == 2) {
@@ -44,13 +44,14 @@ static int32_t Script_IsTradeskillTrainer(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 788fe43f IDENTICAL/NONE
+// PROVEN: 788fe43f IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9100/0x140743F30
 static int32_t Script_GetTrainerGreetingText(lua_State* L) {
     lua_pushstring(L, CGClassTrainer::m_greetingText);
     return 1;
 }
 
+// PROVEN: 4887d6ce IDENTICAL/DIFFERENT
 // OFFSET: 0x009B9170/0x140743FC0
 static int32_t Script_GetTrainerServiceStepIndex(lua_State* L) {
     if (CGClassTrainer::m_stepIndex >= 0) {
@@ -61,13 +62,14 @@ static int32_t Script_GetTrainerServiceStepIndex(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d8087372 IDENTICAL/NONE
+// PROVEN: d8087372 IDENTICAL/DIFFERENT
 // OFFSET: 0x009B9580/0x140744580
 static int32_t Script_CloseTrainer(lua_State* L) {
     CGClassTrainer::SetTrainer(WOWGUID(), 0, 0);
     return 0;
 }
 
+// PROVEN: 34f32450 IDENTICAL/UNPROVEN
 // OFFSET: 0x009B95B0/0x1407445D0
 static int32_t Script_SelectTrainerService(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -97,6 +99,7 @@ static int32_t Script_GetTrainerSelectionIndex(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ffe00fda IDENTICAL/DIFFERENT
 // OFFSET: 0x009B96C0/0x1407446F0
 static int32_t Script_GetTrainerServiceLevelReq(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -119,6 +122,7 @@ static int32_t Script_GetTrainerServiceLevelReq(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 18e3ac51 IDENTICAL/DIFFERENT
 // OFFSET: 0x009B9740/0x140744770
 static int32_t Script_GetTrainerServiceNumAbilityReq(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -148,6 +152,7 @@ static int32_t Script_GetTrainerServiceNumAbilityReq(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 66157f67 DIFFERENT/IDENTICAL
 // OFFSET: 0x009B97E0/0x140744810
 static int32_t Script_GetTrainerServiceTypeFilter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -355,6 +360,7 @@ static int32_t Script_GetTrainerServiceAbilityReq(lua_State* L) {
     return 2;
 }
 
+// PROVEN: d566f48a IDENTICAL/DIFFERENT
 // OFFSET: 0x009BA1C0/0x140745480
 static int32_t Script_BuyTrainerService(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -373,6 +379,7 @@ static int32_t Script_BuyTrainerService(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 713de3ea DIFFERENT/IDENTICAL
 // OFFSET: 0x009BA220/0x140745500
 static int32_t Script_SetTrainerServiceTypeFilter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -549,6 +556,7 @@ static int32_t Script_GetTrainerServiceIcon(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 285c1122 IDENTICAL/DIFFERENT
 // OFFSET: 0x009BAF70/0x1407466E0
 static int32_t Script_GetTrainerServiceDescription(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -622,7 +630,7 @@ static int32_t Script_GetTrainerServiceItemLink(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00D15A30
+// STATIC: 0x00D15A30/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "OpenTrainer", &Script_OpenTrainer },
     { "CloseTrainer", &Script_CloseTrainer },
@@ -648,7 +656,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTrainerTradeskillRankValues", &Script_GetTrainerTradeskillRankValues },
 };
 
-// PROVEN: 4c2fdd6d IDENTICAL/NONE
+// PROVEN: 4c2fdd6d IDENTICAL/UNPROVEN
 // OFFSET: 0x009B91A0/0x140743FF0
 void ClassTrainerRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -656,7 +664,7 @@ void ClassTrainerRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 373c2929 IDENTICAL/NONE
+// PROVEN: 373c2929 IDENTICAL/UNPROVEN
 // OFFSET: 0x009B91D0/0x140744040
 void ClassTrainerUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

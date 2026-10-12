@@ -18,7 +18,7 @@
 #include "WoW/Source/Object/ObjectClient/UnitCombatLog_C.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: 0x00D119A0
+// STATIC: 0x00D119A0/0x140BC86D4
 CGCommentator CGCommentator::s_Commentator;
 
 // OFFSET: 0x0092BDD0/0x140692A10
@@ -141,10 +141,11 @@ void CGCommentator::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_STATE_CHANGED, CGCommentator::OnStateChanged, NULL);
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT1, CGCommentator::OnSkirmishPlayersInQueue, NULL);
     ClientServices::SetMessageHandler(SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT2, CGCommentator::OnSkirmishPlayersModeState, NULL);
-    ClientCommentatorPartyInfo::s_handler = CGCommentator::OnClientCommentatorPartyInfo;
+    ClientCommentatorPartyInfo::s_handler = JamHandlerEncode(CGCommentator::OnClientCommentatorPartyInfo, g_jamHandlerKey_CFDEF0);
 }
 
-// OFFSET: 0x0092BD10
+// PROVEN: 01c2b4aa IDENTICAL/DIFFERENT
+// OFFSET: 0x0092BD10/0x140692940
 void CGCommentator::SnapCameraToPlayer() {
     if (!CGWorldFrame::s_currentWorldFrame) {
         return;
@@ -169,7 +170,7 @@ void CGCommentator::SnapCameraToPlayer() {
     camera->CommentatorSetViewAndPosition(this->m_position, this->m_facing, this->m_pitch);
 }
 
-// OFFSET: 0x0092C070
+// OFFSET: 0x0092C070/0x140692E40
 void CGCommentator::PostInit(CGPlayer_C* player) {
     if (player && player->IsCommentatorUberOrInArena()) {
         World::ObjectSetShadow(player->m_worldObject, 0);
@@ -183,6 +184,7 @@ void CGCommentator::PostInit(CGPlayer_C* player) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_ENTER_WORLD, NULL);
 }
 
+// PROVEN: 6265db8c IDENTICAL/IDENTICAL
 // OFFSET: 0x00928580/0x14068E000
 void CGCommentator::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_PLAYER_INFO);
@@ -201,18 +203,8 @@ void CommentatorInstanceKey::Write(CDataStore* msg) const {
     msg->Put(static_cast<uint8_t>(this->unk_0004));
 }
 
-// INLINED
-void CGCommentator::SetMoveSpeed(float speed) {
-    if (speed >= 40.0f) {
-        this->m_moveSpeed = 40.0f;
-    } else if (speed <= 0.0f) {
-        this->m_moveSpeed = 0.0f;
-    } else {
-        this->m_moveSpeed = speed;
-    }
-}
-
-// OFFSET: 0x00928180
+// PROVEN: bebc80e1 IDENTICAL/UNPROVEN
+// OFFSET: 0x00928180/0x14068DCA0
 int32_t CGCommentator::OnSkirmishPlayersModeState(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t mode = 0;
     msg->Get(mode);
@@ -240,6 +232,7 @@ void CGCommentator::SetPosYawPitch(const C3Vector& position, float facing, float
     camera->CommentatorSetViewAndPosition(this->m_position, facing, pitch);
 }
 
+// PROVEN: 5ec31f8b IDENTICAL/NONE
 // OFFSET: 0x00928270
 void CGCommentator::SetFov(float fov) {
     this->m_targetFov = fov;
@@ -272,6 +265,7 @@ void CommentatorInstanceKey::Read(CDataStore* msg) {
     this->unk_0004 = type;
 }
 
+// PROVEN: 1060d43b IDENTICAL/NONE
 // OFFSET: 0x009283F0
 CGCommentator::MapInfo* CGCommentator::GetMapInfoByIndex(uint32_t index) {
     if (index < this->m_maps.Count()) {
@@ -308,7 +302,7 @@ bool CGCommentator::GetCurrentMapAndInstance(CGCommentator::MapInfo** map, CGCom
     return false;
 }
 
-// OFFSET: 0x009286D0
+// OFFSET: 0x009286D0/0x14068E170
 bool CGCommentator::OnClientCommentatorPartyInfo(ClientCommentatorPartyInfo* msg) {
     if (!msg->unk_0028 || msg->unk_0014.Count() > 40) {
         FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_PARTY_INFO_REQUEST, "%u%b", msg->unk_0024, 0);
@@ -597,7 +591,7 @@ uint64_t CGCommentator::GetArenaMember(int32_t index) {
     return 0;
 }
 
-// OFFSET: 0x0092BA80
+// OFFSET: 0x0092BA80/0x140692560
 int32_t CGCommentator::OnReceivePlayerInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t mapID;
     CommentatorInstanceKey key;
@@ -665,7 +659,7 @@ int32_t CGCommentator::OnReceivePlayerInfo(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// OFFSET: 0x0092C0E0
+// OFFSET: 0x0092C0E0/0x140692EB0
 int32_t CGCommentator::OnStateChanged(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     guid.m_guid = 0;
@@ -698,7 +692,7 @@ int32_t CGCommentator::OnStateChanged(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: 0x0092C1E0
+// OFFSET: 0x0092C1E0/0x140692FC0
 void CGCommentator::SetPlayersInQueue(CDataStore* msg) {
     uint32_t mode = 0;
     msg->Get(mode);
@@ -726,14 +720,15 @@ void CGCommentator::SetPlayersInQueue(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0092C3B0
+// PROVEN: fc017733 IDENTICAL/UNPROVEN
+// OFFSET: 0x0092C3B0/0x1406931F0
 int32_t CGCommentator::OnSkirmishPlayersInQueue(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGCommentator::s_Commentator.SetPlayersInQueue(msg);
     FrameScript_SignalEvent(SCRIPT_EVENT_COMMENTATOR_SKIRMISH_QUEUE_REQUEST, NULL);
     return 1;
 }
 
-// OFFSET: 0x0092C7E0
+// OFFSET: 0x0092C7E0/0x1406937A0
 int32_t CGCommentator::OnReceiveMapInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count = 0;
     msg->Get(count);

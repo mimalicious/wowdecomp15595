@@ -34,7 +34,6 @@ class CGxFormat {
     /* 0024 */ uint32_t m_multisampleCount;
     /* 0028 */ float m_multisampleQuality;
     /* 002C */ bool unk_002C;
-    /* 002D */ uint8_t unk_002D[3];
     /* 0030 */ CGxFormat::Format m_colorFormat;
     /* 0034 */ uint32_t m_refreshRate;
     /* 0038 */ uint32_t m_refreshRateDenom;
@@ -42,7 +41,6 @@ class CGxFormat {
     /* 0040 */ uint32_t m_scaling;
     /* 0044 */ uint32_t m_vsync;
     /* 0048 */ bool m_stereoEnabled;
-    /* 0049 */ uint8_t unk_003D[3];
     /* 004C */ int32_t m_shaderModel;
     /* 0050 */ C2iVector m_pos;
 

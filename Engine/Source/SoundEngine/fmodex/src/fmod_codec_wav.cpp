@@ -593,8 +593,8 @@ FMOD_RESULT CodecWav::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5e738c17 IDENTICAL/NONE
-// OFFSET: 0x00ABBD70
+// PROVEN: 5e738c17 IDENTICAL/UNPROVEN
+// OFFSET: 0x00ABBD70/0x1408831F0
 FMOD_RESULT CodecWav::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT result;
@@ -992,7 +992,7 @@ FMOD_RESULT CodecWav::canPointInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2b824526 IDENTICAL/NONE
+// PROVEN: 2b824526 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABC340/0x140883860
 FMOD_RESULT F_CALLBACK CodecWav::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -1017,7 +1017,7 @@ FMOD_RESULT F_CALLBACK CodecWav::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0338486a IDENTICAL/NONE
+// PROVEN: 0338486a IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABC380/0x1408838C0
 FMOD_RESULT F_CALLBACK CodecWav::closeCallback(FMOD_CODEC_STATE *codec)
 {
@@ -1042,7 +1042,7 @@ FMOD_RESULT F_CALLBACK CodecWav::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3fe391dc IDENTICAL/NONE
+// PROVEN: 3fe391dc IDENTICAL/DIFFERENT
 // OFFSET: 0x00ABC3B0/0x1408838A0
 FMOD_RESULT F_CALLBACK CodecWav::soundCreateCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_SOUND *sound)
 {
@@ -1067,8 +1067,8 @@ FMOD_RESULT F_CALLBACK CodecWav::soundCreateCallback(FMOD_CODEC_STATE *codec, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b9823f0c IDENTICAL/NONE
-// OFFSET: 0x00ABC3F0
+// PROVEN: b9823f0c IDENTICAL/DIFFERENT
+// OFFSET: 0x00ABC3F0/0x1408838A0
 FMOD_RESULT F_CALLBACK CodecWav::canPointCallback(FMOD_CODEC_STATE *codec)
 {
     CodecWav *wav = (CodecWav *)codec;    
@@ -1095,7 +1095,7 @@ FMOD_RESULT F_CALLBACK CodecWav::canPointCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 089a2b7d IDENTICAL/NONE
+// PROVEN: 089a2b7d IDENTICAL/UNPROVEN
 // OFFSET: 0x00ABC420/0x140883CB0
 FMOD_RESULT F_CALLBACK CodecWav::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -1120,7 +1120,7 @@ FMOD_RESULT F_CALLBACK CodecWav::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 64ef1319 IDENTICAL/NONE
+// PROVEN: 64ef1319 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABC7E0/0x140883880
 FMOD_RESULT F_CALLBACK CodecWav::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {

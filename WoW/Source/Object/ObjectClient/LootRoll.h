@@ -19,24 +19,20 @@ struct PendingLootRoll : public TSLinkedNode<PendingLootRoll> {
     /* 0028 */ uint32_t m_count;
     /* 002C */ uint32_t m_expireTime;
     /* 0030 */ uint8_t unk_0030;
-    /* 0031 */ uint8_t unk_0031[3];
     /* 0034 */ uint32_t unk_0034;
     /* 0038 */ WOWGUID m_rollerGuid;
     /* 0040 */ int32_t m_rollNumber;
     /* 0044 */ uint8_t m_shown;
     /* 0045 */ uint8_t m_showPending;
     /* 0046 */ uint8_t m_rolled;
-    /* 0047 */ uint8_t unk_0047;
     /* 0048 */ uint32_t m_rollTime;
     /* 004C */ uint8_t m_voteMask;
-    /* 004D */ uint8_t unk_004D[3];
     /* 0050 */ uint32_t m_rollType;
     /* 0054 */ uint8_t m_autoPass;
     /* 0055 */ uint8_t m_reasonPass;
     /* 0056 */ uint8_t m_reasonNeed;
     /* 0057 */ uint8_t m_reasonGreed;
     /* 0058 */ uint8_t m_reasonDisenchant;
-    /* 0059 */ uint8_t unk_0059[3];
     /* 005C */ uint32_t unk_005C;
 };
 

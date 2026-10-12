@@ -36,6 +36,7 @@ CBitArray::~CBitArray() {
     }
 }
 
+// PROVEN: 7e56f5b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00872D80/0x1405A9390
 void CBitArray::SetRawData(char* data, uint32_t size, bool owned) {
     if (this->m_array && this->unk_0008) {

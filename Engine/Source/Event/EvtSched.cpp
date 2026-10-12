@@ -57,6 +57,7 @@ namespace Event {
     SEvent s_shutdownEvent(1, 0);
 }
 
+// PROVEN: 1bd99b7b DIFFERENT/IDENTICAL
 // OFFSET: 0x008A00B0/0x1405E1280
 void CloseContext(EvtContext* context) {
     context->m_critsect.Enter();
@@ -102,6 +103,7 @@ void IEvtSchedulerShutdown() {
     Event::s_threadListCritsect.Leave();
 }
 
+// PROVEN: 63c9b354 DIFFERENT/IDENTICAL
 // OFFSET: 0x008A0CD0/0x1405E2580
 int32_t SynthesizeInitialize(EvtContext* context) {
     if (context->m_schedFlags & 1) {
@@ -115,6 +117,7 @@ int32_t SynthesizeInitialize(EvtContext* context) {
     return 1;
 }
 
+// PROVEN: 530d626a DIFFERENT/IDENTICAL
 // OFFSET: 0x008A0D00/0x1405E25C0
 void SynthesizeIdle(EvtContext* context, uint32_t currTime, float elapsedSec) {
     context->m_critsect.Enter();
@@ -134,6 +137,7 @@ void SynthesizeIdle(EvtContext* context, uint32_t currTime, float elapsedSec) {
     }
 }
 
+// PROVEN: 9dfdf14b DIFFERENT/IDENTICAL
 // OFFSET: 0x008A0D60/0x1405E2650
 void SynthesizePoll(EvtContext* context) {
     context->m_critsect.Enter();
@@ -145,6 +149,7 @@ void SynthesizePoll(EvtContext* context) {
     }
 }
 
+// PROVEN: 851ac67c DIFFERENT/IDENTICAL
 // OFFSET: 0x008A0D90/0x1405E26A0
 void SynthesizePaint(EvtContext* context) {
     context->m_critsect.Enter();
@@ -157,13 +162,13 @@ void SynthesizePaint(EvtContext* context) {
     }
 }
 
-// PROVEN: c2d2af92 IDENTICAL/DIFFERENT
+// PROVEN: c2d2af92 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A0DD0/0x1405E2700
 int32_t IEvtSchedulerIsContextInteractive(EvtContext* context) {
     return (context->m_schedFlags >> 1) & 1;
 }
 
-// OFFSET: 0x008A0DE0
+// OFFSET: 0x008A0DE0/0x1405E2710
 void EventForceIdleProcessing() {
     static int32_t s_watchdogStarted;
 
@@ -277,6 +282,7 @@ void SynthesizeDestroy(EvtContext* context) {
     }
 }
 
+// PROVEN: 27351470 DIFFERENT/IDENTICAL
 // OFFSET: 0x008A18C0/0x1405E34E0
 EvtContext* GetNextContext(uint32_t hThread) {
     Event::s_threadSlotCritsects[hThread].Enter();
@@ -411,6 +417,7 @@ HEVENTCONTEXT AttachContextToThread(EvtContext* context) {
     return handle;
 }
 
+// PROVEN: 9fa6b8de DIFFERENT/IDENTICAL
 // OFFSET: 0x008A0FC0/0x1405E28C0
 void DetachContextFromThread(uint32_t hThread, EvtContext* context) {
     InterlockedIncrement(&Event::s_threadListContention);
@@ -666,6 +673,7 @@ uint32_t STORMAPI SchedulerThreadProc(void* mainThread) {
     return 0;
 }
 
+// PROVEN: 110f006f IDENTICAL/DIFFERENT
 // OFFSET: 0x008A2440/0x1405E4310
 void IEvtSchedulerProcess() {
     Event::s_startEvent.Set();
@@ -716,6 +724,7 @@ void IEvtSchedulerInitialize(uint32_t threadCount, int32_t netServer) {
     }
 }
 
+// PROVEN: 52cc6487 DIFFERENT/IDENTICAL
 // OFFSET: 0x008A2730/0x1405E46F0
 HEVENTCONTEXT IEvtSchedulerCreateContext(int32_t interactive, EVENTHANDLERFUNC initializeHandler, EVENTHANDLERFUNC destroyHandler, uint32_t idleTime, uint32_t debugFlags) {
     if (idleTime < 1) {

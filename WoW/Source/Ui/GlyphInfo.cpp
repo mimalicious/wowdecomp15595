@@ -19,29 +19,31 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: 0x00F76868
+// STATIC: 0x00F76868/0x140E6C8F0
 uint32_t CGGlyphInfo::s_filter;
 
-// STATIC: 0x00F7686C
+// STATIC: 0x00F7686C/0x140E6C8F8
 char* CGGlyphInfo::s_nameFilter;
 
-// STATIC: 0x00F76870
+// STATIC: 0x00F76870/0x140E6C900
 TSGrowableArray<GlyphItem*> CGGlyphInfo::s_glyphs;
 
-// STATIC: 0x00D16D38
+// STATIC: 0x00D16D38/0x140BD1510
 int32_t CGGlyphInfo::s_numFiltered = -1;
 
-// STATIC: 0x00D16D3C
+// STATIC: 0x00D16D3C/0x140BD1514
 int32_t CGGlyphInfo::s_clearGlyphSpell = -1;
 
-// STATIC: 0x00D16D40
+// STATIC: 0x00D16D40/0x140BD1518
 int32_t CGGlyphInfo::s_selectedGlyph = -1;
 
+// PROVEN: 82b72423 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EECC0/0x1407883B0
 void ClearGlyphReagentCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     FrameScript_SignalEvent(SCRIPT_EVENT_USE_GLYPH, NULL);
 }
 
+// PROVEN: 67c804f0 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EEDC0/0x140788540
 static int CompareGlyphs(const void* a, const void* b) {
     const GlyphItem* glyph1 = *static_cast<GlyphItem* const*>(a);
@@ -77,7 +79,7 @@ static int CompareGlyphs(const void* a, const void* b) {
     return SStrSortUTF8I(spell1->m_name, spell2->m_name, STORM_MAX_STR);
 }
 
-// OFFSET: 0x009EEE90
+// OFFSET: 0x009EEE90/0x140788680
 void CGGlyphInfo::AddKnownGlyph(int32_t spellId) {
     int32_t i;
 
@@ -109,6 +111,7 @@ void CGGlyphInfo::AddKnownGlyph(int32_t spellId) {
     FrameScript_SignalEvent(SCRIPT_EVENT_USE_GLYPH, NULL);
 }
 
+// PROVEN: 917a13c2 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EEF50/0x140788760
 bool CGGlyphInfo::IsGlyphKnown(int32_t spellId) {
     for (int32_t i = CGGlyphInfo::s_glyphs.Count() - 1; i >= 0; i--) {
@@ -120,6 +123,7 @@ bool CGGlyphInfo::IsGlyphKnown(int32_t spellId) {
     return false;
 }
 
+// PROVEN: 72736494 IDENTICAL/NONE
 // OFFSET: 0x009EEF80
 void CGGlyphInfo::SelectGlyph(int32_t index) {
     CGGlyphInfo::s_selectedGlyph = -1;
@@ -131,6 +135,7 @@ void CGGlyphInfo::SelectGlyph(int32_t index) {
     FrameScript_SignalEvent(SCRIPT_EVENT_USE_GLYPH, NULL);
 }
 
+// PROVEN: f3a848e8 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EEFC0/0x1407887A0
 void CGGlyphInfo::ClearSelectedGlyphBySpell(int32_t spellId) {
     if (CGGlyphInfo::s_selectedGlyph == spellId) {
@@ -139,6 +144,7 @@ void CGGlyphInfo::ClearSelectedGlyphBySpell(int32_t spellId) {
     }
 }
 
+// PROVEN: 7b35961e IDENTICAL/DIFFERENT
 // OFFSET: 0x009EEFF0/0x1407887D0
 int32_t CGGlyphInfo::GetGlyphSpellIDByName(const char* name) {
     for (uint32_t i = 0; i < CGGlyphInfo::s_glyphs.Count(); i++) {
@@ -197,6 +203,7 @@ void CGGlyphInfo::FilterGlyphs() {
     qsort(CGGlyphInfo::s_glyphs.m_data, CGGlyphInfo::s_glyphs.Count(), sizeof(GlyphItem*), CompareGlyphs);
 }
 
+// PROVEN: 3a6e631c IDENTICAL/IDENTICAL
 // OFFSET: 0x009EF1E0/0x140788A90
 void CGGlyphInfo::SetNameFilter(const char* name) {
     CGGlyphInfo::s_numFiltered = -1;
@@ -276,6 +283,7 @@ void CGGlyphInfo::CastGlyph(uint32_t index) {
     Spell_C_ClickSpell(glyph->m_spellID, NULL, WOWGUID(), 0, 0);
 }
 
+// PROVEN: 415b7043 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F0080/0x140789BE0
 void CGGlyphInfo::ClearGlyphs() {
     for (int32_t i = CGGlyphInfo::s_glyphs.Count() - 1; i >= 0; i--) {
@@ -366,11 +374,13 @@ void CGGlyphInfo::ListGlyphs() {
     CGGlyphInfo::s_filter = 0xFFFFFFFF;
 }
 
+// PROVEN: aa9a0a0b IDENTICAL/IDENTICAL
 // OFFSET: 0x009F0350/0x14078A0C0
 void CGGlyphInfo::InitializeGame() {
     CGGlyphInfo::ClearGlyphs();
 }
 
+// PROVEN: 63e08c9f IDENTICAL/IDENTICAL
 // OFFSET: 0x009F0350/0x14078A0C0
 void CGGlyphInfo::ShutdownGame() {
     CGGlyphInfo::ClearGlyphs();

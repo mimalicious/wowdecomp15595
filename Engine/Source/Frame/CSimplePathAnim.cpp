@@ -14,16 +14,16 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/Tempest/C2Vector.h"
 
-// STATIC: 0x00CA47C4
+// STATIC: 0x00CA47C4/0x140B428D4
 int32_t CSimplePathAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CB8/0x140CB9A58
 int32_t CSimplePathAnim::s_objectType;
 
-// STATIC: 0x00CA3834
+// STATIC: 0x00CA3834/0x140B40AB8
 const char* CSimplePathAnim::s_objectTypeName = "Path";
 
-// PROVEN: 223a23c0 DIFFERENT/IDENTICAL
+// PROVEN: 223a23c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x005294D0/0x140178ED0
 bool CSimplePathAnim::IsA(int32_t type) {
     return type == CSimplePathAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
@@ -47,13 +47,13 @@ int32_t CSimplePathAnim::GetScriptMetaTable() {
     return CSimplePathAnim::s_metatable;
 }
 
-// PROVEN: f9eb47ca IDENTICAL/DIFFERENT
+// PROVEN: f9eb47ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00527AE0/0x140176E60
 CSimpleControlPoint* CSimplePathAnim::GetControlPoint(uint32_t index) {
     return index < this->m_sortedPoints.Count() ? this->m_sortedPoints[index] : NULL;
 }
 
-// PROVEN: c7c36dcd IDENTICAL/DIFFERENT
+// PROVEN: c7c36dcd IDENTICAL/IDENTICAL
 // OFFSET: 0x00527B10/0x140176E80
 int32_t CSimplePathAnim::GetMaxControlPointOrder() {
     if (!this->m_sortedPoints.Count()) {
@@ -91,6 +91,7 @@ int32_t CSimplePathAnim::FindControlPoint(int32_t order) {
     return -1;
 }
 
+// PROVEN: 6441d522 DIFFERENT/IDENTICAL
 // OFFSET: 0x00528010/0x140177450
 void CSimplePathAnim::UpdateControlPointPositions() {
     uint32_t count = this->m_sortedPoints.Count();
@@ -244,6 +245,7 @@ void CSimplePathAnim::Apply(float progress) {
     }
 }
 
+// PROVEN: 465e4993 DIFFERENT/IDENTICAL
 // OFFSET: 0x00528C30/0x140178380
 int32_t CSimplePathAnim::RegisterSplineControlPoint(CSimpleControlPoint* point) {
     int32_t count = this->m_sortedPoints.Count();
@@ -291,6 +293,7 @@ CSimplePathAnim::~CSimplePathAnim() {
     this->m_controlPoints.Clear();
 }
 
+// PROVEN: 5ab08920 DIFFERENT/IDENTICAL
 // OFFSET: 0x0052A700/0x14017A7A0
 CSimplePathAnim::CSimplePathAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
     this->m_curve = ANIM_CURVE_NONE;
@@ -313,7 +316,7 @@ void CSimplePathAnim::LoadXML_ControlPoint(linkObject* node, CStatus* status) {
     point->LoadXML(node, status);
 }
 
-// OFFSET: 0x00529580
+// OFFSET: 0x00529580/0x140178F70
 void CSimplePathAnim::BuildSpline() {
     this->Stop(false);
 
@@ -402,7 +405,7 @@ void CSimplePathAnim::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: 0x00529B80
+// OFFSET: 0x00529B80/0x140179850
 void CSimplePathAnim::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_flags ^= 1;
     this->BuildSpline();
@@ -432,7 +435,7 @@ void CSimplePathAnim::NotifyControlPointAdded(CSimpleControlPoint* point) {
     }
 }
 
-// PROVEN: 91598126 IDENTICAL/DIFFERENT
+// PROVEN: 91598126 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529C90/0x1401799D0
 void CSimplePathAnim::NotifyControlPointRemoved(CSimpleControlPoint* point) {
     if (point && this->FindControlPoint(point->m_order) >= 0) {

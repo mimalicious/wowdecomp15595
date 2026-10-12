@@ -75,7 +75,7 @@ void CWorldMap::PreloadCountMapObjGroupTextures(const CAaBox& box, CMapObjDef* m
     }
 }
 
-// OFFSET: 0x00773760
+// OFFSET: 0x00773760/0x14045D430
 void CWorldMap::PreloadDoodadDefs(const CAaBox& box) {
     for (CMapDoodadDef* doodadDef = CMap::s_doodadDefLoadingList.Head(), * next; doodadDef; doodadDef = next) {
         next = CMap::s_doodadDefLoadingList.Next(doodadDef);
@@ -112,7 +112,7 @@ CMapChunk* CMap::GetChunk(const C3Vector& pos) {
     return entry->m_area->m_chunks[(y & 0xF) + 16 * (x & 0xF)];
 }
 
-// OFFSET: 0x00773960
+// OFFSET: 0x00773960/0x14045D700
 void CWorldMap::PreloadChunk(CMap* map, const CAaBox& box) {
     C3Vector center((box.t.x + box.b.x) * 0.5f, (box.t.y + box.b.y) * 0.5f, (box.t.z + box.b.z) * 0.5f);
     CMapChunk* chunk = map->GetChunk(center);
@@ -212,7 +212,7 @@ void CWorldMap::PreloadCountDoodadDefs(const CAaBox& box, TSExplicitList<CMapBas
     }
 }
 
-// OFFSET: 0x00773D00
+// OFFSET: 0x00773D00/0x14045DB20
 void CWorldMap::PreloadMapObjDefs(const CAaBox& box) {
     for (CMapObjDef* mapObjDef = this->m_mapObjDefHash.Head(), * next; mapObjDef; mapObjDef = next) {
         next = this->m_mapObjDefHash.Next(mapObjDef);

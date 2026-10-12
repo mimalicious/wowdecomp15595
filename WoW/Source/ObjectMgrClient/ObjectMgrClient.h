@@ -37,7 +37,6 @@ class CMirrorHandler : public TSLinkedNode<CMirrorHandler> {
     /* 002C */ uint8_t m_dispatching;
     /* 002D */ uint8_t m_deletePending;
     /* 002E */ uint8_t m_alwaysFire;
-    /* 002F */ uint8_t unk_002F;
 
     ~CMirrorHandler();
 };

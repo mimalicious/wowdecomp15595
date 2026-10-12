@@ -34,4 +34,6 @@ class CFrustum {
     CFrustum& operator=(const CFrustum& source);
 };
 
+#include "Engine/Source/Tempest/CFrustum.inl"
+
 #endif

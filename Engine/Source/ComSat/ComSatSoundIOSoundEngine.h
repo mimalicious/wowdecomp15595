@@ -138,7 +138,7 @@ uint32_t ComSat::Sound::RingBuffer<T>::Count() {
     return count;
 }
 
-// OFFSET: [0x00A3AC50<float>, 0x00A3ADA0<short>]
+// OFFSET: [0x00A3AC50/0x1407E7640<float>, 0x00A3ADA0/0x1407E7800<short>]
 template <class T>
 uint32_t ComSat::Sound::RingBuffer<T>::Read(T* samples, uint32_t count) {
     uint32_t read = 0;

@@ -24,7 +24,6 @@ class CGPetition {
     /* 1124 */ uint32_t m_allowedClasses;
     /* 1128 */ uint32_t m_allowedRaces;
     /* 112C */ uint16_t m_allowedGenders;
-    /* 112E */ uint8_t unk_112E [2];
     /* 1130 */ uint32_t m_allowedMinLevel;
     /* 1134 */ uint32_t m_allowedMaxLevel;
     /* 1138 */ char m_choiceText [10][64];

@@ -81,8 +81,6 @@ class CMovement_C : public CMovementShared {
     void Hover(int32_t enable, int32_t tryFall);
     void OnClientControlLost();
 
-    /* 00B8 */ uint32_t m_gameTime;
-    /* 00BC */ uint32_t unk_00BC;
     /* 00C0 */ C3Vector m_groundNormal;
     /* 00CC */ float m_collisionRadius;
     /* 00D0 */ float m_collisionHeight;
@@ -97,7 +95,6 @@ class CMovement_C : public CMovementShared {
     /* 0138 */ uint32_t m_moveStartDelay;
     /* 013C */ CPlayerMoveQueue m_moveQueue;
     /* 0148 */ CGUnit_C* m_unit;
-    /* 014C */ uint32_t unk_014C;
 
     CMovement_C(const C3Vector& position, float facing, const WOWGUID& ownerGuid, CGUnit_C* unit);
     ~CMovement_C();
@@ -380,5 +377,7 @@ class CMovement_C : public CMovementShared {
     C3Vector GetSteepSurfacePushNormal(uint32_t facet, const C4Plane* planes, uint32_t count);
     C2Vector CalcFallObstaclePush(const C3Vector& direction, float distance, float maxDistance, uint32_t facet, const C4Plane* planes, uint32_t count);
 };
+
+#include "WoW/Source/Object/Movement.inl"
 
 #endif

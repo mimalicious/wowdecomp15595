@@ -24,28 +24,28 @@
 #include "WoW/Source/WorldClient/SpanRasterizer.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00D03F34
+// STATIC: 0x00D03F34/0x140BB4120
 static float s_invLiquidTileSize = 0.24000001f;
 
-// STATIC: 0x00D02AE8
+// STATIC: 0x00D02AE8/0x140BB2AF0
 static float s_liquidSoundTileScale = 0.24f;
 
-// STATIC: 0x00BC9148
+// STATIC: 0x00BC9148/0x1409B7440
 static const float s_liquidSoundRings[26] = { 0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 12.0f, 14.0f, 16.0f, 18.0f, 20.0f, 24.0f, 28.0f, 32.0f, 36.0f, 40.0f, 44.0f, 48.0f, 52.0f, 56.0f, 60.0f };
 
 // STATIC: 0x00E4FE38
 uint32_t World::TriData::s_statusFlags;
 
-// STATIC: 0x00E4FE3C
+// STATIC: 0x00E4FE3C/0x140D39504
 uint32_t World::TriData::s_nBatches;
 
 // STATIC: 0x00E4FE40
 uint32_t World::TriData::s_faceIndexCursor;
 
-// STATIC: 0x00E4FE44
+// STATIC: 0x00E4FE44/0x140D3950C
 uint32_t World::TriData::s_indexCursor;
 
-// STATIC: 0x00E4FE48
+// STATIC: 0x00E4FE48/0x140D39510
 uint32_t World::TriData::s_nMatrices;
 
 // STATIC: 0x00E4FE50
@@ -57,13 +57,13 @@ uint16_t World::TriData::s_indexPool[0xC000];
 // STATIC: 0x00E6FEE8
 C44Matrix World::TriData::s_matrices[32];
 
-// STATIC: 0x00E706E8
+// STATIC: 0x00E706E8/0x140D59DC0
 World::TriData::Batch World::TriData::s_batches[32];
 
-// STATIC: 0x00EAB230
+// STATIC: 0x00EAB230/0x140D96F80
 uint16_t BspQuery::s_testFaces[0x2000];
 
-// STATIC: 0x00EAF230
+// STATIC: 0x00EAF230/0x140D9AF80
 uint16_t BspQuery::s_hitFaces[0x2000];
 
 // STATIC: 0x00EB3234
@@ -78,7 +78,7 @@ VBBList CMapObjGroup::s_vertexList;
 // STATIC: 0x00D03F60/0x140BB4180
 VBBList CMapObjGroup::s_indexList;
 
-// STATIC: 0x00D03F88
+// STATIC: 0x00D03F88/0x140BB41C8
 TSExplicitList<CMapObjGroup::VertArray, offsetof(CMapObjGroup::VertArray, m_link)> CMapObjGroup::s_freeVertArrays;
 
 static uint32_t FloatBits(float value) {
@@ -109,7 +109,7 @@ C3Vector World::TriData::Batch::GetNormal(uint16_t index) const {
     return C3Vector(0.0f, 0.0f, 1.0f);
 }
 
-// OFFSET: 0x00740730
+// OFFSET: 0x00740730/0x14041E9F0
 World::TriData::Batch* World::TriData::AllocBatch() {
     if (World::TriData::s_nBatches + 1 >= 32) {
         World::TriData::s_statusFlags |= 0x1;
@@ -219,7 +219,7 @@ void SpanRasterizer::AddSpan(int32_t x0, int32_t x1, int32_t y) {
     this->m_ranges[y].Merge(add);
 }
 
-// OFFSET: 0x0077D010
+// OFFSET: 0x0077D010/0x140469990
 void SpanRasterizer::AddRing(int32_t x, int32_t y, int32_t radius) {
     if (!radius) {
         this->AddSpan(x, x, y);
@@ -290,7 +290,7 @@ LiquidSoundQuery::LiquidSoundQuery(const C2iVector& size, SpanRange* ranges, con
     this->m_found = 0;
 }
 
-// OFFSET: 0x0077D1D0
+// OFFSET: 0x0077D1D0/0x140469B20
 void CMapObjGroup::QueryLiquidSounds(const C3Vector& pos, TSGrowableArray<World::LiquidQueryResult>& results) {
     if (!this->m_liquidType || !this->m_liquidTiles.x) {
         return;
@@ -415,7 +415,7 @@ void BspQuery_Segment::operator()(uint16_t face) {
     }
 }
 
-// OFFSET: 0x0078DC60
+// OFFSET: 0x0078DC60/0x14047E9E0
 bool BspQuery_Segment::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node) {
     if (!g_BspDigestCache) {
         return false;
@@ -627,7 +627,7 @@ bool BspQuery_SegmentLink::GetHits(float& frontT, uint32_t& frontFace, float& ba
     return true;
 }
 
-// OFFSET: 0x0078D780
+// OFFSET: 0x0078D780/0x14047E3F0
 bool BspQuery_SegmentLink::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node) {
     if (!g_BspDigestCache) {
         return false;
@@ -768,7 +768,7 @@ static bool QueryCull(const CFrustum& frustum, const C3Vector& v0, const C3Vecto
     return (outside1 & outside2 & outside0) != 0;
 }
 
-// OFFSET: 0x0078E080
+// OFFSET: 0x0078E080/0x14047EF10
 template <>
 bool BspQuery_Volume<CAaBox>::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node) {
     if (!g_BspDigestCache) {
@@ -852,7 +852,7 @@ static uint8_t CullLiquidVertexZ(const CAaBox& box, const C3Vector& vertex) {
     return static_cast<uint8_t>(((FloatBits(box.t.z - vertex.z + 0.019444443f) >> 26) & 0x20) | ((FloatBits(vertex.z - box.b.z + 0.019444443f) >> 29) & 0x4));
 }
 
-// OFFSET: 0x0078E650
+// OFFSET: 0x0078E650/0x14047F460
 BspQuery_SegmentLink::BspQuery_SegmentLink(SMOPoly* faces, C3Vector* vertexList, uint16_t* indices, const C3Segment& seg, float frontT, float backT) {
     this->m_faces = faces;
     this->m_overflowFlags = NULL;
@@ -939,7 +939,7 @@ int32_t CMapObjGroup::HasLiquidVB(CGxBatch*& batch) {
     return 1;
 }
 
-// PROVEN: 92e56810 IDENTICAL/DIFFERENT
+// PROVEN: 92e56810 IDENTICAL/IDENTICAL
 // OFFSET: 0x0078E3D0/0x14047F290
 uint32_t CMapObjGroup::GetLiquidType() const {
     return this->m_liquidType;
@@ -1013,7 +1013,7 @@ BspQuery_Segment::BspQuery_Segment(SMOPoly* faces, C3Vector* vertexList, uint16_
     this->m_ray.dir.z = this->m_ray.dir.z * (1.0f / length);
 }
 
-// OFFSET: 0x0078EA20
+// OFFSET: 0x0078EA20/0x14047F860
 void CMapObjGroup::GetTrisFromQuery(World::TriData* triData, BspQuery* query, const CMapObjDef* mapObjDef, uint32_t statusFlags) {
     if (World::GetEnables() & 0x4000000) {
         for (uint32_t i = 0; i < BspQuery::s_testFaceSub; i++) {
@@ -1143,7 +1143,7 @@ void CMapObjGroup::InitPtrs() {
     this->m_liquidTiles.y = 0;
 }
 
-// OFFSET: 0x0078F330
+// OFFSET: 0x0078F330/0x140480240
 int32_t CMapObjGroup::QueryLighting(const C3Vector& pos, uint16_t polyIndex, CImVector& color, bool& exterior) {
     if (polyIndex >= this->m_polyCount) {
         color = this->m_parent->m_ambColor;
@@ -1235,7 +1235,7 @@ int32_t CMapObjGroup::QueryLighting(const C3Vector& pos, uint16_t polyIndex, CIm
     return 1;
 }
 
-// OFFSET: 0x0078F6F0
+// OFFSET: 0x0078F6F0/0x1404806B0
 int32_t CMapObjGroup::QueryLiquid(const C3Vector& pos, int32_t requireTiles, uint32_t& liquidType, float& height) {
     uint32_t type = this->m_liquidType;
 
@@ -1394,6 +1394,7 @@ void CMapObjGroup::UploadIndexBuffer(CGxBuf* buf) const {
     buf->unk_001C = 1;
 }
 
+// PROVEN: 593be159 IDENTICAL/IDENTICAL
 // OFFSET: 0x0078FFE0/0x140480FC0
 int32_t CMapObjGroup::GetNumSharedTiles() {
     if (this->m_numSharedTiles > 0) {
@@ -1466,7 +1467,7 @@ uint32_t CMapObjGroup::IdentifyLegacyLiquidType() {
     return 0;
 }
 
-// OFFSET: 0x007901C0
+// OFFSET: 0x007901C0/0x1404811B0
 bool CMapObjGroup::VectorIntersectLiquidTiles(const C3Segment& seg, float* t, uint32_t flags, const uint32_t* tileCount, const uint8_t* tiles, World::TriData* triData, const CMapObjDef* mapObjDef) const {
     uint32_t liquidType = this->m_liquidType;
 
@@ -1691,7 +1692,7 @@ void CMapObjGroup::VectorIntersectLiquidDY(const C3Vector& start, const C3Vector
     }
 }
 
-// OFFSET: 0x00790840
+// OFFSET: 0x00790840/0x140481630
 bool CMapObjGroup::GetLiquidTris(const CAaBox& box, uint32_t flags, World::TriData& tris, const CMapObjDef* mapObjDef) {
     uint32_t liquidType = this->m_liquidType;
 
@@ -1808,7 +1809,7 @@ bool CMapObjGroup::GetLiquidTris(const CAaBox& box, uint32_t flags, World::TriDa
     return started;
 }
 
-// OFFSET: 0x00790D90
+// OFFSET: 0x00790D90/0x140481C70
 bool CMapObjGroup::GetLiquidTris(const CFrustum& frustum, uint32_t flags, World::TriData& tris, const CMapObjDef* mapObjDef) {
     uint32_t liquidType = this->m_liquidType;
 
@@ -1920,6 +1921,7 @@ bool CMapObjGroup::GetLiquidTris(const CFrustum& frustum, uint32_t flags, World:
     return started;
 }
 
+// PROVEN: f5992ee6 IDENTICAL/IDENTICAL
 // OFFSET: 0x007912B0/0x140482290
 uint32_t CMapObjGroup::ComputePassCount(int32_t unified, uint32_t batch) const {
     if (unified) {
@@ -1937,7 +1939,7 @@ uint32_t CMapObjGroup::ComputePassCount(int32_t unified, uint32_t batch) const {
     return 1;
 }
 
-// OFFSET: 0x007914C0
+// OFFSET: 0x007914C0/0x1404824B0
 void CMapObjGroup::Init() {
     this->m_renderFlags &= ~0xF;
     this->m_distSq = 3.402823466e38f;
@@ -2005,7 +2007,7 @@ void CMapObjGroup::SetTransparencyVB() const {
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PNCT);
 }
 
-// PROVEN: 5e357e18 IDENTICAL/NONE
+// PROVEN: 5e357e18 IDENTICAL/IDENTICAL
 // OFFSET: 0x007916B0/0x140482710
 void CMapObjGroup::SetIndexVB() const {
     CGxBuf* buf = this->m_indicesBlock ? this->m_indicesBlock->m_buf : g_theGxDevicePtr->BufStream(GxPoolTarget_Index, 2, this->m_indexCount);
@@ -2017,7 +2019,7 @@ void CMapObjGroup::SetIndexVB() const {
     g_theGxDevicePtr->PrimIndexPtr(buf);
 }
 
-// OFFSET: 0x00791700
+// OFFSET: 0x00791700/0x1404827C0
 bool CMapObjGroup::VectorIntersectLiquid(const C3Segment& seg, float* t, uint32_t flags, World::TriData* triData, const CMapObjDef* mapObjDef) const {
     float sizeY = this->m_liquidTiles.y * 4.1666665f - 0.1f;
 
@@ -2186,7 +2188,7 @@ bool CMapObjGroup::Intersect(const C3Segment& seg, float& t, uint32_t flags, uin
     return hit;
 }
 
-// OFFSET: 0x00792EA0
+// OFFSET: 0x00792EA0/0x140484C50
 bool CMapObjGroup::GetTris(const CAaBox& box, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef) {
     uint32_t batchCount = World::TriData::s_nBatches;
 
@@ -2214,7 +2216,7 @@ bool CMapObjGroup::GetTris(const CAaBox& box, uint32_t flags, uint32_t ignoreFla
     return World::TriData::s_nBatches != batchCount;
 }
 
-// OFFSET: 0x007929C0
+// OFFSET: 0x007929C0/0x1404844D0
 VBBList::Block* VBBList::AllocBlock() {
     Block* block;
 
@@ -2262,7 +2264,7 @@ void CMapObjGroup::AllocVertArray(VertArray*& array, uint32_t count) {
     array->m_verts.SetCount(count);
 }
 
-// OFFSET: 0x00792CB0
+// OFFSET: 0x00792CB0/0x1404849F0
 void CMapObjGroup::PurgeVertArrayList() {
     VertArray* array;
 
@@ -2272,7 +2274,7 @@ void CMapObjGroup::PurgeVertArrayList() {
     }
 }
 
-// OFFSET: 0x00792DD0
+// OFFSET: 0x00792DD0/0x140484B80
 CMapObjGroup::CMapObjGroup() {
     this->m_liquidBatch.m_primType = GxPrim_TriangleFan;
     this->m_liquidBatch.m_minIndex = 0;
@@ -2298,7 +2300,7 @@ CMapObjGroup::CMapObjGroup() {
     this->m_type |= 0x2000;
 }
 
-// OFFSET: 0x00792F70
+// OFFSET: 0x00792F70/0x140484DC0
 void VBBList::Destroy() {
     Block* block = this->m_blocks.Head();
 
@@ -2464,6 +2466,7 @@ void VBBList::AllocVBB(Block** owner, uint32_t itemSize, uint32_t itemCount) {
     }
 }
 
+// PROVEN: 3be476e9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00793340/0x1404851E0
 void CMapObjGroup::AllocVB() {
     if (!this->m_vertsBlock) {
@@ -2481,7 +2484,7 @@ void CMapObjGroup::AllocVB() {
     }
 }
 
-// PROVEN: 00ba8ada IDENTICAL/UNPROVEN
+// PROVEN: 00ba8ada IDENTICAL/IDENTICAL
 // OFFSET: 0x007933F0/0x1404852C0
 void CMapObjGroup::FreeVB() {
     if (this->m_vertsBlock) {
@@ -2501,7 +2504,7 @@ void CMapObjGroup::FreeVB() {
     this->m_indicesBlock = NULL;
 }
 
-// PROVEN: 476c010e IDENTICAL/DIFFERENT
+// PROVEN: 476c010e IDENTICAL/UNPROVEN
 // OFFSET: 0x00793440/0x140485320
 void CMapObjGroup::AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCount, uint32_t indexCount, CGxBatch*& batch) {
     if (!this->m_liquidVertsBlock) {
@@ -2518,6 +2521,7 @@ void CMapObjGroup::AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCo
     this->m_liquidVBRefCount++;
 }
 
+// PROVEN: 19b76674 IDENTICAL/IDENTICAL
 // OFFSET: 0x007934B0/0x1404853C0
 void CMapObjGroup::FreeLiquidVB() {
     if (!this->m_liquidVBRefCount) {
@@ -2552,7 +2556,7 @@ void CMapObjGroup::Initialize() {
     CMapObjGroup::s_indexList.m_usage = static_cast<EGxPoolUsage>(World::GetPoolUsage());
 }
 
-// OFFSET: 0x00793660
+// OFFSET: 0x00793660/0x140485610
 void CMapObjGroup::Destroy() {
     CMapObjGroup::s_vertexList.Destroy();
     CMapObjGroup::s_indexList.Destroy();

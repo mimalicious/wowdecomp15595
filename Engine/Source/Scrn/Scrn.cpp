@@ -6,13 +6,13 @@
 // STATIC: 0x00EBB118/0x140DABE98
 static int32_t s_initParam;
 
-// OFFSET: 0x007FFDA0
+// OFFSET: 0x007FFDA0/0x140513BA0
 void ScrnDestroy() {
     ILayerDestroy();
     IStockDestroy();
 }
 
-// PROVEN: d1a7e02d IDENTICAL/UNPROVEN
+// PROVEN: d1a7e02d IDENTICAL/IDENTICAL
 // OFFSET: 0x007FFDB0/0x140513BC0
 void ScrnInitialize(int32_t param) {
     ILayerInitialize();

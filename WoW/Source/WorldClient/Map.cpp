@@ -28,10 +28,10 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// STATIC: 0x00D00D98
+// STATIC: 0x00D00D98/0x140BB0710
 TSExplicitList<CMapAreaLow, offsetof(CMapAreaLow, m_renderLink)> CMap::s_mapAreaLowUpdateList;
 
-// STATIC: 0x00D00DA4
+// STATIC: 0x00D00DA4/0x140BB0728
 TSExplicitList<CMapRenderChunk, offsetof(CMapRenderChunk, m_link)> CMap::s_mapRenderChunkUpdateList;
 
 // STATIC: 0x00D00DB0
@@ -40,52 +40,52 @@ TSExplicitList<CChunkLiquid, offsetof(CChunkLiquid, m_updateLink)> CMap::s_mapCh
 // STATIC: 0x00D00DC8
 TSExplicitList<CMapDoodadDef, offsetof(CMapDoodadDef, m_updateLink)> CMap::s_doodadDefLoadingList;
 
-// STATIC: 0x00D00DD4
+// STATIC: 0x00D00DD4/0x140BB0788
 TSExplicitList<CMapDoodadDef, offsetof(CMapDoodadDef, m_updateLink)> CMap::s_doodadDefLoadedList;
 
-// STATIC: 0x00E74314
+// STATIC: 0x00E74314/0x140D5E070
 CGxShader* CMap::ds_terrain;
 
-// STATIC: 0x00E74318
+// STATIC: 0x00E74318/0x140D5E078
 CGxShader* CMap::hs_terrain;
 
-// STATIC: 0x00E7431C
+// STATIC: 0x00E7431C/0x140D5E080
 CGxShader* CMap::vs_terrain;
 
-// STATIC: 0x00E74320
+// STATIC: 0x00E74320/0x140D5E088
 CGxShader* CMap::ps_terrain;
 
-// STATIC: 0x00E74324
+// STATIC: 0x00E74324/0x140D5E090
 int32_t CMap::enableChunkBatching;
 
-// STATIC: 0x00E74328
+// STATIC: 0x00E74328/0x140D5E094
 int32_t CMap::enableTriangleStrips;
 
-// STATIC: 0x00E7432C
+// STATIC: 0x00E7432C/0x140D5E098
 int32_t CMap::enableTerrainShaderPixel;
 
-// STATIC: 0x00E74330
+// STATIC: 0x00E74330/0x140D5E09C
 int32_t CMap::enableTerrainShaderVertex;
 
-// STATIC: 0x00E74334
+// STATIC: 0x00E74334/0x140D5E0A0
 int32_t CMap::s_globalUniqueId;
 
-// STATIC: 0x00E74344
+// STATIC: 0x00E74344/0x140D5E0B0
 CTexture* CMap::s_blackTexture;
 
-// STATIC: 0x00E74348
+// STATIC: 0x00E74348/0x140D5E0B8
 TSGrowableArray<CGxVertexPC> CMap::s_testQueryVertices;
 
-// STATIC: 0x00E74358
+// STATIC: 0x00E74358/0x140D5E0D0
 TSGrowableArray<uint16_t> CMap::s_testQueryIndices;
 
-// STATIC: 0x00E8938C
+// STATIC: 0x00E8938C/0x140D750BC
 int32_t CMap::s_areasUnloaded;
 
-// STATIC: 0x00E89390
+// STATIC: 0x00E89390/0x140D750C0
 uint32_t CMap::freeCounts[10];
 
-// STATIC: 0x00E893B8
+// STATIC: 0x00E893B8/0x140D750E8
 uint32_t CMap::counts[10];
 
 struct CMapAreaSortEntry {
@@ -223,7 +223,7 @@ int32_t CMap::LinkObjectToExterior(CMapBaseObj* object, const CAaBox& box, const
     return result;
 }
 
-// PROVEN: 30adeb3c IDENTICAL/NONE
+// PROVEN: 30adeb3c IDENTICAL/IDENTICAL
 // OFFSET: 0x007614F0/0x140446070
 static int CompareAreaDist(const void* a, const void* b) {
     float distA = static_cast<const CMapAreaSortEntry*>(a)->m_distSq;
@@ -236,6 +236,7 @@ static int CompareAreaDist(const void* a, const void* b) {
     return distA < distB;
 }
 
+// PROVEN: 65c28b31 IDENTICAL/IDENTICAL
 // OFFSET: 0x00735A80/0x140411F80
 uint32_t CMap::GetTerrainVSPerm(int32_t displacement, int32_t lighting, uint32_t layers, uint32_t format, uint32_t material, int32_t shadow, uint32_t clip) {
     uint32_t base = layers + 4 * lighting - 1;
@@ -270,7 +271,7 @@ void CMap::Initialize() {
     CMap::enableTriangleStrips = 0;
 }
 
-// OFFSET: 0x00735BF0
+// OFFSET: 0x00735BF0/0x1404120D0
 void CMap::Destroy() {
     CDetailDoodad::DestroyPools();
     CMapRenderChunk::DestroyPools();
@@ -310,7 +311,7 @@ void CMap::Destroy() {
     CMap::MapMemDestroy();
 }
 
-// PROVEN: 792fbef9 IDENTICAL/NONE
+// PROVEN: 792fbef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00735CB0/0x1404121B0
 uint32_t CMap::GetTerrainPSPerm(uint32_t materialType, uint32_t layers, uint32_t shadowMode) {
     return materialType + 6 * (layers + 4 * (CShaderEffect::s_usePcfFiltering + 2 * shadowMode) - 1);
@@ -321,7 +322,7 @@ uint32_t CMap::GetTerrainPSPerm(uint32_t materialType, uint32_t layers, uint32_t
 void CMap::ProcessDetailDoodadUpdateList() {
 }
 
-// OFFSET: 0x00735CE0
+// OFFSET: 0x00735CE0/0x1404121D0
 void CMap::ClearChunkDetailDoodads() {
     for (CMapArea* area = this->m_areaList.Head(); area; area = this->m_areaList.Next(area)) {
         for (CMapChunk* chunk = area->m_chunkList.Head(); chunk; chunk = area->m_chunkList.Next(chunk)) {
@@ -536,6 +537,7 @@ void CMap::UpdateAreaDistances() {
     }
 }
 
+// PROVEN: 95614bd4 IDENTICAL/DIFFERENT
 // OFFSET: 0x007619F0/0x1404466C0
 int32_t CMap::PreloadAreasExist(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
@@ -832,7 +834,7 @@ void CMap::ProcessDoodadDefUpdateList() {
     }
 }
 
-// PROVEN: 8e810a58 IDENTICAL/NONE
+// PROVEN: 8e810a58 IDENTICAL/IDENTICAL
 // OFFSET: 0x00762580/0x140447580
 void CMap::PreUpdateMap() {
     this->PreUpdateAreas();
@@ -905,6 +907,7 @@ void CMap::UpdateMap() {
     }
 }
 
+// PROVEN: 1a5e16f0 IDENTICAL/DIFFERENT
 // OFFSET: 0x007626E0/0x140447720
 void CMap::PreloadUpdateMap(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
@@ -927,7 +930,7 @@ void CMap::PreloadUpdateMap(const CiRect& rect) {
     this->UpdateAreaDistances();
 }
 
-// OFFSET: 0x0077DD80
+// OFFSET: 0x0077DD80/0x14046A9F0
 void CMap::WaterReset() {
     for (CMapArea* area = this->m_areaList.Head(); area; area = this->m_areaList.Next(area)) {
         for (CMapChunk* chunk = area->m_chunkList.Head(); chunk; chunk = area->m_chunkList.Next(chunk)) {
@@ -940,13 +943,14 @@ void CMap::WaterReset() {
     }
 }
 
-// OFFSET: 0x0077F820
+// PROVEN: 10d8fcec IDENTICAL/UNPROVEN
+// OFFSET: 0x0077F820/0x14046C8A0
 void CMap::TestQueryReset() {
     CMap::s_testQueryVertices.SetCount(0);
     CMap::s_testQueryIndices.m_count = 0;
 }
 
-// OFFSET: 0x0077FAE0
+// OFFSET: 0x0077FAE0/0x14046CD90
 void CMap::TestQueryRender() {
     if (!CMap::s_testQueryVertices.Count()) {
         return;
@@ -1014,7 +1018,7 @@ void CMap::Purge() {
     this->m_lowDetail.Purge();
 }
 
-// OFFSET: 0x0078C9C0
+// OFFSET: 0x0078C9C0/0x14047D370
 void CMap::TestQueryAdd(const CFacet& facet, CImVector color, const C44Matrix* mat) {
     uint16_t base = static_cast<uint16_t>(CMap::s_testQueryVertices.Count());
     C44Matrix identity;
@@ -1075,7 +1079,7 @@ CMapArea* CMap::PrepareArea(int32_t x, int32_t y) {
     return area;
 }
 
-// OFFSET: 0x0077EF80
+// OFFSET: 0x0077EF80/0x14046C140
 void CMap::QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results) {
     CAaSphere sphere;
     sphere.c = C3Vector(pos.x, pos.y, 0.0f);

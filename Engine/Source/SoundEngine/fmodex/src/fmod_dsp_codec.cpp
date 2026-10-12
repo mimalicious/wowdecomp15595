@@ -212,7 +212,7 @@ FMOD_RESULT DSPCodec::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AD4BC0
+// OFFSET: 0x00AD4BC0/0x14089F790
 FMOD_RESULT DSPCodec::readInternal(signed short *inbuffer, signed short *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     FMOD_RESULT result;
@@ -395,7 +395,7 @@ FMOD_RESULT DSPCodec::getParameterInternal(int index, float *value, char *values
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3e160f7f IDENTICAL/NONE
+// PROVEN: 3e160f7f IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD4B60/0x14089FAC0
 FMOD_RESULT F_CALLBACK DSPCodec::createCallback(FMOD_DSP_STATE *dsp)
 {
@@ -466,8 +466,8 @@ FMOD_RESULT F_CALLBACK DSPCodec::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b55a9e6e IDENTICAL/NONE
-// OFFSET: 0x00AD4EC0
+// PROVEN: b55a9e6e IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD4EC0/0x14089FAC0
 FMOD_RESULT F_CALLBACK DSPCodec::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPCodec *dspcodec = (DSPCodec *)dsp;

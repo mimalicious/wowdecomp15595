@@ -284,7 +284,7 @@ uint32_t sgetu8(const uint8_t* strptr, int32_t* chars) {
     return c;
 }
 
-// OFFSET: 0x004B6530
+// OFFSET: 0x004B6530/0x1400EDDD0
 char* sputu8(uint32_t c, char* strptr) {
     if (!strptr) {
         return strptr;

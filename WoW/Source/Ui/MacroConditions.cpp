@@ -20,7 +20,7 @@ static int32_t EvaluateNone(const WOWGUID* unit, const TSGrowableArray<MacroSubs
     return 1;
 }
 
-// STATIC: 0x00D17B40
+// STATIC: 0x00D17B40/0x140BD2D90
 static MACROCONDITIONFUNC s_conditionFuncs[34] = { EvaluateNone, EvaluateCombat, EvaluateExists, EvaluateHelp, EvaluateHarm, EvaluateParty, EvaluateRaid, EvaluateDead, EvaluateFlyable, EvaluateIndoors, EvaluateOutdoors, EvaluateSwimming, EvaluateFlying, EvaluateMounted, EvaluateStealth, EvaluateGroup, EvaluateStance, EvaluateStance, EvaluatePet, EvaluateModifier, EvaluateModifier, EvaluateButton, EvaluateButton, EvaluateActionBar, EvaluateActionBar, EvaluateBonusBar, EvaluateEquipped, EvaluateEquipped, EvaluateChanneling, EvaluateSpec, EvaluateVehicleUI, EvaluateUnitHasVehicleUI, EvaluateCursor, EvaluateResting };
 
 // OFFSET: 0x00A0F4F0/0x1407B1E80

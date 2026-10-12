@@ -2,7 +2,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00DC0CB8
+// STATIC: 0x00DC0CB8/0x140CA67E0
 CGameTime g_clientGameTime;
 
 // OFFSET: 0x00A313C0/0x1407DB280
@@ -76,7 +76,7 @@ bool CGameTime::IsDaytime() {
     return time.InRange(start, end);
 }
 
-// OFFSET: 0x00A31440
+// OFFSET: 0x00A31440/0x1407DB2F0
 void CGameTime::UpdateTimeStamps(int32_t minutes) {
     HASHKEY_NONE key;
     TIMESTAMPSTRUCT* stamp = this->m_timeStamps.Ptr(minutes, key);
@@ -94,7 +94,7 @@ void CGameTime::UpdateTimeStamps(int32_t minutes) {
     }
 }
 
-// OFFSET: 0x00A31610
+// OFFSET: 0x00A31610/0x1407DB570
 void CGameTime::TickMinute() {
     int32_t minutes = (this->GetHourAndMinutes() + 1) % 1440;
     this->SetHourAndMinutes(minutes);
@@ -218,6 +218,7 @@ void CGameTime::GameTimeSync(const WowTime& time, bool force) {
     DebugLog(0x10, "GameTimeSync: delta=%d, differential=%d, HoursAndMinutes=%d", 0, this->m_elapsedMinutes, this->GetHourAndMinutes());
 }
 
+// PROVEN: f767a3b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A31C20/0x1407DBB30
 void __stdcall CGameTime::GameTimeUnregisterCallback(TIMESTAMPCALLBACK* callback) {
     callback->m_link.Unlink();
@@ -248,9 +249,4 @@ TIMESTAMPCALLBACK* CGameTime::GameTimeRegisterCallback(const WowTime* time, void
     node->m_param = param;
     node->m_callback = callback;
     return node;
-}
-
-// INLINED
-TIMESTAMPSTRUCT::~TIMESTAMPSTRUCT() {
-    this->m_callbacks.Clear();
 }

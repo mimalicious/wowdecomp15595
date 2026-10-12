@@ -14,12 +14,14 @@
 #include "WoW/Source/Object/ObjectClient/GameObject_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 
+// PROVEN: 9837a228 IDENTICAL/IDENTICAL
 // OFFSET: 0x009DDF20/0x140773FF0
 static int32_t Script_ItemTextGetPage(lua_State* L) {
     lua_pushnumber(L, CGItemText::m_currentPage + 1);
     return 1;
 }
 
+// PROVEN: ad70efa2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009DDFD0/0x1407740D0
 static int32_t Script_ItemTextGetItem(lua_State* L) {
     const char* name = NULL;
@@ -33,13 +35,14 @@ static int32_t Script_ItemTextGetItem(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 9f736fa5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009DDF60/0x140774020
 static int32_t Script_ItemTextGetText(lua_State* L) {
     lua_pushstring(L, CGItemText::m_text);
     return 1;
 }
 
-// PROVEN: ed2b2a8b IDENTICAL/NONE
+// PROVEN: ed2b2a8b IDENTICAL/UNPROVEN
 // OFFSET: 0x009DE020/0x140774130
 static int32_t Script_ItemTextHasNextPage(lua_State* L) {
     if (CGItemText::m_hasItemText || !CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1]) {
@@ -102,6 +105,7 @@ static int32_t Script_ItemTextGetMaterial(lua_State* L) {
     return 1;
 }
 
+// PROVEN: eaf8504c IDENTICAL/IDENTICAL
 // OFFSET: 0x009DE4C0/0x140774680
 static int32_t Script_ItemTextPrevPage(lua_State* L) {
     if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_currentPage > 0) {
@@ -112,7 +116,7 @@ static int32_t Script_ItemTextPrevPage(lua_State* L) {
     return 0;
 }
 
-// PROVEN: bc4af6ca IDENTICAL/NONE
+// PROVEN: bc4af6ca IDENTICAL/UNPROVEN
 // OFFSET: 0x009DE500/0x1407746D0
 static int32_t Script_ItemTextNextPage(lua_State* L) {
     if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1] > 0) {
@@ -123,7 +127,7 @@ static int32_t Script_ItemTextNextPage(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2de55c44 IDENTICAL/NONE
+// PROVEN: 2de55c44 IDENTICAL/DIFFERENT
 // OFFSET: 0x009DE7B0/0x1407749E0
 static int32_t Script_CloseItemText(lua_State* L) {
     WOWGUID none = WOWGUID();
@@ -131,7 +135,7 @@ static int32_t Script_CloseItemText(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D165C0
+// STATIC: 0x00D165C0/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "ItemTextGetItem", &Script_ItemTextGetItem },
     { "ItemTextGetCreator", &Script_ItemTextGetCreator },
@@ -144,7 +148,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseItemText", &Script_CloseItemText },
 };
 
-// PROVEN: 3ce033f1 IDENTICAL/NONE
+// PROVEN: 3ce033f1 IDENTICAL/UNPROVEN
 // OFFSET: 0x009DDF80/0x140774040
 void ItemTextRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -152,7 +156,7 @@ void ItemTextRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 566df76a IDENTICAL/NONE
+// PROVEN: 566df76a IDENTICAL/UNPROVEN
 // OFFSET: 0x009DDFB0/0x140774090
 void ItemTextUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

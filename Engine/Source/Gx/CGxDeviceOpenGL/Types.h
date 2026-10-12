@@ -23,7 +23,6 @@ class NvCombinerStage {
     /* 0044 */ GLboolean m_abDotProduct;
     /* 0045 */ GLboolean m_cdDotProduct;
     /* 0046 */ GLboolean m_muxSum;
-    /* 0047 */ uint8_t unk_0047;
 
     void Apply(GLenum stage, GLenum portion);
 };

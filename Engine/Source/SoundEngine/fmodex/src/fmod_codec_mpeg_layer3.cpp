@@ -735,6 +735,7 @@ FMOD_RESULT CodecMPEG::initLayer3(int down_sample_sblimit)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: a3d33573 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ADC110/0x1408A5D80
 FMOD_RESULT CodecMPEG::III_get_side_info_1(struct III_sideinfo *si, int stereo, int ms_stereo, int sfreq)
 {
@@ -850,6 +851,7 @@ FMOD_RESULT CodecMPEG::III_get_side_info_1(struct III_sideinfo *si, int stereo, 
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 482b82f1 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ADC490/0x1408A61D0
 FMOD_RESULT CodecMPEG::III_get_side_info_2(struct III_sideinfo *si, int stereo, int ms_stereo, int sfreq)
 {
@@ -957,6 +959,7 @@ FMOD_RESULT CodecMPEG::III_get_side_info_2(struct III_sideinfo *si, int stereo, 
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 1ce36621 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ADC7C0/0x1408A65C0
 FMOD_RESULT CodecMPEG::III_get_scale_factors_1(int *scf,struct gr_info_s *gr_info, int *numbits)
 {
@@ -1074,6 +1077,7 @@ FMOD_RESULT CodecMPEG::III_get_scale_factors_1(int *scf,struct gr_info_s *gr_inf
 	[SEE_ALSO]
 ]
 */
+// PROVEN: ef7d7a85 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ADC9D0/0x1408A67E0
 FMOD_RESULT CodecMPEG::III_get_scale_factors_2(int *scf,struct gr_info_s *gr_info,int i_stereo, int *numbits)
 {
@@ -2181,7 +2185,8 @@ FMOD_RESULT CodecMPEG::III_dequantize_sample_ms(float xr[2][SBLIMIT][SSLIMIT], i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00ADE6B0
+// PROVEN: 49bff0dc UNPROVEN/IDENTICAL
+// OFFSET: 0x00ADE6B0/0x1408A8CB0
 FMOD_RESULT CodecMPEG::III_i_stereo(float xr_buf[2][SBLIMIT][SSLIMIT], int *scalefac, struct gr_info_s *gr_info, int sfreq, int ms_stereo, int lsf)
 {
 	float	(*xr)[SBLIMIT * SSLIMIT] = (float(*)[SBLIMIT * SSLIMIT]) xr_buf;
@@ -2884,8 +2889,8 @@ int scale[] =
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8da77a81 IDENTICAL/NONE
-// OFFSET: 0x00AE0000
+// PROVEN: 8da77a81 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AE0000/0x1408AA750
 FMOD_RESULT CodecMPEG::decodeLayer3(void *pcm_sample, unsigned int *outlen)
 {
     FMOD_RESULT result;

@@ -31,7 +31,6 @@ class ClientConnection : public RealmConnection {
     /* 4784 */ uint8_t m_quitAfterLogout;
     /* 4785 */ uint8_t m_loggingOut;
     /* 4786 */ uint8_t m_realmConnectPending;
-    /* 4787 */ uint8_t unk_4787[1];
     /* 4788 */ void (*m_cleanup)();
 
     ~ClientConnection();

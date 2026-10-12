@@ -238,10 +238,8 @@ class ARCHIVEREC {
     /* 011C */ uint32_t unk_011C;
     /* 0120 */ bool m_compressTables;
     /* 0121 */ bool unk_0121;
-    /* 0122 */ uint8_t unk_0122[2];
     /* 0124 */ int32_t m_chunkSize;
     /* 0128 */ bool m_setFileSize;
-    /* 0129 */ uint8_t unk_0129[7];
     /* 0130 */ int64_t m_minFileSize;
     /* 0138 */ char m_name[260];
     /* 023C */ std::string m_directPath;
@@ -254,7 +252,6 @@ class ARCHIVEREC {
     /* 02B1 */ bool m_tablesInitialized;
     /* 02B2 */ uint16_t m_locale;
     /* 02B4 */ uint8_t m_platform;
-    /* 02B5 */ uint8_t unk_02B5[3];
     /* 02B8 */ uint32_t m_attributeFlags;
     /* 02BC */ std::vector<Blizzard::Mopaq::CompressionAlgorithm> m_compression;
     /* 02D4 */ uint32_t unk_02D4;
@@ -264,13 +261,10 @@ class ARCHIVEREC {
     /* 02E4 */ ListFile* m_listfile;
     /* 02E8 */ std::vector<ListFileEntry> m_listfileEntries;
     /* 0300 */ bool m_listfileLoaded;
-    /* 0301 */ uint8_t unk_0301[3];
     /* 0304 */ int32_t m_listfileRefcount;
     /* 0308 */ Blizzard::Util::Array<uint8_t> m_patchMetadata;
     /* 0310 */ bool m_patchMetadataLoaded;
-    /* 0311 */ uint8_t unk_0311[3];
     /* 0314 */ Blizzard::Lock::RMutex m_patchLock;
-    /* 032C */ uint32_t unk_032C;
     /* 0330 */ int64_t m_writeReservationEnd;
     /* 0338 */ int64_t m_writeReservationPending;
     /* 0340 */ Blizzard::Lock::RMutex m_writeLock;

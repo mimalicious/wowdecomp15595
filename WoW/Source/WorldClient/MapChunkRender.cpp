@@ -23,13 +23,13 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// STATIC: 0x00D03D20
+// STATIC: 0x00D03D20/0x140BB3EA0
 static uint16_t s_streamVertexCount = 145;
 
-// STATIC: 0x00D03D40
+// STATIC: 0x00D03D40/0x140BB3EE0
 static uint16_t s_streamIndexCount = 768;
 
-// STATIC: 0x00D03D78
+// STATIC: 0x00D03D78/0x140BB3F20
 static float s_animSpeeds[8] = { 64.0f, 48.0f, 32.0f, 16.0f, 8.0f, 4.0f, 2.0f, 1.0f };
 
 // STATIC: 0x00E88DA8
@@ -57,7 +57,7 @@ static C3Vector LayerAnimation(uint16_t flags) {
     return C3Vector(direction);
 }
 
-// OFFSET: 0x00781170
+// OFFSET: 0x00781170/0x14046E670
 void CMapRenderChunk::InitializeVertexShaderConstants(CWorldView* view) {
     C4Vector* consts = CMapRenderChunk::s_vertexShaderConsts;
     memset(consts, 0, sizeof(CMapRenderChunk::s_vertexShaderConsts));
@@ -240,8 +240,8 @@ void CMapRenderChunk::RenderPrepBufs(CGxBuf* vertexBuf, CGxBuf* indexBuf) {
     }
 }
 
-// PROVEN: 08f48e95 IDENTICAL/NONE
-// OFFSET: 0x00781BD0
+// PROVEN: 08f48e95 IDENTICAL/UNPROVEN
+// OFFSET: 0x00781BD0/0x14046F450
 void CMapRenderChunk::UseStreamingBufs() {
     uint32_t vertexSize = GxVertexSize(static_cast<EGxVertexBufferFormat>(CMapRenderChunk::s_vertexFormat));
     uint32_t indexCount = 4 * s_streamIndexCount;
@@ -252,7 +252,7 @@ void CMapRenderChunk::UseStreamingBufs() {
     g_theGxDevicePtr->PrimIndexPtr(indexBuf);
 }
 
-// OFFSET: 0x00781C50
+// OFFSET: 0x00781C50/0x14046F500
 void CMapRenderChunk::RenderSetup(CMapRenderChunkBatch* batch, int32_t vertexShader) {
     if (!vertexShader) {
         C44Matrix world;
@@ -330,7 +330,7 @@ static C3Vector BatchOffset(const CMapRenderChunkBatch* batch) {
     return C3Vector(camPos.x - batch->m_position.x, camPos.y - batch->m_position.y, camPos.z - batch->m_position.z);
 }
 
-// OFFSET: 0x00781F00
+// OFFSET: 0x00781F00/0x14046F730
 void CMapRenderChunk::RenderMultiPassAdditive(CWorldView* view, CMapRenderChunk* renderChunk, CMapRenderChunkBatch* batch) {
     C44Matrix texMat;
     C44Matrix shadowMat;
@@ -383,7 +383,7 @@ void CMapRenderChunk::RenderMultiPassAdditive(CWorldView* view, CMapRenderChunk*
     GxRsSet(GxRs_Texture1, 0);
 }
 
-// OFFSET: 0x007824F0
+// OFFSET: 0x007824F0/0x140470180
 void CMapRenderChunk::RenderMultiPassAlpha(CWorldView* view, CMapRenderChunk* renderChunk, CMapRenderChunkBatch* batch) {
     C44Matrix texMat;
     C44Matrix shadowMat;
@@ -442,7 +442,7 @@ void CMapRenderChunk::RenderMultiPassAlpha(CWorldView* view, CMapRenderChunk* re
     GxRsSet(GxRs_Texture1, 0);
 }
 
-// OFFSET: 0x00782B50
+// OFFSET: 0x00782B50/0x140470C10
 void CMapRenderChunk::RenderSinglePassPixelShader(CWorldView* view, CMapRenderChunkBatch* batch) {
     GxRsSet(GxRs_BlendingMode, 0);
 
@@ -479,7 +479,7 @@ void CMapRenderChunk::RenderSinglePassPixelShader(CWorldView* view, CMapRenderCh
     g_theGxDevicePtr->Draw(batch->m_batch);
 }
 
-// OFFSET: 0x007830A0
+// OFFSET: 0x007830A0/0x1404713D0
 void CMapRenderChunk::RenderSetupFixedFunction(CWorldView* view) {
     CWorldScene::s_lighting.SetupGxLights(&view->m_camPos);
     CWorldScene::s_lighting.SetupGxFog();
@@ -492,7 +492,8 @@ void CMapRenderChunk::RenderSetupFixedFunction(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x007831B0
+// PROVEN: 18728209 IDENTICAL/NONE
+// OFFSET: 0x007831B0/0x140471510
 void CMapRenderChunk::RenderSetupCombiners() {
     GxRsSet(GxRs_ColorOp0, 1);
     GxRsSet(GxRs_AlphaOp0, 0);
@@ -500,7 +501,8 @@ void CMapRenderChunk::RenderSetupCombiners() {
     GxRsSet(GxRs_AlphaOp1, 0);
 }
 
-// OFFSET: 0x00783270
+// PROVEN: 27ec3540 IDENTICAL/DIFFERENT
+// OFFSET: 0x00783270/0x140471610
 void CMapRenderChunk::RenderSetupPixelShader() {
     float fogColor[4];
     fogColor[0] = CWorldScene::s_lighting.m_fogColor.x;
@@ -525,7 +527,7 @@ void CMapRenderChunk::RenderSetupPixelShader() {
     }
 }
 
-// OFFSET: 0x007833B0
+// OFFSET: 0x007833B0/0x1404717A0
 void CMapRenderChunk::SetVertexShader(CMapRenderChunk* renderChunk, CMapRenderChunkBatch* batch, uint32_t shadowMode, uint32_t layerCount, int32_t hasMaterialTexture) {
     C4Vector* consts = CMapRenderChunk::s_vertexShaderConsts;
     int32_t format = 0;
@@ -585,7 +587,7 @@ void CMapRenderChunk::SetVertexShader(CMapRenderChunk* renderChunk, CMapRenderCh
     }
 }
 
-// OFFSET: 0x007835C0
+// OFFSET: 0x007835C0/0x140471A50
 void CMapRenderChunk::RenderSolid(CMapRenderChunkBatch* batch) {
     C44Matrix identity;
     GxXformSet(GxXform_Tex0, identity);
@@ -604,12 +606,12 @@ void CMapRenderChunk::RenderSolid(CMapRenderChunkBatch* batch) {
 }
 
 // PROVEN: 4288d101 IDENTICAL/NONE
-// OFFSET: 0x00783820
+// OFFSET: 0x00783820/0x140471CE0
 void CMapRenderChunk::RenderSolidPixelShader(CMapRenderChunkBatch* batch) {
     CMapRenderChunk::RenderSolid(batch);
 }
 
-// OFFSET: 0x00783830
+// OFFSET: 0x00783830/0x140471CF0
 void CMapRenderChunk::RenderSolidVertexPixelShader(CWorldView* view, CMapRenderChunkBatch* batch) {
     GxRsSet(GxRs_BlendingMode, 0);
     GxUpdateAlphaRef(GxRs_AlphaRef);
@@ -652,7 +654,7 @@ void CMapRenderChunk::SetShaders(uint32_t materialType, uint32_t shadowMode) {
     }
 }
 
-// OFFSET: 0x00784580
+// OFFSET: 0x00784580/0x140473090
 void CMapRenderChunk::RenderSinglePassVertexPixelShader(CWorldView* view, CMapRenderChunkBatch* batch) {
     C4Vector* consts = CMapRenderChunk::s_vertexShaderConsts;
     GxRsSet(GxRs_BlendingMode, 0);
@@ -697,6 +699,7 @@ void CMapRenderChunk::RenderSinglePassVertexPixelShader(CWorldView* view, CMapRe
     }
 }
 
+// PROVEN: 21d83812 IDENTICAL/DIFFERENT
 // OFFSET: 0x00784810/0x1404733F0
 void CMapRenderChunk::RenderPrep() {
     uint32_t flags = this->m_flags;

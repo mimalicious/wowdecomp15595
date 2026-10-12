@@ -8,7 +8,7 @@
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00D040A0
+// STATIC: 0x00D040A0/0x140BB42F0
 static TSExplicitList<CMapChunkBufList, offsetof(CMapChunkBufList, m_link)> s_freeLists;
 
 // OFFSET: 0x00796260/0x1404891F0
@@ -31,7 +31,7 @@ CMapChunkBuf* CMapChunkBuf::CreateBuf(int32_t vertexCount, int32_t indexCount, i
     return buf;
 }
 
-// PROVEN: 492414c0 IDENTICAL/NONE
+// PROVEN: 492414c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00796320/0x140489310
 int32_t CMapChunkBuf::Valid() const {
     if (!this->m_vertexBuf || !this->m_vertexBuf->unk_001C || !this->m_vertexBuf->unk_001D) {
@@ -67,7 +67,7 @@ CMapChunkBuf* CMapChunkBuf::Alloc(int32_t vertexCount, int32_t indexCount, EGxVe
     return buf;
 }
 
-// PROVEN: b7464487 IDENTICAL/NONE
+// PROVEN: b7464487 IDENTICAL/IDENTICAL
 // OFFSET: 0x00796410/0x140489440
 CMapChunkBuf::CMapChunkBuf() {
     this->m_lastUsedFrame = 0;
@@ -106,6 +106,7 @@ CMapChunkBuf::~CMapChunkBuf() {
     }
 }
 
+// PROVEN: 6bb572c2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00796510/0x140489580
 CMapChunkBufList::~CMapChunkBufList() {
 }
@@ -156,7 +157,7 @@ void CMapChunkBuf::Update() {
     }
 }
 
-// OFFSET: 0x00796770
+// OFFSET: 0x00796770/0x1404898E0
 void CMapChunkBuf::Destroy() {
     for (CMapChunkBufList* list = s_freeLists.Head(), * nextList; list; list = nextList) {
         nextList = s_freeLists.Next(list);

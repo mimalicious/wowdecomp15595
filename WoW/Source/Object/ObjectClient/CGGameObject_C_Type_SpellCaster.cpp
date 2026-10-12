@@ -8,7 +8,7 @@
 CGGameObject_C_Type_SpellCaster::CGGameObject_C_Type_SpellCaster(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
-// OFFSET: 0x005A2900
+// OFFSET: 0x005A2900/0x140212C20
 bool CGGameObject_C_Type_SpellCaster::CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         if (!this->m_owner->GetProperty(47)) {

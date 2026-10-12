@@ -14,10 +14,10 @@
 #include "WoW/Source/Object/ObjectClient/Movement_C.h"
 #include "WoW/Source/Object/Types.h"
 
-// STATIC: 0x00D18C40
+// STATIC: 0x00D18C40/0x140BD4C40
 float CMovementShared::s_terminalVelocity = 60.148003f;
 
-// STATIC: 0x00D18C44
+// STATIC: 0x00D18C44/0x140BD4C44
 float CMovementShared::s_safeFallTerminalVelocity = 7.0f;
 
 float CMovementShared::s_twoPi = 6.2831855f;
@@ -91,7 +91,7 @@ float CMovementShared::GetDistanceFallen() const {
     return distance;
 }
 
-// PROVEN: e4ac0b22 IDENTICAL/NONE
+// PROVEN: e4ac0b22 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20210/0x1407C6290
 int32_t CMovementShared::UpgradePendingRoot() {
     uint32_t flags = this->m_flags;
@@ -104,7 +104,7 @@ int32_t CMovementShared::UpgradePendingRoot() {
     return 1;
 }
 
-// PROVEN: 4afe9a90 IDENTICAL/NONE
+// PROVEN: 4afe9a90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20230/0x1407C62B0
 void CMovementShared::DowngradeRootToPending() {
     if (this->m_flags & MOVEMENTFLAG_ROOT) {
@@ -112,7 +112,7 @@ void CMovementShared::DowngradeRootToPending() {
     }
 }
 
-// PROVEN: d849e60d IDENTICAL/NONE
+// PROVEN: d849e60d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20610/0x1407C6650
 void CMovementShared::StopAllLogging() {
     CMovementGlobals* globals = MovementGetGlobals();
@@ -140,7 +140,7 @@ float CMovementShared::TimeToFallDistance(float distance, int32_t safeFall) {
     return (distance - accelDistance) / terminal + accelTime;
 }
 
-// OFFSET: 0x00A20E50
+// OFFSET: 0x00A20E50/0x1407C6F00
 C3Vector CMovementShared::ComputeSplineNormal(uint32_t duration, const C44Matrix& frame) const {
     float progress = 1.0f;
     C3Vector point(0.0f, 0.0f, 0.0f);
@@ -167,7 +167,8 @@ C3Vector CMovementShared::ComputeSplineNormal(uint32_t duration, const C44Matrix
     return *reinterpret_cast<const C3Vector*>(&frame.c0) * rotation;
 }
 
-// OFFSET: 0x00A26190
+// PROVEN: 94aa39b0 NONE/IDENTICAL
+// OFFSET: 0x00A26190/0x1407CD2C0
 void CMovementShared::Root() {
     this->m_flags |= MOVEMENTFLAG_ROOT;
     this->StopFalling();
@@ -209,7 +210,7 @@ CMovementShared::CMovementShared(const WOWGUID& transportGuid, const C3Vector& p
     this->m_hoverHeight = 1.0f;
 }
 
-// PROVEN: b228fe3b IDENTICAL/NONE
+// PROVEN: b228fe3b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A1FBD0/0x1407C5D20
 void CMovementShared::CalcCurrentSpeed(int32_t force) {
     if (!(this->m_flags & MOVEMENTFLAG_FALLING) || force) {
@@ -217,7 +218,7 @@ void CMovementShared::CalcCurrentSpeed(int32_t force) {
     }
 }
 
-// OFFSET: 0x00A1FAD0
+// OFFSET: 0x00A1FAD0/0x1407C5C10
 void CMovementShared::CalcDirection() {
     float facing = this->m_anchorFacing;
     C2Vector dir2D;
@@ -241,7 +242,7 @@ void CMovementShared::CalcDirection() {
     }
 }
 
-// OFFSET: 0x00A204A0
+// OFFSET: 0x00A204A0/0x1407C6530
 void CMovementShared::ComputeSplineDurationModifier(float progress) {
     CMoveSpline* spline = this->m_spline;
 
@@ -353,7 +354,7 @@ void CMovementShared::CalcDirection(int32_t force) {
     }
 }
 
-// PROVEN: 2c482da5 IDENTICAL/NONE
+// PROVEN: 2c482da5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A1FDB0/0x1407C5E40
 float CMovementShared::CalcFallStartElevation(uint32_t time) const {
     return CalcFallDistance(time * 0.001f, this->m_flags & MOVEMENTFLAG_SAFE_FALL, this->m_fallVelocity) + this->m_position.z;
@@ -436,7 +437,7 @@ float CMovementShared::CalcTimeFallen(float distance, int32_t upward) const {
     return result;
 }
 
-// OFFSET: 0x00605F60
+// OFFSET: 0x00605F60/0x14028D640
 int32_t CMovementShared::CanCollideWhileFlying() const {
     if (this->IsSplineFlyerOrFlyingOrSwimming()) {
         return 1;
@@ -468,7 +469,7 @@ void CMovementShared::ForceStopStrafe() {
     this->UpdateAnchors(0);
 }
 
-// OFFSET: 0x00A258B0
+// OFFSET: 0x00A258B0/0x1407CC910
 int32_t CMovementShared::ChangeFlightBackSpeed(float speed) {
     if (fabs(speed - this->m_flightBackSpeed) < 0.00000023841858f) {
         return 0;
@@ -480,7 +481,7 @@ int32_t CMovementShared::ChangeFlightBackSpeed(float speed) {
     return 1;
 }
 
-// OFFSET: 0x00A255B0
+// OFFSET: 0x00A255B0/0x1407CC5D0
 int32_t CMovementShared::ChangeFlightSpeed(float speed) {
     if (fabs(speed - this->m_flightSpeed) < 0.00000023841858f) {
         return 0;
@@ -492,7 +493,7 @@ int32_t CMovementShared::ChangeFlightSpeed(float speed) {
     return 1;
 }
 
-// OFFSET: 0x00A243D0
+// OFFSET: 0x00A243D0/0x1407CB260
 int32_t CMovementShared::ChangePitchRate(float rate) {
     if (fabs(rate - this->m_pitchRate) < 0.00000023841858f) {
         return 0;
@@ -503,7 +504,7 @@ int32_t CMovementShared::ChangePitchRate(float rate) {
     return 1;
 }
 
-// OFFSET: 0x00A249B0
+// OFFSET: 0x00A249B0/0x1407CB8D0
 int32_t CMovementShared::ChangeRunBackSpeed(float speed) {
     if (fabs(speed - this->m_runBackSpeed) < 0.00000023841858f) {
         return 0;
@@ -515,7 +516,7 @@ int32_t CMovementShared::ChangeRunBackSpeed(float speed) {
     return 1;
 }
 
-// OFFSET: 0x00A246B0
+// OFFSET: 0x00A246B0/0x1407CB590
 int32_t CMovementShared::ChangeRunSpeed(float speed) {
     if (fabs(speed - this->m_runSpeed) < 0.00000023841858f) {
         return 0;
@@ -527,7 +528,7 @@ int32_t CMovementShared::ChangeRunSpeed(float speed) {
     return 1;
 }
 
-// OFFSET: 0x00A252B0
+// OFFSET: 0x00A252B0/0x1407CC290
 int32_t CMovementShared::ChangeSwimBackSpeed(float speed) {
     if (fabs(speed - this->m_swimBackSpeed) < 0.00000023841858f) {
         return 0;
@@ -539,7 +540,7 @@ int32_t CMovementShared::ChangeSwimBackSpeed(float speed) {
     return 1;
 }
 
-// OFFSET: 0x00A24FB0
+// OFFSET: 0x00A24FB0/0x1407CBF50
 int32_t CMovementShared::ChangeSwimSpeed(float speed) {
     if (fabs(speed - this->m_swimSpeed) < 0.00000023841858f) {
         return 0;
@@ -551,7 +552,7 @@ int32_t CMovementShared::ChangeSwimSpeed(float speed) {
     return 1;
 }
 
-// OFFSET: 0x00A240F0
+// OFFSET: 0x00A240F0/0x1407CAF30
 int32_t CMovementShared::ChangeTurnRate(float rate) {
     if (fabs(rate - this->m_turnRate) < 0.00000023841858f) {
         return 0;
@@ -562,7 +563,7 @@ int32_t CMovementShared::ChangeTurnRate(float rate) {
     return 1;
 }
 
-// OFFSET: 0x00A24CB0
+// OFFSET: 0x00A24CB0/0x1407CBC10
 int32_t CMovementShared::ChangeWalkSpeed(float speed) {
     if (fabs(speed - this->m_walkSpeed) < 0.00000023841858f) {
         return 0;
@@ -574,7 +575,7 @@ int32_t CMovementShared::ChangeWalkSpeed(float speed) {
     return 1;
 }
 
-// PROVEN: 2ced7c66 IDENTICAL/NONE
+// PROVEN: 2ced7c66 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A25E90/0x1407CCF80
 int32_t CMovementShared::EnableCollision(int32_t enable) {
     if (enable) {
@@ -586,7 +587,7 @@ int32_t CMovementShared::EnableCollision(int32_t enable) {
     return 0;
 }
 
-// OFFSET: 0x00A25EC0
+// OFFSET: 0x00A25EC0/0x1407CCFA0
 int32_t CMovementShared::EnableGravity(int32_t enable) {
     uint32_t flags = this->m_flags;
     uint32_t newFlags = enable ? flags & ~MOVEMENTFLAG_DISABLE_GRAVITY : flags | MOVEMENTFLAG_DISABLE_GRAVITY;
@@ -600,7 +601,7 @@ int32_t CMovementShared::EnableGravity(int32_t enable) {
     return 1;
 }
 
-// PROVEN: 9481efa7 IDENTICAL/NONE
+// PROVEN: 9481efa7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A203E0/0x1407C64D0
 void CMovementShared::FeatherFall(int32_t enable) {
     if (enable) {
@@ -679,7 +680,7 @@ float CMovementShared::GetModifiedSplineDuration() const {
     return this->m_spline->m_duration * this->m_spline->m_durationMod;
 }
 
-// PROVEN: b5ee02dd IDENTICAL/NONE
+// PROVEN: b5ee02dd IDENTICAL/DIFFERENT
 // OFFSET: 0x00A20400/0x1407C64F0
 void CMovementShared::Hover(int32_t enable) {
     if (enable) {
@@ -723,17 +724,7 @@ int32_t CMovementShared::IsJumpingUp() const {
     return (this->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_fallVelocity && this->m_fallVelocity * -0.051837362f > this->m_fallTimeMs * 0.001f;
 }
 
-// INLINED
-int32_t CMovementShared::IsOnFallingSpline() const {
-    CMoveSpline* spline = this->m_spline;
-
-    if (spline && !(spline->m_flags & SPLINEFLAG_NO_SPLINE) && (spline->m_flags & SPLINEFLAG_FALLING)) {
-        return 1;
-    }
-
-    return 0;
-}
-
+// PROVEN: aa5fa75f IDENTICAL/NONE
 // OFFSET: 0x0043B7C0
 int32_t CMovementShared::IsOnFlyingSpline() const {
     CMoveSpline* spline = this->m_spline;
@@ -756,25 +747,16 @@ int32_t CMovementShared::IsOnParabolicSpline() const {
     return 0;
 }
 
-// PROVEN: 05c18660 IDENTICAL/NONE
-// OFFSET: [0x0043B770]
+// PROVEN: 05c18660 IDENTICAL/IDENTICAL
+// OFFSET: [0x0043B770/0x140046140]
 int32_t CMovementShared::HasFallVelocity() const {
     return (this->m_flags & MOVEMENTFLAG_FALLING) && this->m_fallVelocity != 0.0f;
 }
 
-// PROVEN: b1ccd881 IDENTICAL/NONE
+// PROVEN: b1ccd881 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043B7A0/0x140046160
 int32_t CMovementShared::IsOnSpline() const {
     return this->m_spline && !(this->m_spline->m_flags & SPLINEFLAG_NO_SPLINE);
-}
-
-// INLINED
-int32_t CMovementShared::IsSplineFlyerOrFlyingOrSwimming() const {
-    if (this->IsGravityDisabled()) {
-        return 1;
-    }
-
-    return (this->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) != 0;
 }
 
 // INLINED
@@ -808,7 +790,7 @@ void CMovementShared::PlotAscendDescend(float dt, C3Vector* move) const {
     *move = C3Vector(this->m_moveDir2D.x * 0.70710677f * dt * speed, y * dt * speed, speed * (vertical * dt));
 }
 
-// PROVEN: f1311031 IDENTICAL/NONE
+// PROVEN: f1311031 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20640/0x1407C6690
 float CMovementShared::PlotFacing(float dt) const {
     uint32_t flags = this->m_flags;
@@ -874,7 +856,7 @@ void CMovementShared::PlotHorzCircularPosition(float dt, C3Vector* move) const {
     }
 }
 
-// PROVEN: 2d831ff5 IDENTICAL/NONE
+// PROVEN: 2d831ff5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A206A0/0x1407C66E0
 float CMovementShared::PlotPitch(float dt) const {
     uint32_t flags = this->m_flags;
@@ -1098,7 +1080,7 @@ float CMovementShared::RelDistanceFallen(uint32_t time, float z) const {
     return CalcFallDistance(time * 0.001f, flags & MOVEMENTFLAG_SAFE_FALL, velocity);
 }
 
-// PROVEN: e6d9576d IDENTICAL/NONE
+// PROVEN: e6d9576d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20350/0x1407C63F0
 void CMovementShared::UpdateSplineID(uint32_t splineId) {
     this->m_spline->m_id = splineId;
@@ -1106,8 +1088,8 @@ void CMovementShared::UpdateSplineID(uint32_t splineId) {
     this->m_spline->m_duration = 0;
 }
 
-// PROVEN: 6bf43fc3 IDENTICAL/NONE
-// OFFSET: 0x00A205F0
+// PROVEN: 6bf43fc3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A205F0/0x1407C6630
 void CMovementShared::ProcessFallReset() {
     this->m_flags |= MOVEMENTFLAG_FALLING_FAR;
     this->m_fallStartZ = this->m_position.z;
@@ -1115,7 +1097,7 @@ void CMovementShared::ProcessFallReset() {
     this->m_fallTimeMs = 0;
 }
 
-// OFFSET: 0x00A25BB0
+// OFFSET: 0x00A25BB0/0x1407CCC50
 void CMovementShared::SetRunMode(int32_t run) {
     if (run) {
         this->m_flags &= ~MOVEMENTFLAG_WALKING;
@@ -1127,13 +1109,13 @@ void CMovementShared::SetRunMode(int32_t run) {
     this->CalcCurrentSpeed(0);
 }
 
-// PROVEN: ede5cbab IDENTICAL/NONE
+// PROVEN: ede5cbab IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20330/0x1407C63D0
 void CMovementShared::MarkAwaitingLoad() {
     this->m_flags2 |= MOVEMENTFLAG2_AWAITING_LOAD;
 }
 
-// PROVEN: f0ecfad8 IDENTICAL/NONE
+// PROVEN: f0ecfad8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20450/0x1407CD320
 void CMovementShared::SetAnimTierInTrans(int32_t enable) {
     if (enable) {
@@ -1143,7 +1125,7 @@ void CMovementShared::SetAnimTierInTrans(int32_t enable) {
     }
 }
 
-// PROVEN: feb66b6e IDENTICAL/NONE
+// PROVEN: feb66b6e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20430/0x1407CD300
 void CMovementShared::SetJumpSplineInAir(int32_t enable) {
     if (enable) {
@@ -1308,6 +1290,7 @@ int32_t CMovementShared::StopTurn() {
     return 1;
 }
 
+// PROVEN: d662333f DIFFERENT/IDENTICAL
 // OFFSET: 0x00A1FC80/0x1407C5D50
 float CMovementShared::TimeToJumpPeak() const {
     if (this->m_flags & MOVEMENTFLAG_FALLING) {
@@ -1317,7 +1300,7 @@ float CMovementShared::TimeToJumpPeak() const {
     return 0.0f;
 }
 
-// PROVEN: 4bcdae57 IDENTICAL/NONE
+// PROVEN: 4bcdae57 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A214C0/0x1407C7630
 void CMovementShared::UpdateAnchors(int32_t force) {
     this->m_anchorFacing = this->m_facing;
@@ -1343,6 +1326,7 @@ void CMovementShared::UpdateBaseStatus(const CMovementStatus& status) {
     this->CalcCurrentSpeed(0);
 }
 
+// PROVEN: 1a9e1dce DIFFERENT/IDENTICAL
 // OFFSET: 0x00603860/0x14028AB40
 void CMovementShared::UpdateFallingFar() {
     uint32_t flags = this->m_flags;
@@ -1375,7 +1359,7 @@ C3Vector CMovementShared::GetPosition() const {
     return CPassenger::GetPosition(this->m_position);
 }
 
-// PROVEN: f4b9308e IDENTICAL/NONE
+// PROVEN: f4b9308e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20D20/0x1407C6DD0
 uint32_t CMovementShared::PlotUnitMovement(uint32_t time, C3Vector* move) {
     return this->PlotUnitMovement(time, move, &this->m_facing, &this->m_pitch);
@@ -1387,7 +1371,7 @@ float CMovementShared::RelDistanceFallen(uint32_t time) const {
     return this->RelDistanceFallen(time, this->m_position.z);
 }
 
-// OFFSET: 0x00A24050
+// OFFSET: 0x00A24050/0x1407CAB90
 int32_t CMovementShared::SetPitch(float pitch) {
     if (fabs(pitch - this->m_pitch) < 9.5367432e-7f) {
         this->m_flags &= ~(MOVEMENTFLAG_PITCH_UP | MOVEMENTFLAG_PITCH_DOWN);
@@ -1413,7 +1397,7 @@ int32_t CMovementShared::SetPitch(float pitch) {
     return 1;
 }
 
-// OFFSET: 0x00A23FF0
+// OFFSET: 0x00A23FF0/0x1407CA860
 void CMovementShared::SetRawFacing(float facing) {
     if (!(fabs(facing - this->m_facing) < 9.5367432e-7f)) {
         int32_t falling = this->m_flags & MOVEMENTFLAG_FALLING;
@@ -1441,8 +1425,8 @@ int32_t CMovementShared::StartAscensionDescension(int32_t ascend) {
     return 1;
 }
 
-// PROVEN: 63b11f7f IDENTICAL/NONE
-// OFFSET: 0x00A23C60
+// PROVEN: 63b11f7f IDENTICAL/DIFFERENT
+// OFFSET: 0x00A23C60/0x1407C9EA0
 int32_t CMovementShared::StartFlight() {
     uint32_t flags = this->m_flags;
 
@@ -1453,16 +1437,6 @@ int32_t CMovementShared::StartFlight() {
     this->m_flags = (flags & ~(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR | MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING | MOVEMENTFLAG_SPLINE_ELEVATION)) | MOVEMENTFLAG_FLYING;
     this->UpdateAnchors(0);
     this->CalcCurrentSpeed(0);
-    return 1;
-}
-
-// INLINED
-int32_t CMovementShared::StopStrafe(uint32_t moveFlags) {
-    if (!(moveFlags & (MOVEMENTFLAG_STRAFE_LEFT | MOVEMENTFLAG_STRAFE_RIGHT)) || (this->m_flags & MOVEMENTFLAG_FALLING)) {
-        return 0;
-    }
-
-    this->ForceStopStrafe();
     return 1;
 }
 
@@ -1517,7 +1491,7 @@ C3Vector CMovementShared::GetDirection() const {
         this->m_moveDir.x * matrix.a2 + matrix.c2 * this->m_moveDir.z + matrix.b2 * this->m_moveDir.y);
 }
 
-// OFFSET: 0x00A23980
+// OFFSET: 0x00A23980/0x1407C9B70
 void CMovementShared::StartSwim() {
     this->m_flags = (this->m_flags & ~(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING | MOVEMENTFLAG_SPLINE_ELEVATION)) | MOVEMENTFLAG_SWIMMING;
     this->UpdateAnchors(0);
@@ -1525,17 +1499,7 @@ void CMovementShared::StartSwim() {
     this->CalcCurrentSpeed(0);
 }
 
-// INLINED
-int32_t CMovementShared::StopMove(uint32_t moveFlags) {
-    if (!(moveFlags & (MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_BACKWARD)) || (this->m_flags & MOVEMENTFLAG_FALLING)) {
-        return 0;
-    }
-
-    this->ForceStopMove(1);
-    return 1;
-}
-
-// PROVEN: c3f342cc IDENTICAL/NONE
+// PROVEN: c3f342cc IDENTICAL/IDENTICAL
 // OFFSET: 0x00A21E30/0x1407CD4A0
 void CMovementShared::RemoveSpline() {
     this->m_flags2 &= ~MOVEMENTFLAG2_JUMP_SPLINE_IN_AIR;
@@ -1743,6 +1707,7 @@ int32_t CMovementShared::IsFallingSwimmingFlying(uint32_t ignoreFlags) const {
     return (~ignoreFlags & this->m_flags & (MOVEMENTFLAG_UNK_40000000 | MOVEMENTFLAG_FLYING | MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_ROOT)) != 0;
 }
 
+// PROVEN: 80b3a196 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A26220/0x1407CD9E0
 void CMovementShared::Disable() {
     this->RemoveSpline();
@@ -1763,7 +1728,7 @@ void CMovementShared::Suspend() {
     }
 }
 
-// OFFSET: 0x00A26300
+// OFFSET: 0x00A26300/0x1407CD340
 int32_t CMovementShared::StartFalling(float velocity) {
     if (this->m_flags & (MOVEMENTFLAG_UNK_40000000 | MOVEMENTFLAG_ROOT)) {
         return 0;
@@ -1777,7 +1742,7 @@ int32_t CMovementShared::StartFalling(float velocity) {
     return 1;
 }
 
-// OFFSET: 0x00A26340
+// OFFSET: 0x00A26340/0x1407CDB80
 int32_t CMovementShared::StartFallingIgnoring(uint32_t ignoreFlags, float velocity) {
     if (~ignoreFlags & this->m_flags & (MOVEMENTFLAG_UNK_40000000 | MOVEMENTFLAG_ROOT)) {
         return 0;
@@ -1791,7 +1756,7 @@ int32_t CMovementShared::StartFallingIgnoring(uint32_t ignoreFlags, float veloci
     return 1;
 }
 
-// OFFSET: 0x00A26390
+// OFFSET: 0x00A26390/0x1407CD380
 int32_t CMovementShared::Jump(int32_t checkHover) {
     if (checkHover && (this->m_flags & MOVEMENTFLAG_HOVER) && !(this->m_flags & MOVEMENTFLAG_SWIMMING)) {
         return 0;
@@ -1822,6 +1787,7 @@ void CMovementShared::DowngradeRootIfFalling() {
     }
 }
 
+// PROVEN: c496e82f IDENTICAL/NONE
 // OFFSET: 0x00A26460
 float CMovementShared::RemoveFromTransportFinish(const C44Matrix& matrix, float facing, const C3Vector& oldPosition) {
     this->TransportTransform(matrix, facing, oldPosition);
@@ -1862,7 +1828,7 @@ int32_t CMovementShared::TryStartFalling() {
     return 0;
 }
 
-// PROVEN: be94fad9 IDENTICAL/NONE
+// PROVEN: be94fad9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A266C0/0x1407CDC10
 float CMovementShared::RemoveFromTransport(C44Matrix* matrix) {
     C3Vector oldPosition = this->m_position;
@@ -1870,8 +1836,8 @@ float CMovementShared::RemoveFromTransport(C44Matrix* matrix) {
     return this->RemoveFromTransportFinish(*matrix, facing, oldPosition);
 }
 
-// PROVEN: 9c598c81 IDENTICAL/NONE
-// OFFSET: 0x00A20250
+// PROVEN: 9c598c81 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A20250/0x1407C62D0
 void CMovementShared::AddSpline(const C3Vector& position) {
     if (!this->m_spline) {
         this->m_spline = MovementNewSpline();
@@ -1888,7 +1854,7 @@ void CMovementShared::ResetFallOnControlLoss() {
     }
 }
 
-// PROVEN: 005a6019 IDENTICAL/NONE
+// PROVEN: 005a6019 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A20340/0x1407C63E0
 void CMovementShared::UnMarkAwaitingLoad() {
     this->m_flags2 &= ~MOVEMENTFLAG2_AWAITING_LOAD;
@@ -1909,8 +1875,8 @@ void CMovementShared::ForceStopMove(int32_t tryFall) {
     }
 }
 
-// PROVEN: f1105040 IDENTICAL/NONE
-// OFFSET: 0x00A26A00
+// PROVEN: f1105040 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A26A00/0x1407CE020
 int32_t CMovementShared::StopStrafe() {
     uint32_t flags = this->m_flags;
 
@@ -1936,7 +1902,7 @@ int32_t CMovementShared::StopStrafe() {
     return 1;
 }
 
-// OFFSET: 0x00A26A60
+// OFFSET: 0x00A26A60/0x1407CE090
 void CMovementShared::StopSwim() {
     uint16_t flags2 = this->m_flags2;
     this->m_flags &= ~(MOVEMENTFLAG_ASCENDING | MOVEMENTFLAG_DESCENDING);
@@ -1971,7 +1937,7 @@ void CMovementShared::StopFlight() {
     this->UpdateAnchors(0);
 }
 
-// PROVEN: 68264aae IDENTICAL/NONE
+// PROVEN: 68264aae IDENTICAL/IDENTICAL
 // OFFSET: 0x00A270B0/0x1407CE740
 void CMovementShared::TryRoot() {
     uint32_t flags = this->m_flags;
@@ -1991,8 +1957,8 @@ void CMovementShared::TryRoot() {
     }
 }
 
-// PROVEN: fa7136c8 IDENTICAL/NONE
-// OFFSET: 0x00A27100
+// PROVEN: fa7136c8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A27100/0x1407CE7D0
 void CMovementShared::UnRoot(int32_t tryFall) {
     this->m_flags &= ~(MOVEMENTFLAG_ROOT | MOVEMENTFLAG_PENDING_ROOT);
 
@@ -2001,7 +1967,7 @@ void CMovementShared::UnRoot(int32_t tryFall) {
     }
 }
 
-// PROVEN: 231507a8 IDENTICAL/NONE
+// PROVEN: 231507a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27120/0x1407CE7F0
 void CMovementShared::OnSpline(uint32_t timePassed, const C3Vector* points, uint32_t pointCount, uint32_t duration, uint32_t splineFlags, uint32_t splineId) {
     this->m_spline->m_flags = splineFlags;
@@ -2025,8 +1991,8 @@ void CMovementShared::OnSpline(uint32_t timePassed, const C3Vector* points, uint
     }
 }
 
-// PROVEN: f87dcef5 IDENTICAL/NONE
-// OFFSET: 0x00A27200
+// PROVEN: f87dcef5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A27200/0x1407CE8E0
 int32_t CMovementShared::StopMove() {
     uint32_t flags = this->m_flags;
 
@@ -2052,8 +2018,8 @@ int32_t CMovementShared::StopMove() {
     return 1;
 }
 
-// PROVEN: 07658f82 IDENTICAL/NONE
-// OFFSET: 0x00A27260
+// PROVEN: 07658f82 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A27260/0x1407CE950
 void CMovementShared::ConvertCurrentSplineToLoopingSpline(uint32_t timePassed) {
     CMoveSpline* spline = this->m_spline;
 

@@ -155,7 +155,7 @@ int32_t Script_UnitIsControlling(lua_State* L);
 int32_t Script_CanEjectPassengerFromSeat(lua_State* L);
 int32_t Script_IsXPUserDisabled(lua_State* L);
 
-// STATIC: 0x00BE4580
+// STATIC: 0x00BE4580/0x1409DE200
 const int32_t s_unitSexValues[3] = { 2, 3, 1 };
 
 static const char* s_unitClassificationTokens[7] = { "normal", "elite", "rareelite", "worldboss", "rare", "trivial", NULL };
@@ -619,6 +619,7 @@ static int32_t Script_UnitSex(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a6eeb6d5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0044E970/0x14005CC50
 static int32_t Script_FillLocalizedClassList(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -734,6 +735,7 @@ static int32_t Script_GetMoney(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 838c0879 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044BC90/0x1400592B0
 static int32_t Script_GetTime(lua_State* L) {
     lua_pushnumber(L, FrameTime::GetCurTimeMs() * 0.001);
@@ -741,6 +743,7 @@ static int32_t Script_GetTime(lua_State* L) {
     return 1;
 }
 
+// PROVEN: aa2ea58c IDENTICAL/UNPROVEN
 // OFFSET: 0x0044BD10/0x140059330
 static int32_t Script_GetGameTime(lua_State* L) {
     lua_pushnumber(L, g_clientGameTime.m_hour);
@@ -749,6 +752,7 @@ static int32_t Script_GetGameTime(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 283b6f85 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044E610/0x14005C850
 static int32_t Script_ConsoleExec(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -764,18 +768,21 @@ static int32_t Script_ConsoleExec(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 781999ea IDENTICAL/DIFFERENT
 // OFFSET: 0x0044BD50/0x140632130
 static int32_t Script_ReadFile(lua_State* L) {
     luaL_error(L, "Access Denied");
     return 0;
 }
 
+// PROVEN: 689c219d IDENTICAL/DIFFERENT
 // OFFSET: 0x0044BD50/0x140632130
 static int32_t Script_DeleteFile(lua_State* L) {
     luaL_error(L, "Access Denied");
     return 0;
 }
 
+// PROVEN: 4fac0ae1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0044BD50/0x140632130
 static int32_t Script_AppendToFile(lua_State* L) {
     luaL_error(L, "Access Denied");
@@ -1088,6 +1095,7 @@ static int32_t Script_UnitFactionGroup(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 757f7663 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044E890/0x14005CB90
 static int32_t Script_IsLoggedIn(lua_State* L) {
     if (!CGGameUI::m_loggingIn) {
@@ -1099,7 +1107,7 @@ static int32_t Script_IsLoggedIn(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a65fb5b9 IDENTICAL/NONE
+// PROVEN: a65fb5b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044C0F0/0x140059730
 static int32_t Script_CanSwitchVehicleSeat(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::GetActive();
@@ -1113,6 +1121,7 @@ static int32_t Script_CanSwitchVehicleSeat(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 33eff2b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00458C10/0x140068AC0
 static int32_t Script_IsXPUserDisabled(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1125,6 +1134,7 @@ static int32_t Script_IsXPUserDisabled(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d6e7d677 IDENTICAL/DIFFERENT
 // OFFSET: 0x004524A0/0x140060EE0
 static int32_t Script_IsInGuild(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1138,6 +1148,7 @@ static int32_t Script_IsInGuild(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 055ee966 IDENTICAL/DIFFERENT
 // OFFSET: 0x004528B0/0x140061320
 static int32_t Script_GetDodgeChance(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1151,6 +1162,7 @@ static int32_t Script_GetDodgeChance(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 698fa830 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452910/0x140061390
 static int32_t Script_GetBlockChance(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1164,6 +1176,7 @@ static int32_t Script_GetBlockChance(lua_State* L) {
     return 1;
 }
 
+// PROVEN: c5adcce1 IDENTICAL/DIFFERENT
 // OFFSET: 0x004529F0/0x140061470
 static int32_t Script_GetParryChance(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1177,6 +1190,7 @@ static int32_t Script_GetParryChance(lua_State* L) {
     return 1;
 }
 
+// PROVEN: b5e0b9e1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452AF0/0x140061570
 static int32_t Script_GetCritChance(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1190,6 +1204,7 @@ static int32_t Script_GetCritChance(lua_State* L) {
     return 1;
 }
 
+// PROVEN: b85389a1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452C50/0x140061780
 static int32_t Script_GetRangedCritChance(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1216,6 +1231,7 @@ static int32_t Script_GetSpellBonusHealing(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a5ff5a6f IDENTICAL/DIFFERENT
 // OFFSET: 0x00452E60/0x1400619F0
 static int32_t Script_GetPetSpellBonusDamage(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1229,7 +1245,7 @@ static int32_t Script_GetPetSpellBonusDamage(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 51a82bdd IDENTICAL/NONE
+// PROVEN: 51a82bdd IDENTICAL/DIFFERENT
 // OFFSET: 0x00456A50/0x140066250
 static int32_t Script_IsIndoors(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1243,6 +1259,7 @@ static int32_t Script_IsIndoors(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 0e016503 IDENTICAL/DIFFERENT
 // OFFSET: 0x00456AB0/0x1400662C0
 static int32_t Script_IsOutdoors(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1269,6 +1286,7 @@ static int32_t Script_IsSwimming(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 0b4855d5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00456E80/0x1400667A0
 static int32_t Script_IsStealthed(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1308,6 +1326,7 @@ static int32_t Script_IsResting(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ff3a7ea9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452EC0/0x140061A60
 static int32_t Script_GetSpellPenetration(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1321,6 +1340,7 @@ static int32_t Script_GetSpellPenetration(lua_State* L) {
     return 1;
 }
 
+// PROVEN: c907e42f IDENTICAL/DIFFERENT
 // OFFSET: 0x00455DE0/0x1400652A0
 static int32_t Script_HasFullControl(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1376,6 +1396,7 @@ static int32_t Script_IsFalling(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 9e82969d IDENTICAL/DIFFERENT
 // OFFSET: 0x00456E10/0x140066730
 static int32_t Script_IsMounted(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1389,6 +1410,7 @@ static int32_t Script_IsMounted(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a7fe9e20 IDENTICAL/IDENTICAL
 // OFFSET: 0x004511D0/0x14005F7C0
 static int32_t Script_UnitInParty(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
@@ -1437,6 +1459,7 @@ static int32_t Script_IsInArenaTeam(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 0b9e8fe6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452970/0x140061400
 static int32_t Script_GetShieldBlock(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1464,6 +1487,7 @@ static int32_t Script_GetSpellCritChance(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 82e3e948 IDENTICAL/DIFFERENT
 // OFFSET: 0x004558D0/0x140064C70
 static int32_t Script_UnitIsTapped(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1482,6 +1506,7 @@ static int32_t Script_UnitIsTapped(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 6ccd0eca IDENTICAL/DIFFERENT
 // OFFSET: 0x00455950/0x140064D20
 static int32_t Script_UnitIsTappedByPlayer(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1500,6 +1525,7 @@ static int32_t Script_UnitIsTappedByPlayer(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3e0f2d75 IDENTICAL/DIFFERENT
 // OFFSET: 0x004559D0/0x140064DD0
 static int32_t Script_UnitIsTappedByAllThreatList(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1518,6 +1544,7 @@ static int32_t Script_UnitIsTappedByAllThreatList(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 17b1cb97 IDENTICAL/DIFFERENT
 // OFFSET: 0x00455A50/0x140064E80
 static int32_t Script_UnitIsTrivial(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1553,6 +1580,7 @@ static int32_t Script_UnitIsPartyLeader(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 74d9e2ee IDENTICAL/DIFFERENT
 // OFFSET: 0x004517E0/0x14005FE60
 static int32_t Script_UnitIsPVPSanctuary(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
@@ -1568,6 +1596,7 @@ static int32_t Script_UnitIsPVPSanctuary(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 93e7899e IDENTICAL/DIFFERENT
 // OFFSET: 0x00451C10/0x1400603C0
 static int32_t Script_UnitIsEnemy(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -1587,6 +1616,7 @@ static int32_t Script_UnitIsEnemy(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 229908cd IDENTICAL/DIFFERENT
 // OFFSET: 0x00451F80/0x140060820
 static int32_t Script_UnitCanAssist(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -1606,6 +1636,7 @@ static int32_t Script_UnitCanAssist(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1fc299d4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452020/0x140060960
 static int32_t Script_UnitCanAttack(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -1625,6 +1656,7 @@ static int32_t Script_UnitCanAttack(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 9400eae3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00455F70/0x140065470
 static int32_t Script_UnitCreatureType(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1645,6 +1677,7 @@ static int32_t Script_UnitCreatureType(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ea578917 IDENTICAL/DIFFERENT
 // OFFSET: 0x00456010/0x140065560
 static int32_t Script_UnitCreatureFamily(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1682,6 +1715,7 @@ static int32_t Script_IsFlying(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1d266824 IDENTICAL/DIFFERENT
 // OFFSET: 0x004570F0/0x140066AC0
 static int32_t Script_GetUnitMaxHealthModifier(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1781,6 +1815,7 @@ static int32_t Script_UnitVehicleSeatCount(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 4a6dee98 IDENTICAL/DIFFERENT
 // OFFSET: 0x00458760/0x1400684D0
 static int32_t Script_UnitIsControlling(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
@@ -1821,6 +1856,7 @@ static int32_t Script_GetMaxCombatRatingBonus(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ee763cd8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00451B60/0x140060280
 static int32_t Script_UnitReaction(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -1855,6 +1891,7 @@ static int32_t Script_GetManaRegen(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 0ce9f88f IDENTICAL/DIFFERENT
 // OFFSET: 0x00457340/0x140066DF0
 static int32_t Script_GetPowerRegen(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1871,6 +1908,7 @@ static int32_t Script_GetPowerRegen(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 8729edb4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452730/0x140061190
 static int32_t Script_GetCombatRating(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1896,6 +1934,7 @@ static int32_t Script_GetCombatRating(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 21d644e8 IDENTICAL/DIFFERENT
 // OFFSET: 0x004573F0/0x140066EC0
 static int32_t Script_GetExpertise(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1920,6 +1959,7 @@ static int32_t Script_GetPVPSessionStats(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 063256b1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00456260/0x140065850
 static int32_t Script_GetPVPYesterdayStats(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2006,6 +2046,7 @@ static int32_t Script_UnitIsDND(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3c6dbf66 IDENTICAL/DIFFERENT
 // OFFSET: 0x00457D30/0x140067920
 static int32_t Script_UnitInVehicle(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -2038,6 +2079,7 @@ static int32_t Script_UnitInVehicle(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 88ae1ce3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00457E10/0x140067A00
 static int32_t Script_UnitUsingVehicle(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -2089,6 +2131,7 @@ static int32_t Script_UnitHasRelicSlot(lua_State* L) {
     return 1;
 }
 
+// PROVEN: cb7596e1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00453400/0x140061FC0
 static int32_t Script_UnitPVPName(lua_State* L) {
     char buffer[1024];
@@ -2522,6 +2565,7 @@ static int32_t Script_UnitLevel(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3b292356 IDENTICAL/DIFFERENT
 // OFFSET: 0x00458420/0x140068100
 static int32_t Script_UnitThreatSituation(lua_State* L) {
     uint8_t status = 0;
@@ -2605,7 +2649,8 @@ static int32_t Script_UnitDetailedThreatSituation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0045A7A0
+// PROVEN: eb203137 IDENTICAL/DIFFERENT
+// OFFSET: 0x0045A7A0/0x14006ABE0
 static int32_t Script_UnitBuff(lua_State* L) {
     ScriptAuraInfo info;
 
@@ -2618,7 +2663,8 @@ static int32_t Script_UnitBuff(lua_State* L) {
     return PushUnitAura(L, &info);
 }
 
-// OFFSET: 0x0045A7F0
+// PROVEN: 1b52013c IDENTICAL/DIFFERENT
+// OFFSET: 0x0045A7F0/0x14006ACA0
 static int32_t Script_UnitDebuff(lua_State* L) {
     ScriptAuraInfo info;
 
@@ -2631,7 +2677,8 @@ static int32_t Script_UnitDebuff(lua_State* L) {
     return PushUnitAura(L, &info);
 }
 
-// OFFSET: 0x0045A840
+// PROVEN: ce75bb3d IDENTICAL/DIFFERENT
+// OFFSET: 0x0045A840/0x14006AD60
 static int32_t Script_UnitAura(lua_State* L) {
     ScriptAuraInfo info;
 
@@ -2841,7 +2888,7 @@ static int32_t Script_GetPVPRankInfo(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 107dbf5a IDENTICAL/NONE
+// PROVEN: 107dbf5a IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C320/0x1405229B0
 static int32_t Script_GetPVPRankProgress(lua_State* L) {
     lua_pushnumber(L, 0.0);
@@ -2880,6 +2927,7 @@ static int32_t Script_GetRuneType(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f67d4129 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452BD0/0x1400616B0
 static int32_t Script_GetSpellCritChanceFromIntellect(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -2981,6 +3029,7 @@ static int32_t Script_UnitIsPVP(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 883157aa IDENTICAL/DIFFERENT
 // OFFSET: 0x00451CB0/0x140060500
 static int32_t Script_UnitIsFriend(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -3009,7 +3058,7 @@ static int32_t Script_UnitIsFriend(lua_State* L) {
     return 1;
 }
 
-// PROVEN: cc73a513 IDENTICAL/NONE
+// PROVEN: cc73a513 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044C0D0/0x140059710
 static void PortraitQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -3083,6 +3132,7 @@ static int32_t Script_SetPortraitTexture(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 104f82af IDENTICAL/DIFFERENT
 // OFFSET: 0x004527F0/0x140061260
 static int32_t Script_GetCombatRatingBonus(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -3102,6 +3152,7 @@ static int32_t Script_GetCombatRatingBonus(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a3ea259a IDENTICAL/DIFFERENT
 // OFFSET: 0x00452FE0/0x140061B60
 static int32_t Script_GetAttackPowerForStat(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -3217,6 +3268,7 @@ static int32_t Script_UnitSelectionColor(lua_State* L) {
     return 4;
 }
 
+// PROVEN: 50fd9a3d IDENTICAL/DIFFERENT
 // OFFSET: 0x00452B50/0x1400615E0
 static int32_t Script_GetCritChanceFromAgility(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -3281,6 +3333,7 @@ static int32_t Script_UnitRangedAttackPower(lua_State* L) {
     return 3;
 }
 
+// PROVEN: 3eb75a25 IDENTICAL/DIFFERENT
 // OFFSET: 0x00452F30/0x140061AD0
 static int32_t Script_GetArmorPenetration(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -3294,6 +3347,7 @@ static int32_t Script_GetArmorPenetration(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f99a3b69 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044C140/0x140059780
 static int32_t PushItemStatsTable(lua_State* L, const CGItemStatsSummary* summary) {
     float dps = summary->m_dps;
@@ -3323,6 +3377,7 @@ static int32_t PushItemStatsTable(lua_State* L, const CGItemStatsSummary* summar
     return 1;
 }
 
+// PROVEN: 792f47c6 DIFFERENT/IDENTICAL
 // OFFSET: 0x0044C200/0x140059870
 static int32_t Script_GetItemStats(lua_State* L) {
     if (!lua_isstring(L, 1) || (lua_type(L, 2) > LUA_TNIL && lua_type(L, 2) != LUA_TTABLE)) {
@@ -3656,6 +3711,7 @@ static int32_t Script_UnitRangedAttack(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 37ce906f IDENTICAL/DIFFERENT
 // OFFSET: 0x004560B0/0x140065650
 static int32_t Script_GetResSicknessDuration(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -3749,6 +3805,7 @@ static int32_t Script_UnitIsSameServer(lua_State* L) {
     return 1;
 }
 
+// PROVEN: e76955f8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00457070/0x1400669F0
 static int32_t Script_GetUnitHealthModifier(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -3769,6 +3826,7 @@ static int32_t Script_GetUnitHealthModifier(lua_State* L) {
     return 1;
 }
 
+// PROVEN: b14795d8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00457180/0x140066BA0
 static int32_t Script_GetUnitPowerModifier(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -4038,7 +4096,7 @@ static int32_t Script_GetPlayerInfoByGUID(lua_State* L) {
     return 7;
 }
 
-// OFFSET: 0x0045A890
+// OFFSET: 0x0045A890/0x14006AE10
 static void CacheVehicleUIIndicatorRec(int32_t id) {
     VehicleUIIndicatorRec* indicator = g_vehicleUIIndicatorDB.GetRecord(id);
 
@@ -4177,6 +4235,7 @@ static int32_t Script_UnitSwitchToVehicleSeat(lua_State* L) {
     return 0;
 }
 
+// PROVEN: c41e4750 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044BCD0/0x1400592F0
 static int32_t Script_GetSessionTime(lua_State* L) {
     lua_pushnumber(L, FrameTime::GetSessionTimeMs() * 0.001);
@@ -4215,12 +4274,14 @@ static int32_t Script_ResistancePercent(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a1ac2535 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044C3F0/0x140059AE0
 static int32_t Script_GetMaxPlayerLevel(lua_State* L) {
     lua_pushnumber(L, 85.0);
     return 1;
 }
 
+// PROVEN: 0e1acfbf IDENTICAL/DIFFERENT
 // OFFSET: 0x0044E670/0x14005C8B0
 static int32_t PushPowerBarInfo(lua_State* L, int32_t barID) {
     const UnitPowerBarRec* bar = g_unitPowerBarDB.GetRecord(barID);
@@ -4244,6 +4305,7 @@ static int32_t PushPowerBarInfo(lua_State* L, int32_t barID) {
     return 12;
 }
 
+// PROVEN: f52b807b IDENTICAL/DIFFERENT
 // OFFSET: 0x0044E740/0x14005CA00
 static int32_t Script_GetAlternatePowerInfoByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -4285,6 +4347,7 @@ static int32_t Script_SetAchievementComparisonPortrait(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 12476ff9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0044EA30/0x14005CD50
 static int32_t Script_InitiateRolePoll(lua_State* L) {
     static ThrottleObject s_throttle(2, 10);
@@ -4345,6 +4408,7 @@ static int32_t Script_LoadURLIndex(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 71b4f5f0 IDENTICAL/DIFFERENT
 // OFFSET: 0x004522F0/0x140060CD0
 static int32_t Script_UnitIsQuestBoss(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -4494,6 +4558,7 @@ static int32_t Script_UnitSpellHaste(lua_State* L) {
     return 1;
 }
 
+// PROVEN: cf4cb84b IDENTICAL/DIFFERENT
 // OFFSET: 0x00456CA0/0x140066540
 static int32_t Script_IsSubmerged(lua_State* L) {
     CGUnit_C* unit;
@@ -4513,6 +4578,7 @@ static int32_t Script_IsSubmerged(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 7e33cb5e IDENTICAL/DIFFERENT
 // OFFSET: 0x00457550/0x140067010
 static int32_t Script_GetMastery(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -4697,6 +4763,7 @@ static int32_t Script_UnitSetRole(lua_State* L) {
     return 1;
 }
 
+// PROVEN: cfc12419 IDENTICAL/DIFFERENT
 // OFFSET: 0x004590E0/0x1400690B0
 static int32_t Script_GetHitModifier(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -4709,6 +4776,7 @@ static int32_t Script_GetHitModifier(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d6cc5461 IDENTICAL/DIFFERENT
 // OFFSET: 0x00459130/0x140069110
 static int32_t Script_GetSpellHitModifier(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -4813,6 +4881,7 @@ static int32_t GetUnitPowerBarID(const char* token, int32_t timerIndex) {
     return 0;
 }
 
+// PROVEN: a1dc6f28 IDENTICAL/DIFFERENT
 // OFFSET: 0x00459AB0/0x140069B70
 static int32_t Script_UnitAlternatePowerInfo(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -4823,6 +4892,7 @@ static int32_t Script_UnitAlternatePowerInfo(lua_State* L) {
     return PushPowerBarInfo(L, GetUnitPowerBarID(lua_tostring(L, 1), -1));
 }
 
+// PROVEN: 316b4fd5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00459B00/0x140069C10
 static int32_t Script_UnitAlternatePowerCounterInfo(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -4986,13 +5056,14 @@ static int32_t Script_UnitNumPowerBarTimers(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ce2003e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00807310/0x140631100
 static int32_t Script_IsGMClient(lua_State* L) {
     lua_pushboolean(L, 0);
     return 1;
 }
 
-// STATIC: 0x00C99510
+// STATIC: 0x00C99510/0x140B314E0
 static FrameScript_Method s_SystemFunctions[] = {
     { "GetTime", &Script_GetTime },
     { "GetGameTime", &Script_GetGameTime },
@@ -5003,7 +5074,7 @@ static FrameScript_Method s_SystemFunctions[] = {
     { "GetSessionTime", &Script_GetSessionTime },
 };
 
-// PROVEN: 130561a8 IDENTICAL/NONE
+// PROVEN: 130561a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044E0F0/0x14005C340
 void SystemRegisterFunctions() {
     for (uint32_t i = 0; i < sizeof(s_SystemFunctions) / sizeof(s_SystemFunctions[0]); i++) {
@@ -5011,7 +5082,7 @@ void SystemRegisterFunctions() {
     }
 }
 
-// PROVEN: 88e5031e IDENTICAL/NONE
+// PROVEN: 88e5031e IDENTICAL/IDENTICAL
 // OFFSET: 0x0044E120/0x14005C390
 void SystemUnregisterFunctions() {
     for (uint32_t i = 0; i < sizeof(s_SystemFunctions) / sizeof(s_SystemFunctions[0]); i++) {
@@ -5086,7 +5157,7 @@ static int32_t Script_UnitIsAFK(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00C99560
+// STATIC: 0x00C99560/0x140B31580
 static FrameScript_Method s_UnitFunctions[] = {
     { "UnitExists", &Script_UnitExists },
     { "UnitIsVisible", &Script_UnitIsVisible },
@@ -5287,6 +5358,7 @@ static FrameScript_Method s_UnitFunctions[] = {
     { "LoadURLIndex", &Script_LoadURLIndex },
 };
 
+// PROVEN: 9c23edc8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044E140/0x14005C3D0
 void ScriptEventsRegisterFunctions() {
     SystemRegisterFunctions();

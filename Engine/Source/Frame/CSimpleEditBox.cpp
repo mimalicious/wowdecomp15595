@@ -35,7 +35,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA40F0
+// STATIC: 0x00CA40F0/0x140B41B90
 int32_t CSimpleEditBox::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD39FC/0x140CB9710
@@ -47,10 +47,10 @@ int32_t CSimpleEditBox::s_objectType;
 // STATIC: 0x00CA334C
 const char* CSimpleEditBox::s_objectTypeName = "EditBox";
 
-// STATIC: 0x00CA3350
+// STATIC: 0x00CA3350/0x140B404B0
 const char* CSimpleEditBox::s_inputLanguageNames[4] = { "ROMAN", "KOREAN", "CHINESE", "JAPANESE" };
 
-// STATIC: 0x00DD3A00
+// STATIC: 0x00DD3A00/0x140CB9718
 CDataAllocator CSimpleEditBox::s_allocator(sizeof(CSimpleEditBox), 5);
 
 // PROVEN: 9be4407c IDENTICAL/IDENTICAL
@@ -82,11 +82,6 @@ CSimpleEditBox::EditHistory::~EditHistory() {
     if (this->m_text) {
         SMemFree(this->m_text, __FILE__, __LINE__, 0);
     }
-}
-
-// INLINED
-CSimpleFontedFrameFont::CSimpleFontedFrameFont(CSimpleFontedFrame* frame) {
-    this->m_frame = frame;
 }
 
 // PROVEN: 7fe1a6ff IDENTICAL/DIFFERENT
@@ -130,7 +125,7 @@ void CSimpleEditBox::ClearKeyboardFocus(CSimpleEditBox* editBox, bool runScript)
     editBox->OnFocusChange(false, runScript);
 }
 
-// OFFSET: 0x0051ABC0
+// OFFSET: 0x0051ABC0/0x140166AD0
 CSimpleEditBox::CSimpleEditBox(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(parent) {
     this->m_cursorBlinkSpeed = 0.5f;
     this->m_blinkElapsedTime = 0.0f;
@@ -288,7 +283,7 @@ void CSimpleEditBox::RunOnCharCompositionScript(const char* text) {
     this->RunScript(this->m_onCharComposition, 1, NULL);
 }
 
-// PROVEN: 8653e390 IDENTICAL/DIFFERENT
+// PROVEN: 8653e390 IDENTICAL/IDENTICAL
 // OFFSET: 0x00516140/0x140160950
 FrameScript_Object::ScriptIx* CSimpleEditBox::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleHyperlinkedFrame::GetScriptByName(name, data);
@@ -348,7 +343,7 @@ FrameScript_Object::ScriptIx* CSimpleEditBox::GetScriptByName(const char* name, 
     return NULL;
 }
 
-// PROVEN: 587751d6 IDENTICAL/NONE
+// PROVEN: 587751d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00516430/0x140160B20
 void CSimpleEditBox::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onEnterPressed, time, count);
@@ -365,7 +360,7 @@ void CSimpleEditBox::GetScriptTime(lua_State* L, double* time, uint32_t* count, 
     CSimpleHyperlinkedFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: d7b1d513 IDENTICAL/NONE
+// PROVEN: d7b1d513 IDENTICAL/IDENTICAL
 // OFFSET: 0x00516540/0x140160C90
 void CSimpleEditBox::SetAutoFocus(int32_t enable) {
     if (enable) {
@@ -375,7 +370,7 @@ void CSimpleEditBox::SetAutoFocus(int32_t enable) {
     }
 }
 
-// PROVEN: fb84e1f0 IDENTICAL/DIFFERENT
+// PROVEN: fb84e1f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00516560/0x140160CB0
 void CSimpleEditBox::SetCountInvisibleLetters(int32_t enable) {
     if (enable) {
@@ -385,7 +380,7 @@ void CSimpleEditBox::SetCountInvisibleLetters(int32_t enable) {
     }
 }
 
-// PROVEN: 0678a072 IDENTICAL/NONE
+// PROVEN: 0678a072 IDENTICAL/IDENTICAL
 // OFFSET: 0x00516580/0x140160CD0
 void CSimpleEditBox::SetNumeric(int32_t enable) {
     if (enable) {
@@ -395,7 +390,7 @@ void CSimpleEditBox::SetNumeric(int32_t enable) {
     }
 }
 
-// PROVEN: cb86e0ca IDENTICAL/DIFFERENT
+// PROVEN: cb86e0ca IDENTICAL/IDENTICAL
 // OFFSET: 0x005165A0/0x140160CF0
 void CSimpleEditBox::SetPassword(int32_t enable) {
     if (enable) {
@@ -405,7 +400,7 @@ void CSimpleEditBox::SetPassword(int32_t enable) {
     }
 }
 
-// PROVEN: 2b3de7b3 IDENTICAL/NONE
+// PROVEN: 2b3de7b3 IDENTICAL/IDENTICAL
 // OFFSET: 0x005165C0/0x140160D10
 void CSimpleEditBox::SetAltArrowKeyMode(int32_t enable) {
     if (enable) {
@@ -415,19 +410,19 @@ void CSimpleEditBox::SetAltArrowKeyMode(int32_t enable) {
     }
 }
 
-// PROVEN: ecb0e373 IDENTICAL/DIFFERENT
+// PROVEN: ecb0e373 IDENTICAL/IDENTICAL
 // OFFSET: 0x005165E0/0x140160D30
 const char* CSimpleEditBox::GetInputLanguageString() {
     return CSimpleEditBox::s_inputLanguageNames[this->m_inputLanguage];
 }
 
-// PROVEN: e9bedebb IDENTICAL/DIFFERENT
+// PROVEN: e9bedebb IDENTICAL/IDENTICAL
 // OFFSET: 0x005165F0/0x140160D50
 void CSimpleEditBox::ToggleInputLanguage() {
     OsIMESetLanguageMode(this->m_inputLanguage == 0);
 }
 
-// PROVEN: 69207952 IDENTICAL/NONE
+// PROVEN: 69207952 IDENTICAL/IDENTICAL
 // OFFSET: 0x00516610/0x140160D70
 int32_t CSimpleEditBox::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     int32_t result = CSimpleFrame::OnLayerMouseUp(evt, btn);
@@ -440,7 +435,7 @@ int32_t CSimpleEditBox::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) 
     return result;
 }
 
-// OFFSET: 0x00516650
+// OFFSET: 0x00516650/0x140160DA0
 void CSimpleEditBox::UpdateTextInfo() {
     const char* text = this->m_text;
     int32_t offset = 0;
@@ -551,7 +546,7 @@ int32_t CSimpleEditBox::GetNumToLen(int32_t offset, int32_t count, bool skipHype
     return length;
 }
 
-// PROVEN: 133e362e IDENTICAL/DIFFERENT
+// PROVEN: 133e362e IDENTICAL/IDENTICAL
 // OFFSET: 0x00516890/0x140160E80
 int32_t CSimpleEditBox::GetLenToNum(int32_t offset, int32_t length) {
     uint32_t* info = &this->m_textInfo[offset];
@@ -598,7 +593,7 @@ int32_t CSimpleEditBox::GetLenToNum(int32_t offset, int32_t length) {
     return count;
 }
 
-// OFFSET: 0x00516910
+// OFFSET: 0x00516910/0x140160EF0
 void CSimpleEditBox::GrowText(int32_t length) {
     if (static_cast<uint32_t>(length + 1) <= this->m_textSize) {
         return;
@@ -702,7 +697,7 @@ void CSimpleEditBox::DeleteSubstring(int32_t left, int32_t right, int32_t script
     }
 }
 
-// OFFSET: 0x00516B50
+// OFFSET: 0x00516B50/0x140161190
 void CSimpleEditBox::HighlightText(int32_t left, int32_t right) {
     int32_t length = this->m_textLength;
     int32_t start = left <= 0 ? 0 : left;
@@ -726,7 +721,7 @@ void CSimpleEditBox::HighlightText(int32_t left, int32_t right) {
     this->m_highlightRight = end;
 }
 
-// OFFSET: 0x00516BB0
+// OFFSET: 0x00516BB0/0x1401611E0
 void CSimpleEditBox::ExtendHighlight(int32_t count) {
     if (!count) {
         return;
@@ -745,7 +740,7 @@ void CSimpleEditBox::ExtendHighlight(int32_t count) {
     }
 }
 
-// OFFSET: 0x00516C70
+// OFFSET: 0x00516C70/0x140161260
 void CSimpleEditBox::DeleteHighlight(int32_t script) {
     int32_t length = this->m_textLength;
     int32_t left = this->m_highlightLeft <= 0 ? 0 : this->m_highlightLeft;
@@ -766,8 +761,8 @@ void CSimpleEditBox::DeleteHighlight(int32_t script) {
     this->DeleteSubstring(left, right, script);
 }
 
-// PROVEN: 1684e3c9 IDENTICAL/NONE
-// OFFSET: 0x00516D10
+// PROVEN: 1684e3c9 IDENTICAL/DIFFERENT
+// OFFSET: 0x00516D10/0x140161300
 void CSimpleEditBox::CopyToClipboard() {
     int32_t left = this->m_highlightLeft;
     int32_t right = this->m_highlightRight;
@@ -810,7 +805,8 @@ void CSimpleEditBox::DisableIME() {
     OsIMEEnable(0);
 }
 
-// OFFSET: 0x00517210
+// PROVEN: ea112be4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00517210/0x140161850
 void CSimpleEditBox::CreateClauseHighlight() {
     if (this->m_clauseHighlight) {
         return;
@@ -919,7 +915,7 @@ void CSimpleEditBox::UpdateSizes() {
     this->m_dirtyBits |= 0x7;
 }
 
-// OFFSET: 0x005176A0
+// OFFSET: 0x005176A0/0x140162160
 void CSimpleEditBox::Delete(int32_t count, int32_t script) {
     if (!count) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -1030,8 +1026,8 @@ void CSimpleEditBox::DeleteBackwardWord(int32_t script) {
     }
 }
 
-// PROVEN: ad1f3dd4 IDENTICAL/NONE
-// OFFSET: 0x005179B0
+// PROVEN: ad1f3dd4 IDENTICAL/IDENTICAL
+// OFFSET: 0x005179B0/0x1401628F0
 void CSimpleEditBox::DeleteToStart(int32_t script) {
     int32_t count = this->GetLenToNum(0, this->m_cursorPos);
 
@@ -1050,8 +1046,8 @@ void CSimpleEditBox::DeleteToEnd(int32_t script) {
     }
 }
 
-// PROVEN: 943b1dcf IDENTICAL/NONE
-// OFFSET: 0x00517A20
+// PROVEN: 943b1dcf IDENTICAL/DIFFERENT
+// OFFSET: 0x00517A20/0x140162990
 void CSimpleEditBox::Move(int32_t count, int32_t highlight) {
     if (!count) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -1175,8 +1171,8 @@ void CSimpleEditBox::MoveForwardWord(int32_t highlight) {
     }
 }
 
-// PROVEN: a0a6f7f5 IDENTICAL/NONE
-// OFFSET: 0x00517D50
+// PROVEN: a0a6f7f5 IDENTICAL/DIFFERENT
+// OFFSET: 0x00517D50/0x140162D20
 void CSimpleEditBox::MoveBackward(int32_t highlight) {
     if (this->m_cursorPos > 0) {
         this->Move(-1, highlight);
@@ -1459,7 +1455,7 @@ void CSimpleEditBox::AddHistoryLine(const char* text, const char* taint) {
     this->m_historyIndex = (this->m_historyIndex + 1) % this->m_historyLines;
 }
 
-// PROVEN: f5091a4c IDENTICAL/DIFFERENT
+// PROVEN: f5091a4c IDENTICAL/IDENTICAL
 // OFFSET: 0x00518480/0x1401634B0
 void CSimpleEditBox::ClearHistory() {
     this->m_historyIndex = 0;
@@ -1748,7 +1744,7 @@ void CSimpleEditBox::UpdateHighlightArea(CSimpleRegion* region, int32_t left, in
     }
 }
 
-// PROVEN: 4937c9dc IDENTICAL/DIFFERENT
+// PROVEN: 4937c9dc IDENTICAL/IDENTICAL
 // OFFSET: 0x00518F50/0x140164690
 void CSimpleEditBox::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
@@ -1760,7 +1756,7 @@ void CSimpleEditBox::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     }
 }
 
-// OFFSET: 0x005191C0
+// OFFSET: 0x005191C0/0x1401649A0
 void CSimpleEditBox::RunOnEnterPressedScript() {
     if (this->HasScript(this->m_onEnterPressed)) {
         this->RunScript(this->m_onEnterPressed, 0, NULL);
@@ -1774,7 +1770,7 @@ void CSimpleEditBox::RunOnEnterPressedScript() {
     }
 }
 
-// OFFSET: 0x00519230
+// OFFSET: 0x00519230/0x140164A20
 void CSimpleEditBox::RunOnEscapePressedScript() {
     if (this->HasScript(this->m_onEscapePressed)) {
         this->RunScript(this->m_onEscapePressed, 0, NULL);
@@ -1788,7 +1784,7 @@ void CSimpleEditBox::RunOnEscapePressedScript() {
     }
 }
 
-// OFFSET: 0x005192A0
+// OFFSET: 0x005192A0/0x140164AA0
 void CSimpleEditBox::RunOnSpacePressedScript() {
     if (this->HasScript(this->m_onSpacePressed)) {
         this->RunScript(this->m_onSpacePressed, 0, NULL);
@@ -1802,7 +1798,7 @@ void CSimpleEditBox::RunOnSpacePressedScript() {
     }
 }
 
-// OFFSET: 0x00519310
+// OFFSET: 0x00519310/0x140164B20
 void CSimpleEditBox::RunOnTabPressedScript() {
     if (this->HasScript(this->m_onTabPressed)) {
         this->RunScript(this->m_onTabPressed, 0, NULL);
@@ -1846,7 +1842,7 @@ void CSimpleEditBox::RunOnTextSetScript(const char* taint) {
     }
 }
 
-// PROVEN: 46a54e8a IDENTICAL/DIFFERENT
+// PROVEN: 46a54e8a IDENTICAL/IDENTICAL
 // OFFSET: 0x00519480/0x140164CD0
 void CSimpleEditBox::SetEditTextInsets(float left, float right, float top, float bottom) {
     this->m_textInsets.minX = left;
@@ -1856,7 +1852,7 @@ void CSimpleEditBox::SetEditTextInsets(float left, float right, float top, float
     this->UpdateSizes();
 }
 
-// PROVEN: 76e92de6 IDENTICAL/DIFFERENT
+// PROVEN: 76e92de6 IDENTICAL/IDENTICAL
 // OFFSET: 0x005194C0/0x140164D00
 void CSimpleEditBox::GetEditTextInsets(float& left, float& right, float& top, float& bottom) {
     left = this->m_textInsets.minX;
@@ -1866,7 +1862,7 @@ void CSimpleEditBox::GetEditTextInsets(float& left, float& right, float& top, fl
     this->UpdateSizes();
 }
 
-// PROVEN: 853899d7 IDENTICAL/DIFFERENT
+// PROVEN: 853899d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00519500/0x140164D30
 void CSimpleEditBox::OnLayerShow() {
     CSimpleFrame::OnLayerShow();
@@ -1886,7 +1882,7 @@ void CSimpleEditBox::OnLayerHide() {
     }
 }
 
-// OFFSET: 0x005195A0
+// OFFSET: 0x005195A0/0x140164D80
 int32_t CSimpleEditBox::OnLayerTrackUpdate(const CMouseEvent& evt) {
     if (!CSimpleFrame::OnLayerTrackUpdate(evt)) {
         return 0;
@@ -1982,7 +1978,7 @@ int32_t CSimpleEditBox::OnLayerKeyDownRepeat(const CKeyEvent& evt) {
     return this->OnLayerKeyDown(evt);
 }
 
-// OFFSET: 0x00519840
+// OFFSET: 0x00519840/0x1401650D0
 int32_t CSimpleEditBox::OnLayerKeyUp(const CKeyEvent& evt) {
     if (!this->m_visible) {
         return 0;
@@ -1997,7 +1993,7 @@ int32_t CSimpleEditBox::OnLayerKeyUp(const CKeyEvent& evt) {
     return !(this->m_frameFlags & 0x200000) || this->IsProtected();
 }
 
-// OFFSET: 0x005198A0
+// OFFSET: 0x005198A0/0x140165140
 void CSimpleEditBox::Insert(const char* text, const char* taint, int32_t runScripts, int32_t highlight, int32_t script) {
     int32_t position = this->m_cursorPos;
     uint32_t* info = this->m_textInfo;
@@ -2118,8 +2114,8 @@ void CSimpleEditBox::Insert(const char* text, const char* taint, int32_t runScri
     this->RunOnSpacePressedScript();
 }
 
-// PROVEN: 8da0ea58 IDENTICAL/NONE
-// OFFSET: 0x00519C10
+// PROVEN: 8da0ea58 IDENTICAL/IDENTICAL
+// OFFSET: 0x00519C10/0x140165680
 void CSimpleEditBox::Insert(uint32_t ch) {
     if (ch < 0x20 || ch == 0x7F) {
         if (ch == '\t') {
@@ -2193,6 +2189,7 @@ void CSimpleEditBox::UpdateVisibleHighlight() {
     this->UpdateHighlightArea(this->m_highlightTextures[2], this->m_visibleLines.m_data[endLine], this->m_highlightRight);
 }
 
+// PROVEN: fab8acd3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00519E40/0x140165940
 void CSimpleEditBox::PasteFromClipboard() {
     char* string = OsClipboardGetString();
@@ -2258,7 +2255,7 @@ void CSimpleEditBox::SetMultiLine(int32_t enable) {
     this->UpdateSizes();
 }
 
-// OFFSET: 0x00519E90
+// OFFSET: 0x00519E90/0x140165A40
 int32_t CSimpleEditBox::OnLayerChar(const CCharEvent& evt) {
     if (!this->m_visible) {
         return 0;
@@ -2406,7 +2403,7 @@ int32_t CSimpleEditBox::OnLayerIme(const CImeEvent& evt) {
     return 1;
 }
 
-// PROVEN: 152f92f8 IDENTICAL/DIFFERENT
+// PROVEN: 152f92f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051A370/0x140166090
 void CSimpleEditBox::SetText(const char* text, const char* taint) {
     if (this->m_highlightLeft != this->m_highlightRight) {
@@ -2440,6 +2437,7 @@ void CSimpleEditBox::BackwardHistory() {
     }
 }
 
+// PROVEN: e7682105 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051A480/0x1401661D0
 void CSimpleEditBox::ForwardHistory() {
     for (int32_t count = 1; count <= this->m_historyLines; count++) {
@@ -2765,7 +2763,7 @@ void CSimpleEditBox::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: 0x0051B530
+// OFFSET: 0x0051B530/0x140167650
 void CSimpleEditBox::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -3058,7 +3056,7 @@ int32_t CSimpleEditBox::OnLayerMouseDown(const CMouseEvent& evt, const char* btn
     return result;
 }
 
-// PROVEN: bd8733e2 IDENTICAL/NONE
+// PROVEN: bd8733e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00516CE0/0x1401612D0
 void CSimpleEditBox::RefreshHyperlinks() {
     this->ClearHyperlinks();

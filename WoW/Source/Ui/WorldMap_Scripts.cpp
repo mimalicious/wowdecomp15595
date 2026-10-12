@@ -32,21 +32,24 @@
 #include "WoW/Source/DB/Rec/TaxiNodesRec.h"
 #include <cmath>
 
-// STATIC: 0x00D1143C
+// STATIC: 0x00D1143C/0x140BC7D28
 static const int32_t s_outdoorPVPZones[2][3] = { { 501, 3801, 4354 }, { 708, 5387, 5332 } };
 
+// PROVEN: cfc5acc9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00919D40/0x14067AC90
 static int32_t Script_GetNumMapLandmarks(lua_State* L) {
     lua_pushnumber(L, CGWorldMap::m_numLandmarks);
     return 1;
 }
 
+// PROVEN: f02988e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00919D80/0x14067ACC0
 static int32_t Script_GetNumMapOverlays(lua_State* L) {
     lua_pushnumber(L, CGWorldMap::m_numOverlays);
     return 1;
 }
 
+// PROVEN: 807062b3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00919DC0/0x14067ACF0
 static int32_t Script_PositionWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerArrowFrame;
@@ -106,6 +109,7 @@ static int32_t Script_PositionWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 414c9314 DIFFERENT/IDENTICAL
 // OFFSET: 0x00919FE0/0x14067AFA0
 static int32_t Script_PositionMiniWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerMiniArrowFrame;
@@ -165,6 +169,7 @@ static int32_t Script_PositionMiniWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 5ee0e340 IDENTICAL/UNPROVEN
 // OFFSET: 0x0091B790/0x14067CC10
 static int32_t Script_GetMapContinents(lua_State* L) {
     uint32_t count = CGWorldMap::m_continents.m_count;
@@ -209,6 +214,7 @@ static int32_t Script_GetCurrentMapContinent(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 989e8a5b IDENTICAL/DIFFERENT
 // OFFSET: 0x0091BBC0/0x14067D0D0
 static int32_t Script_GetCurrentMapAreaID(lua_State* L) {
     int32_t areaID;
@@ -290,6 +296,7 @@ static int32_t Script_GetCurrentMapDungeonLevel(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3dcd1786 IDENTICAL/UNPROVEN
 // OFFSET: 0x0091B920/0x14067CDE0
 static int32_t Script_DungeonUsesTerrainMap(lua_State* L) {
     WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(CGWorldMap::m_currentOrphanZone);
@@ -303,6 +310,7 @@ static int32_t Script_DungeonUsesTerrainMap(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 22f26693 IDENTICAL/IDENTICAL
 // OFFSET: 0x0091A200/0x14067B250
 static int32_t Script_ShowWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerArrowFrame;
@@ -322,6 +330,7 @@ static int32_t Script_ShowWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 3b30f64e IDENTICAL/IDENTICAL
 // OFFSET: 0x0091A260/0x14067B2C0
 static int32_t Script_ShowMiniWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerMiniArrowFrame;
@@ -341,6 +350,7 @@ static int32_t Script_ShowMiniWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
+// PROVEN: a49aa9a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0091BF80/0x14067D540
 static int32_t Script_IsZoomOutAvailable(lua_State* L) {
     bool available = true;
@@ -358,24 +368,27 @@ static int32_t Script_IsZoomOutAvailable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 9f0de39d IDENTICAL/NONE
+// PROVEN: 9f0de39d IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C320/0x1405229B0
 static int32_t Script_GetNumMapDebugObjects(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;
 }
 
+// PROVEN: d2109180 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_HasDebugZoneMap(lua_State* L) {
     return 0;
 }
 
+// PROVEN: d388f0e1 IDENTICAL/IDENTICAL
 // OFFSET: 0x009201F0/0x1406826A0
 static int32_t Script_SetMapToCurrentZone(lua_State* L) {
     CGWorldMap::SetMapToCurrentZone(0);
     return 0;
 }
 
+// PROVEN: 3d69d8d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0091DC00/0x14067F840
 static int32_t Script_GetNumDungeonMapLevels(lua_State* L) {
     lua_pushnumber(L, CGWorldMap::GetNumDungeonLevels());
@@ -403,6 +416,7 @@ static int32_t Script_GetMapInfo(lua_State* L) {
     return 3;
 }
 
+// PROVEN: 1be58819 IDENTICAL/DIFFERENT
 // OFFSET: 0x0091DC30/0x14067F870
 static int32_t Script_GetPlayerMapPosition(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -806,6 +820,7 @@ static int32_t Script_UpdateMapHighlight(lua_State* L) {
     return 10;
 }
 
+// PROVEN: eb1356e3 IDENTICAL/UNPROVEN
 // OFFSET: 0x0091B7D0/0x14067CC60
 static int32_t Script_GetMapZones(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -824,6 +839,7 @@ static int32_t Script_GetMapZones(lua_State* L) {
     return count;
 }
 
+// PROVEN: 861a7e4e DIFFERENT/IDENTICAL
 // OFFSET: 0x0091C370/0x14067DA70
 static int32_t Script_GetMapOverlayInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -852,6 +868,7 @@ static int32_t Script_GetMapOverlayInfo(lua_State* L) {
     return 5;
 }
 
+// PROVEN: b2833599 IDENTICAL/UNPROVEN
 // OFFSET: 0x0091F630/0x1406817F0
 static int32_t Script_SetMapZoom(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -881,6 +898,7 @@ static int32_t Script_SetMapZoom(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9a1d57ad IDENTICAL/DIFFERENT
 // OFFSET: 0x0091C470/0x14067DB90
 static int32_t Script_CreateWorldMapArrowFrame(lua_State* L) {
     if (lua_type(L, 1) == LUA_TTABLE) {
@@ -944,7 +962,7 @@ static int32_t Script_InitWorldMapPing(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1f07a6dc IDENTICAL/NONE
+// PROVEN: 1f07a6dc IDENTICAL/IDENTICAL
 // OFFSET: 0x0091A2C0/0x14067B330
 static int32_t Script_CanQueueForWintergrasp(lua_State* L) {
     if (GetWorldState(4375)) {
@@ -983,6 +1001,7 @@ static int32_t Script_GetDeathReleasePosition(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 16bfd9ed IDENTICAL/DIFFERENT
 // OFFSET: 0x0091C520/0x14067DC70
 static int32_t Script_CreateMiniWorldMapArrowFrame(lua_State* L) {
     if (lua_type(L, 1) == LUA_TTABLE) {
@@ -1008,13 +1027,14 @@ static int32_t Script_CreateMiniWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 7540c227 IDENTICAL/IDENTICAL
 // OFFSET: 0x0091C5D0/0x14067DD50
 static int32_t Script_UpdateWorldMapArrowFrames(lua_State* L) {
     CGWorldMap::UpdateArrowFrames();
     return 0;
 }
 
-// OFFSET: 0x0091F6D0
+// OFFSET: 0x0091F6D0/0x1406818B0
 static int32_t Script_ZoomOut(lua_State* L) {
     int32_t parent;
 
@@ -1136,7 +1156,7 @@ static int32_t Script_ZoomOut(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0091FA00
+// OFFSET: 0x0091FA00/0x140681CB0
 static int32_t Script_SetMapByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetMapByID(mapID)");
@@ -1207,6 +1227,7 @@ static int32_t Script_SetMapByID(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 76242581 IDENTICAL/DIFFERENT
 // OFFSET: 0x0091FC10/0x140681F10
 static int32_t Script_ProcessMapClick(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -1271,11 +1292,13 @@ static int32_t Script_SetDungeonMapLevel(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 1c66de1a IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_GetMapDebugObjectInfo(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 58a2461a IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_TeleportToDebugObject(lua_State* L) {
     return 0;
@@ -1287,6 +1310,7 @@ static int32_t Script_GetDebugZoneMap(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0c374697 IDENTICAL/IDENTICAL
 // OFFSET: 0x00919D10/0x14067AC70
 static int32_t Script_GetNumberOfDetailTiles(lua_State* L) {
     lua_pushnumber(L, 12.0);
@@ -1299,6 +1323,7 @@ static int32_t Script_RefreshWorldMap(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0bde688d IDENTICAL/DIFFERENT
 // OFFSET: 0x0091B880/0x14067CD20
 static int32_t Script_GetMapNameByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1365,7 +1390,7 @@ static int32_t Script_GetOutdoorPVPWaitTime(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D112C8
+// STATIC: 0x00D112C8/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMapContinents", &Script_GetMapContinents },
     { "GetMapZones", &Script_GetMapZones },
@@ -1413,6 +1438,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CanQueueForWintergrasp", &Script_CanQueueForWintergrasp },
 };
 
+// PROVEN: e423aded IDENTICAL/UNPROVEN
 // OFFSET: 0x0091A310/0x14067B380
 void WorldMapRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1420,6 +1446,7 @@ void WorldMapRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 74af56df IDENTICAL/UNPROVEN
 // OFFSET: 0x0091A340/0x14067B3D0
 void WorldMapUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -28,25 +28,25 @@ DBCache<CreatureStats_C, int32_t, HASHKEY_INT> g_creatureDBCache('WMOB', "creatu
 // STATIC: 0x00D97F88
 DBCache<GameObjectStats_C, int32_t, HASHKEY_INT> g_gameObjectDBCache('WGOB', "gameobjectcache.wdb", CMSG_QUERY_GAME_OBJECT, 0, true, true, 0);
 
-// STATIC: 0x00D98018
+// STATIC: 0x00D98018/0x140C77E10
 DBCache<NPCText, int32_t, HASHKEY_INT> g_npcTextDBCache('WNPC', "npccache.wdb", CMSG_QUERY_NPC_TEXT, 0, true, true, 0);
 
-// STATIC: 0x00D980A8
+// STATIC: 0x00D980A8/0x140C77F00
 DBCache<NameCache, uint64_t, CHashKeyGUID> g_nameDBCache('WNAM', "namecache.wdb", CMSG_NAME_QUERY, 0, false, false, 256);
 
-// STATIC: 0x00D98138
+// STATIC: 0x00D98138/0x140C77FF0
 DBCache<GuildStats_C, uint64_t, CHashKeyGUID> g_guildInfoCache('WGLD', "guildcache.wdb", CMSG_QUERY_GUILD_INFO, 0, false, false, 0);
 
-// STATIC: 0x00D981C8
+// STATIC: 0x00D981C8/0x140C780E0
 DBCache<QuestCache, int32_t, HASHKEY_INT> g_questDBCache('WQST', "questcache.wdb", CMSG_QUERY_QUEST_INFO, 0, false, true, 0);
 
-// STATIC: 0x00D98258
+// STATIC: 0x00D98258/0x140C781D0
 DBCache<PageTextCache_C, int32_t, HASHKEY_INT> g_pageTextCache('WPTX', "pagetextcache.wdb", CMSG_QUERY_PAGE_TEXT, 0, true, true, 0);
 
-// STATIC: 0x00D982E8
+// STATIC: 0x00D982E8/0x140C782C0
 DBCache<PetNameCache, int32_t, HASHKEY_INT> g_petNameCache('WPNM', "petnamecache.wdb", CMSG_QUERY_PET_NAME, 0, true, false, 0);
 
-// STATIC: 0x00D98378
+// STATIC: 0x00D98378/0x140C783B0
 DBCache<CGPetition, int32_t, HASHKEY_INT> g_petitionCache('WPTN', "petitioncache.wdb", CMSG_PETITION_QUERY, 0, true, false, 0);
 
 // STATIC: 0x00D98408
@@ -55,13 +55,14 @@ DBCache<ItemTextCache_C, uint64_t, CHashKeyGUID> g_itemTextDBCache('WITX', "item
 // STATIC: 0x00D98498
 DBCache<WardenCachedModule, CWardenKey, CWardenKey> g_wardenCache('WRDN', "wowcache.wdb", 0, 0, true, true, 0);
 
-// STATIC: 0x00D98528
+// STATIC: 0x00D98528/0x140C78680
 DBCache<ArenaTeamCache, int32_t, HASHKEY_INT> g_arenaTeamCache('WATM', "arenateamcache.wdb", CMSG_ARENA_TEAM_QUERY, 0, false, false, 0);
 
-// STATIC: 0x00D985B8
+// STATIC: 0x00D985B8/0x140C78770
 DBCache<DanceCache, int32_t, HASHKEY_INT> g_danceCache('WDAN', "dancecache.wdb", CMSG_DANCE_QUERY, 0, false, false, 0);
 
-// OFFSET: 0x00496AD0
+// PROVEN: 4692bd69 IDENTICAL/UNPROVEN
+// OFFSET: 0x00496AD0/0x1400BCCD0
 static void LoadDBCaches() {
     g_creatureDBCache.Load();
     g_gameObjectDBCache.Load();
@@ -78,6 +79,7 @@ static void LoadDBCaches() {
     g_danceCache.Load();
 }
 
+// PROVEN: 0291c05a IDENTICAL/NONE
 // OFFSET: 0x00496BE0
 static int32_t ReceiveCreature(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_creatureDBCache.AddItems(msg, true);
@@ -85,6 +87,7 @@ static int32_t ReceiveCreature(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
+// PROVEN: db2fec9d IDENTICAL/NONE
 // OFFSET: 0x00496C00
 static int32_t ReceiveGameObject(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_gameObjectDBCache.AddItems(msg, true);
@@ -92,6 +95,7 @@ static int32_t ReceiveGameObject(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
+// PROVEN: 617489d8 IDENTICAL/NONE
 // OFFSET: 0x00496C20
 static int32_t ReceiveNPCText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_npcTextDBCache.AddItems(msg, true);
@@ -99,7 +103,8 @@ static int32_t ReceiveNPCText(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// OFFSET: 0x00496C40
+// PROVEN: 540a5cd1 IDENTICAL/UNPROVEN
+// OFFSET: 0x00496C40/0x1400BCE80
 static int32_t ReceiveQuest(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     QuestCache quest;
     quest.Unpack(msg);
@@ -113,6 +118,7 @@ static int32_t ReceiveQuest(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
+// PROVEN: 1ed77bb5 IDENTICAL/NONE
 // OFFSET: 0x00496CB0
 static int32_t ReceivePageText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     g_pageTextCache.AddItems(msg, true);
@@ -120,12 +126,14 @@ static int32_t ReceivePageText(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: 0x00496CD0
+// OFFSET: 0x00496CD0/0x1400BCF10
 static int32_t ReceivePetName(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     PetNameCache petName;
     msg->Get(petName.m_petNumber);
     msg->GetString(petName.m_name, sizeof(petName.m_name));
-    msg->Get(petName.m_timestamp);
+    uint32_t timestamp;
+    msg->Get(timestamp);
+    petName.m_timestamp = timestamp;
 
     uint8_t hasDeclinedNames;
     msg->Get(hasDeclinedNames);
@@ -147,6 +155,7 @@ static int32_t ReceivePetName(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
+// PROVEN: 957a6368 IDENTICAL/NONE
 // OFFSET: 0x00496DB0
 static int32_t ReceivePetition(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGPetition petition;
@@ -161,7 +170,7 @@ static int32_t ReceivePetition(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: 0x00496E20
+// OFFSET: 0x00496E20/0x1400BD140
 static int32_t ReceiveInvalidatePlayer(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -176,7 +185,8 @@ static int32_t ReceiveInvalidatePlayer(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: 0x00496EA0
+// PROVEN: f18bf7e7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00496EA0/0x1400BD1C0
 static int32_t ReceiveArenaTeam(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     ArenaTeamCache arenaTeam;
     arenaTeam.Unpack(msg);
@@ -190,7 +200,8 @@ static int32_t ReceiveArenaTeam(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: 0x00496EF0
+// PROVEN: e6647d46 IDENTICAL/UNPROVEN
+// OFFSET: 0x00496EF0/0x1400BD220
 static int32_t ReceiveInvalidateDance(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t danceID;
     msg->Get(danceID);
@@ -217,7 +228,7 @@ void SetClientCacheVersion(uint32_t version) {
     g_danceCache.VerifyAndUpdateVersion(version);
 }
 
-// OFFSET: 0x00497100
+// OFFSET: 0x00497100/0x1400BD4A0
 static int32_t ReceiveName(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     NameCache name;
     SmartGUID guid;
@@ -285,7 +296,8 @@ static int32_t ReceiveName(void* param, NETMESSAGE msgId, uint32_t time, CDataSt
     return 1;
 }
 
-// OFFSET: 0x00497330
+// PROVEN: 070f9851 IDENTICAL/UNPROVEN
+// OFFSET: 0x00497330/0x1400BD760
 static int32_t ReceiveGuildInfo(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     GuildStats_C guild;
     guild.Unpack(msg);
@@ -299,7 +311,8 @@ static int32_t ReceiveGuildInfo(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: 0x00497390
+// PROVEN: 549972d8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00497390/0x1400BD7C0
 static int32_t ReceiveItemText(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     ItemTextCache_C itemText;
 
@@ -330,7 +343,7 @@ static int32_t ReceiveDance(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// PROVEN: 2b008480 IDENTICAL/NONE
+// PROVEN: 2b008480 IDENTICAL/IDENTICAL
 // OFFSET: 0x00496F20/0x1400BD250
 void DBCache_Initialize() {
     LoadDBCaches();
@@ -353,6 +366,7 @@ void DBCache_Destroy() {
     g_danceCache.Destroy();
 }
 
+// PROVEN: 74426758 IDENTICAL/IDENTICAL
 // OFFSET: 0x004975F0/0x1400BDA50
 void DBCache_ClearHandlers() {
     ClientServices::ClearMessageHandler(SMSG_QUERY_CREATURE_RESPONSE);
@@ -572,7 +586,8 @@ void DBCache<NameCache, uint64_t, CHashKeyGUID>::AddItem(NameCache* item, uint64
     }
 }
 
-// OFFSET: 0x00496B60
+// PROVEN: 02a59559 IDENTICAL/UNPROVEN
+// OFFSET: 0x00496B60/0x1400BCD80
 void DBCache_Idle() {
     g_creatureDBCache.Idle();
     g_gameObjectDBCache.Idle();
@@ -588,11 +603,13 @@ void DBCache_Idle() {
     g_arenaTeamCache.Idle();
 }
 
-// OFFSET: 0x00496F30
+// PROVEN: 97ee34c3 IDENTICAL/UNPROVEN
+// OFFSET: 0x00496F30/0x1400BD260
 void ClientDBIdle() {
     DBCache_Idle();
 }
 
+// PROVEN: 92934152 IDENTICAL/UNPROVEN
 // OFFSET: 0x00496FD0/0x1400BD320
 void DBCache_ClearPending() {
     g_creatureDBCache.ClearPending();

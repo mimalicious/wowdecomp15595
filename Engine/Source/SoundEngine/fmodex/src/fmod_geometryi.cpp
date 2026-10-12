@@ -892,7 +892,7 @@ FMOD_RESULT GeometryI::getPolygonAttributes(int polygonIndex, float *directOcclu
     [SEE_ALSO]
 ]
 */
-// PROVEN: 2deea4ce IDENTICAL/UNPROVEN
+// PROVEN: 2deea4ce IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC7510/0x140890C20
 FMOD_RESULT GeometryI::flush()
 {

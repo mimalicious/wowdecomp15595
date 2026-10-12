@@ -15,7 +15,7 @@ struct HMAC {
     void Process(const void* data, uint32_t length);
 };
 
-// PROVEN: c6bdeb7c IDENTICAL/NONE
+// PROVEN: c6bdeb7c IDENTICAL/IDENTICAL
 // OFFSET: 0x004878E0/0x1400A8D40
 template <class T>
 void HMAC<T>::Init(const uint8_t* key, uint32_t length) {
@@ -31,7 +31,7 @@ void HMAC<T>::Init(const uint8_t* key, uint32_t length) {
     this->m_hash.Process(this->m_innerPad, sizeof(this->m_innerPad));
 }
 
-// OFFSET: [0x00487940<SHA1>]
+// OFFSET: [0x00487940/0x1400A8E00<SHA1>]
 template <class T>
 void HMAC<T>::Finish(typename T::Digest& digest) {
     typename T::Digest inner;

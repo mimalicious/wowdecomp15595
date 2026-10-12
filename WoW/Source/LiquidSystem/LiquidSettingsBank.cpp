@@ -6,10 +6,10 @@
 // STATIC: 0x00E4EB90
 uint32_t Liquid::CSettingsBank::s_refCount;
 
-// STATIC: 0x00E4EB94
+// STATIC: 0x00E4EB94/0x140D37F70
 CDataAllocator Liquid::s_settingsAllocator(sizeof(Liquid::CMaterialSettings), 32);
 
-// STATIC: 0x00E4EBA8
+// STATIC: 0x00E4EBA8/0x140D37F90
 TSGrowableArray<Liquid::CMaterialSettings*> Liquid::CSettingsBank::s_settings;
 
 // PROVEN: 2356bc85 IDENTICAL/NONE
@@ -101,7 +101,8 @@ Liquid::CMaterialSettings* Liquid::CSettingsBank::GetSettings(uint32_t liquidTyp
     }
 }
 
-// OFFSET: 0x0071C4A0
+// PROVEN: 9695e1b4 IDENTICAL/DIFFERENT
+// OFFSET: 0x0071C4A0/0x1403F1400
 void Liquid::CSettingsBank::Destroy() {
     if (!--Liquid::CSettingsBank::s_refCount) {
         Liquid::CSettingsBank::Purge();

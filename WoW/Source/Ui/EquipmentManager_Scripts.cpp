@@ -18,9 +18,10 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/UIMacros.h"
 
-// STATIC: 0x00D14FD0
+// STATIC: 0x00D14FD0/0x140BCE150
 static const char* s_equipmentSetIconPath = "Interface\\Icons\\";
 
+// PROVEN: 6d52cc0f IDENTICAL/DIFFERENT
 // OFFSET: 0x009A1340/0x140725A70
 static int32_t Script_EquipmentManagerIgnoreSlotForSave(lua_State* L) {
     int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -34,6 +35,7 @@ static int32_t Script_EquipmentManagerIgnoreSlotForSave(lua_State* L) {
     return 0;
 }
 
+// PROVEN: a02efe5b IDENTICAL/DIFFERENT
 // OFFSET: 0x009A13E0/0x140725B70
 static int32_t Script_EquipmentManagerUnignoreSlotForSave(lua_State* L) {
     int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -66,13 +68,14 @@ static int32_t Script_CanUseEquipmentSets(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 21dd9897 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A13D0/0x140725B20
 static int32_t Script_EquipmentManagerClearIgnoredSlotsForSave(lua_State* L) {
     CGEquipmentManager::ClearIgnoredSlots();
     return 0;
 }
 
-// PROVEN: 355248fd IDENTICAL/NONE
+// PROVEN: 355248fd IDENTICAL/IDENTICAL
 // OFFSET: 0x009A3AB0/0x140729040
 static int32_t Script_DeleteEquipmentSet(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -439,7 +442,7 @@ static int32_t Script_GetEquipmentSetInfoByName(lua_State* L) {
     return 8;
 }
 
-// PROVEN: d24455dc IDENTICAL/NONE
+// PROVEN: d24455dc IDENTICAL/IDENTICAL
 // OFFSET: 0x009A28D0/0x1407275A0
 static int32_t Script_PickupEquipmentSetByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -464,7 +467,7 @@ static int32_t Script_PickupEquipmentSetByName(lua_State* L) {
     return 0;
 }
 
-// PROVEN: bd804c71 IDENTICAL/NONE
+// PROVEN: bd804c71 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A2940/0x140727620
 static int32_t Script_PickupEquipmentSet(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -498,7 +501,7 @@ static int32_t Script_EquipmentSetContainsLockedItems(lua_State* L) {
     return 1;
 }
 
-// PROVEN: f777512f IDENTICAL/NONE
+// PROVEN: f777512f IDENTICAL/IDENTICAL
 // OFFSET: 0x009A2A00/0x140727720
 static int32_t Script_UseEquipmentSet(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -609,7 +612,7 @@ static int32_t Script_SaveEquipmentSet(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D14FD8
+// STATIC: 0x00D14FD8/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SaveEquipmentSet", &Script_SaveEquipmentSet },
     { "DeleteEquipmentSet", &Script_DeleteEquipmentSet },
@@ -630,7 +633,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CanUseEquipmentSets", &Script_CanUseEquipmentSets },
 };
 
-// PROVEN: 6dc9ab12 IDENTICAL/NONE
+// PROVEN: 6dc9ab12 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A1470/0x140725C10
 void EquipmentManagerRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -638,7 +641,7 @@ void EquipmentManagerRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 546a0550 IDENTICAL/NONE
+// PROVEN: 546a0550 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A14A0/0x140725C60
 void EquipmentManagerUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

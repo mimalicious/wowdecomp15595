@@ -146,4 +146,6 @@ class CGTalentInfo_Inspect {
     static void UpdateTalentData(CDataStore* msg);
 };
 
+#include "WoW/Source/Ui/TalentInfo.inl"
+
 #endif

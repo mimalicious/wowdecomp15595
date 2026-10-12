@@ -322,7 +322,7 @@ static int _bisect_forward_serialno(OggVorbis_File *vf,
 
 /* uses the local ogg_stream storage in vf; this is important for
    non-streaming input sources */
-// OFFSET: 0x00B36020
+// OFFSET: 0x00B36020/0x140901530
 static int _fetch_headers(OggVorbis_File *vf,vorbis_info *vi,vorbis_comment *vc,
                           ogg_int32_t *serialno,ogg_page *og_ptr){
   ogg_page og;
@@ -861,7 +861,7 @@ static int _fseek64_wrap(FILE *f,ogg_int64_t off,int whence){
   return fseek(f,(int)off,whence);
 }
 
-// OFFSET: 0x00B37E50
+// OFFSET: 0x00B37E50/0x140903C60
 static int _ov_open1(void *f,OggVorbis_File *vf,char *initial,
                      ogg_int32_t ibytes, ov_callbacks callbacks){
   int offsettest=((f && callbacks.seek_func)?callbacks.seek_func(f,0,SEEK_CUR):-1);
@@ -930,7 +930,7 @@ static int _ov_open2(OggVorbis_File *vf){
 
 
 /* clear out the OggVorbis_File struct */
-// OFFSET: 0x00B36A60
+// OFFSET: 0x00B36A60/0x1409021F0
 int ov_clear(OggVorbis_File *vf){
   if(vf){
     FMOD_vorbis_block_clear(&vf->vb);
@@ -969,6 +969,7 @@ int ov_clear(OggVorbis_File *vf){
             0) OK
 */
 
+// PROVEN: c9816a4f DIFFERENT/IDENTICAL
 // OFFSET: 0x00B37FD0/0x140903E50
 int ov_open_callbacks(void *f,OggVorbis_File *vf,char *initial,ogg_int32_t ibytes,
     ov_callbacks callbacks){
@@ -1162,6 +1163,7 @@ ogg_int64_t ov_raw_total(OggVorbis_File *vf,int i){
             OV_EINVAL if the stream is not seekable (we can't know the
             length) or only partially open
 */
+// PROVEN: 8a875b0f DIFFERENT/IDENTICAL
 // OFFSET: 0x00B36BC0/0x140902370
 ogg_int64_t ov_pcm_total(OggVorbis_File *vf,int i){
   if(vf->ready_state<OPENED)return(OV_EINVAL);

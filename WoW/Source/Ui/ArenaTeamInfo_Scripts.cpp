@@ -18,6 +18,7 @@
 #include "WoW/Source/Game/GameClient/NameCache.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 
+// PROVEN: cbaa57b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A9200/0x140730330
 static int32_t Script_GetArenaTeamRosterShowOffline(lua_State* L) {
     if (CGArenaTeamInfo::m_showOffline) {
@@ -29,6 +30,7 @@ static int32_t Script_GetArenaTeamRosterShowOffline(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 602018f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A9130/0x140730280
 static int32_t Script_GetNumArenaTeamMembers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -54,6 +56,7 @@ static int32_t Script_GetNumArenaTeamMembers(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 65c3d892 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A9A30/0x140730C10
 static int32_t Script_GetArenaTeamGdfInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -76,6 +79,7 @@ static int32_t Script_GetArenaTeamGdfInfo(lua_State* L) {
     return 2;
 }
 
+// PROVEN: b9d6453a IDENTICAL/IDENTICAL
 // OFFSET: 0x009A90C0/0x140730210
 static void ArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -151,14 +155,14 @@ static int32_t Script_GetArenaTeam(lua_State* L) {
     return 22;
 }
 
-// PROVEN: a3c5e1a7 IDENTICAL/NONE
+// PROVEN: a3c5e1a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A9240/0x140730370
 static int32_t Script_GetCurrentArenaSeason(lua_State* L) {
     lua_pushnumber(L, GetWorldState(3191));
     return 1;
 }
 
-// PROVEN: 2b38f31c IDENTICAL/NONE
+// PROVEN: 2b38f31c IDENTICAL/IDENTICAL
 // OFFSET: 0x009A9270/0x1407303A0
 static int32_t Script_GetPreviousArenaSeason(lua_State* L) {
     lua_pushnumber(L, GetWorldState(3901));
@@ -215,6 +219,7 @@ static int32_t Script_GetArenaTeamRosterInfo(lua_State* L) {
     return 10;
 }
 
+// PROVEN: 5f0312ef IDENTICAL/DIFFERENT
 // OFFSET: 0x009A9B30/0x140730D00
 static int32_t Script_SetArenaTeamRosterSelection(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -228,7 +233,7 @@ static int32_t Script_SetArenaTeamRosterSelection(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 391468f0 IDENTICAL/NONE
+// PROVEN: 391468f0 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A9BD0/0x140730DC0
 static int32_t Script_GetArenaTeamRosterSelection(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -241,6 +246,7 @@ static int32_t Script_GetArenaTeamRosterSelection(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 00c3bf83 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A9C50/0x140730E70
 static int32_t Script_SortArenaTeamRoster(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -271,6 +277,7 @@ static int32_t Script_SortArenaTeamRoster(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9072025e IDENTICAL/IDENTICAL
 // OFFSET: 0x009A9D90/0x140730F80
 static int32_t Script_SetArenaTeamRosterShowOffline(lua_State* L) {
     CGArenaTeamInfo::SetRosterShowOffline(StringToBOOL(L, 1, 1));
@@ -283,7 +290,7 @@ static int32_t Script_CloseArenaTeamRoster(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 5c5f2a90 IDENTICAL/NONE
+// PROVEN: 5c5f2a90 IDENTICAL/IDENTICAL
 // OFFSET: 0x009AA4C0/0x140731720
 static int32_t Script_ArenaTeamRoster(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -296,7 +303,7 @@ static int32_t Script_ArenaTeamRoster(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D15308
+// STATIC: 0x00D15308/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetArenaTeam", &Script_GetArenaTeam },
     { "GetNumArenaTeamMembers", &Script_GetNumArenaTeamMembers },
@@ -313,7 +320,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetPreviousArenaSeason", &Script_GetPreviousArenaSeason },
 };
 
-// PROVEN: 063d5bf3 IDENTICAL/NONE
+// PROVEN: 063d5bf3 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A92A0/0x1407303D0
 void ArenaTeamInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -321,7 +328,7 @@ void ArenaTeamInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 4cade410 IDENTICAL/NONE
+// PROVEN: 4cade410 IDENTICAL/UNPROVEN
 // OFFSET: 0x009A92D0/0x140730420
 void ArenaTeamInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

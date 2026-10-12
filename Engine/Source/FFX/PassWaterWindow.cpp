@@ -12,10 +12,10 @@
 
 static CTexture* s_bumpTex;
 
-// STATIC: 0x00EC72A8
+// STATIC: 0x00EC72A8/0x140DB9760
 static CTexture* s_oceanTex[30];
 
-// STATIC: 0x00EC7320
+// STATIC: 0x00EC7320/0x140E78268
 static int32_t s_refCount;
 
 // OFFSET: [0x0089DFE0/0x1405DEA50, 0x0089E1D0/0x1405DEC40]
@@ -47,6 +47,7 @@ PassWaterWindow::~PassWaterWindow() {
     }
 }
 
+// PROVEN: 5720ef49 IDENTICAL/DIFFERENT
 // OFFSET: 0x0089E080/0x1405DEB30
 PassWaterWindow::VertexConstants::VertexConstants() {
     this->m_time.x = 0.0f;

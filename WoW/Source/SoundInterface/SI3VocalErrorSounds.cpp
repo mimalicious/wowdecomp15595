@@ -8,16 +8,16 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: 0x00D2810C
+// STATIC: 0x00D2810C/0x140BE6BDC
 static int32_t s_vocalErrorRace = -1;
 
-// STATIC: 0x0100A6E8
+// STATIC: 0x0100A6E8/0x140EE21F0
 static int32_t s_vocalErrorSounds[68];
 
-// STATIC: 0x0100A7F8
+// STATIC: 0x0100A7F8/0x140EE2300
 static uint32_t s_vocalErrorSound;
 
-// STATIC: 0x0100A7FC
+// STATIC: 0x0100A7FC/0x140EE2304
 static uint32_t s_vocalErrorSex;
 
 // OFFSET: 0x00B357C0/0x140900AC0
@@ -37,6 +37,7 @@ void SI3::InitVocalErrorSounds(int32_t race, uint32_t sex) {
     }
 }
 
+// PROVEN: 3578d33d IDENTICAL/DIFFERENT
 // OFFSET: 0x00B35830/0x140900B60
 void SI3::PlayVocalErrorSound(int32_t error) {
     static CVar* s_enableErrorSpeech = CVar::Lookup("Sound_EnableErrorSpeech");

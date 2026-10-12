@@ -12,12 +12,6 @@ static bool Region_child(linkObject* node, MemBlock& block, char* name);
 static bool Frame_child(linkObject* node, MemBlock& block, char* name);
 static bool Region_context(linkObject* node, MemBlock& block, const char* name);
 
-// INLINED
-MemBlock::MemBlock() {
-    this->m_block = NULL;
-    this->m_strings = NULL;
-}
-
 // PROVEN: c9862745 IDENTICAL/NONE
 // OFFSET: 0x004EC920
 MemBlock::~MemBlock() {
@@ -26,6 +20,7 @@ MemBlock::~MemBlock() {
     }
 }
 
+// PROVEN: 73121965 IDENTICAL/DIFFERENT
 // OFFSET: 0x004F0350/0x140134AE0
 bool MemBlock::Advance() {
     if (!this->m_block || this->m_end < this->m_cur + 0x4000) {
@@ -40,6 +35,7 @@ bool MemBlock::Advance() {
     return true;
 }
 
+// PROVEN: 06b495b7 IDENTICAL/DIFFERENT
 // OFFSET: 0x004F02F0/0x140134A60
 bool MemBlock::Reserve(uint32_t bytes) {
     if (!this->m_strings || bytes > static_cast<uint32_t>(this->m_stringsEnd - this->m_strings)) {
@@ -52,7 +48,7 @@ bool MemBlock::Reserve(uint32_t bytes) {
     return true;
 }
 
-// OFFSET: 0x004EC2B0
+// OFFSET: 0x004EC2B0/0x14012F7D0
 bool linkObject::RelocateStrings(char*& dest) {
     for (int32_t offset = this->m_strings; offset; ) {
         XMLString* string = reinterpret_cast<XMLString*>(reinterpret_cast<char*>(this) + offset);
@@ -66,7 +62,7 @@ bool linkObject::RelocateStrings(char*& dest) {
     return true;
 }
 
-// OFFSET: 0x004EC310
+// OFFSET: 0x004EC310/0x14012F840
 bool linkObject::Relocate(char*& dest) {
     char* self = dest;
     dest += this->m_size;
@@ -97,7 +93,7 @@ void FrameXML_FreeCompiled(linkObject* node, bool force) {
     }
 }
 
-// OFFSET: 0x004EC800
+// OFFSET: 0x004EC800/0x14012FE10
 uint32_t linkObject::CalculateSize() {
     uint32_t strings = 0;
 
@@ -116,7 +112,7 @@ uint32_t linkObject::CalculateSize() {
     return strings + children + this->m_size;
 }
 
-// OFFSET: 0x004EC8A0
+// OFFSET: 0x004EC8A0/0x14012FEF0
 linkObject* linkObject::Compile(uint32_t& size) {
     size = this->CalculateSize();
 
@@ -258,7 +254,7 @@ bool linkObject::dochildren(XMLChildFunc func, MemBlock& block) {
     return true;
 }
 
-// PROVEN: 8a2c7b91 IDENTICAL/UNPROVEN
+// PROVEN: 8a2c7b91 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F0780/0x140135010
 bool Function::parse(MemBlock& block) {
     this->m_flags |= 0x20;
@@ -285,6 +281,7 @@ bool Function::parse(MemBlock& block) {
     return true;
 }
 
+// PROVEN: 842459d0 DIFFERENT/IDENTICAL
 // OFFSET: 0x004F0710/0x140134F80
 static bool Script_parse(Script* node, MemBlock& block) {
     const char* file = node->m_xml->GetAttributeByName("file");
@@ -309,7 +306,7 @@ static bool Script_parse(Script* node, MemBlock& block) {
     return true;
 }
 
-// PROVEN: 15a2b29e IDENTICAL/UNPROVEN
+// PROVEN: 15a2b29e IDENTICAL/IDENTICAL
 // OFFSET: 0x004F05C0/0x140134DF0
 bool Attribute::parse(MemBlock& block) {
     this->m_size = block.m_cur - reinterpret_cast<char*>(this);
@@ -333,7 +330,7 @@ bool Attribute::parse(MemBlock& block) {
     return true;
 }
 
-// PROVEN: b34eb4f6 IDENTICAL/UNPROVEN
+// PROVEN: b34eb4f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F0630/0x140134E80
 bool Dimension::parseRelative(MemBlock& block) {
     const char* x = this->m_xml->GetAttributeByName("x");
@@ -355,7 +352,7 @@ bool Dimension::parseRelative(MemBlock& block) {
     return this->linkObject::parse(block);
 }
 
-// PROVEN: d0d7a334 IDENTICAL/UNPROVEN
+// PROVEN: d0d7a334 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F06A0/0x140134F10
 bool Dimension::parseAbsolute(MemBlock& block) {
     this->m_size = block.m_cur - reinterpret_cast<char*>(this);
@@ -372,7 +369,7 @@ bool Dimension::parseAbsolute(MemBlock& block) {
     return true;
 }
 
-// PROVEN: a0bdf457 IDENTICAL/UNPROVEN
+// PROVEN: a0bdf457 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F07F0/0x1401350B0
 bool ControlPoint::parse(MemBlock& block) {
     const char* parentKey = this->m_xml->GetAttributeByName("parentKey");
@@ -452,7 +449,7 @@ bool Color::parse(MemBlock& block) {
     return true;
 }
 
-// PROVEN: 2423a210 IDENTICAL/UNPROVEN
+// PROVEN: 2423a210 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F0A80/0x140135330
 bool Value::parseAbsolute(MemBlock& block) {
     this->m_size = block.m_cur - reinterpret_cast<char*>(this);
@@ -474,7 +471,7 @@ bool Value::parseAbsolute(MemBlock& block) {
     return true;
 }
 
-// PROVEN: f632d41d IDENTICAL/UNPROVEN
+// PROVEN: f632d41d IDENTICAL/IDENTICAL
 // OFFSET: 0x004F0B00/0x1401353C0
 bool Rect::parse(MemBlock& block) {
     const char* value = this->m_xml->GetAttributeByName("ULx");
@@ -538,7 +535,7 @@ bool Rect::parse(MemBlock& block) {
     return this->linkObject::parse(block);
 }
 
-// PROVEN: 9bbb07c2 IDENTICAL/UNPROVEN
+// PROVEN: 9bbb07c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F0C30/0x140135530
 bool Insets::parseRelative(MemBlock& block) {
     const char* left = this->m_xml->GetAttributeByName("left");
@@ -575,7 +572,7 @@ bool Insets::parseRelative(MemBlock& block) {
     return true;
 }
 
-// PROVEN: 16cffe9d IDENTICAL/UNPROVEN
+// PROVEN: 16cffe9d IDENTICAL/IDENTICAL
 // OFFSET: 0x004F0CF0/0x140135610
 bool Insets::parseAbsolute(MemBlock& block) {
     this->m_size = block.m_cur - reinterpret_cast<char*>(this);
@@ -625,7 +622,7 @@ bool BlobFrame::parse(MemBlock& block) {
     return true;
 }
 
-// OFFSET: [0x004F0F70<51, 8>, 0x004F0FA0<52, 8>, 0x004F0FD0<53, 8>, 0x004F1000<54, 8>, 0x004F1030<139, 16>, 0x004F1060<60, 8>, 0x004F1090<63, 2>, 0x004F10C0<66, 4>, 0x004F10F0<67, 4>]
+// OFFSET: [0x004F0F70/0x140135920<51, 8>, 0x004F0FA0/0x140135960<52, 8>, 0x004F0FD0/0x1401359A0<53, 8>, 0x004F1000/0x1401359E0<54, 8>, 0x004F1030/0x140135A20<139, 16>, 0x004F1060/0x140135A60<60, 8>, 0x004F1090/0x140135AA0<63, 2>, 0x004F10C0/0x140135AE0<66, 4>, 0x004F10F0/0x140135B20<67, 4>]
 template <uint32_t ELEMENT, uint32_t SIGNATURE>
 static bool AdvanceAndParseScript(linkObject* node, MemBlock& block) {
     Function* function = static_cast<Function*>(node);
@@ -649,6 +646,7 @@ static bool AdvanceAndParseScript(linkObject* node, MemBlock& block) {
     return function->parse(block);
 }
 
+// PROVEN: b8bdecdb DIFFERENT/IDENTICAL
 // OFFSET: 0x004F1120/0x140135B60
 static bool Origin_parse(linkObject* node, MemBlock& block) {
     Origin* origin = static_cast<Origin*>(node);
@@ -667,6 +665,7 @@ static bool Origin_parse(linkObject* node, MemBlock& block) {
     return origin->parse(block);
 }
 
+// PROVEN: 0d33027f DIFFERENT/IDENTICAL
 // OFFSET: 0x004F1180/0x140135BE0
 static bool RelValue_parse(linkObject* node, MemBlock& block) {
     Value* value = static_cast<Value*>(node);
@@ -694,6 +693,7 @@ static bool BackdropColor_parse(linkObject* node, MemBlock& block) {
     return static_cast<Color*>(node)->parse(block);
 }
 
+// PROVEN: 199f5d7a DIFFERENT/IDENTICAL
 // OFFSET: 0x004F1200/0x140135C50
 static bool Include_parse(linkObject* node, MemBlock& block) {
     Include* include = static_cast<Include*>(node);
@@ -746,7 +746,7 @@ static bool ArchaeologyDigSiteFrame_advance(linkObject* node, MemBlock& block) {
     return true;
 }
 
-// PROVEN: 46e6e291 IDENTICAL/NONE
+// PROVEN: 46e6e291 IDENTICAL/DIFFERENT
 // OFFSET: 0x004F0DA0/0x1401356E0
 bool Minimap::parse(MemBlock& block) {
     const char* texture = this->m_xml->GetAttributeByName("minimapPlayerTexture");
@@ -831,7 +831,7 @@ bool FontStyle::parse(MemBlock& block) {
     return true;
 }
 
-// PROVEN: dae04279 IDENTICAL/UNPROVEN
+// PROVEN: dae04279 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F1390/0x140135D40
 static bool Dimensions_child(linkObject* node, MemBlock& block, char* name) {
     Dimension* dimension = static_cast<Dimension*>(node);
@@ -893,7 +893,7 @@ static bool TexCoords_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Rect*>(node)->parse(block);
 }
 
-// PROVEN: fea7acac IDENTICAL/UNPROVEN
+// PROVEN: fea7acac IDENTICAL/IDENTICAL
 // OFFSET: 0x004F15B0/0x140135F10
 static bool Insets_child(linkObject* node, MemBlock& block, char* name) {
     Insets* insets = static_cast<Insets*>(node);
@@ -958,7 +958,8 @@ static bool HighlightColor_parse(linkObject* node, MemBlock& block) {
     return static_cast<Color*>(node)->parse(block);
 }
 
-// OFFSET: 0x004F1F40
+// PROVEN: 75268613 DIFFERENT/IDENTICAL
+// OFFSET: 0x004F1F40/0x140136080
 static bool DisabledFont_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_DISABLEDFONT;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontStyle);
@@ -966,7 +967,8 @@ static bool DisabledFont_parse(linkObject* node, MemBlock& block) {
     return static_cast<FontStyle*>(node)->parse(block);
 }
 
-// OFFSET: 0x004F1F60
+// PROVEN: ce95a5f2 DIFFERENT/IDENTICAL
+// OFFSET: 0x004F1F60/0x140136100
 static bool NormalFont_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_NORMALFONT;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontStyle);
@@ -974,7 +976,8 @@ static bool NormalFont_parse(linkObject* node, MemBlock& block) {
     return static_cast<FontStyle*>(node)->parse(block);
 }
 
-// OFFSET: 0x004F1F80
+// PROVEN: 3b4b9284 DIFFERENT/IDENTICAL
+// OFFSET: 0x004F1F80/0x140136180
 static bool HighlightFont_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_HIGHLIGHTFONT;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontStyle);
@@ -1328,7 +1331,7 @@ static bool Model_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Color*>(node)->parse(block);
 }
 
-// OFFSET: 0x004F3150
+// OFFSET: 0x004F3150/0x140136B80
 static bool ScrollFrame_advance(linkObject* node, MemBlock& block) {
     Frame* frame = static_cast<Frame*>(node);
     frame->m_regionType = XML_SCROLLFRAME;
@@ -1363,7 +1366,7 @@ static bool Path_child(linkObject* node, MemBlock& block, char* name) {
     return node->dochildren(ControlPoints_child, block);
 }
 
-// PROVEN: bc83357d IDENTICAL/UNPROVEN
+// PROVEN: bc83357d IDENTICAL/IDENTICAL
 // OFFSET: 0x004F3240/0x140136CA0
 bool Gradient::parse(MemBlock& block) {
     this->m_orientation = 0;
@@ -1416,7 +1419,7 @@ static bool Scripts_parse(linkObject* node, MemBlock& block) {
     return node->dochildren(Scripts_child, block);
 }
 
-// OFFSET: [0x004F33C0/0x140136D70<92>, 0x004F3400<151>]
+// OFFSET: [0x004F33C0/0x140136D70<92>, 0x004F3400/0x140136E10<151>]
 template <uint32_t ELEMENT>
 static bool AdvanceAndParseValue(linkObject* node, MemBlock& block) {
     Value* value = static_cast<Value*>(node);
@@ -1429,7 +1432,7 @@ static bool AdvanceAndParseValue(linkObject* node, MemBlock& block) {
     return value->dochildren(Val_child, block);
 }
 
-// OFFSET: [0x004F3440<152>, 0x004F34C0/0x140136E60<31>]
+// OFFSET: [0x004F3440/0x140136DC0<152>, 0x004F34C0/0x140136E60<31>]
 template <uint32_t ELEMENT>
 static bool AdvanceAndParseInsets(linkObject* node, MemBlock& block) {
     Insets* insets = static_cast<Insets*>(node);
@@ -1442,6 +1445,7 @@ static bool AdvanceAndParseInsets(linkObject* node, MemBlock& block) {
     return insets->dochildren(Insets_child, block);
 }
 
+// PROVEN: ff7a61e0 DIFFERENT/IDENTICAL
 // OFFSET: 0x004F3500/0x140136EB0
 static bool ResizeBounds_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "minresize", STORM_MAX_STR)) {
@@ -1505,7 +1509,7 @@ static bool Shadow_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// PROVEN: 38287bb2 IDENTICAL/UNPROVEN
+// PROVEN: 38287bb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F3790/0x140137120
 static bool Texture_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "texcoords", STORM_MAX_STR)) {
@@ -1575,7 +1579,7 @@ bool PathAnimation::parse(MemBlock& block) {
     return this->dochildren(Path_child, block);
 }
 
-// OFFSET: 0x004F3EE0
+// OFFSET: 0x004F3EE0/0x140137670
 static bool Path_parse(linkObject* node, MemBlock& block) {
     PathAnimation* path = static_cast<PathAnimation*>(node);
     path->m_element = XML_PATH;
@@ -1584,7 +1588,7 @@ static bool Path_parse(linkObject* node, MemBlock& block) {
     return path->parse(block);
 }
 
-// PROVEN: 3c33d430 IDENTICAL/UNPROVEN
+// PROVEN: 3c33d430 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F39E0/0x1401372D0
 bool Anchor::parse(MemBlock& block) {
     const char* relativeTo = this->m_xml->GetAttributeByName("relativeTo");
@@ -1680,7 +1684,7 @@ bool Animation::parse(MemBlock& block) {
     return this->dochildren(Animation_child, block);
 }
 
-// PROVEN: e233b3c6 IDENTICAL/UNPROVEN
+// PROVEN: e233b3c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F3BD0/0x140137550
 bool VectorAnimation::parseTranslation(MemBlock& block) {
     const char* x = this->m_xml->GetAttributeByName("offsetX");
@@ -1702,7 +1706,7 @@ bool VectorAnimation::parseTranslation(MemBlock& block) {
     return this->Animation::parse(block);
 }
 
-// PROVEN: 78eb12e7 IDENTICAL/UNPROVEN
+// PROVEN: 78eb12e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F3C30/0x1401375E0
 bool VectorAnimation::parseRotation(MemBlock& block) {
     const char* degrees = this->m_xml->GetAttributeByName("degrees");
@@ -1724,7 +1728,7 @@ bool VectorAnimation::parseRotation(MemBlock& block) {
     return this->Animation::parse(block);
 }
 
-// PROVEN: 7b79f9b8 IDENTICAL/UNPROVEN
+// PROVEN: 7b79f9b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F3D00/0x140137700
 bool VectorAnimation::parseScale(MemBlock& block) {
     const char* x = this->m_xml->GetAttributeByName("scaleX");
@@ -1787,6 +1791,7 @@ bool Backdrop::parse(MemBlock& block) {
     return this->dochildren(Backdrop_child, block);
 }
 
+// PROVEN: 92a1636c DIFFERENT/IDENTICAL
 // OFFSET: 0x004F3E30/0x1401378B0
 static bool Alpha_parse(linkObject* node, MemBlock& block) {
     AlphaAnimation* alpha = static_cast<AlphaAnimation*>(node);
@@ -2448,6 +2453,7 @@ static bool StatusBar_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
+// PROVEN: 59f8438f DIFFERENT/IDENTICAL
 // OFFSET: 0x004F5230/0x140138AD0
 static bool FontFrame_child(linkObject* node, MemBlock& block, char* name) {
     return FontStrings_child(node, block, name);
@@ -2531,7 +2537,7 @@ static bool CheckButton_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Texture*>(node)->parse(block);
 }
 
-// PROVEN: b05cc35c IDENTICAL/UNPROVEN
+// PROVEN: b05cc35c IDENTICAL/IDENTICAL
 // OFFSET: 0x004F5630/0x140138D60
 bool Layer::parse(MemBlock& block) {
     this->m_level = 2;
@@ -2911,7 +2917,7 @@ static bool EditBox_advance(linkObject* node, MemBlock& block) {
     return editBox->parse(block);
 }
 
-// OFFSET: 0x004F5E50
+// OFFSET: 0x004F5E50/0x1401395F0
 static bool ColorSelect_advance(linkObject* node, MemBlock& block) {
     Frame* frame = static_cast<Frame*>(node);
     frame->m_regionType = XML_COLORSELECT;

@@ -33,13 +33,13 @@
 #include "WoW/Source/UIUtil/PortraitButton.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00D17688
+// STATIC: 0x00D17688/0x140BD2540
 const char* CGCharacterModelBase::s_objectTypeName = "PlayerModel";
 
-// STATIC: 0x00D1768C
+// STATIC: 0x00D1768C/0x140BD2548
 int32_t CGCharacterModelBase::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00F76C70
+// STATIC: 0x00F76C70/0x140E6CDB8
 int32_t CGCharacterModelBase::s_objectType;
 
 CDataAllocator CGCharacterModelBase::s_characterModelHeap(sizeof(CGCharacterModelBase), 5);
@@ -66,31 +66,33 @@ void CGCharacterModelBase::operator delete(void* ptr) {
     CGCharacterModelBase::s_characterModelHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x008C64D0
+// PROVEN: 6ac7a362 DIFFERENT/IDENTICAL
+// OFFSET: 0x008C64D0/0x140636540
 CSimpleFrame* CGCharacterModelBase::Create(CSimpleFrame* parent) {
     void* data = CGCharacterModelBase::s_characterModelHeap.GetData(0, typeid(CGCharacterModelBase).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGCharacterModelBase(parent) : NULL;
 }
 
-// OFFSET: [0x00A02C70, 0x00A03130/0x1407A22D0, 0x00A06020]
+// OFFSET: [0x00A02C70/0x1407A1D50, 0x00A03130/0x1407A22D0, 0x00A06020/0x1407A42E0]
 CGCharacterModelBase::~CGCharacterModelBase() {
     if (this->m_component) {
         CCharacterComponent::FreeComponent(this->m_component);
     }
 }
 
-// PROVEN: 596b5867 IDENTICAL/NONE
-// OFFSET: 0x00A02CA0
+// PROVEN: 596b5867 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A02CA0/0x1407A1D90
 const char* CGCharacterModelBase::GetObjectTypeName() {
     return CGCharacterModelBase::s_objectTypeName;
 }
 
-// PROVEN: 65e855b0 IDENTICAL/NONE
+// PROVEN: 65e855b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02CB0/0x1407A1DA0
 int32_t CGCharacterModelBase::GetScriptMetaTable() {
     return CGCharacterModelBase::s_metatable;
 }
 
+// PROVEN: ba8c5656 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02CC0/0x1407A1DB0
 CM2Model* CGCharacterModelBase::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
     if (unit) {
@@ -100,6 +102,7 @@ CM2Model* CGCharacterModelBase::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
     return NULL;
 }
 
+// PROVEN: 823ef583 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A02CF0/0x1407A1DE0
 void CGCharacterModelBase::RotateModel(float facing, bool animate) {
     if (this->m_model && this->m_model->IsLoaded()) {
@@ -129,8 +132,8 @@ void CGCharacterModelBase::RotateModel(float facing, bool animate) {
     this->m_facing = facing;
 }
 
-// PROVEN: 9b7efb3f IDENTICAL/NONE
-// OFFSET: 0x00A02DD0
+// PROVEN: 9b7efb3f IDENTICAL/DIFFERENT
+// OFFSET: 0x00A02DD0/0x1407A1F10
 void CGCharacterModelBase::UpdateModel() {
     CSimpleModel::UpdateModel();
 
@@ -146,21 +149,21 @@ void CGCharacterModelBase::UpdateModel() {
     this->m_sequenceSet = 0;
 }
 
-// PROVEN: f77a3fda IDENTICAL/NONE
+// PROVEN: f77a3fda IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02E60/0x1407A2010
 void CGCharacterModelBase::HideThis() {
     this->SetModel(static_cast<CM2Model*>(NULL));
     CSimpleFrame::HideThis();
 }
 
-// PROVEN: 18675790 IDENTICAL/NONE
+// PROVEN: 18675790 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02F20/0x1407A20B0
 bool CGCharacterModelBase::IsA(int32_t type) {
     return type == CGCharacterModelBase::s_objectType || type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: fd18a837 IDENTICAL/NONE
-// OFFSET: 0x00A02F60
+// PROVEN: fd18a837 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A02F60/0x1407A20E0
 bool CGCharacterModelBase::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGCharacterModelBase::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleModel::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
@@ -281,8 +284,8 @@ void CGCharacterModelBase::RefreshUnit(WOWGUID guid) {
     }
 }
 
-// PROVEN: c77124a8 IDENTICAL/NONE
-// OFFSET: 0x00A03490
+// PROVEN: c77124a8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A03490/0x1407A2700
 void CGCharacterModelBase::UpdateAlpha() {
     CSimpleModel::UpdateAlpha();
 
@@ -323,7 +326,8 @@ void CGCharacterModelBase::SetDisplayInfo(int32_t displayID, CGPlayer_C* owner) 
     }
 }
 
-// OFFSET: 0x00A03730
+// PROVEN: 6f00fe45 DIFFERENT/IDENTICAL
+// OFFSET: 0x00A03730/0x1407A29C0
 int32_t CGCharacterModelBase::IsDrawable() {
     if (this->m_model && this->m_model->IsDrawableRecursive()) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_unitGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -515,7 +519,7 @@ void CGCharacterModelBase::SetUpModel(CGUnit_C* unit) {
     model->Release();
 }
 
-// PROVEN: 55ff4808 IDENTICAL/NONE
+// PROVEN: 55ff4808 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A03F60/0x1407A33F0
 void CGCharacterModelBase::OnModelLoaded(CM2Model* model) {
     CSimpleModel::OnModelLoaded(model);

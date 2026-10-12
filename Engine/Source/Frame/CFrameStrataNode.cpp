@@ -8,6 +8,7 @@ CFrameStrataNode::CFrameStrataNode() {
     this->m_batchDirty = 0;
 }
 
+// PROVEN: 5b7a66a5 IDENTICAL/DIFFERENT
 // OFFSET: 0x004FF430/0x1401441C0
 int32_t CFrameStrataNode::RemoveFrame(CSimpleFrame* frame) {
     if (!frame->m_strataLink.IsLinked()) {
@@ -37,7 +38,7 @@ void CFrameStrataNode::OnLayerUpdate(float elapsedSec) {
     this->m_frames.Combine(&this->m_pendingFrames, 2, NULL);
 }
 
-// OFFSET: 0x005000F0
+// OFFSET: 0x005000F0/0x140145460
 int32_t CFrameStrataNode::BuildBatches() {
     int32_t batchDirty = this->m_batchDirty;
     this->m_batchDirty = 0;

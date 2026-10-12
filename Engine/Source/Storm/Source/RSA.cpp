@@ -8,8 +8,8 @@ void Crypt::RSA::Prepare(const void* modulus, uint32_t mLength, const void* expo
     this->m_exponent.FromBinary(exponent, eLength);
 }
 
-// PROVEN: c8bd61fc IDENTICAL/NONE
-// OFFSET: 0x004BDC40
+// PROVEN: c8bd61fc IDENTICAL/IDENTICAL
+// OFFSET: 0x004BDC40/0x1400F76C0
 bool Crypt::RSA::Process(uint8_t* data, uint32_t length) {
     BigNum src;
     src.FromBinary(data, length);

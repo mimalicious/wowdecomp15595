@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[5] = { 0, 2, 2, 2, 2 };
 // STATIC: 0x00C23568/0x140A18830
 const DBCMeta LockTypeRec::s_meta = { "DBFilesClient\\LockType.dbc", 5, 20, LockTypeRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 059e0598 IDENTICAL/NONE
+// PROVEN: 059e0598 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EAB0/0x1407D8150
 void LockTypeRec::FixupStrings(void* record, const char* strings) {
     LockTypeRec* rec = static_cast<LockTypeRec*>(record);

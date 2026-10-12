@@ -124,8 +124,8 @@ FMOD_RESULT ChannelDSound::init(int index, SystemI *system, Output *output, DSPI
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 84f13590 IDENTICAL/NONE
-// OFFSET: 0x00AFE520
+// PROVEN: 84f13590 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AFE520/0x1408BFF30
 FMOD_RESULT ChannelDSound::alloc()
 {
     FMOD_MODE       mode;
@@ -539,7 +539,7 @@ FMOD_RESULT ChannelDSound::setPaused(bool paused)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AFE960
+// OFFSET: 0x00AFE960/0x1408C0430
 FMOD_RESULT ChannelDSound::setVolume(float volume)
 {  
 	if (mBuffer) 
@@ -659,8 +659,8 @@ FMOD_RESULT ChannelDSound::setFrequency(float frequency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 70d2ca46 IDENTICAL/NONE
-// OFFSET: 0x00AFEB20
+// PROVEN: 70d2ca46 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AFEB20/0x1408C05C0
 FMOD_RESULT ChannelDSound::setPan(float pan, float fbpan)
 {
 	int hwpan;
@@ -855,8 +855,8 @@ FMOD_RESULT ChannelDSound::getPosition(unsigned int *position, FMOD_TIMEUNIT pos
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 59823825 IDENTICAL/NONE
-// OFFSET: 0x00AFEBF0
+// PROVEN: 59823825 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AFEBF0/0x1408C0670
 FMOD_RESULT ChannelDSound::set3DAttributes()
 {
     FMOD_RESULT   result;
@@ -1016,8 +1016,8 @@ FMOD_RESULT ChannelDSound::set3DAttributes()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3579e884 IDENTICAL/NONE
-// OFFSET: 0x00AFEF70
+// PROVEN: 3579e884 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AFEF70/0x1408C0A60
 FMOD_RESULT ChannelDSound::set3DMinMaxDistance()
 {
     int  deferred = DS3D_IMMEDIATE;
@@ -1082,8 +1082,8 @@ FMOD_RESULT ChannelDSound::set3DMinMaxDistance()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cc435f3e IDENTICAL/NONE
-// OFFSET: 0x00AFF020
+// PROVEN: cc435f3e IDENTICAL/IDENTICAL
+// OFFSET: 0x00AFF020/0x1408C0B50
 FMOD_RESULT ChannelDSound::set3DOcclusion(float directOcclusion, float reverbOcclusion)
 {
     if (mOutputDSound->mReverbVersion != REVERB_VERSION_NONE)
@@ -1139,8 +1139,8 @@ FMOD_RESULT ChannelDSound::set3DOcclusion(float directOcclusion, float reverbOcc
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 97b9e01c IDENTICAL/NONE
-// OFFSET: 0x00AFF110
+// PROVEN: 97b9e01c IDENTICAL/DIFFERENT
+// OFFSET: 0x00AFF110/0x1408C0C90
 FMOD_RESULT ChannelDSound::isPlaying(bool *isplaying, bool includethreadlatency)
 {
     if (mFlags & (CHANNELREAL_FLAG_ALLOCATED | CHANNELREAL_FLAG_PAUSED) || mFlags & CHANNELREAL_FLAG_ENDDELAY)

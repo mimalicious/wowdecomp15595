@@ -118,7 +118,7 @@ bool Blizzard::Net::Select(Socket* readSockets, Socket* writeSockets, int64_t ti
     return result > 0;
 }
 
-// OFFSET: 0x007B58D0
+// OFFSET: 0x007B58D0/0x1404AB870
 bool Blizzard::Net::CreateSocket(Socket* s, int32_t receiveBuffer, int32_t sendBuffer) {
     *s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -160,7 +160,7 @@ bool Blizzard::Net::CreateSocket(Socket* s, int32_t receiveBuffer, int32_t sendB
     return true;
 }
 
-// OFFSET: 0x007B59B0
+// OFFSET: 0x007B59B0/0x1404AB9A0
 bool Blizzard::Net::CloseSocket(Socket* s, bool linger) {
     if (*s != INVALID_SOCKET) {
         int error = WSAGetLastError();
@@ -196,7 +196,7 @@ bool Blizzard::Net::Connect(Socket s, const sockaddr* address) {
     return false;
 }
 
-// OFFSET: 0x007C0960
+// OFFSET: 0x007C0960/0x1404BA490
 bool Blizzard::Net::ConnectAddress(sockaddr_in* address, Socket* s, int32_t receiveBuffer, int32_t sendBuffer, bool blocking) {
     address->sin_family = AF_INET;
 
@@ -212,7 +212,7 @@ bool Blizzard::Net::ConnectAddress(sockaddr_in* address, Socket* s, int32_t rece
     return Connect(*s, reinterpret_cast<sockaddr*>(address));
 }
 
-// OFFSET: 0x007BD120
+// OFFSET: 0x007BD120/0x1404B5780
 int __cdecl System_Net::CompareAddresses(const void* a, const void* b) {
     uint32_t x = static_cast<const Blizzard::Net::Address*>(a)->m_ip;
     uint32_t y = static_cast<const Blizzard::Net::Address*>(b)->m_ip;
@@ -226,7 +226,7 @@ int __cdecl System_Net::CompareAddresses(const void* a, const void* b) {
     return first < second ? -1 : 1;
 }
 
-// OFFSET: 0x007C4CF0
+// OFFSET: 0x007C4CF0/0x1404BFB90
 bool Blizzard::Net::ResolveHost(const char* name, Address* addresses, int32_t* count) {
     char localName[268];
 
@@ -290,7 +290,7 @@ bool Blizzard::Net::ResolveAddress(const char* name, sockaddr_in* address) {
     return true;
 }
 
-// OFFSET: 0x007C6510
+// OFFSET: 0x007C6510/0x1404C16F0
 bool Blizzard::Net::ConnectHost(const char* host, uint16_t port, Socket* s, int32_t receiveBuffer, int32_t sendBuffer, bool blocking) {
     sockaddr_in address;
     memset(&address.sin_addr, 0, 12);

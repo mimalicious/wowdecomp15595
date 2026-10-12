@@ -33,25 +33,25 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA2FA4
+// STATIC: 0x00CA2FA4/0x140B3FDF4
 int32_t CSimpleFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3914
+// STATIC: 0x00DD3914/0x140CB95CC
 int32_t CSimpleFrame::s_objectType;
 
-// STATIC: 0x00CA2EA0
+// STATIC: 0x00CA2EA0/0x140B3FCA0
 const char* CSimpleFrame::s_objectTypeName = "Frame";
 
 int32_t CSimpleFrame::s_frameCount;
 
-// STATIC: 0x00DD391C
+// STATIC: 0x00DD391C/0x140CB95D8
 CDataAllocator CSimpleFrame::s_allocator(sizeof(CSimpleFrame), 100);
 
 static float s_dragThreshold = 0.0001f;
 
 bool CSimpleFrame::s_defaultPreload;
 
-// OFFSET: 0x00502600
+// OFFSET: 0x00502600/0x140148060
 static const char* KeyCodeToString(KEY key) {
     static char charBuf[8];
 
@@ -286,8 +286,8 @@ bool CSimpleFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleFrame::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: 88105321 IDENTICAL/NONE
-// OFFSET: 0x00506120
+// PROVEN: 88105321 IDENTICAL/IDENTICAL
+// OFFSET: 0x00506120/0x14014CEE0
 const char* CSimpleFrame::GetObjectTypeName() {
     return CSimpleFrame::s_objectTypeName;
 }
@@ -298,7 +298,7 @@ int32_t CSimpleFrame::GetScriptMetaTable() {
     return CSimpleFrame::s_metatable;
 }
 
-// PROVEN: 41141b61 IDENTICAL/UNPROVEN
+// PROVEN: 41141b61 IDENTICAL/IDENTICAL
 // OFFSET: 0x00501D20/0x1401479A0
 FrameScript_Object::ScriptIx* CSimpleFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = FrameScript_Object::GetScriptByName(name, data);
@@ -429,19 +429,19 @@ void CSimpleFrame::Raise() {
     this->m_simpleTop->RaiseFrame(this, 1);
 }
 
-// PROVEN: 4b152c86 IDENTICAL/UNPROVEN
+// PROVEN: 4b152c86 IDENTICAL/IDENTICAL
 // OFFSET: 0x005022D0/0x140147D30
 int32_t CSimpleFrame::Lower() {
     return this->m_simpleTop->LowerFrame(this);
 }
 
-// PROVEN: 648274f4 IDENTICAL/NONE
-// OFFSET: 0x005022E0
+// PROVEN: 648274f4 IDENTICAL/IDENTICAL
+// OFFSET: 0x005022E0/0x140147D40
 int32_t CSimpleFrame::DragBy(float offsetX, float offsetY, FRAMEPOINT point) {
     return CLayoutFrame::DragBy(this->m_simpleTop, offsetX, offsetY, point);
 }
 
-// PROVEN: 54410507 IDENTICAL/UNPROVEN
+// PROVEN: 54410507 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502310/0x140147D70
 void CSimpleFrame::PropagateProtectFlagToParent(uint32_t flag) {
     if (this->m_parent) {
@@ -505,12 +505,12 @@ void CSimpleFrame::GetClampRectInsets(float& left, float& right, float& top, flo
     bottom = this->m_clampRectInsets.minY;
 }
 
-// OFFSET: 0x00502540
+// OFFSET: 0x00502540/0x140147FA0
 bool CSimpleFrame::IsDragging() {
     return this->m_isMouseDragging || (this->m_parent && this->m_parent->IsDragging());
 }
 
-// PROVEN: 6126f2c3 IDENTICAL/NONE
+// PROVEN: 6126f2c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504A10/0x14014B170
 void CSimpleFrame::PreOnAnimUpdate() {
     if (this->AnimData_HasActiveAlpha()) {
@@ -539,7 +539,7 @@ void CSimpleFrame::PreOnAnimUpdate() {
     }
 }
 
-// PROVEN: 0a6bee8e IDENTICAL/UNPROVEN
+// PROVEN: 0a6bee8e IDENTICAL/IDENTICAL
 // OFFSET: 0x00503680/0x140149840
 void CSimpleFrame::RunOnAttributeChangedScript(const char* name, int32_t luaRef) {
     if (!this->HasScript(this->m_onAttributeChanged)) {
@@ -592,7 +592,7 @@ int32_t CSimpleFrame::AttributeChangesAllowed() {
     return 0;
 }
 
-// OFFSET: 0x00502860
+// OFFSET: 0x00502860/0x1401486B0
 void CSimpleFrame::RunOnSizeChangedScript(float width, float height) {
     if (this->HasScript(this->m_onSizeChanged)) {
         lua_State* L = FrameScript_GetContext();
@@ -602,7 +602,7 @@ void CSimpleFrame::RunOnSizeChangedScript(float width, float height) {
     }
 }
 
-// PROVEN: 1816dafe IDENTICAL/UNPROVEN
+// PROVEN: 1816dafe IDENTICAL/IDENTICAL
 // OFFSET: 0x005028F0/0x140148780
 void CSimpleFrame::RunOnEnterScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorEnter)) {
@@ -612,7 +612,7 @@ void CSimpleFrame::RunOnEnterScript(int32_t motion) {
     }
 }
 
-// PROVEN: 55499e11 IDENTICAL/UNPROVEN
+// PROVEN: 55499e11 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502940/0x1401487F0
 void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorExit)) {
@@ -622,7 +622,7 @@ void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
     }
 }
 
-// PROVEN: f096a446 IDENTICAL/UNPROVEN
+// PROVEN: f096a446 IDENTICAL/IDENTICAL
 // OFFSET: 0x00502990/0x140148860
 void CSimpleFrame::RunOnMouseWheelScript(int32_t delta) {
     if (this->HasScript(this->m_onMouseWheel)) {
@@ -632,8 +632,8 @@ void CSimpleFrame::RunOnMouseWheelScript(int32_t delta) {
     }
 }
 
-// PROVEN: 17241e87 IDENTICAL/NONE
-// OFFSET: 0x005029E0
+// PROVEN: 17241e87 IDENTICAL/IDENTICAL
+// OFFSET: 0x005029E0/0x1401488D0
 void CSimpleFrame::RunOnCharScript(const char* text) {
     if (this->HasScript(this->m_onChar)) {
         lua_State* L = FrameScript_GetContext();
@@ -642,8 +642,8 @@ void CSimpleFrame::RunOnCharScript(const char* text) {
     }
 }
 
-// PROVEN: 2a038d3e IDENTICAL/NONE
-// OFFSET: 0x00502A30
+// PROVEN: 2a038d3e IDENTICAL/IDENTICAL
+// OFFSET: 0x00502A30/0x140148940
 void CSimpleFrame::RunOnKeyDownScript(const char* key) {
     if (this->HasScript(this->m_onKeyDown)) {
         lua_State* L = FrameScript_GetContext();
@@ -652,8 +652,8 @@ void CSimpleFrame::RunOnKeyDownScript(const char* key) {
     }
 }
 
-// PROVEN: dc54f6e2 IDENTICAL/NONE
-// OFFSET: 0x00502A80
+// PROVEN: dc54f6e2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00502A80/0x1401489B0
 void CSimpleFrame::RunOnKeyUpScript(const char* key) {
     if (this->HasScript(this->m_onKeyUp)) {
         lua_State* L = FrameScript_GetContext();
@@ -783,7 +783,7 @@ void CSimpleFrame::DisableEvent(CSimpleEventType eventType) {
     this->m_enabledEventsBitmask &= ~(1 << eventType);
 }
 
-// OFFSET: 0x00502E40
+// OFFSET: 0x00502E40/0x140148E80
 int32_t CSimpleFrame::TestHitRect(const C2Vector& pt) {
     if (!(this->m_layoutFlags & 0x1)) {
         return 0;
@@ -826,7 +826,7 @@ void CSimpleFrame::SetHitRectInsets(float left, float right, float top, float bo
     this->m_hitRect.maxY = this->m_rect.maxY - top * this->m_layoutScale;
 }
 
-// OFFSET: 0x00502FF0
+// OFFSET: 0x00502FF0/0x140149060
 int32_t CSimpleFrame::GetHitRect(CRect& rect) {
     if (!(this->m_layoutFlags & 0x1)) {
         return 0;
@@ -836,7 +836,7 @@ int32_t CSimpleFrame::GetHitRect(CRect& rect) {
     return 1;
 }
 
-// OFFSET: 0x00504EC0
+// OFFSET: 0x00504EC0/0x14014B750
 void CSimpleFrame::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     if (region != this && region) {
         for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
@@ -915,13 +915,13 @@ void CSimpleFrame::OnFrameSizeChanged(const CRect& rect) {
     this->m_simpleTop->NotifyFrameMovedOrResized(this);
 }
 
-// PROVEN: b5db8ef9 IDENTICAL/DIFFERENT
+// PROVEN: b5db8ef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CSimpleFrame::OnLayerIme(const CImeEvent& evt) {
     return 0;
 }
 
-// PROVEN: 08408449 IDENTICAL/DIFFERENT
+// PROVEN: 08408449 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CSimpleFrame::OnLayerKeyDownRepeat(const CKeyEvent& evt) {
     return 0;
@@ -940,7 +940,7 @@ int32_t CSimpleFrame::OnLayerChar(const CCharEvent& evt) {
     return !(this->m_frameFlags & 0x200000) || this->IsProtected();
 }
 
-// OFFSET: 0x005032D0
+// OFFSET: 0x005032D0/0x1401493C0
 int32_t CSimpleFrame::OnLayerKeyDown(const CKeyEvent& evt) {
     if (!this->m_visible || (!this->HasScript(this->m_onKeyDown) && !this->HasScript(this->m_onKeyUp))) {
         return 0;
@@ -951,7 +951,7 @@ int32_t CSimpleFrame::OnLayerKeyDown(const CKeyEvent& evt) {
     return !(this->m_frameFlags & 0x200000) || this->IsProtected();
 }
 
-// OFFSET: 0x00503350
+// OFFSET: 0x00503350/0x140149450
 int32_t CSimpleFrame::OnLayerKeyUp(const CKeyEvent& evt) {
     if (!this->m_visible || !this->HasScript(this->m_onKeyUp)) {
         return 0;
@@ -988,6 +988,7 @@ int32_t CSimpleFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) 
     return 0;
 }
 
+// PROVEN: 67a4f9c1 DIFFERENT/IDENTICAL
 // OFFSET: 0x00503480/0x1401495B0
 int32_t CSimpleFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     if (!btn) {
@@ -1034,7 +1035,7 @@ int32_t CSimpleFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
     return 1;
 }
 
-// OFFSET: 0x005035B0
+// OFFSET: 0x005035B0/0x140149720
 void CSimpleFrame::OnDragStart(const CMouseEvent& evt) {
     uint32_t button = 0;
 
@@ -1138,7 +1139,7 @@ void CSimpleFrame::OnLayerShow() {
     this->NotifyScrollParent();
 }
 
-// PROVEN: ac25ec01 IDENTICAL/NONE
+// PROVEN: ac25ec01 IDENTICAL/DIFFERENT
 // OFFSET: 0x00503A00/0x140149D40
 void CSimpleFrame::OnLayerHide() {
     if (this->HasScript(this->m_onHide) && !this->m_isLoading) {
@@ -1155,7 +1156,7 @@ void CSimpleFrame::OnFrameSizeChanged(float width, float height) {
     this->NotifyScrollParent();
 }
 
-// OFFSET: 0x00503A70
+// OFFSET: 0x00503A70/0x140149E50
 void CSimpleFrame::PreLoadXML(linkObject* node, CStatus* status) {
     if (node->m_flags & 0x1000000) {
         this->SetName(node->m_name.m_string);
@@ -1238,21 +1239,21 @@ void CSimpleFrame::SetBackdrop(CBackdropGenerator* backdrop) {
     this->m_backdropGenerator = backdrop;
 }
 
-// PROVEN: 8b299b45 IDENTICAL/DIFFERENT
+// PROVEN: 8b299b45 IDENTICAL/IDENTICAL
 // OFFSET: 0x005040A0/0x14014A600
 void CSimpleFrame::EnableDrawLayer(uint32_t drawLayer) {
     this->m_drawLayerEnabled |= 1 << drawLayer;
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// PROVEN: 3697ac9a IDENTICAL/DIFFERENT
+// PROVEN: 3697ac9a IDENTICAL/IDENTICAL
 // OFFSET: 0x005040E0/0x14014A640
 void CSimpleFrame::DisableDrawLayer(uint32_t drawLayer) {
     this->m_drawLayerEnabled &= ~(1 << drawLayer);
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// OFFSET: 0x00505470
+// OFFSET: 0x00505470/0x14014BE40
 void CSimpleFrame::RegisterRegion(CSimpleRegion* region) {
     if (!region) {
         DebugValidate("region");
@@ -1274,6 +1275,7 @@ void CSimpleFrame::UnregisterRegion(CSimpleRegion* region) {
     this->m_regions.UnlinkNode(region);
 }
 
+// PROVEN: 8f8d358a IDENTICAL/DIFFERENT
 // OFFSET: 0x005054B0/0x14014BE80
 void CSimpleFrame::AddFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     region->SetLayoutScale(this->m_layoutScale, false);
@@ -1281,13 +1283,14 @@ void CSimpleFrame::AddFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
+// PROVEN: 5baef935 IDENTICAL/DIFFERENT
 // OFFSET: 0x00504150/0x14014A6F0
 void CSimpleFrame::RemoveFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     this->m_drawLayers[drawLayer].UnlinkNode(region);
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// PROVEN: fcbe4345 IDENTICAL/DIFFERENT
+// PROVEN: fcbe4345 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504FB0/0x14014B890
 void CSimpleFrame::OnLayerUpdate(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
@@ -1317,8 +1320,8 @@ void CSimpleFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// PROVEN: d01bb310 IDENTICAL/NONE
-// OFFSET: 0x00505260
+// PROVEN: d01bb310 IDENTICAL/IDENTICAL
+// OFFSET: 0x00505260/0x14014BC30
 void CSimpleFrame::OnScreenSizeChanged() {
     for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
         nextRegion = this->m_regions.RawNext(region);
@@ -1326,8 +1329,8 @@ void CSimpleFrame::OnScreenSizeChanged() {
     }
 }
 
-// PROVEN: a6958dfb IDENTICAL/NONE
-// OFFSET: 0x005052A0
+// PROVEN: a6958dfb IDENTICAL/IDENTICAL
+// OFFSET: 0x005052A0/0x14014BC80
 void CSimpleFrame::OnLayerCursorEnter(int32_t a2) {
     if (this->m_hoverFrame) {
         this->m_hoverFrame->Show();
@@ -1341,7 +1344,7 @@ void CSimpleFrame::OnLayerCursorEnter(int32_t a2) {
     this->RunOnEnterScript(a2);
 }
 
-// PROVEN: 75014645 IDENTICAL/NONE
+// PROVEN: 75014645 IDENTICAL/IDENTICAL
 // OFFSET: 0x00505320/0x14014BD20
 void CSimpleFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     if (this->m_hoverFrame) {
@@ -1361,7 +1364,7 @@ void CSimpleFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     this->RunOnLeaveScript(a2);
 }
 
-// PROVEN: 7611dd38 IDENTICAL/DIFFERENT
+// PROVEN: 7611dd38 IDENTICAL/IDENTICAL
 // OFFSET: 0x005053B0/0x14014BDD0
 void CSimpleFrame::LockHighlight(int32_t lock) {
     if (lock == this->m_highlightLocked) {
@@ -1379,13 +1382,14 @@ void CSimpleFrame::LockHighlight(int32_t lock) {
     }
 }
 
-// OFFSET: 0x005058F0
+// PROVEN: f73d6996 IDENTICAL/DIFFERENT
+// OFFSET: 0x005058F0/0x14014C430
 void CSimpleFrame::ParentFrame(CSimpleFrame* child) {
     SIMPLEFRAMENODE* node = this->m_children.NewNode(2, 0, 0);
     node->m_frame = child;
 }
 
-// PROVEN: e2c67e18 IDENTICAL/DIFFERENT
+// PROVEN: e2c67e18 IDENTICAL/IDENTICAL
 // OFFSET: 0x00503B10/0x140149F10
 void CSimpleFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onEvent, time, count);
@@ -1515,7 +1519,7 @@ void CSimpleFrame::SetFrameLevel(int32_t level, int32_t shiftChildren) {
     }
 }
 
-// OFFSET: 0x00505A10
+// OFFSET: 0x00505A10/0x14014C590
 void CSimpleFrame::UnparentFrame(CSimpleFrame* child) {
     for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
         if (node->m_frame == child) {
@@ -1582,7 +1586,7 @@ void CSimpleFrame::SetParent(CSimpleFrame* parent) {
     }
 }
 
-// PROVEN: b081319b IDENTICAL/DIFFERENT
+// PROVEN: b081319b IDENTICAL/IDENTICAL
 // OFFSET: 0x005041C0/0x14014A770
 int32_t CSimpleFrame::AreChildrenProtected(int32_t& deferred) {
     for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
@@ -1597,7 +1601,7 @@ int32_t CSimpleFrame::AreChildrenProtected(int32_t& deferred) {
     return 0;
 }
 
-// OFFSET: 0x00504220
+// OFFSET: 0x00504220/0x14014A7F0
 bool CSimpleFrame::GetBoundsRect(CRect& rect) {
     CRect frameRect(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -1638,7 +1642,7 @@ bool CSimpleFrame::GetBoundsRect(CRect& rect) {
     return rect.maxY > rect.minY && rect.maxX > rect.minX;
 }
 
-// PROVEN: 605b64c5 IDENTICAL/NONE
+// PROVEN: 605b64c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504400/0x14014AA00
 bool CSimpleFrame::UpdateScale(bool force) {
     float scale = this->m_frameScale;
@@ -1666,7 +1670,7 @@ bool CSimpleFrame::UpdateScale(bool force) {
     return true;
 }
 
-// PROVEN: ac34c512 IDENTICAL/NONE
+// PROVEN: ac34c512 IDENTICAL/IDENTICAL
 // OFFSET: 0x00504500/0x14014AB10
 void CSimpleFrame::UpdateAlpha() {
     for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
@@ -1687,7 +1691,7 @@ void CSimpleFrame::UpdateAlpha() {
     }
 }
 
-// OFFSET: 0x005045A0
+// OFFSET: 0x005045A0/0x14014ABE0
 bool CSimpleFrame::UpdateDepth(bool force) {
     float depth = this->m_parentDepth + this->m_depth;
 
@@ -1774,8 +1778,8 @@ void CSimpleFrame::ShowThis(bool loadPending) {
     this->OnLayerShow();
 }
 
-// PROVEN: 9981fbcb IDENTICAL/NONE
-// OFFSET: 0x00504AB0
+// PROVEN: 9981fbcb IDENTICAL/IDENTICAL
+// OFFSET: 0x00504AB0/0x14014B220
 void CSimpleFrame::StopAnimating() {
     CScriptRegion::StopAnimating();
 
@@ -1790,7 +1794,7 @@ void CSimpleFrame::StopAnimating() {
     }
 }
 
-// PROVEN: b864c45b IDENTICAL/NONE
+// PROVEN: b864c45b IDENTICAL/DIFFERENT
 // OFFSET: 0x00504B30/0x14014B2B0
 void CSimpleFrame::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
@@ -1818,8 +1822,8 @@ void CSimpleFrame::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t
     }
 }
 
-// PROVEN: db146ffa IDENTICAL/NONE
-// OFFSET: 0x00504C00
+// PROVEN: db146ffa IDENTICAL/IDENTICAL
+// OFFSET: 0x00504C00/0x14014B3B0
 void CSimpleFrame::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (alpha) {
         uint8_t value = this->AnimData_GetAlpha();
@@ -1853,8 +1857,8 @@ void CSimpleFrame::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32
     }
 }
 
-// PROVEN: 7e98ed5e IDENTICAL/NONE
-// OFFSET: 0x00504CD0
+// PROVEN: 7e98ed5e IDENTICAL/IDENTICAL
+// OFFSET: 0x00504CD0/0x14014B4C0
 void CSimpleFrame::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
     if (!region || region == this) {
         region = NULL;
@@ -1871,8 +1875,8 @@ void CSimpleFrame::AddAnimTranslation(CScriptRegion* region, const C2Vector& tra
     }
 }
 
-// PROVEN: 3a87e348 IDENTICAL/NONE
-// OFFSET: 0x00504D60
+// PROVEN: 3a87e348 IDENTICAL/IDENTICAL
+// OFFSET: 0x00504D60/0x14014B580
 void CSimpleFrame::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     if (!region || region == this) {
         region = NULL;
@@ -1889,8 +1893,8 @@ void CSimpleFrame::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, con
     }
 }
 
-// PROVEN: 45486cf1 IDENTICAL/NONE
-// OFFSET: 0x00504E10
+// PROVEN: 45486cf1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00504E10/0x14014B670
 void CSimpleFrame::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     if (!region || region == this) {
         region = NULL;
@@ -2377,7 +2381,7 @@ void CSimpleFrame::MarkDirty() {
     }
 }
 
-// PROVEN: 05100265 IDENTICAL/DIFFERENT
+// PROVEN: 05100265 IDENTICAL/IDENTICAL
 // OFFSET: 0x0046A7C0/0x14007ED40
 int32_t CSimpleFrame::IsObjectLoaded() {
     for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {

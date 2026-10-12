@@ -49,7 +49,7 @@ int32_t BGLoading::BGLoadManager::SkipLocalData(Blizzard::Mopaq::HSFILERecord* f
     return 1;
 }
 
-// OFFSET: 0x007A1FD0
+// OFFSET: 0x007A1FD0/0x1404991C0
 bool BGLoading::BGLoadManager::Shutdown() {
     if (!this->m_thread || !Blizzard::Thread::IsRunning(this->m_thread)) {
         this->CloseBackgroundFiles();
@@ -280,8 +280,8 @@ BGLoading::BGLoadManager* BGLoading::BGLoadManager::Get() {
     return &s_manager;
 }
 
-// PROVEN: 6608aa26 IDENTICAL/NONE
-// OFFSET: 0x007A1EA0
+// PROVEN: 6608aa26 IDENTICAL/UNPROVEN
+// OFFSET: 0x007A1EA0/0x140498740
 void BGLoading::BGLoadManager::CloseBackgroundFiles() {
     this->AppendNewBGFiles();
 
@@ -305,7 +305,7 @@ void BGLoading::BGLoadManager::QueueArchiveFiles() {
     }
 }
 
-// OFFSET: 0x007A0040
+// OFFSET: 0x007A0040/0x140495B90
 double BGLoading::BGLoadManager::GetDownloadedPercentage() {
     uint32_t now = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
 
@@ -381,8 +381,8 @@ float BGLoading::GetBandwidth() {
     return 0.0f;
 }
 
-// PROVEN: 5bc76dbb IDENTICAL/NONE
-// OFFSET: 0x007A28D0
+// PROVEN: 5bc76dbb IDENTICAL/DIFFERENT
+// OFFSET: 0x007A28D0/0x1404992E0
 double BGLoading::GetDownloadedPercentage() {
     if (!Blizzard::Streaming::IsStreamingMode()) {
         return 1.0;
@@ -408,8 +408,8 @@ bool BGLoading::QueueFile(const char* name) {
     return BGLoadManager::Get()->QueueFile(name);
 }
 
-// PROVEN: 7cb399bc IDENTICAL/NONE
-// OFFSET: 0x007A2930
+// PROVEN: 7cb399bc IDENTICAL/DIFFERENT
+// OFFSET: 0x007A2930/0x140499440
 void BGLoading::Pause(bool pause) {
     if (Blizzard::Streaming::IsStreamingMode()) {
         BGLoadManager::Get()->m_paused = pause;

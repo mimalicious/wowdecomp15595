@@ -17,7 +17,7 @@ struct VideoDeviceID {
     /* 0002 */ uint16_t m_deviceID;
 };
 
-// STATIC: 0x00CC90B8
+// STATIC: 0x00CC90B8/0x140B695A0
 static const char* s_hwRegNames[] = { "HWCpuIdx", "HWMemIdx", "HWVideoID", "HWSoundIdx" };
 
 // STATIC: 0x00CC90C8
@@ -38,6 +38,7 @@ static const VideoDeviceID s_midEndDevices[] = {
     { 0, 0 },
 };
 
+// PROVEN: 4c38f067 IDENTICAL/IDENTICAL
 // OFFSET: 0x00637440/0x1402CE080
 static int CompareResolutions(const void* a, const void* b) {
     const C2iVector* left = static_cast<const C2iVector*>(a);
@@ -258,7 +259,7 @@ static void AddResolution(TSGrowableArray<C2iVector>& resolutions, const C2iVect
     resolutions.New(resolution);
 }
 
-// OFFSET: 0x00637C90
+// OFFSET: 0x00637C90/0x1402CEB30
 void ConsoleDetectGetResolutions(TSGrowableArray<C2iVector>& resolutions, uint32_t monitor, int32_t sort) {
     resolutions.SetCount(0);
 

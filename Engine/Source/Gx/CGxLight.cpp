@@ -68,7 +68,3 @@ CGxApiLight& CGxApiLight::operator=(const CGxLight& light) {
 
     return *this;
 }
-
-// INLINED
-CGxApiLight::CGxApiLight() : m_dir(), m_constantAttenuation(0.0f), m_linearAttenuation(0.0f), m_quadraticAttenuation(0.0f) {
-}

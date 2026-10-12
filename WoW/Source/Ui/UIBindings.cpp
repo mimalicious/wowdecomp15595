@@ -29,7 +29,7 @@
 #include "WoW/Source/Ui/WorldFrame.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/AccountData.h"
 
-// STATIC: 0x00D115A4
+// STATIC: 0x00D115A4/0x140BC7F88
 static CGUIBindingsStatus s_bindingsStatus;
 
 // STATIC: 0x00D115B8
@@ -84,13 +84,13 @@ static BINDINGPREFIX s_modifierPrefixes[3] = {
     { "ALT-", 4 },
 };
 
-// STATIC: 0x00F33EA8
+// STATIC: 0x00F33EA8/0x140E26EA0
 static uint32_t s_loadPendingMask;
 
-// STATIC: 0x00F33EAC
+// STATIC: 0x00F33EAC/0x140E26EA8
 CGUIBindings* CGUIBindings::s_bindings;
 
-// STATIC: 0x00F33EB0
+// STATIC: 0x00F33EB0/0x140E26EA4
 static uint16_t s_initRound;
 
 // STATIC: 0x00F33EB4
@@ -99,7 +99,7 @@ static TSHashTable<CLICKFRAME, HASHKEY_STR> s_clickFrames;
 // STATIC: 0x00F33EE0
 static char s_keyName[8];
 
-// STATIC: 0x00F33EE8
+// STATIC: 0x00F33EE8/0x140E26EB8
 static char s_bindKey[2];
 
 // OFFSET: 0x009211F0/0x140683A30
@@ -260,7 +260,7 @@ static const char* GetKeyName(KEY key) {
     }
 }
 
-// OFFSET: 0x009240C0
+// OFFSET: 0x009240C0/0x140130BA0
 void CGUIBindingsStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     char buffer[512];
 
@@ -374,6 +374,7 @@ int32_t CGUIBindings::AddMetaPrefix(uint32_t modifiers, char*& binding, int32_t&
     return maxLength >= 0;
 }
 
+// PROVEN: eb78bfd8 DIFFERENT/IDENTICAL
 // OFFSET: 0x00920E50/0x1406835C0
 void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     while (*binding) {
@@ -414,6 +415,7 @@ void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     }
 }
 
+// PROVEN: 28d3adfe IDENTICAL/DIFFERENT
 // OFFSET: 0x00925DA0/0x14068AF10
 void CGUIBindings::Initialize() {
     CGUIBindings::s_bindings = new (SMemAlloc(sizeof(CGUIBindings), __FILE__, __LINE__, 0)) CGUIBindings();
@@ -423,6 +425,7 @@ void CGUIBindings::Initialize() {
     } while (!s_initRound);
 }
 
+// PROVEN: c2c33900 IDENTICAL/DIFFERENT
 // OFFSET: 0x009218D0/0x140684890
 char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_t maxLength) {
     uint32_t modifiers = evt.m_data.m_metaKeyState;
@@ -452,6 +455,7 @@ char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_
     return result;
 }
 
+// PROVEN: 74fae6b2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00927C00/0x14068D6D0
 void CGUIBindings::LoadBindings() {
     void* data;
@@ -479,6 +483,7 @@ void CGUIBindings::LoadBindings() {
     LoadAccountData(3, CGUIBindings::LoadBindingsCallback, reinterpret_cast<void*>(static_cast<uintptr_t>((s_initRound << 16) | BINDING_SET_CHARACTER)));
 }
 
+// PROVEN: 874dbb4c IDENTICAL/UNPROVEN
 // OFFSET: 0x00927A00/0x14068D410
 void CGUIBindings::LoadBindings(BINDING_SET set, const char* data) {
     CGUIBindings* bindings = CGUIBindings::s_bindings;
@@ -623,6 +628,7 @@ void CGUIBindings::SaveBindings() {
     }
 }
 
+// PROVEN: 0d8d2942 IDENTICAL/IDENTICAL
 // OFFSET: 0x00921F20/0x1406851E0
 void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     BINDING_SET set = static_cast<BINDING_SET>(reinterpret_cast<uintptr_t>(param));
@@ -632,6 +638,7 @@ void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* p
     }
 }
 
+// PROVEN: d93323d1 IDENTICAL/NONE
 // OFFSET: 0x00925F70
 void CGUIBindings::Shutdown() {
     if (CGUIBindings::s_bindings) {
@@ -643,6 +650,7 @@ void CGUIBindings::Shutdown() {
     s_initRound++;
 }
 
+// PROVEN: 76723f38 IDENTICAL/IDENTICAL
 // OFFSET: 0x00920D20/0x140683440
 void CGUIBindings::StripModifiers(uint32_t& modifiers, const char* binding) {
     while (*binding) {
@@ -706,7 +714,7 @@ CGUIBindings::~CGUIBindings() {
     this->m_modifiedClicks.Clear();
 }
 
-// OFFSET: 0x009226E0
+// OFFSET: 0x009226E0/0x140685D60
 void CGUIBindings::AdjustCommandKeyIndices(BINDING_SET set, BINDING_MODE mode, const char* command, int32_t index) {
     for (KEYBINDING* binding = this->m_bindings[set].m_fulllist.Head(); binding; binding = this->m_bindings[set].m_fulllist.Next(binding)) {
         if (this->GetBindingCommand(binding, mode) && !SStrCmpI(this->GetBindingCommand(binding, mode), command, STORM_MAX_STR) && this->GetBindingIndex(binding, mode) > index) {
@@ -894,7 +902,8 @@ void CGUIBindings::CopyBindings(BINDING_SET source, BINDING_SET dest) {
     }
 }
 
-// OFFSET: 0x00921BF0
+// PROVEN: c3bf2d78 DIFFERENT/IDENTICAL
+// OFFSET: 0x00921BF0/0x140684C80
 void CGUIBindings::EnableBindingMode(BINDING_MODE mode, int32_t enable) {
     if (!mode) {
         return;
@@ -1166,7 +1175,7 @@ const char* CGUIBindings::GetCommandAction(BINDING_MODE mode, const char* key, i
     return NULL;
 }
 
-// OFFSET: 0x009224F0
+// OFFSET: 0x009224F0/0x140685920
 const char* CGUIBindings::GetCommandKey(BINDING_MODE mode, const char* command, int32_t index) {
     for (KEYBINDING* binding = this->m_bindings[BINDING_SET_CURRENT].m_fulllist.Head(); binding; binding = this->m_bindings[BINDING_SET_CURRENT].m_fulllist.Next(binding)) {
         if (this->GetBindingCommand(binding, mode) && !SStrCmpI(this->GetBindingCommand(binding, mode), command, STORM_MAX_STR) && this->GetBindingIndex(binding, mode) == index) {
@@ -1390,6 +1399,7 @@ int32_t CGUIBindings::IsModifiedClick(const char* action) {
     return result;
 }
 
+// PROVEN: c6a2bba2 DIFFERENT/IDENTICAL
 // OFFSET: 0x00927F60/0x14068DB10
 int32_t CGUIBindings::Load(const char* file, MD5_CTX* md5, CStatus* status) {
     if (!status) {
@@ -1655,6 +1665,7 @@ int32_t MouseButtonToIndex(uint32_t button) {
     }
 }
 
+// PROVEN: a47df421 DIFFERENT/IDENTICAL
 // OFFSET: 0x004DB960/0x1406842E0
 MOUSEBUTTON StringToMouseButton(const char* string) {
     if (!string || !*string) {

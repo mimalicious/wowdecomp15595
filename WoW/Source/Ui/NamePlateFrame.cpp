@@ -30,79 +30,79 @@
 #include "WoW/Source/Ui/RaidInfo.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// STATIC: 0x00F7636C
+// STATIC: 0x00F7636C/0x140E6C3C8
 static CVar* s_cvNamePlateStyle;
 
-// STATIC: 0x00F76368
+// STATIC: 0x00F76368/0x140E6C3C0
 static CVar* s_cvBloatTest;
 
-// STATIC: 0x00F76364
+// STATIC: 0x00F76364/0x140E6C3B8
 static CVar* s_cvBloatNamePlates;
 
-// STATIC: 0x00F76360
+// STATIC: 0x00F76360/0x140E6C3B0
 static CVar* s_cvBloatThreat;
 
-// STATIC: 0x00F7635C
+// STATIC: 0x00F7635C/0x140E6C3A8
 CVar* CGNamePlateFrame::s_cvNamePlateMotion;
 
-// STATIC: 0x00F76358
+// STATIC: 0x00F76358/0x140E6C3A0
 static CVar* s_cvMaxAlgoPlates;
 
-// STATIC: 0x00F76354
+// STATIC: 0x00F76354/0x140E6C398
 static CVar* s_cvRepositionFrequency;
 
-// STATIC: 0x00F76350
+// STATIC: 0x00F76350/0x140E6C390
 static CVar* s_cvNamePlateOverlapH;
 
-// STATIC: 0x00F7634C
+// STATIC: 0x00F7634C/0x140E6C388
 static CVar* s_cvNamePlateOverlapV;
 
-// STATIC: 0x00F76370
+// STATIC: 0x00F76370/0x140E6C3D0
 CGNamePlateFrame* CGUnit_C::s_namePlateFocus;
 
-// STATIC: 0x00F76374
+// STATIC: 0x00F76374/0x140E6C3D8
 uint32_t CGUnit_C::s_namePlateFlags;
 
-// STATIC: 0x00F76378
+// STATIC: 0x00F76378/0x140E6C3DC
 static int32_t s_namePlateCount;
 
-// STATIC: 0x00F7637C
+// STATIC: 0x00F7637C/0x140E6C3E0
 static uint32_t s_lastRepositionTime;
 
-// STATIC: 0x00F76380
+// STATIC: 0x00F76380/0x140E6C3E4
 static uint32_t s_repositionCounter;
 
-// STATIC: 0x00F76384
+// STATIC: 0x00F76384/0x140E6C3E8
 CDataAllocator CGNamePlateFrame::s_namePlateHeap(sizeof(CGNamePlateFrame), 5);
 
-// STATIC: 0x00F76398
+// STATIC: 0x00F76398/0x140E6C408
 static TSGrowableArray<CGNamePlateFrame*> s_sortedPlates;
 
-// STATIC: 0x00C0A270
+// STATIC: 0x00C0A270/0x140A03400
 static const int32_t s_greenLevelRanges[20] = { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
 
-// STATIC: 0x00D16AA8
+// STATIC: 0x00D16AA8/0x140BD10D0
 static float s_namePlateWidth = 0.09f;
 
-// STATIC: 0x00D16AAC
+// STATIC: 0x00D16AAC/0x140BD10D4
 static float s_namePlateHeight = 0.025f;
 
-// STATIC: 0x00D16ACC
+// STATIC: 0x00D16ACC/0x140BD110C
 static CImVector s_friendlyPlayerColor = CImVector(0xFF, 0x00, 0x00, 0xFF);
 
-// STATIC: 0x00D16AD0
+// STATIC: 0x00D16AD0/0x140BD1110
 static CImVector s_friendlyColor = CImVector(0x00, 0xFF, 0x00, 0xFF);
 
-// STATIC: 0x00D16AD4
+// STATIC: 0x00D16AD4/0x140BD1114
 static CImVector s_neutralColor = CImVector(0x00, 0xFF, 0xFF, 0xFF);
 
-// STATIC: 0x00D16AD8
+// STATIC: 0x00D16AD8/0x140BD1118
 static CImVector s_hostileColor = CImVector(0x00, 0x00, 0xFF, 0xFF);
 
-// STATIC: 0x00D16ADC
+// STATIC: 0x00D16ADC/0x140BD111C
 static CImVector s_levelTextColor = CImVector(0xFF, 0xFF, 0xFF, 0xFF);
 
-// STATIC: 0x00D16AE0
+// STATIC: 0x00D16AE0/0x140BD1120
 static CImVector s_classColors[12] = {
     CImVector(0x00, 0x00, 0x00, 0xFF),
     CImVector(0x6D, 0x9B, 0xC6, 0xFF),
@@ -118,10 +118,10 @@ static CImVector s_classColors[12] = {
     CImVector(0x0A, 0x7C, 0xFF, 0xFF),
 };
 
-// STATIC: 0x00D16B10
+// STATIC: 0x00D16B10/0x140BD1160
 TSList<CGNamePlateFrame> CGNamePlateFrame::s_namePlates;
 
-// STATIC: 0x00D16B1C
+// STATIC: 0x00D16B1C/0x140BD1168
 TSList<CGNamePlateFrame> CGNamePlateFrame::s_unusedNamePlates;
 
 // INLINED
@@ -139,6 +139,7 @@ static float NamePlateScreenCenterDistanceSquared(C3Vector position) {
     return delta2.x * delta2.x + delta2.y * delta2.y;
 }
 
+// PROVEN: f4dfa202 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7180/0x14077FA50
 void CGNamePlateFrame::RegisterCVars() {
     s_cvNamePlateStyle = CVar::Register("NamePlateStlye", "Template used to create nameplates", 257, "", NULL, 1, false, NULL, false);
@@ -152,12 +153,13 @@ void CGNamePlateFrame::RegisterCVars() {
     s_cvNamePlateOverlapV = CVar::Register("nameplateOverlapV", "Percentage amount for vertical overlap of nameplates", 17, "0.8", NULL, 1, false, NULL, false);
 }
 
-// PROVEN: c903ef18 IDENTICAL/NONE
+// PROVEN: c903ef18 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E72E0/0x14077FCA0
 CGNamePlateFrame* CGNamePlateFrame::GetNamePlateFocus() {
     return CGUnit_C::s_namePlateFocus;
 }
 
+// PROVEN: f184d2ce IDENTICAL/IDENTICAL
 // OFFSET: 0x009E72F0/0x14077FCB0
 void CGUnit_C::NamePlateSetResortAll(bool enable) {
     if (enable) {
@@ -167,6 +169,7 @@ void CGUnit_C::NamePlateSetResortAll(bool enable) {
     }
 }
 
+// PROVEN: 453941c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7310/0x14077FCD0
 void CGUnit_C::NamePlateUpdateLevels(bool enable) {
     if (enable) {
@@ -176,6 +179,7 @@ void CGUnit_C::NamePlateUpdateLevels(bool enable) {
     }
 }
 
+// PROVEN: 8c91925f IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7330/0x14077FCF0
 void CGUnit_C::NamePlateUpdateColor(bool enable) {
     if (enable) {
@@ -185,11 +189,13 @@ void CGUnit_C::NamePlateUpdateColor(bool enable) {
     }
 }
 
-// OFFSET: 0x009E7350
+// PROVEN: 131c46b7 IDENTICAL/IDENTICAL
+// OFFSET: 0x009E7350/0x14077FD10
 uint32_t CGUnit_C::GetNamePlateFlags() {
     return s_namePlateFlags;
 }
 
+// PROVEN: c23b60cd IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7360/0x14077FD20
 void CGNamePlateFrame::UpdateNameDisplay(const CGUnit_C* unit) {
     if (this->m_unitNameText) {
@@ -197,6 +203,7 @@ void CGNamePlateFrame::UpdateNameDisplay(const CGUnit_C* unit) {
     }
 }
 
+// PROVEN: df659d44 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7390/0x14077FD60
 void CGNamePlateFrame::UpdateCastBarSize() {
     if (this->m_scripted) {
@@ -226,18 +233,21 @@ static int32_t UpdateStackDepth(CGNamePlateFrame* frame, int32_t depth) {
     return result;
 }
 
+// PROVEN: d15a7fc9 IDENTICAL/NONE
 // OFFSET: 0x009E74E0
 void CGNamePlateFrame::SetFrameStrata(FRAME_STRATA strata) {
     CSimpleFrame::SetFrameStrata(strata);
 }
 
-// OFFSET: 0x009E7610
+// PROVEN: 357851f8 DIFFERENT/IDENTICAL
+// OFFSET: 0x009E7610/0x1407800F0
 static void SetNumberText(CSimpleFontString* string, int32_t value) {
     char text[32];
     SStrPrintf(text, sizeof(text), "%d", value);
     string->SetText(text, 1);
 }
 
+// PROVEN: a7ab68ac IDENTICAL/NONE
 // OFFSET: 0x009E7650
 void CGNamePlateFrame::SetScreenRect(const CRect& rect) {
     if (this->m_screenRect.minY != rect.minY || this->m_screenRect.minX != rect.minX || this->m_screenRect.maxY != rect.maxY || this->m_screenRect.maxX != rect.maxX) {
@@ -246,17 +256,20 @@ void CGNamePlateFrame::SetScreenRect(const CRect& rect) {
     }
 }
 
+// PROVEN: 335b5a8b IDENTICAL/IDENTICAL
 // OFFSET: 0x009E76D0/0x140780130
 bool CGNamePlateFrame::IsBloatThreat() {
     return s_cvBloatThreat->m_intValue > 0;
 }
 
-// OFFSET: 0x009E76E0
+// PROVEN: dc24b233 IDENTICAL/IDENTICAL
+// OFFSET: 0x009E76E0/0x140780140
 int32_t CGNamePlateFrame::GetNamePlateMotion() {
     return CGNamePlateFrame::s_cvNamePlateMotion->m_intValue;
 }
 
-// OFFSET: 0x009E76F0
+// PROVEN: b1837e23 IDENTICAL/IDENTICAL
+// OFFSET: 0x009E76F0/0x140780150
 float CGNamePlateFrame::GetBloatNamePlates() {
     return s_cvBloatNamePlates->m_floatValue;
 }
@@ -313,6 +326,7 @@ bool CGNamePlateFrame::SetBloat(float bloat, bool force) {
     return true;
 }
 
+// PROVEN: 87c23b41 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7C00/0x1407807E0
 void CGNamePlateFrame::TriggerDamageFeedback() {
     CImVector color(0, 0, 0xFF, 0xFF);
@@ -323,6 +337,7 @@ void CGNamePlateFrame::TriggerDamageFeedback() {
     }
 }
 
+// PROVEN: 930fe4f4 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E7C40/0x140780820
 static const CImVector* GetDifficultyColor(int32_t level, int32_t playerLevel) {
     static CImVector s_difficultyColors[5] = {
@@ -356,6 +371,7 @@ static const CImVector* GetDifficultyColor(int32_t level, int32_t playerLevel) {
     return &s_difficultyColors[4];
 }
 
+// PROVEN: ba57a66e IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7D30/0x140780940
 void CGNamePlateFrame::UpdateEliteIcon(CGUnit_C* unit) {
     if (!this->m_eliteNameplateIcon) {
@@ -371,6 +387,7 @@ void CGNamePlateFrame::UpdateEliteIcon(CGUnit_C* unit) {
     }
 }
 
+// PROVEN: 55034d75 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E7DA0/0x1407809E0
 void CGNamePlateFrame::UpdateRaidTargetDisplay(uint32_t raidTarget) {
     if (!this->m_raidTargetingIcon) {
@@ -394,7 +411,7 @@ void CGNamePlateFrame::UpdateRaidTargetDisplay(uint32_t raidTarget) {
     this->m_raidTargetingIcon->Show();
 }
 
-// OFFSET: 0x009E7E50
+// OFFSET: 0x009E7E50/0x140780AA0
 void CGNamePlateFrame::HideCastBar() {
     if (!this->m_castBar->m_shown) {
         return;
@@ -406,6 +423,7 @@ void CGNamePlateFrame::HideCastBar() {
     this->m_castFadeTime = 0.0f;
 }
 
+// PROVEN: 05b5c263 DIFFERENT/IDENTICAL
 // OFFSET: 0x009E7E90/0x140780AE0
 void CGNamePlateFrame::SetScreenCoordsAndRectangle(C3Vector position) {
     CSimpleFrame* parent = this->m_parent;
@@ -448,6 +466,7 @@ static int32_t __cdecl CompareNamePlates(const void* a, const void* b) {
     return yB <= yA ? 1 : -1;
 }
 
+// PROVEN: 62c7e379 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E8180/0x140780E50
 static int32_t GetAdjustedLevel(CGPlayer_C* player, CGUnit_C* unit) {
     int32_t level = static_cast<int32_t>(unit->m_unit->m_unitFieldLevel);
@@ -463,6 +482,7 @@ static int32_t GetAdjustedLevel(CGPlayer_C* player, CGUnit_C* unit) {
     return level;
 }
 
+// PROVEN: cd7978df IDENTICAL/DIFFERENT
 // OFFSET: 0x009E81F0/0x140780ED0
 void CGNamePlateFrame::OnGainFocus() {
     if (this->m_namePlateGlow) {
@@ -477,6 +497,7 @@ void CGNamePlateFrame::OnGainFocus() {
     this->EnableDrawLayer(4);
 }
 
+// PROVEN: c182cdcf IDENTICAL/DIFFERENT
 // OFFSET: 0x009E8250/0x140780F40
 void CGNamePlateFrame::OnLoseFocus() {
     if (this->m_namePlateGlow) {
@@ -491,7 +512,7 @@ void CGNamePlateFrame::OnLoseFocus() {
     this->DisableDrawLayer(4);
 }
 
-// OFFSET: 0x009E82B0
+// OFFSET: 0x009E82B0/0x140780FB0
 void CGNamePlateFrame::OnLayerUpdate(float elapsedSec) {
     if (CGNamePlateFrame::s_cvNamePlateMotion->m_intValue == 1) {
         float delta = this->m_targetOffsetY - this->m_offset.y;
@@ -656,7 +677,7 @@ void CGNamePlateFrame::UpdateColorDisplay(CGUnit_C* unit) {
     this->m_healthBar->SetStatusBarColor(this->m_healthBarColor);
 }
 
-// OFFSET: 0x009E88D0
+// OFFSET: 0x009E88D0/0x1407816C0
 void CGNamePlateFrame::UpdateLevelDisplay(CGUnit_C* unit) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -772,7 +793,8 @@ void CGNamePlateFrame::SetCastBarValues(float minValue, float maxValue, float va
     }
 }
 
-// OFFSET: 0x009E8E80
+// PROVEN: 66d4e6e4 IDENTICAL/IDENTICAL
+// OFFSET: 0x009E8E80/0x140781C40
 void CGUnit_C::NamePlateClearAll() {
     CGNamePlateFrame* frame = CGNamePlateFrame::s_namePlates.Head();
 
@@ -788,7 +810,7 @@ void CGUnit_C::NamePlateClearAll() {
     }
 }
 
-// OFFSET: 0x009E8EE0
+// OFFSET: 0x009E8EE0/0x140781CB0
 void CGUnit_C::SetNamePlateFocus(const C2Vector& position) {
     if (CGInputControl::GetActive()->m_flags & 0x6000003) {
         return;
@@ -825,6 +847,7 @@ void CGUnit_C::SetNamePlateFocus(const C2Vector& position) {
     }
 }
 
+// PROVEN: 960191b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E8FD0/0x140781DD0
 void CGUnit_C::ClearNamePlateFocus() {
     if (CGUnit_C::s_namePlateFocus) {
@@ -834,6 +857,7 @@ void CGUnit_C::ClearNamePlateFocus() {
     CGUnit_C::s_namePlateFocus = NULL;
 }
 
+// PROVEN: 450c42e5 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E8FF0/0x140781E00
 void CGNamePlateFrame::ReleaseNameplateFrame(CGNamePlateFrame* frame) {
     if (frame) {
@@ -841,7 +865,7 @@ void CGNamePlateFrame::ReleaseNameplateFrame(CGNamePlateFrame* frame) {
     }
 }
 
-// OFFSET: 0x009E9010
+// OFFSET: 0x009E9010/0x140781E70
 void CGNamePlateFrame::NamePlateSort(CGNamePlateFrame* frame) {
     CGNamePlateFrame::s_namePlates.UnlinkNode(frame);
 
@@ -857,6 +881,7 @@ void CGNamePlateFrame::NamePlateSort(CGNamePlateFrame* frame) {
     CGNamePlateFrame::s_namePlates.LinkToTail(frame);
 }
 
+// PROVEN: 9507edeb IDENTICAL/NONE
 // OFFSET: 0x009E9240
 void CGNamePlateFrame::DestroyUnusedNameplateFrames() {
     CGNamePlateFrame* frame = CGNamePlateFrame::s_unusedNamePlates.Head();
@@ -869,7 +894,7 @@ void CGNamePlateFrame::DestroyUnusedNameplateFrames() {
     }
 }
 
-// OFFSET: 0x009E92C0
+// OFFSET: 0x009E92C0/0x1407821F0
 void CGNamePlateFrame::Initialize(CGUnit_C* unit) {
     if (this->m_unitNameText) {
         this->m_unitNameText->SetVertexColor(CImVector(0xFFFFFFFF));
@@ -1330,7 +1355,7 @@ CGNamePlateFrame::CGNamePlateFrame(CSimpleFrame* parent) : CSimpleFrame(parent),
 CGNamePlateFrame::~CGNamePlateFrame() {
 }
 
-// OFFSET: 0x009EB4F0
+// OFFSET: 0x009EB4F0/0x140784900
 CGNamePlateFrame* CGNamePlateFrame::GetNewNameplateFrame(CSimpleFrame* parent) {
     CGNamePlateFrame* frame = CGNamePlateFrame::s_unusedNamePlates.Head();
 
@@ -1343,6 +1368,7 @@ CGNamePlateFrame* CGNamePlateFrame::GetNewNameplateFrame(CSimpleFrame* parent) {
     return data ? new (data) CGNamePlateFrame(parent) : NULL;
 }
 
+// PROVEN: 6a7621fc IDENTICAL/NONE
 // OFFSET: 0x005ACCA0
 void CGNamePlateFrame::SetPosition(const C3Vector& position) {
     if (this->m_position.x != position.x || this->m_position.y != position.y || this->m_position.z != position.z) {

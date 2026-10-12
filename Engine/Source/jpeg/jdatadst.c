@@ -77,7 +77,7 @@ static void init_destination(j_compress_ptr cinfo) {
  * write it out when emptying the buffer externally.
  */
 
-// OFFSET: 0x00B5D8B0
+// OFFSET: 0x00B5D8B0/0x140926340
 static boolean empty_output_buffer(j_compress_ptr cinfo) {
   my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
 

@@ -11,7 +11,7 @@ CGGameObject_C_Type_DungeonDifficulty::CGGameObject_C_Type_DungeonDifficulty(CGG
     this->m_disabled = 1;
 }
 
-// PROVEN: 0e1ccec7 IDENTICAL/NONE
+// PROVEN: 0e1ccec7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0059C6D0/0x14020B140
 float CGGameObject_C_Type_DungeonDifficulty::GetBaseAlpha() const {
     if (this->m_owner->m_gameObject->m_dynamicFlags & 2) {
@@ -32,7 +32,7 @@ bool CGGameObject_C_Type_DungeonDifficulty::CanUse() const {
     return false;
 }
 
-// PROVEN: 88d86cb7 IDENTICAL/NONE
+// PROVEN: 88d86cb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00599670/0x140207A70
 void CGGameObject_C_Type_DungeonDifficulty::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     a3 = this->m_disabled;
@@ -49,7 +49,7 @@ void CGGameObject_C_Type_DungeonDifficulty::HandleAnimEvent(uint32_t eventId, ui
     }
 }
 
-// PROVEN: 25d6ef25 IDENTICAL/NONE
+// PROVEN: 25d6ef25 IDENTICAL/IDENTICAL
 // OFFSET: 0x00599660/0x140207A60
 void CGGameObject_C_Type_DungeonDifficulty::PostInitWithStats() {
     this->UpdateDisabled();

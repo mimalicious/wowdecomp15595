@@ -219,6 +219,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecOggVorbis::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: a1d0dc4c UNPROVEN/IDENTICAL
 // OFFSET: 0x00ABAF60/0x140882170
 FMOD_RESULT CodecOggVorbis::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -582,7 +583,7 @@ FMOD_RESULT CodecOggVorbis::setPositionInternal(int subsound, unsigned int posit
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 003c645a IDENTICAL/UNPROVEN
+// PROVEN: 003c645a IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABAE30/0x140881FF0
 FMOD_RESULT CodecOggVorbis::readVorbisComments()
 {

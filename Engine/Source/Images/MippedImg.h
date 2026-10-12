@@ -13,4 +13,6 @@ MipBits* MippedImgAllocA(uint32_t format, uint32_t width, uint32_t height, const
 uint32_t MippedImgCalcSize(uint32_t format, uint32_t width, uint32_t height);
 void MippedImgSet(uint32_t format, uint32_t width, uint32_t height, MipBits* images);
 
+#include "Engine/Source/Images/MippedImg.inl"
+
 #endif

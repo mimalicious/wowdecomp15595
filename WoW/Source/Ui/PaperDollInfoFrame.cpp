@@ -36,55 +36,55 @@
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include <cstdlib>
 
-// STATIC: 0x00C00024
+// STATIC: 0x00C00024/0x1409F7F78
 static const int32_t s_inventoryAlertSlots[11] = { 0, 2, 4, 5, 6, 7, 8, 9, 15, 16, 17 };
 
-// STATIC: 0x00F4A358
+// STATIC: 0x00F4A358/0x140E3E490
 TSFixedArray<INV_ALERT_STATUS> CGCharacterInfo::m_invAlertStatus;
 
-// STATIC: 0x00F4A330
+// STATIC: 0x00F4A330/0x140E3E468
 WOWGUID CGCharacterInfo::m_inspectTarget;
 
-// STATIC: 0x00F4A338
+// STATIC: 0x00F4A338/0x140E3E470
 int32_t CGCharacterInfo::m_hasHonorData;
 
-// STATIC: 0x00F4A2D8
+// STATIC: 0x00F4A2D8/0x140E3E410
 InspectArenaTeam CGCharacterInfo::m_inspectArenaTeams[3];
 
-// STATIC: 0x00F4A320
+// STATIC: 0x00F4A320/0x140E3E458
 uint32_t CGCharacterInfo::m_inspectLifetimeHonorableKills;
 
-// STATIC: 0x00F4A324
+// STATIC: 0x00F4A324/0x140E3E45C
 uint16_t CGCharacterInfo::m_inspectYesterdayHonorableKills;
 
-// STATIC: 0x00F4A326
+// STATIC: 0x00F4A326/0x140E3E45E
 uint8_t CGCharacterInfo::m_inspectLifetimeHighestRank;
 
-// STATIC: 0x00F4A328
+// STATIC: 0x00F4A328/0x140E3E460
 uint16_t CGCharacterInfo::m_inspectTodayHonorableKills;
 
-// STATIC: 0x00F4A33C
+// STATIC: 0x00F4A33C/0x140E3E474
 int32_t CGCharacterInfo::m_honorRequestPending;
 
-// STATIC: 0x00F4A340
+// STATIC: 0x00F4A340/0x140E3E478
 int32_t CGCharacterInfo::m_avgItemLevelPending;
 
-// STATIC: 0x00F4A344
+// STATIC: 0x00F4A344/0x140E3E47C
 float CGCharacterInfo::m_avgItemLevel;
 
-// STATIC: 0x00F4A348
+// STATIC: 0x00F4A348/0x140E3E480
 float CGCharacterInfo::m_avgItemLevelEquipped;
 
-// STATIC: 0x00F4A34C
+// STATIC: 0x00F4A34C/0x140E3E484
 uint32_t CGCharacterInfo::m_inspectRatedBGPlayed;
 
-// STATIC: 0x00F4A350
+// STATIC: 0x00F4A350/0x140E3E488
 uint32_t CGCharacterInfo::m_inspectRatedBGRating;
 
-// STATIC: 0x00F4A354
+// STATIC: 0x00F4A354/0x140E3E48C
 uint32_t CGCharacterInfo::m_inspectRatedBGWon;
 
-// STATIC: 0x00D13668
+// STATIC: 0x00D13668/0x140BCBA80
 uint8_t CGCharacterInfo::m_avgItemLevelDirty = 1;
 
 // INLINED
@@ -99,6 +99,7 @@ int32_t PlayerEquipmentChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     return 1;
 }
 
+// PROVEN: a101faac IDENTICAL/DIFFERENT
 // OFFSET: 0x0097C3C0/0x1406F5B90
 int32_t PlayerCharacterPointsUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -113,7 +114,8 @@ int32_t PlayerCharacterPointsUpdateHandler(WOWGUID guid, uint32_t fieldOffset, u
     return 1;
 }
 
-// OFFSET: 0x0097B860
+// PROVEN: dda228fe IDENTICAL/IDENTICAL
+// OFFSET: 0x0097B860/0x1406F4E30
 static bool OnInspectHonorStats(ClientInspectHonorStats* msg) {
     if (*reinterpret_cast<WOWGUID*>(&msg->unk_0010) == CGCharacterInfo::m_inspectTarget) {
         CGCharacterInfo::m_inspectLifetimeHighestRank = msg->unk_0020;
@@ -128,7 +130,8 @@ static bool OnInspectHonorStats(ClientInspectHonorStats* msg) {
     return true;
 }
 
-// OFFSET: 0x0097B8D0
+// PROVEN: cb621f54 IDENTICAL/IDENTICAL
+// OFFSET: 0x0097B8D0/0x1406F4EA0
 static bool OnInspectRatedBgStats(ClientInspectRatedBgStats* msg) {
     if (*reinterpret_cast<WOWGUID*>(&msg->unk_0010) == CGCharacterInfo::m_inspectTarget) {
         CGCharacterInfo::m_inspectRatedBGRating = msg->unk_0020;
@@ -142,8 +145,8 @@ static bool OnInspectRatedBgStats(ClientInspectRatedBgStats* msg) {
 
 // OFFSET: 0x0097C440/0x1406F5C20
 void CGCharacterInfo::InitializeGame() {
-    ClientInspectHonorStats::s_handler = OnInspectHonorStats;
-    ClientInspectRatedBgStats::s_handler = OnInspectRatedBgStats;
+    ClientInspectHonorStats::s_handler = JamHandlerEncode(OnInspectHonorStats, g_jamHandlerKey_CFE310);
+    ClientInspectRatedBgStats::s_handler = JamHandlerEncode(OnInspectRatedBgStats, g_jamHandlerKey_CFDB84);
     ClientServices::SetMessageHandler(MSG_INSPECT_ARENA_TEAMS, Packet_MSG_INSPECT_ARENA_TEAMS, NULL);
 }
 
@@ -156,6 +159,7 @@ void CGCharacterInfo::RegisterMirrorHandlers(WOWGUID guid) {
     ClntObjMgrSetObjMirrorHandler(guid, ID_PLAYER, 0xD98, 4, PlayerCharacterPointsUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
+// PROVEN: 32b8e1f9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097CF60/0x1406F69A0
 void CGCharacterInfo::UpdateInventoryAlerts() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -182,6 +186,7 @@ void CGCharacterInfo::UpdateInventoryAlerts() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_INVENTORY_DURABILITY, NULL);
 }
 
+// PROVEN: 855cbcde IDENTICAL/UNPROVEN
 // OFFSET: 0x0097DF80/0x1406F7C50
 void CGCharacterInfo::EnterWorld() {
     CGCharacterInfo::RegisterMirrorHandlers(ClntObjMgrGetActivePlayer());
@@ -197,6 +202,7 @@ void UnitInventoryChangedCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 }
 
+// PROVEN: 5e37b4b7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0097B920/0x1406F4EE0
 bool CGCharacterInfo::CanInspect(const CGPlayer_C* unit) {
     if (unit) {
@@ -215,7 +221,8 @@ int32_t CGCharacterInfo::GetActivePlayerAmmoID(const CGPlayer_C* player) {
     return 0;
 }
 
-// OFFSET: 0x0097B210
+// PROVEN: d1e78a85 IDENTICAL/IDENTICAL
+// OFFSET: 0x0097B210/0x1406F4810
 int32_t Packet_MSG_INSPECT_ARENA_TEAMS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -243,6 +250,7 @@ int32_t Packet_MSG_INSPECT_ARENA_TEAMS(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
+// PROVEN: 7d01de5a IDENTICAL/IDENTICAL
 // OFFSET: 0x0097B310/0x1406F4920
 void CGCharacterInfo::SetInspectTarget(const WOWGUID& guid) {
     WOWGUID target = guid;
@@ -433,6 +441,7 @@ void CGCharacterInfo::UseItem(int32_t slot, WOWGUID* target) {
     }
 }
 
+// PROVEN: 8877c011 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097CA50/0x1406F6460
 void CGCharacterInfo::SocketInventoryItem(int32_t slot) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -611,6 +620,7 @@ int32_t CGCharacterInfo::CanEquipItemInSlot(const ItemRecSparse* stats, uint32_t
     return !stats->m_requiredReputationFaction || GetRepListRepValue(stats->m_requiredReputationFaction) >= CGReputationInfo::m_reactionThresholds[stats->m_requiredReputationRank];
 }
 
+// PROVEN: 54f87507 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097E0A0/0x1406F7DA0
 int32_t CGCharacterInfo::CanEquipItem(CGItem_C* item, uint32_t slot) {
     int32_t id = item->m_obj->m_entryID;
@@ -625,6 +635,7 @@ int32_t CGCharacterInfo::CanEquipItem(CGItem_C* item, uint32_t slot) {
     return CGCharacterInfo::CanEquipItemInSlot(stats, slot);
 }
 
+// PROVEN: 7418f846 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097B3D0/0x1406F49D0
 void CGCharacterInfo::AverageItemLevelDirty() {
     if (!CGCharacterInfo::m_avgItemLevelDirty) {
@@ -632,6 +643,7 @@ void CGCharacterInfo::AverageItemLevelDirty() {
     }
 }
 
+// PROVEN: 3860e311 IDENTICAL/NONE
 // OFFSET: 0x0097B360
 static void UpdateBestItemLevel(int32_t level, int32_t* best, int32_t* second) {
     if (!second) {
@@ -644,12 +656,14 @@ static void UpdateBestItemLevel(int32_t level, int32_t* best, int32_t* second) {
     }
 }
 
-// OFFSET: 0x0097B380
+// PROVEN: b22bfa12 IDENTICAL/IDENTICAL
+// OFFSET: 0x0097B380/0x1406F4980
 static int32_t QSortItemLevels(const void* a, const void* b) {
     return *static_cast<const int32_t*>(b) - *static_cast<const int32_t*>(a);
 }
 
-// OFFSET: 0x0097B390
+// PROVEN: 18fe7b5e IDENTICAL/IDENTICAL
+// OFFSET: 0x0097B390/0x1406F4990
 static void AverageItemLevelCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success && CGCharacterInfo::m_avgItemLevelPending > 0) {
         if (!--CGCharacterInfo::m_avgItemLevelPending) {
@@ -954,7 +968,8 @@ INV_ALERT_STATUS CGCharacterInfo::CalculateInventoryAlertStatus(CGPlayer_C* play
     return INV_ALERT_NONE;
 }
 
-// OFFSET: 0x0097B830
+// PROVEN: faa74318 IDENTICAL/IDENTICAL
+// OFFSET: 0x0097B830/0x1406F4DF0
 void CGCharacterInfo::ShutdownGame() {
     ClientInspectHonorStats::s_handler = NULL;
     ClientInspectRatedBgStats::s_handler = NULL;
@@ -963,6 +978,7 @@ void CGCharacterInfo::ShutdownGame() {
     CGCharacterInfo::m_avgItemLevelPending = 0;
 }
 
+// PROVEN: f7dc4934 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097B3F0/0x1406F49F0
 void GuildNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -970,6 +986,7 @@ void GuildNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bo
     }
 }
 
+// PROVEN: b49fd75f IDENTICAL/DIFFERENT
 // OFFSET: 0x0097DFE0/0x1406F7CD0
 void CGCharacterInfo::LeaveWorld() {
     WOWGUID guid = ClntObjMgrGetActivePlayer();

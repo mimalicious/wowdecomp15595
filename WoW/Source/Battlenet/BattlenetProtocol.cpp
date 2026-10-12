@@ -94,10 +94,10 @@ BSN::AsciiString<63> Battlenet::Event::AuthModule::ShowSurveyDialog("ShowSurveyD
 // STATIC: 0x01009300
 BSN::AsciiString<63> Battlenet::Event::AuthModule::AcceptAgreement("AcceptAgreement");
 
-// STATIC: 0x01009344
+// STATIC: 0x01009344/0x140EE0DF8
 BSN::FourCC Battlenet::InviteSource::MISC("Misc");
 
-// STATIC: 0x01009350
+// STATIC: 0x01009350/0x140EE0E04
 BSN::FourCC Battlenet::Program::WOW("WoW");
 
 // OFFSET: 0x00627D80
@@ -105,7 +105,7 @@ Battlenet::Authentication::Settings::Settings() {
     this->m_seed.m_length = 0;
 }
 
-// PROVEN: e07ea298 IDENTICAL/NONE
+// PROVEN: e07ea298 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2E610/0x1408F6F70
 int32_t ProtocolHard::TypeInfoOf<Battlenet::IP4::AddressPort>::Encode(const Battlenet::IP4::AddressPort& value, BSN::Hard::Encoder& encoder) {
     int32_t result = encoder.PutAlignedData(4, value.m_address.m_data);
@@ -117,8 +117,8 @@ int32_t ProtocolHard::TypeInfoOf<Battlenet::IP4::AddressPort>::Encode(const Batt
     return encoder.PutAlignedData(2, value.m_port.m_data);
 }
 
-// PROVEN: 96b5b9c2 IDENTICAL/NONE
-// OFFSET: 0x00B2E640
+// PROVEN: 96b5b9c2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B2E640/0x1408F6FB0
 int32_t ProtocolHard::TypeInfoOf<Battlenet::IP4::AddressPort>::Decode(Battlenet::IP4::AddressPort& value, BSN::Hard::Decoder& decoder) {
     int32_t result = decoder.GetAlignedData(4, value.m_address.m_data);
 
@@ -130,13 +130,13 @@ int32_t ProtocolHard::TypeInfoOf<Battlenet::IP4::AddressPort>::Decode(Battlenet:
 }
 
 // PROVEN: 107b8057 IDENTICAL/NONE
-// OFFSET: 0x00B2E670
+// OFFSET: 0x00B2E670/0x1408F6FF0
 int32_t ProtocolHard::TypeInfoOf<Battlenet::IP4::AddressPort>::Encode(const Battlenet::IP4::AddressPort& value, BSN::Hard::SizeEncoder& encoder) {
     encoder.m_size = ((((encoder.m_size + 7) & ~7u) + 32) & ~7u) + 16;
     return BSN::CODEC_VALID;
 }
 
-// OFFSET: 0x00B2E690
+// OFFSET: 0x00B2E690/0x1408F7010
 int32_t ProtocolHard::TypeInfoOf<Battlenet::Client::DNSInfo>::Encode(const Battlenet::Client::DNSInfo& value, BSN::Hard::Encoder& encoder) {
     uint32_t length = value.m_canonicalName.m_length;
 
@@ -179,7 +179,7 @@ int32_t ProtocolHard::TypeInfoOf<Battlenet::Client::DNSInfo>::Encode(const Battl
     return BSN::CODEC_VALID;
 }
 
-// OFFSET: 0x00B2E840
+// OFFSET: 0x00B2E840/0x1408F7230
 int32_t ProtocolHard::TypeInfoOf<Battlenet::Client::DNSInfo>::Encode(const Battlenet::Client::DNSInfo& value, BSN::Hard::SizeEncoder& encoder) {
     uint32_t length = value.m_canonicalName.m_length;
 

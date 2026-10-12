@@ -27,7 +27,7 @@ void BSN::Protocol::Type::Int::Get(int32_t intType, const uint8_t*& cursor, uint
     }
 }
 
-// PROVEN: d913a6f4 IDENTICAL/NONE
+// PROVEN: d913a6f4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00665B90/0x14030C090
 void BSN::Protocol::Type::Int::GetSize(const uint8_t*& cursor, uint32_t& value) {
     uint8_t intType = *cursor++;
@@ -43,8 +43,8 @@ bool BSN::Protocol::Type::Bounds::Contains(uint64_t value) const {
     return static_cast<int64_t>(value) >= static_cast<int64_t>(this->m_min) && static_cast<int64_t>(value) <= static_cast<int64_t>(this->m_max);
 }
 
-// PROVEN: f6e919a3 IDENTICAL/NONE
-// OFFSET: 0x00665C00
+// PROVEN: f6e919a3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00665C00/0x14030C110
 void BSN::Protocol::Type::Bounds::Get(bool fixed, const uint8_t*& cursor, Bounds& bounds) {
     uint8_t intType = *cursor++;
     bounds.m_intType = intType;

@@ -1,19 +1,19 @@
 #include "WoW/Source/Battlenet/Tumor/Tendril.h"
 #include "WoW/Source/Battlenet/Tumor/TumorManager.h"
 
-// PROVEN: 71c346c6 IDENTICAL/DIFFERENT
+// PROVEN: 71c346c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void Battlenet::Service::Interface::RecvEvent(const Event::Header& header, const BSN::EncodedObject* data) {
 }
 
-// OFFSET: 0x00662340
+// OFFSET: 0x00662340/0x140308160
 Battlenet::Service::Interface::~Interface() {
     if (this->m_tendrilId) {
         this->m_manager->GetTumor()->RemoveTendril(this->m_tendrilId);
     }
 }
 
-// PROVEN: eb74f12e IDENTICAL/NONE
+// PROVEN: eb74f12e IDENTICAL/IDENTICAL
 // OFFSET: 0x006622C0/0x140307FF0
 void Battlenet::Service::Interface::Register() {
     if (this->m_eventId.m_value) {
@@ -24,7 +24,7 @@ void Battlenet::Service::Interface::Register() {
     }
 }
 
-// PROVEN: 2a0132f2 IDENTICAL/NONE
+// PROVEN: 2a0132f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00662310/0x140308270
 void Battlenet::Service::Interface::SendEvent(const uint8_t& eventType, const BSN::FourCC& eventId, const BSN::EncodedObject* data) {
     if (this->m_eventAdapter) {
@@ -32,7 +32,7 @@ void Battlenet::Service::Interface::SendEvent(const uint8_t& eventType, const BS
     }
 }
 
-// OFFSET: 0x00662390
+// OFFSET: 0x00662390/0x1403080E0
 Battlenet::Tendril::Tendril(BSN::FourCC eventId, TumorManager& manager) : Service::Interface(manager) {
     this->m_eventId = eventId;
 

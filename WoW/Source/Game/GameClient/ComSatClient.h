@@ -144,7 +144,6 @@ struct VoiceRosterMember {
     /* 0009 */ char m_address[32];
     /* 0029 */ uint8_t m_talkerPriority;
     /* 002A */ uint8_t m_flags;
-    /* 002B */ uint8_t unk_002B[5];
 };
 
 int32_t ComSatClient_IsCurrentSession(uint64_t session);

@@ -29,7 +29,7 @@ int32_t FrameScript_Object::GetLuaObjectRef() {
     return this->m_luaObjectRef;
 }
 
-// PROVEN: fca8cbd8 IDENTICAL/UNPROVEN
+// PROVEN: fca8cbd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00839A90/0x140563ED0
 int32_t FrameScript_Object::CreateScriptMetaTable(lua_State* L, void (*registerFunc)(lua_State*)) {
     lua_newtable(L);
@@ -41,7 +41,7 @@ int32_t FrameScript_Object::CreateScriptMetaTable(lua_State* L, void (*registerF
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
-// PROVEN: 11be704c IDENTICAL/UNPROVEN
+// PROVEN: 11be704c IDENTICAL/IDENTICAL
 // OFFSET: 0x00839AE0/0x140563F30
 void FrameScript_Object::FillScriptMethodTable(lua_State* L, FrameScript_Method* methods, int32_t count) {
     for (int32_t i = 0; i < count; i++) {
@@ -106,7 +106,7 @@ FrameScript_Object::~FrameScript_Object() {
     }
 }
 
-// PROVEN: ddfe8be9 IDENTICAL/UNPROVEN
+// PROVEN: ddfe8be9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CCB0/0x140567970
 void FrameScript_Object::RegisterScriptObject(const char* name) {
     lua_State* L = s_context;
@@ -156,7 +156,7 @@ void FrameScript_Object::RegisterScriptObject(const char* name) {
     }
 }
 
-// PROVEN: 41081439 IDENTICAL/UNPROVEN
+// PROVEN: 41081439 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CDF0/0x140567B00
 void FrameScript_Object::UnregisterScriptObject(const char* name) {
     lua_State* L = s_context;
@@ -202,7 +202,7 @@ FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByNameCamelCase(const
     return this->GetScriptByName(lower, data);
 }
 
-// PROVEN: 5df4fffa IDENTICAL/UNPROVEN
+// PROVEN: 5df4fffa IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CF90/0x140567D00
 void FrameScript_Object::GetScriptTime(lua_State* L, const FrameScript_Object::ScriptIx& script, double* time, uint32_t* calls) {
     if (!this->HasScript(script)) {
@@ -499,7 +499,7 @@ void FrameScript_Object::RegisterAllScriptEvents() {
     }
 }
 
-// OFFSET: 0x0083E7B0
+// OFFSET: 0x0083E7B0/0x140569D40
 void FrameScript_Object::UnregisterAllScriptEvents() {
     for (FrameScript_EventObject* event = s_scriptEventsHash.m_fulllist.Head(); event; event = s_scriptEventsHash.m_fulllist.Next(event)) {
         this->UnregisterScriptEvent(event->m_key.m_str);

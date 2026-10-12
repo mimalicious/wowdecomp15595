@@ -27,13 +27,14 @@ static int32_t Script_GetNumPartyMembers(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 2faefb81 IDENTICAL/NONE
+// PROVEN: 2faefb81 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCB40/0x140653DD0
 static int32_t Script_GetRealNumPartyMembers(lua_State* L) {
     lua_pushnumber(L, CGPartyInfo::m_realNumMembers);
     return 1;
 }
 
+// PROVEN: bd7e4980 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FCB80/0x140653E00
 static int32_t Script_GetPartyMember(lua_State* L) {
     uint32_t index;
@@ -52,21 +53,21 @@ static int32_t Script_GetPartyMember(lua_State* L) {
     return 1;
 }
 
-// PROVEN: fbd5803e IDENTICAL/NONE
+// PROVEN: fbd5803e IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCC20/0x140653E80
 static int32_t Script_GetPartyLeaderIndex(lua_State* L) {
     lua_pushnumber(L, CGPartyInfo::m_leaderIndex + 1);
     return 1;
 }
 
-// PROVEN: 069c8263 IDENTICAL/NONE
+// PROVEN: 069c8263 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCC50/0x140653EB0
 static int32_t Script_GetLootThreshold(lua_State* L) {
     lua_pushnumber(L, CGPartyInfo::m_lootThreshold);
     return 1;
 }
 
-// PROVEN: 74dbd5e3 IDENTICAL/NONE
+// PROVEN: 74dbd5e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCC80/0x140653ED0
 static int32_t Script_GetOptOutOfLoot(lua_State* L) {
     if (CGPartyInfo::m_optOutOfLoot) {
@@ -78,7 +79,7 @@ static int32_t Script_GetOptOutOfLoot(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 1e9c9de8 IDENTICAL/NONE
+// PROVEN: 1e9c9de8 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCCC0/0x140653F10
 static int32_t Script_IsPartyLFG(lua_State* L) {
     if (CGPartyInfo::m_lfgSlot) {
@@ -90,6 +91,7 @@ static int32_t Script_IsPartyLFG(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a7f9a069 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCD00/0x140653F50
 static int32_t Script_GetPartyLFGID(lua_State* L) {
     if (CGPartyInfo::m_lfgSlot) {
@@ -100,13 +102,14 @@ static int32_t Script_GetPartyLFGID(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 57286fe3 IDENTICAL/NONE
+// PROVEN: 57286fe3 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCD50/0x140653F90
 static int32_t Script_HasLFGRestrictions(lua_State* L) {
     lua_pushboolean(L, CGPartyInfo::m_lfgRestricted);
     return 1;
 }
 
+// PROVEN: d88eb2ef IDENTICAL/IDENTICAL
 // OFFSET: 0x008FCD70/0x140653FB0
 static int32_t Script_IsOnePersonParty(lua_State* L) {
     lua_pushboolean(L, CGPartyInfo::m_onePersonParty);
@@ -135,6 +138,7 @@ static int32_t Script_IsRealPartyLeader(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3bdd7b55 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FDAF0/0x140655280
 static int32_t Script_LeaveParty(lua_State* L) {
     CGPlayer_C::LeaveGroup();
@@ -213,6 +217,7 @@ static int32_t Script_GetLootMethod(lua_State* L) {
     return 3;
 }
 
+// PROVEN: 187958e8 DIFFERENT/IDENTICAL
 // OFFSET: 0x008FDC60/0x1406553E0
 static int32_t Script_SetOptOutOfLoot(lua_State* L) {
     int32_t optOut = lua_toboolean(L, 1);
@@ -242,7 +247,7 @@ static int32_t Script_GetPartyAssignment(lua_State* L) {
     return CGPartyInfo::GetPartyAssignments(L, 1);
 }
 
-// PROVEN: 732c9a85 IDENTICAL/NONE
+// PROVEN: 732c9a85 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FDD40/0x140655500
 static int32_t Script_CanChangePlayerDifficulty(lua_State* L) {
     lua_pushboolean(L, CGGameUI::CanChangePlayerDifficulty());
@@ -251,6 +256,7 @@ static int32_t Script_CanChangePlayerDifficulty(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 6040445b IDENTICAL/IDENTICAL
 // OFFSET: 0x008FDDA0/0x140655560
 static int32_t Script_AcceptGroup(lua_State* L) {
     uint32_t roles = 0;
@@ -311,6 +317,7 @@ static int32_t Script_UninviteUnit(lua_State* L) {
     return 0;
 }
 
+// PROVEN: c648b00c IDENTICAL/IDENTICAL
 // OFFSET: 0x008FDF20/0x140655740
 static int32_t Script_DeclineGroup(lua_State* L) {
     UserClientPartyInviteResponse msg;
@@ -569,11 +576,13 @@ static int32_t Script_SetPartyAssignment(lua_State* L) {
     return SetOrClearAssignment(L, true);
 }
 
+// PROVEN: 1faff008 DIFFERENT/IDENTICAL
 // OFFSET: 0x008FF140/0x140656A30
 static int32_t Script_ClearPartyAssignment(lua_State* L) {
     return SetOrClearAssignment(L, false);
 }
 
+// PROVEN: abe62159 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FF160/0x140656A40
 static int32_t Script_InviteUnit(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
@@ -605,7 +614,7 @@ static int32_t Script_InviteUnit(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D107C8
+// STATIC: 0x00D107C8/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumPartyMembers", &Script_GetNumPartyMembers },
     { "GetRealNumPartyMembers", &Script_GetRealNumPartyMembers },
@@ -636,6 +645,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "DeclineGroup", &Script_DeclineGroup },
 };
 
+// PROVEN: cdbfef86 IDENTICAL/UNPROVEN
 // OFFSET: 0x008FCD90/0x140653FD0
 void CGPartyInfo::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -643,6 +653,7 @@ void CGPartyInfo::RegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 3d141e47 IDENTICAL/UNPROVEN
 // OFFSET: 0x008FCDC0/0x140654020
 void CGPartyInfo::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

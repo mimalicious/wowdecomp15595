@@ -33,4 +33,6 @@ class CSimpleFontStringAttributes {
     void Update(CSimpleFontStringAttributes& attributes, int32_t flags);
 };
 
+#include "Engine/Source/Frame/CSimpleFontStringAttributes.inl"
+
 #endif

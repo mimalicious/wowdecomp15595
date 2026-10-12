@@ -14,10 +14,10 @@
 #include <cmath>
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00DD394C
+// STATIC: 0x00DD394C/0x140CB9620
 int32_t s_numRegions;
 
-// STATIC: 0x00DD3950
+// STATIC: 0x00DD3950/0x140CB9628
 CDataAllocator CGradient::s_allocator(sizeof(CGradient), 5);
 
 // OFFSET: 0x0050AA10
@@ -82,7 +82,7 @@ void CSimpleRegion::SetVertexAlpha(uint8_t alpha) {
     this->SetVertexColor(color);
 }
 
-// OFFSET: 0x004F87D0
+// OFFSET: 0x004F87D0/0x14013C0E0
 uint8_t CSimpleRegion::GetVertexAlpha() {
     CImVector color;
     this->GetVertexColor(color);
@@ -98,13 +98,13 @@ void CSimpleRegion::SetIgnoreParentAlpha(bool ignore) {
     }
 }
 
-// PROVEN: 9747124f IDENTICAL/DIFFERENT
+// PROVEN: 9747124f IDENTICAL/IDENTICAL
 // OFFSET: 0x004FAA60/0x14013E7D0
 void CSimpleRegion::SetParent(CSimpleFrame* parent) {
     this->SetFrame(parent, this->m_drawLayer, this->m_subLevel, this->m_shown);
 }
 
-// PROVEN: a1cb9dc6 IDENTICAL/UNPROVEN
+// PROVEN: a1cb9dc6 IDENTICAL/IDENTICAL
 // OFFSET: 0x004FBDD0/0x14013FFE0
 void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
     char buffer[128];
@@ -123,7 +123,7 @@ int32_t CSimpleRegion::CanBeAnchorFor(CLayoutFrame* frame) {
     return frame->IsProtected() == 0;
 }
 
-// PROVEN: b9f67c7d IDENTICAL/DIFFERENT
+// PROVEN: b9f67c7d IDENTICAL/IDENTICAL
 // OFFSET: 0x004FA850/0x1401A1AA0
 void CSimpleRegion::GetBaseColor(CImVector& color) {
     const CImVector* source = this->m_hasGradient ? this->Gradient()->m_colors : (this->m_hasColor ? &this->m_color : NULL);
@@ -133,7 +133,7 @@ void CSimpleRegion::GetBaseColor(CImVector& color) {
     }
 }
 
-// PROVEN: 3c7c8b85 IDENTICAL/DIFFERENT
+// PROVEN: 3c7c8b85 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A470/0x1401525F0
 void CSimpleRegion::GetVertexColor(CImVector& color) {
     if (this->m_hasColor) {
@@ -155,8 +155,8 @@ void CSimpleRegion::MarkDirty() {
     this->m_visible = 1;
 }
 
-// PROVEN: 75b95c58 IDENTICAL/NONE
-// OFFSET: 0x0050A500
+// PROVEN: 75b95c58 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050A500/0x140152680
 void CSimpleRegion::SignalLoaded() {
     this->m_loadPending = 0;
 }
@@ -257,6 +257,7 @@ void CSimpleRegion::NotifyDelayedLoad() {
     }
 }
 
+// PROVEN: 55b3259c DIFFERENT/IDENTICAL
 // OFFSET: 0x0050A8A0/0x140152A60
 bool CSimpleRegion::IsColorWhite() {
     return this->m_vertexAlpha >= 0xFE && this->m_color.r == 0xFF && this->m_color.g == 0xFF && this->m_color.b == 0xFF;
@@ -293,7 +294,7 @@ void CSimpleRegion::SetVertexColor(const CImVector& color) {
     this->OnColorChanged(changed);
 }
 
-// PROVEN: 64591d67 IDENTICAL/DIFFERENT
+// PROVEN: 64591d67 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050A9A0/0x140152B80
 void CSimpleRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     if (region && region != this) {
@@ -314,6 +315,7 @@ void CSimpleRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     this->SetVertexColor(color);
 }
 
+// PROVEN: 7f72230c IDENTICAL/DIFFERENT
 // OFFSET: 0x0050AA50/0x140152BF0
 void CSimpleRegion::EnableGradient(bool enable) {
     if (enable) {
@@ -334,7 +336,8 @@ void CSimpleRegion::EnableGradient(bool enable) {
     }
 }
 
-// OFFSET: 0x0050AB00
+// PROVEN: 07102838 IDENTICAL/DIFFERENT
+// OFFSET: 0x0050AB00/0x140152CF0
 void CSimpleRegion::SetVertexGradient(ORIENTATION orientation, const CImVector& minColor, const CImVector& maxColor) {
     bool changed = !this->m_hasGradient;
 
@@ -349,7 +352,7 @@ void CSimpleRegion::SetVertexGradient(ORIENTATION orientation, const CImVector& 
     this->OnColorChanged(changed);
 }
 
-// OFFSET: 0x0050AB90
+// OFFSET: 0x0050AB90/0x140152DE0
 void CSimpleRegion::OnColorChanged(bool changed) {
     if (this->m_parent) {
         if (!this->m_hasColor && !this->m_hasGradient) {
@@ -385,7 +388,7 @@ void CSimpleRegion::OnColorChanged(bool changed) {
     }
 }
 
-// PROVEN: a62151d3 IDENTICAL/NONE
+// PROVEN: a62151d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050AD20/0x140152FC0
 void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
@@ -401,7 +404,7 @@ void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_
     }
 }
 
-// PROVEN: 153a2cba IDENTICAL/NONE
+// PROVEN: 153a2cba IDENTICAL/IDENTICAL
 // OFFSET: 0x0050AD90/0x140153060
 void CSimpleRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
     if (alpha) {
@@ -437,7 +440,7 @@ CSimpleRegion::CSimpleRegion(CSimpleFrame* frame, uint32_t drawLayer, int8_t sub
     }
 }
 
-// OFFSET: [0x0050AE80, 0x0050AF70/0x140153390, 0x0050AE70/0x1401531B0]
+// OFFSET: [0x0050AE80/0x1401531C0, 0x0050AF70/0x140153390, 0x0050AE70/0x1401531B0]
 CSimpleRegion::~CSimpleRegion() {
     this->SetFrame(NULL, 1, 0, false);
     this->EnableGradient(false);
@@ -449,7 +452,7 @@ CSimpleRegion::~CSimpleRegion() {
 void CSimpleRegion::OnScreenSizeChanged() {
 }
 
-// OFFSET: 0x009E80F0
+// OFFSET: 0x009E80F0/0x140780DC0
 void CSimpleRegion::SetVertexColorRGBA(float r, float g, float b, float a) {
     CImVector color;
     color.Set(a, r, g, b);
@@ -465,7 +468,7 @@ C3Vector& ApplyTranslationAnim(C3Vector& position, const C2Vector& translation) 
     return position;
 }
 
-// OFFSET: 0x0052B810
+// OFFSET: 0x0052B810/0x14017C000
 void ApplyTranslationAnim(C3Vector* positions, const C2Vector& translation) {
     for (uint32_t i = 0; i < 4; i++) {
         positions[i].x = positions[i].x + translation.x;
@@ -482,7 +485,7 @@ static C2Vector LerpPoint(float t, const C2Vector& a, const C2Vector& b) {
     return result;
 }
 
-// OFFSET: 0x0052B8C0
+// OFFSET: 0x0052B8C0/0x14017C0A0
 static void GetOriginOffset(FRAMEPOINT origin, const C3Vector* positions, const C2Vector& offset, C2Vector& result) {
     switch (origin) {
         case FRAMEPOINT_TOPLEFT:
@@ -550,7 +553,7 @@ static void GetOriginOffset(FRAMEPOINT origin, const C3Vector* positions, const 
     }
 }
 
-// OFFSET: 0x0052BB90
+// OFFSET: 0x0052BB90/0x14017C4A0
 void ApplyRotationAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     C2Vector center;
     GetOriginOffset(origin, positions, offset, center);
@@ -566,8 +569,8 @@ void ApplyRotationAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& o
     }
 }
 
-// PROVEN: 148452e7 IDENTICAL/NONE
-// OFFSET: 0x0052BD00
+// PROVEN: 148452e7 IDENTICAL/DIFFERENT
+// OFFSET: 0x0052BD00/0x14017C620
 void ApplyScaleAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     C2Vector center;
     GetOriginOffset(origin, positions, offset, center);

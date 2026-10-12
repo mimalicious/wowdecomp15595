@@ -5,12 +5,13 @@
 #include "SSignature.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: fbf94414 IDENTICAL/NONE
-// OFFSET: 0x004B8690
+// PROVEN: fbf94414 IDENTICAL/IDENTICAL
+// OFFSET: 0x004B8690/0x140511EA0
 uint32_t SSignatureVerifyStream_GetSignatureLength(SSignatureData* token) {
     return token->magicBufferSize;
 }
 
+// PROVEN: a4878eb6 DIFFERENT/IDENTICAL
 // OFFSET: 0x004B86A0/0x1400F0C60
 void SSignatureVerifyStream_ProvideData(SSignatureData* token, const uint8_t* data, uint32_t size) {
     int32_t excess = size - token->magicBufferSize;

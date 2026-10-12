@@ -18,94 +18,94 @@ bool FFX::s_useRECT;
 // STATIC: 0x00EC6FE9/0x140DB9401
 bool FFX::s_defaultEnabled;
 
-// STATIC: 0x00EC6FF4
+// STATIC: 0x00EC6FF4/0x140DB9418
 float FFX::s_oldMaxZ;
 
-// STATIC: 0x00EC6FF8
+// STATIC: 0x00EC6FF8/0x140DB941C
 float FFX::s_oldMinZ;
 
-// STATIC: 0x00EC6FFC
+// STATIC: 0x00EC6FFC/0x140DB9420
 float FFX::s_oldMaxY;
 
-// STATIC: 0x00EC7000
+// STATIC: 0x00EC7000/0x140DB9424
 float FFX::s_oldMinY;
 
-// STATIC: 0x00EC7004
+// STATIC: 0x00EC7004/0x140DB9428
 float FFX::s_oldMaxX;
 
-// STATIC: 0x00EC7008
+// STATIC: 0x00EC7008/0x140DB942C
 float FFX::s_oldMinX;
 
-// STATIC: 0x00EC700C
+// STATIC: 0x00EC700C/0x140DB9430
 const uint16_t* FFX::s_idx;
 
 // STATIC: 0x00EC7010
 const C2Vector* FFX::s_tex;
 
-// STATIC: 0x00EC7014
+// STATIC: 0x00EC7014/0x140DB9440
 const CImVector* FFX::s_col1;
 
-// STATIC: 0x00EC7018
+// STATIC: 0x00EC7018/0x140DB9448
 const CImVector* FFX::s_col0;
 
-// STATIC: 0x00EC701C
+// STATIC: 0x00EC701C/0x140DB9450
 const C3Vector* FFX::s_normal;
 
-// STATIC: 0x00EC7020
+// STATIC: 0x00EC7020/0x140DB9458
 const C3Vector* FFX::s_geo;
 
-// STATIC: 0x00EC7024
+// STATIC: 0x00EC7024/0x140DB9460
 CGxShader* FFX::s_passThrough_PCT4;
 
-// STATIC: 0x00EC7028
+// STATIC: 0x00EC7028/0x140DB9468
 CGxShader* FFX::s_passThrough_PCT3;
 
-// STATIC: 0x00EC702C
+// STATIC: 0x00EC702C/0x140DB9470
 CGxShader* FFX::s_passThrough_PCT2;
 
-// STATIC: 0x00EC7030
+// STATIC: 0x00EC7030/0x140DB9478
 CGxShader* FFX::s_passThrough_PCT;
 
-// STATIC: 0x00EC7034
+// STATIC: 0x00EC7034/0x140DB9480
 FFX::PortalEffect* FFX::s_portalEffect;
 
 // STATIC: 0x00EC7038/0x140DB9488
 FFX::Effect* FFX::s_effect[3];
 
-// STATIC: 0x00EC7044
+// STATIC: 0x00EC7044/0x140DB94A0
 uint32_t FFX::s_curTimeMs;
 
-// STATIC: 0x00EC7048
+// STATIC: 0x00EC7048/0x140DB94A4
 float FFX::s_tickTimeSec;
 
-// STATIC: 0x00EC704C
+// STATIC: 0x00EC704C/0x140DB94A8
 CGxFrameBuffer* FFX::s_oldFrameBuffer;
 
-// STATIC: 0x00EC7050
+// STATIC: 0x00EC7050/0x140DB94B0
 C3Vector FFX::s_camPos;
 
-// STATIC: 0x00EC705C
+// STATIC: 0x00EC705C/0x140DB94C0
 FFX::Tex FFX::s_waveTex;
 
-// STATIC: 0x00EC707C
+// STATIC: 0x00EC707C/0x140DB94E8
 FFX::Tex FFX::s_screen;
 
 // STATIC: 0x00EC70A0
 C4Vector FFX::psProcWaterConsts[15];
 
-// STATIC: 0x00EC7190
+// STATIC: 0x00EC7190/0x140DB9600
 TSGrowableArray<FFX::PortalEffect> FFX::s_portalEffects;
 
-// STATIC: 0x00EC71A0
+// STATIC: 0x00EC71A0/0x140DB9620
 FFX::Tex FFX::s_full[2];
 
-// STATIC: 0x00EC71E0
+// STATIC: 0x00EC71E0/0x140DB9670
 FFX::Tex FFX::s_quart[3];
 
-// STATIC: 0x00EC7294
+// STATIC: 0x00EC7294/0x140DB9740
 static void* s_waveTexData;
 
-// STATIC: 0x00D0ABAC
+// STATIC: 0x00D0ABAC/0x140BBCD48
 C2iVector FFX::s_wavePeriod = { 3174, 2805 };
 
 // STATIC: 0x00D0ABB4
@@ -114,16 +114,16 @@ float FFX::s_waveScaleX = 1.0f;
 // STATIC: 0x00D0ABB8
 float FFX::s_waveScaleY = 0.88f;
 
-// STATIC: 0x00D0ABBC
+// STATIC: 0x00D0ABBC/0x140BBCD58
 CGxBatch FFX::s_batch = { GxPrim_Triangles, 0, 0, 0, 0 };
 
 // STATIC: 0x00D0ABD0
 C44Matrix FFX::s_oldProjMtxNative;
 
-// STATIC: 0x00D0AC10
+// STATIC: 0x00D0AC10/0x140BBCDB0
 C44Matrix FFX::s_oldProjMtx;
 
-// STATIC: 0x00D0AC50
+// STATIC: 0x00D0AC50/0x140BBCDF0
 C44Matrix FFX::s_oldViewMtx;
 
 // STATIC: 0x00D0AB98
@@ -283,7 +283,7 @@ FFX::Pass::Pass(Tex** inputs, uint32_t count, Tex* output, EGxBlend blend) {
     this->m_blend = blend;
 }
 
-// OFFSET: 0x00899EF0
+// OFFSET: 0x00899EF0/0x1405D96A0
 static void DestroyTex(FFX::Tex& tex) {
     if (tex.m_texture) {
         TextureRelease(tex.m_texture);
@@ -296,7 +296,7 @@ static void DestroyTex(FFX::Tex& tex) {
     ResetTex(tex);
 }
 
-// OFFSET: 0x00899F60
+// OFFSET: 0x00899F60/0x1405D9730
 void FFX::Destroy() {
     if (FFX::s_passThrough_PCT) {
         g_theGxDevicePtr->ShaderRelease(FFX::s_passThrough_PCT);
@@ -330,10 +330,10 @@ void FFX::Destroy() {
 
 // OFFSET: 0x0089A020/0x1405D9A00
 void FFX::SetupGeo_Quad(const C2iVector& size, C44Matrix* matrix) {
-    // STATIC: 0x00EC72A0
+    // STATIC: 0x00EC72A0/0x140DB9708
     static const C3Vector s_quadPos[4] = { C3Vector(0.0f, 0.0f, 0.0f), C3Vector(0.0f, 1.0f, 0.0f), C3Vector(1.0f, 0.0f, 0.0f), C3Vector(1.0f, 1.0f, 0.0f) };
 
-    // STATIC: 0x00EC7280
+    // STATIC: 0x00EC7280/0x140DB96E8
     static const C2Vector s_quadTex[4] = { C2Vector(0.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 0.0f), C2Vector(1.0f, 1.0f) };
 
     FFX::s_batch.m_primType = GxPrim_Triangles;
@@ -358,6 +358,7 @@ void FFX::SetupGeo_Quad(const C2iVector& size, C44Matrix* matrix) {
     matrix->Scale(C3Vector(2.0f, -2.0f, 1.0f));
 }
 
+// PROVEN: c9a7ae68 IDENTICAL/DIFFERENT
 // OFFSET: 0x0089A220/0x1405D9C30
 void FFX::SetupGeo_PortalEffect(C44Matrix* modelView, C44Matrix* projection, C44Matrix* model) {
     C44Matrix camera;
@@ -812,7 +813,7 @@ void FFX::SetupReset() {
     GxXformPop(GxXform_World);
 }
 
-// PROVEN: 47b242e9 IDENTICAL/NONE
+// PROVEN: 47b242e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0089C550/0x1405DC6D0
 void FFX::Finish() {
     if (!FFX::s_cvarFFX->m_intValue) {
@@ -1018,6 +1019,7 @@ void FFX::Start() {
     GxXformSetViewport(0.0f, scaleX, 0.0f, scaleY, 0.0f, 1.0f);
 }
 
+// PROVEN: b882fecc IDENTICAL/UNPROVEN
 // OFFSET: 0x0089D310/0x1405DD770
 void FFX::FlushPortalEffects() {
     if (!FFX::s_portalEffects.Count() || !FFX::s_full[0].m_texture) {
@@ -1063,6 +1065,7 @@ void FFX::AddPortalEffect(Effect* effect, const C44Matrix& matrix, const C3Vecto
 FFX::Effect::Effect() : m_cvar(NULL) {
 }
 
+// PROVEN: 51a6fc4f DIFFERENT/IDENTICAL
 // OFFSET: 0x0089D460/0x1405DD9D0
 FFX::Effect::~Effect() {
 }
@@ -1120,7 +1123,7 @@ void FFX::Effect::Begin() {
 void FFX::Effect::End() {
 }
 
-// PROVEN: 787a0f92 IDENTICAL/DIFFERENT
+// PROVEN: 787a0f92 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void FFX::Effect::SetParameters(int32_t count, const int32_t* params) {
 }

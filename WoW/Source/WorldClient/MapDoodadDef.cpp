@@ -23,7 +23,7 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// PROVEN: 878cc1c9 IDENTICAL/NONE
+// PROVEN: 878cc1c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00733100/0x140475D70
 void CMapDoodadDef::StreamingCallback(void* param) {
     static_cast<CMapDoodadDef*>(param)->m_model->LinkToAsyncHead();
@@ -37,7 +37,7 @@ void CMapDoodadDef::GetLocalMatrix(C44Matrix& matrix) {
     matrix.Scale(this->m_scale);
 }
 
-// OFFSET: 0x00786AC0
+// OFFSET: 0x00786AC0/0x140475D80
 void CMapDoodadDef::SelectLights(CM2Lighting* lighting) {
     if (!this->m_exteriorLightingValid) {
         this->QueryExteriorLighting();
@@ -80,7 +80,7 @@ void CMapDoodadDef::SelectLights(CM2Lighting* lighting) {
     lighting->SetFog(color, fog->m_start, fog->m_end, fog->m_density);
 }
 
-// OFFSET: 0x00786E70
+// OFFSET: 0x00786E70/0x140476210
 int32_t CMapDoodadDef::SelectUnderwater(CMapObjDefGroup* group) {
     CMapObjDef* mapObjDef = group->m_mapObjDef;
     CMapObjGroup* objGroup = mapObjDef->m_mapObj->GetGroup(group->m_groupNum, 0);
@@ -237,6 +237,7 @@ void CMapDoodadDef::UpdateBounds() {
     }
 }
 
+// PROVEN: 11cd35b8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00787900/0x140476FA0
 void CMapDoodadDef::LinkToChunk(CMapBaseObj* owner) {
     if (owner->m_type & 0x4) {
@@ -268,7 +269,7 @@ void CMapDoodadDef::LinkToChunk(CMapBaseObj* owner) {
     }
 }
 
-// OFFSET: [0x007879B0, 0x00787DC0]
+// OFFSET: [0x007879B0/0x140477070, 0x00787DC0]
 CMapDoodadDef::~CMapDoodadDef() {
     if (this->m_model) {
         this->m_model->SetSequenceCallback(NULL, 0);
@@ -331,6 +332,7 @@ void CMapDoodadDef::UpdateOwners() {
     }
 }
 
+// PROVEN: ddec203f IDENTICAL/DIFFERENT
 // OFFSET: 0x00787C90/0x1404773F0
 void CMapDoodadDef::Purge() {
     if (this->m_refCount) {
@@ -341,7 +343,7 @@ void CMapDoodadDef::Purge() {
     CMap::FreeDoodadDef(this);
 }
 
-// OFFSET: 0x00787CE0
+// OFFSET: 0x00787CE0/0x140477470
 CMapDoodadDef::CMapDoodadDef() {
     this->m_modelBox.b.x = 0.0f;
     this->m_modelBox.b.y = 0.0f;
@@ -360,7 +362,7 @@ CMapDoodadDef::CMapDoodadDef() {
     this->m_fade = 0xFF00;
 }
 
-// OFFSET: 0x00787DF0
+// OFFSET: 0x00787DF0/0x1404775A0
 int32_t CMapDoodadDef::SelectUnderwater() {
     CMap* map = this->m_worldMap->GetMap(this->m_position);
 

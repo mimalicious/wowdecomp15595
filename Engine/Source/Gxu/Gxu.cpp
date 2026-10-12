@@ -51,7 +51,7 @@ void GxuXformCreateProjection_Exact(float fovyInRadians, float aspect, float min
     dst.d3 = 0.0f;
 }
 
-// OFFSET: 0x00615CF0
+// OFFSET: 0x00615CF0/0x1402A1CE0
 void GxuXformCreateOrtho(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, C44Matrix& dst) {
     if (maxX == minX) {
         DebugValidate("minX != maxX");
@@ -89,7 +89,7 @@ void GxuXformCreateOrtho(float minX, float maxX, float minY, float maxY, float m
     dst.d3 = 1.0f;
 }
 
-// OFFSET: 0x00615DF0
+// OFFSET: 0x00615DF0/0x1402A1E30
 void GxuXformCreateOrthoDepth(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, C44Matrix& dst) {
     if (maxX == minX) {
         DebugValidate("minX != maxX");
@@ -139,6 +139,7 @@ void GxuXformCreateOrthoDepth(float minX, float maxX, float minY, float maxY, fl
     }
 }
 
+// PROVEN: 62dabeaa DIFFERENT/IDENTICAL
 // OFFSET: 0x00615F40/0x1402A1FF0
 void GxuAdjustProjForHalfPixel(C44Matrix& proj) {
     if (!g_theGxDevicePtr->m_caps.m_pixelCenterOnEdge) {
@@ -292,10 +293,10 @@ int32_t GxuXformCalc3dScreenCoords(const C44Matrix& toScreen, uint32_t count, co
     return 1;
 }
 
-// PROVEN: dc6e39c7 IDENTICAL/DIFFERENT
+// PROVEN: 0b73b925 IDENTICAL/IDENTICAL
 // OFFSET: 0x006166C0/0x1402A3210
 void GxuUpdateSingleColorTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
-    // STATIC: 0x00DD9D78
+    // STATIC: 0x00DD9D78/0x140CC0650
     static CImVector s_texels[64];
 
     switch (command) {

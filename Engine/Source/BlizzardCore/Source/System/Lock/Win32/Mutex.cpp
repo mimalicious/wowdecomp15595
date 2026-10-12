@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 
+// PROVEN: aa0a4d23 IDENTICAL/NONE
 // OFFSET: 0x007AD510/0x1404A31F0
 void Blizzard::Lock::MutexCreate(Mutex& mutex) {
     InitializeCriticalSection(&mutex);
@@ -33,7 +34,7 @@ Blizzard::Lock::ScopedMutex::ScopedMutex(Mutex& mutex) {
     MutexEnter(mutex);
 }
 
-// OFFSET: #0x0042B3A0
+// INLINED
 Blizzard::Lock::ScopedMutex::~ScopedMutex() {
     MutexLeave(*this->m_mutex);
 }
@@ -43,7 +44,7 @@ Blizzard::Lock::RMutex::RMutex() {
     MutexCreate(this->m_mutex);
 }
 
-// OFFSET: #0x00421640
+// INLINED
 Blizzard::Lock::RMutex::~RMutex() {
     MutexDestroy(this->m_mutex);
 }

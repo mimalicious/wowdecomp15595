@@ -35,4 +35,6 @@ class Session : public Network::Session::Callback {
 
 }
 
+#include "Engine/Source/ComSat/ComSatSession.inl"
+
 #endif

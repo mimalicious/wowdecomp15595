@@ -106,7 +106,7 @@ static const XMLENUMVALUE s_curveTypes[] = {
 
 static const uint8_t s_signaturePublicExponent[4] = { 0x01, 0x00, 0x01, 0x00 };
 
-// STATIC: 0x00DC7830
+// STATIC: 0x00DC7830/0x140CAD4D0
 static char s_fontFlagsString[64];
 
 // OFFSET: 0x004EEAF0/0x140132F10
@@ -167,7 +167,7 @@ int32_t StringToDrawLayer(const char* string, uint32_t& layer) {
     return 0;
 }
 
-// OFFSET: 0x004EEC40
+// OFFSET: 0x004EEC40/0x1401330E0
 const char* DrawLayerToString(uint32_t layer) {
     for (uint32_t i = 0; i < sizeof(s_drawLayers) / sizeof(s_drawLayers[0]); i++) {
         if (layer == s_drawLayers[i].m_value) {
@@ -278,7 +278,7 @@ const char* FontFlagsToString(uint32_t flags) {
     return s_fontFlagsString;
 }
 
-// OFFSET: 0x004EEE30
+// OFFSET: 0x004EEE30/0x140133390
 int32_t StringToSmoothWeights(const char* string, float& in, float& out) {
     for (uint32_t i = 0; i < sizeof(s_smoothWeights) / sizeof(s_smoothWeights[0]); i++) {
         if (!SStrCmpI(s_smoothWeights[i].m_name, string, STORM_MAX_STR)) {
@@ -523,7 +523,7 @@ bool Insets::Load(float& left, float& right, float& top, float& bottom, CStatus*
     return false;
 }
 
-// PROVEN: 6ccead45 IDENTICAL/UNPROVEN
+// PROVEN: 6ccead45 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF150/0x140133810
 int32_t LoadXML_Value(linkObject* node, float& value, CStatus* status) {
     return static_cast<Value*>(node)->Load(value, status) != 0;
@@ -534,7 +534,7 @@ int32_t LoadXML_Dimensions(linkObject* node, float& x, float& y, CStatus* status
     return static_cast<Dimension*>(node)->Load(x, y, status);
 }
 
-// PROVEN: 3fd4757d IDENTICAL/UNPROVEN
+// PROVEN: 3fd4757d IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF1A0/0x140133850
 int32_t LoadXML_Insets(linkObject* node, float& left, float& right, float& top, float& bottom, CStatus* status) {
     return static_cast<Insets*>(node)->Load(left, right, top, bottom, status) != 0;
@@ -566,7 +566,7 @@ bool Color::GetColor(CImVector& color, CStatus* status) {
     return this->m_colorFlags & 1;
 }
 
-// OFFSET: 0x004EF2C0
+// OFFSET: 0x004EF2C0/0x1401339A0
 bool Gradient::Load(ORIENTATION& orientation, CImVector& minColor, CImVector& maxColor, CStatus* status) {
     orientation = static_cast<ORIENTATION>(this->m_orientation);
 
@@ -594,13 +594,13 @@ int32_t LoadXML_Color(linkObject* node, CImVector& color, CStatus* status) {
     return 1;
 }
 
-// PROVEN: 8bd70daf IDENTICAL/UNPROVEN
+// PROVEN: 8bd70daf IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF5B0/0x140133BC0
 int32_t LoadXML_Gradient(linkObject* node, ORIENTATION& orientation, CImVector& minColor, CImVector& maxColor, CStatus* status) {
     return static_cast<Gradient*>(node)->Load(orientation, minColor, maxColor, status) != 0;
 }
 
-// PROVEN: 9a30f9fb IDENTICAL/UNPROVEN
+// PROVEN: 9a30f9fb IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF5E0/0x140133BF0
 int32_t LoadXML_AnimOrigin(linkObject* node, FRAMEPOINT& point, C2Vector& offset, CStatus* status) {
     Origin* origin = static_cast<Origin*>(node);
@@ -622,6 +622,7 @@ int32_t LoadXML_AnimOrigin(linkObject* node, FRAMEPOINT& point, C2Vector& offset
     return 1;
 }
 
+// PROVEN: 143e7a74 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF650/0x140133C50
 CSimpleTexture* LoadXML_Texture(linkObject* node, CSimpleFrame* frame, CStatus* status) {
     void* data = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
@@ -634,6 +635,7 @@ CSimpleTexture* LoadXML_Texture(linkObject* node, CSimpleFrame* frame, CStatus* 
     return texture;
 }
 
+// PROVEN: ec34bcdb IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF6C0/0x140133CF0
 CSimpleFontString* LoadXML_String(linkObject* node, CSimpleFrame* frame, CStatus* status) {
     void* data = CSimpleFontString::s_allocator.GetData(0, typeid(CSimpleFontString).raw_name(), SLOG_OBJECT);
@@ -866,6 +868,7 @@ int32_t ProcessFileForMakeSign(MD5_CTX* md5, const char* filename, const char* b
     return 1;
 }
 
+// PROVEN: 3570744c DIFFERENT/IDENTICAL
 // OFFSET: 0x004EFC30/0x1401343C0
 static void CalculateSignatureMD5(const char* tocFile, const char* extraFile, uint8_t* digest) {
     MD5_CTX context;

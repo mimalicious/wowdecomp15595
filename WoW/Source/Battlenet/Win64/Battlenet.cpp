@@ -4,6 +4,7 @@
 #include <new>
 #include "WoW/Source/Battlenet/Battlenet.h"
 
+// PROVEN: 6e30f59d NONE/IDENTICAL
 // OFFSET: 0x00663320/0x140309410
 void* Battlenet::WindowsLibrary::GetProc(const char* name) {
     return reinterpret_cast<void*>(GetProcAddress(static_cast<HMODULE>(this->m_module), name));

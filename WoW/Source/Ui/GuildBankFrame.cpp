@@ -25,55 +25,55 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F4DE58
+// STATIC: 0x00F4DE58/0x140E42820
 int32_t CGGuildBankInfo::m_textDirty[8];
 
 // STATIC: 0x00F4DE78
 GuildBankLogEntry CGGuildBankInfo::m_log[9][25];
 
-// STATIC: 0x00F501A0
+// STATIC: 0x00F501A0/0x140E45270
 GuildBankTabInfo CGGuildBankInfo::m_tabInfo[8];
 
-// STATIC: 0x00F60BC0
+// STATIC: 0x00F60BC0/0x140E55C90
 int32_t CGGuildBankInfo::m_numLogEntries[9];
 
-// STATIC: 0x00F60BE4
+// STATIC: 0x00F60BE4/0x140E55CB4
 int32_t CGGuildBankInfo::m_numTabs;
 
-// STATIC: 0x00F60BE8
+// STATIC: 0x00F60BE8/0x140E55CB8
 WOWGUID CGGuildBankInfo::m_banker;
 
-// STATIC: 0x00F60BF0
+// STATIC: 0x00F60BF0/0x140E55CC0
 WOWGUID CGGuildBankInfo::m_pendingBanker;
 
-// STATIC: 0x00F60BF8
+// STATIC: 0x00F60BF8/0x140E55CC8
 int32_t CGGuildBankInfo::m_currentTab;
 
-// STATIC: 0x00F60BFC
+// STATIC: 0x00F60BFC/0x140E55CCC
 int32_t CGGuildBankInfo::m_pendingItemCallbacks;
 
-// STATIC: 0x00F60C00
+// STATIC: 0x00F60C00/0x140E55CD0
 uint64_t CGGuildBankInfo::m_money;
 
-// STATIC: 0x00F60C08
+// STATIC: 0x00F60C08/0x140E55CD8
 uint64_t CGGuildBankInfo::m_bonusDepositMoney;
 
-// STATIC: 0x00F60C10
+// STATIC: 0x00F60C10/0x140E55CE0
 int32_t CGGuildBankInfo::m_pendingLogCallbacks;
 
-// STATIC: 0x00F60C14
+// STATIC: 0x00F60C14/0x140E55CE4
 int32_t CGGuildBankInfo::m_remainingWithdrawals;
 
-// STATIC: 0x00F60C18
+// STATIC: 0x00F60C18/0x140E55CE8
 uint64_t CGGuildBankInfo::m_remainingWithdrawMoney;
 
-// STATIC: 0x00F60C20
+// STATIC: 0x00F60C20/0x140E55CF0
 TSGrowableArray<GuildBankItem> CGGuildBankInfo::m_tabSlots[8];
 
-// STATIC: 0x00D15C68
+// STATIC: 0x00D15C68/0x140BCF840
 uint32_t CGGuildBankInfo::m_logTab = 255;
 
-// PROVEN: 53247f81 IDENTICAL/NONE
+// PROVEN: 53247f81 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C02D0/0x14074CBE0
 void CGGuildBankInfo::SetGuildBanker(const WOWGUID& banker) {
     if (!banker) {
@@ -90,7 +90,7 @@ void CGGuildBankInfo::SetGuildBanker(const WOWGUID& banker) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_OPENED, NULL);
 }
 
-// PROVEN: 475bf0bb IDENTICAL/NONE
+// PROVEN: 475bf0bb IDENTICAL/IDENTICAL
 // OFFSET: 0x009C0350/0x14074CC50
 void CGGuildBankInfo::GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t& tab, uint32_t& slot) {
     tab = virtualSlot / 98;
@@ -103,39 +103,39 @@ void CGGuildBankInfo::SetTextUpdate(uint32_t tab, int32_t update) {
     CGGuildBankInfo::m_textDirty[tab] = update;
 }
 
-// PROVEN: 33bfb5e2 IDENTICAL/NONE
-// OFFSET: 0x009C0940
+// PROVEN: 33bfb5e2 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C0940/0x14074D250
 void CGGuildBankInfo::GuildBankItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!CGGuildBankInfo::m_pendingItemCallbacks || !--CGGuildBankInfo::m_pendingItemCallbacks) {
         FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
     }
 }
 
-// PROVEN: 3aa43c58 IDENTICAL/NONE
-// OFFSET: 0x009C0970
+// PROVEN: 3aa43c58 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C0970/0x14074D280
 void CGGuildBankInfo::GuildBankLogCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!CGGuildBankInfo::m_pendingLogCallbacks || !--CGGuildBankInfo::m_pendingLogCallbacks) {
         FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKLOG_UPDATE, NULL);
     }
 }
 
-// PROVEN: c115d3ca IDENTICAL/NONE
-// OFFSET: 0x009C09A0
+// PROVEN: c115d3ca IDENTICAL/IDENTICAL
+// OFFSET: 0x009C09A0/0x14074D2B0
 bool CGGuildBankInfo::ClientGuildBankMoneyWithdrawnHandler(ClientGuildBankMoneyWithdrawn* msg) {
     CGGuildBankInfo::m_remainingWithdrawMoney = msg->m_remainingWithdrawMoney;
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_WITHDRAWMONEY, NULL);
     return true;
 }
 
-// PROVEN: 90b0ea75 IDENTICAL/NONE
-// OFFSET: 0x009C09D0
+// PROVEN: 90b0ea75 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C09D0/0x14074D2E0
 bool CGGuildBankInfo::ClientGuildBankTextQueryResultHandler(ClientGuildBankTextQueryResult* msg) {
     ScrubString(msg->m_text, CGGuildBankInfo::m_tabInfo[msg->m_tab].m_text, 2048, sizeof(CGGuildBankInfo::m_tabInfo[msg->m_tab].m_text), 0);
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TEXT, "%d", msg->m_tab + 1);
     return true;
 }
 
-// OFFSET: 0x009C0A20
+// OFFSET: 0x009C0A20/0x14074D340
 void CGGuildBankInfo::ClearGuildTabList(uint32_t tab) {
     if (tab >= 8) {
         return;
@@ -168,8 +168,8 @@ void CGGuildBankInfo::BuyGuildBankTab() {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 43546643 IDENTICAL/NONE
-// OFFSET: 0x009C0B60
+// PROVEN: 43546643 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C0B60/0x14074D4C0
 void CGGuildBankInfo::UpdateTabInfo(uint32_t tab, char* name, char* icon) {
     ScrubString(name, CGGuildBankInfo::m_tabInfo[tab].m_name, 16, sizeof(CGGuildBankInfo::m_tabInfo[tab].m_name), 1);
     SStrCopy(CGGuildBankInfo::m_tabInfo[tab].m_icon, icon, sizeof(CGGuildBankInfo::m_tabInfo[tab].m_icon));
@@ -261,7 +261,7 @@ void CGGuildBankInfo::EnterWorld() {
     ClientServices::Send(&query);
 }
 
-// OFFSET: 0x009C0DC0
+// OFFSET: 0x009C0DC0/0x14074D770
 void CGGuildBankInfo::QueryGuildBankTab(uint32_t tab) {
     if (!CGGuildBankInfo::m_banker) {
         return;
@@ -276,8 +276,8 @@ void CGGuildBankInfo::QueryGuildBankTab(uint32_t tab) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 635cc759 IDENTICAL/NONE
-// OFFSET: 0x009C0E80
+// PROVEN: 635cc759 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C0E80/0x14074D850
 void CGGuildBankInfo::QueryGuildBankText(uint32_t tab) {
     if (!CGGuildBankInfo::m_banker || !CGGuildBankInfo::m_textDirty[tab]) {
         FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TEXT, "%d", tab + 1);
@@ -289,7 +289,7 @@ void CGGuildBankInfo::QueryGuildBankText(uint32_t tab) {
     CGGuildBankInfo::m_textDirty[tab] = 0;
 }
 
-// OFFSET: 0x009C0EF0
+// OFFSET: 0x009C0EF0/0x14074D8D0
 void CGGuildBankInfo::SetTabInfo(uint32_t tab, const char* name, const char* icon) {
     char scrubbed[64];
     ScrubString(name, scrubbed, 16, sizeof(scrubbed), 1);
@@ -343,7 +343,7 @@ void CGGuildBankInfo::WithdrawMoney(int64_t amount) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 59f0b9ac IDENTICAL/NONE
+// PROVEN: 59f0b9ac IDENTICAL/IDENTICAL
 // OFFSET: 0x009C11A0/0x14074DBE0
 void CGGuildBankInfo::SetGuildBankText(uint32_t tab, const char* text) {
     if (!CGGuildBankInfo::m_banker || static_cast<int32_t>(tab) >= CGGuildBankInfo::m_numTabs) {
@@ -356,8 +356,8 @@ void CGGuildBankInfo::SetGuildBankText(uint32_t tab, const char* text) {
     ClientServices::Send(&request);
 }
 
-// PROVEN: 3f4cf561 IDENTICAL/NONE
-// OFFSET: 0x009C1F80
+// PROVEN: 3f4cf561 IDENTICAL/IDENTICAL
+// OFFSET: 0x009C1F80/0x14074EBE0
 void CGGuildBankInfo::ClearContents() {
     for (uint32_t i = 0; i < 8; i++) {
         CGGuildBankInfo::m_tabSlots[i].Clear();
@@ -369,8 +369,8 @@ void CGGuildBankInfo::ClearContents() {
     CGGuildBankInfo::m_currentTab = 0;
 }
 
-// PROVEN: a5bb2f62 IDENTICAL/NONE
-// OFFSET: 0x009C2000
+// PROVEN: a5bb2f62 IDENTICAL/UNPROVEN
+// OFFSET: 0x009C2000/0x14074EC90
 void CGGuildBankInfo::ShutdownGame() {
     ClientGuildBankQueryResults::s_handler = NULL;
     ClientGuildBankLogQueryResults::s_handler = NULL;
@@ -379,7 +379,7 @@ void CGGuildBankInfo::ShutdownGame() {
     CGGuildBankInfo::ClearContents();
 }
 
-// OFFSET: 0x009C2020
+// OFFSET: 0x009C2020/0x14074ECC0
 bool CGGuildBankInfo::ClientGuildBankQueryResultsHandler(ClientGuildBankQueryResults* msg) {
     CGGuildBankInfo::m_remainingWithdrawals = msg->m_withdrawalsRemaining;
 
@@ -577,7 +577,7 @@ void CGGuildBankInfo::SwapItems(uint32_t tab, uint32_t slot, uint64_t item, uint
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
 }
 
-// OFFSET: 0x009C2740
+// OFFSET: 0x009C2740/0x14074F580
 void CGGuildBankInfo::SwapBankItems(uint32_t tab, uint32_t slot, uint32_t itemID, uint32_t virtualSlot, int32_t split) {
     if (!CGGuildBankInfo::m_banker || !itemID) {
         return;
@@ -657,7 +657,7 @@ void CGGuildBankInfo::SwapBankItems(uint32_t tab, uint32_t slot, uint32_t itemID
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
 }
 
-// PROVEN: d331753f IDENTICAL/NONE
+// PROVEN: d331753f IDENTICAL/IDENTICAL
 // OFFSET: 0x009C29E0/0x14074F8D0
 void CGGuildBankInfo::AutoStoreItem(uint64_t item, uint64_t container, uint32_t containerSlot) {
     if (CGGuildBankInfo::m_banker) {
@@ -665,7 +665,7 @@ void CGGuildBankInfo::AutoStoreItem(uint64_t item, uint64_t container, uint32_t 
     }
 }
 
-// OFFSET: 0x009C2A20
+// OFFSET: 0x009C2A20/0x14074F910
 bool CGGuildBankInfo::IsTabFiltered(int32_t tab) {
     if (!CGContainerInfo::IsSearchActive()) {
         return false;
@@ -697,7 +697,7 @@ bool CGGuildBankInfo::IsTabFiltered(int32_t tab) {
     return true;
 }
 
-// OFFSET: 0x009C3850
+// OFFSET: 0x009C3850/0x140750980
 bool CGGuildBankInfo::ClientGuildBankLogQueryResultsHandler(ClientGuildBankLogQueryResults* msg) {
     int32_t now = _time32(NULL);
     uint32_t tab = msg->m_tab;
@@ -762,10 +762,10 @@ bool CGGuildBankInfo::ClientGuildBankLogQueryResultsHandler(ClientGuildBankLogQu
 
 // OFFSET: 0x009C3A70/0x140750DA0
 void CGGuildBankInfo::InitializeGame() {
-    ClientGuildBankQueryResults::s_handler = &CGGuildBankInfo::ClientGuildBankQueryResultsHandler;
-    ClientGuildBankLogQueryResults::s_handler = &CGGuildBankInfo::ClientGuildBankLogQueryResultsHandler;
-    ClientGuildBankMoneyWithdrawn::s_handler = &CGGuildBankInfo::ClientGuildBankMoneyWithdrawnHandler;
-    ClientGuildBankTextQueryResult::s_handler = &CGGuildBankInfo::ClientGuildBankTextQueryResultHandler;
+    ClientGuildBankQueryResults::s_handler = JamHandlerEncode(&CGGuildBankInfo::ClientGuildBankQueryResultsHandler, g_jamHandlerKey_CFEF10);
+    ClientGuildBankLogQueryResults::s_handler = JamHandlerEncode(&CGGuildBankInfo::ClientGuildBankLogQueryResultsHandler, g_jamHandlerKey_CFF1A8);
+    ClientGuildBankMoneyWithdrawn::s_handler = JamHandlerEncode(&CGGuildBankInfo::ClientGuildBankMoneyWithdrawnHandler, g_jamHandlerKey_CFD284);
+    ClientGuildBankTextQueryResult::s_handler = JamHandlerEncode(&CGGuildBankInfo::ClientGuildBankTextQueryResultHandler, g_jamHandlerKey_CFE4E8);
     CGGuildBankInfo::m_numTabs = 0;
     memset(CGGuildBankInfo::m_tabInfo, 0, sizeof(CGGuildBankInfo::m_tabInfo));
 }

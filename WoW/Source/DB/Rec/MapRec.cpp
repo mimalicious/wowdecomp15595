@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[19] = { 0, 2, 0, 0, 0, 0, 2, 0, 2, 2, 0, 3, 0,
 // STATIC: 0x00C28334/0x140A1EAD0
 const DBCMeta MapRec::s_meta = { "DBFilesClient\\Map.dbc", 19, 80, MapRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 1e9f9ca0 IDENTICAL/NONE
+// PROVEN: 1e9f9ca0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B750/0x1407E8630
 void MapRec::FixupStrings(void* record, const char* strings) {
     MapRec* rec = static_cast<MapRec*>(record);

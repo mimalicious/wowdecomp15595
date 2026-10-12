@@ -42,10 +42,10 @@ static CRect (*s_moveFunctions[4])(uint32_t grid, CRect rect) = {
     SmartScreenRectMoveDown,
 };
 
-// STATIC: 0x00C99DF4
+// STATIC: 0x00C99DF4/0x140B32300
 static TSList<BFSNODE> s_searchQueue;
 
-// STATIC: 0x00C99E00
+// STATIC: 0x00C99E00/0x140CAD488
 static TSList<BFSNODE> s_freeNodes;
 
 // STATIC: 0x00D3A774
@@ -261,7 +261,7 @@ void SmartScreenRectClearGrid(uint32_t grid) {
     }
 }
 
-// OFFSET: 0x00460E30
+// OFFSET: 0x00460E30/0x14006C7F0
 static BFSNODE* SmartScreenRectAllocNode() {
     BFSNODE* node = s_freeNodes.Head();
 
@@ -277,6 +277,7 @@ static BFSNODE* SmartScreenRectAllocNode() {
     return node;
 }
 
+// PROVEN: f70267c5 IDENTICAL/NONE
 // OFFSET: 0x004607B0
 int32_t SmartScreenRectStartDirection(uint8_t flags) {
     if (flags & 0x1) {
@@ -394,7 +395,7 @@ void SmartScreenRectPlace(uint32_t grid, CRect& rect) {
     *s_grids[grid].New() = rect;
 }
 
-// OFFSET: 0x00461510
+// OFFSET: 0x00461510/0x14006D050
 void SmartScreenRectShutdown() {
     s_searchQueue.Clear();
     s_freeNodes.Clear();

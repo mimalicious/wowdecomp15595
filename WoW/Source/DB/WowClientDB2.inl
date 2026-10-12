@@ -47,7 +47,7 @@ WowClientDB2<T>::WowClientDB2() : m_maxQueriesPerPump(100), m_queriesSent(0), m_
     this->m_meta = &T::s_meta;
 }
 
-// OFFSET: [0x00499F90<ItemRec>, 0x0049A770<ItemRecSparse>, 0x0049A990<ItemCurrencyCostRec>, 0x0049ABB0<ItemExtendedCostRec>, 0x0049ADD0<KeyChainRec>]
+// OFFSET: [0x00499F90/0x1400C49A0<ItemRec>, 0x0049A770/0x1400C4F40<ItemRecSparse>, 0x0049A990/0x1400C54E0<ItemCurrencyCostRec>, 0x0049ABB0/0x1400C61B0<ItemExtendedCostRec>, 0x0049ADD0/0x1400C6750<KeyChainRec>]
 template <class T>
 WowClientDB2<T>::~WowClientDB2() {
     this->m_pending.Clear();
@@ -88,6 +88,7 @@ void* WowClientDB2<T>::AppendDBRequest(int32_t id, WOWGUID guid, bool related) {
     return cache;
 }
 
+// PROVEN: 29fb8166 IDENTICAL/NONE
 // OFFSET: [0x00499DF0<ItemRec>]
 template <class T>
 void WowClientDB2<T>::CancelAllCallbacks() {
@@ -110,7 +111,7 @@ void WowClientDB2<T>::CancelAllCallbacks() {
     }
 }
 
-// OFFSET: [0x00582DA0<ItemRec>]
+// OFFSET: [0x00582DA0/0x1401EA5B0<ItemRec>]
 template <class T>
 void WowClientDB2<T>::CancelCallback(int32_t id, RECORD_CALLBACK callback, void* param) {
     DBCACHE* cache = this->m_cache.Head();
@@ -139,6 +140,7 @@ void WowClientDB2<T>::CancelCallback(int32_t id, RECORD_CALLBACK callback, void*
     }
 }
 
+// PROVEN: 675ca3cf IDENTICAL/NONE
 // OFFSET: [0x0049A750<ItemRec>, 0x0049A970<ItemRecSparse>, 0x0049AB90<ItemCurrencyCostRec>, 0x0049ADB0<ItemExtendedCostRec>, 0x0049AFD0<KeyChainRec>]
 template <class T>
 void WowClientDB2<T>::ClearPendingRequests() {
@@ -147,7 +149,7 @@ void WowClientDB2<T>::ClearPendingRequests() {
     this->PurgeUnconfirmedHotfixes();
 }
 
-// OFFSET: [0x00465ED0<ItemRec>]
+// OFFSET: [0x00465ED0/0x140079600<ItemRec>]
 template <class T>
 void WowClientDB2<T>::DBReadFailCallback(CAsyncObject* object) {
     DBREADINFO* info = static_cast<DBREADINFO*>(object->m_userArg);
@@ -536,7 +538,7 @@ void WowClientDB2<T>::Idle() {
 }
 
 // PROVEN: f90c549f IDENTICAL/NONE
-// OFFSET: [0x004988B0<ItemRec>]
+// OFFSET: [0x004988B0/0x1400C2600<ItemRec>]
 template <class T>
 void WowClientDB2<T>::IterateOverCache(ITERATE_CALLBACK callback, void* param) {
     DBCACHE* cache = this->m_cachedRecordList.Head();
@@ -553,7 +555,7 @@ void WowClientDB2<T>::IterateOverCache(ITERATE_CALLBACK callback, void* param) {
 }
 
 // PROVEN: f823eee8 IDENTICAL/NONE
-// OFFSET: [0x00498680<ItemRec>]
+// OFFSET: [0x00498680/0x1400C2A20<ItemRec>]
 template <class T>
 void WowClientDB2<T>::IterateOverRecords(ITERATE_CALLBACK callback, void* param) {
     for (int32_t id = this->m_minID; id < this->m_maxID; id++) {

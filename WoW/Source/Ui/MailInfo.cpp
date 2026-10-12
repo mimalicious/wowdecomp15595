@@ -29,70 +29,71 @@
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// STATIC: 0x00F48E78
+// STATIC: 0x00F48E78/0x140E3CF60
 SendMailItem CGMailInfo::m_sendItems[16];
 
-// STATIC: 0x00F48FF8
+// STATIC: 0x00F48FF8/0x140E3D0E0
 uint8_t CGMailInfo::m_lockSendItems;
 
-// STATIC: 0x00F49010
+// STATIC: 0x00F49010/0x140E3D0F8
 uint32_t CGMailInfo::m_sendPending;
 
-// STATIC: 0x00F48E28
+// STATIC: 0x00F48E28/0x140E3CF10
 MailSenderInfo s_recentSenders[3];
 
-// STATIC: 0x00F49000
+// STATIC: 0x00F49000/0x140E3D0E8
 uint64_t CGMailInfo::m_sendMoney;
 
-// STATIC: 0x00F49008
+// STATIC: 0x00F49008/0x140E3D0F0
 uint64_t CGMailInfo::m_sendCOD;
 
-// STATIC: 0x00D13340
+// STATIC: 0x00D13340/0x140BCB4A0
 float CGMailInfo::m_nextMailTime = -1.0f;
 
-// STATIC: 0x00F49024
+// STATIC: 0x00F49024/0x140E3D10C
 uint32_t CGMailInfo::m_numInboxItems;
 
-// STATIC: 0x00F49028
+// STATIC: 0x00F49028/0x140E3D110
 uint32_t CGMailInfo::m_totalInboxItems;
 
-// STATIC: 0x00F49018
+// STATIC: 0x00F49018/0x140E3D100
 int32_t CGMailInfo::m_selectedStationery;
 
-// STATIC: 0x00F4901C
+// STATIC: 0x00F4901C/0x140E3D104
 int32_t CGMailInfo::m_selectedPackage;
 
-// STATIC: 0x00F48E70
+// STATIC: 0x00F48E70/0x140E3CF58
 WOWGUID CGMailInfo::m_object;
 
-// STATIC: 0x00F4902C
+// STATIC: 0x00F4902C/0x140E3D114
 uint32_t CGMailInfo::m_nextUpdateTime;
 
-// STATIC: 0x00F49030
+// STATIC: 0x00F49030/0x140E3D118
 int32_t CGMailInfo::m_commandPending;
 
-// STATIC: 0x00F48FF9
+// STATIC: 0x00F48FF9/0x140E3D0E1
 uint8_t CGMailInfo::m_sendMailShowing;
 
-// STATIC: 0x00F49014
+// STATIC: 0x00F49014/0x140E3D0FC
 uint32_t CGMailInfo::m_numStationeries;
 
-// STATIC: 0x00F49020
+// STATIC: 0x00F49020/0x140E3D108
 uint32_t CGMailInfo::m_pendingStationeryCallbacks;
 
 // STATIC: 0x00F49034
 int32_t CGMailInfo::m_doPendingQuery;
 
-// STATIC: 0x00F49038
+// STATIC: 0x00F49038/0x140E3D120
 MailboxMessageInfo* CGMailInfo::m_autoLooting;
 
-// STATIC: 0x00F4903C
+// STATIC: 0x00F4903C/0x140E3D130
 TSFixedArray<StationeryInfo*> CGMailInfo::m_stationeries;
 
-// STATIC: 0x00F49048
+// STATIC: 0x00F49048/0x140E3D138
 TSGrowableArray<MailboxMessageInfo*> CGMailInfo::m_inbox;
 
-// OFFSET: 0x00464790
+// PROVEN: 29b0a39f IDENTICAL/IDENTICAL
+// OFFSET: 0x00464790/0x140079830
 MailAttachmentInfo* CGMailInfo::GetFirstAttachment(MailboxMessageInfo* mail) {
     if (!mail) {
         return NULL;
@@ -107,6 +108,7 @@ MailAttachmentInfo* CGMailInfo::GetFirstAttachment(MailboxMessageInfo* mail) {
     return NULL;
 }
 
+// PROVEN: 5fdbbf36 IDENTICAL/NONE
 // OFFSET: 0x00466140
 MailboxMessageInfo* CGMailInfo::GetInboxItem(uint32_t index) {
     if (index >= CGMailInfo::m_numInboxItems) {
@@ -116,6 +118,7 @@ MailboxMessageInfo* CGMailInfo::GetInboxItem(uint32_t index) {
     return CGMailInfo::m_inbox.m_data[index];
 }
 
+// PROVEN: ec121ea6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00466160/0x140079830
 MailAttachmentInfo* GetAttachment(MailboxMessageInfo* message, uint32_t index) {
     if (!message) {
@@ -151,6 +154,7 @@ uint32_t GetNumAttachments(const MailboxMessageInfo* message) {
     return count;
 }
 
+// PROVEN: fa3c8ff5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096D730/0x1406E46B0
 static void SenderNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -159,6 +163,7 @@ static void SenderNameQueryCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
+// PROVEN: 8e8530c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096D760/0x1406E46E0
 void SendItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -166,6 +171,7 @@ void SendItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
+// PROVEN: 7d37758b IDENTICAL/IDENTICAL
 // OFFSET: 0x0096D780/0x1406E4700
 void InboxItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -182,7 +188,8 @@ void CGMailInfo::ClearSendItem(uint32_t index) {
     }
 }
 
-// OFFSET: 0x0096DEB0
+// PROVEN: a57da3ea IDENTICAL/IDENTICAL
+// OFFSET: 0x0096DEB0/0x1406E4F00
 StationeryInfo* GetStationery(uint32_t index) {
     if (index >= CGMailInfo::m_numStationeries) {
         return NULL;
@@ -346,7 +353,8 @@ int32_t Packet_SMSG_SEND_MAIL_RESULT(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: 0x0096F610
+// PROVEN: b7695d9f IDENTICAL/IDENTICAL
+// OFFSET: 0x0096F610/0x1406E6AD0
 int32_t Packet_SMSG_RECEIVED_MAIL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     float delay;
     msg->Get(delay);
@@ -354,7 +362,7 @@ int32_t Packet_SMSG_RECEIVED_MAIL(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: 0x00970E00
+// OFFSET: 0x00970E00/0x1406E8750
 int32_t Packet_SMSG_MAIL_LIST_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t total = 0;
     msg->Get(total);
@@ -541,7 +549,7 @@ void CGMailInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_SHOW_MAILBOX, Packet_SMSG_SHOW_MAILBOX, NULL);
 }
 
-// OFFSET: 0x0096E4C0
+// OFFSET: 0x0096E4C0/0x1406E5690
 void CGMailInfo::UpdateRecentSenders() {
     bool changed = false;
 
@@ -613,6 +621,7 @@ void CGMailInfo::UpdatePendingMail(float elapsed) {
     }
 }
 
+// PROVEN: e1461075 IDENTICAL/NONE
 // OFFSET: 0x0096E0B0
 int32_t Packet_SMSG_SHOW_MAILBOX(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID mailbox;
@@ -639,7 +648,8 @@ void CGMailInfo::SetMailCopied(uint32_t messageID) {
     }
 }
 
-// OFFSET: 0x0096E440
+// PROVEN: baee9407 IDENTICAL/IDENTICAL
+// OFFSET: 0x0096E440/0x1406E55E0
 void CGMailInfo::RemoveMail(uint32_t messageID) {
     for (uint32_t i = 0; i < CGMailInfo::m_numInboxItems; i++) {
         if (CGMailInfo::m_inbox.m_data[i]->m_messageID == static_cast<int32_t>(messageID)) {
@@ -655,6 +665,7 @@ void CGMailInfo::RemoveMail(uint32_t messageID) {
     }
 }
 
+// PROVEN: d02108e4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00971400/0x1406E8ED0
 static int32_t QSortStationery(const void* a, const void* b) {
     const StationeryInfo* infoA = *static_cast<StationeryInfo* const*>(a);
@@ -847,7 +858,7 @@ void CGMailInfo::ParseInboxSubject(MailboxMessageInfo* message) {
     }
 }
 
-// OFFSET: 0x0096D930
+// OFFSET: 0x0096D930/0x1406E48E0
 int32_t CanDeleteEmptyMail(MailboxMessageInfo* message) {
     bool autoDelete = (message->m_flags >> 3) & 1;
     return (message->m_messageType == 2 || autoDelete || (!SStrLen(message->m_body) && !message->m_mailTemplateID)) && !message->m_deletePending && !message->m_money && !GetNumAttachments(message);
@@ -993,6 +1004,7 @@ void CGMailInfo::Complain(uint32_t index) {
     ClientServices::Send2(&query);
 }
 
+// PROVEN: 0e860359 IDENTICAL/DIFFERENT
 // OFFSET: 0x00971520/0x1406E9040
 void CGMailInfo::UpdateStationeryList() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1028,7 +1040,7 @@ void CGMailInfo::UpdateStationeryList() {
     qsort(CGMailInfo::m_stationeries.m_data, count, sizeof(StationeryInfo*), QSortStationery);
 }
 
-// OFFSET: 0x0096F830
+// OFFSET: 0x0096F830/0x1406E6DB0
 int32_t CGMailInfo::SetSendMoney(uint64_t money) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1045,7 +1057,8 @@ int32_t CGMailInfo::SetSendMoney(uint64_t money) {
     return 0;
 }
 
-// OFFSET: 0x0096D9A0
+// PROVEN: bfbcfac9 IDENTICAL/IDENTICAL
+// OFFSET: 0x0096D9A0/0x1406E4970
 void CGMailInfo::SetSendCOD(uint64_t amount) {
     if (CGMailInfo::GetNumSendItems() && !(amount & 0x8000000000000000ull) && amount < 10000000000ull) {
         CGMailInfo::m_sendCOD = amount;
@@ -1053,7 +1066,7 @@ void CGMailInfo::SetSendCOD(uint64_t amount) {
     }
 }
 
-// OFFSET: 0x0096F8F0
+// OFFSET: 0x0096F8F0/0x1406E6E70
 void CGMailInfo::MarkAsRead(uint32_t index) {
     if (index >= CGMailInfo::m_numInboxItems || (CGMailInfo::m_inbox.m_data[index]->m_flags & 0x1)) {
         return;
@@ -1255,7 +1268,8 @@ void CGMailInfo::AutoLoot(uint32_t index) {
     CGMailInfo::ProcessAutoLootAttachments(message);
 }
 
-// OFFSET: 0x0096E620
+// PROVEN: 0fb4ba0f IDENTICAL/DIFFERENT
+// OFFSET: 0x0096E620/0x1406E5810
 void CGMailInfo::ReceivedMail(float delay) {
     if (CGMailInfo::m_object) {
         CGMailInfo::m_doPendingQuery = 1;
@@ -1272,7 +1286,7 @@ void CGMailInfo::ReceivedMail(float delay) {
     }
 }
 
-// PROVEN: 8585ab24 IDENTICAL/NONE
+// PROVEN: 8585ab24 IDENTICAL/IDENTICAL
 // OFFSET: 0x00972710/0x1406EA540
 void StationeryItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!--CGMailInfo::m_pendingStationeryCallbacks) {
@@ -1314,7 +1328,7 @@ void CGMailInfo::EnterWorld() {
     CGMailInfo::m_autoLooting = 0;
 }
 
-// PROVEN: 3e722487 IDENTICAL/NONE
+// PROVEN: 3e722487 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096D5D0/0x1406E4640
 void CGMailInfo::SetSendItem(uint32_t index, WOWGUID item, WOWGUID container, uint8_t slot) {
     if (index >= 12) {
@@ -1334,6 +1348,7 @@ void CGMailInfo::SetSendItem(uint32_t index, WOWGUID item, WOWGUID container, ui
     CGMailInfo::m_sendItems[index].m_slot = slot;
 }
 
+// PROVEN: 53d2f16f IDENTICAL/NONE
 // OFFSET: 0x0096D660
 void CGMailInfo::GetSendItem(uint32_t index, WOWGUID& item, WOWGUID& container, uint8_t& slot) {
     if (index < 16) {
@@ -1347,6 +1362,7 @@ void CGMailInfo::GetSendItem(uint32_t index, WOWGUID& item, WOWGUID& container, 
     }
 }
 
+// PROVEN: 0677423a IDENTICAL/NONE
 // OFFSET: 0x00464760
 WOWGUID CGMailInfo::GetSendItemGuid(uint32_t index) {
     return index < 16 ? CGMailInfo::m_sendItems[index].m_guid : WOWGUID::Make(0);
@@ -1366,6 +1382,7 @@ uint32_t CGMailInfo::GetNumSendItems() {
     return count;
 }
 
+// PROVEN: 80011644 IDENTICAL/NONE
 // OFFSET: 0x005F2000
 int32_t CGMailInfo::IsSendItem(WOWGUID item) {
     if (!item) {
@@ -1452,7 +1469,7 @@ void CGMailInfo::ParseInboxSubject(uint32_t messageID) {
     }
 }
 
-// OFFSET: 0x0096D850
+// OFFSET: 0x0096D850/0x1406E47D0
 int32_t Packet_MSG_QUERY_NEXT_MAIL_TIME(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(CGMailInfo::m_nextMailTime);
     uint32_t count;
@@ -1484,6 +1501,7 @@ int32_t Packet_MSG_QUERY_NEXT_MAIL_TIME(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
+// PROVEN: cbabfb8d IDENTICAL/NONE
 // OFFSET: 0x009704A0
 void CGMailInfo::ShutdownGame() {
     uint32_t count = CGMailInfo::m_stationeries.m_count;
@@ -1507,6 +1525,7 @@ void CGMailInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_SHOW_MAILBOX);
 }
 
+// PROVEN: b55902a3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096F590/0x1406E69E0
 void CGMailInfo::CloseMail(bool leavingWorld) {
     CGMailInfo::ClearSendMail(false);
@@ -1528,6 +1547,7 @@ void CGMailInfo::CloseMail(bool leavingWorld) {
     }
 }
 
+// PROVEN: d9b94a13 IDENTICAL/NONE
 // OFFSET: 0x00972A20
 void CGMailInfo::LeaveWorld() {
     CGMailInfo::CloseMail(true);

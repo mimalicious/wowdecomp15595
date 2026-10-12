@@ -9,16 +9,16 @@
 // STATIC: 0x00E4E4E0
 static HASHKEY_NONE s_chatLookupKey;
 
-// STATIC: 0x00E4E4E8
+// STATIC: 0x00E4E4E8/0x140D377A0
 static FMOD_CREATESOUNDEXINFO s_captureExInfo;
 
-// STATIC: 0x00E4E558
+// STATIC: 0x00E4E558/0x140D37850
 static char s_chatInputDeviceName[256];
 
-// STATIC: 0x00E4E658
+// STATIC: 0x00E4E658/0x140D37950
 static char s_chatOutputDeviceName[256];
 
-// STATIC: 0x00E4E758
+// STATIC: 0x00E4E758/0x140D37A50
 int32_t SE3::sm_bCaptureInitialized;
 
 // STATIC: 0x00E4E75C/0x140D37A58
@@ -48,13 +48,13 @@ static FMOD::DSP* s_monitorDSP;
 // STATIC: 0x00E4E77C/0x140D37A88
 static void (*s_userMonitorDSPCallback)(float*, uint32_t);
 
-// STATIC: 0x00E4E784
+// STATIC: 0x00E4E784/0x140BAFD00
 TSHashTable<SE3ChatSound, HASHKEY_NONE> SE3::sm_ChatSoundObjectTable;
 
 // STATIC: 0x00E4E7B0/0x140D37A98
 static SCritSect s_heartBeatCritSect;
 
-// STATIC: 0x00E4E7D8
+// STATIC: 0x00E4E7D8/0x140D37AC0
 char SE3::sm_sSystemDefaultName[64];
 
 // OFFSET: 0x00712450
@@ -64,7 +64,7 @@ void SE3::ErrCheck(uint32_t line, const char* file, FMOD_RESULT result) {
     }
 }
 
-// OFFSET: 0x00712480
+// OFFSET: 0x00712480/0x1403E4280
 FMOD_RESULT F_CALLBACK SE3ChatSound::DSPReadCallback(FMOD_DSP_STATE* dspState, float* inBuffer, float* outBuffer, unsigned int length, int inChannels, int outChannels) {
     void* userdata;
     FMOD_RESULT result = reinterpret_cast<FMOD::DSP*>(dspState->instance)->getUserData(&userdata);
@@ -92,7 +92,7 @@ FMOD_RESULT F_CALLBACK SE3ChatSound::DSPReadCallback(FMOD_DSP_STATE* dspState, f
     return FMOD_OK;
 }
 
-// OFFSET: 0x00712510
+// OFFSET: 0x00712510/0x1403E4320
 FMOD_RESULT F_CALLBACK SE3ChatSound::DSPSeekCallback(FMOD_DSP_STATE* dspState, unsigned int position) {
     void* userdata;
     FMOD_RESULT result = reinterpret_cast<FMOD::DSP*>(dspState->instance)->getUserData(&userdata);
@@ -112,6 +112,7 @@ FMOD_RESULT F_CALLBACK SE3ChatSound::DSPSeekCallback(FMOD_DSP_STATE* dspState, u
     return FMOD_OK;
 }
 
+// PROVEN: 76abd7b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00712560/0x1403E4370
 void SE3::CaptureWork() {
     if (!s_capturing) {
@@ -170,7 +171,7 @@ FMOD_RESULT SE3::AttachMonitorDSP(FMOD::Channel* channel) {
     return channel->addDSP(s_monitorDSP);
 }
 
-// PROVEN: f375c512 IDENTICAL/UNPROVEN
+// PROVEN: f375c512 IDENTICAL/IDENTICAL
 // OFFSET: 0x007126E0/0x1403E4530
 static FMOD_RESULT F_CALLBACK MonitorDSPCallback(FMOD_DSP_STATE* dspState, float* inBuffer, float* outBuffer, unsigned int length, int inChannels, int outChannels) {
     memcpy(outBuffer, inBuffer, length * sizeof(float));
@@ -268,6 +269,7 @@ bool SE3::IsCapturing() {
     return recording;
 }
 
+// PROVEN: f3ad69b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00712870/0x1403E45A0
 void SE3::StartCapture() {
     if (!SE3::sm_pChatSystem) {
@@ -350,6 +352,7 @@ void SE3StreamCallbacks::DiscardSamples(uint32_t position, uint32_t count) {
     }
 }
 
+// PROVEN: e3cf17a4 DIFFERENT/IDENTICAL
 // OFFSET: 0x00712A60/0x1403E4820
 void SE3::StopCapture() {
     if (!SE3::sm_pChatSystem || !SE3::IsChatSoundInitialized()) {
@@ -386,6 +389,7 @@ void SE3::ShutDownCapture() {
     SE3::HeartBeat(NULL, NULL);
 }
 
+// PROVEN: 338db020 IDENTICAL/DIFFERENT
 // OFFSET: 0x00712DB0/0x1403E4D40
 void SE3::DestroyChatSystem() {
     if (!SE3::sm_pChatSystem) {
@@ -661,7 +665,7 @@ void SE3::VoiceChat_Play(uint32_t handle) {
     }
 }
 
-// OFFSET: 0x00712B70
+// OFFSET: 0x00712B70/0x1403E4A30
 void SE3::VoiceChat_StopSound(uint32_t handle) {
     SE3ChatSound* sound = SE3::sm_ChatSoundObjectTable.Ptr(handle, s_chatLookupKey);
 

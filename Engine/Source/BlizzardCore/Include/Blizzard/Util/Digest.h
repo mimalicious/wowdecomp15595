@@ -52,6 +52,7 @@ bool Blizzard::Util::Digest<N>::operator<(const Digest& other) const {
     return false;
 }
 
+// PROVEN: 8868fbeb IDENTICAL/NONE
 // OFFSET: 0x007AE890<16>
 template <int N>
 bool Blizzard::Util::Digest<N>::operator==(const Digest& other) const {

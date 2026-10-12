@@ -39,49 +39,49 @@
 #include "WoW/Source/UIUtil/CameraManager.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00D0AFF8
+// STATIC: 0x00D0AFF8/0x140BBD3A0
 static int32_t s_lastUpdateTime = -1;
 
-// STATIC: 0x00D0B00C
+// STATIC: 0x00D0B00C/0x140BBD3B8
 static TSList<BlizzardObject> s_blizzardObjects;
 
-// STATIC: 0x00D0B018
+// STATIC: 0x00D0B018/0x140BBD3D0
 static TSList<BlizzardObject> s_blizzardObjectsDeleted;
 
-// STATIC: 0x00ED6754
+// STATIC: 0x00ED6754/0x140DC93B0
 static CDataAllocator s_blizzardObjectHeap(sizeof(BlizzardObject), 8);
 
-// STATIC: 0x00ED6768
+// STATIC: 0x00ED6768/0x140DC93D0
 static CDataAllocator s_shardHeap(sizeof(Shard), 32);
 
-// STATIC: 0x00D0B024
+// STATIC: 0x00D0B024/0x140BBD3E8
 static TSList<LightningObject> s_lightningObjects;
 
-// STATIC: 0x00D0B030
+// STATIC: 0x00D0B030/0x140BBD400
 static TSList<LightningObject> s_lightningObjectsDeleted;
 
-// STATIC: 0x00D0B03C
+// STATIC: 0x00D0B03C/0x140BBD418
 static TSList<MountTransitionObject> s_mountTransitions;
 
-// STATIC: 0x00D0B048
+// STATIC: 0x00D0B048/0x140BBD430
 static TSList<MountTransitionObject> s_mountTransitionsDeleted;
 
 // STATIC: 0x00D0B164
 static const char* s_defaultBlizzardModel = "Spells\\Blizzard_Impact_Base.mdx";
 
-// STATIC: 0x00ED6740
+// STATIC: 0x00ED6740/0x140DC9390
 static CLightningManager* s_lightningManager;
 
-// STATIC: 0x00ED6748
+// STATIC: 0x00ED6748/0x140DC93A0
 static TSGrowableArray<TSGrowableArray<const SpellVisualKitModelAttachRec*>*>* s_modelAttachLookup;
 
 // STATIC: 0x00ED6790
 static EclipseState s_eclipse;
 
-// STATIC: 0x00ED67A4
+// STATIC: 0x00ED67A4/0x140DC941C
 static uint32_t s_shardEventCount;
 
-// STATIC: 0x00ED67A8
+// STATIC: 0x00ED67A8/0x140DC9420
 static SpellVisualKitAreaModelRec s_defaultAreaModel;
 
 // INLINED
@@ -118,7 +118,8 @@ void BlizzardObject::SetFrameOfReference(const C44Matrix* matrix) {
     }
 }
 
-// OFFSET: 0x008BBFA0
+// PROVEN: 7fab1e95 IDENTICAL/NONE
+// OFFSET: 0x008BBFA0/0x140605250
 int32_t BlizzardObject::GetAngleRange(float& minAngle, float& maxAngle) const {
     minAngle = 0.0f;
     maxAngle = 6.2831855f;
@@ -138,6 +139,7 @@ int32_t BlizzardObject::GetAngleRange(float& minAngle, float& maxAngle) const {
     return 0;
 }
 
+// PROVEN: 20b7c851 IDENTICAL/NONE
 // OFFSET: 0x008BC040
 void EclipseState::Update(uint32_t time) {
     if (this->m_start == this->m_end) {
@@ -160,25 +162,26 @@ void EclipseState::Update(uint32_t time) {
     DayNight::SetEclipse(*reinterpret_cast<const uint32_t*>(&this->m_color), blend);
 }
 
+// PROVEN: e8ef79e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008BC100/0x140604CE0
 void SpellVisualsBlizzardSetDeletedCallback(BlizzardObject* object, void (*callback)(BlizzardObject* object, void* param), void* param) {
     object->m_deletedCallback = callback;
     object->m_deletedParam = param;
 }
 
-// PROVEN: b0403c10 IDENTICAL/NONE
+// PROVEN: b0403c10 IDENTICAL/IDENTICAL
 // OFFSET: 0x008BC120/0x140604CF0
 float SpellVisualsGetMountTransitionHeight(const MountTransitionObject* transition) {
     return transition->m_height;
 }
 
-// PROVEN: d81d3c7b IDENTICAL/NONE
-// OFFSET: 0x008BC130
+// PROVEN: d81d3c7b IDENTICAL/IDENTICAL
+// OFFSET: 0x008BC130/0x140604D00
 float SpellVisualsGetMountTransitionAlpha(const MountTransitionObject* transition) {
     return transition->m_alpha;
 }
 
-// PROVEN: 06742b3f IDENTICAL/NONE
+// PROVEN: 06742b3f IDENTICAL/IDENTICAL
 // OFFSET: 0x008BC140/0x140604D10
 void SpellVisualsGetMountTransitionPosAndNormal(const MountTransitionObject* transition, C3Vector* position, C3Vector* normal, float* facing) {
     *position = transition->m_position;
@@ -186,13 +189,13 @@ void SpellVisualsGetMountTransitionPosAndNormal(const MountTransitionObject* tra
     *facing = transition->m_facing;
 }
 
-// PROVEN: 54548d21 IDENTICAL/NONE
+// PROVEN: 54548d21 IDENTICAL/IDENTICAL
 // OFFSET: 0x008BC180/0x140604D40
 void SpellVisualsFlagMountTransitionFinished(MountTransitionObject* transition) {
     transition->m_flags |= 0x2;
 }
 
-// PROVEN: 484ab884 IDENTICAL/NONE
+// PROVEN: 484ab884 IDENTICAL/IDENTICAL
 // OFFSET: 0x008BC190/0x140604D50
 int32_t SpellVisualsIsMountTransitionFinished(const MountTransitionObject* transition) {
     return (transition->m_flags >> 1) & 1;
@@ -241,6 +244,7 @@ bool CanPlaySpellVisualKit(uint64_t caster, uint64_t target, const SpellVisualKi
     return CanPlaySpellVisualForPlayer(caster, target, kit->m_flags & 0x1000, kit->m_flags & 0x2000);
 }
 
+// PROVEN: 9c6427ee IDENTICAL/NONE
 // OFFSET: 0x008BC4D0
 CAaSphere BlizzardObject::GetBoundingSphere() {
     float radius = this->m_radius;
@@ -255,6 +259,7 @@ CAaSphere BlizzardObject::GetBoundingSphere() {
     return sphere;
 }
 
+// PROVEN: 7a86b636 IDENTICAL/IDENTICAL
 // OFFSET: 0x008BC550/0x140605190
 static void ShardEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     if ((++s_shardEventCount & 3) == 0 && eventId == 0x444E5324) {
@@ -282,6 +287,7 @@ C3Vector BlizzardObject::GetPolarOffset(float radius, float angle, int32_t rotat
     return offset;
 }
 
+// PROVEN: 4e0ca032 IDENTICAL/DIFFERENT
 // OFFSET: 0x008BC6D0/0x140605480
 const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit) {
     int32_t visualId = spell->m_spellVisualID[0];
@@ -306,7 +312,7 @@ const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit
     return hostile ? hostile : visual;
 }
 
-// OFFSET: 0x008BC770
+// OFFSET: 0x008BC770/0x140605560
 void SpellVisualsHandleCastStart(CGUnit_C* unit, const SpellCast* cast, const SpellRec* spell) {
     if (!unit) {
         SErrSetLastError(87);
@@ -531,7 +537,7 @@ void SpellVisualsHandleEclipse(const CImVector& color, float fadeIn, const Spell
     s_eclipse.m_end = now + castTime + 100;
 }
 
-// OFFSET: 0x008BD4E0
+// OFFSET: 0x008BD4E0/0x1406065A0
 void LightningObject::InitializeBolts(CGUnit_C* caster, const WOWGUID* targets, uint32_t count, bool reverse, int32_t attachment) {
     uint32_t time = this->m_chainEffects->m_segDelay + CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     this->m_endTime = time;
@@ -580,7 +586,7 @@ void LightningObject::InitializeBolts(CGUnit_C* caster, const WOWGUID* targets, 
     }
 }
 
-// OFFSET: 0x008BD660
+// OFFSET: 0x008BD660/0x140606740
 void SpellVisualsRender() {
     s_lightningManager->Render(StaticSingleton<CCameraManager>::Instance()->m_shot.m_position, World::FrustumCull);
 }
@@ -658,7 +664,7 @@ int32_t MountTransitionObject::UpdateCharacterData() {
     return 1;
 }
 
-// OFFSET: 0x008BD9B0
+// OFFSET: 0x008BD9B0/0x140606B40
 void SpellVisualsComputeMountTransitionJumpVec(const MountTransitionObject* transition, C3Vector* jump) {
     *jump = transition->m_jumpVector;
 
@@ -695,13 +701,13 @@ uint32_t SpellVisualsGetModelAttachRecCount(uint32_t kitId) {
     return 0;
 }
 
-// PROVEN: 356e42a8 IDENTICAL/NONE
+// PROVEN: 356e42a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x008BDAD0/0x140606C80
 const SpellVisualKitModelAttachRec* SpellVisualsGetModelAttachRec(uint32_t kitId, uint32_t index) {
     return s_modelAttachLookup->m_data[kitId]->m_data[index];
 }
 
-// OFFSET: 0x008BDAF0
+// OFFSET: 0x008BDAF0/0x140606CA0
 void BlizzardObject::UpdateWorldObject() {
     C44Matrix transform;
     C3Vector position = this->GetWorldPosition();
@@ -713,6 +719,7 @@ void BlizzardObject::UpdateWorldObject() {
     World::ObjectUpdate(this->m_entity, transform, box, sphere, sphere.c, 0, 0xFFFFFFFF);
 }
 
+// PROVEN: 9816c0fd IDENTICAL/NONE
 // OFFSET: 0x008BDCC0
 void BlizzardObject::ModelLoadedCallback(CM2Model* model, void* param) {
     if (param) {
@@ -730,7 +737,7 @@ C3Vector BlizzardObject::GetRandomShardOffset() {
     return this->GetPolarOffset(radius, angle, rotate);
 }
 
-// OFFSET: 0x008BDEB0
+// OFFSET: 0x008BDEB0/0x1406072F0
 void BlizzardObject::Render(int32_t visible) {
     C44Matrix transform;
     float scale = this->m_areaModel->m_modelScale;
@@ -793,7 +800,7 @@ void SpellVisualsBlizzardSetFrameOfReference(BlizzardObject* object, const C44Ma
     object->SetFrameOfReference(matrix);
 }
 
-// OFFSET: 0x008BE200
+// OFFSET: 0x008BE200/0x140607720
 BlizzardObject::BlizzardObject() : m_entity(0), m_radius(0.0f), m_angle(0.0f), m_endTime(0), m_shardRate(0.0f), m_shardAccum(0.0f), m_hasFrame(0), m_deletedCallback(NULL), m_deletedParam(NULL), m_model(NULL) {
     this->unk_0030[0] = 0.0f;
     this->unk_0030[1] = 0.0f;
@@ -808,7 +815,7 @@ int32_t BlizzardObject::WorldObjectRender(void* param, uintptr_t flags, uint64_t
     return 1;
 }
 
-// OFFSET: 0x008BE310
+// OFFSET: 0x008BE310/0x140607850
 void BlizzardObject::Init(const C3Vector* position, const SpellVisualKitAreaModelRec* areaModel, float radius, float angle) {
     this->m_position = *position;
     this->m_areaModel = areaModel;
@@ -848,7 +855,8 @@ void BlizzardObject::Init(const C3Vector* position, const SpellVisualKitAreaMode
     model->SetLoadedCallback(BlizzardObject::ModelLoadedCallback, this);
 }
 
-// OFFSET: 0x008BE430
+// PROVEN: 30c8772c IDENTICAL/DIFFERENT
+// OFFSET: 0x008BE430/0x1406079B0
 LightningObject::~LightningObject() {
     for (uint32_t i = 0; i < this->m_bolts.Count(); i++) {
         if (this->m_bolts[i].m_lightning != 0xFFFFFFFF) {
@@ -971,6 +979,7 @@ bool MountTransitionObject::Tick() {
     return true;
 }
 
+// PROVEN: a904af8c IDENTICAL/IDENTICAL
 // OFFSET: 0x008BE990/0x140608060
 void SpellVisualsShutdownModelAttachLookup() {
     if (!s_modelAttachLookup) {
@@ -1019,7 +1028,7 @@ BlizzardObject* SpellVisualsBlizzardCreate(const C3Vector* position, float radiu
     return object;
 }
 
-// OFFSET: 0x008BEBD0
+// OFFSET: 0x008BEBD0/0x140608320
 MountTransitionObject* SpellVisualsStartMountTransition(CGUnit_C* unit) {
     MountTransitionObject* transition = s_mountTransitions.NewNode(2, 0, 0);
 
@@ -1066,7 +1075,7 @@ void SpellVisualsInitializeModelAttachLookup() {
     }
 }
 
-// OFFSET: 0x008BF000
+// OFFSET: 0x008BF000/0x1406086B0
 BlizzardObject::~BlizzardObject() {
     Shard* shard;
 
@@ -1088,7 +1097,8 @@ BlizzardObject::~BlizzardObject() {
     }
 }
 
-// OFFSET: 0x008BF120
+// PROVEN: c9857fc8 IDENTICAL/DIFFERENT
+// OFFSET: 0x008BF120/0x140608830
 static void ShardSequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     Shard* shard = reinterpret_cast<Shard*>(static_cast<uintptr_t>(param));
 
@@ -1106,7 +1116,7 @@ static void ShardSequenceCallback(CM2Model* model, uint32_t boneId, uint32_t seq
     }
 }
 
-// OFFSET: 0x008BF1D0
+// OFFSET: 0x008BF1D0/0x1406089B0
 void BlizzardObject::AddShard(const C3Vector& center, const C3Vector& offset, float delayRange) {
     Shard* shard = s_shardHeap.New<Shard>(0);
     this->m_shards.LinkToTail(shard);
@@ -1204,6 +1214,7 @@ void BlizzardObject::Stop() {
     }
 }
 
+// PROVEN: 65b9b36a IDENTICAL/UNPROVEN
 // OFFSET: 0x008BF6A0/0x140608FE0
 void SpellVisualsInitialize() {
     s_lightningManager = new (SMemAlloc(sizeof(CLightningManager), __FILE__, __LINE__, 0)) CLightningManager();
@@ -1343,7 +1354,8 @@ void SpellVisualGetLightning(CGUnit_C* caster, CEffect* effect, uint32_t chainEf
     }
 }
 
-// OFFSET: 0x008BFB30
+// PROVEN: 7eddaccd IDENTICAL/IDENTICAL
+// OFFSET: 0x008BFB30/0x140609760
 void SpellVisualClearLightning(LightningObject* lightning) {
     uint32_t time = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     lightning->m_flags &= ~0x1;
@@ -1355,12 +1367,14 @@ void SpellVisualClearLightning(LightningObject* lightning) {
     }
 }
 
+// PROVEN: db764e3c IDENTICAL/IDENTICAL
 // OFFSET: 0x008BFB70/0x1406097B0
 void SpellVisualsBlizzardStop(BlizzardObject* object) {
     object->Stop();
 }
 
-// OFFSET: 0x008BFB80
+// PROVEN: b606c0fb IDENTICAL/DIFFERENT
+// OFFSET: 0x008BFB80/0x1406097C0
 void SpellVisualsCancelMountTransition(MountTransitionObject* transition) {
     if (transition) {
         s_mountTransitions.DeleteNode(transition);
@@ -1496,7 +1510,7 @@ void SpellVisualsTick() {
     }
 }
 
-// OFFSET: 0x008C01D0
+// OFFSET: 0x008C01D0/0x140609E70
 void SpellVisualsFreeDeleted() {
     LightningObject* lightning = s_lightningObjectsDeleted.Head();
 
@@ -1536,7 +1550,8 @@ void SpellVisualsFreeDeleted() {
     s_mountTransitionsDeleted.Clear();
 }
 
-// OFFSET: 0x008C0360
+// PROVEN: a5e2d041 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C0360/0x14060A0E0
 void SpellVisualsClear() {
     SpellVisualsFreeDeleted();
     s_lightningObjects.Clear();
@@ -1549,7 +1564,8 @@ void SpellVisualsClear() {
     }
 }
 
-// OFFSET: 0x008C03A0
+// PROVEN: 7826d576 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C03A0/0x14060A170
 void SpellVisualsShutdown() {
     SpellVisualsClear();
 

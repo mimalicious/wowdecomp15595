@@ -19,25 +19,25 @@
 #include "WoW/Source/Object/Unit.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: 0x00F4B978
+// STATIC: 0x00F4B978/0x140E3FDB0
 int32_t CGEquipmentManager::m_ignoredSlots[19];
 
-// STATIC: 0x00F4B9C4
+// STATIC: 0x00F4B9C4/0x140E3FDFC
 uint8_t CGEquipmentManager::m_lastCanUseEquipmentSetsValue;
 
-// STATIC: 0x00F4B9C5
+// STATIC: 0x00F4B9C5/0x140E3FDFD
 uint8_t CGEquipmentManager::m_loaded;
 
-// STATIC: 0x00F4B9C6
+// STATIC: 0x00F4B9C6/0x140E3FDFE
 uint8_t CGEquipmentManager::m_swapPending;
 
-// STATIC: 0x00F4B9C8
+// STATIC: 0x00F4B9C8/0x140E3FE00
 int32_t CGEquipmentManager::m_pendingSetID;
 
-// STATIC: 0x00F4B9CC
+// STATIC: 0x00F4B9CC/0x140E3FE08
 TSObjectAllocPool<EQUIPMENT_SET>* CGEquipmentManager::s_equipmentSetPool;
 
-// STATIC: 0x00D15060
+// STATIC: 0x00D15060/0x140BCE270
 TSList<EQUIPMENT_SET_NODE> CGEquipmentManager::s_equipmentSets;
 
 // INLINED
@@ -47,7 +47,7 @@ EQUIPMENT_SET::EQUIPMENT_SET() {
     this->m_unsaved = 0;
 }
 
-// PROVEN: b695294d IDENTICAL/NONE
+// PROVEN: b695294d IDENTICAL/IDENTICAL
 // OFFSET: 0x009A1280/0x140725A20
 void CGEquipmentManager::EnterWorld() {
     CGEquipmentManager::m_swapPending = 0;
@@ -70,7 +70,7 @@ int32_t CGEquipmentManager::CanUseEquipmentSets(bool updateActionBar) {
     return canUse;
 }
 
-// PROVEN: 243b4596 IDENTICAL/NONE
+// PROVEN: 243b4596 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A12D0/0x140725B20
 void CGEquipmentManager::ClearIgnoredSlots() {
     for (uint32_t i = 0; i < 19; i++) {
@@ -203,7 +203,7 @@ bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
     return true;
 }
 
-// OFFSET: 0x009A1990
+// OFFSET: 0x009A1990/0x140726300
 void CGEquipmentManager::SaveSet(EQUIPMENT_SET* set, const char* name, const char* icon) {
     if (set->m_unsaved) {
         return;
@@ -312,7 +312,7 @@ int32_t CGEquipmentManager::GetSetList(char* buffer, uint32_t size, const WOWGUI
     return buffer != out;
 }
 
-// OFFSET: 0x009A1D50
+// OFFSET: 0x009A1D50/0x140726850
 bool CGEquipmentManager::HasSet(const char* name) {
     for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
         if (!strcmp(node->m_set->m_name, name)) {
@@ -323,7 +323,7 @@ bool CGEquipmentManager::HasSet(const char* name) {
     return false;
 }
 
-// OFFSET: 0x009A1DC0
+// OFFSET: 0x009A1DC0/0x1407268B0
 bool CGEquipmentManager::HasSet(int32_t id) {
     for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
         if (node->m_set->m_id == id) {
@@ -395,7 +395,7 @@ EQUIPMENT_SET* CGEquipmentManager::GetSetByName(const char* name) {
     return NULL;
 }
 
-// OFFSET: 0x009A1F50
+// OFFSET: 0x009A1F50/0x1407269E0
 void CGEquipmentManager::EquipSet(int32_t id) {
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
 
@@ -503,7 +503,7 @@ bool CGEquipmentManager::IsSetEquipped(int32_t id) {
     return true;
 }
 
-// OFFSET: 0x009A2C60
+// OFFSET: 0x009A2C60/0x140727A30
 bool CGEquipmentManager::ModifyEquipmentSet(EQUIPMENT_SET* set, const char* name, const char* icon) {
     if (!set) {
         return false;
@@ -546,7 +546,7 @@ bool CGEquipmentManager::ModifyEquipmentSet(EQUIPMENT_SET* set, const char* name
     return true;
 }
 
-// OFFSET: 0x009A2E50
+// OFFSET: 0x009A2E50/0x140727C60
 bool CGEquipmentManager::CanCreateSet() {
     int32_t count = 0;
 
@@ -557,7 +557,8 @@ bool CGEquipmentManager::CanCreateSet() {
     return count < 10;
 }
 
-// OFFSET: 0x009A2E80
+// PROVEN: cb5e7dd9 IDENTICAL/DIFFERENT
+// OFFSET: 0x009A2E80/0x140727C90
 int32_t CGEquipmentManager::OnEquipmentSetResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGEquipmentManager::m_swapPending = 0;
     uint8_t result = 0;
@@ -591,7 +592,7 @@ void CGEquipmentManager::SaveSetByName(const char* name, const char* icon) {
     }
 }
 
-// OFFSET: 0x009A32B0
+// OFFSET: 0x009A32B0/0x1407284C0
 void CGEquipmentManager::CreateEquipmentSet(const char* name, const char* icon) {
     int32_t count = 0;
 
@@ -641,7 +642,7 @@ bool CGEquipmentManager::DeleteEquipmentSet(EQUIPMENT_SET* set) {
     return true;
 }
 
-// OFFSET: 0x009A3800
+// OFFSET: 0x009A3800/0x140728CD0
 int32_t CGEquipmentManager::OnEquipmentSet(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count = 0;
     msg->Get(count);
@@ -687,7 +688,7 @@ int32_t CGEquipmentManager::OnEquipmentSet(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// OFFSET: 0x009A3A10
+// OFFSET: 0x009A3A10/0x140728F50
 static void OnEquipmentSetSaved(int32_t id, WOWGUID guid) {
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
 
@@ -711,7 +712,7 @@ static void OnEquipmentSetSaved(int32_t id, WOWGUID guid) {
     CGEquipmentManager::s_equipmentSetPool->Delete(set);
 }
 
-// OFFSET: 0x009A3B10
+// OFFSET: 0x009A3B10/0x1407290B0
 void CGEquipmentManager::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_LOAD_EQUIPMENT_SET);
     ClientServices::ClearMessageHandler(SMSG_EQUIPMENT_SET_ID);
@@ -729,7 +730,7 @@ void CGEquipmentManager::ShutdownGame() {
     CGEquipmentManager::s_equipmentSetPool = NULL;
 }
 
-// OFFSET: 0x009A3C20
+// OFFSET: 0x009A3C20/0x140729250
 int32_t CGEquipmentManager::OnEquipmentSetID(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t id = 0;
     msg->Get(reinterpret_cast<uint32_t&>(id));

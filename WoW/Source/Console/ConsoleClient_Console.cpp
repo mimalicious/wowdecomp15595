@@ -11,6 +11,7 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/Console/ConsoleClient.h"
 
+// PROVEN: fc4e4814 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E210/0x140297F90
 int32_t ConsoleCommand_CloseConsole(const char* command, const char* arguments) {
     s_active = 0;
@@ -49,6 +50,7 @@ int32_t ConsoleCommand_RepeatHandler(const char* command, const char* arguments)
     return 1;
 }
 
+// PROVEN: c26f6258 IDENTICAL/DIFFERENT
 // OFFSET: 0x00610110/0x14029A490
 int32_t ConsoleCommand_ClearConsole(const char* command, const char* arguments) {
     s_NumLines = 0;
@@ -163,7 +165,7 @@ int32_t ConsoleCommand_Font(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: a0e237fc IDENTICAL/NONE
+// PROVEN: a0e237fc IDENTICAL/IDENTICAL
 // OFFSET: 0x00610450/0x14029A890
 int32_t ConsoleCommand_CurrentSettings(const char* command, const char* arguments) {
     char buffer[260];
@@ -238,6 +240,7 @@ int32_t ConsoleCommand_FontColor(const char* command, const char* arguments) {
     return 1;
 }
 
+// PROVEN: e87bd8c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006106B0/0x14029AB60
 int32_t ConsoleCommand_BufferSize(const char* command, const char* arguments) {
     if (!arguments || !*arguments) {
@@ -327,7 +330,7 @@ int32_t ConsoleCommand_HighLightColor(const char* command, const char* arguments
     return 1;
 }
 
-// PROVEN: 5c7fc97b IDENTICAL/NONE
+// PROVEN: 5c7fc97b IDENTICAL/IDENTICAL
 // OFFSET: 0x006108C0/0x14029ADD0
 int32_t ConsoleCommand_AppendLogToFile(const char* command, const char* arguments) {
     ConsoleWrite("Access Denied", ERROR_COLOR);

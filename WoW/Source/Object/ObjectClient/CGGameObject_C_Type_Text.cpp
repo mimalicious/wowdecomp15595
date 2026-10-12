@@ -7,7 +7,7 @@ CGGameObject_C_Type_Text::CGGameObject_C_Type_Text(CGGameObject_C* owner, const 
     this->m_interactDistance = 5.5555553f;
 }
 
-// OFFSET: 0x005A0950
+// OFFSET: 0x005A0950/0x140210460
 void CGGameObject_C_Type_Text::CloseInteraction() {
     if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
         this->m_owner->SetDisplayState(1);
@@ -16,7 +16,7 @@ void CGGameObject_C_Type_Text::CloseInteraction() {
     }
 }
 
-// OFFSET: 0x005A08F0
+// OFFSET: 0x005A08F0/0x1402103F0
 void CGGameObject_C_Type_Text::StartInteraction() {
     if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
         this->m_owner->SetDisplayState(0);
@@ -25,13 +25,13 @@ void CGGameObject_C_Type_Text::StartInteraction() {
     }
 }
 
-// PROVEN: e7bc6bee IDENTICAL/NONE
+// PROVEN: e7bc6bee IDENTICAL/IDENTICAL
 // OFFSET: 0x005994D0/0x1402078B0
 int32_t CGGameObject_C_Type_Text::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 7 : 33;
 }
 
-// PROVEN: 0fc69faa IDENTICAL/NONE
+// PROVEN: 0fc69faa IDENTICAL/IDENTICAL
 // OFFSET: 0x0059AB20/0x140209290
 bool CGGameObject_C_Type_Text::Use() {
     WOWGUID guid = this->m_owner->m_obj->m_guid;
@@ -40,7 +40,7 @@ bool CGGameObject_C_Type_Text::Use() {
     return true;
 }
 
-// PROVEN: 4ad9ea77 IDENTICAL/NONE
+// PROVEN: 4ad9ea77 IDENTICAL/IDENTICAL
 // OFFSET: 0x0059AB50/0x1402092C0
 void CGGameObject_C_Type_Text::PostInitWithStats() {
     if (CGItemText::m_itemGUID == this->m_owner->m_obj->m_guid) {

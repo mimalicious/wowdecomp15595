@@ -12,16 +12,16 @@
 #include "Engine/Source/Tempest/C33Matrix.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// STATIC: 0x00E4ED00
+// STATIC: 0x00E4ED00/0x140D38150
 uint32_t Liquid::CMaterialDebug::s_refCount;
 
-// STATIC: 0x00E4ECFC
+// STATIC: 0x00E4ECFC/0x140D38148
 CGxShader* Liquid::CMaterialDebug::s_vertexShader;
 
-// STATIC: 0x00E4ECF8
+// STATIC: 0x00E4ECF8/0x140D38140
 CGxShader* Liquid::CMaterialDebug::s_pixelShader;
 
-// STATIC: 0x00E4ED08
+// STATIC: 0x00E4ED08/0x140D38270
 C4Vector Liquid::CMaterialDebug::s_vsConsts[50] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
@@ -75,7 +75,7 @@ C4Vector Liquid::CMaterialDebug::s_vsConsts[50] = {
     C4Vector(0.0f, 0.0f, 0.0f, 1.0f)
 };
 
-// STATIC: 0x00D00730
+// STATIC: 0x00D00730/0x140D38160
 C4Vector Liquid::CMaterialDebug::s_psConsts[17] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
@@ -96,13 +96,13 @@ C4Vector Liquid::CMaterialDebug::s_psConsts[17] = {
     C4Vector(0.0f, 0.0f, 0.0f, 1.0f)
 };
 
-// STATIC: 0x00E4F030
+// STATIC: 0x00E4F030/0x140D385A0
 uint32_t Liquid::CMaterialMercury::s_refCount;
 
-// STATIC: 0x00E4F02C
+// STATIC: 0x00E4F02C/0x140D38598
 CGxShader* Liquid::CMaterialMercury::s_vertexShader;
 
-// STATIC: 0x00E4F028
+// STATIC: 0x00E4F028/0x140D38590
 CGxShader* Liquid::CMaterialMercury::s_pixelShader;
 
 // STATIC: 0x00E4F038
@@ -162,7 +162,7 @@ C4Vector Liquid::CMaterialMercury::s_vsConsts[53] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f)
 };
 
-// STATIC: 0x00E4F388
+// STATIC: 0x00E4F388/0x140D38900
 C4Vector Liquid::CMaterialMercury::s_psConsts[32] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
@@ -198,22 +198,22 @@ C4Vector Liquid::CMaterialMercury::s_psConsts[32] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f)
 };
 
-// STATIC: 0x00E4F598
+// STATIC: 0x00E4F598/0x140D38B20
 uint32_t Liquid::CMaterialMagma::s_refCount;
 
-// STATIC: 0x00E4F594
+// STATIC: 0x00E4F594/0x140D38B18
 CGxShader* Liquid::CMaterialMagma::s_vertexShader;
 
-// STATIC: 0x00E4F590
+// STATIC: 0x00E4F590/0x140D38B10
 CGxShader* Liquid::CMaterialMagma::s_pixelShader;
 
-// STATIC: 0x00E4F58C
+// STATIC: 0x00E4F58C/0x140D38B08
 CGxShader* Liquid::CMaterialMagma::s_procVertexShader;
 
-// STATIC: 0x00E4F588
+// STATIC: 0x00E4F588/0x140D38B00
 CGxShader* Liquid::CMaterialMagma::s_procPixelShader;
 
-// STATIC: 0x00E4F5A0
+// STATIC: 0x00E4F5A0/0x140D38D30
 C4Vector Liquid::CMaterialMagma::s_vsConsts[51] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
@@ -268,7 +268,7 @@ C4Vector Liquid::CMaterialMagma::s_vsConsts[51] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f)
 };
 
-// STATIC: 0x00D00850
+// STATIC: 0x00D00850/0x140D38B30
 C4Vector Liquid::CMaterialMagma::s_psConsts[18] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
@@ -290,22 +290,22 @@ C4Vector Liquid::CMaterialMagma::s_psConsts[18] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f)
 };
 
-// STATIC: 0x00E4F8E0
+// STATIC: 0x00E4F8E0/0x140D38FA0
 uint32_t Liquid::CMaterialWater::s_refCount;
 
-// STATIC: 0x00E4F8DC
+// STATIC: 0x00E4F8DC/0x140D38F98
 CGxShader* Liquid::CMaterialWater::s_vertexShader;
 
-// STATIC: 0x00E4F8D8
+// STATIC: 0x00E4F8D8/0x140D38F90
 CGxShader* Liquid::CMaterialWater::s_pixelShader;
 
-// STATIC: 0x00E4F8D4
+// STATIC: 0x00E4F8D4/0x140D38F88
 CGxShader* Liquid::CMaterialWater::s_pixelShaderBelow;
 
-// STATIC: 0x00E4F8D0
+// STATIC: 0x00E4F8D0/0x140D38F80
 CGxShader* Liquid::CMaterialWater::s_pixelShaderAboveFog;
 
-// STATIC: 0x00E4F8E8
+// STATIC: 0x00E4F8E8/0x140D38FB0
 C4Vector Liquid::CMaterialWater::s_vsConsts[53] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
@@ -362,7 +362,7 @@ C4Vector Liquid::CMaterialWater::s_vsConsts[53] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f)
 };
 
-// STATIC: 0x00E4FC38
+// STATIC: 0x00E4FC38/0x140D39300
 C4Vector Liquid::CMaterialWater::s_psConsts[32] = {
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
     C4Vector(0.0f, 0.0f, 0.0f, 0.0f),
@@ -588,14 +588,14 @@ void Liquid::IMaterial::Reset() {
 void Liquid::IMaterial::OnAddToScene() {
 }
 
-// PROVEN: 2e7e7d46 IDENTICAL/NONE
-// OFFSET: 0x005EB640
+// PROVEN: 2e7e7d46 IDENTICAL/IDENTICAL
+// OFFSET: 0x005EB640/0x14090EBB0
 int32_t Liquid::IMaterial::SetupDefaultTransform(const C3Vector& camPos) {
     return 1;
 }
 
-// PROVEN: 203466c5 IDENTICAL/NONE
-// OFFSET: 0x005EB640
+// PROVEN: 203466c5 IDENTICAL/IDENTICAL
+// OFFSET: 0x005EB640/0x14090EBB0
 int32_t Liquid::CMaterialDebug::IsAllLoaded(CMaterialSettings* settings) {
     return 1;
 }
@@ -661,7 +661,7 @@ void Liquid::SetupTransform(C4Vector* vsConstants, C4Vector* psConstants, const 
     *reinterpret_cast<C44Matrix*>(&psConstants[8]) = product;
 }
 
-// OFFSET: 0x0071B8B0
+// OFFSET: 0x0071B8B0/0x1403F04D0
 void Liquid::SetShaderLighting(C4Vector* vsConstants, C4Vector* psConstants, const CM2Lighting& lighting) {
     C44Matrix view;
     view = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
@@ -702,8 +702,8 @@ void Liquid::SetScreenConstants(C4Vector* constants) {
     constants[2] = ViewSettings::CalculateHomToScreen(halfX, halfY);
 }
 
-// PROVEN: 01980596 IDENTICAL/NONE
-// OFFSET: 0x0071D9D0
+// PROVEN: 01980596 IDENTICAL/IDENTICAL
+// OFFSET: 0x0071D9D0/0x14090EBB0
 int32_t Liquid::IMaterial::SetupRender(uint32_t time, ERenderPass pass, const C3Vector& camPos, IEnvironment* environment, CMaterialSettings* settings, uint32_t reflection) {
     return 1;
 }
@@ -722,6 +722,7 @@ void Liquid::CMaterialDebug::Render(uint32_t pass, const C3Vector& camPos, CInst
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(9), NULL, 0, 0);
 }
 
+// PROVEN: 2fc4cf37 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071E0C0/0x1403F3480
 Liquid::CMaterialDebug::CMaterialDebug() {
     if (!s_refCount++) {
@@ -738,7 +739,7 @@ Liquid::CMaterialDebug::~CMaterialDebug() {
     }
 }
 
-// PROVEN: fa32a1fe IDENTICAL/NONE
+// PROVEN: fa32a1fe IDENTICAL/IDENTICAL
 // OFFSET: 0x0071E170/0x1403F3580
 void Liquid::CMaterialDebug::Reset() {
     ReleaseShader(s_vertexShader);
@@ -761,23 +762,24 @@ int32_t Liquid::CMaterialDebug::SetupRender(uint32_t time, ERenderPass pass, con
     return 1;
 }
 
-// PROVEN: f8069bd4 IDENTICAL/NONE
-// OFFSET: 0x00873190
+// PROVEN: f8069bd4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00873190/0x14090EBB0
 int32_t Liquid::IMaterial::SetupLighting(const C3Vector& camPos, CInstance* instance) {
     return 1;
 }
 
-// PROVEN: ac6cc6a4 IDENTICAL/NONE
+// PROVEN: ac6cc6a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00904350/0x14065C8C0
 void Liquid::IMaterial::Release() {
     delete this;
 }
 
-// PROVEN: cda9a1fe IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: cda9a1fe IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void Liquid::CMaterialDebug::LinkToAsyncHead(CMaterialSettings* settings) {
 }
 
+// PROVEN: 625900ab DIFFERENT/IDENTICAL
 // OFFSET: 0x0071E370/0x1403F3810
 void Liquid::CMaterialMercury::OnAddToScene() {
     if (Liquid::GetWaterDetail()) {
@@ -803,7 +805,7 @@ void Liquid::CMaterialMercury::LinkToAsyncHead(CMaterialSettings* settings) {
     settings->LinkToAsyncHead(Liquid::GetWaterDetail() ? 2 : 0);
 }
 
-// OFFSET: 0x0071E540
+// OFFSET: 0x0071E540/0x1403F39E0
 void Liquid::CMaterialMercury::SetFogConstants() {
     SetFog(&s_psConsts[18]);
 }
@@ -840,6 +842,7 @@ int32_t Liquid::CMaterialMercury::SetupLighting(const C3Vector& camPos, CInstanc
     return 1;
 }
 
+// PROVEN: b3ead665 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071EC00/0x1403F3FF0
 Liquid::CMaterialMercury::CMaterialMercury() {
     if (!s_refCount++) {
@@ -855,7 +858,7 @@ Liquid::CMaterialMercury::~CMaterialMercury() {
     }
 }
 
-// PROVEN: fe1fcd7b IDENTICAL/NONE
+// PROVEN: fe1fcd7b IDENTICAL/IDENTICAL
 // OFFSET: 0x0071EC90/0x1403F40C0
 void Liquid::CMaterialMercury::Reset() {
     ReleaseShader(s_vertexShader);
@@ -863,7 +866,7 @@ void Liquid::CMaterialMercury::Reset() {
     CMaterialMercury::InitResources();
 }
 
-// OFFSET: 0x0071ECE0
+// OFFSET: 0x0071ECE0/0x1403F4120
 void Liquid::CMaterialMercury::RenderShader(uint32_t pass, const C3Vector& camPos, CInstance* instance) {
     SetInstanceTransform(camPos, instance, s_vsConsts, s_psConsts);
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(7), s_vertexShader, 0, 1);
@@ -1058,7 +1061,7 @@ void Liquid::CMaterialMagma::InitResources() {
     }
 }
 
-// PROVEN: 68e5887e IDENTICAL/NONE
+// PROVEN: 68e5887e IDENTICAL/IDENTICAL
 // OFFSET: 0x0071FAE0/0x1403F5610
 void Liquid::CMaterialMagma::DestroyResources() {
     ReleaseShader(s_vertexShader);
@@ -1079,6 +1082,7 @@ int32_t Liquid::CMaterialMagma::SetupLighting(const C3Vector& camPos, CInstance*
     return 1;
 }
 
+// PROVEN: 9afa6e96 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071FD50/0x1403F5880
 Liquid::CMaterialMagma::CMaterialMagma() {
     if (!s_refCount++) {
@@ -1086,14 +1090,14 @@ Liquid::CMaterialMagma::CMaterialMagma() {
     }
 }
 
-// PROVEN: 73a7b757 IDENTICAL/NONE
+// PROVEN: 73a7b757 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071FD80/0x1403F58C0
 void Liquid::CMaterialMagma::Reset() {
     CMaterialMagma::DestroyResources();
     CMaterialMagma::InitResources();
 }
 
-// OFFSET: 0x0071FD90
+// OFFSET: 0x0071FD90/0x1403F58E0
 void Liquid::CMaterialMagma::RenderShader(uint32_t pass, const C3Vector& camPos, CInstance* instance) {
     SetInstanceTransform(camPos, instance, s_vsConsts, s_psConsts);
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(9), NULL, 0, 0);
@@ -1105,7 +1109,7 @@ void Liquid::CMaterialMagma::RenderFixedFunction(uint32_t pass, const C3Vector& 
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(9), NULL, 0, 0);
 }
 
-// OFFSET: 0x0071FFA0
+// OFFSET: 0x0071FFA0/0x1403F5C30
 void Liquid::CMaterialMagma::RenderProcedural(uint32_t pass, const C3Vector& camPos, CInstance* instance) {
     SetInstanceTransform(camPos, instance, s_vsConsts, s_psConsts);
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(13), s_procVertexShader, 0, 0);
@@ -1236,6 +1240,7 @@ int32_t Liquid::CMaterialMagma::SetupRender(uint32_t time, ERenderPass pass, con
     return 1;
 }
 
+// PROVEN: 7b5ab3c2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0071E370/0x1403F3810
 void Liquid::CMaterialWater::OnAddToScene() {
     if (Liquid::GetWaterDetail()) {
@@ -1264,7 +1269,7 @@ int32_t Liquid::CMaterialWater::IsAllLoaded(CMaterialSettings* settings) {
     return settings->IsAllLoaded(3) ? 1 : 0;
 }
 
-// PROVEN: 65e0d082 IDENTICAL/NONE
+// PROVEN: 65e0d082 IDENTICAL/IDENTICAL
 // OFFSET: 0x00720860/0x1403F6840
 void Liquid::CMaterialWater::LinkToAsyncHead(CMaterialSettings* settings) {
     settings->LinkToAsyncHead(1);
@@ -1278,7 +1283,7 @@ void Liquid::CMaterialWater::LinkToAsyncHead(CMaterialSettings* settings) {
     settings->LinkToAsyncHead(3);
 }
 
-// OFFSET: 0x007208A0
+// OFFSET: 0x007208A0/0x1403F6890
 void Liquid::CMaterialWater::SetFogConstants() {
     SetFog(&s_psConsts[18]);
 }
@@ -1306,7 +1311,7 @@ void Liquid::CMaterialWater::InitResources() {
     }
 }
 
-// PROVEN: 4d272018 IDENTICAL/NONE
+// PROVEN: 4d272018 IDENTICAL/IDENTICAL
 // OFFSET: 0x00720B80/0x1403F6BA0
 void Liquid::CMaterialWater::DestroyResources() {
     ReleaseShader(s_vertexShader);
@@ -1327,6 +1332,7 @@ int32_t Liquid::CMaterialWater::SetupLighting(const C3Vector& camPos, CInstance*
     return 1;
 }
 
+// PROVEN: 0204d080 DIFFERENT/IDENTICAL
 // OFFSET: 0x00720E80/0x1403F6E10
 Liquid::CMaterialWater::CMaterialWater() {
     if (!s_refCount++) {
@@ -1334,7 +1340,7 @@ Liquid::CMaterialWater::CMaterialWater() {
     }
 }
 
-// PROVEN: 63b580a4 IDENTICAL/NONE
+// PROVEN: 63b580a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00720EB0/0x1403F6E50
 void Liquid::CMaterialWater::Reset() {
     CMaterialWater::DestroyResources();
@@ -1349,13 +1355,13 @@ void Liquid::CMaterialWater::SetPixelShaderAboveFog() {
     g_theGxDevicePtr->RsSet(GxRs_PixelShader, &s_pixelShaderAboveFog->m_permutes[3 * depthMode + displCount]);
 }
 
-// OFFSET: 0x00720F20
+// OFFSET: 0x00720F20/0x1403F6E70
 void Liquid::CMaterialWater::SetPixelShaderAbove(uint32_t reflection) {
     GxRsSet(GxRs_Culling, 0);
     g_theGxDevicePtr->RsSet(GxRs_PixelShader, &s_pixelShader->m_permutes[AbovePermute(reflection)]);
 }
 
-// OFFSET: 0x00720FD0
+// OFFSET: 0x00720FD0/0x1403F6EF0
 void Liquid::CMaterialWater::SetPixelShaderBelow(uint32_t reflection) {
     GxRsSet(GxRs_Culling, 0);
     uint32_t depthMode = DepthCache::GetDepthMode() - 1;
@@ -1375,7 +1381,7 @@ void Liquid::CMaterialWater::RenderShader(uint32_t pass, const C3Vector& camPos,
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(7), s_vertexShader, 0, 1);
 }
 
-// OFFSET: 0x00721160
+// OFFSET: 0x00721160/0x1403F71F0
 void Liquid::CMaterialWater::RenderProcedural(uint32_t pass, const C3Vector& camPos, CInstance* instance) {
     SetInstanceTransform(camPos, instance, s_vsConsts, s_psConsts);
     DrawInstance(instance, static_cast<EGxVertexBufferFormat>(7), s_vertexShader, 4 * Liquid::GetDynamicDisplMapCnt(), 1);

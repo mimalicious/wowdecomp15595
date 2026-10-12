@@ -10,19 +10,19 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: 0x00DD3C84
+// STATIC: 0x00DD3C84/0x140B409D0
 static TSHashTable<SIMPLEFONT, HASHKEY_STRI> s_fontList;
 
 // STATIC: 0x00DD3C7C
 static int32_t s_fontCount;
 
-// STATIC: 0x00CA3F00
+// STATIC: 0x00CA3F00/0x140B417B0
 int32_t CSimpleFont::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3C80/0x140CB9A4C
 int32_t CSimpleFont::s_objectType;
 
-// STATIC: 0x00CA37C4
+// STATIC: 0x00CA37C4/0x140B409C0
 const char* CSimpleFont::s_objectTypeName = "Font";
 
 // INLINED
@@ -41,7 +41,7 @@ const char* CSimpleFont::GetName() {
     return this->m_name;
 }
 
-// PROVEN: cd230c82 DIFFERENT/IDENTICAL
+// PROVEN: cd230c82 IDENTICAL/IDENTICAL
 // OFFSET: 0x00517000/0x140161610
 bool CSimpleFont::IsA(int32_t type) {
     return type == CSimpleFont::s_objectType;
@@ -117,11 +117,13 @@ CSimpleFont::~CSimpleFont() {
     s_fontCount--;
 }
 
+// PROVEN: 9bb686fa IDENTICAL/NONE
 // OFFSET: 0x00525DF0
 void CSimpleFont::Destroy() {
     s_fontList.Clear();
 }
 
+// PROVEN: 92cc9032 IDENTICAL/DIFFERENT
 // OFFSET: 0x004FB2A0/0x14013F1D0
 void CSimpleFont::RemoveFontable(CSimpleFontable* fontable) {
     this->m_fontableList.UnlinkNode(fontable);
@@ -141,7 +143,7 @@ void CSimpleFont::UpdateObjects() {
     this->m_attributes.m_flags &= ~0x1Fu;
 }
 
-// OFFSET: 0x00525D70
+// OFFSET: 0x00525D70/0x140174B70
 CSimpleFont& CSimpleFont::operator=(const CSimpleFont& source) {
     this->unk_005C = source.unk_005C;
     this->m_attributes = source.m_attributes;

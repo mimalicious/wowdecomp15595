@@ -303,31 +303,31 @@ static const RussianDeclensionRule s_russianDeclensionRules[55] = {
     { { { 0x0451, 0x0446, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 }, { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 } }, 2, { 0x0451, 0x0446, 0x0000, 0x0000, 0x0000 }, { 69, 70, 0 } },
 };
 
-// STATIC: 0x00DC71E0
+// STATIC: 0x00DC71E0/0x140CACE10
 static bool s_charsetCached;
 
-// STATIC: 0x00DC71E4
+// STATIC: 0x00DC71E4/0x140CACE14
 static int32_t s_cachedLocaleMask;
 
-// STATIC: 0x00DC71E8
+// STATIC: 0x00DC71E8/0x140CACE18
 static int32_t s_cachedCharsetMask;
 
-// STATIC: 0x00DC71EC
+// STATIC: 0x00DC71EC/0x140CACE1C
 static int32_t s_cachedExistingCharsetMask;
 
-// STATIC: 0x00DC71F0
+// STATIC: 0x00DC71F0/0x140CACE20
 TSFixedArray<regex_t> g_profanityTokens[11];
 
-// STATIC: 0x00DC7274
+// STATIC: 0x00DC7274/0x140CAD030
 TSFixedArray<regex_t> g_chatSpamTokens;
 
-// STATIC: 0x00DC7280
+// STATIC: 0x00DC7280/0x140CACED0
 TSFixedArray<regex_t> g_reservedNameTokens[11];
 
-// STATIC: 0x00DC7304
+// STATIC: 0x00DC7304/0x140CAD040
 TSFixedArray<regex_t> g_expectedSpamTokens;
 
-// STATIC: 0x00DC7310
+// STATIC: 0x00DC7310/0x140CACF80
 TSFixedArray<regex_t> g_chatProfanityTokens[11];
 
 // INLINED
@@ -421,6 +421,7 @@ bool IsAlphaInCharSet(uint16_t c, int32_t charset) {
     }
 }
 
+// PROVEN: b47cc3a6 IDENTICAL/NONE
 // OFFSET: 0x004E72C0
 static void GetDefaultCharsetMask(int32_t* charsetMask, bool english) {
     if (english) {
@@ -580,7 +581,7 @@ int32_t ValidateName(uint32_t language, const uint16_t* allowed, const char* nam
     return 0;
 }
 
-// PROVEN: 1efd769f IDENTICAL/NONE
+// PROVEN: 1efd769f IDENTICAL/DIFFERENT
 // OFFSET: 0x004E77E0/0x1401299E0
 int32_t ValidateCharacterNameConst(uint32_t language, const char* name, bool profanity, bool chatProfanity, bool reserved, bool english, int32_t extraLength) {
     uint32_t length;
@@ -623,7 +624,7 @@ int32_t ValidatePetName(uint32_t language, const char* name, bool profanity, boo
     return result;
 }
 
-// PROVEN: 0343ee59 IDENTICAL/NONE
+// PROVEN: 0343ee59 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E78B0/0x140129B00
 int32_t ValidateGuildName(uint32_t language, const char* name) {
     uint16_t allowed[2] = { 32, 0 };
@@ -652,17 +653,19 @@ int32_t ValidateGuildBankTabName(uint32_t language, const char* name) {
     return result;
 }
 
+// PROVEN: 284704fb IDENTICAL/NONE
 // OFFSET: 0x004E65E0
 static void* RegexAlloc(size_t bytes) {
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
+// PROVEN: c4c6810d IDENTICAL/NONE
 // OFFSET: 0x004E6600
 static void RegexFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x004E7B20
+// OFFSET: 0x004E7B20/0x140129E90
 void ValidateNameDestroy() {
     if (!s_charsetCached) {
         return;
@@ -799,6 +802,7 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
     g_chatSpamTokens.SetCount(numSpamTokens);
 }
 
+// PROVEN: c637f0da IDENTICAL/IDENTICAL
 // OFFSET: 0x004E6620/0x1401285C0
 bool ValidateStringIsUTF8(const char* string) {
     int32_t chars;
@@ -836,7 +840,7 @@ bool TruncateNewLines(char* text) {
     return false;
 }
 
-// PROVEN: 675be0b0 IDENTICAL/NONE
+// PROVEN: 675be0b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E6670/0x140128610
 bool IsNumeric(uint16_t c) {
     return static_cast<uint16_t>(c - '0') <= 9;
@@ -1021,7 +1025,7 @@ void CaseAccentInsensitiveParse(char* string, uint32_t size, int32_t locale) {
     SUniConvertUTF16to8(string, size, folded, 512, NULL, NULL);
 }
 
-// OFFSET: 0x004E6FB0
+// OFFSET: 0x004E6FB0/0x140128F70
 bool StripHyperlinks(const char* text, char* buffer, uint32_t size) {
     bool stripped = false;
     char* dest = buffer;
@@ -1138,7 +1142,7 @@ int32_t NameNeedsDeclensions(int32_t locale, const char* name) {
     return locale == 8 && RussianNameNeedsDeclensions(name);
 }
 
-// PROVEN: 74b7e0fc IDENTICAL/NONE
+// PROVEN: 74b7e0fc IDENTICAL/IDENTICAL
 // OFFSET: 0x00A312C0/0x1407DB180
 uint32_t GetNumNameDeclensionSets(int32_t locale, const char* name, int32_t sex) {
     if (locale == 8) {
@@ -1148,7 +1152,7 @@ uint32_t GetNumNameDeclensionSets(int32_t locale, const char* name, int32_t sex)
     return 0;
 }
 
-// PROVEN: 74e43113 IDENTICAL/NONE
+// PROVEN: 74e43113 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A312E0/0x1407DB1A0
 int32_t GetNameDeclensions(int32_t locale, char* declensions, const char* name, int32_t sex, uint32_t set) {
     if (locale == 8) {
@@ -1441,7 +1445,7 @@ bool IsRussianDeclensionValid(const char* name, const char* declension) {
     return i - stem <= 5;
 }
 
-// PROVEN: 8db9a0d0 IDENTICAL/NONE
+// PROVEN: 8db9a0d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E67C0/0x1401286C0
 bool IsRussian(uint16_t c) {
     return static_cast<uint16_t>(c - 0x400) <= 0xFF;
@@ -1501,7 +1505,7 @@ bool ScrubString(const char* source, char* dest, int32_t maxChars, uint32_t dest
     return valid;
 }
 
-// OFFSET: 0x004E79B0
+// OFFSET: 0x004E79B0/0x140129C40
 bool FixCharacterNameCase(char* dest, const char* source, uint32_t size) {
     if (!dest || !size) {
         return false;

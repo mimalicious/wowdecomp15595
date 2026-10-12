@@ -62,7 +62,8 @@ typedef struct {
 
 } vorbis_look_residue0;
 
-// OFFSET: 0x00B48050
+// PROVEN: 7f81e988 DIFFERENT/IDENTICAL
+// OFFSET: 0x00B48050/0x1409177A0
 void FMOD_res0_free_info(vorbis_info_residue *i){
   vorbis_info_residue0 *info=(vorbis_info_residue0 *)i;
   if(info){
@@ -71,7 +72,7 @@ void FMOD_res0_free_info(vorbis_info_residue *i){
   }
 }
 
-// OFFSET: 0x00B48080
+// OFFSET: 0x00B48080/0x1409177E0
 void FMOD_res0_free_look(vorbis_look_residue *i){
   int j;
   if(i){
@@ -200,7 +201,8 @@ void FMOD_res0_pack(vorbis_info_residue *vr,oggpack_buffer *opb){
 #endif
 
 /* vorbis_info is for range checking */
-// OFFSET: 0x00B48140
+// PROVEN: 1c8ddd15 DIFFERENT/IDENTICAL
+// OFFSET: 0x00B48140/0x1409178F0
 vorbis_info_residue *FMOD_res0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   int j,acc=0;
   vorbis_info_residue0 *info=_ogg_calloc(1,sizeof(*info));
@@ -238,7 +240,7 @@ vorbis_info_residue *FMOD_res0_unpack(vorbis_info *vi,oggpack_buffer *opb){
   return(NULL);
 }
 
-// OFFSET: 0x00B482A0
+// OFFSET: 0x00B482A0/0x140917A90
 vorbis_look_residue *FMOD_res0_look(vorbis_dsp_state *vd,
                                vorbis_info_residue *vr){
   vorbis_info_residue0 *info=(vorbis_info_residue0 *)vr;
@@ -649,7 +651,7 @@ static int _01forward(oggpack_buffer *opb,
 #endif
 
 /* a truncated packet here just means 'stop working'; it's not an error */
-// OFFSET: 0x00B484E0
+// OFFSET: 0x00B484E0/0x140917D70
 static int _FMOD_01inverse(vorbis_block *vb,vorbis_look_residue *vl,
                       float **in,int ch,
                       ogg_int32_t (*decodepart)(codebook *, float *,
@@ -764,7 +766,8 @@ int FMOD_res0_forward(vorbis_block *vb,vorbis_look_residue *vl,
 }
 #endif
 
-// OFFSET: 0x00B486E0
+// PROVEN: 598c3e53 IDENTICAL/UNPROVEN
+// OFFSET: 0x00B486E0/0x140918050
 int FMOD_res0_inverse(vorbis_block *vb,vorbis_look_residue *vl,
                  float **in,int *nonzero,int ch){
   int i,used=0;
@@ -820,7 +823,8 @@ ogg_int32_t **FMOD_res1_class(vorbis_block *vb,vorbis_look_residue *vl,
     return(0);
 }
 
-// OFFSET: 0x00B48740
+// PROVEN: 90a3a70b IDENTICAL/UNPROVEN
+// OFFSET: 0x00B48740/0x1409180D0
 int FMOD_res1_inverse(vorbis_block *vb,vorbis_look_residue *vl,
                  float **in,int *nonzero,int ch){
   int i,used=0;

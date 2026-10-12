@@ -2,19 +2,6 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// INLINED
-PetNameCache::PetNameCache() {
-    this->m_petNumber = 0;
-    this->m_name[0] = '\0';
-    this->m_declinedNames = NULL;
-    this->m_timestamp = 0;
-}
-
-// INLINED
-PetNameCache::~PetNameCache() {
-    delete this->m_declinedNames;
-}
-
 // OFFSET: 0x0049BB50/0x1400C79B0
 PetNameCache& PetNameCache::operator=(const PetNameCache& source) {
     this->m_petNumber = source.m_petNumber;
@@ -35,7 +22,7 @@ PetNameCache& PetNameCache::operator=(const PetNameCache& source) {
     return *this;
 }
 
-// PROVEN: 3fd02c18 IDENTICAL/NONE
+// PROVEN: a6518ee3 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EB900/0x14012EA50
 void PetNameCache::Pack(CDataStore* msg) {
     msg->Put(this->m_petNumber);
@@ -51,10 +38,10 @@ void PetNameCache::Pack(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(0));
     }
 
-    msg->Put(this->m_timestamp);
+    msg->Put(static_cast<uint32_t>(this->m_timestamp));
 }
 
-// PROVEN: 4cf79465 IDENTICAL/NONE
+// PROVEN: 4cf79465 IDENTICAL/DIFFERENT
 // OFFSET: 0x004EB980/0x14012EAF0
 void PetNameCache::Unpack(CDataStore* msg) {
     uint8_t hasDeclinedNames;

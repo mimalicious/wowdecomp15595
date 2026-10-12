@@ -16,7 +16,7 @@ NPCText::~NPCText() {
     }
 }
 
-// PROVEN: bf6e499b IDENTICAL/NONE
+// PROVEN: bf6e499b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A28DE0/0x1407D0A20
 void NPCText::Pack(CDataStore* msg) {
     for (uint32_t i = 0; i < 8; i++) {

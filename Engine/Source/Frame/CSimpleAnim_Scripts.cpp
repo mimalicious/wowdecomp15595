@@ -24,20 +24,21 @@ void ReadOrigin(lua_State* L, int32_t index, FRAMEPOINT& point, C2Vector& offset
     offset.y = NDCToDDCWidth(y / (CoordinateGetAspectCompensation() * 1024.0f));
 }
 
-// OFFSET: 0x0053BB60
+// OFFSET: 0x0053BB60/0x14018F950
 static int32_t Script_Play(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     anim->Play();
     return 0;
 }
 
-// OFFSET: 0x0053BBA0
+// OFFSET: 0x0053BBA0/0x14018F990
 static int32_t Script_Pause(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     anim->Pause();
     return 0;
 }
 
+// PROVEN: 66f369c3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053BBE0/0x14018F9D0
 static int32_t Script_Stop(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -52,13 +53,15 @@ static int32_t Script_IsDone(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0053BC80
+// PROVEN: 29f807f1 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053BC80/0x14018FA70
 static int32_t Script_IsPlaying(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushboolean(L, anim->m_playState == 1);
     return 1;
 }
 
+// PROVEN: 5b096820 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053BCD0/0x14018FAC0
 static int32_t Script_IsPaused(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -66,6 +69,7 @@ static int32_t Script_IsPaused(lua_State* L) {
     return 1;
 }
 
+// PROVEN: db88d1fa IDENTICAL/IDENTICAL
 // OFFSET: 0x0053BD20/0x14018FB10
 static int32_t Script_IsStopped(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -73,6 +77,7 @@ static int32_t Script_IsStopped(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 95fcd629 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053BD70/0x14018FB60
 static int32_t Script_IsDelaying(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -80,6 +85,7 @@ static int32_t Script_IsDelaying(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 6d70ff9f DIFFERENT/IDENTICAL
 // OFFSET: 0x0053BDC0/0x14018FBB0
 static int32_t Script_SetStartDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -94,6 +100,7 @@ static int32_t Script_SetStartDelay(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 783d32d0 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053BE40/0x14018FC50
 static int32_t Script_GetStartDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -101,6 +108,7 @@ static int32_t Script_GetStartDelay(lua_State* L) {
     return 1;
 }
 
+// PROVEN: fb52553d DIFFERENT/IDENTICAL
 // OFFSET: 0x0053BE80/0x14018FCA0
 static int32_t Script_SetEndDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -115,6 +123,7 @@ static int32_t Script_SetEndDelay(lua_State* L) {
     return 0;
 }
 
+// PROVEN: c8a034b1 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053BF00/0x14018FD40
 static int32_t Script_GetEndDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -122,6 +131,7 @@ static int32_t Script_GetEndDelay(lua_State* L) {
     return 1;
 }
 
+// PROVEN: c9b6ab26 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053BF40/0x14018FD90
 static int32_t Script_SetDuration(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -136,6 +146,7 @@ static int32_t Script_SetDuration(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9129a223 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053BFC0/0x14018FE30
 static int32_t Script_GetDuration(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -143,6 +154,7 @@ static int32_t Script_GetDuration(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3d1feca7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053C000/0x14018FE80
 static int32_t Script_GetSmoothProgress(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -150,6 +162,7 @@ static int32_t Script_GetSmoothProgress(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 32e5cd96 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053C040/0x14018FED0
 static int32_t Script_SetSmoothProgress(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -164,6 +177,7 @@ static int32_t Script_SetSmoothProgress(lua_State* L) {
     return 0;
 }
 
+// PROVEN: a31b4c04 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053C0C0/0x14018FF70
 static int32_t Script_GetProgress(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -171,6 +185,7 @@ static int32_t Script_GetProgress(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 401c0277 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053C100/0x14018FFC0
 static int32_t Script_GetProgressWithDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -178,6 +193,7 @@ static int32_t Script_GetProgressWithDelay(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f5152d96 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053C140/0x140190010
 static int32_t Script_GetElapsed(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -185,6 +201,7 @@ static int32_t Script_GetElapsed(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1ab42573 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053C180/0x140190060
 static int32_t Script_SetOrder(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -199,6 +216,7 @@ static int32_t Script_SetOrder(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 3c3cc62a IDENTICAL/DIFFERENT
 // OFFSET: 0x0053C200/0x140190110
 static int32_t Script_GetOrder(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -229,6 +247,7 @@ static int32_t Script_SetSmoothing(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9033697f IDENTICAL/IDENTICAL
 // OFFSET: 0x0053C310/0x140190230
 static int32_t Script_GetSmoothing(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -299,6 +318,7 @@ static int32_t Script_SetParent(lua_State* L) {
     return 0;
 }
 
+// PROVEN: a7917da0 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053C580/0x140190550
 static int32_t Script_GetRegionParent(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -340,40 +360,43 @@ static int32_t Script_HasScript(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0053C6C0
+// PROVEN: 987077d3 IDENTICAL/UNPROVEN
+// OFFSET: 0x0053C6C0/0x1401906D0
 static int32_t Script_GetScript(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     return anim ? anim->GetScript(L) : 0;
 }
 
-// OFFSET: 0x0053C700
+// PROVEN: 61b80a4e IDENTICAL/UNPROVEN
+// OFFSET: 0x0053C700/0x140190720
 static int32_t Script_SetScript(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     return anim ? anim->SetScript(L) : 0;
 }
 
+// PROVEN: 4be7edbe IDENTICAL/IDENTICAL
 // OFFSET: 0x0053C740/0x140190770
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     return anim ? anim->HookScript(L) : 0;
 }
 
-// PROVEN: c9389b1c IDENTICAL/NONE
-// OFFSET: 0x0053C780
+// PROVEN: c9389b1c IDENTICAL/IDENTICAL
+// OFFSET: 0x0053C780/0x1401907C0
 void CSimpleAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleAnim::RegisterScriptMethods);
 }
 
-// PROVEN: fa82111e IDENTICAL/NONE
-// OFFSET: 0x0053B870
+// PROVEN: fa82111e IDENTICAL/IDENTICAL
+// OFFSET: 0x0053B870/0x14018F630
 void CSimpleAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleAnim::s_metatable);
     CSimpleAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00CA4618
+// STATIC: 0x00CA4618/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "Play", &Script_Play },
     { "Pause", &Script_Pause },
@@ -406,6 +429,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "HookScript", &Script_HookScript },
 };
 
+// PROVEN: 5ff987b2 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053B850/0x14018F600
 void CSimpleAnim::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);

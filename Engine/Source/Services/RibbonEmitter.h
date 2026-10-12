@@ -99,4 +99,6 @@ class CRibbonEmitter {
     void Update(float deltaTime, int32_t suppressNewEdges);
 };
 
+#include "Engine/Source/Services/RibbonEmitter.inl"
+
 #endif

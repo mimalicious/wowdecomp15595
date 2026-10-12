@@ -174,7 +174,7 @@ FMOD_RESULT OutputNoSound_NRT::getDriverCaps(int id, FMOD_CAPS *caps)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AC0E90
+// OFFSET: 0x00AC0E90/0x140889180
 FMOD_RESULT OutputNoSound_NRT::init(int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     FMOD_RESULT         result;
@@ -373,7 +373,7 @@ FMOD_RESULT OutputNoSound_NRT::getDriverCapsCallback(FMOD_OUTPUT_STATE *output, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 776e2bce IDENTICAL/NONE
+// PROVEN: 776e2bce IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC1010/0x140889340
 FMOD_RESULT F_CALLBACK OutputNoSound_NRT::initCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
@@ -427,7 +427,7 @@ FMOD_RESULT F_CALLBACK OutputNoSound_NRT::closeCallback(FMOD_OUTPUT_STATE *outpu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0ce500a8 IDENTICAL/NONE
+// PROVEN: 0ce500a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC0E60/0x140889150
 FMOD_RESULT F_CALLBACK OutputNoSound_NRT::updateCallback(FMOD_OUTPUT_STATE *output)
 {

@@ -53,79 +53,79 @@
 #include "Engine/Source/Tempest/NTempest.h"
 #include <typeinfo>
 
-// STATIC: 0x00F457A8
+// STATIC: 0x00F457A8/0x140E39560
 QuestLogEntry CGQuestLog::m_quests[100];
 
-// STATIC: 0x00F45358
+// STATIC: 0x00F45358/0x140E38FD0
 int32_t CGQuestLog::m_sortTypes[50];
 
-// STATIC: 0x00F45420
+// STATIC: 0x00F45420/0x140E390A0
 AutoQuestPopUp CGQuestLog::m_autoQuestPopUps[50];
 
-// STATIC: 0x00F45678
+// STATIC: 0x00F45678/0x140E39300
 QuestWatch CGQuestLog::m_questWatches[25];
 
-// STATIC: 0x00F45DE8
+// STATIC: 0x00F45DE8/0x140E39BA0
 uint32_t CGQuestLog::m_numQuest;
 
-// STATIC: 0x00F45DEC
+// STATIC: 0x00F45DEC/0x140E39BA4
 uint32_t CGQuestLog::m_numSortTypes;
 
-// STATIC: 0x00F45DF0
+// STATIC: 0x00F45DF0/0x140E39BA8
 int32_t CGQuestLog::m_selectedQuest;
 
-// STATIC: 0x00F45DF4
+// STATIC: 0x00F45DF4/0x140E39BAC
 int32_t CGQuestLog::m_superTrackedQuest;
 
-// STATIC: 0x00F45DF8
+// STATIC: 0x00F45DF8/0x140E39BB0
 int32_t CGQuestLog::m_abandonQuest;
 
-// STATIC: 0x00F45DFC
+// STATIC: 0x00F45DFC/0x140E39BB4
 uint32_t CGQuestLog::m_numAutoQuestPopUps;
 
-// STATIC: 0x00F45E00
+// STATIC: 0x00F45E00/0x140E39BB8
 uint32_t CGQuestLog::m_numQuestWatches;
 
-// STATIC: 0x00F45E04
+// STATIC: 0x00F45E04/0x140E39BBC
 uint32_t CGQuestLog::m_numShownQuests;
 
-// STATIC: 0x00F45E08
+// STATIC: 0x00F45E08/0x140E39BC0
 int32_t CGQuestLog::m_timeOffset;
 
-// STATIC: 0x00F45E0C
+// STATIC: 0x00F45E0C/0x140E39BC8
 int32_t CGQuestLog::m_questResetTime;
 
-// STATIC: 0x00F45E10
+// STATIC: 0x00F45E10/0x140E39BC4
 uint8_t CGQuestLog::m_trackedQuestsLoaded;
 
-// STATIC: 0x00F45E14
+// STATIC: 0x00F45E14/0x140E39BD0
 static uint32_t s_questCallbackCount;
 
-// STATIC: 0x00F45E18
+// STATIC: 0x00F45E18/0x140E39BD8
 int32_t CGQuestLog::m_nextQuestUpdate;
 
-// STATIC: 0x00F45E1C
+// STATIC: 0x00F45E1C/0x140E39BE0
 static CVar* s_cvPOIShiftComplete;
 
 // STATIC: 0x00F45E20
 QuestPOIInfo CGQuestLog::m_questPOIs[50];
 
-// STATIC: 0x00F46780
+// STATIC: 0x00F46780/0x140BCB080
 TSHashTable<CGQuestLog::QUESTCOMPLETIONNPC, HASHKEY_NONE> CGQuestLog::s_questCompletionNPCs;
 
-// STATIC: 0x00D12E80
+// STATIC: 0x00D12E80/0x140BCAB60
 float CGQuestLog::m_questIconOverlapDist = 12.0f;
 
-// STATIC: 0x00D12E84
+// STATIC: 0x00D12E84/0x140BCAB64
 float CGQuestLog::m_questIconOverlapPushDist = 18.0f;
 
-// STATIC: 0x00D13184
+// STATIC: 0x00D13184/0x140BCB164
 static int32_t s_poiOverlapIterations = 20;
 
-// STATIC: 0x00BFD938
+// STATIC: 0x00BFD938/0x1409F55B0
 static const int32_t s_questGreenRange[20] = { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
 
-// PROVEN: 11c5bb76 IDENTICAL/NONE
+// PROVEN: 11c5bb76 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095BF90/0x1406CECE0
 int32_t CGQuestLog::GetQuestLogSlot(int32_t index) {
     if (index < 0 || index >= static_cast<int32_t>(CGQuestLog::m_numQuest) || CGQuestLog::m_quests[index].m_isHeader) {
@@ -135,6 +135,7 @@ int32_t CGQuestLog::GetQuestLogSlot(int32_t index) {
     return CGQuestLog::m_quests[index].m_logSlot;
 }
 
+// PROVEN: 7b11745a IDENTICAL/IDENTICAL
 // OFFSET: 0x0095BFC0/0x1406CED10
 static void QuestSelectQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -159,6 +160,7 @@ void DisplayQuestFailed(int32_t id, const WOWGUID& guid, void* param, bool succe
     }
 }
 
+// PROVEN: f024e4f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C040/0x1406CED90
 void QuestCreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -168,6 +170,7 @@ void QuestCreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bo
     }
 }
 
+// PROVEN: 5ec4d079 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C070/0x1406CEDB0
 void ObjectQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -177,7 +180,7 @@ void ObjectQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool succ
     }
 }
 
-// PROVEN: 7ce68c36 IDENTICAL/NONE
+// PROVEN: 7ce68c36 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C0A0/0x1406CEDD0
 void ItemQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -210,7 +213,7 @@ void CGQuestLog::RemoveQuestWatch(int32_t questId) {
     CGQuestLog::m_questWatches[count - 1].m_expireTime = 0;
 }
 
-// PROVEN: 6b6ba060 IDENTICAL/NONE
+// PROVEN: 6b6ba060 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095C140/0x1406CEE70
 AutoQuestPopUp* CGQuestLog::FindAutoQuestPopUp(int32_t questId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numAutoQuestPopUps; i++) {
@@ -260,7 +263,7 @@ void AddQuestPointDisplay() {
     }
 }
 
-// PROVEN: 3f2dd7d0 IDENTICAL/NONE
+// PROVEN: 3f2dd7d0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095C270/0x1406CEFB0
 int32_t CGQuestLog::GetSelectedLogEntry() {
     uint32_t index = 0;
@@ -278,15 +281,15 @@ int32_t CGQuestLog::GetSelectedLogEntry() {
     return index;
 }
 
-// PROVEN: b1c7e4d0 IDENTICAL/NONE
-// OFFSET: 0x0095C2B0
+// PROVEN: b1c7e4d0 IDENTICAL/IDENTICAL
+// OFFSET: 0x0095C2B0/0x1406CF000
 void CGQuestLog::ClearQuest(int32_t questId) {
     if (questId && questId == CGQuestLog::m_selectedQuest) {
         DisplayQuestPoint(0.0f, 0.0f, 0, "");
     }
 }
 
-// PROVEN: 9df14ef6 IDENTICAL/NONE
+// PROVEN: 9df14ef6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C2E0/0x1406CF030
 int32_t CGQuestLog::GetQuestID(int32_t index) {
     if (index < 0 || index >= static_cast<int32_t>(CGQuestLog::m_numQuest) || CGQuestLog::m_quests[index].m_isHeader) {
@@ -328,12 +331,13 @@ int32_t CGQuestLog::GetQuestItemID(const char* type, int32_t index) {
     return quest->m_rewardChoiceItem[index];
 }
 
-// PROVEN: a6fdd2f6 IDENTICAL/NONE
+// PROVEN: a6fdd2f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C3B0/0x1406CF140
 int32_t CGQuestLog::IsQuestFailed(uint32_t index) {
     return index < CGQuestLog::m_numQuest && !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
 }
 
+// PROVEN: 57d5d2bf IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C3E0/0x1406CF170
 int32_t CGQuestLog::IsQuestExpiredByID(int32_t questId) {
     for (uint32_t index = 0; index < CGQuestLog::m_numQuest; index++) {
@@ -356,6 +360,7 @@ uint32_t IsQuestStartEvent(uint32_t index) {
     return quest && (quest->m_flags & 0x2);
 }
 
+// PROVEN: f31bd8fa IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C490/0x1406CF230
 int32_t CGQuestLog::GetQuestIndex(int32_t questId) {
     for (uint32_t i = 0; i < 100; i++) {
@@ -367,7 +372,7 @@ int32_t CGQuestLog::GetQuestIndex(int32_t questId) {
     return 0;
 }
 
-// OFFSET: 0x0095C4C0
+// OFFSET: 0x0095C4C0/0x1406CF260
 bool CGQuestLog::GetQuestPOILoc(int32_t questId, bool& complete, int32_t& mapId, int32_t& floor, int32_t& x, int32_t& y, int32_t& objectiveIndex) {
     uint32_t index = 0;
 
@@ -391,7 +396,7 @@ bool CGQuestLog::GetQuestPOILoc(int32_t questId, bool& complete, int32_t& mapId,
     return true;
 }
 
-// OFFSET: 0x0095C540
+// OFFSET: 0x0095C540/0x1406CF2E0
 bool CGQuestLog::IsPOIVisibleOnWorldMap(const BLOBPOI& point, int32_t mapId, int32_t currentMapId) {
     if (mapId == currentMapId) {
         C3Vector position(static_cast<float>(point.m_x), static_cast<float>(point.m_y), 0.0f);
@@ -408,7 +413,7 @@ bool CGQuestLog::IsPOIVisibleOnWorldMap(const BLOBPOI& point, int32_t mapId, int
     return false;
 }
 
-// PROVEN: 84c84734 IDENTICAL/NONE
+// PROVEN: 84c84734 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095C5D0/0x1406CF390
 void CGQuestLog::ShiftQuestWatches(uint32_t from, uint32_t to) {
     int32_t step;
@@ -430,6 +435,7 @@ void CGQuestLog::ShiftQuestWatches(uint32_t from, uint32_t to) {
     CGQuestLog::m_questWatches[to] = moved;
 }
 
+// PROVEN: 6ec0eaf6 IDENTICAL/NONE
 // OFFSET: 0x0095D7F0
 static int32_t QSortQuestSortTypes(const void* a, const void* b) {
     int32_t sortA = *static_cast<const int32_t*>(a);
@@ -481,8 +487,8 @@ static int32_t QSortQuestSortTypes(const void* a, const void* b) {
     return SStrSortUTF8I(nameA, nameB, 0x7FFFFFFF);
 }
 
-// PROVEN: 6154cc11 IDENTICAL/NONE
-// OFFSET: 0x0095D960
+// PROVEN: 6154cc11 IDENTICAL/DIFFERENT
+// OFFSET: 0x0095D960/0x1406D0980
 void CGQuestLog::UpdateWatchTimers() {
     for (uint32_t i = 0; i < CGQuestLog::m_numQuestWatches; i++) {
         if (CGQuestLog::m_questWatches[i].m_expireTime > 0 && _time32(NULL) >= CGQuestLog::m_questWatches[i].m_expireTime) {
@@ -492,6 +498,7 @@ void CGQuestLog::UpdateWatchTimers() {
     }
 }
 
+// PROVEN: 85c75230 IDENTICAL/NONE
 // OFFSET: 0x0095D9B0
 void CGQuestLog::SetServerTime(int32_t serverTime, int32_t resetTime) {
     int32_t now = _time32(NULL);
@@ -511,7 +518,7 @@ void CGQuestLog::SetServerTime(int32_t serverTime, int32_t resetTime) {
     Script_SendUniqueSignal(SCRIPT_EVENT_QUEST_LOG_UPDATE);
 }
 
-// PROVEN: 602bed41 IDENTICAL/NONE
+// PROVEN: 602bed41 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095DA10/0x1406D09E0
 void CGQuestLog::SetSelectedQuest(int32_t index) {
     if (CGQuestLog::m_selectedQuest) {
@@ -526,15 +533,15 @@ void CGQuestLog::SetSelectedQuest(int32_t index) {
     }
 }
 
-// PROVEN: a27e2510 IDENTICAL/NONE
+// PROVEN: a27e2510 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095DA70/0x1406D0A50
 int32_t CGQuestLog::IsSelectedQuestExpired() {
     uint32_t index = CGQuestLog::GetSelectedLogEntry();
     return index < CGQuestLog::m_numQuest && !CGQuestLog::m_quests[index].m_isHeader && CGQuestLog::m_quests[index].m_expired;
 }
 
-// PROVEN: 878a66d1 IDENTICAL/NONE
-// OFFSET: 0x0095DAA0
+// PROVEN: 878a66d1 IDENTICAL/DIFFERENT
+// OFFSET: 0x0095DAA0/0x1406D0AB0
 void CGQuestLog::GetBlobBounds(const TSGrowableArray<BLOBPOI>& points, CRect& bounds) {
     bounds.minX = 3.402823466e38f;
     bounds.maxX = -3.402823466e38f;
@@ -637,6 +644,7 @@ static void QuestLogQueryCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 }
 
+// PROVEN: 620cf830 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095E5C0/0x1406D18C0
 void QuestQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -664,7 +672,7 @@ int32_t Packet_SMSG_QUERY_TIME_RESPONSE(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: 0x0095E670
+// OFFSET: 0x0095E670/0x1406D19C0
 static int32_t QSortQuestLogEntries(const void* a, const void* b) {
     const QuestLogEntry* first = static_cast<const QuestLogEntry*>(a);
     const QuestLogEntry* second = static_cast<const QuestLogEntry*>(b);
@@ -778,7 +786,7 @@ static int32_t QSortQuestLogEntries(const void* a, const void* b) {
     return 2 * (firstLevel >= secondLevel) - 1;
 }
 
-// OFFSET: 0x0095E8E0
+// OFFSET: 0x0095E8E0/0x1406D1C80
 void CGQuestLog::FilterAndSortQuests() {
     qsort(CGQuestLog::m_quests, CGQuestLog::m_numQuest, sizeof(QuestLogEntry), QSortQuestLogEntries);
     CGQuestLog::m_numShownQuests = CGQuestLog::m_numQuest;
@@ -875,6 +883,7 @@ void CGQuestLog::LoadAutoQuestPopUps() {
     }
 }
 
+// PROVEN: c3f253fe IDENTICAL/UNPROVEN
 // OFFSET: 0x0095EB40/0x1406D1E70
 void CGQuestLog::SaveAutoQuestPopUps() {
     CVarIntListWrapper list;
@@ -1199,7 +1208,7 @@ int32_t CGQuestLog::IsOnQuest(const CGPlayer_C* player, int32_t questId) {
     return 0;
 }
 
-// OFFSET: 0x0095F470
+// OFFSET: 0x0095F470/0x1406D2950
 void CGQuestLog::UpdateQuestItem(int32_t itemId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numQuest; i++) {
         WOWGUID none = WOWGUID::Make(0);
@@ -1279,7 +1288,7 @@ void CGQuestLog::UpdateQuestCurrency(int32_t currencyId) {
     }
 }
 
-// OFFSET: 0x0095F690
+// OFFSET: 0x0095F690/0x1406D2BF0
 int32_t CGQuestLog::GetQuestCriteriaSpell(int32_t questId) {
     if (static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         int32_t id = questId ? questId : CGQuestLog::m_selectedQuest;
@@ -1431,6 +1440,7 @@ int32_t CGQuestLog::GetNumQuestItems(const CGPlayer_C* player, int32_t questId, 
     return entry->m_counts[slot];
 }
 
+// PROVEN: 33383713 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095FBA0/0x1406D3260
 int32_t CGQuestLog::GetQuestGreenRange() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1448,6 +1458,7 @@ int32_t CGQuestLog::GetQuestGreenRange() {
     return s_questGreenRange[index];
 }
 
+// PROVEN: a58307cd IDENTICAL/NONE
 // OFFSET: 0x0095FBF0
 bool CGQuestLog::HasQuestPOI(int32_t questId) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || questId <= 0) {
@@ -1463,6 +1474,7 @@ bool CGQuestLog::HasQuestPOI(int32_t questId) {
     return false;
 }
 
+// PROVEN: 7475d8ca IDENTICAL/NONE
 // OFFSET: 0x0095FC40
 int32_t CGQuestLog::GetQuestPOIIndex(int32_t questId) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || questId <= 0) {
@@ -1478,7 +1490,7 @@ int32_t CGQuestLog::GetQuestPOIIndex(int32_t questId) {
     return -1;
 }
 
-// OFFSET: 0x0095FC90
+// OFFSET: 0x0095FC90/0x1406D32D0
 uint32_t CGQuestLog::ComputeBlobQuestObjectives(int32_t questId) {
     uint32_t result = 0;
     int32_t index = CGQuestLog::GetQuestIndex(questId) - 1;
@@ -1532,7 +1544,7 @@ uint32_t CGQuestLog::ComputeBlobQuestObjectives(int32_t questId) {
     return result;
 }
 
-// OFFSET: 0x0095FEC0
+// OFFSET: 0x0095FEC0/0x1406D3510
 int32_t CGQuestLog::GetQuestWorldMapAreaID(int32_t questId, int32_t& floor) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1658,7 +1670,7 @@ int32_t CGQuestLog::GetQuestWorldMapAreaID(int32_t questId, int32_t& floor) {
     }
 }
 
-// OFFSET: 0x00960220
+// OFFSET: 0x00960220/0x1406D39D0
 bool CGQuestLog::QuestPOIBlobIntersectsRect(int32_t questId, int32_t blobIndex, const CRect& rect) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || blobIndex < 0) {
         return false;
@@ -1714,7 +1726,7 @@ bool CGQuestLog::QuestPOIBlobIntersectsRect(int32_t questId, int32_t blobIndex, 
     return false;
 }
 
-// OFFSET: 0x009603E0
+// OFFSET: 0x009603E0/0x1406D3C40
 QuestPOIInfo* CGQuestLog::GetQuestPOIData(int32_t questId) {
     uint32_t index = CGQuestLog::GetQuestPOIIndex(questId);
 
@@ -1818,7 +1830,7 @@ float CGQuestLog::GetQuestDistSqr(int32_t questId, C2Vector& position) {
     return bestDistance;
 }
 
-// PROVEN: 2691a13d IDENTICAL/NONE
+// PROVEN: 2691a13d IDENTICAL/DIFFERENT
 // OFFSET: 0x00960700/0x1406D0C50
 void CGQuestLog::SaveTrackedQuests() {
     CVarIntListWrapper list;
@@ -1921,7 +1933,7 @@ bool CGQuestLog::AddAutoQuestPopUp(int32_t questId, int32_t type) {
     return false;
 }
 
-// PROVEN: e68df7f6 IDENTICAL/NONE
+// PROVEN: e68df7f6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00961B50/0x1406D58B0
 void CGQuestLog::RemoveAutoQuestPopUp(int32_t questId) {
     uint32_t count = CGQuestLog::m_numAutoQuestPopUps;
@@ -1943,6 +1955,7 @@ void CGQuestLog::RemoveAutoQuestPopUp(int32_t questId) {
     CGQuestLog::SaveAutoQuestPopUps();
 }
 
+// PROVEN: c95f7ea8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00961BB0/0x1406D5920
 const char* CGQuestLog::GetQuestName(int32_t index) {
     if (index >= 0 && index < static_cast<int32_t>(CGQuestLog::m_numQuest)) {
@@ -1970,19 +1983,21 @@ const char* CGQuestLog::GetQuestName(int32_t index) {
     return NULL;
 }
 
+// PROVEN: 0a7b9925 IDENTICAL/DIFFERENT
 // OFFSET: 0x00961C20/0x1406D59E0
 int32_t CGQuestLog::IsQuestComplete(uint32_t index) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     return CGQuestLog::IsQuestCompleteEx(player, index, true, 0, 0);
 }
 
-// PROVEN: 23fcc8e2 IDENTICAL/NONE
+// PROVEN: 23fcc8e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00961C50/0x1406D5A30
 int32_t CGQuestLog::IsQuestComplete(const CGPlayer_C* player, uint32_t index) {
     return CGQuestLog::IsQuestCompleteEx(player, index, true, 0, 0);
 }
 
-// OFFSET: 0x00961C70
+// PROVEN: f649fdd3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00961C70/0x1406D5A50
 int32_t CGQuestLog::IsOnQuest(int32_t questId) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     return CGQuestLog::IsOnQuest(player, questId);
@@ -2042,7 +2057,8 @@ int32_t CGQuestLog::GetNumQuestLeaderBoards(int32_t questId, void (*callback)(in
     return count;
 }
 
-// OFFSET: 0x00961E30
+// PROVEN: 475429f3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00961E30/0x1406D5C20
 int32_t CGQuestLog::GetQuestLeaderBoardForKill(int32_t questId, int32_t objectId, QuestLogLeaderBoardParams* params) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2115,7 +2131,7 @@ int32_t CGQuestLog::UpdateAllQuestPOI() {
     return visible;
 }
 
-// OFFSET: 0x00962030
+// OFFSET: 0x00962030/0x1406D5F30
 void CGQuestLog::UpdatePOIIcons() {
     if (!g_questPOICVar->m_intValue) {
         return;
@@ -2371,7 +2387,7 @@ void CGQuestLog::UpdatePOIIcons() {
     }
 }
 
-// OFFSET: 0x00962AE0
+// OFFSET: 0x00962AE0/0x1406D7590
 int32_t CGQuestLog::GetPOIQuestIDByVisibleIndex(int32_t index) {
     if (static_cast<uint32_t>(index) > 49) {
         return -1;
@@ -2440,6 +2456,7 @@ int32_t CGQuestLog::GetPOIQuestIDByVisibleIndex(int32_t index) {
     return -1;
 }
 
+// PROVEN: b485f87c IDENTICAL/DIFFERENT
 // OFFSET: 0x00962DA0/0x1406D7920
 bool CGQuestLog::SortQuestWatches() {
     int32_t sort = g_trackerSortingCVar->m_intValue;
@@ -2526,6 +2543,7 @@ bool CGQuestLog::AddQuestWatch(int32_t questId, uint32_t duration) {
     return CGQuestLog::SortQuestWatches();
 }
 
+// PROVEN: 3953c740 IDENTICAL/DIFFERENT
 // OFFSET: 0x009636B0/0x1406D8360
 int32_t CGQuestLog::SetQuestExpired(uint32_t index) {
     if (!(index >= CGQuestLog::m_numQuest)) {
@@ -2547,6 +2565,7 @@ int32_t CGQuestLog::SetQuestExpired(uint32_t index) {
     return 0;
 }
 
+// PROVEN: 515bf283 IDENTICAL/IDENTICAL
 // OFFSET: 0x00963730/0x1406D8400
 int32_t CGQuestLog::SetQuestExpiredByID(int32_t questId) {
     for (uint32_t i = 0; i < CGQuestLog::m_numQuest; i++) {
@@ -2582,7 +2601,7 @@ int32_t CGQuestLog::GetQuestCompletionNPC(int32_t questId, int32_t index) {
     return 0;
 }
 
-// OFFSET: 0x00963840
+// OFFSET: 0x00963840/0x1406D8580
 uint32_t CGQuestLog::GetQuestPOIBlobsOnContinent(int32_t questId, TSGrowableArray<uint32_t>& blobs) {
     uint32_t index = 0;
 
@@ -2630,7 +2649,7 @@ uint32_t CGQuestLog::GetQuestPOIBlobsOnContinent(int32_t questId, TSGrowableArra
     return blobs.m_count;
 }
 
-// OFFSET: 0x00963940
+// OFFSET: 0x00963940/0x1406D86C0
 static uint32_t AddUniqueBlobIndex(uint32_t blobIndex, TSGrowableArray<uint32_t>& indices) {
     for (uint32_t i = 0; i < indices.m_count; i++) {
         if (indices.m_data[i] == blobIndex) {
@@ -2643,8 +2662,8 @@ static uint32_t AddUniqueBlobIndex(uint32_t blobIndex, TSGrowableArray<uint32_t>
     return indices.m_count;
 }
 
-// PROVEN: 605690e6 IDENTICAL/NONE
-// OFFSET: 0x009639B0
+// PROVEN: 605690e6 IDENTICAL/UNPROVEN
+// OFFSET: 0x009639B0/0x1406D8770
 void CGQuestLog::LoadTrackedQuests(bool force) {
     if (force && !CGQuestLog::m_trackedQuestsLoaded) {
         return;
@@ -2876,7 +2895,7 @@ void CGQuestLog::Update(int32_t rebuild) {
     }
 }
 
-// OFFSET: 0x009644F0
+// OFFSET: 0x009644F0/0x1406D97B0
 void CGQuestLog::MergeOverlappingBlobs(int32_t questId, TSGrowableArray<uint32_t>& blobs, TSGrowableArray<uint32_t>& merged) {
     int32_t index = 0;
 
@@ -3007,7 +3026,7 @@ void CGQuestLog::EnterWorld() {
     CGQuestLog::Update(1);
 }
 
-// OFFSET: 0x00964B80
+// OFFSET: 0x00964B80/0x1406DA260
 int32_t CGQuestLog::FindEmptyQuestPOISlot(int32_t questId) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || questId <= 0) {
         return -1;
@@ -3499,7 +3518,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardForItem(const CGPlayer_C* player, int32_t
     return 1;
 }
 
-// OFFSET: 0x00967200
+// OFFSET: 0x00967200/0x1406DD510
 void CGQuestLog::OnQuestPOIResponse(CDataStore* msg) {
     if (!msg) {
         return;

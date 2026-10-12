@@ -26,6 +26,7 @@ bool FFX::CVarCallback(CVar* var, const char* oldValue, const char* value, void*
     return true;
 }
 
+// PROVEN: 41eb1417 DIFFERENT/IDENTICAL
 // OFFSET: 0x0089D110/0x1405DD4B0
 void FFX::InitCVars() {
     FFX::s_defaultEnabled = true;

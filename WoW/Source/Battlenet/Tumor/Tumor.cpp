@@ -28,7 +28,7 @@ Battlenet::Tumor::~Tumor() {
     }
 }
 
-// PROVEN: 886170e7 IDENTICAL/NONE
+// PROVEN: 886170e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00661700/0x140307170
 bool Battlenet::Tumor::AllocTendrilId(uint32_t& tendrilId) {
     tendrilId = this->m_nextTendrilId++;
@@ -228,7 +228,7 @@ void Battlenet::Tumor::RemoveTendril(const uint32_t& tendrilId) {
     }
 }
 
-// OFFSET: 0x00661D80
+// OFFSET: 0x00661D80/0x140307960
 uint32_t Battlenet::Tumor::Connect(uint32_t index, const IP4::AddressPort& address, const uint32_t& tendrilId) {
     ConnectionBinding* binding = this->AllocConnectionBinding();
 
@@ -245,7 +245,7 @@ uint32_t Battlenet::Tumor::Connect(uint32_t index, const IP4::AddressPort& addre
     return connection;
 }
 
-// OFFSET: 0x00661E30
+// OFFSET: 0x00661E30/0x140307A40
 uint32_t Battlenet::Tumor::OpenDatagram(uint32_t index, int32_t port, const uint32_t& tendrilId) {
     ConnectionBinding* binding = this->AllocConnectionBinding();
 
@@ -262,7 +262,7 @@ uint32_t Battlenet::Tumor::OpenDatagram(uint32_t index, int32_t port, const uint
     return connection;
 }
 
-// PROVEN: 3faf57fe IDENTICAL/NONE
+// PROVEN: 3faf57fe IDENTICAL/DIFFERENT
 // OFFSET: 0x00661EE0/0x140307B20
 void Battlenet::Tumor::Resolved(uint32_t request, const Client::DNSInfo& info) {
     TokenBinding* binding = this->FindTokenBinding(request);
@@ -275,7 +275,7 @@ void Battlenet::Tumor::Resolved(uint32_t request, const Client::DNSInfo& info) {
     }
 }
 
-// PROVEN: 5a4cec35 IDENTICAL/NONE
+// PROVEN: 5a4cec35 IDENTICAL/DIFFERENT
 // OFFSET: 0x00661F20/0x140307B90
 void Battlenet::Tumor::Connected(uint32_t connection, const IP4::AddressPort& address) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
@@ -285,7 +285,7 @@ void Battlenet::Tumor::Connected(uint32_t connection, const IP4::AddressPort& ad
     }
 }
 
-// PROVEN: b8f025a9 IDENTICAL/NONE
+// PROVEN: b8f025a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00661F50/0x140307BE0
 void Battlenet::Tumor::Disconnected(uint32_t connection) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
@@ -298,7 +298,7 @@ void Battlenet::Tumor::Disconnected(uint32_t connection) {
     }
 }
 
-// PROVEN: 173ee0a4 IDENTICAL/NONE
+// PROVEN: 173ee0a4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00661F90/0x140307C50
 bool Battlenet::Tumor::Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
@@ -310,7 +310,7 @@ bool Battlenet::Tumor::Recv(uint32_t connection, void* data, uint32_t size, uint
     return false;
 }
 
-// PROVEN: 64f976f5 IDENTICAL/NONE
+// PROVEN: 64f976f5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00661FD0/0x140307CB0
 bool Battlenet::Tumor::RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
@@ -363,58 +363,65 @@ uint32_t Battlenet::Tumor::Adapter::Resolve(uint32_t token, const char* hostname
     return tumor->m_application->Resolve(binding->m_token, hostname);
 }
 
-// PROVEN: cf8fbf4b IDENTICAL/NONE
-// OFFSET: 0x006620D0
+// PROVEN: cf8fbf4b IDENTICAL/UNPROVEN
+// OFFSET: 0x006620D0/0x140307D30
 uint32_t Battlenet::Tumor::Adapter::Connect(const IP4::AddressPort& address, const uint32_t& tendrilId) {
     return this->m_tumor->Connect(this->m_index, address, tendrilId);
 }
 
-// OFFSET: 0x006620F0
+// OFFSET: 0x006620F0/0x140307D50
 void Battlenet::Tumor::Adapter::Disconnect(uint32_t connection) {
     this->m_tumor->m_application->Disconnect(connection);
 }
 
-// OFFSET: 0x00662110
+// OFFSET: 0x00662110/0x140307D90
 bool Battlenet::Tumor::Adapter::Send(uint32_t connection, const void* data, uint32_t size) {
     return this->m_tumor->m_application->Send(connection, data, size);
 }
 
-// PROVEN: 38938bfb IDENTICAL/NONE
-// OFFSET: 0x00662130
+// PROVEN: 38938bfb IDENTICAL/UNPROVEN
+// OFFSET: 0x00662130/0x140307DD0
 uint32_t Battlenet::Tumor::Adapter::OpenDatagram(int32_t port, const uint32_t& tendrilId) {
     return this->m_tumor->OpenDatagram(this->m_index, port, tendrilId);
 }
 
+// PROVEN: c8f1de20 DIFFERENT/IDENTICAL
 // OFFSET: 0x00661920/0x140307350
 void Battlenet::Tumor::Adapter::CloseDatagram(uint32_t connection) {
     this->m_tumor->m_application->CloseDatagram(connection);
 }
 
+// PROVEN: 9cfa8dea DIFFERENT/IDENTICAL
 // OFFSET: 0x00661940/0x140307370
 bool Battlenet::Tumor::Adapter::SendDatagram(uint32_t connection, const void* data, uint32_t size, const IP4::AddressPort& address) {
     return this->m_tumor->m_application->SendDatagram(connection, data, size, address);
 }
 
+// PROVEN: 7ce29724 DIFFERENT/IDENTICAL
 // OFFSET: 0x00661960/0x1403073A0
 uint64_t Battlenet::Tumor::Adapter::GetCurrentTime() const {
     return this->m_tumor->m_application->GetCurrentTime();
 }
 
+// PROVEN: 3265a276 DIFFERENT/IDENTICAL
 // OFFSET: 0x00661980/0x1403073C0
 uint64_t Battlenet::Tumor::Adapter::GetCurrentTick() const {
     return this->m_tumor->m_application->GetCurrentTick();
 }
 
+// PROVEN: b033dd41 DIFFERENT/IDENTICAL
 // OFFSET: 0x006619A0/0x1403073E0
 void Battlenet::Tumor::Adapter::LogLevel(const char* message, int32_t level) {
     this->m_tumor->m_application->LogLevel(message, level);
 }
 
+// PROVEN: 7dcc24b6 DIFFERENT/IDENTICAL
 // OFFSET: 0x006619C0/0x140307400
 Battlenet::ApplicationFile* Battlenet::Tumor::Adapter::OpenApplicationFile(const char* name) {
     return this->m_tumor->m_application->OpenApplicationFile(name);
 }
 
+// PROVEN: 0288e6ad DIFFERENT/IDENTICAL
 // OFFSET: 0x006619E0/0x140307420
 void Battlenet::Tumor::Adapter::CloseApplicationFile(ApplicationFile* file) {
     this->m_tumor->m_application->CloseApplicationFile(file);
@@ -424,61 +431,52 @@ void Battlenet::Tumor::Adapter::CloseApplicationFile(ApplicationFile* file) {
 Battlenet::Tumor::Adapter::~Adapter() {
 }
 
-// PROVEN: eda6052b IDENTICAL/NONE
+// PROVEN: eda6052b IDENTICAL/IDENTICAL
 // OFFSET: 0x00661A00/0x140307440
 void Battlenet::Tumor::Adapter::Destroy() {
     Battlenet::Delete(this);
 }
 
-// PROVEN: 63a55997 IDENTICAL/NONE
-// OFFSET: 0x00661620
+// PROVEN: 63a55997 IDENTICAL/IDENTICAL
+// OFFSET: 0x00661620/0x140307080
 void Battlenet::Tumor::Adapter::Resolved(uint32_t request, const Client::DNSInfo& info) {
     this->m_client->Resolved(request, info);
 }
 
-// PROVEN: 5a6d2eea IDENTICAL/NONE
-// OFFSET: 0x00661630
+// PROVEN: 5a6d2eea IDENTICAL/IDENTICAL
+// OFFSET: 0x00661630/0x1407E5940
 void Battlenet::Tumor::Adapter::Connected(uint32_t connection, const IP4::AddressPort& address) {
     this->m_client->Connected(connection, address);
 }
 
-// PROVEN: 0a62ec3d IDENTICAL/NONE
-// OFFSET: 0x00661640
+// PROVEN: 0a62ec3d IDENTICAL/IDENTICAL
+// OFFSET: 0x00661640/0x140307090
 void Battlenet::Tumor::Adapter::Disconnected(uint32_t connection) {
     this->m_client->Disconnected(connection);
 }
 
-// PROVEN: 44a89ee0 IDENTICAL/NONE
+// PROVEN: 44a89ee0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00661650/0x1403070A0
 bool Battlenet::Tumor::Adapter::Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) {
     return this->m_client->Recv(connection, data, size, used);
 }
 
-// PROVEN: 9e616a2b IDENTICAL/NONE
+// PROVEN: 9e616a2b IDENTICAL/IDENTICAL
 // OFFSET: 0x00661660/0x1403070C0
 bool Battlenet::Tumor::Adapter::RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) {
     return this->m_client->RecvDatagram(connection, data, size, address);
 }
 
-// PROVEN: 869f18c3 IDENTICAL/NONE
-// OFFSET: 0x00661670
+// PROVEN: 869f18c3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00661670/0x1403070E0
 int32_t Battlenet::Tumor::Adapter::Process(uint32_t time) {
     return this->m_client->Process(time);
 }
 
-// PROVEN: 2d3d777b IDENTICAL/NONE
-// OFFSET: 0x00661680
+// PROVEN: 2d3d777b IDENTICAL/IDENTICAL
+// OFFSET: 0x00661680/0x1409321D0
 int32_t Battlenet::Tumor::Adapter::GetLastError() const {
     return this->m_client->GetLastError();
-}
-
-// INLINED
-Battlenet::Tumor::EventAdapter::EventAdapter(BSN::FourCC eventId, EventSubscriber& subscriber, Tumor* tumor, uint32_t index, const uint32_t& tendrilId) {
-    this->m_eventId = eventId;
-    this->m_tendrilId = tendrilId;
-    this->m_tumor = tumor;
-    this->m_index = index;
-    this->m_subscriber = &subscriber;
 }
 
 // PROVEN: 0df30c1a IDENTICAL/NONE
@@ -494,7 +492,7 @@ void Battlenet::Tumor::EventAdapter::SendEvent(uint8_t eventType, uint32_t adapt
     this->m_tumor->SendEvent(header, data);
 }
 
-// PROVEN: 9c48aa7a IDENTICAL/NONE
+// PROVEN: 9c48aa7a IDENTICAL/IDENTICAL
 // OFFSET: 0x006621A0/0x140307E50
 void Battlenet::Tumor::EventAdapter::SendEvent(uint8_t eventType, BSN::FourCC eventId, const BSN::EncodedObject* data) {
     Event::Header header;
@@ -507,7 +505,7 @@ void Battlenet::Tumor::EventAdapter::SendEvent(uint8_t eventType, BSN::FourCC ev
     this->m_tumor->SendEvent(header, data);
 }
 
-// PROVEN: 16dcd556 IDENTICAL/NONE
+// PROVEN: 16dcd556 IDENTICAL/IDENTICAL
 // OFFSET: 0x00661690/0x1403070F0
 void Battlenet::Tumor::EventAdapter::Subscribe(BSN::FourCC eventId, const uint32_t& tendrilId) {
     this->m_tumor->Subscribe(eventId, *this, tendrilId);

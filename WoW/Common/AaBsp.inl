@@ -8,7 +8,8 @@ inline CAaBspDigestCache::~CAaBspDigestCache() {
     this->Reset();
 }
 
-// OFFSET: [0x00791300<BspQuery_Segment>, 0x007913B0<BspQuery_SegmentLink>, 0x00792270<BspQuery_Volume<CAaBox>>, 0x00791360<BspQuery_Volume<CFrustum>>]
+// PROVEN: 51eaabb4 IDENTICAL/NONE
+// OFFSET: [0x00791300<BspQuery_Segment>, 0x007913B0<BspQuery_SegmentLink>, 0x00792270<BspQuery_Volume<CAaBox>>, 0x00791360/0x14047F2A0<BspQuery_Volume<CFrustum>>]
 template <class T>
 void CAaBsp_Query<T>::GetFaceIndices(const CAaBspNode* node) {
     if (this->m_f->GetFaceIndicesUsingCache(*this->m_aaBsp, node)) {
@@ -121,7 +122,7 @@ void CAaBsp_Query_Segment<T>::GetFaceIndices(uint32_t nodeIndex, const C3Segment
     }
 }
 
-// OFFSET: [0x007922D0<BspQuery_Volume<CAaBox>>, 0x00791E00<BspQuery_Volume<CFrustum>>]
+// OFFSET: [0x007922D0<BspQuery_Volume<CAaBox>>, 0x00791E00/0x1404832B0<BspQuery_Volume<CFrustum>>]
 template <class T>
 void CAaBsp_Query_AaBox<T>::GetFaceIndices(uint32_t nodeIndex, const CAaBox& box, const CAaBox& nodeBox) {
     const CAaBspNode* node = &this->m_aaBsp->m_nodes[nodeIndex];

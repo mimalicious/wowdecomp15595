@@ -30,6 +30,7 @@ void CGMailInfo::ClearSendMail(bool signal) {
     }
 }
 
+// PROVEN: 3d1f461e IDENTICAL/DIFFERENT
 // OFFSET: 0x0096E030/0x1406E5110
 void CGPlayer_C::TalkToMailbox(WOWGUID guid) {
     CGGossipInfo::ClearGossip();

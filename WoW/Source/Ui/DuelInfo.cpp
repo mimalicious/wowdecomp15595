@@ -13,19 +13,20 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/FriendList.h"
 
-// STATIC: 0x00F76880
+// STATIC: 0x00F76880/0x140E6C918
 static WOWGUID s_duelArbiter;
 
-// STATIC: 0x00F76888
+// STATIC: 0x00F76888/0x140E6C920
 WOWGUID CGDuelInfo::m_dueler;
 
-// STATIC: 0x00F76890
+// STATIC: 0x00F76890/0x140E6C928
 static uint32_t s_countdown;
 
-// STATIC: 0x00F76894
+// STATIC: 0x00F76894/0x140E6C92C
 static uint32_t s_countdownTimer;
 
-// OFFSET: 0x009F0760
+// PROVEN: 76533788 IDENTICAL/IDENTICAL
+// OFFSET: 0x009F0760/0x14078A5F0
 int32_t Packet_SMSG_DUEL_COUNTDOWN(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t countdown;
     msg->Get(countdown);
@@ -34,7 +35,8 @@ int32_t Packet_SMSG_DUEL_COUNTDOWN(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: 0x009F07A0
+// PROVEN: 5869d374 IDENTICAL/IDENTICAL
+// OFFSET: 0x009F07A0/0x14078A630
 int32_t Packet_SMSG_DUEL_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t completed;
     msg->Get(completed);
@@ -57,7 +59,7 @@ int32_t Packet_SMSG_DUEL_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: 0x009F0830
+// OFFSET: 0x009F0830/0x14078A6B0
 int32_t Packet_SMSG_DUEL_WINNER(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t retreat;
     char winner[48];
@@ -97,7 +99,8 @@ void CGDuelInfo::CancelDuel() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x009F09C0
+// PROVEN: d9d08790 IDENTICAL/DIFFERENT
+// OFFSET: 0x009F09C0/0x14078A880
 int32_t Packet_SMSG_DUEL_REQUESTED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(s_duelArbiter.m_guid);
     WOWGUID requester;
@@ -135,6 +138,7 @@ void CGDuelInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_DUEL_WINNER, Packet_SMSG_DUEL_WINNER, NULL);
 }
 
+// PROVEN: 67b8385c IDENTICAL/IDENTICAL
 // OFFSET: 0x009F0500/0x14078A310
 int32_t CGDuelInfo::ProcessCountdown(const void* data, void* param) {
     char buffer[3000];
@@ -150,18 +154,21 @@ int32_t CGDuelInfo::ProcessCountdown(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x009F0590
+// PROVEN: 15f6d19e IDENTICAL/IDENTICAL
+// OFFSET: 0x009F0590/0x14078A3A0
 int32_t Packet_SMSG_DUEL_OUTOFBOUNDS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_DUEL_OUTOFBOUNDS, NULL);
     return 1;
 }
 
-// OFFSET: 0x009F05B0
+// PROVEN: 8477a8d7 IDENTICAL/IDENTICAL
+// OFFSET: 0x009F05B0/0x14078A3C0
 int32_t Packet_SMSG_DUEL_INBOUNDS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_DUEL_INBOUNDS, NULL);
     return 1;
 }
 
+// PROVEN: 92cf647a IDENTICAL/IDENTICAL
 // OFFSET: 0x009F06A0/0x14078A510
 void CGDuelInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_DUEL_REQUESTED);
@@ -172,6 +179,7 @@ void CGDuelInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_DUEL_WINNER);
 }
 
+// PROVEN: 6d7a5f47 IDENTICAL/IDENTICAL
 // OFFSET: 0x009F0710/0x14078A5A0
 void CGDuelInfo::LeaveWorld() {
     if (!CGGameUI::m_currentlyReloadingUI) {

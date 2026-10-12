@@ -20,10 +20,10 @@
 template <>
 CCameraManager* StaticSingleton<CCameraManager>::m_instance = NULL;
 
-// STATIC: 0x00D386C0
+// STATIC: 0x00D386C0/0x140BF2250
 CVar* CCameraManager::s_cameraSystemCVar;
 
-// STATIC: 0x00D386C4
+// STATIC: 0x00D386C4/0x140BF2258
 uint32_t CCameraManager::ANIMATED_CAMERA_ID;
 
 // STATIC: 0x00D386C8
@@ -32,13 +32,13 @@ CameraModeRec CCameraManager::s_animatedCameraRec;
 // STATIC: 0x00D3870C
 static CDataAllocator s_cameraModeBuffers(sizeof(CCameraModeBuffer), 32);
 
-// STATIC: 0x00D38720
+// STATIC: 0x00D38720/0x140B303C0
 TSHashTable<CCameraModeEntry, HASHKEY_NONE> CCameraManager::s_cameraModes;
 
-// STATIC: 0x00D3874C
+// STATIC: 0x00D3874C/0x140BF22C8
 TSGrowableArray<CCameraTransition> CCameraManager::s_transitions;
 
-// STATIC: 0x00C98C4C
+// STATIC: 0x00C98C4C/0x140B303B4
 static float s_shakeTwoPi = 6.2831855f;
 
 // STATIC: 0x00C98C50
@@ -47,7 +47,7 @@ static float s_shakeFalloffStartSqr = 81.0f;
 // STATIC: 0x00C98C54
 static float s_shakeFalloffMaxSqr = 6400.0f;
 
-// PROVEN: 7aa02847 IDENTICAL/NONE
+// PROVEN: 7aa02847 IDENTICAL/IDENTICAL
 // OFFSET: 0x00438D80/0x1400431D0
 float CCameraManager::GetYaw() {
     float yaw = 0.0f;
@@ -56,23 +56,24 @@ float CCameraManager::GetYaw() {
     return CMath::normalizeAngleNegPiToPi_(yaw + 3.1415927f);
 }
 
-// OFFSET: 0x00438DD0
+// OFFSET: 0x00438DD0/0x140043210
 int32_t CCameraManager::IsCompletelyLegacy() {
     return this->m_track->IsCompletelyLegacy();
 }
 
-// PROVEN: 7b4b0705 IDENTICAL/NONE
+// PROVEN: 7b4b0705 IDENTICAL/IDENTICAL
 // OFFSET: 0x00438DE0/0x140043220
 const CCameraMode* CCameraManager::GetGameCamera() {
     return this->m_track->GetCurrentCamera();
 }
 
-// PROVEN: c04913cb IDENTICAL/NONE
+// PROVEN: c04913cb IDENTICAL/DIFFERENT
 // OFFSET: 0x00438DF0/0x140043230
 void CCameraManager::ResetCameras(WOWGUID guid) {
     this->m_track->ResetCameras(guid);
 }
 
+// PROVEN: c0768104 UNPROVEN/IDENTICAL
 // OFFSET: 0x00438E10/0x140043240
 CCameraMode* CCameraManager::CreateCameraMode(CCameraModeBuffer* buffer, const CameraModeRec* rec) {
     switch (rec->m_type) {
@@ -92,13 +93,13 @@ CCameraMode* CCameraManager::CreateCameraMode(CCameraModeBuffer* buffer, const C
     return NULL;
 }
 
-// PROVEN: d4bc6921 IDENTICAL/NONE
+// PROVEN: d4bc6921 IDENTICAL/IDENTICAL
 // OFFSET: 0x00438F90/0x140043480
 int32_t CCameraManager::IsCameraSystemEnabled() {
     return !CCameraManager::s_cameraSystemCVar || CCameraManager::s_cameraSystemCVar->m_intValue;
 }
 
-// PROVEN: 2f0054b9 IDENTICAL/NONE
+// PROVEN: 2f0054b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00438FB0/0x1400434A0
 void CCameraManager::SetScreenAspect(const CRect& rect) {
     this->m_aspect = (rect.maxX - rect.minX) / (rect.maxY - rect.minY);
@@ -146,7 +147,7 @@ void CCameraManager::ApplyWorldProjection(const CRect& rect) {
     g_theGxDevicePtr->XformSetView(this->m_renderMatrix);
 }
 
-// OFFSET: 0x00439160
+// OFFSET: 0x00439160/0x140043660
 void CCameraManager::UpdateLegacyState() {
     int32_t active = 0;
     const CCameraMode* mode = this->m_track->GetCurrentCamera();
@@ -251,7 +252,7 @@ C3Vector CCameraManager::CalcShakeOffset(const C3Vector& position, float facing,
     return offset;
 }
 
-// PROVEN: 1d8175c6 IDENTICAL/NONE
+// PROVEN: 1d8175c6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00439500/0x140043AD0
 void CCameraManager::ApplyShakes(CCameraShot& shot) {
     float yaw = 0.0f;
@@ -283,7 +284,7 @@ void CCameraManager::InitCameraTransitions() {
     transition->m_easeOut = 0.7f;
 }
 
-// OFFSET: 0x00439660
+// OFFSET: 0x00439660/0x140043DF0
 void CCameraManager::DestroyCameraModes() {
     CCameraManager::ANIMATED_CAMERA_ID = 0;
     CCameraModeEntry* entry;
@@ -293,7 +294,8 @@ void CCameraManager::DestroyCameraModes() {
     }
 }
 
-// OFFSET: 0x004396A0
+// PROVEN: 24b45a53 IDENTICAL/DIFFERENT
+// OFFSET: 0x004396A0/0x140043ED0
 CCameraManager::~CCameraManager() {
     if (this->m_track) {
         delete this->m_track;
@@ -322,6 +324,7 @@ void CCameraManager::SetGameCamera(uint32_t id, WOWGUID guid) {
     }
 }
 
+// PROVEN: 3aa29996 IDENTICAL/DIFFERENT
 // OFFSET: 0x00439940/0x140044270
 void CCameraManager::AddShake(const C3Vector& position, int32_t type, int32_t dir, float amplitude, float frequency, float duration, float timeOffset, float damping, uint32_t flags) {
     CameraShake* shake = this->m_shakes.NewNode(2, 0, 0);
@@ -340,7 +343,7 @@ void CCameraManager::AddShake(const C3Vector& position, int32_t type, int32_t di
     }
 }
 
-// PROVEN: 13e0b1c1 IDENTICAL/NONE
+// PROVEN: 13e0b1c1 IDENTICAL/UNPROVEN
 // OFFSET: 0x00439A40/0x1400443C0
 void CCameraManager::AddShakeById(int32_t shakeId, const C3Vector& position) {
     CameraShakesRec* shake = g_cameraShakesDB.GetRecord(shakeId);
@@ -350,6 +353,7 @@ void CCameraManager::AddShakeById(int32_t shakeId, const C3Vector& position) {
     }
 }
 
+// PROVEN: 9200f5b5 DIFFERENT/IDENTICAL
 // OFFSET: 0x00439C40/0x140044660
 void CCameraManager::ClearShakes() {
     this->m_shakes.Clear();
@@ -402,6 +406,7 @@ void CCameraManager::Update(float elapsed) {
     this->PruneShakes();
 }
 
+// PROVEN: 408c60b4 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043A3C0/0x1400450A0
 void CCameraManager::InitCameraModeFromRecord(const CameraModeRec* rec) {
     if (!rec || !rec->m_id || !rec->m_type) {
@@ -413,7 +418,7 @@ void CCameraManager::InitCameraModeFromRecord(const CameraModeRec* rec) {
     entry->m_mode = mode;
 }
 
-// PROVEN: 1c844eb3 IDENTICAL/NONE
+// PROVEN: 1c844eb3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043A480/0x1400452A0
 void CCameraManager::InitCameraModes() {
     int32_t maxId = 0;

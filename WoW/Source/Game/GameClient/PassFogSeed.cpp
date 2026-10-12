@@ -6,11 +6,11 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00D27BC0
+// STATIC: 0x00D27BC0/0x140BE63C0
 int32_t PassFogSeed::s_deviceReset = 1;
 
-// PROVEN: ccf39bf9 IDENTICAL/NONE
-// OFFSET: 0x00B0B740
+// PROVEN: ccf39bf9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B0B740/0x1408CF660
 void __fastcall PassFogSeed::DeviceRestoredCallback() {
     PassFogSeed::s_deviceReset = 1;
 }
@@ -25,7 +25,7 @@ PassFogSeed::PassFogSeed(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EG
     g_theGxDevicePtr->AddDeviceRestoredCallback(PassFogSeed::DeviceRestoredCallback);
 }
 
-// OFFSET: 0x00B0CA20
+// OFFSET: 0x00B0CA20/0x1408D0C10
 PassFogSeed::~PassFogSeed() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -41,7 +41,7 @@ bool PassFogSeed::Valid() {
     return true;
 }
 
-// OFFSET: 0x00B0CA80
+// OFFSET: 0x00B0CA80/0x1408D0CA0
 void PassFogSeed::Execute() {
     struct Vertex {
         C3Vector p;

@@ -6,18 +6,19 @@
 #include "Engine/Source/Event/EvtSched.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00EC7548
+// STATIC: 0x00EC7548/0x140DB9B08
 static TExtraInstanceRecycler<EvtMessage> s_messageRecycler(64, 64, 256);
 
 void IEvtQueueInitialize() {
 }
 
-// OFFSET: 0x008A3690
+// PROVEN: 8f79861b IDENTICAL/IDENTICAL
+// OFFSET: 0x008A3690/0x1405E5B70
 void IEvtQueueDestroy() {
     s_messageRecycler.Clear();
 }
 
-// PROVEN: a8dcebd2 IDENTICAL/DIFFERENT
+// PROVEN: a8dcebd2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A36A0/0x1405E5B80
 int32_t IEvtQueueCheckSyncMouseState(EvtContext* context, MOUSEBUTTON button) {
     if (!context) {
@@ -73,7 +74,8 @@ void IEvtQueuePost(EvtContext* context, EVENTID id, const void* data, uint32_t b
     context->m_critsect.Leave();
 }
 
-// OFFSET: 0x008A3BB0
+// PROVEN: e9f529d1 IDENTICAL/DIFFERENT
+// OFFSET: 0x008A3BB0/0x1405E60E0
 static void UpdateSyncKeyState(EvtContext* context, KEY key, EVENTID& id) {
     int32_t found = 0;
 
@@ -102,7 +104,7 @@ static void UpdateSyncKeyState(EvtContext* context, KEY key, EVENTID& id) {
     context->m_critsect.Leave();
 }
 
-// OFFSET: 0x008A3CB0
+// OFFSET: 0x008A3CB0/0x1405E6250
 static void UpdateSyncState(EvtContext* context, EVENTID& id, const void* data) {
     if (!context) {
         DebugValidate("context");
@@ -141,7 +143,7 @@ static void UpdateSyncState(EvtContext* context, EVENTID& id, const void* data) 
     }
 }
 
-// OFFSET: 0x008A3760
+// OFFSET: 0x008A3760/0x1405E5BB0
 int32_t IEvtQueueCheckSyncKeyState(EvtContext* context, KEY key) {
     if (!context) {
         DebugValidate("context");

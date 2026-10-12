@@ -10,21 +10,21 @@
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00C98A80
+// STATIC: 0x00C98A80/0x000B300C0
 static const char* s_shaderNames[GxVertexBufferFormats_Last] = { "Default_P", "Default_PN", "Default_PNC", "Default_PNT", "Default_PNCT", NULL, NULL, "Default_PNCT2", "Default_PC", "Default_PCT", NULL, NULL, NULL, "Default_PT", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-// STATIC: 0x00D380C8
+// STATIC: 0x00D380C8/0x000BF1B40
 static CGxShader* s_pixelShaders[GxVertexBufferFormats_Last];
 
-// STATIC: 0x00D38120
+// STATIC: 0x00D38120/0x000BF1BF0
 static CGxShader* s_vertexShaders[GxVertexBufferFormats_Last];
 
-// STATIC: 0x00D38178
+// STATIC: 0x00D38178/0x140BF1CA0
 static uint32_t s_initCount;
 
 static C4Vector s_fogParams;
 
-// STATIC: 0x00D3818C
+// STATIC: 0x00D3818C/0x140BF1CB8
 static C4Vector s_fogColor;
 
 // PROVEN: cdcf0ac9 IDENTICAL/UNPROVEN
@@ -36,6 +36,7 @@ void DefaultShaders::GetFogColor(CImVector& color) {
     color.a = 0xFF;
 }
 
+// PROVEN: 9c8d6516 DIFFERENT/IDENTICAL
 // OFFSET: 0x00430B10/0x140038E20
 void DefaultShaders::Initialize() {
     if (s_initCount++) {
@@ -170,7 +171,7 @@ static int32_t SelectPixelPermute(EGxVertexBufferFormat format, uint32_t texture
     return alphaTest + 2 * textureCount;
 }
 
-// OFFSET: 0x00430E10
+// OFFSET: 0x00430E10/0x140039230
 static void SetVertexConstants(int32_t permute, EGxVertexBufferFormat format) {
     CGxDevice* device = g_theGxDevicePtr;
 
@@ -265,7 +266,7 @@ static void SetVertexConstants(int32_t permute, EGxVertexBufferFormat format) {
     GxRsSet(GxRs_VertexShader, s_vertexShaders[format], permute);
 }
 
-// OFFSET: 0x00431580
+// OFFSET: 0x00431580/0x140039D80
 static void SetPixelConstants(int32_t permute, EGxVertexBufferFormat format) {
     if (g_theGxDevicePtr->m_caps.unk_02FC) {
         GxRsSet(GxRs_Fog, static_cast<int32_t>(s_fogColor.w != 0.0f));
@@ -286,7 +287,7 @@ static void SetPixelConstants(int32_t permute, EGxVertexBufferFormat format) {
     GxRsSet(GxRs_PixelShader, s_pixelShaders[format], permute);
 }
 
-// OFFSET: 0x00431690
+// OFFSET: 0x00431690/0x140039F00
 void DefaultShaders::SetFogParams(float start, float end, float density, const CImVector& color) {
     s_fogColor.x = color.r * 0.0039215689f;
     s_fogColor.y = color.g * 0.0039215689f;
@@ -311,6 +312,7 @@ void DefaultShaders::SetFogParams(float start, float end, float density, const C
     GxRsSet(GxRs_FogColor, *reinterpret_cast<const int32_t*>(&color));
 }
 
+// PROVEN: 948de202 IDENTICAL/DIFFERENT
 // OFFSET: 0x00431840/0x14003A0E0
 void DefaultShaders::SetFogEnabled(int32_t enabled) {
     s_fogColor.w = enabled && g_theGxDevicePtr->MasterEnable(GxMasterEnable_Fog) ? 1.0f : 0.0f;
@@ -369,7 +371,7 @@ int32_t DefaultShaders::SetDefaultShaders(EGxVertexBufferFormat format, uint32_t
     return 1;
 }
 
-// OFFSET: 0x00431960
+// OFFSET: 0x00431960/0x14003A240
 int32_t DefaultShaders::SetPixelShader(EGxVertexBufferFormat format, uint32_t textureCount) {
     if (!CShaderEffect::s_enableShaders) {
         return 0;

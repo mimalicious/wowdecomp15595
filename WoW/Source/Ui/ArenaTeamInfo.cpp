@@ -19,15 +19,15 @@
 // STATIC: 0x00C04154
 static const int32_t s_arenaBracketTypes[3] = { 2, 3, 5 };
 
-// STATIC: 0x00D15300
+// STATIC: 0x00D15300/0x140BCE730
 int32_t CGArenaTeamInfo::m_showOffline = 1;
-// STATIC: 0x00F4CCD0
+// STATIC: 0x00F4CCD0/0x140E412A0
 ArenaTeam CGArenaTeamInfo::m_arenaTeams[3];
 
-// STATIC: 0x00F4CC80
+// STATIC: 0x00F4CC80/0x140E41250
 uint32_t CGArenaTeamInfo::m_nextAllowedQuery[3];
 
-// STATIC: 0x00F4CC8C
+// STATIC: 0x00F4CC8C/0x140E41260
 ArenaTeamSort CGArenaTeamInfo::m_sortOrder[7];
 
 // STATIC: 0x00F4CCC8
@@ -42,7 +42,8 @@ ArenaTeam* CGArenaTeamInfo::GetArenaTeam(uint32_t index) {
     return &CGArenaTeamInfo::m_arenaTeams[index];
 }
 
-// OFFSET: 0x009A90E0
+// PROVEN: f0e00332 IDENTICAL/IDENTICAL
+// OFFSET: 0x009A90E0/0x140730230
 void CGArenaTeamInfo::UpdateRoster(uint32_t index, int32_t reset) {
     if (index >= 3) {
         return;
@@ -56,7 +57,7 @@ void CGArenaTeamInfo::UpdateRoster(uint32_t index, int32_t reset) {
     }
 }
 
-// PROVEN: 439683be IDENTICAL/NONE
+// PROVEN: 0832c998 IDENTICAL/NONE
 // OFFSET: 0x009A9390
 ArenaTeamMemberInfo* CGArenaTeamInfo::SelectMember(uint32_t team, uint32_t index) {
     if (team >= 3 || index >= CGArenaTeamInfo::m_arenaTeams[team].m_numMembers) {
@@ -69,6 +70,7 @@ ArenaTeamMemberInfo* CGArenaTeamInfo::SelectMember(uint32_t team, uint32_t index
     return member;
 }
 
+// PROVEN: 5b34b79e IDENTICAL/DIFFERENT
 // OFFSET: 0x009A93E0/0x140730550
 static int32_t QSortRoster(const void* a, const void* b) {
     const ArenaTeamMemberInfo* member1 = *static_cast<ArenaTeamMemberInfo* const*>(a);
@@ -171,7 +173,8 @@ static int32_t QSortRoster(const void* a, const void* b) {
     return 0;
 }
 
-// OFFSET: 0x009A9570
+// PROVEN: 26acfaf6 IDENTICAL/IDENTICAL
+// OFFSET: 0x009A9570/0x140730790
 int32_t Packet_SMSG_ARENA_TEAM_STATS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t teamId;
     msg->Get(teamId);
@@ -191,6 +194,7 @@ int32_t Packet_SMSG_ARENA_TEAM_STATS(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
+// PROVEN: dd60abfa IDENTICAL/IDENTICAL
 // OFFSET: 0x009AA530/0x140731800
 void ArenaTeam::FreeMemberArray() {
     this->m_teamId = 0;
@@ -217,7 +221,7 @@ void ArenaTeam::FreeMemberArray() {
     this->m_rank = 0;
 }
 
-// OFFSET: 0x009AA5F0
+// OFFSET: 0x009AA5F0/0x140731910
 int32_t Packet_SMSG_ARENA_TEAM_ROSTER(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t teamId;
     msg->Get(teamId);
@@ -311,6 +315,7 @@ void CGArenaTeamInfo::InitializeGame() {
     }
 }
 
+// PROVEN: a7d727cc IDENTICAL/DIFFERENT
 // OFFSET: 0x009A9F70/0x1407311B0
 bool CGArenaTeamInfo::CheckPersonalAndTeamRating(uint32_t rating, int32_t bracket) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -346,6 +351,7 @@ bool CGArenaTeamInfo::CheckPersonalAndTeamRating(uint32_t rating, int32_t bracke
     return false;
 }
 
+// PROVEN: 9840886c IDENTICAL/DIFFERENT
 // OFFSET: 0x009A9630/0x140730860
 void CGArenaTeamInfo::SetRosterShowOffline(int32_t showOffline) {
     if (showOffline == CGArenaTeamInfo::m_showOffline) {
@@ -365,6 +371,7 @@ void CGArenaTeamInfo::SetRosterShowOffline(int32_t showOffline) {
     }
 }
 
+// PROVEN: b1b18484 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A96A0/0x1407308D0
 void CGArenaTeamInfo::SortRoster(int32_t column) {
     for (uint32_t i = 0; i < 7; i++) {
@@ -399,6 +406,7 @@ void CGArenaTeamInfo::SortRoster(int32_t column) {
     }
 }
 
+// PROVEN: 889439be IDENTICAL/NONE
 // OFFSET: 0x009A9750
 int32_t CGArenaTeamInfo::GetSelectedMemberIndex(uint32_t team) {
     if (team >= 3) {
@@ -446,6 +454,7 @@ void CGArenaTeamInfo::QueryRoster(uint32_t index) {
     CGArenaTeamInfo::m_nextAllowedQuery[index] = now + 500;
 }
 
+// PROVEN: 785f621e IDENTICAL/DIFFERENT
 // OFFSET: 0x009A9EB0/0x1407310E0
 void CGArenaTeamInfo::UpdateTeams(int32_t signal) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -477,12 +486,13 @@ void CGArenaTeamInfo::UpdateTeams(int32_t signal) {
     }
 }
 
-// PROVEN: f5f35875 IDENTICAL/NONE
+// PROVEN: f5f35875 IDENTICAL/IDENTICAL
 // OFFSET: 0x009AA590/0x1407318A0
 void CGArenaTeamInfo::EnterWorld() {
     CGArenaTeamInfo::UpdateTeams(0);
 }
 
+// PROVEN: 33f9014f IDENTICAL/IDENTICAL
 // OFFSET: 0x009AA5A0/0x1407318B0
 void CGArenaTeamInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_ARENA_TEAM_ROSTER);

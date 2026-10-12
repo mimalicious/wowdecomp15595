@@ -403,6 +403,7 @@ FMOD_RESULT DSPI::execute(void *inbuffer, void **outbuffer, unsigned int *length
 	[SEE_ALSO]
 ]
 */
+// PROVEN: e6d7c4fd DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8C5B0/0x14084B260
 FMOD_RESULT DSPI::resetVisited()
 {
@@ -1380,6 +1381,7 @@ FMOD_RESULT DSPI::calculateSpeakerLevels(float frontleft, float frontright, floa
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 24be2c53 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8EA00/0x14084DDB0
 DSPI::DSPI()
 {
@@ -1832,7 +1834,7 @@ FMOD_RESULT DSPI::addInputQueued(DSPI *target, bool checkcircular, DSPConnection
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A8E5A0
+// OFFSET: 0x00A8E5A0/0x14084D740
 FMOD_RESULT DSPI::disconnectFromInternal(DSPI *target)
 {
     FMOD_RESULT result;
@@ -2440,7 +2442,7 @@ FMOD_RESULT DSPI::setParameter(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cc882339 IDENTICAL/UNPROVEN
+// PROVEN: cc882339 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E030/0x14084D140
 FMOD_RESULT DSPI::getParameter(int index, float *value, char *valuestr, int valuestrlen)
 {
@@ -2530,7 +2532,7 @@ FMOD_RESULT DSPI::getNumParameters(int *numparams)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 28e9a422 IDENTICAL/UNPROVEN
+// PROVEN: 28e9a422 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E0F0/0x14084D210
 FMOD_RESULT DSPI::getParameterInfo(int index, char *name, char *label, char *description, int descriptionlen, float *min, float *max)
 {
@@ -2633,7 +2635,7 @@ FMOD_RESULT DSPI::showConfigDialog(void *hwnd, bool show)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8577578d IDENTICAL/UNPROVEN
+// PROVEN: 8577578d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8E200/0x14084D350
 FMOD_RESULT DSPI::getInfo(char *name, unsigned int *version, int *channels, int *configwidth, int *configheight)
 {

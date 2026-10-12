@@ -3,7 +3,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: 0x00F76BC4
+// STATIC: 0x00F76BC4/0x140BD21D0
 TSHashTable<CGIncomingResurrection::INCOMINGRESLIST, CHashKeyGUID> CGIncomingResurrection::s_incoming;
 
 // OFFSET: 0x009FCF80/0x14079ACD0
@@ -27,12 +27,13 @@ bool CGIncomingResurrection::HasIncomingResurrection(const WOWGUID& guid) {
     return list && list->m_resurrections.m_count;
 }
 
+// PROVEN: 51706a9b IDENTICAL/NONE
 // OFFSET: 0x009FD1E0
 void CGIncomingResurrection::Reset() {
     CGIncomingResurrection::s_incoming.Clear();
 }
 
-// OFFSET: 0x009FD1F0
+// OFFSET: 0x009FD1F0/0x14079B060
 void CGIncomingResurrection::Remove(const WOWGUID& target, const WOWGUID& caster, int32_t spellID) {
     WOWGUID key = target;
     INCOMINGRESLIST* list = CGIncomingResurrection::s_incoming.Ptr(static_cast<uint32_t>(key.m_guid), CHashKeyGUID(key.m_guid));
@@ -73,7 +74,7 @@ void CGIncomingResurrection::Remove(const WOWGUID& target, const WOWGUID& caster
     }
 }
 
-// OFFSET: 0x009FDA00
+// OFFSET: 0x009FDA00/0x14079BBB0
 void CGIncomingResurrection::Add(const WOWGUID& target, const WOWGUID& caster, int32_t spellID) {
     WOWGUID key = target;
     INCOMINGRESLIST* list = CGIncomingResurrection::s_incoming.Ptr(static_cast<uint32_t>(key.m_guid), CHashKeyGUID(key.m_guid));

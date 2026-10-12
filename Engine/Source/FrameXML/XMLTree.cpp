@@ -7,13 +7,13 @@
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00DC77A8
+// STATIC: 0x00DC77A8/0x140CAD480
 static XML_Parser s_parser;
 
-// STATIC: 0x00DC77AC
+// STATIC: 0x00DC77AC/0x140CAD488
 static XMLNode* s_freeNodes;
 
-// STATIC: 0x00DC77B0
+// STATIC: 0x00DC77B0/0x140CAD490
 CDataAllocator XMLNode::s_allocator(sizeof(XMLNode), 1170);
 
 // PROVEN: c55c70e0 IDENTICAL/NONE
@@ -28,8 +28,8 @@ static void* XMLTree_MemReAlloc(void* ptr, size_t size) {
     return SMemReAlloc(ptr, size, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 5c986334 IDENTICAL/NONE
-// OFFSET: 0x004EBAF0
+// PROVEN: 5c986334 IDENTICAL/DIFFERENT
+// OFFSET: 0x004EBAF0/0x14012ECD0
 static void XMLTree_MemFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
@@ -215,6 +215,7 @@ static void begin_element(void* userData, const char* name, const char** atts) {
     }
 }
 
+// PROVEN: dfa04ae8 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC080/0x14012F510
 void XMLNode::SetAttribute(const char* name, const char* value) {
     uint32_t count = this->m_attributes.Count();
@@ -231,6 +232,7 @@ void XMLNode::SetAttribute(const char* name, const char* value) {
     this->m_attributes[count].m_value.Copy(value);
 }
 
+// PROVEN: 56d4bc65 DIFFERENT/IDENTICAL
 // OFFSET: 0x004EC120/0x14012F5C0
 void XMLNode::Recycle() {
     if (this->m_userData) {

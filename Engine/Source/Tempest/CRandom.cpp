@@ -4,7 +4,7 @@
 #include "Engine/Source/Tempest/CRandom.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: 0x00BA1A00
+// STATIC: 0x00BA1A00/0x140983040
 static const uint32_t s_rndTable[64] = {
     0x9927148E, 0x08C7AAFD, 0x1F3EE6D5, 0xDA55BBF6, 0x6A4AA075, 0xFF97BDE8, 0x9FBC9BDE, 0x46A18A81,
     0x63E30B6E, 0x5D6C7A76, 0xCA69D388, 0x25B947C3, 0x3FA2AB83, 0xBA7C41A6, 0x0195ACE5, 0xC109CF7E,
@@ -55,7 +55,7 @@ uint32_t CRandom::uint32_(CRndSeed& seed) {
     return acc;
 }
 
-// OFFSET: 0x004010D0
+// OFFSET: 0x004010D0/0x140101960
 CRndSeed::CRndSeed(uint32_t seed) {
     this->SetSeed(seed);
 }
@@ -79,8 +79,8 @@ float CRandom::ufloat_(CRndSeed& seed) {
     return *reinterpret_cast<float*>(&bits) - 1.0f;
 }
 
-// PROVEN: e81ddf4b IDENTICAL/NONE
-// OFFSET: 0x004C67F0
+// PROVEN: e81ddf4b IDENTICAL/DIFFERENT
+// OFFSET: 0x004C67F0/0x1401019E0
 float CRandom::sfloat_(CRndSeed& seed) {
     uint32_t value = CRandom::uint32_(seed);
     uint32_t bits = (value & 0x7FFFFF) | 0x3F800000;
@@ -103,6 +103,7 @@ uint32_t CRandom::dice_(uint32_t sides, CRndSeed& seed) {
     return static_cast<uint32_t>((static_cast<uint64_t>(sides) * CRandom::uint32_(seed)) >> 32);
 }
 
+// PROVEN: 345ed239 DIFFERENT/IDENTICAL
 // OFFSET: 0x004C6870/0x140101AC0
 C3Vector CRandom::C3Vector_(CRndSeed& seed) {
     float c;
@@ -113,9 +114,4 @@ C3Vector CRandom::C3Vector_(CRndSeed& seed) {
     CMath::fsincos_(angle, &s, &c);
 
     return C3Vector(c * r, r * s, z);
-}
-
-// INLINED
-float __stdcall CRandom::ufloat_(float range, CRndSeed& seed) {
-    return CRandom::ufloat_(seed) * range;
 }

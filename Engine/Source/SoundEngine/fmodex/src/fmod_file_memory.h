@@ -15,6 +15,7 @@ namespace FMOD
         unsigned int  mPosition;
         void         *mMem;
 
+        // PROVEN: 578bfedf UNPROVEN/IDENTICAL
         // OFFSET: 0x00A80190/0x14083C870
         MemoryFile() { mDeviceType = DEVICE_MEMORY; }
 

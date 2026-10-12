@@ -26,10 +26,10 @@ struct LiquidChunkAndDistance {
     }
 };
 
-// STATIC: 0x00D01BEC
+// STATIC: 0x00D01BEC/0x140BB1824
 static uint32_t s_batchMask = 3;
 
-// OFFSET: 0x00796F10
+// OFFSET: 0x00796F10/0x14048A2A0
 static int32_t CanBatchChunks(CMapChunk** chunks, uint32_t mask, int32_t multiPass) {
     if (!CMap::enableChunkBatching) {
         return 0;
@@ -148,8 +148,8 @@ void CMapArea::Initialize() {
 void CMapArea::Destroy() {
 }
 
-// PROVEN: 452c9edf IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: 452c9edf IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CMapArea::Enable(int32_t enable) {
 }
 
@@ -202,7 +202,7 @@ void CMapArea::PurgeXXX() {
     this->m_textures.SetCount(0);
 }
 
-// PROVEN: 85663c4a IDENTICAL/NONE
+// PROVEN: 85663c4a IDENTICAL/IDENTICAL
 // OFFSET: 0x007869A0/0x140475CC0
 void CMapArea::PurgeChunk(CMapChunk* chunk) {
     this->m_chunks[16 * chunk->m_indexY + chunk->m_indexX] = NULL;
@@ -210,6 +210,7 @@ void CMapArea::PurgeChunk(CMapChunk* chunk) {
     CMap::FreeChunk(chunk);
 }
 
+// PROVEN: b42ed990 IDENTICAL/IDENTICAL
 // OFFSET: 0x00796920/0x140489AB0
 int32_t CMapArea::IsLoading() {
     for (int32_t i = 0; i < 3; i++) {
@@ -320,6 +321,7 @@ void CMapArea::AsyncFailedCallback(CAsyncObject* object) {
     World::SetLoadFailed(1, NULL);
 }
 
+// PROVEN: a9694c2e DIFFERENT/IDENTICAL
 // OFFSET: 0x00796E70/0x14048A180
 void CMapArea::AsyncPriorityCallback(void* param) {
     CMapArea* area = static_cast<CMapArea*>(param);
@@ -349,6 +351,7 @@ void CMapArea::PurgeChunks(const CiRect& rect) {
     }
 }
 
+// PROVEN: 0ce2cfbf IDENTICAL/IDENTICAL
 // OFFSET: 0x007972F0/0x14048A6F0
 CTexture* CMapArea::LoadTexture(uint32_t index) {
     CMapAreaTexture* texture = &this->m_textures.m_data[index];
@@ -372,7 +375,7 @@ CTexture* CMapArea::GetTexture(uint32_t index) {
     return this->m_textures.m_data[index].m_texture;
 }
 
-// OFFSET: 0x007973C0
+// OFFSET: 0x007973C0/0x14048A800
 void CMapArea::PrepareChunk(int32_t x, int32_t y) {
     CMapChunk* chunk = CMap::AllocChunk();
     this->m_chunkList.LinkToTail(chunk);
@@ -494,7 +497,7 @@ void CMapArea::LoadTextures() {
     } while (offset < this->m_textureNamesSize);
 }
 
-// OFFSET: 0x007979C0
+// OFFSET: 0x007979C0/0x14048B180
 CMapArea::CMapArea() {
     this->m_bbox.b.x = 0.0f;
     this->m_bbox.b.y = 0.0f;
@@ -551,6 +554,7 @@ CMapArea::CMapArea() {
     this->m_distSq = 0.0f;
 }
 
+// PROVEN: 89944795 IDENTICAL/DIFFERENT
 // OFFSET: 0x00797BA0/0x14048B3D0
 void CMapArea::Create() {
     for (int32_t i = 0; i < 3; i++) {
@@ -610,7 +614,7 @@ void CMapArea::Load(const char* fileName) {
     this->m_numFiles++;
 }
 
-// PROVEN: 4ac5fdf4 IDENTICAL/NONE
+// PROVEN: 4ac5fdf4 IDENTICAL/DIFFERENT
 // OFFSET: 0x007968D0/0x140489A70
 void CMapArea::InitBounds() {
     float posX = this->m_posX;
@@ -702,7 +706,7 @@ void CMapArea::BatchChunks(const C2iVector& index) {
     }
 }
 
-// OFFSET: 0x0077E730
+// OFFSET: 0x0077E730/0x14046B7B0
 void CMapArea::QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results) {
     int32_t centerY = static_cast<int32_t>(-(pos.y - this->m_posY) * 0.029999999f);
     float fx = -(pos.x - this->m_posX) * 0.029999999f;

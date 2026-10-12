@@ -14,7 +14,7 @@ bool Blizzard::Jobs::Job::IsReady() const {
     return true;
 }
 
-// OFFSET: 0x007B05D0
+// OFFSET: 0x007B05D0/0x1404A5360
 uint32_t Blizzard::Jobs::WorkerPool::RunJobProc(void* param) {
     JobParam* jobParam = static_cast<JobParam*>(param);
     Job* job = jobParam->m_job;
@@ -134,7 +134,7 @@ Blizzard::Jobs::WorkerPool::Impl::Impl() {
     this->m_shutdown = false;
 }
 
-// OFFSET: [0x007E3F90, 0x007E62F0]
+// OFFSET: [0x007E3F90/0x1404EBE60, 0x007E62F0]
 Blizzard::Jobs::WorkerPool::~WorkerPool() {
     if (this->m_pImpl->m_pool) {
         delete this->m_pImpl->m_pool;

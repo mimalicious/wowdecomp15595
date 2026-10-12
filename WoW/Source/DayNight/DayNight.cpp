@@ -21,85 +21,85 @@
 #include "WoW/Source/LiquidSystem/Liquid.h"
 #include "WoW/Source/WorldClient/MapObj.h"
 
-// STATIC: 0x00E42388
+// STATIC: 0x00E42388/0x140D2B080
 DayNight::INTERSECT_CALLBACK DayNight::g_intersectCallback;
 
-// STATIC: 0x00E4238C
+// STATIC: 0x00E4238C/0x140D2B088
 float DayNight::g_fogDistanceMax;
 
-// STATIC: 0x00E42390
+// STATIC: 0x00E42390/0x140D2B08C
 float DayNight::g_fOverrideFogRate;
 
-// STATIC: 0x00E42394
+// STATIC: 0x00E42394/0x140D2B090
 float DayNight::g_fOverrideFogStartScalar;
 
-// STATIC: 0x00E42398
+// STATIC: 0x00E42398/0x140D2B094
 float DayNight::g_fOverrideFogEnd;
 
-// STATIC: 0x00E4239C
+// STATIC: 0x00E4239C/0x140D2B098
 int32_t DayNight::g_bSaveShowSky;
 
-// STATIC: 0x00E423A0
+// STATIC: 0x00E423A0/0x140D2B09C
 float DayNight::g_fSaveFogRate;
 
-// STATIC: 0x00E423A4
+// STATIC: 0x00E423A4/0x140D2B0A0
 float DayNight::g_fSaveFogStartScalar;
 
-// STATIC: 0x00E423A8
+// STATIC: 0x00E423A8/0x140D2B0A4
 float DayNight::g_fSaveFogEnd;
 
-// STATIC: 0x00E423AC
+// STATIC: 0x00E423AC/0x140D2B0A8
 int32_t DayNight::g_bOverrideFog;
 
-// STATIC: 0x00E423B0
+// STATIC: 0x00E423B0/0x140D2B0AC
 int32_t DayNight::g_zoneLightsDirty;
 
-// STATIC: 0x00E423B4
+// STATIC: 0x00E423B4/0x140D2B0B0
 int32_t DayNight::g_forceFullUpdate;
 
-// STATIC: 0x00E423B8
+// STATIC: 0x00E423B8/0x140D2B0B4
 int32_t DayNight::g_exteriorUnderwater;
 
-// STATIC: 0x00E423BC
+// STATIC: 0x00E423BC/0x140D2B0B8
 int32_t DayNight::g_initialized;
 
-// STATIC: 0x00E423C0
+// STATIC: 0x00E423C0/0x140D2B0C0
 DayNight::DNStars DayNight::g_stars;
 
-// STATIC: 0x00E423DC
+// STATIC: 0x00E423DC/0x140D2B0E8
 CImVector DayNight::g_SaveFogColor;
 
 // STATIC: 0x00E423E0
 DayNight::DNInfo DayNight::g_dnInfo;
 
-// STATIC: 0x00E4279C
+// STATIC: 0x00E4279C/0x140D2B0EC
 CImVector DayNight::g_OverrideFogColor;
 
-// STATIC: 0x00E427A0
+// STATIC: 0x00E427A0/0x140D2B4F0
 DayNight::DNClouds DayNight::g_clouds;
 
-// STATIC: 0x00E42834
+// STATIC: 0x00E42834/0x140B90180
 TSHashTable<DayNight::DNOverrideSky, HASHKEY_STRI> DayNight::g_overrideSky;
 
-// STATIC: 0x00E42860
+// STATIC: 0x00E42860/0x140D2B5C0
 DayNight::DNPlanet DayNight::g_planets[4];
 
-// STATIC: 0x00E428E0
+// STATIC: 0x00E428E0/0x140D2B660
 DayNight::DNSky DayNight::g_sky;
 
-// STATIC: 0x00E42910
+// STATIC: 0x00E42910/0x140D2B4D8
 TSGrowableArray<DayNight::AreaLightOverride> DayNight::g_areaLightOverrides;
 
-// STATIC: 0x00E42920
+// STATIC: 0x00E42920/0x140D2B5A8
 TSGrowableArray<const LightRec*> DayNight::g_areaLights;
 
-// STATIC: 0x00E42930
+// STATIC: 0x00E42930/0x140D2B6A0
 CDataAllocator DayNight::g_areaLightRecordCache(sizeof(LightRec), 16);
 
-// STATIC: 0x00CEF960
+// STATIC: 0x00CEF960/0x140B8FFE0
 DayNight::DNSunGlare DayNight::g_sunGlare;
 
-// STATIC: 0x00CEFA18
+// STATIC: 0x00CEFA18/0x140B900B0
 DayNight::DNMoonGlare DayNight::g_moonGlare;
 
 // INLINED
@@ -121,7 +121,7 @@ static CImVector Brighten(const CImVector& color) {
     return *reinterpret_cast<CImVector*>(&result);
 }
 
-// PROVEN: 2b6e9b71 IDENTICAL/NONE
+// PROVEN: 2b6e9b71 IDENTICAL/UNPROVEN
 // OFFSET: 0x00646DD0/0x1402E3930
 void DayNight::Initialize(bool enableFogMode) {
     DayNight::g_dnInfo.m_enableFogMode = enableFogMode;
@@ -133,7 +133,7 @@ void DayNight::Initialize(bool enableFogMode) {
 void DayNight::Destroy() {
 }
 
-// PROVEN: 15ba432a IDENTICAL/NONE
+// PROVEN: 15ba432a IDENTICAL/UNPROVEN
 // OFFSET: 0x00646DF0/0x1402E3950
 void DayNight::SetTime(uint32_t time, float timeOfDay, float dayFraction) {
     DayNight::g_dnInfo.m_timeOfDay = timeOfDay;
@@ -167,26 +167,26 @@ const DayNight::FogInfo* DayNight::GetIntFogInfo() {
     return &DayNight::g_dnInfo.m_intFog;
 }
 
-// PROVEN: 07b618f3 IDENTICAL/NONE
+// PROVEN: 07b618f3 IDENTICAL/UNPROVEN
 // OFFSET: 0x00646E60/0x1402E39D0
 const DayNight::FogInfo* DayNight::GetFogInfoUW() {
     return &DayNight::g_dnInfo.m_fogUW;
 }
 
-// PROVEN: f93d4754 IDENTICAL/NONE
+// PROVEN: f93d4754 IDENTICAL/UNPROVEN
 // OFFSET: 0x00646E70/0x1402E39E0
 const DayNight::FogInfo* DayNight::GetIntFogInfoUW() {
     return &DayNight::g_dnInfo.m_intFogUW;
 }
 
-// PROVEN: 5c4191e8 IDENTICAL/NONE
+// PROVEN: 5c4191e8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00646E80/0x1402E39F0
 const DayNight::FogInfo* DayNight::GetFogInfoAW() {
     return &DayNight::g_dnInfo.m_fog;
 }
 
-// PROVEN: add2ec27 IDENTICAL/NONE
-// OFFSET: 0x00646E90
+// PROVEN: add2ec27 IDENTICAL/UNPROVEN
+// OFFSET: 0x00646E90/0x1402E3C90
 void DayNight::ClearOverrideFog() {
     if (DayNight::g_bOverrideFog) {
         DayNight::g_dnInfo.m_light.m_fogEnd = DayNight::g_fSaveFogEnd;
@@ -198,7 +198,7 @@ void DayNight::ClearOverrideFog() {
     }
 }
 
-// PROVEN: d22e86a9 IDENTICAL/NONE
+// PROVEN: d22e86a9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00646EF0/0x1402E3CF0
 void DayNight::SetOverrideFog(float startScalar, float end, CImVector color, int32_t showSky) {
     if (!DayNight::g_bOverrideFog) {
@@ -217,13 +217,13 @@ void DayNight::SetOverrideFog(float startScalar, float end, CImVector color, int
     DayNight::g_bOverrideFog = 1;
 }
 
-// PROVEN: 8b750674 IDENTICAL/NONE
+// PROVEN: 8b750674 IDENTICAL/IDENTICAL
 // OFFSET: 0x00646FA0/0x1402E3A00
 void DayNight::SetFogDistanceMax(float distance) {
     DayNight::g_fogDistanceMax = distance;
 }
 
-// PROVEN: 2fed8983 IDENTICAL/NONE
+// PROVEN: 2fed8983 IDENTICAL/UNPROVEN
 // OFFSET: 0x00646FC0/0x1402E3A10
 const DayNight::LightInfo* DayNight::GetLightInfo() {
     if (Liquid::CameraSubmerged()) {
@@ -233,13 +233,13 @@ const DayNight::LightInfo* DayNight::GetLightInfo() {
     return &DayNight::g_dnInfo.m_lightInfo;
 }
 
-// PROVEN: 3497c27d IDENTICAL/NONE
-// OFFSET: 0x00646FE0
+// PROVEN: 3497c27d IDENTICAL/UNPROVEN
+// OFFSET: 0x00646FE0/0x1402E3A30
 const DayNight::LightInfo* DayNight::GetMinimapLightInfo() {
     return DayNight::g_dnInfo.m_minimapLight;
 }
 
-// PROVEN: 37c36cc4 IDENTICAL/NONE
+// PROVEN: 37c36cc4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00646FF0/0x1402E3A40
 float DayNight::GetSelfIlluminatedScalar() {
     return DayNight::g_dnInfo.m_selfIlluminatedScalar;
@@ -251,14 +251,14 @@ float DayNight::GetGlow() {
     return DayNight::g_dnInfo.m_light.m_glow;
 }
 
-// PROVEN: dfc00c99 IDENTICAL/NONE
+// PROVEN: dfc00c99 IDENTICAL/UNPROVEN
 // OFFSET: 0x00647010/0x1402E3A60
 CImVector* DayNight::GetShadowColor(CImVector* color) {
     *color = DayNight::g_dnInfo.m_shadowColor;
     return color;
 }
 
-// PROVEN: d430eab6 IDENTICAL/NONE
+// PROVEN: d430eab6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00647020/0x1402E3A70
 CImVector* DayNight::GetSpecularColor(CImVector* color) {
     const CurrentLight* light = Liquid::CameraSubmerged() ? &DayNight::g_dnInfo.m_lightUW : &DayNight::g_dnInfo.m_light;
@@ -266,8 +266,8 @@ CImVector* DayNight::GetSpecularColor(CImVector* color) {
     return color;
 }
 
-// PROVEN: 6036d080 IDENTICAL/NONE
-// OFFSET: 0x00647040
+// PROVEN: 6036d080 IDENTICAL/UNPROVEN
+// OFFSET: 0x00647040/0x1402E3AA0
 void DayNight::ClearOverrideLightParamsID() {
     DayNight::g_dnInfo.m_overrideLightParamsId = 0;
 }
@@ -288,25 +288,25 @@ const DayNight::LiquidColors* DayNight::GetLiquidColors(uint32_t index) {
     return colors;
 }
 
-// PROVEN: f9ad628a IDENTICAL/NONE
-// OFFSET: 0x006470E0
+// PROVEN: f9ad628a IDENTICAL/IDENTICAL
+// OFFSET: 0x006470E0/0x1402E3AB0
 void DayNight::SetExteriorUnderwater(int32_t underwater) {
     DayNight::g_exteriorUnderwater = underwater;
 }
 
-// PROVEN: cebed488 IDENTICAL/NONE
+// PROVEN: cebed488 IDENTICAL/UNPROVEN
 // OFFSET: 0x006470F0/0x1402E3AC0
 int32_t DayNight::ShouldClearToBlack() {
     return !DayNight::g_exteriorUnderwater && (DayNight::g_dnInfo.m_showSky || !DayNight::g_bOverrideFog);
 }
 
-// OFFSET: 0x00647120
+// OFFSET: 0x00647120/0x1402E3AF0
 C3Vector* DayNight::GetSunPos(C3Vector* pos) {
     *pos = DayNight::g_planets[0].m_position;
     return pos;
 }
 
-// OFFSET: 0x00647150
+// OFFSET: 0x00647150/0x1402E3B10
 C3Vector* DayNight::GetMoonPos(C3Vector* pos) {
     *pos = DayNight::g_planets[1].m_position;
     return pos;
@@ -318,18 +318,19 @@ C3Vector* DayNight::GetSunGlarePos(C3Vector* pos) {
     return pos;
 }
 
-// PROVEN: 688dd66f IDENTICAL/NONE
-// OFFSET: 0x006471B0
+// PROVEN: 688dd66f IDENTICAL/UNPROVEN
+// OFFSET: 0x006471B0/0x1402E3B60
 float DayNight::GetSunGlareOpacity() {
     return DayNight::g_sunGlare.m_visibility;
 }
 
-// PROVEN: 30c4bba3 IDENTICAL/NONE
-// OFFSET: 0x006471C0
+// PROVEN: 30c4bba3 IDENTICAL/IDENTICAL
+// OFFSET: 0x006471C0/0x1402E3B50
 float DayNight::GetMoonGlareOpacity() {
     return DayNight::g_moonGlare.m_visibility;
 }
 
+// PROVEN: 39b832c3 IDENTICAL/DIFFERENT
 // OFFSET: 0x006471D0/0x1402E3B70
 void DayNight::SetCloudLOD(uint32_t lod) {
     DayNight::g_clouds.SetLOD(lod, 0);
@@ -341,7 +342,7 @@ void DayNight::SetEclipse(uint32_t lightId, float amount) {
     DayNight::g_dnInfo.m_eclipseAmount = static_cast<int32_t>(amount * 255.0f);
 }
 
-// PROVEN: b4ba290b IDENTICAL/NONE
+// PROVEN: b4ba290b IDENTICAL/IDENTICAL
 // OFFSET: 0x00647240/0x1402E3B90
 void DayNight::SetIntersectCallback(INTERSECT_CALLBACK callback) {
     DayNight::g_intersectCallback = callback;
@@ -385,7 +386,7 @@ const DayNight::LightInfo* DayNight::GetDeathLightInfo() {
     return &DayNight::g_dnInfo.m_deathLightInfo;
 }
 
-// OFFSET: 0x006474D0
+// OFFSET: 0x006474D0/0x1402E3D90
 void DayNight::ClearOverrideAreaLight(int32_t time, int32_t lightId, int32_t duration) {
     for (uint32_t i = 0; i < DayNight::g_areaLightOverrides.m_count; i++) {
         AreaLightOverride* areaLight = &DayNight::g_areaLightOverrides.m_data[i];
@@ -400,7 +401,7 @@ void DayNight::ClearOverrideAreaLight(int32_t time, int32_t lightId, int32_t dur
     }
 }
 
-// OFFSET: 0x00647540
+// OFFSET: 0x00647540/0x1402E3DF0
 void DayNight::SetOverrideLightParamsID(int32_t id, int32_t preload) {
     if (id <= 0) {
         DayNight::g_dnInfo.m_overrideLightParamsId = 0;
@@ -447,7 +448,7 @@ CImVector* DayNight::GetLiquidMinimapColor(CImVector* color, uint32_t time, cons
     return color;
 }
 
-// OFFSET: 0x00647780
+// OFFSET: 0x00647780/0x1402E43C0
 void DayNight::UnloadMap() {
     for (DNOverrideSky* sky = DayNight::g_overrideSky.Head(), * next; sky; sky = next) {
         next = DayNight::g_overrideSky.Next(sky);
@@ -486,7 +487,7 @@ void DayNight::UnloadMap() {
     DayNight::g_initialized = 0;
 }
 
-// OFFSET: 0x006478C0
+// OFFSET: 0x006478C0/0x1402E45E0
 void DayNight::SetOverrideAreaLight(int32_t time, int32_t lightId, int32_t overrideId, int32_t duration) {
     LightRec* target = g_lightDB.GetRecord(lightId);
     const LightRec* source = g_lightDB.GetRecord(overrideId);
@@ -521,7 +522,7 @@ void DayNight::SetOverrideAreaLight(int32_t time, int32_t lightId, int32_t overr
     }
 }
 
-// OFFSET: 0x006479B0
+// OFFSET: 0x006479B0/0x1402E4710
 void DayNight::LoadMap(int32_t mapId) {
     if (DayNight::g_initialized) {
         DayNight::UnloadMap();
@@ -628,7 +629,7 @@ void DayNight::LoadMap(int32_t mapId) {
     DayNight::g_exteriorUnderwater = 0;
 }
 
-// PROVEN: e098bd4f IDENTICAL/NONE
+// PROVEN: e098bd4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00647E40/0x1402E4C10
 void DayNight::ForceFullUpdate() {
     DayNight::g_forceFullUpdate = 1;
@@ -654,7 +655,7 @@ void DayNight::SetCamera(const C3Vector& pos, const C3Vector& dir, const C3Vecto
     DayNight::g_dnInfo.m_farClip = farClip;
 }
 
-// PROVEN: 19db56a0 IDENTICAL/NONE
+// PROVEN: 19db56a0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00647F40/0x1402E4C20
 void DayNight::SetStormPercentage(float percentage) {
     DayNight::g_dnInfo.m_stormPercentage = percentage;
@@ -918,7 +919,7 @@ void DayNight::UpdateFog() {
     }
 }
 
-// OFFSET: 0x006486C0
+// OFFSET: 0x006486C0/0x1402E5420
 void DayNight::SetDirection() {
     static C2Vector s_phiTable[4] = {
         C2Vector(0.0f, 2.2165682f),
@@ -1189,7 +1190,7 @@ void DayNight::UpdateLighting() {
     DayNight::SetPlanets();
 }
 
-// PROVEN: 1eb3ce22 IDENTICAL/NONE
+// PROVEN: 1eb3ce22 IDENTICAL/DIFFERENT
 // OFFSET: 0x0064A6F0/0x1402E7E70
 void DayNight::Update(uint32_t timeMs, float tickSec, float timeSec) {
     DayNight::g_dnInfo.m_tickSec = tickSec;

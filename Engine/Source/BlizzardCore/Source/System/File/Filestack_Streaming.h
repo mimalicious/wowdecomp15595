@@ -85,4 +85,6 @@ bool stream_writep(Blizzard::File::Filesystem* fs, FileParms* parms);
 }
 }
 
+#include "Engine/Source/BlizzardCore/Source/System/File/Filestack_Streaming.inl"
+
 #endif

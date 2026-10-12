@@ -11,25 +11,26 @@
 #include "WoW/Source/Ui/SpellBookFrame.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
-// STATIC: 0x00F35FFC
+// STATIC: 0x00F35FFC/0x000E29388
 int32_t CGRuneInfo::m_runes[6];
 
-// STATIC: 0x00F36014
+// STATIC: 0x00F36014/0x000E293A0
 int32_t CGRuneInfo::m_baseRunes[6];
 
-// STATIC: 0x00F3602C
+// STATIC: 0x00F3602C/0x140E293B8
 uint32_t CGRuneInfo::m_runeCooldowns[6];
 
-// STATIC: 0x00F36044
+// STATIC: 0x00F36044/0x140E293D0
 uint32_t CGRuneInfo::m_runeLastUsed[6];
 
-// STATIC: 0x00F3605C
+// STATIC: 0x00F3605C/0x140E293E8
 uint32_t CGRuneInfo::m_numRunes;
 
-// STATIC: 0x00F36060
+// STATIC: 0x00F36060/0x140E293EC
 uint32_t CGRuneInfo::m_predictedRunes;
 
 
+// PROVEN: 4305e805 IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C370/0x1406A7A00
 void CGRuneInfo::InitializeGame() {
     for (uint32_t i = 0; i < 6; i++) {
@@ -56,6 +57,7 @@ void CGRuneInfo::InitializeGame() {
     CGRuneInfo::m_baseRunes[5] = 2;
 }
 
+// PROVEN: 16988e2e IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C4C0/0x1406A7B60
 void CGRuneInfo::EnterWorld() {
     for (uint32_t i = 0; i < 6; i++) {
@@ -84,6 +86,7 @@ void CGRuneInfo::EnterWorld() {
     }
 }
 
+// PROVEN: 65522d23 IDENTICAL/IDENTICAL
 // OFFSET: 0x0093C430/0x1406A7AE0
 bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
     if (!(static_cast<uint32_t>(index) > 5)) {
@@ -97,7 +100,7 @@ bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
     return false;
 }
 
-// PROVEN: 4cf7ce2d IDENTICAL/NONE
+// PROVEN: 4cf7ce2d IDENTICAL/IDENTICAL
 // OFFSET: 0x0093C460/0x1406A7B10
 int32_t CGRuneInfo::GetRuneTypeByIndex(int32_t index, bool base) {
     if (base) {
@@ -107,6 +110,7 @@ int32_t CGRuneInfo::GetRuneTypeByIndex(int32_t index, bool base) {
     return CGRuneInfo::m_runes[index];
 }
 
+// PROVEN: c2bc9c5f IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C640/0x1406A7D40
 uint32_t CGRuneInfo::GetRuneRechargeTime(int32_t index) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -120,7 +124,7 @@ uint32_t CGRuneInfo::GetRuneRechargeTime(int32_t index) {
     return CGRuneInfo::m_runeCooldowns[index];
 }
 
-// OFFSET: 0x0093C8C0
+// OFFSET: 0x0093C8C0/0x1406A8100
 int32_t CGRuneInfo::CountPredictedRunesOfType(int32_t type) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return 0;
@@ -330,16 +334,18 @@ bool CGRuneInfo::ComputeRuneSpellCooldown(const SpellRec* spell, uint32_t* coold
     return true;
 }
 
+// PROVEN: 31a366a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGRuneInfo::ShutdownGame() {
 }
 
-// PROVEN: 656c969a IDENTICAL/NONE
+// PROVEN: 656c969a IDENTICAL/UNPROVEN
 // OFFSET: 0x0093C410/0x1406A7AD0
 void CGRuneInfo::SetRuneLastUsedTime(int32_t index, uint32_t time) {
     CGRuneInfo::m_runeLastUsed[index] = time;
 }
 
+// PROVEN: 3e1d1939 IDENTICAL/DIFFERENT
 // OFFSET: 0x0093C560/0x1406A7C30
 uint32_t CGRuneInfo::GetRuneLastUsedTime(int32_t index) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
@@ -366,7 +372,7 @@ void CGRuneInfo::ComputeRuneRechargeTime(int32_t index, float progress) {
     }
 }
 
-// OFFSET: 0x0093C490
+// OFFSET: 0x0093C490/0x1406A7B30
 void CGRuneInfo::ConvertRune(uint8_t rune, uint8_t type) {
     CGRuneInfo::m_runes[rune] = type;
     FrameScript_SignalEvent(SCRIPT_EVENT_RUNE_TYPE_UPDATE, "%d", rune + 1);
@@ -429,7 +435,8 @@ void CGRuneInfo::SetPredictedRunes(uint8_t available, uint8_t used, const uint8_
     CGSpellBook::UpdateUsable();
 }
 
-// OFFSET: 0x0093C920
+// PROVEN: 0b9a8596 IDENTICAL/UNPROVEN
+// OFFSET: 0x0093C920/0x1406A8170
 void CGRuneInfo::ResyncRunes(CDataStore* msg) {
     msg->Get(CGRuneInfo::m_numRunes);
 
@@ -452,6 +459,7 @@ void CGRuneInfo::ResyncRunes(CDataStore* msg) {
     }
 }
 
+// PROVEN: d6eced7d IDENTICAL/DIFFERENT
 // OFFSET: 0x0093CA00/0x1406A82B0
 void CGRuneInfo::AddRunePower(CDataStore* msg) {
     uint32_t runes;

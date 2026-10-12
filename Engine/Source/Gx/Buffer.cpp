@@ -153,7 +153,7 @@ static const CGxVertexAttrib s_vertexAttribsPT2_iDD[] = {
     { GxVA_TexCoord4, 2, 28, 1 }
 };
 
-// STATIC: 0x00D08900
+// STATIC: 0x00D08900/0x140BBA000
 VertexBufDesc Buffer::s_vertexBufDesc[GxVertexBufferFormats_Last] = {
     { "P", s_vertexAttribsP, 1, 12 },
     { "PN", s_vertexAttribsPN, 2, 24 },

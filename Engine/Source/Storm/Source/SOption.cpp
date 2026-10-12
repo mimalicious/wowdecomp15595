@@ -6,7 +6,7 @@ static int32_t s_freecount;
 
 static int32_t s_alloccount;
 
-// STATIC: 0x00D9D54C
+// STATIC: 0x00D9D54C/0x140C7F670
 _STORMOPTIONS g_opt;
 
 // OFFSET: 0x004B8A10

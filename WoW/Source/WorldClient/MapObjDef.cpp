@@ -15,7 +15,7 @@
 #include "WoW/Source/WorldClient/MapObjRender.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// PROVEN: c6695cb7 IDENTICAL/NONE
+// PROVEN: c6695cb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EDD0/0x14048C530
 void CMapObjDefGroup::WaterDestroy() {
     if (this->m_liquidInstance) {
@@ -24,7 +24,7 @@ void CMapObjDefGroup::WaterDestroy() {
     }
 }
 
-// PROVEN: 01f72353 IDENTICAL/NONE
+// PROVEN: 01f72353 IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EDF0/0x140442DF0
 void CMapObjDefGroup::UpdateBounds(const C44Matrix& matrix) {
     this->m_mapObjDef->m_mapObj->GetGroupBounds(this->m_portalBox, this->m_groupNum);
@@ -32,19 +32,20 @@ void CMapObjDefGroup::UpdateBounds(const C44Matrix& matrix) {
     this->m_portalBox = this->m_bbox;
 }
 
+// PROVEN: 1ac3adee IDENTICAL/NONE
 // OFFSET: 0x00756DF0
 CMapObjDefGroup* CMapObjDef::GetDefGroup(uint32_t index) {
     return this->m_defGroups[index];
 }
 
-// PROVEN: e9e8d538 IDENTICAL/NONE
+// PROVEN: e9e8d538 IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EE50/0x140442E60
 bool CMapObjDef::TestAABox(const C3Vector& start, const C3Vector& end) {
     return CWorldMath::VectorIntersectAABox2(this->m_bbox, start, end);
 }
 
 // PROVEN: a922f468 IDENTICAL/NONE
-// OFFSET: 0x0075EF10
+// OFFSET: 0x0075EF10/0x140442F60
 void CMapObjDefGroup::ExtendBounds(const CAaBox& box) {
     this->m_bbox |= box;
     this->m_mapObjDef->m_bbox |= box;
@@ -73,12 +74,12 @@ void CMapObjDef::UpdateBounds() {
     CWorldMath::TransformAABox(this->m_mat, bounds, this->m_bbox);
 }
 
-// OFFSET: 0x0075F080
+// OFFSET: 0x0075F080/0x1404431C0
 int32_t CMapObjDef::CanLinkTo() {
     return (this->m_flags & 0x40) && this->m_defGroupList.Head() ? 1 : 0;
 }
 
-// OFFSET: 0x0075F0A0
+// OFFSET: 0x0075F0A0/0x1404431E0
 bool CMapObjDef::GetFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags) {
     if (!(this->m_mapObj->m_flags & 0x40) || !this->m_defGroupList.Head()) {
         facets.m_status |= 0x2;
@@ -112,7 +113,7 @@ bool CMapObjDef::GetFacets(const CFrustum& frustum, World::FacetData& facets, ui
     return true;
 }
 
-// OFFSET: 0x0075F890
+// OFFSET: 0x0075F890/0x1404439F0
 void CMapObjDefGroup::UpdateMatrix(const C44Matrix& matrix) {
     this->UpdateBounds(matrix);
 
@@ -138,7 +139,7 @@ void CMapObjDefGroup::UpdateMatrix(const C44Matrix& matrix) {
     }
 }
 
-// OFFSET: 0x0075F9D0
+// OFFSET: 0x0075F9D0/0x140443B70
 void CMapObjDefGroup::SetSequence(uint32_t sequence, int32_t a2, uint16_t doodadSet) {
     for (CMapBaseObjLink* link = this->m_doodadLinks.Head(), * next; link; link = next) {
         next = this->m_doodadLinks.Next(link);
@@ -186,7 +187,7 @@ void CMapObjDefGroup::SetSequenceFinishedCallback(WORLD_SEQUENCE_CALLBACK callba
     }
 }
 
-// OFFSET: 0x0075FB30
+// OFFSET: 0x0075FB30/0x140443D10
 void CMapObjDefGroup::SetEventCallback(WORLD_MODEL_EVENT_CALLBACK callback, uint64_t param, uint16_t doodadSet) {
     for (CMapBaseObjLink* link = this->m_doodadLinks.Head(), * next; link; link = next) {
         next = this->m_doodadLinks.Next(link);
@@ -340,7 +341,7 @@ void CMapObjDefGroup::CreateBatchMaterials() {
     }
 }
 
-// OFFSET: 0x00760020
+// OFFSET: 0x00760020/0x140444360
 void CMapObjDef::SetSequence(uint32_t sequence, int32_t a2, uint16_t doodadSet) {
     for (CMapObjDefGroup* group = this->m_defGroupList.Head(), * next; group; group = next) {
         next = this->m_defGroupList.Next(group);
@@ -364,7 +365,7 @@ void CMapObjDef::SetSequenceFinishedCallback(WORLD_SEQUENCE_CALLBACK callback, u
     }
 }
 
-// OFFSET: 0x00760130
+// OFFSET: 0x00760130/0x140444560
 void CMapObjDef::SetEventCallback(WORLD_MODEL_EVENT_CALLBACK callback, uint64_t param, uint16_t doodadSet) {
     for (CMapObjDefGroup* group = this->m_defGroupList.Head(), * next; group; group = next) {
         next = this->m_defGroupList.Next(group);
@@ -372,7 +373,7 @@ void CMapObjDef::SetEventCallback(WORLD_MODEL_EVENT_CALLBACK callback, uint64_t 
     }
 }
 
-// OFFSET: 0x00760190
+// OFFSET: 0x00760190/0x1404445F0
 int32_t CMapObjDef::IsAllLoaded() {
     if (!this->m_mapObj->IsAllLoaded()) {
         return 0;
@@ -419,7 +420,7 @@ int32_t CMapObjDef::IsAllDrawable() {
     return 1;
 }
 
-// OFFSET: 0x00760290
+// OFFSET: 0x00760290/0x140444730
 void CMapObjDef::UpdateMoved() {
     if (!(this->m_flags & 0x4000)) {
         this->m_flags |= 0x200;
@@ -487,7 +488,7 @@ void CMapObjDef::SetDoodadEmittersIgnoresDistance(int32_t enable, uint16_t dooda
     }
 }
 
-// OFFSET: 0x00760470
+// OFFSET: 0x00760470/0x1404449A0
 void CMapObjDef::LinkDoodadDef(CMapDoodadDef* doodadDef, int32_t testBounds) {
     for (CMapObjDefGroup* group = this->m_defGroupList.Head(), * next; group; group = next) {
         next = this->m_defGroupList.Next(group);
@@ -546,7 +547,7 @@ int32_t CMapObjDef::MoveDoodadDefs(uint16_t doodadSet, CMapObjDef* target, uint1
     return 0;
 }
 
-// OFFSET: 0x00760650
+// OFFSET: 0x00760650/0x140444C80
 void CMapObjDef::SetDoodadsEnabled(int32_t enable, uint16_t doodadSet) {
     for (CMapObjDefGroup* group = this->m_defGroupList.Head(), * nextGroup; group; group = nextGroup) {
         nextGroup = this->m_defGroupList.Next(group);
@@ -583,7 +584,7 @@ void CMapObjDef::SetDoodadsEnabled(int32_t enable, uint16_t doodadSet) {
     }
 }
 
-// OFFSET: 0x00760760
+// OFFSET: 0x00760760/0x140444DD0
 bool CMapObjDef::GetFacets(const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags) {
     CAaBox local;
     memset(&local, 0, sizeof(local));
@@ -665,7 +666,7 @@ void CMapObjDef::UpdateMatrix(const C44Matrix& matrix) {
     this->UpdateMoved();
 }
 
-// OFFSET: 0x00760CE0
+// OFFSET: 0x00760CE0/0x1404456B0
 CMapObjDefGroup::CMapObjDefGroup() {
     this->m_bbox.b.x = 0.0f;
     this->m_bbox.b.y = 0.0f;

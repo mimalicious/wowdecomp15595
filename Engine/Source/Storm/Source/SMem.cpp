@@ -114,6 +114,7 @@ void* operator new(size_t bytes) {
     return SMemAlloc(bytes, "new", SLOG_FUNCTION, 0);
 }
 
+// PROVEN: af8bc094 IDENTICAL/IDENTICAL
 // OFFSET: 0x00872C50/0x140001030
 void operator delete(void* ptr) {
     if (ptr) {
@@ -126,6 +127,7 @@ void* operator new[](size_t bytes) {
     return SMemAlloc(bytes, "new[]", SLOG_FUNCTION, 0);
 }
 
+// PROVEN: 79597c6a IDENTICAL/IDENTICAL
 // OFFSET: 0x00401030/0x140001080
 void operator delete[](void* ptr) {
     if (ptr) {

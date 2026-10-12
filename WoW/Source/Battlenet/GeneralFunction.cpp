@@ -1,6 +1,7 @@
 #include "WoW/Source/Battlenet/GeneralFunction.h"
 #include <cstdlib>
 
+// PROVEN: 2b3e6e7f IDENTICAL/DIFFERENT
 // OFFSET: 0x00660940/0x140305F30
 GeneralFunction::Arg& GeneralFunction::Arg::operator=(const Arg& other) {
     this->FreeData();
@@ -42,6 +43,7 @@ GeneralFunction::Arg& GeneralFunction::Arg::operator=(const Arg& other) {
     return *this;
 }
 
+// PROVEN: 21358f94 IDENTICAL/NONE
 // OFFSET: 0x00902640
 GeneralFunction::Arg& GeneralFunction::Arg::operator=(const BSN::FourCC& value) {
     this->FreeData();
@@ -50,7 +52,7 @@ GeneralFunction::Arg& GeneralFunction::Arg::operator=(const BSN::FourCC& value) 
     return *this;
 }
 
-// PROVEN: 6c736636 IDENTICAL/NONE
+// PROVEN: 6c736636 IDENTICAL/DIFFERENT
 // OFFSET: 0x00902070/0x14065A650
 int64_t GeneralFunction::Arg::ToInt64() const {
     switch (this->m_type) {
@@ -77,7 +79,7 @@ int64_t GeneralFunction::Arg::ToInt64() const {
     }
 }
 
-// PROVEN: d733f862 IDENTICAL/NONE
+// PROVEN: d733f862 IDENTICAL/DIFFERENT
 // OFFSET: 0x00660600/0x140305C90
 uint64_t GeneralFunction::Arg::ToUInt64() const {
     switch (this->m_type) {
@@ -108,12 +110,13 @@ uint64_t GeneralFunction::Arg::ToUInt64() const {
 GeneralFunction::Callback::~Callback() {
 }
 
-// PROVEN: 429efe43 IDENTICAL/NONE
+// PROVEN: 429efe43 IDENTICAL/IDENTICAL
 // OFFSET: 0x00627270/0x1402B9280
 void GeneralFunction::Callback::IncRef() const {
     const_cast<Callback*>(this)->m_refCount++;
 }
 
+// PROVEN: 278a7b46 IDENTICAL/IDENTICAL
 // OFFSET: 0x00902040/0x14065A620
 void GeneralFunction::Callback::DecRef() const {
     if (--const_cast<Callback*>(this)->m_refCount == 0) {
@@ -121,12 +124,13 @@ void GeneralFunction::Callback::DecRef() const {
     }
 }
 
-// PROVEN: 8ba953dc IDENTICAL/NONE
+// PROVEN: 8ba953dc IDENTICAL/IDENTICAL
 // OFFSET: 0x00902050/0x14065A640
 void GeneralFunction::SimpleCallback::Call(int32_t argc, const Arg* args) const {
     this->m_func(this->m_param, argc, args);
 }
 
+// PROVEN: 1308fcbf IDENTICAL/IDENTICAL
 // OFFSET: 0x00904350/0x14065C8C0
 void GeneralFunction::SimpleCallback::Destroy() const {
     delete this;

@@ -10,21 +10,7 @@
 #include "WoW/Source/DB/Rec/TransportPhysicsRec.h"
 #include "WoW/Source/Object/ObjectClient/Types.h"
 
-// INLINED
-ShipPath::ShipPath() {
-    this->m_physics = NULL;
-    this->m_taxiPathId = 0xFFFFFFFF;
-    this->m_moveSpeed = 0.0f;
-    this->m_totalPathTime = 0;
-    this->m_accelRate = 0.0f;
-    this->m_waitTime = 0;
-    this->m_timeOffset = 0;
-    this->m_waiting = 0;
-    this->m_waitReached = 0;
-    this->unk_003E = 0;
-}
-
-// PROVEN: 00482bd1 IDENTICAL/NONE
+// PROVEN: 00482bd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B11420/0x1408D6D10
 void ShipPath::Init(uint32_t taxiPathId, float moveSpeed, float accelRate, const TransportPhysicsRec* physics) {
     this->m_moveSpeed = moveSpeed;
@@ -35,7 +21,7 @@ void ShipPath::Init(uint32_t taxiPathId, float moveSpeed, float accelRate, const
     this->m_physics = physics;
 }
 
-// PROVEN: 7b3abdcb IDENTICAL/NONE
+// PROVEN: 7b3abdcb IDENTICAL/DIFFERENT
 // OFFSET: 0x00B0FDB0/0x1408D50F0
 void ShipPath::SetTotalPathTime(uint32_t time) {
     this->m_totalPathTime = time;
@@ -386,7 +372,7 @@ uint32_t ShipPath::GetPathTime(uint32_t time) const {
     return pathTime;
 }
 
-// PROVEN: e16faa1e IDENTICAL/NONE
+// PROVEN: e16faa1e IDENTICAL/DIFFERENT
 // OFFSET: 0x00B0F5B0/0x1408D4760
 uint32_t ShipPath::UpdatePathTime(uint32_t time, uint32_t elapsed, int32_t absolute) {
     uint32_t total = this->m_totalPathTime;
@@ -496,7 +482,7 @@ float ShipPath::DistanceMoved(float t, float segTime, uint32_t* sequence, int32_
     return this->m_moveSpeed * t;
 }
 
-// OFFSET: 0x00B0F8E0
+// OFFSET: 0x00B0F8E0/0x1408D4BE0
 void ShipPath::GetRollAndPitch(uint32_t time, float speed, float turn, C3Vector* position, float* roll, float* pitch) {
     const TransportPhysicsRec* physics = this->m_physics;
     float damp;

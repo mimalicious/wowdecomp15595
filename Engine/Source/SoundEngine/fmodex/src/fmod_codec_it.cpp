@@ -218,8 +218,8 @@ FMOD_RESULT CodecIT::readBits(unsigned char b, unsigned int *result)	/* reads b 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 152ba062 IDENTICAL/NONE
-// OFFSET: 0x00AA9C90
+// PROVEN: 152ba062 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AA9C90/0x14086C4C0
 FMOD_RESULT CodecIT::readBlock(signed char **buff)  /* gets block of compressed data from file */
 {
 	unsigned short size;
@@ -760,6 +760,7 @@ FMOD_RESULT MusicChannelIT::portamento()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: b5d88b91 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AAA240/0x14086CCE0
 FMOD_RESULT MusicChannelIT::vibrato() 
 {
@@ -846,6 +847,7 @@ FMOD_RESULT MusicChannelIT::vibrato()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: e5d7f93a DIFFERENT/IDENTICAL
 // OFFSET: 0x00AAA320/0x14086CDD0
 FMOD_RESULT MusicChannelIT::fineVibrato() 
 {
@@ -932,6 +934,7 @@ FMOD_RESULT MusicChannelIT::fineVibrato()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: b5cc4257 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AAA3F0/0x14086CEC0
 FMOD_RESULT MusicChannelIT::tremolo() 
 {
@@ -1015,6 +1018,7 @@ FMOD_RESULT MusicChannelIT::tremolo()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: b735cfbd DIFFERENT/IDENTICAL
 // OFFSET: 0x00AAA4E0/0x14086CFB0
 FMOD_RESULT MusicChannelIT::panbrello() 
 {
@@ -1217,6 +1221,7 @@ FMOD_RESULT CodecIT::processEnvelope(MusicEnvelopeState *env, MusicVirtualChanne
 	[SEE_ALSO]
 ]
 */
+// PROVEN: a364392b UNPROVEN/IDENTICAL
 // OFFSET: 0x00AAA760/0x14086D2A0
 FMOD_RESULT CodecIT::processPitchEnvelope(MusicVirtualChannel *vcptr, MusicInstrument *iptr, int note)
 {
@@ -1425,6 +1430,7 @@ FMOD_RESULT CodecIT::processPitchEnvelope(MusicVirtualChannel *vcptr, MusicInstr
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 59bef49b DIFFERENT/IDENTICAL
 // OFFSET: 0x00AAAD00/0x14086D7D0
 FMOD_RESULT CodecIT::sampleVibrato(MusicVirtualChannel *vcptr) 
 {
@@ -6342,7 +6348,7 @@ FMOD_RESULT CodecIT::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AAD830
+// OFFSET: 0x00AAD830/0x140871A50
 FMOD_RESULT CodecIT::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;
@@ -6537,7 +6543,7 @@ FMOD_RESULT F_CALLBACK CodecIT::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b9e8dad2 IDENTICAL/NONE
+// PROVEN: b9e8dad2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAD760/0x1408719B0
 FMOD_RESULT F_CALLBACK CodecIT::closeCallback(FMOD_CODEC_STATE *codec)
 {
@@ -6563,7 +6569,7 @@ FMOD_RESULT F_CALLBACK CodecIT::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: af1a0998 IDENTICAL/NONE
+// PROVEN: af1a0998 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AADBF0/0x140871EA0
 FMOD_RESULT F_CALLBACK CodecIT::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -6588,7 +6594,7 @@ FMOD_RESULT F_CALLBACK CodecIT::readCallback(FMOD_CODEC_STATE *codec, void *buff
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fa682fe6 IDENTICAL/NONE
+// PROVEN: fa682fe6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAD790/0x1408719D0
 FMOD_RESULT F_CALLBACK CodecIT::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {

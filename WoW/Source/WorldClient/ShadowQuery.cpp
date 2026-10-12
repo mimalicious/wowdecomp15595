@@ -22,25 +22,25 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// STATIC: 0x00E89008
+// STATIC: 0x00E89008/0x140D74C30
 CShadowQuery* CShadowQuery::s_activeShadowQuery;
 
-// STATIC: 0x00E8900C
+// STATIC: 0x00E8900C/0x140D74C38
 CVar* CShadowQuery::s_shadowCull;
 
-// STATIC: 0x00E89014
+// STATIC: 0x00E89014/0x140D74C48
 CVar* CShadowQuery::s_shadowScissor;
 
-// STATIC: 0x00E89018
+// STATIC: 0x00E89018/0x140D74C50
 CVar* CShadowQuery::s_shadowInstancing;
 
-// PROVEN: d847b370 IDENTICAL/NONE
-// OFFSET: 0x00768B10
+// PROVEN: d847b370 IDENTICAL/IDENTICAL
+// OFFSET: 0x00768B10/0x14044FE40
 void CShadowQuery::Destroy() {
     CShadowCache::Destroy();
 }
 
-// OFFSET: 0x00768B20
+// OFFSET: 0x00768B20/0x14044FE50
 void CShadowQuery::GetSize(CShadowCacheQueryData& data, int32_t band, float& minRadius, float& maxRadius) {
     maxRadius = 10000.0f;
 
@@ -65,7 +65,7 @@ void CShadowQuery::AllocBuffers() {
     }
 }
 
-// OFFSET: 0x00768CE0
+// OFFSET: 0x00768CE0/0x140450000
 void CShadowQuery::GetMatrix(C3Vector& center, float radius, C44Matrix& matrix, C3Vector& direction, int32_t band) {
     if (!(radius > 0.0f)) {
         return;
@@ -104,7 +104,7 @@ void CShadowQuery::GetMatrix(C3Vector& center, float radius, C44Matrix& matrix, 
     matrix.d2 = depth.d2 - (bandBias * 0.2f + pcfBias);
 }
 
-// OFFSET: 0x00769190
+// OFFSET: 0x00769190/0x140450720
 void CShadowQuery::GetFrustum(CFrustum& frustum, C44Matrix& matrix, const C3Vector& direction, CShadowCacheQueryData& data, int32_t band) {
     const float* bounds = data.m_bounds[band];
     const C3Vector& pos = data.m_pos[band];
@@ -211,24 +211,24 @@ int32_t CShadowQuery::Query(CShadowCacheQueryData& data, uint32_t frame) {
     return 1;
 }
 
-// PROVEN: 2b7c86b7 IDENTICAL/NONE
-// OFFSET: 0x00769960
+// PROVEN: 2b7c86b7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00769960/0x140451030
 void CShadowQuery::MatrixCallback(C3Vector& center, float radius, C44Matrix& matrix, C3Vector& direction, int32_t band) {
     if (CShadowQuery::s_activeShadowQuery) {
         CShadowQuery::s_activeShadowQuery->GetMatrix(center, radius, matrix, direction, band);
     }
 }
 
-// PROVEN: e863ffd6 IDENTICAL/NONE
-// OFFSET: 0x00769990
+// PROVEN: e863ffd6 IDENTICAL/UNPROVEN
+// OFFSET: 0x00769990/0x140451060
 void CShadowQuery::FrustumCallback(CFrustum& frustum, C44Matrix& matrix, const C3Vector& direction, CShadowCacheQueryData& data, int32_t band) {
     if (CShadowQuery::s_activeShadowQuery) {
         CShadowQuery::s_activeShadowQuery->GetFrustum(frustum, matrix, direction, data, band);
     }
 }
 
-// PROVEN: 3f0b4aaa IDENTICAL/NONE
-// OFFSET: 0x007699C0
+// PROVEN: 3f0b4aaa IDENTICAL/UNPROVEN
+// OFFSET: 0x007699C0/0x1404510A0
 int32_t CShadowQuery::QueryCallback(CShadowCacheQueryData& data, uint32_t frame) {
     if (CShadowQuery::s_activeShadowQuery) {
         return CShadowQuery::s_activeShadowQuery->Query(data, frame);
@@ -257,7 +257,7 @@ void CShadowQuery::SetEntityCutoff(const C3Vector& pos, const C3Vector& camPos) 
     this->m_entityCutoff = pos.z + 2.0f;
 }
 
-// OFFSET: 0x00769CB0
+// OFFSET: 0x00769CB0/0x140451540
 void CShadowQuery::Update() {
     C3Vector sunDir = CWorldMap::s_sunLight.m_dir;
     CWorldView* view = this->m_worldView;
@@ -304,7 +304,7 @@ void CShadowQuery::Clear(CGxFrameBuffer* frameBuffer, const float* rect) {
     g_theGxDevicePtr->FrameBufferSet(oldFrameBuffer);
 }
 
-// PROVEN: 2a220642 IDENTICAL/NONE
+// PROVEN: 2a220642 IDENTICAL/DIFFERENT
 // OFFSET: 0x00769F50/0x1404517D0
 CShadowQuery::CShadowQuery() {
     void* mem = SMemAlloc(sizeof(CWorldOcclusion), __FILE__, __LINE__, 0);
@@ -314,6 +314,7 @@ CShadowQuery::CShadowQuery() {
     this->m_entityCutoff = 0.0f;
 }
 
+// PROVEN: 6d47b933 IDENTICAL/IDENTICAL
 // OFFSET: 0x00769FC0/0x140451860
 CShadowQuery::~CShadowQuery() {
     CWorldOcclusion* occlusion = this->m_occlusion;
@@ -330,7 +331,7 @@ CShadowQuery::~CShadowQuery() {
     }
 }
 
-// OFFSET: 0x0076A030
+// OFFSET: 0x0076A030/0x140451900
 int32_t CShadowQuery::Render(CShadowCacheQueryData& data, int32_t band, CGxFrameBuffer* frameBuffer, C3Vector& direction) {
     CWorldQuery& query = this->m_queries[band];
 
@@ -425,8 +426,8 @@ int32_t CShadowQuery::Render(CShadowCacheQueryData& data, int32_t band, CGxFrame
     return 1;
 }
 
-// PROVEN: dadba1ff IDENTICAL/NONE
-// OFFSET: 0x0076A9B0
+// PROVEN: dadba1ff IDENTICAL/UNPROVEN
+// OFFSET: 0x0076A9B0/0x1404526F0
 int32_t CShadowQuery::RenderCallback(CShadowCacheQueryData& data, int32_t band, CGxFrameBuffer* frameBuffer, C3Vector& direction) {
     if (CShadowQuery::s_activeShadowQuery) {
         return CShadowQuery::s_activeShadowQuery->Render(data, band, frameBuffer, direction);

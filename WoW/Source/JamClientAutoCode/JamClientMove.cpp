@@ -4,240 +4,240 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: 0x00E4D7F4
+// STATIC: 0x00E4D7F4/0x140D369C0
 bool (*ClientAuraPointsDepleted::s_handler)(ClientAuraPointsDepleted* msg);
 
-// STATIC: 0x00E4D540
+// STATIC: 0x00E4D540/0x140D36458
 bool (*ClientMoveCollisionDisable::s_handler)(ClientMoveCollisionDisable* msg);
 
-// STATIC: 0x00E4D808
+// STATIC: 0x00E4D808/0x140D369E8
 bool (*ClientMoveCollisionEnable::s_handler)(ClientMoveCollisionEnable* msg);
 
-// STATIC: 0x00E4D498
+// STATIC: 0x00E4D498/0x140D36308
 bool (*ClientMoveGravityDisable::s_handler)(ClientMoveGravityDisable* msg);
 
-// STATIC: 0x00E4D79C
+// STATIC: 0x00E4D79C/0x140D36910
 bool (*ClientMoveGravityEnable::s_handler)(ClientMoveGravityEnable* msg);
 
-// STATIC: 0x00E4D608
+// STATIC: 0x00E4D608/0x140D365E8
 bool (*ClientMoveKnockBack::s_handler)(ClientMoveKnockBack* msg);
 
-// STATIC: 0x00E4D70C
+// STATIC: 0x00E4D70C/0x140D367F0
 bool (*ClientMoveRoot::s_handler)(ClientMoveRoot* msg);
 
-// STATIC: 0x00E4D524
+// STATIC: 0x00E4D524/0x140D36420
 bool (*ClientMoveSetCanFly::s_handler)(ClientMoveSetCanFly* msg);
 
-// STATIC: 0x00E4D67C
+// STATIC: 0x00E4D67C/0x140D366D0
 bool (*ClientMoveSetCanTransitionBetweenSwimAndFly::s_handler)(ClientMoveSetCanTransitionBetweenSwimAndFly* msg);
 
-// STATIC: 0x00E4D750
+// STATIC: 0x00E4D750/0x140D36878
 bool (*ClientMoveSetCollisionHeight::s_handler)(ClientMoveSetCollisionHeight* msg);
 
-// STATIC: 0x00E4D634
+// STATIC: 0x00E4D634/0x140D36640
 bool (*ClientMoveSetFeatherFall::s_handler)(ClientMoveSetFeatherFall* msg);
 
-// STATIC: 0x00E4D64C
+// STATIC: 0x00E4D64C/0x140D36670
 bool (*ClientMoveSetFlightBackSpeed::s_handler)(ClientMoveSetFlightBackSpeed* msg);
 
-// STATIC: 0x00E4D4CC
+// STATIC: 0x00E4D4CC/0x140D36370
 bool (*ClientMoveSetFlightSpeed::s_handler)(ClientMoveSetFlightSpeed* msg);
 
-// STATIC: 0x00E4D5EC
+// STATIC: 0x00E4D5EC/0x140D365B0
 bool (*ClientMoveSetHover::s_handler)(ClientMoveSetHover* msg);
 
-// STATIC: 0x00E4D6D4
+// STATIC: 0x00E4D6D4/0x140D36780
 bool (*ClientMoveSetLandWalk::s_handler)(ClientMoveSetLandWalk* msg);
 
-// STATIC: 0x00E4D434
+// STATIC: 0x00E4D434/0x140D36240
 bool (*ClientMoveSetNormalFall::s_handler)(ClientMoveSetNormalFall* msg);
 
-// STATIC: 0x00E4D7A8
+// STATIC: 0x00E4D7A8/0x140D36928
 bool (*ClientMoveSetPitchRate::s_handler)(ClientMoveSetPitchRate* msg);
 
-// STATIC: 0x00E4D484
+// STATIC: 0x00E4D484/0x140D362E0
 bool (*ClientMoveSetRunBackSpeed::s_handler)(ClientMoveSetRunBackSpeed* msg);
 
-// STATIC: 0x00E4D668
+// STATIC: 0x00E4D668/0x140D366A8
 bool (*ClientMoveSetRunSpeed::s_handler)(ClientMoveSetRunSpeed* msg);
 
-// STATIC: 0x00E4D4A4
+// STATIC: 0x00E4D4A4/0x140D36320
 bool (*ClientMoveSetSwimBackSpeed::s_handler)(ClientMoveSetSwimBackSpeed* msg);
 
-// STATIC: 0x00E4D62C
+// STATIC: 0x00E4D62C/0x140D36630
 bool (*ClientMoveSetSwimSpeed::s_handler)(ClientMoveSetSwimSpeed* msg);
 
-// STATIC: 0x00E4D614
+// STATIC: 0x00E4D614/0x140D36600
 bool (*ClientMoveSetTurnRate::s_handler)(ClientMoveSetTurnRate* msg);
 
-// STATIC: 0x00E4D800
+// STATIC: 0x00E4D800/0x140D369D8
 bool (*ClientMoveSetVehicleRecId::s_handler)(ClientMoveSetVehicleRecId* msg);
 
-// STATIC: 0x00E4D4B0
+// STATIC: 0x00E4D4B0/0x140D36338
 bool (*ClientMoveSetWalkSpeed::s_handler)(ClientMoveSetWalkSpeed* msg);
 
-// STATIC: 0x00E4D7A4
+// STATIC: 0x00E4D7A4/0x140D36920
 bool (*ClientMoveSetWaterWalk::s_handler)(ClientMoveSetWaterWalk* msg);
 
-// STATIC: 0x00E4D788
+// STATIC: 0x00E4D788/0x140D368E8
 bool (*ClientMoveSkipTime::s_handler)(ClientMoveSkipTime* msg);
 
-// STATIC: 0x00E4D4FC
+// STATIC: 0x00E4D4FC/0x140D363D0
 bool (*ClientMoveTeleport::s_handler)(ClientMoveTeleport* msg);
 
-// STATIC: 0x00E4D6C8
+// STATIC: 0x00E4D6C8/0x140D36768
 bool (*ClientMoveUnroot::s_handler)(ClientMoveUnroot* msg);
 
-// STATIC: 0x00E4D4E0
+// STATIC: 0x00E4D4E0/0x140D36398
 bool (*ClientMoveUnsetCanFly::s_handler)(ClientMoveUnsetCanFly* msg);
 
-// STATIC: 0x00E4D528
+// STATIC: 0x00E4D528/0x140D36428
 bool (*ClientMoveUnsetCanTransitionBetweenSwimAndFly::s_handler)(ClientMoveUnsetCanTransitionBetweenSwimAndFly* msg);
 
-// STATIC: 0x00E4D730
+// STATIC: 0x00E4D730/0x140D36838
 bool (*ClientMoveUnsetHover::s_handler)(ClientMoveUnsetHover* msg);
 
-// STATIC: 0x00E4D4D0
+// STATIC: 0x00E4D4D0/0x140D36378
 bool (*ClientMoveUpdate::s_handler)(ClientMoveUpdate* msg);
 
-// STATIC: 0x00E4D560
+// STATIC: 0x00E4D560/0x140D36498
 bool (*ClientMoveUpdateCollisionHeight::s_handler)(ClientMoveUpdateCollisionHeight* msg);
 
-// STATIC: 0x00E4D778
+// STATIC: 0x00E4D778/0x140D368C8
 bool (*ClientMoveUpdateFlightBackSpeed::s_handler)(ClientMoveUpdateFlightBackSpeed* msg);
 
-// STATIC: 0x00E4D490
+// STATIC: 0x00E4D490/0x140D362F8
 bool (*ClientMoveUpdateFlightSpeed::s_handler)(ClientMoveUpdateFlightSpeed* msg);
 
-// STATIC: 0x00E4D63C
+// STATIC: 0x00E4D63C/0x140D36650
 bool (*ClientMoveUpdateKnockBack::s_handler)(ClientMoveUpdateKnockBack* msg);
 
-// STATIC: 0x00E4D58C
+// STATIC: 0x00E4D58C/0x140D364F0
 bool (*ClientMoveUpdatePitchRate::s_handler)(ClientMoveUpdatePitchRate* msg);
 
-// STATIC: 0x00E4D700
+// STATIC: 0x00E4D700/0x140D367D8
 bool (*ClientMoveUpdateRunBackSpeed::s_handler)(ClientMoveUpdateRunBackSpeed* msg);
 
-// STATIC: 0x00E4D744
+// STATIC: 0x00E4D744/0x140D36860
 bool (*ClientMoveUpdateRunSpeed::s_handler)(ClientMoveUpdateRunSpeed* msg);
 
-// STATIC: 0x00E4D72C
+// STATIC: 0x00E4D72C/0x140D36830
 bool (*ClientMoveUpdateSwimBackSpeed::s_handler)(ClientMoveUpdateSwimBackSpeed* msg);
 
-// STATIC: 0x00E4D5B8
+// STATIC: 0x00E4D5B8/0x140D36548
 bool (*ClientMoveUpdateSwimSpeed::s_handler)(ClientMoveUpdateSwimSpeed* msg);
 
-// STATIC: 0x00E4D708
+// STATIC: 0x00E4D708/0x140D367E8
 bool (*ClientMoveUpdateTeleport::s_handler)(ClientMoveUpdateTeleport* msg);
 
-// STATIC: 0x00E4D7D4
+// STATIC: 0x00E4D7D4/0x140D36980
 bool (*ClientMoveUpdateTurnRate::s_handler)(ClientMoveUpdateTurnRate* msg);
 
-// STATIC: 0x00E4D5AC
+// STATIC: 0x00E4D5AC/0x140D36530
 bool (*ClientMoveUpdateWalkSpeed::s_handler)(ClientMoveUpdateWalkSpeed* msg);
 
-// STATIC: 0x00E4D5FC
+// STATIC: 0x00E4D5FC/0x140D365D0
 bool (*ClientPlaySpellVisual::s_handler)(ClientPlaySpellVisual* msg);
 
-// STATIC: 0x00E4D794
+// STATIC: 0x00E4D794/0x140D36900
 bool (*ClientSetPlayHoverAnim::s_handler)(ClientSetPlayHoverAnim* msg);
 
-// STATIC: 0x00E4D4BC
+// STATIC: 0x00E4D4BC/0x140D36350
 bool (*ClientSplineMoveCollisionDisable::s_handler)(ClientSplineMoveCollisionDisable* msg);
 
-// STATIC: 0x00E4D588
+// STATIC: 0x00E4D588/0x140D364E8
 bool (*ClientSplineMoveCollisionEnable::s_handler)(ClientSplineMoveCollisionEnable* msg);
 
-// STATIC: 0x00E4D7AC
+// STATIC: 0x00E4D7AC/0x140D36930
 bool (*ClientSplineMoveGravityDisable::s_handler)(ClientSplineMoveGravityDisable* msg);
 
-// STATIC: 0x00E4D6E8
+// STATIC: 0x00E4D6E8/0x140D367A8
 bool (*ClientSplineMoveGravityEnable::s_handler)(ClientSplineMoveGravityEnable* msg);
 
-// STATIC: 0x00E4D4E4
+// STATIC: 0x00E4D4E4/0x140D363A0
 bool (*ClientSplineMoveRoot::s_handler)(ClientSplineMoveRoot* msg);
 
-// STATIC: 0x00E4D688
+// STATIC: 0x00E4D688/0x140D366E8
 bool (*ClientSplineMoveSetFeatherFall::s_handler)(ClientSplineMoveSetFeatherFall* msg);
 
-// STATIC: 0x00E4D81C
+// STATIC: 0x00E4D81C/0x140D36A10
 bool (*ClientSplineMoveSetFlightBackSpeed::s_handler)(ClientSplineMoveSetFlightBackSpeed* msg);
 
-// STATIC: 0x00E4D68C
+// STATIC: 0x00E4D68C/0x140D366F0
 bool (*ClientSplineMoveSetFlightSpeed::s_handler)(ClientSplineMoveSetFlightSpeed* msg);
 
-// STATIC: 0x00E4D604
+// STATIC: 0x00E4D604/0x140D365E0
 bool (*ClientSplineMoveSetFlying::s_handler)(ClientSplineMoveSetFlying* msg);
 
-// STATIC: 0x00E4D438
+// STATIC: 0x00E4D438/0x140D36248
 bool (*ClientSplineMoveSetHover::s_handler)(ClientSplineMoveSetHover* msg);
 
-// STATIC: 0x00E4D76C
+// STATIC: 0x00E4D76C/0x140D368B0
 bool (*ClientSplineMoveSetLandWalk::s_handler)(ClientSplineMoveSetLandWalk* msg);
 
-// STATIC: 0x00E4D73C
+// STATIC: 0x00E4D73C/0x140D36850
 bool (*ClientSplineMoveSetNormalFall::s_handler)(ClientSplineMoveSetNormalFall* msg);
 
-// STATIC: 0x00E4D638
+// STATIC: 0x00E4D638/0x140D36648
 bool (*ClientSplineMoveSetPitchRate::s_handler)(ClientSplineMoveSetPitchRate* msg);
 
-// STATIC: 0x00E4D5C4
+// STATIC: 0x00E4D5C4/0x140D36560
 bool (*ClientSplineMoveSetRunBackSpeed::s_handler)(ClientSplineMoveSetRunBackSpeed* msg);
 
-// STATIC: 0x00E4D57C
+// STATIC: 0x00E4D57C/0x140D364D0
 bool (*ClientSplineMoveSetRunMode::s_handler)(ClientSplineMoveSetRunMode* msg);
 
-// STATIC: 0x00E4D740
+// STATIC: 0x00E4D740/0x140D36858
 bool (*ClientSplineMoveSetRunSpeed::s_handler)(ClientSplineMoveSetRunSpeed* msg);
 
-// STATIC: 0x00E4D678
+// STATIC: 0x00E4D678/0x140D366C8
 bool (*ClientSplineMoveSetSwimBackSpeed::s_handler)(ClientSplineMoveSetSwimBackSpeed* msg);
 
-// STATIC: 0x00E4D69C
+// STATIC: 0x00E4D69C/0x140D36710
 bool (*ClientSplineMoveSetSwimSpeed::s_handler)(ClientSplineMoveSetSwimSpeed* msg);
 
-// STATIC: 0x00E4D6B0
+// STATIC: 0x00E4D6B0/0x140D36738
 bool (*ClientSplineMoveSetTurnRate::s_handler)(ClientSplineMoveSetTurnRate* msg);
 
-// STATIC: 0x00E4D44C
+// STATIC: 0x00E4D44C/0x140D36270
 bool (*ClientSplineMoveSetWalkMode::s_handler)(ClientSplineMoveSetWalkMode* msg);
 
-// STATIC: 0x00E4D82C
+// STATIC: 0x00E4D82C/0x140D36A30
 bool (*ClientSplineMoveSetWalkSpeed::s_handler)(ClientSplineMoveSetWalkSpeed* msg);
 
-// STATIC: 0x00E4D660
+// STATIC: 0x00E4D660/0x140D36698
 bool (*ClientSplineMoveSetWaterWalk::s_handler)(ClientSplineMoveSetWaterWalk* msg);
 
-// STATIC: 0x00E4D828
+// STATIC: 0x00E4D828/0x140D36A28
 bool (*ClientSplineMoveStartSwim::s_handler)(ClientSplineMoveStartSwim* msg);
 
-// STATIC: 0x00E4D6BC
+// STATIC: 0x00E4D6BC/0x140D36750
 bool (*ClientSplineMoveStopSwim::s_handler)(ClientSplineMoveStopSwim* msg);
 
-// STATIC: 0x00E4D5C8
+// STATIC: 0x00E4D5C8/0x140D36568
 bool (*ClientSplineMoveUnroot::s_handler)(ClientSplineMoveUnroot* msg);
 
-// STATIC: 0x00E4D550
+// STATIC: 0x00E4D550/0x140D36478
 bool (*ClientSplineMoveUnsetFlying::s_handler)(ClientSplineMoveUnsetFlying* msg);
 
-// STATIC: 0x00E4D628
+// STATIC: 0x00E4D628/0x140D36628
 bool (*ClientSplineMoveUnsetHover::s_handler)(ClientSplineMoveUnsetHover* msg);
 
-// STATIC: 0x00E4D790
+// STATIC: 0x00E4D790/0x140D368F8
 bool (*ClientSuppressNPCGreetings::s_handler)(ClientSuppressNPCGreetings* msg);
 
-// PROVEN: 465ad810 IDENTICAL/NONE
+// PROVEN: 465ad810 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C99C0/0x140381410
 ClientAuraPointsDepleted::ClientAuraPointsDepleted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 42684abe IDENTICAL/NONE
+// PROVEN: 42684abe IDENTICAL/IDENTICAL
 // OFFSET: 0x006A18E0/0x14034EC90
 ClientAuraPointsDepleted::~ClientAuraPointsDepleted() {
 }
 
-// PROVEN: 6a517d52 IDENTICAL/NONE
+// PROVEN: 6a517d52 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B81F0/0x14036B2D0
 void ClientAuraPointsDepleted::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -309,14 +309,14 @@ void ClientAuraPointsDepleted::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 48e55031 IDENTICAL/NONE
-// OFFSET: 0x006A8CF0
+// PROVEN: 48e55031 IDENTICAL/UNPROVEN
+// OFFSET: 0x006A8CF0/0x140357CF0
 bool ClientAuraPointsDepleted::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 86616813 IDENTICAL/NONE
-// OFFSET: 0x006A57F0
+// PROVEN: 86616813 IDENTICAL/DIFFERENT
+// OFFSET: 0x006A57F0/0x140353680
 bool ClientAuraPointsDepleted::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -389,34 +389,37 @@ bool ClientAuraPointsDepleted::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: d351670f IDENTICAL/UNPROVEN
 // OFFSET: 0x006B0820/0x140361650
 bool ClientAuraPointsDepleted::Handle() {
-    if (!ClientAuraPointsDepleted::s_handler) {
-        return false;
+    if (ClientAuraPointsDepleted::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEAD0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEAD0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientAuraPointsDepleted*)>(reinterpret_cast<uintptr_t>(ClientAuraPointsDepleted::s_handler) - (right + left))(this);
     }
 
-    return ClientAuraPointsDepleted::s_handler(this);
+    return false;
 }
 
-// PROVEN: 14d411e4 IDENTICAL/NONE
-// OFFSET: 0x006A2410
+// PROVEN: 14d411e4 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2410/0x14034F920
 ClientMoveCollisionDisable::ClientMoveCollisionDisable(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 80e7cadf IDENTICAL/NONE
+// PROVEN: 80e7cadf IDENTICAL/IDENTICAL
 // OFFSET: 0x006C6EC0/0x14037D910
 ClientMoveCollisionDisable::ClientMoveCollisionDisable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 7beb2e40 IDENTICAL/NONE
+// PROVEN: 7beb2e40 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A19A0/0x14034ED60
 ClientMoveCollisionDisable::~ClientMoveCollisionDisable() {
 }
 
-// PROVEN: b3085b98 IDENTICAL/NONE
+// PROVEN: b3085b98 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B0CD0/0x140361C20
 void ClientMoveCollisionDisable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -483,14 +486,14 @@ void ClientMoveCollisionDisable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 917e205c IDENTICAL/NONE
-// OFFSET: 0x006AB620
+// PROVEN: 917e205c IDENTICAL/UNPROVEN
+// OFFSET: 0x006AB620/0x14035B1A0
 bool ClientMoveCollisionDisable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: a40c148e IDENTICAL/NONE
-// OFFSET: 0x006A7E80
+// PROVEN: a40c148e IDENTICAL/IDENTICAL
+// OFFSET: 0x006A7E80/0x140356A80
 bool ClientMoveCollisionDisable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -558,34 +561,37 @@ bool ClientMoveCollisionDisable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 7407b20a IDENTICAL/UNPROVEN
 // OFFSET: 0x006BFB60/0x140374CF0
 bool ClientMoveCollisionDisable::Handle() {
-    if (!ClientMoveCollisionDisable::s_handler) {
-        return false;
+    if (ClientMoveCollisionDisable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE07C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE07C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveCollisionDisable*)>(reinterpret_cast<uintptr_t>(ClientMoveCollisionDisable::s_handler) - (right ^ left))(this);
     }
 
-    return ClientMoveCollisionDisable::s_handler(this);
+    return false;
 }
 
-// PROVEN: e2bd4f00 IDENTICAL/NONE
-// OFFSET: 0x006A1CE0
+// PROVEN: e2bd4f00 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A1CE0/0x14034F130
 ClientMoveCollisionEnable::ClientMoveCollisionEnable(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 40047fe6 IDENTICAL/NONE
+// PROVEN: 40047fe6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C54C0/0x14037B280
 ClientMoveCollisionEnable::ClientMoveCollisionEnable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 0feb1c12 IDENTICAL/NONE
+// PROVEN: 0feb1c12 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2ED0/0x1403503E0
 ClientMoveCollisionEnable::~ClientMoveCollisionEnable() {
 }
 
-// PROVEN: 9e621a40 IDENTICAL/NONE
+// PROVEN: 9e621a40 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B9210/0x14036C720
 void ClientMoveCollisionEnable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -652,14 +658,14 @@ void ClientMoveCollisionEnable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: fda8a59d IDENTICAL/NONE
-// OFFSET: 0x006C50C0
+// PROVEN: fda8a59d IDENTICAL/UNPROVEN
+// OFFSET: 0x006C50C0/0x14037ADF0
 bool ClientMoveCollisionEnable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: ba58f97a IDENTICAL/NONE
-// OFFSET: 0x006AE9A0
+// PROVEN: ba58f97a IDENTICAL/IDENTICAL
+// OFFSET: 0x006AE9A0/0x14035F120
 bool ClientMoveCollisionEnable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -727,34 +733,37 @@ bool ClientMoveCollisionEnable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 2bd8c1df IDENTICAL/UNPROVEN
 // OFFSET: 0x006C0D40/0x1403761D0
 bool ClientMoveCollisionEnable::Handle() {
-    if (!ClientMoveCollisionEnable::s_handler) {
-        return false;
+    if (ClientMoveCollisionEnable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFDFCC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFDFCC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveCollisionEnable*)>(reinterpret_cast<uintptr_t>(ClientMoveCollisionEnable::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientMoveCollisionEnable::s_handler(this);
+    return false;
 }
 
-// PROVEN: 1200b753 IDENTICAL/NONE
-// OFFSET: 0x006A29B0
+// PROVEN: 1200b753 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A29B0/0x14034FE50
 ClientMoveGravityDisable::ClientMoveGravityDisable(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 4a25db8c IDENTICAL/NONE
+// PROVEN: 4a25db8c IDENTICAL/IDENTICAL
 // OFFSET: 0x006C6F10/0x14037D960
 ClientMoveGravityDisable::ClientMoveGravityDisable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 4ede2728 IDENTICAL/NONE
+// PROVEN: 4ede2728 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2FB0/0x1403504B0
 ClientMoveGravityDisable::~ClientMoveGravityDisable() {
 }
 
-// PROVEN: f5d72615 IDENTICAL/NONE
+// PROVEN: f5d72615 IDENTICAL/DIFFERENT
 // OFFSET: 0x006BA4B0/0x14036DEB0
 void ClientMoveGravityDisable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -821,14 +830,14 @@ void ClientMoveGravityDisable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 9b5862e9 IDENTICAL/NONE
-// OFFSET: 0x006BF730
+// PROVEN: 9b5862e9 IDENTICAL/UNPROVEN
+// OFFSET: 0x006BF730/0x140374880
 bool ClientMoveGravityDisable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 03b81940 IDENTICAL/NONE
-// OFFSET: 0x006B0B60
+// PROVEN: 03b81940 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B0B60/0x140361A40
 bool ClientMoveGravityDisable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -896,34 +905,37 @@ bool ClientMoveGravityDisable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 2191920e IDENTICAL/UNPROVEN
 // OFFSET: 0x006A34B0/0x140350CA0
 bool ClientMoveGravityDisable::Handle() {
-    if (!ClientMoveGravityDisable::s_handler) {
-        return false;
+    if (ClientMoveGravityDisable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFED68.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFED68.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveGravityDisable*)>(reinterpret_cast<uintptr_t>(ClientMoveGravityDisable::s_handler) - (right ^ left))(this);
     }
 
-    return ClientMoveGravityDisable::s_handler(this);
+    return false;
 }
 
-// PROVEN: b3144733 IDENTICAL/NONE
-// OFFSET: 0x006A1FA0
+// PROVEN: b3144733 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A1FA0/0x14034F420
 ClientMoveGravityEnable::ClientMoveGravityEnable(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: eda89b6a IDENTICAL/NONE
+// PROVEN: eda89b6a IDENTICAL/IDENTICAL
 // OFFSET: 0x006B9430/0x14036C9F0
 ClientMoveGravityEnable::ClientMoveGravityEnable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: e8833812 IDENTICAL/NONE
+// PROVEN: e8833812 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0F20/0x14034E000
 ClientMoveGravityEnable::~ClientMoveGravityEnable() {
 }
 
-// PROVEN: 8b8fb955 IDENTICAL/NONE
+// PROVEN: 8b8fb955 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B1EE0/0x140363380
 void ClientMoveGravityEnable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -990,14 +1002,14 @@ void ClientMoveGravityEnable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 7eb5ee86 IDENTICAL/NONE
-// OFFSET: 0x006C8710
+// PROVEN: 7eb5ee86 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C8710/0x14037F7E0
 bool ClientMoveGravityEnable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 0401652d IDENTICAL/NONE
-// OFFSET: 0x006B5A20
+// PROVEN: 0401652d IDENTICAL/IDENTICAL
+// OFFSET: 0x006B5A20/0x140367EE0
 bool ClientMoveGravityEnable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -1065,16 +1077,19 @@ bool ClientMoveGravityEnable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: cddd60d7 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A8B20/0x140357A80
 bool ClientMoveGravityEnable::Handle() {
-    if (!ClientMoveGravityEnable::s_handler) {
-        return false;
+    if (ClientMoveGravityEnable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF718.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF718.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveGravityEnable*)>(reinterpret_cast<uintptr_t>(ClientMoveGravityEnable::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveGravityEnable::s_handler(this);
+    return false;
 }
 
-// PROVEN: 8ad49aaf IDENTICAL/NONE
+// PROVEN: 8ad49aaf IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2F50/0x140350460
 ClientMoveKnockBack::ClientMoveKnockBack(WOWGUID guid, uint32_t ackIndex, const C2Vector& direction, float horizontalSpeed, float verticalSpeed) {
     this->m_guid = guid;
@@ -1084,18 +1099,18 @@ ClientMoveKnockBack::ClientMoveKnockBack(WOWGUID guid, uint32_t ackIndex, const 
     this->m_direction = direction;
 }
 
-// PROVEN: b90b78bf IDENTICAL/NONE
+// PROVEN: b90b78bf IDENTICAL/IDENTICAL
 // OFFSET: 0x006ADBE0/0x14035E010
 ClientMoveKnockBack::ClientMoveKnockBack(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: abab2fa5 IDENTICAL/NONE
+// PROVEN: abab2fa5 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A23E0/0x14034F8F0
 ClientMoveKnockBack::~ClientMoveKnockBack() {
 }
 
-// PROVEN: 4a099e15 IDENTICAL/NONE
+// PROVEN: 4a099e15 IDENTICAL/DIFFERENT
 // OFFSET: 0x006A66D0/0x140354A80
 void ClientMoveKnockBack::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -1182,14 +1197,14 @@ void ClientMoveKnockBack::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: b2ddde43 IDENTICAL/NONE
-// OFFSET: 0x006C87F0
+// PROVEN: b2ddde43 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C87F0/0x14037F8C0
 bool ClientMoveKnockBack::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 5e34d84f IDENTICAL/NONE
-// OFFSET: 0x006B3620
+// PROVEN: 5e34d84f IDENTICAL/DIFFERENT
+// OFFSET: 0x006B3620/0x140365110
 bool ClientMoveKnockBack::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -1277,7 +1292,7 @@ bool ClientMoveKnockBack::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006A28D0
+// OFFSET: 0x006A28D0/0x14034FD50
 bool ClientMoveKnockBack::IsValid() const {
     if (std::fabs(this->m_horizontalSpeed) < 2.3841858e-7f && std::fabs(this->m_verticalSpeed) < 2.3841858e-7f) {
         return false;
@@ -1294,34 +1309,37 @@ bool ClientMoveKnockBack::IsValid() const {
     return _finite(this->m_direction.y) && _finite(this->m_direction.x);
 }
 
+// PROVEN: 7f4c8502 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A7540/0x140355FE0
 bool ClientMoveKnockBack::Handle() {
-    if (!ClientMoveKnockBack::s_handler) {
-        return false;
+    if (ClientMoveKnockBack::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF8FC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF8FC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveKnockBack*)>(reinterpret_cast<uintptr_t>(ClientMoveKnockBack::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientMoveKnockBack::s_handler(this);
+    return false;
 }
 
-// PROVEN: 619c80be IDENTICAL/NONE
-// OFFSET: 0x006A3C50
+// PROVEN: 619c80be IDENTICAL/IDENTICAL
+// OFFSET: 0x006A3C50/0x1403514E0
 ClientMoveRoot::ClientMoveRoot(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 76e7e259 IDENTICAL/NONE
+// PROVEN: 76e7e259 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C05B0/0x140375880
 ClientMoveRoot::ClientMoveRoot(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 7c524104 IDENTICAL/NONE
+// PROVEN: 7c524104 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1B70/0x14034F030
 ClientMoveRoot::~ClientMoveRoot() {
 }
 
-// PROVEN: cb8cd089 IDENTICAL/NONE
+// PROVEN: cb8cd089 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B14A0/0x140362630
 void ClientMoveRoot::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -1388,14 +1406,14 @@ void ClientMoveRoot::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 35921c4e IDENTICAL/NONE
-// OFFSET: 0x006BB400
+// PROVEN: 35921c4e IDENTICAL/UNPROVEN
+// OFFSET: 0x006BB400/0x14036F2C0
 bool ClientMoveRoot::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 77c70b26 IDENTICAL/NONE
-// OFFSET: 0x006A51F0
+// PROVEN: 77c70b26 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A51F0/0x140353190
 bool ClientMoveRoot::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -1463,34 +1481,37 @@ bool ClientMoveRoot::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 80d50a48 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B3C10/0x1403658A0
 bool ClientMoveRoot::Handle() {
-    if (!ClientMoveRoot::s_handler) {
-        return false;
+    if (ClientMoveRoot::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEDD0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEDD0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveRoot*)>(reinterpret_cast<uintptr_t>(ClientMoveRoot::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveRoot::s_handler(this);
+    return false;
 }
 
-// PROVEN: 927e999c IDENTICAL/NONE
-// OFFSET: 0x006A10C0
+// PROVEN: 927e999c IDENTICAL/IDENTICAL
+// OFFSET: 0x006A10C0/0x14034E300
 ClientMoveSetCanFly::ClientMoveSetCanFly(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: fd6f3024 IDENTICAL/NONE
+// PROVEN: fd6f3024 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C5F60/0x14037C380
 ClientMoveSetCanFly::ClientMoveSetCanFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 5433cb5b IDENTICAL/NONE
+// PROVEN: 5433cb5b IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1E00/0x14034F270
 ClientMoveSetCanFly::~ClientMoveSetCanFly() {
 }
 
-// PROVEN: 501b94c6 IDENTICAL/NONE
+// PROVEN: 501b94c6 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B3400/0x140364E60
 void ClientMoveSetCanFly::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -1557,14 +1578,14 @@ void ClientMoveSetCanFly::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 98a7ea07 IDENTICAL/NONE
-// OFFSET: 0x006C07B0
+// PROVEN: 98a7ea07 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C07B0/0x140375AF0
 bool ClientMoveSetCanFly::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: e7de905f IDENTICAL/NONE
-// OFFSET: 0x006BBBB0
+// PROVEN: e7de905f IDENTICAL/IDENTICAL
+// OFFSET: 0x006BBBB0/0x14036FC90
 bool ClientMoveSetCanFly::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -1632,34 +1653,37 @@ bool ClientMoveSetCanFly::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 4ae2e678 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B2080/0x1403635B0
 bool ClientMoveSetCanFly::Handle() {
-    if (!ClientMoveSetCanFly::s_handler) {
-        return false;
+    if (ClientMoveSetCanFly::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF490.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF490.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetCanFly*)>(reinterpret_cast<uintptr_t>(ClientMoveSetCanFly::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientMoveSetCanFly::s_handler(this);
+    return false;
 }
 
-// PROVEN: 151b66cb IDENTICAL/NONE
-// OFFSET: 0x006A1CA0
+// PROVEN: 151b66cb IDENTICAL/IDENTICAL
+// OFFSET: 0x006A1CA0/0x14034F100
 ClientMoveSetCanTransitionBetweenSwimAndFly::ClientMoveSetCanTransitionBetweenSwimAndFly(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: d3d29216 IDENTICAL/NONE
+// PROVEN: d3d29216 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C9A50/0x1403814B0
 ClientMoveSetCanTransitionBetweenSwimAndFly::ClientMoveSetCanTransitionBetweenSwimAndFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: a0b81e8a IDENTICAL/NONE
+// PROVEN: a0b81e8a IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0F10/0x14034DFF0
 ClientMoveSetCanTransitionBetweenSwimAndFly::~ClientMoveSetCanTransitionBetweenSwimAndFly() {
 }
 
-// PROVEN: 89b2c708 IDENTICAL/NONE
+// PROVEN: 89b2c708 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B9FA0/0x14036D860
 void ClientMoveSetCanTransitionBetweenSwimAndFly::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -1726,14 +1750,14 @@ void ClientMoveSetCanTransitionBetweenSwimAndFly::Unpack(CDataStore* msg, bool f
     }
 }
 
-// PROVEN: 78ee688d IDENTICAL/NONE
-// OFFSET: 0x006CFCA0
+// PROVEN: 78ee688d IDENTICAL/UNPROVEN
+// OFFSET: 0x006CFCA0/0x14038A230
 bool ClientMoveSetCanTransitionBetweenSwimAndFly::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: d374ed1d IDENTICAL/NONE
-// OFFSET: 0x006C7F90
+// PROVEN: d374ed1d IDENTICAL/IDENTICAL
+// OFFSET: 0x006C7F90/0x14037EED0
 bool ClientMoveSetCanTransitionBetweenSwimAndFly::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -1801,16 +1825,19 @@ bool ClientMoveSetCanTransitionBetweenSwimAndFly::Read(CDataStore* msg, bool ful
     return msg->IsRead() != 0;
 }
 
+// PROVEN: b5ef1662 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A4890/0x1403523E0
 bool ClientMoveSetCanTransitionBetweenSwimAndFly::Handle() {
-    if (!ClientMoveSetCanTransitionBetweenSwimAndFly::s_handler) {
-        return false;
+    if (ClientMoveSetCanTransitionBetweenSwimAndFly::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEB00.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEB00.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetCanTransitionBetweenSwimAndFly*)>(reinterpret_cast<uintptr_t>(ClientMoveSetCanTransitionBetweenSwimAndFly::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientMoveSetCanTransitionBetweenSwimAndFly::s_handler(this);
+    return false;
 }
 
-// PROVEN: c9cc0e19 IDENTICAL/NONE
+// PROVEN: c9cc0e19 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1050/0x14034E2A0
 ClientMoveSetCollisionHeight::ClientMoveSetCollisionHeight(WOWGUID guid, uint32_t ackIndex, float height, uint32_t reason) {
     this->m_guid = guid;
@@ -1819,17 +1846,18 @@ ClientMoveSetCollisionHeight::ClientMoveSetCollisionHeight(WOWGUID guid, uint32_
     this->m_reason = reason;
 }
 
-// PROVEN: 01adc0df IDENTICAL/NONE
+// PROVEN: 01adc0df IDENTICAL/IDENTICAL
 // OFFSET: 0x006C0E20/0x140376310
 ClientMoveSetCollisionHeight::ClientMoveSetCollisionHeight(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 73ea8b6d IDENTICAL/NONE
+// PROVEN: 73ea8b6d IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1690/0x14034E9D0
 ClientMoveSetCollisionHeight::~ClientMoveSetCollisionHeight() {
 }
 
+// PROVEN: a601d573 IDENTICAL/DIFFERENT
 // OFFSET: 0x006A81B0/0x140356EA0
 void ClientMoveSetCollisionHeight::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -1903,13 +1931,14 @@ void ClientMoveSetCollisionHeight::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: ee4fea34 IDENTICAL/NONE
-// OFFSET: 0x006B72C0
+// PROVEN: ee4fea34 IDENTICAL/UNPROVEN
+// OFFSET: 0x006B72C0/0x14036A030
 bool ClientMoveSetCollisionHeight::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006B6ED0
+// PROVEN: 4b3b74ea IDENTICAL/DIFFERENT
+// OFFSET: 0x006B6ED0/0x140369B40
 bool ClientMoveSetCollisionHeight::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -1984,34 +2013,37 @@ bool ClientMoveSetCollisionHeight::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_height) && this->m_reason <= 2;
 }
 
+// PROVEN: 2c668440 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A5BB0/0x140353B50
 bool ClientMoveSetCollisionHeight::Handle() {
-    if (!ClientMoveSetCollisionHeight::s_handler) {
-        return false;
+    if (ClientMoveSetCollisionHeight::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD04C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD04C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetCollisionHeight*)>(reinterpret_cast<uintptr_t>(ClientMoveSetCollisionHeight::s_handler) - (right ^ left))(this);
     }
 
-    return ClientMoveSetCollisionHeight::s_handler(this);
+    return false;
 }
 
-// PROVEN: a60416d8 IDENTICAL/NONE
-// OFFSET: 0x006A2AA0
+// PROVEN: a60416d8 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2AA0/0x14034FF80
 ClientMoveSetFeatherFall::ClientMoveSetFeatherFall(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 1b8328c4 IDENTICAL/NONE
+// PROVEN: 1b8328c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C6F90/0x14037D9E0
 ClientMoveSetFeatherFall::ClientMoveSetFeatherFall(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 3851f197 IDENTICAL/NONE
+// PROVEN: 3851f197 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1FE0/0x14034F450
 ClientMoveSetFeatherFall::~ClientMoveSetFeatherFall() {
 }
 
-// PROVEN: bc8e3f8c IDENTICAL/NONE
+// PROVEN: bc8e3f8c IDENTICAL/DIFFERENT
 // OFFSET: 0x006AB8E0/0x14035B540
 void ClientMoveSetFeatherFall::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -2078,14 +2110,14 @@ void ClientMoveSetFeatherFall::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 92fbbad0 IDENTICAL/NONE
-// OFFSET: 0x006C5120
+// PROVEN: 92fbbad0 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C5120/0x14037AE60
 bool ClientMoveSetFeatherFall::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 1ad03a79 IDENTICAL/NONE
-// OFFSET: 0x006AEF70
+// PROVEN: 1ad03a79 IDENTICAL/IDENTICAL
+// OFFSET: 0x006AEF70/0x14035F850
 bool ClientMoveSetFeatherFall::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -2153,35 +2185,38 @@ bool ClientMoveSetFeatherFall::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 1cae558d IDENTICAL/UNPROVEN
 // OFFSET: 0x006AE7D0/0x14035EEE0
 bool ClientMoveSetFeatherFall::Handle() {
-    if (!ClientMoveSetFeatherFall::s_handler) {
-        return false;
+    if (ClientMoveSetFeatherFall::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF440.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF440.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetFeatherFall*)>(reinterpret_cast<uintptr_t>(ClientMoveSetFeatherFall::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientMoveSetFeatherFall::s_handler(this);
+    return false;
 }
 
-// PROVEN: d0d84d45 IDENTICAL/NONE
-// OFFSET: 0x006A7210
+// PROVEN: d0d84d45 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A7210/0x14034E020
 ClientMoveSetFlightBackSpeed::ClientMoveSetFlightBackSpeed(WOWGUID guid, uint32_t ackIndex, float speed) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
     this->m_speed = speed;
 }
 
-// PROVEN: 2b01b4ec IDENTICAL/NONE
+// PROVEN: 2b01b4ec IDENTICAL/IDENTICAL
 // OFFSET: 0x006C6030/0x14037C450
 ClientMoveSetFlightBackSpeed::ClientMoveSetFlightBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 5bc26de3 IDENTICAL/NONE
+// PROVEN: 5bc26de3 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2380/0x14034F8A0
 ClientMoveSetFlightBackSpeed::~ClientMoveSetFlightBackSpeed() {
 }
 
-// PROVEN: 959c8edf IDENTICAL/NONE
+// PROVEN: 959c8edf IDENTICAL/DIFFERENT
 // OFFSET: 0x006B3C90/0x140365960
 void ClientMoveSetFlightBackSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -2253,14 +2288,14 @@ void ClientMoveSetFlightBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 282fb0b7 IDENTICAL/NONE
-// OFFSET: 0x006D0460
+// PROVEN: 282fb0b7 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D0460/0x14038AE60
 bool ClientMoveSetFlightBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: f29ecf4f IDENTICAL/NONE
-// OFFSET: 0x006BF540
+// PROVEN: f29ecf4f IDENTICAL/DIFFERENT
+// OFFSET: 0x006BF540/0x140374610
 bool ClientMoveSetFlightBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -2333,35 +2368,38 @@ bool ClientMoveSetFlightBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: 7d1694c5 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B1A60/0x140362DB0
 bool ClientMoveSetFlightBackSpeed::Handle() {
-    if (!ClientMoveSetFlightBackSpeed::s_handler) {
-        return false;
+    if (ClientMoveSetFlightBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE1A4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE1A4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetFlightBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveSetFlightBackSpeed::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveSetFlightBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 85f56437 IDENTICAL/NONE
-// OFFSET: 0x006A2BA0
+// PROVEN: 85f56437 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2BA0/0x1403500E0
 ClientMoveSetFlightSpeed::ClientMoveSetFlightSpeed(WOWGUID guid, uint32_t ackIndex, float speed) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
     this->m_speed = speed;
 }
 
-// PROVEN: 3a9e9e88 IDENTICAL/NONE
+// PROVEN: 3a9e9e88 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C8410/0x14037F440
 ClientMoveSetFlightSpeed::ClientMoveSetFlightSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: af9ead83 IDENTICAL/NONE
+// PROVEN: af9ead83 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2B10/0x140350050
 ClientMoveSetFlightSpeed::~ClientMoveSetFlightSpeed() {
 }
 
-// PROVEN: 05482758 IDENTICAL/NONE
+// PROVEN: 05482758 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B3820/0x140365390
 void ClientMoveSetFlightSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -2433,14 +2471,14 @@ void ClientMoveSetFlightSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: ec443e5f IDENTICAL/NONE
-// OFFSET: 0x006C48B0
+// PROVEN: ec443e5f IDENTICAL/UNPROVEN
+// OFFSET: 0x006C48B0/0x14037A7F0
 bool ClientMoveSetFlightSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: b4c03838 IDENTICAL/NONE
-// OFFSET: 0x006C0600
+// PROVEN: b4c03838 IDENTICAL/DIFFERENT
+// OFFSET: 0x006C0600/0x1403758D0
 bool ClientMoveSetFlightSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -2513,34 +2551,37 @@ bool ClientMoveSetFlightSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: bf7036dd IDENTICAL/UNPROVEN
 // OFFSET: 0x006B8160/0x14036B1F0
 bool ClientMoveSetFlightSpeed::Handle() {
-    if (!ClientMoveSetFlightSpeed::s_handler) {
-        return false;
+    if (ClientMoveSetFlightSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFFBCC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFFBCC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetFlightSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveSetFlightSpeed::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveSetFlightSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 1cc6263a IDENTICAL/NONE
-// OFFSET: 0x006A2340
+// PROVEN: 1cc6263a IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2340/0x14034F870
 ClientMoveSetHover::ClientMoveSetHover(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 9526e212 IDENTICAL/NONE
+// PROVEN: 9526e212 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C7F40/0x14037EE80
 ClientMoveSetHover::ClientMoveSetHover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 88c63a6f IDENTICAL/NONE
+// PROVEN: 88c63a6f IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2450/0x14034F950
 ClientMoveSetHover::~ClientMoveSetHover() {
 }
 
-// PROVEN: b43b45fe IDENTICAL/NONE
+// PROVEN: b43b45fe IDENTICAL/IDENTICAL
 // OFFSET: 0x006BA610/0x14036E080
 void ClientMoveSetHover::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -2608,14 +2649,14 @@ void ClientMoveSetHover::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 296e79fe IDENTICAL/NONE
-// OFFSET: 0x006C5F50
+// PROVEN: 296e79fe IDENTICAL/UNPROVEN
+// OFFSET: 0x006C5F50/0x14037C370
 bool ClientMoveSetHover::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: def8fea0 IDENTICAL/NONE
-// OFFSET: 0x006AB630
+// PROVEN: def8fea0 IDENTICAL/IDENTICAL
+// OFFSET: 0x006AB630/0x14035B1B0
 bool ClientMoveSetHover::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -2684,34 +2725,37 @@ bool ClientMoveSetHover::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: d6e5bf37 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B6450/0x140368C00
 bool ClientMoveSetHover::Handle() {
-    if (!ClientMoveSetHover::s_handler) {
-        return false;
+    if (ClientMoveSetHover::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD3AC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD3AC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetHover*)>(reinterpret_cast<uintptr_t>(ClientMoveSetHover::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveSetHover::s_handler(this);
+    return false;
 }
 
-// PROVEN: eb38b2c3 IDENTICAL/NONE
-// OFFSET: 0x006A68A0
+// PROVEN: eb38b2c3 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A68A0/0x14034DFA0
 ClientMoveSetLandWalk::ClientMoveSetLandWalk(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 63302a1b IDENTICAL/NONE
+// PROVEN: 63302a1b IDENTICAL/IDENTICAL
 // OFFSET: 0x006CB670/0x140383D30
 ClientMoveSetLandWalk::ClientMoveSetLandWalk(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 499bf972 IDENTICAL/NONE
+// PROVEN: 499bf972 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1620/0x14034E920
 ClientMoveSetLandWalk::~ClientMoveSetLandWalk() {
 }
 
-// PROVEN: 2bda9e81 IDENTICAL/NONE
+// PROVEN: 2bda9e81 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BE160/0x140372D80
 void ClientMoveSetLandWalk::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -2779,14 +2823,14 @@ void ClientMoveSetLandWalk::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 208bd6e1 IDENTICAL/NONE
-// OFFSET: 0x006C6F00
+// PROVEN: 208bd6e1 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C6F00/0x14037D950
 bool ClientMoveSetLandWalk::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 9b78ef13 IDENTICAL/NONE
-// OFFSET: 0x006C3E10
+// PROVEN: 9b78ef13 IDENTICAL/IDENTICAL
+// OFFSET: 0x006C3E10/0x140379DB0
 bool ClientMoveSetLandWalk::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -2855,34 +2899,37 @@ bool ClientMoveSetLandWalk::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: b9d3fecb IDENTICAL/UNPROVEN
 // OFFSET: 0x006ABE50/0x14035BB80
 bool ClientMoveSetLandWalk::Handle() {
-    if (!ClientMoveSetLandWalk::s_handler) {
-        return false;
+    if (ClientMoveSetLandWalk::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF3C8.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF3C8.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetLandWalk*)>(reinterpret_cast<uintptr_t>(ClientMoveSetLandWalk::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveSetLandWalk::s_handler(this);
+    return false;
 }
 
-// PROVEN: ccfccc94 IDENTICAL/NONE
-// OFFSET: 0x006A2DF0
+// PROVEN: ccfccc94 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2DF0/0x140350360
 ClientMoveSetNormalFall::ClientMoveSetNormalFall(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: fea953ca IDENTICAL/NONE
+// PROVEN: fea953ca IDENTICAL/IDENTICAL
 // OFFSET: 0x006B5D90/0x140368330
 ClientMoveSetNormalFall::ClientMoveSetNormalFall(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 94ad6c9e IDENTICAL/NONE
+// PROVEN: 94ad6c9e IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1EF0/0x14034F370
 ClientMoveSetNormalFall::~ClientMoveSetNormalFall() {
 }
 
-// PROVEN: 58ae70ce IDENTICAL/NONE
+// PROVEN: 58ae70ce IDENTICAL/IDENTICAL
 // OFFSET: 0x006A6BC0/0x140355090
 void ClientMoveSetNormalFall::Unpack(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -2949,14 +2996,14 @@ void ClientMoveSetNormalFall::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 72e3ff7c IDENTICAL/NONE
-// OFFSET: 0x006D3860
+// PROVEN: 72e3ff7c IDENTICAL/UNPROVEN
+// OFFSET: 0x006D3860/0x14038FC30
 bool ClientMoveSetNormalFall::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 198c9053 IDENTICAL/NONE
-// OFFSET: 0x006CB8A0
+// PROVEN: 198c9053 IDENTICAL/IDENTICAL
+// OFFSET: 0x006CB8A0/0x140384030
 bool ClientMoveSetNormalFall::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
     {
@@ -3024,35 +3071,38 @@ bool ClientMoveSetNormalFall::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 1c86cde8 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B4560/0x1403664C0
 bool ClientMoveSetNormalFall::Handle() {
-    if (!ClientMoveSetNormalFall::s_handler) {
-        return false;
+    if (ClientMoveSetNormalFall::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFDFA0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFDFA0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetNormalFall*)>(reinterpret_cast<uintptr_t>(ClientMoveSetNormalFall::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveSetNormalFall::s_handler(this);
+    return false;
 }
 
-// PROVEN: 9cb17202 IDENTICAL/NONE
-// OFFSET: 0x006A1000
+// PROVEN: 9cb17202 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A1000/0x14034E260
 ClientMoveSetPitchRate::ClientMoveSetPitchRate(WOWGUID guid, uint32_t ackIndex, float rate) {
     this->m_guid = guid;
     this->m_rate = rate;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: dfd40978 IDENTICAL/NONE
+// PROVEN: dfd40978 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B47A0/0x1403667C0
 ClientMoveSetPitchRate::ClientMoveSetPitchRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 05bc15af IDENTICAL/NONE
+// PROVEN: 05bc15af IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0EB0/0x14034DF70
 ClientMoveSetPitchRate::~ClientMoveSetPitchRate() {
 }
 
-// PROVEN: c726a058 IDENTICAL/NONE
+// PROVEN: c726a058 IDENTICAL/DIFFERENT
 // OFFSET: 0x006A9E70/0x1403593B0
 void ClientMoveSetPitchRate::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -3124,14 +3174,14 @@ void ClientMoveSetPitchRate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 3c8b2523 IDENTICAL/NONE
-// OFFSET: 0x006D30B0
+// PROVEN: 3c8b2523 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D30B0/0x140373560
 bool ClientMoveSetPitchRate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 2761618b IDENTICAL/NONE
-// OFFSET: 0x006C41E0
+// PROVEN: 2761618b IDENTICAL/DIFFERENT
+// OFFSET: 0x006C41E0/0x140352440
 bool ClientMoveSetPitchRate::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -3204,35 +3254,38 @@ bool ClientMoveSetPitchRate::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_rate);
 }
 
+// PROVEN: 037b14d7 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AB890/0x14035B4E0
 bool ClientMoveSetPitchRate::Handle() {
-    if (!ClientMoveSetPitchRate::s_handler) {
-        return false;
+    if (ClientMoveSetPitchRate::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF9AC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF9AC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetPitchRate*)>(reinterpret_cast<uintptr_t>(ClientMoveSetPitchRate::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientMoveSetPitchRate::s_handler(this);
+    return false;
 }
 
-// PROVEN: 42afe1bc IDENTICAL/NONE
-// OFFSET: 0x006A1240
+// PROVEN: 42afe1bc IDENTICAL/IDENTICAL
+// OFFSET: 0x006A1240/0x14034E520
 ClientMoveSetRunBackSpeed::ClientMoveSetRunBackSpeed(WOWGUID guid, uint32_t ackIndex, float speed) {
     this->m_guid = guid;
     this->m_speed = speed;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 7d68c2af IDENTICAL/NONE
+// PROVEN: 7d68c2af IDENTICAL/IDENTICAL
 // OFFSET: 0x006C3DC0/0x140379D50
 ClientMoveSetRunBackSpeed::ClientMoveSetRunBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 612185b7 IDENTICAL/NONE
+// PROVEN: 612185b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2330/0x14034F860
 ClientMoveSetRunBackSpeed::~ClientMoveSetRunBackSpeed() {
 }
 
-// PROVEN: 5d67cb88 IDENTICAL/NONE
+// PROVEN: 5d67cb88 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B9B20/0x14036D2B0
 void ClientMoveSetRunBackSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -3304,14 +3357,14 @@ void ClientMoveSetRunBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: b6ae2303 IDENTICAL/NONE
-// OFFSET: 0x006D7720
+// PROVEN: b6ae2303 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D7720/0x14037ADE0
 bool ClientMoveSetRunBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: db34f697 IDENTICAL/NONE
-// OFFSET: 0x006CF0E0
+// PROVEN: db34f697 IDENTICAL/DIFFERENT
+// OFFSET: 0x006CF0E0/0x140368CC0
 bool ClientMoveSetRunBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -3384,35 +3437,38 @@ bool ClientMoveSetRunBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: 39a8f899 IDENTICAL/UNPROVEN
 // OFFSET: 0x006ACE70/0x14035CEF0
 bool ClientMoveSetRunBackSpeed::Handle() {
-    if (!ClientMoveSetRunBackSpeed::s_handler) {
-        return false;
+    if (ClientMoveSetRunBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD8D4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD8D4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetRunBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveSetRunBackSpeed::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveSetRunBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: b45b2acd IDENTICAL/NONE
-// OFFSET: 0x006A15E0
+// PROVEN: b45b2acd IDENTICAL/IDENTICAL
+// OFFSET: 0x006A15E0/0x14034E8F0
 ClientMoveSetRunSpeed::ClientMoveSetRunSpeed(WOWGUID guid, uint32_t ackIndex, float speed) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
     this->m_speed = speed;
 }
 
-// PROVEN: 00e52bb6 IDENTICAL/NONE
+// PROVEN: 00e52bb6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006CA860/0x140382930
 ClientMoveSetRunSpeed::ClientMoveSetRunSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 8350f0e2 IDENTICAL/NONE
+// PROVEN: 8350f0e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A24C0/0x14034F9E0
 ClientMoveSetRunSpeed::~ClientMoveSetRunSpeed() {
 }
 
-// PROVEN: 087d219b IDENTICAL/NONE
+// PROVEN: 087d219b IDENTICAL/DIFFERENT
 // OFFSET: 0x006B6200/0x140368900
 void ClientMoveSetRunSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -3484,14 +3540,14 @@ void ClientMoveSetRunSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 4515e61c IDENTICAL/NONE
-// OFFSET: 0x006C5FA0
+// PROVEN: 4515e61c IDENTICAL/UNPROVEN
+// OFFSET: 0x006C5FA0/0x14037C3C0
 bool ClientMoveSetRunSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 14099eae IDENTICAL/NONE
-// OFFSET: 0x006AD190
+// PROVEN: 14099eae IDENTICAL/DIFFERENT
+// OFFSET: 0x006AD190/0x14035D270
 bool ClientMoveSetRunSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -3564,35 +3620,38 @@ bool ClientMoveSetRunSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: d681f80a IDENTICAL/UNPROVEN
 // OFFSET: 0x006AE220/0x14035E770
 bool ClientMoveSetRunSpeed::Handle() {
-    if (!ClientMoveSetRunSpeed::s_handler) {
-        return false;
+    if (ClientMoveSetRunSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE300.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE300.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetRunSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveSetRunSpeed::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveSetRunSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: f9ea59f2 IDENTICAL/NONE
-// OFFSET: 0x006A45A0
+// PROVEN: f9ea59f2 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A45A0/0x140352030
 ClientMoveSetSwimBackSpeed::ClientMoveSetSwimBackSpeed(WOWGUID guid, uint32_t ackIndex, float speed) {
     this->m_guid = guid;
     this->m_speed = speed;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 34247677 IDENTICAL/NONE
+// PROVEN: 34247677 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C0C40/0x1403760B0
 ClientMoveSetSwimBackSpeed::ClientMoveSetSwimBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 4ac7260c IDENTICAL/NONE
+// PROVEN: 4ac7260c IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2FC0/0x1403504C0
 ClientMoveSetSwimBackSpeed::~ClientMoveSetSwimBackSpeed() {
 }
 
-// PROVEN: cdb81759 IDENTICAL/NONE
+// PROVEN: cdb81759 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B2ED0/0x140364800
 void ClientMoveSetSwimBackSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -3664,14 +3723,14 @@ void ClientMoveSetSwimBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 455fbda2 IDENTICAL/NONE
-// OFFSET: 0x006BF830
+// PROVEN: 455fbda2 IDENTICAL/UNPROVEN
+// OFFSET: 0x006BF830/0x1403749D0
 bool ClientMoveSetSwimBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 47223aa0 IDENTICAL/NONE
-// OFFSET: 0x006ACBD0
+// PROVEN: 47223aa0 IDENTICAL/DIFFERENT
+// OFFSET: 0x006ACBD0/0x14035CBA0
 bool ClientMoveSetSwimBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -3744,35 +3803,38 @@ bool ClientMoveSetSwimBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: c8192a16 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B5400/0x1403676F0
 bool ClientMoveSetSwimBackSpeed::Handle() {
-    if (!ClientMoveSetSwimBackSpeed::s_handler) {
-        return false;
+    if (ClientMoveSetSwimBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE634.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE634.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetSwimBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveSetSwimBackSpeed::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveSetSwimBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 347a5d30 IDENTICAL/NONE
-// OFFSET: 0x006A2390
+// PROVEN: 347a5d30 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2390/0x14034F8B0
 ClientMoveSetSwimSpeed::ClientMoveSetSwimSpeed(WOWGUID guid, uint32_t ackIndex, float speed) {
     this->m_guid = guid;
     this->m_speed = speed;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 2a3981d0 IDENTICAL/NONE
+// PROVEN: 2a3981d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C46D0/0x14037A5D0
 ClientMoveSetSwimSpeed::ClientMoveSetSwimSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: ecfa107f IDENTICAL/NONE
+// PROVEN: ecfa107f IDENTICAL/IDENTICAL
 // OFFSET: 0x006A28C0/0x14034FD40
 ClientMoveSetSwimSpeed::~ClientMoveSetSwimSpeed() {
 }
 
-// PROVEN: 6785133b IDENTICAL/NONE
+// PROVEN: 6785133b IDENTICAL/DIFFERENT
 // OFFSET: 0x006B28B0/0x140363F80
 void ClientMoveSetSwimSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -3844,14 +3906,14 @@ void ClientMoveSetSwimSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 32617c54 IDENTICAL/NONE
-// OFFSET: 0x006C46C0
+// PROVEN: 32617c54 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C46C0/0x14037A5C0
 bool ClientMoveSetSwimSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 3d06b3bc IDENTICAL/NONE
-// OFFSET: 0x006C43B0
+// PROVEN: 3d06b3bc IDENTICAL/DIFFERENT
+// OFFSET: 0x006C43B0/0x14037A200
 bool ClientMoveSetSwimSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -3924,35 +3986,38 @@ bool ClientMoveSetSwimSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: ddbd1031 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A6690/0x140354A20
 bool ClientMoveSetSwimSpeed::Handle() {
-    if (!ClientMoveSetSwimSpeed::s_handler) {
-        return false;
+    if (ClientMoveSetSwimSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD91C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD91C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetSwimSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveSetSwimSpeed::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveSetSwimSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 7e220f79 IDENTICAL/NONE
-// OFFSET: 0x006A7960
+// PROVEN: 7e220f79 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A7960/0x14034E0D0
 ClientMoveSetTurnRate::ClientMoveSetTurnRate(WOWGUID guid, uint32_t ackIndex, float rate) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
     this->m_rate = rate;
 }
 
-// PROVEN: 8a1f649b IDENTICAL/NONE
+// PROVEN: 8a1f649b IDENTICAL/IDENTICAL
 // OFFSET: 0x006AC0E0/0x14035BEE0
 ClientMoveSetTurnRate::ClientMoveSetTurnRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 339b9420 IDENTICAL/NONE
+// PROVEN: 339b9420 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A10F0/0x14034E320
 ClientMoveSetTurnRate::~ClientMoveSetTurnRate() {
 }
 
-// PROVEN: 352c18f5 IDENTICAL/NONE
+// PROVEN: 352c18f5 IDENTICAL/DIFFERENT
 // OFFSET: 0x006AA640/0x140359D00
 void ClientMoveSetTurnRate::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -4024,14 +4089,14 @@ void ClientMoveSetTurnRate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: fc687abb IDENTICAL/NONE
-// OFFSET: 0x006C9930
+// PROVEN: fc687abb IDENTICAL/UNPROVEN
+// OFFSET: 0x006C9930/0x140381370
 bool ClientMoveSetTurnRate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: e94ff991 IDENTICAL/NONE
-// OFFSET: 0x006C5130
+// PROVEN: e94ff991 IDENTICAL/DIFFERENT
+// OFFSET: 0x006C5130/0x14037AE70
 bool ClientMoveSetTurnRate::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -4104,16 +4169,19 @@ bool ClientMoveSetTurnRate::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_rate);
 }
 
+// PROVEN: cb89a52f IDENTICAL/UNPROVEN
 // OFFSET: 0x006B2E50/0x140364740
 bool ClientMoveSetTurnRate::Handle() {
-    if (!ClientMoveSetTurnRate::s_handler) {
-        return false;
+    if (ClientMoveSetTurnRate::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD9EC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD9EC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetTurnRate*)>(reinterpret_cast<uintptr_t>(ClientMoveSetTurnRate::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveSetTurnRate::s_handler(this);
+    return false;
 }
 
-// PROVEN: 7462773e IDENTICAL/NONE
+// PROVEN: 7462773e IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1E80/0x14034F2F0
 ClientMoveSetVehicleRecId::ClientMoveSetVehicleRecId(WOWGUID guid, uint32_t ackIndex, uint32_t vehicleRecId) {
     this->m_guid = guid;
@@ -4121,18 +4189,18 @@ ClientMoveSetVehicleRecId::ClientMoveSetVehicleRecId(WOWGUID guid, uint32_t ackI
     this->m_vehicleRecId = vehicleRecId;
 }
 
-// PROVEN: 62b3150b IDENTICAL/NONE
+// PROVEN: 62b3150b IDENTICAL/IDENTICAL
 // OFFSET: 0x006B7D00/0x14036AC70
 ClientMoveSetVehicleRecId::ClientMoveSetVehicleRecId(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 30d9a879 IDENTICAL/NONE
+// PROVEN: 30d9a879 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1110/0x14034E340
 ClientMoveSetVehicleRecId::~ClientMoveSetVehicleRecId() {
 }
 
-// PROVEN: 1d5a817d IDENTICAL/NONE
+// PROVEN: 1d5a817d IDENTICAL/IDENTICAL
 // OFFSET: 0x006A34F0/0x140350D00
 void ClientMoveSetVehicleRecId::Unpack(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -4204,14 +4272,14 @@ void ClientMoveSetVehicleRecId::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 657e45ec IDENTICAL/NONE
-// OFFSET: 0x006C61A0
+// PROVEN: 657e45ec IDENTICAL/UNPROVEN
+// OFFSET: 0x006C61A0/0x14037C5D0
 bool ClientMoveSetVehicleRecId::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: ef1818f4 IDENTICAL/NONE
-// OFFSET: 0x006B74D0
+// PROVEN: ef1818f4 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B74D0/0x14036A2C0
 bool ClientMoveSetVehicleRecId::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
     {
@@ -4284,35 +4352,38 @@ bool ClientMoveSetVehicleRecId::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: c415bf0e IDENTICAL/UNPROVEN
 // OFFSET: 0x006ABE10/0x14035BAD0
 bool ClientMoveSetVehicleRecId::Handle() {
-    if (!ClientMoveSetVehicleRecId::s_handler) {
-        return false;
+    if (ClientMoveSetVehicleRecId::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF964.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF964.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetVehicleRecId*)>(reinterpret_cast<uintptr_t>(ClientMoveSetVehicleRecId::s_handler) - (right ^ left))(this);
     }
 
-    return ClientMoveSetVehicleRecId::s_handler(this);
+    return false;
 }
 
-// PROVEN: 8d56423c IDENTICAL/NONE
-// OFFSET: 0x006A2F00
+// PROVEN: 8d56423c IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2F00/0x140350420
 ClientMoveSetWalkSpeed::ClientMoveSetWalkSpeed(WOWGUID guid, uint32_t ackIndex, float speed) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
     this->m_speed = speed;
 }
 
-// PROVEN: c9830330 IDENTICAL/NONE
+// PROVEN: c9830330 IDENTICAL/IDENTICAL
 // OFFSET: 0x006AA530/0x140359BC0
 ClientMoveSetWalkSpeed::ClientMoveSetWalkSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: d56cecdc IDENTICAL/NONE
+// PROVEN: d56cecdc IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2A10/0x14034FF00
 ClientMoveSetWalkSpeed::~ClientMoveSetWalkSpeed() {
 }
 
-// PROVEN: 7ee3ea6a IDENTICAL/NONE
+// PROVEN: 7ee3ea6a IDENTICAL/DIFFERENT
 // OFFSET: 0x006A7720/0x140356260
 void ClientMoveSetWalkSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -4384,14 +4455,14 @@ void ClientMoveSetWalkSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 1f0ebf53 IDENTICAL/NONE
-// OFFSET: 0x006C0E60
+// PROVEN: 1f0ebf53 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C0E60/0x140376350
 bool ClientMoveSetWalkSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: f02af77e IDENTICAL/NONE
-// OFFSET: 0x006B7310
+// PROVEN: f02af77e IDENTICAL/DIFFERENT
+// OFFSET: 0x006B7310/0x14036A0A0
 bool ClientMoveSetWalkSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -4464,34 +4535,37 @@ bool ClientMoveSetWalkSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: fbbbbb7a IDENTICAL/UNPROVEN
 // OFFSET: 0x006BD9D0/0x140372390
 bool ClientMoveSetWalkSpeed::Handle() {
-    if (!ClientMoveSetWalkSpeed::s_handler) {
-        return false;
+    if (ClientMoveSetWalkSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF6D4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF6D4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetWalkSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveSetWalkSpeed::s_handler) - (right ^ left))(this);
     }
 
-    return ClientMoveSetWalkSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 2d20c8fe IDENTICAL/NONE
-// OFFSET: 0x006A1370
+// PROVEN: 2d20c8fe IDENTICAL/IDENTICAL
+// OFFSET: 0x006A1370/0x14034E660
 ClientMoveSetWaterWalk::ClientMoveSetWaterWalk(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 6468136f IDENTICAL/NONE
+// PROVEN: 6468136f IDENTICAL/IDENTICAL
 // OFFSET: 0x006BBFA0/0x1403701C0
 ClientMoveSetWaterWalk::ClientMoveSetWaterWalk(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: fed7fe41 IDENTICAL/NONE
+// PROVEN: fed7fe41 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A14F0/0x14034E7C0
 ClientMoveSetWaterWalk::~ClientMoveSetWaterWalk() {
 }
 
-// PROVEN: 2e7f5ad9 IDENTICAL/NONE
+// PROVEN: 2e7f5ad9 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B6860/0x1403692F0
 void ClientMoveSetWaterWalk::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -4558,14 +4632,14 @@ void ClientMoveSetWaterWalk::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: b0255e79 IDENTICAL/NONE
-// OFFSET: 0x006C9130
+// PROVEN: b0255e79 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C9130/0x140380730
 bool ClientMoveSetWaterWalk::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 197b37da IDENTICAL/NONE
-// OFFSET: 0x006B4360
+// PROVEN: 197b37da IDENTICAL/IDENTICAL
+// OFFSET: 0x006B4360/0x140366220
 bool ClientMoveSetWaterWalk::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -4633,27 +4707,30 @@ bool ClientMoveSetWaterWalk::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: f3f427ec IDENTICAL/UNPROVEN
 // OFFSET: 0x006AA080/0x140359660
 bool ClientMoveSetWaterWalk::Handle() {
-    if (!ClientMoveSetWaterWalk::s_handler) {
-        return false;
+    if (ClientMoveSetWaterWalk::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD320.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD320.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetWaterWalk*)>(reinterpret_cast<uintptr_t>(ClientMoveSetWaterWalk::s_handler) - (right ^ left))(this);
     }
 
-    return ClientMoveSetWaterWalk::s_handler(this);
+    return false;
 }
 
-// PROVEN: 85cfaf5f IDENTICAL/NONE
+// PROVEN: 85cfaf5f IDENTICAL/IDENTICAL
 // OFFSET: 0x006AC7E0/0x14035C670
 ClientMoveSkipTime::ClientMoveSkipTime(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 96060234 IDENTICAL/NONE
+// PROVEN: 96060234 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1DA0/0x14034F220
 ClientMoveSkipTime::~ClientMoveSkipTime() {
 }
 
-// PROVEN: e13494af IDENTICAL/NONE
+// PROVEN: e13494af IDENTICAL/DIFFERENT
 // OFFSET: 0x006A4440/0x140351E60
 void ClientMoveSkipTime::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -4720,14 +4797,14 @@ void ClientMoveSkipTime::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 63363caa IDENTICAL/NONE
-// OFFSET: 0x006D95F0
+// PROVEN: 63363caa IDENTICAL/UNPROVEN
+// OFFSET: 0x006D95F0/0x140397A30
 bool ClientMoveSkipTime::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: edb7f816 IDENTICAL/NONE
-// OFFSET: 0x006CEEE0
+// PROVEN: edb7f816 IDENTICAL/IDENTICAL
+// OFFSET: 0x006CEEE0/0x140389020
 bool ClientMoveSkipTime::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -4795,16 +4872,19 @@ bool ClientMoveSkipTime::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: c4b1938d IDENTICAL/UNPROVEN
 // OFFSET: 0x006A7250/0x140355C70
 bool ClientMoveSkipTime::Handle() {
-    if (!ClientMoveSkipTime::s_handler) {
-        return false;
+    if (ClientMoveSkipTime::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF6A4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF6A4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSkipTime*)>(reinterpret_cast<uintptr_t>(ClientMoveSkipTime::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientMoveSkipTime::s_handler(this);
+    return false;
 }
 
-// PROVEN: 76553b1c IDENTICAL/NONE
+// PROVEN: 76553b1c IDENTICAL/DIFFERENT
 // OFFSET: 0x006C6110/0x14037C530
 ClientMoveTeleport::ClientMoveTeleport(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasTransport = false;
@@ -4812,11 +4892,12 @@ ClientMoveTeleport::ClientMoveTeleport(NetClient* netClient, WowConnection* conn
     this->Unpack(msg, true);
 }
 
-// PROVEN: 21fcefc8 IDENTICAL/NONE
+// PROVEN: 21fcefc8 IDENTICAL/IDENTICAL
 // OFFSET: 0x006CCA20/0x140385B70
 ClientMoveTeleport::~ClientMoveTeleport() {
 }
 
+// PROVEN: 98cc8f21 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B22B0/0x140363890
 void ClientMoveTeleport::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -4979,13 +5060,14 @@ void ClientMoveTeleport::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 159579e8 IDENTICAL/NONE
-// OFFSET: 0x006D64C0
+// PROVEN: 159579e8 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D64C0/0x140393A00
 bool ClientMoveTeleport::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006D3870
+// PROVEN: a24ffb00 IDENTICAL/DIFFERENT
+// OFFSET: 0x006D3870/0x14038FC40
 bool ClientMoveTeleport::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_transportGuid);
@@ -5149,39 +5231,42 @@ bool ClientMoveTeleport::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
-// OFFSET: 0x006BCC80
+// OFFSET: 0x006BCC80/0x140371260
 bool ClientMoveTeleport::IsValid() const {
     return this->m_facing >= 0.0f && this->m_facing < 6.2831864f && _finite(this->m_facing) && _finite(this->m_position.z) && _finite(this->m_position.y) && IsFinite(this->m_position.x);
 }
 
+// PROVEN: 288c63d7 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AC120/0x14035BF20
 bool ClientMoveTeleport::Handle() {
-    if (!ClientMoveTeleport::s_handler) {
-        return false;
+    if (ClientMoveTeleport::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEB28.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEB28.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveTeleport*)>(reinterpret_cast<uintptr_t>(ClientMoveTeleport::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveTeleport::s_handler(this);
+    return false;
 }
 
-// PROVEN: e1a44e1c IDENTICAL/NONE
-// OFFSET: 0x006A1580
+// PROVEN: e1a44e1c IDENTICAL/IDENTICAL
+// OFFSET: 0x006A1580/0x14034E880
 ClientMoveUnroot::ClientMoveUnroot(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: dfd197c2 IDENTICAL/NONE
+// PROVEN: dfd197c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C5FB0/0x14037C3D0
 ClientMoveUnroot::ClientMoveUnroot(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 9a12c140 IDENTICAL/NONE
+// PROVEN: 9a12c140 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2800/0x14034FCC0
 ClientMoveUnroot::~ClientMoveUnroot() {
 }
 
-// PROVEN: 698067f4 IDENTICAL/NONE
+// PROVEN: 698067f4 IDENTICAL/DIFFERENT
 // OFFSET: 0x006BFBA0/0x140374D50
 void ClientMoveUnroot::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -5248,14 +5333,14 @@ void ClientMoveUnroot::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: fcee716f IDENTICAL/NONE
-// OFFSET: 0x006CB510
+// PROVEN: fcee716f IDENTICAL/UNPROVEN
+// OFFSET: 0x006CB510/0x140383B70
 bool ClientMoveUnroot::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 3d9b1b60 IDENTICAL/NONE
-// OFFSET: 0x006B45F0
+// PROVEN: 3d9b1b60 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B45F0/0x140366580
 bool ClientMoveUnroot::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -5323,34 +5408,37 @@ bool ClientMoveUnroot::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 1203c95d IDENTICAL/UNPROVEN
 // OFFSET: 0x006C1540/0x140376B80
 bool ClientMoveUnroot::Handle() {
-    if (!ClientMoveUnroot::s_handler) {
-        return false;
+    if (ClientMoveUnroot::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF538.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF538.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUnroot*)>(reinterpret_cast<uintptr_t>(ClientMoveUnroot::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientMoveUnroot::s_handler(this);
+    return false;
 }
 
-// PROVEN: 4623cb4c IDENTICAL/NONE
-// OFFSET: 0x006A16A0
+// PROVEN: 4623cb4c IDENTICAL/IDENTICAL
+// OFFSET: 0x006A16A0/0x14034E9F0
 ClientMoveUnsetCanFly::ClientMoveUnsetCanFly(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 6872bcda IDENTICAL/NONE
+// PROVEN: 6872bcda IDENTICAL/IDENTICAL
 // OFFSET: 0x006C4950/0x14037A8A0
 ClientMoveUnsetCanFly::ClientMoveUnsetCanFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 5f7ce380 IDENTICAL/NONE
+// PROVEN: 5f7ce380 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A23D0/0x14034F8E0
 ClientMoveUnsetCanFly::~ClientMoveUnsetCanFly() {
 }
 
-// PROVEN: d68112b0 IDENTICAL/NONE
+// PROVEN: d68112b0 IDENTICAL/DIFFERENT
 // OFFSET: 0x006BEB70/0x1403739D0
 void ClientMoveUnsetCanFly::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -5417,14 +5505,14 @@ void ClientMoveUnsetCanFly::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: abd7ce75 IDENTICAL/NONE
-// OFFSET: 0x006CA840
+// PROVEN: abd7ce75 IDENTICAL/UNPROVEN
+// OFFSET: 0x006CA840/0x140382910
 bool ClientMoveUnsetCanFly::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 2a8ecefa IDENTICAL/NONE
-// OFFSET: 0x006C8150
+// PROVEN: 2a8ecefa IDENTICAL/IDENTICAL
+// OFFSET: 0x006C8150/0x14037F0D0
 bool ClientMoveUnsetCanFly::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -5492,34 +5580,37 @@ bool ClientMoveUnsetCanFly::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 451bd6f2 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B1A20/0x140362D50
 bool ClientMoveUnsetCanFly::Handle() {
-    if (!ClientMoveUnsetCanFly::s_handler) {
-        return false;
+    if (ClientMoveUnsetCanFly::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE634.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE634.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUnsetCanFly*)>(reinterpret_cast<uintptr_t>(ClientMoveUnsetCanFly::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveUnsetCanFly::s_handler(this);
+    return false;
 }
 
-// PROVEN: 750dd881 IDENTICAL/NONE
-// OFFSET: 0x006A2BE0
+// PROVEN: 750dd881 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2BE0/0x140350110
 ClientMoveUnsetCanTransitionBetweenSwimAndFly::ClientMoveUnsetCanTransitionBetweenSwimAndFly(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 23a70d57 IDENTICAL/NONE
+// PROVEN: 23a70d57 IDENTICAL/IDENTICAL
 // OFFSET: 0x006CAB80/0x140382D00
 ClientMoveUnsetCanTransitionBetweenSwimAndFly::ClientMoveUnsetCanTransitionBetweenSwimAndFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 240e4cfb IDENTICAL/NONE
+// PROVEN: 240e4cfb IDENTICAL/IDENTICAL
 // OFFSET: 0x006A21B0/0x14034F6B0
 ClientMoveUnsetCanTransitionBetweenSwimAndFly::~ClientMoveUnsetCanTransitionBetweenSwimAndFly() {
 }
 
-// PROVEN: dce4dd1b IDENTICAL/NONE
+// PROVEN: dce4dd1b IDENTICAL/DIFFERENT
 // OFFSET: 0x006BE4A0/0x1403731C0
 void ClientMoveUnsetCanTransitionBetweenSwimAndFly::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -5586,14 +5677,14 @@ void ClientMoveUnsetCanTransitionBetweenSwimAndFly::Unpack(CDataStore* msg, bool
     }
 }
 
-// PROVEN: b067469c IDENTICAL/NONE
-// OFFSET: 0x006D72F0
+// PROVEN: b067469c IDENTICAL/UNPROVEN
+// OFFSET: 0x006D72F0/0x140394F70
 bool ClientMoveUnsetCanTransitionBetweenSwimAndFly::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: b6e6423d IDENTICAL/NONE
-// OFFSET: 0x006C5330
+// PROVEN: b6e6423d IDENTICAL/IDENTICAL
+// OFFSET: 0x006C5330/0x14037B080
 bool ClientMoveUnsetCanTransitionBetweenSwimAndFly::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -5661,34 +5752,37 @@ bool ClientMoveUnsetCanTransitionBetweenSwimAndFly::Read(CDataStore* msg, bool f
     return msg->IsRead() != 0;
 }
 
+// PROVEN: d8ab744b IDENTICAL/UNPROVEN
 // OFFSET: 0x006A5C40/0x140353C00
 bool ClientMoveUnsetCanTransitionBetweenSwimAndFly::Handle() {
-    if (!ClientMoveUnsetCanTransitionBetweenSwimAndFly::s_handler) {
-        return false;
+    if (ClientMoveUnsetCanTransitionBetweenSwimAndFly::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD3E0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD3E0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUnsetCanTransitionBetweenSwimAndFly*)>(reinterpret_cast<uintptr_t>(ClientMoveUnsetCanTransitionBetweenSwimAndFly::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUnsetCanTransitionBetweenSwimAndFly::s_handler(this);
+    return false;
 }
 
-// PROVEN: a832d2be IDENTICAL/NONE
-// OFFSET: 0x006A2A60
+// PROVEN: a832d2be IDENTICAL/IDENTICAL
+// OFFSET: 0x006A2A60/0x14034FF50
 ClientMoveUnsetHover::ClientMoveUnsetHover(WOWGUID guid, uint32_t ackIndex) {
     this->m_guid = guid;
     this->m_ackIndex = ackIndex;
 }
 
-// PROVEN: 1733a632 IDENTICAL/NONE
+// PROVEN: 1733a632 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BCC40/0x140371220
 ClientMoveUnsetHover::ClientMoveUnsetHover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 66456d9d IDENTICAL/NONE
+// PROVEN: 66456d9d IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0DD0/0x14034DE70
 ClientMoveUnsetHover::~ClientMoveUnsetHover() {
 }
 
-// PROVEN: a760bdfb IDENTICAL/NONE
+// PROVEN: a760bdfb IDENTICAL/IDENTICAL
 // OFFSET: 0x006A5690/0x1403534B0
 void ClientMoveUnsetHover::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -5756,14 +5850,14 @@ void ClientMoveUnsetHover::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 2e207e16 IDENTICAL/NONE
-// OFFSET: 0x006C9A00
+// PROVEN: 2e207e16 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C9A00/0x140381450
 bool ClientMoveUnsetHover::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 4162dc96 IDENTICAL/NONE
-// OFFSET: 0x006BB820
+// PROVEN: 4162dc96 IDENTICAL/IDENTICAL
+// OFFSET: 0x006BB820/0x14036F800
 bool ClientMoveUnsetHover::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -5832,22 +5926,25 @@ bool ClientMoveUnsetHover::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 2dcece11 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AB850/0x14035B480
 bool ClientMoveUnsetHover::Handle() {
-    if (!ClientMoveUnsetHover::s_handler) {
-        return false;
+    if (ClientMoveUnsetHover::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD3BC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD3BC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUnsetHover*)>(reinterpret_cast<uintptr_t>(ClientMoveUnsetHover::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUnsetHover::s_handler(this);
+    return false;
 }
 
-// PROVEN: 142eadda IDENTICAL/NONE
+// PROVEN: 142eadda IDENTICAL/IDENTICAL
 // OFFSET: 0x006D4540/0x140390F20
 ClientMoveUpdate::ClientMoveUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: dd173323 IDENTICAL/NONE
+// PROVEN: dd173323 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1F30/0x14034F3C0
 ClientMoveUpdate::~ClientMoveUpdate() {
 }
@@ -6112,13 +6209,13 @@ void ClientMoveUpdate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 89d467ad IDENTICAL/NONE
-// OFFSET: 0x006CEED0
+// PROVEN: 89d467ad IDENTICAL/UNPROVEN
+// OFFSET: 0x006CEED0/0x140389010
 bool ClientMoveUpdate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006C6FD0
+// OFFSET: 0x006C6FD0/0x14037DA20
 bool ClientMoveUpdate::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
@@ -6380,22 +6477,25 @@ bool ClientMoveUpdate::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->m_status.IsValid();
 }
 
+// PROVEN: 8e3778d2 IDENTICAL/UNPROVEN
 // OFFSET: 0x006ABA40/0x14035B710
 bool ClientMoveUpdate::Handle() {
-    if (!ClientMoveUpdate::s_handler) {
-        return false;
+    if (ClientMoveUpdate::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE6E8.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE6E8.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdate*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdate::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUpdate::s_handler(this);
+    return false;
 }
 
-// PROVEN: 14e401e5 IDENTICAL/NONE
+// PROVEN: 14e401e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x006DA970/0x1403990B0
 ClientMoveUpdateCollisionHeight::ClientMoveUpdateCollisionHeight(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 02bb83d0 IDENTICAL/NONE
+// PROVEN: 02bb83d0 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A2EC0/0x1403503C0
 ClientMoveUpdateCollisionHeight::~ClientMoveUpdateCollisionHeight() {
 }
@@ -6665,13 +6765,13 @@ void ClientMoveUpdateCollisionHeight::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 5175528c IDENTICAL/NONE
-// OFFSET: 0x006CA8B0
+// PROVEN: 5175528c IDENTICAL/UNPROVEN
+// OFFSET: 0x006CA8B0/0x140382980
 bool ClientMoveUpdateCollisionHeight::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006C35A0
+// OFFSET: 0x006C35A0/0x140379070
 bool ClientMoveUpdateCollisionHeight::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_status.m_transport.m_guid);
@@ -6938,22 +7038,25 @@ bool ClientMoveUpdateCollisionHeight::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_height) && this->m_status.IsValid();
 }
 
+// PROVEN: 8fdc7d1f IDENTICAL/UNPROVEN
 // OFFSET: 0x006BED60/0x140373C70
 bool ClientMoveUpdateCollisionHeight::Handle() {
-    if (!ClientMoveUpdateCollisionHeight::s_handler) {
-        return false;
+    if (ClientMoveUpdateCollisionHeight::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFFBFC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFFBFC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateCollisionHeight*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateCollisionHeight::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUpdateCollisionHeight::s_handler(this);
+    return false;
 }
 
-// PROVEN: 8e8d61e2 IDENTICAL/NONE
+// PROVEN: 8e8d61e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D4FD0/0x140391E10
 ClientMoveUpdateFlightBackSpeed::ClientMoveUpdateFlightBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 1157518d IDENTICAL/NONE
+// PROVEN: 1157518d IDENTICAL/UNPROVEN
 // OFFSET: 0x006A19D0/0x14034EE00
 ClientMoveUpdateFlightBackSpeed::~ClientMoveUpdateFlightBackSpeed() {
 }
@@ -7221,13 +7324,13 @@ void ClientMoveUpdateFlightBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: acdf1f57 IDENTICAL/NONE
-// OFFSET: 0x006DAEF0
+// PROVEN: acdf1f57 IDENTICAL/UNPROVEN
+// OFFSET: 0x006DAEF0/0x1403996E0
 bool ClientMoveUpdateFlightBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006D5010
+// OFFSET: 0x006D5010/0x140391E60
 bool ClientMoveUpdateFlightBackSpeed::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_status.m_transport.m_guid);
@@ -7492,22 +7595,25 @@ bool ClientMoveUpdateFlightBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed) && this->m_status.IsValid();
 }
 
+// PROVEN: 0da129b8 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A76E0/0x140356200
 bool ClientMoveUpdateFlightBackSpeed::Handle() {
-    if (!ClientMoveUpdateFlightBackSpeed::s_handler) {
-        return false;
+    if (ClientMoveUpdateFlightBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE6D0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE6D0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateFlightBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateFlightBackSpeed::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveUpdateFlightBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: e725f957 IDENTICAL/NONE
+// PROVEN: e725f957 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D8670/0x140396770
 ClientMoveUpdateFlightSpeed::ClientMoveUpdateFlightSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 1ebbbcdf IDENTICAL/NONE
+// PROVEN: 1ebbbcdf IDENTICAL/UNPROVEN
 // OFFSET: 0x006A2520/0x14034FA40
 ClientMoveUpdateFlightSpeed::~ClientMoveUpdateFlightSpeed() {
 }
@@ -7777,13 +7883,13 @@ void ClientMoveUpdateFlightSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 92efb285 IDENTICAL/NONE
-// OFFSET: 0x006CA8A0
+// PROVEN: 92efb285 IDENTICAL/UNPROVEN
+// OFFSET: 0x006CA8A0/0x140382970
 bool ClientMoveUpdateFlightSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006C9B40
+// OFFSET: 0x006C9B40/0x1403815E0
 bool ClientMoveUpdateFlightSpeed::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_status.m_transport.m_guid);
@@ -8050,22 +8156,25 @@ bool ClientMoveUpdateFlightSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed) && this->m_status.IsValid();
 }
 
+// PROVEN: 45dd11e4 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B8950/0x14036BC10
 bool ClientMoveUpdateFlightSpeed::Handle() {
-    if (!ClientMoveUpdateFlightSpeed::s_handler) {
-        return false;
+    if (ClientMoveUpdateFlightSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF164.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF164.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateFlightSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateFlightSpeed::s_handler) - (right ^ left))(this);
     }
 
-    return ClientMoveUpdateFlightSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: d9eb91d8 IDENTICAL/NONE
+// PROVEN: d9eb91d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D9280/0x140397690
 ClientMoveUpdateKnockBack::ClientMoveUpdateKnockBack(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 49046eeb IDENTICAL/NONE
+// PROVEN: 49046eeb IDENTICAL/UNPROVEN
 // OFFSET: 0x006A2DE0/0x140350340
 ClientMoveUpdateKnockBack::~ClientMoveUpdateKnockBack() {
 }
@@ -8329,13 +8438,13 @@ void ClientMoveUpdateKnockBack::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: df179b92 IDENTICAL/NONE
-// OFFSET: 0x006D1FF0
+// PROVEN: df179b92 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D1FF0/0x14038D620
 bool ClientMoveUpdateKnockBack::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006CD700
+// OFFSET: 0x006CD700/0x140386B30
 bool ClientMoveUpdateKnockBack::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
@@ -8596,22 +8705,25 @@ bool ClientMoveUpdateKnockBack::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->m_status.m_hasFall && this->m_status.m_fall.m_hasDirection && this->m_status.IsValid();
 }
 
+// PROVEN: 4bc3cce2 IDENTICAL/UNPROVEN
 // OFFSET: 0x006BECD0/0x140373BA0
 bool ClientMoveUpdateKnockBack::Handle() {
-    if (!ClientMoveUpdateKnockBack::s_handler) {
-        return false;
+    if (ClientMoveUpdateKnockBack::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD3AC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD3AC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateKnockBack*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateKnockBack::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveUpdateKnockBack::s_handler(this);
+    return false;
 }
 
-// PROVEN: 8313458e IDENTICAL/NONE
+// PROVEN: 8313458e IDENTICAL/IDENTICAL
 // OFFSET: 0x006CB470/0x140383A60
 ClientMoveUpdatePitchRate::ClientMoveUpdatePitchRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: a1f2bed7 IDENTICAL/NONE
+// PROVEN: a1f2bed7 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A30C0/0x1403507E0
 ClientMoveUpdatePitchRate::~ClientMoveUpdatePitchRate() {
 }
@@ -8881,13 +8993,13 @@ void ClientMoveUpdatePitchRate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 2121f2b1 IDENTICAL/NONE
-// OFFSET: 0x006D4FC0
+// PROVEN: 2121f2b1 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D4FC0/0x140391E00
 bool ClientMoveUpdatePitchRate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006CC150
+// OFFSET: 0x006CC150/0x140384D80
 bool ClientMoveUpdatePitchRate::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_status.m_transport.m_guid);
@@ -9154,22 +9266,25 @@ bool ClientMoveUpdatePitchRate::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_rate) && this->m_status.IsValid();
 }
 
+// PROVEN: 633fa99b IDENTICAL/UNPROVEN
 // OFFSET: 0x006B6410/0x140368BA0
 bool ClientMoveUpdatePitchRate::Handle() {
-    if (!ClientMoveUpdatePitchRate::s_handler) {
-        return false;
+    if (ClientMoveUpdatePitchRate::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF3B4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF3B4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdatePitchRate*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdatePitchRate::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUpdatePitchRate::s_handler(this);
+    return false;
 }
 
-// PROVEN: 31a9754c IDENTICAL/NONE
+// PROVEN: 31a9754c IDENTICAL/IDENTICAL
 // OFFSET: 0x006D9700/0x140397B80
 ClientMoveUpdateRunBackSpeed::ClientMoveUpdateRunBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 3c9118d8 IDENTICAL/NONE
+// PROVEN: 3c9118d8 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A15B0/0x14034E8A0
 ClientMoveUpdateRunBackSpeed::~ClientMoveUpdateRunBackSpeed() {
 }
@@ -9440,13 +9555,13 @@ void ClientMoveUpdateRunBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 56b9abd6 IDENTICAL/NONE
-// OFFSET: 0x006D92F0
+// PROVEN: 56b9abd6 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D92F0/0x1403976E0
 bool ClientMoveUpdateRunBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006D46D0
+// OFFSET: 0x006D46D0/0x140391130
 bool ClientMoveUpdateRunBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
@@ -9714,22 +9829,25 @@ bool ClientMoveUpdateRunBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed) && this->m_status.IsValid();
 }
 
+// PROVEN: 261408c9 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AA000/0x1403595A0
 bool ClientMoveUpdateRunBackSpeed::Handle() {
-    if (!ClientMoveUpdateRunBackSpeed::s_handler) {
-        return false;
+    if (ClientMoveUpdateRunBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE800.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE800.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateRunBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateRunBackSpeed::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUpdateRunBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 1823e0e4 IDENTICAL/NONE
+// PROVEN: 1823e0e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D72B0/0x140394F20
 ClientMoveUpdateRunSpeed::ClientMoveUpdateRunSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 90cc337b IDENTICAL/NONE
+// PROVEN: 90cc337b IDENTICAL/UNPROVEN
 // OFFSET: 0x006A22D0/0x14034F7A0
 ClientMoveUpdateRunSpeed::~ClientMoveUpdateRunSpeed() {
 }
@@ -9999,13 +10117,13 @@ void ClientMoveUpdateRunSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: f605d254 IDENTICAL/NONE
-// OFFSET: 0x006D8D50
+// PROVEN: f605d254 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D8D50/0x140397150
 bool ClientMoveUpdateRunSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006D5C20
+// OFFSET: 0x006D5C20/0x140392FB0
 bool ClientMoveUpdateRunSpeed::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_status.m_transport.m_guid);
@@ -10272,22 +10390,25 @@ bool ClientMoveUpdateRunSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed) && this->m_status.IsValid();
 }
 
+// PROVEN: 9d29ebfb IDENTICAL/UNPROVEN
 // OFFSET: 0x006AC050/0x14035BE40
 bool ClientMoveUpdateRunSpeed::Handle() {
-    if (!ClientMoveUpdateRunSpeed::s_handler) {
-        return false;
+    if (ClientMoveUpdateRunSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD3D4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD3D4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateRunSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateRunSpeed::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientMoveUpdateRunSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 469341d5 IDENTICAL/NONE
+// PROVEN: 469341d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D4580/0x140390F70
 ClientMoveUpdateSwimBackSpeed::ClientMoveUpdateSwimBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 8a6c429f IDENTICAL/NONE
+// PROVEN: 8a6c429f IDENTICAL/UNPROVEN
 // OFFSET: 0x006A10A0/0x14034E2E0
 ClientMoveUpdateSwimBackSpeed::~ClientMoveUpdateSwimBackSpeed() {
 }
@@ -10557,13 +10678,13 @@ void ClientMoveUpdateSwimBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 6121481c IDENTICAL/NONE
-// OFFSET: 0x006D9340
+// PROVEN: 6121481c IDENTICAL/UNPROVEN
+// OFFSET: 0x006D9340/0x140397740
 bool ClientMoveUpdateSwimBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006CE690
+// OFFSET: 0x006CE690/0x140388350
 bool ClientMoveUpdateSwimBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
@@ -10830,22 +10951,25 @@ bool ClientMoveUpdateSwimBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed) && this->m_status.IsValid();
 }
 
+// PROVEN: ea503908 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B2E90/0x1403647A0
 bool ClientMoveUpdateSwimBackSpeed::Handle() {
-    if (!ClientMoveUpdateSwimBackSpeed::s_handler) {
-        return false;
+    if (ClientMoveUpdateSwimBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFCF68.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFCF68.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateSwimBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateSwimBackSpeed::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUpdateSwimBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 4f7545f6 IDENTICAL/NONE
+// PROVEN: 4f7545f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D64D0/0x140393A10
 ClientMoveUpdateSwimSpeed::ClientMoveUpdateSwimSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 5a22da8c IDENTICAL/NONE
+// PROVEN: 5a22da8c IDENTICAL/UNPROVEN
 // OFFSET: 0x006A2260/0x14034F750
 ClientMoveUpdateSwimSpeed::~ClientMoveUpdateSwimSpeed() {
 }
@@ -11114,13 +11238,13 @@ void ClientMoveUpdateSwimSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: a22945c6 IDENTICAL/NONE
-// OFFSET: 0x006D96F0
+// PROVEN: a22945c6 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D96F0/0x140397B70
 bool ClientMoveUpdateSwimSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006CF350
+// OFFSET: 0x006CF350/0x1403892F0
 bool ClientMoveUpdateSwimSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
@@ -11386,22 +11510,25 @@ bool ClientMoveUpdateSwimSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed) && this->m_status.IsValid();
 }
 
+// PROVEN: 64125e8c IDENTICAL/UNPROVEN
 // OFFSET: 0x006A5AD0/0x140353A30
 bool ClientMoveUpdateSwimSpeed::Handle() {
-    if (!ClientMoveUpdateSwimSpeed::s_handler) {
-        return false;
+    if (ClientMoveUpdateSwimSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFFC74.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFFC74.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateSwimSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateSwimSpeed::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientMoveUpdateSwimSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 231d119f IDENTICAL/NONE
+// PROVEN: 231d119f IDENTICAL/IDENTICAL
 // OFFSET: 0x006D9110/0x1403975E0
 ClientMoveUpdateTeleport::ClientMoveUpdateTeleport(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 543cae81 IDENTICAL/NONE
+// PROVEN: 543cae81 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A2EF0/0x140350400
 ClientMoveUpdateTeleport::~ClientMoveUpdateTeleport() {
 }
@@ -11666,13 +11793,13 @@ void ClientMoveUpdateTeleport::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 90089e2b IDENTICAL/NONE
-// OFFSET: 0x006D7780
+// PROVEN: 90089e2b IDENTICAL/UNPROVEN
+// OFFSET: 0x006D7780/0x140395430
 bool ClientMoveUpdateTeleport::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006C9140
+// OFFSET: 0x006C9140/0x140380740
 bool ClientMoveUpdateTeleport::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_status.m_transport.m_guid);
@@ -11934,22 +12061,25 @@ bool ClientMoveUpdateTeleport::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->m_status.IsValid();
 }
 
+// PROVEN: 5b12440e IDENTICAL/UNPROVEN
 // OFFSET: 0x006BC810/0x140370CD0
 bool ClientMoveUpdateTeleport::Handle() {
-    if (!ClientMoveUpdateTeleport::s_handler) {
-        return false;
+    if (ClientMoveUpdateTeleport::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD57C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD57C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateTeleport*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateTeleport::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUpdateTeleport::s_handler(this);
+    return false;
 }
 
-// PROVEN: 5990ff89 IDENTICAL/NONE
+// PROVEN: 5990ff89 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D90D0/0x140397590
 ClientMoveUpdateTurnRate::ClientMoveUpdateTurnRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: f43c63fd IDENTICAL/NONE
+// PROVEN: f43c63fd IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1970/0x14034ED10
 ClientMoveUpdateTurnRate::~ClientMoveUpdateTurnRate() {
 }
@@ -12218,13 +12348,13 @@ void ClientMoveUpdateTurnRate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: f3a52abe IDENTICAL/NONE
-// OFFSET: 0x006D46B0
+// PROVEN: f3a52abe IDENTICAL/UNPROVEN
+// OFFSET: 0x006D46B0/0x140391110
 bool ClientMoveUpdateTurnRate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006D2000
+// OFFSET: 0x006D2000/0x14038D630
 bool ClientMoveUpdateTurnRate::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&this->m_status.m_transport.m_guid);
@@ -12490,22 +12620,25 @@ bool ClientMoveUpdateTurnRate::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_rate) && this->m_status.IsValid();
 }
 
+// PROVEN: 78d59a45 IDENTICAL/UNPROVEN
 // OFFSET: 0x006C09B0/0x140375D80
 bool ClientMoveUpdateTurnRate::Handle() {
-    if (!ClientMoveUpdateTurnRate::s_handler) {
-        return false;
+    if (ClientMoveUpdateTurnRate::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD3E0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD3E0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateTurnRate*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateTurnRate::s_handler) - (left - right))(this);
     }
 
-    return ClientMoveUpdateTurnRate::s_handler(this);
+    return false;
 }
 
-// PROVEN: b881f9d0 IDENTICAL/NONE
+// PROVEN: b881f9d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x006DACF0/0x1403994F0
 ClientMoveUpdateWalkSpeed::ClientMoveUpdateWalkSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 9e5d4024 IDENTICAL/NONE
+// PROVEN: 9e5d4024 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1F20/0x14034F3A0
 ClientMoveUpdateWalkSpeed::~ClientMoveUpdateWalkSpeed() {
 }
@@ -12775,13 +12908,13 @@ void ClientMoveUpdateWalkSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: af938b5f IDENTICAL/NONE
-// OFFSET: 0x006D3060
+// PROVEN: af938b5f IDENTICAL/UNPROVEN
+// OFFSET: 0x006D3060/0x14038EF90
 bool ClientMoveUpdateWalkSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006CDEB0
+// OFFSET: 0x006CDEB0/0x1403876C0
 bool ClientMoveUpdateWalkSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_status.m_guid);
@@ -13048,26 +13181,30 @@ bool ClientMoveUpdateWalkSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed) && this->m_status.IsValid();
 }
 
+// PROVEN: 88841251 IDENTICAL/UNPROVEN
 // OFFSET: 0x006BCD10/0x1403712E0
 bool ClientMoveUpdateWalkSpeed::Handle() {
-    if (!ClientMoveUpdateWalkSpeed::s_handler) {
-        return false;
+    if (ClientMoveUpdateWalkSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE9B8.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE9B8.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveUpdateWalkSpeed*)>(reinterpret_cast<uintptr_t>(ClientMoveUpdateWalkSpeed::s_handler) - (right + left))(this);
     }
 
-    return ClientMoveUpdateWalkSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 891d7d49 IDENTICAL/NONE
+// PROVEN: 891d7d49 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B12A0/0x1403623B0
 ClientPlaySpellVisual::ClientPlaySpellVisual(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 9ed6cc67 IDENTICAL/NONE
+// PROVEN: 9ed6cc67 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1E20/0x14034F290
 ClientPlaySpellVisual::~ClientPlaySpellVisual() {
 }
 
+// PROVEN: e55159e6 DIFFERENT/IDENTICAL
 // OFFSET: 0x006A5F00/0x140354010
 void ClientPlaySpellVisual::Unpack(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -13222,13 +13359,14 @@ void ClientPlaySpellVisual::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: ee100563 IDENTICAL/NONE
-// OFFSET: 0x006B1690
+// PROVEN: ee100563 IDENTICAL/UNPROVEN
+// OFFSET: 0x006B1690/0x1403628C0
 bool ClientPlaySpellVisual::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006A9470
+// PROVEN: 1abee5af DIFFERENT/IDENTICAL
+// OFFSET: 0x006A9470/0x1403586C0
 bool ClientPlaySpellVisual::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
     uint8_t* targetGuid = reinterpret_cast<uint8_t*>(&this->m_targetGuid);
@@ -13384,27 +13522,30 @@ bool ClientPlaySpellVisual::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 3eeda410 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A9040/0x1403580F0
 bool ClientPlaySpellVisual::Handle() {
-    if (!ClientPlaySpellVisual::s_handler) {
-        return false;
+    if (ClientPlaySpellVisual::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF728.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF728.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientPlaySpellVisual*)>(reinterpret_cast<uintptr_t>(ClientPlaySpellVisual::s_handler) - (left - right))(this);
     }
 
-    return ClientPlaySpellVisual::s_handler(this);
+    return false;
 }
 
-// PROVEN: 00e37547 IDENTICAL/NONE
+// PROVEN: 00e37547 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BADE0/0x14036EA80
 ClientSetPlayHoverAnim::ClientSetPlayHoverAnim(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 21c339e1 IDENTICAL/NONE
+// PROVEN: 21c339e1 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2D70/0x1403502D0
 ClientSetPlayHoverAnim::~ClientSetPlayHoverAnim() {
 }
 
-// PROVEN: cbac5179 IDENTICAL/NONE
+// PROVEN: cbac5179 IDENTICAL/IDENTICAL
 // OFFSET: 0x006AAA40/0x14035A210
 void ClientSetPlayHoverAnim::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -13467,14 +13608,14 @@ void ClientSetPlayHoverAnim::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 3aac09d2 IDENTICAL/NONE
-// OFFSET: 0x006ACE60
+// PROVEN: 3aac09d2 IDENTICAL/UNPROVEN
+// OFFSET: 0x006ACE60/0x14035CEE0
 bool ClientSetPlayHoverAnim::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 2693fc07 IDENTICAL/NONE
-// OFFSET: 0x006A86A0
+// PROVEN: 2693fc07 IDENTICAL/IDENTICAL
+// OFFSET: 0x006A86A0/0x1403574C0
 bool ClientSetPlayHoverAnim::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -13538,27 +13679,30 @@ bool ClientSetPlayHoverAnim::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 29d303c0 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B45A0/0x140366520
 bool ClientSetPlayHoverAnim::Handle() {
-    if (!ClientSetPlayHoverAnim::s_handler) {
-        return false;
+    if (ClientSetPlayHoverAnim::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE008.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE008.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSetPlayHoverAnim*)>(reinterpret_cast<uintptr_t>(ClientSetPlayHoverAnim::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientSetPlayHoverAnim::s_handler(this);
+    return false;
 }
 
-// PROVEN: df10bd3f IDENTICAL/NONE
+// PROVEN: df10bd3f IDENTICAL/IDENTICAL
 // OFFSET: 0x006C6070/0x14037C490
 ClientSplineMoveCollisionDisable::ClientSplineMoveCollisionDisable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 92d9a16f IDENTICAL/NONE
+// PROVEN: 92d9a16f IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2270/0x14034F770
 ClientSplineMoveCollisionDisable::~ClientSplineMoveCollisionDisable() {
 }
 
-// PROVEN: f6b924d5 IDENTICAL/NONE
+// PROVEN: f6b924d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BC430/0x1403707D0
 void ClientSplineMoveCollisionDisable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -13620,14 +13764,14 @@ void ClientSplineMoveCollisionDisable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 69b75a97 IDENTICAL/NONE
-// OFFSET: 0x006C78C0
+// PROVEN: 69b75a97 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C78C0/0x14037E6F0
 bool ClientSplineMoveCollisionDisable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: e93d9869 IDENTICAL/NONE
-// OFFSET: 0x006B6B10
+// PROVEN: e93d9869 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B6B10/0x140369670
 bool ClientSplineMoveCollisionDisable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -13690,27 +13834,30 @@ bool ClientSplineMoveCollisionDisable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: b2069e12 IDENTICAL/UNPROVEN
 // OFFSET: 0x006C1500/0x140376B20
 bool ClientSplineMoveCollisionDisable::Handle() {
-    if (!ClientSplineMoveCollisionDisable::s_handler) {
-        return false;
+    if (ClientSplineMoveCollisionDisable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE8F4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE8F4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveCollisionDisable*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveCollisionDisable::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveCollisionDisable::s_handler(this);
+    return false;
 }
 
-// PROVEN: 2f4563d4 IDENTICAL/NONE
+// PROVEN: 2f4563d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C1360/0x140376910
 ClientSplineMoveCollisionEnable::ClientSplineMoveCollisionEnable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: a0161cb2 IDENTICAL/NONE
+// PROVEN: a0161cb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2320/0x14034F850
 ClientSplineMoveCollisionEnable::~ClientSplineMoveCollisionEnable() {
 }
 
-// PROVEN: 0912e50e IDENTICAL/NONE
+// PROVEN: 0912e50e IDENTICAL/IDENTICAL
 // OFFSET: 0x006AA190/0x140359790
 void ClientSplineMoveCollisionEnable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -13772,14 +13919,14 @@ void ClientSplineMoveCollisionEnable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: c5fea94d IDENTICAL/NONE
-// OFFSET: 0x006C0A40
+// PROVEN: c5fea94d IDENTICAL/UNPROVEN
+// OFFSET: 0x006C0A40/0x140375E40
 bool ClientSplineMoveCollisionEnable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 9c0f91c0 IDENTICAL/NONE
-// OFFSET: 0x006AEC70
+// PROVEN: 9c0f91c0 IDENTICAL/IDENTICAL
+// OFFSET: 0x006AEC70/0x14035F4C0
 bool ClientSplineMoveCollisionEnable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -13842,27 +13989,30 @@ bool ClientSplineMoveCollisionEnable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: eec5858f IDENTICAL/UNPROVEN
 // OFFSET: 0x006C1730/0x140376DE0
 bool ClientSplineMoveCollisionEnable::Handle() {
-    if (!ClientSplineMoveCollisionEnable::s_handler) {
-        return false;
+    if (ClientSplineMoveCollisionEnable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEDA0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEDA0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveCollisionEnable*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveCollisionEnable::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientSplineMoveCollisionEnable::s_handler(this);
+    return false;
 }
 
-// PROVEN: 204ee9b4 IDENTICAL/NONE
+// PROVEN: 204ee9b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B5000/0x1403671E0
 ClientSplineMoveGravityDisable::ClientSplineMoveGravityDisable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 9557d82e IDENTICAL/NONE
+// PROVEN: 9557d82e IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2110/0x14034F560
 ClientSplineMoveGravityDisable::~ClientSplineMoveGravityDisable() {
 }
 
-// PROVEN: cb471656 IDENTICAL/NONE
+// PROVEN: cb471656 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B20E0/0x140363620
 void ClientSplineMoveGravityDisable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -13924,14 +14074,14 @@ void ClientSplineMoveGravityDisable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 15b5e0e8 IDENTICAL/NONE
-// OFFSET: 0x006BF4A0
+// PROVEN: 15b5e0e8 IDENTICAL/UNPROVEN
+// OFFSET: 0x006BF4A0/0x140374540
 bool ClientSplineMoveGravityDisable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 1aaec67b IDENTICAL/NONE
-// OFFSET: 0x006B7BA0
+// PROVEN: 1aaec67b IDENTICAL/IDENTICAL
+// OFFSET: 0x006B7BA0/0x14036AAB0
 bool ClientSplineMoveGravityDisable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -13994,27 +14144,30 @@ bool ClientSplineMoveGravityDisable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: b9d2dec5 IDENTICAL/UNPROVEN
 // OFFSET: 0x006BF130/0x140374100
 bool ClientSplineMoveGravityDisable::Handle() {
-    if (!ClientSplineMoveGravityDisable::s_handler) {
-        return false;
+    if (ClientSplineMoveGravityDisable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFECE8.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFECE8.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveGravityDisable*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveGravityDisable::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientSplineMoveGravityDisable::s_handler(this);
+    return false;
 }
 
-// PROVEN: 4658b421 IDENTICAL/NONE
+// PROVEN: 4658b421 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B8430/0x14036B5C0
 ClientSplineMoveGravityEnable::ClientSplineMoveGravityEnable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 4cbf6d11 IDENTICAL/NONE
+// PROVEN: 4cbf6d11 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A28A0/0x14034FD20
 ClientSplineMoveGravityEnable::~ClientSplineMoveGravityEnable() {
 }
 
-// PROVEN: d994e280 IDENTICAL/NONE
+// PROVEN: d994e280 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A92E0/0x140358480
 void ClientSplineMoveGravityEnable::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -14076,14 +14229,14 @@ void ClientSplineMoveGravityEnable::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 6fd27692 IDENTICAL/NONE
-// OFFSET: 0x006CDE90
+// PROVEN: 6fd27692 IDENTICAL/UNPROVEN
+// OFFSET: 0x006CDE90/0x1403876A0
 bool ClientSplineMoveGravityEnable::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 115f75a0 IDENTICAL/NONE
-// OFFSET: 0x006B90B0
+// PROVEN: 115f75a0 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B90B0/0x14036C560
 bool ClientSplineMoveGravityEnable::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -14146,27 +14299,30 @@ bool ClientSplineMoveGravityEnable::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 02b21b9c IDENTICAL/UNPROVEN
 // OFFSET: 0x006AFA20/0x1403604C0
 bool ClientSplineMoveGravityEnable::Handle() {
-    if (!ClientSplineMoveGravityEnable::s_handler) {
-        return false;
+    if (ClientSplineMoveGravityEnable::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFFA40.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFFA40.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveGravityEnable*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveGravityEnable::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientSplineMoveGravityEnable::s_handler(this);
+    return false;
 }
 
-// PROVEN: 0aca9f61 IDENTICAL/NONE
+// PROVEN: 0aca9f61 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B9070/0x14036C520
 ClientSplineMoveRoot::ClientSplineMoveRoot(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 5bc67e6e IDENTICAL/NONE
+// PROVEN: 5bc67e6e IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0FE0/0x14034E240
 ClientSplineMoveRoot::~ClientSplineMoveRoot() {
 }
 
-// PROVEN: d6e714d2 IDENTICAL/NONE
+// PROVEN: d6e714d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A8B60/0x140357AE0
 void ClientSplineMoveRoot::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -14228,14 +14384,14 @@ void ClientSplineMoveRoot::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: f3fd3b47 IDENTICAL/NONE
-// OFFSET: 0x006B4100
+// PROVEN: f3fd3b47 IDENTICAL/UNPROVEN
+// OFFSET: 0x006B4100/0x140365F20
 bool ClientSplineMoveRoot::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: db96f44a IDENTICAL/NONE
-// OFFSET: 0x006AF250
+// PROVEN: db96f44a IDENTICAL/IDENTICAL
+// OFFSET: 0x006AF250/0x14035FBB0
 bool ClientSplineMoveRoot::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -14298,27 +14454,30 @@ bool ClientSplineMoveRoot::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: c6e6ec4f IDENTICAL/UNPROVEN
 // OFFSET: 0x006BE120/0x140372D20
 bool ClientSplineMoveRoot::Handle() {
-    if (!ClientSplineMoveRoot::s_handler) {
-        return false;
+    if (ClientSplineMoveRoot::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF3C8.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF3C8.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveRoot*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveRoot::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveRoot::s_handler(this);
+    return false;
 }
 
-// PROVEN: 244ffb16 IDENTICAL/NONE
+// PROVEN: 244ffb16 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C78D0/0x14037E700
 ClientSplineMoveSetFeatherFall::ClientSplineMoveSetFeatherFall(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: c168da68 IDENTICAL/NONE
+// PROVEN: c168da68 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2E30/0x140350390
 ClientSplineMoveSetFeatherFall::~ClientSplineMoveSetFeatherFall() {
 }
 
-// PROVEN: 794cb1d1 IDENTICAL/NONE
+// PROVEN: 794cb1d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BC8E0/0x140370DE0
 void ClientSplineMoveSetFeatherFall::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -14380,14 +14539,14 @@ void ClientSplineMoveSetFeatherFall::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 166c60c5 IDENTICAL/NONE
-// OFFSET: 0x006C8140
+// PROVEN: 166c60c5 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C8140/0x14037F0C0
 bool ClientSplineMoveSetFeatherFall::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 77557831 IDENTICAL/NONE
-// OFFSET: 0x006C4D60
+// PROVEN: 77557831 IDENTICAL/IDENTICAL
+// OFFSET: 0x006C4D60/0x14037AA10
 bool ClientSplineMoveSetFeatherFall::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -14450,27 +14609,30 @@ bool ClientSplineMoveSetFeatherFall::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: d428e8f3 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AAD00/0x14035A590
 bool ClientSplineMoveSetFeatherFall::Handle() {
-    if (!ClientSplineMoveSetFeatherFall::s_handler) {
-        return false;
+    if (ClientSplineMoveSetFeatherFall::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE04C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE04C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetFeatherFall*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetFeatherFall::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetFeatherFall::s_handler(this);
+    return false;
 }
 
-// PROVEN: 6a9c3b7f IDENTICAL/NONE
+// PROVEN: 6a9c3b7f IDENTICAL/IDENTICAL
 // OFFSET: 0x006C4F10/0x14037ABD0
 ClientSplineMoveSetFlightBackSpeed::ClientSplineMoveSetFlightBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: ce720705 IDENTICAL/NONE
+// PROVEN: ce720705 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A19E0/0x14034EE20
 ClientSplineMoveSetFlightBackSpeed::~ClientSplineMoveSetFlightBackSpeed() {
 }
 
-// PROVEN: ac9c85fe IDENTICAL/NONE
+// PROVEN: ac9c85fe IDENTICAL/DIFFERENT
 // OFFSET: 0x006BBDF0/0x14036FF90
 void ClientSplineMoveSetFlightBackSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -14537,14 +14699,14 @@ void ClientSplineMoveSetFlightBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 7eea3b7d IDENTICAL/NONE
-// OFFSET: 0x006BE7E0
+// PROVEN: 7eea3b7d IDENTICAL/UNPROVEN
+// OFFSET: 0x006BE7E0/0x140373570
 bool ClientSplineMoveSetFlightBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 8791e403 IDENTICAL/NONE
-// OFFSET: 0x006BB0C0
+// PROVEN: 8791e403 IDENTICAL/DIFFERENT
+// OFFSET: 0x006BB0C0/0x14036EEC0
 bool ClientSplineMoveSetFlightBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -14612,27 +14774,30 @@ bool ClientSplineMoveSetFlightBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: 13b67573 IDENTICAL/UNPROVEN
 // OFFSET: 0x006BF4B0/0x140374550
 bool ClientSplineMoveSetFlightBackSpeed::Handle() {
-    if (!ClientSplineMoveSetFlightBackSpeed::s_handler) {
-        return false;
+    if (ClientSplineMoveSetFlightBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFED40.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFED40.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetFlightBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetFlightBackSpeed::s_handler) - (left - right))(this);
     }
 
-    return ClientSplineMoveSetFlightBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 27cfb260 IDENTICAL/NONE
+// PROVEN: 27cfb260 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B83E0/0x14036B570
 ClientSplineMoveSetFlightSpeed::ClientSplineMoveSetFlightSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 141ae6d0 IDENTICAL/NONE
+// PROVEN: 141ae6d0 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2690/0x14034FB70
 ClientSplineMoveSetFlightSpeed::~ClientSplineMoveSetFlightSpeed() {
 }
 
-// PROVEN: fae55185 IDENTICAL/NONE
+// PROVEN: fae55185 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B1340/0x140362460
 void ClientSplineMoveSetFlightSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -14700,14 +14865,14 @@ void ClientSplineMoveSetFlightSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: b11baa6d IDENTICAL/NONE
-// OFFSET: 0x006C7940
+// PROVEN: b11baa6d IDENTICAL/UNPROVEN
+// OFFSET: 0x006C7940/0x14037E7C0
 bool ClientSplineMoveSetFlightSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: be7f70ec IDENTICAL/NONE
-// OFFSET: 0x006BB5A0
+// PROVEN: be7f70ec IDENTICAL/IDENTICAL
+// OFFSET: 0x006BB5A0/0x14036F4E0
 bool ClientSplineMoveSetFlightSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -14776,27 +14941,30 @@ bool ClientSplineMoveSetFlightSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: d177ced7 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AB3F0/0x14035AED0
 bool ClientSplineMoveSetFlightSpeed::Handle() {
-    if (!ClientSplineMoveSetFlightSpeed::s_handler) {
-        return false;
+    if (ClientSplineMoveSetFlightSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFCF04.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFCF04.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetFlightSpeed*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetFlightSpeed::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetFlightSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 62ab9ec6 IDENTICAL/NONE
+// PROVEN: 62ab9ec6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BC240/0x140370570
 ClientSplineMoveSetFlying::ClientSplineMoveSetFlying(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: f639615e IDENTICAL/NONE
+// PROVEN: f639615e IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1E10/0x14034F280
 ClientSplineMoveSetFlying::~ClientSplineMoveSetFlying() {
 }
 
-// PROVEN: 8b3e98ee IDENTICAL/NONE
+// PROVEN: 8b3e98ee IDENTICAL/IDENTICAL
 // OFFSET: 0x006AE5D0/0x14035EC40
 void ClientSplineMoveSetFlying::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -14858,14 +15026,14 @@ void ClientSplineMoveSetFlying::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 0beef25a IDENTICAL/NONE
-// OFFSET: 0x006BC850
+// PROVEN: 0beef25a IDENTICAL/UNPROVEN
+// OFFSET: 0x006BC850/0x140370D30
 bool ClientSplineMoveSetFlying::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: f34d8c94 IDENTICAL/NONE
-// OFFSET: 0x006BB990
+// PROVEN: f34d8c94 IDENTICAL/IDENTICAL
+// OFFSET: 0x006BB990/0x14036F9E0
 bool ClientSplineMoveSetFlying::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -14928,27 +15096,30 @@ bool ClientSplineMoveSetFlying::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: ed917b1a IDENTICAL/UNPROVEN
 // OFFSET: 0x006BF380/0x1403743E0
 bool ClientSplineMoveSetFlying::Handle() {
-    if (!ClientSplineMoveSetFlying::s_handler) {
-        return false;
+    if (ClientSplineMoveSetFlying::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFDEB4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFDEB4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetFlying*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetFlying::s_handler) - (left - right))(this);
     }
 
-    return ClientSplineMoveSetFlying::s_handler(this);
+    return false;
 }
 
-// PROVEN: 3227cbbe IDENTICAL/NONE
+// PROVEN: 3227cbbe IDENTICAL/IDENTICAL
 // OFFSET: 0x006C17F0/0x140376E40
 ClientSplineMoveSetHover::ClientSplineMoveSetHover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: be553cba IDENTICAL/NONE
+// PROVEN: be553cba IDENTICAL/IDENTICAL
 // OFFSET: 0x006A25D0/0x14034FB20
 ClientSplineMoveSetHover::~ClientSplineMoveSetHover() {
 }
 
-// PROVEN: cea3fa0f IDENTICAL/NONE
+// PROVEN: cea3fa0f IDENTICAL/IDENTICAL
 // OFFSET: 0x006AB4D0/0x14035AFF0
 void ClientSplineMoveSetHover::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -15010,14 +15181,14 @@ void ClientSplineMoveSetHover::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: cf565dbf IDENTICAL/NONE
-// OFFSET: 0x006BBAF0
+// PROVEN: cf565dbf IDENTICAL/UNPROVEN
+// OFFSET: 0x006BBAF0/0x14036FBA0
 bool ClientSplineMoveSetHover::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 869e18aa IDENTICAL/NONE
-// OFFSET: 0x006A3350
+// PROVEN: 869e18aa IDENTICAL/IDENTICAL
+// OFFSET: 0x006A3350/0x140350AE0
 bool ClientSplineMoveSetHover::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -15080,27 +15251,30 @@ bool ClientSplineMoveSetHover::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 24e435d0 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AAF20/0x14035A870
 bool ClientSplineMoveSetHover::Handle() {
-    if (!ClientSplineMoveSetHover::s_handler) {
-        return false;
+    if (ClientSplineMoveSetHover::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFCFE0.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFCFE0.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetHover*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetHover::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetHover::s_handler(this);
+    return false;
 }
 
-// PROVEN: 2f613032 IDENTICAL/NONE
+// PROVEN: 2f613032 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C87A0/0x14037F870
 ClientSplineMoveSetLandWalk::ClientSplineMoveSetLandWalk(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 8cc2c1e3 IDENTICAL/NONE
+// PROVEN: 8cc2c1e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2D80/0x1403502E0
 ClientSplineMoveSetLandWalk::~ClientSplineMoveSetLandWalk() {
 }
 
-// PROVEN: a54d70e8 IDENTICAL/NONE
+// PROVEN: a54d70e8 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BE350/0x140373010
 void ClientSplineMoveSetLandWalk::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -15162,14 +15336,14 @@ void ClientSplineMoveSetLandWalk::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: fdc249e6 IDENTICAL/NONE
-// OFFSET: 0x006C4560
+// PROVEN: fdc249e6 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C4560/0x14037A410
 bool ClientSplineMoveSetLandWalk::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: d7f46ac1 IDENTICAL/NONE
-// OFFSET: 0x006B9E40
+// PROVEN: d7f46ac1 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B9E40/0x14036D6A0
 bool ClientSplineMoveSetLandWalk::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -15232,27 +15406,30 @@ bool ClientSplineMoveSetLandWalk::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 4df74643 IDENTICAL/UNPROVEN
 // OFFSET: 0x006BF6F0/0x140374820
 bool ClientSplineMoveSetLandWalk::Handle() {
-    if (!ClientSplineMoveSetLandWalk::s_handler) {
-        return false;
+    if (ClientSplineMoveSetLandWalk::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD434.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD434.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetLandWalk*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetLandWalk::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetLandWalk::s_handler(this);
+    return false;
 }
 
-// PROVEN: 1a1d9a28 IDENTICAL/NONE
+// PROVEN: 1a1d9a28 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C8320/0x14037F320
 ClientSplineMoveSetNormalFall::ClientSplineMoveSetNormalFall(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: c3ab0e0f IDENTICAL/NONE
+// PROVEN: c3ab0e0f IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2D60/0x1403502C0
 ClientSplineMoveSetNormalFall::~ClientSplineMoveSetNormalFall() {
 }
 
-// PROVEN: 3ec36359 IDENTICAL/NONE
+// PROVEN: 3ec36359 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BEA10/0x140373810
 void ClientSplineMoveSetNormalFall::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -15314,14 +15491,14 @@ void ClientSplineMoveSetNormalFall::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: dc8bc00c IDENTICAL/NONE
-// OFFSET: 0x006CCA90
+// PROVEN: dc8bc00c IDENTICAL/UNPROVEN
+// OFFSET: 0x006CCA90/0x140385BE0
 bool ClientSplineMoveSetNormalFall::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 9c33d84e IDENTICAL/NONE
-// OFFSET: 0x006B5280
+// PROVEN: 9c33d84e IDENTICAL/IDENTICAL
+// OFFSET: 0x006B5280/0x140367510
 bool ClientSplineMoveSetNormalFall::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -15384,27 +15561,30 @@ bool ClientSplineMoveSetNormalFall::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 3fa2c3ca IDENTICAL/UNPROVEN
 // OFFSET: 0x006AEED0/0x14035F7F0
 bool ClientSplineMoveSetNormalFall::Handle() {
-    if (!ClientSplineMoveSetNormalFall::s_handler) {
-        return false;
+    if (ClientSplineMoveSetNormalFall::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFDC44.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFDC44.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetNormalFall*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetNormalFall::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetNormalFall::s_handler(this);
+    return false;
 }
 
-// PROVEN: a1f35500 IDENTICAL/NONE
+// PROVEN: a1f35500 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B0860/0x1403616B0
 ClientSplineMoveSetPitchRate::ClientSplineMoveSetPitchRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: ea60a0f8 IDENTICAL/NONE
+// PROVEN: ea60a0f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1280/0x14034E550
 ClientSplineMoveSetPitchRate::~ClientSplineMoveSetPitchRate() {
 }
 
-// PROVEN: c9acd03f IDENTICAL/NONE
+// PROVEN: c9acd03f IDENTICAL/DIFFERENT
 // OFFSET: 0x006AA7C0/0x140359EF0
 void ClientSplineMoveSetPitchRate::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -15471,14 +15651,14 @@ void ClientSplineMoveSetPitchRate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: d6abb68b IDENTICAL/NONE
-// OFFSET: 0x006CDE40
+// PROVEN: d6abb68b IDENTICAL/UNPROVEN
+// OFFSET: 0x006CDE40/0x140387690
 bool ClientSplineMoveSetPitchRate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: a31b4b36 IDENTICAL/NONE
-// OFFSET: 0x006BB260
+// PROVEN: a31b4b36 IDENTICAL/DIFFERENT
+// OFFSET: 0x006BB260/0x14036F0C0
 bool ClientSplineMoveSetPitchRate::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -15546,27 +15726,30 @@ bool ClientSplineMoveSetPitchRate::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_rate);
 }
 
+// PROVEN: fe57aaaf IDENTICAL/UNPROVEN
 // OFFSET: 0x006AD0C0/0x14035D150
 bool ClientSplineMoveSetPitchRate::Handle() {
-    if (!ClientSplineMoveSetPitchRate::s_handler) {
-        return false;
+    if (ClientSplineMoveSetPitchRate::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEFF4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEFF4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetPitchRate*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetPitchRate::s_handler) - (left - right))(this);
     }
 
-    return ClientSplineMoveSetPitchRate::s_handler(this);
+    return false;
 }
 
-// PROVEN: b6bf78ca IDENTICAL/NONE
+// PROVEN: b6bf78ca IDENTICAL/IDENTICAL
 // OFFSET: 0x006D3070/0x14038EFA0
 ClientSplineMoveSetRunBackSpeed::ClientSplineMoveSetRunBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: a816d7f6 IDENTICAL/NONE
+// PROVEN: a816d7f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A17B0/0x14034EB30
 ClientSplineMoveSetRunBackSpeed::~ClientSplineMoveSetRunBackSpeed() {
 }
 
-// PROVEN: 951fe937 IDENTICAL/NONE
+// PROVEN: 951fe937 IDENTICAL/DIFFERENT
 // OFFSET: 0x006C11C0/0x1403766E0
 void ClientSplineMoveSetRunBackSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -15633,14 +15816,14 @@ void ClientSplineMoveSetRunBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 7023e344 IDENTICAL/NONE
-// OFFSET: 0x006B39A0
+// PROVEN: 7023e344 IDENTICAL/UNPROVEN
+// OFFSET: 0x006B39A0/0x140365580
 bool ClientSplineMoveSetRunBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 28137f22 IDENTICAL/NONE
-// OFFSET: 0x006B0900
+// PROVEN: 28137f22 IDENTICAL/DIFFERENT
+// OFFSET: 0x006B0900/0x140361740
 bool ClientSplineMoveSetRunBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -15708,27 +15891,30 @@ bool ClientSplineMoveSetRunBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: 57ab81fc IDENTICAL/UNPROVEN
 // OFFSET: 0x006B7B60/0x14036AA50
 bool ClientSplineMoveSetRunBackSpeed::Handle() {
-    if (!ClientSplineMoveSetRunBackSpeed::s_handler) {
-        return false;
+    if (ClientSplineMoveSetRunBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD200.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD200.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetRunBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetRunBackSpeed::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetRunBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 32f0890d IDENTICAL/NONE
+// PROVEN: 32f0890d IDENTICAL/IDENTICAL
 // OFFSET: 0x006BC860/0x140370D40
 ClientSplineMoveSetRunMode::ClientSplineMoveSetRunMode(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 9c2fec97 IDENTICAL/NONE
+// PROVEN: 9c2fec97 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A17A0/0x14034EB20
 ClientSplineMoveSetRunMode::~ClientSplineMoveSetRunMode() {
 }
 
-// PROVEN: 0d8b454b IDENTICAL/NONE
+// PROVEN: 0d8b454b IDENTICAL/IDENTICAL
 // OFFSET: 0x006B4CD0/0x140366DF0
 void ClientSplineMoveSetRunMode::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -15790,14 +15976,14 @@ void ClientSplineMoveSetRunMode::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: e09d74a2 IDENTICAL/NONE
-// OFFSET: 0x006B4350
+// PROVEN: e09d74a2 IDENTICAL/UNPROVEN
+// OFFSET: 0x006B4350/0x140366210
 bool ClientSplineMoveSetRunMode::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 4a0e7628 IDENTICAL/NONE
-// OFFSET: 0x006AEB10
+// PROVEN: 4a0e7628 IDENTICAL/IDENTICAL
+// OFFSET: 0x006AEB10/0x14035F300
 bool ClientSplineMoveSetRunMode::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -15860,27 +16046,30 @@ bool ClientSplineMoveSetRunMode::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 7c071132 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B5230/0x1403674B0
 bool ClientSplineMoveSetRunMode::Handle() {
-    if (!ClientSplineMoveSetRunMode::s_handler) {
-        return false;
+    if (ClientSplineMoveSetRunMode::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEF10.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEF10.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetRunMode*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetRunMode::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientSplineMoveSetRunMode::s_handler(this);
+    return false;
 }
 
-// PROVEN: 77c394c1 IDENTICAL/NONE
+// PROVEN: 77c394c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D4670/0x1403910D0
 ClientSplineMoveSetRunSpeed::ClientSplineMoveSetRunSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 677f5624 IDENTICAL/NONE
+// PROVEN: 677f5624 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0EF0/0x14034DFD0
 ClientSplineMoveSetRunSpeed::~ClientSplineMoveSetRunSpeed() {
 }
 
-// PROVEN: 7b1aa95e IDENTICAL/NONE
+// PROVEN: 7b1aa95e IDENTICAL/DIFFERENT
 // OFFSET: 0x006C13A0/0x140376950
 void ClientSplineMoveSetRunSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -15947,14 +16136,14 @@ void ClientSplineMoveSetRunSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 5b9cc9a0 IDENTICAL/NONE
-// OFFSET: 0x006D4FA0
+// PROVEN: 5b9cc9a0 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D4FA0/0x140391DE0
 bool ClientSplineMoveSetRunSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 40d5de4e IDENTICAL/NONE
-// OFFSET: 0x006CA8D0
+// PROVEN: 40d5de4e IDENTICAL/DIFFERENT
+// OFFSET: 0x006CA8D0/0x1403829A0
 bool ClientSplineMoveSetRunSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -16022,27 +16211,30 @@ bool ClientSplineMoveSetRunSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: ddb6bc83 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B8F00/0x14036C350
 bool ClientSplineMoveSetRunSpeed::Handle() {
-    if (!ClientSplineMoveSetRunSpeed::s_handler) {
-        return false;
+    if (ClientSplineMoveSetRunSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF000.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF000.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetRunSpeed*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetRunSpeed::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientSplineMoveSetRunSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 52a7b75b IDENTICAL/NONE
+// PROVEN: 52a7b75b IDENTICAL/IDENTICAL
 // OFFSET: 0x006B0AA0/0x140361940
 ClientSplineMoveSetSwimBackSpeed::ClientSplineMoveSetSwimBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: bcd6c464 IDENTICAL/NONE
+// PROVEN: bcd6c464 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2400/0x14034F910
 ClientSplineMoveSetSwimBackSpeed::~ClientSplineMoveSetSwimBackSpeed() {
 }
 
-// PROVEN: 6c822d6e IDENTICAL/NONE
+// PROVEN: 6c822d6e IDENTICAL/DIFFERENT
 // OFFSET: 0x006AADC0/0x14035A6A0
 void ClientSplineMoveSetSwimBackSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -16109,14 +16301,14 @@ void ClientSplineMoveSetSwimBackSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: a196ce27 IDENTICAL/NONE
-// OFFSET: 0x006D45C0
+// PROVEN: a196ce27 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D45C0/0x140390FC0
 bool ClientSplineMoveSetSwimBackSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 1ba1f28c IDENTICAL/NONE
-// OFFSET: 0x006C1590
+// PROVEN: 1ba1f28c IDENTICAL/DIFFERENT
+// OFFSET: 0x006C1590/0x140376BE0
 bool ClientSplineMoveSetSwimBackSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -16184,27 +16376,30 @@ bool ClientSplineMoveSetSwimBackSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: f6ca63ef IDENTICAL/UNPROVEN
 // OFFSET: 0x006BC7D0/0x140370C70
 bool ClientSplineMoveSetSwimBackSpeed::Handle() {
-    if (!ClientSplineMoveSetSwimBackSpeed::s_handler) {
-        return false;
+    if (ClientSplineMoveSetSwimBackSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF204.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF204.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetSwimBackSpeed*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetSwimBackSpeed::s_handler) - (right ^ left))(this);
     }
 
-    return ClientSplineMoveSetSwimBackSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 3549e454 IDENTICAL/NONE
+// PROVEN: 3549e454 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C8720/0x14037F7F0
 ClientSplineMoveSetSwimSpeed::ClientSplineMoveSetSwimSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: eae6c780 IDENTICAL/NONE
+// PROVEN: eae6c780 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1130/0x14034E3D0
 ClientSplineMoveSetSwimSpeed::~ClientSplineMoveSetSwimSpeed() {
 }
 
-// PROVEN: 358e7f60 IDENTICAL/NONE
+// PROVEN: 358e7f60 IDENTICAL/DIFFERENT
 // OFFSET: 0x006B60A0/0x140368730
 void ClientSplineMoveSetSwimSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -16271,14 +16466,14 @@ void ClientSplineMoveSetSwimSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: fdfb8d2d IDENTICAL/NONE
-// OFFSET: 0x006CA480
+// PROVEN: fdfb8d2d IDENTICAL/UNPROVEN
+// OFFSET: 0x006CA480/0x140382450
 bool ClientSplineMoveSetSwimSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: d608e29c IDENTICAL/NONE
-// OFFSET: 0x006B87B0
+// PROVEN: d608e29c IDENTICAL/DIFFERENT
+// OFFSET: 0x006B87B0/0x14036BA10
 bool ClientSplineMoveSetSwimSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -16346,27 +16541,30 @@ bool ClientSplineMoveSetSwimSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: 46cdd8ed IDENTICAL/UNPROVEN
 // OFFSET: 0x006BF8D0/0x140374A90
 bool ClientSplineMoveSetSwimSpeed::Handle() {
-    if (!ClientSplineMoveSetSwimSpeed::s_handler) {
-        return false;
+    if (ClientSplineMoveSetSwimSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEC7C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEC7C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetSwimSpeed*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetSwimSpeed::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientSplineMoveSetSwimSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 4d15eaf7 IDENTICAL/NONE
+// PROVEN: 4d15eaf7 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C8660/0x14037F7A0
 ClientSplineMoveSetTurnRate::ClientSplineMoveSetTurnRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 68169eae IDENTICAL/NONE
+// PROVEN: 68169eae IDENTICAL/IDENTICAL
 // OFFSET: 0x006A27B0/0x14034FCB0
 ClientSplineMoveSetTurnRate::~ClientSplineMoveSetTurnRate() {
 }
 
-// PROVEN: 5879419e IDENTICAL/NONE
+// PROVEN: 5879419e IDENTICAL/IDENTICAL
 // OFFSET: 0x006B2A70/0x1403641D0
 void ClientSplineMoveSetTurnRate::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -16433,14 +16631,14 @@ void ClientSplineMoveSetTurnRate::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: cc5f3ea6 IDENTICAL/NONE
-// OFFSET: 0x006D0D20
+// PROVEN: cc5f3ea6 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D0D20/0x14038B8F0
 bool ClientSplineMoveSetTurnRate::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: a66529ef IDENTICAL/NONE
-// OFFSET: 0x006B9CA0
+// PROVEN: a66529ef IDENTICAL/IDENTICAL
+// OFFSET: 0x006B9CA0/0x14036D4A0
 bool ClientSplineMoveSetTurnRate::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -16508,27 +16706,30 @@ bool ClientSplineMoveSetTurnRate::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_rate);
 }
 
+// PROVEN: ac933970 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B35A0/0x140365070
 bool ClientSplineMoveSetTurnRate::Handle() {
-    if (!ClientSplineMoveSetTurnRate::s_handler) {
-        return false;
+    if (ClientSplineMoveSetTurnRate::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD23C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD23C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetTurnRate*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetTurnRate::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetTurnRate::s_handler(this);
+    return false;
 }
 
-// PROVEN: ebe7f92c IDENTICAL/NONE
+// PROVEN: ebe7f92c IDENTICAL/IDENTICAL
 // OFFSET: 0x006CB4C0/0x140383AC0
 ClientSplineMoveSetWalkMode::ClientSplineMoveSetWalkMode(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 48fff467 IDENTICAL/NONE
+// PROVEN: 48fff467 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1FF0/0x14034F460
 ClientSplineMoveSetWalkMode::~ClientSplineMoveSetWalkMode() {
 }
 
-// PROVEN: 33b89b23 IDENTICAL/NONE
+// PROVEN: 33b89b23 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BA310/0x14036DCA0
 void ClientSplineMoveSetWalkMode::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -16590,14 +16791,14 @@ void ClientSplineMoveSetWalkMode::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 51df3a33 IDENTICAL/NONE
-// OFFSET: 0x006AE820
+// PROVEN: 51df3a33 IDENTICAL/UNPROVEN
+// OFFSET: 0x006AE820/0x14035EF40
 bool ClientSplineMoveSetWalkMode::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: ac54b698 IDENTICAL/NONE
-// OFFSET: 0x006AA340
+// PROVEN: ac54b698 IDENTICAL/IDENTICAL
+// OFFSET: 0x006AA340/0x140359940
 bool ClientSplineMoveSetWalkMode::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -16660,27 +16861,30 @@ bool ClientSplineMoveSetWalkMode::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 2fa46f1a IDENTICAL/UNPROVEN
 // OFFSET: 0x006BE880/0x140373630
 bool ClientSplineMoveSetWalkMode::Handle() {
-    if (!ClientSplineMoveSetWalkMode::s_handler) {
-        return false;
+    if (ClientSplineMoveSetWalkMode::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFD934.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFD934.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetWalkMode*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetWalkMode::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientSplineMoveSetWalkMode::s_handler(this);
+    return false;
 }
 
-// PROVEN: 13d04964 IDENTICAL/NONE
+// PROVEN: 13d04964 IDENTICAL/IDENTICAL
 // OFFSET: 0x006D0CE0/0x14038B8B0
 ClientSplineMoveSetWalkSpeed::ClientSplineMoveSetWalkSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 1a926bb3 IDENTICAL/NONE
+// PROVEN: 1a926bb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A1DF0/0x14034F260
 ClientSplineMoveSetWalkSpeed::~ClientSplineMoveSetWalkSpeed() {
 }
 
-// PROVEN: f271b2a0 IDENTICAL/NONE
+// PROVEN: f271b2a0 IDENTICAL/DIFFERENT
 // OFFSET: 0x006BC660/0x140370A90
 void ClientSplineMoveSetWalkSpeed::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -16747,14 +16951,14 @@ void ClientSplineMoveSetWalkSpeed::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 69ada395 IDENTICAL/NONE
-// OFFSET: 0x006C4F50
+// PROVEN: 69ada395 IDENTICAL/UNPROVEN
+// OFFSET: 0x006C4F50/0x14037AC10
 bool ClientSplineMoveSetWalkSpeed::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: d2fe45a9 IDENTICAL/NONE
-// OFFSET: 0x006ADFC0
+// PROVEN: d2fe45a9 IDENTICAL/DIFFERENT
+// OFFSET: 0x006ADFC0/0x14035E510
 bool ClientSplineMoveSetWalkSpeed::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -16822,27 +17026,30 @@ bool ClientSplineMoveSetWalkSpeed::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && _finite(this->m_speed);
 }
 
+// PROVEN: 5249a1e9 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B31B0/0x140364BB0
 bool ClientSplineMoveSetWalkSpeed::Handle() {
-    if (!ClientSplineMoveSetWalkSpeed::s_handler) {
-        return false;
+    if (ClientSplineMoveSetWalkSpeed::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEC6C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEC6C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetWalkSpeed*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetWalkSpeed::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveSetWalkSpeed::s_handler(this);
+    return false;
 }
 
-// PROVEN: 2bc2fc1e IDENTICAL/NONE
+// PROVEN: 2bc2fc1e IDENTICAL/IDENTICAL
 // OFFSET: 0x006C4860/0x14037A7A0
 ClientSplineMoveSetWaterWalk::ClientSplineMoveSetWaterWalk(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 17714037 IDENTICAL/NONE
+// PROVEN: 17714037 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A26B0/0x14034FB90
 ClientSplineMoveSetWaterWalk::~ClientSplineMoveSetWaterWalk() {
 }
 
-// PROVEN: bc1968fb IDENTICAL/NONE
+// PROVEN: bc1968fb IDENTICAL/IDENTICAL
 // OFFSET: 0x006B99D0/0x14036D100
 void ClientSplineMoveSetWaterWalk::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -16904,14 +17111,14 @@ void ClientSplineMoveSetWaterWalk::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 1fb8e29e IDENTICAL/NONE
-// OFFSET: 0x006B20D0
+// PROVEN: 1fb8e29e IDENTICAL/UNPROVEN
+// OFFSET: 0x006B20D0/0x140363610
 bool ClientSplineMoveSetWaterWalk::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 1556365e IDENTICAL/NONE
-// OFFSET: 0x006AE840
+// PROVEN: 1556365e IDENTICAL/IDENTICAL
+// OFFSET: 0x006AE840/0x14035EF60
 bool ClientSplineMoveSetWaterWalk::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -16974,27 +17181,30 @@ bool ClientSplineMoveSetWaterWalk::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 2446107d IDENTICAL/UNPROVEN
 // OFFSET: 0x006A6D20/0x140355260
 bool ClientSplineMoveSetWaterWalk::Handle() {
-    if (!ClientSplineMoveSetWaterWalk::s_handler) {
-        return false;
+    if (ClientSplineMoveSetWaterWalk::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEA54.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEA54.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveSetWaterWalk*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveSetWaterWalk::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientSplineMoveSetWaterWalk::s_handler(this);
+    return false;
 }
 
-// PROVEN: b138a1cd IDENTICAL/NONE
+// PROVEN: b138a1cd IDENTICAL/IDENTICAL
 // OFFSET: 0x006C4760/0x14037A670
 ClientSplineMoveStartSwim::ClientSplineMoveStartSwim(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 3e6e6ef6 IDENTICAL/NONE
+// PROVEN: 3e6e6ef6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A19C0/0x14034EDF0
 ClientSplineMoveStartSwim::~ClientSplineMoveStartSwim() {
 }
 
-// PROVEN: 489e74f5 IDENTICAL/NONE
+// PROVEN: 489e74f5 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A6250/0x140354450
 void ClientSplineMoveStartSwim::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -17056,14 +17266,14 @@ void ClientSplineMoveStartSwim::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: e7468ea3 IDENTICAL/NONE
-// OFFSET: 0x006BEB60
+// PROVEN: e7468ea3 IDENTICAL/UNPROVEN
+// OFFSET: 0x006BEB60/0x1403739C0
 bool ClientSplineMoveStartSwim::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 6ac04444 IDENTICAL/NONE
-// OFFSET: 0x006B39B0
+// PROVEN: 6ac04444 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B39B0/0x140365590
 bool ClientSplineMoveStartSwim::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -17126,27 +17336,30 @@ bool ClientSplineMoveStartSwim::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 9974b8dd IDENTICAL/UNPROVEN
 // OFFSET: 0x006BB560/0x14036F480
 bool ClientSplineMoveStartSwim::Handle() {
-    if (!ClientSplineMoveStartSwim::s_handler) {
-        return false;
+    if (ClientSplineMoveStartSwim::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFFCD4.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFFCD4.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveStartSwim*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveStartSwim::s_handler) - (right ^ left))(this);
     }
 
-    return ClientSplineMoveStartSwim::s_handler(this);
+    return false;
 }
 
-// PROVEN: 514eb121 IDENTICAL/NONE
+// PROVEN: 514eb121 IDENTICAL/IDENTICAL
 // OFFSET: 0x006C48C0/0x14037A800
 ClientSplineMoveStopSwim::ClientSplineMoveStopSwim(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 6780ea66 IDENTICAL/NONE
+// PROVEN: 6780ea66 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0E20/0x14034DEC0
 ClientSplineMoveStopSwim::~ClientSplineMoveStopSwim() {
 }
 
-// PROVEN: cd1ac6e9 IDENTICAL/NONE
+// PROVEN: cd1ac6e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B7E80/0x14036AE40
 void ClientSplineMoveStopSwim::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -17208,14 +17421,14 @@ void ClientSplineMoveStopSwim::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: e6d4bd03 IDENTICAL/NONE
-// OFFSET: 0x006D59B0
+// PROVEN: e6d4bd03 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D59B0/0x140392CE0
 bool ClientSplineMoveStopSwim::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 838ca1a4 IDENTICAL/NONE
-// OFFSET: 0x006C4F60
+// PROVEN: 838ca1a4 IDENTICAL/IDENTICAL
+// OFFSET: 0x006C4F60/0x14037AC20
 bool ClientSplineMoveStopSwim::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -17278,27 +17491,30 @@ bool ClientSplineMoveStopSwim::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: f8c142c7 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B1AA0/0x140362E10
 bool ClientSplineMoveStopSwim::Handle() {
-    if (!ClientSplineMoveStopSwim::s_handler) {
-        return false;
+    if (ClientSplineMoveStopSwim::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE9DC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE9DC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveStopSwim*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveStopSwim::s_handler) - (right + left))(this);
     }
 
-    return ClientSplineMoveStopSwim::s_handler(this);
+    return false;
 }
 
-// PROVEN: 14b17a7b IDENTICAL/NONE
+// PROVEN: 14b17a7b IDENTICAL/IDENTICAL
 // OFFSET: 0x006BDF60/0x140372AD0
 ClientSplineMoveUnroot::ClientSplineMoveUnroot(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: ffb9a264 IDENTICAL/NONE
+// PROVEN: ffb9a264 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A22C0/0x14034F790
 ClientSplineMoveUnroot::~ClientSplineMoveUnroot() {
 }
 
-// PROVEN: 710d5c37 IDENTICAL/NONE
+// PROVEN: 710d5c37 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B3E50/0x140365BB0
 void ClientSplineMoveUnroot::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -17360,14 +17576,14 @@ void ClientSplineMoveUnroot::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 25438ab4 IDENTICAL/NONE
-// OFFSET: 0x006D46C0
+// PROVEN: 25438ab4 IDENTICAL/UNPROVEN
+// OFFSET: 0x006D46C0/0x140391120
 bool ClientSplineMoveUnroot::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 28d1cf04 IDENTICAL/NONE
-// OFFSET: 0x006C1830
+// PROVEN: 28d1cf04 IDENTICAL/IDENTICAL
+// OFFSET: 0x006C1830/0x140376E80
 bool ClientSplineMoveUnroot::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -17430,27 +17646,30 @@ bool ClientSplineMoveUnroot::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 729e8102 IDENTICAL/UNPROVEN
 // OFFSET: 0x006BBD60/0x14036FED0
 bool ClientSplineMoveUnroot::Handle() {
-    if (!ClientSplineMoveUnroot::s_handler) {
-        return false;
+    if (ClientSplineMoveUnroot::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFE198.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFE198.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveUnroot*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveUnroot::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientSplineMoveUnroot::s_handler(this);
+    return false;
 }
 
-// PROVEN: f157fc14 IDENTICAL/NONE
+// PROVEN: f157fc14 IDENTICAL/IDENTICAL
 // OFFSET: 0x006B2830/0x140363EE0
 ClientSplineMoveUnsetFlying::ClientSplineMoveUnsetFlying(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 8895cb33 IDENTICAL/NONE
+// PROVEN: 8895cb33 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A0F60/0x14034E1C0
 ClientSplineMoveUnsetFlying::~ClientSplineMoveUnsetFlying() {
 }
 
-// PROVEN: 42121fa3 IDENTICAL/NONE
+// PROVEN: 42121fa3 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A90D0/0x1403581B0
 void ClientSplineMoveUnsetFlying::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -17512,14 +17731,14 @@ void ClientSplineMoveUnsetFlying::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 6e1dc233 IDENTICAL/NONE
-// OFFSET: 0x006CDEA0
+// PROVEN: 6e1dc233 IDENTICAL/UNPROVEN
+// OFFSET: 0x006CDEA0/0x1403876B0
 bool ClientSplineMoveUnsetFlying::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 42a27b68 IDENTICAL/NONE
-// OFFSET: 0x006B6560
+// PROVEN: 42a27b68 IDENTICAL/IDENTICAL
+// OFFSET: 0x006B6560/0x140368F30
 bool ClientSplineMoveUnsetFlying::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -17582,27 +17801,30 @@ bool ClientSplineMoveUnsetFlying::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: c6c6c13b IDENTICAL/UNPROVEN
 // OFFSET: 0x006BAF00/0x14036EC60
 bool ClientSplineMoveUnsetFlying::Handle() {
-    if (!ClientSplineMoveUnsetFlying::s_handler) {
-        return false;
+    if (ClientSplineMoveUnsetFlying::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFDE64.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFDE64.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveUnsetFlying*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveUnsetFlying::s_handler) - (left - right))(this);
     }
 
-    return ClientSplineMoveUnsetFlying::s_handler(this);
+    return false;
 }
 
-// PROVEN: f78c2fdb IDENTICAL/NONE
+// PROVEN: f78c2fdb IDENTICAL/IDENTICAL
 // OFFSET: 0x006C5FF0/0x14037C410
 ClientSplineMoveUnsetHover::ClientSplineMoveUnsetHover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 412abe25 IDENTICAL/NONE
+// PROVEN: 412abe25 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A26A0/0x14034FB80
 ClientSplineMoveUnsetHover::~ClientSplineMoveUnsetHover() {
 }
 
-// PROVEN: 91ad102c IDENTICAL/NONE
+// PROVEN: 91ad102c IDENTICAL/IDENTICAL
 // OFFSET: 0x006B2C10/0x140364400
 void ClientSplineMoveUnsetHover::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -17664,14 +17886,14 @@ void ClientSplineMoveUnsetHover::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: a2603f0f IDENTICAL/NONE
-// OFFSET: 0x006D7200
+// PROVEN: a2603f0f IDENTICAL/UNPROVEN
+// OFFSET: 0x006D7200/0x140394E70
 bool ClientSplineMoveUnsetHover::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 3f30408c IDENTICAL/NONE
-// OFFSET: 0x006CABC0
+// PROVEN: 3f30408c IDENTICAL/IDENTICAL
+// OFFSET: 0x006CABC0/0x140382D40
 bool ClientSplineMoveUnsetHover::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -17734,27 +17956,30 @@ bool ClientSplineMoveUnsetHover::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: 58f46d00 IDENTICAL/UNPROVEN
 // OFFSET: 0x006ABC30/0x14035B940
 bool ClientSplineMoveUnsetHover::Handle() {
-    if (!ClientSplineMoveUnsetHover::s_handler) {
-        return false;
+    if (ClientSplineMoveUnsetHover::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF8FC.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF8FC.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSplineMoveUnsetHover*)>(reinterpret_cast<uintptr_t>(ClientSplineMoveUnsetHover::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientSplineMoveUnsetHover::s_handler(this);
+    return false;
 }
 
-// PROVEN: 3cf6ca4e IDENTICAL/NONE
+// PROVEN: 3cf6ca4e IDENTICAL/IDENTICAL
 // OFFSET: 0x006C98B0/0x1403812F0
 ClientSuppressNPCGreetings::ClientSuppressNPCGreetings(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 00f1f479 IDENTICAL/NONE
+// PROVEN: 00f1f479 IDENTICAL/IDENTICAL
 // OFFSET: 0x006A2370/0x14034F890
 ClientSuppressNPCGreetings::~ClientSuppressNPCGreetings() {
 }
 
-// PROVEN: 8d515cf1 IDENTICAL/NONE
+// PROVEN: 8d515cf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x006BE600/0x140373390
 void ClientSuppressNPCGreetings::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
@@ -17817,14 +18042,14 @@ void ClientSuppressNPCGreetings::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// PROVEN: 1e0b8949 IDENTICAL/NONE
-// OFFSET: 0x006B7650
+// PROVEN: 1e0b8949 IDENTICAL/UNPROVEN
+// OFFSET: 0x006B7650/0x14036A4C0
 bool ClientSuppressNPCGreetings::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: e24bafa7 IDENTICAL/NONE
-// OFFSET: 0x006AE260
+// PROVEN: e24bafa7 IDENTICAL/IDENTICAL
+// OFFSET: 0x006AE260/0x14035E7D0
 bool ClientSuppressNPCGreetings::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
@@ -17888,16 +18113,19 @@ bool ClientSuppressNPCGreetings::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
+// PROVEN: c20325d9 IDENTICAL/UNPROVEN
 // OFFSET: 0x006B9030/0x14036C4C0
 bool ClientSuppressNPCGreetings::Handle() {
-    if (!ClientSuppressNPCGreetings::s_handler) {
-        return false;
+    if (ClientSuppressNPCGreetings::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFEC9C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFEC9C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientSuppressNPCGreetings*)>(reinterpret_cast<uintptr_t>(ClientSuppressNPCGreetings::s_handler) - (left - right))(this);
     }
 
-    return ClientSuppressNPCGreetings::s_handler(this);
+    return false;
 }
 
-// OFFSET: 0x006A2C10
+// OFFSET: 0x006A2C10/0x140350130
 bool JamMoveKnockBack::IsValid() const {
     if (std::fabs(this->m_horizontalSpeed) < 2.3841858e-7f && std::fabs(this->m_verticalSpeed) < 2.3841858e-7f) {
         return false;
@@ -17914,16 +18142,16 @@ bool JamMoveKnockBack::IsValid() const {
     return _finite(this->m_direction.y) && _finite(this->m_direction.x);
 }
 
-// STATIC: 0x00E4D834
+// STATIC: 0x00E4D834/0x140D36A40
 bool (*ClientMoveSetCompoundState::s_handler)(ClientMoveSetCompoundState* msg);
 
-// PROVEN: 087b8667 IDENTICAL/NONE
+// PROVEN: 087b8667 IDENTICAL/IDENTICAL
 // OFFSET: 0x006F07E0/0x1403B61B0
 ClientMoveSetCompoundState::ClientMoveSetCompoundState(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 3da56775 IDENTICAL/NONE
+// PROVEN: 3da56775 IDENTICAL/IDENTICAL
 // OFFSET: 0x006E1F90/0x1403B1980
 ClientMoveSetCompoundState::~ClientMoveSetCompoundState() {
 }
@@ -18078,13 +18306,13 @@ bool ClientMoveSetCompoundState::IsValid() {
     return true;
 }
 
-// PROVEN: b989a3ad IDENTICAL/NONE
-// OFFSET: 0x006ECD60
+// PROVEN: b989a3ad IDENTICAL/UNPROVEN
+// OFFSET: 0x006ECD60/0x1403B1170
 bool ClientMoveSetCompoundState::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x006E8760
+// OFFSET: 0x006E8760/0x1403AAFB0
 bool ClientMoveSetCompoundState::Read(CDataStore* msg, bool full) {
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
     JamBitReader bits(msg);
@@ -18224,15 +18452,19 @@ bool ClientMoveSetCompoundState::Read(CDataStore* msg, bool full) {
     return msg->IsRead() && this->IsValid();
 }
 
+// PROVEN: a67a8836 IDENTICAL/UNPROVEN
 // OFFSET: 0x006AA140/0x140359730
 bool ClientMoveSetCompoundState::Handle() {
-    if (!ClientMoveSetCompoundState::s_handler) {
-        return false;
+    if (ClientMoveSetCompoundState::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFF304.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFF304.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientMoveSetCompoundState*)>(reinterpret_cast<uintptr_t>(ClientMoveSetCompoundState::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientMoveSetCompoundState::s_handler(this);
+    return false;
 }
 
+// PROVEN: ab482013 IDENTICAL/NONE
 // OFFSET: 0x006C0480
 void JamMoveStateChange::operator=(const JamMoveStateChange& source) {
     this->m_hasCollisionHeight = source.m_hasCollisionHeight;

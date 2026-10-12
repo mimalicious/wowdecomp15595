@@ -12,13 +12,13 @@
 #include "WoW/Source/Client.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: 0x00000000/0x140B33908
+// STATIC: 0x00000000
 static const uint32_t s_db2LocaleIds[11] = { 'enUS', 'koKR', 'frFR', 'deDE', 'zhCN', 'zhTW', 'esES', 'esMX', 'ruRU', 'enUS', 'ptBR' };
 
-// STATIC: 0x00D3651C
+// STATIC: 0x00D3651C/0x140BEFA48
 static float s_archiveProgressStages[3][2];
 
-// STATIC: 0x00D36534
+// STATIC: 0x00D36534/0x140BEFA60
 static uint32_t s_archiveProgressStage;
 
 // STATIC: 0x00D36538
@@ -27,7 +27,7 @@ static HWND s_archiveProgressDialog;
 // STATIC: 0x00D3653C
 static HWND s_archiveProgressBar;
 
-// STATIC: 0x00D36540
+// STATIC: 0x00D36540/0x140BEFA78
 static HICON s_archiveProgressIcon;
 
 static void InvalidParameterHandler(const wchar_t* expression, const wchar_t* function, const wchar_t* file, unsigned int line, uintptr_t reserved) {
@@ -115,7 +115,7 @@ static INT_PTR CALLBACK ArchiveProgressDialogProc(HWND window, UINT message, WPA
     return FALSE;
 }
 
-// OFFSET: 0x00409120
+// OFFSET: 0x00409120/0x14000B7E0
 void ArchiveProgressInitialize(int32_t sparse) {
     float start;
     float end;
@@ -137,7 +137,8 @@ void ArchiveProgressInitialize(int32_t sparse) {
     s_archiveProgressStage = sparse != 0;
 }
 
-// OFFSET: 0x004091A0
+// PROVEN: 803eb216 NONE/IDENTICAL
+// OFFSET: 0x004091A0/0x14000B860
 void ArchiveProgressSetStage(uint32_t stage) {
     s_archiveProgressStage = stage;
 }

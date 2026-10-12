@@ -3,16 +3,16 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/Gx.h"
 
-// STATIC: 0x00D1C90C
+// STATIC: 0x00D1C90C/0x140BD9138
 static float s_zFar = 946.0f;
 
-// STATIC: 0x00D1C910
+// STATIC: 0x00D1C910/0x140BD913C
 static float s_zNear = 0.2f;
 
-// STATIC: 0x00D1C914
+// STATIC: 0x00D1C914/0x140BD9140
 static float s_viewportFarClip = 0.94f;
 
-// STATIC: 0x00F803F0
+// STATIC: 0x00F803F0/0x140E78280
 static int32_t s_submerged;
 
 // STATIC: 0x00F803F4
@@ -28,20 +28,20 @@ struct ViewSettingsFog {
 // STATIC: 0x00F80408
 static ViewSettingsFog s_fog[4];
 
-// PROVEN: 0448e23d IDENTICAL/NONE
-// OFFSET: 0x00A30110
+// PROVEN: 0448e23d IDENTICAL/IDENTICAL
+// OFFSET: 0x00A30110/0x1407D9FF0
 void ViewSettings::SetZNearFar(float zNear, float zFar) {
     s_zNear = zNear;
     s_zFar = zFar;
 }
 
-// PROVEN: bb1e15d2 IDENTICAL/NONE
-// OFFSET: 0x00A30130
+// PROVEN: bb1e15d2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A30130/0x1407DA010
 void ViewSettings::SetViewportFarClip(float farClip) {
     s_viewportFarClip = farClip;
 }
 
-// PROVEN: 888189fe IDENTICAL/NONE
+// PROVEN: 888189fe IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30150/0x1407DA020
 void ViewSettings::SetSubmerged(int32_t submerged) {
     s_submerged = submerged;

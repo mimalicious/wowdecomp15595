@@ -12,7 +12,7 @@ class ObjectAllocPool {
     /* 0000 */ TSLink<ObjectAllocPool> m_link;
     /* 0008 */ int64_t m_liveCount;
     /* 0010 */ int64_t m_allocCount;
-    /* 0018 */ uint32_t m_objectSize;
+    /* 0018 */ size_t m_objectSize;
     /* 001C */ const char* m_name;
     /* 0020 */ uint32_t m_heapId;
 };

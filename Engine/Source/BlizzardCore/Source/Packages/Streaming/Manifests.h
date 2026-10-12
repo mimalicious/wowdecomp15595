@@ -312,4 +312,6 @@ class HttpCallback : public Blizzard::URL::DownloadCallback {
 
 }
 
+#include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Manifests.inl"
+
 #endif

@@ -10,7 +10,7 @@
 
 static const uint8_t s_padding[64] = { 0x80 };
 
-// PROVEN: acbd927e IDENTICAL/NONE
+// PROVEN: acbd927e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3D2A0/0x14090A290
 void ComSat::MD5::ProcessBlock(const uint8_t* block) {
     uint32_t a = this->m_state[0];
@@ -113,7 +113,7 @@ void ComSat::MD5::Prepare() {
     this->m_state[3] = 0x10325476;
 }
 
-// OFFSET: 0x00B3DA00
+// OFFSET: 0x00B3DA00/0x14090AB60
 void ComSat::MD5::Process(const void* data, uint32_t size) {
     const uint8_t* p = static_cast<const uint8_t*>(data);
     uint32_t index = (this->m_count[0] >> 3) & 0x3F;

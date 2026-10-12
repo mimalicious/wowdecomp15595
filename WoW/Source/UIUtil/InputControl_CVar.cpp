@@ -9,7 +9,7 @@
 
 CVar* s_cvCinematicJoystick;
 
-// STATIC: 0x00D39210
+// STATIC: 0x00D39210/0x140BF37B8
 CVar* s_cvEnableWowMouse;
 
 // OFFSET: 0x00447CC0/0x140054560

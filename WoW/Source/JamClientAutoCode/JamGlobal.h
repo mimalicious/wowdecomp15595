@@ -395,4 +395,6 @@ class GlobalGuildSetAchievementTracking : public JamClientMessage {
     ~GlobalGuildSetAchievementTracking();
 };
 
+#include "WoW/Source/JamClientAutoCode/JamGlobal.inl"
+
 #endif

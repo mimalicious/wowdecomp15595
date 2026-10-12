@@ -264,7 +264,7 @@ FMOD_RESULT DSPCompressor::readInternal(float *inbuffer, float *outbuffer, unsig
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A956C0
+// OFFSET: 0x00A956C0/0x140855850
 FMOD_RESULT DSPCompressor::setParameterInternal(int index, float value)
 {
     FMOD_RESULT result;
@@ -506,7 +506,7 @@ FMOD_RESULT F_CALLBACK DSPCompressor::setParameterCallback(FMOD_DSP_STATE *dsp, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4ff29e9e IDENTICAL/NONE
+// PROVEN: 4ff29e9e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A95940/0x140855A40
 FMOD_RESULT F_CALLBACK DSPCompressor::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

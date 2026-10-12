@@ -38,6 +38,7 @@ ComSat::Network::SocketPosix::~SocketPosix() {
     closesocket(this->m_socket);
 }
 
+// PROVEN: 05538cf5 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A3B550/0x1407E82D0
 bool ComSat::Network::SocketPosix::Bind(int32_t port) {
     ComSat::Network::Address address;
@@ -53,11 +54,11 @@ int32_t ComSat::Network::SocketPosix::SendTo(const ComSat::Network::Address& add
     return sendto(this->m_socket, reinterpret_cast<const char*>(data), size, 0, reinterpret_cast<const sockaddr*>(&address.m_family), address.m_length);
 }
 
-// PROVEN: f0c4061c IDENTICAL/DIFFERENT
+// PROVEN: 082ba24f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B5E0/0x1407E8390
 bool ComSat::Network::SocketPosix::RecvFrom(ComSat::Network::Address& address, uint8_t* data, uint32_t& size) {
     memset(data, 0, size);
-    int32_t received = recvfrom(this->m_socket, reinterpret_cast<char*>(data), size, 0, reinterpret_cast<sockaddr*>(&address.m_family), &address.m_length);
+    int32_t received = recvfrom(this->m_socket, reinterpret_cast<char*>(data), size, 0, reinterpret_cast<sockaddr*>(&address.m_family), reinterpret_cast<int*>(&address.m_length));
     if (received == SOCKET_ERROR) {
         WSAGetLastError();
         return false;

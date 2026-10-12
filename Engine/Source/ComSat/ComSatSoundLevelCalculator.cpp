@@ -26,7 +26,7 @@ void ComSat::Sound::LevelCalculator16Bit::CalculateLevelForFrame(const uint8_t* 
     }
 }
 
-// OFFSET: 0x00A3B4B0
+// OFFSET: 0x00A3B4B0/0x1407E8210
 float ComSat::Sound::LevelCalculator16Bit::GetMaxDecibelLevel() {
     return static_cast<float>(log10(131.072) * 20.0f);
 }

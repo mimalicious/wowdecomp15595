@@ -19,28 +19,28 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// STATIC: 0x00D01AAC
+// STATIC: 0x00D01AAC/0x140BB16A0
 static World::FacetData s_footprintFacets;
 
 // STATIC: 0x00D01AE0
 static C3Vector s_footprintNormal(0.0f, 0.0f, 1.0f);
 
-// STATIC: 0x00E759A0
+// STATIC: 0x00E759A0/0x140D5F780
 static CGxShader* s_footprintPS;
 
-// STATIC: 0x00E759A4
+// STATIC: 0x00E759A4/0x140D5F788
 static CGxShader* s_footprintVS;
 
-// STATIC: 0x00E759A8
+// STATIC: 0x00E759A8/0x140D5F790
 static uint32_t s_footprintPlayerNext;
 
-// STATIC: 0x00E759AC
+// STATIC: 0x00E759AC/0x140D5F794
 static uint32_t s_footprintNext;
 
 // STATIC: 0x00E759B0
 static CMapFootprint s_footprints[320];
 
-// STATIC: 0x00E78BB0
+// STATIC: 0x00E78BB0/0x140D5F798
 static TSGrowableArray<CMapFootprintTexture> s_footprintTextures;
 
 // OFFSET: 0x0075D4C0
@@ -64,7 +64,6 @@ static CAaBox FootprintBounds(const C2Vector& size, const C3Vector& pos) {
     return box;
 }
 
-// PROVEN: bcb6208a IDENTICAL/NONE
 // OFFSET: 0x0075D550
 static void FootprintRotation(C44Matrix& matrix, const C2Vector& size, int32_t flip, float facing) {
     if (flip) {
@@ -83,7 +82,7 @@ static void FootprintRotation(C44Matrix& matrix, const C2Vector& size, int32_t f
     matrix.RotateAroundZ(-facing);
 }
 
-// OFFSET: 0x0075D730
+// OFFSET: 0x0075D730/0x140441050
 void CWorldMap::ClearAllFootprints() {
     for (CMapFootprint* footprint = s_footprints; footprint < &s_footprints[320]; footprint++) {
         footprint->m_textureIndex = 0;
@@ -95,8 +94,8 @@ void CWorldMap::ClearAllFootprints() {
     }
 }
 
-// PROVEN: 0d451cf6 IDENTICAL/NONE
-// OFFSET: 0x0075D7C0
+// PROVEN: 0d451cf6 IDENTICAL/UNPROVEN
+// OFFSET: 0x0075D7C0/0x140441130
 void CWorldMap::FootprintDestroy() {
     if (s_footprintVS) {
         g_theGxDevicePtr->ShaderRelease(s_footprintVS);
@@ -117,7 +116,7 @@ void CWorldMap::FootprintDestroy() {
     }
 }
 
-// OFFSET: 0x0075D840
+// OFFSET: 0x0075D840/0x1404411D0
 void CWorldMap::NewFootprint(uint32_t textureIndex, const C2Vector& size, const C3Vector& pos, float facing, int32_t flip, uint32_t terrainType, int32_t isPlayer) {
     if (textureIndex >= s_footprintTextures.m_count) {
         return;

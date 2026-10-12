@@ -10,7 +10,7 @@
 #include "WoW/Source/WorldClient/MapObjGroup.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00D0174C
+// STATIC: 0x00D0174C/0x140BB1228
 float CMapObj::s_closestDistSq = FLT_MAX;
 
 // OFFSET: 0x0079ECD0/0x140493FB0
@@ -42,6 +42,7 @@ void CMapObj::UpdateTextures(CMapObjGroup* group) {
     AsyncFileReadAddStreamingObject(CMapObjGroup::LinkToAsyncHead, group, priority);
 }
 
+// PROVEN: 50f2b2ac IDENTICAL/DIFFERENT
 // OFFSET: 0x0079ED90/0x1404940B0
 void CMapObj::UpdateGroups(CMapObj* mapObj) {
     for (uint32_t i = 0; i < mapObj->m_mapObjGroupCount; i++) {

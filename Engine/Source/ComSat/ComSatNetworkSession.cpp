@@ -27,7 +27,8 @@ void ComSat::Network::Session::Recv(uint64_t talker, const uint8_t* data, uint32
     this->m_callback->Recv(talker, data, size);
 }
 
-// OFFSET: 0x00A39650
+// PROVEN: 03f8b0c3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A39650/0x1407E59D0
 void ComSat::Network::Session::SetTalkerNetworkIdLocal(uint64_t talker, uint8_t networkId) {
     LocalTalker key;
     key.m_talker = talker;
@@ -38,7 +39,7 @@ void ComSat::Network::Session::SetTalkerNetworkIdLocal(uint64_t talker, uint8_t 
     }
 }
 
-// OFFSET: 0x00A396A0
+// OFFSET: 0x00A396A0/0x1407E5A10
 void ComSat::Network::Session::SetTalkerNetworkIdRemote(uint64_t talker, uint8_t networkId) {
     RemoteTalker key;
     key.m_talker = talker;
@@ -117,7 +118,7 @@ ComSat::Network::Session::~Session() {
     }
 }
 
-// OFFSET: 0x00A39A50
+// OFFSET: 0x00A39A50/0x1407E5DC0
 bool ComSat::Network::Session::Remove(uint64_t talker) {
     RemoteTalker key;
     key.m_talker = talker;

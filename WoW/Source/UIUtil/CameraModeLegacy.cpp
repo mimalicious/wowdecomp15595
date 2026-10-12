@@ -8,7 +8,7 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/UIUtil/CameraManager.h"
 
-// STATIC: 0x00D3A7A8
+// STATIC: 0x00D3A7A8/0x140BF5A98
 int32_t CCameraModeLegacy::s_suspended;
 
 // OFFSET: 0x004617A0/0x1400744B0
@@ -100,13 +100,13 @@ void CCameraModeLegacy::UpdateInstance(CCameraModeInstance* instance, float elap
     }
 }
 
-// PROVEN: ed6438cc IDENTICAL/DIFFERENT
+// PROVEN: ed6438cc IDENTICAL/IDENTICAL
 // OFFSET: 0x009FCE20/0x14090EBB0
 int32_t CCameraModeLegacy::GetType() const {
     return CAMERA_MODE_LEGACY;
 }
 
-// PROVEN: cf1f18de IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: cf1f18de IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CCameraModeLegacy::DestroyInstance(CCameraModeInstance* instance) const {
 }

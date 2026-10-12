@@ -9,12 +9,13 @@
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include <cstring>
 
-// STATIC: 0x00DC0D3C
+// STATIC: 0x00DC0D3C/0x140CA68D8
 int32_t s_currentOutputDevice;
 
-// STATIC: 0x00DC0D40
+// STATIC: 0x00DC0D40/0x140CA68DC
 int32_t s_currentCaptureDevice;
 
+// PROVEN: 0381a5c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DC2E0/0x14011A7A0
 static int32_t Script_VoiceIsDisabledByClient(lua_State* L) {
     if (s_comsatDisabledByClient) {
@@ -322,8 +323,8 @@ static int32_t Script_VoiceGetCurrentOutputDevice(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 645851d3 IDENTICAL/NONE
-// OFFSET: 0x004DAB90
+// PROVEN: 645851d3 IDENTICAL/UNPROVEN
+// OFFSET: 0x004DAB90/0x140119030
 static int32_t Script_SetActiveVoiceChannelBySessionID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         lua_pushnil(L);
@@ -357,7 +358,7 @@ static int32_t Script_SetActiveVoiceChannelBySessionID(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00CA0F20
+// STATIC: 0x00CA0F20/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "VoiceEnumerateOutputDevices", &Script_VoiceEnumerateOutputDevices },
     { "VoiceEnumerateCaptureDevices", &Script_VoiceEnumerateCaptureDevices },
@@ -376,7 +377,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "UnitIsTalking", &Script_UnitIsTalking },
 };
 
-// PROVEN: 23a6a688 IDENTICAL/NONE
+// PROVEN: 23a6a688 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DB2D0/0x140119880
 void VoiceRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -384,7 +385,7 @@ void VoiceRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: d2acb2c7 IDENTICAL/NONE
+// PROVEN: d2acb2c7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DB300/0x1401198D0
 void VoiceUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

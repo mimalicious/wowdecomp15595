@@ -27,6 +27,7 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
+// PROVEN: be0f117b IDENTICAL/UNPROVEN
 // OFFSET: 0x007749E0/0x14045E950
 void CWorldMap::UpdateAllEnvironments() {
     for (int32_t i = 0; i < 2; i++) {
@@ -72,7 +73,7 @@ void CWorldMap::UpdateMaps(int32_t preload) {
     }
 }
 
-// OFFSET: 0x00774A30
+// OFFSET: 0x00774A30/0x14045E9D0
 void CWorldMap::UpdateAreas() {
     if (!this->m_maps[0]) {
         return;
@@ -541,7 +542,7 @@ void CWorldMap::GetLowDetailAreaRect(const C3Vector& pos, CiRect& rect) {
     }
 }
 
-// OFFSET: 0x0079CB70
+// OFFSET: 0x0079CB70/0x140491690
 void CWorldMap::LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float* dists, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]) {
     C3Vector localStart = start * mapObjDef->m_invMat;
     C3Vector localEnd = end * mapObjDef->m_invMat;
@@ -612,7 +613,7 @@ void CWorldMap::LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& sta
     }
 }
 
-// OFFSET: 0x0079CF70
+// OFFSET: 0x0079CF70/0x140491B80
 int32_t CWorldMap::LocateViewerMapObjDefs(CMapChunk* chunk, const C3Vector& start, const C3Vector& end, float t, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]) {
     float dists[2];
     dists[0] = t;

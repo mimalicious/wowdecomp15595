@@ -9,10 +9,10 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Storm/H/stpl.h"
 
-// STATIC: 0x00CA08E0
+// STATIC: 0x00CA08E0/0x140B3CC10
 static const C44Matrix s_catmullRomBasis(-0.5f, 1.0f, -0.5f, 0.0f, 1.5f, -2.5f, 0.0f, 1.0f, -1.5f, 2.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f);
 
-// STATIC: 0x00CA0920
+// STATIC: 0x00CA0920/0x140B3CC50
 static const C34Matrix s_catmullRomDer1(-1.5f, 2.0f, -0.5f, 4.5f, -5.0f, 0.0f, -4.5f, 4.0f, 0.5f, 1.5f, -1.0f, 0.0f);
 
 // PROVEN: 6e188d90 IDENTICAL/NONE
@@ -98,7 +98,7 @@ void C3Spline_CatmullRom::ParametricSegT(float t, uint32_t& seg, float& segT) {
     segT = static_cast<float>(segCount * (t - 1.0 / segCount * seg));
 }
 
-// PROVEN: 38927d52 IDENTICAL/UNPROVEN
+// PROVEN: 38927d52 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CA110/0x140105120
 float C3Spline_CatmullRom::ILength() {
     return C3Spline::ILength(this->m_pointCount - 3);
@@ -263,7 +263,7 @@ uint32_t C3Spline_CatmullRom::IGetPoints(float t, C3Vector* points, uint32_t cou
     return remaining;
 }
 
-// OFFSET: 0x004CABF0
+// OFFSET: 0x004CABF0/0x140106630
 int32_t C3Spline_CatmullRom::Smooth(float minLength, int32_t keepStart) {
     if (!this->m_splineMode) {
         return 0;
@@ -395,6 +395,7 @@ int32_t C3Spline_CatmullRom::Smooth(float minLength, int32_t keepStart) {
     return 1;
 }
 
+// PROVEN: b8cf4231 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CB4A0/0x1401070F0
 void C3Spline_CatmullRom::ISetPoints(const C3Vector* points, uint32_t count) {
     if (count) {

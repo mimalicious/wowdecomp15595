@@ -12,10 +12,10 @@
 // STATIC: 0x00D27C88/0x140BE64B0
 static float s_scaler = 1.0f;
 
-// STATIC: 0x01008B38
+// STATIC: 0x01008B38/0x140EE04E0
 ParticleSystemManager* ParticleSystemManager::s_instance;
 
-// STATIC: 0x01008B3C
+// STATIC: 0x01008B3C/0x140EE04E8
 RibbonManager* RibbonManager::s_instance;
 
 // PROVEN: 9a00f6d5 IDENTICAL/NONE
@@ -36,7 +36,7 @@ void ParticleSystemManager::SetScaler(float scaler) {
     }
 }
 
-// OFFSET: 0x00B13C10
+// OFFSET: 0x00B13C10/0x1408D9990
 void ParticleSystemManager::Flush() {
     for (uint32_t i = this->m_emitters2.Count(); i; i--) {
         this->m_emitters2[i - 1]->DecRef();
@@ -51,6 +51,7 @@ void ParticleSystemManager::Flush() {
     this->m_pendingEmitters2.m_count = 0;
 }
 
+// PROVEN: 7f3b8824 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B13C60/0x1408D9A10
 CParticleEmitter2* ParticleSystemManager::DuplicateEmitter(const CParticleEmitter2* emitter, int32_t copyParticles) {
     if (!emitter) {
@@ -65,7 +66,7 @@ CParticleEmitter2* ParticleSystemManager::DuplicateEmitter(const CParticleEmitte
     return duplicate;
 }
 
-// OFFSET: 0x00B13CB0
+// OFFSET: 0x00B13CB0/0x1408D9A70
 void RibbonManager::Flush() {
     for (uint32_t i = this->m_emitters.Count(); i; i--) {
         this->m_emitters[i - 1]->DecRef();
@@ -105,7 +106,8 @@ ParticleSystemManager::~ParticleSystemManager() {
     this->Flush();
 }
 
-// OFFSET: 0x00B13EA0
+// PROVEN: dcce1d29 IDENTICAL/UNPROVEN
+// OFFSET: 0x00B13EA0/0x1408D9BF0
 void ParticleSystemManager::Destroy() {
     if (ParticleSystemManager::s_instance) {
         CParticleEmitter2::Destroy();
@@ -115,7 +117,7 @@ void ParticleSystemManager::Destroy() {
     ParticleSystemManager::s_instance = NULL;
 }
 
-// OFFSET: 0x00B13ED0
+// OFFSET: 0x00B13ED0/0x1408D9CB0
 void RibbonManager::Destroy() {
     delete RibbonManager::s_instance;
     RibbonManager::s_instance = NULL;

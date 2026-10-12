@@ -27,19 +27,19 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// STATIC: 0x00E89658
+// STATIC: 0x00E89658/0x140D75470
 CShaderEffect* CMapObjRender::s_unifiedEffects[15];
 
-// STATIC: 0x00E89694
+// STATIC: 0x00E89694/0x140D75470
 CShaderEffect* CMapObjRender::s_effects[15];
 
-// STATIC: 0x00E896D0
+// STATIC: 0x00E896D0/0x140D75468
 FFX::Effect* CMapObjRender::s_submarineEffect;
 
-// STATIC: 0x00E896D4
+// STATIC: 0x00E896D4/0x140D754E8
 FFX::Effect* CMapObjRender::s_waterWindowEffect;
 
-// STATIC: 0x00EA96D8
+// STATIC: 0x00EA96D8/0x140BB29D0
 TSHashTable<CSceneMaterial, HASHKEY_MATERIAL> CMapObjRender::s_materialHash;
 
 static float ColorByte(uint8_t value) {
@@ -63,7 +63,7 @@ static void DestroyWaterEffects() {
     }
 }
 
-// PROVEN: cdaa04ca IDENTICAL/NONE
+// PROVEN: cdaa04ca IDENTICAL/UNPROVEN
 // OFFSET: 0x007797C0/0x140465500
 SMOMaterial* CMapObj::GetGroupMaterial(uint32_t groupNum) {
     CMapObjGroup* group = this->GetGroup(groupNum, 0);
@@ -81,13 +81,13 @@ void CMapObjRender::WaterResetCallback() {
     CreateWaterEffects();
 }
 
-// PROVEN: 06dc38c7 IDENTICAL/NONE
-// OFFSET: 0x00779890
+// PROVEN: 06dc38c7 IDENTICAL/DIFFERENT
+// OFFSET: 0x00779890/0x140465610
 bool HASHKEY_MATERIAL::operator==(const HASHKEY_MATERIAL& key) const {
     return this->m_textures[0] == key.m_textures[0] && this->m_textures[1] == key.m_textures[1] && this->m_textures[2] == key.m_textures[2] && this->m_materialFlags == key.m_materialFlags && this->m_ambColor == key.m_ambColor && this->m_color == key.m_color && this->m_pass == key.m_pass && this->m_shader == key.m_shader && this->m_unified == key.m_unified && this->m_blendMode == key.m_blendMode && this->m_cull == key.m_cull && this->m_lighting == key.m_lighting && this->m_interior == key.m_interior && this->m_fog == key.m_fog && this->m_secondVB == key.m_secondVB && this->m_shadow == key.m_shadow;
 }
 
-// OFFSET: 0x00779960
+// OFFSET: 0x00779960/0x1404656D0
 float CMapObj::CalcPortalFarthestDistance(const SMOPortalInfo* portal, const C4Plane& plane) {
     float farthest = 0.0f;
     const C3Vector* verts = &this->m_portalVertices[portal->m_startVertex];
@@ -103,7 +103,7 @@ float CMapObj::CalcPortalFarthestDistance(const SMOPortalInfo* portal, const C4P
     return farthest;
 }
 
-// OFFSET: 0x00779B00
+// OFFSET: 0x00779B00/0x140465870
 void CMapObj::CalcPortalCenterInWorldSpace(const SMOPortalInfo* portal, const C44Matrix& matrix, C3Vector& pos) {
     pos.x = 0.0f;
     pos.y = 0.0f;
@@ -171,7 +171,7 @@ void CMapObjRender::Initialize() {
     Liquid::AddConfigChangedCallback(CMapObjRender::WaterResetCallback);
 }
 
-// OFFSET: 0x00779F10
+// OFFSET: 0x00779F10/0x140465D40
 void CMapObjRender::Destroy() {
     Liquid::RemoveConfigChangedCallback(CMapObjRender::WaterResetCallback);
     DestroyWaterEffects();
@@ -224,8 +224,8 @@ void CMapObjRender::RenderMaterialElements(CWorldView* view, CSceneMaterial* mat
     }
 }
 
-// PROVEN: 99d80a2d IDENTICAL/NONE
-// OFFSET: 0x0077A320
+// PROVEN: 99d80a2d IDENTICAL/DIFFERENT
+// OFFSET: 0x0077A320/0x140466200
 HASHKEY_MATERIAL& HASHKEY_MATERIAL::operator=(const HASHKEY_MATERIAL& key) {
     this->m_textures[0] = key.m_textures[0];
     this->m_textures[1] = key.m_textures[1];
@@ -315,7 +315,7 @@ void CMapObjRender::SceneSetup(CWorldView* view) {
     GxRsSet(GxRs_DepthWrite, 1);
 }
 
-// OFFSET: 0x0077A800
+// OFFSET: 0x0077A800/0x140466760
 void CSceneMaterial::UpdateSceneMaterial(int32_t shadow) {
     CShaderEffect* effect = this->m_key.m_unified ? CMapObjRender::s_unifiedEffects[this->m_key.m_shader] : CMapObjRender::s_effects[this->m_key.m_shader];
     this->m_effect = effect;
@@ -481,7 +481,7 @@ int32_t CMapObjRender::ApplyMaterial(CWorldView* view, CSceneMaterial* material)
     return 1;
 }
 
-// OFFSET: 0x0077B0A0
+// OFFSET: 0x0077B0A0/0x1404671E0
 void CMapObjRender::BuildFrameMaterials(CWorldView* view) {
     for (uint32_t i = 0; i < 5; i++) {
         this->m_materials[i].m_count = 0;
@@ -510,7 +510,7 @@ void CMapObjRender::RenderMaterialList(CWorldView* view, TSGrowableArray<CSceneM
     }
 }
 
-// OFFSET: 0x0077B220
+// OFFSET: 0x0077B220/0x1404673E0
 void CMapObj::RenderMapObjGroupsShadowMap(const CWorldQueryElement* groups, uint32_t count, const C44Matrix& world, const CFrustum& frustum) {
     CAaBox bounds;
     bounds.b.x = 0.0f;
@@ -589,7 +589,7 @@ void CMapObj::RenderMapObjGroupsShadowMap(const CWorldQueryElement* groups, uint
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0077B580
+// OFFSET: 0x0077B580/0x140467870
 void CMapObj::RenderMapObjGroupsColor(const CWorldQueryElement* groups, uint32_t count, const C44Matrix& world, const CImVector& color) {
     uint32_t vertexColor = *reinterpret_cast<const uint32_t*>(&color);
 
@@ -675,7 +675,7 @@ void CMapObj::RenderMapObjGroupsColor(const CWorldQueryElement* groups, uint32_t
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0077BA60
+// OFFSET: 0x0077BA60/0x140467E80
 void CMapObjRender::UnregisterMaterial(CSceneMaterial* material) {
     if (--material->m_refCount != 0) {
         return;
@@ -706,7 +706,7 @@ void CMapObjRender::RenderPass(CWorldView* view, uint32_t pass) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0077C390
+// OFFSET: 0x0077C390/0x140468B70
 CSceneMaterial* CMapObjRender::RegisterMaterial(const HASHKEY_MATERIAL& key) {
     uint32_t seed = (key.m_blendMode << 8) | (key.m_materialFlags << 16) | key.m_shader;
     uint32_t hash = ((seed >> 2) + (seed << 6) + reinterpret_cast<uintptr_t>(key.m_textures[0]) - 0x61C88647) ^ seed;
@@ -730,7 +730,7 @@ CSceneMaterial* CMapObjRender::RegisterMaterial(const HASHKEY_MATERIAL& key) {
     return material;
 }
 
-// OFFSET: 0x0077C4C0
+// OFFSET: 0x0077C4C0/0x140468D50
 void CMapObj::UpdateSceneMaterials(CMapObjDefGroup* defGroup, uint32_t state) {
     CMapObjGroup* group = this->GetGroup(defGroup->m_groupNum, 0);
     int32_t unified = this->m_header->m_flags & 0x2;

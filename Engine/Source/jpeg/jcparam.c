@@ -62,7 +62,7 @@ void jpeg_add_quant_table(j_compress_ptr cinfo, int which_tbl, const int *basic_
 
 /* Define a Huffman table */
 // PROVEN: 498b58ac IDENTICAL/NONE
-// OFFSET: 0x00B5DB40
+// OFFSET: 0x00B5DB40/0x140926580
 static void add_huff_table(j_compress_ptr cinfo, JHUFF_TBL **htblptr, const UINT8 *bits, const UINT8 *val) {
   int nsymbols, len;
 
@@ -277,7 +277,7 @@ void jpeg_set_defaults(j_compress_ptr cinfo) {
  */
 
 // PROVEN: cd5032e1 IDENTICAL/NONE
-// OFFSET: 0x00B5DF70
+// OFFSET: 0x00B5DF70/0x140926C90
 void jpeg_default_colorspace(j_compress_ptr cinfo) {
   switch (cinfo->in_color_space) {
   case JCS_GRAYSCALE:
@@ -309,7 +309,7 @@ void jpeg_default_colorspace(j_compress_ptr cinfo) {
  */
 
 // PROVEN: 67fe2403 IDENTICAL/NONE
-// OFFSET: 0x00B5DC80
+// OFFSET: 0x00B5DC80/0x140926890
 void jpeg_set_colorspace(j_compress_ptr cinfo, J_COLOR_SPACE colorspace) {
   jpeg_component_info * compptr;
   int ci;

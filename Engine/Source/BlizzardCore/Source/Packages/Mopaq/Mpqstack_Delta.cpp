@@ -34,7 +34,7 @@ static void ComputeMD5(Blizzard::Util::Digest<16>* digest, const void* buffer, u
     md5.Finish(digest->m_data);
 }
 
-// OFFSET: 0x007B26E0
+// OFFSET: 0x007B26E0/0x1404A7920
 bool MpqPatchStream::Read(uint32_t offset, void* buffer, uint32_t size) {
     System_Mopaq::MpqParams parms;
     memset(&parms, 0, sizeof(parms));
@@ -726,7 +726,7 @@ bool System_Mopaq::delta_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// OFFSET: 0x007AB340
+// OFFSET: 0x007AB340/0x1404A13F0
 bool System_Mopaq::delta_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     DeltaData* delta = handle->m_delta;

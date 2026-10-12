@@ -96,6 +96,7 @@ void SHA1_Init(SHA1_CONTEXT* context) {
     context->m_count[0] = context->m_count[1] = 0;
 }
 
+// PROVEN: ca279a82 DIFFERENT/IDENTICAL
 // OFFSET: 0x00658680/0x1402FBE30
 void SHA1_Update(SHA1_CONTEXT* context, const uint8_t* data, uint32_t length) {
     uint32_t i;
@@ -124,7 +125,7 @@ void SHA1_Update(SHA1_CONTEXT* context, const uint8_t* data, uint32_t length) {
     memcpy(&context->m_buffer[j], &data[i], length - i);
 }
 
-// PROVEN: 0f2c1954 IDENTICAL/UNPROVEN
+// PROVEN: 0f2c1954 IDENTICAL/IDENTICAL
 // OFFSET: 0x00658740/0x1402FBF00
 void SHA1_Final(uint8_t* digest, SHA1_CONTEXT* context) {
     uint8_t finalcount[8];
@@ -146,7 +147,7 @@ void SHA1_Final(uint8_t* digest, SHA1_CONTEXT* context) {
     }
 }
 
-// PROVEN: 71e4effe IDENTICAL/UNPROVEN
+// PROVEN: 71e4effe IDENTICAL/IDENTICAL
 // OFFSET: 0x00658810/0x1402FC0A0
 uint8_t* SHA1_InterleaveHash(uint8_t* out, const uint8_t* in, uint32_t length) {
     while (length && !*in) {
@@ -264,7 +265,7 @@ void SHA1::Prepare() {
     this->m_hash[4] = 0xC3D2E1F0;
 }
 
-// PROVEN: f6e0a8d7 IDENTICAL/UNPROVEN
+// PROVEN: f6e0a8d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AA0F0/0x1404A04A0
 void SHA1::Process(const void* _data, uint32_t length) {
     const uint8_t* data = static_cast<const uint8_t*>(_data);

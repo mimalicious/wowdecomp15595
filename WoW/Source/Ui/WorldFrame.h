@@ -92,7 +92,6 @@ class CGWorldFrame : public CSimpleFrame {
     /* 0208 */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_freeModelList;
     /* 0214 */ uint32_t unk_0214;
     /* 0218 */ uint32_t unk_0218;
-    /* 021C */ uint32_t unk_021C;
     /* 0220 */ WOWGUID m_trackedGuid;
     /* 0228 */ WOWGUID m_hitGuid;
     /* 0230 */ uint32_t m_defaultActionHitKind;

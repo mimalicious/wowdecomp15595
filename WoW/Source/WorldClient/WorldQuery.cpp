@@ -15,6 +15,7 @@
 #include "WoW/Source/WorldClient/WorldOcclusion.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
+// PROVEN: 363e3331 IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D5F0/0x1404923F0
 void CWorldQuery::FreeMapObjGroupList() {
     if (this->m_mapObjGroups) {
@@ -26,6 +27,7 @@ void CWorldQuery::FreeMapObjGroupList() {
     this->m_mapObjGroupMax = 0;
 }
 
+// PROVEN: 2938453e IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D620/0x140492440
 void CWorldQuery::FreeModelList() {
     if (this->m_models) {
@@ -37,8 +39,8 @@ void CWorldQuery::FreeModelList() {
     this->m_modelMax = 0;
 }
 
-// PROVEN: 200c511b IDENTICAL/NONE
-// OFFSET: 0x0079D650
+// PROVEN: 200c511b IDENTICAL/DIFFERENT
+// OFFSET: 0x0079D650/0x140492490
 void CWorldQuery::AllocMapObjGroupList(uint32_t count) {
     if (!this->m_mapObjGroups) {
         CWorldQueryElement* groups = static_cast<CWorldQueryElement*>(SMemAlloc(sizeof(CWorldQueryElement) * count, __FILE__, __LINE__, 0));
@@ -49,6 +51,7 @@ void CWorldQuery::AllocMapObjGroupList(uint32_t count) {
     this->m_mapObjGroupCount = 0;
 }
 
+// PROVEN: dbe44580 DIFFERENT/IDENTICAL
 // OFFSET: 0x0079D690/0x1404924F0
 CWorldQuery::CWorldQuery() {
     this->m_untexturedBatches.m_batches = NULL;
@@ -67,6 +70,7 @@ CWorldQuery::CWorldQuery() {
     this->m_modelMax = 0;
 }
 
+// PROVEN: 1e44c09a IDENTICAL/IDENTICAL
 // OFFSET: 0x0079D6D0/0x140492530
 void CWorldQuery::FreeModelBatchList() {
     if (this->m_untexturedBatches.m_batches) {
@@ -86,7 +90,7 @@ void CWorldQuery::FreeModelBatchList() {
     this->m_texturedBatches.m_maxCount = 0;
 }
 
-// OFFSET: 0x0079D720
+// OFFSET: 0x0079D720/0x1404925A0
 void CWorldQuery::AllocModelBatchList(uint32_t count) {
     if (!this->m_untexturedBatches.m_batches) {
         this->m_untexturedBatches.m_batches = static_cast<CModelBatch*>(SMemAlloc((static_cast<uint64_t>(count) * sizeof(CModelBatch)) >> 32 ? 0xFFFFFFFF : count * sizeof(CModelBatch), __FILE__, __LINE__, 0));
@@ -105,6 +109,7 @@ void CWorldQuery::AllocModelBatchList(uint32_t count) {
     this->m_texturedBatches.m_optimizedCount = 0;
 }
 
+// PROVEN: d0a0bdcb IDENTICAL/DIFFERENT
 // OFFSET: 0x0079D7B0/0x140492640
 CWorldQuery::~CWorldQuery() {
     this->FreeMapObjGroupList();
@@ -122,14 +127,15 @@ void CWorldQuery::AddMapObjGroup(CMapObjGroup* group, const C44Matrix* matrix) {
     }
 }
 
-// OFFSET: 0x0079D860
+// PROVEN: 60c21c27 IDENTICAL/DIFFERENT
+// OFFSET: 0x0079D860/0x1404926B0
 int32_t CWorldView::IsBeyondFadeInner(const C3Vector& pos, uint32_t sizeCategory) {
     float dx = pos.x - this->m_camPos.x;
     float dy = pos.y - this->m_camPos.y;
     return dx * dx + dy * dy + (pos.z - this->m_camPos.z) * (pos.z - this->m_camPos.z) > CWorldView::s_fadeInnerSqr[sizeCategory];
 }
 
-// OFFSET: 0x0079D8D0
+// OFFSET: 0x0079D8D0/0x140492710
 void CWorldMap::ShadowQueryEntitys(CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand) {
     float minRadius[3];
     float maxRadius[3];
@@ -178,7 +184,7 @@ void CWorldMap::ShadowQueryEntitys(CShadowQuery& query, CShadowCacheQueryData& d
     }
 }
 
-// OFFSET: 0x0079DB40
+// OFFSET: 0x0079DB40/0x1404929C0
 void CWorldMap::ShadowQueryMapObjDef(CMapObjDef* mapObjDef, CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand) {
     CWorldView* view = query.m_worldView;
 
@@ -236,7 +242,7 @@ void CWorldMap::ShadowQueryMapObjDef(CMapObjDef* mapObjDef, CShadowQuery& query,
     }
 }
 
-// OFFSET: 0x0079DF90
+// OFFSET: 0x0079DF90/0x140492F30
 void CWorldMap::ShadowQueryMapObjDef(CMapObjDef* mapObjDef, CShadowQuery& query, CShadowCacheQueryData& data, int32_t band, float maxRadius) {
     int32_t global = 0;
     int32_t textured = 0;
@@ -318,7 +324,7 @@ void CWorldMap::ShadowQueryMapObjDef(CMapObjDef* mapObjDef, CShadowQuery& query,
     }
 }
 
-// OFFSET: 0x0079E340
+// OFFSET: 0x0079E340/0x140493390
 void CWorldMap::ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand) {
     CWorldMap::s_queryTag++;
     CiRect rect(0, 0, 0, 0);
@@ -355,7 +361,7 @@ void CWorldMap::ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& d
     }
 }
 
-// OFFSET: 0x0079E4B0
+// OFFSET: 0x0079E4B0/0x1404935A0
 void CWorldMap::ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, int32_t band) {
     CWorldMap::s_queryTag++;
     CiRect rect(0, 0, 0, 0);
@@ -392,7 +398,7 @@ void CWorldMap::ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& d
     }
 }
 
-// OFFSET: 0x0079E610
+// OFFSET: 0x0079E610/0x140493780
 void CWorldMap::ShadowQueryMapObjDefs(CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand) {
     for (CMapObjDef* mapObjDef = this->m_mapObjDefList.Head(), * next; mapObjDef; mapObjDef = next) {
         next = this->m_mapObjDefList.Next(mapObjDef);
@@ -403,7 +409,7 @@ void CWorldMap::ShadowQueryMapObjDefs(CShadowQuery& query, CShadowCacheQueryData
     }
 }
 
-// OFFSET: 0x0079E670
+// OFFSET: 0x0079E670/0x140493810
 void CWorldMap::ShadowQueryMapObjDefs(CShadowQuery& query, CShadowCacheQueryData& data, int32_t band) {
     float minRadius;
     float maxRadius;
@@ -418,7 +424,7 @@ void CWorldMap::ShadowQueryMapObjDefs(CShadowQuery& query, CShadowCacheQueryData
     }
 }
 
-// OFFSET: 0x0079F670
+// OFFSET: 0x0079F670/0x140494D90
 void CMap::ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, CiRect& rect, int32_t startBand, int32_t endBand) {
     CMapAreaTableEntry* entry = this->m_areaTable.Get((rect.minX >> 4) & 0x3F, (rect.minY >> 4) & 0x3F);
 
@@ -528,7 +534,7 @@ void CMap::ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, 
     }
 }
 
-// OFFSET: 0x0079FAD0
+// OFFSET: 0x0079FAD0/0x140495420
 void CMap::ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, CiRect& rect, int32_t band) {
     float minRadius;
     float maxRadius;

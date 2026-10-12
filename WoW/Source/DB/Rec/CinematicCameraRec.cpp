@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[5] = { 0, 2, 0, 3, 3 };
 // STATIC: 0x00C263E0/0x140A1C2C0
 const DBCMeta CinematicCameraRec::s_meta = { "DBFilesClient\\CinematicCamera.dbc", 5, 28, CinematicCameraRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: e16db06c IDENTICAL/NONE
+// PROVEN: e16db06c IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void CinematicCameraRec::FixupStrings(void* record, const char* strings) {
     CinematicCameraRec* rec = static_cast<CinematicCameraRec*>(record);

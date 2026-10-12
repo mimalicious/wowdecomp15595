@@ -25,10 +25,8 @@ class Login : public Grunt::ClientResponse {
     /* 000D */ char m_username [1280];
     /* 050D */ char m_rawUsername [1280];
     /* 0A0D */ char unk_0A0D [1280];
-    /* 0F0D */ uint8_t unk_0F0D[3];
     /* 0F10 */ char* m_password;
     /* 0F14 */ uint8_t m_sessionKey [40];
-    /* 0F3C */ uint32_t unk_0F3C;
     /* 0F40 */ uint64_t m_fileSize;
     /* 0F48 */ uint8_t m_fileMD5 [16];
     /* 0F58 */ char m_fileName [260];
@@ -42,16 +40,14 @@ class Login : public Grunt::ClientResponse {
     /* 10A0 */ uint8_t m_matrixMaxDigitCount;
     /* 10A1 */ uint8_t m_matrixChallengeCount;
     /* 10A2 */ bool m_matrixFlipCoords;
-    /* 10A3 */ uint8_t unk_10A3[1];
     /* 10A4 */ uint32_t* m_matrixData;
     /* 10A8 */ uint32_t unk_10A8 [4];
-    /* 10B8 */ uint64_t m_matrixSeed;
+    /* 10B8 */ uintptr_t m_matrixSeed[2];
     /* 10C0 */ uint32_t unk_10C0 [5];
     /* 10D4 */ bool m_tokenRequired;
     /* 10D5 */ uint8_t unk_10D5;
     /* 10D6 */ uint8_t unk_10D6 [17];
-    /* 10E7 */ uint8_t unk_10E7[1];
-    /* 10E8 */ uint32_t unk_10E8;
+    /* 10E8 */ uintptr_t unk_10E8;
     /* 10EC */ LoginResponse* m_loginResponse;
 
     bool OnlineIdle() override;

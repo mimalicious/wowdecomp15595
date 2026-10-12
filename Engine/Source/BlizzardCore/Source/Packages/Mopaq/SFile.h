@@ -91,4 +91,6 @@ bool SFileWriteFile(HSFILERecord* file, const void* data, uint32_t size);
 }
 }
 
+#include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFile.inl"
+
 #endif

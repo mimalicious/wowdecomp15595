@@ -32,7 +32,7 @@ struct CloudOctave {
     /* 0050 */ uint32_t m_lastX0;
 };
 
-// STATIC: 0x00BBAF18
+// STATIC: 0x00BBAF18/0x1409A2EE0
 static uint32_t s_lodSizes[5] = { 128, 256, 512, 1024, 2048 };
 
 // STATIC: 0x00BBAF2C
@@ -44,7 +44,7 @@ static float s_ringAngles[12] = { 0.0f, 0.025f, 0.050000001f, 0.075000003f, 0.1f
 // STATIC: 0x00BBAF70
 static uint8_t s_ringAlphas[12] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 128, 0, 0 };
 
-// STATIC: 0x00CEFAD8
+// STATIC: 0x00CEFAD8/0x140B901D0
 static uint8_t s_perm[256] = {
     225, 155, 210, 108, 175, 199, 221, 144, 203, 116, 70, 213, 69, 158, 33, 252,
     5, 82, 173, 133, 222, 139, 174, 27, 9, 71, 90, 246, 75, 130, 91, 191,
@@ -85,22 +85,22 @@ static uint16_t s_octaveScales[5][5] = {
     { 1, 2, 4, 8, 4 },
 };
 
-// STATIC: 0x00E42950
+// STATIC: 0x00E42950/0x140D2B6C0
 static float s_smoothTable[256];
 
 // STATIC: 0x00E42D50
 static uint8_t s_sharpnessTable[256];
 
-// STATIC: 0x00E42E50
+// STATIC: 0x00E42E50/0x140D2BBC0
 static float s_noiseTable[256];
 
-// STATIC: 0x00E43250
+// STATIC: 0x00E43250/0x140D2BFC0
 uint32_t DayNight::DNClouds::s_refCount;
 
-// STATIC: 0x00E43254
+// STATIC: 0x00E43254/0x140D2BFC8
 CGxShader* DayNight::DNClouds::s_vertexShader;
 
-// STATIC: 0x00E43258
+// STATIC: 0x00E43258/0x140D2BFD0
 CGxShader* DayNight::DNClouds::s_pixelShader;
 
 // INLINED
@@ -109,13 +109,13 @@ static float FastInvSqrt(float value) {
     return *reinterpret_cast<float*>(&bits);
 }
 
-// PROVEN: b83565b0 IDENTICAL/NONE
+// PROVEN: b83565b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0064D260/0x1402E8790
 void DayNight::DNClouds::SetFullUpdate() {
     this->m_fullUpdate = 1;
 }
 
-// PROVEN: 42668219 IDENTICAL/NONE
+// PROVEN: 42668219 IDENTICAL/IDENTICAL
 // OFFSET: 0x0064D270/0x1402E87A0
 void DayNight::DNClouds::Callback_GxTex(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch && !level) {
@@ -124,8 +124,8 @@ void DayNight::DNClouds::Callback_GxTex(EGxTexCommand command, uint32_t width, u
     }
 }
 
-// PROVEN: f280b04a IDENTICAL/NONE
-// OFFSET: 0x0064D2A0
+// PROVEN: f280b04a IDENTICAL/DIFFERENT
+// OFFSET: 0x0064D2A0/0x1402E8890
 void DayNight::DNClouds::SetDensity(float density) {
     float value = this->m_densityOverride;
 
@@ -136,7 +136,7 @@ void DayNight::DNClouds::SetDensity(float density) {
     this->m_density = static_cast<uint8_t>(static_cast<int32_t>((1.0f - value) * 255.0f));
 }
 
-// PROVEN: 04cf9141 IDENTICAL/NONE
+// PROVEN: 04cf9141 IDENTICAL/IDENTICAL
 // OFFSET: 0x0064D2E0/0x1402E88C0
 void DayNight::DNClouds::Initialize() {
     if (!DNClouds::s_refCount++ && g_theGxDevicePtr->m_caps.m_shaderModel >= 3) {
@@ -145,8 +145,8 @@ void DayNight::DNClouds::Initialize() {
     }
 }
 
-// PROVEN: 8fc14f98 IDENTICAL/NONE
-// OFFSET: 0x0064D330
+// PROVEN: 8fc14f98 IDENTICAL/IDENTICAL
+// OFFSET: 0x0064D330/0x1402E8930
 void DayNight::DNClouds::Destroy() {
     if (this->m_textures[0]) {
         TextureRelease(this->m_textures[0]);
@@ -186,7 +186,7 @@ void __stdcall DayNight::DNClouds::Collide(const C3Vector& origin, const C3Vecto
     out.z = (origin.z + dir.z * t) + DayNight::g_dnInfo.m_camPos.z;
 }
 
-// OFFSET: 0x0064D4D0
+// OFFSET: 0x0064D4D0/0x1402E87D0
 void DayNight::DNClouds::SetSharpness(float sharpness) {
     this->m_sharpness = sharpness;
 
@@ -217,7 +217,7 @@ DayNight::DNClouds::DNClouds() {
     this->m_rowsPerUpdate = 8;
 }
 
-// OFFSET: 0x0064D660
+// OFFSET: 0x0064D660/0x1402E8B50
 void DayNight::DNClouds::WorldToTexture(const C3Vector& world, C2Vector& uv) {
     float dx = world.x - DayNight::g_dnInfo.m_camPos.x;
     float dy = world.y - DayNight::g_dnInfo.m_camPos.y;
@@ -244,7 +244,7 @@ void DayNight::DNClouds::WorldToTexture(const C3Vector& world, C2Vector& uv) {
     uv.y = (radius * ny + 0.5f) * static_cast<double>(this->m_size);
 }
 
-// OFFSET: 0x0064D7C0
+// OFFSET: 0x0064D7C0/0x1402E8CD0
 float DayNight::DNClouds::GetDensity(const C3Vector& pos, float scale) {
     if (!this->m_enabled) {
         return 0.0f;
@@ -538,7 +538,7 @@ void DayNight::DNClouds::Update() {
     }
 }
 
-// OFFSET: 0x0064E590
+// OFFSET: 0x0064E590/0x1402E9CE0
 void DayNight::DNClouds::GenSphere(float radius) {
     float prevPhi = 0.0f;
     uint16_t prevStart = 0;
@@ -638,7 +638,7 @@ void DayNight::DNClouds::SetLOD(uint32_t lod, uint32_t rowsPerUpdate) {
     this->m_fullUpdate = 1;
 }
 
-// OFFSET: 0x0064EA20
+// OFFSET: 0x0064EA20/0x1402EA540
 void DayNight::DNClouds::Render() {
     if (!this->m_enabled) {
         return;

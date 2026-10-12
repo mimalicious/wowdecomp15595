@@ -264,7 +264,7 @@ unsigned int System_SComp::PkwareBufferRead(void* param, unsigned char** buffer)
     return pkware->m_inputSize;
 }
 
-// PROVEN: d3d378ef IDENTICAL/UNPROVEN
+// PROVEN: d3d378ef IDENTICAL/IDENTICAL
 // OFFSET: 0x007AA9C0/0x1404A0D30
 int System_SComp::PkwareBufferWrite(void* param, unsigned char* data, unsigned int size) {
     PkwareBuffer* pkware = static_cast<PkwareBuffer*>(param);
@@ -273,7 +273,7 @@ int System_SComp::PkwareBufferWrite(void* param, unsigned char* data, unsigned i
     return 0;
 }
 
-// OFFSET: 0x007AA9F0
+// OFFSET: 0x007AA9F0/0x1404A0D60
 int32_t System_SComp::PkwareDecompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize) {
     PkwareBuffer buffer;
     buffer.m_output = static_cast<uint8_t*>(dest);
@@ -348,7 +348,7 @@ void System_SComp::PkwareCompress(void* dest, uint32_t* destSize, const void* so
     *hint = 0;
 }
 
-// PROVEN: 09c99054 IDENTICAL/UNPROVEN
+// PROVEN: 09c99054 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AAA50/0x1404A0DC0
 void System_SComp::Bzip2Compress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     int32_t result = BZ2_bzBuffToBuffCompress(static_cast<char*>(dest), destSize, static_cast<char*>(const_cast<void*>(source)), sourceSize, 9, 0, 0);
@@ -577,7 +577,8 @@ int System_SComp::zlib_compress(uint8_t* dest, uint32_t* destLen, const uint8_t*
     return deflateEnd(&stream);
 }
 
-// OFFSET: 0x007E42C0
+// PROVEN: 632df47d DIFFERENT/IDENTICAL
+// OFFSET: 0x007E42C0/0x1404EC220
 void System_SComp::ZlibCompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     int level2;
 
@@ -602,7 +603,7 @@ void System_SComp::ZlibCompress(void* dest, uint32_t* destSize, const void* sour
     *hint = 0;
 }
 
-// OFFSET: 0x007E6430
+// OFFSET: 0x007E6430/0x1404EFE30
 bool System_SComp::Compress(void* dst, uint32_t* dstSize, bool* checksum, const void* src, uint32_t srcSize, uint32_t count, const Blizzard::Mopaq::CompressionAlgorithm* algorithms) {
     *checksum = false;
 

@@ -37,6 +37,7 @@ HidDevice::HidDevice(const HidDevice& device) : m_thread(NULL), m_threadId(0), m
     strcpy_s(this->m_serialNumber, sizeof(this->m_serialNumber), device.m_serialNumber);
 }
 
+// PROVEN: d2124a41 IDENTICAL/NONE
 // OFFSET: 0x0087FC40/0x1405B8E90
 HidDevice::~HidDevice() {
     if (this->m_stopEvent) {

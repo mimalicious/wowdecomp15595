@@ -24,13 +24,13 @@
 // STATIC: 0x00BCEA84
 static const RECTF s_defaultRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 
-// STATIC: 0x00D07518
+// STATIC: 0x00D07518/0x140BB8120
 static char s_screenshotFormat[16] = "jpeg";
 
-// STATIC: 0x00D07528
+// STATIC: 0x00D07528/0x140BB8130
 static uint32_t s_screenshotQuality = 60;
 
-// STATIC: 0x00D0752C
+// STATIC: 0x00D0752C/0x140BB8138
 static TSExplicitList<CILayer, offsetof(CILayer, m_zorderlink)> s_zorderlist;
 
 // STATIC: 0x00EBB0F8/0x140DABE60
@@ -83,7 +83,7 @@ void ScrnSetScreenshotFormat(const char* format) {
     SStrCopy(s_screenshotFormat, format, sizeof(s_screenshotFormat));
 }
 
-// OFFSET: 0x007FF620
+// OFFSET: 0x007FF620/0x140513260
 void ScrnSetScreenshotQuality(int32_t quality) {
     if (static_cast<uint32_t>(quality - 1) > 9) {
         quality = quality - 1 < 0 ? 1 : 10;
@@ -316,6 +316,7 @@ void ScrnLayerCreate(const RECTF* rect, float zorder, uint32_t flags, void* para
 CILayer::~CILayer() {
 }
 
+// PROVEN: 9d890534 IDENTICAL/DIFFERENT
 // OFFSET: 0x007FFBC0/0x1405138C0
 void ILayerDestroy() {
     SRgnDelete(s_layerRgn);

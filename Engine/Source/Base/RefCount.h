@@ -12,4 +12,6 @@ class TRefCnt {
     virtual ~TRefCnt();
 };
 
+#include "Engine/Source/Base/RefCount.inl"
+
 #endif

@@ -500,7 +500,7 @@ void CGxDeviceOpenGl::IStateSyncVertexFormat() {
     this->m_curVertexFormat = this->m_primVertexFormats[0];
 }
 
-// OFFSET: 0x0085CE30
+// OFFSET: 0x0085CE30/0x14058EFD0
 int32_t CGxDeviceOpenGl::XformIsValidViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     const CRect& window = this->DeviceCurWindow();
     float height = window.maxY;

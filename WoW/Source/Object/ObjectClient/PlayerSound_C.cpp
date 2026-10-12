@@ -14,7 +14,7 @@
 #include "WoW/Source/Object/ObjectClient/VisibleItem_C.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: 0x00CA80D0
+// STATIC: 0x00CA80D0/0x140B47EF0
 static const uint32_t s_playerSoundChance[14] = { 35, 100, 30, 100, 100, 40, 100, 100, 100, 100, 100, 100, 100, 0 };
 
 // OFFSET: 0x0060AF00/0x1402941D0
@@ -86,6 +86,7 @@ void CGPlayer_C::PlayFoleySound() {
     }
 }
 
+// PROVEN: 0c1e808a IDENTICAL/UNPROVEN
 // OFFSET: 0x0060B240/0x140294590
 uint32_t CGPlayer_C::GetImpactType() const {
     VisibleItem_C* chest = const_cast<VisibleItem_C*>(this->GetVisibleItem(4));

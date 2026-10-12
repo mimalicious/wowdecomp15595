@@ -27,7 +27,7 @@ uint32_t GetBitDepth(uint32_t format) {
     }
 }
 
-// OFFSET: 0x00639300
+// OFFSET: 0x00639300/0x1402D0BD0
 uint32_t CalcLevelSize(uint32_t level, uint32_t width, uint32_t height, uint32_t format) {
     uint32_t levelWidth = width >> level ? width >> level : 1;
     uint32_t levelHeight = height >> level ? height >> level : 1;
@@ -96,8 +96,8 @@ MipBits* MippedImgAllocA(uint32_t format, uint32_t width, uint32_t height, const
     return images;
 }
 
-// PROVEN: 57394fb9 IDENTICAL/NONE
-// OFFSET: 0x006394C0
+// PROVEN: 57394fb9 IDENTICAL/DIFFERENT
+// OFFSET: 0x006394C0/0x1402D0E60
 uint32_t MippedImgCalcSize(uint32_t format, uint32_t width, uint32_t height) {
     uint32_t levelCount = CalcLevelCount(width, height);
     return CalcLevelOffset(levelCount, width, height, format) + levelCount * sizeof(MipBits);
@@ -112,61 +112,5 @@ void MippedImgSet(uint32_t format, uint32_t width, uint32_t height, MipBits* ima
     for (uint32_t i = 0; i < levelCount; i++) {
         images[i].m_mip[0] = reinterpret_cast<C4Pixel*>(reinterpret_cast<uint8_t*>(&images[levelCount]) + offset);
         offset += CalcLevelSize(i, width, height, format);
-    }
-}
-
-// INLINED
-void FullShrink(C4Pixel* dest, uint32_t destWidth, uint32_t destHeight, C4Pixel* source, uint32_t sourceWidth, uint32_t sourceHeight) {
-    uint32_t xRatio = sourceWidth / destWidth;
-    uint32_t yRatio = sourceHeight / destHeight;
-
-    for (uint32_t y = 0; y < destHeight; y++) {
-        for (uint32_t x = 0; x < destWidth; x++) {
-            int64_t weightedB = 0;
-            int64_t weightedG = 0;
-            int64_t weightedR = 0;
-            int64_t alpha = 0;
-            int64_t b = 0;
-            int64_t g = 0;
-            int64_t r = 0;
-            int64_t count = 0;
-            C4Pixel* row = source;
-
-            for (uint32_t j = 0; j < yRatio; j++) {
-                C4Pixel* pixel = row;
-
-                for (uint32_t i = 0; i < xRatio; i++) {
-                    alpha += pixel->m_a;
-                    weightedR += pixel->m_a * pixel->m_r;
-                    weightedG += pixel->m_a * pixel->m_g;
-                    weightedB += pixel->m_a * pixel->m_b;
-                    count++;
-                    r += pixel->m_r;
-                    g += pixel->m_g;
-                    b += pixel->m_b;
-                    pixel++;
-                }
-
-                row += sourceWidth;
-            }
-
-            C4Pixel result;
-
-            if (alpha) {
-                result.m_r = static_cast<uint8_t>(weightedR / alpha);
-                result.m_g = static_cast<uint8_t>(weightedG / alpha);
-                result.m_b = static_cast<uint8_t>(weightedB / alpha);
-            } else {
-                result.m_r = static_cast<uint8_t>(r / count);
-                result.m_g = static_cast<uint8_t>(g / count);
-                result.m_b = static_cast<uint8_t>(b / count);
-            }
-
-            result.m_a = static_cast<uint8_t>(alpha / (xRatio * yRatio));
-            *dest++ = result;
-            source += xRatio;
-        }
-
-        source += sourceWidth * (yRatio - 1);
     }
 }

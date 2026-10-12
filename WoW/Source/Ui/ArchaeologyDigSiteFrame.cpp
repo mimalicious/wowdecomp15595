@@ -11,13 +11,13 @@
 #include "WoW/Source/Ui/QuestLog.h"
 #include "WoW/Source/Ui/ResearchFrame.h"
 
-// STATIC: 0x00D17680
+// STATIC: 0x00D17680/0x140BD2528
 const char* CGArchaeologyDigSiteFrame::s_objectTypeName = "ArchaeologyDigSiteFrame";
 
-// STATIC: 0x00D17684
+// STATIC: 0x00D17684/0x140BD2530
 int32_t CGArchaeologyDigSiteFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00F76C58
+// STATIC: 0x00F76C58/0x140E6CD90
 int32_t CGArchaeologyDigSiteFrame::s_objectType;
 
 // STATIC: 0x00F76C5C
@@ -28,27 +28,30 @@ void CGArchaeologyDigSiteFrame::operator delete(void* ptr) {
     CGArchaeologyDigSiteFrame::s_digSiteHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x008C6490
+// OFFSET: 0x008C6490/0x1406364F0
 CSimpleFrame* CGArchaeologyDigSiteFrame::Create(CSimpleFrame* parent) {
     void* data = CGArchaeologyDigSiteFrame::s_digSiteHeap.GetData(0, typeid(CGArchaeologyDigSiteFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGArchaeologyDigSiteFrame(parent) : NULL;
 }
 
-// OFFSET: 0x00A02AA0
+// OFFSET: 0x00A02AA0/0x1407A1B60
 CGArchaeologyDigSiteFrame::CGArchaeologyDigSiteFrame(CSimpleFrame* parent) : CGBlobFrame(parent) {
 }
 
-// OFFSET: 0x00A02AD0
+// PROVEN: 9514d2f3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A02AD0/0x1407A1B90
 const char* CGArchaeologyDigSiteFrame::GetObjectTypeName() {
     return CGArchaeologyDigSiteFrame::s_objectTypeName;
 }
 
-// OFFSET: 0x00A02AE0
+// PROVEN: 0eb0dca8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A02AE0/0x1407A1BA0
 int32_t CGArchaeologyDigSiteFrame::GetScriptMetaTable() {
     return CGArchaeologyDigSiteFrame::s_metatable;
 }
 
-// OFFSET: 0x00A02AF0
+// PROVEN: 34ab39dc IDENTICAL/UNPROVEN
+// OFFSET: 0x00A02AF0/0x1407A1BB0
 void CGArchaeologyDigSiteFrame::DrawBlob(int32_t id, bool show) {
     if (show) {
         CGResearchFrame::BLOBPOIDATA* info = CGResearchFrame::GetPOIData(id);
@@ -61,11 +64,13 @@ void CGArchaeologyDigSiteFrame::DrawBlob(int32_t id, bool show) {
     }
 }
 
+// PROVEN: f6dde4a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02B30/0x1407A1BF0
 void CGArchaeologyDigSiteFrame::RegisterScriptMethods(lua_State* L) {
     CGBlobFrame::RegisterScriptMethods(L);
 }
 
+// PROVEN: ea4f296f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02B40/0x1407A1C00
 void CGArchaeologyDigSiteFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -73,12 +78,13 @@ void CGArchaeologyDigSiteFrame::DestroyScriptMetaTable() {
     CGArchaeologyDigSiteFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: 0x00A02B80
+// PROVEN: 3fa314cc NONE/IDENTICAL
+// OFFSET: 0x00A02B80/0x1407A1C40
 bool CGArchaeologyDigSiteFrame::IsA(int32_t type) {
     return type == CGArchaeologyDigSiteFrame::s_objectType || type == CGBlobFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: 0x00A02BC0
+// OFFSET: 0x00A02BC0/0x1407A1C70
 bool CGArchaeologyDigSiteFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGArchaeologyDigSiteFrame::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CGBlobFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
@@ -87,6 +93,7 @@ bool CGArchaeologyDigSiteFrame::IsA(const char* typeName) {
 CGArchaeologyDigSiteFrame::~CGArchaeologyDigSiteFrame() {
 }
 
+// PROVEN: 6315dccb IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02C50/0x1407A1D20
 void CGArchaeologyDigSiteFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();

@@ -14,16 +14,16 @@
 // STATIC: 0x00DD3CE8
 CDataAllocator CSimpleHyperlinkButton::s_allocator(sizeof(CSimpleHyperlinkButton), 10);
 
-// STATIC: 0x00DD3CE4
+// STATIC: 0x00DD3CE4/0x140CB9A90
 int32_t CSimpleHyperlinkButton::s_objectType;
 
 // STATIC: 0x00CA3E00
 const char* CSimpleHyperlinkButton::s_objectTypeName = "HyperLinkButton";
 
-// STATIC: 0x00CA3E14
+// STATIC: 0x00CA3E14/0x140B415F0
 int32_t CSimpleHyperlinkedFrame::s_metatable;
 
-// PROVEN: 0aac88eb IDENTICAL/NONE
+// PROVEN: 0aac88eb IDENTICAL/IDENTICAL
 // OFFSET: 0x005331A0/0x1401855B0
 bool CSimpleHyperlinkButton::IsA(int32_t type) {
     return type == CSimpleHyperlinkButton::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
@@ -66,7 +66,7 @@ void CSimpleHyperlinkButton::OnClick(const char* btn, int32_t down) {
     static_cast<CSimpleHyperlinkedFrame*>(this->m_parent)->OnHyperlinkClick(this->m_linkData, this->m_linkText, btn);
 }
 
-// OFFSET: 0x00532E70
+// OFFSET: 0x00532E70/0x140185200
 void CSimpleHyperlinkButton::SetHyperlink(CSimpleFontString* fontString, const GXUFONTHYPERLINKINFO* info) {
     if (!fontString || !info) {
         this->Hide();
@@ -112,13 +112,6 @@ void CSimpleHyperlinkButton::SetHyperlink(CSimpleFontString* fontString, const G
     this->Show();
 }
 
-// INLINED
-CSimpleHyperlinkButton::CSimpleHyperlinkButton(CSimpleHyperlinkedFrame* parent) : CSimpleButton(parent) {
-    this->SetClickAction(0xFFFFFFFF80000000ULL);
-    this->m_linkData = NULL;
-    this->m_linkText = NULL;
-}
-
 // OFFSET: [0x00533220/0x140185650, 0x00533430/0x140185970]
 CSimpleHyperlinkButton::~CSimpleHyperlinkButton() {
     if (this->m_linkData) {
@@ -131,8 +124,8 @@ CSimpleHyperlinkButton::~CSimpleHyperlinkButton() {
 }
 
 // PROVEN: 6db8490c IDENTICAL/NONE
-// PROVEN: 6db8490c IDENTICAL/NONE
-// OFFSET: 0x00532D20
+// PROVEN: 6db8490c IDENTICAL/IDENTICAL
+// OFFSET: 0x00532D20/0x140184FF0
 void CSimpleHyperlinkedFrame::RunOnHyperlinkEnterScript(const char* link, const char* text) {
     this->m_inHyperlinkScript = 1;
 
@@ -146,8 +139,8 @@ void CSimpleHyperlinkedFrame::RunOnHyperlinkEnterScript(const char* link, const 
     this->m_inHyperlinkScript = 0;
 }
 
-// PROVEN: 196e62f7 IDENTICAL/NONE
-// OFFSET: 0x00532D90
+// PROVEN: 196e62f7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00532D90/0x1401850A0
 void CSimpleHyperlinkedFrame::RunOnHyperlinkLeaveScript(const char* link, const char* text) {
     this->m_inHyperlinkScript = 1;
 
@@ -161,8 +154,8 @@ void CSimpleHyperlinkedFrame::RunOnHyperlinkLeaveScript(const char* link, const 
     this->m_inHyperlinkScript = 0;
 }
 
-// PROVEN: bfcce0da IDENTICAL/NONE
-// OFFSET: 0x00532E00
+// PROVEN: bfcce0da IDENTICAL/IDENTICAL
+// OFFSET: 0x00532E00/0x140185150
 void CSimpleHyperlinkedFrame::RunOnHyperlinkClickScript(const char* link, const char* text, const char* btn) {
     this->m_inHyperlinkScript = 1;
 
@@ -181,7 +174,7 @@ void CSimpleHyperlinkedFrame::RunOnHyperlinkClickScript(const char* link, const 
 CSimpleHyperlinkedFrame::~CSimpleHyperlinkedFrame() {
 }
 
-// PROVEN: 9450b56b IDENTICAL/UNPROVEN
+// PROVEN: 9450b56b IDENTICAL/IDENTICAL
 // OFFSET: 0x00532B90/0x140184D80
 FrameScript_Object::ScriptIx* CSimpleHyperlinkedFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -217,25 +210,25 @@ void CSimpleHyperlinkedFrame::GetScriptTime(lua_State* L, double* time, uint32_t
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: f342770c IDENTICAL/NONE
-// OFFSET: 0x00533080
+// PROVEN: f342770c IDENTICAL/UNPROVEN
+// OFFSET: 0x00533080/0x140185470
 void CSimpleHyperlinkedFrame::OnHyperlinkEnter(const char* link, const char* text) {
     this->RunOnHyperlinkEnterScript(link, text);
 }
 
-// PROVEN: db7c1134 IDENTICAL/NONE
-// OFFSET: 0x00533090
+// PROVEN: db7c1134 IDENTICAL/UNPROVEN
+// OFFSET: 0x00533090/0x140185480
 void CSimpleHyperlinkedFrame::OnHyperlinkLeave(const char* link, const char* text) {
     this->RunOnHyperlinkLeaveScript(link, text);
 }
 
-// PROVEN: 4493a059 IDENTICAL/NONE
-// OFFSET: 0x005330A0
+// PROVEN: 4493a059 IDENTICAL/UNPROVEN
+// OFFSET: 0x005330A0/0x140185490
 void CSimpleHyperlinkedFrame::OnHyperlinkClick(const char* link, const char* text, const char* btn) {
     this->RunOnHyperlinkClickScript(link, text, btn);
 }
 
-// PROVEN: 9a157691 IDENTICAL/NONE
+// PROVEN: 9a157691 IDENTICAL/IDENTICAL
 // OFFSET: 0x005334D0/0x140185A60
 int32_t CSimpleHyperlinkedFrame::GetScriptMetaTable() {
     return CSimpleHyperlinkedFrame::s_metatable;
@@ -248,6 +241,7 @@ CSimpleHyperlinkedFrame::CSimpleHyperlinkedFrame(CSimpleFrame* parent) : CSimple
     this->m_hyperlinksDirty = 0;
 }
 
+// PROVEN: 862da1bf IDENTICAL/DIFFERENT
 // OFFSET: 0x005332B0/0x140185720
 void CSimpleHyperlinkedFrame::ClearHyperlinks() {
     CSimpleHyperlinkButton* button = this->m_hyperlinks.Head();

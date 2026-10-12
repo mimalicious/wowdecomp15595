@@ -42,88 +42,88 @@ static CVar* s_M2BatchDoodadsVar;
 // STATIC: 0x00D361EC
 static CVar* s_M2UseThreadsVar;
 
-// STATIC: 0x00D36340
+// STATIC: 0x00D36340/0x140BEF680
 static CVar* s_M2UseClipPlanesVar;
 
-// STATIC: 0x00D36208
+// STATIC: 0x00D36208/0x140BEF688
 static CVar* s_M2UseZFillVar;
 
 // STATIC: 0x00D3620C
 static CVar* s_M2FasterDebugVar;
 
-// STATIC: 0x00D361CC
+// STATIC: 0x00D361CC/0x140BEF698
 static CVar* s_M2FasterVar;
 
-// STATIC: 0x00D361E4
+// STATIC: 0x00D361E4/0x140BEF6A0
 CVar* s_desktopGammaCvar;
 
-// STATIC: 0x00D361D4
+// STATIC: 0x00D361D4/0x140BEF6A8
 CVar* s_gammaCvar;
 
-// STATIC: 0x00D36200
+// STATIC: 0x00D36200/0x140BEF6B0
 static CVar* s_cvErrorFilter;
 
-// STATIC: 0x00D361F8
+// STATIC: 0x00D361F8/0x140BEF6B8
 static CVar* s_cvErrorLevelMax;
 
-// STATIC: 0x00D361E0
+// STATIC: 0x00D361E0/0x140BEF6C0
 static CVar* s_cvErrorLevelMin;
 
-// STATIC: 0x00D361FC
+// STATIC: 0x00D361FC/0x140BEF6C8
 static CVar* s_cvShowErrors;
 
-// STATIC: 0x00D36228
+// STATIC: 0x00D36228/0x140BEF6D0
 static CVar* s_cvErrors;
 
-// STATIC: 0x00D3622C
+// STATIC: 0x00D3622C/0x140BEF6D8
 static CVar* s_cvMouseSpeed;
 
-// STATIC: 0x00D361C0
+// STATIC: 0x00D361C0/0x140BEF7F8
 static CVar* s_cvScreenshotQuality;
 
-// STATIC: 0x00D36338
+// STATIC: 0x00D36338/0x140BEF800
 static CVar* s_cvScreenshotFormat;
 
-// STATIC: 0x00D361DC
+// STATIC: 0x00D361DC/0x140BEF808
 CVar* g_readContestVar;
 
-// STATIC: 0x00D36348
+// STATIC: 0x00D36348/0x140BEF810
 CVar* g_readScanningVar;
 
-// STATIC: 0x00D36330
+// STATIC: 0x00D36330/0x140BEF818
 CVar* g_readTerminationWithoutNoticeVar;
 
-// STATIC: 0x00D361D0
+// STATIC: 0x00D361D0/0x140BEF820
 CVar* g_readEULAVar;
 
-// STATIC: 0x00D36204
+// STATIC: 0x00D36204/0x140BEF828
 CVar* g_readTOSVar;
 
-// STATIC: 0x00D361C8
+// STATIC: 0x00D361C8/0x140BEF7E0
 CVar* g_installLocaleVar;
 
-// STATIC: 0x00D3621C
+// STATIC: 0x00D3621C/0x140BEF830
 CVar* g_lastCharacterIndexVar;
 
-// STATIC: 0x00D361D8
+// STATIC: 0x00D361D8/0x140BEF838
 CVar* g_checkAddonVersionVar;
 
-// STATIC: 0x00D36224
+// STATIC: 0x00D36224/0x140BEF840
 static CVar* s_cvMovieSubtitle;
 
-// STATIC: 0x00D3633C
+// STATIC: 0x00D3633C/0x140BEF848
 CVar* g_playIntroMovie;
 
-// STATIC: 0x00D361C4
+// STATIC: 0x00D361C4/0x140BEF870
 CVar* g_blizzconVar;
 
-// STATIC: 0x00D36344
+// STATIC: 0x00D36344/0x140BEF850
 CVar* g_accountUsesTokenVar;
 
-// STATIC: 0x00D36210
+// STATIC: 0x00D36210/0x140BEF858
 CVar* g_accountListVar;
 
-// STATIC: 0x00D361F4
+// STATIC: 0x00D361F4/0x140BEF860
 CVar* g_accountNameVar;
 
 CVar* s_cvarEnterWorld;
@@ -134,28 +134,29 @@ CVar* s_cvTextureCacheSize;
 
 CVar* s_cvTextureFilteringMode;
 
-// STATIC: 0x00D364C0
+// STATIC: 0x00D364C0/0x140BEFA08
 static CVar* s_cvAsyncThreadSleep;
 
 // STATIC: 0x00D364C4
 static CVar* s_cvAsyncHandlerTimeout;
 
-// STATIC: 0x00D732E4
+// STATIC: 0x00D732E4/0x140C2E630
 char s_localeCode[5];
 
-// STATIC: 0x00D361F0
+// STATIC: 0x00D361F0/0x140BEF7E8
 CVar* g_disableServerNagleVar;
 
-// STATIC: 0x00D36218
+// STATIC: 0x00D36218/0x140BEF7F0
 CVar* g_useIPv6Var;
 
-// OFFSET: 0x00401400
+// PROVEN: ef572c18 IDENTICAL/UNPROVEN
+// OFFSET: 0x00401400/0x1400011F0
 static bool MouseSpeedCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     OsInputSetMouseSpeed(SStrToFloat(value));
     return true;
 }
 
-// PROVEN: fccc02c2 IDENTICAL/NONE
+// PROVEN: fccc02c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401420/0x140001210
 static bool ErrorDisplayCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
@@ -173,7 +174,7 @@ static bool ErrorDisplayCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// PROVEN: 98de87a0 IDENTICAL/NONE
+// PROVEN: 98de87a0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401470/0x140001260
 static bool ErrorDisplayShowCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t show = SStrToInt(value);
@@ -248,7 +249,7 @@ static void DisplayErrorLevelStatus() {
     ConsoleWrite(status, DEFAULT_COLOR);
 }
 
-// OFFSET: 0x00403B20
+// OFFSET: 0x00403B20/0x140003470
 static bool ErrorDisplayMinLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t level = SStrToInt(value);
 
@@ -263,7 +264,7 @@ static bool ErrorDisplayMinLevelCallback(CVar* var, const char* oldValue, const 
     return true;
 }
 
-// OFFSET: 0x00403B60
+// OFFSET: 0x00403B60/0x1400034C0
 static bool ErrorDisplayMaxLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t level = SStrToInt(value);
 
@@ -349,7 +350,7 @@ static int32_t ErrorDisplaySetFilter(const char* filter) {
     return 1;
 }
 
-// PROVEN: 14ea5daa IDENTICAL/NONE
+// PROVEN: 14ea5daa IDENTICAL/IDENTICAL
 // OFFSET: 0x00403C90/0x140003660
 static bool ErrorDisplayFilterCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!ErrorDisplaySetFilter(value)) {
@@ -361,6 +362,7 @@ static bool ErrorDisplayFilterCallback(CVar* var, const char* oldValue, const ch
     return true;
 }
 
+// PROVEN: a12f8ea6 DIFFERENT/IDENTICAL
 // OFFSET: 0x004015F0/0x140003690
 static bool GammaCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     float gamma = SStrToFloat(value);
@@ -397,20 +399,21 @@ static bool DesktopGammaCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
+// PROVEN: b5b77202 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401750/0x1400014A0
 static bool ScreenshotFormatCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotFormat(value);
     return true;
 }
 
-// PROVEN: 4504b5d0 IDENTICAL/NONE
-// OFFSET: 0x00401770
+// PROVEN: 4504b5d0 IDENTICAL/UNPROVEN
+// OFFSET: 0x00401770/0x1400014C0
 static bool ScreenshotQualityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotQuality(SStrToInt(value));
     return true;
 }
 
-// OFFSET: 0x00401890
+// OFFSET: 0x00401890/0x1400014E0
 static uint32_t GetM2FasterModifierMask(int32_t faster, int32_t debug) {
     uint32_t mask = 0;
 
@@ -465,7 +468,8 @@ static bool M2FasterChanged(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
-// OFFSET: 0x004019A0
+// PROVEN: 4e7612ee DIFFERENT/IDENTICAL
+// OFFSET: 0x004019A0/0x1400041F0
 static bool M2DebugFasterChanged(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t faster = s_M2FasterVar ? s_M2FasterVar->m_intValue : 0;
     M2SetGlobalOptFlags(GetM2FasterModifierMask(faster, SStrToInt(value)));
@@ -517,8 +521,8 @@ bool ProcessAffinityMaskCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// PROVEN: 40ddeda4 IDENTICAL/NONE
-// OFFSET: 0x004016D0
+// PROVEN: 40ddeda4 IDENTICAL/UNPROVEN
+// OFFSET: 0x004016D0/0x140001420
 bool SimdCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t requested = SStrToInt(value);
 
@@ -553,7 +557,7 @@ bool SimdCallback(CVar* var, const char* oldValue, const char* value, void* arg)
     return true;
 }
 
-// PROVEN: b4b329b6 IDENTICAL/NONE
+// PROVEN: b4b329b6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401AB0/0x140001620
 bool TextureCacheSizeCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t size = SStrToInt(value) << 20;
@@ -621,12 +625,13 @@ static bool ForceAdditiveParticleSortCallback(CVar* var, const char* oldValue, c
     return true;
 }
 
-// OFFSET: 0x00401D90
+// PROVEN: 9d414f3b DIFFERENT/IDENTICAL
+// OFFSET: 0x00401D90/0x140001920
 static bool AsyncFileReadThreadSleepCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     return static_cast<uint32_t>(SStrToInt(value)) <= 100;
 }
 
-// OFFSET: 0x00401DB0
+// OFFSET: 0x00401DB0/0x140001940
 static bool AsyncFileReadHandlerTimeoutCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     return static_cast<uint32_t>(SStrToInt(value) - 20) <= 230;
 }
@@ -658,7 +663,7 @@ bool TimingMethodCallback(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
-// OFFSET: 0x00402730
+// OFFSET: 0x00402730/0x1400020F0
 bool LocaleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (strlen(value) != 4) {
         return false;

@@ -5,6 +5,7 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
+#include "WoW/Source/JamClientAutoCode/JamHandlerKeys.h"
 #include "WoW/Source/Object/CMovementStatus.h"
 #include "WoW/Source/Object/WGUID.h"
 

@@ -1,7 +1,8 @@
 #include "KEYBINDING.h"
 #include <cstring>
 
-// OFFSET: 0x00921CB0
+// PROVEN: 222c0437 DIFFERENT/IDENTICAL
+// OFFSET: 0x00921CB0/0x140684E30
 KEYBINDING::KEYBINDING() : m_flags(0) {
     memset(this->m_data, 0, sizeof(this->m_data));
 }

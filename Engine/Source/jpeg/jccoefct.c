@@ -137,7 +137,7 @@ static void start_pass_coef(j_compress_ptr cinfo, J_BUF_MODE pass_mode) {
  */
 
 // PROVEN: f584f21e IDENTICAL/NONE
-// OFFSET: 0x00B60470
+// OFFSET: 0x00B60470/0x1409299D0
 static boolean compress_data(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION MCU_col_num;	/* index of current MCU within row */
@@ -239,7 +239,7 @@ static boolean compress_data(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
  */
 
 // PROVEN: 1a366bf4 IDENTICAL/NONE
-// OFFSET: 0x00B608E0
+// OFFSET: 0x00B608E0/0x140929F10
 static boolean compress_first_pass(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
@@ -335,7 +335,7 @@ static boolean compress_first_pass(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
  */
 
 // PROVEN: 1dbd753d IDENTICAL/NONE
-// OFFSET: 0x00B60700
+// OFFSET: 0x00B60700/0x140929CB0
 static boolean compress_output(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION MCU_col_num;	/* index of current MCU within row */

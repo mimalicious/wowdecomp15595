@@ -95,12 +95,14 @@ static int32_t Script_IsUsableAction(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 3907225f IDENTICAL/IDENTICAL
 // OFFSET: 0x009546B0/0x1406C54E0
 static int32_t Script_GetBonusBarOffset(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGActionBar::m_bonusBarOffset));
     return 1;
 }
 
+// PROVEN: 4096f2b6 IDENTICAL/IDENTICAL
 // OFFSET: 0x009546F0/0x14065A910
 static int32_t Script_GetMultiCastBarOffset(lua_State* L) {
     lua_pushnumber(L, 6.0);
@@ -125,6 +127,7 @@ static int32_t Script_ChangeActionBarPage(lua_State* L) {
     return 0;
 }
 
+// PROVEN: aa151809 DIFFERENT/IDENTICAL
 // OFFSET: 0x00954790/0x1406C55B0
 static int32_t Script_GetActionBarPage(lua_State* L) {
     if (!CGActionBar::m_tempPageActiveFlags || (CGActionBar::m_tempPageActiveFlags & CGActionBar::TEMP_PAGE_EXTRA)) {
@@ -201,6 +204,7 @@ static int32_t Script_GetMultiCastTotemSpells(lua_State* L) {
     return spells.m_count;
 }
 
+// PROVEN: 4abc6a8a IDENTICAL/DIFFERENT
 // OFFSET: 0x00955100/0x1406C6230
 static int32_t Script_GetActionBarToggles(lua_State* L) {
     uint8_t toggles = 0;
@@ -223,6 +227,7 @@ static int32_t Script_GetActionBarToggles(lua_State* L) {
     return 4;
 }
 
+// PROVEN: 39e409a7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00955190/0x1406C62E0
 static int32_t Script_GetBonusBarOverrideBarType(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -416,6 +421,7 @@ static int32_t Script_IsAutoRepeatAction(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a376fde9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00956530/0x1406C7B60
 static int32_t Script_ActionHasRange(lua_State* L) {
     int32_t slot;
@@ -429,6 +435,7 @@ static int32_t Script_ActionHasRange(lua_State* L) {
     return 1;
 }
 
+// PROVEN: af1696ac DIFFERENT/IDENTICAL
 // OFFSET: 0x00956590/0x1406C7BC0
 static int32_t Script_IsActionInRange(lua_State* L) {
     if (lua_isnumber(L, 1)) {
@@ -598,6 +605,7 @@ static int32_t Script_PlaceAction(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 53d0700e IDENTICAL/DIFFERENT
 // OFFSET: 0x009590F0/0x1406CB470
 static int32_t Script_SetMultiCastSpell(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
@@ -672,13 +680,14 @@ static int32_t Script_PickupAction(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 82f5690c IDENTICAL/IDENTICAL
 // OFFSET: 0x009C8210/0x140756A70
 static int32_t Script_GetExtraBarOffset(lua_State* L) {
     lua_pushnumber(L, 5.0);
     return 1;
 }
 
-// STATIC: 0x00D12C98
+// STATIC: 0x00D12C98/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetActionInfo", &Script_GetActionInfo },
     { "GetActionTexture", &Script_GetActionTexture },
@@ -714,6 +723,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetActionUIButton", &Script_SetActionUIButton },
 };
 
+// PROVEN: f1490ac8 IDENTICAL/UNPROVEN
 // OFFSET: 0x009547E0/0x1406C55F0
 void ActionBarRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -721,6 +731,7 @@ void ActionBarRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 4c8de7fe IDENTICAL/UNPROVEN
 // OFFSET: 0x00954810/0x1406C5640
 void ActionBarUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

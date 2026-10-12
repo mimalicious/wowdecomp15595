@@ -33,6 +33,7 @@ static const ChrRacesRec* GetSelectedRaceRec() {
     return g_chrRacesDB.GetRecord(raceID);
 }
 
+// PROVEN: 2d11a060 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080C1A0/0x140522810
 static int32_t Script_IsRaceClassRestricted(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -53,7 +54,7 @@ static int32_t Script_IsRaceClassRestricted(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 1a498207 IDENTICAL/NONE
+// PROVEN: 1a498207 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C280/0x1405228F0
 static int32_t Script_UpdateCustomizationScene(lua_State* L) {
     if (CCharacterCreation::m_character) {
@@ -81,26 +82,28 @@ static int32_t Script_GenerateRandomName(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 75ca45c5 IDENTICAL/NONE
+// PROVEN: 75ca45c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C320/0x1405229B0
 static int32_t Script_PaidChange_GetPreviousRaceIndex(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;
 }
 
+// PROVEN: 9519a149 DIFFERENT/IDENTICAL
 // OFFSET: 0x0080C340/0x1405229D0
 static int32_t Script_HasAlteredForm(lua_State* L) {
     lua_pushboolean(L, CCharacterCreation::m_alteredCharacter != NULL);
     return 1;
 }
 
+// PROVEN: 71b77b8a DIFFERENT/IDENTICAL
 // OFFSET: 0x0080C370/0x1405229F0
 static int32_t Script_IsViewingAlteredForm(lua_State* L) {
     lua_pushboolean(L, CCharacterCreation::m_alteredCharacter ? CCharacterCreation::m_alteredFormAtFront : 0);
     return 1;
 }
 
-// PROVEN: 0a6b3514 IDENTICAL/NONE
+// PROVEN: 0a6b3514 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080D350/0x140523BE0
 static int32_t Script_SetCharCustomizeFrame(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -117,7 +120,7 @@ static int32_t Script_SetCharCustomizeFrame(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f0bc9972 IDENTICAL/NONE
+// PROVEN: f0bc9972 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080D3C0/0x140523C70
 static int32_t Script_SetCharCustomizeBackground(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -129,6 +132,7 @@ static int32_t Script_SetCharCustomizeBackground(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 4da9ae20 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D410/0x140523CC0
 static int32_t Script_GetNameForRace(lua_State* L) {
     int32_t raceID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_raceID : 0;
@@ -176,6 +180,7 @@ static int32_t Script_GetFactionForRace(lua_State* L) {
     return 2;
 }
 
+// PROVEN: f4af0659 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D5D0/0x140523F10
 static int32_t Script_GetAvailableClasses(lua_State* L) {
     uint32_t count = g_chrClassesDB.m_numRecords;
@@ -226,13 +231,14 @@ static int32_t Script_GetFacialHairCustomization(lua_State* L) {
     return 1;
 }
 
-// PROVEN: f3accfab IDENTICAL/NONE
+// PROVEN: f3accfab IDENTICAL/IDENTICAL
 // OFFSET: 0x0080D7B0/0x140524180
 static int32_t Script_GetSelectedRace(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::m_raceIndex + 1);
     return 1;
 }
 
+// PROVEN: 3057dc3b IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D7F0/0x1405241B0
 static int32_t Script_GetSelectedSex(lua_State* L) {
     int32_t sexID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_sexID : 0;
@@ -240,6 +246,7 @@ static int32_t Script_GetSelectedSex(lua_State* L) {
     return 1;
 }
 
+// PROVEN: e5730454 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D830/0x1405241F0
 static int32_t Script_GetSelectedClass(lua_State* L) {
     int32_t classID = CCharacterCreation::m_selectedClassID;
@@ -270,13 +277,14 @@ static int32_t Script_GetSelectedClass(lua_State* L) {
     return 6;
 }
 
-// PROVEN: 7d63dc36 IDENTICAL/NONE
+// PROVEN: 7d63dc36 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080D930/0x140524340
 static int32_t Script_GetCharacterCreateFacing(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::m_charFacing * 57.29578f);
     return 1;
 }
 
+// PROVEN: 2ad7895c IDENTICAL/IDENTICAL
 // OFFSET: 0x0080D960/0x140524370
 static int32_t Script_SetCharacterCreateFacing(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -288,13 +296,14 @@ static int32_t Script_SetCharacterCreateFacing(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f3228c65 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080D9B0/0x1405243D0
 static int32_t Script_RequestRandomName(lua_State* L) {
     CGlueMgr::RequestRandomCharacterName(CCharacterCreation::m_character->m_data.m_preferences.m_raceID, CCharacterCreation::m_character->m_data.m_preferences.m_sexID);
     return 0;
 }
 
-// PROVEN: fbf9a149 IDENTICAL/NONE
+// PROVEN: fbf9a149 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080D9D0/0x1405243F0
 static int32_t Script_CreateCharacter(lua_State* L) {
     if (lua_isstring(L, 1)) {
@@ -305,14 +314,14 @@ static int32_t Script_CreateCharacter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9800e3b0 IDENTICAL/NONE
+// PROVEN: 9800e3b0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080DA10/0x140524440
 static int32_t Script_PaidChange_GetCurrentRaceIndex(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::GetExistingRaceIndex() + 1);
     return 1;
 }
 
-// PROVEN: dcf0b691 IDENTICAL/NONE
+// PROVEN: dcf0b691 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080DA40/0x1405244B0
 static int32_t Script_PaidChange_GetCurrentClassIndex(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::GetExistingClassIndex() + 1);
@@ -386,7 +395,7 @@ static int32_t Script_GetCreateBackgroundModel(lua_State* L) {
     return 1;
 }
 
-// PROVEN: b26cafb9 IDENTICAL/NONE
+// PROVEN: b26cafb9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080DC40/0x140524770
 static int32_t Script_SetViewingAlteredForm(lua_State* L) {
     if (lua_type(L, 1) != LUA_TBOOLEAN) {
@@ -444,6 +453,7 @@ static int32_t Script_SetPortraitTexture(lua_State* L) {
     return 0;
 }
 
+// PROVEN: a0f55938 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080E2A0/0x140525060
 static int32_t Script_GetAvailableRaces(lua_State* L) {
     uint32_t count = CCharacterCreation::m_races.Count();
@@ -464,6 +474,7 @@ static int32_t Script_GetAvailableRaces(lua_State* L) {
     return 3 * count;
 }
 
+// PROVEN: 0603d7e1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080E3C0/0x1405251D0
 static int32_t Script_GetClassesForRace(lua_State* L) {
     uint32_t count = CCharacterCreation::m_classes.Count();
@@ -500,6 +511,7 @@ static int32_t Script_PaidChange_GetName(lua_State* L) {
     return 1;
 }
 
+// PROVEN: df278e4e IDENTICAL/DIFFERENT
 // OFFSET: 0x0080EA50/0x140525A00
 static int32_t Script_SetSelectedClass(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -513,6 +525,7 @@ static int32_t Script_SetSelectedClass(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e3cccb5c IDENTICAL/DIFFERENT
 // OFFSET: 0x0080EAF0/0x140525A80
 static int32_t Script_CycleCharCustomization(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -526,13 +539,14 @@ static int32_t Script_CycleCharCustomization(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 63c751db IDENTICAL/DIFFERENT
 // OFFSET: 0x0080EB80/0x140525B00
 static int32_t Script_RandomizeCharCustomization(lua_State* L) {
     CCharacterCreation::RandomizeCharCustomization();
     return 0;
 }
 
-// PROVEN: f0e19ac7 IDENTICAL/NONE
+// PROVEN: f0e19ac7 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080F060/0x140526230
 static int32_t Script_SetSelectedSex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -551,13 +565,14 @@ static int32_t Script_SetSelectedSex(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f2e8a69f IDENTICAL/NONE
+// PROVEN: f2e8a69f IDENTICAL/IDENTICAL
 // OFFSET: 0x0080F700/0x1405269E0
 static int32_t Script_ResetCharCustomize(lua_State* L) {
     CCharacterCreation::ResetCharCustomizeInfo();
     return 0;
 }
 
+// PROVEN: e7355674 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080F710/0x1405269F0
 static int32_t Script_SetSelectedRace(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -569,13 +584,14 @@ static int32_t Script_SetSelectedRace(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b820d8ae IDENTICAL/NONE
+// PROVEN: b820d8ae IDENTICAL/IDENTICAL
 // OFFSET: 0x0080F780/0x140526A40
 static int32_t Script_UpdateCustomizationBackground(lua_State* L) {
     CCharacterCreation::SetSelectedRace(CCharacterCreation::m_raceIndex);
     return 0;
 }
 
+// PROVEN: eca4036d IDENTICAL/IDENTICAL
 // OFFSET: 0x0080F7A0/0x140526A60
 static int32_t Script_CustomizeExistingCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -587,7 +603,7 @@ static int32_t Script_CustomizeExistingCharacter(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D07AA0
+// STATIC: 0x00D07AA0/0x140BD1C10
 static FrameScript_Method s_scriptFunctions[] = {
     { "SetCharCustomizeFrame", &Script_SetCharCustomizeFrame },
     { "SetCharCustomizeBackground", &Script_SetCharCustomizeBackground },
@@ -628,7 +644,7 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "SetPortraitTexture", &Script_SetPortraitTexture },
 };
 
-// PROVEN: a3c174fa IDENTICAL/NONE
+// PROVEN: a3c174fa IDENTICAL/UNPROVEN
 // OFFSET: 0x0080C3A0/0x140522A20
 void CharacterCreateRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -636,7 +652,7 @@ void CharacterCreateRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: fe23ed3e IDENTICAL/NONE
+// PROVEN: fe23ed3e IDENTICAL/UNPROVEN
 // OFFSET: 0x0080C3D0/0x140522A70
 void CharacterCreateUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

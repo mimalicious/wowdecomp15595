@@ -262,7 +262,7 @@ static BOOL OsSetPhysicalCursorPos(int32_t x, int32_t y) {
     return s_setPhysicalCursorPos(x, y);
 }
 
-// PROVEN: ce240a15 IDENTICAL/NONE
+// PROVEN: ce240a15 IDENTICAL/IDENTICAL
 // OFFSET: 0x00873190/0x14025E5A0
 static BOOL WINAPI LogicalToPhysicalPointNop(HWND hwnd, POINT* point) {
     return TRUE;
@@ -309,7 +309,6 @@ void OsQueuePut(OSINPUT id, int32_t param0, int32_t param1, int32_t param2, int3
     s_queueTail = next;
 }
 
-// PROVEN: 61d84f5f IDENTICAL/NONE
 // OFFSET: 0x00873270/0x1405A9960
 int32_t OsQueueGet(OSINPUT* id, int32_t* param0, int32_t* param1, int32_t* param2, int32_t* param3) {
     if (s_queueHead == s_queueTail) {
@@ -757,7 +756,6 @@ static int32_t ConvertButton(uint32_t message, uintptr_t wparam, MOUSEBUTTON* bu
     return 0;
 }
 
-// PROVEN: 26fe573e IDENTICAL/NONE
 // OFFSET: 0x00873A70
 static void RestoreMouse() {
     POINT point;
@@ -779,14 +777,13 @@ static void SaveMouse(HWND hwnd, const POINT& point) {
     s_mousePos.y = point.y;
 }
 
-// PROVEN: 471df457 IDENTICAL/NONE
 // OFFSET: 0x00873AB0/0x1405AA470
 void OsInputSetJoystickPollFcn(void (*pollFcn)(int32_t)) {
     s_joystickPollFcn = pollFcn;
 }
 
 // PROVEN: 0bc0115e IDENTICAL/NONE
-// OFFSET: 0x00873AC0
+// OFFSET: 0x00873AC0/0x1405AA480
 void OsInputSetWindowResizeLock(int32_t resizeLock) {
     s_WindowResizeLock = resizeLock;
 }
@@ -1453,7 +1450,7 @@ void OsInputSetMouseMode(OS_MOUSE_MODE mode) {
     }
 }
 
-// OFFSET: 0x00874A60
+// OFFSET: 0x00874A60/0x1405AB470
 void OsInputSetMouseSpeed(float speed) {
     float clamped = speed < 0.1f ? 0.1f : (speed >= 2.0f ? 2.0f : speed);
     s_mouseSpeed = static_cast<int32_t>(clamped * 10.0f);
@@ -1482,8 +1479,7 @@ void OsInputGetMousePosition(int32_t* x, int32_t* y) {
     }
 }
 
-// PROVEN: a1b9c5da IDENTICAL/NONE
-// OFFSET: 0x00874B10
+// OFFSET: 0x00874B10/0x1405A98B0
 void OsInputSetMousePosition(int32_t x, int32_t y) {
     HWND hwnd = static_cast<HWND>(OsGuiGetWindow(0));
 

@@ -28,6 +28,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 5ab52e08 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AF4D00/0x1408BE2D0
 ChannelEmulated::ChannelEmulated()
 {

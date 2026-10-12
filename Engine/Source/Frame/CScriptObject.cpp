@@ -5,10 +5,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00DD3980
+// STATIC: 0x00DD3980/0x140CB9674
 int32_t CScriptObject::s_objectType;
 
-// STATIC: 0x00CA3288
+// STATIC: 0x00CA3288/0x140B403A8
 const char* CScriptObject::s_objectTypeName = "Object";
 
 // PROVEN: 543c32af IDENTICAL/IDENTICAL
@@ -50,7 +50,7 @@ void CScriptObject::CreateName(const char* source, char* dest, uint32_t destSize
     SStrPack(dest, source + SStrLen("$parent"), destSize);
 }
 
-// PROVEN: 7e707b6f IDENTICAL/UNPROVEN
+// PROVEN: 7e707b6f IDENTICAL/IDENTICAL
 // OFFSET: 0x005103F0/0x140159AD0
 CScriptObject* CScriptObject::GetScriptObjectByName(const char* name, int32_t type) {
     lua_State* L = FrameScript_GetContext();
@@ -74,6 +74,7 @@ CScriptObject* CScriptObject::GetScriptObjectByName(const char* name, int32_t ty
     return NULL;
 }
 
+// PROVEN: fc546e73 DIFFERENT/IDENTICAL
 // OFFSET: 0x00510480/0x140159B90
 CScriptObject::CScriptObject() {
 }

@@ -1,0 +1,10 @@
+#ifndef WOW_SOURCE_SOUNDINTERFACE_SI3FOOTSTEPS_INL
+#define WOW_SOURCE_SOUNDINTERFACE_SI3FOOTSTEPS_INL
+
+// INLINED
+inline FOOTSTEPSNDCACHE::FOOTSTEPSNDCACHE() {
+    this->m_sounds.Clear();
+    this->m_splashSounds.Clear();
+}
+
+#endif

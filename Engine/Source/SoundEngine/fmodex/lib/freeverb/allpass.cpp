@@ -29,6 +29,7 @@ void allpass::mute()
 		buffer[i]=0;
 }
 
+// PROVEN: 89ec25fd IDENTICAL/IDENTICAL
 // OFFSET: 0x00AF5430/0x1408BE430
 void allpass::setfeedback(float val) 
 {

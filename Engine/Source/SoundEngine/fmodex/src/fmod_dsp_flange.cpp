@@ -181,8 +181,8 @@ FMOD_INLINE const float DSPFlange::sine(float x)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 224f404d IDENTICAL/NONE
-// OFFSET: 0x00A9ABA0
+// PROVEN: 224f404d IDENTICAL/DIFFERENT
+// OFFSET: 0x00A9ABA0/0x14085B3D0
 FMOD_RESULT DSPFlange::createInternal()
 {
     FMOD_RESULT  result;
@@ -326,7 +326,7 @@ FMOD_RESULT DSPFlange::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A9ACB0
+// OFFSET: 0x00A9ACB0/0x14085B520
 FMOD_RESULT DSPFlange::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {   
     unsigned int count;
@@ -560,7 +560,7 @@ FMOD_RESULT DSPFlange::getParameterInternal(int index, float *value, char *value
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ee6960ac IDENTICAL/NONE
+// PROVEN: ee6960ac IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9B370/0x14085BCE0
 FMOD_RESULT F_CALLBACK DSPFlange::createCallback(FMOD_DSP_STATE *dsp)
 {
@@ -586,7 +586,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ca10ccf9 IDENTICAL/NONE
+// PROVEN: ca10ccf9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9B3A0/0x14085BC60
 FMOD_RESULT F_CALLBACK DSPFlange::releaseCallback(FMOD_DSP_STATE *dsp)
 {
@@ -612,7 +612,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 795088fd IDENTICAL/NONE
+// PROVEN: 795088fd IDENTICAL/UNPROVEN
 // OFFSET: 0x00A9B3F0/0x14085BD20
 FMOD_RESULT F_CALLBACK DSPFlange::resetCallback(FMOD_DSP_STATE *dsp)
 {
@@ -665,7 +665,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::readCallback(FMOD_DSP_STATE *dsp, float *inbuf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 13d65f72 IDENTICAL/NONE
+// PROVEN: 13d65f72 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9B460/0x14085BD50
 FMOD_RESULT F_CALLBACK DSPFlange::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
@@ -691,7 +691,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0672e551 IDENTICAL/NONE
+// PROVEN: 0672e551 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9B4A0/0x14085BD70
 FMOD_RESULT F_CALLBACK DSPFlange::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

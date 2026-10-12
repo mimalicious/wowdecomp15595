@@ -31,7 +31,7 @@
 // STATIC: 0x00BD1CA0
 static const uint32_t s_skinProfileBoneCounts[4] = { 256, 64, 53, 21 };
 
-// STATIC: 0x00D07F78
+// STATIC: 0x00D07F78/0x140BB9210
 static uint32_t s_sequenceIndex = 0xFFFFFFFF;
 
 // STATIC: 0x00EBEED4
@@ -75,7 +75,7 @@ uint32_t CM2Shared::AddRef() {
     return ++this->m_refCount;
 }
 
-// PROVEN: 8e3aad4c IDENTICAL/DIFFERENT
+// PROVEN: 8e3aad4c IDENTICAL/IDENTICAL
 // OFFSET: 0x00831110/0x140552700
 int32_t CM2Shared::CallbackWhenLoaded(CM2Model* model) {
     if (!(model->m_flags & 0x10)) {
@@ -138,7 +138,7 @@ SFileImpl* CM2Shared::OpenSkinFile(uint32_t profile) {
     return NULL;
 }
 
-// OFFSET: [0x008318A0/0x140552FB0<char>, 0x008318F0/0x140552EA0<M2Loop>, 0x008318F0/0x140552EA0<M2Material>, 0x008318F0/0x140552EA0<ubyte4>, 0x008318F0/0x140552EA0<unsigned int>, 0x008318F0/0x140552EA0<float>, 0x00831940/0x140553060<M2Sequence>, 0x00831990/0x1405530C0<unsigned short>, 0x00831990/0x1405530C0<fixed16>, 0x008317B0/0x140552EF0<M2Vertex>, 0x008317B0/0x140552EF0<M2SkinSection>, 0x00831800<M2Batch>, 0x00831850/0x140553000<C3Vector>, 0x00831850/0x140553000<M2ShadowBatch>, 0x00831850/0x140553000<M2SplineKey<float> >, 0x008319E0<C2Vector>, 0x008319E0<M2CompQuat>]
+// OFFSET: [0x008318A0/0x140552FB0<char>, 0x008318F0/0x140552EA0<M2Loop>, 0x008318F0/0x140552EA0<M2Material>, 0x008318F0/0x140552EA0<ubyte4>, 0x008318F0/0x140552EA0<unsigned int>, 0x008318F0/0x140552EA0<float>, 0x00831940/0x140553060<M2Sequence>, 0x00831990/0x1405530C0<unsigned short>, 0x00831990/0x1405530C0<fixed16>, 0x008317B0/0x140552EF0<M2Vertex>, 0x008317B0/0x140552EF0<M2SkinSection>, 0x00831800/0x140552F50<M2Batch>, 0x00831850/0x140553000<C3Vector>, 0x00831850/0x140553000<M2ShadowBatch>, 0x00831850/0x140553000<M2SplineKey<float> >, 0x008319E0<C2Vector>, 0x008319E0<M2CompQuat>]
 template <class T>
 int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Array<T>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -861,7 +861,7 @@ int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Particle& par
     return M2Init(base, size, data, particle.m_geometryMdl) && M2Init(base, size, data, particle.m_recursionMdl) && M2Init(base, size, data, particle.m_speedTrack) && M2Init(base, size, data, particle.m_variationTrack) && M2Init(base, size, data, particle.m_latitudeTrack) && M2Init(base, size, data, particle.m_longitudeTrack) && M2Init(base, size, data, particle.m_gravityTrack) && M2Init(base, size, data, particle.m_lifeTrack) && M2Init(base, size, data, particle.m_emissionRateTrack) && M2Init(base, size, data, particle.m_widthTrack) && M2Init(base, size, data, particle.m_lengthTrack) && M2Init(base, size, data, particle.m_zsourceTrack) && M2Init(base, size, data, particle.m_colorTrack.m_times) && M2Init(base, size, data, particle.m_colorTrack.m_values) && M2Init(base, size, data, particle.m_alphaTrack.m_times) && M2Init(base, size, data, particle.m_alphaTrack.m_values) && M2Init(base, size, data, particle.m_scaleTrack.m_times) && M2Init(base, size, data, particle.m_scaleTrack.m_values) && M2Init(base, size, data, particle.m_headCellTrack.m_times) && M2Init(base, size, data, particle.m_headCellTrack.m_values) && M2Init(base, size, data, particle.m_tailCellTrack.m_times) && M2Init(base, size, data, particle.m_tailCellTrack.m_values) && M2Init(base, size, data, particle.m_spline) && M2Init(base, size, data, particle.m_visibilityTrack);
 }
 
-// OFFSET: 0x00836970
+// OFFSET: 0x00836970/0x14055E720
 template <>
 int32_t M2Init<M2Particle>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Particle>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -980,6 +980,7 @@ void CM2Shared::SkinProfileLoadedCallback(CAsyncObject* object) {
     shared->m_asyncObject = NULL;
 }
 
+// PROVEN: df4f8f1c IDENTICAL/DIFFERENT
 // OFFSET: 0x00832640/0x1405547D0
 int32_t CM2Shared::LoadSkinProfile(uint32_t profile) {
     SFileImpl* file = this->OpenSkinFile(profile);
@@ -1089,7 +1090,7 @@ int32_t CM2Shared::Initialize() {
     return 1;
 }
 
-// OFFSET: 0x00838C60
+// OFFSET: 0x00838C60/0x140562A40
 void CM2Shared::LoadSucceededCallback(CAsyncObject* object) {
     CM2Shared* shared = static_cast<CM2Shared*>(object->m_userArg);
     DefaultAsyncObjectCleanupCallback(object);
@@ -1146,7 +1147,7 @@ CM2SequenceLoad::~CM2SequenceLoad() {
     }
 }
 
-// OFFSET: 0x00839050
+// OFFSET: 0x00839050/0x1405631A0
 int32_t CM2Shared::Load(SFileImpl* file, int32_t flags, CAaBox* boundingBox, uint8_t priority) {
     this->m_flags ^= (this->m_flags ^ (flags ? 4 : 0)) & 4;
     this->m_fileSize = SFileGetFileSize(file, NULL);
@@ -1302,7 +1303,7 @@ void CM2Shared::LowPrioritySequenceLoadedCallback(CAsyncObject* object) {
     }
 }
 
-// PROVEN: c901c079 IDENTICAL/NONE
+// PROVEN: c901c079 IDENTICAL/IDENTICAL
 // OFFSET: 0x008389B0/0x140562840
 void CM2Shared::LowPrioritySequenceFailedCallback(CAsyncObject* object) {
     CM2SequenceLoad* load = static_cast<CM2SequenceLoad*>(object->m_userArg);
@@ -1391,6 +1392,7 @@ bool M2SortCompare::operator()(uint32_t a, uint32_t b) const {
     return this->m_compare(a, b, this->m_param) < 0;
 }
 
+// PROVEN: c2cd21ff DIFFERENT/IDENTICAL
 // OFFSET: 0x008395E0/0x140563A20
 void M2HeapSort(int32_t (*compare)(uint32_t, uint32_t, const void*), uint32_t* array, uint32_t count, const void* param) {
     M2SortCompare predicate;

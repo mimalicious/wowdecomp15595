@@ -387,3 +387,11 @@ inline bool JamGuildBankTabInfo::IsValid() const {
 
     return true;
 }
+
+// INLINED
+inline JamResearchHistory::JamResearchHistory() {
+}
+
+// INLINED
+inline JamResearchHistory::~JamResearchHistory() {
+}

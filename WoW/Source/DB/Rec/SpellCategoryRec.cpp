@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[4] = { 0, 0, 0, 2 };
 // STATIC: 0x00C21D40/0x140A169F8
 const DBCMeta SpellCategoryRec::s_meta = { "DBFilesClient\\SpellCategory.dbc", 4, 16, SpellCategoryRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 77cc907a IDENTICAL/NONE
+// PROVEN: 77cc907a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ECE0/0x1407D8380
 void SpellCategoryRec::FixupStrings(void* record, const char* strings) {
     SpellCategoryRec* rec = static_cast<SpellCategoryRec*>(record);

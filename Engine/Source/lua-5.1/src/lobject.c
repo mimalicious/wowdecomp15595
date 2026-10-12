@@ -46,6 +46,7 @@ int luaO_int2fb (unsigned int x) {
 
 
 /* converts back */
+// PROVEN: 67338b00 IDENTICAL/NONE
 // OFFSET: 0x0041FA70/0x140023D10
 int luaO_fb2int (int x) {
   int e = (x >> 3) & 31;

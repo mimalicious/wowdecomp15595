@@ -5,17 +5,18 @@
 
 static int32_t s_modified;
 
-// STATIC: 0x00DA60AC
+// STATIC: 0x00DA60AC/0x140C8BB40
 static _TYPEHASHENTRY** s_typehashtable;
 
-// STATIC: 0x00DA60B0
+// STATIC: 0x00DA60B0/0x140C8BB48
 static uint32_t s_typehashtablesize;
 
 static uint32_t s_typehashtableused;
 
-// STATIC: 0x00DA60B8
+// STATIC: 0x00DA60B8/0x140C8B960
 static CCritSect s_critsect;
 
+// PROVEN: b670f53e IDENTICAL/DIFFERENT
 // OFFSET: 0x004C17C0/0x1400FC090
 static void DeleteIdHashTable(_IDHASHTABLE* idhashtable) {
     for (uint32_t i = 0; i < idhashtable->size; i++) {

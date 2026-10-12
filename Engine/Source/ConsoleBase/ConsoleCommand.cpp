@@ -6,10 +6,10 @@
 #include "Engine/Source/ConsoleBase/IConsole.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00CEFF84
+// STATIC: 0x00CEFF84/0x140B90798
 int32_t s_execState = 4;
 
-// STATIC: 0x00E43328
+// STATIC: 0x00E43328/0x140D2C100
 static char s_execBuffer[0x2000];
 
 // STATIC: 0x00E45328/0x140D2E100
@@ -23,13 +23,13 @@ COMMANDHANDLER g_defaultCommand;
 // STATIC: 0x00E4D334/0x140B90620
 TSHashTable<CONSOLECOMMAND, HASHKEY_CONSTSTRI> g_consoleCommandHash;
 
-// STATIC: 0x00E4D360
+// STATIC: 0x00E4D360/0x140D36120
 static char s_commandName[64];
 
-// STATIC: 0x00CEFED0
+// STATIC: 0x00CEFED0/0x140B90608
 static const char* s_noHelpText = "No help yet";
 
-// STATIC: 0x00CEFDF8
+// STATIC: 0x00CEFDF8/0x140B90530
 static CATEGORYINFO s_categories[NUM_CATEGORIES] = {
     { CATEGORY_DEBUG, "debug" },
     { CATEGORY_GRAPHICS, "graphics" },
@@ -48,15 +48,15 @@ CONSOLECOMMAND::CONSOLECOMMAND() {
     this->m_helpText = NULL;
 }
 
-// PROVEN: 1fbbef9c IDENTICAL/NONE
-// OFFSET: 0x00610960
+// PROVEN: 1fbbef9c IDENTICAL/DIFFERENT
+// OFFSET: 0x00610960/0x14029AEB0
 static int32_t ConsoleCommand_Ver(const char* command, const char* arguments) {
     ConsoleWrite("WoW [Release x86] Build 15595 (Apr 10 2012)", DEFAULT_COLOR);
 
     return 1;
 }
 
-// PROVEN: b68528ef IDENTICAL/NONE
+// PROVEN: b68528ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00610980/0x14029AED0
 static int32_t ConsoleCommand_Quit(const char* command, const char* arguments) {
     ConsolePostClose();
@@ -64,7 +64,7 @@ static int32_t ConsoleCommand_Quit(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: 9ca48304 IDENTICAL/NONE
+// PROVEN: 9ca48304 IDENTICAL/IDENTICAL
 // OFFSET: 0x00653970/0x1402F3F40
 static int32_t CompareCompletions(const void* elem1, const void* elem2) {
     const char* const* str1 = static_cast<const char* const*>(elem1);
@@ -345,7 +345,8 @@ void ConsoleCommandWriteHelp(const char* command) {
     ConsoleCommand_Help("help", command);
 }
 
-// OFFSET: 0x006545E0
+// PROVEN: 179b5e50 IDENTICAL/DIFFERENT
+// OFFSET: 0x006545E0/0x1402F4EA0
 void ConsoleCommandDestroy() {
     g_consoleCommandHash.Clear();
 }
@@ -365,25 +366,26 @@ int32_t ConsoleCommandRegister(const char* command, COMMANDHANDLER handler, CATE
     return 1;
 }
 
-// PROVEN: 75a3a4f5 IDENTICAL/NONE
+// PROVEN: 75a3a4f5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00654D60/0x1402F5A10
 void ConsoleCommandInitialize() {
     ConsoleCommandRegister("help", ConsoleCommand_Help, CATEGORY_CONSOLE, "Provides help information about a command.", NULL);
 }
 
-// OFFSET: 0x00610940
+// OFFSET: 0x00610940/0x14029AE80
 void ConsoleInitializeClientCommand() {
     ConsoleCommandInitialize();
     ConsoleInitializeCommonCommand();
     ConsoleInitializeDebugCommand();
 }
 
+// PROVEN: 6f2be152 DIFFERENT/IDENTICAL
 // OFFSET: 0x00610950/0x14029AEA0
 void ConsoleDestroyClientCommand() {
     ConsoleCommandDestroy();
 }
 
-// PROVEN: 091d27c9 IDENTICAL/NONE
+// PROVEN: 091d27c9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00610990/0x14029AEF0
 void ConsoleInitializeCommonCommand() {
     ConsoleCommandRegister("quit", ConsoleCommand_Quit, CATEGORY_DEFAULT, NULL, NULL);

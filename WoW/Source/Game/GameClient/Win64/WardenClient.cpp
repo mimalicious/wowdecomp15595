@@ -72,14 +72,14 @@ CDataStore& operator>>(CDataStore& msg, CWardenKey& key) {
     return msg;
 }
 
-// PROVEN: 39095c57 IDENTICAL/NONE
+// PROVEN: 39095c57 IDENTICAL/IDENTICAL
 // OFFSET: 0x00704C50/0x1403D1A70
 WardenCachedModule::WardenCachedModule() {
     this->m_size = 0;
     this->m_data = NULL;
 }
 
-// PROVEN: 177e2fab IDENTICAL/NONE
+// PROVEN: 177e2fab IDENTICAL/DIFFERENT
 // OFFSET: 0x004D8960/0x140117F50
 WardenCachedModule::~WardenCachedModule() {
     if (this->m_data) {

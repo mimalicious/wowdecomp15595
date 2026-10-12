@@ -4,8 +4,8 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: c53febb7 IDENTICAL/NONE
-// OFFSET: 0x0084DE70
+// PROVEN: c53febb7 IDENTICAL/UNPROVEN
+// OFFSET: 0x0084DE70/0x14057CAF0
 static bool CVGxMaxFPSCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t maxFPS = SStrToInt(value);
 
@@ -18,8 +18,8 @@ static bool CVGxMaxFPSCallback(CVar* var, const char* oldValue, const char* valu
     return true;
 }
 
-// PROVEN: c959f723 IDENTICAL/NONE
-// OFFSET: 0x0084DEA0
+// PROVEN: c959f723 IDENTICAL/UNPROVEN
+// OFFSET: 0x0084DEA0/0x14057CB20
 static bool CVGxMaxFPSBkCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t maxFPSBk = SStrToInt(value);
 
@@ -32,15 +32,15 @@ static bool CVGxMaxFPSBkCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// PROVEN: 1c461ee1 IDENTICAL/NONE
-// OFFSET: 0x0084DED0
+// PROVEN: 1c461ee1 IDENTICAL/UNPROVEN
+// OFFSET: 0x0084DED0/0x14057CB50
 static bool CVGxDepthResolveHandleCachingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     GxSetDepthResolveHandleCaching(SStrToInt(value));
 
     return true;
 }
 
-// PROVEN: eb62808f IDENTICAL/UNPROVEN
+// PROVEN: eb62808f IDENTICAL/IDENTICAL
 // OFFSET: 0x0084DEF0/0x14057CB70
 void GxCVarInitialize() {
     CVar::Register("maxFPS", "Set FPS limit", 1, "200", CVGxMaxFPSCallback, CATEGORY_GRAPHICS, false, NULL, false);

@@ -14,30 +14,31 @@
 // STATIC: 0x00D1C8FC
 static const uint16_t s_quadIndices[4] = { 0, 3, 1, 2 };
 
-// STATIC: 0x00F803A0
+// STATIC: 0x00F803A0/0x140E781F0
 static CGxShader* s_propagatePixelShader;
 
-// STATIC: 0x00F803A4
+// STATIC: 0x00F803A4/0x140E781F8
 static CGxShader* s_propagateVertexShader;
 
-// STATIC: 0x00F803A8
+// STATIC: 0x00F803A8/0x140E78200
 static CGxShader* s_maskPixelShader;
 
-// STATIC: 0x00F803AC
+// STATIC: 0x00F803AC/0x140E78208
 static CGxShader* s_maskVertexShader;
 
-// STATIC: 0x00F803B0
+// STATIC: 0x00F803B0/0x140E78210
 static CGxFrameBuffer* s_frameBuffer[2];
 
 // STATIC: 0x00F803B8/0x140E78228
 static CGxTex* s_gxTex[2];
 
-// STATIC: 0x00F803C0
+// STATIC: 0x00F803C0/0x140E78230
 static CTexture* s_tex[2];
 
 // STATIC: 0x00F803C8/0x140E78240
 static uint32_t s_mode;
 
+// PROVEN: 788fa11a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ECF0/0x1407D86D0
 int32_t SunShafts::ModeNeedsDepthCache(uint32_t mode) {
     return mode > 0;
@@ -131,6 +132,7 @@ uint32_t SunShafts::ValidateMode(uint32_t mode) {
     return DepthCache::IsSupported(NULL, NULL, NULL) ? 0 : 8;
 }
 
+// PROVEN: 8ebe2f7c DIFFERENT/IDENTICAL
 // OFFSET: 0x00A2EF60/0x1407D89F0
 int32_t SunShafts::SetMode(uint32_t mode) {
     if (!mode || (mode <= 2 && g_theGxDevicePtr->m_caps.m_shaderModel >= 4 && DepthCache::IsSupported(NULL, NULL, NULL))) {

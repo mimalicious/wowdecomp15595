@@ -28,8 +28,8 @@ static const GLenum s_glCubeFaces[6] = { 0x8515, 0x8516, 0x8517, 0x8518, 0x8519,
 // STATIC: 0x00D096A0/0x140BBB510
 static GLenum s_glPrim[GxPrims_Last] = { GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_TRIANGLES, GL_TRIANGLE_STRIP };
 
-// PROVEN: d2465d58 IDENTICAL/NONE
-// OFFSET: 0x008691D0
+// PROVEN: d2465d58 IDENTICAL/UNPROVEN
+// OFFSET: 0x008691D0/0x14059CCA0
 void CGxDeviceOpenGl::IShaderConstantsClear() {
     this->ShaderConstantsClear();
     this->IShaderConstantsReset();
@@ -82,7 +82,7 @@ void CGxDeviceOpenGl::ScenePresent(void* window) {
     this->IShaderConstantsClear();
 }
 
-// OFFSET: 0x00869350
+// OFFSET: 0x00869350/0x14059CE50
 void CGxDeviceOpenGl::IXformSetProjection(const C44Matrix& matrix) {
     C44Matrix projection(matrix.a0, matrix.a1, matrix.a2, matrix.a3, matrix.b0, matrix.b1, matrix.b2, matrix.b3, -matrix.c0, -matrix.c1, -matrix.c2, -matrix.c3, matrix.d0, matrix.d1, matrix.d2, matrix.d3);
 
@@ -113,6 +113,7 @@ void CGxDeviceOpenGl::IXformGLModelView(const C44Matrix& view, C44Matrix& world)
     world = C44Matrix(view.a0, view.a1, -view.a2, view.a3, view.b0, view.b1, -view.b2, view.b3, view.c0, view.c1, -view.c2, view.c3, view.d0, view.d1, -view.d2, view.d3);
 }
 
+// PROVEN: ffc3bc0b IDENTICAL/DIFFERENT
 // OFFSET: 0x00869640/0x14059D350
 void CGxDeviceOpenGl::IXformSetModelView(const C44Matrix& matrix) {
     C44Matrix modelView;
@@ -121,15 +122,15 @@ void CGxDeviceOpenGl::IXformSetModelView(const C44Matrix& matrix) {
     glLoadMatrixf(&modelView.a0);
 }
 
-// PROVEN: 14593c6e IDENTICAL/NONE
-// OFFSET: 0x00869790
+// PROVEN: 14593c6e IDENTICAL/DIFFERENT
+// OFFSET: 0x00869790/0x14059D3E0
 void CGxDeviceOpenGl::XformSetProjection(const C44Matrix& matrix) {
     this->m_projection = matrix;
     this->IXformSetProjection(matrix);
 }
 
-// PROVEN: 2c044fa7 IDENTICAL/NONE
-// OFFSET: 0x008697C0
+// PROVEN: 2c044fa7 IDENTICAL/IDENTICAL
+// OFFSET: 0x008697C0/0x14059D480
 void CGxDeviceOpenGl::XformSetView(const C44Matrix& matrix) {
     CGxDevice::XformSetView(matrix);
     this->m_viewDirty = 1;
@@ -234,8 +235,8 @@ int32_t CGxDeviceOpenGl::TexCopy(CGxTex* source, CGxTex* dest, const C2iVector& 
     return 1;
 }
 
-// PROVEN: 0fe72bb7 IDENTICAL/NONE
-// OFFSET: 0x008688E0
+// PROVEN: 0fe72bb7 IDENTICAL/IDENTICAL
+// OFFSET: 0x008688E0/0x1407FDD80
 int32_t CGxDeviceOpenGl::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* destRect, const CiRect* sourceRect, uint32_t level, uint32_t face) {
     return 0;
 }
@@ -247,7 +248,7 @@ void CGxDeviceOpenGl::ITexForceRecreation() {
             continue;
         }
 
-        // STATIC: 0x00EC6974
+        // STATIC: 0x00EC6974/0x140DB8C38
         static CiRect s_updateRect;
 
         if (s_glFormat[texId->m_format] == GL_DEPTH_COMPONENT) {
@@ -267,7 +268,7 @@ void CGxDeviceOpenGl::ITexForceRecreation() {
 
 // OFFSET: 0x008689D0/0x14059C1B0
 void CGxDeviceOpenGl::ITexDownload(CGxTex* texId, uint32_t width, uint32_t height, uint32_t face, uint32_t mip, uint32_t baseMip, uint32_t stride, const void* texels) {
-    // STATIC: 0x00EC6988
+    // STATIC: 0x00EC6988/0x140DB8C50
     static TSGrowableArray<uint8_t> s_buffer;
 
     uint32_t minY = texId->m_updateRect.minY >> mip;
@@ -547,7 +548,7 @@ void CGxDeviceOpenGl::ITexMarkAsUpdated(CGxTex* texId, uint32_t tmu) {
     CGxDevice::ITexMarkAsUpdated(texId);
 }
 
-// OFFSET: 0x008691B0
+// OFFSET: 0x008691B0/0x14059CC90
 void CGxDeviceOpenGl::ITexMarkAsUpdated(CGxTex* texId) {
     this->ITexMarkAsUpdated(texId, 0xFFFFFFFF);
 }

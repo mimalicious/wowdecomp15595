@@ -7,7 +7,7 @@
 // STATIC: 0x00E4E824
 static HASHKEY_NONE s_memoryLookupKey;
 
-// STATIC: 0x00E4E828
+// STATIC: 0x00E4E828/0x140BAFDD0
 TSHashTable<SE3MemorySoundObject, HASHKEY_NONE> SE3::sm_MemorySoundObjectTable;
 
 // OFFSET: 0x007147F0/0x1403E6F30
@@ -38,7 +38,7 @@ void SE3MemorySoundProperties::ResetToDefaults() {
     this->m_attachMonitorDSP = 0;
 }
 
-// OFFSET: 0x00714860
+// OFFSET: 0x00714860/0x1403E6FB0
 int32_t SE3::SetMemorySoundFinishedCallback(uint32_t handle, void (*callback)(SE3MemorySoundObject*, void*)) {
     SE3MemorySoundObject* sound = SE3::sm_MemorySoundObjectTable.Ptr(handle, s_memoryLookupKey);
 
@@ -51,7 +51,7 @@ int32_t SE3::SetMemorySoundFinishedCallback(uint32_t handle, void (*callback)(SE
     return SE3_OK;
 }
 
-// OFFSET: 0x00714890
+// OFFSET: 0x00714890/0x1403E70D0
 int32_t SE3::StopMemorySound(uint32_t handle) {
     if (!handle) {
         return SE3_ERR_NOT_FOUND;

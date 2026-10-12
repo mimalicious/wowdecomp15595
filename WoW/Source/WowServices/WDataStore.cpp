@@ -3,13 +3,13 @@
 #include "Engine/Source/Base/ObjectAlloc.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00DBE220
+// STATIC: 0x00DBE220/0x140CA3D18
 static TSObjectAllocPool<WDATASTOREBUFFER<0x300> >* s_smallBufferHeap;
 
-// STATIC: 0x00DBE224
+// STATIC: 0x00DBE224/0x140CA3D20
 static TSObjectAllocPool<WDATASTOREBUFFER<0x4000> >* s_largeBufferHeap;
 
-// STATIC: 0x00DBE228
+// STATIC: 0x00DBE228/0x140CA3D28
 static TSObjectAllocPool<WDATASTOREBUFFER<0x40040> >* s_superBufferHeap;
 
 // STATIC: 0x00DBE22C/0x140EE2558
@@ -20,7 +20,7 @@ WDataStore::WDataStore() {
     this->InternalInitialize(this->m_data, this->m_base, this->m_alloc);
 }
 
-// OFFSET: 0x0044ECB0
+// OFFSET: 0x0044ECB0/0x1403178A0
 WDataStore::~WDataStore() {
     if (this->m_alloc != -1) {
         this->InternalDestroy(this->m_data, this->m_base, this->m_alloc);
@@ -85,7 +85,7 @@ void WDataStore::InternalDestroy(uint8_t*& data, uint32_t& base, uint32_t& alloc
     alloc = 0;
 }
 
-// OFFSET: 0x004C60A0
+// OFFSET: 0x004C60A0/0x1401012A0
 void WDataStore::FreeBuffer(void* buffer, uint32_t size) {
     if (size <= 0x300) {
         s_smallBufferHeap->Delete(reinterpret_cast<WDATASTOREBUFFER<0x300>*>(static_cast<uint8_t*>(buffer) - sizeof(WDATASTOREBUFFERHEADER)), __FILE__, __LINE__);
@@ -98,6 +98,7 @@ void WDataStore::FreeBuffer(void* buffer, uint32_t size) {
     }
 }
 
+// PROVEN: 0f827d36 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C6270/0x140101370
 void WDataStore::StaticInitialize() {
     if (s_initialized) {
@@ -189,6 +190,7 @@ int32_t WDataStore::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& d
     return 1;
 }
 
+// PROVEN: 5eed8785 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C6580/0x140101800
 void WDataStore::StaticDestroy() {
     delete s_smallBufferHeap;

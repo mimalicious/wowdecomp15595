@@ -13,13 +13,13 @@
 #include "Engine/Source/Tempest/CFrustum.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00D38338
+// STATIC: 0x00D38338/0x140BF1E50
 CGxShader* CShadowCache::s_shadowMapPixelShader;
 
-// STATIC: 0x00D3833C
+// STATIC: 0x00D3833C/0x140BF1E58
 CGxShader* CShadowCache::s_shadowMapVertexShader;
 
-// STATIC: 0x00C98B34
+// STATIC: 0x00C98B34/0x140B30238
 float CShadowCache::s_debugAspect = 1.0f;
 
 // STATIC: 0x00C98B38/0x140B3023C
@@ -48,16 +48,16 @@ EShadowMode CShadowCache::s_shadowMode;
 // STATIC: 0x00D38348
 CGxFrameBuffer* CShadowCache::s_bandFrameBuffers[3][2];
 
-// STATIC: 0x00D38360
+// STATIC: 0x00D38360/0x140BF1E98
 CTexture* CShadowCache::s_intDynShadow;
 
-// STATIC: 0x00D38364
+// STATIC: 0x00D38364/0x140BF1EA0
 CTexture* CShadowCache::s_depthBuffer;
 
-// STATIC: 0x00D38368
+// STATIC: 0x00D38368/0x140BF1EAC
 int32_t CShadowCache::s_fullClear;
 
-// STATIC: 0x00D3836C
+// STATIC: 0x00D3836C/0x140BF1EA8
 int32_t CShadowCache::s_fullUpdate;
 
 // STATIC: 0x00D38370
@@ -78,28 +78,28 @@ ShadowQueryCallback CShadowCache::s_queryCallback;
 // STATIC: 0x00D38384/0x140BF1ED8
 ShadowRenderCallback CShadowCache::s_renderCallback;
 
-// STATIC: 0x00D38388
+// STATIC: 0x00D38388/0x140BF1EE0
 int32_t CShadowCache::s_debugLevel;
 
-// STATIC: 0x00D3838C
+// STATIC: 0x00D3838C/0x140BF1EE4
 uint8_t CShadowCache::s_frameCounter;
 
-// STATIC: 0x00D38390
+// STATIC: 0x00D38390/0x140BF1EF0
 CShadowBand CShadowCache::s_extDynShadow;
 
 // STATIC: 0x00D383D0
 float CShadowCache::s_extDynShadowCullRect[4];
 
-// STATIC: 0x00D383E0
+// STATIC: 0x00D383E0/0x140BF1F48
 C3Vector CShadowCache::s_sunDir;
 
-// STATIC: 0x00D383EC
+// STATIC: 0x00D383EC/0x140BF1F58
 C4Vector CShadowCache::s_sunDirViewSpace;
 
-// STATIC: 0x00D383FC
+// STATIC: 0x00D383FC/0x140BF1F68
 C4Vector CShadowCache::s_cutoffPlane;
 
-// STATIC: 0x00D3840C
+// STATIC: 0x00D3840C/0x140BF1F78
 C4Vector CShadowCache::s_cutoffPlaneDefault;
 
 // STATIC: 0x00D3841C
@@ -111,16 +111,16 @@ float CShadowCache::s_shadowScale;
 // STATIC: 0x00D38430
 C4Vector CShadowCache::s_shadowMatrices[12];
 
-// STATIC: 0x00D384F0
+// STATIC: 0x00D384F0/0x140BF2060
 C4Vector CShadowCache::s_extShadowMatrix[3];
 
-// STATIC: 0x00D38520
+// STATIC: 0x00D38520/0x140BF2090
 C4Vector CShadowCache::s_bandParams[6];
 
-// STATIC: 0x00D38580
+// STATIC: 0x00D38580/0x140BF20F0
 C4Vector CShadowCache::s_pcfOffsets[8];
 
-// STATIC: 0x00D38600
+// STATIC: 0x00D38600/0x140BF2170
 CShadowBand CShadowCache::s_extShadowBands[3];
 
 // OFFSET: 0x004352A0/0x14003E9E0
@@ -191,8 +191,8 @@ void __fastcall CShadowCache::NotifyTexturesRecreate() {
     CShadowCache::s_recreateTextures = 1;
 }
 
-// PROVEN: 1aebd967 IDENTICAL/NONE
-// OFFSET: 0x004353E0
+// PROVEN: 1aebd967 IDENTICAL/IDENTICAL
+// OFFSET: 0x004353E0/0x14003EB70
 void CShadowCache::SetDebugParams(float aspect, int32_t level) {
     CShadowCache::s_debugAspect = aspect;
     CShadowCache::s_debugLevel = level;
@@ -369,7 +369,7 @@ void CShadowCache::InitPcfOffsets() {
     CShadowCache::s_pcfOffsets[7].w = 0.0f;
 }
 
-// PROVEN: 29f5640c IDENTICAL/NONE
+// PROVEN: 29f5640c IDENTICAL/UNPROVEN
 // OFFSET: 0x00435B60/0x14003F350
 void CShadowCache::SetShadowMapGenericGlobal() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
@@ -389,8 +389,8 @@ void CShadowCache::SetShadowMapGenericGlobal() {
     }
 }
 
-// PROVEN: 3d779f43 IDENTICAL/NONE
-// OFFSET: 0x00435C60
+// PROVEN: 3d779f43 IDENTICAL/UNPROVEN
+// OFFSET: 0x00435C60/0x14003F4A0
 void CShadowCache::SetShadowMapGenericInterior(int32_t interior) {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;
@@ -411,8 +411,8 @@ void CShadowCache::SetShadowMapGenericInterior(int32_t interior) {
     g_theGxDevicePtr->RsSet(GxRs_Texture4, texture);
 }
 
-// PROVEN: 463fda19 IDENTICAL/NONE
-// OFFSET: 0x00435CF0
+// PROVEN: 463fda19 IDENTICAL/UNPROVEN
+// OFFSET: 0x00435CF0/0x14003F560
 void CShadowCache::SetShadowMapTerrain() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;
@@ -431,8 +431,8 @@ void CShadowCache::SetShadowMapTerrain() {
     }
 }
 
-// PROVEN: 5bcef6c4 IDENTICAL/NONE
-// OFFSET: 0x00435E00
+// PROVEN: 5bcef6c4 IDENTICAL/UNPROVEN
+// OFFSET: 0x00435E00/0x14003F6B0
 void CShadowCache::SetShadowMapDetailDoodad() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;
@@ -641,7 +641,7 @@ void CShadowCache::GatherBands(CShadowCacheQueryData& data, const C3Vector& pos,
     CShadowCache::s_queryCallback(data, frame);
 }
 
-// OFFSET: 0x00435370
+// OFFSET: 0x00435370/0x14003EAB0
 void CShadowCache::RenderBands(CShadowCacheQueryData& data) {
     for (int32_t i = 0; i <= data.m_lastBand; i++) {
         if (!data.m_active[i]) {
@@ -660,7 +660,7 @@ void CShadowCache::RenderBands(CShadowCacheQueryData& data) {
     }
 }
 
-// OFFSET: 0x00436960
+// OFFSET: 0x00436960/0x1400403E0
 void CShadowCache::PostUpdate() {
     if (!CShadowCache::s_matrixCallback || !CShadowCache::s_frustumCallback || !CShadowCache::s_queryCallback || !CShadowCache::s_renderCallback) {
         return;
@@ -737,7 +737,7 @@ void CShadowCache::PostUpdate() {
     }
 }
 
-// OFFSET: 0x004372B0
+// OFFSET: 0x004372B0/0x140040EB0
 CShadowCacheQueryData::CShadowCacheQueryData() {
     for (uint32_t i = 0; i < 3; i++) {
         this->m_extents[i].b = C3Vector(0.0f, 0.0f, 0.0f);
@@ -848,7 +848,7 @@ void CShadowCache::ClearBandTextures() {
     CShadowCache::s_fullClear = 0;
 }
 
-// OFFSET: 0x004379A0
+// OFFSET: 0x004379A0/0x1400415D0
 int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
     if (!CShadowCache::s_matrixCallback || !CShadowCache::s_frustumCallback || !CShadowCache::s_queryCallback || !CShadowCache::s_renderCallback) {
         return 0;
@@ -1125,7 +1125,7 @@ int32_t CShadowCache::Init() {
     return 1;
 }
 
-// PROVEN: c464dcd8 IDENTICAL/UNPROVEN
+// PROVEN: c464dcd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00438610/0x1400425F0
 void CShadowCache::CreateResources() {
     if (!CShadowCache::s_recreateTextures) {

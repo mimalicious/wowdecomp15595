@@ -7,43 +7,43 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: 0x00E4EADC
+// STATIC: 0x00E4EADC/0x140D37E94
 static int32_t s_cameraRelativeCoords;
 
-// STATIC: 0x00D00634
+// STATIC: 0x00D00634/0x140BB0054
 static float s_worldCoordScale = 1.0f;
 
-// STATIC: 0x00D00638
+// STATIC: 0x00D00638/0x140BB0058
 static int32_t s_shadersEnabled = 1;
 
-// STATIC: 0x00D0063C
+// STATIC: 0x00D0063C/0x140BB005C
 static int32_t s_materialsDirty = 1;
 
-// STATIC: 0x00E4EAFC
+// STATIC: 0x00E4EAFC/0x140D37EB4
 static int32_t s_configDirty;
 
-// STATIC: 0x00E4EAE0
+// STATIC: 0x00E4EAE0/0x140D37E98
 static uint32_t s_waterDetail;
 
-// STATIC: 0x00E4EAE4
+// STATIC: 0x00E4EAE4/0x140D37E9C
 static uint32_t s_rippleDetail;
 
-// STATIC: 0x00E4EAE8
+// STATIC: 0x00E4EAE8/0x140D37EA0
 static uint32_t s_reflectionMode;
 
-// STATIC: 0x00E4EAEC
+// STATIC: 0x00E4EAEC/0x140D37EA4
 static uint32_t s_reflectionDownscale;
 
-// STATIC: 0x00E4EAF0
+// STATIC: 0x00E4EAF0/0x140D37EA8
 static int32_t s_cameraSubmerged;
 
-// STATIC: 0x00E4EAF4
+// STATIC: 0x00E4EAF4/0x140D37EAC
 static int32_t s_needBackBuffer;
 
-// STATIC: 0x00E4EAF8
+// STATIC: 0x00E4EAF8/0x140D37EB0
 static int32_t s_needDynDisplMap;
 
-// STATIC: 0x00E4EB00
+// STATIC: 0x00E4EB00/0x140D37EB8
 static float s_underWaterFogStart;
 
 // STATIC: 0x00E4EB04
@@ -52,10 +52,10 @@ static float s_underWaterFogEnd;
 // STATIC: 0x00E4EB08
 static float s_underWaterFogDensity;
 
-// STATIC: 0x00E4EB18
+// STATIC: 0x00E4EB18/0x140D37ED4
 static CImVector s_underWaterFogColor;
 
-// STATIC: 0x00E4EB0C
+// STATIC: 0x00E4EB0C/0x140D37EC8
 static float s_aboveWaterFogStart;
 
 // STATIC: 0x00E4EB10
@@ -64,16 +64,16 @@ static float s_aboveWaterFogEnd;
 // STATIC: 0x00E4EB14
 static float s_aboveWaterFogDensity;
 
-// STATIC: 0x00E4EB1C
+// STATIC: 0x00E4EB1C/0x140D37ED8
 static CImVector s_aboveWaterFogColor;
 
-// STATIC: 0x00E4EB20
+// STATIC: 0x00E4EB20/0x140D37EE0
 static TSGrowableArray<Liquid::CONFIG_CHANGED_CALLBACK> s_configChangedCallbacks;
 
-// STATIC: 0x00E4EB30
+// STATIC: 0x00E4EB30/0x140D37EF8
 WaterSurfaceGen* Liquid::s_surfaceGen;
 
-// STATIC: 0x00E4EB7C
+// STATIC: 0x00E4EB7C/0x140D37F48
 CDataAllocator Liquid::s_instanceAllocator(sizeof(Liquid::CInstance), 32);
 
 // OFFSET: 0x0071ACF0
@@ -112,7 +112,7 @@ void Liquid::SetAboveWaterFog(float start, float end, float density, const CImVe
     s_aboveWaterFogColor = color;
 }
 
-// OFFSET: 0x0071ADE0
+// OFFSET: 0x0071ADE0/0x1403EF4E0
 void Liquid::GetAboveWaterFog(float& start, float& end, float& density, CImVector& color) {
     start = s_aboveWaterFogStart;
     end = s_aboveWaterFogEnd;
@@ -120,91 +120,91 @@ void Liquid::GetAboveWaterFog(float& start, float& end, float& density, CImVecto
     color = s_aboveWaterFogColor;
 }
 
-// PROVEN: c9f9370b IDENTICAL/NONE
+// PROVEN: c9f9370b IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE20/0x1403EF290
 uint32_t Liquid::GetWaterDetail() {
     return s_waterDetail;
 }
 
-// PROVEN: 1b32f54a IDENTICAL/NONE
+// PROVEN: 1b32f54a IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE30/0x1403EF2A0
 uint32_t Liquid::GetRippleDetail() {
     return s_rippleDetail;
 }
 
-// PROVEN: af6e86d2 IDENTICAL/NONE
+// PROVEN: af6e86d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE40/0x1403EF2B0
 uint32_t Liquid::GetReflectionMode() {
     return s_reflectionMode;
 }
 
-// PROVEN: 3dd13e28 IDENTICAL/NONE
+// PROVEN: 3dd13e28 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE50/0x1403EF2C0
 uint32_t Liquid::GetReflectionDownscale() {
     return s_reflectionDownscale;
 }
 
-// PROVEN: cfbb7e77 IDENTICAL/NONE
+// PROVEN: cfbb7e77 IDENTICAL/DIFFERENT
 // OFFSET: 0x0071AE60/0x1403EF2D0
 int32_t Liquid::WaterDetailNeedsDepthCache(uint32_t detail) {
     return detail >= 2;
 }
 
-// PROVEN: 191c7132 IDENTICAL/NONE
+// PROVEN: 191c7132 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE70/0x1403EF2E0
 int32_t Liquid::CameraSubmerged() {
     return s_cameraSubmerged;
 }
 
-// PROVEN: b651f811 IDENTICAL/NONE
+// PROVEN: b651f811 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE80/0x1403EF2F0
 void Liquid::SetCameraSubmerged(int32_t submerged) {
     s_cameraSubmerged = submerged;
 }
 
-// PROVEN: abc6bfc0 IDENTICAL/NONE
+// PROVEN: abc6bfc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AE90/0x1403EF300
 int32_t Liquid::NeedBackBuffer() {
     return s_needBackBuffer;
 }
 
-// PROVEN: 5f61cc36 IDENTICAL/NONE
+// PROVEN: 5f61cc36 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEA0/0x1403EF310
 void Liquid::SetNeedBackBuffer(int32_t need) {
     s_needBackBuffer = need;
 }
 
-// PROVEN: ea9b8ac0 IDENTICAL/NONE
+// PROVEN: ea9b8ac0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEB0/0x1403EF320
 int32_t Liquid::NeedDynDisplMap() {
     return s_needDynDisplMap;
 }
 
-// PROVEN: ed575564 IDENTICAL/NONE
+// PROVEN: ed575564 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEC0/0x1403EF330
 void Liquid::SetNeedDynDisplMap(int32_t need) {
     s_needDynDisplMap = need;
 }
 
-// PROVEN: d45ce39a IDENTICAL/NONE
+// PROVEN: d45ce39a IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AED0/0x1403EF340
 int32_t Liquid::GetShadersEnabled() {
     return s_shadersEnabled;
 }
 
-// PROVEN: 1383d3e2 IDENTICAL/NONE
+// PROVEN: 1383d3e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEE0/0x1403EF350
 int32_t Liquid::UseCameraRelativeCoords() {
     return s_cameraRelativeCoords;
 }
 
-// PROVEN: f46b1b37 IDENTICAL/NONE
+// PROVEN: f46b1b37 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AEF0/0x1403EF360
 float Liquid::WorldCoordScale() {
     return s_worldCoordScale;
 }
 
-// OFFSET: 0x0071AF00
+// OFFSET: 0x0071AF00/0x1403EF370
 void Liquid::Destroy() {
     Liquid::CMaterialBank::Destroy();
     Liquid::CSettingsBank::Destroy();
@@ -234,7 +234,7 @@ int32_t Liquid::IsTransparent(uint32_t liquidType) {
     return Liquid::CSettingsBank::GetSettings(liquidType)->m_transparent;
 }
 
-// PROVEN: b9bf9c00 IDENTICAL/NONE
+// PROVEN: b9bf9c00 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071AFB0/0x1403EF440
 void Liquid::PurgeMaterialBank() {
     Liquid::CMaterialBank::Purge();
@@ -298,7 +298,7 @@ int32_t Liquid::SetWaterDetail(uint32_t detail) {
     return 1;
 }
 
-// PROVEN: a2627f67 IDENTICAL/NONE
+// PROVEN: a2627f67 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071B0C0/0x1403EF630
 uint32_t Liquid::ValidateRippleDetail(uint32_t detail) {
     if (!detail) {
@@ -328,7 +328,7 @@ int32_t Liquid::SetRippleDetail(uint32_t detail) {
     return 1;
 }
 
-// PROVEN: c74a57a9 IDENTICAL/NONE
+// PROVEN: c74a57a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0071B150/0x1403EF6C0
 uint32_t Liquid::ValidateReflectionMode(uint32_t mode) {
     if (!mode) {
@@ -354,7 +354,7 @@ int32_t Liquid::SetReflectionMode(uint32_t mode) {
     return 1;
 }
 
-// PROVEN: a3b4a00d IDENTICAL/NONE
+// PROVEN: a3b4a00d IDENTICAL/DIFFERENT
 // OFFSET: 0x0071B1D0/0x1403EF730
 uint32_t Liquid::ValidateReflectionDownscale(uint32_t downscale) {
     if (!downscale) {
@@ -465,7 +465,7 @@ void Liquid::RemoveConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback) {
     }
 }
 
-// OFFSET: 0x0071B490
+// OFFSET: 0x0071B490/0x1403EFAF0
 void Liquid::DestroySurfaceGen() {
     WaterSurfaceGen* surfaceGen = s_surfaceGen;
 
@@ -488,19 +488,20 @@ void Liquid::UpdateSurfaceGen(uint32_t time) {
 void Liquid::CInstance::Initialize() {
 }
 
-// PROVEN: 90ee0c9d IDENTICAL/NONE
-// OFFSET: 0x0071BDF0
+// PROVEN: 90ee0c9d IDENTICAL/IDENTICAL
+// OFFSET: 0x0071BDF0/0x1403F0B40
 void Liquid::CInstance::AddRef() {
     this->m_refCount++;
 }
 
-// PROVEN: 259e5a12 IDENTICAL/NONE
+// PROVEN: 259e5a12 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071BE00/0x1403F0B50
 void Liquid::CInstance::Purge() {
     this->m_geomFactory->Purge();
 }
 
-// OFFSET: 0x0071BE10
+// PROVEN: 6b2578b2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0071BE10/0x1403F0B60
 void Liquid::CInstance::Destroy() {
     Liquid::s_instanceAllocator.Clear(typeid(Liquid::CInstance).raw_name(), SLOG_OBJECT, 1);
 }
@@ -525,11 +526,6 @@ Liquid::CInstance* Liquid::CInstance::Create() {
     return Liquid::s_instanceAllocator.New<Liquid::CInstance>(0);
 }
 
-// INLINED
-void Liquid::CInstance::SetTransform(const C44Matrix& transform) {
-    this->m_transform = transform;
-}
-
 // OFFSET: 0x0071BF10/0x1403F0C80
 void Liquid::CInstance::Release() {
     if (this->m_refCount-- == 1) {
@@ -540,8 +536,8 @@ void Liquid::CInstance::Release() {
     }
 }
 
-// PROVEN: 02c0d807 IDENTICAL/NONE
-// OFFSET: 0x0071D8D0
+// PROVEN: 02c0d807 IDENTICAL/IDENTICAL
+// OFFSET: 0x0071D8D0/0x1403F2F30
 void WaterSurfaceGen::Release() {
     if (this->unk_0028) {
         SMemFree(this->unk_0028, "delete[]", -1, 0);
@@ -570,8 +566,8 @@ void WaterSurfaceGen::Release() {
     this->m_texture = NULL;
 }
 
-// PROVEN: a59e00a4 IDENTICAL/NONE
-// OFFSET: 0x0071D9A0
+// PROVEN: a59e00a4 IDENTICAL/UNPROVEN
+// OFFSET: 0x0071D9A0/0x1403F3030
 WaterSurfaceGen::~WaterSurfaceGen() {
     this->Release();
 }

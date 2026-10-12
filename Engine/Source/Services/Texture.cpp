@@ -30,13 +30,13 @@ static const uint32_t s_texFormatBytesPerTexel[GxTexFormats_Last] = { 0, 4, 4, 2
 
 static const uint32_t s_texFormatTexelsPerBlock[GxTexFormats_Last] = { 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
-// STATIC: 0x00CA49C0
+// STATIC: 0x00CA49C0/0x140B42B40
 static EGxTexFormat s_pixelFormatToGxTexFormat[NUM_PIXEL_FORMATS] = { GxTex_Dxt1, GxTex_Dxt3, GxTex_Argb8888, GxTex_Argb1555, GxTex_Argb4444, GxTex_Rgb565, GxTex_Unknown, GxTex_Dxt5, GxTex_Unknown, GxTex_Unknown };
 
-// STATIC: 0x00CA4A48
+// STATIC: 0x00CA4A48/0x140B42B68
 static EGxTexFilter s_filterMode = GxTex_LinearMipNearest;
 
-// STATIC: 0x00CA4A4C
+// STATIC: 0x00CA4A4C/0x140B42B6C
 static uint32_t s_maxAnisotropy = 1;
 
 static int32_t s_createBlpAsync = 1;
@@ -49,51 +49,51 @@ static TSExplicitList<CTexture, offsetof(CTexture, m_link)> s_textureList;
 
 static uint32_t s_defaultColor = 0xFF00FF00;
 
-// STATIC: 0x00CA4B08
+// STATIC: 0x00CA4B08/0x140B42D90
 static TSExplicitList<CGxTexCache, offsetof(CGxTexCache, m_link)> s_gxTexCacheFree;
 
-// STATIC: 0x00CA4B14
+// STATIC: 0x00CA4B14/0x140B42DA8
 static TSExplicitList<CMipBitsCache, offsetof(CMipBitsCache, m_link)> s_mipBitsCacheFree;
 
-// STATIC: 0x00CA4B20
+// STATIC: 0x00CA4B20/0x140B42DC0
 static TSExplicitList<CTextureAtlas, offsetof(CTextureAtlas, m_link)> s_atlasList;
 
-// STATIC: 0x00CA4B2C
+// STATIC: 0x00CA4B2C/0x140B42DD8
 static TSExplicitList<CAsyncObject, offsetof(CAsyncObject, m_link)> s_asyncTextureList;
 
-// STATIC: 0x00DD3D98
+// STATIC: 0x00DD3D98/0x140CB9AC0
 static uint32_t s_currentTime;
 
-// STATIC: 0x00DD3D9C
+// STATIC: 0x00DD3D9C/0x140CB9AC8
 static char* s_substituteFrom;
 
-// STATIC: 0x00DD3DA0
+// STATIC: 0x00DD3DA0/0x140CB9AD0
 static char* s_substituteTo;
 
-// STATIC: 0x00DD3DA4
+// STATIC: 0x00DD3DA4/0x140CB9AD8
 static int32_t s_atlasEnable;
 
-// STATIC: 0x00DD3DB0
+// STATIC: 0x00DD3DB0/0x140CB9AE8
 static MipBits* s_mipBits;
 
-// STATIC: 0x00DD3DB4
+// STATIC: 0x00DD3DB4/0x140CB9AE4
 static int32_t s_pumping;
 
-// STATIC: 0x00DD3DB8
+// STATIC: 0x00DD3DB8/0x140CB9AF0
 static int32_t s_gxTexCacheSize;
 
-// STATIC: 0x00DD3DBC
+// STATIC: 0x00DD3DBC/0x140CB9AF4
 static int32_t s_gxTexCacheMaxSize;
 
 static uint32_t s_asyncLoadBufferUsed;
 
-// STATIC: 0x00DD3DC4
+// STATIC: 0x00DD3DC4/0x140B42D10
 static TSHashTableReuse<CTexture, HASHKEY_TEXTUREFILE> s_textureCache;
 
-// STATIC: 0x00DD3E00
+// STATIC: 0x00DD3E00/0x140CB9B00
 static TSExplicitList<CGxTexCache, offsetof(CGxTexCache, m_link)> s_gxTexCache[6][6];
 
-// STATIC: 0x00DD3FB0
+// STATIC: 0x00DD3FB0/0x140CB9E60
 static TSExplicitList<CMipBitsCache, offsetof(CMipBitsCache, m_link)> s_mipBitsCache[6][6][2];
 
 // INLINED
@@ -130,7 +130,7 @@ EGxTexFormat TexturePixelFormatToGxTexFormat(PIXEL_FORMAT format) {
     return s_pixelFormatToGxTexFormat[format];
 }
 
-// OFFSET: 0x00540730
+// OFFSET: 0x00540730/0x140193240
 void CTextureAtlas::Update(CTexture* texture) {
     this->m_updateSlot = texture->m_atlasBlockIndex;
     GxTexUpdate(this->m_gxTex, (texture->m_atlasBlockIndex & 7) * this->m_width, ((texture->m_atlasBlockIndex >> 3) & 7) * this->m_height, (texture->m_atlasBlockIndex & 7) * this->m_width + this->m_width, ((texture->m_atlasBlockIndex >> 3) & 7) * this->m_height + this->m_height, 1);
@@ -178,7 +178,7 @@ int32_t TextureBuildAliasPath(char* buffer, const char* fileName) {
     return 1;
 }
 
-// OFFSET: 0x005409C0
+// OFFSET: 0x005409C0/0x140193480
 MipBits* GetDefaultTexture(uint32_t width, uint32_t height) {
     MipBits* images = s_mipBits;
     MipBits* level = images;
@@ -211,7 +211,7 @@ void AsyncTextureFailureCallback(CAsyncObject* object) {
     FillInSolidTexture(*reinterpret_cast<const CImVector*>(&s_defaultColor), texture);
 }
 
-// OFFSET: 0x00540AB0
+// OFFSET: 0x00540AB0/0x1401935B0
 SFileImpl* TextureCreateOpenFile(const char* debugName, const char* fileName, int32_t flags) {
     SFileImpl* file = NULL;
     SErrSetLastError(0);
@@ -336,7 +336,7 @@ int32_t TextureIsSame(CTexture* texture, const char* fileName) {
     return SStrCmpI(name, texture->m_filename, sizeof(texture->m_filename)) == 0;
 }
 
-// PROVEN: a0a0409b IDENTICAL/NONE
+// PROVEN: a0a0409b IDENTICAL/IDENTICAL
 // OFFSET: 0x00540C80/0x140193790
 void TextureSetUserData(CTexture* texture, GxTexUserFunc userFunc, void* userArg) {
     if (!texture) {
@@ -398,7 +398,7 @@ int32_t TextureCalcMipCount(uint32_t width, uint32_t height) {
     return count;
 }
 
-// OFFSET: 0x00540D90
+// OFFSET: 0x00540D90/0x1401938C0
 void TextureGenerateMips(uint32_t width, uint32_t height, uint32_t firstLevel, uint32_t levelCount, MipBits* images) {
     uint32_t sourceWidth = width;
     uint32_t sourceHeight = height;
@@ -493,15 +493,15 @@ int32_t TextureIsLoaded(CTexture* texture) {
     return texture && !texture->m_asyncObject;
 }
 
-// PROVEN: de8122be IDENTICAL/NONE
+// PROVEN: de8122be IDENTICAL/IDENTICAL
 // OFFSET: 0x00541010/0x140193C10
 void TextureSetTextureSubstitutions(const char* from, const char* to) {
     s_substituteFrom = const_cast<char*>(from);
     s_substituteTo = const_cast<char*>(to);
 }
 
-// PROVEN: 3833ca98 IDENTICAL/NONE
-// OFFSET: 0x00541030
+// PROVEN: 3833ca98 IDENTICAL/IDENTICAL
+// OFFSET: 0x00541030/0x140193C20
 void TextureGetGxTexFlags(CTexture* texture, CGxTexFlags* texFlags) {
     if (!texture) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -511,12 +511,13 @@ void TextureGetGxTexFlags(CTexture* texture, CGxTexFlags* texFlags) {
     *texFlags = texture->m_gxTexFlags;
 }
 
-// PROVEN: 660b7d26 IDENTICAL/NONE
+// PROVEN: 660b7d26 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541050/0x140193C40
 int32_t TextureLoadBlob(const char* fileName) {
     return CTextureBlob::Load(fileName);
 }
 
+// PROVEN: 15eb7a5d IDENTICAL/IDENTICAL
 // OFFSET: 0x00541060/0x140193C50
 int32_t TextureLoadBlob(const char* fileName, void* data, uint32_t size) {
     return CTextureBlob::Load(fileName, data, size);
@@ -528,7 +529,7 @@ int32_t TextureUnloadBlob(const char* fileName) {
     return CTextureBlob::Unload(fileName);
 }
 
-// PROVEN: 2f536430 IDENTICAL/NONE
+// PROVEN: 2f536430 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541080/0x140193C70
 const char* TextureGetObjectName(CTexture* texture) {
     if (!texture) {
@@ -560,13 +561,13 @@ int32_t TextureIsBlob(CTexture* texture) {
     return texture->m_asyncObject && texture->m_gxTex;
 }
 
-// PROVEN: 047493f0 IDENTICAL/DIFFERENT
+// PROVEN: 047493f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00541120/0x140193D50
 int32_t TextureIsStreaming(CTexture* texture) {
     return texture->m_asyncObject && texture->m_asyncObject->m_isStreamed;
 }
 
-// PROVEN: 56119f1f IDENTICAL/NONE
+// PROVEN: 56119f1f IDENTICAL/IDENTICAL
 // OFFSET: 0x00541140/0x140193D70
 int32_t TextureGetAsyncRenderStatus(CTexture* texture) {
     if (texture->m_asyncObject) {
@@ -610,7 +611,7 @@ void ResolveMipLevel(EGxTexCommand command, uint32_t width, uint32_t height, uin
     }
 }
 
-// OFFSET: 0x005412E0
+// OFFSET: 0x005412E0/0x140193E20
 uint32_t LoadPredrawnMips(CTgaFile* image, const char* format, int32_t flags, MipBits* images) {
     uint32_t level = 1;
     uint32_t count = TextureCalcMipCount(image->Width(), image->Height()) - 1;
@@ -1007,6 +1008,7 @@ int32_t TextureGetDimensions(CTexture* texture, uint32_t* width, uint32_t* heigh
     return 1;
 }
 
+// PROVEN: 9b1ff507 DIFFERENT/IDENTICAL
 // OFFSET: 0x00543800/0x140197170
 CGxTex* TextureForceLoad(CTexture* texture) {
     if (texture->m_flags & 4) {
@@ -1028,6 +1030,7 @@ CGxTex* TextureForceLoad(CTexture* texture) {
     return texture->m_gxTex;
 }
 
+// PROVEN: 7d16056f IDENTICAL/IDENTICAL
 // OFFSET: 0x00543880/0x140197200
 CGxTex* TextureForceLoadForDiskOnly(CTexture* texture) {
     CAsyncObject* object = texture->m_asyncObject;
@@ -1062,6 +1065,7 @@ CTextureAtlas::CTextureAtlas() {
     memset(this->m_textures, 0, sizeof(this->m_textures));
 }
 
+// PROVEN: 8df25520 IDENTICAL/DIFFERENT
 // OFFSET: 0x00541CB0/0x140194800
 void TextureCacheRemoveTexture(CTexture* texture) {
     s_textureCache.Unlink(texture);
@@ -1158,7 +1162,7 @@ void FillInSolidTexture(const CImVector& color, CTexture* texture) {
     texture->m_colorEncoding = 3;
 }
 
-// OFFSET: 0x00541E60
+// OFFSET: 0x00541E60/0x140194AC0
 void AsyncTextureHandler() {
     uint32_t available = 0x300000 - s_asyncLoadBufferUsed;
 
@@ -1210,6 +1214,7 @@ void TextureCacheUpdate() {
     }
 }
 
+// PROVEN: 6a289e30 DIFFERENT/IDENTICAL
 // OFFSET: 0x00541AA0/0x1401945D0
 void TextureIncreasePriority(CTexture* texture) {
     CAsyncObject* object = texture->m_asyncObject;
@@ -1257,7 +1262,7 @@ CGxTex* TextureGetGxTex(CTexture* texture) {
     return texture->m_atlas->m_gxTex;
 }
 
-// PROVEN: 983e494a IDENTICAL/UNPROVEN
+// PROVEN: 983e494a IDENTICAL/IDENTICAL
 // OFFSET: 0x005444E0/0x140198510
 CGxTex* TextureGetGxTexBlocking(CTexture* texture) {
     CGxTex* gxTex = TextureGetGxTex(texture);
@@ -1285,7 +1290,7 @@ CTextureAtlas* CTextureAtlas::Alloc(uint32_t width, uint32_t height, EGxTexForma
     return atlas;
 }
 
-// OFFSET: 0x00542220
+// OFFSET: 0x00542220/0x140194EB0
 CTexture* TextureCacheGetTexture(const char* fileName) {
     uint32_t hashval = SStrHashHT(fileName);
     HASHKEY_TEXTUREFILE key;
@@ -1300,7 +1305,8 @@ CTexture* TextureCacheGetTexture(const char* fileName) {
     return texture;
 }
 
-// OFFSET: 0x00542270
+// PROVEN: 271e9c18 IDENTICAL/DIFFERENT
+// OFFSET: 0x00542270/0x140194FB0
 CTexture* TextureCacheGetTexture(char* fileName, char* extension, CGxTexFlags texFlags) {
     if (extension) {
         *extension = '\0';
@@ -1368,7 +1374,7 @@ void TextureFreeGxTex(CGxTex* gxTex, const char* name) {
     }
 }
 
-// PROVEN: f2601043 IDENTICAL/UNPROVEN
+// PROVEN: f2601043 IDENTICAL/IDENTICAL
 // OFFSET: 0x00542420/0x140195370
 int32_t TextureUpdate(const void* data, void* param) {
     s_currentTime = OsGetAsyncTimeMs();
@@ -1460,6 +1466,7 @@ void TextureFreeMippedImg(MipBits* bits, PIXEL_FORMAT format, uint32_t width, ui
     s_mipBitsCache[x][y][cache].LinkToTail(entry);
 }
 
+// PROVEN: 4d409719 IDENTICAL/DIFFERENT
 // OFFSET: 0x00542920/0x140195B00
 CTextureAtlas::~CTextureAtlas() {
     if (this->m_gxTex) {
@@ -1565,7 +1572,7 @@ int32_t LoadTgaMips(void* data, uint32_t size, const char* fileName, int32_t fla
     return 1;
 }
 
-// OFFSET: 0x00542C80
+// OFFSET: 0x00542C80/0x140196110
 int32_t TextureReloadMips(CTexture* texture, MipBits** images) {
     char buffer[260];
     char* fileName = texture->m_filename;
@@ -1853,8 +1860,8 @@ void AsyncTextureSuccessCallback(CAsyncObject* object) {
     texture->m_asyncObject = NULL;
 }
 
-// PROVEN: c0acde7d IDENTICAL/NONE
-// OFFSET: 0x00541EC0
+// PROVEN: c0acde7d IDENTICAL/UNPROVEN
+// OFFSET: 0x00541EC0/0x140194B30
 int32_t AsyncTextureStatus() {
     int32_t count = 0;
 
@@ -1884,7 +1891,7 @@ void TextureGxCacheFlush() {
     s_gxTexCacheFree.Clear();
 }
 
-// OFFSET: 0x00542E30
+// OFFSET: 0x00542E30/0x140196370
 MipBits* TextureLoadImage(const char* fileName, uint32_t* width, uint32_t* height, PIXEL_FORMAT* dataFormat, int32_t* opaque, CStatus* status, uint32_t* alphaBits, int32_t flags) {
     if (!fileName) {
         DebugValidate("filename");
@@ -2073,7 +2080,7 @@ CTexture::~CTexture() {
     this->m_link.Unlink();
 }
 
-// OFFSET: 0x00543DB0
+// OFFSET: 0x00543DB0/0x1401979A0
 static int32_t CreateTextureSync(char* extension, CTexture* texture, const char* fileName, int32_t type, uint32_t size, uint32_t flags, CGxTexFlags texFlags) {
     TextureAppendExtension(extension, type, fileName + size - extension);
 

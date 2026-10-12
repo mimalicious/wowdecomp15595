@@ -292,7 +292,7 @@ FMOD_RESULT GeometryMgr::setWorldSize(float worldSize)
     [SEE_ALSO]
 ]
 */
-// PROVEN: 6b162515 IDENTICAL/UNPROVEN
+// PROVEN: 6b162515 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8F800/0x14084FB10
 FMOD_RESULT GeometryMgr::lineTestAll(const FMOD_VECTOR* start, const FMOD_VECTOR* end, float* directOcclusion, float* reverbOcclusion)
 {

@@ -32,7 +32,6 @@ class CMovementShared : public CPassenger {
     /* 0038 */ uint32_t m_flags;
     /* 003C */ uint16_t m_flags2;
     /* 003E */ uint8_t m_transportSeat;
-    /* 003F */ uint8_t unk_003F;
     /* 0040 */ C3Vector m_anchorPos;
     /* 004C */ float m_anchorFacing;
     /* 0050 */ float m_anchorPitch;
@@ -58,6 +57,7 @@ class CMovementShared : public CPassenger {
     /* 00AC */ float m_fallVelocity;
     /* 00B0 */ CMoveSpline* m_spline;
     /* 00B4 */ uint32_t m_statusTimeMs;
+    /* 00B8 */ uint32_t m_gameTime;
 
     CMovementShared(const WOWGUID& transportGuid, const C3Vector& position, float facing, const WOWGUID& ownerGuid);
     void CalcCurrentSpeed(int32_t force);
@@ -178,5 +178,7 @@ class CMovementShared : public CPassenger {
 
 int32_t IsAckMessage(uint32_t msgId);
 int32_t IsMessageAllowedWhileOnSpline(uint32_t msgId);
+
+#include "WoW/Source/Object/MovementShared.inl"
 
 #endif

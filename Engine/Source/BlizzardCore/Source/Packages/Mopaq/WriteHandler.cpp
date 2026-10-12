@@ -191,7 +191,7 @@ void System_Mopaq::SectorReadWriteHandler::ResetSectorCount() {
     }
 }
 
-// OFFSET: 0x007E8ED0
+// OFFSET: 0x007E8ED0/0x1404F37F0
 bool System_Mopaq::SectorReadWriteHandler::PrepareSector(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, uint32_t* destSize, uint32_t sector) {
     bool checksum = false;
     const Blizzard::Mopaq::CompressionAlgorithm* algorithms = this->m_compression.size() ? &this->m_compression[0] : NULL;
@@ -361,7 +361,7 @@ bool System_Mopaq::SectorReadWriteHandler::AdjustSectorTable() {
     return true;
 }
 
-// PROVEN: 6e12d975 IDENTICAL/DIFFERENT
+// PROVEN: 6e12d975 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AB8C0/0x14090D710
 void System_Mopaq::SectorReadWriteHandler::SetSizeFileBeforeDelta(uint64_t size) {
     this->m_sizeBeforeDelta = size;
@@ -498,6 +498,7 @@ bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteData(const uint8_t* buffe
     return result;
 }
 
+// PROVEN: 56e45eac DIFFERENT/IDENTICAL
 // OFFSET: 0x007E9310/0x1404F3CD0
 bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteChecksumTable() {
     uint32_t size = 0;

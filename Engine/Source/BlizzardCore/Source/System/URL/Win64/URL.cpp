@@ -11,7 +11,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
 
-// STATIC: 0x00EBA244
+// STATIC: 0x00EBA244/0x140DAACF0
 static HINTERNET s_session;
 
 // OFFSET: 0x007B4670
@@ -156,6 +156,7 @@ static uint32_t ReadResponseData(void* param) {
     return 0;
 }
 
+// PROVEN: 3d59253b DIFFERENT/IDENTICAL
 // OFFSET: 0x007B4A20/0x1404AA5A0
 static HINTERNET ConnectServer(Blizzard::URL::HttpRequest* request, const char* serverName, INTERNET_PORT serverPort) {
     request->m_state = 0;

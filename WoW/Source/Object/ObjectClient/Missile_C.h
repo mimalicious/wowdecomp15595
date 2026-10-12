@@ -64,7 +64,6 @@ class CMissile {
     /* 0028 */ CM2Model* m_model;
     /* 002C */ uint32_t m_spellID;
     /* 0030 */ uint8_t m_castID;
-    /* 0031 */ uint8_t unk_0031[3];
     /* 0034 */ int32_t m_spellVisualID;
     /* 0038 */ float m_launchSpeed;
     /* 003C */ float m_speed;

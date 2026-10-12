@@ -16,90 +16,92 @@
 // STATIC: 0x00D084EC
 const char* s_colorBitsNames[8] = { "16", "24", "24", "30", "0", "0", "0", "0" };
 
-// STATIC: 0x00D0850C
+// STATIC: 0x00D0850C/0x140BB99F0
 const char* s_depthBitsNames[8] = { "0", "0", "0", "0", "16", "24", "24", "32" };
 
-// STATIC: 0x00D0852C
+// STATIC: 0x00D0852C/0x140BB9A30
 const char* s_apiNames[4] = { "OpenGL", "D3D9", "D3D11", "GLL" };
 
-// STATIC: 0x00E288C0
+// STATIC: 0x00E288C0/0x140D104D0
 CVar* s_cvGxStereoEnabled;
 
-// STATIC: 0x00E288C8
+// STATIC: 0x00E288C8/0x140D104E0
 CVar* s_cvGxRefresh;
 
-// STATIC: 0x00E288CC
+// STATIC: 0x00E288CC/0x140D104E8
 CVar* s_cvGxMaximize;
 
-// STATIC: 0x00E288D0
+// STATIC: 0x00E288D0/0x140D104F0
 CVar* s_cvGxMultisample;
 
-// STATIC: 0x00E288D4
+// STATIC: 0x00E288D4/0x140D104F8
 CVar* s_cvGxCursor;
 
-// STATIC: 0x00E288D8
+// STATIC: 0x00E288D8/0x140D10500
 CVar* s_cvGxStereoSeparation;
 
-// STATIC: 0x00E288DC
+// STATIC: 0x00E288DC/0x140D10508
 CVar* s_cvGxMultisampleQuality;
 
-// STATIC: 0x00E288E0
+// STATIC: 0x00E288E0/0x140D10510
 CVar* s_cvGxResolution;
 
-// STATIC: 0x00E288E4
+// STATIC: 0x00E288E4/0x140D10518
 CVar* s_cvHwDetect;
 
 // STATIC: 0x00E288E8
 CVar* s_cvGraphicsQuality;
 
-// STATIC: 0x00E288EC
+// STATIC: 0x00E288EC/0x140D10528
 CVar* s_cvGxOverride;
 
-// STATIC: 0x00E288F0
+// STATIC: 0x00E288F0/0x140D10530
 CVar* s_cvGxFixLag;
 
-// STATIC: 0x00E2891C
+// STATIC: 0x00E2891C/0x140D10560
 CVar* s_cvGxVSync;
 
-// STATIC: 0x00E28920
+// STATIC: 0x00E28920/0x140D10568
 CVar* s_cvGxMonitor;
 
-// STATIC: 0x00E28924
+// STATIC: 0x00E28924/0x140D10570
 CVar* s_cvVideoOptionsVersion;
 
-// STATIC: 0x00E28928
+// STATIC: 0x00E28928/0x140D10578
 CVar* s_cvGxStereoConvergence;
 
-// STATIC: 0x00E28958
+// STATIC: 0x00E28958/0x140D105B0
 CVar* s_cvGxTripleBuffer;
 
-// STATIC: 0x00E2895C
+// STATIC: 0x00E2895C/0x140D105B8
 CVar* s_cvGxDepthBits;
 
-// STATIC: 0x00E28960
+// STATIC: 0x00E28960/0x140D105C0
 CVar* s_cvGxColorBits;
 
-// STATIC: 0x00E28988
+// STATIC: 0x00E28988/0x140D105F0
 CVar* s_cvGxApi;
 
-// STATIC: 0x00E2898C
+// STATIC: 0x00E2898C/0x140D105F8
 CVar* s_cvGxAspect;
 
 // STATIC: 0x00E28994
 CVar* s_cvFixedFunction;
 
-// STATIC: 0x00E28998
+// STATIC: 0x00E28998/0x140D10608
 CVar* s_cvGxWindow;
 
 // STATIC: 0x00E2899C
 CVar* s_cvWindowResizeLock;
 
+// PROVEN: ccfcc595 NONE/IDENTICAL
 // OFFSET: 0x006352D0/0x1402CB6D0
 static bool CVGxRestartPendingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
     return true;
 }
 
+// PROVEN: 83558cf9 IDENTICAL/IDENTICAL
 // OFFSET: 0x006352F0/0x1402CB6F0
 static bool CVClientRestartPendingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleWrite("set pending client restart", DEFAULT_COLOR);
@@ -143,12 +145,14 @@ static bool CVGxApiCallback(CVar* var, const char* oldValue, const char* value, 
     return false;
 }
 
+// PROVEN: f02c386d IDENTICAL/IDENTICAL
 // OFFSET: 0x00635530/0x1402CB9A0
 static bool CVGxOverrideCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleGxOverride(value);
     return true;
 }
 
+// PROVEN: 42f8b7aa IDENTICAL/IDENTICAL
 // OFFSET: 0x00635550/0x1402CB9C0
 static bool CVWindowResizeLockCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     OsInputSetWindowResizeLock(SStrToInt(value));
@@ -212,6 +216,7 @@ static bool CVGxStereoSeparationCallback(CVar* var, const char* oldValue, const 
     return true;
 }
 
+// PROVEN: f7f00bf0 IDENTICAL/IDENTICAL
 // OFFSET: 0x006358D0/0x1402CBDD0
 void RegisterStereoCVars() {
     s_cvGxStereoConvergence = CVar::Register("gxStereoConvergence", "Set stereoscopic rendering convergence depth", 1, "1", CVGxStereoConvergenceCallback, CATEGORY_GRAPHICS, false, NULL, false);

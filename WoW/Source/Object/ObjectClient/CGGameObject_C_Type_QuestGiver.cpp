@@ -8,7 +8,7 @@ CGGameObject_C_Type_QuestGiver::CGGameObject_C_Type_QuestGiver(CGGameObject_C* o
     this->m_interactDistance = 5.5555553f;
 }
 
-// PROVEN: 829d01df IDENTICAL/NONE
+// PROVEN: 829d01df IDENTICAL/IDENTICAL
 // OFFSET: 0x0059FD70/0x140207C90
 int32_t CGGameObject_C_Type_QuestGiver::CanChangeCursor() const {
     int32_t cursor = this->m_owner->GetQuestGiverCursor(!this->CanUseNow(NULL, NULL, NULL));
@@ -20,7 +20,7 @@ int32_t CGGameObject_C_Type_QuestGiver::CanChangeCursor() const {
     return cursor;
 }
 
-// OFFSET: 0x0059FEE0
+// OFFSET: 0x0059FEE0/0x14020F830
 void CGGameObject_C_Type_QuestGiver::CloseInteraction() {
     uint32_t keepOpenIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 22);
     GameObjectStats* keepOpenStats = this->m_owner->m_stats;
@@ -35,7 +35,7 @@ void CGGameObject_C_Type_QuestGiver::CloseInteraction() {
     }
 }
 
-// OFFSET: 0x0059FDA0
+// OFFSET: 0x0059FDA0/0x14020F610
 void CGGameObject_C_Type_QuestGiver::StartInteraction() {
     uint32_t index = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 22);
     GameObjectStats* stats = this->m_owner->m_stats;

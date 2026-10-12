@@ -27,10 +27,10 @@ int32_t CmdLineGetBool(CMDOPT opt) {
     return SCmdGetBool(opt);
 }
 
-// PROVEN: ed2ac2bb IDENTICAL/IDENTICAL
+// PROVEN: 34992536 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871F80/0x1405A8260
 const char* CmdLineGetString(CMDOPT opt) {
-    // STATIC: 0x00EC6A10
+    // STATIC: 0x00EC6A10/0x140DB8D10
     static char buffer[260];
 
     SCmdGetString(opt, buffer, sizeof(buffer));

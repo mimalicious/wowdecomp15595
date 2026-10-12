@@ -3,21 +3,6 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// INLINED
-DanceCache::DanceCache() {
-    this->m_id = 0;
-    this->m_guid = WOWGUID();
-    this->m_name[0] = '\0';
-    this->m_data = NULL;
-    this->m_dataCount = 0;
-    this->unk_0098 = 0;
-}
-
-// INLINED
-DanceCache::~DanceCache() {
-    delete[] this->m_data;
-}
-
 // OFFSET: 0x0049BD60/0x1400C7C30
 DanceCache& DanceCache::operator=(const DanceCache& source) {
     this->m_id = source.m_id;
@@ -39,8 +24,8 @@ DanceCache& DanceCache::operator=(const DanceCache& source) {
     return *this;
 }
 
-// PROVEN: f5394072 IDENTICAL/NONE
-// OFFSET: 0x00A286D0
+// PROVEN: f5394072 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A286D0/0x1407D01C0
 void DanceCache::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));
     *msg << static_cast<const SmartGUID&>(this->m_guid);

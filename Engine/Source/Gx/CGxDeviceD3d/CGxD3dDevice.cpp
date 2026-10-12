@@ -2,7 +2,7 @@
 #include "Engine/Source/Gx/CGxDeviceD3d/CGxDeviceD3d.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: 0x0084FE90
+// OFFSET: 0x0084FE90/0x14057F040
 CGxDevice* CreateCGxDeviceD3d() {
     void* mem = SMemAlloc(sizeof(CGxDeviceD3d), __FILE__, __LINE__, 0);
 

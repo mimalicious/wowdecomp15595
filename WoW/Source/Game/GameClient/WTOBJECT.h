@@ -44,4 +44,6 @@ void WeaponTrailSetDrawTrail(WTOBJECT* trail, const uint32_t* a2, uint32_t a3);
 void WorldTextInitialize();
 void WorldTextShutdown();
 
+#include "WoW/Source/Game/GameClient/WTOBJECT.inl"
+
 #endif

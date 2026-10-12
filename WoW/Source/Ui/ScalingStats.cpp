@@ -65,7 +65,7 @@ int32_t GetRandomItemSlot(int32_t inventoryType) {
     }
 }
 
-// OFFSET: 0x009995E0
+// OFFSET: 0x009995E0/0x14071B140
 int32_t GetDamageClassFromBonusStat(int32_t stat) {
     switch (stat) {
         case 50:
@@ -94,6 +94,7 @@ int32_t GetDamageClassFromBonusStat(int32_t stat) {
     }
 }
 
+// PROVEN: 48e01a52 IDENTICAL/DIFFERENT
 // OFFSET: 0x00999650/0x14071B1B0
 int32_t GetRandomPropertyPointsEx(int32_t itemLevel, int32_t quality, int32_t inventoryType) {
     uint32_t slot = GetRandomItemSlot(inventoryType);
@@ -124,7 +125,7 @@ int32_t GetRandomPropertyPointsEx(int32_t itemLevel, int32_t quality, int32_t in
     }
 }
 
-// OFFSET: 0x009996C0
+// OFFSET: 0x009996C0/0x14071B240
 int32_t GetEffectiveArmor(int32_t level, int32_t itemLevel, int32_t classID, int32_t subclassID, uint32_t quality, int32_t inventoryType) {
     int32_t effectiveLevel = level;
 
@@ -200,7 +201,7 @@ int32_t GetEffectiveArmor(int32_t level, int32_t itemLevel, int32_t classID, int
     return static_cast<int32_t>(floor(qualityRec->m_qualityMod[quality] * totalArmor * locationModifier + 0.5f));
 }
 
-// OFFSET: 0x00999890
+// OFFSET: 0x00999890/0x14071B480
 float GetEffectiveWeaponDamage(int32_t level, int32_t itemLevel, int32_t classID, int32_t subclassID, uint32_t quality, float damageModifier, int32_t delay, float statScalingFactor, int32_t inventoryType, int32_t flags, bool minimum) {
     int32_t effectiveLevel = level;
     float dps = 0.0f;

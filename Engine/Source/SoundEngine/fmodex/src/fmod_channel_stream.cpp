@@ -31,6 +31,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 9cde6a17 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ACC220/0x140896920
 ChannelStream::ChannelStream()
 {

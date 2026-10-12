@@ -21,7 +21,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA3DC8
+// STATIC: 0x00CA3DC8/0x140B41550
 int32_t CSimpleButton::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD39C8/0x140CB96B8
@@ -30,7 +30,7 @@ int32_t CSimpleButton::s_objectType;
 // STATIC: 0x00CA3334
 const char* CSimpleButton::s_objectTypeName = "Button";
 
-// STATIC: 0x00DD39CC
+// STATIC: 0x00DD39CC/0x140CB96C0
 CDataAllocator CSimpleButton::s_allocator(sizeof(CSimpleButton), 100);
 
 // INLINED
@@ -57,12 +57,12 @@ void CSimpleButton::LockHighlight(int32_t lock) {
     this->UpdateTextState(this->m_state);
 }
 
-// OFFSET: 0x00514540
+// OFFSET: 0x00514540/0x14015EA70
 void CSimpleButton::SetMotionScriptsWhileDisabled(int32_t enabled) {
     this->m_motionScriptsWhileDisabled = enabled;
 }
 
-// OFFSET: 0x00514560
+// OFFSET: 0x00514560/0x14015EA90
 int32_t CSimpleButton::GetMotionScriptsWhileDisabled() {
     return this->m_motionScriptsWhileDisabled;
 }
@@ -333,7 +333,7 @@ uint64_t MouseButtonStringToBitmask(const char* string) {
     return 0;
 }
 
-// PROVEN: 2c28993a IDENTICAL/UNPROVEN
+// PROVEN: 2c28993a IDENTICAL/IDENTICAL
 // OFFSET: 0x00514B60/0x14015EEC0
 void CSimpleButton::RunOnClickScript(const char* btn, int32_t down) {
     if (this->HasScript(this->m_onPreClick)) {
@@ -358,8 +358,8 @@ void CSimpleButton::RunOnClickScript(const char* btn, int32_t down) {
     }
 }
 
-// PROVEN: 58ac1500 IDENTICAL/NONE
-// OFFSET: 0x00514C50
+// PROVEN: 58ac1500 IDENTICAL/IDENTICAL
+// OFFSET: 0x00514C50/0x14015EFF0
 void CSimpleButton::RunOnDoubleClickScript(const char* btn) {
     if (this->HasScript(this->m_onDoubleClick)) {
         lua_State* L = FrameScript_GetContext();
@@ -384,7 +384,7 @@ int32_t CSimpleButton::GetScriptMetaTable() {
     return CSimpleButton::s_metatable;
 }
 
-// PROVEN: 6041cae6 IDENTICAL/UNPROVEN
+// PROVEN: 6041cae6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00514590/0x14015EAC0
 FrameScript_Object::ScriptIx* CSimpleButton::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -456,7 +456,7 @@ void CSimpleButton::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
-// PROVEN: 0bb2e305 IDENTICAL/UNPROVEN
+// PROVEN: 0bb2e305 IDENTICAL/IDENTICAL
 // OFFSET: 0x005147C0/0x14015ECD0
 void CSimpleButton::SetHighlight(CSimpleTexture* texture, EGxBlend blend) {
     if (texture == this->m_highlightTexture) {
@@ -475,7 +475,7 @@ void CSimpleButton::SetHighlight(CSimpleTexture* texture, EGxBlend blend) {
     this->m_highlightTexture = texture;
 }
 
-// PROVEN: 3c592eb7 IDENTICAL/NONE
+// PROVEN: 3c592eb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00514810/0x14015ED40
 void CSimpleButton::OnLayerHide() {
     if (this->m_state != BUTTONSTATE_DISABLED && !this->m_stateLocked) {
@@ -485,8 +485,8 @@ void CSimpleButton::OnLayerHide() {
     CSimpleFrame::OnLayerHide();
 }
 
-// PROVEN: c523d4a1 IDENTICAL/NONE
-// OFFSET: 0x00514840
+// PROVEN: c523d4a1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00514840/0x14015ED80
 void CSimpleButton::OnDragStart(const CMouseEvent& evt) {
     if (this->m_state != BUTTONSTATE_DISABLED && !this->m_stateLocked) {
         this->SetButtonState(BUTTONSTATE_NORMAL, 0);
@@ -503,7 +503,7 @@ void CSimpleButton::SetClickAction(uint64_t action) {
     this->m_clickAction = action;
 }
 
-// PROVEN: 84acf226 IDENTICAL/DIFFERENT
+// PROVEN: 84acf226 IDENTICAL/IDENTICAL
 // OFFSET: 0x005148A0/0x14015EDF0
 void CSimpleButton::UpdateTextState(CSimpleButtonState state) {
     if (!this->m_fontString) {
@@ -629,6 +629,7 @@ void CSimpleButton::SetFontString(CSimpleFontString* fontString) {
     this->UpdateTextState(this->m_state);
 }
 
+// PROVEN: 1d117b5c IDENTICAL/IDENTICAL
 // OFFSET: 0x00514E10/0x14015F260
 void CSimpleButton::SetText(const char* text) {
     if ((!text || !*text) && !this->m_fontString) {
@@ -694,7 +695,7 @@ void CSimpleButton::SetHighlightFontColor(const CImVector& color) {
     this->m_highlightFont->UpdateObjects();
 }
 
-// PROVEN: 64e2f4d7 IDENTICAL/UNPROVEN
+// PROVEN: 64e2f4d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00514F70/0x14015F300
 void CSimpleButton::SetStateTexture(CSimpleButtonState state, CSimpleTexture* texture) {
     if (texture == this->m_stateTextures[state]) {
@@ -841,7 +842,7 @@ int32_t CSimpleButton::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     return 1;
 }
 
-// PROVEN: 3f118c53 IDENTICAL/UNPROVEN
+// PROVEN: 3f118c53 IDENTICAL/IDENTICAL
 // OFFSET: 0x00515310/0x14015F760
 void CSimpleButton::OnLayerCursorEnter(int32_t a2) {
     if (this->m_state != BUTTONSTATE_DISABLED) {
@@ -859,7 +860,7 @@ void CSimpleButton::OnLayerCursorEnter(int32_t a2) {
     }
 }
 
-// PROVEN: b98223ee IDENTICAL/UNPROVEN
+// PROVEN: b98223ee IDENTICAL/IDENTICAL
 // OFFSET: 0x00515370/0x14015F7D0
 void CSimpleButton::OnLayerCursorExit(int32_t a2, int32_t a3) {
     if (this->m_state != BUTTONSTATE_DISABLED) {
@@ -891,7 +892,7 @@ void CSimpleButton::OnClick(const char* btn, int32_t down) {
     this->m_simpleTop->m_mouseButtonName = savedButtonName;
 }
 
-// OFFSET: 0x00515440
+// OFFSET: 0x00515440/0x14015F8B0
 void CSimpleButton::OnDoubleClick(const char* btn) {
     if (this->m_inClick || this->m_state == BUTTONSTATE_DISABLED) {
         return;
@@ -1103,7 +1104,7 @@ int32_t CSimpleButton::SetStateTexture(CSimpleButtonState state, const char* fil
     return 1;
 }
 
-// PROVEN: 9ff37c6c IDENTICAL/DIFFERENT
+// PROVEN: 9ff37c6c IDENTICAL/IDENTICAL
 // OFFSET: 0x00515A20/0x140160090
 void CSimpleButton::Enable(int32_t enabled) {
     if (enabled) {
@@ -1136,7 +1137,7 @@ void CSimpleButton::Enable(int32_t enabled) {
     this->RunOnEnableScript(enabled == 0);
 }
 
-// PROVEN: dfb8be0e IDENTICAL/DIFFERENT
+// PROVEN: dfb8be0e IDENTICAL/IDENTICAL
 // OFFSET: 0x00515550/0x14015F9F0
 void CSimpleFrame::RunOnEnableScript(int32_t disabled) {
     this->SetFrameFlag(0x400, disabled);

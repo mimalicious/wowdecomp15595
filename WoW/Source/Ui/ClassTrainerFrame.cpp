@@ -21,34 +21,34 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F4D5B0
+// STATIC: 0x00F4D5B0/0x140E41F50
 char CGClassTrainer::m_greetingText[2048];
 
-// STATIC: 0x00F4DDB0
+// STATIC: 0x00F4DDB0/0x140E42750
 WOWGUID CGClassTrainer::m_trainer;
 
-// STATIC: 0x00F4DDB8
+// STATIC: 0x00F4DDB8/0x140E42758
 int32_t CGClassTrainer::m_trainerID;
 
-// STATIC: 0x00F4DDBC
+// STATIC: 0x00F4DDBC/0x140E4275C
 int32_t CGClassTrainer::m_trainerType;
 
-// STATIC: 0x00F4DDC0
+// STATIC: 0x00F4DDC0/0x140E42760
 int32_t CGClassTrainer::m_currentSelection;
 
-// STATIC: 0x00F4DDC4
+// STATIC: 0x00F4DDC4/0x140E42764
 uint32_t CGClassTrainer::m_numServices;
 
-// STATIC: 0x00F4DDC8
+// STATIC: 0x00F4DDC8/0x140E42768
 uint32_t CGClassTrainer::m_filteredServices;
 
-// STATIC: 0x00F4DDCC
+// STATIC: 0x00F4DDCC/0x140E42778
 TSGrowableArray<TrainerServiceInfo*> CGClassTrainer::m_services;
 
-// STATIC: 0x00D15A28
+// STATIC: 0x00D15A28/0x140BCF3E0
 int32_t CGClassTrainer::m_stepIndex = -1;
 
-// PROVEN: 9ae5338c IDENTICAL/NONE
+// PROVEN: 9ae5338c IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9030/0x140743E70
 void TrainerItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -56,7 +56,7 @@ void TrainerItemCallback(int32_t id, const WOWGUID& guid, void* param, bool succ
     }
 }
 
-// PROVEN: 842b99d2 IDENTICAL/NONE
+// PROVEN: 842b99d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9050/0x140743E90
 void CGClassTrainer::EnterWorld() {
     CGClassTrainer::m_trainer = WOWGUID();
@@ -66,6 +66,7 @@ void CGClassTrainer::EnterWorld() {
     CGClassTrainer::m_greetingText[0] = '\0';
 }
 
+// PROVEN: 89f21bcf DIFFERENT/IDENTICAL
 // OFFSET: 0x009B9120/0x140743F50
 int32_t GetServiceTypeFromString(const char* type) {
     if (!type) {
@@ -83,6 +84,7 @@ int32_t GetServiceTypeFromString(const char* type) {
     return _stricmp(type, "used") != 0 ? 6 : 0;
 }
 
+// PROVEN: 348baeb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x009B9290/0x140744170
 void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t trainerID, int32_t type) {
     CGClassTrainer::m_trainerID = trainerID;
@@ -130,7 +132,7 @@ int32_t CGClassTrainer::GetSelectionIndex() {
     return i;
 }
 
-// OFFSET: 0x009B9370
+// OFFSET: 0x009B9370/0x1407443D0
 static int32_t QSortServices_General(const void* a, const void* b) {
     const TrainerServiceInfo* serviceA = *static_cast<TrainerServiceInfo* const*>(a);
     const TrainerServiceInfo* serviceB = *static_cast<TrainerServiceInfo* const*>(b);
@@ -171,7 +173,7 @@ static int32_t QSortServices_General(const void* a, const void* b) {
     return result;
 }
 
-// OFFSET: 0x009B9460
+// OFFSET: 0x009B9460/0x140744200
 static int32_t QSortServices_Tradeskill(const void* a, const void* b) {
     const TrainerServiceInfo* serviceA = *static_cast<TrainerServiceInfo* const*>(a);
     const TrainerServiceInfo* serviceB = *static_cast<TrainerServiceInfo* const*>(b);
@@ -210,7 +212,8 @@ static int32_t QSortServices_Tradeskill(const void* a, const void* b) {
     return SStrSortUTF8I(spellA->m_name, spellB->m_name, STORM_MAX_STR);
 }
 
-// OFFSET: 0x009B9560
+// PROVEN: 78afcc73 IDENTICAL/UNPROVEN
+// OFFSET: 0x009B9560/0x140744560
 TrainerServiceInfo* CGClassTrainer::GetService(uint32_t index) {
     if (index >= CGClassTrainer::m_numServices) {
         return NULL;
@@ -219,7 +222,7 @@ TrainerServiceInfo* CGClassTrainer::GetService(uint32_t index) {
     return CGClassTrainer::m_services.m_data[index];
 }
 
-// PROVEN: b695dbba IDENTICAL/NONE
+// PROVEN: b695dbba IDENTICAL/DIFFERENT
 // OFFSET: 0x009B9880/0x1407448B0
 void CGClassTrainer::LeaveWorld() {
     CGClassTrainer::SetTrainer(WOWGUID(), 0, 0);
@@ -324,7 +327,7 @@ void CGClassTrainer::FilterAndSortServices() {
     }
 }
 
-// OFFSET: 0x009B9A90
+// OFFSET: 0x009B9A90/0x140744B80
 void CGClassTrainer::BuyService(uint32_t index) {
     if (index >= CGClassTrainer::m_numServices) {
         return;
@@ -353,15 +356,16 @@ void CGClassTrainer::BuyAllServices() {
     }
 }
 
-// PROVEN: eab3fdf1 IDENTICAL/NONE
-// OFFSET: 0x009B9B90
+// PROVEN: eab3fdf1 IDENTICAL/IDENTICAL
+// OFFSET: 0x009B9B90/0x140744C70
 void CGClassTrainer::SetServiceTypeFilter(int32_t filter) {
     g_serviceTypeFilterCVar->Set(filter, true, false, false, true);
     CGClassTrainer::FilterAndSortServices();
     FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
 }
 
-// OFFSET: 0x009BA450
+// PROVEN: 832f3d9f IDENTICAL/UNPROVEN
+// OFFSET: 0x009BA450/0x1407457A0
 void CGClassTrainer::ShutdownGame() {
     for (uint32_t i = 0; i < CGClassTrainer::m_services.m_count; i++) {
         TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
@@ -374,7 +378,7 @@ void CGClassTrainer::ShutdownGame() {
     CGClassTrainer::m_services.m_count = 0;
 }
 
-// OFFSET: 0x009BA4A0
+// OFFSET: 0x009BA4A0/0x140745820
 void CGClassTrainer::AddServices(uint32_t count, const int32_t* spellIds, const int32_t* moneyCosts, const uint8_t* levelReqs, const int32_t* skillReqs, const uint32_t* skillRankReqs, const int32_t* const* abilityReqs, const int32_t* talentTabReqs, const uint8_t* states, const char* greeting) {
     for (uint32_t i = CGClassTrainer::m_services.Count(); i < count; i++) {
         TrainerServiceInfo* info = static_cast<TrainerServiceInfo*>(SMemAlloc(sizeof(TrainerServiceInfo), __FILE__, __LINE__, 0));

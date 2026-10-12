@@ -110,3 +110,13 @@ inline C3Vector C3Vector::Normalized() const {
     float scale = 1.0f / sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
     return C3Vector(this->x * scale, this->y * scale, this->z * scale);
 }
+
+// INLINED
+inline void C3Vector::Minimize(const C3Vector& v) {
+    *this = C3Vector::Min(*this, v);
+}
+
+// INLINED
+inline void C3Vector::Maximize(const C3Vector& v) {
+    *this = C3Vector::Max(*this, v);
+}

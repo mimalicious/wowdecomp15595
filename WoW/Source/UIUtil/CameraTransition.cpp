@@ -11,13 +11,13 @@ CCameraTransition::CCameraTransition() {
     this->unk_0018 = 0;
 }
 
-// PROVEN: 86bf73ca IDENTICAL/NONE
+// PROVEN: 86bf73ca IDENTICAL/DIFFERENT
 // OFFSET: 0x00463FF0/0x1400779A0
 int32_t CCameraTransition::IsComplete(float time) const {
     return time >= this->m_delay + this->m_duration;
 }
 
-// OFFSET: 0x00464020
+// OFFSET: 0x00464020/0x1400779C0
 float CCameraTransition::CalcBezier(float t, float easeIn, float easeOut) {
     float a = (easeOut * 3.0f + easeIn * 3.0f) - 2.0f;
     float c = easeIn * 3.0f;
@@ -45,7 +45,7 @@ float CCameraTransition::CalcBezier(float t, float easeIn, float easeOut) {
     return 3.0f * (s * s) - (s * s * s + s * s * s);
 }
 
-// OFFSET: 0x004641E0
+// OFFSET: 0x004641E0/0x140077BB0
 float CCameraTransition::CalcLerpFactor(float time) const {
     if (this->m_duration <= 0.00000011920929f) {
         return CCameraTransition::CalcBezier(1.0f, this->m_easeIn, this->m_easeOut);

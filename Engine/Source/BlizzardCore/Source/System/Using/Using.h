@@ -92,4 +92,6 @@ class UsingGlobalUse : public Blizzard::Using::Use {
 
 }
 
+#include "Engine/Source/BlizzardCore/Source/System/Using/Using.inl"
+
 #endif

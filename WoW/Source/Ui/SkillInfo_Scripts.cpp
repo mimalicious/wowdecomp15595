@@ -23,11 +23,12 @@ static int32_t Script_AbandonSkill(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D16860
+// STATIC: 0x00D16860/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "AbandonSkill", &Script_AbandonSkill },
 };
 
+// PROVEN: 9c7195bb IDENTICAL/UNPROVEN
 // OFFSET: 0x009E2150/0x140779290
 void SkillInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -35,6 +36,7 @@ void SkillInfoRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 845a8b8e IDENTICAL/UNPROVEN
 // OFFSET: 0x009E2170/0x1407792B0
 void SkillInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

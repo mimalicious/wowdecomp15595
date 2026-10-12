@@ -61,6 +61,7 @@ bool RestorePointFile::Read(void* buffer, int64_t offset, uint32_t size) {
     return result && count == static_cast<int32_t>(size);
 }
 
+// PROVEN: 12214884 IDENTICAL/NONE
 // OFFSET: 0x007B87A0
 bool RestorePointFile::Write(const void* buffer, int64_t offset, uint32_t size) {
     if (this->m_archive) {
@@ -132,7 +133,7 @@ bool RestorePointCopier::Copy(int64_t source, int64_t target, uint32_t size) {
     return result;
 }
 
-// OFFSET: 0x007B9950
+// OFFSET: 0x007B9950/0x1404B0AD0
 static int64_t GetSpecialFileOffset(const char* name, System_SFile::ARCHIVEREC* archive) {
     uint32_t blockIndex;
 

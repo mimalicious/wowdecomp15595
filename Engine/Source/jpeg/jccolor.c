@@ -83,7 +83,7 @@ typedef my_color_converter * my_cconvert_ptr;
  */
 
 // PROVEN: 2184c538 IDENTICAL/NONE
-// OFFSET: 0x00B64390
+// OFFSET: 0x00B64390/0x14092E6D0
 static void rgb_ycc_start(j_compress_ptr cinfo) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
   INT32 * rgb_ycc_tab;
@@ -127,7 +127,7 @@ static void rgb_ycc_start(j_compress_ptr cinfo) {
  */
 
 // PROVEN: a1e6b377 IDENTICAL/NONE
-// OFFSET: 0x00B64460
+// OFFSET: 0x00B64460/0x14092E7A0
 static void rgb_ycc_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
   register int r, g, b;
@@ -181,7 +181,7 @@ static void rgb_ycc_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMA
  */
 
 // PROVEN: 18f12c33 IDENTICAL/NONE
-// OFFSET: 0x00B64570
+// OFFSET: 0x00B64570/0x14092E8E0
 static void rgb_gray_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
   register int r, g, b;
@@ -218,7 +218,7 @@ static void rgb_gray_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIM
  */
 
 // PROVEN: 99e3db5d IDENTICAL/NONE
-// OFFSET: 0x00B64600
+// OFFSET: 0x00B64600/0x14092E9A0
 static void cmyk_ycck_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
   register int r, g, b;
@@ -271,7 +271,7 @@ static void cmyk_ycck_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPI
  */
 
 // PROVEN: ffa52680 IDENTICAL/NONE
-// OFFSET: 0x00B64750
+// OFFSET: 0x00B64750/0x14092EB30
 static void grayscale_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   register JSAMPROW inptr;
   register JSAMPROW outptr;
@@ -298,7 +298,7 @@ static void grayscale_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPI
  */
 
 // PROVEN: da8dad0d IDENTICAL/NONE
-// OFFSET: 0x00B647B0
+// OFFSET: 0x00B647B0/0x14092EBC0
 static void null_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   register JSAMPROW inptr;
   register JSAMPROW outptr;
@@ -336,7 +336,7 @@ static void null_method(j_compress_ptr cinfo) {
  * Module initialization routine for input colorspace conversion.
  */
 
-// OFFSET: 0x00B64830
+// OFFSET: 0x00B64830/0x14092EC60
 void jinit_color_converter(j_compress_ptr cinfo) {
   my_cconvert_ptr cconvert;
 

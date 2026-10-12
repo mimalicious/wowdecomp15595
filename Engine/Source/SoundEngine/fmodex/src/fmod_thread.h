@@ -48,6 +48,7 @@ namespace FMOD
         } PRIORITY;
 
         Thread();
+        // PROVEN: 827c6bb0 UNPROVEN/IDENTICAL
         // OFFSET: 0x00A80160/0x14083C840
         virtual ~Thread() { }
 

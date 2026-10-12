@@ -8,6 +8,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
+// PROVEN: aebab603 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053C7A0/0x1401907F0
 static int32_t Script_SetOffset(lua_State* L) {
     CSimpleTranslationAnim* anim = static_cast<CSimpleTranslationAnim*>(FrameScript_GetObjectThis(L, CSimpleTranslationAnim::GetObjectType()));
@@ -43,28 +44,28 @@ static int32_t Script_GetOffset(lua_State* L) {
 }
 
 
-// PROVEN: 4f1dd3c5 IDENTICAL/NONE
-// OFFSET: 0x0053C930
+// PROVEN: 4f1dd3c5 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053C930/0x1401909D0
 void CSimpleTranslationAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleTranslationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleTranslationAnim::RegisterScriptMethods);
 }
 
-// PROVEN: b3cb05b8 IDENTICAL/NONE
-// OFFSET: 0x0053B8D0
+// PROVEN: b3cb05b8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053B8D0/0x14018F6A0
 void CSimpleTranslationAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleTranslationAnim::s_metatable);
     CSimpleTranslationAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00CA4704
+// STATIC: 0x00CA4704/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetOffset", &Script_SetOffset },
     { "GetOffset", &Script_GetOffset },
 };
 
-// OFFSET: 0x0053B8A0
+// OFFSET: 0x0053B8A0/0x14018F660
 void CSimpleTranslationAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

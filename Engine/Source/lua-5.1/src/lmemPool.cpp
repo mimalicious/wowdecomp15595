@@ -2,7 +2,7 @@
 #include "lmemPool.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00C1C594
+// STATIC: 0x00C1C594/0x140A10268
 static const uint32_t s_blocksizes[] = { 16, 24, 32, 40, 64, 80, 128, 160, 256 };
 
 // OFFSET: 0x00A2E330/0x1407D71F0
@@ -48,7 +48,7 @@ int32_t MemPool::MemFree(void* ptr) {
     return 0;
 }
 
-// OFFSET: 0x00A2E4B0
+// OFFSET: 0x00A2E4B0/0x1407D7380
 MemPool::~MemPool() {
     for (uint32_t i = this->m_chunks.Count(); i; i--) {
         delete this->m_chunks[i - 1];
@@ -69,7 +69,7 @@ void* luaM_initPool() {
     return pools;
 }
 
-// OFFSET: 0x00A2E5B0
+// OFFSET: 0x00A2E5B0/0x1407D7500
 void luaM_freePool(void* ud) {
     MemPool** pools = static_cast<MemPool**>(ud);
 

@@ -12,7 +12,7 @@ static uint32_t Pack565_SSE2(uint32_t color) {
     return ((color & 0xF8) | (((color & 0xFC00) | ((color >> 3) & 0x1F0000)) >> 2)) >> 3;
 }
 
-// OFFSET: 0x00491100
+// OFFSET: 0x00491100/0x1400B6060
 static void CompressDXT1_SSE2(const uint8_t* src, int32_t pitch, uint8_t* dst) {
     __m128i zero = _mm_setzero_si128();
     __m128i row0 = _mm_load_si128(reinterpret_cast<const __m128i*>(src));
@@ -125,8 +125,8 @@ static void CompressDXT1_SSE2(const uint8_t* src, int32_t pitch, uint8_t* dst) {
     reinterpret_cast<uint32_t*>(dst)[1] = bits;
 }
 
-// PROVEN: 805cfd0b IDENTICAL/NONE
-// OFFSET: 0x00491740
+// PROVEN: 805cfd0b IDENTICAL/UNPROVEN
+// OFFSET: 0x00491740/0x1400B66D0
 void SIMD::Init_SSE2(SIMD::FunctionTable* table) {
     table->CompressDXT1 = CompressDXT1_SSE2;
 }

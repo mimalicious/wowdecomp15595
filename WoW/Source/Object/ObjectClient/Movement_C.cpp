@@ -14,7 +14,7 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00CA7790
+// STATIC: 0x00CA7790/0x140B47250
 static TSExplicitList<CGGameObject_C, offsetof(CGGameObject_C, m_transportLink)> s_transports;
 
 // OFFSET: 0x00571920/0x1401D2B80
@@ -22,7 +22,8 @@ uint32_t MovementGetIdleTime() {
     return MovementGetGlobals()->m_idleTime;
 }
 
-// OFFSET: 0x005E7000
+// PROVEN: 83d72a45 IDENTICAL/DIFFERENT
+// OFFSET: 0x005E7000/0x140267A40
 void MovementAddTransport(CGGameObject_C* transport) {
     s_transports.LinkToTail(transport);
 }
@@ -44,13 +45,13 @@ int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t
     return object->AddPassenger(passenger, a3);
 }
 
-// PROVEN: 8e5bc963 IDENTICAL/NONE
+// PROVEN: 8e5bc963 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E6B90/0x1402674F0
 CMovementGlobals* MovementGetGlobals() {
     return ClntObjMgrGetMovementGlobals();
 }
 
-// PROVEN: fbafa5c1 IDENTICAL/NONE
+// PROVEN: fbafa5c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E6B80/0x1402674E0
 void MovementSetGlobals(CMovementGlobals* globals) {
     ClntObjMgrSetMovementGlobals(globals);
@@ -68,7 +69,7 @@ float MovementGetTransportFacing(WOWGUID transport) {
     return object->GetFacing();
 }
 
-// PROVEN: c9e9b163 IDENTICAL/NONE
+// PROVEN: c9e9b163 IDENTICAL/DIFFERENT
 // OFFSET: 0x005E6CD0/0x140267680
 int32_t MovementGetTransportMtxSafe(WOWGUID transport, C44Matrix* matrix) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -107,7 +108,7 @@ int32_t MovementGetTransportMtxX(WOWGUID transport, C44Matrix* matrix, WOWGUID o
     return 0;
 }
 
-// OFFSET: 0x005E6DD0
+// OFFSET: 0x005E6DD0/0x1402677D0
 void MovementGetTransportQuat(WOWGUID transport, C4Quaternion* quat) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -124,7 +125,7 @@ void MovementGetTransportQuat(WOWGUID transport, C4Quaternion* quat) {
 }
 
 // PROVEN: 3bb0d15a IDENTICAL/NONE
-// OFFSET: 0x005E6EB0
+// OFFSET: 0x005E6EB0/0x1402678B0
 int32_t MovementInsideTransport(WOWGUID transport, const C3Vector& point) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -160,7 +161,7 @@ void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, ui
 void MovementNotifyZoneMgr(WOWGUID guid) {
 }
 
-// PROVEN: 21879ace IDENTICAL/NONE
+// PROVEN: 21879ace IDENTICAL/DIFFERENT
 // OFFSET: 0x005E6C90/0x140267640
 int32_t MovementObjIsTransport(WOWGUID guid) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -172,6 +173,7 @@ int32_t MovementObjIsTransport(WOWGUID guid) {
     return object->IsTransport();
 }
 
+// PROVEN: 8f4c9cbe IDENTICAL/DIFFERENT
 // OFFSET: 0x005E7020/0x140267AC0
 void MovementRemoveTransport(CGGameObject_C* transport) {
     s_transports.UnlinkNode(transport);
@@ -216,6 +218,7 @@ int32_t MovementIdleMoveUnits(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: b954ad54 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E7190/0x140267C90
 void MovementDelSpline(CMoveSpline* spline) {
     if (spline) {
@@ -238,6 +241,7 @@ void MovementUpdateCameraYaw(WOWGUID guid, WOWGUID transport) {
     }
 }
 
+// PROVEN: dfba3521 IDENTICAL/DIFFERENT
 // OFFSET: 0x005E6EF0/0x1402678F0
 void MovementUpdateWorld(WOWGUID guid, const C3Vector& position, int32_t preload) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -253,7 +257,7 @@ void MovementUpdateWorld(WOWGUID guid, const C3Vector& position, int32_t preload
     }
 }
 
-// OFFSET: 0x005E7160
+// OFFSET: 0x005E7160/0x140267C50
 CMoveSpline* MovementNewSpline() {
     return new (SMemAlloc(sizeof(CMoveSpline), __FILE__, __LINE__, 0)) CMoveSpline();
 }

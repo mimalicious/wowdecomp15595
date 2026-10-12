@@ -2,7 +2,7 @@
 #include "WoW/Source/Object/Item.h"
 #include "WoW/Source/Object/Object.h"
 
-// STATIC: 0x00D18F48
+// STATIC: 0x00D18F48/0x140BD4F60
 const uint32_t CGContainer::s_mirrorFields[72] = {
     0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x10, 0x11,
     0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21,
@@ -11,6 +11,7 @@ const uint32_t CGContainer::s_mirrorFields[72] = {
     0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49
 };
 
+// PROVEN: d303f53a IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D20/0x1407CF4E0
 uint32_t CGContainer::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int32_t local) {
     for (uint32_t i = 0; i < sizeof(CGContainer::s_mirrorFields) / sizeof(CGContainer::s_mirrorFields[0]); i++) {
@@ -29,6 +30,7 @@ uint32_t CGContainer::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, i
     return (offset & 3) + 4 * (total + CGContainer::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
+// PROVEN: 567bbe06 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D10/0x1407CF4C0
 int32_t CGContainer::TotalFieldsSaved() {
     return CGItem::TotalFieldsSaved() + sizeof(CGContainer::s_mirrorFields) / sizeof(CGContainer::s_mirrorFields[0]);

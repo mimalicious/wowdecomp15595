@@ -10,4 +10,11 @@ inline int32_t CSimpleMessageScrollFrame::GetObjectType() {
     return CSimpleMessageScrollFrame::s_objectType;
 }
 
+// INLINED
+inline CSimpleMessageScrollFrameDisplayNode::CSimpleMessageScrollFrameDisplayNode(const CSimpleMessageScrollFrameDisplayNode& source) {
+    this->m_line = source.m_line;
+    this->m_string = source.m_string;
+    this->m_string->m_refcnt++;
+}
+
 #endif

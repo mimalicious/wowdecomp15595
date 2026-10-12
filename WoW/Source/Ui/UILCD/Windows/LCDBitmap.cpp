@@ -4,10 +4,10 @@
 
 typedef BOOL (WINAPI* ALPHABLENDPROC)(HDC hdcDest, int xDest, int yDest, int widthDest, int heightDest, HDC hdcSrc, int xSrc, int ySrc, int widthSrc, int heightSrc, BLENDFUNCTION blend);
 
-// STATIC: 0x0100AACC
+// STATIC: 0x0100AACC/0x140EE26E8
 static bool s_alphaBlendLoaded;
 
-// STATIC: 0x0100AAD0
+// STATIC: 0x0100AAD0/0x140EE26F0
 static ALPHABLENDPROC s_alphaBlend;
 
 // OFFSET: 0x00B3FB10/0x14090D660
@@ -27,19 +27,19 @@ CLCDBitmap::CLCDBitmap() {
 CLCDBitmap::~CLCDBitmap() {
 }
 
-// PROVEN: 302a8fad IDENTICAL/NONE
+// PROVEN: 302a8fad IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3FB90/0x14090D6F0
 void CLCDBitmap::SetBitmap(HBITMAP bitmap) {
     this->m_hBitmap = bitmap;
 }
 
-// PROVEN: 4d42703e IDENTICAL/NONE
+// PROVEN: 4d42703e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3FBA0/0x14090D700
 void CLCDBitmap::SetAlpha(int32_t alpha) {
     this->m_bAlpha = alpha;
 }
 
-// PROVEN: 0064655e IDENTICAL/DIFFERENT
+// PROVEN: 0064655e IDENTICAL/IDENTICAL
 // OFFSET: 0x007AB8C0/0x14090D710
 void CLCDBitmap::SetBitmapSize(int32_t width, int32_t height) {
     this->m_nBitmapWidth = width;

@@ -94,7 +94,7 @@ FMOD_RESULT CddaFile::shutDown()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8938d9ef IDENTICAL/DIFFERENT
+// PROVEN: 8938d9ef IDENTICAL/UNPROVEN
 // OFFSET: 0x00ACE860/0x140899290
 FMOD_RESULT CddaFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
@@ -248,7 +248,7 @@ FMOD_RESULT CddaFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 13a7e87e IDENTICAL/UNPROVEN
+// PROVEN: 13a7e87e IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACEA20/0x140899490
 FMOD_RESULT CddaFile::reallyRead(void *buffer, unsigned int size, unsigned int *rd)
 {
@@ -349,8 +349,8 @@ FMOD_RESULT CddaFile::reallyRead(void *buffer, unsigned int size, unsigned int *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 75b2b36f IDENTICAL/NONE
-// OFFSET: 0x00ACE3B0
+// PROVEN: 75b2b36f IDENTICAL/IDENTICAL
+// OFFSET: 0x00ACE3B0/0x140898DA0
 FMOD_RESULT CddaFile::doJitterCorrection(unsigned int sectors_to_read)
 {
     if (!mJitterBufEmpty)
@@ -540,8 +540,8 @@ FMOD_RESULT CddaFile::getTrackLength(unsigned int track, unsigned int *trackleng
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4cc187ef IDENTICAL/NONE
-// OFFSET: 0x00ACE6C0
+// PROVEN: 4cc187ef IDENTICAL/IDENTICAL
+// OFFSET: 0x00ACE6C0/0x1408990A0
 FMOD_RESULT CddaFile::openTrack(unsigned int track)
 {
     unsigned int starttime, thistime;

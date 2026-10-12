@@ -14,7 +14,7 @@ const EGxTexOp CShaderEffectParser::s_gxTexOpValues[GxTexOps_Last] = {
     GxTexOp_Fade,
 };
 
-// STATIC: 0x00C98B64
+// STATIC: 0x00C98B64/0x140B30280
 const char* CShaderEffectParser::s_gxTexOpNames[GxTexOps_Last] = {
     "Mod",
     "Mod2x",

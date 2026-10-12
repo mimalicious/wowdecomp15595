@@ -328,7 +328,7 @@ void OsNet::IOTCPCONN::Selected(TCPNET* net, SELECTSET selectSet) {
     OsNet::TCPNET::LogWrite("%s 12", OsNet::OSNETERR_INTERNAL);
 }
 
-// OFFSET: 0x0087CE50
+// OFFSET: 0x0087CE50/0x1405B5410
 void OsNet::SLTCPCONN::StartWriteAndLeaveLock(OUTPUT* output) {
     this->m_lock.Leave();
 }
@@ -815,7 +815,7 @@ void OsNet::TCPCONN::CompleteWrite(NETOVERLAP* overlap, uint32_t bytes) {
     this->m_lock.Leave();
 }
 
-// OFFSET: 0x0087DF50
+// OFFSET: 0x0087DF50/0x1405B6A50
 OsNet::IOTCPCONN::IOTCPCONN(TCPNET* net, HANDLE port, SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr, const void* data, uint32_t bytes) : TCPCONN(net, sock, eventProc, user, connAddr) {
     this->m_ioCount.m_value = 1;
 
@@ -837,7 +837,7 @@ OsNet::IOTCPCONN::IOTCPCONN(TCPNET* net, HANDLE port, SOCKET sock, NETEVENTPROC 
     this->DecIo();
 }
 
-// OFFSET: 0x0087E060
+// OFFSET: 0x0087E060/0x1405B6C30
 OsNet::SLTCPCONN::SLTCPCONN(TCPNET* net, SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr, const void* data, uint32_t bytes) : TCPCONN(net, sock, eventProc, user, connAddr) {
     if (data && bytes) {
         this->Send(data, bytes);
@@ -966,7 +966,8 @@ void OsNetPump(uint32_t timeout) {
     }
 }
 
-// OFFSET: 0x0087E870
+// PROVEN: c1af479a IDENTICAL/NONE
+// OFFSET: 0x0087E870/0x1405B77D0
 void OsNet::SLTCPCONN::AddToSelectSets(NETSELECTSETS* selectSets) {
     NETSELSOCKPTR* selsockptr = selectSets->m_selsockTable.New(static_cast<uint32_t>(this->m_sock), HASHKEY_NONE(), 0, 0);
     selsockptr->ptr = this;

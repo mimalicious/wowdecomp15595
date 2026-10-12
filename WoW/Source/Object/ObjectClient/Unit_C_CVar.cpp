@@ -2,16 +2,16 @@
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "WoW/Source/Ui/NamePlateFrame.h"
 
-// STATIC: 0x00DD6184
+// STATIC: 0x00DD6184/0x140CBC8E0
 CVar* CGUnit_C::s_cvShowFootPrintParticles;
 
-// STATIC: 0x00DD6180
+// STATIC: 0x00DD6180/0x140CBC8D8
 CVar* CGUnit_C::s_cvPathingDistTolerance;
 
-// STATIC: 0x00DD6174
+// STATIC: 0x00DD6174/0x140CBC8D0
 CVar* CGUnit_C::s_cvPathSmoothing;
 
-// PROVEN: 7cc939b7 IDENTICAL/NONE
+// PROVEN: 7cc939b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x005AB790/0x14021DC10
 void CGUnit_C::ClientInitialize() {
     CGNamePlateFrame::RegisterCVars();

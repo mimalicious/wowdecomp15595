@@ -73,7 +73,6 @@ struct SPELLHISTORY : public TSLinkedNode<SPELLHISTORY> {
     /* 0028 */ int32_t m_startRecoveryCategory;
     /* 002C */ uint32_t m_startRecoveryTime;
     /* 0030 */ uint8_t m_castCount;
-    /* 0031 */ uint8_t unk_0031[3];
 };
 
 struct WEEKLYSPELLUSE : public TSLinkedNode<WEEKLYSPELLUSE> {
@@ -101,7 +100,6 @@ struct NotifyDestLocSpellCastData {
     /* 0034 */ uint32_t unk_0034;
     /* 0038 */ uint8_t unk_0038;
     /* 0039 */ uint8_t m_castCount;
-    /* 003A */ uint8_t unk_003A[2];
 };
 
 struct SpellInTransit : public TSLinkedNode<SpellInTransit> {

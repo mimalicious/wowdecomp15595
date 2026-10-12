@@ -22,6 +22,7 @@ class Buffer {
 }
 }
 
+// PROVEN: bb31487b IDENTICAL/NONE
 // OFFSET: 0x007A37C0/0x1404AC9E0<4096, char>
 template <uint32_t N, class T>
 Blizzard::Util::Buffer<N, T>::Buffer() {
@@ -36,7 +37,7 @@ Blizzard::Util::Buffer<N, T>::Buffer(uint32_t count) {
     this->m_data = count > N ? new T[count] : this->m_buffer;
 }
 
-// PROVEN: 2949f53e IDENTICAL/IDENTICAL
+// PROVEN: 2949f53e IDENTICAL/NONE
 // OFFSET: 0x007B6800/0x1404AC7A0
 template <uint32_t N, class T>
 Blizzard::Util::Buffer<N, T>::~Buffer() {
@@ -45,7 +46,7 @@ Blizzard::Util::Buffer<N, T>::~Buffer() {
     }
 }
 
-// OFFSET: [0x007B6410<4096, char>, 0x007B65E0<1024, char>, 0x007B66A0/0x1404ACB30<1, System_Mopaq::CacheData::CacheBlock>, 0x007B64A0<16384, uint8_t>, 0x007FEB50<4194304, uint8_t>]
+// OFFSET: [0x007B6410/0x1404AC7C0<4096, char>, 0x007B65E0/0x1404ACA20<1024, char>, 0x007B66A0/0x1404ACB30<1, System_Mopaq::CacheData::CacheBlock>, 0x007B64A0/0x1404AC8D0<16384, uint8_t>, 0x007FEB50/0x140511EB0<4194304, uint8_t>]
 template <uint32_t N, class T>
 void Blizzard::Util::Buffer<N, T>::Resize(uint32_t count) {
     if (count > N) {

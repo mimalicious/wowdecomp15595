@@ -12,13 +12,13 @@ const int32_t System_Time::s_daysBeforeMonth[13] = { 0, 31, 59, 90, 120, 151, 18
 // STATIC: 0x00EBAB8C
 Blizzard::Lock::Atomic System_Time::s_tickLock;
 
-// STATIC: 0x00EBAB88
+// STATIC: 0x00EBAB88/0x140DAB810
 uint32_t System_Time::s_lastTickCount;
 
-// STATIC: 0x00EBA648
+// STATIC: 0x00EBA648/0x140DAB118
 System_Time::TimeInfo* System_Time::s_timeInfo;
 
-// STATIC: 0x00EBAB80
+// STATIC: 0x00EBAB80/0x140DAB808
 uint64_t System_Time::s_tickCountHigh;
 
 // STATIC: 0x00D07438
@@ -247,7 +247,7 @@ int64_t Blizzard::Time::Milliseconds() {
     return System_Time::GetTickCount64();
 }
 
-// OFFSET: 0x007AE240
+// OFFSET: 0x007AE240/0x1404A3F50
 uint32_t Blizzard::Time::GetTimeElapsed(uint32_t start, uint32_t end) {
     if (start <= end) {
         return end - start;

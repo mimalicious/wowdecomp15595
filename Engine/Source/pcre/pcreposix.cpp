@@ -118,7 +118,7 @@ static int32_t pcre_posix_error_code(const char* s) {
     return REG_ASSERT;
 }
 
-// OFFSET: 0x0063D760
+// OFFSET: 0x0063D760/0x1402D6600
 void regfree(regex_t* preg) {
     pcre_free(preg->re_pcre);
 
@@ -127,7 +127,7 @@ void regfree(regex_t* preg) {
     }
 }
 
-// PROVEN: 2eaa596b IDENTICAL/UNPROVEN
+// PROVEN: 2eaa596b IDENTICAL/IDENTICAL
 // OFFSET: 0x0063D790/0x1402D6630
 int32_t regcomp(regex_t* preg, const char* pattern, int32_t cflags) {
     const char* errorptr;
@@ -155,7 +155,7 @@ int32_t regcomp(regex_t* preg, const char* pattern, int32_t cflags) {
     return 0;
 }
 
-// OFFSET: 0x0063D810
+// OFFSET: 0x0063D810/0x1402D6710
 int32_t regexec(const regex_t* preg, const char* string, size_t nmatch, regmatch_t pmatch[], int32_t eflags) {
     int rc;
     int options = PCRE_NO_UTF8_CHECK;

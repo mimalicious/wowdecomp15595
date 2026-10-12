@@ -199,7 +199,7 @@ bool Blizzard::Streaming::Manifests::TimeslotItem::HandleTag(const char* tag, co
     return true;
 }
 
-// OFFSET: [0x007C3770/0x1404BDDA0, 0x007C3560]
+// OFFSET: [0x007C3770/0x1404BDDA0, 0x007C3560/0x1404BDE50]
 Blizzard::Streaming::Manifests::ManifestItem::~ManifestItem() {
 }
 
@@ -405,7 +405,7 @@ int32_t Blizzard::Streaming::Manifests::FileItem::GetContentId() {
     return atoi(this->m_fileVersion.c_str());
 }
 
-// OFFSET: 0x007CCA80
+// OFFSET: 0x007CCA80/0x1404C8FC0
 std::string Blizzard::Streaming::Manifests::FileItem::GetRemotePath() {
     return this->m_path + this->m_fileName;
 }
@@ -810,10 +810,6 @@ Blizzard::Streaming::ManifestInfo::ManifestInfo() {
     this->m_randomGenerator = new ManifestRandomNumberGenerator();
 }
 
-// INLINED
-Blizzard::Streaming::ManifestInfo::~ManifestInfo() {
-}
-
 // OFFSET: 0x007AB970
 Blizzard::Streaming::ManifestRandomNumberGenerator::~ManifestRandomNumberGenerator() {
 }
@@ -1092,11 +1088,13 @@ std::vector<std::string> Blizzard::Streaming::ManifestInfo::GetDirectoryList(con
     return files;
 }
 
+// PROVEN: d8064073 IDENTICAL/NONE
 // OFFSET: 0x007EDAC0
 std::vector<std::string> Blizzard::Streaming::GetFileList(const char* path) {
     return ManifestInfo::Get()->GetFileList(path);
 }
 
+// PROVEN: e5922d8c IDENTICAL/NONE
 // OFFSET: 0x007EDAF0
 std::vector<std::string> Blizzard::Streaming::GetDirectoryList(const char* path) {
     return ManifestInfo::Get()->GetDirectoryList(path);
@@ -1577,7 +1575,7 @@ bool Blizzard::Streaming::ManifestInfo::ReadDirectFileFromBuffer(char* buffer, i
     return true;
 }
 
-// OFFSET: 0x007F41E0
+// OFFSET: 0x007F41E0/0x140501B00
 bool Blizzard::Streaming::ManifestInfo::ReadFile(const char* path) {
     if (path && s_httpPrefix && !_strnicmp(path, s_httpPrefix, s_httpPrefix ? strlen(s_httpPrefix) : 0)) {
         return this->ReadIndirectFile(path);
@@ -1692,7 +1690,7 @@ std::string Blizzard::Streaming::ManifestInfo::GetAbsolutePath(const std::string
     return std::string(normalized);
 }
 
-// PROVEN: 339f6610 IDENTICAL/NONE
+// PROVEN: 339f6610 IDENTICAL/DIFFERENT
 // OFFSET: 0x007C3BC0/0x140177130
 int32_t System_Streaming::HttpCallback::GetTimeout() {
     return this->m_timeout;
@@ -1704,6 +1702,7 @@ void System_Streaming::HttpCallback::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
 }
 
+// PROVEN: 05af256c UNPROVEN/IDENTICAL
 // OFFSET: 0x007C8120/0x1404C34E0
 bool System_Streaming::HttpCallback::ReceivedData(const void* data, int32_t size) {
     if (size > 0) {

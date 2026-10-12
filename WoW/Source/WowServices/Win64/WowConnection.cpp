@@ -14,7 +14,7 @@
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowServices/WowConnectionNet.h"
 
-// STATIC: 0x00DD44B0
+// STATIC: 0x00DD44B0/0x140CBA6C0
 static int32_t s_osNetDestroyed;
 
 // OFFSET: 0x0054C690
@@ -120,7 +120,7 @@ static void LogSendDepthExceeded(WowConnection* connection) {
     DebugLog(0x10001, 10, "WowConnection: MaxSendDepth Reached! m_sendDepth=%d, m_maxSendDepth=%d, Dropping connection to %s", connection->m_sendDepth, connection->m_maxSendDepth, peer.m_str);
 }
 
-// PROVEN: 0ab7c327 IDENTICAL/NONE
+// PROVEN: 0ab7c327 IDENTICAL/IDENTICAL
 // OFFSET: 0x0054D420/0x1401A73F0
 bool WowConnection::GetLocalAddr(sockaddr* addr) {
     int32_t length = 32;
@@ -134,6 +134,7 @@ void WowConnection::AddRef() {
     this->m_refCount.Increment();
 }
 
+// PROVEN: d46c8f6f IDENTICAL/IDENTICAL
 // OFFSET: 0x0054D7D0/0x1401A7850
 void WowConnection::DestroyOsNet() {
     s_osNetDestroyed = 1;
@@ -152,7 +153,7 @@ void WowConnection::FreeSendNode(WowConnection::SENDNODE* node) {
     WDataStore::FreeBuffer(node, node->m_allocsize);
 }
 
-// OFFSET: 0x0054DD00
+// OFFSET: 0x0054DD00/0x1401A7E60
 void WowConnection::CloseSocket(int32_t sock) {
     closesocket(sock);
 
@@ -751,7 +752,7 @@ int32_t WowConnection::Send(CDataStore* msg, int32_t headroom) {
     return result;
 }
 
-// OFFSET: 0x0054F580
+// OFFSET: 0x0054F580/0x1401A9ED0
 void WowConnection::CheckConnect() {
     int32_t error;
     int32_t length = sizeof(error);
@@ -846,7 +847,7 @@ void WowConnection::CheckAccept() {
     }
 }
 
-// OFFSET: 0x0054F990
+// OFFSET: 0x0054F990/0x1401AA3F0
 void WowConnection::DoWrites() {
     this->AddRef();
     this->m_lock.Enter();
@@ -983,7 +984,7 @@ void WowConnection::DoExceptions() {
     this->Release();
 }
 
-// OFFSET: 0x0054FDB0
+// OFFSET: 0x0054FDB0/0x1401AA830
 void WowConnection::StartConnect() {
     if (this->m_sock >= 0) {
         if (this->m_netLink.IsLinked()) {
@@ -1070,7 +1071,7 @@ void WowConnection::StartConnect() {
     }
 }
 
-// PROVEN: 75d827e6 IDENTICAL/NONE
+// PROVEN: 75d827e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00550000/0x1401AAB50
 bool WowConnection::Connect(const SockAddr& address, uint16_t port, int32_t timeout) {
     memcpy(&this->m_connectAddress, &address, sizeof(address));

@@ -10,22 +10,22 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/QuestLog.h"
 
-// STATIC: 0x00C09818
+// STATIC: 0x00C09818/0x140A027F0
 static const uint32_t s_objectiveMarkFlags[4] = { 0x1, 0x2, 0x4, 0x8 };
 
-// STATIC: 0x00C09828
+// STATIC: 0x00C09828/0x140A02800
 static const uint32_t s_collectItemMarkFlags[6] = { 0x10, 0x20, 0x40, 0x80, 0x100, 0x200 };
 
-// STATIC: 0x00F71010
+// STATIC: 0x00F71010/0x140E66F28
 uint8_t CGQuestObjectiveCache::s_dirty;
 
-// STATIC: 0x00F71014
+// STATIC: 0x00F71014/0x140BD0950
 TSHashTable<CGQuestObjectiveCache::REQUIREDUNITNODE, HASHKEY_NONE> CGQuestObjectiveCache::s_requiredUnits;
 
-// STATIC: 0x00F71040
+// STATIC: 0x00F71040/0x140BD09A0
 TSHashTable<CGQuestObjectiveCache::REQUIREDITEMNODE, HASHKEY_NONE> CGQuestObjectiveCache::s_requiredItems;
 
-// OFFSET: 0x009DF8D0
+// OFFSET: 0x009DF8D0/0x1407760E0
 void CGQuestObjectiveCache::SetUnitRequired(int32_t id, bool required, bool minimapMark) {
     REQUIREDUNITNODE* node = CGQuestObjectiveCache::s_requiredUnits.Ptr(id, HASHKEY_NONE());
 
@@ -55,7 +55,7 @@ void CGQuestObjectiveCache::SetItemRequired(int32_t id, bool required, bool mini
     node->m_minimapMark = minimapMark;
 }
 
-// OFFSET: 0x009DFAD0
+// OFFSET: 0x009DFAD0/0x1407764A0
 void CGQuestObjectiveCache::UpdateLists() {
     CGQuestObjectiveCache::s_requiredUnits.Clear();
     CGQuestObjectiveCache::s_requiredItems.Clear();
@@ -177,7 +177,7 @@ bool CGQuestObjectiveCache::CreatureTrackedInQuests(const CGUnit_C* unit, bool m
     return mark;
 }
 
-// OFFSET: 0x009DFE70
+// OFFSET: 0x009DFE70/0x140776930
 bool CGQuestObjectiveCache::ObjectTrackedInQuests(const CGGameObject_C* object, bool minimapMark) {
     if (CGQuestObjectiveCache::s_dirty) {
         CGQuestObjectiveCache::UpdateLists();

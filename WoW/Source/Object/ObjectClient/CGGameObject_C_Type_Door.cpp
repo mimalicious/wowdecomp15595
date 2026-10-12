@@ -24,7 +24,7 @@ bool CGGameObject_C_Type_Door::CanBeSolid() const {
     return this->m_animState != 4;
 }
 
-// PROVEN: 7acb43ae IDENTICAL/NONE
+// PROVEN: 7acb43ae IDENTICAL/IDENTICAL
 // OFFSET: 0x0059BF70/0x14020AA60
 void CGGameObject_C_Type_Door::UpdateAnimState(uint32_t state) {
     if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {

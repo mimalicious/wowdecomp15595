@@ -30,7 +30,7 @@ Crypt::Panama::~Panama() {
     memset(this->m_stateData, 0, sizeof(this->m_stateData));
 }
 
-// OFFSET: 0x00A1D200
+// OFFSET: 0x00A1D200/0x1407C31A0
 void Crypt::Panama::Reset() {
     memset(this->m_state, 0, this->m_stateSize);
     this->m_state[17] = (OsGetProcessorFeatures() & 0x80) != 0;
@@ -51,7 +51,7 @@ Crypt::PanamaCypher::~PanamaCypher() {
 }
 
 #if defined(_M_IX86)
-// OFFSET: 0x00A1D2B0
+// OFFSET: 0x00A1D2B0/0x1407C5760
 static __declspec(naked) void __cdecl Panama_SSE2_Pull(uint32_t count, uint32_t* state, uint32_t* z) {
     __asm {
         push ebp

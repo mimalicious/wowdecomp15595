@@ -12,6 +12,7 @@ void CGSimpleHealthBar::operator delete(void* ptr) {
     CGSimpleHealthBar::s_simpleHealthBarHeap.PutData(ptr, NULL, 0);
 }
 
+// PROVEN: 28b3e0bf IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B840/0x1407E88D0
 static int32_t SimpleHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -25,6 +26,7 @@ static int32_t SimpleHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uin
     return 1;
 }
 
+// PROVEN: 30a91da3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A3B7C0/0x1407E8840
 CGSimpleHealthBar::CGSimpleHealthBar(CSimpleFrame* parent) : CSimpleStatusBar(parent) {
     this->m_guid.m_guid = 0;
@@ -40,6 +42,7 @@ CGSimpleHealthBar::~CGSimpleHealthBar() {
     this->m_guid.m_guid = 0;
 }
 
+// PROVEN: a0d8d944 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3B800/0x1407E8890
 void CGSimpleHealthBar::SetStatusBarColor(const CImVector& color) {
     if (this->m_barTexture) {
@@ -49,7 +52,7 @@ void CGSimpleHealthBar::SetStatusBarColor(const CImVector& color) {
     this->m_autoColor = 0;
 }
 
-// OFFSET: 0x00A3B8B0
+// OFFSET: 0x00A3B8B0/0x1407E8950
 void CGSimpleHealthBar::SetValue(float value) {
     CSimpleStatusBar::SetValue(value);
 
@@ -84,6 +87,7 @@ void CGSimpleHealthBar::RemoveMirrorHandlers() {
     ClntObjMgrUnsetObjMirrorHandler(this->m_guid, ID_UNIT, offsetof(CGUnitData, m_unitFieldMaxhealth), SimpleHealthUpdateHandler, this);
 }
 
+// PROVEN: c1d42b2b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B9F0/0x1407E8A60
 void CGSimpleHealthBar::SetUnit(CGUnit_C* unit) {
     if (ClntObjMgrGetCurrent()) {

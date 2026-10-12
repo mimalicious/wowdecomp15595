@@ -21,13 +21,13 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA47DC
+// STATIC: 0x00CA47DC/0x140B428DC
 int32_t CSimpleAnimGroup::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CB0/0x140CB9A50
 int32_t CSimpleAnimGroup::s_objectType;
 
-// STATIC: 0x00CA383C
+// STATIC: 0x00CA383C/0x140B40AC8
 const char* CSimpleAnimGroup::s_objectTypeName = "AnimationGroup";
 
 // OFFSET: 0x005270F0/0x140176430
@@ -54,8 +54,8 @@ void CSimpleAnimGroup::LoadXML_Anim(linkObject* node, CStatus* status, CSimpleAn
     anim->LoadXML(node, status);
 }
 
-// PROVEN: 817da576 IDENTICAL/NONE
-// OFFSET: 0x00526CE0
+// PROVEN: 817da576 IDENTICAL/UNPROVEN
+// OFFSET: 0x00526CE0/0x140176450
 void CSimpleAnimGroup::LoadXML_Scripts(linkObject* node, CStatus* status) {
     lua_State* L = FrameScript_GetContext();
 
@@ -66,7 +66,7 @@ void CSimpleAnimGroup::LoadXML_Scripts(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 09689528 IDENTICAL/UNPROVEN
+// PROVEN: 09689528 IDENTICAL/IDENTICAL
 // OFFSET: 0x00527110/0x1401764C0
 FrameScript_Object::ScriptIx* CSimpleAnimGroup::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = this->FrameScript_Object::GetScriptByName(name, data);
@@ -137,7 +137,7 @@ void CSimpleAnimGroup::SetInitialOffset(const C2Vector& offset) {
     }
 }
 
-// PROVEN: 6d02956a IDENTICAL/UNPROVEN
+// PROVEN: 6d02956a IDENTICAL/IDENTICAL
 // OFFSET: 0x00527550/0x140176880
 void CSimpleAnimGroup::RunOnFinishedScript(bool requested) {
     if (this->HasScript(this->m_onFinished)) {
@@ -147,7 +147,7 @@ void CSimpleAnimGroup::RunOnFinishedScript(bool requested) {
     }
 }
 
-// PROVEN: 89b388cb IDENTICAL/UNPROVEN
+// PROVEN: 89b388cb IDENTICAL/IDENTICAL
 // OFFSET: 0x005275A0/0x1401768F0
 void CSimpleAnimGroup::RunOnUpdateScript(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
@@ -164,8 +164,8 @@ void CSimpleAnimGroup::Finish() {
     }
 }
 
-// PROVEN: 08b73b99 IDENTICAL/NONE
-// OFFSET: 0x00527C10
+// PROVEN: 08b73b99 IDENTICAL/IDENTICAL
+// OFFSET: 0x00527C10/0x140176F50
 void CSimpleAnimGroup::RunOnLoopScript(SimpleAnimLoopState state) {
     if (this->HasScript(this->m_onLoop)) {
         lua_State* L = FrameScript_GetContext();
@@ -174,7 +174,7 @@ void CSimpleAnimGroup::RunOnLoopScript(SimpleAnimLoopState state) {
     }
 }
 
-// PROVEN: 53e98988 IDENTICAL/DIFFERENT
+// PROVEN: 53e98988 IDENTICAL/IDENTICAL
 // OFFSET: 0x005280A0/0x1401774D0
 int32_t CSimpleAnimGroup::GetMaxAnimOrder() {
     if (!this->m_animLists.Count()) {
@@ -225,13 +225,13 @@ bool CSimpleAnimGroup::HasAnimOfType(int32_t type) {
     return false;
 }
 
-// PROVEN: 2b9aabf1 IDENTICAL/NONE
+// PROVEN: 2b9aabf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528FD0/0x1401787A0
 bool CSimpleAnimGroup::HasAlphaAnim() {
     return this->HasAnimOfType(CSimpleAlphaAnim::GetObjectType());
 }
 
-// PROVEN: b176fe2b IDENTICAL/NONE
+// PROVEN: b176fe2b IDENTICAL/IDENTICAL
 // OFFSET: 0x00528FF0/0x1401787D0
 bool CSimpleAnimGroup::HasPositionAnim() {
     for (CSimpleAnim* anim = this->m_animations.Head(); !this->m_animations.IsEnd(anim); anim = this->m_animations.RawNext(anim)) {
@@ -330,7 +330,7 @@ CScriptObject* CSimpleAnimGroup::GetScriptObjectParent() {
     return this->m_region;
 }
 
-// PROVEN: 2b6c35aa DIFFERENT/IDENTICAL
+// PROVEN: 2b6c35aa IDENTICAL/IDENTICAL
 // OFFSET: 0x00529DC0/0x140179BD0
 bool CSimpleAnimGroup::IsA(int32_t type) {
     return type == CSimpleAnimGroup::s_objectType || type == CScriptObject::s_objectType;
@@ -494,7 +494,7 @@ CSimpleAnimGroup::~CSimpleAnimGroup() {
     this->m_animations.Clear();
 }
 
-// OFFSET: 0x00528E00
+// OFFSET: 0x00528E00/0x140178530
 void CSimpleAnimGroup::Pause() {
     if (!this->m_loopState || (this->m_flags & 0x4)) {
         return;
@@ -574,6 +574,7 @@ void CSimpleAnimGroup::ComputeDuration() {
     }
 }
 
+// PROVEN: 08727f4f IDENTICAL/UNPROVEN
 // OFFSET: 0x0052A400/0x14017A440
 void CSimpleAnimGroup::NotifyAnimAdded(CSimpleAnim* anim) {
     if (!anim) {
@@ -737,7 +738,7 @@ void CSimpleAnimGroup::SortAnimations() {
     }
 }
 
-// OFFSET: 0x00529760
+// OFFSET: 0x00529760/0x140179230
 bool CSimpleAnimGroup::DoGroupUpdateWork(float elapsedSec) {
     float remaining = elapsedSec < 0.0f ? 0.0f : (elapsedSec >= 60.0f ? 60.0f : elapsedSec);
 
@@ -810,7 +811,7 @@ bool CSimpleAnimGroup::RemoveAnimListNode(TSList<SIMPLEANIMNODE, TSGetLink<SIMPL
     return false;
 }
 
-// PROVEN: a359ac3b IDENTICAL/DIFFERENT
+// PROVEN: a359ac3b IDENTICAL/IDENTICAL
 // OFFSET: 0x0052B6F0/0x14017BE10
 void CSimpleAnimGroup::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_flags &= ~1;
@@ -872,7 +873,7 @@ void CSimpleAnimGroup::NotifyAnimRemoved(CSimpleAnim* anim) {
     }
 }
 
-// OFFSET: 0x00529F80
+// OFFSET: 0x00529F80/0x140179DE0
 bool CSimpleAnimGroup::Play(bool reverse) {
     if (!this->m_animations.Head()) {
         return false;

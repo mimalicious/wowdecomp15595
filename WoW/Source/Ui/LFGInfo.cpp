@@ -30,79 +30,79 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 
-// STATIC: 0x00F4A8C8
+// STATIC: 0x00F4A8C8/0x140E3EA28
 TSGrowableArray<LFG_SLOT_INFO_LOOT> CGLookingForGroup::m_completionRewards;
 
-// STATIC: 0x00F4A4D8
+// STATIC: 0x00F4A4D8/0x140E3E610
 int32_t CGLookingForGroup::m_searchJoinedID;
 
-// STATIC: 0x00F4A4DC
+// STATIC: 0x00F4A4DC/0x140E3E614
 uint32_t CGLookingForGroup::m_lastProposalID;
 
-// STATIC: 0x00F4A4E8
+// STATIC: 0x00F4A4E8/0x140E3E620
 uint32_t CGLookingForGroup::m_randomDungeonBestChoice;
 
-// STATIC: 0x00F4AB8C
+// STATIC: 0x00F4AB8C/0x140E3ED38
 TSGrowableArray<uint32_t> CGLookingForGroup::m_randomDungeons;
 
-// STATIC: 0x00F4AB9C
+// STATIC: 0x00F4AB9C/0x140E3ED50
 TSGrowableArray<CGLookingForGroup::LFGEntryInfo> CGLookingForGroup::m_lfdEntries;
 
-// STATIC: 0x00F4ABAC
+// STATIC: 0x00F4ABAC/0x140E3ED68
 TSGrowableArray<CGLookingForGroup::LFGEntryInfo> CGLookingForGroup::m_lfrEntries;
 
-// STATIC: 0x00F4ABBC
+// STATIC: 0x00F4ABBC/0x140E3ED80
 TSGrowableArray<CGLookingForGroup::LFGEntryInfo> CGLookingForGroup::m_rfEntries;
 
-// STATIC: 0x00F4A368
+// STATIC: 0x00F4A368/0x140E3E4A0
 CGLookingForGroup::LFGEntryInfo CGLookingForGroup::m_unkBEA820[7];
 
-// STATIC: 0x00F4A3A8
+// STATIC: 0x00F4A3A8/0x140E3E4E0
 LFGBootProposal CGLookingForGroup::m_bootProposal;
 
-// STATIC: 0x00F4A8D8
+// STATIC: 0x00F4A8D8/0x140E3EA70
 LFGProposal CGLookingForGroup::m_proposal;
 
-// STATIC: 0x00F4A4D4
+// STATIC: 0x00F4A4D4/0x140E3E60C
 uint8_t CGLookingForGroup::m_unkBEAA10;
 
-// STATIC: 0x00F4ABD0
+// STATIC: 0x00F4ABD0/0x140E3EDA0
 LFGLIST CGLookingForGroup::m_prevSearchResults;
 
-// STATIC: 0x00D137C4
+// STATIC: 0x00D137C4/0x140BCBD28
 uint8_t CGLookingForGroup::m_unkACD660;
 
-// STATIC: 0x00F4AC60
+// STATIC: 0x00F4AC60/0x140E3EE80
 LFGLIST CGLookingForGroup::m_searchResults;
 
-// STATIC: 0x00F4A510
+// STATIC: 0x00F4A510/0x140E3E630
 LFGInfo CGLookingForGroup::m_localInfo;
 
-// STATIC: 0x00F4A648
+// STATIC: 0x00F4A648/0x140E3E780
 LFGInfo CGLookingForGroup::m_playerInfo;
 
-// STATIC: 0x00F4A780
+// STATIC: 0x00F4A780/0x140E3E8D0
 LFGInfo CGLookingForGroup::m_partyInfo;
 
-// STATIC: 0x00D13A38
+// STATIC: 0x00D13A38/0x140BCC210
 LFGLockInfo CGLookingForGroup::m_playerLockInfo;
 
-// STATIC: 0x00D13A60
+// STATIC: 0x00D13A60/0x140BCC248
 LFGPartyLockInfo CGLookingForGroup::m_partyLockInfo;
 
-// STATIC: 0x00F4A8B8
+// STATIC: 0x00F4A8B8/0x140E3EA18
 LFGRewardInfo CGLookingForGroup::m_reward;
 
-// STATIC: 0x00F4A4EC
+// STATIC: 0x00F4A4EC/0x140E3EA40
 LFGQueueStatus CGLookingForGroup::m_queueStatus;
 
-// STATIC: 0x00F4AB68
+// STATIC: 0x00F4AB68/0x140E3ED00
 int32_t CGLookingForGroup::m_roleCheckState;
 
-// STATIC: 0x00F4AB6C
+// STATIC: 0x00F4AB6C/0x140E3ED08
 TSGrowableArray<uint32_t> CGLookingForGroup::m_roleCheckSlots;
 
-// STATIC: 0x00F4AB7C
+// STATIC: 0x00F4AB7C/0x140E3ED20
 TSGrowableArray<LFG_ROLE_CHECK_MEMBER_INFO> CGLookingForGroup::m_roleCheckMembers;
 
 // STATIC: 0x00D14460
@@ -125,16 +125,16 @@ static const LFGJoinResultError s_joinResultErrors[16] = {
     { 43, ERR_LFG_ROLE_CHECK_FAILED },
 };
 
-// STATIC: 0x00D13A70
+// STATIC: 0x00D13A70/0x140BCC270
 uint32_t CGLookingForGroup::m_randomSlotCount;
 
 // STATIC: 0x00D13A74
 LFGRandomSlot CGLookingForGroup::m_randomSlots[16];
 
-// STATIC: 0x00F4A3A4
+// STATIC: 0x00F4A3A4/0x140E3E4DC
 int32_t CGLookingForGroup::m_randomSlotMinLevel;
 
-// STATIC: 0x00F4A3A0
+// STATIC: 0x00F4A3A0/0x140E3E4D8
 int32_t CGLookingForGroup::m_randomSlotMaxLevel;
 
 // STATIC: 0x00F4A4E0
@@ -143,6 +143,7 @@ static uint32_t s_searchType;
 // STATIC: 0x00F4A4E4
 static uint32_t s_searchID;
 
+// PROVEN: 90def9f5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00985040/0x1407001D0
 bool CGLookingForGroup::HasRaidDungeon(LFGInfo* info) {
     if (info->m_joined) {
@@ -231,7 +232,8 @@ static int QSortLFGDungeons(const void* a, const void* b) {
     return SStrCmpUTF8I(leftRec->m_name, rightRec->m_name, 0x7FFFFFFF);
 }
 
-// OFFSET: 0x00980910
+// PROVEN: 780e1be5 IDENTICAL/DIFFERENT
+// OFFSET: 0x00980910/0x1406FACE0
 static int QSortRFDungeons(const void* a, const void* b) {
     LfgDungeonsRec* leftRec = g_lfgDungeonsDB.GetRecord(static_cast<const CGLookingForGroup::LFGEntryInfo*>(a)->m_id);
     LfgDungeonsRec* rightRec = g_lfgDungeonsDB.GetRecord(static_cast<const CGLookingForGroup::LFGEntryInfo*>(b)->m_id);
@@ -243,7 +245,7 @@ static int QSortRFDungeons(const void* a, const void* b) {
     return SStrCmpUTF8I(leftRec->m_name, rightRec->m_name, 0x7FFFFFFF);
 }
 
-// OFFSET: 0x00984B30
+// OFFSET: 0x00984B30/0x1406FFB60
 void CGLookingForGroup::UpdateLFDEntries() {
     CGLookingForGroup::m_lfdEntries.m_chunk = 32;
 
@@ -278,7 +280,7 @@ void CGLookingForGroup::UpdateLFDEntries() {
     qsort(CGLookingForGroup::m_lfdEntries.m_data, CGLookingForGroup::m_lfdEntries.m_count, sizeof(CGLookingForGroup::LFGEntryInfo), QSortLFGDungeons);
 }
 
-// OFFSET: 0x00984D50
+// OFFSET: 0x00984D50/0x1406FFE00
 void CGLookingForGroup::UpdateRFEntries() {
     CGLookingForGroup::m_rfEntries.m_chunk = 8;
 
@@ -301,7 +303,7 @@ void CGLookingForGroup::UpdateRFEntries() {
     qsort(CGLookingForGroup::m_rfEntries.m_data, CGLookingForGroup::m_rfEntries.m_count, sizeof(CGLookingForGroup::LFGEntryInfo), QSortRFDungeons);
 }
 
-// OFFSET: 0x00984E70
+// OFFSET: 0x00984E70/0x1406FFF80
 void CGLookingForGroup::UpdateLFREntries() {
     CGLookingForGroup::m_lfrEntries.m_chunk = 8;
 
@@ -332,7 +334,7 @@ void CGLookingForGroup::UpdateLFREntries() {
     qsort(CGLookingForGroup::m_lfrEntries.m_data, CGLookingForGroup::m_lfrEntries.m_count, sizeof(CGLookingForGroup::LFGEntryInfo), QSortLFGDungeons);
 }
 
-// OFFSET: 0x00987380
+// OFFSET: 0x00987380/0x140702E80
 void LFGInfo::Reset() {
     *reinterpret_cast<uint64_t*>(this->m_ticket.m_requesterGuid) = 0;
     this->m_ticket.m_id = 0;
@@ -357,7 +359,8 @@ void LFGInfo::Reset() {
     this->m_numDungeons = 0;
 }
 
-// OFFSET: 0x009877F0
+// PROVEN: 2281475f IDENTICAL/UNPROVEN
+// OFFSET: 0x009877F0/0x140703530
 void CGLookingForGroup::JoiningParty() {
     CGLookingForGroup::m_playerInfo.Reset();
     CGLookingForGroup::m_partyInfo.Reset();
@@ -370,6 +373,7 @@ void CGLookingForGroup::JoiningParty() {
     FrameScript_SignalEvent(SCRIPT_EVENT_LFG_UPDATE, NULL);
 }
 
+// PROVEN: c7db4e82 IDENTICAL/UNPROVEN
 // OFFSET: 0x00987840/0x140703580
 void CGLookingForGroup::ClearDungeonList() {
     for (LFGDungeonEntry* dungeon = CGLookingForGroup::m_localInfo.m_dungeons.Head(); !CGLookingForGroup::m_localInfo.m_dungeons.IsEnd(dungeon); ) {
@@ -383,6 +387,7 @@ void CGLookingForGroup::ClearDungeonList() {
     CGLookingForGroup::m_localInfo.m_numDungeons = 0;
 }
 
+// PROVEN: 06452196 IDENTICAL/NONE
 // OFFSET: 0x00987D80
 void LFGLockInfo::ClearDungeons() {
     for (LFGDungeonEntry* dungeon = this->m_dungeons.Head(); !this->m_dungeons.IsEnd(dungeon); ) {
@@ -400,7 +405,8 @@ LFGLockInfo::LFGLockInfo() {
     this->ClearDungeons();
 }
 
-// OFFSET: 0x00989BE0
+// PROVEN: e5794045 IDENTICAL/DIFFERENT
+// OFFSET: 0x00989BE0/0x140706BD0
 LFGLockInfo::~LFGLockInfo() {
     this->m_valid = 0;
     this->m_guid.m_guid = 0;
@@ -419,6 +425,7 @@ void LFGPartyLockInfo::Clear() {
     }
 }
 
+// PROVEN: d5727fe6 IDENTICAL/UNPROVEN
 // OFFSET: 0x004952D0/0x1400BACE0
 LfgDungeonExpansionRec* GetLfgDungeonExpansionRec(int32_t dungeonID, int32_t expansionLevel) {
     for (int32_t i = 0; i < g_lfgDungeonExpansionDB.m_numRecords; i++) {
@@ -486,6 +493,7 @@ void CGLookingForGroup::ShowProposal(int32_t silent) {
     }
 }
 
+// PROVEN: 408d320d IDENTICAL/NONE
 // OFFSET: 0x00984490
 LFGDungeonEntry* LFGInfo::FindDungeon(uint32_t slot) const {
     for (LFGDungeonEntry* dungeon = const_cast<LFGInfo*>(this)->m_dungeons.Head(); !this->m_dungeons.IsEnd(dungeon); dungeon = dungeon->RawNext()) {
@@ -529,6 +537,7 @@ LFGShortageReward::LFGShortageReward() {
     this->m_xp = 0;
 }
 
+// PROVEN: 46d441bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00986790/0x140701D10
 LFGDungeonEntry::LFGDungeonEntry() {
     this->m_slot = 0;
@@ -555,6 +564,7 @@ LFGDungeonEntry::LFGDungeonEntry() {
     this->unk_006C = 0;
 }
 
+// PROVEN: dcca49f3 IDENTICAL/DIFFERENT
 // OFFSET: 0x009868D0/0x140701DF0
 LFGDungeonEntry::~LFGDungeonEntry() {
 }
@@ -582,6 +592,7 @@ LFGInfo::LFGInfo() {
     this->Reset();
 }
 
+// PROVEN: e7579dcf IDENTICAL/NONE
 // OFFSET: 0x00987DC0
 LFGInfo::~LFGInfo() {
     this->Reset();
@@ -645,7 +656,8 @@ static void ClearSearchResults() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
 }
 
-// OFFSET: 0x00989D00
+// PROVEN: dbff39af IDENTICAL/DIFFERENT
+// OFFSET: 0x00989D00/0x140706D40
 void CGLookingForGroup::ParsePartyInfo(CDataStore* msg) {
     uint8_t count;
     msg->Get(count);
@@ -660,7 +672,7 @@ void CGLookingForGroup::ParsePartyInfo(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x009802C0
+// OFFSET: 0x009802C0/0x1406FA550
 static int32_t Packet_SMSG_LFG_ROLE_CHOSEN(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t guid;
     msg->Get(guid);
@@ -754,7 +766,7 @@ static int32_t Packet_SMSG_LFG_TELEPORT_DENIED(void* param, NETMESSAGE msgId, ui
     return 1;
 }
 
-// OFFSET: 0x00980680
+// OFFSET: 0x00980680/0x1406FA980
 static int32_t Packet_SMSG_LFG_OFFER_CONTINUE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t value;
     msg->Get(value);
@@ -769,7 +781,7 @@ static int32_t Packet_SMSG_LFG_OFFER_CONTINUE(void* param, NETMESSAGE msgId, uin
     return 1;
 }
 
-// OFFSET: 0x00984620
+// OFFSET: 0x00984620/0x1406FF4C0
 static int32_t Packet_SMSG_LFG_ROLE_CHECK_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(reinterpret_cast<uint32_t&>(CGLookingForGroup::m_roleCheckState));
     uint8_t beginning = 0;
@@ -878,7 +890,7 @@ static int32_t Packet_SMSG_LFG_PLAYER_REWARD(void* param, NETMESSAGE msgId, uint
     return 1;
 }
 
-// OFFSET: 0x00988700
+// OFFSET: 0x00988700/0x140704CB0
 static int32_t Packet_SMSG_LFG_PLAYER_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGLookingForGroup::m_playerLockInfo.m_valid = 0;
     CGLookingForGroup::m_playerLockInfo.m_guid.m_guid = 0;
@@ -961,7 +973,7 @@ static int32_t Packet_SMSG_LFG_PLAYER_INFO(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// OFFSET: 0x0098A0D0
+// OFFSET: 0x0098A0D0/0x1407070D0
 static int32_t Packet_SMSG_LFG_DISABLED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGLookingForGroup::m_localInfo.Reset();
     CGLookingForGroup::m_playerInfo.Reset();
@@ -982,7 +994,7 @@ static int32_t Packet_SMSG_LFG_DISABLED(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: 0x0098A370
+// OFFSET: 0x0098A370/0x140707590
 static int32_t Packet_SMSG_LFG_PARTY_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     DebugLog("LFGMessage: LFG_PARTY_INFO");
     CGLookingForGroup::m_partyLockInfo.Clear();
@@ -994,7 +1006,8 @@ static int32_t Packet_SMSG_LFG_PARTY_INFO(void* param, NETMESSAGE msgId, uint32_
     return 1;
 }
 
-// OFFSET: 0x00980380
+// PROVEN: 91d1bf10 IDENTICAL/DIFFERENT
+// OFFSET: 0x00980380/0x1406FA620
 static bool OnLfgQueueStatus(ClientLfgQueueStatus* msg) {
     CGLookingForGroup::m_queueStatus.m_lfgID = msg->unk_0038 & 0xFFFFFF;
     CGLookingForGroup::m_queueStatus.m_averageWait = msg->unk_0010;
@@ -1066,7 +1079,8 @@ static bool OnLfgProposalUpdate(ClientLfgProposalUpdate* msg) {
     return true;
 }
 
-// OFFSET: 0x00980770
+// PROVEN: 6a57ce1d IDENTICAL/IDENTICAL
+// OFFSET: 0x00980770/0x1406FAA90
 static bool OnUpdateDungeonEncounterForLoot(ClientUpdateDungeonEncounterForLoot* msg) {
     UserClientLfgLockInfoRequest request;
     request.unk_0010 = true;
@@ -1074,7 +1088,7 @@ static bool OnUpdateDungeonEncounterForLoot(ClientUpdateDungeonEncounterForLoot*
     return true;
 }
 
-// OFFSET: 0x0098A1D0
+// OFFSET: 0x0098A1D0/0x140707290
 static bool OnLfgJoinResult(ClientLfgJoinResult* msg) {
     uint8_t result = msg->unk_0010;
     DebugLog("LFGMessage: LFG_JOIN_RESULT - Result: %u", result);
@@ -1373,18 +1387,19 @@ void CGLookingForGroup::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_LFG_TELEPORT_DENIED, Packet_SMSG_LFG_TELEPORT_DENIED, NULL);
     ClientServices::SetMessageHandler(SMSG_LFG_OFFER_CONTINUE, Packet_SMSG_LFG_OFFER_CONTINUE, NULL);
     ClientServices::SetMessageHandler(SMSG_OPEN_LFG_DUNGEON_FINDER, Packet_SMSG_LFG_OPEN_FROM_GOSSIP, NULL);
-    ClientLfgUpdateStatus::s_handler = OnLfgUpdateStatus;
-    ClientLfgJoinResult::s_handler = OnLfgJoinResult;
-    ClientLfgProposalUpdate::s_handler = OnLfgProposalUpdate;
-    ClientLfgQueueStatus::s_handler = OnLfgQueueStatus;
+    ClientLfgUpdateStatus::s_handler = JamHandlerEncode(OnLfgUpdateStatus, g_jamHandlerKey_CFE748);
+    ClientLfgJoinResult::s_handler = JamHandlerEncode(OnLfgJoinResult, g_jamHandlerKey_CFDD18);
+    ClientLfgProposalUpdate::s_handler = JamHandlerEncode(OnLfgProposalUpdate, g_jamHandlerKey_CFE6DC);
+    ClientLfgQueueStatus::s_handler = JamHandlerEncode(OnLfgQueueStatus, g_jamHandlerKey_CFFCA4);
     CGLookingForGroup::m_randomSlotCount = 0;
     CGLookingForGroup::m_unkACD660 = 1;
-    ClientLfgSearchResult::s_handler = OnLfgSearchResult;
-    ClientUpdateDungeonEncounterForLoot::s_handler = OnUpdateDungeonEncounterForLoot;
+    ClientLfgSearchResult::s_handler = JamHandlerEncode(OnLfgSearchResult, g_jamHandlerKey_CFE9C4);
+    ClientUpdateDungeonEncounterForLoot::s_handler = JamHandlerEncode(OnUpdateDungeonEncounterForLoot, g_jamHandlerKey_CFDEA8);
     CGLookingForGroup::m_randomSlotMinLevel = -1;
     CGLookingForGroup::m_randomSlotMaxLevel = -1;
 }
 
+// PROVEN: fab3f89c IDENTICAL/NONE
 // OFFSET: 0x00984450
 LFGLockInfo* LFGPartyLockInfo::FindMember(WOWGUID guid) {
     for (LFGLockInfo* member = this->m_members.Head(); !this->m_members.IsEnd(member); ) {
@@ -1414,7 +1429,7 @@ LFGLockInfo* LFGPartyLockInfo::AddMember(WOWGUID guid) {
     return member;
 }
 
-// OFFSET: 0x00989F00
+// OFFSET: 0x00989F00/0x140706E10
 void CGLookingForGroup::ShutdownGame() {
     CGLookingForGroup::m_prevSearchResults.Clear();
     CGLookingForGroup::m_searchResults.Clear();
@@ -1449,7 +1464,8 @@ void CGLookingForGroup::ShutdownGame() {
     ClientUpdateDungeonEncounterForLoot::s_handler = NULL;
 }
 
-// OFFSET: 0x00986C40
+// PROVEN: 09d48437 IDENTICAL/DIFFERENT
+// OFFSET: 0x00986C40/0x1407021A0
 void CGLookingForGroup::ParseBlackList(CDataStore* msg, LFGLockInfo* lockInfo) {
     uint32_t count;
     msg->Get(count);
@@ -1484,7 +1500,7 @@ bool CGLookingForGroup::IsRandomDungeonUnlocked(const LfgDungeonsRec* rec) {
     return false;
 }
 
-// OFFSET: 0x009879C0
+// OFFSET: 0x009879C0/0x140703800
 void CGLookingForGroup::UpdateRandomDungeons() {
     int32_t numRecords = g_lfgDungeonsDB.m_numRecords;
     CGLookingForGroup::m_randomDungeons.SetCount(0);
@@ -1604,7 +1620,7 @@ static bool IsBetterRandomDungeon(const LfgDungeonsRec* candidate, const LfgDung
     return candidate->m_orderIndex > best->m_orderIndex;
 }
 
-// OFFSET: 0x00986E50
+// OFFSET: 0x00986E50/0x140702520
 bool CGLookingForGroup::UpdateRandomDungeonBestChoice() {
     LfgDungeonsRec* best = NULL;
     uint32_t count = CGLookingForGroup::m_randomDungeons.m_count;
@@ -1714,6 +1730,7 @@ void CGLookingForGroup::UpdateRandomSlots(int32_t minLevel, int32_t maxLevel) {
     CGLookingForGroup::m_randomSlotMaxLevel = maxLevel;
 }
 
+// PROVEN: 1f936933 IDENTICAL/DIFFERENT
 // OFFSET: 0x00983680/0x1406FE420
 LFGRandomSlotDungeons* CGLookingForGroup::GetRandomSlot(int32_t dungeonID) {
     LfgDungeonsRec* rec = g_lfgDungeonsDB.GetRecord(dungeonID);
@@ -1834,6 +1851,7 @@ void CGLookingForGroup::RequestLFGPartyInfo() {
     ClientServices::Send2(&msg);
 }
 
+// PROVEN: c9b66807 IDENTICAL/DIFFERENT
 // OFFSET: 0x00980D90/0x1406FB240
 void CGLookingForGroup::SetLFGComment(const char* comment) {
     char scrubbed[256];
@@ -1854,6 +1872,7 @@ void CGLookingForGroup::SetLFGComment(const char* comment) {
     }
 }
 
+// PROVEN: b501410d IDENTICAL/IDENTICAL
 // OFFSET: 0x009886E0/0x140704C90
 void CGLookingForGroup::LeaveWorld() {
     ClientSetDfFastLaunchResult::s_handler = NULL;
@@ -1861,6 +1880,7 @@ void CGLookingForGroup::LeaveWorld() {
     CGLookingForGroup::LeaveLFGSearch();
 }
 
+// PROVEN: b4b2a549 IDENTICAL/UNPROVEN
 // OFFSET: 0x00987E90/0x140703E50
 void CGLookingForGroup::LeaveLFGSearch() {
     if (CGLookingForGroup::m_searchJoinedID) {
@@ -1875,14 +1895,16 @@ void CGLookingForGroup::LeaveLFGSearch() {
     }
 }
 
-// OFFSET: 0x0097EFB0
+// PROVEN: 93a30b6a IDENTICAL/UNPROVEN
+// OFFSET: 0x0097EFB0/0x1406F90F0
 void LFGNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!CGLookingForGroup::m_prevSearchResults.m_pendingNames || !--CGLookingForGroup::m_prevSearchResults.m_pendingNames) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
     }
 }
 
-// OFFSET: 0x0097EFE0
+// PROVEN: cacba4ca IDENTICAL/IDENTICAL
+// OFFSET: 0x0097EFE0/0x1406F9120
 int32_t Packet_SMSG_LFG_OPEN_FROM_GOSSIP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t slot;
     msg->Get(slot);

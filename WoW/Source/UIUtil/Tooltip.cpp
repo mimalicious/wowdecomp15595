@@ -137,37 +137,37 @@
 #include "WoW/Source/DB/Rec/SpellReagentsRec.h"
 #include "WoW/Source/DB/Rec/ItemDisplayInfoRec.h"
 
-// STATIC: 0x00C9A2A8
+// STATIC: 0x00C9A2A8/0x140B32E30
 int32_t CGTooltip::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00D3A7F4
+// STATIC: 0x00D3A7F4/0x140BF5B18
 int32_t CGTooltip::s_objectType;
 
-// STATIC: 0x00D3AC44
+// STATIC: 0x00D3AC44/0x140BF5F70
 CDataAllocator CGTooltip::s_tooltipHeap(sizeof(CGTooltip), 5);
 
-// STATIC: 0x00F4A330
+// STATIC: 0x00F4A330/0x140E3E468
 WOWGUID CGTooltip::m_vehicleStatUnit;
 
-// STATIC: 0x00C99F1C
+// STATIC: 0x00C99F1C/0x140B32718
 static const char* s_tooltipTextColorString = "ffffffff";
 
-// STATIC: 0x00C99F20
+// STATIC: 0x00C99F20/0x140B32720
 static const char* s_tooltipRedColorString = "ffff2020";
 
 // STATIC: 0x00C99F24
 static const char* s_tooltipGrayColorString = "ff808080";
 
-// STATIC: 0x00C99F30
+// STATIC: 0x00C99F30/0x140B32740
 static const char* s_achievementLinkColor = "ffffff00";
 
 // STATIC: 0x00C99F40
 static const char* s_questDifficultyColorStrings[5] = { "ff808080", "ff40c040", "ffffff00", "ffff8040", "ffff2020" };
 
-// STATIC: 0x00C99F54
+// STATIC: 0x00C99F54/0x140B32788
 static const char* s_positiveDeltaColorString = "ff00ff00";
 
-// STATIC: 0x00C99F58
+// STATIC: 0x00C99F58/0x140B32790
 static const char* s_negativeDeltaColorString = "ffff2020";
 
 // STATIC: 0x00C99F98
@@ -176,55 +176,55 @@ static const char* s_glyphLinkColor = "ff66bbff";
 // STATIC: 0x00C99FA0
 static const char* s_spellLinkColor = "ff71d5ff";
 
-// STATIC: 0x00C99FA8
+// STATIC: 0x00C99FA8/0x140B32830
 static const char* s_talentLinkColor = "ff4e96f7";
 
 // STATIC: 0x00C99FAC
 static const char* s_instanceLockLinkColor = "ffff8000";
 
-// STATIC: 0x00C99FB0
+// STATIC: 0x00C99FB0/0x140B32840
 static const char* s_currencyLinkColor = "ff00aa00";
 
 // STATIC: 0x00C99FDC
 static const char* s_gemColorTokens[5] = { NULL, "META_GEM", "RED_GEM", "YELLOW_GEM", "BLUE_GEM" };
 
-// STATIC: 0x00C99FF0
+// STATIC: 0x00C99FF0/0x140B328C0
 static const char* s_colorblindSuffixes[5] = { "", "[+] ", "[++] ", "[+++] ", "[-] " };
 
-// STATIC: 0x00C9A004
+// STATIC: 0x00C9A004/0x140B328E8
 const char* CGTooltip::s_objectTypeName = "GameTooltip";
 
-// STATIC: 0x00C9A2B8
+// STATIC: 0x00C9A2B8/0x140B32E44
 CImVector s_tooltipTitleColor = CImVector(0xFFFFD200);
 
-// STATIC: 0x00C9A2BC
+// STATIC: 0x00C9A2BC/0x140B32E48
 CImVector s_tooltipTextColor = CImVector(0xFFFFFFFF);
 
-// STATIC: 0x00C9A2C0
+// STATIC: 0x00C9A2C0/0x140B32E4C
 static CImVector s_tooltipRedColor = CImVector(0xFFFF2020);
 
-// STATIC: 0x00C9A2C4
+// STATIC: 0x00C9A2C4/0x140B32E50
 static CImVector s_tooltipGrayColor = CImVector(0xFF808080);
 
 // STATIC: 0x00C9A2C8
 static CImVector s_tooltipDisenchantColor = CImVector(0xFF88AAFF);
 
-// STATIC: 0x00C9A2CC
+// STATIC: 0x00C9A2CC/0x140B32E58
 static CImVector s_tooltipGreenColor = CImVector(0xFF00FF00);
 
 // STATIC: 0x00C9A2D4
 static CImVector s_tooltipBrightRedColor = CImVector(0xFFFF0000);
 
-// STATIC: 0x00C9A2D8
+// STATIC: 0x00C9A2D8/0x140B32E64
 static CImVector s_tooltipObjectBackdropColor = CImVector(0xFF002E5A);
 
 // STATIC: 0x00C9A2DC
 static CImVector s_tooltipItemSetColor = CImVector(0xFFFFFF97);
 
-// STATIC: 0x00C9A2E0
+// STATIC: 0x00C9A2E0/0x140B32E6C
 static CImVector s_skillColors[5] = { CImVector(0xFF808080), CImVector(0xFF40C040), CImVector(0xFFFFFF00), CImVector(0xFFFF8040), CImVector(0xFFFF2020) };
 
-// STATIC: 0x00C9A338
+// STATIC: 0x00C9A338/0x140B32EC4
 static CImVector s_tooltipGlyphColor = CImVector(0xFF66BBFF);
 
 // STATIC: 0x00C9A358
@@ -242,7 +242,7 @@ static CImVector s_frameStackMouseColors[2] = { CImVector(0xFFFF9966), CImVector
 // STATIC: 0x00C9A36C
 static CImVector s_frameStackColors[2] = { CImVector(0xFF6699FF), CImVector(0xFF88DDDD) };
 
-// STATIC: 0x00C9A374
+// STATIC: 0x00C9A374/0x140BF5F68
 static CImVector s_frameStackHiddenColors[2] = { CImVector(0xFF666666), CImVector(0xFF999999) };
 
 // STATIC: 0x00C9A3A0
@@ -272,19 +272,19 @@ static const char* s_balanceNegativeEnergyCostToken = "BALANCE_NEGATIVE_ENERGY_C
 // STATIC: 0x00C9A508
 static int32_t s_comparisonIndex = 1;
 
-// STATIC: 0x00C9CAD8
+// STATIC: 0x00C9CAD8/0x140B36940
 const char* s_itemModTokens[57] = { "ITEM_MOD_MANA", "ITEM_MOD_HEALTH", "", "ITEM_MOD_AGILITY", "ITEM_MOD_STRENGTH", "ITEM_MOD_INTELLECT", "ITEM_MOD_SPIRIT", "ITEM_MOD_STAMINA", "", "", "", "", "ITEM_MOD_DEFENSE_SKILL_RATING", "ITEM_MOD_DODGE_RATING", "ITEM_MOD_PARRY_RATING", "ITEM_MOD_BLOCK_RATING", "ITEM_MOD_HIT_MELEE_RATING", "ITEM_MOD_HIT_RANGED_RATING", "ITEM_MOD_HIT_SPELL_RATING", "ITEM_MOD_CRIT_MELEE_RATING", "ITEM_MOD_CRIT_RANGED_RATING", "ITEM_MOD_CRIT_SPELL_RATING", "ITEM_MOD_HIT_TAKEN_MELEE_RATING", "ITEM_MOD_HIT_TAKEN_RANGED_RATING", "ITEM_MOD_HIT_TAKEN_SPELL_RATING", "ITEM_MOD_CRIT_TAKEN_MELEE_RATING", "ITEM_MOD_CRIT_TAKEN_RANGED_RATING", "ITEM_MOD_CRIT_TAKEN_SPELL_RATING", "ITEM_MOD_HASTE_MELEE_RATING", "ITEM_MOD_HASTE_RANGED_RATING", "ITEM_MOD_HASTE_SPELL_RATING", "ITEM_MOD_HIT_RATING", "ITEM_MOD_CRIT_RATING", "ITEM_MOD_HIT_TAKEN_RATING", "ITEM_MOD_CRIT_TAKEN_RATING", "ITEM_MOD_RESILIENCE_RATING", "ITEM_MOD_HASTE_RATING", "ITEM_MOD_EXPERTISE_RATING", "ITEM_MOD_ATTACK_POWER", "ITEM_MOD_RANGED_ATTACK_POWER", "", "ITEM_MOD_SPELL_HEALING_DONE", "ITEM_MOD_SPELL_DAMAGE_DONE", "ITEM_MOD_MANA_REGENERATION", "ITEM_MOD_ARMOR_PENETRATION_RATING", "ITEM_MOD_SPELL_POWER", "ITEM_MOD_HEALTH_REGEN", "ITEM_MOD_SPELL_PENETRATION", "ITEM_MOD_BLOCK_VALUE", "ITEM_MOD_MASTERY_RATING", "ITEM_MOD_EXTRA_ARMOR", "ITEM_MOD_FIRE_RESISTANCE", "ITEM_MOD_FROST_RESISTANCE", "ITEM_MOD_HOLY_RESISTANCE", "ITEM_MOD_SHADOW_RESISTANCE", "ITEM_MOD_NATURE_RESISTANCE", "ITEM_MOD_ARCANE_RESISTANCE" };
 
 // STATIC: 0x00C9CBBC
 static const char* s_socketNames[6] = { "Meta", "Red", "Yellow", "Blue", "Hydraulic", "Cogwheel" };
 
-// STATIC: 0x00C9F730
+// STATIC: 0x00C9F730/0x140B3B850
 static const char* s_socketIdentifiers[8] = { s_socketNames[0], s_socketNames[1], s_socketNames[2], s_socketNames[3], s_socketNames[4], s_socketNames[5], "Prismatic", "Prismatic" };
 
-// STATIC: 0x00D0B1E0
+// STATIC: 0x00D0B1E0/0x140BBE2C0
 const char* s_inventoryTypeTokens[29] = { "", "INVTYPE_HEAD", "INVTYPE_NECK", "INVTYPE_SHOULDER", "INVTYPE_BODY", "INVTYPE_CHEST", "INVTYPE_WAIST", "INVTYPE_LEGS", "INVTYPE_FEET", "INVTYPE_WRIST", "INVTYPE_HAND", "INVTYPE_FINGER", "INVTYPE_TRINKET", "INVTYPE_WEAPON", "INVTYPE_SHIELD", "INVTYPE_RANGED", "INVTYPE_CLOAK", "INVTYPE_2HWEAPON", "INVTYPE_BAG", "INVTYPE_TABARD", "INVTYPE_ROBE", "INVTYPE_WEAPONMAINHAND", "INVTYPE_WEAPONOFFHAND", "INVTYPE_HOLDABLE", "INVTYPE_AMMO", "INVTYPE_THROWN", "INVTYPE_RANGEDRIGHT", "INVTYPE_QUIVER", "INVTYPE_RELIC" };
 
-// STATIC: 0x00B95368
+// STATIC: 0x00B95368/0x140974AA8
 static const int32_t s_attackPowerGroup[2] = { 8, 9 };
 
 // STATIC: 0x00B95370
@@ -293,13 +293,13 @@ static const int32_t s_manaRegenGroup[1] = { 54 };
 // STATIC: 0x00B95374
 static const int32_t s_hasteRatingGroup[3] = { 39, 40, 41 };
 
-// STATIC: 0x00B95380
+// STATIC: 0x00B95380/0x140974AB0
 static const int32_t s_critRatingGroup[3] = { 30, 31, 32 };
 
-// STATIC: 0x00B9538C
+// STATIC: 0x00B9538C/0x140974AD0
 static const int32_t s_hitRatingGroup[3] = { 27, 28, 29 };
 
-// STATIC: 0x00B95398
+// STATIC: 0x00B95398/0x140974AE0
 static const int32_t s_spellPowerGroup[2] = { 53, 52 };
 
 // STATIC: 0x00B951AC
@@ -317,22 +317,22 @@ static const int32_t s_primaryStatOrder[11] = { 4, 3, 7, 5, 6, 1, 0, 8, 9, 2, 10
 // STATIC: 0x00B9E6AC
 static const int32_t s_socketColors[8] = { 1, 2, 4, 8, 16, 32, 14, 0 };
 
-// STATIC: 0x00D3A7F0
+// STATIC: 0x00D3A7F0/0x140BF5B10
 static const ItemSetRec* s_sortItemSet;
 
-// STATIC: 0x00D3A7F8
+// STATIC: 0x00D3A7F8/0x140BF5B20
 static char s_itemLink[1024];
 
-// STATIC: 0x00D3ABF8
+// STATIC: 0x00D3ABF8/0x140BF5F20
 static CImVector s_threatStatusColors[5] = { CImVector(0xFFFFFFFF), CImVector(0xFFB0B0B0), CImVector(0xFFFFFF77), CImVector(0xFFFF9900), CImVector(0xFFFF0000) };
 
-// STATIC: 0x00D3AC0C
+// STATIC: 0x00D3AC0C/0x140BF5F38
 static CImVector s_itemQualityColors[8] = { CImVector(0xFF9D9D9D), CImVector(0xFFFFFFFF), CImVector(0xFF1EFF00), CImVector(0xFF0070DD), CImVector(0xFFA335EE), CImVector(0xFFFF8000), CImVector(0xFFE6CC80), CImVector(0xFFE6CC80) };
 
-// STATIC: 0x00D3AC58
+// STATIC: 0x00D3AC58/0x140BF5F90
 static TSGrowableArray<FrameStackInfo> s_frameStack;
 
-// STATIC: 0x00D3AC70
+// STATIC: 0x00D3AC70/0x140BF5FE0
 static const char* s_itemQualityColorStrings[8] = { "ff9d9d9d", "ffffffff", "ff1eff00", "ff0070dd", "ffa335ee", "ffff8000", "ffe6cc80", "ffe6cc80" };
 
 // OFFSET: 0x00464260/0x140077C00
@@ -455,6 +455,7 @@ const char* GetSocketIdentifier(int32_t color) {
     return "Unknown";
 }
 
+// PROVEN: c311bc8c IDENTICAL/IDENTICAL
 // OFFSET: 0x00464920/0x140078120
 FrameScript_Object::ScriptIx* CGTooltip::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -507,6 +508,7 @@ FrameScript_Object::ScriptIx* CGTooltip::GetScriptByName(const char* name, Frame
     return NULL;
 }
 
+// PROVEN: af2cf797 IDENTICAL/IDENTICAL
 // OFFSET: 0x00464BC0/0x1400782A0
 void CGTooltip::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onTooltipSetDefaultAnchor, time, count);
@@ -522,6 +524,7 @@ void CGTooltip::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
+// PROVEN: 2f2489d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00464CB0/0x1400783F0
 const CImVector* CGTooltip::GetThreatStateColor(uint32_t status) {
     if (status >= 5) {
@@ -531,7 +534,7 @@ const CImVector* CGTooltip::GetThreatStateColor(uint32_t status) {
     return &s_threatStatusColors[status];
 }
 
-// PROVEN: 476d7a82 IDENTICAL/NONE
+// PROVEN: 476d7a82 IDENTICAL/IDENTICAL
 // OFFSET: 0x00464CD0/0x140078410
 const CImVector* CGTooltip::GetItemQualityColor(uint32_t quality) {
     if (quality >= sizeof(s_itemQualityColors) / sizeof(s_itemQualityColors[0])) {
@@ -541,7 +544,7 @@ const CImVector* CGTooltip::GetItemQualityColor(uint32_t quality) {
     return reinterpret_cast<const CImVector*>(&s_itemQualityColors[quality]);
 }
 
-// PROVEN: c6683b2a IDENTICAL/NONE
+// PROVEN: c6683b2a IDENTICAL/IDENTICAL
 // OFFSET: 0x00464CF0/0x140078430
 const char* CGTooltip::GetItemQualityColorString(uint32_t quality) {
     if (quality >= sizeof(s_itemQualityColorStrings) / sizeof(s_itemQualityColorStrings[0])) {
@@ -551,6 +554,7 @@ const char* CGTooltip::GetItemQualityColorString(uint32_t quality) {
     return s_itemQualityColorStrings[quality];
 }
 
+// PROVEN: 1684479b IDENTICAL/IDENTICAL
 // OFFSET: 0x00464D10/0x140078450
 const char* CGTooltip::GetTalentHyperlinkString(const TalentRec* talent, const char* name, int32_t rank) {
     if (!talent || !name) {
@@ -568,7 +572,7 @@ int32_t FormatString(const char* token, int32_t count, FRAMESCRIPT_GENDER gender
     return *text != '\0';
 }
 
-// PROVEN: e6f9b035 IDENTICAL/NONE
+// PROVEN: e6f9b035 IDENTICAL/IDENTICAL
 // OFFSET: 0x00464ED0/0x1400784F0
 static int32_t QSortFrameStack(const void* a, const void* b) {
     const FrameStackInfo* infoA = static_cast<const FrameStackInfo*>(a);
@@ -593,6 +597,7 @@ static int32_t QSortFrameStack(const void* a, const void* b) {
     return SStrCmpI(infoA->m_name, infoB->m_name, STORM_MAX_STR);
 }
 
+// PROVEN: e9e5a5e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00464F20/0x140078530
 static int32_t SortItemSetBonuses(const void* a, const void* b) {
     uint8_t left = *static_cast<const uint8_t*>(a);
@@ -611,7 +616,7 @@ static int32_t SortItemSetBonuses(const void* a, const void* b) {
     return left < right ? -1 : 1;
 }
 
-// OFFSET: 0x00464F70
+// OFFSET: 0x00464F70/0x140078570
 int32_t CGTooltip::GetScalingStatItemBudget(const ItemRecSparse* item, const ScalingStatValuesRec* values) {
     if (!item || !values || !item->m_scalingStatDistribution) {
         return 0;
@@ -656,6 +661,7 @@ int32_t CGTooltip::GetScalingStatItemBudget(const ItemRecSparse* item, const Sca
     }
 }
 
+// PROVEN: 3982587f IDENTICAL/NONE
 // OFFSET: 0x00465000
 int32_t CGTooltip::GetScalingStatArmor(const ItemRecSparse* item, const ScalingStatValuesRec* values) {
     if (!item) {
@@ -708,6 +714,7 @@ int32_t CGTooltip::GetScalingStatArmor(const ItemRecSparse* item, const ScalingS
     }
 }
 
+// PROVEN: ae95df4c IDENTICAL/NONE
 // OFFSET: 0x00465220
 bool CGTooltip::DurationIsInt(float time, float fraction) {
     float value;
@@ -725,7 +732,7 @@ bool CGTooltip::DurationIsInt(float time, float fraction) {
     return fraction > value - floor(value);
 }
 
-// OFFSET: 0x004652A0
+// OFFSET: 0x004652A0/0x140078970
 void CGTooltip::GetDurationString(char* buffer, uint32_t size, uint64_t time, const char* token, const char* prefix, int32_t roundUp, bool seconds) {
     if (!buffer || !token) {
         return;
@@ -776,7 +783,7 @@ void CGTooltip::GetDurationString(char* buffer, uint32_t size, uint64_t time, co
     }
 }
 
-// OFFSET: 0x004654B0
+// OFFSET: 0x004654B0/0x140078B30
 void CGTooltip::GetFloatDurationString(char* buffer, uint32_t size, float time, const char* token, const char* prefix) {
     if (!buffer || !token) {
         return;
@@ -784,7 +791,7 @@ void CGTooltip::GetFloatDurationString(char* buffer, uint32_t size, float time, 
 
     // STATIC: 0x00D3ACA8
     static const float s_hour = 3600000.0f;
-    // STATIC: 0x00D3ACA4
+    // STATIC: 0x00D3ACA4/0x140BF6024
     static const float s_day = s_hour * 24.0f;
 
     *buffer = '\0';
@@ -819,7 +826,8 @@ void CGTooltip::GetFloatDurationString(char* buffer, uint32_t size, float time, 
     }
 }
 
-// OFFSET: 0x00465620
+// PROVEN: f039f99e IDENTICAL/DIFFERENT
+// OFFSET: 0x00465620/0x140078C90
 void CGTooltip::ResetPosition(int32_t force) {
     if (!this->m_owner || this->m_anchorType == ANCHOR_PRESERVE) {
         return;
@@ -867,7 +875,7 @@ void CGTooltip::ResetPosition(int32_t force) {
     }
 }
 
-// PROVEN: 4a3f42d4 IDENTICAL/NONE
+// PROVEN: 4a3f42d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x004658B0/0x140078E80
 void CGTooltip::FadeOut() {
     if (this->m_anchorType == ANCHOR_CURSOR || this->m_anchorType == ANCHOR_CURSOR_RIGHT) {
@@ -918,7 +926,7 @@ void CGTooltip::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// PROVEN: a78fb364 IDENTICAL/NONE
+// PROVEN: a78fb364 IDENTICAL/DIFFERENT
 // OFFSET: 0x00465B30/0x140079140
 void __stdcall CGTooltip::FormatStringForXML(const char* text, char* buffer) {
     int32_t length = strlen(text);
@@ -955,11 +963,13 @@ void __stdcall CGTooltip::FormatStringForXML(const char* text, char* buffer) {
     buffer[out] = '\0';
 }
 
-// OFFSET: 0x0044BC70
+// PROVEN: 2a8236c5 DIFFERENT/IDENTICAL
+// OFFSET: 0x0044BC70/0x140079240
 CGItemStatsSummary::CGItemStatsSummary() {
     this->Clear();
 }
 
+// PROVEN: 6d2386f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00465BD0/0x140079240
 void CGItemStatsSummary::Clear() {
     memset(this->m_stats, 0, sizeof(this->m_stats));
@@ -967,6 +977,7 @@ void CGItemStatsSummary::Clear() {
     this->m_flags = 0;
 }
 
+// PROVEN: 6bc7b7cc IDENTICAL/NONE
 // OFFSET: 0x00465C00
 void CGItemStatsSummary::AddStatMod(int32_t stat, int32_t amount) {
     if (stat == 50) {
@@ -984,7 +995,7 @@ void CGItemStatsSummary::AddStatMod(int32_t stat, int32_t amount) {
     }
 }
 
-// OFFSET: 0x00465C40
+// OFFSET: 0x00465C40/0x14007E810
 void CGItemStatsSummary::GetSocketFlags(const ItemRecSparse* item) {
     this->m_flags |= 0x10;
 
@@ -1027,7 +1038,8 @@ void CGItemStatsSummary::MakeStatNamesPretty(int32_t stat, const int32_t* group,
     }
 }
 
-// OFFSET: 0x00465D50
+// PROVEN: a59141c9 IDENTICAL/DIFFERENT
+// OFFSET: 0x00465D50/0x140079270
 void CGItemStatsSummary::CleanStatNames() {
     if (this->m_stats[8] == this->m_stats[10]) {
         this->m_stats[10] = 0;
@@ -1041,7 +1053,7 @@ void CGItemStatsSummary::CleanStatNames() {
     this->MakeStatNamesPretty(7, s_attackPowerGroup, 2, 1);
 }
 
-// OFFSET: 0x00466060
+// OFFSET: 0x00466060/0x140079740
 void CGTooltip::AddMoney(int32_t money, int32_t maxMoney) {
     if (!this->HasScript(this->m_onTooltipAddMoney)) {
         return;
@@ -1059,6 +1071,7 @@ void CGTooltip::AddMoney(int32_t money, int32_t maxMoney) {
     this->RunScript(this->m_onTooltipAddMoney, 2, NULL);
 }
 
+// PROVEN: 0ab14904 IDENTICAL/IDENTICAL
 // OFFSET: 0x004660F0/0x1400797F0
 void CGTooltip::RunOnTooltipSetUnit() {
     if (this->HasScript(this->m_onTooltipSetUnit)) {
@@ -1066,7 +1079,7 @@ void CGTooltip::RunOnTooltipSetUnit() {
     }
 }
 
-// PROVEN: 3696c42e IDENTICAL/NONE
+// PROVEN: 3696c42e IDENTICAL/IDENTICAL
 // OFFSET: 0x00466200/0x1400798A0
 static const char* GetColorblindSuffix(int32_t index) {
     CVar* colorblindMode = CVar::Lookup("colorblindMode");
@@ -1108,6 +1121,7 @@ static const CImVector* GetSkillColor(int32_t required, int32_t current, const c
     return color;
 }
 
+// PROVEN: c6d4a63c IDENTICAL/DIFFERENT
 // OFFSET: 0x004662C0/0x1400799B0
 static int32_t HealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1121,6 +1135,7 @@ static int32_t HealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t 
     return 1;
 }
 
+// PROVEN: 0de0d880 IDENTICAL/IDENTICAL
 // OFFSET: 0x00466330/0x140079A30
 static int32_t ObjHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
@@ -1134,6 +1149,7 @@ static int32_t ObjHealthUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     return 1;
 }
 
+// PROVEN: 35725d33 IDENTICAL/DIFFERENT
 // OFFSET: 0x00466410/0x140079B50
 const char* CGTooltip::GetSpellHyperlinkString(int32_t spellId) {
     SpellRec* spell = g_spellDB.GetRecord(spellId);
@@ -1146,6 +1162,7 @@ const char* CGTooltip::GetSpellHyperlinkString(int32_t spellId) {
     return s_itemLink;
 }
 
+// PROVEN: c090e178 IDENTICAL/DIFFERENT
 // OFFSET: 0x00466480/0x140079BF0
 const char* CGTooltip::GetAchievementHyperlink(int32_t achievementId, WOWGUID guid, bool completed, WowTime time, uint32_t criteria1, uint32_t criteria2, uint32_t criteria3, uint32_t criteria4) {
     AchievementRec* achievement = g_achievementDB.GetRecord(achievementId);
@@ -1160,6 +1177,7 @@ const char* CGTooltip::GetAchievementHyperlink(int32_t achievementId, WOWGUID gu
     return s_itemLink;
 }
 
+// PROVEN: 597c0f55 IDENTICAL/DIFFERENT
 // OFFSET: 0x00466540/0x140079D50
 const char* CGTooltip::GetGlyphHyperlinkString(int32_t glyphId) {
     GlyphPropertiesRec* glyph = g_glyphPropertiesDB.GetRecord(glyphId);
@@ -1662,6 +1680,7 @@ void CGTooltip::CalculateSize() {
     this->Resize(0);
 }
 
+// PROVEN: 72a3e018 IDENTICAL/IDENTICAL
 // OFFSET: 0x00467BD0/0x14007BA90
 void CGTooltip::ShowThis(bool loadPending) {
     if (!this->m_owner || !this->m_numLines) {
@@ -1674,7 +1693,7 @@ void CGTooltip::ShowThis(bool loadPending) {
     CSimpleFrame::ShowThis(false);
 }
 
-// OFFSET: 0x004688B0
+// OFFSET: 0x004688B0/0x14007C9E0
 void CGItemStatsSummary::ParseSpellRec(const SpellRec* spell) {
     if (!(spell->m_attributes & 0x40)) {
         return;
@@ -1746,7 +1765,8 @@ void CGItemStatsSummary::ParseSpellRec(const SpellRec* spell) {
     }
 }
 
-// OFFSET: 0x00468B30
+// PROVEN: 900272c3 IDENTICAL/UNPROVEN
+// OFFSET: 0x00468B30/0x14007CC60
 void CGItemStatsSummary::ScanEnchantSpells(const ItemRecSparse* item) {
     this->m_flags |= 0x1;
 
@@ -1763,6 +1783,7 @@ void CGItemStatsSummary::ScanEnchantSpells(const ItemRecSparse* item) {
     }
 }
 
+// PROVEN: 45e7083d IDENTICAL/IDENTICAL
 // OFFSET: 0x00468BA0/0x14007CCF0
 CGItemStatsSummary CGItemStatsSummary::operator-(const CGItemStatsSummary& other) const {
     CGItemStatsSummary result;
@@ -1907,6 +1928,7 @@ bool CGTooltip::GetScalingStatWeaponDPS(const ItemRecSparse* item, const Scaling
     return true;
 }
 
+// PROVEN: dfd70634 DIFFERENT/IDENTICAL
 // OFFSET: 0x00469040/0x14007D1E0
 void TooltipObjectCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -1922,6 +1944,7 @@ void TooltipObjectCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
+// PROVEN: 757ad128 DIFFERENT/IDENTICAL
 // OFFSET: 0x00469080/0x14007D220
 void TooltipCorpseCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -1937,6 +1960,7 @@ void TooltipCorpseCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
+// PROVEN: 0ecdc9b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004690C0/0x14007D260
 void TooltipSpellCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -1971,6 +1995,7 @@ void TooltipUnitNameCallback(int32_t id, const WOWGUID& guid, void* param, bool 
     }
 }
 
+// PROVEN: bf455b3e IDENTICAL/IDENTICAL
 // OFFSET: 0x00469180/0x14007D360
 void TooltipQuestCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -1999,7 +2024,7 @@ void TooltipAchievementCallback(int32_t id, const WOWGUID& guid, void* param, bo
     }
 }
 
-// OFFSET: 0x00469240
+// OFFSET: 0x00469240/0x14007D470
 CGTooltip::CGTooltip(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_itemLinkInfo.Clear();
     this->m_owner = NULL;
@@ -2035,27 +2060,31 @@ CGTooltip::CGTooltip(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_minimumWidthForce = 0;
 }
 
-// OFFSET: 0x004693E0
+// PROVEN: 579c6156 IDENTICAL/IDENTICAL
+// OFFSET: 0x004693E0/0x14007D610
 const char* CGTooltip::GetObjectTypeName() {
     return CGTooltip::s_objectTypeName;
 }
 
-// PROVEN: f4d4043b IDENTICAL/NONE
+// PROVEN: f4d4043b IDENTICAL/IDENTICAL
 // OFFSET: 0x004693F0/0x14007D620
 int32_t CGTooltip::GetScriptMetaTable() {
     return CGTooltip::s_metatable;
 }
 
+// PROVEN: d52a2a38 IDENTICAL/IDENTICAL
 // OFFSET: 0x00469570/0x14007D770
 bool CGTooltip::IsA(int32_t type) {
     return type == CGTooltip::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: 0x004695B0
+// PROVEN: de22a4a9 IDENTICAL/DIFFERENT
+// OFFSET: 0x004695B0/0x14007D7A0
 bool CGTooltip::IsA(const char* typeName) {
     return !_stricmp(typeName, CGTooltip::s_objectTypeName) || CSimpleFrame::IsA(typeName);
 }
 
+// PROVEN: 170d3a87 UNPROVEN/IDENTICAL
 // OFFSET: 0x004695F0/0x14007D810
 CGTooltip::~CGTooltip() {
     if (this->m_healthGuid && ClntObjMgrGetCurrent()) {
@@ -2087,6 +2116,7 @@ const char* CGTooltip::GetItemHyperlinkString(int32_t itemId, uint32_t quality, 
     return s_itemLink;
 }
 
+// PROVEN: 81112811 IDENTICAL/IDENTICAL
 // OFFSET: 0x004697B0/0x14007DA70
 const char* CGTooltip::GetItemHyperlinkString(int32_t itemId, uint32_t quality, int32_t enchant, int32_t randomPropertiesId, int32_t seed, int32_t reforge) {
     int32_t gems[3] = { 0, 0, 0 };
@@ -2136,7 +2166,7 @@ const char* CGTooltip::GetQuestHyperlinkString(int32_t questId, int32_t level) {
     return s_itemLink;
 }
 
-// OFFSET: 0x00469900
+// OFFSET: 0x00469900/0x14007DC20
 int32_t CGTooltip::GetDislayedScalingItemLevel(const ItemRecSparse* item, const TooltipExtendedItemInfo* info, WOWGUID target, int32_t minimumLevel) {
     int32_t level = 0;
     ScalingStatDistributionRec* distribution = g_scalingStatDistributionDB.GetRecord(item->m_scalingStatDistribution);
@@ -2171,6 +2201,7 @@ int32_t CGTooltip::GetDislayedScalingItemLevel(const ItemRecSparse* item, const 
     return level > 1 ? level : 1;
 }
 
+// PROVEN: 85e743a0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00469A10/0x14007DD60
 void CGTooltip::SetOwner(CSimpleFrame* owner, TOOLTIP_ANCHORPOINT anchorType, float offsetX, float offsetY) {
     this->ClearTooltip();
@@ -2193,6 +2224,7 @@ void CGTooltip::SetOwner(CSimpleFrame* owner, TOOLTIP_ANCHORPOINT anchorType, fl
     this->ResetPosition(1);
 }
 
+// PROVEN: 86ca6c55 DIFFERENT/IDENTICAL
 // OFFSET: 0x00469AC0/0x14007DE40
 void CGTooltip::AppendText(const char* text) {
     if (!this->m_numLines) {
@@ -2211,7 +2243,7 @@ void CGTooltip::AppendText(const char* text) {
     this->CalculateSize();
 }
 
-// PROVEN: 6868dd86 IDENTICAL/NONE
+// PROVEN: 6868dd86 IDENTICAL/IDENTICAL
 // OFFSET: 0x00469B30/0x14007DEC0
 void CGTooltip::HideThis() {
     this->SetOwner(NULL, ANCHOR_LEFT, 0.0f, 0.0f);
@@ -2244,7 +2276,7 @@ void CGItemStatsSummary::AddEnchantEffect(int32_t type, int32_t arg, int32_t amo
     }
 }
 
-// OFFSET: 0x0046A050
+// OFFSET: 0x0046A050/0x14007E420
 void CGItemStatsSummary::ParseWeaponDPS(const ItemRecSparse* item) {
     if (!item) {
         return;
@@ -2277,7 +2309,7 @@ void CGItemStatsSummary::ParseWeaponDPS(const ItemRecSparse* item) {
     this->m_dps = average * 1000.0f / static_cast<float>(item->m_delay) + this->m_dps;
 }
 
-// OFFSET: 0x0046A200
+// OFFSET: 0x0046A200/0x14007E610
 void CGItemStatsSummary::ParseResistances(const ItemRecSparse* item) {
     if (!item) {
         return;
@@ -2303,7 +2335,7 @@ void CGItemStatsSummary::ParseResistances(const ItemRecSparse* item) {
     }
 }
 
-// OFFSET: 0x0046A2E0
+// OFFSET: 0x0046A2E0/0x14007E720
 void CGItemStatsSummary::ParseBasicStats(const ItemRecSparse* item) {
     this->m_flags |= 0x20;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2383,6 +2415,7 @@ void CGItemStatsSummary::FillOutScalingItem(const ItemRecSparse* item, int32_t l
     }
 }
 
+// PROVEN: 2e4d8898 IDENTICAL/NONE
 // OFFSET: 0x0046A840
 void CGItemStatsSummary::AddEnchantment(const SpellItemEnchantmentRec* enchant) {
     for (uint32_t i = 0; i < 3; i++) {
@@ -2390,7 +2423,8 @@ void CGItemStatsSummary::AddEnchantment(const SpellItemEnchantmentRec* enchant) 
     }
 }
 
-// OFFSET: 0x0046A880
+// PROVEN: 02dc48a5 IDENTICAL/NONE
+// OFFSET: 0x0046A880/0x14007EEC0
 void CGItemStatsSummary::AddEnchantment(const SpellItemEnchantmentRec* enchant, int32_t amount) {
     for (uint32_t i = 0; i < 3; i++) {
         this->AddEnchantEffect(enchant->m_effect[i], enchant->m_effectArg[i], amount);
@@ -2446,7 +2480,7 @@ void CGTooltip::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_statusBar = static_cast<CSimpleStatusBar*>(CScriptObject::GetScriptObjectByName(buffer, CSimpleStatusBar::GetObjectType()));
 }
 
-// OFFSET: 0x0046ABD0
+// OFFSET: 0x0046ABD0/0x14007F300
 void CGTooltip::AddFontStrings(CSimpleFontString* left, CSimpleFontString* right) {
     this->m_maxLines++;
     this->m_leftStrings.SetCount(this->m_maxLines);
@@ -2514,14 +2548,14 @@ void CGTooltip::AddLine(const char* left, const char* right, const CImVector& le
     this->m_lineWrap.m_data[this->m_numLines++] = lineWrap;
 }
 
-// PROVEN: 94bb7ffa IDENTICAL/NONE
+// PROVEN: 94bb7ffa IDENTICAL/IDENTICAL
 // OFFSET: 0x0046AFC0/0x14007F8E0
 void CGTooltip::AddLine(const char* left, const char* right, int32_t wrap) {
     const CImVector& titleColor = *reinterpret_cast<const CImVector*>(&s_tooltipTitleColor);
     this->AddLine(left, right, titleColor, titleColor, wrap);
 }
 
-// OFFSET: 0x0046B4C0
+// OFFSET: 0x0046B4C0/0x14007FFE0
 void CGItemStatsSummary::FillOutRandomProperties(int32_t randomPropertiesId, int32_t seed) {
     this->m_flags |= 0x2;
 
@@ -3415,6 +3449,7 @@ void CGTooltip::SetFrameStack(bool showHidden) {
     s_frameStack.m_count = 0;
 }
 
+// PROVEN: aff3cc92 DIFFERENT/IDENTICAL
 // OFFSET: 0x0046D870/0x1400831C0
 int32_t CGTooltip::SetItemNoStats() {
     this->AddLine(FrameScript_GetText("RETRIEVING_ITEM_INFO", -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
@@ -3669,6 +3704,7 @@ int32_t CGTooltip::SetItemDelta(const CGItemStatsSummary& summary, int32_t appen
     return 1;
 }
 
+// PROVEN: 1df92522 IDENTICAL/NONE
 // OFFSET: 0x0046EBE0
 int32_t CGItemStatsSummary::Create(const ItemRecSparse* item, const TooltipExtendedItemInfo* info, int32_t level) {
     this->Clear();
@@ -5048,7 +5084,7 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
     return result;
 }
 
-// OFFSET: 0x00473A40
+// OFFSET: 0x00473A40/0x14008BFA0
 int32_t CGItemStatsSummary::Create(const CGItem_C* item, int32_t level) {
     this->Clear();
     WOWGUID requester = WOWGUID::Make(0);
@@ -5076,6 +5112,7 @@ int32_t CGItemStatsSummary::Create(const CGItem_C* item, int32_t level) {
     return 1;
 }
 
+// PROVEN: 066e3bfc IDENTICAL/DIFFERENT
 // OFFSET: 0x00473B20/0x14008C080
 int32_t CGItemStatsSummary::Create(const char* link) {
     this->Clear();
@@ -5172,6 +5209,7 @@ int32_t CGItemStatsSummary::Create(const char* link) {
     return 1;
 }
 
+// PROVEN: a7675048 IDENTICAL/DIFFERENT
 // OFFSET: 0x00473CF0/0x14008C290
 void TooltipItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -8293,7 +8331,7 @@ int32_t CGTooltip::SetMacro(uint32_t macroId) {
     return 0;
 }
 
-// OFFSET: 0x00480B40
+// OFFSET: 0x00480B40/0x14009F180
 int32_t CGItemStatsSummary::GetItemComparison(CGTooltip* first, CGTooltip* second, CGItemStatsSummary& result) {
     struct ComparisonEntry {
         CGItemStatsSummary m_summary;
@@ -8366,7 +8404,7 @@ int32_t CGItemStatsSummary::GetItemComparison(CGTooltip* first, CGTooltip* secon
     return 1;
 }
 
-// OFFSET: 0x00481010
+// OFFSET: 0x00481010/0x14009FA30
 int32_t SetCompareItem(CGTooltip* tooltip, int32_t itemId, int32_t offset, int32_t shift, CGTooltip* compare) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     WOWGUID none = WOWGUID::Make(0);
@@ -8470,19 +8508,22 @@ void CGTooltip::operator delete(void* ptr) {
     CGTooltip::s_tooltipHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x008C65E0
+// PROVEN: 98b4a846 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C65E0/0x140636630
 CSimpleFrame* CGTooltip::Create(CSimpleFrame* parent) {
     void* data = CGTooltip::s_tooltipHeap.GetData(0, typeid(CGTooltip).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGTooltip(parent) : NULL;
 }
 
-// OFFSET: 0x008CC0B0
+// PROVEN: d69d13f8 IDENTICAL/IDENTICAL
+// OFFSET: 0x008CC0B0/0x14063CEF0
 void CGTooltip::SetDefaultAnchor() {
     if (this->HasScript(this->m_onTooltipSetDefaultAnchor)) {
         this->RunScript(this->m_onTooltipSetDefaultAnchor, 0, NULL);
     }
 }
 
+// PROVEN: 69dd2953 IDENTICAL/UNPROVEN
 // OFFSET: 0x004663A0/0x140079AB0
 const char* CGTooltip::GetCurrencyHyperlinkString(int32_t currencyId) {
     const char* reset = *s_currencyLinkColor ? "|r" : "";

@@ -164,7 +164,7 @@ bool DecompressOgg(const void* data, uint32_t size, OggDecompressBuffer* buffer)
     return false;
 }
 
-// PROVEN: fdd5119e IDENTICAL/UNPROVEN
+// PROVEN: fdd5119e IDENTICAL/IDENTICAL
 // OFFSET: 0x007FEAF0/0x140511E60
 bool ShutdownOggDecompression() {
     return OggToWavConversion::ShutdownCache();

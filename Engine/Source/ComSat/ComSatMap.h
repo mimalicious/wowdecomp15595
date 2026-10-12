@@ -36,8 +36,8 @@ class Map {
     };
 
     /* 0000 */ Entry* m_entries;
-    /* 0004 */ uint32_t m_used;
-    /* 0008 */ uint32_t m_capacity;
+    /* 0004 */ size_t m_used;
+    /* 0008 */ size_t m_capacity;
     /* 000C */ Allocator* m_allocator;
 
     Map(Allocator& allocator);
@@ -165,7 +165,7 @@ bool ComSat::Map<K, V>::Get(const ComSat::MapKey<K>& key, V& value) const {
 template <class K, class V>
 bool ComSat::Map<K, V>::Insert(const ComSat::MapKey<K>& key, const V& value) {
     if (this->m_used >= (3 * this->m_capacity) >> 2) {
-        this->Resize(std::max(this->m_capacity * 2, 8u));
+        this->Resize(std::max(this->m_capacity * 2, static_cast<size_t>(8)));
     }
     uint32_t index;
     if (this->Find(key, index)) {
@@ -209,7 +209,7 @@ uint32_t ComSat::Map<K, V>::Reinsert(const Entry* entries, uint32_t count) {
     return inserted;
 }
 
-// OFFSET: [0x00A36D00<unsigned __int64, unsigned char>, 0x00A36DF0<unsigned __int64, float>, 0x00A36EE0<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>, 0x00A3A6B0/0x1407E6E70<unsigned char, ComSat::Sound::Manager::LocalPlayer*>]
+// OFFSET: [0x00A36D00/0x1407E2000<unsigned __int64, unsigned char>, 0x00A36DF0<unsigned __int64, float>, 0x00A36EE0/0x1407E23C0<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>, 0x00A3A6B0/0x1407E6E70<unsigned char, ComSat::Sound::Manager::LocalPlayer*>]
 template <class K, class V>
 bool ComSat::Map<K, V>::Remove(const ComSat::MapKey<K>& key, V& value) {
     uint32_t index;
@@ -257,7 +257,7 @@ bool ComSat::Map<K, V>::Shrink() {
     if (this->m_used >= (3 * this->m_capacity) >> 3 || this->m_capacity <= 8) {
         return false;
     }
-    this->Resize(std::max(this->m_capacity >> 1, 8u));
+    this->Resize(std::max(this->m_capacity >> 1, static_cast<size_t>(8)));
     return true;
 }
 
@@ -265,7 +265,7 @@ bool ComSat::Map<K, V>::Shrink() {
 template <class K, class V>
 V& ComSat::Map<K, V>::operator[](const ComSat::MapKey<K>& key) {
     if (this->m_used >= (3 * this->m_capacity) >> 2) {
-        this->Resize(std::max(this->m_capacity * 2, 8u));
+        this->Resize(std::max(this->m_capacity * 2, static_cast<size_t>(8)));
     }
     uint32_t index;
     if (!this->Find(key, index)) {

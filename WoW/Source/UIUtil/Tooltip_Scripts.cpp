@@ -79,6 +79,7 @@ static int32_t ReadTexCoordArgs(lua_State* L, int32_t index, CAaRect& coords) {
     return index + 4;
 }
 
+// PROVEN: 376015d9 DIFFERENT/IDENTICAL
 // OFFSET: 0x00467C20/0x14007BAF0
 static int32_t Script_SetMinimumWidth(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -95,6 +96,7 @@ static int32_t Script_SetMinimumWidth(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 2d5e8b60 DIFFERENT/IDENTICAL
 // OFFSET: 0x00467CB0/0x14007BBB0
 static int32_t Script_GetMinimumWidth(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -109,6 +111,7 @@ static int32_t Script_GetMinimumWidth(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 10b1afe5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00467D30/0x14007BC40
 static int32_t Script_SetPadding(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -117,6 +120,7 @@ static int32_t Script_SetPadding(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 61c271e2 DIFFERENT/IDENTICAL
 // OFFSET: 0x00467D90/0x14007BCC0
 static int32_t Script_GetPadding(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -177,6 +181,7 @@ static int32_t Script_GetOwner(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a92709a7 DIFFERENT/IDENTICAL
 // OFFSET: 0x00467F90/0x14007BF40
 static int32_t Script_SetAnchorType(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -243,6 +248,7 @@ static int32_t Script_SetAnchorType(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 79676a2e IDENTICAL/DIFFERENT
 // OFFSET: 0x00468200/0x14007C200
 static int32_t Script_GetAnchorType(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -287,6 +293,7 @@ static int32_t Script_GetAnchorType(lua_State* L) {
     }
 }
 
+// PROVEN: 2466e327 DIFFERENT/IDENTICAL
 // OFFSET: 0x00468380/0x14007C3C0
 static int32_t Script_ClearLines(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -338,6 +345,7 @@ static int32_t Script_FadeOut(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 39ffa141 DIFFERENT/IDENTICAL
 // OFFSET: 0x00468580/0x14007C630
 static int32_t Script_NumLines(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -345,6 +353,7 @@ static int32_t Script_NumLines(lua_State* L) {
     return 1;
 }
 
+// PROVEN: fcbdfdfd IDENTICAL/IDENTICAL
 // OFFSET: 0x004685E0/0x14007C680
 static int32_t Script_IsUnit(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -387,6 +396,7 @@ static int32_t Script_GetUnit(lua_State* L) {
     return 0;
 }
 
+// PROVEN: ed8cdb41 IDENTICAL/DIFFERENT
 // OFFSET: 0x00468760/0x14007C830
 static int32_t Script_GetSpell(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -409,11 +419,13 @@ static int32_t Script_GetSpell(lua_State* L) {
     return count;
 }
 
+// PROVEN: 2eeacbfb DIFFERENT/IDENTICAL
 // OFFSET: 0x00468860/0x14007C9A0
 static int32_t FindItemByGUID(const CGItem_C* item, void* param) {
     return item->m_obj->m_guid == *static_cast<WOWGUID*>(param);
 }
 
+// PROVEN: f499be43 IDENTICAL/IDENTICAL
 // OFFSET: 0x00468890/0x14007C9B0
 void CGTooltip::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -569,6 +581,7 @@ static int32_t Script_AddFontStrings(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 5c3f2c1f DIFFERENT/IDENTICAL
 // OFFSET: 0x0046B140/0x14007FA70
 static int32_t Script_AddLine(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -588,6 +601,7 @@ static int32_t Script_AddLine(lua_State* L) {
     return 0;
 }
 
+// PROVEN: feb5d4bb DIFFERENT/IDENTICAL
 // OFFSET: 0x0046B1E0/0x14007FB40
 static int32_t Script_AddDoubleLine(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -641,7 +655,7 @@ static int32_t Script_SetText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0046B3B0
+// OFFSET: 0x0046B3B0/0x14007FD70
 static int32_t Script_SetTotem(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
 
@@ -783,6 +797,7 @@ static int32_t Script_SetQuestLogCurrency(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0573de2f DIFFERENT/IDENTICAL
 // OFFSET: 0x0046E330/0x140084010
 static int32_t Script_SetUnitAura(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -797,6 +812,7 @@ static int32_t Script_SetUnitAura(lua_State* L) {
     return SetTooltipUnitAura(tooltip, &info);
 }
 
+// PROVEN: 9f621bfb DIFFERENT/IDENTICAL
 // OFFSET: 0x0046E3B0/0x1400840B0
 static int32_t Script_SetUnitBuff(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -812,6 +828,7 @@ static int32_t Script_SetUnitBuff(lua_State* L) {
     return SetTooltipUnitAura(tooltip, &info);
 }
 
+// PROVEN: 88055507 DIFFERENT/IDENTICAL
 // OFFSET: 0x0046E440/0x140084150
 static int32_t Script_SetUnitDebuff(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -870,6 +887,7 @@ static int32_t Script_SetBackpackToken(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0f2ea14d IDENTICAL/IDENTICAL
 // OFFSET: 0x0046E690/0x1400843F0
 static int32_t Script_SetEquipmentSet(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -887,6 +905,7 @@ static int32_t Script_SetEquipmentSet(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e1268286 DIFFERENT/IDENTICAL
 // OFFSET: 0x0046E720/0x1400844A0
 static int32_t Script_SetFrameStack(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -1133,6 +1152,7 @@ static int32_t Script_SetUnit(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 4fdfa24d DIFFERENT/IDENTICAL
 // OFFSET: 0x00473790/0x14008BBD0
 static int32_t Script_SetQuestRewardSpell(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -3110,6 +3130,7 @@ static int32_t Script_SetHyperlinkCompareItem(lua_State* L) {
     return 1;
 }
 
+// PROVEN: c7b05169 IDENTICAL/IDENTICAL
 // OFFSET: 0x00465B00/0x140079110
 void CGTooltip::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -3117,7 +3138,7 @@ void CGTooltip::DestroyScriptMetaTable() {
     CGTooltip::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00C9A008
+// STATIC: 0x00C9A008/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "AddFontStrings", &Script_AddFontStrings },
     { "SetMinimumWidth", &Script_SetMinimumWidth },
@@ -3205,6 +3226,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetVoidWithdrawalItem", &Script_SetVoidWithdrawalItem },
 };
 
+// PROVEN: 07c48d2a IDENTICAL/IDENTICAL
 // OFFSET: 0x00465AE0/0x1400790E0
 void CGTooltip::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

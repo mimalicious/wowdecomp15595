@@ -125,4 +125,6 @@ struct TEXTURECACHE {
     void WriteGlyphToTexture(CHARCODEDESC* glyph);
 };
 
+#include "Engine/Source/Gxu/GxuFontMiscClasses.inl"
+
 #endif

@@ -172,22 +172,22 @@ static int32_t Script_UpdateScrollChildRect(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 84fc49e4 IDENTICAL/NONE
-// OFFSET: 0x005395F0
+// PROVEN: 84fc49e4 IDENTICAL/IDENTICAL
+// OFFSET: 0x005395F0/0x14018CB30
 void CSimpleScrollFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleScrollFrame::s_metatable);
     CSimpleScrollFrame::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 3b4eed99 IDENTICAL/NONE
-// OFFSET: 0x00539BF0
+// PROVEN: 3b4eed99 IDENTICAL/IDENTICAL
+// OFFSET: 0x00539BF0/0x14018D290
 void CSimpleScrollFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleScrollFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleScrollFrame::RegisterScriptMethods);
 }
 
-// STATIC: 0x00CA4428
+// STATIC: 0x00CA4428/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetScrollChild", &Script_SetScrollChild },
     { "GetScrollChild", &Script_GetScrollChild },

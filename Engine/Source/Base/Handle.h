@@ -21,4 +21,6 @@ void HandleDestroy();
 HOBJECT HandleDuplicate(HOBJECT handle);
 void HandleInitialize();
 
+#include "Engine/Source/Base/Handle.inl"
+
 #endif

@@ -9,59 +9,59 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00CA84F4
+// STATIC: 0x00CA84F4/0x140B48508
 static float s_lodDistModifier = 1.0f;
 
-// STATIC: 0x00CA84F8
+// STATIC: 0x00CA84F8/0x140B4850C
 static int32_t s_lodMode = 1;
 
-// STATIC: 0x00DD8AFC
+// STATIC: 0x00DD8AFC/0x140CBF310
 static GxuDebugTextObject* s_textObjectFreeList;
 
-// STATIC: 0x00DD8B00
+// STATIC: 0x00DD8B00/0x140CBF318
 static GxuDebugObjectBlock<GxuDebugTextObject>* s_textObjectBlocks;
 
-// STATIC: 0x00DD8B04
+// STATIC: 0x00DD8B04/0x140CBF320
 static bool s_textDrawerInitialized;
 
-// STATIC: 0x00DD8B05
+// STATIC: 0x00DD8B05/0x140CBF321
 static bool s_text3DDrawerInitialized;
 
-// STATIC: 0x00DD8B08
+// STATIC: 0x00DD8B08/0x140CBF328
 static GxuDebugText3DObject* s_text3DObjectFreeList;
 
-// STATIC: 0x00DD8B0C
+// STATIC: 0x00DD8B0C/0x140CBF330
 static GxuDebugObjectBlock<GxuDebugText3DObject>* s_text3DObjectBlocks;
 
-// STATIC: 0x00DD9E7C
+// STATIC: 0x00DD9E7C/0x140CC0758
 static CGxShader* s_textureVertexShader;
 
-// STATIC: 0x00DD9E80
+// STATIC: 0x00DD9E80/0x140CC0760
 static CGxShader* s_texturePixelShader;
 
-// STATIC: 0x00DD9E84
+// STATIC: 0x00DD9E84/0x140CC0768
 static GxuDebugTextureObject* s_textureObjectFreeList;
 
-// STATIC: 0x00DD9E88
+// STATIC: 0x00DD9E88/0x140CC0770
 static GxuDebugObjectBlock<GxuDebugTextureObject>* s_textureObjectBlocks;
 
-// STATIC: 0x00DD9E8C
+// STATIC: 0x00DD9E8C/0x140CC0778
 static bool s_textureDrawerInitialized;
 
-// PROVEN: 1a9e7609 IDENTICAL/NONE
+// PROVEN: 1a9e7609 IDENTICAL/IDENTICAL
 // OFFSET: 0x006120D0/0x14029D070
 float GxuGetLODDistModifier() {
     return s_lodDistModifier;
 }
 
-// PROVEN: 21cdd17a IDENTICAL/NONE
-// OFFSET: 0x006120E0
+// PROVEN: 21cdd17a IDENTICAL/IDENTICAL
+// OFFSET: 0x006120E0/0x14029D080
 int32_t GxuGetLODMode() {
     return s_lodMode;
 }
 
-// PROVEN: 42691cb4 IDENTICAL/NONE
-// OFFSET: 0x006120F0
+// PROVEN: 42691cb4 IDENTICAL/IDENTICAL
+// OFFSET: 0x006120F0/0x14029D090
 void GxuDebugText::Draw(const C3Vector& viewPos) {
     GxuFontRenderBatch(this->m_batch);
 }
@@ -77,18 +77,19 @@ void GxuDebugTextObject::Release() {
     s_textObjectFreeList = this;
 }
 
-// PROVEN: d8afad71 IDENTICAL/NONE
-// OFFSET: 0x00612150
+// PROVEN: d8afad71 IDENTICAL/DIFFERENT
+// OFFSET: 0x00612150/0x14029D100
 bool GxuDebugTextObject::IsAlive() {
     return this->m_time >= 0.0f;
 }
 
+// PROVEN: 0410f556 DIFFERENT/IDENTICAL
 // OFFSET: 0x00612170/0x14029D120
 void GxuDebugTextObject::Update(float elapsed) {
     this->m_time = this->m_time - elapsed;
 }
 
-// OFFSET: 0x00612180
+// OFFSET: 0x00612180/0x14029D130
 void GxuDebugTextObject::Render() {
     if (this->m_time == 0.0f) {
         this->m_time = this->m_time - 0.001;
@@ -101,6 +102,7 @@ void GxuDebugTextObject::Render() {
 GxuDebugText::~GxuDebugText() {
 }
 
+// PROVEN: 90751935 UNPROVEN/IDENTICAL
 // OFFSET: 0x00612250/0x14029D250
 GxuDebugText::GxuDebugText(float x, float y, const char* text, const CImVector& color) {
     this->m_x = x;
@@ -122,7 +124,8 @@ GxuDebugText::GxuDebugText(float x, float y, const char* text, const CImVector& 
 GxuDebugTextObject::~GxuDebugTextObject() {
 }
 
-// OFFSET: 0x00612540
+// PROVEN: 83ebc418 IDENTICAL/IDENTICAL
+// OFFSET: 0x00612540/0x14029D590
 void GxuShutdownDebugTextDrawer() {
     if (!s_textDrawerInitialized) {
         return;
@@ -140,7 +143,8 @@ void GxuShutdownDebugTextDrawer() {
     s_textDrawerInitialized = false;
 }
 
-// OFFSET: 0x006125E0
+// PROVEN: db304a6d IDENTICAL/DIFFERENT
+// OFFSET: 0x006125E0/0x14029D6E0
 void GxuShutdownDebugText3DDrawer() {
     if (!s_text3DDrawerInitialized) {
         return;
@@ -158,7 +162,7 @@ void GxuShutdownDebugText3DDrawer() {
     s_text3DDrawerInitialized = false;
 }
 
-// OFFSET: 0x00612770
+// OFFSET: 0x00612770/0x14029D990
 void GxuShutdownDebugDraw() {
     GxuShutdownDebugTextDrawer();
     GxuShutdownDebugText3DDrawer();
@@ -198,10 +202,6 @@ void GxuDebugDrawText(float x, float y, const char* text, const CImVector& color
 }
 
 // INLINED
-GxuDebugText::GxuDebugText() : m_x(0.0f), m_y(0.0f), m_text(NULL), m_batch(NULL), m_string(NULL) {
-}
-
-// INLINED
 GxuDebugTextObject::GxuDebugTextObject() : m_next(NULL), m_time(0.0f) {
 }
 
@@ -209,7 +209,8 @@ GxuDebugTextObject::GxuDebugTextObject() : m_next(NULL), m_time(0.0f) {
 GxuDebugTextObject::GxuDebugTextObject(float x, float y, const char* text, const CImVector& color, float time) : m_next(NULL), m_text(x, y, text, color), m_time(time) {
 }
 
-// OFFSET: 0x00616E80
+// PROVEN: 74466b26 IDENTICAL/DIFFERENT
+// OFFSET: 0x00616E80/0x1402A3D60
 void GxuShutdownDebugTextureDrawer() {
     if (!s_textureDrawerInitialized) {
         return;

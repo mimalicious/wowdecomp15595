@@ -4,10 +4,10 @@
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/DB/Rec/SoundEntriesAdvancedRec.h"
 
-// STATIC: 0x00D0055C
+// STATIC: 0x00D0055C/0x140BAFF58
 static TSList<SuppressorSound, TSGetLink<SuppressorSound> > s_suppressors;
 
-// PROVEN: 1e007cf1 IDENTICAL/DIFFERENT
+// PROVEN: 1e007cf1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716DA0/0x1403EA240
 int32_t SE3::SuppressorIsPresent() {
     return s_suppressors.Head() != NULL;

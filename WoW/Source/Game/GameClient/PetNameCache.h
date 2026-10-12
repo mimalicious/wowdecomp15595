@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ctime>
 
 class CDataStore;
 
@@ -17,7 +18,7 @@ class PetNameCache {
     /* 0000 */ char m_name[80];
     /* 0050 */ PetNameCache::DeclinedNames* m_declinedNames;
     /* 0054 */ uint32_t m_petNumber;
-    /* 0058 */ uint32_t m_timestamp;
+    /* 0058 */ time_t m_timestamp;
 
     PetNameCache();
     ~PetNameCache();
@@ -25,5 +26,7 @@ class PetNameCache {
     void Pack(CDataStore* msg);
     void Unpack(CDataStore* msg);
 };
+
+#include "WoW/Source/Game/GameClient/PetNameCache.inl"
 
 #endif

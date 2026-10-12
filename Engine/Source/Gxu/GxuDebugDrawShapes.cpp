@@ -38,16 +38,16 @@ static GxuDebugShapeRenderStateBlockNoDepth s_renderStateBlockNoDepth;
 // STATIC: 0x00CA87FC
 static GxuDebugShapeRenderStateBlock s_renderStateBlockWireframe(3);
 
-// STATIC: 0x00DD9EB0
+// STATIC: 0x00DD9EB0/0x140CC07B0
 static GxuDebugShapeObject* s_shapeObjectFreeList;
 
-// STATIC: 0x00DD9EB4
+// STATIC: 0x00DD9EB4/0x140CC07B8
 static GxuDebugObjectBlock<GxuDebugShapeObject>* s_shapeObjectBlocks;
 
-// STATIC: 0x00DD9EB8
+// STATIC: 0x00DD9EB8/0x140CC07C0
 static bool s_shapeDrawerInitialized;
 
-// STATIC: 0x00DD9EBC
+// STATIC: 0x00DD9EBC/0x140CC07C8
 static GxuBufferCache s_bufferCache;
 
 // STATIC: 0x00DD9ED0
@@ -98,65 +98,78 @@ GxuDebugShapeDrawer::GxuDebugShapeDrawer() {
     this->m_factory = &s_nullShapeFactory;
 }
 
-// OFFSET: [0x00847950]
+// PROVEN: ba04d483 IDENTICAL/IDENTICAL
+// OFFSET: [0x00847950/0x1407D7E80]
 void IGxuDebugShapeFactory::SetLOD(float distance) {
 }
 
+// PROVEN: c931a800 IDENTICAL/IDENTICAL
 // OFFSET: [0x00842700/0x1407FDD80]
 uint32_t IGxuDebugShapeFactory::GetIdxOffset() {
     return 0;
 }
 
+// PROVEN: 87aa87c9 IDENTICAL/IDENTICAL
 // OFFSET: [0x00842700/0x1407FDD80]
 uint32_t GxuNullShapeFactory::GetNumVertices() {
     return 0;
 }
 
+// PROVEN: 0fb1d43a IDENTICAL/IDENTICAL
 // OFFSET: [0x00842700/0x1407FDD80]
 uint32_t GxuNullShapeFactory::GetNumIndices() {
     return 0;
 }
 
+// PROVEN: 420b7b76 IDENTICAL/IDENTICAL
 // OFFSET: [0x0076CA20/0x140586E10]
 float GxuNullShapeFactory::GetRadius() {
     return 0.0f;
 }
 
+// PROVEN: 8ff62cae IDENTICAL/IDENTICAL
 // OFFSET: [0x00599E10/0x1402082B0]
 float GxuConeShapeFactory::GetRadius() {
     return 1.0f;
 }
 
+// PROVEN: 25464ff7 IDENTICAL/IDENTICAL
 // OFFSET: [0x00599E10/0x1402082B0]
 float GxuSphereShapeFactory::GetRadius() {
     return 1.0f;
 }
 
+// PROVEN: 1e2d9de9 IDENTICAL/IDENTICAL
 // OFFSET: [0x00599E10/0x1402082B0]
 float GxuDirectionalDiamondShapeFactory::GetRadius() {
     return 1.0f;
 }
 
+// PROVEN: 9c16aabf IDENTICAL/DIFFERENT
 // OFFSET: [0x00B41A50/0x14090FD50]
 uint32_t GxuSphereShapeFactory::GetNumVertices() {
     return this->m_numVertices;
 }
 
+// PROVEN: 82d374ec IDENTICAL/NONE
 // OFFSET: [0x00B2CAC0]
 uint32_t GxuRotationRingShapeFactory::GetNumVertices() {
     return 64;
 }
 
-// OFFSET: [0x007B0AA0]
+// PROVEN: 12781add IDENTICAL/IDENTICAL
+// OFFSET: [0x007B0AA0/0x1402A6B60]
 uint32_t GxuDirectionalDiamondShapeFactory::GetNumIndices() {
     return 24;
 }
 
+// PROVEN: fd6033ac IDENTICAL/NONE
 // OFFSET: 0x00619410
 uint32_t GxuConeShapeFactory::GetNumVertices() {
     return 14;
 }
 
+// PROVEN: 7e90eced IDENTICAL/IDENTICAL
 // OFFSET: 0x00619420/0x1402A6A40
 uint32_t GxuConeShapeFactory::GetNumIndices() {
     return 72;
@@ -195,6 +208,7 @@ void GxuSphereShapeFactory::SetLOD(float distance) {
     this->m_lod = static_cast<uint32_t>(static_cast<int64_t>(lod + lod));
 }
 
+// PROVEN: b4a0f5e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00619540/0x1402A6A50
 uint32_t GxuSphereShapeFactory::GetIdxOffset() {
     return this->m_idxOffset[this->m_lod];
@@ -204,62 +218,73 @@ uint32_t GxuSphereShapeFactory::GetIdxOffset() {
 GxuDirectionalSphereShapeFactory::GxuDirectionalSphereShapeFactory() {
 }
 
+// PROVEN: bb99bc38 IDENTICAL/IDENTICAL
 // OFFSET: 0x006195F0/0x1402A6A60
 uint32_t GxuSphereShapeFactory::GetNumIndices() {
     return this->m_numIndices[this->m_lod];
 }
 
+// PROVEN: fc45fe4f IDENTICAL/NONE
 // OFFSET: 0x00619600
 uint32_t GxuBoxShapeFactory::GetNumVertices() {
     return 8;
 }
 
+// PROVEN: 5c2b6d05 IDENTICAL/NONE
 // OFFSET: 0x00619610
 uint32_t GxuBoxShapeFactory::GetNumIndices() {
     return 36;
 }
 
+// PROVEN: 50c43317 IDENTICAL/NONE
 // OFFSET: [0x00619620]
 float GxuBoxShapeFactory::GetRadius() {
     return 0.5f;
 }
 
+// PROVEN: 0442d269 IDENTICAL/NONE
 // OFFSET: [0x00619620]
 float GxuTriangleShapeFactory::GetRadius() {
     return 0.5f;
 }
 
+// PROVEN: a54969e1 IDENTICAL/IDENTICAL
 // OFFSET: [0x00619630/0x1402A6B50]
 uint32_t GxuTriangleShapeFactory::GetNumVertices() {
     return 6;
 }
 
+// PROVEN: c7c44a0e IDENTICAL/IDENTICAL
 // OFFSET: [0x00619630/0x1402A6B50]
 uint32_t GxuTriangleShapeFactory::GetNumIndices() {
     return 6;
 }
 
+// PROVEN: da777590 IDENTICAL/IDENTICAL
 // OFFSET: [0x00619630/0x1402A6B50]
 uint32_t GxuDirectionalDiamondShapeFactory::GetNumVertices() {
     return 6;
 }
 
+// PROVEN: 9e374b38 IDENTICAL/NONE
 // OFFSET: 0x00619640
 uint32_t GxuRotationRingShapeFactory::GetNumIndices() {
     return 192;
 }
 
+// PROVEN: 7729b090 IDENTICAL/NONE
 // OFFSET: [0x00619650]
 float GxuDirectionalSphereShapeFactory::GetRadius() {
     return 2.0f;
 }
 
+// PROVEN: af3a6571 IDENTICAL/NONE
 // OFFSET: [0x00619650]
 float GxuRotationRingShapeFactory::GetRadius() {
     return 2.0f;
 }
 
-// OFFSET: 0x00619660
+// OFFSET: 0x00619660/0x1402A6B70
 GxuDrawListState* GxuDebugShapeDrawer::GetState() {
     switch (this->m_mode) {
         case 1:
@@ -276,28 +301,32 @@ GxuDrawListState* GxuDebugShapeDrawer::GetState() {
     }
 }
 
+// PROVEN: 30f50541 IDENTICAL/NONE
 // OFFSET: 0x006196A0
-uint32_t GxuDebugShapeDrawer::GetVtxStream() {
+uintptr_t GxuDebugShapeDrawer::GetVtxStream() {
     return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(s_bufferCache.GetBuffer(this->m_vertexBuffer)));
 }
 
+// PROVEN: 04fc4346 IDENTICAL/IDENTICAL
 // OFFSET: 0x006196B0/0x1402A6BC0
 void GxuDebugShapeObject::Release() {
     this->m_next = s_shapeObjectFreeList;
     s_shapeObjectFreeList = this;
 }
 
-// OFFSET: 0x006196C0
+// PROVEN: 92813b8f IDENTICAL/DIFFERENT
+// OFFSET: 0x006196C0/0x1402A6BE0
 bool GxuDebugShapeObject::IsAlive() {
     return this->m_time >= 0.0f;
 }
 
+// PROVEN: 4fb58095 DIFFERENT/IDENTICAL
 // OFFSET: 0x006196E0/0x1402A6C00
 void GxuDebugShapeObject::Update(float elapsed) {
     this->m_time = this->m_time - elapsed;
 }
 
-// OFFSET: 0x006196F0
+// OFFSET: 0x006196F0/0x1402A6C10
 void GxuDebugShapeObject::Render() {
     if (this->m_time == 0.0f) {
         this->m_time = this->m_time - 0.0010000000474974513;
@@ -561,6 +590,7 @@ uint32_t GxuBoxShapeFactory::CreateIndexBuffer() {
     return this->m_indexBuffer;
 }
 
+// PROVEN: b82576d9 IDENTICAL/NONE
 // OFFSET: 0x0061A170
 uint32_t GxuTriangleShapeFactory::CreateVertexBuffer() {
     if (!s_bufferCache.Exists(this->m_vertexBuffer)) {
@@ -664,6 +694,7 @@ uint32_t GxuRotationRingShapeFactory::CreateIndexBuffer() {
     return this->m_indexBuffer;
 }
 
+// PROVEN: 6d53efe1 IDENTICAL/NONE
 // OFFSET: 0x0061A5C0
 uint32_t GxuDirectionalDiamondShapeFactory::CreateVertexBuffer() {
     if (!s_bufferCache.Exists(this->m_vertexBuffer)) {
@@ -722,12 +753,14 @@ uint32_t GxuDirectionalDiamondShapeFactory::CreateIndexBuffer() {
     return this->m_indexBuffer;
 }
 
+// PROVEN: 02228329 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061A8C0/0x1402A8290
 void GxuDebugShapeRenderStateBlock::End() {
     g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_PolygonFill, this->m_polygonFill);
     g_theGxDevicePtr->RsPop();
 }
 
+// PROVEN: 0d73bfca IDENTICAL/NONE
 // OFFSET: 0x0061A920
 void GxuDebugShapeRenderStateBlockNoDepth::End() {
     g_theGxDevicePtr->RsPop();
@@ -758,7 +791,7 @@ GxuDebugShapeDrawer::GxuDebugShapeDrawer(const C44Matrix& matrix, const CImVecto
     this->m_radius = factory->GetRadius() * this->m_scale;
 }
 
-// OFFSET: 0x0061ABC0
+// OFFSET: 0x0061ABC0/0x1402A85E0
 float GxuDebugShapeDrawer::GetDepth(const C3Vector& viewPos) {
     float x = this->m_matrix.d0 - viewPos.x;
     float y = this->m_matrix.d1 - viewPos.y;
@@ -843,7 +876,7 @@ void GxuDebugShapeRenderStateBlock::Begin() {
     g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_PolygonFill, this->m_mode != 3);
 }
 
-// OFFSET: 0x0061B3A0
+// OFFSET: 0x0061B3A0/0x1402A8EE0
 void GxuDebugShapeRenderStateBlockNoDepth::Begin() {
     g_theGxDevicePtr->RsPush();
     GxRsSet(GxRs_DepthTest, 0);
@@ -858,7 +891,8 @@ void GxuDebugShapeRenderStateBlockNoDepth::Begin() {
     GxRsSet(GxRs_Culling, 0);
 }
 
-// OFFSET: 0x0061B590
+// PROVEN: 340c0b03 IDENTICAL/UNPROVEN
+// OFFSET: 0x0061B590/0x1402A9130
 void GxuShutdownDebugShapeDrawer() {
     if (!s_shapeDrawerInitialized) {
         return;
@@ -904,31 +938,37 @@ static void GxuDebugDrawShape(const C44Matrix& matrix, const CImVector& color, i
     g_scene.AddObject(object);
 }
 
+// PROVEN: 1e2c1ede IDENTICAL/NONE
 // OFFSET: 0x0061B7E0
 void GxuDebugDrawCone(const C44Matrix& matrix, const CImVector& color, int32_t mode, float time) {
     GxuDebugDrawShape(matrix, color, mode, &s_coneShapeFactory, time);
 }
 
+// PROVEN: 3322f85c IDENTICAL/NONE
 // OFFSET: 0x0061B810
 void GxuDebugDrawSphere(const C44Matrix& matrix, const CImVector& color, int32_t mode, float time) {
     GxuDebugDrawShape(matrix, color, mode, &s_sphereShapeFactory, time);
 }
 
+// PROVEN: 199e4676 IDENTICAL/NONE
 // OFFSET: 0x0061B840
 void GxuDebugDrawDirectionalSphere(const C44Matrix& matrix, const CImVector& color, int32_t mode, float time) {
     GxuDebugDrawShape(matrix, color, mode, &s_directionalSphereShapeFactory, time);
 }
 
+// PROVEN: df89ed72 IDENTICAL/NONE
 // OFFSET: 0x0061B870
 void GxuDebugDrawBox(const C44Matrix& matrix, const CImVector& color, int32_t mode, float time) {
     GxuDebugDrawShape(matrix, color, mode, &s_boxShapeFactory, time);
 }
 
+// PROVEN: 08db4c94 IDENTICAL/NONE
 // OFFSET: 0x0061B8A0
 void GxuDebugDrawTriangle(const C44Matrix& matrix, const CImVector& color, int32_t mode, float time) {
     GxuDebugDrawShape(matrix, color, mode, &s_triangleShapeFactory, time);
 }
 
+// PROVEN: 5504dba8 IDENTICAL/NONE
 // OFFSET: 0x0061B8D0
 void GxuDebugDrawRotationRing(const C44Matrix& matrix, const CImVector& color, int32_t mode, float time) {
     GxuDebugDrawShape(matrix, color, mode, &s_rotationRingShapeFactory, time);

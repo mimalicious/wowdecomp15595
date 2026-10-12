@@ -13,16 +13,16 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: 0x00CA3DFC
+// STATIC: 0x00CA3DFC/0x140B415C0
 int32_t CSimpleCheckbox::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD39E0/0x140CB96E0
 int32_t CSimpleCheckbox::s_objectType;
 
-// STATIC: 0x00CA3348
+// STATIC: 0x00CA3348/0x140B404A0
 const char* CSimpleCheckbox::s_objectTypeName = "CheckButton";
 
-// STATIC: 0x00DD39E4
+// STATIC: 0x00DD39E4/0x140CB96E8
 CDataAllocator CSimpleCheckbox::s_allocator(sizeof(CSimpleCheckbox), 50);
 
 // INLINED
@@ -30,6 +30,7 @@ void CSimpleCheckbox::operator delete(void* ptr) {
     CSimpleCheckbox::s_allocator.PutData(ptr, NULL, 0);
 }
 
+// PROVEN: cb376cfc UNPROVEN/IDENTICAL
 // OFFSET: 0x00515C10/0x1401602A0
 CSimpleCheckbox::CSimpleCheckbox(CSimpleFrame* parent) : CSimpleButton(parent) {
     this->m_checked = 0;
@@ -37,14 +38,14 @@ CSimpleCheckbox::CSimpleCheckbox(CSimpleFrame* parent) : CSimpleButton(parent) {
     this->m_disabledCheckedTexture = NULL;
 }
 
-// PROVEN: 8dbd22bf IDENTICAL/NONE
-// OFFSET: 0x00515C50
+// PROVEN: 8dbd22bf IDENTICAL/IDENTICAL
+// OFFSET: 0x00515C50/0x1401602F0
 const char* CSimpleCheckbox::GetObjectTypeName() {
     return CSimpleCheckbox::s_objectTypeName;
 }
 
-// PROVEN: 29fd7aea IDENTICAL/NONE
-// OFFSET: 0x00515C60
+// PROVEN: 29fd7aea IDENTICAL/IDENTICAL
+// OFFSET: 0x00515C60/0x140160300
 int32_t CSimpleCheckbox::GetScriptMetaTable() {
     return CSimpleCheckbox::s_metatable;
 }
@@ -120,7 +121,7 @@ void CSimpleCheckbox::OnClick(const char* btn, int32_t down) {
     CSimpleButton::OnClick(btn, down);
 }
 
-// PROVEN: cb2e9252 IDENTICAL/UNPROVEN
+// PROVEN: cb2e9252 IDENTICAL/IDENTICAL
 // OFFSET: 0x00515E60/0x140160540
 void CSimpleCheckbox::SetCheckedTexture(CSimpleTexture* texture) {
     if (texture == this->m_checkedTexture) {
@@ -139,7 +140,7 @@ void CSimpleCheckbox::SetCheckedTexture(CSimpleTexture* texture) {
     this->SetChecked(this->m_checked, 1);
 }
 
-// PROVEN: 3b782e0a IDENTICAL/UNPROVEN
+// PROVEN: 3b782e0a IDENTICAL/IDENTICAL
 // OFFSET: 0x00515EB0/0x1401605B0
 void CSimpleCheckbox::SetDisabledCheckedTexture(CSimpleTexture* texture) {
     if (texture == this->m_disabledCheckedTexture) {
@@ -158,13 +159,14 @@ void CSimpleCheckbox::SetDisabledCheckedTexture(CSimpleTexture* texture) {
     this->SetChecked(this->m_checked, 1);
 }
 
+// PROVEN: c2d68c71 IDENTICAL/DIFFERENT
 // OFFSET: 0x00515F00/0x140160620
 void CSimpleCheckbox::Enable(int32_t enabled) {
     CSimpleButton::Enable(enabled);
     this->SetChecked(this->m_checked, 1);
 }
 
-// OFFSET: 0x00515F30
+// OFFSET: 0x00515F30/0x140160650
 void CSimpleCheckbox::LoadXML(linkObject* node, CStatus* status) {
     CSimpleButton::LoadXML(node, status);
 

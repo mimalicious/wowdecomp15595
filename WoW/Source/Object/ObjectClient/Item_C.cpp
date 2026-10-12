@@ -58,19 +58,19 @@
 #include "WoW/Source/DB/Rec/ItemGroupSoundsRec.h"
 #include "WoW/Source/Object/Item.h"
 
-// STATIC: 0x00B9E5A0
+// STATIC: 0x00B9E5A0/0x14097F740
 const uint32_t s_inventoryTypeSlots[29] = { 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 3072, 12288, 98304, 65536, 131072, 16384, 98304, 7864320, 262144, 16, 98304, 98304, 65536, 0, 131072, 131072, 0, 131072 };
 
-// STATIC: 0x00DD5E40
+// STATIC: 0x00DD5E40/0x140CBC5E8
 WOWGUID CGItem_C::s_bindOnUseTarget;
 
-// STATIC: 0x00DD5E50
+// STATIC: 0x00DD5E50/0x140CBC5F8
 WOWGUID CGItem_C::s_bindOnUseItem;
 
-// STATIC: 0x00DD5E58
+// STATIC: 0x00DD5E58/0x140B45150
 static TSHashTable<INVENTORYART, HASHKEY_NONE> s_inventoryArt;
 
-// STATIC: 0x00DD5E84
+// STATIC: 0x00DD5E84/0x140B451A0
 static TSHashTable<ITEMBYNAME, HASHKEY_UTF8I> s_itemByName;
 
 // OFFSET: 0x005A5070
@@ -88,6 +88,7 @@ static int32_t ReforgeStatIsInvalid(int32_t stat, int32_t amount, const ItemRefo
     return 0;
 }
 
+// PROVEN: d26ab580 IDENTICAL/NONE
 // OFFSET: 0x005A50D0
 void INVENTORYART::SetTexture(const char* texture) {
     if (this->m_texture) {
@@ -100,7 +101,8 @@ void INVENTORYART::SetTexture(const char* texture) {
     }
 }
 
-// OFFSET: 0x005A5120
+// PROVEN: 44603175 IDENTICAL/DIFFERENT
+// OFFSET: 0x005A5120/0x140215F50
 void CGItem_C::UpdateEnchantmentTime(int32_t slot, int32_t seconds) {
     if (seconds > 0) {
         this->m_enchantmentExpiration[slot] = 1000 * seconds + FrameTime::GetCurTimeMs();
@@ -109,7 +111,8 @@ void CGItem_C::UpdateEnchantmentTime(int32_t slot, int32_t seconds) {
     }
 }
 
-// OFFSET: 0x005A5160
+// PROVEN: d2628d40 IDENTICAL/DIFFERENT
+// OFFSET: 0x005A5160/0x140215FB0
 uint32_t CGItem_C::GetEnchantmentTimeLeft(int32_t slot) const {
     if (this->m_enchantmentExpiration[slot]) {
         uint32_t now = FrameTime::GetCurTimeMs();
@@ -123,7 +126,8 @@ uint32_t CGItem_C::GetEnchantmentTimeLeft(int32_t slot) const {
     return 0;
 }
 
-// OFFSET: 0x005A51A0
+// PROVEN: 48e5a67c IDENTICAL/DIFFERENT
+// OFFSET: 0x005A51A0/0x140216000
 void CGItem_C::SetItemPurchaseData(ItemPurchaseData* data) {
     if (this->m_itemPurchaseData) {
         delete this->m_itemPurchaseData;
@@ -274,6 +278,7 @@ void EvalutateReforgeOfRandomProp(int32_t randomPropertiesId, int32_t propertySe
     }
 }
 
+// PROVEN: 2d2210e1 IDENTICAL/UNPROVEN
 // OFFSET: 0x005A5640/0x140216590
 uint32_t CGItem_C::GetSpellItemEnchantmentId() const {
     for (uint32_t i = 0; i < 15; i++) {
@@ -303,6 +308,7 @@ uint32_t CGItem_C::GetSpellItemEnchantmentId() const {
     return 0;
 }
 
+// PROVEN: b2e865c1 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A5600/0x140216540
 void CGItem_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
@@ -310,6 +316,7 @@ void CGItem_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_itemMirror = saved + CGObject::TotalFieldsSaved();
 }
 
+// PROVEN: 13dec0b2 IDENTICAL/UNPROVEN
 // OFFSET: 0x005A56E0/0x140216630
 int32_t CGItem_C::IsMetal(int32_t materialId) {
     MaterialRec* rec = g_materialDB.GetRecord(materialId);
@@ -321,6 +328,7 @@ int32_t CGItem_C::IsMetal(int32_t materialId) {
     return 0;
 }
 
+// PROVEN: 912fd376 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5720/0x140216670
 void CGItem_C::Lock() {
     if (!(this->m_itemFlags & 1)) {
@@ -330,6 +338,7 @@ void CGItem_C::Lock() {
     }
 }
 
+// PROVEN: 848d4f78 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5760/0x1402166B0
 void CGItem_C::Unlock() {
     if (this->m_itemFlags & 1) {
@@ -339,11 +348,13 @@ void CGItem_C::Unlock() {
     }
 }
 
-// OFFSET: 0x005A57A0
+// PROVEN: 5188b532 IDENTICAL/IDENTICAL
+// OFFSET: 0x005A57A0/0x1402166F0
 void CGItem_C::SetTranslated() {
     this->m_item->m_itemFieldFlags |= 0x2;
 }
 
+// PROVEN: 3b0ce03a IDENTICAL/DIFFERENT
 // OFFSET: 0x005A57B0/0x140216700
 void CGItem_C::UpdateExpirationTime(int32_t seconds) {
     if (seconds > 0) {
@@ -353,7 +364,7 @@ void CGItem_C::UpdateExpirationTime(int32_t seconds) {
     }
 }
 
-// OFFSET: 0x005A57F0
+// OFFSET: 0x005A57F0/0x140216750
 uint32_t CGItem_C::GetExpirationTimeLeft() const {
     if (!this->m_expirationTime) {
         return 0;
@@ -364,7 +375,7 @@ uint32_t CGItem_C::GetExpirationTimeLeft() const {
     return left > 0 ? left : 0;
 }
 
-// PROVEN: bfc33732 IDENTICAL/NONE
+// PROVEN: bfc33732 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5820/0x140216790
 int32_t CGItem_C::GetSelectionHighlightColor(CImVector* color) const {
     CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
@@ -473,7 +484,7 @@ void CGItem_C::ModStatByReforge(int32_t level, const ItemRecSparse* stats, const
     value += static_cast<int32_t>(static_cast<float>(static_cast<int32_t>(static_cast<float>(amount) * reforge->m_sourceMultiplier)) * reforge->m_targetMultiplier);
 }
 
-// OFFSET: 0x005A5B00
+// OFFSET: 0x005A5B00/0x140216B50
 static int32_t OnUpdateSpellCharges(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -485,7 +496,8 @@ static int32_t OnUpdateSpellCharges(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// OFFSET: 0x005A5B60
+// PROVEN: 9974dd8f IDENTICAL/DIFFERENT
+// OFFSET: 0x005A5B60/0x140216BB0
 static void ItemIDChangedCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -508,7 +520,7 @@ static void ItemIDChangedCacheCallback(int32_t id, const WOWGUID& guid, void* pa
     CGCharacterInfo::UpdateItem(guid);
 }
 
-// OFFSET: 0x005A5BE0
+// OFFSET: 0x005A5BE0/0x140216C60
 static int32_t OnUpdateDynamicFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -523,7 +535,7 @@ static int32_t OnUpdateDynamicFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// OFFSET: 0x005A5C90
+// OFFSET: 0x005A5C90/0x140216D40
 static int32_t OnUpdateDurability(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -563,7 +575,7 @@ static int32_t OnUpdateDurability(WOWGUID guid, uint32_t fieldOffset, uint32_t f
     return 1;
 }
 
-// PROVEN: 07c61422 IDENTICAL/NONE
+// PROVEN: 07c61422 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5DD0/0x140216EC0
 int32_t CGItem_C::HasOnUseEnchant() const {
     return this->GetSpellItemEnchantmentId() != 0;
@@ -578,7 +590,7 @@ int32_t CGItem_C::HasUseEffect() {
     return this->GetSpellItemEnchantmentId() ? 1 : 0;
 }
 
-// OFFSET: 0x005A5E10
+// OFFSET: 0x005A5E10/0x140216F20
 void CGItem_C::UpdateEnchantments(uint16_t changed) {
     if (this->GetItemStaticFlags(0) & 0x2000) {
         return;
@@ -647,7 +659,8 @@ int32_t CGItem_C::GetPrismaticSocketCount() {
     return 0;
 }
 
-// OFFSET: 0x005A5FC0
+// PROVEN: 2a0d44cd IDENTICAL/DIFFERENT
+// OFFSET: 0x005A5FC0/0x1402170E0
 void CGItem_C::UpdateSockets(uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5) {
     uint16_t changed = 0;
 
@@ -675,6 +688,7 @@ void CGItem_C::UpdateSockets(uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
     FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_SUCCESS, NULL);
 }
 
+// PROVEN: 307246b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A5AC0/0x140216B40
 bool CGItem_C::IsTemporarilyBoundForTrade() {
     return this->HasSoulboundEnchant();
@@ -738,7 +752,7 @@ bool CGItem_C::IsPermanentlyBoundForTrade() {
     return true;
 }
 
-// OFFSET: 0x005A6240
+// OFFSET: 0x005A6240/0x1402173F0
 static int32_t OnUpdateEnchantments(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -760,7 +774,7 @@ static int32_t OnUpdateEnchantments(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// PROVEN: 195b6a47 IDENTICAL/NONE
+// PROVEN: 195b6a47 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A62D0/0x1402174C0
 bool CGItem_C::IsBoundForTrade() {
     return this->IsPermanentlyBoundForTrade() || this->HasSoulboundEnchant();
@@ -792,7 +806,7 @@ void CGItem_C::RemoveNameFromCache(const char* name) {
     }
 }
 
-// OFFSET: 0x005A69B0
+// OFFSET: 0x005A69B0/0x140217ED0
 static int32_t OnUpdateStackCount(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -821,7 +835,7 @@ static int32_t OnUpdateStackCount(WOWGUID guid, uint32_t fieldOffset, uint32_t f
     return 1;
 }
 
-// OFFSET: 0x005A6AE0
+// OFFSET: 0x005A6AE0/0x140217FF0
 static int32_t OnUpdateItemID(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -1057,6 +1071,7 @@ void CGItem_C::GetCooldowns(int32_t itemId, uint32_t& cooldown, uint32_t& catego
     }
 }
 
+// PROVEN: 0427fed4 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A70A0/0x1402187E0
 void CGItem_C::Initialize() {
     ItemSparseInitialize();
@@ -1068,7 +1083,8 @@ void CGItem_C::Initialize() {
     ClntObjMgrSetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldDurability), sizeof(uint32_t), OnUpdateDurability, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
-// OFFSET: 0x005A7140
+// PROVEN: 17fcf124 IDENTICAL/DIFFERENT
+// OFFSET: 0x005A7140/0x1402188D0
 void CGItem_C::Shutdown() {
     ClntObjMgrUnsetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldStackCount), OnUpdateStackCount, NULL);
     ClntObjMgrUnsetTypeMirrorHandler(ID_ITEM, offsetof(CGItemData, m_itemFieldSpellCharges), OnUpdateSpellCharges, NULL);
@@ -1103,7 +1119,8 @@ int32_t CGItem_C::GetNumSockets() {
     return sockets + this->GetPrismaticSocketCount();
 }
 
-// OFFSET: 0x005A7230
+// PROVEN: ea401f74 IDENTICAL/DIFFERENT
+// OFFSET: 0x005A7230/0x140218AC0
 int32_t CGItem_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const {
     WOWGUID guid = this->m_obj->m_guid;
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, guid, callback, NULL, false);
@@ -1111,7 +1128,7 @@ int32_t CGItem_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*,
     return stats ? stats->m_pageText : 0;
 }
 
-// OFFSET: 0x005A7280
+// OFFSET: 0x005A7280/0x140218B10
 const char* CGItem_C::GetObjectName() const {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
@@ -1234,6 +1251,7 @@ int32_t CGItem_C::CanGoInSlot(int32_t itemId, uint32_t slot, int32_t bypass) {
     return 0;
 }
 
+// PROVEN: 5d4c3cbc DIFFERENT/IDENTICAL
 // OFFSET: 0x005A7650/0x140218FF0
 int32_t CGItem_C::CanGoInSlot(uint32_t slot, int32_t bypass) {
     return CGItem_C::CanGoInSlot(this->m_obj->m_entryID, slot, bypass);
@@ -1244,7 +1262,7 @@ ItemRecSparse* CGItem_C::GetStats() const {
     return g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 }
 
-// OFFSET: 0x005A76A0
+// OFFSET: 0x005A76A0/0x140219040
 uint32_t CGItem_C::GetItemStaticFlags(int32_t index) {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
@@ -1258,7 +1276,7 @@ bool CGItem_C::IsBoundToAccount() {
     return stats && (stats->m_flags[0] & 0x8000000) == 0x8000000;
 }
 
-// OFFSET: 0x005A7750
+// OFFSET: 0x005A7750/0x1402190F0
 bool CGItem_C::IsBoundToBattlenetAccount() {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
@@ -1284,7 +1302,7 @@ bool CGItem_C::ReforgeIsValid(const ItemReforgeRec* reforge, int32_t& reason) {
     return CGItem_C::ReforgeIsValid(stats, reforge, randomPropertiesId, static_cast<uint16_t>(propertySeed), reason);
 }
 
-// OFFSET: 0x005A7840
+// OFFSET: 0x005A7840/0x140219230
 int32_t CGItem_C::GetRepairCost() {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
@@ -1360,21 +1378,21 @@ int32_t CGItem_C::GetTransmogrifyCost() {
     return stats->GetSellPrice();
 }
 
-// OFFSET: 0x005A7A20
+// OFFSET: 0x005A7A20/0x1402194B0
 bool CGItem_C::IsZoneBound() const {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
     return stats && stats->m_zoneBound;
 }
 
-// OFFSET: 0x005A7A70
+// OFFSET: 0x005A7A70/0x140219510
 bool CGItem_C::IsInstanceBound() const {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
     return stats && stats->m_instanceBound;
 }
 
-// OFFSET: 0x005A7AC0
+// OFFSET: 0x005A7AC0/0x140219570
 int32_t CGItem_C::IsLocked(const LockRec* lock, int32_t itemLevel, int32_t* spellId, int32_t* skillValue, int32_t* requiredSkill, int32_t* lockIndex, CGItem_C** key, int32_t* entry) {
     int32_t locked = 0;
 
@@ -1587,7 +1605,7 @@ int32_t CGItem_C::GetRandomPropertyOverrideAmount(int32_t slot) {
     return CGItem_C::GetRandomPropertyOverrideAmountEx(slot, randomPropertiesId, points);
 }
 
-// OFFSET: 0x005A8820
+// OFFSET: 0x005A8820/0x14021A800
 CGItem_C::CGItem_C(uint32_t time, const CClientObjCreate& create) : CGObject_C(time, create) {
     this->m_itemFlags = 0;
     this->m_expirationTime = 0;
@@ -1617,12 +1635,13 @@ CGItem_C::CGItem_C(uint32_t time, const CClientObjCreate& create) : CGObject_C(t
     this->m_itemPurchaseData = NULL;
 }
 
-// PROVEN: ad527087 IDENTICAL/NONE
+// PROVEN: ad527087 IDENTICAL/IDENTICAL
 // OFFSET: 0x005A89E0/0x14021AA10
 int32_t CGItem_C::CanBeUsed() {
     return this->GetEnchantmentSpell(0) != 0;
 }
 
+// PROVEN: 91a25189 IDENTICAL/DIFFERENT
 // OFFSET: 0x005A89F0/0x14021AA30
 int32_t CGItem_C::GetUsableSpellCharges() const {
     uint32_t id = this->GetSpellItemEnchantmentId();
@@ -1642,6 +1661,7 @@ int32_t CGItem_C::GetUsableSpellCharges() const {
     return CGItem_C::NumBaseCharges(this->m_obj->m_entryID);
 }
 
+// PROVEN: 606aaebb IDENTICAL/UNPROVEN
 // OFFSET: 0x005A8A50/0x14021AB20
 void CGItem_C::GetSpellCooldownInfo(uint32_t& cooldown, uint32_t& categoryCooldown, uint32_t& category) {
     cooldown = 0;
@@ -1763,7 +1783,7 @@ bool CGItem_C::CanBeUsedInRatedBattleground() {
     return this->GetUsableSpellCharges() >= 0 && static_cast<int32_t>(cooldown) <= 900000 && static_cast<int32_t>(categoryCooldown) <= 900000;
 }
 
-// OFFSET: 0x005A8DC0
+// OFFSET: 0x005A8DC0/0x14021AF30
 bool CGItem_C::CanBeStoredInVoidStorage(int32_t& error) {
     ItemRecSparse* stats = g_itemSparseDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
 
@@ -2152,7 +2172,7 @@ const char* CGItem_C::GetInventoryArt() const {
     return CGItem_C::GetInventoryArt(0);
 }
 
-// OFFSET: 0x005A9B20
+// OFFSET: 0x005A9B20/0x14021BDF0
 void CGItem_C::PostInitWithStats() {
     this->m_itemFlags |= 2;
     ItemRec* rec = g_itemDB.GetRecord(this->m_obj->m_entryID, WOWGUID(), NULL, NULL, false);
@@ -2226,7 +2246,7 @@ void CGItem_C::PostInitWithStats() {
     Script_SendUnitSignal(this->m_item->m_itemFieldOwner, SCRIPT_EVENT_UNIT_INVENTORY_CHANGED);
 }
 
-// OFFSET: 0x005A9F70
+// OFFSET: 0x005A9F70/0x14021C4C0
 static void LoadItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -2242,7 +2262,7 @@ static void LoadItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 }
 
-// OFFSET: 0x005A9FE0
+// OFFSET: 0x005A9FE0/0x14021C540
 void CGItem_C::RequestItemCacheInfo() {
     WOWGUID guid = this->m_obj->m_guid;
 
@@ -2258,19 +2278,21 @@ void CGItem_C::RequestItemCacheInfo() {
     }
 }
 
-// OFFSET: 0x005AA060
+// PROVEN: c603595b IDENTICAL/UNPROVEN
+// OFFSET: 0x005AA060/0x14021C5C0
 void CGItem_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->CGObject_C::PostInit(time, create, reenable);
     this->RequestItemCacheInfo();
 }
 
-// OFFSET: 0x005AA090
+// PROVEN: 7f005425 IDENTICAL/UNPROVEN
+// OFFSET: 0x005AA090/0x14021C5E0
 void CGItem_C::PostReenable(const CClientObjCreate& create) {
     this->CGObject_C::PostReenable(create);
     this->RequestItemCacheInfo();
 }
 
-// OFFSET: 0x005AA0B0
+// OFFSET: 0x005AA0B0/0x14021C600
 void CGItem_C::Disable() {
     CGObject_C::Disable();
 

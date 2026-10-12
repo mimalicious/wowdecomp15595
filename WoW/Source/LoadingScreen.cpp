@@ -57,19 +57,19 @@ static const BackgroundImage s_miniTextureInfo[2] = {
     { "Interface\\Glues\\LoadingBar\\Loading-BarBorder", false, 0.5f, 0.975f, 0.6f, 0.05f },
 };
 
-// STATIC: 0x00C9761C
+// STATIC: 0x00C9761C/0x140B2E6B0
 static float s_normalAspect = 4.0f / 3.0f;
 
-// STATIC: 0x00C97620
+// STATIC: 0x00C97620/0x140B2E6B4
 static float s_wideAspect = 1.6f;
 
-// STATIC: 0x00C97624
+// STATIC: 0x00C97624/0x140B2E6B8
 static int32_t s_preparedSpellID = -1;
 
-// STATIC: 0x00C97628
+// STATIC: 0x00C97628/0x140B2E6BC
 static int32_t s_simpleMapID = -1;
 
-// STATIC: 0x00C9762C
+// STATIC: 0x00C9762C/0x140B2E6C0
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
 static const char* s_fontNames[9] = {
@@ -107,99 +107,99 @@ static C2Vector s_pathTexCoords[4] = {
     C2Vector(0.5f, 0.5f),
 };
 
-// STATIC: 0x00C976D4
+// STATIC: 0x00C976D4/0x140B2E7A0
 static CSizeEvent s_sizeEvent;
 
-// STATIC: 0x00D36548
+// STATIC: 0x00D36548/0x140BEFA80
 static int32_t s_fileBarEnabled;
 
-// STATIC: 0x00D3654C
+// STATIC: 0x00D3654C/0x140CACC58
 static CGxShader* s_pixelShader;
 
-// STATIC: 0x00D36550
+// STATIC: 0x00D36550/0x140CACC50
 static CGxShader* s_vertexShader;
 
-// STATIC: 0x00D36554
+// STATIC: 0x00D36554/0x140BEFA84
 static uint32_t s_lastUpdateTime;
 
-// STATIC: 0x00D36558
+// STATIC: 0x00D36558/0x140BEFA98
 static uint32_t s_nextPingTime;
 
-// STATIC: 0x00D3655C
+// STATIC: 0x00D3655C/0x140BEFAA0
 static CTexture* s_dynamicElementsTexture;
 
-// STATIC: 0x00D36560
+// STATIC: 0x00D36560/0x140BEFAB0
 static CTexture* s_dynamicBackgroundTextures[12];
 
-// STATIC: 0x00D36590
+// STATIC: 0x00D36590/0x140BEFAA8
 static CTexture* s_simpleBackgroundTexture;
 
-// STATIC: 0x00D36594
+// STATIC: 0x00D36594/0x140BEFA9C
 static float s_progress;
 
 // STATIC: 0x00D3659C
 static float s_worldProgress;
 
-// STATIC: 0x00D365A0
+// STATIC: 0x00D365A0/0x140BEFB18
 static float s_asyncProgress;
 
-// STATIC: 0x00D365A4
+// STATIC: 0x00D365A4/0x140BEFB1C
 static float s_xmlProgress;
 
-// STATIC: 0x00D365A8
+// STATIC: 0x00D365A8/0x140BEFB20
 static float s_preloadProgress;
 
-// STATIC: 0x00D365AC
+// STATIC: 0x00D365AC/0x140BEFB24
 static bool s_loadingWorld;
 
-// STATIC: 0x00D365B0
+// STATIC: 0x00D365B0/0x140BEFB28
 static HLAYER s_miniLoadingLayer;
 
-// STATIC: 0x00D365B4
+// STATIC: 0x00D365B4/0x140BEFB30
 static CTexture* unk_B2FEC4[2];
 
-// STATIC: 0x00D365BC
+// STATIC: 0x00D365BC/0x140BEFB40
 static CTexture* s_textures[2];
 
-// STATIC: 0x00D365C4
+// STATIC: 0x00D365C4/0x140BEFB50
 static HLAYER s_loadingScreenLayer;
 
-// STATIC: 0x00D365C8
+// STATIC: 0x00D365C8/0x140BEFB58
 static bool s_usingWideScreen;
 
-// STATIC: 0x00D365CC
+// STATIC: 0x00D365CC/0x140BEFB5C
 static int32_t s_preparedLoadingScreenID;
 
-// STATIC: 0x00D365D0
+// STATIC: 0x00D365D0/0x140BEFB60
 static int32_t s_preparedSplineID;
 
-// STATIC: 0x00D365D4
+// STATIC: 0x00D365D4/0x140BEFB64
 static int32_t s_backgroundLocal;
 
-// STATIC: 0x00D365D8
+// STATIC: 0x00D365D8/0x140BEFB68
 static int32_t s_dynamicBarEnabled;
 
 static bool s_raceDataTip;
 
-// STATIC: 0x00D36598
+// STATIC: 0x00D36598/0x140BEFB10
 static float s_spellProgress;
 
-// STATIC: 0x00D365DC
+// STATIC: 0x00D365DC/0x140CBF250
 static HTEXTFONT s_textFont;
 
-// STATIC: 0x00D365E0
+// STATIC: 0x00D365E0/0x140BEFB78
 static CGxString* s_tipStr;
 
-// STATIC: 0x00D365E4
+// STATIC: 0x00D365E4/0x140BEFB80
 static CGxString* s_tipStr2;
 
-// STATIC: 0x00D365E8
+// STATIC: 0x00D365E8/0x140BEFB88
 static const char* s_gameTip;
 
-// STATIC: 0x00D365EC
+// STATIC: 0x00D365EC/0x140BEFB90
 static CGxStringBatch* s_batch;
 
-// STATIC: 0x00D365F0
+// STATIC: 0x00D365F0/0x140BEFB6C
 static int32_t s_sizeEventPosted;
 
 // STATIC: 0x00D365F8
@@ -208,10 +208,10 @@ static C3Vector s_tileVertices[12][4];
 // STATIC: 0x00D36838
 static C2Vector s_tileTexCoords[12][4];
 
-// STATIC: 0x00D369B8
+// STATIC: 0x00D369B8/0x140BEFB98
 static TSGrowableArray<DYNAMICELEMENTVERT> s_dynamicElements;
 
-// STATIC: 0x00D369C8
+// STATIC: 0x00D369C8/0x140BEFF70
 static CLoadingScreenShipInfo<TaxiPathNodeRec> s_shipInfo;
 
 // STATIC: 0x00D369E8
@@ -259,7 +259,7 @@ static void BuildTiles() {
     }
 }
 
-// OFFSET: 0x0040ADF0
+// OFFSET: 0x0040ADF0/0x14000D720
 static bool OnCustomLoadScreen(ClientCustomLoadScreen* msg) {
     int32_t spellID = msg->unk_0010;
 
@@ -284,15 +284,16 @@ void LoadingScreenInitialize() {
     s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
     s_pixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "UI");
     BuildTiles();
-    ClientCustomLoadScreen::s_handler = OnCustomLoadScreen;
+    ClientCustomLoadScreen::s_handler = JamHandlerEncode(OnCustomLoadScreen, g_jamHandlerKey_CFF6D4);
 }
 
+// PROVEN: 82480aa7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0040DD70/0x140011480
 void LoadingScreenInitializeInGame() {
     s_shipInfo.Initialize(&g_taxiPathNodeDB, g_taxiPathDB.m_maxID + 1);
 }
 
-// PROVEN: b1ef4bb2 IDENTICAL/NONE
+// PROVEN: b1ef4bb2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00409520/0x14000BC20
 static int32_t SizeEvent(const void* data, void* param) {
     memcpy(&s_sizeEvent, data, sizeof(s_sizeEvent));
@@ -351,7 +352,7 @@ static void InitializeProgressBarEvents() {
     s_sizeEventPosted = 0;
 }
 
-// PROVEN: 268e3a50 IDENTICAL/NONE
+// PROVEN: 268e3a50 IDENTICAL/IDENTICAL
 // OFFSET: 0x004096C0/0x14000BDE0
 void LoadingScreenSetTip(const char* tip) {
     s_gameTip = tip;
@@ -363,7 +364,7 @@ void LoadingScreenSetScreenTipForRaceData() {
     s_gameTip = s_raceDataTipText;
 }
 
-// PROVEN: 01c1912d IDENTICAL/NONE
+// PROVEN: 01c1912d IDENTICAL/IDENTICAL
 // OFFSET: 0x00409740/0x14000BE50
 bool LoadingScreenDrawing() {
     return s_loadingScreenLayer != NULL;
@@ -397,7 +398,7 @@ static void ProgressBarSendKeepAlive(uint32_t time) {
     s_nextPingTime = time + 30000;
 }
 
-// OFFSET: 0x0040BAC0
+// OFFSET: 0x0040BAC0/0x14000E920
 static bool PaintSimpleBackground() {
     if (!s_simpleBackgroundTexture) {
         return false;
@@ -427,7 +428,7 @@ static bool PaintSimpleBackground() {
     return true;
 }
 
-// OFFSET: 0x0040B300
+// OFFSET: 0x0040B300/0x14000DD30
 static bool PaintBackgroundImage() {
     if (s_backgroundLocal || !s_dynamicElements.Count()) {
         return false;
@@ -487,7 +488,7 @@ static void PaintProgressBar(const BackgroundImage* images, int32_t count, CText
     }
 }
 
-// OFFSET: 0x0040B580
+// OFFSET: 0x0040B580/0x14000E120
 static void PaintLoadingBar(const BackgroundImage* images, int32_t count, CTexture** textures) {
     if (!s_fileBarEnabled) {
         return;
@@ -594,7 +595,7 @@ bool LoadingScreenGetBackgroundTexturePathForMap(int32_t mapID, char* path, uint
     return LoadingScreenGetBackgroundTexturePath(map->m_loadingScreenID, path, size, isWide);
 }
 
-// OFFSET: 0x0040C750
+// OFFSET: 0x0040C750/0x14000F900
 static bool LoadSimpleBackgroundTexture() {
     s_backgroundLocal = 1;
     bool result = false;
@@ -624,6 +625,7 @@ static bool LoadSimpleBackgroundTexture() {
     return result;
 }
 
+// PROVEN: 8987d523 IDENTICAL/DIFFERENT
 // OFFSET: 0x0040BA40/0x14000E860
 static void ClearDynamicData() {
     if (s_dynamicElementsTexture) {
@@ -643,7 +645,7 @@ static void ClearDynamicData() {
     s_dynamicElements.Clear();
 }
 
-// OFFSET: 0x0040C8A0
+// OFFSET: 0x0040C8A0/0x14000FAF0
 static bool LoadMapBackgroundTexture() {
     MapRec* map = g_mapDB.GetRecord(s_simpleMapID);
     char path[260];
@@ -664,7 +666,7 @@ static bool LoadMapBackgroundTexture() {
     return s_simpleBackgroundTexture != NULL;
 }
 
-// OFFSET: 0x0040BEE0
+// OFFSET: 0x0040BEE0/0x14000EDB0
 int32_t IsStillLoading() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -834,7 +836,7 @@ static void InitializeProgressBar(bool loadingWorld) {
     }
 }
 
-// OFFSET: 0x0040DA30
+// OFFSET: 0x0040DA30/0x140011150
 void LoadingScreenSpellUpdateProgress(float progress) {
     if (progress <= s_spellProgress) {
         return;
@@ -933,6 +935,7 @@ void LoadingScreenXMLCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
+// PROVEN: 2de387ae IDENTICAL/DIFFERENT
 // OFFSET: 0x00409640/0x14000BD30
 static void LoadingScreenDisableEvents() {
     EventUnregister(EVENT_ID_CHAR, SwallowEvent);
@@ -948,6 +951,7 @@ static void LoadingScreenDisableEvents() {
     }
 }
 
+// PROVEN: f8767b6f IDENTICAL/DIFFERENT
 // OFFSET: 0x0040BBE0/0x14000EA90
 void LoadingScreenDisable() {
     if (s_loadingScreenLayer) {
@@ -1016,7 +1020,8 @@ void LoadingScreenDisable() {
     ClientServices::Send(&msg);
 }
 
-// OFFSET: 0x0040BD20
+// PROVEN: ef1664d3 IDENTICAL/IDENTICAL
+// OFFSET: 0x0040BD20/0x14000EC10
 void LoadingScreenShutdown() {
     LoadingScreenDisable();
 
@@ -1033,6 +1038,7 @@ void LoadingScreenShutdown() {
     ClientCustomLoadScreen::s_handler = NULL;
 }
 
+// PROVEN: e5df3f75 IDENTICAL/DIFFERENT
 // OFFSET: 0x004097A0/0x14000BEA0
 void LoadingScreenMiniDisable() {
     if (s_miniLoadingLayer) {
@@ -1050,6 +1056,7 @@ void LoadingScreenMiniDisable() {
     }
 }
 
+// PROVEN: 9dc8f2d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0040D120/0x1400106C0
 void LoadingScreenMiniUpdate(float progress) {
     LoadingScreenMiniEnable();
@@ -1257,7 +1264,7 @@ static LoadingScreenTaxiSplinesRec* FindTaxiSpline(int32_t pathID, int32_t legIn
     return NULL;
 }
 
-// OFFSET: 0x0040B0F0
+// OFFSET: 0x0040B0F0/0x14000DA70
 void PaintDynamicLoadingBar() {
     if (!s_dynamicElements.Count()) {
         return;
@@ -1319,7 +1326,7 @@ void PaintDynamicLoadingBar() {
     GxPrimUnlockVertexPtrs();
 }
 
-// OFFSET: 0x0040BF70
+// OFFSET: 0x0040BF70/0x14000EE60
 static bool InitializeSpline(uint32_t path, int32_t leg) {
     LoadingScreenTaxiSplinesRec* splineRec = FindTaxiSpline(path, leg);
 
@@ -1398,7 +1405,7 @@ static bool InitializeSpline(uint32_t path, int32_t leg) {
     return true;
 }
 
-// OFFSET: 0x0040D7A0
+// OFFSET: 0x0040D7A0/0x140010ED0
 void LoadingScreenEnableShip(uint32_t transportEntry, int32_t transportMap, int32_t mapID) {
     s_simpleMapID = mapID;
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -1423,7 +1430,7 @@ void LoadingScreenEnableShip(uint32_t transportEntry, int32_t transportMap, int3
     InitializeProgressBar(true);
 }
 
-// OFFSET: 0x0040D880
+// OFFSET: 0x0040D880/0x140010FC0
 void LoadingScreenEnableShipLeg(int32_t entryId, uint32_t leg) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -1446,6 +1453,7 @@ void LoadingScreenEnableShipLeg(int32_t entryId, uint32_t leg) {
     InitializeProgressBar(true);
 }
 
+// PROVEN: cecfaf24 IDENTICAL/IDENTICAL
 // OFFSET: 0x004097F0/0x14000BF20
 void LoadingScreenEnableFileBar(bool enable) {
     s_fileBarEnabled = enable;
@@ -1462,7 +1470,8 @@ bool LoadingScreenIsPreparedForSpell(int32_t spellID) {
     return prepared;
 }
 
-// OFFSET: 0x00409710
+// PROVEN: 0e55be59 IDENTICAL/IDENTICAL
+// OFFSET: 0x00409710/0x14000BE20
 void LoadingScreenClearPrepared() {
     s_preparedSpellID = -1;
     s_preparedLoadingScreenID = 0;
@@ -1496,6 +1505,7 @@ void LoadingScreenEnablePrepared(int32_t mapID) {
     InitializeProgressBar(true);
 }
 
+// PROVEN: 8db79a3d DIFFERENT/IDENTICAL
 // OFFSET: 0x0040DA80/0x140011190
 void LoadingScreenUpdateProgress(float progress, int32_t a2) {
     if (progress > s_preloadProgress) {

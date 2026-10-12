@@ -31,19 +31,19 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "WoW/Source/Game/GameClient/FFXEffects.h"
 
-// STATIC: 0x00DD3904
+// STATIC: 0x00DD3904/0x140CB95B0
 CSimpleTop* CSimpleTop::s_instance;
 
-// STATIC: 0x00DD3900
+// STATIC: 0x00DD3900/0x140CB95AC
 uint32_t CSimpleTop::s_eventTime;
 
-// STATIC: 0x00DD3908
+// STATIC: 0x00DD3908/0x140CB95B8
 FFX::Effect* CSimpleTop::s_colorShiftEffect;
 
-// STATIC: 0x00DD390C
+// STATIC: 0x00DD390C/0x140CB95C0
 int32_t CSimpleTop::s_colorblindMode;
 
-// STATIC: 0x00CA2CF8
+// STATIC: 0x00CA2CF8/0x140B3FAB0
 static float s_colorShiftMatrices[8][9] = {
     { 0.567f, 0.433f, 0.0f, 0.558f, 0.442f, 0.0f, 0.0f, 0.242f, 0.758f },
     { 0.817f, 0.183f, 0.0f, 0.333f, 0.667f, 0.0f, 0.0f, 0.125f, 0.875f },
@@ -55,7 +55,7 @@ static float s_colorShiftMatrices[8][9] = {
     { 0.618f, 0.32f, 0.062f, 0.163f, 0.775f, 0.062f, 0.163f, 0.32f, 0.516f }
 };
 
-// STATIC: 0x00CA2E18
+// STATIC: 0x00CA2E18/0x140B3FBD0
 static const char* s_colorblindModeNames[8] = {
     "Protanopia          (1% of males)",
     "Protanomaly         (1% of males, 0.01% of females)",
@@ -84,7 +84,7 @@ static void PaintScreen(void* param, const RECTF* rect, const RECTF* visible, fl
     }
 }
 
-// OFFSET: 0x005015F0
+// OFFSET: 0x005015F0/0x140147070
 void CSimpleTop::QueueTextureRelease(CTexture* texture) {
     UNEEDED_TEXTURES* node = s_textureReleaseQueue.NewNode(2, 0, 0);
     node->m_texture = texture;
@@ -128,6 +128,7 @@ void CSimpleTop::ClearLoadingObjectsQueue() {
     }
 }
 
+// PROVEN: 012f31c4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00500DC0/0x140146510
 void CSimpleTop::UpdateLoadingQueue(CSimpleFrame* frame, bool add) {
     if (frame->m_loadLink.IsLinked()) {
@@ -137,11 +138,6 @@ void CSimpleTop::UpdateLoadingQueue(CSimpleFrame* frame, bool add) {
     if (add) {
         this->m_loadingObjects.LinkToTail(frame);
     }
-}
-
-// INLINED
-CSimpleTop* CSimpleTop::GetInstance() {
-    return CSimpleTop::s_instance;
 }
 
 // PROVEN: 0e6a22e0 IDENTICAL/NONE
@@ -160,7 +156,7 @@ void CSimpleTop::StopMoveOrResizeFrame() {
     this->m_moveResizeFrame = NULL;
 }
 
-// PROVEN: f0370228 IDENTICAL/NONE
+// PROVEN: f0370228 IDENTICAL/IDENTICAL
 // OFFSET: 0x004FEE00/0x140143C10
 void CSimpleTop::SetColorblindShader() {
     if (CSimpleTop::s_colorblindMode) {
@@ -203,7 +199,7 @@ static int32_t ConsoleCommand_ColorblindShader(const char* command, const char* 
     return 1;
 }
 
-// PROVEN: 12f2bf1c IDENTICAL/DIFFERENT
+// PROVEN: 12f2bf1c IDENTICAL/IDENTICAL
 // OFFSET: 0x004FF140/0x140143F10
 void CSimpleTop::NotifyFrameLayerChanged(CSimpleFrame* frame, uint32_t drawLayer) {
     CFrameStrata* strata = this->m_strata[frame->m_strata];
@@ -219,7 +215,8 @@ void CSimpleTop::NotifyFrameDelayedLoad(CSimpleFrame* frame) {
     strata->m_batchDirty = 1;
 }
 
-// OFFSET: 0x004FF1C0
+// PROVEN: e2bcc5ff DIFFERENT/IDENTICAL
+// OFFSET: 0x004FF1C0/0x140143F80
 void CSimpleTop::SetCursor(MipBits* image) {
     if (image) {
         memcpy(g_theGxDevicePtr->CursorLock(), image->m_mip[0], sizeof(CGxDevice::s_cursor));
@@ -391,7 +388,7 @@ int32_t CSimpleTop::StartMoveOrResizeFrame(CSimpleFrame* frame, MOVERESIZE_REASO
     return this->StartMoveOrResizeFrame(frame, reason, x, y, point);
 }
 
-// OFFSET: 0x004FF810
+// OFFSET: 0x004FF810/0x1401447B0
 int32_t CSimpleTop::OnChar(const void* data, void* param) {
     const EVENT_DATA_CHAR* charData = static_cast<const EVENT_DATA_CHAR*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -423,7 +420,7 @@ int32_t CSimpleTop::OnChar(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: 0x004FF8B0
+// OFFSET: 0x004FF8B0/0x140144870
 int32_t CSimpleTop::OnIme(const void* data, void* param) {
     const EVENT_DATA_IME* imeData = static_cast<const EVENT_DATA_IME*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -455,7 +452,7 @@ int32_t CSimpleTop::OnIme(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: 0x004FF950
+// OFFSET: 0x004FF950/0x140144940
 int32_t CSimpleTop::OnKeyDown(const void* data, void* param) {
     const EVENT_DATA_KEY* keyData = static_cast<const EVENT_DATA_KEY*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -497,7 +494,7 @@ int32_t CSimpleTop::OnKeyDown(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: 0x004FFA20
+// OFFSET: 0x004FFA20/0x140144A50
 int32_t CSimpleTop::OnKeyUp(const void* data, void* param) {
     const EVENT_DATA_KEY* keyData = static_cast<const EVENT_DATA_KEY*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -521,7 +518,7 @@ int32_t CSimpleTop::OnKeyUp(const void* data, void* param) {
     return !handled;
 }
 
-// OFFSET: 0x004FFAC0
+// OFFSET: 0x004FFAC0/0x140144B10
 int32_t CSimpleTop::OnKeyDownRepeat(const void* data, void* param) {
     const EVENT_DATA_KEY* keyData = static_cast<const EVENT_DATA_KEY*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -618,7 +615,7 @@ int32_t CSimpleTop::OnMouseMove(const void* data, void* param) {
     return newFocus == NULL;
 }
 
-// OFFSET: 0x004FFCD0
+// OFFSET: 0x004FFCD0/0x140144ED0
 int32_t CSimpleTop::OnMouseMoveRelative(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -632,7 +629,7 @@ int32_t CSimpleTop::OnMouseMoveRelative(const void* data, void* param) {
     return !callback || !callback(&evt);
 }
 
-// OFFSET: 0x004FFD40
+// OFFSET: 0x004FFD40/0x140144F90
 int32_t CSimpleTop::OnMouseUp(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -667,7 +664,7 @@ int32_t CSimpleTop::OnMouseUp(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: 0x004FFE40
+// OFFSET: 0x004FFE40/0x1401450E0
 int32_t CSimpleTop::OnMouseWheel(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -707,7 +704,7 @@ int32_t CSimpleTop::OnMouseWheel(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: 0x004FFF30
+// OFFSET: 0x004FFF30/0x140145240
 int32_t CSimpleTop::OnFocusChanged(const void* data, void* param) {
     const EVENT_DATA_FOCUS* focusData = static_cast<const EVENT_DATA_FOCUS*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -785,7 +782,7 @@ int32_t CFrameStrata::FrameOccluded(CSimpleFrame* frame) {
     return 0;
 }
 
-// OFFSET: 0x005004B0
+// OFFSET: 0x005004B0/0x140145800
 void CFrameStrata::CheckOcclusion() {
     for (uint32_t level = 0; level < this->m_topLevel; level++) {
         CFrameStrataNode* node = this->m_levels[level];
@@ -820,8 +817,8 @@ int32_t CFrameStrata::BuildBatches(int32_t noMouseCapture) {
     return this->m_batchDirty;
 }
 
-// PROVEN: 4339851a IDENTICAL/NONE
-// OFFSET: 0x00500580
+// PROVEN: 4339851a IDENTICAL/IDENTICAL
+// OFFSET: 0x00500580/0x1401458C0
 void CFrameStrata::RenderBatches() {
     for (uint32_t level = 0; level < this->m_topLevel; level++) {
         CFrameStrataNode* node = this->m_levels[level];
@@ -833,6 +830,7 @@ void CFrameStrata::RenderBatches() {
     }
 }
 
+// PROVEN: 729b80b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x005005E0/0x140145960
 void CSimpleTop::RegisterFrame(CSimpleFrame* frame) {
     this->m_frames.LinkToTail(frame);
@@ -856,6 +854,7 @@ void CSimpleTop::UnregisterFrame(CSimpleFrame* frame) {
     this->m_frames.UnlinkNode(frame);
 }
 
+// PROVEN: 3886a448 IDENTICAL/NONE
 // OFFSET: 0x00500660
 void CSimpleTop::RegisterForCleanup(CSimpleFrame* frame) {
     this->m_destroyed.LinkToTail(frame);
@@ -1002,6 +1001,7 @@ void CSimpleTop::OnLayerUpdate(float elapsedSec) {
     }
 }
 
+// PROVEN: 94e1550c DIFFERENT/IDENTICAL
 // OFFSET: 0x00500A30/0x140145FF0
 void CSimpleTop::OnLayerRender() {
     C2Vector offset;
@@ -1063,7 +1063,7 @@ int32_t CSimpleTop::OnMouseDown(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: 0x00500C20
+// OFFSET: 0x00500C20/0x1401462E0
 int32_t CSimpleTop::OnDisplaySizeChanged(const void* data, void* param) {
     const EVENT_DATA_SIZE* sizeData = static_cast<const EVENT_DATA_SIZE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -1097,7 +1097,7 @@ void CSimpleTop::NotifyFrameMovedOrResized(CSimpleFrame* frame) {
     this->m_checkFocus = 1;
 }
 
-// PROVEN: ef5e7907 IDENTICAL/DIFFERENT
+// PROVEN: ef5e7907 IDENTICAL/IDENTICAL
 // OFFSET: 0x00500F70/0x140146720
 void CSimpleTop::RegisterForEvent(CSimpleFrame* frame, CSimpleEventType event, int32_t a4, int32_t priority) {
     CSimpleSortedArray<FRAMEPRIORITY*>& queue = this->m_eventqueue[event][frame->m_strata];
@@ -1176,7 +1176,7 @@ void CSimpleTop::EnableEvents() {
     EventRegisterEx(EVENT_ID_FOCUS, &CSimpleTop::OnFocusChanged, this, 1.0f);
 }
 
-// PROVEN: e3e3d1c4 IDENTICAL/UNPROVEN
+// PROVEN: e3e3d1c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00501200/0x140146B20
 void CSimpleTop::DisableEvents() {
     EventUnregisterEx(EVENT_ID_CHAR, &CSimpleTop::OnChar, this, 0xFFFFFFFF);
@@ -1289,7 +1289,7 @@ CSimpleTop::CSimpleTop() {
     CSimpleTexture::Init();
 }
 
-// PROVEN: c2171ee9 IDENTICAL/DIFFERENT
+// PROVEN: c2171ee9 IDENTICAL/IDENTICAL
 // OFFSET: 0x005015C0/0x140147030
 void CSimpleTop::ShowFrame(CSimpleFrame* frame, int32_t a3) {
     this->m_strata[frame->m_strata]->AddFrame(frame);
@@ -1343,7 +1343,7 @@ CSimpleTop::~CSimpleTop() {
     CSimpleTop::s_instance = NULL;
 }
 
-// PROVEN: b2ac43a5 IDENTICAL/DIFFERENT
+// PROVEN: b2ac43a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CSimpleTop::LowerFrame(CSimpleFrame* frame) {
     return 0;

@@ -5,7 +5,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: 0x00D173E8
+// STATIC: 0x00D173E8/0x140BD2120
 CKBArticle g_KnowledgeBaseArticle;
 
 // INLINED
@@ -17,7 +17,7 @@ CKBArticle::CKBArticle() {
 void CKBArticle::_ComputeCachedData() {
 }
 
-// PROVEN: 52ec8010 IDENTICAL/NONE
+// PROVEN: 52ec8010 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB9B0/0x140799050
 int32_t CKBArticle::BeginLoading(int32_t articleId, int32_t searchType) {
     if (this->m_state == 1 || this->m_inQueue) {
@@ -50,6 +50,7 @@ int32_t CKBArticle::BeginLoading(int32_t articleId, int32_t searchType) {
     return 1;
 }
 
+// PROVEN: b2eedf76 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC940/0x14079A550
 void CKBArticle::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
@@ -57,6 +58,7 @@ void CKBArticle::_SendSuccessEvent() {
     }
 }
 
+// PROVEN: fef7932a IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC960/0x14079A570
 void CKBArticle::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {

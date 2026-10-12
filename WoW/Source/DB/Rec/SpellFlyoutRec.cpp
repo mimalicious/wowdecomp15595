@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[7] = { 0, 0, 0, 0, 0, 2, 2 };
 // STATIC: 0x00C21454/0x140A15FC8
 const DBCMeta SpellFlyoutRec::s_meta = { "DBFilesClient\\SpellFlyout.dbc", 7, 28, SpellFlyoutRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 4d6f7167 IDENTICAL/NONE
+// PROVEN: 4d6f7167 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EB30/0x1407D7E90
 void SpellFlyoutRec::FixupStrings(void* record, const char* strings) {
     SpellFlyoutRec* rec = static_cast<SpellFlyoutRec*>(record);

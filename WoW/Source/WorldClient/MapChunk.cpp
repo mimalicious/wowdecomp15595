@@ -46,10 +46,10 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// STATIC: 0x00D025D0
+// STATIC: 0x00D025D0/0x140BB2230
 uint32_t CMapChunk::s_vertexCount = 145;
 
-// STATIC: 0x00D025F0
+// STATIC: 0x00D025F0/0x140BB2270
 uint16_t CMapChunk::s_indexCount = 768;
 
 // STATIC: 0x00BC7650
@@ -73,10 +73,10 @@ static uint16_t s_noEffectDoodadMasks[8] = { 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x4
 // STATIC: 0x00BC7728
 static uint32_t s_noEffectDoodadShifts[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
-// STATIC: 0x00BC92E4
+// STATIC: 0x00BC92E4/0x1409B760C
 static uint32_t s_subchunkTris[4][3] = { { 17, 9, 0 }, { 9, 1, 0 }, { 9, 17, 18 }, { 9, 18, 1 } };
 
-// STATIC: 0x00BC9314
+// STATIC: 0x00BC9314/0x1409B7640
 static uint32_t s_subchunkVerts[5] = { 0, 9, 17, 1, 18 };
 
 // STATIC: 0x00D03DF8
@@ -88,25 +88,25 @@ static C2Vector s_flightBoundsVerts[9] = { C2Vector(0.0f, 0.0f), C2Vector(0.0f, 
 // STATIC: 0x00D00DE0
 static C3Vector s_subchunkCoords[5] = { C3Vector(0.0f, 0.0f, 0.0f), C3Vector(0.0f, -4.1666665f, 0.0f), C3Vector(-4.1666665f, -4.1666665f, 0.0f), C3Vector(-4.1666665f, 0.0f, 0.0f), C3Vector(-2.0833333f, -2.0833333f, 0.0f) };
 
-// STATIC: 0x00E74E28
+// STATIC: 0x00E74E28/0x140D5EB90
 float CMapChunk::s_geoToTex;
 
-// STATIC: 0x00E74E38
+// STATIC: 0x00E74E38/0x140D5EBB0
 C3Vector CMapChunk::vertexListXY[145];
 
-// STATIC: 0x00E75504
+// STATIC: 0x00E75504/0x140D5F270
 static float s_worldPNY[9];
 
 // STATIC: 0x00E75528
 static float s_worldPNX[9];
 
-// STATIC: 0x00E7554C
+// STATIC: 0x00E7554C/0x140D5F2C0
 static float s_worldPNCY[9];
 
 // STATIC: 0x00E75570
 static float s_worldPNCX[9];
 
-// STATIC: 0x00E75594
+// STATIC: 0x00E75594/0x140D5F310
 static float s_worldPNC2Y[9];
 
 // STATIC: 0x00E755B8
@@ -241,7 +241,7 @@ void CMapChunkHeader::Set(const SMChunk& chunk) {
     memcpy(this->m_noEffectDoodad, chunk.m_noEffectDoodad, sizeof(this->m_noEffectDoodad));
 }
 
-// OFFSET: 0x0073B4D0
+// OFFSET: 0x0073B4D0/0x140418B60
 void CMapChunk::CreateMaterial() {
     if (this->m_shaderTexture) {
         TextureRelease(this->m_shaderTexture);
@@ -347,7 +347,7 @@ void CMapChunk::SelectLights(CM2Lighting* lighting) {
     lighting->SetFog(color, fog->m_start, fog->m_end, fog->m_density);
 }
 
-// OFFSET: 0x0073F710
+// OFFSET: 0x0073F710/0x14041D680
 void CMapChunk::GetLiquidBox(CAaBox& box) {
     box.t.x = this->m_bbox.t.x;
     box.t.y = this->m_bbox.t.y;
@@ -494,7 +494,7 @@ void CMapChunk::CreateLiquids(int32_t isNew) {
     CChunkLiquid::CreateVertXY();
 }
 
-// OFFSET: 0x0073FC30
+// OFFSET: 0x0073FC30/0x14041DC00
 void CMapChunk::CreateBounds() {
     this->m_bbox.b.x = 3.402823466e38f;
     this->m_bbox.b.y = 3.402823466e38f;
@@ -546,7 +546,7 @@ void CMapChunk::CreateBounds() {
     this->m_area->m_chunkBounds[this->m_indexX + 16 * this->m_indexY] = this->m_bbox;
 }
 
-// OFFSET: 0x0073FF40
+// OFFSET: 0x0073FF40/0x14041DFA0
 void CMapChunk::CreateRefs(CMapArea* area) {
     C3Vector offset(17066.666f, 17066.666f, 0.0f);
     const uint32_t* doodadRefs;
@@ -611,7 +611,7 @@ CMapChunk::~CMapChunk() {
     }
 }
 
-// OFFSET: 0x00740350
+// OFFSET: 0x00740350/0x14041E5F0
 void CMapChunk::Create(int32_t isNew) {
     float chunkX = static_cast<float>(this->m_chunkX) * 33.333332f;
     this->m_position.x = 17066.666f - static_cast<float>(this->m_chunkY) * 33.333332f;
@@ -893,7 +893,7 @@ void CMapChunk::CreateDetailDoodads() {
     }
 }
 
-// PROVEN: 3a34611f IDENTICAL/NONE
+// PROVEN: 3a34611f IDENTICAL/IDENTICAL
 // OFFSET: 0x007848B0/0x1404734B0
 void CMapChunk::CreateDetailDoodadInst() {
     if (!this->m_header.m_nLayers || !this->LoadDetailDoodadModels()) {
@@ -944,7 +944,7 @@ void CMapChunk::Purge() {
     }
 }
 
-// OFFSET: 0x00788080
+// OFFSET: 0x00788080/0x140477970
 int32_t CMap::GetHeightTerrain(const CMapChunk* chunk, const C3Vector& pos, int32_t subX, int32_t subY, int32_t a5, float& height) {
     if (a5 && (chunk->m_holes & s_holeMasks[4 * (subY >> 1) + (subX >> 1)])) {
         return 0;
@@ -995,7 +995,7 @@ static uint8_t BoxClipCode(const C3Vector& v, const CAaBox& box) {
     return static_cast<uint8_t>(FloatSign(v.x - box.b.x + 0.019444443f) | (FloatSign(v.y - box.b.y + 0.019444443f) << 1) | (FloatSign(v.z - box.b.z + 0.019444443f) << 2) | (FloatSign(box.t.x - v.x + 0.019444443f) << 3) | (FloatSign(box.t.y - v.y + 0.019444443f) << 4) | (FloatSign(box.t.z - v.z + 0.019444443f) << 5));
 }
 
-// OFFSET: 0x007883E0
+// OFFSET: 0x007883E0/0x140477D40
 bool CMap::GetHeightDoodadDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, const C3Vector& start, const C3Vector& end) {
     for (CMapBaseObjLink* link = list.Head(), * next; link; link = next) {
         next = list.Next(link);
@@ -1044,7 +1044,7 @@ bool CMap::GetHeightDoodadDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBase
     return true;
 }
 
-// OFFSET: 0x00788500
+// OFFSET: 0x00788500/0x140477E80
 bool CMap::GetHeightMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float& t) {
     if (!(mapObjDef->m_mapObj->m_flags & 0x40)) {
         return false;
@@ -1249,7 +1249,7 @@ int32_t CMap::GetFlightBounds(const C3Vector& pos, float& z, int32_t lower) {
     return 1;
 }
 
-// OFFSET: 0x00788A40
+// OFFSET: 0x00788A40/0x1404784E0
 bool CMap::GetHeightMapObjDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, const C3Vector& start, const C3Vector& end, float& t) {
     for (CMapBaseObjLink* link = list.Head(), * next; link; link = next) {
         next = list.Next(link);
@@ -1269,7 +1269,7 @@ bool CMap::GetHeightMapObjDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBase
     return true;
 }
 
-// OFFSET: 0x00788AC0
+// OFFSET: 0x00788AC0/0x1404785A0
 bool CMap::QueryLiquidMapObjDef(CMapObjDef* mapObjDef, const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height) {
     if (pos.x < mapObjDef->m_bbox.b.x || pos.y < mapObjDef->m_bbox.b.y || pos.z < mapObjDef->m_bbox.b.z) {
         return false;
@@ -1446,7 +1446,7 @@ bool CMap::QueryShadowTerrain(const C3Vector& pos) {
     return (static_cast<uint8_t>(1 << (sx & 7)) & shadow[(sx >> 3) + 8 * sy]) != 0;
 }
 
-// OFFSET: 0x007891F0
+// OFFSET: 0x007891F0/0x140478E90
 int32_t CMap::QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType, float& height) {
     float fx = -(pos.x - 17066.666f) * 0.23999999f;
     float fy = -(pos.y - 17066.666f) * 0.23999999f;
@@ -1510,7 +1510,7 @@ int32_t CMap::QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType, floa
     return 1;
 }
 
-// OFFSET: 0x00789440
+// OFFSET: 0x00789440/0x140479190
 bool CMap::QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height) {
     if (this->m_globalMapObjDef) {
         return CMap::QueryLiquidMapObjDef(this->m_globalMapObjDef, pos, nearest, liquidType, height);
@@ -1754,7 +1754,7 @@ void CMap::GetTrisTerrain(const CAaBox& box, const CiRect& chunkRect, const CiRe
     }
 }
 
-// OFFSET: 0x0078A250
+// OFFSET: 0x0078A250/0x14047A390
 bool CMapChunk::Intersect(int32_t subX, int32_t subY, C3Ray& ray, float& t) {
     bool hit = false;
 
@@ -1788,7 +1788,7 @@ bool CMapChunk::Intersect(int32_t subX, int32_t subY, C3Ray& ray, float& t) {
     return hit;
 }
 
-// OFFSET: 0x0078A380
+// OFFSET: 0x0078A380/0x14047A540
 bool CMapChunk::Intersect(int32_t subX, int32_t subY, C3Ray& ray, C4Plane& plane, float& t) {
     bool hit = false;
 
@@ -1886,7 +1886,7 @@ void CMapChunk::Intersect(const CiRect& rect, CAaBox& box, World::FacetData& fac
     }
 }
 
-// OFFSET: 0x0078B070
+// OFFSET: 0x0078B070/0x14047B4E0
 void CMapChunk::Intersect(const CiRect& rect, const CFrustum& frustum, World::FacetData& facets) {
     uint32_t start = rect.minY + rect.minX + 16 * rect.minY;
     const float* heights = &this->m_vertices[start];
@@ -1962,7 +1962,7 @@ static void CreateQuadFacets(const C3Vector& edge, const C3Vector& normal, const
     facets.facetFlags.New(flags);
 }
 
-// OFFSET: 0x0078B6C0
+// OFFSET: 0x0078B6C0/0x14047BC50
 static void CollectDoodadDefFacets(CMapDoodadDef* doodadDef, World::FacetData& facets, const CAaBox& box, uint64_t guid) {
     uint32_t oldCount = facets.facets.Count();
     doodadDef->m_model->GetCollisionFacets(box, doodadDef->m_model->m_worldTransform, facets.facets);
@@ -1990,7 +1990,7 @@ static void CollectEntityFacets(World::ObjectCollisionData& data, World::FacetDa
     }
 }
 
-// OFFSET: 0x0078B850
+// OFFSET: 0x0078B850/0x14047BCF0
 bool CMap::GetDoodadDefFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags, uint64_t guid) {
     for (CMapBaseObjLink* link = links.Head(), * next; link; link = next) {
         next = links.Next(link);
@@ -2040,7 +2040,7 @@ bool CMap::GetDoodadDefFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseO
     return true;
 }
 
-// OFFSET: 0x0078BAB0
+// OFFSET: 0x0078BAB0/0x14047BFC0
 bool CMap::GetEntityFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags) {
     if (!World::s_entityRenderCallback) {
         return true;
@@ -2293,7 +2293,7 @@ bool CMap::CreateFlightBoundsFacets(int32_t x, int32_t y, const CAaBox& box, Wor
     return true;
 }
 
-// OFFSET: 0x0078C940
+// OFFSET: 0x0078C940/0x14047D2C0
 void CMap::GetMapObjDefFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const CFrustum& frustum, World::FacetData& facets, uint32_t flags) {
     for (CMapBaseObjLink* link = links.Head(), * next; link; link = next) {
         next = links.Next(link);
@@ -2312,7 +2312,7 @@ void CMap::GetMapObjDefFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseO
     }
 }
 
-// OFFSET: 0x0078CD20
+// OFFSET: 0x0078CD20/0x14047D750
 bool CMap::GetChunkFacets(CMapChunk* chunk, const CAaBox& box, const CAaBox& box2, const CiRect& rect, World::FacetData& facets, uint32_t flags) {
     if (chunk->m_flags & 0x20) {
         CMap::CreateImpassableFacets(chunk, box2, facets, flags);
@@ -2420,7 +2420,7 @@ bool CMap::GetChunkFacets(CMapChunk* chunk, const CFrustum& frustum, const CAaBo
     return oldCount != facets.facets.Count();
 }
 
-// OFFSET: 0x0078D1C0
+// OFFSET: 0x0078D1C0/0x14047DD00
 bool CMap::GetFacets(const CAaBox& box, const CAaBox& box2, const CiRect& chunkRect, const CiRect& subChunkRect, World::FacetData& facets, uint32_t flags) {
     int32_t areaY = chunkRect.minY >> 4;
     int32_t areaX = chunkRect.minX >> 4;
@@ -2483,7 +2483,7 @@ bool CMap::GetFacets(const CAaBox& box, const CAaBox& box2, const CiRect& chunkR
     return true;
 }
 
-// OFFSET: 0x0078D440
+// OFFSET: 0x0078D440/0x14047E090
 bool CMap::GetFacets(const CFrustum& frustum, const CAaBox& bounds, const CiRect& chunkRect, const CiRect& subChunkRect, World::FacetData& facets, uint32_t flags) {
     int32_t areaY = chunkRect.minY >> 4;
     int32_t areaX = chunkRect.minX >> 4;
@@ -2551,7 +2551,7 @@ void CMapChunk::InitVertexListXY() {
     }
 }
 
-// PROVEN: 2525e2da IDENTICAL/NONE
+// PROVEN: 2525e2da IDENTICAL/DIFFERENT
 // OFFSET: 0x0073B360/0x140418A70
 int32_t CMapChunk::AreTexturesLoaded() {
     const SMLayer* layer = this->m_layers;
@@ -2581,7 +2581,7 @@ int32_t CMapChunk::AreTexturesLoaded() {
     return !shaderTexture || TextureIsLoaded(shaderTexture);
 }
 
-// PROVEN: 00f95295 IDENTICAL/NONE
+// PROVEN: 00f95295 IDENTICAL/IDENTICAL
 // OFFSET: 0x0073B4A0/0x140418B30
 void CMapChunk::Initialize() {
     CMapRenderChunk::Initialize();
@@ -2589,7 +2589,7 @@ void CMapChunk::Initialize() {
     CMapChunk::s_geoToTex = -1.0f / CMapChunk::vertexListXY[1].y;
 }
 
-// PROVEN: f3795343 IDENTICAL/NONE
+// PROVEN: f3795343 IDENTICAL/IDENTICAL
 // OFFSET: 0x0073B6D0/0x140418DF0
 void CMapChunk::Batch() {
     if (this->m_chunkFlags & 0x1) {
@@ -2949,7 +2949,7 @@ uint32_t CMapChunk::CreateIndices(uint16_t* indices, uint16_t base, int32_t lowR
     return count;
 }
 
-// PROVEN: c6fc17a8 IDENTICAL/NONE
+// PROVEN: c6fc17a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x0073F520/0x14041D490
 void CMapChunk::CreateVertices(void* vertices, int32_t index, const C3Vector& origin) {
     uint8_t* buffer = static_cast<uint8_t*>(vertices);
@@ -2969,6 +2969,7 @@ void CMapChunk::CreateVertices(void* vertices, int32_t index, const C3Vector& or
     }
 }
 
+// PROVEN: 08b3341e IDENTICAL/IDENTICAL
 // OFFSET: 0x0073F5C0/0x14041D510
 void CMapChunk::CreateIndices(uint16_t* indices, uint16_t base, uint32_t& count, int32_t lowRes) {
     count = this->CreateIndices(indices, base, lowRes);

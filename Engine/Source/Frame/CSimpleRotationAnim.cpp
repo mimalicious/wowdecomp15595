@@ -12,16 +12,16 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: 0x00CA4748
+// STATIC: 0x00CA4748/0x140B427D8
 int32_t CSimpleRotationAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CC4/0x140CB9A64
 int32_t CSimpleRotationAnim::s_objectType;
 
-// STATIC: 0x00CA3828
+// STATIC: 0x00CA3828/0x140B40AA0
 const char* CSimpleRotationAnim::s_objectTypeName = "Rotation";
 
-// PROVEN: 03507ea6 DIFFERENT/IDENTICAL
+// PROVEN: 03507ea6 IDENTICAL/IDENTICAL
 // OFFSET: 0x005284E0/0x140177A20
 bool CSimpleRotationAnim::IsA(int32_t type) {
     return type == CSimpleRotationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
@@ -64,7 +64,7 @@ CSimpleRotationAnim::CSimpleRotationAnim(CSimpleAnimGroup* group) : CSimpleAnim(
     this->m_radians = 0.0f;
 }
 
-// PROVEN: 762dd731 IDENTICAL/DIFFERENT
+// PROVEN: 762dd731 IDENTICAL/IDENTICAL
 // OFFSET: 0x0052B2E0/0x14017B8E0
 void CSimpleRotationAnim::LoadXML(linkObject* node, CStatus* status) {
     VectorAnimation* animation = static_cast<VectorAnimation*>(node);

@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "WoW/Source/Object/Unit.h"
 
-// STATIC: 0x00D19070
+// STATIC: 0x00D19070/0x140BD5090
 const uint32_t CGPlayer::s_mirrorFields[299] = {
     0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x10, 0x11,
     0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21,
@@ -24,7 +24,7 @@ const uint32_t CGPlayer::s_mirrorFields[299] = {
     0x122, 0x123, 0x124, 0x125, 0x126, 0x127, 0x128, 0x129, 0x12A, 0x12B, 0x12C
 };
 
-// STATIC: 0x00D19520
+// STATIC: 0x00D19520/0x140BD5540
 const uint32_t CGPlayer::s_localMirrorFields[805] = {
     0x12E, 0x12F, 0x130, 0x131, 0x132, 0x133, 0x134, 0x135, 0x136, 0x137, 0x138, 0x139, 0x13A, 0x13B, 0x13C, 0x13D,
     0x13E, 0x13F, 0x140, 0x141, 0x142, 0x143, 0x144, 0x145, 0x146, 0x147, 0x148, 0x149, 0x14A, 0x14B, 0x14C, 0x14D,
@@ -86,6 +86,7 @@ uint32_t CGPlayer::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int3
     return (offset & 3) + 4 * (total + CGPlayer::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
+// PROVEN: 171bf3df IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D70/0x1407CF550
 uint32_t CGPlayer::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int32_t local) {
     for (uint32_t i = 0; i < sizeof(CGPlayer::s_mirrorFields) / sizeof(CGPlayer::s_mirrorFields[0]); i++) {
@@ -127,11 +128,13 @@ int32_t CGPlayer::HasZoneExplored(int32_t zone) {
     return this->m_player->m_playerExploredZones1[zone / 8] & (1 << (zone % 8));
 }
 
+// PROVEN: ef7abf64 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D50/0x1407CF510
 int32_t CGPlayer::TotalFields() {
     return CGUnit::TotalFields() + 1104;
 }
 
+// PROVEN: 0afe5bb0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27D60/0x1407CF530
 int32_t CGPlayer::TotalRemoteFields() {
     return CGUnit::TotalFields() + sizeof(CGPlayer::s_mirrorFields) / sizeof(CGPlayer::s_mirrorFields[0]);

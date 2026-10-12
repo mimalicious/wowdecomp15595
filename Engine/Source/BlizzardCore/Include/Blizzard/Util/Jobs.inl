@@ -42,6 +42,7 @@ inline Blizzard::Jobs::RefPtr<T>::RefPtr(T* ptr) {
     }
 }
 
+// PROVEN: 8abc4667 IDENTICAL/NONE
 // OFFSET: 0x007A3FC0<Blizzard::Jobs::Job>
 template <class T>
 inline Blizzard::Jobs::RefPtr<T>::RefPtr(const RefPtr& other) {
@@ -57,6 +58,7 @@ inline Blizzard::Jobs::RefPtr<T>::~RefPtr() {
     }
 }
 
+// PROVEN: 2e603633 IDENTICAL/NONE
 // OFFSET: 0x007A40A0<Blizzard::Jobs::Job>
 template <class T>
 inline Blizzard::Jobs::RefPtr<T>& Blizzard::Jobs::RefPtr<T>::operator=(const RefPtr& other) {

@@ -61,6 +61,7 @@ C4Quaternion::C4Quaternion(const C4QuaternionCompressed& compressed) {
     this->w = fabs(length - 1.0f) < 0.00000095367432f ? 0.0f : sqrt(1.0f - length);
 }
 
+// PROVEN: 02e1bfb2 DIFFERENT/IDENTICAL
 // OFFSET: 0x004CB6A0/0x1401072A0
 void C4Quaternion::FromAngleAxis(float angle, const C3Vector& axis) {
     float half = angle * 0.5f;
@@ -72,7 +73,7 @@ void C4Quaternion::FromAngleAxis(float angle, const C3Vector& axis) {
     this->z = s * axis.z;
 }
 
-// OFFSET: 0x004CB720
+// OFFSET: 0x004CB720/0x140107320
 C4Quaternion C4Quaternion::Slerp(float t, const C4Quaternion& a, const C4Quaternion& b) {
     float cosine = a.z * b.z + a.y * b.y + a.x * b.x + b.w * a.w;
     float sign = 1.0f;
@@ -125,7 +126,7 @@ void C4Quaternion::NormalizeApprox() {
     this->w = scale * this->w;
 }
 
-// OFFSET: 0x004CB9D0
+// OFFSET: 0x004CB9D0/0x140107690
 C4Quaternion C4Quaternion::Nlerp(float t, const C4Quaternion& a, const C4Quaternion& b) {
     C4Quaternion result;
     result.x = (b.x - a.x) * t + a.x;
@@ -161,16 +162,6 @@ static void FromTransposedRotationMatrix(C4Quaternion& q, const C44Matrix& trans
 // OFFSET: 0x004CBDA0/0x140107B10
 void C4Quaternion::FromRotationMatrix(const C44Matrix& m) {
     FromTransposedRotationMatrix(*this, m.Transpose());
-}
-
-// INLINED
-C4Quaternion operator*(const C4Quaternion& l, const C4Quaternion& r) {
-    C4Quaternion result;
-    result.x = l.w * r.x + r.z * l.y + r.w * l.x - l.z * r.y;
-    result.y = r.w * l.y + l.w * r.y + l.z * r.x - r.z * l.x;
-    result.z = r.z * l.w + r.w * l.z + l.x * r.y - r.x * l.y;
-    result.w = r.w * l.w - l.x * r.x - l.y * r.y - r.z * l.z;
-    return result;
 }
 
 // OFFSET: 0x0041EE80

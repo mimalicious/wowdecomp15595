@@ -128,17 +128,20 @@ int LocalMemoryCounter::getMemoryUsed()
 /*
     The wrapper is needed to handle stdcall callbacks when malloc/free is normally cdecl
 */
-// OFFSET: 0x00A88430
+// PROVEN: 516699fc DIFFERENT/IDENTICAL
+// OFFSET: 0x00A88430/0x140846580
 void * F_CALLBACK Memory_DefaultMalloc(unsigned int size, FMOD_MEMORY_TYPE type)
 {
     return FMOD_OS_Memory_Alloc(size, type);
 }
-// OFFSET: 0x00A88450
+// PROVEN: 84eb3c84 DIFFERENT/IDENTICAL
+// OFFSET: 0x00A88450/0x140846590
 void * F_CALLBACK Memory_DefaultRealloc(void *data, unsigned int size, FMOD_MEMORY_TYPE type)
 {
     return FMOD_OS_Memory_Realloc(data, size, type);
 }
-// OFFSET: 0x00A88470
+// PROVEN: b5342df8 DIFFERENT/IDENTICAL
+// OFFSET: 0x00A88470/0x1408465A0
 void F_CALLBACK   Memory_DefaultFree(void *ptr, FMOD_MEMORY_TYPE type)
 {
     FMOD_OS_Memory_Free(ptr, type);
@@ -344,7 +347,7 @@ FMOD_RESULT MemPool::initCustom(void *poolmem, int poolsize, int blocksize)
 	[REMARKS]
 ]
 */
-// PROVEN: 4c68573f IDENTICAL/UNPROVEN
+// PROVEN: 4c68573f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A88CC0/0x140847320
 void MemPool::close()
 {

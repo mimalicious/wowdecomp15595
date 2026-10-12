@@ -25,7 +25,7 @@ static D3DFORMAT s_d3d9ExDepthFormats[4] = { D3DFMT_D16, D3DFMT_D24X8, D3DFMT_D2
 
 static D3DFORMAT s_d3d9ExAdapterFormats[3] = { D3DFMT_R5G6B5, D3DFMT_X8R8G8B8, D3DFMT_A8R8G8B8 };
 
-// OFFSET: 0x00843F60
+// OFFSET: 0x00843F60/0x140570540
 int32_t CGxDevice::AdjustWindowRectToWorkArea(uint32_t monitor, float aspectRatio, C2iVector* adjust, tagRECT* rect) {
     MONITORINFO info;
     info.cbSize = sizeof(info);
@@ -191,7 +191,7 @@ int32_t CGxDevice::DeviceAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint3
     return result;
 }
 
-// PROVEN: 6ae548e9 IDENTICAL/NONE
+// PROVEN: 6ae548e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849B70/0x140577D00
 int32_t CGxDevice::AdapterHasDriver() {
     DISPLAY_DEVICEA device;
@@ -207,8 +207,8 @@ int32_t CGxDevice::AdapterHasDriver() {
     return 0;
 }
 
-// PROVEN: 0e82249c IDENTICAL/NONE
-// OFFSET: 0x0084BEA0
+// PROVEN: 0e82249c IDENTICAL/DIFFERENT
+// OFFSET: 0x0084BEA0/0x14057A750
 int32_t CGxDevice::AdapterD3dAvailable() {
     HINSTANCE d3dLib;
     LPDIRECT3D9 d3d;
@@ -361,6 +361,7 @@ static BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC dc, LPRECT rect, LPAR
     return TRUE;
 }
 
+// PROVEN: bc6c872e IDENTICAL/IDENTICAL
 // OFFSET: 0x0084AC80/0x140579240
 int32_t CGxDevice::D3d11AdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes) {
     modes.SetCount(0);
@@ -411,6 +412,7 @@ int32_t CGxDevice::WinAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxM
     return modes.Count() != 0;
 }
 
+// PROVEN: 8725ddb1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0084ADE0/0x140579420
 void CGxDevice::AdapterInitMonitors() {
     CGxDevice::s_monitors.Clear();
@@ -459,7 +461,7 @@ void CGxDevice::IWindowDestroy(void* window) {
     hwnd = NULL;
 }
 
-// OFFSET: 0x008499D0
+// OFFSET: 0x008499D0/0x140577AF0
 void CGxDevice::IWindowCursorCreate(void* window, void* icon) {
     HWND hwnd = static_cast<HWND>(window);
     HICON& cursor = *static_cast<HICON*>(icon);
@@ -520,7 +522,7 @@ void CGxDevice::IWindowCursorDestroy(void* icon) {
     }
 }
 
-// PROVEN: e26dae05 IDENTICAL/NONE
+// PROVEN: e26dae05 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849B70/0x140577D00
 int32_t CGxDevice::AdapterIsPresent() {
     DISPLAY_DEVICEA device;
@@ -796,7 +798,7 @@ LRESULT CALLBACK WindowProcGx(HWND hwnd, UINT message, WPARAM wparam, LPARAM lpa
     return DefWindowProcA(hwnd, message, wparam, lparam);
 }
 
-// PROVEN: 551048cb IDENTICAL/UNPROVEN
+// PROVEN: 551048cb IDENTICAL/IDENTICAL
 // OFFSET: 0x0084A6B0/0x140578470
 uint16_t CGxDevice::IWindowClassCreate() {
     HINSTANCE instance = GetModuleHandleA(NULL);

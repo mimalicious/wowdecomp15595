@@ -32,7 +32,7 @@ uint32_t ComSat::Network::ComputeSignature(const uint8_t (&key)[16], const uint8
     return digest[3] ^ digest[2] ^ digest[1] ^ digest[0];
 }
 
-// PROVEN: 0925cf84 IDENTICAL/DIFFERENT
+// PROVEN: 0925cf84 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A38B50/0x1407E4D60
 ComSat::Network::Manager::Manager(const ComSat::Initialization& init, ComSat::Allocator& allocator) : m_allocator(&allocator), m_sessions(allocator) {
     this->m_socket = ComSat::Network::Socket::Create(allocator);

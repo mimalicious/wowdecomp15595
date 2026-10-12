@@ -15,37 +15,37 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00D381A0
+// STATIC: 0x00D381A0/0x140BF1CD0
 CTexture* CShaderEffect::s_displTex;
 
 int32_t CShaderEffect::s_forceAlphaTest;
 
-// STATIC: 0x00D381A8
+// STATIC: 0x00D381A8/0x140BF1CDC
 int32_t CShaderEffect::s_clipEnabled;
 
 int32_t CShaderEffect::s_useAlphaRef;
 
-// STATIC: 0x00D381B0
+// STATIC: 0x00D381B0/0x140BF1CE4
 float CShaderEffect::s_fogMul;
 
-// STATIC: 0x00D381B4
+// STATIC: 0x00D381B4/0x140BF1CE8
 uint32_t CShaderEffect::s_usePcfFiltering;
 
-// STATIC: 0x00D381B8
+// STATIC: 0x00D381B8/0x140BF1CEC
 uint32_t CShaderEffect::s_localLightCount;
 
-// STATIC: 0x00D381BC
+// STATIC: 0x00D381BC/0x140BF1CF0
 int32_t CShaderEffect::s_lightEnabled;
 
-// STATIC: 0x00D381C0
+// STATIC: 0x00D381C0/0x140BF1CF4
 float CShaderEffect::s_terrainDisplFactor;
 
-// STATIC: 0x00D381C4
+// STATIC: 0x00D381C4/0x140BF1CF8
 float CShaderEffect::s_displFactor;
 
 float CShaderEffect::s_tesselationDist;
 
-// STATIC: 0x00D381CC
+// STATIC: 0x00D381CC/0x140BF1D00
 float CShaderEffect::s_tesselationFactor;
 
 // STATIC: 0x00D381D0/0x140BF1D04
@@ -63,13 +63,13 @@ C3Vector CShaderEffect::s_sunSpec;
 
 LocalLights CShaderEffect::s_localLights;
 
-// STATIC: 0x00D382B8
+// STATIC: 0x00D382B8/0x140BF1E00
 C4Vector CShaderEffect::s_fogColorAlphaRef;
 
-// STATIC: 0x00D382C8
+// STATIC: 0x00D382C8/0x140BF1E10
 C4Vector CShaderEffect::s_fogParams;
 
-// STATIC: 0x00D382F8
+// STATIC: 0x00D382F8/0x140BF1E40
 C4Plane CShaderEffect::s_clipPlane;
 
 uint32_t CShaderEffect::s_shadowValue;
@@ -89,7 +89,7 @@ uint32_t CShaderEffect::ComputeVertexPermute(int32_t option0, int32_t option1, i
     return (option1 != 0) + 2 * permute;
 }
 
-// PROVEN: 551677b8 IDENTICAL/UNPROVEN
+// PROVEN: 551677b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00431D80/0x14003A550
 static void ReloadShadersCallback(const char* fileName) {
     g_theGxDevicePtr->ShaderReloadAll();
@@ -101,7 +101,7 @@ void CShaderEffect::AddRef() {
     this->m_refCount++;
 }
 
-// PROVEN: d4ff236e IDENTICAL/UNPROVEN
+// PROVEN: d4ff236e IDENTICAL/DIFFERENT
 // OFFSET: 0x00431E30/0x14003A610
 void CShaderEffect::InitEffect(const char* vertexShader, const char* hullShader, const char* domainShader, const char* pixelShader) {
     this->m_vertexShader = NULL;
@@ -143,7 +143,7 @@ uint32_t CShaderEffect::SelectShadowShader(uint32_t shadow) {
     return shadow + 4 * (CShaderEffect::s_usePcfFiltering + 2);
 }
 
-// OFFSET: 0x00431F20
+// OFFSET: 0x00431F20/0x14003A6E0
 void CShaderEffect::SetGlobalLighting(CM2Light* light) {
     CShaderEffect::s_sunDir = light->m_dir;
     CShaderEffect::s_sunSpec = light->m_specColor;
@@ -243,7 +243,7 @@ void CShaderEffect::GetClipPlane(C4Plane& plane) {
     plane = CShaderEffect::s_clipPlane;
 }
 
-// PROVEN: b8b6f07e IDENTICAL/DIFFERENT
+// PROVEN: b8b6f07e IDENTICAL/UNPROVEN
 // OFFSET: 0x00432960/0x14003B380
 void CShaderEffect::SetClipPlane(const C4Plane& plane) {
     CShaderEffect::s_clipPlane = plane;
@@ -255,13 +255,13 @@ void CShaderEffect::SetClipPlane(const C4Plane& plane) {
     }
 }
 
-// PROVEN: fc27580e IDENTICAL/NONE
+// PROVEN: fc27580e IDENTICAL/IDENTICAL
 // OFFSET: 0x00431AA0/0x14003A360
 int32_t CShaderEffect::GetClipEnabled() {
     return CShaderEffect::s_clipEnabled;
 }
 
-// PROVEN: 9554c981 IDENTICAL/DIFFERENT
+// PROVEN: 9554c981 IDENTICAL/IDENTICAL
 // OFFSET: 0x004329C0/0x14003B3F0
 void CShaderEffect::FlushFogParams() {
     if (!g_theGxDevicePtr->MasterEnable(GxMasterEnable_Fog) || !CShaderEffect::s_enableShaders) {
@@ -284,8 +284,8 @@ int32_t CShaderEffect::DisplacementEnabled() {
     return CShaderEffect::s_enableShaders && CShaderEffect::s_displFactor != 0.0f;
 }
 
-// PROVEN: d251fdb9 IDENTICAL/NONE
-// OFFSET: 0x00431B10
+// PROVEN: d251fdb9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00431B10/0x14003A3D0
 int32_t CShaderEffect::TerrainDisplEnabled() {
     return CShaderEffect::s_enableShaders && CShaderEffect::s_terrainDisplFactor != 0.0f;
 }
@@ -390,7 +390,8 @@ void CShaderEffect::SetDefaultShaders(uint32_t shadow, uint32_t boneInfluences) 
     CShaderEffect::SetShaders(4 * (localLights + 4 * (shadowIndex + bones + 2 * shadowIndex)), -1, -1, pixelPermute);
 }
 
-// OFFSET: 0x00433570
+// PROVEN: ebead0a4 IDENTICAL/DIFFERENT
+// OFFSET: 0x00433570/0x14003B890
 void CShaderEffect::SetLightingEnabled(int32_t enabled) {
     CShaderEffect::s_lightEnabled = enabled;
 
@@ -471,7 +472,7 @@ void CShaderEffect::SetTexMtx_Identity(uint32_t stage) {
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 0);
 }
 
-// OFFSET: 0x004339C0
+// OFFSET: 0x004339C0/0x14003C1E0
 void CShaderEffect::SetTexMtx_SphereMap(uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         float matrix[8] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
@@ -524,7 +525,7 @@ void CShaderEffect::SetTexMtx(const C44Matrix& matrix, uint32_t stage) {
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 0);
 }
 
-// OFFSET: 0x00433DA0
+// OFFSET: 0x00433DA0/0x14003C320
 void CShaderEffect::SetTexMtx_TexGen(EGxTexGen texGen, const C44Matrix& matrix, uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         C44Matrix view;
@@ -607,7 +608,7 @@ void CShaderEffect::UpdateTesselation() {
     g_theGxDevicePtr->ShaderConstantsSet(GxSh_Domain, 0, reinterpret_cast<const float*>(&projection), 4);
 }
 
-// OFFSET: 0x00432EE0
+// OFFSET: 0x00432EE0/0x14003CC40
 void CShaderEffect::UpdateDisplacement() {
     C44Matrix projection;
     projection = g_theGxDevicePtr->m_projNative;
@@ -632,7 +633,7 @@ void CShaderEffect::UpdateDisplacement() {
     }
 }
 
-// OFFSET: 0x004330A0
+// OFFSET: 0x004330A0/0x14003CE20
 void CShaderEffect::UpdateTerrainDispl() {
     C44Matrix projection;
     projection = g_theGxDevicePtr->m_projNative;
@@ -657,7 +658,7 @@ void CShaderEffect::UpdateTerrainDispl() {
     }
 }
 
-// OFFSET: 0x00433FB0
+// OFFSET: 0x00433FB0/0x14003D000
 void CShaderEffect::SetDiffuse(const C4Vector& color) {
     if (CShaderEffect::s_enableShaders) {
         GxShaderConstantsSet(GxSh_Vertex, 28, &color.x, 1);
@@ -678,7 +679,7 @@ void CShaderEffect::SetDiffuse(const C4Vector& color) {
     GxRsSet(GxRs_MatDiffuse, *reinterpret_cast<int32_t*>(&diffuse));
 }
 
-// OFFSET: 0x00434100
+// OFFSET: 0x00434100/0x14003D150
 void CShaderEffect::SetEmissive(const C4Vector& color) {
     if (CShaderEffect::s_enableShaders) {
         GxShaderConstantsSet(GxSh_Vertex, 29, &color.x, 1);
@@ -711,7 +712,7 @@ void CShaderEffect::SetAlphaRef(float alphaRef) {
     GxRsSet(GxRs_AlphaRef, static_cast<int32_t>(static_cast<uint8_t>(static_cast<int32_t>(alphaRef * 255.0f))));
 }
 
-// OFFSET: 0x00434370
+// OFFSET: 0x00434370/0x14003D3F0
 void CShaderEffect::SetLocalLighting(CM2Lighting* lighting, int32_t enabled, const C3Vector* origin) {
     CShaderEffect::s_lightEnabled = enabled;
 
@@ -763,13 +764,15 @@ void CShaderEffect::SetLocalLighting(CM2Lighting* lighting, int32_t enabled, con
     CShadowCache::SetShadowMapGenericInterior(lighting->m_flags & 8);
 }
 
+// PROVEN: 7acb66de IDENTICAL/DIFFERENT
 // OFFSET: 0x004345C0/0x14003D6B0
 void CShaderEffect::SetAlphaRefDefault() {
     float alphaRef = CGxDevice::s_alphaRef[g_theGxDevicePtr->m_appRenderStates[GxRs_BlendingMode].m_value.m_data.i[0]] * 0.0039215689f;
     CShaderEffect::SetAlphaRef(alphaRef);
 }
 
-// OFFSET: 0x004342F0
+// PROVEN: 0bbb42ba IDENTICAL/UNPROVEN
+// OFFSET: 0x004342F0/0x14003D350
 CShaderEffect::~CShaderEffect() {
     if (CShaderEffect::s_displTex) {
         TextureRelease(CShaderEffect::s_displTex);

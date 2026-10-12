@@ -1,5 +1,6 @@
 #include "ComponentData.h"
 
+// PROVEN: 98ed5afc IDENTICAL/IDENTICAL
 // OFFSET: 0x00481DC0/0x1400A0AB0
 ComponentData::ComponentData() {
     this->m_flags &= ~0x3u;

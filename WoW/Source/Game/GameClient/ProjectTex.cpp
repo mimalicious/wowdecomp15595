@@ -74,7 +74,7 @@ CTexture* ProjectTex2dGetModFadeTex() {
     return s_shadowModTexture;
 }
 
-// PROVEN: 1c09cdb2 IDENTICAL/UNPROVEN
+// PROVEN: 1c09cdb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x007407B0/0x14041EA50
 void ProjectTexDestroy() {
     if (s_shadowModTexture) {
@@ -417,7 +417,7 @@ static void ProjectTexClipPolygon(uint32_t& outCount, C3Vector* out, const CAaBo
     }
 }
 
-// PROVEN: 6fa1c1d8 IDENTICAL/UNPROVEN
+// PROVEN: 6fa1c1d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00743650/0x140420450
 void ProjectTexInitialize() {
     s_vsProjTex2DModel2 = NULL;

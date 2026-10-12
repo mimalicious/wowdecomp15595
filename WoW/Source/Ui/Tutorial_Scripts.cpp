@@ -60,7 +60,7 @@ static int32_t Script_IsTutorialFlagged(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 63a167dd IDENTICAL/NONE
+// PROVEN: 63a167dd IDENTICAL/UNPROVEN
 // OFFSET: 0x00901CB0/0x14065A230
 static int32_t Script_CanResetTutorials(lua_State* L) {
     for (uint32_t i = CGTutorial::m_tutorialShown.m_bits.m_count; i; ) {
@@ -76,12 +76,14 @@ static int32_t Script_CanResetTutorials(lua_State* L) {
     return 1;
 }
 
+// PROVEN: e6d61453 IDENTICAL/IDENTICAL
 // OFFSET: 0x00901DD0/0x14065A380
 static int32_t Script_ClearTutorials(lua_State* L) {
     CGTutorial::ClearTutorials();
     return 0;
 }
 
+// PROVEN: 58a5a463 IDENTICAL/IDENTICAL
 // OFFSET: 0x00901DE0/0x14065A390
 static int32_t Script_ResetTutorials(lua_State* L) {
     CGTutorial::ResetTutorials();
@@ -124,7 +126,7 @@ static int32_t Script_GetPrevCompleatedTutorial(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00D109A0
+// STATIC: 0x00D109A0/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CanResetTutorials", &Script_CanResetTutorials },
     { "FlagTutorial", &Script_FlagTutorial },
@@ -136,7 +138,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetPrevCompleatedTutorial", &Script_GetPrevCompleatedTutorial },
 };
 
-// PROVEN: bf9c0cbc IDENTICAL/NONE
+// PROVEN: bf9c0cbc IDENTICAL/UNPROVEN
 // OFFSET: 0x00901830/0x140659CB0
 void TutorialRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -144,7 +146,7 @@ void TutorialRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: d5d9091c IDENTICAL/NONE
+// PROVEN: d5d9091c IDENTICAL/UNPROVEN
 // OFFSET: 0x00901860/0x140659D00
 void TutorialUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

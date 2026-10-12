@@ -5,7 +5,7 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00D9D53C
+// STATIC: 0x00D9D53C/0x140C7F660
 static int32_t s_exitcode;
 
 // STATIC: 0x00D9D540/0x140C7F664
@@ -21,7 +21,7 @@ static void StormAtExit() {
     }
 }
 
-// OFFSET: 0x004B8980
+// OFFSET: 0x004B8980/0x1400F1040
 void STORMAPI StormInitialize() {
     SStrInitialize();
     SErrInitialize();

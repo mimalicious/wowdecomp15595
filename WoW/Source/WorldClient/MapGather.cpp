@@ -24,7 +24,7 @@ void CMap::GatherMapObjDefs(CWorldView* view, CMapArea* area) {
     }
 }
 
-// OFFSET: 0x0079F3C0
+// OFFSET: 0x0079F3C0/0x140494870
 void CMap::GatherLowDetail(CWorldView* view, int32_t x, int32_t y) {
     CMapLowDetail::CMapAreaLowTableEntry* entry = this->m_lowDetail.m_areaTable.Get(x, y);
 
@@ -57,8 +57,8 @@ void CMap::GatherLowDetail(CWorldView* view, int32_t x, int32_t y) {
     }
 }
 
-// PROVEN: 9ce49674 IDENTICAL/NONE
-// OFFSET: 0x0079F450
+// PROVEN: 9ce49674 IDENTICAL/DIFFERENT
+// OFFSET: 0x0079F450/0x140494990
 void CMap::GatherInfiniteOcean(CWorldView* view, int32_t x, int32_t y) {
     CMapLowDetail::CMapAreaLowTableEntry* entry = this->m_lowDetail.m_areaTable.Get(x, y);
 

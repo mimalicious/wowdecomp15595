@@ -13,8 +13,8 @@ template <class T>
 class Vector {
     public:
     /* 0000 */ T* m_data;
-    /* 0004 */ uint32_t m_used;
-    /* 0008 */ uint32_t m_capacity;
+    /* 0004 */ size_t m_used;
+    /* 0008 */ size_t m_capacity;
     /* 000C */ Allocator* m_allocator;
 
     Vector(Allocator& allocator);
@@ -65,7 +65,7 @@ bool ComSat::Vector<T>::Find(const T& value, uint32_t& index) const {
 }
 
 // PROVEN: 93632a2b IDENTICAL/DIFFERENT
-// OFFSET: [0x00A33C40<unsigned __int64>, 0x00A38990/0x1407DE1E0<ComSat::Network::Endpoint*>, 0x00A395F0<ComSat::Network::Session::LocalTalker>]
+// OFFSET: [0x00A33C40<unsigned __int64>, 0x00A38990/0x1407DE1E0<ComSat::Network::Endpoint*>, 0x00A395F0/0x1407E5950<ComSat::Network::Session::LocalTalker>]
 template <class T>
 bool ComSat::Vector<T>::Reserve(uint32_t size) {
     if (size < this->m_used) {

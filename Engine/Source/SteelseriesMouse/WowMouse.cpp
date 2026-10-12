@@ -2,6 +2,7 @@
 #include "Engine/Source/Os/Gui.h"
 #include "Engine/Source/SteelseriesMouse/HidManager.h"
 
+// PROVEN: f6868da0 DIFFERENT/IDENTICAL
 // OFFSET: 0x006301E0/0x1402C52E0
 SteelseriesMouse::~SteelseriesMouse() {
 }

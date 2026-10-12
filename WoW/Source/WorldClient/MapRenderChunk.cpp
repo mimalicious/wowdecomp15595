@@ -9,28 +9,28 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// STATIC: 0x00D02638
+// STATIC: 0x00D02638/0x140BB22C0
 static CGxBatch s_chunkBatch;
 
 // STATIC: 0x00E78C08
 uint8_t CMapRenderChunk::s_alphaRowBuffer[256];
 
-// STATIC: 0x00E78D08
+// STATIC: 0x00E78D08/0x140D64920
 uint8_t CMapRenderChunk::s_emptyShadow[64];
 
-// STATIC: 0x00E78D48
+// STATIC: 0x00E78D48/0x140D64960
 uint8_t CMapRenderChunk::s_emptyAlpha[64];
 
-// STATIC: 0x00E78D88
+// STATIC: 0x00E78D88/0x140D649A0
 uint32_t CMapRenderChunk::s_vertexFormat;
 
-// STATIC: 0x00E78D8C
+// STATIC: 0x00E78D8C/0x140D649A8
 int32_t CMapRenderChunk::s_pixelShaderIds[4];
 
-// STATIC: 0x00E78DA0
+// STATIC: 0x00E78DA0/0x140D649C0
 uint8_t CMapRenderChunk::s_texelBuffer[0x10000];
 
-// STATIC: 0x00E88DA0
+// STATIC: 0x00E88DA0/0x140D749C0
 void (*CMapRenderChunk::s_renderMultiPass)(CWorldView* view, CMapRenderChunk* renderChunk, CMapRenderChunkBatch* batch);
 
 // STATIC: 0x00E88DA4
@@ -41,7 +41,7 @@ static uint32_t AlphaSize(const CMapChunk* chunk) {
     return header ? 64 >> header->m_mamp : 64;
 }
 
-// PROVEN: 0dcac47e IDENTICAL/NONE
+// PROVEN: 0dcac47e IDENTICAL/UNPROVEN
 // OFFSET: 0x00765E90/0x14044BB30
 void CMapRenderChunk::Initialize() {
     CMapRenderChunk::s_vertexFormat = GxVBF_PN;
@@ -54,7 +54,7 @@ void CMapRenderChunk::Initialize() {
     memset(CMapRenderChunk::s_emptyShadow, 0, sizeof(CMapRenderChunk::s_emptyShadow));
 }
 
-// PROVEN: 3190c7c0 IDENTICAL/NONE
+// PROVEN: 3190c7c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00765EF0/0x14044BBF0
 void CMapRenderChunk::SetVertexFormat(uint32_t format) {
     if (CMapRenderChunk::s_vertexFormat != format) {
@@ -63,7 +63,7 @@ void CMapRenderChunk::SetVertexFormat(uint32_t format) {
     }
 }
 
-// PROVEN: 9bf5b422 IDENTICAL/NONE
+// PROVEN: 9bf5b422 IDENTICAL/IDENTICAL
 // OFFSET: 0x00765F10/0x14044BC10
 void CMapRenderChunk::FreeBuf() {
     if (this->m_chunkBuf) {
@@ -72,6 +72,7 @@ void CMapRenderChunk::FreeBuf() {
     }
 }
 
+// PROVEN: a47992ff IDENTICAL/IDENTICAL
 // OFFSET: 0x00765F40/0x14044BC40
 void CMapRenderChunk::AddChunks(CMapChunk** chunks) {
     for (uint32_t i = 0; i < 4; i++) {
@@ -81,8 +82,8 @@ void CMapRenderChunk::AddChunks(CMapChunk** chunks) {
     }
 }
 
-// PROVEN: 80e1e3d8 IDENTICAL/NONE
-// OFFSET: 0x00765F80
+// PROVEN: 80e1e3d8 IDENTICAL/DIFFERENT
+// OFFSET: 0x00765F80/0x14044BC80
 void CMapRenderChunk::DestroyBufs() {
     for (uint32_t i = 0; i < this->m_batchCount; i++) {
         CMapRenderChunkBatch& batch = this->m_batches[i];
@@ -122,6 +123,7 @@ void CMapRenderChunk::DestroyBufs() {
     }
 }
 
+// PROVEN: 14a64139 IDENTICAL/IDENTICAL
 // OFFSET: 0x00766060/0x14044BD80
 void CMapRenderChunk::UpdateLoaded() {
     for (uint32_t i = 0; i < this->m_batchCount; i++) {
@@ -154,13 +156,13 @@ CMapChunk* CMapRenderChunk::GetBatchChunk(uint32_t chunkMask) {
     return NULL;
 }
 
-// PROVEN: fdec8e70 IDENTICAL/NONE
+// PROVEN: fdec8e70 IDENTICAL/IDENTICAL
 // OFFSET: 0x00766730/0x14044C320
 void CMapRenderChunk::AllocBuf() {
     this->m_chunkBuf = CMapChunkBuf::Alloc(580, 3072, static_cast<EGxVertexBufferFormat>(CMapRenderChunk::s_vertexFormat));
 }
 
-// OFFSET: 0x00766760
+// OFFSET: 0x00766760/0x14044C350
 void CMapRenderChunk::AddBatch(uint32_t chunkMask, uint8_t flags) {
     CMapRenderChunkBatch& batch = this->m_batches[this->m_batchCount++];
     int32_t first = 1;
@@ -195,6 +197,7 @@ void CMapRenderChunk::AddBatch(uint32_t chunkMask, uint8_t flags) {
     this->m_center.z = (this->m_bbox.t.z + this->m_bbox.b.z) * 0.5f;
 }
 
+// PROVEN: 45fa069b DIFFERENT/IDENTICAL
 // OFFSET: 0x007668B0/0x14044C550
 void CMapRenderChunk::CreateLayer(CMapArea* area, CMapRenderChunkBatch& batch, const SMLayer* layer, int32_t merge) {
     if (merge) {
@@ -316,7 +319,7 @@ void CMapRenderChunk::CreateLayerTexture(CMapRenderChunkBatch* batch, CMapRender
     this->UnpackAlphaBits(chunk, reinterpret_cast<uint32_t*>(CMapRenderChunk::s_texelBuffer), AlphaSize(chunk), &alpha, shadow, format, chunk->m_header.m_flags & 0x8000);
 }
 
-// OFFSET: 0x00768410
+// OFFSET: 0x00768410/0x14044F420
 void CMapRenderChunk::CreateShaderTexture(CMapRenderChunkBatch* batch) {
     EGxTexFormat format = static_cast<EGxTexFormat>((this->m_flags & 0x100) ? 2 : 3);
     uint32_t size = AlphaSize(this->m_chunks[0]);
@@ -455,7 +458,7 @@ CMapRenderChunk::CMapRenderChunk() {
     this->m_chunkBuf = NULL;
 }
 
-// OFFSET: 0x00768790
+// OFFSET: 0x00768790/0x14044F9A0
 CMapRenderChunk::~CMapRenderChunk() {
     if (this->m_chunkBuf) {
         CMapChunkBuf::Free(this->m_chunkBuf);

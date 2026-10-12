@@ -22,194 +22,194 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// STATIC: 0x00ED7428
+// STATIC: 0x00ED7428/0x140E25A80
 HSLOG s_taintLog;
 
-// STATIC: 0x00ED7614
+// STATIC: 0x00ED7614/0x140E25C80
 CVar* g_taintLogCVar;
 
-// STATIC: 0x00ED7688
+// STATIC: 0x00ED7688/0x140E25D68
 CVar* g_emphasizeMySpellEffectsCVar;
 
-// STATIC: 0x00ED7618
+// STATIC: 0x00ED7618/0x140E25C88
 CVar* g_scriptErrorsCVar;
 
-// STATIC: 0x00ED761C
+// STATIC: 0x00ED761C/0x140E25C90
 CVar* g_scriptProfileCVar;
 
-// STATIC: 0x00ED7620
+// STATIC: 0x00ED7620/0x140E25C98
 CVar* g_deselectOnClickCVar;
 
-// STATIC: 0x00ED7624
+// STATIC: 0x00ED7624/0x140E25CA0
 CVar* g_cvAutoInteract;
 
-// STATIC: 0x00ED7628
+// STATIC: 0x00ED7628/0x140E25CA8
 CVar* g_autoStandCVar;
 
-// STATIC: 0x00ED762C
+// STATIC: 0x00ED762C/0x140E25CB0
 CVar* g_autoDismountCVar;
 
-// STATIC: 0x00ED7630
+// STATIC: 0x00ED7630/0x140E25CB8
 CVar* g_autoDismountFlyingCVar;
 
-// STATIC: 0x00ED7634
+// STATIC: 0x00ED7634/0x140E25CC0
 CVar* g_autoUnshiftCVar;
 
-// STATIC: 0x00ED7638
+// STATIC: 0x00ED7638/0x140E25CC8
 CVar* g_autoClearAFKCVar;
 
-// STATIC: 0x00ED763C
+// STATIC: 0x00ED763C/0x140E25CD0
 CVar* g_blockTradesCVar;
 
-// STATIC: 0x00ED7640
+// STATIC: 0x00ED7640/0x140E25CD8
 CVar* g_lootUnderMouseCVar;
 
-// STATIC: 0x00ED7644
+// STATIC: 0x00ED7644/0x140E25CE0
 CVar* g_autoLootDefaultCVar;
 
-// STATIC: 0x00ED764C
+// STATIC: 0x00ED764C/0x140E25CF0
 CVar* g_assistAttackCVar;
 
-// STATIC: 0x00ED7650
+// STATIC: 0x00ED7650/0x140E25CF8
 CVar* g_autoSelfCastCVar;
 
-// STATIC: 0x00ED7654
+// STATIC: 0x00ED7654/0x140E25D00
 CVar* g_stopAutoAttackOnTargetChangeCVar;
 
-// STATIC: 0x00ED7658
+// STATIC: 0x00ED7658/0x140E25D08
 CVar* g_showTargetOfTargetCVar;
 
-// STATIC: 0x00ED765C
+// STATIC: 0x00ED765C/0x140E25D10
 CVar* g_targetOfTargetModeCVar;
 
-// STATIC: 0x00ED7660
+// STATIC: 0x00ED7660/0x140E25D18
 CVar* g_showTargetCastbarCVar;
 
-// STATIC: 0x00ED7664
+// STATIC: 0x00ED7664/0x140E25D20
 CVar* g_showVKeyCastbarCVar;
 
-// STATIC: 0x00ED7668
+// STATIC: 0x00ED7668/0x140E25D28
 CVar* g_buffDurationsCVar;
 
-// STATIC: 0x00ED766C
+// STATIC: 0x00ED766C/0x140E25D30
 CVar* g_rotateMinimapCVar;
 
-// STATIC: 0x00ED7670
+// STATIC: 0x00ED7670/0x140E25D38
 CVar* g_minimapZoomCVar;
 
-// STATIC: 0x00ED7674
+// STATIC: 0x00ED7674/0x140E25D40
 CVar* g_minimapInsideZoomCVar;
 
 CVar* g_minimapPortalMaxCVar;
 
-// STATIC: 0x00ED7678
+// STATIC: 0x00ED7678/0x140E25D48
 CVar* g_screenEdgeFlashCVar;
 
-// STATIC: 0x00ED767C
+// STATIC: 0x00ED767C/0x140E25D50
 CVar* g_showLootSpamCVar;
 
-// STATIC: 0x00ED7680
+// STATIC: 0x00ED7680/0x140E25D58
 CVar* g_displayFreeBagSlotsCVar;
 
-// STATIC: 0x00ED7684
+// STATIC: 0x00ED7684/0x140E25D60
 CVar* g_displayWorldPVPObjectivesCVar;
 
-// STATIC: 0x00ED768C
+// STATIC: 0x00ED768C/0x140E25D70
 CVar* g_profanityFilterCVar;
 
-// STATIC: 0x00ED7690
+// STATIC: 0x00ED7690/0x140E25D78
 CVar* g_spamFilterCVar;
 
-// STATIC: 0x00ED7694
+// STATIC: 0x00ED7694/0x140E25D80
 CVar* g_chatBubblesCVar;
 
-// STATIC: 0x00ED7698
+// STATIC: 0x00ED7698/0x140E25D88
 CVar* g_chatBubblesPartyCVar;
 
-// STATIC: 0x00ED769C
+// STATIC: 0x00ED769C/0x140E25D90
 CVar* g_removeChatDelayCVar;
 
-// STATIC: 0x00ED76A0
+// STATIC: 0x00ED76A0/0x140E25D98
 CVar* g_guildShowOfflineCVar;
 
-// STATIC: 0x00ED76A4
+// STATIC: 0x00ED76A4/0x140E25DA0
 CVar* g_guildMemberNotifyCVar;
 
-// STATIC: 0x00ED76B0
+// STATIC: 0x00ED76B0/0x140E25DB8
 CVar* g_secureAbilityToggleCVar;
 
-// STATIC: 0x00ED76B4
+// STATIC: 0x00ED76B4/0x140E25DC0
 CVar* g_combatDamageCVar;
 
-// STATIC: 0x00ED76B8
+// STATIC: 0x00ED76B8/0x140E25DC8
 CVar* s_cvCombatLogPeriodicSpells;
 
-// STATIC: 0x00ED76BC
+// STATIC: 0x00ED76BC/0x140E25DD0
 CVar* g_petMeleeDamageCVar;
 
-// STATIC: 0x00ED76C0
+// STATIC: 0x00ED76C0/0x140E25DD8
 CVar* g_petSpellDamageCVar;
 
-// STATIC: 0x00ED76C4
+// STATIC: 0x00ED76C4/0x140E25DE0
 CVar* g_combatHealingCVar;
 
-// STATIC: 0x00ED76CC
+// STATIC: 0x00ED76CC/0x140E25DF0
 CVar* s_cvCalendarShowWeeklyHolidays;
 
-// STATIC: 0x00ED76D0
+// STATIC: 0x00ED76D0/0x140E25DF8
 CVar* s_cvCalendarShowDarkmoon;
 
-// STATIC: 0x00ED76D4
+// STATIC: 0x00ED76D4/0x140E25E00
 CVar* s_cvCalendarShowBattlegrounds;
 
-// STATIC: 0x00ED76D8
+// STATIC: 0x00ED76D8/0x140E25E08
 CVar* s_cvCalendarShowLockouts;
 
-// STATIC: 0x00ED76DC
+// STATIC: 0x00ED76DC/0x140E25E10
 CVar* s_cvCalendarShowResets;
 
-// STATIC: 0x00ED76E0
+// STATIC: 0x00ED76E0/0x140E25E18
 CVar* unk_BD09AC;
 
-// STATIC: 0x00ED76E4
+// STATIC: 0x00ED76E4/0x140E25E20
 CVar* g_useUiScaleCVar;
 
-// STATIC: 0x00ED76E8
+// STATIC: 0x00ED76E8/0x140E25E28
 CVar* g_uiScaleCVar;
 
-// STATIC: 0x00ED76EC
+// STATIC: 0x00ED76EC/0x140E25E30
 CVar* g_nameplateShowEnemiesCVar;
 
-// STATIC: 0x00ED76F0
+// STATIC: 0x00ED76F0/0x140E25E38
 CVar* g_nameplateShowEnemyPetsCVar;
 
-// STATIC: 0x00ED76F4
+// STATIC: 0x00ED76F4/0x140E25E40
 CVar* g_nameplateShowEnemyGuardiansCVar;
 
 // STATIC: 0x00ED76F8
 CVar* g_nameplateShowEnemyTotemsCVar;
 
-// STATIC: 0x00ED76FC
+// STATIC: 0x00ED76FC/0x140E25E50
 CVar* g_nameplateShowFriendsCVar;
 
-// STATIC: 0x00ED7700
+// STATIC: 0x00ED7700/0x140E25E58
 CVar* g_nameplateShowFriendlyPetsCVar;
 
-// STATIC: 0x00ED7704
+// STATIC: 0x00ED7704/0x140E25E60
 CVar* g_nameplateShowFriendlyGuardiansCVar;
 
-// STATIC: 0x00ED7708
+// STATIC: 0x00ED7708/0x140E25E68
 CVar* g_nameplateShowFriendlyTotemsCVar;
 
 CVar* s_cvNameplateAllowOverlap;
 
-// STATIC: 0x00ED770C
+// STATIC: 0x00ED770C/0x140E25E70
 CVar* g_unitHighlightsCVar;
 
-// STATIC: 0x00ED7714
+// STATIC: 0x00ED7714/0x140E25E80
 CVar* g_enablePVPNotifyAFKCVar;
 
-// STATIC: 0x00ED7718
+// STATIC: 0x00ED7718/0x140E25E88
 CVar* g_serviceTypeFilterCVar;
 
 // STATIC: 0x00ED771C
@@ -218,103 +218,104 @@ CVar* g_autojoinPartyVoiceCVar;
 // STATIC: 0x00ED7720
 CVar* g_autojoinBGVoiceCVar;
 
-// STATIC: 0x00ED7724
+// STATIC: 0x00ED7724/0x140E25EA0
 CVar* g_combatLogRetentionTimeCVar;
 
-// STATIC: 0x00ED7728
+// STATIC: 0x00ED7728/0x140E25EA8
 CVar* g_currencyTokensUnused1CVar;
 
-// STATIC: 0x00ED772C
+// STATIC: 0x00ED772C/0x140E25EB0
 CVar* g_currencyTokensUnused2CVar;
 
-// STATIC: 0x00ED7730
+// STATIC: 0x00ED7730/0x140E25EB8
 CVar* g_currencyTokensBackpack1CVar;
 
-// STATIC: 0x00ED7734
+// STATIC: 0x00ED7734/0x140E25EC0
 CVar* g_currencyTokensBackpack2CVar;
 
-// STATIC: 0x00ED7738
+// STATIC: 0x00ED7738/0x140E25EC8
 CVar* g_predictedHealthCVar;
 
-// STATIC: 0x00ED773C
+// STATIC: 0x00ED773C/0x140E25ED0
 CVar* g_predictedPowerCVar;
 
-// STATIC: 0x00ED7740
+// STATIC: 0x00ED7740/0x140E25ED8
 CVar* g_threatWarningCVar;
 
-// STATIC: 0x00ED7744
+// STATIC: 0x00ED7744/0x140E25EE0
 CVar* g_threatWorldTextCVar;
 
-// STATIC: 0x00ED7748
+// STATIC: 0x00ED7748/0x140E25EE8
 CVar* s_cvThreatShowNumeric;
 
-// STATIC: 0x00ED774C
+// STATIC: 0x00ED774C/0x140E25EF0
 CVar* s_cvThreatPlaySounds;
 
 CVar* s_cvShowAllSpellRanks;
 
-// STATIC: 0x00ED7750
+// STATIC: 0x00ED7750/0x140E25EF8
 CVar* g_ShowClassColorInNameplateCVar;
 
 CVar* g_previewTalentsCVar;
 
-// STATIC: 0x00ED7758
+// STATIC: 0x00ED7758/0x140E25F08
 CVar* s_cvLfgSelectedRoles;
 
-// STATIC: 0x00ED775C
+// STATIC: 0x00ED775C/0x140E25F10
 CVar* s_cvLfdCollapsedHeaders;
 
-// STATIC: 0x00ED7760
+// STATIC: 0x00ED7760/0x140E25F18
 CVar* s_cvLfdSelectedDungeons;
 
 CVar* s_cvQuestLogCollapseFilter;
 
-// STATIC: 0x00ED7768
+// STATIC: 0x00ED7768/0x140E25F28
 CVar* s_cvAutoFilledMultiCastSlots;
 
-// STATIC: 0x00ED776C
+// STATIC: 0x00ED776C/0x140E25F30
 CVar* g_questPOICVar;
 
-// STATIC: 0x00ED7770
+// STATIC: 0x00ED7770/0x140E25F38
 CVar* g_trackerSortingCVar;
 
-// STATIC: 0x00ED7774
+// STATIC: 0x00ED7774/0x140E25F40
 CVar* s_cvShowToastFriendRequest;
 
-// STATIC: 0x00ED7778
+// STATIC: 0x00ED7778/0x140E25F48
 CVar* s_cvShowToastOnline;
 
-// STATIC: 0x00ED777C
+// STATIC: 0x00ED777C/0x140E25F50
 CVar* s_cvShowToastOffline;
 
-// STATIC: 0x00ED7780
+// STATIC: 0x00ED7780/0x140E25F58
 CVar* s_cvShowToastBroadcast;
 
-// STATIC: 0x00ED7784
+// STATIC: 0x00ED7784/0x140E25F60
 CVar* s_cvShowToastConversation;
 
-// STATIC: 0x00ED7788
+// STATIC: 0x00ED7788/0x140E25F68
 CVar* g_spellTooltip_DisplayAvgValuesCVar;
 
-// STATIC: 0x00ED7648
+// STATIC: 0x00ED7648/0x140E25CE8
 CVar* g_interactOnLeftClickCVar;
 
-// STATIC: 0x00ED7764
+// STATIC: 0x00ED7764/0x140E25F20
 CVar* g_questLogCollapseHeaderFilterCVar;
 
-// STATIC: 0x00ED76A8
+// STATIC: 0x00ED76A8/0x140E25DA8
 CVar* g_guildRewardsUsableCVar;
 
-// STATIC: 0x00ED76AC
+// STATIC: 0x00ED76AC/0x140E25DB0
 CVar* g_guildRewardsCategoryCVar;
 
-// STATIC: 0x00ED7710
+// STATIC: 0x00ED7710/0x140E25E78
 CVar* g_talentPointsSpentCVar;
 
-// STATIC: 0x00ED7754
+// STATIC: 0x00ED7754/0x140E25F00
 CVar* g_previewTalentsOptionCVar;
 
-// OFFSET: 0x008C4230
+// PROVEN: cdc5cc03 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C4230/0x140633D80
 bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 
@@ -325,14 +326,14 @@ bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const cha
     return true;
 }
 
-// PROVEN: 8ddd94c5 IDENTICAL/NONE
+// PROVEN: 8ddd94c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4260/0x140633DC0
 bool GuildShowOfflineCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGuildInfo::SetShowOffline(StringToBOOL(value));
     return true;
 }
 
-// PROVEN: 72e8cfdc IDENTICAL/NONE
+// PROVEN: 72e8cfdc IDENTICAL/DIFFERENT
 // OFFSET: 0x008C4280/0x140633F60
 bool ShowClassColorInNameplateCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!oldValue || SStrToInt(oldValue) != SStrToInt(value)) {
@@ -342,7 +343,7 @@ bool ShowClassColorInNameplateCallback(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// PROVEN: 4625f6c8 IDENTICAL/NONE
+// PROVEN: 4625f6c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C42C0/0x140633E20
 bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (CGGameUI::m_initialized) {
@@ -352,6 +353,7 @@ bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* 
     return true;
 }
 
+// PROVEN: bb38c1c7 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C42F0/0x140633E50
 bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t spent = CGTalentInfo::GetAllGroupPreviewTalentPointsSpent(0);
@@ -368,27 +370,31 @@ bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* val
     return true;
 }
 
-// OFFSET: 0x008C4370
+// PROVEN: 15d5ece2 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C4370/0x140633F00
 bool CVarHandler_autoCompleteResortNamesOnRecency(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_resortNamesOnRecency = SStrToInt(value) != 0;
     CGAutoCompleteName::ResortAll();
     return true;
 }
 
-// OFFSET: 0x008C43A0
+// PROVEN: c7700220 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C43A0/0x140633F30
 bool CVarHandler_autoCompleteWhenEditingFromCenter(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_whenEditingFromCenter = SStrToInt(value) != 0;
     CGAutoCompleteName::ResortAll();
     return true;
 }
 
-// OFFSET: 0x008C43D0
+// PROVEN: 039ce46f IDENTICAL/DIFFERENT
+// OFFSET: 0x008C43D0/0x140633F60
 bool CVarHandler_autoCompleteUseContext(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_useContext = SStrToInt(value) != 0;
     CGAutoCompleteName::ResortAll();
     return true;
 }
 
+// PROVEN: 4ec4248c DIFFERENT/IDENTICAL
 // OFFSET: 0x008C4400/0x140633F90
 bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char* value, void* arg) {
     CVar* reduced = CVar::Lookup("reducedLagTolerance");
@@ -406,6 +412,7 @@ bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char
     return true;
 }
 
+// PROVEN: 4004d23f IDENTICAL/NONE
 // OFFSET: 0x008CA050
 bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (g_useUiScaleCVar && g_useUiScaleCVar->m_intValue) {
@@ -421,7 +428,7 @@ bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, voi
     return true;
 }
 
-// PROVEN: 9aa34c60 IDENTICAL/NONE
+// PROVEN: 9aa34c60 IDENTICAL/IDENTICAL
 // OFFSET: 0x008CA0C0/0x14063A400
 bool CGGameUI::UnitHighlightsCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (CGGameUI::m_initialized) {
@@ -450,6 +457,7 @@ bool CVarHandler_useUiScale(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
+// PROVEN: 19598d88 IDENTICAL/IDENTICAL
 // OFFSET: 0x008DDB00/0x140652640
 bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value) > 0) {
@@ -463,8 +471,8 @@ bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, voi
     return true;
 }
 
-// PROVEN: 09d7d072 IDENTICAL/NONE
-// OFFSET: 0x008CF190
+// PROVEN: 09d7d072 IDENTICAL/IDENTICAL
+// OFFSET: 0x008CF190/0x140641930
 bool CVarHandler_threatWarning(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGameUI::UpdateThreatWarningEnabled(SStrToInt(value));
     return true;

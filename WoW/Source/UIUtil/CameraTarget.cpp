@@ -17,7 +17,7 @@ CCameraTarget::CCameraTarget() {
     this->m_valid = 0;
 }
 
-// OFFSET: 0x00485BC0
+// OFFSET: 0x00485BC0/0x1400A6870
 void CCameraTarget::UpdateInternal() {
     if (!this->m_valid) {
         return;
@@ -38,7 +38,7 @@ void CCameraTarget::UpdateInternal() {
     this->m_matrix.d2 = position.z;
 }
 
-// OFFSET: 0x00485CA0
+// OFFSET: 0x00485CA0/0x1400A6950
 WOWGUID CCameraTarget::CalcTargetGUID(WOWGUID guid) {
     for (int32_t i = 0; i < 4; i++) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -114,7 +114,7 @@ void CCameraTarget::SetObject(const C44Matrix& matrix, WOWGUID guid, TARGET_TYPE
     this->m_currentTargetGUID = this->m_targetGUID;
 }
 
-// OFFSET: 0x00485E20
+// OFFSET: 0x00485E20/0x1400A6B40
 void CCameraTarget::UpdateTarget(WOWGUID guid) {
     this->m_currentTargetGUID = this->CalcTargetGUID(guid);
     this->UpdateInternal();

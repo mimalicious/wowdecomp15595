@@ -10,7 +10,7 @@
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00CA8A18
+// STATIC: 0x00CA8A18/0x140B48CD0
 static TSCArray<uint16_t, 256 * 256> s_textureData = { 256 * 256 };
 
 // OFFSET: 0x00623340
@@ -334,7 +334,8 @@ void TEXTURECACHE::PasteGlyphNonOutlinedAA(const GLYPHBITMAPDATA& data, TSCArray
     }
 }
 
-// OFFSET: 0x00623300
+// PROVEN: 4408b172 DIFFERENT/IDENTICAL
+// OFFSET: 0x00623300/0x1402B47A0
 void TEXTURECACHE::UpdateDirty() {
     if (this->m_anyDirtyGlyphs && this->m_texture) {
         CGxTex* gxTex = TextureGetGxTex(this->m_texture);
@@ -343,6 +344,7 @@ void TEXTURECACHE::UpdateDirty() {
     }
 }
 
+// PROVEN: 91c98dc0 DIFFERENT/IDENTICAL
 // OFFSET: 0x006242A0/0x1402B5890
 CHARCODEDESC* TEXTURECACHE::AllocateNewGlyph(GLYPHBITMAPDATA* data) {
     uint32_t count = this->m_textureRows.m_count;
@@ -406,7 +408,7 @@ void TEXTURECACHE::TextureCallback(EGxTexCommand command, uint32_t width, uint32
     texels = s_textureData.m_data;
 }
 
-// PROVEN: 071c8737 IDENTICAL/UNPROVEN
+// PROVEN: 071c8737 IDENTICAL/IDENTICAL
 // OFFSET: 0x00624410/0x1402B5A80
 void TEXTURECACHE::CreateTexture(int32_t filter) {
     CGxTexFlags flags;
@@ -415,6 +417,7 @@ void TEXTURECACHE::CreateTexture(int32_t filter) {
     this->m_texture = TextureCreate(256, 256, GxTex_Argb4444, GxTex_Argb4444, flags, this, TEXTURECACHE::TextureCallback, "GxuFont", 0);
 }
 
+// PROVEN: db3d86d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00624660/0x1402B5D90
 void TEXTURECACHE::Initialize(CGxFont* face, uint32_t cellHeight) {
     this->m_theFace = face;

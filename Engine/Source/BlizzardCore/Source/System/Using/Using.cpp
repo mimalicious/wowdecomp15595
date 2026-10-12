@@ -15,7 +15,7 @@ System_Using::UsingHashTable System_Using::s_Using;
 // STATIC: 0x00EBA64C
 char* System_Using::s_UsingNamesTail;
 
-// STATIC: 0x00EBA650
+// STATIC: 0x00EBA650/0x140DAB10C
 int16_t System_Using::s_NextUsingID;
 
 // STATIC: 0x00EBA654
@@ -95,7 +95,7 @@ void System_Using::ShutdownUnused() {
 void System_Using::RegisterNull() {
 }
 
-// OFFSET: 0x007B6230
+// OFFSET: 0x007B6230/0x1404AC500
 System_Using::UsingRec* System_Using::Intern(const char* name) {
     uint32_t slot;
 
@@ -122,11 +122,13 @@ System_Using::UsingRec* System_Using::Intern(const char* name) {
     return rec;
 }
 
+// PROVEN: 498fd223 DIFFERENT/IDENTICAL
 // OFFSET: 0x007BD5E0/0x1404B5DC0
 void Blizzard::Using::StartUsing(const char* name) {
     System_Using::Intern(name)->refCount++;
 }
 
+// PROVEN: 226809d5 DIFFERENT/IDENTICAL
 // OFFSET: 0x007BD600/0x1404B5DE0
 void Blizzard::Using::StopUsing(const char* name) {
     System_Using::Intern(name)->refCount--;
@@ -156,20 +158,8 @@ void Blizzard::Using::DependsOn(const char* me, const char* dependsOn) {
 }
 
 // INLINED
-Blizzard::Using::GlobalUse::GlobalUse() {
-    this->m_name = "Blizzard::Using::GlobalUse";
-    Blizzard::Using::StartUsing("Blizzard::Using::GlobalUse");
-}
-
-// INLINED
 Blizzard::Using::GlobalUse::~GlobalUse() {
     Blizzard::Using::StopUsing(this->m_name);
-}
-
-// INLINED
-Blizzard::Using::Use::Use(const char* name) {
-    this->m_name = name;
-    Blizzard::Using::StartUsing(name);
 }
 
 // INLINED

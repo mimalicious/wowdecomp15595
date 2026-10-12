@@ -10,7 +10,7 @@ static float s_ddcWidthScale = 0.8f;
 // STATIC: 0x00D096BC
 static float s_ddcHeightScale = 0.6f;
 
-// STATIC: 0x00D096C0
+// STATIC: 0x00D096C0/0x140BBB530
 static float s_aspectCompensation = 1.0f;
 
 // PROVEN: 98cbafae IDENTICAL/UNPROVEN
@@ -23,7 +23,7 @@ void CoordinateSetAspectRatio(float aspect) {
     s_ddcWidthScale = aspect * scale;
 }
 
-// PROVEN: 429128d8 IDENTICAL/NONE
+// PROVEN: 429128d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00872390/0x1405A87B0
 float CoordinateGetAspectRatio() {
     return s_aspectRatio;

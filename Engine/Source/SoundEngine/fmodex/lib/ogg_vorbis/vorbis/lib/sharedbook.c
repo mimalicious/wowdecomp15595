@@ -71,7 +71,7 @@ float _FMOD_float32_unpack(ogg_int32_t val){
 /* given a list of word lengths, generate a list of codewords.  Works
    for length ordered or unordered, always assigns the lowest valued
    codewords first.  Extended to handle unused entries (length 0) */
-// OFFSET: 0x00B45400
+// OFFSET: 0x00B45400/0x140914310
 ogg_uint32_t *_FMOD_make_words(ogg_int32_t *l,ogg_int32_t n,ogg_int32_t sparsecount){
   ogg_int32_t i,j,count=0;
   ogg_uint32_t marker[33];
@@ -257,6 +257,7 @@ float *_FMOD_book_unquantize(const static_codebook *b,int n,int *sparsemap){
   return(NULL);
 }
 
+// PROVEN: 680505f3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B45860/0x140914850
 void FMOD_vorbis_staticbook_clear(static_codebook *b){
   if(b->quantlist)_ogg_free(b->quantlist);
@@ -271,6 +272,7 @@ void FMOD_vorbis_staticbook_destroy(static_codebook *b){
   _ogg_free(b);
 }
 
+// PROVEN: e580c9d5 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B458F0/0x1409148F0
 void FMOD_vorbis_book_clear(codebook *b){
   /* static book is not cleared; we're likely called on the lookup and
@@ -315,6 +317,7 @@ static int sort32a(const void *a,const void *b){
 }
 
 /* decode codebook arrangement is more heavily optimized than encode */
+// PROVEN: 8efec906 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B459C0/0x1409149D0
 int FMOD_vorbis_book_init_decode(codebook *c,const static_codebook *s){
   int i,j,n=0,tabn;

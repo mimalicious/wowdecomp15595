@@ -29,54 +29,55 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Ui/MacroConditions.h"
 
-// STATIC: 0x00D15E38
+// STATIC: 0x00D15E38/0x140BCFC18
 static TSExplicitList<MACRONODE, offsetof(MACRONODE, m_dynamicLink)> s_dynamicMacros;
 
-// STATIC: 0x00F60CA0
+// STATIC: 0x00F60CA0/0x140E55DB0
 uint32_t CGUIMacros::m_sortedMacros[72];
 
-// STATIC: 0x00F60DE8
+// STATIC: 0x00F60DE8/0x140BCFBD0
 static TSHashTable<MACRONODE, HASHKEY_NONE> s_macros;
 
-// STATIC: 0x00D15D90
+// STATIC: 0x00D15D90/0x140BCFA80
 const char* s_macroIconPath = "Interface\\Icons\\";
 
-// STATIC: 0x00F60DC0
+// STATIC: 0x00F60DC0/0x140E55ED0
 int32_t CGUIMacros::m_saveMacros;
 
-// STATIC: 0x00F60DC4
+// STATIC: 0x00F60DC4/0x140E55ED4
 uint32_t CGUIMacros::m_state;
 
-// STATIC: 0x00F60DC8
+// STATIC: 0x00F60DC8/0x140E55ED8
 const char* CGUIMacros::m_macroRunning;
 
-// STATIC: 0x00F60DCC
+// STATIC: 0x00F60DCC/0x140E55EE0
 MACRONODE* CGUIMacros::m_macroButton;
 
-// STATIC: 0x00F60DD0
+// STATIC: 0x00F60DD0/0x140E55EE8
 uint32_t CGUIMacros::m_numMacros[2];
 
-// STATIC: 0x00F60DD8
+// STATIC: 0x00F60DD8/0x140E55EF0
 static uint32_t s_maxMacroID[2];
 
-// STATIC: 0x00C074B0
+// STATIC: 0x00C074B0/0x140A00048
 static const uint32_t s_maxMacros[2] = { 36, 18 };
 
 // STATIC: 0x00C074B8
 static const uint32_t s_macroIDBase[2] = { 0, 0x1000000 };
 
-// STATIC: 0x00F60E14
+// STATIC: 0x00F60E14/0x140E55F00
 TSGrowableArray<char*> s_macroIcons;
 
-// STATIC: 0x00F60E24
+// STATIC: 0x00F60E24/0x140E55F18
 TSGrowableArray<char*> s_macroItemIcons;
 
-// STATIC: 0x00F60DE0
+// STATIC: 0x00F60DE0/0x140E55EF8
 static uint16_t s_initCounter;
 
-// STATIC: 0x00F60DE4
+// STATIC: 0x00F60DE4/0x140E55EFC
 static uint32_t s_pendingLoads;
 
+// PROVEN: bd50a44a IDENTICAL/IDENTICAL
 // OFFSET: 0x009C3C30/0x140750FD0
 int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
     for (uint32_t i = 0; i < static_cast<int32_t>(sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])); i++) {
@@ -88,7 +89,8 @@ int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
     return -1;
 }
 
-// OFFSET: 0x009C50C0
+// PROVEN: 8726b5e8 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C50C0/0x140752B20
 void MACRONODE::IncrementActionBarCount() {
     if (this->m_dynamic && !this->m_actionBarCount) {
         s_dynamicMacros.LinkToTail(this);
@@ -97,7 +99,7 @@ void MACRONODE::IncrementActionBarCount() {
     this->m_actionBarCount++;
 }
 
-// OFFSET: 0x009C50F0
+// OFFSET: 0x009C50F0/0x140752B60
 void MACRONODE::DecrementActionBarCount() {
     this->m_actionBarCount--;
 
@@ -115,6 +117,7 @@ void CGUIMacros::UpdateMacroSpells() {
     }
 }
 
+// PROVEN: 6cd621a8 IDENTICAL/NONE
 // OFFSET: 0x009C53F0
 int32_t CGUIMacros::GetSortedIndexByName(const char* name) {
     MACRONODE* macro = CGUIMacros::FindMacro(name);
@@ -132,7 +135,7 @@ int32_t CGUIMacros::GetSortedIndexByName(const char* name) {
     return -1;
 }
 
-// OFFSET: 0x009C4AA0
+// OFFSET: 0x009C4AA0/0x1407523C0
 void CGUIMacros::UpdateDynamicMacros() {
     for (MACRONODE* macro = s_dynamicMacros.Head(); macro; macro = s_dynamicMacros.Next(macro)) {
         if (macro->FindSpellID()) {
@@ -141,7 +144,7 @@ void CGUIMacros::UpdateDynamicMacros() {
     }
 }
 
-// OFFSET: 0x009C53C0
+// OFFSET: 0x009C53C0/0x140752FC0
 MACRONODE* CGUIMacros::GetMacroByIndex(uint32_t index) {
     if (index >= sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])) {
         return NULL;
@@ -150,12 +153,12 @@ MACRONODE* CGUIMacros::GetMacroByIndex(uint32_t index) {
     return s_macros.Ptr(CGUIMacros::m_sortedMacros[index], HASHKEY_NONE());
 }
 
-// OFFSET: 0x009C5430
+// OFFSET: 0x009C5430/0x140753030
 MACRONODE* CGUIMacros::GetMacroByID(uint32_t id) {
     return s_macros.Ptr(id, HASHKEY_NONE());
 }
 
-// OFFSET: 0x009C54C0
+// OFFSET: 0x009C54C0/0x140753140
 void CGUIMacros::RunMacro(int32_t id, const char* button) {
     CGUIMacros::RunMacro(s_macros.Ptr(id, HASHKEY_NONE()), button);
 }
@@ -234,11 +237,13 @@ bool CGUIMacros::IsActionAllowed(uint32_t action) {
     return !CGUIMacros::m_macroButton || ((1 << action) & CGUIMacros::m_state);
 }
 
+// PROVEN: e69afe2f IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4A40/0x140752360
 void CGUIMacros::RemoveDynamicMacro(MACRONODE* macro) {
     s_dynamicMacros.UnlinkNode(macro);
 }
 
+// PROVEN: 28ccda0c IDENTICAL/UNPROVEN
 // OFFSET: 0x009C5120/0x140752B90
 void CGUIMacros::Initialize() {
     do {
@@ -249,7 +254,7 @@ void CGUIMacros::Initialize() {
     CGUIMacros::LoadIcons();
 }
 
-// PROVEN: 8b1765db IDENTICAL/NONE
+// PROVEN: 8b1765db IDENTICAL/IDENTICAL
 // OFFSET: 0x009C7050/0x140755840
 void CGUIMacros::LoadMacros() {
     s_pendingLoads = 0x30000;
@@ -257,6 +262,7 @@ void CGUIMacros::LoadMacros() {
     LoadAccountData(5, CGUIMacros::LoadMacrosCallback, reinterpret_cast<void*>(static_cast<uintptr_t>(s_initCounter | 0x20000)));
 }
 
+// PROVEN: b09ec62c DIFFERENT/IDENTICAL
 // OFFSET: 0x009C3BF0/0x140750FA0
 static int32_t QSortIcons(const void* a, const void* b) {
     return _stricmp(*static_cast<char* const*>(a), *static_cast<char* const*>(b));
@@ -267,6 +273,7 @@ static int32_t QSortMacrosByName(const void* a, const void* b) {
     return _stricmp((*static_cast<MACRONODE* const*>(a))->m_name, (*static_cast<MACRONODE* const*>(b))->m_name);
 }
 
+// PROVEN: b9a90486 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4390/0x1407519C0
 static void AddMacroIcon(const char* fileName) {
     char* ext = SStrChrR(const_cast<char*>(fileName), '.');
@@ -282,6 +289,7 @@ static void AddMacroIcon(const char* fileName) {
     }
 }
 
+// PROVEN: 2093e2c2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4400/0x140751A50
 static void AddMacroItemIcon(const char* fileName) {
     char* ext = SStrChrR(const_cast<char*>(fileName), '.');
@@ -297,6 +305,7 @@ static void AddMacroItemIcon(const char* fileName) {
     }
 }
 
+// PROVEN: 7c7fc799 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C4470/0x140751AE0
 static int32_t IconListArchiveCallback(const char* fileName, void* param) {
     if (!SFile::FileExists(fileName)) {
@@ -353,7 +362,7 @@ static int32_t IconListDirectoryCallback(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// PROVEN: 6ee8c901 IDENTICAL/NONE
+// PROVEN: 6ee8c901 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C4680/0x140751E20
 static int32_t IconListCustomCallback(OS_FILE_DATA& data, void* param) {
     if (!(data.flags & OS_FILE_ATTRIBUTE_DIRECTORY)) {
@@ -432,10 +441,12 @@ struct MacroSlashCommand {
     int32_t m_type;
 };
 
-// OFFSET: 0x009C4AF0
+// PROVEN: 899df668 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C4AF0/0x140752420
 MACRONODE::~MACRONODE() {
 }
 
+// PROVEN: 864a54f1 IDENTICAL/NONE
 // OFFSET: 0x009C4B60
 MACRONODE::MACRONODE() {
     this->m_name[0] = '\0';
@@ -572,7 +583,8 @@ int32_t MACRONODE::Parse() {
     return this->FindSpellID();
 }
 
-// OFFSET: 0x009C5340
+// PROVEN: e30de2bf IDENTICAL/DIFFERENT
+// OFFSET: 0x009C5340/0x140752EE0
 void CGUIMacros::CountActionBarSlots(MACRONODE* macro) {
     macro->m_actionBarCount = 0;
     CGUIMacros::RemoveDynamicMacro(macro);
@@ -615,6 +627,7 @@ void CGUIMacros::SortMacros() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_MACROS, NULL);
 }
 
+// PROVEN: 335e1d24 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C54F0/0x1407531A0
 int32_t CGUIMacros::SetMacroBody(MACRONODE* macro, const char* body) {
     SStrCopy(macro->m_body, body, sizeof(macro->m_body));
@@ -672,7 +685,7 @@ void CGUIMacros::DeleteMacro(uint32_t id, int32_t silent) {
     CGUIMacros::SortMacros();
 }
 
-// OFFSET: 0x009C5D90
+// OFFSET: 0x009C5D90/0x140753DF0
 void CGUIMacros::CheckActionBar() {
     for (MACRONODE* macro = s_macros.m_fulllist.Head(); macro; macro = s_macros.m_fulllist.Next(macro)) {
         macro->m_actionBarCount = 0;
@@ -818,7 +831,8 @@ void CGUIMacros::LoadMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
     }
 }
 
-// OFFSET: 0x009C3F00
+// PROVEN: 5a8d7eb4 IDENTICAL/IDENTICAL
+// OFFSET: 0x009C3F00/0x140751350
 void CGUIMacros::RunMacro(MACRONODE* macro, const char* button) {
     MACRONODE* savedMacro = CGUIMacros::m_macroButton;
     const char* savedButton = CGUIMacros::m_macroRunning;
@@ -1047,7 +1061,7 @@ void CGUIMacros::SaveMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
     }
 }
 
-// PROVEN: d712a366 IDENTICAL/NONE
+// PROVEN: d712a366 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C5300/0x140752E90
 void CGUIMacros::SaveMacros() {
     if (!CGUIMacros::m_saveMacros) {
@@ -1059,7 +1073,8 @@ void CGUIMacros::SaveMacros() {
     SaveAccountData(5, CGUIMacros::SaveMacrosCallback, reinterpret_cast<void*>(1));
 }
 
-// OFFSET: 0x009C70A0
+// PROVEN: 4b2c37c7 IDENTICAL/DIFFERENT
+// OFFSET: 0x009C70A0/0x140755890
 uint32_t CGUIMacros::CreateMacro(const char* name, const char* icon, const char* body, int32_t perCharacter, int32_t isLocal) {
     if (!name || !*name) {
         return 0;

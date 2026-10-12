@@ -13,9 +13,10 @@
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: 0x00EBC488
+// STATIC: 0x00EBC488/0x140DAD460
 CDataAllocator CSimpleModelFFX::s_simpleModelFFXHeap(sizeof(CSimpleModelFFX), 5);
 
+// PROVEN: 7c3b0154 IDENTICAL/IDENTICAL
 // OFFSET: 0x00811030/0x140528800
 static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position) {
     if (eventId == 0x4F534424) {
@@ -24,6 +25,7 @@ static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId
     }
 }
 
+// PROVEN: 8ea00fdd IDENTICAL/IDENTICAL
 // OFFSET: 0x008110A0/0x140528890
 void CSimpleModelFFX::SetModel(CM2Model* model) {
     this->CSimpleModel::SetModel(model);
@@ -46,7 +48,7 @@ void CSimpleModelFFX::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 5fbdd967 IDENTICAL/NONE
+// PROVEN: 5fbdd967 IDENTICAL/IDENTICAL
 // OFFSET: 0x00811010/0x1405287D0
 void CSimpleModelFFX::OnLayerShow() {
     FFX::SetEffect(1, CGlueMgr::m_glowEffect);
@@ -73,13 +75,13 @@ CSimpleModelFFX::CSimpleModelFFX(CSimpleFrame* parent) : CSimpleModel(parent) {
     this->m_lightArray3[1].m_modelFrame = this;
 }
 
-// PROVEN: 42e8c4ae IDENTICAL/NONE
-// OFFSET: 0x00811210
+// PROVEN: 42e8c4ae IDENTICAL/IDENTICAL
+// OFFSET: 0x00811210/0x140528A50
 void CSimpleModelFFX::SetGlow(float glow) {
     this->m_glow = glow;
 }
 
-// PROVEN: 180241f1 IDENTICAL/NONE
+// PROVEN: 180241f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00811230/0x140528A60
 int32_t CSimpleModelFFX::GetScriptMetaTable() {
     return CSimpleModelFFX::s_metatable;
@@ -124,14 +126,15 @@ void CSimpleModelFFX::operator delete(void* ptr) {
     CSimpleModelFFX::s_simpleModelFFXHeap.PutData(ptr, NULL, 0);
 }
 
+// PROVEN: 6def4ccc IDENTICAL/IDENTICAL
 // OFFSET: 0x008113F0/0x140528C80
 CSimpleFrame* CSimpleModelFFX::Create(CSimpleFrame* parent) {
     void* data = CSimpleModelFFX::s_simpleModelFFXHeap.GetData(0, typeid(CSimpleModelFFX).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleModelFFX(parent) : NULL;
 }
 
-// PROVEN: 80f379d5 IDENTICAL/NONE
-// OFFSET: 0x00811430
+// PROVEN: 80f379d5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00811430/0x140528CD0
 void CSimpleModelFFX::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     this->CSimpleFrame::OnFrameRender(batch, layer);
 

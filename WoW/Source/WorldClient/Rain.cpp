@@ -26,7 +26,7 @@
 // STATIC: 0x00D017C8
 static float s_motionBlurMaxAngle = 45.0f;
 
-// STATIC: 0x00D017CC
+// STATIC: 0x00D017CC/0x140BB1308
 static float s_motionBlurMaxSpeed = 30.0f;
 
 // STATIC: 0x00D017D0
@@ -37,7 +37,7 @@ struct PTVertex {
     /* 000C */ C2Vector tc;
 };
 
-// OFFSET: 0x007485E0
+// OFFSET: 0x007485E0/0x140427720
 float Rain::GetDropStretch() const {
     const C3Vector& velocity = this->m_weather->m_velocity;
     float stretch = 2.0f;
@@ -112,7 +112,7 @@ void Rain::RealizePacket(PatterPacket* packet) {
     buf->unk_001C = 1;
 }
 
-// OFFSET: 0x007497B0
+// OFFSET: 0x007497B0/0x140428E60
 void Rain::GetMotionBlurMatrix(C33Matrix& matrix) const {
     const C3Vector& velocity = this->m_weather->m_velocity;
     float vx = velocity.x;
@@ -212,7 +212,7 @@ bool Rain::InitDrop(Drop& drop, float time) {
     return true;
 }
 
-// OFFSET: 0x00749F50
+// OFFSET: 0x00749F50/0x1404296C0
 void Rain::UpdatePacket(uint32_t count) {
     PatterPacket* patters = this->m_patters.m_current;
     DropPacket* drops = this->m_drops.m_current;
@@ -279,7 +279,7 @@ uint32_t Rain::NumActive() {
     return this->m_mists.NumActive() + active;
 }
 
-// OFFSET: 0x0074BFE0
+// OFFSET: 0x0074BFE0/0x14042BE20
 void Rain::RenderPatterPacketsSW() {
     if (!this->m_patters.m_active.Head()) {
         return;
@@ -391,7 +391,7 @@ void Rain::RenderPatterPacketsSW() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0074C900
+// OFFSET: 0x0074C900/0x14042C880
 void Rain::RenderDropPacketsSW() {
     if (!this->m_drops.m_active.Head()) {
         return;
@@ -513,7 +513,7 @@ void Rain::RenderDropPacketsSW() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0074D2E0
+// OFFSET: 0x0074D2E0/0x14042D320
 void Rain::RenderPatterPackets() {
     if (!this->m_patters.m_active.Head()) {
         return;
@@ -594,7 +594,7 @@ void Rain::RenderPatterPackets() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0074DA30
+// OFFSET: 0x0074DA30/0x14042DC20
 void Rain::RenderDropPackets() {
     if (!this->m_drops.m_active.Head()) {
         return;
@@ -691,7 +691,7 @@ void Rain::RenderDropPackets() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x00751DE0
+// OFFSET: 0x00751DE0/0x140432CF0
 Rain::~Rain() {
     TextureRelease(this->m_dropTexture);
     TextureRelease(this->m_patterTexture);
@@ -795,8 +795,8 @@ void Rain::UpdatePackets() {
     }
 }
 
-// PROVEN: bf9f2627 IDENTICAL/NONE
-// OFFSET: 0x007522E0
+// PROVEN: bf9f2627 IDENTICAL/UNPROVEN
+// OFFSET: 0x007522E0/0x140433270
 void Rain::Render() {
     this->UpdatePackets();
 

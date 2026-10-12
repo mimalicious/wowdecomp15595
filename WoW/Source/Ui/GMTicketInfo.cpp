@@ -13,22 +13,23 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/ChatFrame.h"
 
-// STATIC: 0x00F76304
+// STATIC: 0x00F76304/0x140E6C300
 int32_t CGGMTicketInfo::m_ticketID;
 
-// STATIC: 0x00F76308
+// STATIC: 0x00F76308/0x140E6C304
 int32_t CGGMTicketInfo::m_responseID;
 
-// STATIC: 0x00D169F0
+// STATIC: 0x00D169F0/0x140BD0F70
 uint8_t CGGMTicketInfo::s_quickTicketSystemStatus = 1;
 
-// STATIC: 0x00D169F1
+// STATIC: 0x00D169F1/0x140BD0F71
 uint8_t CGGMTicketInfo::s_itemRestorationButtonStatus = 1;
 
-// STATIC: 0x00D16A98
+// STATIC: 0x00D16A98/0x140BD10C0
 ThrottleObject CGGMTicketInfo::s_quickTicketThrottle(0, 1);
 
-// OFFSET: 0x009E5700
+// PROVEN: 99963cea IDENTICAL/IDENTICAL
+// OFFSET: 0x009E5700/0x14077DA60
 void CGGMTicketInfo::SetQuickTicketSystemStatus(bool enabled) {
     if (static_cast<uint8_t>(enabled) != CGGMTicketInfo::s_quickTicketSystemStatus) {
         CGGMTicketInfo::s_quickTicketSystemStatus = enabled;
@@ -36,14 +37,16 @@ void CGGMTicketInfo::SetQuickTicketSystemStatus(bool enabled) {
     }
 }
 
-// OFFSET: 0x009E5730
+// PROVEN: 39e350b0 IDENTICAL/DIFFERENT
+// OFFSET: 0x009E5730/0x14077DA90
 void CGGMTicketInfo::SetQuickTicketThrottle(const ThrottleObject* throttle) {
     ThrottleObject saved = *throttle;
     CGGMTicketInfo::s_quickTicketThrottle.Restore(saved);
     FrameScript_SignalEvent(SCRIPT_EVENT_QUICK_TICKET_THROTTLE_CHANGED, NULL);
 }
 
-// OFFSET: 0x009E5780
+// PROVEN: 5062c212 IDENTICAL/IDENTICAL
+// OFFSET: 0x009E5780/0x14077DAE0
 void CGGMTicketInfo::SetItemRestorationButtonStatus(bool enabled) {
     if (static_cast<uint8_t>(enabled) != CGGMTicketInfo::s_itemRestorationButtonStatus) {
         CGGMTicketInfo::s_itemRestorationButtonStatus = enabled;
@@ -51,7 +54,7 @@ void CGGMTicketInfo::SetItemRestorationButtonStatus(bool enabled) {
     }
 }
 
-// PROVEN: 24dd1cb4 IDENTICAL/NONE
+// PROVEN: 24dd1cb4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5670/0x14077D9C0
 void CGGMTicketInfo::EnterWorld() {
     CGGMTicketInfo::m_ticketID = 0;
@@ -196,7 +199,7 @@ void SendGMResponseResolve() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x009E6670
+// OFFSET: 0x009E6670/0x14077ED30
 void CGGMReportLag::Submit(int32_t type) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -225,7 +228,7 @@ void SendGetTicketOpcode() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x009E6C10
+// OFFSET: 0x009E6C10/0x14077F3C0
 int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     switch (msgId) {
         case SMSG_GM_TICKET_CREATE:
@@ -373,6 +376,7 @@ int32_t Packet_Group_5(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
     return 1;
 }
 
+// PROVEN: ae89e004 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5B50/0x14077DFA0
 void CGGMTicketInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_GM_TICKET_CREATE);

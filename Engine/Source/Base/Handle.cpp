@@ -3,11 +3,6 @@
 #include "Engine/Source/Storm/H/storm.h"
 
 // INLINED
-CHandleObject::CHandleObject() {
-    this->m_refcount = 0;
-}
-
-// INLINED
 CHandleObject::~CHandleObject() {
 }
 

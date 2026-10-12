@@ -37,7 +37,7 @@ class GxuDrawListItem {
     virtual ~GxuDrawListItem();
     virtual float GetDepth(const C3Vector& viewPos);
     virtual GxuDrawListState* GetState();
-    virtual uint32_t GetVtxStream();
+    virtual uintptr_t GetVtxStream();
     virtual void Discard();
     virtual void Draw(const C3Vector& viewPos) = 0;
 };
@@ -46,7 +46,7 @@ class GxDrawListEntry {
     public:
     /* 0000 */ GxuDrawListItem* m_item;
     /* 0004 */ float m_depth;
-    /* 0008 */ uint32_t m_vtxStream;
+    /* 0008 */ uintptr_t m_vtxStream;
 
     GxDrawListEntry();
 };
@@ -187,5 +187,7 @@ EGxApi GxDefaultApi();
 uint32_t GxCalcTexelStrideInBytes(EGxTexFormat format, uint32_t width);
 uint32_t GxVertexAttribOffset(EGxVertexBufferFormat format, EGxVertexAttrib attrib);
 uint32_t GxVertexSize(EGxVertexBufferFormat format);
+
+#include "Engine/Source/Gx/Gx.inl"
 
 #endif

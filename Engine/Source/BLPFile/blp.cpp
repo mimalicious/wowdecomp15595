@@ -17,20 +17,20 @@ uint8_t CBLPFile::s_oneBitAlphaLookup[2] = { 0x00, 0xFF };
 // STATIC: 0x00CA05D4
 static uint16_t s_oneBitAlpha4444[2] = { 0x0000, 0xF000 };
 
-// STATIC: 0x00CA0698
+// STATIC: 0x00CA0698/0x140B3C7D8
 static uint8_t s_twoBitAlphaMask[4] = { 0x03, 0x0C, 0x30, 0xC0 };
 
-// STATIC: 0x00CA069C
+// STATIC: 0x00CA069C/0x140B3C8A0
 static uint32_t s_twoBitAlphaShift[4] = { 0, 2, 4, 6 };
 
-// STATIC: 0x00CA06B0
+// STATIC: 0x00CA06B0/0x140B3C8B0
 static uint32_t s_fourBitAlphaShift[2] = { 2, 6 };
 
 static TSGrowableArray<uint8_t> s_blpFileLoadBuffer;
 
 // INLINED
 static BlitFormat GetBlitFormat(PIXEL_FORMAT format) {
-    // STATIC: 0x00CA06CC
+    // STATIC: 0x00CA06CC/0x140B3C8E0
     static BlitFormat blitFmt[NUM_PIXEL_FORMATS] = {
         BlitFormat_Dxt1,
         BlitFormat_Dxt3,
@@ -58,11 +58,6 @@ CBLPFile::CBLPFile() {
     this->m_header.m_formatVersion = 1;
     this->m_header.m_preferredFormat = 2;
     this->m_inMemoryImage = NULL;
-}
-
-// INLINED
-CBLPFile::~CBLPFile() {
-    this->Close();
 }
 
 // INLINED
@@ -127,7 +122,7 @@ void CBLPFile::DecompPalFastPath(uint8_t* out, const void* in, uint32_t count) {
     }
 }
 
-// OFFSET: 0x004C3B80
+// OFFSET: 0x004C3B80/0x1400FE720
 void CBLPFile::DecompPalARGB8888(uint8_t* out, const void* in, uint32_t count) {
     BlpPalPixel* pixels = reinterpret_cast<BlpPalPixel*>(out);
     const uint8_t* indices = static_cast<const uint8_t*>(in);
@@ -194,7 +189,7 @@ void CBLPFile::DecompPalARGB8888(uint8_t* out, const void* in, uint32_t count) {
     }
 }
 
-// OFFSET: 0x004C3D90
+// OFFSET: 0x004C3D90/0x1400FE960
 void CBLPFile::DecompPalARGB4444DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: 0x00DA6130
     static int32_t s_errors[2][1026][3];
@@ -308,7 +303,7 @@ void CBLPFile::DecompPalARGB4444DitherFloydSteinberg(uint8_t* out, const void* i
     }
 }
 
-// OFFSET: 0x004C40B0
+// OFFSET: 0x004C40B0/0x1400FED30
 void CBLPFile::DecompPalARGB1555DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: 0x00DAC160
     static int32_t s_errors[2][1026][3];
@@ -423,7 +418,7 @@ void CBLPFile::DecompPalARGB1555DitherFloydSteinberg(uint8_t* out, const void* i
     }
 }
 
-// OFFSET: 0x004C43F0
+// OFFSET: 0x004C43F0/0x1400FF100
 void CBLPFile::DecompPalARGB565DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: 0x00DB2190
     static int32_t s_errors[2][1026][3];
@@ -488,7 +483,7 @@ void CBLPFile::DecompPalARGB565DitherFloydSteinberg(uint8_t* out, const void* in
     }
 }
 
-// OFFSET: 0x004C45F0
+// OFFSET: 0x004C45F0/0x1400FF3C0
 void CBLPFile::DecompPalARGB2565DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: 0x00DB81C0
     static int32_t s_errors[2][1026][3];
@@ -608,7 +603,7 @@ uint32_t CBLPFile::Pixels(uint32_t mipLevel) const {
     return this->Height(mipLevel) * this->Width(mipLevel);
 }
 
-// PROVEN: 201141ed IDENTICAL/DIFFERENT
+// PROVEN: 201141ed IDENTICAL/IDENTICAL
 // OFFSET: 0x004C49A0/0x1400FF7F0
 int32_t CBLPFile::Unlock(uint32_t mipLevel) {
     if (this->m_lockDecompMem) {
@@ -651,7 +646,7 @@ int32_t CBLPFile::GetFormatSize(PIXEL_FORMAT format, uint32_t mipLevel, uint32_t
     }
 }
 
-// OFFSET: 0x004C4AE0
+// OFFSET: 0x004C4AE0/0x1400FF910
 int32_t CBLPFile::DecompPalDither(PIXEL_FORMAT format, uint32_t mipLevel, uint8_t* out, const void* in) {
     switch (format) {
         case PIXEL_ARGB8888: {
@@ -911,7 +906,7 @@ int32_t CBLPFile::Open(const char* fileName, int32_t flags) {
     return this->Source(s_blpFileLoadBuffer.Ptr());
 }
 
-// PROVEN: 5b2e3004 IDENTICAL/UNPROVEN
+// PROVEN: 5b2e3004 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C4F20/0x1400FFE70
 int32_t CBLPFile::OpenAddBlp(const char* fileName, int32_t flags) {
     char path[260];

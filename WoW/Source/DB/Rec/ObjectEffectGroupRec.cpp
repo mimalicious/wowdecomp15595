@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C1CF74/0x140A10D68
 const DBCMeta ObjectEffectGroupRec::s_meta = { "DBFilesClient\\ObjectEffectGroup.dbc", 2, 8, ObjectEffectGroupRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: dbcbde07 IDENTICAL/NONE
+// PROVEN: dbcbde07 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ObjectEffectGroupRec::FixupStrings(void* record, const char* strings) {
     ObjectEffectGroupRec* rec = static_cast<ObjectEffectGroupRec*>(record);

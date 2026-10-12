@@ -17,7 +17,7 @@ FT_Face FontFaceGetFace(HFACE handle) {
     return reinterpret_cast<FACEDATA*>(handle)->m_face;
 }
 
-// OFFSET: 0x00622500
+// OFFSET: 0x00622500/0x1402B3430
 void FontFaceCloseHandle(HFACE handle) {
     if (!handle) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -52,7 +52,7 @@ FACEDATA::FACEDATA() {
     this->m_face = NULL;
 }
 
-// OFFSET: 0x00622630
+// OFFSET: 0x00622630/0x1402B3620
 FACEDATA::~FACEDATA() {
     if (this->m_face) {
         FT_Done_Face(this->m_face);

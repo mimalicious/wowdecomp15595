@@ -33,7 +33,7 @@ void* jpeg_get_small(j_common_ptr cinfo, size_t sizeofobject) {
 }
 
 // PROVEN: 3b6941d9 IDENTICAL/NONE
-// OFFSET: 0x00B5D380
+// OFFSET: 0x00B5D380/0x140925D80
 void jpeg_free_small(j_common_ptr cinfo, void* object, size_t sizeofobject) {
     if (s_jpegFree) {
         s_jpegFree(object);
@@ -51,7 +51,7 @@ void* jpeg_get_large(j_common_ptr cinfo, size_t sizeofobject) {
 }
 
 // PROVEN: 01ebc9d9 IDENTICAL/NONE
-// OFFSET: 0x00B5D380
+// OFFSET: 0x00B5D380/0x140925D80
 void jpeg_free_large(j_common_ptr cinfo, void* object, size_t sizeofobject) {
     if (s_jpegFree) {
         s_jpegFree(object);

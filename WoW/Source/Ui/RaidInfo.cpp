@@ -28,46 +28,46 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F33EF8
+// STATIC: 0x00F33EF8/0x140E26ED0
 WOWGUID CGRaidInfo::m_raidTargets[28];
 
-// STATIC: 0x00F33FD8
+// STATIC: 0x00F33FD8/0x140E26FB0
 CGRaidMember* CGRaidInfo::m_members[40];
 
-// STATIC: 0x00F34078
+// STATIC: 0x00F34078/0x140E270F0
 uint32_t CGRaidInfo::m_numMembers;
 
-// STATIC: 0x00F3407C
+// STATIC: 0x00F3407C/0x140E270F4
 uint32_t CGRaidInfo::m_realNumMembers;
 
-// STATIC: 0x00F34080
+// STATIC: 0x00F34080/0x140E270F8
 WOWGUID CGRaidInfo::m_selectedMember;
 
-// STATIC: 0x00F34088
+// STATIC: 0x00F34088/0x140E27100
 uint32_t CGRaidInfo::m_raidMarkers;
 
-// STATIC: 0x00F3408C
+// STATIC: 0x00F3408C/0x140E27104
 static int32_t s_pendingNameQueries;
 
-// STATIC: 0x00F34090
+// STATIC: 0x00F34090/0x140E27108
 uint32_t CGRaidInfo::m_readyCheckTime;
 
-// STATIC: 0x00F34094
+// STATIC: 0x00F34094/0x140E2710C
 uint32_t CGRaidInfo::m_readyCheckTimer;
 
-// STATIC: 0x00F34098
+// STATIC: 0x00F34098/0x140E27110
 WOWGUID CGRaidInfo::m_readyCheckInitiator;
 
-// STATIC: 0x00F340A0
+// STATIC: 0x00F340A0/0x140E27118
 uint8_t CGRaidInfo::m_isInFakeRaid;
 
-// STATIC: 0x00F340A1
+// STATIC: 0x00F340A1/0x140E27119
 uint8_t CGRaidInfo::m_everyoneIsAssistant;
 
-// STATIC: 0x00F340A4
+// STATIC: 0x00F340A4/0x140E27124
 TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
-// STATIC: 0x00D11AB0
+// STATIC: 0x00D11AB0/0x140BC87C0
 uint8_t CGRaidInfo::m_rosterCounter = 0xFF;
 
 // OFFSET: 0x0092CB10
@@ -93,7 +93,7 @@ static void SignalReadyCheckConfirmEvents(const WOWGUID& guid, int32_t ready) {
     }
 }
 
-// PROVEN: e4cec15d IDENTICAL/NONE
+// PROVEN: e4cec15d IDENTICAL/IDENTICAL
 // OFFSET: 0x0092CBB0/0x140693B60
 void CGRaidInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     if (count <= 40) {
@@ -103,7 +103,7 @@ void CGRaidInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     CGPartyInfo::m_realLeader = leader;
 }
 
-// OFFSET: 0x0092CBE0
+// OFFSET: 0x0092CBE0/0x140693B80
 int32_t Packet_MSG_RAID_READY_CHECK_FINISHED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGRaidInfo::m_readyCheckTime = 0;
     FrameScript_SignalEvent(SCRIPT_EVENT_READY_CHECK_FINISHED, "%b", 0);
@@ -111,13 +111,15 @@ int32_t Packet_MSG_RAID_READY_CHECK_FINISHED(void* param, NETMESSAGE msgId, uint
     return 1;
 }
 
-// OFFSET: 0x0092CC20
+// PROVEN: 3bc2ca7a IDENTICAL/IDENTICAL
+// OFFSET: 0x0092CC20/0x140693BC0
 int32_t Packet_SMSG_READY_CHECK_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_READY_CHECK_THROTTLED);
     return 1;
 }
 
-// OFFSET: 0x0092CC40
+// PROVEN: 78ed761b IDENTICAL/IDENTICAL
+// OFFSET: 0x0092CC40/0x140693BE0
 int32_t Packet_MSG_NOTIFY_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t squelched;
     msg->Get(squelched);
@@ -174,7 +176,7 @@ int32_t CGRaidInfo::GetSelectedMemberIndex() {
     return i;
 }
 
-// PROVEN: b44723de IDENTICAL/NONE
+// PROVEN: b44723de IDENTICAL/IDENTICAL
 // OFFSET: 0x0092CD60/0x140693CA0
 int32_t IsGuidInMyRaid(const WOWGUID& guid) {
     if (!guid) {
@@ -190,7 +192,7 @@ int32_t IsGuidInMyRaid(const WOWGUID& guid) {
     return 0;
 }
 
-// PROVEN: a66e6444 IDENTICAL/NONE
+// PROVEN: a66e6444 IDENTICAL/IDENTICAL
 // OFFSET: 0x0092CDB0/0x140693CE0
 int32_t CGRaidInfo::IsPlayerRaidOfficer(const WOWGUID& guid) {
     if (!guid) {
@@ -206,6 +208,7 @@ int32_t CGRaidInfo::IsPlayerRaidOfficer(const WOWGUID& guid) {
     return 0;
 }
 
+// PROVEN: 9b42f038 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092CE20/0x140693D40
 PartyMemberState* CGRaidInfo::GetRemoteStats(const WOWGUID& guid) {
     if (guid) {
@@ -219,6 +222,7 @@ PartyMemberState* CGRaidInfo::GetRemoteStats(const WOWGUID& guid) {
     return NULL;
 }
 
+// PROVEN: 930138fc IDENTICAL/DIFFERENT
 // OFFSET: 0x0092CE70/0x140693D80
 PartyMemberState* CGRaidInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
     for (uint32_t i = 0; i < 40; i++) {
@@ -232,6 +236,7 @@ PartyMemberState* CGRaidInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
     return NULL;
 }
 
+// PROVEN: dd822bde IDENTICAL/DIFFERENT
 // OFFSET: 0x0092CEC0/0x140693DC0
 PartyMemberPetState* CGRaidInfo::GetRemotePetStats(const WOWGUID& guid) {
     if (guid) {
@@ -247,6 +252,7 @@ PartyMemberPetState* CGRaidInfo::GetRemotePetStats(const WOWGUID& guid) {
     return NULL;
 }
 
+// PROVEN: ddb51f27 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092CF20/0x140693E10
 uint32_t GetRaidTargetIndexFromGuid(WOWGUID guid) {
     uint32_t index = 0;
@@ -317,14 +323,16 @@ int32_t CGRaidInfo::GetPartyAssignments(lua_State* L, int32_t assignment) {
     return count;
 }
 
-// OFFSET: 0x0092D0F0
+// PROVEN: c7766718 IDENTICAL/DIFFERENT
+// OFFSET: 0x0092D0F0/0x140694040
 void CGRaidInfo::ClearRecruitAFriend(WOWGUID guid) {
     if (PartyMemberState* stats = CGRaidInfo::GetRemoteStats(guid)) {
         stats->m_flags &= ~0x100;
     }
 }
 
-// OFFSET: 0x0092D520
+// PROVEN: f025d257 IDENTICAL/DIFFERENT
+// OFFSET: 0x0092D520/0x140694540
 void RaidRosterNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!s_pendingNameQueries || !--s_pendingNameQueries) {
         FrameScript_SignalEvent(SCRIPT_EVENT_RAID_ROSTER_UPDATE, NULL);
@@ -373,7 +381,7 @@ void CGRaidInfo::EnterWorld() {
     }
 }
 
-// PROVEN: b8e75bb9 IDENTICAL/NONE
+// PROVEN: b8e75bb9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0092D650/0x140694720
 void CGRaidInfo::SetRaidTarget(uint32_t index, const WOWGUID& guid) {
     CGUnit_C* previous = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGRaidInfo::m_raidTargets[index], TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -401,7 +409,7 @@ int32_t CGRaidInfo::IsPVPRaid() {
     return map->m_instanceType == 4;
 }
 
-// OFFSET: 0x0092D710
+// OFFSET: 0x0092D710/0x140694800
 void CGRaidInfo::ClearRoster() {
     if (CGRaidInfo::m_numMembers) {
         CGGameUI::DisplayError(ERR_RAID_YOU_LEFT);
@@ -640,7 +648,7 @@ void CGRaidInfo::CheckReadyCheckTime() {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 3c2c0e63 IDENTICAL/NONE
+// PROVEN: 3c2c0e63 IDENTICAL/IDENTICAL
 // OFFSET: 0x0092DED0/0x1406951E0
 int32_t CGRaidInfo::ProcessReadyCheckTimer(const void* data, void* param) {
     CGRaidInfo::m_readyCheckTimer = 0;
@@ -703,7 +711,7 @@ void CGRaidInfo::GetMapNameWithDifficulty(char* buffer, uint32_t size, int32_t m
     SStrPrintf(buffer, size, FrameScript_GetText("DUNGEON_NAME_WITH_DIFFICULTY", -1, GENDER_NOT_APPLICABLE), name, difficultyText);
 }
 
-// OFFSET: 0x0092EF40
+// OFFSET: 0x0092EF40/0x140696640
 uint32_t CGRaidInfo::GetIneligibleEncounterMask(int32_t mapId, uint32_t completedMask, uint32_t difficulty) {
     uint32_t mask;
 
@@ -714,7 +722,7 @@ uint32_t CGRaidInfo::GetIneligibleEncounterMask(int32_t mapId, uint32_t complete
     return 0;
 }
 
-// OFFSET: 0x0092F310
+// OFFSET: 0x0092F310/0x140696B40
 int32_t Packet_MSG_RAID_TARGET_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID setter;
     setter.m_guid = 0;
@@ -759,7 +767,7 @@ int32_t Packet_MSG_RAID_TARGET_UPDATE(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: 0x0092F450
+// OFFSET: 0x0092F450/0x140696D30
 int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     guid.m_guid = 0;
@@ -878,7 +886,7 @@ bool CGRaidInfo::CanBeRaidTarget(WOWGUID guid) {
     return unit && player && (unit == player || !(unit->m_obj->m_type & TYPEMASK_PLAYER) || unit->CanCooperate(player));
 }
 
-// OFFSET: 0x0092F7C0
+// OFFSET: 0x0092F7C0/0x140697260
 void CGRaidInfo::SetRaidTarget(WOWGUID guid, uint32_t index) {
     if (guid && !CGRaidInfo::IsPlayerOrPetInRaid(guid) && !CGPartyInfo::IsPlayerOrPetInParty(guid)) {
         if (!ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__)) {
@@ -919,6 +927,7 @@ void CGRaidInfo::SetRaidTarget(WOWGUID guid, uint32_t index) {
     FrameScript_SignalEvent(SCRIPT_EVENT_RAID_TARGET_UPDATE, NULL);
 }
 
+// PROVEN: c8133f1c IDENTICAL/IDENTICAL
 // OFFSET: 0x0092F940/0x140697410
 void CGRaidInfo::InitiateReadyCheck(const char* name) {
     uint32_t now = FrameTime::GetCurTimeMs();
@@ -1009,7 +1018,7 @@ static void ReadyCheckNameCallback(int32_t id, const WOWGUID& guid, void* param,
     }
 }
 
-// OFFSET: 0x009302B0
+// OFFSET: 0x009302B0/0x140698020
 int32_t Packet_SMSG_RAID_INSTANCE_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count;
     msg->Get(count);
@@ -1040,7 +1049,7 @@ int32_t Packet_SMSG_RAID_INSTANCE_INFO(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: 0x009303D0
+// OFFSET: 0x009303D0/0x140698190
 int32_t Packet_MSG_RAID_READY_CHECK(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID initiator;
     msg->Get(initiator.m_guid);
@@ -1297,7 +1306,7 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
     delete[] stats;
 }
 
-// OFFSET: 0x00930DE0
+// OFFSET: 0x00930DE0/0x140698D30
 void CGRaidInfo::InitializeGame() {
     ClientServices::SetMessageHandler(MSG_RAID_TARGET_UPDATE, Packet_MSG_RAID_TARGET_UPDATE, NULL);
     ClientServices::SetMessageHandler(MSG_RAID_READY_CHECK, Packet_MSG_RAID_READY_CHECK, NULL);
@@ -1379,7 +1388,7 @@ CGRaidMember* CGRaidInfo::GetMember(uint32_t index) {
     return CGRaidInfo::m_members[index];
 }
 
-// PROVEN: f108baec IDENTICAL/NONE
+// PROVEN: f108baec IDENTICAL/IDENTICAL
 // OFFSET: 0x0044BAF0/0x140059210
 CGRaidMember* CGRaidInfo::FindMemberByGuid(WOWGUID guid) {
     for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
@@ -1391,6 +1400,7 @@ CGRaidMember* CGRaidInfo::FindMemberByGuid(WOWGUID guid) {
     return NULL;
 }
 
+// PROVEN: c76177ab IDENTICAL/NONE
 // OFFSET: 0x0092CA90
 int32_t CGRaidInfo::GetPartyMemberIndex(WOWGUID guid) {
     for (uint32_t i = 0; i < 4; i++) {
@@ -1402,11 +1412,13 @@ int32_t CGRaidInfo::GetPartyMemberIndex(WOWGUID guid) {
     return -1;
 }
 
+// PROVEN: b4d42f9f IDENTICAL/NONE
 // OFFSET: 0x0092CAD0
 int32_t CGRaidInfo::IsPartyMemberReadyCheckPending(uint32_t index) {
     return index >= 4 ? 0 : CGPartyInfo::m_readyCheckPending[index];
 }
 
+// PROVEN: 5af42291 IDENTICAL/NONE
 // OFFSET: 0x0092CAF0
 int32_t CGRaidInfo::IsPartyMemberReadyCheckReady(uint32_t index) {
     return index >= 4 ? 0 : CGPartyInfo::m_readyCheckReady[index];

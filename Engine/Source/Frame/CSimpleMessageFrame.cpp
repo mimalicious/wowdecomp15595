@@ -15,10 +15,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: 0x00DD3A18
+// STATIC: 0x00DD3A18/0x140CB9740
 CDataAllocator CSimpleMessageFrame::s_allocator(sizeof(CSimpleMessageFrame), 5);
 
-// STATIC: 0x00CA41D8
+// STATIC: 0x00CA41D8/0x140B41D60
 int32_t CSimpleMessageFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A14/0x140CB9738
@@ -104,6 +104,7 @@ void CSimpleMessageFrame::ScrollMessages(uint32_t index) {
     this->HideLineNode(last);
 }
 
+// PROVEN: 2e443bd3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0051BFB0/0x140168380
 CSimpleMessageFrameLineNode::CSimpleMessageFrameLineNode() {
     this->m_timeLeft = 0.0f;
@@ -154,7 +155,7 @@ CSimpleMessageFrameLine::~CSimpleMessageFrameLine() {
     }
 }
 
-// OFFSET: 0x0051C240
+// OFFSET: 0x0051C240/0x140168750
 void CSimpleMessageFrame::AddPendingMessage(const char* text, const CImVector& color) {
     if (!text) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -231,7 +232,8 @@ bool CSimpleMessageFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: 0x0051C160
+// PROVEN: 9337e25a IDENTICAL/UNPROVEN
+// OFFSET: 0x0051C160/0x140168620
 void CSimpleMessageFrame::AddMessage(const char* text, const CImVector& color) {
     if (!text) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -243,7 +245,7 @@ void CSimpleMessageFrame::AddMessage(const char* text, const CImVector& color) {
     message->m_color = color;
 }
 
-// PROVEN: 947f428e IDENTICAL/UNPROVEN
+// PROVEN: 947f428e IDENTICAL/IDENTICAL
 // OFFSET: 0x0051C1B0/0x140168690
 void CSimpleMessageFrame::ClearPending() {
     for (uint32_t i = this->m_pendingMessages.Count(); i;) {
@@ -326,7 +328,7 @@ void CSimpleMessageFrame::UpdateRect() {
     }
 }
 
-// OFFSET: 0x0051CAA0
+// OFFSET: 0x0051CAA0/0x140169160
 void CSimpleMessageFrame::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 

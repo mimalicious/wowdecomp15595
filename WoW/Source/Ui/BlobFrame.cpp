@@ -28,19 +28,19 @@
 #include "WoW/Source/Ui/QuestLog.h"
 #include "WoW/Source/Ui/WorldMap.h"
 
-// STATIC: 0x00D175D0
+// STATIC: 0x00D175D0/0x140BD23F0
 const char* CGBlobFrame::s_objectTypeName = "CGBlobFrame";
 
-// STATIC: 0x00D175D4
+// STATIC: 0x00D175D4/0x140BD23F8
 int32_t CGBlobFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00F76C28
+// STATIC: 0x00F76C28/0x140E6CD40
 int32_t CGBlobFrame::s_objectType;
 
-// STATIC: 0x00F76C2C
+// STATIC: 0x00F76C2C/0x140E6CD48
 CDataAllocator CGBlobFrame::s_blobHeap(sizeof(CGBlobFrame), 5);
 
-// STATIC: 0x00D1765C
+// STATIC: 0x00D1765C/0x140BD24E4
 static int32_t s_highlightIndex = -1;
 
 // INLINED
@@ -48,12 +48,14 @@ void CGBlobFrame::operator delete(void* ptr) {
     CGBlobFrame::s_blobHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x008C63D0
+// PROVEN: 3dbdfc23 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C63D0/0x140636400
 CSimpleFrame* CGBlobFrame::Create(CSimpleFrame* parent) {
     void* data = CGBlobFrame::s_blobHeap.GetData(0, typeid(CGBlobFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGBlobFrame(parent) : NULL;
 }
 
+// PROVEN: facd997f IDENTICAL/IDENTICAL
 // OFFSET: 0x009FFCB0/0x14079E2D0
 void CGBlobFrame::RenderCallback(void* param) {
     if (param) {
@@ -61,7 +63,8 @@ void CGBlobFrame::RenderCallback(void* param) {
     }
 }
 
-// OFFSET: 0x009FFD60
+// PROVEN: bd1d03ec IDENTICAL/UNPROVEN
+// OFFSET: 0x009FFD60/0x14079E5A0
 void CGBlobFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
 
@@ -70,7 +73,7 @@ void CGBlobFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// OFFSET: 0x009FFD90
+// OFFSET: 0x009FFD90/0x14079E5F0
 void CGBlobFrame::MergeBlobs(uint32_t index) {
     BlobRenderGroup* group = &this->m_groups[index];
     int32_t mask = group->m_info->m_objectiveMask;
@@ -151,12 +154,12 @@ bool IntersectLines(const C3Vector& a0, const C3Vector& a1, const C3Vector& b0, 
     return true;
 }
 
-// PROVEN: 766b947d IDENTICAL/NONE
+// PROVEN: 0884ad48 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A007D0/0x14079EE00
 CGBlobFrame::BlobRenderData::~BlobRenderData() {
 }
 
-// OFFSET: 0x00A00890
+// OFFSET: 0x00A00890/0x14079EF00
 void CGBlobFrame::BuildBlobOutline(BLOB* blob, TSGrowableArray<BLOBPOI>* points, bool smoothing, uint32_t numSplinePoints) {
     if (!smoothing) {
         points->SetCount(blob->m_points.Count());
@@ -399,26 +402,31 @@ CGBlobFrame::~CGBlobFrame() {
     }
 }
 
-// OFFSET: 0x00A01900
+// PROVEN: 492dc977 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A01900/0x1407A0460
 const char* CGBlobFrame::GetObjectTypeName() {
     return CGBlobFrame::s_objectTypeName;
 }
 
+// PROVEN: ee5a68ff IDENTICAL/IDENTICAL
 // OFFSET: 0x00A01910/0x1407A0470
 int32_t CGBlobFrame::GetScriptMetaTable() {
     return CGBlobFrame::s_metatable;
 }
 
+// PROVEN: 5d1b9d93 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A01930/0x1407A0490
 bool CGBlobFrame::IsA(int32_t type) {
     return type == CGBlobFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: 0x00A01970
+// PROVEN: 1c5d931d IDENTICAL/DIFFERENT
+// OFFSET: 0x00A01970/0x1407A04C0
 bool CGBlobFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGBlobFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
+// PROVEN: fc5f47a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A019B0/0x1407A0530
 void CGBlobFrame::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
@@ -438,7 +446,7 @@ void CGBlobFrame::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: 0x00A01A10
+// OFFSET: 0x00A01A10/0x1407A0590
 void CGBlobFrame::RemoveBlob(int32_t id) {
     if (!id) {
         return;
@@ -489,7 +497,8 @@ CGBlobFrame::CGBlobFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     }
 }
 
-// OFFSET: 0x00A01D70
+// PROVEN: a8d176bd IDENTICAL/UNPROVEN
+// OFFSET: 0x00A01D70/0x1407A09C0
 void CGBlobFrame::DrawNone() {
     for (uint32_t i = 0; i < 4; i++) {
         if (this->m_groups[i].m_info) {
@@ -498,7 +507,8 @@ void CGBlobFrame::DrawNone() {
     }
 }
 
-// OFFSET: 0x00A01E00
+// PROVEN: 7d6d0786 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A01E00/0x1407A0B20
 bool CGBlobFrame::BuildRenderData(int32_t index, bool filter) {
     if (index >= 0 && index < sizeof(this->m_groups) / sizeof(this->m_groups[0]) && this->m_groups[index].m_info) {
         if (fabs(this->m_rect.maxX - this->m_rect.minX) < 0.001f && fabs(this->m_rect.maxY - this->m_rect.minY) < 0.001f) {
@@ -521,7 +531,7 @@ bool CGBlobFrame::BuildRenderData(int32_t index, bool filter) {
     return true;
 }
 
-// OFFSET: 0x00A01EE0
+// OFFSET: 0x00A01EE0/0x1407A0C50
 void CGBlobFrame::Render() {
     CTexture* fill = this->m_fillTexture;
 
@@ -610,7 +620,8 @@ void CGBlobFrame::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x00A021F0
+// PROVEN: 1facf369 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A021F0/0x1407A10F0
 void CGBlobFrame::AddBlob(QuestPOIInfo* info, bool filter) {
     if (!info) {
         return;
@@ -634,6 +645,7 @@ void CGBlobFrame::AddBlob(QuestPOIInfo* info, bool filter) {
     }
 }
 
-// OFFSET: [0x00841AE0]
+// PROVEN: e233d7a0 IDENTICAL/IDENTICAL
+// OFFSET: [0x00841AE0/0x1407D7E80]
 void CGBlobFrame::DrawBlob(int32_t id, bool show) {
 }

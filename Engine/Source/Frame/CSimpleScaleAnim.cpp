@@ -12,16 +12,16 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: 0x00CA476C
+// STATIC: 0x00CA476C/0x140B427DC
 int32_t CSimpleScaleAnim::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3CC0/0x140CB9A60
 int32_t CSimpleScaleAnim::s_objectType;
 
-// STATIC: 0x00CA382C
+// STATIC: 0x00CA382C/0x140B40AA8
 const char* CSimpleScaleAnim::s_objectTypeName = "Scale";
 
-// PROVEN: 62d528f7 DIFFERENT/IDENTICAL
+// PROVEN: 62d528f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528590/0x140177AC0
 bool CSimpleScaleAnim::IsA(int32_t type) {
     return type == CSimpleScaleAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
@@ -52,7 +52,7 @@ void CSimpleScaleAnim::SetScale(const C2Vector& scale) {
     this->m_scaleChange.y = 1.0f - (scale.y >= 0.001f ? scale.y : 0.001f);
 }
 
-// OFFSET: 0x005279F0
+// OFFSET: 0x005279F0/0x140176D90
 void CSimpleScaleAnim::GetScale(C2Vector& scale) {
     scale.x = 1.0f - this->m_scaleChange.x;
     scale.y = 1.0f - this->m_scaleChange.y;

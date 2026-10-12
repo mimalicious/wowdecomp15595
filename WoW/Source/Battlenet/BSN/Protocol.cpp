@@ -94,6 +94,7 @@ const uint8_t* BSN::Protocol::Protocol::DumpInfo(uint32_t typeId) const {
     return &this->m_bytecode[offset];
 }
 
+// PROVEN: b4ea195c IDENTICAL/DIFFERENT
 // OFFSET: 0x00665A90/0x14030BFF0
 const char* BSN::Protocol::Protocol::DumpString(const uint8_t* dumpInfo, uint32_t index) const {
     if (!this->m_dumpInfoSize || !dumpInfo) {

@@ -44,7 +44,6 @@ class CGCharacterModelBase : public CSimpleModel {
     /* 02E8 */ bool m_barberShopAlternateForm;
     /* 02EC */ int32_t m_customRace;
     /* 02F0 */ int32_t m_customSex;
-    /* 02F4 */ uint32_t unk_02F4;
 
     ~CGCharacterModelBase();
     int32_t GetScriptMetaTable() override;

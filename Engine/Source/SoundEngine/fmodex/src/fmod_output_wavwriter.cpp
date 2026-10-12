@@ -571,7 +571,7 @@ FMOD_RESULT F_CALLBACK OutputWavWriter::getNumDriversCallback(FMOD_OUTPUT_STATE 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 37f78fd5 IDENTICAL/UNPROVEN
+// PROVEN: 37f78fd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC1710/0x14088A280
 FMOD_RESULT F_CALLBACK OutputWavWriter::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {

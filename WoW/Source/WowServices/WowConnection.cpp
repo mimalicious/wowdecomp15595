@@ -10,25 +10,25 @@
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowServices/WowConnectionNet.h"
 
-// STATIC: 0x00CA500C
+// STATIC: 0x00CA500C/0x140B43708
 WowConnection::IDBITS WowConnection::s_idBits;
 
-// STATIC: 0x00DD44B4
+// STATIC: 0x00DD44B4/0x140CBA6C4
 static int32_t s_sendNodeCount;
 
-// STATIC: 0x00DD44B8
+// STATIC: 0x00DD44B8/0x140CBA6C8
 static uint64_t s_sendNodeBytes;
 
 // STATIC: 0x00DD44C0
 uint64_t WowConnection::s_sendBytes;
 
-// STATIC: 0x00DD44C8
+// STATIC: 0x00DD44C8/0x140CBA6D8
 bool (*WowConnection::s_verifyAddr)(const NETADDR* addr);
 
-// STATIC: 0x00DD44CC
+// STATIC: 0x00DD44CC/0x140CBA6E0
 WowConnectionNet* WowConnection::s_network;
 
-// STATIC: 0x00DD44D0
+// STATIC: 0x00DD44D0/0x140CBA6E8
 int32_t WowConnection::s_lagTestDelayMin;
 
 // STATIC: 0x00DD44D4
@@ -37,16 +37,16 @@ int32_t WowConnection::s_lagTestDelayMax;
 // STATIC: 0x00DD44D8
 Blizzard::Lock::Atomic WowConnection::s_numConnections;
 
-// STATIC: 0x00DD44E8
+// STATIC: 0x00DD44E8/0x140CBA700
 SCritSect WowConnection::s_idLock;
 
-// STATIC: 0x00DD4518
+// STATIC: 0x00DD4518/0x140CBA740
 static uint8_t s_arc4drop1024[1024];
 
-// STATIC: 0x00DD4918
+// STATIC: 0x00DD4918/0x140CBAB40
 static uint8_t s_arc4drop1024Key[1024];
 
-// STATIC: 0x00BAE6F0
+// STATIC: 0x00BAE6F0/0x140992B00
 static const uint8_t s_defaultSeed[32] = { 0xCC, 0x98, 0xAE, 0x04, 0xE8, 0x97, 0xEA, 0xCA, 0x12, 0xDD, 0xC0, 0x93, 0x42, 0x91, 0x53, 0x57, 0xC2, 0xB3, 0x72, 0x3C, 0xC6, 0xAE, 0xD9, 0xB5, 0x34, 0x3C, 0x53, 0xEE, 0x2F, 0x43, 0x67, 0xCE };
 
 // OFFSET: 0x0054D500/0x1401A74F0
@@ -110,8 +110,8 @@ void WowConnection::SetResponse(WowConnectionResponse* response, bool deferred) 
     this->m_responseLock.Leave();
 }
 
-// PROVEN: c2c63a8e IDENTICAL/NONE
-// OFFSET: 0x0054D350
+// PROVEN: c2c63a8e IDENTICAL/DIFFERENT
+// OFFSET: 0x0054D350/0x1401A7310
 void WowConnection::AcquireResponseRef() {
     this->m_responseLock.Enter();
     this->m_responseRef++;
@@ -119,8 +119,8 @@ void WowConnection::AcquireResponseRef() {
     this->m_responseLock.Leave();
 }
 
-// PROVEN: a1e79162 IDENTICAL/NONE
-// OFFSET: 0x0054D380
+// PROVEN: a1e79162 IDENTICAL/DIFFERENT
+// OFFSET: 0x0054D380/0x1401A7350
 void WowConnection::ReleaseResponseRef() {
     this->m_responseLock.Enter();
 
@@ -146,7 +146,7 @@ void WowConnection::SetState(WOW_CONN_STATE state) {
     }
 }
 
-// PROVEN: d1542e3d IDENTICAL/NONE
+// PROVEN: d1542e3d IDENTICAL/IDENTICAL
 // OFFSET: 0x0054D3F0/0x1401A73A0
 void WowConnection::SetType(WOWC_TYPE type) {
     this->m_lock.Enter();
@@ -270,7 +270,7 @@ void WowConnection::IDBITS::Or(const WowConnection::IDBITS& source) {
     }
 }
 
-// OFFSET: 0x0054DA20
+// OFFSET: 0x0054DA20/0x1401A7B20
 void WowConnection::SENDNODE::InitPacket(uint8_t* data, uint32_t size, const void* extraData, uint32_t extraSize, bool checksum) {
     this->m_datasize = size;
 
@@ -382,7 +382,7 @@ WowConnection::SENDNODE* WowConnection::AllocSendNodePacket(uint32_t size, uint3
     return node;
 }
 
-// OFFSET: 0x0054E500
+// OFFSET: 0x0054E500/0x1401A88C0
 WowConnection::SENDNODE* WowConnection::CopySendNode(const WowConnection::SENDNODE* source) {
     s_sendNodeCount++;
     s_sendNodeBytes += source->m_datasize;
@@ -420,6 +420,7 @@ WowConnection::SENDNODE* WowConnection::NewSendNodePacket(const void* data, uint
     return node;
 }
 
+// PROVEN: 4a12b654 DIFFERENT/IDENTICAL
 // OFFSET: 0x00487A80/0x1400A8E80
 WowConnectionResponse::~WowConnectionResponse() {
 }

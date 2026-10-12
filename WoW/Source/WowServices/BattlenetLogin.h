@@ -80,9 +80,7 @@ class BattlenetLogin : public Login {
     /* 117C */ char m_accountName[256];
     /* 127C */ TSGrowableArray<BattlenetLogin::PatchInstruction> m_patchInstructions;
     /* 128C */ SCritSect m_patchInstructionLock;
-    /* 12B4 */ uint32_t unk_12B4;
-    /* 12B8 */ uint32_t m_accountFlags;
-    /* 12BC */ uint32_t m_accountFlags2;
+    /* 12B8 */ uint64_t m_accountFlags;
     /* 12C0 */ bool m_surveyPending;
     /* 12C1 */ uint8_t unk_12C1[3];
     /* 12C4 */ uint32_t m_surveyTime;

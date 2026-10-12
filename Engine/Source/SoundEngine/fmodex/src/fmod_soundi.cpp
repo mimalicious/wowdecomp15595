@@ -794,7 +794,7 @@ FMOD_RESULT SoundI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a1df404e IDENTICAL/NONE
+// PROVEN: a1df404e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A89010/0x1408476E0
 FMOD_RESULT SoundI::lock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
@@ -1379,6 +1379,7 @@ FMOD_RESULT SoundI::setSubSound(int index, SoundI *subsound)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: bb203665 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8B890/0x14084A2B0
 FMOD_RESULT SoundI::getSubSound(int index, SoundI **subsound)
 {
@@ -1588,7 +1589,7 @@ FMOD_RESULT SoundI::setSubSoundSentence(int *subsoundlist, int numsubsounds)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: db650006 IDENTICAL/UNPROVEN
+// PROVEN: db650006 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A896D0/0x140847DF0
 FMOD_RESULT SoundI::getName(char *name, int namelen)
 {

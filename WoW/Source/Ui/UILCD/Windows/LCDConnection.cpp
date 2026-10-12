@@ -3,7 +3,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDGfx.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDOutput.h"
 
-// STATIC: 0x0100AAC8
+// STATIC: 0x0100AAC8/0x140EE26E4
 LONG CLCDConnection::g_lInitCount;
 
 // OFFSET: 0x00B3F460/0x14090CDD0
@@ -91,6 +91,7 @@ int32_t CLCDConnection::InitializeConnection(lgLcdConnectContextEx& connectConte
     return 1;
 }
 
+// PROVEN: 870463f4 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B3F150/0x14090CA10
 void CLCDConnection::Shutdown() {
     this->Disconnect();
@@ -102,13 +103,13 @@ void CLCDConnection::Shutdown() {
     this->m_pSoftbuttonsChangedCtx = NULL;
 }
 
-// PROVEN: 02e1b70c IDENTICAL/NONE
+// PROVEN: 02e1b70c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F200/0x14090CAD0
 int32_t CLCDConnection::IsConnected() {
     return this->m_hConnection != LGLCD_INVALID_CONNECTION;
 }
 
-// PROVEN: ea9fc070 IDENTICAL/NONE
+// PROVEN: ea9fc070 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F1C0/0x14090CA90
 void CLCDConnection::Disconnect() {
     if (this->m_pColorOutput) {
@@ -135,7 +136,7 @@ CLCDOutput* CLCDConnection::AllocColorOutput() {
     return new CLCDOutput();
 }
 
-// PROVEN: 44a25712 IDENTICAL/NONE
+// PROVEN: 44a25712 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F220/0x14090CB00
 CLCDOutput* CLCDConnection::MonoOutput() {
     return this->m_pMonoOutput;
@@ -162,7 +163,7 @@ void CLCDConnection::ConnectEx() {
     }
 }
 
-// PROVEN: 60a692cf IDENTICAL/NONE
+// PROVEN: 60a692cf IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F210/0x14050FC70
 int32_t CLCDConnection::GetConnectionId() {
     return this->m_hConnection;
@@ -186,6 +187,7 @@ void CLCDConnection::OnDeviceRemoval(uint32_t displayType) {
     }
 }
 
+// PROVEN: 726948b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F260/0x14090CB50
 void CLCDConnection::OnNotification(uint32_t notification, uint32_t param1) {
     switch (notification) {
@@ -211,6 +213,7 @@ void CLCDConnection::OnNotification(uint32_t notification, uint32_t param1) {
     }
 }
 
+// PROVEN: d930f1d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F2D0/0x14090CBB0
 void CLCDConnection::OnSoftButtonEvent(int32_t device, uint32_t buttons) {
     if (this->m_pMonoOutput && device == this->m_pMonoOutput->GetDeviceId()) {
@@ -220,7 +223,7 @@ void CLCDConnection::OnSoftButtonEvent(int32_t device, uint32_t buttons) {
     }
 }
 
-// PROVEN: fca4e27e IDENTICAL/NONE
+// PROVEN: fca4e27e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F330/0x14090CC10
 void CLCDConnection::FreeMonoOutput() {
     if (this->m_pMonoOutput) {
@@ -229,7 +232,7 @@ void CLCDConnection::FreeMonoOutput() {
     }
 }
 
-// PROVEN: cfb52040 IDENTICAL/NONE
+// PROVEN: cfb52040 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3F350/0x14090CC40
 void CLCDConnection::FreeColorOutput() {
     if (this->m_pColorOutput) {
@@ -276,6 +279,7 @@ void CLCDConnection::OnConfigure() {
 void CLCDConnection::OnCallbackEvent() {
 }
 
+// PROVEN: b19fab74 IDENTICAL/NONE
 // OFFSET: 0x00B3F5B0/0x14090CFB0
 DWORD WINAPI CLCDConnection::_OnNotificationCallback(int connection, const PVOID pContext, DWORD notificationCode, DWORD notifyParm1, DWORD notifyParm2, DWORD notifyParm3, DWORD notifyParm4) {
     CLCDConnection* self = static_cast<CLCDConnection*>(pContext);
@@ -292,6 +296,7 @@ DWORD WINAPI CLCDConnection::_OnNotificationCallback(int connection, const PVOID
     return 0;
 }
 
+// PROVEN: d704165b IDENTICAL/NONE
 // OFFSET: 0x00B3F670/0x14090D0C0
 DWORD WINAPI CLCDConnection::_OnSoftButtonsCallback(int device, DWORD buttons, const PVOID context) {
     CLCDConnection* self = static_cast<CLCDConnection*>(context);

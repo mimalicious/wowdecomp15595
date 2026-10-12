@@ -8,35 +8,35 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: 0x00CA83C4
+// STATIC: 0x00CA83C4/0x140B482A4
 static uint8_t s_dirty = 1;
 
 // STATIC: 0x00CA83C8
 static uint32_t s_maxLights = 4;
 
-// STATIC: 0x00CA8400
+// STATIC: 0x00CA8400/0x140B48318
 static float s_gridSize = 1024.0f;
 
-// STATIC: 0x00CA8404
+// STATIC: 0x00CA8404/0x140B4831C
 static float s_gridHalfSize = 512.0f;
 
-// STATIC: 0x00CA8408
+// STATIC: 0x00CA8408/0x140B48320
 static TSList<CGxuLight, TSGetLink<CGxuLight> > s_lights;
 
-// STATIC: 0x00CA8414
+// STATIC: 0x00CA8414/0x140B48338
 static TSList<CGxuLight, TSGetLink<CGxuLight> > s_freeLights;
 
-// STATIC: 0x00CA8420
+// STATIC: 0x00CA8420/0x140B48350
 static TSExplicitList<CGxuLightLink, offsetof(CGxuLightLink, m_lightLink)> s_freeLinks;
 
-// STATIC: 0x00CA842C
+// STATIC: 0x00CA842C/0x140B48370
 static CLightList s_globalLights;
 
 static uint32_t s_lastHashval;
 
 static uint32_t s_frame;
 
-// STATIC: 0x00DD8AB4
+// STATIC: 0x00DD8AB4/0x140B483C0
 static TSHashTableReuse<CLightList, HASHKEY_DWORD> s_lightGrid;
 
 static const uint32_t s_lightQueueSize[2] = { 32, 32 };
@@ -82,7 +82,7 @@ static void GxuLightSetMaxLightsImpl(uint32_t maxLights) {
     }
 }
 
-// PROVEN: 59b9700f IDENTICAL/NONE
+// PROVEN: 59b9700f IDENTICAL/IDENTICAL
 // OFFSET: 0x00610A50/0x14029AFD0
 static float GxuLightGetGridSizeImpl() {
     return s_gridSize;
@@ -111,11 +111,12 @@ float CGxuLight::CalcIntensity(const C3Vector& point, float linearAttenuation, f
     return ambientMag + intensity;
 }
 
-// OFFSET: 0x00775F40
+// PROVEN: 99f107c6 IDENTICAL/NONE
+// OFFSET: 0x00775F40/0x140460560
 CGxuLightLink::~CGxuLightLink() {
 }
 
-// OFFSET: 0x00610B90
+// OFFSET: 0x00610B90/0x14029B140
 void CGxuLight::ClearLinks() {
     CGxuLightLink* link = this->m_links.Head();
 
@@ -138,7 +139,7 @@ void CGxuLight::ClearLinks() {
     }
 }
 
-// OFFSET: 0x00610D30
+// OFFSET: 0x00610D30/0x14029B380
 CGxuLightLink* CGxuLight::NewLink() {
     CGxuLightLink* link = s_freeLinks.Head();
 
@@ -152,6 +153,7 @@ CGxuLightLink* CGxuLight::NewLink() {
     return link;
 }
 
+// PROVEN: ac47e974 IDENTICAL/DIFFERENT
 // OFFSET: 0x00610E20/0x14029B4C0
 CLightList::~CLightList() {
 }
@@ -164,7 +166,8 @@ static void GxuLightDestroyImpl(CGxuLight* light) {
     s_freeLights.LinkToTail(light);
 }
 
-// OFFSET: 0x006110F0
+// PROVEN: 4e8645ef IDENTICAL/DIFFERENT
+// OFFSET: 0x006110F0/0x14029B8A0
 CGxuLight::~CGxuLight() {
 }
 
@@ -234,7 +237,7 @@ static void GxuLightApplyImpl(float x, float y, int32_t unused, const C3Vector& 
     s_lastHashval = hashval;
 }
 
-// OFFSET: 0x006116F0
+// OFFSET: 0x006116F0/0x14029C0A0
 static void GxuLightShutdownImpl() {
     s_lightGrid.Destroy();
     s_freeLights.Clear();
@@ -322,10 +325,10 @@ CGxuLight* (*GxuLightCreate)() = GxuLightCreateImpl;
 
 void (*GxuLightDestroy)(CGxuLight* light) = GxuLightDestroyImpl;
 
-// STATIC: 0x00CA83DC
+// STATIC: 0x00CA83DC/0x140B482D0
 CGxLight* (*GxuLightLock)(CGxuLight* light) = GxuLightLockImpl;
 
-// STATIC: 0x00CA83E0
+// STATIC: 0x00CA83E0/0x140B482D8
 void (*GxuLightUnlock)(CGxuLight* light) = GxuLightUnlockImpl;
 
 void (*GxuLightApply)(float x, float y, int32_t unused, const C3Vector& viewPos, uint32_t maxLights) = GxuLightApplyImpl;

@@ -16,7 +16,7 @@ static bool s_enteredWorld;
 // STATIC: 0x00EBAD78
 static int32_t s_startTime;
 
-// STATIC: 0x00EBAD80
+// STATIC: 0x00EBAD80/0x140DABAA0
 static int64_t s_initialLocal;
 
 // OFFSET: 0x007FB700/0x14050DFD0

@@ -7,16 +7,6 @@
 #include "Engine/Source/Services/TextBlock.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// INLINED
-CSimpleFontStringAttributes::CSimpleFontStringAttributes() {
-    this->m_fontHeight = 0.0f;
-    this->m_spacing = 0.0f;
-    this->m_fontFlags = 0;
-    this->m_styleFlags = 0x212;
-    this->m_color.Set(1.0f, 1.0f, 1.0f, 1.0f);
-    this->m_flags = 0;
-}
-
 // OFFSET: 0x004F8830/0x14013C120
 int32_t CSimpleFontStringAttributes::SetFont(const char* fontName, float fontHeight, uint32_t fontFlags) {
     if (!fontName) {
@@ -96,7 +86,7 @@ void CSimpleFontStringAttributes::Update(CSimpleFontStringAttributes& attributes
     }
 }
 
-// OFFSET: 0x004FE7A0
+// OFFSET: 0x004FE7A0/0x140143320
 void CSimpleFontStringAttributes::Update(CSimpleFontString* string, int32_t flags) {
     if (!string) {
         DebugValidate("string");

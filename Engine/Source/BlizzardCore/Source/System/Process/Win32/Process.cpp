@@ -81,7 +81,7 @@ bool ToolhelpFunction::CallProcessW(HANDLE snapshot, uint32_t* pid, char* name, 
     return true;
 }
 
-// PROVEN: 38bccc48 IDENTICAL/NONE
+// PROVEN: 38bccc48 IDENTICAL/DIFFERENT
 // OFFSET: 0x007BD0C0/0x1404B5C40
 bool ToolhelpFunction::CallModuleW(HANDLE snapshot, char* path, uint32_t pathsize) {
     MODULEENTRY32W entry;
@@ -297,7 +297,7 @@ bool Blizzard::Process::LaunchChildProcessWithArguments(const char* path, const 
     return true;
 }
 
-// OFFSET: 0x007C4B10
+// OFFSET: 0x007C4B10/0x1404BF890
 bool Blizzard::Process::EnumProcessesByName(const char* name, void (*callback)(const char*, uint32_t, void*), void* param) {
     if (!name || !callback) {
         return false;

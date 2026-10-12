@@ -20,6 +20,7 @@ void CSimpleMovieFrame::DestroyScriptMetaTable() {
     CSimpleMovieFrame::s_metatable = LUA_NOREF;
 }
 
+// PROVEN: c2eb2293 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053B680/0x14018F470
 static int32_t Script_StartMovie(lua_State* L) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(FrameScript_GetObjectThis(L, CSimpleMovieFrame::GetObjectType()));
@@ -44,7 +45,7 @@ static int32_t Script_StopMovie(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6c0bbd20 IDENTICAL/NONE
+// PROVEN: 6c0bbd20 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053B760/0x14018F570
 static int32_t Script_EnableSubtitles(lua_State* L) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(FrameScript_GetObjectThis(L, CSimpleMovieFrame::GetObjectType()));
@@ -53,14 +54,14 @@ static int32_t Script_EnableSubtitles(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00CA45FC
+// STATIC: 0x00CA45FC/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "StartMovie", &Script_StartMovie },
     { "StopMovie", &Script_StopMovie },
     { "EnableSubtitles", &Script_EnableSubtitles },
 };
 
-// PROVEN: 2032fcc3 IDENTICAL/NONE
+// PROVEN: 2032fcc3 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053B630/0x14018F410
 void CSimpleMovieFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

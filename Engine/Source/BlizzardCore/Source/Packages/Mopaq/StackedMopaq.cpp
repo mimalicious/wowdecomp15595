@@ -11,7 +11,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00EBA224
+// STATIC: 0x00EBA224/0x140DAACB8
 MpqSystemList::Implementation* MpqSystemList::s_list;
 
 // OFFSET: 0x007B2080
@@ -137,7 +137,7 @@ void MpqSystemList::ShutdownProc() {
     s_list = NULL;
 }
 
-// OFFSET: 0x007CC4A0
+// OFFSET: 0x007CC4A0/0x1404C8940
 Blizzard::Mopaq::Mpqsystem* System_Mopaq::FindIOStackManager(int32_t flags) {
     static MpqSystemList s_systemList;
     return MpqSystemList::s_list->GetStack(flags);
@@ -218,7 +218,7 @@ static Blizzard::Mopaq::MpqHandleRecord* GetPrealloc(const char* name, System_SF
     return static_cast<Blizzard::Mopaq::MpqHandleRecord*>(SMemAlloc(nameLength + handlerSize + sectorTableSize + errorHandlerSize + sizeof(Blizzard::Mopaq::MpqHandleRecord) + 1, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 }
 
-// OFFSET: 0x007B2650
+// OFFSET: 0x007B2650/0x1404A7850
 void System_Mopaq::InitializeHandle(Blizzard::Mopaq::MpqHandleRecord* handle, MpqParams* parms) {
     if (parms->m_flags & 0x10000) {
         return;
@@ -254,7 +254,7 @@ static void CreateSectorReadWriteHandler(Blizzard::Mopaq::MpqHandleRecord* handl
     }
 }
 
-// OFFSET: 0x007EABA0
+// OFFSET: 0x007EABA0/0x1404F75A0
 static void CreateHandler(bool sharedMemory, bool compressed, Blizzard::Mopaq::MpqHandleRecord* handle, void* memory, void* sectorTable, bool writable, bool inPlace) {
     if (inPlace) {
         if (compressed) {

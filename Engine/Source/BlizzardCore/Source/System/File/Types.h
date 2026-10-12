@@ -24,17 +24,14 @@ namespace Blizzard {
 namespace File {
 struct FileInfo {
     /* 0000 */ char* m_path;
-    /* 0004 */ uint32_t unk_0004;
     /* 0008 */ int64_t m_size;
     /* 0010 */ int64_t m_compressedSize;
     /* 0018 */ int32_t m_attributes;
-    /* 001C */ uint8_t unk_001C[4];
     /* 0020 */ Blizzard::Time::Timestamp m_createTime;
     /* 0028 */ Blizzard::Time::Timestamp m_modTime;
     /* 0030 */ Blizzard::Time::Timestamp m_accessTime;
     /* 0038 */ int32_t m_existence;
     /* 003C */ bool m_regularFile;
-    /* 003D */ uint8_t unk_003D[3];
 };
 }
 }

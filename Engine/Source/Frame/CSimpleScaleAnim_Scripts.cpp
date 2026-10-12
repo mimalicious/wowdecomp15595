@@ -41,6 +41,7 @@ static int32_t Script_GetOrigin(lua_State* L) {
     return 3;
 }
 
+// PROVEN: c360d6a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053CDB0/0x140191010
 static int32_t Script_SetScale(lua_State* L) {
     CSimpleScaleAnim* anim = static_cast<CSimpleScaleAnim*>(FrameScript_GetObjectThis(L, CSimpleScaleAnim::GetObjectType()));
@@ -59,7 +60,7 @@ static int32_t Script_SetScale(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0053CE60
+// OFFSET: 0x0053CE60/0x1401910F0
 static int32_t Script_GetScale(lua_State* L) {
     CSimpleScaleAnim* anim = static_cast<CSimpleScaleAnim*>(FrameScript_GetObjectThis(L, CSimpleScaleAnim::GetObjectType()));
 
@@ -71,22 +72,22 @@ static int32_t Script_GetScale(lua_State* L) {
     return 2;
 }
 
-// PROVEN: dd25caa4 IDENTICAL/NONE
-// OFFSET: 0x0053CED0
+// PROVEN: dd25caa4 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053CED0/0x140191160
 void CSimpleScaleAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleScaleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleScaleAnim::RegisterScriptMethods);
 }
 
-// PROVEN: 478b2a94 IDENTICAL/NONE
-// OFFSET: 0x0053B990
+// PROVEN: 478b2a94 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053B990/0x14018F780
 void CSimpleScaleAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleScaleAnim::s_metatable);
     CSimpleScaleAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00CA474C
+// STATIC: 0x00CA474C/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetOrigin", &Script_SetOrigin },
     { "GetOrigin", &Script_GetOrigin },
@@ -94,7 +95,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetScale", &Script_GetScale },
 };
 
-// OFFSET: 0x0053B960
+// OFFSET: 0x0053B960/0x14018F740
 void CSimpleScaleAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

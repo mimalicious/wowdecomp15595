@@ -12,16 +12,16 @@
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: 0x00CA47D8
+// STATIC: 0x00CA47D8/0x140B428D8
 int32_t CSimpleAlphaAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CB4
+// STATIC: 0x00DD3CB4/0x140CB9A54
 int32_t CSimpleAlphaAnim::s_objectType;
 
-// STATIC: 0x00CA3838
+// STATIC: 0x00CA3838/0x140B40AC0
 const char* CSimpleAlphaAnim::s_objectTypeName = "Alpha";
 
-// PROVEN: 224a22a3 DIFFERENT/IDENTICAL
+// PROVEN: 224a22a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528D50/0x140178490
 bool CSimpleAlphaAnim::IsA(int32_t type) {
     return type == CSimpleAlphaAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
@@ -45,13 +45,14 @@ int32_t CSimpleAlphaAnim::GetScriptMetaTable() {
     return CSimpleAlphaAnim::s_metatable;
 }
 
+// PROVEN: 782478ba DIFFERENT/IDENTICAL
 // OFFSET: 0x005270B0/0x1401763F0
 void CSimpleAlphaAnim::SetChange(float change) {
     float value = change < -1.0f ? -1.0f : (change >= 1.0f ? 1.0f : change);
     this->m_change = static_cast<int16_t>(value * 255.0f);
 }
 
-// OFFSET: 0x00527B90
+// OFFSET: 0x00527B90/0x140176EB0
 void CSimpleAlphaAnim::Apply(float progress) {
     CScriptRegion* region = this->GetRegionParent();
 
@@ -64,6 +65,7 @@ void CSimpleAlphaAnim::Apply(float progress) {
 CSimpleAlphaAnim::~CSimpleAlphaAnim() {
 }
 
+// PROVEN: b9cfb1ba DIFFERENT/IDENTICAL
 // OFFSET: 0x0052A760/0x14017A810
 CSimpleAlphaAnim::CSimpleAlphaAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
     this->m_change = 0;

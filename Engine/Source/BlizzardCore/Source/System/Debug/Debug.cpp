@@ -15,7 +15,7 @@ char System_Debug::s_CanonBuffer[1024];
 
 char* System_Debug::s_CanonHead = System_Debug::s_CanonBuffer;
 
-// STATIC: 0x00D07414
+// STATIC: 0x00D07414/0x140BB7F10
 char* System_Debug::s_CanonTail = System_Debug::s_CanonBuffer;
 
 // INLINED

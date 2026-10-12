@@ -17,22 +17,23 @@
 #include "WoW/Source/Ui/PetInfo.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: 0x00F768C0
+// STATIC: 0x00F768C0/0x140E6C970
 CGSpellActivationOverlay::ActiveMoverSpell CGSpellActivationOverlay::s_activeMoverSpells[10];
 
-// STATIC: 0x00F76910
+// STATIC: 0x00F76910/0x140BD1700
 TSHashTable<CGSpellActivationOverlay::COUNTERNODE, HASHKEY_NONE> CGSpellActivationOverlay::s_counters;
 
-// STATIC: 0x00F7693C
+// STATIC: 0x00F7693C/0x140E6C9C0
 TSGrowableArray<CGSpellActivationOverlay::WatchedSpellInfo> CGSpellActivationOverlay::s_availableSpells;
 
-// STATIC: 0x00F7694C
+// STATIC: 0x00F7694C/0x140E6C9D8
 TSGrowableArray<int32_t> CGSpellActivationOverlay::s_glowableSpells;
 
-// STATIC: 0x00F7695C
+// STATIC: 0x00F7695C/0x140BD1750
 TSHashTable<CGSpellActivationOverlay::PETAURANODE, HASHKEY_NONE> CGSpellActivationOverlay::s_petAuras;
 
-// OFFSET: 0x008D71D0
+// PROVEN: bd3f6d3e IDENTICAL/DIFFERENT
+// OFFSET: 0x008D71D0/0x14064AC30
 void CGSpellActivationOverlay::ShutdownGame() {
     CGSpellActivationOverlay::s_counters.Clear();
     CGSpellActivationOverlay::s_availableSpells.Clear();
@@ -62,6 +63,7 @@ void CGSpellActivationOverlay::ShowSpellOverlay(const SpellActivationOverlayRec*
     FrameScript_SignalEvent(SCRIPT_EVENT_SPELL_ACTIVATION_OVERLAY_SHOW, "%d%s%s%f%d%d%d", overlay->m_spellID, texture, static_cast<const char*>(location->m_name), overlay->m_scale, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 }
 
+// PROVEN: d0a7e931 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F22B0/0x14078C940
 void CGSpellActivationOverlay::DelOverlayGlowableSpell(int32_t spellId) {
     for (uint32_t i = 0; i < CGSpellActivationOverlay::s_glowableSpells.m_count; i++) {
@@ -76,6 +78,7 @@ void CGSpellActivationOverlay::DelOverlayGlowableSpell(int32_t spellId) {
     }
 }
 
+// PROVEN: a4312011 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F2300/0x1405EBD20
 void CGSpellActivationOverlay::EnableActiveMoverGlow(int32_t classSet, const int32_t* classMask) {
     for (uint32_t i = 0; i < 10; i++) {
@@ -94,6 +97,7 @@ void CGSpellActivationOverlay::AddOverlayOnAvailableSpell(int32_t spellId) {
     info->m_usable = false;
 }
 
+// PROVEN: 743c2d1d IDENTICAL/DIFFERENT
 // OFFSET: 0x009F23D0/0x14078CA40
 bool CGSpellActivationOverlay::IsSpellOverlayed(int32_t spellId) {
     HASHKEY_NONE key;
@@ -112,6 +116,7 @@ bool CGSpellActivationOverlay::IsSpellOverlayed(int32_t spellId) {
     return false;
 }
 
+// PROVEN: ee800417 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F2420/0x14078CAC0
 uint32_t CGSpellActivationOverlay::AddOverlayGlowableSpell(int32_t spellId) {
     for (uint32_t i = 0; i < CGSpellActivationOverlay::s_glowableSpells.m_count; i++) {
@@ -167,6 +172,7 @@ void CGSpellActivationOverlay::ClearActiveMoverSpells() {
     CGSpellActivationOverlay::s_petAuras.Clear();
 }
 
+// PROVEN: 6444bd4d IDENTICAL/DIFFERENT
 // OFFSET: 0x009F3610/0x14078E3A0
 void CGSpellActivationOverlay::ApplyChangeCheckSpell(int32_t spellId, int32_t classSet, const int32_t* classMask, int32_t change) {
     const SpellRec* spell = g_spellDB.GetRecord(spellId);
@@ -440,6 +446,7 @@ void CGSpellActivationOverlay::UpdateActiveMoverOverlays() {
     }
 }
 
+// PROVEN: f33a9183 IDENTICAL/UNPROVEN
 // OFFSET: 0x009F41E0/0x14078FA00
 void CGSpellActivationOverlay::ApplyChangeCheckSpells(int32_t classSet, const int32_t* classMask, int32_t change) {
     if (!classSet) {
@@ -473,7 +480,7 @@ void CGSpellActivationOverlay::AddActiveMoverSpells() {
     CGSpellActivationOverlay::UpdateActiveMoverOverlays();
 }
 
-// OFFSET: 0x009F42C0
+// OFFSET: 0x009F42C0/0x14078FB40
 void CGSpellActivationOverlay::OnAuraAdded(const SpellRec* spell) {
     const SpellActivationOverlayRec* overlay = GetSpellActivationOverlayRec(spell->m_id);
 
@@ -483,7 +490,7 @@ void CGSpellActivationOverlay::OnAuraAdded(const SpellRec* spell) {
     }
 }
 
-// OFFSET: 0x009F4300
+// OFFSET: 0x009F4300/0x14078FB90
 void CGSpellActivationOverlay::OnAuraRemoved(const SpellRec* spell) {
     const SpellActivationOverlayRec* overlay = GetSpellActivationOverlayRec(spell->m_id);
 
@@ -526,6 +533,7 @@ void CGSpellActivationOverlay::DelOverlayOnAvailableSpell(int32_t spellId) {
     CGSpellActivationOverlay::s_availableSpells.m_count--;
 }
 
+// PROVEN: 5c4b2817 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F4420/0x14078FD00
 void CGSpellActivationOverlay::UpdateUsable() {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));

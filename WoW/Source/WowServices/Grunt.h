@@ -191,9 +191,7 @@ struct ServerHelloInfo {
     /* 002C */ uint8_t m_versionMajor;
     /* 002D */ uint8_t m_versionMinor;
     /* 002E */ uint8_t m_versionPatch;
-    /* 002F */ uint8_t unk_002F;
     /* 0030 */ uint16_t m_build;
-    /* 0032 */ uint8_t unk_0032[2];
     /* 0034 */ uint32_t unk_0018;
     /* 0038 */ uint32_t unk_001C;
     /* 003C */ uint32_t unk_0020;
@@ -201,7 +199,6 @@ struct ServerHelloInfo {
     /* 0044 */ uint32_t unk_0028;
     /* 0048 */ char m_realmName [32];
     /* 0068 */ uint8_t unk_004C;
-    /* 0069 */ uint8_t unk_0069[3];
     /* 006C */ uint32_t m_linkType;
 };
 
@@ -231,24 +228,19 @@ struct ServerSessionInfo {
     /* 005C */ uint8_t m_versionMajor;
     /* 005D */ uint8_t m_versionMinor;
     /* 005E */ uint8_t m_versionPatch;
-    /* 005F */ uint8_t unk_005F;
     /* 0060 */ uint16_t m_build;
     /* 0062 */ uint16_t m_timePlayedMinutes;
     /* 0064 */ uint16_t unk_0064;
     /* 0066 */ uint8_t m_expansionLevel;
-    /* 0067 */ uint8_t unk_0067;
     /* 0068 */ int32_t unk_0068;
     /* 006C */ uint32_t unk_006C;
     /* 0070 */ uint32_t m_referrerAccountId;
     /* 0074 */ int32_t m_referralTime;
     /* 0078 */ uint16_t unk_0078;
-    /* 007A */ uint8_t unk_007A[2];
     /* 007C */ uint32_t unk_007C;
     /* 0080 */ uint16_t m_bnetLicenseCount;
-    /* 0082 */ uint8_t unk_0082[2];
     /* 0084 */ Grunt::ServerLicense m_bnetLicenses [256];
     /* 0C84 */ uint16_t m_wowLicenseCount;
-    /* 0C86 */ uint8_t unk_0C86[2];
     /* 0C88 */ Grunt::ServerLicense m_wowLicenses [256];
 };
 

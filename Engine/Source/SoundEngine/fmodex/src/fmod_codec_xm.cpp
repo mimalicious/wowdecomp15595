@@ -352,6 +352,7 @@ FMOD_RESULT MusicChannelXM::portamento()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 07a19084 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB0520/0x140875240
 FMOD_RESULT MusicChannelXM::vibrato() 
 {
@@ -414,6 +415,7 @@ FMOD_RESULT MusicChannelXM::vibrato()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 9ab73ff0 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB05C0/0x1408752F0
 FMOD_RESULT MusicChannelXM::tremolo() 
 {
@@ -588,6 +590,7 @@ FMOD_RESULT CodecXM::processEnvelope(MusicEnvelopeState *env, MusicVirtualChanne
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 78e6a1f4 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB07E0/0x140875570
 FMOD_RESULT MusicChannelXM::instrumentVibrato(MusicInstrument *iptr) 
 {
@@ -3613,7 +3616,7 @@ FMOD_RESULT CodecXM::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AB26C0
+// OFFSET: 0x00AB26C0/0x140877B20
 FMOD_RESULT CodecXM::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;
@@ -3830,7 +3833,7 @@ FMOD_RESULT F_CALLBACK CodecXM::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1bafa9a9 IDENTICAL/NONE
+// PROVEN: 1bafa9a9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AB2A80/0x140877F70
 FMOD_RESULT F_CALLBACK CodecXM::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -3855,7 +3858,7 @@ FMOD_RESULT F_CALLBACK CodecXM::readCallback(FMOD_CODEC_STATE *codec, void *buff
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d6e740fa IDENTICAL/NONE
+// PROVEN: d6e740fa IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB2640/0x140877AA0
 FMOD_RESULT F_CALLBACK CodecXM::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype   )
 {

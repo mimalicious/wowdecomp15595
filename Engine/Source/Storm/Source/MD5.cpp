@@ -70,7 +70,7 @@ const MD5& MD5::operator=(const char* str) {
     return *this;
 }
 
-// PROVEN: 6dd18a41 IDENTICAL/NONE
+// PROVEN: 6dd18a41 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B8670/0x1400F0C40
 MD5::MD5(char* str) {
     *this = str;
@@ -190,6 +190,7 @@ static void MD5Transform(uint32_t state[4], const uint8_t block[64]) {
     memset(x, 0, sizeof(x));
 }
 
+// PROVEN: adc3f30a DIFFERENT/IDENTICAL
 // OFFSET: 0x004B93A0/0x1400F1C90
 void MD5Update(MD5_CTX* context, const uint8_t* input, uint32_t inputLen) {
     uint32_t index = (context->count[0] >> 3) & 0x3F;

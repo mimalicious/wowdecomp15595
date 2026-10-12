@@ -48,6 +48,7 @@ static int32_t MoveViewStart(lua_State* L, uint32_t motion) {
     return 0;
 }
 
+// PROVEN: 68e9fe58 DIFFERENT/IDENTICAL
 // OFFSET: 0x0043BE10/0x140046840
 static int32_t Script_MoveViewInStart(lua_State* L) {
     return MoveViewStart(L, 0);
@@ -66,6 +67,7 @@ static int32_t Script_MoveViewInStop(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9604a7c8 DIFFERENT/IDENTICAL
 // OFFSET: 0x0043BE60/0x140046880
 static int32_t Script_MoveViewOutStart(lua_State* L) {
     return MoveViewStart(L, 1);
@@ -84,6 +86,7 @@ static int32_t Script_MoveViewOutStop(lua_State* L) {
     return 0;
 }
 
+// PROVEN: cede85f3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0043BF00/0x140046900
 static int32_t Script_MoveViewLeftStart(lua_State* L) {
     return MoveViewStart(L, 3);
@@ -102,6 +105,7 @@ static int32_t Script_MoveViewLeftStop(lua_State* L) {
     return 0;
 }
 
+// PROVEN: a454ca04 DIFFERENT/IDENTICAL
 // OFFSET: 0x0043BEB0/0x1400468C0
 static int32_t Script_MoveViewRightStart(lua_State* L) {
     return MoveViewStart(L, 2);
@@ -120,6 +124,7 @@ static int32_t Script_MoveViewRightStop(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 06b23120 DIFFERENT/IDENTICAL
 // OFFSET: 0x0043BF50/0x140046950
 static int32_t Script_MoveViewUpStart(lua_State* L) {
     return MoveViewStart(L, 4);
@@ -138,6 +143,7 @@ static int32_t Script_MoveViewUpStop(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9ea156f8 DIFFERENT/IDENTICAL
 // OFFSET: 0x0043BFA0/0x1400469A0
 static int32_t Script_MoveViewDownStart(lua_State* L) {
     return MoveViewStart(L, 5);
@@ -156,7 +162,7 @@ static int32_t Script_MoveViewDownStop(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b7cc5169 IDENTICAL/NONE
+// PROVEN: b7cc5169 IDENTICAL/DIFFERENT
 // OFFSET: 0x00441B40/0x14004D0D0
 static int32_t Script_SetView(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -173,7 +179,7 @@ static int32_t Script_SetView(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 1e5a17a5 IDENTICAL/NONE
+// PROVEN: 1e5a17a5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0043BFF0/0x1400469F0
 static int32_t Script_SaveView(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -190,7 +196,7 @@ static int32_t Script_SaveView(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dc932a6e IDENTICAL/NONE
+// PROVEN: dc932a6e IDENTICAL/IDENTICAL
 // OFFSET: 0x004430D0/0x14004E660
 static int32_t Script_ResetView(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -207,7 +213,7 @@ static int32_t Script_ResetView(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 193fdd1d IDENTICAL/NONE
+// PROVEN: 193fdd1d IDENTICAL/IDENTICAL
 // OFFSET: 0x00443130/0x14004E6C0
 static int32_t Script_NextView(lua_State* L) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -220,7 +226,7 @@ static int32_t Script_NextView(lua_State* L) {
     return 0;
 }
 
-// PROVEN: dfc4e1ac IDENTICAL/NONE
+// PROVEN: dfc4e1ac IDENTICAL/IDENTICAL
 // OFFSET: 0x00443160/0x14004E700
 static int32_t Script_PrevView(lua_State* L) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -233,7 +239,7 @@ static int32_t Script_PrevView(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ecb57eca IDENTICAL/NONE
+// PROVEN: ecb57eca IDENTICAL/IDENTICAL
 // OFFSET: 0x0043C050/0x140046A70
 static int32_t Script_FlipCameraYaw(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -247,19 +253,19 @@ static int32_t Script_FlipCameraYaw(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 797fa63e IDENTICAL/NONE
+// PROVEN: 797fa63e IDENTICAL/IDENTICAL
 // OFFSET: 0x0043F5C0/0x14004A7E0
 static int32_t Script_VehicleCameraZoomIn(lua_State* L) {
     return Script_CameraZoomIn(L);
 }
 
-// PROVEN: 820a1f93 IDENTICAL/NONE
+// PROVEN: 820a1f93 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043F5D0/0x14004A7F0
 static int32_t Script_VehicleCameraZoomOut(lua_State* L) {
     return Script_CameraZoomOut(L);
 }
 
-// STATIC: 0x00C99170
+// STATIC: 0x00C99170/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CameraZoomIn", &Script_CameraZoomIn },
     { "CameraZoomOut", &Script_CameraZoomOut },
@@ -285,7 +291,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "VehicleCameraZoomOut", &Script_VehicleCameraZoomOut },
 };
 
-// PROVEN: 91c7a965 IDENTICAL/NONE
+// PROVEN: 91c7a965 IDENTICAL/UNPROVEN
 // OFFSET: 0x0043A900/0x140045790
 void CameraRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -293,7 +299,7 @@ void CameraRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 03e90b12 IDENTICAL/NONE
+// PROVEN: 03e90b12 IDENTICAL/UNPROVEN
 // OFFSET: 0x0043A930/0x1400457E0
 void CameraUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

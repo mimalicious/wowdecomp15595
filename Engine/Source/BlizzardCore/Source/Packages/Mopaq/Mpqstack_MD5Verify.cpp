@@ -44,7 +44,7 @@ void System_Mopaq::CreateMD5VerifyData(Blizzard::Mopaq::MpqHandleRecord* handle,
     }
 }
 
-// OFFSET: 0x007C3390
+// OFFSET: 0x007C3390/0x1404BD9A0
 void System_Mopaq::DestroyMD5VerifyData(Blizzard::Mopaq::MpqHandleRecord* handle) {
     MD5VerifyData* data = handle->m_md5Verify;
 
@@ -124,7 +124,7 @@ bool System_Mopaq::MD5VerifyData::ReadAligned(int64_t offset) {
     return this->m_handle->m_readFunc(this->m_handle->m_handler, this->m_buffer, offset, &count) && count == this->m_size;
 }
 
-// OFFSET: 0x007B3150
+// OFFSET: 0x007B3150/0x1404A87A0
 bool System_Mopaq::MD5VerifyData::ReadSingleBlock(int64_t offset) {
     int32_t size = this->m_blockSize;
 
@@ -136,7 +136,7 @@ bool System_Mopaq::MD5VerifyData::ReadSingleBlock(int64_t offset) {
     return this->m_handle->m_readFunc(this->m_handle->m_handler, this->m_workBuffer.m_data, offset - offset % this->m_blockSize, &count) && count == size;
 }
 
-// OFFSET: 0x007BAC70
+// OFFSET: 0x007BAC70/0x1404B2540
 bool System_Mopaq::MD5VerifyData::ReadMultipleBlocks(int64_t offset) {
     int32_t head = 0;
     bool result = true;
@@ -207,7 +207,7 @@ bool System_Mopaq::MD5VerifyData::InitializeMD5Buffer() {
     return this->m_handle->m_readFunc(this->m_handle->m_handler, this->m_md5s.m_data, this->m_fileSize, &count) && count == expected;
 }
 
-// OFFSET: 0x007E7C10
+// OFFSET: 0x007E7C10/0x1404F1E10
 bool System_Mopaq::MD5VerifyData::ValidateBlock(uint8_t* buffer, int32_t block, int32_t size, bool& repaired) {
     repaired = false;
 
@@ -293,7 +293,7 @@ bool System_Mopaq::MD5VerifyData::ValidateAlignedRead() {
     return result;
 }
 
-// OFFSET: 0x007E8190
+// OFFSET: 0x007E8190/0x1404F2840
 bool System_Mopaq::MD5VerifyData::ValidateSingleBlock(int64_t offset) {
     bool repaired;
     bool result;
@@ -415,7 +415,7 @@ bool System_Mopaq::MD5VerifyData::ValidateRead(IoOperationType type, int64_t off
     return result;
 }
 
-// OFFSET: 0x007E8310
+// OFFSET: 0x007E8310/0x1404F29E0
 bool System_Mopaq::MD5VerifyData::ReadAndValidate(int64_t offset, Blizzard::Mopaq::MpqHandleRecord* handle) {
     this->m_handle = handle;
     handle->m_handler->m_baseOffset = this->m_baseOffset;
@@ -461,7 +461,7 @@ void System_Mopaq::MD5VerifyData::ComputeMD5s(const uint8_t* buffer, int64_t off
     }
 }
 
-// OFFSET: 0x007E8390
+// OFFSET: 0x007E8390/0x1404F2A90
 bool System_Mopaq::MD5VerifyData::ValidateExistingBlock(int64_t offset) {
     if (static_cast<uint32_t>(this->m_blockSize) > this->m_workBuffer.m_count) {
         this->m_workBuffer.SetCount(this->m_blockSize);
@@ -486,7 +486,7 @@ bool System_Mopaq::MD5VerifyData::ValidateExistingBlock(int64_t offset) {
     return result;
 }
 
-// OFFSET: 0x007EAC90
+// OFFSET: 0x007EAC90/0x1404F7720
 bool System_Mopaq::MD5VerifyData::MD5SingleBlock(int64_t offset) {
     if (!this->m_unalignedStart && !this->m_unalignedEnd) {
         this->ComputeMD5s(this->m_buffer, offset, this->m_size);
@@ -522,7 +522,7 @@ bool System_Mopaq::MD5VerifyData::MD5SingleBlock(int64_t offset) {
     return result;
 }
 
-// OFFSET: 0x007EADB0
+// OFFSET: 0x007EADB0/0x1404F7830
 bool System_Mopaq::MD5VerifyData::MD5MultipleBlocks(int64_t offset) {
     uint8_t* source = this->m_buffer;
     int32_t remaining = this->m_size;
@@ -639,7 +639,7 @@ bool System_Mopaq::MD5VerifyData::EnsureMD5Table(int64_t offset, int64_t size) {
     return this->m_md5s.m_count >= count;
 }
 
-// OFFSET: 0x007EAFC0
+// OFFSET: 0x007EAFC0/0x1404F7A00
 bool System_Mopaq::MD5VerifyData::MD5AndWrite(int64_t offset, int64_t size, Blizzard::Mopaq::MpqHandleRecord* handle) {
     int64_t relative = offset - this->m_baseOffset;
     this->m_handle = handle;
@@ -695,8 +695,8 @@ bool System_Mopaq::MD5VerifyData::MD5AndWrite(int64_t offset, int64_t size, Bliz
     return ok;
 }
 
-// PROVEN: 2a8f4f4c IDENTICAL/NONE
-// OFFSET: 0x007BFBC0
+// PROVEN: 2a8f4f4c IDENTICAL/DIFFERENT
+// OFFSET: 0x007BFBC0/0x1404B8EF0
 bool System_Mopaq::md5verify_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     const System_SFile::BLOCKENTRY* entry = parms->m_blockEntry;
     int64_t size = entry->m_compressedSize ? entry->m_compressedSize : entry->m_fileSize;
@@ -705,7 +705,7 @@ bool System_Mopaq::md5verify_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams*
     return true;
 }
 
-// OFFSET: 0x007C3400
+// OFFSET: 0x007C3400/0x1404BDA30
 bool System_Mopaq::md5verify_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     MD5VerifyData* data = parms->m_handle->m_md5Verify;
     bool result = true;
@@ -718,7 +718,7 @@ bool System_Mopaq::md5verify_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams
     return result;
 }
 
-// OFFSET: 0x007EAC30
+// OFFSET: 0x007EAC30/0x1404F76D0
 bool System_Mopaq::md5verify_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     MD5VerifyData* data = handle->m_md5Verify;
@@ -736,7 +736,7 @@ bool System_Mopaq::md5verify_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams*
     return data->ReadAndValidate(parms->m_offset, handle);
 }
 
-// OFFSET: 0x007EC390
+// OFFSET: 0x007EC390/0x1404F8890
 bool System_Mopaq::md5verify_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     MD5VerifyData* data = handle->m_md5Verify;

@@ -10,18 +10,6 @@
 CImageFileImpl::~CImageFileImpl() {
 }
 
-// INLINED
-CTgaFile::CTgaFile() {
-    this->m_file = NULL;
-    this->m_image = NULL;
-    this->m_header = NULL;
-    this->m_addlHeaderData = NULL;
-    this->m_imageBytes = 0;
-    this->m_colorMap = NULL;
-    this->m_fileData = NULL;
-    this->m_data = NULL;
-}
-
 // OFFSET: 0x00481AE0/0x1400A0790
 CTgaFile::~CTgaFile() {
     this->Close();
@@ -749,6 +737,7 @@ int32_t CTgaFile::ReadRleImage(uint32_t flags) {
     return 1;
 }
 
+// PROVEN: 84649adc DIFFERENT/IDENTICAL
 // OFFSET: 0x00638EF0/0x1402D0640
 int32_t CTgaFile::AddAlphaChannel(const void* alpha) {
     if (!this->Image()) {

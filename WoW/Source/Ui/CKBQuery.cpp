@@ -7,10 +7,10 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: 0x00D17398
+// STATIC: 0x00D17398/0x140BD20B0
 CKBQuery g_KnowledgeBaseQuery;
 
-// STATIC: 0x00D17258
+// STATIC: 0x00D17258/0x1409B8D10
 static char s_hexDigits[] = "0123456789ABCDEF";
 
 // INLINED
@@ -43,6 +43,7 @@ XMLNode* CKBQuery::GetArticleHeader(int32_t index) {
     return this->m_articleHeaders.m_node;
 }
 
+// PROVEN: 8dc675b3 DIFFERENT/IDENTICAL
 // OFFSET: 0x009FB8D0/0x140798F30
 void CKBQuery::_ComputeCachedData() {
     XMLNode* node = XMLTree_GetRoot(this->m_tree);
@@ -131,6 +132,7 @@ int32_t CKBQuery::BeginLoading(const char* query, int32_t categoryId, int32_t nu
     return 1;
 }
 
+// PROVEN: 632ca7f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC900/0x14079A510
 void CKBQuery::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
@@ -138,6 +140,7 @@ void CKBQuery::_SendSuccessEvent() {
     }
 }
 
+// PROVEN: 5046946d IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC920/0x14079A530
 void CKBQuery::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {

@@ -5,12 +5,12 @@
 #include <cstring>
 #include <new>
 
-// STATIC: 0x00C27680
+// STATIC: 0x00C27680/0x140A1DA60
 const uint8_t ComSat::Sound::CODECIPMR6000::s_invalidPlayer = 0xFF;
 
 const int32_t ComSat::Sound::CODECIPMR6000::s_maxFramesPerPacket = 20;
 
-// STATIC: 0x00C27688
+// STATIC: 0x00C27688/0x140A1DA68
 const int32_t ComSat::Sound::CODECIPMR6000::s_sampleRate = 8000;
 
 // STATIC: 0x00C2768C
@@ -19,15 +19,15 @@ const int32_t ComSat::Sound::CODECIPMR6000::s_bitsPerSample = 16;
 // STATIC: 0x00C27690
 const int32_t ComSat::Sound::CODECIPMR6000::s_samplesPerFrame = 800;
 
-// STATIC: 0x00C27694
+// STATIC: 0x00C27694/0x140A1DA78
 const int32_t ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength = 360;
 
-// STATIC: 0x00C27698
+// STATIC: 0x00C27698/0x140A1DA80
 const int32_t ComSat::Sound::CODECIPMR6000::s_maxEncodedFrameLength = 960;
 
 const uint32_t ComSat::Sound::CODECIPMR6000::s_bytesPerFrame = 1600;
 
-// OFFSET: 0x00A3A000
+// OFFSET: 0x00A3A000/0x1407E6510
 ComSat::Sound::CODECIPMR6000::LocalPlayer::LocalPlayer(ComSat::Allocator& allocator, int32_t channelCount, uint8_t* tables) {
     this->m_threshold = 0.5f;
     this->m_tables = tables;
@@ -59,7 +59,7 @@ ComSat::Sound::CODECIPMR6000::LocalPlayer::~LocalPlayer() {
     }
 }
 
-// OFFSET: 0x00A3A150
+// OFFSET: 0x00A3A150/0x1407E66A0
 bool ComSat::Sound::CODECIPMR6000::LocalPlayer::CompressRawData(const uint8_t* pcm, uint32_t size, uint8_t* data, uint32_t* bits, bool* voice) {
     uint8_t* encoder = this->m_encoder;
     if (!encoder || size != 1600 || *bits < 960) {
@@ -189,8 +189,8 @@ bool ComSat::Sound::CODECIPMR6000::Init() {
     return true;
 }
 
-// PROVEN: 3100d447 IDENTICAL/NONE
-// OFFSET: 0x00A3A390
+// PROVEN: 3100d447 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3A390/0x1404C2CC0
 bool ComSat::Sound::CODECIPMR6000::Reset() {
     return this->Init();
 }
@@ -214,7 +214,7 @@ ComSat::Sound::CODECIPMR6000::CODECIPMR6000(const ComSat::Initialization& init, 
     this->m_initialized = false;
 }
 
-// OFFSET: 0x00A3A440
+// OFFSET: 0x00A3A440/0x1407E69F0
 void ComSat::Sound::CODECIPMR6000::ResetPlayerChannelDecoder(uint8_t player, int32_t channel) {
     if (this->m_initialized) {
         LocalPlayer* localPlayer;
@@ -224,7 +224,7 @@ void ComSat::Sound::CODECIPMR6000::ResetPlayerChannelDecoder(uint8_t player, int
     }
 }
 
-// OFFSET: 0x00A3A4D0
+// OFFSET: 0x00A3A4D0/0x1407E69F0
 void ComSat::Sound::CODECIPMR6000::ResetPlayerChannelEncoder(uint8_t player) {
     if (this->m_initialized) {
         LocalPlayer* localPlayer;
@@ -234,19 +234,19 @@ void ComSat::Sound::CODECIPMR6000::ResetPlayerChannelEncoder(uint8_t player) {
     }
 }
 
-// OFFSET: 0x00A3A540
+// OFFSET: 0x00A3A540/0x1407E6A80
 bool ComSat::Sound::CODECIPMR6000::CompressRawData(uint8_t player, const uint8_t* pcm, uint32_t size, uint8_t* data, uint32_t* bits, bool* voice) {
     LocalPlayer* localPlayer;
     return this->m_initialized && this->m_players.Get(ComSat::MapKey<uint8_t>(player), localPlayer) && localPlayer->CompressRawData(pcm, size, data, bits, voice);
 }
 
-// OFFSET: 0x00A3A5C0
+// OFFSET: 0x00A3A5C0/0x1407E6B70
 bool ComSat::Sound::CODECIPMR6000::DecompressEncodedData(uint8_t player, int32_t channel, const uint8_t* data, uint32_t bits, uint8_t* pcm, uint32_t* size) {
     LocalPlayer* localPlayer;
     return this->m_initialized && this->m_players.Get(ComSat::MapKey<uint8_t>(player), localPlayer) && localPlayer->DecompressEncodedData(channel, data, bits, pcm, size);
 }
 
-// OFFSET: 0x00A3A640
+// OFFSET: 0x00A3A640/0x1407E6CA0
 void ComSat::Sound::CODECIPMR6000::SetThreshold(uint8_t player, float threshold) {
     LocalPlayer* localPlayer;
     if (this->m_players.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -254,7 +254,7 @@ void ComSat::Sound::CODECIPMR6000::SetThreshold(uint8_t player, float threshold)
     }
 }
 
-// OFFSET: 0x00A3A780
+// OFFSET: 0x00A3A780/0x1407E7030
 void ComSat::Sound::CODECIPMR6000::Shutdown() {
     LocalPlayer* localPlayer = NULL;
     ComSat::MapKey<uint8_t> key(s_invalidPlayer);
@@ -267,7 +267,7 @@ void ComSat::Sound::CODECIPMR6000::Shutdown() {
     this->m_initialized = false;
 }
 
-// OFFSET: 0x00A3A830
+// OFFSET: 0x00A3A830/0x1407E7100
 bool ComSat::Sound::CODECIPMR6000::InitLocalPlayer(uint8_t player, float threshold) {
     if (!this->m_initialized) {
         return false;
@@ -282,6 +282,7 @@ bool ComSat::Sound::CODECIPMR6000::InitLocalPlayer(uint8_t player, float thresho
     return true;
 }
 
+// PROVEN: b2f9b90d UNPROVEN/IDENTICAL
 // OFFSET: 0x00A3A910/0x1407E7250
 bool ComSat::Sound::CODECIPMR6000::RemoveLocalPlayer(uint8_t player) {
     if (!this->m_initialized) {

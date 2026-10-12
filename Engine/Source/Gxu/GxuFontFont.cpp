@@ -167,7 +167,7 @@ float CGxFont::GetGlyphAdvance(uint32_t code) {
     return advance;
 }
 
-// OFFSET: 0x0061CE50
+// OFFSET: 0x0061CE50/0x1402AB190
 void CGxFont::ClearGlyphs() {
     for (uint32_t i = 0; i < 8; i++) {
         this->m_textureCache[i].Destroy();
@@ -178,7 +178,7 @@ void CGxFont::ClearGlyphs() {
     this->m_kernInfo.Clear();
 }
 
-// PROVEN: c5b09f48 IDENTICAL/DIFFERENT
+// PROVEN: c5b09f48 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061D050/0x1402AB420
 void CGxFont::HandleScreenSizeChange() {
     this->ClearGlyphs();
@@ -194,7 +194,7 @@ void CGxFont::HandleScreenSizeChange() {
 CGxFont::CGxFont() : m_cellHeight(0), m_pixelsPerUnit(0.0f) {
 }
 
-// OFFSET: 0x0061D210
+// OFFSET: 0x0061D210/0x1402AB640
 CGxFont::~CGxFont() {
     if (this->m_fontFaceHandle) {
         FontFaceCloseHandle(this->m_fontFaceHandle);
@@ -204,7 +204,7 @@ CGxFont::~CGxFont() {
     this->ClearGlyphs();
 }
 
-// PROVEN: 476ad0d8 IDENTICAL/UNPROVEN
+// PROVEN: 476ad0d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061D3A0/0x1402AB900
 int32_t CGxFont::Initialize(const char* name, uint32_t fontFlags, float fontHeight) {
     SStrPrintf(this->m_fontName, sizeof(this->m_fontName), "%s", name);

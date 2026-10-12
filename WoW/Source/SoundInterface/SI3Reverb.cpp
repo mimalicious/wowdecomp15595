@@ -6,10 +6,10 @@
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/SoundInterface/SI3ZoneSounds.h"
 
-// STATIC: 0x00E283B4
+// STATIC: 0x00E283B4/0x140D0FF3C
 int32_t SI3::sm_bReverbEnabled;
 
-// OFFSET: 0x006345C0
+// OFFSET: 0x006345C0/0x1402CA7F0
 static void GetReverbProperties(SoundProviderPreferencesRec* rec, FMOD_REVERB_PROPERTIES* properties) {
     if (!properties) {
         return;
@@ -55,7 +55,7 @@ static void GetReverbProperties(SoundProviderPreferencesRec* rec, FMOD_REVERB_PR
     properties->ReverbPan[2] = 0.0f;
 }
 
-// OFFSET: 0x00634790
+// OFFSET: 0x00634790/0x1402CA9D0
 int32_t SI3::GetZoneReverb() {
     int32_t type = SI3ZONESOUNDTYPE_LAST - 1;
 
@@ -68,8 +68,8 @@ int32_t SI3::GetZoneReverb() {
     return SI3::sm_aZoneSoundInfo[type].m_reverb;
 }
 
-// PROVEN: f6c49d19 IDENTICAL/NONE
-// OFFSET: 0x006347F0
+// PROVEN: f6c49d19 IDENTICAL/IDENTICAL
+// OFFSET: 0x006347F0/0x1402CAA40
 void SI3::EnableReverb(int32_t enable) {
     SI3::sm_bReverbEnabled = enable;
 }
@@ -92,8 +92,8 @@ void SI3::UpdateReverb() {
     SE3::SetReverb(&properties);
 }
 
-// PROVEN: 30f52b84 IDENTICAL/NONE
-// OFFSET: 0x00634880
+// PROVEN: 30f52b84 IDENTICAL/DIFFERENT
+// OFFSET: 0x00634880/0x1402CAA50
 void SI3::ReverbUnderwaterChanged() {
     SI3::UpdateReverb();
 }

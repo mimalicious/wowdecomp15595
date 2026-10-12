@@ -11,10 +11,10 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: 0x00D07F14
+// STATIC: 0x00D07F14/0x140BB91A4
 static float s_lightGridScale = 0.05f;
 
-// PROVEN: 9a8905f2 IDENTICAL/NONE
+// PROVEN: 9a8905f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00812BF0/0x14052A850
 void CM2Light::Copy(const CM2Light& light) {
     this->m_scene = NULL;
@@ -33,14 +33,14 @@ void CM2Light::Copy(const CM2Light& light) {
     this->m_lightNext = NULL;
 }
 
-// PROVEN: d77917a8 IDENTICAL/DIFFERENT
+// PROVEN: d77917a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00812C90/0x14052A8E0
 void CM2Light::Initialize(CM2Scene* scene) {
     this->m_scene = scene;
     this->m_stamp = scene ? scene->m_frameStamp - 1 : 0;
 }
 
-// PROVEN: ee6c8208 IDENTICAL/DIFFERENT
+// PROVEN: ee6c8208 IDENTICAL/IDENTICAL
 // OFFSET: 0x00812CE0/0x14052AA80
 void CM2Lighting::Initialize(CM2Scene* scene, const CAaSphere& sphere) {
     memset(this, 0, sizeof(*this));
@@ -49,7 +49,7 @@ void CM2Lighting::Initialize(CM2Scene* scene, const CAaSphere& sphere) {
     this->m_sphere4 = sphere;
 }
 
-// PROVEN: a97406ac IDENTICAL/DIFFERENT
+// PROVEN: a97406ac IDENTICAL/IDENTICAL
 // OFFSET: 0x00812D20/0x14052AAE0
 void CM2Lighting::SetFog(const C3Vector& color, float start, float end) {
     this->m_fogStart = start;
@@ -59,7 +59,7 @@ void CM2Lighting::SetFog(const C3Vector& color, float start, float end) {
     this->m_fogColor = color;
 }
 
-// PROVEN: 38c345ef IDENTICAL/DIFFERENT
+// PROVEN: 38c345ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00812D90/0x14052AB30
 void CM2Lighting::SetFog(const C3Vector& color, float start, float end, float density) {
     this->m_fogStart = start;
@@ -69,7 +69,7 @@ void CM2Lighting::SetFog(const C3Vector& color, float start, float end, float de
     this->m_fogColor = color;
 }
 
-// PROVEN: 20156ce1 IDENTICAL/NONE
+// PROVEN: 20156ce1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00812E00/0x14052AB90
 int32_t CM2Lighting::GetPointLight(uint32_t index, C3Vector& pos, C3Vector& color, C3Vector& attenuation) {
     if (index >= this->m_lightCount) {
@@ -98,11 +98,6 @@ CM2Light::CM2Light() {
     this->m_visible = 0;
     this->m_lightPrev = NULL;
     this->m_lightNext = NULL;
-}
-
-// INLINED
-CM2Light::~CM2Light() {
-    this->Unlink();
 }
 
 // OFFSET: 0x00812CB0/0x14052A900
@@ -311,7 +306,7 @@ void CM2Lighting::SetupSunlight() {
     this->m_flags |= 2;
 }
 
-// OFFSET: 0x00813980
+// OFFSET: 0x00813980/0x14052B7B0
 void CM2Lighting::SetupGxLights(const C3Vector* origin) {
     CGxLight light;
     light.m_flags |= 1;
@@ -413,7 +408,7 @@ void CM2Light::SetVisible(int32_t visible) {
     }
 }
 
-// OFFSET: 0x00813CC0
+// OFFSET: 0x00813CC0/0x14052BA80
 void CM2Lighting::SetupGxFog() {
     int32_t fixedFog = g_theGxDevicePtr->m_caps.unk_02FC;
 

@@ -34,6 +34,7 @@ static int32_t Script_SetCurve(lua_State* L) {
     return 0;
 }
 
+// PROVEN: aa36a5d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053D400/0x140191820
 static int32_t Script_GetCurve(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
@@ -41,7 +42,8 @@ static int32_t Script_GetCurve(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0053D450
+// PROVEN: 8669560e IDENTICAL/IDENTICAL
+// OFFSET: 0x0053D450/0x140191870
 static int32_t Script_GetMaxOrder(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
     int32_t order = path->GetMaxControlPointOrder() + 1;
@@ -49,6 +51,7 @@ static int32_t Script_GetMaxOrder(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 75981c58 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053DE00/0x140192390
 static int32_t Script_GetControlPoints(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
@@ -138,22 +141,22 @@ static int32_t Script_CreateControlPoint(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 9943457d IDENTICAL/NONE
-// OFFSET: 0x0053D4B0
+// PROVEN: 9943457d IDENTICAL/IDENTICAL
+// OFFSET: 0x0053D4B0/0x1401918D0
 void CSimplePathAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimplePathAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimplePathAnim::RegisterScriptMethods);
 }
 
-// PROVEN: 213e571e IDENTICAL/NONE
-// OFFSET: 0x0053BA40
+// PROVEN: 213e571e IDENTICAL/IDENTICAL
+// OFFSET: 0x0053BA40/0x14018F850
 void CSimplePathAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimplePathAnim::s_metatable);
     CSimplePathAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00CA479C
+// STATIC: 0x00CA479C/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetCurve", &Script_SetCurve },
     { "GetCurve", &Script_GetCurve },
@@ -162,7 +165,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetMaxOrder", &Script_GetMaxOrder },
 };
 
-// OFFSET: 0x0053BA10
+// OFFSET: 0x0053BA10/0x14018F810
 void CSimplePathAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

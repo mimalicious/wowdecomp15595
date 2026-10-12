@@ -7,7 +7,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// STATIC: 0x00CA3B70
+// STATIC: 0x00CA3B70/0x140B410A0
 float CFramePoint::UNDEFINED = std::numeric_limits<float>::infinity();
 
 // STATIC: 0x00DD3CD0
@@ -117,7 +117,7 @@ float CFramePoint::X(float scale) {
     }
 }
 
-// OFFSET: 0x0052ED30
+// OFFSET: 0x0052ED30/0x14017FB50
 float CFramePoint::Y(float scale) {
     CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
 

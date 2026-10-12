@@ -19,26 +19,26 @@
 #include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00CA812C
+// STATIC: 0x00CA812C/0x140B47F58
 static const uint32_t s_unitSoundChance[14] = { 70, 100, 60, 100, 100, 40, 100, 100, 100, 100, 100, 100, 100, 0 };
 
-// STATIC: 0x00CA8188
+// STATIC: 0x00CA8188/0x140B47FC0
 static float s_attachmentHeights[53] = { 1.0f, 1.0f, 1.0f, 1.5f, 1.5f, 1.8f, 1.8f, 0.5f, 0.5f, 1.0f, 1.0f, 2.0f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f, 2.0f, 2.5f, 0.0f, 2.0f, 1.5f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 1.5f, 1.5f, 1.0f, 1.0f, 1.5f, 1.0f, 1.0f, 2.5f, 1.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f };
 
-// STATIC: 0x00BB6B9C
+// STATIC: 0x00BB6B9C/0x14099DFA0
 const uint32_t CGUnit_C::s_impactTypes[4] = { 0, 8, 7, 9 };
 
-// STATIC: 0x00DD86E0
+// STATIC: 0x00DD86E0/0x140CBEEC0
 static uint32_t s_lastStandSoundTime;
 
-// STATIC: 0x00DD86E4
+// STATIC: 0x00DD86E4/0x140CBEED0
 static TSFixedArray<DEATTHUDSOUNDINFO> s_deathThudSounds[5];
 
 // INLINED
 inline DEATTHUDSOUNDINFO::DEATTHUDSOUNDINFO() : m_soundEntryId(0), m_soundEntryIdWater(0) {
 }
 
-// PROVEN: 7b24c443 IDENTICAL/NONE
+// PROVEN: 7b24c443 IDENTICAL/DIFFERENT
 // OFFSET: 0x0060BF90/0x140295690
 int32_t GetSoundID(const CreatureSoundDataRec* soundData, uint32_t soundType) {
     if (!soundData) {
@@ -76,13 +76,13 @@ int32_t GetSoundID(const CreatureSoundDataRec* soundData, uint32_t soundType) {
     }
 }
 
-// PROVEN: 3183c718 IDENTICAL/NONE
+// PROVEN: 3183c718 IDENTICAL/DIFFERENT
 // OFFSET: 0x0060C0E0/0x1402957C0
 void CGUnit_C::KillCreatureLoopSound() {
     SE3::StopSound(this->m_loopSound, 500, __FILE__, __LINE__, "CGUnit_C::KillCreatureLoopSound");
 }
 
-// PROVEN: 05564641 IDENTICAL/NONE
+// PROVEN: 05564641 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060C110/0x140295800
 void CGUnit_C::RefreshSoundData() {
     this->m_soundData = NULL;
@@ -96,7 +96,7 @@ void CGUnit_C::RefreshSoundData() {
     }
 }
 
-// PROVEN: 357f082d IDENTICAL/NONE
+// PROVEN: 357f082d IDENTICAL/DIFFERENT
 // OFFSET: 0x0060C160/0x140283F20
 bool CGUnit_C::GetWeaponSwingType(bool offhand, int32_t* swingType) const {
     if (!this->GetVirtualItemDisplayID(offhand == false)) {
@@ -119,7 +119,7 @@ bool CGUnit_C::GetWeaponSwingType(bool offhand, int32_t* swingType) const {
     return subClass != NULL;
 }
 
-// OFFSET: 0x0060C1E0
+// OFFSET: 0x0060C1E0/0x1402958F0
 uint32_t CGUnit_C::GetImpactType() const {
     if (this->m_soundData && static_cast<uint32_t>(this->m_soundData->m_creatureImpactType) < 4) {
         return s_impactTypes[this->m_soundData->m_creatureImpactType];
@@ -128,8 +128,8 @@ uint32_t CGUnit_C::GetImpactType() const {
     return 0;
 }
 
-// PROVEN: 68ddd779 IDENTICAL/NONE
-// OFFSET: 0x0060C200
+// PROVEN: 68ddd779 IDENTICAL/IDENTICAL
+// OFFSET: 0x0060C200/0x140295920
 void CGUnit_C::SetFootstepSoundsSuppressed(int32_t suppressed) {
     if (suppressed) {
         this->unk_09FC |= 0x40;
@@ -138,6 +138,7 @@ void CGUnit_C::SetFootstepSoundsSuppressed(int32_t suppressed) {
     }
 }
 
+// PROVEN: 63699949 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060C2D0/0x140295A30
 void CGUnit_C::PlayFidgetSound(uint32_t index) {
     CreatureSoundDataRec* soundData = this->GetSoundData(0);
@@ -170,6 +171,7 @@ void CGUnit_C::PlayFidgetSound(uint32_t index) {
     SE3::PlaySoundKit(soundKitId, local && listenerAtCharacter ? NULL : &position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::PlayFidgetSound");
 }
 
+// PROVEN: fa759911 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060C3F0/0x140295BA0
 void CGUnit_C::PlayFoleySound() {
     if (SI3::sm_pCVar_Sound_EnableArmorFoleySoundForOthers && SI3::sm_pCVar_Sound_EnableArmorFoleySoundForOthers->m_intValue) {
@@ -190,7 +192,7 @@ void CGUnit_C::SetImpactKitEffect(bool offhand, const ATTACKROUNDINFO* info, con
     }
 }
 
-// OFFSET: 0x0060C4F0
+// OFFSET: 0x0060C4F0/0x140295CF0
 void CGUnit_C::PlayStandSound() {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         this->PlayUnitSound(5, 0, 0);
@@ -343,6 +345,7 @@ void CGUnit_C::PlayAISound(int32_t soundKitId, WOWGUID source) {
     }
 }
 
+// PROVEN: bbf6e147 IDENTICAL/UNPROVEN
 // OFFSET: 0x0060CAA0/0x140296440
 void CGUnit_C::PlayEmoteStateSound(const C3Vector* position) {
     EmotesRec* emote = g_emotesDB.GetRecord(this->m_unit->m_unitNpcEmotestate);
@@ -372,7 +375,7 @@ int32_t CGUnit_C::GetUnitSoundKitIndex(uint32_t soundType) const {
     }
 }
 
-// OFFSET: 0x0060CC00
+// OFFSET: 0x0060CC00/0x1402965D0
 C3Vector CGUnit_C::GetAttachmentPosition(uint32_t attachId, const C3Vector* offset) {
     CM2Model* model = this->m_worldModel;
 
@@ -466,7 +469,7 @@ void CGUnit_C::PlayEmoteSound(int32_t soundKitId, bool checkCVars, int32_t fileI
     SE3::PlaySoundKit(soundKitId, atCharacter ? NULL : &position, &properties, interactHandle ? &this->m_npcInteractSound : &this->m_npcSound, __FILE__, __LINE__, "CGUnit_C::PlayEmoteSound");
 }
 
-// PROVEN: ba26896b IDENTICAL/NONE
+// PROVEN: ba26896b IDENTICAL/UNPROVEN
 // OFFSET: 0x0060D130/0x140296B60
 void CGUnit_C::PlayTextEmoteSound(uint32_t emote, uint32_t emoteNum) {
     CVar* cvar = CVar::Lookup("Sound_EnableEmoteSounds");
@@ -496,7 +499,7 @@ void CGUnit_C::PlayTextEmoteSound(uint32_t emote, uint32_t emoteNum) {
     this->PlayEmoteSound(soundKitId, false, emoteNum, 1);
 }
 
-// PROVEN: 4f014aa2 IDENTICAL/NONE
+// PROVEN: 4f014aa2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060D200/0x140296C60
 void CGUnit_C::HandlePlayStandSound(uint32_t eventId, int32_t a3) {
     if (SI3::sm_pCVar_Sound_EnablePetSounds && !SI3::sm_pCVar_Sound_EnablePetSounds->m_intValue && this->m_unit->m_unitFieldPetnumber) {
@@ -557,7 +560,8 @@ void CGUnit_C::HandleFootfallAnimEvent(const C3Vector& position) {
     }
 }
 
-// OFFSET: 0x0060C0B0
+// PROVEN: d55e9337 IDENTICAL/IDENTICAL
+// OFFSET: 0x0060C0B0/0x140295780
 int32_t CheckUnitSoundTimer(uint32_t soundType) {
     if (soundType == 5) {
         uint32_t now = FrameTime::GetCurTimeMs();
@@ -695,7 +699,7 @@ void CGUnit_C::PlayUnitEventSound(int32_t reaction) {
     SE3::PlaySoundKit(soundKitId, atCharacter ? NULL : &position, &properties, &this->m_npcInteractSound, __FILE__, __LINE__, "CGUnit_C::PlayUnitEventSound");
 }
 
-// PROVEN: 6f4a82f6 IDENTICAL/NONE
+// PROVEN: 6f4a82f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0060D820/0x140297400
 void CGUnit_C::UpdateSoundPosition() {
     C3Vector position = this->GetPosition();
@@ -736,12 +740,13 @@ void UnitSoundShutdown() {
     }
 }
 
+// PROVEN: 40a3f34d IDENTICAL/NONE
 // OFFSET: 0x0060DA30
 void UnitSoundDestroy() {
     UnitSoundShutdown();
 }
 
-// PROVEN: 7217bd7f IDENTICAL/NONE
+// PROVEN: 7217bd7f IDENTICAL/IDENTICAL
 // OFFSET: 0x0060DA40/0x140297670
 void UnitSoundInitialize() {
     UnitSoundLoadDeathThuds();

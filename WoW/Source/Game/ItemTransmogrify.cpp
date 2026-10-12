@@ -20,6 +20,7 @@ static const uint32_t s_classStatCategoryMask[2] = { 0x5D2, 0x46F };
 // STATIC: 0x00B9E638
 static const int32_t s_inventoryTypeGroup[29] = { -2, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, 16, 17, 14, -1, -1, 18, 4, 15, 16, 16, -2, 17, 17, -2, 17 };
 
+// PROVEN: 286b257e IDENTICAL/NONE
 // OFFSET: 0x00B12060
 bool IsRestrictedItemMod(int32_t stat) {
     switch (stat) {
@@ -50,6 +51,7 @@ bool CanClassUseArmorSubclass(uint8_t classID, uint32_t subclass) {
     return subclass <= 11 && (s_classArmorSubclassMask[subclass] & (1 << (classID - 1)));
 }
 
+// PROVEN: 4c58a2c2 IDENTICAL/NONE
 // OFFSET: 0x00B12110
 bool CanClassUseWeaponSubclass(int32_t classID, int32_t subclass) {
     return (s_classWeaponSubclassMask[subclass] & (1 << (classID - 1))) != 0;
@@ -60,11 +62,13 @@ bool ClassUsesItemStatCategory(int32_t classID, int32_t category) {
     return (s_classStatCategoryMask[category] & (1 << (classID - 1))) != 0;
 }
 
+// PROVEN: 0f88f0a8 IDENTICAL/NONE
 // OFFSET: 0x00B12150
 bool CanClassDualWield(int32_t classID) {
     return classID == 1 || classID == 4 || classID == 3 || classID == 7;
 }
 
+// PROVEN: 78eca8ea IDENTICAL/IDENTICAL
 // OFFSET: 0x00B12180/0x1408D7BA0
 bool IsRelicItem(const ItemRecInterface* item) {
     if (item->GetClassID() != 4) {
@@ -76,6 +80,7 @@ bool IsRelicItem(const ItemRecInterface* item) {
     return subclass == 7 || subclass == 8 || subclass == 9 || subclass == 10 || subclass == 11;
 }
 
+// PROVEN: 82d6dc1f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B121D0/0x1408D7C00
 bool IsBowGunOrCrossbow(const ItemRecInterface* item) {
     if (item->GetClassID() != 2) {
@@ -87,6 +92,7 @@ bool IsBowGunOrCrossbow(const ItemRecInterface* item) {
     return subclass == 2 || subclass == 3 || subclass == 18;
 }
 
+// PROVEN: 6aca4c7d IDENTICAL/IDENTICAL
 // OFFSET: 0x00B12210/0x1408D7C50
 bool CanItemBeTransmogrified(const ItemRecInterface* item, int32_t* reason) {
     if (!item) {
@@ -208,7 +214,8 @@ bool SpellHasRestrictedStat(const SpellRec* spell) {
     return false;
 }
 
-// OFFSET: 0x00B124B0
+// PROVEN: c67213c7 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B124B0/0x1408D7F70
 bool EnchantmentHasRestrictedStat(int32_t enchantmentId) {
     const SpellItemEnchantmentRec* enchantment = g_spellItemEnchantmentDB.GetRecord(enchantmentId);
 
@@ -235,7 +242,8 @@ bool EnchantmentHasRestrictedStat(int32_t enchantmentId) {
     return false;
 }
 
-// OFFSET: 0x00B12540
+// PROVEN: c4b458d4 IDENTICAL/NONE
+// OFFSET: 0x00B12540/0x1408D8090
 int32_t GetItemStatCategory(const ItemRecInterface* item, int32_t randomPropertiesId) {
     if (item->GetFlags(1) & 8) {
         return 0;
@@ -297,7 +305,7 @@ bool IsAllClassesMask(int32_t mask) {
     return true;
 }
 
-// OFFSET: 0x00B127C0
+// OFFSET: 0x00B127C0/0x1408D8330
 bool IsItemUsefulForClass(int32_t classID, const ItemRecInterface* item, int32_t randomPropertiesId, bool checkLevel, bool ignoreStats) {
     if (item->GetFlags(1) & 0x100) {
         return false;
@@ -417,6 +425,7 @@ bool ItemHasStats(const ItemRecInterface* item, int32_t randomPropertiesId) {
     return false;
 }
 
+// PROVEN: 6b3802e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B12B80/0x1408D8810
 bool CanTransmogrifyTarget(const ItemRecInterface* item, uint32_t bound, int32_t randomPropertiesId, int32_t* reason) {
     if (!CanItemBeTransmogrified(item, reason)) {
@@ -442,6 +451,7 @@ bool CanTransmogrifyTarget(const ItemRecInterface* item, uint32_t bound, int32_t
     return true;
 }
 
+// PROVEN: 625f2908 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B12BF0/0x1408D88A0
 bool CanTransmogrifySource(const ItemRecInterface* item, int32_t randomPropertiesId, int32_t* reason) {
     if (!CanItemBeTransmogrified(item, reason)) {

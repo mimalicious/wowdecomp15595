@@ -779,7 +779,7 @@ FMOD_RESULT F_CALLBACK CodecAIFF::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 601e51df IDENTICAL/NONE
+// PROVEN: 601e51df IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABA1F0/0x140881220
 FMOD_RESULT F_CALLBACK CodecAIFF::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -804,7 +804,7 @@ FMOD_RESULT F_CALLBACK CodecAIFF::readCallback(FMOD_CODEC_STATE *codec, void *bu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 15961f15 IDENTICAL/NONE
+// PROVEN: 15961f15 IDENTICAL/DIFFERENT
 // OFFSET: 0x00ABAB60/0x140881C60
 FMOD_RESULT F_CALLBACK CodecAIFF::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {

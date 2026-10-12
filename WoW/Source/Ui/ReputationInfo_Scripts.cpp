@@ -10,20 +10,21 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// PROVEN: 0d136467 IDENTICAL/NONE
+// PROVEN: 0d136467 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A7F00/0x14072EB50
 static int32_t Script_CollapseAllFactionHeaders(lua_State* L) {
     CGReputationInfo::CollapseHeader(CGReputationInfo::m_numFactions, 1);
     return 0;
 }
 
-// PROVEN: 6b771ead IDENTICAL/NONE
+// PROVEN: 6b771ead IDENTICAL/IDENTICAL
 // OFFSET: 0x009A7F20/0x14072EB70
 static int32_t Script_ExpandAllFactionHeaders(lua_State* L) {
     CGReputationInfo::CollapseHeader(CGReputationInfo::m_numFactions, 0);
     return 0;
 }
 
+// PROVEN: a6d21ae4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A5A90/0x14072BE80
 static int32_t Script_GetNumFactions(lua_State* L) {
     lua_pushnumber(L, CGReputationInfo::m_numShownFactions);
@@ -86,12 +87,14 @@ static int32_t Script_SetSelectedFaction(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 46d9a89e IDENTICAL/DIFFERENT
 // OFFSET: 0x009A6240/0x14072C730
 static int32_t Script_GetSelectedFaction(lua_State* L) {
     lua_pushnumber(L, CGReputationInfo::GetSelectedFactionIndex() + 1);
     return 1;
 }
 
+// PROVEN: d7ce6c3a DIFFERENT/IDENTICAL
 // OFFSET: 0x009A6D30/0x14072D530
 static int32_t Script_GetFactionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -181,6 +184,7 @@ static int32_t Script_SetWatchedFactionIndex(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0dd43839 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A7DB0/0x14072EA20
 static int32_t Script_SetFactionInactive(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -201,6 +205,7 @@ static int32_t Script_SetFactionInactive(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 24b74000 IDENTICAL/IDENTICAL
 // OFFSET: 0x009A7E30/0x14072EA90
 static int32_t Script_SetFactionActive(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -221,6 +226,7 @@ static int32_t Script_SetFactionActive(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 1af3c551 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A7090/0x14072D940
 static int32_t Script_GetGuildExpirationTime(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -248,7 +254,7 @@ static int32_t Script_GetGuildFactionInfo(lua_State* L) {
     return count;
 }
 
-// STATIC: 0x00D151A8
+// STATIC: 0x00D151A8/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumFactions", &Script_GetNumFactions },
     { "GetFactionInfo", &Script_GetFactionInfo },
@@ -269,6 +275,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetGuildFactionInfo", &Script_GetGuildFactionInfo },
 };
 
+// PROVEN: 4ea573da IDENTICAL/UNPROVEN
 // OFFSET: 0x009A5AD0/0x14072BEB0
 void ReputationInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -276,6 +283,7 @@ void ReputationInfoRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 37ee940d IDENTICAL/UNPROVEN
 // OFFSET: 0x009A5B00/0x14072BF00
 void ReputationInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

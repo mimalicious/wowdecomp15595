@@ -394,7 +394,7 @@ static void cleartable (GCObject *l) {
 
 
 // PROVEN: 2ae2ad9a IDENTICAL/NONE
-// OFFSET: 0x00429AB0
+// OFFSET: 0x00429AB0/0x1400302A0
 static void freeobj (lua_State *L, GCObject *o) {
   switch (o->gch.tt) {
     case LUA_TPROTO: luaF_freeproto(L, gco2p(o)); break;
@@ -512,7 +512,7 @@ static void updatetimes (lua_State *L, GCObject *o) {
 #define sweepwholelist(L,p)	sweeplist(L,p,MAX_LUMEM)
 
 
-// OFFSET: 0x00429D20
+// OFFSET: 0x00429D20/0x1400305D0
 static GCObject **sweeplist (lua_State *L, GCObject **p, lu_mem count) {
   GCObject *curr;
   global_State *g = G(L);

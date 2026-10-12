@@ -7,7 +7,7 @@
 #include "WoW/Source/UIUtil/CameraManager.h"
 #include "WoW/Source/UIUtil/CameraMode.h"
 
-// STATIC: 0x00D3A7C4
+// STATIC: 0x00D3A7C4/0x140BF5AC8
 static CDataAllocator s_trackNodes(sizeof(CCameraTrackNode), 8);
 
 // INLINED
@@ -112,13 +112,6 @@ CCameraShot CCameraTrackBlendData::ApplyBlend(const CCameraShot& shot, float fac
     result.m_roll = result.m_roll + roll;
     result.m_fade = result.m_fade + fade;
     return result;
-}
-
-// INLINED
-CCameraTrackNode::CCameraTrackNode() {
-    this->m_transition = NULL;
-    this->m_instance = NULL;
-    this->m_next = NULL;
 }
 
 // OFFSET: 0x004623A0/0x140075390
@@ -352,13 +345,13 @@ CCameraTrack::DeferredCameraAction::DeferredCameraAction() {
     this->m_guid = WOWGUID::Make(0);
 }
 
-// PROVEN: 1ae442a3 IDENTICAL/NONE
+// PROVEN: 1ae442a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00462B20/0x140075E10
 CCameraTrack::CCameraTrack() : m_head(NULL) {
 }
 
-// PROVEN: ea8ff33b IDENTICAL/NONE
-// OFFSET: 0x00462B40
+// PROVEN: ea8ff33b IDENTICAL/IDENTICAL
+// OFFSET: 0x00462B40/0x140075E40
 CCameraTrack::~CCameraTrack() {
     this->m_deferredActions.Clear();
     this->ClearCamerasInternal(NULL);
@@ -380,7 +373,7 @@ void CCameraTrack::SetCurrentCamera(const CCameraModeInstance* instance, const C
     action->m_guid = guid;
 }
 
-// PROVEN: ac6dddd4 IDENTICAL/NONE
+// PROVEN: ac6dddd4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00462C00/0x140075F40
 void CCameraTrack::ProcessDeferredActions() {
     for (uint32_t i = 0; i < this->m_deferredActions.Count(); i++) {

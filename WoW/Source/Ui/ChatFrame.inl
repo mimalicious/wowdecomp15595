@@ -11,6 +11,7 @@ inline bool HASHKEY_LANGUAGE::operator==(const HASHKEY_LANGUAGE& key) const {
     return this->m_length == key.m_length && this->m_unk04 == key.m_unk04;
 }
 
+// PROVEN: 5f9fb6bf IDENTICAL/IDENTICAL
 // OFFSET: 0x008E57A0/0x140634AD0
 inline ChatMessageParams::ChatMessageParams() {
     this->m_senderName = NULL;

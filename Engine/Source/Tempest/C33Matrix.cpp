@@ -65,19 +65,6 @@ void C33Matrix::Scale(float scale) {
     this->c2 = scale * this->c2;
 }
 
-// INLINED
-void C33Matrix::Scale(float x, float y, float z) {
-    this->a0 = this->a0 * x;
-    this->a1 = this->a1 * x;
-    this->a2 = x * this->a2;
-    this->b0 = this->b0 * y;
-    this->b1 = this->b1 * y;
-    this->b2 = y * this->b2;
-    this->c0 = this->c0 * z;
-    this->c1 = this->c1 * z;
-    this->c2 = z * this->c2;
-}
-
 // OFFSET: 0x004CD530/0x140109300
 void C33Matrix::Scale(const C3Vector& scale) {
     this->a0 = scale.x * this->a0;
@@ -122,7 +109,7 @@ C33Matrix C33Matrix::Adjoint() const {
     return result;
 }
 
-// OFFSET: 0x004CD7C0
+// OFFSET: 0x004CD7C0/0x1401096A0
 C33Matrix C33Matrix::Inverse(float determinant) const {
     float scale = 1.0f / determinant;
     C33Matrix adjoint = this->Adjoint();
@@ -181,7 +168,7 @@ bool C33Matrix::ToEulerAnglesZYX(float& yaw, float& pitch, float& roll) const {
     return true;
 }
 
-// OFFSET: 0x004CDC40
+// OFFSET: 0x004CDC40/0x140109B40
 void C33Matrix::FromEulerAnglesZYX(float yaw, float pitch, float roll) {
     float c = cos(yaw);
     float s = sin(yaw);
@@ -273,26 +260,13 @@ C33Matrix C33Matrix::Rotation(float angle, const C3Vector& axis, bool normalized
     return result;
 }
 
-// PROVEN: b1ea7faf IDENTICAL/UNPROVEN
+// PROVEN: b1ea7faf IDENTICAL/IDENTICAL
 // OFFSET: 0x004CE070/0x140109F50
 void C33Matrix::Rotate(float angle, const C3Vector& axis, bool normalized) {
     *this = Rotation(angle, axis, normalized) * *this;
 }
 
-// INLINED
-C33Matrix::C33Matrix(float a0, float a1, float a2, float b0, float b1, float b2, float c0, float c1, float c2) {
-    this->a0 = a0;
-    this->a1 = a1;
-    this->a2 = a2;
-    this->b0 = b0;
-    this->b1 = b1;
-    this->b2 = b2;
-    this->c0 = c0;
-    this->c1 = c1;
-    this->c2 = c2;
-}
-
-// OFFSET: 0x004CD9E0
+// OFFSET: 0x004CD9E0/0x1401097C0
 void C33Matrix::RotateAroundX(float angle) {
     float c = cos(angle);
     float s = sin(angle);
@@ -311,7 +285,7 @@ void C33Matrix::RotateAroundX(float angle) {
     *this = rotation * *this;
 }
 
-// OFFSET: 0x004CDA70
+// OFFSET: 0x004CDA70/0x1401098A0
 void C33Matrix::RotateAroundY(float angle) {
     float c = cos(angle);
     float s = sin(angle);
@@ -330,7 +304,7 @@ void C33Matrix::RotateAroundY(float angle) {
     *this = rotation * *this;
 }
 
-// OFFSET: 0x004CDB10
+// OFFSET: 0x004CDB10/0x140109980
 void C33Matrix::RotateAroundZ(float angle) {
     float c = cos(angle);
     float s = sin(angle);
@@ -347,15 +321,6 @@ void C33Matrix::RotateAroundZ(float angle) {
     rotation.c2 = 1.0f;
 
     *this = rotation * *this;
-}
-
-// INLINED
-C3Vector operator*(const C3Vector& v, const C33Matrix& m) {
-    C3Vector result;
-    result.x = m.b0 * v.y + m.c0 * v.z + v.x * m.a0;
-    result.y = m.b1 * v.y + m.a1 * v.x + m.c1 * v.z;
-    result.z = m.b2 * v.y + m.a2 * v.x + m.c2 * v.z;
-    return result;
 }
 
 // PROVEN: 3c0f5380 IDENTICAL/NONE

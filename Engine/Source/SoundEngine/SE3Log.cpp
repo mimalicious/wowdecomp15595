@@ -13,7 +13,7 @@ HSLOG SE3::sm_log;
 // STATIC: 0x00E4E81C/0x140D37B08
 static uint32_t s_logFlags;
 
-// STATIC: 0x00E4E820
+// STATIC: 0x00E4E820/0x140D37B0C
 static int32_t s_errorCount;
 
 // PROVEN: 22b93471 IDENTICAL/IDENTICAL

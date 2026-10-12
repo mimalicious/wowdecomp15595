@@ -1,15 +1,16 @@
 #include "Engine/Source/Services/FileNotification.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00CA4E18
+// STATIC: 0x00CA4E18/0x140B432C0
 static TSExplicitList<FileNotification::CallbackInfo, offsetof(FileNotification::CallbackInfo, m_link)> s_callbacks;
 
-// STATIC: 0x00DD4330
+// STATIC: 0x00DD4330/0x140B432E0
 static TSHashTable<FileNotification::DeferredFile, HASHKEY_NONE> s_deferredFiles;
 
-// STATIC: 0x00DD435C
+// STATIC: 0x00DD435C/0x140B43330
 static TSHashTable<FileNotification::Manifest, HASHKEY_NONE> s_manifests;
 
+// PROVEN: 8c3ce577 IDENTICAL/DIFFERENT
 // OFFSET: 0x00547160/0x14019EC60
 void FileNotification::RegisterSingleFile(const char* extension, Callback callback) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);
@@ -18,6 +19,7 @@ void FileNotification::RegisterSingleFile(const char* extension, Callback callba
     info->m_callback = callback;
 }
 
+// PROVEN: 09eb9654 IDENTICAL/DIFFERENT
 // OFFSET: 0x00547240/0x14019ED70
 void FileNotification::RegisterManifestFile(const char* extension, Callback callback) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);
@@ -26,7 +28,7 @@ void FileNotification::RegisterManifestFile(const char* extension, Callback call
     info->m_isManifest = 1;
 }
 
-// OFFSET: 0x005476A0
+// OFFSET: 0x005476A0/0x14019F280
 void FileNotification::Destroy() {
     FileNotification::Manifest* manifest = s_manifests.Head();
 
@@ -54,6 +56,7 @@ static void AddDeferredFile(const char* fileName) {
     SStrCopy(file->m_filename, fileName, sizeof(file->m_filename));
 }
 
+// PROVEN: 7959bd87 IDENTICAL/DIFFERENT
 // OFFSET: 0x00548200/0x1401A0390
 void FileNotification::RegisterDeferredFile(const char* extension) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);

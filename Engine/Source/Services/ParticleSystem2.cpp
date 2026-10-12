@@ -27,7 +27,7 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRange.h"
 
-// STATIC: 0x00D27CD0
+// STATIC: 0x00D27CD0/0x140BE6510
 static int32_t s_particleRenderEnable = 1;
 
 // STATIC: 0x00D27CDC
@@ -36,7 +36,7 @@ static C3Vector s_particleNormal(0.0f, 0.0f, 1.0f);
 // STATIC: 0x00D27CE8
 static C44Matrix s_particleXform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-// STATIC: 0x00D27D28
+// STATIC: 0x00D27D28/0x140BE6570
 static C33Matrix s_billboardXform(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 // STATIC: 0x00D27D4C
@@ -51,13 +51,13 @@ static const float s_cornerOffsets[4][2] = { { -1.0f, 1.0f }, { -1.0f, -1.0f }, 
 // STATIC: 0x00D27D74
 static const float s_cornerTexCoords[4][2] = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f } };
 
-// STATIC: 0x01008B40
+// STATIC: 0x01008B40/0x140EE04F0
 uint32_t CParticleEmitter2::s_initCount;
 
-// STATIC: 0x01008B44
+// STATIC: 0x01008B44/0x140EE04F8
 CGxBuf* CParticleEmitter2::s_indexBuf;
 
-// STATIC: 0x01008B48
+// STATIC: 0x01008B48/0x140EE0500
 CGxPool* CParticleEmitter2::s_indexPool;
 
 // STATIC: 0x01008B4C
@@ -75,10 +75,10 @@ static int32_t s_particleBounds;
 // STATIC: 0x01008D58
 std::priority_queue<CSortableParticleRecord> CParticleEmitter2::s_pq;
 
-// STATIC: 0x01008B30
+// STATIC: 0x01008B30/0x140EE04D0
 void* ParticleSystemManager::sm_projectParam;
 
-// STATIC: 0x01008B34
+// STATIC: 0x01008B34/0x140EE04D8
 int32_t (*ParticleSystemManager::sm_projectCallback)(const C3Vector&, float&, void*);
 
 // OFFSET: 0x00B199A0/0x1408E0150
@@ -218,11 +218,6 @@ static inline const C3Vector& VertexPosition(const CGxVertexPNCT& vertex) {
 }
 
 // INLINED
-bool operator<(const CSortableParticleRecord& l, const CSortableParticleRecord& r) {
-    return l.m_depth < r.m_depth;
-}
-
-// INLINED
 template <>
 CParticle2* CParticleEmitter2::NextParticle<CParticle2>(uint32_t index) {
     return &this->m_particles[this->m_liveList[index]];
@@ -242,7 +237,7 @@ CParticle2* CParticleEmitter2::NextParticle<CSortableParticleRecord>(uint32_t in
     return particle;
 }
 
-// PROVEN: 6a61881b IDENTICAL/NONE
+// PROVEN: 6a61881b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B13EF0/0x1408D9D40
 void CParticleEmitter2::SetModel(CM2Scene* scene, const char* name) {
     if (scene && name && *name) {
@@ -277,7 +272,7 @@ void CParticleEmitter2::SetMaterial(const CParticleMat& material, CTexture* text
     this->m_params.m_materialFlags = material.m_flags;
 }
 
-// PROVEN: dd36dcb2 IDENTICAL/UNPROVEN
+// PROVEN: dd36dcb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B13F40/0x1408D9DA0
 void CParticleEmitter2::SetTexture(CTexture* texture) {
     if (texture) {
@@ -389,7 +384,7 @@ CParticleEmitter2* CParticleEmitter2::AddRef() {
     return this;
 }
 
-// OFFSET: 0x00B14330
+// OFFSET: 0x00B14330/0x1408DA170
 void CParticleEmitter2::DecRef() {
     if (this->m_refCount-- == 1) {
         delete this;
@@ -413,6 +408,7 @@ void CParticleEmitter2::Init() {
     CParticleEmitter2::s_initCount++;
 }
 
+// PROVEN: 228a6f29 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B146D0/0x1408DA580
 void CParticleEmitter2::Destroy() {
     if (--CParticleEmitter2::s_initCount) {
@@ -437,7 +433,7 @@ float CParticleEmitter2::CalcVelocity() {
     return (CRandom::sfloat_(this->m_random) * this->m_params.m_variation + 1.0f) * this->m_params.m_speed;
 }
 
-// OFFSET: 0x00B19C90
+// OFFSET: 0x00B19C90/0x1408E0590
 CImVector CParticleEmitter2::InterpolateColorTrack(float t) {
     const M2PartTrack<C3Vector>* track = this->m_params.m_colorTrack;
     CImVector color;
@@ -680,7 +676,7 @@ void CParticleEmitter2::InterpolateAllTracksSimple(const CParticle2& particle, T
     values->m_tailCell = static_cast<uint32_t>(blend * key->m_deltaTailCell + key->m_tailCell) >> 16;
 }
 
-// OFFSET: 0x00B1A170
+// OFFSET: 0x00B1A170/0x1408E0B30
 void CParticleEmitter2::InterpolateAllTracks(const CParticle2& particle, TrackValues* values) {
     float life = particle.m_lifeSeed.m_value * this->m_params.m_lifeVariation * 0.000030518509f + this->m_params.m_life;
 
@@ -779,7 +775,7 @@ void __stdcall CParticleEmitter2::RenderIndices(CGxBuf* buf) {
     buf->unk_001C = 1;
 }
 
-// OFFSET: 0x00B19540
+// OFFSET: 0x00B19540/0x1408DF8F0
 void CParticleEmitter2::RenderParticlesPrep(const C44Matrix* frameOfReference, const C44Matrix& view) {
     C44Matrix translate;
     translate.d0 = -this->m_viewPos.x;
@@ -951,7 +947,7 @@ int32_t CParticleEmitter2::RenderParticle(CParticle2_Model& particle, const C44M
     return 1;
 }
 
-// PROVEN: 1c81cf74 IDENTICAL/DIFFERENT
+// PROVEN: 1c81cf74 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B13F80/0x1408D9DF0
 void CParticleEmitter2::SetParticleColors(const CImVector& color0, const CImVector& color1, const CImVector& color2) {
     this->m_params.m_replacementColors[0].x = color0.r;
@@ -1019,7 +1015,7 @@ void CParticleEmitter2::UpdateXform(const C44Matrix& transform, const C3Vector& 
     this->m_xformScale = sqrt(transform.a2 * transform.a2 + transform.a1 * transform.a1 + transform.a0 * transform.a0);
 }
 
-// OFFSET: 0x00B203A0
+// OFFSET: 0x00B203A0/0x1408E7DC0
 void CParticleEmitter2::InternalUpdate(float deltaTime, int32_t child) {
     float time = 0.0f;
 
@@ -1086,7 +1082,7 @@ static void RecursiveEmitterModelLoaded(CM2Model* model, void* arg) {
     }
 }
 
-// PROVEN: a0c8586e IDENTICAL/NONE
+// PROVEN: a0c8586e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B154D0/0x1408DB4B0
 void CParticleEmitter2::CreateChildEmittersFromModel(CM2Scene* scene, const char* name) {
     if (!scene) {
@@ -1124,7 +1120,7 @@ void CParticleEmitter2::ChangeFrameOfReference(const C44Matrix& matrix) {
     }
 }
 
-// OFFSET: 0x00B1A940
+// OFFSET: 0x00B1A940/0x1408E13E0
 void CParticleEmitter2::SetSimpleColorKeys() {
     if (this->m_flags & 0x10) {
         const float* colors = &this->m_params.m_replacementColors[0].x;
@@ -1212,7 +1208,7 @@ void CParticleEmitter2::SetSimpleAlphaKeys() {
     }
 }
 
-// OFFSET: 0x00B1AF70
+// OFFSET: 0x00B1AF70/0x1408E1C20
 void CParticleEmitter2::SetSimpleScaleKeys() {
     this->m_params.m_simpleKeys[0].m_scale = this->m_params.m_scaleTrack->m_values[0].x;
 
@@ -1247,7 +1243,7 @@ void CParticleEmitter2::SetSimpleScaleKeys() {
     }
 }
 
-// OFFSET: 0x00B1B060
+// OFFSET: 0x00B1B060/0x1408E1DC0
 void CParticleEmitter2::SetSimpleHeadCellKeys() {
     const M2PartTrack<uint16_t>* track = this->m_params.m_headCellTrack;
 
@@ -1297,7 +1293,7 @@ void CParticleEmitter2::SetSimpleHeadCellKeys() {
     }
 }
 
-// OFFSET: 0x00B1B1F0
+// OFFSET: 0x00B1B1F0/0x1408E1FE0
 void CParticleEmitter2::SetSimpleTailCellKeys() {
     const M2PartTrack<uint16_t>* track = this->m_params.m_tailCellTrack;
 
@@ -1373,7 +1369,7 @@ int32_t CParticleEmitter2::HasLiveParticles() {
     return 0;
 }
 
-// OFFSET: 0x00B15850
+// OFFSET: 0x00B15850/0x1408DB8B0
 uint32_t CParticleEmitter2::GetNumParticleModels() {
     uint32_t count = 0;
 
@@ -1388,7 +1384,8 @@ uint32_t CParticleEmitter2::GetNumParticleModels() {
     return count;
 }
 
-// OFFSET: 0x00B15890
+// PROVEN: f838efae DIFFERENT/IDENTICAL
+// OFFSET: 0x00B15890/0x1408DB910
 CM2Model* CParticleEmitter2::GetParticleModelInternal(uint32_t& index) {
     if (this->m_params.m_hasModel == 1) {
         uint32_t count = this->m_liveList.Count();
@@ -1428,6 +1425,7 @@ uint32_t CParticleEmitter2::GetNumBatches() {
     return count;
 }
 
+// PROVEN: 5fb3702c DIFFERENT/IDENTICAL
 // OFFSET: 0x00B15940/0x1408DBA20
 uint32_t CParticleEmitter2::GetNumPrimitives() {
     uint32_t count = this->m_liveList.Count() * this->m_indicesPerParticle / 3;
@@ -2331,7 +2329,7 @@ void CParticleEmitter2::Render(const C44Matrix* frameOfReference, void* buffer, 
     }
 }
 
-// OFFSET: 0x00B247E0
+// OFFSET: 0x00B247E0/0x1408EC670
 void CParticleEmitter2::Update(float deltaTime, const C44Matrix& transform, const C3Vector& viewPos, const C44Matrix* frameOfReference) {
     float dz = transform.d2 - viewPos.z;
     float dy = transform.d1 - viewPos.y;
@@ -2574,7 +2572,7 @@ CParticle2_Model::~CParticle2_Model() {
     }
 }
 
-// OFFSET: 0x00B27170
+// OFFSET: 0x00B27170/0x1408EF5F0
 CPlaneParticleEmitter::CPlaneParticleEmitter() {
     this->m_width = 0.0f;
     this->m_height = 0.0f;
@@ -2597,25 +2595,25 @@ void CPlaneParticleEmitter::SetWidth(float width) {
     this->m_width = width;
 }
 
-// PROVEN: 7b4240fb IDENTICAL/NONE
-// OFFSET: 0x00B27230
+// PROVEN: 7b4240fb IDENTICAL/IDENTICAL
+// OFFSET: 0x00B27230/0x1408EF650
 void CPlaneParticleEmitter::SetHeight(float height) {
     this->m_height = height;
 }
 
-// PROVEN: 3b916f09 IDENTICAL/NONE
-// OFFSET: 0x00B27250
+// PROVEN: 3b916f09 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B27250/0x1408EF660
 void CPlaneParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// PROVEN: e51bd20e IDENTICAL/DIFFERENT
+// PROVEN: e51bd20e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27370/0x1408EF770
 void CPlaneParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
 }
 
-// OFFSET: 0x00B27270
+// OFFSET: 0x00B27270/0x1408EF670
 CSphereParticleEmitter::CSphereParticleEmitter() {
     this->m_minRadius = 0.0f;
     this->m_maxRadius = 0.0f;
@@ -2624,7 +2622,8 @@ CSphereParticleEmitter::CSphereParticleEmitter() {
     this->m_longitude = 0.0f;
 }
 
-// OFFSET: 0x00B272B0
+// PROVEN: 2947c456 UNPROVEN/IDENTICAL
+// OFFSET: 0x00B272B0/0x1408EF6C0
 CSphereParticleEmitter::CSphereParticleEmitter(const CSphereParticleEmitter& source, int32_t copyParticles) : CParticleEmitter2(source, copyParticles) {
     this->m_minRadius = source.m_minRadius;
     this->m_maxRadius = source.m_maxRadius;
@@ -2633,47 +2632,47 @@ CSphereParticleEmitter::CSphereParticleEmitter(const CSphereParticleEmitter& sou
     this->m_radiusSpan = source.m_radiusSpan;
 }
 
-// PROVEN: 5f90bd03 IDENTICAL/DIFFERENT
+// PROVEN: 5f90bd03 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27310/0x1408EF730
 void CSphereParticleEmitter::SetWidth(float width) {
     this->m_minRadius = width;
     this->m_radiusSpan = this->m_maxRadius - width;
 }
 
-// PROVEN: 46d3a505 IDENTICAL/DIFFERENT
+// PROVEN: 46d3a505 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27340/0x1408EF750
 void CSphereParticleEmitter::SetHeight(float height) {
     this->m_maxRadius = height;
     this->m_radiusSpan = height - this->m_minRadius;
 }
 
-// PROVEN: 4a09dccc IDENTICAL/DIFFERENT
+// PROVEN: 4a09dccc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27370/0x1408EF770
 void CSphereParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// PROVEN: a1921b28 IDENTICAL/DIFFERENT
+// PROVEN: a1921b28 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27390/0x1408EF780
 void CSphereParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
 }
 
-// PROVEN: 43da2e20 IDENTICAL/DIFFERENT
+// PROVEN: 43da2e20 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B273B0/0x1408EF790
 void CSplineParticleEmitter::SetEmissionRate(float rate) {
     this->m_ratePerUnit = rate;
     this->m_params.m_emissionRate = rate * this->m_end;
 }
 
-// PROVEN: cc428db1 IDENTICAL/DIFFERENT
+// PROVEN: cc428db1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B273E0/0x1408EF7B0
 void CSplineParticleEmitter::SetSpline(const C3Vector* points, uint32_t count) {
     this->m_spline.SetPoints(points, count);
 }
 
-// PROVEN: 0ec91914 IDENTICAL/NONE
-// OFFSET: 0x00B273F0
+// PROVEN: 0ec91914 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B273F0/0x1408EF7C0
 CParticleEmitter2* CPlaneParticleEmitter::Clone(int32_t copyParticles) {
     void* mem = SMemAlloc(sizeof(CPlaneParticleEmitter), __FILE__, __LINE__, 0);
 
@@ -2692,7 +2691,7 @@ CParticleEmitter2* CSphereParticleEmitter::Clone(int32_t copyParticles) {
 CPlaneParticleEmitter::~CPlaneParticleEmitter() {
 }
 
-// OFFSET: 0x00B274A0
+// OFFSET: 0x00B274A0/0x1408EF920
 void CPlaneParticleEmitter::CreateParticle(CParticle2& particle, float time, const C44Matrix& transform) {
     float age = CRandom::ufloat_(this->m_random) * time;
     particle.m_lifeSeed = fixed16(CRandom::sfloat_(this->m_random));
@@ -2760,7 +2759,7 @@ void CPlaneParticleEmitter::CreateParticle(CParticle2& particle, float time, con
 CSphereParticleEmitter::~CSphereParticleEmitter() {
 }
 
-// OFFSET: 0x00B27A50
+// OFFSET: 0x00B27A50/0x1408EFF90
 void CSphereParticleEmitter::CreateParticle(CParticle2& particle, float time, const C44Matrix& transform) {
     float age = CRandom::ufloat_(this->m_random) * time;
     particle.m_lifeSeed = fixed16(CRandom::sfloat_(this->m_random));
@@ -2864,13 +2863,13 @@ void CSplineParticleEmitter::SetHeight(float height) {
     }
 }
 
-// PROVEN: 30258723 IDENTICAL/DIFFERENT
+// PROVEN: 30258723 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27370/0x1408EF770
 void CSplineParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// PROVEN: f55f2b60 IDENTICAL/DIFFERENT
+// PROVEN: f55f2b60 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B27390/0x1408EF780
 void CSplineParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
@@ -2973,6 +2972,7 @@ CSplineParticleEmitter::CSplineParticleEmitter() {
 CSplineParticleEmitter::~CSplineParticleEmitter() {
 }
 
+// PROVEN: b78fae3c UNPROVEN/IDENTICAL
 // OFFSET: 0x00B287A0/0x1408F0F20
 CSplineParticleEmitter::CSplineParticleEmitter(const CSplineParticleEmitter& source, int32_t copyParticles) : CParticleEmitter2(source, copyParticles) {
     this->m_start = source.m_start;

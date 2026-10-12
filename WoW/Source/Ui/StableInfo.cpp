@@ -16,18 +16,19 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "Engine/Source/Services/SysMessage.h"
 
-// STATIC: 0x00F484B8
+// STATIC: 0x00F484B8/0x140E3C5A0
 StablePetInfo CGStableInfo::m_pets[25];
 
-// STATIC: 0x00F48E18
+// STATIC: 0x00F48E18/0x140E3CF00
 WOWGUID CGStableInfo::m_stableMaster;
 
-// STATIC: 0x00F48E20
+// STATIC: 0x00F48E20/0x140E3CF08
 uint32_t CGStableInfo::m_numPets;
 
-// STATIC: 0x00F48E24
+// STATIC: 0x00F48E24/0x140E3CF0C
 uint8_t CGStableInfo::m_slotChangePending;
 
+// PROVEN: 0de6a6ba IDENTICAL/NONE
 // OFFSET: 0x00464740
 StablePetInfo* CGStableInfo::GetPetInfo(uint32_t index) {
     if (!(index >= 25)) {
@@ -37,11 +38,13 @@ StablePetInfo* CGStableInfo::GetPetInfo(uint32_t index) {
     return NULL;
 }
 
+// PROVEN: 875c71ba IDENTICAL/UNPROVEN
 // OFFSET: 0x0096C880/0x1406E3630
 void CGStableInfo::EnterWorld() {
     CGStableInfo::m_stableMaster = WOWGUID::Make(0);
 }
 
+// PROVEN: f68cfca5 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096C890/0x1406E3640
 void CGStableInfo::CloseStables(bool force) {
     if (!CGStableInfo::m_stableMaster && !force) {
@@ -53,6 +56,7 @@ void CGStableInfo::CloseStables(bool force) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_STABLE_CLOSED, NULL);
 }
 
+// PROVEN: 355141a4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096C8E0/0x1406E3680
 int32_t CGStableInfo::GetNumActivePets() {
     int32_t count = 0;
@@ -66,7 +70,8 @@ int32_t CGStableInfo::GetNumActivePets() {
     return count;
 }
 
-// OFFSET: 0x0096C950
+// PROVEN: 2920b91c IDENTICAL/UNPROVEN
+// OFFSET: 0x0096C950/0x1406E36B0
 void CGStableInfo::SetPetSlot(uint32_t index, uint32_t slot) {
     if (index > 24 || slot > 24 || index == slot || CGStableInfo::m_slotChangePending) {
         return;
@@ -86,6 +91,7 @@ void CGStableInfo::SetPetSlot(uint32_t index, uint32_t slot) {
     CGStableInfo::m_slotChangePending = 1;
 }
 
+// PROVEN: c8531675 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096C9D0/0x1406E3740
 int32_t CGStableInfo::FindPetIndexBySpellID(int32_t spellId, int32_t effectIndex) {
     const SpellEffectRec* effect = SpellGetEffect(spellId, effectIndex);
@@ -103,11 +109,13 @@ int32_t CGStableInfo::FindPetIndexBySpellID(int32_t spellId, int32_t effectIndex
     return index;
 }
 
+// PROVEN: e45bb16b IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CB80/0x1406E3920
 void CGStableInfo::LeaveWorld() {
     CGStableInfo::CloseStables(false);
 }
 
+// PROVEN: bab56482 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CBC0/0x1406E3960
 void CGStableInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(MSG_LIST_STABLED_PETS);
@@ -117,7 +125,7 @@ void CGStableInfo::ShutdownGame() {
     memset(CGStableInfo::m_pets, 0, sizeof(CGStableInfo::m_pets));
 }
 
-// OFFSET: 0x0096CC10
+// OFFSET: 0x0096CC10/0x1406E39B0
 int32_t CGStableInfo::OnStableList(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGossipInfo::ClearGossip();
     WOWGUID master;
@@ -173,6 +181,7 @@ int32_t CGStableInfo::OnStableList(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
+// PROVEN: 6370d654 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CDE0/0x1406E3C30
 void CGStableInfo::UpdatePetName(uint32_t petNumber, const char* name) {
     if (!petNumber) {
@@ -186,7 +195,7 @@ void CGStableInfo::UpdatePetName(uint32_t petNumber, const char* name) {
     }
 }
 
-// OFFSET: 0x0096CE40
+// OFFSET: 0x0096CE40/0x1406E3CC0
 bool CGStableInfo::OnPetSlotUpdated(ClientPetSlotUpdated* msg) {
     CGStableInfo::m_slotChangePending = 0;
     StablePetInfo* found = NULL;
@@ -220,7 +229,7 @@ bool CGStableInfo::OnPetSlotUpdated(ClientPetSlotUpdated* msg) {
     return true;
 }
 
-// OFFSET: 0x0096CF00
+// OFFSET: 0x0096CF00/0x1406E3DC0
 bool CGStableInfo::OnPetAdded(ClientPetAdded* msg) {
     int32_t slot = msg->m_slot;
 
@@ -292,6 +301,6 @@ int32_t CGStableInfo::OnStableCommandResult(void* param, NETMESSAGE msgId, uint3
 void CGStableInfo::InitializeGame() {
     ClientServices::SetMessageHandler(MSG_LIST_STABLED_PETS, CGStableInfo::OnStableList, NULL);
     ClientServices::SetMessageHandler(SMSG_STABLE_RESULT, CGStableInfo::OnStableCommandResult, NULL);
-    ClientPetSlotUpdated::s_handler = CGStableInfo::OnPetSlotUpdated;
-    ClientPetAdded::s_handler = CGStableInfo::OnPetAdded;
+    ClientPetSlotUpdated::s_handler = JamHandlerEncode(CGStableInfo::OnPetSlotUpdated, g_jamHandlerKey_CFF628);
+    ClientPetAdded::s_handler = JamHandlerEncode(CGStableInfo::OnPetAdded, g_jamHandlerKey_CFDE78);
 }

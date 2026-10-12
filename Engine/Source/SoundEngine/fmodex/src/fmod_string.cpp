@@ -255,7 +255,7 @@ void * FMOD_memmove(void * dest,const void *src, int count)
 }
 
 
-// PROVEN: 0f32b136 IDENTICAL/DIFFERENT
+// PROVEN: 0f32b136 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC3590/0x14088BEC0
 char *FMOD_strdup(const char * src)
 {

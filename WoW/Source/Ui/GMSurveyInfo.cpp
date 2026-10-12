@@ -6,15 +6,16 @@
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F762F4
+// STATIC: 0x00F762F4/0x140E6C2F0
 uint8_t CGGMSurveyInfo::m_surveyAnswers[15];
 
-// STATIC: 0x00F7630C
+// STATIC: 0x00F7630C/0x140E6C310
 char* CGGMSurveyInfo::m_surveyAnswerComments[15];
 
-// STATIC: 0x00F76348
+// STATIC: 0x00F76348/0x140E6C308
 char* CGGMSurveyInfo::m_surveyComment;
 
+// PROVEN: 4fbc9fa4 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E5C00/0x14077E060
 const char* CGGMSurveyInfo::GetQuestion(int32_t index) {
     if (index < 1 || static_cast<uint32_t>(index) > 15) {
@@ -129,6 +130,7 @@ void CGGMSurveyInfo::Submit() {
 void CGGMSurveyInfo::InitializeGame() {
 }
 
+// PROVEN: f12e0411 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E57B0/0x14077DB10
 void CGGMSurveyInfo::FreeAnswers() {
     for (uint32_t i = 0; i < 15; i++) {
@@ -148,6 +150,7 @@ void CGGMSurveyInfo::FreeAnswers() {
     CGGMSurveyInfo::m_surveyComment = NULL;
 }
 
+// PROVEN: 2a22887a IDENTICAL/DIFFERENT
 // OFFSET: 0x009E5820/0x14077DBB0
 void CGGMSurveyInfo::SetAnswer(uint32_t index, uint8_t answer, const char* comment) {
     if (static_cast<int32_t>(index) < 0 || index >= 15) {
@@ -167,6 +170,7 @@ void CGGMSurveyInfo::SetAnswer(uint32_t index, uint8_t answer, const char* comme
     }
 }
 
+// PROVEN: fe5d8a0c IDENTICAL/DIFFERENT
 // OFFSET: 0x009E5890/0x14077DC50
 void CGGMSurveyInfo::SetComment(const char* comment) {
     if (CGGMSurveyInfo::m_surveyComment) {
@@ -180,7 +184,7 @@ void CGGMSurveyInfo::SetComment(const char* comment) {
     }
 }
 
-// PROVEN: 7999596e IDENTICAL/NONE
+// PROVEN: 7999596e IDENTICAL/IDENTICAL
 // OFFSET: 0x009E5BF0/0x14077E050
 void CGGMSurveyInfo::ShutdownGame() {
     CGGMSurveyInfo::FreeAnswers();

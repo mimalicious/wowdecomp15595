@@ -387,7 +387,7 @@ bool System_Mopaq::cache_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return next && CallNext(system, parms) && result;
 }
 
-// PROVEN: 6d99460e IDENTICAL/NONE
+// PROVEN: 6d99460e IDENTICAL/DIFFERENT
 // OFFSET: 0x007AB5B0/0x1404A1600
 bool System_Mopaq::cache_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_cache->m_size;
@@ -430,7 +430,7 @@ bool System_Mopaq::cache_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPara
     return CallNext(system, parms);
 }
 
-// OFFSET: 0x007B2E30
+// OFFSET: 0x007B2E30/0x1404A8400
 bool System_Mopaq::cache_abandon(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     CacheData* data = parms->m_handle->m_cache;
     SMemFree(data->m_buffer, __FILE__, __LINE__, 0);

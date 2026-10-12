@@ -11,7 +11,7 @@ static const char* s_bloodSpurtTextures[2] = { "BloodSpurtSmall01_Low.blp", "Blo
 
 static const char* s_bloodSpurtTexture = "BloodSpurtSmall01.blp";
 
-// STATIC: 0x01008A24
+// STATIC: 0x01008A24/0x140EE03BC
 int32_t s_violenceLevel;
 
 // OFFSET: 0x00B11460/0x1408D6D40

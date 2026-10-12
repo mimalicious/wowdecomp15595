@@ -29,6 +29,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 238200f6 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AC7E00/0x140891740
 OutputSoftware::OutputSoftware()
 {

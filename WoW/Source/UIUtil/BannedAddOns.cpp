@@ -6,13 +6,13 @@
 #include "WoW/Source/Client.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: 0x00B8D974
+// STATIC: 0x00B8D974/0x14096C498
 static const uint8_t s_emptyMd5[16] = { 0xD4, 0x1D, 0x8C, 0xD9, 0x8F, 0x00, 0xB2, 0x04, 0xE9, 0x80, 0x09, 0x98, 0xEC, 0xF8, 0x42, 0x7E };
 
-// STATIC: 0x00D391D4
+// STATIC: 0x00D391D4/0x140BF3798
 static int32_t s_bannedAddOnCount;
 
-// STATIC: 0x00D391D8
+// STATIC: 0x00D391D8/0x140B310B0
 static TSHashTable<_BANNEDADDON, HASHKEY_NONE> s_bannedAddOns;
 
 // INLINED
@@ -22,7 +22,7 @@ static void CopyMd5(uint8_t* dest, const uint8_t* source) {
     }
 }
 
-// PROVEN: 4ea3e41b IDENTICAL/NONE
+// PROVEN: 4ea3e41b IDENTICAL/DIFFERENT
 // OFFSET: 0x00446400/0x1400523E0
 BannedAddOnCache::BannedAddOnCache() {
     this->m_id = 0;
@@ -31,7 +31,7 @@ BannedAddOnCache::BannedAddOnCache() {
     memcpy(this->m_versionMd5, s_emptyMd5, sizeof(this->m_versionMd5));
 }
 
-// PROVEN: 9e983ba2 IDENTICAL/NONE
+// PROVEN: 9e983ba2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00446460/0x140052420
 BannedAddOnCache& BannedAddOnCache::operator=(const BannedAddOnCache& source) {
     this->m_id = source.m_id;
@@ -140,6 +140,7 @@ static int32_t SaveCache() {
     return 1;
 }
 
+// PROVEN: 966725bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00446A50/0x140052B00
 int32_t SaveBannedAddOns() {
     if (!s_bannedAddOnCount) {
@@ -194,12 +195,13 @@ BannedAddOnCache* FindBannedAddOn(const char* name, const char* version) {
     return NULL;
 }
 
-// PROVEN: 31447c10 IDENTICAL/NONE
+// PROVEN: 31447c10 IDENTICAL/DIFFERENT
 // OFFSET: 0x00446BC0/0x140052CB0
 bool IsBannedAddOn(const char* name, const char* version) {
     return FindBannedAddOn(name, version) != NULL;
 }
 
+// PROVEN: 16bd8a31 IDENTICAL/NONE
 // OFFSET: 0x00446DA0
 void DestroyBannedAddOns() {
     s_bannedAddOns.InternalClear(0);
@@ -310,7 +312,7 @@ static int32_t LoadCache() {
     return 1;
 }
 
-// PROVEN: 03e00bcb IDENTICAL/NONE
+// PROVEN: 03e00bcb IDENTICAL/IDENTICAL
 // OFFSET: 0x004478A0/0x1400540B0
 int32_t LoadBannedAddOns() {
     LoadDatabase();

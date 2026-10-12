@@ -71,7 +71,7 @@ static uint32_t ConvertStringFlags(uint32_t flags) {
     return result;
 }
 
-// PROVEN: bc41331f IDENTICAL/NONE
+// PROVEN: bc41331f IDENTICAL/DIFFERENT
 // OFFSET: 0x005490D0/0x1401A19B0
 int32_t TextBlockSetGradient(HTEXTBLOCK string, int32_t start, int32_t length) {
     return GxuFontStringSetGradient(reinterpret_cast<TEXTBLOCK*>(string)->m_string, start, length);
@@ -114,7 +114,7 @@ uint32_t TextBlockGetFontFlags(HTEXTFONT font) {
     return flags;
 }
 
-// PROVEN: 8f9a1985 IDENTICAL/DIFFERENT
+// PROVEN: 8f9a1985 IDENTICAL/IDENTICAL
 // OFFSET: 0x005491A0/0x1401A1AA0
 CGxFont* TextBlockGetFontPtr(HTEXTFONT font) {
     if (!font) {
@@ -148,7 +148,7 @@ void TextBlockAddShadow(HTEXTBLOCK string, CImVector color, const C2Vector& offs
     GxuFontAddShadow(reinterpret_cast<TEXTBLOCK*>(string)->m_string, color, ndcOffset);
 }
 
-// PROVEN: ea224b5b IDENTICAL/NONE
+// PROVEN: ea224b5b IDENTICAL/UNPROVEN
 // OFFSET: 0x00549240/0x1401A1B60
 void TextBlockRemoveShadow(HTEXTBLOCK string) {
     if (!string) {
@@ -216,8 +216,8 @@ C3Vector TextBlockGetStringPos(HTEXTBLOCK string) {
     return position;
 }
 
-// PROVEN: 64c23b90 IDENTICAL/NONE
-// OFFSET: 0x005494A0
+// PROVEN: 64c23b90 IDENTICAL/IDENTICAL
+// OFFSET: 0x005494A0/0x1401A1EB0
 void TextBlockUpdateColor(HTEXTBLOCK string, const CImVector& color) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -247,7 +247,7 @@ void TextBlockGetTextExtent(HTEXTFONT font, const char* text, uint32_t numBytes,
     NDCToDDC(*extent, 0.0f, extent, NULL);
 }
 
-// OFFSET: 0x00549580
+// OFFSET: 0x00549580/0x1401A2000
 float TextBlockGetWrappedTextHeight(HTEXTFONT font, const char* text, float fontHeight, float blockWidth, const C2Vector& shadowOffset, float scale, float spacing, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -275,7 +275,8 @@ uint32_t TextBlockGetMaxCharsWithinWidth(HTEXTFONT font, const char* text, float
     return numChars;
 }
 
-// OFFSET: 0x005496F0
+// PROVEN: 4065a35b DIFFERENT/IDENTICAL
+// OFFSET: 0x005496F0/0x1401A2270
 uint32_t TextBlockGetMaxCharsWithinWidthAndHeight(HTEXTFONT font, const char* text, float fontHeight, float blockWidth, float blockHeight, uint32_t numBytes, float shadowWidth, float scale, float spacing, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -308,7 +309,7 @@ uint32_t TextBlockWrapText(HTEXTFONT font, const char* text, float fontHeight, f
     return GxuFontWrapText(reinterpret_cast<FONTHASHOBJ*>(font)->m_font, text, SStrLen(text), DDCToNDCHeight(fontHeight), DDCToNDCWidth(blockWidth), lineStarts, maxLines, DDCToNDCWidth(shadowWidth), scale, DDCToNDCWidth(unused), ConvertStringFlags(flags));
 }
 
-// OFFSET: 0x00549DD0
+// OFFSET: 0x00549DD0/0x1401A2AC0
 FONTHASHOBJ::~FONTHASHOBJ() {
     if (this->m_font) {
         GxuFontDestroyFont(this->m_font);

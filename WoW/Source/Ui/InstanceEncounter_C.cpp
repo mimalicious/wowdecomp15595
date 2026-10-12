@@ -9,13 +9,13 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00D12A58
+// STATIC: 0x00D12A58/0x140BCA440
 uint32_t CGInstanceEncounter_C::m_numUnits;
 
-// STATIC: 0x00D12A60
+// STATIC: 0x00D12A60/0x140BCA448
 ENCOUNTER_UNIT CGInstanceEncounter_C::m_units[16];
 
-// STATIC: 0x00D12B60
+// STATIC: 0x00D12B60/0x140BCA548
 TSList<ENCOUNTER_TIMER> CGInstanceEncounter_C::m_timers;
 
 // STATIC: 0x00D12B6C
@@ -55,6 +55,7 @@ static ENCOUNTER_UNIT* FindUnit(const WOWGUID& guid) {
     return NULL;
 }
 
+// PROVEN: eaf6bf11 IDENTICAL/IDENTICAL
 // OFFSET: 0x0094F520/0x1406BF6F0
 WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     if (static_cast<int32_t>(index) < 0 || static_cast<int32_t>(index) >= static_cast<int32_t>(CGInstanceEncounter_C::m_numUnits)) {
@@ -64,6 +65,7 @@ WOWGUID CGInstanceEncounter_C::GetBoss(uint32_t index) {
     return CGInstanceEncounter_C::m_units[index].m_guid;
 }
 
+// PROVEN: a9965003 IDENTICAL/IDENTICAL
 // OFFSET: 0x0094F550/0x1406BF710
 uint32_t CGInstanceEncounter_C::GetNumBossSlots() {
     return CGInstanceEncounter_C::m_numUnits;
@@ -81,7 +83,7 @@ bool CGInstanceEncounter_C::CanResurrect(int32_t spellId) {
     return !(s_maxResurrections > 0 && s_resurrectionsUsed >= s_maxResurrections && limited);
 }
 
-// OFFSET: 0x0094F5C0
+// OFFSET: 0x0094F5C0/0x1406BF780
 static void SortUnits(ENCOUNTER_UNIT* units, uint32_t count) {
     if (count < 2) {
         return;
@@ -128,7 +130,7 @@ static void SortUnits(ENCOUNTER_UNIT* units, uint32_t count) {
     }
 }
 
-// OFFSET: 0x0094F740
+// OFFSET: 0x0094F740/0x1406BF960
 static void OnStateMessage(int32_t type) {
     if (type == 1) {
         s_resurrectionsUsed = 0;
@@ -187,7 +189,7 @@ void CGInstanceEncounter_C::DisengageUnit(const WOWGUID& guid) {
     FrameScript_SignalEvent(SCRIPT_EVENT_INSTANCE_ENCOUNTER_ENGAGE_UNIT, NULL);
 }
 
-// OFFSET: 0x0094F8A0
+// OFFSET: 0x0094F8A0/0x1406BF9C0
 void CGInstanceEncounter_C::SetUnitPriority(const WOWGUID& guid, uint8_t priority) {
     ENCOUNTER_UNIT* unit = FindUnit(guid);
 
@@ -214,7 +216,7 @@ static void UpdateObjective(int32_t id, int32_t delta) {
     }
 }
 
-// OFFSET: 0x0094F930
+// OFFSET: 0x0094F930/0x1406BFB20
 static void OnUnitMessage(int32_t type, WOWGUID guid, uint8_t priority) {
     if (type == 2) {
         CGInstanceEncounter_C::EngageUnit(guid, priority);
@@ -238,7 +240,7 @@ void CGInstanceEncounter_C::EnableObjective(int32_t id) {
     objective->m_progress = 0;
 }
 
-// OFFSET: 0x0094FBB0
+// OFFSET: 0x0094FBB0/0x1406BFEE0
 void CGInstanceEncounter_C::LeaveWorld() {
     if (CGGameUI::m_currentlyReloadingUI) {
         return;
@@ -276,6 +278,7 @@ void CGInstanceEncounter_C::DisableObjective(int32_t id) {
     }
 }
 
+// PROVEN: 86858859 IDENTICAL/NONE
 // OFFSET: 0x0094FC70
 void CGInstanceEncounter_C::AddTimer(uint32_t duration) {
     CGInstanceEncounter_C::ClearExpiredTimers();

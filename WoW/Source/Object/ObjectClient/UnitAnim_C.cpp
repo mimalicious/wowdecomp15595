@@ -14,31 +14,31 @@
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// STATIC: 0x00BB6368
+// STATIC: 0x00BB6368/0x14099D6F8
 static const uint32_t s_movementAnimKitIDs[8] = { 0, 41, 41, 42, 44, 43, 45, 301 };
 
-// STATIC: 0x00BB6388
+// STATIC: 0x00BB6388/0x14099D718
 static const int32_t s_movementAnimKitScalesSpeed[8] = { 0, 1, 0, 1, 1, 0, 1, 1 };
 
-// STATIC: 0x00BB63A8
+// STATIC: 0x00BB63A8/0x14099D738
 static const uint32_t s_deathAnimKitIDs[8] = { 61, 62, 63, 64, 65, 66, 67, 68 };
 
-// STATIC: 0x00BB63C8
+// STATIC: 0x00BB63C8/0x14099D758
 static const int32_t s_deathAnimKitIsCorpse[8] = { 0, 0, 1, 1, 0, 0, 0, 0 };
 
-// STATIC: 0x00BB63E8
+// STATIC: 0x00BB63E8/0x14099D778
 static const uint32_t s_combatReadyAnimKitIDs[3] = { 86, 141, 142 };
 
-// STATIC: 0x00BB63F4
+// STATIC: 0x00BB63F4/0x14099D788
 static const uint32_t s_combatActionAnimKitIDs[5] = { 0, 81, 81, 82, 1194 };
 
-// STATIC: 0x00BB6408
+// STATIC: 0x00BB6408/0x14099D7A0
 static const uint32_t s_precastAnimKitIDs[4] = { 84, 85, 121, 122 };
 
-// STATIC: 0x00BB6418
+// STATIC: 0x00BB6418/0x14099D7B0
 static const uint32_t s_standStateAnimKitIDs[6] = { 181, 182, 183, 184, 185, 186 };
 
-// STATIC: 0x00BB6450
+// STATIC: 0x00BB6450/0x14099D7F0
 static const uint32_t s_emoteAnimKitIDs[8] = { 1207, 1206, 205, 206, 1360, 1359, 1357, 1358 };
 
 // STATIC: 0x00CA7B00
@@ -84,16 +84,16 @@ static const UnitAnimationSet* s_animSets[12] = {
     &s_animSetMountSelfGround, &s_animSetMountSelfGroundAlt, &s_animSetMountSelfFlying, &s_animSetMountSelfSwimming
 };
 
-// STATIC: 0x00CA7F20
+// STATIC: 0x00CA7F20/0x140B47CF0
 static UnitAnimationSet s_animSetStealth = { 120, 11, 12, { { 119, 13, 119, 119 }, { 223, 13, 223, 223 }, { 223, 13, 223, 223 } }, 37, 38, 39, 187, 40, -1, 0 };
 
-// STATIC: 0x00CA7F78
+// STATIC: 0x00CA7F78/0x140B47D50
 static UnitAnimationSet s_animSetFlyingSpline = { 135, -1, -1, { { 135, 135, 135, 135 }, { 135, 135, 135, 135 }, { 135, 135, 135, 135 } }, -1, -1, -1, -1, -1, -1, 0 };
 
-// STATIC: 0x00CA7FD0
+// STATIC: 0x00CA7FD0/0x140B47DB0
 static UnitAnimationSet s_animSetHover = { 193, -1, -1, { { 4, 13, 4, 4 }, { 5, 13, 5, 5 }, { 143, 13, 143, 143 } }, 37, 38, 39, 187, 40, -1, 0 };
 
-// PROVEN: fe8be2b9 IDENTICAL/NONE
+// PROVEN: fe8be2b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FAE70/0x1402800B0
 void CGUnit_C::ShutdownAnims() {
     this->m_animKitManager.SetExpressionsBlocked(1, 0);
@@ -109,13 +109,13 @@ void CGUnit_C::SetMovementAnimKitID(uint16_t id) {
     this->m_movementAnimKitID = id;
 }
 
-// PROVEN: cc4795cf IDENTICAL/NONE
-// OFFSET: 0x005FAEC0
+// PROVEN: cc4795cf IDENTICAL/IDENTICAL
+// OFFSET: 0x005FAEC0/0x140280100
 uint32_t CGUnit_C::IsHovering() const {
     return this->m_animationState & 0x40000;
 }
 
-// PROVEN: 57edf83d IDENTICAL/NONE
+// PROVEN: 57edf83d IDENTICAL/IDENTICAL
 // OFFSET: 0x005FAED0/0x140280110
 void CGUnit_C::MovementOneShotAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = reinterpret_cast<CGUnit_C*>(static_cast<uintptr_t>(param));
@@ -130,7 +130,7 @@ void CGUnit_C::SetMeleeAnimKitID(uint16_t id) {
     this->m_meleeAnimKitID = id;
 }
 
-// PROVEN: a6e59928 IDENTICAL/NONE
+// PROVEN: a6e59928 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FAF20/0x140280150
 void CGUnit_C::CastAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = reinterpret_cast<CGUnit_C*>(static_cast<uintptr_t>(param));
@@ -146,7 +146,7 @@ void CGUnit_C::CastAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     inst->Release();
 }
 
-// PROVEN: c1b599e4 IDENTICAL/NONE
+// PROVEN: c1b599e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FAF70/0x1402801B0
 void CGUnit_C::SheatheAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = reinterpret_cast<CGUnit_C*>(static_cast<uintptr_t>(param));
@@ -160,7 +160,7 @@ void CGUnit_C::SheatheAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     }
 }
 
-// PROVEN: e7406c92 IDENTICAL/NONE
+// PROVEN: e7406c92 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FAFD0/0x140280210
 void CGUnit_C::PlaySpawnAnimKit() {
     if (!(this->m_animationState & 0x8000)) {
@@ -168,13 +168,13 @@ void CGUnit_C::PlaySpawnAnimKit() {
     }
 }
 
-// PROVEN: 9f573d9a IDENTICAL/NONE
+// PROVEN: 9f573d9a IDENTICAL/IDENTICAL
 // OFFSET: 0x005FB000/0x140280240
 void CGUnit_C::LootAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     reinterpret_cast<CGUnit_C*>(static_cast<uintptr_t>(param))->UpdateLootAnimKit(0);
 }
 
-// PROVEN: 7f8c8187 IDENTICAL/NONE
+// PROVEN: 7f8c8187 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FB010/0x140280250
 void CGUnit_C::PlayMountSpecialAnimKit(uint32_t anim) {
     CAnimKitManager* manager;
@@ -202,7 +202,7 @@ void CGUnit_C::PlayMountSpecialAnimKit(uint32_t anim) {
     }
 }
 
-// PROVEN: 913b40a4 IDENTICAL/NONE
+// PROVEN: 913b40a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FB070/0x1402802C0
 void CGUnit_C::ResetAIAnimKit() {
     this->m_aiAnimKitID = 0;
@@ -250,15 +250,15 @@ void CGUnit_C::ProcessPlayFlagsForAnimKit(uint8_t playFlags, uint32_t* anim, uin
     }
 }
 
-// PROVEN: a77c8428 IDENTICAL/NONE
+// PROVEN: a77c8428 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FB1B0/0x14026EE10
 void CGUnit_C::PointerClearAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     inst->Release();
     *reinterpret_cast<CAnimKitInst**>(static_cast<uintptr_t>(param)) = NULL;
 }
 
-// PROVEN: 58345c30 IDENTICAL/NONE
-// OFFSET: 0x005FB1D0
+// PROVEN: 58345c30 IDENTICAL/IDENTICAL
+// OFFSET: 0x005FB1D0/0x140280450
 void CGUnit_C::UpdateAnimKitIDsFromClientInitData(const uint16_t* ids) {
     this->m_aiAnimKitID = ids[0];
     this->m_movementAnimKitID = ids[1];
@@ -298,7 +298,7 @@ void CGUnit_C::SetAnimKitSplitBody(const CreatureModelDataRec* modelData, CAnimK
     }
 }
 
-// PROVEN: 6adbddda IDENTICAL/NONE
+// PROVEN: 6adbddda IDENTICAL/IDENTICAL
 // OFFSET: 0x005FB270/0x140280480
 void CGUnit_C::DeathAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -472,7 +472,7 @@ void CGUnit_C::PlayPrecastAnimKit(uint32_t type, int32_t channelFlag, int32_t sp
     }
 }
 
-// PROVEN: 8620b61c IDENTICAL/NONE
+// PROVEN: 8620b61c IDENTICAL/DIFFERENT
 // OFFSET: 0x005FB700/0x140280A90
 void CGUnit_C::PlayCastAnimKit(uint32_t anim, uint8_t playFlags, int32_t fullBody, int32_t spellID) {
     uint32_t kitID = fullBody || !this->IsSplitbodyAnim(anim) ? 125 : 81;
@@ -497,7 +497,7 @@ void CGUnit_C::PlayCastAnimKit(uint32_t anim, uint8_t playFlags, int32_t fullBod
     }
 }
 
-// PROVEN: 59028d73 IDENTICAL/NONE
+// PROVEN: 59028d73 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FB7C0/0x140280B80
 void CGUnit_C::PlayOneShotSpellAnimKit(uint32_t anim, uint8_t playFlags, int32_t fullBody, int32_t spellID) {
     uint32_t kitID = fullBody || !this->IsSplitbodyAnim(anim) ? 125 : 81;
@@ -562,7 +562,7 @@ void CGUnit_C::UpdateEffectAnimKit() {
     }
 }
 
-// PROVEN: c514e382 IDENTICAL/NONE
+// PROVEN: c514e382 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FB980/0x140280DA0
 void CGUnit_C::PlaySheatheAnimKit(uint32_t anim, int32_t leftHand) {
     this->m_animationState |= leftHand ? 0x20000 : 0x10000;
@@ -574,7 +574,7 @@ void CGUnit_C::PlaySheatheAnimKit(uint32_t anim, int32_t leftHand) {
     }
 }
 
-// OFFSET: 0x005FB9F0
+// OFFSET: 0x005FB9F0/0x140280E10
 void CGUnit_C::PlayStandStateAnimKit(uint32_t type, uint32_t anim, uint32_t secondaryAnim) {
     int32_t split = type == 2 || type == 4;
     CAnimKitInst** slot = &this->m_standStateAnimKit;
@@ -651,7 +651,7 @@ void CGUnit_C::UpdateLootAnimKit(int32_t immediate) {
     }
 }
 
-// PROVEN: abab3222 IDENTICAL/NONE
+// PROVEN: abab3222 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FBC00/0x1402810C0
 void CGUnit_C::PlayLootStartAnimKit() {
     if (this->m_lootAnimKit) {
@@ -667,7 +667,7 @@ void CGUnit_C::PlayLootStartAnimKit() {
     }
 }
 
-// PROVEN: 044f108f IDENTICAL/NONE
+// PROVEN: 044f108f IDENTICAL/IDENTICAL
 // OFFSET: 0x005FBC70/0x140281140
 void CGUnit_C::DestroyEmoteSpellEffects() {
     for (CEffect* effect = this->m_effectList; effect; ) {
@@ -682,7 +682,7 @@ void CGUnit_C::DestroyEmoteSpellEffects() {
     }
 }
 
-// PROVEN: 525f0ef5 IDENTICAL/NONE
+// PROVEN: 525f0ef5 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FBCB0/0x140281190
 void CGUnit_C::EmoteAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -918,7 +918,7 @@ void CGUnit_C::PlayJumpEndAnimKit() {
     }
 }
 
-// PROVEN: 98e48c60 IDENTICAL/NONE
+// PROVEN: 98e48c60 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FC290/0x140281960
 void CGUnit_C::PlayDeathAnimKit(uint32_t type) {
     if (this->m_deathAnimKit) {
@@ -1036,7 +1036,7 @@ void CGUnit_C::PlayCombatActionAnimKit(uint32_t type, uint32_t anim, uint32_t pl
     }
 }
 
-// PROVEN: 63d977c9 IDENTICAL/NONE
+// PROVEN: 63d977c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FC580/0x140281CE0
 void CGUnit_C::CombatActionAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = reinterpret_cast<CGUnit_C*>(static_cast<uintptr_t>(param));
@@ -1097,7 +1097,7 @@ void CGUnit_C::UpdatePrecastAnimKit(int32_t a2, WOWGUID target) {
     }
 }
 
-// PROVEN: aab13ccb IDENTICAL/NONE
+// PROVEN: aab13ccb IDENTICAL/IDENTICAL
 // OFFSET: 0x005FC800/0x140281FC0
 void CGUnit_C::EmoteSpellEffectStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1107,7 +1107,7 @@ void CGUnit_C::EmoteSpellEffectStopCallback(CAnimKitInst* inst, uint64_t param) 
     }
 }
 
-// PROVEN: 8120a699 IDENTICAL/NONE
+// PROVEN: 8120a699 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FC830/0x140282030
 void CGUnit_C::StopEmoteSpellEffects() {
     for (CEffect* effect = this->m_effectList; effect; ) {
@@ -1129,7 +1129,7 @@ void CGUnit_C::StopEmoteSpellEffects() {
     }
 }
 
-// OFFSET: 0x005FC8A0
+// OFFSET: 0x005FC8A0/0x1402820E0
 void CGUnit_C::UpdateAIAnimKit(int32_t randomStart) {
     CAnimKitInst** slot = &this->m_aiAnimKit;
 
@@ -1167,7 +1167,7 @@ void CGUnit_C::UpdateAIAnimKit(int32_t randomStart) {
     }
 }
 
-// PROVEN: 83636f7f IDENTICAL/NONE
+// PROVEN: 83636f7f IDENTICAL/IDENTICAL
 // OFFSET: 0x005FC990/0x140282210
 void CGUnit_C::HandItemAnimCallback(CM2Model* model, uint32_t boneId, uint32_t sheathedAnim, uint32_t a4, uint32_t a5, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1177,7 +1177,7 @@ void CGUnit_C::HandItemAnimCallback(CM2Model* model, uint32_t boneId, uint32_t s
     }
 }
 
-// PROVEN: 6822d352 IDENTICAL/NONE
+// PROVEN: 6822d352 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FC9D0/0x140282260
 void CGUnit_C::UpdateAnimKitsBeforeMountModelChange(int32_t mounting) {
     if (!mounting || !this->m_mountAnimKitManager) {
@@ -1319,7 +1319,7 @@ void CGUnit_C::UpdateDeathAnimKit() {
     this->m_animationState &= ~0x2000;
 }
 
-// OFFSET: 0x005FCDD0
+// OFFSET: 0x005FCDD0/0x140282710
 void CGUnit_C::UpdateStandStateAnimKit(uint32_t oldStandState, int32_t instant) {
     uint32_t standState = this->GetClientStandState();
 
@@ -1424,7 +1424,7 @@ void CGUnit_C::StopEmoteAnimKit() {
     this->StopEmoteSpellEffects();
 }
 
-// PROVEN: adf55beb IDENTICAL/NONE
+// PROVEN: adf55beb IDENTICAL/IDENTICAL
 // OFFSET: 0x005FD030/0x140282920
 void CGUnit_C::EmoteSpellVisualKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1450,8 +1450,8 @@ bool ClientSetPlayHoverAnimHandler(ClientSetPlayHoverAnim* msg) {
     return true;
 }
 
-// PROVEN: 124b4646 IDENTICAL/NONE
-// OFFSET: 0x005FD060
+// PROVEN: 124b4646 IDENTICAL/UNPROVEN
+// OFFSET: 0x005FD060/0x1402829A0
 void CGUnit_C::SetAIAnimKitID(uint16_t id) {
     if (this->m_aiAnimKitID != id) {
         this->m_aiAnimKitID = id;
@@ -1459,6 +1459,7 @@ void CGUnit_C::SetAIAnimKitID(uint16_t id) {
     }
 }
 
+// PROVEN: adc92318 DIFFERENT/IDENTICAL
 // OFFSET: 0x005FD090/0x1402829C0
 void CGUnit_C::UpdateHandItemAnims() {
     if (!this->m_characterComponent) {
@@ -1544,6 +1545,7 @@ void CGUnit_C::UpdateMountAnimReplacementSets() {
     this->m_mountAnimKitManager->UpdateAnimReplacementSets(count, setIDs);
 }
 
+// PROVEN: 429d76c6 DIFFERENT/IDENTICAL
 // OFFSET: 0x005FD440/0x140282E10
 void CGUnit_C::PlayEmoteAnimKit(uint32_t anim, int32_t oneShot, int32_t allowMounted) {
     int32_t mountSelf = this->IsMountSelf(0);
@@ -1669,6 +1671,7 @@ void CGUnit_C::UpdateEmoteAnimKit() {
     }
 }
 
+// PROVEN: 52e64244 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FD840/0x140283360
 void CGUnit_C::AnimKitMgrExpressionCallback(CAnimKitManager* manager, uint64_t param) {
     CGUnit_C* unit = reinterpret_cast<CGUnit_C*>(static_cast<uintptr_t>(param));

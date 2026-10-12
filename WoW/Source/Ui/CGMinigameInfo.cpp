@@ -5,7 +5,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F771A8
+// STATIC: 0x00F771A8/0x140E6D3A8
 CMinigame_C* CGMinigameInfo::m_minigame;
 
 // OFFSET: 0x00A0A220/0x1407AB2A0
@@ -14,13 +14,15 @@ void CGMinigameInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_MINIGAME_STATE, Packet_SMSG_MINIGAME_STATE, NULL);
 }
 
+// PROVEN: 7fe393ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0A160/0x1407AB1D0
 void CGMinigameInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_MINIGAME_SETUP);
     ClientServices::ClearMessageHandler(SMSG_MINIGAME_STATE);
 }
 
-// OFFSET: 0x00A09FA0
+// PROVEN: a1320bbb IDENTICAL/IDENTICAL
+// OFFSET: 0x00A09FA0/0x1407AAFC0
 int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (CGMinigameInfo::m_minigame) {
         CGMinigameInfo::m_minigame->UpdateState(msg);
@@ -30,6 +32,7 @@ int32_t Packet_SMSG_MINIGAME_STATE(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
+// PROVEN: e43bd314 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0A130/0x1407AB190
 void CGMinigameInfo::LeaveWorld() {
     if (CGMinigameInfo::m_minigame) {
@@ -38,7 +41,8 @@ void CGMinigameInfo::LeaveWorld() {
     }
 }
 
-// OFFSET: 0x00A0A190
+// PROVEN: ecef8b89 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A0A190/0x1407AB200
 int32_t Packet_SMSG_MINIGAME_SETUP(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t guid;
     uint8_t type;

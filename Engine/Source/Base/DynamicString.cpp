@@ -138,7 +138,7 @@ void CDynamicString::operator+=(int32_t value) {
     this->m_length = static_cast<int32_t>(SStrLen(this->m_buffer));
 }
 
-// OFFSET: 0x008730A0
+// OFFSET: 0x008730A0/0x1405A97D0
 void CDynamicString::Append(const char* src, int32_t count) {
     if (src && count > 0) {
         this->m_length += count;

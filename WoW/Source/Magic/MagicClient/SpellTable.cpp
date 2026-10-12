@@ -9,13 +9,13 @@
 #include "WoW/Source/Object/Types.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
-// STATIC: 0x00ED67C4
+// STATIC: 0x00ED67C4/0x140DC9440
 static bool s_skillLineLinkInfoDirty;
 
-// STATIC: 0x00ED67C8
+// STATIC: 0x00ED67C8/0x140BBD640
 static TSHashTable<RACECLASSINFO, HASHKEY_NONE> s_raceClassInfo;
 
-// STATIC: 0x00ED67F4
+// STATIC: 0x00ED67F4/0x140DC9448
 static TSGrowableArray<SkillLineLinkInfo> s_skillLineLinkInfo;
 
 // STATIC: 0x00ED6804
@@ -34,6 +34,7 @@ bool SpellTableMatchRaceClass(int32_t race, int32_t classId, int32_t raceMask, i
     return (!raceMask || ((1 << (static_cast<int8_t>(race) - 1)) & raceMask)) && (!classMask || ((1 << (static_cast<int8_t>(classId) - 1)) & classMask));
 }
 
+// PROVEN: 4914d5cc IDENTICAL/UNPROVEN
 // OFFSET: 0x008C0520/0x14060A350
 SkillLineAbilityRec* SpellTableLookupPetAbility(int32_t skillLine, int32_t spellId) {
     for (int32_t i = 0; i < g_skillLineAbilityDB.m_numRecords; i++) {
@@ -47,6 +48,7 @@ SkillLineAbilityRec* SpellTableLookupPetAbility(int32_t skillLine, int32_t spell
     return NULL;
 }
 
+// PROVEN: 50bf1c6f IDENTICAL/UNPROVEN
 // OFFSET: 0x008C0570/0x14060A3A0
 bool SpellTableGetSkillLineLinkInfo(int32_t skillLine, const SkillLineAbilityRec*& ability, uint32_t& count) {
     for (uint32_t i = 0; i < s_skillLineLinkInfo.Count(); i++) {
@@ -170,7 +172,8 @@ SkillLineAbilityRec* SpellTableLookupAbility(int32_t race, int32_t classId, int3
     return NULL;
 }
 
-// OFFSET: 0x008C0A60
+// PROVEN: 0f54b37f IDENTICAL/DIFFERENT
+// OFFSET: 0x008C0A60/0x14060A9F0
 void SpellTableDestroy() {
     s_destroyed = true;
     s_raceClassInfo.Clear();

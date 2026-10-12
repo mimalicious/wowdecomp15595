@@ -36,25 +36,25 @@
 #include "WoW/Source/WowServices/RealmConnection.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x01014008
+// STATIC: 0x01014008/0x000000008
 static __declspec(thread) ObjectMgr* s_curMgr;
 
-// STATIC: 0x00D73658
+// STATIC: 0x00D73658/0x140C2EB80
 static ObjectMgr* s_savedObjMgr;
 
 // STATIC: 0x00D73660
 static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> > s_typeMirrorHandlers[NUM_CLIENT_OBJECT_TYPES][(sizeof(CGObjectData) + sizeof(CGUnitData) + sizeof(CGPlayerLocalData)) / sizeof(uint32_t)];
 
-// STATIC: 0x00D73634
+// STATIC: 0x00D73634/0x000C2EB5C
 static uint32_t s_objHeapIds[NUM_CLIENT_OBJECT_TYPES];
 
-// STATIC: 0x00D7365C
+// STATIC: 0x00D7365C/0x140C2EB88
 static bool s_heapsAllocated;
 
-// STATIC: 0x00C9AC14
+// STATIC: 0x00C9AC14/0x140B33D68
 static const char* s_objNames[NUM_CLIENT_OBJECT_TYPES] = { "CGObject_C", "CGItem_C", "CGContainer_C", "CGUnit_C", "CGPlayer_C", "CGGameObject_C", "CGDynamicObject_C", "CGCorpse_C", "CGAreaTrigger_C" };
 
-// STATIC: 0x00C9AC38
+// STATIC: 0x00C9AC38/0x000B33DAC
 static const uint32_t s_objHeapSize[NUM_CLIENT_OBJECT_TYPES] = { 0, 512, 32, 64, 64, 64, 32, 32, 32 };
 
 // STATIC: 0x00C9AC5C
@@ -70,7 +70,7 @@ static const uint32_t s_objDwordCount[NUM_CLIENT_OBJECT_TYPES] = {
     (sizeof(CGObjectData) + sizeof(CGAreaTriggerData)) / sizeof(uint32_t),
 };
 
-// STATIC: 0x00D97E40
+// STATIC: 0x00D97E40/0x000C77B54
 uint32_t s_objTotalSize[NUM_CLIENT_OBJECT_TYPES] = {
     sizeof(CGObject_C) + sizeof(CGObjectData) + CGObject::TotalFieldsSaved() * sizeof(uint32_t),
     sizeof(CGItem_C) + sizeof(CGObjectData) + sizeof(CGItemData) + CGItem::TotalFieldsSaved() * sizeof(uint32_t),
@@ -83,6 +83,7 @@ uint32_t s_objTotalSize[NUM_CLIENT_OBJECT_TYPES] = {
     sizeof(CGAreaTrigger_C) + sizeof(CGObjectData) + sizeof(CGAreaTriggerData) + CGAreaTrigger::TotalFields() * sizeof(uint32_t),
 };
 
+// PROVEN: 9b9c58b3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0048F190/0x1400B37F0
 static CMirrorHandler* AssignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list, uint32_t fieldByteOffset, uint32_t mirrorByteOffset, uint32_t fieldByteSize, MIRRORHANDLERFUNC function, void* param, HANDLER_PRIORITY priority, int32_t alwaysFire) {
     CMirrorHandler* handler = list->NewNode(2, 0, 0);
@@ -98,7 +99,7 @@ static CMirrorHandler* AssignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMir
     return handler;
 }
 
-// OFFSET: 0x0048D2D0
+// OFFSET: 0x0048D2D0/0x1400B1160
 static uint32_t GetObjectTypeFieldByteOffset(OBJECT_TYPE_ID typeId) {
     switch (typeId) {
         case ID_ITEM:
@@ -180,7 +181,7 @@ static void UnassignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMirrorHandle
     }
 }
 
-// PROVEN: f5d66880 IDENTICAL/NONE
+// PROVEN: f5d66880 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D120/0x1400B0F80
 void ClntObjMgrPush(ClntObjMgr* mgr) {
     if (s_savedObjMgr) {
@@ -195,7 +196,7 @@ void ClntObjMgrPush(ClntObjMgr* mgr) {
     }
 }
 
-// PROVEN: dc993463 IDENTICAL/NONE
+// PROVEN: dc993463 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D160/0x1400B0FC0
 void ClntObjMgrPop() {
     if (s_savedObjMgr) {
@@ -204,13 +205,14 @@ void ClntObjMgrPop() {
     }
 }
 
-// PROVEN: 675b198a IDENTICAL/NONE
+// PROVEN: 675b198a IDENTICAL/UNPROVEN
 // OFFSET: 0x0048D1B0/0x1400B1020
 int32_t ClntObjMgrIsValid(int32_t a1) {
     ObjectMgr* mgr = s_curMgr;
     return mgr && SMemIsValidPointer(mgr, sizeof(ObjectMgr), a1);
 }
 
+// PROVEN: cee0ed44 DIFFERENT/IDENTICAL
 // OFFSET: 0x0048D1F0/0x1400B1070
 WOWGUID ClntObjMgrGetActivePlayer() {
     ObjectMgr* mgr = s_curMgr;
@@ -222,7 +224,7 @@ WOWGUID ClntObjMgrGetActivePlayer() {
     return mgr->m_playerGuid;
 }
 
-// OFFSET: 0x00401180
+// OFFSET: 0x00401180/0x1400027F0
 WOWGUID ClntObjMgrGetActivePlayerGuid() {
     return ClntObjMgrGetActivePlayer();
 }
@@ -276,7 +278,7 @@ CGCorpse_C* ClntObjMgrFindCorpseByOwner(const WOWGUID& owner) {
     return NULL;
 }
 
-// PROVEN: 4ea93bf0 IDENTICAL/NONE
+// PROVEN: 4ea93bf0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D190/0x1400B1000
 ObjectMgr* ClntObjMgrGetCurrent() {
     return s_curMgr;
@@ -293,7 +295,7 @@ uint32_t ClntObjMgrGetMapID() {
     return mgr->m_mapId;
 }
 
-// PROVEN: f6be13da IDENTICAL/NONE
+// PROVEN: f6be13da IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D270/0x1400B1100
 CMovementGlobals* ClntObjMgrGetMovementGlobals() {
     ObjectMgr* mgr = s_curMgr;
@@ -305,7 +307,7 @@ CMovementGlobals* ClntObjMgrGetMovementGlobals() {
     return mgr->m_movementGlobal;
 }
 
-// PROVEN: c765748d IDENTICAL/NONE
+// PROVEN: c765748d IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D220/0x1400B10A0
 uint32_t ClntObjMgrGetPlayerType() {
     return s_curMgr->m_type;
@@ -327,7 +329,8 @@ void ClntObjMgrLinkInNewObject(CGObject_C* object) {
     s_curMgr->m_objects.Insert(object, static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 }
 
-// OFFSET: 0x0048E570
+// PROVEN: c34eb43f IDENTICAL/DIFFERENT
+// OFFSET: 0x0048E570/0x1400B26B0
 void ClntObjMgrLockObject(WOWGUID guid) {
     CGObject_C* object = s_curMgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
@@ -336,7 +339,7 @@ void ClntObjMgrLockObject(WOWGUID guid) {
     }
 }
 
-// PROVEN: e8b58fac IDENTICAL/NONE
+// PROVEN: e8b58fac IDENTICAL/IDENTICAL
 // OFFSET: 0x0048D2A0/0x1400B1130
 void ClntObjMgrSetMovementGlobals(CMovementGlobals* globals) {
     ObjectMgr* mgr = s_curMgr;
@@ -352,7 +355,7 @@ void ClntObjMgrSetTypeMirrorHandler(OBJECT_TYPE_ID typeId, uint32_t fieldOffset,
     AssignMirrorHandler(&s_typeMirrorHandlers[typeId][fieldOffset >> 2], fieldOffset + GetObjectTypeFieldByteOffset(typeId), mirrorOffset, fieldSize, function, param, priority, alwaysFire);
 }
 
-// OFFSET: 0x0048E510
+// OFFSET: 0x0048E510/0x1400B2660
 void ClntObjMgrShowObject(WOWGUID guid) {
     ObjectMgr* mgr = s_curMgr;
     CGObject_C* object = mgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -497,7 +500,7 @@ static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* GetObjectMirrorList(O
     return reinterpret_cast<TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >*>(list);
 }
 
-// OFFSET: 0x0048D580
+// OFFSET: 0x0048D580/0x1400B1480
 static uint32_t GetNumDwordBlocks(uint32_t type, WOWGUID guid) {
     switch (type) {
         case TYPEMASK_OBJECT: {
@@ -584,7 +587,7 @@ static int32_t SkipPartialObjectUpdate(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: 0x0048D830
+// OFFSET: 0x0048D830/0x1400B1630
 static void InitObject(CGObject_C* object, const CClientObjCreate& create, uint32_t time) {
     switch (object->m_typeId) {
         case ID_ITEM: {
@@ -876,7 +879,7 @@ static void ExpirePendingHandlers(TSExplicitList<CMirrorHandler, offsetof(CMirro
     }
 }
 
-// OFFSET: 0x0048FDF0
+// OFFSET: 0x0048FDF0/0x1400B45E0
 static void ExpireOldObjects(OBJECT_TYPE_ID typeId, uint32_t expireTime) {
     CGObject_C* object = s_curMgr->m_lazyCleanupFifo[typeId - 1].Head();
 
@@ -887,7 +890,7 @@ static void ExpireOldObjects(OBJECT_TYPE_ID typeId, uint32_t expireTime) {
     }
 }
 
-// OFFSET: 0x0048FE60
+// OFFSET: 0x0048FE60/0x1400B4690
 CGObject_C* ClntObjMgrAllocObject(OBJECT_TYPE_ID typeId, WOWGUID guid) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         return static_cast<CGObject_C*>(SMemAlloc(sizeof(CGPlayer_C) + s_objDwordCount[ID_PLAYER] * sizeof(uint32_t) + (sizeof(CGPlayerLocalData) - sizeof(CGPlayerData)) / sizeof(uint32_t) * sizeof(TSList<void>) + CGPlayer::TotalFields() * sizeof(uint32_t), __FILE__, __LINE__, 0));
@@ -944,7 +947,7 @@ static int32_t CCommand_ObjUsage(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: 7dd71eb2 IDENTICAL/NONE
+// PROVEN: 7dd71eb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048E240/0x1400B22B0
 void ClntObjMgrInitializeShared() {
     if (!s_heapsAllocated) {
@@ -960,7 +963,7 @@ void ClntObjMgrInitializeShared() {
     ConsoleCommandRegister("ShowObjUsage", CCommand_ObjUsage, CATEGORY_GAME, NULL, NULL);
 }
 
-// OFFSET: 0x0048EA80
+// OFFSET: 0x0048EA80/0x1400B2F50
 static void CallMirrorFunctions(TSExplicitList<CMirrorHandler, offsetof(CMirrorHandler, m_link2)>* pending, WOWGUID guid, CGObject_C* object, OBJECT_TYPE_ID typeId) {
     CMirrorHandler* handler = pending->Head();
 
@@ -1062,7 +1065,7 @@ static int32_t FillInPartialObjectData(CGObject_C* object, WOWGUID guid, CDataSt
     return 1;
 }
 
-// OFFSET: 0x0048EC40
+// OFFSET: 0x0048EC40/0x1400B3130
 static int32_t CallMirrorHandlers(CDataStore* msg, bool postInit, WOWGUID guid) {
     if (!postInit) {
         SmartGUID smartGuid;
@@ -1206,6 +1209,7 @@ static int32_t ExpireLazyObjects(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: e95f4ae4 IDENTICAL/DIFFERENT
 // OFFSET: 0x004900F0/0x1400B4920
 void ClntObjMgrDestroyLazyCleanupObjects() {
     CGObject_C* object;
@@ -1217,7 +1221,7 @@ void ClntObjMgrDestroyLazyCleanupObjects() {
     }
 }
 
-// OFFSET: 0x0048FFD0
+// OFFSET: 0x0048FFD0/0x1400B4780
 static void DestroyAllObjects() {
     CGObject_C* object;
 
@@ -1290,7 +1294,7 @@ ObjectMgr::ObjectMgr(uint32_t type) {
     this->m_movementGlobal = NULL;
 }
 
-// OFFSET: 0x0048FAF0
+// OFFSET: 0x0048FAF0/0x1400B4320
 ObjectMgr::~ObjectMgr() {
     if (this->m_realmConnection) {
         this->m_realmConnection->m_objMgr = NULL;
@@ -1301,7 +1305,7 @@ ObjectMgr::~ObjectMgr() {
     }
 }
 
-// OFFSET: 0x0048EE20
+// OFFSET: 0x0048EE20/0x1400B34D0
 static int32_t PostInitObject(CGPlayer_C** activePlayer, CDataStore* msg, uint32_t time, bool reenable, bool* transport) {
     SmartGUID guid;
     *msg >> guid;
@@ -1346,7 +1350,8 @@ static int32_t PostInitObject(CGPlayer_C** activePlayer, CDataStore* msg, uint32
     return result;
 }
 
-// OFFSET: 0x004902F0
+// PROVEN: f65c3b11 IDENTICAL/IDENTICAL
+// OFFSET: 0x004902F0/0x1400B4C80
 void ClntObjMgrDestroyStd() {
     if (!s_curMgr) {
         return;
@@ -1359,7 +1364,7 @@ void ClntObjMgrDestroyStd() {
     delete mgr;
 }
 
-// OFFSET: 0x00490670
+// OFFSET: 0x00490670/0x1400B5220
 static CGObject_C* GetUpdateObject(WOWGUID guid, int32_t* reenabled) {
     *reenabled = 0;
 
@@ -1388,7 +1393,7 @@ static CGObject_C* GetUpdateObject(WOWGUID guid, int32_t* reenabled) {
     return object;
 }
 
-// OFFSET: 0x0048EB90
+// OFFSET: 0x0048EB90/0x1400B3060
 static int32_t UpdateExistingObject(CDataStore* msg, CGObject_C* object, int32_t reenabled) {
     CClientObjCreate create;
     create.Get(msg, true);
@@ -1554,7 +1559,7 @@ static int32_t ObjectUpdateSecondPass(CGPlayer_C** activePlayer, CDataStore* msg
     return 1;
 }
 
-// OFFSET: 0x00490AB0
+// OFFSET: 0x00490AB0/0x1400B5870
 static void UpdateOutOfRangeObjects(CDataStore* msg) {
     uint32_t count;
     msg->Get(count);
@@ -1612,7 +1617,7 @@ static void UpdateOutOfRangeObjects(CDataStore* msg) {
     CVehiclePassenger_C::ExecutePendingRescueTransitions();
 }
 
-// OFFSET: 0x00490C20
+// OFFSET: 0x00490C20/0x1400B5A70
 int32_t Packet_SMSG_UPDATE_OBJECT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t start = msg->m_read;
 
@@ -1668,7 +1673,7 @@ int32_t Packet_SMSG_UPDATE_OBJECT(void* param, NETMESSAGE msgId, uint32_t time, 
     return Packet_SMSG_UPDATE_OBJECT(NULL, SMSG_UPDATE_OBJECT, time, msg);
 }
 
-// OFFSET: 0x00490D70
+// OFFSET: 0x00490D70/0x1400B5CC0
 int32_t Packet_SMSG_DESTROY_OBJECT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -1713,6 +1718,7 @@ void ClntObjMgrInitializeStd(uint32_t mapId) {
     s_curMgr->m_mapId = mapId;
 }
 
+// PROVEN: 52e7a492 IDENTICAL/DIFFERENT
 // OFFSET: 0x00490F20/0x1400B5E90
 void ClntObjMgrUnlockObject(WOWGUID guid, const char* fileName, int32_t lineNumber) {
     CGObject_C* object = s_curMgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -1738,6 +1744,7 @@ void ClntObjMgrUnlockObject(WOWGUID guid, const char* fileName, int32_t lineNumb
     }
 }
 
+// PROVEN: 88f08ff1 IDENTICAL/DIFFERENT
 // OFFSET: [0x0048E430/0x1400B24C0]
 CMirrorHandler::~CMirrorHandler() {
 }

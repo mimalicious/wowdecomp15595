@@ -632,4 +632,6 @@ linkObject* FrameXML_CompileXML_Region(XMLNode* node);
 void FrameXML_FreeCompiled(linkObject* node, bool force);
 linkObject* FrameXML_CompileXML_Ui(XMLNode* node, MemBlock& block);
 
+#include "Engine/Source/FrameXML/BinaryXML.inl"
+
 #endif

@@ -184,7 +184,7 @@ static void start_pass_huff(j_compress_ptr cinfo, boolean gather_statistics) {
  */
 
 // PROVEN: 92a7867d IDENTICAL/NONE
-// OFFSET: 0x00B60CB0
+// OFFSET: 0x00B60CB0/0x14092A420
 void jpeg_make_c_derived_tbl(j_compress_ptr cinfo, boolean isDC, int tblno, c_derived_tbl ** pdtbl) {
   JHUFF_TBL *htbl;
   c_derived_tbl *dtbl;
@@ -364,7 +364,7 @@ static boolean flush_bits(working_state * state) {
 
 /* Encode a single block's worth of coefficients */
 
-// OFFSET: 0x00B60FB0
+// OFFSET: 0x00B60FB0/0x14092A790
 static boolean encode_one_block(working_state * state, JCOEFPTR block, int last_dc_val, c_derived_tbl *dctbl, c_derived_tbl *actbl) {
   register int temp, temp2;
   register int nbits;
@@ -488,7 +488,7 @@ static boolean emit_restart(working_state * state, int restart_num) {
  */
 
 // PROVEN: 2f8db81f IDENTICAL/NONE
-// OFFSET: 0x00B61210
+// OFFSET: 0x00B61210/0x14092AA40
 static boolean encode_mcu_huff(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   huff_entropy_ptr entropy = (huff_entropy_ptr) cinfo->entropy;
   working_state state;
@@ -585,7 +585,7 @@ static void finish_pass_huff(j_compress_ptr cinfo) {
 
 /* Process a single block's worth of coefficients */
 
-// OFFSET: 0x00B61410
+// OFFSET: 0x00B61410/0x14092ACC0
 static void htest_one_block(j_compress_ptr cinfo, JCOEFPTR block, int last_dc_val, long dc_counts[], long ac_counts[]) {
   register int temp;
   register int nbits;
@@ -661,7 +661,7 @@ static void htest_one_block(j_compress_ptr cinfo, JCOEFPTR block, int last_dc_va
  */
 
 // PROVEN: 5d5f6e6b IDENTICAL/NONE
-// OFFSET: 0x00B614F0
+// OFFSET: 0x00B614F0/0x14092ADE0
 static boolean encode_mcu_gather(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   huff_entropy_ptr entropy = (huff_entropy_ptr) cinfo->entropy;
   int blkn, ci;

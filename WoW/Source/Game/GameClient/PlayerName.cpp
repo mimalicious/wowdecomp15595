@@ -32,18 +32,18 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "Engine/Source/Os/TimeManager.h"
 
-// STATIC: 0x00DC70CC
+// STATIC: 0x00DC70CC/0x140CACCA0
 uint32_t s_nameMask;
 
-// STATIC: 0x00DC70D0
+// STATIC: 0x00DC70D0/0x140CACCA4
 static uint32_t s_lastRenderFrame;
 
 static CGxStringBatch* s_playerNameBatch;
 
-// STATIC: 0x00DC70D8
+// STATIC: 0x00DC70D8/0x140CACCB0
 static CGxFont* s_playerNameFont;
 
-// STATIC: 0x00DC70DC
+// STATIC: 0x00DC70DC/0x140CACCB8
 static CTexture* s_playerNameIcons;
 
 // STATIC: 0x00DC70E0
@@ -63,7 +63,7 @@ static C2Vector s_iconTexCoords[4] = {
     C2Vector(0.0f, 0.25f),
 };
 
-// STATIC: 0x00CA1148
+// STATIC: 0x00CA1148/0x140B3DA48
 TSExplicitList<PLAYERNAMEDESC, offsetof(PLAYERNAMEDESC, m_link)> s_playerNames;
 
 // OFFSET: 0x004E1230/0x1401217B0
@@ -100,7 +100,7 @@ void PlayerNameInitialize() {
     s_playerNameIcons = TextureCreate("Interface\\TargetingFrame\\UI-RaidTargetingIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
 }
 
-// PROVEN: 763e3951 IDENTICAL/NONE
+// PROVEN: 763e3951 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E04D0/0x140120870
 void PlayerNameTriggerColorUpdate(PLAYERNAMEDESC* desc) {
     if (desc) {
@@ -108,7 +108,7 @@ void PlayerNameTriggerColorUpdate(PLAYERNAMEDESC* desc) {
     }
 }
 
-// OFFSET: 0x004E1CE0
+// OFFSET: 0x004E1CE0/0x140122910
 void PlayerNameUpdateDrawCallback(PLAYERNAMEDESC* desc) {
     if (!desc) {
         return;
@@ -150,12 +150,13 @@ void PlayerNameUpdateDrawCallback(PLAYERNAMEDESC* desc) {
     }
 }
 
-// OFFSET: 0x004E0500
+// PROVEN: 71d4e1ae IDENTICAL/IDENTICAL
+// OFFSET: 0x004E0500/0x1401208A0
 void PlayerNameUpdateEarly() {
     s_lastRenderFrame++;
 }
 
-// PROVEN: e0c19acc IDENTICAL/NONE
+// PROVEN: e0c19acc IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0510/0x1401208B0
 void PlayerNameTriggerNameRegenerate(PLAYERNAMEDESC* desc) {
     if (desc) {
@@ -163,18 +164,19 @@ void PlayerNameTriggerNameRegenerate(PLAYERNAMEDESC* desc) {
     }
 }
 
-// PROVEN: 5eb9b876 IDENTICAL/NONE
+// PROVEN: 5eb9b876 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0530/0x1401208D0
 bool PlayerNameShowing(PLAYERNAMEDESC* desc) {
     return desc && (desc->m_flags & 0x8);
 }
 
+// PROVEN: 1fc21c54 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0550/0x1401208F0
 bool PlayerNameShouldShowGuildTitle() {
     return (s_nameMask >> 15) & 1;
 }
 
-// OFFSET: 0x004E12F0
+// OFFSET: 0x004E12F0/0x1401218E0
 void PlayerNameUpdateLate() {
     for (PLAYERNAMEDESC* desc = s_playerNames.Head(); desc; desc = s_playerNames.Next(desc)) {
         if (desc->m_renderFrame == s_lastRenderFrame || (desc->m_flags & 4)) {
@@ -216,7 +218,7 @@ PLAYERNAMEDESC::~PLAYERNAMEDESC() {
     }
 }
 
-// OFFSET: 0x004E1B60
+// OFFSET: 0x004E1B60/0x140122600
 PLAYERNAMEDESC* PlayerNameCreate(const WOWGUID& guid) {
     if (!guid) {
         return NULL;
@@ -257,7 +259,7 @@ void PlayerNameDelete(PLAYERNAMEDESC* desc) {
     s_freePlayerNames.PutData(desc, NULL, 0);
 }
 
-// OFFSET: 0x004E0850
+// OFFSET: 0x004E0850/0x140120AE0
 int32_t PLAYERNAMEDESC::ShouldRender(CGObject_C* object, uint32_t raidTarget) {
     int32_t show = 1;
 
@@ -269,7 +271,7 @@ int32_t PLAYERNAMEDESC::ShouldRender(CGObject_C* object, uint32_t raidTarget) {
     return CGGameUI::m_visible && raidTarget < 8 && show;
 }
 
-// OFFSET: 0x004E0DA0
+// OFFSET: 0x004E0DA0/0x140121180
 float PlayerNameComputeScale(CGObject_C* object) {
     float height;
 
@@ -290,7 +292,7 @@ float PlayerNameComputeScale(CGObject_C* object) {
     return height * 0.25f * 1.5f;
 }
 
-// OFFSET: 0x004E0770
+// OFFSET: 0x004E0770/0x1401209D0
 static uint8_t PlayerNameIconAlpha(const C3Vector& position) {
     CGCamera* camera = CGWorldFrame::s_currentWorldFrame->m_camera;
 
@@ -314,7 +316,7 @@ static uint8_t PlayerNameIconAlpha(const C3Vector& position) {
     return 34;
 }
 
-// OFFSET: 0x004E1410
+// OFFSET: 0x004E1410/0x140121A50
 void PLAYERNAMEDESC::Render() {
     if (!this->m_guid) {
         return;
@@ -466,7 +468,8 @@ void PLAYERNAMEDESC::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x004E1C30
+// PROVEN: 80d5d221 IDENTICAL/DIFFERENT
+// OFFSET: 0x004E1C30/0x140122850
 void PLAYERNAMEDESC::RenderIfVisible(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     PLAYERNAMEDESC* desc = static_cast<PLAYERNAMEDESC*>(arg);
 
@@ -491,7 +494,7 @@ void PLAYERNAMEDESC::DeleteWorldText(uint32_t type) {
     }
 }
 
-// PROVEN: d6268158 IDENTICAL/NONE
+// PROVEN: d6268158 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E04E0/0x140120880
 void PlayerNameDeleteText(PLAYERNAMEDESC* desc, uint32_t type) {
     if (desc) {
@@ -499,7 +502,7 @@ void PlayerNameDeleteText(PLAYERNAMEDESC* desc, uint32_t type) {
     }
 }
 
-// OFFSET: 0x004E0660
+// OFFSET: 0x004E0660/0x140120900
 void PLAYERNAMEDESC::UpdateWorldText(uint32_t time) {
     CGObject_C* object = ClntObjMgrObjectPtr(this->m_guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -649,7 +652,7 @@ void PlayerNameCreateText(PLAYERNAMEDESC* desc, uint32_t type, const char* text,
     }
 }
 
-// OFFSET: 0x004E1360
+// OFFSET: 0x004E1360/0x140121980
 void PlayerNameUpdateWorldText() {
     uint32_t time = OsGetAsyncTimeMs();
 

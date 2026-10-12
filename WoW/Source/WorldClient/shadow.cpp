@@ -21,7 +21,7 @@ static CTexture* s_shadowBlobTexture;
 // STATIC: 0x00E75674/0x140D5F458
 static CVar* s_cvShadowMode;
 
-// PROVEN: 68b580f3 IDENTICAL/UNPROVEN
+// PROVEN: 68b580f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00744F60/0x140422C20
 void ShadowDestroy() {
     if (s_shadowBlobTexture) {

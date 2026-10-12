@@ -44,7 +44,8 @@ typedef struct lsfit_acc{
 
 /***********************************************/
 
-// OFFSET: 0x00B48940
+// PROVEN: 174441ba DIFFERENT/IDENTICAL
+// OFFSET: 0x00B48940/0x140918380
 static void FMOD_floor1_free_info(vorbis_info_floor *i){
   vorbis_info_floor1 *info=(vorbis_info_floor1 *)i;
   if(info){
@@ -53,7 +54,8 @@ static void FMOD_floor1_free_info(vorbis_info_floor *i){
   }
 }
 
-// OFFSET: 0x00B48970
+// PROVEN: 9f5eac64 DIFFERENT/IDENTICAL
+// OFFSET: 0x00B48970/0x1409183C0
 static void FMOD_floor1_free_look(vorbis_look_floor *i){
   vorbis_look_floor1 *look=(vorbis_look_floor1 *)i;
   if(look){
@@ -127,7 +129,7 @@ static int icomp(const void *a,const void *b){
   return(**(int **)a-**(int **)b);
 }
 
-// OFFSET: 0x00B489A0
+// OFFSET: 0x00B489A0/0x140918400
 static vorbis_info_floor *FMOD_floor1_unpack (vorbis_info *vi,oggpack_buffer *opb){
   codec_setup_info     *ci=vi->codec_setup;
   int j,k,count=0,maxclass=-1,rangebits;
@@ -180,7 +182,7 @@ static vorbis_info_floor *FMOD_floor1_unpack (vorbis_info *vi,oggpack_buffer *op
   return(NULL);
 }
 
-// OFFSET: 0x00B48BF0
+// OFFSET: 0x00B48BF0/0x140918690
 static vorbis_look_floor *FMOD_floor1_look(vorbis_dsp_state *vd,
                                       vorbis_info_floor *in){
 

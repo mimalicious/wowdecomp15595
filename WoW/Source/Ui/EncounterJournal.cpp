@@ -17,54 +17,55 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/WorldMap.h"
 
-// STATIC: 0x00C0E590
+// STATIC: 0x00C0E590/0x140A087C0
 static const int32_t s_inventoryTypeOrder[29] = { 0, 10, 11, 12, 0, 14, 17, 18, 19, 15, 16, 20, 21, 4, 6, 5, 13, 1, 0, 0, 14, 2, 3, 7, 0, 8, 5, 0, 9 };
 
-// STATIC: 0x00D17804
+// STATIC: 0x00D17804/0x140BD2828
 static const char* s_journalLinkColor = "ff66bbff";
 
-// STATIC: 0x00D1782C
+// STATIC: 0x00D1782C/0x140BD2878
 int32_t CGEncounterJournal::s_classFilter = -1;
 
-// STATIC: 0x00D17830
+// STATIC: 0x00D17830/0x140BD287C
 bool CGEncounterJournal::s_lootDirty = true;
 
 // STATIC: 0x00D179D8
 EJMapEncounters CGEncounterJournal::s_mapEncounters;
 
-// STATIC: 0x00F76CE0
+// STATIC: 0x00F76CE0/0x140E6CE70
 static char s_linkBuffer[1024];
 
-// STATIC: 0x00F770E0
+// STATIC: 0x00F770E0/0x140E6D270
 static int32_t s_tierID;
 
-// STATIC: 0x00F770E4
+// STATIC: 0x00F770E4/0x140E6D274
 int32_t CGEncounterJournal::s_instanceID;
 
-// STATIC: 0x00F770E8
+// STATIC: 0x00F770E8/0x140E6D278
 EJInstance* CGEncounterJournal::s_instance;
 
-// STATIC: 0x00F770EC
+// STATIC: 0x00F770EC/0x140E6D280
 int32_t CGEncounterJournal::s_encounterID;
 
-// STATIC: 0x00F770F0
+// STATIC: 0x00F770F0/0x140E6D284
 int32_t CGEncounterJournal::s_difficulty;
 
-// STATIC: 0x00F770F4
+// STATIC: 0x00F770F4/0x140E6D288
 char* CGEncounterJournal::s_searchString;
 
-// STATIC: 0x00F770F8
+// STATIC: 0x00F770F8/0x140E6D290
 bool CGEncounterJournal::s_searchTruncated;
 
-// STATIC: 0x00F77144
+// STATIC: 0x00F77144/0x140E6D2C0
 EJSearchResultList CGEncounterJournal::s_searchResults;
 
 // STATIC: 0x00F77150
 EJInstanceList CGEncounterJournal::s_instances;
 
-// STATIC: 0x00F7715C
+// STATIC: 0x00F7715C/0x140E6D2F0
 EJLootList CGEncounterJournal::s_loot;
 
+// PROVEN: 1f2d2623 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A06CA0/0x1407A6B70
 void CGEncounterJournal::ResetState() {
     s_tierID = 0;
@@ -82,12 +83,14 @@ void CGEncounterJournal::ResetState() {
     CGEncounterJournal::s_searchString = NULL;
 }
 
+// PROVEN: acb2d6c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06D00/0x1407A6BE0
 const char* CGEncounterJournal::BuildLink(int32_t type, int32_t id, const char* name) {
     SStrPrintf(s_linkBuffer, sizeof(s_linkBuffer), "|c%s|Hjournal:%d:%d:%d|h[%s]|h%s", s_journalLinkColor, type, id, CGEncounterJournal::s_difficulty + 1, name, *s_journalLinkColor ? "|r" : "");
     return s_linkBuffer;
 }
 
+// PROVEN: 46afb436 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06DC0/0x1407A6C50
 void CGEncounterJournal::ItemLoadedCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -194,7 +197,7 @@ void CGEncounterJournal::AddSearchResult(int32_t id, int32_t type, const char* n
     CGEncounterJournal::s_searchResults.insert(it, result);
 }
 
-// OFFSET: 0x00A07D10
+// OFFSET: 0x00A07D10/0x1407A7ED0
 void CGEncounterJournal::RefineSearch(const char* search) {
     for (EJSearchResultList::iterator it = CGEncounterJournal::s_searchResults.begin(); it != CGEncounterJournal::s_searchResults.end(); ++it) {
         if (!it->m_name || !SStrStrUTF8I(it->m_name, search)) {
@@ -210,7 +213,7 @@ void CGEncounterJournal::RefineSearch(const char* search) {
     CGEncounterJournal::s_searchString = SStrDupA(search, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x00A07DB0
+// OFFSET: 0x00A07DB0/0x1407A7FA0
 void CGEncounterJournal::SearchSections(int32_t sectionID, const char* search) {
     for (JournalEncounterSectionRec* section = g_journalEncounterSectionDB.GetRecord(sectionID); section; section = g_journalEncounterSectionDB.GetRecord(section->m_firstChildSectionID)) {
         if (section->m_type) {
@@ -236,7 +239,8 @@ int32_t CGEncounterJournal::GetInstanceByIndex(int32_t index, int32_t instanceTy
     return 0;
 }
 
-// OFFSET: 0x00A08490
+// PROVEN: 16a95514 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A08490/0x1407A89E0
 bool CGEncounterJournal::SelectInstance(int32_t instanceID) {
     CGEncounterJournal::s_lootDirty = true;
     CGEncounterJournal::s_encounterID = 0;
@@ -337,7 +341,7 @@ void CGEncounterJournal::BuildInstances() {
     }
 }
 
-// OFFSET: 0x00A08BF0
+// OFFSET: 0x00A08BF0/0x1407A9480
 void CGEncounterJournal::ClearInstances() {
     for (EJInstanceList::iterator it = CGEncounterJournal::s_instances.begin(); it != CGEncounterJournal::s_instances.end(); ++it) {
         it->m_encounters.clear();
@@ -392,13 +396,15 @@ int32_t CGEncounterJournal::GetCurrentInstance() {
     return 0;
 }
 
+// PROVEN: 4800e7a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08FB0/0x1407A9A10
 void CGEncounterJournal::InitializeGame() {
     CGEncounterJournal::ResetState();
     CGEncounterJournal::BuildInstances();
 }
 
-// OFFSET: 0x00A08FC0
+// PROVEN: 19e31617 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A08FC0/0x1407A9A30
 void CGEncounterJournal::ShutdownGame() {
     CGEncounterJournal::ClearInstances();
 
@@ -409,7 +415,7 @@ void CGEncounterJournal::ShutdownGame() {
     CGEncounterJournal::s_searchString = NULL;
 }
 
-// OFFSET: 0x00A08FF0
+// OFFSET: 0x00A08FF0/0x1407A9A70
 int32_t CGEncounterJournal::CompareLoot(int32_t itemA, int32_t itemB) {
     ItemRecSparse* a = g_itemSparseDB.GetRecord(itemA, WOWGUID(), NULL, NULL, false);
     ItemRecSparse* b = g_itemSparseDB.GetRecord(itemB, WOWGUID(), NULL, NULL, false);
@@ -493,7 +499,8 @@ void CGEncounterJournal::SetSearch(const char* search) {
     CGEncounterJournal::s_searchString = SStrDupA(search, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x00A099E0
+// PROVEN: 0504fd57 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A099E0/0x1407AA850
 void CGEncounterJournal::OnLootItemLoaded(JournalEncounterItemRec* item) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -513,14 +520,15 @@ void CGEncounterJournal::OnLootItemLoaded(JournalEncounterItemRec* item) {
     }
 }
 
-// OFFSET: 0x00A09A80
+// PROVEN: 66fd1865 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A09A80/0x1407AA900
 void CGEncounterJournal::LootItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGEncounterJournal::OnLootItemLoaded(static_cast<JournalEncounterItemRec*>(param));
     }
 }
 
-// OFFSET: 0x00A09AA0
+// OFFSET: 0x00A09AA0/0x1407AA920
 bool CGEncounterJournal::IsLootFiltered(JournalEncounterItemRec* item, int32_t factionMask) {
     if (!(factionMask & item->m_factionMask) || !((1 << CGEncounterJournal::s_difficulty) & item->m_difficultyMask)) {
         return true;

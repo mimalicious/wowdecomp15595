@@ -11,13 +11,13 @@
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: 0x00E28808
+// STATIC: 0x00E28808/0x140D10458
 static TSFixedArray<IMPACTSOUNDARRAY> s_impactSounds;
 
 // STATIC: 0x00E28814
 static int32_t s_swingSounds[3][2];
 
-// PROVEN: 939e3a79 IDENTICAL/NONE
+// PROVEN: 939e3a79 IDENTICAL/IDENTICAL
 // OFFSET: 0x00704C50/0x1403D1A70
 IMPACTSOUND::IMPACTSOUND() {
     this->m_soundId = 0;
@@ -43,7 +43,7 @@ void SI3::PlayWeaponSwooshSound(int32_t type, int32_t crit, const C3Vector& posi
     SE3::PlaySoundKit(s_swingSounds[type][crit != 0], self ? NULL : &position, &properties, NULL, __FILE__, __LINE__, "SI3::PlayWeaponSwooshSound");
 }
 
-// PROVEN: 38532f83 IDENTICAL/NONE
+// PROVEN: 38532f83 IDENTICAL/DIFFERENT
 // OFFSET: 0x00631DA0/0x1402C72F0
 void SI3::InitWeaponSwingCombatSounds() {
     for (int32_t i = g_weaponSwingSounds2DB.m_numRecords; i;) {
@@ -71,6 +71,7 @@ static void InitWeaponImpactSound(WeaponImpactSoundsRec* rec) {
     }
 }
 
+// PROVEN: e771aac4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00631F60/0x1402C7510
 void SI3::PlaySheatheSound(const CGUnitVirtualItem* item, int32_t sheathe, const C3Vector& position, int32_t self) {
     if (!item) {
@@ -99,6 +100,7 @@ void SI3::PlaySheatheSound(const CGUnitVirtualItem* item, int32_t sheathe, const
     SE3::PlaySoundKit(soundKitId, self ? NULL : &soundPosition, &properties, NULL, __FILE__, __LINE__, "SI3::PlaySheatheSound");
 }
 
+// PROVEN: 414a7bec IDENTICAL/DIFFERENT
 // OFFSET: 0x00632050/0x1402C7640
 void SI3::PlayMissedSound(bool oneHand, const C3Vector& position, int32_t self) {
     SE3SoundKitProperties properties;
@@ -230,6 +232,7 @@ void SI3::PlayHitSound(const CGUnitVirtualItem* weapon, uint32_t impactType, int
     SE3::PlaySoundKit(crit != 0 ? sound->m_critSoundId : sound->m_soundId, self ? NULL : &position, &properties, NULL, __FILE__, __LINE__, "SI3::PlayHitSound");
 }
 
+// PROVEN: 7e441fba IDENTICAL/DIFFERENT
 // OFFSET: 0x00632710/0x1402C7F30
 void SI3::InitWeaponImpactCombatSounds() {
     s_impactSounds.SetCount(ClientDBGetNumWeaponSubClasses());

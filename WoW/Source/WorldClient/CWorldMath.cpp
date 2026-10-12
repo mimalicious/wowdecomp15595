@@ -5,10 +5,10 @@
 #include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 
-// STATIC: 0x01008A30
+// STATIC: 0x01008A30/0x140EE0450
 static uint32_t s_clipSides[32];
 
-// STATIC: 0x01008AB0
+// STATIC: 0x01008AB0/0x140EE03D0
 static float s_clipDists[32];
 
 // OFFSET: 0x00B130F0/0x1408D8D90
@@ -134,7 +134,7 @@ bool CWorldMath::VectorIntersectAABox2(const CAaBox& box, const C3Vector& start,
     return true;
 }
 
-// OFFSET: 0x00B13410
+// OFFSET: 0x00B13410/0x1408D90A0
 void CWorldMath::ClipVertexListToPlane(const C3Vector* verts, uint32_t count, C3Vector* out, uint32_t& outCount, const C4Plane& plane, float epsilon, int32_t keepCoplanar) {
     uint32_t counts[3];
     counts[0] = 0;

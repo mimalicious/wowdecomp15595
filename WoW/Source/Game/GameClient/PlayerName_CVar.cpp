@@ -24,6 +24,7 @@ bool ObjectNameShowCallback(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
+// PROVEN: e2519021 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E1010/0x140121440
 void PlayerNameRegisterCVars() {
     CVar::Register("UnitNameOwn", NULL, 0x10, "0", ObjectNameShowCallback, CATEGORY_GAME, false, reinterpret_cast<void*>(0x1), false);

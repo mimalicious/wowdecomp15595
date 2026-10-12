@@ -159,17 +159,7 @@ void System_SFile::ListFile::FreeBlocks(ListFileBlock* blocks) {
     }
 }
 
-// INLINED
-System_SFile::ListFile::ListFile() {
-    this->m_blocks = NULL;
-}
-
-// INLINED
-System_SFile::ListFile::~ListFile() {
-    FreeBlocks(this->m_blocks);
-}
-
-// OFFSET: 0x007D3960
+// OFFSET: 0x007D3960/0x1404D3600
 void System_SFile::ListFile::Parse(char* data, int64_t size) {
     char* start = data;
 

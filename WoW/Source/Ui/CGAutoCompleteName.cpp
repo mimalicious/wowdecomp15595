@@ -12,34 +12,35 @@
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/Ui/BattlenetUI.h"
 
-// STATIC: 0x00D16098
+// STATIC: 0x00D16098/0x140BCFFD0
 TSList<CGAutoCompleteName::AUTOCOMPLETE_NAMENODE, TSGetLink<CGAutoCompleteName::AUTOCOMPLETE_NAMENODE>> CGAutoCompleteName::m_list;
 
-// STATIC: 0x00F60FE0
+// STATIC: 0x00F60FE0/0x140BCFFE0
 TSHashTable<CGAutoCompleteName::AUTOCOMPLETE_CHARACTER_HASHNODE, CHashKeyGUID> CGAutoCompleteName::m_characterHash;
 
-// STATIC: 0x00F6100C
+// STATIC: 0x00F6100C/0x140BD0030
 TSHashTable<CGAutoCompleteName::AUTOCOMPLETE_BATTLENET_HASHNODE, HASHKEY_NONE> CGAutoCompleteName::m_battlenetHash;
 
-// STATIC: 0x00F60FD8
+// STATIC: 0x00F60FD8/0x140E56138
 uint32_t CGAutoCompleteName::s_numNodes;
 
-// STATIC: 0x00F60FD4
+// STATIC: 0x00F60FD4/0x140E56134
 bool CGAutoCompleteName::s_resortNamesOnRecency;
 
-// STATIC: 0x00F60FDC
+// STATIC: 0x00F60FDC/0x140E5613C
 bool CGAutoCompleteName::s_batchUpdate;
 
-// STATIC: 0x00F60FDD
+// STATIC: 0x00F60FDD/0x140E5613D
 bool CGAutoCompleteName::s_resortPending;
 
-// STATIC: 0x00F60FD5
+// STATIC: 0x00F60FD5/0x140E56135
 bool CGAutoCompleteName::s_whenEditingFromCenter;
 
-// STATIC: 0x00F60FD6
+// STATIC: 0x00F60FD6/0x140E56136
 bool CGAutoCompleteName::s_useContext;
 
-// OFFSET: 0x009CB210
+// PROVEN: 4f029efb IDENTICAL/IDENTICAL
+// OFFSET: 0x009CB210/0x14075AC20
 int32_t CGAutoCompleteName::CompareNodes(const void* a, const void* b) {
     const AUTOCOMPLETE_NAMENODE* nodeA = *static_cast<const AUTOCOMPLETE_NAMENODE* const*>(a);
     const AUTOCOMPLETE_NAMENODE* nodeB = *static_cast<const AUTOCOMPLETE_NAMENODE* const*>(b);
@@ -51,6 +52,7 @@ int32_t CGAutoCompleteName::CompareNodes(const void* a, const void* b) {
     return SStrCmpUTF8I(nodeA->m_name, nodeB->m_name, STORM_MAX_STR);
 }
 
+// PROVEN: e08dd62a IDENTICAL/IDENTICAL
 // OFFSET: 0x009CB260/0x14075AC60
 const char* CGAutoCompleteName::GetDisplayName(const char* name) {
     if (name[0] == '|' && name[1] == 'K' && name[2] == 'f') {
@@ -65,7 +67,7 @@ const char* CGAutoCompleteName::GetDisplayName(const char* name) {
     return name;
 }
 
-// OFFSET: 0x009CB3A0
+// OFFSET: 0x009CB3A0/0x14075AE40
 int32_t CGAutoCompleteName::NodeMatchesParams(const AUTOCOMPLETE_NAMENODE* node, const char* text, uint32_t include, uint32_t exclude, int32_t cursor, bool allowFullMatch) {
     if (CGAutoCompleteName::s_useContext && ((node->m_flags & exclude) || !(node->m_flags & include))) {
         return 0;
@@ -127,6 +129,7 @@ int32_t CGAutoCompleteName::NodeMatchesParams(const AUTOCOMPLETE_NAMENODE* node,
     return 1;
 }
 
+// PROVEN: 30b9bde1 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CB520/0x14075AFF0
 CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::FindNodeByName(const char* name, bool characters, bool battlenet) {
     for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
@@ -173,7 +176,8 @@ void CGAutoCompleteName::PutNameInCorrectSpot(AUTOCOMPLETE_NAMENODE* node) {
     CGAutoCompleteName::m_list.LinkToTail(node);
 }
 
-// OFFSET: 0x009CB6E0
+// PROVEN: cb08c95d IDENTICAL/UNPROVEN
+// OFFSET: 0x009CB6E0/0x14075B290
 int32_t CGAutoCompleteName::GetMatchingResults(lua_State* L, const char* text, uint32_t include, uint32_t exclude, int32_t numReturns, int32_t cursor, bool allowFullMatch) {
     int32_t count = 0;
 
@@ -222,7 +226,7 @@ int32_t CGAutoCompleteName::GetPresenceID(const char* name, uint32_t* presenceId
     return 0;
 }
 
-// OFFSET: 0x009CB870
+// OFFSET: 0x009CB870/0x14075B490
 void CGAutoCompleteName::ResortAll() {
     TSGrowableArray<AUTOCOMPLETE_NAMENODE*> nodes;
     uint32_t count = CGAutoCompleteName::s_numNodes;
@@ -246,7 +250,7 @@ void CGAutoCompleteName::ResortAll() {
     CGAutoCompleteName::s_resortPending = false;
 }
 
-// OFFSET: 0x009CBBC0
+// OFFSET: 0x009CBBC0/0x14075B870
 int32_t CGAutoCompleteName::SetName(const WOWGUID& guid, const char* name, bool overwrite) {
     AUTOCOMPLETE_CHARACTER_HASHNODE* hashNode = CGAutoCompleteName::m_characterHash.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
     AUTOCOMPLETE_NAMENODE* node;
@@ -280,7 +284,8 @@ int32_t CGAutoCompleteName::SetName(const uint32_t& presenceId, const char* name
     return 1;
 }
 
-// OFFSET: 0x009CBCC0
+// PROVEN: b69f47c2 IDENTICAL/NONE
+// OFFSET: 0x009CBCC0/0x14075B9C0
 int32_t CGAutoCompleteName::AddFlagsToNode(AUTOCOMPLETE_NAMENODE* node, uint32_t flags, int32_t add, const char* name) {
     node->m_flags |= flags;
     bool resort = false;
@@ -311,7 +316,7 @@ static void AutoCompleteNameQueryCallback(int32_t id, const WOWGUID& guid, void*
     }
 }
 
-// OFFSET: 0x009CC080
+// OFFSET: 0x009CC080/0x14075BE30
 void CGAutoCompleteName::RefreshName(const WOWGUID& guid) {
     NameCache* name = g_nameDBCache.GetRecord(guid.m_guid, guid, AutoCompleteNameQueryCallback, NULL, true);
 
@@ -320,7 +325,7 @@ void CGAutoCompleteName::RefreshName(const WOWGUID& guid) {
     }
 }
 
-// OFFSET: 0x009CC260
+// OFFSET: 0x009CC260/0x14075C0A0
 CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::RemoveNode(AUTOCOMPLETE_NAMENODE* node) {
     CGAutoCompleteName::s_numNodes--;
 
@@ -345,6 +350,7 @@ CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::RemoveNode(AUTOCO
     return CGAutoCompleteName::m_list.DeleteNode(node);
 }
 
+// PROVEN: f8f75bf5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CC340/0x14075C200
 void CGAutoCompleteName::RemoveAllBattlenet() {
     for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
@@ -390,6 +396,7 @@ int32_t CGAutoCompleteName::RemoveFlags(const uint32_t& presenceId, uint32_t fla
     return 1;
 }
 
+// PROVEN: ab2b7bb5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CC650/0x14075C6A0
 int32_t CGAutoCompleteName::RemoveFlagsByName(const char* name, uint32_t flags, bool characters, bool battlenet) {
     AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::FindNodeByName(name, characters, battlenet);
@@ -405,7 +412,8 @@ int32_t CGAutoCompleteName::RemoveFlagsByName(const char* name, uint32_t flags, 
     return 1;
 }
 
-// OFFSET: 0x009CC6A0
+// PROVEN: 8f876a9a IDENTICAL/IDENTICAL
+// OFFSET: 0x009CC6A0/0x14075C6F0
 int32_t CGAutoCompleteName::RemoveFlagsFromAllNodes(uint32_t flags) {
     for (AUTOCOMPLETE_NAMENODE* node = CGAutoCompleteName::m_list.Head(); !CGAutoCompleteName::m_list.IsEnd(node); ) {
         AUTOCOMPLETE_NAMENODE* next = node->RawNext();
@@ -446,7 +454,8 @@ CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::AddPlayerToList(c
     return node;
 }
 
-// OFFSET: 0x009CD230
+// PROVEN: 906fc76b IDENTICAL/DIFFERENT
+// OFFSET: 0x009CD230/0x14075D750
 CGAutoCompleteName::AUTOCOMPLETE_NAMENODE* CGAutoCompleteName::AddPlayerToList(const uint32_t& presenceId, uint32_t flags, uint32_t lastUsed, const char* name) {
     AUTOCOMPLETE_NAMENODE* node = new (SMemAlloc(sizeof(AUTOCOMPLETE_NAMENODE), typeid(AUTOCOMPLETE_NAMENODE).raw_name(), -2, 0x8)) AUTOCOMPLETE_NAMENODE;
     CGAutoCompleteName::s_numNodes++;
@@ -491,7 +500,7 @@ int32_t CGAutoCompleteName::AddFlags(const WOWGUID& guid, uint32_t flags, int32_
     return CGAutoCompleteName::AddPlayerToList(guid, flags, add ? FrameTime::GetCurTimeMs() : 0, name) != NULL;
 }
 
-// OFFSET: 0x009CD3F0
+// OFFSET: 0x009CD3F0/0x14075DA70
 int32_t CGAutoCompleteName::AddFlags(const uint32_t& presenceId, uint32_t flags, int32_t add, const char* name) {
     AUTOCOMPLETE_BATTLENET_HASHNODE* hashNode = CGAutoCompleteName::m_battlenetHash.Ptr(presenceId, HASHKEY_NONE());
     AUTOCOMPLETE_NAMENODE* node;

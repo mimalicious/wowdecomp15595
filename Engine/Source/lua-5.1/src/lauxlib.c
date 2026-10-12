@@ -86,7 +86,7 @@ LUALIB_API void luaL_where (lua_State *L, int level) {
 }
 
 
-// OFFSET: 0x00A29380
+// OFFSET: 0x00A29380/0x1407D1010
 LUALIB_API int luaL_error (lua_State *L, const char *fmt, ...) {
   va_list argp;
   va_start(argp, fmt);
@@ -190,7 +190,7 @@ LUALIB_API const char *luaL_optlstring (lua_State *L, int narg,
 
 
 // PROVEN: 72f8cb5a IDENTICAL/NONE
-// OFFSET: 0x00A29BD0
+// OFFSET: 0x00A29BD0/0x1407D1B50
 LUALIB_API lua_Number luaL_checknumber (lua_State *L, int narg) {
   lua_Number d = lua_tonumber(L, narg);
   if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */
@@ -207,7 +207,7 @@ LUALIB_API lua_Number luaL_optnumber (lua_State *L, int narg, lua_Number def) {
 
 
 // PROVEN: 1b6ea427 IDENTICAL/NONE
-// OFFSET: 0x00A29C80
+// OFFSET: 0x00A29C80/0x1407D1C20
 LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, int narg) {
   lua_Integer d = lua_tointeger(L, narg);
   if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */

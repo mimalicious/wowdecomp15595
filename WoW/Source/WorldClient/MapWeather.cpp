@@ -32,6 +32,7 @@ void Weather::Initialize() {
 void Weather::Destroy() {
 }
 
+// PROVEN: 770e476e IDENTICAL/IDENTICAL
 // OFFSET: 0x007483D0/0x140427410
 int32_t Weather::GetType() const {
     int32_t type = 0;
@@ -51,8 +52,8 @@ int32_t Weather::GetType() const {
     return type;
 }
 
-// PROVEN: 02c6d5e6 IDENTICAL/NONE
-// OFFSET: 0x00748400
+// PROVEN: 02c6d5e6 IDENTICAL/DIFFERENT
+// OFFSET: 0x00748400/0x140427440
 void Weather::FillInDefaultPrecipTexturePath(int32_t type) {
     if (type == 1) {
         strcpy(this->m_precipTexture, "textures\\Weather\\RainDrop01.blp");
@@ -62,7 +63,7 @@ void Weather::FillInDefaultPrecipTexturePath(int32_t type) {
 }
 
 // PROVEN: 42821182 IDENTICAL/NONE
-// OFFSET: 0x00748440
+// OFFSET: 0x00748440/0x140427CC0
 CHMMgr::~CHMMgr() {
     for (uint32_t y = 0; y < 5; y++) {
         for (uint32_t x = 0; x < 5; x++) {
@@ -73,7 +74,7 @@ CHMMgr::~CHMMgr() {
     }
 }
 
-// PROVEN: 25f18666 IDENTICAL/NONE
+// PROVEN: 25f18666 IDENTICAL/IDENTICAL
 // OFFSET: 0x00748480/0x1404274C0
 void CHMMgr::Invalidate() {
     for (uint32_t y = 0; y < 5; y++) {
@@ -87,7 +88,7 @@ void CHMMgr::Invalidate() {
     }
 }
 
-// OFFSET: 0x00748A30
+// OFFSET: 0x00748A30/0x140427D60
 void Weather::SetType(int32_t type, float intensity, const WeatherRec* rec, bool transition, float densityBlend) {
     if (Weather::s_weatherTypeForced || static_cast<uint32_t>(type) > 3) {
         return;
@@ -229,7 +230,7 @@ void Weather::SetStormIntensity(float start, float target) {
     this->m_densityChanged = 0;
 }
 
-// OFFSET: 0x00748F40
+// OFFSET: 0x00748F40/0x1404282E0
 static int32_t GetHeightOrDefault(const C3Vector& pos, float& height) {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
 
@@ -246,7 +247,7 @@ static int32_t GetHeightOrDefault(const C3Vector& pos, float& height) {
     return 0;
 }
 
-// OFFSET: 0x00748FC0
+// OFFSET: 0x00748FC0/0x140428360
 float WeatherGridCell::GetHeight(const C3Vector& pos) {
     float dx = pos.x - static_cast<float>(this->m_cellX) * 33.333332f;
     float dy = pos.y - static_cast<float>(this->m_cellY) * 33.333332f;
@@ -314,7 +315,7 @@ float CHMMgr::Query(const C3Vector& pos) {
     return this->m_cells[y][x]->GetHeight(pos);
 }
 
-// OFFSET: 0x007491B0
+// OFFSET: 0x007491B0/0x140428610
 float CHMMgr::GetSubCellHeight(const C2iVector& cell, float z) {
     WeatherGridCell* gridCell = this->m_cells[cell.y >> 5][cell.x >> 5];
     uint32_t index = (cell.x & 0x1F) + 32 * (cell.y & 0x1F);
@@ -335,7 +336,7 @@ float CHMMgr::GetSubCellHeight(const C2iVector& cell, float z) {
     return height;
 }
 
-// OFFSET: 0x00749290
+// OFFSET: 0x00749290/0x140428760
 bool CHMMgr::Query(const C3Vector& start, const C3Vector& end, C3Vector& hit) {
     hit = start;
     int32_t startX = static_cast<int32_t>(floor(start.x * 0.95999998f)) - this->m_minX;
@@ -526,7 +527,7 @@ Weather::Weather() {
     this->m_precipTexture[0] = '\0';
 }
 
-// OFFSET: 0x007511F0
+// OFFSET: 0x007511F0/0x140431B20
 void Weather::CalcPlayerVelocity(const C3Vector& position, const C3Vector& velocity) {
     uint32_t total = 0;
 
@@ -578,7 +579,8 @@ void Weather::CalcPlayerVelocity(const C3Vector& position, const C3Vector& veloc
     }
 }
 
-// OFFSET: 0x00752E90
+// PROVEN: 17682527 IDENTICAL/UNPROVEN
+// OFFSET: 0x00752E90/0x140434040
 void Weather::Clear() {
     Rain* rain = this->m_rain;
 
@@ -715,7 +717,7 @@ void Weather::Update() {
     this->m_transportVelocity.z = 0.0f;
 }
 
-// OFFSET: 0x007532D0
+// OFFSET: 0x007532D0/0x1404344F0
 Weather::~Weather() {
     this->Clear();
 
@@ -728,7 +730,7 @@ Weather::~Weather() {
     this->m_posDeltas.Clear();
 }
 
-// OFFSET: 0x007525F0
+// OFFSET: 0x007525F0/0x140433520
 void Weather::Render() {
     if (!this->m_updated) {
         return;

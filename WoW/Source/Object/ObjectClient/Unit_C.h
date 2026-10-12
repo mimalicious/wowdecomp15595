@@ -338,7 +338,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param);
 
     /* 0104 */ TSList<void> m_unitMirrorLists [138];
-    /* 077C */ float m_swimDepth;
     /* 0780 */ CMovement_C m_movementData;
     /* 08D0 */ float m_smoothFacing;
     /* 08D4 */ float unk_08D4;

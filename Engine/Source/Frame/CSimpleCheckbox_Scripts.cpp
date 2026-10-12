@@ -17,7 +17,7 @@ static int32_t Script_SetChecked(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2dc76d4c IDENTICAL/NONE
+// PROVEN: 2dc76d4c IDENTICAL/IDENTICAL
 // OFFSET: 0x005326E0/0x140184820
 static int32_t Script_GetChecked(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
@@ -147,22 +147,22 @@ static int32_t Script_SetDisabledCheckedTexture(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f113b968 IDENTICAL/NONE
-// OFFSET: 0x00532640
+// PROVEN: f113b968 IDENTICAL/IDENTICAL
+// OFFSET: 0x00532640/0x140184790
 void CSimpleCheckbox::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleCheckbox::s_metatable);
     CSimpleCheckbox::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 81972cd5 IDENTICAL/NONE
-// OFFSET: 0x00532AE0
+// PROVEN: 81972cd5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00532AE0/0x140184CC0
 void CSimpleCheckbox::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleCheckbox::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleCheckbox::RegisterScriptMethods);
 }
 
-// STATIC: 0x00CA3DCC
+// STATIC: 0x00CA3DCC/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetChecked", &Script_SetChecked },
     { "GetChecked", &Script_GetChecked },

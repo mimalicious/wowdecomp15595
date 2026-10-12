@@ -14,7 +14,7 @@ int32_t SE3::sm_nMaxCacheSizeInBytes = 0x1000000;
 // STATIC: 0x00D00494/0x140BAFE1C
 uint32_t SE3::sm_uMaxCacheableSize = 0x100000;
 
-// STATIC: 0x00D00498
+// STATIC: 0x00D00498/0x140BAFE20
 uint32_t SE3WaveDataNode::sm_uNextUniqueID = 1;
 
 // STATIC: 0x00D0049C
@@ -23,7 +23,7 @@ TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_SoundCache_Loading;
 // STATIC: 0x00D004A8
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_SoundCache;
 
-// STATIC: 0x00D004B4
+// STATIC: 0x00D004B4/0x140BAFE58
 TSExplicitList<SE3WaveDataNode, offsetof(SE3WaveDataNode, m_unreferencedLink)> SE3::sm_SoundCacheUnreferenced;
 
 // STATIC: 0x00D004C0
@@ -32,16 +32,16 @@ TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_Streams_Loading;
 // STATIC: 0x00D004CC
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_Streams;
 
-// STATIC: 0x00D004D8
+// STATIC: 0x00D004D8/0x140BAFEA0
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_WaveDataNode_DeleteList;
 
-// STATIC: 0x00E4E854
+// STATIC: 0x00E4E854/0x140D37B10
 int32_t SE3::sm_SoundCache_Stats_Count;
 
-// STATIC: 0x00E4E858
+// STATIC: 0x00E4E858/0x140D37B14
 int32_t SE3::sm_SoundCache_Stats_TotalSizeInBytes;
 
-// STATIC: 0x00E4E85C
+// STATIC: 0x00E4E85C/0x140D37B18
 void (*SE3::sm_fpCacheEventCallback)(SE3CACHEEVENT, uint32_t);
 
 // STATIC: 0x00E4E860/0x140D37B20
@@ -56,10 +56,10 @@ SCritSect SE3::sm_StreamedSound_Loading_CritSec;
 // STATIC: 0x00E4E8B4/0x140D37B78
 SCritSect SE3::sm_SE3ShuttingDown_CritSec;
 
-// STATIC: 0x00D004E4
+// STATIC: 0x00D004E4/0x140BAFEB8
 static int32_t s_mp3Bitrates[15] = { 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320 };
 
-// STATIC: 0x00E4E8DC
+// STATIC: 0x00E4E8DC/0x140D37BA0
 static SCritSect s_streamCritSect;
 
 // PROVEN: 9329de35 IDENTICAL/IDENTICAL
@@ -74,14 +74,14 @@ void SE3::SetMaxCacheableSizeInBytes(uint32_t size) {
     SE3::sm_uMaxCacheableSize = size;
 }
 
-// PROVEN: fba01528 IDENTICAL/NONE
-// OFFSET: 0x007153E0
+// PROVEN: fba01528 IDENTICAL/IDENTICAL
+// OFFSET: 0x007153E0/0x1403E80C0
 void SE3::RegisterCacheEventCallback(void (*callback)(SE3CACHEEVENT, uint32_t)) {
     SE3::sm_fpCacheEventCallback = callback;
 }
 
-// PROVEN: 3b32313f IDENTICAL/NONE
-// OFFSET: 0x007153F0
+// PROVEN: 3b32313f IDENTICAL/IDENTICAL
+// OFFSET: 0x007153F0/0x1403E80D0
 void SE3::RegisterWaveDataDoneLoadingCallback(FMOD_RESULT (*callback)(FMOD_SOUND*, FMOD_RESULT)) {
     SE3::sm_fpWaveDataDoneLoadingCallback = callback;
 }
@@ -96,7 +96,7 @@ static FMOD_RESULT F_CALLBACK DoneLoadingCallback(FMOD_SOUND* sound, FMOD_RESULT
     return r;
 }
 
-// OFFSET: 0x00715440
+// OFFSET: 0x00715440/0x1403E8130
 static int32_t CheckStreamHeader(SE3StreamInfo* info, uint8_t* frame, int32_t size) {
     uint32_t fileSize = SFileGetFileSize(info->m_file, NULL);
     uint32_t sync = (8 * frame[0]) | ((frame[1] >> 5) & 0x7FF);
@@ -238,6 +238,7 @@ static int32_t CancelStreamReads(SE3StreamInfo* info) {
     return pending == 0;
 }
 
+// PROVEN: f399c740 IDENTICAL/DIFFERENT
 // OFFSET: 0x00715C30/0x1403E8AE0
 SE3StreamInfo::~SE3StreamInfo() {
 }
@@ -367,7 +368,7 @@ static FMOD_RESULT F_CALLBACK SESeekCallback(void* handle, unsigned int pos, voi
     return FMOD_OK;
 }
 
-// OFFSET: 0x00715810
+// OFFSET: 0x00715810/0x1403E84A0
 void SE3::DecrementWaveDataNodeRefCount(uint32_t waveDataID) {
     if (!waveDataID) {
         return;
@@ -449,7 +450,7 @@ static int32_t OpenLoadingStreamFile(uint32_t key, FMOD_RESULT* result, unsigned
     return found != NULL;
 }
 
-// OFFSET: 0x007159C0
+// OFFSET: 0x007159C0/0x1403E87A0
 int32_t SE3::FindAndReferenceWaveDataNodeInCache(uint32_t key, uint32_t* waveDataID) {
     SE3WaveDataNode* node;
 
@@ -474,7 +475,7 @@ int32_t SE3::FindAndReferenceWaveDataNodeInCache(uint32_t key, uint32_t* waveDat
     return 1;
 }
 
-// OFFSET: 0x00715A60
+// OFFSET: 0x00715A60/0x1403E8860
 int32_t SE3::FindAndReferenceWaveDataNodeLoadingInCache(uint32_t key, uint32_t* waveDataID) {
     SE3WaveDataNode* node;
 
@@ -499,6 +500,7 @@ int32_t SE3::FindAndReferenceWaveDataNodeLoadingInCache(uint32_t key, uint32_t* 
     return 1;
 }
 
+// PROVEN: 14174e2b DIFFERENT/IDENTICAL
 // OFFSET: 0x00715B00/0x1403E8920
 static FMOD_RESULT F_CALLBACK SEOpenCallback(const char* name, int unicode, unsigned int* filesize, void** handle, void** userdata) {
     if (*userdata) {
@@ -515,7 +517,7 @@ static FMOD_RESULT F_CALLBACK SEOpenCallback(const char* name, int unicode, unsi
     return result;
 }
 
-// OFFSET: 0x00715B60
+// OFFSET: 0x00715B60/0x1403E89B0
 int32_t SE3::FindWaveDataNode(uint32_t waveDataID, SE3WaveDataNode** node) {
     for (SE3WaveDataNode* cached = SE3::sm_SoundCache.Head(); cached; cached = SE3::sm_SoundCache.Next(cached)) {
         if (cached->m_uUniqueID == waveDataID) {
@@ -534,6 +536,7 @@ int32_t SE3::FindWaveDataNode(uint32_t waveDataID, SE3WaveDataNode** node) {
     return 0;
 }
 
+// PROVEN: 5077d74f IDENTICAL/DIFFERENT
 // OFFSET: 0x00715BD0/0x1403E8A20
 void SE3::WaveData_PutOnDeleteList(SE3WaveDataNode* node, int32_t referenced) {
     if (node->m_nRefCount && SE3::sm_fpCacheEventCallback) {
@@ -792,7 +795,7 @@ void SE3::ProcessWaveDataNodeDeleteList(int32_t elapsed, int32_t force) {
 }
 
 // PROVEN: 1bd576ea IDENTICAL/NONE
-// OFFSET: 0x00716BF0
+// OFFSET: 0x00716BF0/0x1403EA0D0
 void SE3::SetReverb(const SE3_REVERB_PROPERTIES* properties) {
     if (SE3::sm_pGameSystem) {
         SE3::sm_pGameSystem->setReverbProperties(properties);
@@ -800,7 +803,7 @@ void SE3::SetReverb(const SE3_REVERB_PROPERTIES* properties) {
 }
 
 // PROVEN: 6ce5932a IDENTICAL/NONE
-// OFFSET: 0x00716C10
+// OFFSET: 0x00716C10/0x1403EA0F0
 FMOD_RESULT SE3::CreateDSPByType(SE3_DSP_TYPE type, void** dsp) {
     return SE3::sm_pGameSystem->createDSPByType(type, reinterpret_cast<FMOD::DSP**>(dsp));
 }
@@ -846,7 +849,7 @@ FMOD_RESULT SE3::ConnectDspToChannelGroup(void* dsp, void* channelGroup) {
     return FMOD_OK;
 }
 
-// PROVEN: 206719e8 IDENTICAL/NONE
+// PROVEN: 206719e8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00716D00/0x1403EA1C0
 int32_t SE3::GetChannelGroupNumChannels(void* channelGroup) {
     int numChannels = 0;
@@ -874,7 +877,7 @@ FMOD_RESULT SE3::AddChannelToChannelGroup(void* channel, void* channelGroup) {
     return static_cast<FMOD::Channel*>(channel)->setChannelGroup(static_cast<FMOD::ChannelGroup*>(channelGroup));
 }
 
-// PROVEN: 2823cd42 IDENTICAL/UNPROVEN
+// PROVEN: 2823cd42 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716D80/0x1403EA230
 FMOD_RESULT SE3::SetFMODChannelGroupVolume(void* channelGroup, float volume) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->setVolume(volume);

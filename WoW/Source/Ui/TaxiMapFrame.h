@@ -68,4 +68,6 @@ class CGTaxiMap {
 
 uint32_t GetRouteSegmentCount(uint32_t index);
 
+#include "WoW/Source/Ui/TaxiMapFrame.inl"
+
 #endif

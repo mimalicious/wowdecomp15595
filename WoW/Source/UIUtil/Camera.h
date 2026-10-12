@@ -97,7 +97,7 @@ class CGCamera : public CSimpleCamera {
     /* 0138 */ float m_targetHeightFar;
     /* 013C */ float m_targetHeightSwim;
     /* 0140 */ float m_mountHeight;
-    /* 0144 */ uint32_t m_heightChangedTimeMs;
+    /* 0144 */ uintptr_t m_heightChangedTimeMs;
     /* 0148 */ uint8_t m_fade;
     /* 014C */ uint32_t m_motionFlags;
     /* 0150 */ uint32_t m_motionStartTime [6];

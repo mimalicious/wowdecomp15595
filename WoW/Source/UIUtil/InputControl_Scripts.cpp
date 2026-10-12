@@ -391,7 +391,7 @@ static int32_t Script_CameraOrSelectOrMoveStop(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9f989108 IDENTICAL/NONE
+// PROVEN: 9f989108 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044ACF0/0x140057EA0
 static int32_t Script_MouselookStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
@@ -406,7 +406,7 @@ static int32_t Script_MouselookStop(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8447b888 IDENTICAL/NONE
+// PROVEN: 8447b888 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044B000/0x140058290
 static int32_t Script_MouselookStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
@@ -425,13 +425,14 @@ static int32_t Script_MouselookStart(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 93da93e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x004478F0/0x140054110
 static int32_t Script_VehicleAimGetNormPower(lua_State* L) {
     lua_pushnumber(L, s_vehicleAimNormPower);
     return 1;
 }
 
-// PROVEN: acace478 IDENTICAL/NONE
+// PROVEN: acace478 IDENTICAL/IDENTICAL
 // OFFSET: 0x004480B0/0x140054A00
 static int32_t Script_IsMouselooking(lua_State* L) {
     if (CGInputControl::s_inputControl->m_flags & 0x2000001) {
@@ -456,6 +457,7 @@ static int32_t Script_VehicleAimGetAngle(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 40f1d98a IDENTICAL/IDENTICAL
 // OFFSET: 0x00449D60/0x140056B20
 static int32_t Script_IsUsingVehicleControls(lua_State* L) {
     if (CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x800000)) {
@@ -467,6 +469,7 @@ static int32_t Script_IsUsingVehicleControls(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 4792fe7d IDENTICAL/IDENTICAL
 // OFFSET: 0x00449DB0/0x140056B70
 static int32_t Script_CanExitVehicle(lua_State* L) {
     if (CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x2000000)) {
@@ -478,6 +481,7 @@ static int32_t Script_CanExitVehicle(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 18f88040 IDENTICAL/IDENTICAL
 // OFFSET: 0x00449E00/0x140056BC0
 static int32_t Script_CanSwitchVehicleSeats(lua_State* L) {
     if (CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x4000000)) {
@@ -554,6 +558,7 @@ static int32_t Script_IsVehicleAimPowerAdjustable(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 67e5198c IDENTICAL/IDENTICAL
 // OFFSET: 0x0044BA80/0x140059170
 static int32_t Script_SetMouselookOverrideBinding(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::s_inputControl;
@@ -649,7 +654,7 @@ static int32_t Script_VehicleAimRequestNormAngle(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6d45b25d IDENTICAL/NONE
+// PROVEN: 6d45b25d IDENTICAL/IDENTICAL
 // OFFSET: 0x00448360/0x140054CC0
 static int32_t Script_DetectWowMouse(lua_State* L) {
     CGInputControl::s_inputControl->DetectWowMouse();
@@ -718,7 +723,7 @@ static int32_t Script_VehicleAimDecrement(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 42d39f95 IDENTICAL/NONE
+// PROVEN: 42d39f95 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044ABE0/0x140057D50
 static int32_t Script_MoveAndSteerStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
@@ -758,7 +763,7 @@ static int32_t Script_MoveAndSteerStart(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00C99300
+// STATIC: 0x00C99300/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "JumpOrAscendStart", &Script_JumpOrAscendStart },
     { "AscendStop", &Script_AscendStop },
@@ -814,7 +819,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "DetectWowMouse", &Script_DetectWowMouse },
 };
 
-// PROVEN: d152bd3f IDENTICAL/NONE
+// PROVEN: d152bd3f IDENTICAL/UNPROVEN
 // OFFSET: 0x00447920/0x140054130
 void InputControlRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -822,7 +827,7 @@ void InputControlRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: ccaeca04 IDENTICAL/NONE
+// PROVEN: ccaeca04 IDENTICAL/UNPROVEN
 // OFFSET: 0x00447950/0x140054180
 void InputControlUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -232,7 +232,6 @@ class CM2Model {
     /* 0300 */ void* m_hitTestOwner;
     /* 0304 */ uint32_t m_hitTestGroup;
     /* 0308 */ uint32_t m_handle;
-    /* 030C */ uint32_t unk_0314;
 
     static int32_t s_errorAppFatal;
     static const char* s_errorFile;
@@ -520,7 +519,6 @@ class M2ModelParticle {
     /* 0084 */ uint8_t m_emitting;
     /* 0085 */ uint8_t m_active;
     /* 0086 */ uint8_t m_burstFired;
-    /* 0087 */ uint8_t unk_0087;
 
     M2ModelParticle();
 };
@@ -554,5 +552,7 @@ M2ModelTrack<T>::M2ModelTrack() {
     this->m_secondaryKey = 0;
     memset(&this->m_currentValue, 0, sizeof(T));
 }
+
+#include "Engine/Source/Model2/M2Model.inl"
 
 #endif

@@ -142,7 +142,7 @@ static void codestring (LexState *ls, expdesc *e, TString *s) {
 
 
 // PROVEN: 8c24dba8 IDENTICAL/NONE
-// OFFSET: 0x004265A0
+// OFFSET: 0x004265A0/0x14002CC70
 static void checkname(LexState *ls, expdesc *e) {
   codestring(ls, e, str_checkname(ls));
 }
@@ -642,7 +642,7 @@ static int explist1 (LexState *ls, expdesc *v) {
 }
 
 
-// PROVEN: d278f7e9 IDENTICAL/UNPROVEN
+// PROVEN: 3b0e94f4 IDENTICAL/UNPROVEN
 // OFFSET: 0x004274C0/0x14002D4A0
 static void funcargs (LexState *ls, expdesc *f) {
   FuncState *fs = ls->fs;
@@ -827,7 +827,7 @@ static UnOpr getunopr (int op) {
 
 
 // PROVEN: 776c534d IDENTICAL/NONE
-// OFFSET: 0x00427B20
+// OFFSET: 0x00427B20/0x14002DC50
 static BinOpr getbinopr (int op) {
   switch (op) {
     case '+': return OPR_ADD;

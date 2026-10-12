@@ -4,13 +4,13 @@
 #include "WoW/Source/WorldClient/MapArea.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
 
-// STATIC: 0x00BC7EB0
+// STATIC: 0x00BC7EB0/0x1409B5FB8
 static uint32_t s_nibbleMasks[2] = { 0x0F, 0xF0 };
 
 // STATIC: 0x00BC7EB8
 static uint32_t s_nibblePackShifts[2] = { 4, 0 };
 
-// STATIC: 0x00BC7EC0
+// STATIC: 0x00BC7EC0/0x1409B5FC8
 static uint32_t s_nibbleShifts[2] = { 0, 4 };
 
 // STATIC: 0x00BC7EC8
@@ -19,7 +19,7 @@ static uint32_t s_bitMasks[8] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80
 // STATIC: 0x00BC7EE8
 static uint32_t s_bitShifts[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
-// STATIC: 0x00BC7F08
+// STATIC: 0x00BC7F08/0x1409B5FB4
 static uint8_t s_shadowAlpha[2] = { 0xFF, 0x00 };
 
 // STATIC: 0x00D01FB4
@@ -330,7 +330,7 @@ static inline uint16_t PackAlphaShadow4444(const uint8_t* const* rows, const uin
     return static_cast<uint16_t>(a2 | a1 | (16 * (a0 & 0xF0)) | s);
 }
 
-// OFFSET: 0x00766DE0
+// OFFSET: 0x00766DE0/0x14044D160
 static void UnpackAlphaShadowBitsFixed4444Mip0(uint16_t* dest, uint32_t x, uint32_t pitch, uint32_t size, CMapRenderChunk::SLayerAlpha* alpha, const uint8_t* shadow) {
     uint16_t* row = dest + x;
 
@@ -413,7 +413,7 @@ static void UnpackAlphaShadowBitsUnfixed4444Mip0(uint16_t* dest, uint32_t x, uin
     UnpackAlphaShadowRowUnfixed4444(row, rows, shadowRow, size);
 }
 
-// OFFSET: 0x007673C0
+// OFFSET: 0x007673C0/0x14044D940
 static void UnpackAlphaShadowBitsUnfixed4444Mip1(uint16_t* dest, uint32_t x, uint32_t pitch, uint32_t size, CMapRenderChunk::SLayerAlpha* alpha, const uint8_t* shadow) {
     uint16_t* row = dest + x;
 

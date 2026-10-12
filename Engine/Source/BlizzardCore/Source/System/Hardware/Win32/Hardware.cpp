@@ -10,7 +10,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 
-// STATIC: 0x00EB6204
+// STATIC: 0x00EB6204/0x140DA2C88
 Blizzard::Hardware::ProcessorFeatures System_Hardware::s_processorFeatures;
 
 Blizzard::Hardware::ProcessorFeatures System_Hardware::s_extendedFeatures;
@@ -193,7 +193,7 @@ uint32_t Blizzard::Hardware::GetProcessorFeatures() {
     return features;
 }
 
-// OFFSET: 0x007C0710
+// OFFSET: 0x007C0710/0x1404BA110
 bool Blizzard::Hardware::ExtendedProcessorFeatures(ProcessorFeatures& features) {
     System_Hardware::s_extendedFeatures.m_features = GetProcessorFeatures();
     System_Hardware::s_extendedFeatures.m_coreCount = GetCoreCount();
@@ -240,7 +240,7 @@ uint64_t System_Hardware::GetDiskCapacity() {
     return 0;
 }
 
-// OFFSET: 0x007FE9E0
+// OFFSET: 0x007FE9E0/0x140511CC0
 void System_Hardware::CalcFingerprint(uint8_t* fingerprint) {
     char buffer[296];
     memset(buffer, 0, sizeof(buffer));
@@ -261,7 +261,7 @@ void System_Hardware::CalcFingerprint(uint8_t* fingerprint) {
     memcpy(fingerprint, digest.m_data, 16);
 }
 
-// PROVEN: b30a7375 IDENTICAL/UNPROVEN
+// PROVEN: b30a7375 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FEAC0/0x140511E40
 bool Blizzard::Hardware::GetFingerprint(Fingerprint* fingerprint) {
     System_Hardware::CalcFingerprint(fingerprint->m_data);

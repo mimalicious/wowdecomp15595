@@ -255,7 +255,6 @@ class M2Ribbon {
     /* 0084 */ M2Track<uint16_t> m_textureSlotTrack;
     /* 0098 */ M2Track<uint8_t> m_visibilityTrack;
     /* 00AC */ int16_t m_priorityPlane;
-    /* 00AE */ uint16_t unk_00AE;
 
     ~M2Ribbon();
 };

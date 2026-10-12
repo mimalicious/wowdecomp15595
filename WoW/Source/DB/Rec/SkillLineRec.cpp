@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[7] = { 0, 0, 2, 2, 0, 2, 0 };
 // STATIC: 0x00C22438/0x140A172B0
 const DBCMeta SkillLineRec::s_meta = { "DBFilesClient\\SkillLine.dbc", 7, 28, SkillLineRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: d12a1191 IDENTICAL/NONE
+// PROVEN: d12a1191 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EA20/0x1407D7FF0
 void SkillLineRec::FixupStrings(void* record, const char* strings) {
     SkillLineRec* rec = static_cast<SkillLineRec*>(record);

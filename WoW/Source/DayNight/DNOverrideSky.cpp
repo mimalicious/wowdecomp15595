@@ -5,13 +5,13 @@
 #include "Engine/Source/Model2/M2Scene.h"
 #include "WoW/Source/DayNight/DayNight.h"
 
-// STATIC: 0x00E4325C
+// STATIC: 0x00E4325C/0x140D2BFE8
 CM2Scene* DayNight::DNOverrideSky::s_scene;
 
-// STATIC: 0x00E43260
+// STATIC: 0x00E43260/0x140D2BFF0
 uint32_t DayNight::DNOverrideSky::s_lastTimeMs;
 
-// PROVEN: 54190adf IDENTICAL/NONE
+// PROVEN: 54190adf IDENTICAL/IDENTICAL
 // OFFSET: 0x0064EDB0/0x1402EDDE0
 int32_t DayNight::DNOverrideSky::IsAllLoaded() {
     return this->m_model->IsLoaded() && this->m_model->TexturesAllLoaded();
@@ -50,7 +50,7 @@ void DayNight::SyncSkyAnimWithTime(DNOverrideSky* sky, int32_t minute) {
     sky->m_lastMinute = minute;
 }
 
-// PROVEN: 2e4d28e5 IDENTICAL/NONE
+// PROVEN: 2e4d28e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0064EEC0/0x1402EDF30
 DayNight::DNOverrideSky::DNOverrideSky() {
     this->m_model = NULL;
@@ -59,7 +59,7 @@ DayNight::DNOverrideSky::DNOverrideSky() {
     this->m_flags = 0;
 }
 
-// OFFSET: 0x0064EEF0
+// OFFSET: 0x0064EEF0/0x1402EDF60
 void DayNight::DestroyOverrideSky(const char* name) {
     if (!name || !*name) {
         return;
@@ -78,7 +78,7 @@ void DayNight::DestroyOverrideSky(const char* name) {
     DayNight::g_overrideSky.Delete(sky);
 }
 
-// OFFSET: 0x0064F480
+// OFFSET: 0x0064F480/0x1402EE750
 DayNight::DNOverrideSky* DayNight::GetOverrideSky(uint32_t timeMs, const char* name, uint32_t flags) {
     if (!name || !*name) {
         return NULL;
@@ -102,7 +102,7 @@ DayNight::DNOverrideSky* DayNight::GetOverrideSky(uint32_t timeMs, const char* n
     return sky;
 }
 
-// OFFSET: 0x0064F590
+// OFFSET: 0x0064F590/0x1402EE960
 DayNight::DNOverrideSky* DayNight::SetBlendSky(uint32_t timeMs, uint32_t index, const char* name, uint32_t flags, float weight) {
     if (index > 3) {
         return NULL;

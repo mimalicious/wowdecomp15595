@@ -6,7 +6,7 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDOutput.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDText.h"
 
-// PROVEN: 4a15468b IDENTICAL/NONE
+// PROVEN: 4a15468b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DF00/0x14090B2B0
 DWORD WINAPI CEzLcd::OnSoftButtonCB(int device, DWORD dwButtons, const PVOID pContext) {
     static_cast<CEzLcd*>(pContext)->OnSoftButtons(dwButtons);
@@ -43,6 +43,7 @@ CEzLcd::CEzLcd() {
     }
 }
 
+// PROVEN: bb11dd56 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B3E850/0x14090BF40
 CEzLcd::~CEzLcd() {
     for (uint32_t i = 0; i < this->m_monoPages.Count(); i++) {
@@ -77,7 +78,7 @@ CEzLcd::~CEzLcd() {
     DeleteCriticalSection(&this->m_buttonLock);
 }
 
-// PROVEN: 30b1127a IDENTICAL/NONE
+// PROVEN: 30b1127a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DF20/0x14090B2D0
 void CEzLcd::OnSoftButtons(uint32_t buttons) {
     EnterCriticalSection(&this->m_buttonLock);
@@ -166,7 +167,7 @@ int32_t CEzLcd::Initialize(const char* friendlyName, int32_t lcdType, int32_t is
     return S_OK;
 }
 
-// PROVEN: ef24fb16 IDENTICAL/NONE
+// PROVEN: ef24fb16 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DE60/0x14090B1F0
 void CEzLcd::Update() {
     if (this->m_initialized) {
@@ -180,13 +181,13 @@ void CEzLcd::Update() {
     }
 }
 
-// PROVEN: e5d5bdb4 IDENTICAL/NONE
+// PROVEN: e5d5bdb4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DF90/0x14090B370
 int32_t CEzLcd::IsConnected() {
     return this->m_connection.IsConnected();
 }
 
-// OFFSET: 0x00B3DB80
+// OFFSET: 0x00B3DB80/0x14090ADF0
 int32_t CEzLcd::IsDeviceAvailable(int32_t type) {
     CLCDOutput* output;
 
@@ -205,7 +206,7 @@ int32_t CEzLcd::IsDeviceAvailable(int32_t type) {
     return output->IsOpened();
 }
 
-// OFFSET: 0x00B3DBC0
+// OFFSET: 0x00B3DBC0/0x14090AE30
 void CEzLcd::ModifyDisplay(int32_t display) {
     if (display == 0) {
         this->m_output = this->m_connection.MonoOutput();
@@ -214,7 +215,7 @@ void CEzLcd::ModifyDisplay(int32_t display) {
     }
 }
 
-// PROVEN: 5b8f8e68 IDENTICAL/NONE
+// PROVEN: 5b8f8e68 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DC00/0x14090AE80
 HRESULT CEzLcd::SetText(void* handle, const WCHAR* text) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
@@ -233,7 +234,7 @@ HRESULT CEzLcd::SetText(void* handle, const WCHAR* text) {
     return E_FAIL;
 }
 
-// PROVEN: 909d1803 IDENTICAL/NONE
+// PROVEN: 909d1803 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DC60/0x14090AF00
 HRESULT CEzLcd::SetTextWordWrap(void* handle, bool enable) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
@@ -246,7 +247,7 @@ HRESULT CEzLcd::SetTextWordWrap(void* handle, bool enable) {
     return S_OK;
 }
 
-// PROVEN: 9492012a IDENTICAL/NONE
+// PROVEN: 9492012a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DCA0/0x14090AF60
 HRESULT CEzLcd::SetSize(void* handle, int32_t width, int32_t height) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
@@ -259,7 +260,7 @@ HRESULT CEzLcd::SetSize(void* handle, int32_t width, int32_t height) {
     return S_OK;
 }
 
-// PROVEN: ded0cc63 IDENTICAL/NONE
+// PROVEN: ded0cc63 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DCD0/0x14090AF90
 HRESULT CEzLcd::SetBitmap(void* handle, HBITMAP bitmap) {
     if (!bitmap || !handle) {
@@ -305,7 +306,8 @@ HRESULT CEzLcd::SetAlpha(void* handle, int32_t alpha) {
     return S_OK;
 }
 
-// OFFSET: 0x00B3DD90
+// PROVEN: 7ea113f7 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B3DD90/0x14090B050
 int32_t CEzLcd::ButtonReleased(int32_t button) {
     switch (button) {
         case 0:
@@ -335,7 +337,7 @@ int32_t CEzLcd::ButtonReleased(int32_t button) {
     }
 }
 
-// PROVEN: 94a17579 IDENTICAL/NONE
+// PROVEN: 94a17579 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DEC0/0x14090B260
 void CEzLcd::SetCurrentPage(CEzLcdPage* page) {
     if (this->m_connection.MonoOutput() == this->m_output) {
@@ -345,7 +347,7 @@ void CEzLcd::SetCurrentPage(CEzLcdPage* page) {
     }
 }
 
-// PROVEN: 564474ed IDENTICAL/NONE
+// PROVEN: 564474ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3DF50/0x14090B320
 void CEzLcd::ShowSubscreen(int32_t subscreen) {
     CEzLcdPage* page;
@@ -494,7 +496,7 @@ CLCDBitmap* CEzLcd::AddBitmap(int32_t width, int32_t height, int32_t bitmapWidth
     return this->m_currentColorPage->AddBitmap(width, height, bitmapWidth, bitmapHeight);
 }
 
-// PROVEN: 5ce0fb91 IDENTICAL/NONE
+// PROVEN: 5ce0fb91 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3E520/0x14090BB10
 CEzLcdPage* CEzLcd::GetGlobalPage() {
     if (this->m_output == this->m_connection.MonoOutput()) {

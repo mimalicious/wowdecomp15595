@@ -28,20 +28,20 @@
 // STATIC: 0x00D39228
 const char* g_scriptEvents[NUM_SCRIPT_EVENTS];
 
-// STATIC: 0x00D39F38
+// STATIC: 0x00D39F38/0x140BF5204
 static TSGrowableArray<UniqueSignal> s_uniqueSignals;
 
 static char s_nameWithRealm[305];
 
 static char s_tokenBuffers[8][32];
 
-// STATIC: 0x00C99BD8
+// STATIC: 0x00C99BD8/0x140B32240
 static char* s_tokenIDs[8] = { s_tokenBuffers[0], s_tokenBuffers[1], s_tokenBuffers[2], s_tokenBuffers[3], s_tokenBuffers[4], s_tokenBuffers[5], s_tokenBuffers[6], s_tokenBuffers[7] };
 
-// STATIC: 0x00D3A0D4
+// STATIC: 0x00D3A0D4/0x140BF53B8
 static char s_auraToken[32];
 
-// STATIC: 0x00D3A0B4
+// STATIC: 0x00D3A0B4/0x140BF5398
 static char s_tokenFromGUID[32];
 
 // OFFSET: 0x0044C420/0x140059B00
@@ -199,6 +199,7 @@ bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTar
     return true;
 }
 
+// PROVEN: 2c048cc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00450AA0/0x14005EEC0
 WOWGUID Script_GetGUIDFromName(const char* name) {
     WOWGUID guid = WOWGUID::Make(0);
@@ -206,6 +207,7 @@ WOWGUID Script_GetGUIDFromName(const char* name) {
     return guid;
 }
 
+// PROVEN: 261a64b9 DIFFERENT/IDENTICAL
 // OFFSET: 0x00450AD0/0x14005EEF0
 CGUnit_C* Script_GetUnitFromName(const char* token) {
     WOWGUID guid;
@@ -232,7 +234,7 @@ void Script_SendUniqueSignal(const WOWGUID& guid, int32_t signal) {
     entry->m_signal = signal;
 }
 
-// OFFSET: 0x004596F0
+// OFFSET: 0x004596F0/0x1400696E0
 void Script_SendUniqueSignalToAllUnits(int32_t signal) {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -320,14 +322,14 @@ void Script_SendUniqueSignalToAllUnits(int32_t signal) {
     }
 }
 
-// PROVEN: 0db9253a IDENTICAL/NONE
+// PROVEN: 0db9253a IDENTICAL/DIFFERENT
 // OFFSET: 0x0045AB10/0x14006B2D0
 void Script_SendUniqueSignal(int32_t signal) {
     WOWGUID guid = WOWGUID();
     Script_SendUniqueSignal(guid, signal);
 }
 
-// PROVEN: def28bb6 IDENTICAL/NONE
+// PROVEN: def28bb6 IDENTICAL/DIFFERENT
 // OFFSET: 0x004598F0/0x1400698E0
 void Script_SendUniqueSignals() {
     uint32_t count = s_uniqueSignals.Count();
@@ -345,20 +347,22 @@ void Script_SendUniqueSignals() {
     s_uniqueSignals.m_count = 0;
 }
 
-// PROVEN: 9dc2d163 IDENTICAL/NONE
-// OFFSET: 0x00450B20
+// PROVEN: 9dc2d163 IDENTICAL/DIFFERENT
+// OFFSET: 0x00450B20/0x14005EF30
 static int32_t UnitFieldChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     Script_SendUnitSignal(guid, fieldOffset >> 2);
     return 1;
 }
 
-// OFFSET: 0x00450B40
+// PROVEN: f815b534 IDENTICAL/IDENTICAL
+// OFFSET: 0x00450B40/0x14005EFA0
 static int32_t PlayerInventoryChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_INVENTORY_CHANGED);
     return 1;
 }
 
-// OFFSET: 0x00450B60
+// PROVEN: 71edcae6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00450B60/0x14005F000
 static int32_t PlayerQuestLogChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_QUEST_LOG_CHANGED);
     return 1;
@@ -414,7 +418,7 @@ void ScriptEventsUnregisterUnit(CGUnit_C* unit) {
     }
 }
 
-// PROVEN: 64f52559 IDENTICAL/NONE
+// PROVEN: 64f52559 IDENTICAL/IDENTICAL
 // OFFSET: 0x0044BE10/0x140059410
 void UnitNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -429,6 +433,7 @@ WOWGUID GetGuidByKeyword(const char* token) {
     return guid;
 }
 
+// PROVEN: 00322b33 IDENTICAL/NONE
 // OFFSET: 0x0044F8B0
 bool GetUnitByKeyword(const char* token, CGUnit_C** unit, bool defaultToTarget) {
     WOWGUID guid;
@@ -877,7 +882,7 @@ const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
     return NULL;
 }
 
-// OFFSET: 0x0045A130
+// OFFSET: 0x0045A130/0x14006A3B0
 int32_t PushUnitAura(lua_State* L, ScriptAuraInfo* info) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -1172,7 +1177,7 @@ char** Script_GetTokenIDsFromGUID(const WOWGUID& guid, int32_t* count) {
     return s_tokenIDs;
 }
 
-// PROVEN: 3e530f3f IDENTICAL/NONE
+// PROVEN: 3e530f3f IDENTICAL/IDENTICAL
 // OFFSET: 0x00450760/0x14005EA40
 void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal) {
     int32_t count;
@@ -1183,6 +1188,7 @@ void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal) {
     }
 }
 
+// PROVEN: 59a7be26 IDENTICAL/DIFFERENT
 // OFFSET: 0x004507B0/0x14005EAA0
 void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal, const char* format, ...) {
     va_list args;
@@ -1224,7 +1230,8 @@ void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal, const char* form
     }
 }
 
-// OFFSET: 0x004508B0
+// PROVEN: ab0095c3 IDENTICAL/DIFFERENT
+// OFFSET: 0x004508B0/0x14005EBF0
 void Script_SendUnitSpellSignal(const WOWGUID& guid, uint8_t castCount, const SpellRec* spell, int32_t signal) {
     if (!spell) {
         Script_SendUnitSignal(guid, signal);
@@ -1303,6 +1310,7 @@ int32_t Script_GetUnitAuraInfo(lua_State* L, int32_t index, ScriptAuraInfo* info
     return Script_GetAuraInfo(L, index + 1, info);
 }
 
+// PROVEN: 919875e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00459940/0x1400699C0
 void ClearUniqueSignals() {
     s_uniqueSignals.m_count = 0;

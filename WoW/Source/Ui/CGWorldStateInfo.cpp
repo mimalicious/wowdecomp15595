@@ -14,30 +14,31 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Ui/QuestTextParser.h"
 
-// STATIC: 0x00F61038
+// STATIC: 0x00F61038/0x140E56140
 uint32_t CGWorldStateInfo::m_nextUITimeUpdate;
 
-// STATIC: 0x00F6103C
+// STATIC: 0x00F6103C/0x140E56148
 uint32_t CGWorldStateInfo::m_UITimeOffset;
 
-// STATIC: 0x00F61040
+// STATIC: 0x00F61040/0x140E56144
 uint32_t CGWorldStateInfo::m_nextUpdateTime;
 
-// STATIC: 0x00F61044
+// STATIC: 0x00F61044/0x140E56150
 int32_t CGWorldStateInfo::m_subAreaID;
 
-// STATIC: 0x00F61048
+// STATIC: 0x00F61048/0x140E56154
 int32_t CGWorldStateInfo::m_areaID;
 
-// STATIC: 0x00F6104C
+// STATIC: 0x00F6104C/0x140E56158
 int32_t CGWorldStateInfo::m_mapID;
 
-// STATIC: 0x00F61050
+// STATIC: 0x00F61050/0x140BD0260
 TSHashTable<WORLDSTATE, HASHKEY_NONE> CGWorldStateInfo::m_worldStates;
 
-// STATIC: 0x00F6107C
+// STATIC: 0x00F6107C/0x140E56164
 TSGrowableArray<CGWorldStateInfo::WorldStateUIData> CGWorldStateInfo::m_worldStateUI;
 
+// PROVEN: bf14cfc0 IDENTICAL/DIFFERENT
 // OFFSET: 0x009CD470/0x14075DB50
 void CGWorldStateInfo::InitializeGame() {
     CGWorldStateInfo::m_mapID = -1;
@@ -47,7 +48,7 @@ void CGWorldStateInfo::InitializeGame() {
     CGWorldStateInfo::m_nextUITimeUpdate = 0;
 }
 
-// PROVEN: cab1ad26 IDENTICAL/NONE
+// PROVEN: cab1ad26 IDENTICAL/DIFFERENT
 // OFFSET: 0x009CD5D0/0x14075DD30
 int32_t CGWorldStateInfo::GetUITime() {
     return CGWorldStateInfo::m_UITimeOffset + static_cast<int32_t>(time(NULL));
@@ -64,7 +65,7 @@ int32_t GetWorldState(int32_t id) {
     return 0;
 }
 
-// OFFSET: 0x009CD630
+// OFFSET: 0x009CD630/0x14075DD80
 void CGWorldStateInfo::RequestUITime() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_UI_TIME_REQUEST));
@@ -72,7 +73,7 @@ void CGWorldStateInfo::RequestUITime() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x009CD7B0
+// OFFSET: 0x009CD7B0/0x14075DF60
 void CGWorldStateInfo::TimerUpdate() {
     uint32_t now = FrameTime::GetCurTimeMs();
 
@@ -95,7 +96,8 @@ void CGWorldStateInfo::TimerUpdate() {
     }
 }
 
-// OFFSET: 0x009CD820
+// PROVEN: 45783951 IDENTICAL/IDENTICAL
+// OFFSET: 0x009CD820/0x14075DFE0
 bool CGWorldStateInfo::InitWorldStates(uint32_t mapId, uint32_t zoneId, uint32_t areaId) {
     CGWorldStateInfo::m_mapID = mapId;
     CGWorldStateInfo::m_areaID = zoneId;
@@ -109,7 +111,7 @@ bool CGWorldStateInfo::GetWorldStateKnown(int32_t id) {
     return CGWorldStateInfo::m_worldStates.Ptr(id, HASHKEY_NONE()) != NULL;
 }
 
-// OFFSET: 0x009CE3B0
+// OFFSET: 0x009CE3B0/0x14075F030
 bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value, bool hidden) {
     WORLDSTATE* worldState = CGWorldStateInfo::m_worldStates.Ptr(state, HASHKEY_NONE());
 
@@ -133,13 +135,13 @@ bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value, bool hidden
     return true;
 }
 
-// PROVEN: d4dff9de IDENTICAL/NONE
+// PROVEN: d4dff9de IDENTICAL/DIFFERENT
 // OFFSET: 0x009CD5B0/0x14075DD10
 void CGWorldStateInfo::OnUITime(uint32_t time) {
     CGWorldStateInfo::m_UITimeOffset = time - static_cast<uint32_t>(::time(NULL));
 }
 
-// OFFSET: 0x009CD6A0
+// OFFSET: 0x009CD6A0/0x14075DE00
 void CGWorldStateInfo::ResetWorldStateUI() {
     CGWorldStateInfo::m_worldStateUI.m_count = 0;
 
@@ -168,12 +170,14 @@ void CGWorldStateInfo::ResetWorldStateUI() {
     }
 }
 
+// PROVEN: 9bb6698c IDENTICAL/NONE
 // OFFSET: 0x009CDC70
 void CGWorldStateInfo::ShutdownGame() {
     CGWorldStateInfo::m_worldStates.InternalClear(0);
     CGWorldStateInfo::m_worldStateUI.Clear();
 }
 
+// PROVEN: ff93c3fb IDENTICAL/DIFFERENT
 // OFFSET: 0x009CDCC0/0x14075E620
 void CGWorldStateInfo::LeaveWorld(bool reload) {
     if (!reload) {

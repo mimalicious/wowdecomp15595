@@ -27,16 +27,16 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// STATIC: 0x00D16E24
+// STATIC: 0x00D16E24/0x140BD16B8
 static TSList<CGChatBubbleFrame> s_freeChatBubbles;
 
-// STATIC: 0x00D16E30
+// STATIC: 0x00D16E30/0x140BD16D0
 static TSList<CGChatBubbleFrame> s_chatBubbles;
 
-// STATIC: 0x00F76898
+// STATIC: 0x00F76898/0x140E6C930
 static uint8_t s_cameraPositionValid;
 
-// STATIC: 0x00F7689C
+// STATIC: 0x00F7689C/0x140E6C938
 static C3Vector s_cameraPosition;
 
 CDataAllocator CGChatBubbleFrame::s_chatBubbleHeap(sizeof(CGChatBubbleFrame), 10);
@@ -46,7 +46,7 @@ struct RaidIconTag {
     const char* m_icon;
 };
 
-// STATIC: 0x00C0B670
+// STATIC: 0x00C0B670/0x140A04A40
 static const RaidIconTag s_raidIconTags[24] = {
     { "RAID_TARGET_1", "1" },
     { "RAID_TARGET_2", "2" },
@@ -84,7 +84,7 @@ void CGChatBubbleFrame::operator delete(void* ptr) {
 void CGChatBubbleFrame::InitializeGame() {
 }
 
-// OFFSET: 0x009F0CE0
+// OFFSET: 0x009F0CE0/0x14078ABB0
 void CGChatBubbleFrame::FadeIn() {
     if (this->m_bubbleFlags & 0x5) {
         return;
@@ -95,7 +95,7 @@ void CGChatBubbleFrame::FadeIn() {
     this->m_fadeStart = FrameTime::GetCurTimeMs() - static_cast<int32_t>(alpha * (1.0f / 255.0f) * 250.0f);
 }
 
-// OFFSET: 0x009F0D50
+// OFFSET: 0x009F0D50/0x14078AC20
 void CGChatBubbleFrame::FadeOut(bool remove) {
     if (this->m_bubbleFlags & 0x4) {
         return;
@@ -139,7 +139,7 @@ static int32_t ComputeDuration(const char* text, bool self) {
     return duration;
 }
 
-// OFFSET: 0x009F0FB0
+// OFFSET: 0x009F0FB0/0x14078AEE0
 C3Vector CGChatBubbleFrame::GetUnitPosition() {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_unit, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -228,7 +228,7 @@ void CGChatBubbleFrame::Render(CGWorldFrame* worldFrame) {
     }
 }
 
-// OFFSET: 0x009F1050
+// OFFSET: 0x009F1050/0x14078AF80
 bool CGChatBubbleFrame::Update(CGUnit_C* player, CGUnit_C* unit) {
     if (!player) {
         return false;
@@ -465,6 +465,7 @@ CGChatBubbleFrame::CGChatBubbleFrame(CSimpleFrame* parent) : CSimpleFrame(parent
     this->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this->m_fontString, FRAMEPOINT_BOTTOMRIGHT, 0.01f, -0.01f, 1);
 }
 
+// PROVEN: f64828f5 IDENTICAL/NONE
 // OFFSET: 0x009F1B60
 void CGChatBubbleFrame::ShutdownGame() {
     s_freeChatBubbles.Clear();
@@ -496,13 +497,14 @@ CGChatBubbleFrame* CGChatBubbleFrame::GetNewChatBubble(CSimpleFrame* parent) {
     return bubble;
 }
 
+// PROVEN: f8b40180 IDENTICAL/DIFFERENT
 // OFFSET: 0x009F1C70/0x14078BF80
 void CGChatBubbleFrame::Remove(CGChatBubbleFrame* bubble) {
     bubble->Hide();
     s_freeChatBubbles.LinkToTail(bubble);
 }
 
-// OFFSET: 0x009F1DB0
+// OFFSET: 0x009F1DB0/0x14078C140
 void CGChatBubbleFrame::ClearAll() {
     CGChatBubbleFrame* next;
 

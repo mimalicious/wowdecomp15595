@@ -37,80 +37,82 @@
 #include "WoW/Source/WowServices/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00D07A98
+// STATIC: 0x00D07A98/0x140BB8B80
 int32_t CCharacterCreation::m_selectedClassID = 1;
 
-// STATIC: 0x00D07A9C
+// STATIC: 0x00D07A9C/0x140BB8B84
 int32_t CCharacterCreation::m_existingCharacterIndex = -1;
 
-// STATIC: 0x00D07C04
+// STATIC: 0x00D07C04/0x140BB8E30
 static int32_t s_standAnimKitID = 541;
 
-// STATIC: 0x00EBC0D8
+// STATIC: 0x00EBC0D8/0x140DACF70
 CharacterPreferences* CCharacterCreation::m_charPreferences[24][2];
 
-// STATIC: 0x00EBC198
+// STATIC: 0x00EBC198/0x140DAD0F0
 uint32_t CCharacterCreation::m_raceIndex;
 
-// STATIC: 0x00EBC19C
+// STATIC: 0x00EBC19C/0x140DAD0F8
 CSimpleModelFFX* CCharacterCreation::m_charCustomizeFrame;
 
-// STATIC: 0x00EBC1A0
+// STATIC: 0x00EBC1A0/0x140DAD0F4
 float CCharacterCreation::m_charFacing;
 
-// STATIC: 0x00EBC1A4
+// STATIC: 0x00EBC1A4/0x140DAD100
 int32_t CCharacterCreation::m_alteredFormAtFront;
 
-// STATIC: 0x00EBC1A8
+// STATIC: 0x00EBC1A8/0x140DAD104
 uint32_t CCharacterCreation::m_prevSkinIndex;
 
-// STATIC: 0x00EBC1AC
+// STATIC: 0x00EBC1AC/0x140DAD108
 uint32_t CCharacterCreation::m_prevFaceIndex;
 
-// STATIC: 0x00EBC1B0
+// STATIC: 0x00EBC1B0/0x140DAD10C
 uint32_t CCharacterCreation::m_prevHairColorIndex;
 
-// STATIC: 0x00EBC1B4
+// STATIC: 0x00EBC1B4/0x140DAD110
 uint32_t CCharacterCreation::m_prevHairStyleIndex;
 
-// STATIC: 0x00EBC1B8
+// STATIC: 0x00EBC1B8/0x140DAD114
 uint32_t CCharacterCreation::m_prevFacialFeatureIndex;
 
-// STATIC: 0x00EBC1BC
+// STATIC: 0x00EBC1BC/0x140DAD120
 CCharacterComponent* CCharacterCreation::m_character;
 
-// STATIC: 0x00EBC1C0
+// STATIC: 0x00EBC1C0/0x140DAD128
 CCharacterComponent* CCharacterCreation::m_alteredCharacter;
 
-// STATIC: 0x00EBC1C4
+// STATIC: 0x00EBC1C4/0x140DAD130
 CAnimKitManager* CCharacterCreation::m_animKitManager;
 
-// STATIC: 0x00EBC1C8
+// STATIC: 0x00EBC1C8/0x140DAD138
 CAnimKitInst* CCharacterCreation::m_standAnimKit;
 
-// STATIC: 0x00EBC1CC
+// STATIC: 0x00EBC1CC/0x140DAD140
 TSFixedArray<const ChrClassesRec*> CCharacterCreation::m_classes;
 
-// STATIC: 0x00EBC1F4
+// STATIC: 0x00EBC1F4/0x140DAD170
 CM2Model* CCharacterCreation::m_petModel;
 
-// STATIC: 0x00EBC1F8
+// STATIC: 0x00EBC1F8/0x140DAD178
 TSGrowableArray<int32_t> CCharacterCreation::m_races;
 
-// STATIC: 0x00EBC208
+// STATIC: 0x00EBC208/0x140DAD190
 CNameGen CCharacterCreation::m_nameGen(g_rndSeed);
 
-// STATIC: 0x00EBC22C
+// STATIC: 0x00EBC22C/0x140DAD1C8
 TSGrowableArray<CAsyncObject*> CCharacterCreation::m_racialTexturesLoading;
 
-// STATIC: 0x00EBC23C
+// STATIC: 0x00EBC23C/0x140DAD1E0
 CGlueMgr::WeaponLoadOut CCharacterCreation::m_weaponLoadOut;
 
+// PROVEN: 9650f25b IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C050/0x140522680
 void CCharacterCreation::SetCharCustomizeFrame(CSimpleModelFFX* modelFrame) {
     CCharacterCreation::m_charCustomizeFrame = modelFrame;
 }
 
+// PROVEN: 8764a68e IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C060/0x140522690
 void CCharacterCreation::UndressComponent(CCharacterComponent* component) {
     if (!component) {
@@ -127,7 +129,7 @@ void CCharacterCreation::UndressComponent(CCharacterComponent* component) {
     component->RemoveHandItem(INVSLOT_RANGED, SHEATHE_NONE, false);
 }
 
-// OFFSET: 0x0080C0C0
+// OFFSET: 0x0080C0C0/0x140522710
 int32_t CCharacterCreation::GetDefaultSlotByType(int32_t inventoryType) {
     switch (inventoryType) {
         case 1:
@@ -184,6 +186,7 @@ int32_t CCharacterCreation::GetDefaultSlotByType(int32_t inventoryType) {
     }
 }
 
+// PROVEN: ab07c054 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C3F0/0x140522AB0
 int32_t CCharacterCreation::GetSelectedSex() {
     if (CCharacterCreation::m_character) {
@@ -193,6 +196,7 @@ int32_t CCharacterCreation::GetSelectedSex() {
     return 0;
 }
 
+// PROVEN: ee35f403 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080C400/0x140522AD0
 void CCharacterCreation::GetRandomRaceAndSex(ComponentData* data) {
     int32_t races[24];
@@ -212,6 +216,7 @@ void CCharacterCreation::GetRandomRaceAndSex(ComponentData* data) {
     data->m_preferences.m_raceID = races[index];
 }
 
+// PROVEN: 0cd8e5e8 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080C4D0/0x140522BD0
 bool IsRaceClassValid(int32_t raceID, int32_t classID) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(g_charBaseInfoDB.m_numRecords); i++) {
@@ -369,6 +374,7 @@ CGlueMgr::WeaponLoadOut CCharacterCreation::Dress() {
     return CGlueMgr::AddItemsFromCharInfo(&info, CCharacterCreation::m_character, NULL, CCharacterCreation::BowModelLoadedCallback);
 }
 
+// PROVEN: 1d2ceba4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080C8E0/0x1405230B0
 void CCharacterCreation::SetCharacterFacing(float facing) {
     CCharacterComponent* component = CCharacterCreation::m_alteredCharacter && CCharacterCreation::m_alteredFormAtFront ? CCharacterCreation::m_alteredCharacter : CCharacterCreation::m_character;
@@ -480,6 +486,7 @@ void CCharacterCreation::SetPet() {
     }
 }
 
+// PROVEN: 27e7b8d9 IDENTICAL/NONE
 // OFFSET: 0x0080CCC0
 void CCharacterCreation::UninitCharacterComponent(CCharacterComponent*& component) {
     if (!component) {
@@ -539,6 +546,7 @@ bool CCharacterCreation::IsClassAvailable(int32_t classID) {
     return false;
 }
 
+// PROVEN: eb061414 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080CE10/0x140523630
 void CCharacterCreation::RandomizeCharFeatures() {
     COMPONENT_CONTEXT context = static_cast<COMPONENT_CONTEXT>(0);
@@ -613,6 +621,7 @@ validated:
     }
 }
 
+// PROVEN: c8bc2a4d IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D020/0x1405238A0
 void CCharacterCreation::StartAnimation(uint64_t param) {
     if (g_useAnimKitsOnGlueScreen) {
@@ -632,6 +641,7 @@ void CCharacterCreation::StartAnimation(uint64_t param) {
     }
 }
 
+// PROVEN: 8b7bdb8a IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D0E0/0x14051E1E0
 int32_t CCharacterCreation::GetExistingRaceIndex() {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex);
@@ -647,6 +657,7 @@ int32_t CCharacterCreation::GetExistingRaceIndex() {
     return -1;
 }
 
+// PROVEN: c44721f4 IDENTICAL/NONE
 // OFFSET: 0x0080D120
 int32_t CCharacterCreation::GetExistingClassIndex() {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(CCharacterCreation::m_existingCharacterIndex);
@@ -699,6 +710,7 @@ void CCharacterCreation::TextureMakeLocalFinishedCallback(CAsyncObject* object) 
     AsyncFileReadDestroyObject(object);
 }
 
+// PROVEN: 879e6824 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080D230/0x140523A90
 int32_t CCharacterCreation::Idle(const void* data, void* param) {
     if (CCharacterCreation::m_charCustomizeFrame) {
@@ -765,13 +777,14 @@ int32_t CCharacterCreation::GetRandomClassID() {
     return classes[index];
 }
 
-// PROVEN: f00c8714 IDENTICAL/NONE
-// OFFSET: 0x0080DF10
+// PROVEN: f00c8714 IDENTICAL/UNPROVEN
+// OFFSET: 0x0080DF10/0x140524B30
 void CCharacterCreation::OnShow() {
     EventRegisterEx(EVENT_ID_IDLE, CCharacterCreation::Idle, NULL, 0.0f);
 }
 
-// OFFSET: 0x0080DF30
+// PROVEN: 228c4119 IDENTICAL/UNPROVEN
+// OFFSET: 0x0080DF30/0x140524B50
 void CCharacterCreation::UninitCharacterComponents() {
     if (CCharacterCreation::m_standAnimKit) {
         CGlueMgr::StopCharacterEmoteKits(*CCharacterCreation::m_animKitManager);
@@ -941,6 +954,7 @@ bool CCharacterCreation::SetSelectedClass(int32_t classID) {
     return true;
 }
 
+// PROVEN: cb412a64 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080E750/0x140525580
 void CCharacterCreation::CycleCharCustomization(CHAR_CUSTOMIZATION_TYPE type, int32_t delta) {
     if (!delta) {
@@ -1111,6 +1125,7 @@ void CCharacterCreation::Initialize() {
     }
 }
 
+// PROVEN: 0c014c6b IDENTICAL/NONE
 // OFFSET: 0x0080ED80
 void CCharacterCreation::Shutdown() {
     CCharacterCreation::UninitCharacterComponents();
@@ -1129,7 +1144,7 @@ void CCharacterCreation::Shutdown() {
     CCharacterCreation::CancelRaceSexComponentTexturesPreload();
 }
 
-// PROVEN: 7cf42d01 IDENTICAL/NONE
+// PROVEN: 7cf42d01 IDENTICAL/DIFFERENT
 // OFFSET: 0x0080EDE0/0x140525F10
 void CCharacterCreation::OnHide() {
     CCharacterCreation::CancelRaceSexComponentTexturesPreload();
@@ -1238,6 +1253,7 @@ void CCharacterCreation::CalcClasses(int32_t raceID) {
     }
 }
 
+// PROVEN: 86d7c98c IDENTICAL/UNPROVEN
 // OFFSET: 0x0080F1D0/0x140526400
 void CCharacterCreation::ResetCharCustomizeInfo() {
     if (!CCharacterCreation::m_charCustomizeFrame) {
@@ -1354,6 +1370,7 @@ void CCharacterCreation::SetSelectedRace(uint32_t raceIndex) {
     CCharacterCreation::PreloadRaceSexComponentTextures();
 }
 
+// PROVEN: 92ae1953 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080F5B0/0x140526870
 void CCharacterCreation::SetToExistingCharacter(uint32_t index) {
     CharacterSelectionDisplay* display = CCharacterSelection::GetCharacterDisplay(index);

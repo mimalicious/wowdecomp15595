@@ -58,15 +58,12 @@ class FriendList {
 
     /* 0000 */ FriendInfo m_friends[100];
     /* D480 */ uint32_t m_pendingFriendNames;
-    /* D484 */ uint32_t unk_D484;
     /* D488 */ WOWGUID m_selectedFriend;
     /* D490 */ IgnoreInfo m_ignores[50];
     /* D7B0 */ uint32_t m_pendingIgnoreNames;
-    /* D7B4 */ uint32_t unk_D7B4;
     /* D7B8 */ WOWGUID m_selectedIgnore;
     /* D7C0 */ IgnoreInfo m_mutes[50];
     /* DAE0 */ uint32_t m_pendingMuteNames;
-    /* DAE4 */ uint32_t unk_DAE4;
     /* DAE8 */ WOWGUID m_selectedMute;
     /* DAF0 */ uint64_t m_complained[32];
     /* DBF0 */ int32_t m_whoMinLevel;
@@ -77,7 +74,6 @@ class FriendList {
     /* DC8C */ int32_t m_whoClassMask;
     /* DC90 */ int32_t m_whoStringCount;
     /* DC94 */ char m_whoStrings[10][128];
-    /* E194 */ uint8_t unk_E194[4];
 
     FriendList();
     ~FriendList();

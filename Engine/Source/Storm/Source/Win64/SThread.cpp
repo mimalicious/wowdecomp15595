@@ -105,6 +105,7 @@ void CInitCritSect::Leave() {
     this->m_critsect->Leave();
 }
 
+// PROVEN: dab0089d IDENTICAL/IDENTICAL
 // OFFSET: 0x004B7740/0x1400EF750
 static uint32_t STORMAPI ProcessCompletionCallbackThread(void* vdata) {
     PROCESSCOMPLETION* completion = static_cast<PROCESSCOMPLETION*>(vdata);

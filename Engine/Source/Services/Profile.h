@@ -47,4 +47,6 @@ int32_t ProfileGetValue(void* profile, const char* section, const char* key, int
 int32_t ProfileGetValue(void* profile, const char* section, const char* key, char* buffer, uint32_t bufferSize, uint32_t index);
 int32_t ProfileReadFile(void* profile, const char* path);
 
+#include "Engine/Source/Services/Profile.inl"
+
 #endif

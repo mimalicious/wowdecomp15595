@@ -12,7 +12,7 @@
 
 static uint16_t s_quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 
-// OFFSET: 0x004F8620
+// OFFSET: 0x004F8620/0x14013BF50
 static int32_t SortByTexture(const void* elem1, const void* elem2) {
     const CSimpleBatchedMesh* mesh1 = static_cast<const CSimpleBatchedMesh*>(elem1);
     const CSimpleBatchedMesh* mesh2 = static_cast<const CSimpleBatchedMesh*>(elem2);
@@ -35,8 +35,8 @@ static int32_t SortByTexture(const void* elem1, const void* elem2) {
     return static_cast<int32_t>(reinterpret_cast<uintptr_t>(mesh1->m_shader) - reinterpret_cast<uintptr_t>(mesh2->m_shader));
 }
 
-// PROVEN: ceaa3c78 IDENTICAL/NONE
-// OFFSET: 0x004FA6E0
+// PROVEN: ceaa3c78 IDENTICAL/UNPROVEN
+// OFFSET: 0x004FA6E0/0x14013E480
 void CRenderBatch::Finish() {
     if (this->m_texturelist.Count() > 1) {
         qsort(this->m_texturelist.Ptr(), this->m_texturelist.Count(), sizeof(CSimpleBatchedMesh), &SortByTexture);
@@ -76,13 +76,15 @@ void CRenderBatch::Queue(CTexture* texture, EGxBlend alphaMode, int32_t posCount
     this->m_count++;
 }
 
+// PROVEN: 95026a39 UNPROVEN/IDENTICAL
 // OFFSET: 0x004FC020/0x140140200
 CRenderBatch::CRenderBatch() {
     this->m_count = 0;
     this->m_stringbatch = NULL;
 }
 
-// OFFSET: 0x004FC580
+// PROVEN: 0d62026b IDENTICAL/DIFFERENT
+// OFFSET: 0x004FC580/0x1401408D0
 void CRenderBatch::QueueCallback(void (*callback)(void*), void* param) {
     RENDERCALLBACKNODE* node = this->m_callbacks.NewNode(2, 0, 0);
     node->m_callback = callback;
@@ -90,6 +92,7 @@ void CRenderBatch::QueueCallback(void (*callback)(void*), void* param) {
     this->m_count++;
 }
 
+// PROVEN: 087957c0 DIFFERENT/IDENTICAL
 // OFFSET: 0x004FC730/0x140140B10
 void CRenderBatch::Clear() {
     this->m_texturelist.SetCount(0);

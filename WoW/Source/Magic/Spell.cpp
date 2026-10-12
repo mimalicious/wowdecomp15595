@@ -2,7 +2,7 @@
 #include <cmath>
 #include "Engine/Source/Tempest/C3Vector.h"
 
-// OFFSET: 0x00663530
+// OFFSET: 0x00663530/0x140309680
 float SpellUtils_ComputeMissileTrajectoryTravelTime(float pitch, float speed, const C3Vector& delta, float gravity) {
     bool hasGravity = fabs(gravity) > 0.000099999997f;
     float horizontal = cos(pitch) * speed;
@@ -44,7 +44,7 @@ float SpellUtils_ComputeMissileTrajectoryTravelTime(float pitch, float speed, co
     return first;
 }
 
-// OFFSET: 0x00663660
+// OFFSET: 0x00663660/0x1403097C0
 int32_t SpellUtils_ComputeMissileTrajectory(float pitch, const C3Vector& delta, float gravity, float& speed, float& time, C3Vector* velocity) {
     float c = cos(pitch);
     float s = sin(pitch);
@@ -99,6 +99,7 @@ int32_t GetSkinningDifficulty(int32_t level) {
     return 5 * level + 35;
 }
 
+// PROVEN: 2e9a209c IDENTICAL/NONE
 // OFFSET: 0x00663800
 bool SpellIsAuraEffect(int32_t effect) {
     switch (effect) {
@@ -118,6 +119,7 @@ bool SpellIsAuraEffect(int32_t effect) {
     }
 }
 
+// PROVEN: 9ab9db94 IDENTICAL/DIFFERENT
 // OFFSET: 0x006638E0/0x140309A50
 bool SpellIsApplyAuraEffect(int32_t effect) {
     switch (effect) {
@@ -136,6 +138,7 @@ bool SpellIsApplyAuraEffect(int32_t effect) {
     }
 }
 
+// PROVEN: a255de8c IDENTICAL/DIFFERENT
 // OFFSET: 0x006639C0/0x140309B40
 bool SpellIsAreaAuraEffect(int32_t effect) {
     switch (effect) {
@@ -154,6 +157,7 @@ bool SpellIsAreaAuraEffect(int32_t effect) {
     }
 }
 
+// PROVEN: fce50cac IDENTICAL/NONE
 // OFFSET: 0x00663A90
 bool SpellIsDamageEffect(int32_t effect, int32_t aura) {
     switch (effect) {

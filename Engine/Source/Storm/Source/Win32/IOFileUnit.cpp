@@ -297,6 +297,7 @@ bool IOUnbufferedFileUnit::GetFileSize(int64_t* size) {
 IOUnit::~IOUnit() {
 }
 
+// PROVEN: e3aecbff DIFFERENT/IDENTICAL
 // OFFSET: 0x00B67D10/0x140931F90
 IOWin32FileUnit::~IOWin32FileUnit() {
     CloseHandle(this->m_handle);

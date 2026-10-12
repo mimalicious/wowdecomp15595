@@ -39,6 +39,7 @@ int32_t Script_SetZoom(lua_State* L);
 int32_t Script_PingLocation(lua_State* L);
 int32_t Script_GetPingPosition(lua_State* L);
 
+// PROVEN: 3f2537a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CEE90/0x14075F9B0
 void CGMinimapFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -46,6 +47,7 @@ void CGMinimapFrame::DestroyScriptMetaTable() {
     CGMinimapFrame::s_metatable = LUA_NOREF;
 }
 
+// PROVEN: 5d1afd81 IDENTICAL/IDENTICAL
 // OFFSET: 0x009D19E0/0x140762E20
 void CGMinimapFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -118,6 +120,7 @@ static int32_t Script_SetQuestBlobRingAlpha(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e82b8469 DIFFERENT/IDENTICAL
 // OFFSET: 0x009D1630/0x140762A60
 static int32_t Script_SetQuestBlobRingScalar(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -198,6 +201,7 @@ static int32_t Script_SetArchBlobRingAlpha(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 46758bed DIFFERENT/IDENTICAL
 // OFFSET: 0x009D1920/0x140762D40
 static int32_t Script_SetArchBlobRingScalar(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -212,6 +216,7 @@ static int32_t Script_SetArchBlobRingScalar(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 4cbbfe52 DIFFERENT/IDENTICAL
 // OFFSET: 0x009D19A0/0x140762DE0
 static int32_t Script_UpdateBlips(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -219,6 +224,7 @@ static int32_t Script_UpdateBlips(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 538656e4 IDENTICAL/UNPROVEN
 // OFFSET: 0x009D2940/0x140763FD0
 static int32_t Script_GetNumTrackingTypes(lua_State* L) {
     uint32_t spells = s_trackingSpells.Count();
@@ -226,6 +232,7 @@ static int32_t Script_GetNumTrackingTypes(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3ed50d58 DIFFERENT/IDENTICAL
 // OFFSET: 0x009D1240/0x140762660
 static int32_t Script_SetPlayerTextureHeight(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -246,6 +253,7 @@ static int32_t Script_SetPlayerTextureHeight(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9c805079 DIFFERENT/IDENTICAL
 // OFFSET: 0x009D1300/0x140762740
 static int32_t Script_SetPlayerTextureWidth(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -327,12 +335,14 @@ static int32_t Script_GetTrackingInfo(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 0ab7fe73 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CED80/0x14075F8D0
 static int32_t Script_GetZoomLevels(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(MinimapGetZoomLevels()));
     return 1;
 }
 
+// PROVEN: ea1be6c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CEDC0/0x14075F900
 static int32_t Script_GetZoom(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(MinimapGetZoom()));
@@ -695,6 +705,7 @@ static int32_t Script_ClearAllTracking(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 782497ca DIFFERENT/IDENTICAL
 // OFFSET: 0x009DB630/0x140770900
 static int32_t Script_SetQuestBlobInsideTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -714,6 +725,7 @@ static int32_t Script_SetQuestBlobInsideTexture(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 8f865c6b DIFFERENT/IDENTICAL
 // OFFSET: 0x009DB6E0/0x1407709E0
 static int32_t Script_SetQuestBlobOutsideTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -733,6 +745,7 @@ static int32_t Script_SetQuestBlobOutsideTexture(lua_State* L) {
     return 0;
 }
 
+// PROVEN: af587430 DIFFERENT/IDENTICAL
 // OFFSET: 0x009DB790/0x140770AC0
 static int32_t Script_SetQuestBlobRingTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -752,6 +765,7 @@ static int32_t Script_SetQuestBlobRingTexture(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 4525cdd8 DIFFERENT/IDENTICAL
 // OFFSET: 0x009DB840/0x140770BA0
 static int32_t Script_SetArchBlobInsideTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -771,6 +785,7 @@ static int32_t Script_SetArchBlobInsideTexture(lua_State* L) {
     return 0;
 }
 
+// PROVEN: eff85a87 DIFFERENT/IDENTICAL
 // OFFSET: 0x009DB8F0/0x140770C80
 static int32_t Script_SetArchBlobOutsideTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -790,6 +805,7 @@ static int32_t Script_SetArchBlobOutsideTexture(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 53098a40 DIFFERENT/IDENTICAL
 // OFFSET: 0x009DB9A0/0x140770D60
 static int32_t Script_SetArchBlobRingTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
@@ -809,7 +825,7 @@ static int32_t Script_SetArchBlobRingTexture(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D16380
+// STATIC: 0x00D16380/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetMaskTexture", &Script_SetMaskTexture },
     { "SetIconTexture", &Script_SetIconTexture },
@@ -843,13 +859,14 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "UpdateBlips", &Script_UpdateBlips },
 };
 
+// PROVEN: 202357b1 IDENTICAL/UNPROVEN
 // OFFSET: 0x009CEE70/0x14075F980
 void CGMinimapFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }
 
-// STATIC: 0x00D16470
+// STATIC: 0x00D16470/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumTrackingTypes", &Script_GetNumTrackingTypes },
     { "GetTrackingInfo", &Script_GetTrackingInfo },
@@ -857,6 +874,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ClearAllTracking", &Script_ClearAllTracking },
 };
 
+// PROVEN: 79263025 IDENTICAL/UNPROVEN
 // OFFSET: 0x009CEEC0/0x14075F9E0
 void MinimapRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -864,6 +882,7 @@ void MinimapRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: eb92dd39 IDENTICAL/UNPROVEN
 // OFFSET: 0x009CEEF0/0x14075FA30
 void MinimapUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

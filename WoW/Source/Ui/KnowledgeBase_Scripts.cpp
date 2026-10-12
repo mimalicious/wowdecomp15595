@@ -11,24 +11,28 @@
 #include "Engine/Source/FrameXML/XMLTree.h"
 #include "Engine/Source/Storm/H/storm.h"
 
+// PROVEN: 8fcf8004 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FC540/0x14079A030
 static int32_t Script_KBSystem_GetMOTD(lua_State* L) {
     lua_pushstring(L, s_motd.m_buffer);
     return 1;
 }
 
+// PROVEN: c1e59ddf IDENTICAL/UNPROVEN
 // OFFSET: 0x009FC560/0x14079A050
 static int32_t Script_KBSystem_GetServerStatus(lua_State* L) {
     lua_pushstring(L, s_serverStatus.m_buffer);
     return 1;
 }
 
+// PROVEN: 4d770079 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FC580/0x14079A070
 static int32_t Script_KBSystem_GetServerNotice(lua_State* L) {
     lua_pushstring(L, s_serverNotice.m_buffer);
     return 1;
 }
 
+// PROVEN: d0f56430 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FBCB0/0x140799360
 static int32_t Script_KBSetup_BeginLoading(lua_State* L) {
     int32_t numArticles = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -37,24 +41,28 @@ static int32_t Script_KBSetup_BeginLoading(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 1b0abcd3 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FBCF0/0x1407993B0
 static int32_t Script_KBSetup_IsLoaded(lua_State* L) {
     lua_pushboolean(L, g_KnowledgeBaseSetup.m_state == 2);
     return 1;
 }
 
+// PROVEN: 352d95eb IDENTICAL/UNPROVEN
 // OFFSET: 0x009FC120/0x1407999D0
 static int32_t Script_KBQuery_IsLoaded(lua_State* L) {
     lua_pushboolean(L, g_KnowledgeBaseQuery.m_state == 2);
     return 1;
 }
 
+// PROVEN: c6605dfd IDENTICAL/UNPROVEN
 // OFFSET: 0x009FC330/0x140799D00
 static int32_t Script_KBArticle_IsLoaded(lua_State* L) {
     lua_pushboolean(L, g_KnowledgeBaseArticle.m_state == 2);
     return 1;
 }
 
+// PROVEN: a2a0ab7c IDENTICAL/UNPROVEN
 // OFFSET: 0x009FBD20/0x1407993D0
 static int32_t Script_KBSetup_GetLanguageCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
@@ -66,6 +74,7 @@ static int32_t Script_KBSetup_GetLanguageCount(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 326abd38 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FBE50/0x140799570
 static int32_t Script_KBSetup_GetCategoryCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
@@ -77,6 +86,7 @@ static int32_t Script_KBSetup_GetCategoryCount(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 9cdb4adc IDENTICAL/UNPROVEN
 // OFFSET: 0x009FBF80/0x140799710
 static int32_t Script_KBSetup_GetArticleHeaderCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
@@ -88,6 +98,7 @@ static int32_t Script_KBSetup_GetArticleHeaderCount(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 8af42537 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FC150/0x1407999F0
 static int32_t Script_KBQuery_GetArticleHeaderCount(lua_State* L) {
     if (g_KnowledgeBaseQuery.m_state != 2) {
@@ -137,7 +148,7 @@ static int32_t Script_KBSetup_GetCategoryData(lua_State* L) {
     return 2;
 }
 
-// OFFSET: 0x009FBFC0
+// OFFSET: 0x009FBFC0/0x140799750
 static int32_t Script_KBSetup_GetArticleHeaderData(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetArticleHeaderData() failed because setup is not loaded");
@@ -158,7 +169,7 @@ static int32_t Script_KBSetup_GetArticleHeaderData(lua_State* L) {
     return 4;
 }
 
-// OFFSET: 0x009FC0D0
+// OFFSET: 0x009FC0D0/0x140799940
 static int32_t Script_KBSetup_GetTotalArticleCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetTotalArticleCount() failed because setup is not loaded");
@@ -169,7 +180,7 @@ static int32_t Script_KBSetup_GetTotalArticleCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009FC190
+// OFFSET: 0x009FC190/0x140799A30
 static int32_t Script_KBQuery_GetArticleHeaderData(lua_State* L) {
     if (g_KnowledgeBaseQuery.m_state != 2) {
         luaL_error(L, "KBQuery_GetArticleHeaderData() failed because query is not loaded");
@@ -190,7 +201,7 @@ static int32_t Script_KBQuery_GetArticleHeaderData(lua_State* L) {
     return 4;
 }
 
-// OFFSET: 0x009FC2A0
+// OFFSET: 0x009FC2A0/0x140799C20
 static int32_t Script_KBQuery_GetTotalArticleCount(lua_State* L) {
     if (g_KnowledgeBaseQuery.m_state != 2) {
         luaL_error(L, "KBQuery_GetTotalArticleCount() failed because query is not loaded");
@@ -201,6 +212,7 @@ static int32_t Script_KBQuery_GetTotalArticleCount(lua_State* L) {
     return 1;
 }
 
+// PROVEN: cff2d564 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FC2F0/0x140799CB0
 static int32_t Script_KBArticle_BeginLoading(lua_State* L) {
     int32_t articleId = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -321,7 +333,7 @@ static int32_t Script_KBQuery_BeginLoading(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D17270
+// STATIC: 0x00D17270/0x140BD1EA0
 static FrameScript_Method s_apMethodMap[] = {
     { "KBSetup_BeginLoading", &Script_KBSetup_BeginLoading },
     { "KBSetup_IsLoaded", &Script_KBSetup_IsLoaded },
@@ -347,7 +359,7 @@ static FrameScript_Method s_apMethodMap[] = {
     { "KBSystem_GetServerNotice", &Script_KBSystem_GetServerNotice },
 };
 
-// PROVEN: dca7a4a1 IDENTICAL/NONE
+// PROVEN: dca7a4a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC5A0/0x14079A090
 void KnowledgeBase_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {
@@ -355,7 +367,7 @@ void KnowledgeBase_RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: a5646998 IDENTICAL/NONE
+// PROVEN: a5646998 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC5D0/0x14079A0E0
 void KnowledgeBase_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {

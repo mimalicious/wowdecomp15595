@@ -41,13 +41,13 @@ void CAngle::Set_(const float& value) {
     this->m_sin = sin(this->m_data);
 }
 
-// PROVEN: 7a2f638f IDENTICAL/NONE
+// PROVEN: 7a2f638f IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A460/0x1401A35C0
 void CameraAddRef(CCamera* camera) {
     camera->m_refCount++;
 }
 
-// PROVEN: 913dc92b IDENTICAL/NONE
+// PROVEN: 913dc92b IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A470/0x1401A35D0
 void CameraGetCoord(CCamera* camera, uint32_t index, C3Vector* value) {
     switch (index) {
@@ -61,7 +61,7 @@ void CameraGetCoord(CCamera* camera, uint32_t index, C3Vector* value) {
     }
 }
 
-// PROVEN: 7bd54c5b IDENTICAL/NONE
+// PROVEN: 7bd54c5b IDENTICAL/DIFFERENT
 // OFFSET: 0x0054A4C0/0x1401A3610
 float CameraGetFloat(CCamera* camera, uint32_t index) {
     switch (index) {
@@ -91,7 +91,7 @@ float CameraGetFloat(CCamera* camera, uint32_t index) {
     }
 }
 
-// PROVEN: a5a23e49 IDENTICAL/NONE
+// PROVEN: a5a23e49 IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A530/0x1401A3680
 void CameraSetCoord(CCamera* camera, uint32_t index, const C3Vector& value) {
     switch (index) {
@@ -138,7 +138,7 @@ void CameraSetFloat(CCamera* camera, uint32_t index, float value) {
     }
 }
 
-// OFFSET: 0x0054A6B0
+// OFFSET: 0x0054A6B0/0x1401A3890
 CCamera::CCamera() : m_position(100.0f, 0.0f, 0.0f), m_target(0.0f, 0.0f, 0.0f), m_aoa(0.0f), m_fov(s_halfPi), m_roll(0.0f), m_rotation(0.0f) {
     this->m_refCount = 1;
     this->m_distance = 100.0f;
@@ -146,6 +146,7 @@ CCamera::CCamera() : m_position(100.0f, 0.0f, 0.0f), m_target(0.0f, 0.0f, 0.0f),
     this->m_zNear = 8.0f;
 }
 
+// PROVEN: 95b7837d IDENTICAL/IDENTICAL
 // OFFSET: 0x0054A860/0x1401A3910
 void CCamera::SetupWorldProjection(const CRect& rect, uint32_t flags) {
     C44Matrix projection;
@@ -162,7 +163,7 @@ void CCamera::SetupWorldProjection(const CRect& rect, uint32_t flags) {
     CShaderEffect::UpdateProjMatrix();
 }
 
-// PROVEN: 27f2465f IDENTICAL/NONE
+// PROVEN: 27f2465f IDENTICAL/DIFFERENT
 // OFFSET: 0x0054AA40/0x1401A3B30
 CCamera* CameraCreate() {
     return new (__FILE__, __LINE__) CCamera;
@@ -203,7 +204,7 @@ void CameraRelease(CCamera*& camera) {
     camera = NULL;
 }
 
-// OFFSET: 0x0054AB70
+// OFFSET: 0x0054AB70/0x1401A3CC0
 void CameraSetupScreenProjection(const CRect& rect, const C2Vector& offset, float depth, int32_t forceOrtho) {
     float centerX = (rect.minX + rect.maxX) * 0.5f;
     float centerY = 0.5f * (rect.minY + rect.maxY);
@@ -229,7 +230,7 @@ void CameraSetupScreenProjection(const CRect& rect, const C2Vector& offset, floa
     GxXformSetView(view);
 }
 
-// PROVEN: 1bf5d399 IDENTICAL/UNPROVEN
+// PROVEN: 1bf5d399 IDENTICAL/IDENTICAL
 // OFFSET: 0x0054AE00/0x1401A3FF0
 void CameraSetupWorldProjection(CCamera* camera, const CRect& rect, uint32_t flags) {
     if (!camera) {
@@ -240,7 +241,7 @@ void CameraSetupWorldProjection(CCamera* camera, const CRect& rect, uint32_t fla
     camera->SetupWorldProjection(rect, flags);
 }
 
-// OFFSET: 0x0054AE30
+// OFFSET: 0x0054AE30/0x1401A4010
 void CameraGetLineSegment(float x, float y, C3Vector* start, C3Vector* end) {
     if (!start || !end || !(x >= 0.0f) || !(x <= 1.0f) || !(y >= 0.0f) || !(y <= 1.0f)) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

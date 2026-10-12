@@ -189,7 +189,7 @@ void Sand::UpdatePackets() {
     }
 }
 
-// OFFSET: 0x0074FA80
+// OFFSET: 0x0074FA80/0x1404300C0
 void Sand::RenderPacketsSW() {
     if (!this->m_grains.m_active.Head()) {
         return;
@@ -284,7 +284,7 @@ void Sand::RenderPacketsSW() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0074FEB0
+// OFFSET: 0x0074FEB0/0x140430610
 void Sand::RenderPackets() {
     if (!this->m_grains.m_active.Head()) {
         return;
@@ -372,7 +372,7 @@ void Sand::RenderPackets() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x00752410
+// OFFSET: 0x00752410/0x140433400
 Sand::~Sand() {
     if (this->m_vertexShader) {
         g_theGxDevicePtr->ShaderRelease(this->m_vertexShader);
@@ -390,7 +390,7 @@ Sand::~Sand() {
     }
 }
 
-// OFFSET: 0x007524B0
+// OFFSET: 0x007524B0/0x1404334C0
 void Sand::Render() {
     this->UpdatePackets();
 

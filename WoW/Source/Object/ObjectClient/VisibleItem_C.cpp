@@ -86,6 +86,7 @@ uint32_t VisibleItem_C::GetSoundOverrideSubclassID() {
     return rec ? rec->m_soundOverrideSubclassID : 0;
 }
 
+// PROVEN: 32a46960 IDENTICAL/UNPROVEN
 // OFFSET: 0x005FF600/0x1402884D0
 int32_t VisibleItem_C::GetItemEnchantmentVisualID() {
     ItemDisplayInfoRec displayRec;

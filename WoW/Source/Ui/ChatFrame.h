@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ctime>
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/Net/Types.h"
@@ -129,7 +130,6 @@ struct PENDINGCHAT {
     /* 002C */ int32_t m_queued;
     /* 0030 */ int32_t unk_0030;
     /* 0034 */ char m_channelName[128];
-    /* 00B4 */ uint32_t unk_00B4;
     /* 00B8 */ WOWGUID m_targetGuid;
     /* 00C0 */ char m_flags[5];
     /* 00C8 */ int32_t m_achievementID;
@@ -188,13 +188,11 @@ class ChatChannel {
     /* 00A0 */ int32_t m_unkA0;
     /* 00A4 */ bool m_unkA4;
     /* 00A5 */ uint8_t m_unkA5;
-    /* 00A6 */ uint8_t unk_00A6[2];
-    /* 00A8 */ int32_t m_messageTimes[32];
+    /* 00A8 */ time_t m_messageTimes[32];
     /* 0128 */ uint32_t m_messageTimeIndex;
     /* 012C */ char m_password[128];
     /* 01AC */ bool m_unk1AC;
     /* 01AD */ uint8_t m_joinPending;
-    /* 01AE */ uint8_t unk_01AE[2];
 
     ChatChannel();
 };
@@ -254,7 +252,6 @@ class ChatWindowInfo {
     public:
     /* 0000 */ char m_name[128];
     /* 0080 */ uint8_t m_messageGroups[49];
-    /* 00B1 */ uint8_t unk_00B1[3];
     /* 00B4 */ TSGrowableArray<char*> m_channels;
     /* 00C4 */ TSGrowableArray<int32_t> m_channelIDs;
     /* 00D4 */ uint32_t m_unkD0;
@@ -267,7 +264,6 @@ class ChatWindowInfo {
     /* 00F0 */ float m_unkEC;
     /* 00F4 */ float m_unkF0;
     /* 00F8 */ uint8_t m_unkF4;
-    /* 00F9 */ uint8_t unk_00F9[3];
     /* 00FC */ float m_width;
     /* 0100 */ float m_height;
 
@@ -287,7 +283,6 @@ struct ChatRecord {
     /* 17B0 */ uint32_t m_unk17B0;
     /* 17B4 */ uint32_t m_lineID;
     /* 17B8 */ uint32_t m_time;
-    /* 17BC */ uint32_t unk_17BC;
 };
 
 struct ChatColorInfo {

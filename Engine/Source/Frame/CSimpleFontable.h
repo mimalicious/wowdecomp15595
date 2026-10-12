@@ -21,4 +21,6 @@ class CSimpleFontable {
     void SetFontObject(CSimpleFont* font);
 };
 
+#include "Engine/Source/Frame/CSimpleFontable.inl"
+
 #endif

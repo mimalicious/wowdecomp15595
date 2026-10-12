@@ -27,25 +27,25 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00CC8E64
+// STATIC: 0x00CC8E64/0x140B69230
 static int32_t s_savedVoiceSessionType = 4;
 
-// STATIC: 0x00E283E0
+// STATIC: 0x00E283E0/0x140D0FF68
 static int32_t s_restartSignaled;
 
 // STATIC: 0x00E286D0
 static uint32_t s_taxiSound;
 
-// STATIC: 0x00E286D4
+// STATIC: 0x00E286D4/0x140D10254
 static float s_taxiFidgetElapsed;
 
-// STATIC: 0x00E286D8
+// STATIC: 0x00E286D8/0x140D1025C
 static float s_taxiFidgetDelay;
 
-// STATIC: 0x00E2872C
+// STATIC: 0x00E2872C/0x140D102B8
 static const char* s_savedVoiceSession;
 
-// PROVEN: 634441c3 IDENTICAL/NONE
+// PROVEN: 634441c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062C2B0/0x1402BF9E0
 void SI3::SignalRestart() {
     s_restartSignaled = 1;
@@ -68,7 +68,7 @@ int32_t SI3::HeartBeat(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 313d1b08 IDENTICAL/NONE
+// PROVEN: 313d1b08 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062C310/0x1402BFA50
 void SI3::PosToWorldChunkCoords(const C3Vector& position, uint32_t* x, uint32_t* y) {
     int32_t areaX;
@@ -80,12 +80,13 @@ void SI3::PosToWorldChunkCoords(const C3Vector& position, uint32_t* x, uint32_t*
     *y = (chunkY + 16 * areaY) / 4;
 }
 
-// PROVEN: 3a202e3a IDENTICAL/NONE
+// PROVEN: 3a202e3a IDENTICAL/IDENTICAL
 // OFFSET: 0x0062C370/0x1402BFAC0
 int32_t SI3::GetFallbackSoundKitID(int32_t soundKitID) {
     return SE3::GetFallbackSoundKitID(soundKitID);
 }
 
+// PROVEN: 7902b677 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062C380/0x1402BFAD0
 int32_t SI3::PlayUISound(int32_t soundKitID, const SE3BUS* bus, bool forceNoDuplicates) {
     SE3SoundKitProperties properties;
@@ -101,6 +102,7 @@ int32_t SI3::PlayUISound(int32_t soundKitID, const SE3BUS* bus, bool forceNoDupl
     return SE3::PlaySoundKit(soundKitID, NULL, &properties, NULL, __FILE__, __LINE__, "SI3::PlayUISound");
 }
 
+// PROVEN: 50511ccd IDENTICAL/DIFFERENT
 // OFFSET: 0x0062C420/0x1402BFBB0
 void SI3::PlayItemSound(int32_t type, int32_t displayID) {
     ItemDisplayInfoRec displayInfo;
@@ -119,6 +121,7 @@ void SI3::PlayItemSound(int32_t type, int32_t displayID) {
     SE3::PlaySoundKit(groupSounds->m_sound[type], NULL, &properties, NULL, __FILE__, __LINE__, "PlayItemSound()");
 }
 
+// PROVEN: 5958b777 IDENTICAL/UNPROVEN
 // OFFSET: 0x0062C500/0x1402BFCD0
 void SI3::PlayFoleySound(uint32_t materialID, const C3Vector& position, int32_t self, void* unit) {
     MaterialRec* material = g_materialDB.GetRecord(materialID);
@@ -161,6 +164,7 @@ void SI3::PlayItemSound(int32_t type, const CGItem_C* item) {
     }
 }
 
+// PROVEN: 77f36ad6 IDENTICAL/DIFFERENT
 // OFFSET: 0x0062C750/0x1402BFFB0
 void SI3::ForceUpdateZoneSounds() {
     CGObject_C* object = ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__);
@@ -250,7 +254,7 @@ static int32_t _GetDayProgressionCallback() {
     return static_cast<int32_t>(g_clientGameTime.GameTimeGetDayProgression() * 86400000.0);
 }
 
-// PROVEN: fc3d18ab IDENTICAL/NONE
+// PROVEN: fc3d18ab IDENTICAL/IDENTICAL
 // OFFSET: 0x0062FA00/0x1402C43A0
 void SI3::InitSoundInGame() {
     SI3::InitFootstepSounds();
@@ -262,7 +266,7 @@ void SI3::InitSoundInGame() {
     SI3::InitZoneSoundOverrides();
 }
 
-// PROVEN: 98f6ec54 IDENTICAL/NONE
+// PROVEN: 98f6ec54 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062FAB0/0x1402C43D0
 int32_t SI3::OnFocusChanged(const void* data, void* param) {
     const EVENT_DATA_FOCUS* focus = static_cast<const EVENT_DATA_FOCUS*>(data);
@@ -293,6 +297,7 @@ int32_t SI3::OnFocusChanged(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: 48c38f75 IDENTICAL/IDENTICAL
 // OFFSET: 0x0062FBB0/0x1402C44E0
 void SI3::ShutDown(int32_t restart) {
     SE3::Log_Write(" ");

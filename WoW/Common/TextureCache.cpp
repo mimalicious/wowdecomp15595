@@ -13,10 +13,10 @@
 // STATIC: 0x00E4DDF4
 static HASHKEY_NONE s_cacheKey;
 
-// STATIC: 0x00E4DDF8
+// STATIC: 0x00E4DDF8/0x140D37100
 static TSObjectAllocPool<CACHEENTRY>* s_entryPool;
 
-// STATIC: 0x00E4DDFC
+// STATIC: 0x00E4DDFC/0x140D37108
 static int32_t s_loadCount;
 
 // STATIC: 0x00E4DE00
@@ -81,7 +81,7 @@ int32_t CACHEENTRY::LoadTexture() {
     return 1;
 }
 
-// PROVEN: 0a85dc2e IDENTICAL/NONE
+// PROVEN: 0a85dc2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00703DA0/0x1403D08A0
 void* TextureCacheCopyTexture(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
@@ -106,7 +106,7 @@ void* TextureCacheGetMip(void* handle, uint32_t mipLevel) {
     return reinterpret_cast<uint8_t*>(entry->m_data) + entry->m_data->m_mipOffsets[mipLevel];
 }
 
-// OFFSET: 0x00703E00
+// OFFSET: 0x00703E00/0x1403D0900
 BlpPalPixel* TextureCacheGetPal(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
@@ -158,7 +158,7 @@ int32_t TextureCacheGetInfo(void* handle, TCTEXTUREINFO& info, int32_t wait) {
     return 1;
 }
 
-// PROVEN: 76cf2643 IDENTICAL/NONE
+// PROVEN: 76cf2643 IDENTICAL/IDENTICAL
 // OFFSET: 0x00703F10/0x1403D0A00
 void TextureCacheIncreasePriority(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
@@ -170,13 +170,13 @@ void TextureCacheIncreasePriority(void* handle) {
     }
 }
 
-// PROVEN: 2587d302 IDENTICAL/NONE
+// PROVEN: 2587d302 IDENTICAL/IDENTICAL
 // OFFSET: 0x00703F60/0x1403D0A50
 void TextureCacheResetLoadCount() {
     s_loadCount = 0;
 }
 
-// PROVEN: 7d5e49e3 IDENTICAL/NONE
+// PROVEN: 7d5e49e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00703F70/0x1403D0A60
 void TextureCacheComputeLoadProgress(void* handle, int64_t& local, int64_t& total) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
@@ -248,6 +248,7 @@ void TextureCacheDestroyTexture(void* handle) {
     }
 }
 
+// PROVEN: eae448c4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00704480/0x1403D0F10
 static CACHEENTRY* TextureCacheAllocEntry() {
     if (!s_entryPool) {
@@ -258,13 +259,13 @@ static CACHEENTRY* TextureCacheAllocEntry() {
     return s_entryPool->New("", 0);
 }
 
-// OFFSET: 0x007044E0
+// OFFSET: 0x007044E0/0x1403D0FB0
 void TextureCacheDestroy() {
     delete s_entryPool;
     s_entryPool = NULL;
 }
 
-// OFFSET: 0x00704BB0
+// OFFSET: 0x00704BB0/0x1403D18A0
 void* TextureCacheCreateTexture(const char* fileName) {
     uint32_t hashval = SStrHash(fileName, 0, 0);
     CACHEENTRY* entry = s_cacheTable.Ptr(hashval, s_cacheKey);

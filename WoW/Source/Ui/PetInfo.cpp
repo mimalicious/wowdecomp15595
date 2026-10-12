@@ -29,13 +29,13 @@
 #include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 
-// STATIC: 0x00BFC5D8
+// STATIC: 0x00BFC5D8/0x1409F40D0
 static const char s_petModeTokens[4][32] = { "PASSIVE", "DEFENSIVE", "AGGRESSIVE", "ASSIST" };
 
-// STATIC: 0x00BFC658
+// STATIC: 0x00BFC658/0x1409F4150
 static const char s_petOrderTokens[5][32] = { "WAIT", "FOLLOW", "ATTACK", "DISMISS", "MOVE_TO" };
 
-// STATIC: 0x00F43B58
+// STATIC: 0x00F43B58/0x140E370B8
 uint32_t CGPetInfo::m_petMode;
 
 // STATIC: 0x00F43B5C
@@ -44,71 +44,78 @@ uint32_t CGPetInfo::m_expirationTime;
 // STATIC: 0x00F43B60
 WOWGUID CGPetInfo::m_pet;
 
-// STATIC: 0x00F43B68
+// STATIC: 0x00F43B68/0x140E370C8
 uint32_t CGPetInfo::m_petBarState;
 
-// STATIC: 0x00F43B6C
+// STATIC: 0x00F43B6C/0x140E370CC
 int32_t CGPetInfo::m_attackingTarget;
 
-// STATIC: 0x00F43B70
+// STATIC: 0x00F43B70/0x140E370D0
 int32_t CGPetInfo::m_possessSpell;
 
-// STATIC: 0x00F43B74
+// STATIC: 0x00F43B74/0x140E370D4
 uint8_t CGPetInfo::m_comboPoints;
 
-// STATIC: 0x00F43B75
+// STATIC: 0x00F43B75/0x140E370D5
 bool CGPetInfo::m_petOrderMoveTo;
 
-// STATIC: 0x00F43B78
+// STATIC: 0x00F43B78/0x140E370D8
 WOWGUID CGPetInfo::m_comboTarget;
 
-// STATIC: 0x00F43B80
+// STATIC: 0x00F43B80/0x140E370E0
 TSGrowableArray<WOWGUID> s_pets;
 
-// STATIC: 0x00F43B90
+// STATIC: 0x00F43B90/0x140E370F8
 PetAction CGPetInfo::m_actions[10];
 
-// STATIC: 0x00F43BB8
+// STATIC: 0x00F43BB8/0x140E37120
 static TSGrowableArray<PetAction> s_petSpellActions;
 
+// PROVEN: 61947e49 IDENTICAL/NONE
 // OFFSET: 0x0094FED0
 void CGPetInfo::SetPetMode(uint32_t mode) {
     CGPetInfo::m_petMode = mode | (CGPetInfo::m_petMode & 0xFFFFFF00);
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_BAR_UPDATE, NULL);
 }
 
+// PROVEN: 987d05b8 IDENTICAL/NONE
 // OFFSET: 0x0094FF00
 void CGPetInfo::SetPetOrders(uint32_t orders) {
     CGPetInfo::m_petMode = (orders << 8) | (CGPetInfo::m_petMode & 0x80000FF);
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_BAR_UPDATE, NULL);
 }
 
+// PROVEN: 1111a4ef IDENTICAL/IDENTICAL
 // OFFSET: 0x0094FF30/0x1406C0260
 const char* CGPetInfo::GetModeToken(uint32_t mode) {
     return s_petModeTokens[mode];
 }
 
+// PROVEN: f24d53c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0094FF40/0x1406C0280
 const char* CGPetInfo::GetOrdersToken(uint32_t order) {
     return s_petOrderTokens[order];
 }
 
+// PROVEN: 27a54f49 IDENTICAL/IDENTICAL
 // OFFSET: 0x0094FF50/0x1406C02A0
 void CGPetInfo::ShowGrid() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_BAR_SHOWGRID, NULL);
 }
 
+// PROVEN: 875fbd7c IDENTICAL/NONE
 // OFFSET: 0x0094FF60
 void CGPetInfo::HideGrid() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_BAR_HIDEGRID, NULL);
 }
 
-// OFFSET: 0x0094FF70
+// PROVEN: c630dc75 IDENTICAL/IDENTICAL
+// OFFSET: 0x0094FF70/0x1406C02C0
 void CGPetInfo::UpdateCooldowns() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_BAR_UPDATE_COOLDOWN, NULL);
 }
 
-// OFFSET: 0x0094FF80
+// OFFSET: 0x0094FF80/0x1406C02D0
 void CGPetInfo::SetIsAttackingTarget(int32_t attacking) {
     if (attacking) {
         FrameScript_SignalEvent(SCRIPT_EVENT_PET_ATTACK_START, NULL);
@@ -119,7 +126,8 @@ void CGPetInfo::SetIsAttackingTarget(int32_t attacking) {
     }
 }
 
-// OFFSET: 0x0094FFC0
+// PROVEN: afd41497 IDENTICAL/IDENTICAL
+// OFFSET: 0x0094FFC0/0x1406C0300
 void CGPetInfo::SetPossessedSpell(int32_t spellId) {
     int32_t previous = CGPetInfo::m_possessSpell;
     CGPetInfo::m_possessSpell = spellId;
@@ -133,6 +141,7 @@ void CGPetInfo::SetPossessedSpell(int32_t spellId) {
     }
 }
 
+// PROVEN: 29d7cb68 IDENTICAL/IDENTICAL
 // OFFSET: 0x00950000/0x1406C0340
 void CGPetInfo::SetPetOrderMoveTo() {
     Spell_C_StopTargeting();
@@ -141,6 +150,7 @@ void CGPetInfo::SetPetOrderMoveTo() {
     CGPetInfo::m_petOrderMoveTo = 1;
 }
 
+// PROVEN: c6181b1b IDENTICAL/IDENTICAL
 // OFFSET: 0x00950020/0x1406C0370
 void CGPetInfo::ClearPetOrderMoveTo() {
     CursorSetResetMode(1);
@@ -148,25 +158,27 @@ void CGPetInfo::ClearPetOrderMoveTo() {
     CGPetInfo::m_petOrderMoveTo = 0;
 }
 
-// OFFSET: 0x00950040
+// PROVEN: 58cd8cb4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00950040/0x1406C03A0
 int32_t CGPetInfo::OnPetBroken(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGGameUI::DisplayError(ERR_PET_BROKEN);
     return 1;
 }
 
-// OFFSET: 0x00950060
+// PROVEN: 5cd2efb7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00950060/0x1406C03C0
 int32_t CGPetInfo::OnPetRenameable(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_RENAMEABLE, NULL);
     return 1;
 }
 
-// PROVEN: 97502d5f IDENTICAL/NONE
+// PROVEN: 97502d5f IDENTICAL/IDENTICAL
 // OFFSET: 0x00950160/0x1406C0500
 static int32_t PetTempActionBarCallback(uint32_t index, const void* data) {
     return index < 10 ? index | 0x10000000 : 0;
 }
 
-// PROVEN: 9c7fd35f IDENTICAL/NONE
+// PROVEN: 9c7fd35f IDENTICAL/DIFFERENT
 // OFFSET: 0x00950220/0x1406C07C0
 void PetAction::SetAutocast(bool enable) {
     if (enable) {
@@ -176,6 +188,7 @@ void PetAction::SetAutocast(bool enable) {
     }
 }
 
+// PROVEN: 6eafc372 IDENTICAL/IDENTICAL
 // OFFSET: 0x00950270/0x1406C0620
 void CGPetInfo::LeaveWorld() {
     int32_t possessSpell = CGPetInfo::m_possessSpell;
@@ -186,6 +199,7 @@ void CGPetInfo::LeaveWorld() {
     }
 }
 
+// PROVEN: 5511f982 IDENTICAL/IDENTICAL
 // OFFSET: 0x009502A0/0x1406C0650
 void CGPetInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_PET_SPELLS_MESSAGE);
@@ -199,6 +213,7 @@ void CGPetInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_PET_GUIDS);
 }
 
+// PROVEN: 5860d03f IDENTICAL/UNPROVEN
 // OFFSET: 0x00950350/0x1406C0710
 WOWGUID CGPetInfo::GetPet(uint32_t index) {
     if (!(index >= s_pets.m_count)) {
@@ -215,6 +230,7 @@ WOWGUID CGPetInfo::GetTarget() {
     return pet ? pet->m_unit->m_unitFieldTarget : WOWGUID();
 }
 
+// PROVEN: 9af1a5f8 IDENTICAL/UNPROVEN
 // OFFSET: 0x009503D0/0x1406C0780
 PetAction* CGPetInfo::GetPetSpellAction(int32_t spellId) {
     for (uint32_t i = s_petSpellActions.m_count; i; ) {
@@ -228,6 +244,7 @@ PetAction* CGPetInfo::GetPetSpellAction(int32_t spellId) {
     return NULL;
 }
 
+// PROVEN: 69e6f7d5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00950410/0x1406C07C0
 void CGPetInfo::UpdatePetSpellAction(const PetAction* action) {
     uint32_t value = action->m_data;
@@ -274,7 +291,7 @@ uint8_t CGPetInfo::GetComboPoints(WOWGUID target, bool anyTarget) {
     return CGPetInfo::m_comboPoints;
 }
 
-// OFFSET: 0x00950530
+// OFFSET: 0x00950530/0x1406C0880
 PetAction* CGPetInfo::FindSpellByID(int32_t spellId) {
     for (uint32_t i = 0; i < 10; i++) {
         uint32_t action = CGPetInfo::m_actions[i].m_data;
@@ -331,7 +348,8 @@ int32_t CGPetInfo::OnPetSpellChanges(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: 0x00950740
+// PROVEN: b078a2db IDENTICAL/DIFFERENT
+// OFFSET: 0x00950740/0x1406C0B60
 int32_t CGPetInfo::OnPetMode(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID pet;
     uint32_t mode;
@@ -346,7 +364,7 @@ int32_t CGPetInfo::OnPetMode(void* param, NETMESSAGE msgId, uint32_t time, CData
     return 1;
 }
 
-// OFFSET: 0x009507B0
+// OFFSET: 0x009507B0/0x1406C0BD0
 int32_t CGPetInfo::OnPetActionFeedback(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t feedback;
     msg->Get(feedback);
@@ -391,7 +409,8 @@ int32_t CGPetInfo::OnPetActionFeedback(void* param, NETMESSAGE msgId, uint32_t t
     }
 }
 
-// OFFSET: 0x009508C0
+// PROVEN: 932069ef IDENTICAL/DIFFERENT
+// OFFSET: 0x009508C0/0x1406C0CF0
 int32_t CGPetInfo::OnPetUpdateComboPoints(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID pet;
     SmartGUID target;
@@ -455,7 +474,7 @@ const char* CGPetInfo::GetPetActionTexture(const PetAction& action) {
     }
 }
 
-// OFFSET: 0x00950A60
+// OFFSET: 0x00950A60/0x1406C0ED0
 bool CGPetInfo::PetActionIsActive(const PetAction& action) {
     uint32_t data = action.m_data;
     uint32_t id = data & 0xFFFFFF;
@@ -571,6 +590,7 @@ int32_t CGPetInfo::PetActionSlotUsable(const PetAction* action) {
     return 0;
 }
 
+// PROVEN: ff951eda IDENTICAL/NONE
 // OFFSET: 0x00951460
 int32_t CGPetInfo::IsAttackAction(uint32_t index) {
     PetAction* action = CGPetInfo::GetPet(0) && index < 10 ? &CGPetInfo::m_actions[index] : NULL;
@@ -751,6 +771,7 @@ void CGPetInfo::SendPetAction(const PetAction& action, const WOWGUID& target, in
     ClientServices::Send2(&msg);
 }
 
+// PROVEN: 87cfa55b IDENTICAL/DIFFERENT
 // OFFSET: 0x00951950/0x1406C1FF0
 void CGPetInfo::PetFollow() {
     PetAction action;
@@ -758,7 +779,7 @@ void CGPetInfo::PetFollow() {
     CGPetInfo::SendPetAction(action, WOWGUID(), 0);
 }
 
-// PROVEN: f641700b IDENTICAL/NONE
+// PROVEN: f641700b IDENTICAL/IDENTICAL
 // OFFSET: 0x00951980/0x1406C2020
 void CGPetInfo::PetAttackTarget(const WOWGUID& target, int32_t useGiven) {
     PetAction action;
@@ -975,12 +996,12 @@ bool CGPetInfo::HandleTerrainClick(const CTerrainClickEvent& evt) {
     return false;
 }
 
-// OFFSET: 0x00952F70
+// OFFSET: 0x00952F70/0x1406C39E0
 void CGPetInfo::SetPetCount(uint32_t count) {
     s_pets.SetCount(count);
 }
 
-// OFFSET: 0x00952FD0
+// OFFSET: 0x00952FD0/0x1406C3A70
 int32_t CGPetInfo::SetAction(uint32_t index, PetAction& action, int32_t send) {
     uint32_t data = action.m_data;
     uint32_t type = (data >> 24) & 0x3F;
@@ -1060,7 +1081,7 @@ void CGPetInfo::SetAutocast(uint32_t index, int32_t enable) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_BAR_UPDATE, NULL);
 }
 
-// OFFSET: 0x00953220
+// OFFSET: 0x00953220/0x1406C3DC0
 void CGPetInfo::SetSpellAutocast(int32_t spellId, int32_t enable) {
     if (!CGGameUI::CanPerformAction(2) || !CGPetInfo::PetActionsUsable(false, false)) {
         return;
@@ -1179,7 +1200,8 @@ void CGPetInfo::FindPossessedSpell() {
     }
 }
 
-// OFFSET: 0x009536D0
+// PROVEN: ff8a799d IDENTICAL/UNPROVEN
+// OFFSET: 0x009536D0/0x1406C42D0
 int32_t CGPetInfo::OnPetGUIDs(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t count;
     msg->Get(count);
@@ -1197,6 +1219,7 @@ int32_t CGPetInfo::OnPetGUIDs(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
+// PROVEN: 14bb76d3 IDENTICAL/NONE
 // OFFSET: 0x00953740
 void CGPetInfo::PickupAction(uint32_t index, int32_t send) {
     if (index < 10) {

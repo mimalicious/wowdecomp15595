@@ -55,6 +55,7 @@ static int32_t Script_SetDegrees(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 8879d7dd DIFFERENT/IDENTICAL
 // OFFSET: 0x0053CB20/0x140190CA0
 static int32_t Script_GetDegrees(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
@@ -62,6 +63,7 @@ static int32_t Script_GetDegrees(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 55a2bdb5 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053CB70/0x140190D00
 static int32_t Script_SetRadians(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
@@ -76,29 +78,30 @@ static int32_t Script_SetRadians(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0053CBF0
+// PROVEN: 71664bf0 DIFFERENT/IDENTICAL
+// OFFSET: 0x0053CBF0/0x140190DA0
 static int32_t Script_GetRadians(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_radians);
     return 1;
 }
 
-// PROVEN: 6091772f IDENTICAL/NONE
-// OFFSET: 0x0053CC40
+// PROVEN: 6091772f IDENTICAL/IDENTICAL
+// OFFSET: 0x0053CC40/0x140190DF0
 void CSimpleRotationAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleRotationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleRotationAnim::RegisterScriptMethods);
 }
 
-// PROVEN: e3adba13 IDENTICAL/NONE
-// OFFSET: 0x0053B930
+// PROVEN: e3adba13 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053B930/0x14018F710
 void CSimpleRotationAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleRotationAnim::s_metatable);
     CSimpleRotationAnim::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00CA4718
+// STATIC: 0x00CA4718/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetOrigin", &Script_SetOrigin },
     { "GetOrigin", &Script_GetOrigin },
@@ -108,7 +111,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetRadians", &Script_GetRadians },
 };
 
-// OFFSET: 0x0053B900
+// OFFSET: 0x0053B900/0x14018F6D0
 void CSimpleRotationAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

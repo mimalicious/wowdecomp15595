@@ -1,9 +1,9 @@
 #include "WoW/Source/Battlenet/BattlenetProtocolTypes.h"
 
-// STATIC: 0x010093A0
+// STATIC: 0x010093A0/0x140EE0E20
 const BSN::String<32> Battlenet::Account::FullName::s_default_givenName("");
 
-// STATIC: 0x01009430
+// STATIC: 0x01009430/0x140EE0EF0
 const BSN::String<32> Battlenet::Account::FullName::s_default_surname("");
 
 // STATIC: 0x010094DC
@@ -45,7 +45,7 @@ const BSN::FourCC Battlenet::Attribute::Entry::s_default_code = BSN::FourCC();
 // STATIC: 0x01009968
 const BSN::String<255> Battlenet::Conference::ConferenceConfiguration::s_default_welcomeMessage("");
 
-// STATIC: 0x01009D70
+// STATIC: 0x01009D70/0x140EE1850
 const BSN::FourCC Battlenet::Conference::PublicName::s_default_locale = BSN::FourCC();
 
 // STATIC: 0x01009D74
@@ -57,7 +57,7 @@ const BSN::FourCC Battlenet::Toon::FullName::s_default_programId = BSN::FourCC()
 // STATIC: 0x01009E8C
 const BSN::FixedBlob<40> Battlenet::Toon::UnlockDefinitionFile::s_default_unlockDefinitionFileCacheHandle = BSN::FixedBlob<40>();
 
-// STATIC: 0x01009EB4
+// STATIC: 0x01009EB4/0x140EE19A8
 const BSN::FourCC Battlenet::Toon::Handle::s_default_programId = BSN::FourCC();
 
 // STATIC: 0x01009EB8
@@ -93,11 +93,13 @@ const BSN::AsciiString<32> Battlenet::Event::OfflineDataStore::StoredData::s_def
 // STATIC: 0x0100A358
 const BSN::FixedBlob<4> Battlenet::S2Game::Summary::Data::s_default_seed = BSN::FixedBlob<4>();
 
+// PROVEN: beadac28 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B2C6D0/0x1408F4D10
 void Battlenet::Account::FullName::SetDefault_givenName(BSN::String<32>& value) {
     value = Battlenet::Account::FullName::s_default_givenName;
 }
 
+// PROVEN: 7ebd1736 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B2C6F0/0x1408F4D30
 void Battlenet::Account::FullName::SetDefault_surname(BSN::String<32>& value) {
     value = Battlenet::Account::FullName::s_default_surname;
@@ -145,7 +147,7 @@ void Battlenet::Achievement::CriteriaEvent::SetDefault_id(uint32_t& value) {
     value = 0;
 }
 
-// PROVEN: 9bd9981c IDENTICAL/NONE
+// PROVEN: 9bd9981c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Achievement::CriteriaEvent::SetDefault_comparand(BSN::Optional<uint64_t>& value) {
     value.m_exists = false;
@@ -165,7 +167,7 @@ void Battlenet::Achievement::CriteriaStartEvent::SetDefault_CriteriaEvent(Battle
     Battlenet::Achievement::CriteriaEvent::SetDefault_modifier(value.m_modifier);
 }
 
-// PROVEN: 3a7038d3 IDENTICAL/NONE
+// PROVEN: 3a7038d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Achievement::CriteriaStartEvent::SetDefault_timerDuration(BSN::Optional<int32_t>& value) {
     value.m_exists = false;
@@ -177,13 +179,13 @@ void Battlenet::Achievement::CriteriaUpdateRecord::SetDefault_criteriaId(uint64_
     value = 0;
 }
 
-// PROVEN: 5884f688 IDENTICAL/NONE
+// PROVEN: 5884f688 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Achievement::CriteriaUpdateRecord::SetDefault_startTime(BSN::Optional<int32_t>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 76612bd2 IDENTICAL/NONE
+// PROVEN: 76612bd2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Achievement::CriteriaUpdateRecord::SetDefault_quantity(BSN::Optional<uint64_t>& value) {
     value.m_exists = false;
@@ -219,7 +221,7 @@ void Battlenet::Achievement::TrackedCriteria::SetDefault_pendingQuantity(uint64_
     value = 0;
 }
 
-// PROVEN: 4a64b6f6 IDENTICAL/NONE
+// PROVEN: 4a64b6f6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Achievement::TrackedCriteria::SetDefault_startTime(BSN::Optional<int32_t>& value) {
     value.m_exists = false;
@@ -231,13 +233,13 @@ void Battlenet::Achievement::TrackedCriteria::SetDefault_flags(uint32_t& value) 
     value = 0;
 }
 
-// PROVEN: b89d706c IDENTICAL/NONE
+// PROVEN: b89d706c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Achievement::ImageHandle::SetDefault_offset(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: b16611ba IDENTICAL/NONE
+// PROVEN: b16611ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Achievement::ImageHandle::SetDefault_textureFileIndex(uint8_t& value) {
     value = 0;
@@ -348,49 +350,49 @@ void Battlenet::Attribute::PermissionRestriction::SetDefault_requiredPermissions
     value.m_count = 0;
 }
 
-// PROVEN: 627497a5 IDENTICAL/NONE
+// PROVEN: 627497a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::ArtId::SetDefault_visualFileIndex(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: 16bb20c1 IDENTICAL/NONE
+// PROVEN: 16bb20c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_top(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 08585f70 IDENTICAL/NONE
+// PROVEN: 08585f70 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_left(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: ec8584cc IDENTICAL/NONE
+// PROVEN: ec8584cc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_height(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 7b821572 IDENTICAL/NONE
+// PROVEN: 7b821572 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::ArtId::SetDefault_width(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: da7624f9 IDENTICAL/NONE
+// PROVEN: da7624f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::LocalizedString::SetDefault_colorHint(BSN::Optional<uint32_t>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 38a7e53c IDENTICAL/NONE
+// PROVEN: 38a7e53c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::LocalizedString::SetDefault_fileIndex(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: 304fd598 IDENTICAL/NONE
+// PROVEN: 304fd598 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Attribute::LocalizedString::SetDefault_id(uint16_t& value) {
     value = 0;
@@ -408,19 +410,19 @@ void Battlenet::Attribute::LocaleTableEntry::SetDefault_stringFileTable(BSN::Arr
     value.m_count = 0;
 }
 
-// PROVEN: ed5dac0f IDENTICAL/NONE
+// PROVEN: ed5dac0f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::Visual::SetDefault_text(BSN::Optional<Battlenet::Attribute::LocalizedString>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: f0b7e70c IDENTICAL/NONE
+// PROVEN: f0b7e70c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::Visual::SetDefault_tip(BSN::Optional<Battlenet::Attribute::LocalizedString>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: dfbd6e48 IDENTICAL/NONE
+// PROVEN: dfbd6e48 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::Visual::SetDefault_art(BSN::Optional<Battlenet::Attribute::ArtId>& value) {
     value.m_exists = false;
@@ -453,7 +455,7 @@ void Battlenet::Attribute::Address::SetDefault_definitionHandle(Battlenet::Attri
     Battlenet::Attribute::DefinitionHandle::SetDefault_id(value.m_id);
 }
 
-// PROVEN: af8f7f90 IDENTICAL/NONE
+// PROVEN: af8f7f90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C7D0/0x1408F4E40
 void Battlenet::Attribute::Parent::SetDefault_address(Battlenet::Attribute::Address& value) {
     Battlenet::Attribute::Address::SetDefault_scope(value.m_scope);
@@ -466,13 +468,13 @@ void Battlenet::Attribute::Parent::SetDefault_set(BSN::Array<BSN::FourCC, 32>& v
     value.m_count = 0;
 }
 
-// PROVEN: b1a54deb IDENTICAL/NONE
+// PROVEN: b1a54deb IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::NearInstance::SetDefault_index(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: 24f8dfb3 IDENTICAL/NONE
+// PROVEN: 24f8dfb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::NearInstance::SetDefault_baked(bool& value) {
     value = false;
@@ -554,7 +556,7 @@ void Battlenet::Attribute::Definition::SetDefault_defaults(Battlenet::Attribute:
     Battlenet::Attribute::NearInstance::SetDefault_baked(element.m_baked);
 }
 
-// PROVEN: abe1e2a3 IDENTICAL/NONE
+// PROVEN: abe1e2a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::Definition::SetDefault_sortOrder(uint8_t& value) {
     value = 0;
@@ -567,7 +569,7 @@ void Battlenet::Attribute::DefinitionLock::SetDefault_handle(Battlenet::Attribut
     Battlenet::Attribute::DefinitionHandle::SetDefault_id(value.m_id);
 }
 
-// PROVEN: 90173f8a IDENTICAL/NONE
+// PROVEN: 90173f8a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::DefinitionLock::SetDefault_lockedScopes(BSN::Optional<BSN::FixedBitArray<16>>& value) {
     value.m_exists = false;
@@ -589,13 +591,13 @@ void Battlenet::Attribute::WorkingSet::SetDefault_description(Battlenet::Attribu
     Battlenet::Attribute::LocalizedString::SetDefault_id(value.m_id);
 }
 
-// PROVEN: f2d13480 IDENTICAL/NONE
+// PROVEN: f2d13480 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::WorkingSet::SetDefault_thumbnail(BSN::Optional<Battlenet::Attribute::ArtId>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 6400f8c6 IDENTICAL/NONE
+// PROVEN: 6400f8c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Attribute::WorkingSet::SetDefault_bigMap(BSN::Optional<Battlenet::Attribute::ArtId>& value) {
     value.m_exists = false;
@@ -667,6 +669,7 @@ void Battlenet::Cache::ResolvedStreamItem::SetDefault_commandId(uint32_t& value)
     value = 0;
 }
 
+// PROVEN: 463a521c IDENTICAL/NONE
 // OFFSET: 0x00B2C730
 void Battlenet::Cache::ResolvedStreamItem::SetDefault_path(BSN::String<248>& value) {
     value = Battlenet::Cache::ResolvedStreamItem::s_default_path;
@@ -683,19 +686,19 @@ void Battlenet::Cache::ResolvedStreamItem::SetDefault_publicationTime(int32_t& v
     value = 0;
 }
 
-// PROVEN: 69a0650a IDENTICAL/NONE
+// PROVEN: 69a0650a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Cache::ResolvedStreamItem::SetDefault_index(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 4cc0c283 IDENTICAL/NONE
+// PROVEN: 4cc0c283 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Cache::ResolvedStreamItem::SetDefault_totalNumItems(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: bd164a19 IDENTICAL/NONE
+// PROVEN: bd164a19 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Toon::FullName::SetDefault_region(uint8_t& value) {
     value = 0;
@@ -713,6 +716,7 @@ void Battlenet::Toon::FullName::SetDefault_realm(uint32_t& value) {
     value = 0;
 }
 
+// PROVEN: 5764a505 IDENTICAL/NONE
 // OFFSET: 0x00B2C890
 void Battlenet::Toon::FullName::SetDefault_name(BSN::String<25>& value) {
     value = Battlenet::Toon::FullName::s_default_name;
@@ -742,6 +746,7 @@ void Battlenet::Conference::ConferenceConfiguration::SetDefault_allowedPrograms(
     value.m_count = 0;
 }
 
+// PROVEN: 5591402c IDENTICAL/NONE
 // OFFSET: 0x00B2C830
 void Battlenet::Conference::ConferenceConfiguration::SetDefault_welcomeMessage(BSN::String<255>& value) {
     value = Battlenet::Conference::ConferenceConfiguration::s_default_welcomeMessage;
@@ -765,19 +770,19 @@ void Battlenet::Conference::PublicName::SetDefault_locale(BSN::FourCC& value) {
     value = Battlenet::Conference::PublicName::s_default_locale;
 }
 
-// PROVEN: 7286ee4a IDENTICAL/NONE
+// PROVEN: 7286ee4a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::PublicName::SetDefault_name(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 39cfa8f9 IDENTICAL/NONE
+// PROVEN: 39cfa8f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::PublicName::SetDefault_index(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 269c351b IDENTICAL/NONE
+// PROVEN: 269c351b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Toon::Handle::SetDefault_region(uint8_t& value) {
     value = 0;
@@ -825,19 +830,19 @@ void Battlenet::Conference::PublicPartialName::SetDefault_locale(BSN::FourCC& va
     value = Battlenet::Conference::PublicPartialName::s_default_locale;
 }
 
-// PROVEN: 3a21c9db IDENTICAL/NONE
+// PROVEN: 3a21c9db IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::PublicPartialName::SetDefault_name(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 97cf3f68 IDENTICAL/NONE
+// PROVEN: 97cf3f68 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Conference::ConferenceDescription::SetDefault_parentCategory(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: 662f8c4a IDENTICAL/NONE
+// PROVEN: 662f8c4a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C850/0x1408F4EB0
 void Battlenet::Conference::ConferenceDescription::SetDefault_name(Battlenet::Conference::PublicName& value) {
     Battlenet::Conference::PublicName::SetDefault_locale(value.m_locale);
@@ -845,7 +850,7 @@ void Battlenet::Conference::ConferenceDescription::SetDefault_name(Battlenet::Co
     Battlenet::Conference::PublicName::SetDefault_index(value.m_index);
 }
 
-// PROVEN: d6d8e128 IDENTICAL/NONE
+// PROVEN: d6d8e128 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::ConferenceDescription::SetDefault_sortOrder(uint16_t& value) {
     value = 0;
@@ -860,19 +865,19 @@ void Battlenet::Conference::ConferenceDescription::SetDefault_configuration(Batt
     Battlenet::Conference::ConferenceConfiguration::SetDefault_flags(value.m_flags);
 }
 
-// PROVEN: 401d4d1f IDENTICAL/NONE
+// PROVEN: 401d4d1f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Conference::CategoryDescription::SetDefault_id(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: ed28b80c IDENTICAL/NONE
+// PROVEN: ed28b80c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::CategoryDescription::SetDefault_name(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: a0166240 IDENTICAL/NONE
+// PROVEN: a0166240 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::Conference::CategoryDescription::SetDefault_sortOrder(uint16_t& value) {
     value = 0;
@@ -903,12 +908,13 @@ void Battlenet::S2Map::LinkEntry::SetDefault_type(Battlenet::S2Map::LinkEntryTyp
     value = Battlenet::S2Map::LinkEntryType::OPTIONAL;
 }
 
-// PROVEN: b32cac56 IDENTICAL/NONE
+// PROVEN: b32cac56 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::Link::SetDefault_variantIndex(uint8_t& value) {
     value = 0;
 }
 
+// PROVEN: 3bc17770 IDENTICAL/NONE
 // OFFSET: 0x00B2C8F0
 void Battlenet::S2Map::Link::SetDefault_speed(BSN::FourCC& value) {
     value = Battlenet::S2Map::Link::s_default_speed;
@@ -939,6 +945,7 @@ void Battlenet::Result::Container::SetDefault_orderHint(uint32_t& value) {
     value = 0;
 }
 
+// PROVEN: 434167a4 IDENTICAL/NONE
 // OFFSET: 0x00B2C8B0
 void Battlenet::Result::Definition::SetDefault_name(BSN::String<31>& value) {
     value = Battlenet::Result::Definition::s_default_name;
@@ -977,25 +984,25 @@ void Battlenet::Result::Definition::SetDefault_flags(uint8_t& value) {
     value = 1;
 }
 
-// PROVEN: f343d8fe IDENTICAL/NONE
+// PROVEN: f343d8fe IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::S2Map::MapSize::SetDefault_horizontal(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 06a84bfe IDENTICAL/NONE
+// PROVEN: 06a84bfe IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C750/0x1408F4D90
 void Battlenet::S2Map::MapSize::SetDefault_vertical(uint16_t& value) {
     value = 0;
 }
 
-// PROVEN: 81fc2d19 IDENTICAL/NONE
+// PROVEN: 81fc2d19 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::VariantId::SetDefault_category(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: a1dcedd9 IDENTICAL/NONE
+// PROVEN: a1dcedd9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::VariantId::SetDefault_mode(uint8_t& value) {
     value = 0;
@@ -1024,13 +1031,13 @@ void Battlenet::S2Map::VariantInfo::SetDefault_modeName(Battlenet::Attribute::Lo
     Battlenet::Attribute::LocalizedString::SetDefault_id(value.m_id);
 }
 
-// PROVEN: 1759e332 IDENTICAL/NONE
+// PROVEN: 1759e332 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::VariantInfo::SetDefault_categoryDescription(BSN::Optional<Battlenet::Attribute::LocalizedString>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 26303e54 IDENTICAL/NONE
+// PROVEN: 26303e54 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::VariantInfo::SetDefault_modeDescription(BSN::Optional<Battlenet::Attribute::LocalizedString>& value) {
     value.m_exists = false;
@@ -1087,6 +1094,7 @@ void Battlenet::S2Map::BnetHeader::SetDefault_handle(Battlenet::S2Map::Handle& v
     Battlenet::S2Map::Handle::SetDefault_version(value.m_version);
 }
 
+// PROVEN: 6ebce5a9 IDENTICAL/NONE
 // OFFSET: 0x00B2C9A0
 void Battlenet::S2Map::BnetHeader::SetDefault_name(BSN::String<80>& value) {
     value = Battlenet::S2Map::BnetHeader::s_default_name;
@@ -1143,25 +1151,25 @@ void Battlenet::S2Map::BnetHeader::SetDefault_locales(BSN::Array<Battlenet::Attr
     value.m_count = 0;
 }
 
-// PROVEN: 340c46e9 IDENTICAL/NONE
+// PROVEN: 340c46e9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::BnetHeader::SetDefault_size(BSN::Optional<Battlenet::S2Map::MapSize>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: ab94be4e IDENTICAL/NONE
+// PROVEN: ab94be4e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::BnetHeader::SetDefault_tileset(BSN::Optional<Battlenet::Attribute::LocalizedString>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 20bda161 IDENTICAL/NONE
+// PROVEN: 20bda161 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::BnetHeader::SetDefault_labelDeprecated(BSN::Optional<BSN::FourCC>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 74cce47a IDENTICAL/NONE
+// PROVEN: 74cce47a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::BnetHeader::SetDefault_defaultVariantIndex(uint8_t& value) {
     value = 0;
@@ -1203,7 +1211,7 @@ void Battlenet::S2Map::BnetHeader::SetDefault_labels(BSN::Array<BSN::FourCC, 16>
     value.m_count = 0;
 }
 
-// PROVEN: 6eb63277 IDENTICAL/NONE
+// PROVEN: 6eb63277 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::GameHeader::SetDefault_dummy(bool& value) {
     value = false;
@@ -1232,7 +1240,7 @@ void Battlenet::S2Map::Header::SetDefault_bnet(Battlenet::S2Map::BnetHeader& val
     Battlenet::S2Map::BnetHeader::SetDefault_labels(value.m_labels);
 }
 
-// PROVEN: 69d1b4a2 IDENTICAL/NONE
+// PROVEN: 69d1b4a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::Header::SetDefault_game(Battlenet::S2Map::GameHeader& value) {
     Battlenet::S2Map::GameHeader::SetDefault_dummy(value.m_dummy);
@@ -1257,8 +1265,8 @@ void Battlenet::S2Game::Summary::ParticipantRole::SetDefault_resultCode(Battlene
     value = Battlenet::S2Game::PlayerResultCode::UNDECIDED;
 }
 
-// PROVEN: 107ee808 IDENTICAL/NONE
-// OFFSET: 0x00B2CA60
+// PROVEN: 107ee808 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B2CA60/0x1408F50C0
 void Battlenet::Result::PlayerObjectType::Player::SetDefault_toonHandle(Battlenet::Toon::Handle& value) {
     Battlenet::Toon::Handle::SetDefault_region(value.m_region);
     Battlenet::Toon::Handle::SetDefault_programId(value.m_programId);
@@ -1266,7 +1274,7 @@ void Battlenet::Result::PlayerObjectType::Player::SetDefault_toonHandle(Battlene
     Battlenet::Toon::Handle::SetDefault_id(value.m_id);
 }
 
-// PROVEN: 3098fe20 IDENTICAL/NONE
+// PROVEN: 3098fe20 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Result::PlayerObjectType::Player::SetDefault_toonProfileAddress(BSN::Optional<Battlenet::Profile::RecordAddress>& value) {
     value.m_exists = false;
@@ -1290,19 +1298,19 @@ void Battlenet::S2Map::InfoBase::SetDefault_uploadTime(int32_t& value) {
     value = 0;
 }
 
-// PROVEN: c6e75d68 IDENTICAL/NONE
+// PROVEN: c6e75d68 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_isLinked(bool& value) {
     value = false;
 }
 
-// PROVEN: a92f6a04 IDENTICAL/NONE
+// PROVEN: a92f6a04 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_isLocked(bool& value) {
     value = false;
 }
 
-// PROVEN: ca452ee3 IDENTICAL/NONE
+// PROVEN: ca452ee3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_isPrivate(bool& value) {
     value = false;
@@ -1314,30 +1322,32 @@ void Battlenet::S2Map::InfoBase::SetDefault_mapSize(uint32_t& value) {
     value = 0;
 }
 
+// PROVEN: 0b2c6ead IDENTICAL/NONE
 // OFFSET: 0x00B2C900
 void Battlenet::S2Map::InfoBase::SetDefault_name(BSN::String<80>& value) {
     value = Battlenet::S2Map::InfoBase::s_default_name;
 }
 
-// PROVEN: 3a6014db IDENTICAL/NONE
+// PROVEN: 3a6014db IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2C920/0x1408F4F80
 void Battlenet::S2Map::InfoBase::SetDefault_profileRecordAddress(Battlenet::Profile::RecordAddress& value) {
     Battlenet::Profile::RecordAddress::SetDefault_label(value.m_label);
     Battlenet::Profile::RecordAddress::SetDefault_id(value.m_id);
 }
 
-// PROVEN: a7b77f0b IDENTICAL/NONE
+// PROVEN: a7b77f0b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_isMod(bool& value) {
     value = false;
 }
 
-// PROVEN: 8a67cf40 IDENTICAL/NONE
+// PROVEN: 8a67cf40 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_labelDeprecated(BSN::Optional<BSN::FourCC>& value) {
     value.m_exists = false;
 }
 
+// PROVEN: fc373666 IDENTICAL/NONE
 // OFFSET: 0x00B2C940
 void Battlenet::S2Map::InfoBase::SetDefault_authorToonName(Battlenet::Toon::FullName& value) {
     Battlenet::Toon::FullName::SetDefault_region(value.m_region);
@@ -1346,20 +1356,20 @@ void Battlenet::S2Map::InfoBase::SetDefault_authorToonName(Battlenet::Toon::Full
     Battlenet::Toon::FullName::SetDefault_name(value.m_name);
 }
 
-// PROVEN: 174985ad IDENTICAL/NONE
+// PROVEN: 174985ad IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_isLatestVersion(bool& value) {
     value = false;
 }
 
-// PROVEN: 298d2eeb IDENTICAL/NONE
+// PROVEN: 298d2eeb IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_mainLocale(BSN::Optional<BSN::FourCC>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 71f61e34 IDENTICAL/NONE
-// OFFSET: 0x00B2CA60
+// PROVEN: 71f61e34 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B2CA60/0x1408F50C0
 void Battlenet::S2Map::InfoBase::SetDefault_authorToonHandle(Battlenet::Toon::Handle& value) {
     Battlenet::Toon::Handle::SetDefault_region(value.m_region);
     Battlenet::Toon::Handle::SetDefault_programId(value.m_programId);
@@ -1367,7 +1377,7 @@ void Battlenet::S2Map::InfoBase::SetDefault_authorToonHandle(Battlenet::Toon::Ha
     Battlenet::Toon::Handle::SetDefault_id(value.m_id);
 }
 
-// PROVEN: 00d607ed IDENTICAL/NONE
+// PROVEN: 00d607ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::InfoBase::SetDefault_isSkipInitialDownload(bool& value) {
     value = false;
@@ -1407,13 +1417,13 @@ void Battlenet::S2Map::Info::SetDefault_InfoBase(Battlenet::S2Map::InfoBase& val
     Battlenet::S2Map::InfoBase::SetDefault_labels(value.m_labels);
 }
 
-// PROVEN: bd9ec415 IDENTICAL/NONE
+// PROVEN: bd9ec415 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Map::Info::SetDefault_authorRealName(BSN::Optional<Battlenet::Account::FullName>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 74f97ae5 IDENTICAL/NONE
+// PROVEN: 74f97ae5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Event::OfflineDataStore::Email::SetDefault_hash(BSN::Optional<uint64_t>& value) {
     value.m_exists = false;
@@ -1431,6 +1441,7 @@ void Battlenet::Event::OfflineDataStore::TagIdx::SetDefault_idx(uint32_t& value)
     value = 0;
 }
 
+// PROVEN: e066aac6 IDENTICAL/NONE
 // OFFSET: 0x00B2C940
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_toon(Battlenet::Toon::FullName& value) {
     Battlenet::Toon::FullName::SetDefault_region(value.m_region);
@@ -1439,24 +1450,26 @@ void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_toon(Battlenet::
     Battlenet::Toon::FullName::SetDefault_name(value.m_name);
 }
 
-// OFFSET: 0x00B2CA00
+// PROVEN: 180e1421 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B2CA00/0x1408F5020
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_fullName(Battlenet::Account::FullName& value) {
     Battlenet::Account::FullName::SetDefault_givenName(value.m_givenName);
     Battlenet::Account::FullName::SetDefault_surname(value.m_surname);
 }
 
-// PROVEN: 7c83523c IDENTICAL/NONE
+// PROVEN: 7c83523c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_accountRegion(uint8_t& value) {
     value = 0;
 }
 
-// PROVEN: 63045b25 IDENTICAL/NONE
+// PROVEN: 63045b25 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_gameAccountRegion(uint8_t& value) {
     value = 0;
 }
 
+// PROVEN: c1cc8be1 IDENTICAL/NONE
 // OFFSET: 0x00B2CA30
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_gameAccountName(BSN::AsciiString<32>& value) {
     value = Battlenet::Event::OfflineDataStore::StoredData::s_default_gameAccountName;
@@ -1474,7 +1487,7 @@ void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_program(BSN::Fou
     value = Battlenet::Event::OfflineDataStore::StoredData::s_default_program;
 }
 
-// PROVEN: 3e225703 IDENTICAL/NONE
+// PROVEN: 3e225703 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_tagidx(BSN::Optional<BSN::Array<Battlenet::Event::OfflineDataStore::TagIdx, 16>>& value) {
     value.m_exists = false;
@@ -1486,8 +1499,8 @@ void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_lastOnline(uint3
     value = 0;
 }
 
-// PROVEN: 73926af2 IDENTICAL/NONE
-// OFFSET: 0x00B2CA60
+// PROVEN: 73926af2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B2CA60/0x1408F50C0
 void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_toonHandle(Battlenet::Toon::Handle& value) {
     Battlenet::Toon::Handle::SetDefault_region(value.m_region);
     Battlenet::Toon::Handle::SetDefault_programId(value.m_programId);
@@ -1501,7 +1514,7 @@ void Battlenet::Event::OfflineDataStore::StoredData::SetDefault_accountId(uint32
     value = 0;
 }
 
-// PROVEN: 5522f1d7 IDENTICAL/NONE
+// PROVEN: 5522f1d7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Event::OfflineDataStore::OfflineData::SetDefault_info(BSN::Optional<BSN::Array<Battlenet::Event::OfflineDataStore::StoredData, 3>>& value) {
     value.m_exists = false;
@@ -1518,7 +1531,7 @@ void Battlenet::Result::Value::SetDefault_value(uint32_t& value) {
     value = 0;
 }
 
-// PROVEN: aa3dce0d IDENTICAL/NONE
+// PROVEN: aa3dce0d IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::Result::Value::SetDefault_maxValue(BSN::Optional<uint32_t>& value) {
     value.m_exists = false;
@@ -1561,14 +1574,14 @@ void Battlenet::Result::PlayerListContainer::SetDefault_playerList(BSN::Array<Ba
     value.m_count = 0;
 }
 
-// PROVEN: 2da04720 IDENTICAL/NONE
+// PROVEN: 2da04720 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2E5A0/0x1408F6F20
 void Battlenet::S2Game::Summary::PlayerData::SetDefault_playerObject(Battlenet::Result::PlayerObject& value) {
     Battlenet::Result::PlayerObject::SetDefault_scope(value.m_scope);
     Battlenet::Result::PlayerObject::SetDefault_playerObjectType(value.m_playerObjectType);
 }
 
-// PROVEN: 147f551d IDENTICAL/NONE
+// PROVEN: 147f551d IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2E5C0/0x1408F6F40
 void Battlenet::S2Game::Summary::PlayerData::SetDefault_role(Battlenet::S2Game::Summary::Role& value) {
     value.m_tag = 0;
@@ -1576,12 +1589,13 @@ void Battlenet::S2Game::Summary::PlayerData::SetDefault_role(Battlenet::S2Game::
     Battlenet::S2Game::Summary::ParticipantRole::SetDefault_resultCode(element.m_resultCode);
 }
 
-// PROVEN: b87d9dcc IDENTICAL/NONE
+// PROVEN: b87d9dcc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Game::Summary::PlayerData::SetDefault_actualRace(BSN::Optional<BSN::FourCC>& value) {
     value.m_exists = false;
 }
 
+// PROVEN: dda45af0 IDENTICAL/NONE
 // OFFSET: 0x00B2CE30
 void Battlenet::S2Game::Summary::Data::SetDefault_mapLink(Battlenet::S2Map::Link& value) {
     Battlenet::S2Map::Link::SetDefault_variantIndex(value.m_variantIndex);
@@ -1590,13 +1604,13 @@ void Battlenet::S2Game::Summary::Data::SetDefault_mapLink(Battlenet::S2Map::Link
     Battlenet::S2Map::Link::SetDefault_extraEntries(value.m_extraEntries);
 }
 
-// PROVEN: 42e834ca IDENTICAL/NONE
+// PROVEN: 42e834ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Game::Summary::Data::SetDefault_replayCacheHandle(BSN::Optional<BSN::FixedBlob<40>>& value) {
     value.m_exists = false;
 }
 
-// PROVEN: 7631a2fd IDENTICAL/IDENTICAL
+// PROVEN: 7631a2fd IDENTICAL/DIFFERENT
 // OFFSET: 0x00B2C9D0/0x140923990
 void Battlenet::S2Game::Summary::Data::SetDefault_instanceHandle(Battlenet::S2Master::InstanceHandle& value) {
     Battlenet::S2Master::InstanceHandle::SetDefault_instanceId(value.m_instanceId);
@@ -1649,7 +1663,7 @@ void Battlenet::S2Game::Summary::Data::SetDefault_endTime(int32_t& value) {
     value = 0;
 }
 
-// PROVEN: 218b46c2 IDENTICAL/NONE
+// PROVEN: 218b46c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CD00/0x1408F52D0
 void Battlenet::S2Game::Summary::Data::SetDefault_resultsCacheHandle(BSN::Optional<BSN::FixedBlob<40>>& value) {
     value.m_exists = false;

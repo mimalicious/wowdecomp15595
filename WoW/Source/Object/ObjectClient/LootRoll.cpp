@@ -21,16 +21,16 @@
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00CA57BC
+// STATIC: 0x00CA57BC/0x140B440B0
 TSExplicitList<PendingLootRoll, offsetof(PendingLootRoll, m_link)> s_pendingLootRolls;
 
-// STATIC: 0x00DD5268
+// STATIC: 0x00DD5268/0x140CBB4F0
 WOWGUID s_masterLootCandidates[40];
 
-// STATIC: 0x00DD53A8
+// STATIC: 0x00DD53A8/0x140CBB630
 static int32_t s_nextLootRollId;
 
-// STATIC: 0x00DD53AC
+// STATIC: 0x00DD53AC/0x140CBB634
 uint32_t s_numShownLootRolls;
 
 // OFFSET: 0x0057B340
@@ -45,7 +45,7 @@ static void LootRollShow(PendingLootRoll* roll) {
     FrameScript_SignalEvent(SCRIPT_EVENT_START_LOOT_ROLL, "%d%d", roll->m_id, roll->m_rollTime);
 }
 
-// OFFSET: 0x0057B380
+// OFFSET: 0x0057B380/0x1401E0EA0
 int32_t LootRollMasterList(CDataStore* msg) {
     memset(s_masterLootCandidates, 0, sizeof(s_masterLootCandidates));
     uint8_t count;
@@ -164,6 +164,7 @@ void LootRollShowPending() {
     }
 }
 
+// PROVEN: 840baf62 IDENTICAL/DIFFERENT
 // OFFSET: 0x0057B620/0x1401E1140
 static void AllPassedStats(const ItemRecSparse* rec, PendingLootRoll* roll) {
     const char* link = CGTooltip::GetItemHyperlinkString(roll->m_itemId, rec->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0);
@@ -300,7 +301,7 @@ void LootRollShutdown() {
     s_numShownLootRolls = 0;
 }
 
-// OFFSET: 0x0057BF70
+// OFFSET: 0x0057BF70/0x1401E1D20
 void CloseAllLootRolls() {
     for (PendingLootRoll* roll = s_pendingLootRolls.Head(); roll; ) {
         PendingLootRoll* next = roll->Next();
@@ -340,7 +341,7 @@ static void StartCallback(int32_t id, const WOWGUID& guid, void* param, bool suc
     }
 }
 
-// OFFSET: 0x0057C180
+// OFFSET: 0x0057C180/0x1401E2000
 int32_t LootRollStart(CDataStore* msg) {
     WOWGUID lootGuid;
     int32_t mapId;
@@ -381,7 +382,7 @@ int32_t LootRollStart(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: 0x0057C320
+// OFFSET: 0x0057C320/0x1401E2240
 static void PassedCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     PendingLootRoll* roll = static_cast<PendingLootRoll*>(param);
 
@@ -393,7 +394,7 @@ static void PassedCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
-// OFFSET: 0x0057C3C0
+// OFFSET: 0x0057C3C0/0x1401E22F0
 int32_t LootRollAllPassed(CDataStore* msg) {
     WOWGUID lootGuid;
     uint32_t slot;
@@ -461,7 +462,7 @@ static void WonCallback(int32_t id, const WOWGUID& guid, void* param, bool succe
     }
 }
 
-// OFFSET: 0x0057C630
+// OFFSET: 0x0057C630/0x1401E2620
 int32_t LootRollWon(CDataStore* msg) {
     WOWGUID lootGuid;
     uint32_t slot;
@@ -598,7 +599,7 @@ static void RolledCallback(int32_t id, const WOWGUID& guid, void* param, bool su
     }
 }
 
-// OFFSET: 0x0057CB00
+// OFFSET: 0x0057CB00/0x1401E2C60
 int32_t LootRollRolled(CDataStore* msg) {
     PendingLootRoll* roll = new (__FILE__, __LINE__) PendingLootRoll;
     msg->Get(roll->m_lootGuid.m_guid);

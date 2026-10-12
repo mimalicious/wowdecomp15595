@@ -31,6 +31,7 @@ struct CorpseGuildRequest {
     /* 0008 */ uint32_t m_flags;
 };
 
+// PROVEN: 2c5a8bc3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00597930/0x140209980
 void CGCorpse_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
@@ -38,12 +39,14 @@ void CGCorpse_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_corpseMirror = saved + CGObject::TotalFieldsSaved();
 }
 
+// PROVEN: 29de48a8 IDENTICAL/NONE
 // OFFSET: 0x00597970
 void CGCorpse_C::PostReenable(const CClientObjCreate& create) {
     this->m_passenger.PostInit(create.m_stationaryPosition);
     CGObject_C::PostReenable(create);
 }
 
+// PROVEN: 20bc9b8c IDENTICAL/DIFFERENT
 // OFFSET: 0x005979A0/0x140205830
 int32_t CGCorpse_C::GetModelFileName(const char** name) const {
     static char s_modelName[260];
@@ -79,6 +82,7 @@ int32_t CGCorpse_C::GetModelFileName(const char** name) const {
     return *name != NULL;
 }
 
+// PROVEN: 2d94c80f IDENTICAL/DIFFERENT
 // OFFSET: 0x00597AD0/0x1402059D0
 const char* CGCorpse_C::GetPortraitTexture() const {
     uint32_t displayId = this->m_corpse->m_corpseFieldDisplayId;
@@ -92,6 +96,7 @@ const char* CGCorpse_C::GetPortraitTexture() const {
     return rec ? static_cast<const char*>(rec->m_portraitTextureName) : NULL;
 }
 
+// PROVEN: 9e0af90d IDENTICAL/NONE
 // OFFSET: 0x00597B10
 void CGCorpse_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     CGObject_C::ShouldRender(flags, render, a3);
@@ -110,6 +115,7 @@ int32_t CGCorpse_C::ShouldFadeout() {
     return !this->m_component || (TextureIsReadyNow(this->m_component->m_baseTexture) && this->m_component->RenderPrep(0));
 }
 
+// PROVEN: 189d31f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00597BC0/0x140205B00
 int32_t CGCorpse_C::CanBeLooted() const {
     return this->m_corpse->m_corpseFieldDynamicFlags & 0x1;
@@ -129,6 +135,7 @@ void CGCorpse_C::ShowLootEffect() {
     }
 }
 
+// PROVEN: 7f758eb0 IDENTICAL/NONE
 // OFFSET: 0x00597C20
 static void GuildTabardCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     CorpseGuildRequest* request = static_cast<CorpseGuildRequest*>(param);
@@ -141,6 +148,7 @@ static void GuildTabardCallback(const uint64_t& key, const WOWGUID& guid, void* 
     delete request;
 }
 
+// PROVEN: 8f1af0f6 IDENTICAL/NONE
 // OFFSET: 0x00597C70
 static void ShirtGuildTabardCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     CorpseGuildRequest* request = static_cast<CorpseGuildRequest*>(param);
@@ -153,7 +161,7 @@ static void ShirtGuildTabardCallback(const uint64_t& key, const WOWGUID& guid, v
     delete request;
 }
 
-// OFFSET: 0x00597CC0
+// OFFSET: 0x00597CC0/0x140205C30
 void CGCorpse_C::ApplyGuildColor(uint32_t flags) {
     if (!this->m_component) {
         return;
@@ -176,7 +184,7 @@ void CGCorpse_C::ApplyGuildColor(uint32_t flags) {
     }
 }
 
-// OFFSET: 0x00597DD0
+// OFFSET: 0x00597DD0/0x140205DA0
 void CGCorpse_C::ApplyShirtGuildColor(uint32_t flags) {
     if (!this->m_component) {
         return;
@@ -199,6 +207,7 @@ void CGCorpse_C::ApplyShirtGuildColor(uint32_t flags) {
     }
 }
 
+// PROVEN: c493e97d IDENTICAL/UNPROVEN
 // OFFSET: 0x00597EE0/0x140205F10
 uint32_t CGCorpse_C::GetFactionTemplate() const {
     ChrRacesRec* rec = g_chrRacesDB.GetRecord(this->m_corpse->m_corpseFieldBytes1[1]);
@@ -396,6 +405,7 @@ void CGCorpse_C::Reenable(const CClientObjCreate& create) {
     }
 }
 
+// PROVEN: 9c9acae2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00598520/0x140206670
 void CGCorpse_C::ModelLoaded(CM2Model* model) {
     this->CGObject_C::ModelLoaded(model);
@@ -432,7 +442,8 @@ void CGCorpse_C::OnRightClick() {
     }
 }
 
-// OFFSET: 0x00598680
+// PROVEN: 69ca36a4 IDENTICAL/UNPROVEN
+// OFFSET: 0x00598680/0x140206800
 void CGCorpse_C::OnFlagChanged(uint32_t oldFlags) {
     if (this->m_lootEffect) {
         if (this->m_lootEffect->m_attachParent) {
@@ -473,7 +484,7 @@ void CGCorpse_C::OnFlagChanged(uint32_t oldFlags) {
     this->AddWorldObject();
 }
 
-// OFFSET: 0x00598770
+// OFFSET: 0x00598770/0x140206910
 void CGCorpse_C::OnDynamicFlagChanged(uint32_t oldFlags) {
     if (!((static_cast<uint8_t>(oldFlags) ^ this->m_corpse->m_corpseFieldDynamicFlags) & 0x1)) {
         return;
@@ -494,7 +505,7 @@ void CGCorpse_C::OnDynamicFlagChanged(uint32_t oldFlags) {
     }
 }
 
-// PROVEN: d336bac1 IDENTICAL/NONE
+// PROVEN: d336bac1 IDENTICAL/DIFFERENT
 // OFFSET: 0x005987D0/0x140206980
 int32_t CorpseFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGCorpse_C* corpse = static_cast<CGCorpse_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_CORPSE, __FILE__, __LINE__));
@@ -506,7 +517,7 @@ int32_t CorpseFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     return 1;
 }
 
-// PROVEN: a2431141 IDENTICAL/NONE
+// PROVEN: a2431141 IDENTICAL/DIFFERENT
 // OFFSET: 0x00598810/0x1402069C0
 int32_t CorpseDynamicFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGCorpse_C* corpse = static_cast<CGCorpse_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_CORPSE, __FILE__, __LINE__));
@@ -518,6 +529,7 @@ int32_t CorpseDynamicFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
+// PROVEN: 1501f3c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00598850/0x140206A00
 void CGCorpse_C::Initialize() {
     ClntObjMgrSetTypeMirrorHandler(ID_CORPSE, offsetof(CGCorpseData, m_corpseFieldFlags), sizeof(uint32_t), CorpseFlagUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
@@ -529,7 +541,7 @@ void CGCorpse_C::OnInteract() {
     this->OnRightClick();
 }
 
-// OFFSET: 0x00598890
+// OFFSET: 0x00598890/0x140206A70
 void CGCorpse_C::RenderTargetSelection() const {
     g_theGxDevicePtr->RsPush();
 
@@ -569,11 +581,13 @@ CGCorpse_C::CGCorpse_C(uint32_t time, const CClientObjCreate& create) : CGObject
     this->m_passenger.m_facing = create.m_hasGOTransport ? create.m_goTransport.m_facing : create.m_stationaryFacing;
 }
 
+// PROVEN: 4ed8d6d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00598B80/0x140206E00
 float CGCorpse_C::GetTrueScale() const {
     return this->GetDisplayScale() * this->m_scaleModifier * this->m_scale;
 }
 
+// PROVEN: 068a6ade IDENTICAL/IDENTICAL
 // OFFSET: 0x00598BA0/0x140206E30
 int32_t CGCorpse_C::CanHighlight() const {
     return !(this->m_corpse->m_corpseFieldFlags & 0x1) || (this->m_corpse->m_corpseFieldDynamicFlags & 0x1);
@@ -595,7 +609,7 @@ CGCorpse_C::~CGCorpse_C() {
     }
 }
 
-// OFFSET: 0x00598CC0
+// OFFSET: 0x00598CC0/0x140207010
 C3Vector CGCorpse_C::GetGroundNormal() {
     if (!(this->m_corpseFlags & 0x1) && this->GetObjectModel() && this->GetObjectModel()->IsLoaded()) {
         static World::FacetData s_facets;
@@ -635,7 +649,7 @@ C3Vector CGCorpse_C::GetGroundNormal() {
     return this->m_groundNormal;
 }
 
-// OFFSET: 0x00598F40
+// OFFSET: 0x00598F40/0x140207360
 int32_t CGCorpse_C::Animate(float elapsed) {
     for (CEffect* effect = this->m_effectList; effect; ) {
         CEffect* next = effect->m_next;
@@ -663,17 +677,19 @@ float CGCorpse_C::GetFacing() const {
     return this->m_passenger.GetFacing(this->m_passenger.m_facing);
 }
 
+// PROVEN: 9507718e IDENTICAL/IDENTICAL
 // OFFSET: 0x00597820/0x140205620
 float CGCorpse_C::GetRawFacing() const {
     return this->m_passenger.m_facing;
 }
 
+// PROVEN: a830af99 IDENTICAL/IDENTICAL
 // OFFSET: 0x00598B40/0x140206DE0
 C3Vector CGCorpse_C::GetRawPosition() const {
     return this->m_passenger.m_position;
 }
 
-// PROVEN: c85850d8 IDENTICAL/NONE
+// PROVEN: c85850d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00598B70/0x1402142E0
 uint64_t CGCorpse_C::GetTransportGUID() const {
     return this->m_passenger.m_transportGuid.m_guid;

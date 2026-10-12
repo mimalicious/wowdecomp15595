@@ -8,9 +8,10 @@
 #include "WoW/Source/StaticSingleton.h"
 #include "WoW/Source/UIUtil/CameraManager.h"
 
-// STATIC: 0x00D3A7D8
+// STATIC: 0x00D3A7D8/0x140BF5AE8
 static CDataAllocator s_lockedInstances(sizeof(CCameraModeInstanceLocked), 8);
 
+// PROVEN: f351b294 UNPROVEN/IDENTICAL
 // OFFSET: 0x00463640/0x140076CD0
 CCameraModeLocked::CCameraModeLocked(const CameraModeRec* rec) : CCameraMode(rec) {
 }
@@ -28,7 +29,7 @@ CCameraModeInstance* CCameraModeLocked::AllocInstance(const CCameraModeInstance&
     return result;
 }
 
-// PROVEN: 470ffd38 IDENTICAL/NONE
+// PROVEN: 470ffd38 IDENTICAL/IDENTICAL
 // OFFSET: 0x004636C0/0x140076D80
 void CCameraModeLocked::FreeInstance(CCameraModeInstance* instance) const {
     if (instance) {
@@ -54,7 +55,7 @@ int32_t CCameraModeLocked::IsTracking(const CCameraModeInstance* instance, WOWGU
     return CCameraMode::IsTracking(instance, guid) != 0;
 }
 
-// OFFSET: 0x004637B0
+// OFFSET: 0x004637B0/0x140076EA0
 C3Vector CCameraModeLocked::CalcOffsetTwoTargets(const C3Vector& offset, const C44Matrix& target, const C44Matrix& secondTarget, CAMERA_MODE_LOCKED_OFFSET_BASE base, CAMERA_MODE_LOCKED_OFFSET_DIRECTION direction, int32_t flatten) const {
     if (base == CAMERA_MODE_LOCKED_OFFSET_BASE_WORLD) {
         return offset;
@@ -209,13 +210,13 @@ void CCameraModeLocked::UpdateInstance(CCameraModeInstance* instance, float elap
     }
 }
 
-// PROVEN: caeae147 IDENTICAL/NONE
+// PROVEN: caeae147 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CAB0/0x1408476E0
 int32_t CCameraModeLocked::GetType() const {
     return CAMERA_MODE_LOCKED;
 }
 
-// PROVEN: 109f08e3 IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: 109f08e3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CCameraModeLocked::DestroyInstance(CCameraModeInstance* instance) const {
 }

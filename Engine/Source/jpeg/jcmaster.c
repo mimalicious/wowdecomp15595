@@ -44,7 +44,7 @@ typedef my_comp_master * my_master_ptr;
 
 /* Do computations that are needed before master selection phase */
 // PROVEN: 13807af3 IDENTICAL/NONE
-// OFFSET: 0x00B649E0
+// OFFSET: 0x00B649E0/0x14092EE70
 static void initial_setup(j_compress_ptr cinfo) {
   int ci;
   jpeg_component_info *compptr;
@@ -137,7 +137,7 @@ static void initial_setup(j_compress_ptr cinfo) {
 /* Verify that the scan script in cinfo->scan_info[] is valid; also
  * determine whether it uses progressive JPEG, and set cinfo->progressive_mode.
  */
-// OFFSET: 0x00B64BF0
+// OFFSET: 0x00B64BF0/0x14092F0A0
 static void validate_script(j_compress_ptr cinfo) {
   const jpeg_scan_info * scanptr;
   int scanno, ncomps, ci, coefi, thisi;

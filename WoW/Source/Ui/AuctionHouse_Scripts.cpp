@@ -27,7 +27,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00BFF460
+// STATIC: 0x00BFF460/0x1409F72F0
 static const AuctionItemClass s_auctionClasses[10] = {
     { 2, 1 },
     { 4, 1 },
@@ -59,12 +59,13 @@ static const AuctionInvType s_auctionInvTypes[14] = {
     { 23, "INVTYPE_HOLDABLE", 1, 1 },
 };
 
-// STATIC: 0x00BFF718
+// STATIC: 0x00BFF718/0x1409F75A8
 static const uint32_t s_timeLeftThresholds[3] = { 1800000, 7200000, 43200000 };
 
 // STATIC: 0x00BFF724
 static const uint32_t AUCTION_RUN_TIMES[3] = { 720, 1440, 2880 };
 
+// PROVEN: f25a91f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009739B0/0x1406EB920
 static int32_t Script_SetAuctionsTabShowing(lua_State* L) {
     if (lua_type(L, 1) != LUA_TBOOLEAN) {
@@ -76,7 +77,7 @@ static int32_t Script_SetAuctionsTabShowing(lua_State* L) {
     return 0;
 }
 
-// PROVEN: be315713 IDENTICAL/NONE
+// PROVEN: be315713 IDENTICAL/UNPROVEN
 // OFFSET: 0x00974300/0x1406EC410
 static int32_t Script_GetAuctionHouseDepositRate(lua_State* L) {
     const AuctionHouseRec* rec = g_auctionHouseDB.GetRecord(CGAuctionHouse::m_auctionHouseID);
@@ -90,6 +91,7 @@ static int32_t Script_GetAuctionHouseDepositRate(lua_State* L) {
     return 1;
 }
 
+// PROVEN: de401547 IDENTICAL/DIFFERENT
 // OFFSET: 0x00974BD0/0x1406ECC50
 static int32_t Script_GetAuctionItemClasses(lua_State* L) {
     int32_t count = 0;
@@ -191,6 +193,7 @@ static int32_t Script_GetAuctionInvTypes(lua_State* L) {
     return 28;
 }
 
+// PROVEN: 21d5d673 IDENTICAL/DIFFERENT
 // OFFSET: 0x00975180/0x1406ED3B0
 static int32_t Script_CanCancelAuction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -337,6 +340,7 @@ static int32_t Script_IsAuctionSortReversed(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 5b69adf2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00973660/0x1406EB570
 static int32_t Script_GetAuctionSort(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
@@ -375,7 +379,7 @@ static int32_t Script_GetAuctionSort(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 67d50cbe IDENTICAL/NONE
+// PROVEN: 67d50cbe IDENTICAL/DIFFERENT
 // OFFSET: 0x00973780/0x1406EB6D0
 static int32_t Script_SortAuctionClearSort(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -423,7 +427,8 @@ static int32_t Script_SortAuctionSetSort(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00973940
+// PROVEN: bf10d347 DIFFERENT/IDENTICAL
+// OFFSET: 0x00973940/0x1406EB900
 static int32_t Script_CancelSell(lua_State* L) {
     if (CGAuctionHouse::m_havePendingSell) {
         CGAuctionHouse::OnMultisellFailure(false);
@@ -600,7 +605,7 @@ static int32_t Script_GetAuctionItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00974EF0
+// OFFSET: 0x00974EF0/0x1406ED060
 static int32_t Script_CanSendAuctionQuery(lua_State* L) {
     int32_t type = 0;
 
@@ -623,6 +628,7 @@ static int32_t Script_CanSendAuctionQuery(lua_State* L) {
     return 2;
 }
 
+// PROVEN: cd02917d IDENTICAL/DIFFERENT
 // OFFSET: 0x00974FE0/0x1406ED180
 static int32_t Script_SetSelectedAuctionItem(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
@@ -644,6 +650,7 @@ static int32_t Script_SetSelectedAuctionItem(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 79d5e47e IDENTICAL/DIFFERENT
 // OFFSET: 0x009750C0/0x1406ED2A0
 static int32_t Script_GetSelectedAuctionItem(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -666,6 +673,7 @@ static int32_t Script_GetSelectedAuctionItem(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 75d26d19 IDENTICAL/DIFFERENT
 // OFFSET: 0x009783D0/0x1406F0860
 static int32_t Script_SortAuctionApplySort(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1096,6 +1104,7 @@ static int32_t Script_PlaceAuctionBid(lua_State* L) {
     return 0;
 }
 
+// PROVEN: beb62cc8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00979DC0/0x1406F2AF0
 static int32_t Script_SortAuctionItems(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
@@ -1122,6 +1131,7 @@ static int32_t Script_SortAuctionItems(lua_State* L) {
     return 0;
 }
 
+// PROVEN: f7794f40 IDENTICAL/IDENTICAL
 // OFFSET: 0x00975BE0/0x1406EDFA0
 static int32_t Script_CloseAuctionHouse(lua_State* L) {
     CGAuctionHouse::CloseAuctionHouse();
@@ -1350,7 +1360,7 @@ static int32_t Script_GetAuctionItemTimeLeft(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00D134D0
+// STATIC: 0x00D134D0/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseAuctionHouse", &Script_CloseAuctionHouse },
     { "GetAuctionHouseDepositRate", &Script_GetAuctionHouseDepositRate },
@@ -1385,6 +1395,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetAuctionsTabShowing", &Script_SetAuctionsTabShowing },
 };
 
+// PROVEN: 21a4ca15 IDENTICAL/UNPROVEN
 // OFFSET: 0x00973A00/0x1406EB970
 void AuctionHouseRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1392,6 +1403,7 @@ void AuctionHouseRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 28cfc0a2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00973A30/0x1406EB9C0
 void AuctionHouseUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

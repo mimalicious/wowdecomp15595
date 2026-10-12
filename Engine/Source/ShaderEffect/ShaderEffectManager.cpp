@@ -5,10 +5,10 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00D38308
+// STATIC: 0x00D38308/0x140B301F0
 TSHashTable<CShaderEffect, HASHKEY_STRI> CShaderEffectManager::m_ShaderList;
 
-// OFFSET: 0x004347C0
+// OFFSET: 0x004347C0/0x14003D9C0
 void CShaderEffectManager::DestroyAllEffects() {
     CShaderEffect* effect = CShaderEffectManager::m_ShaderList.Head();
 
@@ -31,6 +31,7 @@ CShaderEffect* CShaderEffectManager::CreateEffect(const char* name) {
     return CShaderEffectManager::m_ShaderList.New(name, 0, 0);
 }
 
+// PROVEN: f3d20c49 IDENTICAL/DIFFERENT
 // OFFSET: 0x00434F70/0x14003E590
 void CShaderEffectManager::ParseEffectCallback(const CShaderEffectParser::ParsedEffect& effect, void* param) {
     CShaderEffect* shaderEffect = CShaderEffectManager::m_ShaderList.New(effect.m_name, 0, 0);
@@ -43,6 +44,7 @@ void CShaderEffectManager::ParseEffectCallback(const CShaderEffectParser::Parsed
     }
 }
 
+// PROVEN: 03dac55e IDENTICAL/DIFFERENT
 // OFFSET: 0x00435070/0x14003E770
 void CShaderEffectManager::AddEffectFile(const char* fileName) {
     char path[256];

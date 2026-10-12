@@ -7,10 +7,10 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: 0x00E287E8
+// STATIC: 0x00E287E8/0x140D10428
 static TSGrowableArray<TEXTEMOTELOOKUP> s_textEmoteLookups;
 
-// STATIC: 0x00E287F8
+// STATIC: 0x00E287F8/0x140D10440
 static TSGrowableArray<TEXTEMOTELOOKUP*> s_textEmoteLookupById;
 
 // INLINED
@@ -19,7 +19,7 @@ TEXTEMOTELOOKUP::TEXTEMOTELOOKUP() {
     memset(this->m_soundIds, 0, sizeof(this->m_soundIds));
 }
 
-// PROVEN: eb0515c2 IDENTICAL/NONE
+// PROVEN: eb0515c2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00631950/0x1402C6D90
 int32_t SI3::GetTextEmoteSoundID(uint32_t emotesTextId, uint32_t race, uint32_t sex) {
     TEXTEMOTELOOKUP* lookup;
@@ -31,7 +31,7 @@ int32_t SI3::GetTextEmoteSoundID(uint32_t emotesTextId, uint32_t race, uint32_t 
     return 0;
 }
 
-// OFFSET: 0x00631990
+// OFFSET: 0x00631990/0x1402C6DD0
 int32_t SI3::GetTextEmoteSoundIndex(uint32_t emotesTextId, uint32_t race, uint32_t sex) {
     TEXTEMOTELOOKUP* lookup;
     int32_t soundKitId;
@@ -55,6 +55,7 @@ int32_t SI3::GetTextEmoteSoundIndex(uint32_t emotesTextId, uint32_t race, uint32
     return index;
 }
 
+// PROVEN: c10ba697 IDENTICAL/DIFFERENT
 // OFFSET: 0x00631B00/0x1402C6F60
 void SI3::InitEmoteSounds() {
     if (!g_emotesTextDB.m_numRecords || !g_emotesTextSoundDB.m_numRecords) {
@@ -99,8 +100,8 @@ void SI3::InitEmoteSounds() {
     }
 }
 
-// PROVEN: 2485bc42 IDENTICAL/NONE
-// OFFSET: 0x00631C40
+// PROVEN: 2485bc42 IDENTICAL/UNPROVEN
+// OFFSET: 0x00631C40/0x1402C7130
 void SI3::ShutDownEmoteSounds() {
     s_textEmoteLookups.Clear();
     s_textEmoteLookupById.Clear();

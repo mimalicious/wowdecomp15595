@@ -18,6 +18,7 @@
 #include "WoW/Source/Ui/GuildRegistrar.h"
 #include "WoW/Source/Ui/Types.h"
 
+// PROVEN: f892816e IDENTICAL/IDENTICAL
 // OFFSET: 0x009E01C0/0x140776D40
 static int32_t Script_GetNumPetitionNames(lua_State* L) {
     lua_pushnumber(L, CGPetitionInfo::m_numPetitionNames);
@@ -256,7 +257,7 @@ static int32_t Script_RenamePetition(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D16738
+// STATIC: 0x00D16738/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "ClosePetition", &Script_ClosePetition },
     { "GetPetitionInfo", &Script_GetPetitionInfo },
@@ -268,7 +269,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "RenamePetition", &Script_RenamePetition },
 };
 
-// PROVEN: e3481e2c IDENTICAL/NONE
+// PROVEN: e3481e2c IDENTICAL/UNPROVEN
 // OFFSET: 0x009E0200/0x140776D70
 void PetitionInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -276,7 +277,7 @@ void PetitionInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 7fcecd32 IDENTICAL/NONE
+// PROVEN: 7fcecd32 IDENTICAL/UNPROVEN
 // OFFSET: 0x009E0230/0x140776DC0
 void PetitionInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

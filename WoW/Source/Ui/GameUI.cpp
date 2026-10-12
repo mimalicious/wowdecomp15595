@@ -196,68 +196,68 @@
 #include "WoW/Source/DB/Rec/CreatureFamilyRec.h"
 #include "WoW/Source/DB/Rec/CreatureTypeRec.h"
 
-// STATIC: 0x00BE4DD0
+// STATIC: 0x00BE4DD0/0x1409DEB14
 static const uint8_t s_parentalControlsWarningTimes[] = { 1, 2, 3, 4, 5, 10, 15, 0 };
 
-// STATIC: 0x00D0FF9C
+// STATIC: 0x00D0FF9C/0x140BC6308
 static int32_t s_cemeteryListRequestDelay = 1000;
 
-// STATIC: 0x00ED758C
+// STATIC: 0x00ED758C/0x140E25BF0
 uint32_t CGGameUI::s_numCemeteries;
 
-// STATIC: 0x00ED7590
+// STATIC: 0x00ED7590/0x140E25C00
 uint32_t CGGameUI::s_cemeteries[16];
 
-// STATIC: 0x00ED757C
+// STATIC: 0x00ED757C/0x140E25BE8
 uint32_t CGGameUI::s_cemeteryPreference;
 
-// STATIC: 0x00D0B2AC
+// STATIC: 0x00D0B2AC/0x140BBE454
 int32_t CGGameUI::s_parentalControlsWarning;
 
-// STATIC: 0x00ED7610
+// STATIC: 0x00ED7610/0x140E25C78
 int32_t CGGameUI::s_streamingWait;
 
-// STATIC: 0x00ED7604
+// STATIC: 0x00ED7604/0x140E25C6C
 int32_t CGGameUI::s_streamingIcon;
 
 // STATIC: 0x00ED7608
 WOWGUID CGGameUI::m_lastEnchantItem;
 
-// STATIC: 0x00ED75D4
+// STATIC: 0x00ED75D4/0x140E25BF8
 int32_t CGGameUI::s_weeklyResetTime;
 
-// STATIC: 0x00ED75DA
+// STATIC: 0x00ED75DA/0x140E25C42
 bool CGGameUI::s_sessionAlertEnabled;
 
-// STATIC: 0x00ED75DC
+// STATIC: 0x00ED75DC/0x140E25C44
 int32_t CGGameUI::s_sessionAlertInterval;
 
-// STATIC: 0x00ED75E0
+// STATIC: 0x00ED75E0/0x140E25C48
 int32_t CGGameUI::s_sessionAlertIntervalAlt;
 
-// STATIC: 0x00ED75E4
+// STATIC: 0x00ED75E4/0x140E25C4C
 int32_t CGGameUI::s_sessionAlertTime;
 
-// STATIC: 0x00ED7588
+// STATIC: 0x00ED7588/0x140E25BEC
 uint32_t CGGameUI::s_cemeteryListRequestTime;
 
-// STATIC: 0x00ED748C
+// STATIC: 0x00ED748C/0x140E25AEC
 int32_t CGGameUI::m_cursorCurrency;
 
-// STATIC: 0x00ED7490
+// STATIC: 0x00ED7490/0x140E25AF0
 int32_t CGGameUI::m_cursorFlyout;
 
-// STATIC: 0x00ED7498
+// STATIC: 0x00ED7498/0x140E25AF8
 WOWGUID CGGameUI::m_cursorVoidStorageItem;
 
 CImVector s_deadSelectionColor = CImVector(0x7F, 0x7F, 0x7F, 0xFF);
 
-// STATIC: 0x00D0B254
+// STATIC: 0x00D0B254/0x140BBE3A8
 const char* g_macroTaint = "";
 
 static const char* s_readOnlyCVars[6] = { "realmList", "realmName", "decorateAccountName", "realmlistbn", "portal", "serverAlert" };
 
-// STATIC: 0x00D0BD30
+// STATIC: 0x00D0BD30/0x140BBF8D0
 static UIErrorInfo s_errorInfo[ERR_MAX_VALUE] = {
     { "ERR_INV_FULL", 2, "NONE", 0, 0 },
     { "ERR_BANK_FULL", 2, "NONE", 68, 0 },
@@ -1095,54 +1095,54 @@ static UIErrorInfo s_errorInfo[ERR_MAX_VALUE] = {
     { "ERR_BUG_SUBMITTED_SUCCESSFULLY", 1, "NONE", 68, 0 },
 };
 
-// STATIC: 0x00D0B2A8
+// STATIC: 0x00D0B2A8/0x140BBE450
 int32_t CGGameUI::m_cursorEquipmentSet = -1;
 
 int32_t CGGameUI::m_phaseMask;
 
-// STATIC: 0x00D0B2B4
+// STATIC: 0x00D0B2B4/0x140BBE45C
 int32_t CGGameUI::m_visible = 1;
 
-// STATIC: 0x00D0B2B0
+// STATIC: 0x00D0B2B0/0x140BBE458
 int32_t CGGameUI::m_areaMountFlags = -1;
 
-// STATIC: 0x00ED7524
+// STATIC: 0x00ED7524/0x140E25B84
 int32_t CGGameUI::m_billingActive;
 
-// STATIC: 0x00ED74F2
+// STATIC: 0x00ED74F2/0x140E25B52
 uint8_t CGGameUI::m_hasTravelPass;
 
-// STATIC: 0x00ED74F3
+// STATIC: 0x00ED74F3/0x140E25B53
 uint8_t CGGameUI::s_canSendSoR;
 
-// STATIC: 0x00ED7564
+// STATIC: 0x00ED7564/0x140E25BC8
 int32_t CGGameUI::s_numSoRRemaining;
 
-// STATIC: 0x00ED7560
+// STATIC: 0x00ED7560/0x140E25BC4
 int32_t CGGameUI::s_maxSoRPerDay;
 
-// STATIC: 0x00ED7568
+// STATIC: 0x00ED7568/0x140E25BCC
 uint32_t CGGameUI::s_cfgRealmID;
 
-// STATIC: 0x00ED756C
+// STATIC: 0x00ED756C/0x140E25BD0
 uint32_t CGGameUI::s_cfgRealmRecID;
 
-// STATIC: 0x00ED753C
+// STATIC: 0x00ED753C/0x140E25BA0
 int32_t CGGameUI::s_tournamentRealm;
 
-// STATIC: 0x00ED7558
+// STATIC: 0x00ED7558/0x140E25BB4
 uint32_t CGGameUI::s_restrictedLevel;
 
-// STATIC: 0x00ED755C
+// STATIC: 0x00ED755C/0x140E25BC0
 uint32_t CGGameUI::s_restrictedMoney;
 
-// STATIC: 0x00D0BD10
+// STATIC: 0x00D0BD10/0x140BBF8A0
 CCapturePointUIManager g_capturePointUIManager;
 
-// STATIC: 0x00D0BCAC
+// STATIC: 0x00D0BCAC/0x140BBF834
 static float s_maxMatchDistance = 10000.0f;
 
-// STATIC: 0x00D0BCB0
+// STATIC: 0x00D0BCB0/0x140BBF838
 static float s_corpseRangeSq = 1600.0f;
 
 // STATIC: 0x00D0BCD0
@@ -1151,292 +1151,292 @@ static C44Matrix s_corpseMapRotation;
 // STATIC: 0x00D0BD00
 static C3Vector s_corpseMapPosition;
 
-// STATIC: 0x00ED74D8
+// STATIC: 0x00ED74D8/0x140E25B38
 static int32_t s_corpseQueryTime;
 
-// STATIC: 0x00ED6808
+// STATIC: 0x00ED6808/0x140E24E40
 static uint32_t s_accountDataPending;
 
-// STATIC: 0x00ED680C
+// STATIC: 0x00ED680C/0x140E24E48
 CinematicInfo CGGameUI::m_cinematic;
 
-// STATIC: 0x00ED6824
+// STATIC: 0x00ED6824/0x140E24E44
 int32_t CGGameUI::m_hasControl;
 
-// STATIC: 0x00ED6828
+// STATIC: 0x00ED6828/0x140E24E70
 char CGGameUI::m_lastErrorMessage[3000];
 
-// STATIC: 0x00ED73E0
+// STATIC: 0x00ED73E0/0x140E24E68
 int32_t CGGameUI::m_cursorItemType;
 
-// STATIC: 0x00ED73E4
+// STATIC: 0x00ED73E4/0x140E24E6C
 int32_t CGGameUI::m_cursorHasAction;
 
-// STATIC: 0x00ED73E8
+// STATIC: 0x00ED73E8/0x140E25A28
 int32_t CGGameUI::m_cursorVirtualSlot;
 
-// STATIC: 0x00ED73EC
+// STATIC: 0x00ED73EC/0x140E25A2C
 int32_t CGGameUI::m_cursorVirtualDisplay;
 
-// STATIC: 0x00ED73F0
+// STATIC: 0x00ED73F0/0x140E25A30
 int32_t CGGameUI::m_cursorVirtualID;
 
-// STATIC: 0x00ED73F4
+// STATIC: 0x00ED73F4/0x140E25A34
 uint32_t CGGameUI::m_cursorItemSlot;
 
-// STATIC: 0x00ED73F8
+// STATIC: 0x00ED73F8/0x140E25A38
 WOWGUID CGGameUI::m_cursorItemContainer;
 
-// STATIC: 0x00ED7400
+// STATIC: 0x00ED7400/0x140E25A40
 WOWGUID CGGameUI::m_cursorItem;
 
-// STATIC: 0x00ED740C
+// STATIC: 0x00ED740C/0x140E25A50
 CGTooltip* CGGameUI::m_gameTooltip;
 
-// STATIC: 0x00ED77A4
+// STATIC: 0x00ED77A4/0x140E26160
 static TAINTEVENT s_lastTaintEvent;
 
-// STATIC: 0x00ED7934
+// STATIC: 0x00ED7934/0x140BC6110
 static TSHashTable<TAINTEVENT, HASHKEY_STR> s_taintEvents;
 
-// STATIC: 0x00ED7410
+// STATIC: 0x00ED7410/0x140E25A58
 CSimpleFrame* CGGameUI::m_UISimpleParent;
 
-// STATIC: 0x00ED7420
+// STATIC: 0x00ED7420/0x140E25A78
 CSimpleTop* CGGameUI::m_simpleTop;
 
-// STATIC: 0x00ED7424
+// STATIC: 0x00ED7424/0x140E25A4C
 uint8_t CGGameUI::m_currentlyReloadingUI;
 
-// STATIC: 0x00ED7425
+// STATIC: 0x00ED7425/0x140E25A4D
 uint8_t CGGameUI::m_reloadUIRequested;
 
-// STATIC: 0x00ED7427
+// STATIC: 0x00ED7427/0x140E25A4F
 uint8_t CGGameUI::m_loggingIn;
 
-// STATIC: 0x00ED7478
+// STATIC: 0x00ED7478/0x140E25AD8
 uint64_t CGGameUI::m_cursorMoney;
 
-// STATIC: 0x00ED7438
+// STATIC: 0x00ED7438/0x140E25A98
 WOWGUID CGGameUI::m_currentObjectTrack;
 
-// STATIC: 0x00ED7440
+// STATIC: 0x00ED7440/0x140E25AA0
 WOWGUID CGGameUI::m_interactTarget;
 
-// STATIC: 0x00ED7430
+// STATIC: 0x00ED7430/0x140E25A90
 float CGGameUI::m_interactMaxDistSq;
 
-// STATIC: 0x00ED74E0
+// STATIC: 0x00ED74E0/0x140E25B40
 WOWGUID CGGameUI::m_areaSpiritHealerGUID;
 
 float s_duelDistSq = 100.0f;
 
-// STATIC: 0x00D0BCA0
+// STATIC: 0x00D0BCA0/0x140BBF828
 float s_playerInteractDistSq = 123.45678f;
 
-// STATIC: 0x00D0BCA4
+// STATIC: 0x00D0BCA4/0x140BBF82C
 float s_inspectDistSq = 900.0f;
 
 float s_followDistSq = 900.0f;
 
-// STATIC: 0x00ED7448
+// STATIC: 0x00ED7448/0x140E25AA8
 WOWGUID CGGameUI::m_lockedTarget;
 
-// STATIC: 0x00ED7450
+// STATIC: 0x00ED7450/0x140E25AB0
 WOWGUID CGGameUI::m_lastTarget;
 
-// STATIC: 0x00ED7458
+// STATIC: 0x00ED7458/0x140E25AB8
 WOWGUID CGGameUI::m_lastEnemyTarget;
 
-// STATIC: 0x00ED7460
+// STATIC: 0x00ED7460/0x140E25AC0
 WOWGUID CGGameUI::m_lastFriendTarget;
 
-// STATIC: 0x00ED7468
+// STATIC: 0x00ED7468/0x140E25AC8
 WOWGUID CGGameUI::m_focusTarget;
 
-// STATIC: 0x00ED7434
+// STATIC: 0x00ED7434/0x140E25A94
 int32_t CGGameUI::m_cursorSpell;
 
-// STATIC: 0x00ED7480
+// STATIC: 0x00ED7480/0x140E25AE0
 PetAction CGGameUI::m_cursorPetAction;
 
-// STATIC: 0x00ED7484
+// STATIC: 0x00ED7484/0x140E25AE4
 int32_t CGGameUI::m_cursorMacro;
 
-// STATIC: 0x00ED7488
+// STATIC: 0x00ED7488/0x140E25AE8
 int32_t CGGameUI::m_cursorPet;
 
-// STATIC: 0x00ED7494
+// STATIC: 0x00ED7494/0x140E25AF4
 int32_t CGGameUI::m_screenWidth;
 
-// STATIC: 0x00ED74A0
+// STATIC: 0x00ED74A0/0x140E25B00
 int32_t CGGameUI::m_screenHeight;
 
-// STATIC: 0x00ED74A4
+// STATIC: 0x00ED74A4/0x140E25B04
 float CGGameUI::m_aspect;
 
-// STATIC: 0x00ED74A8
+// STATIC: 0x00ED74A8/0x140E25B08
 int32_t CGGameUI::m_inCinematic;
 
-// STATIC: 0x00ED74AC
+// STATIC: 0x00ED74AC/0x140E25B0C
 int32_t CGGameUI::m_inMovie;
 
 int32_t CGGameUI::m_movieFileDataID;
 
 int32_t CGGameUI::m_movieVolume;
 
-// STATIC: 0x00ED74C8
+// STATIC: 0x00ED74C8/0x140E25B28
 WOWGUID CGGameUI::m_corpseGUID;
 
-// STATIC: 0x00ED74EC
+// STATIC: 0x00ED74EC/0x140E25B4C
 uint32_t CGGameUI::m_repopTime;
 
-// STATIC: 0x00ED74F0
+// STATIC: 0x00ED74F0/0x140E25B50
 uint8_t CGGameUI::m_deadNoRepopTimer;
 
-// STATIC: 0x00ED74F1
+// STATIC: 0x00ED74F1/0x140E25B51
 uint8_t CGGameUI::m_comboPoints;
 
-// STATIC: 0x00ED74F4
+// STATIC: 0x00ED74F4/0x140E25B54
 uint32_t CGGameUI::m_corpseReclaimDelay;
 
-// STATIC: 0x00ED74F8
+// STATIC: 0x00ED74F8/0x140E25B58
 uint32_t CGGameUI::m_instanceBootTime;
 
-// STATIC: 0x00ED74FC
+// STATIC: 0x00ED74FC/0x140E25B5C
 uint32_t CGGameUI::m_instanceLockTime;
 
-// STATIC: 0x00ED7500
+// STATIC: 0x00ED7500/0x140E25B60
 uint32_t CGGameUI::m_instanceLockCompletedMask;
 
-// STATIC: 0x00ED7504
+// STATIC: 0x00ED7504/0x140E25B64
 uint32_t CGGameUI::m_instanceLockExtending;
 
-// STATIC: 0x00ED7508
+// STATIC: 0x00ED7508/0x140E25B68
 uint32_t CGGameUI::m_summonConfirmTime;
 
-// STATIC: 0x00ED7518
+// STATIC: 0x00ED7518/0x140E25B78
 uint32_t CGGameUI::m_billingExpireTime;
 
-// STATIC: 0x00ED751C
+// STATIC: 0x00ED751C/0x140E25B7C
 int32_t CGGameUI::m_billingNagCheckTime;
 
-// STATIC: 0x00ED7520
+// STATIC: 0x00ED7520/0x140E25B80
 int32_t CGGameUI::m_billingNagShown;
 
-// STATIC: 0x00ED7528
+// STATIC: 0x00ED7528/0x140E25B88
 int32_t CGGameUI::m_initialized;
 
 // STATIC: 0x00ED752C
 uint32_t CGGameUI::m_uiLastInstanceTime;
 
-// STATIC: 0x00ED7530
+// STATIC: 0x00ED7530/0x140E25B8C
 int32_t CGGameUI::m_iMapID;
 
-// STATIC: 0x00ED7534
+// STATIC: 0x00ED7534/0x140E25B98
 int32_t CGGameUI::m_iCurrentMapID;
 
-// STATIC: 0x00ED7540
+// STATIC: 0x00ED7540/0x140E25BA4
 uint32_t CGGameUI::m_instanceDifficulty;
 
-// STATIC: 0x00ED7544
+// STATIC: 0x00ED7544/0x140E25BA8
 uint32_t CGGameUI::m_dungeonDifficulty;
 
-// STATIC: 0x00ED754C
+// STATIC: 0x00ED754C/0x140E25BB0
 uint32_t CGGameUI::m_lastRegenTime;
 
-// STATIC: 0x00ED7550
+// STATIC: 0x00ED7550/0x140E25BB8
 WOWGUID CGGameUI::m_comboTarget;
 
-// STATIC: 0x00ED75D0
+// STATIC: 0x00ED75D0/0x140E25BF4
 int32_t CGGameUI::m_threatWarningEnabled;
 
-// STATIC: 0x00ED75D8
+// STATIC: 0x00ED75D8/0x140E25C40
 uint16_t CGGameUI::m_accountDataGeneration;
 
 int32_t CGGameUI::unk_BD08CC;
 
-// STATIC: 0x00ED7830
+// STATIC: 0x00ED7830/0x140E26020
 TotemInfo CGGameUI::m_totems[5];
 
-// STATIC: 0x00ED78D0
+// STATIC: 0x00ED78D0/0x140E26104
 MirrorTimerInfo CGGameUI::m_mirrorTimerInfo[3];
 
-// STATIC: 0x00ED74B0
+// STATIC: 0x00ED74B0/0x140E25B10
 int32_t CGGameUI::m_areaID;
 
-// STATIC: 0x00ED7538
+// STATIC: 0x00ED7538/0x140E25B9C
 int32_t CGGameUI::m_bOwnsInstance;
 
-// STATIC: 0x00ED7408
+// STATIC: 0x00ED7408/0x140E25A48
 int32_t CGGameUI::m_stackSplit;
 
-// STATIC: 0x00ED7426
+// STATIC: 0x00ED7426/0x140E25A4E
 uint8_t CGGameUI::s_inWorld;
 
-// STATIC: 0x00ED7578
+// STATIC: 0x00ED7578/0x140E25BD4
 uint32_t CGGameUI::m_autoStoreItemID;
 
-// STATIC: 0x00ED7570
+// STATIC: 0x00ED7570/0x140E25BD8
 WOWGUID CGGameUI::m_autoStoreItem;
 
-// STATIC: 0x00ED74BC
+// STATIC: 0x00ED74BC/0x140E25B1C
 int32_t CGGameUI::m_corpseMapID;
 
-// STATIC: 0x00ED74C0
+// STATIC: 0x00ED74C0/0x140E25B20
 int32_t CGGameUI::m_corpseActualMapID;
 
-// STATIC: 0x00ED74C4
+// STATIC: 0x00ED74C4/0x140E25B24
 int32_t CGGameUI::m_corpseInRange;
 
-// STATIC: 0x00ED74D0
+// STATIC: 0x00ED74D0/0x140E25B30
 WOWGUID CGGameUI::m_corpseTransportGUID;
 
-// STATIC: 0x00ED74E8
+// STATIC: 0x00ED74E8/0x140E25B48
 int32_t CGGameUI::m_deathReleaseMapID;
 
-// STATIC: 0x00ED778C
+// STATIC: 0x00ED778C/0x140E25F70
 C3Vector CGGameUI::m_corpsePos;
 
-// STATIC: 0x00ED7798
+// STATIC: 0x00ED7798/0x140E25F80
 C3Vector CGGameUI::m_deathReleaseLoc;
 
-// STATIC: 0x00ED7414
+// STATIC: 0x00ED7414/0x140E25A60
 const char* CGGameUI::m_minimapZoneText;
 
-// STATIC: 0x00ED7418
+// STATIC: 0x00ED7418/0x140E25A68
 const char* CGGameUI::m_subZoneText;
 
-// STATIC: 0x00ED74B4
+// STATIC: 0x00ED74B4/0x140E25B14
 int32_t CGGameUI::m_subzoneID;
 
-// STATIC: 0x00ED74B8
+// STATIC: 0x00ED74B8/0x140E25B18
 int32_t CGGameUI::m_wmoGroupID;
 
-// STATIC: 0x00ED7470
+// STATIC: 0x00ED7470/0x140E25AD0
 WOWGUID CGGameUI::m_directionalTarget;
 
-// STATIC: 0x00ED7580
+// STATIC: 0x00ED7580/0x140E25BE0
 WOWGUID CGGameUI::m_pendingLevelGranter;
 
-// STATIC: 0x00ED7548
+// STATIC: 0x00ED7548/0x140E25BAC
 uint32_t CGGameUI::m_raidDifficulty;
 
 const char* CGGameUI::m_realZoneText;
 
-// STATIC: 0x00ED741C
+// STATIC: 0x00ED741C/0x140E25A70
 const char* CGGameUI::m_zoneText;
 
-// STATIC: 0x00ED750C
+// STATIC: 0x00ED750C/0x140E25B6C
 uint32_t CGGameUI::m_summonConfirmArea;
 
-// STATIC: 0x00ED7510
+// STATIC: 0x00ED7510/0x140E25B70
 WOWGUID CGGameUI::m_summonConfirmGUID;
 
-// STATIC: 0x00ED74DC
+// STATIC: 0x00ED74DC/0x140E25B3C
 int32_t CGGameUI::m_areaSpiritHealerTime;
 
-// STATIC: 0x00ED77D8
+// STATIC: 0x00ED77D8/0x140E25F90
 TSHashTable<SAVEDVARIABLE, HASHKEY_STR> CGGameUI::s_savedVariables[2];
 
 struct ItemPushData {
@@ -1451,22 +1451,22 @@ struct ItemPushData {
     /* 0024 */ uint32_t m_count;
 };
 
-// STATIC: 0x00ED75F8
+// STATIC: 0x00ED75F8/0x140E25C60
 WOWGUID CGGameUI::m_lastItemSpellTarget;
 
 // STATIC: 0x00ED7600
 int32_t CGGameUI::m_lastEnchantSpellID;
 
-// STATIC: 0x00ED75E8
+// STATIC: 0x00ED75E8/0x140E25C50
 static uint32_t s_nearestIndex;
 
-// STATIC: 0x00ED75EC
+// STATIC: 0x00ED75EC/0x140E25C54
 static uint32_t s_nearestSortTime;
 
-// STATIC: 0x00ED75F0
+// STATIC: 0x00ED75F0/0x140E25C58
 static uint32_t s_nearestTargetTime;
 
-// STATIC: 0x00ED75F4
+// STATIC: 0x00ED75F4/0x140E25C5C
 static int32_t s_nearestType;
 
 struct NearestUnitData {
@@ -1475,7 +1475,7 @@ struct NearestUnitData {
     /* 000C */ int32_t m_inFront;
 };
 
-// STATIC: 0x00ED7924
+// STATIC: 0x00ED7924/0x140E26148
 static TSGrowableArray<NearestUnitData> s_nearestUnits;
 
 static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY", "INTERRUPT", "BLOCK", "EVADE", "IMMUNE", "DEFLECT" };
@@ -1483,32 +1483,38 @@ static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY",
 // STATIC: 0x00ED74AC
 int32_t CGGameUI::s_loadingScreen;
 
+// PROVEN: 93594da2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C40D0/0x140633BD0
 void CGGameUI::OpenGuildInvite(const char* inviter, const char* guild, int32_t guildLevel, const char* oldGuild) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_INVITE_REQUEST, "%s%s%d%s", inviter, guild, guildLevel, oldGuild);
 }
 
+// PROVEN: a5f4fa3b IDENTICAL/NONE
 // OFFSET: 0x008C4100
 void CGGameUI::CancelGuildInvite() {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_INVITE_CANCEL, NULL);
 }
 
+// PROVEN: 4bc3b108 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4210/0x140633D50
 void CGGameUI::SetAspect() {
     CGGameUI::m_aspect = g_theGxDevicePtr->CapsAspectRatio(0);
     CoordinateSetAspectRatio(CGGameUI::m_aspect);
 }
 
+// PROVEN: f07b5226 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4620/0x1406341B0
 WOWGUID CGGameUI::GetPartyMember(uint32_t index) {
     return CGPartyInfo::GetMember(index);
 }
 
+// PROVEN: 2feecae4 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4630/0x1406341C0
 WOWGUID CGGameUI::GetPartyMemberPet(uint32_t index) {
     return CGPartyInfo::GetMemberPet(index);
 }
 
+// PROVEN: 087c43d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4640/0x1406341D0
 WOWGUID GetRaidMemberGUID(uint32_t index) {
     if (index >= CGRaidInfo::m_numMembers || !CGRaidInfo::m_members[index]) {
@@ -1518,6 +1524,7 @@ WOWGUID GetRaidMemberGUID(uint32_t index) {
     return CGRaidInfo::m_members[index]->m_guid;
 }
 
+// PROVEN: bafb1242 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4790/0x1406343F0
 void CGGameUI::SetActiveCorpse(WOWGUID guid) {
     CGGameUI::m_corpseGUID = guid;
@@ -1547,7 +1554,7 @@ WOWGUID CGGameUI::GetRaidMemberPet(uint32_t index) {
 
 // OFFSET: 0x008CAB80/0x14063B170
 void CGGameUI::ShowBlockedActionFeedback(FrameScript_Object* object, uint32_t type) {
-    // STATIC: 0x00ED7964
+    // STATIC: 0x00ED7964/0x140E261C4
     static int32_t showing;
 
     if (showing) {
@@ -1584,6 +1591,7 @@ void CGGameUI::ShowBlockedActionFeedback(FrameScript_Object* object, uint32_t ty
     showing = 0;
 }
 
+// PROVEN: 446b1fd8 IDENTICAL/UNPROVEN
 // OFFSET: 0x008C57E0/0x1406354A0
 uint32_t CGGameUI::GetCurrentDungeonDifficulty() {
     if (!CGPartyInfo::m_members[0] || CGRaidInfo::m_numMembers) {
@@ -1882,6 +1890,7 @@ int32_t CGGameUI::CanPerformAction(uint32_t action) {
     return 1;
 }
 
+// PROVEN: a7f788ab IDENTICAL/UNPROVEN
 // OFFSET: 0x008C3FC0/0x140633A90
 int32_t CGGameUI::StartCinematicSound() {
     CinematicCameraRec* record = CGGameUI::m_cinematic.m_camera;
@@ -1900,6 +1909,7 @@ int32_t CGGameUI::StartCinematicSound() {
     return 1;
 }
 
+// PROVEN: f8ff2b29 IDENTICAL/NONE
 // OFFSET: 0x008C4450
 uint32_t CGGameUI::GetCemetery(uint32_t index) {
     if (index < CGGameUI::s_numCemeteries) {
@@ -2061,17 +2071,20 @@ void CGGameUI::UpdatePlayerAFK(uint32_t now, CGPlayer_C* player) {
     }
 }
 
-// OFFSET: 0x008C56D0
+// PROVEN: 65cf6447 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C56D0/0x1406353B0
 void CGGameUI::ClearStreamingWait() {
     CGGameUI::s_streamingWait = 0;
 }
 
-// OFFSET: 0x008C56E0
+// PROVEN: c588ed34 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C56E0/0x1406353C0
 int32_t CGGameUI::GetStreamingWait() {
     return CGGameUI::s_streamingWait;
 }
 
-// OFFSET: 0x008C56F0
+// PROVEN: 3f7e9070 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C56F0/0x1406353D0
 void CGGameUI::UpdateStreamingIcon() {
     int32_t previous = CGGameUI::s_streamingIcon;
 
@@ -2101,6 +2114,7 @@ void CGGameUI::UpdateStreamingIcon() {
     }
 }
 
+// PROVEN: 7d27a0b5 IDENTICAL/NONE
 // OFFSET: 0x008C57C0
 void CGGameUI::SetInstanceDifficulty(uint32_t difficulty) {
     CGGameUI::m_instanceDifficulty = difficulty;
@@ -2127,6 +2141,7 @@ bool Script_GetMoney(lua_State* L, int32_t index, uint64_t* money) {
     return true;
 }
 
+// PROVEN: 5a5625da IDENTICAL/IDENTICAL
 // OFFSET: 0x008C6050/0x1406361A0
 void CGGameUI::SetSessionTimeAlert(bool enabled, int32_t interval, int32_t intervalAlt, int32_t alertTime) {
     CGGameUI::s_sessionAlertEnabled = enabled;
@@ -2135,6 +2150,7 @@ void CGGameUI::SetSessionTimeAlert(bool enabled, int32_t interval, int32_t inter
     CGGameUI::s_sessionAlertTime = 1000 * alertTime;
 }
 
+// PROVEN: 120a4222 IDENTICAL/NONE
 // OFFSET: 0x008C6090
 void CGGameUI::UpdateSessionTimeAlert() {
     if (!CGGameUI::s_sessionAlertEnabled) {
@@ -2173,6 +2189,7 @@ uint32_t MouseButtonNumberToMask(int32_t button) {
     return 0;
 }
 
+// PROVEN: bc73dbed IDENTICAL/IDENTICAL
 // OFFSET: 0x008CAB60/0x140634AB0
 float CGGameUI::GetUIScale() {
     if (CGGameUI::m_UISimpleParent) {
@@ -2197,6 +2214,7 @@ int32_t CGGameUI::GetCurrentAreaMountFlags() {
     return area->m_mountFlags;
 }
 
+// PROVEN: c5d8dadd IDENTICAL/UNPROVEN
 // OFFSET: 0x008CC050/0x14063CE80
 bool CGGameUI::IsInArenaOrRatedBattleground(bool* arena) {
     if (arena) {
@@ -2222,13 +2240,15 @@ bool CGGameUI::IsInArenaOrRatedBattleground(bool* arena) {
     return false;
 }
 
-// OFFSET: 0x008D2F40
+// PROVEN: 02a4c7d7 IDENTICAL/DIFFERENT
+// OFFSET: 0x008D2F40/0x1406471A0
 void CGGameUI::UpdateMountFlags() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGGameUI::m_areaMountFlags = player ? player->GetMountFlags() : CGGameUI::GetCurrentAreaMountFlags();
 }
 
-// OFFSET: 0x008D30C0
+// PROVEN: 313086ec IDENTICAL/DIFFERENT
+// OFFSET: 0x008D30C0/0x14063C950
 void CGGameUI::CheckThreatTutorial(const WOWGUID& guid) {
     if (CGGameUI::m_threatWarningEnabled && guid == ClntObjMgrGetActivePlayer()) {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2239,6 +2259,7 @@ void CGGameUI::CheckThreatTutorial(const WOWGUID& guid) {
     }
 }
 
+// PROVEN: 15c3d5bd IDENTICAL/NONE
 // OFFSET: 0x008D5850
 void CGGameUI::SetCursorMoney(uint64_t amount) {
     CGGameUI::SetCursorMoney(amount, 2, SCRIPT_EVENT_PLAYER_MONEY);
@@ -2431,20 +2452,22 @@ void CGGameUI::Initialize() {
     CGGameUI::m_currentlyReloadingUI = 0;
 }
 
-// OFFSET: 0x008C3F60
+// PROVEN: 28bb77cc IDENTICAL/IDENTICAL
+// OFFSET: 0x008C3F60/0x140633A50
 void CGGameUI::SetCanSendSoRByText(bool enabled) {
     CGGameUI::s_canSendSoR = enabled;
     FrameScript_SignalEvent(SCRIPT_EVENT_SOR_BY_TEXT_UPDATED, NULL);
 }
 
-// OFFSET: 0x008C3F80
+// PROVEN: befdbd1e IDENTICAL/IDENTICAL
+// OFFSET: 0x008C3F80/0x140633A70
 void CGGameUI::SetSoRCounts(int32_t maxPerDay, int32_t remaining) {
     CGGameUI::s_maxSoRPerDay = maxPerDay;
     CGGameUI::s_numSoRRemaining = remaining;
     FrameScript_SignalEvent(SCRIPT_EVENT_SOR_COUNTS_UPDATED, NULL);
 }
 
-// OFFSET: 0x008CB2A0
+// OFFSET: 0x008CB2A0/0x14063BB90
 bool CGGameUI::OnWorldServerInfo(ClientWorldServerInfo* msg) {
     CGGameUI::m_instanceDifficulty = msg->m_difficultyID;
     CGGameUI::s_tournamentRealm = msg->m_isTournamentRealm;
@@ -2482,13 +2505,14 @@ bool CGGameUI::OnFailedPlayerCondition(ClientFailedPlayerCondition* msg) {
     return true;
 }
 
-// OFFSET: 0x008C5B50
+// PROVEN: 0e4f178b NONE/IDENTICAL
+// OFFSET: 0x008C5B50/0x1406358A0
 bool CGGameUI::OnDifferentInstanceFromParty(ClientDifferentInstanceFromParty* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_ENTERED_DIFFERENT_INSTANCE_FROM_PARTY, NULL);
     return true;
 }
 
-// OFFSET: 0x008D5A20
+// OFFSET: 0x008D5A20/0x140646EC0
 bool CGGameUI::OnMoneyNotify(ClientMoneyNotify* msg) {
     char text[1024];
     GetCurrencyText(msg->unk_0010, text, sizeof(text), ", ");
@@ -2594,11 +2618,11 @@ void CGGameUI::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_CORPSE_MAP_POSITION_QUERY_RESPONSE, CGGameUI::MessageHandler, NULL);
     ClientServices::SetMessageHandler(SMSG_UI_TIME, CGGameUI::MessageHandler, NULL);
     ClientServices::SetMessageHandler(SMSG_TALENTS_INVOLUNTARILY_RESET, CGGameUI::MessageHandler, NULL);
-    ClientDifferentInstanceFromParty::s_handler = CGGameUI::OnDifferentInstanceFromParty;
-    ClientMoneyNotify::s_handler = CGGameUI::OnMoneyNotify;
-    ClientWorldServerInfo::s_handler = CGGameUI::OnWorldServerInfo;
-    ClientDisplayGameError::s_handler = CGGameUI::OnDisplayGameError;
-    ClientFailedPlayerCondition::s_handler = CGGameUI::OnFailedPlayerCondition;
+    ClientDifferentInstanceFromParty::s_handler = JamHandlerEncode(CGGameUI::OnDifferentInstanceFromParty, g_jamHandlerKey_CFE04C);
+    ClientMoneyNotify::s_handler = JamHandlerEncode(CGGameUI::OnMoneyNotify, g_jamHandlerKey_CFDBB4);
+    ClientWorldServerInfo::s_handler = JamHandlerEncode(CGGameUI::OnWorldServerInfo, g_jamHandlerKey_CFEF00);
+    ClientDisplayGameError::s_handler = JamHandlerEncode(CGGameUI::OnDisplayGameError, g_jamHandlerKey_CFD3AC);
+    ClientFailedPlayerCondition::s_handler = JamHandlerEncode(CGGameUI::OnFailedPlayerCondition, g_jamHandlerKey_CFE840);
 
     do {
         CGGameUI::m_accountDataGeneration++;
@@ -2720,6 +2744,7 @@ void CGGameUI::InitializeGame() {
     }
 }
 
+// PROVEN: 9c33672f IDENTICAL/IDENTICAL
 // OFFSET: 0x008DE140/0x140652E30
 void CGGameUI::DoUiReload() {
     CGGameUI::m_currentlyReloadingUI = 1;
@@ -2781,12 +2806,14 @@ int32_t CGGameUI::Idle(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: b7ab1597 IDENTICAL/UNPROVEN
 // OFFSET: 0x008C4840/0x140634430
 void CGGameUI::GetDeathReleaseLocation(int32_t& mapID, C3Vector& position) {
     mapID = CGGameUI::m_deathReleaseMapID;
     position = CGGameUI::m_deathReleaseLoc;
 }
 
+// PROVEN: d8d79773 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4900/0x1406344F0
 int32_t CGGameUI::FilterMouseMotion(CMouseEvent* evt) {
     if (evt->m_id == 0x400500CB) {
@@ -2797,6 +2824,7 @@ int32_t CGGameUI::FilterMouseMotion(CMouseEvent* evt) {
     return 0;
 }
 
+// PROVEN: 37caac5a IDENTICAL/DIFFERENT
 // OFFSET: 0x008D2B60/0x14063B7F0
 void CGGameUI::UpdateActivePlayer() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2837,6 +2865,7 @@ PartyMemberState* CGGameUI::GetPartyMemberState(const WOWGUID& guid) {
     return state;
 }
 
+// PROVEN: c679f4a0 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5C30/0x140635980
 PartyMemberPetState* CGGameUI::GetPartyMemberPetState(const WOWGUID& guid) {
     PartyMemberPetState* state = NULL;
@@ -2856,7 +2885,7 @@ PartyMemberPetState* CGGameUI::GetPartyMemberPetState(const WOWGUID& guid) {
     return state;
 }
 
-// OFFSET: 0x008D5000
+// OFFSET: 0x008D5000/0x140648030
 void CGGameUI::ScaleToScreenSize(int32_t width, int32_t height, int32_t force) {
     if (!force && CGGameUI::m_screenWidth > 0 && CGGameUI::m_screenWidth == width && CGGameUI::m_screenHeight > 0 && CGGameUI::m_screenHeight == height) {
         return;
@@ -2894,7 +2923,8 @@ void CGGameUI::ScaleToScreenSize(int32_t width, int32_t height, int32_t force) {
     }
 }
 
-// OFFSET: 0x008D6160
+// PROVEN: f02d9061 IDENTICAL/DIFFERENT
+// OFFSET: 0x008D6160/0x14064A680
 int32_t CGGameUI::HandleDisplaySizeChanged(const CSizeEvent& evt) {
     if (g_useUiScaleCVar->m_intValue) {
         float scale = g_uiScaleCVar->m_floatValue;
@@ -2921,6 +2951,7 @@ int32_t CGGameUI::HandleDisplaySizeChanged(const CSizeEvent& evt) {
     return 1;
 }
 
+// PROVEN: 45d3f60e IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4990/0x140634590
 void CGGameUI::OnMouseModeRelative() {
     CGWorldFrame* worldFrame = CGWorldFrame::s_currentWorldFrame;
@@ -2932,6 +2963,7 @@ void CGGameUI::OnMouseModeRelative() {
     EventSetMouseMode(MOUSE_MODE_RELATIVE, 0);
 }
 
+// PROVEN: ba72a0f5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C49D0/0x1406345E0
 void CGGameUI::OnMouseModeNormal() {
     CGWorldFrame::s_currentWorldFrame->OnMouseModeNormal();
@@ -2945,6 +2977,7 @@ void CGGameUI::OnMouseModeNormal() {
     EventSetMouseMode(MOUSE_MODE_NORMAL, 0);
 }
 
+// PROVEN: ca79bf71 IDENTICAL/IDENTICAL
 // OFFSET: 0x008D18D0/0x140645700
 void CGGameUI::HandleSpriteTrack(const CObjectTrackEvent& evt) {
     CGGameUI::HandleObjectTrackChange(evt.m_guid, evt.m_prevGuid);
@@ -2974,6 +3007,7 @@ int32_t CGGameUI::OnSpriteRightClick(WOWGUID guid) {
     return 1;
 }
 
+// PROVEN: 3e51547f IDENTICAL/IDENTICAL
 // OFFSET: 0x008DD4A0/0x140651EE0
 int32_t CGGameUI::HandleTerrainClick(const CTerrainClickEvent& evt) {
     if (evt.m_button == MOUSE_BUTTON_RIGHT || CGGameUI::m_cursorVirtualID) {
@@ -2984,6 +3018,7 @@ int32_t CGGameUI::HandleTerrainClick(const CTerrainClickEvent& evt) {
     return 1;
 }
 
+// PROVEN: d16f703f IDENTICAL/IDENTICAL
 // OFFSET: 0x008DD4E0/0x140651F20
 int32_t CGGameUI::HandleSpriteClick(const CSpriteClickEvent& evt) {
     if (CGGameUI::m_cursorVirtualID) {
@@ -2999,7 +3034,8 @@ int32_t CGGameUI::HandleSpriteClick(const CSpriteClickEvent& evt) {
     return 1;
 }
 
-// OFFSET: 0x008DD530
+// PROVEN: 5e915ee1 DIFFERENT/IDENTICAL
+// OFFSET: 0x008DD530/0x140651F70
 int32_t CGGameUI::HandleWorldClick(const CWorldClickEvent& evt) {
     int32_t noCursorItem = CGGameUI::m_cursorItemType == 0;
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -3028,6 +3064,7 @@ int32_t CGGameUI::HandleWorldClick(const CWorldClickEvent& evt) {
     return 1;
 }
 
+// PROVEN: 878bdbdd IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5190/0x140634E20
 void CGGameUI::GetCursorItem(WOWGUID& item, WOWGUID& container, uint32_t& slot) {
     item = CGGameUI::m_cursorItem;
@@ -3035,6 +3072,7 @@ void CGGameUI::GetCursorItem(WOWGUID& item, WOWGUID& container, uint32_t& slot) 
     slot = CGGameUI::m_cursorItemSlot;
 }
 
+// PROVEN: a0406356 IDENTICAL/DIFFERENT
 // OFFSET: 0x008C5270/0x140634F00
 void CGGameUI::UnlockItem(WOWGUID guid) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -3754,17 +3792,20 @@ int32_t CGGameUI::IsPartyMember(const WOWGUID& guid) {
     return 0;
 }
 
+// PROVEN: d2e83f9d IDENTICAL/NONE
 // OFFSET: 0x008C57A0
 void CGGameUI::ClearInstanceResetMap() {
     CGGameUI::m_uiLastInstanceTime = 0;
     CGGameUI::m_iMapID = 0;
 }
 
-// OFFSET: 0x008C57B0
+// PROVEN: 4911f36c IDENTICAL/IDENTICAL
+// OFFSET: 0x008C57B0/0x140635470
 void UpdateInstanceOwnershipPacket(int32_t owns) {
     CGGameUI::m_bOwnsInstance = owns;
 }
 
+// PROVEN: b6b88b62 IDENTICAL/DIFFERENT
 // OFFSET: 0x008C5170/0x140634E00
 WOWGUID CGGameUI::GetCursorItem() {
     if (CGGameUI::m_cursorItemType == 1) {
@@ -3774,11 +3815,13 @@ WOWGUID CGGameUI::GetCursorItem() {
     return WOWGUID::Make(0);
 }
 
+// PROVEN: 036eda10 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C51D0/0x140634E40
 int32_t CGGameUI::GetCursorSpell() {
     return CGGameUI::m_cursorSpell;
 }
 
+// PROVEN: b58f664a IDENTICAL/IDENTICAL
 // OFFSET: 0x008C51E0/0x140634E50
 int32_t CGGameUI::GetCursorVirtualItem() {
     return CGGameUI::m_cursorVirtualID;
@@ -3807,6 +3850,7 @@ void CGGameUI::SetCursorMoney(uint64_t amount, int32_t type, int32_t event) {
     }
 }
 
+// PROVEN: e8115d07 IDENTICAL/UNPROVEN
 // OFFSET: 0x008D2390/0x1406464B0
 void CGGameUI::SetCursorSpell(int32_t spellId, int32_t displaySpellId) {
     if (!g_spellDB.GetRecord(spellId)) {
@@ -3829,6 +3873,7 @@ void CGGameUI::SetCursorSpell(int32_t spellId, int32_t displaySpellId) {
     CGGameUI::m_cursorHasAction = 1;
 }
 
+// PROVEN: 790d03f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x008D2480/0x1406465D0
 void CGGameUI::DropCursorSpell() {
     if (CGGameUI::m_cursorItemType == 3) {
@@ -3836,6 +3881,7 @@ void CGGameUI::DropCursorSpell() {
     }
 }
 
+// PROVEN: 13ce87e1 IDENTICAL/UNPROVEN
 // OFFSET: 0x008D24A0/0x1406465F0
 void CGGameUI::SetCursorPetAction(const PetAction* action) {
     if (!CGGameUI::m_hasControl) {
@@ -3858,6 +3904,7 @@ void CGGameUI::SetCursorPetAction(const PetAction* action) {
     CGGameUI::m_cursorHasAction = 1;
 }
 
+// PROVEN: 09eb4559 IDENTICAL/UNPROVEN
 // OFFSET: 0x008D2560/0x1406466D0
 void CGGameUI::SetCursorMacro(int32_t macroId) {
     char texture[260];
@@ -3902,6 +3949,7 @@ void CGGameUI::SetCursorPet(int32_t index) {
     }
 }
 
+// PROVEN: f559315f IDENTICAL/IDENTICAL
 // OFFSET: 0x008D2730/0x140646920
 void CGGameUI::SetCursorVirtualItem(int32_t id, int32_t displayId, int32_t slot, int32_t type, int32_t stackSplit) {
     if (!CGGameUI::m_hasControl && type != 6) {
@@ -3930,6 +3978,7 @@ void CGGameUI::SetCursorVirtualItem(int32_t id, int32_t displayId, int32_t slot,
     FrameScript_SignalEvent(SCRIPT_EVENT_CURSOR_UPDATE, NULL);
 }
 
+// PROVEN: c3b7d2b7 IDENTICAL/UNPROVEN
 // OFFSET: 0x008D27C0/0x1406469D0
 void CGGameUI::SetCursorEquipmentSet(int32_t setId) {
     if (!CGEquipmentManager::GetSetByID(setId)) {
@@ -3948,6 +3997,7 @@ void CGGameUI::SetCursorEquipmentSet(int32_t setId) {
     CGGameUI::m_cursorHasAction = 1;
 }
 
+// PROVEN: 91984937 IDENTICAL/UNPROVEN
 // OFFSET: 0x008D2880/0x140646AB0
 void CGGameUI::SetCursorCurrency(int32_t currencyId) {
     CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(currencyId);
@@ -3966,6 +4016,7 @@ void CGGameUI::SetCursorCurrency(int32_t currencyId) {
     CGGameUI::m_cursorHasAction = 1;
 }
 
+// PROVEN: 1fd746e1 IDENTICAL/DIFFERENT
 // OFFSET: 0x008D2950/0x140646BB0
 void CGGameUI::SetCursorFlyout(int32_t flyoutId) {
     SpellFlyoutRec* flyout = g_spellFlyoutDB.GetRecord(flyoutId);
@@ -3990,6 +4041,7 @@ void CGGameUI::SetCursorFlyout(int32_t flyoutId) {
     CGGameUI::m_cursorHasAction = 1;
 }
 
+// PROVEN: fa8fddcc IDENTICAL/IDENTICAL
 // OFFSET: 0x008D2A10/0x140646CB0
 void CGGameUI::DropCursorVoidStorageItem() {
     if (CGGameUI::m_cursorItemType == 15) {
@@ -4006,12 +4058,13 @@ int32_t CGGameUI::GetCursorVirtualItemOfType(int32_t type) {
     return 0;
 }
 
-// OFFSET: 0x008C5770
+// OFFSET: 0x008C5770/0x140635440
 void CGGameUI::InitClientControlState(const WOWGUID& guid) {
     CGGameUI::m_hasControl = 1;
     CGUnit_C::InitActiveMover(guid);
 }
 
+// PROVEN: 8962674b IDENTICAL/IDENTICAL
 // OFFSET: 0x008D2BB0/0x140646CD0
 void CGGameUI::OnClientControlChanged(int32_t control) {
     if (control == CGGameUI::m_hasControl) {
@@ -4048,6 +4101,7 @@ void CGGameUI::UpdateThreatWarningEnabled(int32_t value) {
     FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_THREAT_LIST_UPDATE, NULL);
 }
 
+// PROVEN: d847081b IDENTICAL/UNPROVEN
 // OFFSET: 0x008C4810/0x140634400
 void CGGameUI::SetDeathReleaseLocation(int32_t mapId, const C3Vector& position) {
     CGGameUI::m_deathReleaseMapID = mapId;
@@ -4167,7 +4221,8 @@ void CGGameUI::OnItemPush(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t ite
     }
 }
 
-// OFFSET: 0x008D11C0
+// PROVEN: 8ddf516a IDENTICAL/DIFFERENT
+// OFFSET: 0x008D11C0/0x140644EC0
 void CGGameUI::SetCorpseLocation(int32_t mapId, const C3Vector& position, int32_t actualMapId, int32_t transport) {
     CGGameUI::m_corpseMapID = mapId;
     CGGameUI::m_corpsePos = position;
@@ -4190,6 +4245,7 @@ void CGGameUI::SetCorpseLocation(int32_t mapId, const C3Vector& position, int32_
     }
 }
 
+// PROVEN: 300bfeea IDENTICAL/UNPROVEN
 // OFFSET: 0x008D59D0/0x140646E60
 void CGGameUI::CheckInstanceDifficultyMessages(uint32_t dungeonDifficulty, uint32_t raidDifficulty) {
     if (raidDifficulty != CGGameUI::GetCurrentRaidDifficulty()) {
@@ -4201,6 +4257,7 @@ void CGGameUI::CheckInstanceDifficultyMessages(uint32_t dungeonDifficulty, uint3
     }
 }
 
+// PROVEN: 1b550052 IDENTICAL/DIFFERENT
 // OFFSET: 0x008D5F40/0x14064A2B0
 void CGGameUI::NextCinematic(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
     if (interrupted) {
@@ -4220,7 +4277,7 @@ void CGGameUI::NextCinematic(CM2Model* model, uint32_t boneId, uint32_t sequence
     EnableFadingScreen(0.25f, &CGGameUI::NextCinematicInternal, NULL);
 }
 
-// OFFSET: 0x008D4CE0
+// OFFSET: 0x008D4CE0/0x140647C50
 void CGGameUI::UpdateCorpseLocation() {
     C3Vector position(0.0f, 0.0f, 0.0f);
     CGGameUI::SetCorpseLocation(-1, position, -1, 0);
@@ -4243,6 +4300,7 @@ void CGGameUI::UpdateCorpseLocation() {
     }
 }
 
+// PROVEN: ab3d6d7f IDENTICAL/IDENTICAL
 // OFFSET: 0x008D8E10/0x14064C540
 void CGGameUI::BeginCinematicInternal(void* param) {
     int32_t started = CGGameUI::StartCinematicSound();
@@ -4395,6 +4453,7 @@ void CGGameUI::EnterWorld() {
     PhaseShift_C_EnterWorld(CGGameUI::m_currentlyReloadingUI);
 }
 
+// PROVEN: 3e2e8063 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C46C0/0x140634250
 void CGGameUI::UnitModelUpdate(const WOWGUID& guid, uint32_t flags) {
     UpdateModelForUI(guid, flags);
@@ -4454,22 +4513,26 @@ int32_t CGGameUI::HandleMouseUp(const CMouseEvent& evt) {
     return 0;
 }
 
-// OFFSET: 0x008C4070
+// PROVEN: 1d547648 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C4070/0x140633B70
 int32_t CGGameUI::SequenceMusicIsPlaying() {
     return CGGameUI::m_inCinematic;
 }
 
-// OFFSET: 0x008C40C0
+// PROVEN: b882de6f IDENTICAL/IDENTICAL
+// OFFSET: 0x008C40C0/0x140633BC0
 void CGGameUI::CancelPartyInvite() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PARTY_INVITE_CANCEL, NULL);
 }
 
+// PROVEN: 3c2c25fb IDENTICAL/IDENTICAL
 // OFFSET: 0x008C45B0/0x140634140
 int32_t CGGameUI::IsInParty(const WOWGUID& guid) {
     return CGPartyInfo::IsMember(guid);
 }
 
-// OFFSET: 0x008C40A0
+// PROVEN: 9920b04b IDENTICAL/IDENTICAL
+// OFFSET: 0x008C40A0/0x140633BA0
 void CGGameUI::OpenPlayerSkinned(bool a1) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_SKINNED, "%d", a1 != 0);
 }
@@ -4479,16 +4542,19 @@ void SignalEvent_EVENT_PARTY_INVITE_REQUEST(const char* name) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PARTY_INVITE_REQUEST, "%s", name);
 }
 
-// OFFSET: 0x008CACC0
+// PROVEN: 516c97d2 IDENTICAL/IDENTICAL
+// OFFSET: 0x008CACC0/0x14063B2E0
 void CGGameUI::ShowBlockedFrameFeedback(CScriptRegion* region) {
     CGGameUI::ShowBlockedActionFeedback(region, 2);
 }
 
+// PROVEN: 40304a54 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5810/0x1406354D0
 uint32_t CGGameUI::GetCurrentRaidDifficulty() {
     return CGRaidInfo::m_numMembers ? CGPartyInfo::m_raidDifficulty : CGGameUI::m_raidDifficulty;
 }
 
+// PROVEN: c1bdaa6d IDENTICAL/NONE
 // OFFSET: 0x008C5AD0
 void CGGameUI::GetInstanceLockInfo(uint32_t* remaining, uint32_t* completedMask, uint32_t* extending) {
     *remaining = 0;
@@ -4505,7 +4571,8 @@ void CGGameUI::GetInstanceLockInfo(uint32_t* remaining, uint32_t* completedMask,
     *extending = CGGameUI::m_instanceLockExtending;
 }
 
-// OFFSET: 0x008C5B70
+// PROVEN: ee41039d IDENTICAL/DIFFERENT
+// OFFSET: 0x008C5B70/0x1406358C0
 void CGGameUI::SetSummonRequest(WOWGUID summoner, uint32_t area, uint32_t timeout) {
     CGGameUI::m_summonConfirmGUID = summoner;
     CGGameUI::m_summonConfirmArea = area;
@@ -4513,6 +4580,7 @@ void CGGameUI::SetSummonRequest(WOWGUID summoner, uint32_t area, uint32_t timeou
     FrameScript_SignalEvent(SCRIPT_EVENT_CONFIRM_SUMMON, NULL);
 }
 
+// PROVEN: e6a63f22 IDENTICAL/NONE
 // OFFSET: 0x008C4E90
 void CGGameUI::SetUIScale(float scale) {
     if (!(scale > 0.64f)) {
@@ -4527,6 +4595,7 @@ void CGGameUI::SetUIScale(float scale) {
     }
 }
 
+// PROVEN: 3aa85d9c IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5C70/0x1406359C0
 void CGGameUI::UpdateUnitHighlights(int32_t force) {
     int32_t show = CGGameUI::m_visible || (g_unitHighlightsCVar && g_unitHighlightsCVar->m_intValue);
@@ -4556,6 +4625,7 @@ void CGGameUI::UpdateUnitHighlights(int32_t force) {
     }
 }
 
+// PROVEN: 912b3f8a DIFFERENT/IDENTICAL
 // OFFSET: 0x008D5310/0x140648620
 void CGGameUI::SetFocusTarget(const WOWGUID& guid) {
     if (guid == CGGameUI::m_focusTarget) {
@@ -4588,7 +4658,7 @@ void CGGameUI::SetFocusTarget(const WOWGUID& guid) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_FOCUS_CHANGED, NULL);
 }
 
-// OFFSET: 0x008CB530
+// OFFSET: 0x008CB530/0x14063BCC0
 void CGGameUI::DestroyTotem(int32_t slot, WOWGUID guid) {
     if (static_cast<uint32_t>(slot) > 4) {
         return;
@@ -4641,6 +4711,7 @@ void LoadSavedVariables(CStatus* status) {
     }
 }
 
+// PROVEN: e7383ed8 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5210/0x140634E80
 int32_t CGGameUI::IsAutoLooting() {
     int32_t autoLoot = g_autoLootDefaultCVar->m_intValue;
@@ -4652,7 +4723,8 @@ int32_t CGGameUI::IsAutoLooting() {
     return autoLoot;
 }
 
-// OFFSET: 0x008D8A70
+// PROVEN: 25b640b9 IDENTICAL/NONE
+// OFFSET: 0x008D8A70/0x14064C1A0
 void CCapturePointUIManager::AddCapturePoint(CGGameObject_C* object, uint32_t worldState, uint32_t radius) {
     WOWGUID guid = object->m_obj->m_guid;
     CapturePointUIManagerNode* node = this->m_nodes.NewNode(2, 0, 0);
@@ -4661,7 +4733,8 @@ void CCapturePointUIManager::AddCapturePoint(CGGameObject_C* object, uint32_t wo
     node->m_worldState = worldState;
 }
 
-// OFFSET: 0x008C50F0
+// PROVEN: bf989d6a IDENTICAL/IDENTICAL
+// OFFSET: 0x008C50F0/0x140634D70
 void CGGameUI::SetMinimapZoneText(const char* text) {
     if (text && *text) {
         if (CGGameUI::m_minimapZoneText) {
@@ -4769,6 +4842,7 @@ void CGGameUI::RegisterSavedVariable(const char* name, int32_t perCharacter) {
     }
 }
 
+// PROVEN: b5ad6dd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5D80/0x140635B00
 const char* MirrorTimerTypeToken(int32_t type) {
     switch (type) {
@@ -4785,7 +4859,7 @@ const char* MirrorTimerTypeToken(int32_t type) {
     return "UNKNOWN";
 }
 
-// OFFSET: 0x008CB620
+// OFFSET: 0x008CB620/0x14063BDE0
 void CGGameUI::TargetTradeItem() {
     if (!CGTradeInfo::m_targetTrade.m_items[6].m_itemID) {
         return;
@@ -4825,6 +4899,7 @@ void CGGameUI::TargetTradeItem() {
     Spell_C_TargetTradeItem();
 }
 
+// PROVEN: de3f07c7 IDENTICAL/DIFFERENT
 // OFFSET: 0x008CB730/0x14063C290
 const char* GetMirrorTimerLabel(int32_t type, int32_t spellId) {
     const SpellRec* spell = g_spellDB.GetRecord(spellId);
@@ -4838,6 +4913,7 @@ const char* GetMirrorTimerLabel(int32_t type, int32_t spellId) {
     return FrameScript_GetText(label, -1, GENDER_NOT_APPLICABLE);
 }
 
+// PROVEN: 0727281b IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4A20/0x140634630
 void CGGameUI::HandleScreenshot(int32_t success) {
     if (!CGGameUI::m_initialized) {
@@ -4851,7 +4927,7 @@ void CGGameUI::HandleScreenshot(int32_t success) {
     }
 }
 
-// OFFSET: 0x008C4A60/0x140634870
+// OFFSET: 0x008C4A60/0x140634660
 void CGGameUI::CloseInteraction() {
     WOWGUID target = CGGameUI::m_interactTarget;
 
@@ -4907,6 +4983,7 @@ void CGGameUI::CloseInteraction() {
     }
 }
 
+// PROVEN: 0d51e95a IDENTICAL/DIFFERENT
 // OFFSET: 0x008CA680/0x14063AB40
 void CGGameUI::ClearInteractTarget(const WOWGUID& guid, int32_t a2) {
     if (!CGGameUI::m_interactTarget || CGGameUI::m_interactTarget != guid) {
@@ -4926,7 +5003,7 @@ void CGGameUI::ClearInteractTarget(const WOWGUID& guid, int32_t a2) {
     }
 }
 
-// OFFSET: 0x008CB7C0
+// OFFSET: 0x008CB7C0/0x14063C350
 int32_t CGGameUI::OnMirrorTimerEvent(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (msgId == SMSG_START_MIRROR_TIMER) {
         uint32_t type;
@@ -4993,6 +5070,7 @@ int32_t CGGameUI::OnMirrorTimerEvent(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
+// PROVEN: 490e8ea9 IDENTICAL/UNPROVEN
 // OFFSET: 0x008CB9F0/0x14063C5E0
 AreaTableRec* CGGameUI::GetCurrentSubzoneRec() {
     AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_subzoneID);
@@ -5066,6 +5144,7 @@ void CGGameUI::SetInteractTarget(const WOWGUID& guid) {
     }
 }
 
+// PROVEN: 1c885738 IDENTICAL/IDENTICAL
 // OFFSET: 0x008D12A0/0x140644FA0
 void CGGameUI::GetCorpseLocation(int32_t& mapID, C3Vector& position, int32_t& actualMapID) {
     mapID = CGGameUI::m_corpseMapID;
@@ -5098,27 +5177,32 @@ void CGGameUI::SetAreaSpiritHealer(WOWGUID guid, bool cancel) {
     ClientServices::Send2(&msg);
 }
 
+// PROVEN: 948ea504 IDENTICAL/NONE
 // OFFSET: 0x008C5D70
 const char* CGGameUI::LastErrorMessage() {
     return CGGameUI::m_lastErrorMessage;
 }
 
+// PROVEN: b5abba6c IDENTICAL/NONE
 // OFFSET: 0x008C5900
 void CGGameUI::SetLastEnchantSpellID(int32_t spellId) {
     CGGameUI::m_lastEnchantSpellID = spellId;
 }
 
+// PROVEN: 1748f584 IDENTICAL/NONE
 // OFFSET: 0x008C5910
 void CGGameUI::SetLastEnchantItem(WOWGUID guid) {
     CGGameUI::m_lastEnchantItem = guid;
 }
 
+// PROVEN: 2ad9e009 IDENTICAL/NONE
 // OFFSET: 0x008C5930
 void CGGameUI::SetLastItemSpellTarget(WOWGUID guid) {
     CGGameUI::m_lastItemSpellTarget = guid;
 }
 
-// OFFSET: 0x008C5040
+// PROVEN: 1747c614 IDENTICAL/DIFFERENT
+// OFFSET: 0x008C5040/0x140634C60
 void CGGameUI::ShowSpellMissFeedback(const WOWGUID& guid, int32_t reason) {
     if (static_cast<uint32_t>(reason) > 11) {
         return;
@@ -5134,6 +5218,7 @@ void CGGameUI::ShowSpellMissFeedback(const WOWGUID& guid, int32_t reason) {
     }
 }
 
+// PROVEN: 165ae99a IDENTICAL/IDENTICAL
 // OFFSET: 0x008C50B0/0x140634D10
 void CGGameUI::ShowHealingFeedback(const WOWGUID& guid, int32_t amount, bool crit) {
     if (amount) {
@@ -5172,7 +5257,8 @@ void CGGameUI::SignalUnitCombat(const WOWGUID& guid, const char* action, int32_t
     }
 }
 
-// OFFSET: 0x008C5890
+// PROVEN: d080b9a2 IDENTICAL/DIFFERENT
+// OFFSET: 0x008C5890/0x140635690
 TotemInfo* CGGameUI::GetTotemInfo(uint32_t slot) {
     if (static_cast<int32_t>(slot) >= 0 && slot < 5) {
         return &CGGameUI::m_totems[slot];
@@ -5181,6 +5267,7 @@ TotemInfo* CGGameUI::GetTotemInfo(uint32_t slot) {
     return NULL;
 }
 
+// PROVEN: 325c23a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x008C58B0/0x1406356B0
 TotemInfo* CGGameUI::GetTotemInfo(WOWGUID guid) {
     if (!guid) {
@@ -5196,6 +5283,7 @@ TotemInfo* CGGameUI::GetTotemInfo(WOWGUID guid) {
     return NULL;
 }
 
+// PROVEN: ac7f8f82 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5DC0/0x140635B30
 int32_t CGGameUI::MirrorTimerToIndex(const char* timer) {
     if (!_stricmp(timer, "EXHAUSTION")) {
@@ -5209,6 +5297,7 @@ int32_t CGGameUI::MirrorTimerToIndex(const char* timer) {
     return (_stricmp(timer, "FEIGNDEATH") != 0) + 2;
 }
 
+// PROVEN: bb70d45e IDENTICAL/DIFFERENT
 // OFFSET: 0x008C5E90/0x140635C30
 MirrorTimerInfo* CGGameUI::MirrorTimerGetInfo(uint32_t index) {
     if (index <= 2) {
@@ -5218,7 +5307,8 @@ MirrorTimerInfo* CGGameUI::MirrorTimerGetInfo(uint32_t index) {
     return NULL;
 }
 
-// OFFSET: 0x008C5EC0
+// PROVEN: 0ab43f61 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C5EC0/0x140635C50
 uint32_t TotemInfo::GetSpawnTimeLeft() {
     uint32_t now = FrameTime::GetCurTimeMs();
     uint32_t end = this->m_duration + this->m_startTime;
@@ -5230,6 +5320,7 @@ uint32_t TotemInfo::GetSpawnTimeLeft() {
     return 0;
 }
 
+// PROVEN: af0c69bb IDENTICAL/DIFFERENT
 // OFFSET: 0x008D13C0/0x140645110
 void CGGameUI::CastSpiritHealSpell() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -5426,6 +5517,7 @@ static int32_t FilterClosestMatchCandidate(int32_t targetType, const WOWGUID& gu
     }
 }
 
+// PROVEN: ec8b703c IDENTICAL/DIFFERENT
 // OFFSET: 0x008C4E00/0x1400E9C30
 static void UpdateClosestMatch(ClosestObjectMatchData* data, const WOWGUID& guid, const char* name, float distance) {
     if (data->m_bestDistance > distance && name && !SStrCmpUTF8I(name, data->m_name, data->m_nameLength)) {
@@ -5784,12 +5876,12 @@ void TargetNearestEnemy(int32_t reverse, int32_t type) {
     }
 }
 
-// OFFSET: 0x008C5000
+// OFFSET: 0x008C5000/0x140634C20
 void CGGameUI::ShowCombatFeedbackAttackRoundInfo(const ATTACKROUNDINFO* info) {
     CGGameUI::SignalUnitCombat(info->m_target, s_victimStateTokens[info->m_victimState], info->m_damage, info->m_schoolMask[0], info->m_hitInfo);
 }
 
-// OFFSET: 0x008D6660
+// OFFSET: 0x008D6660/0x14064A7D0
 void CGGameUI::BreakTarget(WOWGUID guid) {
     if (guid == CGGameUI::m_lockedTarget) {
         Spell_C_CancelAutoRepeat(true);
@@ -5822,6 +5914,7 @@ void CGGameUI::BreakTarget(WOWGUID guid) {
     }
 }
 
+// PROVEN: 971ebeee IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4670/0x140634200
 void CGGameUI::UnitTooltipUpdate(const WOWGUID& guid) {
     if (CGGameUI::m_gameTooltip && CGGameUI::m_gameTooltip->m_unitGuid == guid && !CGGameUI::m_gameTooltip->m_fading) {
@@ -5830,6 +5923,7 @@ void CGGameUI::UnitTooltipUpdate(const WOWGUID& guid) {
     }
 }
 
+// PROVEN: 58add5c5 IDENTICAL/DIFFERENT
 // OFFSET: 0x008CB370/0x14063BC80
 int32_t CGGameUI::IsDynamicDifficultyMap() {
     MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
@@ -5853,7 +5947,7 @@ uint32_t CGGameUI::GetEffectiveRaidDifficulty() {
     return CGRaidInfo::m_numMembers ? CGPartyInfo::m_raidDifficulty : CGGameUI::m_raidDifficulty;
 }
 
-// OFFSET: 0x008CB3B0
+// OFFSET: 0x008CB3B0/0x1406354F0
 void CGGameUI::DoPowerRegen() {
     uint32_t now = FrameTime::GetCurTimeMs();
 
@@ -5956,7 +6050,7 @@ int32_t CGGameUI::StartCinematicCamera() {
     return 1;
 }
 
-// OFFSET: 0x008D4AA0
+// OFFSET: 0x008D4AA0/0x140647B60
 void CGGameUI::NextCinematicInternal(void* param) {
     CGGameUI::m_cinematic.m_camera = NULL;
     SE3::StopSound(CGGameUI::m_cinematic.m_cameraMusic, 0, __FILE__, __LINE__, "CGGameUI::NextCinematicInternal");
@@ -6024,6 +6118,7 @@ void CGGameUI::CloseLoot(bool a1, bool a2, bool a3) {
     }
 }
 
+// PROVEN: e9cb4f48 IDENTICAL/IDENTICAL
 // OFFSET: 0x008D5800/0x140646120
 void CGGameUI::SetRegenEnabled(int32_t enabled) {
     if (enabled) {
@@ -6037,6 +6132,7 @@ void CGGameUI::SetRegenEnabled(int32_t enabled) {
     CGGameUI::UpdateCombatMode();
 }
 
+// PROVEN: 95176709 IDENTICAL/DIFFERENT
 // OFFSET: 0x008C5240/0x140634EC0
 void CGGameUI::LockItem(WOWGUID guid) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -6048,7 +6144,7 @@ void CGGameUI::LockItem(WOWGUID guid) {
     CGActionBar::UpdateUsable();
 }
 
-// OFFSET: 0x008D2A30
+// OFFSET: 0x008D2A30/0x14063B690
 void CGGameUI::UnlockAllItems() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -6085,12 +6181,14 @@ void CGGameUI::UnlockAllItems() {
     }
 }
 
+// PROVEN: e6c9c1e4 IDENTICAL/NONE
 // OFFSET: 0x009BB490
 void CGGameUI::SetPendingItemSound(WOWGUID guid, int32_t itemId) {
     CGGameUI::m_autoStoreItem = guid;
     CGGameUI::m_autoStoreItemID = itemId;
 }
 
+// PROVEN: 1eea2978 IDENTICAL/DIFFERENT
 // OFFSET: 0x008C5BF0/0x140635940
 PartyMemberState* CGGameUI::GetPartyMemberStateFromPet(const WOWGUID& petGuid) {
     PartyMemberState* state = NULL;
@@ -6110,12 +6208,14 @@ PartyMemberState* CGGameUI::GetPartyMemberStateFromPet(const WOWGUID& petGuid) {
     return state;
 }
 
+// PROVEN: c20f14ed IDENTICAL/IDENTICAL
 // OFFSET: 0x008C51F0/0x140634E60
 void CGGameUI::GetCursorVirtualItem(int32_t& id, int32_t& slot) {
     id = CGGameUI::m_cursorVirtualID;
     slot = CGGameUI::m_cursorVirtualSlot;
 }
 
+// PROVEN: 89bd50de IDENTICAL/DIFFERENT
 // OFFSET: 0x008C52A0/0x140634F40
 int32_t CGGameUI::VirtualItemIsLocked(int32_t id, uint32_t virtualSlot, int32_t a3) {
     if (!id) {
@@ -6129,6 +6229,7 @@ int32_t CGGameUI::VirtualItemIsLocked(int32_t id, uint32_t virtualSlot, int32_t 
     return CGGuildBankInfo::IsLocked(id, virtualSlot);
 }
 
+// PROVEN: ac9316bb IDENTICAL/IDENTICAL
 // OFFSET: 0x008C52D0/0x140634F60
 void CGGameUI::LockVirtualItem(int32_t id, uint32_t virtualSlot, int32_t a3) {
     if (!id || a3) {
@@ -6139,7 +6240,8 @@ void CGGameUI::LockVirtualItem(int32_t id, uint32_t virtualSlot, int32_t a3) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_ITEM_LOCK_CHANGED, NULL);
 }
 
-// OFFSET: 0x008C5300
+// PROVEN: 5b25e2d8 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C5300/0x140634F90
 void CGGameUI::UnlockVirtualItem(int32_t id, uint32_t virtualSlot, int32_t a3) {
     if (id && !a3) {
         CGGuildBankInfo::Unlock(id, virtualSlot);
@@ -6147,6 +6249,7 @@ void CGGameUI::UnlockVirtualItem(int32_t id, uint32_t virtualSlot, int32_t a3) {
     }
 }
 
+// PROVEN: 0c15d005 IDENTICAL/NONE
 // OFFSET: 0x008C5330
 int32_t CGGameUI::GetVirtualItemCount(int32_t id, uint32_t virtualSlot, int32_t a3) {
     if (!id) {
@@ -6199,6 +6302,7 @@ void CGGameUI::SetCursorItem(WOWGUID item, WOWGUID container, uint32_t slot, int
     FrameScript_SignalEvent(SCRIPT_EVENT_CURSOR_UPDATE, NULL);
 }
 
+// PROVEN: 00fea758 IDENTICAL/DIFFERENT
 // OFFSET: 0x008D2E20/0x14063C1B0
 void CGGameUI::DisplayNameError(uint32_t error) {
     switch (error) {
@@ -6272,7 +6376,8 @@ void CGGameUI::AcceptLevelGrant() {
     CGGameUI::m_pendingLevelGranter = WOWGUID();
 }
 
-// OFFSET: 0x008D30B0
+// PROVEN: 0d4f1f6e IDENTICAL/IDENTICAL
+// OFFSET: 0x008D30B0/0x140647250
 void CGGameUI::UpdateThreatWarningFromCVar() {
     CGGameUI::UpdateThreatWarningEnabled(g_threatWarningCVar->m_intValue);
 }
@@ -6283,13 +6388,13 @@ void CGGameUI::GetSelectionHighlightColor(const WOWGUID& guid, CImVector* color,
 
     static CImVector s_playerColors[2] = { CImVector(0xFF, 0x00, 0x00, 0xFF), CImVector(0xFF, 0x60, 0x60, 0xFF) };
 
-    // STATIC: 0x00ED79AC
+    // STATIC: 0x00ED79AC/0x140E261D0
     static CImVector s_partyColor = CImVector(0xFF, 0xAA, 0xAA, 0xFF);
 
-    // STATIC: 0x00ED79A8
+    // STATIC: 0x00ED79A8/0x140E261CC
     static CImVector s_partyPvpColor = CImVector(0xAA, 0xFF, 0xAA, 0xFF);
 
-    // STATIC: 0x00ED79A4
+    // STATIC: 0x00ED79A4/0x140E261C8
     static CImVector s_friendColor = CImVector(0xFF, 0xC8, 0x53, 0xFF);
 
     if (!color) {
@@ -6393,7 +6498,8 @@ void CGGameUI::UnitNameUpdate(const WOWGUID& guid) {
     Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_NAME_UPDATE);
 }
 
-// OFFSET: 0x008C4060
+// PROVEN: 49f0c976 IDENTICAL/UNPROVEN
+// OFFSET: 0x008C4060/0x140633B60
 int32_t CGGameUI::CameraMusicIsPlaying() {
     return SE3::IsPlaying(CGGameUI::m_cinematic.m_cameraMusic);
 }
@@ -6500,7 +6606,8 @@ void CGGameUI::StopMovie() {
     CGInputControl::GetActive()->EnterWorld();
 }
 
-// OFFSET: 0x008CA0E0
+// PROVEN: a6e11728 IDENTICAL/UNPROVEN
+// OFFSET: 0x008CA0E0/0x14063A420
 static void AccountVariablesLoadedCallback(HOSFILE localFile, HOSFILE cacheFile, void* param) {
     uint32_t value = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(param));
     uint32_t type = value & 0xFFFF;
@@ -6582,7 +6689,7 @@ struct AutoMouseOverData {
     /* 0024 */ float m_bestDistSq;
 };
 
-// OFFSET: 0x008CBC50
+// OFFSET: 0x008CBC50/0x140635D40
 static int32_t AutoMouseOverProc(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -6683,7 +6790,7 @@ static int32_t AutoMouseOverProc(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: 0x008D35A0
+// OFFSET: 0x008D35A0/0x140647260
 void CGGameUI::AutoMouseOver() {
     if (CGInputControl::GetActive()->m_mouseModeFlags & 0x1) {
         return;
@@ -6728,7 +6835,8 @@ void CGGameUI::SetPhaseShift(uint32_t phase) {
     }
 }
 
-// OFFSET: 0x008D6080
+// PROVEN: 48d70e13 IDENTICAL/DIFFERENT
+// OFFSET: 0x008D6080/0x14064A4C0
 void CGGameUI::UpdateAreaSpiritHealerTime(WOWGUID guid, int32_t time) {
     CGGameUI::UpdateAreaSpiritHealerDistance();
 
@@ -6743,7 +6851,7 @@ void CGGameUI::UpdateAreaSpiritHealerTime(WOWGUID guid, int32_t time) {
     }
 }
 
-// OFFSET: 0x008D7D10
+// OFFSET: 0x008D7D10/0x14064B1C0
 int32_t CGGameUI::MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     switch (msgId) {
         case SMSG_UPDATE_COMBO_POINTS: {
@@ -7117,6 +7225,7 @@ int32_t CGGameUI::MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, C
     }
 }
 
+// PROVEN: e534692b IDENTICAL/NONE
 // OFFSET: 0x008C4740
 void CGGameUI::SetCorpseMapPosition(const C3Vector& position, const float& facing) {
     s_corpseMapRotation = C44Matrix::RotationAroundZ(facing);
@@ -7200,7 +7309,7 @@ void CGGameUI::GetCorpsePosition(C3Vector& position) {
     position = CGGameUI::m_corpsePos * s_corpseMapRotation + s_corpseMapPosition;
 }
 
-// OFFSET: 0x008CA590
+// OFFSET: 0x008CA590/0x14063AA10
 void CGGameUI::OnWorldStateChanged(int32_t worldState) {
     int32_t low = 0;
     int32_t high = g_areaPOISortedWorldStateDB.m_numRecords;
@@ -7233,6 +7342,7 @@ void CGGameUI::OnWorldStateChanged(int32_t worldState) {
     }
 }
 
+// PROVEN: 73485b1f IDENTICAL/UNPROVEN
 // OFFSET: 0x008CA610/0x14063AA90
 void CGGameUI::SetCemeteryList(uint32_t count, const uint32_t* cemeteries) {
     CGGameUI::s_numCemeteries = 0;
@@ -7270,7 +7380,7 @@ static void UpdateCorpseRange(int32_t inRange) {
     }
 }
 
-// OFFSET: 0x008D12D0
+// OFFSET: 0x008D12D0/0x140644FD0
 void CGGameUI::UpdateCorpseDistance() {
     int32_t inRange = 0;
 
@@ -7299,7 +7409,7 @@ void CGGameUI::UpdateCorpseDistance() {
     UpdateCorpseRange(inRange);
 }
 
-// OFFSET: 0x008D1A00
+// OFFSET: 0x008D1A00/0x140645830
 void CGGameUI::UpdateInteractTarget() {
     if (!CGGameUI::m_interactTarget || CGGameUI::m_interactMaxDistSq <= 0.0f) {
         return;
@@ -7349,6 +7459,7 @@ void CGGameUI::UpdateInteractTarget() {
     }
 }
 
+// PROVEN: 7f19dd94 DIFFERENT/IDENTICAL
 // OFFSET: 0x008D4EA0/0x140647EC0
 static int32_t AreaSpiritHealerCheck(WOWGUID guid, void* param) {
     CGUnit_C* player = static_cast<CGUnit_C*>(param);
@@ -7385,6 +7496,7 @@ void CGGameUI::UpdateAreaSpiritHealerDistance() {
     ClntObjMgrEnumVisibleObjects(AreaSpiritHealerCheck, player);
 }
 
+// PROVEN: dcf6bd2e IDENTICAL/UNPROVEN
 // OFFSET: 0x008D5870/0x140646D30
 void CGGameUI::ShowDungeonDifficultyChanged() {
     char token[64];
@@ -7392,6 +7504,7 @@ void CGGameUI::ShowDungeonDifficultyChanged() {
     CGGameUI::DisplayError(ERR_DUNGEON_DIFFICULTY_CHANGED_S, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE));
 }
 
+// PROVEN: be35b01d IDENTICAL/UNPROVEN
 // OFFSET: 0x008D6D60/0x140649270
 void CGGameUI::SetDungeonDifficulty(uint32_t difficulty, uint32_t unk, uint32_t inGroup) {
     uint32_t previous = CGGameUI::GetCurrentDungeonDifficulty();
@@ -7428,6 +7541,7 @@ void CGGameUI::SendRaidDifficultyMessage() {
     CGGameUI::DisplayError(ERR_RAID_DIFFICULTY_CHANGED_S, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE));
 }
 
+// PROVEN: 5d39e50d IDENTICAL/DIFFERENT
 // OFFSET: 0x008D6DE0/0x140649300
 bool CGGameUI::SetRaidDifficulty(uint32_t difficulty, uint32_t unk, uint32_t inGroup, int32_t force) {
     uint32_t previous = CGGameUI::GetCurrentRaidDifficulty();
@@ -7464,7 +7578,7 @@ bool CGGameUI::SetRaidDifficulty(uint32_t difficulty, uint32_t unk, uint32_t inG
     return true;
 }
 
-// OFFSET: 0x008DB580
+// OFFSET: 0x008DB580/0x14064F7D0
 void CGGameUI::ShutdownGame() {
     CGGameUI::Shutdown();
     PortraitShutdown();
@@ -7605,6 +7719,7 @@ void CGGameUI::ShutdownGame() {
     ClientFailedPlayerCondition::s_handler = NULL;
 }
 
+// PROVEN: cbb39937 IDENTICAL/DIFFERENT
 // OFFSET: 0x008DAF20/0x14064F060
 void CGGameUI::StartCinematic(int32_t cinematic) {
     memset(&CGGameUI::m_cinematic, 0, sizeof(CGGameUI::m_cinematic));
@@ -7636,6 +7751,7 @@ void CGGameUI::StartCinematic(int32_t cinematic) {
     }
 }
 
+// PROVEN: 15b89f51 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4110/0x140633C10
 static void GetTaintContext(TaintStackFrame* frame, char* buffer, uint32_t size) {
     char name[1024];
@@ -7869,6 +7985,7 @@ void CGGameUI::Shutdown() {
     s_lastTaintEvent.m_type = 0;
 }
 
+// PROVEN: 36b730ef IDENTICAL/DIFFERENT
 // OFFSET: 0x008CC000/0x14063CE20
 int32_t IsInFlyableArea() {
     AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_subzoneID);
@@ -7880,7 +7997,7 @@ int32_t IsInFlyableArea() {
     return area && (area->m_mountFlags & 2);
 }
 
-// OFFSET: 0x008D87E0
+// OFFSET: 0x008D87E0/0x14064BF00
 void CGGameUI::SaveSavedVariables() {
     int32_t created = 0;
 
@@ -7923,7 +8040,7 @@ void CGGameUI::SaveSavedVariables() {
     }
 }
 
-// OFFSET: 0x008C4930
+// OFFSET: 0x008C4930/0x140634530
 void CGGameUI::HandleFocusChanged(const CFocusEvent& event) {
     CGInputControl::GetActive()->OnFocusChange(event);
 }
@@ -8024,6 +8141,7 @@ void SavePlacedFrames(HOSFILE localFile, HOSFILE file, void* param) {
     }
 }
 
+// PROVEN: 2c0ada2a IDENTICAL/IDENTICAL
 // OFFSET: 0x008C4470/0x140633FF0
 void SaveGameCVarsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     if (file == OS_INVALID_FILE) {
@@ -8039,14 +8157,16 @@ void SaveGameCVarsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     CVar::SaveAll(file, category, 0);
 }
 
-// OFFSET: 0x008C4EF0
+// PROVEN: 03faf043 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C4EF0/0x140634AD0
 void CGGameUI::AddErrorMessage(const char* text, int32_t error) {
     if (text && *text) {
         FrameScript_SignalEvent(error ? SCRIPT_EVENT_UI_ERROR_MESSAGE : SCRIPT_EVENT_UI_INFO_MESSAGE, "%s", text);
     }
 }
 
-// OFFSET: 0x008C5950
+// PROVEN: 7db29c88 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C5950/0x140635720
 void CGGameUI::SetRepopTimeLeft(uint32_t time) {
     uint32_t repopTime = time + FrameTime::GetCurTimeMs();
     CGGameUI::m_deadNoRepopTimer = 0;
@@ -8057,13 +8177,15 @@ void CGGameUI::SetRepopTimeLeft(uint32_t time) {
     }
 }
 
-// OFFSET: 0x008C5980
+// PROVEN: b2394ff6 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C5980/0x140635750
 void CGGameUI::ClearRepopTime() {
     CGGameUI::m_repopTime = 0;
     CGGameUI::m_deadNoRepopTimer = 1;
 }
 
-// OFFSET: 0x008C59A0
+// PROVEN: a9b81bed IDENTICAL/IDENTICAL
+// OFFSET: 0x008C59A0/0x140635770
 void CGGameUI::SetCorpseReclaimDelay(uint32_t delay) {
     CGGameUI::m_corpseReclaimDelay = delay + FrameTime::GetCurTimeMs();
 
@@ -8076,6 +8198,7 @@ void CGGameUI::SetCorpseReclaimDelay(uint32_t delay) {
     }
 }
 
+// PROVEN: 45fb8ca2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5D50/0x140635AC0
 const char* CGGameUI::GetErrorToken(int32_t error) {
     if (error < ERR_MAX_VALUE) {
@@ -8085,6 +8208,7 @@ const char* CGGameUI::GetErrorToken(int32_t error) {
     return "";
 }
 
+// PROVEN: 725306f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x008D4CB0/0x140647C10
 void CGGameUI::Reload() {
     if (lua_tainted && CGGameUI::m_simpleTop && !CGGameUI::m_simpleTop->unk_1260) {
@@ -8095,11 +8219,13 @@ void CGGameUI::Reload() {
     CGGameUI::m_reloadUIRequested = 1;
 }
 
+// PROVEN: 47c8fd20 IDENTICAL/IDENTICAL
 // OFFSET: 0x008C57D0/0x140635490
 uint32_t CGGameUI::GetInstanceDifficulty() {
     return CGGameUI::m_instanceDifficulty;
 }
 
+// PROVEN: 802515bf IDENTICAL/IDENTICAL
 // OFFSET: 0x008C5E10/0x140635B90
 void CGGameUI::CancelMirrorTimers() {
     for (int32_t i = 0; i < 3; i++) {
@@ -8115,12 +8241,14 @@ void CGGameUI::CancelMirrorTimers() {
     }
 }
 
-// OFFSET: 0x008C4080
+// PROVEN: 53224fdd IDENTICAL/IDENTICAL
+// OFFSET: 0x008C4080/0x140633B80
 void CGGameUI::OpenResurrectRequest(const char* name) {
     FrameScript_SignalEvent(SCRIPT_EVENT_RESURRECT_REQUEST, "%s", name);
 }
 
-// OFFSET: 0x008C59F0
+// PROVEN: 50552aa8 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C59F0/0x1406357C0
 void CGGameUI::SetInstanceBootTime(uint32_t time) {
     if (static_cast<int32_t>(time) > 0) {
         CGGameUI::m_instanceBootTime = time + FrameTime::GetCurTimeMs();
@@ -8131,13 +8259,15 @@ void CGGameUI::SetInstanceBootTime(uint32_t time) {
     }
 }
 
-// OFFSET: 0x008C5A40
+// PROVEN: 2c45105b IDENTICAL/IDENTICAL
+// OFFSET: 0x008C5A40/0x140635810
 void CGGameUI::SetInstanceLockWarning(uint32_t completedMask) {
     CGGameUI::m_instanceLockCompletedMask = completedMask;
     FrameScript_SignalEvent(SCRIPT_EVENT_INSTANCE_LOCK_WARNING, NULL);
 }
 
-// OFFSET: 0x008C5A60
+// PROVEN: 914f8329 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C5A60/0x140635830
 void CGGameUI::SetInstanceLockTime(uint32_t time, uint32_t a2, uint32_t a3) {
     if (static_cast<int32_t>(time) > 0) {
         CGGameUI::m_instanceLockTime = time + FrameTime::GetCurTimeMs();
@@ -8152,7 +8282,8 @@ void CGGameUI::SetInstanceLockTime(uint32_t time, uint32_t a2, uint32_t a3) {
     }
 }
 
-// OFFSET: 0x008C5D20
+// PROVEN: 3703326b IDENTICAL/UNPROVEN
+// OFFSET: 0x008C5D20/0x140635A90
 void CGGameUI::InvalidatePlayer(const WOWGUID& guid) {
     CGGuildInfo::InvalidatePlayer(guid.m_guid);
     CGCalendar::InvalidatePlayer(guid);
@@ -8172,7 +8303,7 @@ static void LevelGrantNameQueryCallback(int32_t id, const WOWGUID& guid, void* p
     }
 }
 
-// OFFSET: 0x008C5F40
+// OFFSET: 0x008C5F40/0x140635CD0
 void CGGameUI::ProposeLevelGrant(WOWGUID guid) {
     if (CGGameUI::m_pendingLevelGranter) {
         return;
@@ -8249,12 +8380,14 @@ static int32_t FindMovieFileDataID(int32_t movieId) {
     return best;
 }
 
-// OFFSET: 0x008CB060
+// PROVEN: 9d6a8b5d IDENTICAL/IDENTICAL
+// OFFSET: 0x008CB060/0x14063B850
 void CGGameUI::ClearClientControls() {
     CGGameUI::ClearCursor(1, 1);
     Spell_C_CancelPlayerSpells();
 }
 
+// PROVEN: 60df823c IDENTICAL/NONE
 // OFFSET: 0x008CB4E0
 void CGGameUI::UpdateComboPoints(const WOWGUID& guid, uint32_t points) {
     CGGameUI::m_comboTarget = guid;
@@ -8343,6 +8476,7 @@ void CGGameUI::DisplayPvPQueueRemovedError(int32_t reason) {
     }
 }
 
+// PROVEN: dd9dbddf IDENTICAL/DIFFERENT
 // OFFSET: 0x008CEF10/0x140641490
 void CGGameUI::StartMovie(uint32_t movieId) {
     if (!g_movieDB.GetRecord(movieId)) {
@@ -8360,7 +8494,7 @@ void CGGameUI::StartMovie(uint32_t movieId) {
     }
 }
 
-// OFFSET: 0x008D93A0
+// OFFSET: 0x008D93A0/0x14064CB20
 void CCapturePointUIManager::DeleteNode(CapturePointUIManagerNode* node) {
     uint32_t worldState = node->m_worldState;
     this->m_nodes.DeleteNode(node);
@@ -8473,7 +8607,7 @@ void CGGameUI::LeaveWorld() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_LEAVING_WORLD, NULL);
 }
 
-// OFFSET: 0x008DC580
+// OFFSET: 0x008DC580/0x140650A80
 void CCapturePointUIManager::RemoveCapturePoint(CGGameObject_C* object) {
     WOWGUID guid = object->m_obj->m_guid;
 

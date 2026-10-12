@@ -48,4 +48,6 @@ class CMinigameTicTacToe_C : public CMinigame_C {
     virtual int32_t PushStateToLua(lua_State* L);
 };
 
+#include "WoW/Source/Minigame/Minigame_c.inl"
+
 #endif

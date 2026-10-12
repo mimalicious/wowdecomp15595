@@ -33,7 +33,7 @@ class CAaBsp {
     /* 0044 */ uint32_t m_avgNodeFaces;
     /* 0048 */ int32_t m_bFree;
     /* 004C */ CAaBox m_aaBox;
-    /* 0064 */ int32_t unk_0064;
+    /* 0064 */ uintptr_t unk_0064;
 
     CAaBsp();
     ~CAaBsp();
@@ -54,7 +54,6 @@ class CAaBspNodeDigest {
     /* 18A6 */ uint16_t m_faceVertexIndices [900];
     /* 1FAE */ uint16_t m_faceFlags [300];
     /* 2206 */ uint16_t m_faceIndices [300];
-    /* 245E */ uint8_t unk_245E[2];
 };
 
 class CAaBspDigestCache {

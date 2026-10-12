@@ -7,10 +7,10 @@
 // STATIC: 0x00D07434
 static System_Thread::UsingThreadLocalStorage s_usingThreadLocalStorage;
 
-// STATIC: 0x00EB5CB8
+// STATIC: 0x00EB5CB8/0x140DA2350
 Blizzard::Thread::TLSSlot* System_Thread::s_slotList[128];
 
-// STATIC: 0x00EB5ED0
+// STATIC: 0x00EB5ED0/0x140DA2750
 uint32_t System_Thread::s_slotListUsed;
 
 // INLINED

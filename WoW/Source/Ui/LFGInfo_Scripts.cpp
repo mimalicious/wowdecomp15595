@@ -39,7 +39,7 @@
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include "WoW/Source/DB/Rec/SpellShapeshiftFormRec.h"
 
-// STATIC: 0x00D137A8
+// STATIC: 0x00D137A8/0x140BCBCF0
 static const char* s_lfgTypeTokens[7] = {
     "LFG_TYPE_NONE",
     "LFG_TYPE_DUNGEON",
@@ -49,15 +49,16 @@ static const char* s_lfgTypeTokens[7] = {
     "LFG_TYPE_RANDOM_DUNGEON",
 };
 
-// STATIC: 0x00F4AD88
+// STATIC: 0x00F4AD88/0x140E3F010
 static char s_completionRewardTexture[260];
 
-// STATIC: 0x00F4AEB8
+// STATIC: 0x00F4AEB8/0x140E3F150
 static char s_rewardItemTexture[260];
 
-// STATIC: 0x00F4AFC0
+// STATIC: 0x00F4AFC0/0x140E3F260
 static char s_shortageRewardTexture[260];
 
+// PROVEN: 3ecbb933 IDENTICAL/UNPROVEN
 // OFFSET: 0x00985350/0x140700500
 LFGDungeonEntry* CGLookingForGroup::GetDungeonRewardInfo(uint32_t dungeonKey) {
     if (CGLookingForGroup::m_playerLockInfo.m_valid) {
@@ -91,6 +92,7 @@ LFG_SLOT_INFO_LOOT* CGLookingForGroup::GetDungeonReward(uint32_t dungeonKey, uin
     return &entry->m_rewards.m_data[index];
 }
 
+// PROVEN: 064f4998 IDENTICAL/UNPROVEN
 // OFFSET: 0x00980F40/0x1406FB440
 static bool CanPartyLFGBackfill() {
     int32_t members = CGRaidInfo::m_realNumMembers;
@@ -116,6 +118,7 @@ static bool CanPartyLFGBackfill() {
     return false;
 }
 
+// PROVEN: 1023509c IDENTICAL/DIFFERENT
 // OFFSET: 0x009861A0/0x1407015B0
 static int32_t PushAuraExpiration(lua_State* L, int32_t spellID) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -162,6 +165,7 @@ static int32_t PushUnitHasAura(lua_State* L, int32_t spellID) {
     return 0;
 }
 
+// PROVEN: d8df3074 IDENTICAL/DIFFERENT
 // OFFSET: 0x009828E0/0x1406FD440
 static int32_t PushLockReasonArgs(lua_State* L, LFGDungeonEntry* entry) {
     switch (entry->m_lockReason) {
@@ -188,7 +192,7 @@ static int32_t PushLockReasonArgs(lua_State* L, LFGDungeonEntry* entry) {
     }
 }
 
-// PROVEN: a5d876ec IDENTICAL/NONE
+// PROVEN: a5d876ec IDENTICAL/IDENTICAL
 // OFFSET: 0x00981850/0x1406FC0F0
 static int32_t Script_GetLFGRoles(lua_State* L) {
     if (s_cvLfgSelectedRoles) {
@@ -207,6 +211,7 @@ static int32_t Script_GetLFGRoles(lua_State* L) {
     return 4;
 }
 
+// PROVEN: 813dec89 IDENTICAL/DIFFERENT
 // OFFSET: 0x00986120/0x1407014F0
 static int32_t Script_GetLFGRandomCooldownExpiration(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -223,11 +228,13 @@ static int32_t Script_GetLFGRandomCooldownExpiration(lua_State* L) {
     return 0;
 }
 
+// PROVEN: d6cf24b2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00986220/0x140701680
 static int32_t Script_GetLFGDeserterExpiration(lua_State* L) {
     return PushAuraExpiration(L, 71041);
 }
 
+// PROVEN: e72c19b3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097F4A0/0x1406F9590
 static int32_t Script_SetLFGRoles(lua_State* L) {
     uint8_t roles = 0;
@@ -254,6 +261,7 @@ static int32_t Script_SetLFGRoles(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e6821b46 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097F460/0x1406F9520
 static int32_t Script_GetLFGTypes(lua_State* L) {
     lua_checkstack(L, 7);
@@ -265,6 +273,7 @@ static int32_t Script_GetLFGTypes(lua_State* L) {
     return 7;
 }
 
+// PROVEN: bd2c5b28 IDENTICAL/IDENTICAL
 // OFFSET: 0x00988AB0/0x1407051F0
 static void RandomDungeonRewardItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -277,6 +286,7 @@ static void RandomDungeonRewardItemStatsCallback(int32_t id, const WOWGUID& guid
     }
 }
 
+// PROVEN: ff9bff5e IDENTICAL/IDENTICAL
 // OFFSET: 0x0097F010/0x1406F9160
 static int32_t Script_SearchLFGGetJoinedID(lua_State* L) {
     int32_t id = CGLookingForGroup::m_searchJoinedID & 0xFFFFFF;
@@ -289,6 +299,7 @@ static int32_t Script_SearchLFGGetJoinedID(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 3dcf1486 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097F5E0/0x1406F96F0
 static int32_t Script_GetRandomDungeonBestChoice(lua_State* L) {
     if (CGLookingForGroup::m_randomDungeonBestChoice) {
@@ -299,18 +310,21 @@ static int32_t Script_GetRandomDungeonBestChoice(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 55a8f3b1 IDENTICAL/UNPROVEN
 // OFFSET: 0x00982B30/0x1406FD710
 static int32_t Script_GetNumRandomDungeons(lua_State* L) {
     lua_pushnumber(L, CGLookingForGroup::m_randomDungeons.Count());
     return 1;
 }
 
+// PROVEN: 78d47970 IDENTICAL/IDENTICAL
 // OFFSET: 0x009831D0/0x1406FDEC0
 static int32_t Script_CanPartyLFGBackfill(lua_State* L) {
     lua_pushboolean(L, CanPartyLFGBackfill());
     return 1;
 }
 
+// PROVEN: 0405ea76 IDENTICAL/DIFFERENT
 // OFFSET: 0x009831F0/0x1406FDEF0
 static int32_t Script_GetPartyLFGBackfillInfo(lua_State* L) {
     if (CanPartyLFGBackfill()) {
@@ -341,6 +355,7 @@ static int32_t Script_SearchLFGGetNumResults(lua_State* L) {
     return 2;
 }
 
+// PROVEN: c5d9b49d IDENTICAL/UNPROVEN
 // OFFSET: 0x00982660/0x1406FD120
 static int32_t Script_GetLFDChoiceOrder(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
@@ -379,6 +394,7 @@ static int32_t Script_GetLFDChoiceOrder(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 66e8accf IDENTICAL/UNPROVEN
 // OFFSET: 0x009827A0/0x1406FD2B0
 static int32_t Script_GetLFRChoiceOrder(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
@@ -417,7 +433,7 @@ static int32_t Script_GetLFRChoiceOrder(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 768ebc7d IDENTICAL/NONE
+// PROVEN: 768ebc7d IDENTICAL/UNPROVEN
 // OFFSET: 0x0097F540/0x1406F9650
 static int32_t Script_GetLFGInfoLocal(lua_State* L) {
     lua_pushboolean(L, CGLookingForGroup::m_localInfo.m_joined);
@@ -433,6 +449,7 @@ static int32_t Script_GetLFGInfoLocal(lua_State* L) {
     return 8;
 }
 
+// PROVEN: 7eb7bb78 IDENTICAL/UNPROVEN
 // OFFSET: 0x00985440/0x140700590
 static int32_t Script_GetLFGInfoServer(lua_State* L) {
     LFGInfo* info = CGPartyInfo::m_members[0] || CGPartyInfo::m_onePersonParty || CGRaidInfo::m_numMembers ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
@@ -452,6 +469,7 @@ static int32_t Script_GetLFGInfoServer(lua_State* L) {
     return 11;
 }
 
+// PROVEN: 825a0fda IDENTICAL/DIFFERENT
 // OFFSET: 0x00981910/0x1406FC1D0
 static int32_t Script_GetLFGQueueStats(lua_State* L) {
     LFGInfo* info = CGPartyInfo::m_members[0] || CGPartyInfo::m_onePersonParty || CGRaidInfo::m_numMembers ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
@@ -498,6 +516,7 @@ static int32_t Script_GetLFGQueueStats(lua_State* L) {
     return 17;
 }
 
+// PROVEN: abd823b2 IDENTICAL/UNPROVEN
 // OFFSET: 0x00985530/0x140700690
 static int32_t Script_GetLFGQueuedList(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
@@ -532,6 +551,7 @@ static int32_t Script_GetLFGQueuedList(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 41e5c70e IDENTICAL/UNPROVEN
 // OFFSET: 0x009858F0/0x140700AB0
 static int32_t Script_GetLFDLockPlayerCount(lua_State* L) {
     if (!CGLookingForGroup::m_playerLockInfo.m_valid) {
@@ -554,6 +574,7 @@ static int32_t Script_GetLFDLockPlayerCount(lua_State* L) {
     return 1;
 }
 
+// PROVEN: b2ca6649 IDENTICAL/DIFFERENT
 // OFFSET: 0x00988B00/0x140705240
 static int32_t Script_GetLFGDungeonRewardInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -612,6 +633,7 @@ static int32_t Script_GetLFGDungeonRewardInfo(lua_State* L) {
     return 3;
 }
 
+// PROVEN: a3eac1d8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00982E80/0x1406FDAE0
 static int32_t Script_GetLFGCompletionReward(lua_State* L) {
     if (CGLookingForGroup::m_reward.m_actualSlot) {
@@ -637,6 +659,7 @@ static int32_t Script_GetLFGCompletionReward(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 427b3757 IDENTICAL/UNPROVEN
 // OFFSET: 0x00982FD0/0x1406FDC60
 static int32_t Script_GetLFGCompletionRewardItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -676,6 +699,7 @@ static int32_t Script_GetLFGCompletionRewardItem(lua_State* L) {
     return 0;
 }
 
+// PROVEN: b9a8d686 IDENTICAL/UNPROVEN
 // OFFSET: 0x009856D0/0x140700860
 static int32_t Script_JoinLFG(lua_State* L) {
     if (!CGLookingForGroup::m_localInfo.m_numDungeons) {
@@ -740,6 +764,7 @@ static int32_t Script_GetLFDChoiceLockedState(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 516e6913 IDENTICAL/DIFFERENT
 // OFFSET: 0x00986FB0/0x140702730
 static int32_t Script_IsListedInLFR(lua_State* L) {
     LFGInfo* info = CGPartyInfo::m_members[0] || CGPartyInfo::m_onePersonParty || CGRaidInfo::m_numMembers ? &CGLookingForGroup::m_partyInfo : &CGLookingForGroup::m_playerInfo;
@@ -747,11 +772,13 @@ static int32_t Script_IsListedInLFR(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009820E0
+// PROVEN: 7dac8da5 IDENTICAL/IDENTICAL
+// OFFSET: 0x009820E0/0x1406FCA80
 static int32_t Script_GetLFGRoleUpdate(lua_State* L) {
     return CGLookingForGroup::GetLFGRoleUpdate(L);
 }
 
+// PROVEN: 244c2185 IDENTICAL/IDENTICAL
 // OFFSET: 0x009821C0/0x1406FCBD0
 static int32_t Script_GetLFGRoleUpdateSlot(lua_State* L) {
     return CGLookingForGroup::GetLFGRoleUpdateSlot(L);
@@ -809,11 +836,13 @@ int32_t CGLookingForGroup::GetLFGProposal(lua_State* L) {
     return 13;
 }
 
+// PROVEN: b0078d3f IDENTICAL/IDENTICAL
 // OFFSET: 0x00981D60/0x1406FC710
 static int32_t Script_GetLFGProposal(lua_State* L) {
     return CGLookingForGroup::GetLFGProposal(L);
 }
 
+// PROVEN: 303058a4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00982B70/0x1406FD740
 static int32_t PushDungeonInfo(lua_State* L, int32_t dungeonId) {
     if (dungeonId < 0) {
@@ -858,6 +887,7 @@ static int32_t PushDungeonInfo(lua_State* L, int32_t dungeonId) {
     return 0;
 }
 
+// PROVEN: 63e5fd1e IDENTICAL/DIFFERENT
 // OFFSET: 0x00982DC0/0x1406FDA00
 static int32_t Script_GetLFGDungeonInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -928,6 +958,7 @@ static int32_t Script_GetLFDLockInfo(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 82b0d99f IDENTICAL/DIFFERENT
 // OFFSET: 0x00985B00/0x140700D00
 static int32_t Script_GetLFGDungeonRewards(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -963,6 +994,7 @@ static int32_t Script_GetLFGDungeonRewards(lua_State* L) {
     return 6;
 }
 
+// PROVEN: a18dbfd8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00982E00/0x1406FDA50
 static int32_t Script_GetLFGRandomDungeonInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -981,12 +1013,14 @@ static int32_t Script_GetLFGRandomDungeonInfo(lua_State* L) {
     return PushDungeonInfo(L, dungeonId) + 1;
 }
 
+// PROVEN: 08792e76 IDENTICAL/IDENTICAL
 // OFFSET: 0x00987BC0/0x140703B20
 static int32_t Script_ClearAllLFGDungeons(lua_State* L) {
     CGLookingForGroup::ClearDungeonList();
     return 0;
 }
 
+// PROVEN: d319205c IDENTICAL/DIFFERENT
 // OFFSET: 0x00987A50/0x1407039D0
 static int32_t Script_SetLFGDungeon(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1184,6 +1218,7 @@ static int32_t Script_GetLFDChoiceEnabledState(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ed7da7e3 IDENTICAL/UNPROVEN
 // OFFSET: 0x00982980/0x1406FD530
 static int32_t Script_RequestLFDPlayerLockInfo(lua_State* L) {
     static ThrottleObject s_shortThrottle(1, 1);
@@ -1204,6 +1239,7 @@ static int32_t Script_RequestLFDPlayerLockInfo(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 379cf00c IDENTICAL/UNPROVEN
 // OFFSET: 0x00982A50/0x1406FD620
 static int32_t Script_RequestLFDPartyLockInfo(lua_State* L) {
     static ThrottleObject s_shortThrottle(1, 1);
@@ -1224,7 +1260,7 @@ static int32_t Script_RequestLFDPartyLockInfo(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 17860c07 IDENTICAL/NONE
+// PROVEN: 17860c07 IDENTICAL/IDENTICAL
 // OFFSET: 0x009818D0/0x1406FC180
 static int32_t Script_SetLFGComment(lua_State* L) {
     const char* comment = NULL;
@@ -1272,6 +1308,7 @@ static int32_t Script_UnitHasLFGRandomCooldown(lua_State* L) {
     return 0;
 }
 
+// PROVEN: d6c3700d IDENTICAL/IDENTICAL
 // OFFSET: 0x00983460/0x1406FE1C0
 static int32_t Script_UnitHasLFGDeserter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -1282,6 +1319,7 @@ static int32_t Script_UnitHasLFGDeserter(lua_State* L) {
     return PushUnitHasAura(L, 71041);
 }
 
+// PROVEN: 89019ef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x009884A0/0x1407048C0
 static int32_t Script_SearchLFGLeave(lua_State* L) {
     if (CGGameUI::CanPerformAction(9)) {
@@ -1291,6 +1329,7 @@ static int32_t Script_SearchLFGLeave(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 2aeebe29 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097F050/0x1406F9190
 static int32_t AddLFGPlayerInfo(lua_State* L, const LFGListPlayer* player) {
     if (player) {
@@ -1358,6 +1397,7 @@ static int32_t AddLFGPlayerInfo(lua_State* L, const LFGListPlayer* player) {
     return 29;
 }
 
+// PROVEN: cca2878e IDENTICAL/IDENTICAL
 // OFFSET: 0x00981E50/0x1406FC800
 static int32_t Script_GetLFGProposalMember(lua_State* L) {
     return CGLookingForGroup::GetLFGProposalMember(L);
@@ -1393,6 +1433,7 @@ static int32_t Script_SearchLFGGetEncounterResults(lua_State* L) {
     return PushDungeonEncounterInfo(L, rec->m_mapID, rec->m_difficulty, static_cast<int32_t>(encounter - 1.0), mask, 0);
 }
 
+// PROVEN: 7b3a9f61 IDENTICAL/UNPROVEN
 // OFFSET: 0x00981760/0x1406FBFD0
 static int32_t Script_CompleteLFGRoleCheck(lua_State* L) {
     if (!s_cvLfgSelectedRoles) {
@@ -1425,17 +1466,20 @@ static int32_t Script_CompleteLFGRoleCheck(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 40a87f9b IDENTICAL/IDENTICAL
 // OFFSET: 0x00981B40/0x1406FC450
 static int32_t Script_LeaveLFG(lua_State* L) {
     CGLookingForGroup::LeaveLFG();
     return 0;
 }
 
+// PROVEN: fdc86c37 IDENTICAL/DIFFERENT
 // OFFSET: 0x00981F20/0x1406FC8D0
 static int32_t Script_GetLFGProposalEncounter(lua_State* L) {
     return CGLookingForGroup::GetLFGProposalEncounter(L);
 }
 
+// PROVEN: 5ca6a9fd IDENTICAL/IDENTICAL
 // OFFSET: 0x00982040/0x1406FCA40
 static int32_t Script_AcceptProposal(lua_State* L) {
     if (CGGameUI::CanPerformAction(9)) {
@@ -1445,27 +1489,32 @@ static int32_t Script_AcceptProposal(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 00183dac IDENTICAL/IDENTICAL
 // OFFSET: 0x00982060/0x1406FCA60
 static int32_t Script_RejectProposal(lua_State* L) {
     CGLookingForGroup::ProposalResponse(false);
     return 0;
 }
 
+// PROVEN: cf6da62f IDENTICAL/IDENTICAL
 // OFFSET: 0x00982360/0x1406FCDA0
 static int32_t Script_GetLFGRoleUpdateMember(lua_State* L) {
     return CGLookingForGroup::GetLFGRoleUpdateMember(L);
 }
 
+// PROVEN: b1df964d IDENTICAL/IDENTICAL
 // OFFSET: 0x00982510/0x1406FCF70
 static int32_t Script_SetLFGBootVote(lua_State* L) {
     return CGLookingForGroup::SetLFGBootVote(L);
 }
 
+// PROVEN: 4cb2e1df IDENTICAL/IDENTICAL
 // OFFSET: 0x00982650/0x1406FD110
 static int32_t Script_GetLFGBootProposal(lua_State* L) {
     return CGLookingForGroup::GetLFGBootProposal(L);
 }
 
+// PROVEN: 92e80969 IDENTICAL/UNPROVEN
 // OFFSET: 0x00983160/0x1406FDE20
 static int32_t Script_IsInLFGDungeon(lua_State* L) {
     if (CGPartyInfo::m_lfgSlot) {
@@ -1593,6 +1642,7 @@ static int32_t Script_SearchLFGGetPartyResults(lua_State* L) {
     return AddLFGPlayerInfo(L, NULL) + 5;
 }
 
+// PROVEN: 62b33589 IDENTICAL/UNPROVEN
 // OFFSET: 0x00983C90/0x1406FEBF0
 static int32_t Script_SetLFGHeaderCollapsed(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1614,7 +1664,7 @@ static int32_t Script_SetLFGHeaderCollapsed(lua_State* L) {
     return 0;
 }
 
-// PROVEN: fddce97a IDENTICAL/NONE
+// PROVEN: fddce97a IDENTICAL/IDENTICAL
 // OFFSET: 0x00983D20/0x1406FEC90
 static int32_t Script_SetLFGDungeonEnabled(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1727,6 +1777,7 @@ static int32_t Script_GetLFGDungeonRewardLink(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 99ec49f6 IDENTICAL/DIFFERENT
 // OFFSET: 0x009883C0/0x1407047F0
 static int32_t Script_SearchLFGJoin(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -1748,6 +1799,7 @@ static int32_t Script_SearchLFGJoin(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e3792261 IDENTICAL/DIFFERENT
 // OFFSET: 0x00987AF0/0x140703A60
 static int32_t Script_ClearLFGDungeon(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
@@ -1765,6 +1817,7 @@ static int32_t Script_ClearLFGDungeon(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 618bd633 IDENTICAL/DIFFERENT
 // OFFSET: 0x00985680/0x140700810
 static int32_t Script_GetLastQueueStatusIndex(lua_State* L) {
     if (CGLookingForGroup::GetQueueStatusIndex() >= 0) {
@@ -1776,6 +1829,7 @@ static int32_t Script_GetLastQueueStatusIndex(lua_State* L) {
     return 1;
 }
 
+// PROVEN: dab6127a IDENTICAL/IDENTICAL
 // OFFSET: 0x00987BD0/0x140703B30
 static int32_t Script_PartyLFGStartBackfill(lua_State* L) {
     if (s_cvLfgSelectedRoles && (s_cvLfgSelectedRoles->m_intValue & 0xE)) {
@@ -1793,6 +1847,7 @@ static int32_t Script_PartyLFGStartBackfill(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 5792e003 IDENTICAL/UNPROVEN
 // OFFSET: 0x0098B050/0x140708D40
 static int32_t Script_RefreshLFGList(lua_State* L) {
     CGLookingForGroup::m_searchResults.Copy(CGLookingForGroup::m_prevSearchResults);
@@ -1898,12 +1953,14 @@ static int32_t Script_UnitGetAvailableRoles(lua_State* L) {
     return 0;
 }
 
+// PROVEN: b5083931 IDENTICAL/UNPROVEN
 // OFFSET: 0x009834A0/0x1406FE200
 static int32_t Script_GetNumRFDungeons(lua_State* L) {
     lua_pushnumber(L, CGLookingForGroup::m_rfEntries.m_count);
     return 1;
 }
 
+// PROVEN: 0900f369 IDENTICAL/UNPROVEN
 // OFFSET: 0x009834E0/0x1406FE230
 static int32_t Script_GetRFDungeonInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1922,6 +1979,7 @@ static int32_t Script_GetRFDungeonInfo(lua_State* L) {
     return PushDungeonInfo(L, entry.m_id) + 1;
 }
 
+// PROVEN: 49009f14 IDENTICAL/DIFFERENT
 // OFFSET: 0x00983F70/0x1406FEF40
 static int32_t Script_GetNumDungeonForRandomSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1935,6 +1993,7 @@ static int32_t Script_GetNumDungeonForRandomSlot(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1e746bbf IDENTICAL/DIFFERENT
 // OFFSET: 0x00983FE0/0x1406FEFB0
 static int32_t Script_GetDungeonForRandomSlot(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
@@ -1961,6 +2020,7 @@ static int32_t Script_GetDungeonForRandomSlot(lua_State* L) {
     return 1;
 }
 
+// PROVEN: a3ef3739 IDENTICAL/DIFFERENT
 // OFFSET: 0x00987C30/0x140703BA0
 static int32_t Script_GetBestRFChoice(lua_State* L) {
     int32_t dungeonID = CGLookingForGroup::GetBestRFChoice();
@@ -1973,6 +2033,7 @@ static int32_t Script_GetBestRFChoice(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e1bbf9b6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00985C30/0x140700E90
 static int32_t Script_GetLFGDungeonRewardCapBarInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -2214,6 +2275,7 @@ static int32_t Script_GetLFGDungeonNumEncounters(lua_State* L) {
     return 2;
 }
 
+// PROVEN: 3fa6215e IDENTICAL/DIFFERENT
 // OFFSET: 0x009864A0/0x1407019D0
 static int32_t Script_GetLFGDungeonEncounterInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -2339,7 +2401,7 @@ static int32_t Script_GetLFGDungeonShortageRewardInfo(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D137C8
+// STATIC: 0x00D137C8/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SetLFGDungeon", &Script_SetLFGDungeon },
     { "ClearLFGDungeon", &Script_ClearLFGDungeon },
@@ -2421,6 +2483,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetBestRFChoice", &Script_GetBestRFChoice },
 };
 
+// PROVEN: 1f60365e IDENTICAL/UNPROVEN
 // OFFSET: 0x0097F630/0x1406F9730
 void LookingForGroupRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -2428,6 +2491,7 @@ void LookingForGroupRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: f5f99ff6 IDENTICAL/UNPROVEN
 // OFFSET: 0x0097F660/0x1406F9780
 void LookingForGroupUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

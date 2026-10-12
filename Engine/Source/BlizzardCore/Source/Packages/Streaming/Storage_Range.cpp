@@ -61,7 +61,7 @@ void Blizzard::Storage::Request::CheckLocal() {
     }
 }
 
-// PROVEN: 648d692b IDENTICAL/NONE
+// PROVEN: 648d692b IDENTICAL/DIFFERENT
 // OFFSET: 0x007B4640/0x1404AA2A0
 void Blizzard::Storage::Request::AddRef() {
     this->m_refCount.Increment();

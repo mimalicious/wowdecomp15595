@@ -49,7 +49,7 @@ void luaS_resize (lua_State *L, int newsize) {
 }
 
 
-// OFFSET: 0x00421200
+// OFFSET: 0x00421200/0x140025CB0
 static TString *newlstr (lua_State *L, const char *str, size_t l,
                                        unsigned int h) {
   TString *ts;

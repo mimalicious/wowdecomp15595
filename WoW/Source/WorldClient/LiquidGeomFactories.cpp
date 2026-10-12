@@ -19,22 +19,22 @@ typedef void (*MAPOBJ_VERTEX_FILL)(CMapObjGroup* group, const C3Vector& pos, con
 // STATIC: 0x00D02A20
 static float s_mapObjLiquidTexScale = 0.24f;
 
-// STATIC: 0x00E89138
+// STATIC: 0x00E89138/0x140D74E30
 static uint32_t s_smolVertCacheSize;
 
-// STATIC: 0x00E8913C
+// STATIC: 0x00E8913C/0x140D74E38
 CDataAllocator CMeshGeomFactory::s_allocator(sizeof(CMeshGeomFactory), 4);
 
-// STATIC: 0x00E89150
+// STATIC: 0x00E89150/0x140D74E60
 static SMOLiquidVert s_smolVertCache[64];
 
-// STATIC: 0x00E89350
+// STATIC: 0x00E89350/0x140D75060
 CDataAllocator CChunkGeomFactory::s_allocator(sizeof(CChunkGeomFactory), 16);
 
-// STATIC: 0x00E89364
+// STATIC: 0x00E89364/0x140D75080
 CDataAllocator CAreaGeomFactory::s_allocator(sizeof(CAreaGeomFactory), 16);
 
-// STATIC: 0x00E89378
+// STATIC: 0x00E89378/0x140D750A0
 static TSGrowableArray<uint16_t> s_liquidVertexCounts;
 
 static float ChunkStep(int32_t cell) {
@@ -131,7 +131,7 @@ static uint16_t* BuildAreaIndices(uint16_t* indices) {
 Liquid::IGeomFactory::~IGeomFactory() {
 }
 
-// PROVEN: 1306526c IDENTICAL/NONE
+// PROVEN: 1306526c IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA00/0x140455010
 void CMeshGeomFactory::SetTexCoord1ValueX(float value) {
     this->m_texCoord1ValueX = value;
@@ -143,7 +143,7 @@ float CMeshGeomFactory::GetHeight() {
     return 0.0f;
 }
 
-// PROVEN: b08f3ba8 IDENTICAL/NONE
+// PROVEN: b08f3ba8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA30/0x140455020
 void CMeshGeomFactory::Purge() {
     if (this->m_mapObjGroup) {
@@ -151,7 +151,7 @@ void CMeshGeomFactory::Purge() {
     }
 }
 
-// PROVEN: 2ce6c080 IDENTICAL/NONE
+// PROVEN: 2ce6c080 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CB40/0x140455140
 void CChunkGeomFactory::Purge() {
     if (this->m_buf) {
@@ -160,7 +160,7 @@ void CChunkGeomFactory::Purge() {
     }
 }
 
-// PROVEN: 6d5fc22b IDENTICAL/NONE
+// PROVEN: 6d5fc22b IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CBD0/0x1404551F0
 void CAreaGeomFactory::Purge() {
     if (this->m_buf) {
@@ -169,7 +169,8 @@ void CAreaGeomFactory::Purge() {
     }
 }
 
-// OFFSET: 0x0076CE00
+// PROVEN: 60282c52 IDENTICAL/IDENTICAL
+// OFFSET: 0x0076CE00/0x140455420
 void CMeshGeomFactory::Destroy() {
     CMeshGeomFactory::s_allocator.Clear(typeid(CMeshGeomFactory).raw_name(), SLOG_OBJECT, 1);
 }
@@ -183,6 +184,7 @@ void CMeshGeomFactory::SetDiffuseColor(const CImVector& color) {
     }
 }
 
+// PROVEN: 72d7a811 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CE70/0x140455490
 void CMeshGeomFactory::Release() {
     if (--this->m_refCount == 0) {
@@ -233,7 +235,7 @@ static void BuildMapObjLiquidIndices(CMapObjGroup* group, uint16_t*& indices) {
     }
 }
 
-// PROVEN: 462e946d IDENTICAL/NONE
+// PROVEN: 462e946d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CFC0/0x140455610
 static void* PolyClipVtxLerpTexCoords(const void* a, const void* b, float t) {
     const uint16_t* from = static_cast<const uint16_t*>(a);
@@ -244,7 +246,7 @@ static void* PolyClipVtxLerpTexCoords(const void* a, const void* b, float t) {
     return vert;
 }
 
-// PROVEN: bbad3458 IDENTICAL/NONE
+// PROVEN: bbad3458 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D030/0x140455690
 static void* PolyClipVtxLerpDepth(const void* a, const void* b, float t) {
     const uint8_t* from = static_cast<const uint8_t*>(a);
@@ -382,7 +384,7 @@ int32_t FillMapObjVertices(CMapObjGroup* group, const CImVector& color, float te
     return cols * rows;
 }
 
-// OFFSET: [0x0076D980<13, 1>, 0x0076DB90<13, 0>, 0x0076DE20<9, 1>, 0x0076E050<9, 0>, 0x0076E370<10, 1>, 0x0076E640<10, 0>, 0x0076E9F0<7, 1>, 0x0076ED30<7, 0>]
+// OFFSET: [0x0076D980/0x140456280<13, 1>, 0x0076DB90<13, 0>, 0x0076DE20/0x140456770<9, 1>, 0x0076E050<9, 0>, 0x0076E370<10, 1>, 0x0076E640<10, 0>, 0x0076E9F0<7, 1>, 0x0076ED30<7, 0>]
 template <uint32_t FORMAT, int32_t LOCAL>
 void FillMapObjVertex(CMapObjGroup* group, const C3Vector& pos, const float* depthTable, const SMOLiquidVert* vertex, const CImVector& color, float texCoord1, void*& vertices) {
     float*& out = reinterpret_cast<float*&>(vertices);
@@ -420,11 +422,13 @@ void FillMapObjVertex(CMapObjGroup* group, const C3Vector& pos, const float* dep
     out += FORMAT == 7 ? 11 : FORMAT == 10 ? 8 : FORMAT == 9 ? 6 : 5;
 }
 
-// OFFSET: 0x0076D420
+// PROVEN: 336e8ac0 IDENTICAL/IDENTICAL
+// OFFSET: 0x0076D420/0x140455C60
 void CChunkGeomFactory::Destroy() {
     CChunkGeomFactory::s_allocator.Clear(typeid(CChunkGeomFactory).raw_name(), SLOG_OBJECT, 1);
 }
 
+// PROVEN: 7c1fd7e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D440/0x140455C90
 void CChunkGeomFactory::Release() {
     if (--this->m_refCount == 0) {
@@ -432,7 +436,7 @@ void CChunkGeomFactory::Release() {
     }
 }
 
-// PROVEN: 80a9b65f IDENTICAL/NONE
+// PROVEN: 80a9b65f IDENTICAL/DIFFERENT
 // OFFSET: 0x0076D470/0x140455CD0
 bool CChunkGeomFactory::SetTransform(const C44Matrix& transform) {
     if (this->m_transform == transform) {
@@ -444,6 +448,7 @@ bool CChunkGeomFactory::SetTransform(const C44Matrix& transform) {
     return true;
 }
 
+// PROVEN: 5fcee884 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D4B0/0x140455D70
 float CChunkGeomFactory::GetHeight() {
     if (this->m_liquids.Count()) {
@@ -504,6 +509,7 @@ static void BuildChunkIndices(const CChunkLiquid* liquid, uint16_t* indices, uin
     batch.m_count = static_cast<uint16_t>(batch.m_count + (out - indices));
 }
 
+// PROVEN: 70ae072d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076D660/0x140455F70
 void CAreaGeomFactory::Release() {
     if (--this->m_refCount == 0) {
@@ -511,7 +517,7 @@ void CAreaGeomFactory::Release() {
     }
 }
 
-// PROVEN: e609827c IDENTICAL/NONE
+// PROVEN: e609827c IDENTICAL/DIFFERENT
 // OFFSET: 0x0076D690/0x140455FB0
 bool CAreaGeomFactory::SetTransform(const C44Matrix& transform) {
     if (this->m_transform == transform) {
@@ -1028,7 +1034,7 @@ static void FillAreaVertexP3N3C4T2D2(const CMapAreaLow* area, const C44Matrix& t
     FillAreaVertices(area, transform, vertices, 7);
 }
 
-// OFFSET: 0x00772560
+// OFFSET: 0x00772560/0x14045BED0
 CMeshGeomFactory* CMeshGeomFactory::Create(CMapObj* mapObj, CMapObjGroup* mapObjGroup) {
     CMeshGeomFactory* factory = CMeshGeomFactory::s_allocator.New<CMeshGeomFactory>(0);
     factory->m_mapObj = mapObj;
@@ -1275,7 +1281,7 @@ void CAreaGeomFactory::GetBuffers(EGxVertexBufferFormat format, CGxBuf*& vertexB
     this->m_dirty = 0;
 }
 
-// OFFSET: 0x00772CB0
+// OFFSET: 0x00772CB0/0x14045C880
 CChunkGeomFactory* CChunkGeomFactory::Create(const TSGrowableArray<CChunkLiquid*>& liquids) {
     CChunkGeomFactory* factory = CChunkGeomFactory::s_allocator.New<CChunkGeomFactory>(0);
 
@@ -1407,8 +1413,8 @@ float CAreaGeomFactory::GetHeight() {
     return 0.0f;
 }
 
-// PROVEN: 442796bc IDENTICAL/NONE
-// OFFSET: 0x007AAB20
+// PROVEN: 442796bc IDENTICAL/IDENTICAL
+// OFFSET: 0x007AAB20/0x140317F90
 bool CMeshGeomFactory::SetTransform(const C44Matrix& transform) {
     return false;
 }

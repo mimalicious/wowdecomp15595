@@ -59,6 +59,7 @@ static int32_t GetQuestIDArg(lua_State* L) {
     return CGQuestLog::m_quests[index].m_questId;
 }
 
+// PROVEN: 81f6a100 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095C680/0x1406CF480
 static int32_t Script_GetNumQuestLogEntries(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::m_numShownQuests);
@@ -76,14 +77,14 @@ static int32_t Script_GetNumQuestLogEntries(lua_State* L) {
     return 2;
 }
 
-// PROVEN: d5d4f689 IDENTICAL/NONE
+// PROVEN: d5d4f689 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095C700/0x1406CF500
 static int32_t Script_GetQuestLogSelection(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::GetSelectedLogEntry() + 1);
     return 1;
 }
 
-// PROVEN: ab8052b5 IDENTICAL/NONE
+// PROVEN: ab8052b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095C730/0x1406CF560
 static int32_t Script_SetAbandonQuest(lua_State* L) {
     CGQuestLog::m_abandonQuest = CGQuestLog::m_selectedQuest;
@@ -227,7 +228,7 @@ static int32_t Script_GetQuestLogPushable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5a751288 IDENTICAL/NONE
+// PROVEN: 5a751288 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095CB00/0x1406CF940
 static int32_t Script_GetNumQuestWatches(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::m_numQuestWatches);
@@ -319,6 +320,7 @@ static int32_t Script_ProcessQuestLogRewardFactions(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 1b796254 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095CE00/0x1406CFC40
 static int32_t Script_GetNumQuestLogRewardFactions(lua_State* L) {
     lua_pushnumber(L, static_cast<int32_t>(CGQuestInfo::m_numRewardFactions));
@@ -372,6 +374,7 @@ static int32_t Script_QuestPOIGetQuestIDByIndex(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 98ff20fd IDENTICAL/IDENTICAL
 // OFFSET: 0x0095CFE0/0x1406CFE10
 static int32_t Script_SetPOIIconOverlapDistance(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -383,6 +386,7 @@ static int32_t Script_SetPOIIconOverlapDistance(lua_State* L) {
     return 0;
 }
 
+// PROVEN: afd63d24 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095D020/0x1406CFE60
 static int32_t Script_SetPOIIconOverlapPushDistance(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -444,6 +448,7 @@ static int32_t Script_GetQuestWatchIndex(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 046fd387 IDENTICAL/DIFFERENT
 // OFFSET: 0x0095D200/0x1406D0010
 static int32_t Script_GetQuestLogIndexByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -501,7 +506,7 @@ static int32_t Script_GetQuestLogPortraitTurnIn(lua_State* L) {
     return 0;
 }
 
-// PROVEN: bd357a09 IDENTICAL/NONE
+// PROVEN: bd357a09 IDENTICAL/IDENTICAL
 // OFFSET: 0x0095D5C0/0x1406D03C0
 static int32_t Script_GetNumAutoQuestPopUps(lua_State* L) {
     lua_pushinteger(L, CGQuestLog::m_numAutoQuestPopUps);
@@ -540,7 +545,7 @@ static int32_t Script_FindAutoQuestPopUp(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 406f6bef IDENTICAL/NONE
+// PROVEN: 406f6bef IDENTICAL/IDENTICAL
 // OFFSET: 0x0095D690/0x1406D04D0
 static int32_t Script_SetSuperTrackedQuestID(lua_State* L) {
     if (lua_isnumber(L, 1)) {
@@ -552,13 +557,14 @@ static int32_t Script_SetSuperTrackedQuestID(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 73bb14de IDENTICAL/NONE
+// PROVEN: 73bb14de IDENTICAL/DIFFERENT
 // OFFSET: 0x0095D6D0/0x1406D0520
 static int32_t Script_GetSuperTrackedQuestID(lua_State* L) {
     lua_pushinteger(L, CGQuestLog::m_superTrackedQuest);
     return 1;
 }
 
+// PROVEN: 80b018bf IDENTICAL/DIFFERENT
 // OFFSET: 0x0095DC30/0x1406D0D10
 static int32_t Script_SelectQuestLogEntry(lua_State* L) {
     if (lua_isnumber(L, 1)) {
@@ -746,7 +752,7 @@ static int32_t Script_GetQuestLogCompletionText(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4ca66562 IDENTICAL/NONE
+// PROVEN: 4ca66562 IDENTICAL/IDENTICAL
 // OFFSET: 0x009608A0/0x1406D41A0
 static int32_t Script_AbandonQuest(lua_State* L) {
     CGQuestLog::AbandonSelectedQuest();
@@ -1063,7 +1069,7 @@ static int32_t Script_GetQuestIndexForTimer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009612C0
+// OFFSET: 0x009612C0/0x1406D4D70
 static int32_t Script_CollapseQuestHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CollapseQuestHeader(index)");
@@ -1074,7 +1080,7 @@ static int32_t Script_CollapseQuestHeader(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00961310
+// OFFSET: 0x00961310/0x1406D4E60
 static int32_t Script_ExpandQuestHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ExpandQuestHeader(index)");
@@ -1085,8 +1091,8 @@ static int32_t Script_ExpandQuestHeader(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 078f9aad IDENTICAL/NONE
-// OFFSET: 0x00961360
+// PROVEN: 078f9aad IDENTICAL/DIFFERENT
+// OFFSET: 0x00961360/0x1406D4F50
 static int32_t Script_GetQuestGreenRange(lua_State* L) {
     lua_pushnumber(L, CGQuestLog::GetQuestGreenRange());
     return 1;
@@ -1149,6 +1155,7 @@ static int32_t Script_GetQuestLogSpecialItemInfo(lua_State* L) {
     return 4;
 }
 
+// PROVEN: 0d058ccb DIFFERENT/IDENTICAL
 // OFFSET: 0x00961620/0x1406D5330
 static int32_t Script_GetQuestLogSpecialItemCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1196,6 +1203,7 @@ static int32_t Script_IsQuestLogSpecialItemInRange(lua_State* L) {
     return 1;
 }
 
+// PROVEN: e88b2288 IDENTICAL/DIFFERENT
 // OFFSET: 0x00961860/0x1406D5560
 static int32_t Script_GetQuestWorldMapAreaID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1330,6 +1338,7 @@ static int32_t Script_GetNumQuestLeaderBoards(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 24f3422d IDENTICAL/DIFFERENT
 // OFFSET: 0x009631E0/0x1406D7D80
 static int32_t Script_GetQuestLogCriteriaSpell(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -1374,13 +1383,14 @@ static int32_t Script_QuestMapUpdateAllQuests(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ed7c9622 IDENTICAL/NONE
+// PROVEN: ed7c9622 IDENTICAL/IDENTICAL
 // OFFSET: 0x009633E0/0x1406D7FF0
 static int32_t Script_QuestPOIUpdateIcons(lua_State* L) {
     CGQuestLog::UpdatePOIIcons();
     return 0;
 }
 
+// PROVEN: 6efe2ba7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009633F0/0x1406D8000
 static int32_t Script_QuestPOIGetQuestIDByVisibleIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1399,13 +1409,14 @@ static int32_t Script_QuestPOIGetQuestIDByVisibleIndex(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3c87843e IDENTICAL/NONE
+// PROVEN: 3c87843e IDENTICAL/IDENTICAL
 // OFFSET: 0x00963480/0x1406D80C0
 static int32_t Script_SortQuestWatches(lua_State* L) {
     lua_pushboolean(L, CGQuestLog::SortQuestWatches());
     return 1;
 }
 
+// PROVEN: a18e35e9 IDENTICAL/DIFFERENT
 // OFFSET: 0x009634A0/0x1406D80F0
 static int32_t Script_AddAutoQuestPopUp(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
@@ -1435,7 +1446,7 @@ static int32_t Script_AddAutoQuestPopUp(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 78e02b3a IDENTICAL/NONE
+// PROVEN: 78e02b3a IDENTICAL/IDENTICAL
 // OFFSET: 0x00963580/0x1406D81F0
 static int32_t Script_RemoveAutoQuestPopUp(lua_State* L) {
     int32_t questId = lua_isnumber(L, 1) ? static_cast<int32_t>(lua_tonumber(L, 1)) : CGQuestLog::m_selectedQuest;
@@ -1865,7 +1876,8 @@ static int32_t Script_UseQuestLogSpecialItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x009671C0
+// PROVEN: 9efa5a2d IDENTICAL/DIFFERENT
+// OFFSET: 0x009671C0/0x1406DD4A0
 int32_t CGQuestLog::GetQuestLeaderBoardForItem(int32_t questId, int32_t itemId, QuestLogLeaderBoardParams* params) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1972,7 +1984,7 @@ static int32_t Script_GetQuestPOILeaderBoard(lua_State* L) {
     return 3;
 }
 
-// PROVEN: 7f6279b4 IDENTICAL/NONE
+// PROVEN: 7f6279b4 IDENTICAL/DIFFERENT
 // OFFSET: 0x009648A0/0x1406D9E60
 static int32_t Script_GetQuestResetTime(lua_State* L) {
     int32_t now = static_cast<int32_t>(time(NULL));
@@ -1985,7 +1997,7 @@ static int32_t Script_GetQuestResetTime(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00D12E88
+// STATIC: 0x00D12E88/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumQuestLogEntries", &Script_GetNumQuestLogEntries },
     { "GetQuestLogTitle", &Script_GetQuestLogTitle },
@@ -2069,7 +2081,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetSuperTrackedQuestID", &Script_GetSuperTrackedQuestID },
 };
 
-// PROVEN: cb18a370 IDENTICAL/NONE
+// PROVEN: cb18a370 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095D6F0/0x1406D0540
 void QuestLogRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -2077,7 +2089,7 @@ void QuestLogRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 0e94e32e IDENTICAL/NONE
+// PROVEN: 0e94e32e IDENTICAL/UNPROVEN
 // OFFSET: 0x0095D720/0x1406D0590
 void QuestLogUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

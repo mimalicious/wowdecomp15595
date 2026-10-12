@@ -68,6 +68,7 @@ extern "C"
     File_GetDiskBusy
 ]
 */
+// PROVEN: 0c0cc580 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A91620/0x140850F70
 FMOD_RESULT F_API FMOD_File_SetDiskBusy(int busy)
 {
@@ -146,7 +147,7 @@ int                      File::gBufferSize        = FILE_SECTORSIZE;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A928A0
+// OFFSET: 0x00A928A0/0x1408523F0
 void fileThreadFunc(void *data)
 {
     FileThread *fileThread = (FileThread *)data;
@@ -240,6 +241,7 @@ FileThread::FileThread()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 429bd906 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A928B0/0x140852400
 FMOD_RESULT FileThread::init(int devicetype, bool owned)
 {
@@ -398,6 +400,7 @@ FMOD_RESULT File::getFileThread()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: d231ec0a UNPROVEN/IDENTICAL
 // OFFSET: 0x00A92730/0x140852250
 File::File()
 {
@@ -470,6 +473,7 @@ FMOD_RESULT File::init(unsigned int filesize, int blocksize)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 504af24e UNPROVEN/IDENTICAL
 // OFFSET: 0x00A91790/0x140851100
 FMOD_RESULT File::shutDown()
 {
@@ -1269,8 +1273,8 @@ FMOD_RESULT File::getByte(unsigned short *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f3baa626 IDENTICAL/NONE
-// OFFSET: 0x00A922E0
+// PROVEN: f3baa626 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A922E0/0x140851DC0
 FMOD_RESULT File::getByte(unsigned int *val)
 {
     FMOD_RESULT result;
@@ -1875,7 +1879,7 @@ FMOD_RESULT File::getName(char **name)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 77152b0c IDENTICAL/UNPROVEN
+// PROVEN: 77152b0c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A925F0/0x1408520E0
 FMOD_RESULT File::setName(char *name)
 {

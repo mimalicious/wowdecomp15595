@@ -29,4 +29,6 @@ struct CGxPool : public TSLinkedNode<CGxPool> {
     void UnlinkBuf(CGxBuf* buf);
 };
 
+#include "Engine/Source/Gx/CGxPool.inl"
+
 #endif

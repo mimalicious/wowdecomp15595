@@ -26,7 +26,7 @@
 #include "WoW/Source/WowServices/RealmConnection.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// PROVEN: 4988e952 IDENTICAL/NONE
+// PROVEN: 4988e952 IDENTICAL/IDENTICAL
 // OFFSET: 0x008087D0/0x14051E300
 static int32_t Script_SetCharSelectModelFrame(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -43,20 +43,21 @@ static int32_t Script_SetCharSelectModelFrame(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 01149b5d IDENTICAL/NONE
+// PROVEN: 01149b5d IDENTICAL/IDENTICAL
 // OFFSET: 0x00808840/0x14051E390
 static int32_t Script_UpdateSelectionCustomizationScene(lua_State* L) {
     CCharacterSelection::RenderPrep();
     return 0;
 }
 
-// PROVEN: 98a3238d IDENTICAL/NONE
+// PROVEN: 98a3238d IDENTICAL/IDENTICAL
 // OFFSET: 0x00808850/0x14051E3A0
 static int32_t Script_GetCharacterSelectFacing(lua_State* L) {
     lua_pushnumber(L, CCharacterSelection::m_charFacing * 57.29578f);
     return 1;
 }
 
+// PROVEN: 6f1e9aa1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00808880/0x14051E3D0
 static int32_t Script_SetCharacterSelectFacing(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -68,7 +69,7 @@ static int32_t Script_SetCharacterSelectFacing(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 900363a8 IDENTICAL/NONE
+// PROVEN: 900363a8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00808E00/0x14051EA40
 static int32_t Script_GetNumCharacters(lua_State* L) {
     lua_pushnumber(L, static_cast<int32_t>(CCharacterSelection::m_characterList.Count()));
@@ -216,7 +217,7 @@ static int32_t Script_DeclineCharacter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x008092C0
+// OFFSET: 0x008092C0/0x14051EFC0
 static int32_t Script_GetSelectBackgroundModel(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetSelectBackgroundModel(index)");
@@ -314,7 +315,7 @@ static int32_t Script_SaveCharacterOrder(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 5658550a IDENTICAL/NONE
+// PROVEN: 5658550a IDENTICAL/IDENTICAL
 // OFFSET: 0x00809A90/0x14051F9F0
 static int32_t Script_SetCharSelectBackground(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -326,7 +327,7 @@ static int32_t Script_SetCharSelectBackground(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9b1f6dca IDENTICAL/NONE
+// PROVEN: 9b1f6dca IDENTICAL/IDENTICAL
 // OFFSET: 0x00809AE0/0x14051FA40
 static int32_t Script_DeleteCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -338,7 +339,7 @@ static int32_t Script_DeleteCharacter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 211f25f7 IDENTICAL/NONE
+// PROVEN: 211f25f7 IDENTICAL/UNPROVEN
 // OFFSET: 0x0080A1E0/0x140520400
 static int32_t Script_SelectCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -356,14 +357,14 @@ static int32_t Script_SelectCharacter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9c190d76 IDENTICAL/NONE
+// PROVEN: 9c190d76 IDENTICAL/IDENTICAL
 // OFFSET: 0x0080A950/0x140520C70
 static int32_t Script_GetCharacterListUpdate(lua_State* L) {
     CCharacterSelection::OnGetCharacterList();
     return 0;
 }
 
-// STATIC: 0x00D07950
+// STATIC: 0x00D07950/0x140BD1C10
 static FrameScript_Method s_scriptFunctions[] = {
     { "SetCharSelectModelFrame", &Script_SetCharSelectModelFrame },
     { "SetCharSelectBackground", &Script_SetCharSelectBackground },
@@ -381,7 +382,7 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "SaveCharacterOrder", &Script_SaveCharacterOrder },
 };
 
-// PROVEN: e65f2480 IDENTICAL/NONE
+// PROVEN: e65f2480 IDENTICAL/UNPROVEN
 // OFFSET: 0x00807F50/0x14051D8E0
 void CharSelectRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -389,7 +390,7 @@ void CharSelectRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: b22ea559 IDENTICAL/NONE
+// PROVEN: b22ea559 IDENTICAL/UNPROVEN
 // OFFSET: 0x00807F80/0x14051D930
 void CharSelectUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

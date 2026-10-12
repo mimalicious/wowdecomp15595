@@ -32,15 +32,16 @@
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include "WoW/Common/ThrottleObject.h"
 
-// STATIC: 0x00C273B8
+// STATIC: 0x00C273B8/0x140A1D5E0
 static const uint8_t s_classRoles[11] = { 0x0A, 0x0E, 0x08, 0x08, 0x0C, 0x0A, 0x0C, 0x08, 0x08, 0x00, 0x0E };
 
-// STATIC: 0x00C9F524
+// STATIC: 0x00C9F524/0x140B3B218
 const char* s_roleTokens[3] = { "TANK", "HEALER", "DAMAGER" };
 
-// STATIC: 0x00F4A4D0
+// STATIC: 0x00F4A4D0/0x140E3E608
 static uint32_t s_lastQueueSlot;
 
+// PROVEN: fddc03f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30410/0x1407DA340
 uint32_t CGLookingForGroup::GetClassRoles(uint32_t classID) {
     if (!classID) {
@@ -54,6 +55,7 @@ uint32_t CGLookingForGroup::GetClassRoles(uint32_t classID) {
     return s_classRoles[classID - 1];
 }
 
+// PROVEN: 350fa935 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A30430/0x1407DA360
 const char* GetRoleTokenFromFlags(uint32_t flags) {
     for (int32_t i = 0; i < 3; i++) {
@@ -65,6 +67,7 @@ const char* GetRoleTokenFromFlags(uint32_t flags) {
     return "NONE";
 }
 
+// PROVEN: c714599c IDENTICAL/UNPROVEN
 // OFFSET: 0x00A30470/0x1407DA390
 uint32_t GetRoleFlagFromToken(const char* token) {
     for (int32_t i = 0; i < 3; i++) {
@@ -89,7 +92,8 @@ void CGLookingForGroup::RequestLFGPlayerInfo() {
     ClientServices::Send(&request);
 }
 
-// OFFSET: 0x00980700
+// PROVEN: fc324c55 IDENTICAL/IDENTICAL
+// OFFSET: 0x00980700/0x1406FAA10
 static bool OnSetDfFastLaunchResult(ClientSetDfFastLaunchResult* msg) {
     char text[64];
     SStrPrintf(text, sizeof(text), "lfgFastLaunch set to %d", msg->unk_0010);
@@ -98,7 +102,8 @@ static bool OnSetDfFastLaunchResult(ClientSetDfFastLaunchResult* msg) {
     return true;
 }
 
-// OFFSET: 0x00980740
+// PROVEN: 1e2c5bad IDENTICAL/IDENTICAL
+// OFFSET: 0x00980740/0x1406FAA60
 static bool OnLfgSlotInvalid(ClientLfgSlotInvalid* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LFG_INVALID_ERROR_MESSAGE, "%d%d%d", msg->unk_0010.m_firstCompleted, msg->unk_0010.m_projectID, msg->unk_0010.m_completionCount);
     return true;
@@ -109,10 +114,11 @@ void CGLookingForGroup::EnterWorld() {
     CGLookingForGroup::m_lastProposalID = 0;
     CGLookingForGroup::RequestLFGStatus();
     CGLookingForGroup::RequestLFGPlayerInfo();
-    ClientSetDfFastLaunchResult::s_handler = OnSetDfFastLaunchResult;
-    ClientLfgSlotInvalid::s_handler = OnLfgSlotInvalid;
+    ClientSetDfFastLaunchResult::s_handler = JamHandlerEncode(OnSetDfFastLaunchResult, g_jamHandlerKey_CFDD28);
+    ClientLfgSlotInvalid::s_handler = JamHandlerEncode(OnLfgSlotInvalid, g_jamHandlerKey_CFD074);
 }
 
+// PROVEN: 65417cb0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00980C00/0x1406FB050
 void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32_t completedMask, uint32_t* total, uint32_t* completed) {
     *total = 0;
@@ -131,6 +137,7 @@ void DungeonEncounterCountMatchingRows(int32_t mapId, int32_t difficulty, uint32
     }
 }
 
+// PROVEN: f8ffe6dc IDENTICAL/DIFFERENT
 // OFFSET: 0x00980C80/0x1406FB0E0
 int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty, int32_t index, uint32_t completedMask, uint32_t otherMask) {
     for (int32_t i = 0; i < g_dungeonEncounterDB.m_numRecords; i++) {
@@ -166,7 +173,8 @@ int32_t PushDungeonEncounterInfo(lua_State* L, int32_t mapId, int32_t difficulty
     return 4;
 }
 
-// OFFSET: 0x00982070
+// PROVEN: 44cba5ef IDENTICAL/IDENTICAL
+// OFFSET: 0x00982070/0x1406FCA80
 int32_t CGLookingForGroup::GetLFGRoleUpdate(lua_State* L) {
     lua_pushboolean(L, CGLookingForGroup::m_roleCheckState == 2);
     lua_pushnumber(L, CGLookingForGroup::m_roleCheckSlots.m_count);
@@ -236,6 +244,7 @@ void CGLookingForGroup::JoinLFG() {
     CGLookingForGroup::m_localInfo.unk_0003 = 0;
 }
 
+// PROVEN: fc12ffd8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00980E90/0x1406FB390
 void CGLookingForGroup::LeaveLFG() {
     if (!CGLookingForGroup::m_localInfo.m_joined) {
@@ -254,6 +263,7 @@ void CGLookingForGroup::LeaveLFG() {
     CGLookingForGroup::m_localInfo.unk_0003 = 0;
 }
 
+// PROVEN: 80d825dc IDENTICAL/DIFFERENT
 // OFFSET: 0x00981D70/0x1406FC720
 int32_t CGLookingForGroup::GetLFGProposalMember(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -277,6 +287,7 @@ int32_t CGLookingForGroup::GetLFGProposalMember(lua_State* L) {
     return 7;
 }
 
+// PROVEN: 460219b0 IDENTICAL/DIFFERENT
 // OFFSET: 0x00981E60/0x1406FC810
 int32_t CGLookingForGroup::GetLFGProposalEncounter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -374,6 +385,7 @@ int32_t CGLookingForGroup::GetLFGRoleUpdateMember(lua_State* L) {
     return 8;
 }
 
+// PROVEN: 6973aa8f IDENTICAL/UNPROVEN
 // OFFSET: 0x00982470/0x1406FCED0
 int32_t CGLookingForGroup::SetLFGBootVote(lua_State* L) {
     bool vote = StringToBOOL(L, 1, 0) != 0;
@@ -419,6 +431,7 @@ int32_t CGLookingForGroup::GetLFGBootProposal(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d0750260 IDENTICAL/DIFFERENT
 // OFFSET: 0x009835E0/0x1406FE320
 bool CGLookingForGroup::SetHeaderCollapsed(uint32_t header, bool collapsed) {
     if (s_cvLfdCollapsedHeaders) {
@@ -429,6 +442,7 @@ bool CGLookingForGroup::SetHeaderCollapsed(uint32_t header, bool collapsed) {
     return false;
 }
 
+// PROVEN: 1d032550 IDENTICAL/DIFFERENT
 // OFFSET: 0x00983630/0x1406FE3A0
 bool CGLookingForGroup::SetDungeonEnabled(uint32_t dungeon, bool enabled) {
     if (s_cvLfdSelectedDungeons) {
@@ -439,7 +453,8 @@ bool CGLookingForGroup::SetDungeonEnabled(uint32_t dungeon, bool enabled) {
     return false;
 }
 
-// OFFSET: 0x00987E20
+// PROVEN: 9450d0f7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00987E20/0x140703DD0
 void CGLookingForGroup::JoinLFGSearch(int32_t lfgID) {
     if (CGLookingForGroup::m_searchJoinedID != lfgID) {
         CGLookingForGroup::m_prevSearchResults.Clear();
@@ -490,7 +505,7 @@ int32_t CGLookingForGroup::GetQueueStatusIndex() {
     return -1;
 }
 
-// OFFSET: 0x0098A3D0
+// OFFSET: 0x0098A3D0/0x140707650
 void CGLookingForGroup::ClearPartyInfo() {
     CGLookingForGroup::m_partyLockInfo.Clear();
 
@@ -507,6 +522,7 @@ void CGLookingForGroup::ClearPartyInfo() {
     }
 }
 
+// PROVEN: 06f460d7 IDENTICAL/NONE
 // OFFSET: 0x0097FF60
 bool CGLookingForGroup::GetLFGListEntryDisplayed(uint32_t index, const LFGListParty*& party, const LFGListPlayer*& player) {
     LFGLIST* list = &CGLookingForGroup::m_searchResults;
@@ -700,7 +716,8 @@ static int QSortLFGPlayer(const void* a, const void* b) {
     return 0;
 }
 
-// OFFSET: 0x0098A9D0
+// PROVEN: deff348b IDENTICAL/DIFFERENT
+// OFFSET: 0x0098A9D0/0x140708100
 void CGLookingForGroup::ResortLFGLists() {
     LFGLIST* list = &CGLookingForGroup::m_prevSearchResults;
 

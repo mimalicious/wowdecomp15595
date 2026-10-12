@@ -9,9 +9,9 @@ namespace ComSat {
 class BitPacker {
     public:
     /* 0004 */ uint8_t* m_buffer;
-    /* 0008 */ uint32_t m_bitLength;
-    /* 000C */ uint32_t m_byteOffset;
-    /* 0010 */ uint32_t m_bitOffset;
+    /* 0008 */ size_t m_bitLength;
+    /* 000C */ size_t m_byteOffset;
+    /* 0010 */ size_t m_bitOffset;
 
     virtual ~BitPacker();
 
@@ -23,9 +23,9 @@ class BitPacker {
 class BitUnpacker {
     public:
     /* 0004 */ const uint8_t* m_buffer;
-    /* 0008 */ uint32_t m_bitLength;
-    /* 000C */ uint32_t m_byteOffset;
-    /* 0010 */ uint32_t m_bitOffset;
+    /* 0008 */ size_t m_bitLength;
+    /* 000C */ size_t m_byteOffset;
+    /* 0010 */ size_t m_bitOffset;
 
     virtual ~BitUnpacker();
 

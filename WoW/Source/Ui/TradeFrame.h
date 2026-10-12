@@ -30,7 +30,6 @@ struct TradeTargetItem {
     /* 002C */ int32_t m_engineeringEnchant;
     /* 0030 */ WOWGUID m_creator;
     /* 0038 */ uint8_t m_locked;
-    /* 0039 */ uint8_t unk_0039[3];
     /* 003C */ int32_t m_spellCharges;
     /* 0040 */ int32_t m_suffixFactor;
     /* 0044 */ int32_t m_randomPropertyID;

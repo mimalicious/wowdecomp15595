@@ -84,4 +84,6 @@ class CM2Lighting {
     void SetupSunlight();
 };
 
+#include "Engine/Source/Model2/M2Light.inl"
+
 #endif

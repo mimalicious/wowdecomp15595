@@ -40,4 +40,16 @@ inline void Blizzard::Streaming::AddStreamed(int64_t size) {
     }
 }
 
+// INLINED
+inline Blizzard::Streaming::RequestProcessor::~RequestProcessor() {
+    Blizzard::Lock::MutexDestroy(this->m_mutex);
+    Blizzard::Lock::EventDestroy(this->m_event);
+}
+
+// INLINED
+inline Blizzard::Streaming::DefaultRequestHandler::DefaultRequestHandler() {
+    this->m_processor = NULL;
+    Blizzard::Lock::MutexCreate(this->m_mutex);
+}
+
 #endif

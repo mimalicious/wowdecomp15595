@@ -16,25 +16,27 @@
 #include "WoW/Source/Ui/GossipInfo.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: 0x00F4B0C8
+// STATIC: 0x00F4B0C8/0x140E3F370
 WOWGUID CGReforge::m_forgeMaster;
 
-// STATIC: 0x00F4B0D0
+// STATIC: 0x00F4B0D0/0x140E3F378
 WOWGUID CGReforge::m_reforgeItem;
 
-// STATIC: 0x00F4B0D8
+// STATIC: 0x00F4B0D8/0x140E3F380
 TSCGrowableArray<REFORGE_OPTION, 16> CGReforge::s_reforgeOptions;
 
 // STATIC: 0x00D14528
 static ThrottleObject s_reforgeThrottle(1, 1);
 
-// OFFSET: 0x0098B510
+// PROVEN: 963c05ae IDENTICAL/IDENTICAL
+// OFFSET: 0x0098B510/0x140709350
 void CGReforge::UpdateEnchantment(WOWGUID item) {
     if (CGReforge::m_forgeMaster && CGReforge::m_reforgeItem && CGReforge::m_reforgeItem == item) {
         FrameScript_SignalEvent(SCRIPT_EVENT_FORGE_MASTER_ITEM_CHANGED, NULL);
     }
 }
 
+// PROVEN: 2e23385c IDENTICAL/NONE
 // OFFSET: 0x0098B5D0
 uint32_t CGReforge::GetNumOptions() {
     return CGReforge::s_reforgeOptions.Count();
@@ -49,7 +51,7 @@ const ItemReforgeRec* CGReforge::GetOption(int32_t index) {
     return CGReforge::s_reforgeOptions[index].m_reforge;
 }
 
-// OFFSET: 0x0098B630
+// OFFSET: 0x0098B630/0x140709450
 void CGReforge::ReforgeItem(int32_t index) {
     WOWGUID itemGuid = CGReforge::m_reforgeItem;
 
@@ -115,6 +117,7 @@ void CGReforge::ReforgeItem(int32_t index) {
     }
 }
 
+// PROVEN: a0acf7ea IDENTICAL/UNPROVEN
 // OFFSET: 0x0098B820/0x1407096B0
 int32_t CGReforge::FindOption(int32_t reforgeId) {
     for (uint32_t i = 0; i < CGReforge::s_reforgeOptions.Count(); i++) {
@@ -126,7 +129,8 @@ int32_t CGReforge::FindOption(int32_t reforgeId) {
     return -1;
 }
 
-// OFFSET: 0x0098CBA0
+// PROVEN: 09c17b2b IDENTICAL/IDENTICAL
+// OFFSET: 0x0098CBA0/0x1406E12F0
 void CGReforge::ShutdownGame() {
     CGReforge::m_forgeMaster = WOWGUID();
     CGReforge::m_reforgeItem = WOWGUID();
@@ -156,6 +160,7 @@ bool CGReforge::UpdateOptions() {
     return CGReforge::s_reforgeOptions.Count() != 0;
 }
 
+// PROVEN: 44b1ac70 IDENTICAL/IDENTICAL
 // OFFSET: 0x0098CCA0/0x14070B080
 void CGReforge::ItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success && guid == CGReforge::m_reforgeItem && CGReforge::UpdateOptions()) {
@@ -280,6 +285,7 @@ void CGReforge::SetForgeMaster(const WOWGUID& guid) {
     }
 }
 
+// PROVEN: 177e415e IDENTICAL/DIFFERENT
 // OFFSET: 0x0098D100/0x14070B580
 void CGReforge::LeaveWorld() {
     CGReforge::SetForgeMaster(WOWGUID::Make(0));
@@ -287,12 +293,14 @@ void CGReforge::LeaveWorld() {
     ClientForgeMasterSet::s_handler = NULL;
 }
 
+// PROVEN: c16f0960 IDENTICAL/NONE
 // OFFSET: 0x0098D130
 static bool OnForgeMasterSet(ClientForgeMasterSet* msg) {
     CGReforge::SetForgeMaster(*reinterpret_cast<const WOWGUID*>(msg->m_forgeMaster));
     return true;
 }
 
+// PROVEN: 34d0ea3e IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 static bool OnReforgeResult(ClientReforgeResult* msg) {
     return true;
@@ -302,6 +310,6 @@ static bool OnReforgeResult(ClientReforgeResult* msg) {
 void CGReforge::EnterWorld() {
     CGReforge::m_forgeMaster = WOWGUID();
     CGReforge::m_reforgeItem = WOWGUID();
-    ClientReforgeResult::s_handler = OnReforgeResult;
-    ClientForgeMasterSet::s_handler = OnForgeMasterSet;
+    ClientReforgeResult::s_handler = JamHandlerEncode(OnReforgeResult, g_jamHandlerKey_CFE754);
+    ClientForgeMasterSet::s_handler = JamHandlerEncode(OnForgeMasterSet, g_jamHandlerKey_CFD934);
 }

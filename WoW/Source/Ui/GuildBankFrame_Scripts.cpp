@@ -38,7 +38,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00C07014
+// STATIC: 0x00C07014/0x1409FFB58
 static const uint32_t s_guildBankTabCosts[6] = { 1000000, 2500000, 5000000, 10000000, 25000000, 50000000 };
 
 // OFFSET: 0x009C03A0/0x14074CC80
@@ -57,6 +57,7 @@ static int32_t Script_PickupGuildBankMoney(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9a79204f IDENTICAL/IDENTICAL
 // OFFSET: 0x009C0440/0x14074CD30
 static int32_t Script_SetCurrentGuildBankTab(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -73,42 +74,42 @@ static int32_t Script_SetCurrentGuildBankTab(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2208c883 IDENTICAL/NONE
+// PROVEN: 2208c883 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C0490/0x14074CD90
 static int32_t Script_GetCurrentGuildBankTab(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_currentTab + 1);
     return 1;
 }
 
-// PROVEN: f227cc47 IDENTICAL/NONE
+// PROVEN: f227cc47 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C04C0/0x14074CDC0
 static int32_t Script_GetGuildBankMoney(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGuildBankInfo::m_money));
     return 1;
 }
 
-// PROVEN: d404ab9d IDENTICAL/NONE
+// PROVEN: d404ab9d IDENTICAL/IDENTICAL
 // OFFSET: 0x009C0520/0x14074CDF0
 static int32_t Script_GetGuildBankBonusDepositMoney(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGuildBankInfo::m_bonusDepositMoney));
     return 1;
 }
 
-// PROVEN: fcc655c5 IDENTICAL/NONE
+// PROVEN: fcc655c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C0580/0x14074CE20
 static int32_t Script_GetGuildBankWithdrawMoney(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGuildBankInfo::m_remainingWithdrawMoney));
     return 1;
 }
 
-// PROVEN: 5f8cb174 IDENTICAL/NONE
+// PROVEN: 5f8cb174 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C05E0/0x14074CE50
 static int32_t Script_GetNumGuildBankTabs(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_numTabs);
     return 1;
 }
 
-// PROVEN: 66e896d8 IDENTICAL/NONE
+// PROVEN: 66e896d8 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C0610/0x14074CE70
 static int32_t Script_CloseGuildBankFrame(lua_State* L) {
     WOWGUID none = WOWGUID::Make(0);
@@ -133,6 +134,7 @@ static int32_t Script_QueryGuildBankLog(lua_State* L) {
     return 0;
 }
 
+// PROVEN: c268d5fd IDENTICAL/UNPROVEN
 // OFFSET: 0x009C06B0/0x14074CF30
 static int32_t Script_GetNumGuildBankTransactions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -145,7 +147,7 @@ static int32_t Script_GetNumGuildBankTransactions(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c04cb8c6 IDENTICAL/NONE
+// PROVEN: c04cb8c6 IDENTICAL/UNPROVEN
 // OFFSET: 0x009C0730/0x14074CFA0
 static int32_t Script_GetNumGuildBankMoneyTransactions(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_numLogEntries[8]);
@@ -173,6 +175,7 @@ static int32_t Script_GetGuildBankText(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1e61af7c IDENTICAL/IDENTICAL
 // OFFSET: 0x009C1230/0x14074DC80
 static int32_t Script_QueryGuildBankTab(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -281,6 +284,7 @@ static int32_t Script_GetGuildBankMoneyTransaction(lua_State* L) {
     return 7;
 }
 
+// PROVEN: 7f14de54 IDENTICAL/IDENTICAL
 // OFFSET: 0x009C1520/0x14074DFC0
 static int32_t Script_QueryGuildBankText(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -293,6 +297,7 @@ static int32_t Script_QueryGuildBankText(lua_State* L) {
     return 0;
 }
 
+// PROVEN: ebda3e38 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C1570/0x14074E010
 static int32_t Script_SetGuildBankText(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
@@ -464,7 +469,7 @@ static int32_t Script_AutoStoreGuildBankItem(lua_State* L) {
     return 0;
 }
 
-// PROVEN: cacfab8a IDENTICAL/NONE
+// PROVEN: cacfab8a IDENTICAL/DIFFERENT
 // OFFSET: 0x009C1AE0/0x14074E650
 static int32_t Script_SetGuildBankTabInfo(lua_State* L) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -487,7 +492,7 @@ static int32_t Script_SetGuildBankTabInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d55a8d1b IDENTICAL/NONE
+// PROVEN: d55a8d1b IDENTICAL/DIFFERENT
 // OFFSET: 0x009C1B90/0x14074E740
 static int32_t Script_GetGuildBankTabCost(lua_State* L) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -725,6 +730,7 @@ static int32_t Script_PickupGuildBankItem(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e90c5401 IDENTICAL/DIFFERENT
 // OFFSET: 0x009C2FF0/0x14074FFD0
 static int32_t Script_SplitGuildBankItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
@@ -961,7 +967,7 @@ static int32_t Script_GetGuildBankTransaction(lua_State* L) {
     return 10;
 }
 
-// STATIC: 0x00D15C70
+// STATIC: 0x00D15C70/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "QueryGuildBankTab", &Script_QueryGuildBankTab },
     { "SetCurrentGuildBankTab", &Script_SetCurrentGuildBankTab },
@@ -997,7 +1003,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CanEditGuildBankTabInfo", &Script_CanEditGuildBankTabInfo },
 };
 
-// PROVEN: 5f44d6fc IDENTICAL/NONE
+// PROVEN: 5f44d6fc IDENTICAL/UNPROVEN
 // OFFSET: 0x009C0840/0x14074D0D0
 void GuildBankRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1005,7 +1011,7 @@ void GuildBankRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: ff128081 IDENTICAL/NONE
+// PROVEN: ff128081 IDENTICAL/UNPROVEN
 // OFFSET: 0x009C0870/0x14074D120
 void GuildBankUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

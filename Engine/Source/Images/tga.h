@@ -121,4 +121,6 @@ class CTgaFile : public CImageFileImpl {
     int32_t Write(const char* fileName);
 };
 
+#include "Engine/Source/Images/tga.inl"
+
 #endif

@@ -12,4 +12,6 @@ struct FOOTSTEPSNDCACHE : public TSHashObject<FOOTSTEPSNDCACHE, HASHKEY_NONE> {
     FOOTSTEPSNDCACHE();
 };
 
+#include "WoW/Source/SoundInterface/SI3Footsteps.inl"
+
 #endif

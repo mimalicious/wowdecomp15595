@@ -3,6 +3,7 @@
 #include <cstdio>
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
+// PROVEN: ac77b816 IDENTICAL/IDENTICAL
 // OFFSET: [0x008435D0/0x14056FB20]
 float Screen::GetAspectRatio() {
     CVar* widescreen = CVar::Lookup("widescreen");

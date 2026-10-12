@@ -11,10 +11,10 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00DC6FA8
+// STATIC: 0x00DC6FA8/0x140CACB70
 CVar* s_cvarEnableVoiceChat;
 
-// STATIC: 0x00DC6FAC
+// STATIC: 0x00DC6FAC/0x140CACB78
 CVar* s_cvarEnableMicrophone;
 
 // OFFSET: 0x004DC120/0x14011A590
@@ -57,7 +57,7 @@ bool InboundChatVolumeHandler(CVar* var, const char* oldValue, const char* value
     return true;
 }
 
-// PROVEN: fe6fc487 IDENTICAL/NONE
+// PROVEN: fe6fc487 IDENTICAL/UNPROVEN
 // OFFSET: 0x004DC900/0x14011AFA0
 bool VoiceChatModeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value) == 1) {
@@ -90,6 +90,7 @@ bool VoiceChatModeHandler(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
+// PROVEN: e115f5fb DIFFERENT/IDENTICAL
 // OFFSET: 0x004DC9D0/0x14011B060
 bool VoiceActivationSensitivityHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     CVar* voiceChatMode = CVar::Lookup("VoiceChatMode");
@@ -109,7 +110,7 @@ bool VoiceActivationSensitivityHandler(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// PROVEN: bc07ee84 IDENTICAL/NONE
+// PROVEN: bc07ee84 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DCA40/0x14011B0C0
 bool PushToTalkButtonHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     AddComSatEvent(10, 0u, 0);
@@ -117,7 +118,7 @@ bool PushToTalkButtonHandler(CVar* var, const char* oldValue, const char* value,
     return true;
 }
 
-// OFFSET: 0x004DCA60
+// OFFSET: 0x004DCA60/0x14011B0E0
 bool SelfMuteHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value)) {
         AddComSatEvent(2, 0u, 0);
@@ -136,7 +137,7 @@ bool EnableVoiceChatHandler(CVar* var, const char* oldValue, const char* value, 
     bool enabled = SStrToInt(value) != 0;
     bool microphoneEnabled = s_cvarEnableMicrophone && s_cvarEnableMicrophone->m_intValue;
 
-    // STATIC: 0x00DC7090
+    // STATIC: 0x00DC7090/0x140CACC38
     static CVar* s_voiceChatMode = CVar::Lookup("VoiceChatMode");
 
     if (!wasEnabled && enabled) {

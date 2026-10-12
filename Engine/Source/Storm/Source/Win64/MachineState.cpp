@@ -143,6 +143,7 @@ int32_t CDbgHelpDll::Load() {
     return 0;
 }
 
+// PROVEN: 706398cf IDENTICAL/NONE
 // OFFSET: 0x004BEF40
 BOOL CDbgHelpDll::InitializeW(HANDLE process, PCWSTR path, BOOL invade) {
     if (this->SymInitializeW) {
@@ -496,6 +497,7 @@ inline void sLogVerboseMessage(uint32_t logOptions, void (*logLineProc)(void*, c
     }
 }
 
+// PROVEN: 32c4a1ba IDENTICAL/NONE
 // OFFSET: 0x004C0350
 static void sLogDbgHelpStackFrame(uint32_t logOptions, void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, const STACKFRAME64* stackFrame) {
     char symbolName[256];
@@ -527,6 +529,7 @@ static void sLogDbgHelpStackFrame(uint32_t logOptions, void (*logLineProc)(void*
     }
 }
 
+// PROVEN: 9e704fb8 IDENTICAL/NONE
 // OFFSET: 0x004BF670
 static BOOL sSymInitialize(HANDLE process) {
     wchar_t path[MAX_PATH];
@@ -625,7 +628,7 @@ static void sLogDbgHelpStackFrames(STACKFRAME64* stackFrame, HANDLE process, HAN
     }
 }
 
-// OFFSET: 0x004C0530
+// OFFSET: 0x004C0530/0x1400FAB30
 static void sLogDbgHelpStackTrace(uint32_t logOptions, void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, const CONTEXT* threadContext, uint32_t stackFramesToSkip) {
     sLogHeader(logLineProc, logLineProcParam, "Stack Trace (Using DBGHELP.DLL)");
 
@@ -692,7 +695,7 @@ static void sLogDbgHelpStackTrace(uint32_t logOptions, void (*logLineProc)(void*
     logLineProc(logLineProcParam, "");
 }
 
-// OFFSET: 0x004BF8D0
+// OFFSET: 0x004BF8D0/0x1400F98F0
 static void sLogX64ManualStackTrace(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, const CONTEXT* threadContext, uint32_t stackFramesToSkip) {
     sLogHeader(logLineProc, logLineProcParam, "Stack Trace (Manual)");
     logLineProc(logLineProcParam, "%s", "Address  Frame    Logical addr  Module");
@@ -984,7 +987,6 @@ static void sReadDebugDirectory(const T* ntHeaders, MODULEDEBUGINFO* info, const
     }
 }
 
-// PROVEN: 43405277 IDENTICAL/NONE
 // OFFSET: 0x004C08F0
 static void sReadModuleDebugInfo(MODULEDEBUGINFO* info, const uint8_t* base) {
     memset(info, 0, sizeof(*info));
@@ -1133,7 +1135,7 @@ static void sLogMemoryStatus(void (*logLineProc)(void*, const char*, ...), void*
     sLogSeparatorLine(logLineProc, logLineProcParam, '-', 1);
 }
 
-// OFFSET: 0x004C0D30
+// OFFSET: 0x004C0D30/0x1400FB550
 void LogMachineState(uint32_t logOptions, void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, uint32_t stackFramesToSkip, CONTEXT* context) {
     if (InterlockedIncrement(&sgRecursionLevel) == 1) {
         if (!logOptions || (logOptions & LOG_OPTION_DEFAULT)) {

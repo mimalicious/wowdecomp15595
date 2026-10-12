@@ -130,7 +130,7 @@ static void emit_marker(j_compress_ptr cinfo, JPEG_MARKER mark) {
 
 
 /* Emit a 2-byte integer; these are always MSB first in JPEG files */
-// OFFSET: 0x00B5F360
+// OFFSET: 0x00B5F360/0x140928620
 static void emit_2bytes(j_compress_ptr cinfo, int value) {
   emit_byte(cinfo, (value >> 8) & 0xFF);
   if (cinfo->error_flag)
@@ -145,7 +145,7 @@ static void emit_2bytes(j_compress_ptr cinfo, int value) {
 
 /* Emit a DQT marker */
 /* Returns the precision used (0 = 8bits, 1 = 16bits) for baseline checking */
-// OFFSET: 0x00B5F3D0
+// OFFSET: 0x00B5F3D0/0x1409286B0
 static int emit_dqt(j_compress_ptr cinfo, int index) {
   JQUANT_TBL * qtbl = cinfo->quant_tbl_ptrs[index];
   int prec;
@@ -196,7 +196,7 @@ static int emit_dqt(j_compress_ptr cinfo, int index) {
 
 
 /* Emit a DHT marker */
-// OFFSET: 0x00B5F590
+// OFFSET: 0x00B5F590/0x140928870
 static void emit_dht(j_compress_ptr cinfo, int index, boolean is_ac) {
   JHUFF_TBL * htbl;
   int length, i;
@@ -302,7 +302,7 @@ static void emit_dri(j_compress_ptr cinfo) {
 
 
 /* Emit a SOF marker */
-// OFFSET: 0x00B5F740
+// OFFSET: 0x00B5F740/0x140928A60
 static void emit_sof(j_compress_ptr cinfo, JPEG_MARKER code) {
   int ci;
   jpeg_component_info *compptr;
@@ -352,7 +352,7 @@ static void emit_sof(j_compress_ptr cinfo, JPEG_MARKER code) {
 
 
 /* Emit a SOS marker */
-// OFFSET: 0x00B5F840
+// OFFSET: 0x00B5F840/0x140928B90
 static void emit_sos(j_compress_ptr cinfo) {
   int i, td, ta;
   jpeg_component_info *compptr;
@@ -406,7 +406,7 @@ static void emit_sos(j_compress_ptr cinfo) {
 
 
 /* Emit a JFIF-compliant APP0 marker */
-// OFFSET: 0x00B5FA30
+// OFFSET: 0x00B5FA30/0x140928DC0
 static void emit_jfif_app0(j_compress_ptr cinfo) {
   /*
    * Length of APP0 block	(2 bytes)
@@ -539,7 +539,7 @@ static void emit_adobe_app14(j_compress_ptr cinfo) {
  */
 
 /* Emit an arbitrary marker header */
-// OFFSET: 0x00B5FC80
+// OFFSET: 0x00B5FC80/0x1409290A0
 static void write_marker_header(j_compress_ptr cinfo, int marker, unsigned int datalen) {
   if (datalen > (unsigned int) 65533)		/* safety check */ {
     ERREXIT(cinfo, JERR_BAD_LENGTH);
@@ -573,7 +573,7 @@ static void write_marker_byte(j_compress_ptr cinfo, int val) {
  */
 
 // PROVEN: ad4d24a5 IDENTICAL/NONE
-// OFFSET: 0x00B5FD10
+// OFFSET: 0x00B5FD10/0x140929140
 static void write_file_header(j_compress_ptr cinfo) {
   my_marker_ptr marker = (my_marker_ptr) cinfo->marker;
 
@@ -603,7 +603,7 @@ static void write_file_header(j_compress_ptr cinfo) {
  */
 
 // PROVEN: 25f408f0 IDENTICAL/NONE
-// OFFSET: 0x00B5FD70
+// OFFSET: 0x00B5FD70/0x1409291A0
 static void write_frame_header(j_compress_ptr cinfo) {
   int ci, prec;
   boolean is_baseline;
@@ -661,7 +661,7 @@ static void write_frame_header(j_compress_ptr cinfo) {
  * Compressed data will be written following the SOS.
  */
 
-// OFFSET: 0x00B5FE70
+// OFFSET: 0x00B5FE70/0x1409292B0
 static void write_scan_header(j_compress_ptr cinfo) {
   my_marker_ptr marker = (my_marker_ptr) cinfo->marker;
   int i;
@@ -733,7 +733,7 @@ static void write_file_trailer(j_compress_ptr cinfo) {
  * emitted.  Note that all tables will be marked sent_table = TRUE at exit.
  */
 
-// OFFSET: 0x00B5FFA0
+// OFFSET: 0x00B5FFA0/0x140929450
 static void write_tables_only(j_compress_ptr cinfo) {
   int i;
 

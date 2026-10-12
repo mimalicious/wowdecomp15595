@@ -162,6 +162,7 @@ static const ogg_uint32_t crc_lookup[256]={
   0xbcb4666d,0xb8757bda,0xb5365d03,0xb1f740b4};
 
 /* init the encode/decode logical stream state */
+// PROVEN: dcfb0489 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3B340/0x140908000
 int FMOD_ogg_stream_init(ogg_stream_state *os,int serialno){
   if(os){
@@ -193,6 +194,7 @@ int FMOD_ogg_stream_init(ogg_stream_state *os,int serialno){
   return(-1);
 }
 /* _clear does not free os, only the non-flat storage within */
+// PROVEN: 7fbf3477 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3B3E0/0x1409080C0
 int FMOD_ogg_stream_clear(ogg_stream_state *os){
   if(os){
@@ -427,6 +429,7 @@ int FMOD_ogg_sync_init(ogg_sync_state *oy){
 }
 
 /* clear non-flat storage within */
+// PROVEN: e82adc8b DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3B580/0x140908230
 int FMOD_ogg_sync_clear(ogg_sync_state *oy){
   if(oy){
@@ -444,6 +447,7 @@ int FMOD_ogg_sync_destroy(ogg_sync_state *oy){
   return(0);
 }
 
+// PROVEN: 03bd068e DIFFERENT/IDENTICAL
 // OFFSET: 0x00B3B5C0/0x140908280
 char *FMOD_ogg_sync_buffer(ogg_sync_state *oy, ogg_int32_t size){
   /* first, clear out any space that has been previously returned */

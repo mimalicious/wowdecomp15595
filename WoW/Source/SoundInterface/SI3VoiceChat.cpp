@@ -14,22 +14,22 @@
 // STATIC: 0x00CC8E68
 static SI3LoopbackCapture s_loopbackCapture;
 
-// STATIC: 0x00E28730
+// STATIC: 0x00E28730/0x140D102C0
 static uint32_t s_loopbackSound;
 
-// STATIC: 0x00E28734
+// STATIC: 0x00E28734/0x140D102C4
 static int32_t s_microphoneSignalLevel;
 
-// STATIC: 0x00E28738
+// STATIC: 0x00E28738/0x140D102C8
 static uint8_t* s_loopbackBuffer;
 
-// STATIC: 0x00E2873C
+// STATIC: 0x00E2873C/0x140D102D0
 static uint8_t* s_loopbackWrite;
 
-// STATIC: 0x00E28740
+// STATIC: 0x00E28740/0x140D102D8
 static uint32_t s_loopbackSize;
 
-// OFFSET: 0x00630090
+// OFFSET: 0x00630090/0x1402C4B10
 void SI3::VoiceChat_CleanUpLoopbackSound() {
     SE3::StopMemorySound(s_loopbackSound);
 
@@ -40,7 +40,7 @@ void SI3::VoiceChat_CleanUpLoopbackSound() {
     }
 }
 
-// PROVEN: cd8ef384 IDENTICAL/NONE
+// PROVEN: cd8ef384 IDENTICAL/IDENTICAL
 // OFFSET: 0x006300D0/0x1402C4B60
 void SI3::VoiceChat_StopPlayingLoopbackSound() {
     SE3::StopMemorySound(s_loopbackSound);
@@ -51,20 +51,20 @@ bool SI3::VoiceChat_IsPlayingLoopbackSound() {
     return SE3::IsPlaying(s_loopbackSound) != 0;
 }
 
-// PROVEN: bfe18542 IDENTICAL/NONE
-// OFFSET: 0x006300F0
+// PROVEN: bfe18542 IDENTICAL/UNPROVEN
+// OFFSET: 0x006300F0/0x1402C4B80
 void SI3::VoiceChat_DestroyChatSystem() {
     SE3::StopMemorySound(s_loopbackSound);
     SE3::DestroyChatSystem();
 }
 
-// PROVEN: 2cd0f718 IDENTICAL/NONE
+// PROVEN: 2cd0f718 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630110/0x1402C4BA0
 int32_t SI3::VoiceChat_IsVoiceChatInitialized() {
     return SE3::IsChatSoundInitialized();
 }
 
-// PROVEN: 805dbd5a IDENTICAL/NONE
+// PROVEN: 805dbd5a IDENTICAL/IDENTICAL
 // OFFSET: 0x00630120/0x1402C4BB0
 int32_t SI3::VoiceChat_CreateChatSound(uint32_t& handle, SE3StreamCallbacks* callbacks, int32_t chatSystem) {
     if (!SE3::IsChatSoundInitialized()) {
@@ -74,13 +74,13 @@ int32_t SI3::VoiceChat_CreateChatSound(uint32_t& handle, SE3StreamCallbacks* cal
     return SE3::CreateChatSound(callbacks, &handle, chatSystem ? SE3::sm_pChatSystem : SE3::sm_pGameSystem);
 }
 
-// PROVEN: f4427fef IDENTICAL/NONE
+// PROVEN: f4427fef IDENTICAL/IDENTICAL
 // OFFSET: 0x00630160/0x1402C4C20
 void SI3::VoiceChat_SetFrequencyScale(uint32_t handle, float scale) {
     SE3::VoiceChat_SetFrequencyScale(handle, scale);
 }
 
-// PROVEN: 52773a6c IDENTICAL/NONE
+// PROVEN: 52773a6c IDENTICAL/IDENTICAL
 // OFFSET: 0x00630180/0x1402C4C30
 int32_t SI3::VoiceChat_Play(uint32_t& handle) {
     if (!SE3::IsChatSoundInitialized()) {
@@ -91,8 +91,8 @@ int32_t SI3::VoiceChat_Play(uint32_t& handle) {
     return 0;
 }
 
-// PROVEN: 2a0af4dd IDENTICAL/NONE
-// OFFSET: 0x006301B0
+// PROVEN: 2a0af4dd IDENTICAL/UNPROVEN
+// OFFSET: 0x006301B0/0x1402C4C60
 void SI3::VoiceChat_StopSound(uint32_t handle) {
     SE3::VoiceChat_StopSound(handle);
 }
@@ -110,6 +110,7 @@ int32_t SI3::VoiceChat_GetNumOutputDrivers() {
 SI3LoopbackCapture::~SI3LoopbackCapture() {
 }
 
+// PROVEN: bc9a846a DIFFERENT/IDENTICAL
 // OFFSET: 0x00630210/0x1402C4C90
 void SI3::VoiceChat_AmplifyMicrophoneInput(int16_t* data, uint32_t samples) {
     if (!SE3::IsChatSoundInitialized()) {
@@ -156,13 +157,13 @@ static void ComputeAverageLevel(float* data, uint32_t count) {
     s_microphoneSignalLevel = static_cast<int32_t>(sqrt(sum / static_cast<double>(count)) * 100.0);
 }
 
-// PROVEN: a90ea4e3 IDENTICAL/NONE
+// PROVEN: a90ea4e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00630360/0x1402C4EF0
 int32_t SI3::VoiceChat_GetCurrentMicrophoneSignalLevel() {
     return SE3::IsChatSoundInitialized() != 0 ? s_microphoneSignalLevel : 0;
 }
 
-// PROVEN: 9aa575c3 IDENTICAL/NONE
+// PROVEN: 9aa575c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630370/0x1402C4F10
 static void MonitorCallback(float* data, uint32_t count) {
     if (SE3::IsChatSoundInitialized()) {
@@ -170,7 +171,7 @@ static void MonitorCallback(float* data, uint32_t count) {
     }
 }
 
-// PROVEN: 13548644 IDENTICAL/NONE
+// PROVEN: 13548644 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630390/0x1402C4F40
 void SI3::VoiceChat_InitCapture(float sampleRate) {
     if (CmdLineGetBool(static_cast<CMDOPT>(26))) {
@@ -228,7 +229,7 @@ void SI3::VoiceChat_InitCapture(float sampleRate) {
     SE3::SetUserMonitorDSPCallback(MonitorCallback);
 }
 
-// PROVEN: 4647d99b IDENTICAL/NONE
+// PROVEN: 4647d99b IDENTICAL/IDENTICAL
 // OFFSET: 0x00630550/0x1402C51C0
 void SI3::VoiceChat_SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     if (SE3::IsChatSoundInitialized()) {
@@ -236,7 +237,7 @@ void SI3::VoiceChat_SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     }
 }
 
-// PROVEN: 3951f825 IDENTICAL/NONE
+// PROVEN: 3951f825 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630570/0x1402C51E0
 void SI3::VoiceChat_StartCapture() {
     if (SE3::IsChatSoundInitialized()) {
@@ -244,7 +245,7 @@ void SI3::VoiceChat_StartCapture() {
     }
 }
 
-// PROVEN: b3c988f1 IDENTICAL/NONE
+// PROVEN: b3c988f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630580/0x1402C5200
 void SI3::VoiceChat_StopCapture() {
     if (SE3::IsChatSoundInitialized()) {
@@ -272,7 +273,7 @@ static void ComputeMicrophoneLevel(int16_t* data, uint32_t samples) {
 static void loopbackSoundEndedCallback(SE3MemorySoundObject* object, void* param) {
 }
 
-// PROVEN: c3b76ac7 IDENTICAL/NONE
+// PROVEN: c3b76ac7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00630640/0x1402C5320
 void SI3::VoiceChat_PlayLoopbackSound() {
     if (!SE3::IsChatSoundInitialized() || !s_loopbackBuffer) {
@@ -295,7 +296,7 @@ void SI3::VoiceChat_PlayLoopbackSound() {
     SE3::PlaySoundFromMemory(&properties, 1);
 }
 
-// PROVEN: c957dc74 IDENTICAL/NONE
+// PROVEN: c957dc74 IDENTICAL/IDENTICAL
 // OFFSET: 0x006306D0/0x1402C53C0
 bool SI3::VoiceChat_IsRecordingLoopbackSound() {
     if (!SE3::IsChatSoundInitialized()) {
@@ -305,7 +306,7 @@ bool SI3::VoiceChat_IsRecordingLoopbackSound() {
     return SE3::IsCapturing() && SE3::AlternateCaptureCallbackIsActive();
 }
 
-// PROVEN: 75077dee IDENTICAL/NONE
+// PROVEN: 75077dee IDENTICAL/IDENTICAL
 // OFFSET: 0x00630700/0x1402C5400
 void SI3::VoiceChat_ActivatePrimaryCaptureCallback() {
     if (SE3::IsChatSoundInitialized()) {
@@ -313,7 +314,7 @@ void SI3::VoiceChat_ActivatePrimaryCaptureCallback() {
     }
 }
 
-// PROVEN: c2fc0ece IDENTICAL/NONE
+// PROVEN: c2fc0ece IDENTICAL/IDENTICAL
 // OFFSET: 0x00630710/0x1402C5420
 void SI3::VoiceChat_StopRecordingLoopbackSound() {
     if (SE3::IsChatSoundInitialized()) {
@@ -321,7 +322,8 @@ void SI3::VoiceChat_StopRecordingLoopbackSound() {
     }
 }
 
-// OFFSET: 0x00630730
+// PROVEN: dba087ff DIFFERENT/IDENTICAL
+// OFFSET: 0x00630730/0x1402C5440
 void SI3::VoiceChat_SetCaptureDevice(int32_t index) {
     if (!SI3::sm_pCVar_Sound_VoiceChatInputDriverIndex || !SI3::sm_pCVar_Sound_VoiceChatInputDriverName) {
         return;
@@ -334,7 +336,8 @@ void SI3::VoiceChat_SetCaptureDevice(int32_t index) {
     SI3::sm_pCVar_Sound_VoiceChatInputDriverName->Set(value, true, false, false, true);
 }
 
-// OFFSET: 0x006307D0
+// PROVEN: 35393ca8 DIFFERENT/IDENTICAL
+// OFFSET: 0x006307D0/0x1402C54F0
 void SI3::VoiceChat_SetOutputDevice(int32_t index) {
     if (!SI3::sm_pCVar_Sound_VoiceChatOutputDriverIndex || !SI3::sm_pCVar_Sound_VoiceChatOutputDriverName) {
         return;
@@ -347,7 +350,7 @@ void SI3::VoiceChat_SetOutputDevice(int32_t index) {
     SI3::sm_pCVar_Sound_VoiceChatOutputDriverName->Set(value, true, false, false, true);
 }
 
-// PROVEN: ab9bf673 IDENTICAL/NONE
+// PROVEN: ab9bf673 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630870/0x1402C55A0
 void SI3::VoiceChat_ShutDownCapture() {
     SI3::VoiceChat_StopRecordingLoopbackSound();
@@ -355,7 +358,7 @@ void SI3::VoiceChat_ShutDownCapture() {
     SE3::ShutDownCapture();
 }
 
-// OFFSET: 0x006308A0
+// OFFSET: 0x006308A0/0x1402C55D0
 void SI3LoopbackCapture::ProcessData(int16_t* data, uint32_t samples) {
     if (!s_loopbackBuffer) {
         return;
@@ -380,7 +383,7 @@ void SI3LoopbackCapture::ProcessData(int16_t* data, uint32_t samples) {
     }
 }
 
-// PROVEN: 933b5ad5 IDENTICAL/NONE
+// PROVEN: 933b5ad5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630920/0x1402C5680
 static int32_t DetectRecordingFinished(const void* data, void* param) {
     if (!SI3::VoiceChat_IsRecordingLoopbackSound()) {

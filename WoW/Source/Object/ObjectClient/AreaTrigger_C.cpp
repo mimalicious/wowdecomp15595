@@ -30,6 +30,7 @@ void CGAreaTrigger_C::PlayStandAnim() {
     }
 }
 
+// PROVEN: b5a58ca6 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FA1F0/0x14027F170
 void CGAreaTrigger_C::UpdateDisplay(uint32_t time) {
     CM2Model* model = this->GetObjectModel();
@@ -40,16 +41,19 @@ void CGAreaTrigger_C::UpdateDisplay(uint32_t time) {
     }
 }
 
-// OFFSET: 0x005FA220
+// PROVEN: d7726d37 IDENTICAL/IDENTICAL
+// OFFSET: 0x005FA220/0x14027F1B0
 void CGAreaTrigger_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     CGObject_C::ShouldRender(flags, render, a3);
 }
 
-// OFFSET: 0x005FA230
+// PROVEN: a61dfffe IDENTICAL/IDENTICAL
+// OFFSET: 0x005FA230/0x14027F1C0
 void CGAreaTrigger_C::SetFrameOfReference(const C44Matrix* matrix) {
     CGObject_C::SetFrameOfReference(matrix);
 }
 
+// PROVEN: ebcf092b DIFFERENT/IDENTICAL
 // OFFSET: 0x005FA240/0x14027F1D0
 static void AreaTriggerDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGAreaTrigger_C* object = reinterpret_cast<CGAreaTrigger_C*>(static_cast<uintptr_t>(param));
@@ -59,7 +63,8 @@ static void AreaTriggerDecayHandler(CM2Model* model, uint32_t boneId, uint32_t s
     }
 }
 
-// OFFSET: 0x005FA270
+// PROVEN: 2271dc6a IDENTICAL/DIFFERENT
+// OFFSET: 0x005FA270/0x14027F200
 void CGAreaTrigger_C::HandleOutOfRange(OUT_OF_RANGE_TYPE type) {
     if (type != 1) {
         return;
@@ -74,6 +79,7 @@ void CGAreaTrigger_C::HandleOutOfRange(OUT_OF_RANGE_TYPE type) {
     }
 }
 
+// PROVEN: f154334a IDENTICAL/NONE
 // OFFSET: 0x005FA300
 void CGAreaTrigger_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGObject_C::SetStorage(storage, saved);
@@ -81,6 +87,7 @@ void CGAreaTrigger_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_areaTriggerMirror = saved + CGObject::TotalFieldsSaved();
 }
 
+// PROVEN: 03166c26 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FA340/0x14027F2C0
 C3Vector CGAreaTrigger_C::GetRawPosition(uint32_t time) const {
     float progress = static_cast<float>(static_cast<int32_t>(time - this->m_createTime)) / static_cast<float>(this->m_areaTrigger->m_areatriggerDuration);
@@ -95,6 +102,7 @@ C3Vector CGAreaTrigger_C::GetRawPosition(uint32_t time) const {
     return (*reinterpret_cast<const C3Vector*>(this->m_areaTrigger->m_areatriggerFinalPos) - start) * progress + start;
 }
 
+// PROVEN: ee705007 IDENTICAL/NONE
 // OFFSET: 0x005FA410
 static void AnimFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
@@ -120,12 +128,14 @@ void CGAreaTrigger_C::Reenable(const CClientObjCreate& create) {
     CGObject_C::Reenable(create);
 }
 
-// OFFSET: 0x005FA4A0
+// PROVEN: 3a373977 IDENTICAL/DIFFERENT
+// OFFSET: 0x005FA4A0/0x14027F430
 void CGAreaTrigger_C::PostReenable(const CClientObjCreate& create) {
     this->m_passenger.PostInit(create.m_stationaryPosition);
     CGObject_C::PostReenable(create);
 }
 
+// PROVEN: e869b79d IDENTICAL/IDENTICAL
 // OFFSET: 0x005FA4D0/0x14027F470
 void CGAreaTrigger_C::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time) {
     SE3SoundKitProperties properties;
@@ -135,6 +145,7 @@ void CGAreaTrigger_C::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3V
     }
 }
 
+// PROVEN: f1d87232 DIFFERENT/IDENTICAL
 // OFFSET: 0x005FA540/0x14027F510
 C44Matrix CGAreaTrigger_C::GetMatrix() const {
     C44Matrix matrix;
@@ -152,7 +163,8 @@ C44Matrix CGAreaTrigger_C::GetMatrix() const {
     return matrix;
 }
 
-// OFFSET: 0x005FA640
+// PROVEN: 2c4671a5 IDENTICAL/UNPROVEN
+// OFFSET: 0x005FA640/0x14027F620
 static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CGAreaTrigger_C* object = static_cast<CGAreaTrigger_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_AREATRIGGER, __FILE__, __LINE__));
 
@@ -179,6 +191,7 @@ void CGAreaTrigger_C::PostInit(uint32_t time, const CClientObjCreate& create, bo
     this->Animate(0.0f);
 }
 
+// PROVEN: b9ab70ca IDENTICAL/UNPROVEN
 // OFFSET: 0x005FA740/0x14027F770
 const SpellVisualEffectNameRec* CGAreaTrigger_C::GetVisualEffectNameRec(const SpellRec* spell, const SpellVisualKitRec*& kit) const {
     kit = NULL;
@@ -222,6 +235,7 @@ const SpellVisualEffectNameRec* CGAreaTrigger_C::GetVisualEffectNameRec(const Sp
     return effect;
 }
 
+// PROVEN: fa202c87 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FA880/0x14027F900
 int32_t CGAreaTrigger_C::GetModelFileName(const char** name) const {
     const SpellRec* spell = g_spellDB.GetRecord(this->m_areaTrigger->m_areatriggerSpellid);
@@ -242,6 +256,7 @@ int32_t CGAreaTrigger_C::GetModelFileName(const char** name) const {
     return *name != NULL;
 }
 
+// PROVEN: acd8e290 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FA900/0x14027F9D0
 void CGAreaTrigger_C::ModelLoaded(CM2Model* model) {
     CGObject_C::ModelLoaded(model);
@@ -268,38 +283,44 @@ void CGAreaTrigger_C::ModelLoaded(CM2Model* model) {
     }
 }
 
-// OFFSET: 0x005FAA20
+// OFFSET: 0x005FAA20/0x14027FB30
 CGAreaTrigger_C::CGAreaTrigger_C(uint32_t time, const CClientObjCreate& create) : CGObject_C(time, create), CGAreaTriggerPassenger(create.m_hasGOTransport ? create.m_goTransport.m_guid : WOWGUID::Make(0), create.m_hasGOTransport ? create.m_goTransport.m_position : create.m_stationaryPosition, this->m_obj->m_guid) {
     this->m_hasStandLoop = 0;
     this->m_createTime = time;
     this->m_passenger.m_facing = create.m_hasGOTransport ? create.m_goTransport.m_facing : create.m_stationaryFacing;
 }
 
-// OFFSET: 0x005FABA0
+// PROVEN: 9c1ca5b8 IDENTICAL/IDENTICAL
+// OFFSET: 0x005FABA0/0x14027FCC0
 C3Vector CGAreaTrigger_C::GetPosition() const {
     return this->GetPosition(FrameTime::GetCurTimeMs());
 }
 
+// PROVEN: 62cb77c4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FABD0/0x14027FD10
 C3Vector CGAreaTrigger_C::GetRawPosition() const {
     return this->m_passenger.m_position;
 }
 
+// PROVEN: 9fb89a34 DIFFERENT/IDENTICAL
 // OFFSET: 0x005FAC00/0x14027FD50
 float CGAreaTrigger_C::GetFacing() const {
     return this->m_passenger.GetFacing(this->m_passenger.m_facing);
 }
 
-// OFFSET: 0x005FAC20
+// PROVEN: 048218ab IDENTICAL/IDENTICAL
+// OFFSET: 0x005FAC20/0x14027FD50
 float CGAreaTrigger_C::GetRawFacing() const {
     return this->m_passenger.m_facing;
 }
 
-// OFFSET: 0x005FAC30
+// PROVEN: b24a7a98 IDENTICAL/IDENTICAL
+// OFFSET: 0x005FAC30/0x14027FD60
 uint64_t CGAreaTrigger_C::GetTransportGUID() const {
     return this->m_passenger.m_transportGuid.m_guid;
 }
 
+// PROVEN: 6d70812b IDENTICAL/IDENTICAL
 // OFFSET: 0x005FAC40/0x14027FD70
 C3Vector CGAreaTrigger_C::GetPosition(uint32_t time) const {
     return this->m_passenger.GetPosition(this->GetRawPosition(time));

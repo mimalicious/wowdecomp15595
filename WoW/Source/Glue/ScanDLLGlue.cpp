@@ -11,39 +11,40 @@
 #include "WoW/Source/Glue/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/CheckExecutableSignature.h"
 
-// STATIC: 0x00EBC248
+// STATIC: 0x00EBC248/0x140DAD1F0
 char CGlueMgr::m_scandllHackName[512];
 
-// STATIC: 0x00EBC448
+// STATIC: 0x00EBC448/0x140DAD3F0
 static volatile long s_downloadComplete;
 
-// STATIC: 0x00EBC44C
+// STATIC: 0x00EBC44C/0x140DAD3F4
 volatile long CGlueMgr::m_scandllStatus;
 
-// STATIC: 0x00EBC450
+// STATIC: 0x00EBC450/0x140DAD3F8
 const char* CGlueMgr::m_scandllResult;
 
-// STATIC: 0x00EBC454
+// STATIC: 0x00EBC454/0x140DAD400
 uint8_t CGlueMgr::m_scandllOkayToLogIn;
 
-// STATIC: 0x00EBC455
+// STATIC: 0x00EBC455/0x140DAD401
 uint8_t CGlueMgr::m_scandllShouldBlockPlaying;
 
-// STATIC: 0x00EBC458
+// STATIC: 0x00EBC458/0x140DAD408
 static CDataStore* s_versionData;
 
-// STATIC: 0x00EBC45C
+// STATIC: 0x00EBC45C/0x140DAD410
 static char* s_dllURL;
 
-// STATIC: 0x00EBC460
+// STATIC: 0x00EBC460/0x140DAD418
 static char* s_localVersion;
 
-// STATIC: 0x00EBC464
+// STATIC: 0x00EBC464/0x140DAD420
 SThread CGlueMgr::m_scandllThread;
 
-// STATIC: 0x00BD1334
+// STATIC: 0x00BD1334/0x1409C5A20
 static ScanDLLThreadParams s_scanThreadParams = { ".\\Scan.dll", &CGlueMgr::m_scandllStatus, &CGlueMgr::m_scandllResult, CGlueMgr::m_scandllHackName, sizeof(((CGlueMgr*)0)->m_scandllHackName), &CGlueMgr::m_scandllOkayToLogIn, &CGlueMgr::m_scandllShouldBlockPlaying };
 
+// PROVEN: 3b7755bd IDENTICAL/IDENTICAL
 // OFFSET: 0x0080F810/0x140526AB0
 void CGlueMgr::ScanDLLContinueAnyway() {
     if (CGlueMgr::m_scandllShouldBlockPlaying) {
@@ -62,7 +63,7 @@ bool CGlueMgr::IsScanDLLFinished() {
     return CGlueMgr::m_scandllOkayToLogIn;
 }
 
-// PROVEN: 03dda93c IDENTICAL/NONE
+// PROVEN: 03dda93c IDENTICAL/DIFFERENT
 // OFFSET: 0x0080F880/0x140526B40
 static uint32_t STORMAPI ScanThreadProc(void* param) {
     ScanDLLThreadParams* params = static_cast<ScanDLLThreadParams*>(param);
@@ -125,7 +126,7 @@ static bool DownloadDllCallback(void* param, const char* data, uint32_t size, bo
     return true;
 }
 
-// OFFSET: 0x0080FA00
+// OFFSET: 0x0080FA00/0x140526D30
 static bool VersionDownloadCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     CDataStore* msg = static_cast<CDataStore*>(param);
     bool failed = true;

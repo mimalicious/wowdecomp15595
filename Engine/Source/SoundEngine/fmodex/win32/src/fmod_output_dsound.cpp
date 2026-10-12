@@ -239,6 +239,7 @@ FMOD_RESULT OutputDSound::registerDLL()
 
 	[SEE_ALSO]
 */
+// PROVEN: 22b19891 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AE9AA0/0x1408B1D20
 BOOL CALLBACK FMOD_Output_DSound_EnumProc(LPGUID lpGUID, LPCSTR lpszDesc, LPCSTR lpszDrvName, LPVOID lpContext)
 {
@@ -1339,8 +1340,8 @@ FMOD_RESULT OutputDSound::getHandle(void **handle)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 11759570 IDENTICAL/NONE
-// OFFSET: 0x00AE9E10
+// PROVEN: 11759570 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AE9E10/0x1408B20D0
 FMOD_RESULT OutputDSound::update()
 {
     HRESULT        hr;
@@ -1975,8 +1976,8 @@ FMOD_RESULT OutputDSound::getReverbProperties(FMOD_REVERB_PROPERTIES *prop)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4de077f7 IDENTICAL/NONE
-// OFFSET: 0x00AEA730
+// PROVEN: 4de077f7 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AEA730/0x1408B2C80
 FMOD_RESULT OutputDSound::start()
 {
     FMOD_RESULT             result;
@@ -2330,7 +2331,7 @@ FMOD_RESULT F_CALLBACK OutputDSound::getNumDriversCallback(FMOD_OUTPUT_STATE *ou
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3471f5e6 IDENTICAL/NONE
+// PROVEN: 3471f5e6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AEA890/0x1408B30F0
 FMOD_RESULT F_CALLBACK OutputDSound::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
@@ -2357,7 +2358,7 @@ FMOD_RESULT F_CALLBACK OutputDSound::getDriverNameCallback(FMOD_OUTPUT_STATE *ou
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6f02627f IDENTICAL/NONE
+// PROVEN: 6f02627f IDENTICAL/IDENTICAL
 // OFFSET: 0x00AEB990/0x1408B4280
 FMOD_RESULT OutputDSound::getDriverCapsExCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_CAPS *caps, int *minfrequency, int *maxfrequency, FMOD_SPEAKERMODE *controlpanelspeakermode, int *num2dchannels, int *num3dchannels, int *totalchannels)
 {
@@ -2492,7 +2493,7 @@ FMOD_RESULT F_CALLBACK OutputDSound::stopCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 699789b9 IDENTICAL/NONE
+// PROVEN: 699789b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AEA980/0x1408B2ED0
 FMOD_RESULT F_CALLBACK OutputDSound::updateCallback(FMOD_OUTPUT_STATE *output)
 {
@@ -2573,7 +2574,7 @@ FMOD_RESULT F_CALLBACK OutputDSound::getPositionCallback(FMOD_OUTPUT_STATE *outp
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 575a2a90 IDENTICAL/NONE
+// PROVEN: 575a2a90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AEA9E0/0x1408B2F60
 FMOD_RESULT F_CALLBACK OutputDSound::lockCallback(FMOD_OUTPUT_STATE *output, unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
@@ -2871,7 +2872,7 @@ FMOD_RESULT F_CALLBACK OutputDSound::recordUnlockCallback(FMOD_OUTPUT_STATE *out
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1c2a57ce IDENTICAL/NONE
+// PROVEN: 1c2a57ce IDENTICAL/IDENTICAL
 // OFFSET: 0x00AEAC60/0x1408B30D0
 FMOD_RESULT F_CALLBACK OutputDSound::setReverbPropertiesCallback(FMOD_OUTPUT_STATE *output, const FMOD_REVERB_PROPERTIES *prop)
 {

@@ -23,8 +23,6 @@ class DNInfo {
     /* 0048 */ uint32_t unk_0048;
     /* 004C */ uint32_t unk_004C;
     /* 0050 */ uint8_t unk_0050;
-    /* 0051 */ uint8_t unk_0051[4];
-    /* 0055 */ uint8_t unk_0055[3];
     /* 0058 */ uint32_t unk_0058;
     /* 005C */ uint32_t unk_005C;
     /* 0060 */ uint32_t unk_0060;
@@ -41,7 +39,6 @@ class DNInfo {
     /* 00A0 */ uint32_t unk_00A0;
     /* 00A4 */ uint8_t unk_00A4[12];
     /* 00B0 */ uint32_t unk_00B0;
-    /* 00B4 */ uint8_t unk_00B4[12];
     /* 00C0 */ uint32_t unk_00C0;
     /* 00C4 */ uint32_t unk_00C4;
     /* 00C8 */ uint8_t unk_00C8[8];
@@ -50,18 +47,11 @@ class DNInfo {
     /* 00D8 */ uint8_t unk_00D8[152];
     /* 0170 */ uint32_t unk_0170;
     /* 0174 */ uint8_t unk_0174[40];
-    /* 019C */ uint32_t unk_019C;
-    /* 01A0 */ uint8_t unk_01A0[40];
     /* 01C8 */ uint32_t unk_01C8;
     /* 01CC */ uint32_t unk_01CC;
     /* 01D0 */ uint32_t unk_01D0;
     /* 01D4 */ uint32_t unk_01D4;
     /* 01D8 */ uint32_t unk_01D8;
-    /* 01DC */ uint32_t unk_01DC;
-    /* 01E0 */ uint32_t unk_01E0;
-    /* 01E4 */ uint32_t unk_01E4;
-    /* 01E8 */ uint8_t unk_01E8[24];
-    /* 0200 */ uint32_t unk_0200;
 };
 
 #endif

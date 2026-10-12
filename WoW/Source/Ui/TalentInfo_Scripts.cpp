@@ -27,7 +27,7 @@
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "WoW/Source/Ui/QuestTextParser.h"
 
-// STATIC: 0x00D14CD0
+// STATIC: 0x00D14CD0/0x140BCDBF0
 static int32_t s_activateTalentGroupSpells[2] = { 63645, 63644 };
 
 // OFFSET: 0x0099A300/0x14071C170
@@ -51,6 +51,7 @@ static int32_t Script_GetNumTalentTabs(lua_State* L) {
     return 1;
 }
 
+// PROVEN: b29659ef IDENTICAL/DIFFERENT
 // OFFSET: 0x0099A480/0x14071C350
 static int32_t Script_GetNumTalents(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -72,6 +73,7 @@ static int32_t Script_GetNumTalents(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 5037c252 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099A530/0x14071C450
 static int32_t Script_GetNumTalentGroups(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 1, 0);
@@ -473,6 +475,7 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
     return 11;
 }
 
+// PROVEN: fbe20d27 IDENTICAL/DIFFERENT
 // OFFSET: 0x0099CAB0/0x14071F510
 static int32_t Script_GetTalentPrereqs(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -660,7 +663,7 @@ static int32_t Script_AddPreviewTalentPoints(lua_State* L) {
     return 0;
 }
 
-// PROVEN: c38e45bd IDENTICAL/NONE
+// PROVEN: c38e45bd IDENTICAL/IDENTICAL
 // OFFSET: 0x00999D10/0x14071BAB0
 static int32_t Script_GetActiveTalentGroup(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 1, 0);
@@ -691,6 +694,7 @@ static int32_t Script_GetPreviewTalentPointsSpent(lua_State* L) {
     return 1;
 }
 
+// PROVEN: bb9955cf IDENTICAL/DIFFERENT
 // OFFSET: 0x0099A380/0x14071C1F0
 static int32_t Script_GetTalentTreeRoles(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -777,6 +781,7 @@ static int32_t Script_SetPrimaryTalentTree(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e9d6469f IDENTICAL/DIFFERENT
 // OFFSET: 0x0099A730/0x14071C6A0
 static int32_t Script_GetTalentTreeMasterySpells(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -990,6 +995,7 @@ static int32_t PushTalentTreeBonuses(lua_State* L, bool major, bool early) {
     return count;
 }
 
+// PROVEN: 1dbf99ca DIFFERENT/IDENTICAL
 // OFFSET: 0x0099B630/0x14071DB20
 static int32_t Script_GetMajorTalentTreeBonuses(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1000,6 +1006,7 @@ static int32_t Script_GetMajorTalentTreeBonuses(lua_State* L) {
     return PushTalentTreeBonuses(L, true, false);
 }
 
+// PROVEN: c85e46d8 DIFFERENT/IDENTICAL
 // OFFSET: 0x0099B670/0x14071DB60
 static int32_t Script_GetMinorTalentTreeBonuses(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1010,6 +1017,7 @@ static int32_t Script_GetMinorTalentTreeBonuses(lua_State* L) {
     return PushTalentTreeBonuses(L, false, false);
 }
 
+// PROVEN: eb3917fd DIFFERENT/IDENTICAL
 // OFFSET: 0x0099B6B0/0x14071DBA0
 static int32_t Script_GetTalentTreeEarlySpells(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1020,7 +1028,7 @@ static int32_t Script_GetTalentTreeEarlySpells(lua_State* L) {
     return PushTalentTreeBonuses(L, false, true);
 }
 
-// STATIC: 0x00D14CD8
+// STATIC: 0x00D14CD8/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumTalentTabs", &Script_GetNumTalentTabs },
     { "GetTalentTabInfo", &Script_GetTalentTabInfo },
@@ -1053,6 +1061,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTalentTreeMasterySpells", &Script_GetTalentTreeMasterySpells },
 };
 
+// PROVEN: d23793e6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00999D80/0x14071BB20
 void TalentInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1060,6 +1069,7 @@ void TalentInfoRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: e368c2c4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00999DB0/0x14071BB70
 void TalentInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

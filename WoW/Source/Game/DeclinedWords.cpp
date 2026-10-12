@@ -11,10 +11,11 @@
 #include "WoW/Source/Game/GameClient/PetNameCache.h"
 #include "WoW/Source/Game/ValidateName.h"
 
-// STATIC: 0x00DC71B0
+// STATIC: 0x00DC71B0/0x140B3DE70
 static TSHashTable<DECLINEDWORD, HASHKEY_CONSTSTRI> s_declinedWords;
 
-// OFFSET: 0x004E5730
+// PROVEN: ab5f9133 IDENTICAL/DIFFERENT
+// OFFSET: 0x004E5730/0x140127190
 void DeclinedWordsDestroy() {
     s_declinedWords.Clear();
     g_declinedWordDB.Unload(&DeclinedWordRec::s_meta);

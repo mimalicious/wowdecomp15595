@@ -18,4 +18,6 @@ class CAaSphere {
     CAaBox Box() const;
 };
 
+#include "Engine/Source/Tempest/CAaSphere.inl"
+
 #endif

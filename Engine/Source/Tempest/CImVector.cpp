@@ -44,6 +44,7 @@ void CImVector::ScaleRGB(uint32_t scale) {
     value = ((((r << 8) | g) << 8) | b) | (value & 0xFF000000);
 }
 
+// PROVEN: 526c0a5e DIFFERENT/IDENTICAL
 // OFFSET: 0x00B08000/0x1408CAFD0
 CImVector& CImVector::operator=(const C3Vector& color) {
     this->a = 0xFF;

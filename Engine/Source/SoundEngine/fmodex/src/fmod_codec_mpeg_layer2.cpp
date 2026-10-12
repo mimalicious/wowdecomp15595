@@ -229,6 +229,7 @@ struct al_table CodecMPEG::gAlloc4[] =
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 22e21f5a UNPROVEN/IDENTICAL
 // OFFSET: 0x00AE0360/0x1408AAD30
 FMOD_RESULT CodecMPEG::initLayer2()
 {
@@ -409,6 +410,7 @@ FMOD_RESULT CodecMPEG::II_step_one(unsigned int *bit_alloc,int *scale)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: fda00887 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AE0890/0x1408AB330
 FMOD_RESULT CodecMPEG::II_step_two(unsigned int *bit_alloc,float fraction[2][4][SBLIMIT],int *scale,int x1)
 {
@@ -526,6 +528,7 @@ FMOD_RESULT CodecMPEG::II_step_two(unsigned int *bit_alloc,float fraction[2][4][
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 769eed1a UNPROVEN/IDENTICAL
 // OFFSET: 0x00AE0D10/0x1408AB940
 FMOD_RESULT CodecMPEG::getIIStuff()
 {

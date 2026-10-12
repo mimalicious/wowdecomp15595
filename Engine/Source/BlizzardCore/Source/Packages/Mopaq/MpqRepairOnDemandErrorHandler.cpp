@@ -344,7 +344,7 @@ bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleMD5BlockError(MpqHand
     return result;
 }
 
-// PROVEN: 192ac859 IDENTICAL/NONE
+// PROVEN: 192ac859 IDENTICAL/DIFFERENT
 // OFFSET: 0x007FA280/0x14050A050
 bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleInitSectorTableError(MpqHandleRecord* handle, uint8_t* table, int64_t offset, uint32_t size) {
     Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected MPQ sector table error: offset = %lld, length = %d\n", offset, size);
@@ -361,8 +361,8 @@ bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleInitSectorTableError(
     return RepairFile(handle, table, offset, size);
 }
 
-// PROVEN: 3d0c94c1 IDENTICAL/NONE
-// OFFSET: 0x007FA310
+// PROVEN: 3d0c94c1 IDENTICAL/UNPROVEN
+// OFFSET: 0x007FA310/0x14050A110
 bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleNonStreamableFileError(MpqHandleRecord* handle, uint8_t* buffer, int64_t offset, uint32_t count) {
     return RepairCacheFile(handle, buffer, offset, count);
 }

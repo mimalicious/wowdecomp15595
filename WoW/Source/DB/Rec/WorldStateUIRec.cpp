@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[15] = { 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 2,
 // STATIC: 0x00C1F0B8/0x140A13560
 const DBCMeta WorldStateUIRec::s_meta = { "DBFilesClient\\WorldStateUI.dbc", 15, 68, WorldStateUIRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 6486cbe9 IDENTICAL/NONE
+// PROVEN: 6486cbe9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E900/0x1407D7C00
 void WorldStateUIRec::FixupStrings(void* record, const char* strings) {
     WorldStateUIRec* rec = static_cast<WorldStateUIRec*>(record);

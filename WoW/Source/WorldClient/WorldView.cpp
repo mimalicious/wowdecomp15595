@@ -56,13 +56,13 @@ static SFadeDistances s_baseFadeDist = {
     { 5.0f, 10.0f, 15.0f, 20.0f, 50.0f },
 };
 
-// STATIC: 0x00D018F8
+// STATIC: 0x00D018F8/0x140BB1470
 float CWorldView::s_fadeStart[5];
 
 // STATIC: 0x00D0190C
 static float s_fadeInner[5];
 
-// STATIC: 0x00D01920
+// STATIC: 0x00D01920/0x140BB14A0
 float CWorldView::s_fadeInnerSqr[5];
 
 // STATIC: 0x00D01934
@@ -71,28 +71,28 @@ static float s_fadeOuter[5];
 // STATIC: 0x00D01948
 static float s_fadeOuterSqr[5];
 
-// STATIC: 0x00D01964
+// STATIC: 0x00D01964/0x140BB14E4
 float CWorldView::s_skyboxMinZ = 0.99902344f;
 
-// STATIC: 0x00D0195C
+// STATIC: 0x00D0195C/0x140BB1424
 static uint32_t s_maxPortalDepth = 12;
 
-// STATIC: 0x00D018B8
+// STATIC: 0x00D018B8/0x140BB1420
 static int32_t s_entityCullDone = 1;
 
 // STATIC: 0x00E75780
 static C3Vector s_clipVerts[2][16];
 
-// STATIC: 0x00E75700
+// STATIC: 0x00E75700/0x140D5F4D0
 static int32_t s_clipSide[17];
 
-// STATIC: 0x00E75740
+// STATIC: 0x00E75740/0x140D5F510
 static float s_clipDist[17];
 
 // STATIC: 0x00E75908
 static C3Vector s_transformVerts[12];
 
-// OFFSET: 0x00753360
+// OFFSET: 0x00753360/0x1404345A0
 void CWorldView::ScaleFadeDist(float scale) {
     for (uint32_t i = 0; i < 5; i++) {
         float outer = s_baseFadeDist.m_fadeEnd[i];
@@ -109,7 +109,8 @@ void CWorldView::ScaleFadeDist(float scale) {
     }
 }
 
-// OFFSET: 0x00753510
+// PROVEN: fde85f68 IDENTICAL/DIFFERENT
+// OFFSET: 0x00753510/0x140434640
 uint32_t CWorldView::CalcMinSizeCatFromDistSqr(float distSqr) {
     if (distSqr < 0.0f) {
         return 0;
@@ -134,8 +135,8 @@ uint32_t CWorldView::CalcMinSizeCatFromDistSqr(float distSqr) {
     return 4;
 }
 
-// PROVEN: 9faeb6ca IDENTICAL/NONE
-// OFFSET: 0x00753580
+// PROVEN: 9faeb6ca IDENTICAL/UNPROVEN
+// OFFSET: 0x00753580/0x140434690
 void CWorldView::Gather() {
     CWorldMap::Gather(this);
 }
@@ -146,7 +147,7 @@ void CWorldView::CalcProjection(C44Matrix& projection) {
     GxuXformCreateProjection_Exact(this->m_fov * 0.60000002f, this->m_aspect, nearClip, World::GetHorizonFarClip(), projection);
 }
 
-// PROVEN: aeb50149 IDENTICAL/NONE
+// PROVEN: aeb50149 IDENTICAL/IDENTICAL
 // OFFSET: 0x007535F0/0x140434710
 void CWorldView::FrustumPop() {
     this->m_frustumIndex--;
@@ -220,7 +221,7 @@ void CPortalView::Clear() {
     this->m_vertCount = 0;
 }
 
-// OFFSET: 0x00753C40
+// OFFSET: 0x00753C40/0x140434CE0
 void CPortalView::Merge(const CPortalView& other) {
     float maxY = this->m_rect.maxY <= other.m_rect.maxY ? other.m_rect.maxY : this->m_rect.maxY;
     float maxX = this->m_rect.maxX <= other.m_rect.maxX ? other.m_rect.maxX : this->m_rect.maxX;
@@ -286,6 +287,7 @@ int32_t CWorldView::OcclusionQueryBox(const CAaBox& box, uint32_t flags) {
     return occluded;
 }
 
+// PROVEN: d3a1999d IDENTICAL/IDENTICAL
 // OFFSET: 0x00753EC0/0x140434FB0
 void CWorldView::EnableSortTable(int32_t enable) {
     if (enable) {
@@ -301,6 +303,7 @@ void CWorldView::EnableSortTable(int32_t enable) {
     }
 }
 
+// PROVEN: 92936758 IDENTICAL/DIFFERENT
 // OFFSET: 0x00753F30/0x140435040
 void CWorldView::EnableShadow(int32_t enable) {
     if (enable) {
@@ -317,13 +320,14 @@ void CWorldView::EnableShadow(int32_t enable) {
     }
 }
 
-// PROVEN: 7c4b7b97 IDENTICAL/NONE
+// PROVEN: 7c4b7b97 IDENTICAL/DIFFERENT
 // OFFSET: 0x00753FB0/0x1404350E0
 void CWorldView::UpdateViewMat() {
     this->m_viewMat = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
     this->m_viewMat.Translate(C3Vector(-this->m_camPos.x, -this->m_camPos.y, -this->m_camPos.z));
 }
 
+// PROVEN: 2f3e58ee IDENTICAL/UNPROVEN
 // OFFSET: 0x00754030/0x140435160
 void CWorldView::UpdateViewerUnderwater() {
     this->m_underwater = 0;
@@ -360,7 +364,7 @@ void CWorldView::UpdateViewerUnderwater() {
     this->m_underwater = 1;
 }
 
-// OFFSET: 0x007540F0
+// OFFSET: 0x007540F0/0x140435240
 void CWorldView::UpdateShadows() {
     if (!this->m_shadowQuery) {
         return;
@@ -406,6 +410,7 @@ void CWorldView::RenderM2SkyboxPass(CM2Scene* scene) {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
+// PROVEN: 95f01391 DIFFERENT/IDENTICAL
 // OFFSET: 0x00754380/0x140435620
 void CWorldView::RenderSceneClear() {
     if (!g_theGxDevicePtr->MasterEnable(GxMasterEnable_PolygonFill)) {
@@ -430,7 +435,7 @@ void CWorldView::RenderSceneClear() {
     GxSceneClear(0x1F, DayNight::GetFogInfo()->m_color);
 }
 
-// PROVEN: 1ec1277b IDENTICAL/DIFFERENT
+// PROVEN: 1ec1277b IDENTICAL/IDENTICAL
 // OFFSET: 0x00754410/0x1404356C0
 void CWorldView::FrustumPush() {
     this->m_frustumIndex++;
@@ -546,7 +551,7 @@ void CWorldView::CullChunkReflection(CSortEntryChunk& entry) {
     }
 }
 
-// OFFSET: 0x00754BF0
+// OFFSET: 0x00754BF0/0x140435F80
 void CWorldView::CullModelTree(CM2Model* model) {
     if (model->m_fFlags & 0x2000000) {
         model->m_fFlags &= ~0x1000u;
@@ -566,7 +571,7 @@ void CWorldView::CullModelTree(CM2Model* model) {
     }
 }
 
-// OFFSET: 0x00754C70
+// OFFSET: 0x00754C70/0x140436020
 void CWorldView::CullModelTree(CM2Model* model, uint32_t boneId) {
     if (model->m_fFlags & 0x2000000) {
         model->m_fFlags &= ~0x1000u;
@@ -775,7 +780,7 @@ void CWorldView::UpdateViewerLiquid() {
     }
 }
 
-// OFFSET: 0x007557D0
+// OFFSET: 0x007557D0/0x140436BD0
 void CWorldView::RenderOpaque() {
     if (this->m_flags & 0x10) {
         DepthCache::Validate();
@@ -1107,7 +1112,7 @@ void CWorldView::ClearLists() {
     this->m_lowDetailMapObjDefs.m_count = 0;
 }
 
-// OFFSET: 0x00757180
+// OFFSET: 0x00757180/0x140438A60
 void CWorldView::UpdateNonVisEntitys() {
     CMapEntity* entity = this->m_nonVisEntities.Head();
 
@@ -1159,6 +1164,7 @@ void CWorldView::UpdateNonVisEntitys() {
     }
 }
 
+// PROVEN: 68e191b5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00757300/0x140438C30
 void CWorldView::AddMapChunkToRenderList(CMapChunk* chunk) {
     CMapRenderChunk* renderChunk = chunk->m_renderChunk;
@@ -1606,7 +1612,7 @@ void CWorldView::ClipPortalExt(CMapObj* mapObj, const SMOPortalInfo* portal, SPo
     }
 }
 
-// PROVEN: 080d5354 IDENTICAL/NONE
+// PROVEN: 080d5354 IDENTICAL/IDENTICAL
 // OFFSET: 0x00758870/0x14043AD20
 void CWorldView::EnableOcclusion(int32_t enable) {
     if (enable) {
@@ -1828,12 +1834,13 @@ void CWorldView::AddOccluder(const C3Vector& start, const C3Vector& end) {
     this->m_sortTable->m_entries.m_data[endEntry].m_occluders.LinkToTail(occluder);
 }
 
+// PROVEN: 5492e786 IDENTICAL/NONE
 // OFFSET: 0x00759420
 void CWorldView::AddExteriorPortal(CPortalView& portalView) {
     this->m_exteriorPortalViews.Add(1, &portalView);
 }
 
-// OFFSET: 0x00759440
+// OFFSET: 0x00759440/0x14043BCE0
 void CWorldView::AddMapObjDefGroup(CMapObjDef* mapObjDef, CMapObjDefGroup* group) {
     CMapObj* mapObj = mapObjDef->m_mapObj;
 
@@ -1860,7 +1867,7 @@ void CWorldView::AddMapObjDefGroup(CMapObjDef* mapObjDef, CMapObjDefGroup* group
     }
 }
 
-// OFFSET: 0x00759540
+// OFFSET: 0x00759540/0x14043BE10
 void CWorldView::AddMoveableMapObjDefGroups() {
     CMapObjDefGroup* group = this->m_moveableGroups.Head();
 
@@ -1923,7 +1930,7 @@ void CWorldView::AddMapChunk(CMapChunk* chunk, int32_t a2) {
     this->AddMapChunkToRenderList(chunk);
 }
 
-// OFFSET: 0x007597E0
+// OFFSET: 0x007597E0/0x14043C190
 void CWorldView::AddMapEntity(CMapEntity* entity) {
     uint32_t entityFlags = entity->m_entityFlags;
 
@@ -1950,7 +1957,8 @@ void CWorldView::AddMapEntity(CMapEntity* entity) {
     }
 }
 
-// OFFSET: 0x007598D0
+// PROVEN: 321d33ef IDENTICAL/DIFFERENT
+// OFFSET: 0x007598D0/0x14043C2A0
 void CWorldView::AddLowDetailMapArea(CMapAreaLow* area) {
     C3Vector point;
     this->GetCameraClosestPoint(area->m_bbox, point);
@@ -1969,7 +1977,8 @@ void CWorldView::AddLowDetailMapArea(CMapAreaLow* area) {
     this->m_sortTable->m_entries.m_data[entry].m_lowDetailAreas.Add(1, &value);
 }
 
-// OFFSET: 0x007599B0
+// PROVEN: 33d044cb IDENTICAL/DIFFERENT
+// OFFSET: 0x007599B0/0x14043C380
 void CWorldView::AddLowDetailMapObjDef(CMapObjDef* mapObjDef) {
     C3Vector point;
     this->GetCameraClosestPoint(mapObjDef->m_bbox, point);
@@ -1988,7 +1997,8 @@ void CWorldView::AddLowDetailMapObjDef(CMapObjDef* mapObjDef) {
     this->m_sortTable->m_entries.m_data[entry].m_lowDetailMapObjDefs.Add(1, &value);
 }
 
-// OFFSET: 0x00759A90
+// PROVEN: ddb6837c IDENTICAL/DIFFERENT
+// OFFSET: 0x00759A90/0x14043C470
 void CWorldView::AddLowDetailMapAreaOcean(CMapAreaLow* area) {
     C3Vector point;
     this->GetCameraClosestPoint(area->m_bbox, point);
@@ -2007,7 +2017,7 @@ void CWorldView::AddLowDetailMapAreaOcean(CMapAreaLow* area) {
     this->m_sortTable->m_entries.m_data[entry].m_lowDetailOceans.Add(1, &value);
 }
 
-// OFFSET: 0x00759B70
+// OFFSET: 0x00759B70/0x14043C550
 static uint32_t AddViewerGroup(TSGrowableArray<uint32_t>& groups, uint32_t groupNum) {
     for (uint32_t i = 0; i < groups.Count(); i++) {
         if (groups.m_data[i] == groupNum) {
@@ -2068,7 +2078,7 @@ void CWorldView::GatherMapObjDefGroup(CMapObjDef* mapObjDef, CMapObjDefGroup* gr
     }
 }
 
-// OFFSET: 0x0075A480
+// OFFSET: 0x0075A480/0x14043D030
 void CWorldView::AddPortalViewExterior(CMapObj* mapObj, const SMOPortalInfo* portal, const SMOPortalRef* ref, uint16_t* ext, int32_t addViewer) {
     if (*ext & 0x4) {
         return;
@@ -2106,7 +2116,7 @@ void CWorldView::AddPortalViewExterior(CMapObj* mapObj, const SMOPortalInfo* por
     }
 }
 
-// OFFSET: 0x0075A690
+// OFFSET: 0x0075A690/0x14043D2E0
 void CWorldView::AddPortalViewInterior(CMapObj* mapObj, const SMOPortalInfo* portal, const SMOPortalRef* ref, uint16_t* ext, TSGrowableArray<CPortalView>* views) {
     if (*ext & 0xC) {
         return;
@@ -2177,7 +2187,7 @@ CWorldView::CWorldView(int32_t viewType) {
     this->m_camDepth = 0.0f;
 }
 
-// OFFSET: 0x0075B320
+// OFFSET: 0x0075B320/0x14043E0E0
 CWorldView::~CWorldView() {
     if (this->m_sortTable) {
         this->m_sortTable->~CSortTable();
@@ -2291,7 +2301,7 @@ void CWorldView::UpdateViewer() {
     }
 }
 
-// OFFSET: 0x0075B930
+// OFFSET: 0x0075B930/0x14043E970
 void CWorldView::Render() {
     g_theGxDevicePtr->RsPush();
     g_theGxDevicePtr->XformPush(GxXform_World);
@@ -2354,7 +2364,7 @@ void CWorldView::AddDoodadDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBase
     }
 }
 
-// OFFSET: 0x0075BAC0
+// OFFSET: 0x0075BAC0/0x14043EBA0
 void CWorldView::AddMapObjDef(CMapObjDef* mapObjDef) {
     CMapObj* mapObj = mapObjDef->m_mapObj;
 
@@ -2819,7 +2829,7 @@ void CWorldView::CullSortTable(const CAaRect& rect) {
     this->m_frustumIndex--;
 }
 
-// OFFSET: 0x0075CC70
+// OFFSET: 0x0075CC70/0x1404402C0
 void CWorldView::CullReflection() {
     this->m_renderExterior = 0;
 
@@ -2919,7 +2929,7 @@ void CWorldView::CullReflection() {
     this->m_moveableGroups.UnlinkAll();
 }
 
-// OFFSET: 0x0075D010
+// OFFSET: 0x0075D010/0x140440810
 void CWorldView::Cull() {
     if (this->m_occlusion) {
         this->m_occlusion->Clear();

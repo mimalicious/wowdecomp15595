@@ -7,25 +7,25 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/WowServices/InstallLocation.h"
 
-// STATIC: 0x00DBE7F8
+// STATIC: 0x00DBE7F8/0x140CA4318
 CVar* ClientServices::s_realmListBNVar;
 
-// STATIC: 0x00DBE7FC
+// STATIC: 0x00DBE7FC/0x140CA4320
 CVar* ClientServices::s_portalVar;
 
-// STATIC: 0x00DBE800
+// STATIC: 0x00DBE800/0x140CA4328
 CVar* ClientServices::s_realmListVar;
 
-// STATIC: 0x00DBE804
+// STATIC: 0x00DBE804/0x140CA4330
 CVar* ClientServices::s_serverAlertVar;
 
-// STATIC: 0x00DBE808
+// STATIC: 0x00DBE808/0x140CA4338
 CVar* ClientServices::s_realmNameVar;
 
-// STATIC: 0x00DBE80C
+// STATIC: 0x00DBE80C/0x140CA4340
 CVar* ClientServices::s_decorateAccountName;
 
-// STATIC: 0x00DBE810
+// STATIC: 0x00DBE810/0x140CA4348
 CVar* ClientServices::s_patchListVar;
 
 // OFFSET: 0x004CEBF0/0x14010AC70

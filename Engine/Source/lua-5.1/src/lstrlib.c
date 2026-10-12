@@ -718,6 +718,7 @@ static int gmatch (lua_State *L) {
 }
 
 
+// PROVEN: ea4549cf IDENTICAL/NONE
 // OFFSET: 0x00A2C9C0/0x1407D5390
 static int gfind_nodef (lua_State *L) {
   return luaL_error(L, LUA_QL("string.gfind") " was renamed to "
@@ -725,7 +726,7 @@ static int gfind_nodef (lua_State *L) {
 }
 
 
-// OFFSET: 0x00A2C9E0
+// OFFSET: 0x00A2C9E0/0x1407D53A0
 static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
                                                    const char *e) {
   size_t l, i;

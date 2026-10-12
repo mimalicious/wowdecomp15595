@@ -15,7 +15,6 @@ class GruntLogin : public Login {
         /* 0001 */ uint8_t unk_0001[7];
         /* 0008 */ HMAC<SHA1> m_hmac;
         /* 00E8 */ SARC4Key m_key;
-        /* 01EA */ uint8_t unk_01EA[6];
 
         MATRIXINPUT();
         ~MATRIXINPUT();

@@ -25,46 +25,46 @@
 #include "WoW/Source/Game/GameClient/NameCache.h"
 #include "WoW/Source/Ui/ChatFrame.h"
 
-// STATIC: 0x00D12828
+// STATIC: 0x00D12828/0x140BCA128
 TSList<CLIENT_ACHIEVEMENT_CRITERIA, TSGetLink<CLIENT_ACHIEVEMENT_CRITERIA>> s_criteria;
 
-// STATIC: 0x00D12834
+// STATIC: 0x00D12834/0x140BCA150
 TSList<CLIENT_ACHIEVEMENT_CRITERIA, TSGetLink<CLIENT_ACHIEVEMENT_CRITERIA>> s_recentCriteria;
 
-// STATIC: 0x00D12840
+// STATIC: 0x00D12840/0x140BCA168
 TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_completedAchievements;
 
-// STATIC: 0x00D1284C
+// STATIC: 0x00D1284C/0x140BCA170
 TSList<CLIENT_ACHIEVEMENT_CRITERIA, TSGetLink<CLIENT_ACHIEVEMENT_CRITERIA>> s_inspectCriteria;
 
-// STATIC: 0x00D12858
+// STATIC: 0x00D12858/0x140BCA198
 TSList<CLIENT_ACHIEVEMENT_CRITERIA, TSGetLink<CLIENT_ACHIEVEMENT_CRITERIA>> s_inspectRecentCriteria;
 
-// STATIC: 0x00D12864
+// STATIC: 0x00D12864/0x140BCA1B0
 TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_inspectAchievements;
 
-// STATIC: 0x00D12870
+// STATIC: 0x00D12870/0x140BCA1C8
 TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_trackedAchievements;
 
-// STATIC: 0x00D1287C
+// STATIC: 0x00D1287C/0x140BCA1E0
 TSList<COMPLETED_QUESTS, TSGetLink<COMPLETED_QUESTS>> s_completedQuests;
 
-// STATIC: 0x00F43AE0
+// STATIC: 0x00F43AE0/0x140E37098
 static int32_t s_unkC1F450;
 
-// STATIC: 0x00F43AE4
+// STATIC: 0x00F43AE4/0x140E3709C
 static int32_t s_focusedAchievement;
 
-// STATIC: 0x00F43AF8
+// STATIC: 0x00F43AF8/0x140BCA090
 TSHashTable<ACHIEVEMENT, HASHKEY_NONE> s_achievements;
 
-// STATIC: 0x00F43B24
+// STATIC: 0x00F43B24/0x140BCA0E0
 TSHashTable<GUILDACHIEVEMENTMEMBERLIST, HASHKEY_NONE> s_guildAchievementMembers;
 
-// STATIC: 0x00F43AE8
+// STATIC: 0x00F43AE8/0x140E370A0
 int32_t CGAchievementInfo::m_showAchievementUI;
 
-// STATIC: 0x00F43AF0
+// STATIC: 0x00F43AF0/0x140E370A8
 WOWGUID CGAchievementInfo::m_inspect;
 
 // OFFSET: 0x0094E0D0
@@ -88,7 +88,8 @@ int32_t Packet_SMSG_QUERY_QUESTS_COMPLETED_RESPONSE(void* param, NETMESSAGE msgI
     return 1;
 }
 
-// OFFSET: 0x00947810
+// PROVEN: 1688caf9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00947810/0x1406B4DD0
 static void GuildAchievementMemberNameCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         FrameScript_SignalEvent(SCRIPT_EVENT_RECEIVED_ACHIEVEMENT_MEMBER_LIST, "%d", param);
@@ -202,7 +203,7 @@ static bool OnGuildAchievementData(ClientGuildAchievementData* msg) {
     return true;
 }
 
-// OFFSET: 0x0094B850
+// OFFSET: 0x0094B850/0x1406B9EF0
 static bool OnAllAchievementData(ClientAllAchievementData* msg) {
     CGAchievementInfo::m_showAchievementUI = 1;
     int32_t now = static_cast<int32_t>(::time(NULL));
@@ -230,7 +231,7 @@ static bool OnAllAchievementData(ClientAllAchievementData* msg) {
     return true;
 }
 
-// OFFSET: 0x0094B9A0
+// OFFSET: 0x0094B9A0/0x1406BA0C0
 static bool OnRespondInspectAchievements(ClientRespondInspectAchievements* msg) {
     int32_t now = static_cast<int32_t>(::time(NULL));
     WOWGUID guid = *reinterpret_cast<WOWGUID*>(msg->unk_0030);
@@ -253,7 +254,7 @@ static bool OnRespondInspectAchievements(ClientRespondInspectAchievements* msg) 
     return true;
 }
 
-// OFFSET: 0x0094BAD0
+// OFFSET: 0x0094BAD0/0x1406BA250
 void CGAchievementInfo::ClearGuildInfo() {
     for (CLIENT_ACHIEVEMENTS* node = s_trackedAchievements.Head(); !s_trackedAchievements.IsEnd(node); ) {
         CLIENT_ACHIEVEMENTS* next = s_trackedAchievements.RawNext(node);
@@ -311,12 +312,13 @@ void CGAchievementInfo::ClearGuildInfo() {
     FrameScript_SignalEvent(SCRIPT_EVENT_CRITERIA_UPDATE, NULL);
 }
 
-// OFFSET: 0x0094BE20
+// PROVEN: 5a724e35 IDENTICAL/UNPROVEN
+// OFFSET: 0x0094BE20/0x1406BA730
 void CGAchievementInfo::ResetGuildInfo() {
     CGAchievementInfo::ClearGuildInfo();
 }
 
-// OFFSET: 0x0094D730
+// OFFSET: 0x0094D730/0x1406BCC20
 static bool OnGuildAchievementEarned(ClientGuildAchievementEarned* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -354,7 +356,7 @@ static bool OnGuildAchievementEarned(ClientGuildAchievementEarned* msg) {
     return true;
 }
 
-// OFFSET: 0x0094EE20
+// OFFSET: 0x0094EE20/0x1406BECE0
 static bool OnGuildAchievementMembers(ClientGuildAchievementMembers* msg) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -394,14 +396,14 @@ void CGAchievementInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_CRITERIA_DELETED, Packet_SMSG_CRITERIA_DELETED, NULL);
     ClientServices::SetMessageHandler(SMSG_ACHIEVEMENT_DELETED, Packet_SMSG_ACHIEVEMENT_DELETED, NULL);
     ClientServices::SetMessageHandler(SMSG_QUERY_QUESTS_COMPLETED_RESPONSE, Packet_SMSG_QUERY_QUESTS_COMPLETED_RESPONSE, NULL);
-    ClientRespondInspectAchievements::s_handler = OnRespondInspectAchievements;
-    ClientAllAchievementData::s_handler = OnAllAchievementData;
-    ClientGuildCriteriaData::s_handler = OnGuildCriteriaData;
-    ClientGuildCriteriaDeleted::s_handler = OnGuildCriteriaDeleted;
-    ClientGuildAchievementEarned::s_handler = OnGuildAchievementEarned;
-    ClientGuildAchievementDeleted::s_handler = OnGuildAchievementDeleted;
-    ClientGuildAchievementMembers::s_handler = OnGuildAchievementMembers;
-    ClientGuildAchievementData::s_handler = OnGuildAchievementData;
+    ClientRespondInspectAchievements::s_handler = JamHandlerEncode(OnRespondInspectAchievements, g_jamHandlerKey_CFEB88);
+    ClientAllAchievementData::s_handler = JamHandlerEncode(OnAllAchievementData, g_jamHandlerKey_CFDD28);
+    ClientGuildCriteriaData::s_handler = JamHandlerEncode(OnGuildCriteriaData, g_jamHandlerKey_CFF3E4);
+    ClientGuildCriteriaDeleted::s_handler = JamHandlerEncode(OnGuildCriteriaDeleted, g_jamHandlerKey_CFF304);
+    ClientGuildAchievementEarned::s_handler = JamHandlerEncode(OnGuildAchievementEarned, g_jamHandlerKey_CFFC14);
+    ClientGuildAchievementDeleted::s_handler = JamHandlerEncode(OnGuildAchievementDeleted, g_jamHandlerKey_CFE850);
+    ClientGuildAchievementMembers::s_handler = JamHandlerEncode(OnGuildAchievementMembers, g_jamHandlerKey_CFE514);
+    ClientGuildAchievementData::s_handler = JamHandlerEncode(OnGuildAchievementData, g_jamHandlerKey_CFEFA8);
     s_unkC1F450 = 1;
     s_focusedAchievement = 0;
     CGAchievementInfo::m_showAchievementUI = 0;
@@ -438,7 +440,8 @@ void CGAchievementInfo::InitializeGame() {
     }
 }
 
-// OFFSET: 0x00947B10
+// PROVEN: 4130b757 IDENTICAL/DIFFERENT
+// OFFSET: 0x00947B10/0x1406B5160
 bool CGAchievementInfo::IsCriteriaStat(int32_t criteriaId) {
     Achievement_CriteriaRec* criteria = g_achievement_CriteriaDB.GetRecord(criteriaId);
 
@@ -473,7 +476,7 @@ bool CGAchievementInfo::IsCriteriaStat(int32_t criteriaId) {
     return false;
 }
 
-// OFFSET: 0x0094A730
+// OFFSET: 0x0094A730/0x1406B86B0
 void CGAchievementInfo::UpdateCriteria(int32_t id, uint64_t counter, uint32_t flags, WowTime date, WOWGUID player, uint32_t timer1, uint32_t timer2) {
     CLIENT_ACHIEVEMENT_CRITERIA* criteria = NULL;
 
@@ -556,7 +559,7 @@ void CGAchievementInfo::UpdateCriteria(int32_t id, uint64_t counter, uint32_t fl
     }
 }
 
-// OFFSET: 0x0094AAF0
+// OFFSET: 0x0094AAF0/0x1406B8BC0
 void CGAchievementInfo::UpdateAchievement(int32_t id, WowTime date) {
     CLIENT_ACHIEVEMENTS* achievement = CGAchievementInfo::GetAchievement(id);
     AchievementRec* rec = g_achievementDB.GetRecord(id);
@@ -593,7 +596,7 @@ void CGAchievementInfo::UpdateAchievement(int32_t id, WowTime date) {
     achievement->m_date = date;
 }
 
-// OFFSET: 0x0094B5D0
+// OFFSET: 0x0094B5D0/0x1406B9B90
 static void SendGuildAchievementTracking() {
     GlobalGuildSetAchievementTracking msg;
 
@@ -611,16 +614,18 @@ static void SendGuildAchievementTracking() {
     ClientServices::Send(&msg);
 }
 
-// OFFSET: 0x0094D610
+// PROVEN: fc1e93de IDENTICAL/NONE
+// OFFSET: 0x0094D610/0x1406BCAB0
 void CGAchievementInfo::PostInitActivePlayer() {
     SendGuildAchievementTracking();
 }
 
+// PROVEN: b4b9bcff IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGAchievementInfo::EnterWorld() {
 }
 
-// OFFSET: 0x0094D480
+// OFFSET: 0x0094D480/0x1406BC830
 int32_t AddTrackedAchievement(int32_t id) {
     AchievementRec* rec = g_achievementDB.GetRecord(id);
 
@@ -697,7 +702,8 @@ int32_t Packet_SMSG_CRITERIA_DELETED(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: 0x0094D8D0
+// PROVEN: ab7a19ea DIFFERENT/IDENTICAL
+// OFFSET: 0x0094D8D0/0x1406BCE80
 void CGAchievementInfo::LoadTrackedAchievements() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("trackedAchievements");
@@ -716,7 +722,7 @@ void CGAchievementInfo::LoadTrackedAchievements() {
     }
 }
 
-// OFFSET: 0x0094DC00
+// OFFSET: 0x0094DC00/0x1406BD1C0
 void CGAchievementInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_ACHIEVEMENT_EARNED);
     ClientServices::ClearMessageHandler(SMSG_CRITERIA_UPDATE);
@@ -803,7 +809,8 @@ void CGAchievementInfo::ShutdownGame() {
     }
 }
 
-// OFFSET: 0x009493A0
+// PROVEN: 8b5a690b IDENTICAL/IDENTICAL
+// OFFSET: 0x009493A0/0x1406B6E50
 void CGAchievementInfo::SaveTrackedAchievements() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("trackedAchievements");
@@ -826,7 +833,7 @@ void CGAchievementInfo::SaveTrackedAchievements() {
     }
 }
 
-// OFFSET: 0x0094D5C0
+// OFFSET: 0x0094D5C0/0x1406BC9F0
 void CGAchievementInfo::RemoveTrackedAchievement(int32_t id) {
     for (CLIENT_ACHIEVEMENTS* node = s_trackedAchievements.Head(); !s_trackedAchievements.IsEnd(node); ) {
         CLIENT_ACHIEVEMENTS* next = s_trackedAchievements.RawNext(node);
@@ -841,7 +848,7 @@ void CGAchievementInfo::RemoveTrackedAchievement(int32_t id) {
     }
 }
 
-// OFFSET: 0x0094ACB0
+// OFFSET: 0x0094ACB0/0x1406B8E50
 void CGAchievementInfo::UpdateInspectAchievement(WOWGUID guid, int32_t id, WowTime date) {
     if (CGAchievementInfo::m_inspect != guid) {
         return;
@@ -890,7 +897,7 @@ void CGAchievementInfo::UpdateInspectAchievement(WOWGUID guid, int32_t id, WowTi
     achievement->m_date = date;
 }
 
-// OFFSET: 0x0094AEC0
+// OFFSET: 0x0094AEC0/0x1406B9100
 void CGAchievementInfo::UpdateInspectCriteria(WOWGUID guid, int32_t id, uint64_t counter, WOWGUID player, uint32_t flags, WowTime date, uint32_t timer1, uint32_t timer2) {
     if (CGAchievementInfo::m_inspect != guid) {
         return;
@@ -966,7 +973,7 @@ void CGAchievementInfo::UpdateInspectCriteria(WOWGUID guid, int32_t id, uint64_t
     }
 }
 
-// OFFSET: 0x0094D620
+// OFFSET: 0x0094D620/0x1406BCAC0
 int32_t Packet_SMSG_ACHIEVEMENT_EARNED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WowTime date;
     SmartGUID player;
@@ -1001,7 +1008,7 @@ int32_t Packet_SMSG_ACHIEVEMENT_EARNED(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: 0x0094B2C0
+// OFFSET: 0x0094B2C0/0x1406B9730
 int32_t Packet_SMSG_CRITERIA_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     CGAchievementInfo::m_showAchievementUI = 1;
     WowTime date;
@@ -1048,7 +1055,8 @@ int32_t Packet_SMSG_CRITERIA_UPDATE(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// OFFSET: 0x009479F0
+// PROVEN: 3a54c40e IDENTICAL/UNPROVEN
+// OFFSET: 0x009479F0/0x1406B5030
 void CGAchievementInfo::SetFocusedAchievement(int32_t id) {
     if (id == s_focusedAchievement) {
         return;
@@ -1064,6 +1072,7 @@ void CGAchievementInfo::SetFocusedAchievement(int32_t id) {
     }
 }
 
+// PROVEN: 865f0ac9 IDENTICAL/UNPROVEN
 // OFFSET: 0x00947A60/0x1406B50A0
 bool CGAchievementInfo::IsRealAchievement(int32_t id, bool guild) {
     AchievementRec* achievement = g_achievementDB.GetRecord(id);

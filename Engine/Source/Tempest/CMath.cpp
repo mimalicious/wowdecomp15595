@@ -143,7 +143,7 @@ static const CSoftFloat s_softMinusOne = CSoftFloat::FromInt(-1);
 
 static const CSoftFloat s_softZero = CSoftFloat::FromInt(0);
 
-// STATIC: 0x0100A430
+// STATIC: 0x0100A430/0x140EE1F70
 static const CSoftFloat s_softHalf(0x3F000000);
 
 static const CSoftFloat s_softOne = CSoftFloat::FromInt(1);
@@ -263,7 +263,7 @@ double CMath::exp2_(double x) {
 }
 
 
-// OFFSET: 0x004C6B30
+// OFFSET: 0x004C6B30/0x140101E30
 bool CMath::solvequad_(float a, float b, float c, float& r0, float& r1) {
     float fourAC = a * c * 4.0f;
     float bb = b * b;
@@ -315,12 +315,13 @@ float CMath::normalizeAngleNegPiToPi_(float angle) {
     return result;
 }
 
+// PROVEN: 3f5b72c9 IDENTICAL/NONE
 // OFFSET: 0x00585370
 int32_t IsFinite(double value) {
     return _finite(value);
 }
 
-// PROVEN: 495853f5 IDENTICAL/DIFFERENT
+// PROVEN: 495853f5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0041EDF0/0x1404356C0
 int32_t fequalz(float a, float b, float z) {
     return fabsf(a - b) < z;
@@ -378,28 +379,10 @@ int32_t fnotequalz(float a, float b, float z) {
     return !(fabsf(a - b) < z);
 }
 
-// INLINED
-float fclamp(float value, float min, float max) {
-    if (value < min) {
-        return min;
-    }
-
-    if (max <= value) {
-        return max;
-    }
-
-    return value;
-}
-
 // PROVEN: 0df33fdd IDENTICAL/NONE
 // OFFSET: 0x0044BBB0
 int32_t RoundToInt64(float value) {
     return static_cast<uint32_t>(value + 0.5f);
-}
-
-// INLINED
-void ClampInPlace(float& value, float min, float max) {
-    value = min > value ? min : (max <= value ? max : value);
 }
 
 // PROVEN: 4db04bd7 IDENTICAL/NONE
@@ -594,7 +577,7 @@ CSoftFloat CSoftFloat::Floor(const CSoftFloat& value) {
     return value;
 }
 
-// OFFSET: 0x00B2F060
+// OFFSET: 0x00B2F060/0x1408F7B30
 CSoftFloat CSoftFloat::Ceil(const CSoftFloat& value) {
     uint32_t bits = value.m_bits;
     int32_t exp = static_cast<int32_t>((bits >> 23) & 0xFF) - 127;
@@ -671,7 +654,7 @@ CSoftFloat CSoftFloat::FromInt(int32_t value) {
     return result;
 }
 
-// PROVEN: 40842103 IDENTICAL/DIFFERENT
+// PROVEN: 40842103 IDENTICAL/IDENTICAL
 // OFFSET: 0x0043ABA0/0x1401E32E0
 void CMath::split_(float x, float* frac, int32_t* whole) {
     if (x > 0.0f) {
@@ -683,7 +666,7 @@ void CMath::split_(float x, float* frac, int32_t* whole) {
     *frac = x - *whole;
 }
 
-// PROVEN: d491c30d IDENTICAL/DIFFERENT
+// PROVEN: d491c30d IDENTICAL/IDENTICAL
 // OFFSET: 0x0057D180/0x1401E32E0
 float CMath::sin_(float x) {
     float frac;
@@ -695,8 +678,8 @@ float CMath::sin_(float x) {
     return (whole & 1) ? -result : result;
 }
 
-// PROVEN: 822cd8b6 IDENTICAL/NONE
-// OFFSET: 0x004C5D20
+// PROVEN: 822cd8b6 IDENTICAL/IDENTICAL
+// OFFSET: 0x004C5D20/0x1400FFFF0
 float OrganicSmooth(float from, float to, float t) {
     return from + (to - from) * ((1.0f - cosf(t * 3.1415927f)) * 0.5f);
 }

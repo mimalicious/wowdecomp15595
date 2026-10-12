@@ -117,52 +117,52 @@ static const uint32_t s_skinCursorModesUnable[2] = { 47, 46 };
 // STATIC: 0x00D10130
 static const char* s_spellShadowTextureNames[2] = { "Interface\\SpellShadow\\Spell-Shadow-Acceptable.blp", "Interface\\SpellShadow\\Spell-Shadow-Unacceptable.blp" };
 
-// STATIC: 0x00D10138
+// STATIC: 0x00D10138/0x140BBD6A0
 static int32_t s_spellShadowStyle = 3;
 
-// STATIC: 0x00ED79F0
+// STATIC: 0x00ED79F0/0x140DC9468
 static CTexture* s_spellShadowTexture[2];
 
-// STATIC: 0x00ED7A24
+// STATIC: 0x00ED7A24/0x140DC94C0
 static float s_spellShadowSize;
 
-// STATIC: 0x00ED7A30
+// STATIC: 0x00ED7A30/0x140DC94D0
 static C3Vector s_spellShadowPos;
 
-// STATIC: 0x00ED79F8
+// STATIC: 0x00ED79F8/0x140DC9478
 FFX::Effect* CGWorldFrame::ffxEffectUnconscious;
 
-// STATIC: 0x00ED79FC
+// STATIC: 0x00ED79FC/0x140DC9480
 FFX::Effect* CGWorldFrame::ffxEffectUnderwater;
 
-// STATIC: 0x00ED7A00
+// STATIC: 0x00ED7A00/0x140DC9488
 FFX::Effect* CGWorldFrame::ffxEffectSwirlingFog;
 
-// STATIC: 0x00ED7A04
+// STATIC: 0x00ED7A04/0x140DC9490
 FFX::Effect* CGWorldFrame::ffxEffectNetherWorld;
 
-// STATIC: 0x00ED7A08
+// STATIC: 0x00ED7A08/0x140DC9498
 FFX::Effect* CGWorldFrame::ffxEffectGlow;
 
-// STATIC: 0x00ED7A0C
+// STATIC: 0x00ED7A0C/0x140DC94A0
 FFX::Effect* CGWorldFrame::ffxEffectDeath;
 
-// STATIC: 0x00ED7A10
+// STATIC: 0x00ED7A10/0x140DC94A8
 CGWorldFrame* CGWorldFrame::s_currentWorldFrame;
 
-// STATIC: 0x00ED7A14
+// STATIC: 0x00ED7A14/0x140DC94B0
 static float s_timeOfDayBlendRemaining;
 
-// STATIC: 0x00ED7A18
+// STATIC: 0x00ED7A18/0x140DC94B4
 static float s_timeOfDayProgression;
 
-// STATIC: 0x00ED7A1C
+// STATIC: 0x00ED7A1C/0x140DC94B8
 static int32_t s_timeOfDayOverrideActive;
 
-// STATIC: 0x00ED7A20
+// STATIC: 0x00ED7A20/0x140DC94BC
 static float s_timeOfDayOverride;
 
-// STATIC: 0x00D1016C
+// STATIC: 0x00D1016C/0x140BBD6D8
 static float s_timeOfDayBlendTime;
 
 // STATIC: 0x00ED7A58
@@ -177,9 +177,10 @@ static float s_minTimeScale = 0.0f;
 // STATIC: 0x00ED7A60
 static C3Vector s_listenerUp;
 
-// STATIC: 0x00ED7A44
+// STATIC: 0x00ED7A44/0x140DC94E8
 CDataAllocator CGWorldFrame::s_worldFrameHeap(sizeof(CGWorldFrame), 1);
 
+// PROVEN: d065244d IDENTICAL/NONE
 // OFFSET: 0x008DEAF0
 int32_t CGWorldFrame::CanTargetCorpseSelection(const CGCorpse_C* corpse, uint32_t flags) {
     if (Spell_C_IsTargeting()) {
@@ -189,6 +190,7 @@ int32_t CGWorldFrame::CanTargetCorpseSelection(const CGCorpse_C* corpse, uint32_
     return 1;
 }
 
+// PROVEN: 8fd7173d IDENTICAL/NONE
 // OFFSET: 0x008DEB20/0x14060B8A0
 int32_t CGWorldFrame::SpellEffectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4) {
     if (a4) {
@@ -198,6 +200,7 @@ int32_t CGWorldFrame::SpellEffectEnumProc(void* param, uintptr_t flags, uint64_t
     return 1;
 }
 
+// PROVEN: 0609cee6 IDENTICAL/IDENTICAL
 // OFFSET: 0x008DEB50/0x14060B8D0
 CGCamera* CGWorldFrame::GetActiveCamera() {
     if (CGWorldFrame::s_currentWorldFrame) {
@@ -223,7 +226,7 @@ int32_t CGWorldFrame::HandleSpriteTrack(WOWGUID guid) {
     return 1;
 }
 
-// PROVEN: 190ea79a IDENTICAL/NONE
+// PROVEN: 190ea79a IDENTICAL/IDENTICAL
 // OFFSET: 0x008DEBE0/0x14060B950
 int32_t CGWorldFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     int32_t result = CSimpleFrame::OnLayerTrackUpdate(evt);
@@ -260,6 +263,7 @@ void CGWorldFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     s_spellShadowStyle = 3;
 }
 
+// PROVEN: 066e2421 IDENTICAL/IDENTICAL
 // OFFSET: 0x008DECD0/0x14060B9E0
 int32_t CGWorldFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
     if (this->CSimpleFrame::OnLayerMouseWheel(evt)) {
@@ -280,7 +284,7 @@ int32_t CGWorldFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
     return 0;
 }
 
-// PROVEN: 95e3b746 IDENTICAL/NONE
+// PROVEN: 95e3b746 IDENTICAL/IDENTICAL
 // OFFSET: 0x008DED60/0x14060BA90
 void CGWorldFrame::OnMouseModeNormal() {
     this->m_worldFlags &= ~0x2;
@@ -300,12 +304,13 @@ void CGWorldFrame::OnMouseModeRelative() {
     }
 }
 
-// OFFSET: 0x008DEDC0
+// PROVEN: 0e847d8b IDENTICAL/IDENTICAL
+// OFFSET: 0x008DEDC0/0x14060BAF0
 void CGWorldFrame::SetNamePlateUpdate() {
     this->m_namePlateFlags |= 0x1;
 }
 
-// OFFSET: 0x008DEDE0
+// OFFSET: 0x008DEDE0/0x14060BB10
 static const char* KeyCodeToString(KEY key) {
     if (static_cast<uint32_t>(key - 33) <= 0xDE) {
         sputu8(key, s_keyNameBuffer);
@@ -426,6 +431,7 @@ static int32_t GetObjectHitTestType(CGObject_C* object) {
     }
 }
 
+// PROVEN: 36124f95 DIFFERENT/IDENTICAL
 // OFFSET: 0x008DF300/0x14060BF80
 static void AddModelToHitTest(CM2Model* model, uint32_t group, void* owner, uint32_t mode) {
     if (model->m_fFlags & 0x1) {
@@ -452,6 +458,7 @@ static void AddModelToHitTest(CM2Model* model, uint32_t group, void* owner, uint
     }
 }
 
+// PROVEN: 6dd8367b IDENTICAL/NONE
 // OFFSET: 0x008DF390
 void CGWorldFrame::AddObjectToHitTestList(CModelRecord* record, uint32_t flags) {
     uint32_t group;
@@ -466,12 +473,13 @@ void CGWorldFrame::AddObjectToHitTestList(CModelRecord* record, uint32_t flags) 
     AddModelToHitTest(record->m_model, group, record, (flags >> 25) & 0x4);
 }
 
-// OFFSET: 0x008DEDD0
+// PROVEN: ccfb490f IDENTICAL/NONE
+// OFFSET: 0x008DEDD0/0x14060BB00
 float CGWorldFrame::GetUIFadeAmount() {
     return FFX::GetEffectFadeAmount(1);
 }
 
-// OFFSET: 0x008DF3E0
+// OFFSET: 0x008DF3E0/0x14060C030
 int32_t CGWorldFrame::GetLineSegment(float mouseX, float mouseY, C3Vector* start, C3Vector* end) {
     float x = (mouseX - this->m_viewportDDC.minX) / (this->m_viewportDDC.maxX - this->m_viewportDDC.minX);
     float y = (mouseY - this->m_viewportDDC.minY) / (this->m_viewportDDC.maxY - this->m_viewportDDC.minY);
@@ -544,6 +552,7 @@ static int32_t DestroyLiquidPerturbatorProc(WOWGUID guid, void* param) {
     return 1;
 }
 
+// PROVEN: 6e5a97e6 DIFFERENT/IDENTICAL
 // OFFSET: 0x008DF750/0x14060C480
 void CGWorldFrame::WaterReset() {
     ClntObjMgrEnumVisibleObjects(DestroyLiquidPerturbatorProc, NULL);
@@ -560,12 +569,13 @@ void CGWorldFrame::WaterReset() {
     }
 }
 
+// PROVEN: bb13b15e IDENTICAL/IDENTICAL
 // OFFSET: 0x008DF7D0/0x14060C520
 uint32_t CGWorldFrame::GetSceneTime() const {
     return World::GetScene() ? World::GetScene()->m_time : 0;
 }
 
-// OFFSET: 0x008DF7F0
+// OFFSET: 0x008DF7F0/0x14060C550
 void CGWorldFrame::OnLayerTrackTerrain(const HITTESTRESULT& result) {
     if (Spell_C_IsTargeting() && Spell_C_CanTargetTerrain()) {
         s_spellShadowPos = result.m_point;
@@ -763,7 +773,7 @@ void CGWorldFrame::RenderPostAnimateCallback(uint32_t pass, uint64_t param64) {
     }
 }
 
-// OFFSET: 0x008DFF40
+// OFFSET: 0x008DFF40/0x14060CE20
 void CGWorldFrame::OnFrameSizeChanged(const CRect& rect) {
     this->CSimpleFrame::OnFrameSizeChanged(rect);
 
@@ -787,7 +797,7 @@ void CGWorldFrame::OnFrameSizeChanged(const CRect& rect) {
     this->m_viewportNDC.maxY = this->m_viewportNDC.maxY >= 1.0f ? 1.0f : this->m_viewportNDC.maxY;
 }
 
-// OFFSET: 0x008E0120
+// OFFSET: 0x008E0120/0x14060D040
 int32_t CGWorldFrame::OnLayerKeyDown(const CKeyEvent& evt) {
     if (this->CSimpleFrame::OnLayerKeyDown(evt)) {
         return 1;
@@ -814,7 +824,7 @@ int32_t CGWorldFrame::OnLayerKeyDown(const CKeyEvent& evt) {
     return 0;
 }
 
-// OFFSET: 0x008E01B0
+// OFFSET: 0x008E01B0/0x14060D110
 int32_t CGWorldFrame::OnLayerKeyUp(const CKeyEvent& evt) {
     if (this->CSimpleFrame::OnLayerKeyUp(evt)) {
         return 1;
@@ -848,6 +858,7 @@ int32_t CGWorldFrame::OnLayerKeyUp(const CKeyEvent& evt) {
     return result;
 }
 
+// PROVEN: ec439d27 DIFFERENT/IDENTICAL
 // OFFSET: 0x008E0250/0x14060D1F0
 int32_t CGWorldFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) {
     if (this->CSimpleFrame::OnLayerMouseDown(evt, btn)) {
@@ -955,7 +966,7 @@ void CGWorldFrame::SetCameraTarget(CGObject_C* target, int32_t freeLook) {
     }
 }
 
-// OFFSET: 0x008E06F0
+// OFFSET: 0x008E06F0/0x14060D730
 void CGWorldFrame::ClearTrackedObjects() {
     if (this->m_trackedEffectGuidA) {
         CGObject_C* object = ClntObjMgrObjectPtr(this->m_trackedEffectGuidA, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -978,7 +989,7 @@ void CGWorldFrame::ClearTrackedObjects() {
     }
 }
 
-// OFFSET: 0x008E0780
+// OFFSET: 0x008E0780/0x14060D7C0
 static void SetWorldCameraTarget(uintptr_t entity, WOWGUID transport) {
     C44Matrix matrix;
 
@@ -989,7 +1000,7 @@ static void SetWorldCameraTarget(uintptr_t entity, WOWGUID transport) {
     World::SetCameraTarget(entity, transport.m_guid, matrix);
 }
 
-// OFFSET: 0x008E0860
+// OFFSET: 0x008E0860/0x14060D870
 int32_t CGWorldFrame::IsUnitLegalSelection(CGUnit_C* unit, uint32_t flags) {
     if (!(flags & 0x20)) {
         if (unit->IsActivePlayer()) {
@@ -1080,7 +1091,8 @@ int32_t CGWorldFrame::IsLegalSelection(CGObject_C* object, uint32_t flags) {
     }
 }
 
-// OFFSET: 0x008E0B30
+// PROVEN: b5e51044 IDENTICAL/DIFFERENT
+// OFFSET: 0x008E0B30/0x14060DB30
 uint32_t CGWorldFrame::GetHitTestFilterFlags(int32_t a1) {
     if (CGPetInfo::m_petOrderMoveTo) {
         return 0x3;
@@ -1395,6 +1407,7 @@ void __stdcall CGWorldFrame::CursorTrackUnit(CGUnit_C* unit) {
     CursorSetMode(distance <= range * range ? 4 : 30);
 }
 
+// PROVEN: fe5ab202 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E15C0/0x14060E6C0
 void __stdcall CGWorldFrame::CursorTrackObject(CGGameObject_C* object) {
     int32_t mode = object->CanChangeCursor();
@@ -1585,6 +1598,7 @@ static void SetTimeOfDayOverride(int32_t timeOfDay) {
     s_timeOfDayBlendRemaining = s_timeOfDayBlendTime;
 }
 
+// PROVEN: 116d59e1 DIFFERENT/IDENTICAL
 // OFFSET: 0x008E1C90/0x14060ED90
 void CGWorldFrame::SetPlayerFadeCameraValue(uint8_t value) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_camera->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1604,6 +1618,7 @@ void CGWorldFrame::SetPlayerFadeCameraValue(uint8_t value) {
     unit->SetMaxAlpha(value * 0.0039215689f);
 }
 
+// PROVEN: a5237098 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E1D30/0x14060EE30
 int32_t CGWorldFrame::Update(const void* data, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1618,7 +1633,7 @@ int32_t CGWorldFrame::Update(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x008E1D80
+// OFFSET: 0x008E1D80/0x14060EEA0
 void CGWorldFrame::RenderPostAnimateCallback(void* param, uint32_t pass, uint64_t param64) {
     static_cast<CGWorldFrame*>(param)->RenderPostAnimateCallback(pass, param64);
 }
@@ -1896,6 +1911,7 @@ void CGWorldFrame::UpdateWorld() {
     World::Update(shot.m_position, shot.m_target, nearClip, farClip, fov, StaticSingleton<CCameraManager>::Instance()->m_aspect, focus, weatherPosition, weatherVelocity, weatherFacing, weatherOnTaxi, weatherSpline, splineElapsedTime, splineDuration);
 }
 
+// PROVEN: 71b43031 IDENTICAL/DIFFERENT
 // OFFSET: 0x008E2990/0x14060FD60
 void CGWorldFrame::UpdatePlayerAmbientMultiplier() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1974,7 +1990,7 @@ void CGWorldFrame::UpdateDayNight(float deltaSec) {
     DayNight::SetTime(timeOfDay, day, s_timeOfDayProgression);
 }
 
-// PROVEN: 17dd596a IDENTICAL/NONE
+// PROVEN: 17dd596a IDENTICAL/IDENTICAL
 // OFFSET: 0x008E2CB0/0x1406100F0
 void CGWorldFrame::UnitClear() {
     this->MoveToFreeList(&this->m_modelList);
@@ -2151,7 +2167,8 @@ void CGWorldFrame::UpdateScreenEffect() {
     CGWorldFrame::SetScreenEffect(0);
 }
 
-// OFFSET: 0x008E33E0
+// PROVEN: 3879413f IDENTICAL/UNPROVEN
+// OFFSET: 0x008E33E0/0x140610A60
 void CGWorldFrame::WaterResetCallback() {
     if (CGWorldFrame::s_currentWorldFrame) {
         CGWorldFrame::WaterReset();
@@ -2662,6 +2679,7 @@ void CGWorldFrame::RenderTransparentCallback(uint32_t pass, uint64_t param64) {
     this->ClearTrackedObjects();
 }
 
+// PROVEN: b526bc2a IDENTICAL/NONE
 // OFFSET: 0x008E4DA0/0x140612BE0
 int32_t CGWorldFrame::ObjectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4) {
     CGWorldFrame* frame = CGWorldFrame::s_currentWorldFrame;
@@ -2684,7 +2702,7 @@ int32_t CGWorldFrame::ObjectEnumProc(void* param, uintptr_t flags, uint64_t guid
     return 1;
 }
 
-// OFFSET: 0x008E4E10
+// OFFSET: 0x008E4E10/0x140612C60
 void CGWorldFrame::RenderWorld(void* param) {
     CGWorldFrame* worldFrame = static_cast<CGWorldFrame*>(param);
     C44Matrix projection;
@@ -2705,7 +2723,7 @@ void CGWorldFrame::RenderWorld(void* param) {
     CShaderEffect::UpdateProjMatrix();
 }
 
-// OFFSET: 0x008E5010
+// OFFSET: 0x008E5010/0x1406131E0
 void CGWorldFrame::RenderOpaqueCallback(void* param, uint32_t pass, uint64_t param64) {
     if (s_spellShadowStyle < 2) {
         DrawSpellCursorShadow(0x200122);
@@ -2722,7 +2740,7 @@ void CGWorldFrame::RenderOpaqueCallback(void* param, uint32_t pass, uint64_t par
     }
 }
 
-// OFFSET: 0x008E5060
+// OFFSET: 0x008E5060/0x140613230
 void CGWorldFrame::RenderTransparentCallback(void* param, uint32_t pass, uint64_t param64) {
     static_cast<CGWorldFrame*>(param)->RenderTransparentCallback(pass, param64);
 }
@@ -2843,8 +2861,8 @@ CGWorldFrame::~CGWorldFrame() {
     Liquid::RemoveConfigChangedCallback(CGWorldFrame::WaterResetCallback);
 }
 
-// PROVEN: 072ef2d8 IDENTICAL/NONE
-// OFFSET: 0x008E5740
+// PROVEN: 072ef2d8 IDENTICAL/IDENTICAL
+// OFFSET: 0x008E5740/0x140613A90
 void CGWorldFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     this->CSimpleFrame::OnFrameRender(batch, layer);
 
@@ -2853,7 +2871,8 @@ void CGWorldFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// OFFSET: 0x008C13F0
+// PROVEN: b7f09792 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C13F0/0x140630970
 CSimpleFrame* CGWorldFrame::Create(CSimpleFrame* parent) {
     void* data = CGWorldFrame::s_worldFrameHeap.GetData(0, typeid(CGWorldFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGWorldFrame(parent) : NULL;
@@ -2864,6 +2883,7 @@ void CGWorldFrame::operator delete(void* ptr) {
     CGWorldFrame::s_worldFrameHeap.PutData(ptr, NULL, 0);
 }
 
+// PROVEN: 400efb63 IDENTICAL/IDENTICAL
 // OFFSET: 0x008CB080/0x14063B870
 void CGWorldFrame::RegisterFrames() {
     FrameXML_RegisterFactory("WorldFrame", CGWorldFrame::Create, true);

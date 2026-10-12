@@ -21,7 +21,7 @@ Battlenet::String::String(const char* string) {
     this->m_string = reinterpret_cast<const char*>(block + 1);
 }
 
-// OFFSET: 0x00660B80
+// OFFSET: 0x00660B80/0x140306210
 Battlenet::MapKey::MapKey(const String& value) {
     const char* string = value.GetString();
     uint32_t hash = 0x811C9DC5;

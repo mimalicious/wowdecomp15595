@@ -21,44 +21,45 @@
 #include "Engine/Source/Model2/M2Model.h"
 #include "WoW/Source/Net/Types.h"
 
-// STATIC: 0x00F33728
+// STATIC: 0x00F33728/0x140E266F0
 uint8_t CGBarberShop::m_barberShopEnabled;
 
 uint8_t CGBarberShop::m_helmHidden;
 
-// STATIC: 0x00D108A0
+// STATIC: 0x00D108A0/0x140BC66C0
 int32_t CGBarberShop::m_prevView = 4;
 
-// STATIC: 0x00D108A4
+// STATIC: 0x00D108A4/0x140BC66C4
 float CGBarberShop::m_minCameraDistance = 1.0f;
 
 // STATIC: 0x00F33729
 uint8_t CGBarberShop::m_initialized;
 
-// STATIC: 0x00F3372A
+// STATIC: 0x00F3372A/0x140E266F2
 uint8_t CGBarberShop::m_resetPortrait;
 
-// STATIC: 0x00F33718
+// STATIC: 0x00F33718/0x140E266D0
 STYLEREC* CGBarberShop::m_currentHairStyle;
 
-// STATIC: 0x00F3371C
+// STATIC: 0x00F3371C/0x140E266D8
 STYLEREC* CGBarberShop::m_currentFacialHair;
 
-// STATIC: 0x00F33720
+// STATIC: 0x00F33720/0x140E266E0
 STYLEREC* CGBarberShop::m_currentSkinColor;
 
-// STATIC: 0x00F3372C
+// STATIC: 0x00F3372C/0x140BC6790
 TSHashTable<USEABLESTYLE, HASHKEY_NONE> CGBarberShop::m_useableStyles;
 
-// STATIC: 0x00F33724
+// STATIC: 0x00F33724/0x140E266E8
 CGCharacterModelBase* CGBarberShop::m_alternateFormFrame;
 
-// OFFSET: 0x008FF5C0
+// PROVEN: b3e21d9b IDENTICAL/IDENTICAL
+// OFFSET: 0x008FF5C0/0x140657040
 float CGBarberShop::GetMinCameraDistance() {
     return CGBarberShop::m_minCameraDistance;
 }
 
-// PROVEN: 7e49b057 IDENTICAL/NONE
+// PROVEN: 7e49b057 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FF5D0/0x140657050
 const BarberShopStyleRec* CGBarberShop::GetCurrentStyle(int32_t type) {
     switch (type) {
@@ -73,13 +74,15 @@ const BarberShopStyleRec* CGBarberShop::GetCurrentStyle(int32_t type) {
     return NULL;
 }
 
+// PROVEN: 226c35d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FF610/0x140657090
 void CGBarberShop::AppearanceApplied() {
     Script_SendUniqueSignal(SCRIPT_EVENT_BARBER_SHOP_APPEARANCE_APPLIED);
     CGBarberShop::m_resetPortrait = 1;
 }
 
-// OFFSET: 0x008FF6B0
+// PROVEN: 493562ac DIFFERENT/IDENTICAL
+// OFFSET: 0x008FF6B0/0x140657160
 int32_t Packet_SMSG_BARBER_SHOP_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t result = 0xFFFFFFFF;
     msg->Get(result);
@@ -102,6 +105,7 @@ int32_t Packet_SMSG_BARBER_SHOP_RESULT(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
+// PROVEN: 5b355ef6 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FF730/0x1406571E0
 void CGBarberShop::UpdateAlternateForm() {
     if (!CGBarberShop::m_alternateFormFrame) {
@@ -123,6 +127,7 @@ void CGBarberShop::UpdateAlternateForm() {
     }
 }
 
+// PROVEN: 58a9a7f0 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FF860/0x1406573A0
 bool CGBarberShop::IsCurrentStyle(int32_t type) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -146,6 +151,7 @@ bool CGBarberShop::IsCurrentStyle(int32_t type) {
     }
 }
 
+// PROVEN: 0bb010a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FFB90/0x140657760
 bool CGBarberShop::IsSlotHidden(int32_t slot) {
     switch (slot) {
@@ -170,6 +176,7 @@ bool CGBarberShop::IsSlotHidden(int32_t slot) {
     return false;
 }
 
+// PROVEN: c7da655a IDENTICAL/DIFFERENT
 // OFFSET: 0x008FFC00/0x1406577F0
 void CGBarberShop::ResetAppearance() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -192,6 +199,7 @@ void CGBarberShop::ResetAppearance() {
     CGBarberShop::UpdateAlternateForm();
 }
 
+// PROVEN: 4e398200 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FFCA0/0x1406578C0
 void CGBarberShop::SetAlternateForm() {
     CGBarberShop::m_alternateFormFrame->SetBarberShopAlternateForm();
@@ -422,12 +430,14 @@ void CGBarberShop::Reset() {
     CGBarberShop::ResetAppearance();
 }
 
+// PROVEN: 76422f26 IDENTICAL/IDENTICAL
 // OFFSET: 0x009005B0/0x140658420
 void CGBarberShop::LeaveWorld() {
     CGBarberShop::DisableBarberShop();
 }
 
-// OFFSET: 0x009005C0
+// PROVEN: b61aa790 IDENTICAL/DIFFERENT
+// OFFSET: 0x009005C0/0x140742D50
 void CGBarberShop::ShutdownGame() {
     CGBarberShop::m_initialized = 0;
     CGBarberShop::m_useableStyles.InternalClear(0);

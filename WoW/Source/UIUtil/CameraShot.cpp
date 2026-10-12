@@ -3,7 +3,7 @@
 #include "Engine/Source/Gxu/Gxu.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// STATIC: 0x00C99EEC
+// STATIC: 0x00C99EEC/0x140B326D0
 static float s_polarFacingMinDistance = 0.000099999997f;
 
 // OFFSET: 0x00462D60/0x140076120
@@ -35,7 +35,7 @@ void CCameraShot::CalcPolarFacing(float& distance, float& yaw, float& pitch) con
     }
 }
 
-// PROVEN: 9665686e IDENTICAL/NONE
+// PROVEN: 9665686e IDENTICAL/DIFFERENT
 // OFFSET: 0x00462E40/0x1400762B0
 void CCameraShot::CalcYawPitch(float& yaw, float& pitch) const {
     float distance;
@@ -84,7 +84,7 @@ int32_t CCameraShot::Sanitize() {
     return 0;
 }
 
-// OFFSET: 0x004630B0
+// OFFSET: 0x004630B0/0x1400765E0
 void CCameraShot::LerpEuler(const CCameraShot& from, const CCameraShot& to, float t, int32_t flags) {
     float inv = 1.0f - t;
     this->m_roll = from.m_roll * inv + to.m_roll * t;
@@ -125,7 +125,7 @@ void CCameraShot::LerpEuler(const CCameraShot& from, const CCameraShot& to, floa
     }
 }
 
-// OFFSET: 0x004633B0
+// OFFSET: 0x004633B0/0x140076980
 C44Matrix CCameraShot::CalcViewMatrix() const {
     C3Vector dir = this->m_target - this->m_position;
     float mag = dir.z * dir.z + dir.y * dir.y + dir.x * dir.x;

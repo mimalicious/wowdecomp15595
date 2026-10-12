@@ -18,16 +18,16 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA3CB0
+// STATIC: 0x00CA3CB0/0x140B41320
 int32_t CSimpleStatusBar::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3964
+// STATIC: 0x00DD3964/0x140CB9648
 int32_t CSimpleStatusBar::s_objectType;
 
-// STATIC: 0x00CA3260
+// STATIC: 0x00CA3260/0x140B40370
 const char* CSimpleStatusBar::s_objectTypeName = "StatusBar";
 
-// STATIC: 0x00DD3968
+// STATIC: 0x00DD3968/0x140CB9650
 CDataAllocator CSimpleStatusBar::s_allocator(sizeof(CSimpleStatusBar), 5);
 
 // INLINED
@@ -35,7 +35,7 @@ void CSimpleStatusBar::operator delete(void* ptr) {
     CSimpleStatusBar::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: f9cea12a IDENTICAL/DIFFERENT
+// PROVEN: f9cea12a IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F230/0x140158430
 void CSimpleStatusBar::RunOnMinMaxChangedScript() {
     if (this->HasScript(this->m_onMinMaxChanged)) {
@@ -46,7 +46,8 @@ void CSimpleStatusBar::RunOnMinMaxChangedScript() {
     }
 }
 
-// OFFSET: 0x0050EE80
+// PROVEN: cd515e0f UNPROVEN/IDENTICAL
+// OFFSET: 0x0050EE80/0x140158020
 CSimpleStatusBar::~CSimpleStatusBar() {
 }
 
@@ -58,8 +59,8 @@ void CSimpleStatusBar::SetStatusBarColor(const CImVector& color) {
     }
 }
 
-// PROVEN: 95543938 IDENTICAL/NONE
-// OFFSET: 0x0050EEC0
+// PROVEN: 95543938 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050EEC0/0x140158060
 const char* CSimpleStatusBar::GetObjectTypeName() {
     return CSimpleStatusBar::s_objectTypeName;
 }
@@ -70,7 +71,7 @@ int32_t CSimpleStatusBar::GetScriptMetaTable() {
     return CSimpleStatusBar::s_metatable;
 }
 
-// PROVEN: 0fec43d5 IDENTICAL/DIFFERENT
+// PROVEN: 0fec43d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EEE0/0x140158080
 FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -92,7 +93,7 @@ FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name
     return NULL;
 }
 
-// PROVEN: 9a450fd0 IDENTICAL/NONE
+// PROVEN: 9a450fd0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EF90/0x140158120
 void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onValueChanged, time, count);
@@ -110,7 +111,7 @@ void CSimpleStatusBar::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
-// PROVEN: 07f92cae IDENTICAL/UNPROVEN
+// PROVEN: 07f92cae IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F010/0x1401581C0
 void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer, int8_t subLevel) {
     if (texture == this->m_barTexture) {
@@ -133,14 +134,14 @@ void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer
     this->m_barTexture = texture;
 }
 
-// PROVEN: ebf163b1 IDENTICAL/NONE
+// PROVEN: ebf163b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F0E0/0x140158300
 void CSimpleStatusBar::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
     this->m_changed = 1;
 }
 
-// PROVEN: cf2e93ab IDENTICAL/NONE
+// PROVEN: cf2e93ab IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F110/0x140158320
 void CSimpleStatusBar::SetReverseFill(int32_t reverse) {
     this->m_reverseFill = reverse;
@@ -169,8 +170,8 @@ void CSimpleStatusBar::SetMinMaxValues(float minValue, float maxValue) {
     }
 }
 
-// PROVEN: f1af9da6 IDENTICAL/NONE
-// OFFSET: 0x0050F1E0
+// PROVEN: f1af9da6 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050F1E0/0x1401583C0
 void CSimpleStatusBar::RunOnValueChangedScript() {
     if (this->HasScript(this->m_onValueChanged)) {
         lua_State* L = FrameScript_GetContext();
@@ -179,7 +180,7 @@ void CSimpleStatusBar::RunOnValueChangedScript() {
     }
 }
 
-// OFFSET: 0x0050F520
+// OFFSET: 0x0050F520/0x1401587B0
 void CSimpleStatusBar::SetValue(float value) {
     if (!this->m_rangeSet) {
         return;
@@ -201,7 +202,7 @@ void CSimpleStatusBar::SetValue(float value) {
     this->RunOnValueChangedScript();
 }
 
-// PROVEN: 0132627d IDENTICAL/UNPROVEN
+// PROVEN: 0132627d IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F190/0x140158370
 void CSimpleStatusBar::SetWidth(float width) {
     CSimpleFrame::SetWidth(width);
@@ -228,8 +229,8 @@ bool CSimpleStatusBar::IsA(int32_t type) {
     return type == CSimpleStatusBar::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: f2b20eb7 IDENTICAL/NONE
-// OFFSET: 0x0050F2D0
+// PROVEN: f2b20eb7 IDENTICAL/DIFFERENT
+// OFFSET: 0x0050F2D0/0x1401584F0
 bool CSimpleStatusBar::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleStatusBar::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

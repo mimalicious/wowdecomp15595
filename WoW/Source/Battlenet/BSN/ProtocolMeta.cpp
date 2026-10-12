@@ -1,5 +1,6 @@
 #include "WoW/Source/Battlenet/BSN/Protocol.h"
 
+// PROVEN: 95719e48 IDENTICAL/IDENTICAL
 // OFFSET: 0x00663BD0/0x140309D20
 uint32_t BSN::Protocol::Meta::PeekHeaderEnum(const Protocol* protocol, uint32_t typeId) {
     return *protocol->TypeInfo(typeId) & 0x3F;
@@ -19,20 +20,20 @@ BSN::Protocol::Meta::Base::Base(const Protocol* protocol, uint32_t typeId) {
     this->m_header = *this->m_typeInfo++;
 }
 
-// PROVEN: db79175d IDENTICAL/NONE
+// PROVEN: db79175d IDENTICAL/DIFFERENT
 // OFFSET: 0x00663C50/0x140309DC0
 BSN::Protocol::Meta::Array::Array(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::Bounds::Get(this->m_header >> 7, this->m_typeInfo, this->m_bounds);
     BSN::Protocol::Type::GetTypeId(this->m_typeInfo, this->m_elementTypeId);
 }
 
-// PROVEN: 21c8f97d IDENTICAL/NONE
+// PROVEN: 21c8f97d IDENTICAL/IDENTICAL
 // OFFSET: 0x00663CD0/0x140309E70
 BSN::Protocol::Meta::BitArray::BitArray(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::Bounds::Get(this->m_header >> 7, this->m_typeInfo, this->m_bounds);
 }
 
-// PROVEN: f01802c5 IDENTICAL/NONE
+// PROVEN: f01802c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00663CD0/0x140309E70
 BSN::Protocol::Meta::Blob::Blob(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::Bounds::Get(this->m_header >> 7, this->m_typeInfo, this->m_bounds);
@@ -100,7 +101,7 @@ bool BSN::Protocol::Meta::Choice::GetFieldTypeId(uint32_t field, uint32_t& typeI
     return true;
 }
 
-// OFFSET: 0x00663F00
+// OFFSET: 0x00663F00/0x14030A040
 bool BSN::Protocol::Meta::Enum::GetEnumField(uint64_t value, uint32_t& field) const {
     if (!(this->m_header & 0x80)) {
         const uint8_t* cursor = this->m_typeInfo;
@@ -124,51 +125,51 @@ bool BSN::Protocol::Meta::Enum::GetEnumField(uint64_t value, uint32_t& field) co
     return false;
 }
 
-// PROVEN: 1dd3db52 IDENTICAL/NONE
+// PROVEN: 1dd3db52 IDENTICAL/IDENTICAL
 // OFFSET: 0x00663F90/0x140309E10
 BSN::Protocol::Meta::Int::Int(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::Bounds::Get(false, this->m_typeInfo, this->m_bounds);
 }
 
-// PROVEN: 2a91749a IDENTICAL/NONE
+// PROVEN: 2a91749a IDENTICAL/IDENTICAL
 // OFFSET: 0x00663F90/0x140309E10
 BSN::Protocol::Meta::AsciiString::AsciiString(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::Bounds::Get(false, this->m_typeInfo, this->m_bounds);
 }
 
-// PROVEN: c0926f36 IDENTICAL/NONE
+// PROVEN: c0926f36 IDENTICAL/IDENTICAL
 // OFFSET: 0x00663FE0/0x14030A250
 BSN::Protocol::Meta::User::User(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::GetTypeId(this->m_typeInfo, this->m_userTypeId);
 }
 
-// PROVEN: 2c26412a IDENTICAL/NONE
+// PROVEN: 2c26412a IDENTICAL/IDENTICAL
 // OFFSET: 0x00663FE0/0x14030A250
 BSN::Protocol::Meta::Optional::Optional(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::GetTypeId(this->m_typeInfo, this->m_elementTypeId);
 }
 
-// PROVEN: c0b3cda7 IDENTICAL/NONE
+// PROVEN: c0b3cda7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00663FC0/0x14030A0E0
 BSN::Protocol::Meta::Bool::Bool(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
 }
 
-// PROVEN: 0f1b830e IDENTICAL/NONE
+// PROVEN: 0f1b830e IDENTICAL/IDENTICAL
 // OFFSET: 0x00663FC0/0x14030A0E0
 BSN::Protocol::Meta::FourCC::FourCC(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
 }
 
-// PROVEN: 4ef8154b IDENTICAL/NONE
+// PROVEN: 4ef8154b IDENTICAL/IDENTICAL
 // OFFSET: 0x00663FC0/0x14030A0E0
 BSN::Protocol::Meta::Null::Null(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
 }
 
-// PROVEN: 5a46550a IDENTICAL/NONE
+// PROVEN: 5a46550a IDENTICAL/IDENTICAL
 // OFFSET: 0x00663FC0/0x14030A0E0
 BSN::Protocol::Meta::Real32::Real32(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
 }
 
-// PROVEN: 01c1ae32 IDENTICAL/NONE
+// PROVEN: 01c1ae32 IDENTICAL/IDENTICAL
 // OFFSET: 0x00663FC0/0x14030A0E0
 BSN::Protocol::Meta::Real64::Real64(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
 }
@@ -226,7 +227,7 @@ bool BSN::Protocol::Meta::Struct::GetMember(uint32_t index, uint32_t& offset, ui
     return true;
 }
 
-// PROVEN: a05820e6 IDENTICAL/NONE
+// PROVEN: a05820e6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00664090/0x14030A1E0
 BSN::Protocol::Meta::String::String(const Protocol* protocol, uint32_t typeId) : Base(protocol, typeId) {
     BSN::Protocol::Type::Bounds::Get(false, this->m_typeInfo, this->m_charBounds);

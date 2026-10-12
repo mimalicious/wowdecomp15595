@@ -12,6 +12,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
+// PROVEN: a8b9c3ba IDENTICAL/IDENTICAL
 // OFFSET: 0x0099F7B0/0x140723780
 static int32_t Script_GetCurrencyLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -23,6 +24,7 @@ static int32_t Script_GetCurrencyLink(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 57443bfe IDENTICAL/UNPROVEN
 // OFFSET: 0x0099FCD0/0x140723F30
 static int32_t Script_GetCurrencyListSize(lua_State* L) {
     lua_pushnumber(L, CGCurrencyTypes::s_displayList.Count());
@@ -48,6 +50,7 @@ static int32_t Script_GetCurrencyListLink(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 49d56235 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A0270/0x140724570
 static int32_t Script_ExpandCurrencyList(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -61,6 +64,7 @@ static int32_t Script_ExpandCurrencyList(lua_State* L) {
     return 0;
 }
 
+// PROVEN: f26f82a6 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A0300/0x140724600
 static int32_t Script_PickupCurrency(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -77,6 +81,7 @@ static int32_t Script_PickupCurrency(lua_State* L) {
     return 0;
 }
 
+// PROVEN: b0b7f7f8 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A0360/0x140724680
 static int32_t Script_GetCurrencyInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -207,6 +212,7 @@ static int32_t Script_GetCurrencyListInfo(lua_State* L) {
     return 11;
 }
 
+// PROVEN: fb7ac806 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A0A30/0x140724F90
 static int32_t Script_SetCurrencyUnused(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -220,6 +226,7 @@ static int32_t Script_SetCurrencyUnused(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 58434810 IDENTICAL/DIFFERENT
 // OFFSET: 0x009A0AC0/0x140725020
 static int32_t Script_SetCurrencyBackpack(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
@@ -271,7 +278,7 @@ static int32_t Script_GetBackpackCurrencyInfo(lua_State* L) {
     return 4;
 }
 
-// STATIC: 0x00D14EF0
+// STATIC: 0x00D14EF0/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetCurrencyListSize", &Script_GetCurrencyListSize },
     { "GetCurrencyListInfo", &Script_GetCurrencyListInfo },
@@ -285,6 +292,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetCurrencyListLink", &Script_GetCurrencyListLink },
 };
 
+// PROVEN: dc8d9631 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099F800/0x1407237E0
 void CurrencyTypesRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -292,6 +300,7 @@ void CurrencyTypesRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 8310e735 IDENTICAL/UNPROVEN
 // OFFSET: 0x0099F830/0x140723830
 void CurrencyTypesUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

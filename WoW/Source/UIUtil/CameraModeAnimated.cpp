@@ -14,7 +14,7 @@
 // STATIC: 0x00D3A7AC
 int32_t CCameraModeAnimated::s_cameraIndex;
 
-// STATIC: 0x00D3A7B0
+// STATIC: 0x00D3A7B0/0x140BF5AA8
 static CDataAllocator s_animatedInstances(sizeof(CCameraModeInstanceAnimated), 8);
 
 // INLINED
@@ -22,7 +22,7 @@ CCameraModeInstanceAnimated::CCameraModeInstanceAnimated() {
     this->m_active = 1;
 }
 
-// PROVEN: 9f4beb83 IDENTICAL/NONE
+// PROVEN: 9f4beb83 IDENTICAL/IDENTICAL
 // OFFSET: 0x00461B70/0x140074910
 int32_t CCameraModeAnimated::AllowDuplicate(const CCameraModeInstance* current, const CCameraModeInstance* instance) const {
     const CCameraModeInstanceAnimated* a = static_cast<const CCameraModeInstanceAnimated*>(current);
@@ -30,14 +30,14 @@ int32_t CCameraModeAnimated::AllowDuplicate(const CCameraModeInstance* current, 
     return a->m_cameraIndex != b->m_cameraIndex || a->m_active != b->m_active;
 }
 
-// OFFSET: 0x00461BA0
+// OFFSET: 0x00461BA0/0x140074930
 CCameraModeInstance* CCameraModeAnimated::AllocInstance(const CCameraModeInstance& instance) const {
     CCameraModeInstanceAnimated* result = s_animatedInstances.New<CCameraModeInstanceAnimated>(0);
     result->Init(instance);
     return result;
 }
 
-// PROVEN: be6bbeb5 IDENTICAL/NONE
+// PROVEN: be6bbeb5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00461BF0/0x140074990
 void CCameraModeAnimated::FreeInstance(CCameraModeInstance* instance) const {
     if (instance) {
@@ -45,8 +45,8 @@ void CCameraModeAnimated::FreeInstance(CCameraModeInstance* instance) const {
     }
 }
 
-// PROVEN: 09890c22 IDENTICAL/NONE
-// OFFSET: 0x00461C10
+// PROVEN: 09890c22 IDENTICAL/DIFFERENT
+// OFFSET: 0x00461C10/0x1400749B0
 int32_t CCameraModeAnimated::CalcShotFromModel(int32_t index, CM2Model* model, CCameraShot& shot) const {
     if (!model || !model->IsLoaded()) {
         return 0;
@@ -91,7 +91,7 @@ void CCameraModeAnimated::UpdateInternal(CCameraModeInstance* instance) const {
     }
 }
 
-// OFFSET: 0x00461D50
+// OFFSET: 0x00461D50/0x140074B00
 void CCameraModeAnimated::InitInstance(CCameraModeInstance* instance) const {
     CCameraModeInstanceAnimated* animated = static_cast<CCameraModeInstanceAnimated*>(instance);
 
@@ -105,19 +105,19 @@ void CCameraModeAnimated::InitInstance(CCameraModeInstance* instance) const {
     animated->m_shot.m_fade = 1.0f;
 }
 
-// PROVEN: e787ccad IDENTICAL/NONE
-// OFFSET: 0x00461D90
+// PROVEN: e787ccad IDENTICAL/DIFFERENT
+// OFFSET: 0x00461D90/0x140074B90
 void CCameraModeAnimated::UpdateInstance(CCameraModeInstance* instance, float elapsed) const {
     this->UpdateInternal(instance);
 }
 
-// PROVEN: be81a950 IDENTICAL/NONE
-// OFFSET: 0x00B07330
+// PROVEN: be81a950 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07330/0x1408CA670
 int32_t CCameraModeAnimated::GetType() const {
     return CAMERA_MODE_ANIMATED;
 }
 
-// PROVEN: 17f5f54f IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: 17f5f54f IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CCameraModeAnimated::DestroyInstance(CCameraModeInstance* instance) const {
 }

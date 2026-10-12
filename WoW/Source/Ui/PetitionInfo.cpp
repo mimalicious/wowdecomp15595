@@ -13,25 +13,25 @@
 // STATIC: 0x00F71078
 WOWGUID CGPetitionInfo::m_petitionGUID;
 
-// STATIC: 0x00F71080
+// STATIC: 0x00F71080/0x140E66F40
 WOWGUID CGPetitionInfo::m_petitionItem;
 
-// STATIC: 0x00F71088
+// STATIC: 0x00F71088/0x140E66F48
 uint32_t CGPetitionInfo::m_petitionId;
 
 // STATIC: 0x00F7108C
 int32_t CGPetitionInfo::m_signed;
 
-// STATIC: 0x00F71090
+// STATIC: 0x00F71090/0x140E66F50
 uint32_t CGPetitionInfo::m_numPetitionNames;
 
-// STATIC: 0x00F71094
+// STATIC: 0x00F71094/0x140E66F54
 int32_t CGPetitionInfo::m_pendingNameQueries;
 
-// STATIC: 0x00F71098
+// STATIC: 0x00F71098/0x140E66F58
 CGPetition* CGPetitionInfo::m_petition;
 
-// STATIC: 0x00F7109C
+// STATIC: 0x00F7109C/0x140E66F60
 TSGrowableArray<PetitionSignerInfo> CGPetitionInfo::m_signers;
 
 // OFFSET: 0x009E0100
@@ -62,6 +62,7 @@ void CGPetitionInfo::SetPetitionStats(int32_t id) {
     }
 }
 
+// PROVEN: 4dbcff4b IDENTICAL/DIFFERENT
 // OFFSET: 0x009E0300/0x140776EF0
 void SignatureNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (CGPetitionInfo::m_pendingNameQueries && !--CGPetitionInfo::m_pendingNameQueries && CGPetitionInfo::m_petition) {
@@ -82,6 +83,7 @@ void CGPetitionInfo::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_OFFER_PETITION_ERROR, Packet_SMSG_OFFER_PETITION_ERROR, NULL);
 }
 
+// PROVEN: 0613e214 IDENTICAL/UNPROVEN
 // OFFSET: 0x009E0390/0x140776FE0
 void CGPetitionInfo::ClearSignatures() {
     if (CGPetitionInfo::m_pendingNameQueries) {
@@ -135,12 +137,13 @@ void CGPetitionInfo::EnterWorld() {
     CGPetitionInfo::m_signers.SetCount(10);
 }
 
+// PROVEN: bf589852 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E0370/0x140776FC0
 void CGPetitionInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_OFFER_PETITION_ERROR);
 }
 
-// OFFSET: 0x009E0D90
+// OFFSET: 0x009E0D90/0x140777B50
 void CGPetitionInfo::SetSignatures(uint8_t count, const WOWGUID* guids, const uint32_t* choices) {
     CGPetitionInfo::ClearSignatures();
 
@@ -164,7 +167,7 @@ void CGPetitionInfo::SetSignatures(uint8_t count, const WOWGUID* guids, const ui
     }
 }
 
-// OFFSET: 0x009E0E50
+// OFFSET: 0x009E0E50/0x140777C60
 void CGPetitionInfo::AddSignature(WOWGUID petition, WOWGUID signer) {
     uint32_t count = CGPetitionInfo::m_numPetitionNames;
 
@@ -193,6 +196,7 @@ void CGPetitionInfo::AddSignature(WOWGUID petition, WOWGUID signer) {
     }
 }
 
+// PROVEN: 9dd65614 IDENTICAL/UNPROVEN
 // OFFSET: 0x009E0D40/0x140777B00
 void CGPetitionInfo::LeaveWorld() {
     CGPetitionInfo::m_signers.Clear();

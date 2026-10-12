@@ -7,7 +7,7 @@
 #include "WoW/Source/DB/Rec/ZoneLightPointRec.h"
 #include "WoW/Source/DB/Rec/ZoneLightRec.h"
 
-// STATIC: 0x00E43310
+// STATIC: 0x00E43310/0x140D2C0D8
 TSGrowableArray<DayNight::CZoneLight> DayNight::g_zoneLights;
 
 static uint32_t FindZoneLight(int32_t id) {
@@ -142,7 +142,7 @@ void DayNight::UpdateZoneLights() {
     }
 }
 
-// PROVEN: b15ccd3c IDENTICAL/NONE
+// PROVEN: b15ccd3c IDENTICAL/DIFFERENT
 // OFFSET: 0x00652F00/0x1402F31E0
 void DayNight::DNInfo::ClearZoneLights() {
     this->m_zoneLights[0] = NULL;
@@ -158,7 +158,7 @@ void DayNight::DNInfo::ClearZoneLights() {
     this->m_zoneLightCount = 0;
 }
 
-// PROVEN: 7c3d27ec IDENTICAL/NONE
+// PROVEN: 7c3d27ec IDENTICAL/UNPROVEN
 // OFFSET: 0x00652F60/0x1402F3220
 void DayNight::DNInfo::AddZoneLight(int32_t lightId, float blend) {
     if (this->m_zoneLightCount >= 5) {

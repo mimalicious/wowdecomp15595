@@ -13,11 +13,11 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA4420
+// STATIC: 0x00CA4420/0x140B421F0
 int32_t CSimpleModel::s_metatable = LUA_NOREF;
 
-// PROVEN: f2e96b87 IDENTICAL/NONE
-// OFFSET: 0x00538560
+// PROVEN: f2e96b87 IDENTICAL/IDENTICAL
+// OFFSET: 0x00538560/0x14018B640
 void CSimpleModel::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleModel::s_metatable);
@@ -103,6 +103,7 @@ static int32_t Script_GetModel(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d25cb241 DIFFERENT/IDENTICAL
 // OFFSET: 0x00538680/0x14018B8C0
 static int32_t Script_ClearModel(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -370,6 +371,7 @@ static int32_t Script_GetPosition(lua_State* L) {
     return 3;
 }
 
+// PROVEN: e48da39a DIFFERENT/IDENTICAL
 // OFFSET: 0x005390B0/0x14018C520
 static int32_t Script_GetFacing(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -378,6 +380,7 @@ static int32_t Script_GetFacing(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1934a3d4 DIFFERENT/IDENTICAL
 // OFFSET: 0x00539100/0x14018C570
 static int32_t Script_GetModelScale(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -447,6 +450,7 @@ static int32_t Script_SetFogNear(lua_State* L) {
     return 0;
 }
 
+// PROVEN: f5918cc4 DIFFERENT/IDENTICAL
 // OFFSET: 0x005393C0/0x14018C8A0
 static int32_t Script_GetFogNear(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -469,6 +473,7 @@ static int32_t Script_SetFogFar(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e202234f DIFFERENT/IDENTICAL
 // OFFSET: 0x00539490/0x14018C990
 static int32_t Script_GetFogFar(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -500,14 +505,14 @@ static int32_t Script_SetGlow(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ea95236b IDENTICAL/NONE
-// OFFSET: 0x005395B0
+// PROVEN: ea95236b IDENTICAL/IDENTICAL
+// OFFSET: 0x005395B0/0x14018CAD0
 void CSimpleModel::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleModel::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleModel::RegisterScriptMethods);
 }
 
-// STATIC: 0x00CA4360
+// STATIC: 0x00CA4360/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetModel", &Script_SetModel },
     { "GetModel", &Script_GetModel },

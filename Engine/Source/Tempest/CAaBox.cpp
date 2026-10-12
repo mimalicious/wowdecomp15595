@@ -2,11 +2,6 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 
-// INLINED
-bool CAaBox::IsValid() const {
-    return this->t.x > this->b.x && this->t.y > this->b.y && this->t.z > this->b.z;
-}
-
 // OFFSET: 0x00599680
 bool CAaBox::IsEmpty() const {
     return this->t.x <= this->b.x || this->t.y <= this->b.y || this->t.z <= this->b.z;
@@ -29,11 +24,6 @@ CAaBox operator|(const CAaBox& l, const CAaBox& r) {
 CAaBox CAaBox::operator|=(const CAaBox& box) {
     *this = *this | box;
     return *this;
-}
-
-// INLINED
-bool CAaBox::ContainsPoint(const C3Vector& point) const {
-    return this->b.x <= point.x && this->b.y <= point.y && this->b.z <= point.z && this->t.x >= point.x && this->t.y >= point.y && this->t.z >= point.z;
 }
 
 // OFFSET: 0x0072C930
@@ -146,27 +136,6 @@ CAaBox CAaBox::Bounding(const C3Vector* points, uint32_t count) {
     return result;
 }
 
-// INLINED
-CAaBox& CAaBox::operator*=(float scale) {
-    this->b.x = this->b.x * scale;
-    this->b.y = this->b.y * scale;
-    this->b.z = this->b.z * scale;
-    this->t.x = this->t.x * scale;
-    this->t.y = this->t.y * scale;
-    this->t.z = scale * this->t.z;
-    return *this;
-}
-
-// INLINED
-void CAaBox::Expand(float amount) {
-    this->b.x = this->b.x - amount;
-    this->b.y = this->b.y - amount;
-    this->b.z = this->b.z - amount;
-    this->t.x = this->t.x + amount;
-    this->t.y = this->t.y + amount;
-    this->t.z = amount + this->t.z;
-}
-
 // PROVEN: 7e9bf4a7 IDENTICAL/NONE
 // OFFSET: 0x005AA2E0
 void CAaBox::Set(float min, float max) {
@@ -178,46 +147,4 @@ void CAaBox::Set(float min, float max) {
 // OFFSET: 0x00550E40
 bool CAaBox::ContainsPointExclusive(const C3Vector& point) const {
     return this->b.x < point.x && this->b.y < point.y && this->b.z < point.z && this->t.x > point.x && this->t.y > point.y && this->t.z > point.z;
-}
-
-// INLINED
-CAaBox::CAaBox(const C3Vector& point) {
-    this->b = point;
-    this->t = point;
-}
-
-// INLINED
-void CAaBox::Expand(const C3Vector& amount) {
-    this->b.x -= amount.x;
-    this->b.y -= amount.y;
-    this->b.z -= amount.z;
-    this->t.x += amount.x;
-    this->t.y += amount.y;
-    this->t.z += amount.z;
-}
-
-// INLINED
-C3Vector CAaBox::Center() const {
-    float y = this->t.y + this->b.y;
-    float z = this->t.z + this->b.z;
-    C3Vector center;
-    center.x = (this->t.x + this->b.x) * 0.5f;
-    center.y = y * 0.5f;
-    center.z = 0.5f * z;
-    return center;
-}
-
-// INLINED
-void CAaBox::operator+=(const C3Vector& v) {
-    this->b.x = v.x + this->b.x;
-    this->b.y = this->b.y + v.y;
-    this->b.z = this->b.z + v.z;
-    this->t.x = this->t.x + v.x;
-    this->t.y = this->t.y + v.y;
-    this->t.z = this->t.z + v.z;
-}
-
-// INLINED
-bool CAaBox::IsInverted() const {
-    return this->b.x > this->t.x && this->b.y > this->t.y && this->b.z > this->t.z;
 }

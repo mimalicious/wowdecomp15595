@@ -8,7 +8,7 @@ void BaseDestroyContext() {
     HandleDestroy();
 }
 
-// PROVEN: 307ef98b IDENTICAL/NONE
+// PROVEN: 307ef98b IDENTICAL/IDENTICAL
 // OFFSET: 0x00871FD0/0x1405A82D0
 void BaseDestroyGlobal() {
     PropDestroy();
@@ -21,8 +21,8 @@ void BaseInitializeContext() {
     HandleInitialize();
 }
 
-// PROVEN: b5e0be3a IDENTICAL/NONE
-// OFFSET: 0x00871FC0
+// PROVEN: b5e0be3a IDENTICAL/IDENTICAL
+// OFFSET: 0x00871FC0/0x1405A82C0
 void BaseInitializeGlobal() {
     PropInitialize();
 }

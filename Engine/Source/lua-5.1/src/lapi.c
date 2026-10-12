@@ -35,22 +35,22 @@
 
 const char *lua_tainted;
 
-// STATIC: 0x00D38098
+// STATIC: 0x00D38098/0x140BF1B00
 int lua_taintexpected;
 
-// STATIC: 0x00D3809C
+// STATIC: 0x00D3809C/0x140BF1B04
 int lua_taintedclosure;
 
-// STATIC: 0x00D380A0
+// STATIC: 0x00D380A0/0x140BF1B08
 const char *lua_closuretaint;
 
-// STATIC: 0x00D380A4
+// STATIC: 0x00D380A4/0x140BF1B10
 const char *lua_gctag;
 
-// STATIC: 0x00D380A8
+// STATIC: 0x00D380A8/0x140BF1B18
 lua_TaintEventCallback lua_tainteventcallback;
 
-// STATIC: 0x00D380B8
+// STATIC: 0x00D380B8/0x140BF1B28
 static int lua_decimalconvert;
 
 // STATIC: 0x00D380C0/0x140BF1B30

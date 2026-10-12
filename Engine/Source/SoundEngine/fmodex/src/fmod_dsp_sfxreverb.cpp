@@ -385,7 +385,7 @@ FMOD_RESULT DSPSfxReverb::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ec996dca IDENTICAL/UNPROVEN
+// PROVEN: ec996dca IDENTICAL/IDENTICAL
 // OFFSET: 0x00A94E70/0x140854F30
 FMOD_RESULT DSPSfxReverb::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
@@ -502,7 +502,7 @@ FMOD_RESULT DSPSfxReverb::readInternal(float *inbuffer, float *outbuffer, unsign
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A93AF0
+// OFFSET: 0x00A93AF0/0x1408539C0
 FMOD_RESULT DSPSfxReverb::setParameterInternal(int index, float value)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -802,7 +802,7 @@ bool DSPSfxReverb::SetRoomHF(I3DL2_LISTENERPROPERTIES *pProps)						// [-10000, 
 	return err;
 }
 
-// PROVEN: 1ca45724 IDENTICAL/UNPROVEN
+// PROVEN: 1ca45724 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A94030/0x140853F30
 bool DSPSfxReverb::Calculate1stOrderLowpassCoeff(float gain, float cutoff, float sampleRate, float *pK)
 {
@@ -872,7 +872,7 @@ bool DSPSfxReverb::SetRoomLF(int roomLF)						// [-10000, 0]      default: 0 mB
 }
 
 
-// PROVEN: bfe7bca3 IDENTICAL/UNPROVEN
+// PROVEN: bfe7bca3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A94100/0x140854030
 bool DSPSfxReverb::CalculateShelfCoeffs(float gain, float cutoff, float sampleRate, float *a0, float *a1, float *a2, float *b1, float *b2)
 {
@@ -1176,7 +1176,7 @@ bool DSPSfxReverb::SetReverbDelay(I3DL2_LISTENERPROPERTIES *pProps)				// [0.0, 
 }
 
 // Controls the echo density in the late reverberation decay. 0% = minimum, 100% = maximum.
-// PROVEN: d32f338f IDENTICAL/UNPROVEN
+// PROVEN: d32f338f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A949D0/0x140854950
 bool DSPSfxReverb::SetDiffusion(I3DL2_LISTENERPROPERTIES *pProps)					// [0.0, 100.0]     default: 100.0 %
 {
@@ -1346,7 +1346,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 84576b2a IDENTICAL/NONE
+// PROVEN: 84576b2a IDENTICAL/IDENTICAL
 // OFFSET: 0x00A94420/0x140855250
 FMOD_RESULT F_CALLBACK DSPSfxReverb::releaseCallback(FMOD_DSP_STATE *dsp)
 {
@@ -1451,7 +1451,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::setParameterCallback(FMOD_DSP_STATE *dsp, i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 349d82c8 IDENTICAL/NONE
+// PROVEN: 349d82c8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A944F0/0x140854420
 FMOD_RESULT F_CALLBACK DSPSfxReverb::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

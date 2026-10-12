@@ -73,11 +73,9 @@ class WowConnection {
     /* 0060 */ int32_t unk_0060;
     /* 0064 */ SockAddr m_localAddress;
     /* 0078 */ uint16_t unk_0078;
-    /* 007A */ uint8_t unk_007A[2];
     /* 007C */ void (*m_threadInit)();
     /* 0080 */ SockAddr m_connectAddress;
     /* 0094 */ uint16_t m_connectPort;
-    /* 0096 */ uint8_t unk_0096[2];
     /* 0098 */ int32_t m_connectRetryInterval;
     /* 009C */ int32_t unk_009C;
     /* 00A0 */ NETCONNADDR m_peer;
@@ -99,25 +97,20 @@ class WowConnection {
     /* 017C */ void* m_event;
     /* 0180 */ WOWC_TYPE m_type;
     /* 0184 */ bool m_notifyWriteReady;
-    /* 0185 */ uint8_t unk_0185[3];
     /* 0188 */ int32_t unk_0188;
     /* 018C */ bool m_checksumPackets;
     /* 018D */ SARC4Key m_sendKey;
     /* 028F */ SARC4Key m_receiveKey;
     /* 0391 */ uint8_t m_sendKeyInit[20];
     /* 03A5 */ uint8_t m_receiveKeyInit[20];
-    /* 03B9 */ uint8_t unk_03B9[3];
     /* 03BC */ WC_ENCRYPT_TYPE m_encryptionType;
     /* 03C0 */ uint8_t m_sendEncryptBytes;
     /* 03C1 */ uint8_t m_recvEncryptBytes;
-    /* 03C2 */ uint8_t unk_03C2[2];
     /* 03C4 */ Crypt::PanamaCypher* m_cryptPanamaSendCypher;
     /* 03C8 */ Crypt::PanamaCypher* m_cryptPanamaRecvCypher;
-    /* 03CC */ uint32_t unk_03CC;
     /* 03D0 */ uint64_t m_bytesSent;
     /* 03D8 */ uint64_t m_bytesReceived;
     /* 03E0 */ bool m_preferIPv6;
-    /* 03E1 */ uint8_t unk_03E1[7];
 
     static void CloseSocket(int32_t sock);
     static WowConnection::SENDNODE* CopySendNode(const WowConnection::SENDNODE* source);

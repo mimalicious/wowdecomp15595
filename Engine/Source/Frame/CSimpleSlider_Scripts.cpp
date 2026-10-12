@@ -67,7 +67,7 @@ static int32_t Script_SetThumbTexture(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e9c979c6 IDENTICAL/NONE
+// PROVEN: e9c979c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00539E30/0x14018D550
 static int32_t Script_GetOrientation(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
@@ -76,7 +76,7 @@ static int32_t Script_GetOrientation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00539E80
+// OFFSET: 0x00539E80/0x14018D5A0
 static int32_t Script_SetOrientation(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -98,7 +98,8 @@ static int32_t Script_SetOrientation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00539F50
+// PROVEN: 32794671 DIFFERENT/IDENTICAL
+// OFFSET: 0x00539F50/0x14018D6A0
 static int32_t Script_GetMinMaxValues(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -123,7 +124,8 @@ static int32_t Script_SetMinMaxValues(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0053A060
+// PROVEN: fcf16c1b DIFFERENT/IDENTICAL
+// OFFSET: 0x0053A060/0x14018D800
 static int32_t Script_GetValue(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -145,6 +147,7 @@ static int32_t Script_SetValue(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9b0ad851 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053A130/0x14018D8F0
 static int32_t Script_GetValueStep(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
@@ -167,7 +170,7 @@ static int32_t Script_SetValueStep(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0053A200
+// OFFSET: 0x0053A200/0x14018D9E0
 static int32_t Script_IsEnabled(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -180,6 +183,7 @@ static int32_t Script_IsEnabled(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 4b1e2243 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053A280/0x14018DA80
 static int32_t Script_Enable(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
@@ -193,7 +197,8 @@ static int32_t Script_Enable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0053A300
+// PROVEN: 2ab2e4aa DIFFERENT/IDENTICAL
+// OFFSET: 0x0053A300/0x14018DB00
 static int32_t Script_Disable(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -206,22 +211,22 @@ static int32_t Script_Disable(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3641c53c IDENTICAL/NONE
-// OFFSET: 0x00539C30
+// PROVEN: 3641c53c IDENTICAL/IDENTICAL
+// OFFSET: 0x00539C30/0x14018D2F0
 void CSimpleSlider::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleSlider::s_metatable);
     CSimpleSlider::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: fb309834 IDENTICAL/NONE
-// OFFSET: 0x0053A260
+// PROVEN: fb309834 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053A260/0x14018DA50
 void CSimpleSlider::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleSlider::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleSlider::RegisterScriptMethods);
 }
 
-// STATIC: 0x00CA4478
+// STATIC: 0x00CA4478/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetThumbTexture", &Script_GetThumbTexture },
     { "SetThumbTexture", &Script_SetThumbTexture },

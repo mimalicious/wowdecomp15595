@@ -60,12 +60,14 @@ static int32_t Script_ContainerIDToInventoryID(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 231e391d IDENTICAL/IDENTICAL
 // OFFSET: 0x009BB3C0/0x140746BF0
 static int32_t Script_GetMaxArenaCurrency(lua_State* L) {
     lua_pushnumber(L, 10000.0);
     return 1;
 }
 
+// PROVEN: c0d923e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x009BB3F0/0x140746C10
 static int32_t Script_SetItemSearch(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -736,6 +738,7 @@ static int32_t Script_GetContainerItemEquipmentSetInfo(lua_State* L) {
     return 2;
 }
 
+// PROVEN: b77a696f IDENTICAL/DIFFERENT
 // OFFSET: 0x009BCB30/0x140748620
 static int32_t Script_PlayerHasHearthstone(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -773,6 +776,7 @@ static int32_t Script_UseHearthstone(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 093fce33 IDENTICAL/DIFFERENT
 // OFFSET: 0x009BCC30/0x140748730
 static int32_t Script_GetItemCooldown(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1147,7 +1151,7 @@ static int32_t Script_GetBagName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009BE0D0
+// OFFSET: 0x009BE0D0/0x140749FC0
 static bool BuildItemIconPath(int32_t itemId, char* buffer, uint32_t size) {
     if (!itemId) {
         return false;
@@ -1402,7 +1406,7 @@ static int32_t Script_GetContainerItemInfo(lua_State* L) {
     return 8;
 }
 
-// STATIC: 0x00D15B08
+// STATIC: 0x00D15B08/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "ContainerIDToInventoryID", &Script_ContainerIDToInventoryID },
     { "GetContainerNumSlots", &Script_GetContainerNumSlots },
@@ -1435,6 +1439,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetItemSearch", &Script_SetItemSearch },
 };
 
+// PROVEN: 087f1b7f IDENTICAL/UNPROVEN
 // OFFSET: 0x009BB440/0x140746C60
 void ContainerRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1442,6 +1447,7 @@ void ContainerRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: cd0c8151 IDENTICAL/UNPROVEN
 // OFFSET: 0x009BB470/0x140746CB0
 void ContainerUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

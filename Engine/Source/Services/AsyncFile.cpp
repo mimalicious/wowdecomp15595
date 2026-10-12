@@ -9,19 +9,19 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00CA48EC
+// STATIC: 0x00CA48EC/0x140B42EA0
 static const char* s_asyncQueueNames[2] = { "Disk Queue", "Net Queue" };
 
-// STATIC: 0x00CA48F4
+// STATIC: 0x00CA48F4/0x140B42EB0
 static uint32_t s_handlerTimeout = 100;
 
-// STATIC: 0x00CA48F8
+// STATIC: 0x00CA48F8/0x140B42EB4
 static int32_t s_topStreamingPriority = 0x7FFFFFFF;
 
-// STATIC: 0x00CA48FC
+// STATIC: 0x00CA48FC/0x140B42EB8
 static TSExplicitList<CAsyncQueue, offsetof(CAsyncQueue, m_link)> s_asyncQueueList;
 
-// STATIC: 0x00CA4908
+// STATIC: 0x00CA4908/0x140B42ED0
 static TSExplicitList<CAsyncThread, offsetof(CAsyncThread, m_link)> s_asyncThreadList;
 
 namespace AsyncFileRead {
@@ -29,7 +29,7 @@ namespace AsyncFileRead {
     TSExplicitList<CAsyncObject, offsetof(CAsyncObject, m_link)> s_asyncFileReadFreeList;
 }
 
-// STATIC: 0x00CA4920
+// STATIC: 0x00CA4920/0x140B42F00
 static TSExplicitList<CAsyncObject, offsetof(CAsyncObject, m_link)> s_asyncFileReadPostList;
 
 // STATIC: 0x00DD3D00/0x140CBA528
@@ -41,7 +41,7 @@ static void (*s_ingameStartCallback)();
 // STATIC: 0x00DD3D08/0x140CBA538
 static void (*s_ingameProgressCallback)(float, int32_t);
 
-// STATIC: 0x00DD3D0C
+// STATIC: 0x00DD3D0C/0x140CBA52C
 static int32_t s_progressCount;
 
 // STATIC: 0x00DD3D10/0x140CBA540
@@ -50,22 +50,22 @@ static void* s_asyncProgressCallbackParams;
 // STATIC: 0x00DD3D14/0x140CBA548
 static void (*s_asyncProgressCallback)(float, void*);
 
-// STATIC: 0x00DD3D18
+// STATIC: 0x00DD3D18/0x140CBA550
 static CAsyncObject* s_asyncWaitObject;
 
-// STATIC: 0x00DD3D1C
+// STATIC: 0x00DD3D1C/0x140C2E5D0
 static HPROPCONTEXT s_propContext;
 
-// STATIC: 0x00DD3D20
+// STATIC: 0x00DD3D20/0x140CBA568
 static CAsyncQueue* s_asyncQueues[2];
 
-// STATIC: 0x00DD3D28
+// STATIC: 0x00DD3D28/0x140CBA570
 static uint32_t s_threadSleep;
 
-// STATIC: 0x00DD3D2C
+// STATIC: 0x00DD3D2C/0x140CBA574
 static int32_t s_streamingError;
 
-// STATIC: 0x00DD3D30
+// STATIC: 0x00DD3D30/0x140CBA578
 static bool s_shuttingDown;
 
 namespace AsyncFileRead {
@@ -73,16 +73,16 @@ namespace AsyncFileRead {
     SEvent s_shutdownEvent(1, 0);
 }
 
-// STATIC: 0x00DD3D38
+// STATIC: 0x00DD3D38/0x140CBA588
 static TSGrowableArray<void (*)()> s_asyncPollHandlers;
 
-// STATIC: 0x00DD3D48
+// STATIC: 0x00DD3D48/0x140CBA5A0
 static TSGrowableArray<int32_t (*)()> s_asyncStatusHandlers;
 
 // STATIC: 0x00DD3D58/0x140CBA5B8
 SCritSect g_queueLock;
 
-// STATIC: 0x00DD3D80
+// STATIC: 0x00DD3D80/0x140CBA5E0
 static TSGrowableArray<CStreamingObj> s_streamingObjects;
 
 // PROVEN: e75ee842 IDENTICAL/IDENTICAL
@@ -99,7 +99,8 @@ void AsyncFileReadIngameProgressCallback(void (*startCallback)(), void (*progres
     s_ingameProgressCallback = progressCallback;
 }
 
-// OFFSET: 0x0053EA50
+// PROVEN: 619f3399 IDENTICAL/UNPROVEN
+// OFFSET: 0x0053EA50/0x1401994F0
 void AsyncFileGetNetQueueStatus(AsyncFileNetQueueStatus* status) {
     status->m_active = false;
     g_queueLock.Enter();
@@ -137,7 +138,7 @@ void AsyncFileReadLeaveQueueLock() {
     }
 }
 
-// PROVEN: bf657c8a IDENTICAL/NONE
+// PROVEN: bf657c8a IDENTICAL/UNPROVEN
 // OFFSET: 0x0053EB10/0x1401995D0
 float AsyncFileReadGetStreamingBandwidth() {
     if (s_asyncQueues[1]) {
@@ -147,7 +148,7 @@ float AsyncFileReadGetStreamingBandwidth() {
     return 0.0f;
 }
 
-// PROVEN: c850dd30 IDENTICAL/NONE
+// PROVEN: c850dd30 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB20/0x1401995F0
 static int CompareStreamingObjects(const void* a, const void* b) {
     int32_t priority1 = static_cast<const CStreamingObj*>(a)->m_priority;
@@ -160,25 +161,25 @@ static int CompareStreamingObjects(const void* a, const void* b) {
     return priority1 > priority2;
 }
 
-// PROVEN: d421f6a9 IDENTICAL/NONE
+// PROVEN: d421f6a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB50/0x140199610
 int32_t AsyncFileReadHasStreamingErrorOccurred() {
     return s_streamingError;
 }
 
-// PROVEN: e8da7b18 IDENTICAL/NONE
+// PROVEN: e8da7b18 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB60/0x140199620
 void AsyncFileReadSetStreamingError() {
     s_streamingError = 1;
 }
 
-// PROVEN: 2fac8f36 IDENTICAL/UNPROVEN
+// PROVEN: 2fac8f36 IDENTICAL/IDENTICAL
 // OFFSET: 0x0053EB70/0x140199630
 void AsyncFileReadResetStreamingError() {
     s_streamingError = 0;
 }
 
-// PROVEN: da6d66e9 IDENTICAL/NONE
+// PROVEN: da6d66e9 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053ED70/0x140199920
 int32_t AsyncFileReadGetStreamingQueue() {
     int32_t queue = 3;
@@ -210,7 +211,7 @@ int32_t AsyncFileReadGetStreamingQueue() {
     return queue;
 }
 
-// PROVEN: 337a9368 IDENTICAL/NONE
+// PROVEN: 337a9368 IDENTICAL/UNPROVEN
 // OFFSET: 0x0053EDF0/0x1401999A0
 int32_t AsyncFileReadIsStreaming() {
     g_queueLock.Enter();
@@ -226,8 +227,8 @@ int32_t AsyncFileReadIsStreaming() {
     return streaming;
 }
 
-// PROVEN: 0e5f5e4c IDENTICAL/NONE
-// OFFSET: 0x0053EE30
+// PROVEN: 0e5f5e4c IDENTICAL/UNPROVEN
+// OFFSET: 0x0053EE30/0x1401999F0
 int32_t AsyncFileReadIsDiskReading() {
     g_queueLock.Enter();
 
@@ -242,6 +243,7 @@ int32_t AsyncFileReadIsDiskReading() {
     return reading;
 }
 
+// PROVEN: 0ab3a170 DIFFERENT/IDENTICAL
 // OFFSET: 0x0053EE70/0x140199A40
 int32_t AsyncFileReadComputePriority(int32_t category, int32_t type, int32_t visible, float distanceSq) {
     float distance = sqrt(distanceSq);
@@ -303,6 +305,7 @@ static void AsyncFileReadUnlinkObject(CAsyncObject* object) {
     object->m_link.Unlink();
 }
 
+// PROVEN: 92c3fa09 IDENTICAL/NONE
 // OFFSET: 0x0053EFF0
 void AsyncFileReadUnloadPostList() {
     CAsyncObject* object;
@@ -316,6 +319,7 @@ void AsyncFileReadUnloadPostList() {
     }
 }
 
+// PROVEN: f4aec518 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053F060/0x140199BA0
 int32_t AsyncFileReadPollHandler(const void* data, void* param) {
     uint32_t start = OsGetAsyncTimeMs();
@@ -531,7 +535,7 @@ int32_t NetQueuePromoteLocalFiles(const void* data, void* param) {
 
 // OFFSET: 0x0053F800/0x14019A720
 void AsyncFileReadWait(CAsyncObject* object) {
-    // STATIC: 0x00DD3D94
+    // STATIC: 0x00DD3D94/0x140CBA5FC
     static int32_t s_waiting;
 
     if (s_waiting) {
@@ -810,7 +814,7 @@ CAsyncObject* AsyncFileReadAllocObject() {
     return object;
 }
 
-// PROVEN: c408728d IDENTICAL/NONE
+// PROVEN: c408728d IDENTICAL/DIFFERENT
 // OFFSET: 0x0053FFA0/0x14019A3B0
 void AsyncFileReadDestroyObject(CAsyncObject* object) {
     g_queueLock.Enter();
@@ -818,7 +822,7 @@ void AsyncFileReadDestroyObject(CAsyncObject* object) {
     g_queueLock.Leave();
 }
 
-// PROVEN: c5f4f3a2 IDENTICAL/NONE
+// PROVEN: c5f4f3a2 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053FFA0/0x14019A3B0
 void DefaultAsyncObjectCleanupCallback(CAsyncObject* object) {
     g_queueLock.Enter();
@@ -826,7 +830,7 @@ void DefaultAsyncObjectCleanupCallback(CAsyncObject* object) {
     g_queueLock.Leave();
 }
 
-// PROVEN: ec1efc1b IDENTICAL/NONE
+// PROVEN: ec1efc1b IDENTICAL/DIFFERENT
 // OFFSET: 0x0053FFD0/0x14019B180
 int32_t AsyncFileReadCancel(CAsyncObject* object, void (*callback)(CAsyncObject* object)) {
     int32_t result = 0;
@@ -932,6 +936,7 @@ void AsyncFileReadCreateObject(SFileImpl* file, uint8_t priority, int32_t urgent
     }
 }
 
+// PROVEN: 588facfd IDENTICAL/IDENTICAL
 // OFFSET: 0x005401F0/0x14019B4C0
 int32_t AsyncFileReadCreateObject(const char* name, uint8_t priority, int32_t urgent, int32_t noHash, CAsyncObject** result, void* buffer, void* userArg, void (*postload)(CAsyncObject*), void (*failed)(CAsyncObject*), uint16_t userFlags, uint32_t offset, uint32_t size) {
     if (noHash) {
@@ -959,7 +964,8 @@ int32_t AsyncFileReadCreateObject(const char* name, uint8_t priority, int32_t ur
     return 1;
 }
 
-// OFFSET: 0x00540370
+// PROVEN: d372c124 IDENTICAL/DIFFERENT
+// OFFSET: 0x00540370/0x14019B5C0
 CAsyncQueue::~CAsyncQueue() {
 }
 
@@ -974,6 +980,7 @@ CAsyncQueue::CAsyncQueue() {
     this->m_bandwidth = 0.0f;
 }
 
+// PROVEN: 50247a0b IDENTICAL/DIFFERENT
 // OFFSET: 0x00540460/0x14019B670
 CAsyncQueue* AsyncFileReadCreateQueue() {
     return s_asyncQueueList.NewNode(2, 0, 0);
@@ -1016,7 +1023,7 @@ void AsyncFileReadInitialize(uint32_t threadSleep, uint32_t handlerTimeout) {
     s_queueLockCount = 0;
 }
 
-// OFFSET: 0x005405E0
+// OFFSET: 0x005405E0/0x14019B8C0
 void AsyncFileReadDestroy() {
     s_shuttingDown = true;
 

@@ -2,7 +2,7 @@
 #include "WoW/Common/PhaseShiftShared.h"
 #include "Engine/Source/Base/CDataStore.h"
 
-// OFFSET: 0x00A32290
+// OFFSET: 0x00A32290/0x1407DC510
 int32_t PhaseShift_CompareSortedPhaseArray(uint32_t flagsA, const uint16_t* phasesA, int32_t countA, uint32_t flagsB, const uint16_t* phasesB, int32_t countB) {
     if ((flagsB & flagsA & 8) || ((flagsB | flagsA) & 1) || (flagsB & flagsA & 2)) {
         return 1;
@@ -75,7 +75,7 @@ int32_t PhaseShift_CompareSortedPhaseArray(uint32_t flagsA, const uint16_t* phas
     return 0;
 }
 
-// OFFSET: 0x00A32380
+// OFFSET: 0x00A32380/0x1407DC650
 int32_t CPhaseShift::operator==(const CPhaseShift& other) const {
     if (this->m_flags != other.m_flags) {
         return 0;
@@ -104,7 +104,7 @@ CPhaseShift& CPhaseShift::operator=(const CPhaseShift& source) {
     return *this;
 }
 
-// OFFSET: 0x00A324F0
+// OFFSET: 0x00A324F0/0x1407DC790
 void CPhaseShift::SetPhasesFromDataStore(CDataStore* msg) {
     msg->Get(this->m_flags);
 
@@ -117,6 +117,7 @@ void CPhaseShift::SetPhasesFromDataStore(CDataStore* msg) {
     }
 }
 
+// PROVEN: 64fff272 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A32570/0x1407DC830
 CPhaseShift::CPhaseShift() {
     this->m_flags = 0;

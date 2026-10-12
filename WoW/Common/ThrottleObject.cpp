@@ -1,8 +1,8 @@
 #include "WoW/Common/ThrottleObject.h"
 #include "Engine/Source/Os/TimeManager.h"
 
-// PROVEN: fb88bf89 IDENTICAL/NONE
-// OFFSET: 0x00A30350
+// PROVEN: fb88bf89 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A30350/0x1407DA250
 void ThrottleObject::Restore(const ThrottleObject& saved) {
     uint32_t now = OsGetAsyncTimeMs();
     this->m_limit = saved.m_limit;
@@ -11,7 +11,7 @@ void ThrottleObject::Restore(const ThrottleObject& saved) {
     this->m_startTime = now - saved.m_startTime;
 }
 
-// PROVEN: dd089d7b IDENTICAL/NONE
+// PROVEN: dd089d7b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30380/0x1407DA290
 bool ThrottleObject::IncrementAndCheck() {
     uint32_t now = OsGetAsyncTimeMs();

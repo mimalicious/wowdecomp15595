@@ -40,8 +40,8 @@ static void ConvertBool(CMDDEF* ptr, const char* string, int32_t* datachars) {
     }
 }
 
-// PROVEN: a322c91b IDENTICAL/NONE
-// OFFSET: 0x004B6670
+// PROVEN: a322c91b IDENTICAL/IDENTICAL
+// OFFSET: 0x004B6670/0x1400EDF20
 static void ConvertNumber(CMDDEF* ptr, const char* string, int32_t* datachars) {
     char* endptr = NULL;
 
@@ -62,7 +62,7 @@ static void ConvertNumber(CMDDEF* ptr, const char* string, int32_t* datachars) {
     }
 }
 
-// OFFSET: 0x004B6700
+// OFFSET: 0x004B6700/0x1400EDFF0
 static void ConvertString(CMDDEF* ptr, const char* string, int32_t* datachars) {
     *datachars = SStrLen(string);
 
@@ -78,7 +78,7 @@ static void ConvertString(CMDDEF* ptr, const char* string, int32_t* datachars) {
     }
 }
 
-// PROVEN: 59723438 IDENTICAL/NONE
+// PROVEN: 59723438 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B69F0/0x1400EE3F0
 static CMDDEF* FindFlagDef(const char* string, CMDDEF* firstdef, int32_t minlength) {
     int32_t strlength = SStrLen(string);
@@ -425,6 +425,7 @@ int32_t STORMAPI SCmdRegisterArgList(const _ARGLIST* listptr, uint32_t numargs) 
     return 1;
 }
 
+// PROVEN: aa99d0dc DIFFERENT/IDENTICAL
 // OFFSET: 0x004B70B0/0x1400EED10
 int32_t ProcessString(const char** stringptr, _PROCESSING* processing, CMDDEF** nextarg, int32_t (STORMAPI* extracallback)(const char*), void (STORMAPI* errorcallback)(_CMDERROR*)) {
     while (**stringptr) {
@@ -443,7 +444,7 @@ int32_t ProcessString(const char** stringptr, _PROCESSING* processing, CMDDEF** 
     return **stringptr == 0;
 }
 
-// PROVEN: 4cf24d18 IDENTICAL/DIFFERENT
+// PROVEN: 4cf24d18 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B7140/0x1400EEDF0
 int32_t STORMAPI SCmdGetBool(uint32_t id) {
     return SCmdGetNum(id) != 0;

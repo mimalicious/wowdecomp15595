@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[3] = { 0, 2, 0 };
 // STATIC: 0x00C1E054/0x140A12188
 const DBCMeta NamesProfanityRec::s_meta = { "DBFilesClient\\NamesProfanity.dbc", 3, 12, NamesProfanityRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 0350a707 IDENTICAL/NONE
+// PROVEN: 0350a707 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void NamesProfanityRec::FixupStrings(void* record, const char* strings) {
     NamesProfanityRec* rec = static_cast<NamesProfanityRec*>(record);

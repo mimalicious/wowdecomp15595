@@ -63,7 +63,6 @@ struct MailboxMessageInfo {
     /* 218C */ int32_t m_invoiceStackCount;
     /* 2190 */ MailAttachmentInfo m_attachments[16];
     /* 2B90 */ uint8_t m_deletePending;
-    /* 2B94 */ uint32_t unk_2B94;
 };
 
 struct SendMailItem {

@@ -10,49 +10,52 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F763F0
+// STATIC: 0x00F763F0/0x140E6C450
 bool CGLFGuildInfo::s_browsePending;
 
-// STATIC: 0x00F763F1
+// STATIC: 0x00F763F1/0x140E6C451
 bool CGLFGuildInfo::s_listed;
 
-// STATIC: 0x00F763F8
+// STATIC: 0x00F763F8/0x140E6C458
 uint64_t CGLFGuildInfo::s_selectedGuild;
 
-// STATIC: 0x00F76400
+// STATIC: 0x00F76400/0x140E6C460
 uint64_t CGLFGuildInfo::s_selectedApplicant;
 
-// STATIC: 0x00F76408
+// STATIC: 0x00F76408/0x140E6C468
 int32_t CGLFGuildInfo::s_recruitsLastUpdate;
 
-// STATIC: 0x00F7640C
+// STATIC: 0x00F7640C/0x140E6C470
 int32_t CGLFGuildInfo::s_numApplicationsRemaining;
 
 // STATIC: 0x00F76410
 JamLFGuildSettings CGLFGuildInfo::s_settings;
 
-// STATIC: 0x00F76824
+// STATIC: 0x00F76824/0x140E6C898
 TSGrowableArray<LFGuildBrowseData> CGLFGuildInfo::s_browseResults;
 
-// STATIC: 0x00F76834
+// STATIC: 0x00F76834/0x140E6C8B4
 TSGrowableArray<LFGuildRecruitData> CGLFGuildInfo::s_recruits;
 
-// STATIC: 0x00F76844
+// STATIC: 0x00F76844/0x140E6C8CC
 TSGrowableArray<LFGuildApplicationData> CGLFGuildInfo::s_applications;
 
-// OFFSET: 0x009EB9B0
+// PROVEN: 85b3fec8 IDENTICAL/IDENTICAL
+// OFFSET: 0x009EB9B0/0x1407849C0
 bool CGLFGuildInfo::ClientLFGuildRecruitListChangedHandler(ClientLfGuildApplicantListUpdated* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LF_GUILD_RECRUIT_LIST_CHANGED, NULL);
     return true;
 }
 
-// OFFSET: 0x009EB9D0
+// PROVEN: ac7bff11 IDENTICAL/IDENTICAL
+// OFFSET: 0x009EB9D0/0x1407849E0
 bool CGLFGuildInfo::ClientLFGuildMembershipListChangedHandler(ClientLfGuildApplicationsListChanged* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_LF_GUILD_MEMBERSHIP_LIST_CHANGED, NULL);
     return true;
 }
 
-// OFFSET: 0x009EBC10
+// PROVEN: 41bbb9be IDENTICAL/IDENTICAL
+// OFFSET: 0x009EBC10/0x140784C60
 void CGLFGuildInfo::ShutdownGame() {
     ClientLfGuildPostUpdated::s_handler = NULL;
     ClientLfGuildBrowseUpdated::s_handler = NULL;
@@ -63,7 +66,7 @@ void CGLFGuildInfo::ShutdownGame() {
     ClientLfGuildApplicationsListChanged::s_handler = NULL;
 }
 
-// OFFSET: 0x009EBC40
+// OFFSET: 0x009EBC40/0x140784CA0
 bool CGLFGuildInfo::ClientLFGuildPostHandler(ClientLfGuildPostUpdated* msg) {
     const JamLFGuildPost* post = msg->m_hasPost ? &msg->m_post : NULL;
 
@@ -80,7 +83,8 @@ bool CGLFGuildInfo::ClientLFGuildPostHandler(ClientLfGuildPostUpdated* msg) {
     return true;
 }
 
-// OFFSET: 0x009EBD20
+// PROVEN: ba13be1b IDENTICAL/IDENTICAL
+// OFFSET: 0x009EBD20/0x140784D70
 bool CGLFGuildInfo::ClientLFGuildCommandResultHandler(ClientLfGuildCommandResult* msg) {
     if (!msg->m_result) {
         CGGameUI::DisplayError(ERR_GUILD_INTERNAL);
@@ -89,7 +93,8 @@ bool CGLFGuildInfo::ClientLFGuildCommandResultHandler(ClientLfGuildCommandResult
     return true;
 }
 
-// OFFSET: 0x009EBD40
+// PROVEN: 6de3a50e IDENTICAL/DIFFERENT
+// OFFSET: 0x009EBD40/0x140784D90
 void CGLFGuildInfo::SendPost() {
     GlobalLFGuildSetGuildPost msg;
     msg.m_interests = CGLFGuildInfo::s_settings.m_interests;
@@ -101,6 +106,7 @@ void CGLFGuildInfo::SendPost() {
     ClientServices::Send(&msg);
 }
 
+// PROVEN: ea20f7b6 IDENTICAL/NONE
 // OFFSET: 0x009EBDD0
 void CGLFGuildInfo::GetLookingForGuildSettings(uint32_t& interests, uint32_t& availability, uint32_t& classRoles) {
     CVar* var = CVar::Lookup("lfGuildSettings");
@@ -142,7 +148,7 @@ void CGLFGuildInfo::SendBrowse() {
     ClientServices::Send(&msg);
 }
 
-// OFFSET: 0x009ED0B0
+// OFFSET: 0x009ED0B0/0x140786190
 void CGLFGuildInfo::ClearRecruitmentSettings(bool signal) {
     memset(&CGLFGuildInfo::s_settings, 0, sizeof(CGLFGuildInfo::s_settings));
     CGLFGuildInfo::s_settings.m_interests = 1;
@@ -211,11 +217,11 @@ bool CGLFGuildInfo::ClientLFGuildMembershipListHandler(ClientLfGuildMembershipLi
 // OFFSET: 0x009ED330/0x140786660
 void CGLFGuildInfo::InitializeGame() {
     CGLFGuildInfo::ClearRecruitmentSettings(false);
-    ClientLfGuildPostUpdated::s_handler = &CGLFGuildInfo::ClientLFGuildPostHandler;
-    ClientLfGuildBrowseUpdated::s_handler = &CGLFGuildInfo::ClientLFGuildBrowseHandler;
-    ClientLfGuildRecruitListUpdated::s_handler = &CGLFGuildInfo::ClientLFGuildRecruitsHandler;
-    ClientLfGuildCommandResult::s_handler = &CGLFGuildInfo::ClientLFGuildCommandResultHandler;
-    ClientLfGuildMembershipListUpdated::s_handler = &CGLFGuildInfo::ClientLFGuildMembershipListHandler;
-    ClientLfGuildApplicantListUpdated::s_handler = &CGLFGuildInfo::ClientLFGuildRecruitListChangedHandler;
-    ClientLfGuildApplicationsListChanged::s_handler = &CGLFGuildInfo::ClientLFGuildMembershipListChangedHandler;
+    ClientLfGuildPostUpdated::s_handler = JamHandlerEncode(&CGLFGuildInfo::ClientLFGuildPostHandler, g_jamHandlerKey_CFD344);
+    ClientLfGuildBrowseUpdated::s_handler = JamHandlerEncode(&CGLFGuildInfo::ClientLFGuildBrowseHandler, g_jamHandlerKey_CFF49C);
+    ClientLfGuildRecruitListUpdated::s_handler = JamHandlerEncode(&CGLFGuildInfo::ClientLFGuildRecruitsHandler, g_jamHandlerKey_CFEDB4);
+    ClientLfGuildCommandResult::s_handler = JamHandlerEncode(&CGLFGuildInfo::ClientLFGuildCommandResultHandler, g_jamHandlerKey_CFE94C);
+    ClientLfGuildMembershipListUpdated::s_handler = JamHandlerEncode(&CGLFGuildInfo::ClientLFGuildMembershipListHandler, g_jamHandlerKey_CFE774);
+    ClientLfGuildApplicantListUpdated::s_handler = JamHandlerEncode(&CGLFGuildInfo::ClientLFGuildRecruitListChangedHandler, g_jamHandlerKey_CFF2D0);
+    ClientLfGuildApplicationsListChanged::s_handler = JamHandlerEncode(&CGLFGuildInfo::ClientLFGuildMembershipListChangedHandler, g_jamHandlerKey_CFD344);
 }

@@ -253,7 +253,7 @@ static const size_t extra_pool_slop[JPOOL_NUMPOOLS] =
 
 /* Allocate a "small" object */
 // PROVEN: a4893248 IDENTICAL/NONE
-// OFFSET: 0x00B5E560
+// OFFSET: 0x00B5E560/0x140927470
 static void * alloc_small(j_common_ptr cinfo, int pool_id, size_t sizeofobject) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   small_pool_ptr hdr_ptr, prev_hdr_ptr;
@@ -344,7 +344,7 @@ static void * alloc_small(j_common_ptr cinfo, int pool_id, size_t sizeofobject) 
 
 /* Allocate a "large" object */
 // PROVEN: dd128d8c IDENTICAL/NONE
-// OFFSET: 0x00B5E6B0
+// OFFSET: 0x00B5E6B0/0x140927620
 static void FAR * alloc_large(j_common_ptr cinfo, int pool_id, size_t sizeofobject) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   large_pool_ptr hdr_ptr;
@@ -403,7 +403,7 @@ static void FAR * alloc_large(j_common_ptr cinfo, int pool_id, size_t sizeofobje
 
 /* Allocate a 2-D sample array */
 // PROVEN: 3e6324a1 IDENTICAL/NONE
-// OFFSET: 0x00B5E770
+// OFFSET: 0x00B5E770/0x140927700
 static JSAMPARRAY alloc_sarray(j_common_ptr cinfo, int pool_id, JDIMENSION samplesperrow, JDIMENSION numrows) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   JSAMPARRAY result;
@@ -451,7 +451,7 @@ static JSAMPARRAY alloc_sarray(j_common_ptr cinfo, int pool_id, JDIMENSION sampl
  */
 
 /* Allocate a 2-D coefficient-block array */
-// OFFSET: 0x00B5E820
+// OFFSET: 0x00B5E820/0x140927810
 static JBLOCKARRAY alloc_barray(j_common_ptr cinfo, int pool_id, JDIMENSION blocksperrow, JDIMENSION numrows) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   JBLOCKARRAY result;
@@ -532,7 +532,7 @@ static JBLOCKARRAY alloc_barray(j_common_ptr cinfo, int pool_id, JDIMENSION bloc
 
 /* Request a virtual 2-D sample array */
 // PROVEN: 05508278 IDENTICAL/NONE
-// OFFSET: 0x00B5E8D0
+// OFFSET: 0x00B5E8D0/0x140927930
 static jvirt_sarray_ptr request_virt_sarray(j_common_ptr cinfo, int pool_id, boolean pre_zero, JDIMENSION samplesperrow, JDIMENSION numrows, JDIMENSION maxaccess) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   jvirt_sarray_ptr result;
@@ -562,7 +562,7 @@ static jvirt_sarray_ptr request_virt_sarray(j_common_ptr cinfo, int pool_id, boo
 
 /* Request a virtual 2-D coefficient-block array */
 // PROVEN: 74ecadfe IDENTICAL/NONE
-// OFFSET: 0x00B5E940
+// OFFSET: 0x00B5E940/0x1409279D0
 static jvirt_barray_ptr request_virt_barray(j_common_ptr cinfo, int pool_id, boolean pre_zero, JDIMENSION blocksperrow, JDIMENSION numrows, JDIMENSION maxaccess) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   jvirt_barray_ptr result;
@@ -592,7 +592,7 @@ static jvirt_barray_ptr request_virt_barray(j_common_ptr cinfo, int pool_id, boo
 
 /* Allocate the in-memory buffers for any unrealized virtual arrays */
 // PROVEN: 950d4357 IDENTICAL/NONE
-// OFFSET: 0x00B5E9B0
+// OFFSET: 0x00B5E9B0/0x140927A70
 static void realize_virt_arrays(j_common_ptr cinfo) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   long space_per_minheight, maximum_space, avail_mem;
@@ -954,7 +954,7 @@ static JBLOCKARRAY access_virt_barray(j_common_ptr cinfo, jvirt_barray_ptr ptr, 
  */
 
 // PROVEN: 11e22da5 IDENTICAL/NONE
-// OFFSET: 0x00B5EF60
+// OFFSET: 0x00B5EF60/0x140928190
 static void free_pool(j_common_ptr cinfo, int pool_id) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   small_pool_ptr shdr_ptr;
@@ -1028,7 +1028,7 @@ static void free_pool(j_common_ptr cinfo, int pool_id) {
  */
 
 // PROVEN: d0230ace IDENTICAL/NONE
-// OFFSET: 0x00B5F070
+// OFFSET: 0x00B5F070/0x1409282F0
 static void self_destruct(j_common_ptr cinfo) {
   int pool;
 

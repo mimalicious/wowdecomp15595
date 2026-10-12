@@ -1,8 +1,8 @@
 #include "GuildStats_C.h"
 #include "Engine/Source/Base/CDataStore.h"
 
-// PROVEN: a7ac1d60 IDENTICAL/NONE
-// OFFSET: 0x00A28FE0
+// PROVEN: a7ac1d60 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A28FE0/0x1407D0C70
 void GuildStats_C::Pack(CDataStore* msg) {
     msg->Put(this->m_guildGuid);
     msg->PutString(this->m_name);
@@ -27,7 +27,7 @@ void GuildStats_C::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_numRanks));
 }
 
-// PROVEN: 9bd6c1da IDENTICAL/NONE
+// PROVEN: a6dd9b72 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FAD50/0x14027FF50
 int32_t GuildStats_C::GetRankIndex(int32_t rankId) {
     for (int32_t i = 0; i < this->m_numRanks; i++) {
@@ -39,7 +39,8 @@ int32_t GuildStats_C::GetRankIndex(int32_t rankId) {
     return -1;
 }
 
-// OFFSET: 0x005FAD90
+// PROVEN: 9bd6c1da IDENTICAL/IDENTICAL
+// OFFSET: 0x005FAD90/0x14027FF80
 void GuildStats_C::Unpack(CDataStore* msg) {
     msg->Get(this->m_guildGuid);
     msg->GetString(this->m_name, sizeof(this->m_name));

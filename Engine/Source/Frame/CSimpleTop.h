@@ -159,6 +159,7 @@ CSimpleSortedArray<T>::CSimpleSortedArray() {
     this->m_iterator = 0;
 }
 
+// PROVEN: 2d82baa4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00500E00/0x140146590
 template <class T>
 uint32_t CSimpleSortedArray<T>::Insert(T element) {
@@ -195,7 +196,7 @@ uint32_t CSimpleSortedArray<T>::Insert(T element) {
     return index;
 }
 
-// OFFSET: 0x00500E90
+// OFFSET: 0x00500E90/0x140143D80
 template <class T>
 void CSimpleSortedArray<T>::Remove(uint32_t index) {
     for (uint32_t i = index; i < this->m_count - 1; i++) {
@@ -213,5 +214,7 @@ void CSimpleSortedArray<T>::Remove(uint32_t index) {
         this->m_array.SetCount(this->m_maxcount);
     }
 }
+
+#include "Engine/Source/Frame/CSimpleTop.inl"
 
 #endif

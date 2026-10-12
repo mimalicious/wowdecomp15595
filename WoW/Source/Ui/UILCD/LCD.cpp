@@ -35,84 +35,85 @@
 #include "WoW/Source/Ui/WorldMap.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// STATIC: 0x00D27F28
+// STATIC: 0x00D27F28/0x140BE6838
 TSList<POIIcon, TSGetLink<POIIcon> > CGLCD::m_POIIcons;
 
-// STATIC: 0x00D27F34
+// STATIC: 0x00D27F34/0x140BE6850
 TSList<MAPDATA, TSGetLink<MAPDATA> > CGLCD::m_mapData;
 
-// STATIC: 0x0100A62C
+// STATIC: 0x0100A62C/0x140EE2178
 CEzLcd* CGLCD::m_lcd;
 
-// STATIC: 0x0100A648
+// STATIC: 0x0100A648/0x140EE219C
 int32_t CGLCD::m_chatAlertLines;
 
-// STATIC: 0x0100A650
+// STATIC: 0x0100A650/0x140EE21A4
 uint8_t CGLCD::initComplete;
 
-// STATIC: 0x0100A660
+// STATIC: 0x0100A660/0x140BE6870
 TSHashTable<LCDHANDLE, HASHKEY_CONSTSTRI> CGLCD::m_handles;
 
-// STATIC: 0x0100A630
+// STATIC: 0x0100A630/0x140EE2180
 CGPlayer_C* CGLCD::m_player;
 
-// STATIC: 0x0100A634
+// STATIC: 0x0100A634/0x140EE2188
 uint8_t CGLCD::m_inWorld;
 
-// STATIC: 0x0100A635
+// STATIC: 0x0100A635/0x140EE2189
 static uint8_t s_classFlag8;
 
-// STATIC: 0x0100A636
+// STATIC: 0x0100A636/0x140EE218A
 static uint8_t s_inBattlefield;
 
-// STATIC: 0x0100A5E8
+// STATIC: 0x0100A5E8/0x140EE2130
 static char s_battlefieldAlert[64];
 
-// STATIC: 0x0100A638
+// STATIC: 0x0100A638/0x140EE218C
 static uint32_t s_battlefieldPortExpiration;
 
-// STATIC: 0x0100A644
+// STATIC: 0x0100A644/0x140EE2198
 static uint32_t s_battlefieldStartTime;
 
-// STATIC: 0x00D27F08
+// STATIC: 0x00D27F08/0x140BE6810
 static int32_t s_currentScreen = -1;
 
-// STATIC: 0x00D27F0C
+// STATIC: 0x00D27F0C/0x140BE6814
 static int32_t s_previousScreen = -1;
 
-// STATIC: 0x00D27F10
+// STATIC: 0x00D27F10/0x140BE6818
 static int32_t s_subscreen;
 
-// STATIC: 0x00D27F14
+// STATIC: 0x00D27F14/0x140BE681C
 static int32_t s_alertDuration = 30000;
 
-// STATIC: 0x00D27F18
+// STATIC: 0x00D27F18/0x140BE6820
 static uint8_t s_alertExpired = 1;
 
-// STATIC: 0x0100A588
+// STATIC: 0x0100A588/0x140EE20D0
 static char s_idleLogoutText[32];
 
-// STATIC: 0x0100A5A8
+// STATIC: 0x0100A5A8/0x140EE20F0
 static char s_outbidText[32];
 
 // STATIC: 0x0100A5C8
 static char s_whisperFromText[32];
 
-// STATIC: 0x0100A637
+// STATIC: 0x0100A637/0x140EE218B
 static uint8_t s_battlefieldAlertShown;
 
-// STATIC: 0x0100A64C
+// STATIC: 0x0100A64C/0x140EE21A0
 static uint32_t s_alertExpireTime;
 
-// STATIC: 0x0100A651
+// STATIC: 0x0100A651/0x140EE21A5
 static uint8_t s_loginPending;
 
-// STATIC: 0x0100A654
+// STATIC: 0x0100A654/0x140EE21A8
 static TSFixedArray<CHATMESSAGE> s_chatMessages;
 
-// STATIC: 0x0100A68C
+// STATIC: 0x0100A68C/0x140EE21B8
 static HBITMAP s_lastBitmap;
 
+// PROVEN: a4a1adf3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B2F430/0x14090ADF0
 static bool IsLCDAvailable() {
     if (CGLCD::m_lcd->IsDeviceAvailable(1)) {
@@ -135,8 +136,8 @@ static bool IsLCDAvailable() {
     }
 }
 
-// PROVEN: e2157151 IDENTICAL/NONE
-// OFFSET: 0x00B2F540
+// PROVEN: e2157151 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B2F540/0x1408F80D0
 void CGLCD::ShowBattlefieldScreen() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         s_inBattlefield = 0;
@@ -144,14 +145,15 @@ void CGLCD::ShowBattlefieldScreen() {
     }
 }
 
-// PROVEN: 35f0d838 IDENTICAL/NONE
-// OFFSET: 0x00B2F580
+// PROVEN: 35f0d838 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B2F580/0x1408F8140
 void CGLCD::ClearWaitQueueScreen() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         CGLCD::SetScreen(0);
     }
 }
 
+// PROVEN: f45e02c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B32290/0x1408FC370
 void CGLCD::Initialize() {
     CGLCD::m_lcd = new (SMemAlloc(sizeof(CEzLcd), __FILE__, __LINE__, 0)) CEzLcd();
@@ -166,8 +168,8 @@ void CGLCD::Initialize() {
     EventRegister(EVENT_ID_IDLE, CGLCD::Update);
 }
 
-// PROVEN: 9b3811b6 IDENTICAL/NONE
-// OFFSET: 0x00B31450
+// PROVEN: 9b3811b6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B31450/0x1408FAF50
 void CGLCD::OnBattlefieldActive() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         s_inBattlefield = 1;
@@ -196,7 +198,7 @@ void CGLCD::Shutdown() {
     CGLCD::m_chatAlertLines = 0;
 }
 
-// PROVEN: de8493ca IDENTICAL/NONE
+// PROVEN: de8493ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00B312A0/0x1408FAC80
 void CGLCD::OnWhisper(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -204,39 +206,39 @@ void CGLCD::OnWhisper(const char* name) {
     }
 }
 
-// PROVEN: 4a6f5ef5 IDENTICAL/NONE
-// OFFSET: 0x00B31320
+// PROVEN: 4a6f5ef5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B31320/0x1408FAD60
 void CGLCD::AuctionOutbid(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         CGLCD::PushAlert(name, 3);
     }
 }
 
-// PROVEN: 523c9259 IDENTICAL/NONE
-// OFFSET: 0x00B31360
+// PROVEN: 523c9259 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B31360/0x1408FADD0
 void CGLCD::AuctionExpired(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && CGLCD::m_lcd->IsDeviceAvailable(1)) {
         CGLCD::PushAlert(name, 4);
     }
 }
 
-// PROVEN: 9eb1b045 IDENTICAL/NONE
-// OFFSET: 0x00B313B0
+// PROVEN: 9eb1b045 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B313B0/0x1408FAE50
 void CGLCD::AuctionSold(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && CGLCD::m_lcd->IsDeviceAvailable(1)) {
         CGLCD::PushAlert(name, 6);
     }
 }
 
-// PROVEN: c0f64b96 IDENTICAL/NONE
-// OFFSET: 0x00B31400
+// PROVEN: c0f64b96 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B31400/0x1408FAED0
 void CGLCD::AuctionWon(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && CGLCD::m_lcd->IsDeviceAvailable(1)) {
         CGLCD::PushAlert(name, 5);
     }
 }
 
-// PROVEN: 5ef735e4 IDENTICAL/NONE
+// PROVEN: 5ef735e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F770/0x1408F8390
 void CGLCD::HideBattlefieldAlert() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && s_currentScreen == 2) {
@@ -271,7 +273,7 @@ void CGLCD::OnBattlefieldReady(const BattlefieldStatusNode* status) {
     }
 }
 
-// PROVEN: 5d57db41 IDENTICAL/NONE
+// PROVEN: 5d57db41 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B2F890/0x1408F8570
 void CGLCD::EnterWorld() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -280,7 +282,7 @@ void CGLCD::EnterWorld() {
     }
 }
 
-// PROVEN: 903ae8cf IDENTICAL/NONE
+// PROVEN: 903ae8cf IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F470/0x1408F7FD0
 void CGLCD::LeaveWorld() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -312,7 +314,7 @@ void CGLCD::Login() {
     CEzLcd::SetText(CGLCD::GetHandle("BF_NOT_IN"), text);
 }
 
-// PROVEN: 0bb578e0 IDENTICAL/NONE
+// PROVEN: 0bb578e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F4B0/0x1408F8040
 HRESULT CEzLcd::SetText(void* handle, const char* text) {
     uint16_t buffer[1024];
@@ -320,7 +322,7 @@ HRESULT CEzLcd::SetText(void* handle, const char* text) {
     return CGLCD::m_lcd->SetText(handle, reinterpret_cast<const WCHAR*>(buffer));
 }
 
-// PROVEN: 5582db5a IDENTICAL/NONE
+// PROVEN: 5582db5a IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F500/0x1408F8090
 void CGLCD::SetScreen(int32_t screen) {
     if (screen == s_currentScreen) {
@@ -333,7 +335,7 @@ void CGLCD::SetScreen(int32_t screen) {
     CGLCD::m_lcd->HideGlobals();
 }
 
-// PROVEN: 228f97f3 IDENTICAL/NONE
+// PROVEN: 228f97f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F600/0x1408F81E0
 void CGLCD::Logout() {
     if (!CGLCD::m_lcd || !CGLCD::m_lcd->IsConnected() || !IsLCDAvailable()) {
@@ -349,12 +351,13 @@ void CGLCD::Logout() {
     }
 }
 
-// PROVEN: 89582a2b IDENTICAL/NONE
+// PROVEN: 89582a2b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F5F0/0x1408F81D0
 void LCDHANDLE::SetText(const char* text) {
     this->m_text.Copy(text);
 }
 
+// PROVEN: b0235c32 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F280/0x1408F7E00
 int32_t CGLCD::GetScreenFromName(const char* name) {
     if (!_stricmp(name, "WoWTitleScreen")) {
@@ -425,7 +428,7 @@ static bool IsAsianLocale() {
     return s_locale == 1 || (s_locale > 3 && s_locale <= 5);
 }
 
-// OFFSET: 0x00B2F5B0
+// OFFSET: 0x00B2F5B0/0x1408F81A0
 static void SetSubscreen(int32_t subscreen) {
     if (subscreen == 3) {
         CGLCD::m_lcd->ShowSubscreen(0);
@@ -436,7 +439,7 @@ static void SetSubscreen(int32_t subscreen) {
     }
 }
 
-// OFFSET: 0x00B2F8D0
+// OFFSET: 0x00B2F8D0/0x1408F85F0
 void CGLCD::CheckInput() {
     if (!CGLCD::m_inWorld) {
         return;
@@ -633,6 +636,7 @@ checkNavigation:
     }
 }
 
+// PROVEN: 4618ee8a IDENTICAL/UNPROVEN
 // OFFSET: 0x00B2FB90/0x1408F89D0
 void* CGLCD::GetHandle(const char* name) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
@@ -844,6 +848,7 @@ void CGLCD::SetStat(const char* name, const char* value) {
     }
 }
 
+// PROVEN: 40bbbba1 IDENTICAL/NONE
 // OFFSET: 0x00B30640
 void CGLCD::SetHandleText(const char* name, const char* text) {
     LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);
@@ -909,6 +914,7 @@ void CGLCD::DisplayRangedStats() {
     CGLCD::m_lcd->SetVisible(CGLCD::GetHandle("EXPERTISE_FLD"), 0);
 }
 
+// PROVEN: 38bc844b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B30B30/0x1408FA1F0
 void CGLCD::DisplayDefenseStats() {
     int32_t base;
@@ -1076,7 +1082,7 @@ void CGLCD::PushAlert(const char* text, int32_t a2) {
     CGLCD::SetAlertText();
 }
 
-// PROVEN: df3d1a61 IDENTICAL/NONE
+// PROVEN: df3d1a61 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B312E0/0x1408FACF0
 void CGLCD::IdleDisconnectWarning() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -1549,6 +1555,7 @@ bool CGLCD::LoadLCDBitmap(int32_t screen, XMLNode* node, CStatus* status) {
     return true;
 }
 
+// PROVEN: 7f3935e5 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B34070/0x1408FEBF0
 bool CGLCD::LoadLCDElement(int32_t screen, XMLNode* node, CStatus* status, int32_t subscreen) {
     const char* name = node->m_name.m_str;
@@ -1683,7 +1690,7 @@ bool CGLCD::LoadScreen(XMLNode* node, CStatus* status) {
     return true;
 }
 
-// OFFSET: 0x00B34650
+// OFFSET: 0x00B34650/0x1408FF3D0
 bool CGLCD::LoadLayout() {
     char fileName[260];
 

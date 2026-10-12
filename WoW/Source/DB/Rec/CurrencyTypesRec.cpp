@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[10] = { 0, 0, 2, 2, 0, 0, 0, 0, 0, 2 };
 // STATIC: 0x00C25F30/0x140A1BD10
 const DBCMeta CurrencyTypesRec::s_meta = { "DBFilesClient\\CurrencyTypes.dbc", 10, 44, CurrencyTypesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: d4e9e096 IDENTICAL/NONE
+// PROVEN: d4e9e096 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EC00/0x1407D84D0
 void CurrencyTypesRec::FixupStrings(void* record, const char* strings) {
     CurrencyTypesRec* rec = static_cast<CurrencyTypesRec*>(record);

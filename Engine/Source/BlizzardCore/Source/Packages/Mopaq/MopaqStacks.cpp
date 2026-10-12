@@ -34,7 +34,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_nullstack = {
     System_Mopaq::null_func
 };
 
-// STATIC: 0x00D06EAC
+// STATIC: 0x00D06EAC/0x140BB7480
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_basestack = {
     0x1,
     NULL,
@@ -50,7 +50,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_basestack = {
     NULL
 };
 
-// STATIC: 0x00D06EDC
+// STATIC: 0x00D06EDC/0x140BB74E0
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_mopaqstack = {
     0x2,
     NULL,
@@ -66,7 +66,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_mopaqstack = {
     NULL
 };
 
-// STATIC: 0x00D06F0C
+// STATIC: 0x00D06F0C/0x140BB7540
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_metadatastack = {
     0x200,
     NULL,
@@ -82,7 +82,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_metadatastack = {
     NULL
 };
 
-// STATIC: 0x00D06F3C
+// STATIC: 0x00D06F3C/0x140BB75A0
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_deltastack = {
     0x400,
     NULL,
@@ -98,7 +98,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_deltastack = {
     NULL
 };
 
-// STATIC: 0x00D06F70
+// STATIC: 0x00D06F70/0x140BB7610
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_checksumstack = {
     0x8,
     NULL,
@@ -114,7 +114,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_checksumstack = {
     NULL
 };
 
-// STATIC: 0x00D06FA0
+// STATIC: 0x00D06FA0/0x140BB7670
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_lockstack = {
     0x10,
     NULL,
@@ -130,7 +130,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_lockstack = {
     System_Mopaq::lock_operation
 };
 
-// STATIC: 0x00D06FD0
+// STATIC: 0x00D06FD0/0x140BB76D0
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_memorystack = {
     0x4,
     NULL,
@@ -146,7 +146,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_memorystack = {
     NULL
 };
 
-// STATIC: 0x00D07000
+// STATIC: 0x00D07000/0x140BB7730
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_alignstack = {
     0x40,
     NULL,
@@ -162,7 +162,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_alignstack = {
     NULL
 };
 
-// STATIC: 0x00D07030
+// STATIC: 0x00D07030/0x140BB7790
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_cachestack = {
     0x80,
     NULL,
@@ -178,7 +178,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_cachestack = {
     System_Mopaq::cache_abandon
 };
 
-// STATIC: 0x00D07060
+// STATIC: 0x00D07060/0x140BB77F0
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_verifystack = {
     0x100,
     NULL,
@@ -194,7 +194,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_verifystack = {
     NULL
 };
 
-// STATIC: 0x00D07090
+// STATIC: 0x00D07090/0x140BB7850
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_md5verifystack = {
     0x4000,
     NULL,
@@ -210,7 +210,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_md5verifystack = {
     NULL
 };
 
-// STATIC: 0x00D070C0
+// STATIC: 0x00D070C0/0x140BB78B0
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_offsetstack = {
     0x8000,
     NULL,
@@ -276,6 +276,7 @@ bool System_Mopaq::Push(Blizzard::Mopaq::Mpqsystem& system, Blizzard::Mopaq::Mpq
     return HoistAll(&system);
 }
 
+// PROVEN: a50344ad DIFFERENT/IDENTICAL
 // OFFSET: 0x007BA290/0x1404B1A90
 void System_Mopaq::InitStack(Blizzard::Mopaq::Mpqsystem& system, int32_t flags) {
     if (flags & 0x2) {
@@ -320,7 +321,7 @@ void System_Mopaq::InitStack(Blizzard::Mopaq::Mpqsystem& system, int32_t flags) 
     }
 }
 
-// OFFSET: 0x007B2FA0
+// OFFSET: 0x007B2FA0/0x1404A85E0
 bool System_Mopaq::ReadFromNext(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms, void* buffer, int64_t offset, int32_t count, int32_t* amount) {
     MpqParams read;
     memset(&read, 0, sizeof(read));
@@ -360,7 +361,7 @@ bool System_Mopaq::WriteToNext(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return system->m_next->m_write(system->m_next, &write);
 }
 
-// OFFSET: 0x007BF440
+// OFFSET: 0x007BF440/0x1404B8360
 bool System_Mopaq::base_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     const char* path = parms->m_path;
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
@@ -386,7 +387,7 @@ bool System_Mopaq::base_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parm
     return true;
 }
 
-// OFFSET: 0x007BA380
+// OFFSET: 0x007BA380/0x1404B1B90
 bool System_Mopaq::base_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Memory::Free(parms->m_handle->m_name);
     parms->m_handle->m_name = NULL;
@@ -399,18 +400,19 @@ bool System_Mopaq::base_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return true;
 }
 
-// PROVEN: de0749db IDENTICAL/NONE
-// OFFSET: 0x007B24E0
+// PROVEN: de0749db IDENTICAL/DIFFERENT
+// OFFSET: 0x007B24E0/0x1404A7640
 bool System_Mopaq::base_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::Read(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
 }
 
+// PROVEN: a34b2e2f IDENTICAL/NONE
 // OFFSET: 0x007B24B0
 bool System_Mopaq::base_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::Write(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
 }
 
-// OFFSET: 0x007B2510
+// OFFSET: 0x007B2510/0x1404A76C0
 bool System_Mopaq::base_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     System_File::Stacked::FileParms fileParms;
     fileParms.m_verb = offsetof(Blizzard::File::Filesystem, m_verbs.m_flush);
@@ -423,8 +425,8 @@ bool System_Mopaq::base_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return System_File::Stacked::s_manager->m_verbs.m_flush(System_File::Stacked::s_manager, &fileParms);
 }
 
-// PROVEN: 18e51b58 IDENTICAL/NONE
-// OFFSET: 0x007B2560
+// PROVEN: 18e51b58 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B2560/0x1404A7710
 bool System_Mopaq::base_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = Blizzard::File::GetFileInfo(parms->m_handle->m_file)->m_size;
     return true;
@@ -457,7 +459,7 @@ bool System_Mopaq::base_reload(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return ReopenFile(parms->m_handle->m_file);
 }
 
-// OFFSET: 0x007B2A20
+// OFFSET: 0x007B2A20/0x1404A7EB0
 bool System_Mopaq::lock_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     if (!system->m_next) {
         return false;
@@ -478,7 +480,7 @@ bool System_Mopaq::lock_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parm
     return result;
 }
 
-// OFFSET: 0x007BA5B0
+// OFFSET: 0x007BA5B0/0x1404B1D80
 bool System_Mopaq::lock_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     bool result = system->m_next ? CallNext(system, parms) : false;
     Blizzard::Lock::Mutex* mutex = parms->m_handle->m_lock;
@@ -491,7 +493,7 @@ bool System_Mopaq::lock_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return result;
 }
 
-// OFFSET: 0x007B2A80
+// OFFSET: 0x007B2A80/0x1404A7F30
 bool System_Mopaq::lock_operation(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Lock::Mutex* mutex = parms->m_handle->m_lock;
     Blizzard::Lock::MutexEnter(*mutex);
@@ -817,14 +819,14 @@ bool System_Mopaq::align_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// PROVEN: 7e82188f IDENTICAL/NONE
-// OFFSET: 0x007AB500
+// PROVEN: 7e82188f IDENTICAL/DIFFERENT
+// OFFSET: 0x007AB500/0x1404A1550
 bool System_Mopaq::align_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_align->m_size;
     return true;
 }
 
-// OFFSET: 0x007AB520
+// OFFSET: 0x007AB520/0x1404A1570
 bool System_Mopaq::align_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     int64_t size = parms->m_offset;
 
@@ -869,7 +871,7 @@ bool System_Mopaq::ChecksumData::GetRange(const void* buffer, int64_t offset, ui
     return true;
 }
 
-// OFFSET: 0x007AB470
+// OFFSET: 0x007AB470/0x1404A14B0
 bool System_Mopaq::ChecksumData::Update(Blizzard::Mopaq::MpqHandleRecord* handle, const void* buffer, int64_t offset, uint32_t count) {
     if (!this->GetRange(buffer, offset, count, &buffer, &count)) {
         return true;
@@ -891,23 +893,26 @@ bool System_Mopaq::ChecksumData::Update(Blizzard::Mopaq::MpqHandleRecord* handle
     return true;
 }
 
+// PROVEN: a093ba78 DIFFERENT/IDENTICAL
 // OFFSET: 0x007AB450/0x1404A1490
 void System_Mopaq::ChecksumData::ChecksumCrc(ChecksumData* data, const void* buffer, int32_t size) {
     data->m_crc = crc32(data->m_crc, static_cast<const Bytef*>(buffer), size);
 }
 
+// PROVEN: c790c2d3 IDENTICAL/NONE
 // OFFSET: 0x007B29D0
 void System_Mopaq::ChecksumData::ChecksumMd5(ChecksumData* data, const void* buffer, int32_t size) {
     data->m_md5.Process(buffer, size);
 }
 
+// PROVEN: a3718586 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B29F0/0x1404A7E70
 void System_Mopaq::ChecksumData::ChecksumCrcAndMd5(ChecksumData* data, const void* buffer, int32_t size) {
     data->m_crc = crc32(data->m_crc, static_cast<const Bytef*>(buffer), size);
     data->m_md5.Process(buffer, size);
 }
 
-// PROVEN: ba9a6b77 IDENTICAL/UNPROVEN
+// PROVEN: ba9a6b77 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BA4B0/0x1404B1CF0
 bool System_Mopaq::ChecksumData::FinishCrc(ChecksumData* data, Blizzard::Mopaq::MpqHandleRecord* handle) {
     handle->m_blockEntry.m_crc = data->m_crc;
@@ -1017,7 +1022,7 @@ void System_Mopaq::ChecksumData::InitCrcAndMd5() {
     this->m_finish = FinishCrcAndMd5;
 }
 
-// OFFSET: 0x007F4060
+// OFFSET: 0x007F4060/0x140501870
 void System_Mopaq::ChecksumData::InitSigning(Blizzard::Mopaq::MpqHandleRecord* handle) {
     new (&this->m_md5) Blizzard::Util::MD5();
     this->m_checksum = ChecksumMd5;
@@ -1025,7 +1030,7 @@ void System_Mopaq::ChecksumData::InitSigning(Blizzard::Mopaq::MpqHandleRecord* h
     System_SFile::s_signatures.GetEntry(handle->m_name, &handle->m_blockEntry.m_md5);
 }
 
-// OFFSET: 0x007F4CB0
+// OFFSET: 0x007F4CB0/0x1405028D0
 bool System_Mopaq::checksum_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     int64_t size = 0;
 
@@ -1074,7 +1079,7 @@ bool System_Mopaq::checksum_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* 
     return result;
 }
 
-// OFFSET: 0x007BA420
+// OFFSET: 0x007BA420/0x1404B1C40
 bool System_Mopaq::checksum_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Memory::Free(parms->m_handle->m_checksum);
 
@@ -1085,7 +1090,7 @@ bool System_Mopaq::checksum_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams*
     return CallNext(system, parms);
 }
 
-// OFFSET: 0x007B2980
+// OFFSET: 0x007B2980/0x1404A7E00
 bool System_Mopaq::checksum_operation(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
 
@@ -1100,7 +1105,7 @@ bool System_Mopaq::checksum_operation(Blizzard::Mopaq::Mpqsystem* system, MpqPar
     return handle->m_checksum->Update(handle, parms->m_buffer, parms->m_offset, parms->m_count);
 }
 
-// OFFSET: 0x007AB390
+// OFFSET: 0x007AB390/0x1404A1430
 bool System_Mopaq::checksum_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
 
@@ -1138,13 +1143,13 @@ void System_Mopaq::VerifyData::ChecksumTable::SetChecksum(uint32_t index, uint32
     this->m_entries[entry].m_checksums[index & 0x1F] = checksum;
 }
 
-// PROVEN: df145a72 IDENTICAL/NONE
-// OFFSET: 0x007B3090
+// PROVEN: df145a72 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B3090/0x1404A8720
 void System_Mopaq::VerifyData::ChecksumTable::ClearChecksum(uint32_t index) {
     this->m_entries[index >> 5].m_valid &= ~(0x80000000 >> (index & 0x1F));
 }
 
-// OFFSET: 0x007D91C0
+// OFFSET: 0x007D91C0/0x1404DB5C0
 void System_Mopaq::VerifyData::ChecksumTable::ForgetAllChecksumsAtOrBeyond(uint32_t index) {
     uint32_t entry = (index + 31) >> 5;
 
@@ -1155,7 +1160,7 @@ void System_Mopaq::VerifyData::ChecksumTable::ForgetAllChecksumsAtOrBeyond(uint3
     this->m_entries[entry].m_valid &= ~(0xFFFFFFFF >> (index & 0x1F));
 }
 
-// OFFSET: 0x007DBF90
+// OFFSET: 0x007DBF90/0x1404DF370
 bool System_Mopaq::verify_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     if (!system->m_next || !CallNext(system, parms)) {
         return false;
@@ -1176,7 +1181,7 @@ bool System_Mopaq::verify_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return true;
 }
 
-// OFFSET: 0x007D49D0
+// OFFSET: 0x007D49D0/0x1404D5120
 bool System_Mopaq::verify_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     delete parms->m_handle->m_verify;
 
@@ -1187,7 +1192,7 @@ bool System_Mopaq::verify_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return CallNext(system, parms);
 }
 
-// OFFSET: 0x007D9250
+// OFFSET: 0x007D9250/0x1404DB670
 bool System_Mopaq::verify_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     VerifyData* data = parms->m_handle->m_verify;
     int64_t offset = parms->m_offset;
@@ -1262,14 +1267,14 @@ bool System_Mopaq::verify_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return CallNext(system, parms);
 }
 
-// PROVEN: 2b711040 IDENTICAL/NONE
-// OFFSET: 0x007AB5D0
+// PROVEN: 2b711040 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AB5D0/0x1404A1620
 bool System_Mopaq::verify_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_verify->m_size;
     return true;
 }
 
-// OFFSET: 0x007D94F0
+// OFFSET: 0x007D94F0/0x1404DB930
 bool System_Mopaq::verify_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     VerifyData* data = parms->m_handle->m_verify;
 
@@ -1287,7 +1292,7 @@ bool System_Mopaq::verify_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPar
     return CallNext(system, parms);
 }
 
-// OFFSET: 0x007AB640
+// OFFSET: 0x007AB640/0x1404A1670
 bool System_Mopaq::offset_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     if (!system->m_next) {
         return false;
@@ -1302,21 +1307,21 @@ bool System_Mopaq::offset_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPar
     return result;
 }
 
-// OFFSET: 0x007AB680
+// OFFSET: 0x007AB680/0x1404A1640
 bool System_Mopaq::offset_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset += parms->m_handle->m_baseOffset;
 
     return system->m_next ? CallNext(system, parms) : false;
 }
 
-// OFFSET: 0x007AB680
+// OFFSET: 0x007AB680/0x1404A1640
 bool System_Mopaq::offset_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset += parms->m_handle->m_baseOffset;
 
     return system->m_next ? CallNext(system, parms) : false;
 }
 
-// OFFSET: 0x007AB680
+// OFFSET: 0x007AB680/0x1404A1640
 bool System_Mopaq::offset_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset += parms->m_handle->m_baseOffset;
 

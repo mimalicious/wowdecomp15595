@@ -52,13 +52,14 @@ uint32_t FrameTime::GetSessionTimeMs() {
     return FrameTime::s_curTimeMs - FrameTime::s_sessionStartMs;
 }
 
-// PROVEN: c2318d4e IDENTICAL/IDENTICAL
-// OFFSET: 0x008A0A00
+// PROVEN: bf5e5e9b IDENTICAL/IDENTICAL
+// OFFSET: 0x008A0A00/0x1405E21F0
 int32_t SessionTime_GetElapsed() {
     return FrameTime::s_curTimeMs - FrameTime::s_unk_EC74B4;
 }
 
-// OFFSET: 0x008A0A10
+// PROVEN: 5279d33b IDENTICAL/IDENTICAL
+// OFFSET: 0x008A0A10/0x1405E2200
 void SessionTime_ResetElapsed() {
     FrameTime::s_unk_EC74B4 = FrameTime::s_curTimeMs;
 }
@@ -68,11 +69,13 @@ bool SessionTime_IsAlternate() {
     return FrameTime::s_unk_EC74AC;
 }
 
-// OFFSET: 0x008A0A30
+// PROVEN: 34fb7d57 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A0A30/0x1405E2220
 void SessionTime_ResetAlternate() {
     FrameTime::s_unk_EC74AC = 1;
 }
 
+// PROVEN: c2318d4e IDENTICAL/IDENTICAL
 // OFFSET: 0x008A0A50/0x1405E2230
 void FrameTime::Update(float elapsedSec, uint32_t time) {
     FrameTime::s_curTimeMs = time;
@@ -81,7 +84,7 @@ void FrameTime::Update(float elapsedSec, uint32_t time) {
     FrameTime::s_tickTimeSec = elapsedSec;
 }
 
-// PROVEN: b04cd628 IDENTICAL/UNPROVEN
+// PROVEN: b04cd628 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A0AC0/0x1405E2270
 void FrameTime::Initialize(uint32_t time) {
     FrameTime::Update(0.0f, time);

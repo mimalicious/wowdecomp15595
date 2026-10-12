@@ -6,7 +6,7 @@
 CGGameObject_C_Type_Generic::CGGameObject_C_Type_Generic(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
-// OFFSET: 0x005A2BA0
+// OFFSET: 0x005A2BA0/0x14020F8E0
 bool CGGameObject_C_Type_Generic::CanHighlight() const {
     uint32_t highlightIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 18);
     GameObjectStats* highlightStats = this->m_owner->m_stats;

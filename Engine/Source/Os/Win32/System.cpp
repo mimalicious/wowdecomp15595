@@ -138,8 +138,8 @@ int32_t IOsGetProcessorFeatures(CpuIdInfo* info) {
 void OsOutputDebugString(const char* format, ...) {
 }
 
-// PROVEN: 8348ba01 IDENTICAL/NONE
-// OFFSET: 0x00875440
+// PROVEN: 8348ba01 UNPROVEN/IDENTICAL
+// OFFSET: 0x00875440/0x1405AC100
 void OsSystemEnableCpuLog() {
     s_cpuLogEnabled = 1;
 }
@@ -202,8 +202,8 @@ int32_t OsSleepInBackground() {
     return s_sleepInBackground;
 }
 
-// PROVEN: bd3e9443 IDENTICAL/NONE
-// OFFSET: 0x008755F0
+// PROVEN: bd3e9443 IDENTICAL/IDENTICAL
+// OFFSET: 0x008755F0/0x1405AC2D0
 void OsSetSleepInBackground(int32_t sleep) {
     s_sleepInBackground = sleep;
 }
@@ -214,8 +214,8 @@ uint32_t OsGetBackgroundSleepMs() {
     return s_backgroundSleepMs;
 }
 
-// PROVEN: 9b6d08c8 IDENTICAL/NONE
-// OFFSET: 0x00875610
+// PROVEN: 9b6d08c8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00875610/0x1405AC2F0
 void OsSetBackgroundSleepMs(uint32_t milliseconds) {
     s_backgroundSleepMs = milliseconds;
 }
@@ -486,7 +486,7 @@ int32_t IOsGetPowerProfFrequency() {
     return result;
 }
 
-// PROVEN: b58193b6 IDENTICAL/NONE
+// PROVEN: b58193b6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00875A20/0x1405AC7A0
 int32_t OsIsRemoteSession() {
     return GetSystemMetrics(SM_REMOTESESSION);

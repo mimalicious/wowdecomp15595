@@ -4,7 +4,7 @@
 #include "WoW/Source/Object/ObjectClient/Movement_C.h"
 #include "WoW/Source/Object/WGUID.h"
 
-// PROVEN: 3a79bfac IDENTICAL/NONE
+// PROVEN: 3a79bfac IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3AE10/0x140907B00
 void SpellPutCastTargets(const SpellCast* data, CDataStore* msg) {
     msg->Put(data->m_targetFlags);
@@ -44,7 +44,7 @@ void SpellPutCastTargets(const SpellCast* data, CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x00B3AF20
+// OFFSET: 0x00B3AF20/0x140907C10
 void SpellGetCastTargets(SpellCast* data, CDataStore* msg) {
     msg->Get(data->m_targetFlags);
     SmartGUID guid;

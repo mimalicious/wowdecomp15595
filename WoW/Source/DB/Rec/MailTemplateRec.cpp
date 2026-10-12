@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[3] = { 0, 2, 2 };
 // STATIC: 0x00C234F0/0x140A18790
 const DBCMeta MailTemplateRec::s_meta = { "DBFilesClient\\MailTemplate.dbc", 3, 12, MailTemplateRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: c6b08f42 IDENTICAL/NONE
+// PROVEN: c6b08f42 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E9B0/0x1407D8110
 void MailTemplateRec::FixupStrings(void* record, const char* strings) {
     MailTemplateRec* rec = static_cast<MailTemplateRec*>(record);

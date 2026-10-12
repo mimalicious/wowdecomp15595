@@ -60,26 +60,8 @@ float NTempest::Distance(const CAaBox& box, const C3Vector& point) {
     return sqrt(dy * dy + (x - point.x) * (x - point.x) + (z - point.z) * (z - point.z));
 }
 
-// INLINED
-float NTempest::DistanceSquared(const CAaBox& box, const C2Vector& point) {
-    float x = box.b.x <= point.x ? (box.t.x >= point.x ? point.x : box.t.x) : box.b.x;
-    float y = box.b.y <= point.y ? (box.t.y >= point.y ? point.y : box.t.y) : box.b.y;
-    float dy = y - point.y;
-    return (x - point.x) * (x - point.x) + dy * dy;
-}
-
-// INLINED
-float NTempest::DistanceSquared(const CAaBox& box, const C3Vector& point) {
-    float x = box.b.x <= point.x ? (box.t.x >= point.x ? point.x : box.t.x) : box.b.x;
-    float y = box.b.y <= point.y ? (box.t.y >= point.y ? point.y : box.t.y) : box.b.y;
-    float z = box.b.z <= point.z ? (box.t.z >= point.z ? point.z : box.t.z) : box.b.z;
-    float dy = y - point.y;
-    float dz = z - point.z;
-    return dy * dy + (x - point.x) * (x - point.x) + dz * dz;
-}
-
-// PROVEN: d5bbbd79 IDENTICAL/NONE
-// OFFSET: 0x00B08BA0
+// PROVEN: d5bbbd79 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B08BA0/0x1408CC200
 bool NTempest::Intersect2dSegments(const C2Vector& a0, const C2Vector& a1, const C2Vector& b0, const C2Vector& b1) {
     float ax = a1.x - a0.x;
     float ay = a1.y - a0.y;
@@ -279,7 +261,7 @@ bool NTempest::Intersect(const C3Ray& ray, const CAaBox& box, float* t, C3Vector
 }
 
 // PROVEN: 0aaa4951 IDENTICAL/NONE
-// OFFSET: 0x00B09180
+// OFFSET: 0x00B09180/0x1408CC820
 bool NTempest::Intersect2d(const CAaBox& box, const CAaSphere& sphere, SolidIntersect mode) {
     return Intersect2dBoxSphere(&box.b.x, &box.t.x, &sphere.c.x, sphere.r, mode);
 }
@@ -408,7 +390,7 @@ bool NTempest::Intersect(const C3Ray& ray, const C3Vector* verts, const uint16_t
     return true;
 }
 
-// OFFSET: 0x00B098E0
+// OFFSET: 0x00B098E0/0x1408CCFC0
 bool NTempest::Intersect(const C3Ray& ray, const C3Vector* verts, const uint32_t* indices, float* t, C2Vector* uv, float tolerance) {
     float minBound = -tolerance;
     float maxBound = tolerance + 1.0f;
@@ -504,7 +486,7 @@ float NTempest::DistanceSquared(const C3Segment& segment, const C3Vector& point,
     return dz * dz + dy * dy + dx * dx;
 }
 
-// OFFSET: 0x004C6C90
+// OFFSET: 0x004C6C90/0x140101F60
 void NTempest::SmoothDamp(C3Vector& value, C3Vector& velocity, const C3Vector& target, float omega, float deltaTime, float decay) {
     float end = target.x;
     float delta = value.x - end;
@@ -615,7 +597,7 @@ float NTempest::DistanceFromPolygonEdge(const C3Vector& point, const C3Vector* v
     return sqrt(best);
 }
 
-// PROVEN: d2d31980 IDENTICAL/NONE
+// PROVEN: d2d31980 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B08460/0x1408CB950
 float NTempest::DistanceFromPolygon(const C3Vector& point, const C3Vector* verts, uint32_t count, const C4Plane& plane) {
     C3Vector hit = point;
@@ -744,7 +726,7 @@ void HSVtoRGB(const C3Vector& hsv, C3Vector& rgb) {
     }
 }
 
-// OFFSET: 0x00B08810
+// OFFSET: 0x00B08810/0x1408CBEC0
 float PerlinNoise2D(float x, float y, int32_t octaves) {
     float amplitude = 1.0f;
     float total = 0.0f;

@@ -10,4 +10,9 @@ inline int32_t CSimpleEditBox::GetObjectType() {
     return CSimpleEditBox::s_objectType;
 }
 
+// INLINED
+inline CSimpleFontedFrameFont::CSimpleFontedFrameFont(CSimpleFontedFrame* frame) {
+    this->m_frame = frame;
+}
+
 #endif

@@ -33,6 +33,7 @@ static const unsigned int SIZEOF_METABUF = (255 * 16) + 1;
 	[SEE_ALSO]
 ]
 */
+// PROVEN: fc4df9e9 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ACE260/0x140898C20
 NetFile::NetFile()
 {
@@ -103,7 +104,7 @@ FMOD_RESULT NetFile::shutDown()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 83bb6124 IDENTICAL/UNPROVEN
+// PROVEN: 83bb6124 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACCD50/0x140897500
 FMOD_RESULT NetFile::parseUrl(char *url, char *host, int hostlen, char *auth, int authlen, unsigned short *port, char *file, const int filelen, bool *mms)
 {
@@ -757,7 +758,7 @@ FMOD_RESULT NetFile::openAsMMS(const char *name_or_data, char *host, char *file,
 ]
 */
 
-// PROVEN: b3b225e6 IDENTICAL/UNPROVEN
+// PROVEN: b3b225e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACDBF0/0x140898480
 FMOD_RESULT NetFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
@@ -844,7 +845,7 @@ FMOD_RESULT NetFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 015da06a IDENTICAL/UNPROVEN
+// PROVEN: 015da06a IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACDD10/0x140898600
 FMOD_RESULT NetFile::reallyRead(void *buffer, unsigned int size, unsigned int *rd)
 {

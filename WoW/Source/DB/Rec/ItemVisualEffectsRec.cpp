@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C1D168/0x140A10FC8
 const DBCMeta ItemVisualEffectsRec::s_meta = { "DBFilesClient\\ItemVisualEffects.dbc", 2, 8, ItemVisualEffectsRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: cfd1f086 IDENTICAL/NONE
+// PROVEN: cfd1f086 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ItemVisualEffectsRec::FixupStrings(void* record, const char* strings) {
     ItemVisualEffectsRec* rec = static_cast<ItemVisualEffectsRec*>(record);

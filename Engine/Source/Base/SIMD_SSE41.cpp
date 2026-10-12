@@ -4,7 +4,7 @@
 #include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 
-// OFFSET: 0x00491070
+// OFFSET: 0x00491070/0x1400B5FF0
 static uint32_t PlaneMask_SSE41(int32_t count, const C4Plane* planes, const CAaBox* box) {
     __m128 one = _mm_set1_ps(1.0f);
     __m128 bottom = _mm_insert_ps(_mm_loadu_ps(&box->b.x), one, 0xF0);
@@ -19,8 +19,8 @@ static uint32_t PlaneMask_SSE41(int32_t count, const C4Plane* planes, const CAaB
     return mask ^ 0x3F;
 }
 
-// PROVEN: 46c85922 IDENTICAL/NONE
-// OFFSET: 0x004910F0
+// PROVEN: 46c85922 IDENTICAL/UNPROVEN
+// OFFSET: 0x004910F0/0x1400B6050
 void SIMD::Init_SSE41(SIMD::FunctionTable* table) {
     table->PlaneMask = PlaneMask_SSE41;
 }

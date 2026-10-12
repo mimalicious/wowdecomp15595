@@ -65,16 +65,16 @@ static const uint32_t s_particleFrames[5][8] = {
     { 17, 18, 19, 20, 21, 22, 23, 24 },
 };
 
-// PROVEN: 1c2a908c IDENTICAL/NONE
-// OFFSET: 0x0077CC80
+// PROVEN: 1c2a908c IDENTICAL/IDENTICAL
+// OFFSET: 0x0077CC80/0x1404696C0
 Particulate::~Particulate() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);
     }
 }
 
-// PROVEN: d0dbafd4 IDENTICAL/NONE
-// OFFSET: 0x0077CCA0
+// PROVEN: d0dbafd4 IDENTICAL/IDENTICAL
+// OFFSET: 0x0077CCA0/0x1404696E0
 void Particulate::SetScale(float scale) {
     this->m_scale = scale;
 }
@@ -99,7 +99,7 @@ void Particulate::InitParticles(uint32_t liquidType) {
     this->m_liquidType = liquidType;
 }
 
-// OFFSET: 0x0077D750
+// OFFSET: 0x0077D750/0x14046A120
 void Particulate::InitMovement() {
     float theta = CRandom::sfloat_(g_rndSeed) * 3.1415927f;
     float phi = CRandom::sfloat_(g_rndSeed) * 3.1415927f;
@@ -297,7 +297,7 @@ void Particulate::Render(CWorldView* view) {
     GxXformPop(GxXform_World);
 }
 
-// OFFSET: 0x0077EEF0
+// OFFSET: 0x0077EEF0/0x14046C080
 void Particulate::SetTexture(const char* textureName) {
     if (this->m_texture) {
         TextureRelease(this->m_texture);
@@ -310,7 +310,7 @@ void Particulate::SetTexture(const char* textureName) {
     SysMsgAdd(&status);
 }
 
-// OFFSET: 0x0077F1A0
+// OFFSET: 0x0077F1A0/0x14046C3D0
 Particulate::Particulate(float scale, float range, const char* textureName) {
     this->m_lastCamPos = C3Vector(0.0f, 0.0f, 0.0f);
     this->m_enabled = 0;

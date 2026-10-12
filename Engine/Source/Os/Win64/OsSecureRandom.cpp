@@ -24,7 +24,7 @@ struct OsSecureRandomEntropy {
     /* 0080 */ volatile LONG* m_counterAddress;
 };
 
-// STATIC: 0x00EC6DDC
+// STATIC: 0x00EC6DDC/0x140DB91AC
 static volatile LONG s_counter;
 
 // PROVEN: 15fe9366 IDENTICAL/DIFFERENT

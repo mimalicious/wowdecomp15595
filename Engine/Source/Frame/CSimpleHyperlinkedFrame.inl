@@ -10,4 +10,11 @@ inline int32_t CSimpleHyperlinkButton::GetObjectType() {
     return CSimpleHyperlinkButton::s_objectType;
 }
 
+// INLINED
+inline CSimpleHyperlinkButton::CSimpleHyperlinkButton(CSimpleHyperlinkedFrame* parent) : CSimpleButton(parent) {
+    this->SetClickAction(0xFFFFFFFF80000000ULL);
+    this->m_linkData = NULL;
+    this->m_linkText = NULL;
+}
+
 #endif

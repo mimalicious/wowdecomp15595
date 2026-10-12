@@ -21,7 +21,7 @@ struct PartialFileHeader {
 };
 #pragma pack(pop)
 
-// STATIC: 0x00BCA138
+// STATIC: 0x00BCA138/0x1409B8970
 static const uint8_t s_bitCount[256] = {
     0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
     1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
@@ -44,10 +44,10 @@ static const uint8_t s_bitCount[256] = {
 // STATIC: 0x00BCD184
 static const uint32_t s_retryDelays[11] = { 100, 500, 1000, 2000, 3000, 5000, 7000, 10000, 12000, 15000, 1 };
 
-// STATIC: 0x00D07424
+// STATIC: 0x00D07424/0x140BB7F30
 static Blizzard::Storage::DefaultBitFieldAllocator s_defaultBitFieldAllocator;
 
-// STATIC: 0x00D07184
+// STATIC: 0x00D07184/0x140BB7A30
 Blizzard::Storage::BitFieldAllocator* Blizzard::Storage::s_bitFieldAllocator = &s_defaultBitFieldAllocator;
 
 // STATIC: 0x00EBA768
@@ -107,7 +107,7 @@ static Blizzard::File::StreamRecord* CreateLockFile(const char* path) {
     return NULL;
 }
 
-// PROVEN: 8bf4389c IDENTICAL/DIFFERENT
+// PROVEN: 8bf4389c IDENTICAL/IDENTICAL
 // OFFSET: 0x007AC1F0/0x1404A2010
 int64_t Blizzard::Storage::BitField::CountSet() const {
     int64_t count = 0;
@@ -119,7 +119,7 @@ int64_t Blizzard::Storage::BitField::CountSet() const {
     return count;
 }
 
-// OFFSET: 0x007AC140
+// OFFSET: 0x007AC140/0x1404A1F70
 bool Blizzard::Storage::BitField::IsSetUpTo(int32_t count) const {
     int32_t words = count / 64;
     int32_t rest = count % 64;
@@ -159,8 +159,8 @@ bool Blizzard::Storage::BitField::IsSetUpTo(int32_t count) const {
 Blizzard::Storage::BitFieldAllocator::~BitFieldAllocator() {
 }
 
-// PROVEN: d014b02f IDENTICAL/NONE
-// OFFSET: 0x007AC130
+// PROVEN: d014b02f IDENTICAL/IDENTICAL
+// OFFSET: 0x007AC130/0x1404A1F60
 Blizzard::Storage::BitField* Blizzard::Storage::DefaultBitFieldAllocator::Attach(const char* name, int64_t bits, BitField* field) {
     return field;
 }
@@ -183,7 +183,7 @@ Blizzard::Storage::BitField* Blizzard::Storage::DefaultBitFieldAllocator::Create
     return field;
 }
 
-// PROVEN: a19d4a21 IDENTICAL/NONE
+// PROVEN: a19d4a21 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BB650/0x1404AA190
 void Blizzard::Storage::DefaultBitFieldAllocator::Destroy(BitField* field) {
     if (field) {
@@ -230,7 +230,7 @@ Blizzard::Storage::BitField* Blizzard::Storage::SharedBitFieldAllocator::Attach(
     return shared;
 }
 
-// PROVEN: 72a97986 IDENTICAL/NONE
+// PROVEN: 72a97986 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AC290/0x1404A20D0
 void Blizzard::Storage::ShutdownBitFieldAllocator() {
     if (s_bitFieldAllocator != &s_defaultBitFieldAllocator && s_bitFieldAllocator) {
@@ -240,6 +240,7 @@ void Blizzard::Storage::ShutdownBitFieldAllocator() {
     s_bitFieldAllocator = NULL;
 }
 
+// PROVEN: dde824a4 UNPROVEN/IDENTICAL
 // OFFSET: 0x007BC210/0x1404B4040
 void Blizzard::Storage::InitializeBitFieldAllocator(int32_t mode) {
     if (mode == 1) {
@@ -324,7 +325,7 @@ bool Blizzard::Storage::LockFile::Acquire() {
     return this->m_file != NULL;
 }
 
-// PROVEN: 16593951 IDENTICAL/NONE
+// PROVEN: 16593951 IDENTICAL/DIFFERENT
 // OFFSET: 0x007C3980/0x1404BDFC0
 bool Blizzard::Storage::LockFile::IsStale(uint32_t seconds) {
     if (this->m_file) {
@@ -518,7 +519,7 @@ bool Blizzard::Storage::PartialFile::Write(const void* buffer, int64_t offset, i
     return result;
 }
 
-// PROVEN: 7dccacc3 IDENTICAL/DIFFERENT
+// PROVEN: 7dccacc3 IDENTICAL/IDENTICAL
 // OFFSET: 0x007EB6E0/0x1404F8340
 bool Blizzard::Storage::PartialFile::Flush() {
     if (this->m_dirtyStart < 0 || this->m_dirtyEnd < 0) {
@@ -700,7 +701,7 @@ int64_t Blizzard::Storage::PartialFile::GetLocalBytes(int64_t offset, int64_t si
     return total;
 }
 
-// PROVEN: 84bc1815 IDENTICAL/NONE
+// PROVEN: 84bc1815 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B3F50/0x1404A99A0
 bool Blizzard::Storage::PartialFile::Invalidate(int64_t offset, int64_t size) {
     if (!this->m_locality) {
@@ -727,13 +728,13 @@ bool Blizzard::Storage::PartialFile::Invalidate(int64_t offset, int64_t size) {
     return true;
 }
 
-// PROVEN: 533e821a IDENTICAL/DIFFERENT
+// PROVEN: 533e821a IDENTICAL/IDENTICAL
 // OFFSET: 0x007C6290/0x1404C1360
 bool Blizzard::Storage::PartialFile::IsCompleted() const {
     return this->m_completed;
 }
 
-// PROVEN: 22129c06 IDENTICAL/NONE
+// PROVEN: 22129c06 IDENTICAL/IDENTICAL
 // OFFSET: 0x007C62A0/0x1404C1370
 bool Blizzard::Storage::PartialFile::IsReadOnly() const {
     return this->m_lock.m_file == NULL;
@@ -825,8 +826,8 @@ void Blizzard::Storage::PartialFile::GetChunkRange(int32_t* chunks, int64_t offs
     chunks[1] = static_cast<int32_t>((size + offset - 1) / this->GetChunkSize());
 }
 
-// PROVEN: 415eaeb8 IDENTICAL/NONE
-// OFFSET: 0x007B3FE0
+// PROVEN: 415eaeb8 IDENTICAL/UNPROVEN
+// OFFSET: 0x007B3FE0/0x1404A9A80
 bool Blizzard::Storage::PartialFile::IsLocalityComplete() {
     int64_t fileSize = this->m_fileSize;
     this->GetChunkSize();
@@ -872,7 +873,7 @@ void Blizzard::Storage::PartialFile::MakeSparse() {
     }
 }
 
-// OFFSET: 0x007EDB50
+// OFFSET: 0x007EDB50/0x1404FA020
 bool Blizzard::Storage::PartialFile::ParseFile() {
     Blizzard::File::FileInfo info;
 
@@ -1218,25 +1219,25 @@ Blizzard::Storage::PartialFile* Blizzard::Storage::PartialFile::CreateShared(Bli
     return partialFile;
 }
 
-// PROVEN: ae2342d8 IDENTICAL/NONE
-// OFFSET: 0x007C3810
+// PROVEN: ae2342d8 IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Storage::CacheSource::Read(void* buffer, int64_t offset, int64_t size) {
     return false;
 }
 
-// PROVEN: f1d862be IDENTICAL/NONE
-// OFFSET: 0x007C3810
+// PROVEN: f1d862be IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Storage::CacheSource::FindMissing(int64_t offset, int64_t size, ChunkRange* range) {
     return false;
 }
 
-// PROVEN: 57fce6fc IDENTICAL/NONE
-// OFFSET: 0x007C3810
+// PROVEN: 57fce6fc IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Storage::CacheSource::GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) {
     return false;
 }
 
-// PROVEN: f84f7257 IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: f84f7257 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void Blizzard::Storage::CacheSource::AlignRange(ChunkRange* range) {
 }

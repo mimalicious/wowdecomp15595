@@ -73,4 +73,6 @@ void FrameXML_ReleaseHashNode(const char* name);
 void FrameXML_SetDebugLevel(int32_t level);
 bool FrameXML_StoreHashNode(linkObject* node, const char* name, const char* taint, CStatus* status);
 
+#include "Engine/Source/FrameXML/FrameXML.inl"
+
 #endif

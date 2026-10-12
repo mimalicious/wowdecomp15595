@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[7] = { 0, 2, 0, 0, 3, 3, 3 };
 // STATIC: 0x00C206D8/0x140A14F80
 const DBCMeta SpellVisualKitAreaModelRec::s_meta = { "DBFilesClient\\SpellVisualKitAreaModel.dbc", 7, 28, SpellVisualKitAreaModelRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: ae7a67d9 IDENTICAL/NONE
+// PROVEN: ae7a67d9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void SpellVisualKitAreaModelRec::FixupStrings(void* record, const char* strings) {
     SpellVisualKitAreaModelRec* rec = static_cast<SpellVisualKitAreaModelRec*>(record);

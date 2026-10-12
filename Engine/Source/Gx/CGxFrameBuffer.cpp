@@ -1,9 +1,9 @@
 #include "Engine/Source/Gx/CGxFrameBuffer.h"
 
-// STATIC: 0x00D09498
+// STATIC: 0x00D09498/0x140BBB2F8
 uint32_t CGxFrameBuffer::s_nextVersion;
 
-// OFFSET: 0x00856350
+// OFFSET: 0x00856350/0x140587000
 CGxFrameBuffer::CGxFrameBuffer() {
     this->m_version = 0;
     this->m_targets[0].m_texture = NULL;
@@ -40,7 +40,7 @@ int32_t CGxFrameBuffer::Attach(EGxBuffer buffer, CGxTex* texture, uint32_t plane
     return count;
 }
 
-// PROVEN: b2b9910c IDENTICAL/NONE
+// PROVEN: b2b9910c IDENTICAL/IDENTICAL
 // OFFSET: 0x008563C0/0x140587080
 int32_t CGxFrameBuffer::Finalize() {
     uint32_t version = CGxFrameBuffer::s_nextVersion;

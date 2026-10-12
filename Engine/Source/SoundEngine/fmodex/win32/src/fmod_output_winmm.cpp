@@ -1210,7 +1210,7 @@ FMOD_RESULT F_CALLBACK OutputWinMM::getNumDriversCallback(FMOD_OUTPUT_STATE *out
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8c1effdc IDENTICAL/UNPROVEN
+// PROVEN: 8c1effdc IDENTICAL/IDENTICAL
 // OFFSET: 0x00AE8FD0/0x1408B1190
 FMOD_RESULT F_CALLBACK OutputWinMM::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
@@ -1480,7 +1480,7 @@ FMOD_RESULT F_CALLBACK OutputWinMM::recordGetNumDriversCallback(FMOD_OUTPUT_STAT
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e16455d6 IDENTICAL/UNPROVEN
+// PROVEN: e16455d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AE91D0/0x1408B1390
 FMOD_RESULT F_CALLBACK OutputWinMM::recordGetDriverInfoCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {

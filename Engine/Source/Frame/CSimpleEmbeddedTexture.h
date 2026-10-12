@@ -19,4 +19,6 @@ class CSimpleEmbeddedTexture {
     void InitEmbeddedTexture(CSimpleFontString* string, const GXUEMBEDDEDTEXTUREINFO* info);
 };
 
+#include "Engine/Source/Frame/CSimpleEmbeddedTexture.inl"
+
 #endif

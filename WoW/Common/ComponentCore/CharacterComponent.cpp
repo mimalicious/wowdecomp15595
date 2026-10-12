@@ -51,7 +51,7 @@
 #include "WoW/Source/DB/Rec/ParticleColorRec.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 
-// STATIC: 0x00BC28E0
+// STATIC: 0x00BC28E0/0x1409B03D0
 static int32_t s_itemPriority[NUM_ITEM_SLOTS][NUM_COMPONENT_SECTIONS] = {
     { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
     { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
@@ -76,76 +76,76 @@ static COMPONENT_SECTIONS s_shirtSections[4] = { SECTION_TORSO_UPPER, SECTION_TO
 // STATIC: 0x00CFFD44
 static const char* s_componentSections[8] = { "ArmUpperTexture", "ArmLowerTexture", "HandTexture", "TorsoUpperTexture", "TorsoLowerTexture", "LegUpperTexture", "LegLowerTexture", "FootTexture" };
 
-// STATIC: 0x00CFFD64
+// STATIC: 0x00CFFD64/0x140BAF1B0
 static const char* s_fileDecorations[3] = { "M", "F", "U" };
 
-// STATIC: 0x00CFFDA0
+// STATIC: 0x00CFFDA0/0x140BAF228
 static CStatus s_status;
 
-// STATIC: 0x00CFFDB4
+// STATIC: 0x00CFFDB4/0x140BAF250
 static TSExplicitList<CCharacterComponent, offsetof(CCharacterComponent, m_link)> s_queue;
 
-// STATIC: 0x00CFFDC0
+// STATIC: 0x00CFFDC0/0x140BAF268
 static TSExplicitList<CCharacterComponent, offsetof(CCharacterComponent, m_componentLink)> s_componentList;
 
-// STATIC: 0x00CFFDCC
+// STATIC: 0x00CFFDCC/0x140BAF280
 static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_requestList;
 
-// STATIC: 0x00CFFDD8
+// STATIC: 0x00CFFDD8/0x140BAF298
 static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_finishedList;
 
-// STATIC: 0x00CFFDE4
+// STATIC: 0x00CFFDE4/0x140BAF2B0
 static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_requestFreeList;
 
-// STATIC: 0x00CFFDF0
+// STATIC: 0x00CFFDF0/0x140BAF2C8
 static TSExplicitList<CComponentMipBits, offsetof(CComponentMipBits, m_link)> s_mipBitsFreeList;
 
-// STATIC: 0x00CFFDFC
+// STATIC: 0x00CFFDFC/0x140BAF2E0
 static TSExplicitList<CComponentMipBits, offsetof(CComponentMipBits, m_link)> s_mipBitsCompressedFreeList;
 
 // STATIC: 0x00CFFE08
 static const char* s_proceduralEmblemFormat = "Textures\\GuildEmblems\\emblem_%02i";
 
-// STATIC: 0x00E4D858
+// STATIC: 0x00E4D858/0x140D36A90
 static int32_t s_closestComponentSortVal;
 
-// STATIC: 0x00E4D85C
+// STATIC: 0x00E4D85C/0x140D36A98
 static CCharacterComponent* s_closestComponent;
 
 // STATIC: 0x00E4D860
 void (CCharacterComponent::*CCharacterComponent::s_requestFunc[NUM_COMPONENT_SECTIONS])();
 
-// STATIC: 0x00E4D888
+// STATIC: 0x00E4D888/0x140D36AF0
 static HPROPCONTEXT s_threadPropContext;
 
-// STATIC: 0x00E4D88C
+// STATIC: 0x00E4D88C/0x140D36A94
 int32_t CCharacterComponent::s_bComponentCompression;
 
-// STATIC: 0x00E4D890
+// STATIC: 0x00E4D890/0x140D36AF8
 int32_t CCharacterComponent::s_bComponentThread;
 
-// STATIC: 0x00E4D894
+// STATIC: 0x00E4D894/0x140D36B00
 static char* s_pathEnd2;
 
-// STATIC: 0x00E4D898
+// STATIC: 0x00E4D898/0x140D36B08
 static char* s_pathEnd;
 
-// STATIC: 0x00E4D89C
+// STATIC: 0x00E4D89C/0x140D36AFC
 static int32_t s_useCompression;
 
-// STATIC: 0x00E4D8A0
+// STATIC: 0x00E4D8A0/0x140D36B10
 static char s_path2[260];
 
-// STATIC: 0x00E4D9A4
+// STATIC: 0x00E4D9A4/0x140D36C14
 uint32_t CCharacterComponent::s_mipLevels;
 
-// STATIC: 0x00E4D9A8
+// STATIC: 0x00E4D9A8/0x140D36C20
 static char s_path[260];
 
-// STATIC: 0x00E4DAAC
+// STATIC: 0x00E4DAAC/0x140D36C18
 EGxTexFormat CCharacterComponent::s_gxFormatHigh;
 
-// STATIC: 0x00E4DAB0
+// STATIC: 0x00E4DAB0/0x140D36D30
 static char s_buffer[260];
 
 // STATIC: 0x00E4DBB4
@@ -154,46 +154,46 @@ void (CCharacterComponent::*CCharacterComponent::m_itemFunc[NUM_COMPONENT_SECTIO
 // STATIC: 0x00E4DBDC
 void (CCharacterComponent::*CCharacterComponent::m_prepFunc[NUM_COMPONENT_SECTIONS])();
 
-// STATIC: 0x00E4DC04
+// STATIC: 0x00E4DC04/0x140D36C1C
 EGxTexFormat CCharacterComponent::s_gxFormat;
 
-// STATIC: 0x00E4DC08
+// STATIC: 0x00E4DC08/0x140D36EE0
 uint32_t* CCharacterComponent::s_characterFacialHairStylesList;
 
-// STATIC: 0x00E4DC0C
+// STATIC: 0x00E4DC0C/0x140D36EE8
 st_race* CCharacterComponent::s_chrVarArray;
 
-// STATIC: 0x00E4DC10
+// STATIC: 0x00E4DC10/0x140D36EF0
 static MipBits* s_threadTextureBuffer;
 
-// STATIC: 0x00E4DC14
+// STATIC: 0x00E4DC14/0x140D36EF8
 static MipBits* s_compressedTextureBuffer;
 
-// STATIC: 0x00E4DC18
+// STATIC: 0x00E4DC18/0x140D36F00
 MipBits* CCharacterComponent::s_textureBuffer;
 
-// STATIC: 0x00E4DC1C
+// STATIC: 0x00E4DC1C/0x140D36F08
 uint32_t CCharacterComponent::s_chrVarArrayLength;
 
-// STATIC: 0x00E4DC20
+// STATIC: 0x00E4DC20/0x140D36F10
 CCharacterComponent* CCharacterComponent::m_activePlayerComponent;
 
-// STATIC: 0x00E4DC28
+// STATIC: 0x00E4DC28/0x140D36F18
 static TSObjectAllocPool<CCharacterComponent>* s_componentPool;
 
-// STATIC: 0x00E4DC2C
+// STATIC: 0x00E4DC2C/0x140D36F20
 static CVar* s_textureLevelVar;
 
-// STATIC: 0x00E4DC30
+// STATIC: 0x00E4DC30/0x140D36F28
 int32_t CCharacterComponent::s_bInRenderPrep;
 
-// STATIC: 0x00E4DC34
+// STATIC: 0x00E4DC34/0x140D37070
 static SThread s_thread;
 
-// STATIC: 0x00E4DC38
+// STATIC: 0x00E4DC38/0x140D36F30
 static CompSectionInfo s_sectionInfo[NUM_COMPONENT_SECTIONS];
 
-// STATIC: 0x00E4DCD8
+// STATIC: 0x00E4DCD8/0x140D36FD0
 CompSectionInfo CCharacterComponent::s_sectionInfoRaw[NUM_COMPONENT_SECTIONS] = {
     { { 0, 0 }, { 256, 128 } },
     { { 0, 128 }, { 256, 128 } },
@@ -207,16 +207,16 @@ CompSectionInfo CCharacterComponent::s_sectionInfoRaw[NUM_COMPONENT_SECTIONS] = 
     { { 0, 384 }, { 256, 128 } },
 };
 
-// STATIC: 0x00E4DD78
+// STATIC: 0x00E4DD78/0x140D37078
 static SEvent s_threadBeginEvent(0, 0);
 
-// STATIC: 0x00E4DD7C
+// STATIC: 0x00E4DD7C/0x140D37080
 static SCritSect s_requestListCritSect;
 
-// STATIC: 0x00E4DDA4
+// STATIC: 0x00E4DDA4/0x140D370A8
 static SCritSect s_finishedListCritSect;
 
-// STATIC: 0x00E4DDCC
+// STATIC: 0x00E4DDCC/0x140D370D0
 static SCritSect s_mipBitsCritSect;
 
 // INLINED
@@ -296,7 +296,7 @@ bool CCharacterComponent::Initialize() {
     return CCharacterComponent::Initialize(GxTex_Rgb565, mipLevels, useThread, useCompression);
 }
 
-// PROVEN: 3b7c062b IDENTICAL/NONE
+// PROVEN: 3b7c062b IDENTICAL/IDENTICAL
 // OFFSET: 0x006F8340/0x1403C1270
 void CComponentRequest::DestroyCachedTextures() {
     for (uint32_t i = 0; i < NUM_COMPONENT_SECTIONS; i++) {
@@ -319,7 +319,7 @@ void CComponentRequest::DestroyCachedTextures() {
 }
 
 // PROVEN: cb1a1897 IDENTICAL/NONE
-// OFFSET: 0x006F83B0
+// OFFSET: 0x006F83B0/0x1403C1310
 void CCharacterComponent::ResetCounts() {
     TextureCacheResetLoadCount();
 }
@@ -362,8 +362,8 @@ void CCharacterComponent::TextureBufferInitialize() {
     }
 }
 
-// PROVEN: 8df01310 IDENTICAL/NONE
-// OFFSET: 0x006F8530
+// PROVEN: 8df01310 IDENTICAL/IDENTICAL
+// OFFSET: 0x006F8530/0x1403C14A0
 static void TextureBufferDestroy() {
     uint32_t size = 1 << CCharacterComponent::s_mipLevels;
 
@@ -406,7 +406,7 @@ static void ComputeSectionInfo(uint32_t mipLevels) {
     }
 }
 
-// PROVEN: bc8e1539 IDENTICAL/NONE
+// PROVEN: de70ffc2 IDENTICAL/NONE
 // OFFSET: 0x006F87F0
 void* CCharacterComponent::LoadItemComponentTexture(const ItemDisplayInfoRec* displayRec, COMPONENT_SECTIONS section) {
     SStrPrintf(s_path, sizeof(s_path), "Item\\TextureComponents\\%s\\%s_%s.blp", s_componentSections[section], static_cast<const char*>(displayRec->m_texture[section]), s_fileDecorations[2]);
@@ -418,7 +418,7 @@ void* CCharacterComponent::LoadItemComponentTexture(const ItemDisplayInfoRec* di
     return TextureCacheCreateTexture(s_path);
 }
 
-// PROVEN: 171d13e4 IDENTICAL/NONE
+// PROVEN: 171d13e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006F8870/0x1403C17A0
 void CCharacterComponent::ApplyExtraTextures() {
     if (this->m_extraSkinTexture) {
@@ -460,7 +460,7 @@ static void CompressMipLevels(MipBits* src, MipBits* dst, uint32_t mipLevels) {
     }
 }
 
-// PROVEN: 34201937 IDENTICAL/NONE
+// PROVEN: 34201937 IDENTICAL/IDENTICAL
 // OFFSET: 0x006F8990/0x1403C1960
 int32_t CCharacterComponent::SetClosestComponent(CCharacterComponent* component, int32_t a2, float distance) {
     int32_t sortVal = AsyncFileReadComputePriority(3, 0, a2, distance);
@@ -473,19 +473,19 @@ int32_t CCharacterComponent::SetClosestComponent(CCharacterComponent* component,
     return sortVal;
 }
 
-// PROVEN: b112e3f9 IDENTICAL/NONE
+// PROVEN: b112e3f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x006F89F0/0x1403C19C0
 CCharacterComponent* CCharacterComponent::GetClosestComponent() {
     return s_closestComponent;
 }
 
-// PROVEN: 31427ac3 IDENTICAL/NONE
+// PROVEN: 31427ac3 IDENTICAL/IDENTICAL
 // OFFSET: 0x006F8A00/0x1403C19D0
 int32_t CCharacterComponent::GetClosestComponentSortVal() {
     return s_closestComponentSortVal;
 }
 
-// PROVEN: d4707b22 IDENTICAL/NONE
+// PROVEN: d4707b22 IDENTICAL/IDENTICAL
 // OFFSET: 0x006F8A10/0x1403C19E0
 void CCharacterComponent::DestroyRenderTextures() {
     for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
@@ -732,8 +732,8 @@ void CCharacterComponent::RemoveLinkpt(CM2Model* model, uint8_t* attachMask, GEO
     }
 }
 
-// PROVEN: 557dd2b4 IDENTICAL/NONE
-// OFFSET: 0x006F8F80
+// PROVEN: 557dd2b4 IDENTICAL/DIFFERENT
+// OFFSET: 0x006F8F80/0x1403C1EB0
 INVENTORY_SLOTS CCharacterComponent::GetInvSlotForInvType(INVENTORY_TYPES invType) {
     switch (invType) {
         case INVTYPE_HEAD:
@@ -904,7 +904,7 @@ int32_t CCharacterComponent::GetNumFacesForSkin(int32_t raceID, int32_t sexID, i
     return count;
 }
 
-// PROVEN: ee105df0 IDENTICAL/NONE
+// PROVEN: ee105df0 IDENTICAL/IDENTICAL
 // OFFSET: 0x006F9380/0x1403C2390
 int32_t CCharacterComponent::GetNumFacialFeaturesForHairColor(int32_t raceID, int32_t sexID, int32_t classID, int32_t hairColorID, COMPONENT_CONTEXT context) {
     COMPONENT_SELECTION selection = GetSelectionFromContext(context, classID);
@@ -1243,8 +1243,8 @@ void CCharacterComponent::SetTexturesDirty() {
     this->m_flags &= ~0x8;
 }
 
-// PROVEN: feb0fd8a IDENTICAL/NONE
-// OFFSET: 0x006F9D90
+// PROVEN: feb0fd8a IDENTICAL/IDENTICAL
+// OFFSET: 0x006F9D90/0x1403C3B80
 void CCharacterComponent::ReleaseBaseTexture() {
     if (this->m_baseTexture) {
         GxTexSetCannotUpdate(TextureGetGxTex(this->m_baseTexture));
@@ -1253,7 +1253,7 @@ void CCharacterComponent::ReleaseBaseTexture() {
     }
 }
 
-// OFFSET: 0x006F9DC0
+// OFFSET: 0x006F9DC0/0x1403C3BC0
 bool CCharacterComponent::ItemDisplayHasGeosetGroup(uint32_t displayID, int32_t group, ItemDisplayInfoRec& rec) {
     if (!displayID) {
         return false;
@@ -1262,7 +1262,8 @@ bool CCharacterComponent::ItemDisplayHasGeosetGroup(uint32_t displayID, int32_t 
     return g_itemDisplayInfoDB.GetRecord(displayID, &rec) && rec.m_geosetGroup[group];
 }
 
-// OFFSET: 0x006F9E20
+// PROVEN: d528694e IDENTICAL/UNPROVEN
+// OFFSET: 0x006F9E20/0x1403C3C50
 bool CCharacterComponent::ItemDisplayHasGeosetGroup(uint32_t displayID, int32_t group) {
     ItemDisplayInfoRec rec;
 
@@ -1392,7 +1393,7 @@ void CCharacterComponent::GeosRenderPrep() {
     this->m_flags &= ~0x4;
 }
 
-// OFFSET: 0x006FA550
+// OFFSET: 0x006FA550/0x1403C44E0
 void CCharacterComponent::PrepSections() {
     uint32_t size = 1 << this->m_mipLevels;
 
@@ -1430,7 +1431,7 @@ void CCharacterComponent::PrepSections() {
     }
 }
 
-// OFFSET: 0x006FA690
+// OFFSET: 0x006FA690/0x1403C46C0
 void CCharacterComponent::CreateRequestAU() {
     this->m_request->m_baseTextures[SECTION_ARM_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
 
@@ -1441,7 +1442,7 @@ void CCharacterComponent::CreateRequestAU() {
     }
 }
 
-// OFFSET: 0x006FA720
+// OFFSET: 0x006FA720/0x1403C4760
 void CCharacterComponent::CreateRequestAL() {
     this->m_request->m_baseTextures[SECTION_ARM_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
 
@@ -1452,7 +1453,7 @@ void CCharacterComponent::CreateRequestAL() {
     }
 }
 
-// OFFSET: 0x006FA7B0
+// OFFSET: 0x006FA7B0/0x1403C4800
 void CCharacterComponent::CreateRequestHA() {
     this->m_request->m_baseTextures[SECTION_HAND] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
 
@@ -1461,7 +1462,7 @@ void CCharacterComponent::CreateRequestHA() {
     }
 }
 
-// OFFSET: 0x006FA810
+// OFFSET: 0x006FA810/0x1403C4870
 void CCharacterComponent::CreateRequestHU() {
     CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
 
@@ -1482,7 +1483,7 @@ void CCharacterComponent::CreateRequestHU() {
     }
 }
 
-// OFFSET: 0x006FA900
+// OFFSET: 0x006FA900/0x1403C4970
 void CCharacterComponent::CreateRequestHL() {
     CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
 
@@ -1503,7 +1504,7 @@ void CCharacterComponent::CreateRequestHL() {
     }
 }
 
-// OFFSET: 0x006FA9F0
+// OFFSET: 0x006FA9F0/0x1403C4A70
 void CCharacterComponent::CreateRequestTU() {
     this->m_request->m_baseTextures[SECTION_TORSO_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
     uint32_t mask = this->m_section[SECTION_TORSO_UPPER].m_layerMask & 0x7F;
@@ -1519,7 +1520,7 @@ void CCharacterComponent::CreateRequestTU() {
     }
 }
 
-// OFFSET: 0x006FAAE0
+// OFFSET: 0x006FAAE0/0x1403C4BA0
 void CCharacterComponent::CreateRequestTL() {
     this->m_request->m_baseTextures[SECTION_TORSO_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
 
@@ -1530,7 +1531,7 @@ void CCharacterComponent::CreateRequestTL() {
     }
 }
 
-// OFFSET: 0x006FAB70
+// OFFSET: 0x006FAB70/0x1403C4C40
 void CCharacterComponent::CreateRequestLU() {
     this->m_request->m_baseTextures[SECTION_LEG_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
 
@@ -1548,7 +1549,7 @@ void CCharacterComponent::CreateRequestLU() {
     }
 }
 
-// OFFSET: 0x006FAC60
+// OFFSET: 0x006FAC60/0x1403C4D60
 void CCharacterComponent::CreateRequestLL() {
     this->m_request->m_baseTextures[SECTION_LEG_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
 
@@ -1562,7 +1563,7 @@ void CCharacterComponent::CreateRequestLL() {
     }
 }
 
-// OFFSET: 0x006FAD10
+// OFFSET: 0x006FAD10/0x1403C4E30
 void CCharacterComponent::CreateRequestFO() {
     this->m_request->m_baseTextures[SECTION_FOOT] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
 
@@ -1571,8 +1572,8 @@ void CCharacterComponent::CreateRequestFO() {
     }
 }
 
-// PROVEN: ddea1587 IDENTICAL/NONE
-// OFFSET: 0x006FAD70
+// PROVEN: ddea1587 IDENTICAL/UNPROVEN
+// OFFSET: 0x006FAD70/0x1403C4EA0
 void CCharacterComponent::UpdateSections() {
     uint32_t size = 1 << this->m_mipLevels;
 
@@ -1758,6 +1759,7 @@ void CCharacterComponent::SetHairColor(int32_t hairColorID, bool loadHair, const
     this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 1, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
 }
 
+// PROVEN: a19fe2a9 DIFFERENT/IDENTICAL
 // OFFSET: 0x006FB350/0x1403C58B0
 void CCharacterComponent::SetHairStyle(int32_t hairStyleID, const char* debug) {
     if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID, this->m_data.m_preferences.m_hairColorId)) {
@@ -1777,6 +1779,7 @@ void CCharacterComponent::SetHairStyle(int32_t hairStyleID, const char* debug) {
     this->SetDirtySections(0x300);
 }
 
+// PROVEN: b989cf41 DIFFERENT/IDENTICAL
 // OFFSET: 0x006FB400/0x1403C59B0
 void CCharacterComponent::SetFace(int32_t faceID, bool loadHair, const char* debug) {
     if (this->m_data.m_flags & 0x1) {
@@ -1955,6 +1958,7 @@ int32_t CCharacterComponent::UpdateTextureSlot(COMPONENT_SECTIONS section, const
     return 1;
 }
 
+// PROVEN: e8898d39 DIFFERENT/IDENTICAL
 // OFFSET: 0x006FB9D0/0x1403C61E0
 void CCharacterComponent::FreeSectionTexture(COMPONENT_SECTIONS section, int32_t layer) {
     if (layer == -1) {
@@ -1970,7 +1974,7 @@ void CCharacterComponent::FreeSectionTexture(COMPONENT_SECTIONS section, int32_t
     this->m_section[section].m_layerMask &= ~(1 << layer);
 }
 
-// OFFSET: 0x006FBA40
+// OFFSET: 0x006FBA40/0x1403C6280
 void CCharacterComponent::UpdateItem(ITEM_SLOT itemSlot, COMPONENT_SECTIONS section, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][section];
 
@@ -2085,8 +2089,8 @@ updated:
     }
 }
 
-// PROVEN: d545bcbf IDENTICAL/NONE
-// OFFSET: 0x006FBC30
+// PROVEN: d545bcbf IDENTICAL/UNPROVEN
+// OFFSET: 0x006FBC30/0x1403C6550
 void CCharacterComponent::UpdateItemAU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][SECTION_ARM_UPPER];
 
@@ -2101,8 +2105,8 @@ void CCharacterComponent::UpdateItemAU(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: d5766acf IDENTICAL/NONE
-// OFFSET: 0x006FBC90
+// PROVEN: d5766acf IDENTICAL/UNPROVEN
+// OFFSET: 0x006FBC90/0x1403C65C0
 void CCharacterComponent::UpdateItemAL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][SECTION_ARM_LOWER];
 
@@ -2132,8 +2136,8 @@ void CCharacterComponent::UpdateItemAL(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: f4af80ec IDENTICAL/NONE
-// OFFSET: 0x006FBD10
+// PROVEN: f4af80ec IDENTICAL/UNPROVEN
+// OFFSET: 0x006FBD10/0x1403C6660
 void CCharacterComponent::UpdateItemHA(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][SECTION_HAND];
 
@@ -2148,8 +2152,8 @@ void CCharacterComponent::UpdateItemHA(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: 90aa2b97 IDENTICAL/NONE
-// OFFSET: 0x006FBD70
+// PROVEN: 90aa2b97 IDENTICAL/UNPROVEN
+// OFFSET: 0x006FBD70/0x1403C66D0
 void CCharacterComponent::UpdateItemTU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][SECTION_TORSO_UPPER];
 
@@ -2164,8 +2168,8 @@ void CCharacterComponent::UpdateItemTU(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: f35990fc IDENTICAL/NONE
-// OFFSET: 0x006FBDD0
+// PROVEN: f35990fc IDENTICAL/UNPROVEN
+// OFFSET: 0x006FBDD0/0x1403C6740
 void CCharacterComponent::UpdateItemTL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][SECTION_TORSO_LOWER];
 
@@ -2180,8 +2184,8 @@ void CCharacterComponent::UpdateItemTL(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: 649ca295 IDENTICAL/NONE
-// OFFSET: 0x006FBE30
+// PROVEN: 649ca295 IDENTICAL/UNPROVEN
+// OFFSET: 0x006FBE30/0x1403C67B0
 void CCharacterComponent::UpdateItemLU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][SECTION_LEG_UPPER];
 
@@ -2196,8 +2200,8 @@ void CCharacterComponent::UpdateItemLU(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: 428b3977 IDENTICAL/NONE
-// OFFSET: 0x006FBEB0
+// PROVEN: 428b3977 IDENTICAL/UNPROVEN
+// OFFSET: 0x006FBEB0/0x1403C6840
 void CCharacterComponent::UpdateItemFO(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     int32_t layer = s_itemPriority[itemSlot][SECTION_FOOT];
 
@@ -2216,7 +2220,7 @@ void CCharacterComponent::UpdateItemFO(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: d2465183 IDENTICAL/NONE
+// PROVEN: d2465183 IDENTICAL/DIFFERENT
 // OFFSET: 0x006FBF20/0x1403C68C0
 void CCharacterComponent::ComponentUtilAddItemVisual(CM2Model* model, int32_t itemVisual) {
     while (model->m_attachList) {
@@ -2336,7 +2340,7 @@ CM2Model* CCharacterComponent::AddLink(CM2Model* parent, uint8_t* attachMask, GE
     return model;
 }
 
-// PROVEN: 1e9a0da9 IDENTICAL/NONE
+// PROVEN: 1e9a0da9 IDENTICAL/UNPROVEN
 // OFFSET: 0x006FC230/0x1403C6D00
 int32_t CCharacterComponent::GetShoulderDisplayInfo(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec) {
     if (!g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_SHOULDER], &rec)) {
@@ -2393,7 +2397,7 @@ int32_t CCharacterComponent::BuildShoulderItemPaths(ItemDisplayInfoRec& rec, con
     return 1;
 }
 
-// OFFSET: 0x006FC430
+// OFFSET: 0x006FC430/0x1403C6FB0
 int32_t CCharacterComponent::AreShoulderModelsCorrect() {
     CM2Model* list = this->m_data.m_model->m_attachList;
     CM2Model* left = list;
@@ -2437,7 +2441,7 @@ int32_t CCharacterComponent::AreShoulderModelsCorrect() {
     return !_stricmp(left->m_shared->m_fileName, s_path) && !_stricmp(right->m_shared->m_fileName, s_path2);
 }
 
-// PROVEN: a90fb84f IDENTICAL/NONE
+// PROVEN: a90fb84f IDENTICAL/DIFFERENT
 // OFFSET: 0x006FC550/0x1403C7220
 static void ShoulderSequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary) {
     if (!model || !primary || !model->m_attachParent) {
@@ -3152,7 +3156,7 @@ void CCharacterComponent::PasteTransparent8Bit(void* texture, const BlpPalPixel*
     }
 }
 
-// OFFSET: 0x006FDD10
+// OFFSET: 0x006FDD10/0x1403C37A0
 void CCharacterComponent::PasteOpaqueScale(void* texture, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
     uint32_t srcWidth = srcInfo.m_width;
     uint32_t width = srcSize.x;
@@ -3245,7 +3249,7 @@ void CCharacterComponent::PasteOpaqueScale(void* texture, MipBits* dstMips, C2iV
     CCharacterComponent::PasteOpaque(texture, pal, dstMips, dstPos, dstStride >> 1, srcPos, srcSize, srcInfo, 0, 1);
 }
 
-// OFFSET: 0x006FE050
+// OFFSET: 0x006FE050/0x1403C88A0
 void CCharacterComponent::PasteTransparent1BitScale(void* texture, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
     uint32_t srcRowPitch = srcInfo.m_width;
     uint32_t copyWidth = srcSize.x;
@@ -3529,7 +3533,7 @@ void CCharacterComponent::PasteTransparent4BitScale(void* texture, MipBits* dstM
     CCharacterComponent::PasteTransparent4Bit(texture, pal, dstMips, dstPos, dstStride >> 1, srcPos, srcSize, srcInfo, 0, 1);
 }
 
-// OFFSET: 0x006FEBA0
+// OFFSET: 0x006FEBA0/0x1403C94B0
 void CCharacterComponent::PasteTransparent8BitScale(void* texture, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
     uint32_t srcRowPitch = srcInfo.m_width;
     uint32_t copyWidth = srcSize.x;
@@ -3658,7 +3662,7 @@ void CCharacterComponent::PasteTransparent8BitScale(void* texture, MipBits* dstM
     CCharacterComponent::PasteTransparent8Bit(texture, pal, dstMips, dstPos, dstStride >> 1, srcPos, srcSize, srcInfo, 0, 1);
 }
 
-// PROVEN: d21b0506 IDENTICAL/NONE
+// PROVEN: d21b0506 IDENTICAL/DIFFERENT
 // OFFSET: 0x006FF010/0x1403C99C0
 CHelmPathSuffix::CHelmPathSuffix(const char* format, ...) {
     va_list args;
@@ -3666,7 +3670,7 @@ CHelmPathSuffix::CHelmPathSuffix(const char* format, ...) {
     this->m_length = SStrVPrintf(this->m_buffer, sizeof(this->m_buffer), format, args);
 }
 
-// PROVEN: 831e559e IDENTICAL/NONE
+// PROVEN: 831e559e IDENTICAL/IDENTICAL
 // OFFSET: 0x006FF040/0x1403C9A00
 bool CCharacterComponent::VariationsLoaded(int32_t wait) {
     TCTEXTUREINFO info;
@@ -3689,7 +3693,7 @@ bool CCharacterComponent::VariationsLoaded(int32_t wait) {
     return true;
 }
 
-// OFFSET: 0x006FF0D0
+// OFFSET: 0x006FF0D0/0x1403C9AB0
 bool CCharacterComponent::ItemsLoaded(int32_t wait) {
     bool loaded = true;
     TCTEXTUREINFO info;
@@ -3826,7 +3830,7 @@ int32_t CCharacterComponent::ComposeHelmModelFilePath(const ChrRacesRec* raceRec
     return 1;
 }
 
-// PROVEN: 4801c2c0 IDENTICAL/NONE
+// PROVEN: 4801c2c0 IDENTICAL/UNPROVEN
 // OFFSET: 0x006FF600/0x1403CA260
 int32_t CCharacterComponent::GetHelmModelFilePath(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec) {
     if (!this->m_itemDisplayID[ITEMSLOT_HEAD]) {
@@ -3847,7 +3851,7 @@ int32_t CCharacterComponent::GetHelmModelFilePath(ItemDisplayInfoRec& rec, const
     return this->ComposeHelmModelFilePath(raceRec, &rec, s_pathEnd, 260);
 }
 
-// OFFSET: 0x006FF6A0
+// OFFSET: 0x006FF6A0/0x1403CA340
 bool CCharacterComponent::IsHelmModelCorrect() {
     CM2Model* attached = this->m_data.m_model->m_attachList;
 
@@ -3937,7 +3941,7 @@ void CCharacterComponent::AddHelm(int32_t itemVisual) {
     }
 }
 
-// OFFSET: 0x006FF940
+// OFFSET: 0x006FF940/0x1403CA770
 void CCharacterComponent::AddShoulders(int32_t itemVisual) {
     ItemDisplayInfoRec rec;
     const ItemDisplayInfoRec* displayRec;
@@ -4016,19 +4020,19 @@ void CCharacterComponent::SetShieldItemDisplay(int32_t displayID) {
     this->SetHandItemDisplay(displayID, 1, INVSLOT_OFFHAND, true);
 }
 
-// PROVEN: adb9674e IDENTICAL/NONE
+// PROVEN: adb9674e IDENTICAL/IDENTICAL
 // OFFSET: 0x006FFC10/0x1403CAD20
 GEOCOMPONENTLINKS CCharacterComponent::AddHandItem(const ItemDisplayInfoRec* displayRec, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool sheathed, bool shield, bool mainHand, int32_t itemVisual) {
     return CCharacterComponent::AddHandItem(this->m_data.m_model, &this->m_attachMask, displayRec, invSlot, sheatheType, sheathed, shield, mainHand, itemVisual);
 }
 
-// PROVEN: 7d9cd055 IDENTICAL/NONE
+// PROVEN: 7d9cd055 IDENTICAL/IDENTICAL
 // OFFSET: 0x006FFC50/0x1403CAD80
 void CCharacterComponent::RemoveHandItem(INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool shield) {
     CCharacterComponent::RemoveHandItem(this->m_data.m_model, &this->m_attachMask, invSlot, sheatheType, shield);
 }
 
-// PROVEN: 7b1c32bf IDENTICAL/NONE
+// PROVEN: 7b1c32bf IDENTICAL/IDENTICAL
 // OFFSET: 0x006FFC80/0x1403CADB0
 void CCharacterComponent::ClearGuildTabard(int32_t count) {
     for (int32_t layer = count; layer > 3; layer--) {
@@ -4040,7 +4044,7 @@ void CCharacterComponent::ClearGuildTabard(int32_t count) {
     }
 }
 
-// PROVEN: 002c784d IDENTICAL/NONE
+// PROVEN: 002c784d IDENTICAL/IDENTICAL
 // OFFSET: 0x006FFCC0/0x1403CAE20
 void CCharacterComponent::ClearGuildShirt(int32_t count) {
     for (int32_t layer = count; layer >= 0; layer--) {
@@ -4060,7 +4064,7 @@ void CCharacterComponent::ClearGuildShirt(int32_t count) {
     }
 }
 
-// OFFSET: 0x006FFD30
+// OFFSET: 0x006FFD30/0x1403CAED0
 void CCharacterComponent::ApplyGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
     this->ClearGuildTabard(6);
 
@@ -4088,7 +4092,7 @@ void CCharacterComponent::ApplyGuildColor(uint32_t flags, int32_t emblem, int32_
     this->SetDirtySections((1 << SECTION_TORSO_UPPER) | (1 << SECTION_TORSO_LOWER));
 }
 
-// OFFSET: 0x006FFF10
+// OFFSET: 0x006FFF10/0x1403CB3B0
 void CCharacterComponent::ApplyShirtGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
     this->ClearGuildShirt(2);
 
@@ -4116,7 +4120,7 @@ void CCharacterComponent::ApplyShirtGuildColor(uint32_t flags, int32_t emblem, i
     this->SetDirtySections((1 << SECTION_ARM_UPPER) | (1 << SECTION_ARM_LOWER) | (1 << SECTION_TORSO_UPPER) | (1 << SECTION_TORSO_LOWER));
 }
 
-// PROVEN: 7b1d2e33 IDENTICAL/NONE
+// PROVEN: 7b1d2e33 IDENTICAL/IDENTICAL
 // OFFSET: 0x007000F0/0x1403CB770
 void CCharacterComponent::TurnOffGuildTabardPurchase() {
     if (!(this->m_flags & 0x40)) {
@@ -4191,7 +4195,7 @@ void CCharacterComponent::PasteScale(void* texture, MipBits* dstMips, const C2iV
     }
 }
 
-// OFFSET: 0x007003C0
+// OFFSET: 0x007003C0/0x1403CBA60
 void CCharacterComponent::ComputeLoadProgress(int64_t& local, int64_t& total) {
     for (int32_t variation = 0; variation < NUM_COMPONENT_VARIATIONS; variation++) {
         for (int32_t i = 0; i < 3; i++) {
@@ -4220,7 +4224,7 @@ void CCharacterComponent::ComputeLoadProgress(int64_t& local, int64_t& total) {
     }
 }
 
-// OFFSET: 0x007004B0
+// OFFSET: 0x007004B0/0x1403CBB70
 CCharacterComponent::CCharacterComponent() {
     this->m_attachMask = 0;
     memset(this->m_baseVariation, 0, sizeof(this->m_baseVariation));
@@ -4241,7 +4245,8 @@ CCharacterComponent::CCharacterComponent() {
     s_componentList.LinkToTail(this);
 }
 
-// OFFSET: 0x007005A0
+// PROVEN: 725961f3 IDENTICAL/DIFFERENT
+// OFFSET: 0x007005A0/0x1403CBCF0
 CCharacterComponent::~CCharacterComponent() {
     if (this->m_request) {
         this->m_request->m_active = 0;
@@ -4317,6 +4322,7 @@ void CCharacterComponent::UpdateBaseTexture(EGxTexCommand command, uint32_t widt
     }
 }
 
+// PROVEN: ebd94604 IDENTICAL/DIFFERENT
 // OFFSET: 0x00700850/0x1403CC190
 void CCharacterComponent::Prep() {
     if (this->m_data.m_flags & 0x1) {
@@ -4336,7 +4342,7 @@ void CCharacterComponent::Prep() {
     }
 }
 
-// PROVEN: 12bb3fe5 IDENTICAL/NONE
+// PROVEN: 12bb3fe5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00700890/0x1403CC240
 void CCharacterComponent::CreateBaseTexture() {
     EGxTexFormat dataFormat = GxTex_Argb8888;
@@ -4442,7 +4448,7 @@ void CCharacterComponent::RemoveItemBySlot(INVENTORY_SLOTS invSlot) {
     }
 }
 
-// OFFSET: 0x00701070
+// OFFSET: 0x00701070/0x1403CCCA0
 void CCharacterComponent::RemoveItemByType(INVENTORY_TYPES invType) {
     ITEM_SLOT itemSlot = CCharacterComponent::GetItemSlotForInvType(invType);
 
@@ -4590,8 +4596,8 @@ void CCharacterComponent::PasteToSection(COMPONENT_SECTIONS section, void* textu
     CCharacterComponent::Paste(texture, dstMips, s_sectionInfo[section].m_pos, srcPos, s_sectionInfo[section].m_size, info, mipLevel, mipLevels);
 }
 
-// PROVEN: 203b11e5 IDENTICAL/NONE
-// OFFSET: 0x007019E0
+// PROVEN: 203b11e5 IDENTICAL/UNPROVEN
+// OFFSET: 0x007019E0/0x1403CD7F0
 void CCharacterComponent::RenderPrepAU() {
     CCharacterComponent::PasteFromSkin(SECTION_ARM_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4602,8 +4608,8 @@ void CCharacterComponent::RenderPrepAU() {
     }
 }
 
-// PROVEN: ea1d907f IDENTICAL/NONE
-// OFFSET: 0x00701A50
+// PROVEN: ea1d907f IDENTICAL/UNPROVEN
+// OFFSET: 0x00701A50/0x1403CD870
 void CCharacterComponent::RenderPrepAL() {
     CCharacterComponent::PasteFromSkin(SECTION_ARM_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4614,8 +4620,8 @@ void CCharacterComponent::RenderPrepAL() {
     }
 }
 
-// PROVEN: f5c86075 IDENTICAL/NONE
-// OFFSET: 0x00701AC0
+// PROVEN: f5c86075 IDENTICAL/UNPROVEN
+// OFFSET: 0x00701AC0/0x1403CD900
 void CCharacterComponent::RenderPrepHA() {
     CCharacterComponent::PasteFromSkin(SECTION_HAND, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4624,8 +4630,8 @@ void CCharacterComponent::RenderPrepHA() {
     }
 }
 
-// PROVEN: e88e774c IDENTICAL/NONE
-// OFFSET: 0x00701B10
+// PROVEN: e88e774c IDENTICAL/DIFFERENT
+// OFFSET: 0x00701B10/0x1403CD950
 void CCharacterComponent::RenderPrepHU() {
     CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
 
@@ -4646,8 +4652,8 @@ void CCharacterComponent::RenderPrepHU() {
     }
 }
 
-// PROVEN: e39df29c IDENTICAL/NONE
-// OFFSET: 0x00701BC0
+// PROVEN: e39df29c IDENTICAL/DIFFERENT
+// OFFSET: 0x00701BC0/0x1403CDA20
 void CCharacterComponent::RenderPrepHL() {
     CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
 
@@ -4668,7 +4674,7 @@ void CCharacterComponent::RenderPrepHL() {
     }
 }
 
-// OFFSET: 0x00701C70
+// OFFSET: 0x00701C70/0x1403CDAF0
 void CCharacterComponent::RenderPrepTU() {
     CCharacterComponent::PasteFromSkin(SECTION_TORSO_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4683,8 +4689,8 @@ void CCharacterComponent::RenderPrepTU() {
     }
 }
 
-// PROVEN: b4d7d56a IDENTICAL/NONE
-// OFFSET: 0x00701D10
+// PROVEN: b4d7d56a IDENTICAL/UNPROVEN
+// OFFSET: 0x00701D10/0x1403CDBB0
 void CCharacterComponent::RenderPrepTL() {
     CCharacterComponent::PasteFromSkin(SECTION_TORSO_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4695,7 +4701,7 @@ void CCharacterComponent::RenderPrepTL() {
     }
 }
 
-// OFFSET: 0x00701D80
+// OFFSET: 0x00701D80/0x1403CDC40
 void CCharacterComponent::RenderPrepLU() {
     CCharacterComponent::PasteFromSkin(SECTION_LEG_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4712,7 +4718,7 @@ void CCharacterComponent::RenderPrepLU() {
     }
 }
 
-// OFFSET: 0x00701E40
+// OFFSET: 0x00701E40/0x1403CDD30
 void CCharacterComponent::RenderPrepLL() {
     CCharacterComponent::PasteFromSkin(SECTION_LEG_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4725,8 +4731,8 @@ void CCharacterComponent::RenderPrepLL() {
     }
 }
 
-// PROVEN: ad27985f IDENTICAL/NONE
-// OFFSET: 0x00701ED0
+// PROVEN: ad27985f IDENTICAL/UNPROVEN
+// OFFSET: 0x00701ED0/0x1403CDDF0
 void CCharacterComponent::RenderPrepFO() {
     CCharacterComponent::PasteFromSkin(SECTION_FOOT, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
@@ -4780,6 +4786,7 @@ void CCharacterComponent::ProcessComponentRequest(CComponentRequest* request) {
     }
 }
 
+// PROVEN: 12aebd41 IDENTICAL/DIFFERENT
 // OFFSET: 0x00702030/0x1403CDFE0
 void CCharacterComponent::CreateComponentFreeLists() {
     int32_t count = 10;
@@ -4984,7 +4991,7 @@ bool CCharacterComponent::RenderPrep(int32_t wait) {
     return true;
 }
 
-// PROVEN: 97286b15 IDENTICAL/NONE
+// PROVEN: 97286b15 IDENTICAL/DIFFERENT
 // OFFSET: 0x007027E0/0x1403CEC70
 CCharacterComponent* CCharacterComponent::AllocComponent() {
     return s_componentPool->New("", 0);
@@ -5033,7 +5040,7 @@ void CCharacterComponent::CreateComponentRequest() {
     s_threadBeginEvent.Set();
 }
 
-// OFFSET: 0x00702990
+// OFFSET: 0x00702990/0x1403CEF40
 void CCharacterComponent::DestroyComponentFreeLists() {
     s_mipBitsCritSect.Enter();
 
@@ -5050,13 +5057,13 @@ void CCharacterComponent::DestroyComponentFreeLists() {
     s_mipBitsCritSect.Leave();
 }
 
-// PROVEN: 33bd4cb8 IDENTICAL/NONE
+// PROVEN: 33bd4cb8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00702A40/0x1403CF010
 void CCharacterComponent::FreeComponent(CCharacterComponent* component) {
     s_componentPool->Delete(component);
 }
 
-// OFFSET: 0x00702A80
+// OFFSET: 0x00702A80/0x1403CF060
 void CCharacterComponent::ThreadDestroy() {
     CCharacterComponent::s_bComponentThread = 0;
     s_threadBeginEvent.Set();
@@ -5236,7 +5243,8 @@ bool CCharacterComponent::Initialize(EGxTexFormat format, uint32_t mipLevels, in
     return true;
 }
 
-// OFFSET: 0x007030D0
+// PROVEN: b2d4f50f IDENTICAL/DIFFERENT
+// OFFSET: 0x007030D0/0x1403CFED0
 bool CCharacterComponent::Destroy() {
     if (CCharacterComponent::m_activePlayerComponent) {
         CCharacterComponent::FreeComponent(CCharacterComponent::m_activePlayerComponent);
@@ -5258,7 +5266,8 @@ bool CCharacterComponent::Destroy() {
     return true;
 }
 
-// OFFSET: 0x007031B0
+// PROVEN: c4431434 DIFFERENT/IDENTICAL
+// OFFSET: 0x007031B0/0x1403CF430
 bool CCharacterComponent::SkinNpc(const char* debug) {
     this->m_data.m_flags &= ~0x1;
 
@@ -5450,6 +5459,7 @@ void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* 
     }
 }
 
+// PROVEN: 0be36b61 IDENTICAL/UNPROVEN
 // OFFSET: 0x00703890/0x1403D0310
 void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, int32_t displayID, int32_t itemVisual) {
     if (displayID <= 0) {
@@ -5515,7 +5525,7 @@ void CCharacterComponent::AddItemBySlot(INVENTORY_SLOTS invSlot, int32_t display
     }
 }
 
-// OFFSET: 0x00703A40
+// OFFSET: 0x00703A40/0x1403D04B0
 void CCharacterComponent::AddItemByType(INVENTORY_TYPES invType, int32_t displayID) {
     this->RemoveItemByType(invType);
 
@@ -5640,7 +5650,7 @@ void CCharacterComponent::UpdateItemHU(ITEM_SLOT itemSlot, const ItemDisplayInfo
 void CCharacterComponent::UpdateItemHL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
 }
 
-// PROVEN: f28fa65e IDENTICAL/NONE
+// PROVEN: f28fa65e IDENTICAL/IDENTICAL
 // OFFSET: 0x006FBE90/0x1403C6820
 void CCharacterComponent::UpdateItemLL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     this->UpdateItem(itemSlot, SECTION_LEG_LOWER, displayRec, apply);

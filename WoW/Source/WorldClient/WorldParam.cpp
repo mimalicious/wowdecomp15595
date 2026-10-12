@@ -3,7 +3,7 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00D02680
+// STATIC: 0x00D02680/0x140BB2310
 static const CWorldParam::DefaultSetting s_defaultsLow[] = {
     { "farClip", 185 },
     { "baseMip", 1 },
@@ -23,7 +23,7 @@ static const CWorldParam::DefaultSetting s_defaultsLow[] = {
     { NULL, 0 },
 };
 
-// STATIC: 0x00D02700
+// STATIC: 0x00D02700/0x140BB2410
 static const CWorldParam::DefaultSetting s_defaultsFair[] = {
     { "farClip", 507 },
     { "baseMip", 0 },
@@ -44,7 +44,7 @@ static const CWorldParam::DefaultSetting s_defaultsFair[] = {
     { NULL, 0 },
 };
 
-// STATIC: 0x00D02788
+// STATIC: 0x00D02788/0x140BB2520
 static const CWorldParam::DefaultSetting s_defaultsGood[] = {
     { "farClip", 727 },
     { "baseMip", 0 },
@@ -66,7 +66,7 @@ static const CWorldParam::DefaultSetting s_defaultsGood[] = {
     { NULL, 0 },
 };
 
-// STATIC: 0x00D02818
+// STATIC: 0x00D02818/0x140BB2640
 static const CWorldParam::DefaultSetting s_defaultsHigh[] = {
     { "farClip", 1057 },
     { "baseMip", 0 },
@@ -88,7 +88,7 @@ static const CWorldParam::DefaultSetting s_defaultsHigh[] = {
     { NULL, 0 },
 };
 
-// STATIC: 0x00D028A8
+// STATIC: 0x00D028A8/0x140BB2760
 static const CWorldParam::DefaultSetting s_defaultsUltra[] = {
     { "farClip", 1250 },
     { "baseMip", 0 },
@@ -110,25 +110,28 @@ static const CWorldParam::DefaultSetting s_defaultsUltra[] = {
     { NULL, 0 },
 };
 
-// STATIC: 0x00D02938
+// STATIC: 0x00D02938/0x140BB2880
 const CWorldParam::DefaultSetting* CWorldParam::s_defaults[5] = { s_defaultsLow, s_defaultsFair, s_defaultsGood, s_defaultsHigh, s_defaultsUltra };
 
-// STATIC: 0x00D0294C
+// STATIC: 0x00D0294C/0x140BB28A8
 const EGxTexFilter CWorldParam::s_textureFilteringModes[6] = { GxTex_LinearMipNearest, GxTex_LinearMipLinear, GxTex_Anisotropic, GxTex_Anisotropic, GxTex_Anisotropic, GxTex_Anisotropic };
 
-// STATIC: 0x00D02964
+// STATIC: 0x00D02964/0x140BB28C0
 const uint32_t CWorldParam::s_textureFilteringAnisotropy[6] = { 1, 1, 2, 4, 8, 16 };
 
+// PROVEN: cd3eaae2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B5A0/0x140453660
 const CWorldParam::DefaultSetting* CWorldParam::GetDefaultSettings(uint32_t level) {
     return CWorldParam::s_defaults[level];
 }
 
+// PROVEN: e09f161b IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B5B0/0x140453670
 const CWorldParam::DefaultSetting* CWorldParam::GetCurrentDefaultSettings() {
     return CWorldParam::s_defaults[ConsoleDeviceGetDefaultSettings()->m_graphicsQuality];
 }
 
+// PROVEN: 69f993cf IDENTICAL/IDENTICAL
 // OFFSET: 0x0076B5C0/0x140453690
 void CWorldParam::SetDefaults(OPTION_PAGE page) {
     if (page != OPTION_PAGE_0) {
@@ -143,12 +146,13 @@ void CWorldParam::SetDefaults(OPTION_PAGE page) {
     }
 }
 
-// PROVEN: cb6b2cea IDENTICAL/NONE
-// OFFSET: 0x0076B610
+// PROVEN: cb6b2cea IDENTICAL/UNPROVEN
+// OFFSET: 0x0076B610/0x140453700
 void CWorldParam::Destroy() {
     RemoveConsoleDeviceDefaultCallback(CWorldParam::SetDefaults);
 }
 
+// PROVEN: 1a40b545 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C130/0x140454240
 uint32_t CWorldParam::ValidateTextureFilteringMode(uint32_t mode) {
     if (mode <= 1) {

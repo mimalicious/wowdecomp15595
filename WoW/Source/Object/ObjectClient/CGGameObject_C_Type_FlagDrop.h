@@ -10,4 +10,6 @@ class CGGameObject_C_Type_FlagDrop : public CGGameObject_C_TypeAnimated {
     CGGameObject_C_Type_FlagDrop(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
+#include "WoW/Source/Object/ObjectClient/CGGameObject_C_Type_FlagDrop.inl"
+
 #endif

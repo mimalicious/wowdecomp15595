@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "Engine/Source/Os/SockAddr.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
+#include "WoW/Source/JamClientAutoCode/JamHandlerKeys.h"
 #include "WoW/Source/WowServices/WDataStore.h"
 
 class ClientConnectionAuthChallenge : public JamClientMessage {

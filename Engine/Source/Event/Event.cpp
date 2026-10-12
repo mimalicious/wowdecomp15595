@@ -26,7 +26,7 @@ void EventInitialize(uint32_t threadCount, int32_t netServer) {
     OsInputSetEventPollProc(EventForceIdleProcessing);
 }
 
-// OFFSET: 0x008A0040
+// OFFSET: 0x008A0040/0x1405E1200
 void EventDestroy() {
     OsInputSetEventPollProc(NULL);
     IEvtSchedulerDestroy();
@@ -36,7 +36,8 @@ void EventDestroy() {
     ObserverDestroy();
 }
 
-// OFFSET: 0x008A0070
+// PROVEN: a0fdabd3 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A0070/0x1405E1230
 void EventDoMessageLoop() {
     IEvtSchedulerProcess();
 }
@@ -47,7 +48,7 @@ void EventInitiateShutdown() {
     IEvtSchedulerShutdown();
 }
 
-// PROVEN: 047bcbf3 IDENTICAL/NONE
+// PROVEN: 047bcbf3 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A0090/0x1405E1250
 HEVENTCONTEXT EventCreateContextEx(int32_t interactive, EVENTHANDLERFUNC initializeHandler, EVENTHANDLERFUNC destroyHandler, uint32_t idleTime, uint32_t debugFlags) {
     return IEvtSchedulerCreateContext(interactive, initializeHandler, destroyHandler, idleTime, debugFlags);
@@ -65,7 +66,7 @@ HEVENTCONTEXT EventGetCurrentContext() {
     return static_cast<HEVENTCONTEXT>(PropGet(PROP_EVENTCONTEXT));
 }
 
-// OFFSET: 0x008A01E0
+// OFFSET: 0x008A01E0/0x1405E12D0
 int32_t EventIsButtonDown(MOUSEBUTTON button) {
     int32_t result = 0;
     uint32_t findMask;
@@ -228,7 +229,7 @@ uint32_t EventSetTimer(uint32_t delay, EVENTHANDLERFUNC handler, void* param) {
     return result;
 }
 
-// OFFSET: 0x008A05B0
+// OFFSET: 0x008A05B0/0x1405E1B20
 uint32_t EventSetTimer(uint32_t delay, EVENTHANDLERGUIDFUNC handler, uint64_t guid, void* param) {
     uint32_t result = 0;
     uint32_t findMask;

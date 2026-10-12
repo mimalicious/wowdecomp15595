@@ -64,6 +64,7 @@ FMOD_RESULT UserFile::reallyOpen(const char *name_or_data, unsigned int *filesiz
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 844eee7a UNPROVEN/IDENTICAL
 // OFFSET: 0x00A92D90/0x1408529E0
 FMOD_RESULT UserFile::reallyClose()
 {
@@ -97,6 +98,7 @@ FMOD_RESULT UserFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 6b1499a4 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A92DC0/0x140852A20
 FMOD_RESULT UserFile::reallyRead(void *buffer, unsigned int size, unsigned int *rd)
 {
@@ -132,6 +134,7 @@ FMOD_RESULT UserFile::reallyRead(void *buffer, unsigned int size, unsigned int *
 	[SEE_ALSO]
 ]
 */
+// PROVEN: a09ee232 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A92E00/0x140852A60
 FMOD_RESULT UserFile::reallySeek(unsigned int pos)
 {

@@ -16,10 +16,10 @@
 #include "WoW/Source/DayNight/DNOverrideSky.h"
 #include "WoW/Source/DayNight/DNPlanet.h"
 
-// STATIC: 0x00CEFC74
+// STATIC: 0x00CEFC74/0x140B90378
 static uint16_t s_glareIndices[4] = { 0, 2, 1, 3 };
 
-// STATIC: 0x00CEFC80
+// STATIC: 0x00CEFC80/0x140B90388
 static C3Vector s_glareVerts[4] = {
     C3Vector(0.0f, -0.5f, 0.5f),
     C3Vector(0.0f, 0.5f, 0.5f),
@@ -35,49 +35,49 @@ static C2Vector s_glareTexCoords[4] = {
     C2Vector(1.0f, 1.0f),
 };
 
-// STATIC: 0x00CEFCD0
+// STATIC: 0x00CEFCD0/0x140B903D8
 static float s_glowExponent = 10.0f;
 
-// STATIC: 0x00E43264
+// STATIC: 0x00E43264/0x140D2BFF8
 CGxShader* DayNight::DNGlare::s_pixelShader;
 
-// STATIC: 0x00E43268
+// STATIC: 0x00E43268/0x140D2C000
 int32_t DayNight::GlareBase::s_masterEnable;
 
-// STATIC: 0x00E4326C
+// STATIC: 0x00E4326C/0x140D2C004
 uint32_t DayNight::DNGlare::s_refCount;
 
-// STATIC: 0x00E43270
+// STATIC: 0x00E43270/0x140D2C008
 CGxShader* DayNight::DNGlare::s_vertexShader;
 
-// STATIC: 0x00E43274
+// STATIC: 0x00E43274/0x140D2C010
 CGxShader* DayNight::DNGlare::s_queryVertexShader;
 
-// STATIC: 0x00E43278
+// STATIC: 0x00E43278/0x140D2C018
 CGxShader* DayNight::DNGlare::s_queryPixelShader;
 
-// PROVEN: bb7ab595 IDENTICAL/NONE
+// PROVEN: bb7ab595 IDENTICAL/IDENTICAL
 // OFFSET: 0x0064F7F0/0x1402EEC30
 int32_t DayNight::GlareBase::IsAllLoaded() {
     return TextureIsLoaded(this->m_texture);
 }
 
-// PROVEN: 435f07f8 IDENTICAL/NONE
-// OFFSET: 0x0064F800
+// PROVEN: 435f07f8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0064F800/0x1402EEC40
 void DayNight::GlareBase::LinkToAsyncHead() {
     if (this->m_texture) {
         TextureIncreasePriority(this->m_texture);
     }
 }
 
-// PROVEN: 3fa6a7f9 IDENTICAL/NONE
-// OFFSET: 0x0064F810
+// PROVEN: 3fa6a7f9 IDENTICAL/UNPROVEN
+// OFFSET: 0x0064F810/0x1402EEC60
 float DayNight::DNSunGlare::GetCloudDensityFade() {
     return 1.0f - DayNight::g_clouds.GetDensity(this->m_position, 1.0f);
 }
 
-// PROVEN: cb38ef01 IDENTICAL/NONE
-// OFFSET: 0x0064F830
+// PROVEN: cb38ef01 IDENTICAL/UNPROVEN
+// OFFSET: 0x0064F830/0x1402EECA0
 void DayNight::DNGlare::Destroy() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);
@@ -204,7 +204,7 @@ void DayNight::DNGlare::Update(float deltaSec) {
     this->m_glow = pow(dot, s_glowExponent) * current;
 }
 
-// OFFSET: 0x0064FC20
+// OFFSET: 0x0064FC20/0x1402EF0D0
 float DayNight::DNGlare::IsVisibleIntersect() {
     DNInfo& info = DayNight::g_dnInfo;
 
@@ -228,7 +228,7 @@ float DayNight::DNGlare::IsVisibleIntersect() {
     return 1.0f;
 }
 
-// OFFSET: 0x0064FD70
+// OFFSET: 0x0064FD70/0x1402EF250
 float DayNight::DNGlare::IsVisibleQuery() {
     DNInfo& info = DayNight::g_dnInfo;
 
@@ -375,8 +375,8 @@ float DayNight::DNGlare::IsVisibleQuery() {
     return 0.0f;
 }
 
-// PROVEN: cc7f6dc2 IDENTICAL/NONE
-// OFFSET: 0x006506B0
+// PROVEN: cc7f6dc2 IDENTICAL/UNPROVEN
+// OFFSET: 0x006506B0/0x1402EFE30
 float DayNight::DNGlare::IsVisible() {
     if (!GlareBase::s_masterEnable || !this->m_enable || !this->m_color.a) {
         return 0.0f;
@@ -472,6 +472,7 @@ void DayNight::DNGlare::Render() {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
+// PROVEN: f6b0773f UNPROVEN/IDENTICAL
 // OFFSET: 0x00650B80/0x1402F0520
 void DayNight::DNGlare::Initialize(const char* fileName) {
     CStatus status;

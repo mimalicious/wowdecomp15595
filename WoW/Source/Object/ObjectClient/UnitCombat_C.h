@@ -31,7 +31,6 @@ class ATTACKROUNDINFO {
     /* 006C */ uint32_t unk_006C;
     /* 0070 */ float unk_0070 [8];
     /* 0090 */ uint32_t unk_0090 [5];
-    /* 00A4 */ uint32_t unk_00A4;
 
     ATTACKROUNDINFO();
     void Unpack(CDataStore& msg);

@@ -21,6 +21,7 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
+// PROVEN: daadcf78 IDENTICAL/IDENTICAL
 // OFFSET: 0x009ED3B0/0x140786700
 static int32_t Script_GetVoidTransferCost(lua_State* L) {
     CGVoidTransfer* transfer = CGVoidTransfer::Get(false);
@@ -278,6 +279,7 @@ static int32_t Script_ClickVoidTransferDepositSlot(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 256574a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EDF00/0x1407873F0
 static int32_t Script_CloseVoidStorageFrame(lua_State* L) {
     CGVoidStorageInfo::SetNPC(WOWGUID());
@@ -285,6 +287,7 @@ static int32_t Script_CloseVoidStorageFrame(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 3df2a329 IDENTICAL/DIFFERENT
 // OFFSET: 0x009EDF70/0x140787460
 static int32_t Script_GetVoidItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -523,6 +526,7 @@ static int32_t Script_ClickVoidTransferWithdrawalSlot(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 8c3b04aa IDENTICAL/DIFFERENT
 // OFFSET: 0x009EE600/0x140787BC0
 static int32_t Script_GetVoidItemHyperlinkString(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -571,7 +575,7 @@ static int32_t Script_GetVoidItemHyperlinkString(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D16C90
+// STATIC: 0x00D16C90/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CanUseVoidStorage", &Script_CanUseVoidStorage },
     { "UnlockVoidStorage", &Script_UnlockVoidStorage },

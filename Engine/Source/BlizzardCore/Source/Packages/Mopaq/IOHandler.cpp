@@ -58,7 +58,7 @@ const char* Blizzard::Mopaq::HSFILERecord::GetFileName() {
     return this->m_handle ? this->m_handle->m_name : "";
 }
 
-// OFFSET: 0x007B20E0
+// OFFSET: 0x007B20E0/0x1404A7120
 bool Blizzard::Mopaq::HSFILERecord::Read(void* buffer, int64_t offset, int32_t count, int32_t* amount) {
     MpqHandleRecord* handle = this->m_handle;
 
@@ -185,13 +185,13 @@ Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::MpqStandaloneRepairErrorHandle
 Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::~MpqStandaloneRepairErrorHandler() {
 }
 
-// OFFSET: 0x007D8F60
+// OFFSET: 0x007D8F60/0x1404DB2D0
 bool Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::HandleDecompressSectorError(uint32_t sector) {
     this->m_badSectors.push_back(sector);
     return true;
 }
 
-// OFFSET: 0x007D44F0
+// OFFSET: 0x007D44F0/0x1404D4C00
 bool Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::GetBadSectorList(std::vector<uint32_t>& sectors) {
     sectors = this->m_badSectors;
     return true;
@@ -203,14 +203,14 @@ bool Blizzard::Mopaq::MpqErrorHandler::HandleInitSectorTableError(MpqHandleRecor
     return false;
 }
 
-// PROVEN: baa60b30 IDENTICAL/DIFFERENT
-// OFFSET: 0x007AAB20/0x1402B9E40
+// PROVEN: baa60b30 IDENTICAL/IDENTICAL
+// OFFSET: 0x007AAB20/0x140317F90
 bool Blizzard::Mopaq::MpqErrorHandler::HandleReadChecksumError(MpqHandleRecord* handle) {
     return false;
 }
 
-// PROVEN: 486a3d46 IDENTICAL/DIFFERENT
-// OFFSET: 0x007AAB20/0x1402B9E40
+// PROVEN: 486a3d46 IDENTICAL/IDENTICAL
+// OFFSET: 0x007AAB20/0x140317F90
 bool Blizzard::Mopaq::MpqErrorHandler::HandleDecompressSectorError(uint32_t sector) {
     return false;
 }
@@ -239,8 +239,8 @@ bool Blizzard::Mopaq::MpqErrorHandler::HandleNonStreamableFileError(MpqHandleRec
     return false;
 }
 
-// PROVEN: 6e17c5ff IDENTICAL/DIFFERENT
-// OFFSET: 0x007AAB20/0x1402B9E40
+// PROVEN: 6e17c5ff IDENTICAL/IDENTICAL
+// OFFSET: 0x007AAB20/0x140317F90
 bool Blizzard::Mopaq::MpqErrorHandler::GetBadSectorList(std::vector<uint32_t>& sectors) {
     return false;
 }
@@ -283,8 +283,8 @@ bool System_Mopaq::IOHandler::WriteData(IOHandler* handler, const void* buffer, 
     return handler->WriteData(static_cast<const uint8_t*>(buffer), offset, count);
 }
 
-// PROVEN: 7ead9b00 IDENTICAL/NONE
-// OFFSET: 0x007B36F0
+// PROVEN: 7ead9b00 IDENTICAL/UNPROVEN
+// OFFSET: 0x007B36F0/0x1404A8FB0
 bool System_Mopaq::IOHandler::ReadData(void* buffer, int64_t offset, int32_t* count) {
     return this->m_base.Read(buffer, offset + this->m_baseOffset, *count, count);
 }
@@ -327,7 +327,7 @@ bool System_Mopaq::IOHandler::AdjustSectorTable() {
     return true;
 }
 
-// PROVEN: 719f64cf IDENTICAL/DIFFERENT
+// PROVEN: 719f64cf IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void System_Mopaq::IOHandler::SetSizeFileBeforeDelta(uint64_t size) {
 }
@@ -380,7 +380,7 @@ System_Mopaq::SectorReadHandler::SectorCache::SectorCache(uint32_t size) {
     this->m_data = static_cast<uint8_t*>(Blizzard::Memory::Allocate(size));
 }
 
-// OFFSET: 0x007E8530
+// OFFSET: 0x007E8530/0x1404F2C50
 System_Mopaq::SectorReadHandler::SectorReadHandler(Blizzard::Mopaq::MpqHandleRecord*& handle, void* sectorTable, bool sharedMemory) : MopaqReadHandler(handle) {
     this->m_sectorSize = handle->m_archive->m_sectorSize;
     this->m_key = 0;
@@ -426,7 +426,7 @@ System_Mopaq::SectorReadHandler::SectorReadHandler(Blizzard::Mopaq::MpqHandleRec
     }
 }
 
-// OFFSET: [0x007CC950, 0x007D0700]
+// OFFSET: [0x007CC950/0x1404C8EE0, 0x007D0700]
 System_Mopaq::SectorReadHandler::~SectorReadHandler() {
     delete[] this->m_checksums;
 
@@ -441,7 +441,7 @@ System_Mopaq::SectorReadHandler::~SectorReadHandler() {
     }
 }
 
-// OFFSET: 0x007B33A0
+// OFFSET: 0x007B33A0/0x1404A8C30
 void System_Mopaq::SectorReadHandler::AllocateSectorTable() {
     if (!this->m_sectorTableState) {
         delete[] this->m_sectorTable;
@@ -634,7 +634,7 @@ bool System_Mopaq::SectorReadHandler::ReadAndDecompressData(uint8_t* dest, const
     return false;
 }
 
-// OFFSET: 0x007E8B60
+// OFFSET: 0x007E8B60/0x1404F3440
 bool System_Mopaq::SectorReadHandler::UnalignedRead(uint8_t* dest, const int32_t* range) {
     uint32_t sectorSize = this->m_sectorSize;
     uint32_t head = range[0] % sectorSize;
@@ -847,10 +847,6 @@ bool System_Mopaq::SectorReadHandler::PkwareDecompressWrapper(void* dest, uint32
     }
 
     return true;
-}
-
-// INLINED
-Blizzard::Mopaq::HSFILERecord::HSFILERecord() {
 }
 
 // OFFSET: 0x007BF420

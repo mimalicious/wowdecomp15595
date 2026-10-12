@@ -3,6 +3,7 @@
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
 
+// PROVEN: 34a0a5c7 IDENTICAL/DIFFERENT
 // OFFSET: 0x009CB970/0x14075B6A0
 static int32_t Script_GetAutoCompleteResults(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3) || !lua_isnumber(L, 4)) {
@@ -24,6 +25,7 @@ static int32_t Script_GetAutoCompleteResults(lua_State* L) {
     return CGAutoCompleteName::GetMatchingResults(L, text, include, exclude, numReturns, cursor, allowFullMatch);
 }
 
+// PROVEN: 7306009c DIFFERENT/IDENTICAL
 // OFFSET: 0x009CBAD0/0x14075B800
 static int32_t Script_GetAutoCompletePresenceID(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -41,12 +43,13 @@ static int32_t Script_GetAutoCompletePresenceID(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00D16088
+// STATIC: 0x00D16088/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetAutoCompleteResults", &Script_GetAutoCompleteResults },
     { "GetAutoCompletePresenceID", &Script_GetAutoCompletePresenceID },
 };
 
+// PROVEN: 42c4982d IDENTICAL/UNPROVEN
 // OFFSET: 0x009CB2B0/0x14075ACC0
 void AutoCompleteRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -54,6 +57,7 @@ void AutoCompleteRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: b6f0841c IDENTICAL/UNPROVEN
 // OFFSET: 0x009CB2E0/0x14075AD10
 void AutoCompleteUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

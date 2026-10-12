@@ -243,7 +243,7 @@ FMOD_RESULT CodecUser::setPositionInternal(int subsound, unsigned int position, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fd5ee18b IDENTICAL/NONE
+// PROVEN: fd5ee18b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A93A30/0x140853900
 FMOD_RESULT F_CALLBACK CodecUser::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {

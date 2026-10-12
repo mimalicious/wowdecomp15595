@@ -16,4 +16,6 @@ class EmergencyMem {
     void Unlock();
 };
 
+#include "Engine/Source/Gx/CGxDevice/EmergencyMem.inl"
+
 #endif

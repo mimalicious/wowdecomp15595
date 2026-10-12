@@ -15,13 +15,13 @@ static const uint32_t s_forcedTutorials[] = { 56, 33, 3, 4, 10, 54, 65 };
 // STATIC: 0x00D10994
 static const uint32_t s_repeatableTutorials[] = { 56, 65 };
 
-// STATIC: 0x00F33758
+// STATIC: 0x00F33758/0x140E26700
 static int32_t s_tutorialsCompleted[65];
 
-// STATIC: 0x00F3385C
+// STATIC: 0x00F3385C/0x140E26808
 TSBitField<TSFixedArray<uint32_t> > CGTutorial::m_tutorialShown;
 
-// STATIC: 0x00F3386C
+// STATIC: 0x00F3386C/0x140E26820
 TSBitField<TSFixedArray<uint32_t> > CGTutorial::m_tutorialFlags;
 
 // OFFSET: 0x00901F70
@@ -201,7 +201,7 @@ void CGTutorial::TriggerTutorial(uint32_t tutorial) {
     }
 }
 
-// OFFSET: 0x00901C00
+// OFFSET: 0x00901C00/0x14065A170
 void CGTutorial::LoadFlaggedTutorials() {
     memset(s_tutorialsCompleted, 0, sizeof(s_tutorialsCompleted));
     CVarIntListWrapper list;
@@ -227,6 +227,7 @@ void CGTutorial::LoadFlaggedTutorials() {
 void CGTutorial::ShutdownGame() {
 }
 
+// PROVEN: 7d513a6f IDENTICAL/UNPROVEN
 // OFFSET: 0x009016C0/0x140659B30
 int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     bool found = false;
@@ -244,6 +245,7 @@ int32_t CGTutorial::GetNextCompletedTutorial(int32_t tutorial) {
     return 65;
 }
 
+// PROVEN: a4aa1205 IDENTICAL/NONE
 // OFFSET: 0x00901710
 int32_t CGTutorial::GetPrevCompletedTutorial(int32_t tutorial) {
     bool found = false;
@@ -261,7 +263,8 @@ int32_t CGTutorial::GetPrevCompletedTutorial(int32_t tutorial) {
     return 0;
 }
 
-// OFFSET: 0x00901B60
+// PROVEN: 37b21dba IDENTICAL/UNPROVEN
+// OFFSET: 0x00901B60/0x14065A0D0
 void CGTutorial::SaveFlaggedTutorials() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("flaggedTutorials");

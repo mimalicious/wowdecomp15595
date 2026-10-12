@@ -4,7 +4,7 @@
 #include "Engine/Source/Event/Observer.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00EC7564
+// STATIC: 0x00EC7564/0x140DB9B38
 static TRefCnt* s_inputObserver;
 
 // STATIC: 0x00EC756C
@@ -19,7 +19,7 @@ static LockedDataAllocator s_dispatchRegAllocator(sizeof(EventReg::EVENTDISPATCH
 void InputObserverInitialize() {
 }
 
-// OFFSET: 0x008A4070
+// OFFSET: 0x008A4070/0x1405E68E0
 void InputObserverDestroy() {
     if (s_inputObserver && --s_inputObserver->m_refcnt == 0) {
         s_inputObserver->DeleteSelf();

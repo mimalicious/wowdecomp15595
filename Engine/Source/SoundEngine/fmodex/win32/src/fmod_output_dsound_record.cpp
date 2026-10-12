@@ -37,6 +37,7 @@ static const FMOD_GUID _KSDATAFORMAT_SUBTYPE_IEEE_FLOAT     = { 0x00000003, 0x00
 	[SEE_ALSO]
 ]
 */
+// PROVEN: ec322d49 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B019E0/0x1408C3D30
 BOOL CALLBACK FMOD_Output_DSound_RecordEnumProc(LPGUID lpGUID, LPCSTR lpszDesc, LPCSTR lpszDrvName, LPVOID lpContext)
 {
@@ -175,8 +176,8 @@ FMOD_RESULT OutputDSound::recordGetNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c5bbf187 IDENTICAL/NONE
-// OFFSET: 0x00B01B70
+// PROVEN: c5bbf187 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B01B70/0x1408C3F20
 FMOD_RESULT OutputDSound::recordGetDriverInfo(int id, char *name, int namelen)
 {
     FMOD_RESULT result;
@@ -219,7 +220,7 @@ FMOD_RESULT OutputDSound::recordGetDriverInfo(int id, char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00B01BD0
+// OFFSET: 0x00B01BD0/0x1408C3FA0
 FMOD_RESULT OutputDSound::recordStart(int id, Sound *sound, bool loop)
 {
     FMOD_RESULT                 result;

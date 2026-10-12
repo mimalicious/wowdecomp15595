@@ -13,18 +13,6 @@ CMinigame_C::CMinigame_C(MINIGAME_TYPE type, uint64_t guid) {
     this->m_type = type;
 }
 
-// INLINED
-CMinigameTicTacToe_C::CMinigameTicTacToe_C(uint64_t guid) : CMinigame_C(MINIGAME_TICTACTOE, guid) {
-    this->m_guid = guid;
-    this->m_type = MINIGAME_TICTACTOE;
-    this->m_state = 0;
-    this->unk_0010 = 0;
-    this->unk_0018 = 0;
-    this->unk_0020 = 0;
-    this->unk_0021 = 0;
-    memset(this->m_board, 0, sizeof(this->m_board));
-}
-
 // OFFSET: 0x00B38020/0x140903EB0
 CMinigame_C* CMinigame_C::CreateMinigame(MINIGAME_TYPE type, uint64_t guid) {
     if (type != MINIGAME_TICTACTOE) {
@@ -35,7 +23,7 @@ CMinigame_C* CMinigame_C::CreateMinigame(MINIGAME_TYPE type, uint64_t guid) {
     return memory ? new (memory) CMinigameTicTacToe_C(guid) : NULL;
 }
 
-// OFFSET: 0x00B380A0
+// OFFSET: 0x00B380A0/0x140903F50
 void CMinigame_C::UpdateSetup(CDataStore* msg) {
     uint8_t state;
     msg->Get(state);
@@ -49,7 +37,7 @@ void CMinigame_C::UpdateSetup(CDataStore* msg) {
     }
 }
 
-// PROVEN: 5a310b5e IDENTICAL/NONE
+// PROVEN: 5a310b5e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B38100/0x140903FC0
 void CMinigameTicTacToe_C::UpdateState(CDataStore* msg) {
     for (uint32_t i = 0; i < 9; i++) {
@@ -64,6 +52,7 @@ bool CMinigameTicTacToe_C::ValidateMoveClient(uint8_t moveType, int32_t param) {
     return CMinigameTicTacToe::ValidateMove(this, moveType, param);
 }
 
+// PROVEN: 320607bc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B38170/0x140904040
 int32_t CMinigameTicTacToe_C::PushStateToLua(lua_State* L) {
     lua_checkstack(L, 9);
@@ -75,7 +64,7 @@ int32_t CMinigameTicTacToe_C::PushStateToLua(lua_State* L) {
     return 9;
 }
 
-// OFFSET: 0x00B381C0
+// OFFSET: 0x00B381C0/0x1409040A0
 void CMinigame_C::MakeMove(uint8_t moveType, int32_t param) {
     if (!this->ValidateMoveClient(moveType, param)) {
         return;

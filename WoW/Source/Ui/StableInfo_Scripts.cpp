@@ -17,6 +17,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 
+// PROVEN: 7cd35dea IDENTICAL/IDENTICAL
 // OFFSET: 0x0096C840/0x1406E35F0
 static void StablePetFoodCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -24,6 +25,7 @@ static void StablePetFoodCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 }
 
+// PROVEN: 3d15f052 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096C860/0x1406E3610
 static void StablePaperdollCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -31,6 +33,7 @@ static void StablePaperdollCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
+// PROVEN: b1dbe1c1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096CA00/0x1406E3770
 static int32_t Script_PickupStablePet(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -222,7 +225,7 @@ static int32_t Script_SetPetStablePaperdoll(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D13308
+// STATIC: 0x00D13308/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "ClosePetStables", &Script_ClosePetStables },
     { "GetStablePetInfo", &Script_GetStablePetInfo },
@@ -233,6 +236,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SetPetSlot", &Script_SetPetSlot },
 };
 
+// PROVEN: fc58c528 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CB30/0x1406E3890
 void StableInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -240,6 +244,7 @@ void StableInfoRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: f2265615 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096CB60/0x1406E38E0
 void StableInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

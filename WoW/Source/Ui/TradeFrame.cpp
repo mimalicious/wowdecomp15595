@@ -24,31 +24,31 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/FriendList.h"
 
-// STATIC: 0x00F48178
+// STATIC: 0x00F48178/0x140E3C250
 static uint32_t s_clientStateIndex;
 
-// STATIC: 0x00F48180
+// STATIC: 0x00F48180/0x140E3C260
 TradeTargetData CGTradeInfo::m_targetTrade;
 
-// STATIC: 0x00F483C8
+// STATIC: 0x00F483C8/0x140E3C4B0
 TradePlayerData CGTradeInfo::m_playerTrade;
 
-// STATIC: 0x00F48488
+// STATIC: 0x00F48488/0x140E3C570
 WOWGUID CGTradeInfo::m_tradingPlayer;
 
-// STATIC: 0x00F48490
+// STATIC: 0x00F48490/0x140E3C578
 int32_t CGTradeInfo::m_playerAccepted;
 
-// STATIC: 0x00F48494
+// STATIC: 0x00F48494/0x140E3C57C
 int32_t CGTradeInfo::m_targetAccepted;
 
-// STATIC: 0x00F48498
+// STATIC: 0x00F48498/0x140E3C580
 int32_t CGTradeInfo::m_supressMoneyEvent;
 
-// STATIC: 0x00F4849C
+// STATIC: 0x00F4849C/0x140E3C584
 int32_t CGTradeInfo::m_useCursorItem;
 
-// STATIC: 0x00F484A0
+// STATIC: 0x00F484A0/0x140E3C588
 WOWGUID CGTradeInfo::m_enchantingItem;
 
 // STATIC: 0x00F484A8
@@ -57,12 +57,13 @@ int32_t CGTradeInfo::m_initiator;
 // STATIC: 0x00F484AC
 uint32_t CGTradeInfo::m_tradeID;
 
-// STATIC: 0x00F484B0
+// STATIC: 0x00F484B0/0x140E3C598
 int32_t CGTradeInfo::m_partnerIsSameBnetAccount;
 
-// STATIC: 0x00F484B4
+// STATIC: 0x00F484B4/0x140E3C59C
 static uint32_t s_nextTradeRequestTime;
 
+// PROVEN: 3ccabbcf IDENTICAL/NONE
 // OFFSET: 0x004646B0
 int32_t CGTradeInfo::GetTargetCount(uint32_t slot) {
     if (slot <= 6) {
@@ -72,7 +73,8 @@ int32_t CGTradeInfo::GetTargetCount(uint32_t slot) {
     return 0;
 }
 
-// OFFSET: 0x004646D0
+// PROVEN: 873151d3 IDENTICAL/DIFFERENT
+// OFFSET: 0x004646D0/0x140078080
 int32_t CGTradeInfo::GetTargetEnchant(uint32_t slot) {
     if (slot <= 6) {
         return CGTradeInfo::m_targetTrade.m_items[slot].m_enchant;
@@ -81,6 +83,7 @@ int32_t CGTradeInfo::GetTargetEnchant(uint32_t slot) {
     return 0;
 }
 
+// PROVEN: ae8095a2 IDENTICAL/NONE
 // OFFSET: 0x004646F0
 int32_t CGTradeInfo::GetTargetRandomPropertyID(uint32_t slot) {
     if (slot <= 6) {
@@ -107,7 +110,7 @@ void CGTradeInfo::GetPlayerItem(uint32_t slot, WOWGUID& item, WOWGUID& container
     }
 }
 
-// PROVEN: c6b5775e IDENTICAL/NONE
+// PROVEN: c6b5775e IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A2A0/0x1406E0C90
 void TradeItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -165,7 +168,8 @@ void CGTradeInfo::InitiateTrade(WOWGUID guid, int32_t useCursorItem) {
     }
 }
 
-// OFFSET: 0x0096A420
+// PROVEN: 8df109c4 DIFFERENT/IDENTICAL
+// OFFSET: 0x0096A420/0x1406E0E20
 static void SetTargetAccepted(int32_t accepted) {
     if (CGTradeInfo::m_targetAccepted != accepted) {
         CGTradeInfo::m_targetAccepted = accepted;
@@ -173,7 +177,7 @@ static void SetTargetAccepted(int32_t accepted) {
     }
 }
 
-// PROVEN: e76cd299 IDENTICAL/NONE
+// PROVEN: e76cd299 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096A450/0x1406E0E60
 void CGTradeInfo::RemoveMoney(int64_t amount) {
     if (!amount || static_cast<uint64_t>(amount) > CGTradeInfo::m_playerTrade.m_money) {
@@ -188,8 +192,8 @@ void CGTradeInfo::RemoveMoney(int64_t amount) {
     CGTradeInfo::m_playerTrade.m_money = money;
 }
 
-// PROVEN: a56a29b3 IDENTICAL/NONE
-// OFFSET: 0x0096A4C0
+// PROVEN: a56a29b3 IDENTICAL/UNPROVEN
+// OFFSET: 0x0096A4C0/0x1406E0EC0
 void CGTradeInfo::UpdatePlayerItem(WOWGUID guid) {
     if (!guid) {
         return;
@@ -235,13 +239,13 @@ bool CGTradeInfo::IsItemBeingTraded(WOWGUID item) {
     return false;
 }
 
-// PROVEN: b8cac5cb IDENTICAL/NONE
+// PROVEN: b8cac5cb IDENTICAL/DIFFERENT
 // OFFSET: 0x0096A5B0/0x1402190F0
 bool CanTradeBoundItem(CGItem_C* item) {
     return item->IsBoundToBattlenetAccount() && CGTradeInfo::m_partnerIsSameBnetAccount;
 }
 
-// PROVEN: 7ef05467 IDENTICAL/NONE
+// PROVEN: 7ef05467 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A5E0/0x1406E0FA0
 int32_t CGTradeInfo::GetGameError(int32_t error, int32_t target) {
     switch (error) {
@@ -262,14 +266,14 @@ int32_t CGTradeInfo::GetGameError(int32_t error, int32_t target) {
     }
 }
 
-// PROVEN: 72caeb14 IDENTICAL/NONE
+// PROVEN: 72caeb14 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A6B0/0x1406E0FF0
 void CGTradeInfo::BeginTrade() {
     PlayerCliBeginTrade msg;
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 2961daaf IDENTICAL/NONE
+// PROVEN: 2961daaf IDENTICAL/IDENTICAL
 // OFFSET: 0x0096A6E0/0x1406E1020
 void CGTradeInfo::CancelTrade() {
     PlayerCliCancelTrade msg;
@@ -305,14 +309,14 @@ void CGTradeInfo::BusyTrade() {
     ClientServices::Send(&msg);
 }
 
-// PROVEN: 904274db IDENTICAL/NONE
+// PROVEN: 904274db IDENTICAL/IDENTICAL
 // OFFSET: 0x0096AA10/0x1406E12F0
 void CGTradeInfo::ShutdownGame() {
     ClientTradeStatus::s_handler = NULL;
     ClientTradeUpdated::s_handler = NULL;
 }
 
-// OFFSET: 0x0096AA20
+// OFFSET: 0x0096AA20/0x1406E1310
 static void ConvertTradeItem(TradeTargetItem* dst, const JamTradeItem* src) {
     dst->m_itemID = src->m_itemID;
     dst->m_count = src->m_stackCount;
@@ -356,7 +360,7 @@ void CGTradeInfo::SetEnchantingItem(CGItem_C* item) {
     }
 }
 
-// OFFSET: 0x0096AC70
+// OFFSET: 0x0096AC70/0x1406E15B0
 void CGTradeInfo::PlayerAccept() {
     if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted) {
         CGTradeInfo::m_playerAccepted = 0;
@@ -370,7 +374,7 @@ void CGTradeInfo::PlayerAccept() {
     }
 }
 
-// PROVEN: 2ff66143 IDENTICAL/NONE
+// PROVEN: 2ff66143 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096ACE0/0x1406E1650
 bool CGTradeInfo::AddMoney(int64_t amount) {
     if (!amount) {
@@ -392,7 +396,7 @@ bool CGTradeInfo::AddMoney(int64_t amount) {
     return true;
 }
 
-// OFFSET: 0x0096AD80
+// OFFSET: 0x0096AD80/0x1406E1720
 void CGTradeInfo::SetMoney(int64_t amount) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -407,8 +411,8 @@ void CGTradeInfo::SetMoney(int64_t amount) {
     CGTradeInfo::m_playerTrade.m_money = amount;
 }
 
-// PROVEN: a2a2c604 IDENTICAL/NONE
-// OFFSET: 0x0096AE50
+// PROVEN: a2a2c604 IDENTICAL/DIFFERENT
+// OFFSET: 0x0096AE50/0x1406E17F0
 void CGTradeInfo::SetCurrency(int32_t type, int32_t quantity) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__) || !CGCurrencyTypes::HasCurrency(type, quantity)) {
         return;
@@ -484,7 +488,7 @@ void CGTradeInfo::RemovePlayerItem(WOWGUID item) {
     }
 }
 
-// OFFSET: 0x0096B090
+// OFFSET: 0x0096B090/0x1406E1B20
 void CGTradeInfo::DenyPlayerItem(uint32_t slot) {
     if (slot == 255) {
         CGTradeInfo::m_playerTrade.m_money = 0;
@@ -610,7 +614,7 @@ void CGTradeInfo::SetTradePartner(WOWGUID partner, int32_t supressMoneyEvent, in
     FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_SHOW, NULL);
 }
 
-// OFFSET: 0x0096B610
+// OFFSET: 0x0096B610/0x1406E20F0
 bool CGTradeInfo::OnTradeUpdated(ClientTradeUpdated* msg) {
     uint8_t whichPlayer = msg->m_whichPlayer;
 
@@ -974,6 +978,6 @@ bool CGTradeInfo::OnTradeStatus(ClientTradeStatus* msg) {
 
 // OFFSET: 0x0096C820/0x1406E35D0
 void CGTradeInfo::InitializeGame() {
-    ClientTradeStatus::s_handler = &CGTradeInfo::OnTradeStatus;
-    ClientTradeUpdated::s_handler = &CGTradeInfo::OnTradeUpdated;
+    ClientTradeStatus::s_handler = JamHandlerEncode(&CGTradeInfo::OnTradeStatus, g_jamHandlerKey_CFF0F0);
+    ClientTradeUpdated::s_handler = JamHandlerEncode(&CGTradeInfo::OnTradeUpdated, g_jamHandlerKey_CFD350);
 }

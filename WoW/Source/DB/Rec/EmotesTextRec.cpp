@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[4] = { 0, 2, 0, 0 };
 // STATIC: 0x00C2579C/0x140A1B3E0
 const DBCMeta EmotesTextRec::s_meta = { "DBFilesClient\\EmotesText.dbc", 4, 76, EmotesTextRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 66060229 IDENTICAL/NONE
+// PROVEN: 66060229 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void EmotesTextRec::FixupStrings(void* record, const char* strings) {
     EmotesTextRec* rec = static_cast<EmotesTextRec*>(record);

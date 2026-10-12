@@ -14,16 +14,17 @@
 
 static bool s_continueAfterAssert;
 
-// STATIC: 0x00EB5880
+// STATIC: 0x00EB5880/0x140DA1ED0
 static Blizzard::Lock::Mutex s_dbgHelpLock;
 
-// STATIC: 0x00EBA668
+// STATIC: 0x00EBA668/0x140DAB160
 static HMODULE s_dbgHelp;
 
 // STATIC: 0x00EBA66C
 static bool s_dbgHelpInitialized;
 
-// OFFSET: 0x007AC370
+// PROVEN: 92cb3936 DIFFERENT/IDENTICAL
+// OFFSET: 0x007AC370/0x1404A2140
 void Blizzard::Debug::Breakpoint() {
     __try {
         __debugbreak();

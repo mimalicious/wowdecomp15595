@@ -3,7 +3,7 @@
 #include "WoW/Source/Object/Movement.h"
 #include "WoW/Source/Object/Object.h"
 
-// STATIC: 0x00D18C58
+// STATIC: 0x00D18C58/0x140BD4C60
 const uint32_t CGUnit::s_mirrorFieldIndices[120] = {
     0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xC, 0xD, 0xE, 0xF, 0x10, 0x11,
     0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21,
@@ -28,6 +28,7 @@ int32_t CGUnit::IsFlyingOrHovering() const {
     return (movement->m_flags & MOVEMENTFLAG_HOVER) != 0;
 }
 
+// PROVEN: 9693d950 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27820/0x1407CEF80
 uint32_t CGUnit::MirrorIndexFromFieldIndex(uint32_t fieldIndex) {
     for (uint32_t i = 0; i < sizeof(s_mirrorFieldIndices) / sizeof(s_mirrorFieldIndices[0]); i++) {
@@ -39,7 +40,7 @@ uint32_t CGUnit::MirrorIndexFromFieldIndex(uint32_t fieldIndex) {
     return 138;
 }
 
-// OFFSET: 0x00A27850
+// OFFSET: 0x00A27850/0x1407CEFB0
 bool CGUnit::CanSwim() const {
     uint32_t flags = this->m_unit->m_unitFieldFlags;
 
@@ -138,7 +139,7 @@ int32_t CGUnit::CanPlayEmote(uint32_t emoteFlags, int32_t targeted, int32_t* sta
     return 1;
 }
 
-// PROVEN: 0497d0ca IDENTICAL/NONE
+// PROVEN: 0497d0ca IDENTICAL/DIFFERENT
 // OFFSET: 0x00A278A0/0x1407CF000
 void CGUnit::GetResistanceAndBuffs(int32_t school, int32_t* baseValue, int32_t* total, int32_t* effective, int32_t* positive, int32_t* negative) const {
     int32_t resistance = this->m_unit->m_unitFieldResistances[school];
@@ -206,6 +207,7 @@ int32_t CGUnit::IsOnSpline() const {
     return spline && !(spline->m_flags & 0x80);
 }
 
+// PROVEN: d0407b4d DIFFERENT/IDENTICAL
 // OFFSET: 0x0043B840/0x140046180
 int32_t CGUnit::IsOnFallingSpline() const {
     CMoveSpline* spline = this->m_movement->m_spline;
@@ -228,12 +230,13 @@ uint32_t CGUnit::DescriptorToMirrorOffset(uint32_t offset, uint32_t a2, uint32_t
     return (offset & 3) + 4 * (objectFields + MirrorIndexFromFieldIndex((offset - base) >> 2));
 }
 
+// PROVEN: 15c7b8ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00A27810/0x1407CEF60
 int32_t CGUnit::TotalFields() {
     return CGObject::TotalFieldsSaved() + 120;
 }
 
-// PROVEN: 4fb188ef IDENTICAL/NONE
+// PROVEN: 4fb188ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00447B30/0x14026EC00
 float CGUnit::GetFacing(float facing) const {
     return this->m_movement->GetFacing(facing);
@@ -267,6 +270,7 @@ bool CGUnit::IsCharmed() const {
     return this->m_unit->m_unitFieldCharmedby != WOWGUID();
 }
 
+// PROVEN: d055791b IDENTICAL/IDENTICAL
 // OFFSET: 0x008A4690/0x1405E70F0
 int32_t CGUnit::GetSpellCostModifier(int32_t schoolMask) const {
     int32_t result = 0;
@@ -282,6 +286,7 @@ int32_t CGUnit::GetSpellCostModifier(int32_t schoolMask) const {
     return result;
 }
 
+// PROVEN: ab50373b IDENTICAL/NONE
 // OFFSET: 0x008A46E0
 float CGUnit::GetSpellCostMultiplier(int32_t schoolMask) const {
     float result = 0.0f;
@@ -343,6 +348,7 @@ void CGUnit::CalcMissileTravel(const C3Vector& target, float speed, bool speedAs
     }
 }
 
+// PROVEN: 38d76aa9 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A27900/0x1407CF070
 float CGUnit::GetMaxSplineSpeed(uint32_t splineFlags) const {
     if (splineFlags & 0x2000A40) {

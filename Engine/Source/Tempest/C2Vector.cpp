@@ -16,7 +16,7 @@ void C2Vector::NormalizeSafe() {
     }
 }
 
-// PROVEN: d17bfd6a IDENTICAL/NONE
+// PROVEN: d17bfd6a IDENTICAL/IDENTICAL
 // OFFSET: 0x004CB4F0/0x140107160
 C2Vector::C2Vector(const C2iVector& v) {
     this->x = static_cast<float>(v.x);

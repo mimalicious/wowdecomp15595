@@ -1792,6 +1792,9 @@ extern JamHandlerKeyMulXor g_jamHandlerKey_CFFCA4;
 extern JamHandlerKeyXor g_jamHandlerKey_CFFCD4;
 extern JamHandlerKeySub g_jamHandlerKey_CFFD08;
 
+template <class F, class K>
+F JamHandlerEncode(F handler, K& key);
+
 #include "WoW/Source/JamClientAutoCode/JamHandlerKeys.inl"
 
 #endif

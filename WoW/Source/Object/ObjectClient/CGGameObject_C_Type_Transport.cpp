@@ -132,7 +132,7 @@ CGGameObject_C_Type_Transport::CGGameObject_C_Type_Transport(CGGameObject_C* own
     this->InitializeMovement();
 }
 
-// OFFSET: 0x0059AC70
+// OFFSET: 0x0059AC70/0x140209400
 uint32_t CGGameObject_C_Type_Transport::GetSequenceTimeFromRealTime(int32_t state, uint32_t time) const {
     uint32_t count = this->m_frameCount;
 
@@ -191,7 +191,8 @@ uint32_t CGGameObject_C_Type_Transport::GetSequenceTimeFromRealTime(int32_t stat
     return static_cast<uint32_t>(static_cast<float>(duration) * progress);
 }
 
-// OFFSET: 0x005A35D0
+// PROVEN: 6d5566fc IDENTICAL/UNPROVEN
+// OFFSET: 0x005A35D0/0x140213C40
 uint32_t CGGameObject_C_Type_Transport::GetSequenceTimeFromRealTime(uint32_t time) const {
     return this->GetSequenceTimeFromRealTime(this->m_owner->m_gameObject->m_state, time);
 }
@@ -202,6 +203,7 @@ void CGGameObject_C_Type_Transport::Reenable() {
     this->InitializeMovement();
 }
 
+// PROVEN: 9a3a330f IDENTICAL/IDENTICAL
 // OFFSET: 0x00599560/0x140207950
 void CGGameObject_C_Type_Transport::PostInitWithStats() {
     this->CreateWorldObj();
@@ -216,7 +218,8 @@ void CGGameObject_C_Type_Transport::PostInitWithStats() {
     }
 }
 
-// OFFSET: 0x005995D0
+// PROVEN: 832e8356 IDENTICAL/IDENTICAL
+// OFFSET: 0x005995D0/0x1402079C0
 void CGGameObject_C_Type_Transport::PostReenable() {
     this->m_sequence = 660;
     this->CreateWorldObj();
@@ -267,7 +270,7 @@ void CGGameObject_C_Type_Transport::InitializeMovement() {
     matrix.d2 = this->m_position.z;
 }
 
-// OFFSET: 0x0059C170
+// OFFSET: 0x0059C170/0x14020AC80
 C3Vector CGGameObject_C_Type_Transport::GetMovement(uint32_t time) {
     if (this->m_frameCount <= 1) {
         return C3Vector(0.0f, 0.0f, 0.0f);
@@ -314,7 +317,7 @@ C3Vector CGGameObject_C_Type_Transport::GetMovement(uint32_t time) {
     return result;
 }
 
-// OFFSET: 0x0059C340
+// OFFSET: 0x0059C340/0x14020AEA0
 C4Quaternion CGGameObject_C_Type_Transport::GetRotation(uint32_t time) {
     uint32_t count = this->m_rotationCount;
 
@@ -348,6 +351,7 @@ C4Quaternion CGGameObject_C_Type_Transport::GetRotation(uint32_t time) {
     return rotation * reinterpret_cast<const C4Quaternion&>(this->m_owner->m_gameObject->m_parentRotation);
 }
 
+// PROVEN: f55f75c4 IDENTICAL/NONE
 // OFFSET: 0x0059C570
 void CGGameObject_C_Type_Transport::Interpolate(uint32_t time, C3Vector* offset, C4Quaternion* rotation) {
     uint32_t sequenceTime = this->GetSequenceTimeFromRealTime(this->m_owner->m_gameObject->m_state, time);
@@ -355,7 +359,7 @@ void CGGameObject_C_Type_Transport::Interpolate(uint32_t time, C3Vector* offset,
     *rotation = this->GetRotation(sequenceTime);
 }
 
-// OFFSET: 0x0059A8C0
+// OFFSET: 0x0059A8C0/0x1402090D0
 C44Matrix& CGGameObject_C_Type_Transport::UpdateOwnerMatrix() {
     C44Matrix& matrix = this->m_owner->m_matrix;
     matrix = this->m_owner->GetRotation();
@@ -365,7 +369,7 @@ C44Matrix& CGGameObject_C_Type_Transport::UpdateOwnerMatrix() {
     return matrix;
 }
 
-// OFFSET: 0x005A0C90
+// OFFSET: 0x005A0C90/0x1402108B0
 void CGGameObject_C_Type_Transport::UpdateMovement(uint32_t time, uint32_t elapsed) {
     if (!this->m_isLoaded && this->m_worldObject && World::ObjectIsLoaded(this->m_worldObject)) {
         this->MarkTransportLoaded();

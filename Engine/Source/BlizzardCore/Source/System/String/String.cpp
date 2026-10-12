@@ -100,6 +100,7 @@ const char* Blizzard::String::FindFirstOf(const char* str, const char* chars, in
     return NULL;
 }
 
+// PROVEN: c98b31ed DIFFERENT/IDENTICAL
 // OFFSET: 0x007ADCA0/0x1404A3860
 int32_t Blizzard::String::VFormat(char* dst, uint32_t maxchars, const char* format, va_list args) {
     if (!format) {
@@ -216,6 +217,7 @@ char* System_String::Duplicate(const char* str, const char* fileName, int32_t li
     return dst;
 }
 
+// PROVEN: 873851d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B5BD0/0x1404ABC30
 const char* Blizzard::String::Find(const char* str, const char* substr, uint32_t maxchars) {
     if (str && substr) {
@@ -225,7 +227,7 @@ const char* Blizzard::String::Find(const char* str, const char* substr, uint32_t
     return NULL;
 }
 
-// OFFSET: 0x007AF8E0
+// OFFSET: 0x007AF8E0/0x1404A4CE0
 const char* System_String::FindReverse(const char* str, const char* substr, uint32_t maxchars) {
     uint32_t sublen = substr ? static_cast<uint32_t>(strlen(substr)) : 0;
     uint32_t length = str ? static_cast<uint32_t>(strlen(str)) : 0;
@@ -245,8 +247,8 @@ const char* System_String::FindReverse(const char* str, const char* substr, uint
     return p;
 }
 
-// PROVEN: 59873c10 IDENTICAL/NONE
-// OFFSET: 0x007B5C00
+// PROVEN: 59873c10 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B5C00/0x1404ABC50
 const char* Blizzard::String::Find(const char* str, char c, uint32_t maxchars) {
     if (str && c) {
         return System_String::Find(str, c, maxchars);
@@ -255,7 +257,8 @@ const char* Blizzard::String::Find(const char* str, char c, uint32_t maxchars) {
     return NULL;
 }
 
-// OFFSET: 0x007B5C30
+// PROVEN: d4c2797a IDENTICAL/UNPROVEN
+// OFFSET: 0x007B5C30/0x1404ABC80
 const char* Blizzard::String::FindReverse(const char* str, const char* substr, uint32_t maxchars) {
     if (str && substr) {
         return System_String::FindReverse(str, substr, maxchars);
@@ -298,7 +301,7 @@ const char* Blizzard::String::FindWordI(const char* str, const char* word, uint3
     return NULL;
 }
 
-// PROVEN: 769c0637 IDENTICAL/NONE
+// PROVEN: 769c0637 IDENTICAL/IDENTICAL
 // OFFSET: 0x007B5D30/0x1404ABDA0
 const char* Blizzard::String::FindI(const char* str, const char* substr, uint32_t maxchars) {
     if (str && substr) {
@@ -308,7 +311,7 @@ const char* Blizzard::String::FindI(const char* str, const char* substr, uint32_
     return NULL;
 }
 
-// PROVEN: 7531668c IDENTICAL/UNPROVEN
+// PROVEN: 7531668c IDENTICAL/IDENTICAL
 // OFFSET: 0x007B5DA0/0x1404ABE00
 int32_t Blizzard::String::Format(char* dst, uint32_t maxchars, const char* format, ...) {
     if (!dst || !maxchars) {

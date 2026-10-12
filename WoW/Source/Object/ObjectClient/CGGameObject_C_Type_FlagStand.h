@@ -10,4 +10,6 @@ class CGGameObject_C_Type_FlagStand : public CGGameObject_C_TypeAnimated {
     CGGameObject_C_Type_FlagStand(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
+#include "WoW/Source/Object/ObjectClient/CGGameObject_C_Type_FlagStand.inl"
+
 #endif

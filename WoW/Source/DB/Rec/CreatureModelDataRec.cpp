@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[27] = { 0, 0, 2, 0, 3, 0, 0, 3, 3, 3, 0, 0, 0,
 // STATIC: 0x00C1D6F4/0x140A11650
 const DBCMeta CreatureModelDataRec::s_meta = { "DBFilesClient\\CreatureModelData.dbc", 27, 124, CreatureModelDataRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 7d549e20 IDENTICAL/NONE
+// PROVEN: 7d549e20 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ECA0/0x1407D8230
 void CreatureModelDataRec::FixupStrings(void* record, const char* strings) {
     CreatureModelDataRec* rec = static_cast<CreatureModelDataRec*>(record);

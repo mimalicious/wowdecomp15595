@@ -190,4 +190,6 @@ class SectorInPlaceReadWriteHandler : public SectorReadWriteHandler {
 
 }
 
+#include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/IOHandler.inl"
+
 #endif

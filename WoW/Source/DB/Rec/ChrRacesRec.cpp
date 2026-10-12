@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[23] = { 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0,
 // STATIC: 0x00C1E594/0x140A127E0
 const DBCMeta ChrRacesRec::s_meta = { "DBFilesClient\\ChrRaces.dbc", 23, 96, ChrRacesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: eea3b520 IDENTICAL/NONE
+// PROVEN: eea3b520 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E890/0x1407D7A30
 void ChrRacesRec::FixupStrings(void* record, const char* strings) {
     ChrRacesRec* rec = static_cast<ChrRacesRec*>(record);

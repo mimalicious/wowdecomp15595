@@ -174,7 +174,7 @@ class ForEveryRunOnceWTF {
 
 }
 
-// STATIC: 0x00B88080
+// STATIC: 0x00B88080/0x140965DD0
 static const _ARGLIST s_wowArgList[] = {
     { 0, CMD_RES_800x600, "800x600", NULL },
     { 0, CMD_RES_1024x768, "1024x768", NULL },
@@ -222,7 +222,7 @@ static ARCHIVEINFO s_archives[19] = {
     { "alternate.MPQ", "alternate", 0, 0x3, 0 },
     { "world2.MPQ", NULL, 0, 0x0, 0 },
 };
-// STATIC: 0x00B87400
+// STATIC: 0x00B87400/0x140965408
 static const uint8_t s_signatureExponent[4] = { 0x01, 0x00, 0x01, 0x00 };
 
 // STATIC: 0x00C97008/0x140B2E108
@@ -244,10 +244,10 @@ static const uint8_t s_signatureModulus[256] = {
     0x5D, 0xCA, 0x5D, 0xCF, 0x7D, 0xC3, 0x6F, 0x6B, 0x9D, 0xBC, 0x6D, 0x86, 0x4C, 0x91, 0xC5, 0x51,
     0xE8, 0xFD, 0xA6, 0x33, 0x10, 0xD1, 0x12, 0x8F, 0x05, 0x80, 0xDA, 0x42, 0x57, 0x0C, 0xEB, 0xC0,
 };
-// STATIC: 0x00D1F1F8
+// STATIC: 0x00D1F1F8/0x140BDBAB0
 const char* s_raceFileNames[24] = { NULL, "Human", "Orc", "Dwarf", "NightElf", "Scourge", "Tauren", "Gnome", "Troll", "Goblin", "BloodElf", "Draenei", "FelOrc", "Naga_", "Broken", "Skeleton", "Vrykul", "Tuskarr", "ForestTroll", "Taunka", "NorthrendSkeleton", "IceTroll", "Worgen", "Gilnean" };
 
-// STATIC: 0x00D1F258
+// STATIC: 0x00D1F258/0x140BDBB70
 const char* s_classFileNames[12] = { NULL, "WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "DEATHKNIGHT", "SHAMAN", "MAGE", "WARLOCK", NULL, "DRUID" };
 
 // STATIC: 0x00C97230/0x140B2E208
@@ -259,53 +259,53 @@ static uint32_t s_archiveOpenFlags = 0x9E48;
 // STATIC: 0x00C9753C
 static const SignaturePrefix s_signaturePrefixes[1] = { { "alternate\\", 10 } };
 
-// STATIC: 0x00C97530
+// STATIC: 0x00C97530/0x140B2E578
 static TSExplicitList<ArchivePreload, offsetof(ArchivePreload, m_link)> s_archivePreloads;
 
-// STATIC: 0x00C97570
+// STATIC: 0x00C97570/0x140B2E5F0
 static char s_installLocationRegKeyName[128] = "World of Warcraft";
 
-// STATIC: 0x00D36358
+// STATIC: 0x00D36358/0x140BEF884
 int32_t s_region;
 
-// STATIC: 0x00D3635C
+// STATIC: 0x00D3635C/0x140BEF898
 static int32_t s_showArchiveProgress;
 
-// STATIC: 0x00D36360
+// STATIC: 0x00D36360/0x140BEF890
 static int64_t s_placeholderArchiveSize;
 
-// STATIC: 0x00D36368
+// STATIC: 0x00D36368/0x140BEF8A0
 static char s_placeholderArchivePath[260];
 
-// STATIC: 0x00D3646C
+// STATIC: 0x00D3646C/0x140BEF89C
 static int32_t s_engineInitialized;
 
-// STATIC: 0x00D364AC
+// STATIC: 0x00D364AC/0x140BEF9E0
 static uint8_t* s_preloadBuffer;
 
-// STATIC: 0x00D364B0
+// STATIC: 0x00D364B0/0x140BEF9E8
 static int32_t s_startBGLoadThread;
 
-// STATIC: 0x00D364CC
+// STATIC: 0x00D364CC/0x140BEFA18
 static uint32_t s_numUpdateArchives;
 
-// STATIC: 0x00ED742C
+// STATIC: 0x00ED742C/0x140E25A88
 PreloadList* s_startWorldCommonList;
 
 WowClientDB<Startup_StringsRec> g_startup_StringsDB;
 
-// STATIC: 0x00C9A938
+// STATIC: 0x00C9A938/0x140B338B0
 const char* s_iniLocaleNames[9] = { "enUS", "koKR", "frFR", "deDE", "zhCN", "zhTW", "esES", "esMX", "ruRU" };
 
-// STATIC: 0x00C9A9CC
+// STATIC: 0x00C9A9CC/0x140B339B8
 uint32_t s_localeIds[15] = { 'deDE', 'enGB', 'enUS', 'esES', 'frFR', 'koKR', 'zhCN', 'zhTW', 'enCN', 'enTW', 'esMX', 'ruRU', 'enUS', 'ptBR', 'ptPT' };
 
 static uint32_t s_firstBaseArchive;
 
-// STATIC: 0x00D364E8
+// STATIC: 0x00D364E8/0x140BEFA20
 CRndSeed g_rndSeed(0);
 
-// STATIC: 0x00D364D4
+// STATIC: 0x00D364D4/0x140BEFA28
 static TSGrowableArray<SArchive*> s_archiveHandles;
 
 static char s_iniLocale[5];
@@ -317,13 +317,13 @@ static uint32_t s_streamingDiag;
 
 static char s_streamingError[2051];
 
-// STATIC: 0x00D36334
+// STATIC: 0x00D36334/0x140BEF868
 HEVENTCONTEXT g_clientEventContext;
 
-// STATIC: 0x00D36474
+// STATIC: 0x00D36474/0x140BEF9A8
 static int32_t s_closeErrorStringId;
 
-// STATIC: 0x00D364A8
+// STATIC: 0x00D364A8/0x140BEF9DC
 static uint32_t s_timeTestError;
 
 // STATIC: 0x00D364C8/0x140BEF9EC
@@ -332,7 +332,7 @@ static uint32_t s_unk_B2FA10;
 // STATIC: 0x00D36354/0x140BEF888
 static char* s_mfilDownloadErrors;
 
-// STATIC: 0x00D732EC
+// STATIC: 0x00D732EC/0x000C2E638
 bool g_hasIsoLocale[15];
 
 // STATIC: 0x00D732FC/0x140DABA80
@@ -344,16 +344,16 @@ static float s_spawnRotation;
 
 static uint32_t s_zoneID;
 
-// STATIC: 0x00D36350
+// STATIC: 0x00D36350/0x140BEF880
 int32_t s_isPvPRealm;
 
-// STATIC: 0x00D36470
+// STATIC: 0x00D36470/0x140BEF9A4
 static int32_t s_gameInitialized;
 
-// STATIC: 0x00D36478
+// STATIC: 0x00D36478/0x140BEF9AC
 static int32_t s_clientTaxiBenchIsOnTaxi;
 
-// STATIC: 0x00D3647C
+// STATIC: 0x00D3647C/0x140BEF9B0
 static int32_t s_clientTaxiBenchEnabled;
 
 static double s_clientTaxiBenchMinFPS;
@@ -467,7 +467,7 @@ static bool FormatArchiveError(char* buffer, uint32_t size, const char* initErro
     return allowRetry;
 }
 
-// OFFSET: 0x004022D0
+// OFFSET: 0x004022D0/0x140001C70
 static int64_t GetStreamedArchiveSize() {
     int64_t total = 0;
 
@@ -559,6 +559,7 @@ static void LoadInstallLocation() {
     delete[] data;
 }
 
+// PROVEN: b29a25b4 DIFFERENT/IDENTICAL
 // OFFSET: 0x00402E10/0x140005FF0
 void StartupReport() {
     if (SFile::IsTrial()) {
@@ -609,6 +610,7 @@ const char* GetInstallLocationRegKeyName() {
     return s_installLocationRegKeyName;
 }
 
+// PROVEN: 4dd2a2b9 IDENTICAL/NONE
 // OFFSET: 0x00405450
 void UpdateInstallLocation() {
     const char* key = GetInstallLocationRegKeyName();
@@ -909,7 +911,7 @@ static bool InitializeStreamingManifest() {
     return true;
 }
 
-// OFFSET: 0x004072A0
+// OFFSET: 0x004072A0/0x140008D50
 static bool FindArchivesToPreload() {
     for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
         char path[260];
@@ -978,7 +980,7 @@ static void DestroyArchivePreloads() {
     }
 }
 
-// OFFSET: 0x00406F30
+// OFFSET: 0x00406F30/0x140008A90
 uint32_t ClientBeginInitializingArchives(uint8_t expansion) {
     int64_t total = 0;
 
@@ -1096,7 +1098,7 @@ int32_t ClientContinueInitializingArchives(int32_t* stalled) {
     return 0;
 }
 
-// OFFSET: 0x00407D60
+// OFFSET: 0x00407D60/0x140009DE0
 static bool PreloadArchives() {
     uint32_t chunks = ClientBeginInitializingArchives(0);
 
@@ -1453,6 +1455,7 @@ static int32_t AcceptArchive(const char* path, void* param, uint8_t flags) {
     return 1;
 }
 
+// PROVEN: 1a3d80fd IDENTICAL/DIFFERENT
 // OFFSET: 0x00404C00/0x140005320
 static void ListArchives(const char* prefix, int32_t index, int32_t (*callback)(const char* fileName, void* param), void* param) {
     ARCHIVELISTPARAMS params;
@@ -1470,6 +1473,7 @@ static void ListArchives(const char* prefix, int32_t index, int32_t (*callback)(
     }
 }
 
+// PROVEN: d9dfb831 IDENTICAL/DIFFERENT
 // OFFSET: 0x00404C90/0x1400053C0
 void ListInterfaceArchive(const char* prefix, int32_t (*callback)(const char* fileName, void* param), void* param) {
     ListArchives(prefix, 3, callback, param);
@@ -1552,7 +1556,7 @@ bool OpenExpansionArchives(uint8_t accountExpansion, uint8_t activeExpansion) {
     return true;
 }
 
-// OFFSET: 0x00406570
+// OFFSET: 0x00406570/0x140007C60
 static bool OpenArchives() {
     for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
         s_archives[i].m_opened = false;
@@ -1673,7 +1677,8 @@ static bool OpenArchives() {
     return LoadMopaqFileSigningData(s_localeCode) && (CmdLineGetBool(static_cast<CMDOPT>(CMD_LAUNCH)) || s_locale != 4 || s_allArchivesComplete || !SCreateProcess("Launcher.exe", NULL, 0, NULL, NULL, NULL));
 }
 
-// OFFSET: 0x004011A0
+// PROVEN: ad485657 IDENTICAL/NONE
+// OFFSET: 0x004011A0/0x140007B40
 CommandManager::~CommandManager() {
     for (uint32_t i = 0; i < this->m_count; i++) {
         this->m_commands[i]->Uninstall();
@@ -1735,7 +1740,8 @@ static void ClientProcessNotification(const char* text) {
     }
 }
 
-// OFFSET: 0x004012A0
+// PROVEN: 0e530234 IDENTICAL/UNPROVEN
+// OFFSET: 0x004012A0/0x1400011A0
 int32_t Packet_SMSG_NOTIFICATION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     char text[4096];
     msg->GetString(text, sizeof(text));
@@ -1743,12 +1749,14 @@ int32_t Packet_SMSG_NOTIFICATION(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
+// PROVEN: 5a5a86fd IDENTICAL/NONE
 // OFFSET: 0x004012E0
 static bool OnNotification(ClientNotification* msg) {
     ClientProcessNotification(msg->m_text);
     return true;
 }
 
+// PROVEN: 560b5595 IDENTICAL/NONE
 // OFFSET: 0x004013F0
 static bool OnNewWorldAbort(ClientNewWorldAbort* msg) {
     MovementResumeActiveMover();
@@ -1869,7 +1877,7 @@ static void WowClientDestroy() {
     SysMsgShutdown();
 }
 
-// OFFSET: 0x00407200
+// OFFSET: 0x00407200/0x1400092D0
 int32_t DestroyEngineCallback(const void* data, void* param) {
     RemoveConsoleDeviceDefaultCallback(SetDefaults);
     ClientDestroyGame(0, 0, 0);
@@ -1894,6 +1902,7 @@ int32_t DestroyEngineCallback(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: 471d7f29 IDENTICAL/NONE
 // OFFSET: 0x004020A0
 void SetPaths() {
     SFile::DisableSFileCheckDisk();
@@ -1913,6 +1922,7 @@ void SetPaths() {
     SFile::SetDataPath(s_dataDirectory);
 }
 
+// PROVEN: 3f30f0d3 DIFFERENT/IDENTICAL
 // OFFSET: 0x004026C0/0x1400020D0
 int ForEveryRunOnceWTF::FileNameCompare(const void* a, const void* b) {
     return SStrSortUTF8I(*static_cast<char* const*>(a), *static_cast<char* const*>(b), STORM_MAX_STR);
@@ -1926,7 +1936,8 @@ static int32_t ClientIdle(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x004029D0
+// PROVEN: a4a34a4c IDENTICAL/UNPROVEN
+// OFFSET: 0x004029D0/0x140005840
 static bool OnMessageBox(ClientMessageBox* msg) {
     char text[512];
     msg->m_text.GetString(text, sizeof(text));
@@ -1934,7 +1945,8 @@ static bool OnMessageBox(ClientMessageBox* msg) {
     return true;
 }
 
-// OFFSET: 0x00402A20
+// PROVEN: 84e8ec84 IDENTICAL/UNPROVEN
+// OFFSET: 0x00402A20/0x140005890
 static bool OnSuspendToken(ClientSuspendToken* msg) {
     UserRouterClientSuspendTokenResponse response;
     response.m_present |= 1;
@@ -1948,7 +1960,7 @@ static bool OnSuspendToken(ClientSuspendToken* msg) {
     return true;
 }
 
-// OFFSET: 0x004031F0
+// OFFSET: 0x004031F0/0x140002920
 static bool OnTransferPending(ClientTransferPending* msg) {
     int32_t shipID = 0;
     int32_t shipOriginMapID = -1;
@@ -1982,6 +1994,7 @@ static bool OnTransferPending(ClientTransferPending* msg) {
     return true;
 }
 
+// PROVEN: 0d106570 IDENTICAL/UNPROVEN
 // OFFSET: 0x00403660/0x140002EA0
 int32_t ClientLoadNewWorld(int32_t mapID, C3Vector* position, float facing) {
     if (!g_mapDB.GetRecord(mapID)) {
@@ -2027,7 +2040,8 @@ int32_t ClientLoadNewWorld(int32_t mapID, C3Vector* position, float facing) {
     return 1;
 }
 
-// OFFSET: 0x004037B0
+// PROVEN: b8b72aa7 IDENTICAL/UNPROVEN
+// OFFSET: 0x004037B0/0x140003020
 static bool OnNewWorld(ClientNewWorld* msg) {
     if (!ClientLoadNewWorld(msg->m_mapID, &msg->m_position, msg->m_facing)) {
         return false;
@@ -2039,7 +2053,7 @@ static bool OnNewWorld(ClientNewWorld* msg) {
     return true;
 }
 
-// OFFSET: 0x00403810
+// OFFSET: 0x00403810/0x140003070
 static int32_t Packet_SMSG_LOGIN_VERIFY_WORLD(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     C3Vector position;
     position.x = 0.0f;
@@ -2061,6 +2075,7 @@ static int32_t Packet_SMSG_LOGIN_VERIFY_WORLD(void* param, NETMESSAGE msgId, uin
     return ClientLoadNewWorld(mapID, &position, facing);
 }
 
+// PROVEN: 56980067 IDENTICAL/IDENTICAL
 // OFFSET: 0x004029B0/0x140002250
 void ClientPostClose(int32_t reason) {
     s_closeErrorStringId = reason;
@@ -2221,7 +2236,8 @@ void ForEveryRunOnceWTF::Execute(int32_t (*callback)(const char*)) {
     }
 }
 
-// OFFSET: 0x00407BA0
+// PROVEN: 0d923ce9 IDENTICAL/UNPROVEN
+// OFFSET: 0x00407BA0/0x140009B50
 static void AbortInitializeGlobal() {
     CloseAllArchives();
     DestroyArchivePreloads();
@@ -2257,7 +2273,7 @@ static const char* GetDefaultLocale() {
     return g_localeNames[index == 15 ? current : index];
 }
 
-// OFFSET: 0x00407E10
+// OFFSET: 0x00407E10/0x140009E90
 bool InitializeGlobal() {
     SCmdRegisterArgList(s_wowArgList, sizeof(s_wowArgList) / sizeof(s_wowArgList[0]));
     CmdLineProcess();
@@ -2722,6 +2738,7 @@ void BeginCloseGame() {
     g_startup_StringsDB.Unload(&Startup_StringsRec::s_meta);
 }
 
+// PROVEN: b2ab0435 IDENTICAL/DIFFERENT
 // OFFSET: 0x00408340/0x14000A610
 int32_t CommonMain() {
     OsGuiSetGxDevWindowFcn(GxDevWindow);
@@ -2763,6 +2780,7 @@ int32_t CommonMain() {
     return 0;
 }
 
+// PROVEN: 74dcf5f2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00408580/0x14000A8C0
 void GameClientCommands::Uninstall() {
     ConsoleCommandUnregister("port");
@@ -2774,6 +2792,7 @@ void GameClientCommands::Uninstall() {
     ConsoleCommandUnregister("togglecloak");
 }
 
+// PROVEN: c58cca59 IDENTICAL/IDENTICAL
 // OFFSET: 0x00408FF0/0x14000B610
 void GameClientCommands::Install() {
     ConsoleCommandRegister("port", CCommand_Teleport, CATEGORY_DEBUG, NULL, NULL);
@@ -2785,7 +2804,7 @@ void GameClientCommands::Install() {
     ConsoleCommandRegister("togglecloak", CCommand_ToggleCloak, CATEGORY_GAME, NULL, NULL);
 }
 
-// OFFSET: 0x00403290
+// OFFSET: 0x00403290/0x1400029C0
 int32_t Packet_SMSG_TRANSFER_ABORTED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t mapID;
     uint8_t reason;
@@ -2884,6 +2903,7 @@ int32_t Packet_SMSG_TRANSFER_ABORTED(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
+// PROVEN: e3ac4108 IDENTICAL/IDENTICAL
 // OFFSET: 0x00402D20/0x140002260
 int32_t STORMAPI SendErrorLog(uint32_t errorcode, const char* description, const char* filename, int32_t linenumber, const char* errorstring) {
     char path[260];
@@ -2897,7 +2917,7 @@ int32_t STORMAPI SendErrorLog(uint32_t errorcode, const char* description, const
     return 1;
 }
 
-// OFFSET: 0x00405600
+// OFFSET: 0x00405600/0x140007440
 static void ClientBeginTaxiBenchmarkMode() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2943,7 +2963,7 @@ static void ClientEndTaxiBenchmarkMode(int32_t silent) {
     CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
 }
 
-// OFFSET: 0x004057F0
+// OFFSET: 0x004057F0/0x140007670
 void ClientUpdateTaxiBenchmarkMode() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -3043,7 +3063,7 @@ void CheckAndSendBotDetected() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x00401300
+// OFFSET: 0x00401300/0x140002820
 int32_t Packet_SMSG_PLAYED_TIME(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     int32_t total;
     int32_t level;
@@ -3075,6 +3095,7 @@ int32_t Packet_SMSG_PLAYED_TIME(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
+// PROVEN: 4f7b114a IDENTICAL/IDENTICAL
 // OFFSET: 0x004029A0/0x140002240
 void ClientKillTimer(uint32_t id, EVENTHANDLERFUNC handler, const char* name) {
     EventKillTimer(id, handler, name);
@@ -3099,12 +3120,14 @@ void SendBotDetected2(uint32_t msgId, uint32_t code) {
     ClientServices::Send2(&msg);
 }
 
+// PROVEN: f5437e2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00402960/0x140002220
 uint32_t ClientSetTimer(uint32_t delay, EVENTHANDLERFUNC handler, void* param) {
     return EventSetTimer(delay, handler, param);
 }
 
-// OFFSET: 0x00402970
+// PROVEN: aace4b15 IDENTICAL/IDENTICAL
+// OFFSET: 0x00402970/0x140002230
 uint32_t ClientSetTimer(uint32_t delay, EVENTHANDLERGUIDFUNC handler, uint64_t guid, void* param) {
     return EventSetTimer(delay, handler, guid, param);
 }
@@ -3164,15 +3187,15 @@ void ClientInitializeGame(uint32_t mapId, C3Vector position) {
 
     ClientServices::SetMessageHandler(SMSG_NOTIFICATION, Packet_SMSG_NOTIFICATION, NULL);
     ClientServices::SetMessageHandler(SMSG_PLAYED_TIME, Packet_SMSG_PLAYED_TIME, NULL);
-    ClientTransferPending::s_handler = OnTransferPending;
+    ClientTransferPending::s_handler = JamHandlerEncode(OnTransferPending, g_jamHandlerKey_CFEF80);
     ClientServices::SetMessageHandler(SMSG_TRANSFER_ABORTED, Packet_SMSG_TRANSFER_ABORTED, NULL);
     ClientServices::SetMessageHandler(SMSG_LOGIN_VERIFY_WORLD, Packet_SMSG_LOGIN_VERIFY_WORLD, NULL);
     ClientServices::SetMessageHandler(SMSG_KICK_REASON, CGlueMgr::OnKickReasonMsg, NULL);
-    ClientNewWorldAbort::s_handler = OnNewWorldAbort;
-    ClientNotification::s_handler = OnNotification;
-    ClientNewWorld::s_handler = OnNewWorld;
-    ClientMessageBox::s_handler = OnMessageBox;
-    ClientSuspendToken::s_handler = OnSuspendToken;
+    ClientNewWorldAbort::s_handler = JamHandlerEncode(OnNewWorldAbort, g_jamHandlerKey_CFDEB4);
+    ClientNotification::s_handler = JamHandlerEncode(OnNotification, g_jamHandlerKey_CFF188);
+    ClientNewWorld::s_handler = JamHandlerEncode(OnNewWorld, g_jamHandlerKey_CFD85C);
+    ClientMessageBox::s_handler = JamHandlerEncode(OnMessageBox, g_jamHandlerKey_CFEF80);
+    ClientSuspendToken::s_handler = JamHandlerEncode(OnSuspendToken, g_jamHandlerKey_CFEFF4);
 
     if (!g_mapDB.GetRecord(mapId)) {
         DebugLog("Bad zone ID %i", mapId);

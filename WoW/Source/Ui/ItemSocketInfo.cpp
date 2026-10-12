@@ -13,19 +13,19 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F4A290
+// STATIC: 0x00F4A290/0x140E3E3C0
 uint8_t CGItemSocketInfo::m_gemContainerSlot[3];
 
-// STATIC: 0x00F4A298
+// STATIC: 0x00F4A298/0x140E3E3C8
 WOWGUID CGItemSocketInfo::m_gemItemContainer[3];
 
-// STATIC: 0x00F4A2B0
+// STATIC: 0x00F4A2B0/0x140E3E3E0
 WOWGUID CGItemSocketInfo::m_gemItems[3];
 
-// STATIC: 0x00F4A2C8
+// STATIC: 0x00F4A2C8/0x140E3E3F8
 WOWGUID CGItemSocketInfo::m_socketItem;
 
-// STATIC: 0x00F4A2D0
+// STATIC: 0x00F4A2D0/0x140E3E400
 ItemRecSparse* CGItemSocketInfo::m_socketItemRec;
 
 // OFFSET: 0x0097A150
@@ -41,6 +41,7 @@ void CGItemSocketInfo::GetGemItemForSlot(uint32_t slot, WOWGUID& item, WOWGUID& 
     }
 }
 
+// PROVEN: 4331ca5e IDENTICAL/IDENTICAL
 // OFFSET: 0x0097A1B0/0x1406F3730
 void EnchantItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -48,7 +49,7 @@ void EnchantItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool
     }
 }
 
-// PROVEN: 0571ab78 IDENTICAL/NONE
+// PROVEN: 0571ab78 IDENTICAL/UNPROVEN
 // OFFSET: 0x0097A1D0/0x1406F3750
 void CGItemSocketInfo::EnterWorld() {
     CGItemSocketInfo::m_socketItem = WOWGUID::Make(0);
@@ -62,6 +63,7 @@ void CGItemSocketInfo::EnterWorld() {
     memset(CGItemSocketInfo::m_gemContainerSlot, 0, sizeof(((CGItemSocketInfo*)0)->m_gemContainerSlot));
 }
 
+// PROVEN: 7d5af11b IDENTICAL/UNPROVEN
 // OFFSET: 0x0097A310/0x1406F38C0
 int32_t CGItemSocketInfo::GemMatchesSocket(const ItemRecSparse* item, const ItemRecSparse* gem, int32_t socket) {
     if (!item || !gem) {
@@ -83,7 +85,8 @@ int32_t CGItemSocketInfo::GemMatchesSocket(const ItemRecSparse* item, const Item
     return 0;
 }
 
-// OFFSET: 0x0097A370
+// PROVEN: 0dbfd0f7 IDENTICAL/DIFFERENT
+// OFFSET: 0x0097A370/0x1406F3B60
 bool CGItemSocketInfo::IsSocketItemBoundTradeable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -94,7 +97,8 @@ bool CGItemSocketInfo::IsSocketItemBoundTradeable() {
     return false;
 }
 
-// OFFSET: 0x0097A660
+// PROVEN: e2c3abdf IDENTICAL/DIFFERENT
+// OFFSET: 0x0097A660/0x1406F3BF0
 void CGItemSocketInfo::UpdateItem(WOWGUID item) {
     if (CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))) {
         player->CountEquippedGems();
@@ -131,6 +135,7 @@ void CGItemSocketInfo::Accept() {
     }
 }
 
+// PROVEN: 1059532b IDENTICAL/DIFFERENT
 // OFFSET: 0x0097A7B0/0x1406F3D50
 bool CGItemSocketInfo::IsSocketItemRefundable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -177,7 +182,7 @@ void CGItemSocketInfo::SetItem(WOWGUID item) {
     FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
 }
 
-// OFFSET: 0x0097A970
+// OFFSET: 0x0097A970/0x1406F3F20
 int32_t CGItemSocketInfo::SetGem(uint32_t slot, WOWGUID item, WOWGUID container, uint8_t containerSlot) {
     if (slot >= 3 || !CGItemSocketInfo::m_socketItem || !CGItemSocketInfo::m_socketItemRec) {
         return 0;
@@ -234,7 +239,7 @@ int32_t CGItemSocketInfo::SetGem(uint32_t slot, WOWGUID item, WOWGUID container,
     return 1;
 }
 
-// OFFSET: 0x0097AB60
+// OFFSET: 0x0097AB60/0x1406F40E0
 void CGItemSocketInfo::RemoveItem(WOWGUID item) {
     if (item == CGItemSocketInfo::m_socketItem) {
         CGItemSocketInfo::SetItem(WOWGUID::Make(0));
@@ -257,6 +262,7 @@ void CGItemSocketInfo::RemoveItem(WOWGUID item) {
     }
 }
 
+// PROVEN: c24c11d0 DIFFERENT/IDENTICAL
 // OFFSET: 0x0097B1E0/0x1406F47E0
 void CGItemSocketInfo::LeaveWorld() {
     CGItemSocketInfo::SetItem(WOWGUID::Make(0));

@@ -23,49 +23,49 @@
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F44EC0
+// STATIC: 0x00F44EC0/0x140E38B20
 uint32_t CGLootInfo::m_missingItemsPending;
 
-// STATIC: 0x00F44EC4
+// STATIC: 0x00F44EC4/0x140E38B24
 uint32_t CGLootInfo::m_itemsPending;
 
-// STATIC: 0x00F44EC8
+// STATIC: 0x00F44EC8/0x140E38B28
 uint32_t CGLootInfo::m_lootType;
 
-// STATIC: 0x00F44ECC
+// STATIC: 0x00F44ECC/0x140E38B2C
 int32_t CGLootInfo::m_coins;
 
-// STATIC: 0x00F44ED0
+// STATIC: 0x00F44ED0/0x140E38B30
 LootSlot CGLootInfo::m_slots[24];
 
-// STATIC: 0x00F45230
+// STATIC: 0x00F45230/0x140E38E90
 WOWGUID CGLootInfo::m_lootObj;
 
-// STATIC: 0x00F45238
+// STATIC: 0x00F45238/0x140E38E98
 int32_t CGLootInfo::m_autolooted;
 
-// STATIC: 0x00F4523C
+// STATIC: 0x00F4523C/0x140E38EA4
 TSGrowableArray<MissingLootItem> CGLootInfo::m_missingItems;
 
-// STATIC: 0x00F45250
+// STATIC: 0x00F45250/0x140E38EC0
 static char s_lootSlotTexture[260];
 
-// STATIC: 0x00D12DB0
+// STATIC: 0x00D12DB0/0x140BCA9D0
 static int32_t s_bindConfirmSlot = -1;
 
 // STATIC: 0x00DC715C
 static uint32_t s_currencyMultiplier[3];
 
-// STATIC: 0x00DC7168
+// STATIC: 0x00DC7168/0x140CACDAC
 static uint8_t s_lootInitialized;
 
 // STATIC: 0x00CA1364
 static const char* s_currencyAmountTokens[3] = { "COPPER_AMOUNT", "SILVER_AMOUNT", "GOLD_AMOUNT" };
 
-// STATIC: 0x00CA1370
+// STATIC: 0x00CA1370/0x140B3DCD8
 static const char* s_currencyTextureTokens[3] = { "COPPER_AMOUNT_TEXTURE", "SILVER_AMOUNT_TEXTURE", "GOLD_AMOUNT_TEXTURE" };
 
-// STATIC: 0x00CA137C
+// STATIC: 0x00CA137C/0x140B3DCF0
 static const char* s_currencySymbolTokens[3] = { "COPPER_AMOUNT_SYMBOL", "SILVER_AMOUNT_SYMBOL", "GOLD_AMOUNT_SYMBOL" };
 
 // OFFSET: 0x004E3990
@@ -84,7 +84,7 @@ void CurrencyBreakdown(uint64_t amount, uint64_t* parts) {
     parts[0] = amount;
 }
 
-// PROVEN: 32af9dfe IDENTICAL/NONE
+// PROVEN: 32af9dfe IDENTICAL/UNPROVEN
 // OFFSET: 0x004E3A00/0x140124BF0
 void LootInitialize() {
     s_currencyMultiplier[0] = 1;
@@ -93,7 +93,7 @@ void LootInitialize() {
     s_lootInitialized = 1;
 }
 
-// PROVEN: 99b26c7d IDENTICAL/NONE
+// PROVEN: 99b26c7d IDENTICAL/IDENTICAL
 // OFFSET: 0x004E3A30/0x140124C20
 void LootDestroy() {
     s_lootInitialized = 0;
@@ -206,6 +206,7 @@ void GetCurrencyShortText(int64_t amount, char* buffer, uint32_t size, const cha
     }
 }
 
+// PROVEN: b31abe26 IDENTICAL/IDENTICAL
 // OFFSET: 0x00959950/0x1406CBF70
 void MasterLootCandidateCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -213,12 +214,13 @@ void MasterLootCandidateCallback(int32_t id, const WOWGUID& guid, void* param, b
     }
 }
 
-// PROVEN: 09095f6f IDENTICAL/NONE
+// PROVEN: 09095f6f IDENTICAL/IDENTICAL
 // OFFSET: 0x00959970/0x1406CBF90
 void CGLootInfo::LeaveWorld() {
     CGGameUI::CloseLoot(true, false, false);
 }
 
+// PROVEN: e333a2bb IDENTICAL/NONE
 // OFFSET: 0x00959980
 int32_t CGLootWindow::GetNumLootItems() {
     if (!CGLootInfo::m_lootObj) {
@@ -240,6 +242,7 @@ int32_t CGLootWindow::GetNumLootItems() {
     return count;
 }
 
+// PROVEN: aad4653f IDENTICAL/UNPROVEN
 // OFFSET: 0x00959A20/0x1406CBFA0
 int32_t CGLootInfo::GetLootItem(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -261,6 +264,7 @@ int32_t CGLootInfo::GetLootItem(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_itemID;
 }
 
+// PROVEN: 14785721 IDENTICAL/UNPROVEN
 // OFFSET: 0x00959A60/0x1406CBFE0
 int32_t CGLootInfo::GetLootCurrency(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -282,6 +286,7 @@ int32_t CGLootInfo::GetLootCurrency(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_currencyID;
 }
 
+// PROVEN: 5f023e10 IDENTICAL/UNPROVEN
 // OFFSET: 0x00959AA0/0x1406CC020
 int32_t CGLootInfo::GetLootQuantity(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -303,6 +308,7 @@ int32_t CGLootInfo::GetLootQuantity(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_quantity;
 }
 
+// PROVEN: e1f13ae5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00959AE0/0x1406CC060
 int32_t CGLootInfo::GetLootSeed(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -324,6 +330,7 @@ int32_t CGLootInfo::GetLootSeed(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_randomSuffix;
 }
 
+// PROVEN: d019963f IDENTICAL/UNPROVEN
 // OFFSET: 0x00959B20/0x1406CC0A0
 int32_t CGLootInfo::GetLootRandomPropertiesID(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -345,19 +352,21 @@ int32_t CGLootInfo::GetLootRandomPropertiesID(uint32_t slot) {
     return CGLootInfo::m_slots[slot].m_randomPropertiesID;
 }
 
+// PROVEN: 732c2549 IDENTICAL/IDENTICAL
 // OFFSET: 0x00959B60/0x1406CC0E0
 uint32_t CGLootInfo::GetLootType() {
     return CGLootInfo::m_lootType;
 }
 
-// OFFSET: 0x0095A190
+// PROVEN: 2dbd171c IDENTICAL/IDENTICAL
+// OFFSET: 0x0095A190/0x1406CC770
 void CGLootInfo::ShutdownGame() {
     ClientCurrencyLootRemoved::s_handler = NULL;
     ClientCurrencyLootRestored::s_handler = NULL;
     ClientLootContents::s_handler = NULL;
 }
 
-// OFFSET: 0x0095A1B0
+// OFFSET: 0x0095A1B0/0x1406CC790
 bool CGLootInfo::OnCurrencyLootRestored(ClientCurrencyLootRestored* msg) {
     uint8_t lootListID = msg->m_lootListID;
     uint32_t index = static_cast<uint32_t>(-1);
@@ -395,6 +404,7 @@ bool CGLootInfo::OnCurrencyLootRestored(ClientCurrencyLootRestored* msg) {
     return true;
 }
 
+// PROVEN: 889881d5 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A260/0x1406CC850
 const char* CGLootInfo::GetLootSlotTexture(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -470,6 +480,7 @@ void CGLootInfo::GetLootSlotText(char* buffer, uint32_t size, uint32_t slot) {
     }
 }
 
+// PROVEN: ae6488db IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A430/0x1406CCAE0
 int32_t CGLootInfo::HasLoot() {
     if (!ClntObjMgrObjectPtr(CGLootInfo::m_lootObj, TYPEMASK_OBJECT, __FILE__, __LINE__)) {
@@ -489,7 +500,8 @@ int32_t CGLootInfo::HasLoot() {
     return 0;
 }
 
-// OFFSET: 0x0095A490
+// PROVEN: 4205bdc2 IDENTICAL/UNPROVEN
+// OFFSET: 0x0095A490/0x1406CCB50
 static void MissingLootItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     for (uint32_t i = 0; i < CGLootInfo::m_missingItems.m_count; i++) {
         MissingLootItem& item = CGLootInfo::m_missingItems.m_data[i];
@@ -504,6 +516,7 @@ static void MissingLootItemCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
+// PROVEN: daa597d4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0095A500/0x1406CCBC0
 bool CGLootInfo::IsPlayerIneligible(int32_t itemId) {
     for (uint32_t i = 0; i < CGLootInfo::m_missingItems.m_count; i++) {
@@ -515,7 +528,7 @@ bool CGLootInfo::IsPlayerIneligible(int32_t itemId) {
     return false;
 }
 
-// OFFSET: 0x0095A600
+// OFFSET: 0x0095A600/0x1406CCCB0
 bool CGLootInfo::OnCurrencyLootRemoved(ClientCurrencyLootRemoved* msg) {
     uint32_t index;
 
@@ -546,7 +559,8 @@ bool CGLootInfo::OnCurrencyLootRemoved(ClientCurrencyLootRemoved* msg) {
     return true;
 }
 
-// OFFSET: 0x0095A6A0
+// PROVEN: 6beab623 IDENTICAL/DIFFERENT
+// OFFSET: 0x0095A6A0/0x1406CCDB0
 void CGLootInfo::ClearRollPending(WOWGUID guid, uint32_t slot) {
     if (!static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) || CGLootInfo::m_lootObj != guid) {
         return;
@@ -560,8 +574,8 @@ void CGLootInfo::ClearRollPending(WOWGUID guid, uint32_t slot) {
     }
 }
 
-// PROVEN: f72cc58e IDENTICAL/NONE
-// OFFSET: 0x0095A710
+// PROVEN: f72cc58e IDENTICAL/IDENTICAL
+// OFFSET: 0x0095A710/0x1406CCE40
 void CGLootInfo::CoinsCleared() {
     if (CGLootInfo::m_coins > 0) {
         CGLootInfo::m_coins = -1;
@@ -596,7 +610,7 @@ void CGLootInfo::GiveMasterLoot(uint32_t slot, WOWGUID target) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: 0x0095A8C0
+// OFFSET: 0x0095A8C0/0x1406CD090
 void CGLootInfo::DoAutoLoot(int32_t keepOpen) {
     if (CGLootInfo::m_itemsPending) {
         return;
@@ -677,6 +691,7 @@ void CGLootInfo::DoAutoLoot(int32_t keepOpen) {
     CGGameUI::CloseLoot(true, false, false);
 }
 
+// PROVEN: f93d558c IDENTICAL/UNPROVEN
 // OFFSET: 0x0095AA80/0x1406CD320
 int32_t CGLootWindow::GetLootItemRarity(uint32_t slot) {
     if (!CGLootInfo::m_lootObj) {
@@ -849,7 +864,8 @@ void CGLootInfo::ConfirmLootSlot(uint32_t slot) {
     s_bindConfirmSlot = -1;
 }
 
-// OFFSET: 0x0095AE60
+// PROVEN: 91992987 IDENTICAL/DIFFERENT
+// OFFSET: 0x0095AE60/0x1406CD7D0
 void CGLootInfo::LootButtonItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -1021,7 +1037,7 @@ void CGLootInfo::SetObject(CGObject_C* object, CDataStore* msg, uint32_t lootTyp
     }
 }
 
-// OFFSET: 0x0095BD50
+// OFFSET: 0x0095BD50/0x1406CE950
 void CGLootInfo::ClearSlot(uint8_t slot) {
     uint32_t index;
 
@@ -1054,7 +1070,7 @@ void CGLootInfo::ClearSlot(uint8_t slot) {
     }
 }
 
-// OFFSET: 0x0095BE30
+// OFFSET: 0x0095BE30/0x1406CEB30
 void CGLootInfo::ChangedSlot(uint8_t slot, CDataStore* msg) {
     uint32_t index = static_cast<uint32_t>(-1);
 
@@ -1107,9 +1123,9 @@ void CGLootInfo::ChangedSlot(uint8_t slot, CDataStore* msg) {
 // OFFSET: 0x0095BF60/0x1406CECA0
 void CGLootInfo::InitializeGame() {
     CGLootInfo::m_lootObj = WOWGUID();
-    ClientCurrencyLootRemoved::s_handler = CGLootInfo::OnCurrencyLootRemoved;
-    ClientCurrencyLootRestored::s_handler = CGLootInfo::OnCurrencyLootRestored;
-    ClientLootContents::s_handler = CGLootInfo::OnLootContents;
+    ClientCurrencyLootRemoved::s_handler = JamHandlerEncode(CGLootInfo::OnCurrencyLootRemoved, g_jamHandlerKey_CFF6A4);
+    ClientCurrencyLootRestored::s_handler = JamHandlerEncode(CGLootInfo::OnCurrencyLootRestored, g_jamHandlerKey_CFE850);
+    ClientLootContents::s_handler = JamHandlerEncode(CGLootInfo::OnLootContents, g_jamHandlerKey_CFE748);
 }
 
 // INLINED

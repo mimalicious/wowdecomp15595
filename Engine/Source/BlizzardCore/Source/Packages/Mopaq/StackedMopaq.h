@@ -51,7 +51,6 @@ struct Mpqsystem {
 class MpqHandleRecord {
     public:
     /* 0000 */ System_SFile::BLOCKENTRY m_blockEntry;
-    /* 003A */ uint8_t unk_003A[2];
     /* 003C */ uint32_t m_blockIndex;
     /* 0040 */ int64_t m_position;
     /* 0048 */ Blizzard::File::StreamRecord* m_file;
@@ -65,7 +64,7 @@ class MpqHandleRecord {
     /* 0068 */ Mpqsystem* m_stack;
     /* 006C */ System_SFile::ARCHIVEREC* m_archive;
     /* 0070 */ System_SFile::ARCHIVEREC* m_logicalArchive;
-    /* 0074 */ uint32_t unk_0074;
+    /* 0074 */ void* unk_0074;
     /* 0078 */ Blizzard::Lock::Atomic m_refCount;
     /* 007C */ System_Mopaq::MemoryData* m_memory;
     /* 0080 */ System_Mopaq::AlignData* m_align;
@@ -76,7 +75,6 @@ class MpqHandleRecord {
     /* 0094 */ uint32_t unk_0094;
     /* 0098 */ int64_t m_baseOffset;
     /* 00A0 */ bool m_signatureFailed;
-    /* 00A1 */ uint8_t unk_00A1[7];
 
     int32_t Release();
 };

@@ -12,7 +12,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// PROVEN: 76393933 IDENTICAL/NONE
+// PROVEN: 76393933 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A02EA0/0x1407A2070
 void CGCharacterModelBase::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -20,7 +20,7 @@ void CGCharacterModelBase::DestroyScriptMetaTable() {
     CGCharacterModelBase::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 0a99bf25 IDENTICAL/NONE
+// PROVEN: 0a99bf25 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A035F0/0x1407A2830
 static int32_t Script_ModelSetUnit(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
@@ -58,7 +58,7 @@ static int32_t Script_SetRotation(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d238e798 IDENTICAL/NONE
+// PROVEN: d238e798 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A03710/0x1407A2990
 void CGCharacterModelBase::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -86,7 +86,7 @@ static int32_t Script_SetCreature(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e4c6fba3 IDENTICAL/NONE
+// PROVEN: e4c6fba3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A04040/0x1407A34F0
 static int32_t Script_SetDisplayInfo(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
@@ -106,7 +106,7 @@ static int32_t Script_SetDisplayInfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 724df049 IDENTICAL/NONE
+// PROVEN: 724df049 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A040D0/0x1407A35A0
 static int32_t Script_SetPortraitZoom(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
@@ -173,6 +173,7 @@ static int32_t Script_RefreshUnit(lua_State* L) {
     return 0;
 }
 
+// PROVEN: abb49a68 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A042A0/0x1407A3780
 static int32_t Script_RefreshCamera(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
@@ -213,6 +214,7 @@ static int32_t Script_SetCustomRace(lua_State* L) {
     return 0;
 }
 
+// PROVEN: f6488a26 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A04800/0x1407A3E30
 static int32_t Script_SetBarberShopAlternateForm(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
@@ -220,7 +222,7 @@ static int32_t Script_SetBarberShopAlternateForm(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D17690
+// STATIC: 0x00D17690/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetUnit", &Script_ModelSetUnit },
     { "SetCreature", &Script_SetCreature },
@@ -234,7 +236,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetCustomRace", &Script_SetCustomRace },
 };
 
-// PROVEN: 4c0fb303 IDENTICAL/NONE
+// PROVEN: 4c0fb303 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A02E80/0x1407A2040
 void CGCharacterModelBase::RegisterScriptMethods(lua_State* L) {
     CSimpleModel::RegisterScriptMethods(L);

@@ -13,4 +13,6 @@ class CGGameObject_C_Type_FishingHole : public CGGameObject_C_TypeAnimated {
     CGGameObject_C_Type_FishingHole(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
+#include "WoW/Source/Object/ObjectClient/CGGameObject_C_Type_FishingHole.inl"
+
 #endif

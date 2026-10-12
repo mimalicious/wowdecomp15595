@@ -12,12 +12,12 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/FileDownload.h"
 #include "Engine/Source/Event/FrameTime.h"
 
-// STATIC: 0x00BD1460
+// STATIC: 0x00BD1460/0x1409C5B84
 static const uint8_t s_patchExponent[4] = {
     0x01, 0x00, 0x01, 0x00,
 };
 
-// STATIC: 0x00D07D08
+// STATIC: 0x00D07D08/0x140BB8F40
 static uint8_t s_patchModulus[256] = {
     0x4F, 0x6F, 0xD4, 0x65, 0x56, 0x85, 0x88, 0xD9, 0xAA, 0xE6, 0xF7, 0x05, 0x72, 0xBB, 0x2A, 0x20,
     0xE0, 0x24, 0x38, 0x2B, 0x77, 0xB3, 0x3D, 0xC2, 0xD3, 0x2D, 0x52, 0x5C, 0xB7, 0xA3, 0x0F, 0xE6,
@@ -37,16 +37,16 @@ static uint8_t s_patchModulus[256] = {
     0xE8, 0xFD, 0xA6, 0x33, 0x10, 0xD1, 0x12, 0x8F, 0x05, 0x80, 0xDA, 0x42, 0x57, 0x0C, 0xEB, 0xC0,
 };
 
-// STATIC: 0x00EBB938
+// STATIC: 0x00EBB938/0x140DAC6D0
 float CGlueMgr::m_patchDownloadProgress;
 
-// STATIC: 0x00EBB93C
+// STATIC: 0x00EBB93C/0x140DAC6D4
 uint32_t CGlueMgr::m_patchLastUpdate;
 
-// STATIC: 0x00EBB940
+// STATIC: 0x00EBB940/0x140DAC6D8
 uint32_t CGlueMgr::m_patchStartTime;
 
-// STATIC: 0x00EBC47C
+// STATIC: 0x00EBC47C/0x140DAD448
 FileDownload* CGlueMgr::m_patchDownload;
 
 // STATIC: 0x00EBC480
@@ -130,7 +130,7 @@ bool CGlueMgr::PatchDownloadExecutePrepatch(SArchive* archive) {
     return result;
 }
 
-// PROVEN: ab06e423 IDENTICAL/NONE
+// PROVEN: ab06e423 IDENTICAL/IDENTICAL
 // OFFSET: 0x00810940/0x140527FA0
 void CGlueMgr::PatchDownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_patchDownload) {

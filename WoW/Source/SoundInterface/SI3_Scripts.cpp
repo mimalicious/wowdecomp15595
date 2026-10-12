@@ -16,7 +16,7 @@
 #include "WoW/Source/Ui/ChatFrame.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// STATIC: 0x0100A6C8
+// STATIC: 0x0100A6C8/0x140EE21D4
 static uint32_t s_testPillEmitter;
 
 // OFFSET: 0x00B34860/0x1408FF870
@@ -93,20 +93,21 @@ static int32_t Script_PlaySoundFile(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 4ff77aac IDENTICAL/NONE
+// PROVEN: 4ff77aac IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34A70/0x1408FFAF0
 static int32_t Script_StopMusic(lua_State* L) {
     SI3::StopLuaMusic();
     return 0;
 }
 
-// PROVEN: 03306fce IDENTICAL/NONE
+// PROVEN: 03306fce IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34A80/0x1408FFB00
 static int32_t Script_Sound_ChatSystem_GetNumInputDrivers(lua_State* L) {
     lua_pushnumber(L, SE3::GetNumInputDrivers(SE3::sm_pChatSystem));
     return 1;
 }
 
+// PROVEN: 89571e78 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B34AB0/0x1408FFB30
 static int32_t Script_Sound_ChatSystem_GetInputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -121,13 +122,14 @@ static int32_t Script_Sound_ChatSystem_GetInputDriverNameByIndex(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 941f9e71 IDENTICAL/NONE
+// PROVEN: 941f9e71 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34B50/0x1408FFBE0
 static int32_t Script_Sound_ChatSystem_GetNumOutputDrivers(lua_State* L) {
     lua_pushnumber(L, SE3::GetNumOutputDrivers_Cached(SE3::sm_pChatSystem));
     return 1;
 }
 
+// PROVEN: cd79dbc5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B34B80/0x1408FFC10
 static int32_t Script_Sound_ChatSystem_GetOutputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -146,13 +148,14 @@ static int32_t Script_Sound_ChatSystem_GetOutputDriverNameByIndex(lua_State* L) 
     return 1;
 }
 
-// PROVEN: 8b781dde IDENTICAL/NONE
+// PROVEN: 8b781dde IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34C40/0x1408FFCE0
 static int32_t Script_VoiceChat_StopCapture(lua_State* L) {
     SI3::VoiceChat_StopCapture();
     return 0;
 }
 
+// PROVEN: 4d84899d DIFFERENT/IDENTICAL
 // OFFSET: 0x00B34C50/0x1408FFCF0
 static int32_t Script_VoiceChat_RecordLoopbackSound(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -164,28 +167,28 @@ static int32_t Script_VoiceChat_RecordLoopbackSound(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4140f27b IDENTICAL/NONE
+// PROVEN: 4140f27b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34CC0/0x1408FFD40
 static int32_t Script_VoiceChat_StopRecordingLoopbackSound(lua_State* L) {
     SI3::VoiceChat_StopRecordingLoopbackSound();
     return 0;
 }
 
-// PROVEN: 6c79221b IDENTICAL/NONE
+// PROVEN: 6c79221b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34CD0/0x1408FFD50
 static int32_t Script_VoiceChat_PlayLoopbackSound(lua_State* L) {
     SI3::VoiceChat_PlayLoopbackSound();
     return 0;
 }
 
-// PROVEN: 6453f5bc IDENTICAL/NONE
+// PROVEN: 6453f5bc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34CE0/0x1408FFD60
 static int32_t Script_VoiceChat_StopPlayingLoopbackSound(lua_State* L) {
     SI3::VoiceChat_StopPlayingLoopbackSound();
     return 0;
 }
 
-// PROVEN: 59647ae8 IDENTICAL/NONE
+// PROVEN: 59647ae8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B34CF0/0x1408FFD70
 static int32_t Script_VoiceChat_IsRecordingLoopbackSound(lua_State* L) {
     lua_pushnumber(L, SI3::VoiceChat_IsRecordingLoopbackSound());
@@ -198,34 +201,35 @@ static int32_t Script_VoiceChat_IsPlayingLoopbackSound(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5ce4c1a7 IDENTICAL/NONE
+// PROVEN: 5ce4c1a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34D50/0x1408FFDD0
 static int32_t Script_VoiceChat_GetCurrentMicrophoneSignalLevel(lua_State* L) {
     lua_pushnumber(L, SI3::VoiceChat_GetCurrentMicrophoneSignalLevel());
     return 1;
 }
 
-// PROVEN: 58546ecd IDENTICAL/NONE
+// PROVEN: 58546ecd IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34D80/0x1408FFE00
 static int32_t Script_VoiceChat_ActivatePrimaryCaptureCallback(lua_State* L) {
     SI3::VoiceChat_ActivatePrimaryCaptureCallback();
     return 0;
 }
 
-// PROVEN: d3549769 IDENTICAL/NONE
+// PROVEN: d3549769 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34D90/0x1408FFE10
 static int32_t Script_Sound_GameSystem_RestartSoundSystem(lua_State* L) {
     SI3::SignalRestart();
     return 0;
 }
 
-// PROVEN: 51bebe2c IDENTICAL/NONE
+// PROVEN: 51bebe2c IDENTICAL/IDENTICAL
 // OFFSET: [0x0080C320/0x1405229B0]
 static int32_t Script_Sound_GameSystem_GetNumInputDrivers(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;
 }
 
+// PROVEN: 4b3d49a8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B34DA0/0x1408FFE20
 static int32_t Script_Sound_GameSystem_GetInputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -238,13 +242,14 @@ static int32_t Script_Sound_GameSystem_GetInputDriverNameByIndex(lua_State* L) {
     return 1;
 }
 
-// PROVEN: beb2f5ed IDENTICAL/NONE
+// PROVEN: beb2f5ed IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34E20/0x1408FFEA0
 static int32_t Script_Sound_GameSystem_GetNumOutputDrivers(lua_State* L) {
     lua_pushnumber(L, SE3::GetNumOutputDrivers_Cached(SE3::sm_pGameSystem));
     return 1;
 }
 
+// PROVEN: a018f2ac IDENTICAL/DIFFERENT
 // OFFSET: 0x00B34E50/0x1408FFED0
 static int32_t Script_Sound_GameSystem_GetOutputDriverNameByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -283,7 +288,7 @@ static int32_t Script_PlaySound(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e9ac96ba IDENTICAL/NONE
+// PROVEN: e9ac96ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00B35060/0x140900160
 static int32_t Script_VoiceChat_StartCapture(lua_State* L) {
     static CVar* s_enableMicrophone = CVar::Lookup("EnableMicrophone");
@@ -296,6 +301,7 @@ static int32_t Script_VoiceChat_StartCapture(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 1a355b85 DIFFERENT/IDENTICAL
 // OFFSET: 0x00B350E0/0x140900200
 static int32_t Script_TestCreatePill(lua_State* L) {
     C3Vector listener;
@@ -327,7 +333,7 @@ static int32_t Script_TestCreatePill(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D28038
+// STATIC: 0x00D28038/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "TestCreatePill", &Script_TestCreatePill },
     { "PlaySoundKitID", &Script_PlaySoundKitID },
@@ -356,7 +362,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "VoiceChat_ActivatePrimaryCaptureCallback", &Script_VoiceChat_ActivatePrimaryCaptureCallback },
 };
 
-// PROVEN: 196bba3d IDENTICAL/NONE
+// PROVEN: 196bba3d IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34EF0/0x1408FFF80
 void SI3::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -364,7 +370,7 @@ void SI3::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 310678ea IDENTICAL/NONE
+// PROVEN: 310678ea IDENTICAL/IDENTICAL
 // OFFSET: 0x00B34F20/0x1408FFFD0
 void SI3::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

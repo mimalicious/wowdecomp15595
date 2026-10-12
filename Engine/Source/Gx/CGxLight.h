@@ -37,4 +37,6 @@ class CGxApiLight {
     CGxApiLight& operator=(const CGxLight& light);
 };
 
+#include "Engine/Source/Gx/CGxLight.inl"
+
 #endif

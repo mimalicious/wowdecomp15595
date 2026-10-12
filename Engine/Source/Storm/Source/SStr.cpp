@@ -20,7 +20,7 @@
         c -= a; c -= b; c ^= (b >> 15); \
     }
 
-// STATIC: 0x00B9E830
+// STATIC: 0x00B9E830/0x14097FA00
 static const uint32_t s_hashtable[16] = { 0x486E26EE, 0xDCAA16B3, 0xE1918EEF, 0x202DAFDB, 0x341C7DC7, 0x1C365303, 0x40EF2D37, 0x65FD5E49, 0xD6057177, 0x904ECE93, 0x1C38024F, 0x98FD323B, 0xE3061AE7, 0xA39B0FA1, 0x9797F25F, 0xE4444563 };
 
 // STATIC: 0x00B9E8F0
@@ -37,7 +37,7 @@ static const uint8_t bytesFromUTF8[256] = {
     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6
 };
 
-// STATIC: 0x00D9AB14
+// STATIC: 0x00D9AB14/0x140BF0120
 static int32_t s_initialized;
 
 static double s_realDigit[20][10];
@@ -113,7 +113,7 @@ static int32_t GetNextTextUpper(const char** string, uint32_t* code, uint32_t* u
     return bytes;
 }
 
-// OFFSET: 0x004B2E30
+// OFFSET: 0x004B2E30/0x1400E9A50
 static int32_t SStrCmpGetNextTextUpper(const char** string, uint32_t* code, uint32_t* upper) {
     int32_t bytes = bytesFromUTF8[static_cast<uint8_t>(**string)];
     *code = 0;
@@ -188,7 +188,7 @@ static int32_t SStrCmpGetNextTextUpper(const char** string, uint32_t* code, uint
     return bytes;
 }
 
-// PROVEN: 418746e1 IDENTICAL/NONE
+// PROVEN: 418746e1 IDENTICAL/DIFFERENT
 // OFFSET: 0x004B2F90/0x1400E9C30
 int32_t SStrCmpUTF8I(const char* string1, const char* string2, size_t maxchars) {
     while ((*string1 || *string2) && maxchars--) {
@@ -385,7 +385,7 @@ size_t SStrCopyUTF8(char* dest, const char* source, size_t destsize, size_t maxc
     return curr - dest;
 }
 
-// PROVEN: 53d1f9aa IDENTICAL/NONE
+// PROVEN: 53d1f9aa IDENTICAL/DIFFERENT
 // OFFSET: 0x004B3320/0x1400EA940
 size_t SStrLenUTF8(const char* string) {
     if (!string) {
@@ -520,7 +520,7 @@ uint32_t SStrToUnsigned(const char* string) {
     return result;
 }
 
-// PROVEN: 93c4c655 IDENTICAL/NONE
+// PROVEN: 93c4c655 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B3510/0x1400EA170
 uint32_t SStrToUnsigned(const char** string) {
     uint32_t result = 0;
@@ -704,7 +704,7 @@ char* SStrStrI(const char* string, const char* search) {
     return NULL;
 }
 
-// PROVEN: 885202df IDENTICAL/NONE
+// PROVEN: 885202df IDENTICAL/DIFFERENT
 // OFFSET: 0x004B3A00/0x1400EAB60
 const char* SStrStrUTF8I(const char* string, const char* search) {
     size_t length = SStrLenUTF8(search);
@@ -779,7 +779,7 @@ static void InitializeFloatDigits() {
     }
 }
 
-// PROVEN: c0f4fc8c IDENTICAL/NONE
+// PROVEN: c0f4fc8c IDENTICAL/DIFFERENT
 // OFFSET: 0x004B3260/0x1400E9FB0
 char* SStrDupA(const char* string, const char* filename, int32_t linenumber) {
     size_t length = SStrLen(string) + 1;
@@ -788,8 +788,8 @@ char* SStrDupA(const char* string, const char* filename, int32_t linenumber) {
     return result;
 }
 
-// PROVEN: 0799581b IDENTICAL/NONE
-// OFFSET: 0x004B3BE0
+// PROVEN: 0799581b IDENTICAL/IDENTICAL
+// OFFSET: 0x004B3BE0/0x1400EAD10
 void SStrInitialize() {
     InitializeFloatDigits();
     s_initialized = 1;
@@ -798,7 +798,7 @@ void SStrInitialize() {
 void SStrDestroy() {
 }
 
-// OFFSET: 0x004B3BF0
+// OFFSET: 0x004B3BF0/0x1400EAA30
 int64_t SStrToInt64(const char* string) {
     int32_t negative = *string == '-';
 

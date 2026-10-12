@@ -190,7 +190,7 @@ static void LerpInteriorFog(float* fog, const float* target, float t) {
     }
 }
 
-// OFFSET: 0x00733880
+// OFFSET: 0x00733880/0x14040F0E0
 CMapEntity::CMapEntity() {
     this->unk_00D8 = 0;
     this->unk_00C0 = 0;
@@ -224,7 +224,7 @@ CMapEntity::~CMapEntity() {
     }
 }
 
-// OFFSET: 0x00733A10
+// OFFSET: 0x00733A10/0x14040F2E0
 void CMapEntity::SelectLights(CM2Lighting* lighting) {
     float scale = this->unk_00E0;
     C3Vector direct;
@@ -573,7 +573,7 @@ bool CMapEntity::QueryMapObjMinimap(const CAaBox& box, TSStackArray<World::Minim
     return false;
 }
 
-// OFFSET: 0x00734B40
+// OFFSET: 0x00734B40/0x140410C50
 bool CMapEntity::QueryMapObjIDs(uint32_t& wmoId, uint32_t& nameSet, uint32_t& groupId) {
     for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
         CMapBaseObj* ref = link->m_ref;
@@ -662,6 +662,7 @@ void CMapEntity::UpdateLiquid() {
     this->UpdateTerrainLiquid();
 }
 
+// PROVEN: 025ffb67 IDENTICAL/DIFFERENT
 // OFFSET: 0x00734CE0/0x140410FC0
 void CMapEntity::UpdateMapObjLiquid() {
     CMapObjDef* mapObjDef;
@@ -674,7 +675,7 @@ void CMapEntity::UpdateMapObjLiquid() {
     }
 }
 
-// OFFSET: 0x00734D20
+// OFFSET: 0x00734D20/0x140411040
 void CMapEntity::QueryLiquidSounds(TSGrowableArray<World::LiquidQueryResult>& results, uint32_t* distance) {
     if (!(this->m_staticFlags & 0x8)) {
         return;
@@ -759,6 +760,7 @@ void CMapEntity::EnablePortals(int32_t enable) {
     this->UpdatePortals();
 }
 
+// PROVEN: 11642ad7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00735560/0x140411900
 void CMapEntity::Update() {
     if (this->m_model) {

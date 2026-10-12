@@ -9,7 +9,7 @@
 #include "WoW/Source/Ui/SpellBookFrame.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: 0x00F4B9D0
+// STATIC: 0x00F4B9D0/0x140BCE300
 TSHashTable<CFlyout, HASHKEY_NONE> s_flyouts;
 
 // STATIC: 0x00F4B9FC
@@ -40,6 +40,7 @@ void CFlyout::DelKnownSpellInternal(int32_t spellId) {
     }
 }
 
+// PROVEN: 808d273e IDENTICAL/DIFFERENT
 // OFFSET: 0x009A3F10/0x140729690
 void CFlyout::AddKnownSpellInternal(int32_t spellId) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -79,7 +80,8 @@ void CFlyout::ShutdownGame() {
     s_flyouts.Clear();
 }
 
-// OFFSET: 0x009A40A0
+// PROVEN: fef5ae74 IDENTICAL/UNPROVEN
+// OFFSET: 0x009A40A0/0x140729A00
 CFlyout::~CFlyout() {
     this->m_slots.Clear();
 }
@@ -108,7 +110,7 @@ void CFlyout::AddSlot(const SpellFlyoutItemRec* rec) {
     }
 }
 
-// OFFSET: 0x009A4170
+// OFFSET: 0x009A4170/0x1407395D0
 CFlyout* CFlyout::GetByID(int32_t id) {
     return s_flyouts.Ptr(id, HASHKEY_NONE());
 }
@@ -156,7 +158,7 @@ bool CFlyout::AddKnownSpell(int32_t spellId) {
     return false;
 }
 
-// OFFSET: 0x009A4270
+// OFFSET: 0x009A4270/0x140729D00
 void CFlyout::DelKnownSpell(int32_t spellId) {
     SpellToFlyoutMapItem* item = s_spellToFlyout.Ptr(spellId, HASHKEY_NONE());
 
@@ -173,7 +175,8 @@ void CFlyout::DelKnownSpell(int32_t spellId) {
     }
 }
 
-// OFFSET: 0x009A42C0
+// PROVEN: 9cd2790d IDENTICAL/DIFFERENT
+// OFFSET: 0x009A42C0/0x140729DB0
 void CFlyout::ClearKnownSpells() {
     for (CFlyout* flyout = s_flyouts.Head(); flyout; flyout = s_flyouts.Next(flyout)) {
         for (uint32_t i = 0; i < flyout->m_slots.m_count; i++) {

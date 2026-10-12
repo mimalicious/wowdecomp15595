@@ -20,7 +20,7 @@ const char* Blizzard::String::FindFilename(const char* str) {
     return result;
 }
 
-// PROVEN: 65f01901 IDENTICAL/NONE
+// PROVEN: 65f01901 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AD980/0x1404A3620
 char* Blizzard::String::FindFilename(char* str) {
     return const_cast<char*>(FindFilename(static_cast<const char*>(str)));
@@ -59,21 +59,6 @@ const char* Blizzard::String::FindExtension(const char* str) {
 // OFFSET: 0x007ADA70/0x1404A36B0
 const char* Blizzard::String::FindExtensionWithLeadingDot(const char* str) {
     return System_String::FindExtension(str, 0);
-}
-
-// INLINED
-char Blizzard::String::FirstPathSeparator(const char* str) {
-    if (!str) {
-        return '\\';
-    }
-
-    for (; *str; str++) {
-        if (*str == '/' || *str == '\\') {
-            return *str;
-        }
-    }
-
-    return '\\';
 }
 
 // OFFSET: 0x007AF780
@@ -130,7 +115,7 @@ void Blizzard::String::MakeBackslashPath(const char* src, char* dst, int32_t cou
     *dst = '\0';
 }
 
-// OFFSET: 0x007B5A60
+// OFFSET: 0x007B5A60/0x1404ABAC0
 char* Blizzard::String::MakeConsistentPath(const char* src, char* dst, int32_t count) {
     if (!dst || count <= 0) {
         return NULL;

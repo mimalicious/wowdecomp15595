@@ -7,6 +7,7 @@
 #include "WoW/Source/DB/Rec/WorldStateUIRec.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
+// PROVEN: 7a32d567 IDENTICAL/IDENTICAL
 // OFFSET: 0x009CD5F0/0x14075DD50
 static int32_t Script_GetNumWorldStateUI(lua_State* L) {
     lua_pushnumber(L, CGWorldStateInfo::m_worldStateUI.m_count);
@@ -58,13 +59,13 @@ int32_t Script_GetWorldStateUIInfo(lua_State* L) {
     return 12;
 }
 
-// STATIC: 0x00D1623C
+// STATIC: 0x00D1623C/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumWorldStateUI", &Script_GetNumWorldStateUI },
     { "GetWorldStateUIInfo", &Script_GetWorldStateUIInfo },
 };
 
-// PROVEN: 0694f211 IDENTICAL/NONE
+// PROVEN: 0694f211 IDENTICAL/UNPROVEN
 // OFFSET: 0x009CD4B0/0x14075DB90
 void WorldStateInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -72,7 +73,7 @@ void WorldStateInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 76f2f4d6 IDENTICAL/NONE
+// PROVEN: 76f2f4d6 IDENTICAL/UNPROVEN
 // OFFSET: 0x009CD4E0/0x14075DBE0
 void WorldStateInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

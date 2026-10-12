@@ -58,4 +58,6 @@ void ClientDestroyGameTime();
 int32_t ClientGameTimeTickHandler(const void* data, void* param);
 void ClientInitializeGameTime();
 
+#include "WoW/Source/Game/GameTime.inl"
+
 #endif

@@ -19,160 +19,160 @@ static const float s_displMapScale[2] = { 1.0f, 1.0f };
 // STATIC: 0x00BC7064
 static const float s_perturbAmplitudeScale[2] = { 1.25f, 0.25f };
 
-// STATIC: 0x00D00620
+// STATIC: 0x00D00620/0x140BB0040
 static uint16_t s_quadIndices[4] = { 0, 3, 1, 2 };
 
 // STATIC: 0x00D00628
 static uint16_t s_quadTriIndices[6] = { 0, 2, 1, 1, 2, 3 };
 
-// STATIC: 0x00E4E908
+// STATIC: 0x00E4E908/0x140D37BD0
 uint8_t Liquid::s_wmoWaterTexValid;
 
-// STATIC: 0x00E4E909
+// STATIC: 0x00E4E909/0x140D37BD1
 uint8_t Liquid::s_riverDepthTexValid;
 
-// STATIC: 0x00E4E90A
+// STATIC: 0x00E4E90A/0x140D37BD2
 uint8_t Liquid::s_oceanDepthTexValid;
 
-// STATIC: 0x00E4E90C
+// STATIC: 0x00E4E90C/0x000D37BD8
 static uint32_t s_displMapCurrent[2];
 
-// STATIC: 0x00E4E914
+// STATIC: 0x00E4E914/0x140D37BE0
 static uint32_t s_displMapPeriod[2];
 
-// STATIC: 0x00E4E91C
+// STATIC: 0x00E4E91C/0x140D37BE8
 static uint32_t s_displMapTexSize[2];
 
-// STATIC: 0x00E4E924
+// STATIC: 0x00E4E924/0x140D37BF0
 static float s_displMapInterpolation[2];
 
-// STATIC: 0x00E4E92C
+// STATIC: 0x00E4E92C/0x140D37BF8
 static uint32_t s_displMapLastTime[2];
 
-// STATIC: 0x00E4E934
+// STATIC: 0x00E4E934/0x140D37C00
 static CTexture* s_noiseVolTex;
 
-// STATIC: 0x00E4E938
+// STATIC: 0x00E4E938/0x140D37C08
 static CGxFrameBuffer* s_blurredReflectionFB;
 
-// STATIC: 0x00E4E93C
+// STATIC: 0x00E4E93C/0x140D37C10
 static CGxFrameBuffer* s_blurredBackBufferFB;
 
-// STATIC: 0x00E4E940
+// STATIC: 0x00E4E940/0x140D37C18
 static CGxFrameBuffer* s_blurTempFB;
 
-// STATIC: 0x00E4E944
+// STATIC: 0x00E4E944/0x140D37C28
 static CTexture* s_blurredReflectionBuffer;
 
-// STATIC: 0x00E4E948
+// STATIC: 0x00E4E948/0x140D37C28
 static CTexture* s_blurredBackBuffer;
 
-// STATIC: 0x00E4E94C
+// STATIC: 0x00E4E94C/0x140D37C30
 static CTexture* s_blurTemp;
 
-// STATIC: 0x00E4E950
+// STATIC: 0x00E4E950/0x140D37C38
 static CGxFrameBuffer* s_fakeReflectionFB;
 
-// STATIC: 0x00E4E954
+// STATIC: 0x00E4E954/0x140D37C40
 static CGxFrameBuffer* s_realReflectionFB;
 
-// STATIC: 0x00E4E958
+// STATIC: 0x00E4E958/0x140D37C48
 static CTexture* s_depthReflectionBuffer;
 
-// STATIC: 0x00E4E95C
+// STATIC: 0x00E4E95C/0x140D37C50
 static CTexture* s_fakeReflectionBuffer;
 
-// STATIC: 0x00E4E960
+// STATIC: 0x00E4E960/0x140D37C58
 static CTexture* s_realReflectionBuffer;
 
-// STATIC: 0x00E4E964
+// STATIC: 0x00E4E964/0x140D37C60
 static CTexture* s_backBuffer;
 
-// STATIC: 0x00E4E968
+// STATIC: 0x00E4E968/0x140D37C68
 static CTexture* s_wmoWaterTex;
 
-// STATIC: 0x00E4E96C
+// STATIC: 0x00E4E96C/0x140D37C70
 static CTexture* s_oceanDepthTex;
 
-// STATIC: 0x00E4E970
+// STATIC: 0x00E4E970/0x140D37C78
 static CTexture* s_riverDepthTex;
 
-// STATIC: 0x00E4E974
+// STATIC: 0x00E4E974/0x140D37C80
 uint32_t Liquid::s_kawasePingPong;
 
-// STATIC: 0x00E4E978
+// STATIC: 0x00E4E978/0x140D37C84
 uint32_t Liquid::s_displMapCount;
 
-// STATIC: 0x00E4E97C
+// STATIC: 0x00E4E97C/0x140D37C88
 CTexture* Liquid::s_displMaps[4];
 
-// STATIC: 0x00E4E98C
+// STATIC: 0x00E4E98C/0x000D37CA0
 CGxFrameBuffer* Liquid::s_displMapFBs[4];
 
-// STATIC: 0x00E4E99C
+// STATIC: 0x00E4E99C/0x140D37CC8
 uint8_t Liquid::s_displMapDirty;
 
-// STATIC: 0x00E4E99D
+// STATIC: 0x00E4E99D/0x140D37CC9
 static uint8_t s_perturbationsReserved;
 
-// STATIC: 0x00E4E9A0
+// STATIC: 0x00E4E9A0/0x140D37CD0
 CGxShader* Liquid::s_fourTapBlurVS;
 
-// STATIC: 0x00E4E9A4
+// STATIC: 0x00E4E9A4/0x140D37CD8
 CGxShader* Liquid::s_fourTapBlurPS;
 
-// STATIC: 0x00E4E9A8
+// STATIC: 0x00E4E9A8/0x140D37CE0
 CGxShader* Liquid::s_propagateDisplMapVS;
 
-// STATIC: 0x00E4E9AC
+// STATIC: 0x00E4E9AC/0x140D37CE8
 CGxShader* Liquid::s_propagateDisplMapPS;
 
-// STATIC: 0x00E4E9B0
+// STATIC: 0x00E4E9B0/0x140D37CF0
 CGxShader* Liquid::s_perturbDisplMapVS;
 
-// STATIC: 0x00E4E9B4
+// STATIC: 0x00E4E9B4/0x140D37CF8
 CGxShader* Liquid::s_perturbDisplMapPS;
 
-// STATIC: 0x00E4E9B8
+// STATIC: 0x00E4E9B8/0x140D37D00
 CGxShader* Liquid::s_perturbDisplMapMeshVS;
 
-// STATIC: 0x00E4E9BC
+// STATIC: 0x00E4E9BC/0x140D37D08
 CGxShader* Liquid::s_perturbDisplMapMeshPS;
 
-// STATIC: 0x00E4E9C0
+// STATIC: 0x00E4E9C0/0x140D37D10
 CGxShader* Liquid::s_clearDisplMapVS;
 
-// STATIC: 0x00E4E9C4
+// STATIC: 0x00E4E9C4/0x140D37D18
 CGxShader* Liquid::s_clearDisplMapPS;
 
-// STATIC: 0x00E4E9C8
+// STATIC: 0x00E4E9C8/0x140D37D20
 CTexture* Liquid::s_perturbTex;
 
-// STATIC: 0x00E4E9CC
+// STATIC: 0x00E4E9CC/0x140D37D28
 static C3Vector s_displMapPos[2];
 
-// STATIC: 0x00E4E9E4
+// STATIC: 0x00E4E9E4/0x140D37D40
 static C3Vector s_displMapRawPos[2];
 
-// STATIC: 0x00E4E9FC
+// STATIC: 0x00E4E9FC/0x000D37D58
 static C2Vector s_displMapSize[2];
 
-// STATIC: 0x00E4EA0C
+// STATIC: 0x00E4EA0C/0x140D37D68
 static TSGrowableArray<uint8_t> s_texBuffer;
 
-// STATIC: 0x00E4EA1C
+// STATIC: 0x00E4EA1C/0x140D37D80
 static CDataAllocator s_perturbationAllocator(sizeof(Liquid::DisplMapPerturbation), 64);
 
-// STATIC: 0x00E4EA30
+// STATIC: 0x00E4EA30/0x140D37DA0
 static CDataAllocator s_perturbationMeshAllocator(sizeof(Liquid::DisplMapPerturbationMesh), 16);
 
-// STATIC: 0x00E4EA48
+// STATIC: 0x00E4EA48/0x140D37DC0
 TSGrowableArray<Liquid::DisplMapPerturbation*> Liquid::s_eventPerturbations[2];
 
 // STATIC: 0x00E4EA68
 TSGrowableArray<Liquid::DisplMapPerturbation*> Liquid::s_perturbations[2];
 
-// STATIC: 0x00E4EA88
+// STATIC: 0x00E4EA88/0x140D37E20
 TSGrowableArray<Liquid::DisplMapPerturbationMesh*> Liquid::s_eventPerturbationMeshes[2];
 
 // STATIC: 0x00E4EAA8
@@ -186,6 +186,7 @@ static void ReserveTexBuffer() {
     s_texBuffer.m_count = 2048;
 }
 
+// PROVEN: bae7edbf DIFFERENT/IDENTICAL
 // OFFSET: 0x007172F0/0x1403EA8A0
 static void NoiseVolTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
@@ -202,7 +203,7 @@ static CTexture* CreateBlurBuffer(const char* name) {
     return TextureCreate(512, 512, GxTex_Argb8888, GxTex_Argb8888, flags, NULL, GxTexNullUserFunc, name, 0);
 }
 
-// PROVEN: 6981411d IDENTICAL/NONE
+// PROVEN: 6981411d IDENTICAL/UNPROVEN
 // OFFSET: 0x00717360/0x1403EA8D0
 int32_t Liquid::HasDynamicDisplMap() {
     if ((Liquid::s_displMapCount > 1 && (!Liquid::s_displMaps[2] || !Liquid::s_displMaps[3])) || !Liquid::s_displMaps[0] || !Liquid::s_displMaps[1]) {
@@ -212,19 +213,19 @@ int32_t Liquid::HasDynamicDisplMap() {
     return 1;
 }
 
-// PROVEN: ebead9d9 IDENTICAL/NONE
+// PROVEN: ebead9d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x007173A0/0x1403EA910
 uint32_t Liquid::GetDynamicDisplMapCnt() {
     return Liquid::s_displMapCount;
 }
 
-// PROVEN: 66674763 IDENTICAL/NONE
+// PROVEN: 66674763 IDENTICAL/UNPROVEN
 // OFFSET: 0x007173B0/0x1403EA920
 CGxTex* Liquid::GetDynamicDisplMap(uint32_t index) {
     return TextureGetGxTex(Liquid::s_displMaps[s_displMapCurrent[index]]);
 }
 
-// PROVEN: aaf7a655 IDENTICAL/NONE
+// PROVEN: aaf7a655 IDENTICAL/IDENTICAL
 // OFFSET: 0x007173D0/0x1403EA940
 float Liquid::GetDynamicDisplMapInterpolation(uint32_t index) {
     return s_displMapInterpolation[index];
@@ -236,6 +237,7 @@ void __fastcall Liquid::OnTexturesDirty() {
     Liquid::SignalConfigChanged(1);
 }
 
+// PROVEN: f416ead6 IDENTICAL/UNPROVEN
 // OFFSET: 0x007173F0/0x1403EA960
 void Liquid::CacheProceduralTextures() {
     CGxTexFlags flags;
@@ -254,6 +256,7 @@ void Liquid::CacheProceduralTextures() {
     }
 }
 
+// PROVEN: d2bb80af IDENTICAL/UNPROVEN
 // OFFSET: 0x00717470/0x1403EA9F0
 void Liquid::UnCacheProceduralTextures() {
     if (s_riverDepthTex) {
@@ -279,7 +282,7 @@ void Liquid::UnCacheProceduralTextures() {
     }
 }
 
-// PROVEN: 970ca42d IDENTICAL/NONE
+// PROVEN: 970ca42d IDENTICAL/IDENTICAL
 // OFFSET: 0x00717520/0x1403EAAA0
 void Liquid::GrabBackBuffer() {
     if (!Liquid::NeedBackBuffer() || !s_backBuffer) {
@@ -293,61 +296,61 @@ void Liquid::GrabBackBuffer() {
     }
 }
 
-// PROVEN: a5e4295c IDENTICAL/NONE
+// PROVEN: a5e4295c IDENTICAL/IDENTICAL
 // OFFSET: 0x00717560/0x1403EAAE0
 CTexture* Liquid::GetBackBuffer() {
     return s_backBuffer;
 }
 
-// PROVEN: ad67666a IDENTICAL/NONE
-// OFFSET: 0x00717570
+// PROVEN: ad67666a IDENTICAL/UNPROVEN
+// OFFSET: 0x00717570/0x1403EAAF0
 CTexture* Liquid::GetBlurredBackBuffer() {
     return s_blurredBackBuffer;
 }
 
-// PROVEN: 6545f23d IDENTICAL/NONE
-// OFFSET: 0x00717580
+// PROVEN: 6545f23d IDENTICAL/IDENTICAL
+// OFFSET: 0x00717580/0x1403EAB00
 CGxFrameBuffer* Liquid::GetBlurredBackBufferFB() {
     return s_blurredBackBufferFB;
 }
 
-// PROVEN: 50c22a2c IDENTICAL/NONE
+// PROVEN: 50c22a2c IDENTICAL/IDENTICAL
 // OFFSET: 0x00717590/0x1403EAB10
 CTexture* Liquid::GetRealReflectionBuffer() {
     return s_realReflectionBuffer;
 }
 
-// PROVEN: d308aadb IDENTICAL/NONE
+// PROVEN: d308aadb IDENTICAL/UNPROVEN
 // OFFSET: 0x007175A0/0x1403EAAF0
 CTexture* Liquid::GetBlurredReflectionBuffer() {
     return s_blurredReflectionBuffer;
 }
 
-// PROVEN: e2cf3e9f IDENTICAL/NONE
+// PROVEN: e2cf3e9f IDENTICAL/IDENTICAL
 // OFFSET: 0x007175B0/0x1403EAB30
 CGxFrameBuffer* Liquid::GetBlurredReflectionBufferFB() {
     return s_blurredReflectionFB;
 }
 
-// PROVEN: 47212a35 IDENTICAL/NONE
+// PROVEN: 47212a35 IDENTICAL/IDENTICAL
 // OFFSET: 0x007175C0/0x1403EAB40
 CTexture* Liquid::GetFakeReflectionBuffer() {
     return s_fakeReflectionBuffer;
 }
 
-// PROVEN: 91d99b69 IDENTICAL/NONE
-// OFFSET: 0x007175D0
+// PROVEN: 91d99b69 IDENTICAL/IDENTICAL
+// OFFSET: 0x007175D0/0x1403EAB50
 CGxFrameBuffer* Liquid::GetRealReflectionFB() {
     return s_realReflectionFB;
 }
 
-// PROVEN: 0d567191 IDENTICAL/NONE
-// OFFSET: 0x007175E0
+// PROVEN: 0d567191 IDENTICAL/IDENTICAL
+// OFFSET: 0x007175E0/0x1403EAB60
 CGxFrameBuffer* Liquid::GetFakeReflectionFB() {
     return s_fakeReflectionFB;
 }
 
-// PROVEN: 233ca5a9 IDENTICAL/NONE
+// PROVEN: 233ca5a9 IDENTICAL/UNPROVEN
 // OFFSET: 0x007175F0/0x1403EAB70
 void Liquid::GetDisplMapInfoRaw(uint32_t index, C3Vector& pos, C2Vector& size) {
     pos = s_displMapRawPos[index];
@@ -396,7 +399,7 @@ static CTexture* CreateDepthReflectionBuffer(const char* name) {
     return TextureCreate(GxTex_NonPow2, width, height, 1, format, format, flags, NULL, GxTexNullUserFunc, name, 0);
 }
 
-// OFFSET: 0x007179D0
+// OFFSET: 0x007179D0/0x1403EB020
 void Liquid::UpdateProceduralTextures() {
     if (!Liquid::s_oceanDepthTexValid && s_oceanDepthTex) {
         CGxTex* tex = TextureGetGxTex(s_oceanDepthTex);
@@ -429,7 +432,7 @@ void Liquid::UpdateProceduralTextures() {
     }
 }
 
-// OFFSET: 0x00717AB0
+// OFFSET: 0x00717AB0/0x1403EB110
 void Liquid::SetDisplMapInfo(const C3Vector& pos, const C2Vector& size) {
     for (uint32_t i = 0; i < Liquid::s_displMapCount; i++) {
         float texSize = static_cast<float>(s_displMapTexSize[i]);
@@ -447,7 +450,8 @@ void Liquid::SetDisplMapInfo(const C3Vector& pos, const C2Vector& size) {
     }
 }
 
-// OFFSET: 0x00717BD0
+// PROVEN: c6bac292 IDENTICAL/IDENTICAL
+// OFFSET: 0x00717BD0/0x1403EB2A0
 void Liquid::ClearPerturbatorCache() {
     s_perturbationAllocator.Clear(typeid(Liquid::DisplMapPerturbation).raw_name(), SLOG_OBJECT, 1);
     s_perturbationMeshAllocator.Clear(typeid(Liquid::DisplMapPerturbationMesh).raw_name(), SLOG_OBJECT, 1);
@@ -506,7 +510,7 @@ static void WmoWaterTexCallback(EGxTexCommand command, uint32_t width, uint32_t 
     texels = buffer;
 }
 
-// OFFSET: 0x00717E60
+// OFFSET: 0x00717E60/0x1403EB730
 static void ExtWaterDepthTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     ReserveTexBuffer();
 
@@ -605,7 +609,7 @@ static CTexture* CreateNoiseVolTex() {
     return texture;
 }
 
-// OFFSET: 0x007181E0
+// OFFSET: 0x007181E0/0x1403EBD20
 Liquid::DisplMapPerturbation* Liquid::CreatePerturbator(EPertSurface surface, int32_t force) {
     uint32_t index = surface;
 
@@ -776,7 +780,7 @@ void Liquid::KawaseBlur(CTexture* source, CTexture* target, CGxFrameBuffer* fram
     g_theGxDevicePtr->FrameBufferSet(oldFrameBuffer);
 }
 
-// OFFSET: 0x00718930
+// OFFSET: 0x00718930/0x1403EC5A0
 Liquid::DisplMapPerturbationMesh* Liquid::CreatePerturbatorMesh(EPertSurface surface) {
     uint32_t index = Liquid::s_displMapCount - 1;
 
@@ -1529,7 +1533,7 @@ void Liquid::CreateDynamicDisplacementMap() {
     Liquid::s_displMapDirty = 1;
 }
 
-// OFFSET: 0x0071A8F0
+// OFFSET: 0x0071A8F0/0x1403EEDF0
 void Liquid::CreateProceduralTextures(int32_t materials) {
     int32_t backBuffer = Liquid::GetWaterDetail() != 0;
     int32_t blur = Liquid::GetWaterDetail() != 0;

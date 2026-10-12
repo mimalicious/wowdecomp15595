@@ -10,21 +10,21 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/WowSysMessageOutput.h"
 
-// STATIC: 0x00D36B50
+// STATIC: 0x00D36B50/0x140BF0120
 static bool s_initialized;
 
-// STATIC: 0x00D36B51
+// STATIC: 0x00D36B51/0x140BF0121
 static bool s_enabled;
 
-// STATIC: 0x00D36B52
+// STATIC: 0x00D36B52/0x140BF0122
 static bool s_hidden;
 
 static bool s_moved;
 
-// STATIC: 0x00D36B54
+// STATIC: 0x00D36B54/0x140BF0128
 static HLAYER s_layer;
 
-// STATIC: 0x00D36B58
+// STATIC: 0x00D36B58/0x140BF0130
 static CGxStringBatch* s_batch;
 
 static CGxFont* s_font;
@@ -33,10 +33,10 @@ static float s_fontHeight;
 
 static uint32_t s_first;
 
-// STATIC: 0x00D36B68
+// STATIC: 0x00D36B68/0x140BF0150
 static SYSMESSAGE s_messages[10];
 
-// PROVEN: 5b3651a7 IDENTICAL/NONE
+// PROVEN: 5b3651a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0040DE00/0x140011580
 void WowSysMessageOutput::Enable() {
     if (!s_enabled && s_initialized && s_layer) {
@@ -44,7 +44,7 @@ void WowSysMessageOutput::Enable() {
     }
 }
 
-// PROVEN: a282cc5f IDENTICAL/NONE
+// PROVEN: a282cc5f IDENTICAL/IDENTICAL
 // OFFSET: 0x0040DE30/0x1400115B0
 void WowSysMessageOutput::Disable() {
     if (s_enabled) {
@@ -52,7 +52,7 @@ void WowSysMessageOutput::Disable() {
     }
 }
 
-// PROVEN: fa7671f8 IDENTICAL/NONE
+// PROVEN: fa7671f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0040DE50/0x1400115C0
 void WowSysMessageOutput::Show() {
     if (s_hidden) {
@@ -60,7 +60,7 @@ void WowSysMessageOutput::Show() {
     }
 }
 
-// PROVEN: 71ccff6a IDENTICAL/NONE
+// PROVEN: 71ccff6a IDENTICAL/IDENTICAL
 // OFFSET: 0x0040DE70/0x1400115D0
 void WowSysMessageOutput::Hide() {
     if (!s_hidden) {
@@ -184,7 +184,8 @@ void WowSysMessageOutput::Initialize() {
     s_initialized = 1;
 }
 
-// OFFSET: 0x0040DD90
+// PROVEN: dfa7a44d IDENTICAL/DIFFERENT
+// OFFSET: 0x0040DD90/0x1400114E0
 void WowSysMessageOutput::Shutdown() {
     if (!s_initialized) {
         return;

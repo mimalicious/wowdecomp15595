@@ -17,7 +17,7 @@ class CBLPFile {
     /* 049C */ int32_t m_inMemoryNeedsFree;
     /* 04A0 */ uint32_t m_numLevels;
     /* 04A4 */ uint32_t m_quality;
-    /* 04A8 */ uint32_t m_colorMapping;
+    /* 04A8 */ void* m_colorMapping;
     /* 04AC */ uint8_t* m_lockDecompMem;
 
     static int32_t ValidateHeader(const BLPHeader& header);
@@ -50,5 +50,7 @@ class CBLPFile {
     int32_t DecompPalDither(PIXEL_FORMAT format, uint32_t mipLevel, uint8_t* out, const void* in);
     void DecompPalFastPath(uint8_t* out, const void* in, uint32_t count);
 };
+
+#include "Engine/Source/BLPFile/blp.inl"
 
 #endif

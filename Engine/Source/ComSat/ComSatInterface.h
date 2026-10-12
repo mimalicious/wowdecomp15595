@@ -19,8 +19,8 @@ struct DeviceInfo {
 };
 
 struct Initialization {
-    /* 0000 */ uint32_t m_maxLocalPlayers;
-    /* 0004 */ uint32_t unk_0004;
+    /* 0000 */ size_t m_maxLocalPlayers;
+    /* 0004 */ size_t unk_0004;
     /* 0008 */ void* m_window;
     /* 000C */ uint16_t m_port;
     /* 0010 */ uint32_t m_time;

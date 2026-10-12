@@ -6,10 +6,10 @@
 #include "WoW/Source/WorldClient/MapObj.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00E71F10
+// STATIC: 0x00E71F10/0x140D5BC10
 CAaBspDigestCache* g_BspDigestCache;
 
-// STATIC: 0x00E73F2C
+// STATIC: 0x00E73F2C/0x140D5DC34
 int32_t CAaBspDigestCache::s_digestReplaceIndex;
 
 // OFFSET: 0x00730530/0x14040B010
@@ -37,7 +37,7 @@ void CAaBspDigestCache::RemoveEntry(const CAaBspNode* node) {
     }
 }
 
-// OFFSET: 0x00730610
+// OFFSET: 0x00730610/0x14040B090
 void CAaBspDigestCache::GenerateDigest(CAaBspNodeDigest* digest, const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices) {
     uint16_t slots[1024];
     uint16_t hash[1024];
@@ -94,7 +94,7 @@ void CAaBspDigestCache::GenerateDigest(CAaBspNodeDigest* digest, const CAaBsp& b
     }
 }
 
-// PROVEN: 34acda52 IDENTICAL/NONE
+// PROVEN: 34acda52 IDENTICAL/IDENTICAL
 // OFFSET: 0x00730810/0x14040B2F0
 CAaBsp::CAaBsp() {
     this->unk_0064 = 0;
@@ -119,7 +119,7 @@ CAaBsp::CAaBsp() {
     this->m_avgNodeFaces = 0;
 }
 
-// PROVEN: ac2d1d78 IDENTICAL/NONE
+// PROVEN: ac2d1d78 IDENTICAL/DIFFERENT
 // OFFSET: 0x00730880/0x14040B360
 void CAaBsp::Free() {
     if (g_BspDigestCache) {
@@ -145,20 +145,21 @@ void CAaBsp::Free() {
     }
 }
 
+// PROVEN: 5b75deb5 DIFFERENT/IDENTICAL
 // OFFSET: 0x00730910/0x14040B4B0
 CAaBspDigestCache::CAaBspDigestCache() {
     memset(this->m_nodes, 0, sizeof(this->m_nodes));
     memset(this->m_digests, 0, sizeof(this->m_digests));
 }
 
-// PROVEN: bde94ab6 IDENTICAL/NONE
+// PROVEN: bde94ab6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00730580/0x14040B060
 void CAaBspDigestCache::Reset() {
     memset(this->m_nodes, 0, sizeof(this->m_nodes));
     memset(this->m_digests, 0, sizeof(this->m_digests));
 }
 
-// OFFSET: 0x00730970
+// OFFSET: 0x00730970/0x14040B540
 CAaBspNodeDigest* CAaBspDigestCache::GetDigest(const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices) {
     uint32_t bucket = ((reinterpret_cast<uintptr_t>(node) >> 5) ^ node->m_nFaces) & 0x7F;
     int32_t freeSlot = -1;
@@ -195,13 +196,13 @@ CAaBspNodeDigest* CAaBspDigestCache::GetDigest(const CAaBsp& bsp, const CAaBspNo
     return digest->m_status ? NULL : digest;
 }
 
-// PROVEN: 80546f6b IDENTICAL/NONE
+// PROVEN: 80546f6b IDENTICAL/IDENTICAL
 // OFFSET: 0x00730A10/0x14040B640
 CAaBsp::~CAaBsp() {
     this->Free();
 }
 
-// PROVEN: c3c8769d IDENTICAL/NONE
+// PROVEN: c3c8769d IDENTICAL/IDENTICAL
 // OFFSET: 0x00730A20/0x14040B650
 void CAaBsp::Clear() {
     this->Free();

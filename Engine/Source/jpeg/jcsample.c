@@ -81,7 +81,7 @@ static void start_pass_downsample(j_compress_ptr cinfo) {
  * by duplicating the rightmost samples.
  */
 
-// OFFSET: 0x00B63A70
+// OFFSET: 0x00B63A70/0x14092DC20
 static void expand_right_edge(JSAMPARRAY image_data, int num_rows, JDIMENSION input_cols, JDIMENSION output_cols) {
   register JSAMPROW ptr;
   register JSAMPLE pixval;
@@ -107,7 +107,7 @@ static void expand_right_edge(JSAMPARRAY image_data, int num_rows, JDIMENSION in
  */
 
 // PROVEN: afdfed7f IDENTICAL/NONE
-// OFFSET: 0x00B63AB0
+// OFFSET: 0x00B63AB0/0x14092DCA0
 static void sep_downsample(j_compress_ptr cinfo, JSAMPIMAGE input_buf, JDIMENSION in_row_index, JSAMPIMAGE output_buf, JDIMENSION out_row_group_index) {
   my_downsample_ptr downsample = (my_downsample_ptr) cinfo->downsample;
   int ci;
@@ -130,7 +130,7 @@ static void sep_downsample(j_compress_ptr cinfo, JSAMPIMAGE input_buf, JDIMENSIO
  * Note that this version is not actually used for customary sampling ratios.
  */
 
-// OFFSET: 0x00B63B40
+// OFFSET: 0x00B63B40/0x14092DD40
 static void int_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY input_data, JSAMPARRAY output_data) {
   int inrow, outrow, h_expand, v_expand, numpix, numpix2, h, v;
   JDIMENSION outcol, outcol_h;	/* outcol_h == outcol*h_expand */
@@ -175,7 +175,7 @@ static void int_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, 
  * without smoothing.
  */
 
-// OFFSET: 0x00B63C90
+// OFFSET: 0x00B63C90/0x14092DF00
 static void fullsize_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY input_data, JSAMPARRAY output_data) {
   /* Copy the data */
   jcopy_sample_rows(input_data, 0, output_data, 0,
@@ -198,7 +198,7 @@ static void fullsize_downsample(j_compress_ptr cinfo, jpeg_component_info * comp
  * alternate pixel locations (a simple ordered dither pattern).
  */
 
-// OFFSET: 0x00B63CE0
+// OFFSET: 0x00B63CE0/0x14092DF70
 static void h2v1_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY input_data, JSAMPARRAY output_data) {
   int outrow;
   JDIMENSION outcol;
@@ -233,7 +233,7 @@ static void h2v1_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr,
  * without smoothing.
  */
 
-// OFFSET: 0x00B63D80
+// OFFSET: 0x00B63D80/0x14092E020
 static void h2v2_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY input_data, JSAMPARRAY output_data) {
   int inrow, outrow;
   JDIMENSION outcol;
@@ -274,7 +274,7 @@ static void h2v2_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr,
  * with smoothing.  One row of context is required.
  */
 
-// OFFSET: 0x00B63E30
+// OFFSET: 0x00B63E30/0x14092E0F0
 static void h2v2_smooth_downsample(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY input_data, JSAMPARRAY output_data) {
   int inrow, outrow;
   JDIMENSION colctr;
@@ -372,7 +372,7 @@ static void h2v2_smooth_downsample(j_compress_ptr cinfo, jpeg_component_info * c
  * with smoothing.  One row of context is required.
  */
 
-// OFFSET: 0x00B640A0
+// OFFSET: 0x00B640A0/0x14092E390
 static void fullsize_smooth_downsample(j_compress_ptr cinfo, jpeg_component_info *compptr, JSAMPARRAY input_data, JSAMPARRAY output_data) {
   int outrow;
   JDIMENSION colctr;

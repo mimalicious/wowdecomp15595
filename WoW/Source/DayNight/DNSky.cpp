@@ -31,13 +31,13 @@ static C2Vector s_facingTable[6] = {
     C2Vector(0.875f, 0.0f),
 };
 
-// STATIC: 0x00E43304
+// STATIC: 0x00E43304/0x140D2C0C0
 uint32_t DayNight::DNSky::s_refCount;
 
-// STATIC: 0x00E43308
+// STATIC: 0x00E43308/0x140D2C0C8
 CGxShader* DayNight::DNSky::s_vertexShader;
 
-// STATIC: 0x00E4330C
+// STATIC: 0x00E4330C/0x140D2C0D0
 CGxShader* DayNight::DNSky::s_pixelShader;
 
 // INLINED
@@ -52,7 +52,7 @@ static void ApplyEclipse(CImVector& color) {
     }
 }
 
-// PROVEN: 2ca9ae1a IDENTICAL/NONE
+// PROVEN: 2ca9ae1a IDENTICAL/IDENTICAL
 // OFFSET: 0x006519C0/0x1402F1680
 void DayNight::DNSky::Initialize() {
     if (!DNSky::s_refCount++ && g_theGxDevicePtr->m_caps.m_shaderModel >= 3) {
@@ -61,7 +61,7 @@ void DayNight::DNSky::Initialize() {
     }
 }
 
-// PROVEN: 0feec97e IDENTICAL/NONE
+// PROVEN: 0feec97e IDENTICAL/IDENTICAL
 // OFFSET: 0x00651A10/0x1402F16F0
 void DayNight::DNSky::Destroy() {
     if (--DNSky::s_refCount) {
@@ -140,7 +140,7 @@ void DayNight::DNSky::SetColors(const CurrentLight& light) {
     *color = last;
 }
 
-// OFFSET: 0x00651DE0
+// OFFSET: 0x00651DE0/0x1402F1DC0
 void DayNight::DNSky::GenSphere(float radius) {
     this->m_thetaTess = 24;
     this->m_verts.SetCount(168);
@@ -190,7 +190,7 @@ void DayNight::DNSky::GenSphere(float radius) {
     this->m_nIndices = 300;
 }
 
-// OFFSET: 0x00652130
+// OFFSET: 0x00652130/0x1402F2170
 void DayNight::DNSky::Render() {
     C44Matrix world;
     world.Scale(6.6666665f);

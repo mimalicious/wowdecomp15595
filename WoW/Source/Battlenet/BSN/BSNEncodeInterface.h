@@ -178,7 +178,7 @@ class BSNEncodedObjectPtr : public EncodedObject {
 };
 }
 
-// OFFSET: [0x00904040<Battlenet::Friends::FriendList, Protocol>, 0x00628740<Battlenet::Event::Update::Invoke, Protocol>, 0x00628AF0<Battlenet::Event::Larva::Invoke, Protocol>, 0x009041B0/0x1402B92F0<Battlenet::Toon::FullName, Protocol>, 0x00904300<Battlenet::Friends::FriendsOfFriendList, Protocol>]
+// OFFSET: [0x00904040<Battlenet::Friends::FriendList, Protocol>, 0x00628740/0x1402BA860<Battlenet::Event::Update::Invoke, Protocol>, 0x00628AF0/0x1402BAC60<Battlenet::Event::Larva::Invoke, Protocol>, 0x009041B0/0x1402B92F0<Battlenet::Toon::FullName, Protocol>, 0x00904300<Battlenet::Friends::FriendsOfFriendList, Protocol>]
 template <class T, class P>
 BSN::BSNEncodedObject<T, P>::BSNEncodedObject() {
     this->m_context.m_protocol = &P::s_protocol;
@@ -212,24 +212,28 @@ uint32_t BSN::BSNEncodedObject<T, P>::GetEncodingType() const {
     return 1;
 }
 
+// PROVEN: 68ef0ed7 IDENTICAL/NONE
 // OFFSET: [0x00628790<Battlenet::Event::Update::Invoke, Protocol>, 0x00628B50<Battlenet::Event::Larva::Invoke, Protocol>, 0x00903E40<Battlenet::Friends::FriendInviteContainer, Protocol>, 0x00903FE0<Battlenet::Presence::BlockList, Protocol>, 0x00904090<Battlenet::Friends::FriendList, Protocol>, 0x00904160<Battlenet::Presence::FieldUpdate, Protocol>, 0x00904200<Battlenet::Toon::FullName, Protocol>, 0x009042C0<Battlenet::Chat::MemberList, Protocol>, 0x00662FE0<Battlenet::Event::Header, Protocol>]
 template <class T, class P>
 const BSN::PrimitiveEncoder* BSN::BSNEncodedObject<T, P>::GetEncoder() const {
     return &this->m_encoder;
 }
 
+// PROVEN: e0c75ffd IDENTICAL/NONE
 // OFFSET: [0x00903F20<Battlenet::Presence::FieldVal, Protocol>, 0x006287A0<Battlenet::Event::Update::Invoke, Protocol>, 0x00628B60<Battlenet::Event::Larva::Invoke, Protocol>, 0x00903E50<Battlenet::Friends::FriendInviteContainer, Protocol>, 0x00903FF0<Battlenet::Presence::BlockList, Protocol>, 0x009040A0<Battlenet::Friends::FriendList, Protocol>]
 template <class T, class P>
 BSN::EncodeContext* BSN::BSNEncodedObject<T, P>::GetContext() {
     return &this->m_context;
 }
 
+// PROVEN: 347060eb IDENTICAL/NONE
 // OFFSET: [0x00903F20<Battlenet::Presence::FieldVal, Protocol>]
 template <class T, class P>
 const BSN::EncodeContext* BSN::BSNEncodedObject<T, P>::GetContext() const {
     return &this->m_context;
 }
 
+// PROVEN: a23bee10 IDENTICAL/IDENTICAL
 // OFFSET: [0x00904350/0x14065C8C0]
 template <class T, class P>
 void BSN::BSNEncodedObject<T, P>::Destroy() const {

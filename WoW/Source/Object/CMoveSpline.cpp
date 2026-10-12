@@ -11,6 +11,7 @@ CMoveSpline::CMoveSpline() {
     this->m_finalDestination.z = 0.0f;
 }
 
+// PROVEN: daf8f9b2 IDENTICAL/DIFFERENT
 // OFFSET: 0x005E70E0/0x140267B90
 CMoveSpline::~CMoveSpline() {
 }
@@ -73,7 +74,7 @@ CMoveSpline& CMoveSpline::CopyFrom(const CMoveSpline& source) {
     return *this;
 }
 
-// OFFSET: 0x00A291D0
+// OFFSET: 0x00A291D0/0x1407D0E50
 CMoveSpline& CMoveSpline::InitFromClientSpline(const CClientMoveSpline& source) {
     this->m_id = source.m_id;
     this->m_finalDestination = source.m_endPoint;

@@ -32,6 +32,7 @@ static int32_t Script_GetSocketTypes(lua_State* L) {
     return 1;
 }
 
+// PROVEN: dfe833d3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097A3C0/0x1406F3920
 static int32_t Script_GetSocketItemInfo(lua_State* L) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -60,6 +61,7 @@ static int32_t Script_GetSocketItemInfo(lua_State* L) {
     return 3;
 }
 
+// PROVEN: 7771b99c IDENTICAL/DIFFERENT
 // OFFSET: 0x0097A500/0x1406F3A70
 static int32_t Script_GetNumSockets(lua_State* L) {
     uint32_t count = 0;
@@ -91,8 +93,8 @@ static int32_t Script_GetNewSocketLink(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 387ee8fd IDENTICAL/NONE
-// OFFSET: 0x0097A620
+// PROVEN: 387ee8fd IDENTICAL/DIFFERENT
+// OFFSET: 0x0097A620/0x1406F3B60
 static int32_t Script_GetSocketItemBoundTradeable(lua_State* L) {
     if (CGItemSocketInfo::IsSocketItemBoundTradeable()) {
         lua_pushnumber(L, 1.0);
@@ -103,14 +105,14 @@ static int32_t Script_GetSocketItemBoundTradeable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 4dda36fe IDENTICAL/NONE
+// PROVEN: 4dda36fe IDENTICAL/IDENTICAL
 // OFFSET: 0x0097A820/0x1406F3DD0
 static int32_t Script_AcceptSockets(lua_State* L) {
     CGItemSocketInfo::Accept();
     return 0;
 }
 
-// PROVEN: 8020cf64 IDENTICAL/NONE
+// PROVEN: 8020cf64 IDENTICAL/IDENTICAL
 // OFFSET: 0x0097A830/0x1406F3DE0
 static int32_t Script_GetSocketItemRefundable(lua_State* L) {
     if (CGItemSocketInfo::IsSocketItemRefundable()) {
@@ -122,6 +124,7 @@ static int32_t Script_GetSocketItemRefundable(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f477e237 DIFFERENT/IDENTICAL
 // OFFSET: 0x0097AC10/0x1406F4180
 static int32_t Script_CloseSocketInfo(lua_State* L) {
     CGItemSocketInfo::SetItem(WOWGUID());
@@ -169,6 +172,7 @@ static int32_t Script_GetExistingSocketInfo(lua_State* L) {
     return 3;
 }
 
+// PROVEN: 7a60dbb6 IDENTICAL/DIFFERENT
 // OFFSET: 0x0097AE20/0x1406F43C0
 static int32_t Script_GetExistingSocketLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -270,7 +274,7 @@ static int32_t Script_ClickSocketButton(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D13608
+// STATIC: 0x00D13608/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseSocketInfo", &Script_CloseSocketInfo },
     { "GetSocketItemInfo", &Script_GetSocketItemInfo },
@@ -286,7 +290,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetSocketItemBoundTradeable", &Script_GetSocketItemBoundTradeable },
 };
 
-// PROVEN: 5a0d4f7c IDENTICAL/NONE
+// PROVEN: 5a0d4f7c IDENTICAL/UNPROVEN
 // OFFSET: 0x0097A2C0/0x1406F3830
 void ItemSocketInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -294,7 +298,7 @@ void ItemSocketInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: f1a30822 IDENTICAL/NONE
+// PROVEN: f1a30822 IDENTICAL/UNPROVEN
 // OFFSET: 0x0097A2F0/0x1406F3880
 void ItemSocketInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

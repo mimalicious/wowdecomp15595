@@ -55,7 +55,7 @@ static __m128 PlaneVector_SSE(const C3Vector* dir, float d) {
     return _mm_unpacklo_ps(_mm_unpacklo_ps(_mm_set_ss(dir->x), _mm_set_ss(dir->z)), _mm_unpacklo_ps(_mm_set_ss(dir->y), _mm_set_ss(-d)));
 }
 
-// OFFSET: 0x00491750
+// OFFSET: 0x00491750/0x1400B66E0
 static bool ProjectBoxTop_SSE(const CAaBox* box, const C44Matrix* matrix, float nearW, float* minX, float* maxX, float* maxY) {
     const float* m = &matrix->a0;
     __m128 bottom = _mm_loadu_ps(&box->b.x);
@@ -87,7 +87,7 @@ static bool ProjectBoxTop_SSE(const CAaBox* box, const C44Matrix* matrix, float 
     return true;
 }
 
-// OFFSET: 0x004918C0
+// OFFSET: 0x004918C0/0x1400B6840
 static void BlendBoneMatrices_SSE(C44Matrix* result, uint32_t weights, uint32_t indices, const C44Matrix* bones) {
     __m128 row0;
     __m128 row1;
@@ -106,7 +106,7 @@ static void BlendBoneMatrices_SSE(C44Matrix* result, uint32_t weights, uint32_t 
     result->d3 = 1.0f;
 }
 
-// OFFSET: 0x004919F0
+// OFFSET: 0x004919F0/0x1400B6960
 static void SkinVertices_SSE(void* dst, const M2Vertex* src, uint32_t count, const C44Matrix* bones, uint32_t texCoord) {
     float* out = static_cast<float*>(dst);
     uint32_t weights = 0;
@@ -134,7 +134,7 @@ static void SkinVertices_SSE(void* dst, const M2Vertex* src, uint32_t count, con
     }
 }
 
-// OFFSET: 0x00491BB0
+// OFFSET: 0x00491BB0/0x1400B6B40
 static void SkinVerticesOneBone_SSE(void* dst, const M2Vertex* src, uint32_t count, const C44Matrix* bones, uint32_t texCoord) {
     float* out = static_cast<float*>(dst);
 
@@ -151,7 +151,7 @@ static void SkinVerticesOneBone_SSE(void* dst, const M2Vertex* src, uint32_t cou
     }
 }
 
-// OFFSET: 0x00491CA0
+// OFFSET: 0x00491CA0/0x1400B6C20
 static void ProjectVertices_SSE(C3Vector* dst, const M2Vertex* vertices, uint32_t start, uint32_t count, const uint16_t* indices, const C44Matrix* bones, int32_t normals, const C3Vector* dir, float d) {
     uint32_t weights = 0;
     uint32_t boneIndices = 0;
@@ -177,7 +177,7 @@ static void ProjectVertices_SSE(C3Vector* dst, const M2Vertex* vertices, uint32_
     }
 }
 
-// OFFSET: 0x00491ED0
+// OFFSET: 0x00491ED0/0x1400B6EB0
 static void ProjectVerticesOneBone_SSE(C3Vector* dst, const M2Vertex* vertices, uint32_t start, uint32_t count, const uint16_t* indices, const C44Matrix* bones, int32_t normals, const C3Vector* dir, float d) {
     __m128 plane = PlaneVector_SSE(dir, d);
     const uint16_t* index = &indices[start];
@@ -304,7 +304,7 @@ static void FFT2D_SSE(float* data, void* re, void* im, int32_t n, int32_t log2n)
     }
 }
 
-// PROVEN: de111e50 IDENTICAL/UNPROVEN
+// PROVEN: de111e50 IDENTICAL/IDENTICAL
 // OFFSET: 0x004928E0/0x1400B7930
 void SIMD::Init_SSE(SIMD::FunctionTable* table) {
     table->ProjectBoxTop = ProjectBoxTop_SSE;

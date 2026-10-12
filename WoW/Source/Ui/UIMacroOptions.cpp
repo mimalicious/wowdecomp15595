@@ -28,6 +28,7 @@
 void InitializeMacroOptions() {
 }
 
+// PROVEN: 23dca48e IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0D3E0/0x1407AF000
 int32_t EvaluateExists(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGObject_C* object = ClntObjMgrObjectPtr(*unit, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -40,6 +41,7 @@ int32_t EvaluateExists(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
     return exists == args->m_data->ToNumber();
 }
 
+// PROVEN: 661e5bb3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0D450/0x1407AF0C0
 int32_t EvaluateParty(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     int32_t party = CGPartyInfo::IsPlayerOrPetInParty(*unit);
@@ -51,6 +53,7 @@ int32_t EvaluateParty(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>
     return party == args->m_data->ToNumber();
 }
 
+// PROVEN: 12b9394b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0D490/0x1407AF120
 int32_t EvaluateRaid(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     int32_t raid = CGPartyInfo::IsPlayerOrPetInParty(*unit) || CGRaidInfo::IsPlayerOrPetInRaid(*unit);
@@ -241,7 +244,7 @@ static VehicleSeatRec* GetVehicleSeatRec(const WOWGUID* guid) {
     return NULL;
 }
 
-// PROVEN: de650eae IDENTICAL/NONE
+// PROVEN: de650eae IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0DA30/0x1407AF860
 int32_t EvaluateVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     WOWGUID guid = ClntObjMgrGetActivePlayer();
@@ -254,7 +257,7 @@ int32_t EvaluateVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstr
     return 0;
 }
 
-// PROVEN: 474e025c IDENTICAL/NONE
+// PROVEN: 474e025c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A0DA70/0x1407AF8A0
 int32_t EvaluateUnitHasVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     VehicleSeatRec* seat = GetVehicleSeatRec(unit);
@@ -353,6 +356,7 @@ int32_t EvaluateCombat(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
     return combat == args->m_data->ToNumber();
 }
 
+// PROVEN: 6641e648 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0DDC0/0x1407AFD10
 int32_t EvaluateHelp(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -366,6 +370,7 @@ int32_t EvaluateHelp(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>*
     return help == args->m_data->ToNumber();
 }
 
+// PROVEN: 90e1ead5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0DE40/0x1407AFDF0
 int32_t EvaluateHarm(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -406,6 +411,7 @@ int32_t EvaluateDead(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>*
     return dead == args->m_data->ToNumber();
 }
 
+// PROVEN: 71f21903 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0E000/0x1407B0090
 int32_t EvaluateIndoors(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -418,6 +424,7 @@ int32_t EvaluateIndoors(const WOWGUID* unit, const TSGrowableArray<MacroSubstrin
     return indoors == args->m_data->ToNumber();
 }
 
+// PROVEN: 4d58197f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0E060/0x1407B0140
 int32_t EvaluateOutdoors(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -454,6 +461,7 @@ int32_t EvaluateFlying(const WOWGUID* unit, const TSGrowableArray<MacroSubstring
     return flying;
 }
 
+// PROVEN: 99726db6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0E180/0x1407B0330
 int32_t EvaluateMounted(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -466,6 +474,7 @@ int32_t EvaluateMounted(const WOWGUID* unit, const TSGrowableArray<MacroSubstrin
     return mounted == args->m_data->ToNumber();
 }
 
+// PROVEN: 010506a2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A0E1F0/0x1407B03D0
 int32_t EvaluateStealth(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));

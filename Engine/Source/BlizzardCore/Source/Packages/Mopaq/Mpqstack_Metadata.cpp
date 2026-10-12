@@ -63,7 +63,7 @@ bool System_Mopaq::ReadAndInitializeMetadata(Blizzard::Mopaq::MpqHandleRecord* h
     return stack->m_open(stack, &parms);
 }
 
-// OFFSET: 0x007EF300
+// OFFSET: 0x007EF300/0x1404FB610
 bool System_Mopaq::metadata_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     InitializeHandle(handle, parms);
@@ -81,7 +81,7 @@ bool System_Mopaq::metadata_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* 
     return ReadAndInitializeMetadata(parms->m_handle);
 }
 
-// OFFSET: 0x007EF370
+// OFFSET: 0x007EF370/0x1404FB690
 bool System_Mopaq::metadata_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     if (!ReadAndInitializeMetadata(parms->m_handle)) {
         return false;

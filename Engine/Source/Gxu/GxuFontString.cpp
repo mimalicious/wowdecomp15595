@@ -23,7 +23,7 @@ void CGxString::TexturePageEvicted(uint32_t texturePage) {
     }
 }
 
-// PROVEN: bebe930a IDENTICAL/UNPROVEN
+// PROVEN: bebe930a IDENTICAL/IDENTICAL
 // OFFSET: 0x0061D950/0x1402AC0D0
 void CGxString::WriteGeometry(CGxVertexPCT* buf, int32_t texturePage, int32_t vertIndex, int32_t numVerts) const {
     TEXTLINETEXTURE* textLine = this->m_textLines[texturePage];
@@ -76,7 +76,7 @@ uint8_t CGxString::GetGradientAlpha(const GRADIENTINFO& info) {
     return textLine->m_colors.m_data[info.m_vertIndex].a;
 }
 
-// OFFSET: 0x0061DEB0
+// OFFSET: 0x0061DEB0/0x1402AC6B0
 void CGxString::InitializeViewTranslation() {
     this->m_viewTranslation = this->m_position;
 
@@ -160,6 +160,7 @@ void CGxString::AddEmbeddedTextureParseInfo(GXUEMBEDDEDTEXTUREINFO info) {
     this->m_embeddedTextureInfo.Add(1, &info);
 }
 
+// PROVEN: 69f87f22 IDENTICAL/IDENTICAL
 // OFFSET: 0x0061E8C0/0x1402AD390
 void CGxString::ClearInstanceData() {
     this->m_hyperlinkInfo.SetCount(0);
@@ -212,7 +213,7 @@ void CGxString::HandleScreenSizeChange() {
     this->ClearInstanceData();
 }
 
-// OFFSET: 0x0061EA10
+// OFFSET: 0x0061EA10/0x1402AD4E0
 void CGxString::InitializeTextLine(const char* text, uint32_t numBytes, CImVector& color, const C3Vector& position, uint32_t* texturePagesUsed, EMBEDDEDPARSEINFO& parseInfo) {
     float rotation = this->m_rotation;
     bool rotated = false;
@@ -606,7 +607,7 @@ int32_t CGxString::CheckGeometry() {
     return this->m_numLines != 0;
 }
 
-// OFFSET: 0x0061F580
+// OFFSET: 0x0061F580/0x1402AE3F0
 int32_t CGxString::Initialize(float fontHeight, const C3Vector& position, float blockWidth, float blockHeight, CGxFont* face, const char* text, EGxFontVJusts vertJust, EGxFontHJusts horzJust, float spacing, uint32_t flags, const CImVector& color, float scale, float stringScale, float rotation) {
     uint32_t textLen = SStrLen(text) + 1;
 
@@ -648,6 +649,7 @@ int32_t CGxString::Initialize(float fontHeight, const C3Vector& position, float 
     return 1;
 }
 
+// PROVEN: b89dab4a IDENTICAL/DIFFERENT
 // OFFSET: 0x0061F6F0/0x1402AE5D0
 void CGxString::Recycle() {
     this->m_batchedStringLink.Unlink();
@@ -655,7 +657,7 @@ void CGxString::Recycle() {
     this->ClearInstanceData();
 }
 
-// OFFSET: 0x0061F750
+// OFFSET: 0x0061F750/0x1402AE690
 CGxString::CGxString() {
     this->m_requestedFontHeight = 0.02f;
     this->m_currentFontHeight = 0.02f;
@@ -700,6 +702,7 @@ CGxString::CGxString() {
     }
 }
 
+// PROVEN: 8ecd2cac IDENTICAL/NONE
 // OFFSET: 0x0061F8B0
 CGxString::~CGxString() {
     for (uint32_t i = 0; i < 8; i++) {
@@ -716,7 +719,7 @@ CGxString::~CGxString() {
     this->m_embeddedTextureInfo.Clear();
 }
 
-// OFFSET: 0x0061FAE0
+// OFFSET: 0x0061FAE0/0x1402AEA30
 int32_t CGxString::SetGradient(int32_t start, int32_t length) {
     if (start < 0 || length < 0) {
         return 2;

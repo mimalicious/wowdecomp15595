@@ -122,13 +122,13 @@ void OsPathReplaceExtension(char* dest, uint32_t size, const char* path, const c
     }
 }
 
-// PROVEN: de1f7629 IDENTICAL/UNPROVEN
+// PROVEN: de1f7629 IDENTICAL/IDENTICAL
 // OFFSET: 0x00876270/0x1405AD200
 void OsBuildFontFilePath(const char* fontName, char* path, uint32_t size) {
     SStrPrintf(path, size, "%s\\%s", "Fonts", fontName);
 }
 
-// OFFSET: 0x00876340
+// OFFSET: 0x00876340/0x1405AD300
 void OsPathStripFilename(char* path) {
     char* filename = path;
 
@@ -149,7 +149,8 @@ void OsPathStripFilename(char* path) {
     }
 }
 
-// OFFSET: 0x00876390
+// PROVEN: 2f78923d DIFFERENT/IDENTICAL
+// OFFSET: 0x00876390/0x1405AD370
 void OsGetExePath(char* path, uint32_t size) {
     GetModuleFileNameUTF8(NULL, path, size);
     OsPathStripFilename(path);

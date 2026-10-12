@@ -7,7 +7,7 @@
 CGGameObject_C_Type_CapturePoint::CGGameObject_C_Type_CapturePoint(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
-// OFFSET: 0x005A2BA0
+// OFFSET: 0x005A2BA0/0x14020F8E0
 bool CGGameObject_C_Type_CapturePoint::CanHighlight() const {
     uint32_t highlightIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 18);
     GameObjectStats* highlightStats = this->m_owner->m_stats;
@@ -22,7 +22,7 @@ bool CGGameObject_C_Type_CapturePoint::CanUse() const {
     return false;
 }
 
-// OFFSET: 0x005A10B0
+// OFFSET: 0x005A10B0/0x140210FD0
 void CGGameObject_C_Type_CapturePoint::PostInitWithStats() {
     uint32_t a3Index = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 24);
     GameObjectStats* a3Stats = this->m_owner->m_stats;
@@ -34,7 +34,7 @@ void CGGameObject_C_Type_CapturePoint::PostInitWithStats() {
     g_capturePointUIManager.AddCapturePoint(this->m_owner, a2, a3);
 }
 
-// OFFSET: 0x005A10B0
+// OFFSET: 0x005A10B0/0x140210FD0
 void CGGameObject_C_Type_CapturePoint::Reenable() {
     uint32_t a3Index = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 24);
     GameObjectStats* a3Stats = this->m_owner->m_stats;
@@ -46,7 +46,8 @@ void CGGameObject_C_Type_CapturePoint::Reenable() {
     g_capturePointUIManager.AddCapturePoint(this->m_owner, a2, a3);
 }
 
-// OFFSET: 0x0059AE30
+// PROVEN: fbdc91fd IDENTICAL/UNPROVEN
+// OFFSET: 0x0059AE30/0x140209570
 void CGGameObject_C_Type_CapturePoint::Disable() {
     g_capturePointUIManager.RemoveCapturePoint(this->m_owner);
 }

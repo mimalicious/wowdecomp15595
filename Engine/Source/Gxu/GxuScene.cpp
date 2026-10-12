@@ -1,6 +1,6 @@
 #include "Engine/Source/Gxu/GxuScene.h"
 
-// STATIC: 0x00CA8554
+// STATIC: 0x00CA8554/0x140B48590
 GxuScene g_scene;
 
 // PROVEN: 110effb7 IDENTICAL/IDENTICAL
@@ -8,17 +8,18 @@ GxuScene g_scene;
 void GxuSceneObject::Render() {
 }
 
-// PROVEN: 61f0e1f8 IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: 61f0e1f8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void GxuSceneObject::Update(float elapsed) {
 }
 
-// PROVEN: 12e92145 IDENTICAL/DIFFERENT
+// PROVEN: 12e92145 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FCE20/0x14090EBB0
 bool GxuSceneObject::IsAlive() {
     return true;
 }
 
+// PROVEN: d570d883 UNPROVEN/IDENTICAL
 // OFFSET: 0x00612880/0x14029DB20
 GxuSceneObject::GxuSceneObject() {
 }
@@ -31,6 +32,7 @@ GxuSceneObject::~GxuSceneObject() {
 GxuScene::~GxuScene() {
 }
 
+// PROVEN: c31d9bb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00612E50/0x14029E370
 void GxuScene::AddObject(GxuSceneObject* object) {
     this->m_objects.New(object);

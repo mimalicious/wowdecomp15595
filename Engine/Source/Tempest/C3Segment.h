@@ -12,4 +12,6 @@ struct C3Segment {
     C3Vector Lerp(float t) const;
 };
 
+#include "Engine/Source/Tempest/C3Segment.inl"
+
 #endif

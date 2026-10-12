@@ -84,6 +84,7 @@ int32_t Blizzard::Mopaq::SFileOpenFileEx(System_SFile::ARCHIVEREC* handle, const
     return 0;
 }
 
+// PROVEN: 6acd2a32 IDENTICAL/UNPROVEN
 // OFFSET: 0x007F7880/0x140506970
 int32_t Blizzard::Mopaq::SFileOpenFileEx(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags, HSFILERecord** result) {
     Blizzard::Util::Digest<16> md5 = System_SFile::s_emptyMd5;
@@ -169,7 +170,7 @@ bool Blizzard::Mopaq::SFileReadFile(HSFILERecord* file, void* buffer, uint32_t c
     return false;
 }
 
-// PROVEN: b0f44088 IDENTICAL/UNPROVEN
+// PROVEN: b0f44088 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BA190/0x1404B1920
 bool Blizzard::Mopaq::SFileWriteFile(HSFILERecord* file, const void* data, uint32_t size) {
     int64_t position = file->m_handle ? file->m_handle->m_position : -1;
@@ -210,13 +211,13 @@ int64_t Blizzard::Mopaq::SFileSetFilePointer(HSFILERecord* file, int32_t distanc
     return position;
 }
 
-// PROVEN: 9404b712 IDENTICAL/UNPROVEN
+// PROVEN: 9404b712 IDENTICAL/IDENTICAL
 // OFFSET: 0x007BA180/0x1404B1910
 int64_t Blizzard::Mopaq::SFileGetFileSize(HSFILERecord* file, uint32_t* sizeHigh) {
     return file->GetFileSize();
 }
 
-// OFFSET: 0x007B1B30
+// OFFSET: 0x007B1B30/0x1404A6C30
 int32_t Blizzard::Mopaq::SFileGetFilePointer(HSFILERecord* file) {
     if (!file->m_handle) {
         return -1;

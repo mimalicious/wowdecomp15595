@@ -87,7 +87,7 @@ class Manager : public IOCallback {
         Session(Allocator& allocator);
     };
 
-    /* 0004 */ uint32_t m_maxLocalPlayers;
+    /* 0004 */ size_t m_maxLocalPlayers;
     /* 0008 */ Allocator* m_allocator;
     /* 000C */ Callback* m_callback;
     /* 0010 */ CODEC* m_codec;

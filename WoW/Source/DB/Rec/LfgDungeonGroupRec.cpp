@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[5] = { 0, 2, 0, 0, 0 };
 // STATIC: 0x00C238A8/0x140A18C28
 const DBCMeta LfgDungeonGroupRec::s_meta = { "DBFilesClient\\LfgDungeonGroup.dbc", 5, 20, LfgDungeonGroupRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 67396f38 IDENTICAL/NONE
+// PROVEN: 67396f38 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void LfgDungeonGroupRec::FixupStrings(void* record, const char* strings) {
     LfgDungeonGroupRec* rec = static_cast<LfgDungeonGroupRec*>(record);

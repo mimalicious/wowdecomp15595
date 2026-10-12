@@ -17,4 +17,6 @@ class ItemTextCache_C {
     void Unpack(CDataStore* msg);
 };
 
+#include "WoW/Source/Object/ItemTextCache.inl"
+
 #endif

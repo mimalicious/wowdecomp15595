@@ -95,4 +95,6 @@ class CVehicle_C {
     void Destroy(int32_t removePassengers);
 };
 
+#include "WoW/Source/Object/ObjectClient/Vehicle_C.inl"
+
 #endif

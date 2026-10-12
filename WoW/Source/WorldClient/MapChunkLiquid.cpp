@@ -14,23 +14,23 @@
 #include "WoW/Source/WorldClient/MapChunk.h"
 #include "WoW/Source/WorldClient/MapObjGroup.h"
 
-// STATIC: 0x00EB3270
+// STATIC: 0x00EB3270/0x140D9EFD0
 C3Vector CChunkLiquid::s_vertXY[81];
 
-// STATIC: 0x00EB3268
+// STATIC: 0x00EB3268/0x140D9EFC0
 int32_t CChunkLiquid::s_vertXYInitialized;
 
 // STATIC: 0x00BC9580
 static const uint32_t s_cellTriangles[6] = { 0, 18, 17, 0, 1, 18 };
 
-// STATIC: 0x00EB3A0C
+// STATIC: 0x00EB3A0C/0x140D9F770
 static TSGrowableArray<CChunkLiquid*> s_batchLiquids;
 
 static uint32_t FloatSign(float value) {
     return *reinterpret_cast<uint32_t*>(&value) >> 31;
 }
 
-// PROVEN: c063c8fe IDENTICAL/NONE
+// PROVEN: c063c8fe IDENTICAL/IDENTICAL
 // OFFSET: 0x0075EDD0/0x14048C530
 void CChunkLiquid::Purge() {
     if (this->m_instance) {
@@ -39,13 +39,13 @@ void CChunkLiquid::Purge() {
     }
 }
 
-// PROVEN: 6e4ed08f IDENTICAL/NONE
+// PROVEN: 6e4ed08f IDENTICAL/DIFFERENT
 // OFFSET: 0x0076CDE0/0x140909D40
 float CChunkLiquid::GetVertexHeight(uint32_t index) const {
     return Liquid::GetChunkHeight(this->m_liquidObject, this->m_vertexData, this->m_vertexCount, index);
 }
 
-// PROVEN: 6d9f518c IDENTICAL/NONE
+// PROVEN: 6d9f518c IDENTICAL/IDENTICAL
 // OFFSET: 0x00798930/0x14048C560
 void CChunkLiquid::UpdateResourcePurging() {
     if (this->m_instance) {
@@ -53,7 +53,7 @@ void CChunkLiquid::UpdateResourcePurging() {
     }
 }
 
-// PROVEN: 834227f6 IDENTICAL/NONE
+// PROVEN: 834227f6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00798940/0x14048C580
 bool CChunkLiquid::HasData() const {
     if (this->m_tileData) {
@@ -63,7 +63,7 @@ bool CChunkLiquid::HasData() const {
     return Liquid::HasData(static_cast<const SMLiquidChunkDesc*>(this->m_owner->m_liquidChunk), static_cast<const SMLiquidInstance*>(this->m_liquidHeader));
 }
 
-// PROVEN: b8e632aa IDENTICAL/NONE
+// PROVEN: b8e632aa IDENTICAL/IDENTICAL
 // OFFSET: 0x00798960/0x14048C5B0
 void CChunkLiquid::CreateVertXY() {
     if (CChunkLiquid::s_vertXYInitialized) {
@@ -87,7 +87,7 @@ void CChunkLiquid::CreateVertXY() {
     CChunkLiquid::s_vertXYInitialized = 1;
 }
 
-// PROVEN: 044bef56 IDENTICAL/NONE
+// PROVEN: 044bef56 IDENTICAL/DIFFERENT
 // OFFSET: 0x007989C0/0x14048C630
 void CChunkLiquid::CreateVertZ() {
     memset(this->m_heights, 0, sizeof(this->m_heights));
@@ -118,7 +118,7 @@ bool CChunkLiquid::GetHeight(const C2Vector& frac, const C2iVector& cell, float&
     return true;
 }
 
-// OFFSET: 0x00798B40
+// OFFSET: 0x00798B40/0x14048C820
 bool CChunkLiquid::Intersect(int32_t x, int32_t y, C3Ray& ray, float& t) const {
     int32_t index = x + (this->m_height - this->m_yOffset + 1) * (y - this->m_xOffset) - this->m_yOffset;
     int32_t stride = this->m_height - this->m_yOffset + 1;
@@ -165,7 +165,7 @@ bool CChunkLiquid::TileExists(uint32_t x, uint32_t y) const {
     return CMapChunk::TestBit(exists, x + width * (y - this->m_xOffset) - this->m_yOffset) != 0;
 }
 
-// OFFSET: 0x00798D40
+// OFFSET: 0x00798D40/0x14048CAC0
 bool CChunkLiquid::GetTris(World::TriData& tris, uint8_t* clip, const C2iVector& start, const C2iVector& size) const {
     uint32_t cellTris[6];
     cellTris[1] = 9;
@@ -238,7 +238,7 @@ bool CChunkLiquid::GetTris(World::TriData& tris, uint8_t* clip, const C2iVector&
     return batch != NULL;
 }
 
-// OFFSET: 0x007990C0
+// OFFSET: 0x007990C0/0x14048CE00
 bool CChunkLiquid::GetTris(World::TriData& tris, const CAaBox& box, const CiRect& rect) const {
     CiRect query(rect.minY, rect.minX, rect.maxY + 1, rect.maxX + 1);
     CiRect area = *reinterpret_cast<const CiRect*>(&this->m_xOffset) & query;
@@ -272,7 +272,7 @@ bool CChunkLiquid::GetTris(World::TriData& tris, const CAaBox& box, const CiRect
     return this->GetTris(tris, clip, start, size);
 }
 
-// OFFSET: 0x00799350
+// OFFSET: 0x00799350/0x14048D150
 bool CChunkLiquid::GetTris(World::TriData& tris, const CFrustum& frustum, const CiRect& rect) const {
     CiRect query(rect.minY, rect.minX, rect.maxY + 1, rect.maxX + 1);
     CiRect area = *reinterpret_cast<const CiRect*>(&this->m_xOffset) & query;
@@ -327,11 +327,12 @@ CChunkLiquid::CChunkLiquid() {
     this->unk_0024 = -1.0f;
 }
 
+// PROVEN: 56cfba74 IDENTICAL/NONE
 // OFFSET: 0x007994F0
 CChunkLiquid::~CChunkLiquid() {
 }
 
-// OFFSET: 0x00799570
+// OFFSET: 0x00799570/0x14048D430
 void CChunkLiquid::Batch() {
     s_batchLiquids.Clear();
     s_batchLiquids.Reserve(32, 0);
@@ -403,8 +404,8 @@ void CChunkLiquid::Batch() {
     instance->Release();
 }
 
-// PROVEN: 0b03f0c6 IDENTICAL/NONE
-// OFFSET: 0x00799BC0
+// PROVEN: 0b03f0c6 IDENTICAL/UNPROVEN
+// OFFSET: 0x00799BC0/0x14048DDA0
 void CChunkLiquid::RenderPrep() {
     if (!this->m_instance) {
         this->Batch();

@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C25080/0x140A1AAF8
 const DBCMeta GMTicketCategoryRec::s_meta = { "DBFilesClient\\GMTicketCategory.dbc", 2, 8, GMTicketCategoryRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 5d85c455 IDENTICAL/NONE
+// PROVEN: 5d85c455 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void GMTicketCategoryRec::FixupStrings(void* record, const char* strings) {
     GMTicketCategoryRec* rec = static_cast<GMTicketCategoryRec*>(record);

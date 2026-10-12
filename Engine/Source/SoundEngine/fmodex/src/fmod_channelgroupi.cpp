@@ -246,6 +246,7 @@ FMOD_RESULT ChannelGroupI::setVolume(float volume)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 7bacad8e DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8F280/0x14084E810
 FMOD_RESULT ChannelGroupI::setVolumeInternal()
 {
@@ -369,6 +370,7 @@ FMOD_RESULT ChannelGroupI::setPitch(float pitch)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 9d483519 DIFFERENT/IDENTICAL
 // OFFSET: 0x00A8F320/0x14084E8D0
 FMOD_RESULT ChannelGroupI::setPitchInternal()
 {
@@ -568,7 +570,7 @@ FMOD_RESULT ChannelGroupI::get3DOcclusion(float *directOcclusion, float *reverbO
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A8F3B0
+// OFFSET: 0x00A8F3B0/0x14084E980
 FMOD_RESULT ChannelGroupI::setPaused(bool paused, bool setpausedflag)
 {
     LinkedListNode *current;
@@ -648,7 +650,7 @@ FMOD_RESULT ChannelGroupI::getPaused(bool *paused)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A8F410
+// OFFSET: 0x00A8F410/0x14084EA10
 FMOD_RESULT ChannelGroupI::setMute(bool mute, bool setmuteflag)
 {
     LinkedListNode *current;
@@ -1058,6 +1060,7 @@ FMOD_RESULT ChannelGroupI::overrideSpeakerMix(float frontleft, float frontright,
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 638bafe1 UNPROVEN/IDENTICAL
 // OFFSET: 0x00A8F4F0/0x14084EAF0
 FMOD_RESULT ChannelGroupI::addGroup(ChannelGroupI *group)
 {

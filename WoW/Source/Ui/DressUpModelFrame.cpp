@@ -31,13 +31,13 @@
 #include "WoW/Source/Ui/CGTabardCreationFrame.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// STATIC: 0x00D176E4
+// STATIC: 0x00D176E4/0x140BD25F8
 const char* CGDressUpModelFrame::s_objectTypeName = "DressUpModel";
 
-// STATIC: 0x00D17708
+// STATIC: 0x00D17708/0x140BD25F4
 int32_t CGDressUpModelFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00F76C88
+// STATIC: 0x00F76C88/0x140E6CDE0
 int32_t CGDressUpModelFrame::s_objectType;
 
 CDataAllocator CGDressUpModelFrame::s_dressUpModelHeap(sizeof(CGDressUpModelFrame), 5);
@@ -45,10 +45,10 @@ CDataAllocator CGDressUpModelFrame::s_dressUpModelHeap(sizeof(CGDressUpModelFram
 // STATIC: 0x00F76C8C
 static int32_t s_mainHandItemId;
 
-// STATIC: 0x00F76C90
+// STATIC: 0x00F76C90/0x140E6CDEC
 static int32_t s_offHandItemId;
 
-// STATIC: 0x00D176E0
+// STATIC: 0x00D176E0/0x140BD25F0
 static int32_t s_nextHand = 15;
 
 // INLINED
@@ -56,7 +56,7 @@ void CGDressUpModelFrame::operator delete(void* ptr) {
     CGDressUpModelFrame::s_dressUpModelHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x008C6510
+// OFFSET: 0x008C6510/0x140636590
 CSimpleFrame* CGDressUpModelFrame::Create(CSimpleFrame* parent) {
     if (CGDressUpModelFrame::s_dressUpModelHeap.m_bytesPerData < sizeof(CGDressUpModelFrame)) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -66,23 +66,25 @@ CSimpleFrame* CGDressUpModelFrame::Create(CSimpleFrame* parent) {
     return data ? new (data) CGDressUpModelFrame(parent) : NULL;
 }
 
-// OFFSET: 0x00A04840
+// PROVEN: c6272ad9 DIFFERENT/IDENTICAL
+// OFFSET: 0x00A04840/0x1407A3E70
 CGDressUpModelFrame::CGDressUpModelFrame(CSimpleFrame* parent) : CGCharacterModelBase(parent) {
     this->m_dressUpComponent = NULL;
 }
 
-// PROVEN: 67d442a2 IDENTICAL/NONE
-// OFFSET: 0x00A04870
+// PROVEN: 67d442a2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A04870/0x1407A3EB0
 const char* CGDressUpModelFrame::GetObjectTypeName() {
     return CGDressUpModelFrame::s_objectTypeName;
 }
 
-// PROVEN: 5a0a4bc2 IDENTICAL/NONE
-// OFFSET: 0x00A04880
+// PROVEN: 5a0a4bc2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A04880/0x1407A3EC0
 int32_t CGDressUpModelFrame::GetScriptMetaTable() {
     return CGDressUpModelFrame::s_metatable;
 }
 
+// PROVEN: 46d3b9b9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04890/0x1407A3ED0
 void CGDressUpModelFrame::Undress() {
     if (!this->m_model) {
@@ -192,18 +194,19 @@ CGDressUpModelFrame::~CGDressUpModelFrame() {
     }
 }
 
-// OFFSET: 0x00A04BA0
+// PROVEN: 7a727e07 NONE/IDENTICAL
+// OFFSET: 0x00A04BA0/0x1407A4240
 bool CGDressUpModelFrame::IsA(int32_t type) {
     return type == CGDressUpModelFrame::s_objectType || type == CGCharacterModelBase::s_objectType || type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: 0x00A04BF0
+// OFFSET: 0x00A04BF0/0x1407A4280
 bool CGDressUpModelFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGDressUpModelFrame::s_objectTypeName, STORM_MAX_STR) || CGCharacterModelBase::IsA(typeName);
 }
 
-// PROVEN: 0eade77d IDENTICAL/NONE
-// OFFSET: 0x00A04C90
+// PROVEN: 0eade77d IDENTICAL/DIFFERENT
+// OFFSET: 0x00A04C90/0x1407A4360
 CM2Model* CGDressUpModelFrame::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
     if (!unit) {
         return NULL;
@@ -230,7 +233,7 @@ CM2Model* CGDressUpModelFrame::GetDuplicateUnitCharacterModel(CGUnit_C* unit) {
     return this->GetScene()->CreateModel(modelName, 0, 3);
 }
 
-// PROVEN: c1967315 IDENTICAL/NONE
+// PROVEN: c1967315 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04E40/0x1407A4590
 void CGDressUpModelFrame::SetUpModel(CGUnit_C* unit) {
     CGCharacterModelBase::SetUpModel(unit);
@@ -240,7 +243,7 @@ void CGDressUpModelFrame::SetUpModel(CGUnit_C* unit) {
     }
 }
 
-// OFFSET: 0x00A04E70
+// OFFSET: 0x00A04E70/0x1407A45C0
 void CGDressUpModelFrame::UpdateModel() {
     CGCharacterModelBase::UpdateModel();
 
@@ -260,6 +263,7 @@ void CGDressUpModelFrame::UpdateModel() {
     }
 }
 
+// PROVEN: 8a8dd292 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A04EF0/0x1407A4650
 void CGDressUpModelFrame::TryOn(int32_t itemId, const int32_t* enchants, int32_t hand) {
     int32_t visual = 0;
@@ -289,7 +293,7 @@ void CGDressUpModelFrame::TryOn(int32_t itemId, const int32_t* enchants, int32_t
     this->TryOnWithVisual(itemId, visual, hand);
 }
 
-// PROVEN: 8c1ea975 IDENTICAL/NONE
+// PROVEN: 8c1ea975 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A04FF0/0x1407A4790
 static void DressUpItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {

@@ -11,7 +11,7 @@
 
 typedef int32_t (WINAPI* GETUSERDEFAULTLOCALENAME)(LPWSTR localeName, int32_t size);
 
-// STATIC: 0x00EC6DBC
+// STATIC: 0x00EC6DBC/0x140DB9178
 static GETUSERDEFAULTLOCALENAME s_getUserDefaultLocaleName;
 
 // OFFSET: 0x00876AD0/0x1405ADCF0
@@ -735,7 +735,7 @@ static int32_t WINAPI DownlevelGetUserDefaultLocaleName(LPWSTR localeName, int32
     return size;
 }
 
-// PROVEN: 5f329366 IDENTICAL/NONE
+// PROVEN: 5f329366 IDENTICAL/IDENTICAL
 // OFFSET: 0x008790C0/0x1405B0570
 uint32_t OsGetLangIdFromLocale(uint32_t locale) {
     switch (locale) {
@@ -766,7 +766,7 @@ uint32_t OsGetLangIdFromLocale(uint32_t locale) {
     }
 }
 
-// PROVEN: 9dfaa8f9 IDENTICAL/NONE
+// PROVEN: 9dfaa8f9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00879170/0x1405B0620
 uint32_t OsGetUserDefaultLangID() {
     return GetUserDefaultLangID();

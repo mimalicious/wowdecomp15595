@@ -18,10 +18,10 @@
 
 static System_Log::UsingLog s_usingLog;
 
-// STATIC: 0x00EBA62C
+// STATIC: 0x00EBA62C/0x140DAB0E8
 System_Log::Pref* System_Log::s_Prefs;
 
-// STATIC: 0x00EBA630
+// STATIC: 0x00EBA630/0x140DAB0F0
 System_Log::LogGlobals* System_Log::s_LogGlobals;
 
 // INLINED
@@ -34,7 +34,7 @@ static System_Log::LogGlobals* GetLogGlobals() {
     return System_Log::s_LogGlobals;
 }
 
-// OFFSET: 0x007B55B0
+// OFFSET: 0x007B55B0/0x1404AB440
 System_Log::Pref& System_Log::Pref::operator=(const Pref& other) {
     if (&other != this) {
         this->m_mode = other.m_mode;
@@ -564,7 +564,7 @@ void Blizzard::Log::Printf(int32_t logClass, const char* name, const char* forma
     va_end(args);
 }
 
-// OFFSET: 0x007EDF30
+// OFFSET: 0x007EDF30/0x1404F5E00
 void Blizzard::Log::VPrintf(int32_t logClass, const char* name, const char* format, va_list args) {
     if (System_Log::Acquire(logClass)) {
         if (!System_Log::s_Prefs[logClass].m_disabled && !System_Log::s_Prefs[0].m_disabled) {

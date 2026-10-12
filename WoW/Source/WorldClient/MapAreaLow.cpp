@@ -73,7 +73,7 @@ static uint16_t* BuildLowDetailIndices(const uint16_t* holes, int32_t holeMode, 
     return indices;
 }
 
-// PROVEN: 0295b48a IDENTICAL/NONE
+// PROVEN: 0295b48a IDENTICAL/IDENTICAL
 // OFFSET: 0x0077F530/0x14046C480
 void CMapAreaLow::CreateVertices(CGxBuf* buf) {
     float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(buf));
@@ -174,8 +174,8 @@ void CMapAreaLow::Render() {
     CMap::s_mapAreaLowUpdateList.LinkToTail(this);
 }
 
-// PROVEN: 560ac273 IDENTICAL/NONE
-// OFFSET: 0x00796880
+// PROVEN: 560ac273 IDENTICAL/IDENTICAL
+// OFFSET: 0x00796880/0x140489A40
 void CMapAreaLow::LiquidReset() {
     if (this->m_oceanInstance) {
         this->m_oceanInstance->Release();
@@ -183,7 +183,7 @@ void CMapAreaLow::LiquidReset() {
     }
 }
 
-// OFFSET: 0x00796B60
+// OFFSET: 0x00796B60/0x140489DA0
 void CMapAreaLow::Create(int32_t x, int32_t y, const int16_t* heights, const uint16_t* holes) {
     this->m_heights = heights;
     this->m_holes = holes;
@@ -263,7 +263,7 @@ void CMapAreaLow::CreateOceanInstance() {
     this->m_oceanInstance->m_isMesh = factory->GetWorldSpace() == 0;
 }
 
-// PROVEN: 403410d0 IDENTICAL/NONE
+// PROVEN: 403410d0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00796E60/0x14048A160
 void CMapAreaLow::RenderPrep() {
     if (!this->m_oceanInstance) {
@@ -271,6 +271,7 @@ void CMapAreaLow::RenderPrep() {
     }
 }
 
+// PROVEN: 0191818c IDENTICAL/DIFFERENT
 // OFFSET: 0x00797360/0x14048A760
 void CMapAreaLow::FreeBuf() {
     if (this->m_buf) {
@@ -300,7 +301,7 @@ CMapAreaLow::~CMapAreaLow() {
     }
 }
 
-// OFFSET: 0x007978D0
+// OFFSET: 0x007978D0/0x14048B050
 CMapAreaLow::CMapAreaLow() {
     this->m_radius = 0.0f;
     this->m_posX = 0.0f;

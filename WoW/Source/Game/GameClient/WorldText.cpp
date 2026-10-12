@@ -38,7 +38,7 @@ static float s_critHeightCurve[3][4] = {
     { 0.2f, 1.0f, 1.0f, 1.0f },
 };
 
-// STATIC: 0x00CA1198
+// STATIC: 0x00CA1198/0x140B3DAE0
 static WORLDTEXTTYPE s_worldTextTypes[11] = {
     { 2.0f, 150, 760, 1500, 0.018333333f, 0.018333333f, CImVector(0xFF, 0xFF, 0xFF, 0xFF) },
     { 2.0f, 150, 90, 1500, 0.018333333f, 0.018333333f, CImVector(0xFF, 0xFF, 0xFF, 0xFF) },
@@ -69,19 +69,19 @@ static C2Vector s_iconTexCoords[4] = {
     C2Vector(0.0f, 1.0f),
 };
 
-// STATIC: 0x00DC70F4
+// STATIC: 0x00DC70F4/0x140CACCE0
 static CGxStringBatch* s_worldTextBatch;
 
-// STATIC: 0x00DC70F8
+// STATIC: 0x00DC70F8/0x140CACCE8
 static HTEXTFONT s_worldTextFont;
 
-// STATIC: 0x00DC70FC
+// STATIC: 0x00DC70FC/0x140CACCF0
 static CTexture* s_pvpRankTextures[15];
 
-// STATIC: 0x00DC7138
+// STATIC: 0x00DC7138/0x140CACD68
 static CDataAllocator s_freeStrings(sizeof(WORLDTEXTSTRING), 30);
 
-// STATIC: 0x00DC714C
+// STATIC: 0x00DC714C/0x140CACD88
 static TSGrowableArray<SWorldTextIcon> s_worldTextIcons;
 
 static const char* s_pvpRankTextureNames[15] = { "Interface\\PvPRankBadges\\PvPRank01.blp", "Interface\\PvPRankBadges\\PvPRank02.blp", "Interface\\PvPRankBadges\\PvPRank03.blp", "Interface\\PvPRankBadges\\PvPRank04.blp", "Interface\\PvPRankBadges\\PvPRank05.blp", "Interface\\PvPRankBadges\\PvPRank06.blp", "Interface\\PvPRankBadges\\PvPRank07.blp", "Interface\\PvPRankBadges\\PvPRank08.blp", "Interface\\PvPRankBadges\\PvPRank09.blp", "Interface\\PvPRankBadges\\PvPRank10.blp", "Interface\\PvPRankBadges\\PvPRank11.blp", "Interface\\PvPRankBadges\\PvPRank12.blp", "Interface\\PvPRankBadges\\PvPRank13.blp", "Interface\\PvPRankBadges\\PvPRank14.blp", "Interface\\PvPRankBadges\\PvPRank15.blp" };
@@ -116,7 +116,7 @@ float WORLDTEXTSTRING::CalculateAscendOffset(uint32_t elapsed) {
     return static_cast<float>(elapsed) / static_cast<float>(s_worldTextTypes[this->m_type].m_duration) * s_worldTextTypes[this->m_type].m_ascendDistance;
 }
 
-// PROVEN: 908329e4 IDENTICAL/NONE
+// PROVEN: 908329e4 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E1EE0/0x140122AF0
 float WorldTextGetAscendDistance(uint32_t type) {
     return s_worldTextTypes[type].m_ascendDistance;
@@ -204,7 +204,8 @@ void WORLDTEXTSTRING::CalculateNewColor(uint32_t elapsed) {
     GxuFontAddShadow(this->m_string, shadowColor, s_shadowOffset);
 }
 
-// OFFSET: 0x004E2380
+// PROVEN: 17a17ecf IDENTICAL/IDENTICAL
+// OFFSET: 0x004E2380/0x140123130
 void WorldTextShutdown() {
     if (s_worldTextFont) {
         HandleClose(reinterpret_cast<HOBJECT>(s_worldTextFont));
@@ -221,14 +222,14 @@ void WorldTextShutdown() {
     }
 }
 
-// PROVEN: a706bdb7 IDENTICAL/NONE
+// PROVEN: a706bdb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E23F0/0x1401231D0
 void WorldTextDelete(WORLDTEXTSTRING* text) {
     text->~WORLDTEXTSTRING();
     s_freeStrings.PutData(text, NULL, 0);
 }
 
-// OFFSET: 0x004E2420
+// OFFSET: 0x004E2420/0x140123200
 static void WorldTextSetupOrthoProjection() {
     CBoundingBox viewport = g_theGxDevicePtr->m_viewport;
     float offsetX = 0.0f;
@@ -406,7 +407,8 @@ bool WORLDTEXTSTRING::Update(uint32_t time) {
     return true;
 }
 
-// OFFSET: 0x004E2EB0
+// PROVEN: a1ac84d7 IDENTICAL/DIFFERENT
+// OFFSET: 0x004E2EB0/0x140123DB0
 void WORLDTEXTSTRING::AddIcon() {
     if (this->m_pvpRank < 5) {
         return;
@@ -437,7 +439,7 @@ void WORLDTEXTSTRING::AddIcon() {
     icon->m_color = this->m_color;
 }
 
-// OFFSET: 0x004E2FB0
+// OFFSET: 0x004E2FB0/0x140123ED0
 bool WorldTextUpdate(WORLDTEXTSTRING* text, uint32_t time) {
     if (!text) {
         return false;
@@ -454,7 +456,7 @@ void WorldTextAddIcon(WORLDTEXTSTRING* text) {
     }
 }
 
-// OFFSET: 0x004E2FF0
+// OFFSET: 0x004E2FF0/0x140123F00
 void WorldTextRenderBatch() {
     GxuFontRenderBatch(s_worldTextBatch);
 
@@ -551,7 +553,8 @@ void WorldTextRenderBatch() {
     g_theGxDevicePtr->XformSetProjection(projection);
 }
 
-// OFFSET: 0x004E0520
+// PROVEN: 700d254b IDENTICAL/IDENTICAL
+// OFFSET: 0x004E0520/0x1401208C0
 void PlayerNameRenderWorldText() {
     WorldTextRenderBatch();
 }

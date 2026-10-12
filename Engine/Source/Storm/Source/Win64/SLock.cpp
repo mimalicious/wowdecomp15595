@@ -485,7 +485,7 @@ void CDebugSRWLock::DumpAllEntries() {
     s_critsect.Leave();
 }
 
-// OFFSET: 0x004BBA80
+// OFFSET: 0x004BBA80/0x1400F4F40
 void SRWLock::SUNNLockEnter(volatile SUNNLOCK* sunnlock) {
     if (!sunnlock->m_event) {
         uint32_t spin = s_spinCount;
@@ -529,7 +529,7 @@ void SRWLock::SUNNLockEnter(volatile SUNNLOCK* sunnlock) {
     }
 }
 
-// OFFSET: 0x004BBB80
+// OFFSET: 0x004BBB80/0x1400F5080
 void SRWLock::SURWLockEnter(volatile SURWLOCK* surwlock, int32_t forwriting) {
     if (forwriting) {
         SUNNLockEnter(&surwlock->m_mutex);
@@ -574,7 +574,7 @@ void SRWLock::SURWLockEnter(volatile SURWLOCK* surwlock, int32_t forwriting) {
     }
 }
 
-// PROVEN: 1055bb99 IDENTICAL/UNPROVEN
+// PROVEN: 1055bb99 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BBC60/0x1400F5150
 void CSRWLock::Enter(int32_t forwriting) {
     SRWLock::SURWLockEnter(&this->m_opaqueData, forwriting);

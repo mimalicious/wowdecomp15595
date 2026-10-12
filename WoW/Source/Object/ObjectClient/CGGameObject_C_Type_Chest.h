@@ -12,4 +12,6 @@ class CGGameObject_C_Type_Chest : public CGGameObject_C_TypeAnimated {
     int32_t GetTrivialSkillHigh() const;
 };
 
+#include "WoW/Source/Object/ObjectClient/CGGameObject_C_Type_Chest.inl"
+
 #endif

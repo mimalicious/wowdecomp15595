@@ -37,67 +37,67 @@
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F33318
+// STATIC: 0x00F33318/0x140E26270
 uint32_t CGPartyInfo::m_memberRoles[4];
 
-// STATIC: 0x00F33328
+// STATIC: 0x00F33328/0x140E26280
 int32_t CGPartyInfo::m_readyCheckReady[4];
 
-// STATIC: 0x00F33338
+// STATIC: 0x00F33338/0x140E26290
 int32_t CGPartyInfo::m_readyCheckPending[4];
 
 // STATIC: 0x00F33348
 uint8_t CGPartyInfo::m_memberAssignments[4];
 
-// STATIC: 0x00F33350
+// STATIC: 0x00F33350/0x140E262A8
 WOWGUID CGPartyInfo::m_members[4];
 
-// STATIC: 0x00F33370
+// STATIC: 0x00F33370/0x140E262C8
 WOWGUID CGPartyInfo::m_leader;
 
-// STATIC: 0x00F33378
+// STATIC: 0x00F33378/0x140E262D0
 WOWGUID CGPartyInfo::m_lootMaster;
 
-// STATIC: 0x00F33380
+// STATIC: 0x00F33380/0x140E262D8
 uint32_t CGPartyInfo::m_dungeonDifficulty;
 
-// STATIC: 0x00F33384
+// STATIC: 0x00F33384/0x140E262DC
 uint32_t CGPartyInfo::m_raidDifficulty;
 
-// STATIC: 0x00F33388
+// STATIC: 0x00F33388/0x140E262E0
 uint32_t CGPartyInfo::m_nextDifficultyChange;
 
-// STATIC: 0x00F3338C
+// STATIC: 0x00F3338C/0x140E262E8
 uint8_t CGPartyInfo::m_playerAssignments;
 
-// STATIC: 0x00F3338D
+// STATIC: 0x00F3338D/0x140E262E9
 uint8_t CGPartyInfo::m_playerLFGFlags;
 
-// STATIC: 0x00F3338E
+// STATIC: 0x00F3338E/0x140E262EA
 uint8_t CGPartyInfo::m_playerRole;
 
-// STATIC: 0x00F3338F
+// STATIC: 0x00F3338F/0x140E262EB
 uint8_t CGPartyInfo::m_onePersonParty;
 
-// STATIC: 0x00F33390
+// STATIC: 0x00F33390/0x140E262F0
 WOWGUID CGPartyInfo::m_realLeader;
 
-// STATIC: 0x00F33398
+// STATIC: 0x00F33398/0x140E262EC
 uint32_t CGPartyInfo::m_realNumMembers;
 
 // STATIC: 0x00F3339C
 uint32_t CGPartyInfo::m_lastAssignmentTime;
 
-// STATIC: 0x00F333A0
+// STATIC: 0x00F333A0/0x140E262FC
 int32_t CGPartyInfo::m_optOutOfLoot;
 
-// STATIC: 0x00F333A4
+// STATIC: 0x00F333A4/0x140E26300
 int32_t CGPartyInfo::m_lfgSlot;
 
-// STATIC: 0x00F333A8
+// STATIC: 0x00F333A8/0x140E26304
 int32_t CGPartyInfo::m_lfgRestricted;
 
-// STATIC: 0x00F333AC
+// STATIC: 0x00F333AC/0x140E26308
 int32_t CGPartyInfo::m_lfgUnk;
 
 // STATIC: 0x00F333B0
@@ -106,13 +106,13 @@ int32_t CGPartyInfo::m_pendingInviteRoles;
 // STATIC: 0x00F333B8
 PartyMemberState s_partyMemberStates[4];
 
-// STATIC: 0x00D107B8
+// STATIC: 0x00D107B8/0x140BC6500
 int32_t CGPartyInfo::m_leaderIndex = -1;
 
 // STATIC: 0x00D107BC
 int32_t CGPartyInfo::m_lootMethod = 3;
 
-// STATIC: 0x00D107C0
+// STATIC: 0x00D107C0/0x140BC6508
 int32_t CGPartyInfo::m_lootThreshold = 2;
 
 int32_t CGPartyInfo::m_dynamicDifficulty;
@@ -135,6 +135,7 @@ WOWGUID CGPartyInfo::GetMember(uint32_t index) {
     return CGPartyInfo::m_members[index];
 }
 
+// PROVEN: 828e9615 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FC5C0/0x140653930
 void CGPartyInfo::SetLeader(WOWGUID leader) {
     if (leader == CGPartyInfo::m_leader) {
@@ -161,7 +162,7 @@ void CGPartyInfo::SetLeader(WOWGUID leader) {
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_LEADER_CHANGED);
 }
 
-// PROVEN: dd5ea47a IDENTICAL/NONE
+// PROVEN: dd5ea47a IDENTICAL/UNPROVEN
 // OFFSET: 0x008FC650/0x1406539A0
 uint32_t CGPartyInfo::NumMembers() {
     uint32_t count = 0;
@@ -175,7 +176,7 @@ uint32_t CGPartyInfo::NumMembers() {
     return count;
 }
 
-// PROVEN: a0c63dee IDENTICAL/NONE
+// PROVEN: a0c63dee IDENTICAL/IDENTICAL
 // OFFSET: 0x008FC6A0/0x1406539D0
 void CGPartyInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     if (count <= 4) {
@@ -248,18 +249,21 @@ int32_t CGPartyInfo::SetLootMethod(int32_t method, WOWGUID master, int32_t thres
     return changed;
 }
 
+// PROVEN: 6c98eed2 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FC820/0x140653B40
 void CGPartyInfo::SetDungeonDifficulty(uint32_t difficulty) {
     CGPartyInfo::m_dungeonDifficulty = difficulty;
     CGGameObject_C::UpdateDungeonDifficulty();
 }
 
+// PROVEN: 513b2a7a IDENTICAL/IDENTICAL
 // OFFSET: 0x008FC840/0x140653B50
 void CGPartyInfo::SetRaidDifficulty(uint32_t difficulty) {
     CGPartyInfo::m_raidDifficulty = difficulty;
     CGGameObject_C::UpdateDungeonDifficulty();
 }
 
+// PROVEN: eaf60132 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FC860/0x140653B60
 PartyMemberState* CGPartyInfo::GetRemoteStats(const WOWGUID& guid) {
     if (guid) {
@@ -273,6 +277,7 @@ PartyMemberState* CGPartyInfo::GetRemoteStats(const WOWGUID& guid) {
     return NULL;
 }
 
+// PROVEN: 300b2d58 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FC8B0/0x140653BA0
 PartyMemberState* CGPartyInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
     for (uint32_t i = 0; i < 4; i++) {
@@ -284,6 +289,7 @@ PartyMemberState* CGPartyInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
     return NULL;
 }
 
+// PROVEN: 99236610 IDENTICAL/DIFFERENT
 // OFFSET: 0x008FC900/0x140653BF0
 PartyMemberPetState* CGPartyInfo::GetRemotePetStats(const WOWGUID& guid) {
     if (guid) {
@@ -297,8 +303,8 @@ PartyMemberPetState* CGPartyInfo::GetRemotePetStats(const WOWGUID& guid) {
     return NULL;
 }
 
-// PROVEN: dec597de IDENTICAL/NONE
-// OFFSET: 0x008FC970
+// PROVEN: dec597de IDENTICAL/UNPROVEN
+// OFFSET: 0x008FC970/0x140653C50
 void CGPartyInfo::GetReadyCheckInfo(PartyReadyCheckInfo* info, uint32_t index) {
     info->m_guid = WOWGUID();
     info->m_pending = 0;
@@ -311,8 +317,8 @@ void CGPartyInfo::GetReadyCheckInfo(PartyReadyCheckInfo* info, uint32_t index) {
     }
 }
 
-// PROVEN: fded74e1 IDENTICAL/NONE
-// OFFSET: 0x008FC9C0
+// PROVEN: fded74e1 IDENTICAL/UNPROVEN
+// OFFSET: 0x008FC9C0/0x140653C90
 void CGPartyInfo::SetReadyCheckInfo(const PartyReadyCheckInfo* info, uint32_t index) {
     if (index < 4 && CGPartyInfo::m_members[index] == info->m_guid) {
         CGPartyInfo::m_readyCheckPending[index] = info->m_pending;
@@ -320,20 +326,22 @@ void CGPartyInfo::SetReadyCheckInfo(const PartyReadyCheckInfo* info, uint32_t in
     }
 }
 
+// PROVEN: bb093d91 IDENTICAL/NONE
 // OFFSET: 0x008FCA00
 int32_t CanSendPartyCommand() {
     return !CGPartyInfo::m_lastAssignmentTime || static_cast<int32_t>(FrameTime::GetCurTimeMs() - CGPartyInfo::m_lastAssignmentTime - 750) >= 0;
 }
 
-// OFFSET: 0x008FCA30
+// PROVEN: 78cb137b IDENTICAL/DIFFERENT
+// OFFSET: 0x008FCA30/0x140653CD0
 void CGPartyInfo::ClearRecruitAFriend(WOWGUID guid) {
     if (PartyMemberState* stats = CGPartyInfo::GetRemoteStats(guid)) {
         stats->m_flags &= ~0x100;
     }
 }
 
-// PROVEN: 74005542 IDENTICAL/NONE
-// OFFSET: 0x008FCA50
+// PROVEN: 74005542 IDENTICAL/IDENTICAL
+// OFFSET: 0x008FCA50/0x140653D20
 void CGPartyInfo::SetLfgSlot(int32_t slot) {
     if (CGPartyInfo::m_lfgSlot != slot) {
         CGPartyInfo::m_lfgSlot = slot;
@@ -341,8 +349,8 @@ void CGPartyInfo::SetLfgSlot(int32_t slot) {
     }
 }
 
-// PROVEN: dad316ea IDENTICAL/NONE
-// OFFSET: 0x008FCA80
+// PROVEN: dad316ea IDENTICAL/IDENTICAL
+// OFFSET: 0x008FCA80/0x140653D50
 void CGPartyInfo::SetLfgRestricted(int32_t restricted) {
     if ((CGPartyInfo::m_lfgRestricted != 0) != (restricted != 0)) {
         CGPartyInfo::m_lfgRestricted = restricted;
@@ -350,7 +358,7 @@ void CGPartyInfo::SetLfgRestricted(int32_t restricted) {
     }
 }
 
-// OFFSET: 0x008FCDE0
+// OFFSET: 0x008FCDE0/0x140654060
 int32_t Packet_SMSG_INSTANCE_SAVE_CREATED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t debug;
     char text[3000];
@@ -537,6 +545,7 @@ bool CGPartyInfo::InParty() {
     return CGPartyInfo::m_members[0].m_guid != 0;
 }
 
+// PROVEN: b2cb0606 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E8260/0x14012A8A0
 PartyMemberState* CGPartyInfo::GetMemberState(uint32_t index) {
     if (CGPartyInfo::m_members[index]) {
@@ -546,7 +555,7 @@ PartyMemberState* CGPartyInfo::GetMemberState(uint32_t index) {
     return NULL;
 }
 
-// PROVEN: ab72033d IDENTICAL/NONE
+// PROVEN: ab72033d IDENTICAL/UNPROVEN
 // OFFSET: 0x008FD3E0/0x140654910
 int32_t CGPartyInfo::IsMember(const WOWGUID& guid) {
     if (!guid) {
@@ -613,7 +622,8 @@ void CGPartyInfo::EnableMember(CGPlayer_C* player, int32_t enable) {
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBER_ENABLE);
 }
 
-// OFFSET: 0x008FD5C0
+// PROVEN: 48bd58f7 IDENTICAL/DIFFERENT
+// OFFSET: 0x008FD5C0/0x140654B20
 uint32_t CGPartyInfo::GetGroupRole(const WOWGUID& guid) {
     if (!guid) {
         return 0;
@@ -662,7 +672,7 @@ int32_t CGPartyInfo::IsPlayerOrPetInParty(const WOWGUID& guid) {
     return 0;
 }
 
-// OFFSET: 0x008FD700
+// OFFSET: 0x008FD700/0x140654C60
 uint8_t CGPartyInfo::GetPartyAssignments(const WOWGUID& guid) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         return CGPartyInfo::m_playerAssignments;
@@ -753,7 +763,7 @@ bool CGGameUI::CanChangePlayerDifficulty() {
     return false;
 }
 
-// OFFSET: 0x008FD990
+// OFFSET: 0x008FD990/0x140655130
 void CGPartyInfo::CheckClearLFGSlot() {
     int32_t count = CGPartyInfo::m_members[0] ? 1 : 0;
 
@@ -798,6 +808,7 @@ int32_t CCommand_SetDifficulty(const char* command, const char* arguments) {
     return 1;
 }
 
+// PROVEN: ece47503 IDENTICAL/IDENTICAL
 // OFFSET: 0x008FDFD0/0x140655770
 void CGPartyInfo::LeaveWorld(bool reload) {
     if (reload) {
@@ -807,7 +818,7 @@ void CGPartyInfo::LeaveWorld(bool reload) {
     }
 }
 
-// OFFSET: 0x008FE000
+// OFFSET: 0x008FE000/0x1406557A0
 bool CGPartyInfo::ClientPartyInviteHandler(ClientPartyInvite* msg) {
     if (msg->m_mustBeBNetFriend && !BattlenetUI::IsToonFriend(msg->m_inviterCfgRealmID)) {
         UserClientPartyInviteResponse response;
@@ -944,7 +955,7 @@ int32_t CGPartyInfo::IsMemberOrPet(const WOWGUID& guid) {
     return 0;
 }
 
-// OFFSET: 0x008FE440
+// OFFSET: 0x008FE440/0x140655C60
 void CGPartyInfo::RemoveAll(int32_t notify) {
     uint32_t dungeonDifficulty = CGGameUI::GetCurrentDungeonDifficulty();
     uint32_t raidDifficulty = CGGameUI::GetCurrentRaidDifficulty();
@@ -998,7 +1009,7 @@ void CGPartyInfo::RemoveAll(int32_t notify) {
     }
 }
 
-// OFFSET: 0x008FE610
+// OFFSET: 0x008FE610/0x140655E60
 void CGPartyInfo::ResetLootMethod() {
     CGPartyInfo::m_lootMethod = 3;
     CGPartyInfo::m_lootMaster = WOWGUID();
@@ -1056,11 +1067,11 @@ void CGPartyInfo::InitializeGame() {
     CGPartyInfo::m_onePersonParty = 0;
     ClientServices::SetMessageHandler(SMSG_INSTANCE_SAVE_CREATED, Packet_SMSG_INSTANCE_SAVE_CREATED, NULL);
     ClientServices::SetMessageHandler(SMSG_CHANGE_PLAYER_DIFFICULTY_RESULT, Packet_SMSG_CHANGE_PLAYER_DIFFICULTY_RESULT, NULL);
-    ClientPartyInvite::s_handler = &CGPartyInfo::ClientPartyInviteHandler;
+    ClientPartyInvite::s_handler = JamHandlerEncode(&CGPartyInfo::ClientPartyInviteHandler, g_jamHandlerKey_CFFB4C);
     ConsoleCommandRegister("changePlayerDifficulty", CCommand_SetDifficulty, CATEGORY_DEFAULT, NULL, NULL);
 }
 
-// OFFSET: 0x008FF310
+// OFFSET: 0x008FF310/0x140656C40
 void CGPartyInfo::AddMember(WOWGUID guid, int32_t online, const PartyMemberState* state, uint8_t assignments, uint32_t role, const PartyReadyCheckInfo* readyCheck) {
     if (!guid) {
         return;

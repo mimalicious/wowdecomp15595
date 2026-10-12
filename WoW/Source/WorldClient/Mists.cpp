@@ -24,7 +24,7 @@ Mists::Mist::Mist() {
     this->m_startTime = 0;
 }
 
-// PROVEN: d1ce220f IDENTICAL/NONE
+// PROVEN: d1ce220f IDENTICAL/IDENTICAL
 // OFFSET: 0x007484C0/0x140427540
 void Mists::Mist::SetHeights(uint32_t count, const float* heights) {
     for (uint32_t i = 0; i < count; i++) {
@@ -179,7 +179,7 @@ uint32_t Mists::NumActive() {
     return active;
 }
 
-// OFFSET: 0x00750560
+// OFFSET: 0x00750560/0x140430DB0
 void Mists::Render() {
     CGxTex* gxTex = TextureGetGxTex(this->m_texture);
 

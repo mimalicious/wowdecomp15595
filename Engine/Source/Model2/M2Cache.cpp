@@ -21,10 +21,10 @@
 
 CM2ModelHeap* g_modelPool;
 
-// STATIC: 0x00EBC4CC
+// STATIC: 0x00EBC4CC/0x140DAD4B8
 uint32_t CM2Cache::s_processorFeatures;
 
-// STATIC: 0x00EBC4D0
+// STATIC: 0x00EBC4D0/0x140DAD4CC
 static CM2Cache s_cache;
 
 static float s_randomTable[128];
@@ -54,13 +54,13 @@ void CM2Cache::BeginThread(void (*func)(void*), void* param) {
     this->m_threadStart.Set();
 }
 
-// PROVEN: eb2b4538 IDENTICAL/NONE
-// OFFSET: 0x00811FE0
+// PROVEN: eb2b4538 IDENTICAL/IDENTICAL
+// OFFSET: 0x00811FE0/0x1405298F0
 void CM2Cache::WaitThread() {
     this->m_threadDone.Wait(0xFFFFFFFF);
 }
 
-// PROVEN: 6aaae644 IDENTICAL/DIFFERENT
+// PROVEN: 6aaae644 IDENTICAL/IDENTICAL
 // OFFSET: 0x00811FF0/0x140529900
 uint32_t STORMAPI CM2Cache::ThreadProc(void* param) {
     CM2Cache* cache = static_cast<CM2Cache*>(param);
@@ -80,7 +80,7 @@ uint32_t STORMAPI CM2Cache::ThreadProc(void* param) {
     return 0;
 }
 
-// PROVEN: 952e6bfa IDENTICAL/IDENTICAL
+// PROVEN: 952e6bfa IDENTICAL/UNPROVEN
 // OFFSET: 0x00812070/0x140529990
 void M2SetGlobalOptFlags(uint32_t flags) {
     s_cache.m_flags |= flags & 0xE000;
@@ -101,19 +101,19 @@ CM2Scene* M2CreateScene() {
     return scene;
 }
 
-// PROVEN: d5d0b06f IDENTICAL/IDENTICAL
+// PROVEN: d5d0b06f IDENTICAL/UNPROVEN
 // OFFSET: 0x008120E0/0x140529A10
 uint32_t M2GetCacheFlags() {
     return s_cache.m_flags;
 }
 
-// PROVEN: 0c5cecc6 IDENTICAL/IDENTICAL
+// PROVEN: 0c5cecc6 IDENTICAL/UNPROVEN
 // OFFSET: 0x008120F0/0x140529A20
 void M2SetCacheFlags(uint32_t flags) {
     s_cache.m_flags = flags;
 }
 
-// PROVEN: 3dbe4961 IDENTICAL/DIFFERENT
+// PROVEN: 3dbe4961 IDENTICAL/IDENTICAL
 // OFFSET: 0x00812100/0x140529A30
 void CM2Cache::UpdateShaderFlags() {
     uint32_t requested = this->m_requestedFlags;
@@ -137,7 +137,7 @@ void CM2Cache::UpdateShaderFlags() {
     }
 }
 
-// PROVEN: 39e9ba7f IDENTICAL/NONE
+// PROVEN: 39e9ba7f IDENTICAL/DIFFERENT
 // OFFSET: 0x008124D0/0x140529F60
 CM2Shared* CM2Cache::ReloadShared(const char* name) {
     for (uint32_t i = 0; i < sizeof(this->m_shared) / sizeof(this->m_shared[0]); i++) {
@@ -281,7 +281,8 @@ void CM2Cache::GarbageCollect(int32_t force) {
     }
 }
 
-// OFFSET: 0x00812810
+// PROVEN: 757612ff IDENTICAL/DIFFERENT
+// OFFSET: 0x00812810/0x14052A3B0
 void CM2Cache::Destroy() {
     g_theGxDevicePtr->RemoveShaderModelChangeCallback(CM2Cache::OnShaderModelChanged, this);
 
@@ -517,7 +518,7 @@ void M2Initialize(uint32_t flags, uint32_t modelCount) {
     }
 }
 
-// OFFSET: 0x00812B70
+// OFFSET: 0x00812B70/0x14052A7A0
 void M2Destroy() {
     CM2Model::ErrorClear();
     s_cache.Destroy();
@@ -550,7 +551,8 @@ void CM2Cache::UpdateShared() {
     }
 }
 
-// OFFSET: 0x00812980
+// PROVEN: 46be1b2d IDENTICAL/NONE
+// OFFSET: 0x00812980/0x14052A600
 void CM2Cache::LinkToSharedUpdateList(CM2Shared* shared) {
     shared->m_lastUsedTime = this->m_updateTime;
     this->m_sharedUpdateList.LinkToTail(shared);

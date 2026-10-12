@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[4] = { 0, 0, 0, 2 };
 // STATIC: 0x00C27224/0x140A1D408
 const DBCMeta DeclinedWordCasesRec::s_meta = { "DBFilesClient\\DeclinedWordCases.dbc", 4, 16, DeclinedWordCasesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: f53f460c IDENTICAL/NONE
+// PROVEN: f53f460c IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2ECE0/0x1407D8380
 void DeclinedWordCasesRec::FixupStrings(void* record, const char* strings) {
     DeclinedWordCasesRec* rec = static_cast<DeclinedWordCasesRec*>(record);

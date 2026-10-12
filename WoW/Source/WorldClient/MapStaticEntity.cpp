@@ -14,7 +14,7 @@
 // STATIC: 0x00D01AEC
 C3Vector CMapStaticEntity::s_interiorLightDir = C3Vector(-0.30822f, -0.30822f, -0.89999998f);
 
-// OFFSET: 0x00734650
+// OFFSET: 0x00734650/0x1404104F0
 int32_t CMapStaticEntity::GetMapObjAndGroup(CMapObjDef*& mapObjDef, CMapObj*& mapObj, CMapObjDefGroup*& defGroup, CMapObjGroup*& group, int32_t skipMoving) {
     for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
         next = this->m_parentLinkList.Next(link);
@@ -42,23 +42,23 @@ int32_t CMapStaticEntity::GetMapObjAndGroup(CMapObjDef*& mapObjDef, CMapObj*& ma
     return 0;
 }
 
-// OFFSET: [0x00762DE0, 0x00762F40]
+// OFFSET: [0x00762DE0/0x140447FD0, 0x00762F40]
 CMapStaticEntity::~CMapStaticEntity() {
     if (this->m_soundEmitter) {
         SE3::EmitterMangerSendMessage_DestroyEmitter(this->m_soundEmitter);
     }
 }
 
-// PROVEN: 60d6bccf IDENTICAL/NONE
-// OFFSET: 0x00762800
+// PROVEN: 60d6bccf IDENTICAL/UNPROVEN
+// OFFSET: 0x00762800/0x140447860
 void CMapStaticEntity::SetSequenceSpeed(float speed) {
     if (this->m_model) {
         this->m_model->SetAnimationSpeed(speed);
     }
 }
 
-// PROVEN: ccf96f9c IDENTICAL/NONE
-// OFFSET: 0x00762820
+// PROVEN: ccf96f9c IDENTICAL/IDENTICAL
+// OFFSET: 0x00762820/0x1407D7E80
 void CMapStaticEntity::AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
 }
 
@@ -79,6 +79,7 @@ void CMapStaticEntity::SelectUnderwater(CM2Lighting* lighting) {
     }
 }
 
+// PROVEN: b08270ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00762830/0x140447880
 void CMapStaticEntity::ModelEventCallback(CM2Model* model, uint32_t a2, uint32_t a3, uint32_t a4, const C3Vector& a5, uint32_t a6, uint64_t param) {
     CMapStaticEntity* entity = reinterpret_cast<CMapStaticEntity*>(static_cast<uintptr_t>(param));
@@ -148,7 +149,7 @@ void CMapStaticEntity::ModelLightingCallback(CM2Model* model, CM2Lighting* light
     lighting->m_flags &= ~0x8u;
 }
 
-// OFFSET: 0x00762C00
+// OFFSET: 0x00762C00/0x140447D50
 void CMapStaticEntity::AdjustLighting(const CImVector& color, CImVector& direct, uint8_t maxDirect, CImVector& ambient, uint8_t maxAmbient) {
     uint8_t brightest = color.r > color.g ? color.r : color.g;
 
@@ -207,7 +208,7 @@ void CMapStaticEntity::QueryExteriorLighting() {
     }
 }
 
-// OFFSET: 0x00762E50
+// OFFSET: 0x00762E50/0x140448060
 CMapStaticEntity::CMapStaticEntity() {
     this->m_sphere.c.x = 0.0f;
     this->m_sphere.c.y = 0.0f;

@@ -92,4 +92,6 @@ class CCameraTrack {
     void Update(float elapsed);
 };
 
+#include "WoW/Source/UIUtil/CameraTrack.inl"
+
 #endif

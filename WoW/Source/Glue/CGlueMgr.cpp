@@ -95,7 +95,7 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/FileDownload.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/Types.h"
 
-// STATIC: 0x00B89A78
+// STATIC: 0x00B89A78/0x140967DE0
 const uint8_t InterfaceKey[256] = {
     0xC3, 0x5B, 0x50, 0x84, 0xB9, 0x3E, 0x32, 0x42, 0x8C, 0xD0, 0xC7, 0x48, 0xFA, 0x0E, 0x5D, 0x54,
     0x5A, 0xA3, 0x0E, 0x14, 0xBA, 0x9E, 0x0D, 0xB9, 0x5D, 0x8B, 0xEE, 0xB6, 0x84, 0x93, 0x45, 0x75,
@@ -115,7 +115,7 @@ const uint8_t InterfaceKey[256] = {
     0x0D, 0x36, 0xEA, 0x01, 0xE0, 0xAA, 0x91, 0x20, 0x54, 0xF0, 0x72, 0xD8, 0x1E, 0xC7, 0x89, 0xD2,
 };
 
-// STATIC: 0x00BCF230
+// STATIC: 0x00BCF230/0x1409C3660
 static const LoginErrorURL s_loginErrorURLs[5] = {
     { AUTH_BANNED, "AUTH_BANNED_URL" },
     { AUTH_DB_BUSY, "AUTH_DB_BUSY_URL" },
@@ -124,217 +124,217 @@ static const LoginErrorURL s_loginErrorURLs[5] = {
     { AUTH_PARENTAL_CONTROL, "AUTH_PARENTAL_CONTROL_URL" },
 };
 
-// STATIC: 0x00D07538
+// STATIC: 0x00D07538/0x140BB8150
 int32_t CGlueMgr::m_loginResult = -1;
 
-// STATIC: 0x00D0753C
+// STATIC: 0x00D0753C/0x140BB8154
 int32_t CGlueMgr::m_loginState = -1;
 
-// STATIC: 0x00D07540
+// STATIC: 0x00D07540/0x140BB8158
 int32_t CGlueMgr::m_lastLoginResult = -1;
 
-// STATIC: 0x00D07544
+// STATIC: 0x00D07544/0x140BB815C
 int32_t CGlueMgr::m_lastLoginState = -1;
 
-// STATIC: 0x00D07548
+// STATIC: 0x00D07548/0x140BB8160
 int32_t g_useAnimKitsOnGlueScreen = 1;
 
-// STATIC: 0x00D0754C
+// STATIC: 0x00D0754C/0x140BB8170
 const char* s_screenNames[NUM_GLUE_SCREENS] = { "login", "patchdownload", "charselect", "charcreate", "trialconvert", "movie", "realmlist", "credits", "realmwizard" };
 
-// STATIC: 0x00D07578
+// STATIC: 0x00D07578/0x140BB81C8
 static const char* s_serverAlertTag = "SERVERALERT:";
 
-// STATIC: 0x00D0757C
+// STATIC: 0x00D0757C/0x140BB81D0
 static const char* s_serverAlertTagBOM = "\xEF\xBB\xBFSERVERALERT:";
 
-// STATIC: 0x00D07580
+// STATIC: 0x00D07580/0x140BB81D8
 static TSExplicitList<ConsoleString, offsetof(ConsoleString, m_link)> s_connectionStatus;
 
-// STATIC: 0x00EBB128
+// STATIC: 0x00EBB128/0x140DABEB0
 uint8_t CGlueMgr::m_ffxActive;
 
-// STATIC: 0x00EBB12C
+// STATIC: 0x00EBB12C/0x140DABEB8
 FFX::Effect* CGlueMgr::m_deathEffect;
 
-// STATIC: 0x00EBB130
+// STATIC: 0x00EBB130/0x140DABEC0
 FFX::Effect* CGlueMgr::m_glowEffect;
 
-// STATIC: 0x00EBB134
+// STATIC: 0x00EBB134/0x140DABEC8
 static HSLOG s_connectionLog;
 
-// STATIC: 0x00EBB138
+// STATIC: 0x00EBB138/0x140DABED0
 char CGlueMgr::m_serverAlert[2048];
 
-// STATIC: 0x00EBB944
+// STATIC: 0x00EBB944/0x140DAC6E0
 uint32_t CGlueMgr::m_queueTime[8];
 
-// STATIC: 0x00EBB964
+// STATIC: 0x00EBB964/0x140DAC700
 int32_t CGlueMgr::m_queuePosition[8];
 
-// STATIC: 0x00EBB984
+// STATIC: 0x00EBB984/0x140DAC6DC
 int32_t CGlueMgr::m_currentScreen;
 
-// STATIC: 0x00EBB988
+// STATIC: 0x00EBB988/0x140DAC720
 MipBits* CGlueMgr::m_cursorMipBits;
 
-// STATIC: 0x00EBB98C
+// STATIC: 0x00EBB98C/0x140DAC728
 CSimpleTop* CGlueMgr::m_simpleTop;
 
-// STATIC: 0x00EBB990
+// STATIC: 0x00EBB990/0x140DAC730
 int32_t CGlueMgr::m_reload;
 
-// STATIC: 0x00EBB994
+// STATIC: 0x00EBB994/0x140DAC734
 int32_t CGlueMgr::m_initialized;
 
-// STATIC: 0x00EBB9A0
+// STATIC: 0x00EBB9A0/0x140DAC740
 int32_t CGlueMgr::m_suspended;
 
-// STATIC: 0x00EBB9A4
+// STATIC: 0x00EBB9A4/0x140DAC744
 int32_t CGlueMgr::m_disconnectPending;
 
-// STATIC: 0x00EBB9A8
+// STATIC: 0x00EBB9A8/0x140DAC748
 int32_t CGlueMgr::m_reconnect;
 
-// STATIC: 0x00EBB9AC
+// STATIC: 0x00EBB9AC/0x140DAC74C
 GLUE_IDLE_STATE CGlueMgr::m_idleState;
 
-// STATIC: 0x00EBB9B0
+// STATIC: 0x00EBB9B0/0x140DAC750
 GLUE_IDLE_STATE CGlueMgr::m_lastIdleState;
 
-// STATIC: 0x00EBB9B4
+// STATIC: 0x00EBB9B4/0x140DAC754
 uint32_t CGlueMgr::m_matrixChallengeCount;
 
-// STATIC: 0x00EBB9B8
+// STATIC: 0x00EBB9B8/0x140DAC760
 char CGlueMgr::m_accountName[1280];
 
-// STATIC: 0x00EBBEB8
+// STATIC: 0x00EBBEB8/0x140DAC758
 uint32_t CGlueMgr::m_matrixRemaining;
 
-// STATIC: 0x00EBBEBC
+// STATIC: 0x00EBBEBC/0x140DAC75C
 int32_t CGlueMgr::m_estimatedWaitTime;
 
-// STATIC: 0x00EBBEC0
+// STATIC: 0x00EBBEC0/0x140DACC60
 int32_t CGlueMgr::m_displayingQueueDialog;
 
-// STATIC: 0x00EBBEC4
+// STATIC: 0x00EBBEC4/0x140DACC68
 CHARACTER_INFO* CGlueMgr::m_characterInfo;
 
-// STATIC: 0x00EBBEC8
+// STATIC: 0x00EBBEC8/0x140DACC64
 int32_t CGlueMgr::m_rereadTOS;
 
-// STATIC: 0x00EBBECC
+// STATIC: 0x00EBBECC/0x140DACC70
 int32_t CGlueMgr::m_acceptedTOS;
 
-// STATIC: 0x00EBBED0
+// STATIC: 0x00EBBED0/0x140DACC74
 int32_t CGlueMgr::m_rereadEULA;
 
-// STATIC: 0x00EBBED4
+// STATIC: 0x00EBBED4/0x140DACC78
 int32_t CGlueMgr::m_acceptedEULA;
 
-// STATIC: 0x00EBBED8
+// STATIC: 0x00EBBED8/0x140DACC7C
 int32_t CGlueMgr::m_rereadTerminationWithoutNotice;
 
-// STATIC: 0x00EBBEDC
+// STATIC: 0x00EBBEDC/0x140DACC80
 int32_t CGlueMgr::m_acceptedTerminationWithoutNotice;
 
-// STATIC: 0x00EBBEE0
+// STATIC: 0x00EBBEE0/0x140DACC84
 int32_t CGlueMgr::m_rereadScanning;
 
-// STATIC: 0x00EBBEE4
+// STATIC: 0x00EBBEE4/0x140DACC88
 int32_t CGlueMgr::m_acceptedScanning;
 
-// STATIC: 0x00EBBEE8
+// STATIC: 0x00EBBEE8/0x140DACC8C
 int32_t CGlueMgr::m_rereadContest;
 
-// STATIC: 0x00EBBEEC
+// STATIC: 0x00EBBEEC/0x140DACC90
 int32_t CGlueMgr::m_acceptedContest;
 
-// STATIC: 0x00EBBEF0
+// STATIC: 0x00EBBEF0/0x140DACC94
 uint8_t CGlueMgr::m_authenticated;
 
-// STATIC: 0x00EBBEF1
+// STATIC: 0x00EBBEF1/0x140DACC95
 bool CGlueMgr::s_scriptFunctionsLoaded;
 
-// STATIC: 0x00EBBEF4
+// STATIC: 0x00EBBEF4/0x140DACC98
 int32_t CGlueMgr::m_showingIntroScene;
 
-// STATIC: 0x00EBBEF8
+// STATIC: 0x00EBBEF8/0x140DACC9C
 int32_t CGlueMgr::m_screenWidth;
 
-// STATIC: 0x00EBBEFC
+// STATIC: 0x00EBBEFC/0x140DACCA0
 int32_t CGlueMgr::m_screenHeight;
 
-// STATIC: 0x00EBBF00
+// STATIC: 0x00EBBF00/0x140DACCA4
 float CGlueMgr::m_aspect;
 
-// STATIC: 0x00EBBF04
+// STATIC: 0x00EBBF04/0x140DACCA8
 int32_t CGlueMgr::m_pendingServerAlert;
 
-// STATIC: 0x00EBBF08
+// STATIC: 0x00EBBF08/0x140DACCAC
 int32_t CGlueMgr::m_processServerAlert;
 
-// STATIC: 0x00EBBF0C
+// STATIC: 0x00EBBF0C/0x140DACCB0
 uint32_t CGlueMgr::m_pendingTimerAlert;
 
-// STATIC: 0x00EBBF10
+// STATIC: 0x00EBBF10/0x140DACCB4
 int32_t CGlueMgr::m_accountMsgAvailable;
 
-// STATIC: 0x00EBBF14
+// STATIC: 0x00EBBF14/0x140DACCB8
 uint8_t CGlueMgr::m_clientKickReason;
 
-// STATIC: 0x00EBBF18
+// STATIC: 0x00EBBF18/0x140DACCBC
 int32_t CGlueMgr::m_shownTrialPopUp;
 
-// STATIC: 0x00EBBF1C
+// STATIC: 0x00EBBF1C/0x140DACCC0
 uint32_t CGlueMgr::m_numChangedOptionWarnings;
 
-// STATIC: 0x00EBBF20
+// STATIC: 0x00EBBF20/0x140DACCC4
 int32_t CGlueMgr::m_showedDisconnect;
 
-// STATIC: 0x00EBBF24
+// STATIC: 0x00EBBF24/0x140DACCC8
 uint32_t CGlueMgr::m_elapsedMs;
 
-// STATIC: 0x00EBBF28
+// STATIC: 0x00EBBF28/0x140DACCCC
 uint32_t CGlueMgr::m_timeMs;
 
-// STATIC: 0x00EBBF2C
+// STATIC: 0x00EBBF2C/0x140DACCD0
 uint32_t CGlueMgr::m_expansionArchivesTotalChunks;
 
-// STATIC: 0x00EBBF30
+// STATIC: 0x00EBBF30/0x140DACCD4
 uint32_t CGlueMgr::m_expansionArchivesInitChunks;
 
-// STATIC: 0x00EBBF34
+// STATIC: 0x00EBBF34/0x140DACCD8
 static CVar* s_curGameTip;
 
-// STATIC: 0x00EBBF38
+// STATIC: 0x00EBBF38/0x140DACCE0
 static CVar* s_showGameTips;
 
-// STATIC: 0x00EBBF40
+// STATIC: 0x00EBBF40/0x140DACCF0
 CGlueMgr::Agreements CGlueMgr::m_latestAgreements;
 
-// STATIC: 0x00EBBF54
+// STATIC: 0x00EBBF54/0x140DACD18
 TSGrowableArray<const char*> CGlueMgr::m_changedOptionWarnings;
 
-// STATIC: 0x00EBBF64
+// STATIC: 0x00EBBF64/0x140DACD28
 static SCritSect s_connectionStatusLock;
 
-// STATIC: 0x00EBBF8C
+// STATIC: 0x00EBBF8C/0x140DACD50
 static CDataAllocator s_emoteKitFinishedAllocator(sizeof(CharacterEmoteKitFinishedData), 4);
 
-// STATIC: 0x00EBBFA0
+// STATIC: 0x00EBBFA0/0x140DACD70
 static CDataAllocator s_emoteSpellStartAllocator(sizeof(CharacterEmoteSpellStartData), 4);
 
-// STATIC: 0x01014010
+// STATIC: 0x01014010/0x000000010
 static __declspec(thread) WOWGUID s_activeCharacterGuid;
 
-// PROVEN: d7d34f06 IDENTICAL/NONE
+// PROVEN: d7d34f06 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FFF10/0x140513D50
 bool CGlueMgr::AreScriptFunctionsLoaded() {
     return CGlueMgr::s_scriptFunctionsLoaded;
 }
 
-// PROVEN: d31889d0 IDENTICAL/NONE
+// PROVEN: d31889d0 IDENTICAL/DIFFERENT
 // OFFSET: 0x007FFF30/0x1405191E0
 static void WriteConnectionLog(const char* text) {
     if (!s_connectionLog) {
@@ -346,7 +346,7 @@ static void WriteConnectionLog(const char* text) {
     SLogFlush(s_connectionLog);
 }
 
-// PROVEN: 7194ccec IDENTICAL/NONE
+// PROVEN: 7194ccec IDENTICAL/IDENTICAL
 // OFFSET: 0x007FFF80/0x140513D70
 void CGlueMgr::InitializeFFX() {
     if (CGlueMgr::m_ffxActive) {
@@ -360,6 +360,7 @@ void CGlueMgr::InitializeFFX() {
     CSimpleTop::SetColorblindShader();
 }
 
+// PROVEN: bebca5c2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00800000/0x140513E20
 void CGlueMgr::SetIdleState(GLUE_IDLE_STATE state) {
     if (state) {
@@ -402,7 +403,7 @@ void CGlueMgr::UpdateWaitQueue(int32_t position) {
     }
 }
 
-// PROVEN: dea94251 IDENTICAL/NONE
+// PROVEN: dea94251 IDENTICAL/IDENTICAL
 // OFFSET: 0x00800120/0x140513F90
 void CGlueMgr::AcceptTOS() {
     int32_t value = g_readTOSVar->m_intValue;
@@ -416,7 +417,7 @@ void CGlueMgr::AcceptTOS() {
     }
 }
 
-// PROVEN: e5426c22 IDENTICAL/NONE
+// PROVEN: e5426c22 IDENTICAL/IDENTICAL
 // OFFSET: 0x00800160/0x140513FE0
 void CGlueMgr::AcceptEULA() {
     int32_t value = g_readEULAVar->m_intValue;
@@ -430,7 +431,7 @@ void CGlueMgr::AcceptEULA() {
     }
 }
 
-// PROVEN: 844d2439 IDENTICAL/NONE
+// PROVEN: 844d2439 IDENTICAL/IDENTICAL
 // OFFSET: 0x008001A0/0x140514030
 void CGlueMgr::AcceptTerminationWithoutNotice() {
     int32_t value = g_readTerminationWithoutNoticeVar->m_intValue;
@@ -444,7 +445,7 @@ void CGlueMgr::AcceptTerminationWithoutNotice() {
     }
 }
 
-// PROVEN: a6ea8825 IDENTICAL/NONE
+// PROVEN: a6ea8825 IDENTICAL/IDENTICAL
 // OFFSET: 0x008001E0/0x140514080
 void CGlueMgr::AcceptScanning() {
     CGlueMgr::m_acceptedScanning = 1;
@@ -452,7 +453,7 @@ void CGlueMgr::AcceptScanning() {
     g_readScanningVar->Set("1", true, false, false, true);
 }
 
-// PROVEN: ef2b6f11 IDENTICAL/NONE
+// PROVEN: ef2b6f11 IDENTICAL/IDENTICAL
 // OFFSET: 0x00800210/0x1405140C0
 void CGlueMgr::AcceptContest() {
     CGlueMgr::m_acceptedContest = 1;
@@ -512,14 +513,14 @@ void CGlueMgr::LoginServerLogin(const char* username, char* password) {
     memset(password, 0, strlen(password));
 }
 
-// PROVEN: 80fafbc4 IDENTICAL/NONE
-// OFFSET: 0x008003D0
+// PROVEN: 80fafbc4 IDENTICAL/UNPROVEN
+// OFFSET: 0x008003D0/0x1405142C0
 void CGlueMgr::LoginEnterPIN(int32_t count, uint8_t* digits) {
     FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s", "CANCEL");
     ClientServices::EnterPIN(count, digits);
 }
 
-// PROVEN: c31be062 IDENTICAL/NONE
+// PROVEN: c31be062 IDENTICAL/IDENTICAL
 // OFFSET: 0x008003F0/0x140514300
 void CGlueMgr::LoginEnterMatrix(uint8_t value) {
     if (CGlueMgr::m_loginState == LOGIN_STATE_MATRIX_WAIT && CGlueMgr::m_matrixRemaining) {
@@ -527,6 +528,7 @@ void CGlueMgr::LoginEnterMatrix(uint8_t value) {
     }
 }
 
+// PROVEN: 5bfecbd3 UNPROVEN/IDENTICAL
 // OFFSET: 0x00800410/0x140514320
 void CGlueMgr::LoginRevertMatrix() {
     if (CGlueMgr::m_loginState == LOGIN_STATE_MATRIX_WAIT && CGlueMgr::m_matrixRemaining) {
@@ -534,7 +536,7 @@ void CGlueMgr::LoginRevertMatrix() {
     }
 }
 
-// PROVEN: fad3d260 IDENTICAL/NONE
+// PROVEN: fad3d260 IDENTICAL/IDENTICAL
 // OFFSET: 0x00800430/0x140514340
 void CGlueMgr::LoginCommitMatrix() {
     if (CGlueMgr::m_loginState == LOGIN_STATE_MATRIX_WAIT && CGlueMgr::m_matrixRemaining) {
@@ -547,7 +549,7 @@ void CGlueMgr::LoginCommitMatrix() {
     }
 }
 
-// PROVEN: c8248a9e IDENTICAL/NONE
+// PROVEN: c8248a9e IDENTICAL/IDENTICAL
 // OFFSET: 0x00800470/0x140514390
 bool CGlueMgr::LoginGetMatrixCoordinates(uint32_t* x, uint32_t* y) {
     if (CGlueMgr::m_loginState != LOGIN_STATE_MATRIX_WAIT || !CGlueMgr::m_matrixRemaining) {
@@ -557,13 +559,14 @@ bool CGlueMgr::LoginGetMatrixCoordinates(uint32_t* x, uint32_t* y) {
     return ClientServices::LoginConnection()->GetMatrixCoordinates(CGlueMgr::m_matrixChallengeCount - CGlueMgr::m_matrixRemaining, x, y);
 }
 
-// PROVEN: ce75f188 IDENTICAL/NONE
+// PROVEN: ce75f188 IDENTICAL/IDENTICAL
 // OFFSET: 0x008004C0/0x1405143F0
 void CGlueMgr::LoginEnterToken(const char* token) {
     FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s", "CANCEL");
     ClientServices::EnterToken(token);
 }
 
+// PROVEN: 7c22eb7d IDENTICAL/NONE
 // OFFSET: 0x008004E0
 WOWGUID CGlueMgr::GetActive() {
     return s_activeCharacterGuid;
@@ -630,6 +633,7 @@ void CGlueMgr::DisplayLoginStatus() {
     }
 }
 
+// PROVEN: fceb3369 IDENTICAL/NONE
 // OFFSET: 0x00800650
 static void StartAccountLogin() {
     if (CGlueMgr::m_idleState) {
@@ -640,7 +644,8 @@ static void StartAccountLogin() {
     ClientServices::Connection()->Connect();
 }
 
-// OFFSET: 0x008006A0
+// PROVEN: ef7c58a8 IDENTICAL/DIFFERENT
+// OFFSET: 0x008006A0/0x1405145D0
 void CGlueMgr::CreateCharacter(const CHARACTER_CREATE_INFO* info) {
     if (!info) {
         return;
@@ -651,7 +656,7 @@ void CGlueMgr::CreateCharacter(const CHARACTER_CREATE_INFO* info) {
     ClientServices::Connection()->RequestCharacterCreate(*info);
 }
 
-// OFFSET: 0x00800720
+// OFFSET: 0x00800720/0x140514670
 void CGlueMgr::DeleteCharacter(WOWGUID guid) {
     if (!guid) {
         return;
@@ -662,14 +667,15 @@ void CGlueMgr::DeleteCharacter(WOWGUID guid) {
     ClientServices::Connection()->RequestCharacterDelete(guid);
 }
 
-// PROVEN: 43952506 IDENTICAL/NONE
+// PROVEN: 43952506 IDENTICAL/IDENTICAL
 // OFFSET: 0x008007A0/0x140514710
 void CGlueMgr::RequestRandomCharacterName(uint8_t raceID, uint8_t sexID) {
     UserClientGenerateRandomCharacterName msg(raceID, sexID);
     ClientServices::Send(&msg);
 }
 
-// OFFSET: 0x008007D0
+// PROVEN: e5713a1a IDENTICAL/IDENTICAL
+// OFFSET: 0x008007D0/0x140514740
 int32_t CGlueMgr::OnRealmSplitMsg(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t realmID = 0;
     uint32_t state = 0;
@@ -686,7 +692,7 @@ int32_t CGlueMgr::OnRealmSplitMsg(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: 0x00800840
+// OFFSET: 0x00800840/0x1405147D0
 int32_t CGlueMgr::OnKickReasonMsg(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t reason = 0;
 
@@ -698,7 +704,7 @@ int32_t CGlueMgr::OnKickReasonMsg(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// PROVEN: d81996ba IDENTICAL/NONE
+// PROVEN: d81996ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00800880/0x140514830
 void CGlueMgr::CancelRealmListQuery() {
     if (CGlueMgr::m_idleState == IDLE_REALM_LIST) {
@@ -708,7 +714,7 @@ void CGlueMgr::CancelRealmListQuery() {
     }
 }
 
-// PROVEN: 1892a624 IDENTICAL/NONE
+// PROVEN: 1892a624 IDENTICAL/IDENTICAL
 // OFFSET: 0x008008B0/0x140514870
 void CGlueMgr::RealmListDialogCancelled() {
     if (CGlueMgr::m_currentScreen == GLUE_SCREEN_LOGIN) {
@@ -716,13 +722,13 @@ void CGlueMgr::RealmListDialogCancelled() {
     }
 }
 
-// PROVEN: 736ebf51 IDENTICAL/NONE
+// PROVEN: 736ebf51 IDENTICAL/IDENTICAL
 // OFFSET: 0x008008D0/0x1405148A0
 void CGlueMgr::SetScreen(int32_t screen) {
     FrameScript_SignalEvent(GLUE_EVENT_SET_GLUE_SCREEN, "%s", s_screenNames[screen]);
 }
 
-// PROVEN: 8b1efe07 IDENTICAL/NONE
+// PROVEN: 8b1efe07 IDENTICAL/IDENTICAL
 // OFFSET: 0x008008F0/0x1405148C0
 void CGlueMgr::UpdateCurrentScreen(const char* screen) {
     switch (CGlueMgr::m_currentScreen) {
@@ -769,19 +775,20 @@ void CGlueMgr::UpdateCurrentScreen(const char* screen) {
     }
 }
 
-// PROVEN: 1dc21140 IDENTICAL/NONE
+// PROVEN: 1dc21140 IDENTICAL/IDENTICAL
 // OFFSET: 0x008009B0/0x140514990
 void CGlueMgr::QuitGame() {
     ClientPostClose(0);
 }
 
-// PROVEN: 8d651c66 IDENTICAL/NONE
+// PROVEN: 8d651c66 IDENTICAL/IDENTICAL
 // OFFSET: 0x008009C0/0x1405149A0
 void CGlueMgr::QuitGameAndRunLauncher() {
     ClientPostClose(0);
     SCreateProcess("Launcher.exe", NULL, NULL, NULL, NULL, NULL);
 }
 
+// PROVEN: 99132eb5 DIFFERENT/IDENTICAL
 // OFFSET: 0x00800A60/0x140514A70
 void CGlueMgr::GetRealmList(int32_t showDialog) {
     CGlueMgr::SetIdleState(IDLE_REALM_LIST);
@@ -793,7 +800,7 @@ void CGlueMgr::GetRealmList(int32_t showDialog) {
     ClientServices::GetRealmList();
 }
 
-// OFFSET: 0x008009E0
+// OFFSET: 0x008009E0/0x1405149E0
 void CGlueMgr::GetCharacterList() {
     if (CGlueMgr::m_idleState == IDLE_WORLD_LOGIN || CGlueMgr::m_idleState == IDLE_ENTER_WORLD) {
         return;
@@ -812,12 +819,13 @@ void CGlueMgr::ResetQueueState() {
     CGlueMgr::m_estimatedWaitTime = 0;
 }
 
-// PROVEN: 80a87352 IDENTICAL/NONE
-// OFFSET: 0x00800AD0
+// PROVEN: 16379b13 IDENTICAL/UNPROVEN
+// OFFSET: 0x00800AD0/0x140514AF0
 void CGlueMgr::UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>& characters) {
     CCharacterSelection::UpdateCharacterList(characters);
 }
 
+// PROVEN: 80a87352 IDENTICAL/IDENTICAL
 // OFFSET: 0x00800AE0/0x140514B00
 void CGlueMgr::DownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_patchDownload) {
@@ -867,14 +875,14 @@ int32_t StoreHandItemType(int32_t slot, int32_t inventoryType, bool hunter, CGlu
     return 1;
 }
 
-// PROVEN: 2ffc122e IDENTICAL/NONE
-// OFFSET: 0x00800B70
+// PROVEN: 2ffc122e IDENTICAL/IDENTICAL
+// OFFSET: 0x00800B70/0x140514B30
 void CGlueMgr::AttachmentSequenceCallback(CM2Model* model) {
     model->DetachFromParent();
 }
 
-// PROVEN: b5ce397f IDENTICAL/NONE
-// OFFSET: 0x00800B80
+// PROVEN: b5ce397f IDENTICAL/DIFFERENT
+// OFFSET: 0x00800B80/0x140514B40
 uint32_t CGlueMgr::GetTotemDisplayId(int32_t classID, int32_t raceID) {
     if (classID != 7) {
         return 0;
@@ -898,7 +906,7 @@ uint32_t CGlueMgr::GetTotemDisplayId(int32_t classID, int32_t raceID) {
     }
 }
 
-// PROVEN: e86a3e0f IDENTICAL/NONE
+// PROVEN: e86a3e0f IDENTICAL/IDENTICAL
 // OFFSET: 0x00800C00/0x140514BC0
 int32_t CGlueMgr::HandleBattlenetDisconnect() {
     if (CGlueMgr::m_loginState != LOGIN_STATE_FAILED || CGlueMgr::m_loginResult != 21 || CGlueMgr::m_showedDisconnect) {
@@ -917,7 +925,7 @@ int32_t CGlueMgr::HandleBattlenetDisconnect() {
     return 1;
 }
 
-// OFFSET: 0x00800C90
+// OFFSET: 0x00800C90/0x140514C60
 void CGlueMgr::PollUserSurvey() {
     if (CGlueMgr::m_surveyDownload && CGlueMgr::m_surveyDownload->GetStatus() == 2) {
         if (CGlueMgr::m_executedSurvey) {
@@ -941,7 +949,7 @@ void CGlueMgr::PollUserSurvey() {
     CGlueMgr::SurveyDownloadEnd();
 }
 
-// PROVEN: 54d2aefa IDENTICAL/NONE
+// PROVEN: 54d2aefa IDENTICAL/IDENTICAL
 // OFFSET: 0x00800D10/0x140514D00
 void CGlueMgr::PollCharacterList(const char* text, int32_t complete, int32_t result, int32_t errorCode) {
     FrameScript_SignalEvent(GLUE_EVENT_UPDATE_STATUS_DIALOG, "%s", text);
@@ -978,8 +986,8 @@ void CGlueMgr::PollCharacterList(const char* text, int32_t complete, int32_t res
     }
 }
 
-// PROVEN: 75a9d693 IDENTICAL/NONE
-// OFFSET: 0x00800DC0
+// PROVEN: 75a9d693 IDENTICAL/DIFFERENT
+// OFFSET: 0x00800DC0/0x140514EB0
 void CGlueMgr::PollRealmList(const char* text, int32_t complete, int32_t result) {
     FrameScript_SignalEvent(GLUE_EVENT_UPDATE_STATUS_DIALOG, "%s", text);
 
@@ -1010,8 +1018,8 @@ void CGlueMgr::PollRealmList(const char* text, int32_t complete, int32_t result)
     }
 }
 
-// PROVEN: 895f119a IDENTICAL/NONE
-// OFFSET: 0x00800E60
+// PROVEN: 895f119a IDENTICAL/DIFFERENT
+// OFFSET: 0x00800E60/0x140514DF0
 void CGlueMgr::PollCreateCharacter(const char* text, int32_t complete, int32_t result) {
     FrameScript_SignalEvent(GLUE_EVENT_UPDATE_STATUS_DIALOG, "%s", text);
 
@@ -1038,8 +1046,8 @@ void CGlueMgr::PollCreateCharacter(const char* text, int32_t complete, int32_t r
     CGlueMgr::SetScreen(GLUE_SCREEN_CHARSELECT);
 }
 
-// PROVEN: 86442b2a IDENTICAL/NONE
-// OFFSET: 0x00800F00
+// PROVEN: 86442b2a IDENTICAL/UNPROVEN
+// OFFSET: 0x00800F00/0x140514F70
 void CGlueMgr::PollDeleteCharacter(const char* text, int32_t complete, int32_t result) {
     FrameScript_SignalEvent(GLUE_EVENT_UPDATE_STATUS_DIALOG, "%s", text);
 
@@ -1063,6 +1071,7 @@ void CGlueMgr::PollDeleteCharacter(const char* text, int32_t complete, int32_t r
     CGlueMgr::GetCharacterList();
 }
 
+// PROVEN: 8577d9a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00800F80/0x140515010
 int32_t CGlueMgr::Paint(const void* data, void* param) {
     uint32_t now = OsGetAsyncTimeMs();
@@ -1082,7 +1091,7 @@ int32_t CGlueMgr::Paint(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: cf9b85bf IDENTICAL/NONE
+// PROVEN: cf9b85bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00801000/0x1405150A0
 void CGlueMgr::HandleScreenshot(int32_t success) {
     if (success) {
@@ -1092,12 +1101,13 @@ void CGlueMgr::HandleScreenshot(int32_t success) {
     }
 }
 
-// PROVEN: 14619fab IDENTICAL/NONE
+// PROVEN: 14619fab IDENTICAL/IDENTICAL
 // OFFSET: 0x00801030/0x1405150C0
 int32_t CGlueMgr::ShowChangedOptionWarnings() {
     return CGlueMgr::m_numChangedOptionWarnings > 0;
 }
 
+// PROVEN: 3c18fd4a IDENTICAL/IDENTICAL
 // OFFSET: 0x00801040/0x1405150D0
 int32_t CGlueMgr::CCommand_ExportInterfaceFiles(const char* command, const char* arguments) {
     if (!*arguments) {
@@ -1116,6 +1126,7 @@ int32_t CGlueMgr::CCommand_ExportInterfaceFiles(const char* command, const char*
     return 1;
 }
 
+// PROVEN: fe509f19 IDENTICAL/UNPROVEN
 // OFFSET: 0x008010D0/0x140515160
 void CGlueMgr::PreloadCharacterModels() {
     uint32_t count = g_chrClassesDB.m_numRecords;
@@ -1296,7 +1307,7 @@ void CGlueMgr::ProcessAgreements(CGlueMgr::Agreements* agreements) {
     OsDeleteFile(path);
 }
 
-// PROVEN: 8e97ce4c IDENTICAL/NONE
+// PROVEN: 8e97ce4c IDENTICAL/IDENTICAL
 // OFFSET: 0x00801900/0x140515BA0
 int32_t CGlueMgr::HandleDisplaySizeChanged(const CSizeEvent& event) {
     if (CGlueMgr::m_screenWidth > 0 && CGlueMgr::m_screenWidth == event.m_data.m_w && CGlueMgr::m_screenHeight > 0 && CGlueMgr::m_screenHeight == event.m_data.m_h) {
@@ -1322,6 +1333,7 @@ int32_t CGlueMgr::HandleDisplaySizeChanged(const CSizeEvent& event) {
     return 1;
 }
 
+// PROVEN: d6a5dc49 IDENTICAL/DIFFERENT
 // OFFSET: 0x008019D0/0x140515C80
 void CGlueMgr::Suspend() {
     CGlueMgr::m_suspended = 1;
@@ -1376,13 +1388,14 @@ void CGlueMgr::Suspend() {
     ClientGenerateRandomCharacterNameResult::s_handler = NULL;
 }
 
-// PROVEN: ddf8f35f IDENTICAL/NONE
+// PROVEN: ddf8f35f IDENTICAL/DIFFERENT
 // OFFSET: 0x00801B20/0x140515E10
 void CGlueMgr::SetCurrentAccount(const char* accountName) {
     SStrCopy(CGlueMgr::m_accountName, accountName, sizeof(CGlueMgr::m_accountName));
     _strupr(CGlueMgr::m_accountName);
 }
 
+// PROVEN: f2f9b9ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00801B70/0x140515E60
 void CGlueMgr::ChangeRealm(REALM_INFO* realm) {
     if (!realm) {
@@ -1506,7 +1519,7 @@ bool CGlueMgr::OnRandomCharacterNameResult(ClientGenerateRandomCharacterNameResu
     return true;
 }
 
-// PROVEN: 548886ee IDENTICAL/NONE
+// PROVEN: 548886ee IDENTICAL/IDENTICAL
 // OFFSET: 0x008020E0/0x140516570
 int32_t CGlueMgr::GetSelectedCharInfo(CHARACTER_INFO* info) {
     CGlueMgr::m_characterInfo = info;
@@ -1519,7 +1532,7 @@ int32_t CGlueMgr::GetSelectedCharInfo(CHARACTER_INFO* info) {
     return 1;
 }
 
-// OFFSET: 0x00802150
+// OFFSET: 0x00802150/0x1405165E0
 int32_t CGlueMgr::OnCharCustomizeResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid = { 0 };
     char name[48];
@@ -1708,7 +1721,7 @@ void CGlueMgr::StatusDialogClick() {
     }
 }
 
-// PROVEN: 6ad9eaea IDENTICAL/NONE
+// PROVEN: 6ad9eaea IDENTICAL/DIFFERENT
 // OFFSET: 0x00802670/0x140516B70
 void CGlueMgr::CancelLogin() {
     if (CGlueMgr::m_idleState == IDLE_LOGIN_SERVER_LOGIN) {
@@ -1785,7 +1798,7 @@ static bool CreateIntroScene(uint8_t classID, uint8_t raceID, C3Vector& position
     return true;
 }
 
-// PROVEN: 8265971e IDENTICAL/NONE
+// PROVEN: 8265971e IDENTICAL/IDENTICAL
 // OFFSET: 0x00802890/0x140516FA0
 void CGlueMgr::SetUIDepth(float depth) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(CScriptObject::GetScriptObjectByName("GlueParent", CSimpleFrame::GetObjectType()));
@@ -1847,6 +1860,7 @@ static int32_t FindGlueScreenEmote(int32_t classID, int32_t raceID, int32_t scre
     return 0;
 }
 
+// PROVEN: ef2488ad IDENTICAL/IDENTICAL
 // OFFSET: 0x00802A20/0x140517180
 void CGlueMgr::StopCharacterEmoteKits(CAnimKitManager& manager) {
     CAnimKitInst* inst = manager.GetExpressingAnimKitInst(0xFFFFFFFF, 1);
@@ -1863,7 +1877,7 @@ void CGlueMgr::StopCharacterEmoteKits(CAnimKitManager& manager) {
     }
 }
 
-// OFFSET: 0x00802A90
+// OFFSET: 0x00802A90/0x140517210
 void CGlueMgr::CharacterEmoteKitFinished(CAnimKitInst* inst, uint64_t param) {
     CAnimKitManager* manager = inst->m_manager;
     CM2Model* model;
@@ -1898,7 +1912,7 @@ void CGlueMgr::CharacterEmoteKitFinished(CAnimKitInst* inst, uint64_t param) {
     inst->Release();
 }
 
-// OFFSET: 0x00802B10
+// OFFSET: 0x00802B10/0x1405172E0
 CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const uint64_t& guildGUID, const WOWGUID& guid, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg)) {
     CGlueMgr::WeaponLoadOut types;
     types.m_offHand = 0;
@@ -1986,7 +2000,7 @@ CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* inf
     return types;
 }
 
-// OFFSET: 0x00802DC0
+// OFFSET: 0x00802DC0/0x140517770
 void CGlueMgr::ProcessAttachment(CSimpleModel* modelFrame, CM2Model* model, int32_t effectID, uint32_t attachID, int32_t sequenceCallback) {
     if (!model || !model->HasAttachment(attachID)) {
         return;
@@ -2145,6 +2159,7 @@ void CGlueMgr::PollLoginServerLogin() {
     }
 }
 
+// PROVEN: 926f2f81 DIFFERENT/IDENTICAL
 // OFFSET: 0x00803370/0x140518030
 void CGlueMgr::PollEnterWorld() {
     if (!LoadingScreenDrawing()) {
@@ -2206,7 +2221,7 @@ CharacterSelectionDisplay* GetCharacterInfo(int32_t index) {
     return &CCharacterSelection::m_characterList[index];
 }
 
-// OFFSET: 0x00803530
+// OFFSET: 0x00803530/0x1405181F0
 void CGlueMgr::ApplySpellVisualKit(CSimpleModelFFX* modelFrame, CM2Model* model, int32_t spellVisualKitID, int32_t sequenceCallback) {
     SpellVisualKitRec* kitRec = g_spellVisualKitDB.GetRecord(spellVisualKitID);
 
@@ -2396,7 +2411,7 @@ void CGlueMgr::EnterWorld() {
     CGlueMgr::SetIdleState(IDLE_ENTER_WORLD);
 }
 
-// OFFSET: 0x00803CC0
+// OFFSET: 0x00803CC0/0x140518B40
 void CGlueMgr::CharacterEmoteSpellStart(CAnimKitManager* manager, uint64_t param) {
     CharacterEmoteSpellStartData* data = reinterpret_cast<CharacterEmoteSpellStartData*>(static_cast<uintptr_t>(param));
     CM2Model* model = manager->m_model;
@@ -2458,7 +2473,8 @@ void CGlueMgr::CharacterEmoteSpellStart(CAnimKitManager* manager, uint64_t param
     }
 }
 
-// OFFSET: 0x00803E30
+// PROVEN: 06fbdf7d IDENTICAL/UNPROVEN
+// OFFSET: 0x00803E30/0x140518D40
 void CGlueMgr::AddChangedOptionWarning(const char* warning) {
     if (!warning) {
         return;
@@ -2477,6 +2493,7 @@ void CGlueMgr::AddChangedOptionWarning(const char* warning) {
     CGlueMgr::m_changedOptionWarnings[CGlueMgr::m_numChangedOptionWarnings++] = text;
 }
 
+// PROVEN: 08eb389b IDENTICAL/IDENTICAL
 // OFFSET: 0x00803ED0/0x140518DF0
 bool CGlueMgr::AgreementsURLCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     CGlueMgr::Agreements* agreements = static_cast<CGlueMgr::Agreements*>(param);
@@ -2501,7 +2518,8 @@ bool CGlueMgr::AgreementsURLCallback(void* param, const char* data, uint32_t siz
     return true;
 }
 
-// OFFSET: 0x00803F20
+// PROVEN: 924a502e IDENTICAL/DIFFERENT
+// OFFSET: 0x00803F20/0x140518E50
 int32_t CGlueMgr::OnCharRenameResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t result;
     WOWGUID guid = { 0 };
@@ -2537,7 +2555,8 @@ int32_t CGlueMgr::OnCharRenameResult(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: 0x00804020
+// PROVEN: ff5c3286 IDENTICAL/UNPROVEN
+// OFFSET: 0x00804020/0x140518F70
 int32_t CGlueMgr::OnCharDeclineResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid = { 0 };
     uint32_t result;
@@ -2562,6 +2581,7 @@ int32_t CGlueMgr::OnCharDeclineResult(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
+// PROVEN: 46cb680b IDENTICAL/DIFFERENT
 // OFFSET: 0x008040D0/0x140519020
 void CGlueMgr::PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t screen, const CGlueMgr::WeaponLoadOut& handItems, CAnimKitManager& manager, CSimpleModelFFX* modelFrame) {
     uint32_t animKitID = 0;
@@ -2588,14 +2608,14 @@ void CGlueMgr::PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t s
     inst->SetStopCallback(CGlueMgr::CharacterEmoteKitFinished, 0);
 }
 
-// PROVEN: f6dbeaae IDENTICAL/NONE
+// PROVEN: f6dbeaae IDENTICAL/UNPROVEN
 // OFFSET: 0x00804170/0x140519100
 void CGlueMgr::AcceptChangedOptionWarnings() {
     CGlueMgr::m_changedOptionWarnings.Clear();
     CGlueMgr::m_numChangedOptionWarnings = 0;
 }
 
-// PROVEN: ab6bb506 IDENTICAL/NONE
+// PROVEN: ab6bb506 IDENTICAL/UNPROVEN
 // OFFSET: 0x008041B0/0x140519150
 static void RequestLatestAgreements() {
     CGlueMgr::m_latestAgreements.m_data.Clear();
@@ -2606,7 +2626,7 @@ static void RequestLatestAgreements() {
     }
 }
 
-// OFFSET: 0x00804220
+// OFFSET: 0x00804220/0x1405191E0
 void CGlueMgr::LogConnectionStatus(const char* format, ...) {
     if (!CGlueMgr::m_initialized || !format || !*format) {
         return;
@@ -2626,7 +2646,7 @@ void CGlueMgr::LogConnectionStatus(const char* format, ...) {
     s_connectionStatusLock.Leave();
 }
 
-// PROVEN: d3e56ff2 IDENTICAL/NONE
+// PROVEN: d3e56ff2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00804300/0x140519350
 void CGlueMgr::SetLoginStateAndResult(LOGIN_STATE state, LOGIN_RESULT result, const char* addressString, const char* stateString, const char* resultString, uint16_t flags) {
     CGlueMgr::LogConnectionStatus("GRUNT: state: %s result: %s %s", stateString, resultString, addressString ? addressString : "");
@@ -2752,7 +2772,7 @@ void CGlueMgr::Resume() {
             ClientServices::SetMessageHandler(SMSG_REALM_SPLIT, CGlueMgr::OnRealmSplitMsg, NULL);
             ClientServices::SetMessageHandler(SMSG_KICK_REASON, CGlueMgr::OnKickReasonMsg, NULL);
             ClientServices::SetMessageHandler(SMSG_CHAR_FACTION_CHANGE_RESULT, CGlueMgr::OnCharFactionChangeResult, NULL);
-            ClientGenerateRandomCharacterNameResult::s_handler = CGlueMgr::OnRandomCharacterNameResult;
+            ClientGenerateRandomCharacterNameResult::s_handler = JamHandlerEncode(CGlueMgr::OnRandomCharacterNameResult, g_jamHandlerKey_CFD98C);
 
             CGlueMgr::m_pendingServerAlert = 1;
             CGlueMgr::m_processServerAlert = 0;
@@ -2773,7 +2793,7 @@ void CGlueMgr::Resume() {
     ClientPostClose(9);
 }
 
-// OFFSET: 0x008048A0
+// OFFSET: 0x008048A0/0x140519AD0
 void CGlueMgr::PollAccountLogin(int32_t errorCode, const char* text, int32_t complete, int32_t result, WOWCS_OPS op) {
     if (ClientServices::LoginConnection()->GetLoginServerType() == 1 && CGlueMgr::m_loginState == LOGIN_STATE_FAILED) {
         CGlueMgr::DisplayLoginStatus();
@@ -3069,7 +3089,7 @@ int32_t CGlueMgr::NetDisconnectHandler(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: 4d713df3 IDENTICAL/NONE
+// PROVEN: 4d713df3 IDENTICAL/IDENTICAL
 // OFFSET: 0x008052D0/0x14051A770
 static void ReloadGlue() {
     CCharacterCreation::Shutdown();
@@ -3266,7 +3286,7 @@ void CGlueMgr::Initialize() {
     CGlueMgr::PreloadCharacterModels();
 }
 
-// OFFSET: 0x00805840
+// OFFSET: 0x00805840/0x14051AD10
 void CGlueMgr::Shutdown() {
     while (CGlueMgr::m_pendingServerAlert || CGlueMgr::m_latestAgreements.m_data.Count()) {
         if (CGlueMgr::m_latestAgreements.m_data.Count()) {

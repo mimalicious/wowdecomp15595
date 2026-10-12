@@ -15,10 +15,10 @@ struct SFileStreamingStatus {
 // STATIC: 0x00D05900
 const char* System_SFile2::s_downloadStatusNames[12] = { "noError", "genericError", "timedOut", "fileNotFound", "unmodified", "dataCallbackError", "forbiddenError", "nameResolveError", "cannotConnectError", "stopped", "badrequest", "outOfDiskSpace" };
 
-// STATIC: 0x00EB4210
+// STATIC: 0x00EB4210/0x140DA0120
 static SFileStreamingStatus s_streamingStatus;
 
-// PROVEN: e677872d IDENTICAL/NONE
+// PROVEN: e677872d IDENTICAL/UNPROVEN
 // OFFSET: 0x007A96B0/0x14049F440
 void SFile::SetStreamingStatus(bool mfilReady, bool dataReady, bool disabled, uint32_t build, const char* text) {
     s_streamingStatus.m_mfilReady = mfilReady;
@@ -28,7 +28,7 @@ void SFile::SetStreamingStatus(bool mfilReady, bool dataReady, bool disabled, ui
     Blizzard::String::Copy(s_streamingStatus.m_text, text, sizeof(s_streamingStatus.m_text));
 }
 
-// PROVEN: 0cb8d3ea IDENTICAL/NONE
+// PROVEN: 0cb8d3ea IDENTICAL/UNPROVEN
 // OFFSET: 0x007A9700/0x14049F490
 void SFile::GetStreamingStatus(bool* mfilReady, bool* dataReady, bool* disabled, uint32_t* build) {
     if (mfilReady) {
@@ -48,25 +48,25 @@ void SFile::GetStreamingStatus(bool* mfilReady, bool* dataReady, bool* disabled,
     }
 }
 
-// PROVEN: c33d1850 IDENTICAL/NONE
+// PROVEN: c33d1850 IDENTICAL/UNPROVEN
 // OFFSET: 0x007A9750/0x14049F4E0
 bool SFile::IsStreamingDataReady() {
     return s_streamingStatus.m_dataReady;
 }
 
-// PROVEN: 1a789ce6 IDENTICAL/NONE
+// PROVEN: 1a789ce6 IDENTICAL/UNPROVEN
 // OFFSET: 0x007A9760/0x14049F4F0
 bool SFile::IsStreamingMfilReady() {
     return s_streamingStatus.m_mfilReady;
 }
 
-// PROVEN: 9fce349a IDENTICAL/NONE
+// PROVEN: 9fce349a IDENTICAL/UNPROVEN
 // OFFSET: 0x007A9770/0x14049F500
 bool SFile::IsStreamingDisabled() {
     return s_streamingStatus.m_disabled;
 }
 
-// PROVEN: 6a968d38 IDENTICAL/NONE
+// PROVEN: 6a968d38 IDENTICAL/UNPROVEN
 // OFFSET: 0x007A9780/0x14049F510
 const char* SFile::GetStreamingStatusText() {
     return s_streamingStatus.m_text;
@@ -84,7 +84,7 @@ void System_SFile2::BufferCallback::WaitForCompletion() {
     Blizzard::Lock::EventWaitForever(this->m_event);
 }
 
-// PROVEN: 639bf0de IDENTICAL/NONE
+// PROVEN: 639bf0de IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9640/0x14049F3C0
 bool System_SFile2::BufferCallback::ReceivedData(const void* data, int32_t size) {
     uint32_t length = Blizzard::String::Length(this->m_buffer);

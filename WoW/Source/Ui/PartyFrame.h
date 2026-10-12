@@ -25,7 +25,6 @@ class PartyMemberPetState {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ char m_name[80];
     /* 0058 */ uint8_t m_powerType;
-    /* 0059 */ uint8_t unk_0059;
     /* 005A */ uint16_t m_displayId;
     /* 005C */ uint32_t m_health;
     /* 0060 */ uint32_t m_maxHealth;
@@ -53,7 +52,6 @@ class PartyMemberState {
     /* 0026 */ int16_t m_posY;
     /* 0028 */ int16_t m_posZ;
     /* 002A */ uint8_t m_powerType;
-    /* 002B */ uint8_t unk_002B;
     /* 002C */ uint32_t unk_002C;
     /* 0030 */ PartyMemberPetState m_pet;
     /* 00B0 */ TSGrowableArray<PartyMemberAuraStates> m_auras;

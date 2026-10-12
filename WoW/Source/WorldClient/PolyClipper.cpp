@@ -2,6 +2,7 @@
 #include <cmath>
 #include "Engine/Source/Tempest/C4Plane.h"
 
+// PROVEN: 847ed1ec DIFFERENT/IDENTICAL
 // OFFSET: 0x0079E6F0/0x1404938B0
 const void* PCDataProxy::GetData(PCInterpolateFunc func) {
     if (!this->m_data) {
@@ -11,7 +12,7 @@ const void* PCDataProxy::GetData(PCInterpolateFunc func) {
     return this->m_data;
 }
 
-// PROVEN: 507bac05 IDENTICAL/NONE
+// PROVEN: 507bac05 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079E730/0x140493920
 void PolyClipper::AddVertex(const C3Vector& pos, const void* data) {
     Vertex& vertex = this->m_vertices[this->m_numVertices];
@@ -20,7 +21,7 @@ void PolyClipper::AddVertex(const C3Vector& pos, const void* data) {
     this->m_numVertices++;
 }
 
-// PROVEN: c8355e93 IDENTICAL/NONE
+// PROVEN: c8355e93 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079E770/0x140493950
 void PolyClipper::Begin() {
     for (int32_t i = 0; i < this->m_numVertices; i++) {
@@ -40,7 +41,7 @@ void PolyClipper::Begin() {
     }
 }
 
-// PROVEN: cf701ed2 IDENTICAL/NONE
+// PROVEN: cf701ed2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079E7F0/0x1404939F0
 void PolyClipper::End() {
     this->m_firstEdge = 0;
@@ -65,7 +66,7 @@ PCResultsIterator::PCResultsIterator(const PolyClipper* clipper, PCInterpolateFu
     }
 }
 
-// PROVEN: e3ebb080 IDENTICAL/NONE
+// PROVEN: e3ebb080 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079E890/0x140493A30
 void PCResultsIterator::GetVertex(C3Vector& pos, const void*& data) {
     int32_t index = (this->m_step & 1) == 0 ? this->m_vertex[0] : this->m_vertex[1];
@@ -74,7 +75,7 @@ void PCResultsIterator::GetVertex(C3Vector& pos, const void*& data) {
     data = vertex.m_proxy.GetData(this->m_func);
 }
 
-// PROVEN: 2ace0e4c IDENTICAL/NONE
+// PROVEN: 2ace0e4c IDENTICAL/DIFFERENT
 // OFFSET: 0x0079E900/0x140493AE0
 void PCResultsIterator::Next() {
     if (this->m_vertex[1] == this->m_vertex[0]) {
@@ -93,7 +94,7 @@ void PCResultsIterator::Next() {
     }
 }
 
-// PROVEN: b993f5e7 IDENTICAL/NONE
+// PROVEN: b993f5e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079E960/0x140493B50
 bool PCResultsIterator::HasFinished() const {
     return this->m_finished;
@@ -182,13 +183,13 @@ void PolyClipper::Clip(const C4Plane& plane, int32_t sign) {
     this->m_numEdges++;
 }
 
-// PROVEN: 1e02c0ee IDENTICAL/NONE
+// PROVEN: 1e02c0ee IDENTICAL/IDENTICAL
 // OFFSET: 0x0079EC60/0x140493EF0
 PCResultsIterator PolyClipper::GetResults(PCInterpolateFunc func) const {
     return PCResultsIterator(this, func);
 }
 
-// PROVEN: a5df1c06 IDENTICAL/NONE
+// PROVEN: a5df1c06 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079EC80/0x140493F60
 PolyClipper::PolyClipper() {
     this->m_numVertices = 0;

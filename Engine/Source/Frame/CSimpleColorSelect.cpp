@@ -26,7 +26,7 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/TabardModelFrame.h"
 
-// STATIC: 0x00CA45F8
+// STATIC: 0x00CA45F8/0x140B425A0
 int32_t CSimpleColorSelect::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3ABC/0x140CB9858
@@ -35,12 +35,12 @@ int32_t CSimpleColorSelect::s_objectType;
 // STATIC: 0x00CA3488
 const char* CSimpleColorSelect::s_objectTypeName = "ColorSelect";
 
-// STATIC: 0x00DD3AC0
+// STATIC: 0x00DD3AC0/0x140CB9860
 CDataAllocator CSimpleColorSelect::s_allocator(sizeof(CSimpleColorSelect), 5);
 
 // OFFSET: 0x00523030/0x140171170
 static void ValueTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
-    // STATIC: 0x00DD3AD8
+    // STATIC: 0x00DD3AD8/0x140CB9880
     static CImVector s_texels[64];
 
     switch (command) {
@@ -80,7 +80,7 @@ int32_t CSimpleColorSelect::GetScriptMetaTable() {
     return CSimpleColorSelect::s_metatable;
 }
 
-// PROVEN: 196d9f95 IDENTICAL/UNPROVEN
+// PROVEN: 196d9f95 IDENTICAL/IDENTICAL
 // OFFSET: 0x00522D80/0x140170E20
 FrameScript_Object::ScriptIx* CSimpleColorSelect::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -146,6 +146,7 @@ int32_t CSimpleColorSelect::OnLayerMouseUp(const CMouseEvent& evt, const char* b
 CSimpleColorSelect::~CSimpleColorSelect() {
 }
 
+// PROVEN: ff1e579d DIFFERENT/IDENTICAL
 // OFFSET: 0x00522ED0/0x140170FA0
 void CSimpleColorSelect::RunOnColorSelectScript() {
     if (!this->HasScript(this->m_onColorSelect)) {
@@ -187,6 +188,7 @@ CSimpleColorSelect::CSimpleColorSelect(CSimpleFrame* parent) : CSimpleFrame(pare
     this->EnableEvent(SIMPLE_EVENT_MOUSE, -1);
 }
 
+// PROVEN: 422aa6a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523180/0x140171330
 void CSimpleColorSelect::UpdateValueTexture() {
     if (!this->m_valueTexture) {
@@ -245,6 +247,7 @@ int32_t CSimpleColorSelect::OnLayerMouseDown(const CMouseEvent& evt, const char*
     return CSimpleFrame::OnLayerMouseDown(evt, btn);
 }
 
+// PROVEN: 7c82debb DIFFERENT/IDENTICAL
 // OFFSET: 0x005233F0/0x140171610
 void CSimpleColorSelect::SetColorWheelThumbTexture(CSimpleTexture* texture) {
     if (texture == this->m_wheelThumbTexture) {
@@ -294,6 +297,7 @@ void CSimpleColorSelect::SetColorValueTexture(CSimpleTexture* texture) {
     this->UpdateValueTexture();
 }
 
+// PROVEN: 22b18f32 DIFFERENT/IDENTICAL
 // OFFSET: 0x00523510/0x1401717A0
 void CSimpleColorSelect::SetColorValueThumbTexture(CSimpleTexture* texture) {
     if (texture == this->m_valueThumbTexture) {
@@ -322,7 +326,7 @@ void CSimpleColorSelect::UpdateColor() {
     this->RunOnColorSelectScript();
 }
 
-// OFFSET: 0x00523580
+// OFFSET: 0x00523580/0x140171840
 int32_t CSimpleColorSelect::OnLayerTrackUpdate(const CMouseEvent& evt) {
     if (this->m_wheelTracking || this->m_valueTracking) {
         if (this->m_wheelTracking) {
@@ -420,7 +424,7 @@ void CSimpleColorSelect::SetColorWheelTexture(CSimpleTexture* texture) {
     }
 
     if (texture) {
-        // STATIC: 0x00DD3BDC
+        // STATIC: 0x00DD3BDC/0x140CB9988
         static TSGrowableArray<CImVector> s_wheelTexels;
 
         if (!s_wheelTexels.Count()) {

@@ -18,7 +18,6 @@ class CMapEntity : public CMapStaticEntity {
     /* 00A0 */ WORLD_LOAD_CALLBACK m_updateCallback;
     /* 00A4 */ void* m_updateParam;
     /* 00A8 */ uint32_t m_cullStamp;
-    /* 00AC */ uint32_t unk_00AC;
     /* 00B0 */ uint64_t m_param64;
     /* 00B8 */ uintptr_t m_param32;
     /* 00BC */ int32_t unk_00BC;

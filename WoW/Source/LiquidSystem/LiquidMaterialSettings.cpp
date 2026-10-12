@@ -8,7 +8,7 @@
 // STATIC: 0x00E4EBCC
 Liquid::TEXTURE_LOAD_CALLBACK Liquid::s_textureLoadCallback;
 
-// PROVEN: 64d572f1 IDENTICAL/NONE
+// PROVEN: 64d572f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071C200/0x1403F10A0
 Liquid::CMaterialSettings::~CMaterialSettings() {
 }
@@ -19,19 +19,19 @@ Liquid::CMaterialSettings::CMaterialSettings() {
     *reinterpret_cast<uint32_t*>(&this->m_colors[1]) = 0;
 }
 
-// PROVEN: feb09674 IDENTICAL/NONE
+// PROVEN: feb09674 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071C820/0x1403F1900
 void Liquid::CMaterialSettings::Initialize(uint32_t liquidType) {
     this->m_liquidType = liquidType;
 }
 
-// PROVEN: d923ddd5 IDENTICAL/NONE
+// PROVEN: d923ddd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071C830/0x1403F1910
 int32_t Liquid::CMaterialSettings::GetInt(uint32_t index) {
     return this->m_ints[index];
 }
 
-// PROVEN: 3be6f5c1 IDENTICAL/NONE
+// PROVEN: 3be6f5c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071C850/0x1403F1920
 float Liquid::CMaterialSettings::GetFloat(uint32_t index) {
     return this->m_floats[index];
@@ -218,7 +218,7 @@ CGxTex* Liquid::CMaterialSettings::GetTexture(uint32_t index, uint32_t period) {
     return TextureGetGxTex(textures->m_data[static_cast<int64_t>(t * static_cast<double>(count))]);
 }
 
-// PROVEN: 95b2f6d3 IDENTICAL/NONE
+// PROVEN: 95b2f6d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071CE00/0x1403F2080
 void Liquid::CMaterialSettings::LinkToAsyncHead(uint32_t index) {
     TSGrowableArray<CTexture*>& textures = this->m_textures[index];

@@ -19,10 +19,10 @@
 #include "WoW/Source/UIUtil/AddOns.h"
 #include "WoW/Source/WowServices/WDataStore.h"
 
-// STATIC: 0x00CC8B38
+// STATIC: 0x00CC8B38/0x140B68E30
 TSList<RealmConnection::REALMCONNECTIONNODE> RealmConnection::s_allRealmConnections;
 
-// STATIC: 0x00DD9FB8
+// STATIC: 0x00DD9FB8/0x140CC0828
 SCritSect RealmConnection::s_allRealmConnectionsCrit;
 
 // INLINED
@@ -30,7 +30,7 @@ RealmConnection::REALMCONNECTIONNODE::REALMCONNECTIONNODE() {
     this->m_connection = NULL;
 }
 
-// PROVEN: b5f589a6 IDENTICAL/NONE
+// PROVEN: b5f589a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x006246B0/0x1402B5DF0
 int32_t RealmConnection::HandleConnect() {
     if (this->m_realmResponse) {
@@ -43,7 +43,7 @@ int32_t RealmConnection::HandleConnect() {
     return NetClient::HandleConnect();
 }
 
-// PROVEN: e50606bd IDENTICAL/NONE
+// PROVEN: e50606bd IDENTICAL/IDENTICAL
 // OFFSET: 0x006246F0/0x1402B5E50
 int32_t RealmConnection::HandleDisconnect() {
     if (this->m_realmResponse) {
@@ -55,7 +55,7 @@ int32_t RealmConnection::HandleDisconnect() {
     return NetClient::HandleDisconnect();
 }
 
-// PROVEN: ff87ebeb IDENTICAL/NONE
+// PROVEN: ff87ebeb IDENTICAL/IDENTICAL
 // OFFSET: 0x00624730/0x1402B5EB0
 int32_t RealmConnection::HandleCantConnect() {
     if (this->m_realmResponse) {
@@ -67,7 +67,7 @@ int32_t RealmConnection::HandleCantConnect() {
     return NetClient::HandleCantConnect();
 }
 
-// PROVEN: d9cd8b38 IDENTICAL/NONE
+// PROVEN: d9cd8b38 IDENTICAL/IDENTICAL
 // OFFSET: 0x00624770/0x1402B5F10
 bool RealmConnection::HandleWaitQueueUpdate(ClientWaitQueueUpdate* msg) {
     if (this->m_realmResponse) {
@@ -85,7 +85,7 @@ bool RealmConnection::HandleWaitQueueUpdate(ClientWaitQueueUpdate* msg) {
     return true;
 }
 
-// PROVEN: 5499f1e4 IDENTICAL/NONE
+// PROVEN: 5499f1e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x006247D0/0x1402B5FA0
 int32_t RealmConnection::HandleAddonInfo(uint32_t msgId, uint32_t time, CDataStore* msg) {
     if (this->m_realmResponse) {
@@ -98,7 +98,7 @@ int32_t RealmConnection::HandleAddonInfo(uint32_t msgId, uint32_t time, CDataSto
     return 1;
 }
 
-// PROVEN: 1a7c1909 IDENTICAL/NONE
+// PROVEN: 1a7c1909 IDENTICAL/IDENTICAL
 // OFFSET: 0x00624820/0x1402B6010
 int32_t RealmConnection::HandleClientCacheVersion(uint32_t msgId, uint32_t time, CDataStore* msg) {
     if (this->m_realmResponse) {
@@ -181,8 +181,8 @@ int32_t RealmConnection::HandleCharacterDelete(uint32_t msgId, uint32_t time, CD
     return 1;
 }
 
-// PROVEN: b1eb6a0f IDENTICAL/NONE
-// OFFSET: 0x006249A0
+// PROVEN: b1eb6a0f IDENTICAL/IDENTICAL
+// OFFSET: 0x006249A0/0x1402B6170
 int32_t RealmConnection::HandleLogoutResponse(uint32_t msgId, uint32_t time, CDataStore* msg) {
     uint32_t result = 0;
     msg->Get(result);
@@ -194,13 +194,14 @@ int32_t RealmConnection::HandleLogoutResponse(uint32_t msgId, uint32_t time, CDa
     return 1;
 }
 
+// PROVEN: 33870419 IDENTICAL/IDENTICAL
 // OFFSET: 0x006249F0/0x1402B61D0
 void RealmConnection::RequestCharacterEnum() {
     UserClientEnumCharacters msg;
     this->Send(&msg, CONNECTION_ROUTED);
 }
 
-// PROVEN: 9649aeb1 IDENTICAL/NONE
+// PROVEN: 9649aeb1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00624A20/0x1402B6210
 void RealmConnection::SetSelectedRealm(uint32_t regionID, uint32_t battlegroupID, uint32_t realmID) {
     this->m_regionID = regionID;
@@ -208,7 +209,7 @@ void RealmConnection::SetSelectedRealm(uint32_t regionID, uint32_t battlegroupID
     this->m_realmID = realmID;
 }
 
-// PROVEN: 1c6230dd IDENTICAL/NONE
+// PROVEN: 1c6230dd IDENTICAL/DIFFERENT
 // OFFSET: 0x00624A50/0x1402B6230
 static int32_t CompareOrders(const void* a, const void* b) {
     uint8_t first = *static_cast<const uint8_t*>(a);
@@ -226,7 +227,8 @@ bool RealmConnection::ClientWaitQueueUpdateHandler(ClientWaitQueueUpdate* msg) {
     return static_cast<RealmConnection*>(msg->m_netClient)->HandleWaitQueueUpdate(msg);
 }
 
-// OFFSET: 0x00624A90
+// PROVEN: 33951db5 NONE/IDENTICAL
+// OFFSET: 0x00624A90/0x1402B6260
 bool RealmConnection::ClientWaitQueueFinishHandler(ClientWaitQueueFinish* msg) {
     RealmConnection* connection = static_cast<RealmConnection*>(msg->m_netClient);
 
@@ -243,7 +245,7 @@ bool RealmConnection::ClientWaitQueueFinishHandler(ClientWaitQueueFinish* msg) {
     return true;
 }
 
-// OFFSET: 0x00624D10
+// OFFSET: 0x00624D10/0x1402B65E0
 int32_t RealmConnection::MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     RealmConnection* connection = static_cast<RealmConnection*>(param);
     int32_t result = 0;
@@ -406,7 +408,7 @@ bool RealmConnection::ClientAuthResponseHandler(ClientAuthResponse* msg) {
     return static_cast<RealmConnection*>(msg->m_netClient)->HandleAuthResponse(msg);
 }
 
-// PROVEN: 0211c1ea IDENTICAL/NONE
+// PROVEN: 0211c1ea IDENTICAL/IDENTICAL
 // OFFSET: 0x00625350/0x1402B6CA0
 void RealmConnection::PollNet(const void* data, void* param) {
     RealmConnection::s_allRealmConnectionsCrit.Enter();
@@ -513,9 +515,9 @@ bool RealmConnection::ClientEnumCharactersResultHandler(ClientEnumCharactersResu
 RealmConnection::RealmConnection(RealmResponse* realmResponse) : m_realmResponse(realmResponse), m_authenticated(0), m_queuePosition(0), m_freeCharacterMigration(0), m_billingTimeRemaining(0), m_billingTimeRested(0), m_billingFlags(0), m_accountExpansion(0), m_activeExpansion(0), m_timeRemaining(0), m_timeRemainingStart(0), m_regionID(0), m_battlegroupID(0), m_realmID(0) {
     this->Initialize();
 
-    ClientAuthResponse::s_handler = RealmConnection::ClientAuthResponseHandler;
-    ClientWaitQueueUpdate::s_handler = RealmConnection::ClientWaitQueueUpdateHandler;
-    ClientWaitQueueFinish::s_handler = RealmConnection::ClientWaitQueueFinishHandler;
+    ClientAuthResponse::s_handler = JamHandlerEncode(RealmConnection::ClientAuthResponseHandler, g_jamHandlerKey_CFF274);
+    ClientWaitQueueUpdate::s_handler = JamHandlerEncode(RealmConnection::ClientWaitQueueUpdateHandler, g_jamHandlerKey_CFD04C);
+    ClientWaitQueueFinish::s_handler = JamHandlerEncode(RealmConnection::ClientWaitQueueFinishHandler, g_jamHandlerKey_CFDD28);
 
     this->SetMessageHandler(SMSG_ADDON_INFO, RealmConnection::MessageHandler, this);
     this->SetMessageHandler(SMSG_CHAR_CREATE, RealmConnection::MessageHandler, this);
@@ -526,7 +528,7 @@ RealmConnection::RealmConnection(RealmResponse* realmResponse) : m_realmResponse
     this->SetMessageHandler(SMSG_DELETE_CHAR, RealmConnection::MessageHandler, this);
     this->SetMessageHandler(SMSG_CACHE_VERSION, RealmConnection::MessageHandler, this);
 
-    ClientEnumCharactersResult::s_handler = RealmConnection::ClientEnumCharactersResultHandler;
+    ClientEnumCharactersResult::s_handler = JamHandlerEncode(RealmConnection::ClientEnumCharactersResultHandler, g_jamHandlerKey_CFE57C);
 
     RealmConnection::s_allRealmConnectionsCrit.Enter();
     RealmConnection::REALMCONNECTIONNODE* node = RealmConnection::s_allRealmConnections.NewNode(2, 0, 8);
@@ -725,24 +727,27 @@ RealmConnection::~RealmConnection() {
 void RealmResponse::JoinRealmResult(uint32_t realmID, int32_t result, int32_t a3, int32_t a4, int32_t a5) {
 }
 
-// PROVEN: 01c03df0 IDENTICAL/DIFFERENT
+// PROVEN: 01c03df0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void RealmResponse::OnChatPlayerNotFound(RealmConnection* connection, const char* name) {
 }
 
-// OFFSET: 0x004CF270
+// PROVEN: 0ef00e5d IDENTICAL/IDENTICAL
+// OFFSET: 0x004CF270/0x1407D7E80
 void RealmResponse::OnCharacterRestored(RealmConnection* connection, bool success, uint32_t a3, uint32_t a4, uint32_t a5, uint64_t a6, uint64_t a7, uint32_t a8, const char* a9, uint32_t a10, CDataStore* msg, uint64_t a12, uint64_t a13) {
 }
 
-// OFFSET: 0x004CF260
+// PROVEN: 4201e0ab DIFFERENT/IDENTICAL
+// OFFSET: 0x004CF260/0x1407D7E80
 void RealmResponse::OnChangeArenaTeamRating(RealmConnection* connection, bool success, int32_t a3, int32_t a4) {
 }
 
-// OFFSET: 0x004CF260
+// PROVEN: ceede6fc DIFFERENT/IDENTICAL
+// OFFSET: 0x004CF260/0x1407D7E80
 void RealmResponse::OnServerInfo(RealmConnection* connection, int32_t a2, int32_t a3, char* a4) {
 }
 
-// PROVEN: d7d1893d IDENTICAL/DIFFERENT
+// PROVEN: d7d1893d IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void RealmResponse::HandleCharacterLoginFailed(RealmConnection* connection, uint8_t result) {
 }

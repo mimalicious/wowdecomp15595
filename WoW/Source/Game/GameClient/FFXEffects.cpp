@@ -277,7 +277,7 @@ PassNetherCombine::PassNetherCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex
     this->m_fade = 0.0f;
 }
 
-// PROVEN: f38723fb IDENTICAL/NONE
+// PROVEN: e3d66bff IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C2B0/0x1408D02F0
 void EffectDeath::SetParameters(int32_t count, const int32_t* params) {
     if (g_theGxDevicePtr->m_caps.m_shaderModel >= 2) {
@@ -285,6 +285,7 @@ void EffectDeath::SetParameters(int32_t count, const int32_t* params) {
     }
 }
 
+// PROVEN: f38723fb IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C2E0/0x1408D0320
 void EffectNetherWorld::End() {
     if (this->m_passes.Count() >= 2) {
@@ -292,7 +293,7 @@ void EffectNetherWorld::End() {
     }
 }
 
-// OFFSET: 0x00B0C300
+// OFFSET: 0x00B0C300/0x1408D0340
 static void SeedTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     static float s_scaleX = 64.0f / width;
     static float s_scaleY = 64.0f / height;
@@ -322,7 +323,7 @@ static void SeedTextureCallback(EGxTexCommand command, uint32_t width, uint32_t 
     }
 }
 
-// OFFSET: 0x00B0C4C0
+// OFFSET: 0x00B0C4C0/0x1408D0580
 void EffectSwirlingFog::SetParameters(int32_t count, const int32_t* params) {
     float strength = params[1] * 0.0039215689f * 0.89999998f;
     float density = params[2] * 0.0099999998f;
@@ -333,7 +334,7 @@ void EffectSwirlingFog::SetParameters(int32_t count, const int32_t* params) {
     combine->m_fadeTime = 3.0f;
 }
 
-// OFFSET: 0x00B0C520
+// OFFSET: 0x00B0C520/0x1408D05F0
 void EffectUnconscious::Begin() {
     this->m_fadingOut = false;
     PassGlowFade* pass = static_cast<PassGlowFade*>(this->m_passes[2]);
@@ -343,7 +344,7 @@ void EffectUnconscious::Begin() {
     pass->m_fadingOut = false;
 }
 
-// OFFSET: 0x00B0C550
+// OFFSET: 0x00B0C550/0x1408D0630
 void EffectUnconscious::SetParameters(int32_t count, const int32_t* params) {
     float time = static_cast<float>(params[1]);
     float fadeOutTime = static_cast<float>(params[2]);
@@ -355,7 +356,7 @@ void EffectUnconscious::SetParameters(int32_t count, const int32_t* params) {
     pass->m_fadeOutTime = fadeOutTime;
 }
 
-// OFFSET: 0x00B0C590
+// OFFSET: 0x00B0C590/0x1408D0680
 float EffectUnconscious::GetFadeAmount() {
     if (!this->m_reportFade) {
         return 1.0f;
@@ -364,13 +365,13 @@ float EffectUnconscious::GetFadeAmount() {
     return static_cast<PassGlowFade*>(this->m_passes[2])->GetFadeAmount();
 }
 
-// PROVEN: 63c90148 IDENTICAL/NONE
+// PROVEN: 63c90148 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C5B0/0x1408D06A0
 void EffectUnconscious::SetGlowBlur(uint8_t glow, uint8_t blur) {
     static_cast<PassGlowFade*>(this->m_passes[2])->m_color = CImVector(blur, blur, blur, glow);
 }
 
-// OFFSET: 0x00B0C5E0
+// OFFSET: 0x00B0C5E0/0x1408D06D0
 bool EffectUnconscious::FadedOut() {
     if (!this->m_fadingOut) {
         static_cast<PassGlowFade*>(this->m_passes[2])->BeginFadeOut();
@@ -381,7 +382,7 @@ bool EffectUnconscious::FadedOut() {
     return pass->m_fadingOut && pass->m_fadeTime > pass->m_fadeOutTime;
 }
 
-// OFFSET: 0x00B0C6C0
+// OFFSET: 0x00B0C6C0/0x1408D0730
 PassPropagateFog::~PassPropagateFog() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -389,7 +390,7 @@ PassPropagateFog::~PassPropagateFog() {
     }
 }
 
-// OFFSET: 0x00B0C710
+// OFFSET: 0x00B0C710/0x1408D07E0
 void PassPropagateFog::Execute() {
     s_propagateFogElapsed += FrameTime::s_tickTimeMs;
 
@@ -539,7 +540,7 @@ bool PassDeath::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: 0x00B0D260
+// OFFSET: 0x00B0D260/0x1408D1670
 void PassDeath::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -588,7 +589,7 @@ PassDeathNVRC::PassDeathNVRC(FFX::Tex** inputs, uint32_t count, FFX::Tex* output
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXDeath_nvrc");
 }
 
-// OFFSET: 0x00B0D510
+// OFFSET: 0x00B0D510/0x1408D19E0
 PassDeathNVRC::~PassDeathNVRC() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -596,12 +597,12 @@ PassDeathNVRC::~PassDeathNVRC() {
     }
 }
 
-// OFFSET: 0x00B0D560
+// OFFSET: 0x00B0D560/0x1408D1A50
 bool PassDeathNVRC::Valid() {
     return this->m_shader && this->m_shader->m_permutes[0].Valid();
 }
 
-// OFFSET: 0x00B0D580
+// OFFSET: 0x00B0D580/0x1408D1A80
 void PassDeathNVRC::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -631,7 +632,7 @@ void PassDeathNVRC::Execute() {
     FFX::SetupReset();
 }
 
-// PROVEN: b3eebdea IDENTICAL/NONE
+// PROVEN: b3eebdea IDENTICAL/DIFFERENT
 // OFFSET: 0x00B0D7C0/0x1408D1D70
 bool PassNetherBlur::Valid() {
     return this->m_vertexShader && this->m_vertexShader->m_permutes[0].Valid() && this->m_pixelShader && this->m_pixelShader->m_permutes[this->m_permute].Valid();
@@ -769,7 +770,7 @@ void PassNetherBlur::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: 0x00B0E1C0
+// OFFSET: 0x00B0E1C0/0x1408D2B10
 PassNetherCombine::~PassNetherCombine() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -782,7 +783,7 @@ bool PassNetherCombine::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: 0x00B0E210
+// OFFSET: 0x00B0E210/0x1408D2B80
 void PassNetherCombine::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -856,7 +857,7 @@ EffectDeath::~EffectDeath() {
     }
 }
 
-// OFFSET: 0x00B0E9A0
+// OFFSET: 0x00B0E9A0/0x1408D36B0
 EffectNetherWorld::EffectNetherWorld() {
     this->m_cvar = CVar::Register("ffxNetherWorld", "full screen nether world effect (for invisibility)", 1, "1", FFX::CVarCallback, 1, false, NULL, false);
 
@@ -880,7 +881,7 @@ EffectNetherWorld::~EffectNetherWorld() {
     }
 }
 
-// OFFSET: 0x00B0EB00
+// OFFSET: 0x00B0EB00/0x1408D3910
 EffectSwirlingFog::EffectSwirlingFog() {
     this->m_fogTex.m_texture = NULL;
     this->m_fogTex.m_frameBuffer = NULL;
@@ -934,7 +935,7 @@ EffectSwirlingFog::EffectSwirlingFog() {
     this->m_passes.New(pass);
 }
 
-// OFFSET: [0x00B0ED60, 0x00B0F110]
+// OFFSET: [0x00B0ED60/0x1408D3E10, 0x00B0F110/0x1408D4400]
 EffectSwirlingFog::~EffectSwirlingFog() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {
@@ -977,7 +978,7 @@ EffectSwirlingFog::~EffectSwirlingFog() {
     this->m_seedTex.m_texelSize.y = 0.0f;
 }
 
-// OFFSET: 0x00B0EE80
+// OFFSET: 0x00B0EE80/0x1408D3F80
 EffectUnconscious::EffectUnconscious() {
     this->m_fadingOut = false;
 
@@ -995,7 +996,7 @@ EffectUnconscious::EffectUnconscious() {
     this->m_passes.New(pass);
 }
 
-// OFFSET: [0x00B0EF90, 0x00B0F140]
+// OFFSET: [0x00B0EF90/0x1408D40E0, 0x00B0F140/0x1408D4450]
 EffectUnconscious::~EffectUnconscious() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {
@@ -1004,7 +1005,7 @@ EffectUnconscious::~EffectUnconscious() {
     }
 }
 
-// PROVEN: cbda88b5 IDENTICAL/NONE
+// PROVEN: cbda88b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0B750/0x1408CF670
 void PassColorShift::SetParameters(int32_t count, const float* params) {
     if (count != 9) {
@@ -1036,7 +1037,7 @@ PassColorShift::PassColorShift(FFX::Tex** inputs, uint32_t count, FFX::Tex* outp
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXColorShift");
 }
 
-// PROVEN: 00a46f95 IDENTICAL/NONE
+// PROVEN: 00a46f95 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B0C610/0x1408D0710
 void EffectColorShift::SetParameters(int32_t count, const int32_t* params) {
     if (count == 9) {
@@ -1095,7 +1096,7 @@ EffectColorShift::EffectColorShift() {
     this->m_passes.New(pass);
 }
 
-// OFFSET: [0x00B0F060, 0x00B0F170]
+// OFFSET: [0x00B0F060/0x1408D42C0, 0x00B0F170/0x1408D44A0]
 EffectColorShift::~EffectColorShift() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {

@@ -3,7 +3,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: 0x00DD58E4
+// STATIC: 0x00DD58E4/0x140CBBFF0
 TSGrowableArray<CAnimReplacementSetDef*> CAnimReplacementSetDef::s_defs;
 
 // OFFSET: 0x0058B960/0x1401F4FC0
@@ -115,7 +115,7 @@ void CAnimReplacementSetDef::InitSystem() {
     }
 }
 
-// OFFSET: 0x0058BD10
+// OFFSET: 0x0058BD10/0x1401F5480
 void CAnimReplacementSetDef::UninitSystem() {
     for (uint32_t i = 0; i < CAnimReplacementSetDef::s_defs.Count(); i++) {
         CAnimReplacementSetDef* def = CAnimReplacementSetDef::s_defs.m_data[i];

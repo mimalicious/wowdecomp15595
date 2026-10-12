@@ -62,7 +62,7 @@ Blizzard::File::Filesystem System_File::Stacked::s_streamstack = {
 // STATIC: 0x00EBA22C
 System_File::Stacked::LockAndMap* System_File::Stacked::LockAndMap::s_instance;
 
-// STATIC: 0x00EBA230
+// STATIC: 0x00EBA230/0x140DAACD0
 bool System_File::Stacked::g_callerGuaranteesStreamingWriteHasProperData;
 
 // STATIC: 0x00EBA504
@@ -70,10 +70,6 @@ static std::map<std::string, std::string>* s_inodes;
 
 // STATIC: 0x00EBA6AC
 System_File::UsingInode System_File::s_usingInode;
-
-// INLINED
-FileStack_Streaming::FileStack_Streaming(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) : m_fs(fs), m_parms(parms), m_key(System_File::GetInode(std::string(parms->m_path))), m_unit(NULL) {
-}
 
 // OFFSET: 0x007ABA10/0x1404A1AA0
 bool System_File::Stacked::stream_read(Blizzard::File::Filesystem* fs, FileParms* parms) {
@@ -235,7 +231,7 @@ bool System_File::Stacked::stream_close(Blizzard::File::Filesystem* fs, FileParm
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: 0x007E14B0
+// OFFSET: 0x007E14B0/0x1404E7790
 Blizzard::File::StreamRecord* FileStack_Streaming::InitRecord(Blizzard::File::StreamRecord* record, int64_t size) {
     Blizzard::String::MemCopy(&record->m_streaming->m_info, &record->m_info, sizeof(Blizzard::File::FileInfo));
     record->m_info.m_path = record->m_pathname;
@@ -311,7 +307,7 @@ void System_File::Stacked::LockAndMap::Release() {
     s_instance = NULL;
 }
 
-// OFFSET: 0x007B4190
+// OFFSET: 0x007B4190/0x1404A9C40
 bool System_File::ExistsUnstreamed(const char* path) {
     Blizzard::File::Filesystem* fs = System_File::Stacked::s_manager;
 

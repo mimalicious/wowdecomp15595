@@ -2,62 +2,66 @@
 #include <cstring>
 #include "Engine/Source/Base/CDataStore.h"
 
-// PROVEN: 5c33784b IDENTICAL/NONE
+// PROVEN: 5c33784b IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BC00/0x140312430
 JamUserClientReorderEntry::JamUserClientReorderEntry() {
 }
 
-// OFFSET: 0x0066BC70
+// OFFSET: 0x0066BC70/0x1403124C0
 JamUserClientReorderEntry::JamUserClientReorderEntry(const JamUserClientReorderEntry& source) {
     memcpy(this->m_guid, source.m_guid, sizeof(this->m_guid));
     this->m_newIndex = source.m_newIndex;
 }
 
+// PROVEN: 19f6cc20 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BC90/0x1403124F0
 UserClientAcceptWargameInvite::~UserClientAcceptWargameInvite() {
 }
 
-// PROVEN: b446fdc0 IDENTICAL/NONE
+// PROVEN: b446fdc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D370/0x1403143C0
 UserClientEnumCharacters::UserClientEnumCharacters() {
 }
 
-// PROVEN: 814cdb6d IDENTICAL/NONE
+// PROVEN: 814cdb6d IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B9D0/0x1403121C0
 UserClientEnumCharacters::~UserClientEnumCharacters() {
 }
 
-// PROVEN: 336aa2a7 IDENTICAL/NONE
-// OFFSET: 0x0066BB20
+// PROVEN: 336aa2a7 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BB20/0x1403122F0
 void UserClientEnumCharacters::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x502));
 }
 
+// PROVEN: d0eb1704 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D3A0/0x140314420
 UserClientSupportTicketSubmitComplaint::UserClientSupportTicketSubmitComplaint() {
 }
 
-// PROVEN: 71643081 IDENTICAL/NONE
+// PROVEN: 71643081 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D6F0/0x1403147E0
 UserClientPlayerLogin::UserClientPlayerLogin(uint64_t guid) {
     memcpy(this->m_guid, &guid, sizeof(this->m_guid));
 }
 
-// PROVEN: eabc7c9b IDENTICAL/NONE
+// PROVEN: eabc7c9b IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BC20/0x140312460
 UserClientPlayerLogin::~UserClientPlayerLogin() {
 }
 
+// PROVEN: c1fe6f87 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DE90/0x140315090
 UserClientAcceptWargameInvite::UserClientAcceptWargameInvite() {
 }
 
-// OFFSET: 0x0066DEA0
+// PROVEN: a5e42288 IDENTICAL/UNPROVEN
+// OFFSET: 0x0066DEA0/0x1403150B0
 UserClientSupportTicketSubmitComplaint::~UserClientSupportTicketSubmitComplaint() {
 }
 
-// PROVEN: 54ede3e3 IDENTICAL/NONE
-// OFFSET: 0x0066DEF0
+// PROVEN: 54ede3e3 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066DEF0/0x140315120
 void UserClientPlayerLogin::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x5B1));
 
@@ -105,7 +109,8 @@ void UserClientPlayerLogin::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0066E280
+// PROVEN: 0352a6a6 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E280/0x1403154B0
 void UserClientAcceptWargameInvite::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2410));
 
@@ -179,6 +184,7 @@ void UserClientAcceptWargameInvite::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: ee96cce6 DIFFERENT/IDENTICAL
 // OFFSET: 0x0066FFA0/0x1403170D0
 void UserClientSupportTicketSubmitComplaint::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2501));
@@ -228,21 +234,23 @@ void UserClientSupportTicketSubmitComplaint::Put(CDataStore* msg) {
     this->m_chatLog.Put(msg);
 }
 
+// PROVEN: b4a7ea90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670260/0x1403173C0
 UserClientSendMail::UserClientSendMail() {
 }
 
-// PROVEN: bb06eec1 IDENTICAL/NONE
-// OFFSET: 0x00670290
+// PROVEN: bb06eec1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670290/0x1403173F0
 UserClientReorderCharacters::UserClientReorderCharacters() {
 }
 
+// PROVEN: 99a1c77f IDENTICAL/IDENTICAL
 // OFFSET: 0x00670310/0x140317480
 UserClientSendMail::~UserClientSendMail() {
 }
 
-// PROVEN: 2291a9d0 IDENTICAL/NONE
-// OFFSET: 0x00670360
+// PROVEN: 2291a9d0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670360/0x1403174F0
 UserClientReorderCharacters::~UserClientReorderCharacters() {
 }
 
@@ -417,37 +425,37 @@ void UserClientReorderCharacters::Put(CDataStore* msg) {
     }
 }
 
-// PROVEN: 31fdb30f IDENTICAL/NONE
+// PROVEN: 31fdb30f IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DE40/0x140315030
 UserClientGenerateRandomCharacterName::UserClientGenerateRandomCharacterName(uint8_t raceID, uint8_t sexID) {
     this->m_raceID = raceID;
     this->m_sexID = sexID;
 }
 
-// PROVEN: b94f0e1c IDENTICAL/NONE
+// PROVEN: b94f0e1c IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B960/0x140312160
 UserClientGenerateRandomCharacterName::~UserClientGenerateRandomCharacterName() {
 }
 
-// PROVEN: 960528f1 IDENTICAL/NONE
-// OFFSET: 0x0066D8E0
+// PROVEN: 960528f1 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D8E0/0x140314A40
 void UserClientGenerateRandomCharacterName::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2413));
     msg->Put(this->m_raceID);
     msg->Put(this->m_sexID);
 }
 
-// PROVEN: 6fb75a99 IDENTICAL/NONE
+// PROVEN: 6fb75a99 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BC00/0x140312430
 DBQuery::DBQuery() {
 }
 
-// PROVEN: 179ddb96 IDENTICAL/NONE
-// OFFSET: 0x00670340
+// PROVEN: 179ddb96 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670340/0x1403174D0
 UserClientDBQueryBulk::UserClientDBQueryBulk() {
 }
 
-// PROVEN: 4d39b4f5 IDENTICAL/NONE
+// PROVEN: 4d39b4f5 IDENTICAL/IDENTICAL
 // OFFSET: 0x006702E0/0x140317440
 UserClientDBQueryBulk::~UserClientDBQueryBulk() {
 }
@@ -513,44 +521,54 @@ void UserClientDBQueryBulk::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0066E720
+// PROVEN: 50675da1 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E720/0x1403124D0
 UserClientWorldPortResponse::UserClientWorldPortResponse() {
 }
 
-// OFFSET: 0x0066BC60
+// PROVEN: aad719c1 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BC60/0x1403124B0
 UserClientWorldPortResponse::~UserClientWorldPortResponse() {
 }
 
-// OFFSET: 0x0066B9A0
+// PROVEN: 00f24158 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066B9A0/0x1403121A0
 void UserClientWorldPortResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2411));
 }
 
-// OFFSET: 0x00670B30
+// PROVEN: 530d4dfd IDENTICAL/UNPROVEN
+// OFFSET: 0x00670B30/0x140318CB0
 UserClientBattlefieldPort::~UserClientBattlefieldPort() {
 }
 
+// PROVEN: 52134c6e IDENTICAL/IDENTICAL
 // OFFSET: 0x00673680/0x140317DF0
 UserClientUnlearnSpecialization::UserClientUnlearnSpecialization() {
 }
 
+// PROVEN: a5efc1dd IDENTICAL/IDENTICAL
 // OFFSET: 0x006703E0/0x140317C30
 UserClientUnlearnSpecialization::~UserClientUnlearnSpecialization() {
 }
 
+// PROVEN: 75ae108a IDENTICAL/IDENTICAL
 // OFFSET: 0x006708E0/0x140318700
 UserClientVoidStorageQuery::UserClientVoidStorageQuery() {
 }
 
+// PROVEN: f5297dcb IDENTICAL/IDENTICAL
 // OFFSET: 0x006708B0/0x1403185A0
 UserClientVoidStorageQuery::~UserClientVoidStorageQuery() {
 }
 
+// PROVEN: 4e3901b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00673DA0/0x14031C360
 UserClientBattlefieldPort::UserClientBattlefieldPort() {
 }
 
-// OFFSET: 0x00674250
+// PROVEN: 56954fca IDENTICAL/IDENTICAL
+// OFFSET: 0x00674250/0x14031C7F0
 void UserClientVoidStorageQuery::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x790A));
 
@@ -598,15 +616,18 @@ void UserClientVoidStorageQuery::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 5879bcd8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670560/0x140317E90
 UserClientVoidStorageUnlock::UserClientVoidStorageUnlock() {
 }
 
+// PROVEN: 52ea4d2c IDENTICAL/IDENTICAL
 // OFFSET: 0x00670810/0x140318330
 UserClientVoidStorageUnlock::~UserClientVoidStorageUnlock() {
 }
 
-// OFFSET: 0x006738B0
+// PROVEN: 3797485a IDENTICAL/IDENTICAL
+// OFFSET: 0x006738B0/0x14031BD70
 void UserClientVoidStorageUnlock::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7B14));
 
@@ -654,15 +675,18 @@ void UserClientVoidStorageUnlock::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: ed38819b IDENTICAL/IDENTICAL
 // OFFSET: 0x00673110/0x140317BD0
 UserClientVoidSwapItem::UserClientVoidSwapItem() {
 }
 
+// PROVEN: e9f8a2b3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670500/0x140317DE0
 UserClientVoidSwapItem::~UserClientVoidSwapItem() {
 }
 
-// OFFSET: 0x00675000
+// PROVEN: 948b6886 IDENTICAL/IDENTICAL
+// OFFSET: 0x00675000/0x14031D1F0
 void UserClientVoidSwapItem::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3204));
     msg->Put(this->m_slot);
@@ -751,7 +775,8 @@ void UserClientVoidSwapItem::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x00675250
+// PROVEN: b00a8cc0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00675250/0x14031D430
 void UserClientBattlefieldPort::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x711A));
     msg->Put(this->m_ticket.m_time);
@@ -796,15 +821,17 @@ void UserClientBattlefieldPort::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 3a6660ba IDENTICAL/IDENTICAL
 // OFFSET: 0x006880F0/0x140332F20
 UserClientVoidStorageTransfer::UserClientVoidStorageTransfer() {
 }
 
+// PROVEN: 92c008d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00688060/0x14032F260
 UserClientVoidStorageTransfer::~UserClientVoidStorageTransfer() {
 }
 
-// OFFSET: 0x006837D0
+// OFFSET: 0x006837D0/0x14032D960
 void UserClientVoidStorageTransfer::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x380E));
 
@@ -952,19 +979,23 @@ void UserClientVoidStorageTransfer::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 2b22cc3a IDENTICAL/IDENTICAL
 // OFFSET: [0x0066BC00/0x140312430]
 JamTransmogrifyItem::JamTransmogrifyItem() {
 }
 
-// OFFSET: 0x006880D0
+// PROVEN: eaf7cb7d IDENTICAL/IDENTICAL
+// OFFSET: 0x006880D0/0x140332F00
 UserClientSaveCufProfiles::UserClientSaveCufProfiles() {
 }
 
+// PROVEN: 36584f93 UNPROVEN/IDENTICAL
 // OFFSET: 0x00688050/0x140332E80
 UserClientSaveCufProfiles::~UserClientSaveCufProfiles() {
 }
 
-// OFFSET: 0x006874D0
+// PROVEN: 8a989559 IDENTICAL/DIFFERENT
+// OFFSET: 0x006874D0/0x1403321A0
 void UserClientSaveCufProfiles::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x730E));
 
@@ -1017,14 +1048,17 @@ void UserClientSaveCufProfiles::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x00688120
+// PROVEN: db9cf72f IDENTICAL/IDENTICAL
+// OFFSET: 0x00688120/0x140332F50
 UserClientTransmogrifyItems::UserClientTransmogrifyItems() {
 }
 
+// PROVEN: 44ccf686 IDENTICAL/IDENTICAL
 // OFFSET: 0x00688140/0x140332EA0
 UserClientTransmogrifyItems::~UserClientTransmogrifyItems() {
 }
 
+// PROVEN: 83579887 IDENTICAL/DIFFERENT
 // OFFSET: 0x0067F1F0/0x140328810
 void UserClientTransmogrifyItems::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3B0E));
@@ -1124,16 +1158,19 @@ void UserClientTransmogrifyItems::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x006736F0
+// PROVEN: cd73fb46 IDENTICAL/DIFFERENT
+// OFFSET: 0x006736F0/0x140317E30
 UserClientReforgeItem::UserClientReforgeItem() {
     this->m_flags = 0;
 }
 
-// OFFSET: 0x006703D0
+// PROVEN: cf85dec5 IDENTICAL/IDENTICAL
+// OFFSET: 0x006703D0/0x140317C20
 UserClientReforgeItem::~UserClientReforgeItem() {
 }
 
-// OFFSET: 0x006753B0
+// PROVEN: 7b5a2b33 IDENTICAL/IDENTICAL
+// OFFSET: 0x006753B0/0x14031D590
 void UserClientReforgeItem::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x331A));
     msg->Put(static_cast<uint32_t>(this->m_reforgeId));
@@ -1184,87 +1221,106 @@ void UserClientReforgeItem::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x00673610
+// PROVEN: 7e94c459 IDENTICAL/IDENTICAL
+// OFFSET: 0x00673610/0x14031BA60
 void UserClientUnlearnSpecialization::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3210));
     msg->Put(this->m_index);
 }
 
+// PROVEN: fdc1d726 IDENTICAL/IDENTICAL
 // OFFSET: 0x006709E0/0x140318AB0
 UserClientReturnToGraveyard::UserClientReturnToGraveyard() {
 }
 
+// PROVEN: 8273acb8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670750/0x140318100
 UserClientReturnToGraveyard::~UserClientReturnToGraveyard() {
 }
 
-// OFFSET: 0x006704C0
+// PROVEN: 601323e0 IDENTICAL/IDENTICAL
+// OFFSET: 0x006704C0/0x140317DB0
 void UserClientReturnToGraveyard::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x301E));
 }
 
+// PROVEN: 7ff0b409 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670870/0x1403184D0
 UserClientQueryBattlefieldState::UserClientQueryBattlefieldState() {
 }
 
+// PROVEN: d50e9f8c IDENTICAL/IDENTICAL
 // OFFSET: 0x006705E0/0x140317F40
 UserClientQueryBattlefieldState::~UserClientQueryBattlefieldState() {
 }
 
-// OFFSET: 0x00670730
+// PROVEN: 3b7a6ef2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670730/0x1403180F0
 void UserClientQueryBattlefieldState::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7202));
 }
 
+// PROVEN: 4fef525e IDENTICAL/IDENTICAL
 // OFFSET: 0x00670610/0x140317F70
 UserClientRequestCemeteryList::UserClientRequestCemeteryList() {
 }
 
-// OFFSET: 0x00670720
+// PROVEN: 05e8d282 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670720/0x1403180E0
 UserClientRequestCemeteryList::~UserClientRequestCemeteryList() {
 }
 
-// OFFSET: 0x00670E10
+// PROVEN: e48ab815 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670E10/0x140319170
 void UserClientRequestCemeteryList::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x720A));
 }
 
+// PROVEN: e7a2bf84 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670860/0x1403184B0
 UserClientSetPreferredCemetery::UserClientSetPreferredCemetery() {
 }
 
+// PROVEN: 27e8fbc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670970/0x140318950
 UserClientSetPreferredCemetery::~UserClientSetPreferredCemetery() {
 }
 
-// OFFSET: 0x00670EC0
+// PROVEN: 64abb1cd IDENTICAL/IDENTICAL
+// OFFSET: 0x00670EC0/0x140319250
 void UserClientSetPreferredCemetery::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x311E));
     msg->Put(this->m_cemeteryID);
 }
 
+// PROVEN: e4838673 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670920/0x1403187B0
 UserClientCancelQueuedSpell::UserClientCancelQueuedSpell() {
 }
 
+// PROVEN: 1ff7fbe9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670B40/0x140318D10
 UserClientCancelQueuedSpell::~UserClientCancelQueuedSpell() {
 }
 
-// OFFSET: 0x00670400
+// PROVEN: 66e6126c IDENTICAL/IDENTICAL
+// OFFSET: 0x00670400/0x140317C70
 void UserClientCancelQueuedSpell::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7B1C));
 }
 
+// PROVEN: 858bd83a IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D140/0x140314140
 UserClientPartyInvite::UserClientPartyInvite() {
 }
 
+// PROVEN: 6b544d0b IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BBD0/0x140312410
 UserClientPartyInvite::~UserClientPartyInvite() {
 }
 
-// OFFSET: 0x0066F350
+// PROVEN: aed8600d DIFFERENT/IDENTICAL
+// OFFSET: 0x0066F350/0x140316350
 void UserClientPartyInvite::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x513));
     msg->Put(this->m_targetCfgRealmID);
@@ -1319,16 +1375,19 @@ void UserClientPartyInvite::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 55133be3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0066FA10/0x140316A30
 UserClientPartyInviteResponse::UserClientPartyInviteResponse() {
     this->m_hasRolesDesired = false;
 }
 
+// PROVEN: 4be0190c IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA20/0x140312210
 UserClientPartyInviteResponse::~UserClientPartyInviteResponse() {
 }
 
-// OFFSET: 0x0066E4D0
+// PROVEN: d27cea93 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E4D0/0x1403156E0
 void UserClientPartyInviteResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x410));
 
@@ -1342,15 +1401,18 @@ void UserClientPartyInviteResponse::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 2ed67bda IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D150/0x140314160
 UserClientSetEveryoneIsAssistant::UserClientSetEveryoneIsAssistant() {
 }
 
+// PROVEN: 75a1cf76 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BAB0/0x140312290
 UserClientSetEveryoneIsAssistant::~UserClientSetEveryoneIsAssistant() {
 }
 
-// OFFSET: 0x0066D760
+// PROVEN: e0b198bf IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D760/0x140314880
 void UserClientSetEveryoneIsAssistant::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2530));
 
@@ -1359,62 +1421,76 @@ void UserClientSetEveryoneIsAssistant::Put(CDataStore* msg) {
     bits.Flush();
 }
 
+// PROVEN: e00dc00f IDENTICAL/IDENTICAL
 // OFFSET: 0x00670980/0x1403189C0
 UserClientClearRaidMarker::UserClientClearRaidMarker() {
 }
 
+// PROVEN: 64ab5de2 IDENTICAL/IDENTICAL
 // OFFSET: 0x006704F0/0x140317DD0
 UserClientClearRaidMarker::~UserClientClearRaidMarker() {
 }
 
-// OFFSET: 0x00674D20
+// PROVEN: ba52aafe IDENTICAL/IDENTICAL
+// OFFSET: 0x00674D20/0x140318D80
 void UserClientClearRaidMarker::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7300));
     msg->Put(this->m_markerId);
 }
 
+// PROVEN: 992635ef IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D680/0x140314730
 UserClientRequestPartyJoinUpdates::UserClientRequestPartyJoinUpdates() {
 }
 
+// PROVEN: 958018ab IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BB10/0x1403122E0
 UserClientRequestPartyJoinUpdates::~UserClientRequestPartyJoinUpdates() {
 }
 
-// OFFSET: 0x0066BB50
+// PROVEN: 7dc8c0ce IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BB50/0x140312310
 void UserClientRequestPartyJoinUpdates::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2583));
 }
 
+// PROVEN: 9bcc8551 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CD50/0x140349280
 UserClientChatReportFiltered::~UserClientChatReportFiltered() {
 }
 
+// PROVEN: 0decef68 IDENTICAL/NONE
 // OFFSET: 0x0069CDF0
 UserClientChatUnregisterAllAddonPrefixes::~UserClientChatUnregisterAllAddonPrefixes() {
 }
 
+// PROVEN: 93ad1b2a IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CE30/0x140349360
 void UserClientChatUnregisterAllAddonPrefixes::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3D54));
 }
 
+// PROVEN: e6a88531 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CEB0/0x1403493D0
 UserClientChatReportIgnored::~UserClientChatReportIgnored() {
 }
 
+// PROVEN: 67063f2d IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CF00/0x140349420
 UserClientChatLeaveChannel::~UserClientChatLeaveChannel() {
 }
 
+// PROVEN: d9f036a6 IDENTICAL/NONE
 // OFFSET: 0x0069DC10
 UserClientChatReportFiltered::UserClientChatReportFiltered() {
 }
 
+// PROVEN: 80b6c61a IDENTICAL/IDENTICAL
 // OFFSET: 0x0069DC20/0x14034A2F0
 UserClientChatReportIgnored::UserClientChatReportIgnored() {
 }
 
+// PROVEN: f7ced01a IDENTICAL/IDENTICAL
 // OFFSET: 0x0069DF40/0x14034A780
 void UserClientChatReportIgnored::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0xD54));
@@ -1457,12 +1533,14 @@ void UserClientChatReportIgnored::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0069E460
+// PROVEN: 95685919 IDENTICAL/DIFFERENT
+// OFFSET: 0x0069E460/0x14034AD80
 UserClientChatLeaveChannel::UserClientChatLeaveChannel(uint32_t channelID, const char* channelName) {
     SStrCopy(this->m_channelName, channelName, sizeof(this->m_channelName));
     this->m_channelID = channelID;
 }
 
+// PROVEN: 00dfd47c DIFFERENT/IDENTICAL
 // OFFSET: 0x0069E850/0x14034B260
 void UserClientChatLeaveChannel::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2D56));
@@ -1475,10 +1553,12 @@ void UserClientChatLeaveChannel::Put(CDataStore* msg) {
     msg->PutData(this->m_channelName, strlen(this->m_channelName));
 }
 
-// OFFSET: 0x0069EA70
+// PROVEN: f76feb82 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069EA70/0x14034B4C0
 UserClientChatUnregisterAllAddonPrefixes::UserClientChatUnregisterAllAddonPrefixes() {
 }
 
+// PROVEN: 27010467 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069EB40/0x14034B5C0
 void UserClientChatReportFiltered::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x946));
@@ -1520,6 +1600,7 @@ void UserClientChatReportFiltered::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 0a0edf49 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069FD40/0x14034CEB0
 void UserClientChatRegisterAddonPrefixes::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x954));
@@ -1538,6 +1619,7 @@ void UserClientChatRegisterAddonPrefixes::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 7bfaab67 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069FF50/0x14034D1E0
 UserClientChatRegisterAddonPrefixes::UserClientChatRegisterAddonPrefixes() {
 }
@@ -1546,10 +1628,12 @@ UserClientChatRegisterAddonPrefixes::UserClientChatRegisterAddonPrefixes() {
 UserClientChatRegisterAddonPrefixes::~UserClientChatRegisterAddonPrefixes() {
 }
 
+// PROVEN: 0aaadb9d IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3BD90/0x140908C40
 UserLFGuildAddRecruit::UserLFGuildAddRecruit() {
 }
 
+// PROVEN: 6d03fb71 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3BCF0/0x140908B70
 UserLFGuildAddRecruit::~UserLFGuildAddRecruit() {
 }
@@ -1612,28 +1696,34 @@ void UserLFGuildAddRecruit::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 0f9736e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00673430/0x140317CE0
 PlayerRequestResearchHistory::PlayerRequestResearchHistory() {
 }
 
+// PROVEN: 2f8b7075 IDENTICAL/IDENTICAL
 // OFFSET: 0x006709D0/0x140318AA0
 PlayerRequestResearchHistory::~PlayerRequestResearchHistory() {
 }
 
-// OFFSET: 0x006704A0
+// PROVEN: e995a628 IDENTICAL/IDENTICAL
+// OFFSET: 0x006704A0/0x140317DA0
 void PlayerRequestResearchHistory::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3306));
 }
 
+// PROVEN: abb29c56 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E710/0x140312490
 UserClientSetRole::UserClientSetRole() {
 }
 
+// PROVEN: e1d0fe82 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA40/0x140312230
 UserClientSetRole::~UserClientSetRole() {
 }
 
-// OFFSET: 0x0066E730
+// PROVEN: d6d1ddb0 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E730/0x140315950
 void UserClientSetRole::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x25B1));
     msg->Put(this->m_role);
@@ -1682,82 +1772,100 @@ void UserClientSetRole::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 5ac1a3a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DB00/0x140314C90
 UserClientInitiateRolePoll::UserClientInitiateRolePoll() {
 }
 
+// PROVEN: 6a2fb1ee IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BAF0/0x1403122C0
 UserClientInitiateRolePoll::~UserClientInitiateRolePoll() {
 }
 
-// OFFSET: 0x0066BC40
+// PROVEN: ca73df99 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BC40/0x140312480
 void UserClientInitiateRolePoll::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x430));
 }
 
+// PROVEN: 433d3d79 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D720/0x140314800
 UserClientRequestBattlefieldStatus::UserClientRequestBattlefieldStatus() {
 }
 
+// PROVEN: 6db4a8ac IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA30/0x140312220
 UserClientRequestBattlefieldStatus::~UserClientRequestBattlefieldStatus() {
 }
 
-// OFFSET: 0x0066BAC0
+// PROVEN: fe98b275 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BAC0/0x1403122A0
 void UserClientRequestBattlefieldStatus::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2500));
 }
 
+// PROVEN: 374ba9a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DEE0/0x140312320
 UserClientGuildAccept::UserClientGuildAccept() {
 }
 
+// PROVEN: 00fbe20d IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA70/0x140312260
 UserClientGuildAccept::~UserClientGuildAccept() {
 }
 
-// OFFSET: 0x0066BB80
+// PROVEN: 87711aca IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BB80/0x140312370
 void UserClientGuildAccept::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2531));
 }
 
+// PROVEN: 2c64e6c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E560/0x1403123E0
 UserClientLfgSetRoles::UserClientLfgSetRoles() {
 }
 
+// PROVEN: 80536d6d IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B9E0/0x1403121D0
 UserClientLfgSetRoles::~UserClientLfgSetRoles() {
 }
 
-// OFFSET: 0x0066D0E0
+// PROVEN: 808177b6 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D0E0/0x1403140C0
 void UserClientLfgSetRoles::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x480));
     msg->Put(this->unk_0010);
 }
 
-// OFFSET: 0x0066D920
+// PROVEN: a251daf8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D920/0x140314A80
 UserClientLfgLfrJoin::UserClientLfgLfrJoin() {
 }
 
-// OFFSET: 0x0066B950
+// PROVEN: 371c3cb5 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066B950/0x140312150
 UserClientLfgLfrJoin::~UserClientLfgLfrJoin() {
 }
 
-// OFFSET: 0x0066D110
+// PROVEN: 4c4ff2a8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D110/0x140314100
 void UserClientLfgLfrJoin::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x531));
     msg->Put(this->unk_0010);
 }
 
+// PROVEN: 524d53ca IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D3D0/0x140314460
 UserClientArenaTeamCreate::UserClientArenaTeamCreate() {
 }
 
-// OFFSET: 0x0066B930
+// PROVEN: 4660246d IDENTICAL/IDENTICAL
+// OFFSET: 0x0066B930/0x140312130
 UserClientArenaTeamCreate::~UserClientArenaTeamCreate() {
 }
 
-// OFFSET: 0x0066D820
+// PROVEN: f2af0352 DIFFERENT/IDENTICAL
+// OFFSET: 0x0066D820/0x140314970
 void UserClientArenaTeamCreate::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x4A1));
     msg->Put(this->unk_0010);
@@ -1774,29 +1882,35 @@ void UserClientArenaTeamCreate::Put(CDataStore* msg) {
     msg->PutData(this->unk_0024, strlen(this->unk_0024));
 }
 
+// PROVEN: 8ac3a651 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D750/0x140314860
 UserClientLfgLfrLeave::UserClientLfgLfrLeave() {
 }
 
+// PROVEN: df23c250 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BC10/0x140312440
 UserClientLfgLfrLeave::~UserClientLfgLfrLeave() {
 }
 
-// OFFSET: 0x0066DB10
+// PROVEN: 33351a10 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066DB10/0x140314CB0
 void UserClientLfgLfrLeave::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x500));
     msg->Put(this->unk_0010);
 }
 
+// PROVEN: 192c145a IDENTICAL/IDENTICAL
 // OFFSET: 0x0066CF50/0x140313F20
 UserClientGuildInvite::UserClientGuildInvite() {
 }
 
+// PROVEN: 0f03d724 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B9F0/0x1403121E0
 UserClientGuildInvite::~UserClientGuildInvite() {
 }
 
-// OFFSET: 0x0066E050
+// PROVEN: f0620a4d DIFFERENT/IDENTICAL
+// OFFSET: 0x0066E050/0x140315280
 void UserClientGuildInvite::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x24B0));
 
@@ -1807,15 +1921,18 @@ void UserClientGuildInvite::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 794eb296 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DE70/0x140315050
 UserClientLfgSetComment::UserClientLfgSetComment() {
 }
 
+// PROVEN: 3e1fc5b6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BB70/0x140312360
 UserClientLfgSetComment::~UserClientLfgSetComment() {
 }
 
-// OFFSET: 0x0066F2E0
+// PROVEN: f263d9aa DIFFERENT/IDENTICAL
+// OFFSET: 0x0066F2E0/0x1403162C0
 void UserClientLfgSetComment::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x530));
 
@@ -1826,58 +1943,70 @@ void UserClientLfgSetComment::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 76836b24 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670890/0x140318540
 UserClientBattlefieldLeave::UserClientBattlefieldLeave() {
 }
 
+// PROVEN: ffa6385d IDENTICAL/IDENTICAL
 // OFFSET: 0x00670550/0x140317E80
 UserClientBattlefieldLeave::~UserClientBattlefieldLeave() {
 }
 
-// OFFSET: 0x006705C0
+// PROVEN: a40d5ed1 IDENTICAL/IDENTICAL
+// OFFSET: 0x006705C0/0x140317F30
 void UserClientBattlefieldLeave::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3018));
 }
 
+// PROVEN: b3b1f9cd IDENTICAL/IDENTICAL
 // OFFSET: 0x00670D00/0x140318FF0
 UserClientBattlemasterJoinArena::UserClientBattlemasterJoinArena(uint8_t a1) {
     this->unk_0010 = a1;
 }
 
+// PROVEN: cf05f996 IDENTICAL/IDENTICAL
 // OFFSET: 0x006708C0/0x140318620
 UserClientBattlemasterJoinArena::~UserClientBattlemasterJoinArena() {
 }
 
-// OFFSET: 0x00670A20
+// PROVEN: a668f016 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670A20/0x140318B40
 void UserClientBattlemasterJoinArena::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x701C));
     msg->Put(this->unk_0010);
 }
 
-// OFFSET: 0x00673470
+// PROVEN: fc234e64 IDENTICAL/IDENTICAL
+// OFFSET: 0x00673470/0x14031B8D0
 UserClientBattlefieldList::UserClientBattlefieldList(uint32_t a1) {
     this->unk_0010 = a1;
 }
 
-// OFFSET: 0x00670D20
+// PROVEN: 1e638321 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670D20/0x140319010
 UserClientBattlefieldList::~UserClientBattlefieldList() {
 }
 
-// OFFSET: 0x00670E30
+// PROVEN: 0b566458 IDENTICAL/DIFFERENT
+// OFFSET: 0x00670E30/0x140318E70
 void UserClientBattlefieldList::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3814));
     msg->Put(this->unk_0010);
 }
 
+// PROVEN: 3ac50a07 IDENTICAL/IDENTICAL
 // OFFSET: 0x00673690/0x140317E10
 UserClientBattlemasterJoin::UserClientBattlemasterJoin() {
 }
 
+// PROVEN: 80189aff IDENTICAL/IDENTICAL
 // OFFSET: 0x00670430/0x140317CB0
 UserClientBattlemasterJoin::~UserClientBattlemasterJoin() {
 }
 
-// OFFSET: 0x006734A0
+// PROVEN: 30f9faa3 IDENTICAL/IDENTICAL
+// OFFSET: 0x006734A0/0x14031B8F0
 void UserClientBattlemasterJoin::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7902));
     msg->Put(this->unk_0010);
@@ -1920,41 +2049,50 @@ void UserClientBattlemasterJoin::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: a3ce9c8c IDENTICAL/IDENTICAL
 // OFFSET: 0x0069C160/0x140348660
 UserClientGuildDisband::UserClientGuildDisband() {
 }
 
+// PROVEN: 10b161c6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A420/0x140346970
 UserClientGuildDisband::~UserClientGuildDisband() {
 }
 
+// PROVEN: 8fb7eabb IDENTICAL/IDENTICAL
 // OFFSET: 0x00699FE0/0x140346560
 void UserClientGuildDisband::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3226));
 }
 
+// PROVEN: 8b4bf50e IDENTICAL/IDENTICAL
 // OFFSET: 0x0069C200/0x140348750
 UserClientGuildLeave::UserClientGuildLeave() {
 }
 
+// PROVEN: f45c46d3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A1C0/0x140346740
 UserClientGuildLeave::~UserClientGuildLeave() {
 }
 
+// PROVEN: 3a6e1796 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A3B0/0x140346910
 void UserClientGuildLeave::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1021));
 }
 
+// PROVEN: 42e977d8 IDENTICAL/DIFFERENT
 // OFFSET: 0x0069C330/0x1403488A0
 UserClientGuildLeader::UserClientGuildLeader(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: 41ea0fe0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A200/0x140346770
 UserClientGuildLeader::~UserClientGuildLeader() {
 }
 
+// PROVEN: 0b432941 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069A880/0x140346E20
 void UserClientGuildLeader::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3034));
@@ -1966,15 +2104,18 @@ void UserClientGuildLeader::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 51293f87 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069C210/0x140348770
 UserClientGuildRemove::UserClientGuildRemove(uint64_t a1) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = a1;
 }
 
+// PROVEN: 8cf0d344 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A180/0x140346700
 UserClientGuildRemove::~UserClientGuildRemove() {
 }
 
+// PROVEN: 1b2d6571 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069AF20/0x140347440
 void UserClientGuildRemove::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1231));
@@ -2016,15 +2157,18 @@ void UserClientGuildRemove::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 2546018f IDENTICAL/IDENTICAL
 // OFFSET: 0x0069AB80/0x140347120
 UserClientGuildPromote::UserClientGuildPromote(uint64_t a1) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = a1;
 }
 
+// PROVEN: e12306b3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A110/0x140346680
 UserClientGuildPromote::~UserClientGuildPromote() {
 }
 
+// PROVEN: 592a9423 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069B070/0x1403475A0
 void UserClientGuildPromote::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1030));
@@ -2066,15 +2210,18 @@ void UserClientGuildPromote::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: d3547356 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069B730/0x140347C60
 UserClientGuildDemote::UserClientGuildDemote(uint64_t a1) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = a1;
 }
 
+// PROVEN: bcd56e15 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A2A0/0x140346810
 UserClientGuildDemote::~UserClientGuildDemote() {
 }
 
+// PROVEN: aaccd560 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069B200/0x140347730
 void UserClientGuildDemote::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1020));
@@ -2116,15 +2263,18 @@ void UserClientGuildDemote::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 7125a598 IDENTICAL/DIFFERENT
 // OFFSET: 0x0069B8E0/0x140347DE0
 UserClientGuildMotd::UserClientGuildMotd(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: 0b915017 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A390/0x1403468F0
 UserClientGuildMotd::~UserClientGuildMotd() {
 }
 
+// PROVEN: 7c4dc4ff DIFFERENT/IDENTICAL
 // OFFSET: 0x0069CBA0/0x140349080
 void UserClientGuildMotd::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1035));
@@ -2136,15 +2286,18 @@ void UserClientGuildMotd::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: bb6d937f IDENTICAL/DIFFERENT
 // OFFSET: 0x0069E800/0x14034B210
 UserClientChatChannelVoiceOn::UserClientChatChannelVoiceOn(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: d0984913 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CF20/0x140349440
 UserClientChatChannelVoiceOn::~UserClientChatChannelVoiceOn() {
 }
 
+// PROVEN: 452ebc11 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069D000/0x1403494E0
 void UserClientChatChannelVoiceOn::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1144));
@@ -2156,16 +2309,19 @@ void UserClientChatChannelVoiceOn::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: c5581d9d IDENTICAL/DIFFERENT
 // OFFSET: 0x0069D5F0/0x140349B90
 UserClientChatChannelKick::UserClientChatChannelKick(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CD70
+// PROVEN: b21efecf IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CD70/0x1403492A0
 UserClientChatChannelKick::~UserClientChatChannelKick() {
 }
 
+// PROVEN: 0d248e10 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069D070/0x140349570
 void UserClientChatChannelKick::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3156));
@@ -2179,15 +2335,18 @@ void UserClientChatChannelKick::Put(CDataStore* msg) {
     msg->PutData(this->unk_0090, strlen(this->unk_0090));
 }
 
+// PROVEN: 308338f9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0069DEF0/0x14034A730
 UserClientChatChannelOwner::UserClientChatChannelOwner(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: acd1bf94 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CF80/0x1403494A0
 UserClientChatChannelOwner::~UserClientChatChannelOwner() {
 }
 
+// PROVEN: 91dd0198 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069D130/0x140349650
 void UserClientChatChannelOwner::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3D44));
@@ -2199,16 +2358,19 @@ void UserClientChatChannelOwner::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 1ef3a41b IDENTICAL/DIFFERENT
 // OFFSET: 0x0069D670/0x140349C20
 UserClientChatChannelBan::UserClientChatChannelBan(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CE00
+// PROVEN: ed49939d IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CE00/0x140349330
 UserClientChatChannelBan::~UserClientChatChannelBan() {
 }
 
+// PROVEN: b8e9780d DIFFERENT/IDENTICAL
 // OFFSET: 0x0069D1A0/0x1403496E0
 void UserClientChatChannelBan::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3D56));
@@ -2222,16 +2384,19 @@ void UserClientChatChannelBan::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 2503b38c IDENTICAL/DIFFERENT
 // OFFSET: 0x0069ECD0/0x14034B750
 UserClientChatChannelUnsilenceAll::UserClientChatChannelUnsilenceAll(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CCF0
+// PROVEN: ec4f92bc IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CCF0/0x140349220
 UserClientChatChannelUnsilenceAll::~UserClientChatChannelUnsilenceAll() {
 }
 
+// PROVEN: 9ada6242 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069D530/0x140349AB0
 void UserClientChatChannelUnsilenceAll::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2546));
@@ -2245,16 +2410,19 @@ void UserClientChatChannelUnsilenceAll::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069EED0
+// PROVEN: 3310ad19 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069EED0/0x14034B9A0
 UserClientChatChannelSilenceAll::UserClientChatChannelSilenceAll(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
 }
 
-// OFFSET: 0x0069CE50
+// PROVEN: 46fc11a8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CE50/0x140349370
 UserClientChatChannelSilenceAll::~UserClientChatChannelSilenceAll() {
 }
 
+// PROVEN: 5c8101c2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069D6F0/0x140349CB0
 void UserClientChatChannelSilenceAll::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2154));
@@ -2268,15 +2436,18 @@ void UserClientChatChannelSilenceAll::Put(CDataStore* msg) {
     msg->PutData(this->unk_0040, strlen(this->unk_0040));
 }
 
+// PROVEN: 12da178b IDENTICAL/DIFFERENT
 // OFFSET: 0x0069D260/0x1403497C0
 UserClientChatChannelDisplayList::UserClientChatChannelDisplayList(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: f920fb9e IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CE10/0x140349340
 UserClientChatChannelDisplayList::~UserClientChatChannelDisplayList() {
 }
 
+// PROVEN: 2e24b8c0 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069DA40/0x14034A0C0
 void UserClientChatChannelDisplayList::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2144));
@@ -2288,15 +2459,18 @@ void UserClientChatChannelDisplayList::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: ecd53879 IDENTICAL/DIFFERENT
 // OFFSET: 0x0069EC80/0x14034B700
 UserClientChatChannelList::UserClientChatChannelList(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: ddcd87e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CF50/0x140349470
 UserClientChatChannelList::~UserClientChatChannelList() {
 }
 
+// PROVEN: fd60489a DIFFERENT/IDENTICAL
 // OFFSET: 0x0069DB20/0x14034A1A0
 void UserClientChatChannelList::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1556));
@@ -2308,16 +2482,19 @@ void UserClientChatChannelList::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069D7F0
+// PROVEN: a782e715 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069D7F0/0x140349E30
 UserClientChatChannelUnban::UserClientChatChannelUnban(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
 }
 
-// OFFSET: 0x0069CEF0
+// PROVEN: 44d7d2a4 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CEF0/0x140349410
 UserClientChatChannelUnban::~UserClientChatChannelUnban() {
 }
 
+// PROVEN: 33f1fa17 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069DD20/0x14034A440
 void UserClientChatChannelUnban::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2D46));
@@ -2331,16 +2508,19 @@ void UserClientChatChannelUnban::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069D860
+// PROVEN: 8b20a03d IDENTICAL/IDENTICAL
+// OFFSET: 0x0069D860/0x140349EC0
 UserClientChatChannelInvite::UserClientChatChannelInvite(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
 }
 
-// OFFSET: 0x0069CDA0
+// PROVEN: 14fd79a7 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CDA0/0x1403492D0
 UserClientChatChannelInvite::~UserClientChatChannelInvite() {
 }
 
+// PROVEN: a24a6dce DIFFERENT/IDENTICAL
 // OFFSET: 0x0069DDD0/0x14034A570
 void UserClientChatChannelInvite::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x144));
@@ -2354,15 +2534,18 @@ void UserClientChatChannelInvite::Put(CDataStore* msg) {
     msg->PutData(this->unk_0040, strlen(this->unk_0040));
 }
 
+// PROVEN: e3efe10c IDENTICAL/DIFFERENT
 // OFFSET: 0x0069E640/0x14034AF60
 UserClientChatChannelVoiceOff::UserClientChatChannelVoiceOff(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: 6cff2874 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CE80/0x1403493A0
 UserClientChatChannelVoiceOff::~UserClientChatChannelVoiceOff() {
 }
 
+// PROVEN: 8d0a86d1 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069E0E0/0x14034A920
 void UserClientChatChannelVoiceOff::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3144));
@@ -2374,16 +2557,19 @@ void UserClientChatChannelVoiceOff::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 7a8ef2d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069DE80/0x14034A6A0
 UserClientChatChannelPassword::UserClientChatChannelPassword(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
 }
 
+// PROVEN: c76c1d7f IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CFA0/0x1403494C0
 UserClientChatChannelPassword::~UserClientChatChannelPassword() {
 }
 
+// PROVEN: 693df5b7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069E150/0x14034A9B0
 void UserClientChatChannelPassword::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2556));
@@ -2397,16 +2583,19 @@ void UserClientChatChannelPassword::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069E5D0
+// PROVEN: 29101c88 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069E5D0/0x14034AED0
 UserClientChatChannelUnmute::UserClientChatChannelUnmute(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
 }
 
-// OFFSET: 0x0069CD80
+// PROVEN: 78c4afc2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CD80/0x1403492B0
 UserClientChatChannelUnmute::~UserClientChatChannelUnmute() {
 }
 
+// PROVEN: 434f12b2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069E2C0/0x14034AB70
 void UserClientChatChannelUnmute::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3554));
@@ -2420,16 +2609,19 @@ void UserClientChatChannelUnmute::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0069E990
+// PROVEN: 642ed3c2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069E990/0x14034B3A0
 UserClientChatChannelUnsilenceVoice::UserClientChatChannelUnsilenceVoice(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0040, a1, sizeof(this->unk_0040));
 }
 
-// OFFSET: 0x0069CF30
+// PROVEN: 20194e5c IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CF30/0x140349450
 UserClientChatChannelUnsilenceVoice::~UserClientChatChannelUnsilenceVoice() {
 }
 
+// PROVEN: 7574ff42 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069E690/0x14034AFB0
 void UserClientChatChannelUnsilenceVoice::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3146));
@@ -2443,16 +2635,19 @@ void UserClientChatChannelUnsilenceVoice::Put(CDataStore* msg) {
     msg->PutData(this->unk_0040, strlen(this->unk_0040));
 }
 
+// PROVEN: b78f98db IDENTICAL/DIFFERENT
 // OFFSET: 0x0069EF40/0x14034BA30
 UserClientChatChannelUnmoderator::UserClientChatChannelUnmoderator(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CD40
+// PROVEN: ba09341e IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CD40/0x140349270
 UserClientChatChannelUnmoderator::~UserClientChatChannelUnmoderator() {
 }
 
+// PROVEN: dc4272b1 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069E740/0x14034B0E0
 void UserClientChatChannelUnmoderator::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1954));
@@ -2466,16 +2661,19 @@ void UserClientChatChannelUnmoderator::Put(CDataStore* msg) {
     msg->PutData(this->unk_0090, strlen(this->unk_0090));
 }
 
+// PROVEN: 105578fe IDENTICAL/DIFFERENT
 // OFFSET: 0x0069D9C0/0x14034A030
 UserClientChatChannelSilenceVoice::UserClientChatChannelSilenceVoice(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CF40
+// PROVEN: ce696e87 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CF40/0x140349460
 UserClientChatChannelSilenceVoice::~UserClientChatChannelSilenceVoice() {
 }
 
+// PROVEN: 4f332f7a DIFFERENT/IDENTICAL
 // OFFSET: 0x0069EA80/0x14034B4E0
 void UserClientChatChannelSilenceVoice::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2D54));
@@ -2489,16 +2687,19 @@ void UserClientChatChannelSilenceVoice::Put(CDataStore* msg) {
     msg->PutData(this->unk_0090, strlen(this->unk_0090));
 }
 
+// PROVEN: 5bf6b77d IDENTICAL/DIFFERENT
 // OFFSET: 0x0069EFC0/0x14034BAC0
 UserClientChatChannelSetOwner::UserClientChatChannelSetOwner(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CE60
+// PROVEN: d9b9c73e IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CE60/0x140349380
 UserClientChatChannelSetOwner::~UserClientChatChannelSetOwner() {
 }
 
+// PROVEN: 55913311 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069ED50/0x14034B7E0
 void UserClientChatChannelSetOwner::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3556));
@@ -2512,16 +2713,19 @@ void UserClientChatChannelSetOwner::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: a9f9fafd IDENTICAL/DIFFERENT
 // OFFSET: 0x0069D8D0/0x140349F50
 UserClientChatChannelMute::UserClientChatChannelMute(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CDD0
+// PROVEN: 7058583f IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CDD0/0x140349300
 UserClientChatChannelMute::~UserClientChatChannelMute() {
 }
 
+// PROVEN: 287d6ad7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069EE10/0x14034B8C0
 void UserClientChatChannelMute::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2554));
@@ -2535,16 +2739,19 @@ void UserClientChatChannelMute::Put(CDataStore* msg) {
     msg->PutData(this->unk_0090, strlen(this->unk_0090));
 }
 
+// PROVEN: 94ddaa76 IDENTICAL/DIFFERENT
 // OFFSET: 0x0069D440/0x1403499D0
 UserClientChatChannelModerator::UserClientChatChannelModerator(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0090, a2, sizeof(this->unk_0090));
 }
 
-// OFFSET: 0x0069CDE0
+// PROVEN: cbe0504d IDENTICAL/IDENTICAL
+// OFFSET: 0x0069CDE0/0x140349310
 UserClientChatChannelModerator::~UserClientChatChannelModerator() {
 }
 
+// PROVEN: 9546eba7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F040/0x14034BB50
 void UserClientChatChannelModerator::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x146));
@@ -2558,15 +2765,18 @@ void UserClientChatChannelModerator::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 57eebab0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0069D320/0x1403498A0
 UserClientChatChannelAnnouncements::UserClientChatChannelAnnouncements(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: 8f4df514 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CD00/0x140349230
 UserClientChatChannelAnnouncements::~UserClientChatChannelAnnouncements() {
 }
 
+// PROVEN: 7506fffb DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F100/0x14034BC30
 void UserClientChatChannelAnnouncements::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1146));
@@ -2578,6 +2788,7 @@ void UserClientChatChannelAnnouncements::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 3e40e200 IDENTICAL/DIFFERENT
 // OFFSET: 0x0069E4D0/0x14034ADD0
 UserClientChatJoinChannel::UserClientChatJoinChannel(uint32_t channelID, bool a2, bool a3, const char* channelName, const char* password) {
     this->unk_0010 = a2;
@@ -2587,10 +2798,12 @@ UserClientChatJoinChannel::UserClientChatJoinChannel(uint32_t channelID, bool a2
     SStrCopy(this->m_password, password, sizeof(this->m_password));
 }
 
+// PROVEN: 328394c2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CEA0/0x1403493C0
 UserClientChatJoinChannel::~UserClientChatJoinChannel() {
 }
 
+// PROVEN: 7a3af678 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F170/0x14034BCC0
 void UserClientChatJoinChannel::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x156));
@@ -2607,15 +2820,18 @@ void UserClientChatJoinChannel::Put(CDataStore* msg) {
     msg->PutData(this->m_password, strlen(this->m_password));
 }
 
+// PROVEN: 5637fa6f IDENTICAL/DIFFERENT
 // OFFSET: 0x0069E200/0x14034AA90
 UserClientMessageChatAfk::UserClientMessageChatAfk(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: 19500093 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CDB0/0x1403492E0
 UserClientMessageChatAfk::~UserClientMessageChatAfk() {
 }
 
+// PROVEN: 101708f2 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F420/0x14034C090
 void UserClientMessageChatAfk::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0xD44));
@@ -2627,16 +2843,19 @@ void UserClientMessageChatAfk::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: a650b8dd IDENTICAL/NONE
 // OFFSET: 0x0069EA00
 UserClientMessageChatAddonRaid::UserClientMessageChatAddonRaid(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0021, a2, sizeof(this->unk_0021));
 }
 
+// PROVEN: 6298ac67 IDENTICAL/NONE
 // OFFSET: 0x0069CD30
 UserClientMessageChatAddonRaid::~UserClientMessageChatAddonRaid() {
 }
 
+// PROVEN: 170f65d7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F270/0x14034BDE0
 void UserClientMessageChatAddonRaid::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1D56));
@@ -2650,16 +2869,19 @@ void UserClientMessageChatAddonRaid::Put(CDataStore* msg) {
     msg->PutData(this->unk_0021, strlen(this->unk_0021));
 }
 
+// PROVEN: 1e95e787 IDENTICAL/NONE
 // OFFSET: 0x0069D370
 UserClientMessageChatRaidWarning::UserClientMessageChatRaidWarning(uint32_t a1, const char* a2) {
     this->unk_0010 = a1;
     SStrCopy(this->unk_0014, a2, sizeof(this->unk_0014));
 }
 
+// PROVEN: 17ef6ef0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CF10/0x140349430
 UserClientMessageChatRaidWarning::~UserClientMessageChatRaidWarning() {
 }
 
+// PROVEN: aab90b40 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F320/0x14034BF50
 void UserClientMessageChatRaidWarning::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x944));
@@ -2672,16 +2894,19 @@ void UserClientMessageChatRaidWarning::Put(CDataStore* msg) {
     msg->PutData(this->unk_0014, strlen(this->unk_0014));
 }
 
+// PROVEN: e982b477 IDENTICAL/NONE
 // OFFSET: 0x0069E8D0
 UserClientMessageChatSay::UserClientMessageChatSay(uint32_t a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     this->unk_0110 = a1;
 }
 
+// PROVEN: 678bfbff IDENTICAL/NONE
 // OFFSET: 0x0069CD10
 UserClientMessageChatSay::~UserClientMessageChatSay() {
 }
 
+// PROVEN: 0c0544e3 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F3A0/0x14034BFF0
 void UserClientMessageChatSay::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1154));
@@ -2694,16 +2919,19 @@ void UserClientMessageChatSay::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 1e118700 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069D3C0/0x140349940
 UserClientMessageChatAddonOfficer::UserClientMessageChatAddonOfficer(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     SStrCopy(this->unk_0110, a1, sizeof(this->unk_0110));
 }
 
+// PROVEN: 06f28f03 IDENTICAL/NONE
 // OFFSET: 0x0069CEE0
 UserClientMessageChatAddonOfficer::~UserClientMessageChatAddonOfficer() {
 }
 
+// PROVEN: e6911550 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F490/0x14034C120
 void UserClientMessageChatAddonOfficer::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3954));
@@ -2717,16 +2945,19 @@ void UserClientMessageChatAddonOfficer::Put(CDataStore* msg) {
     msg->PutData(this->unk_0110, strlen(this->unk_0110));
 }
 
+// PROVEN: e1049a9b IDENTICAL/NONE
 // OFFSET: 0x0069E370
 UserClientMessageChatAddonParty::UserClientMessageChatAddonParty(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0021, a2, sizeof(this->unk_0021));
 }
 
+// PROVEN: ef0dd18b IDENTICAL/NONE
 // OFFSET: 0x0069CE20
 UserClientMessageChatAddonParty::~UserClientMessageChatAddonParty() {
 }
 
+// PROVEN: b18da5f7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F550/0x14034C290
 void UserClientMessageChatAddonParty::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x546));
@@ -2740,15 +2971,18 @@ void UserClientMessageChatAddonParty::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 7d75fc1d IDENTICAL/NONE
 // OFFSET: 0x0069E090
 UserClientMessageChatEmote::UserClientMessageChatEmote(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: 9442d97d IDENTICAL/NONE
 // OFFSET: 0x0069CF70
 UserClientMessageChatEmote::~UserClientMessageChatEmote() {
 }
 
+// PROVEN: 0fdc9aa1 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F600/0x14034C400
 void UserClientMessageChatEmote::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1156));
@@ -2760,16 +2994,19 @@ void UserClientMessageChatEmote::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: ffc8aad8 IDENTICAL/NONE
 // OFFSET: 0x0069E560
 UserClientMessageChatYell::UserClientMessageChatYell(uint32_t a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     this->unk_0110 = a1;
 }
 
+// PROVEN: 81bf9909 IDENTICAL/NONE
 // OFFSET: 0x0069CD20
 UserClientMessageChatYell::~UserClientMessageChatYell() {
 }
 
+// PROVEN: dfff1863 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F670/0x14034C490
 void UserClientMessageChatYell::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3544));
@@ -2782,6 +3019,7 @@ void UserClientMessageChatYell::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 74e727ad IDENTICAL/IDENTICAL
 // OFFSET: 0x0069DC80/0x14034A360
 UserClientMessageChatAddonWhisper::UserClientMessageChatAddonWhisper(const char* a1, const char* a2, const char* a3) {
     SStrCopy(this->unk_0010, a3, sizeof(this->unk_0010));
@@ -2789,10 +3027,12 @@ UserClientMessageChatAddonWhisper::UserClientMessageChatAddonWhisper(const char*
     SStrCopy(this->unk_0121, a1, sizeof(this->unk_0121));
 }
 
+// PROVEN: 959bca7b IDENTICAL/NONE
 // OFFSET: 0x0069CD90
 UserClientMessageChatAddonWhisper::~UserClientMessageChatAddonWhisper() {
 }
 
+// PROVEN: 00c25d0b DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F6F0/0x14034C530
 void UserClientMessageChatAddonWhisper::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2146));
@@ -2808,16 +3048,19 @@ void UserClientMessageChatAddonWhisper::Put(CDataStore* msg) {
     msg->PutData(this->unk_0121, strlen(this->unk_0121));
 }
 
+// PROVEN: 2891193f IDENTICAL/NONE
 // OFFSET: 0x0069D2B0
 UserClientMessageChatAddonGuild::UserClientMessageChatAddonGuild(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0021, a2, sizeof(this->unk_0021));
 }
 
+// PROVEN: 4f12feec IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CEC0/0x1403493E0
 UserClientMessageChatAddonGuild::~UserClientMessageChatAddonGuild() {
 }
 
+// PROVEN: 923e1269 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F7F0/0x14034C730
 void UserClientMessageChatAddonGuild::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x544));
@@ -2831,16 +3074,19 @@ void UserClientMessageChatAddonGuild::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 5afdc12a IDENTICAL/NONE
 // OFFSET: 0x0069D4C0
 UserClientMessageChatParty::UserClientMessageChatParty(uint32_t a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     this->unk_0110 = a1;
 }
 
+// PROVEN: f87488c3 IDENTICAL/NONE
 // OFFSET: 0x0069CF90
 UserClientMessageChatParty::~UserClientMessageChatParty() {
 }
 
+// PROVEN: 93b6614c DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F8A0/0x14034C810
 void UserClientMessageChatParty::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1D46));
@@ -2853,16 +3099,19 @@ void UserClientMessageChatParty::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 70aa261f IDENTICAL/NONE
 // OFFSET: 0x0069D7A0
 UserClientMessageChatBattleground::UserClientMessageChatBattleground(uint32_t a1, const char* a2) {
     this->unk_0010 = a1;
     SStrCopy(this->unk_0014, a2, sizeof(this->unk_0014));
 }
 
+// PROVEN: 882abeee IDENTICAL/NONE
 // OFFSET: 0x0069CE70
 UserClientMessageChatBattleground::~UserClientMessageChatBattleground() {
 }
 
+// PROVEN: 45752f60 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F920/0x14034C8B0
 void UserClientMessageChatBattleground::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2156));
@@ -2875,6 +3124,7 @@ void UserClientMessageChatBattleground::Put(CDataStore* msg) {
     msg->PutData(this->unk_0014, strlen(this->unk_0014));
 }
 
+// PROVEN: e9bdb507 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069E3E0/0x14034ACE0
 UserClientMessageChatChannel::UserClientMessageChatChannel(uint32_t a1, const char* a2, const char* a3) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
@@ -2882,10 +3132,12 @@ UserClientMessageChatChannel::UserClientMessageChatChannel(uint32_t a1, const ch
     SStrCopy(this->unk_0148, a3, sizeof(this->unk_0148));
 }
 
+// PROVEN: af9b3244 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CCE0/0x140349210
 UserClientMessageChatChannel::~UserClientMessageChatChannel() {
 }
 
+// PROVEN: 0a70c985 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069F9A0/0x14034C950
 void UserClientMessageChatChannel::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1D44));
@@ -2900,16 +3152,19 @@ void UserClientMessageChatChannel::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 985bda4c IDENTICAL/NONE
 // OFFSET: 0x0069E250
 UserClientMessageChatAddonBattleground::UserClientMessageChatAddonBattleground(const char* a1, const char* a2) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
     SStrCopy(this->unk_0021, a2, sizeof(this->unk_0021));
 }
 
+// PROVEN: e6faed22 IDENTICAL/NONE
 // OFFSET: 0x0069CDC0
 UserClientMessageChatAddonBattleground::~UserClientMessageChatAddonBattleground() {
 }
 
+// PROVEN: 8bfacd20 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069FA60/0x14034CA60
 void UserClientMessageChatAddonBattleground::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0xD46));
@@ -2923,15 +3178,18 @@ void UserClientMessageChatAddonBattleground::Put(CDataStore* msg) {
     msg->PutData(this->unk_0021, strlen(this->unk_0021));
 }
 
+// PROVEN: 5e95155d IDENTICAL/DIFFERENT
 // OFFSET: 0x0069DC30/0x14034A310
 UserClientMessageChatDnd::UserClientMessageChatDnd(const char* a1) {
     SStrCopy(this->unk_0010, a1, sizeof(this->unk_0010));
 }
 
+// PROVEN: afdc2bdc IDENTICAL/NONE
 // OFFSET: 0x0069CE90
 UserClientMessageChatDnd::~UserClientMessageChatDnd() {
 }
 
+// PROVEN: e12b525d DIFFERENT/IDENTICAL
 // OFFSET: 0x0069FB10/0x14034CBD0
 void UserClientMessageChatDnd::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2946));
@@ -2943,6 +3201,7 @@ void UserClientMessageChatDnd::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 38d9eebc IDENTICAL/IDENTICAL
 // OFFSET: 0x0069DB90/0x14034A230
 UserClientMessageChatWhisper::UserClientMessageChatWhisper(uint32_t a1, const char* a2, const char* a3) {
     SStrCopy(this->unk_0010, a3, sizeof(this->unk_0010));
@@ -2950,10 +3209,12 @@ UserClientMessageChatWhisper::UserClientMessageChatWhisper(uint32_t a1, const ch
     SStrCopy(this->unk_0114, a2, sizeof(this->unk_0114));
 }
 
+// PROVEN: 8005dffb IDENTICAL/NONE
 // OFFSET: 0x0069CED0
 UserClientMessageChatWhisper::~UserClientMessageChatWhisper() {
 }
 
+// PROVEN: 4f14b950 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069FB80/0x14034CC60
 void UserClientMessageChatWhisper::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0xD56));
@@ -2968,16 +3229,19 @@ void UserClientMessageChatWhisper::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 09c6a893 IDENTICAL/NONE
 // OFFSET: 0x0069E940
 UserClientMessageChatGuild::UserClientMessageChatGuild(uint32_t a1, const char* a2) {
     this->unk_0010 = a1;
     SStrCopy(this->unk_0014, a2, sizeof(this->unk_0014));
 }
 
+// PROVEN: 3dc668bb IDENTICAL/NONE
 // OFFSET: 0x0069CD60
 UserClientMessageChatGuild::~UserClientMessageChatGuild() {
 }
 
+// PROVEN: 7f1f6c4c DIFFERENT/IDENTICAL
 // OFFSET: 0x0069FC40/0x14034CD70
 void UserClientMessageChatGuild::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3956));
@@ -2990,16 +3254,19 @@ void UserClientMessageChatGuild::Put(CDataStore* msg) {
     msg->PutData(this->unk_0014, strlen(this->unk_0014));
 }
 
+// PROVEN: 48336a16 IDENTICAL/NONE
 // OFFSET: 0x0069D950
 UserClientMessageChatRaid::UserClientMessageChatRaid(uint32_t a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     this->unk_0110 = a1;
 }
 
+// PROVEN: 4cacb423 IDENTICAL/NONE
 // OFFSET: 0x0069CF60
 UserClientMessageChatRaid::~UserClientMessageChatRaid() {
 }
 
+// PROVEN: 23035be5 DIFFERENT/IDENTICAL
 // OFFSET: 0x0069FCC0/0x14034CE10
 void UserClientMessageChatRaid::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2D44));
@@ -3012,16 +3279,19 @@ void UserClientMessageChatRaid::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: 88c437d6 IDENTICAL/NONE
 // OFFSET: 0x0069DAB0
 UserClientMessageChatOfficer::UserClientMessageChatOfficer(uint32_t a1, const char* a2) {
     SStrCopy(this->unk_0010, a2, sizeof(this->unk_0010));
     this->unk_0110 = a1;
 }
 
+// PROVEN: 77888371 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069CFB0/0x1403494D0
 UserClientMessageChatOfficer::~UserClientMessageChatOfficer() {
 }
 
+// PROVEN: a6e9816a DIFFERENT/IDENTICAL
 // OFFSET: 0x0069FE00/0x14034D020
 void UserClientMessageChatOfficer::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x1946));
@@ -3034,41 +3304,50 @@ void UserClientMessageChatOfficer::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: f678dc29 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D170/0x1403141A0
 UserClientRequestRatedBgInfo::UserClientRequestRatedBgInfo() {
 }
 
+// PROVEN: 774854c9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BBC0/0x140312400
 UserClientRequestRatedBgInfo::~UserClientRequestRatedBgInfo() {
 }
 
-// OFFSET: 0x0066B900
+// PROVEN: 7a46c5ce IDENTICAL/IDENTICAL
+// OFFSET: 0x0066B900/0x140312110
 void UserClientRequestRatedBgInfo::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x5B3));
 }
 
+// PROVEN: 1f2bc380 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E120/0x140312380
 UserClientGetPVPOptionsEnabled::UserClientGetPVPOptionsEnabled() {
 }
 
+// PROVEN: 3c0e27bf IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BB40/0x140312300
 UserClientGetPVPOptionsEnabled::~UserClientGetPVPOptionsEnabled() {
 }
 
-// OFFSET: 0x0066BA80
+// PROVEN: a4cba5fe IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BA80/0x140312270
 void UserClientGetPVPOptionsEnabled::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x24A1));
 }
 
+// PROVEN: c0359b2f IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D390/0x140314400
 UserClientLfgLockInfoRequest::UserClientLfgLockInfoRequest() {
 }
 
+// PROVEN: a3335016 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BAA0/0x140312280
 UserClientLfgLockInfoRequest::~UserClientLfgLockInfoRequest() {
 }
 
-// OFFSET: 0x0066D180
+// PROVEN: ca84446a IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D180/0x1403141C0
 void UserClientLfgLockInfoRequest::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x412));
 
@@ -3077,15 +3356,18 @@ void UserClientLfgLockInfoRequest::Put(CDataStore* msg) {
     bits.Flush();
 }
 
+// PROVEN: de5a68ff IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D690/0x140314750
 UserClientLfgSetBootVote::UserClientLfgSetBootVote() {
 }
 
+// PROVEN: 16969fd4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA10/0x140312200
 UserClientLfgSetBootVote::~UserClientLfgSetBootVote() {
 }
 
-// OFFSET: 0x0066D300
+// PROVEN: ff2f7b49 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D300/0x140314350
 void UserClientLfgSetBootVote::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x4B3));
 
@@ -3094,15 +3376,18 @@ void UserClientLfgSetBootVote::Put(CDataStore* msg) {
     bits.Flush();
 }
 
+// PROVEN: ad58b826 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D730/0x140314820
 UserClientStartWarGame::UserClientStartWarGame() {
 }
 
+// PROVEN: e5291219 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BB00/0x1403122D0
 UserClientStartWarGame::~UserClientStartWarGame() {
 }
 
-// OFFSET: 0x0066D440
+// PROVEN: 9205ded4 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D440/0x140314500
 void UserClientStartWarGame::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x5A0));
 
@@ -3175,15 +3460,18 @@ void UserClientStartWarGame::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: ee7ec418 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E8B0/0x140312500
 UserClientLfgTeleport::UserClientLfgTeleport() {
 }
 
+// PROVEN: 7fa350e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA00/0x1403121F0
 UserClientLfgTeleport::~UserClientLfgTeleport() {
 }
 
-// OFFSET: 0x0066D6B0
+// PROVEN: 71f7e59b IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D6B0/0x140314790
 void UserClientLfgTeleport::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2482));
 
@@ -3192,15 +3480,18 @@ void UserClientLfgTeleport::Put(CDataStore* msg) {
     bits.Flush();
 }
 
+// PROVEN: acb8bf9e IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D380/0x1403143E0
 UserClientCommentatorGetPartyInfo::UserClientCommentatorGetPartyInfo() {
 }
 
+// PROVEN: f91d710f IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BC30/0x140312470
 UserClientCommentatorGetPartyInfo::~UserClientCommentatorGetPartyInfo() {
 }
 
-// OFFSET: 0x0066D7A0
+// PROVEN: 3f23002a DIFFERENT/IDENTICAL
+// OFFSET: 0x0066D7A0/0x1403148D0
 void UserClientCommentatorGetPartyInfo::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2412));
     msg->Put(this->unk_0010);
@@ -3212,15 +3503,18 @@ void UserClientCommentatorGetPartyInfo::Put(CDataStore* msg) {
     msg->PutData(this->unk_0014, strlen(this->unk_0014));
 }
 
+// PROVEN: 4214f8e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D740/0x140314840
 UserClientCommentatorStartWargame::UserClientCommentatorStartWargame() {
 }
 
-// OFFSET: 0x0066B920
+// PROVEN: 41039636 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066B920/0x140312120
 UserClientCommentatorStartWargame::~UserClientCommentatorStartWargame() {
 }
 
-// OFFSET: 0x0066DB60
+// PROVEN: a46ffee9 DIFFERENT/IDENTICAL
+// OFFSET: 0x0066DB60/0x140314D20
 void UserClientCommentatorStartWargame::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x25A0));
 
@@ -3265,29 +3559,35 @@ void UserClientCommentatorStartWargame::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 7eb566d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DE30/0x140315010
 UserClientRequestRatedInfo::UserClientRequestRatedInfo() {
 }
 
+// PROVEN: f8eddc80 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B970/0x140312170
 UserClientRequestRatedInfo::~UserClientRequestRatedInfo() {
 }
 
-// OFFSET: 0x0066DE00
+// PROVEN: 9ddb94e7 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066DE00/0x140314FD0
 void UserClientRequestRatedInfo::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2423));
     msg->Put(this->unk_0010);
 }
 
+// PROVEN: 2c48664e IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D6A0/0x140314770
 UserClientSendSorRequestViaAddress::UserClientSendSorRequestViaAddress() {
 }
 
+// PROVEN: e030e44e IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BBB0/0x1403123B0
 UserClientSendSorRequestViaAddress::~UserClientSendSorRequestViaAddress() {
 }
 
-// OFFSET: 0x0066F8D0
+// PROVEN: eae97400 DIFFERENT/IDENTICAL
+// OFFSET: 0x0066F8D0/0x140316880
 void UserClientSendSorRequestViaAddress::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x420));
 
@@ -3300,15 +3600,18 @@ void UserClientSendSorRequestViaAddress::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
-// OFFSET: 0x0066D160
+// PROVEN: 342d20d8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D160/0x140314180
 UserClientSendSorRequestViaBnetAccountId::UserClientSendSorRequestViaBnetAccountId() {
 }
 
+// PROVEN: 41ae6e0b IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA50/0x140312240
 UserClientSendSorRequestViaBnetAccountId::~UserClientSendSorRequestViaBnetAccountId() {
 }
 
-// OFFSET: 0x0066FBA0
+// PROVEN: 91b7333a DIFFERENT/IDENTICAL
+// OFFSET: 0x0066FBA0/0x140316C50
 void UserClientSendSorRequestViaBnetAccountId::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x482));
     msg->Put(this->unk_040C);
@@ -3320,43 +3623,52 @@ void UserClientSendSorRequestViaBnetAccountId::Put(CDataStore* msg) {
     msg->PutData(this->unk_0010, strlen(this->unk_0010));
 }
 
+// PROVEN: c810f961 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670590/0x140317EE0
 UserClientRequestPvpRewards::UserClientRequestPvpRewards() {
 }
 
+// PROVEN: 85f86c8c IDENTICAL/IDENTICAL
 // OFFSET: 0x00670440/0x140317D20
 UserClientRequestPvpRewards::~UserClientRequestPvpRewards() {
 }
 
-// OFFSET: 0x006707D0
+// PROVEN: 899cade4 IDENTICAL/IDENTICAL
+// OFFSET: 0x006707D0/0x1403182D0
 void UserClientRequestPvpRewards::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x780C));
 }
 
+// PROVEN: e855d361 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670670/0x140318030
 UserClientBattlemasterJoinRated::UserClientBattlemasterJoinRated() {
 }
 
+// PROVEN: fde4f15f IDENTICAL/IDENTICAL
 // OFFSET: 0x006707F0/0x1403182E0
 UserClientBattlemasterJoinRated::~UserClientBattlemasterJoinRated() {
 }
 
-// OFFSET: 0x00670D70
+// PROVEN: 58526bc2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670D70/0x140319080
 void UserClientBattlemasterJoinRated::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3B18));
 }
 
-// OFFSET: 0x0069A8F0
+// PROVEN: 465ebbd4 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069A8F0/0x140346EB0
 UserClientGuildAchievementMembers::UserClientGuildAchievementMembers(uint64_t a1, uint64_t a3, uint32_t a5) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = a3;
     *reinterpret_cast<uint64_t*>(this->unk_0018) = a1;
     this->unk_0020 = a5;
 }
 
+// PROVEN: 5bb92e29 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A190/0x140346710
 UserClientGuildAchievementMembers::~UserClientGuildAchievementMembers() {
 }
 
+// PROVEN: 9ae3785a IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A930/0x140346EE0
 void UserClientGuildAchievementMembers::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3025));
@@ -3431,17 +3743,20 @@ void UserClientGuildAchievementMembers::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 7b27bc62 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D340/0x1403143A0
 UserClientBFMgrQueueInviteResponse::UserClientBFMgrQueueInviteResponse(uint64_t queueID, bool accept) {
     this->unk_0010 = accept;
     *reinterpret_cast<uint64_t*>(this->unk_0018) = queueID;
 }
 
+// PROVEN: e3ce1254 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BAE0/0x1403122B0
 UserClientBFMgrQueueInviteResponse::~UserClientBFMgrQueueInviteResponse() {
 }
 
-// OFFSET: 0x0066D1C0
+// PROVEN: 88d96053 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D1C0/0x140314210
 void UserClientBFMgrQueueInviteResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x413));
 
@@ -3483,16 +3798,19 @@ void UserClientBFMgrQueueInviteResponse::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: cf316d34 IDENTICAL/NONE
 // OFFSET: 0x0066E880
 UserClientBFMgrQueueExitRequest::UserClientBFMgrQueueExitRequest(uint64_t queueID) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = queueID;
 }
 
+// PROVEN: 825464c4 IDENTICAL/NONE
 // OFFSET: 0x0066B980
 UserClientBFMgrQueueExitRequest::~UserClientBFMgrQueueExitRequest() {
 }
 
-// OFFSET: 0x0066D950
+// PROVEN: 6371aab2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D950/0x140314AE0
 void UserClientBFMgrQueueExitRequest::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2490));
 
@@ -3533,15 +3851,18 @@ void UserClientBFMgrQueueExitRequest::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 01de23e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E4C0/0x1403123C0
 UserClientBFMgrEntryInviteResponse::UserClientBFMgrEntryInviteResponse() {
 }
 
+// PROVEN: 081090a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066BA60/0x140312250
 UserClientBFMgrEntryInviteResponse::~UserClientBFMgrEntryInviteResponse() {
 }
 
-// OFFSET: 0x0066E570
+// PROVEN: 15cd1434 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E570/0x140315780
 void UserClientBFMgrEntryInviteResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x5A3));
 
@@ -3583,42 +3904,51 @@ void UserClientBFMgrEntryInviteResponse::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 36f2bd64 IDENTICAL/IDENTICAL
 // OFFSET: 0x006705A0/0x140317F00
 UserClientRequestPvpLogData::UserClientRequestPvpLogData() {
 }
 
+// PROVEN: a545ed82 IDENTICAL/IDENTICAL
 // OFFSET: 0x006706E0/0x1403180B0
 UserClientRequestPvpLogData::~UserClientRequestPvpLogData() {
 }
 
-// OFFSET: 0x00670480
+// PROVEN: 19728252 IDENTICAL/IDENTICAL
+// OFFSET: 0x00670480/0x140317D90
 void UserClientRequestPvpLogData::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7308));
 }
 
+// PROVEN: aa0e3550 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670630/0x140317FB0
 UserClientRequestBattlefieldPositions::UserClientRequestBattlefieldPositions() {
 }
 
+// PROVEN: 30c6f271 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670390/0x140317BC0
 UserClientRequestBattlefieldPositions::~UserClientRequestBattlefieldPositions() {
 }
 
-// OFFSET: 0x006707B0
+// PROVEN: a1d98087 IDENTICAL/IDENTICAL
+// OFFSET: 0x006707B0/0x140318280
 void UserClientRequestBattlefieldPositions::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3902));
 }
 
+// PROVEN: 7bc4a3b7 IDENTICAL/NONE
 // OFFSET: 0x00674960
 UserClientBFMgrQueueRequest::UserClientBFMgrQueueRequest(uint64_t queueID) {
     *reinterpret_cast<uint64_t*>(this->unk_0010) = queueID;
 }
 
+// PROVEN: 4de53b5a IDENTICAL/NONE
 // OFFSET: 0x00670E80
 UserClientBFMgrQueueRequest::~UserClientBFMgrQueueRequest() {
 }
 
-// OFFSET: 0x00674110
+// PROVEN: 61c0edf9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00674110/0x14031C6B0
 void UserClientBFMgrQueueRequest::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x710C));
 
@@ -3659,28 +3989,34 @@ void UserClientBFMgrQueueRequest::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: f18a4aa2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E110/0x140312340
 UserClientOpcode2581::UserClientOpcode2581() {
 }
 
+// PROVEN: 81100769 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B940/0x140312140
 UserClientOpcode2581::~UserClientOpcode2581() {
 }
 
-// OFFSET: 0x0066BBE0
+// PROVEN: 1298abb7 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BBE0/0x140312420
 void UserClientOpcode2581::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2581));
 }
 
+// PROVEN: 3a8a80e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DAF0/0x140314C70
 UserClientOpcode2422::UserClientOpcode2422() {
 }
 
+// PROVEN: 46d159f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B9C0/0x1403121B0
 UserClientOpcode2422::~UserClientOpcode2422() {
 }
 
-// OFFSET: 0x0066E0C0
+// PROVEN: befaa6c8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E0C0/0x140315310
 void UserClientOpcode2422::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2422));
     msg->Put(this->unk_0010);
@@ -3690,28 +4026,34 @@ void UserClientOpcode2422::Put(CDataStore* msg) {
     bits.Flush();
 }
 
+// PROVEN: 693bcb2d IDENTICAL/IDENTICAL
 // OFFSET: 0x00673180/0x140317C40
 UserClientOpcode7912::UserClientOpcode7912() {
 }
 
+// PROVEN: 24b19f6d IDENTICAL/IDENTICAL
 // OFFSET: 0x006706A0/0x140318080
 UserClientOpcode7912::~UserClientOpcode7912() {
 }
 
-// OFFSET: 0x006709A0
+// PROVEN: 9834fbfd IDENTICAL/IDENTICAL
+// OFFSET: 0x006709A0/0x140318A50
 void UserClientOpcode7912::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7912));
 }
 
+// PROVEN: d85e9412 IDENTICAL/IDENTICAL
 // OFFSET: 0x006708F0/0x140318770
 UserClientOpcode791E::UserClientOpcode791E() {
 }
 
+// PROVEN: c7e9a4c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670420/0x140317CA0
 UserClientOpcode791E::~UserClientOpcode791E() {
 }
 
-// OFFSET: 0x006731E0
+// PROVEN: ec92be51 IDENTICAL/IDENTICAL
+// OFFSET: 0x006731E0/0x14031B5F0
 void UserClientOpcode791E::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x791E));
 
@@ -3752,29 +4094,35 @@ void UserClientOpcode791E::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 5cc5986f IDENTICAL/IDENTICAL
 // OFFSET: 0x00670830/0x140318370
 UserClientOpcode7816::UserClientOpcode7816() {
 }
 
+// PROVEN: f6c996e3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00670680/0x140318050
 UserClientOpcode7816::~UserClientOpcode7816() {
 }
 
-// OFFSET: 0x006733A0
+// PROVEN: 85efca6b IDENTICAL/IDENTICAL
+// OFFSET: 0x006733A0/0x14031B7E0
 void UserClientOpcode7816::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7816));
     msg->Put(this->unk_0010);
 }
 
+// PROVEN: 9d25fa2a IDENTICAL/IDENTICAL
 // OFFSET: 0x00670660/0x140318010
 UserClientOpcode3010::UserClientOpcode3010() {
 }
 
+// PROVEN: 19885059 IDENTICAL/IDENTICAL
 // OFFSET: 0x006706D0/0x1403180A0
 UserClientOpcode3010::~UserClientOpcode3010() {
 }
 
-// OFFSET: 0x006744E0
+// PROVEN: 55b5796d IDENTICAL/IDENTICAL
+// OFFSET: 0x006744E0/0x14031C970
 void UserClientOpcode3010::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3010));
 
@@ -3815,37 +4163,45 @@ void UserClientOpcode3010::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x0069C180
+// PROVEN: fb8ea343 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069C180/0x1403486A0
 UserClientOpcode3235::UserClientOpcode3235() {
 }
 
-// OFFSET: 0x0069A320
+// PROVEN: e3ef585b IDENTICAL/IDENTICAL
+// OFFSET: 0x0069A320/0x140346890
 UserClientOpcode3235::~UserClientOpcode3235() {
 }
 
+// PROVEN: 29a8ded5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A0A0/0x140346600
 void UserClientOpcode3235::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3235));
     msg->Put(this->unk_0010);
 }
 
+// PROVEN: dca722b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069C110/0x1403485F0
 UserClientOpcode3231::UserClientOpcode3231() {
 }
 
+// PROVEN: 0f7bc814 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A120/0x140346690
 UserClientOpcode3231::~UserClientOpcode3231() {
 }
 
+// PROVEN: 43e642c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069A4A0/0x140346A50
 void UserClientOpcode3231::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3231));
 }
 
+// PROVEN: 9925df62 IDENTICAL/IDENTICAL
 // OFFSET: 0x006702B0/0x140317410
 UserClientLfgJoin::UserClientLfgJoin() {
 }
 
+// PROVEN: da406b01 IDENTICAL/UNPROVEN
 // OFFSET: 0x006701E0/0x1403172E0
 UserClientLfgJoin::~UserClientLfgJoin() {
 }
@@ -3871,29 +4227,35 @@ void UserClientLfgJoin::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: f9a8cb27 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DB40/0x140314CF0
 UserClientLfgLeave::UserClientLfgLeave() {
 }
 
+// PROVEN: 480e42f4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0066E700/0x140315930
 UserClientLfgLeave::~UserClientLfgLeave() {
 }
 
-// OFFSET: 0x0066E6D0
+// PROVEN: 36a6f473 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E6D0/0x1403158F0
 void UserClientLfgLeave::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2433));
     msg->Put(this->unk_0028);
     this->m_ticket.Put(msg);
 }
 
+// PROVEN: b553c801 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E6B0/0x1403158C0
 UserClientLfgProposalResponse::UserClientLfgProposalResponse() {
 }
 
+// PROVEN: 64abd49c IDENTICAL/UNPROVEN
 // OFFSET: 0x0066D940/0x140314AC0
 UserClientLfgProposalResponse::~UserClientLfgProposalResponse() {
 }
 
+// PROVEN: a5ef9ffc IDENTICAL/IDENTICAL
 // OFFSET: 0x0066E130/0x140315360
 void UserClientLfgProposalResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x403));
@@ -3938,6 +4300,7 @@ void UserClientLfgProposalResponse::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 47c411a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DA90/0x140314C20
 UserClientWorldTeleport::UserClientWorldTeleport(uint32_t mapID, uint64_t transportGUID, const C3Vector& position, float facing) {
     memcpy(this->m_transportGUID, &transportGUID, sizeof(this->m_transportGUID));
@@ -3946,11 +4309,13 @@ UserClientWorldTeleport::UserClientWorldTeleport(uint32_t mapID, uint64_t transp
     this->m_position = position;
 }
 
-// OFFSET: 0x0066B990
+// PROVEN: 42cf1bac IDENTICAL/NONE
+// OFFSET: 0x0066B990/0x140312190
 UserClientWorldTeleport::~UserClientWorldTeleport() {
 }
 
-// OFFSET: 0x0066CF60
+// PROVEN: befb510c IDENTICAL/IDENTICAL
+// OFFSET: 0x0066CF60/0x140313F40
 void UserClientWorldTeleport::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x24B2));
     msg->Put(this->m_mapID);
@@ -3996,15 +4361,18 @@ void UserClientWorldTeleport::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 7bbd4b99 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066D3E0/0x140314480
 UserClientSupportTicketSubmitBug::UserClientSupportTicketSubmitBug() {
 }
 
+// PROVEN: b748005c IDENTICAL/UNPROVEN
 // OFFSET: 0x0066D930/0x140314AA0
 UserClientSupportTicketSubmitBug::~UserClientSupportTicketSubmitBug() {
 }
 
-// OFFSET: 0x0066FB20
+// PROVEN: 5f6cc84c IDENTICAL/IDENTICAL
+// OFFSET: 0x0066FB20/0x140316BA0
 void UserClientSupportTicketSubmitBug::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2520));
 
@@ -4016,15 +4384,18 @@ void UserClientSupportTicketSubmitBug::Put(CDataStore* msg) {
     this->m_header.Put(msg);
 }
 
+// PROVEN: 83486819 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066DEC0/0x1403150F0
 UserClientSupportTicketSubmitSuggestion::UserClientSupportTicketSubmitSuggestion() {
 }
 
+// PROVEN: 1baef5eb IDENTICAL/UNPROVEN
 // OFFSET: 0x0066E030/0x140315260
 UserClientSupportTicketSubmitSuggestion::~UserClientSupportTicketSubmitSuggestion() {
 }
 
-// OFFSET: 0x0066F990
+// PROVEN: ca6453e0 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066F990/0x140316980
 void UserClientSupportTicketSubmitSuggestion::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2512));
 
@@ -4044,7 +4415,8 @@ UserClientWardenData::UserClientWardenData() {
 UserClientWardenData::~UserClientWardenData() {
 }
 
-// OFFSET: 0x0066D400
+// PROVEN: 7bfd51ff IDENTICAL/IDENTICAL
+// OFFSET: 0x0066D400/0x1403144B0
 void UserClientWardenData::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x25A2));
     msg->Put(this->m_data.m_size);

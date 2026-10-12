@@ -11,12 +11,14 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
+// PROVEN: 5c109f21 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EB6C0/0x14077D610
 static int32_t Script_GetGuildCharterCost(lua_State* L) {
     lua_pushnumber(L, CGGuildRegistrar::m_petition.m_cost);
     return 1;
 }
 
+// PROVEN: 35e4eb71 IDENTICAL/IDENTICAL
 // OFFSET: 0x009EB680/0x14077D5D0
 static int32_t Script_CloseGuildRegistrar(lua_State* L) {
     if (CGGuildRegistrar::m_registrar) {
@@ -28,6 +30,7 @@ static int32_t Script_CloseGuildRegistrar(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 644e9309 DIFFERENT/IDENTICAL
 // OFFSET: 0x009EB860/0x14077D860
 static int32_t Script_BuyGuildCharter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -49,6 +52,7 @@ static int32_t Script_BuyGuildCharter(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 5334c40f IDENTICAL/DIFFERENT
 // OFFSET: 0x009EB8F0/0x14077D900
 static int32_t Script_TurnInGuildCharter(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -60,7 +64,8 @@ static int32_t Script_TurnInGuildCharter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x009EB920
+// PROVEN: 34adffdf IDENTICAL/DIFFERENT
+// OFFSET: 0x009EB920/0x14077D940
 static int32_t Script_GetTabardInfo(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -78,7 +83,7 @@ static int32_t Script_GetTabardInfo(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00D16B88
+// STATIC: 0x00D16B88/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseGuildRegistrar", &Script_CloseGuildRegistrar },
     { "GetGuildCharterCost", &Script_GetGuildCharterCost },
@@ -87,7 +92,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTabardInfo", &Script_GetTabardInfo },
 };
 
-// PROVEN: 58ada4cf IDENTICAL/NONE
+// PROVEN: 58ada4cf IDENTICAL/UNPROVEN
 // OFFSET: 0x009EB700/0x14077D640
 void GuildRegistrarRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -95,7 +100,7 @@ void GuildRegistrarRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 16af8920 IDENTICAL/NONE
+// PROVEN: 16af8920 IDENTICAL/UNPROVEN
 // OFFSET: 0x009EB730/0x14077D690
 void GuildRegistrarUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

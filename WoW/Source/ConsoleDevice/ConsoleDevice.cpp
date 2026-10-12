@@ -24,43 +24,43 @@
 // STATIC: 0x00BD37D8
 static const uint32_t s_formatToBpp[] = { 16, 24, 24, 32, 16, 24, 24, 32 };
 
-// STATIC: 0x00DD8A10
+// STATIC: 0x00DD8A10/0x140CBF230
 static int32_t s_consoleAccessEnabled;
 
-// STATIC: 0x00E288C4
+// STATIC: 0x00E288C4/0x140D104D8
 int32_t s_shaderModel;
 
-// STATIC: 0x00E288F4
+// STATIC: 0x00E288F4/0x000D10538
 static int32_t s_consoleGxOverrideSet[GxOverrides_Last];
 
-// STATIC: 0x00E28918
+// STATIC: 0x00E28918/0x140D104DC
 DefaultSettings s_defaults;
 
-// STATIC: 0x00E2892C
+// STATIC: 0x00E2892C/0x140D10580
 Hardware s_hardware;
 
-// STATIC: 0x00E28964
+// STATIC: 0x00E28964/0x000D105C8
 static uint32_t s_consoleGxOverrideVal[GxOverrides_Last];
 
-// STATIC: 0x00E28990
+// STATIC: 0x00E28990/0x140D1055C
 uint32_t s_monitor;
 
-// STATIC: 0x00E289A0
+// STATIC: 0x00E289A0/0x140D10618
 bool s_gxRestarting;
 
-// STATIC: 0x00E289A1
+// STATIC: 0x00E289A1/0x140D10619
 static bool s_hardwareDetected;
 
-// STATIC: 0x00E289A2
+// STATIC: 0x00E289A2/0x140D1061A
 static bool s_hwChanged;
 
-// STATIC: 0x00E289A3
+// STATIC: 0x00E289A3/0x140D1061B
 static bool s_hwDetect;
 
-// STATIC: 0x00E289A4
+// STATIC: 0x00E289A4/0x140D1061C
 static int32_t s_defaultsApplied;
 
-// STATIC: 0x00E289A8
+// STATIC: 0x00E289A8/0x140D10620
 char s_windowTitle[256];
 
 static const C2iVector s_size800x600 = { 800, 600 };
@@ -70,18 +70,19 @@ static const C2iVector s_size640x480 = { 640, 480 };
 // STATIC: 0x00E28AB0
 CGxFormat s_desktopFormat(false, s_size800x600, CGxFormat::Fmt_ArgbX888, CGxFormat::Fmt_Ds24X, 60, 1, 1, true, false, true, true, 0, 0);
 
-// STATIC: 0x00E28B08
+// STATIC: 0x00E28B08/0x140D10728
 TSGrowableArray<CGxMonitorMode> s_gxMonitorModes;
 
-// STATIC: 0x00E28B18
+// STATIC: 0x00E28B18/0x140D10798
 static TSGrowableArray<void (*)(OPTION_PAGE)> s_defaultCallbacks;
 
-// STATIC: 0x00E28B38
+// STATIC: 0x00E28B38/0x140D107C0
 CGxFormat s_fallbackFormat(false, s_size640x480, CGxFormat::Fmt_Rgb565, CGxFormat::Fmt_Ds160, 60, 1, 1, true, false, true, true, 0, 0);
 
-// STATIC: 0x00E28B90
+// STATIC: 0x00E28B90/0x140D10820
 CGxFormat s_lastGoodFormat;
 
+// PROVEN: 5d9f084a IDENTICAL/IDENTICAL
 // OFFSET: 0x0060E270/0x140298000
 void ConsoleAccessSetEnabled(int32_t enable) {
     s_consoleAccessEnabled = enable;
@@ -92,6 +93,7 @@ int32_t IsConsoleEnabled() {
     return s_consoleAccessEnabled;
 }
 
+// PROVEN: c8c72c08 IDENTICAL/IDENTICAL
 // OFFSET: 0x00635470/0x1402CB8A0
 void ConsoleGxOverride(const char* list) {
     while (*list) {
@@ -114,17 +116,19 @@ void ConsoleGxOverride(const char* list) {
     }
 }
 
+// PROVEN: 19e29f9f IDENTICAL/DIFFERENT
 // OFFSET: 0x00635930/0x1402CBE80
 Hardware* ConsoleGetHardware() {
     return s_hardwareDetected ? &s_hardware : NULL;
 }
 
-// PROVEN: b3fc94d1 IDENTICAL/NONE
+// PROVEN: b3fc94d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00635950/0x1402CBEA0
 int32_t ConsoleDeviceHardwareChanged() {
     return s_hwDetect || s_hwChanged;
 }
 
+// PROVEN: 2dffb110 IDENTICAL/IDENTICAL
 // OFFSET: 0x00635970/0x1402CBEC0
 DefaultSettings* ConsoleDeviceGetDefaultSettings() {
     return &s_defaults;
@@ -152,6 +156,7 @@ static int32_t CheckDeviceCaps() {
     return 0;
 }
 
+// PROVEN: 76bedbac IDENTICAL/IDENTICAL
 // OFFSET: 0x00635A10/0x1402CBF80
 void DisplayChangeCallback(uint32_t monitor) {
     if (!s_gxRestarting) {
@@ -159,6 +164,7 @@ void DisplayChangeCallback(uint32_t monitor) {
     }
 }
 
+// PROVEN: 0b2649ab IDENTICAL/IDENTICAL
 // OFFSET: 0x00635A30/0x1402CBFA0
 void ConsoleDeviceDestroy() {
     g_theGxDevicePtr->RemoveDisplayChangeCallback(DisplayChangeCallback);

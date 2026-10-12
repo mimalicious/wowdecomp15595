@@ -18,7 +18,7 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00D15C40
+// STATIC: 0x00D15C40/0x140BCF7F0
 static const char* s_transmogrifyReasons[10] = { "OK", "NO_ITEM", "NOT_SOULBOUND", "LEGENDARY", "INVALID_TYPE", "INVALID_TARGET", "MISMATCH", "SAME_ITEM", "INVALID_SOURCE", "NO_STATS" };
 
 // OFFSET: 0x009BED00
@@ -45,6 +45,7 @@ static char* GetTransmogrifyReasonToken(int32_t reason, char* buffer, uint32_t s
     return buffer;
 }
 
+// PROVEN: 71e630eb IDENTICAL/DIFFERENT
 // OFFSET: 0x009BF010/0x14074B150
 static int32_t Script_CloseTransmogrifyFrame(lua_State* L) {
     CGTransmogrify::SetTransmogrifier(WOWGUID());
@@ -265,6 +266,7 @@ static int32_t Script_ClickTransmogrifySlot(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 5d632adb IDENTICAL/IDENTICAL
 // OFFSET: 0x009BFC70/0x14074C150
 static int32_t Script_ValidateTransmogrifications(lua_State* L) {
     CGTransmogrify::ValidatePendingItems();
@@ -440,7 +442,7 @@ static int32_t Script_CanTransmogrifyItemWithItem(lua_State* L) {
     return 2;
 }
 
-// STATIC: 0x00D15BF0
+// STATIC: 0x00D15BF0/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "ClearTransmogrifySlot", &Script_ClearTransmogrifySlot },
     { "ApplyTransmogrifications", &Script_ApplyTransmogrifications },
@@ -454,6 +456,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CanTransmogrifyItemWithItem", &Script_CanTransmogrifyItemWithItem },
 };
 
+// PROVEN: 2fcc675d IDENTICAL/UNPROVEN
 // OFFSET: 0x009BEDB0/0x14074AEA0
 void TransmogrifyRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -461,6 +464,7 @@ void TransmogrifyRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 62c008b7 IDENTICAL/UNPROVEN
 // OFFSET: 0x009BEDE0/0x14074AEF0
 void TransmogrifyUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

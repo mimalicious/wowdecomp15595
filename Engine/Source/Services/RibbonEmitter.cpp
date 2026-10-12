@@ -11,20 +11,11 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/C4Vector.h"
 
-// STATIC: 0x00D27DD0
+// STATIC: 0x00D27DD0/0x140BE6630
 int32_t CRibbonEmitter::s_enableRibbonRendering = 1;
 
 // STATIC: 0x00D27DD4
 int32_t CRibbonEmitter::s_enableFog = 1;
-
-// INLINED
-CRibbonMat::CRibbonMat() {
-    this->m_lit = 1;
-    this->m_fogged = 1;
-    this->m_depthWrite = 1;
-    this->m_cull = 1;
-    this->m_blendMode = 0;
-}
 
 // OFFSET: 0x00B25220
 void CRibbonEmitter::ConvertTexSlotToTexCoords() {
@@ -38,7 +29,7 @@ void CRibbonEmitter::ConvertTexSlotToTexCoords() {
     this->m_texSlotCoords.maxX = v + this->m_texCellV;
 }
 
-// OFFSET: 0x00B252B0
+// OFFSET: 0x00B252B0/0x1408ED260
 void CRibbonEmitter::SetDataEnabled(int32_t enabled) {
     this->m_flags ^= (this->m_flags ^ (4 * enabled)) & 0x4;
 
@@ -56,8 +47,8 @@ void CRibbonEmitter::SetUserEnabled(uint32_t enabled) {
     }
 }
 
-// PROVEN: bd4877f3 IDENTICAL/NONE
-// OFFSET: 0x00B25330
+// PROVEN: bd4877f3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B25330/0x1408ED2C0
 void CRibbonEmitter::SetTexSlot(uint32_t slot) {
     if (this->m_texSlot != slot) {
         this->m_texSlot = slot;
@@ -65,14 +56,14 @@ void CRibbonEmitter::SetTexSlot(uint32_t slot) {
     }
 }
 
-// PROVEN: ed7c78b8 IDENTICAL/NONE
-// OFFSET: 0x00B25350
+// PROVEN: ed7c78b8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B25350/0x1408ED340
 void CRibbonEmitter::SetAbove(float above) {
     this->m_above = above;
 }
 
-// PROVEN: 394715a7 IDENTICAL/NONE
-// OFFSET: 0x00B25370
+// PROVEN: 394715a7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B25370/0x1408ED350
 void CRibbonEmitter::SetBelow(float below) {
     this->m_below = below;
 }
@@ -104,7 +95,7 @@ void CRibbonEmitter::InitInterpDeltas() {
     this->m_endTangent = C3Vector(this->m_currDir.x * distance, this->m_currDir.y * distance, distance * this->m_currDir.z);
 }
 
-// PROVEN: 32b7ca9b IDENTICAL/UNPROVEN
+// PROVEN: 32b7ca9b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B25720/0x1408ED720
 void CRibbonEmitter::CloseTextureHandles() {
     uint32_t count = this->m_textures.Count();
@@ -116,7 +107,7 @@ void CRibbonEmitter::CloseTextureHandles() {
     }
 }
 
-// OFFSET: 0x00B25760
+// OFFSET: 0x00B25760/0x1408ED790
 void CRibbonEmitter::SetPos(const C44Matrix& transform, const C3Vector& position, const C44Matrix* frameOfReference) {
     if (!(this->m_flags & 0x4) || !(this->m_flags & 0x8)) {
         return;
@@ -169,8 +160,8 @@ int32_t CRibbonEmitter::ReplaceTexture(uint32_t type, CTexture* texture) {
     return replaced;
 }
 
-// PROVEN: dbf80e55 IDENTICAL/NONE
-// OFFSET: 0x00B25980
+// PROVEN: dbf80e55 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B25980/0x1408EDA40
 void CRibbonEmitter::SetTexture(uint32_t index, CTexture* texture) {
     if (texture) {
         TextureAddRef(texture);
@@ -183,7 +174,7 @@ void CRibbonEmitter::SetTexture(uint32_t index, CTexture* texture) {
     this->m_textures[index] = texture;
 }
 
-// OFFSET: 0x00B259E0
+// OFFSET: 0x00B259E0/0x1408EDAB0
 void CRibbonEmitter::SetColor(float r, float g, float b) {
     this->m_color.Set(this->m_color.a * 255.0f, r, g, b);
 }
@@ -247,7 +238,7 @@ void CRibbonEmitter::InterpEdge(float age, float t, uint32_t advance) {
     }
 }
 
-// OFFSET: 0x00B261B0
+// OFFSET: 0x00B261B0/0x1408EE2B0
 void CRibbonEmitter::Update(float deltaTime, int32_t suppressNewEdges) {
     float dt = deltaTime;
     float start = 1.0f;
@@ -378,7 +369,7 @@ static void DuplicateTextures(const TSGrowableArray<CTexture*>& source, TSGrowab
     }
 }
 
-// PROVEN: e8398ad1 IDENTICAL/UNPROVEN
+// PROVEN: e8398ad1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B26720/0x1408EE8C0
 CRibbonEmitter::~CRibbonEmitter() {
     this->CloseTextureHandles();
@@ -450,14 +441,14 @@ void CRibbonEmitter::Initialize(float edgesPerSecond, float edgeLifetime, const 
     this->m_gravity = 0.0f;
 }
 
-// OFFSET: 0x00B26DD0
+// OFFSET: 0x00B26DD0/0x1408EF0D0
 void CRibbonEmitter::DecRef() {
     if (this->m_refCount-- == 1) {
         delete this;
     }
 }
 
-// OFFSET: 0x00B26DF0
+// OFFSET: 0x00B26DF0/0x1408EF100
 int32_t CRibbonEmitter::Render(const C44Matrix* frameOfReference) {
     if (!CRibbonEmitter::s_enableRibbonRendering || this->m_readPos == this->m_writePos) {
         return 0;

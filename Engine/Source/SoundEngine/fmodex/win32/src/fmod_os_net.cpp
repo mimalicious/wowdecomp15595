@@ -23,6 +23,7 @@ FMOD_OS_CRITICALSECTION         *gResolveCrit            = 0;
 
 	[SEE_ALSO]
 */
+// PROVEN: 774d4f4a UNPROVEN/IDENTICAL
 // OFFSET: 0x00AF4520/0x1408BDA10
 FMOD_RESULT FMOD_OS_Net_Init()
 {
@@ -59,6 +60,7 @@ FMOD_RESULT FMOD_OS_Net_Init()
 
 	[SEE_ALSO]
 */
+// PROVEN: f879d6cd UNPROVEN/IDENTICAL
 // OFFSET: 0x00AF4570/0x1408BDA70
 FMOD_RESULT FMOD_OS_Net_Shutdown()
 {
@@ -338,7 +340,7 @@ FMOD_RESULT FMOD_OS_Net_Close(const void *handle)
 
 	[SEE_ALSO]
 */
-// PROVEN: b90ce294 IDENTICAL/UNPROVEN
+// PROVEN: b90ce294 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AF48B0/0x1408BDD30
 FMOD_RESULT FMOD_OS_Net_Write(const void *handle, const char *buf, const unsigned int len, unsigned int *byteswritten)
 {
@@ -390,7 +392,7 @@ FMOD_RESULT FMOD_OS_Net_Write(const void *handle, const char *buf, const unsigne
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8e2b215d IDENTICAL/UNPROVEN
+// PROVEN: 8e2b215d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AF4920/0x1408BDDD0
 FMOD_RESULT FMOD_OS_Net_Read(const void *handle, char *buf, const unsigned int len, unsigned int *bytesread)
 {
@@ -457,7 +459,7 @@ FMOD_RESULT FMOD_OS_Net_Read(const void *handle, char *buf, const unsigned int l
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b1549ee0 IDENTICAL/UNPROVEN
+// PROVEN: b1549ee0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AF49B0/0x1408BDE80
 FMOD_RESULT FMOD_OS_Net_ReadLine(const void *handle, char *buf, const unsigned int len)
 {

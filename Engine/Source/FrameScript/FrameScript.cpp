@@ -18,25 +18,25 @@
 // STATIC: 0x00EBEEF8/0x140DB0F70
 double s_scriptTimeDivisor;
 
-// STATIC: 0x00EBEF04
+// STATIC: 0x00EBEF04/0x140DB0F80
 FRAMESCRIPT_EVENTTIME* s_eventTimes;
 
-// STATIC: 0x00EBEF08
+// STATIC: 0x00EBEF08/0x140DB0F7C
 uint32_t s_currentEventId;
 
-// STATIC: 0x00D08398
+// STATIC: 0x00D08398/0x140BB9760
 int32_t s_eventTimeIndex = -1;
 
-// STATIC: 0x00D0839C
+// STATIC: 0x00D0839C/0x140BB9764
 static uint32_t s_nextEventId = 1;
 
-// STATIC: 0x00EBEF24
+// STATIC: 0x00EBEF24/0x140DB0FA8
 static uint32_t s_scriptThreadId;
 
-// STATIC: 0x00EBEF0C
+// STATIC: 0x00EBEF0C/0x140DB0F88
 static void* s_mempool;
 
-// STATIC: 0x00EBEF10
+// STATIC: 0x00EBEF10/0x140DB0F90
 lua_State* s_context;
 
 // STATIC: 0x00EBEF18/0x140DB0F98
@@ -48,13 +48,13 @@ static int32_t s_scriptProfileEnabled;
 // STATIC: 0x00EBEF20/0x140DB0FA4
 int32_t s_inErrorHandler;
 
-// STATIC: 0x00EBEF28
+// STATIC: 0x00EBEF28/0x140DB0FAC
 static PLURAL_RULE s_pluralRule;
 
 // STATIC: 0x00EBEF30/0x140BB9780
 TSHashTable<FrameScript_EventObject, HASHKEY_CONSTSTRI> s_scriptEventsHash;
 
-// STATIC: 0x00EBEF5C
+// STATIC: 0x00EBEF5C/0x140DB0FB8
 static TSFixedArray<FrameScript_EventObject*> s_scriptEvents;
 
 // STATIC: 0x00EBEF68
@@ -75,7 +75,7 @@ int32_t s_errorHandlerFunc = -1;
 // STATIC: 0x00D083A8/0x140BB9770
 static int32_t s_recursiveTableHash = -1;
 
-// STATIC: 0x00D083B0
+// STATIC: 0x00D083B0/0x140BB97C8
 static const char* s_savedVariablesTaint = "SavedVariables";
 
 static const char* s_compatLua =
@@ -191,13 +191,13 @@ int32_t FrameScript_HookWrapper(lua_State* L) {
     return results;
 }
 
-// PROVEN: 0610bf15 IDENTICAL/UNPROVEN
+// PROVEN: 0610bf15 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083AD30/0x140565440
 void FrameScript_MemoryCleanup() {
     lua_gc(s_context, LUA_GCRESTART, 0);
 }
 
-// PROVEN: 9f6c1499 IDENTICAL/NONE
+// PROVEN: 9f6c1499 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083AD50/0x140565460
 void FrameScript_SetPluralRule(PLURAL_RULE rule) {
     s_pluralRule = rule;
@@ -232,7 +232,7 @@ uint32_t FrameScript_GetPluralIndex(int32_t count) {
     }
 }
 
-// PROVEN: 4eeceae9 IDENTICAL/NONE
+// PROVEN: 4eeceae9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083ADF0/0x140565500
 void SetDecimalConversion(int32_t convert) {
     lua_setdecimalconversion(convert);
@@ -244,7 +244,7 @@ lua_State* FrameScript_GetContext() {
     return s_context;
 }
 
-// PROVEN: a2414502 IDENTICAL/UNPROVEN
+// PROVEN: a2414502 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083AE10/0x140565520
 int32_t FrameScript_GetTotalMemoryUsed() {
     return lua_gc(s_context, LUA_GCCOUNT, 0);
@@ -306,7 +306,7 @@ char* FrameScript_GetCurrentFunction(lua_State* L, char* buffer, uint32_t buffer
     return buffer;
 }
 
-// PROVEN: 940ef983 IDENTICAL/NONE
+// PROVEN: 940ef983 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083B030/0x140565760
 void FrameScript_RegisterFunction(const char* name, lua_CFunction function) {
     lua_State* L = s_context;
@@ -314,7 +314,7 @@ void FrameScript_RegisterFunction(const char* name, lua_CFunction function) {
     lua_setglobal(L, name);
 }
 
-// PROVEN: 3c25bed1 IDENTICAL/UNPROVEN
+// PROVEN: 3c25bed1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083B070/0x1405657B0
 void FrameScript_UnregisterFunction(const char* name) {
     lua_State* L = s_context;
@@ -322,7 +322,7 @@ void FrameScript_UnregisterFunction(const char* name) {
     lua_setglobal(L, name);
 }
 
-// PROVEN: 082ca460 IDENTICAL/UNPROVEN
+// PROVEN: 082ca460 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083B0B0/0x140565800
 int32_t FrameScript_GetVariable(const char* name, const char*& value) {
     lua_State* L = s_context;
@@ -706,7 +706,7 @@ static void PrintVariable(HOSFILE file, lua_State* L, int32_t index, int32_t dep
     OsWriteFile(file, s_printBuffer, SStrLen(s_printBuffer), &written);
 }
 
-// PROVEN: 05fa48bd IDENTICAL/UNPROVEN
+// PROVEN: 05fa48bd IDENTICAL/IDENTICAL
 // OFFSET: 0x0083BCB0/0x1405664C0
 int32_t FrameScript_PrintVariable(HOSFILE file, const char* name) {
     lua_State* L = s_context;
@@ -736,7 +736,7 @@ int32_t FrameScript_PrintVariable(HOSFILE file, const char* name) {
     return 1;
 }
 
-// PROVEN: d9a7fd5b IDENTICAL/DIFFERENT
+// PROVEN: d9a7fd5b IDENTICAL/IDENTICAL
 // OFFSET: 0x0083BDA0/0x140566610
 int32_t FrameScript_LoadVariables(const char* filename, CStatus* status) {
     lua_State* L = s_context;
@@ -946,7 +946,7 @@ int32_t FrameScript_CompileFunction(const char* name, const char* wrapper, const
     return function;
 }
 
-// PROVEN: 987adb75 IDENTICAL/UNPROVEN
+// PROVEN: 987adb75 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083C210/0x140566BA0
 void FrameScript_ReleaseFunction(int32_t function) {
     luaL_unref(s_context, LUA_REGISTRYINDEX, function);
@@ -985,7 +985,7 @@ void FrameScript_Execute(const char* source, const char* filename, const char* t
     }
 }
 
-// PROVEN: 71bfa199 IDENTICAL/NONE
+// PROVEN: 71bfa199 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083C310/0x140566CD0
 double FrameScript_GetScriptCPUUsage() {
     return s_scriptTimeUsed * s_scriptTimeDivisor;
@@ -1003,7 +1003,7 @@ static bool IsIntegerNumber(double value) {
     return _finite(value) && value >= -2147483648.0 && value <= 2147483647.0;
 }
 
-// OFFSET: 0x0083C370
+// OFFSET: 0x0083C370/0x140566D00
 void FrameScript_PackVariable(lua_State* L, const char* name, int32_t depth, char* buffer, uint32_t bufferLen) {
     char line[1024];
 
@@ -1110,7 +1110,7 @@ void FrameScript_PackVariable(lua_State* L, const char* name, int32_t depth, cha
     }
 }
 
-// PROVEN: 9d2f43e4 IDENTICAL/UNPROVEN
+// PROVEN: 9d2f43e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083CB70/0x1405677B0
 static int32_t FrameScript_HandleError(lua_State* L) {
     if (!lua_isstring(L, -1)) {
@@ -1191,7 +1191,7 @@ bool FrameScript_GetText(const char* token, char* buffer, uint32_t size, int32_t
 
 // OFFSET: 0x0083D310/0x140568110
 const char* FrameScript_GetText(const char* token, int32_t count, FRAMESCRIPT_GENDER gender) {
-    // STATIC: 0x00EBF468
+    // STATIC: 0x00EBF468/0x140DB14D0
     static const char* text;
 
     text = "";
@@ -1300,7 +1300,7 @@ bool FrameScript_ShouldSignalEvent(uint32_t index) {
     return event && event->m_listeners.Head();
 }
 
-// PROVEN: 4faa3e58 IDENTICAL/UNPROVEN
+// PROVEN: 4faa3e58 IDENTICAL/IDENTICAL
 // OFFSET: 0x0083DE40/0x140569140
 void FrameScript_Execute(int32_t function, FrameScript_Object* object, int32_t argCount, const char* taint, FrameScript_EventObject* event) {
     lua_State* L = s_context;
@@ -1389,7 +1389,7 @@ void FrameScript_ResetCPUUsage() {
     lua_gcresettimes(s_context);
 }
 
-// OFFSET: 0x0083EF30
+// OFFSET: 0x0083EF30/0x14056A780
 FrameScript_EventObject::~FrameScript_EventObject() {
     this->m_listeners.Clear();
 }
@@ -1432,13 +1432,13 @@ void FrameScript_UnregisterScriptEvent(FrameScript_Object* object, FrameScript_E
     }
 }
 
-// OFFSET: 0x0083E410
+// OFFSET: 0x0083E410/0x140569840
 static void DestroyEvents() {
     s_scriptEventsHash.Clear();
     s_scriptEvents.Clear();
 }
 
-// PROVEN: 98724317 IDENTICAL/NONE
+// PROVEN: 98724317 IDENTICAL/DIFFERENT
 // OFFSET: 0x0083E810/0x140569EA0
 void FrameScript_Destroy() {
     if (s_eventTimes) {
@@ -1554,7 +1554,7 @@ void FrameScript_SignalEvent(uint32_t index, lua_State* L, int32_t argCount) {
     }
 }
 
-// PROVEN: 3d3e8f5d IDENTICAL/NONE
+// PROVEN: 3d3e8f5d IDENTICAL/IDENTICAL
 // OFFSET: 0x0083EC60/0x14056A450
 void FrameScript_Flush() {
     if (s_context) {

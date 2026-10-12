@@ -17,7 +17,7 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// OFFSET: 0x00616F50
+// OFFSET: 0x00616F50/0x1402A3EA0
 static int32_t CanWrapBetween(uint32_t previous, uint32_t next) {
     if (!previous) {
         return 0;
@@ -179,13 +179,13 @@ static float GetCharacterWidth(const char* text, uint32_t flags, uint32_t code, 
 }
 
 // PROVEN: 23686516 IDENTICAL/NONE
-// OFFSET: 0x006176E0
+// OFFSET: 0x006176E0/0x1402A4660
 void* FreeTypeAlloc(FT_Memory memory, long size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
 // PROVEN: 57edaa45 IDENTICAL/NONE
-// OFFSET: 0x00617700
+// OFFSET: 0x00617700/0x1402A4680
 void FreeTypeFree(FT_Memory memory, void* block) {
     if (block) {
         SMemFree(block, __FILE__, __LINE__, 0);
@@ -193,7 +193,7 @@ void FreeTypeFree(FT_Memory memory, void* block) {
 }
 
 // PROVEN: 0055a10d IDENTICAL/NONE
-// OFFSET: 0x00617720
+// OFFSET: 0x00617720/0x1402A46B0
 void* FreeTypeRealloc(FT_Memory memory, long curSize, long newSize, void* block) {
     return SMemReAlloc(block, newSize, __FILE__, __LINE__, 0);
 }
@@ -210,7 +210,7 @@ float GetMaxScreenHeight() {
     return 32.0f / static_cast<float>(g_heightPixels);
 }
 
-// OFFSET: 0x006177A0
+// OFFSET: 0x006177A0/0x1402A4720
 void InternalWipeUntilNameTokenStop(char* text) {
     if (!text || !*text) {
         return;
@@ -261,7 +261,7 @@ float ScreenToPixelHeight(int32_t unscaled, float height) {
     return CMath::fint_n(pixels);
 }
 
-// OFFSET: 0x00617890
+// OFFSET: 0x00617890/0x1402A47F0
 float ScreenToPixelWidth(int32_t unscaled, float width) {
     if (unscaled) {
         return width;
@@ -271,7 +271,7 @@ float ScreenToPixelWidth(int32_t unscaled, float width) {
     return CMath::fint_n(pixels);
 }
 
-// OFFSET: 0x006178D0
+// OFFSET: 0x006178D0/0x1402A4840
 bool SetProjection() {
     float minX = g_theGxDevicePtr->m_viewport.m_x.m_l;
     float maxX = g_theGxDevicePtr->m_viewport.m_x.m_h;
@@ -316,7 +316,7 @@ bool SetProjection() {
     return true;
 }
 
-// OFFSET: 0x00617BA0
+// OFFSET: 0x00617BA0/0x1402A4AE0
 bool ParseEmbeddedTexture(const char* text, GXUEMBEDDEDTEXTUREINFO* info, float fontPixelHeight, float scale, float fontHeight) {
     CRect window;
     window.minY = 0.0f;

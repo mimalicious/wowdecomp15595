@@ -86,4 +86,6 @@ class ShipPath {
     void GetPosition(uint32_t time, uint32_t elapsed, int32_t* mapId, uint32_t* sequence, C3Vector* position, float* facing, uint32_t* leg, float* roll, float* pitch, int32_t absolute);
 };
 
+#include "WoW/Source/Game/ShipPath.inl"
+
 #endif

@@ -34,26 +34,29 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// STATIC: 0x00F49160
+// STATIC: 0x00F49160/0x140E3D260
 static char s_stationeryTexture[260];
 
 static char s_packageTexture[260];
 
-// STATIC: 0x00F49268
+// STATIC: 0x00F49268/0x140E3D370
 static char s_headerTexture[260];
 
+// PROVEN: 804d43c1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096DB10/0x1406E4B30
 static int32_t Script_GetSendMailMoney(lua_State* L) {
     lua_pushnumber(L, CGMailInfo::m_sendMoney);
     return 1;
 }
 
+// PROVEN: fac56e2f IDENTICAL/IDENTICAL
 // OFFSET: 0x0096DBD0/0x1406E4BD0
 static int32_t Script_GetSendMailCOD(lua_State* L) {
     lua_pushnumber(L, CGMailInfo::m_sendCOD);
     return 1;
 }
 
+// PROVEN: 3ffa8d3d IDENTICAL/IDENTICAL
 // OFFSET: 0x0096DC90/0x1406E4C40
 static int32_t Script_HasNewMail(lua_State* L) {
     if (fabsf(CGMailInfo::m_nextMailTime) < 2.3841858e-7f) {
@@ -65,6 +68,7 @@ static int32_t Script_HasNewMail(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 1b5a6f0b IDENTICAL/IDENTICAL
 // OFFSET: 0x0096DC30/0x1406E4C00
 static int32_t Script_GetInboxNumItems(lua_State* L) {
     lua_pushnumber(L, CGMailInfo::m_numInboxItems);
@@ -198,6 +202,7 @@ static int32_t Script_TakeInboxTextItem(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 170d7ff6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096E6A0/0x1406E58A0
 static int32_t Script_SelectStationery(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -250,6 +255,7 @@ static int32_t Script_GetStationeryInfo(lua_State* L) {
     return 3;
 }
 
+// PROVEN: 3ad7d5bc IDENTICAL/IDENTICAL
 // OFFSET: 0x0096DAB0/0x1406E4AC0
 static int32_t Script_SetSendMailShowing(lua_State* L) {
     if (lua_type(L, 1) != LUA_TBOOLEAN) {
@@ -287,6 +293,7 @@ static int32_t Script_GetPackageInfo(lua_State* L) {
     return 3;
 }
 
+// PROVEN: 50d2b47b IDENTICAL/IDENTICAL
 // OFFSET: 0x0096E7A0/0x1406E59A0
 static int32_t Script_GetNumPackages(lua_State* L) {
     lua_pushnumber(L, g_packageDB.m_numRecords);
@@ -329,12 +336,14 @@ static int32_t Script_GetSendMailPrice(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 632b97e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x0096DB00/0x1406E4B10
 static int32_t Script_ClearSendMail(lua_State* L) {
     CGMailInfo::ClearSendMail(true);
     return 0;
 }
 
+// PROVEN: 164e8a8b IDENTICAL/IDENTICAL
 // OFFSET: 0x0096DB70/0x1406E4B60
 static int32_t Script_SetSendMailCOD(lua_State* L) {
     uint64_t amount;
@@ -589,6 +598,7 @@ static int32_t Script_GetInboxInvoiceInfo(lua_State* L) {
     return 7;
 }
 
+// PROVEN: fb6924fb IDENTICAL/IDENTICAL
 // OFFSET: 0x009725F0/0x1406EA430
 static int32_t Script_GetInboxItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -738,6 +748,7 @@ static int32_t Script_GetLatestThreeSenders(lua_State* L) {
     return count;
 }
 
+// PROVEN: dd55841d IDENTICAL/DIFFERENT
 // OFFSET: 0x0096F480/0x1406E6890
 static int32_t Script_RespondMailLockSendItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -822,6 +833,7 @@ static int32_t Script_ClickSendMailItemButton(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 8cf61de3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0096FD40/0x1406E7340
 static int32_t Script_SetSendMailMoney(lua_State* L) {
     uint64_t amount;
@@ -1080,6 +1092,7 @@ static int32_t Script_GetInboxText(lua_State* L) {
     return 4;
 }
 
+// PROVEN: cc2626d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00972360/0x1406EA110
 static int32_t Script_GetInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1190,6 +1203,7 @@ static int32_t Script_TakeInboxItem(lua_State* L) {
     return 0;
 }
 
+// PROVEN: d94143cf IDENTICAL/IDENTICAL
 // OFFSET: 0x009702D0/0x1406E79C0
 static int32_t Script_ComplainInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1201,6 +1215,7 @@ static int32_t Script_ComplainInboxItem(lua_State* L) {
     return 0;
 }
 
+// PROVEN: a99d74ab IDENTICAL/IDENTICAL
 // OFFSET: 0x00970340/0x1406E7A10
 static int32_t Script_CanComplainInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1217,6 +1232,7 @@ static int32_t Script_CanComplainInboxItem(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d97930b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009703D0/0x1406E7A90
 static int32_t Script_AutoLootMailItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -1232,6 +1248,7 @@ static int32_t Script_AutoLootMailItem(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 409a5828 IDENTICAL/NONE
 // OFFSET: 0x0096FCD0
 static int32_t Script_CloseMail(lua_State* L) {
     CGMailInfo::ClearSendMail(false);
@@ -1250,6 +1267,7 @@ static int32_t Script_CloseMail(lua_State* L) {
     return 0;
 }
 
+// PROVEN: af70eb03 IDENTICAL/IDENTICAL
 // OFFSET: 0x00972A90/0x1406EAAD0
 static int32_t Script_GetNumStationeries(lua_State* L) {
     if (!CGMailInfo::m_pendingStationeryCallbacks) {
@@ -1260,7 +1278,7 @@ static int32_t Script_GetNumStationeries(lua_State* L) {
     return 1;
 }
 
-// STATIC: 0x00D13348
+// STATIC: 0x00D13348/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseMail", &Script_CloseMail },
     { "ClearSendMail", &Script_ClearSendMail },
@@ -1302,6 +1320,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "RespondMailLockSendItem", &Script_RespondMailLockSendItem },
 };
 
+// PROVEN: 82939c42 IDENTICAL/UNPROVEN
 // OFFSET: 0x0096DCE0/0x1406E4C90
 void MailInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -1309,6 +1328,7 @@ void MailInfoRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 5e59486f IDENTICAL/UNPROVEN
 // OFFSET: 0x0096DD10/0x1406E4CE0
 void MailInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -184,7 +184,7 @@ class CParticleEmitter2 {
     /* 0200 */ C3Vector m_burstOffset;
     /* 020C */ C3Vector m_billboardAxis;
     /* 0218 */ CAaBox m_worldBounds;
-    /* 0230 */ uint32_t unk_0230;
+    /* 0230 */ void* unk_0230;
 
     virtual void Sync();
     virtual void CreateParticle(CParticle2& particle, float time, const C44Matrix& transform);
@@ -323,5 +323,7 @@ class CSplineParticleEmitter : public CParticleEmitter2 {
     void SetEmissionRate(float rate) override;
     void SetSpline(const C3Vector* points, uint32_t count);
 };
+
+#include "Engine/Source/Services/ParticleSystem2.inl"
 
 #endif

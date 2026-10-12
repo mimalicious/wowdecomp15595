@@ -18,10 +18,10 @@
 #include "WoW/Source/WorldClient/WorldParam.h"
 #include "WoW/Source/WorldClient/MapObjRender.h"
 
-// STATIC: 0x00E7567C
+// STATIC: 0x00E7567C/0x140D5F468
 int32_t CMapObj::bPoolsDirty;
 
-// STATIC: 0x00E75678
+// STATIC: 0x00E75678/0x140D5F460
 TSObjectAllocPool<CMapObjOccluder>* CMapObj::s_occluderPool;
 
 // STATIC: 0x00E75684
@@ -39,19 +39,19 @@ static float s_minimapQuadSize = s_minimapTexelSize * 256.0f;
 // STATIC: 0x00E75680
 static uint32_t s_minimapQueryTag;
 
-// PROVEN: 90e66194 IDENTICAL/NONE
-// OFFSET: 0x007459F0
+// PROVEN: 90e66194 IDENTICAL/IDENTICAL
+// OFFSET: 0x007459F0/0x140423900
 void CMapObj::DestroyPools() {
     CMapObj::bPoolsDirty = 1;
 }
 
-// PROVEN: 346c15fb IDENTICAL/NONE
-// OFFSET: 0x00745A00
+// PROVEN: 346c15fb IDENTICAL/IDENTICAL
+// OFFSET: 0x00745A00/0x140423910
 void CMapObj::UpdatePools() {
     CMapObj::bPoolsDirty = 0;
 }
 
-// PROVEN: 71aa0cc3 IDENTICAL/UNPROVEN
+// PROVEN: 71aa0cc3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00745A10/0x140423920
 void CMapObj::LinkToAsyncHead(void* param) {
     AsyncFileReadLinkToPriority(static_cast<CMapObj*>(param)->m_asyncObject, 1);
@@ -94,6 +94,7 @@ void CMapObj::AsyncFreeCallback(CAsyncObject* object) {
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
+// PROVEN: 293c328d IDENTICAL/IDENTICAL
 // OFFSET: 0x00745B00/0x140423A20
 uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t flags) {
     uint32_t ignore = 0xEE;
@@ -129,7 +130,7 @@ uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t flags) {
     return ignore;
 }
 
-// PROVEN: 893420cb IDENTICAL/UNPROVEN
+// PROVEN: 893420cb IDENTICAL/IDENTICAL
 // OFFSET: 0x00745B60/0x140423A70
 void CMapObj::ReadGroup(uint32_t groupNum) {
     this->ReadGroup(groupNum, 0);
@@ -255,6 +256,7 @@ void CMapObj::GetGroupBounds(CAaBox& box, uint32_t groupNum) {
     box.t.z = 0.0f;
 }
 
+// PROVEN: 21a2cdc6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00745F30/0x140423E70
 uint32_t CMapObj::GetGroupFlags(uint32_t groupNum) {
     if (!(this->m_flags & 0x40)) {
@@ -273,7 +275,7 @@ int32_t CMapObj::TestBounds(const CAaBox& box) {
     return this->m_bbox.t.x >= box.b.x && this->m_bbox.t.y >= box.b.y && this->m_bbox.t.z >= box.b.z && box.t.x >= this->m_bbox.b.x && box.t.y >= this->m_bbox.b.y && box.t.z >= this->m_bbox.b.z;
 }
 
-// OFFSET: 0x00745FF0
+// OFFSET: 0x00745FF0/0x140423F00
 int32_t CMapObj::TestBounds(const C3Vector& pos) {
     if (!(this->m_flags & 0x40)) {
         return 0;
@@ -282,7 +284,7 @@ int32_t CMapObj::TestBounds(const C3Vector& pos) {
     return pos.x >= this->m_bbox.b.x && pos.y >= this->m_bbox.b.y && pos.z >= this->m_bbox.b.z && this->m_bbox.t.x >= pos.x && this->m_bbox.t.y >= pos.y && this->m_bbox.t.z >= pos.z;
 }
 
-// OFFSET: 0x00746080
+// OFFSET: 0x00746080/0x140423F60
 int32_t CMapObj::TestBounds(const C3Vector& start, const C3Vector& end) {
     return (this->m_flags & 0x40) && CWorldMath::VectorIntersectAABox2(this->m_bbox, start, end) != 0;
 }
@@ -365,6 +367,7 @@ const char* CMapObj::GetGroupName(uint32_t groupNum) {
     return NULL;
 }
 
+// PROVEN: ae78c0e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00746330/0x1404241E0
 SMOGroupInfo* CMapObj::GetGroupInfo(uint32_t groupNum) {
     if (!(this->m_flags & 0x40)) {
@@ -374,7 +377,7 @@ SMOGroupInfo* CMapObj::GetGroupInfo(uint32_t groupNum) {
     return &this->m_groupInfos[groupNum];
 }
 
-// OFFSET: 0x00746350
+// OFFSET: 0x00746350/0x140424200
 int32_t CMapObj::QueryLighting(uint32_t groupNum, const C3Vector& pos, uint16_t polyIndex, CImVector& color, bool& exterior) {
     if (!(this->m_flags & 0x40)) {
         return 0;
@@ -389,7 +392,7 @@ int32_t CMapObj::QueryLighting(uint32_t groupNum, const C3Vector& pos, uint16_t 
     return group->QueryLighting(pos, polyIndex, color, exterior);
 }
 
-// OFFSET: 0x00746390
+// OFFSET: 0x00746390/0x140424250
 int32_t CMapObj::QueryLiquid(uint32_t ignoreFlags, int32_t requireTiles, const C3Vector& pos, uint32_t& liquidType, float& height) {
     for (uint32_t i = 0; i < this->m_groupCount; i++) {
         if (!(this->m_flags & 0x40)) {
@@ -603,6 +606,7 @@ bool CMapObj::GetTris(const CFrustum& frustum, uint32_t flags, World::TriData& t
     return result;
 }
 
+// PROVEN: 9efbd32b DIFFERENT/IDENTICAL
 // OFFSET: 0x00746B30/0x140424E00
 bool CMapObj::Intersect(const C3Vector& start, const C3Vector& end, float& t, uint32_t flags, uint32_t ignoreFlags, uint32_t groupNum, uint32_t& faceIndex) {
     if (this->m_flags & 0x40) {
@@ -619,7 +623,7 @@ bool CMapObj::Intersect(const C3Vector& start, const C3Vector& end, float& t, ui
     return false;
 }
 
-// OFFSET: 0x00746BA0
+// OFFSET: 0x00746BA0/0x140424E90
 bool CMapObj::VectorIntersectPortals(uint32_t groupNum, const C3Segment& seg, float& t, uint32_t* groups) {
     if (!(this->m_flags & 0x40)) {
         return false;
@@ -688,7 +692,7 @@ bool CMapObj::VectorIntersectPortals(uint32_t groupNum, const C3Segment& seg, fl
     return found;
 }
 
-// OFFSET: 0x00746E00
+// OFFSET: 0x00746E00/0x1404251D0
 bool CMapObj::ClosestPortal(uint32_t groupNum, const C3Vector& pos, float* dist, uint32_t* closestGroup) {
     if (!(this->m_flags & 0x40)) {
         return false;
@@ -765,7 +769,7 @@ CMapObj::~CMapObj() {
     this->Clear();
 }
 
-// OFFSET: 0x007470B0
+// OFFSET: 0x007470B0/0x140425550
 int32_t CMapObj::IsAllLoaded() {
     if (!(this->m_flags & 0x40)) {
         return 0;
@@ -945,7 +949,7 @@ void CMapObj::GetMinimapQuads(const CAaBox& box, TSStackArray<World::MinimapQuad
     ::GetMinimapQuads(bounds, box, this->m_groupCount, quads, maxQuads);
 }
 
-// OFFSET: 0x007477E0
+// OFFSET: 0x007477E0/0x1404262B0
 void CMapObj::ClearCache() {
     CMapObj* mapObj = CMapObj::s_mapObjHash.Head();
 
@@ -996,12 +1000,13 @@ void CMapObj::Initialize() {
     CMapObj::s_occluderPool = mem ? new (mem) TSObjectAllocPool<CMapObjOccluder>("MAPOBJOCC", 128) : NULL;
 }
 
-// OFFSET: 0x00747C90
+// PROVEN: 26881406 IDENTICAL/DIFFERENT
+// OFFSET: 0x00747C90/0x1404268B0
 CMapObjOccluder* CMapObj::AllocOccluder() {
     return CMapObj::s_occluderPool->New("", 0);
 }
 
-// OFFSET: 0x00747CB0
+// OFFSET: 0x00747CB0/0x140426940
 void CMapObj::Destroy() {
     CMapObj::ClearCache();
     CMapObjGroup::Destroy();
@@ -1014,6 +1019,7 @@ void CMapObj::Destroy() {
     }
 }
 
+// PROVEN: d9e2a771 IDENTICAL/DIFFERENT
 // OFFSET: 0x00747CE0/0x1404269E0
 void CMapObj::FreeOccluder(CMapObjOccluder* occluder) {
     CMapObj::s_occluderPool->Delete(occluder, "", 0);
@@ -1036,7 +1042,7 @@ CMapObj* CMapObj::Create(const char* name) {
     return mapObj;
 }
 
-// OFFSET: 0x0077D630
+// OFFSET: 0x0077D630/0x140469FA0
 void CMapObj::QueryLiquidSounds(uint32_t groupNum, uint32_t fromGroup, uint32_t depth, uint32_t* distance, const C3Vector& pos, TSGrowableArray<World::LiquidQueryResult>& results) {
     if (depth > 2) {
         return;

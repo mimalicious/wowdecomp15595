@@ -3,17 +3,12 @@
 #include "Engine/Source/Frame/CSimpleFontable.h"
 #include "Engine/Source/Frame/CSimpleFont.h"
 
-// INLINED
-CSimpleFontable::CSimpleFontable() {
-    this->m_fontableFlags = 0x1F;
-    this->m_fontObject = NULL;
-}
-
 // OFFSET: [0x004FB490/0x14013F520, 0x004FB4F0/0x14013F5A0]
 CSimpleFontable::~CSimpleFontable() {
     this->SetFontObject(NULL);
 }
 
+// PROVEN: a7fe9839 IDENTICAL/UNPROVEN
 // OFFSET: 0x004FB3E0/0x14013F2E0
 void CSimpleFontable::SetFontObject(CSimpleFont* font) {
     if (this->m_fontObject == font) {

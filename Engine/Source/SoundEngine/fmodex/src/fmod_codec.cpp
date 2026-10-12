@@ -100,7 +100,7 @@ FMOD_RESULT Codec::release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 12611afb IDENTICAL/UNPROVEN
+// PROVEN: 12611afb IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACB0A0/0x1408951C0
 FMOD_RESULT Codec::read(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -199,7 +199,7 @@ FMOD_RESULT Codec::read(void *buffer, unsigned int sizebytes, unsigned int *byte
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a9b69fa0 IDENTICAL/DIFFERENT
+// PROVEN: a9b69fa0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACB020/0x1408950E0
 FMOD_RESULT Codec::getMetadataFromFile()
 {

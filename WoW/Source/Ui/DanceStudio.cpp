@@ -14,13 +14,13 @@
 #include "WoW/Source/Object/Unit.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 
-// STATIC: 0x00F4D578
+// STATIC: 0x00F4D578/0x140E41F40
 uint64_t CGDanceStudio::m_learnedDanceMoves;
 
-// STATIC: 0x00F4D580
+// STATIC: 0x00F4D580/0x140BCF320
 static TSHashTable<KNOWNDANCES, HASHKEY_STRI> s_knownDances;
 
-// OFFSET: 0x009B8C40
+// OFFSET: 0x009B8C40/0x140743780
 int32_t Packet_SMSG_NOTIFY_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t flags;
     msg->Get(flags);
@@ -105,12 +105,14 @@ void CGDanceStudio::InitializeGame() {
     ClientServices::SetMessageHandler(SMSG_LEARNED_DANCE_MOVES, Packet_SMSG_LEARNED_DANCE_MOVES, NULL);
 }
 
-// OFFSET: 0x009B7D70
+// PROVEN: e5087bb4 IDENTICAL/IDENTICAL
+// OFFSET: 0x009B7D70/0x1407422E0
 int32_t Packet_SMSG_LEARNED_DANCE_MOVES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     msg->Get(CGDanceStudio::m_learnedDanceMoves);
     return 1;
 }
 
+// PROVEN: 9ded33b6 IDENTICAL/NONE
 // OFFSET: 0x009B8540
 void CGDanceStudio::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_PLAY_DANCE);
@@ -133,7 +135,8 @@ static bool IsDanceMoveAvailable(const DanceMovesRec* move, uint8_t race) {
     return !move->m_lockID || (CGDanceStudio::m_learnedDanceMoves & (1ull << (move->m_lockID - 1)));
 }
 
-// OFFSET: 0x009B7D20
+// PROVEN: 2a9da619 IDENTICAL/DIFFERENT
+// OFFSET: 0x009B7D20/0x140742290
 int32_t Packet_SMSG_STOP_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -203,7 +206,7 @@ static void DanceSequenceCallBack(int32_t id, const WOWGUID& guid, void* param, 
     delete request;
 }
 
-// OFFSET: 0x009B7F80
+// OFFSET: 0x009B7F80/0x140742570
 int32_t Packet_SMSG_PLAY_DANCE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     int32_t danceId;
@@ -322,6 +325,7 @@ void PlayDance(const char* name) {
     }
 }
 
+// PROVEN: ff4cf9df IDENTICAL/DIFFERENT
 // OFFSET: 0x009B8360/0x140742B10
 bool CGDanceStudio::HasDance(const char* name) {
     return s_knownDances.Ptr(name) != NULL;

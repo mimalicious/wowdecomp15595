@@ -5,16 +5,17 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00F76B64
+// STATIC: 0x00F76B64/0x140E6CC88
 CDynamicString s_motd;
 
-// STATIC: 0x00F76B70
+// STATIC: 0x00F76B70/0x140E6CC98
 CDynamicString s_serverStatus;
 
-// STATIC: 0x00F76B7C
+// STATIC: 0x00F76B7C/0x140E6CCA8
 CDynamicString s_serverNotice;
 
-// OFFSET: 0x009FBBB0
+// PROVEN: c11e0599 IDENTICAL/UNPROVEN
+// OFFSET: 0x009FBBB0/0x1407991F0
 static int32_t Packet_SMSG_MOTD(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     if (msgId != SMSG_MOTD) {
         return 0;
@@ -52,7 +53,8 @@ void CKBSystem::Initialize() {
     ClientServices::SetMessageHandler(SMSG_MOTD, Packet_SMSG_MOTD, NULL);
 }
 
-// OFFSET: 0x009FC9A0
+// PROVEN: 72b9e0cc IDENTICAL/UNPROVEN
+// OFFSET: 0x009FC9A0/0x14079A5C0
 void CKBSystem::Shutdown() {
     s_motd.Free();
     s_serverStatus.Free();

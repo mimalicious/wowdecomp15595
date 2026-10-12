@@ -69,7 +69,7 @@ ComSat::BitUnpacker::BitUnpacker(const uint8_t* buffer, uint32_t bitLength) {
     this->m_bitOffset = 0;
 }
 
-// OFFSET: 0x00A39290
+// OFFSET: 0x00A39290/0x1407E5450
 ComSat::BitUnpacker::~BitUnpacker() {
 }
 

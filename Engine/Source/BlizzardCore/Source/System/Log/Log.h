@@ -66,7 +66,6 @@ struct LogGlobals {
     /* 01F8 */ Blizzard::Thread::ThreadRecord* m_thread;
     /* 01FC */ bool m_threadRunning;
     /* 01FD */ bool m_threadDone;
-    /* 01FE */ uint8_t unk_01FE[2];
 };
 
 extern Pref* s_Prefs;

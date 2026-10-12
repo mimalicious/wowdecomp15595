@@ -34,8 +34,8 @@ class Manager : public Interface, public Sound::Manager::Callback, public Sessio
         LocalTalker(Allocator& allocator);
     };
 
-    /* 000C */ uint32_t m_maxLocalPlayers;
-    /* 0010 */ uint32_t unk_0010;
+    /* 000C */ size_t m_maxLocalPlayers;
+    /* 0010 */ size_t unk_0010;
     /* 0014 */ Sound::Manager* m_soundManager;
     /* 0018 */ Network::Manager* m_networkManager;
     /* 001C */ Allocator* m_allocator;

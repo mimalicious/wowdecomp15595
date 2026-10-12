@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[47] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 // STATIC: 0x00C21954/0x140A16590
 const DBCMeta SpellRec::s_meta = { "DBFilesClient\\Spell.dbc", 47, 192, SpellRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 22d7cca3 IDENTICAL/NONE
+// PROVEN: 22d7cca3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2E9E0/0x1407D7F10
 void SpellRec::FixupStrings(void* record, const char* strings) {
     SpellRec* rec = static_cast<SpellRec*>(record);

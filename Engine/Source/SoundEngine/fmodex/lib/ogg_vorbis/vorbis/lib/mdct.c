@@ -350,6 +350,7 @@ STIN void mdct_butterflies(mdct_lookup *init,
 
 }
 
+// PROVEN: 2976310b DIFFERENT/IDENTICAL
 // OFFSET: 0x00B47310/0x1409167D0
 void FMOD_mdct_clear(mdct_lookup *l){
   if(l){

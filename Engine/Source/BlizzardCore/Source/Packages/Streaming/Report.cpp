@@ -6,22 +6,22 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Tracker.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// STATIC: 0x00D074F4
+// STATIC: 0x00D074F4/0x140BB80D8
 static const char* s_trackerAddressUS = "http://us.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: 0x00D074F8
+// STATIC: 0x00D074F8/0x140BB80E0
 static const char* s_trackerAddressEU = "http://eu.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: 0x00D074FC
+// STATIC: 0x00D074FC/0x140BB80E8
 static const char* s_trackerAddressKR = "http://kr.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: 0x00D07500
+// STATIC: 0x00D07500/0x140BB80F0
 static const char* s_trackerAddressCN = "http://cn.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: 0x00D07504
+// STATIC: 0x00D07504/0x140BB80F8
 static const char* s_trackerAddressTW = "http://tw.tracker.worldofwarcraft.com:3724/announce";
 
-// STATIC: 0x00EBAD89
+// STATIC: 0x00EBAD89/0x140DABAB1
 bool Report::s_initialized;
 
 // STATIC: 0x00EBAD90
@@ -30,7 +30,7 @@ char Report::s_app[260];
 // STATIC: 0x00EBAE98
 char Report::s_version[260];
 
-// STATIC: 0x00EBAFA0
+// STATIC: 0x00EBAFA0/0x140DABCE0
 char ReportOld::s_language[260];
 
 // PROVEN: f8b41de0 IDENTICAL/IDENTICAL
@@ -147,7 +147,7 @@ std::vector<Report::LogData*>::iterator Report::FindLogData(std::string key) {
     return GetLogData().end();
 }
 
-// OFFSET: 0x007FE200
+// OFFSET: 0x007FE200/0x140511130
 void Report::Reset() {
     for (std::vector<LogData*>::iterator it = GetLogData().begin(); it != GetLogData().end(); ++it) {
         delete *it;
@@ -157,7 +157,7 @@ void Report::Reset() {
 }
 
 // PROVEN: 7c7b2d1b IDENTICAL/NONE
-// OFFSET: 0x007FE3C0
+// OFFSET: 0x007FE3C0/0x1405112E0
 void Report::Shutdown() {
     Reset();
     s_initialized = false;

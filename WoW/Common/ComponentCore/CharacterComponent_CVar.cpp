@@ -5,13 +5,13 @@
 #include "Engine/Source/Os/System.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x0100AA9C
+// STATIC: 0x0100AA9C/0x140EE26A0
 CVar* CCharacterComponent::g_componentTextureLevelVar;
 
-// STATIC: 0x0100AA98
+// STATIC: 0x0100AA98/0x140EE2698
 CVar* CCharacterComponent::g_componentThreadVar;
 
-// STATIC: 0x0100AA94
+// STATIC: 0x0100AA94/0x140EE2690
 CVar* CCharacterComponent::g_componentCompressVar;
 
 // PROVEN: 0c306dc8 IDENTICAL/IDENTICAL
@@ -48,7 +48,7 @@ static bool ComponentTextureLevelCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
-// PROVEN: 13a1ea1f IDENTICAL/NONE
+// PROVEN: 13a1ea1f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3C180/0x140909030
 void CCharacterComponent::InitCVars() {
     CCharacterComponent::g_componentTextureLevelVar = CVar::Register("componentTextureLevel", "Number of mip levels used for character component textures", 1, "8", ComponentTextureLevelCallback, CATEGORY_GRAPHICS, false, NULL, false);

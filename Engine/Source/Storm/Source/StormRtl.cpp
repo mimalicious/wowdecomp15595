@@ -1,6 +1,6 @@
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: 76b0704d IDENTICAL/UNPROVEN
+// PROVEN: 76b0704d IDENTICAL/IDENTICAL
 // OFFSET: 0x004B2CC0/0x1400E9590
 void StormRtlDestroy() {
     SErrSetLogCallback(NULL);

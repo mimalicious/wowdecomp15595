@@ -10,31 +10,31 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00CA0EF4
+// STATIC: 0x00CA0EF4/0x140B3D944
 static int32_t s_lastAreaID = -1;
 
-// STATIC: 0x00CA0EF8
+// STATIC: 0x00CA0EF8/0x140B3D948
 static int32_t s_lastSubAreaID = -1;
 
-// STATIC: 0x00CA0EFC
+// STATIC: 0x00CA0EFC/0x140B3D94C
 static int32_t s_lastMapID = -1;
 
-// STATIC: 0x00CA0F00
+// STATIC: 0x00CA0F00/0x140B3D950
 static int32_t s_lastWMOID = -1;
 
-// STATIC: 0x00CA0F04
+// STATIC: 0x00CA0F04/0x140B3D954
 static int32_t s_lastWMOHash = -1;
 
-// STATIC: 0x00CA0F08
+// STATIC: 0x00CA0F08/0x140B3D958
 static int32_t s_lastWMOGroupNum = -1;
 
-// STATIC: 0x00CA0F0C
+// STATIC: 0x00CA0F0C/0x140B3D95C
 static uint32_t s_wmoGroupID = static_cast<uint32_t>(-1);
 
-// STATIC: 0x00DC0D34
+// STATIC: 0x00DC0D34/0x140CACC44
 static int32_t s_inMapObj;
 
-// PROVEN: 9305d4f7 IDENTICAL/NONE
+// PROVEN: 9305d4f7 IDENTICAL/IDENTICAL
 // OFFSET: 0x004D9980/0x14011EE80
 void AreaListShutdown() {
     s_lastAreaID = -1;
@@ -163,7 +163,7 @@ static bool AreaListUpdateCurrentZone(uintptr_t object, const char** zoneName, c
 }
 
 // PROVEN: 64abac18 IDENTICAL/NONE
-// OFFSET: 0x004D9F50
+// OFFSET: 0x004D9F50/0x14011F440
 static void AreaListUpdateSoundsForObject(uintptr_t object, const AreaTableRec* zone, const AreaTableRec* area) {
     const WMOAreaTableRec* groupRec = NULL;
     const WMOAreaTableRec* rootRec = NULL;

@@ -34,8 +34,8 @@ uint8_t* Blizzard::Patch::PatchBuffer::Get(uint32_t offset, uint32_t size) {
     return this->m_data + offset;
 }
 
-// PROVEN: a20f5937 IDENTICAL/NONE
-// OFFSET: 0x007B0970
+// PROVEN: a20f5937 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B0970/0x1404A57A0
 uint8_t* Blizzard::Patch::PatchBuffer::GetAll() {
     uint32_t size = this->m_size;
 
@@ -78,7 +78,7 @@ static void DeleteBuffer(Blizzard::Patch::PatchBuffer* buffer) {
 Blizzard::Patch::Patch::~Patch() {
 }
 
-// OFFSET: 0x007B0AB0
+// OFFSET: 0x007B0AB0/0x1404A5830
 bool Blizzard::Patch::Patch::CopyTransformData(uint8_t* dest) {
     uint32_t size = 0;
     const uint8_t* data = this->GetTransformData(&size);
@@ -211,7 +211,7 @@ uint32_t Blizzard::Patch::V2Patch::GetHeaderSize() {
     return this->m_headerSize;
 }
 
-// PROVEN: c58f7eb2 IDENTICAL/UNPROVEN
+// PROVEN: c58f7eb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x007E6400/0x1404EFE00
 bool Blizzard::Patch::V2Patch::Apply(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, uint32_t destSize) {
     return ApplyTransform(this->m_transform, dest, destSize, source, sourceSize);
@@ -393,8 +393,8 @@ Blizzard::Patch::Patch* Blizzard::Patch::Patch::GetPatch(const uint8_t* data, ui
     return CreatePatch(buffer, error);
 }
 
-// PROVEN: c7a65302 IDENTICAL/NONE
-// OFFSET: 0x007D0160
+// PROVEN: c7a65302 IDENTICAL/DIFFERENT
+// OFFSET: 0x007D0160/0x1404CDF40
 bool Blizzard::Patch::Apply(const uint8_t* patch, uint32_t patchSize, uint8_t* dest, uint32_t destSize, uint8_t* source, uint32_t sourceSize, uint32_t flags) {
     bool result = false;
     Patch* instance = Patch::GetPatch(patch, patchSize);

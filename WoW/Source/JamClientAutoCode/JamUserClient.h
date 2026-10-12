@@ -1063,7 +1063,7 @@ class UserClientLfgTeleport : public JamClientMessage {
 class UserClientCommentatorGetPartyInfo : public JamClientMessage {
     public:
     /* 0010 */ uint32_t unk_0010;
-    /* 0014 */ char unk_0014[256];
+    /* 0014 */ char unk_0014[48];
 
     void Put(CDataStore* msg) override;
 

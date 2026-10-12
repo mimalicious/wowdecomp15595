@@ -33,7 +33,7 @@ Blizzard::Storage::StorageUnit::~StorageUnit() {
     delete this->m_http;
 }
 
-// PROVEN: 2526f65a IDENTICAL/DIFFERENT
+// PROVEN: 2526f65a IDENTICAL/IDENTICAL
 // OFFSET: 0x007ABBA0/0x1404A1AF0
 void Blizzard::Storage::StorageUnit::SetLocal(PartialFile* local, int64_t size) {
     delete this->m_local;
@@ -41,6 +41,7 @@ void Blizzard::Storage::StorageUnit::SetLocal(PartialFile* local, int64_t size) 
     this->m_local = local;
 }
 
+// PROVEN: 9e07e86d DIFFERENT/IDENTICAL
 // OFFSET: 0x007ABBD0/0x1404A1B50
 void Blizzard::Storage::StorageUnit::SetCacheSource() {
     delete this->m_cache;
@@ -132,7 +133,7 @@ void Blizzard::Storage::ReadSegment::Set(int64_t offset, int64_t length, const C
     this->m_length = std::min(next, this->m_length);
 }
 
-// OFFSET: 0x007D5060
+// OFFSET: 0x007D5060/0x1404D5A00
 bool Blizzard::Storage::StorageUnit::Read(int64_t offset, int64_t size, void* buffer) {
     if (!buffer) {
         return false;
@@ -414,19 +415,19 @@ Blizzard::Storage::HttpSource::HttpSource(std::string path, int64_t size) : Back
 Blizzard::Storage::HttpSource::~HttpSource() {
 }
 
-// PROVEN: 0deb56f4 IDENTICAL/NONE
-// OFFSET: 0x007C3810
+// PROVEN: 0deb56f4 IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Storage::HttpSource::FindMissing(int64_t offset, int64_t size, ChunkRange* range) {
     return false;
 }
 
-// PROVEN: 17c6fa7b IDENTICAL/NONE
-// OFFSET: 0x007C3810
+// PROVEN: 17c6fa7b IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Storage::HttpSource::GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) {
     return false;
 }
 
-// PROVEN: 1a827fb7 IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: 1a827fb7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void Blizzard::Storage::HttpSource::AlignRange(ChunkRange* range) {
 }

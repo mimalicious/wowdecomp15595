@@ -9,34 +9,34 @@
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
 #include "WoW/Source/Object/ObjectClient/Types.h"
 
-// STATIC: 0x00DD6330
+// STATIC: 0x00DD6330/0x140CBCAF0
 static ObjectEffectAnimState s_objectEffectAnimStateMap[ANIM_COUNT];
 
 // STATIC: 0x00DD8220
 static HASHKEY_NONE s_hashKeyNone;
 
-// STATIC: 0x00DD8224
+// STATIC: 0x00DD8224/0x140B45780
 static TSHashTable<OBJ_EFFECT_DEF_LOOKUP, HASHKEY_NONE> s_effectDefLookup;
 
 // STATIC: 0x00DD8250
 static TSHashTable<OBJ_EFFECT_GROUP_DEF_LOOKUP, HASHKEY_NONE> s_groupDefLookup;
 
-// STATIC: 0x00DD827C
+// STATIC: 0x00DD827C/0x140B45820
 static TSHashTable<OBJ_EFFECT_PACKAGE_DEF_LOOKUP, HASHKEY_NONE> s_packageDefLookup;
 
-// STATIC: 0x00CA6634
+// STATIC: 0x00CA6634/0x140B45750
 float (*CObjectEffectModifier::s_inputFuncs[2])(CObjectEffectManager* manager) = {
     &CObjectEffectModifier::InputNone,
     &CObjectEffectModifier::InputSpeed,
 };
 
-// STATIC: 0x00CA663C
+// STATIC: 0x00CA663C/0x140B45760
 float (*CObjectEffectModifier::s_mapFuncs[2])(float input, const float* params) = {
     &CObjectEffectModifier::MapNone,
     &CObjectEffectModifier::MapLinear,
 };
 
-// STATIC: 0x00CA6644
+// STATIC: 0x00CA6644/0x140B45770
 void (*CObjectEffectModifier::s_outputFuncs[2])(CObjectEffect* effect, float value) = {
     &CObjectEffectModifier::OutputNone,
     &CObjectEffectModifier::OutputPitch,
@@ -79,7 +79,7 @@ CObjectEffectGroupDefRef::CObjectEffectGroupDefRef() {
     this->m_groupDef = NULL;
 }
 
-// OFFSET: 0x005E09F0
+// OFFSET: 0x005E09F0/0x14025E620
 void InitObjectEffectStateMap() {
     for (int32_t i = 0; i < ANIM_COUNT; i++) {
         s_objectEffectAnimStateMap[i].m_animID = ANIM_COUNT;
@@ -310,14 +310,15 @@ void InitObjectEffectStateMap() {
     s_objectEffectAnimStateMap[574].m_altStateID = 0;
 }
 
-// OFFSET: 0x005E2000
+// PROVEN: c5306f25 IDENTICAL/DIFFERENT
+// OFFSET: 0x005E2000/0x140260020
 void ObjectEffectSystem_ShutDown() {
     s_effectDefLookup.Clear();
     s_groupDefLookup.Clear();
     s_packageDefLookup.Clear();
 }
 
-// OFFSET: 0x005E5A70
+// OFFSET: 0x005E5A70/0x1402657A0
 void ObjectEffectSystem_Initialize() {
     InitObjectEffectStateMap();
 
@@ -470,20 +471,20 @@ CObjectEffect::~CObjectEffect() {
     }
 }
 
-// PROVEN: 08b6ded6 IDENTICAL/NONE
+// PROVEN: 08b6ded6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E20/0x14025E5A0
 float CObjectEffectModifier::InputNone(CObjectEffectManager* manager) {
     return -1.0f;
 }
 
-// PROVEN: f4e17f14 IDENTICAL/NONE
+// PROVEN: f4e17f14 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E1130/0x14025EDD0
 float CObjectEffectModifier::InputSpeed(CObjectEffectManager* manager) {
     return manager->m_owner->GetSpeed();
 }
 
-// PROVEN: ea9cdb28 IDENTICAL/NONE
-// OFFSET: 0x008A0A40
+// PROVEN: ea9cdb28 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A0A40/0x1407D7E80
 float CObjectEffectModifier::MapNone(float input, const float* params) {
     return input;
 }
@@ -506,6 +507,7 @@ float CObjectEffectModifier::MapLinear(float input, const float* params) {
 void CObjectEffectModifier::OutputNone(CObjectEffect* effect, float value) {
 }
 
+// PROVEN: 5cb5b387 IDENTICAL/IDENTICAL
 // OFFSET: 0x005E0920/0x14025E5F0
 void CObjectEffectModifier::OutputPitch(CObjectEffect* effect, float value) {
     SE3::SetFrequencyScale(effect->m_soundKitObject, value);
@@ -523,6 +525,7 @@ void CObjectEffectModifier::Apply(CObjectEffectManager* manager, CObjectEffect* 
     CObjectEffectModifier::s_outputFuncs[this->m_outputType](effect, value);
 }
 
+// PROVEN: 163358bf IDENTICAL/IDENTICAL
 // OFFSET: 0x005E09A0/0x14025E600
 int32_t FindObjectEffectStateFromAnimID(int32_t animId, int32_t alternate) {
     if (alternate == 1) {
@@ -639,7 +642,7 @@ void CObjectEffectManager::PropertyChanged(int32_t modifierId) {
     }
 }
 
-// OFFSET: 0x005E23A0
+// OFFSET: 0x005E23A0/0x140260630
 void CObjectEffectManager::UpdateAllPlayingEffects() {
     for (CObjectEffect* effect = this->m_loopingEffects.Head(); effect; effect = this->m_loopingEffects.Next(effect)) {
         effect->UpdateLoopingEffect(this);
@@ -769,7 +772,7 @@ void CObjectEffectManager::ExitState(uint32_t state, int32_t playExitEffects) {
     }
 }
 
-// OFFSET: 0x005E57F0
+// OFFSET: 0x005E57F0/0x1402652C0
 void CObjectEffectManager::PlayLoopingEffect(CObjectEffectDef* def, int32_t groupId) {
     OBJ_EFFECT_GROUP_LOOKUP* group = this->m_groups.Ptr(groupId, s_hashKeyNone);
 
@@ -896,7 +899,7 @@ CObjectEffectManager::~CObjectEffectManager() {
     this->ShutDown();
 }
 
-// OFFSET: 0x005E68A0
+// OFFSET: 0x005E68A0/0x140266DB0
 int32_t CObjectEffectManager::Init(int32_t packageId, CGObject_C* owner) {
     this->m_packageId = packageId;
 

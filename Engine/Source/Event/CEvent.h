@@ -12,4 +12,6 @@ class CEvent : public TRefCnt {
     CEvent();
 };
 
+#include "Engine/Source/Event/CEvent.inl"
+
 #endif

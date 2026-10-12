@@ -17,7 +17,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00E28888
+// STATIC: 0x00E28888/0x140D10480
 static int32_t* s_liquidTypeWaterSounds;
 
 // STATIC: 0x00E2888C
@@ -36,6 +36,7 @@ static void _StopAllWaterSounds() {
     }
 }
 
+// PROVEN: 84a369b2 IDENTICAL/DIFFERENT
 // OFFSET: 0x006348D0/0x1402CAB30
 static int32_t _OkToQueryLiquidSounds() {
     // STATIC: 0x00E288B4

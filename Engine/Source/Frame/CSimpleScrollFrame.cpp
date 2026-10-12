@@ -20,16 +20,16 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA4470
+// STATIC: 0x00CA4470/0x140B42290
 int32_t CSimpleScrollFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A5C/0x140CB97B0
 int32_t CSimpleScrollFrame::s_objectType;
 
-// STATIC: 0x00CA3460
+// STATIC: 0x00CA3460/0x140B40620
 const char* CSimpleScrollFrame::s_objectTypeName = "ScrollFrame";
 
-// STATIC: 0x00DD3A60
+// STATIC: 0x00DD3A60/0x140CB97B8
 CDataAllocator CSimpleScrollFrame::s_allocator(sizeof(CSimpleScrollFrame), 5);
 
 // INLINED
@@ -55,7 +55,7 @@ void CSimpleScrollFrame::RunOnVerticalScrollScript() {
     }
 }
 
-// OFFSET: 0x00520290
+// OFFSET: 0x00520290/0x14016D9B0
 void CSimpleScrollFrame::RunOnScrollRangeChangedScript() {
     if (this->HasScript(this->m_onScrollRangeChanged)) {
         lua_State* L = FrameScript_GetContext();
@@ -75,8 +75,8 @@ void CSimpleScrollFrame::UnparentFrame(CSimpleFrame* child) {
     CSimpleFrame::UnparentFrame(child);
 }
 
-// PROVEN: 25aa2d2c IDENTICAL/NONE
-// OFFSET: 0x0051FF90
+// PROVEN: 25aa2d2c IDENTICAL/IDENTICAL
+// OFFSET: 0x0051FF90/0x14016D650
 const char* CSimpleScrollFrame::GetObjectTypeName() {
     return CSimpleScrollFrame::s_objectTypeName;
 }
@@ -87,7 +87,7 @@ int32_t CSimpleScrollFrame::GetScriptMetaTable() {
     return CSimpleScrollFrame::s_metatable;
 }
 
-// PROVEN: 8a6fe960 IDENTICAL/UNPROVEN
+// PROVEN: 8a6fe960 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051FFB0/0x14016D670
 FrameScript_Object::ScriptIx* CSimpleScrollFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -123,6 +123,7 @@ void CSimpleScrollFrame::GetScriptTime(lua_State* L, double* time, uint32_t* cou
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
+// PROVEN: 18477c7b DIFFERENT/IDENTICAL
 // OFFSET: 0x00520120/0x14016D7D0
 void CSimpleScrollFrame::UpdateScrollChild() {
     if (this->m_scrollChild) {
@@ -148,13 +149,13 @@ bool CSimpleScrollFrame::IsA(int32_t type) {
     return type == CSimpleScrollFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 3fabb958 IDENTICAL/NONE
-// OFFSET: 0x00520370
+// PROVEN: 3fabb958 IDENTICAL/DIFFERENT
+// OFFSET: 0x00520370/0x14016DAB0
 bool CSimpleScrollFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleScrollFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: 0x005203B0
+// OFFSET: 0x005203B0/0x14016DB20
 CSimpleScrollFrame::CSimpleScrollFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_scrollChildUpdate = 0;
     this->m_scrollChild = NULL;
@@ -164,6 +165,7 @@ CSimpleScrollFrame::CSimpleScrollFrame(CSimpleFrame* parent) : CSimpleFrame(pare
     this->m_scrollOffset.y = 0.0f;
 }
 
+// PROVEN: dae24b96 DIFFERENT/IDENTICAL
 // OFFSET: 0x00520460/0x14016DBF0
 void CSimpleScrollFrame::SetScrollChild(CSimpleFrame* child) {
     if (this->m_scrollChild) {
@@ -182,6 +184,7 @@ void CSimpleScrollFrame::SetScrollChild(CSimpleFrame* child) {
     this->m_scrollChildUpdate = 1;
 }
 
+// PROVEN: b422e887 DIFFERENT/IDENTICAL
 // OFFSET: 0x00520510/0x14016DC70
 void CSimpleScrollFrame::SetHorizontalScroll(float offset) {
     if (fabsf(offset - this->m_scrollOffset.x) >= 0.00000095367432f) {
@@ -191,6 +194,7 @@ void CSimpleScrollFrame::SetHorizontalScroll(float offset) {
     }
 }
 
+// PROVEN: 716eae40 DIFFERENT/IDENTICAL
 // OFFSET: 0x00520550/0x14016DCB0
 void CSimpleScrollFrame::SetVerticalScroll(float offset) {
     if (fabsf(offset - this->m_scrollOffset.y) >= 0.00000095367432f) {
@@ -227,7 +231,7 @@ void CSimpleScrollFrame::UpdateScrollChildRect(float width, float height) {
     }
 }
 
-// PROVEN: a086e605 IDENTICAL/UNPROVEN
+// PROVEN: 7fb36aa8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00520690/0x14016DE10
 void CSimpleScrollFrame::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
@@ -243,7 +247,7 @@ void CSimpleScrollFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: 0x00520710
+// OFFSET: 0x00520710/0x14016DE90
 void CSimpleScrollFrame::RenderScrollChild(void* param) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(param);
     CRect rect(0.0f, 0.0f, 0.0f, 0.0f);
@@ -370,8 +374,8 @@ void CSimpleScrollFrame::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 03eb32d5 IDENTICAL/NONE
-// OFFSET: 0x00520C20
+// PROVEN: 03eb32d5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00520C20/0x14016E640
 void CSimpleScrollFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
 
@@ -380,7 +384,7 @@ void CSimpleScrollFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// OFFSET: 0x00520C50
+// OFFSET: 0x00520C50/0x14016E690
 bool CSimpleScrollFrame::GetBoundsRect(CRect& rect) {
     CRect frameRect(0.0f, 0.0f, 0.0f, 0.0f);
 

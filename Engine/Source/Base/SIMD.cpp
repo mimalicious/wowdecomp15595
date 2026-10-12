@@ -16,7 +16,7 @@ static void (*const s_binders[])(SIMD::FunctionTable*) = {
     SIMD::Init_AVX,
 };
 
-// OFFSET: 0x00490FC0
+// OFFSET: 0x00490FC0/0x1400B5F10
 void SIMD::BindAll(int32_t features) {
     uint32_t bit = 1;
 
@@ -44,6 +44,7 @@ void* SIMD::AllocA16(uint32_t size) {
     return ptr;
 }
 
+// PROVEN: d4a8495e IDENTICAL/IDENTICAL
 // OFFSET: 0x00491040/0x1400B5FC0
 void SIMD::FreeA16(void* ptr) {
     if (ptr) {

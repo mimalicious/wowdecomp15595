@@ -12,25 +12,25 @@
 #include "Engine/Source/Event/FrameTime.h"
 #include <typeinfo>
 
-// STATIC: 0x00CA10BC
+// STATIC: 0x00CA10BC/0x140B3D9A8
 static TSExplicitList<WTOBJECT, offsetof(WTOBJECT, m_link)> s_finishedTrails;
 
-// STATIC: 0x00DC7098
+// STATIC: 0x00DC7098/0x140CACC48
 static uint32_t s_count;
 
-// STATIC: 0x00DC709C
+// STATIC: 0x00DC709C/0x140CACC50
 static CGxShader* s_vertexShader;
 
-// STATIC: 0x00DC70A0
+// STATIC: 0x00DC70A0/0x140CACC58
 static CGxShader* s_pixelShader;
 
-// STATIC: 0x00DC70A4
+// STATIC: 0x00DC70A4/0x140CACC60
 static CDataAllocator s_freeSwings(sizeof(SWING), 8);
 
-// STATIC: 0x00DC70B8
+// STATIC: 0x00DC70B8/0x140CACC80
 static CDataAllocator s_freeTrails(sizeof(WTOBJECT), 128);
 
-// PROVEN: a5cd2e8f IDENTICAL/NONE
+// PROVEN: a5cd2e8f IDENTICAL/DIFFERENT
 // OFFSET: 0x004DFC20/0x14011FC30
 void SWING::FillVertices(CImVector color, uint8_t fade, CGxVertexPC* vertices) {
     for (int32_t i = this->m_tail; i < this->m_head; i++, vertices++) {
@@ -44,6 +44,7 @@ void SWING::FillVertices(CImVector color, uint8_t fade, CGxVertexPC* vertices) {
     }
 }
 
+// PROVEN: fa88f6f4 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DFC70/0x14011FCA0
 void WeaponTrailsInitialize() {
     if (!s_vertexShader) {
@@ -52,7 +53,8 @@ void WeaponTrailsInitialize() {
     }
 }
 
-// OFFSET: 0x004DFCB0
+// PROVEN: fef24392 IDENTICAL/IDENTICAL
+// OFFSET: 0x004DFCB0/0x14011FCF0
 void WeaponTrailsShutdown() {
     s_freeTrails.Clear(typeid(WTOBJECT).raw_name(), SLOG_OBJECT, 1);
     s_freeSwings.Clear(typeid(SWING).raw_name(), SLOG_OBJECT, 1);
@@ -68,19 +70,6 @@ void WeaponTrailsShutdown() {
     }
 }
 
-// INLINED
-SWING::SWING() {
-    for (int32_t i = 0; i < 128; i++) {
-        this->m_points[i].x = 0.0f;
-        this->m_points[i].y = 0.0f;
-        this->m_points[i].z = 0.0f;
-    }
-
-    this->m_tail = 0;
-    this->m_head = 0;
-    *reinterpret_cast<uint32_t*>(&this->m_color) = 0;
-}
-
 // OFFSET: 0x004DFD30
 static SWING* AllocSwing(uint32_t zero) {
     SWING* swing = static_cast<SWING*>(s_freeSwings.GetData(zero, typeid(SWING).raw_name(), SLOG_OBJECT));
@@ -92,7 +81,8 @@ static SWING* AllocSwing(uint32_t zero) {
     return swing;
 }
 
-// OFFSET: 0x004DFD90
+// PROVEN: 84cce3fa IDENTICAL/DIFFERENT
+// OFFSET: 0x004DFD90/0x14011FD90
 WTOBJECT::~WTOBJECT() {
     if (this->m_model) {
         this->m_model->m_drawCallback = NULL;
@@ -104,7 +94,7 @@ WTOBJECT::~WTOBJECT() {
     }
 }
 
-// OFFSET: 0x004DFE00
+// OFFSET: 0x004DFE00/0x14011FE30
 void WeaponTrailsClearFinished() {
     for (WTOBJECT* trail = s_finishedTrails.Head(), * next; trail; trail = next) {
         next = s_finishedTrails.Next(trail);
@@ -266,12 +256,14 @@ void WTOBJECT::SetDrawTrail(const uint32_t* color, uint32_t duration) {
     this->m_swing->m_lastTime = this->m_swing->m_startTime;
 }
 
-// OFFSET: 0x004E0430
+// PROVEN: c3b0c26c IDENTICAL/DIFFERENT
+// OFFSET: 0x004E0430/0x1401207B0
 void WeaponTrailClose(WTOBJECT* trail) {
     s_count--;
     s_freeTrails.Delete(trail);
 }
 
+// PROVEN: a01af308 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E0460/0x1401207E0
 void WeaponTrailSetDrawTrail(WTOBJECT* trail, const uint32_t* a2, uint32_t a3) {
     if (a3 && trail) {

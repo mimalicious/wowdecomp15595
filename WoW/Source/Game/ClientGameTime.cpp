@@ -8,7 +8,7 @@
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00DC0CA8
+// STATIC: 0x00DC0CA8/0x140CA67C0
 static void (*s_timeCallbacks[4])(int32_t hour, int32_t minute);
 
 // OFFSET: 0x004D90C0/0x1401172E0
@@ -31,7 +31,7 @@ static void UpdateTime() {
     ConsoleWrite(text, DEFAULT_COLOR);
 }
 
-// OFFSET: 0x004D9180
+// OFFSET: 0x004D9180/0x1401173C0
 static int32_t Packet_SMSG_GAMESPEED_SET(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     float minutesPerSecond;
     msg->Get(minutesPerSecond);
@@ -47,7 +47,7 @@ static int32_t Packet_SMSG_GAMESPEED_SET(void* param, NETMESSAGE msgId, uint32_t
     return 1;
 }
 
-// OFFSET: 0x004D9220
+// OFFSET: 0x004D9220/0x140117490
 static int32_t Packet_SMSG_LOGIN_SETTIMESPEED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     float minutesPerSecond;
@@ -73,7 +73,7 @@ static int32_t Packet_SMSG_LOGIN_SETTIMESPEED(void* param, NETMESSAGE msgId, uin
     return 1;
 }
 
-// OFFSET: 0x004D9300
+// OFFSET: 0x004D9300/0x1401175B0
 static int32_t Packet_SMSG_GAMETIME_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     uint32_t tzHours = 0;
@@ -92,7 +92,7 @@ static int32_t Packet_SMSG_GAMETIME_UPDATE(void* param, NETMESSAGE msgId, uint32
     return 1;
 }
 
-// OFFSET: 0x004D9390
+// OFFSET: 0x004D9390/0x140117660
 static int32_t Packet_SMSG_SERVERTIME(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     uint32_t lastTick;
@@ -117,7 +117,7 @@ static int32_t Packet_SMSG_SERVERTIME(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: 0x004D9480
+// OFFSET: 0x004D9480/0x140117780
 static int32_t Packet_SMSG_GAMETIME_SET(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t encodedTime;
     uint32_t tzHours;
@@ -156,7 +156,7 @@ int32_t ClientGameTimeTickHandler(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x004D95D0
+// OFFSET: 0x004D95D0/0x140117910
 void ClientDestroyGameTime() {
     ClientServices::ClearMessageHandler(SMSG_GAME_SPEED_SET);
     ClientServices::ClearMessageHandler(SMSG_LOGIN_SET_TIME_SPEED);

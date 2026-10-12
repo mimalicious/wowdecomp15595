@@ -225,7 +225,7 @@ class CAnimKitInst {
     /* 000C */ uint8_t m_blendTimeMode;
     /* 0010 */ CAnimKitManager* m_manager;
     /* 0014 */ AnimKitDef* m_def;
-    /* 0018 */ TSCGrowableArray<AnimKitSegmentInst*, 4> m_segmentInsts;
+    /* 0018 */ TSCGrowableArray<AnimKitSegmentInst*, 3> m_segmentInsts;
     /* 002C */ AnimKitStopCallback m_stopCallback;
     /* 0030 */ uint64_t m_stopCallbackParam;
     /* 0038 */ TSCGrowableArray<AnimKitDeferredCommand, 2> m_deferredCommands;

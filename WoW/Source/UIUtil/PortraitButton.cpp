@@ -36,49 +36,49 @@
 #include <cstring>
 #include "Engine/Source/Base/Coordinate.h"
 
-// STATIC: 0x00D3BFD0
+// STATIC: 0x00D3BFD0/0x140BF7350
 static CTexture* s_portraitMaskTexture;
 
-// STATIC: 0x00D3BFD4
+// STATIC: 0x00D3BFD4/0x140BF7358
 static CGxTex* s_portraitMaskGxTex;
 
-// STATIC: 0x00D3BFD8
+// STATIC: 0x00D3BFD8/0x140BF7360
 static CGxFrameBuffer* s_portraitFrameBuffer;
 
-// STATIC: 0x00D3BFDC
+// STATIC: 0x00D3BFDC/0x140BF7368
 static CTexture* s_portraitDepthTexture;
 
-// STATIC: 0x00D3BFE0
+// STATIC: 0x00D3BFE0/0x140BF7370
 static int32_t s_rtAlphaSupported;
 
-// STATIC: 0x00D3BFE4
+// STATIC: 0x00D3BFE4/0x140BF7378
 static PortraitBase* s_playerPortraitCache;
 
-// STATIC: 0x00D3BFE8
+// STATIC: 0x00D3BFE8/0x140BF7380
 static PortraitBase* s_unitPortraitCache;
 
-// STATIC: 0x00D3BFEC
+// STATIC: 0x00D3BFEC/0x140B33450
 static TSHashTable<PLAYERPORTRAIT, CHashKeyGUID> s_playerPortraits;
 
-// STATIC: 0x00D3C018
+// STATIC: 0x00D3C018/0x140B334A0
 static TSHashTable<UNITPORTRAIT, HASHKEY_NONE> s_unitPortraits;
 
-// STATIC: 0x00D3C044
+// STATIC: 0x00D3C044/0x140B334F0
 static TSHashTable<ITEMPORTRAIT, HASHKEY_STR> s_itemPortraits;
 
-// STATIC: 0x00D3C070
+// STATIC: 0x00D3C070/0x140BF7388
 static TSGrowableArray<CTexture*> s_freePortraitTextures;
 
-// STATIC: 0x00C9A6F0
+// STATIC: 0x00C9A6F0/0x140B33420
 static TSList<PORTRAITREQUEST, TSGetLink<PORTRAITREQUEST>> s_pendingPortraits;
 
-// STATIC: 0x00C9A6FC
+// STATIC: 0x00C9A6FC/0x140B33438
 static TSList<PORTRAITREQUEST, TSGetLink<PORTRAITREQUEST>> s_freePortraits;
 
-// STATIC: 0x00C9CAC0
+// STATIC: 0x00C9CAC0/0x140B36910
 const char* s_sexNames[3] = { "Male", "Female", "NOSEX" };
 
-// STATIC: 0x00BAA3B0
+// STATIC: 0x00BAA3B0/0x140977F48
 static const uint16_t s_portraitMaskIndices[] = { 0, 1, 2, 3 };
 
 static void PortraitDepthTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
@@ -166,7 +166,7 @@ int32_t RTAlphaSupported() {
     return supported;
 }
 
-// OFFSET: 0x004821B0
+// OFFSET: 0x004821B0/0x1400A0FD0
 void UpdatePendingPortraits() {
     if (!g_theGxDevicePtr || !g_theGxDevicePtr->CapsIsWindowVisible(-1) || !g_theGxDevicePtr || !g_theGxDevicePtr->CapsHasContext(-1)) {
         return;
@@ -265,7 +265,7 @@ static void PurgePortraitCache(PortraitBase*& head, uint32_t maxEntries, int32_t
     }
 }
 
-// OFFSET: 0x00482520
+// OFFSET: 0x00482520/0x140634130
 void __fastcall UpdateAllPortraits() {
     s_rtAlphaSupported = RTAlphaSupported();
 
@@ -300,7 +300,7 @@ void UpdateModelForUI(const WOWGUID& guid, uint32_t flags) {
     }
 }
 
-// OFFSET: 0x00482620
+// OFFSET: 0x00482620/0x1400A1450
 static int32_t QueuePortraitUpdate(CGUnit_C* unit, uint32_t flags) {
     if (g_theGxDevicePtr && g_theGxDevicePtr->CapsIsWindowVisible(-1) && g_theGxDevicePtr && g_theGxDevicePtr->CapsHasContext(-1) && IsPortraitDrawable(unit)) {
         return 0;
@@ -379,7 +379,7 @@ int32_t ReadyModelForUI(CGUnit_C* unit, uint32_t flags) {
 
 // OFFSET: 0x00482D70/0x1400A1E10
 static TSFixedArray<uint8_t>* GetAlphaMask(uint32_t size) {
-    // STATIC: 0x00D3C080
+    // STATIC: 0x00D3C080/0x140BF73A0
     static TSFixedArray<uint8_t> s_alphaMasks[2];
     TSFixedArray<uint8_t>* mask = &s_alphaMasks[size == 128];
 
@@ -437,7 +437,7 @@ static TSFixedArray<uint8_t>* GetAlphaMask(uint32_t size) {
     return mask;
 }
 
-// OFFSET: 0x00482F50
+// OFFSET: 0x00482F50/0x1400A20A0
 void PortraitShutdown() {
     s_portraitMaskGxTex = NULL;
 
@@ -534,7 +534,7 @@ bool RenderPortraitTexture(CSimpleTexture* texture, CM2Model* model, CM2Scene* s
     int32_t fogEnabled = GxMasterEnable(GxMasterEnable_Fog);
     GxMasterEnableSet(GxMasterEnable_Fog, 0);
 
-    // STATIC: 0x00D3C0F0
+    // STATIC: 0x00D3C0F0/0x140BF7420
     static C44Matrix s_identity;
 
     C3Vector cameraPosition(0.0f, 0.0f, 0.0f);
@@ -664,9 +664,9 @@ bool RenderPortraitTexture(CSimpleTexture* texture, CM2Model* model, CM2Scene* s
         g_theGxDevicePtr->XformPushAndSet(GxXform_World, view);
         DefaultShaders::SetFogEnabled(0);
 
-        // STATIC: 0x00D3C0BC
+        // STATIC: 0x00D3C0BC/0x140BF73E8
         static C3Vector s_positions[] = { C3Vector(-1.0f, 1.0f, 0.0f), C3Vector(-1.0f, -1.0f, 0.0f), C3Vector(1.0f, 1.0f, 0.0f), C3Vector(1.0f, -1.0f, 0.0f) };
-        // STATIC: 0x00D3C09C
+        // STATIC: 0x00D3C09C/0x140BF73C8
         static C2Vector s_texCoords[] = { C2Vector(0.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 0.0f), C2Vector(1.0f, 1.0f) };
 
         GxPrimLockVertexPtrs(4, s_positions, sizeof(C3Vector), NULL, 0, NULL, 0, NULL, 0, s_texCoords, sizeof(C2Vector), NULL, 0);
@@ -781,7 +781,7 @@ void SetPortraitTexture(CSimpleTexture* texture, const char* fileName) {
     blp.Close();
 }
 
-// OFFSET: 0x00485510
+// OFFSET: 0x00485510/0x1400A57A0
 void SetPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit) {
     if (!texture || !unit || AddPendingPortraitFlags(unit, 2)) {
         return;

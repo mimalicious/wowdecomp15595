@@ -37,7 +37,7 @@ static uint32_t ScratchSizeClass(uint32_t size) {
     return sizeClass;
 }
 
-// PROVEN: 97f614d9 IDENTICAL/UNPROVEN
+// PROVEN: 97f614d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086B0A0/0x14059F050
 void D3d11Error(const char* file, int32_t line, const char* format, ...) {
     va_list args;
@@ -283,7 +283,7 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
     return 1;
 }
 
-// PROVEN: bbd6c235 IDENTICAL/NONE
+// PROVEN: bbd6c235 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086B6C0/0x14059F850
 void CGxDeviceD3d11::ITexScratchClear() {
     for (uint32_t i = 0; i < GxTexFormats_Last; i++) {
@@ -420,7 +420,7 @@ void CGxDeviceD3d11::ITexReleaseD3dTexture(CGxTex* texId) {
     this->IResourceTouch(texId);
 }
 
-// PROVEN: 4d5b64e7 IDENTICAL/DIFFERENT
+// PROVEN: 4d5b64e7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086BB60/0x14059FBC0
 void CGxDeviceD3d11::TexDestroy(CGxTex* texId) {
     if (!texId->m_needsCreation && (texId->m_apiSpecificData || texId->m_apiSpecificData2)) {
@@ -724,7 +724,7 @@ void CGxDeviceD3d11::ITexUpload(CGxTex* texId) {
     texId->m_userFunc(GxTex_Unlock, texId->m_width, texId->m_height, 0, 0, texId->m_userArg, texelStrideInBytes, texels);
 }
 
-// PROVEN: 1c651d90 IDENTICAL/UNPROVEN
+// PROVEN: 1c651d90 IDENTICAL/IDENTICAL
 // OFFSET: 0x0086C530/0x1405A0980
 void CGxDeviceD3d11::ITexMarkAsUpdated(CGxTex* texId) {
     if (!texId->m_needsUpdate || !this->m_context) {
@@ -1016,7 +1016,7 @@ int32_t CGxDeviceD3d11::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* d
     return 1;
 }
 
-// OFFSET: 0x0086CEB0
+// OFFSET: 0x0086CEB0/0x1405A16C0
 int32_t CGxDeviceD3d11::TexResolve(CGxTex* source, CGxTex* dest) {
     if ((source->m_needsCreation || (!source->m_apiSpecificData && !source->m_apiSpecificData2)) && !this->ITexCreate(source)) {
         return 0;
@@ -1112,7 +1112,7 @@ int32_t CGxDeviceD3d11::TexResolve(CGxTex* source, CGxTex* dest) {
     return 1;
 }
 
-// PROVEN: b6cfa536 IDENTICAL/NONE
-// OFFSET: 0x00847950
+// PROVEN: b6cfa536 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceD3d11::IResourceTouch(const void* resource) {
 }

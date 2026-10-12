@@ -9,37 +9,37 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "WoW/Source/DayNight/DayNight.h"
 
-// STATIC: 0x00CEFCD4
+// STATIC: 0x00CEFCD4/0x140B903E0
 static uint16_t s_quadIndices[4] = { 0, 1, 2, 3 };
 
-// STATIC: 0x00CEFCDC
+// STATIC: 0x00CEFCDC/0x140B903E8
 static uint16_t s_clipIndices[6] = { 0, 1, 4, 5, 2, 3 };
 
-// STATIC: 0x00E4327C
+// STATIC: 0x00E4327C/0x140D2C020
 uint32_t DayNight::DNPlanet::s_refCount;
 
-// STATIC: 0x00E43280
+// STATIC: 0x00E43280/0x140D2C028
 CGxShader* DayNight::DNPlanet::s_vertexShader;
 
-// STATIC: 0x00E43284
+// STATIC: 0x00E43284/0x140D2C030
 CGxShader* DayNight::DNPlanet::s_pixelShader;
 
-// PROVEN: d39fed51 IDENTICAL/NONE
+// PROVEN: d39fed51 IDENTICAL/IDENTICAL
 // OFFSET: 0x00650C80/0x1402F0670
 int32_t DayNight::DNPlanet::IsAllLoaded() {
     return TextureIsLoaded(this->m_texture);
 }
 
-// PROVEN: 1dffceaa IDENTICAL/NONE
-// OFFSET: 0x00650C90
+// PROVEN: 1dffceaa IDENTICAL/IDENTICAL
+// OFFSET: 0x00650C90/0x1402F0680
 void DayNight::DNPlanet::LinkToAsyncHead() {
     if (this->m_texture) {
         TextureIncreasePriority(this->m_texture);
     }
 }
 
-// PROVEN: 3553ae41 IDENTICAL/NONE
-// OFFSET: 0x00650CA0
+// PROVEN: 3553ae41 IDENTICAL/IDENTICAL
+// OFFSET: 0x00650CA0/0x1402F06A0
 void DayNight::DNPlanet::Destroy() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);
@@ -60,7 +60,7 @@ void DayNight::DNPlanet::Destroy() {
     }
 }
 
-// OFFSET: 0x00650D10
+// OFFSET: 0x00650D10/0x1402F0710
 void DayNight::DNPlanet::GenGeometry(C3Vector* verts, C2Vector* texCoords, CImVector* colors, uint16_t* indices, uint32_t& vertCount, uint32_t& indexCount) {
     static C3Vector s_verts[6] = {
         C3Vector(0.0f, -0.5f, 0.5f),
@@ -93,7 +93,7 @@ void DayNight::DNPlanet::GenGeometry(C3Vector* verts, C2Vector* texCoords, CImVe
     indexCount = 4;
 }
 
-// OFFSET: 0x006510D0
+// OFFSET: 0x006510D0/0x1402F0AD0
 void DayNight::DNPlanet::ClipGeometry(C3Vector* verts, C2Vector* texCoords, CImVector* colors, uint16_t* indices, uint32_t& vertCount, uint32_t& indexCount) {
     vertCount = 0;
 
@@ -151,7 +151,7 @@ void DayNight::DNPlanet::ClipGeometry(C3Vector* verts, C2Vector* texCoords, CImV
     }
 }
 
-// OFFSET: 0x006512C0
+// OFFSET: 0x006512C0/0x1402F0CD0
 void DayNight::DNPlanet::Render() {
     C3Vector verts[6];
     C2Vector texCoords[6];
@@ -228,6 +228,7 @@ void DayNight::DNPlanet::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
+// PROVEN: a53f29e3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00651910/0x1402F15A0
 void DayNight::DNPlanet::Initialize(const char* fileName) {
     CStatus status;

@@ -36,22 +36,22 @@
 #include "WoW/Source/Ui/WorldMap.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00BA5224
+// STATIC: 0x00BA5224/0x140986E58
 static const uint32_t s_outdoorZoomTiles[6] = { 14, 12, 10, 8, 6, 4 };
 
-// STATIC: 0x00BA523C
+// STATIC: 0x00BA523C/0x140986E70
 static const float s_indoorZoomRadius[6] = { 150.0f, 120.0f, 90.0f, 60.0f, 40.0f, 25.0f };
 
-// STATIC: 0x00BA52E4
+// STATIC: 0x00BA52E4/0x140986F28
 static const int32_t s_tileOffsets[4][2] = { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
 
-// STATIC: 0x00CA2710
+// STATIC: 0x00CA2710/0x140B3F140
 static int32_t s_mapId = -1;
 
-// STATIC: 0x00CA2714
+// STATIC: 0x00CA2714/0x140B3F144
 static int32_t s_outdoorZoom = 3;
 
-// STATIC: 0x00CA2718
+// STATIC: 0x00CA2718/0x140B3F148
 static int32_t s_indoorZoom = 3;
 
 // STATIC: 0x00CA271C
@@ -66,10 +66,10 @@ static const char* s_minimapNoLiquidTileFormat = "World\\Minimaps\\%s\\noLiquid_
 // STATIC: 0x00CA2728
 static const char* s_minimapQuadFormat = "World\\Minimaps\\%s_%03d_%02d_%02d.blp";
 
-// STATIC: 0x00CA2730
+// STATIC: 0x00CA2730/0x140B3F16C
 static C2Vector s_halfTile(266.66666f, 266.66666f);
 
-// STATIC: 0x00CA2738
+// STATIC: 0x00CA2738/0x140B3F174
 static C2Vector s_mapOrigin(17066.666f, 17066.666f);
 
 // STATIC: 0x00CA2740
@@ -90,19 +90,19 @@ static float s_closestPOIFacing[3];
 // STATIC: 0x00DC73A4
 static int32_t s_closestPOIs[3];
 
-// STATIC: 0x00DC73B0
+// STATIC: 0x00DC73B0/0x140CAD05C
 static int32_t s_poisChanged;
 
-// STATIC: 0x00DC73B4
+// STATIC: 0x00DC73B4/0x140CAD06C
 static uint32_t s_minimapUpdateFlags;
 
-// STATIC: 0x00DC73B8
+// STATIC: 0x00DC73B8/0x140CAD070
 static char s_dynamicPOINames[4][64];
 
 // STATIC: 0x00DC74B8
 static char s_mapObjName[260];
 
-// STATIC: 0x00DC75BC
+// STATIC: 0x00DC75BC/0x140CAD274
 static uint8_t s_isIndoors;
 
 // STATIC: 0x00DC75C0
@@ -111,25 +111,25 @@ static int32_t s_mapObjGroup;
 // STATIC: 0x00DC75C4
 static int32_t s_mapObjId;
 
-// STATIC: 0x00DC75C8
+// STATIC: 0x00DC75C8/0x140CAD280
 static int32_t s_noLiquid;
 
 // STATIC: 0x00DC75CC
 static uint32_t s_worldMapRefreshTime;
 
-// STATIC: 0x00DC75D0
+// STATIC: 0x00DC75D0/0x140CAD284
 static uint32_t s_numPOIs;
 
 // STATIC: 0x00DC75D4
 static uint32_t s_numClosestPOIs;
 
-// STATIC: 0x00DC75D8
+// STATIC: 0x00DC75D8/0x140CAD294
 static int32_t s_closestPOIsChanged;
 
 // STATIC: 0x00DC75DC
 static uint8_t s_mapObjIndoorArea;
 
-// STATIC: 0x00DC75E0
+// STATIC: 0x00DC75E0/0x140CAD2A0
 static C3Vector s_playerPosition;
 
 // STATIC: 0x00DC75EC
@@ -138,28 +138,28 @@ static CAaBox s_indoorBounds;
 // STATIC: 0x00DC7604
 static int32_t s_tileMinX = -1;
 
-// STATIC: 0x00DC7608
+// STATIC: 0x00DC7608/0x140CAD2CC
 static int32_t s_tileMinY = -1;
 
-// STATIC: 0x00DC760C
+// STATIC: 0x00DC760C/0x140CAD2D0
 static int32_t s_tileMaxX = -1;
 
 // STATIC: 0x00DC7610
 static int32_t s_tileMaxY = -1;
 
-// STATIC: 0x00DC7614
+// STATIC: 0x00DC7614/0x140CAD458
 static TSFixedArray<AreaPOIRec*> s_pois;
 
-// STATIC: 0x00DC7620
+// STATIC: 0x00DC7620/0x140CAD2F0
 static AreaPOIRec s_dynamicPOIs[4];
 
 // STATIC: 0x00DC7780
 static TSFixedArray<int32_t> s_poiVisible;
 
-// STATIC: 0x00DC778C
+// STATIC: 0x00DC778C/0x140CAD470
 static TSFixedArray<int32_t> s_poiOnEdge;
 
-// STATIC: 0x00DC7798
+// STATIC: 0x00DC7798/0x140CAD2D8
 static TSGrowableArray<AreaPOIRec*> s_visiblePOIs;
 
 // OFFSET: 0x004E8440
@@ -197,13 +197,15 @@ void MinimapShutdown() {
     s_minimapUpdateFlags = 0;
 }
 
-// OFFSET: 0x004E8560
+// PROVEN: f68392d2 NONE/IDENTICAL
+// OFFSET: 0x004E8560/0x14012AAF0
 void MinimapLoadZoom() {
     s_outdoorZoom = g_minimapZoomCVar->m_intValue;
     s_indoorZoom = g_minimapInsideZoomCVar->m_intValue;
     FrameScript_SignalEvent(SCRIPT_EVENT_MINIMAP_UPDATE_ZOOM, NULL);
 }
 
+// PROVEN: e66fd135 IDENTICAL/DIFFERENT
 // OFFSET: 0x004E8590/0x14012AB20
 void MinimapSetZoom(uint32_t zoom) {
     uint8_t indoors = s_isIndoors;
@@ -217,12 +219,13 @@ void MinimapSetZoom(uint32_t zoom) {
     }
 }
 
-// PROVEN: 99488e7c IDENTICAL/NONE
-// OFFSET: 0x004E85F0
+// PROVEN: 99488e7c IDENTICAL/IDENTICAL
+// OFFSET: 0x004E85F0/0x14012AB90
 void MinimapSetForceUpdate() {
     s_minimapUpdateFlags |= 4;
 }
 
+// PROVEN: 75ff3e2e IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8600/0x14012ABA0
 int32_t MinimapGetZoom() {
     return s_isIndoors ? s_indoorZoom : s_outdoorZoom;
@@ -237,14 +240,16 @@ double MinimapGetViewRadius() {
     return s_outdoorZoomTiles[s_outdoorZoom] * 0.5f * 33.333332f;
 }
 
-// OFFSET: 0x004E8680
+// PROVEN: 0e12e837 IDENTICAL/IDENTICAL
+// OFFSET: 0x004E8680/0x14012ABC0
 TSGrowableArray<AreaPOIRec*>* MinimapGetPOI(int32_t* changed) {
     *changed = s_poisChanged;
     s_poisChanged = 0;
     return &s_visiblePOIs;
 }
 
-// OFFSET: 0x004E86A0
+// PROVEN: b22a18a2 IDENTICAL/DIFFERENT
+// OFFSET: 0x004E86A0/0x14012AC30
 int32_t MinimapSetNoLiquid(int32_t noLiquid) {
     if (s_mapId || s_playerPosition.x < -8000.0f || s_playerPosition.x > -3735.0f || s_playerPosition.y < 2670.0f || s_playerPosition.x > 8000.0f) {
         noLiquid = 0;
@@ -258,26 +263,31 @@ int32_t MinimapSetNoLiquid(int32_t noLiquid) {
     return noLiquid;
 }
 
-// OFFSET: 0x004E8710
+// PROVEN: f2a88640 IDENTICAL/IDENTICAL
+// OFFSET: 0x004E8710/0x14012AC90
 AreaPOIRec* MinimapGetGossipPoi() {
     return &s_dynamicPOIs[1];
 }
 
-// OFFSET: 0x004E8720
+// PROVEN: 2b1277f1 IDENTICAL/IDENTICAL
+// OFFSET: 0x004E8720/0x14012ACA0
 uint8_t MinimapIsIndoors() {
     return s_isIndoors;
 }
 
-// OFFSET: 0x004E8730
+// PROVEN: d49fb3fb IDENTICAL/IDENTICAL
+// OFFSET: 0x004E8730/0x14012ACB0
 int32_t MinimapGetOutdoorZoom() {
     return s_outdoorZoom;
 }
 
-// OFFSET: 0x004E8740
+// PROVEN: a8abe8fb IDENTICAL/IDENTICAL
+// OFFSET: 0x004E8740/0x14012ACC0
 int32_t MinimapGetIndoorZoom() {
     return s_indoorZoom;
 }
 
+// PROVEN: a8fcae5a IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8750/0x14012ACD0
 float MinimapGetOutdoorZoomTiles(int32_t zoom) {
     if (zoom >= 0 && zoom < sizeof(s_outdoorZoomTiles) / sizeof(s_outdoorZoomTiles[0])) {
@@ -287,6 +297,7 @@ float MinimapGetOutdoorZoomTiles(int32_t zoom) {
     return 0.0f;
 }
 
+// PROVEN: 6ec7f124 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E8780/0x14012AD00
 float MinimapGetIndoorZoomRadius(int32_t zoom) {
     if (zoom >= 0 && zoom < sizeof(s_indoorZoomRadius) / sizeof(s_indoorZoomRadius[0])) {
@@ -345,6 +356,7 @@ static void MinimapSetMapObjName(uintptr_t entity) {
     }
 }
 
+// PROVEN: 221346ec IDENTICAL/NONE
 // OFFSET: 0x004E8AA0
 int32_t MinimapBuildSource(const int32_t* tile, char* path, uint32_t size) {
     *path = 0;
@@ -364,7 +376,7 @@ int32_t MinimapBuildSource(const int32_t* tile, char* path, uint32_t size) {
     return 2;
 }
 
-// OFFSET: 0x004E8C30
+// OFFSET: 0x004E8C30/0x14012B1B0
 static void SetMemberData(WOWGUID guid, MEMBERINFO* member, CGPlayer_C* player, uint32_t index, bool raid) {
     float dx = s_playerPosition.x;
     float dy = s_playerPosition.y;
@@ -479,7 +491,8 @@ static void SetMemberData(WOWGUID guid, MEMBERINFO* member, CGPlayer_C* player, 
     }
 }
 
-// OFFSET: 0x004E9080
+// PROVEN: f66a839e DIFFERENT/IDENTICAL
+// OFFSET: 0x004E9080/0x14012B6B0
 void MinimapGetPartyMembers(MEMBERINFO* members) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -499,7 +512,7 @@ void MinimapGetPartyMembers(MEMBERINFO* members) {
     }
 }
 
-// OFFSET: 0x004E90F0
+// OFFSET: 0x004E90F0/0x14012B760
 void MinimapGetRaidMembers(MEMBERINFO* members) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -647,6 +660,7 @@ void UpdatePointsOfInterest() {
     }
 }
 
+// PROVEN: a14e9cd4 DIFFERENT/IDENTICAL
 // OFFSET: 0x004E95D0/0x14012BEA0
 void RefreshWorldStatePOIs(uint32_t state) {
     for (uint32_t i = 0; i < s_numPOIs; i++) {
@@ -684,17 +698,19 @@ void MinimapSetDynamicPOI(int32_t index, int32_t flags, float x, float y, int32_
     s_closestPOIsChanged = 1;
 }
 
-// OFFSET: 0x004E9720
+// PROVEN: e4f74fa8 IDENTICAL/DIFFERENT
+// OFFSET: 0x004E9720/0x14012BFF0
 void DisplayQuestPoint(float x, float y, int32_t importance, const char* name) {
     MinimapSetDynamicPOI(0, 0, x, y, 6, importance, name);
 }
 
-// OFFSET: 0x004E9750
+// PROVEN: 8a3795a0 IDENTICAL/DIFFERENT
+// OFFSET: 0x004E9750/0x14012C080
 void MinimapSetCorpsePOI(float x, float y) {
     MinimapSetDynamicPOI(2, 2, x, y, 8, -1, FrameScript_GetText("CORPSE_RED", -1, GENDER_NOT_APPLICABLE));
 }
 
-// OFFSET: 0x004E97E0
+// OFFSET: 0x004E97E0/0x14012C1D0
 int32_t MinimapBuildPOIDirectionData(TSGrowableArray<POIDIRECTIONDATA>* directions) {
     if (!s_closestPOIsChanged) {
         for (uint32_t i = 0; i < s_numClosestPOIs; i++) {
@@ -915,7 +931,7 @@ static void MinimapWorldToTileCoords(const C3Vector* position, int32_t* tile) {
     tile[1] = static_cast<int32_t>(x);
 }
 
-// OFFSET: 0x004E9FF0
+// OFFSET: 0x004E9FF0/0x14012CD20
 static int32_t MinimapUpdatePosition(int32_t mapId, const C3Vector* position, C2Vector* center, float* scale, MINIMAPTILE* tiles) {
     int32_t mapChanged = (s_minimapUpdateFlags & 4) | (mapId != s_mapId);
     s_mapId = mapId;

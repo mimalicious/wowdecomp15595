@@ -93,9 +93,9 @@ class M2PreloadMap {
         /* 000C */ bool m_inserted;
     };
 
-    /* 0000 */ uint32_t m_bucketCount;
+    /* 0000 */ size_t m_bucketCount;
     /* 0004 */ Node** m_buckets;
-    /* 0008 */ uint32_t m_count;
+    /* 0008 */ size_t m_count;
     /* 000C */ float m_maxLoadFactor;
     /* 0010 */ uint32_t unk_0010;
     /* 0014 */ uint32_t unk_0014;

@@ -70,13 +70,13 @@
 #include "Engine/Source/Gx/CGxMatrixStack.h"
 #include "Engine/Source/Event/CMouseEvent.h"
 
-// STATIC: 0x00D162EC
+// STATIC: 0x00D162EC/0x140BD0364
 int32_t CGMinimapFrame::s_scaleChanged = 1;
 
 // STATIC: 0x00D16364
 const char* CGMinimapFrame::s_objectTypeName = "Minimap";
 
-// STATIC: 0x00D1637C
+// STATIC: 0x00D1637C/0x140BD03F8
 int32_t CGMinimapFrame::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00F611A4
@@ -100,55 +100,55 @@ float CGMinimapFrame::s_blipHalfSize1;
 // STATIC: 0x00F611BC
 float CGMinimapFrame::s_blipSize1;
 
-// STATIC: 0x00F611C4
+// STATIC: 0x00F611C4/0x140E56310
 int32_t CGMinimapFrame::s_objectType;
 
 // STATIC: 0x00F611D0
 int32_t CGMinimapFrame::s_rotateMinimap;
 
-// STATIC: 0x00F611D4
+// STATIC: 0x00F611D4/0x140E56320
 float CGMinimapFrame::s_facing;
 
 // STATIC: 0x00F611F8
 C2Vector CGMinimapFrame::s_pingPosition;
 
-// STATIC: 0x00F611F0
+// STATIC: 0x00F611F0/0x140E56340
 CGMinimapFrame* CGMinimapFrame::s_minimapFrame;
 
-// STATIC: 0x00F6EF60
+// STATIC: 0x00F6EF60/0x140E64E40
 CDataAllocator CGMinimapFrame::s_minimapHeap(sizeof(CGMinimapFrame), 1);
 
 // STATIC: 0x00F6DC88
 C3Vector CGMinimapFrame::s_blipQuads[3][4];
 
-// STATIC: 0x00F6114C
+// STATIC: 0x00F6114C/0x140E56250
 static CTexture* s_vehicleTextures[8];
 
-// STATIC: 0x00F61180
+// STATIC: 0x00F61180/0x140E562A8
 static CTexture* s_groupArrowTexture;
 
-// STATIC: 0x00F61184
+// STATIC: 0x00F61184/0x140E562B8
 CTexture* s_staticPOIArrowTexture;
 
-// STATIC: 0x00F61188
+// STATIC: 0x00F61188/0x140E562C0
 CTexture* s_corpseArrowTexture;
 
-// STATIC: 0x00F6118C
+// STATIC: 0x00F6118C/0x140E562C8
 CTexture* s_poiArrowTexture;
 
-// STATIC: 0x00F61190
+// STATIC: 0x00F61190/0x140E562D0
 CTexture* s_maskTexture;
 
-// STATIC: 0x00F61194
+// STATIC: 0x00F61194/0x140E562D8
 CTexture* s_classBlipTexture;
 
-// STATIC: 0x00F61198
+// STATIC: 0x00F61198/0x140E562E0
 CTexture* s_blipTexture;
 
-// STATIC: 0x00F6119C
+// STATIC: 0x00F6119C/0x140E562E8
 CTexture* s_iconTexture;
 
-// STATIC: 0x00F6B808
+// STATIC: 0x00F6B808/0x140E61578
 static C2Vector s_iconTexCoords[196][4];
 
 // STATIC: 0x00F6D888
@@ -157,22 +157,22 @@ static C2Vector s_classBlipTexCoords[32][4];
 // STATIC: 0x00F6D088
 static C2Vector s_blipTexCoords[64][4];
 
-// STATIC: 0x00F610A8
+// STATIC: 0x00F610A8/0x140E561A0
 static uint32_t s_hoverObjects[41];
 
-// STATIC: 0x00F611D8
+// STATIC: 0x00F611D8/0x140E56324
 static uint32_t s_hoverPOIs;
 
-// STATIC: 0x00F611DC
+// STATIC: 0x00F611DC/0x140E56328
 static uint32_t s_hoverPOIDirections;
 
-// STATIC: 0x00F611E0
+// STATIC: 0x00F611E0/0x140E5632C
 static uint32_t s_hoverParty;
 
-// STATIC: 0x00F611E8
+// STATIC: 0x00F611E8/0x140E56338
 static uint64_t s_hoverRaid;
 
-// STATIC: 0x00C08690
+// STATIC: 0x00C08690/0x140A013C0
 const TrackingTypeInfo CGMinimapFrame::s_trackingTypes[19] = {
     { 1, 0x200000, "MINIMAP_TRACKING_AUCTIONEER", "Auctioneer", 0x0, 2 },
     { 1, 0x20000, "MINIMAP_TRACKING_BANKER", "Banker", 0x0, 2 },
@@ -195,7 +195,7 @@ const TrackingTypeInfo CGMinimapFrame::s_trackingTypes[19] = {
     { 8, 0x0, "MINIMAP_TRACKING_DIGSITES", "ArchBlob", 0x0, -1 },
 };
 
-// STATIC: 0x00F61218
+// STATIC: 0x00F61218/0x140E56390
 static MINIMAPQUAD s_quads[4] = {
     { CRect(0.0f, 0.0f, 0.5f, 0.5f), C2Vector(0.0f, 0.0f) },
     { CRect(0.5f, 0.0f, 1.0f, 0.5f), C2Vector(1.0f, 0.0f) },
@@ -203,94 +203,94 @@ static MINIMAPQUAD s_quads[4] = {
     { CRect(0.0f, 0.5f, 0.5f, 1.0f), C2Vector(0.0f, 1.0f) },
 };
 
-// STATIC: 0x00F61278
+// STATIC: 0x00F61278/0x140E563F0
 static MINIMAPTILE s_tiles[256];
 
-// STATIC: 0x00D164A0
+// STATIC: 0x00D164A0/0x140BD0630
 static MINIMAPINDOOR s_indoor;
 
-// STATIC: 0x00F6B678
+// STATIC: 0x00F6B678/0x140E56378
 static TSGrowableArray<POIINFO> s_poiInfo;
 
-// STATIC: 0x00F6DD18
+// STATIC: 0x00F6DD18/0x140E63A80
 static TSGrowableArray<C3Vector> s_blipVertices;
 
-// STATIC: 0x00F6DD28
+// STATIC: 0x00F6DD28/0x140E63A98
 static TSGrowableArray<C2Vector> s_blipTexCoords2;
 
-// STATIC: 0x00F6DD38
+// STATIC: 0x00F6DD38/0x140E63AB0
 static TSGrowableArray<uint16_t> s_blipIndices;
 
-// STATIC: 0x00F6DD58
+// STATIC: 0x00F6DD58/0x140E63AE0
 static TSGrowableArray<OBJINFO> s_objInfo[41];
 
 // STATIC: 0x00F6B688
 static C2Vector s_poiArrowPositions[3];
 
-// STATIC: 0x00F6B6A0
+// STATIC: 0x00F6B6A0/0x140E61408
 static C2Vector s_partyArrowPositions[5];
 
 // STATIC: 0x00F6B6C8
 static C2Vector s_raidArrowPositions[40];
 
-// STATIC: 0x00F6DD48
+// STATIC: 0x00F6DD48/0x140E63AC8
 static TSGrowableArray<POIDIRECTIONDATA> s_poiDirections;
 
-// STATIC: 0x00C08930
+// STATIC: 0x00C08930/0x140A01708
 static uint16_t s_arrowIndices[4] = { 0, 2, 1, 3 };
 
-// STATIC: 0x00D16498
+// STATIC: 0x00D16498/0x140BD0628
 static float s_arrowRotation = 2.3561945f;
 
-// STATIC: 0x00F6DFE8
+// STATIC: 0x00F6DFE8/0x140E63EC0
 static MEMBERINFO s_partyMembers[5];
 
 // STATIC: 0x00F6E1A0
 static MEMBERINFO s_raidMembers[40];
 
-// STATIC: 0x00D165A4
+// STATIC: 0x00D165A4/0x140BD0760
 static uint16_t s_quadIndices[4] = { 0, 1, 2, 3 };
 
-// STATIC: 0x00D165AC
+// STATIC: 0x00D165AC/0x140BD0768
 static uint16_t s_insideQuadIndices[4] = { 0, 1, 3, 2 };
 
-// STATIC: 0x00D165B4
+// STATIC: 0x00D165B4/0x140BD0770
 static uint16_t s_insideIndices[4] = { 0, 1, 3, 2 };
 
 // STATIC: 0x00D165BC
 static float s_indoorTexScale = 0.33333334f;
 
-// STATIC: 0x00F611A0
+// STATIC: 0x00F611A0/0x140E56244
 static int32_t s_enteredWorld;
 
-// STATIC: 0x00F611CC
+// STATIC: 0x00F611CC/0x140E56318
 uint32_t CGMinimapFrame::s_trackingMask;
 
-// STATIC: 0x00F611F4
+// STATIC: 0x00F611F4/0x140E56348
 static int32_t s_iconTexCoordsReady;
 
-// STATIC: 0x00F61208
+// STATIC: 0x00F61208/0x140E56360
 TSGrowableArray<int32_t> CGMinimapFrame::s_shapeshiftTrackingSpells;
 
-// STATIC: 0x00F6116C
+// STATIC: 0x00F6116C/0x140E56248
 static CTexture* s_positionArrowsTexture;
 
-// STATIC: 0x00F61170
+// STATIC: 0x00F61170/0x140E56290
 static CTexture* s_pingExpandTexture;
 
-// STATIC: 0x00F61174
+// STATIC: 0x00F61174/0x140E56290
 static CTexture* s_pingRotateTexture;
 
-// STATIC: 0x00F61178
+// STATIC: 0x00F61178/0x140E56298
 static CTexture* s_pingCenterTexture;
 
-// STATIC: 0x00F6117C
+// STATIC: 0x00F6117C/0x140E562A8
 static CTexture* s_questArrowTexture;
 
-// STATIC: 0x00D162D8
+// STATIC: 0x00D162D8/0x140BD0350
 static uint8_t s_defaultBlobAlpha = 0x80;
 
-// STATIC: 0x00D162DC
+// STATIC: 0x00D162DC/0x140BD0354
 static float s_defaultBlobRingScalar = 1.0f;
 
 // STATIC: 0x00D162E4
@@ -302,28 +302,28 @@ static int32_t s_objectBlipOrder[29] = { 21, 24, 26, 23, 18, 32, 16, 17, 22, 27,
 // STATIC: 0x00F61090
 static MARKEDBLIP s_markedBlips[2];
 
-// STATIC: 0x00F610A0
+// STATIC: 0x00F610A0/0x140E56190
 static uint8_t s_superTrackedArrowShown;
 
-// STATIC: 0x00F611C0
+// STATIC: 0x00F611C0/0x140E5630C
 static uint32_t s_pingLastTime;
 
-// STATIC: 0x00F611C8
+// STATIC: 0x00F611C8/0x140E56314
 static uint32_t s_pingTime;
 
 // STATIC: 0x00F61200
 static C2Vector s_superTrackedArrowPosition;
 
-// STATIC: 0x00D162D9
+// STATIC: 0x00D162D9/0x140BD0351
 static uint8_t s_blobsEnabled = 1;
 
-// STATIC: 0x00D162DA
+// STATIC: 0x00D162DA/0x140BD0352
 static uint8_t s_questBlobInsideEnabled = 1;
 
-// STATIC: 0x00D162DB
+// STATIC: 0x00D162DB/0x140BD0353
 static uint8_t s_questBlobOutsideEnabled = 1;
 
-// STATIC: 0x00D162E0
+// STATIC: 0x00D162E0/0x140BD0358
 static uint32_t s_blobSplinePoints = 32;
 
 // STATIC: 0x00D162E8
@@ -332,7 +332,7 @@ static float s_blobRingRadiusScale = 0.9f;
 // STATIC: 0x00D16368
 static uint8_t s_mergeQuestBlobs = 1;
 
-// STATIC: 0x00D1636C
+// STATIC: 0x00D1636C/0x140BD03E8
 static float s_quadrantAngles[4] = { 0.78539819f, 2.3561945f, 3.9269907f, 5.4977875f };
 
 // STATIC: 0x00D1659C
@@ -341,7 +341,7 @@ static const char* s_heightArrowDownText = "|TInterface\\Minimap\\Minimap-Positi
 // STATIC: 0x00D165A0
 static const char* s_heightArrowUpText = "|TInterface\\Minimap\\Minimap-PositionArrows:0:0:0:0:16:32:0:16:0:16|t";
 
-// STATIC: 0x00F611E4
+// STATIC: 0x00F611E4/0x140E56330
 static uint8_t s_hoverQuestArrow;
 
 // INLINED
@@ -392,12 +392,14 @@ C2Vector CGMinimapFrame::WorldPosToMinimapFrameCoords(C3Vector center, float rad
     return coords;
 }
 
+// PROVEN: 54a2a52c IDENTICAL/IDENTICAL
 // OFFSET: [0x00619630/0x1402A6B50]
 int32_t MinimapGetZoomLevels() {
     return 6;
 }
 
-// OFFSET: 0x008C6410
+// PROVEN: 5d7476c3 IDENTICAL/IDENTICAL
+// OFFSET: 0x008C6410/0x140636450
 CSimpleFrame* CGMinimapFrame::Create(CSimpleFrame* parent) {
     void* data = CGMinimapFrame::s_minimapHeap.GetData(0, typeid(CGMinimapFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGMinimapFrame(parent) : NULL;
@@ -430,7 +432,8 @@ static void ComputeIconTexCoords() {
     }
 }
 
-// OFFSET: 0x009CE580
+// PROVEN: ad111de9 IDENTICAL/IDENTICAL
+// OFFSET: 0x009CE580/0x14075F2E0
 bool CGMinimapFrame::UpdateScale(bool force) {
     if (CSimpleFrame::UpdateScale(force)) {
         CGMinimapFrame::s_scaleChanged = 1;
@@ -440,7 +443,7 @@ bool CGMinimapFrame::UpdateScale(bool force) {
     return false;
 }
 
-// OFFSET: 0x009CE5B0
+// OFFSET: 0x009CE5B0/0x14075F310
 void MINIMAPTILE::BuildQuad(const CRect& rect, uint32_t index, const C2Vector* center, float scale, const CRect& bounds, float layoutScale, float width) {
     float size = scale * 2.0f;
     float inv = 1.0f / size;
@@ -483,6 +486,7 @@ void MINIMAPTILE::BuildQuad(const CRect& rect, uint32_t index, const C2Vector* c
     this->m_vertices[3].z = 0.0f;
 }
 
+// PROVEN: 087c7af9 IDENTICAL/NONE
 // OFFSET: 0x009CE8A0
 static void GetSquareDirection(float angle, float* sine, float* cosine) {
     CMath::fsincos_(angle, sine, cosine);
@@ -542,6 +546,7 @@ float CGMinimapFrame::GetBlobRingScale() {
     return tiles / MinimapGetOutdoorZoomTiles(MinimapGetZoomLevels() - 1) * this->m_questBlobRingSize;
 }
 
+// PROVEN: 035d954f IDENTICAL/NONE
 // OFFSET: 0x009CEA90
 void CGMinimapFrame::RenderInsideSortQuads(MINIMAPTILE** head) {
     for (uint32_t i = 0; i < 256; i++) {
@@ -566,7 +571,8 @@ void CGMinimapFrame::RenderInsideSortQuads(MINIMAPTILE** head) {
     }
 }
 
-// OFFSET: 0x009CEB00
+// PROVEN: f58e4e6c IDENTICAL/IDENTICAL
+// OFFSET: 0x009CEB00/0x14075F680
 void CGMinimapFrame::ShutdownGame() {
     if (s_maskTexture) {
         TextureRelease(s_maskTexture);
@@ -652,7 +658,8 @@ void CGMinimapFrame::ShutdownGame() {
     s_positionArrowsTexture = NULL;
 }
 
-// OFFSET: 0x009CEC90
+// PROVEN: 723f0deb IDENTICAL/IDENTICAL
+// OFFSET: 0x009CEC90/0x14075F840
 void CGMinimapFrame::UpdateTrackingSpell() {
     Script_SendUniqueSignal(SCRIPT_EVENT_MINIMAP_UPDATE_TRACKING);
 }
@@ -668,6 +675,7 @@ static bool IsTrackingType(int32_t type) {
     return false;
 }
 
+// PROVEN: ceb5f818 IDENTICAL/NONE
 // OFFSET: 0x009CECE0
 bool CGMinimapFrame::IsTrackingObjectType(char type) {
     for (uint32_t i = 0; i < 19; i++) {
@@ -679,6 +687,7 @@ bool CGMinimapFrame::IsTrackingObjectType(char type) {
     return false;
 }
 
+// PROVEN: 0d560ea2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009CED30/0x14075F890
 bool CGMinimapFrame::IsTrackingNPC(uint32_t npcFlags) {
     for (uint32_t i = 0; i < 19; i++) {
@@ -715,7 +724,7 @@ static bool IsCreatureInBlipList(int32_t list, int32_t entry) {
     return false;
 }
 
-// OFFSET: 0x009CF200
+// OFFSET: 0x009CF200/0x14075FE80
 void MINIMAPTILE::UpdateQuad(uint32_t index, C2Vector center, float scale, float layoutScale, float width) {
     this->m_flags &= ~1u;
 
@@ -1049,14 +1058,14 @@ int32_t CGMinimapFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return 1;
 }
 
-// PROVEN: 0371142e IDENTICAL/NONE
+// PROVEN: 0371142e IDENTICAL/IDENTICAL
 // OFFSET: 0x009D05D0/0x140761540
 void CGMinimapFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     CGGameUI::m_gameTooltip->Hide();
     CSimpleFrame::OnLayerCursorExit(a2, a3);
 }
 
-// OFFSET: 0x009D0600
+// OFFSET: 0x009D0600/0x140761580
 void CGMinimapFrame::SetCompassRotation(float rotation) {
     CSimpleTexture* compass = static_cast<CSimpleTexture*>(this->m_compassTexture);
 
@@ -1065,14 +1074,15 @@ void CGMinimapFrame::SetCompassRotation(float rotation) {
     }
 }
 
-// OFFSET: 0x009D0640
+// PROVEN: e8ecd22b IDENTICAL/UNPROVEN
+// OFFSET: 0x009D0640/0x1407615C0
 void CGMinimapFrame::UpdateQuads(const C2Vector& center, float scale) {
     for (uint32_t i = 0; i < 256; i++) {
         s_tiles[i].UpdateQuad(i, center, scale, this->m_layoutScale, this->GetWidth());
     }
 }
 
-// OFFSET: 0x009D06B0
+// OFFSET: 0x009D06B0/0x140761660
 void CGMinimapFrame::RenderPOIArrows(const C44Matrix& rotation) {
     C2Vector texCoords[4];
     C3Vector vertices[4];
@@ -1151,7 +1161,7 @@ void CGMinimapFrame::RenderPOIArrows(const C44Matrix& rotation) {
     }
 }
 
-// OFFSET: 0x009D0C10
+// OFFSET: 0x009D0C10/0x140761DA0
 void CGMinimapFrame::RenderSuperTrackedQuestArrow(const C44Matrix& rotation, const C3Vector& position) {
     float radius = static_cast<float>(MinimapGetViewRadius());
     s_superTrackedArrowShown = 0;
@@ -1242,6 +1252,7 @@ void CGMinimapFrame::RenderSuperTrackedQuestArrow(const C44Matrix& rotation, con
     s_superTrackedArrowShown = 1;
 }
 
+// PROVEN: 811cc205 IDENTICAL/IDENTICAL
 // OFFSET: 0x009D1110/0x1407623F0
 static int32_t UpdateObjectInteractIcon(WOWGUID guid, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1264,7 +1275,8 @@ bool CGMinimapFrame::IsTrackingDynamicPOI() {
     return IsTrackingType(4);
 }
 
-// OFFSET: 0x009D1A70
+// PROVEN: e1851be9 IDENTICAL/DIFFERENT
+// OFFSET: 0x009D1A70/0x140762E50
 void MINIMAPTILE::Render(uint32_t index, const CImVector* color) {
     if (!(this->m_flags & 1) || !this->m_texture) {
         return;
@@ -1290,7 +1302,7 @@ void MINIMAPTILE::Render(uint32_t index, const CImVector* color) {
     GxRsSet(GxRs_Texture1, static_cast<void*>(NULL));
 }
 
-// OFFSET: 0x009D1B70
+// OFFSET: 0x009D1B70/0x140762FA0
 void CGMinimapFrame::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -1304,7 +1316,7 @@ void CGMinimapFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: 0x009D1C60
+// OFFSET: 0x009D1C60/0x140763070
 void CGMinimapFrame::RenderInsideQuad(MINIMAPTILE* tile, const CImVector* color) {
     C3Vector vertices[4];
     vertices[0] = C3Vector(tile->m_bounds.b.x, tile->m_bounds.b.y, 0.0f);
@@ -1334,6 +1346,7 @@ void CGMinimapFrame::RenderInsideQuad(MINIMAPTILE* tile, const CImVector* color)
     GxPrimUnlockVertexPtrs();
 }
 
+// PROVEN: a69b80c4 IDENTICAL/DIFFERENT
 // OFFSET: 0x009D1E00/0x140763290
 int32_t CGMinimapFrame::CountAvailableTrackingTypes() {
     int32_t count = 0;
@@ -1389,6 +1402,7 @@ void CGMinimapFrame::SetTracking(uint32_t index, bool enable) {
     Script_SendUniqueSignal(SCRIPT_EVENT_MINIMAP_UPDATE_TRACKING);
 }
 
+// PROVEN: 73aeb14a IDENTICAL/DIFFERENT
 // OFFSET: 0x009D1F60/0x140763410
 bool CGMinimapFrame::SetTrackingMask(int32_t mask) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1408,6 +1422,7 @@ bool CGMinimapFrame::SetTrackingMask(int32_t mask) {
     return false;
 }
 
+// PROVEN: db7ecc84 IDENTICAL/DIFFERENT
 // OFFSET: 0x009D1FE0/0x1407634A0
 int32_t CGMinimapFrame::GetTrackingTypeByIndex(int32_t index) {
     int32_t available = 0;
@@ -1429,7 +1444,7 @@ int32_t CGMinimapFrame::GetTrackingTypeByIndex(int32_t index) {
     return -1;
 }
 
-// OFFSET: 0x009D2050
+// OFFSET: 0x009D2050/0x140763520
 void CGMinimapFrame::RefreshShapeshiftTrackingSpells() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t form = player->GetShapeshiftForm();
@@ -1443,6 +1458,7 @@ void CGMinimapFrame::RefreshShapeshiftTrackingSpells() {
     }
 }
 
+// PROVEN: 2665240e IDENTICAL/UNPROVEN
 // OFFSET: 0x009D2110/0x1407624B0
 void CGMinimapFrame::SaveShapeshiftTracking() {
     CVarIntListWrapper list;
@@ -1515,13 +1531,14 @@ void CGMinimapFrame::SetPingPosition(const WOWGUID& guid, const C2Vector& positi
     s_pingLastTime = FrameTime::GetCurTimeMs();
 }
 
-// OFFSET: 0x009D3040
+// PROVEN: 3b88151a IDENTICAL/IDENTICAL
+// OFFSET: 0x009D3040/0x140764810
 MINIMAPBLOB::~MINIMAPBLOB() {
     this->m_points.Clear();
     this->m_rings.Clear();
 }
 
-// OFFSET: 0x009D30D0
+// OFFSET: 0x009D30D0/0x1407648E0
 int32_t CGMinimapFrame::ObjectEnumProc(WOWGUID guid, void* param) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         return 1;
@@ -1740,7 +1757,7 @@ void CGMinimapFrame::LeaveWorld() {
     s_enteredWorld = 0;
 }
 
-// OFFSET: 0x009D3850
+// OFFSET: 0x009D3850/0x140765130
 CGMinimapFrame::CGMinimapFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_facing = -10000.0f;
     this->m_lastBlipUpdate = 0;
@@ -1798,28 +1815,31 @@ CGMinimapFrame::CGMinimapFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_archBlobRingScalar = s_defaultBlobRingScalar;
 }
 
+// PROVEN: bb45bf06 IDENTICAL/NONE
 // OFFSET: 0x009D3C70
 const char* CGMinimapFrame::GetObjectTypeName() {
     return CGMinimapFrame::s_objectTypeName;
 }
 
-// PROVEN: 59736c8c IDENTICAL/NONE
+// PROVEN: 59736c8c IDENTICAL/IDENTICAL
 // OFFSET: 0x009D3C80/0x140765610
 int32_t CGMinimapFrame::GetScriptMetaTable() {
     return CGMinimapFrame::s_metatable;
 }
 
-// OFFSET: 0x009D3CA0
+// PROVEN: 54fb7e74 IDENTICAL/IDENTICAL
+// OFFSET: 0x009D3CA0/0x140765630
 bool CGMinimapFrame::IsA(int32_t type) {
     return type == CGMinimapFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
+// PROVEN: 9babc963 IDENTICAL/NONE
 // OFFSET: 0x009D3CE0
 bool CGMinimapFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGMinimapFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: [0x009D3D20, 0x009D9170]
+// OFFSET: [0x009D3D20/0x1407656D0, 0x009D9170/0x14076D7F0]
 CGMinimapFrame::~CGMinimapFrame() {
     if (CGMinimapFrame::s_minimapFrame == this) {
         CGMinimapFrame::s_minimapFrame = NULL;
@@ -1856,7 +1876,7 @@ CGMinimapFrame::~CGMinimapFrame() {
     }
 }
 
-// OFFSET: 0x009D3EF0
+// OFFSET: 0x009D3EF0/0x140765920
 void CGMinimapFrame::RenderBlobInside(const C44Matrix& rotation, MINIMAPBLOB* blob) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1944,7 +1964,7 @@ void CGMinimapFrame::RenderBlobInside(const C44Matrix& rotation, MINIMAPBLOB* bl
     this->m_blobPoints.SetCount(0);
 }
 
-// OFFSET: 0x009D44A0
+// OFFSET: 0x009D44A0/0x140766030
 void CGMinimapFrame::RenderBlobOutside(const C44Matrix& rotation, MINIMAPBLOB* blob) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2079,7 +2099,7 @@ void CGMinimapFrame::RenderBlobOutside(const C44Matrix& rotation, MINIMAPBLOB* b
     this->m_blobPoints.SetCount(0);
 }
 
-// OFFSET: 0x009D4CF0
+// OFFSET: 0x009D4CF0/0x140766B00
 void CGMinimapFrame::AddBlobRingSegment(MINIMAPBLOB* blob, float from, float to) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2267,7 +2287,7 @@ bool CGMinimapFrame::BuildBlobRings(MINIMAPBLOB* blob) {
     return blob->m_rings.m_count != 0;
 }
 
-// OFFSET: 0x009D55E0
+// OFFSET: 0x009D55E0/0x1407677B0
 static bool IsPlayerInQuestBlob(int32_t questId, uint32_t blobIndex) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2294,7 +2314,7 @@ static bool IsPlayerInQuestBlob(int32_t questId, uint32_t blobIndex) {
     return NTempest::Intersect(position, vertices.m_data, vertices.m_count, C3Vector::AXIS_Z);
 }
 
-// OFFSET: 0x009D56F0
+// OFFSET: 0x009D56F0/0x1407678F0
 void CGMinimapFrame::RenderPartyRaidBlips(const C44Matrix& rotation) {
     if (!s_classBlipTexture) {
         return;
@@ -2388,7 +2408,7 @@ void CGMinimapFrame::RenderPartyRaidBlips(const C44Matrix& rotation) {
     s_blipIndices.SetCount(0);
 }
 
-// OFFSET: 0x009D5BA0
+// OFFSET: 0x009D5BA0/0x140768090
 void CGMinimapFrame::RenderObjectBlips(const C44Matrix& rotation, bool otherFloor) {
     if (!s_blipTexture) {
         return;
@@ -2473,7 +2493,7 @@ void CGMinimapFrame::RenderObjectBlips(const C44Matrix& rotation, bool otherFloo
     s_blipIndices.m_count = 0;
 }
 
-// OFFSET: 0x009D6000
+// OFFSET: 0x009D6000/0x140768890
 void CGMinimapFrame::RenderVehicleBlips(const C44Matrix& rotation) {
     for (uint32_t list = 33; list < 41; list++) {
         CTexture* texture = s_vehicleTextures[list - 33];
@@ -2558,7 +2578,7 @@ void CGMinimapFrame::RenderVehicleBlips(const C44Matrix& rotation) {
     }
 }
 
-// OFFSET: 0x009D6420
+// OFFSET: 0x009D6420/0x140768FD0
 void CGMinimapFrame::RenderPartyArrows(const C44Matrix& rotation) {
     static C3Vector s_normal(0.0f, 0.0f, 1.0f);
 
@@ -2645,7 +2665,7 @@ void CGMinimapFrame::RenderPartyArrows(const C44Matrix& rotation) {
     s_blipIndices.m_count = 0;
 }
 
-// OFFSET: 0x009D68E0
+// OFFSET: 0x009D68E0/0x140769810
 void CGMinimapFrame::RenderRaidArrows(const C44Matrix& rotation) {
     if (!s_groupArrowTexture) {
         return;
@@ -2731,7 +2751,7 @@ void CGMinimapFrame::RenderRaidArrows(const C44Matrix& rotation) {
     s_blipIndices.m_count = 0;
 }
 
-// OFFSET: 0x009D6D90
+// OFFSET: 0x009D6D90/0x14076A030
 void CGMinimapFrame::RenderPings(const C44Matrix& rotation) {
     if (!s_pingTime || !s_pingCenterTexture || !s_pingRotateTexture || !s_pingExpandTexture) {
         return;
@@ -2903,7 +2923,7 @@ void CGMinimapFrame::RenderPings(const C44Matrix& rotation) {
     s_blipIndices.SetCount(0);
 }
 
-// OFFSET: 0x009D78E0
+// OFFSET: 0x009D78E0/0x14076B100
 void CGMinimapFrame::RenderQuestCompletionNPC(const C44Matrix& rotation, C3Vector position) {
     static C3Vector s_normal(0.0f, 0.0f, 1.0f);
     CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
@@ -2997,7 +3017,7 @@ void CGMinimapFrame::RenderQuestCompletionNPC(const C44Matrix& rotation, C3Vecto
     s_blipIndices.m_count = 0;
 }
 
-// OFFSET: 0x009D7DA0
+// OFFSET: 0x009D7DA0/0x14076B920
 void CGMinimapFrame::RenderHeightArrow(const C2Vector& position, float height, const C44Matrix& rotation) {
     if (!s_positionArrowsTexture || !(s_heightArrowThreshold < std::fabs(height))) {
         return;
@@ -3110,7 +3130,7 @@ void CGMinimapFrame::RenderInsideTexture(const CImVector* color) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x009D8740
+// OFFSET: 0x009D8740/0x14076C850
 void CGMinimapFrame::RenderInside(float scale, const C2Vector* center, const CImVector* color) {
     GxRsSet(GxRs_VertexShader, static_cast<void*>(NULL));
     GxRsSet(GxRs_PixelShader, static_cast<void*>(NULL));
@@ -3226,7 +3246,8 @@ void CGMinimapFrame::EnterWorld() {
     ClntObjMgrEnumVisibleObjects(UpdateObjectInteractIcon, NULL);
 }
 
-// OFFSET: 0x009D91A0
+// PROVEN: bc733090 IDENTICAL/DIFFERENT
+// OFFSET: 0x009D91A0/0x14076D840
 void CGMinimapFrame::AddShapeshiftTrackingSpell(int32_t spellId) {
     for (uint32_t i = 0; i < CGMinimapFrame::s_shapeshiftTrackingSpells.Count(); i++) {
         if (CGMinimapFrame::s_shapeshiftTrackingSpells.m_data[i] == spellId) {
@@ -3247,7 +3268,8 @@ void CGMinimapFrame::RemoveShapeshiftTrackingSpell(int32_t spellId) {
     }
 }
 
-// OFFSET: 0x009D9270
+// PROVEN: a877304c IDENTICAL/UNPROVEN
+// OFFSET: 0x009D9270/0x14076DA30
 void CGMinimapFrame::LoadShapeshiftTracking() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("minimapShapeshiftTracking");
@@ -3267,7 +3289,7 @@ void CGMinimapFrame::LoadShapeshiftTracking() {
     }
 }
 
-// OFFSET: 0x009D95F0
+// OFFSET: 0x009D95F0/0x14076DE00
 void CGMinimapFrame::RenderMarkedBlips(const C44Matrix& rotation) {
     for (uint32_t marker = 0; marker < 2; marker++) {
         int32_t list = s_markedBlips[marker].m_list;
@@ -3375,7 +3397,7 @@ void CGMinimapFrame::RenderMarkedBlips(const C44Matrix& rotation) {
     }
 }
 
-// OFFSET: 0x009D9D30
+// OFFSET: 0x009D9D30/0x14076E9E0
 void CGMinimapFrame::RenderBlobRing(const C44Matrix& rotation, MINIMAPBLOB* blob) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -3489,7 +3511,8 @@ void CGMinimapFrame::RenderBlobRing(const C44Matrix& rotation, MINIMAPBLOB* blob
     }
 }
 
-// OFFSET: 0x009DA300
+// PROVEN: a261ea35 IDENTICAL/DIFFERENT
+// OFFSET: 0x009DA300/0x14076F100
 void CGMinimapFrame::LoadTrackingState() {
     CGMinimapFrame::LoadShapeshiftTracking();
     CGMinimapFrame::s_trackingMask = 0;
@@ -3503,7 +3526,8 @@ void CGMinimapFrame::LoadTrackingState() {
     MinimapLoadZoom();
 }
 
-// OFFSET: 0x009DA340
+// PROVEN: c7d411e4 IDENTICAL/UNPROVEN
+// OFFSET: 0x009DA340/0x14076F150
 void CGMinimapFrame::RenderQuestBlob(const C44Matrix& rotation, uint32_t blobIndex) {
     BLOB* blob = CGQuestLog::GetQuestPOIBlob(CGQuestLog::m_superTrackedQuest, blobIndex);
 
@@ -3535,7 +3559,8 @@ void CGMinimapFrame::RenderQuestBlob(const C44Matrix& rotation, uint32_t blobInd
     }
 }
 
-// OFFSET: 0x009DA450
+// PROVEN: f9ee5da6 IDENTICAL/UNPROVEN
+// OFFSET: 0x009DA450/0x14076F2A0
 void CGMinimapFrame::RenderArchBlob(const C44Matrix& rotation, uint32_t siteIndex) {
     BLOB* blob = reinterpret_cast<BLOB*>(CGResearchFrame::GetResearchSiteBlobs(siteIndex));
 
@@ -3697,6 +3722,7 @@ int32_t CGMinimapFrame::SetArchBlobRingTexture(const char* fileName) {
     return 1;
 }
 
+// PROVEN: 617321dd IDENTICAL/DIFFERENT
 // OFFSET: 0x009DAC40/0x14076FD00
 void CGMinimapFrame::PostLoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::PostLoadXML(node, status);
@@ -3734,7 +3760,7 @@ void CGMinimapFrame::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_compassTexture = compass ? static_cast<CScriptRegion*>(compass) : NULL;
 }
 
-// OFFSET: 0x009DBA50
+// OFFSET: 0x009DBA50/0x140770E40
 void CGMinimapFrame::RenderQuestBlobs(const C44Matrix& rotation) {
     this->m_questBlobVisible = 0;
 
@@ -3803,7 +3829,7 @@ void CGMinimapFrame::RenderQuestBlobs(const C44Matrix& rotation) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x009DBE30
+// OFFSET: 0x009DBE30/0x1407713A0
 void CGMinimapFrame::RenderArchBlobs(const C44Matrix& rotation) {
     if (!IsTrackingType(8)) {
         return;
@@ -3853,7 +3879,7 @@ void CGMinimapFrame::RenderArchBlobs(const C44Matrix& rotation) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x009DC170
+// OFFSET: 0x009DC170/0x1407717B0
 void CGMinimapFrame::Render() {
     if (!s_maskTexture || !(this->m_layoutFlags & 0x1) || !s_enteredWorld) {
         return;
@@ -4322,16 +4348,16 @@ void CGMinimapFrame::Render() {
     s_rotateMinimap = g_rotateMinimapCVar->m_intValue;
 }
 
-// PROVEN: d9f90a6e IDENTICAL/NONE
-// OFFSET: 0x009DDED0
+// PROVEN: d9f90a6e IDENTICAL/IDENTICAL
+// OFFSET: 0x009DDED0/0x140773F50
 void CGMinimapFrame::RenderCallback(void* param) {
     if (param) {
         static_cast<CGMinimapFrame*>(param)->Render();
     }
 }
 
-// PROVEN: da772788 IDENTICAL/NONE
-// OFFSET: 0x009DDEF0
+// PROVEN: da772788 IDENTICAL/IDENTICAL
+// OFFSET: 0x009DDEF0/0x140773F70
 void CGMinimapFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
 

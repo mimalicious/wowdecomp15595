@@ -12,7 +12,7 @@ namespace Network {
 
 class Address {
     public:
-    /* 0000 */ int32_t m_length;
+    /* 0000 */ size_t m_length;
     /* 0004 */ uint16_t m_family;
     /* 0006 */ uint16_t m_port;
     /* 0008 */ uint32_t m_ip;
@@ -51,7 +51,7 @@ class SocketPosix : public Socket {
 struct Endpoint {
     /* 0000 */ Address m_address;
     /* 0020 */ uint8_t m_key[16];
-    /* 0030 */ uint32_t m_refCount;
+    /* 0030 */ size_t m_refCount;
 };
 
 #pragma pack(push, 1)

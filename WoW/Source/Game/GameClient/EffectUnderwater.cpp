@@ -9,13 +9,13 @@
 #include "Engine/Source/ShaderEffect/SunShafts.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x01012A80
+// STATIC: 0x01012A80/0x140EEA6C0
 CTexture* PassUnderwater::s_causticsTex[32];
 
-// STATIC: 0x01012B00
+// STATIC: 0x01012B00/0x140EEA7C0
 CTexture* PassUnderwater::s_screenMask;
 
-// STATIC: 0x01012B04
+// STATIC: 0x01012B04/0x140EEA7C8
 int32_t PassUnderwater::s_texRef;
 
 // OFFSET: 0x00B49CF0/0x140919CF0

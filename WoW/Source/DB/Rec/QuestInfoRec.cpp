@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C22DA0/0x140A17E38
 const DBCMeta QuestInfoRec::s_meta = { "DBFilesClient\\QuestInfo.dbc", 2, 8, QuestInfoRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 7d66f6ef IDENTICAL/NONE
+// PROVEN: 7d66f6ef IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void QuestInfoRec::FixupStrings(void* record, const char* strings) {
     QuestInfoRec* rec = static_cast<QuestInfoRec*>(record);

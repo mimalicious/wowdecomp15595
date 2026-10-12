@@ -29,7 +29,6 @@ class CHARACTER_INFO {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ char m_name [48];
     /* 0038 */ uint8_t m_listOrder;
-    /* 0039 */ uint8_t unk_0039[3];
     /* 003C */ uint32_t m_mapID;
     /* 0040 */ uint32_t m_zoneID;
     /* 0044 */ uint8_t unk_0044[4];
@@ -81,7 +80,6 @@ class RealmConnection : public NetClient {
     /* 46C8 */ RealmResponse* m_realmResponse;
     /* 46CC */ TSFixedArray<CHARACTER_INFO> m_characterList;
     /* 46D8 */ uint8_t m_authenticated;
-    /* 46D9 */ uint8_t unk_46D9[3];
     /* 46DC */ uint32_t m_queuePosition;
     /* 46E0 */ uint32_t m_freeCharacterMigration;
     /* 46E4 */ uint32_t m_billingTimeRemaining;
@@ -89,7 +87,6 @@ class RealmConnection : public NetClient {
     /* 46EC */ uint8_t m_billingFlags;
     /* 46ED */ uint8_t m_accountExpansion;
     /* 46EE */ uint8_t m_activeExpansion;
-    /* 46EF */ uint8_t unk_46EF;
     /* 46F0 */ uint32_t m_timeRemaining;
     /* 46F4 */ uint32_t m_timeRemainingStart;
     /* 46F8 */ uint32_t m_regionID;

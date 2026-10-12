@@ -25,7 +25,7 @@ static void LinkAllToAsyncHead(void* param) {
     }
 }
 
-// OFFSET: 0x00B38290
+// OFFSET: 0x00B38290/0x1409041A0
 void DayNight::Preload(const C3Vector& pos) {
     C3Vector dir(0.0f, 0.0f, 1.0f);
     C3Vector target;
@@ -59,7 +59,7 @@ int32_t DayNight::IsAllLoaded() {
         && DayNight::g_stars.IsAllLoaded();
 }
 
-// PROVEN: 00212bb2 IDENTICAL/NONE
+// PROVEN: 00212bb2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B38480/0x140904410
 void DayNight::StreamingUpdate() {
     if (!DayNight::IsAllLoaded()) {

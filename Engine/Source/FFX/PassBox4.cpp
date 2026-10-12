@@ -4,6 +4,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Services/Texture.h"
 
+// PROVEN: 7f51c256 UNPROVEN/IDENTICAL
 // OFFSET: 0x0089FCE0/0x1405E0DA0
 PassBox4::PassBox4(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_permute = 0;

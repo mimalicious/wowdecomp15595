@@ -45,4 +45,6 @@ class PassGlowFade : public PassGlowBase {
     float GetFadeAmount();
 };
 
+#include "Engine/Source/FFX/PassGlow.inl"
+
 #endif

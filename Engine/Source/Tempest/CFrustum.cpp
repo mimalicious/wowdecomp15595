@@ -4,7 +4,7 @@
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CFrustum.h"
 
-// PROVEN: 8a404508 IDENTICAL/NONE
+// PROVEN: 8a404508 IDENTICAL/IDENTICAL
 // OFFSET: 0x004CBEA0/0x140107C10
 void CFrustum::Extents(CAaBox& box) {
     box = CAaBox::Bounding(this->corners, 8);
@@ -78,7 +78,7 @@ uint32_t CFrustum::Cull(const CAaBox& box, uint32_t* outside) {
     return 3;
 }
 
-// OFFSET: 0x004CC140
+// OFFSET: 0x004CC140/0x140107EB0
 uint32_t CFrustum::CullInv(const CAaBox& box) {
     const C3Vector* extremes[2] = { &box.t, &box.b };
 
@@ -96,7 +96,7 @@ uint32_t CFrustum::CullInv(const CAaBox& box) {
     return 3;
 }
 
-// OFFSET: 0x004CC200
+// OFFSET: 0x004CC200/0x140107F40
 void CFrustum::Translate(const C3Vector& v) {
     for (uint32_t i = 0; i < 8; i++) {
         this->corners[i] += v;
@@ -158,19 +158,12 @@ void CFrustum::Transform(const C44Matrix& m) {
     this->CalcPlanesFromCorners();
 }
 
-// INLINED
-uint32_t CFrustum::Cull(const C3Vector& center, float radius) {
-    CAaSphere sphere;
-    sphere.c = center;
-    sphere.r = radius;
-    return this->Cull(sphere);
-}
-
 // PROVEN: 4b4e948b IDENTICAL/IDENTICAL
 // OFFSET: 0x00437100/0x140040D00
 CFrustum::CFrustum() {
 }
 
+// PROVEN: a067d361 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CCD90/0x140108B00
 CFrustum::CFrustum(const C3Vector* corners) {
     for (uint32_t i = 0; i < 8; i++) {
@@ -180,6 +173,7 @@ CFrustum::CFrustum(const C3Vector* corners) {
     this->CalcPlanesFromCorners();
 }
 
+// PROVEN: c6825fce IDENTICAL/IDENTICAL
 // OFFSET: 0x004CD010/0x140108D80
 void CFrustum::CalcPlanesFromCorners(const C3Vector* corners) {
     for (uint32_t i = 0; i < 8; i++) {

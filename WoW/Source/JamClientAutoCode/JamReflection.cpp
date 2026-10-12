@@ -197,7 +197,7 @@ static const char* s_c3VectorNames[3] = { "x", "y", "z" };
 // STATIC: 0x00D277BC
 static const char* s_c4VectorNames[4] = { "x", "y", "z", "w" };
 
-// STATIC: 0x00C45F90
+// STATIC: 0x00C45F90/0x140A3EC70
 const JamTypeInfo g_jamTypeNone = {
     0,
     JamDefault_SetDefaultTrue,
@@ -873,6 +873,7 @@ const JamTypeInfo g_jamTypeTradeStatus = {
     JamDefault_GetBool
 };
 
+// PROVEN: 10b94c5a IDENTICAL/NONE
 // OFFSET: 0x00B075A0
 static bool JamFloat_FromUInt64(float* data, uint64_t value) {
     float converted = static_cast<float>(value);
@@ -885,12 +886,14 @@ static bool JamFloat_FromUInt64(float* data, uint64_t value) {
     return true;
 }
 
+// PROVEN: 59974d70 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A3AA30/0x1404BDD20
 static bool JamDefault_SetDefaultTrue(void* data) {
     return true;
 }
 
-// OFFSET: 0x00B06D30
+// PROVEN: 8c4ac39b IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D30/0x1408C9ED0
 static JamValue* JamDefault_GetMember(JamValue* out, void* data, const void* meta, uint32_t index) {
     out->m_type = &g_jamTypeNone;
     out->m_data = NULL;
@@ -898,12 +901,14 @@ static JamValue* JamDefault_GetMember(JamValue* out, void* data, const void* met
     return out;
 }
 
+// PROVEN: 8a112c5b IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static const char* JamDefault_GetMemberName(void* data, const void* meta, uint32_t index) {
     return NULL;
 }
 
-// OFFSET: 0x00B06D30
+// PROVEN: fd8071cb IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D30/0x1408C9ED0
 static JamValue* JamDefault_FindMember(JamValue* out, void* data, const void* meta, const char* name) {
     out->m_type = &g_jamTypeNone;
     out->m_data = NULL;
@@ -911,17 +916,20 @@ static JamValue* JamDefault_FindMember(JamValue* out, void* data, const void* me
     return out;
 }
 
+// PROVEN: d323a989 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static uint32_t JamDefault_GetMemberCount(void* data, const void* meta) {
     return 0;
 }
 
+// PROVEN: d26bff87 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 static uint32_t JamDefault_GetMemberCapacity(void* data, const void* meta) {
     return 0;
 }
 
-// OFFSET: 0x00B06D30
+// PROVEN: d123dde7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D30/0x1408C9ED0
 static JamValue* JamDefault_GetElement(JamValue* out) {
     out->m_type = &g_jamTypeNone;
     out->m_data = NULL;
@@ -929,76 +937,91 @@ static JamValue* JamDefault_GetElement(JamValue* out) {
     return out;
 }
 
+// PROVEN: 7a3235d1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetString(void* data, const void* meta, const char* value) {
     return false;
 }
 
+// PROVEN: ccea003f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetInt32(void* data, const void* meta, int32_t value) {
     return false;
 }
 
+// PROVEN: 82e1eb00 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetUInt32(void* data, const void* meta, uint32_t value) {
     return false;
 }
 
+// PROVEN: bd27f942 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetInt64(void* data, const void* meta, int64_t value) {
     return false;
 }
 
+// PROVEN: ddb4fc27 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetUInt64(void* data, const void* meta, uint64_t value) {
     return false;
 }
 
+// PROVEN: c16bc9e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetFloat(void* data, const void* meta, float value) {
     return false;
 }
 
+// PROVEN: b68c7353 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetBool(void* data, const void* meta, bool value) {
     return false;
 }
 
+// PROVEN: 7d1e60ab IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetString(const void* data, const void* meta, char* buffer, uint32_t size) {
     return false;
 }
 
+// PROVEN: e697a432 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetInt32(const void* data, const void* meta, int32_t* value) {
     return false;
 }
 
+// PROVEN: b7fcecee IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     return false;
 }
 
+// PROVEN: 1f8e3ce8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetInt64(const void* data, const void* meta, int64_t* value) {
     return false;
 }
 
+// PROVEN: 8725f1b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     return false;
 }
 
+// PROVEN: 5f812b15 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetFloat(const void* data, const void* meta, float* value) {
     return false;
 }
 
+// PROVEN: 1d5a7b52 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_GetBool(const void* data, const void* meta, bool* value) {
     return false;
 }
 
+// PROVEN: e8e055dc IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06D20/0x140317F90
 static bool JamDefault_SetDefault(void* data) {
     return false;
@@ -1013,6 +1036,7 @@ static JamValue* JamStruct_GetMember(JamValue* out, void* data, const void* meta
     return out;
 }
 
+// PROVEN: a7862433 IDENTICAL/NONE
 // OFFSET: 0x00B06D50
 static const char* JamStruct_GetMemberName(void* data, const void* meta, uint32_t index) {
     return static_cast<const JamStructMeta*>(meta)->m_names[index];
@@ -1060,23 +1084,27 @@ static JamValue* JamStruct_FindMember(JamValue* out, void* data, const void* met
     return out;
 }
 
+// PROVEN: a12899c2 IDENTICAL/NONE
 // OFFSET: 0x00B06D70
 static uint32_t JamStruct_GetMemberCount(void* data, const void* meta) {
     return static_cast<const JamStructMeta*>(meta)->m_count;
 }
 
+// PROVEN: be5079cc IDENTICAL/NONE
 // OFFSET: 0x00B06D70
 static uint32_t JamStruct_GetMemberCapacity(void* data, const void* meta) {
     return static_cast<const JamStructMeta*>(meta)->m_count;
 }
 
-// OFFSET: 0x00B071D0
+// PROVEN: f41d586d IDENTICAL/IDENTICAL
+// OFFSET: 0x00B071D0/0x1408CA810
 static bool JamInt8_SetDefault(void* data) {
     *static_cast<int8_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B07600
+// PROVEN: 35ba0eaa IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07600/0x1408CA760
 static bool JamInt8_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     int8_t converted = static_cast<int8_t>(number);
@@ -1089,7 +1117,8 @@ static bool JamInt8_SetString(void* data, const void* meta, const char* value) {
     return true;
 }
 
-// OFFSET: 0x00B07630
+// PROVEN: e2522357 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07630/0x1408CA790
 static bool JamInt8_SetInt32(void* data, const void* meta, int32_t value) {
     int8_t converted = static_cast<int8_t>(value);
 
@@ -1101,7 +1130,8 @@ static bool JamInt8_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07630
+// PROVEN: f962e493 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07630/0x1408CA790
 static bool JamInt8_SetUInt32(void* data, const void* meta, uint32_t value) {
     int8_t converted = static_cast<int8_t>(value);
 
@@ -1113,7 +1143,8 @@ static bool JamInt8_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07650
+// PROVEN: 76e2bfc1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07650/0x1408CA7B0
 static bool JamInt8_SetInt64(void* data, const void* meta, int64_t value) {
     int8_t converted = static_cast<int8_t>(value);
 
@@ -1125,7 +1156,8 @@ static bool JamInt8_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07650
+// PROVEN: 5e1a2ac2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07650/0x1408CA7B0
 static bool JamInt8_SetUInt64(void* data, const void* meta, uint64_t value) {
     int8_t converted = static_cast<int8_t>(value);
 
@@ -1137,6 +1169,7 @@ static bool JamInt8_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
+// PROVEN: 74be35c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07670/0x1408CA7D0
 static bool JamInt8_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
@@ -1150,41 +1183,47 @@ static bool JamInt8_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
-// OFFSET: 0x00B07690
+// PROVEN: 75f05695 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07690/0x1408CA7F0
 static bool JamInt8_GetInt32(const void* data, const void* meta, int32_t* value) {
     int8_t current = *static_cast<const int8_t*>(data);
     *value = current;
     return static_cast<int8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07690
+// PROVEN: 0f4a887d IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07690/0x1408CA7F0
 static bool JamInt8_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     int8_t current = *static_cast<const int8_t*>(data);
     *value = current;
     return static_cast<int8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B076B0
+// PROVEN: d9218aca IDENTICAL/IDENTICAL
+// OFFSET: 0x00B076B0/0x1408CA800
 static bool JamInt8_GetInt64(const void* data, const void* meta, int64_t* value) {
     int8_t current = *static_cast<const int8_t*>(data);
     *value = current;
     return static_cast<int8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B076B0
+// PROVEN: f95b596b IDENTICAL/IDENTICAL
+// OFFSET: 0x00B076B0/0x1408CA800
 static bool JamInt8_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     int8_t current = *static_cast<const int8_t*>(data);
     *value = current;
     return static_cast<int8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B071D0
+// PROVEN: 0f8373cb IDENTICAL/IDENTICAL
+// OFFSET: 0x00B071D0/0x1408CA810
 static bool JamUInt8_SetDefault(void* data) {
     *static_cast<uint8_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B076D0
+// PROVEN: e6b39c4f IDENTICAL/IDENTICAL
+// OFFSET: 0x00B076D0/0x1408CA820
 static bool JamUInt8_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     uint8_t converted = static_cast<uint8_t>(number);
@@ -1197,7 +1236,8 @@ static bool JamUInt8_SetString(void* data, const void* meta, const char* value) 
     return true;
 }
 
-// OFFSET: 0x00B07700
+// PROVEN: eb494f99 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07700/0x1408CA850
 static bool JamUInt8_SetInt32(void* data, const void* meta, int32_t value) {
     uint8_t converted = static_cast<uint8_t>(value);
 
@@ -1209,7 +1249,8 @@ static bool JamUInt8_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07700
+// PROVEN: c71640c6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07700/0x1408CA850
 static bool JamUInt8_SetUInt32(void* data, const void* meta, uint32_t value) {
     uint8_t converted = static_cast<uint8_t>(value);
 
@@ -1221,7 +1262,8 @@ static bool JamUInt8_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07720
+// PROVEN: 18a7c80b IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07720/0x1408CA870
 static bool JamUInt8_SetInt64(void* data, const void* meta, int64_t value) {
     uint8_t converted = static_cast<uint8_t>(value);
 
@@ -1233,7 +1275,8 @@ static bool JamUInt8_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07720
+// PROVEN: f6274d66 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07720/0x1408CA870
 static bool JamUInt8_SetUInt64(void* data, const void* meta, uint64_t value) {
     uint8_t converted = static_cast<uint8_t>(value);
 
@@ -1245,6 +1288,7 @@ static bool JamUInt8_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
+// PROVEN: f7ea4e90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07740/0x1408CA890
 static bool JamUInt8_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
@@ -1258,41 +1302,47 @@ static bool JamUInt8_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
-// OFFSET: 0x00B07760
+// PROVEN: e94c1113 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07760/0x1408CA8B0
 static bool JamUInt8_GetInt32(const void* data, const void* meta, int32_t* value) {
     uint8_t current = *static_cast<const uint8_t*>(data);
     *value = current;
     return static_cast<uint8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07760
+// PROVEN: a55b8721 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07760/0x1408CA8B0
 static bool JamUInt8_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     uint8_t current = *static_cast<const uint8_t*>(data);
     *value = current;
     return static_cast<uint8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07780
+// PROVEN: 63490bd3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07780/0x1408CA8C0
 static bool JamUInt8_GetInt64(const void* data, const void* meta, int64_t* value) {
     uint8_t current = *static_cast<const uint8_t*>(data);
     *value = current;
     return static_cast<uint8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07780
+// PROVEN: 6939b7f1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07780/0x1408CA8C0
 static bool JamUInt8_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     uint8_t current = *static_cast<const uint8_t*>(data);
     *value = current;
     return static_cast<uint8_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07890
+// PROVEN: 341ab7fd IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07890/0x1408CAA30
 static bool JamInt16_SetDefault(void* data) {
     *static_cast<int16_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B077A0
+// PROVEN: 93a4d153 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B077A0/0x1408CA8D0
 static bool JamInt16_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     int16_t converted = static_cast<int16_t>(number);
@@ -1305,7 +1355,8 @@ static bool JamInt16_SetString(void* data, const void* meta, const char* value) 
     return true;
 }
 
-// OFFSET: 0x00B077D0
+// PROVEN: 7ffc42aa IDENTICAL/IDENTICAL
+// OFFSET: 0x00B077D0/0x1408CA900
 static bool JamInt16_SetInt32(void* data, const void* meta, int32_t value) {
     int16_t converted = static_cast<int16_t>(value);
 
@@ -1317,7 +1368,8 @@ static bool JamInt16_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B077D0
+// PROVEN: 2e069595 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B077D0/0x1408CA900
 static bool JamInt16_SetUInt32(void* data, const void* meta, uint32_t value) {
     int16_t converted = static_cast<int16_t>(value);
 
@@ -1329,7 +1381,8 @@ static bool JamInt16_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B077F0
+// PROVEN: b49a77c6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B077F0/0x1408CA920
 static bool JamInt16_SetInt64(void* data, const void* meta, int64_t value) {
     int16_t converted = static_cast<int16_t>(value);
 
@@ -1341,7 +1394,8 @@ static bool JamInt16_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B077F0
+// PROVEN: f1f9fc62 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B077F0/0x1408CA920
 static bool JamInt16_SetUInt64(void* data, const void* meta, uint64_t value) {
     int16_t converted = static_cast<int16_t>(value);
 
@@ -1353,6 +1407,7 @@ static bool JamInt16_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
+// PROVEN: 1d8557a4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07820/0x1408CA940
 static bool JamInt16_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
@@ -1366,41 +1421,47 @@ static bool JamInt16_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
-// OFFSET: 0x00B07840
+// PROVEN: f85e45ed IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07840/0x1408CA960
 static bool JamInt16_GetInt32(const void* data, const void* meta, int32_t* value) {
     int16_t current = *static_cast<const int16_t*>(data);
     *value = current;
     return static_cast<int16_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07840
+// PROVEN: 30529b49 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07840/0x1408CA960
 static bool JamInt16_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     int16_t current = *static_cast<const int16_t*>(data);
     *value = current;
     return static_cast<int16_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07860
+// PROVEN: 3635de54 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07860/0x1408CA970
 static bool JamInt16_GetInt64(const void* data, const void* meta, int64_t* value) {
     int16_t current = *static_cast<const int16_t*>(data);
     *value = current;
     return static_cast<int16_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07860
+// PROVEN: 65dae392 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07860/0x1408CA970
 static bool JamInt16_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     int16_t current = *static_cast<const int16_t*>(data);
     *value = current;
     return static_cast<int16_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07890
+// PROVEN: 8c4e1636 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07890/0x1408CAA30
 static bool JamUInt16_SetDefault(void* data) {
     *static_cast<uint16_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B078A0
+// PROVEN: c65f8bbd IDENTICAL/IDENTICAL
+// OFFSET: 0x00B078A0/0x1408CA980
 static bool JamUInt16_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     uint16_t converted = static_cast<uint16_t>(number);
@@ -1413,7 +1474,8 @@ static bool JamUInt16_SetString(void* data, const void* meta, const char* value)
     return true;
 }
 
-// OFFSET: 0x00B078D0
+// PROVEN: 82e1e9b4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B078D0/0x1408CA9B0
 static bool JamUInt16_SetInt32(void* data, const void* meta, int32_t value) {
     uint16_t converted = static_cast<uint16_t>(value);
 
@@ -1425,7 +1487,8 @@ static bool JamUInt16_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B078D0
+// PROVEN: 5aa5ac29 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B078D0/0x1408CA9B0
 static bool JamUInt16_SetUInt32(void* data, const void* meta, uint32_t value) {
     uint16_t converted = static_cast<uint16_t>(value);
 
@@ -1437,7 +1500,8 @@ static bool JamUInt16_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B078F0
+// PROVEN: e8dffe0a IDENTICAL/IDENTICAL
+// OFFSET: 0x00B078F0/0x1408CA9D0
 static bool JamUInt16_SetInt64(void* data, const void* meta, int64_t value) {
     uint16_t converted = static_cast<uint16_t>(value);
 
@@ -1449,7 +1513,8 @@ static bool JamUInt16_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B078F0
+// PROVEN: 3be8866c IDENTICAL/IDENTICAL
+// OFFSET: 0x00B078F0/0x1408CA9D0
 static bool JamUInt16_SetUInt64(void* data, const void* meta, uint64_t value) {
     uint16_t converted = static_cast<uint16_t>(value);
 
@@ -1461,6 +1526,7 @@ static bool JamUInt16_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
+// PROVEN: d2631f41 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07920/0x1408CA9F0
 static bool JamUInt16_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
@@ -1474,41 +1540,47 @@ static bool JamUInt16_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
-// OFFSET: 0x00B07940
+// PROVEN: c683ce9f IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07940/0x1408CAA10
 static bool JamUInt16_GetInt32(const void* data, const void* meta, int32_t* value) {
     uint16_t current = *static_cast<const uint16_t*>(data);
     *value = current;
     return static_cast<uint16_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07940
+// PROVEN: 4a3d2981 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07940/0x1408CAA10
 static bool JamUInt16_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     uint16_t current = *static_cast<const uint16_t*>(data);
     *value = current;
     return static_cast<uint16_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07960
+// PROVEN: 20a7bcec IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07960/0x1408CAA20
 static bool JamUInt16_GetInt64(const void* data, const void* meta, int64_t* value) {
     uint16_t current = *static_cast<const uint16_t*>(data);
     *value = current;
     return static_cast<uint16_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07960
+// PROVEN: 66e61838 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07960/0x1408CAA20
 static bool JamUInt16_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     uint16_t current = *static_cast<const uint16_t*>(data);
     *value = current;
     return static_cast<uint16_t>(*value) == current;
 }
 
+// PROVEN: 6c1cb9cb IDENTICAL/NONE
 // OFFSET: 0x00B07C00
 static bool JamInt32_SetDefault(void* data) {
     *static_cast<int32_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B07990
+// PROVEN: 9e67a334 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07990/0x1408CAA40
 static bool JamInt32_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     int32_t converted = static_cast<int32_t>(number);
@@ -1521,6 +1593,7 @@ static bool JamInt32_SetString(void* data, const void* meta, const char* value) 
     return true;
 }
 
+// PROVEN: 6bf6bed3 IDENTICAL/NONE
 // OFFSET: 0x00B07BD0
 static bool JamInt32_SetInt32(void* data, const void* meta, int32_t value) {
     int32_t converted = static_cast<int32_t>(value);
@@ -1533,6 +1606,7 @@ static bool JamInt32_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
+// PROVEN: 40982ffe IDENTICAL/NONE
 // OFFSET: 0x00B07BD0
 static bool JamInt32_SetUInt32(void* data, const void* meta, uint32_t value) {
     int32_t converted = static_cast<int32_t>(value);
@@ -1545,7 +1619,8 @@ static bool JamInt32_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07BE0
+// PROVEN: 702fe8c1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07BE0/0x1408CAA80
 static bool JamInt32_SetInt64(void* data, const void* meta, int64_t value) {
     int32_t converted = static_cast<int32_t>(value);
 
@@ -1557,7 +1632,8 @@ static bool JamInt32_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07BE0
+// PROVEN: 53d47efd IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07BE0/0x1408CAA80
 static bool JamInt32_SetUInt64(void* data, const void* meta, uint64_t value) {
     int32_t converted = static_cast<int32_t>(value);
 
@@ -1569,6 +1645,7 @@ static bool JamInt32_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
+// PROVEN: 051c78fb IDENTICAL/NONE
 // OFFSET: 0x00B07A50
 static bool JamInt32_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
@@ -1582,6 +1659,7 @@ static bool JamInt32_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
+// PROVEN: b586a5d2 IDENTICAL/NONE
 // OFFSET: 0x00B079C0
 static bool JamInt32_GetInt32(const void* data, const void* meta, int32_t* value) {
     int32_t current = *static_cast<const int32_t*>(data);
@@ -1589,6 +1667,7 @@ static bool JamInt32_GetInt32(const void* data, const void* meta, int32_t* value
     return static_cast<int32_t>(*value) == current;
 }
 
+// PROVEN: b3625e6c IDENTICAL/NONE
 // OFFSET: 0x00B079C0
 static bool JamInt32_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     int32_t current = *static_cast<const int32_t*>(data);
@@ -1596,6 +1675,7 @@ static bool JamInt32_GetUInt32(const void* data, const void* meta, uint32_t* val
     return static_cast<int32_t>(*value) == current;
 }
 
+// PROVEN: db6d68c3 IDENTICAL/NONE
 // OFFSET: 0x00B079E0
 static bool JamInt32_GetInt64(const void* data, const void* meta, int64_t* value) {
     int32_t current = *static_cast<const int32_t*>(data);
@@ -1603,6 +1683,7 @@ static bool JamInt32_GetInt64(const void* data, const void* meta, int64_t* value
     return static_cast<int32_t>(*value) == current;
 }
 
+// PROVEN: 2fa86dd6 IDENTICAL/NONE
 // OFFSET: 0x00B079E0
 static bool JamInt32_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     int32_t current = *static_cast<const int32_t*>(data);
@@ -1610,13 +1691,15 @@ static bool JamInt32_GetUInt64(const void* data, const void* meta, uint64_t* val
     return static_cast<int32_t>(*value) == current;
 }
 
+// PROVEN: eb6dc23e IDENTICAL/NONE
 // OFFSET: 0x00B07C00
 static bool JamUInt32_SetDefault(void* data) {
     *static_cast<uint32_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B07A00
+// PROVEN: df1b7b07 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07A00/0x1408CAAC0
 static bool JamUInt32_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     uint32_t converted = static_cast<uint32_t>(number);
@@ -1629,6 +1712,7 @@ static bool JamUInt32_SetString(void* data, const void* meta, const char* value)
     return true;
 }
 
+// PROVEN: f06af787 IDENTICAL/NONE
 // OFFSET: 0x00B07BD0
 static bool JamUInt32_SetInt32(void* data, const void* meta, int32_t value) {
     uint32_t converted = static_cast<uint32_t>(value);
@@ -1641,6 +1725,7 @@ static bool JamUInt32_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
+// PROVEN: a3436656 IDENTICAL/NONE
 // OFFSET: 0x00B07BD0
 static bool JamUInt32_SetUInt32(void* data, const void* meta, uint32_t value) {
     uint32_t converted = static_cast<uint32_t>(value);
@@ -1653,7 +1738,8 @@ static bool JamUInt32_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07A30
+// PROVEN: 02d63784 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07A30/0x1408CAAF0
 static bool JamUInt32_SetInt64(void* data, const void* meta, int64_t value) {
     uint32_t converted = static_cast<uint32_t>(value);
 
@@ -1665,7 +1751,8 @@ static bool JamUInt32_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07A30
+// PROVEN: b69a9400 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07A30/0x1408CAAF0
 static bool JamUInt32_SetUInt64(void* data, const void* meta, uint64_t value) {
     uint32_t converted = static_cast<uint32_t>(value);
 
@@ -1677,6 +1764,7 @@ static bool JamUInt32_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
+// PROVEN: 7a7004e7 IDENTICAL/NONE
 // OFFSET: 0x00B07A50
 static bool JamUInt32_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
@@ -1690,6 +1778,7 @@ static bool JamUInt32_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
+// PROVEN: 13c3e533 IDENTICAL/NONE
 // OFFSET: 0x00B079C0
 static bool JamUInt32_GetInt32(const void* data, const void* meta, int32_t* value) {
     uint32_t current = *static_cast<const uint32_t*>(data);
@@ -1697,6 +1786,7 @@ static bool JamUInt32_GetInt32(const void* data, const void* meta, int32_t* valu
     return static_cast<uint32_t>(*value) == current;
 }
 
+// PROVEN: 9ff6cf3a IDENTICAL/NONE
 // OFFSET: 0x00B079C0
 static bool JamUInt32_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     uint32_t current = *static_cast<const uint32_t*>(data);
@@ -1704,6 +1794,7 @@ static bool JamUInt32_GetUInt32(const void* data, const void* meta, uint32_t* va
     return static_cast<uint32_t>(*value) == current;
 }
 
+// PROVEN: c1ce1c05 IDENTICAL/NONE
 // OFFSET: 0x00B07A70
 static bool JamUInt32_GetInt64(const void* data, const void* meta, int64_t* value) {
     uint32_t current = *static_cast<const uint32_t*>(data);
@@ -1711,6 +1802,7 @@ static bool JamUInt32_GetInt64(const void* data, const void* meta, int64_t* valu
     return static_cast<uint32_t>(*value) == current;
 }
 
+// PROVEN: 5b2c1d74 IDENTICAL/NONE
 // OFFSET: 0x00B07A70
 static bool JamUInt32_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     uint32_t current = *static_cast<const uint32_t*>(data);
@@ -1718,13 +1810,15 @@ static bool JamUInt32_GetUInt64(const void* data, const void* meta, uint64_t* va
     return static_cast<uint32_t>(*value) == current;
 }
 
+// PROVEN: cf314b3c IDENTICAL/NONE
 // OFFSET: 0x00B07B90
 static bool JamInt64_SetDefault(void* data) {
     *static_cast<int64_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B07A90
+// PROVEN: e426a216 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07A90/0x1408CABA0
 static bool JamInt64_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     int64_t converted = static_cast<int64_t>(number);
@@ -1737,7 +1831,8 @@ static bool JamInt64_SetString(void* data, const void* meta, const char* value) 
     return true;
 }
 
-// OFFSET: 0x00B07AB0
+// PROVEN: a4429373 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07AB0/0x1408CAB40
 static bool JamInt64_SetInt32(void* data, const void* meta, int32_t value) {
     int64_t converted = static_cast<int64_t>(value);
 
@@ -1749,7 +1844,8 @@ static bool JamInt64_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07AD0
+// PROVEN: 1b8a43f5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07AD0/0x1408CABC0
 static bool JamInt64_SetUInt32(void* data, const void* meta, uint32_t value) {
     int64_t converted = static_cast<int64_t>(value);
 
@@ -1761,6 +1857,7 @@ static bool JamInt64_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
+// PROVEN: 6c992ced IDENTICAL/NONE
 // OFFSET: 0x00B07AF0
 static bool JamInt64_SetInt64(void* data, const void* meta, int64_t value) {
     int64_t converted = static_cast<int64_t>(value);
@@ -1773,6 +1870,7 @@ static bool JamInt64_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
+// PROVEN: 96382795 IDENTICAL/NONE
 // OFFSET: 0x00B07AF0
 static bool JamInt64_SetUInt64(void* data, const void* meta, uint64_t value) {
     int64_t converted = static_cast<int64_t>(value);
@@ -1785,7 +1883,8 @@ static bool JamInt64_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07BB0
+// PROVEN: 101d02ef IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07BB0/0x1408CABE0
 static bool JamInt64_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
     int64_t converted = static_cast<int64_t>(whole);
@@ -1798,20 +1897,23 @@ static bool JamInt64_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
-// OFFSET: 0x00B07B10
+// PROVEN: de2f239e IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07B10/0x1408CAB70
 static bool JamInt64_GetInt32(const void* data, const void* meta, int32_t* value) {
     int64_t current = *static_cast<const int64_t*>(data);
     *value = current;
     return static_cast<int64_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07B40
+// PROVEN: 41ce5f22 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07B40/0x1408CAC00
 static bool JamInt64_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     int64_t current = *static_cast<const int64_t*>(data);
     *value = current;
     return static_cast<int64_t>(*value) == current;
 }
 
+// PROVEN: 77e6fbab IDENTICAL/NONE
 // OFFSET: 0x00B07B70
 static bool JamInt64_GetInt64(const void* data, const void* meta, int64_t* value) {
     int64_t current = *static_cast<const int64_t*>(data);
@@ -1819,6 +1921,7 @@ static bool JamInt64_GetInt64(const void* data, const void* meta, int64_t* value
     return static_cast<int64_t>(*value) == current;
 }
 
+// PROVEN: d8bcad0e IDENTICAL/NONE
 // OFFSET: 0x00B07B70
 static bool JamInt64_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     int64_t current = *static_cast<const int64_t*>(data);
@@ -1826,13 +1929,15 @@ static bool JamInt64_GetUInt64(const void* data, const void* meta, uint64_t* val
     return static_cast<int64_t>(*value) == current;
 }
 
+// PROVEN: 5b4fd81c IDENTICAL/NONE
 // OFFSET: 0x00B07B90
 static bool JamUInt64_SetDefault(void* data) {
     *static_cast<uint64_t*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B07A90
+// PROVEN: 1f55102d IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07A90/0x1408CABA0
 static bool JamUInt64_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     uint64_t converted = static_cast<uint64_t>(number);
@@ -1845,7 +1950,8 @@ static bool JamUInt64_SetString(void* data, const void* meta, const char* value)
     return true;
 }
 
-// OFFSET: 0x00B07AB0
+// PROVEN: d2db3aa6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07AB0/0x1408CAB40
 static bool JamUInt64_SetInt32(void* data, const void* meta, int32_t value) {
     uint64_t converted = static_cast<uint64_t>(value);
 
@@ -1857,7 +1963,8 @@ static bool JamUInt64_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07AD0
+// PROVEN: e0834397 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07AD0/0x1408CABC0
 static bool JamUInt64_SetUInt32(void* data, const void* meta, uint32_t value) {
     uint64_t converted = static_cast<uint64_t>(value);
 
@@ -1869,6 +1976,7 @@ static bool JamUInt64_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
+// PROVEN: 8c272e5b IDENTICAL/NONE
 // OFFSET: 0x00B07AF0
 static bool JamUInt64_SetInt64(void* data, const void* meta, int64_t value) {
     uint64_t converted = static_cast<uint64_t>(value);
@@ -1881,6 +1989,7 @@ static bool JamUInt64_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
+// PROVEN: 0bcbc65b IDENTICAL/NONE
 // OFFSET: 0x00B07AF0
 static bool JamUInt64_SetUInt64(void* data, const void* meta, uint64_t value) {
     uint64_t converted = static_cast<uint64_t>(value);
@@ -1893,7 +2002,8 @@ static bool JamUInt64_SetUInt64(void* data, const void* meta, uint64_t value) {
     return true;
 }
 
-// OFFSET: 0x00B07BB0
+// PROVEN: e14a4491 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07BB0/0x1408CABE0
 static bool JamUInt64_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
     uint64_t converted = static_cast<uint64_t>(whole);
@@ -1906,20 +2016,23 @@ static bool JamUInt64_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
-// OFFSET: 0x00B07B10
+// PROVEN: f12c6e05 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07B10/0x1408CAB70
 static bool JamUInt64_GetInt32(const void* data, const void* meta, int32_t* value) {
     uint64_t current = *static_cast<const uint64_t*>(data);
     *value = current;
     return static_cast<uint64_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07B40
+// PROVEN: 5572ce9f IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07B40/0x1408CAC00
 static bool JamUInt64_GetUInt32(const void* data, const void* meta, uint32_t* value) {
     uint64_t current = *static_cast<const uint64_t*>(data);
     *value = current;
     return static_cast<uint64_t>(*value) == current;
 }
 
+// PROVEN: 590bc84a IDENTICAL/NONE
 // OFFSET: 0x00B07B70
 static bool JamUInt64_GetInt64(const void* data, const void* meta, int64_t* value) {
     uint64_t current = *static_cast<const uint64_t*>(data);
@@ -1927,6 +2040,7 @@ static bool JamUInt64_GetInt64(const void* data, const void* meta, int64_t* valu
     return static_cast<uint64_t>(*value) == current;
 }
 
+// PROVEN: 664dce20 IDENTICAL/NONE
 // OFFSET: 0x00B07B70
 static bool JamUInt64_GetUInt64(const void* data, const void* meta, uint64_t* value) {
     uint64_t current = *static_cast<const uint64_t*>(data);
@@ -1934,13 +2048,15 @@ static bool JamUInt64_GetUInt64(const void* data, const void* meta, uint64_t* va
     return static_cast<uint64_t>(*value) == current;
 }
 
-// OFFSET: 0x00B07D80
+// PROVEN: ddd413b4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07D80/0x1408CAB30
 static bool JamFloat_SetDefault(void* data) {
     *static_cast<float*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B07C10
+// PROVEN: 4f13bf30 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07C10/0x1408CAC10
 static bool JamFloat_SetString(void* data, const void* meta, const char* value) {
     int64_t number = SStrToInt64(value);
     float converted = static_cast<float>(number);
@@ -1953,6 +2069,7 @@ static bool JamFloat_SetString(void* data, const void* meta, const char* value) 
     return true;
 }
 
+// PROVEN: db9de83b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07C60/0x1408CAC50
 static bool JamFloat_SetInt32(void* data, const void* meta, int32_t value) {
     float converted = static_cast<float>(value);
@@ -1965,6 +2082,7 @@ static bool JamFloat_SetInt32(void* data, const void* meta, int32_t value) {
     return true;
 }
 
+// PROVEN: 91a0a349 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07C90/0x1408CAC70
 static bool JamFloat_SetUInt32(void* data, const void* meta, uint32_t value) {
     float converted = static_cast<float>(value);
@@ -1977,6 +2095,7 @@ static bool JamFloat_SetUInt32(void* data, const void* meta, uint32_t value) {
     return true;
 }
 
+// PROVEN: e38f3416 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07CF0/0x1408CAC90
 static bool JamFloat_SetInt64(void* data, const void* meta, int64_t value) {
     float converted = static_cast<float>(value);
@@ -1989,11 +2108,13 @@ static bool JamFloat_SetInt64(void* data, const void* meta, int64_t value) {
     return true;
 }
 
+// PROVEN: c7b71d45 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07D30/0x1408CACB0
 static bool JamFloat_SetUInt64(void* data, const void* meta, uint64_t value) {
     return JamFloat_FromUInt64(static_cast<float*>(data), value);
 }
 
+// PROVEN: accc47b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B07D50/0x1408CAD10
 static bool JamFloat_SetFloat(void* data, const void* meta, float value) {
     int32_t whole = static_cast<int32_t>(value);
@@ -2007,12 +2128,14 @@ static bool JamFloat_SetFloat(void* data, const void* meta, float value) {
     return true;
 }
 
-// OFFSET: 0x00B06EC0
+// PROVEN: 0eb5fd00 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06EC0/0x1408CAB10
 static bool JamFloat_GetFloat(const void* data, const void* meta, float* value) {
     *value = *static_cast<const float*>(data);
     return true;
 }
 
+// PROVEN: bf0af525 IDENTICAL/NONE
 // OFFSET: 0x00B07210
 static JamValue* JamC2iVector_GetMember(JamValue* out, void* data, const void* meta, uint32_t index) {
     out->m_type = &g_jamTypeInt32;
@@ -2021,11 +2144,13 @@ static JamValue* JamC2iVector_GetMember(JamValue* out, void* data, const void* m
     return out;
 }
 
+// PROVEN: 85c15a8d IDENTICAL/NONE
 // OFFSET: 0x00B072B0
 static const char* JamC2iVector_GetMemberName(void* data, const void* meta, uint32_t index) {
     return s_c2iVectorNames[index];
 }
 
+// PROVEN: 00883eba IDENTICAL/NONE
 // OFFSET: 0x00B07240
 static JamValue* JamC2iVector_FindMember(JamValue* out, void* data, const void* meta, const char* name) {
     uint32_t index = 0;
@@ -2073,16 +2198,19 @@ static JamValue* JamC2iVector_FindMember(JamValue* out, void* data, const void* 
     return out;
 }
 
+// PROVEN: 21573d90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CAB0/0x1408476E0
 static uint32_t JamDefault_GetMemberCount2(void* data, const void* meta) {
     return 2;
 }
 
+// PROVEN: dd42f1a5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2CAB0/0x1408476E0
 static uint32_t JamDefault_GetMemberCapacity2(void* data, const void* meta) {
     return 2;
 }
 
+// PROVEN: 6e9fbda4 IDENTICAL/NONE
 // OFFSET: 0x00B07210
 static JamValue* JamC3iVector_GetMember(JamValue* out, void* data, const void* meta, uint32_t index) {
     out->m_type = &g_jamTypeInt32;
@@ -2091,11 +2219,13 @@ static JamValue* JamC3iVector_GetMember(JamValue* out, void* data, const void* m
     return out;
 }
 
+// PROVEN: 0499190a IDENTICAL/NONE
 // OFFSET: 0x00B07340
 static const char* JamC3iVector_GetMemberName(void* data, const void* meta, uint32_t index) {
     return s_c3iVectorNames[index];
 }
 
+// PROVEN: 732ef270 IDENTICAL/NONE
 // OFFSET: 0x00B072C0
 static JamValue* JamC3iVector_FindMember(JamValue* out, void* data, const void* meta, const char* name) {
     uint32_t index = 0;
@@ -2143,16 +2273,19 @@ static JamValue* JamC3iVector_FindMember(JamValue* out, void* data, const void* 
     return out;
 }
 
-// OFFSET: 0x00B07330
+// PROVEN: 24a9b01c IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07330/0x1408CA670
 static uint32_t JamDefault_GetMemberCount3(void* data, const void* meta) {
     return 3;
 }
 
-// OFFSET: 0x00B07330
+// PROVEN: 638ade26 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B07330/0x1408CA670
 static uint32_t JamDefault_GetMemberCapacity3(void* data, const void* meta) {
     return 3;
 }
 
+// PROVEN: 3c6267e0 IDENTICAL/NONE
 // OFFSET: 0x00B07210
 static JamValue* JamC4iVector_GetMember(JamValue* out, void* data, const void* meta, uint32_t index) {
     out->m_type = &g_jamTypeInt32;
@@ -2161,6 +2294,7 @@ static JamValue* JamC4iVector_GetMember(JamValue* out, void* data, const void* m
     return out;
 }
 
+// PROVEN: 0770ad08 IDENTICAL/NONE
 // OFFSET: 0x00B073D0
 static const char* JamC4iVector_GetMemberName(void* data, const void* meta, uint32_t index) {
     return s_c4iVectorNames[index];
@@ -2213,16 +2347,19 @@ static JamValue* JamC4iVector_FindMember(JamValue* out, void* data, const void* 
     return out;
 }
 
+// PROVEN: 52d70321 IDENTICAL/NONE
 // OFFSET: 0x00B2CAA0
 static uint32_t JamDefault_GetMemberCount4(void* data, const void* meta) {
     return 4;
 }
 
+// PROVEN: eddd1047 IDENTICAL/NONE
 // OFFSET: 0x00B2CAA0
 static uint32_t JamDefault_GetMemberCapacity4(void* data, const void* meta) {
     return 4;
 }
 
+// PROVEN: bf43024d IDENTICAL/NONE
 // OFFSET: 0x00B07460
 static JamValue* JamC2Vector_GetMember(JamValue* out, void* data, const void* meta, uint32_t index) {
     out->m_type = &g_jamTypeFloat;
@@ -2231,11 +2368,13 @@ static JamValue* JamC2Vector_GetMember(JamValue* out, void* data, const void* me
     return out;
 }
 
+// PROVEN: d2dd7be7 IDENTICAL/NONE
 // OFFSET: 0x00B07450
 static const char* JamC2Vector_GetMemberName(void* data, const void* meta, uint32_t index) {
     return s_c2VectorNames[index];
 }
 
+// PROVEN: baf4970a IDENTICAL/NONE
 // OFFSET: 0x00B073E0
 static JamValue* JamC2Vector_FindMember(JamValue* out, void* data, const void* meta, const char* name) {
     uint32_t index = 0;
@@ -2283,6 +2422,7 @@ static JamValue* JamC2Vector_FindMember(JamValue* out, void* data, const void* m
     return out;
 }
 
+// PROVEN: 58c6d630 IDENTICAL/NONE
 // OFFSET: 0x00B07460
 static JamValue* JamC3Vector_GetMember(JamValue* out, void* data, const void* meta, uint32_t index) {
     out->m_type = &g_jamTypeFloat;
@@ -2291,11 +2431,13 @@ static JamValue* JamC3Vector_GetMember(JamValue* out, void* data, const void* me
     return out;
 }
 
+// PROVEN: 3780663e IDENTICAL/NONE
 // OFFSET: 0x00B07500
 static const char* JamC3Vector_GetMemberName(void* data, const void* meta, uint32_t index) {
     return s_c3VectorNames[index];
 }
 
+// PROVEN: a6992c7a IDENTICAL/NONE
 // OFFSET: 0x00B07490
 static JamValue* JamC3Vector_FindMember(JamValue* out, void* data, const void* meta, const char* name) {
     uint32_t index = 0;
@@ -2343,6 +2485,7 @@ static JamValue* JamC3Vector_FindMember(JamValue* out, void* data, const void* m
     return out;
 }
 
+// PROVEN: 55ce5fbb IDENTICAL/NONE
 // OFFSET: 0x00B07460
 static JamValue* JamC4Vector_GetMember(JamValue* out, void* data, const void* meta, uint32_t index) {
     out->m_type = &g_jamTypeFloat;
@@ -2351,6 +2494,7 @@ static JamValue* JamC4Vector_GetMember(JamValue* out, void* data, const void* me
     return out;
 }
 
+// PROVEN: 9bb344f2 IDENTICAL/NONE
 // OFFSET: 0x00B07590
 static const char* JamC4Vector_GetMemberName(void* data, const void* meta, uint32_t index) {
     return s_c4VectorNames[index];
@@ -2403,49 +2547,55 @@ static JamValue* JamC4Vector_FindMember(JamValue* out, void* data, const void* m
     return out;
 }
 
-// OFFSET: 0x00B071D0
+// PROVEN: e5c59398 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B071D0/0x1408CA810
 static bool JamString_SetDefault(void* data) {
     *static_cast<char*>(data) = 0;
     return true;
 }
 
-// OFFSET: 0x00B06EE0
+// OFFSET: 0x00B06EE0/0x1408CA070
 static bool JamString_SetString(void* data, const void* meta, const char* value) {
     SStrCopy(static_cast<char*>(data), value, reinterpret_cast<size_t>(meta));
     return true;
 }
 
-// OFFSET: 0x00B06F30
+// PROVEN: 4e6d1143 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06F30/0x1408CA0B0
 static bool JamString_SetInt32(void* data, const void* meta, int32_t value) {
     SStrPrintf(static_cast<char*>(data), reinterpret_cast<size_t>(meta), "%d", value);
     return true;
 }
 
-// OFFSET: 0x00B06F50
+// PROVEN: c1e79ad9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06F50/0x1408CA0D0
 static bool JamString_SetUInt32(void* data, const void* meta, uint32_t value) {
     SStrPrintf(static_cast<char*>(data), reinterpret_cast<size_t>(meta), "%u", value);
     return true;
 }
 
+// PROVEN: 3507963e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06F70/0x1408CA0F0
 static bool JamString_SetInt64(void* data, const void* meta, int64_t value) {
     SStrPrintf(static_cast<char*>(data), reinterpret_cast<size_t>(meta), "%lld", value);
     return true;
 }
 
+// PROVEN: eca3e036 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B06FA0/0x1408CA110
 static bool JamString_SetUInt64(void* data, const void* meta, uint64_t value) {
     SStrPrintf(static_cast<char*>(data), reinterpret_cast<size_t>(meta), "%llu", value);
     return true;
 }
 
-// OFFSET: 0x00B06FD0
+// PROVEN: a1936917 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06FD0/0x1408CA130
 static bool JamString_SetFloat(void* data, const void* meta, float value) {
     SStrPrintf(static_cast<char*>(data), reinterpret_cast<size_t>(meta), "%f", value);
     return true;
 }
 
-// OFFSET: 0x00B07000
+// OFFSET: 0x00B07000/0x1408CA160
 static bool JamString_GetString(const void* data, const void* meta, char* buffer, uint32_t size) {
     SStrCopy(buffer, static_cast<const char*>(data), size);
     return true;
@@ -2466,6 +2616,7 @@ static JamValue* JamRealmAddress_GetMember(JamValue* out, void* data, const void
     return out;
 }
 
+// PROVEN: b409ee1e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B070C0/0x1408CA230
 static const char* JamRealmAddress_GetMemberName(void* data, const void* meta, uint32_t index) {
     switch (index) {
@@ -2496,30 +2647,35 @@ static JamValue* JamRealmAddress_FindMember(JamValue* out, void* data, const voi
     return out;
 }
 
-// OFFSET: 0x00B071D0
+// PROVEN: b7dab44c IDENTICAL/IDENTICAL
+// OFFSET: 0x00B071D0/0x1408CA810
 static bool JamBool_SetDefault(void* data) {
     *static_cast<bool*>(data) = false;
     return true;
 }
 
-// OFFSET: 0x00B071E0
+// PROVEN: 05b9d091 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B071E0/0x1408CA370
 static bool JamBool_SetBool(void* data, const void* meta, bool value) {
     *static_cast<bool*>(data) = value;
     return true;
 }
 
+// PROVEN: 24ec6d1c IDENTICAL/IDENTICAL
 // OFFSET: 0x00B071F0/0x1408CA380
 static bool JamBool_GetBool(const void* data, const void* meta, bool* value) {
     *value = *static_cast<const bool*>(data);
     return true;
 }
 
+// PROVEN: e770edb6 IDENTICAL/NONE
 // OFFSET: 0x0066B180
 static bool JamComplaintType_SetDefault(void* data) {
     *static_cast<uint32_t*>(data) = 7;
     return true;
 }
 
+// PROVEN: 23866b0b IDENTICAL/IDENTICAL
 // OFFSET: 0x0066B190/0x140311AF0
 static bool JamComplaintType_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("JAM_CLI_COMPLAINT_TYPE_COMPLAINT_ANY", value)) {
@@ -2659,12 +2815,14 @@ static bool JamComplaintType_GetString(const void* data, const void* meta, char*
     }
 }
 
-// OFFSET: 0x00696570
+// PROVEN: 1f04adb4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00696570/0x140341C90
 static bool JamSplineFace_SetDefault(void* data) {
     *static_cast<uint32_t*>(data) = 3;
     return true;
 }
 
+// PROVEN: 80688b4b IDENTICAL/IDENTICAL
 // OFFSET: 0x00696580/0x140341CA0
 static bool JamSplineFace_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("SPLINE_FACE_NOTHING", value)) {
@@ -2690,7 +2848,7 @@ static bool JamSplineFace_SetString(void* data, const void* meta, const char* va
     return false;
 }
 
-// OFFSET: 0x00696690
+// OFFSET: 0x00696690/0x140341D60
 static bool JamSplineFace_GetString(const void* data, const void* meta, char* buffer, uint32_t size) {
     switch (*static_cast<const uint32_t*>(data)) {
         case 0:
@@ -2714,12 +2872,14 @@ static bool JamSplineFace_GetString(const void* data, const void* meta, char* bu
     }
 }
 
-// OFFSET: 0x006967C0
+// PROVEN: 3760e78c IDENTICAL/IDENTICAL
+// OFFSET: 0x006967C0/0x140341E70
 static bool JamUpdateCollisionHeightReason_SetDefault(void* data) {
     *static_cast<uint32_t*>(data) = 2;
     return true;
 }
 
+// PROVEN: 2f0d5c7f IDENTICAL/IDENTICAL
 // OFFSET: 0x006967D0/0x140341E80
 static bool JamUpdateCollisionHeightReason_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("UPDATE_COLLISION_HEIGHT_FORCE", value)) {
@@ -2740,7 +2900,7 @@ static bool JamUpdateCollisionHeightReason_SetString(void* data, const void* met
     return false;
 }
 
-// OFFSET: 0x006968A0
+// OFFSET: 0x006968A0/0x140341F10
 static bool JamUpdateCollisionHeightReason_GetString(const void* data, const void* meta, char* buffer, uint32_t size) {
     switch (*static_cast<const uint32_t*>(data)) {
         case 0:
@@ -2760,12 +2920,14 @@ static bool JamUpdateCollisionHeightReason_GetString(const void* data, const voi
     }
 }
 
-// OFFSET: 0x0069FFA0
+// PROVEN: 027f37d2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0069FFA0/0x14034D240
 static bool JamTradeStatus_SetDefault(void* data) {
     *static_cast<uint32_t*>(data) = 21;
     return true;
 }
 
+// PROVEN: b87067b3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0069FFB0/0x14034D250
 static bool JamTradeStatus_SetString(void* data, const void* meta, const char* value) {
     if (!strcmp("TRADE_STATUS_PLAYER_BUSY", value)) {
@@ -2901,7 +3063,7 @@ static bool JamTradeStatus_SetString(void* data, const void* meta, const char* v
     return false;
 }
 
-// OFFSET: 0x006A0640
+// OFFSET: 0x006A0640/0x14034D650
 static bool JamTradeStatus_GetString(const void* data, const void* meta, char* buffer, uint32_t size) {
     switch (*static_cast<const uint32_t*>(data)) {
         case 0:

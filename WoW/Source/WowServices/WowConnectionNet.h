@@ -11,7 +11,6 @@
 
 class WowConnectionNet {
     public:
-#pragma pack(push, 1)
     struct WORKER {
         /* 0000 */ WowConnectionNet* m_owner;
         /* 0004 */ SThread m_thread;
@@ -20,12 +19,10 @@ class WowConnectionNet {
         /* 0010 */ SEvent m_event;
         /* 0014 */ bool m_quit;
         /* 0015 */ SCritSect m_lock;
-        /* 003D */ uint8_t unk_003D[3];
         /* 0040 */ uint32_t m_lastTime;
 
         WORKER();
     };
-#pragma pack(pop)
 
     /* 0000 */ SThread m_thread;
     /* 0004 */ SEvent m_stopEvent;

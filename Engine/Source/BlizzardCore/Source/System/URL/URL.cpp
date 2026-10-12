@@ -2,7 +2,6 @@
 #include <cstddef>
 #include <cstdint>
 
-// PROVEN: b4a4f159 DIFFERENT/IDENTICAL
 // OFFSET: 0x007A4D50/0x140909F60
 Blizzard::URL::DownloadCallback::~DownloadCallback() {
 }
@@ -24,7 +23,7 @@ bool Blizzard::URL::DownloadCallback::WantData() {
 void Blizzard::URL::DownloadCallback::GetLastModified(const char* lastModified) {
 }
 
-// PROVEN: 21209c1c IDENTICAL/DIFFERENT
+// PROVEN: 21209c1c IDENTICAL/IDENTICAL
 // OFFSET: 0x00841AE0/0x140211B90
 void Blizzard::URL::DownloadCallback::GetContentLength(int64_t length) {
 }

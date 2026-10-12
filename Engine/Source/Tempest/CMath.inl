@@ -61,3 +61,21 @@ inline bool fequal(float a, float b) {
 inline bool CMath::fequal(float a, float b) {
     return fabsf(a - b) < 0.00000095367432f;
 }
+
+// INLINED
+inline float fclamp(float value, float min, float max) {
+    if (value < min) {
+        return min;
+    }
+
+    if (max <= value) {
+        return max;
+    }
+
+    return value;
+}
+
+// INLINED
+inline void ClampInPlace(float& value, float min, float max) {
+    value = min > value ? min : (max <= value ? max : value);
+}

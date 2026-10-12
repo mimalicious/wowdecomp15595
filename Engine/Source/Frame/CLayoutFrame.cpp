@@ -27,10 +27,10 @@ static const FRAMEPOINT s_leftPoints[3] = { FRAMEPOINT_TOPLEFT, FRAMEPOINT_LEFT,
 
 static const FRAMEPOINT s_topPoints[3] = { FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOP, FRAMEPOINT_TOPRIGHT };
 
-// STATIC: 0x00CA2F7C
+// STATIC: 0x00CA2F7C/0x140B3FDB8
 static TSExplicitList<CLayoutFrame, offsetof(CLayoutFrame, m_resizeLink)> s_resizePendingList;
 
-// STATIC: 0x00DD3938
+// STATIC: 0x00DD3938/0x140CB9600
 CDataAllocator CAnimationData::s_AnimationData(sizeof(CAnimationData), 5);
 
 // INLINED
@@ -294,7 +294,7 @@ float CLayoutFrame::CenterX() {
     return x;
 }
 
-// OFFSET: 0x00507630
+// OFFSET: 0x00507630/0x14014E810
 float CLayoutFrame::CenterY() {
     if (this->m_guard & 0x20) {
         return CFramePoint::UNDEFINED;
@@ -315,7 +315,7 @@ float CLayoutFrame::CenterY() {
     return y;
 }
 
-// OFFSET: 0x00507760
+// OFFSET: 0x00507760/0x14014ECE0
 float CLayoutFrame::Right() {
     if (this->m_guard & 4) {
         return CFramePoint::UNDEFINED;
@@ -336,7 +336,7 @@ float CLayoutFrame::Right() {
     return x;
 }
 
-// OFFSET: 0x00507880
+// OFFSET: 0x00507880/0x14014F0A0
 float CLayoutFrame::Bottom() {
     if (this->m_guard & 8) {
         return CFramePoint::UNDEFINED;
@@ -357,7 +357,7 @@ float CLayoutFrame::Bottom() {
     return y;
 }
 
-// PROVEN: 89aecdeb IDENTICAL/DIFFERENT
+// PROVEN: 89aecdeb IDENTICAL/IDENTICAL
 // OFFSET: 0x005079A0/0x14014F7E0
 void CLayoutFrame::ProtectFramepoints(uint32_t flag) {
     for (int32_t i = 0; i < FRAMEPOINT_NUMPOINTS; i++) {
@@ -408,12 +408,13 @@ int32_t CLayoutFrame::GetRect(CRect* rect) {
     return 1;
 }
 
+// PROVEN: 19a59180 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507B30/0x14014F060
 int32_t CLayoutFrame::PtInFrameRect(const C2Vector& point) {
     return (this->m_layoutFlags & 0x1) && this->m_rect.IsPointInside(point);
 }
 
-// OFFSET: 0x00507B80
+// OFFSET: 0x00507B80/0x14014F0A0
 float CLayoutFrame::Left() {
     if (this->m_guard & 1) {
         return CFramePoint::UNDEFINED;
@@ -434,7 +435,7 @@ float CLayoutFrame::Left() {
     return x;
 }
 
-// OFFSET: 0x00507CA0
+// OFFSET: 0x00507CA0/0x14014EB50
 float CLayoutFrame::Top() {
     if (this->m_guard & 2) {
         return CFramePoint::UNDEFINED;
@@ -455,7 +456,7 @@ float CLayoutFrame::Top() {
     return y;
 }
 
-// OFFSET: 0x00507DC0
+// OFFSET: 0x00507DC0/0x14014F3E0
 int32_t CLayoutFrame::CalculateRect(CRect* rect) {
     rect->minX = this->Left();
 
@@ -544,7 +545,7 @@ int32_t CLayoutFrame::OnFrameResize() {
     return this->m_layoutFlags & 1;
 }
 
-// PROVEN: 528c53c0 IDENTICAL/UNPROVEN
+// PROVEN: 528c53c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00508100/0x14014F760
 void CLayoutFrame::SetProtected() {
     this->m_layoutFlags &= ~0x600u;
@@ -553,7 +554,7 @@ void CLayoutFrame::SetProtected() {
     this->ProtectFramepoints(0x200);
 }
 
-// PROVEN: 83d7fb2f IDENTICAL/DIFFERENT
+// PROVEN: 83d7fb2f IDENTICAL/IDENTICAL
 // OFFSET: 0x00508140/0x14014F7E0
 void CLayoutFrame::SetProtectFlag(uint32_t flag) {
     if (this->m_layoutFlags & 0x900) {
@@ -652,13 +653,13 @@ CLayoutFrame::CLayoutFrame() {
     this->m_guard = 0;
 }
 
-// PROVEN: 7b077510 IDENTICAL/DIFFERENT
+// PROVEN: 7b077510 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CLayoutFrame::AreChildrenProtected(int32_t& deferred) {
     return 0;
 }
 
-// PROVEN: 01536278 IDENTICAL/UNPROVEN
+// PROVEN: 01536278 IDENTICAL/IDENTICAL
 // OFFSET: 0x00508620/0x14014FD70
 void CLayoutFrame::OnProtectedAttach(CLayoutFrame* frame) {
     if (this->m_layoutFlags & 0x400) {
@@ -670,7 +671,7 @@ void CLayoutFrame::OnProtectedAttach(CLayoutFrame* frame) {
     }
 }
 
-// PROVEN: 4cdd0eda IDENTICAL/UNPROVEN
+// PROVEN: 4cdd0eda IDENTICAL/IDENTICAL
 // OFFSET: 0x00508660/0x14014FDC0
 void CLayoutFrame::OnProtectedDetach(CLayoutFrame* frame) {
     if (this->m_layoutFlags & 0x700) {
@@ -693,7 +694,7 @@ int32_t CLayoutFrame::AreDependentsProtected(int32_t& deferred) {
     return 0;
 }
 
-// PROVEN: 90001b19 IDENTICAL/DIFFERENT
+// PROVEN: 90001b19 IDENTICAL/IDENTICAL
 // OFFSET: 0x005081F0/0x14014F880
 uint32_t CLayoutFrame::IsProtected() {
     if (this->m_layoutFlags & 0x400) {
@@ -814,7 +815,7 @@ bool CLayoutFrame::SetLayoutScale(float scale, bool force) {
     return false;
 }
 
-// PROVEN: 0e34334e IDENTICAL/DIFFERENT
+// PROVEN: 0e34334e IDENTICAL/IDENTICAL
 // OFFSET: 0x005087A0/0x14014FF80
 bool CLayoutFrame::SetLayoutDepth(float depth, bool force) {
     if (!force && fabs(depth - this->m_layoutDepth) < 0.00000023841858f) {
@@ -832,23 +833,24 @@ bool CLayoutFrame::SetLayoutDepth(float depth, bool force) {
     return true;
 }
 
-// PROVEN: 2b3f4d39 IDENTICAL/NONE
-// OFFSET: 0x00508800
+// PROVEN: 2b3f4d39 IDENTICAL/IDENTICAL
+// OFFSET: 0x00508800/0x140150060
 void CLayoutFrame::SetWidth(float width) {
     this->m_layoutFlags &= ~0x8u;
     this->m_width = width;
     this->Resize(0);
 }
 
-// PROVEN: 1fdf5f53 IDENTICAL/NONE
-// OFFSET: 0x00508830
+// PROVEN: 1fdf5f53 IDENTICAL/IDENTICAL
+// OFFSET: 0x00508830/0x140150100
 void CLayoutFrame::SetHeight(float height) {
     this->m_layoutFlags &= ~0x8u;
     this->m_height = height;
     this->Resize(0);
 }
 
-// OFFSET: 0x00508860
+// PROVEN: a86bd427 DIFFERENT/IDENTICAL
+// OFFSET: 0x00508860/0x1401501A0
 void CLayoutFrame::SetSize(float width, float height) {
     this->m_layoutFlags &= ~0x8u;
     this->m_width = width;
@@ -875,8 +877,8 @@ void CLayoutFrame::GetSize(float& width, float& height, int32_t ignoreRect) {
     }
 }
 
-// PROVEN: d51564a2 IDENTICAL/NONE
-// OFFSET: 0x005089A0
+// PROVEN: d51564a2 IDENTICAL/IDENTICAL
+// OFFSET: 0x005089A0/0x1401503F0
 void CLayoutFrame::SetClampedToScreen(int32_t clamped) {
     if (clamped) {
         this->m_layoutFlags |= 0x10;
@@ -1128,7 +1130,7 @@ int32_t CLayoutFrame::UnflattenFrame(CLayoutFrame* relative) {
     return 1;
 }
 
-// OFFSET: 0x00509BF0
+// OFFSET: 0x00509BF0/0x140151C20
 int32_t CLayoutFrame::DragBy(CLayoutFrame* relative, float offsetX, float offsetY, FRAMEPOINT point) {
     float width = this->GetWidth();
     float height = this->GetHeight();
@@ -1498,6 +1500,7 @@ void CLayoutFrame::HideThis() {
 void CLayoutFrame::ShowThis(bool loadPending) {
 }
 
+// PROVEN: d00752c8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00508C70/0x1401507C0
 void CLayoutFrame::AnimData_Init() {
     this->Resize(1);
@@ -1516,7 +1519,7 @@ void CLayoutFrame::AnimData_ResetPositionData() {
     this->Resize(1);
 }
 
-// PROVEN: 51a9da86 IDENTICAL/NONE
+// PROVEN: 51a9da86 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A40/0x14014EF00
 void CLayoutFrame::AnimData_ResetAlphaData() {
     if (this->m_animData) {
@@ -1524,7 +1527,7 @@ void CLayoutFrame::AnimData_ResetAlphaData() {
     }
 }
 
-// PROVEN: e0115494 IDENTICAL/NONE
+// PROVEN: e0115494 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A50/0x14014EF20
 bool CLayoutFrame::AnimData_HasActivePosition() {
     if (this->m_animData) {
@@ -1534,7 +1537,7 @@ bool CLayoutFrame::AnimData_HasActivePosition() {
     return false;
 }
 
-// PROVEN: 0bbb489e IDENTICAL/NONE
+// PROVEN: 0bbb489e IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A70/0x14014EF40
 bool CLayoutFrame::AnimData_HasActiveAlpha() {
     if (this->m_animData) {
@@ -1544,7 +1547,7 @@ bool CLayoutFrame::AnimData_HasActiveAlpha() {
     return false;
 }
 
-// PROVEN: 5d34ab29 IDENTICAL/NONE
+// PROVEN: 5d34ab29 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507A90/0x14014EF60
 void CLayoutFrame::AnimData_StorePosition(const C3Vector* position) {
     if (this->m_animData) {
@@ -1552,13 +1555,13 @@ void CLayoutFrame::AnimData_StorePosition(const C3Vector* position) {
     }
 }
 
-// PROVEN: 27f3b041 IDENTICAL/NONE
+// PROVEN: 27f3b041 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507AB0/0x14014EFD0
 C3Vector* CLayoutFrame::AnimData_GetPositionPtr() {
     return this->m_animData->m_position;
 }
 
-// PROVEN: d0a44095 IDENTICAL/NONE
+// PROVEN: d0a44095 IDENTICAL/IDENTICAL
 // OFFSET: 0x00507AC0/0x14014EFE0
 void CLayoutFrame::AnimData_StoreAlpha(uint8_t alpha) {
     CAnimationData* data = this->m_animData;
@@ -1569,7 +1572,7 @@ void CLayoutFrame::AnimData_StoreAlpha(uint8_t alpha) {
     }
 }
 
-// PROVEN: 959e0ddf IDENTICAL/NONE
+// PROVEN: 959e0ddf IDENTICAL/IDENTICAL
 // OFFSET: 0x00507AE0/0x14014F000
 uint8_t CLayoutFrame::AnimData_GetAlpha() {
     if (this->m_animData) {

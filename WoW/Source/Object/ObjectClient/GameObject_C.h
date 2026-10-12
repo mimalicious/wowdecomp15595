@@ -333,11 +333,9 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     /* 0230 */ int32_t m_pendingOneShotAnim;
     /* 0234 */ int8_t m_hasWorldBounds;
     /* 0235 */ uint8_t m_animLocked;
-    /* 0236 */ uint8_t unk_0236 [2];
     /* 0238 */ uint32_t m_animKitID;
     /* 023C */ CM2Model* m_lootEffect;
     /* 0240 */ uint32_t m_effectAnimState;
-    /* 0244 */ uint32_t unk_0244;
     /* 0248 */ CAnimKitManager m_animKitManager;
 
     virtual C3Vector GetPosition() const;
@@ -429,5 +427,7 @@ void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_
 int32_t Packet_SMSG_GAMEOBJECT_CUSTOM_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GAMEOBJECT_DESPAWN_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GAMEOBJECT_PAGETEXT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+
+#include "WoW/Source/Object/ObjectClient/GameObject_C.inl"
 
 #endif

@@ -8,7 +8,7 @@
 #include "WoW/Source/Game/GameClient/ComSatClient.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: 0x00E28758
+// STATIC: 0x00E28758/0x140D10308
 CVar* SI3::sm_pCVar_VoiceChat_EnableVoiceChat;
 
 // STATIC: 0x00E2875C
@@ -17,149 +17,149 @@ CVar* SI3::sm_pCVar_Sound_OutputQuality;
 // STATIC: 0x00E28760
 CVar* SI3::sm_pCVar_Sound_NumChannels;
 
-// STATIC: 0x00E28764
+// STATIC: 0x00E28764/0x140D10320
 CVar* SI3::sm_pCVar_Sound_EnableReverb;
 
-// STATIC: 0x00E28768
+// STATIC: 0x00E28768/0x140D10328
 CVar* SI3::sm_pCVar_Sound_EnableSoftwareHRTF;
 
-// STATIC: 0x00E2876C
+// STATIC: 0x00E2876C/0x140D10330
 CVar* SI3::sm_pCVar_Sound_OutputDriverIndex;
 
-// STATIC: 0x00E28770
+// STATIC: 0x00E28770/0x140D10338
 CVar* SI3::sm_pCVar_Sound_OutputDriverName;
 
-// STATIC: 0x00E28774
+// STATIC: 0x00E28774/0x140D10340
 CVar* SI3::sm_pCVar_Sound_VoiceChatInputDriverIndex;
 
-// STATIC: 0x00E28778
+// STATIC: 0x00E28778/0x140D10348
 CVar* SI3::sm_pCVar_Sound_VoiceChatInputDriverName;
 
-// STATIC: 0x00E2877C
+// STATIC: 0x00E2877C/0x140D10350
 CVar* SI3::sm_pCVar_Sound_VoiceChatOutputDriverIndex;
 
-// STATIC: 0x00E28780
+// STATIC: 0x00E28780/0x140D10358
 CVar* SI3::sm_pCVar_Sound_VoiceChatOutputDriverName;
 
-// STATIC: 0x00E28784
+// STATIC: 0x00E28784/0x140D10360
 CVar* SI3::sm_pCVar_Sound_DSPBufferSize;
 
-// STATIC: 0x00E28788
+// STATIC: 0x00E28788/0x140D10368
 CVar* SI3::sm_pCVar_Sound_EnableHardware;
 
-// STATIC: 0x00E2878C
+// STATIC: 0x00E2878C/0x140D10370
 CVar* SI3::sm_pCVar_Sound_EnableMode2;
 
-// STATIC: 0x00E28790
+// STATIC: 0x00E28790/0x140D10378
 CVar* SI3::sm_pCVar_Sound_EnableMixMode2;
 
-// STATIC: 0x00E28794
+// STATIC: 0x00E28794/0x140D10380
 CVar* SI3::sm_pCVar_Sound_OutputSampleRate;
 
-// STATIC: 0x00E28798
+// STATIC: 0x00E28798/0x140D10388
 CVar* SI3::sm_pCVar_Sound_EnableSFX;
 
-// STATIC: 0x00E2879C
+// STATIC: 0x00E2879C/0x140D10390
 CVar* SI3::sm_pCVar_Sound_EnableAmbience;
 
-// STATIC: 0x00E287A0
+// STATIC: 0x00E287A0/0x140D10398
 CVar* SI3::sm_pCVar_Sound_EnableErrorSpeech;
 
-// STATIC: 0x00E287A4
+// STATIC: 0x00E287A4/0x140D103A0
 CVar* SI3::sm_pCVar_Sound_EnableMusic;
 
-// STATIC: 0x00E287A8
+// STATIC: 0x00E287A8/0x140D103A8
 CVar* SI3::sm_pCVar_Sound_EnableAllSound;
 
-// STATIC: 0x00E287AC
+// STATIC: 0x00E287AC/0x140D103B0
 CVar* SI3::sm_pCVar_Sound_MasterVolume;
 
-// STATIC: 0x00E287B0
+// STATIC: 0x00E287B0/0x140D103B8
 CVar* SI3::sm_pCVar_Sound_SFXVolume;
 
-// STATIC: 0x00E287B4
+// STATIC: 0x00E287B4/0x140D103C0
 CVar* SI3::sm_pCVar_Sound_MusicVolume;
 
 // STATIC: 0x00E287B8
 CVar* SI3::sm_pCVar_Sound_AmbienceVolume;
 
-// STATIC: 0x00E287BC
+// STATIC: 0x00E287BC/0x140D103D0
 CVar* SI3::sm_pCVar_Sound_ListenerAtCharacter;
 
 // STATIC: 0x00E287C0
 CVar* SI3::sm_pCVar_Sound_EnableEmoteSounds;
 
-// STATIC: 0x00E287C4
+// STATIC: 0x00E287C4/0x140D103E0
 CVar* SI3::sm_pCVar_Sound_ZoneMusicNoDelay;
 
-// STATIC: 0x00E287C8
+// STATIC: 0x00E287C8/0x140D103E8
 CVar* SI3::sm_pCVar_Sound_EnableArmorFoleySoundForSelf;
 
-// STATIC: 0x00E287CC
+// STATIC: 0x00E287CC/0x140D103F0
 CVar* SI3::sm_pCVar_Sound_EnableArmorFoleySoundForOthers;
 
-// STATIC: 0x00E287D0
+// STATIC: 0x00E287D0/0x140D103F8
 CVar* SI3::sm_pCVar_Sound_EnableDSPEffects;
 
-// STATIC: 0x00E287D4
+// STATIC: 0x00E287D4/0x140D10400
 CVar* SI3::sm_pCVar_Sound_EnablePetSounds;
 
-// STATIC: 0x00E287D8
+// STATIC: 0x00E287D8/0x140D10408
 CVar* SI3::sm_pCVar_Sound_EnableSoundWhenGameIsInBG;
 
-// STATIC: 0x00E287DC
+// STATIC: 0x00E287DC/0x140D10410
 CVar* SI3::sm_pCVar_Sound_MaxCacheSizeInBytes;
 
 // STATIC: 0x00E287E0
 CVar* SI3::sm_pCVar_Sound_MaxCacheableSizeInBytes;
 
-// STATIC: 0x00E287E4
+// STATIC: 0x00E287E4/0x140D10420
 CVar* SI3::sm_pCVar_Sound_FootstepSounds;
 
-// PROVEN: 2e4acfbb IDENTICAL/NONE
-// OFFSET: 0x00630AA0
+// PROVEN: 2e4acfbb IDENTICAL/IDENTICAL
+// OFFSET: 0x00630AA0/0x1402C5840
 static bool MasterVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_MASTER, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: bf1d4362 IDENTICAL/NONE
+// PROVEN: bf1d4362 IDENTICAL/IDENTICAL
 // OFFSET: 0x00630AC0/0x1402C5860
 static bool SFXVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_SFX, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: 53cf0d30 IDENTICAL/NONE
-// OFFSET: 0x00630AE0
+// PROVEN: 53cf0d30 IDENTICAL/IDENTICAL
+// OFFSET: 0x00630AE0/0x1402C5880
 static bool MusicVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_MUSIC, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: d5ec65ef IDENTICAL/NONE
+// PROVEN: d5ec65ef IDENTICAL/IDENTICAL
 // OFFSET: 0x00630B00/0x1402C58A0
 static bool MaxCacheSizeInBytesHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SetMaxCacheSizeInBytes(SStrToInt(value));
     return true;
 }
 
-// PROVEN: 67d4f5cc IDENTICAL/NONE
+// PROVEN: 67d4f5cc IDENTICAL/IDENTICAL
 // OFFSET: 0x00630B20/0x1402C58C0
 static bool MaxCacheableSizeInBytesHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SetMaxCacheableSizeInBytes(SStrToInt(value));
     return true;
 }
 
-// PROVEN: 3d6a6528 IDENTICAL/NONE
-// OFFSET: 0x00630B40
+// PROVEN: 3d6a6528 IDENTICAL/IDENTICAL
+// OFFSET: 0x00630B40/0x1402C58E0
 static bool AmbienceVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SoundBusSetVolume(SE3BUS_AMBIENCE, SStrToFloat(value));
     return true;
 }
 
-// PROVEN: fe97c09a IDENTICAL/NONE
-// OFFSET: 0x00630B60
+// PROVEN: fe97c09a IDENTICAL/UNPROVEN
+// OFFSET: 0x00630B60/0x1402C5900
 static bool EnableSFXHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
     SE3::SoundBusEnable(SE3BUS_SFX, enable);
@@ -167,8 +167,8 @@ static bool EnableSFXHandler(CVar* var, const char* oldValue, const char* value,
     return true;
 }
 
-// PROVEN: 951028de IDENTICAL/NONE
-// OFFSET: 0x00630B90
+// PROVEN: 951028de IDENTICAL/UNPROVEN
+// OFFSET: 0x00630B90/0x1402C5930
 static bool EnableMusicHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
     SE3::SoundBusEnable(SE3BUS_MUSIC, enable);
@@ -181,8 +181,8 @@ static bool EnableMusicHandler(CVar* var, const char* oldValue, const char* valu
     return true;
 }
 
-// PROVEN: 1c0d00dc IDENTICAL/NONE
-// OFFSET: 0x00630BD0
+// PROVEN: 1c0d00dc IDENTICAL/UNPROVEN
+// OFFSET: 0x00630BD0/0x1402C5970
 static bool EnableAmbienceHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
     SE3::SoundBusEnable(SE3BUS_AMBIENCE, enable);
@@ -190,8 +190,8 @@ static bool EnableAmbienceHandler(CVar* var, const char* oldValue, const char* v
     return true;
 }
 
-// PROVEN: 4b3f3d36 IDENTICAL/NONE
-// OFFSET: 0x00630C00
+// PROVEN: 4b3f3d36 IDENTICAL/UNPROVEN
+// OFFSET: 0x00630C00/0x1402C59B0
 static bool EnableAllSoundHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
     SE3::SoundBusEnable(SE3BUS_MASTER, enable);
@@ -199,8 +199,8 @@ static bool EnableAllSoundHandler(CVar* var, const char* oldValue, const char* v
     return true;
 }
 
-// PROVEN: 0e96590b IDENTICAL/NONE
-// OFFSET: 0x00630C30
+// PROVEN: 0e96590b IDENTICAL/UNPROVEN
+// OFFSET: 0x00630C30/0x1402C59F0
 static bool EnableErrorSpeechHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
     SE3::SoundBusEnable(SE3BUS_10, enable);
@@ -208,8 +208,8 @@ static bool EnableErrorSpeechHandler(CVar* var, const char* oldValue, const char
     return true;
 }
 
-// PROVEN: 99e70bec IDENTICAL/NONE
-// OFFSET: 0x00630C60
+// PROVEN: 99e70bec IDENTICAL/UNPROVEN
+// OFFSET: 0x00630C60/0x1402C5A30
 static bool EnableReverbHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value)) {
         SI3::EnableReverb(1);
@@ -223,7 +223,7 @@ static bool EnableReverbHandler(CVar* var, const char* oldValue, const char* val
     return true;
 }
 
-// OFFSET: 0x00630D90
+// OFFSET: 0x00630D90/0x1402C5BA0
 static bool OutputDriverIndexHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t index = SStrToInt(value);
     char name[256];

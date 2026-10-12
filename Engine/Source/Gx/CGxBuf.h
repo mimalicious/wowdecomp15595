@@ -20,4 +20,6 @@ struct CGxBuf : public TSLinkedNode<CGxBuf> {
     CGxBuf(CGxPool* pool, uint32_t itemSize, uint32_t itemCount, uint32_t index);
 };
 
+#include "Engine/Source/Gx/CGxBuf.inl"
+
 #endif

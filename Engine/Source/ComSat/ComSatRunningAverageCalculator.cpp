@@ -1,6 +1,6 @@
 #include "Engine/Source/ComSat/ComSatRunningAverageCalculator.h"
 
-// OFFSET: 0x00A39E10
+// OFFSET: 0x00A39E10/0x1407E6290
 ComSat::RunningAverageCalculator::RunningAverageCalculator(ComSat::Allocator& allocator) {
     this->m_sum = 0.0;
     this->m_allocator = &allocator;
@@ -9,7 +9,7 @@ ComSat::RunningAverageCalculator::RunningAverageCalculator(ComSat::Allocator& al
     this->m_index = 0;
 }
 
-// OFFSET: [0x00A39F60, 0x00A39FA0]
+// OFFSET: [0x00A39F60/0x1407E6450, 0x00A39FA0/0x1407E64A0]
 ComSat::RunningAverageCalculator::~RunningAverageCalculator() {
     if (this->m_values) {
         this->m_allocator->Free(this->m_values);
@@ -38,7 +38,7 @@ void ComSat::RunningAverageCalculator::Init(double value, uint32_t count) {
     }
 }
 
-// PROVEN: 778150d6 IDENTICAL/DIFFERENT
+// PROVEN: 778150d6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39F00/0x1407E63E0
 void ComSat::RunningAverageCalculator::SubmitData(double value) {
     if (this->m_values) {
@@ -48,7 +48,7 @@ void ComSat::RunningAverageCalculator::SubmitData(double value) {
     }
 }
 
-// PROVEN: f0094b4f IDENTICAL/DIFFERENT
+// PROVEN: f0094b4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39F40/0x1407E6420
 double ComSat::RunningAverageCalculator::GetCurrentAverage() {
     return this->m_sum / this->m_count;

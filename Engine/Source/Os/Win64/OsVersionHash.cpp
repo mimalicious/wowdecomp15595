@@ -52,7 +52,7 @@ static int __cdecl CompareEntries(const void* a, const void* b) {
     return entryA->m_offset > entryB->m_offset;
 }
 
-// OFFSET: 0x00B42440
+// OFFSET: 0x00B42440/0x140910BF0
 static void HashZeroes(IOsVersionHashCallback& callback, uint32_t size) {
     uint8_t zeroes[4096];
     memset(zeroes, 0, sizeof(zeroes));
@@ -144,7 +144,7 @@ static int32_t AddHeaderEntries(OsVersionHash& hash, const uint8_t* image, uint6
     return 1;
 }
 
-// OFFSET: 0x00B42600
+// OFFSET: 0x00B42600/0x140910ED0
 static int32_t HashEntry(IOsVersionHashCallback& callback, const OsVersionHashEntry& entry, const uint8_t* image, uint64_t imageBase, const uint8_t* data, int32_t unrelocate, bool is32Bit) {
     uint64_t delta = reinterpret_cast<intptr_t>(image) - imageBase;
 
@@ -214,7 +214,7 @@ static int32_t HashEntry(IOsVersionHashCallback& callback, const OsVersionHashEn
     }
 }
 
-// OFFSET: 0x00B427F0
+// OFFSET: 0x00B427F0/0x140911090
 static int32_t HashSection(IOsVersionHashCallback& callback, OsVersionHash& hash, const uint8_t* image, uint64_t imageBase, const IMAGE_SECTION_HEADER* section, uint32_t alignment, int32_t unrelocate, bool is32Bit) {
     uint32_t size = section->Misc.VirtualSize;
     uint32_t address = section->VirtualAddress;
@@ -535,7 +535,7 @@ int32_t IOsVersionChecksum(IOsVersionHashCallback& callback, const char* path, i
     return result;
 }
 
-// PROVEN: 4053bedf IDENTICAL/UNPROVEN
+// PROVEN: 4053bedf IDENTICAL/IDENTICAL
 // OFFSET: 0x00B42FE0/0x1405B30F0
 OsFileVersionInfo::OsFileVersionInfo(const char* filename) : m_fileVersion(), m_productVersion() {
     char path[MAX_PATH];

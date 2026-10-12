@@ -27,4 +27,6 @@ void MakeUnivPath(const char* src, char* dst, int32_t count);
 }
 }
 
+#include "Engine/Source/BlizzardCore/Source/System/String/Path.inl"
+
 #endif

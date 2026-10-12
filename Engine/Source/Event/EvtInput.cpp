@@ -27,10 +27,10 @@ namespace Input {
     CRect s_boundingRect;
 }
 
-// STATIC: 0x00EC7530
+// STATIC: 0x00EC7530/0x140DB9AE8
 static int32_t (*s_confirmCloseCallback)(void*);
 
-// STATIC: 0x00EC7534
+// STATIC: 0x00EC7534/0x140DB9AF0
 static void* s_confirmCloseParam;
 
 // PROVEN: 66f5f713 IDENTICAL/NONE
@@ -137,8 +137,8 @@ void IEvtDispatchJoystickAxis(EvtContext* context, int32_t id, int32_t value, ui
     IEvtQueueDispatch(context, EVENT_ID_18, &data);
 }
 
-// PROVEN: f19241a6 IDENTICAL/NONE
-// OFFSET: 0x008A2D20
+// PROVEN: f19241a6 IDENTICAL/UNPROVEN
+// OFFSET: 0x008A2D20/0x1405E4D90
 void IEvtInputDestroy() {
     OsInputDestroy();
     Input::s_buttonState = 0;

@@ -61,7 +61,7 @@ char* System_Log::DefaultDayHeader() {
     return header;
 }
 
-// OFFSET: 0x007C47E0
+// OFFSET: 0x007C47E0/0x1404BF1D0
 uint32_t System_Log::LogThread(void* param) {
     uint32_t lastFlush = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
 

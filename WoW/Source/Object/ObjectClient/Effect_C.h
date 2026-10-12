@@ -56,6 +56,10 @@ class CEffect {
         uint32_t m_uint[2];
         CEffectVirtualItem* m_virtualItem;
         CEffectCurve* m_curve;
+        struct {
+            void* m_pointer;
+            uint32_t m_value;
+        } m_object;
     };
 
     static void ApplyModelAttachRecToMatrix(const SpellVisualKitModelAttachRec* attach, C44Matrix& matrix, float facing);

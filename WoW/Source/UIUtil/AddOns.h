@@ -26,7 +26,6 @@ struct UIADDON : public TSHashObject<UIADDON, HASHKEY_STRI> {
     /* 002B */ bool m_enabledByDefault;
     /* 002C */ bool m_loadOnDemand;
     /* 002D */ bool m_checkingLoadable;
-    /* 002E */ uint8_t unk_002E[2];
     /* 0030 */ char* m_url;
     /* 0034 */ uint32_t m_numFiles;
     /* 0038 */ TSGrowableArray<char*> m_optionalDeps;

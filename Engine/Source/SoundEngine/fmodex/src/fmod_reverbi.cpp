@@ -521,7 +521,7 @@ FMOD_RESULT ReverbI::set3DAttributes(const FMOD_VECTOR *position, float mindista
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8cd6740d IDENTICAL/UNPROVEN
+// PROVEN: 8cd6740d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A8FA40/0x14089E9A0
 FMOD_RESULT ReverbI::get3DAttributes(FMOD_VECTOR *position, float *mindistance, float *maxdistance)
 { 
@@ -783,7 +783,7 @@ FMOD_RESULT ReverbI::setProperties(const FMOD_REVERB_PROPERTIES* prop_source)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6046d6bf IDENTICAL/UNPROVEN
+// PROVEN: 6046d6bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00A90140/0x14084F930
 FMOD_RESULT ReverbI::getProperties(FMOD_REVERB_PROPERTIES* properties)
 {
@@ -1081,7 +1081,7 @@ FMOD_RESULT ReverbI::getPresenceGain(int index, float *lingain)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f4aa0434 IDENTICAL/UNPROVEN
+// PROVEN: f4aa0434 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A90330/0x14084FB10
 void ReverbI::sumRoomProps(FMOD_REVERB_STDPROPERTIES *accprops, FMOD_REVERB_PROPERTIES *addprops, float factor)
 {
@@ -1107,7 +1107,7 @@ void ReverbI::sumRoomProps(FMOD_REVERB_STDPROPERTIES *accprops, FMOD_REVERB_PROP
 	[SEE_ALSO]
 ]
 */
-// PROVEN: aff1153d IDENTICAL/UNPROVEN
+// PROVEN: aff1153d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A90370/0x14084FB60
 void ReverbI::sumProps(FMOD_REVERB_STDPROPERTIES *accprops, FMOD_REVERB_PROPERTIES *addprops, float factor)
 {

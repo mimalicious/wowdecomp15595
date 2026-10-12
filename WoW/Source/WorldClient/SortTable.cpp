@@ -16,7 +16,7 @@ void CSortTable::SetPlanes(const C3Vector& normal, const C3Vector& pos) {
     }
 }
 
-// OFFSET: 0x00799E20
+// OFFSET: 0x00799E20/0x14048E0A0
 void CSortTable::Clear(TSExplicitList<CMapEntity, offsetof(CMapEntity, m_viewLink)>& entities) {
     for (int32_t i = 0; i < this->m_numEntries; i++) {
         CSortEntry& entry = this->m_entries.m_data[i];
@@ -39,6 +39,7 @@ void CSortTable::Clear(TSExplicitList<CMapEntity, offsetof(CMapEntity, m_viewLin
     this->m_doodadDefs.m_count = 0;
 }
 
+// PROVEN: 6dc2bd2c IDENTICAL/NONE
 // OFFSET: 0x00799F60
 CSortEntry::~CSortEntry() {
 }
@@ -54,11 +55,12 @@ CSortEntry::CSortEntry() {
     this->m_doodadDefHead = -1;
 }
 
+// PROVEN: 4d54b5aa UNPROVEN/IDENTICAL
 // OFFSET: 0x0079A410/0x14048E8F0
 CSortTable::~CSortTable() {
 }
 
-// PROVEN: 11cda42e IDENTICAL/NONE
+// PROVEN: 11cda42e IDENTICAL/IDENTICAL
 // OFFSET: 0x0079A4F0/0x14048EA40
 CSortTable::CSortTable() {
     this->m_entries.m_chunk = 16;
@@ -67,6 +69,7 @@ CSortTable::CSortTable() {
     this->m_lastEntry = 0;
 }
 
+// PROVEN: 87a6aac6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079A520/0x14048EA70
 void CSortTable::Setup(float farClip, const C3Vector& normal, const C3Vector& pos) {
     int32_t count = 3 - static_cast<int32_t>(farClip * -0.029999999f);

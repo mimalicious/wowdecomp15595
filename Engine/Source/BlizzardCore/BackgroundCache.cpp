@@ -25,7 +25,7 @@ OggToWavConversion::DECOMPRESSOGGCALLBACK OggToWavConversion::s_DecompressOggCal
 // STATIC: 0x00EB3D7C/0x140D9FF28
 OggToWavConversion::CONVERTOGGCALLBACK OggToWavConversion::s_ConvertOggCallback;
 
-// STATIC: 0x00D0589C
+// STATIC: 0x00D0589C/0x140BB7F80
 PatchOnDemand::Cache::ArchiveList PatchOnDemand::Cache::s_archiveList = { 0, { NULL, NULL, 13, 0 }, &PatchOnDemand::Cache::s_archiveList.m_head, NULL, NULL };
 
 // PROVEN: 4e1947ad IDENTICAL/IDENTICAL
@@ -203,7 +203,7 @@ int32_t PatchOnDemand::Cache::ArchiveList::Add(int32_t type, int32_t build) {
     return ++this->m_count;
 }
 
-// OFFSET: 0x007A3180
+// OFFSET: 0x007A3180/0x14050BC10
 int32_t PatchOnDemand::Cache::ArchiveList::AddUpdate(int32_t build) {
     if (Blizzard::String::EqualI(this->m_locale, "zhCN") || Blizzard::String::EqualI(this->m_locale, "enCN")) {
         this->Add(0, build);
@@ -217,7 +217,7 @@ int32_t PatchOnDemand::Cache::ArchiveList::AddUpdate(int32_t build) {
     return this->Add(5, build);
 }
 
-// OFFSET: 0x007A3200
+// OFFSET: 0x007A3200/0x14050BF70
 int32_t PatchOnDemand::Cache::ArchiveList::AddUpdateBase(int32_t build) {
     this->Add(4, build);
     this->Add(2, build);
@@ -237,8 +237,8 @@ int32_t PatchOnDemand::Cache::ArchiveList::AddUpdateLang(int32_t build) {
     return this->Add(6, build);
 }
 
-// PROVEN: 8f08739d IDENTICAL/NONE
-// OFFSET: 0x007A32A0
+// PROVEN: 8f08739d IDENTICAL/UNPROVEN
+// OFFSET: 0x007A32A0/0x14050C370
 int32_t PatchOnDemand::Cache::EnumerateArchives(ENUMARCHIVESCALLBACK callback, void* param) {
     return s_archiveList.EnumerateArchives(callback, param);
 }
@@ -261,7 +261,7 @@ OggToWavConversion::OggConverterJob::OggConverterJob(const char* name) : Backgro
     Blizzard::String::Copy(const_cast<char*>(Blizzard::String::FindExtension(this->m_wavName)), "wav", 4);
 }
 
-// PROVEN: b204d4ee IDENTICAL/DIFFERENT
+// PROVEN: b204d4ee IDENTICAL/IDENTICAL
 // OFFSET: 0x007A3360/0x14050C440
 uint32_t OggToWavConversion::OggConverterJob::GetClassId() const {
     return 'oggw';
@@ -280,7 +280,7 @@ bool OggToWavConversion::ShutdownCache() {
     return true;
 }
 
-// OFFSET: 0x007A3540
+// OFFSET: 0x007A3540/0x14050C480
 PatchOnDemand::Cache::ArchiveList::ListItem::~ListItem() {
     if (this->m_next) {
         delete this->m_next;
@@ -293,6 +293,7 @@ PatchOnDemand::Cache::ArchiveList::~ArchiveList() {
     Blizzard::Memory::Free(this->m_locale);
 }
 
+// PROVEN: 61489cff DIFFERENT/IDENTICAL
 // OFFSET: 0x007A35D0/0x14050C4B0
 bool PatchOnDemand::Cache::ArchiveList::DirCallback(const Blizzard::File::ProcessDirParms& parms) {
     ArchiveList* list = static_cast<ArchiveList*>(parms.m_cookie);
@@ -327,7 +328,7 @@ bool PatchOnDemand::Cache::ArchiveList::DirCallback(const Blizzard::File::Proces
     return true;
 }
 
-// PROVEN: 2b3c0a20 IDENTICAL/UNPROVEN
+// PROVEN: 2b3c0a20 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A3710/0x14050C640
 bool PatchOnDemand::PoDWriteJob::WriteFile(System_SFile::ARCHIVEREC* archive, const char* name, const void* data, int64_t size, const Blizzard::Util::Digest<16>& md5) {
     Blizzard::Util::Digest<16> written;
@@ -489,8 +490,8 @@ int32_t PatchOnDemand::Cache::ArchiveList::LoadArchives(const char* path, const 
     return this->m_count;
 }
 
-// PROVEN: de35798d IDENTICAL/NONE
-// OFFSET: 0x007A3CB0
+// PROVEN: de35798d IDENTICAL/UNPROVEN
+// OFFSET: 0x007A3CB0/0x14050CF00
 int32_t PatchOnDemand::Cache::LoadArchives(const char* path, const char* locale) {
     return s_archiveList.LoadArchives(path, locale);
 }
@@ -598,7 +599,7 @@ bool OggToWavConversion::OggConverterJob::ConvertToOgg() {
     return result;
 }
 
-// PROVEN: 2e615aaf IDENTICAL/UNPROVEN
+// PROVEN: 2e615aaf IDENTICAL/IDENTICAL
 // OFFSET: 0x007A3F40/0x14050D1D0
 bool OggToWavConversion::OggConverterJob::Execute() {
     if (Blizzard::Mopaq::SFileFileExists(NULL, this->m_wavName, 0, NULL) || Blizzard::Mopaq::SFileFileExists(NULL, this->m_name, 0, &this->m_archive) != 1) {
@@ -668,7 +669,7 @@ void BackgroundCache::CacheManager::Pump() {
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// PROVEN: a8f45e1e IDENTICAL/UNPROVEN
+// PROVEN: a8f45e1e IDENTICAL/IDENTICAL
 // OFFSET: 0x007A44B0/0x14050D5B0
 void BackgroundCache::Pump() {
     s_cacheManager->Pump();
@@ -758,7 +759,7 @@ void BackgroundCache::CacheManager::PatchCompleteCallback(const void* data, uint
     Blizzard::Log::Printf(0, "Logs/PatchOnDemand.log", "Failed to queue file '%s' for writing due to memory limit (%lld bytes available).\n\tFile size: %lld\n\tQueue Item Count: %d\n", name, available, size, static_cast<int32_t>(s_cacheManager->m_oggJobs.size() + s_cacheManager->m_writeJobs.size()));
 }
 
-// PROVEN: 2f5569d2 IDENTICAL/UNPROVEN
+// PROVEN: 2f5569d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4C80/0x14050DAE0
 void BackgroundCache::CacheManager::OggConvertCallback(const char* name) {
     if (s_cacheManager) {
@@ -766,8 +767,8 @@ void BackgroundCache::CacheManager::OggConvertCallback(const char* name) {
     }
 }
 
-// PROVEN: 66ff32ff IDENTICAL/NONE
-// OFFSET: 0x007A4CA0
+// PROVEN: 66ff32ff IDENTICAL/DIFFERENT
+// OFFSET: 0x007A4CA0/0x14050DB00
 void PatchOnDemand::Cache::Init(int32_t memoryLimit) {
     BackgroundCache::InitManager(memoryLimit);
     Blizzard::Mopaq::SetPatchCompleteCallback(BackgroundCache::CacheManager::PatchCompleteCallback);
@@ -785,7 +786,7 @@ bool OggToWavConversion::InitCache(DECOMPRESSOGGCALLBACK callback) {
     return true;
 }
 
-// PROVEN: 0278f2ee IDENTICAL/NONE
+// PROVEN: 0278f2ee IDENTICAL/IDENTICAL
 // OFFSET: 0x007A4EB0/0x140499B30
 void OggToWavConversion::SetCallback(CONVERTOGGCALLBACK callback) {
     s_ConvertOggCallback = callback;

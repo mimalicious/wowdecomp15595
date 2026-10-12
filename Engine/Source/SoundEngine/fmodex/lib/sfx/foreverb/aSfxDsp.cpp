@@ -15,7 +15,7 @@
 
 //-----------------------------------------------------------------------------
 
-// PROVEN: a079c865 IDENTICAL/UNPROVEN
+// PROVEN: a079c865 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD6820/0x1408A1C20
 int ASfxDsp::init(float rate)
 {
@@ -127,8 +127,8 @@ void ASfxDsp::close()
 }
 
 
-// PROVEN: 50b17985 IDENTICAL/NONE
-// OFFSET: 0x00AD54F0
+// PROVEN: 50b17985 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD54F0/0x1408A0680
 int ASfxDsp::AllocateLateDelays(int numDelays, float *delaySec, float sampleRate)
 {
 	int delaySamples;
@@ -164,8 +164,8 @@ int ASfxDsp::AllocateLateDelays(int numDelays, float *delaySec, float sampleRate
 	return 0;
 }
 
-// PROVEN: e0932c68 IDENTICAL/NONE
-// OFFSET: 0x00AD5620
+// PROVEN: e0932c68 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD5620/0x1408A0800
 int ASfxDsp::AllocateEarlyLateDelay(float *delaySec, float sampleRate)
 {
 	// Allocate it to the max Ref & Rev delays, so we don't have to reallocate it if the delays change.
@@ -191,8 +191,8 @@ int ASfxDsp::AllocateEarlyLateDelay(float *delaySec, float sampleRate)
 	return 0;
 }
 
-// PROVEN: 3d5bf7cf IDENTICAL/NONE
-// OFFSET: 0x00AD56F0
+// PROVEN: 3d5bf7cf IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD56F0/0x1408A0910
 int ASfxDsp::AllocateAllpassDelays(int numDelays, float *delaySec, float sampleRate)
 {
 	int		delaySamples;
@@ -227,8 +227,8 @@ int ASfxDsp::AllocateAllpassDelays(int numDelays, float *delaySec, float sampleR
 	return 0;
 }
 
-// PROVEN: 4dd5a29c IDENTICAL/NONE
-// OFFSET: 0x00AD5820
+// PROVEN: 4dd5a29c IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD5820/0x1408A0A90
 int ASfxDsp::AllocateEarlyDelay(float delaySec, float sampleRate)
 {
 	int delaySamples = (int)(delaySec * sampleRate) + 1;
@@ -863,6 +863,7 @@ void ASfxDsp::DoDSPProcessing (float * inAudio, float * outAudio, int channels, 
 
 
 // Copy input into our input buffer. This may be faster than doing it inside the big loop (?).
+// PROVEN: 045542e3 UNPROVEN/IDENTICAL
 // OFFSET: 0x00AD5240/0x14089FF70
 void ASfxDsp::BlockProcessInput(unsigned int sampframes, int channels, float *inAudio, float rate)
 {

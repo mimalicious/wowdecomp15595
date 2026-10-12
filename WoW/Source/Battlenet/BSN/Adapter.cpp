@@ -49,7 +49,7 @@ uint32_t BSN::Adapter::BitArray::GetLength(const void* data) {
     return *static_cast<const uint32_t*>(data);
 }
 
-// PROVEN: 940552cc IDENTICAL/NONE
+// PROVEN: 940552cc IDENTICAL/IDENTICAL
 // OFFSET: [0x00B2E3F0/0x1408F5FA0]
 const void* BSN::Adapter::BitArray::GetElements(const void* data) {
     return static_cast<const uint8_t*>(data) + 4;

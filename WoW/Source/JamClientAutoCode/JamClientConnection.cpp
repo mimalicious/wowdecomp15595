@@ -2,40 +2,43 @@
 #include <cstring>
 #include "Engine/Source/Base/CDataStore.h"
 
-// STATIC: 0x00E4D838
+// STATIC: 0x00E4D838/0x140D36A58
 bool (*ClientConnectionAuthChallenge::s_handler)(ClientConnectionAuthChallenge* msg);
 
-// STATIC: 0x00E4D83C
+// STATIC: 0x00E4D83C/0x140D36A80
 bool (*ClientConnectionSuspendComms::s_handler)(ClientConnectionSuspendComms* msg);
 
-// STATIC: 0x00E4D840
+// STATIC: 0x00E4D840/0x140D36A68
 bool (*ClientConnectionPong::s_handler)(ClientConnectionPong* msg);
 
-// STATIC: 0x00E4D844
+// STATIC: 0x00E4D844/0x140D36A48
 bool (*ClientConnectionResumeComms::s_handler)(ClientConnectionResumeComms* msg);
 
-// STATIC: 0x00E4D848
+// STATIC: 0x00E4D848/0x140D36A60
 bool (*ClientConnectionNoop::s_handler)(ClientConnectionNoop* msg);
 
-// STATIC: 0x00E4D84C
+// STATIC: 0x00E4D84C/0x140D36A50
 bool (*ClientConnectionResetCompressionContext::s_handler)(ClientConnectionResetCompressionContext* msg);
 
-// STATIC: 0x00E4D850
+// STATIC: 0x00E4D850/0x140D36A70
 bool (*ClientConnectionDropNewConnection::s_handler)(ClientConnectionDropNewConnection* msg);
 
-// STATIC: 0x00E4D854
+// STATIC: 0x00E4D854/0x140D36A78
 bool (*ClientConnectionConnectTo::s_handler)(ClientConnectionConnectTo* msg);
 
-// OFFSET: 0x006964B0
+// PROVEN: 2a30dabb IDENTICAL/DIFFERENT
+// OFFSET: 0x006964B0/0x14033F820
 ClientConnectionAuthChallenge::ClientConnectionAuthChallenge(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x00694900
+// PROVEN: f581d7f3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00694900/0x14033F7A0
 ClientConnectionAuthChallenge::~ClientConnectionAuthChallenge() {
 }
 
-// OFFSET: 0x00694BC0
+// PROVEN: 92547180 IDENTICAL/IDENTICAL
+// OFFSET: 0x00694BC0/0x14033FB90
 void ClientConnectionAuthChallenge::Unpack(CDataStore* msg, bool full) {
     for (uint32_t i = 0; i < 8; i++) {
         uint32_t value = 0;
@@ -56,12 +59,14 @@ void ClientConnectionAuthChallenge::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// PROVEN: 7204f30c IDENTICAL/NONE
 // OFFSET: 0x006964F0
 bool ClientConnectionAuthChallenge::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x00694C80
+// PROVEN: 0bc30a6c DIFFERENT/IDENTICAL
+// OFFSET: 0x00694C80/0x14033FC90
 bool ClientConnectionAuthChallenge::Read(CDataStore* msg, bool full) {
     for (uint32_t i = 0; i < 8; i++) {
         uint32_t value = 0;
@@ -84,25 +89,31 @@ bool ClientConnectionAuthChallenge::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x00694D90
+// PROVEN: 6840c443 IDENTICAL/DIFFERENT
+// OFFSET: 0x00694D90/0x14033FC30
 bool ClientConnectionAuthChallenge::Handle() {
-    if (!ClientConnectionAuthChallenge::s_handler) {
-        return false;
+    if (ClientConnectionAuthChallenge::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB738.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB738.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionAuthChallenge*)>(reinterpret_cast<uintptr_t>(ClientConnectionAuthChallenge::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientConnectionAuthChallenge::s_handler(this);
+    return false;
 }
 
-// OFFSET: 0x00694D00
+// PROVEN: 13fc2c7d IDENTICAL/DIFFERENT
+// OFFSET: 0x00694D00/0x14036ACB0
 ClientConnectionConnectTo::ClientConnectionConnectTo(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x00694920
+// PROVEN: f0b86afe IDENTICAL/UNPROVEN
+// OFFSET: 0x00694920/0x14033F780
 ClientConnectionConnectTo::~ClientConnectionConnectTo() {
 }
 
-// OFFSET: 0x00694AF0
+// PROVEN: ed937980 IDENTICAL/IDENTICAL
+// OFFSET: 0x00694AF0/0x14033FA70
 void ClientConnectionConnectTo::Unpack(CDataStore* msg, bool full) {
     {
         uint64_t key = 0;
@@ -129,12 +140,14 @@ void ClientConnectionConnectTo::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x00694AE0
+// PROVEN: f8e8594a IDENTICAL/IDENTICAL
+// OFFSET: 0x00694AE0/0x140363360
 bool ClientConnectionConnectTo::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// OFFSET: 0x00694A50
+// PROVEN: 3f8dc78a IDENTICAL/IDENTICAL
+// OFFSET: 0x00694A50/0x14033F990
 bool ClientConnectionConnectTo::Read(CDataStore* msg, bool full) {
     {
         uint64_t key = 0;
@@ -163,7 +176,8 @@ bool ClientConnectionConnectTo::Read(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x00694E20
+// PROVEN: cde029c5 IDENTICAL/DIFFERENT
+// OFFSET: 0x00694E20/0x14033FE90
 void ClientConnectPayload::Get(CDataStore* msg, bool full) {
     uint8_t value = 0;
     msg->Get(value);
@@ -1694,16 +1708,19 @@ void ClientConnectPayload::Get(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x00694A00
+// PROVEN: feb93af3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00694A00/0x14033FE30
 bool ClientConnectionConnectTo::Handle() {
-    if (!ClientConnectionConnectTo::s_handler) {
-        return false;
+    if (ClientConnectionConnectTo::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB74C.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB74C.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionConnectTo*)>(reinterpret_cast<uintptr_t>(ClientConnectionConnectTo::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientConnectionConnectTo::s_handler(this);
+    return false;
 }
 
-// OFFSET: 0x00696520
+// OFFSET: 0x00696520/0x14033FD30
 ClientConnectionPong::ClientConnectionPong(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_present = 0;
 
@@ -1713,8 +1730,8 @@ ClientConnectionPong::ClientConnectionPong(NetClient* netClient, WowConnection* 
     this->m_serial = serial;
 }
 
-// PROVEN: 4de97fa3 IDENTICAL/NONE
-// OFFSET: 0x00694910
+// PROVEN: 4de97fa3 IDENTICAL/UNPROVEN
+// OFFSET: 0x00694910/0x14033F7B0
 ClientConnectionPong::~ClientConnectionPong() {
 }
 
@@ -1729,16 +1746,19 @@ bool ClientConnectionPong::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x00694C30
+// PROVEN: 00e0edc4 IDENTICAL/UNPROVEN
+// OFFSET: 0x00694C30/0x14033FD70
 bool ClientConnectionPong::Handle() {
-    if (!ClientConnectionPong::s_handler) {
-        return false;
+    if (ClientConnectionPong::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB780.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB780.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionPong*)>(reinterpret_cast<uintptr_t>(ClientConnectionPong::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientConnectionPong::s_handler(this);
+    return false;
 }
 
-// OFFSET: 0x00696520
+// OFFSET: 0x00696520/0x14033FD30
 ClientConnectionSuspendComms::ClientConnectionSuspendComms(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_present = 0;
 
@@ -1748,8 +1768,8 @@ ClientConnectionSuspendComms::ClientConnectionSuspendComms(NetClient* netClient,
     this->m_serial = serial;
 }
 
-// PROVEN: f23a8ac7 IDENTICAL/NONE
-// OFFSET: 0x00694910
+// PROVEN: f23a8ac7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00694910/0x14033F7B0
 ClientConnectionSuspendComms::~ClientConnectionSuspendComms() {
 }
 
@@ -1764,117 +1784,132 @@ bool ClientConnectionSuspendComms::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x00694930
+// PROVEN: b3130309 IDENTICAL/DIFFERENT
+// OFFSET: 0x00694930/0x14033F930
 bool ClientConnectionSuspendComms::Handle() {
-    if (!ClientConnectionSuspendComms::s_handler) {
-        return false;
+    if (ClientConnectionSuspendComms::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB738.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB738.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionSuspendComms*)>(reinterpret_cast<uintptr_t>(ClientConnectionSuspendComms::s_handler) - (right ^ ((right & 0xF) * left)))(this);
     }
 
-    return ClientConnectionSuspendComms::s_handler(this);
+    return false;
 }
 
-// PROVEN: 3b318ae9 IDENTICAL/NONE
+// PROVEN: 3b318ae9 IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionResumeComms::ClientConnectionResumeComms(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: bdba72f0 IDENTICAL/NONE
+// PROVEN: bdba72f0 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionResumeComms::~ClientConnectionResumeComms() {
 }
 
-// PROVEN: e8fe07cb IDENTICAL/NONE
-// OFFSET: 0x006BAEE0
+// PROVEN: e8fe07cb IDENTICAL/IDENTICAL
+// OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionResumeComms::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x00694980
+// PROVEN: 26cc65bc IDENTICAL/DIFFERENT
+// OFFSET: 0x00694980/0x14033FDD0
 bool ClientConnectionResumeComms::Handle() {
-    if (!ClientConnectionResumeComms::s_handler) {
-        return false;
+    if (ClientConnectionResumeComms::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB688.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB688.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionResumeComms*)>(reinterpret_cast<uintptr_t>(ClientConnectionResumeComms::s_handler) - (left - right))(this);
     }
 
-    return ClientConnectionResumeComms::s_handler(this);
+    return false;
 }
 
-// PROVEN: f623d0ae IDENTICAL/NONE
+// PROVEN: f623d0ae IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionResetCompressionContext::ClientConnectionResetCompressionContext(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: 162fb9ed IDENTICAL/NONE
+// PROVEN: 162fb9ed IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionResetCompressionContext::~ClientConnectionResetCompressionContext() {
 }
 
-// PROVEN: 71bff20b IDENTICAL/NONE
-// OFFSET: 0x006BAEE0
+// PROVEN: 71bff20b IDENTICAL/IDENTICAL
+// OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionResetCompressionContext::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x006949C0
+// PROVEN: 1cbe5843 IDENTICAL/DIFFERENT
+// OFFSET: 0x006949C0/0x14033F7C0
 bool ClientConnectionResetCompressionContext::Handle() {
-    if (!ClientConnectionResetCompressionContext::s_handler) {
-        return false;
+    if (ClientConnectionResetCompressionContext::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB688.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB688.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionResetCompressionContext*)>(reinterpret_cast<uintptr_t>(ClientConnectionResetCompressionContext::s_handler) - (left - right))(this);
     }
 
-    return ClientConnectionResetCompressionContext::s_handler(this);
+    return false;
 }
 
-// PROVEN: 6f10a356 IDENTICAL/NONE
+// PROVEN: 6f10a356 IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionDropNewConnection::ClientConnectionDropNewConnection(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: 265d5f07 IDENTICAL/NONE
+// PROVEN: 265d5f07 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionDropNewConnection::~ClientConnectionDropNewConnection() {
 }
 
-// PROVEN: 3d0ceb3e IDENTICAL/NONE
-// OFFSET: 0x006BAEE0
+// PROVEN: 3d0ceb3e IDENTICAL/IDENTICAL
+// OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionDropNewConnection::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x00694DE0
+// PROVEN: 95137c9d IDENTICAL/DIFFERENT
+// OFFSET: 0x00694DE0/0x14033F8D0
 bool ClientConnectionDropNewConnection::Handle() {
-    if (!ClientConnectionDropNewConnection::s_handler) {
-        return false;
+    if (ClientConnectionDropNewConnection::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB718.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB718.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionDropNewConnection*)>(reinterpret_cast<uintptr_t>(ClientConnectionDropNewConnection::s_handler) - (right + left))(this);
     }
 
-    return ClientConnectionDropNewConnection::s_handler(this);
+    return false;
 }
 
-// PROVEN: 7d8ac1df IDENTICAL/NONE
+// PROVEN: 7d8ac1df IDENTICAL/DIFFERENT
 // OFFSET: 0x006A2E40/0x14036ACB0
 ClientConnectionNoop::ClientConnectionNoop(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
 }
 
-// PROVEN: a5e67d61 IDENTICAL/NONE
+// PROVEN: a5e67d61 IDENTICAL/UNPROVEN
 // OFFSET: 0x006A1120/0x14033F780
 ClientConnectionNoop::~ClientConnectionNoop() {
 }
 
-// PROVEN: 704133ec IDENTICAL/NONE
-// OFFSET: 0x006BAEE0
+// PROVEN: 704133ec IDENTICAL/IDENTICAL
+// OFFSET: 0x006BAEE0/0x140363360
 bool ClientConnectionNoop::Get(CDataStore* msg, bool full) {
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x00694D40
+// PROVEN: 37285460 IDENTICAL/DIFFERENT
+// OFFSET: 0x00694D40/0x14033F870
 bool ClientConnectionNoop::Handle() {
-    if (!ClientConnectionNoop::s_handler) {
-        return false;
+    if (ClientConnectionNoop::s_handler) {
+        uint32_t right = g_jamHandlerKey_CFB708.m_right->Get();
+        uint32_t left = g_jamHandlerKey_CFB708.m_left->Get();
+        return reinterpret_cast<bool (*)(ClientConnectionNoop*)>(reinterpret_cast<uintptr_t>(ClientConnectionNoop::s_handler) - ((left << (right & 0xF)) | (left >> (32 - (right & 0xF)))))(this);
     }
 
-    return ClientConnectionNoop::s_handler(this);
+    return false;
 }
 
-// PROVEN: 8516bb88 IDENTICAL/NONE
-// OFFSET: 0x0066A970
+// PROVEN: 8516bb88 IDENTICAL/DIFFERENT
+// OFFSET: 0x0066A970/0x1403177D0
 UserRouterClientPing::UserRouterClientPing() {
     this->m_present = 0;
 }
@@ -1884,8 +1919,8 @@ UserRouterClientPing::UserRouterClientPing() {
 UserRouterClientPing::~UserRouterClientPing() {
 }
 
-// PROVEN: 85a8ce9e IDENTICAL/NONE
-// OFFSET: 0x0066A910
+// PROVEN: 85a8ce9e IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A910/0x140317770
 void UserRouterClientPing::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x444D));
     msg->Put(this->m_latency);
@@ -1904,8 +1939,8 @@ UserRouterClientLogDisconnect::UserRouterClientLogDisconnect(uint32_t reason) {
 UserRouterClientLogDisconnect::~UserRouterClientLogDisconnect() {
 }
 
-// PROVEN: f5d00f5a IDENTICAL/NONE
-// OFFSET: 0x0066A9E0
+// PROVEN: f5d00f5a IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A9E0/0x140317840
 void UserRouterClientLogDisconnect::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x446D));
     msg->Put(this->m_reason);
@@ -1922,58 +1957,58 @@ UserRouterClientSuspendCommsAck::UserRouterClientSuspendCommsAck() {
 UserRouterClientSuspendCommsAck::~UserRouterClientSuspendCommsAck() {
 }
 
-// PROVEN: 1408bd2d IDENTICAL/NONE
-// OFFSET: 0x0066A990
+// PROVEN: 1408bd2d IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A990/0x1403177F0
 void UserRouterClientSuspendCommsAck::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x4469));
     msg->Put(this->m_serial);
 }
 
-// PROVEN: c72426c1 IDENTICAL/NONE
-// OFFSET: 0x0066A950
+// PROVEN: c72426c1 IDENTICAL/DIFFERENT
+// OFFSET: 0x0066A950/0x1403177B0
 UserRouterClientSuspendTokenResponse::UserRouterClientSuspendTokenResponse() {
     this->m_present = 0;
 }
 
-// PROVEN: 43d88893 IDENTICAL/NONE
-// OFFSET: 0x0066A400
+// PROVEN: 43d88893 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A400/0x140317560
 UserRouterClientSuspendTokenResponse::~UserRouterClientSuspendTokenResponse() {
 }
 
-// PROVEN: a1d353e0 IDENTICAL/NONE
-// OFFSET: 0x0066A7A0
+// PROVEN: a1d353e0 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A7A0/0x1403175E0
 void UserRouterClientSuspendTokenResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x46D));
     msg->Put(this->m_token);
 }
 
-// PROVEN: 57cf04cd IDENTICAL/NONE
+// PROVEN: 57cf04cd IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A760/0x140317590
 UserRouterClientEnableNagle::UserRouterClientEnableNagle() {
 }
 
-// PROVEN: 74bf4a09 IDENTICAL/NONE
+// PROVEN: 74bf4a09 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A410/0x140317570
 UserRouterClientEnableNagle::~UserRouterClientEnableNagle() {
 }
 
-// PROVEN: 8c55ffb7 IDENTICAL/NONE
-// OFFSET: 0x0066A9C0
+// PROVEN: 8c55ffb7 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A9C0/0x140317830
 void UserRouterClientEnableNagle::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x4449));
 }
 
-// PROVEN: eedd4fd9 IDENTICAL/NONE
-// OFFSET: 0x0066A900
+// PROVEN: eedd4fd9 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A900/0x140317750
 UserRouterClientAuthContinuedSession::UserRouterClientAuthContinuedSession() {
 }
 
-// PROVEN: b3c07a7c IDENTICAL/NONE
-// OFFSET: 0x0066A420
+// PROVEN: b3c07a7c IDENTICAL/IDENTICAL
+// OFFSET: 0x0066A420/0x140317580
 UserRouterClientAuthContinuedSession::~UserRouterClientAuthContinuedSession() {
 }
 
-// PROVEN: f746efcf IDENTICAL/NONE
+// PROVEN: f746efcf IDENTICAL/IDENTICAL
 // OFFSET: 0x0066A7D0/0x140317620
 void UserRouterClientAuthContinuedSession::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x44D));
@@ -2009,6 +2044,7 @@ UserRouterClientAuthSession::UserRouterClientAuthSession() {
 UserRouterClientAuthSession::~UserRouterClientAuthSession() {
 }
 
+// PROVEN: 21e06934 IDENTICAL/IDENTICAL
 // OFFSET: 0x0066AF90/0x140317990
 void UserRouterClientAuthSession::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x449));
@@ -2052,18 +2088,18 @@ void UserRouterClientAuthSession::Put(CDataStore* msg) {
     msg->PutData(this->m_account, strlen(this->m_account));
 }
 
-// PROVEN: 24b5eaf7 IDENTICAL/NONE
-// OFFSET: 0x0066DE80
+// PROVEN: 24b5eaf7 IDENTICAL/IDENTICAL
+// OFFSET: 0x0066DE80/0x140315070
 UserClientConnectToFailed::UserClientConnectToFailed() {
 }
 
-// PROVEN: f332452c IDENTICAL/NONE
-// OFFSET: 0x0066BBA0
+// PROVEN: f332452c IDENTICAL/IDENTICAL
+// OFFSET: 0x0066BBA0/0x1403123A0
 UserClientConnectToFailed::~UserClientConnectToFailed() {
 }
 
-// PROVEN: 65f06b2d IDENTICAL/NONE
-// OFFSET: 0x0066E520
+// PROVEN: 65f06b2d IDENTICAL/IDENTICAL
+// OFFSET: 0x0066E520/0x140315740
 void UserClientConnectToFailed::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2533));
     msg->Put(this->m_serial);

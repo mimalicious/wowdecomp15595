@@ -9,22 +9,22 @@
 #include "WoW/Source/WowServices/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00D07A00
+// STATIC: 0x00D07A00/0x140BB8A60
 int32_t CRealmList::m_selectedCategory = -1;
 
-// STATIC: 0x00D07A04
+// STATIC: 0x00D07A04/0x140BB8A64
 int32_t CRealmList::m_preferredCategory = -1;
 
-// STATIC: 0x00EBC0C0
+// STATIC: 0x00EBC0C0/0x140DACF58
 float CRealmList::m_avgLoad;
 
-// STATIC: 0x00EBC0C4
+// STATIC: 0x00EBC0C4/0x140DACF5C
 float CRealmList::m_stdDevLoad;
 
-// STATIC: 0x00EBC0A0
+// STATIC: 0x00EBC0A0/0x140DACF38
 RealmSortCriterion CRealmList::m_sortCriteria[4];
 
-// STATIC: 0x00EBC0C8
+// STATIC: 0x00EBC0C8/0x140DACF60
 TSFixedArray<RealmCategory*> CRealmList::m_categories;
 
 // OFFSET: 0x0080AAF0/0x140520EA0
@@ -283,8 +283,8 @@ void CRealmList::Initialize() {
     }
 }
 
-// PROVEN: ab13bd12 IDENTICAL/NONE
-// OFFSET: 0x0080BC40
+// PROVEN: ab13bd12 IDENTICAL/UNPROVEN
+// OFFSET: 0x0080BC40/0x140522160
 void CRealmList::Shutdown() {
     for (uint32_t i = 0; i < CRealmList::m_categories.Count(); i++) {
         CRealmList::m_categories[i]->m_realms.Clear();

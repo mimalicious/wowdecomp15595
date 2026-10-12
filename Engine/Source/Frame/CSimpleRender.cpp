@@ -42,25 +42,25 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// STATIC: 0x00BA68E8
+// STATIC: 0x00BA68E8/0x140988938
 static const uint8_t s_letterHasFinalConsonant[26] = { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-// STATIC: 0x00BA6904
+// STATIC: 0x00BA6904/0x140988958
 static const uint8_t s_digitHasFinalConsonant[10] = { 1, 1, 0, 1, 0, 0, 1, 1, 1, 0 };
 
 // STATIC: 0x00DC7870
 static uint16_t s_languageWideBuffer[0x2000];
 
-// STATIC: 0x00DCF870
+// STATIC: 0x00DCF870/0x140CB5510
 static char s_languageBuffer[0x2000];
 
-// STATIC: 0x00CA2C00
+// STATIC: 0x00CA2C00/0x140B3F968
 static TSExplicitList<CSimpleEmbeddedTexture, offsetof(CSimpleEmbeddedTexture, m_link)> s_embeddedTextureStorage;
 
-// STATIC: 0x00DD1888
+// STATIC: 0x00DD1888/0x140CB7530
 CGxShader* CSimpleRender::s_vertexShader;
 
-// STATIC: 0x00DD188C
+// STATIC: 0x00DD188C/0x140CB7538
 int32_t CSimpleRender::s_mergeEnable;
 
 // STATIC: 0x00DD18F8
@@ -69,31 +69,31 @@ static char s_displayText[0x2000];
 // STATIC: 0x00CA2BE0
 const char* CSimpleTexture::s_objectTypeName = "Texture";
 
-// STATIC: 0x00CA2BE4
+// STATIC: 0x00CA2BE4/0x000B3F8E8
 const char* CSimpleTexture::s_imageModePixelShaderNames[2] = { "UI", "Desaturate" };
 
-// STATIC: 0x00CA2BEC
+// STATIC: 0x00CA2BEC/0x140B3F8F8
 EGxTexFilter CSimpleTexture::s_textureFilterMode = GxTex_Linear;
 
-// STATIC: 0x00DD1878
+// STATIC: 0x00DD1878/0x140CB7518
 int32_t CSimpleTexture::s_count;
 
-// STATIC: 0x00DD187C
+// STATIC: 0x00DD187C/0x140CB7520
 CGxShader* CSimpleTexture::s_imageModePixelShaders[2];
 
-// STATIC: 0x00DD1884
+// STATIC: 0x00DD1884/0x140CB751C
 int32_t CSimpleTexture::s_objectType;
 
-// STATIC: 0x00DD18A4
+// STATIC: 0x00DD18A4/0x140CB7560
 CDataAllocator CSimpleTexture::s_allocator(sizeof(CSimpleTexture), 0x381);
 
-// STATIC: 0x00DD1890
+// STATIC: 0x00DD1890/0x140CB7540
 CDataAllocator CTextureExtension::s_allocator(sizeof(CTextureExtension), 0x14);
 
 // STATIC: 0x00DD18CC
 TSHashTable<FILENAMEHASH, HASHKEY_STR> CSimpleTexture::s_fileNameHash;
 
-// STATIC: 0x00DD38F8
+// STATIC: 0x00DD38F8/0x140CB95A0
 int32_t CSimpleTexture::s_maskCount;
 
 // STATIC: 0x00DD38FD
@@ -102,16 +102,16 @@ bool CSimpleTexture::s_defaultNonBlocking;
 // STATIC: 0x00DD38FE
 bool CSimpleTexture::s_unloadHiddenTextures;
 
-// STATIC: 0x00CA3A04
+// STATIC: 0x00CA3A04/0x140B40DC4
 int32_t CSimpleFontString::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD1874
+// STATIC: 0x00DD1874/0x140CB7514
 int32_t CSimpleFontString::s_objectType;
 
-// STATIC: 0x00CA2BFC
+// STATIC: 0x00CA2BFC/0x140B3F910
 const char* CSimpleFontString::s_objectTypeName = "FontString";
 
-// STATIC: 0x00DD18B8
+// STATIC: 0x00DD18B8/0x140CB7580
 CDataAllocator CSimpleFontString::s_allocator(sizeof(CSimpleFontString), 0x35E);
 
 // STATIC: 0x00DD1870
@@ -122,7 +122,7 @@ static int32_t IsRectOffscreen(const CRect& rect) {
     return rect.maxY < 0.0f || rect.minY > 1.0f || rect.maxX < 0.0f || rect.minX > 1.0f;
 }
 
-// PROVEN: 695f0110 IDENTICAL/NONE
+// PROVEN: 695f0110 IDENTICAL/DIFFERENT
 // OFFSET: 0x004F76A0/0x14013ADD0
 static const uint16_t* LanguageRule1ChooseParticle(uint32_t lastChar, const uint16_t* consonantForm, const uint16_t* vowelForm) {
     uint16_t c = static_cast<uint16_t>(lastChar);
@@ -555,14 +555,14 @@ bool CSimpleFontString::IsA(int32_t type) {
     return type == CSimpleFontString::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 8be38cd3 IDENTICAL/NONE
-// OFFSET: 0x004FBE60
+// PROVEN: 8be38cd3 IDENTICAL/IDENTICAL
+// OFFSET: 0x004FBE60/0x140140080
 bool CSimpleFontString::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleFontString::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: 1ecc490c IDENTICAL/DIFFERENT
-// OFFSET: 0x004FBEC0/0x140159090
+// PROVEN: 1ecc490c IDENTICAL/NONE
+// OFFSET: 0x004FBEC0/0x1401400E0
 const char* CSimpleFontString::GetObjectTypeName() {
     return CSimpleFontString::s_objectTypeName;
 }
@@ -585,13 +585,13 @@ uint32_t CSimpleFontString::GetFontFlags() {
     return this->m_fontHandle ? TextBlockGetFontFlags(this->m_fontHandle) : 0;
 }
 
-// PROVEN: 4ddf8995 IDENTICAL/UNPROVEN
+// PROVEN: 4ddf8995 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F8990/0x14013C1E0
 void CSimpleRender::Init() {
     CSimpleRender::s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
 }
 
-// PROVEN: 2a139df0 IDENTICAL/UNPROVEN
+// PROVEN: 2a139df0 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F89B0/0x14013C210
 void CSimpleRender::Destroy() {
     if (CSimpleRender::s_vertexShader) {
@@ -600,7 +600,7 @@ void CSimpleRender::Destroy() {
     }
 }
 
-// OFFSET: 0x004F89D0
+// OFFSET: 0x004F89D0/0x14013C240
 int32_t CSimpleRender::CalcBatchCounts(CRenderBatch* batch, uint32_t* vertCounts, uint32_t* idxCounts) {
     CGxTex* textureID = reinterpret_cast<CGxTex*>(-1);
     int32_t alphaMode = GxBlends_Last;
@@ -654,7 +654,7 @@ int32_t CSimpleRender::CalcBatchCounts(CRenderBatch* batch, uint32_t* vertCounts
     return batchIndex;
 }
 
-// OFFSET: 0x004FB520
+// OFFSET: 0x004FB520/0x14013F5F0
 void CSimpleRender::DrawBatch(CRenderBatch* batch) {
     uint32_t meshCount = batch->m_texturelist.Count();
 
@@ -810,7 +810,7 @@ void CSimpleRender::DrawBatch(CRenderBatch* batch) {
     }
 }
 
-// PROVEN: e0d2364d IDENTICAL/UNPROVEN
+// PROVEN: e0d2364d IDENTICAL/IDENTICAL
 // OFFSET: 0x004F7E60/0x14013B6D0
 void CSimpleFontString::RemoveShadow() {
     if (this->m_styleFlags & 0x100) {
@@ -822,7 +822,7 @@ void CSimpleFontString::RemoveShadow() {
     }
 }
 
-// PROVEN: aa2f921a IDENTICAL/DIFFERENT
+// PROVEN: aa2f921a IDENTICAL/IDENTICAL
 // OFFSET: 0x004F7FF0/0x14029E930
 float CSimpleFontString::GetFontHeight(bool recalculate) {
     float fontHeight = this->m_fontHeight;
@@ -946,8 +946,8 @@ void CSimpleFontString::QueueTextures(CRenderBatch* batch) {
     }
 }
 
-// PROVEN: c69419c8 IDENTICAL/NONE
-// OFFSET: 0x004FBEE0
+// PROVEN: c69419c8 IDENTICAL/IDENTICAL
+// OFFSET: 0x004FBEE0/0x140140100
 void CSimpleFontString::Draw(CRenderBatch* batch) {
     if (this->m_fontHandle && this->m_text && *this->m_text) {
         batch->QueueFontString(this);
@@ -969,7 +969,7 @@ void CSimpleFontString::FreeEmbeddedTextures() {
     }
 }
 
-// OFFSET: 0x004FC540
+// OFFSET: 0x004FC540/0x140140800
 void CSimpleFontString::FreeEmbededTextureStorage() {
     CSimpleEmbeddedTexture* embedded = s_embeddedTextureStorage.Head();
 
@@ -991,7 +991,7 @@ CSimpleEmbeddedTexture* CSimpleFontString::GetEmbeddedTextureFromStorage() {
     return mem ? new (mem) CSimpleEmbeddedTexture : NULL;
 }
 
-// OFFSET: 0x004FD670
+// OFFSET: 0x004FD670/0x140142020
 void CSimpleFontString::RefreshEmbeddedTextures() {
     const GXUEMBEDDEDTEXTUREINFO* info;
     uint32_t count = GxuFontStringEmbeddedTextureInfo(this->m_string ? TextBlockGetStringPtr(this->m_string) : NULL, info);
@@ -1036,7 +1036,7 @@ CSimpleFontString::CSimpleFontString(CSimpleFrame* frame, uint32_t drawLayer, bo
     s_fontStringCount++;
 }
 
-// OFFSET: [0x004FC450/0x1401406B0, 0x004FC700/0x140140AC0, 0x0051D760, 0x004FBDB0/0x14013FFC0, 0x004FBDC0, 0x0051D260, 0x0051D270, 0x0051D280]
+// OFFSET: [0x004FC450/0x1401406B0, 0x004FC700/0x140140AC0, 0x0051D760, 0x004FBDB0/0x14013FFC0, 0x004FBDC0/0x14013FFD0, 0x0051D260, 0x0051D270, 0x0051D280]
 CSimpleFontString::~CSimpleFontString() {
     this->FreeEmbeddedTextures();
 
@@ -1050,7 +1050,7 @@ CSimpleFontString::~CSimpleFontString() {
     s_fontStringCount--;
 }
 
-// PROVEN: 09a65cd4 IDENTICAL/UNPROVEN
+// PROVEN: 09a65cd4 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F7630/0x14013AD40
 void CSimpleFontString::SetTextLength(uint32_t length) {
     if (length == this->m_textMaxSize) {
@@ -1072,7 +1072,7 @@ void CSimpleFontString::SetTextLength(uint32_t length) {
     this->m_textMaxSize = length;
 }
 
-// OFFSET: 0x004F7E90
+// OFFSET: 0x004F7E90/0x14013B700
 bool CSimpleFontString::SetAlphaGradient(int32_t start, int32_t length) {
     this->m_alphaGradientStart = start;
     this->m_alphaGradientLength = length;
@@ -1080,7 +1080,7 @@ bool CSimpleFontString::SetAlphaGradient(int32_t start, int32_t length) {
     return !this->m_string || TextBlockSetGradient(this->m_string, start, length) < 2;
 }
 
-// PROVEN: 424e4fda IDENTICAL/UNPROVEN
+// PROVEN: 424e4fda IDENTICAL/IDENTICAL
 // OFFSET: 0x004F8080/0x14013B8F0
 void CSimpleFontString::SetWidth(float width) {
     this->CLayoutFrame::SetWidth(width);
@@ -1088,7 +1088,7 @@ void CSimpleFontString::SetWidth(float width) {
     this->m_textHeight = 0.0f;
 }
 
-// PROVEN: f662e189 IDENTICAL/UNPROVEN
+// PROVEN: f662e189 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F80B0/0x14013B920
 void CSimpleFontString::SetHeight(float height) {
     this->CLayoutFrame::SetHeight(height);
@@ -1122,7 +1122,7 @@ uint32_t CSimpleFontString::WrapText(const char* text, float width, uint32_t* li
     return TextBlockWrapText(this->m_fontHandle, text, this->GetFontHeight(true) * this->m_layoutScale, width * this->m_layoutScale, lineStarts, maxLines, this->m_shadowOffset.x * this->m_layoutScale, this->m_layoutScale, 0.0f, this->m_styleFlags);
 }
 
-// OFFSET: 0x004F82C0
+// OFFSET: 0x004F82C0/0x14013BB70
 uint32_t CSimpleFontString::GetNumCharsWithinWidth(const char* text, uint32_t numBytes, float maxWidth) {
     if (!this->m_fontHandle) {
         return 0;
@@ -1137,7 +1137,7 @@ uint32_t CSimpleFontString::GetNumCharsWithinWidth(const char* text, uint32_t nu
     return TextBlockGetMaxCharsWithinWidth(this->m_fontHandle, text, this->m_layoutScale * this->GetFontHeight(true), this->m_layoutScale * maxWidth, numBytes, &extent, this->m_shadowOffset.x * this->m_layoutScale, this->m_layoutScale, 0.0f, this->m_styleFlags);
 }
 
-// OFFSET: 0x004F83B0
+// OFFSET: 0x004F83B0/0x14013BC90
 uint32_t CSimpleFontString::GetNumCharsWithinWidthFromEnd(const char* text, uint32_t numBytes, float maxWidth) {
     if (!this->m_fontHandle) {
         return 0;
@@ -1175,8 +1175,8 @@ void CSimpleFontString::AddAnimTranslation(CScriptRegion* region, const C2Vector
     }
 }
 
-// PROVEN: 26cb9431 IDENTICAL/NONE
-// OFFSET: 0x004FA440
+// PROVEN: 26cb9431 IDENTICAL/UNPROVEN
+// OFFSET: 0x004FA440/0x14013E180
 void CSimpleFontString::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     if (region && region != this) {
         return;
@@ -1195,7 +1195,7 @@ void CSimpleFontString::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin
     }
 }
 
-// PROVEN: 91f64d37 IDENTICAL/NONE
+// PROVEN: 91f64d37 IDENTICAL/IDENTICAL
 // OFFSET: 0x004FA520/0x14013E260
 void CSimpleFontString::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     if (region && region != this) {
@@ -1214,7 +1214,7 @@ void CSimpleFontString::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     }
 }
 
-// PROVEN: a6036cbc IDENTICAL/UNPROVEN
+// PROVEN: a6036cbc IDENTICAL/IDENTICAL
 // OFFSET: 0x004FA4B0/0x14013E1F0
 void CSimpleFontString::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     if (region && region != this) {
@@ -1234,7 +1234,7 @@ void CSimpleFontString::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, c
     }
 }
 
-// PROVEN: 0e41d60a IDENTICAL/NONE
+// PROVEN: 0e41d60a IDENTICAL/DIFFERENT
 // OFFSET: 0x004F85A0/0x14013BEC0
 void CSimpleFontString::StoreAnimPosition() {
     this->m_animBaseRotation = this->m_rotation;
@@ -1484,7 +1484,7 @@ float CSimpleFontString::GetTextBlockHeight() {
     return height;
 }
 
-// PROVEN: 5af701b0 IDENTICAL/UNPROVEN
+// PROVEN: 5af701b0 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F9DC0/0x14013D900
 float CSimpleFontString::GetStringWidth() {
     if (this->m_textWidth == 0.0f && this->m_fontHandle) {
@@ -1526,6 +1526,7 @@ float CSimpleFontString::GetWrappedWidth(float width) {
     return maxWidth;
 }
 
+// PROVEN: bd00c222 IDENTICAL/IDENTICAL
 // OFFSET: 0x004FAB50/0x14013E8B0
 float CSimpleFontString::GetWrappedWidth() {
     return this->GetWrappedWidth(this->GetWidth());
@@ -1543,7 +1544,7 @@ float CSimpleFontString::GetWidth() {
     return width > NDCToDDCWidth(1.0f / (CoordinateGetAspectCompensation() * 1024.0f)) ? width : NDCToDDCWidth(1.0f / (CoordinateGetAspectCompensation() * 1024.0f));
 }
 
-// PROVEN: b6ba25f1 IDENTICAL/UNPROVEN
+// PROVEN: b6ba25f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F9FA0/0x14013DBA0
 float CSimpleFontString::GetStringHeight() {
     if (this->m_textHeight == 0.0f && this->m_fontHandle) {
@@ -1590,7 +1591,7 @@ bool CSimpleFontString::SetLayoutDepth(float depth, bool force) {
     return true;
 }
 
-// PROVEN: 60db96b8 IDENTICAL/NONE
+// PROVEN: 60db96b8 IDENTICAL/DIFFERENT
 // OFFSET: 0x004FA380/0x14013E0A0
 void CSimpleFontString::PreOnAnimUpdate() {
     if (this->AnimData_HasActivePosition()) {
@@ -1618,7 +1619,7 @@ void CSimpleFontString::PreOnAnimUpdate() {
     }
 }
 
-// OFFSET: 0x004FAC80
+// OFFSET: 0x004FAC80/0x14013EA60
 void CSimpleFontString::OnColorChanged(bool changed) {
     this->CSimpleRegion::OnColorChanged(changed);
 
@@ -1832,7 +1833,7 @@ void CSimpleFontString::SetJustifyH(uint8_t justify) {
     }
 }
 
-// OFFSET: 0x004FE680
+// OFFSET: 0x004FE680/0x140143290
 void CSimpleFontString::SetJustifyV(uint8_t justify) {
     this->m_settableStyleFlags &= ~0x38u;
     uint32_t styleFlags = (this->m_styleFlags & ~0x38u) | (justify & 0x38);
@@ -2070,7 +2071,7 @@ void CSimpleFontString::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: daa9d731 IDENTICAL/UNPROVEN
+// PROVEN: daa9d731 IDENTICAL/IDENTICAL
 // OFFSET: 0x004FEDB0/0x140143BB0
 void CSimpleFontString::FontObjectUpdated(CSimpleFontStringAttributes& attributes) {
     attributes.Update(this, this->m_fontableFlags);
@@ -2126,7 +2127,7 @@ void CSimpleTextureImage::Free() {
     }
 }
 
-// PROVEN: 33cc0c8b IDENTICAL/UNPROVEN
+// PROVEN: 33cc0c8b IDENTICAL/IDENTICAL
 // OFFSET: 0x004F8690/0x14013BFC0
 void CTextureExtension::ReleaseMaskTexture() {
     if (this->m_maskTexture) {
@@ -2135,7 +2136,8 @@ void CTextureExtension::ReleaseMaskTexture() {
     }
 }
 
-// OFFSET: 0x004FB2F0
+// PROVEN: 28cec795 DIFFERENT/IDENTICAL
+// OFFSET: 0x004FB2F0/0x14013F0E0
 CTextureExtension::~CTextureExtension() {
     if (this->m_maskTexture) {
         TextureRelease(this->m_maskTexture);
@@ -2143,7 +2145,7 @@ CTextureExtension::~CTextureExtension() {
     }
 }
 
-// PROVEN: c86f960e IDENTICAL/UNPROVEN
+// PROVEN: c86f960e IDENTICAL/IDENTICAL
 // OFFSET: 0x004F70D0/0x14013A7F0
 int32_t CSimpleTexture::SetTexture(CTexture* texture) {
     if (this->m_texture != texture) {
@@ -2236,7 +2238,7 @@ CGxShader* CSimpleTexture::GetImageModePixelShader(TextureImageMode mode) {
     return CSimpleTexture::s_imageModePixelShaders[mode];
 }
 
-// PROVEN: a84c6227 IDENTICAL/UNPROVEN
+// PROVEN: a84c6227 IDENTICAL/IDENTICAL
 // OFFSET: 0x004F7420/0x14013AB20
 CGxTex* CSimpleTexture::GetGxTex() {
     return this->m_texture ? TextureGetGxTexBlocking(this->m_texture) : NULL;
@@ -2247,7 +2249,8 @@ void CSimpleTexture::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     CSimpleRegion::AddAnimAlpha(region, alpha);
 }
 
-// OFFSET: 0x004F7440
+// PROVEN: b06f38e3 IDENTICAL/UNPROVEN
+// OFFSET: 0x004F7440/0x14013AB40
 void CSimpleTexture::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
     if (region && region != this) {
         return;
@@ -2257,8 +2260,8 @@ void CSimpleTexture::AddAnimTranslation(CScriptRegion* region, const C2Vector& t
     this->OnRegionChanged();
 }
 
-// PROVEN: 6e2ea24a IDENTICAL/NONE
-// OFFSET: 0x004F7470
+// PROVEN: 6e2ea24a IDENTICAL/UNPROVEN
+// OFFSET: 0x004F7470/0x14013AB70
 void CSimpleTexture::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     if (region && region != this) {
         return;
@@ -2268,8 +2271,8 @@ void CSimpleTexture::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, c
     this->OnRegionChanged();
 }
 
-// PROVEN: 355a86b9 IDENTICAL/NONE
-// OFFSET: 0x004F74B0
+// PROVEN: 355a86b9 IDENTICAL/UNPROVEN
+// OFFSET: 0x004F74B0/0x14013ABB0
 void CSimpleTexture::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     if (region && region != this) {
         return;
@@ -2311,7 +2314,7 @@ float CSimpleTexture::GetHeight() {
     return height;
 }
 
-// PROVEN: 0c25116a IDENTICAL/UNPROVEN
+// PROVEN: 0c25116a IDENTICAL/IDENTICAL
 // OFFSET: 0x004F75F0/0x14013AD10
 int32_t CSimpleTexture::IsObjectLoaded() {
     if (this->m_texture && !TextureIsLoaded(this->m_texture)) {
@@ -2359,7 +2362,7 @@ void CSimpleTexture::PostLoadXML(linkObject* node, CStatus* status) {
     this->SetAllPoints(parent, 1);
 }
 
-// OFFSET: 0x004F8C00
+// OFFSET: 0x004F8C00/0x14013C4A0
 void CSimpleTexture::HideThis() {
     CSimpleRegion::HideThis();
 
@@ -2371,7 +2374,7 @@ void CSimpleTexture::HideThis() {
     this->m_visible = 0;
 }
 
-// OFFSET: 0x004F7210
+// OFFSET: 0x004F7210/0x14013A980
 void CSimpleTexture::SetRotation(float radians, float centerX, float centerY) {
     float angle = radians - 0.78539819f;
     float s = sin(angle);
@@ -2415,7 +2418,7 @@ inline void CSimpleTexture::SetPosition(const CRect& rect, C3Vector* position) {
     position[3].z = this->m_layoutDepth;
 }
 
-// OFFSET: 0x004F8C50
+// OFFSET: 0x004F8C50/0x14013C510
 void CSimpleTexture::OnFrameSizeChanged(const CRect& rect) {
     this->CLayoutFrame::OnFrameSizeChanged(rect);
 
@@ -2451,6 +2454,7 @@ void CSimpleTexture::OnFrameSizeChanged(const CRect& rect) {
     }
 }
 
+// PROVEN: b68a7969 DIFFERENT/IDENTICAL
 // OFFSET: 0x004F8F10/0x14013C830
 void CSimpleTexture::PreOnAnimUpdate() {
     if (this->AnimData_HasActivePosition()) {
@@ -2466,6 +2470,7 @@ void CSimpleTexture::PreOnAnimUpdate() {
     }
 }
 
+// PROVEN: 0f14deac DIFFERENT/IDENTICAL
 // OFFSET: 0x004F9030/0x14013C990
 void CSimpleTexture::StoreAnimPosition() {
     C3Vector positions[4];
@@ -2474,7 +2479,7 @@ void CSimpleTexture::StoreAnimPosition() {
     memcpy(this->m_positions, positions, sizeof(this->m_positions));
 }
 
-// OFFSET: 0x004F8F90
+// OFFSET: 0x004F8F90/0x14013C8C0
 void CSimpleTexture::AnimData_ResetPositionData() {
     CLayoutFrame::AnimData_ResetPositionData();
     this->SetPosition(this->m_rect, this->m_positions);
@@ -2629,7 +2634,7 @@ void CSimpleTexture::Draw(CRenderBatch* batch) {
     }
 }
 
-// OFFSET: [0x004FBC00, 0x004FC2F0, 0x004FAA50]
+// OFFSET: [0x004FBC00/0x14013FDF0, 0x004FC2F0/0x1401404E0, 0x004FAA50/0x14013E7C0]
 CSimpleTexture::~CSimpleTexture() {
     if (this->m_texture) {
         TextureRelease(this->m_texture);
@@ -2679,7 +2684,7 @@ int32_t CSimpleTexture::LoadTexture() {
     return 1;
 }
 
-// OFFSET: 0x004FC690
+// OFFSET: 0x004FC690/0x140140A40
 void CSimpleTexture::ShowThis(bool loadPending) {
     CSimpleRegion::ShowThis(loadPending);
 
@@ -2817,7 +2822,7 @@ int32_t CSimpleTexture::SetTexture(const char* fileName, int32_t wrapU, int32_t 
     return 1;
 }
 
-// OFFSET: 0x004FD390
+// OFFSET: 0x004FD390/0x140141BE0
 void CSimpleEmbeddedTexture::InitEmbeddedTexture(CSimpleFontString* string, const GXUEMBEDDEDTEXTUREINFO* info) {
     if (string && info) {
         if (!this->m_texture) {

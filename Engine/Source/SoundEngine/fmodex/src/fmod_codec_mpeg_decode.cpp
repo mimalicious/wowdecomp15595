@@ -475,7 +475,7 @@ FMOD_RESULT CodecMPEG::decodeHeader(void *in, int *samplerate, int *channels, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cc709773 IDENTICAL/UNPROVEN
+// PROVEN: cc709773 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ADA3D0/0x1408A3860
 FMOD_RESULT CodecMPEG::decodeXingHeader(unsigned char *in, unsigned char *toc, unsigned int *numframes)
 {
@@ -574,7 +574,7 @@ FMOD_RESULT CodecMPEG::decodeXingHeader(unsigned char *in, unsigned char *toc, u
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bc8e5eab IDENTICAL/UNPROVEN
+// PROVEN: bc8e5eab IDENTICAL/IDENTICAL
 // OFFSET: 0x00ADA4D0/0x1408A3990
 FMOD_RESULT CodecMPEG::decodeFrame(unsigned char *in, void *out, unsigned int *outlen)
 {

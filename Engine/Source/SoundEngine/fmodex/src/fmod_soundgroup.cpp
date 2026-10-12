@@ -287,6 +287,7 @@ FMOD_RESULT SoundGroup::setUserData(void *_userdata)
 }
 
 
+// PROVEN: e760a1db UNPROVEN/IDENTICAL
 // OFFSET: 0x00A7BE40/0x1408372B0
 FMOD_RESULT SoundGroup::getUserData(void **_userdata)
 {

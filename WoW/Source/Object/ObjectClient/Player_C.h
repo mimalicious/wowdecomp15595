@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ctime>
 #include <windows.h>
 #include "Engine/Source/Services/SysMessage.h"
 #include "Engine/Source/Storm/H/stpl.h"
@@ -89,7 +90,6 @@ struct PlayerDance {
 class DanceMovesRec;
 class CEffect;
 
-#pragma pack(push, 4)
 class CGVoidStorage_C;
 
 class CGPlayer_C : public CGUnit_C, public CGPlayer {
@@ -234,7 +234,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 210C */ TSGrowableArray<int32_t> m_equipBypassSkills;
     /* 211C */ TSGrowableArray<int32_t> m_companionSpells;
     /* 212C */ TSGrowableArray<int32_t> m_companionPetSpells;
-    /* 213C */ uint32_t unk_213C;
     /* 2140 */ uint64_t m_guildXP;
     /* 2148 */ uint64_t m_guildRemainingXP;
     /* 2150 */ uint64_t m_guildDailyXP;
@@ -257,8 +256,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 21E8 */ uint32_t m_pvpCooldownTimestamp;
     /* 21EC */ PlayerDance* m_dance;
     /* 21F0 */ int32_t m_danceMoveIndex;
-    /* 21F4 */ int32_t m_playedTime;
-    /* 21F8 */ uint32_t m_playedTimeBase;
+    /* 21F4 */ time_t m_playedTime;
+    /* 21F8 */ time_t m_playedTimeBase;
     /* 21FC */ uint32_t unk_21FC;
     /* 2200 */ CGVoidStorage_C* m_voidStorage;
     /* 2204 */ uint32_t unk_2204;
@@ -489,7 +488,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void UnsetActiveMirrorHandlers();
     void MeleeModeLeave(bool sendStop);
 };
-#pragma pack(pop)
 
 class PlaySpellVisuaKitData {
     public:

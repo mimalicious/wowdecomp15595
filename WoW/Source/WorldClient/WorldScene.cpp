@@ -50,34 +50,34 @@ CWorldView* CWorldScene::s_defaultWorldView;
 // STATIC: 0x00E70C44
 CWorldView* CWorldScene::s_defaultReflectionView;
 
-// STATIC: 0x00E70C40
+// STATIC: 0x00E70C40/0x140D5A758
 CWorldView* CWorldScene::s_defaultReflectionView2;
 
-// STATIC: 0x00E70C34
+// STATIC: 0x00E70C34/0x140D5A750
 CWorldView* CWorldScene::s_activeWorldView;
 
 // STATIC: 0x00E70C4C/0x140D5A770
 CM2Scene* CWorldScene::s_m2Scene;
 
-// STATIC: 0x00E70C24
+// STATIC: 0x00E70C24/0x140D5A728
 CGxShader* CWorldScene::s_vsWaterFogPoly;
 
-// STATIC: 0x00E70C20
+// STATIC: 0x00E70C20/0x140D5A720
 CGxShader* CWorldScene::s_psWaterFogPoly;
 
-// STATIC: 0x00E70C2C
+// STATIC: 0x00E70C2C/0x140D5A738
 CTexture* CWorldScene::s_defaultTexture;
 
-// STATIC: 0x00E70C28
+// STATIC: 0x00E70C28/0x140D5A730
 CTexture* CWorldScene::s_defaultBlendTexture;
 
-// STATIC: 0x00E70C50
+// STATIC: 0x00E70C50/0x140D5A778
 uintptr_t CWorldScene::camTargEntity;
 
-// STATIC: 0x00E70C30
+// STATIC: 0x00E70C30/0x140D5A740
 const char* CWorldScene::renderSkyboxName;
 
-// STATIC: 0x00E70C58
+// STATIC: 0x00E70C58/0x140D5A788
 C3Vector CWorldScene::s_playerPos;
 
 // STATIC: 0x00E70C54
@@ -86,7 +86,7 @@ int32_t CWorldScene::s_debugFrustumEnabled;
 // STATIC: 0x00E70F40
 CFrustum CWorldScene::s_debugFrustum;
 
-// STATIC: 0x00E70C88
+// STATIC: 0x00E70C88/0x140D5A7A0
 CBarrier CWorldScene::s_barrier;
 
 // STATIC: 0x00E70C64
@@ -95,13 +95,13 @@ TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)> CWorldScene::
 // STATIC: 0x00D00B28
 TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> CWorldScene::s_fadeoutList;
 
-// STATIC: 0x00D00B34
+// STATIC: 0x00D00B34/0x140BB0408
 TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> CWorldScene::s_fadeoutFreeList;
 
-// STATIC: 0x00E70CD8
+// STATIC: 0x00E70CD8/0x140D5A870
 CM2Lighting CWorldScene::s_lighting;
 
-// STATIC: 0x00E70DA8
+// STATIC: 0x00E70DA8/0x140D5A950
 CWorldSceneLight CWorldScene::s_sceneLights[3];
 
 // STATIC: 0x00D04100
@@ -290,7 +290,7 @@ static C3Vector s_clipVolumeVerts60[4] = { C3Vector(-475.6f, 2173.8f, 614.0f), C
 // STATIC: 0x00D04DF8
 static C3Vector s_clipVolumeVerts61[7] = { C3Vector(298.347f, 6122.54f, 124.0f), C3Vector(236.631f, 6101.06f, 124.0f), C3Vector(221.561f, 6027.54f, 124.0f), C3Vector(227.218f, 5996.12f, 124.0f), C3Vector(292.199f, 5971.68f, 124.0f), C3Vector(352.901f, 6017.67f, 124.0f), C3Vector(350.715f, 6078.74f, 124.0f) };
 
-// STATIC: 0x00D04E50
+// STATIC: 0x00D04E50/0x140BB5128
 static CClipVolume s_clipVolumes[62] = {
     { 571, 0x0, CAaBox(C3Vector(FLT_MAX, FLT_MAX, FLT_MAX), C3Vector(-FLT_MAX, -FLT_MAX, -FLT_MAX)), s_clipVolumeVerts0, 8 },
     { 571, 0x2, CAaBox(C3Vector(FLT_MAX, FLT_MAX, FLT_MAX), C3Vector(-FLT_MAX, -FLT_MAX, -FLT_MAX)), s_clipVolumeVerts1, 6 },
@@ -356,7 +356,7 @@ static CClipVolume s_clipVolumes[62] = {
     { 530, 0x0, CAaBox(C3Vector(FLT_MAX, FLT_MAX, FLT_MAX), C3Vector(-FLT_MAX, -FLT_MAX, -FLT_MAX)), s_clipVolumeVerts61, 7 },
 };
 
-// STATIC: 0x00EB3A54
+// STATIC: 0x00EB3A54/0x140D9F7C4
 static int32_t s_clipVolumeBoundsValid;
 
 CWorldSceneLight::CWorldSceneLight() {
@@ -369,8 +369,8 @@ CWorldSceneLight::CWorldSceneLight() {
     this->m_free = 1;
 }
 
-// PROVEN: b9e544c9 IDENTICAL/NONE
-// OFFSET: 0x00726BD0
+// PROVEN: b9e544c9 IDENTICAL/UNPROVEN
+// OFFSET: 0x00726BD0/0x1403FE0A0
 void CWorldScene::FreeSceneLights() {
     CWorldScene::s_sceneLights[0].m_free = 1;
     CWorldScene::s_sceneLights[1].m_free = 1;
@@ -385,7 +385,7 @@ void CWorldScene::ClearBarriers() {
     CWorldScene::s_barrier.m_mapObjDefGroups.m_count = 0;
 }
 
-// PROVEN: 5b22a4ce IDENTICAL/NONE
+// PROVEN: 4711e3d7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00726F00/0x1403FE3C0
 CM2Model* CWorldScene::LoadModel(const char* name, const C44Matrix& mat, void (*eventCallback)(CM2Model*, uint32_t, uint32_t, uint32_t, const C3Vector&, uint32_t, uint64_t), uint64_t eventParam, void (*lightingCallback)(CM2Model*, CM2Lighting*, void*), void* lightingParam, int32_t a7, int32_t a8, int32_t a9, int32_t a10) {
     uint32_t flags = 0;
@@ -433,13 +433,13 @@ void CWorldScene::GetFrustumCornersInWorldSpace(const C44Matrix& view, const C44
     }
 }
 
-// PROVEN: e652f252 IDENTICAL/NONE
+// PROVEN: e652f252 IDENTICAL/IDENTICAL
 // OFFSET: 0x00727130/0x1403FE700
 void CWorldScene::GetFrustumCorners(C3Vector* corners) {
     memcpy(corners, CWorldScene::s_defaultWorldView->m_frustumCorners, sizeof(CWorldScene::s_defaultWorldView->m_frustumCorners));
 }
 
-// PROVEN: 8835a74c IDENTICAL/NONE
+// PROVEN: 8835a74c IDENTICAL/IDENTICAL
 // OFFSET: 0x00727150/0x1403FE720
 void CWorldScene::UpdateViewer() {
     CWorldScene::s_defaultWorldView->m_flags &= ~0x400000u;
@@ -485,7 +485,7 @@ void CWorldScene::CallRenderCallbacks(uint32_t pass) {
     }
 }
 
-// OFFSET: 0x00727310
+// OFFSET: 0x00727310/0x1403FE8F0
 void CWorldScene::SetupSceneLighting() {
     const DayNight::FogInfo* fogInfo = DayNight::GetFogInfo();
     const C3Vector& guardBand = World::GetGuardBandPosition();
@@ -594,12 +594,13 @@ void CWorldScene::RenderWeather() {
     }
 }
 
-// PROVEN: fff60dd1 IDENTICAL/NONE
+// PROVEN: fff60dd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x007275F0/0x1403FEC80
 void CWorldScene::RenderBarriers(CWorldView* view) {
     CWorldScene::s_barrier.Render(view->m_camPos, FrameTime::GetTickTimeSec());
 }
 
+// PROVEN: fa57fa6c IDENTICAL/DIFFERENT
 // OFFSET: 0x00727620/0x1403FECB0
 void CWorldScene::RenderLowDetailAreas(CWorldView* view) {
     if (view->m_lowDetailAreas.Count() <= 0) {
@@ -613,7 +614,7 @@ void CWorldScene::RenderLowDetailAreas(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x00727670
+// OFFSET: 0x00727670/0x1403FED20
 void CWorldScene::RenderLowDetailMapObjDefs(CWorldView* view, const C44Matrix& world) {
     CWorldQueryElement groups[256];
     uint32_t count = 0;
@@ -691,7 +692,7 @@ int32_t CWorldScene::FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_
     return 1;
 }
 
-// OFFSET: 0x00727C80
+// OFFSET: 0x00727C80/0x1403FF8F0
 void CWorldScene::RenderReflection(CWorldView* view, CGxFrameBuffer* frameBuffer, uint32_t mode, float height) {
     if (!Liquid::GetWaterDetail()) {
         return;
@@ -863,7 +864,7 @@ void CWorldScene::UpdateFadeOutObjects() {
     }
 }
 
-// OFFSET: 0x00728810
+// OFFSET: 0x00728810/0x140400AA0
 void CWorldScene::ClearObjectFadeoutList() {
     SObjectFadeout* entry = CWorldScene::s_fadeoutList.Head();
 
@@ -877,8 +878,8 @@ void CWorldScene::ClearObjectFadeoutList() {
     }
 }
 
-// PROVEN: 6a1869f8 IDENTICAL/NONE
-// OFFSET: 0x007288F0
+// PROVEN: 6a1869f8 IDENTICAL/IDENTICAL
+// OFFSET: 0x007288F0/0x140400BC0
 void __fastcall CWorldScene::TextureRecreationCallback() {
     CWorldScene::ClearObjectFadeoutList();
 }
@@ -1047,7 +1048,7 @@ void CWorldScene::Render(const C3Vector& pos, float elapsedSec) {
     }
 }
 
-// OFFSET: 0x00728ED0
+// OFFSET: 0x00728ED0/0x1404012C0
 void CWorldScene::RenderEntitys(CWorldView* view) {
     int32_t blobShadows = ShadowBlobsEnabled();
 
@@ -1070,7 +1071,7 @@ void CWorldScene::RenderEntitys(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x00728FE0
+// OFFSET: 0x00728FE0/0x140401490
 void CWorldScene::FadeoutObject(CMapEntity* entity, float time, C44Matrix* matrix, WORLD_FADE_CALLBACK callback, uint64_t param) {
     SObjectFadeout* fadeout = CWorldScene::s_fadeoutFreeList.Head();
 
@@ -1093,7 +1094,7 @@ void CWorldScene::FadeoutObject(CMapEntity* entity, float time, C44Matrix* matri
     CWorldScene::s_fadeoutList.LinkToTail(fadeout);
 }
 
-// OFFSET: 0x00729100
+// OFFSET: 0x00729100/0x1404016A0
 void CWorldScene::AddRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param, uint64_t param64) {
     TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)>& list = CWorldScene::s_renderCallbackList[pass];
 
@@ -1109,7 +1110,7 @@ void CWorldScene::AddRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callbac
     node->m_param64 = param64;
 }
 
-// OFFSET: 0x007291E0
+// OFFSET: 0x007291E0/0x1404017D0
 void CWorldScene::RenderChunksLayered(CWorldView* view) {
     int32_t vertexShader = CMap::enableTerrainShaderVertex != 0;
 
@@ -1153,7 +1154,7 @@ void CWorldScene::RenderChunksLayered(CWorldView* view) {
     GxRsSet(GxRs_PixelShader, static_cast<void*>(NULL));
 }
 
-// OFFSET: 0x00729400
+// OFFSET: 0x00729400/0x140401A60
 void CWorldScene::RenderChunksSolid(CWorldView* view) {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
 
@@ -1195,7 +1196,7 @@ void CWorldScene::RenderChunksSolid(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x00729700
+// OFFSET: 0x00729700/0x140401E40
 void CWorldScene::Destroy() {
     if (CWorldScene::s_m2Scene) {
         CWorldScene::s_m2Scene->GarbageCollectModels();
@@ -1254,7 +1255,7 @@ void CWorldScene::Destroy() {
     g_theGxDevicePtr->RemoveTextureRecreationCallback(CWorldScene::TextureRecreationCallback);
 }
 
-// OFFSET: 0x00729850
+// OFFSET: 0x00729850/0x140401FE0
 void CWorldScene::RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param) {
     TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)>& list = CWorldScene::s_renderCallbackList[pass];
 
@@ -1369,7 +1370,7 @@ void CWorldScene::RenderWaterFogPoly(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0072A0E0
+// OFFSET: 0x0072A0E0/0x140402AE0
 void CWorldScene::RenderLowDetail(CWorldView* view) {
     if (view->m_frustumPortalView.m_maxViewDepth < 0.0f || !(World::GetEnables() & 0x100)) {
         view->m_lowDetailAreas.m_count = 0;
@@ -1436,7 +1437,7 @@ void CWorldScene::RenderLowDetail(CWorldView* view) {
     g_theGxDevicePtr->XformSetProjection(savedProjection);
 }
 
-// OFFSET: 0x0072A7D0
+// OFFSET: 0x0072A7D0/0x1404035E0
 void CWorldScene::RenderChunks(CWorldView* view) {
     g_theGxDevicePtr->RsPush();
     CMapRenderChunk::s_savedFogColor = g_theGxDevicePtr->m_appRenderStates[GxRs_FogColor].m_value.m_data.i[0];
@@ -1493,7 +1494,7 @@ void CWorldScene::RenderDetailDoodads(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0072AC10
+// OFFSET: 0x0072AC10/0x140403B80
 void CWorldScene::RenderMapObjOpaque(CWorldView* view) {
     g_theGxDevicePtr->RsPush();
     view->FrustumPush();
@@ -1507,7 +1508,7 @@ void CWorldScene::RenderMapObjOpaque(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: be9df0ad IDENTICAL/NONE
+// PROVEN: be9df0ad IDENTICAL/DIFFERENT
 // OFFSET: 0x0072AC80/0x140403C30
 void CWorldScene::RenderMapObjAlpha(CWorldView* view) {
     g_theGxDevicePtr->RsPush();
@@ -1904,7 +1905,7 @@ void CWorldScene::RenderAlphaWaterFog(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: 1affac43 IDENTICAL/NONE
+// PROVEN: 1affac43 IDENTICAL/IDENTICAL
 // OFFSET: 0x0072C740/0x140405890
 void CWorldScene::RenderPortalLists(CWorldView* view) {
     if (view->m_exteriorPortalViews.Count()) {
@@ -1921,7 +1922,7 @@ void CWorldScene::RenderPortalLists(CWorldView* view) {
     }
 }
 
-// PROVEN: 257d2cf7 IDENTICAL/NONE
+// PROVEN: 257d2cf7 IDENTICAL/IDENTICAL
 // OFFSET: 0x0079C480/0x140490E40
 static void InitClipVolumeBounds() {
     if (s_clipVolumeBoundsValid) {

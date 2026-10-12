@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[17] = { 0, 0, 2, 2, 0, 2, 3, 0, 3, 3, 0, 0, 3,
 // STATIC: 0x00C28754/0x140A1EF88
 const DBCMeta SoundEntriesRec::s_meta = { "DBFilesClient\\SoundEntries.dbc", 17, 140, SoundEntriesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 0d956bfa IDENTICAL/NONE
+// PROVEN: 0d956bfa IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B770/0x1407E86B0
 void SoundEntriesRec::FixupStrings(void* record, const char* strings) {
     SoundEntriesRec* rec = static_cast<SoundEntriesRec*>(record);

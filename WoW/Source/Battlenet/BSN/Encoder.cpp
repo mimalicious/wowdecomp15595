@@ -10,7 +10,7 @@ BSN::Encoder::~Encoder() {
 void BSN::Encoder::Flush() {
 }
 
-// PROVEN: 14609084 IDENTICAL/NONE
+// PROVEN: 14609084 IDENTICAL/DIFFERENT
 // OFFSET: 0x00665080/0x14030BB20
 void BSN::Encoder::SetData(void* data, uint32_t bytes) {
     this->m_data = static_cast<uint8_t*>(data);
@@ -19,7 +19,7 @@ void BSN::Encoder::SetData(void* data, uint32_t bytes) {
 }
 
 // PROVEN: 717400e6 IDENTICAL/NONE
-// OFFSET: 0x00663CA0
+// OFFSET: 0x00663CA0/0x140309E40
 bool BSN::IsValidAscii(uint32_t length, const char* data) {
     for (uint32_t i = 0; i < length; i++) {
         uint8_t c = data[i];
@@ -171,7 +171,7 @@ int32_t BSN::Encoder::Align() {
     }
 }
 
-// OFFSET: 0x00665600
+// OFFSET: 0x00665600/0x14030BA60
 int32_t BSN::Encoder::PutAsciiData(uint32_t bytes, const char* data) {
     int32_t result = this->Align();
 
@@ -186,7 +186,7 @@ int32_t BSN::Encoder::PutAsciiData(uint32_t bytes, const char* data) {
     return this->PutData(8 * bytes, reinterpret_cast<const uint8_t*>(data));
 }
 
-// PROVEN: 69ee53e3 IDENTICAL/NONE
+// PROVEN: 69ee53e3 IDENTICAL/DIFFERENT
 // OFFSET: 0x00665650/0x14030BAD0
 int32_t BSN::Encoder::PutAlignedData(uint32_t bytes, const uint8_t* data) {
     int32_t result = this->Align();
@@ -208,7 +208,7 @@ int32_t BSN::Decoder::Fill() {
     return BSN::CODEC_VALID;
 }
 
-// PROVEN: 24eb3afb IDENTICAL/NONE
+// PROVEN: 24eb3afb IDENTICAL/DIFFERENT
 // OFFSET: 0x00665080/0x14030BB20
 void BSN::Decoder::SetData(const void* data, uint32_t bytes) {
     this->m_data = static_cast<const uint8_t*>(data);
@@ -216,7 +216,7 @@ void BSN::Decoder::SetData(const void* data, uint32_t bytes) {
     this->m_position = 0;
 }
 
-// OFFSET: 0x00665680
+// OFFSET: 0x00665680/0x14030BB40
 int32_t BSN::Decoder::GetData(uint32_t bits, uint8_t* data) {
     if ((this->m_position & 7) == 0 && bits >= 8) {
         do {
@@ -359,8 +359,8 @@ int32_t BSN::Decoder::GetData(uint32_t bits, uint8_t* data) {
     return BSN::CODEC_VALID;
 }
 
-// PROVEN: 02017c3f IDENTICAL/NONE
-// OFFSET: 0x006658D0
+// PROVEN: 02017c3f IDENTICAL/DIFFERENT
+// OFFSET: 0x006658D0/0x14030BE10
 int32_t BSN::Decoder::GetAlignedData(uint32_t bytes, uint8_t* data) {
     this->m_position = (this->m_position + 7) & ~7u;
     return this->GetData(8 * bytes, data);

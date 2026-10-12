@@ -16,4 +16,6 @@ class CFacet {
     void Set(float value);
 };
 
+#include "Engine/Source/Tempest/CFacet.inl"
+
 #endif

@@ -130,7 +130,6 @@ class CGTooltip : public CSimpleFrame {
     /* 0228 */ CSimpleTexture* m_textures [10];
     /* 0250 */ uint32_t m_textureLines [10];
     /* 0278 */ uint32_t m_numTextures;
-    /* 027C */ uint32_t unk_027C;
     /* 0280 */ WOWGUID m_unitGuid;
     /* 0288 */ WOWGUID m_objectGuid;
     /* 0290 */ WOWGUID m_unitAuraGuid;

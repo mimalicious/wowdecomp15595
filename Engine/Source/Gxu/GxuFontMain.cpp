@@ -27,10 +27,10 @@
 
 const int32_t g_quotedCodeLengths[NUM_QUOTEDCODES] = { 0, 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
 
-// STATIC: 0x00CA85AC
+// STATIC: 0x00CA85AC/0x140B48608
 static FT_MemoryRec_ s_GxuMemoryRecord = { NULL, FreeTypeAlloc, FreeTypeFree, FreeTypeRealloc };
 
-// STATIC: 0x00CA85BC
+// STATIC: 0x00CA85BC/0x140B48628
 static TSList<CGxStringBatch, TSGetLink<CGxStringBatch> > s_freeBatches;
 
 static QUOTEDCODEINFO s_quotedCodeInfo[NUM_QUOTEDCODES] = {
@@ -45,13 +45,13 @@ static QUOTEDCODEINFO s_quotedCodeInfo[NUM_QUOTEDCODES] = {
     { 0x1000, 't', 1 },
 };
 
-// STATIC: 0x00CA8764
+// STATIC: 0x00CA8764/0x140B48820
 TSList<CGxFont, TSGetLink<CGxFont> > g_fonts;
 
-// STATIC: 0x00CA8770
+// STATIC: 0x00CA8770/0x140B48838
 TSList<CGxString, TSGetLink<CGxString> > g_freeStrings;
 
-// STATIC: 0x00CA877C
+// STATIC: 0x00CA877C/0x140B48850
 TSList<CGxString, TSGetLink<CGxString> > g_strings;
 
 static uint16_t s_graphIndices[30 * 6];
@@ -61,7 +61,7 @@ static uint32_t s_lastFrameTime;
 // STATIC: 0x00DD8CB8
 static float s_frameTimes[30];
 
-// STATIC: 0x00DD8D30
+// STATIC: 0x00DD8D30/0x140CBF588
 static const char* (*s_tokenCallback)(uint32_t, uint32_t);
 
 // STATIC: 0x00DD8D34
@@ -75,27 +75,27 @@ static CGxVertexPC s_graphTens[10 * 4];
 
 static CGxVertexPC s_graphVerts[30 * 4];
 
-// STATIC: 0x00DD9E90
+// STATIC: 0x00DD9E90/0x140CC0780
 FT_Library g_FTLibrary;
 
-// STATIC: 0x00DD9E94
+// STATIC: 0x00DD9E94/0x140CC0788
 float g_indentNormWidth;
 
-// STATIC: 0x00DD9E98
+// STATIC: 0x00DD9E98/0x140CC078C
 float g_indentPixelWidth;
 
 uint8_t g_fontStatsEnabled;
 
-// STATIC: 0x00DD9EA0
+// STATIC: 0x00DD9EA0/0x140CC0794
 uint32_t g_heightPixels;
 
-// STATIC: 0x00DD9EA4
+// STATIC: 0x00DD9EA4/0x140CC0798
 uint32_t g_widthPixels;
 
-// STATIC: 0x00DD9EA8
+// STATIC: 0x00DD9EA8/0x140CC07A0
 CGxShader* g_fontPixelShader;
 
-// STATIC: 0x00DD9EAC
+// STATIC: 0x00DD9EAC/0x140CC07A8
 CGxShader* g_fontVertexShader;
 
 // OFFSET: 0x006130E0
@@ -225,7 +225,8 @@ uint32_t GxuFontGetMaxCharsWithinWidthFromEnd(CGxFont* face, const char* text, f
     return 0;
 }
 
-// OFFSET: 0x006133F0
+// PROVEN: fd0cbf3d DIFFERENT/IDENTICAL
+// OFFSET: 0x006133F0/0x14029E930
 float GxuFontGetOneToOneHeight(CGxFont* face) {
     if (!face) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -376,7 +377,7 @@ static void InitializeFrameGraph() {
     }
 }
 
-// OFFSET: 0x00613770
+// OFFSET: 0x00613770/0x14029EC80
 uint32_t GxuFontGetMaxCharsWithinWidthAndHeight(CGxFont* face, const char* text, float fontHeight, float blockWidth, float blockHeight, uint32_t numBytes, float shadowWidth, float scale, float spacing, uint32_t flags) {
     uint32_t numChars = 0;
 
@@ -784,6 +785,7 @@ QUOTEDCODE GxuDetermineQuotedCode(const char* text, int32_t& advance, CImVector*
     return CODE_INVALIDCODE;
 }
 
+// PROVEN: 672dcb4a IDENTICAL/DIFFERENT
 // OFFSET: 0x00613F10/0x14029F5A0
 int32_t GxuFontRemoveFromBatch(CGxString* string) {
     if (!string) {
@@ -932,7 +934,7 @@ uint32_t GxuFontWrapText(CGxFont* face, const char* text, uint32_t textLength, f
     return numLines;
 }
 
-// OFFSET: 0x006142C0
+// OFFSET: 0x006142C0/0x14029FB80
 const char* GxuFontStripEscapeCodes(const char* text, uint32_t textLength, uint32_t flags, char* buffer, uint32_t bufferSize) {
     *buffer = '\0';
 
@@ -1041,7 +1043,7 @@ int32_t GxuFontCreateFont(const char* name, float fontHeight, CGxFont*& face, ui
     return result;
 }
 
-// PROVEN: 1b953a36 IDENTICAL/UNPROVEN
+// PROVEN: 1b953a36 IDENTICAL/IDENTICAL
 // OFFSET: 0x00614600/0x14029FF40
 void GxuFontDestroyFont(CGxFont*& face) {
     if (face) {
@@ -1053,6 +1055,7 @@ void GxuFontDestroyFont(CGxFont*& face) {
     face = NULL;
 }
 
+// PROVEN: 53871b13 IDENTICAL/DIFFERENT
 // OFFSET: 0x00614640/0x14029FFA0
 void GxuFontDestroyString(CGxString*& string) {
     if (string) {
@@ -1089,6 +1092,7 @@ void GxuFontWindowSizeChanged() {
     }
 }
 
+// PROVEN: d440b31f UNPROVEN/IDENTICAL
 // OFFSET: 0x006148D0/0x1402A01D0
 void GxuFontInitialize() {
     g_fontVertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
@@ -1147,6 +1151,7 @@ int32_t GxuFontCreateString(CGxFont* face, const char* text, float fontHeight, c
     return result;
 }
 
+// PROVEN: 67458f3d IDENTICAL/DIFFERENT
 // OFFSET: 0x00614A30/0x1402A0480
 int32_t GxuFontClearBatch(CGxStringBatch* batch) {
     if (!batch) {
@@ -1158,7 +1163,8 @@ int32_t GxuFontClearBatch(CGxStringBatch* batch) {
     return 1;
 }
 
-// OFFSET: 0x00614A50
+// PROVEN: 3a72f856 IDENTICAL/DIFFERENT
+// OFFSET: 0x00614A50/0x1402A04B0
 int32_t GxuFontDestroyBatch(CGxStringBatch* batch) {
     if (!batch) {
         return 0;
@@ -1170,7 +1176,7 @@ int32_t GxuFontDestroyBatch(CGxStringBatch* batch) {
     return 1;
 }
 
-// OFFSET: 0x00614A80
+// OFFSET: 0x00614A80/0x1402A0540
 void GxuFontUpdate() {
     for (CGxString* string = g_strings.Head(), * next; !g_strings.IsEnd(string); string = next) {
         next = g_strings.RawNext(string);

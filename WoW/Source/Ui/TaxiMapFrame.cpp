@@ -27,52 +27,53 @@
 #include <cmath>
 #include <cstdlib>
 
-// STATIC: 0x00F75E48
+// STATIC: 0x00F75E48/0x140E6BE20
 CTexture* CGTaxiMap::m_mapTexture;
 
-// STATIC: 0x00F75E4C
+// STATIC: 0x00F75E4C/0x140E6BE28
 uint32_t CGTaxiMap::m_numNodes;
 
-// STATIC: 0x00F762A4
+// STATIC: 0x00F762A4/0x140E6C260
 TSGrowableArray<TaxiWaypoint> CGTaxiMap::m_nodes;
 
-// STATIC: 0x00F762E4
+// STATIC: 0x00F762E4/0x140E6C2B8
 TSFixedArray<TSGrowableArray<TAXIROUTELINE>> CGTaxiMap::m_routeLines;
 
-// STATIC: 0x00F76260
+// STATIC: 0x00F76260/0x140E6C240
 WOWGUID CGTaxiMap::m_unit;
 
-// STATIC: 0x00DD5018
+// STATIC: 0x00DD5018/0x140CBB250
 uint32_t CGTaxiMap::m_maxNodeID;
 
-// STATIC: 0x00F75E50
+// STATIC: 0x00F75E50/0x140E6BE2C
 static int32_t s_mapID;
 
-// STATIC: 0x00F75E54
+// STATIC: 0x00F75E54/0x140E6BE30
 static TaxiNodesRec* s_currentNode;
 
-// STATIC: 0x00F75E58
+// STATIC: 0x00F75E58/0x140BF0120
 static int32_t s_initialized;
 
-// STATIC: 0x00F76268
+// STATIC: 0x00F76268/0x140E6C248
 static CRect s_taxiBounds;
 
-// STATIC: 0x00D16868
+// STATIC: 0x00D16868/0x140BD0C50
 static int32_t s_selectedNode = -1;
 
-// STATIC: 0x00F76278
+// STATIC: 0x00F76278/0x140BD0D40
 static TSHashTable<TAXIPATHNODESCLIENT, HASHKEY_NONE> s_pathNodes;
 
-// STATIC: 0x00F762B4
+// STATIC: 0x00F762B4/0x140E6C270
 static TSGrowableArray<uint8_t> s_nodeMask;
 
-// STATIC: 0x00F762C4
+// STATIC: 0x00F762C4/0x140E6C288
 static TSGrowableArray<TAXILINE> s_taxiLines;
 
-// STATIC: 0x00F762D4
+// STATIC: 0x00F762D4/0x140E6C2A0
 static TSGrowableArray<bool> s_unkF762D4;
 
-// OFFSET: 0x009E2260
+// PROVEN: df49362c IDENTICAL/DIFFERENT
+// OFFSET: 0x009E2260/0x140779430
 static float GetNodeX(const TaxiNodesRec* node) {
     int32_t mapID;
     float x;
@@ -83,7 +84,8 @@ static float GetNodeX(const TaxiNodesRec* node) {
     return x;
 }
 
-// OFFSET: 0x009E22A0
+// PROVEN: 94c72a66 IDENTICAL/NONE
+// OFFSET: 0x009E22A0/0x1407793E0
 static float GetNodeY(const TaxiNodesRec* node) {
     int32_t mapID;
     float x;
@@ -94,6 +96,7 @@ static float GetNodeY(const TaxiNodesRec* node) {
     return y;
 }
 
+// PROVEN: 0f0a24f0 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A61E0/0x140779480
 static int CompareTaxiPath(const void* a, const void* b) {
     const TaxiPathRec* l = static_cast<const TaxiPathRec*>(a);
@@ -107,6 +110,7 @@ static int CompareTaxiPath(const void* a, const void* b) {
     return result;
 }
 
+// PROVEN: dabc360d IDENTICAL/DIFFERENT
 // OFFSET: 0x009E25B0/0x140779880
 static TaxiPathRec* FindTaxiPath(uint32_t from, uint32_t to) {
     TaxiPathRec key;
@@ -120,6 +124,7 @@ static bool TaxiRouteExists(uint32_t from, uint32_t to) {
     return from && from <= CGTaxiMap::m_maxNodeID && to && to <= CGTaxiMap::m_maxNodeID && FindTaxiPath(from, to);
 }
 
+// PROVEN: 26c21d34 IDENTICAL/NONE
 // OFFSET: 0x009E25F0
 static TaxiNodesRec* GetNodeMaskBit(int32_t nodeID, int32_t* byte, int32_t* bit) {
     TaxiNodesRec* node = g_taxiNodesDB.GetRecord(nodeID);
@@ -133,6 +138,7 @@ static TaxiNodesRec* GetNodeMaskBit(int32_t nodeID, int32_t* byte, int32_t* bit)
     return node;
 }
 
+// PROVEN: 07187187 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E2650/0x1407798D0
 uint32_t GetRouteSegmentCount(uint32_t index) {
     if (index < CGTaxiMap::m_numNodes) {
@@ -146,6 +152,7 @@ uint32_t GetRouteSegmentCount(uint32_t index) {
     return 0;
 }
 
+// PROVEN: 8fcb204c IDENTICAL/DIFFERENT
 // OFFSET: 0x009E4430/0x14077BB20
 static void FreeData() {
     if (!s_initialized) {
@@ -209,16 +216,14 @@ static void InitializeData(uint32_t nodeMaskSize) {
     s_initialized = 1;
 }
 
+// PROVEN: eb4d12e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E22E0/0x140779490
 void CGTaxiMap::InitializeGame() {
     CGTaxiMap::m_unit.m_guid = 0;
     CGTaxiMap::m_numNodes = 0;
 }
 
-// INLINED
-void CGTaxiMap::EnterWorld() {
-}
-
+// PROVEN: b5c915b2 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E2690/0x140779900
 const char* CGTaxiMap::GetNodeType(uint32_t index) {
     if (index >= CGTaxiMap::m_numNodes) {
@@ -286,6 +291,7 @@ int32_t CGTaxiMap::GetNodeCost(uint32_t index) {
     return 0;
 }
 
+// PROVEN: 0707f57c IDENTICAL/DIFFERENT
 // OFFSET: 0x009E2EA0/0x14077A0D0
 void CGTaxiMap::TakeTaxi(uint32_t index) {
     if (index >= CGTaxiMap::m_numNodes) {
@@ -437,6 +443,7 @@ void CGTaxiMap::RecursePath(uint32_t index, uint32_t parent, int32_t cost) {
     }
 }
 
+// PROVEN: b2c714ac IDENTICAL/UNPROVEN
 // OFFSET: 0x009E3A50/0x14077AEC0
 void CGTaxiMap::GeneratePaths() {
     uint32_t start = 0;
@@ -501,7 +508,8 @@ void CGTaxiMap::TaxiNodeSetCurrent(uint32_t index) {
     }
 }
 
-// OFFSET: 0x009E4610
+// PROVEN: a7420d4f IDENTICAL/IDENTICAL
+// OFFSET: 0x009E4610/0x14077BE10
 void CGTaxiMap::ShutdownGame() {
     if (CGTaxiMap::m_mapTexture) {
         TextureRelease(CGTaxiMap::m_mapTexture);
@@ -511,6 +519,7 @@ void CGTaxiMap::ShutdownGame() {
     FreeData();
 }
 
+// PROVEN: b8dcbfb9 IDENTICAL/DIFFERENT
 // OFFSET: 0x009E4640/0x14077BE40
 void CGTaxiMap::CloseMap() {
     if (!CGTaxiMap::m_unit) {
@@ -531,6 +540,7 @@ void CGTaxiMap::CloseMap() {
     FrameScript_SignalEvent(SCRIPT_EVENT_TAXIMAP_CLOSED, NULL);
 }
 
+// PROVEN: 1d4979ac DIFFERENT/IDENTICAL
 // OFFSET: 0x009E47F0/0x14077C0B0
 static bool LoadMapTexture() {
     char fileName[260];
@@ -549,6 +559,7 @@ static bool LoadMapTexture() {
     return CGTaxiMap::m_mapTexture != NULL;
 }
 
+// PROVEN: 85dcb413 IDENTICAL/IDENTICAL
 // OFFSET: 0x009E48B0/0x14077C1A0
 void CGTaxiMap::LeaveWorld() {
     CGTaxiMap::ShutdownGame();

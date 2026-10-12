@@ -114,16 +114,6 @@ float C3Vector::Distance(const C3Vector& a, const C3Vector& b) {
     return sqrt((a - b).SquaredMag());
 }
 
-// INLINED
-void C3Vector::Minimize(const C3Vector& v) {
-    *this = C3Vector::Min(*this, v);
-}
-
-// INLINED
-void C3Vector::Maximize(const C3Vector& v) {
-    *this = C3Vector::Max(*this, v);
-}
-
 // PROVEN: e5827dc1 IDENTICAL/NONE
 // OFFSET: 0x00B147B0
 void C3Vector::FlushDenormals() {

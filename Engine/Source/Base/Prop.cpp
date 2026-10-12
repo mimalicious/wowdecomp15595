@@ -3,17 +3,17 @@
 #include "Engine/Source/Os/Tls.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00EC6B18
+// STATIC: 0x00EC6B18/0x140DB8E20
 static uint32_t s_tlsIndex;
 
-// PROVEN: c94601bd IDENTICAL/UNPROVEN
+// PROVEN: c94601bd IDENTICAL/IDENTICAL
 // OFFSET: 0x00872B80/0x1405A91A0
 void PropInitialize() {
     s_tlsIndex = OsTlsAlloc();
     OsTlsSetValue(s_tlsIndex, NULL);
 }
 
-// PROVEN: 607e63f1 IDENTICAL/NONE
+// PROVEN: 607e63f1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00872BA0/0x1405A91C0
 void PropDestroy() {
     OsTlsFree(s_tlsIndex);

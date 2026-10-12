@@ -21,6 +21,7 @@ CDataStore::CDataStore(uint8_t* data, uint32_t size) {
     this->m_read = 0;
 }
 
+// PROVEN: e42542b5 IDENTICAL/NONE
 // OFFSET: 0x00487D00
 void CDataStore::InitExternal(uint8_t* data, uint32_t size) {
     if (this->m_alloc != -1) {
@@ -331,8 +332,8 @@ CDataStore& CDataStore::Get(uint64_t& val) {
     return *this;
 }
 
-// PROVEN: d5708ecc IDENTICAL/NONE
-// OFFSET: 0x00871CD0
+// PROVEN: d5708ecc IDENTICAL/IDENTICAL
+// OFFSET: 0x00871CD0/0x1405A7DD0
 CDataStore& CDataStore::Get(float& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
         val = *reinterpret_cast<float*>(&this->m_data[this->m_read - this->m_base]);
@@ -432,7 +433,7 @@ CDataStore& CDataStore::GetArray(uint8_t* pval, uint32_t count) {
     return *this;
 }
 
-// OFFSET: 0x00871E80
+// OFFSET: 0x00871E80/0x1405A80B0
 CDataStore& CDataStore::GetArray(uint32_t* pval, uint32_t count) {
     if (!pval && count) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -533,7 +534,8 @@ uint8_t CDataStore::GetByte() {
     return val;
 }
 
-// OFFSET: 0x0045B8C0
+// PROVEN: e769cdb1 DIFFERENT/IDENTICAL
+// OFFSET: 0x0045B8C0/0x1405A7DD0
 CDataStore& CDataStore::Get(int32_t& val) {
     uint32_t value = 0;
     this->Get(value);

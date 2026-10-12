@@ -134,7 +134,6 @@ class NetClient : public WowConnectionResponse {
     /* 4560 */ NETEVENTQUEUE* m_netEventQueue;
     /* 4564 */ ATOMIC32 m_refCount;
     /* 4568 */ bool m_deleteMe;
-    /* 4569 */ uint8_t unk_4569[7];
     /* 4570 */ NETCONNECTIONSTATS m_connectionStatistics [2];
     /* 4620 */ uint64_t m_connectKeys [2];
     /* 4630 */ uint32_t m_bytesSent;
@@ -148,7 +147,6 @@ class NetClient : public WowConnectionResponse {
     /* 4680 */ bool m_suspended [2];
     /* 4682 */ bool m_handshakeDone [4];
     /* 4686 */ SCritSect m_killLock;
-    /* 46AE */ uint8_t unk_46AE[2];
     /* 46B0 */ TSGrowableArray<WowConnection*> m_killedConnections;
     /* 46C0 */ Crypt::RSA m_rsa;
 

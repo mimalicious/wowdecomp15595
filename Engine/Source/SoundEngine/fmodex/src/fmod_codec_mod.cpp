@@ -216,6 +216,7 @@ FMOD_RESULT MusicChannelMOD::portamento()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: b51cc7e3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB6E80/0x14087D280
 FMOD_RESULT MusicChannelMOD::vibrato() 
 {
@@ -282,6 +283,7 @@ FMOD_RESULT MusicChannelMOD::vibrato()
 	[SEE_ALSO]
 ]
 */
+// PROVEN: 8a28be2a DIFFERENT/IDENTICAL
 // OFFSET: 0x00AB6F40/0x14087D350
 FMOD_RESULT MusicChannelMOD::tremolo() 
 {
@@ -2049,7 +2051,7 @@ FMOD_RESULT CodecMOD::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00AB8220
+// OFFSET: 0x00AB8220/0x14087EC30
 FMOD_RESULT CodecMOD::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT              result = FMOD_OK;
@@ -2266,7 +2268,7 @@ FMOD_RESULT F_CALLBACK CodecMOD::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 33e93be4 IDENTICAL/NONE
+// PROVEN: 33e93be4 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AB85E0/0x14087F080
 FMOD_RESULT F_CALLBACK CodecMOD::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {

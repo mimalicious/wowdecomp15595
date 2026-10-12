@@ -61,8 +61,8 @@ void CGxDeviceD3d11::IShaderCreate(CGxShaderPermute* permute) {
     SMemFree(data, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 95e90cd5 IDENTICAL/NONE
-// OFFSET: 0x00871330
+// PROVEN: 95e90cd5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00871330/0x1405A71C0
 void CGxDeviceD3d11::IShaderDestroy(CGxShaderPermute* permute) {
     if (permute->m_apiSpecific) {
         static_cast<IUnknown*>(permute->m_apiSpecific)->Release();
@@ -72,8 +72,8 @@ void CGxDeviceD3d11::IShaderDestroy(CGxShaderPermute* permute) {
     permute->m_loaded = 0;
 }
 
-// PROVEN: 4bdcadf9 IDENTICAL/NONE
-// OFFSET: 0x00871360
+// PROVEN: 4bdcadf9 IDENTICAL/UNPROVEN
+// OFFSET: 0x00871360/0x1405A7200
 void CGxDeviceD3d11::IBindVertexShader(CGxShaderPermute* permute) {
     this->IShaderBind(permute);
 
@@ -90,8 +90,8 @@ void CGxDeviceD3d11::IBindVertexShader(CGxShaderPermute* permute) {
     }
 }
 
-// PROVEN: d16ed578 IDENTICAL/NONE
-// OFFSET: 0x008713B0
+// PROVEN: d16ed578 IDENTICAL/UNPROVEN
+// OFFSET: 0x008713B0/0x1405A7260
 void CGxDeviceD3d11::IBindHullShader(CGxShaderPermute* permute) {
     this->IShaderBind(permute);
 
@@ -112,8 +112,8 @@ void CGxDeviceD3d11::IBindHullShader(CGxShaderPermute* permute) {
     }
 }
 
-// PROVEN: 6e3c6127 IDENTICAL/NONE
-// OFFSET: 0x00871430
+// PROVEN: 6e3c6127 IDENTICAL/UNPROVEN
+// OFFSET: 0x00871430/0x1405A72D0
 void CGxDeviceD3d11::IBindDomainShader(CGxShaderPermute* permute) {
     this->IShaderBind(permute);
 
@@ -134,8 +134,8 @@ void CGxDeviceD3d11::IBindDomainShader(CGxShaderPermute* permute) {
     }
 }
 
-// PROVEN: 7304175c IDENTICAL/NONE
-// OFFSET: 0x008714B0
+// PROVEN: 7304175c IDENTICAL/UNPROVEN
+// OFFSET: 0x008714B0/0x1405A7340
 void CGxDeviceD3d11::IBindGeometryShader(CGxShaderPermute* permute) {
     this->IShaderBind(permute);
 
@@ -156,8 +156,8 @@ void CGxDeviceD3d11::IBindGeometryShader(CGxShaderPermute* permute) {
     }
 }
 
-// PROVEN: 831316e5 IDENTICAL/NONE
-// OFFSET: 0x00871520
+// PROVEN: 831316e5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00871520/0x1405A73B0
 void CGxDeviceD3d11::IBindPixelShader(CGxShaderPermute* permute) {
     this->IShaderBind(permute);
 

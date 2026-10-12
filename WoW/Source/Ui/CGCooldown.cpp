@@ -18,13 +18,13 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00F76BF0
+// STATIC: 0x00F76BF0/0x140E6CCF8
 int32_t CGCooldown::s_objectType;
 
-// STATIC: 0x00D1754C
+// STATIC: 0x00D1754C/0x140BD2308
 int32_t CGCooldown::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00D17518
+// STATIC: 0x00D17518/0x140BD22F0
 const char* CGCooldown::s_objectTypeName = "Cooldown";
 
 // STATIC: 0x00D1751C
@@ -33,13 +33,13 @@ const char* CGCooldown::s_starTextureName = "interface\\cooldown\\star4.blp";
 // STATIC: 0x00D17520
 const char* CGCooldown::s_edgeTextureName = "interface\\cooldown\\edge.blp";
 
-// STATIC: 0x00D17550
+// STATIC: 0x00D17550/0x140BD2360
 const uint16_t CGCooldown::s_edgeIndices[6] = { 0, 2, 1, 1, 2, 3 };
 
-// STATIC: 0x00D1755C
+// STATIC: 0x00D1755C/0x140BD2370
 const uint16_t CGCooldown::s_flashIndices[6] = { 0, 2, 1, 1, 2, 3 };
 
-// STATIC: 0x00D17568
+// STATIC: 0x00D17568/0x140BD2380
 const uint16_t CGCooldown::s_starIndices[24] = { 0, 9, 1, 1, 9, 2, 2, 9, 3, 3, 9, 4, 4, 9, 5, 5, 9, 6, 6, 9, 7, 7, 9, 8 };
 
 float CGCooldown::s_flashScale[7] = { 1.0f, 0.6993007f, 0.5405405f, 0.6289308f, 0.7518797f, 0.625f, 0.8695652f };
@@ -55,13 +55,14 @@ void CGCooldown::operator delete(void* ptr) {
     CGCooldown::s_cooldownHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: 0x008C6390
+// PROVEN: 6d0436f9 UNPROVEN/IDENTICAL
+// OFFSET: 0x008C6390/0x1406363B0
 CSimpleFrame* CGCooldown::Create(CSimpleFrame* parent) {
     void* data = CGCooldown::s_cooldownHeap.GetData(0, typeid(CGCooldown).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGCooldown(parent) : NULL;
 }
 
-// OFFSET: [0x009FDB50, 0x009FE970]
+// OFFSET: [0x009FDB50/0x14079BE30, 0x009FE970]
 CGCooldown::~CGCooldown() {
     if (this->m_starTexture) {
         TextureRelease(this->m_starTexture);
@@ -75,12 +76,14 @@ CGCooldown::~CGCooldown() {
     this->m_edgeTexture = NULL;
 }
 
-// OFFSET: 0x009FDBB0
+// PROVEN: 52591e8f IDENTICAL/IDENTICAL
+// OFFSET: 0x009FDBB0/0x14079BEB0
 const char* CGCooldown::GetObjectTypeName() {
     return CGCooldown::s_objectTypeName;
 }
 
-// OFFSET: 0x009FDBC0
+// PROVEN: 10bfa9d2 IDENTICAL/IDENTICAL
+// OFFSET: 0x009FDBC0/0x14079BEC0
 int32_t CGCooldown::GetScriptMetaTable() {
     return CGCooldown::s_metatable;
 }
@@ -272,7 +275,7 @@ void CGCooldown::AnimateOctants45(uint32_t octant, float t) {
     }
 }
 
-// OFFSET: 0x009FE4F0
+// OFFSET: 0x009FE4F0/0x14079C940
 void CGCooldown::AnimateOctants67(uint32_t octant, float t) {
     float cx = (this->m_rect.minX + this->m_rect.maxX) * 0.5f;
     float cy = 0.5f * (this->m_rect.maxY + this->m_rect.minY);
@@ -338,6 +341,7 @@ void CGCooldown::AnimateOctants67(uint32_t octant, float t) {
     }
 }
 
+// PROVEN: 12a54dcd IDENTICAL/DIFFERENT
 // OFFSET: 0x009FDBD0/0x14079BED0
 void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
@@ -357,6 +361,7 @@ void CGCooldown::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
+// PROVEN: f1a34cc6 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FE830/0x14079CCC0
 void CGCooldown::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
@@ -420,7 +425,7 @@ void CGCooldown::ResetVerts() {
     }
 }
 
-// OFFSET: 0x009FED40
+// OFFSET: 0x009FED40/0x14079D320
 void CGCooldown::AnimateVerts() {
     if (!this->m_flashing) {
         float elapsed = static_cast<float>(this->m_elapsed);
@@ -593,20 +598,21 @@ void CGCooldown::UpdateColors() {
     }
 }
 
+// PROVEN: edd0e86d IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF570/0x14079DB90
 void CGCooldown::UpdateAlpha() {
     CSimpleFrame::UpdateAlpha();
     this->UpdateColors();
 }
 
-// PROVEN: 7366d7b8 IDENTICAL/NONE
+// PROVEN: 7366d7b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF580/0x14079DBB0
 void CGCooldown::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);
     this->ResetVerts();
 }
 
-// OFFSET: 0x009FF5A0
+// OFFSET: 0x009FF5A0/0x14079DBD0
 void CGCooldown::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -632,6 +638,7 @@ void CGCooldown::OnLayerUpdate(float elapsedSec) {
     this->AnimateVerts();
 }
 
+// PROVEN: 0dec553e DIFFERENT/IDENTICAL
 // OFFSET: 0x009FF790/0x14079DE20
 CGCooldown::CGCooldown(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_starTexture = NULL;

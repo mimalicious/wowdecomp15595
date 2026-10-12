@@ -22,7 +22,7 @@ void DayNight::RenderGlares() {
     }
 }
 
-// OFFSET: 0x00653340
+// OFFSET: 0x00653340/0x1402F3CF0
 void DayNight::Billboard(const C3Vector& dir, C44Matrix& mat) {
     mat.a0 = dir.x;
     mat.a1 = dir.y;
@@ -56,7 +56,7 @@ void DayNight::Billboard(const C3Vector& dir, C44Matrix& mat) {
     mat.c2 = mat.a0 * mat.b1 - mat.a1 * mat.b0;
 }
 
-// OFFSET: 0x006534B0
+// OFFSET: 0x006534B0/0x1402F37E0
 void DayNight::DrawSky(DNOverrideSky* sky, float weight) {
     if (!sky || !sky->m_model || !sky->m_model->IsDrawable() || weight <= 0.0f) {
         return;
@@ -107,7 +107,7 @@ void DayNight::DrawSky(DNOverrideSky* sky, float weight) {
     }
 }
 
-// OFFSET: 0x006535D0
+// OFFSET: 0x006535D0/0x1402F3940
 void DayNight::RenderSky(const char* skyboxName, bool interior) {
     DNInfo& info = DayNight::g_dnInfo;
 

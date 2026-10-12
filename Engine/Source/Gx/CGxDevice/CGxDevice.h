@@ -415,4 +415,6 @@ class CGxDevice {
 extern CGxDevice* g_theGxDevicePtr;
 extern const char* s_formatToInt[CGxFormat::Formats_Last];
 
+#include "Engine/Source/Gx/CGxDevice/CGxDevice.inl"
+
 #endif

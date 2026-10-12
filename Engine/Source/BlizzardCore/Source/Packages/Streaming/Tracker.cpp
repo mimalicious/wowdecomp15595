@@ -7,7 +7,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Hardware/Hardware.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// STATIC: 0x00EBAD68
+// STATIC: 0x00EBAD68/0x140DABA90
 static int64_t s_repairSuccessBytes;
 
 // STATIC: 0x00EBAD70
@@ -16,13 +16,13 @@ static int64_t s_repairFailBytes;
 // STATIC: 0x00EBAD88
 static bool s_trackerDisabled;
 
-// STATIC: 0x00EBAD8C
+// STATIC: 0x00EBAD8C/0x140DABAB8
 const char* Tracker::trackerAddress;
 
-// STATIC: 0x00EBAD58
+// STATIC: 0x00EBAD58/0x140DABA78
 static const char* s_localeTrackerAddress;
 
-// STATIC: 0x00EBAD5C
+// STATIC: 0x00EBAD5C/0x140DABA80
 static char s_locale[5];
 
 static int32_t s_buildnum;
@@ -30,7 +30,7 @@ static int32_t s_buildnum;
 // STATIC: 0x00EBB0A4
 static char s_peerId[21];
 
-// STATIC: 0x00EBB0D0
+// STATIC: 0x00EBB0D0/0x140DABE18
 static char s_key[9];
 
 // PROVEN: e4cc653f IDENTICAL/NONE
@@ -155,7 +155,7 @@ Tracker::TrackerHttpDataDownloadCallBack::~TrackerHttpDataDownloadCallBack() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
-// OFFSET: 0x007FD560
+// OFFSET: 0x007FD560/0x1405101A0
 bool Tracker::TrackerHttpDataDownloadCallBack::ReceivedData(const void* data, int32_t size) {
     this->m_data.append(static_cast<const char*>(data), size);
     return true;

@@ -7,7 +7,7 @@
 // STATIC: 0x00D017A4
 float Weather::s_densityScale = 0.66000003f;
 
-// STATIC: 0x00E756C8
+// STATIC: 0x00E756C8/0x140D5F488
 CVar* Weather::s_cvarUseWeatherShaders;
 
 // OFFSET: 0x00748540/0x1404275F0
@@ -43,7 +43,7 @@ bool Weather::DensityCallback(CVar* var, const char* oldValue, const char* value
     return true;
 }
 
-// PROVEN: 83a092a1 IDENTICAL/NONE
+// PROVEN: 83a092a1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00748EF0/0x140428250
 void Weather::InitializeCVars() {
     CVar::Register("weatherDensity", NULL, 0, "2", Weather::DensityCallback, CATEGORY_DEFAULT, false, NULL, false);

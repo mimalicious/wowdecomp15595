@@ -7,24 +7,25 @@
 #include "Engine/Source/Storm/Source/SLock.h"
 #include "Engine/Source/Storm/Source/SThread.h"
 
-// STATIC: 0x00DC6FD0
+// STATIC: 0x00DC6FD0/0x140CACBA8
 int32_t ComSatThread::s_threadRunning;
 
-// STATIC: 0x00DC6FD4
+// STATIC: 0x00DC6FD4/0x140CACBB0
 ComSat::Interface* ComSatThread::s_comsat;
 
-// STATIC: 0x00DC6FD8
+// STATIC: 0x00DC6FD8/0x140CACBAC
 int32_t s_pushToTalkDown;
 
-// STATIC: 0x00DC6FDC
+// STATIC: 0x00DC6FDC/0x140CACBB8
 int32_t s_localTalkerActive;
 
-// STATIC: 0x00DC7004
+// STATIC: 0x00DC7004/0x140CACBF8
 SThread ComSatThread::s_comsatThread;
 
-// STATIC: 0x00DC7030
+// STATIC: 0x00DC7030/0x140CACC28
 SEvent ComSatThread::s_threadShutdownEvent(0, 0);
 
+// PROVEN: 3dcefc4c IDENTICAL/UNPROVEN
 // OFFSET: 0x004DB320/0x140119910
 static void QueryPushToTalkKey() {
     if (s_voiceActivation) {
@@ -53,6 +54,7 @@ static void QueryPushToTalkKey() {
     ComSatThread::s_comsat->LocalTalkerEnable(0, s_pushToTalkDown != 0);
 }
 
+// PROVEN: 88fb2904 IDENTICAL/IDENTICAL
 // OFFSET: 0x004DC320/0x14011A7E0
 uint32_t STORMAPI ComSatThread::Work(void* param) {
     while (ComSatThread::s_threadShutdownEvent.Wait(0)) {

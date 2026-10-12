@@ -36,11 +36,9 @@ struct MINIMAPTILE {
 
 struct MINIMAPINDOOR {
     /* 0000 */ uint8_t m_active;
-    /* 0001 */ uint8_t m_pad1[3];
     /* 0004 */ CTexture* m_texture;
     /* 0008 */ CGxFrameBuffer* m_frameBuffer;
     /* 000C */ uint8_t m_dirty;
-    /* 000D */ uint8_t m_pad2[3];
     /* 0010 */ float m_radius;
     /* 0014 */ C3Vector m_center;
     /* 0020 */ C3Vector m_position;

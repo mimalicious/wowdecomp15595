@@ -1,15 +1,6 @@
 #include "Engine/Source/Tempest/CFacet.h"
 
-// INLINED
-CFacet::CFacet(float value) {
-    this->plane.n.x = 0.0f;
-    this->plane.n.y = 0.0f;
-    this->plane.n.z = 1.0f;
-    this->plane.d = 0.0f;
-    this->Set(value);
-}
-
-// OFFSET: 0x004CD170
+// OFFSET: 0x004CD170/0x140108F00
 CFacet::CFacet(const C3Vector& v0, const C3Vector& v1, const C3Vector& v2) {
     this->v[0] = v0;
     this->v[1] = v1;

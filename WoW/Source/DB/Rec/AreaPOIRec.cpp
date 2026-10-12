@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[13] = { 0, 0, 0, 0, 3, 0, 0, 0, 2, 2, 0, 0, 0 
 // STATIC: 0x00C26C98/0x140A1CD68
 const DBCMeta AreaPOIRec::s_meta = { "DBFilesClient\\AreaPOI.dbc", 13, 88, AreaPOIRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 8d6aaa81 IDENTICAL/NONE
+// PROVEN: 8d6aaa81 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EC80/0x1407D8610
 void AreaPOIRec::FixupStrings(void* record, const char* strings) {
     AreaPOIRec* rec = static_cast<AreaPOIRec*>(record);

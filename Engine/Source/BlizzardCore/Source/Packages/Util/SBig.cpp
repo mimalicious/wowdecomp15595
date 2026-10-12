@@ -47,15 +47,10 @@ Blizzard::BigBuffer::BigBuffer() {
     this->m_offset = 0;
 }
 
-// OFFSET: 0x007D7500
+// OFFSET: 0x007D7500/0x1404D9000
 uint32_t& Blizzard::BigBuffer::operator[](uint32_t index) {
     this->GrowToFit(index);
     return this->m_data[index + this->m_offset];
-}
-
-// INLINED
-uint32_t Blizzard::BigBuffer::operator[](uint32_t index) const {
-    return this->IsUsed(index) ? this->m_data[index + this->m_offset] : 0;
 }
 
 // INLINED
@@ -94,8 +89,8 @@ inline void Blizzard::BigBuffer::SetOffset(uint32_t offset) {
     }
 }
 
-// PROVEN: db204ec6 IDENTICAL/NONE
-// OFFSET: 0x007C5E60
+// PROVEN: db204ec6 IDENTICAL/UNPROVEN
+// OFFSET: 0x007C5E60/0x1404C0E80
 void Blizzard::BigBuffer::Trim() const {
     while (this->Count() && !this->m_data.back()) {
         this->m_data.pop_back();
@@ -162,7 +157,7 @@ inline Blizzard::BigStack& Blizzard::BigData::Stack() const {
     return this->m_stack;
 }
 
-// OFFSET: 0x007B8A20
+// OFFSET: 0x007B8A20/0x1404AF690
 static int32_t Compare(const Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b) {
     int32_t result = 0;
 
@@ -199,7 +194,7 @@ static uint32_t HighBitPos(const Blizzard::BigBuffer& a) {
     return 0;
 }
 
-// OFFSET: 0x007D7560
+// OFFSET: 0x007D7560/0x1404D9080
 static void Div(Blizzard::BigBuffer& a, uint32_t* b, const Blizzard::BigBuffer& c, uint64_t d) {
     a.SetCount(c.Count());
 
@@ -217,7 +212,7 @@ static void Div(Blizzard::BigBuffer& a, uint32_t* b, const Blizzard::BigBuffer& 
     *b = static_cast<uint32_t>(data);
 }
 
-// OFFSET: 0x007D7670
+// OFFSET: 0x007D7670/0x1404D91F0
 static void Mul(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint64_t c) {
     uint64_t carry = 0;
     uint32_t i = 0;
@@ -250,7 +245,7 @@ static void Mul(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, const Bliz
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: 0x007D79C0
+// OFFSET: 0x007D79C0/0x1404D95E0
 static void Shl(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -278,7 +273,7 @@ static void Shl(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint32_t c
     a.Trim();
 }
 
-// OFFSET: 0x007D7AF0
+// OFFSET: 0x007D7AF0/0x1404D97A0
 static void Shr(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -323,7 +318,7 @@ static void Square(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, Blizzar
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: 0x007D7E40
+// OFFSET: 0x007D7E40/0x1404D9BA0
 static void Sub(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, const Blizzard::BigBuffer& c) {
     uint64_t borrow = 0;
     uint32_t i = 0;
@@ -374,7 +369,7 @@ inline void ToBinary(std::vector<uint8_t>& output, const Blizzard::BigBuffer& a)
     ToBinaryAppend(output, a);
 }
 
-// OFFSET: 0x007DB680
+// OFFSET: 0x007DB680/0x1404DE780
 static void Div(Blizzard::BigBuffer& a, Blizzard::BigBuffer& b, const Blizzard::BigBuffer& c, const Blizzard::BigBuffer& d, Blizzard::BigStack& stack) {
     c.Trim();
     d.Trim();
@@ -592,7 +587,7 @@ void Blizzard::Crypt::RSA::Process(uint8_t* data, uint32_t length) {
     dst.ToBinaryBuffer(data, length);
 }
 
-// OFFSET: 0x007BF290
+// OFFSET: 0x007BF290/0x1404B8100
 void Blizzard::SSignatureVerifyStream_Begin(SSignatureData** token, uint32_t modulusSize, uint32_t pubExponentSize) {
     *token = new SSignatureData;
     (*token)->modulusSize = modulusSize;
@@ -604,7 +599,8 @@ void Blizzard::SSignatureVerifyStream_Begin(SSignatureData** token, uint32_t mod
     (*token)->sha.Prepare();
 }
 
-// OFFSET: 0x007B1FD0
+// PROVEN: 59fc1c12 DIFFERENT/IDENTICAL
+// OFFSET: 0x007B1FD0/0x1404A7050
 void Blizzard::SSignatureVerifyStream_ProvideData(SSignatureData* token, const uint8_t* data, uint32_t size) {
     int32_t excess = size - token->magicBufferSize;
 

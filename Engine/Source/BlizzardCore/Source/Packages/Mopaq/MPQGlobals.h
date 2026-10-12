@@ -27,7 +27,6 @@ struct MopaqGlobals {
     /* 0110 */ bool m_disableAttributes;
     /* 0111 */ bool m_disableRawRead;
     /* 0112 */ bool m_disableRepair;
-    /* 0113 */ uint8_t unk_0113;
 };
 
 class Worker {

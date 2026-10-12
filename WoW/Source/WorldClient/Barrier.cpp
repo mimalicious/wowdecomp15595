@@ -20,25 +20,26 @@
 #include "Engine/Source/Tempest/CAaBox.h"
 #include "Engine/Source/Tempest/NTempest.h"
 
-// STATIC: 0x00E89420
+// STATIC: 0x00E89420/0x140CACC58
 static CGxShader* s_pixelShader;
 
-// STATIC: 0x00E89424
+// STATIC: 0x00E89424/0x140CACC50
 static CGxShader* s_vertexShader;
 
-// STATIC: 0x00E89428
+// STATIC: 0x00E89428/0x140D751A0
 static CM2Model* s_contactModels[4];
 
-// STATIC: 0x00E89438
+// STATIC: 0x00E89438/0x140D751C0
 static CTexture* s_texture;
 
-// STATIC: 0x00E8943C
+// STATIC: 0x00E8943C/0x140E562D0
 static CTexture* s_maskTexture;
 
-// STATIC: 0x00E89654
+// STATIC: 0x00E89654/0x140D753E4
 static float s_scrollPhase;
 
-// OFFSET: 0x00777190
+// PROVEN: e8b6b2b4 IDENTICAL/UNPROVEN
+// OFFSET: 0x00777190/0x140461EA0
 void CBarrier::Destroy() {
     for (int32_t i = 0; i < 4; i++) {
         CM2Model** model = &s_contactModels[i];
@@ -84,7 +85,7 @@ CBarrier::CBarrier() {
     this->m_enabled = 1;
 }
 
-// OFFSET: 0x00777660
+// OFFSET: 0x00777660/0x140462500
 void CBarrier::AddBarrierConvexPoly(C3Vector* verts, uint32_t count, float radius, C44Matrix* matrix, int32_t flip, int32_t oneSided) {
     if (!this->m_enabled || this->m_vertices.Count() > 1000) {
         return;

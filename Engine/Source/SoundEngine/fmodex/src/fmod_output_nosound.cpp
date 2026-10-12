@@ -364,7 +364,7 @@ FMOD_RESULT F_CALLBACK OutputNoSound::getNumDriversCallback(FMOD_OUTPUT_STATE *o
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 35e38429 IDENTICAL/UNPROVEN
+// PROVEN: 35e38429 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC0DF0/0x140889450
 FMOD_RESULT F_CALLBACK OutputNoSound::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
@@ -418,7 +418,7 @@ FMOD_RESULT OutputNoSound::getDriverCapsCallback(FMOD_OUTPUT_STATE *output, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b19debbe IDENTICAL/NONE
+// PROVEN: b19debbe IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC1420/0x140889750
 FMOD_RESULT F_CALLBACK OutputNoSound::initCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {

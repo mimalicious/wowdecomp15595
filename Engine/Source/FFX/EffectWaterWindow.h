@@ -19,4 +19,6 @@ class EffectSubmarineWindow : public FFX::Effect {
     EffectSubmarineWindow(uint32_t type);
 };
 
+#include "Engine/Source/FFX/EffectWaterWindow.inl"
+
 #endif

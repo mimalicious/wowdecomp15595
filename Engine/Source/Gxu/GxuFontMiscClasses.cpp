@@ -14,16 +14,16 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 
-// STATIC: 0x00CA8990
+// STATIC: 0x00CA8990/0x140B48BD0
 TSList<TEXTLINETEXTURE, TSGetLink<TEXTLINETEXTURE> > TEXTLINETEXTURE::s_freeTextLineTextures;
 
-// STATIC: 0x00DD9F64
+// STATIC: 0x00DD9F64/0x140CC07F8
 int32_t TEXTLINETEXTURE::s_recycledBytes;
 
-// STATIC: 0x00DD9F68
+// STATIC: 0x00DD9F68/0x140CC0800
 CGxPool* BATCHEDRENDERFONTDESC::s_indexPool;
 
-// STATIC: 0x00DD9F6C
+// STATIC: 0x00DD9F6C/0x140CC0808
 CGxBuf* BATCHEDRENDERFONTDESC::s_indexBuf;
 
 uint8_t BATCHEDRENDERFONTDESC::s_billboarded;
@@ -36,8 +36,8 @@ CHARCODEDESC::CHARCODEDESC() {
     this->m_glyphEndPixel = 0;
 }
 
-// PROVEN: 138b9a83 IDENTICAL/NONE
-// OFFSET: 0x00620270
+// PROVEN: 138b9a83 IDENTICAL/DIFFERENT
+// OFFSET: 0x00620270/0x1402AF670
 void GLYPHBITMAPDATA::CopyFrom(GLYPHBITMAPDATA* source) {
     if (this == source) {
         return;
@@ -73,11 +73,11 @@ GLYPHBITMAPDATA::~GLYPHBITMAPDATA() {
     this->m_data = NULL;
 }
 
-// OFFSET: 0x0061BC10
+// OFFSET: 0x0061BC10/0x1402A97E0
 CHARCODEDESC::~CHARCODEDESC() {
 }
 
-// OFFSET: 0x006202B0
+// OFFSET: 0x006202B0/0x1402AF7B0
 void CHARCODEDESC::GenerateTextureCoords(uint32_t rowNumber, uint32_t cellHeight) {
     int32_t top = rowNumber * cellHeight;
     float left = this->m_glyphStartPixel;
@@ -104,7 +104,7 @@ uint32_t CHARCODEDESC::GapToPrevious() {
     return this->m_glyphStartPixel - previous->m_glyphEndPixel - 1;
 }
 
-// OFFSET: 0x00620410
+// OFFSET: 0x00620410/0x1402AF850
 void TEXTLINETEXTURE::WriteGeometry(CGxVertexPCT* buf, const CImVector& fontColor, const C2Vector& shadowOffset, const CImVector& shadowColor, const C3Vector& viewTranslation, bool hasShadow, bool hasGradient, int32_t vertIndex, int32_t numVerts) const {
     if (!numVerts) {
         return;
@@ -222,7 +222,7 @@ void BATCHEDRENDERFONTDESC::Initialize() {
     BATCHEDRENDERFONTDESC::s_indexBuf = g_theGxDevicePtr->BufCreate(BATCHEDRENDERFONTDESC::s_indexPool, sizeof(uint16_t), 3072, 0);
 }
 
-// OFFSET: 0x006208B0
+// OFFSET: 0x006208B0/0x1402B0C30
 void BATCHEDRENDERFONTDESC::InitializeIndexBuff() {
     uint16_t* indices = reinterpret_cast<uint16_t*>(GxBufLock(BATCHEDRENDERFONTDESC::s_indexBuf));
 
@@ -255,7 +255,7 @@ void BATCHEDRENDERFONTDESC::Shutdown() {
     }
 }
 
-// OFFSET: 0x00620990
+// OFFSET: 0x00620990/0x1402B0D60
 CGxVertexPCT* BATCHEDRENDERFONTDESC::UnlockVertexPtrAndRender(CGxBuf*& buf, int32_t count) {
     GxBufUnlock(buf, sizeof(CGxVertexPCT) * count);
 
@@ -280,7 +280,7 @@ CGxVertexPCT* BATCHEDRENDERFONTDESC::UnlockVertexPtrAndRender(CGxBuf*& buf, int3
     return reinterpret_cast<CGxVertexPCT*>(GxBufLock(buf));
 }
 
-// OFFSET: 0x00620E90
+// OFFSET: 0x00620E90/0x1402B14A0
 void BATCHEDRENDERFONTDESC::RenderBatch() {
     if (!BATCHEDRENDERFONTDESC::s_indexPool) {
         return;
@@ -347,13 +347,14 @@ void BATCHEDRENDERFONTDESC::RenderBatch() {
     GxBufUnlock(buf, 0);
 }
 
+// PROVEN: 0f8ff291 IDENTICAL/DIFFERENT
 // OFFSET: 0x006210F0/0x1402B1740
 TEXTLINETEXTURE::~TEXTLINETEXTURE() {
     this->m_verts.Clear();
     this->m_colors.Clear();
 }
 
-// OFFSET: 0x006211C0
+// OFFSET: 0x006211C0/0x1402B1850
 TEXTLINETEXTURE* TEXTLINETEXTURE::NewTextLineTexture() {
     TEXTLINETEXTURE* texture = TEXTLINETEXTURE::s_freeTextLineTextures.Head();
 
@@ -367,7 +368,7 @@ TEXTLINETEXTURE* TEXTLINETEXTURE::NewTextLineTexture() {
     return texture;
 }
 
-// OFFSET: 0x006213D0
+// OFFSET: 0x006213D0/0x1402B1B00
 void TEXTURECACHEROW::EvictGlyph(CHARCODEDESC* desc) {
     uint32_t needed = desc->m_bitmapData.m_glyphCellWidth;
 
@@ -409,7 +410,7 @@ void TEXTURECACHEROW::EvictGlyph(CHARCODEDESC* desc) {
     }
 }
 
-// OFFSET: 0x00620C10
+// OFFSET: 0x00620C10/0x1402B1010
 CHARCODEDESC* TEXTURECACHEROW::CreateNewDesc(GLYPHBITMAPDATA* data, uint32_t rowNumber, uint32_t cellHeight) {
     uint32_t width = data->m_glyphCellWidth;
 
@@ -567,6 +568,7 @@ void CGxStringBatch::RenderBatch() {
     GxXformSetProjection(projection);
 }
 
+// PROVEN: 9038761b IDENTICAL/DIFFERENT
 // OFFSET: 0x00621B40/0x1402B2590
 BATCHEDRENDERFONTDESC::~BATCHEDRENDERFONTDESC() {
     this->m_strings.UnlinkAll();
@@ -585,14 +587,11 @@ void TEXTLINETEXTURE::Recycle(TEXTLINETEXTURE* ptr) {
     TEXTLINETEXTURE::s_freeTextLineTextures.LinkToTail(ptr);
 }
 
-// OFFSET: 0x00621C60
+// PROVEN: 807ba711 DIFFERENT/IDENTICAL
+// OFFSET: 0x00621C60/0x1402B2700
 void TEXTLINETEXTURE::Shutdown() {
     TEXTLINETEXTURE::s_recycledBytes = 0;
     TEXTLINETEXTURE::s_freeTextLineTextures.Clear();
-}
-
-// INLINED
-CGxStringBatch::CGxStringBatch() : m_flags(0) {
 }
 
 // OFFSET: 0x006220B0/0x1402B2E20
@@ -617,9 +616,4 @@ void CGxStringBatch::AddString(CGxString* string) {
 TEXTLINETEXTURE::TEXTLINETEXTURE() {
     this->m_verts.m_chunk = 128;
     this->m_colors.m_chunk = 128;
-}
-
-// INLINED
-TEXTURECACHEROW::TEXTURECACHEROW() {
-    this->m_widestFreeSlot = 0;
 }

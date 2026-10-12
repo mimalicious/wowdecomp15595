@@ -35,7 +35,7 @@ static void GetGuidByte(CDataStore* msg, uint8_t& value) {
     }
 }
 
-// OFFSET: 0x00698320
+// OFFSET: 0x00698320/0x140343B00
 void CClientObjCreate::Get(CDataStore* msg, bool a2) {
     CMovementStatus& status = this->m_move.m_status;
     CClientMoveSplineData& spline = this->m_move.m_spline.m_data;
@@ -401,7 +401,7 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
     }
 }
 
-// OFFSET: 0x00698200
+// OFFSET: 0x00698200/0x140343A40
 bool CClientObjCreate::IsValid() const {
     return (!this->m_hasMovement || (!this->m_hasGOTransport && !this->m_hasStationaryPosition))
         && (!this->m_hasTarget || this->m_target.m_guid)
@@ -410,7 +410,7 @@ bool CClientObjCreate::IsValid() const {
         && (!this->m_hasMovement || this->m_move.IsValid());
 }
 
-// OFFSET: 0x00699DE0
+// OFFSET: 0x00699DE0/0x140346360
 bool CClientObjCreate::Validate() const {
     return this->IsValid();
 }

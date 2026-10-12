@@ -69,4 +69,6 @@ class WorldStateZoneSoundOverride {
     /* 001C */ int32_t m_soundProviderPreferencesID;
 };
 
+#include "WoW/Source/SoundInterface/SI3ZoneSounds.inl"
+
 #endif

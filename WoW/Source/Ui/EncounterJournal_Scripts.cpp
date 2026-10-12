@@ -24,19 +24,22 @@
 #include "WoW/Source/Ui/QuestTextParser.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: 0x00F77174
+// STATIC: 0x00F77174/0x140BF5FE0
 static const char* s_itemQualityColorStrings[8] = { "ff9d9d9d", "ffffffff", "ff1eff00", "ff0070dd", "ffa335ee", "ffff8000", "ffe6cc80", "ffe6cc80" };
 
+// PROVEN: 19fefb59 IDENTICAL/IDENTICAL
 // OFFSET: [0x00842700/0x1407FDD80]
 static int32_t Script_EJ_SelectTier(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 44410e14 IDENTICAL/IDENTICAL
 // OFFSET: [0x00842700/0x1407FDD80]
 static int32_t Script_EJ_GetTierInfo(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 5fa66fc6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A06D50/0x1407A6ED0
 int32_t PushEncounterInfo(lua_State* L, JournalEncounterRec* encounter) {
     if (!encounter) {
@@ -51,6 +54,7 @@ int32_t PushEncounterInfo(lua_State* L, JournalEncounterRec* encounter) {
     return 5;
 }
 
+// PROVEN: 4d922693 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06DF0/0x1407A6C80
 static int32_t Script_EJ_SetDifficulty(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -64,6 +68,7 @@ static int32_t Script_EJ_SetDifficulty(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 114b6a76 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06E50/0x1407A6CF0
 static int32_t Script_EJ_IsValidInstanceDifficulty(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -82,12 +87,14 @@ static int32_t Script_EJ_IsValidInstanceDifficulty(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 4641dcbf IDENTICAL/IDENTICAL
 // OFFSET: 0x00A06EC0/0x1407A6D60
 static int32_t Script_EJ_GetDifficulty(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(CGEncounterJournal::s_difficulty + 1));
     return 1;
 }
 
+// PROVEN: 4172a0b8 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A07020/0x1407A6FF0
 static int32_t Script_EJ_SelectEncounter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -107,6 +114,7 @@ static int32_t Script_EJ_SelectEncounter(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 16a6d8a8 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A070A0/0x1407A7080
 static int32_t Script_EJ_GetEncounterInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -215,6 +223,7 @@ static int32_t Script_EJ_GetSectionInfo(lua_State* L) {
     return count + 10;
 }
 
+// PROVEN: 9ac26bd7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A074F0/0x1407A7650
 static int32_t Script_EJ_SetClassLootFilter(lua_State* L) {
     ChrClassesRec* rec;
@@ -231,6 +240,7 @@ static int32_t Script_EJ_SetClassLootFilter(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 906e82b9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A07580/0x1407A76D0
 static int32_t Script_EJ_GetAvailableClasses(lua_State* L) {
     uint32_t count = g_chrClassesDB.m_numRecords;
@@ -348,6 +358,7 @@ static int32_t PushSectionPath(lua_State* L, int32_t sectionID) {
     return 0;
 }
 
+// PROVEN: 838cd935 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A078F0/0x1407A7B00
 static int32_t Script_EJ_GetSectionPath(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -418,6 +429,7 @@ static int32_t PushInstanceInfo(lua_State* L, JournalInstanceRec* instance) {
     return 7;
 }
 
+// PROVEN: a0023f3b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08120/0x1407A84B0
 static int32_t Script_EJ_GetInstanceInfo(lua_State* L) {
     int32_t instanceID = lua_isnumber(L, 1) ? lua_tointeger(L, 1) : CGEncounterJournal::s_instanceID;
@@ -449,6 +461,7 @@ static int32_t Script_EJ_GetInstanceByIndex(lua_State* L) {
     return PushInstanceInfo(L, instance) + 1;
 }
 
+// PROVEN: 0e3acf0c IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08230/0x1407A8630
 static int32_t Script_EJ_InstanceIsRaid(lua_State* L) {
     bool isRaid = false;
@@ -548,6 +561,7 @@ static int32_t Script_EJ_GetSearchResult(lua_State* L) {
     return 5;
 }
 
+// PROVEN: ed64863f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08420/0x1407A8950
 static int32_t Script_EJ_GetEncounterInfoByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -560,6 +574,7 @@ static int32_t Script_EJ_GetEncounterInfoByIndex(lua_State* L) {
     return PushEncounterInfo(L, CGEncounterJournal::GetEncounterByIndex(instanceID, index));
 }
 
+// PROVEN: f549d217 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08540/0x1407A8AE0
 static int32_t Script_EJ_SelectInstance(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -575,6 +590,7 @@ static int32_t Script_EJ_SelectInstance(lua_State* L) {
     return 0;
 }
 
+// PROVEN: bca8e1cb IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08F00/0x1407A98A0
 static int32_t Script_EJ_GetMapEncounter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -594,6 +610,7 @@ static int32_t Script_EJ_GetMapEncounter(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 89e98ec9 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A08F90/0x1407A9950
 static int32_t Script_EJ_GetCurrentInstance(lua_State* L) {
     lua_pushinteger(L, CGEncounterJournal::GetCurrentInstance());
@@ -732,6 +749,7 @@ static int32_t PushLootInfo(lua_State* L, JournalEncounterItemRec* item) {
     return 7;
 }
 
+// PROVEN: 88ff0938 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A098B0/0x1407AA700
 static int32_t Script_EJ_GetLootInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -764,6 +782,7 @@ static int32_t Script_EJ_GetLootInfoByIndex(lua_State* L) {
     return PushLootInfo(L, *it);
 }
 
+// PROVEN: 938f9a93 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A09990/0x1407AA800
 static int32_t Script_EJ_SetSearch(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -775,13 +794,14 @@ static int32_t Script_EJ_SetSearch(lua_State* L) {
     return 0;
 }
 
+// PROVEN: ea05f86d IDENTICAL/DIFFERENT
 // OFFSET: 0x00A09D40/0x1407AACC0
 static int32_t Script_EJ_GetNumLoot(lua_State* L) {
     lua_pushinteger(L, CGEncounterJournal::BuildLoot());
     return 1;
 }
 
-// STATIC: 0x00D17838
+// STATIC: 0x00D17838/0x140B3D060
 static FrameScript_Method s_ScriptFunctions[] = {
     { "EJ_SelectTier", &Script_EJ_SelectTier },
     { "EJ_SelectInstance", &Script_EJ_SelectInstance },
@@ -813,6 +833,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "EJ_GetSectionPath", &Script_EJ_GetSectionPath },
 };
 
+// PROVEN: abe3d219 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A06F00/0x1407A6D90
 void EncounterJournalRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -820,6 +841,7 @@ void EncounterJournalRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 0740d3ed IDENTICAL/UNPROVEN
 // OFFSET: 0x00A06F30/0x1407A6DE0
 void EncounterJournalUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

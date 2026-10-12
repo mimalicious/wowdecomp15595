@@ -36,7 +36,7 @@ void Snow::RealizePacket(FlakePacket* packet) {
     buf->unk_001C = 1;
 }
 
-// OFFSET: 0x0074A140
+// OFFSET: 0x0074A140/0x140429900
 void Snow::InitFlake(Flake& flake, float time, const C3Vector& origin, const C3Vector& wind) {
     C3Vector size(this->m_bounds.t.x - this->m_bounds.b.x, this->m_bounds.t.y - this->m_bounds.b.y, this->m_bounds.t.z - this->m_bounds.b.z);
     float ry = CRandom::ufloat_(g_rndSeed);
@@ -107,7 +107,7 @@ void Snow::InitFlake(Flake& flake, float time, const C3Vector& origin, const C3V
     flake.m_endTime = -0.25f;
 }
 
-// OFFSET: 0x0074A770
+// OFFSET: 0x0074A770/0x140429FE0
 void Snow::UpdatePacket(uint32_t count, const C3Vector& origin, const C3Vector& wind) {
     FlakePacket* packet = this->m_flakes.m_current;
     float tick = FrameTime::GetTickTimeSec();
@@ -277,7 +277,7 @@ void Snow::UpdatePackets() {
     }
 }
 
-// OFFSET: 0x0074E960
+// OFFSET: 0x0074E960/0x14042ED60
 void Snow::RenderPackets() {
     if (!this->m_flakes.m_active.Head()) {
         return;
@@ -370,7 +370,7 @@ void Snow::RenderPackets() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0074EFC0
+// OFFSET: 0x0074EFC0/0x14042F4C0
 void Snow::RenderPacketsSW() {
     if (!this->m_flakes.m_active.Head()) {
         return;
@@ -501,7 +501,7 @@ void Snow::RenderPacketsSW() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x00752330
+// OFFSET: 0x00752330/0x1404332E0
 Snow::~Snow() {
     TextureRelease(this->m_flakeTexture);
 
@@ -521,8 +521,8 @@ Snow::~Snow() {
     }
 }
 
-// PROVEN: 979541c2 IDENTICAL/NONE
-// OFFSET: 0x007523D0
+// PROVEN: 979541c2 IDENTICAL/UNPROVEN
+// OFFSET: 0x007523D0/0x1404333A0
 void Snow::Render() {
     this->UpdatePackets();
 

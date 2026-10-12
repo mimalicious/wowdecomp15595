@@ -47,7 +47,8 @@ typedef struct {
 
 /***********************************************/
 
-// OFFSET: 0x00B49480
+// PROVEN: 27323f05 DIFFERENT/IDENTICAL
+// OFFSET: 0x00B49480/0x140919020
 static void floor0_free_info(vorbis_info_floor *i){
   vorbis_info_floor0 *info=(vorbis_info_floor0 *)i;
   if(info){
@@ -56,7 +57,7 @@ static void floor0_free_info(vorbis_info_floor *i){
   }
 }
 
-// OFFSET: 0x00B494B0
+// OFFSET: 0x00B494B0/0x140919060
 static void floor0_free_look(vorbis_look_floor *i){
   vorbis_look_floor0 *look=(vorbis_look_floor0 *)i;
   if(look){
@@ -73,7 +74,7 @@ static void floor0_free_look(vorbis_look_floor *i){
   }
 }
 
-// OFFSET: 0x00B49540
+// OFFSET: 0x00B49540/0x140919100
 static vorbis_info_floor *floor0_unpack (vorbis_info *vi,oggpack_buffer *opb){
   codec_setup_info     *ci=vi->codec_setup;
   int j;
@@ -148,7 +149,7 @@ static int floor0_map_lazy_init(vorbis_block      *vb,
   return(0);
 }
 
-// OFFSET: 0x00B497C0
+// OFFSET: 0x00B497C0/0x1409194F0
 static vorbis_look_floor *floor0_look(vorbis_dsp_state *vd,
                                       vorbis_info_floor *i){
   vorbis_info_floor0 *info=(vorbis_info_floor0 *)i;

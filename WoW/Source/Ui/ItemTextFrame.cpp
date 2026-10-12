@@ -15,19 +15,19 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
 
-// STATIC: 0x00F70FF8
+// STATIC: 0x00F70FF8/0x140E66F08
 WOWGUID CGItemText::m_itemGUID;
 
-// STATIC: 0x00F70FF0
+// STATIC: 0x00F70FF0/0x140E66F00
 uint32_t CGItemText::m_currentPage;
 
-// STATIC: 0x00F6F0A8
+// STATIC: 0x00F6F0A8/0x140E64FB0
 uint8_t CGItemText::m_hasItemText;
 
-// STATIC: 0x00F6F0B0
+// STATIC: 0x00F6F0B0/0x140E64FC0
 char CGItemText::m_text[8000];
 
-// STATIC: 0x00F71000
+// STATIC: 0x00F71000/0x140E66F18
 TSGrowableArray<int32_t> CGItemText::m_pages;
 
 // OFFSET: 0x009DE0C0/0x1407741D0
@@ -41,7 +41,7 @@ void CGItemText::InitializeGame() {
     CGItemText::m_text[0] = '\0';
 }
 
-// PROVEN: c523cc46 IDENTICAL/NONE
+// PROVEN: c523cc46 IDENTICAL/UNPROVEN
 // OFFSET: 0x009DE070/0x140774180
 void CGItemText::ShutdownGame() {
     CGItemText::m_pages.Clear();
@@ -201,7 +201,7 @@ void CGItemText::SetItem(const WOWGUID& guid, int32_t a2) {
     }
 }
 
-// PROVEN: f546315a IDENTICAL/NONE
+// PROVEN: f546315a IDENTICAL/IDENTICAL
 // OFFSET: 0x009DE800/0x140773FC0
 void CGItemText::ItemTextCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success && CGItemText::m_itemGUID == guid) {

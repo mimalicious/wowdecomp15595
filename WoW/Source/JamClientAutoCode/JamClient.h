@@ -7,6 +7,7 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Common/WowTime.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
+#include "WoW/Source/JamClientAutoCode/JamHandlerKeys.h"
 #include "WoW/Source/Object/WGUID.h"
 #include "WoW/Source/WowServices/WDataStore.h"
 
@@ -38,7 +39,6 @@ struct JamClientCharacterListEntry {
     /* 0060 */ uint32_t m_flags;
     /* 0064 */ uint32_t m_customizeFlags;
     /* 0068 */ bool m_firstLogin;
-    /* 0069 */ uint8_t unk_0069[3];
     /* 006C */ uint32_t m_petDisplayInfoID;
     /* 0070 */ uint32_t m_petExperienceLevel;
     /* 0074 */ uint32_t m_petCreatureFamilyID;
@@ -82,7 +82,6 @@ struct ClientGuildRosterMemberData {
     /* 0167 */ uint8_t m_gender;
     /* 0168 */ bool m_authenticated;
     /* 0169 */ bool m_sorEligible;
-    /* 016A */ uint8_t unk_016A[2];
     /* 016C */ JamGuildMemberProfessionData m_profession[2];
     /* 0184 */ uint32_t unk_0184;
 
@@ -417,7 +416,6 @@ struct JamCliCUFProfile {
     /* 0092 */ uint8_t m_topPoint;
     /* 0093 */ uint8_t m_bottomPoint;
     /* 0094 */ uint8_t m_leftPoint;
-    /* 0095 */ uint8_t unk_0095;
     /* 0096 */ uint16_t m_topOffset;
     /* 0098 */ uint16_t m_bottomOffset;
     /* 009A */ uint16_t m_leftOffset;
@@ -434,7 +432,6 @@ struct JamCliCUFProfile {
     /* 00A6 */ bool m_autoActivateSpec2;
     /* 00A7 */ bool m_autoActivatePvP;
     /* 00A8 */ bool m_autoActivatePvE;
-    /* 00A9 */ uint8_t unk_00A9[3];
     /* 00AC */ uint32_t m_fieldMask;
     /* 00B0 */ uint32_t m_fieldMask2;
 
@@ -580,10 +577,8 @@ struct ClientPVPLogData_Player {
     /* 0029 */ uint8_t unk_0029[3];
     /* 002C */ uint32_t m_rating;
     /* 0030 */ bool m_hasRatingChange;
-    /* 0031 */ uint8_t unk_0031[3];
     /* 0034 */ int32_t m_ratingChange;
     /* 0038 */ bool m_hasPreMatchMMR;
-    /* 0039 */ uint8_t unk_0039[3];
     /* 003C */ uint32_t m_preMatchMMR;
     /* 0040 */ bool m_hasMmrChange;
     /* 0041 */ uint8_t unk_0041[3];
@@ -2569,7 +2564,6 @@ struct JamLfgSearchResultParty {
     /* 0110 */ uint8_t m_leaderGUID[8];
     /* 0118 */ uint32_t unk_0118;
     /* 011C */ uint8_t unk_011C[3];
-    /* 011F */ uint8_t unk_011F;
 
     JamLfgSearchResultParty();
     JamLfgSearchResultParty(const JamLfgSearchResultParty& source);
@@ -3381,7 +3375,6 @@ class ClientBattlefieldStatusActive : public JamClientMessage {
     /* 0018 */ JamClientBattlefieldStatusHeader m_header;
     /* 0048 */ uint32_t unk_0048;
     /* 004C */ uint8_t unk_004C;
-    /* 004D */ uint8_t unk_004D[3];
     /* 0050 */ uint32_t unk_0050;
 
     ClientBattlefieldStatusActive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);

@@ -25,7 +25,7 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: 0x00CA4590
+// STATIC: 0x00CA4590/0x140B424D0
 int32_t CSimpleHTML::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A8C/0x140CB9800
@@ -34,7 +34,7 @@ int32_t CSimpleHTML::s_objectType;
 // STATIC: 0x00CA3468
 const char* CSimpleHTML::s_objectTypeName = "SimpleHTML";
 
-// STATIC: 0x00DD3A90
+// STATIC: 0x00DD3A90/0x140CB9808
 CDataAllocator CSimpleHTML::s_allocator(sizeof(CSimpleHTML), 5);
 
 // INLINED
@@ -44,7 +44,7 @@ void CSimpleHTML::operator delete(void* ptr) {
     }
 }
 
-// PROVEN: 65fa2917 IDENTICAL/NONE
+// PROVEN: 65fa2917 IDENTICAL/IDENTICAL
 // OFFSET: 0x00521A20/0x14016F590
 void CSimpleHTML::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
@@ -378,7 +378,7 @@ void CSimpleHTML::RefreshHyperlinks() {
     }
 }
 
-// PROVEN: a9a44334 IDENTICAL/NONE
+// PROVEN: a9a44334 IDENTICAL/IDENTICAL
 // OFFSET: 0x005219E0/0x14016F560
 void CSimpleHTML::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);

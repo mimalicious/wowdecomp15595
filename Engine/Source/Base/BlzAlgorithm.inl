@@ -36,7 +36,7 @@ void blz::internal::adjust_heap(RandomIt first, Distance holeIndex, Distance len
     blz::internal::push_heap(first, holeIndex, topIndex, value, comp);
 }
 
-// OFFSET: [0x00736500<DDMaterial**, DDMaterialSort>, 0x00815160<CModelBatch*, SModelBatchLessThan>, 0x00839110<uint32_t*, M2SortCompare>, 0x009F87E0<C2iVector*, bool (*)(const C2iVector&, const C2iVector&)>]
+// OFFSET: [0x00736500<DDMaterial**, DDMaterialSort>, 0x00815160/0x14052D350<CModelBatch*, SModelBatchLessThan>, 0x00839110<uint32_t*, M2SortCompare>, 0x009F87E0<C2iVector*, bool (*)(const C2iVector&, const C2iVector&)>]
 template <class RandomIt, class Compare>
 void blz::internal::insertion_sort(RandomIt first, RandomIt last, Compare comp) {
     if (first == last) {
@@ -176,7 +176,7 @@ void blz::internal::introsort_loop(RandomIt first, RandomIt last, Size depthLimi
     }
 }
 
-// OFFSET: [0x00820050<CModelBatch*, SModelBatchLessThan>, 0x00839580<uint32_t*, M2SortCompare>]
+// OFFSET: [0x00820050<CModelBatch*, SModelBatchLessThan>, 0x00839580/0x140563920<uint32_t*, M2SortCompare>]
 template <class RandomIt, class Compare>
 void blz::sort(RandomIt first, RandomIt last, Compare comp) {
     if (first == last) {
@@ -231,7 +231,8 @@ void blz::internal::adjust_heap(RandomIt first, Distance holeIndex, Distance len
     blz::internal::push_heap(first, holeIndex, topIndex, value);
 }
 
-// OFFSET: [0x0077CD70<LiquidChunkAndDistance*>]
+// PROVEN: 027bbdc2 IDENTICAL/NONE
+// OFFSET: [0x0077CD70/0x1404697F0<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::internal::insertion_sort(RandomIt first, RandomIt last) {
     if (first == last) {
@@ -280,6 +281,7 @@ RandomIt blz::internal::median(RandomIt a, RandomIt b, RandomIt c) {
     return b;
 }
 
+// PROVEN: 8cbf0e94 IDENTICAL/NONE
 // OFFSET: [0x0077D530<LiquidChunkAndDistance*, LiquidChunkAndDistance>]
 template <class RandomIt, class T>
 RandomIt blz::internal::unguarded_partition(RandomIt first, RandomIt last, T pivot) {
@@ -305,6 +307,7 @@ RandomIt blz::internal::unguarded_partition(RandomIt first, RandomIt last, T piv
     }
 }
 
+// PROVEN: 6954cff7 IDENTICAL/NONE
 // OFFSET: [0x0077DC50<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::make_heap(RandomIt first, RandomIt last) {
@@ -328,6 +331,7 @@ void blz::make_heap(RandomIt first, RandomIt last) {
     }
 }
 
+// PROVEN: fad8b03a IDENTICAL/NONE
 // OFFSET: [0x0077DCF0<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::sort_heap(RandomIt first, RandomIt last) {
@@ -339,6 +343,7 @@ void blz::sort_heap(RandomIt first, RandomIt last) {
     }
 }
 
+// PROVEN: 394b8c53 IDENTICAL/NONE
 // OFFSET: [0x0077DE20<LiquidChunkAndDistance*>]
 template <class RandomIt>
 void blz::partial_sort(RandomIt first, RandomIt middle, RandomIt last) {

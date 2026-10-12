@@ -48,7 +48,7 @@ int32_t OsIMEGetLanguageMode() {
     return mode;
 }
 
-// OFFSET: 0x0087B570
+// OFFSET: 0x0087B570/0x1405B3350
 static int32_t GetCompositionString(DWORD index, char* buffer, uint32_t bufferSize) {
     memset(buffer, 0, bufferSize);
 
@@ -79,7 +79,7 @@ int32_t OsIMEGetCompositionResult(char* buffer, uint32_t bufferSize) {
     return GetCompositionString(GCS_RESULTSTR, buffer, bufferSize);
 }
 
-// OFFSET: 0x0087B650
+// OFFSET: 0x0087B650/0x1405B3460
 int32_t OsIMEGetClauseInfo(uint32_t& clauseStart, uint32_t& clauseEnd, uint32_t& cursor) {
     UINT codePage = GetACP();
 
@@ -146,7 +146,6 @@ int32_t OsIMEGetClauseInfo(uint32_t& clauseStart, uint32_t& clauseEnd, uint32_t&
     return 1;
 }
 
-// PROVEN: 11fe8bd0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0087B820/0x1405B36B0
 void OsIMEEnable(int32_t enable) {
     HWND window = static_cast<HWND>(OsGuiGetWindow(0));
@@ -162,7 +161,7 @@ void OsIMEEnable(int32_t enable) {
     }
 }
 
-// PROVEN: 259534ba IDENTICAL/IDENTICAL
+// PROVEN: 259534ba DIFFERENT/IDENTICAL
 // OFFSET: 0x0087B870/0x1405B3720
 void OsIMESync() {
     HWND window = static_cast<HWND>(OsGuiGetWindow(0));
@@ -204,7 +203,7 @@ void OsIMEInitialize() {
     s_context = ImmAssociateContext(static_cast<HWND>(OsGuiGetWindow(0)), NULL);
 }
 
-// PROVEN: 511f12da IDENTICAL/IDENTICAL
+// PROVEN: 511f12da DIFFERENT/IDENTICAL
 // OFFSET: 0x0087B940/0x1405B3810
 void OsIMEDestroy() {
     ImmAssociateContextEx(static_cast<HWND>(OsGuiGetWindow(0)), NULL, IACE_DEFAULT);

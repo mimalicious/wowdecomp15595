@@ -1,0 +1,8 @@
+#ifndef WOW_SOURCE_OBJECT_OBJECTCLIENT_VEHICLE_C_INL
+#define WOW_SOURCE_OBJECT_OBJECTCLIENT_VEHICLE_C_INL
+
+// INLINED
+inline CVehicle_C::CVehicle_C() {
+}
+
+#endif

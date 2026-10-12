@@ -4,11 +4,6 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Services/Texture.h"
 
-// INLINED
-PassGlowBase::PassGlowBase(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
-    this->m_color = CImVector(0, 0, 0, 0);
-}
-
 // OFFSET: 0x0089EA20
 float PassGlowFade::GetFadeAmount() {
     float time = this->m_fadeTime;
@@ -30,8 +25,8 @@ float PassGlowFade::GetFadeAmount() {
     return amount;
 }
 
-// PROVEN: bd74b2a8 IDENTICAL/NONE
-// OFFSET: 0x0089EA90
+// PROVEN: bd74b2a8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0089EA90/0x1405DF6A0
 void PassGlowFade::BeginFadeOut() {
     this->m_fadingOut = true;
 }
@@ -71,6 +66,7 @@ PassGlow::~PassGlow() {
     }
 }
 
+// PROVEN: df52733c IDENTICAL/DIFFERENT
 // OFFSET: 0x0089EBE0/0x1405DF8C0
 void PassGlow::Execute() {
     FFX::SetupGx(this->m_output, 0);

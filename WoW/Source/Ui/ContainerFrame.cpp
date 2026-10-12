@@ -30,21 +30,22 @@
 #include "WoW/Source/Ui/Tutorial.h"
 #include "WoW/Source/Ui/Types.h"
 
-// STATIC: 0x00F4DDE0
+// STATIC: 0x00F4DDE0/0x140E42790
 WOWGUID CGContainerInfo::m_containers[11];
 
-// STATIC: 0x00F4DE38
+// STATIC: 0x00F4DE38/0x140E427E8
 char* CGContainerInfo::m_searchText;
 
 // STATIC: 0x00F4DE3C
 char* CGContainerInfo::m_searchTextParsed;
 
-// PROVEN: 63fe3347 IDENTICAL/NONE
+// PROVEN: 63fe3347 IDENTICAL/IDENTICAL
 // OFFSET: 0x009BB1E0/0x140746A00
 void CGContainerInfo::UpdateCooldowns() {
     FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE_COOLDOWN, NULL);
 }
 
+// PROVEN: b0e3f888 IDENTICAL/IDENTICAL
 // OFFSET: 0x009BB1F0/0x140746A10
 WOWGUID CGContainerInfo::GetContainer(int32_t index) {
     if (index >= 0 && static_cast<uint32_t>(index) < 11 && (index < 4 || CGBankInfo::m_banker)) {
@@ -54,6 +55,7 @@ WOWGUID CGContainerInfo::GetContainer(int32_t index) {
     return WOWGUID::Make(0);
 }
 
+// PROVEN: 08475d68 IDENTICAL/DIFFERENT
 // OFFSET: 0x009BB230/0x140746A40
 void CGContainerInfo::SetItemSearch(const char* search) {
     uint32_t length = SStrLenUTF8(search);
@@ -86,6 +88,7 @@ void CGContainerInfo::SetItemSearch(const char* search) {
     FrameScript_SignalEvent(SCRIPT_EVENT_INVENTORY_SEARCH_UPDATE, NULL);
 }
 
+// PROVEN: bc95a493 IDENTICAL/DIFFERENT
 // OFFSET: 0x009BB4B0/0x140746CF0
 void CGContainerInfo::UpdateContents(WOWGUID guid) {
     CGActionBar::UpdateUsable();
@@ -105,7 +108,7 @@ void CGContainerInfo::UpdateContents(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x009BB520
+// OFFSET: 0x009BB520/0x140746D70
 void CGContainerInfo::OpenContainer(WOWGUID guid) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         FrameScript_SignalEvent(SCRIPT_EVENT_BAG_OPEN, "%d", 0);
@@ -119,7 +122,7 @@ void CGContainerInfo::OpenContainer(WOWGUID guid) {
     }
 }
 
-// OFFSET: 0x009BB6B0
+// OFFSET: 0x009BB6B0/0x140746F40
 void CGContainerInfo::UpdateItem(WOWGUID guid) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -198,6 +201,7 @@ static void TriggerMultiCastBarUpdate(const ItemRecSparse* rec) {
     CGActionBar::UpdateMultiCastBar();
 }
 
+// PROVEN: 6b3b2c19 IDENTICAL/IDENTICAL
 // OFFSET: 0x009BCE10/0x140748930
 static void MultiCastBarItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -268,7 +272,7 @@ int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     return 1;
 }
 
-// OFFSET: 0x009BD030
+// OFFSET: 0x009BD030/0x140748B90
 int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -425,7 +429,7 @@ bool ItemRecIsFiltered(const ItemRec* item, int32_t randomPropertiesId) {
     return SStrStrUTF8I(text, CGContainerInfo::m_searchTextParsed) == NULL;
 }
 
-// OFFSET: 0x009BE4B0
+// OFFSET: 0x009BE4B0/0x14074A490
 int32_t InvUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -517,7 +521,8 @@ void CGContainerInfo::LeaveWorld() {
     CGContainerInfo::m_searchText = NULL;
 }
 
-// OFFSET: 0x009BB320
+// PROVEN: 7fce8354 IDENTICAL/IDENTICAL
+// OFFSET: 0x009BB320/0x140746B50
 bool CGContainerInfo::IsSearchActive() {
     return CGContainerInfo::m_searchText != NULL;
 }

@@ -13,10 +13,10 @@ static Liquid::Object s_oceanObject;
 // STATIC: 0x00E4EC8C
 static Liquid::Object s_magmaObject;
 
-// STATIC: 0x00E4ECC4
+// STATIC: 0x00E4ECC4/0x140BB0190
 static TSHashTable<Liquid::Object, HASHKEY_NONE> s_objectHash;
 
-// PROVEN: 069029d2 IDENTICAL/NONE
+// PROVEN: 069029d2 IDENTICAL/IDENTICAL
 // OFFSET: 0x0071CE80/0x1403F2130
 void Liquid::Object::SetReflectionPlane(float height) {
     this->m_reflectionPlane.n.x = 0.0f;

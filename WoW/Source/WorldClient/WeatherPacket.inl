@@ -5,7 +5,7 @@ template <class T, uint32_t N>
 PacketBuffer<T, N>::PacketBuffer() : m_capacity(N) {
 }
 
-// OFFSET: [0x0074BBF0<Rain::Drop, 1024, 3>, 0x0074BC70<Rain::Patter, 1024, 3>, 0x0074B650/0x14042AF80<Snow::Flake, 6144, 1>, 0x0074B650/0x14042AF80<Sand::Grain, 6144, 1>]
+// OFFSET: [0x0074BBF0/0x14042B8B0<Rain::Drop, 1024, 3>, 0x0074BC70/0x14042B980<Rain::Patter, 1024, 3>, 0x0074B650/0x14042AF80<Snow::Flake, 6144, 1>, 0x0074B650/0x14042AF80<Sand::Grain, 6144, 1>]
 template <class T, uint32_t N, uint32_t V>
 Packet<T, N, V>::Packet() {
     this->m_pool = g_theGxDevicePtr->PoolCreate(GxPoolTarget_Vertex, static_cast<EGxPoolUsage>(1), N * V * sizeof(typename T::Vertex), static_cast<EGxPoolHintBits>(2), "WeatherPacket_vtx");
@@ -47,7 +47,7 @@ PacketList<P>::~PacketList() {
     }
 }
 
-// OFFSET: [0x007516E0<Packet<Rain::Drop, 1024, 3>>, 0x00751920<Packet<Rain::Patter, 1024, 3>>, 0x0074BDE0<Packet<Snow::Flake, 6144, 1>>, 0x0074BEE0/0x14042BCE0<Packet<Sand::Grain, 6144, 1>>]
+// OFFSET: [0x007516E0/0x1404320B0<Packet<Rain::Drop, 1024, 3>>, 0x00751920/0x140432460<Packet<Rain::Patter, 1024, 3>>, 0x0074BDE0/0x14042BBA0<Packet<Snow::Flake, 6144, 1>>, 0x0074BEE0/0x14042BCE0<Packet<Sand::Grain, 6144, 1>>]
 template <class P>
 P* PacketList<P>::Alloc() {
     this->m_current = this->m_free.Head();

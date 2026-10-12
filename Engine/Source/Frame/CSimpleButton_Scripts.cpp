@@ -106,7 +106,7 @@ static int32_t Script_Enable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x005313C0
+// OFFSET: 0x005313C0/0x1401831F0
 static int32_t Script_Disable(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -150,7 +150,7 @@ static int32_t Script_GetButtonState(lua_State* L) {
     }
 }
 
-// OFFSET: 0x00531530
+// OFFSET: 0x00531530/0x140183370
 static int32_t Script_SetButtonState(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleButtonState state = BUTTONSTATE_DISABLED;
@@ -165,6 +165,7 @@ static int32_t Script_SetButtonState(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e75ba64f IDENTICAL/DIFFERENT
 // OFFSET: 0x005315F0/0x1401834A0
 static int32_t Script_SetNormalFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -201,6 +202,7 @@ static int32_t Script_GetNormalFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", button->m_normalFont, L);
 }
 
+// PROVEN: 77865304 IDENTICAL/DIFFERENT
 // OFFSET: 0x00531750/0x140183660
 static int32_t Script_SetDisabledFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -237,6 +239,7 @@ static int32_t Script_GetDisabledFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", button->m_disabledFont, L);
 }
 
+// PROVEN: 9723de8e IDENTICAL/DIFFERENT
 // OFFSET: 0x005318B0/0x140183820
 static int32_t Script_SetHighlightFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -321,7 +324,7 @@ static int32_t Script_GetFontString(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c76c2012 IDENTICAL/NONE
+// PROVEN: c76c2012 IDENTICAL/IDENTICAL
 // OFFSET: 0x00531B90/0x140183B90
 static int32_t Script_SetText(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -330,7 +333,7 @@ static int32_t Script_SetText(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 721c730d IDENTICAL/UNPROVEN
+// PROVEN: 721c730d IDENTICAL/IDENTICAL
 // OFFSET: 0x00531BE0/0x140183BF0
 static int32_t Script_SetFormattedText(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -359,6 +362,7 @@ static int32_t Script_SetNormalTexture(lua_State* L) {
     return SetStateTexture(L, BUTTONSTATE_NORMAL, "SetNormalTexture");
 }
 
+// PROVEN: fa5c9673 DIFFERENT/IDENTICAL
 // OFFSET: 0x00531EB0/0x140183F10
 static int32_t Script_GetNormalTexture(lua_State* L) {
     return GetStateTexture(L, BUTTONSTATE_NORMAL);
@@ -382,6 +386,7 @@ static int32_t Script_SetDisabledTexture(lua_State* L) {
     return SetStateTexture(L, BUTTONSTATE_DISABLED, "SetDisabledTexture");
 }
 
+// PROVEN: 7b9faeb1 DIFFERENT/IDENTICAL
 // OFFSET: 0x00531F30/0x140183F60
 static int32_t Script_GetDisabledTexture(lua_State* L) {
     return GetStateTexture(L, BUTTONSTATE_DISABLED);
@@ -499,6 +504,7 @@ static int32_t Script_GetTextHeight(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 8aecf87b DIFFERENT/IDENTICAL
 // OFFSET: 0x005323D0/0x1401844B0
 static int32_t Script_RegisterForClicks(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -512,7 +518,7 @@ static int32_t Script_RegisterForClicks(lua_State* L) {
     return 0;
 }
 
-// PROVEN: ec23ad4c IDENTICAL/UNPROVEN
+// PROVEN: ec23ad4c IDENTICAL/IDENTICAL
 // OFFSET: 0x00532460/0x140184550
 static int32_t Script_Click(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -526,6 +532,7 @@ static int32_t Script_Click(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 89b3e661 DIFFERENT/IDENTICAL
 // OFFSET: 0x005324E0/0x140184600
 static int32_t Script_LockHighlight(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -534,6 +541,7 @@ static int32_t Script_LockHighlight(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 4edf80c7 DIFFERENT/IDENTICAL
 // OFFSET: 0x00532520/0x140184640
 static int32_t Script_UnlockHighlight(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -542,7 +550,7 @@ static int32_t Script_UnlockHighlight(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 187f6fc4 IDENTICAL/NONE
+// PROVEN: 187f6fc4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00532560/0x140184680
 static int32_t Script_GetMotionScriptsWhileDisabled(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
@@ -559,22 +567,22 @@ static int32_t Script_SetMotionScriptsWhileDisabled(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f2d2378f IDENTICAL/NONE
-// OFFSET: 0x00531320
+// PROVEN: f2d2378f IDENTICAL/IDENTICAL
+// OFFSET: 0x00531320/0x140183140
 void CSimpleButton::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleButton::s_metatable);
     CSimpleButton::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: 31a630fc IDENTICAL/NONE
-// OFFSET: 0x00532600
+// PROVEN: 31a630fc IDENTICAL/IDENTICAL
+// OFFSET: 0x00532600/0x140184730
 void CSimpleButton::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleButton::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleButton::RegisterScriptMethods);
 }
 
-// STATIC: 0x00CA3CB8
+// STATIC: 0x00CA3CB8/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "Enable", &Script_Enable },
     { "Disable", &Script_Disable },

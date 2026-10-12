@@ -27,8 +27,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b0f0449f IDENTICAL/NONE
-// OFFSET: 0x00ACF5B0
+// PROVEN: b0f0449f IDENTICAL/IDENTICAL
+// OFFSET: 0x00ACF5B0/0x140899DC0
 OutputEmulated::OutputEmulated()
 {
     FMOD_memset(&mDescription, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));

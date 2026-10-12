@@ -25,7 +25,7 @@ CClientMoveSpline::CClientMoveSpline() {
     this->m_hasData = false;
 }
 
-// OFFSET: 0x006974E0
+// OFFSET: 0x006974E0/0x140342AE0
 bool CClientMoveSpline::IsValid() const {
     return _finite(this->m_endPoint.z)
         && _finite(this->m_endPoint.y)
@@ -38,7 +38,7 @@ CClientMoveUpdate::CClientMoveUpdate() {
     this->m_hasSpline = false;
 }
 
-// OFFSET: 0x00697EF0
+// OFFSET: 0x00697EF0/0x1403436C0
 bool CClientMoveUpdate::IsValid() const {
     if (this->m_status.m_hasSpline && !this->m_hasSpline) {
         return false;

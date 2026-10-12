@@ -47,7 +47,7 @@ void Blizzard::Util::ThreadSafeQueue<T>::Push(const T& value) {
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: [0x007CA890<Blizzard::Jobs::Job*>, 0x007CA890<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
+// OFFSET: [0x007CA890/0x1404CCB10<Blizzard::Jobs::Job*>, 0x007CA890/0x1404CCB10<Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job>>]
 template <class T>
 T& Blizzard::Util::ThreadSafeQueue<T>::Front() {
     Blizzard::Lock::MutexEnter(this->m_mutex);

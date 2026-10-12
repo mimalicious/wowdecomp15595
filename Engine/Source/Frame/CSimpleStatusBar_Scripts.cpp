@@ -9,15 +9,15 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: c0968a67 IDENTICAL/NONE
-// OFFSET: 0x00531270
+// PROVEN: c0968a67 IDENTICAL/IDENTICAL
+// OFFSET: 0x00531270/0x1401827F0
 void CSimpleStatusBar::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleStatusBar::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleStatusBar::RegisterScriptMethods);
 }
 
-// PROVEN: 80f61908 IDENTICAL/NONE
-// OFFSET: 0x005309C0
+// PROVEN: 80f61908 IDENTICAL/IDENTICAL
+// OFFSET: 0x005309C0/0x140181E00
 void CSimpleStatusBar::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleStatusBar::s_metatable);
@@ -33,7 +33,7 @@ void CSimpleStatusBar::GetStatusBarColor(CImVector& color) {
     }
 }
 
-// PROVEN: df625eff IDENTICAL/NONE
+// PROVEN: df625eff IDENTICAL/IDENTICAL
 // OFFSET: 0x00530A10/0x140181E30
 static int32_t Script_GetOrientation(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
@@ -42,7 +42,7 @@ static int32_t Script_GetOrientation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00530A60
+// OFFSET: 0x00530A60/0x140181E90
 static int32_t Script_SetOrientation(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -64,7 +64,8 @@ static int32_t Script_SetOrientation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00530B30
+// PROVEN: 273daa87 DIFFERENT/IDENTICAL
+// OFFSET: 0x00530B30/0x140181F90
 static int32_t Script_GetMinMaxValues(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -100,7 +101,8 @@ static int32_t Script_SetMinMaxValues(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00530CB0
+// PROVEN: 4a99b7e1 DIFFERENT/IDENTICAL
+// OFFSET: 0x00530CB0/0x140182170
 static int32_t Script_GetValue(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -203,6 +205,7 @@ static int32_t Script_GetStatusBarColor(lua_State* L) {
     return 4;
 }
 
+// PROVEN: 79d9ad66 DIFFERENT/IDENTICAL
 // OFFSET: 0x005310B0/0x140182600
 static int32_t Script_SetStatusBarColor(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
@@ -213,7 +216,7 @@ static int32_t Script_SetStatusBarColor(lua_State* L) {
     return 0;
 }
 
-// PROVEN: a8b4e84f IDENTICAL/NONE
+// PROVEN: a8b4e84f IDENTICAL/IDENTICAL
 // OFFSET: 0x00531110/0x140182670
 static int32_t Script_GetRotatesTexture(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
@@ -227,7 +230,7 @@ static int32_t Script_GetRotatesTexture(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 38cb25dc IDENTICAL/NONE
+// PROVEN: 38cb25dc IDENTICAL/IDENTICAL
 // OFFSET: 0x00531170/0x1401826D0
 static int32_t Script_SetRotatesTexture(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
@@ -236,7 +239,7 @@ static int32_t Script_SetRotatesTexture(lua_State* L) {
     return 0;
 }
 
-// PROVEN: fa7f0c5a IDENTICAL/NONE
+// PROVEN: fa7f0c5a IDENTICAL/IDENTICAL
 // OFFSET: 0x005311C0/0x140182730
 static int32_t Script_GetReverseFill(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
@@ -250,7 +253,7 @@ static int32_t Script_GetReverseFill(lua_State* L) {
     return 1;
 }
 
-// PROVEN: cd8c3534 IDENTICAL/NONE
+// PROVEN: cd8c3534 IDENTICAL/IDENTICAL
 // OFFSET: 0x00531220/0x140182790
 static int32_t Script_SetReverseFill(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
@@ -259,7 +262,7 @@ static int32_t Script_SetReverseFill(lua_State* L) {
     return 0;
 }
 
-// STATIC: 0x00CA3C40
+// STATIC: 0x00CA3C40/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetOrientation", &Script_GetOrientation },
     { "SetOrientation", &Script_SetOrientation },
@@ -277,6 +280,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetReverseFill", &Script_SetReverseFill },
 };
 
+// PROVEN: ca8f012b IDENTICAL/UNPROVEN
 // OFFSET: 0x005309A0/0x140181DD0
 void CSimpleStatusBar::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

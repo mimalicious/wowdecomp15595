@@ -5,10 +5,10 @@
 // STATIC: 0x00D1FD68
 static TSExplicitList<ObjectAllocPool, offsetof(ObjectAllocPool, m_link)> s_pools;
 
-// STATIC: 0x00F80494
+// STATIC: 0x00F80494/0x140E78350
 static uint32_t s_poolCount;
 
-// STATIC: 0x00F8049C
+// STATIC: 0x00F8049C/0x140E78360
 static SCritSect s_poolLock;
 
 // OFFSET: 0x00A3BAE0/0x1407E8C10

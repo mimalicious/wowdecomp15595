@@ -14,7 +14,7 @@
 
 static System_File::UsingFile s_usingFile;
 
-// STATIC: 0x00D07270
+// STATIC: 0x00D07270/0x140BB7BD0
 Blizzard::File::Filesystem System_File::Stacked::s_initstack = {
     &System_File::Stacked::s_initstack,
     NULL,
@@ -54,7 +54,7 @@ Blizzard::File::Filesystem System_File::Stacked::s_initstack = {
     }
 };
 
-// STATIC: 0x00D0726C
+// STATIC: 0x00D0726C/0x140BB7BC8
 Blizzard::File::Filesystem* System_File::Stacked::s_manager = &System_File::Stacked::s_initstack;
 
 // STATIC: 0x00D07388
@@ -141,7 +141,7 @@ Blizzard::Thread::LocalObject<System_File::FileError> System_File::s_error;
 
 int64_t System_File::Stacked::s_throttleRate = 56888;
 
-// STATIC: 0x00EB5870
+// STATIC: 0x00EB5870/0x140DA1EC0
 int64_t System_File::Stacked::s_throttleDebt;
 
 int32_t System_File::Stacked::s_throttleDelay;
@@ -345,8 +345,8 @@ bool Blizzard::File::Delete(const char* path) {
     return false;
 }
 
-// PROVEN: 07b945b3 IDENTICAL/NONE
-// OFFSET: 0x007AC5D0
+// PROVEN: 07b945b3 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AC5D0/0x1404A22C0
 int32_t Blizzard::File::Exists(const char* path) {
     return Blizzard::File::Exists(System_File::Stacked::s_manager, path);
 }
@@ -495,7 +495,7 @@ int32_t Blizzard::File::GetRootChars(const char* path) {
     return result ? static_cast<int32_t>(parms.m_pos) : 0;
 }
 
-// PROVEN: 75081508 IDENTICAL/NONE
+// PROVEN: 75081508 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AC820/0x1404A25B0
 bool Blizzard::File::GetWorkingDirectory(char* buffer, int32_t buffersize) {
     Filesystem* manager = System_File::Stacked::s_manager;
@@ -512,7 +512,7 @@ bool Blizzard::File::GetWorkingDirectory(char* buffer, int32_t buffersize) {
     return false;
 }
 
-// PROVEN: 4a2ebde0 IDENTICAL/NONE
+// PROVEN: 4a2ebde0 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AC870/0x1404A2600
 bool Blizzard::File::IsAbsolutePath(const char* path) {
     Filesystem* manager = System_File::Stacked::s_manager;
@@ -545,7 +545,7 @@ bool Blizzard::File::MakeAbsolutePath(const char* rel, char* result, int32_t res
     return false;
 }
 
-// PROVEN: 4d2dad98 IDENTICAL/NONE
+// PROVEN: 4d2dad98 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AC910/0x1404A2690
 bool Blizzard::File::Move(const char* src, const char* dst) {
     Filesystem* manager = System_File::Stacked::s_manager;
@@ -561,7 +561,7 @@ bool Blizzard::File::Move(const char* src, const char* dst) {
     return false;
 }
 
-// PROVEN: 691e8313 IDENTICAL/NONE
+// PROVEN: 691e8313 IDENTICAL/DIFFERENT
 // OFFSET: 0x007AC960/0x1404A26E0
 bool Blizzard::File::Copy(const char* src, const char* dst, bool overwrite) {
     Filesystem* manager = System_File::Stacked::s_manager;
@@ -583,7 +583,7 @@ bool Blizzard::File::Open(const char* filename, int32_t flags, StreamRecord*& fi
     return Blizzard::File::Open(System_File::Stacked::s_manager, filename, flags, file);
 }
 
-// OFFSET: 0x007AC9B0
+// OFFSET: 0x007AC9B0/0x1404A2730
 bool Blizzard::File::Open(Filesystem* fs, const char* filename, int32_t flags, StreamRecord*& file) {
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_open);
@@ -692,7 +692,7 @@ bool Blizzard::File::Read(Filesystem* fs, StreamRecord* file, void* data, int64_
     return false;
 }
 
-// PROVEN: 07829867 IDENTICAL/NONE
+// PROVEN: 07829867 IDENTICAL/DIFFERENT
 // OFFSET: 0x007ACB80/0x1404A28E0
 bool Blizzard::File::RemoveDirectory(const char* path) {
     Filesystem* manager = System_File::Stacked::s_manager;
@@ -708,8 +708,8 @@ bool Blizzard::File::RemoveDirectory(const char* path) {
     return false;
 }
 
-// PROVEN: b40acd8c IDENTICAL/NONE
-// OFFSET: 0x007ACBD0
+// PROVEN: b40acd8c IDENTICAL/DIFFERENT
+// OFFSET: 0x007ACBD0/0x1404A2930
 bool Blizzard::File::SetAttributes(const char* path, int32_t attributes) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -742,7 +742,7 @@ bool Blizzard::File::SetEOF(StreamRecord* file, int64_t offset, int32_t whence) 
     return false;
 }
 
-// PROVEN: acdabe66 IDENTICAL/NONE
+// PROVEN: acdabe66 IDENTICAL/DIFFERENT
 // OFFSET: 0x007ACC90/0x1404A29E0
 bool Blizzard::File::SetSparse(StreamRecord* file, bool zeroFill) {
     Filesystem* manager = System_File::Stacked::s_manager;
@@ -892,7 +892,7 @@ bool Blizzard::File::IsDirectory(const char* path) {
     return Exists(path) == 2;
 }
 
-// PROVEN: c3ec844f IDENTICAL/NONE
+// PROVEN: c3ec844f IDENTICAL/DIFFERENT
 // OFFSET: 0x007AD0B0/0x1404A2D40
 bool Blizzard::File::IsFile(const char* path) {
     return Exists(path) == 1;

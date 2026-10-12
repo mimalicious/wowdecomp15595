@@ -10,10 +10,10 @@
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00CA1388
+// STATIC: 0x00CA1388/0x140B3DD08
 static int32_t s_syncMapLoad = 1;
 
-// STATIC: 0x00CA138C
+// STATIC: 0x00CA138C/0x140B3DD10
 static CPhaseShift s_phaseShift(8);
 
 // STATIC: 0x00CA13BC
@@ -22,19 +22,19 @@ static CPhaseShift s_defaultPhaseShift(8);
 // STATIC: 0x00DC716C
 static int32_t s_phaseGroupIndexInitialized;
 
-// STATIC: 0x00DC7170
+// STATIC: 0x00DC7170/0x140CACDB8
 static TSFixedArray<CPhaseShift> s_areaTriggerPhases;
 
-// STATIC: 0x00DC717C
+// STATIC: 0x00DC717C/0x140CACDC8
 static TSFixedArray<CPhaseShift> s_worldStateUIPhases;
 
-// STATIC: 0x00DC7188
+// STATIC: 0x00DC7188/0x140CACDD8
 static TSFixedArray<uint16_t> s_phasedWorldMaps;
 
-// STATIC: 0x00DC7194
+// STATIC: 0x00DC7194/0x140CACDE8
 TSGrowableArray<CPhaseMapTracker> CPhaseMapTracker::s_loadedMaps;
 
-// STATIC: 0x00DC71A4
+// STATIC: 0x00DC71A4/0x140CACE00
 static TSFixedArray<PhaseGroupLookup> s_phaseGroupLookup;
 
 // INLINED
@@ -46,12 +46,13 @@ CPhaseMapTracker::CPhaseMapTracker() {
     this->m_lastAreaTrigger = -1;
 }
 
-// OFFSET: 0x004E3F70
+// PROVEN: f5d58798 IDENTICAL/IDENTICAL
+// OFFSET: 0x004E3F70/0x140125320
 void PhaseShift_C_ShutdownGame() {
     ClientPhaseShiftChange::s_handler = NULL;
 }
 
-// PROVEN: 2565ab92 IDENTICAL/NONE
+// PROVEN: 2565ab92 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E3F80/0x140125330
 void PhaseShift_C_EnterWorld(int32_t reload) {
     if (!reload) {
@@ -59,6 +60,7 @@ void PhaseShift_C_EnterWorld(int32_t reload) {
     }
 }
 
+// PROVEN: 08c0de35 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E3FA0/0x140125350
 CPhaseShift* PhaseShift_C_GetPhase() {
     return &s_phaseShift;
@@ -120,7 +122,7 @@ void CPhaseMapTracker::RemoveUnusedMaps() {
     }
 }
 
-// PROVEN: 8fd6b9f7 IDENTICAL/NONE
+// PROVEN: 8fd6b9f7 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4320/0x140125620
 void CPhaseMapTracker::LeaveWorld() {
     for (uint32_t i = 0; i < CPhaseMapTracker::s_loadedMaps.Count(); i++) {
@@ -137,13 +139,13 @@ void CPhaseMapTracker::LeaveWorld() {
     }
 }
 
-// PROVEN: 0975e468 IDENTICAL/NONE
+// PROVEN: 0975e468 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4380/0x1401256A0
 int32_t PhaseShift_C_GetNumPhaseMaps() {
     return CPhaseMapTracker::s_loadedMaps.Count();
 }
 
-// PROVEN: 19f4f87d IDENTICAL/NONE
+// PROVEN: 19f4f87d IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4390/0x1401256B0
 int32_t PhaseShift_C_GetNumActivePhaseMaps() {
     int32_t count = 0;
@@ -157,7 +159,7 @@ int32_t PhaseShift_C_GetNumActivePhaseMaps() {
     return count;
 }
 
-// PROVEN: 7987744b IDENTICAL/NONE
+// PROVEN: 7987744b IDENTICAL/UNPROVEN
 // OFFSET: 0x004E43C0/0x1401256E0
 int32_t PhaseShift_C_IsPhasedWorldMapActive(int32_t worldMapAreaID) {
     for (uint32_t i = 0; i < s_phasedWorldMaps.Count(); i++) {
@@ -223,7 +225,7 @@ int32_t CPhaseShift::HasSharedPhase(const CPhaseShift* other) const {
     return PhaseShift_CompareSortedPhaseArray(this->m_flags, this->m_phases.Ptr(), this->m_phases.Count(), other->m_flags, other->m_phases.Ptr(), other->m_phases.Count());
 }
 
-// OFFSET: 0x004E4720
+// OFFSET: 0x004E4720/0x140125BE0
 void PhaseShiftShared_InitPhaseXPhaseGroupIndex() {
     s_phaseGroupIndexInitialized = 1;
 
@@ -256,6 +258,7 @@ void PhaseShiftShared_InitPhaseXPhaseGroupIndex() {
     }
 }
 
+// PROVEN: 920e41ea IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4850/0x140125D40
 int32_t PhaseShift_C_HasSharedPhase(const CPhaseShift* phaseShift) {
     return s_phaseShift.HasSharedPhase(phaseShift);
@@ -309,8 +312,8 @@ CPhaseMapTracker* CPhaseMapTracker::LoadMap(int32_t mapID, int32_t active) {
     return tracker;
 }
 
-// PROVEN: ad6641b3 IDENTICAL/NONE
-// OFFSET: 0x004E49F0
+// PROVEN: ad6641b3 IDENTICAL/UNPROVEN
+// OFFSET: 0x004E49F0/0x140125F40
 void CPhaseMapTracker::UpdateMaps(uint32_t activeCount, const uint16_t* activeMaps, uint32_t inactiveCount, const uint16_t* inactiveMaps) {
     for (uint32_t i = 0; i < activeCount; i++) {
         CPhaseMapTracker::LoadMap(activeMaps[i], 1);
@@ -345,7 +348,7 @@ int32_t PhaseShift_C_HasSharedPhase(const AreaTriggerRec* rec) {
     return s_phaseShift.HasSharedPhase(&s_areaTriggerPhases[rec->m_id]);
 }
 
-// OFFSET: 0x004E4AD0
+// OFFSET: 0x004E4AD0/0x1401260F0
 int32_t PhaseShift_C_HasSharedPhase(const WorldStateUIRec* rec) {
     if (static_cast<uint32_t>(rec->m_id) >= s_worldStateUIPhases.Count()) {
         return s_phaseShift.HasSharedPhase(&s_defaultPhaseShift);
@@ -429,6 +432,7 @@ void CPhaseShift::SetPhasesFromDB(uint32_t flags, uint32_t phaseID, uint32_t pha
     }
 }
 
+// PROVEN: 2dc02795 IDENTICAL/UNPROVEN
 // OFFSET: 0x004E4DF0/0x1401265E0
 void PhaseShift_C_LeaveWorld(int32_t reload) {
     if (reload) {
@@ -441,6 +445,7 @@ void PhaseShift_C_LeaveWorld(int32_t reload) {
     s_phaseShift.m_flags = 8;
 }
 
+// PROVEN: 0c9935da IDENTICAL/NONE
 // OFFSET: 0x004E53B0
 static void InitAreaTriggerPhases() {
     s_areaTriggerPhases.SetCount(g_areaTriggerDB.m_maxID + 1);
@@ -463,15 +468,15 @@ void PhaseShift_C_InitDB() {
     }
 }
 
-// PROVEN: 9c415678 IDENTICAL/NONE
-// OFFSET: 0x004E54A0
+// PROVEN: 9c415678 IDENTICAL/UNPROVEN
+// OFFSET: 0x004E54A0/0x140126F30
 void PhaseShift_C_CleanupDB() {
     s_phaseGroupLookup.Clear();
     s_areaTriggerPhases.Clear();
     s_worldStateUIPhases.Clear();
 }
 
-// OFFSET: 0x004E4E40
+// OFFSET: 0x004E4E40/0x140126640
 static void SetPhasedWorldMaps(uint32_t count, const uint16_t* maps) {
     uint32_t merged = 0;
 
@@ -523,7 +528,7 @@ static void SetPhasedWorldMaps(uint32_t count, const uint16_t* maps) {
     }
 }
 
-// OFFSET: 0x004E4FD0
+// OFFSET: 0x004E4FD0/0x1401268A0
 void CPhaseShift::SetPhasesFromMessage(ClientPhaseShiftChange* msg) {
     uint32_t count = msg->m_data.m_phaseIDs.m_size >> 1;
     void* data = NULL;
@@ -541,7 +546,7 @@ void CPhaseShift::SetPhasesFromMessage(ClientPhaseShiftChange* msg) {
     }
 }
 
-// OFFSET: 0x004E5060
+// OFFSET: 0x004E5060/0x140126960
 static bool OnPhaseShiftChange(ClientPhaseShiftChange* msg) {
     uint32_t activeCount = msg->m_data.m_visibleMapIDs.m_size >> 1;
     void* activeMaps = NULL;
@@ -580,5 +585,5 @@ static bool OnPhaseShiftChange(ClientPhaseShiftChange* msg) {
 
 // OFFSET: 0x004E52B0/0x140126C40
 void PhaseShift_C_InitializeGame() {
-    ClientPhaseShiftChange::s_handler = OnPhaseShiftChange;
+    ClientPhaseShiftChange::s_handler = JamHandlerEncode(OnPhaseShiftChange, g_jamHandlerKey_CFD350);
 }

@@ -294,6 +294,7 @@ void SPIRIT_IP_MR_V3_NAME_85(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input)
     SPIRIT_IP_MR_V3_NAME_189(state->unk_1450, &state->unk_1450[160], 154);
 }
 
+// PROVEN: 47bd9e47 IDENTICAL/NONE
 // OFFSET: 0x00B50B00
 void SPIRIT_IP_MR_V3_NAME_85_Forward(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input) {
     SPIRIT_IP_MR_V3_NAME_85(state, input);

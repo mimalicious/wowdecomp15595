@@ -331,7 +331,7 @@ static int checkArgMode (const Proto *pt, int r, enum OpArgMask mode) {
 }
 
 
-// OFFSET: 0x004252E0
+// OFFSET: 0x004252E0/0x14002AAB0
 static Instruction symbexec (const Proto *pt, int lastpc, int reg) {
   int pc;
   int last;  /* stores position of last instruction that changed `reg' */

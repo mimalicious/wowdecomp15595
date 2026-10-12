@@ -16,7 +16,7 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// STATIC: 0x00E74368
+// STATIC: 0x00E74368/0x140BB07A0
 TSHashTable<CMapDynamicTexture, HASHKEY_DWORD> CMap::s_dynamicTextures;
 
 // OFFSET: 0x00773270/0x14045D800
@@ -31,7 +31,7 @@ void CMap::UpdateDynamicTextures() {
     }
 }
 
-// OFFSET: 0x007732E0
+// OFFSET: 0x007732E0/0x14045CF40
 void CMap::ClearDynamicTextures() {
     for (CMapDynamicTexture* entry = CMap::s_dynamicTextures.Head(), * next; entry; entry = next) {
         next = CMap::s_dynamicTextures.Next(entry);
@@ -70,7 +70,7 @@ CTexture* CMap::GetDynamicTexture(uint32_t textureId) {
     return entry->m_texture;
 }
 
-// PROVEN: c1e3118d IDENTICAL/NONE
+// PROVEN: c1e3118d IDENTICAL/IDENTICAL
 // OFFSET: 0x00784990/0x140473590
 int32_t CMap::SafeOpen(const char* fileName, SFileImpl** file, int32_t fatal) {
     if (SFileOpenFile(fileName, file)) {

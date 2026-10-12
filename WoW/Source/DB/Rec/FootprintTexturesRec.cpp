@@ -12,7 +12,7 @@ static const int32_t s_fieldTypes[2] = { 0, 2 };
 // STATIC: 0x00C28210/0x140A1E988
 const DBCMeta FootprintTexturesRec::s_meta = { "DBFilesClient\\FootprintTextures.dbc", 2, 8, FootprintTexturesRec::FixupStrings, 0, s_fieldOffsets, s_fieldSizes, s_fieldTypes };
 
-// PROVEN: 721f256f IDENTICAL/NONE
+// PROVEN: 721f256f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void FootprintTexturesRec::FixupStrings(void* record, const char* strings) {
     FootprintTexturesRec* rec = static_cast<FootprintTexturesRec*>(record);

@@ -45,4 +45,6 @@ void HSVtoRGB(const C3Vector& hsv, C3Vector& rgb);
 float PerlinNoise2D(float x, float y, int32_t octaves);
 void RGBtoHSV(const C3Vector& rgb, C3Vector& hsv);
 
+#include "Engine/Source/Tempest/NTempest.inl"
+
 #endif

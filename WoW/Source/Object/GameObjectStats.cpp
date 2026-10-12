@@ -3,6 +3,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/GameObjectStats_C.h"
 
+// PROVEN: 8bbbbadb IDENTICAL/DIFFERENT
 // OFFSET: 0x0049B170/0x1400C6F50
 GameObjectStats::~GameObjectStats() {
     for (int32_t i = 0; i < 4; i++) {
@@ -24,6 +25,7 @@ GameObjectStats::~GameObjectStats() {
     }
 }
 
+// PROVEN: 885b3b0d IDENTICAL/NONE
 // OFFSET: 0x00554D80
 const char* GameObjectStats::GetName(int32_t index) {
     const char* name = this->m_name[index];
@@ -35,7 +37,8 @@ const char* GameObjectStats::GetName(int32_t index) {
     return name;
 }
 
-// OFFSET: 0x00A28BA0
+// PROVEN: a0e4e907 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A28BA0/0x1407D0780
 void GameObjectStats::Pack(CDataStore* msg) {
     msg->Put(this->m_typeID);
     msg->Put(this->m_displayID);
@@ -65,7 +68,7 @@ void GameObjectStats::Pack(CDataStore* msg) {
     msg->Put(this->m_requiredLevel);
 }
 
-// PROVEN: 178c07b1 IDENTICAL/NONE
+// PROVEN: 178c07b1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A28C80/0x1407D0880
 void GameObjectStats_C::Unpack(CDataStore* msg) {
     char buffer[1024];

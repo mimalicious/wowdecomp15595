@@ -61,8 +61,8 @@ static int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     return result;
 }
 
-// PROVEN: bc98e27a IDENTICAL/NONE
-// OFFSET: 0x004BBEC0
+// PROVEN: bc98e27a IDENTICAL/DIFFERENT
+// OFFSET: 0x004BBEC0/0x1400F53E0
 static uint32_t HighBitPos(const BigBuffer& a) {
     uint32_t index = a.Count();
 
@@ -85,7 +85,7 @@ static uint32_t HighBitPos(const BigBuffer& a) {
     return 0;
 }
 
-// PROVEN: e3f3c02e IDENTICAL/NONE
+// PROVEN: e3f3c02e IDENTICAL/IDENTICAL
 // OFFSET: 0x004BBF40/0x1400F5470
 int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
     return Compare(a->Primary(), b->Primary());
@@ -96,7 +96,7 @@ int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
 BigStack::~BigStack() {
 }
 
-// PROVEN: 3b903b75 IDENTICAL/NONE
+// PROVEN: 3b903b75 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BCC60/0x1400F6480
 BigData::~BigData() {
 }
@@ -137,7 +137,7 @@ static void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     a.SetCount(i);
 }
 
-// OFFSET: 0x004BC370
+// OFFSET: 0x004BC370/0x1400F59F0
 static void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
     a.SetCount(c.Count());
 
@@ -155,7 +155,7 @@ static void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
     *b = static_cast<uint32_t>(data);
 }
 
-// OFFSET: 0x004BC4C0
+// OFFSET: 0x004BC4C0/0x1400F5B50
 static void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c) {
     uint64_t carry = 0;
     uint32_t i = 0;
@@ -192,7 +192,7 @@ static void SetOne(BigBuffer& a) {
     a[0] = 1;
 }
 
-// OFFSET: 0x004BC790
+// OFFSET: 0x004BC790/0x1400F5E20
 static void Shl(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -220,7 +220,7 @@ static void Shl(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     a.Trim();
 }
 
-// OFFSET: 0x004BC900
+// OFFSET: 0x004BC900/0x1400F5FD0
 static void Shr(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -272,6 +272,7 @@ inline void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& a) {
     ToBinaryAppend(output, a);
 }
 
+// PROVEN: 31331fd5 DIFFERENT/IDENTICAL
 // OFFSET: 0x004BCBE0/0x1400F63F0
 void STORMAPI SBigAdd(BigData* a, const BigData* b, const BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
@@ -303,12 +304,13 @@ void STORMAPI SBigFromBinary(BigData* num, const void* data, uint32_t bytes) {
     FromBinary(num->Primary(), data, bytes);
 }
 
-// PROVEN: eb044316 IDENTICAL/UNPROVEN
+// PROVEN: eb044316 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BCCD0/0x1400F6550
 void STORMAPI SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
 }
 
+// PROVEN: 9bc4ee93 DIFFERENT/IDENTICAL
 // OFFSET: 0x004BCCF0/0x1400F6600
 void STORMAPI SBigSub(BigData* a, const BigData* b, const BigData* c) {
     Sub(a->Primary(), b->Primary(), c->Primary());
@@ -374,7 +376,7 @@ static void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer&
     stack.Free(allocCount);
 }
 
-// PROVEN: 9997af6f IDENTICAL/UNPROVEN
+// PROVEN: 9997af6f IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD120/0x1400F6AF0
 void STORMAPI SBigMod(BigData* a, const BigData* b, const BigData* c) {
     uint32_t allocCount = 0;
@@ -383,7 +385,7 @@ void STORMAPI SBigMod(BigData* a, const BigData* b, const BigData* c) {
     a->Stack().Free(allocCount);
 }
 
-// PROVEN: dd3e4ef2 IDENTICAL/UNPROVEN
+// PROVEN: dd3e4ef2 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD160/0x1400F6B40
 void STORMAPI SBigNew(BigData** num) {
     *num = new (SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0)) BigData;
@@ -453,12 +455,13 @@ static void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
     stack.UnmakeDistinct(a, aa);
 }
 
+// PROVEN: 514e2a4f IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD8D0/0x1400F7310
 void STORMAPI SBigDel(BigData* num) {
     delete num;
 }
 
-// PROVEN: daae2b31 IDENTICAL/UNPROVEN
+// PROVEN: daae2b31 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BD900/0x1400F7340
 void STORMAPI SBigMul(BigData* a, const BigData* b, const BigData* c) {
     Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
@@ -473,7 +476,7 @@ inline void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const B
     stack.Free(allocCount);
 }
 
-// PROVEN: f09e324a IDENTICAL/UNPROVEN
+// PROVEN: f09e324a DIFFERENT/IDENTICAL
 // OFFSET: 0x004BD920/0x1400F7350
 static void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
     c.Trim();
@@ -527,7 +530,7 @@ static void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const B
     stack.Free(allocCount);
 }
 
-// PROVEN: dca765ab IDENTICAL/UNPROVEN
+// PROVEN: dca765ab IDENTICAL/IDENTICAL
 // OFFSET: 0x004BDB70/0x1400F7660
 void STORMAPI SBigPowMod(BigData* a, const BigData* b, const BigData* c, const BigData* d) {
     PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());

@@ -242,7 +242,7 @@ static int luaB_next (lua_State *L) {
 
 
 // PROVEN: e571cff1 IDENTICAL/NONE
-// OFFSET: 0x00A2D950
+// OFFSET: 0x00A2D950/0x1407D6550
 static int luaB_pairs (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   lua_pushvalue(L, lua_upvalueindex(1));  /* return generator, */
@@ -265,7 +265,7 @@ static int ipairsaux (lua_State *L) {
 
 
 // PROVEN: e7ca25b7 IDENTICAL/NONE
-// OFFSET: 0x00A2D9E0
+// OFFSET: 0x00A2D9E0/0x1407D6610
 static int luaB_ipairs (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   lua_pushvalue(L, lua_upvalueindex(1));  /* return generator, */
@@ -312,6 +312,7 @@ static int luaB_assert (lua_State *L) {
 }
 
 
+// PROVEN: c64e8340 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A2DAD0/0x1407D6740
 static int luaB_unpack (lua_State *L) {
   int i, e, n;
@@ -464,7 +465,7 @@ static const luaL_Reg base_funcs[] = {
 #define CO_NOR	2	/* 'normal' (it resumed another coroutine) */
 #define CO_DEAD	3
 
-// STATIC: 0x00C1C318
+// STATIC: 0x00C1C318/0x140A0FF60
 static const char *const statnames[] =
     {"running", "suspended", "normal", "dead"};
 

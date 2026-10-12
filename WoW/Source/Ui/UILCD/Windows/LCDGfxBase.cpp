@@ -2,6 +2,7 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
+// PROVEN: 5295efa1 UNPROVEN/IDENTICAL
 // OFFSET: 0x00B41900/0x14090FBB0
 CLCDGfxBase::CLCDGfxBase() {
     this->m_pLCDScreen = NULL;
@@ -19,7 +20,7 @@ CLCDGfxBase::~CLCDGfxBase() {
     this->Shutdown();
 }
 
-// PROVEN: 82a42512 IDENTICAL/NONE
+// PROVEN: 82a42512 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B41930/0x14090FBE0
 HRESULT CLCDGfxBase::Initialize() {
     this->m_hDC = CreateCompatibleDC(NULL);
@@ -56,7 +57,7 @@ void CLCDGfxBase::Shutdown() {
     this->m_nWidth = 0;
 }
 
-// PROVEN: 38476198 IDENTICAL/NONE
+// PROVEN: 38476198 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B41AC0/0x14090FDE0
 HRESULT CLCDGfxBase::CreateBitmap(uint16_t bitCount) {
     this->m_pBitmapInfo = reinterpret_cast<BITMAPINFO*>(new (__FILE__, __LINE__) uint8_t[sizeof(BITMAPINFO) + 256 * sizeof(RGBQUAD)]);
@@ -98,14 +99,14 @@ HRESULT CLCDGfxBase::CreateBitmap(uint16_t bitCount) {
     return S_OK;
 }
 
-// PROVEN: dae91d09 IDENTICAL/NONE
+// PROVEN: dae91d09 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B41960/0x14090FC20
 void CLCDGfxBase::ClearScreen() {
     RECT rect = { 0, 0, this->m_nWidth, this->m_nHeight };
     FillRect(this->m_hDC, &rect, static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
 }
 
-// PROVEN: a63538b8 IDENTICAL/NONE
+// PROVEN: a63538b8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B419A0/0x14090FC70
 void CLCDGfxBase::BeginDraw() {
     if (!this->m_hPrevBitmap) {
@@ -115,7 +116,7 @@ void CLCDGfxBase::BeginDraw() {
     }
 }
 
-// PROVEN: 6cde81ca IDENTICAL/NONE
+// PROVEN: 6cde81ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00B419E0/0x14090FCC0
 void CLCDGfxBase::EndDraw() {
     if (this->m_hPrevBitmap) {
@@ -125,13 +126,13 @@ void CLCDGfxBase::EndDraw() {
     }
 }
 
-// PROVEN: 5d76ee5e IDENTICAL/NONE
+// PROVEN: 5d76ee5e IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40BC0/0x14090EAF0
 HDC CLCDGfxBase::GetHDC() {
     return this->m_hDC;
 }
 
-// PROVEN: b2aa2441 IDENTICAL/NONE
+// PROVEN: b2aa2441 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B41A10/0x14090FD10
 lgLcdBitmapHeader* CLCDGfxBase::GetLCDScreen() {
     if (this->m_pLCDScreen) {
@@ -147,18 +148,19 @@ BITMAPINFO* CLCDGfxBase::GetBitmapInfo() {
     return this->m_pBitmapInfo;
 }
 
-// PROVEN: fc78ba6e IDENTICAL/NONE
+// PROVEN: fc78ba6e IDENTICAL/DIFFERENT
 // OFFSET: 0x00B41A50/0x140208F50
 HBITMAP CLCDGfxBase::GetHBITMAP() {
     return this->m_hBitmap;
 }
 
-// PROVEN: 4908a79b IDENTICAL/DIFFERENT
+// PROVEN: 4908a79b IDENTICAL/IDENTICAL
 // OFFSET: 0x00B41A60/0x14090EBB0
 int32_t CLCDGfxBase::GetWidth() {
     return this->m_nWidth;
 }
 
+// PROVEN: 406e4414 IDENTICAL/IDENTICAL
 // OFFSET: [0x007B0A80/0x14090FD60]
 int32_t CLCDGfxBase::GetHeight() {
     return this->m_nHeight;

@@ -3,17 +3,17 @@
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// STATIC: 0x00E890B0
+// STATIC: 0x00E890B0/0x140D74D80
 CDataAllocator CClientLiquidEnvironment::s_allocator(sizeof(CClientLiquidEnvironment), 16);
 
-// STATIC: 0x00E890AC
+// STATIC: 0x00E890AC/0x140D74D78
 CClientLiquidEnvironment* CClientLiquidEnvironment::s_shared;
 
-// STATIC: 0x00E890C4
+// STATIC: 0x00E890C4/0x140D74DA0
 static int32_t s_localLightInitialized;
 
-// PROVEN: f99279b5 IDENTICAL/NONE
-// OFFSET: 0x0076C740
+// PROVEN: f99279b5 IDENTICAL/IDENTICAL
+// OFFSET: 0x0076C740/0x140454CB0
 void CClientLiquidEnvironment::SetInteriorFog(int32_t interiorFog) {
     this->m_interiorFog = interiorFog;
 }
@@ -22,7 +22,8 @@ void CClientLiquidEnvironment::SetInteriorFog(int32_t interiorFog) {
 Liquid::IEnvironment::~IEnvironment() {
 }
 
-// OFFSET: 0x0076C780
+// PROVEN: 2d53bd9c IDENTICAL/IDENTICAL
+// OFFSET: 0x0076C780/0x140454CC0
 void CClientLiquidEnvironment::Destroy() {
     if (CClientLiquidEnvironment::s_shared) {
         CClientLiquidEnvironment::s_allocator.Delete(CClientLiquidEnvironment::s_shared);
@@ -32,6 +33,7 @@ void CClientLiquidEnvironment::Destroy() {
     CClientLiquidEnvironment::s_allocator.Clear(typeid(CClientLiquidEnvironment).raw_name(), SLOG_OBJECT, 1);
 }
 
+// PROVEN: 65a26e86 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076C7D0/0x140454D30
 void CClientLiquidEnvironment::Release() {
     if (this != CClientLiquidEnvironment::s_shared) {
@@ -39,7 +41,7 @@ void CClientLiquidEnvironment::Release() {
     }
 }
 
-// OFFSET: 0x0076C800
+// OFFSET: 0x0076C800/0x140454D70
 void CClientLiquidEnvironment::SelectLights(CM2Lighting& lighting) {
     const DayNight::FogInfo* fog = this->m_interiorFog ? DayNight::GetIntFogInfo() : DayNight::GetFogInfo();
     C3Vector color(fog->m_color.r * 0.0039215689f, fog->m_color.g * 0.0039215689f, fog->m_color.b * 0.0039215689f);
@@ -66,7 +68,7 @@ void CClientLiquidEnvironment::SelectLights(CM2Lighting& lighting) {
     lighting.AddLight(&s_localLight);
 }
 
-// OFFSET: 0x0076C980
+// OFFSET: 0x0076C980/0x140454F70
 CClientLiquidEnvironment* CClientLiquidEnvironment::Create(int32_t shared, int32_t localLight) {
     if (shared) {
         if (!CClientLiquidEnvironment::s_shared) {

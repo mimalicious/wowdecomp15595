@@ -193,7 +193,7 @@ FMOD_RESULT DSPDistortion::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A9A880
+// OFFSET: 0x00A9A880/0x14085B090
 FMOD_RESULT DSPDistortion::readInternal(float * inbuffer, float * outbuffer, unsigned int length, int inchannels, int outchannels)
 {   
     float k;
@@ -417,7 +417,7 @@ FMOD_RESULT F_CALLBACK DSPDistortion::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00A9AA40
+// OFFSET: 0x00A9AA40/0x14085B270
 FMOD_RESULT F_CALLBACK DSPDistortion::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPDistortion *distortion = (DSPDistortion *)dsp;

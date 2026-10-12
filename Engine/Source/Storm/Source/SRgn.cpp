@@ -78,7 +78,7 @@ static void ProcessBooleanOperation(TSGrowableArray<_SOURCE>* sourcearray, int32
     }
 }
 
-// OFFSET: 0x004C1B90
+// OFFSET: 0x004C1B90/0x1400FC5E0
 static void AddSourceRect(TSGrowableArray<_SOURCE>* sourcearray, const RECTF* rect, void* param, int32_t sequence, uint32_t flags) {
     _SOURCE* source = sourcearray->New();
     source->rect = *rect;
@@ -197,10 +197,12 @@ static void ClearRegion(RGN* rgn) {
     rgn->dirty = 0;
 }
 
+// PROVEN: ddb70c17 IDENTICAL/IDENTICAL
 // OFFSET: 0x004C2A60/0x1400FD750
 RGN::~RGN() {
 }
 
+// PROVEN: 0581af22 IDENTICAL/NONE
 // OFFSET: 0x004C25C0
 void STORMAPI SRgnDestroy() {
     s_rgntable.Destroy();

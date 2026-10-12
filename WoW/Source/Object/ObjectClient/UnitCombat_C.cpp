@@ -147,16 +147,16 @@
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: 0x00DD8674
+// STATIC: 0x00DD8674/0x140CBEE00
 static uint32_t s_nextVictimImpactTime;
 
-// PROVEN: 99326035 IDENTICAL/NONE
+// PROVEN: 99326035 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FF6D0/0x1402837D0
 void CGUnit_C::ShowPlayerPVPHonorGained(WOWGUID victim, int32_t rank, int32_t honor) {
     CGChat::LogHonorGain(this, victim, rank, honor);
 }
 
-// PROVEN: d784e696 IDENTICAL/NONE
+// PROVEN: d784e696 IDENTICAL/DIFFERENT
 // OFFSET: 0x005FF6F0/0x1402837F0
 const CGUnitVirtualItem* CGUnit_C::GetParryingItem(bool offhand) const {
     const CGUnitVirtualItem* item = this->GetVirtualItem(0, false);
@@ -172,7 +172,7 @@ const CGUnitVirtualItem* CGUnit_C::GetParryingItem(bool offhand) const {
     return item;
 }
 
-// PROVEN: bc3775bf IDENTICAL/NONE
+// PROVEN: bc3775bf IDENTICAL/IDENTICAL
 // OFFSET: 0x005FF740/0x140283850
 int32_t CGUnit_C::GetUnitSize() const {
     int32_t size = this->m_displayInfo->m_sizeClass;
@@ -192,7 +192,7 @@ void TargetAttacker(const WOWGUID& attacker) {
     }
 }
 
-// OFFSET: 0x005FF8A0
+// OFFSET: 0x005FF8A0/0x140283980
 void CGUnit_C::PlayAttackerRound(const ATTACKROUNDINFO& info) {
     if (this->m_unit->m_unitFieldHealth <= 0 || (info.m_hitInfo & 0x40000)) {
         return;
@@ -261,7 +261,7 @@ void CGUnit_C::PlayAttackerRound(const ATTACKROUNDINFO& info) {
     }
 }
 
-// OFFSET: 0x005FF9F0
+// OFFSET: 0x005FF9F0/0x140283B30
 void CGUnit_C::ShowBloodSpurt(const WOWGUID& attacker, int32_t a3) {
     UnitBloodRec* blood = this->GetBloodRecord();
 
@@ -343,6 +343,7 @@ const CGUnitVirtualItem* CGUnit_C::GetAttackingWeapon(int32_t hand, bool require
     return NULL;
 }
 
+// PROVEN: 7699e0e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x005FFBF0/0x140283E40
 void UnitCombatClientShutdown() {
     ClientServices::ClearMessageHandler(SMSG_ATTACK_START);
@@ -358,7 +359,7 @@ void UnitCombatClientShutdown() {
     UnitCombatLogShutdown();
 }
 
-// OFFSET: 0x005FFCB0
+// OFFSET: 0x005FFCB0/0x140283F20
 void CGUnit_C::ShakeCameraOnHit() {
     if (this->m_unit->m_unitFieldPetnumber) {
         return;
@@ -372,7 +373,7 @@ void CGUnit_C::ShakeCameraOnHit() {
     }
 }
 
-// OFFSET: 0x005FFD30
+// OFFSET: 0x005FFD30/0x140283F80
 void ATTACKROUNDINFO::Unpack(CDataStore& msg) {
     msg.Get(this->m_hitInfo);
     msg >> *reinterpret_cast<SmartGUID*>(&this->m_attacker);
@@ -434,7 +435,7 @@ void ATTACKROUNDINFO::Unpack(CDataStore& msg) {
     }
 }
 
-// OFFSET: 0x005FFF60
+// OFFSET: 0x005FFF60/0x140284200
 void CGUnit_C::PlayCombatSpellMissEffects(uint32_t reason, const WOWGUID& source) {
     if (this->IsMountSelf(0) || (this->m_unit->m_unitFieldFlags2 & 0x1) || this->GetClientStandState() == 7) {
         return;
@@ -496,7 +497,7 @@ void CGUnit_C::StopAttack(bool send) {
     this->m_stopAttackSent = 1;
 }
 
-// OFFSET: 0x00600180
+// OFFSET: 0x00600180/0x1402844F0
 void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
     WOWGUID activePlayer = ClntObjMgrGetActivePlayer();
 
@@ -722,7 +723,7 @@ void CGUnit_C::PlayRangedItemPull() {
     this->m_rangedWeaponModel->SetBoneSequence(0xFFFFFFFF, 160, 0, 0, static_cast<float>(static_cast<int32_t>(sequence.m_duration)) / remaining, 1, 1, 0, 0, 0);
 }
 
-// OFFSET: 0x006009B0
+// OFFSET: 0x006009B0/0x140284EF0
 void CGUnit_C::ClearAttackRound() {
     if (!this->m_lastAttackRound.m_attacker.m_guid || !this->m_lastAttackRound.m_target.m_guid) {
         return;
@@ -959,7 +960,7 @@ void CGUnit_C::HandleCombatAnimEvent(uint32_t eventId, uint32_t data, const C3Ve
     }
 }
 
-// OFFSET: 0x006011A0
+// OFFSET: 0x006011A0/0x140285950
 void CGUnit_C::OnAttackStop(uint64_t target, int32_t faceTarget) {
     this->m_combat.m_attacking = WOWGUID::Make(0);
     this->m_combat.m_attackSent = 0;
@@ -981,7 +982,7 @@ void CGUnit_C::OnAttackStop(uint64_t target, int32_t faceTarget) {
     }
 }
 
-// OFFSET: 0x00601240
+// OFFSET: 0x00601240/0x140285A60
 int32_t Packet_Group_29(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     switch (msgId) {
         case SMSG_ATTACK_START: {

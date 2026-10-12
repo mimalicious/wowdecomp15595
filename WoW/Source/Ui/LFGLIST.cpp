@@ -67,6 +67,7 @@ void LFGLIST::RemoveParty(LFGListParty* party) {
     party->m_index = -1;
 }
 
+// PROVEN: 1b9fdba5 IDENTICAL/NONE
 // OFFSET: 0x009872E0
 void LFGLIST::DeleteParty(LFGListParty* party) {
     for (int32_t i = party->m_members.Count() - 1; i >= 0; i--) {

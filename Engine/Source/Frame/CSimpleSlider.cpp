@@ -21,7 +21,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: 0x00CA44E0
+// STATIC: 0x00CA44E0/0x140B42370
 int32_t CSimpleSlider::s_metatable = LUA_NOREF;
 
 // STATIC: 0x00DD3A74/0x140CB97D8
@@ -30,7 +30,7 @@ int32_t CSimpleSlider::s_objectType;
 // STATIC: 0x00CA3464
 const char* CSimpleSlider::s_objectTypeName = "Slider";
 
-// STATIC: 0x00DD3A78
+// STATIC: 0x00DD3A78/0x140CB97E0
 CDataAllocator CSimpleSlider::s_allocator(sizeof(CSimpleSlider), 5);
 
 // INLINED
@@ -40,7 +40,7 @@ void CSimpleSlider::operator delete(void* ptr) {
     }
 }
 
-// PROVEN: 5c7338db IDENTICAL/UNPROVEN
+// PROVEN: 5c7338db IDENTICAL/IDENTICAL
 // OFFSET: 0x00521140/0x14016EB80
 void CSimpleSlider::RunOnMinMaxChangedScript() {
     if (this->HasScript(this->m_onMinMaxChanged)) {
@@ -67,7 +67,7 @@ float CSimpleSlider::SnapValueToStep(float value) {
     return static_cast<float>(static_cast<int32_t>((offset - half) / this->m_valueStep)) * this->m_valueStep + this->m_baseValue;
 }
 
-// PROVEN: 90afd404 IDENTICAL/UNPROVEN
+// PROVEN: 90afd404 IDENTICAL/IDENTICAL
 // OFFSET: 0x00520EF0/0x14016E8B0
 FrameScript_Object::ScriptIx* CSimpleSlider::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -107,6 +107,7 @@ void CSimpleSlider::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
+// PROVEN: d115fedc DIFFERENT/IDENTICAL
 // OFFSET: 0x00521020/0x14016E9F0
 void CSimpleSlider::SetThumbTexture(CSimpleTexture* texture, uint32_t drawLayer) {
     if (texture == this->m_thumbTexture) {
@@ -126,6 +127,7 @@ void CSimpleSlider::SetThumbTexture(CSimpleTexture* texture, uint32_t drawLayer)
     this->m_thumbTexture = texture;
 }
 
+// PROVEN: b7fcc312 DIFFERENT/IDENTICAL
 // OFFSET: 0x00521070/0x14016EA70
 void CSimpleSlider::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
@@ -158,7 +160,7 @@ int32_t CSimpleSlider::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     return CSimpleFrame::OnLayerMouseUp(evt, btn);
 }
 
-// OFFSET: 0x005211B0
+// OFFSET: 0x005211B0/0x14016EC10
 CSimpleSlider::CSimpleSlider(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_changed = 0;
     this->m_rangeSet = 0;
@@ -228,8 +230,8 @@ int32_t CSimpleSlider::SetThumbTexture(const char* fileName) {
     return 0;
 }
 
-// PROVEN: f1a772fa IDENTICAL/NONE
-// OFFSET: 0x005210E0
+// PROVEN: f1a772fa IDENTICAL/IDENTICAL
+// OFFSET: 0x005210E0/0x14016EAF0
 void CSimpleSlider::RunOnValueChangedScript(bool userInput) {
     if (this->HasScript(this->m_onValueChanged)) {
         lua_State* L = FrameScript_GetContext();
@@ -335,7 +337,7 @@ int32_t CSimpleSlider::OnLayerMouseDown(const CMouseEvent& evt, const char* btn)
     return CSimpleFrame::OnLayerMouseDown(evt, btn);
 }
 
-// PROVEN: 15300170 IDENTICAL/UNPROVEN
+// PROVEN: 15300170 IDENTICAL/IDENTICAL
 // OFFSET: 0x005217B0/0x14016F350
 void CSimpleSlider::SetMinMaxValues(float min, float max) {
     float range = max - min;

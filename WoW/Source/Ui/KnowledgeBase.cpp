@@ -12,12 +12,13 @@
 #include "WoW/Source/Ui/Types.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 
-// STATIC: 0x00D17320
+// STATIC: 0x00D17320/0x140BD2000
 CKBSetup g_KnowledgeBaseSetup;
 
-// STATIC: 0x00F76B60
+// STATIC: 0x00F76B60/0x140E6CC78
 CKBPage* CKBPage::s_pLoadingQueue_Head;
 
+// PROVEN: 57afae60 UNPROVEN/IDENTICAL
 // OFFSET: 0x009FB070/0x140798850
 CKBPage::CKBPage() {
     this->m_state = 0;
@@ -106,7 +107,7 @@ bool CKBPage::LoadingCallback(void* param, const char* data, uint32_t size, bool
     return true;
 }
 
-// PROVEN: 58ea4a4d IDENTICAL/NONE
+// PROVEN: 58ea4a4d IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB390/0x140798B70
 int32_t CKBSetup::BeginLoading(int32_t numArticles, int32_t pageNumber) {
     if (this->m_state == 1 || this->m_inQueue) {
@@ -163,7 +164,7 @@ CKBPage::~CKBPage() {
 void CKBPage::_ComputeCachedData() {
 }
 
-// PROVEN: 054e076b IDENTICAL/NONE
+// PROVEN: 054e076b IDENTICAL/DIFFERENT
 // OFFSET: 0x009FB0F0/0x140798900
 int32_t CKBPage::_BeginLoading() {
     this->m_state = 1;
@@ -173,6 +174,7 @@ int32_t CKBPage::_BeginLoading() {
     return 1;
 }
 
+// PROVEN: 3e7f63ea IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB2A0/0x140798AE0
 XMLNode* CKBPage::_GetRoot(CKBIterator& iterator) {
     XMLNode* root = XMLTree_GetRoot(this->m_tree);
@@ -186,7 +188,7 @@ XMLNode* CKBPage::_GetRoot(CKBIterator& iterator) {
     return root;
 }
 
-// OFFSET: [0x009FB2D0, 0x009FB590]
+// OFFSET: [0x009FB2D0/0x1400120D0, 0x009FB590]
 int32_t CKBPage::_GetInt(XMLNode* node, const char* attribute) const {
     if (this->m_state != 2 || !this->m_tree || !node) {
         return 0;
@@ -196,6 +198,7 @@ int32_t CKBPage::_GetInt(XMLNode* node, const char* attribute) const {
     return value ? atol(value) : 0;
 }
 
+// PROVEN: 1a865b7e DIFFERENT/IDENTICAL
 // OFFSET: 0x009FB310/0x140798B50
 const char* CKBPage::_GetBodyString(XMLNode* node) const {
     if (this->m_state != 2 || !this->m_tree) {
@@ -398,7 +401,7 @@ void CKBSetup::_ComputeCachedData() {
     }
 }
 
-// PROVEN: 5fe67e59 IDENTICAL/NONE
+// PROVEN: 5fe67e59 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB7B0/0x140798EB0
 void CKBSetup::GetCategory(int32_t category) {
     this->m_subCategories.m_node = NULL;
@@ -447,6 +450,7 @@ XMLNode* CKBSetup::GetSubCategory(int32_t category, int32_t subCategory) {
     return this->m_subCategories.m_node;
 }
 
+// PROVEN: 292f1a4c IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC700/0x14079A270
 void CKBSetup::_SendSuccessEvent() {
     if (CGGameUI::m_initialized) {
@@ -512,7 +516,7 @@ const char* KnowledgeBaseGetURLForLocale() {
     }
 }
 
-// PROVEN: 89dddaee IDENTICAL/NONE
+// PROVEN: 89dddaee IDENTICAL/IDENTICAL
 // OFFSET: 0x009FB010/0x1407987D0
 void CKBPage::UpdateLoadingQueue() {
     CKBPage* prev = NULL;
@@ -544,7 +548,7 @@ void CKBPage::UpdateLoadingQueue() {
     }
 }
 
-// OFFSET: 0x009FCD10
+// OFFSET: 0x009FCD10/0x14079AA00
 void CKBPage::Shutdown() {
     while (CKBPage::s_pLoadingQueue_Head) {
         OsSleep(1);
@@ -597,6 +601,7 @@ void CKBPage::Shutdown() {
     g_KnowledgeBaseArticle.m_state = 0;
 }
 
+// PROVEN: deabc69e IDENTICAL/IDENTICAL
 // OFFSET: 0x009FC720/0x14079A290
 void CKBSetup::_SendFailureEvent() {
     if (CGGameUI::m_initialized) {

@@ -308,7 +308,7 @@ static int32_t Script_GetChildren(lua_State* L) {
     return count;
 }
 
-// PROVEN: 954b252e IDENTICAL/NONE
+// PROVEN: 954b252e IDENTICAL/IDENTICAL
 // OFFSET: 0x0050B2C0/0x1401537B0
 static int32_t Script_GetFrameStrata(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -347,6 +347,7 @@ static int32_t Script_SetFrameStrata(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e6aece76 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050B410/0x140153940
 static int32_t Script_GetFrameLevel(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -408,21 +409,21 @@ static int32_t Script_HasScript(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d8839d20 IDENTICAL/NONE
-// OFFSET: 0x0050B600
+// PROVEN: d8839d20 IDENTICAL/UNPROVEN
+// OFFSET: 0x0050B600/0x140153BB0
 static int32_t Script_GetScript(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     return frame ? frame->GetScript(L) : 0;
 }
 
-// PROVEN: 0959de32 IDENTICAL/NONE
-// OFFSET: 0x0050B640
+// PROVEN: 0959de32 IDENTICAL/UNPROVEN
+// OFFSET: 0x0050B640/0x140153C00
 static int32_t Script_SetScript(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     return frame ? frame->SetScript(L) : 0;
 }
 
-// PROVEN: 587a1098 IDENTICAL/NONE
+// PROVEN: 587a1098 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050B680/0x140153C50
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -457,6 +458,7 @@ static int32_t Script_UnregisterEvent(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9a522abb DIFFERENT/IDENTICAL
 // OFFSET: 0x0050B820/0x140153E40
 static int32_t Script_RegisterAllEvents(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -465,6 +467,7 @@ static int32_t Script_RegisterAllEvents(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 07564e38 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050B860/0x140153E80
 static int32_t Script_UnregisterAllEvents(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -504,6 +507,7 @@ static int32_t Script_AllowAttributeChanges(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 8575edf6 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050B990/0x140153FE0
 static int32_t Script_CanChangeAttribute(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -695,6 +699,7 @@ static int32_t Script_SetAttribute(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 28a46226 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050BEC0/0x140154630
 static int32_t Script_GetEffectiveScale(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -703,6 +708,7 @@ static int32_t Script_GetEffectiveScale(lua_State* L) {
     return 1;
 }
 
+// PROVEN: ab060d79 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050BF10/0x140154680
 static int32_t Script_GetScale(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -780,6 +786,7 @@ static int32_t Script_SetAlpha(lua_State* L) {
     return 0;
 }
 
+// PROVEN: e733fde1 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050C1E0/0x140154970
 static int32_t Script_GetID(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -826,7 +833,7 @@ static int32_t Script_SetToplevel(lua_State* L) {
     return 0;
 }
 
-// PROVEN: eb52d9f8 IDENTICAL/NONE
+// PROVEN: eb52d9f8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050C350/0x140154B30
 static int32_t Script_IsToplevel(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -840,7 +847,7 @@ static int32_t Script_IsToplevel(lua_State* L) {
     return 1;
 }
 
-// PROVEN: e18f72c3 IDENTICAL/NONE
+// PROVEN: e18f72c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050C3B0/0x140154B90
 static int32_t Script_EnableDrawLayer(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -854,7 +861,7 @@ static int32_t Script_EnableDrawLayer(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 12f316de IDENTICAL/NONE
+// PROVEN: 12f316de IDENTICAL/IDENTICAL
 // OFFSET: 0x0050C420/0x140154C20
 static int32_t Script_DisableDrawLayer(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -884,7 +891,7 @@ static int32_t Script_Show(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0050C4F0
+// OFFSET: 0x0050C4F0/0x140154D20
 static int32_t Script_Hide(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -900,7 +907,7 @@ static int32_t Script_Hide(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0050C550
+// OFFSET: 0x0050C550/0x140154D90
 static int32_t Script_IsVisible(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1119,7 +1126,7 @@ static int32_t Script_SetMovable(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6e023cb9 IDENTICAL/UNPROVEN
+// PROVEN: 6e023cb9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050CF70/0x1401559E0
 static int32_t Script_IsMovable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1142,7 +1149,7 @@ static int32_t Script_SetDontSavePosition(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 099468cb IDENTICAL/NONE
+// PROVEN: 099468cb IDENTICAL/IDENTICAL
 // OFFSET: 0x0050D020/0x140155AC0
 static int32_t Script_GetDontSavePosition(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1165,7 +1172,7 @@ static int32_t Script_SetResizable(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f0df0bae IDENTICAL/UNPROVEN
+// PROVEN: f0df0bae IDENTICAL/IDENTICAL
 // OFFSET: 0x0050D0D0/0x140155BA0
 static int32_t Script_IsResizable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1262,7 +1269,7 @@ static int32_t Script_SetUserPlaced(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 05737aa4 IDENTICAL/NONE
+// PROVEN: 05737aa4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050D3F0/0x140155F50
 static int32_t Script_IsUserPlaced(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1276,7 +1283,7 @@ static int32_t Script_IsUserPlaced(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a7292620 IDENTICAL/UNPROVEN
+// PROVEN: a7292620 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050D450/0x140155FC0
 static int32_t Script_SetClampedToScreen(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1285,7 +1292,7 @@ static int32_t Script_SetClampedToScreen(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6a8b4f79 IDENTICAL/NONE
+// PROVEN: 6a8b4f79 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050D4A0/0x140156020
 static int32_t Script_IsClampedToScreen(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1299,6 +1306,7 @@ static int32_t Script_IsClampedToScreen(lua_State* L) {
     return 1;
 }
 
+// PROVEN: c610b47e DIFFERENT/IDENTICAL
 // OFFSET: 0x0050D500/0x140156080
 static int32_t Script_RegisterForDrag(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1676,6 +1684,7 @@ static int32_t Script_GetBackdropColor(lua_State* L) {
     return 4;
 }
 
+// PROVEN: c025ed4c DIFFERENT/IDENTICAL
 // OFFSET: 0x0050E1A0/0x140157070
 static int32_t Script_SetBackdropColor(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1708,6 +1717,7 @@ static int32_t Script_GetBackdropBorderColor(lua_State* L) {
     return 4;
 }
 
+// PROVEN: 812eb0e7 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050E2E0/0x1401571E0
 static int32_t Script_SetBackdropBorderColor(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1774,7 +1784,7 @@ static int32_t Script_IgnoreDepth(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4eae8bcc IDENTICAL/NONE
+// PROVEN: 4eae8bcc IDENTICAL/IDENTICAL
 // OFFSET: 0x0050E520/0x140157470
 static int32_t Script_IsIgnoringDepth(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1802,6 +1812,7 @@ static int32_t Script_SetPropagateKeyboardInput(lua_State* L) {
     return 0;
 }
 
+// PROVEN: fc6642e5 DIFFERENT/IDENTICAL
 // OFFSET: 0x0050E5E0/0x140157560
 static int32_t Script_GetPropagateKeyboardInput(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1815,22 +1826,22 @@ static int32_t Script_GetPropagateKeyboardInput(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 14325063 IDENTICAL/NONE
-// OFFSET: 0x0050E650
+// PROVEN: 14325063 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050E650/0x1401575D0
 void CSimpleFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleFrame::RegisterScriptMethods);
 }
 
-// PROVEN: d8b12dd4 IDENTICAL/NONE
-// OFFSET: 0x0050B000
+// PROVEN: d8b12dd4 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050B000/0x140153450
 void CSimpleFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleFrame::s_metatable);
     CSimpleFrame::s_metatable = LUA_NOREF;
 }
 
-// STATIC: 0x00CA2FA8
+// STATIC: 0x00CA2FA8/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetTitleRegion", &Script_GetTitleRegion },
     { "CreateTitleRegion", &Script_CreateTitleRegion },

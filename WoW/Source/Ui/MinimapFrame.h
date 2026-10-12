@@ -44,7 +44,6 @@ struct OBJINFO {
     /* 0018 */ uint8_t m_otherFloor;
     /* 0019 */ uint8_t m_tracked;
     /* 001A */ uint8_t m_questGiver;
-    /* 001B */ uint8_t m_pad;
     /* 001C */ int32_t m_icon;
     /* 0020 */ float m_facing;
     /* 0024 */ int32_t m_marker;

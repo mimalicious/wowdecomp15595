@@ -6,6 +6,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
+// PROVEN: 24593d2b IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF650/0x14079DC90
 static int32_t Script_SetReverse(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
@@ -13,6 +14,7 @@ static int32_t Script_SetReverse(lua_State* L) {
     return 0;
 }
 
+// PROVEN: b3d81458 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF6A0/0x14079DCF0
 static int32_t Script_GetReverse(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
@@ -20,6 +22,7 @@ static int32_t Script_GetReverse(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 863c6e93 IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF6E0/0x14079DD40
 static int32_t Script_SetDrawEdge(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
@@ -27,6 +30,7 @@ static int32_t Script_SetDrawEdge(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 58775b3b IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF730/0x14079DDA0
 static int32_t Script_GetDrawEdge(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
@@ -34,6 +38,7 @@ static int32_t Script_GetDrawEdge(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 95e3a18b IDENTICAL/DIFFERENT
 // OFFSET: 0x009FFBD0/0x14079E1F0
 static int32_t Script_SetCooldown(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
@@ -50,6 +55,7 @@ static int32_t Script_SetCooldown(lua_State* L) {
     return 0;
 }
 
+// PROVEN: f6a6667c IDENTICAL/IDENTICAL
 // OFFSET: 0x009FE940/0x14079CE70
 void CGCooldown::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -57,13 +63,14 @@ void CGCooldown::DestroyScriptMetaTable() {
     CGCooldown::s_metatable = LUA_NOREF;
 }
 
+// PROVEN: d781234f IDENTICAL/IDENTICAL
 // OFFSET: 0x009FF770/0x14079DDF0
 void CGCooldown::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CGCooldown::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGCooldown::RegisterScriptMethods);
 }
 
-// STATIC: 0x00D17524
+// STATIC: 0x00D17524/0x140B328F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetCooldown", &Script_SetCooldown },
     { "SetReverse", &Script_SetReverse },
@@ -72,7 +79,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetDrawEdge", &Script_GetDrawEdge },
 };
 
-// PROVEN: 7131e6d6 IDENTICAL/NONE
+// PROVEN: 7131e6d6 IDENTICAL/UNPROVEN
 // OFFSET: 0x009FE920/0x14079CE40
 void CGCooldown::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

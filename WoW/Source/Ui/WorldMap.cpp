@@ -43,60 +43,61 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: 0x00F33E48
+// STATIC: 0x00F33E48/0x140E26E18
 uint32_t CGWorldMap::m_numLandmarks;
 
-// STATIC: 0x00F33E4C
+// STATIC: 0x00F33E4C/0x140E26E1C
 uint32_t CGWorldMap::m_numOverlays;
 
-// STATIC: 0x00F33E50
+// STATIC: 0x00F33E50/0x140E26E20
 CSimpleModel* CGWorldMap::m_playerArrowFrame;
 
-// STATIC: 0x00F33E54
+// STATIC: 0x00F33E54/0x140E26E28
 CSimpleModel* CGWorldMap::m_playerMiniArrowFrame;
 
-// STATIC: 0x00F33E58
+// STATIC: 0x00F33E58/0x140E26E30
 CSimpleModel* CGWorldMap::m_playerArrowEffectFrame;
 
-// STATIC: 0x00F33E5C
+// STATIC: 0x00F33E5C/0x140E26E38
 CSimpleModel* CGWorldMap::m_playerMiniArrowEffectFrame;
 
-// STATIC: 0x00D112B8
+// STATIC: 0x00D112B8/0x140BC7A40
 int32_t CGWorldMap::m_currentContinent = -1;
 
-// STATIC: 0x00D112BC
+// STATIC: 0x00D112BC/0x140BC7A44
 int32_t CGWorldMap::m_currentZone = -1;
 
-// STATIC: 0x00D112C0
+// STATIC: 0x00D112C0/0x140BC7A48
 int32_t CGWorldMap::m_currentDungeonMap = -1;
 
-// STATIC: 0x00D112C4
+// STATIC: 0x00D112C4/0x140BC7A4C
 int32_t CGWorldMap::m_currentOrphanZone = -1;
 
-// STATIC: 0x00F33E70
+// STATIC: 0x00F33E70/0x140E26E50
 TSFixedArray<WorldMapContinentInfo> CGWorldMap::m_continents;
 
-// STATIC: 0x00F33E7C
+// STATIC: 0x00F33E7C/0x140E26E60
 TSGrowableArray<WorldMapLandmarkInfo> CGWorldMap::m_landmarks;
 
-// STATIC: 0x00F33E8C
+// STATIC: 0x00F33E8C/0x140E26E78
 TSGrowableArray<int32_t> CGWorldMap::m_overlays;
 
-// STATIC: 0x00F33E9C
+// STATIC: 0x00F33E9C/0x140E26E90
 TSFixedArray<int32_t> CGWorldMap::m_orphanZones;
 
-// STATIC: 0x00F33E60
+// STATIC: 0x00F33E60/0x140E26E40
 static int32_t s_chunkCacheMapID;
 
-// STATIC: 0x00F33E64
+// STATIC: 0x00F33E64/0x140E26E44
 static int32_t s_chunkCacheIndex;
 
-// STATIC: 0x00D114C4
+// STATIC: 0x00D114C4/0x140BC7DD0
 static int32_t s_preloadedAreaID = -1;
 
-// STATIC: 0x00D114C8
+// STATIC: 0x00D114C8/0x140BC7DD4
 static uint32_t s_taxiNodeZoneRadius = 1;
 
+// PROVEN: ef8be668 IDENTICAL/NONE
 // OFFSET: 0x00919950
 int32_t CGWorldMap::IsContinent(const WorldMapAreaRec* area) {
     if (!area) {
@@ -110,6 +111,7 @@ int32_t CGWorldMap::IsContinent(const WorldMapAreaRec* area) {
     return area->m_areaID == 0;
 }
 
+// PROVEN: 199a633b IDENTICAL/IDENTICAL
 // OFFSET: 0x00919980/0x14067A7F0
 static void CenterArrowModel(CSimpleModel* model) {
     C3Vector position(model->GetWidth() * 0.5f, model->GetHeight() * 0.5f, 0.0f);
@@ -178,7 +180,7 @@ void CGWorldMap::CreateMiniArrowFrame(CSimpleFrame* parent) {
     }
 }
 
-// PROVEN: 543cc20c IDENTICAL/NONE
+// PROVEN: 543cc20c IDENTICAL/IDENTICAL
 // OFFSET: 0x00919CA0/0x14067ABF0
 void CGWorldMap::ClearArrowFrames() {
     if (CGWorldMap::m_playerArrowFrame) {
@@ -212,6 +214,7 @@ int32_t CGWorldMap::GetCurrentDungeonMap() {
     return -1;
 }
 
+// PROVEN: 4c2cdb6e IDENTICAL/UNPROVEN
 // OFFSET: 0x0091A410/0x14067B510
 uint32_t CGWorldMap::GetNumZones(uint32_t continent) {
     if (continent < CGWorldMap::m_continents.m_count) {
@@ -221,6 +224,7 @@ uint32_t CGWorldMap::GetNumZones(uint32_t continent) {
     return 0;
 }
 
+// PROVEN: 422b1fe6 IDENTICAL/DIFFERENT
 // OFFSET: 0x0091A440/0x14067B530
 int32_t CGWorldMap::GetCurrentAreaID() {
     if (CGWorldMap::m_currentContinent >= 0) {
@@ -267,6 +271,7 @@ static int32_t QSortOrphanZones(const void* a, const void* b) {
     return zoneA->m_mapID > zoneB->m_mapID;
 }
 
+// PROVEN: 30e03961 IDENTICAL/DIFFERENT
 // OFFSET: 0x0091A5A0/0x14067B700
 int32_t CGWorldMap::InitializeChunkZones(const WorldMapAreaRec* area, int32_t (&zoneMap)[128][128]) {
     if (area->m_flags & 0x8) {
@@ -590,6 +595,7 @@ static int32_t FindFirstOrphanZone(int32_t mapID) {
     return mid + 1;
 }
 
+// PROVEN: 633bcbda IDENTICAL/DIFFERENT
 // OFFSET: 0x0091AEB0/0x14067C0F0
 const char* CGWorldMap::GetMapName(int32_t areaID) {
     const WorldMapAreaRec* area;
@@ -670,7 +676,7 @@ WorldMapContinentRec* CGWorldMap::GetContinentRec(int32_t mapID) {
     return NULL;
 }
 
-// OFFSET: 0x0091B0C0
+// OFFSET: 0x0091B0C0/0x14067C2D0
 bool CGWorldMap::GetContinentPosition(float x, float y, int32_t mapID, float* mapX, float* mapY) {
     WorldMapContinentRec* rec = CGWorldMap::GetContinentRec(mapID);
 
@@ -705,6 +711,7 @@ bool CGWorldMap::IsMapOnContinent(int32_t mapID, uint32_t continent) {
     return false;
 }
 
+// PROVEN: 91257413 IDENTICAL/UNPROVEN
 // OFFSET: 0x0091B1E0/0x14067C430
 int32_t CGWorldMap::GetWorldMapChildDepth(int32_t parent, int32_t child, int32_t* childArea) {
     if (parent == child) {
@@ -897,6 +904,7 @@ void CGWorldMap::PreloadMapOverlayTextures() {
     }
 }
 
+// PROVEN: c0cec129 IDENTICAL/IDENTICAL
 // OFFSET: 0x0091C950/0x14067E1B0
 bool CGWorldMap::DetermineAlternateMapPosition(int32_t mapID, float x, float y, int32_t& newMapID, float& newX, float& newY, int32_t& dungeonMapID, bool& forceDungeonMap) {
     int32_t newAreaID;
@@ -1310,7 +1318,7 @@ int32_t CGWorldMap::GetChunkFromPos(float x, float y, uint32_t* chunkX, uint32_t
     return 1;
 }
 
-// OFFSET: 0x0091D760
+// OFFSET: 0x0091D760/0x14067F220
 bool CGWorldMap::GetWorldPosition(const C3Vector& position, int32_t mapID, int32_t wmoGroupID, float* x, float* y, bool* outland, bool noClamp, int32_t dungeonMapID) {
     *x = 0.0f;
     *y = 0.0f;
@@ -1448,6 +1456,7 @@ void CGWorldMap::GetPlayerPosition(WOWGUID guid, float* x, float* y) {
     }
 }
 
+// PROVEN: be905c18 IDENTICAL/NONE
 // OFFSET: 0x0091DD50
 int32_t CGWorldMap::GetMapAreaFromPos(float x, float y) {
     uint32_t chunkX = 0;
@@ -1460,6 +1469,7 @@ int32_t CGWorldMap::GetMapAreaFromPos(float x, float y) {
     return CGWorldMap::GetWorldMapAreaByZone(CGWorldMap::m_currentContinent, chunkY, chunkX);
 }
 
+// PROVEN: e3ade554 DIFFERENT/IDENTICAL
 // OFFSET: 0x0091DDB0/0x14067F9F0
 bool CGWorldMap::GetWorldPosition(const C3Vector& position, int32_t mapID, float* x, float* y, bool* outland, bool noClamp, int32_t dungeonMapID) {
     return CGWorldMap::GetWorldPosition(position, mapID, CGGameUI::m_wmoGroupID, x, y, outland, noClamp, dungeonMapID);
@@ -1771,6 +1781,7 @@ void CGWorldMap::SetMap(uint32_t continent, uint32_t zone, int32_t dungeonMap) {
     FrameScript_SignalEvent(SCRIPT_EVENT_WORLD_MAP_UPDATE, NULL);
 }
 
+// PROVEN: ef43d899 IDENTICAL/IDENTICAL
 // OFFSET: 0x004E82B0/0x14012A8D0
 void CGWorldMap::RefreshCurrentMap() {
     if (CGWorldMap::m_currentOrphanZone == -1) {
@@ -1825,6 +1836,7 @@ void CGWorldMap::ProcessClick(float x, float y) {
     }
 }
 
+// PROVEN: 0b12560b IDENTICAL/IDENTICAL
 // OFFSET: 0x0091FEF0/0x140682280
 int32_t PlayerExploredZonesUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     if (CGWorldMap::m_currentOrphanZone == -1) {
@@ -1842,11 +1854,13 @@ void CGWorldMap::EnterWorld() {
     ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offsetof(CGPlayerLocalData, m_playerExploredZones1), sizeof(static_cast<CGPlayerLocalData*>(NULL)->m_playerExploredZones1), PlayerExploredZonesUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }
 
+// PROVEN: 1367deb1 DIFFERENT/IDENTICAL
 // OFFSET: 0x0091FF70/0x140682320
 void CGWorldMap::LeaveWorld() {
     ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offsetof(CGPlayerLocalData, m_playerExploredZones1), PlayerExploredZonesUpdateHandler, NULL);
 }
 
+// PROVEN: c2a7cd09 IDENTICAL/DIFFERENT
 // OFFSET: 0x0091FF90/0x140682360
 void CGWorldMap::SetMapToCurrentZone(int32_t debug) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1872,7 +1886,7 @@ void CGWorldMap::SetMapToCurrentZone(int32_t debug) {
     }
 }
 
-// OFFSET: 0x00920050
+// OFFSET: 0x00920050/0x140682480
 void CGWorldMap::SetDungeonLevel(int32_t level) {
     if (CGWorldMap::m_currentOrphanZone < 0) {
         return;
@@ -1925,7 +1939,8 @@ void CGWorldMap::SetDungeonLevel(int32_t level) {
     }
 }
 
-// OFFSET: 0x00920370
+// PROVEN: fb03e996 IDENTICAL/UNPROVEN
+// OFFSET: 0x00920370/0x1406828A0
 void CGWorldMap::ShutdownGame() {
     CGWorldMap::ClearArrowFrames();
 

@@ -4,7 +4,7 @@
 #include "Engine/Source/Base/Status.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00D096E8
+// STATIC: 0x00D096E8/0x140BBB568
 static CStatus s_errorList;
 
 // INLINED
@@ -35,7 +35,7 @@ void CStatus::Add(const CStatus& source) {
     }
 }
 
-// PROVEN: 564bdf23 IDENTICAL/DIFFERENT
+// PROVEN: 564bdf23 IDENTICAL/IDENTICAL
 // OFFSET: 0x008724D0/0x1405A88E0
 int32_t CStatus::IsEmpty() {
     return this->m_statusList.Head() == NULL;

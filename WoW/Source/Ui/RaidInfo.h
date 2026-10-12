@@ -34,7 +34,6 @@ class CGRaidMember {
     /* 00E8 */ int32_t m_readyCheckPending;
     /* 00EC */ int32_t m_readyCheckReady;
     /* 00F0 */ uint8_t m_assignments;
-    /* 00F1 */ uint8_t unk_00F1[3];
     /* 00F4 */ uint32_t m_groupRole;
 };
 

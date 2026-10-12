@@ -7,7 +7,7 @@
 // STATIC: 0x00DD4388/0x140CBA628
 static CModelBlob* s_modelBlob;
 
-// STATIC: 0x00DD438C
+// STATIC: 0x00DD438C/0x140B43410
 static TSHashTableReuse<CModelBlob::CHashEntry, HASHKEY_MODELBLOBFILE> s_modelBlobHT;
 
 // INLINED
@@ -53,7 +53,8 @@ CModelBlob::~CModelBlob() {
     s_modelBlobHT.Clear();
 }
 
-// OFFSET: 0x00548650
+// PROVEN: 3ae90123 IDENTICAL/DIFFERENT
+// OFFSET: 0x00548650/0x1401A09B0
 void ModelBlobDestroy() {
     if (s_modelBlob) {
         delete s_modelBlob;
@@ -88,7 +89,7 @@ int32_t ModelBlobQuery(const char* modelName, C3Vector& min, C3Vector& max) {
     return s_modelBlob->Query(modelName, min, max);
 }
 
-// OFFSET: 0x00548DE0
+// OFFSET: 0x00548DE0/0x1401A1510
 void CModelBlob::HashBlobEntry(SEntry* entry) {
     const char* name = this->m_stringTable + entry->m_filenameOffset;
     uint32_t hashval = SStrHashHT(name);
@@ -104,7 +105,7 @@ void CModelBlob::HashBlobEntry(SEntry* entry) {
     hashEntry->m_entry = entry;
 }
 
-// OFFSET: 0x00548EA0
+// OFFSET: 0x00548EA0/0x1401A16E0
 void CModelBlob::Load(const char* fileName) {
     SFileImpl* file = NULL;
     SErrSetLastError(0);
@@ -136,7 +137,7 @@ void CModelBlob::Load(const char* fileName) {
     }
 }
 
-// OFFSET: 0x00548FB0
+// OFFSET: 0x00548FB0/0x1401A1840
 int32_t ModelBlobLoad(const char* fileName) {
     if (s_modelBlob) {
         delete s_modelBlob;

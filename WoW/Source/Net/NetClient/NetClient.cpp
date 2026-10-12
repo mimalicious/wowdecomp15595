@@ -27,25 +27,25 @@
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include "WoW/Source/WowServices/HMAC.h"
 
-// STATIC: 0x00C9A888
+// STATIC: 0x00C9A888/0x140B337D8
 static TSList<NETCLIENTNODE> s_clientList;
 
-// STATIC: 0x00D73290
+// STATIC: 0x00D73290/0x140C2E5D0
 static HPROPCONTEXT s_propContext;
 
-// STATIC: 0x00D73294
+// STATIC: 0x00D73294/0x140C2E5D8
 static uint32_t s_stats[6];
 
-// STATIC: 0x00D732AC
+// STATIC: 0x00D732AC/0x140C2E5F0
 static uint32_t s_initializeTime;
 
-// STATIC: 0x00D732B0
+// STATIC: 0x00D732B0/0x140C2E5F4
 static uint32_t s_idleStats[4];
 
-// STATIC: 0x00D732C0
+// STATIC: 0x00D732C0/0x140C2E604
 uint32_t NetClient::s_clientCount;
 
-// STATIC: 0x00B987A0
+// STATIC: 0x00B987A0/0x140978500
 // TrinityCore connect-to key patch: original modulus 91 D5 9B B7 ... (Blizzard key, rejects TrinityCore's SMSG_CONNECT_TO)
 static const uint8_t s_connectToModulus[256] = {
     0x5F, 0xD6, 0x80, 0x0B, 0xA7, 0xFF, 0x01, 0x40, 0xC7, 0xBC, 0x8E, 0xF5, 0x6B, 0x27, 0xB0, 0xBF,
@@ -66,7 +66,7 @@ static const uint8_t s_connectToModulus[256] = {
     0xF0, 0xB8, 0x32, 0xCB, 0x5B, 0x66, 0xCE, 0x51, 0x54, 0xB4, 0xC3, 0xD3, 0xD4, 0xDC, 0xB3, 0xEE,
 };
 
-// STATIC: 0x00B98798
+// STATIC: 0x00B98798/0x1409784F0
 static const uint8_t s_connectToExponent[4] = {
     0x01, 0x00, 0x01, 0x00,
 };
@@ -85,7 +85,7 @@ static const uint8_t s_connectToHaikuDigest[20] = {
     0x0E, 0xC2, 0x63, 0x1F,
 };
 
-// OFFSET: 0x00487230
+// OFFSET: 0x00487230/0x1400A85C0
 static void ComputePiDigits(int32_t digits, uint8_t* out) {
     int32_t terms = digits / 4 * 14;
     int32_t* remainders = static_cast<int32_t*>(alloca((terms + 1) * sizeof(int32_t)));
@@ -112,7 +112,7 @@ static void ComputePiDigits(int32_t digits, uint8_t* out) {
     }
 }
 
-// PROVEN: 8f67d674 IDENTICAL/NONE
+// PROVEN: 8f67d674 IDENTICAL/IDENTICAL
 // OFFSET: 0x00487370/0x1400A8750
 static void InitializePropContext() {
     if (PropGetSelectedContext() != s_propContext) {
@@ -183,7 +183,7 @@ static bool IsFromInstanceRealm(uint32_t msgId) {
     return (g_jam_ClientLegacy_has_flag_FromInstanceRealm[index >> 3] >> (index & 7)) & 1;
 }
 
-// PROVEN: debe5c24 IDENTICAL/NONE
+// PROVEN: debe5c24 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048A190/0x1400AC650
 NETEVENTQUEUE::NETEVENTQUEUE(NetClient* client) {
     this->m_client = client;
@@ -259,6 +259,7 @@ void NETEVENTQUEUE::Poll() {
     events.Clear();
 }
 
+// PROVEN: 4222d001 IDENTICAL/IDENTICAL
 // OFFSET: 0x0048A460/0x1400ACAE0
 void NETEVENTQUEUE::Clear() {
     this->m_critSect.Enter();
@@ -288,6 +289,7 @@ void NETEVENTQUEUE::AddEvent(EVENTID eventId, void* connection, NetClient* clien
     this->m_critSect.Leave();
 }
 
+// PROVEN: dbe1af4d IDENTICAL/DIFFERENT
 // OFFSET: 0x0048A560/0x1400ACC60
 NETEVENTQUEUE::~NETEVENTQUEUE() {
     this->m_critSect.Enter();
@@ -330,13 +332,13 @@ NetClient::NetClient() {
 
     this->m_rsa.Prepare(s_connectToModulus, sizeof(s_connectToModulus), s_connectToExponent, sizeof(s_connectToExponent));
 
-    ClientConnectionAuthChallenge::s_handler = NetClient::ClientConnectionAuthChallengeHandler;
-    ClientConnectionSuspendComms::s_handler = NetClient::ClientConnectionSuspendCommsHandler;
-    ClientConnectionResumeComms::s_handler = NetClient::ClientConnectionResumeCommsHandler;
-    ClientConnectionDropNewConnection::s_handler = NetClient::ClientConnectionDropNewConnectionHandler;
-    ClientConnectionPong::s_handler = NetClient::ClientConnectionPongHandler;
-    ClientConnectionResetCompressionContext::s_handler = NetClient::ClientConnectionResetCompressionContextHandler;
-    ClientConnectionConnectTo::s_handler = NetClient::ClientConnectionConnectToHandler;
+    ClientConnectionAuthChallenge::s_handler = JamHandlerEncode(NetClient::ClientConnectionAuthChallengeHandler, g_jamHandlerKey_CFB738);
+    ClientConnectionSuspendComms::s_handler = JamHandlerEncode(NetClient::ClientConnectionSuspendCommsHandler, g_jamHandlerKey_CFB738);
+    ClientConnectionResumeComms::s_handler = JamHandlerEncode(NetClient::ClientConnectionResumeCommsHandler, g_jamHandlerKey_CFB688);
+    ClientConnectionDropNewConnection::s_handler = JamHandlerEncode(NetClient::ClientConnectionDropNewConnectionHandler, g_jamHandlerKey_CFB718);
+    ClientConnectionPong::s_handler = JamHandlerEncode(NetClient::ClientConnectionPongHandler, g_jamHandlerKey_CFB780);
+    ClientConnectionResetCompressionContext::s_handler = JamHandlerEncode(NetClient::ClientConnectionResetCompressionContextHandler, g_jamHandlerKey_CFB688);
+    ClientConnectionConnectTo::s_handler = JamHandlerEncode(NetClient::ClientConnectionConnectToHandler, g_jamHandlerKey_CFB74C);
 
     NETCLIENTNODE* node = s_clientList.NewNode(2, 0, 8);
     node->m_client = this;
@@ -397,7 +399,8 @@ void NetClient::ResetInflateStream(int32_t index) {
     this->m_inflateStreams[index] = stream;
 }
 
-// OFFSET: 0x004878A0
+// PROVEN: 5f94bda1 IDENTICAL/UNPROVEN
+// OFFSET: 0x004878A0/0x1400A8CF0
 void NetClient::DestroyInflateStream(int32_t index) {
     z_stream* stream = this->m_inflateStreams[index];
     this->m_inflateStreams[index] = NULL;
@@ -408,15 +411,15 @@ void NetClient::DestroyInflateStream(int32_t index) {
     }
 }
 
-// PROVEN: 79d93fe8 IDENTICAL/NONE
-// OFFSET: 0x00487390
+// PROVEN: 79d93fe8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00487390/0x1400A8770
 void NetClient::SetLoginData(LoginData* loginData) {
     this->m_critSect.Enter();
     memcpy(&this->m_loginData, loginData, sizeof(this->m_loginData));
     this->m_critSect.Leave();
 }
 
-// PROVEN: a91c0b00 IDENTICAL/NONE
+// PROVEN: a91c0b00 IDENTICAL/IDENTICAL
 // OFFSET: 0x004873C0/0x1400A87C0
 uint8_t* NetClient::GetSessionKey() {
     return this->m_loginData.m_sessionKey;
@@ -523,6 +526,7 @@ void NetClient::GetNetStats(uint32_t time, CONNECTION_ID connection, float& byte
     this->m_critSect.Leave();
 }
 
+// PROVEN: a8d1254d IDENTICAL/IDENTICAL
 // OFFSET: 0x00487660/0x1400A8AE0
 void NetClient::GetNetStats(CONNECTION_ID connection, float& bytesIn, float& bytesOut, uint32_t& latency) {
     this->GetNetStats(OsGetAsyncTimeMsPrecise(), connection, bytesIn, bytesOut, latency);
@@ -569,7 +573,7 @@ void NetClient::GetNetLatency(CONNECTION_ID connection, uint32_t& latency) {
     this->m_critSect.Leave();
 }
 
-// PROVEN: 3007d186 IDENTICAL/NONE
+// PROVEN: 3007d186 IDENTICAL/IDENTICAL
 // OFFSET: 0x00487B00/0x1400A9290
 int32_t NetClient::HandleConnect() {
     if (this->m_objMgr) {
@@ -582,7 +586,7 @@ int32_t NetClient::HandleConnect() {
     return 1;
 }
 
-// PROVEN: 9a16649b IDENTICAL/NONE
+// PROVEN: 9a16649b IDENTICAL/IDENTICAL
 // OFFSET: 0x00487B30/0x1400A92D0
 int32_t NetClient::HandleDisconnect() {
     if (this->m_objMgr) {
@@ -597,7 +601,7 @@ int32_t NetClient::HandleDisconnect() {
     return 1;
 }
 
-// PROVEN: 053c8f1e IDENTICAL/NONE
+// PROVEN: 053c8f1e IDENTICAL/IDENTICAL
 // OFFSET: 0x00487B80/0x1400A9320
 int32_t NetClient::HandleCantConnect() {
     if (this->m_objMgr) {
@@ -627,7 +631,7 @@ void NetClient::SendOnConnection(JamClientMessage* msg, WowConnection* connectio
     connection->Send(&data, 0);
 }
 
-// OFFSET: 0x00487EA0
+// OFFSET: 0x00487EA0/0x1400A9040
 void NetClient::HandleMultiplePackets(WowConnection* connection, uint32_t timeStamp, CDataStore* msg) {
     while (msg->m_read != msg->m_size) {
         uint16_t msgId = 0;
@@ -671,7 +675,7 @@ int32_t NetClient::HandleData(uint32_t timeReceived, void* data, int32_t size) {
     return 1;
 }
 
-// OFFSET: 0x00488050
+// OFFSET: 0x00488050/0x1400A9360
 void NetClient::Ping(CONNECTION_ID connection) {
     this->m_critSect.Enter();
 
@@ -701,7 +705,7 @@ void NetClient::Ping(CONNECTION_ID connection) {
     this->m_critSect.Leave();
 }
 
-// OFFSET: 0x00488120
+// OFFSET: 0x00488120/0x1400A9AD0
 bool NetClient::ClientConnectionResetCompressionContextHandler(ClientConnectionResetCompressionContext* msg) {
     NetClient* client = msg->m_netClient;
     uint32_t index = 0;
@@ -770,7 +774,7 @@ void NetClient::SendDisconnectReason(WowConnection* connection, DISCONNECT_REASO
     NetClient::SendOnConnection(&msg, connection);
 }
 
-// OFFSET: 0x00488370
+// OFFSET: 0x00488370/0x1400A9B60
 bool NetClient::IsConnectionReady(WowConnection* connection) {
     uint32_t index = 0;
 
@@ -790,7 +794,7 @@ bool NetClient::IsConnectionReady(WowConnection* connection) {
     return false;
 }
 
-// OFFSET: 0x004883F0
+// OFFSET: 0x004883F0/0x1400A9BD0
 bool NetClient::ClientConnectionConnectToHandler(ClientConnectionConnectTo* msg) {
     uint8_t con = msg->m_con;
     WowConnection* connection = msg->m_connection;
@@ -919,7 +923,7 @@ bool NetClient::ClientConnectionSuspendCommsHandler(ClientConnectionSuspendComms
     return true;
 }
 
-// OFFSET: 0x00488940
+// OFFSET: 0x00488940/0x1400AA560
 bool NetClient::ClientConnectionAuthChallengeHandler(ClientConnectionAuthChallenge* msg) {
     WowConnection* connection = msg->m_connection;
     NetClient* client = msg->m_netClient;
@@ -1194,7 +1198,7 @@ bool NetClient::ClientConnectionPongHandler(ClientConnectionPong* msg) {
     return true;
 }
 
-// OFFSET: 0x00489210
+// OFFSET: 0x00489210/0x1400AB3F0
 bool NetClient::ClientConnectionDropNewConnectionHandler(ClientConnectionDropNewConnection* msg) {
     NetClient* client = msg->m_netClient;
     uint32_t index = 0;
@@ -1272,7 +1276,7 @@ bool NetClient::DecompressAndAddToQueue(WowConnection* connection, uint16_t msgI
     return true;
 }
 
-// PROVEN: c39d7ebf IDENTICAL/NONE
+// PROVEN: c39d7ebf IDENTICAL/DIFFERENT
 // OFFSET: 0x00489420/0x1400AB4F0
 void NetClient::CleanupConnections() {
     TSGrowableArray<WowConnection*> connections;
@@ -1368,6 +1372,7 @@ void NetClient::Send(JamClientMessage* msg, CONNECTION_ID connection) {
     this->Send(&data, connection);
 }
 
+// PROVEN: 1f6d5b67 DIFFERENT/IDENTICAL
 // OFFSET: 0x00489770/0x1400AB240
 void NetClient::WCMessageReady(WowConnection* connection, uint32_t timeStamp, CDataStore* msg) {
     InterlockedExchangeAdd(reinterpret_cast<volatile LONG*>(&this->m_bytesReceived), msg->m_size);
@@ -1408,7 +1413,7 @@ void NetClient::WCCantConnect(WowConnection* connection, uint32_t timeStamp, con
     this->m_critSect.Leave();
 }
 
-// PROVEN: 9e622144 IDENTICAL/NONE
+// PROVEN: 9e622144 IDENTICAL/IDENTICAL
 // OFFSET: 0x00489890/0x1400ABB30
 void NetClient::PollEventQueue() {
     this->m_netEventQueue->Poll();
@@ -1537,7 +1542,7 @@ bool NetClient::ClientConnectionResumeCommsHandler(ClientConnectionResumeComms* 
     return true;
 }
 
-// OFFSET: 0x006946E0
+// OFFSET: 0x006946E0/0x14033F4E0
 bool NetClient::JAMClientConnectionDispatch(WowConnection* connection, uint32_t timeStamp, uint16_t msgId, CDataStore* msg) {
     switch (((msgId & 2) | (((msgId & 0xC00) | ((msgId >> 2) & 0x1000)) >> 8)) >> 1) {
         case 0x0: {

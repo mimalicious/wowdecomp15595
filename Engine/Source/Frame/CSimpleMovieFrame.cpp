@@ -36,34 +36,34 @@
 #define MOVIE_CAPTIONS_COMPRESSED 0x5A50424D
 #define MOVIE_CAPTIONS_ENCRYPTED 0x4650424D
 
-// STATIC: 0x00CA4614
+// STATIC: 0x00CA4614/0x140B425D8
 int32_t CSimpleMovieFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3BF0
+// STATIC: 0x00DD3BF0/0x140CB99A8
 int32_t CSimpleMovieFrame::s_objectType;
 
 // STATIC: 0x00CA3490
 const char* CSimpleMovieFrame::s_objectTypeName = "MovieFrame";
 
-// STATIC: 0x00DD3BF4
+// STATIC: 0x00DD3BF4/0x140CB99B0
 CSimpleMovieFrame* CSimpleMovieFrame::s_currentMovieFrame;
 
-// STATIC: 0x00DD3BF8
+// STATIC: 0x00DD3BF8/0x140CB99AC
 int32_t CSimpleMovieFrame::s_decoderCount;
 
-// STATIC: 0x00DD3C38
+// STATIC: 0x00DD3C38/0x140CB99F8
 CDataAllocator CSimpleMovieFrame::s_allocator(sizeof(CSimpleMovieFrame), 5);
 
-// STATIC: 0x00DD3BFC
+// STATIC: 0x00DD3BFC/0x140CB99B8
 static int32_t s_sfxWasMuted;
 
-// STATIC: 0x00DD3C00
+// STATIC: 0x00DD3C00/0x140CB99BC
 static int32_t s_musicWasMuted;
 
-// STATIC: 0x00DD3C04
+// STATIC: 0x00DD3C04/0x140CB99C0
 static int32_t s_ambienceWasMuted;
 
-// STATIC: 0x00DD3C08
+// STATIC: 0x00DD3C08/0x140CB99C4
 static int32_t s_voiceChatWasMuted;
 
 static uint32_t s_textureCount[7] = { 6, 2, 3, 4, 6, 2, 6 };
@@ -256,6 +256,7 @@ static const uint8_t s_defaultKey[32] = { 0xD7, 0xC8, 0xD9, 0xA0, 0xC8, 0xC5, 0x
 
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
+// PROVEN: f21198e2 DIFFERENT/IDENTICAL
 // OFFSET: 0x00523B40/0x1401720B0
 static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
     if (param) {
@@ -268,7 +269,7 @@ static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
     }
 }
 
-// PROVEN: b83e0506 IDENTICAL/NONE
+// PROVEN: b83e0506 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523B80/0x1401720F0
 static void MovieSoundKitFinished(SE3SoundKitObject* sko) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(sko->m_playFinishedParam);
@@ -278,6 +279,7 @@ static void MovieSoundKitFinished(SE3SoundKitObject* sko) {
     }
 }
 
+// PROVEN: 0315444d DIFFERENT/IDENTICAL
 // OFFSET: 0x00523BB0/0x140172130
 static void MovieTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
@@ -292,7 +294,7 @@ void CSimpleMovieFrame::operator delete(void* ptr) {
     CSimpleMovieFrame::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 1ea1c914 IDENTICAL/NONE
+// PROVEN: 1ea1c914 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523BE0/0x140172160
 FrameScript_Object::ScriptIx* CSimpleMovieFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -317,7 +319,7 @@ FrameScript_Object::ScriptIx* CSimpleMovieFrame::GetScriptByName(const char* nam
     return NULL;
 }
 
-// PROVEN: 93efb220 IDENTICAL/NONE
+// PROVEN: 93efb220 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523CD0/0x140172210
 void CSimpleMovieFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onMovieFinished, time, count);
@@ -408,7 +410,7 @@ int32_t CSimpleMovieFrame::OpenAudio() {
     return 1;
 }
 
-// PROVEN: b29eb7d5 IDENTICAL/NONE
+// PROVEN: b29eb7d5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523DB0/0x140172330
 void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     if (CSimpleMovieFrame::s_currentMovieFrame) {
@@ -416,7 +418,7 @@ void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     }
 }
 
-// PROVEN: 98f4c054 IDENTICAL/NONE
+// PROVEN: 98f4c054 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523DD0/0x140172350
 void CSimpleMovieFrame::AudioDeviceChanged_Restart() {
     if (CSimpleMovieFrame::s_currentMovieFrame && CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart) {
@@ -473,7 +475,7 @@ bool CSimpleMovieFrame::SubtitlesVisible() {
     return this->m_subtitlesEnabled || !SE3::IsPlaying(this->m_sound);
 }
 
-// PROVEN: 58471d3c IDENTICAL/NONE
+// PROVEN: 58471d3c IDENTICAL/IDENTICAL
 // OFFSET: 0x00524070/0x140172610
 void CSimpleMovieFrame::RunOnMovieFinishedScript() {
     if (this->HasScript(this->m_onMovieFinished)) {
@@ -481,8 +483,8 @@ void CSimpleMovieFrame::RunOnMovieFinishedScript() {
     }
 }
 
-// PROVEN: 711ac025 IDENTICAL/NONE
-// OFFSET: 0x005240A0
+// PROVEN: 711ac025 IDENTICAL/IDENTICAL
+// OFFSET: 0x005240A0/0x140172650
 void CSimpleMovieFrame::RunOnMovieShowSubtitleScript(const char* text) {
     if (this->HasScript(this->m_onMovieShowSubtitle)) {
         lua_State* L = FrameScript_GetContext();
@@ -491,8 +493,8 @@ void CSimpleMovieFrame::RunOnMovieShowSubtitleScript(const char* text) {
     }
 }
 
-// PROVEN: 82ad950b IDENTICAL/NONE
-// OFFSET: 0x005240F0
+// PROVEN: 82ad950b IDENTICAL/IDENTICAL
+// OFFSET: 0x005240F0/0x1401726C0
 void CSimpleMovieFrame::RunOnMovieHideSubtitleScript() {
     if (this->HasScript(this->m_onMovieHideSubtitle)) {
         this->RunScript(this->m_onMovieHideSubtitle, 0, NULL);
@@ -570,7 +572,7 @@ int32_t CSimpleMovieFrame::OpenVideo() {
     return result;
 }
 
-// OFFSET: 0x00524620
+// OFFSET: 0x00524620/0x140172DF0
 CSimpleMovieFrame::CSimpleMovieFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_sound = 0;
     this->m_isPlaying = 0;
@@ -594,13 +596,13 @@ const char* CSimpleMovieFrame::GetObjectTypeName() {
     return CSimpleMovieFrame::s_objectTypeName;
 }
 
-// PROVEN: 630c5040 IDENTICAL/NONE
+// PROVEN: 630c5040 IDENTICAL/IDENTICAL
 // OFFSET: 0x00524720/0x140172F10
 int32_t CSimpleMovieFrame::GetScriptMetaTable() {
     return CSimpleMovieFrame::s_metatable;
 }
 
-// PROVEN: 7184a3e2 IDENTICAL/NONE
+// PROVEN: 7184a3e2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00524740/0x140172F30
 bool CSimpleMovieFrame::IsA(int32_t type) {
     return type == CSimpleMovieFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
@@ -689,7 +691,7 @@ int32_t CSimpleMovieFrame::OpenCaptions() {
     return 1;
 }
 
-// PROVEN: ac91373a IDENTICAL/NONE
+// PROVEN: ac91373a IDENTICAL/IDENTICAL
 // OFFSET: 0x00524B10/0x140173370
 void CSimpleMovieFrame::CloseCaptions() {
     if (this->m_currentCaption >= 0) {
@@ -704,7 +706,7 @@ void CSimpleMovieFrame::CloseCaptions() {
     this->m_captions.Clear();
 }
 
-// PROVEN: 602601e4 IDENTICAL/NONE
+// PROVEN: 602601e4 IDENTICAL/DIFFERENT
 // OFFSET: 0x00524BD0/0x140173460
 void CSimpleMovieFrame::Cleanup() {
     SE3::SoundBusMute(SE3BUS_SFX, s_sfxWasMuted);
@@ -725,7 +727,7 @@ void CSimpleMovieFrame::Cleanup() {
     this->m_streamer.Cleanup();
 }
 
-// PROVEN: cc54c1ba IDENTICAL/NONE
+// PROVEN: cc54c1ba IDENTICAL/IDENTICAL
 // OFFSET: 0x00524C60/0x140173520
 void CSimpleMovieFrame::StopMovie() {
     if (this->m_isPlaying) {
@@ -734,7 +736,7 @@ void CSimpleMovieFrame::StopMovie() {
     }
 }
 
-// OFFSET: 0x00524CA0
+// OFFSET: 0x00524CA0/0x140173570
 bool CSimpleMovieFrame::UpdateTiming() {
     int32_t playing = SE3::IsPlaying(this->m_sound);
 
@@ -818,7 +820,7 @@ bool CSimpleMovieFrame::UpdateTiming() {
     return true;
 }
 
-// OFFSET: 0x00524F20
+// OFFSET: 0x00524F20/0x140173960
 void CSimpleMovieFrame::Render() {
     float aspect = CoordinateGetAspectCompensation();
 
@@ -840,7 +842,7 @@ void CSimpleMovieFrame::Render() {
     GxXformSetView(view);
     GxXformSetProjection(projection);
 
-    // STATIC: 0x00DD3C6C
+    // STATIC: 0x00DD3C6C/0x140CB9A38
     static C3Vector s_normal(0.0f, 0.0f, 1.0f);
 
     static C2Vector s_texCoords[4] = { C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 1.0f) };
@@ -873,7 +875,7 @@ void CSimpleMovieFrame::Render() {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: [0x005253A0/0x140173F00, 0x00524730]
+// OFFSET: [0x005253A0/0x140173F00, 0x00524730/0x140172F20]
 CSimpleMovieFrame::~CSimpleMovieFrame() {
     this->Cleanup();
 }
@@ -917,7 +919,7 @@ void CSimpleMovieFrame::StartMovieDelayed(bool success) {
     this->RunOnMovieFinishedScript();
 }
 
-// PROVEN: 4d4c54b5 IDENTICAL/NONE
+// PROVEN: 4d4c54b5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00525980/0x140174610
 void CSimpleMovieFrame::KeyChainCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (param) {
@@ -988,7 +990,7 @@ int32_t CSimpleMovieFrame::StartMovie(int32_t movieID) {
     return 0;
 }
 
-// OFFSET: 0x00525CA0
+// OFFSET: 0x00525CA0/0x140174A50
 void CSimpleMovieFrame::RenderMovie(void* param) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(param);
 
@@ -1006,8 +1008,8 @@ void CSimpleMovieFrame::RenderMovie(void* param) {
     }
 }
 
-// PROVEN: b044b2b1 IDENTICAL/NONE
-// OFFSET: 0x00525CC0
+// PROVEN: b044b2b1 IDENTICAL/UNPROVEN
+// OFFSET: 0x00525CC0/0x140174AB0
 void CSimpleMovieFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
 

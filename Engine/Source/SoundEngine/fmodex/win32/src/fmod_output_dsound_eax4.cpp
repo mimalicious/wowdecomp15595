@@ -76,8 +76,8 @@ bool OutputDSound::querySupportEAX4(FMOD_GUID guid, unsigned long ulProperty)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e703a9e5 IDENTICAL/NONE
-// OFFSET: 0x00B00660
+// PROVEN: e703a9e5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00B00660/0x1408C2580
 bool OutputDSound::initEAX4()
 {
     FMOD_RESULT             result;
@@ -231,7 +231,7 @@ FMOD_RESULT OutputDSound::closeEAX4()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: 0x00B009D0
+// OFFSET: 0x00B009D0/0x1408C29F0
 FMOD_RESULT OutputDSound::setPropertiesEAX4(const FMOD_REVERB_PROPERTIES *prop)
 {
     HRESULT hr;

@@ -6,8 +6,8 @@
 
 static System_Memory::UsingMemory s_usingMemory;
 
-// PROVEN: 96e55dd0 IDENTICAL/NONE
-// OFFSET: 0x00B392B0
+// PROVEN: 96e55dd0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B392B0/0x140850630
 static void* DefaultAllocHook(size_t bytes) {
     return malloc(bytes);
 }
@@ -18,10 +18,10 @@ static void DefaultFreeHook(void* ptr, size_t bytes) {
     free(ptr);
 }
 
-// STATIC: 0x00D1C918
+// STATIC: 0x00D1C918/0x140BD9148
 void* (*Blizzard::Memory::s_allocHook)(size_t bytes) = DefaultAllocHook;
 
-// STATIC: 0x00D1C91C
+// STATIC: 0x00D1C91C/0x140BD9150
 void (*Blizzard::Memory::s_freeHook)(void* ptr, size_t bytes) = DefaultFreeHook;
 
 // INLINED

@@ -2,23 +2,6 @@
 #include <cstdint>
 #include "Engine/Source/Tempest/CAaSphere.h"
 
-// INLINED
-CAaSphere::CAaSphere() {
-    this->r = 0.0f;
-}
-
-// INLINED
-CAaBox CAaSphere::Box() const {
-    CAaBox result;
-    result.b.x = this->c.x - this->r;
-    result.b.y = this->c.y - this->r;
-    result.b.z = this->c.z - this->r;
-    result.t.x = this->c.x + this->r;
-    result.t.y = this->c.y + this->r;
-    result.t.z = this->c.z + this->r;
-    return result;
-}
-
 // OFFSET: 0x00B09C20
 CAaBox CAaSphere::FindExtrema(const CAaSphere* spheres, uint32_t count) {
     CAaBox result;

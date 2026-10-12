@@ -76,7 +76,6 @@ class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_N
     /* 0150 */ Liquid::DisplMapPerturbationMesh* m_perturbatorMesh;
     /* 0154 */ uint16_t m_extraDoodadSets[3];
     /* 015A */ int16_t m_skipPortal;
-    /* 015C */ uint32_t unk_015C;
 
     virtual ~CMapObjDef();
 

@@ -49,6 +49,7 @@ void asyncThreadFunc(void *data)
 	[SEE_ALSO]
 ]
 */
+// PROVEN: f16e6395 UNPROVEN/IDENTICAL
 // OFFSET: 0x00ACF370/0x140899AE0
 AsyncThread::AsyncThread()
 {

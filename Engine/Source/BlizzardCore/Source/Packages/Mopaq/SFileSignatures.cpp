@@ -18,7 +18,7 @@ System_SFile::SignatureKey::SignatureKey(const char* name) {
     this->m_hi = static_cast<uint32_t>(hash >> 32);
 }
 
-// OFFSET: 0x007C2E20
+// OFFSET: 0x007C2E20/0x1404BD1E0
 bool System_SFile::SignatureHashTable::GetEntry(const char* name, Blizzard::Util::Digest<16>* md5) {
     if (!md5) {
         return false;
