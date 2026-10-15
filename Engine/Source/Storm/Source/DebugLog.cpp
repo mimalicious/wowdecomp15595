@@ -4,6 +4,7 @@
 #include <windows.h>
 #include "Engine/Source/Storm/H/storm.h"
 
+#ifndef NDEBUG
 void DebugLog(const char* format, ...) {
     char buffer[1024];
 
@@ -42,6 +43,7 @@ void DebugLog(int32_t target, int32_t level, const char* format, ...) {
 
     DebugLog("%s", buffer);
 }
+#endif
 
 void DebugValidate(const char* expression) {
     DebugLog("Validation failed: %s", expression);
