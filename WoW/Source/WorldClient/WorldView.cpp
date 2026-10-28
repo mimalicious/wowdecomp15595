@@ -1871,7 +1871,7 @@ void CWorldView::AddMoveableMapObjDefGroups() {
         int32_t entry = dist > 0.0f ? static_cast<int32_t>(dist * 0.029999999f) : 0;
 
         if (entry < this->m_sortTable->m_lastEntry) {
-            this->m_moveableGroups.LinkToTail(group);
+            this->m_sortTable->m_entries.m_data[entry].m_mapObjDefGroups.LinkToTail(group);
         }
 
         group = next;
